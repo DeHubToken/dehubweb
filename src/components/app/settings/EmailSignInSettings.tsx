@@ -4,7 +4,12 @@ import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { SettingsRow } from './SettingsRow';
+import {
+  SettingsRow,
+  SETTINGS_CONTROL_CLASS,
+  SETTINGS_FIELD_CLASS,
+  SETTINGS_INLINE_ACTION_CLASS,
+} from './SettingsRow';
 import {
   getEmailLinkStatus,
   requestEmailLinkCode,
@@ -138,7 +143,7 @@ export function EmailSignInSettings() {
               variant="outline"
               size="sm"
               disabled={busy}
-              className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl"
+              className={SETTINGS_CONTROL_CLASS}
               onClick={remove}
             >
               {busy ? (
@@ -164,14 +169,13 @@ export function EmailSignInSettings() {
                 placeholder="123456"
                 value={code}
                 onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
-                className="w-full bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 sm:w-28 sm:text-center"
+                className={`${SETTINGS_FIELD_CLASS} w-full sm:w-28 sm:text-center`}
               />
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
-                  size="sm"
                   disabled={busy || code.length !== 6}
-                  className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl"
+                  className={SETTINGS_INLINE_ACTION_CLASS}
                   onClick={confirm}
                 >
                   {busy ? (
@@ -182,9 +186,8 @@ export function EmailSignInSettings() {
                 </Button>
                 <Button
                   variant="ghost"
-                  size="sm"
                   disabled={busy}
-                  className="text-zinc-400 hover:text-white rounded-xl"
+                  className="h-10 shrink-0 rounded-xl px-3 text-zinc-400 hover:text-white"
                   onClick={() => {
                     setAwaitingCode(false);
                     setCode('');
@@ -202,13 +205,12 @@ export function EmailSignInSettings() {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 sm:w-64"
+                className={`${SETTINGS_FIELD_CLASS} w-full sm:w-64`}
               />
               <Button
                 variant="outline"
-                size="sm"
                 disabled={busy || !/.+@.+\..+/.test(email)}
-                className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl"
+                className={SETTINGS_INLINE_ACTION_CLASS}
                 onClick={sendCode}
               >
                 {busy ? (

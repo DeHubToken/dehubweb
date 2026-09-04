@@ -6,7 +6,12 @@ import { useAccount, useSignMessage } from 'wagmi';
 import { WagmiScope } from '@/components/app/WagmiScope';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { SettingsRow } from './SettingsRow';
+import {
+  SettingsRow,
+  SETTINGS_CONTROL_CLASS,
+  SETTINGS_FIELD_CLASS,
+  SETTINGS_INLINE_ACTION_CLASS,
+} from './SettingsRow';
 import {
   getMyEnsLink,
   linkEnsName,
@@ -205,7 +210,7 @@ function EnsHandleSettingsInner() {
               variant="outline"
               size="sm"
               disabled={busy}
-              className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl"
+              className={SETTINGS_CONTROL_CLASS}
               onClick={remove}
             >
               {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : t('settings.ensRemove', 'Remove')}
@@ -231,13 +236,12 @@ function EnsHandleSettingsInner() {
                 setPreviewError(null);
               }}
               onKeyDown={e => e.key === 'Enter' && check()}
-              className="w-full bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 sm:w-56"
+              className={`${SETTINGS_FIELD_CLASS} w-full sm:w-56`}
             />
             <Button
               variant="outline"
-              size="sm"
               disabled={checking || !name.trim() || !!preview}
-              className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl"
+              className={SETTINGS_INLINE_ACTION_CLASS}
               onClick={check}
             >
               {checking ? <Loader2 className="w-3 h-3 animate-spin" /> : t('settings.ensCheck', 'Check')}
@@ -302,7 +306,7 @@ function EnsHandleSettingsInner() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl"
+                  className={SETTINGS_CONTROL_CLASS}
                   onClick={copyMessage}
                 >
                   {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
@@ -316,13 +320,12 @@ function EnsHandleSettingsInner() {
                   value={signature}
                   spellCheck={false}
                   onChange={e => setSignature(e.target.value)}
-                  className="w-full bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 sm:w-72"
+                  className={`${SETTINGS_FIELD_CLASS} w-full sm:w-72`}
                 />
                 <Button
                   variant="outline"
-                  size="sm"
                   disabled={busy || !signature.trim()}
-                  className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl"
+                  className={SETTINGS_INLINE_ACTION_CLASS}
                   onClick={() => submit(signature)}
                 >
                   {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : t('settings.ensLink', 'Link')}

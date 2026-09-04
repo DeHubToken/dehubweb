@@ -15,6 +15,14 @@ export const SETTINGS_CONTROL_CLASS =
 export const SETTINGS_FIELD_CLASS =
   'h-10 rounded-xl border-zinc-700 bg-zinc-800 text-white placeholder:text-zinc-500';
 
+/**
+ * Action button that sits beside an input inside a settings form row. Same
+ * material as SETTINGS_CONTROL_CLASS, sized to SETTINGS_FIELD_CLASS: a
+ * `size="sm"` button is 36px and reads a notch short next to a 40px field.
+ */
+export const SETTINGS_INLINE_ACTION_CLASS =
+  'h-10 shrink-0 rounded-xl border border-zinc-700 bg-zinc-800 px-3 text-sm font-medium text-white shadow-none backdrop-blur-none transition-colors hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-zinc-800';
+
 /** Form field label: one weight, one colour, one gap to its field. */
 export const SETTINGS_LABEL_CLASS = 'mb-1.5 block text-sm font-medium text-white';
 
