@@ -1296,6 +1296,11 @@
     "failedSubmit": "Aanvraag indienen mislukt. Probeer het opnieuw."
   },
   "loginModal": {
+    "migrateNothingToRecover": "Er is geen eerdere DeHub-account op deze login, dus er is niets om over te brengen. Ga terug naar Nieuw account om het instellen van dit account te voltooien.",
+    "migrateUnmatchedWarning": "Deze login heeft geen DeHub-account geregistreerd. Doorgaan herstelt niets — het maakt een tweede account aan met een nieuwe gebruikersnaam en laat degene achter die je al hebt.",
+    "migrateUnmatchedDetail": "Er bestaat geen profiel op dit portefeuilleadres. Als je weer aan het inloggen was, ga dan terug en gebruik in plaats daarvan de login waarmee je je hebt aangemeld.",
+    "migrateGoBack": "Ga terug",
+    "migrateContinueAnyway": "Maak toch een nieuw account aan",
     "title": "Inloggen",
     "addProfileTitle": "Profiel toevoegen",
     "continueEmail": "Doorgaan met e-mail",
@@ -1679,13 +1684,13 @@
     "only_have_dhb_staked": "Je hebt maar {{amount}} ingelegd.",
     "unstake_request_submitted": "Opnameverzoek ingediend! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} toegevoegd aan de opnamewachtrij.",
+    "not_enough_gas_token": "Je hebt {{token}} in deze wallet nodig om de netwerkkosten te betalen.",
+    "unstake_failed": "Unstaken mislukt",
     "only_have_dhb_withdrawable": "Op dit moment kan er slechts {{amount}} DHB worden opgenomen.",
     "early_withdrawal_fee": "Kosten voor vervroegde opname",
     "early_withdrawal_fee_detail": "Vergrendeld tot {{date}}. Nu opnemen kost {{percent}}% — ongeveer {{amount}} DHB. Druk nogmaals op Opnemen om te bevestigen.",
     "unstaked_successfully": "Succesvol opgenomen! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB opgenomen op {{chain}}.",
-    "not_enough_gas_token": "Je hebt {{token}} in deze wallet nodig om de netwerkkosten te betalen.",
-    "unstake_failed": "Unstaken mislukt",
     "unstake_cancelled": "Unstake geannuleerd",
     "unstake_request_removed": "Je unstake-verzoek is verwijderd.",
     "failed_to_cancel": "Annuleren mislukt",
@@ -1761,9 +1766,9 @@
     "minutesAgo": "{{count}}m geleden",
     "hoursAgo": "{{count}}u geleden",
     "daysAgo": "{{count}}d geleden",
+    "cancelUnstake": "Opname annuleren",
     "withdrawableNow": "Nu opneembaar",
-    "poolNotWithdrawable": "{{amount}} DHB staat in de wallet van de stortingspool, die nog geen opnamecontract heeft — neem contact op met support om het te verplaatsen.",
-    "cancelUnstake": "Opname annuleren"
+    "poolNotWithdrawable": "{{amount}} DHB staat in de wallet van de stortingspool, die nog geen opnamecontract heeft — neem contact op met support om het te verplaatsen."
   },
   "communities": {
     "title": "Community's",
@@ -3056,8 +3061,6 @@
     "sellYourFractions": "Verkoop uw fracties ({{held}} in bezit)"
   },
   "creator": {
-    "toolFlow": "Creator Flow",
-    "toolFlowDesc": "Keten van tekst, referenties, beeld- en videomodellen op een canvas, voer het uit in één betaling, deel het met een link.",
     "whatToCreate": "Wat te maken",
     "startCreatingWith": "Begin met creëren met {{model}}",
     "studioSubtitle": "Beschrijf een scène, karakter, stemming of stijl. Resultaten verschijnen hieronder en gaan rechtstreeks naar de editor.",
@@ -3452,7 +3455,9 @@
     "noCreationsYet": "Nog geen AI-creaties. Wees de eerste om er een te genereren.",
     "aiGenerationAlt": "AI-generatie",
     "aiGenerationCommunityAlt": "AI-generatie van de DeHub-gemeenschap",
-    "close": "Sluiten"
+    "close": "Sluiten",
+    "toolFlow": "Creator Flow",
+    "toolFlowDesc": "Keten van tekst, referenties, beeld- en videomodellen op een canvas, voer het uit in één betaling, deel het met een link."
   },
   "pricing": {
     "plansForEveryWorkflow": "Plannen voor elke workflow",
@@ -4326,70 +4331,6 @@
     "ctaBody": "Oorsprongfallback, versleutelde beveiligde media en geverifieerd werk gaan voor openbare knooppuntbeloningen.",
     "footerNote": "DePin-deelname is een bijdrageservice, geen beleggingsproduct. Beschikbaarheid, geschiktheid en beloningen kunnen veranderen."
   },
-  "home": {
-    "title": "Home",
-    "description": "Welkom op de homepagina"
-  },
-  "glossary": {
-    "title": "DHB Woordenlijst",
-    "description": "Een uitgebreide lijst van termen die gebruikt worden in het DHB ecosysteem.",
-    "searchPlaceholder": "Zoek termen...",
-    "noResults": "Geen termen gevonden die overeenkomen met je zoekopdracht.",
-    "table": {
-      "term": "Term",
-      "definition": "Definitie"
-    },
-    "entries": {
-      "dao": {
-        "term": "DAO",
-        "definition": "Een gedecentraliseerde autonome organisatie (DAO) is een entiteit zonder centrale leiding. Beslissingen worden genomen van onderaf, beheerd door een community die georganiseerd is rond een specifieke set regels die zijn vastgelegd in een blockchain."
-      },
-      "dhb": {
-        "term": "DHB",
-        "definition": "De native token van het DHB netwerk, gebruikt voor governance, staking en het belonen van deelnemers."
-      },
-      "defi": {
-        "term": "DeFi",
-        "definition": "Gedecentraliseerde Financiën (DeFi) is een opkomende financiële technologie gebaseerd op veilige gedistribueerde grootboeken. Het doel is om financiële diensten meer open en toegankelijk te maken, en om de noodzaak voor tussenpersonen te minimaliseren."
-      },
-      "nft": {
-        "term": "NFT",
-        "definition": "Een Non-Fungible Token (NFT) is een uniek digitaal item dat eigendom vertegenwoordigt. NFT's kunnen kunst, muziek, in-game items en andere vormen van creatief werk vertegenwoordigen. Ze worden op een blockchain opgeslagen, waardoor ze veilig en transparant zijn."
-      },
-      "staking": {
-        "term": "Staking",
-        "definition": "Het proces van het vasthouden van cryptocurrency om een blockchain netwerk te ondersteunen en beloningen te verdienen. Door DHB te staken, kunnen gebruikers bijdragen aan de veiligheid en efficiëntie van het netwerk."
-      },
-      "yieldFarming": {
-        "term": "Yield Farming",
-        "definition": "Een manier om beloningen te genereren met cryptocurrency holdings. Het houdt in dat je je crypto uitleent of vastzet in gedecentraliseerde financiële (DeFi) protocollen om rente of beloningen te verdienen."
-      },
-      "amm": {
-        "term": "AMM",
-        "definition": "Een Automated Market Maker (AMM) is een type gedecentraliseerde cryptocurrency exchange die geen orderboek gebruikt. In plaats daarvan vertrouwt het op een formule om de prijzen van activa te bepalen."
-      },
-      "smartContract": {
-        "term": "Smart Contract",
-        "definition": "Een zelfuitvoerend contract waarbij de voorwaarden van de overeenkomst direct in code zijn geschreven. Smart contracts automatiseren de uitvoering van een overeenkomst, zodat alle deelnemers direct zeker kunnen zijn van het resultaat, zonder tussenpersonen."
-      },
-      "gas": {
-        "term": "Gas",
-        "definition": "Een eenheid die de hoeveelheid rekenkracht meet die nodig is om een bepaalde operatie op een blockchain netwerk uit te voeren. Gas wordt meestal betaald in de native token van het netwerk."
-      },
-      "oracle": {
-        "term": "Oracle",
-        "definition": "Een dienst die smart contracts voorziet van externe gegevens. Oracles zijn essentieel voor DeFi applicaties die real-world informatie nodig hebben, zoals prijsfeeds."
-      },
-      "web3": {
-        "term": "Web3",
-        "definition": "Web3 is het idee voor een nieuw iteratief internet dat blockchain-technologie, decentralisatie, cryptocurrency en non-fungible tokens (NFT's) omvat."
-      },
-      "metaverse": {
-        "term": "Metaverse",
-        "definition": "Een collectieve virtuele gedeelde ruimte, gecreëerd door de convergentie van virtueel verbeterde fysieke realiteit en fysiek persistente virtuele ruimte, inclusief de som van alle virtuele werelden, augmented reality en het internet."
-      }
-    }
-  },
   "creatorFlow": {
     "title": "Creator Flow",
     "backToStudio": "Terug naar Creator Studio",
@@ -4605,5 +4546,69 @@
     "dubbed": "Gesynchroniseerde audio",
     "preparing": "Voorbereiden van nagesynchroniseerde audio...",
     "unavailable": "Gesynchroniseerde audio is niet beschikbaar voor deze video."
+  },
+  "home": {
+    "title": "Home",
+    "description": "Welkom op de homepagina"
+  },
+  "glossary": {
+    "title": "DHB Woordenlijst",
+    "description": "Een uitgebreide lijst van termen die gebruikt worden in het DHB ecosysteem.",
+    "searchPlaceholder": "Zoek termen...",
+    "noResults": "Geen termen gevonden die overeenkomen met je zoekopdracht.",
+    "table": {
+      "term": "Term",
+      "definition": "Definitie"
+    },
+    "entries": {
+      "dao": {
+        "term": "DAO",
+        "definition": "Een gedecentraliseerde autonome organisatie (DAO) is een entiteit zonder centrale leiding. Beslissingen worden genomen van onderaf, beheerd door een community die georganiseerd is rond een specifieke set regels die zijn vastgelegd in een blockchain."
+      },
+      "dhb": {
+        "term": "DHB",
+        "definition": "De native token van het DHB netwerk, gebruikt voor governance, staking en het belonen van deelnemers."
+      },
+      "defi": {
+        "term": "DeFi",
+        "definition": "Gedecentraliseerde Financiën (DeFi) is een opkomende financiële technologie gebaseerd op veilige gedistribueerde grootboeken. Het doel is om financiële diensten meer open en toegankelijk te maken, en om de noodzaak voor tussenpersonen te minimaliseren."
+      },
+      "nft": {
+        "term": "NFT",
+        "definition": "Een Non-Fungible Token (NFT) is een uniek digitaal item dat eigendom vertegenwoordigt. NFT's kunnen kunst, muziek, in-game items en andere vormen van creatief werk vertegenwoordigen. Ze worden op een blockchain opgeslagen, waardoor ze veilig en transparant zijn."
+      },
+      "staking": {
+        "term": "Staking",
+        "definition": "Het proces van het vasthouden van cryptocurrency om een blockchain netwerk te ondersteunen en beloningen te verdienen. Door DHB te staken, kunnen gebruikers bijdragen aan de veiligheid en efficiëntie van het netwerk."
+      },
+      "yieldFarming": {
+        "term": "Yield Farming",
+        "definition": "Een manier om beloningen te genereren met cryptocurrency holdings. Het houdt in dat je je crypto uitleent of vastzet in gedecentraliseerde financiële (DeFi) protocollen om rente of beloningen te verdienen."
+      },
+      "amm": {
+        "term": "AMM",
+        "definition": "Een Automated Market Maker (AMM) is een type gedecentraliseerde cryptocurrency exchange die geen orderboek gebruikt. In plaats daarvan vertrouwt het op een formule om de prijzen van activa te bepalen."
+      },
+      "smartContract": {
+        "term": "Smart Contract",
+        "definition": "Een zelfuitvoerend contract waarbij de voorwaarden van de overeenkomst direct in code zijn geschreven. Smart contracts automatiseren de uitvoering van een overeenkomst, zodat alle deelnemers direct zeker kunnen zijn van het resultaat, zonder tussenpersonen."
+      },
+      "gas": {
+        "term": "Gas",
+        "definition": "Een eenheid die de hoeveelheid rekenkracht meet die nodig is om een bepaalde operatie op een blockchain netwerk uit te voeren. Gas wordt meestal betaald in de native token van het netwerk."
+      },
+      "oracle": {
+        "term": "Oracle",
+        "definition": "Een dienst die smart contracts voorziet van externe gegevens. Oracles zijn essentieel voor DeFi applicaties die real-world informatie nodig hebben, zoals prijsfeeds."
+      },
+      "web3": {
+        "term": "Web3",
+        "definition": "Web3 is het idee voor een nieuw iteratief internet dat blockchain-technologie, decentralisatie, cryptocurrency en non-fungible tokens (NFT's) omvat."
+      },
+      "metaverse": {
+        "term": "Metaverse",
+        "definition": "Een collectieve virtuele gedeelde ruimte, gecreëerd door de convergentie van virtueel verbeterde fysieke realiteit en fysiek persistente virtuele ruimte, inclusief de som van alle virtuele werelden, augmented reality en het internet."
+      }
+    }
   }
 }

@@ -1090,6 +1090,11 @@
     "failedSubmit": "Müraciəti göndərmək uğursuz oldu. Zəhmət olmasa yenidən cəhd edin."
   },
   "loginModal": {
+    "migrateNothingToRecover": "Bu girişdə daha əvvəlki DeHub hesabı yoxdur, buna görə də davam etmək üçün heç nə yoxdur. Bunu qurmağı tamamlamaq üçün Yeni hesaba qayıdın.",
+    "migrateUnmatchedWarning": "Bu girişdə DeHub hesabı yoxdur. Davam etmək heç nəyi bərpa etmir — o, yeni istifadəçi adı ilə ikinci hesab yaradır və artıq sahib olduğunuzu geridə qoyur.",
+    "migrateUnmatchedDetail": "Bu cüzdan ünvanında heç bir profil mövcud deyil. Yenidən daxil olmusunuzsa, geri qayıdın və əvəzində qeydiyyatdan keçdiyiniz girişdən istifadə edin.",
+    "migrateGoBack": "Geri qayıt",
+    "migrateContinueAnyway": "Hər halda yeni hesab yaradın",
     "title": "Daxil ol",
     "addProfileTitle": "Profil əlavə et",
     "continueEmail": "E-poçt ilə Davam Et",
@@ -1424,13 +1429,13 @@
     "only_have_dhb_staked": "Yalnız {{amount}} depozitiniz var.",
     "unstake_request_submitted": "Çıxarış sorğusu göndərildi! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} çıxarış növbəsinə əlavə edildi.",
+    "not_enough_gas_token": "Şəbəkə haqqını ödəmək üçün bu pulqabda {{token}} lazımdır.",
+    "unstake_failed": "Çıxarış alınmadı",
     "only_have_dhb_withdrawable": "Hazırda yalnız {{amount}} DHB çıxarıla bilər.",
     "early_withdrawal_fee": "Vaxtından əvvəl çıxarış haqqı",
     "early_withdrawal_fee_detail": "{{date}} tarixinədək kilidlidir. İndi çıxarmaq {{percent}}% — təxminən {{amount}} DHB baha başa gəlir. Təsdiqləmək üçün yenidən Çıxar düyməsinə basın.",
     "unstaked_successfully": "Uğurla çıxarıldı! ✅",
     "dhb_unstaked_on_chain": "{{chain}} şəbəkəsində {{amount}} DHB çıxarıldı.",
-    "not_enough_gas_token": "Şəbəkə haqqını ödəmək üçün bu pulqabda {{token}} lazımdır.",
-    "unstake_failed": "Çıxarış alınmadı",
     "unstake_cancelled": "Çıxarış ləğv edildi",
     "unstake_request_removed": "Çıxarış sorğunuz silindi.",
     "failed_to_cancel": "Ləğv edilmədi",
@@ -1506,9 +1511,9 @@
     "minutesAgo": "{{count}} dəq əvvəl",
     "hoursAgo": "{{count}} saat əvvəl",
     "daysAgo": "{{count}} gün əvvəl",
+    "cancelUnstake": "Çıxarışı ləğv et",
     "withdrawableNow": "İndi çıxarıla bilər",
-    "poolNotWithdrawable": "{{amount}} DHB depozit hovuzunun pulqabındadır və onun hələ çıxarış müqaviləsi yoxdur — köçürmək üçün dəstəklə əlaqə saxlayın.",
-    "cancelUnstake": "Çıxarışı ləğv et"
+    "poolNotWithdrawable": "{{amount}} DHB depozit hovuzunun pulqabındadır və onun hələ çıxarış müqaviləsi yoxdur — köçürmək üçün dəstəklə əlaqə saxlayın."
   },
   "communities": {
     "title": "İcmalar",
@@ -2776,8 +2781,6 @@
     "sellYourFractions": "Fraksiyalarınızı satın ({{held}} saxlanılır)"
   },
   "creator": {
-    "toolFlow": "Yaradıcı Axını",
-    "toolFlowDesc": "Kətan üzərində mətn, istinad, şəkil və video modelləri zəncirləyin, onu bir ödənişdə icra edin və linklə paylaşın.",
     "whatToCreate": "Nə yaratmaq lazımdır",
     "startCreatingWith": "{{model}} ilə yaratmağa başlayın",
     "studioSubtitle": "Səhnə, personaj, əhval-ruhiyyə və ya stil təsvir edin. Nəticələr aşağıda görünür və birbaşa redaktora keçir.",
@@ -3166,7 +3169,9 @@
     "noCreationsYet": "Hələ AI yaradılışları yoxdur. Birinci olmaq üçün bir tane yaradın.",
     "aiGenerationAlt": "AI yaradılışı",
     "aiGenerationCommunityAlt": "DeHub cəmiyyətindən AI yaradılışı",
-    "close": "Bağla"
+    "close": "Bağla",
+    "toolFlow": "Yaradıcı Axını",
+    "toolFlowDesc": "Kətan üzərində mətn, istinad, şəkil və video modelləri zəncirləyin, onu bir ödənişdə icra edin və linklə paylaşın."
   },
   "pricing": {
     "plansForEveryWorkflow": "Hər bir iş axını üçün planlar",

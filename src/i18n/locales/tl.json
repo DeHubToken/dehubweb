@@ -1092,6 +1092,11 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "migrateNothingToRecover": "Walang naunang DeHub account sa pag - login na ito, kaya walang dapat dalhin. Bumalik sa Bagong account para tapusin ang pagtatakda nito.",
+    "migrateUnmatchedWarning": "Ang login na ito ay walang DeHub account sa record. Ang pagpapatuloy ay hindi nakakabawi ng anumang bagay — lumilikha ito ng pangalawang account na may bagong username, at iniiwan ang isa na mayroon ka na sa likod.",
+    "migrateUnmatchedDetail": "Walang profile na umiiral sa address ng wallet na ito. Kung nagsa - sign in ka ulit, bumalik at gamitin na lang ang login na na - sign up mo.",
+    "migrateGoBack": "Bumalik",
+    "migrateContinueAnyway": "Gumawa pa rin ng bagong account",
     "title": "Log in",
     "addProfileTitle": "Magdagdag ng profile",
     "continueX": "Continue with X",
@@ -1360,13 +1365,13 @@
     "only_have_dhb_staked": "{{amount}} lang ang naideposito mo.",
     "unstake_request_submitted": "Naisumite ang kahilingang mag-withdraw! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ang naidagdag sa pila ng withdrawal.",
+    "not_enough_gas_token": "Kailangan mo ng {{token}} sa wallet na ito para bayaran ang network fee.",
+    "unstake_failed": "Nabigo ang withdrawal",
     "only_have_dhb_withdrawable": "{{amount}} DHB lang ang puwedeng i-withdraw ngayon.",
     "early_withdrawal_fee": "Bayad sa maagang pag-withdraw",
     "early_withdrawal_fee_detail": "Naka-lock hanggang {{date}}. Ang pag-withdraw ngayon ay may bayad na {{percent}}% — humigit-kumulang {{amount}} DHB. Pindutin ulit ang Withdraw para kumpirmahin.",
     "unstaked_successfully": "Matagumpay na na-withdraw! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB ang na-withdraw sa {{chain}}.",
-    "not_enough_gas_token": "Kailangan mo ng {{token}} sa wallet na ito para bayaran ang network fee.",
-    "unstake_failed": "Nabigo ang withdrawal",
     "unstake_cancelled": "Kinansela ang withdrawal",
     "unstake_request_removed": "Inalis na ang kahilingan mong mag-withdraw.",
     "failed_to_cancel": "Hindi makansela",
@@ -1442,9 +1447,9 @@
     "minutesAgo": "{{count}}m ang nakalipas",
     "hoursAgo": "{{count}}h ang nakalipas",
     "daysAgo": "{{count}}d ang nakalipas",
+    "cancelUnstake": "Kanselahin ang withdrawal",
     "withdrawableNow": "Puwedeng i-withdraw ngayon",
-    "poolNotWithdrawable": "Nasa wallet ng deposit pool ang {{amount}} DHB, at wala pa itong withdrawal contract — makipag-ugnayan sa suporta para mailipat ito.",
-    "cancelUnstake": "Kanselahin ang withdrawal"
+    "poolNotWithdrawable": "Nasa wallet ng deposit pool ang {{amount}} DHB, at wala pa itong withdrawal contract — makipag-ugnayan sa suporta para mailipat ito."
   },
   "communities": {
     "title": "Communities",
@@ -2736,8 +2741,6 @@
     "sellYourFractions": "Ibenta ang iyong mga fraction ({{held}} na hawak)"
   },
   "creator": {
-    "toolFlow": "Daloy ng Tagapaglikha",
-    "toolFlowDesc": "Chain teksto, mga sanggunian, imahe at video modelo sa isang canvas, patakbuhin ito sa isang pagbabayad, ibahagi ito sa isang link.",
     "whatToCreate": "Ano ang gagawin",
     "startCreatingWith": "Magsimula ng paglikha gamit ang {{model}}",
     "studioSubtitle": "Ilarawan ang isang eksena, karakter, mood o istilo. Ang mga resulta ay lalabas sa ibaba at direktang papasok sa editor.",
@@ -3103,7 +3106,9 @@
     "noCreationsYet": "Walang AI creations pa. Maging una na bumuo ng isa.",
     "aiGenerationAlt": "AI generation",
     "aiGenerationCommunityAlt": "AI generation mula sa DeHub community",
-    "close": "Isara"
+    "close": "Isara",
+    "toolFlow": "Daloy ng Tagapaglikha",
+    "toolFlowDesc": "Chain teksto, mga sanggunian, imahe at video modelo sa isang canvas, patakbuhin ito sa isang pagbabayad, ibahagi ito sa isang link."
   },
   "pricing": {
     "plansForEveryWorkflow": "Mga plano para sa bawat workflow",
@@ -3940,140 +3945,6 @@
     "ctaBody": "Origin fallback, encrypted protected media at verified work ay nauna sa public node rewards.",
     "footerNote": "Ang DePin participation ay isang contribution service, hindi isang investment product. Ang availability, eligibility at rewards ay maaaring magbago."
   },
-  "walletSelector": {
-    "title": "Piliin ang Wallet",
-    "description": "Piliin ang wallet na gusto mong ikonekta sa app na ito."
-  },
-  "transaction": {
-    "swap": "Swap",
-    "send": "Ipadala",
-    "wrap": "I-wrap",
-    "unwrap": "I-unwrap",
-    "deposit": "Magdeposito",
-    "withdraw": "Mag-withdraw",
-    "stake": "I-stake",
-    "unstake": "I-unstake",
-    "claim": "I-claim",
-    "mint": "I-mint",
-    "burn": "I-burn",
-    "create": "Lumikha",
-    "update": "I-update",
-    "buy": "Bumili",
-    "sell": "Magbenta",
-    "add": "Magdagdag",
-    "remove": "Alisin",
-    "approve": "Aprubahan",
-    "transfer": "Ilipat"
-  },
-  "glossary": {
-    "title": "Glossary",
-    "subtitle": "Alamin ang tungkol sa mga termino sa web3.",
-    "searchPlaceholder": "Maghanap ng termino...",
-    "noResults": "Walang nakitang resulta.",
-    "DeHub": {
-      "title": "DeHub",
-      "description": "Ang DeHub ay isang desentralisadong social media platform na nagbibigay-daan sa mga user na kumonekta at makipag-ugnayan sa iba sa isang ligtas at transparent na kapaligiran."
-    },
-    "Web3": {
-      "title": "Web3",
-      "description": "Ang Web3 ay isang desentralisadong web na binuo sa blockchain technology. Nagbibigay-daan ito sa mga user na kontrolin ang kanilang data at makipag-ugnayan sa iba nang walang panghihimasok ng mga third party."
-    },
-    "Blockchain": {
-      "title": "Blockchain",
-      "description": "Ang Blockchain ay isang distributed ledger technology na nagtatala ng mga transaksyon sa isang secure at transparent na paraan. Ito ang pundasyon ng maraming desentralisadong aplikasyon, kabilang ang mga cryptocurrency."
-    },
-    "Cryptocurrency": {
-      "title": "Cryptocurrency",
-      "description": "Ang Cryptocurrency ay isang digital o virtual currency na gumagamit ng cryptography para sa seguridad. Gumagana ito nang hiwalay sa isang central bank at maaaring gamitin para sa mga online na pagbili."
-    },
-    "NFT": {
-      "title": "NFT",
-      "description": "Ang NFT (Non-Fungible Token) ay isang natatanging digital asset na kumakatawan sa pagmamay-ari ng isang item o content. Ang mga NFT ay nakaimbak sa isang blockchain, na nagpapatunay sa kanilang pagmamay-ari at pagiging tunay."
-    },
-    "DAO": {
-      "title": "DAO",
-      "description": "Ang DAO (Decentralized Autonomous Organization) ay isang organisasyon na pinapatakbo ng mga panuntunan na naka-encode sa isang blockchain. Ang mga desisyon ay ginagawa sa pamamagitan ng mga panukala at pagboto ng mga miyembro."
-    },
-    "DeFi": {
-      "title": "DeFi",
-      "description": "Ang DeFi (Decentralized Finance) ay tumutukoy sa mga financial application na binuo sa blockchain technology. Naglalayon itong magbigay ng access sa mga tradisyonal na financial service tulad ng pagpapahiram, panghihiram, at pangangalakal nang walang pangangailangan ng mga tagapamagitan."
-    },
-    "Smart Contract": {
-      "title": "Smart Contract",
-      "description": "Ang Smart Contract ay isang self-executing contract na ang mga tuntunin ay direktang nakasulat sa code. Awtomatiko nitong ipinapatupad ang mga tuntunin ng isang kasunduan kapag natugunan ang mga paunang natukoy na kundisyon."
-    },
-    "Wallet": {
-      "title": "Wallet",
-      "description": "Ang Wallet ay isang digital tool na nagbibigay-daan sa mga user na mag-imbak, magpadala, at tumanggap ng mga cryptocurrency. Maaari itong maging isang software application o isang hardware device."
-    },
-    "Gas": {
-      "title": "Gas",
-      "description": "Ang Gas ay ang unit na sumusukat sa computational effort na kinakailangan upang maisagawa ang mga transaksyon sa isang blockchain network. Binabayaran ito sa mga minero o validator bilang kabayaran para sa kanilang trabaho."
-    },
-    "Token": {
-      "title": "Token",
-      "description": "Ang Token ay isang digital asset na kumakatawan sa isang partikular na halaga o utility sa isang blockchain network. Maaari itong gamitin para sa iba't ibang layunin, tulad ng pamamahala, pagbabayad, o pag-access sa mga serbisyo."
-    },
-    "DApp": {
-      "title": "DApp",
-      "description": "Ang DApp (Decentralized Application) ay isang application na binuo sa isang blockchain network. Gumagana ito nang hiwalay sa isang central authority at gumagamit ng mga smart contract para sa functionality."
-    },
-    "Bridge": {
-      "title": "Bridge",
-      "description": "Ang Bridge ay isang protocol na nagbibigay-daan sa paglipat ng mga asset at data sa pagitan ng iba't ibang blockchain network. Pinapadali nito ang interoperability at nagpapahintulot sa mga user na ma-access ang mga application at serbisyo sa iba't ibang blockchain."
-    },
-    "Staking": {
-      "title": "Staking",
-      "description": "Ang Staking ay ang proseso ng paghawak at pag-lock ng mga cryptocurrency upang suportahan ang operasyon ng isang blockchain network. Sa kapalit, ang mga staker ay nakakakuha ng mga reward sa anyo ng mga karagdagang token."
-    },
-    "Yield Farming": {
-      "title": "Yield Farming",
-      "description": "Ang Yield Farming ay isang diskarte kung saan ang mga user ay nagdedeposito o nag-stake ng kanilang mga cryptocurrency sa mga DeFi protocol upang makakuha ng mga reward. Kadalasang kinabibilangan nito ang pagbibigay ng liquidity sa mga desentralisadong exchange o paglahok sa mga lending platform."
-    },
-    "Liquidity Pool": {
-      "title": "Liquidity Pool",
-      "description": "Ang Liquidity Pool ay isang koleksyon ng mga token na naka-lock sa isang smart contract upang mapadali ang pangangalakal sa mga desentralisadong exchange (DEX). Ang mga user ay nagbibigay ng liquidity sa pool at nakakakuha ng mga bayarin sa pangangalakal bilang kapalit."
-    },
-    "Impermanent Loss": {
-      "title": "Impermanent Loss",
-      "description": "Ang Impermanent Loss ay isang panganib na nauugnay sa pagbibigay ng liquidity sa mga desentralisadong exchange. Nangyayari ito kapag ang presyo ng mga token sa isang liquidity pool ay nag-iiba, na nagreresulta sa isang pagbaba sa halaga ng mga asset ng liquidity provider kumpara sa paghawak sa kanila sa kanilang wallet."
-    },
-    "Governance Token": {
-      "title": "Governance Token",
-      "description": "Ang Governance Token ay isang uri ng cryptocurrency na nagbibigay-daan sa mga may-ari na lumahok sa paggawa ng desisyon ng isang desentralisadong protocol o organisasyon. Ang mga may-ari ng token ay maaaring bumoto sa mga panukala at makaimpluwensya sa hinaharap na direksyon ng proyekto."
-    },
-    "Badges": {
-      "title": "Badges",
-      "description": "Ang mga badge ay mga digital na gantimpala na iginagawad sa mga user para sa pagkamit ng mga partikular na milestone o paglahok sa isang komunidad. Ang mga ito ay kumakatawan sa mga tagumpay at maaaring ipakita sa mga profile upang ipakita ang mga nagawa."
-    }
-  },
-  "pageTitles": {
-    "home": "Home",
-    "explore": "Galugarin",
-    "notifications": "Mga Abiso",
-    "messages": "Mga Mensahe",
-    "assistant": "Assistant",
-    "leaderboard": "Leaderboard",
-    "bookmarks": "Mga Bookmark",
-    "settings": "Mga Setting",
-    "profile": "Profile",
-    "blog": "Blog",
-    "command": "Command",
-    "commandCentre": "Command Centre",
-    "wallet": "Wallet",
-    "docs": "Mga Dokumento",
-    "roadmap": "Roadmap",
-    "featureRequests": "Mga Kahilingan sa Feature",
-    "governance": "Pamamahala",
-    "careers": "Mga Trabaho",
-    "glossary": "Glossary",
-    "create": "Lumikha",
-    "login": "Mag-login"
-  },
-  "notification": {
-    "noNotifications": "Walang mga abiso",
-    "loadMore": "Mag-load ng higit pa"
-  },
   "creatorFlow": {
     "title": "Creator Flow",
     "backToStudio": "Bumalik sa Creator Studio",
@@ -4289,5 +4160,139 @@
     "dubbed": "Audio na may Dubbed",
     "preparing": "Inihahanda ang tinaguriang audio...",
     "unavailable": "Hindi available ang Dubbed audio para sa video na ito."
+  },
+  "walletSelector": {
+    "title": "Piliin ang Wallet",
+    "description": "Piliin ang wallet na gusto mong ikonekta sa app na ito."
+  },
+  "transaction": {
+    "swap": "Swap",
+    "send": "Ipadala",
+    "wrap": "I-wrap",
+    "unwrap": "I-unwrap",
+    "deposit": "Magdeposito",
+    "withdraw": "Mag-withdraw",
+    "stake": "I-stake",
+    "unstake": "I-unstake",
+    "claim": "I-claim",
+    "mint": "I-mint",
+    "burn": "I-burn",
+    "create": "Lumikha",
+    "update": "I-update",
+    "buy": "Bumili",
+    "sell": "Magbenta",
+    "add": "Magdagdag",
+    "remove": "Alisin",
+    "approve": "Aprubahan",
+    "transfer": "Ilipat"
+  },
+  "glossary": {
+    "title": "Glossary",
+    "subtitle": "Alamin ang tungkol sa mga termino sa web3.",
+    "searchPlaceholder": "Maghanap ng termino...",
+    "noResults": "Walang nakitang resulta.",
+    "DeHub": {
+      "title": "DeHub",
+      "description": "Ang DeHub ay isang desentralisadong social media platform na nagbibigay-daan sa mga user na kumonekta at makipag-ugnayan sa iba sa isang ligtas at transparent na kapaligiran."
+    },
+    "Web3": {
+      "title": "Web3",
+      "description": "Ang Web3 ay isang desentralisadong web na binuo sa blockchain technology. Nagbibigay-daan ito sa mga user na kontrolin ang kanilang data at makipag-ugnayan sa iba nang walang panghihimasok ng mga third party."
+    },
+    "Blockchain": {
+      "title": "Blockchain",
+      "description": "Ang Blockchain ay isang distributed ledger technology na nagtatala ng mga transaksyon sa isang secure at transparent na paraan. Ito ang pundasyon ng maraming desentralisadong aplikasyon, kabilang ang mga cryptocurrency."
+    },
+    "Cryptocurrency": {
+      "title": "Cryptocurrency",
+      "description": "Ang Cryptocurrency ay isang digital o virtual currency na gumagamit ng cryptography para sa seguridad. Gumagana ito nang hiwalay sa isang central bank at maaaring gamitin para sa mga online na pagbili."
+    },
+    "NFT": {
+      "title": "NFT",
+      "description": "Ang NFT (Non-Fungible Token) ay isang natatanging digital asset na kumakatawan sa pagmamay-ari ng isang item o content. Ang mga NFT ay nakaimbak sa isang blockchain, na nagpapatunay sa kanilang pagmamay-ari at pagiging tunay."
+    },
+    "DAO": {
+      "title": "DAO",
+      "description": "Ang DAO (Decentralized Autonomous Organization) ay isang organisasyon na pinapatakbo ng mga panuntunan na naka-encode sa isang blockchain. Ang mga desisyon ay ginagawa sa pamamagitan ng mga panukala at pagboto ng mga miyembro."
+    },
+    "DeFi": {
+      "title": "DeFi",
+      "description": "Ang DeFi (Decentralized Finance) ay tumutukoy sa mga financial application na binuo sa blockchain technology. Naglalayon itong magbigay ng access sa mga tradisyonal na financial service tulad ng pagpapahiram, panghihiram, at pangangalakal nang walang pangangailangan ng mga tagapamagitan."
+    },
+    "Smart Contract": {
+      "title": "Smart Contract",
+      "description": "Ang Smart Contract ay isang self-executing contract na ang mga tuntunin ay direktang nakasulat sa code. Awtomatiko nitong ipinapatupad ang mga tuntunin ng isang kasunduan kapag natugunan ang mga paunang natukoy na kundisyon."
+    },
+    "Wallet": {
+      "title": "Wallet",
+      "description": "Ang Wallet ay isang digital tool na nagbibigay-daan sa mga user na mag-imbak, magpadala, at tumanggap ng mga cryptocurrency. Maaari itong maging isang software application o isang hardware device."
+    },
+    "Gas": {
+      "title": "Gas",
+      "description": "Ang Gas ay ang unit na sumusukat sa computational effort na kinakailangan upang maisagawa ang mga transaksyon sa isang blockchain network. Binabayaran ito sa mga minero o validator bilang kabayaran para sa kanilang trabaho."
+    },
+    "Token": {
+      "title": "Token",
+      "description": "Ang Token ay isang digital asset na kumakatawan sa isang partikular na halaga o utility sa isang blockchain network. Maaari itong gamitin para sa iba't ibang layunin, tulad ng pamamahala, pagbabayad, o pag-access sa mga serbisyo."
+    },
+    "DApp": {
+      "title": "DApp",
+      "description": "Ang DApp (Decentralized Application) ay isang application na binuo sa isang blockchain network. Gumagana ito nang hiwalay sa isang central authority at gumagamit ng mga smart contract para sa functionality."
+    },
+    "Bridge": {
+      "title": "Bridge",
+      "description": "Ang Bridge ay isang protocol na nagbibigay-daan sa paglipat ng mga asset at data sa pagitan ng iba't ibang blockchain network. Pinapadali nito ang interoperability at nagpapahintulot sa mga user na ma-access ang mga application at serbisyo sa iba't ibang blockchain."
+    },
+    "Staking": {
+      "title": "Staking",
+      "description": "Ang Staking ay ang proseso ng paghawak at pag-lock ng mga cryptocurrency upang suportahan ang operasyon ng isang blockchain network. Sa kapalit, ang mga staker ay nakakakuha ng mga reward sa anyo ng mga karagdagang token."
+    },
+    "Yield Farming": {
+      "title": "Yield Farming",
+      "description": "Ang Yield Farming ay isang diskarte kung saan ang mga user ay nagdedeposito o nag-stake ng kanilang mga cryptocurrency sa mga DeFi protocol upang makakuha ng mga reward. Kadalasang kinabibilangan nito ang pagbibigay ng liquidity sa mga desentralisadong exchange o paglahok sa mga lending platform."
+    },
+    "Liquidity Pool": {
+      "title": "Liquidity Pool",
+      "description": "Ang Liquidity Pool ay isang koleksyon ng mga token na naka-lock sa isang smart contract upang mapadali ang pangangalakal sa mga desentralisadong exchange (DEX). Ang mga user ay nagbibigay ng liquidity sa pool at nakakakuha ng mga bayarin sa pangangalakal bilang kapalit."
+    },
+    "Impermanent Loss": {
+      "title": "Impermanent Loss",
+      "description": "Ang Impermanent Loss ay isang panganib na nauugnay sa pagbibigay ng liquidity sa mga desentralisadong exchange. Nangyayari ito kapag ang presyo ng mga token sa isang liquidity pool ay nag-iiba, na nagreresulta sa isang pagbaba sa halaga ng mga asset ng liquidity provider kumpara sa paghawak sa kanila sa kanilang wallet."
+    },
+    "Governance Token": {
+      "title": "Governance Token",
+      "description": "Ang Governance Token ay isang uri ng cryptocurrency na nagbibigay-daan sa mga may-ari na lumahok sa paggawa ng desisyon ng isang desentralisadong protocol o organisasyon. Ang mga may-ari ng token ay maaaring bumoto sa mga panukala at makaimpluwensya sa hinaharap na direksyon ng proyekto."
+    },
+    "Badges": {
+      "title": "Badges",
+      "description": "Ang mga badge ay mga digital na gantimpala na iginagawad sa mga user para sa pagkamit ng mga partikular na milestone o paglahok sa isang komunidad. Ang mga ito ay kumakatawan sa mga tagumpay at maaaring ipakita sa mga profile upang ipakita ang mga nagawa."
+    }
+  },
+  "pageTitles": {
+    "home": "Home",
+    "explore": "Galugarin",
+    "notifications": "Mga Abiso",
+    "messages": "Mga Mensahe",
+    "assistant": "Assistant",
+    "leaderboard": "Leaderboard",
+    "bookmarks": "Mga Bookmark",
+    "settings": "Mga Setting",
+    "profile": "Profile",
+    "blog": "Blog",
+    "command": "Command",
+    "commandCentre": "Command Centre",
+    "wallet": "Wallet",
+    "docs": "Mga Dokumento",
+    "roadmap": "Roadmap",
+    "featureRequests": "Mga Kahilingan sa Feature",
+    "governance": "Pamamahala",
+    "careers": "Mga Trabaho",
+    "glossary": "Glossary",
+    "create": "Lumikha",
+    "login": "Mag-login"
+  },
+  "notification": {
+    "noNotifications": "Walang mga abiso",
+    "loadMore": "Mag-load ng higit pa"
   }
 }

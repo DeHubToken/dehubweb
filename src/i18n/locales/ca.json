@@ -1090,6 +1090,11 @@
     "failedSubmit": "Error en enviar la sol·licitud. Si us plau, torna-ho a provar."
   },
   "loginModal": {
+    "migrateNothingToRecover": "No hi ha cap compte anterior de DeHub en aquest inici de sessió, de manera que no hi ha res a aportar. Torna a Compte nou per acabar de configurar aquest compte.",
+    "migrateUnmatchedWarning": "Aquest inici de sessió no té cap compte de DeHub registrat. Continuar no recupera res: crea un segon compte amb un nou nom d'usuari i deixa el que ja tens.",
+    "migrateUnmatchedDetail": "No existeix cap perfil en aquesta adreça de moneder. Si has tornat a iniciar la sessió, torna enrere i utilitza l'inici de sessió amb el qual t'has registrat.",
+    "migrateGoBack": "Enrere",
+    "migrateContinueAnyway": "Crea un compte nou de totes maneres",
     "title": "Iniciar sessió",
     "addProfileTitle": "Afegeix un perfil",
     "continueEmail": "Continuar amb correu",
@@ -1424,13 +1429,13 @@
     "only_have_dhb_staked": "Només tens {{amount}} dipositat.",
     "unstake_request_submitted": "Sol·licitud de retirada enviada! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} afegit a la cua de retirada.",
+    "not_enough_gas_token": "Necessites {{token}} en aquesta cartera per pagar la comissió de xarxa.",
+    "unstake_failed": "La retirada ha fallat",
     "only_have_dhb_withdrawable": "Ara mateix només es poden retirar {{amount}} DHB.",
     "early_withdrawal_fee": "Comissió per retirada anticipada",
     "early_withdrawal_fee_detail": "Bloquejat fins al {{date}}. Retirar ara costa un {{percent}}% — uns {{amount}} DHB. Torna a prémer Retira per confirmar.",
     "unstaked_successfully": "Retirada correcta! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB retirats a {{chain}}.",
-    "not_enough_gas_token": "Necessites {{token}} en aquesta cartera per pagar la comissió de xarxa.",
-    "unstake_failed": "La retirada ha fallat",
     "unstake_cancelled": "Retirada cancel·lada",
     "unstake_request_removed": "La teva sol·licitud de retirada s'ha eliminat.",
     "failed_to_cancel": "No s'ha pogut cancel·lar",
@@ -1506,9 +1511,9 @@
     "minutesAgo": "fa {{count}} min",
     "hoursAgo": "fa {{count}} h",
     "daysAgo": "fa {{count}} d",
+    "cancelUnstake": "Cancel·la la retirada",
     "withdrawableNow": "Retirable ara",
-    "poolNotWithdrawable": "{{amount}} DHB són a la cartera del fons de dipòsits, que encara no té contracte de retirada — contacta amb el suport per moure'ls.",
-    "cancelUnstake": "Cancel·la la retirada"
+    "poolNotWithdrawable": "{{amount}} DHB són a la cartera del fons de dipòsits, que encara no té contracte de retirada — contacta amb el suport per moure'ls."
   },
   "communities": {
     "title": "Comunitats",
@@ -2799,8 +2804,6 @@
     "sellYourFractions": "Vendre les teves fraccions ({{held}} retingudes)"
   },
   "creator": {
-    "toolFlow": "Flux de creadors",
-    "toolFlowDesc": "Cadena de text, referències, imatges i models de vídeo en un llenç, executar-lo en un pagament, compartir-lo amb un enllaç.",
     "whatToCreate": "Què crear",
     "startCreatingWith": "Comença a crear amb {{model}}",
     "studioSubtitle": "Descriu una escena, personatge, estat d'ànim o estil. Els resultats apareixen a continuació i van directament a l'editor.",
@@ -3195,7 +3198,9 @@
     "noCreationsYet": "Encara no hi ha creacions d'IA. Sigues el primer a generar-ne una.",
     "aiGenerationAlt": "Generació d'IA",
     "aiGenerationCommunityAlt": "Generació d'IA de la comunitat DeHub",
-    "close": "Tancar"
+    "close": "Tancar",
+    "toolFlow": "Flux de creadors",
+    "toolFlowDesc": "Cadena de text, referències, imatges i models de vídeo en un llenç, executar-lo en un pagament, compartir-lo amb un enllaç."
   },
   "pricing": {
     "plansForEveryWorkflow": "Plans per a cada flux de treball",

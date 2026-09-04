@@ -1099,6 +1099,11 @@
     "failedSubmit": "Einreichung fehlgeschlagen. Bitte erneut versuchen."
   },
   "loginModal": {
+    "migrateNothingToRecover": "Es gibt kein früheres DeHub-Konto bei diesem Login, daher gibt es nichts, was Sie mitbringen können. Gehen Sie zurück zu Neues Konto, um die Einrichtung dieses Kontos abzuschließen.",
+    "migrateUnmatchedWarning": "Diese Anmeldung hat kein DeHub-Konto. Fortfahren stellt nichts wieder her — es erstellt ein zweites Konto mit einem neuen Benutzernamen und lässt dasjenige zurück, das Sie bereits haben.",
+    "migrateUnmatchedDetail": "Unter dieser Wallet-Adresse existiert kein Profil. Wenn Sie sich erneut angemeldet haben, gehen Sie zurück und verwenden Sie stattdessen das Login, mit dem Sie sich angemeldet haben.",
+    "migrateGoBack": "Zurück",
+    "migrateContinueAnyway": "Trotzdem ein neues Konto erstellen",
     "title": "Anmelden",
     "addProfileTitle": "Profil hinzufügen",
     "continueEmail": "Weiter mit E-Mail",
@@ -1482,13 +1487,13 @@
     "only_have_dhb_staked": "Du hast nur {{amount}} eingezahlt.",
     "unstake_request_submitted": "Auszahlungsanfrage eingereicht! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} zur Auszahlungswarteschlange hinzugefügt.",
+    "not_enough_gas_token": "Du brauchst {{token}} in dieser Wallet, um die Netzwerkgebühr zu zahlen.",
+    "unstake_failed": "Unstake fehlgeschlagen",
     "only_have_dhb_withdrawable": "Derzeit können nur {{amount}} DHB abgehoben werden.",
     "early_withdrawal_fee": "Gebühr für vorzeitige Auszahlung",
     "early_withdrawal_fee_detail": "Gesperrt bis {{date}}. Eine Auszahlung jetzt kostet {{percent}}% — etwa {{amount}} DHB. Zum Bestätigen erneut auf Abheben tippen.",
     "unstaked_successfully": "Erfolgreich abgehoben! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB auf {{chain}} abgehoben.",
-    "not_enough_gas_token": "Du brauchst {{token}} in dieser Wallet, um die Netzwerkgebühr zu zahlen.",
-    "unstake_failed": "Unstake fehlgeschlagen",
     "unstake_cancelled": "Unstake abgebrochen",
     "unstake_request_removed": "Deine Unstake-Anfrage wurde entfernt.",
     "failed_to_cancel": "Abbrechen fehlgeschlagen",
@@ -1564,9 +1569,9 @@
     "minutesAgo": "vor {{count}} Min",
     "hoursAgo": "vor {{count}} Std",
     "daysAgo": "vor {{count}} T",
+    "cancelUnstake": "Auszahlung abbrechen",
     "withdrawableNow": "Jetzt abhebbar",
-    "poolNotWithdrawable": "{{amount}} DHB liegen in der Einzahlungspool-Wallet, die noch keinen Auszahlungsvertrag hat — wende dich an den Support, um sie zu verschieben.",
-    "cancelUnstake": "Auszahlung abbrechen"
+    "poolNotWithdrawable": "{{amount}} DHB liegen in der Einzahlungspool-Wallet, die noch keinen Auszahlungsvertrag hat — wende dich an den Support, um sie zu verschieben."
   },
   "communities": {
     "title": "Communities",
@@ -2857,8 +2862,6 @@
     "sellYourFractions": "Verkaufe deine Anteile ({{held}} gehalten)"
   },
   "creator": {
-    "toolFlow": "Creator-Flow",
-    "toolFlowDesc": "Ketten Sie Text, Referenzen, Bild- und Videomodelle auf einer Leinwand, führen Sie sie in einer Zahlung aus und teilen Sie sie mit einem Link.",
     "whatToCreate": "Was du erstellen möchtest",
     "startCreatingWith": "Beginne zu erstellen mit {{model}}",
     "studioSubtitle": "Beschreibe eine Szene, einen Charakter, eine Stimmung oder einen Stil. Ergebnisse erscheinen unten und gehen direkt in den Editor.",
@@ -3245,7 +3248,9 @@
     "noCreationsYet": "Noch keine KI-Kreationen. Seien Sie der Erste, der eine generiert.",
     "aiGenerationAlt": "KI-Generierung",
     "aiGenerationCommunityAlt": "KI-Generierung aus der DeHub-Community",
-    "close": "Schließen"
+    "close": "Schließen",
+    "toolFlow": "Creator-Flow",
+    "toolFlowDesc": "Ketten Sie Text, Referenzen, Bild- und Videomodelle auf einer Leinwand, führen Sie sie in einer Zahlung aus und teilen Sie sie mit einem Link."
   },
   "pricing": {
     "plansForEveryWorkflow": "Pläne für jeden Workflow",

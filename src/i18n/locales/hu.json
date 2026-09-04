@@ -1090,6 +1090,11 @@
     "email": "E-mail"
   },
   "loginModal": {
+    "migrateNothingToRecover": "Ehhez a bejelentkezéshez nincs korábbi DeHub-fiók, így nincs mit átvinni. A beállítás befejezéséhez térj vissza az Új fiókhoz.",
+    "migrateUnmatchedWarning": "Ennek a bejelentkezésnek nincs DeHub-fiókja a nyilvántartásban. A folytatás nem állít vissza semmit — létrehoz egy második fiókot egy új felhasználónévvel, és hátrahagyja a már meglévőt.",
+    "migrateUnmatchedDetail": "Ezen a pénztárcacímen nincs profil. Ha újra bejelentkezett, térjen vissza, és használja azt a bejelentkezést, amellyel regisztrált.",
+    "migrateGoBack": "Vissza",
+    "migrateContinueAnyway": "Új fiók létrehozása mindenképpen",
     "title": "Bejelentkezés",
     "addProfileTitle": "Profil hozzáadása",
     "continueEmail": "Folytatás e-maillel",
@@ -1424,13 +1429,13 @@
     "only_have_dhb_staked": "Csak {{amount}} befizetésed van.",
     "unstake_request_submitted": "Kivonási kérelem elküldve! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} hozzáadva a kivonási sorhoz.",
+    "not_enough_gas_token": "A hálózati díj kifizetéséhez {{token}} kell ebbe a tárcába.",
+    "unstake_failed": "A kivonás sikertelen",
     "only_have_dhb_withdrawable": "Jelenleg csak {{amount}} DHB vehető ki.",
     "early_withdrawal_fee": "Korai kivétel díja",
     "early_withdrawal_fee_detail": "Zárolva {{date}}-ig. A mostani kivétel {{percent}}%-ba kerül — körülbelül {{amount}} DHB. A megerősítéshez nyomd meg újra a Kivétel gombot.",
     "unstaked_successfully": "Sikeres kivétel! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB kivéve a(z) {{chain}} hálózaton.",
-    "not_enough_gas_token": "A hálózati díj kifizetéséhez {{token}} kell ebbe a tárcába.",
-    "unstake_failed": "A kivonás sikertelen",
     "unstake_cancelled": "Kivonás megszakítva",
     "unstake_request_removed": "A kivonási kérelmed eltávolítva.",
     "failed_to_cancel": "A megszakítás sikertelen",
@@ -1506,9 +1511,9 @@
     "minutesAgo": "{{count}} perce",
     "hoursAgo": "{{count}} órája",
     "daysAgo": "{{count}} napja",
+    "cancelUnstake": "Kivonás megszakítása",
     "withdrawableNow": "Most kivehető",
-    "poolNotWithdrawable": "{{amount}} DHB a betéti pool tárcájában van, amelyhez még nincs kivételi szerződés — a mozgatáshoz fordulj az ügyfélszolgálathoz.",
-    "cancelUnstake": "Kivonás megszakítása"
+    "poolNotWithdrawable": "{{amount}} DHB a betéti pool tárcájában van, amelyhez még nincs kivételi szerződés — a mozgatáshoz fordulj az ügyfélszolgálathoz."
   },
   "communities": {
     "title": "Közösségek",
@@ -2799,8 +2804,6 @@
     "sellYourFractions": "Adja el töredékeit ({{held}} tartva)"
   },
   "creator": {
-    "toolFlow": "Alkotói folyamat",
-    "toolFlowDesc": "Láncszöveg, referenciák, kép- és videomodellek egy vásznon, futtassa le egy fizetéssel, ossza meg egy linkkel.",
     "whatToCreate": "Mit kell létrehozni",
     "startCreatingWith": "Kezdj el létrehozni a {{model}} segítségével",
     "studioSubtitle": "Írj le egy jelenetet, karaktert, hangulatot vagy stílust. Az eredmények alul jelennek meg és közvetlenül az editorba kerülnek.",
@@ -3195,7 +3198,9 @@
     "noCreationsYet": "Még nincsenek AI-generálások. Légy az első, aki létrehoz egyet.",
     "aiGenerationAlt": "AI-generálás",
     "aiGenerationCommunityAlt": "AI-generálás a DeHub közösségből",
-    "close": "Bezárás"
+    "close": "Bezárás",
+    "toolFlow": "Alkotói folyamat",
+    "toolFlowDesc": "Láncszöveg, referenciák, kép- és videomodellek egy vásznon, futtassa le egy fizetéssel, ossza meg egy linkkel."
   },
   "pricing": {
     "plansForEveryWorkflow": "Csomagok minden munkafolyamathoz",

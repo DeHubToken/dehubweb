@@ -13,6 +13,7 @@
  * device. Ported from the Pixcellor CreateWalletDialog.
  */
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Loader2, AlertTriangle, CheckCircle2, ArrowDownToLine, Fingerprint, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -84,6 +85,7 @@ function matchLegacyAccount(
 }
 
 export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<Mode>('new');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -158,6 +160,12 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     checkLegacyAccount().then((hint) => {
       if (cancelled) return;
       setBackendHint(hint);
+      // Storage residue alone routed people to Migrate, and Migrate's legacy
+      // login MINTS a Web3Auth wallet when it has nothing to recover — a
+      // second account, with a generated username, for someone who was only
+      // trying to sign back in. A positive "no old account for this verified
+      // email" outranks the residue guess, so retreat to the New tab.
+      if (hint.exists === false && !userChoseModeRef.current) setMode('new');
       if (hint.exists === true && hint.accounts?.length) {
         if (!userChoseModeRef.current) setMode('migrate');
         const emailAccount = hint.accounts.find((a) => a.signupMethod === 'email' || a.signupMethod === 'email_passwordless');
@@ -202,6 +210,23 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
 
   const handleLegacyLogin = async (provider: 'google' | 'twitter' | 'discord' | 'apple' | 'email_passwordless' | 'sms_passwordless') => {
     setError(null);
+    // Web3Auth has no concept of "recover only": handed an identity it has
+    // never seen, it derives a brand-new key and returns it exactly like a
+    // recovered one. Finishing on that key writes a wallet the backend has
+    // never met, so the signature login registers a SIGNUP — a duplicate
+    // account under a generated username, while the account the user was
+    // trying to reach stays behind on their real address. The backend has
+    // already answered whether this session's verified email has anything to
+    // migrate; when the answer is a definite no, there is nothing this login
+    // can retrieve and every outcome is a duplicate. Refuse before the popup.
+    if (backendHint?.exists === false) {
+      setError(t(
+        'loginModal.migrateNothingToRecover',
+        'There is no earlier DeHub account on this login, so there is nothing to bring over. Go back to New account to finish setting this one up.',
+      ));
+      setMode('new');
+      return;
+    }
     if (provider === 'email_passwordless' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(migrateEmail)) {
       setError('Enter the email you used on your old account');
       return;
@@ -504,7 +529,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
           </p>
         </div>
       )}
-      {!migratedKey && backendHint?.exists !== true && residueDetected && (
+      {!migratedKey && backendHint?.exists == null && residueDetected && (
         <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
           <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
           <p>Looks like this browser has signed in to DeHub before. If that was you, use <span className="font-semibold">Migrate</span> below so you keep your old wallet and balance.</p>
@@ -516,9 +541,21 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
           every reason to care that only they can use the account. The mechanics
           stay available underneath for people who do want them. */}
       {mode === 'migrate' ? (
-        <p className="text-white/60 text-sm">
-          Had a DeHub account before? Sign in with your OLD login below to bring over your existing wallet, balance, and profile.
-        </p>
+        backendHint?.exists === false ? (
+          <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
+            <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
+            <p>
+              {t(
+                'loginModal.migrateNothingToRecover',
+                'There is no earlier DeHub account on this login, so there is nothing to bring over. Go back to New account to finish setting this one up.',
+              )}
+            </p>
+          </div>
+        ) : (
+          <p className="text-white/60 text-sm">
+            Had a DeHub account before? Sign in with your OLD login below to bring over your existing wallet, balance, and profile.
+          </p>
+        )
       ) : (
         <div className="space-y-1.5">
           <p className="text-white/60 text-sm">
@@ -546,7 +583,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       </div>
 
       {/* Guarantee the migrate path can't be missed, even when detection is unavailable */}
-      {mode === 'new' && (
+      {mode === 'new' && backendHint?.exists !== false && (
         <button
           type="button"
           onClick={() => { userChoseModeRef.current = true; setMode('migrate'); setError(null); }}
@@ -566,7 +603,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
         />
       )}
 
-      {mode === 'migrate' && !migratedKey && (
+      {mode === 'migrate' && !migratedKey && backendHint?.exists !== false && (
         <div className="space-y-2">
           {migrateBusy === 'resume' ? (
             <p className="text-white/60 text-sm flex items-center gap-2">
@@ -668,11 +705,30 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
 
       {mode === 'migrate' && migratedKey && !addressConfirmed && migratedAddress && (() => {
         const matched = matchedAccount;
+        // Unmatched is only PROOF of a mint when the backend positively answered
+        // "this email has no old account" — which now only reaches this screen
+        // through the redirect resume, whose popup opened before the hint
+        // landed. An unknown hint (check unavailable) or an ambiguous one
+        // (several old accounts on the same provider, so matchLegacyAccount
+        // refuses to guess) must keep the old wording: a real migrator must
+        // never be told their own account does not exist.
+        const looksLikeDuplicate = !matched && backendHint?.exists === false;
         return (
           <div className="space-y-3">
-            <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
-              <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-              <p>This retrieved a real account — double check it's actually yours before continuing. This can't be undone once you set a password.</p>
+            <div
+              className={`flex items-start gap-2 rounded-xl border p-3 text-sm text-white ${
+                looksLikeDuplicate ? 'border-red-400/40 bg-red-400/10' : 'border-amber-400/40 bg-amber-400/10'
+              }`}
+            >
+              <AlertTriangle className={`w-4 h-4 mt-0.5 shrink-0 ${looksLikeDuplicate ? 'text-red-400' : 'text-amber-400'}`} />
+              <p>
+                {!looksLikeDuplicate
+                  ? "This retrieved a real account — double check it's actually yours before continuing. This can't be undone once you set a password."
+                  : t(
+                      'loginModal.migrateUnmatchedWarning',
+                      'This login has no DeHub account on record. Continuing does not recover anything — it creates a SECOND account with a new username, and leaves the one you already have behind.',
+                    )}
+              </p>
             </div>
             <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white space-y-2">
               {matched ? (
@@ -699,7 +755,12 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
                 </div>
               ) : (
                 <p className="text-white/70 text-xs">
-                  We retrieved a wallet for this login, but couldn't match it to a profile on record. Check the address before continuing.
+                  {looksLikeDuplicate
+                    ? t(
+                        'loginModal.migrateUnmatchedDetail',
+                        'No profile exists at this wallet address. If you were signing back in, go back and use the login you signed up with instead.',
+                      )
+                    : "We retrieved a wallet for this login, but couldn't match it to a profile on record. Check the address before continuing."}
                 </p>
               )}
               {matched ? (
@@ -721,17 +782,28 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
             </div>
             <div className="flex gap-2">
               <Button
-                variant="ghost"
-                onClick={() => { setMigratedKey(null); setAddressConfirmed(false); setMigrateProvider(null); setShowMigratedAddress(false); }}
-                className="flex-1 h-11 text-white/60 hover:text-white rounded-xl"
+                onClick={() => { setMigratedKey(null); setAddressConfirmed(false); setMigrateProvider(null); setShowMigratedAddress(false); if (looksLikeDuplicate) setMode('new'); }}
+                className={
+                  looksLikeDuplicate
+                    ? 'flex-1 h-11 bg-white hover:bg-white/90 text-black font-semibold rounded-xl'
+                    : 'flex-1 h-11 text-white/60 hover:text-white rounded-xl bg-transparent hover:bg-white/10'
+                }
               >
-                Try a different login
+                {looksLikeDuplicate
+                  ? t('loginModal.migrateGoBack', 'Go back')
+                  : 'Try a different login'}
               </Button>
               <Button
                 onClick={() => setAddressConfirmed(true)}
-                className="flex-1 h-11 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+                className={
+                  looksLikeDuplicate
+                    ? 'flex-1 h-11 text-white/50 hover:text-white/80 rounded-xl bg-transparent hover:bg-white/10'
+                    : 'flex-1 h-11 bg-white hover:bg-white/90 text-black font-semibold rounded-xl'
+                }
               >
-                Yes, this is mine
+                {looksLikeDuplicate
+                  ? t('loginModal.migrateContinueAnyway', 'Create a new account anyway')
+                  : 'Yes, this is mine'}
               </Button>
             </div>
           </div>

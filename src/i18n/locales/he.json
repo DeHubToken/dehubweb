@@ -1099,6 +1099,11 @@
     "email": "אימייל"
   },
   "loginModal": {
+    "migrateNothingToRecover": "אין חשבון DeHub מוקדם יותר בכניסה זו, כך שאין מה להביא. יש לחזור אל חשבון חדש כדי לסיים את ההגדרה הזו.",
+    "migrateUnmatchedWarning": "התחברות זו אינה רשומה בחשבון DeHub. המשך אינו משחזר דבר — הוא יוצר חשבון שני עם שם משתמש חדש, ומשאיר את החשבון שכבר יש לך מאחור.",
+    "migrateUnmatchedDetail": "לא קיים פרופיל בכתובת ארנק זו. אם התחברת שוב, יש לחזור ולהשתמש בהתחברות שאיתה נרשמת במקום זאת.",
+    "migrateGoBack": "חזרה",
+    "migrateContinueAnyway": "צור חשבון חדש בכל זאת",
     "title": "התחבר",
     "addProfileTitle": "הוספת פרופיל",
     "continueEmail": "המשך עם אימייל",
@@ -1451,13 +1456,13 @@
     "only_have_dhb_staked": "יש לך רק {{amount}} מופקדים.",
     "unstake_request_submitted": "בקשת המשיכה נשלחה! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} נוספו לתור המשיכות.",
+    "not_enough_gas_token": "צריך {{token}} בארנק הזה כדי לשלם את עמלת הרשת.",
+    "unstake_failed": "המשיכה נכשלה",
     "only_have_dhb_withdrawable": "כרגע ניתן למשוך רק {{amount}} DHB.",
     "early_withdrawal_fee": "עמלת משיכה מוקדמת",
     "early_withdrawal_fee_detail": "נעול עד {{date}}. משיכה עכשיו עולה {{percent}}% — כ-{{amount}} DHB. לחצו שוב על משיכה כדי לאשר.",
     "unstaked_successfully": "המשיכה הושלמה! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB נמשכו ב-{{chain}}.",
-    "not_enough_gas_token": "צריך {{token}} בארנק הזה כדי לשלם את עמלת הרשת.",
-    "unstake_failed": "המשיכה נכשלה",
     "unstake_cancelled": "המשיכה בוטלה",
     "unstake_request_removed": "בקשת המשיכה שלך הוסרה.",
     "failed_to_cancel": "הביטול נכשל",
@@ -1533,9 +1538,9 @@
     "minutesAgo": "לפני {{count}} דקות",
     "hoursAgo": "לפני {{count}} שעות",
     "daysAgo": "לפני {{count}} ימים",
+    "cancelUnstake": "בטל משיכה",
     "withdrawableNow": "ניתן למשיכה עכשיו",
-    "poolNotWithdrawable": "{{amount}} DHB נמצאים בארנק מאגר ההפקדות, שאין לו עדיין חוזה משיכה — פנו לתמיכה כדי להעביר אותם.",
-    "cancelUnstake": "בטל משיכה"
+    "poolNotWithdrawable": "{{amount}} DHB נמצאים בארנק מאגר ההפקדות, שאין לו עדיין חוזה משיכה — פנו לתמיכה כדי להעביר אותם."
   },
   "communities": {
     "title": "קהילות",
@@ -2687,8 +2692,6 @@
     "sellYourFractions": "מכור את השברים שלך ({{held}} מוחזק)"
   },
   "creator": {
-    "toolFlow": "תהליך היוצר",
-    "toolFlowDesc": "שרשור טקסט, הפניות, מודלים של תמונות ווידאו על בד, הפעל אותו בתשלום אחד, שתף אותו עם קישור.",
     "whatToCreate": "מה ליצור",
     "startCreatingWith": "התחל ליצור עם {{model}}",
     "studioSubtitle": "תאר סצנה, דמות, מצב רוח או סגנון. התוצאות מופיעות למטה ועוברות ישירות לעורך.",
@@ -3067,7 +3070,9 @@
     "noCreationsYet": "עדיין אין יצירות AI. היה הראשון ליצור אחת.",
     "aiGenerationAlt": "יצירת AI",
     "aiGenerationCommunityAlt": "יצירת AI מקהילת DeHub",
-    "close": "סגור"
+    "close": "סגור",
+    "toolFlow": "תהליך היוצר",
+    "toolFlowDesc": "שרשור טקסט, הפניות, מודלים של תמונות ווידאו על בד, הפעל אותו בתשלום אחד, שתף אותו עם קישור."
   },
   "pricing": {
     "plansForEveryWorkflow": "תוכניות לכל זרימת עבודה",

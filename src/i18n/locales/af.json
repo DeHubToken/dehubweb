@@ -1071,6 +1071,11 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "migrateNothingToRecover": "Daar is geen vorige DeHub-rekening op hierdie aanmelding nie, so daar is niks om oor te bring nie. Gaan terug na nuwe rekening om hierdie een te voltooi.",
+    "migrateUnmatchedWarning": "Hierdie aanmelding het geen DeHub-rekening op rekord nie. Deur voort te gaan, herstel niks nie — dit skep 'n tweede rekening met 'n nuwe gebruikersnaam en laat die een wat u reeds het, agter.",
+    "migrateUnmatchedDetail": "Geen profiel bestaan by hierdie beursie adres nie. As jy weer inteken, gaan terug en gebruik die aanmelding waarmee jy ingeteken het.",
+    "migrateGoBack": "Gaan terug",
+    "migrateContinueAnyway": "Skep in elk geval 'n nuwe rekening",
     "title": "Log in",
     "addProfileTitle": "Voeg profiel by",
     "continueX": "Continue with X",
@@ -1343,13 +1348,13 @@
     "only_have_dhb_staked": "Jy het slegs {{amount}} gedeponeer.",
     "unstake_request_submitted": "Onttrekkingsversoek ingedien! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} by onttrekkingstou gevoeg.",
+    "not_enough_gas_token": "Jy het {{token}} in hierdie beursie nodig om die netwerkfooi te betaal.",
+    "unstake_failed": "Onttrekking misluk",
     "only_have_dhb_withdrawable": "Op die oomblik kan slegs {{amount}} DHB onttrek word.",
     "early_withdrawal_fee": "Vroeë onttrekkingsfooi",
     "early_withdrawal_fee_detail": "Gesluit tot {{date}}. Om nou te onttrek kos {{percent}}% — ongeveer {{amount}} DHB. Druk weer Onttrek om te bevestig.",
     "unstaked_successfully": "Suksesvol onttrek! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB onttrek op {{chain}}.",
-    "not_enough_gas_token": "Jy het {{token}} in hierdie beursie nodig om die netwerkfooi te betaal.",
-    "unstake_failed": "Onttrekking misluk",
     "unstake_cancelled": "Onttrekking gekanselleer",
     "unstake_request_removed": "Jou onttrekkingsversoek is verwyder.",
     "failed_to_cancel": "Kon nie kanselleer nie",
@@ -1425,9 +1430,9 @@
     "minutesAgo": "{{count}}m gelede",
     "hoursAgo": "{{count}}u gelede",
     "daysAgo": "{{count}}d gelede",
+    "cancelUnstake": "Kanselleer onttrekking",
     "withdrawableNow": "Nou onttrekbaar",
-    "poolNotWithdrawable": "{{amount}} DHB is in die depositopoel-beursie, wat nog nie 'n onttrekkingskontrak het nie — kontak ondersteuning om dit te skuif.",
-    "cancelUnstake": "Kanselleer onttrekking"
+    "poolNotWithdrawable": "{{amount}} DHB is in die depositopoel-beursie, wat nog nie 'n onttrekkingskontrak het nie — kontak ondersteuning om dit te skuif."
   },
   "communities": {
     "title": "Gemeenskappe",
@@ -2706,8 +2711,6 @@
     "sellYourFractions": "Verkoop jou fraksies ({{held}} gehou)"
   },
   "creator": {
-    "toolFlow": "Skepperstroom",
-    "toolFlowDesc": "Ketting teks, verwysings, beeld en video modelle op 'n doek, hardloop dit in een betaling, deel dit met 'n skakel.",
     "whatToCreate": "Wat om te skep",
     "startCreatingWith": "Begin met skep met {{model}}",
     "studioSubtitle": "Beskryf 'n toneel, karakter, stemming of styl. Resultate verskyn hieronder en gaan direk in die redigeerder.",
@@ -3098,7 +3101,9 @@
     "noCreationsYet": "Nog geen AI-kreatiwiteite. Wees die eerste om een te genereer.",
     "aiGenerationAlt": "AI-generering",
     "aiGenerationCommunityAlt": "AI-generering van die DeHub-gemeenskap",
-    "close": "Sluit"
+    "close": "Sluit",
+    "toolFlow": "Skepperstroom",
+    "toolFlowDesc": "Ketting teks, verwysings, beeld en video modelle op 'n doek, hardloop dit in een betaling, deel dit met 'n skakel."
   },
   "pricing": {
     "plansForEveryWorkflow": "Planne vir elke werkstroom",
@@ -3967,98 +3972,6 @@
     "ctaBody": "Oorsprongterugval, versleutelde beskermde media en geverifieerde werk kom voor openbare nodus-belonings.",
     "footerNote": "DePin-deelname is 'n bydraediens, nie 'n beleggingsproduk nie. Beskikbaarheid, geskiktheid en belonings mag verander."
   },
-  "home": {
-    "title": "Volhoubare Web3-infrastruktuur",
-    "subtitle": "Bou die volgende generasie gedesentraliseerde toepassings.",
-    "decentralizedCloud": "Gedesentraliseerde Wolk",
-    "decentralizedCompute": "Gedesentraliseerde Berekening",
-    "decentralizedStorage": "Gedesentraliseerde Berging",
-    "buildOnDhobaverse": "Bou op Dhobaverse",
-    "ecosystem": "Ecosystem",
-    "dhobaverseEcosystem": "Dhobaverse Ecosystem",
-    "seeAll": "Sien alles",
-    "community": "Gemeenskap",
-    "communityHub": "Gemeenskapsentrum",
-    "latestNews": "Jongste Nuus",
-    "latestNewsAndUpdates": "Jongste nuus en opdaterings",
-    "loadMore": "Laai meer",
-    "subscribe": "Teken in",
-    "subscribeTitle": "Teken in op ons nuusbrief",
-    "subscribeDescription": "Ontvang die jongste nuus, opdaterings en aankondigings direk in jou inkassie.",
-    "subscribeButton": "Teken in",
-    "subscribeSuccess": "Dankie vir jou intekening!",
-    "subscribeError": "Daar was 'n probleem met jou intekening. Probeer asseblief weer.",
-    "emailPlaceholder": "Jou e-posadres",
-    "emailInvalid": "Voer asseblief 'n geldige e-posadres in.",
-    "emailRequired": "E-posadres is verpligtend."
-  },
-  "footer": {
-    "company": "Maatskappy",
-    "about": "Oor",
-    "contact": "Kontak",
-    "careers": "Loopbane",
-    "community": "Gemeenskap",
-    "discord": "Discord",
-    "twitter": "Twitter",
-    "telegram": "Telegram",
-    "github": "Github",
-    "legal": "Wettig",
-    "terms": "Voorwaardes",
-    "privacy": "Privaatheid",
-    "copyright": "Kopiereg © {year} Dhobaverse. Alle regte voorbehou."
-  },
-  "glossary": {
-    "title": "Woordelys",
-    "description": "Verstaan die terminologie rondom Dhobaverse.",
-    "searchPlaceholder": "Soek terme...",
-    "noResults": "Geen resultate gevind nie.",
-    "table": {
-      "term": "Term",
-      "definition": "Definisie"
-    },
-    "badges": {
-      "crab": "Krap",
-      "lobster": "Kreef",
-      "piranha": "Piranha",
-      "tortoise": "Skilpad",
-      "cobra": "Kobra",
-      "octopus": "Seekat",
-      "crocodite": "Krokodil",
-      "dolphin": "Dolfyn",
-      "tigerShark": "Tierhaai",
-      "killerWhale": "Moordwalvis",
-      "greatWhiteShark": "Grootwithaai",
-      "blueWhale": "Blouwalvis",
-      "meglodon": "Megalodon"
-    }
-  },
-  "docs": {
-    "title": "Dokumente",
-    "gettingStarted": "Aan die gang",
-    "apiReference": "API-verwysing",
-    "sdkReference": "SDK-verwysing",
-    "tutorials": "Tutoriale",
-    "faq": "Gereelde vrae"
-  },
-  "roadmap": {
-    "title": "Padkaart",
-    "description": "Kyk wat kom.",
-    "upcoming": "Komende",
-    "inProgress": "Aan die gang",
-    "completed": "Voltooi"
-  },
-  "featureRequests": {
-    "title": "Versoeke",
-    "description": "Stel 'n kenmerk voor of stem vir bestaande versoeke.",
-    "submitRequest": "Dien versoek in",
-    "vote": "Stem"
-  },
-  "create": {
-    "title": "Skep",
-    "description": "Skep iets nuuts.",
-    "newProject": "Nuwe projek",
-    "newPost": "Nuwe plasing"
-  },
   "creatorFlow": {
     "title": "Skepperstroom",
     "backToStudio": "Terug na Skepperstudio",
@@ -4272,5 +4185,97 @@
     "dubbed": "Dubbele klank",
     "preparing": "Voorbereiding van benoemde oudio...",
     "unavailable": "Dubbele klank is nie beskikbaar vir hierdie video nie."
+  },
+  "home": {
+    "title": "Volhoubare Web3-infrastruktuur",
+    "subtitle": "Bou die volgende generasie gedesentraliseerde toepassings.",
+    "decentralizedCloud": "Gedesentraliseerde Wolk",
+    "decentralizedCompute": "Gedesentraliseerde Berekening",
+    "decentralizedStorage": "Gedesentraliseerde Berging",
+    "buildOnDhobaverse": "Bou op Dhobaverse",
+    "ecosystem": "Ecosystem",
+    "dhobaverseEcosystem": "Dhobaverse Ecosystem",
+    "seeAll": "Sien alles",
+    "community": "Gemeenskap",
+    "communityHub": "Gemeenskapsentrum",
+    "latestNews": "Jongste Nuus",
+    "latestNewsAndUpdates": "Jongste nuus en opdaterings",
+    "loadMore": "Laai meer",
+    "subscribe": "Teken in",
+    "subscribeTitle": "Teken in op ons nuusbrief",
+    "subscribeDescription": "Ontvang die jongste nuus, opdaterings en aankondigings direk in jou inkassie.",
+    "subscribeButton": "Teken in",
+    "subscribeSuccess": "Dankie vir jou intekening!",
+    "subscribeError": "Daar was 'n probleem met jou intekening. Probeer asseblief weer.",
+    "emailPlaceholder": "Jou e-posadres",
+    "emailInvalid": "Voer asseblief 'n geldige e-posadres in.",
+    "emailRequired": "E-posadres is verpligtend."
+  },
+  "footer": {
+    "company": "Maatskappy",
+    "about": "Oor",
+    "contact": "Kontak",
+    "careers": "Loopbane",
+    "community": "Gemeenskap",
+    "discord": "Discord",
+    "twitter": "Twitter",
+    "telegram": "Telegram",
+    "github": "Github",
+    "legal": "Wettig",
+    "terms": "Voorwaardes",
+    "privacy": "Privaatheid",
+    "copyright": "Kopiereg © {year} Dhobaverse. Alle regte voorbehou."
+  },
+  "glossary": {
+    "title": "Woordelys",
+    "description": "Verstaan die terminologie rondom Dhobaverse.",
+    "searchPlaceholder": "Soek terme...",
+    "noResults": "Geen resultate gevind nie.",
+    "table": {
+      "term": "Term",
+      "definition": "Definisie"
+    },
+    "badges": {
+      "crab": "Krap",
+      "lobster": "Kreef",
+      "piranha": "Piranha",
+      "tortoise": "Skilpad",
+      "cobra": "Kobra",
+      "octopus": "Seekat",
+      "crocodite": "Krokodil",
+      "dolphin": "Dolfyn",
+      "tigerShark": "Tierhaai",
+      "killerWhale": "Moordwalvis",
+      "greatWhiteShark": "Grootwithaai",
+      "blueWhale": "Blouwalvis",
+      "meglodon": "Megalodon"
+    }
+  },
+  "docs": {
+    "title": "Dokumente",
+    "gettingStarted": "Aan die gang",
+    "apiReference": "API-verwysing",
+    "sdkReference": "SDK-verwysing",
+    "tutorials": "Tutoriale",
+    "faq": "Gereelde vrae"
+  },
+  "roadmap": {
+    "title": "Padkaart",
+    "description": "Kyk wat kom.",
+    "upcoming": "Komende",
+    "inProgress": "Aan die gang",
+    "completed": "Voltooi"
+  },
+  "featureRequests": {
+    "title": "Versoeke",
+    "description": "Stel 'n kenmerk voor of stem vir bestaande versoeke.",
+    "submitRequest": "Dien versoek in",
+    "vote": "Stem"
+  },
+  "create": {
+    "title": "Skep",
+    "description": "Skep iets nuuts.",
+    "newProject": "Nuwe projek",
+    "newPost": "Nuwe plasing"
   }
 }

@@ -1099,6 +1099,11 @@
     "failedSubmit": "Nie udało się wysłać zgłoszenia. Spróbuj ponownie."
   },
   "loginModal": {
+    "migrateNothingToRecover": "Na tym loginie nie ma wcześniejszego konta DeHub, więc nie ma co przynosić. Wróć do nowego konta, aby dokończyć konfigurację.",
+    "migrateUnmatchedWarning": "Ten login nie ma zarejestrowanego konta DeHub. Kontynuacja niczego nie odzyskuje — tworzy drugie konto z nową nazwą użytkownika i pozostawia to, które już masz za sobą.",
+    "migrateUnmatchedDetail": "Pod tym adresem portfela nie istnieje żaden profil. Jeśli logowałeś się ponownie, wróć i użyj loginu, którego użyłeś.",
+    "migrateGoBack": "Wróć",
+    "migrateContinueAnyway": "Mimo to utwórz nowe konto",
     "title": "Zaloguj się",
     "addProfileTitle": "Dodaj profil",
     "continueEmail": "Kontynuuj przez e-mail",
@@ -1482,13 +1487,13 @@
     "only_have_dhb_staked": "Masz wpłacone tylko {{amount}}.",
     "unstake_request_submitted": "Prośba o wypłatę wysłana! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} dodano do kolejki wypłat.",
+    "not_enough_gas_token": "Potrzebujesz {{token}} w tym portfelu, aby zapłacić opłatę sieciową.",
+    "unstake_failed": "Wypłata nie powiodła się",
     "only_have_dhb_withdrawable": "W tej chwili można wypłacić tylko {{amount}} DHB.",
     "early_withdrawal_fee": "Opłata za wcześniejszą wypłatę",
     "early_withdrawal_fee_detail": "Zablokowane do {{date}}. Wypłata teraz kosztuje {{percent}}% — około {{amount}} DHB. Naciśnij Wypłać ponownie, aby potwierdzić.",
     "unstaked_successfully": "Wypłacono pomyślnie! ✅",
     "dhb_unstaked_on_chain": "Wypłacono {{amount}} DHB w sieci {{chain}}.",
-    "not_enough_gas_token": "Potrzebujesz {{token}} w tym portfelu, aby zapłacić opłatę sieciową.",
-    "unstake_failed": "Wypłata nie powiodła się",
     "unstake_cancelled": "Wypłata anulowana",
     "unstake_request_removed": "Twoja prośba o wypłatę została usunięta.",
     "failed_to_cancel": "Nie udało się anulować",
@@ -1564,9 +1569,9 @@
     "minutesAgo": "{{count}} min temu",
     "hoursAgo": "{{count}} godz. temu",
     "daysAgo": "{{count}} dni temu",
+    "cancelUnstake": "Anuluj wypłatę",
     "withdrawableNow": "Dostępne do wypłaty",
-    "poolNotWithdrawable": "{{amount}} DHB znajduje się w portfelu puli depozytów, który nie ma jeszcze kontraktu wypłat — skontaktuj się z pomocą techniczną, aby je przenieść.",
-    "cancelUnstake": "Anuluj wypłatę"
+    "poolNotWithdrawable": "{{amount}} DHB znajduje się w portfelu puli depozytów, który nie ma jeszcze kontraktu wypłat — skontaktuj się z pomocą techniczną, aby je przenieść."
   },
   "communities": {
     "title": "Społeczności",
@@ -2858,8 +2863,6 @@
     "sellYourFractions": "Sprzedaj swoje ułamki ({{held}} zatrzymane)"
   },
   "creator": {
-    "toolFlow": "Przepływ twórcy",
-    "toolFlowDesc": "Łańcuchowy tekst, referencje, modele obrazu i wideo na płótnie, uruchom je w jednej płatności, udostępnij za pomocą linku.",
     "whatToCreate": "Co utworzyć",
     "startCreatingWith": "Zacznij tworzyć z {{model}}",
     "studioSubtitle": "Opisz scenę, postać, nastrój lub styl. Wyniki pojawią się poniżej i przejdą bezpośrednio do edytora.",
@@ -3254,7 +3257,9 @@
     "noCreationsYet": "Brak jeszcze kreacji AI. Bądź pierwszy, który ją wygeneruje.",
     "aiGenerationAlt": "Generowanie AI",
     "aiGenerationCommunityAlt": "Generowanie AI ze społeczności DeHub",
-    "close": "Zamknij"
+    "close": "Zamknij",
+    "toolFlow": "Przepływ twórcy",
+    "toolFlowDesc": "Łańcuchowy tekst, referencje, modele obrazu i wideo na płótnie, uruchom je w jednej płatności, udostępnij za pomocą linku."
   },
   "pricing": {
     "plansForEveryWorkflow": "Plany dla każdego przepływu pracy",
@@ -4126,74 +4131,6 @@
     "ctaBody": "Przełączanie awaryjne pochodzenia, zaszyfrowana zawartość chroniona i zweryfikowana praca mają pierwszeństwo przed nagrodami węzłów publicznych.",
     "footerNote": "Uczestnictwo w DePin to usługa wkładu, a nie produkt inwestycyjny. Dostępność, uprawnienia i nagrody mogą się zmienić."
   },
-  "glossary": {
-    "title": "Słownik",
-    "description": "Definicje i wyjaśnienia terminów używanych w aplikacji.",
-    "searchPlaceholder": "Szukaj terminów...",
-    "noResults": "Nie znaleziono terminów pasujących do wyszukiwania.",
-    "table": {
-      "term": "Termin",
-      "definition": "Definicja"
-    },
-    "badges": {
-      "title": "Odznaki",
-      "description": "Odznaki stakingowe są białe, aby lepiej pasowały do motywu.",
-      "tiers": [
-        {
-          "name": "Krab",
-          "min": 10000
-        },
-        {
-          "name": "Homar",
-          "min": 25000
-        },
-        {
-          "name": "Pirania",
-          "min": 50000
-        },
-        {
-          "name": "Żółw",
-          "min": 100000
-        },
-        {
-          "name": "Kobra",
-          "min": 250000
-        },
-        {
-          "name": "Ośmiornica",
-          "min": 500000
-        },
-        {
-          "name": "Krokodyl",
-          "min": 1000000
-        },
-        {
-          "name": "Delfin",
-          "min": 2000000
-        },
-        {
-          "name": "Rekin Tygrysi",
-          "min": 3000000
-        },
-        {
-          "name": "Orka",
-          "min": 5000000
-        },
-        {
-          "name": "Rekin Biały",
-          "min": 10000000
-        },
-        {
-          "name": "Płetwal Błękitny",
-          "min": 25000000
-        },
-        {
-          "name": "Megalodon",
-          "min": 50000000
-        }
-      ]
-    }
-  },
   "creatorFlow": {
     "title": "Creator Flow",
     "backToStudio": "Powrót do Creator Studio",
@@ -4409,5 +4346,73 @@
     "dubbed": "Dźwięk dubbingowany",
     "preparing": "Przygotowywanie dubbingowanego dźwięku…",
     "unavailable": "Dźwięk dubbingowany nie jest dostępny dla tego filmu."
+  },
+  "glossary": {
+    "title": "Słownik",
+    "description": "Definicje i wyjaśnienia terminów używanych w aplikacji.",
+    "searchPlaceholder": "Szukaj terminów...",
+    "noResults": "Nie znaleziono terminów pasujących do wyszukiwania.",
+    "table": {
+      "term": "Termin",
+      "definition": "Definicja"
+    },
+    "badges": {
+      "title": "Odznaki",
+      "description": "Odznaki stakingowe są białe, aby lepiej pasowały do motywu.",
+      "tiers": [
+        {
+          "name": "Krab",
+          "min": 10000
+        },
+        {
+          "name": "Homar",
+          "min": 25000
+        },
+        {
+          "name": "Pirania",
+          "min": 50000
+        },
+        {
+          "name": "Żółw",
+          "min": 100000
+        },
+        {
+          "name": "Kobra",
+          "min": 250000
+        },
+        {
+          "name": "Ośmiornica",
+          "min": 500000
+        },
+        {
+          "name": "Krokodyl",
+          "min": 1000000
+        },
+        {
+          "name": "Delfin",
+          "min": 2000000
+        },
+        {
+          "name": "Rekin Tygrysi",
+          "min": 3000000
+        },
+        {
+          "name": "Orka",
+          "min": 5000000
+        },
+        {
+          "name": "Rekin Biały",
+          "min": 10000000
+        },
+        {
+          "name": "Płetwal Błękitny",
+          "min": 25000000
+        },
+        {
+          "name": "Megalodon",
+          "min": 50000000
+        }
+      ]
+    }
   }
 }
