@@ -11,7 +11,7 @@ export const leavingYoutubePost: BlogPostType = {
 
 This is the YouTube-specific companion to our guides on [leaving TikTok](/guides/creators-guide-leaving-tiktok) and [leaving Instagram](/guides/creators-guide-leaving-instagram). The pattern is the same everywhere. The specifics below are the ones that actually bite YouTubers.
 
-![Rules change under you — demonetised without notice, on uploads that were years old](/lovable-uploads/fig-youtube-rules-change.jpg)
+![Rules change under you — demonetised without notice, on uploads that were years old](/media/fig-youtube-rules-change.jpg)
 
 ## The YouTube-specific problems
 
@@ -61,7 +61,7 @@ Earnings settle in DHB, primarily on Base, an Ethereum Layer 2, with contracts o
 
 If you stream, DeHub's live streaming runs on Livepeer, has scaled past 50,000 concurrent viewers, and tips land directly rather than being clipped on the way through. Our [Web3 live streaming guide](/guides/web3-live-streaming-decentralised-twitch-alternative) compares that against the incumbents properly.
 
-![Keep the channel — migrate without losing it, and own the archive yourself](/lovable-uploads/fig-youtube-keep-the-channel.jpg)
+![Keep the channel — migrate without losing it, and own the archive yourself](/media/fig-youtube-keep-the-channel.jpg)
 
 ## How to migrate a YouTube channel without losing it
 
@@ -96,7 +96,7 @@ No. Nothing in YouTube's terms prevents publishing the same work elsewhere, and 
 ### Does DeHub work for long-form video, or just short clips?
 
 Both. The platform carries long-form video, shorts, music, live streaming, images and text, and the monetisation options — free, pay-per-view, token-gated, watch-to-earn — apply per upload regardless of length.`,
-  bannerImage: '/lovable-uploads/creators-guide-leaving-youtube-banner.png',
+  bannerImage: '/media/creators-guide-leaving-youtube-banner.png',
   bannerImageAlt: 'A creator moving from YouTube to a Web3 platform they own on DeHub',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-08-27T12:00:00.000Z',

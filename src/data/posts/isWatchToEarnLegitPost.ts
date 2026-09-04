@@ -111,7 +111,7 @@ The best options share three traits: no purchase to start, on-chain-verifiable r
 
 Yes, and you should insist on it. Genuine watch to earn without buying anything lets you create an account and start earning with zero up-front spend. If a platform requires an NFT, a starter pack or a minimum token balance before you can earn, that up-front purchase is the real business and the "earning" is secondary.
 `,
-  bannerImage: '/lovable-uploads/is-watch-to-earn-legit-banner.png',
+  bannerImage: '/media/is-watch-to-earn-legit-banner.png',
   bannerImageAlt: 'A viewer weighing up whether watch-to-earn crypto rewards are legitimate on the DeHub decentralised social network',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-05-21T16:20:00.000Z',

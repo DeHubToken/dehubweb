@@ -122,7 +122,7 @@ No. DeHub at dehub.io is a Web3 decentralised social network for creators. It is
 ### Are crypto earnings from DeHub taxable in the UK?
 
 Generally, yes. HMRC treats crypto income and capital gains under existing tax rules, and the specifics depend on how you earn and dispose of tokens. Keep accurate records of your earnings and take professional advice for your circumstances, exactly as you would with any other self-employed creator income.`,
-  bannerImage: '/lovable-uploads/uk-creators-guide-leaving-tiktok-banner.png',
+  bannerImage: '/media/uk-creators-guide-leaving-tiktok-banner.png',
   bannerImageAlt: 'A UK creator moving from TikTok to a Web3 platform they own on DeHub',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-04-23T11:00:00.000Z',

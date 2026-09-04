@@ -21,7 +21,7 @@ Meanwhile, athlete-hosted shows — the Kelce brothers, Draymond Green, Angel Re
 
 Note what that sentence implies for the league as well as the marketer.
 
-![The moat moved — distribution is not the asset, the direct relationship with the fan is](/lovable-uploads/fig-athlete-moat-moved.jpg)
+![The moat moved — distribution is not the asset, the direct relationship with the fan is](/media/fig-athlete-moat-moved.jpg)
 
 ## Distribution was never the moat
 
@@ -51,7 +51,7 @@ Applied to sport, three things follow that are not available on a conventional p
 
 **The monetisation is per-piece.** Free, pay-per-view, or token-gated, decided upload by upload. A league does not have to choose between "everything behind the rights deal" and "everything free for reach". Access tiers become an editorial decision rather than a contractual one.
 
-![Who owns the fan? — the ownership question written into the contract](/lovable-uploads/fig-athlete-who-owns-the-fan.jpg)
+![Who owns the fan? — the ownership question written into the contract](/media/fig-athlete-who-owns-the-fan.jpg)
 
 ## The clause worth writing instead
 
@@ -90,7 +90,7 @@ It would not — which is the point. The alternative currently on offer is athle
 ### What is the realistic first step for a league or club?
 
 Treat the athlete's channel as an asset in the next contract rather than a risk in the current one, and run one properly resourced pilot with a small group of players — owned, measured, and with the split written down. The finding you are looking for is how much of the fan relationship you can hold directly, not how much content you can produce.`,
-  bannerImage: '/lovable-uploads/athlete-is-becoming-a-media-platform-banner.png',
+  bannerImage: '/media/athlete-is-becoming-a-media-platform-banner.png',
   bannerImageAlt: 'An athlete as a media property, with the fan relationship owned rather than licensed',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-08-28T10:00:00.000Z',

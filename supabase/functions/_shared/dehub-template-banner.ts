@@ -16,7 +16,7 @@
 // masks and filters here). Keep them in sync.
 //
 // Assets live in the repo under public/brand-kit/ and are fetched from the
-// deployed site at runtime (same origin as /lovable-uploads, which serves real
+// deployed site at runtime (same origin as /media, which serves real
 // static files — NOT the __l5e asset.json paths that fall back to SPA HTML).
 
 import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";

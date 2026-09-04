@@ -42,7 +42,7 @@ We're proud of what the team and community have achieved to earn this attention,
 
 **Bring on the next headline.**
   `,
-  bannerImage: '/lovable-uploads/dehub-featured-in-press-banner.png',
+  bannerImage: '/media/dehub-featured-in-press-banner.png',
   bannerImageAlt: 'DeHub featured in the press — US Weekly, Yahoo Finance, Entrepreneur and Investing.com',
   author: {
     name: 'DeHub Team',

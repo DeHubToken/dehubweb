@@ -101,7 +101,7 @@ Yes — the code is public under the [DeHubToken organization on GitHub](https:/
 ### Where can I follow DeHub?
 On DeHub itself at [dehub.io](https://dehub.io), on X at [@dehub_official](https://x.com/dehub_official), and on [Telegram](https://t.me/dehub_dhb).
   `,
-  bannerImage: '/lovable-uploads/what-is-dehub-banner.png',
+  bannerImage: '/media/what-is-dehub-banner.png',
   bannerImageAlt: 'DeHub — the open source, user-owned social platform for creators and communities',
   author: {
     name: 'DeHub Team',

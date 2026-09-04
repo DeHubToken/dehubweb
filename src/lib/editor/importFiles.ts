@@ -1,6 +1,6 @@
 /**
  * Shared file-import helper. Imports OS files into the media library,
- * persists to IndexedDB (fast local cache) AND uploads to Lovable Cloud
+ * persists to IndexedDB (fast local cache) AND uploads to cloud storage
  * so the library survives across devices, subject to badge-tier quotas.
  */
 import { toast } from "sonner";

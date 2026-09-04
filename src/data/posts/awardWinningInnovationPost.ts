@@ -19,7 +19,7 @@ export const awardWinningInnovationPost: BlogPostType = {
     
     <p class="mt-8 font-semibold text-royal-blue">The London awards ceremony is on the 27th of August, and we'd like to extend an invitation to whoever nominated us for this amazing prize. Please reach out to us via any social media, community group, or by direct email to <a href="mailto:marketing@dehub.net" class="text-middle-blue hover:underline">marketing@dehub.net</a>. A special thanks to you for making this journey more fruitful every day.</p>
   `,
-  bannerImage: '/lovable-uploads/b4d253e4-ae5a-4160-96bd-7c691a56e2f9.png',
+  bannerImage: '/media/b4d253e4-ae5a-4160-96bd-7c691a56e2f9.png',
   bannerImageAlt: 'Corporate LiveWire Innovation & Excellence Awards 2023 Winner badge.',
   author: {
     name: 'DeHub Team',

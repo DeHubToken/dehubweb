@@ -8,7 +8,7 @@ import openaiLogo from "@/assets/ai-logos/openai.png";
 
 const APP_URL =
   "https://chatgpt.com/apps#settings/Connectors?connector=asdk_app_6a4962fb2cdc8191afcda7ca74b6082c";
-// Canonical + OG must live on dehub.io — pointing them at the Lovable mirror
+// Canonical + OG must live on dehub.io — pointing them at a preview mirror
 // told Google the staging host was the real page.
 const PAGE_URL = "https://dehub.io/connect/chatgpt";
 const OG_IMAGE = "https://dehub.io" + ogImage;

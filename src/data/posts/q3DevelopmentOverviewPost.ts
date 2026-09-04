@@ -186,7 +186,7 @@ Mobile cut v1.15.0 ([mobile #166](https://github.com/DeHubToken/dehub-mobile/pul
 
 The quarter is not over, and neither is the list. Q4 continues exactly where this leaves off: more stages, more arcade, deeper economy — shipped in the open, as always.
   `,
-  bannerImage: '/lovable-uploads/q3-development-overview-banner.png',
+  bannerImage: '/media/q3-development-overview-banner.png',
   bannerImageAlt: 'Q3 Development Overview - DeHub rocket banner',
   author: {
     name: 'DeHub Team',

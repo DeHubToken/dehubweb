@@ -25,7 +25,7 @@ But be clear about what kind of money it is. Revenue share is compensation for p
 
 A wage is not an asset. You can earn a lot of money and own nothing, and athletes have been doing exactly that for a century.
 
-![A wage, not an asset — NIL pays while you play and stops when you do](/lovable-uploads/fig-nil-wage-not-asset.jpg)
+![A wage, not an asset — NIL pays while you play and stops when you do](/media/fig-nil-wage-not-asset.jpg)
 
 ## What an asset looks like
 
@@ -63,7 +63,7 @@ This is the part where most articles wave vaguely, so: NIL rules vary by state, 
 
 Talk to your compliance office before you monetise anything, and keep records. The build-an-audience part — posting, publishing, owning your work — is not the part that creates compliance risk. Getting paid is. Do that deliberately.
 
-![Eligibility ends, the audience does not — the five-year view of an athlete’s media career](/lovable-uploads/fig-nil-eligibility-ends.jpg)
+![Eligibility ends, the audience does not — the five-year view of an athlete’s media career](/media/fig-nil-eligibility-ends.jpg)
 
 ## The five-year version
 
@@ -98,7 +98,7 @@ No. You can sign in with Google, Apple, email or SMS and a wallet is created for
 ### Should I stop posting on Instagram and TikTok?
 
 No. They are where your reach is and you should keep using them. The argument is to stop depending on them exclusively — treat them as discovery and build a home base you actually own alongside.`,
-  bannerImage: '/lovable-uploads/nil-ends-your-audience-does-not-banner.png',
+  bannerImage: '/media/nil-ends-your-audience-does-not-banner.png',
   bannerImageAlt: 'A college athlete building an audience that outlasts NIL eligibility',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-08-28T12:00:00.000Z',

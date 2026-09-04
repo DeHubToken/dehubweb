@@ -11,7 +11,7 @@ const AIToolkits = () => {
     <div className="space-y-8">
       <div>
         <h2 className="text-3xl font-bold text-foreground mb-4 font-exo">{t('aiToolkits.title')}</h2>
-        <OptimizedImage src="/lovable-uploads/305d0557-94f8-46fe-b44e-b6b3a810d434.png" alt="DeHub AI interface showing tools and chat bot functionality" className="w-full rounded-lg shadow-lg mb-6" />
+        <OptimizedImage src="/media/305d0557-94f8-46fe-b44e-b6b3a810d434.png" alt="DeHub AI interface showing tools and chat bot functionality" className="w-full rounded-lg shadow-lg mb-6" />
         <p className="text-lg text-muted-foreground leading-relaxed">{t('aiToolkits.subtitle')}</p>
       </div>
 

@@ -13,7 +13,7 @@ This is the country-agnostic version of our [UK creator guide to leaving TikTok]
 
 DeHub is an independent DAO, co-founded by Mike Hales and Indi Jay Cammish, who also built First Class Agency, the United Kingdom's number-one official TikTok LIVE partner agency with more than 1,200 live streamers on its books. The people behind this platform spent years inside TikTok's monetisation machine. That is why this guide is specific about where the money goes rather than vague about it.
 
-![You do not own these — the account, the audience and the income are all TikTok’s to withdraw](/lovable-uploads/fig-tiktok-not-yours.jpg)
+![You do not own these — the account, the audience and the income are all TikTok’s to withdraw](/media/fig-tiktok-not-yours.jpg)
 
 ## The three things you do not own
 
@@ -31,7 +31,7 @@ The change worth making is structural. On [DeHub, the decentralised social netwo
 
 If the whole category is new to you, our explainer on [decentralised social media](/guides/decentralised-social-media-explained-uk) covers the mechanics without the jargon, and our roundup of [the best decentralised social platforms in 2026](/guides/best-decentralised-social-media-platforms-2026) puts DeHub next to its peers.
 
-![Paid from view one — no creator fund, no follower threshold, up to a 90% revenue share](/lovable-uploads/fig-tiktok-paid-from-view-one.jpg)
+![Paid from view one — no creator fund, no follower threshold, up to a 90% revenue share](/media/fig-tiktok-paid-from-view-one.jpg)
 
 ## What changes about the money
 
@@ -90,7 +90,7 @@ Your uploads are minted on-chain to your wallet, so the ownership record does no
 ### Is DeHub only for crypto creators?
 
 No. Payouts settle in crypto, but the content does not have to be about crypto — the platform carries video, music, live streaming, images and text posts across every category. The token is the payment rail, not the subject matter.`,
-  bannerImage: '/lovable-uploads/creators-guide-leaving-tiktok-banner.png',
+  bannerImage: '/media/creators-guide-leaving-tiktok-banner.png',
   bannerImageAlt: 'A creator moving from TikTok to a Web3 platform they own on DeHub',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-08-27T11:00:00.000Z',

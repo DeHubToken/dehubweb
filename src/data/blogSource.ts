@@ -23,11 +23,11 @@ const applyPostOverrides = (post: BlogPost): BlogPost => {
   const newPost = { ...post };
 
   if (post.slug === '1-million-dollar-raise-completed') {
-    newPost.bannerImage = '/lovable-uploads/bdd1dd4c-eb62-44e7-a205-fced995bdf9f.png';
+    newPost.bannerImage = '/media/bdd1dd4c-eb62-44e7-a205-fced995bdf9f.png';
     newPost.bannerImageAlt = '$1,000,000 Fundraise';
     newPost.featured = true;
   } else if (post.slug === 'get-ready-players-final-snapshot-for-last-chad-standing-airdrop---a-dehub-milestone-from-q2-2025') {
-    newPost.bannerImage = '/lovable-uploads/6d868478-769e-4981-b285-4ca5fa215dc5.png';
+    newPost.bannerImage = '/media/6d868478-769e-4981-b285-4ca5fa215dc5.png';
     newPost.bannerImageAlt = 'Last Chad Standing helicopter';
     newPost.publishedAt = '2025-04-01T10:00:00.000Z';
     newPost.readingTime = 5;
@@ -45,7 +45,7 @@ The market is ripe for disruption. Recent trends show a massive surge in the glo
 
 This confluence of factors creates a unique window of opportunity for a game that gets it right.
 
-![Last Chad Standing gameplay screenshot](/lovable-uploads/6d868478-769e-4981-b285-4ca5fa215dc5.png)
+![Last Chad Standing gameplay screenshot](/media/6d868478-769e-4981-b285-4ca5fa215dc5.png)
 
 ### Why Us? The Team Forged in Success
 
@@ -83,23 +83,23 @@ To ensure you qualify, hold or stake your assets before the deadline and until y
 
 Stay tuned, and get ready to play. The arena awaits.`;
   } else if (post.slug === 'main-event-ready-last-chad-standing-full-trailer-gains-mma-promoter-attention---a-dehub-milestone-from-q1-2025') {
-    newPost.bannerImage = '/lovable-uploads/b632bee7-0228-48be-b4ac-7ac0ab5e9994.png';
+    newPost.bannerImage = '/media/b632bee7-0228-48be-b4ac-7ac0ab5e9994.png';
     newPost.bannerImageAlt = 'Last Chad Standing character helmet';
   } else if (post.slug === 'fresh-experience-revamped-app-feed-with-audio-replies--live-talk-spaces---a-dehub-milestone-from-q2-2025') {
-    newPost.bannerImage = '/lovable-uploads/eeb2e5c9-2347-4865-876e-31f38fe4412a.png';
+    newPost.bannerImage = '/media/eeb2e5c9-2347-4865-876e-31f38fe4412a.png';
     newPost.bannerImageAlt = 'DeHub Revamped App Feed';
     newPost.publishedAt = '2025-05-03T10:00:00.000Z';
   } else if (post.slug === 'transparency-hub-dhbscancom-launches-for-contract-activity-tracking---a-dehub-milestone-from-q2-2025') {
-    newPost.bannerImage = '/lovable-uploads/a6f93bd4-c3f4-4d91-abd9-ebdd88e3b884.png';
+    newPost.bannerImage = '/media/a6f93bd4-c3f4-4d91-abd9-ebdd88e3b884.png';
     newPost.bannerImageAlt = 'DHBScan.com banner';
   } else if (post.slug === 'community-champions-ugc-ambassadorship-program-launched---a-dehub-milestone-from-q2-2025') {
-    newPost.bannerImage = '/lovable-uploads/443805df-744b-4ab4-80a7-ae59cafe8baa.png';
+    newPost.bannerImage = '/media/443805df-744b-4ab4-80a7-ae59cafe8baa.png';
     newPost.bannerImageAlt = 'DeHub UGC Programme banner';
     newPost.publishedAt = '2025-05-10T10:00:00.000Z';
     newPost.readingTime = 5;
     newPost.content = `## Become a DeHub Ambassador: Announcing Our UGC Programme
 
-![DeHub UGC Programme Banner](/lovable-uploads/59b8a8cb-c9c7-412e-b51e-8f68b47d73a0.png)
+![DeHub UGC Programme Banner](/media/59b8a8cb-c9c7-412e-b51e-8f68b47d73a0.png)
 
 ### What is the UGC Programme?
 
@@ -146,7 +146,7 @@ Stay tuned for announcements about our selected ambassadors and future opportuni
 
 [TEAM_SECTION_START]
 ### Malik Jan - Co-Founder
-![Malik Jan|avatar](/lovable-uploads/361bb373-38ee-4888-a4b1-ab8239941261.png)
+![Malik Jan|avatar](/media/361bb373-38ee-4888-a4b1-ab8239941261.png)
 Full stack web and blockchain developer, building AI business solutions at Pixcellor, former senior consultant at Randstad, scaled DeHub to a £250m market cap peak with a near $10m liquidity pool and $2m year 1 revenue.
 
 **Key Experience:**
@@ -156,7 +156,7 @@ Full stack web and blockchain developer, building AI business solutions at Pixce
 - ITS Construction: Sussex Regional Manager at leading UK construction agency. Built own office from scratch and turned 0 into $5k per week in less than 8 months, signed PSL with UK's most prestigious builder Berkeley Homes, won exclusive supplier at $100bn Horsham project, Highwood.
 
 ### Mike Hales - Co-Founder
-![Mike Hales|avatar](/lovable-uploads/4cc7ad51-0d4d-49fd-9307-b932b6dc7246.png)
+![Mike Hales|avatar](/media/4cc7ad51-0d4d-49fd-9307-b932b6dc7246.png)
 Founder and CEO of Rapz, a notable high end MMA fightwear brand backed by top UFC and boxing stars, with exclusive supplier rights to BKFC. Joint-owner of First Class, the UK's largest TikTok partner agency, approaching 1000 streamers signed on and reporting directly for the in-house executive team with offices in the UK and Asia.
 
 **Key Experience:**
@@ -165,7 +165,7 @@ Founder and CEO of Rapz, a notable high end MMA fightwear brand backed by top UF
 - Owner of the UK's leading cobra bag provider that recently merged with NGNE
 
 ### Indi Jay Cammish - Co-Founder
-![Indi Jay Cammish|avatar](/lovable-uploads/e06bb6aa-5093-4691-98a1-7bf09b02a71d.png)
+![Indi Jay Cammish|avatar](/media/e06bb6aa-5093-4691-98a1-7bf09b02a71d.png)
 Social media, content & dance expert overseeing communications & corporate relations.
 
 **Key Experience:**
@@ -174,7 +174,7 @@ Social media, content & dance expert overseeing communications & corporate relat
 - Co-founder of First Class, the UK's leading TikTok partner agency
 
 ### Bailey Young - Co-Founder
-![Bailey Young|avatar](/lovable-uploads/980e65e0-cae8-4ed4-86da-c11e3d42fa69.png)
+![Bailey Young|avatar](/media/980e65e0-cae8-4ed4-86da-c11e3d42fa69.png)
 Operational powerhouse and former pro-gamer heavily connected across the gaming, music & entertainment scene.
 
 **Key Experience:**
@@ -185,7 +185,7 @@ Operational powerhouse and former pro-gamer heavily connected across the gaming,
   } else if (post.slug === '2022-wrap-up-and-2023-lookahead') {
     newPost.title = '2022 Wrap Up';
     newPost.status = 'published';
-    newPost.bannerImage = '/lovable-uploads/54bc3062-44f0-456b-8183-c916d4cef34e.png';
+    newPost.bannerImage = '/media/54bc3062-44f0-456b-8183-c916d4cef34e.png';
     newPost.bannerImageAlt = 'DeHub 2022 Wrap-Up with fireworks';
     newPost.publishedAt = '2023-01-04T10:00:00.000Z';
     newPost.tags = ['2022', '2023', 'Recap'];
@@ -359,7 +359,7 @@ As we rapidly enter the middle age of our development stages, we will no longer 
   } else if (post.slug === 'the-vision-unfolds-alpha-launch-of-dehubs-integrated-dapp---a-dehub-milestone-from-q1-2023') {
     newPost.title = "The Vision Unfolds: Test Beta Launch of the DeHub d'App";
     newPost.publishedAt = '2023-01-16T10:00:00.000Z';
-    newPost.bannerImage = '/lovable-uploads/c1cb14e2-cd34-452e-99c2-ad402724885e.png';
+    newPost.bannerImage = '/media/c1cb14e2-cd34-452e-99c2-ad402724885e.png';
     newPost.bannerImageAlt = 'DeHub D\'App Test Beta Launch';
     newPost.content = `To start, we've listed all the functions available to test in this stage of the private beta. The rest will be available in the coming days to weeks prior to public launch but as you can see, we're through the bulk of the developments and all but complete! Thank you for taking the time to test the d'app and we look forward to receiving all feedback publicly and privately to tech@dehub.net.
 
@@ -389,11 +389,11 @@ Enjoy you awesome bunch of "test bunny cyborg soldiers"
 #### Metamask screenshots
 Here are some screenshots to guide you through adding the BSC Testnet to Metamask.
 
-![Network selection screen in Metamask](/lovable-uploads/497b20de-3089-4bcb-88bd-25977bb1df91.png)
+![Network selection screen in Metamask](/media/497b20de-3089-4bcb-88bd-25977bb1df91.png)
 
-![Add a network manually in Metamask](/lovable-uploads/31964a4b-c6ab-4fd9-8f3b-2bdd248ae0e8.png)
+![Add a network manually in Metamask](/media/31964a4b-c6ab-4fd9-8f3b-2bdd248ae0e8.png)
 
-![Where to input data for a new network in Metamask](/lovable-uploads/0c109c6c-884b-4714-b370-014a04e98a3b.png)
+![Where to input data for a new network in Metamask](/media/0c109c6c-884b-4714-b370-014a04e98a3b.png)
 
 ### Test D'app Functions
 
@@ -406,7 +406,7 @@ Here are some screenshots to guide you through adding the BSC Testnet to Metamas
 - Options for Pay-Per-View is now live for DHB — soon to be any token
 - Bounty option available to test although not fully coded yet
 
-![Upload page screenshot](/lovable-uploads/07501ace-5c3e-45af-a6aa-d5aa644e62f3.png)
+![Upload page screenshot](/media/07501ace-5c3e-45af-a6aa-d5aa644e62f3.png)
 
 #### Explore page
 [http://146.190.110.37:3000/explore](http://146.190.110.37:3000/explore)
@@ -414,7 +414,7 @@ Here are some screenshots to guide you through adding the BSC Testnet to Metamas
 - Community live disabled
 - Leaderboards disabled
 
-![Explore page screenshot](/lovable-uploads/7d385a29-3f3d-47b8-a32c-286cf1e0811c.png)
+![Explore page screenshot](/media/7d385a29-3f3d-47b8-a32c-286cf1e0811c.png)
 
 #### Content viewing page
 [http://146.190.110.37:3000/stream_detail](http://146.190.110.37:3000/stream_detail)
@@ -430,12 +430,12 @@ Here are some screenshots to guide you through adding the BSC Testnet to Metamas
 - View all your uploads & landing video
 - Link all your socials and get ready for public launch
 
-![User profile page screenshot](/lovable-uploads/4946bd10-f86b-4826-ba9d-ff15cd6fa480.png)
+![User profile page screenshot](/media/4946bd10-f86b-4826-ba9d-ff15cd6fa480.png)
 
 ### How to token gate content
 On video upload screen, find the highlighted tab above and enter the test contract address for DHB \`0x06EdA7889330031a8417f46e4C771C628c0b6418\` in the input box labelled "contract address" (a search option will be available on launch).
 
-![How to token gate content](/lovable-uploads/c4ff57d8-062e-4d49-ad75-a6672d6be271.png)
+![How to token gate content](/media/c4ff57d8-062e-4d49-ad75-a6672d6be271.png)
 
 On the box labelled "Amount" enter the required amount of tokens this viewing requires.
 Press upload / Mint NFT and wait for the transaction to pop up in your wallet.
@@ -447,7 +447,7 @@ Locked content will soon be opened up to any token across any EVM compatible cha
 Find the highlighted tab on the video upload page.
 Enter the contract address \`0x06EdA7889330031a8417f46e4C771C628c0b6418\` in the input box labelled "contract address" (a search option will be available on launch).
 
-![How to create a PPV](/lovable-uploads/c57e3c3d-15f6-4c57-b2ab-3a41a17badad.png)
+![How to create a PPV](/media/c57e3c3d-15f6-4c57-b2ab-3a41a17badad.png)
 
 On the input box labelled amount, enter the fee you wish to charge for each time a viewer unlocks the content.
 Press upload / Mint NFT and wait for the transaction to pop up in your wallet.
@@ -459,7 +459,7 @@ Pay per view currencies will be limited to BUSD and DHB initially and opened up 
 Find the highlighted tab on the video upload page.
 Enter the contract address \`0x06EdA7889330031a8417f46e4C771C628c0b6418\` in the input box labelled "contract address" (a search option will be available on launch).
 
-![How to add a bounty](/lovable-uploads/73f87ac0-85d4-4bbe-849e-b73db8839967.png)
+![How to add a bounty](/media/73f87ac0-85d4-4bbe-849e-b73db8839967.png)
 
 In the input box labelled "First X Viewers", X represents the number of viewers you wish to reward. With X being 100, your first 100 viewers will be rewarded your subsequently chosen amount of tokens in the last input box in this tab.
 In the input box labelled "First X comments" X represents the number of commenters you wish to reward. If X was 100, your first 100 commenters will be rewarded your subsequently chosen amount of tokens in the last input box in this tab. Only those who watch at least 50% of the video will be able to comment. This fits with our ethos of commenting on subjects you know little to nothing about.
@@ -614,7 +614,7 @@ This AMA covered a lot of ground, and we're excited for what's to come. Stay tun
     newPost.publishedAt = '2024-12-13T10:00:00.000Z';
   } else if (post.title.startsWith("Interactive Streaming: On-Chain Live Streams with Animated Tips")) {
     newPost.publishedAt = '2025-03-10T10:00:00.000Z';
-    newPost.bannerImage = '/lovable-uploads/a6275c3d-1dab-43a4-9362-93dd9d96f41c.png';
+    newPost.bannerImage = '/media/a6275c3d-1dab-43a4-9362-93dd9d96f41c.png';
     newPost.bannerImageAlt = 'DeHub Live Streaming logo';
   }
   
@@ -688,7 +688,7 @@ With our streaming d'app release, we do have a number of new ways users can earn
 During our sale, new community growth tool release and documentary trailer, we came under a strong bot attack on all channels, so take no notice of fluctuating social numbers. It's clear what we're building is designed to be used by the millions and is scalable endlessly, with everything custom-made from the ground up.
 
 As we rapidly enter the middle age of our development stages, we will no longer be able to say we are a new project in our first years. We're growing, maturing and building years of bonds above all else. Now we are at the end of this incredibly enlightening year and celebrations edge closer, it's a notorious time of year for extreme contrasts of happiness and sadness, relative to one's situation. Now more than ever some may need a community, support or just someone to talk to. We invite you all to reach out to someone you haven't heard from for a while and know that our DMs are open to anyone needing any of the above.`,
-    bannerImage: '/lovable-uploads/09d36738-4fac-4bec-93ca-12b75da186ae.png',
+    bannerImage: '/media/09d36738-4fac-4bec-93ca-12b75da186ae.png',
     bannerImageAlt: 'DeHub and Binance logos with lightning',
     author: {
       name: 'DeHub Team',
@@ -712,7 +712,7 @@ In a momentous move by the Coinbase team, you will soon be able to say "buy $DHB
 
 We're getting the best of both worlds: our token will be directly available on one of the biggest centralized exchanges in the world, used by over 200 million people, while remaining entirely on-chain. It almost feels like destiny is at play.
 
-![Coinbase and Base Integration](/lovable-uploads/435d9da9-f69a-405a-92e1-73c030728cd5.png)
+![Coinbase and Base Integration](/media/435d9da9-f69a-405a-92e1-73c030728cd5.png)
 
 ## The Future of On-Chain Trading on Coinbase
 
@@ -743,7 +743,7 @@ This is Coinbase's rollout, not ours. We do not control the timing, the ordering
 What we can say is that when it arrives, it will not require anything from you, and it will not require anything from us.
 
 Stay tuned for more updates as we approach this exciting milestone!`,
-    bannerImage: '/lovable-uploads/435d9da9-f69a-405a-92e1-73c030728cd5.png',
+    bannerImage: '/media/435d9da9-f69a-405a-92e1-73c030728cd5.png',
     bannerImageAlt: 'Base logo on a blue background, representing the Coinbase integration',
     author: {
       name: 'DeHub Team',
@@ -809,7 +809,7 @@ That is a considerably weaker claim than "fraud-proof", and it is the accurate o
 POVR is the mechanism behind the [90% ad revenue share on tokenised uploads](/guides/creator-economy-reimagined-tokenized-uploads--90-ad-revenue-share---a-dehub-milestone-from-q1-2023). A revenue share is only meaningful if the revenue is real, and the revenue is only real if advertisers believe the audience is. Patents pending on the mechanism, as noted above.
 
 For more information on our ad revenue sharing, refer to this thread and our whitepaper below. Also, be sure to follow us for all the latest news on app features and updates.`,
-    bannerImage: '/lovable-uploads/79e6faf5-f135-410b-babd-d2d8611e2d5c.png',
+    bannerImage: '/media/79e6faf5-f135-410b-babd-d2d8611e2d5c.png',
     bannerImageAlt: 'DeHub ad tech ecosystem stakeholders',
     author: {
       name: 'DeHub Team',
@@ -851,7 +851,7 @@ The journey is just beginning. Our MVP is a launchpad for a host of revolutionar
 We invite you to download the app, explore the features, and share your feedback. You are the pioneers of this new era, and your insights are crucial as we continue to build and innovate.
 
 Thank you for being part of our community. The future is bright, and it is being built on DeHub.`,
-    bannerImage: '/lovable-uploads/7c5ce318-2248-49d4-bb92-dc686c8609f1.png',
+    bannerImage: '/media/7c5ce318-2248-49d4-bb92-dc686c8609f1.png',
     bannerImageAlt: 'FTV - Futurov app on Google Play Store',
     author: {
       name: 'DeHub Team',
@@ -965,7 +965,7 @@ export const getAllBlogListPosts = (): BlogPost[] => {
         ...post,
         title: 'Faster and Sleeker: major app upgrade reveals UI Overhaul and 200% Backend Speed Boost',
         publishedAt: '2024-10-28T12:00:00.000Z',
-        bannerImage: '/lovable-uploads/e9632af0-07c2-4ca8-9b82-fc255191358b.png',
+        bannerImage: '/media/e9632af0-07c2-4ca8-9b82-fc255191358b.png',
         bannerImageAlt: 'Screenshot of the new DeHub application UI'
       };
     }

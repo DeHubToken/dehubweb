@@ -18,7 +18,7 @@ Below is a platform-by-platform breakdown of the current monetization rules for 
 
 ## Instagram
 
-![Instagram runs a stack of separate monetization products, not one creator fund](/lovable-uploads/fig-monetization-instagram.jpg)
+![Instagram runs a stack of separate monetization products, not one creator fund](/media/fig-monetization-instagram.jpg)
 
 - **Minimum audience threshold:** About 500 followers for Gifts on Reels; about 1,000 followers for Creator Marketplace and Instagram Affiliate (product tags in posts and Reels); about 10,000 followers for Subscriptions and Live badges.
 - **Minimum activity threshold:** No public, program-wide posting quota. Bonus programs informally favor creators who post Reels several times a week.
@@ -33,7 +33,7 @@ That structure shapes how serious Instagram businesses actually get paid. Native
 
 ## TikTok
 
-![TikTok splits into commerce and media: sell a product, or hold a qualified view](/lovable-uploads/fig-monetization-tiktok.jpg)
+![TikTok splits into commerce and media: sell a product, or hold a qualified view](/media/fig-monetization-tiktok.jpg)
 
 - **Minimum audience threshold:** No follower minimum to sell through your own TikTok Shop if you have an official seller account; about 1,000 followers for LIVE gifts, LIVE subscriptions, and Shop Affiliate entry; 10,000 followers for the Creator Rewards Program, TikTok One / creator marketplace access, and some paywalled Series content; 100,000 followers for premium ad placements such as TikTok Pulse.
 - **Minimum activity threshold:** Creator Rewards currently requires 100,000 video views in the last 30 days, plus an account in good standing. Series generally needs recent public posting. Pulse is reserved for top-performing, high-engagement inventory.
@@ -48,7 +48,7 @@ The economics are uneven on purpose. TikTok Shop's U.S. platform commission is c
 
 ## YouTube
 
-![YouTube is raising its Partner Program entry bar in February 2027](/lovable-uploads/fig-monetization-youtube.jpg)
+![YouTube is raising its Partner Program entry bar in February 2027](/media/fig-monetization-youtube.jpg)
 
 - **Minimum audience threshold:** 500 subscribers for fan funding (Super Chat, Super Thanks, channel memberships) and YouTube Shopping tools; 1,000 subscribers for ads and Premium revenue sharing.
 - **Minimum activity threshold:** Fan funding currently requires three public uploads in the last 90 days plus 3,000 watch hours in the last year or 3 million public Shorts views in the last 90 days. Ads and Premium currently require 4,000 watch hours in the last year or 10 million Shorts views in the last 90 days.
@@ -65,7 +65,7 @@ The revenue split still favors long-form. Industry tracking commonly puts YouTub
 
 ## Facebook
 
-![Facebook Content Monetization stays invite-only and screens for content quality](/lovable-uploads/fig-monetization-facebook.jpg)
+![Facebook Content Monetization stays invite-only and screens for content quality](/media/fig-monetization-facebook.jpg)
 
 - **Minimum audience threshold:** About 500 followers for at least 30 consecutive days for Stars; about 10,000 followers for Subscriptions; no public follower minimum for affiliate tools; no fully public threshold for Content Monetization because that program is invite-only.
 - **Minimum activity threshold:** Subscriptions commonly require 50,000 post engagements or 180,000 watch minutes in the last 60 days. Content Monetization uses internal quality and performance screens rather than a single published number.
@@ -82,7 +82,7 @@ The legal backdrop still hangs over the product. In August, Meta agreed to an $1
 
 ## X
 
-![X replaces Creator Revenue Sharing with Original Content Rewards on September 7, 2026](/lovable-uploads/fig-monetization-x.jpg)
+![X replaces Creator Revenue Sharing with Original Content Rewards on September 7, 2026](/media/fig-monetization-x.jpg)
 
 - **Minimum audience threshold:** 500 verified followers.
 - **Minimum activity threshold:** For Original Content Rewards, 500,000 Home Timeline impressions from verified users in the last 90 days, with reply impressions excluded. Creators must also post original content on a regular basis.
@@ -99,7 +99,7 @@ The catch is structural. Creators still have to pay for a Premium tier to earn f
 
 ## Snap
 
-![Snap pays on a rolling 28-day watch-hour count, not on follower count](/lovable-uploads/fig-monetization-snap.jpg)
+![Snap pays on a rolling 28-day watch-hour count, not on follower count](/media/fig-monetization-snap.jpg)
 
 - **Minimum audience threshold:** 50,000 followers for the unified Monetization Program.
 - **Minimum activity threshold:** Snap's current public bar is 15,000 hours of view time in the last 28 days, including at least 3,000 hours from Spotlight. Since May 7, 2026, creators also need at least 100 hours of Spotlight view time in the trailing 28 days to qualify for maximum rewards. Spotlight videos generally need to be long enough to carry ads, commonly around one minute. Regular posting (often cited as 25 times a month or activity on 10 of the last 28 days) remains part of the Snap Star / monetization profile.
@@ -114,7 +114,7 @@ That second path can be surprisingly lucrative for the small set of accounts tha
 
 ## Twitch
 
-![Twitch now lets streamers switch on subscriptions and Bits before they are Affiliates](/lovable-uploads/fig-monetization-twitch.jpg)
+![Twitch now lets streamers switch on subscriptions and Bits before they are Affiliates](/media/fig-monetization-twitch.jpg)
 
 - **Minimum audience threshold:** Affiliate: 25 followers, plus an average of about 3 concurrent viewers on four different days. Partner: an average of 75 viewers across qualifying streams in two consecutive months, commonly six streams at 75 average viewers in each of two months.
 - **Minimum activity threshold:** Affiliate now requires 4 hours streamed on 4 different days inside a rolling 30-day window, along with the viewer and follower floors. Partner remains a high-consistency test plus a manual review.
@@ -135,7 +135,7 @@ The platforms are no longer asking the same question. Instagram asks whether fan
 
 That is why "getting monetized" is no longer one milestone. It is a stack of product-specific gates, and the smartest creators treat the native payout as one line in a spreadsheet rather than the business itself. The rules above are the current map. Check the in-app dashboard before you build a year of work around any single number. These programs change faster than the pages that explain them.
   `,
-  bannerImage: '/lovable-uploads/social-media-monetization-2026-banner.jpg',
+  bannerImage: '/media/social-media-monetization-2026-banner.jpg',
   bannerImageAlt: 'Who pays and when: creator monetization rules across seven social platforms in 2026',
   author: {
     name: 'DeHub Team',

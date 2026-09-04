@@ -110,7 +110,7 @@ A funding source (advertising revenue or a creator's bounty) pays for the reward
 ### Is watch-to-earn the same as play-to-earn?
 
 No. Watch-to-earn rewards attention, play-to-earn rewards gameplay and skill, and move-to-earn rewards physical activity. They belong to the same "X-to-earn" family but reward different behaviours. We map the whole family, with the trade-offs of each, in [watch-to-earn versus play-to-earn versus move-to-earn](/guides/watch-to-earn-vs-play-to-earn-vs-move-to-earn).`,
-  bannerImage: '/lovable-uploads/what-is-watch-to-earn-banner.png',
+  bannerImage: '/media/what-is-watch-to-earn-banner.png',
   bannerImageAlt: 'DeHub watch-to-earn explained: how viewers earn crypto rewards for watching video on a decentralised social network',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-06-12T14:00:00.000Z',

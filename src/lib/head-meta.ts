@@ -50,8 +50,8 @@ export function upsertSocialMeta(opts: {
 
 /**
  * Robots control. `noindex: true` marks the page; `false` restores the
- * host-appropriate default — which must stay `noindex` on mirror hosts
- * (lovable.app etc.), matching the inline script in index.html. Restoring is
+ * host-appropriate default — which must stay `noindex` on preview mirror
+ * hosts, matching the inline script in index.html. Restoring is
  * required because cached pages share one <head>: navigating from a noindexed
  * page to an indexable one must not leave the noindex behind.
  */
