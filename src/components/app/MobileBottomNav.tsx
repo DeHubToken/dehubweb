@@ -3,6 +3,8 @@ import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useKeyboardOpen } from '@/hooks/use-keyboard-open';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
+import { disarmHomeNavIntent, resolveHomeNavIntent } from '@/lib/home-nav-intent';
+import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll, Map, Wand2, Loader2, BarChart3, Gamepad2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { preloadRoute } from '@/lib/route-preload';
@@ -153,6 +155,13 @@ export function MobileBottomNav() {
   const handleNavClick = (e: React.MouseEvent, path: string) => {
     if (path === '/app' && isHomePath(location.pathname)) {
       e.preventDefault();
+      // First click on Home while already on Home just returns to the top —
+      // refetching the feed on that click is what made this button feel slow
+      // next to the feed tab strip. A second click refreshes.
+      if (resolveHomeNavIntent(true) !== 'refresh') {
+        scrollDocumentToSmooth();
+        return;
+      }
       window.dispatchEvent(new CustomEvent('home-refresh'));
       setIsHomeRefreshing(true);
       if (homeRefreshTimerRef.current) window.clearTimeout(homeRefreshTimerRef.current);
@@ -160,6 +169,13 @@ export function MobileBottomNav() {
       navigate('/app');
     }
   };
+
+  // Leaving home disarms the second click, so arriving back on the feed never
+  // lands on a click that refetches.
+  const onHome = isHomePath(location.pathname);
+  useEffect(() => {
+    if (!onHome) disarmHomeNavIntent();
+  }, [onHome]);
 
   useEffect(() => () => {
     if (homeRefreshTimerRef.current) window.clearTimeout(homeRefreshTimerRef.current);
