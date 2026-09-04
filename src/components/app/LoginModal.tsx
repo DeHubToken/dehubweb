@@ -35,6 +35,12 @@ const LoginModalBody = React.lazy(() =>
   import('@/components/app/login/LoginModalBody').then(m => ({ default: m.LoginModalBody })),
 );
 
+// The last step of signing up, and the only one an existing session can land on
+// cold. Its own chunk so it does not drag the wallet body in behind it.
+const LoginProfileStep = React.lazy(() =>
+  import('@/components/app/login/LoginProfileStep').then(m => ({ default: m.LoginProfileStep })),
+);
+
 /**
  * Warm the body chunk so the skeleton below is insurance rather than the norm.
  * Called from App once the app has painted; safe to call repeatedly.
@@ -89,7 +95,7 @@ function LoginBodySkeleton() {
 }
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
-  const { walletPhase, isProcessingRedirect, loginIntent } = useAuth();
+  const { walletPhase, isProcessingRedirect, loginIntent, requiresUsername } = useAuth();
   const { t } = useTranslation();
 
   // Opening step. A login that is ALREADY in flight must never land on 'main':
@@ -127,17 +133,29 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       setStep(next);
       return;
     }
+    // Checked after the wallet steps, not before: a brand-new account is
+    // flagged as needing a profile by the same auth response that may still
+    // owe it a wallet, and the wallet has to come first.
+    if (requiresUsername) {
+      setStep('profile');
+      return;
+    }
     // The resume ended without producing a wallet step — it either failed or
-    // the session was already complete. Never strand the sheet on the loader.
-    // Any other step is left alone (React bails out on an unchanged value), so
-    // this can't yank someone out of the email or phone flow.
-    setStep((s) => (s === 'resuming' ? 'main' : s));
-  }, [open, walletPhase, isProcessingRedirect]);
+    // the session was already complete. Never strand the sheet on the loader,
+    // or on a profile step whose flag has since cleared. Any other step is left
+    // alone (React bails out on an unchanged value), so this can't yank someone
+    // out of the email or phone flow.
+    setStep((s) => (s === 'resuming' || s === 'profile' ? 'main' : s));
+  }, [open, walletPhase, isProcessingRedirect, requiresUsername]);
 
   const handleClose = useCallback(() => {
+    // An account with no profile is not a usable account: there is nothing
+    // behind this sheet to go back to, so it does not close. Log out is the
+    // other way out, and it clears the flag itself.
+    if (requiresUsername) return;
     setStep('main');
     onOpenChange(false);
-  }, [onOpenChange]);
+  }, [onOpenChange, requiresUsername]);
 
   // The sheet can also be closed from underneath it — a completed login calls
   // closeLoginModal directly, and vaul never reports a close it did not drive.
@@ -167,6 +185,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     // account only usable by them — is also the more accurate description.
     : step === 'wallet-create' ? t('loginModal.secureAccount', 'Secure account')
     : step === 'wallet-unlock' ? t('loginModal.unlockWallet', 'Unlock your wallet')
+    : step === 'profile' ? t('settings.profile')
     : step === 'resuming' || step === 'wallet-signing' ? t('loginModal.signingIn', 'Signing you in…')
     : t('loginModal.connectWallet');
 
@@ -195,10 +214,11 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // inline to drive the slide-up and the drag, and an inline transform beats a
   // class — the sheet would jump for the length of every animation.
   return (
-    <Drawer open={open} onOpenChange={handleClose} warmable>
+    <Drawer open={open} onOpenChange={handleClose} warmable dismissible={!requiresUsername}>
       <DrawerContent
         data-login-modal
         hideHandle
+        onEscapeKeyDown={(e) => { if (requiresUsername) e.preventDefault(); }}
         className={cn(
           "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[200] flex flex-col max-h-[90dvh]",
           !isMobile && "left-[var(--app-main-left,0px)] right-auto w-[var(--app-main-width,100vw)]",
@@ -215,7 +235,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       >
         <DrawerHeader className="px-6 pt-6 pb-4 shrink-0">
           <div className="flex items-center justify-center relative">
-            {step !== 'main' && step !== 'resuming' && !step.startsWith('wallet-') && (
+            {/* No way back from 'profile' either — the account is already
+                created by the time it shows. */}
+            {step !== 'main' && step !== 'resuming' && step !== 'profile' && !step.startsWith('wallet-') && (
               <button
                 onClick={() => setStep('main')}
                 className="absolute left-0 p-2 rounded-xl hover:bg-white/10 transition-colors text-white/60 hover:text-white"
@@ -232,7 +254,13 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
         <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pb-6">
           <Suspense fallback={fallback}>
-            <LoginModalBody open={open} step={step} setStep={setStep} />
+            {/* Kept out of LoginModalBody deliberately: that chunk carries
+                wagmi, and the profile step is reached on a plain session
+                restore (an account saved without a username) where no wallet
+                UI is needed. */}
+            {step === 'profile'
+              ? <LoginProfileStep />
+              : <LoginModalBody open={open} step={step} setStep={setStep} />}
           </Suspense>
         </div>
 

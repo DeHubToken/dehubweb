@@ -9,7 +9,6 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-route
 import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
 // Direct import (not the modals barrel) so the barrel's other modals stay out
 // of the entry bundle.
-import { UsernameRequiredModal } from "@/components/app/modals/UsernameRequiredModal";
 import { GiveawayPrizeModal } from "@/components/app/GiveawayPrizeModal";
 import { ConnectLinkedWalletModal } from "@/components/app/wallet-setup/ConnectLinkedWalletModal";
 import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
@@ -332,7 +331,7 @@ if (typeof window !== "undefined") {
  * Only mounted after user has passed the hero (or is a returning user).
  */
 function AppContent() {
-  const { isLoginModalOpen, closeLoginModal, user, walletAddress, isConnecting, isProcessingRedirect } = useAuth();
+  const { isLoginModalOpen, closeLoginModal, user, walletAddress, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
   const queryClient = useQueryClient();
   usePreloadIcons();
   // A pushed notification focuses this tab and posts where it wanted to go.
@@ -367,14 +366,14 @@ function AppContent() {
   // everything has gone quiet the resume is deferred past the sheet's exit
   // animation (see scheduleBackgroundResume).
   useEffect(() => {
-    const active = isLoginModalOpen || isConnecting || isProcessingRedirect;
+    const active = isLoginModalOpen || isConnecting || isProcessingRedirect || requiresUsername;
     document.documentElement.toggleAttribute('data-login-active', active);
     if (active) {
       setBackgroundPaused(true);
     } else {
       scheduleBackgroundResume();
     }
-  }, [isLoginModalOpen, isConnecting, isProcessingRedirect]);
+  }, [isLoginModalOpen, isConnecting, isProcessingRedirect, requiresUsername]);
 
   // Capture ?ref=CODE / ?aff=CODE on first load (first-touch wins, 90-day cookie).
   useEffect(() => {
@@ -392,7 +391,6 @@ function AppContent() {
     <>
       <SelfBadgeSync />
       <ViewingPreferencesSync />
-      <UsernameRequiredModal />
       <GiveawayPrizeModal />
       <ConnectLinkedWalletModal />
       {/* Always mounted, and closed it costs nothing: ui/drawer keeps vaul's
@@ -401,7 +399,11 @@ function AppContent() {
           it up front is what buys the slide-up — a vaul Root created with
           `open` already true renders at its final position with no transition,
           which is why the sheet used to appear rather than come up. */}
-      <LoginModal open={isLoginModalOpen} onOpenChange={closeLoginModal} />
+      {/* `requiresUsername` opens it too: an account with no profile finishes
+          signing up on the sheet's profile step, which used to be a separate
+          centred dialog on top of the whole viewport. The sheet refuses to
+          close while that flag is set. */}
+      <LoginModal open={isLoginModalOpen || requiresUsername} onOpenChange={closeLoginModal} />
       <Suspense fallback={<PageLoader />}>
         <SurfaceTransition>
           {(loc) => (
