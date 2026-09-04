@@ -6,6 +6,11 @@
  */
 
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import {
+  claimMediaSession,
+  releaseMediaSession,
+  setMediaSessionPlaying,
+} from '@/lib/media-session';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -557,6 +562,43 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
     }
     setIsPlaying(!isPlaying);
   }, [isPlaying, videoId]);
+
+  /**
+   * Hold the OS media session while this stream is actually audible.
+   *
+   * `videoId` rather than a fresh useId: the card already has a stable
+   * per-stream identity that the playback manager keys off, and reusing it
+   * keeps the two arbiters agreeing about which player is which.
+   *
+   * No seek handlers — a live broadcast has nowhere to scrub to, and offering
+   * a dead scrub bar on the lock screen is worse than offering none. `stop`
+   * is wired because leaving a stream is a real thing to want to do from a
+   * locked phone, unlike pausing one.
+   */
+  useEffect(() => {
+    if (!isPlaying || isMuted || streamEnded) {
+      releaseMediaSession(videoId);
+      return;
+    }
+    claimMediaSession(
+      videoId,
+      {
+        title: stream.title || "DeHub live",
+        artist: stream.streamer,
+        artwork: stream.thumbnail || null,
+      },
+      {
+        play: togglePlay,
+        pause: togglePlay,
+        stop: togglePlay,
+      },
+    );
+    setMediaSessionPlaying(videoId, true);
+  }, [isPlaying, isMuted, streamEnded, videoId, stream.title, stream.streamer, stream.thumbnail, togglePlay]);
+
+  // A card scrolled out of the virtualised feed, or a route change, must not
+  // leave the OS holding a session for a player that is gone.
+  useEffect(() => () => releaseMediaSession(videoId), [videoId]);
 
   const toggleMute = useCallback(() => {
     const video = videoRef.current;
