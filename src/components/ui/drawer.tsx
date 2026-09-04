@@ -294,6 +294,14 @@ const DrawerContent = React.forwardRef<
       )}
       onClick={(e) => e.stopPropagation()}
       {...props}
+      /* Hard cap in the unit that matches what the reader can see. Sheets cap
+         themselves in `vh`, which is the LARGE viewport — measured as if the
+         browser chrome were hidden — while the sheet is pinned to the bottom of
+         the visible area. On iOS Safari the two differ by the height of the
+         address bar, so a tall sheet's top edge lands off screen and whatever
+         sits there (a search field, a title, a close button) is unreachable.
+         Inline, so a caller's own `max-h-[…vh]` class cannot lift it. */
+      style={{ maxHeight: "calc(100dvh - env(safe-area-inset-top))", ...props.style }}
       /* After the spread: a sheet that opens another sheet, a Select, a menu or
          a toast must not read that surface's own clicks as "clicked off me"
          (lib/overlay-dismiss). vaul composes this handler ahead of its own and

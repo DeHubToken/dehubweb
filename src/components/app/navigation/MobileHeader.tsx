@@ -200,7 +200,12 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
                 </button>
               )}
             </DrawerTrigger>
-            <DrawerContent glass className="max-h-[85vh]">
+            {/* 85dvh, not 85vh: `vh` is the LARGE viewport, measured as if the
+                browser chrome were hidden, while the sheet's `bottom-0` sits at
+                the bottom of what is actually on screen. On iOS Safari that
+                pushed the top of the menu — the search field — off the top of
+                the screen, with no way to scroll it back into view. */}
+            <DrawerContent glass className="max-h-[85dvh]">
               <div className="p-4 pb-8 overflow-y-auto">
                 {children}
               </div>
