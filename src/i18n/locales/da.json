@@ -1832,6 +1832,7 @@
     "aimAtTiers": "Hvilke badgeniveauer skal se det?"
   },
   "work": {
+    "budgetExhausted": "Denne dusørs budget er fuldt disponeret.",
     "title": "Bounties",
     "subtitle": "Opret en bounty eller find en. Betalt i DHB eller USDC.",
     "myBounties": "Mine Bounties",

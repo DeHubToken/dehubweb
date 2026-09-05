@@ -1655,6 +1655,7 @@
     "aimAtTiers": "Ce niveluri de insignă ar trebui să o vadă?"
   },
   "work": {
+    "budgetExhausted": "Bugetul acestei recompense este alocat în întregime.",
     "title": "Recompense",
     "subtitle": "Postează o recompensă sau găsește una. Plătit în DHB sau USDC.",
     "myBounties": "Recompensele Mele",

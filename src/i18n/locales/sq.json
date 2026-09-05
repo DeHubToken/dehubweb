@@ -1,4 +1,7 @@
 {
+  "work": {
+    "budgetExhausted": "Buxheti i kësaj shpërblimi është angazhuar plotësisht."
+  },
   "nav": {
     "home": "Kryefaqja",
     "explore": "Eksploro",

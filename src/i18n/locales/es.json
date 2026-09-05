@@ -1828,6 +1828,7 @@
     "aimAtTiers": "¿Qué niveles de insignia deberían verla?"
   },
   "work": {
+    "budgetExhausted": "El presupuesto de esta recompensa está comprometido por completo.",
     "title": "Recompensas",
     "subtitle": "Publica una recompensa o cázala. Se paga en DHB o USDC.",
     "myBounties": "Mis recompensas",

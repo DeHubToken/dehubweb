@@ -1828,6 +1828,7 @@
     "aimAtTiers": "Tingkat lencana mana yang harus melihatnya?"
   },
   "work": {
+    "budgetExhausted": "Anggaran bounty ini sudah terpakai sepenuhnya.",
     "title": "Bounty",
     "subtitle": "Pasang bounty atau berburu satu. Dibayar dalam DHB atau USDC.",
     "myBounties": "Bounty Saya",

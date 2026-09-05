@@ -1769,6 +1769,7 @@
     "aimAtTiers": "Které úrovně odznaku ho mají vidět?"
   },
   "work": {
+    "budgetExhausted": "Rozpočet této odměny je zcela vyčerpán.",
     "title": "Odměny",
     "subtitle": "Zveřejni odměnu nebo ji najdi. Placeno v DHB nebo USDC.",
     "myBounties": "Moje odměny",

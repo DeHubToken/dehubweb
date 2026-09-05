@@ -2096,6 +2096,7 @@
     "aimAtTiers": "Peringkat lencana mana yang perlu melihatnya?"
   },
   "work": {
+    "budgetExhausted": "Bajet ganjaran ini telah digunakan sepenuhnya.",
     "title": "Hadiah",
     "subtitle": "Siarkan hadiah atau cari satu. Dibayar dalam DHB atau USDC.",
     "myBounties": "Hadiah Saya",

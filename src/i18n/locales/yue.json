@@ -1,4 +1,7 @@
 {
+  "work": {
+    "budgetExhausted": "呢個賞金嘅預算已經全部分配咗。"
+  },
   "nav": {
     "home": "主頁",
     "explore": "探索",

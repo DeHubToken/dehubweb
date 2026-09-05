@@ -1688,6 +1688,7 @@
     "aimAtTiers": "Watter kentekenvlakke moet dit sien?"
   },
   "work": {
+    "budgetExhausted": "Hierdie kopgeld se begroting is heeltemal toegewys.",
     "title": "Bounties",
     "subtitle": "Plaas 'n bounty of jag een af. Betaal in DHB of USDC.",
     "myBounties": "My Bounties",

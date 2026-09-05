@@ -2025,6 +2025,7 @@
     "aimAtTiers": "Welke badgeniveaus moeten het zien?"
   },
   "work": {
+    "budgetExhausted": "Het budget van deze premie is volledig vergeven.",
     "title": "Bounties",
     "subtitle": "Post een bounty of jaag er een na. Betaald in DHB of USDC.",
     "myBounties": "Mijn Bounties",

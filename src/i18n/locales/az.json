@@ -1769,6 +1769,7 @@
     "aimAtTiers": "Onu hansı nişan səviyyələri görsün?"
   },
   "work": {
+    "budgetExhausted": "Bu mükafatın büdcəsi tam olaraq ayrılıb.",
     "title": "Mükafatlar",
     "subtitle": "Mükafat elan edin və ya birini tapın. DHB və ya USDC ilə ödənilir.",
     "myBounties": "Mənim Mükafatlarım",

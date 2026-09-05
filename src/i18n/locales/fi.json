@@ -1770,6 +1770,7 @@
     "aimAtTiers": "Minkä merkkitasojen pitäisi nähdä se?"
   },
   "work": {
+    "budgetExhausted": "Tämän palkkion budjetti on kokonaan varattu.",
     "title": "Palkkiot",
     "subtitle": "Julkaise palkkio tai etsi sellainen. Maksetaan DHB:ssä tai USDC:ssä.",
     "myBounties": "Omat palkkiot",

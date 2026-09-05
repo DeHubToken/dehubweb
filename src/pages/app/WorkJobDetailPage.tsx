@@ -94,6 +94,17 @@ export default function WorkJobDetailPage() {
   const unpaid = submissions.filter(isAwaitingPayment);
   const owed = unpaid.reduce((sum, s) => sum + Number(s.payout_amount || payoutFor(job)), 0);
 
+  // What the budget can still cover. Every submission card used to offer the
+  // full budget on a contract bounty, so three submissions meant three
+  // full-price Pay buttons for one agreed amount.
+  const budgetLeft = Math.max(
+    0,
+    Number(job.total_budget || 0) -
+      submissions
+        .filter(s => !!s.payout_tx_hash)
+        .reduce((sum, s) => sum + Number(s.payout_amount || 0), 0),
+  );
+
   const requireAuth = () => { if (!me) { openLoginModal(); return false; } return true; };
 
   return (
@@ -245,6 +256,7 @@ export default function WorkJobDetailPage() {
                 currency: job.currency,
                 worker_address: s.worker_address,
                 payout_amount: payoutFor(job),
+                total_budget: job.total_budget,
                 pay,
               })}
               onPay={() => payMutation.mutate({
@@ -254,8 +266,10 @@ export default function WorkJobDetailPage() {
                 currency: job.currency,
                 worker_address: s.worker_address,
                 payout_amount: Number(s.payout_amount) || payoutFor(job),
+                total_budget: job.total_budget,
               })}
               onReject={(reason) => rejectMutation.mutate({ submission_id: s.id, job_id: job.id, reason })}
+              budgetLeft={budgetLeft}
               busy={approveMutation.isPending || payMutation.isPending || rejectMutation.isPending}
             />
           ))}
@@ -372,6 +386,7 @@ function SubmissionCard({
   onPay,
   onReject,
   busy,
+  budgetLeft,
 }: {
   submission: WorkSubmission;
   job: WorkJob;
@@ -381,6 +396,7 @@ function SubmissionCard({
   onPay: () => void;
   onReject: (reason: string) => void;
   busy: boolean;
+  budgetLeft: number;
 }) {
   const { t } = useTranslation();
   const [rejecting, setRejecting] = useState(false);
@@ -389,6 +405,8 @@ function SubmissionCard({
   const paid = isPaid(s);
   const awaiting = isAwaitingPayment(s);
   const due = Number(s.payout_amount) || payoutFor(job);
+  // A rounding-sized shortfall is the token's own precision, not an overspend.
+  const affordable = due - budgetLeft <= 1e-9;
 
   return (
     <div className="p-3 rounded-xl bg-white/5 border border-white/10 mb-2">
@@ -434,7 +452,8 @@ function SubmissionCard({
         <div className="flex flex-wrap gap-2 mt-3">
           <button
             onClick={() => onApprove(true)}
-            disabled={busy}
+            disabled={busy || !affordable}
+            title={affordable ? undefined : t('work.budgetExhausted')}
             className="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 text-xs font-semibold inline-flex items-center gap-1 transition-colors disabled:opacity-40"
           >
             <Wallet className="w-3 h-3" /> {t('work.approveAndPay', { amount: amount(due, job.currency) })}
@@ -456,11 +475,16 @@ function SubmissionCard({
         </div>
       )}
 
+      {isPoster && !paid && !affordable && (
+        <p className="mt-2 text-[11px] text-red-300/80">{t('work.budgetExhausted')}</p>
+      )}
+
       {/* Poster: settle something already accepted. */}
       {isPoster && awaiting && (
         <button
           onClick={onPay}
-          disabled={busy}
+          disabled={busy || !affordable}
+          title={affordable ? undefined : t('work.budgetExhausted')}
           className="mt-3 px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 text-xs font-semibold inline-flex items-center gap-1 transition-colors disabled:opacity-40"
         >
           <Wallet className="w-3 h-3" /> {t('work.payAmount', { amount: amount(due, job.currency) })}

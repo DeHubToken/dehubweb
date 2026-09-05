@@ -1,4 +1,7 @@
 {
+  "work": {
+    "budgetExhausted": "箇个赏金个预算已经全用光哉。"
+  },
   "nav": {
     "home": "主页",
     "explore": "探索",

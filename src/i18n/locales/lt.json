@@ -1,4 +1,7 @@
 {
+  "work": {
+    "budgetExhausted": "Visas šio atlygio biudžetas jau paskirstytas."
+  },
   "nav": {
     "home": "Pradžia",
     "explore": "Naršyti",
