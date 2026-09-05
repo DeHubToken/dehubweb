@@ -335,6 +335,19 @@ describe('surfaces are wired consistently', () => {
     }
   });
 
+  it('draws the burst over the card, not inside it', () => {
+    // The love firework throws sparks ~130px out of the tap point and a feed
+    // card is a rounded, clipped bento: drawn in place, every burst was sliced
+    // against the card's edge, the image's corner radius, the media box's own
+    // `overflow-hidden`, or the sticky nav above a short card. So the layer is
+    // portalled to <body> in viewport coordinates — nothing between the card
+    // and the root can cut it, and it stays pointer-events-none up there.
+    expect(BURST).toContain('createPortal(layer, document.body)');
+    // ...and clips itself nowhere on the way. (Matched against the class lists
+    // only: the comment above the portal names the trap it fixed.)
+    expect(BURST.match(/className="[^"]*overflow-hidden[^"]*"/)).toBeNull();
+  });
+
   it('leaves the immersive player its own double-tap for seek', () => {
     // Double-tap-to-seek is the gesture people already use to scrub a video.
     expect(VIDEO_CARD).toContain('disabled: isImmersive || hideActions || !!video.isAudio');
