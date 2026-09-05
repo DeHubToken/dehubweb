@@ -14,8 +14,10 @@ import {
 } from '@/lib/media-session';
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { X, Volume2, VolumeX, Maximize, Minimize, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye, Gem, Info, Flag, Ban, UserPlus, UserCheck, Loader2, Trash2, EyeOff, Globe } from 'lucide-react';
+import { X, Volume2, VolumeX, Maximize, Minimize, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye, Gem, Info, Flag, Ban, UserPlus, UserCheck, Loader2, Trash2, EyeOff, Globe, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { useTranslation as useContentTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
+import { useTranslation as useI18n } from 'react-i18next';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
@@ -106,7 +108,9 @@ function ExpandableDescription({ text }: { text: string }) {
   }, [text]);
 
   return (
-    <div className="mt-2 lg:mt-3 flex-shrink-0">
+    // Spacing above belongs to ShortCaption, which may be drawing a title
+    // immediately over this.
+    <div className="flex-shrink-0">
       <div className={cn(expanded && "max-h-[7.5rem] overflow-y-auto") }>
         <p
           ref={ref}
@@ -123,6 +127,134 @@ function ExpandableDescription({ text }: { text: string }) {
           {expanded ? 'Show less' : 'Show more'}
         </button>
       )}
+    </div>
+  );
+}
+
+/**
+ * A short's caption — its title, its body, and the way back to the original
+ * once they have been translated.
+ *
+ * Two things this fixes. Shorts showed the description only, so a post whose
+ * author filled in both a title and a description lost the title — and since
+ * the composer writes the caption into the *title* and leaves the description
+ * empty, the feed and the reel were reading different halves of the same post.
+ * And nothing here ever translated: the feed auto-translates every card, then
+ * opening one of those posts full-screen handed the reader back the original.
+ *
+ * Title and body go out as ONE request and come back split, the way the feed
+ * cards do it — one translation per post rather than two. See
+ * splitTranslatedTitleAndBody for what happens when the blank line separating
+ * them does not survive the round trip.
+ *
+ * The translation lives here, not in the viewer, because the viewer is a single
+ * component for the whole reel: a hook up there would still be holding the
+ * previous short's translated text at the moment you swiped, and print it under
+ * the next video. Callers key this on the post id so each short starts clean.
+ */
+function ShortCaption({
+  short,
+  variant,
+  expanded,
+  onToggleExpanded,
+}: {
+  short: ShortVideo;
+  /** 'stacked' clamps the body behind its own Show more; 'tap' opens on tap. */
+  variant: 'stacked' | 'tap';
+  /** 'tap' only — the open state lives in the viewer, which holds the chrome open while it is. */
+  expanded?: boolean;
+  onToggleExpanded?: () => void;
+}) {
+  const { t } = useI18n();
+
+  // "Untitled" is the uploader's placeholder, not a heading anybody wrote.
+  const rawTitle = (short.title || '').trim();
+  const title = rawTitle.toLowerCase() === 'untitled' ? '' : rawTitle;
+  // A description that only repeats the title earns neither a second line nor
+  // half of a translation request.
+  const rawBody = (short.description || '').trim();
+  const body = rawBody && rawBody !== title ? rawBody : '';
+
+  const {
+    isTranslated,
+    translatedText,
+    isLoading,
+    handleShowOriginal,
+  } = useContentTranslation([title, body].filter(Boolean).join('\n\n'));
+
+  let shownTitle: string | undefined = title || undefined;
+  let shownBody: string | undefined = body || undefined;
+  if (isTranslated && translatedText) {
+    [shownTitle, shownBody] = splitTranslatedTitleAndBody(translatedText, title || undefined, body || undefined);
+  }
+
+  if (!shownTitle && !shownBody) return null;
+
+  // Auto-translate is on by default, so the control this surface needs is the
+  // way back — not a button asking for something that already happened. Taking
+  // it holds the original until you swipe off this short and return.
+  const control = isLoading ? (
+    <span className="mt-1 flex items-center gap-1 text-white/50 text-[11px]">
+      <Loader2 className="w-3 h-3 animate-spin" />
+      {t('common.translating')}
+    </span>
+  ) : isTranslated ? (
+    <button
+      onClick={handleShowOriginal}
+      className="mt-1 flex items-center gap-1 text-white/50 hover:text-white text-[11px] transition-colors"
+    >
+      <RotateCcw className="w-3 h-3" />
+      {t('common.showOriginal')}
+    </button>
+  ) : null;
+
+  if (variant === 'tap') {
+    return (
+      <div>
+        <button
+          onClick={onToggleExpanded}
+          className="text-left w-full"
+        >
+          <div
+            className={`overflow-y-auto scrollbar-hide transition-all duration-200 ${
+              expanded ? 'max-h-[calc(2.5rem+200px)]' : 'max-h-[2.5rem]'
+            }`}
+          >
+            {shownTitle && (
+              <p className={`text-white text-sm font-semibold leading-relaxed drop-shadow-lg ${
+                expanded ? 'whitespace-pre-wrap' : 'line-clamp-1'
+              }`}>
+                {shownTitle}
+              </p>
+            )}
+            {shownBody && (
+              <p className={`text-white text-sm leading-relaxed drop-shadow-lg ${
+                expanded ? 'whitespace-pre-wrap' : 'line-clamp-2'
+              }`}>
+                {shownBody}
+              </p>
+            )}
+          </div>
+          {((shownBody?.length ?? 0) > 80 || (shownTitle?.length ?? 0) > 40) && (
+            <span className="text-white/60 text-xs mt-1">
+              {expanded ? 'less' : 'more'}
+            </span>
+          )}
+        </button>
+        {control}
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-2 lg:mt-3 flex-shrink-0">
+      {shownTitle && (
+        <p className="text-white text-sm lg:text-base font-medium leading-snug mb-1">
+          {shownTitle}
+        </p>
+      )}
+      {shownBody && <ExpandableDescription text={shownBody} />}
+      {control}
     </div>
   );
 }
@@ -931,7 +1063,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     claimMediaSession(
       instanceId,
       {
-        title: currentShort.description?.split(String.fromCharCode(10))[0] || "DeHub short",
+        title: currentShort.title?.trim() || currentShort.description?.split(String.fromCharCode(10))[0] || "DeHub short",
         artist: currentShort.displayName || currentShort.creatorUsername || currentShort.username,
         artwork: currentShort.thumbnail || null,
       },
@@ -1429,9 +1561,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                         <span className="text-white/70 text-sm drop-shadow-lg truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
                       </button>
                     </div>
-                    {currentShort.description && (
-                      <ExpandableDescription text={currentShort.description} />
-                    )}
+                    <ShortCaption key={currentShort.id} short={currentShort} variant="stacked" />
                   </div>
                 )}
 
@@ -1681,30 +1811,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     </button>
                   </div>
                   
-                  {/* Description - tap to expand/collapse */}
-                  {currentShort.description && (
-                    <button
-                      onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                      className="text-left w-full"
-                    >
-                      <div 
-                        className={`overflow-y-auto scrollbar-hide transition-all duration-200 ${
-                          isDescriptionExpanded ? 'max-h-[calc(2.5rem+200px)]' : 'max-h-[2.5rem]'
-                        }`}
-                      >
-                        <p className={`text-white text-sm leading-relaxed drop-shadow-lg ${
-                          isDescriptionExpanded ? 'whitespace-pre-wrap' : 'line-clamp-2'
-                        }`}>
-                          {currentShort.description}
-                        </p>
-                      </div>
-                      {currentShort.description.length > 80 && (
-                        <span className="text-white/60 text-xs mt-1">
-                          {isDescriptionExpanded ? 'less' : 'more'}
-                        </span>
-                      )}
-                    </button>
-                  )}
+                  {/* Title + description - tap to expand/collapse */}
+                  <ShortCaption
+                    key={currentShort.id}
+                    short={currentShort}
+                    variant="tap"
+                    expanded={isDescriptionExpanded}
+                    onToggleExpanded={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                  />
                 </div>
 
                 {/* Action bar — horizontal row evenly spread across the bottom,
@@ -1900,9 +2014,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <span className="text-white/60 text-xs lg:text-sm truncate">@{currentShort.creatorUsername || currentShort.username}</span>
                 </div>
               </button>
-              {currentShort.description && (
-                <ExpandableDescription text={currentShort.description} />
-              )}
+              <ShortCaption key={currentShort.id} short={currentShort} variant="stacked" />
               {currentShort.creatorId && followCheckingCreators.has(currentShort.creatorId) ? (
                 <div className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white/40 text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/10 text-center animate-pulse">
                   Loading…
