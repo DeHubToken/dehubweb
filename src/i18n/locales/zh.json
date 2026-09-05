@@ -1103,6 +1103,9 @@
     "email": "邮箱"
   },
   "loginModal": {
+    "welcomeBack": "欢迎回来—此账号仍然属于您。 使用下面的旧登录名登录，以恢复您的帖子、关注者和余额。",
+    "welcomeBackWithLogin": "欢迎回来—此账号仍然属于您。 使用下面的{{login}}登录，即可恢复帖子、粉丝和平衡。",
+    "welcomeBackWaiting": "等待它",
     "migrateNothingToRecover": "此登录名上没有之前的DeHub帐户，因此无需携带任何东西。 返回新账号，完成此账号的设置。",
     "migrateUnmatchedWarning": "此登录名没有DeHub帐户记录。 继续不会恢复任何内容—它会使用新用户名创建第二个帐户，并将您已有的帐户留在后面。",
     "migrateUnmatchedDetail": "此钱包地址不存在配置文件。 如果您要重新登录，请返回并改用您注册时使用的登录信息。",

@@ -522,11 +522,38 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       {!migratedKey && !hasMultipleOldAccounts && backendHint?.exists === true && foundAccounts[0] && (
         <div className="flex items-start gap-2 rounded-xl border border-green-400/40 bg-green-400/10 p-3 text-sm text-white">
           <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-400 shrink-0" />
-          <p>
-            Welcome back! We found your existing DeHub account
-            {foundAccounts[0].signupMethod && OLD_LOGIN_LABELS[foundAccounts[0].signupMethod] ? <> (old login: <span className="font-semibold">{OLD_LOGIN_LABELS[foundAccounts[0].signupMethod]}</span>)</> : null}
-            . Sign in with it below to keep your wallet, balance, and profile.
-          </p>
+          {/* Name the account. "your existing DeHub account" is true of everyone
+              and convinces nobody; the username, and the balance sitting on it,
+              is what makes a returning user press Migrate instead of starting
+              over on a new one. */}
+          {/* The username carries this, not the sentence. "Your existing DeHub
+              account" is true of everyone and convinces nobody; seeing the
+              actual handle — and the balance sitting on it — is what makes a
+              returning user press Migrate instead of starting over.
+              It is data, not copy, so it stays outside the translated string
+              rather than being interpolated into one. */}
+          <div className="space-y-1 min-w-0">
+            {foundAccounts[0].username && (
+              <p className="font-semibold truncate">@{foundAccounts[0].username}</p>
+            )}
+            <p>
+              {foundAccounts[0].signupMethod && OLD_LOGIN_LABELS[foundAccounts[0].signupMethod]
+                ? t(
+                    'loginModal.welcomeBackWithLogin',
+                    'Welcome back — this account is still yours. Sign in with {{login}} below to bring it back, with your posts, followers and balance.',
+                    { login: OLD_LOGIN_LABELS[foundAccounts[0].signupMethod] },
+                  )
+                : t(
+                    'loginModal.welcomeBack',
+                    'Welcome back — this account is still yours. Sign in with your old login below to bring it back, with your posts, followers and balance.',
+                  )}
+            </p>
+            {typeof foundAccounts[0].badgeBalance === 'number' && foundAccounts[0].badgeBalance > 0 && (
+              <p className="text-xs text-white/70 flex items-center gap-1">
+                {foundAccounts[0].badgeBalance.toLocaleString()} <DhbCoin /> {t('loginModal.welcomeBackWaiting', 'waiting on it')}
+              </p>
+            )}
+          </div>
         </div>
       )}
       {!migratedKey && backendHint?.exists == null && residueDetected && (

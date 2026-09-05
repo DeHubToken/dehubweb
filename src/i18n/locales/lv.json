@@ -1079,6 +1079,9 @@
     "failedSubmit": "Pieteikuma iesniegšana neizdevās. Lūdzu, mēģiniet vēlreiz."
   },
   "loginModal": {
+    "welcomeBack": "Apsveicam ar atgriešanos — šis konts joprojām ir jūsu. Pierakstieties ar savu veco pieteikumvārdu zemāk, lai to atjaunotu, ar saviem ierakstiem, sekotājiem un bilanci.",
+    "welcomeBackWithLogin": "Apsveicam ar atgriešanos — šis konts joprojām ir jūsu. Pierakstieties, izmantojot tālāk redzamo {{login}}, lai atgrieztos ar saviem ierakstiem, sekotājiem un bilanci.",
+    "welcomeBackWaiting": "gaida to",
     "migrateNothingToRecover": "Šajā pieteikumvārdā nav iepriekšēja DeHub konta, tāpēc nav ko pārnest. Atgriezieties sadaļā Jauns konts, lai pabeigtu šī konta iestatīšanu.",
     "migrateUnmatchedWarning": "Šim pieteikumam nav reģistrēts DeHub konts. Turpinot nekas netiek atgūts — tas izveido otru kontu ar jaunu lietotājvārdu un atstāj to, kas jums jau ir aiz muguras.",
     "migrateUnmatchedDetail": "Šajā maka adresē nav profila. Ja pierakstījāties atkārtoti, atgriezieties un tā vietā izmantojiet pieteikumvārdu, ar kuru reģistrējāties.",

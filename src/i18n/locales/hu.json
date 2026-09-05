@@ -1090,6 +1090,9 @@
     "email": "E-mail"
   },
   "loginModal": {
+    "welcomeBack": "Üdvözlünk újra itt — ez a fiók továbbra is az Öné. Jelentkezzen be az alábbi régi bejelentkezési adataival, hogy visszahozza, a bejegyzéseivel, követőivel és egyenlegével.",
+    "welcomeBackWithLogin": "Üdvözlünk újra itt — ez a fiók továbbra is az Öné. Jelentkezz be az alábbi {{login}} fiókkal, hogy visszaállíthasd a fiókodat a bejegyzéseiddel, a követőiddel és az egyenlegeddel.",
+    "welcomeBackWaiting": "várakozik rá",
     "migrateNothingToRecover": "Ehhez a bejelentkezéshez nincs korábbi DeHub-fiók, így nincs mit átvinni. A beállítás befejezéséhez térj vissza az Új fiókhoz.",
     "migrateUnmatchedWarning": "Ennek a bejelentkezésnek nincs DeHub-fiókja a nyilvántartásban. A folytatás nem állít vissza semmit — létrehoz egy második fiókot egy új felhasználónévvel, és hátrahagyja a már meglévőt.",
     "migrateUnmatchedDetail": "Ezen a pénztárcacímen nincs profil. Ha újra bejelentkezett, térjen vissza, és használja azt a bejelentkezést, amellyel regisztrált.",

@@ -1090,6 +1090,8 @@
     "failedSubmit": "Müraciəti göndərmək uğursuz oldu. Zəhmət olmasa yenidən cəhd edin."
   },
   "loginModal": {
+    "welcomeBack": "Yenidən xoş gəldiniz — bu hesab hələ də sizin hesabınızdır. Postlarınızı, izləyicilərinizi və balansınızı geri gətirmək üçün aşağıdakı köhnə girişinizlə daxil olun.",
+    "welcomeBackWaiting": "onu gözləyir",
     "migrateNothingToRecover": "Bu girişdə daha əvvəlki DeHub hesabı yoxdur, buna görə də davam etmək üçün heç nə yoxdur. Bunu qurmağı tamamlamaq üçün Yeni hesaba qayıdın.",
     "migrateUnmatchedWarning": "Bu girişdə DeHub hesabı yoxdur. Davam etmək heç nəyi bərpa etmir — o, yeni istifadəçi adı ilə ikinci hesab yaradır və artıq sahib olduğunuzu geridə qoyur.",
     "migrateUnmatchedDetail": "Bu cüzdan ünvanında heç bir profil mövcud deyil. Yenidən daxil olmusunuzsa, geri qayıdın və əvəzində qeydiyyatdan keçdiyiniz girişdən istifadə edin.",

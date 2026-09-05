@@ -1090,6 +1090,9 @@
     "failedSubmit": "Hakemuksen lähetys epäonnistui. Yritä uudelleen."
   },
   "loginModal": {
+    "welcomeBack": "Tervetuloa takaisin — tämä tili on edelleen sinun. Kirjaudu sisään alla olevalla vanhalla kirjautumistunnuksellasi ja tuo se takaisin julkaisuillasi, seuraajillasi ja saldollasi.",
+    "welcomeBackWithLogin": "Tervetuloa takaisin — tämä tili on edelleen sinun. Kirjaudu sisään {{login}} -sovelluksella ja tuo se takaisin julkaisuillasi, seuraajillasi ja saldollasi.",
+    "welcomeBackWaiting": "odottaa sitä",
     "migrateNothingToRecover": "Tällä kirjautumistunnuksella ei ole aiempaa DeHub-tiliä, joten ei ole mitään tuotavaa. Palaa kohtaan Uusi tili viimeistelläksesi tämän tilin asetukset.",
     "migrateUnmatchedWarning": "Tällä kirjautumistunnuksella ei ole DeHub-tiliä. Jatkaminen ei palauta mitään — se luo toisen tilin uudella käyttäjätunnuksella ja jättää taakse sen, joka sinulla jo on.",
     "migrateUnmatchedDetail": "Tässä lompakon osoitteessa ei ole profiilia. Jos kirjauduit takaisin sisään, palaa takaisin ja käytä sen sijaan kirjautumistunnusta, jolla rekisteröidyit.",
