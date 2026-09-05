@@ -35,6 +35,7 @@ import {
   LayoutGrid,
   Play,
   Sparkles,
+  Wand2,
   Save,
   FileText,
   MapPin,
@@ -88,6 +89,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { SettingDrawerSelect } from '@/components/app/settings/SettingDrawerSelect';
 import { useTipNetwork, type TipNetworkOption } from '@/hooks/use-tip-network';
+import { setSmartRepliesEnabled, useSmartRepliesEnabled } from '@/hooks/use-smart-replies-enabled';
 import {
   SettingsRow,
   SETTINGS_CONTROL_CLASS,
@@ -3145,6 +3147,29 @@ function AssetsSettings() {
   );
 }
 
+/**
+ * Suggested replies (the two drafted cards above the chat box, with the orb).
+ *
+ * The × on the rail switches this off, which is the only way most people will
+ * ever meet this setting — so it has to be findable afterwards. Device-local,
+ * on the same storage key mobile writes.
+ */
+function SmartRepliesToggle() {
+  const { t } = useTranslation();
+  const enabled = useSmartRepliesEnabled();
+  return (
+    <SettingsRow
+      as="label"
+      className="cursor-pointer"
+      icon={<Wand2 />}
+      anchor="smart-replies"
+      title={t('settings.smartReplies', 'Suggested replies')}
+      description={t('settings.smartRepliesDesc', 'Draft two replies you can tap in a chat. The × on the suggestions turns this off.')}
+      action={<Switch checked={enabled} onCheckedChange={setSmartRepliesEnabled} />}
+    />
+  );
+}
+
 function MessagesSettings() {
   const { t } = useTranslation();
   const { whoCanMessage, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateDoNotDisturb } = useDmSettings();
@@ -3212,6 +3237,7 @@ function MessagesSettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.preferences')}</h3>
         <div className="space-y-4">
+          <SmartRepliesToggle />
           <SettingToggle
             icon={Bell}
             anchor="message-notifications"
