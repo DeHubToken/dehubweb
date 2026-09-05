@@ -50,6 +50,23 @@ const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text
 /** Survives the mobile redirect round-trip so the resumed leg still knows
  * which old login was used (and therefore which legacy account was reached). */
 const MIGRATE_PROVIDER_KEY = 'dehub_legacy_migrate_provider';
+const MIGRATE_PENDING_KEY = 'dehub_legacy_migration_pending';
+
+/**
+ * A legacy migration is mid-round-trip on this browser.
+ *
+ * Read straight from sessionStorage rather than from state: the two effects
+ * that care both run on mount and neither can rely on the other having set a
+ * flag yet, so state would be a race by construction. The key is written
+ * before the redirect leaves and cleared when the resume finishes.
+ */
+function legacyMigrationInFlight(): boolean {
+  try {
+    return !!sessionStorage.getItem(MIGRATE_PENDING_KEY);
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Which legacy account did this retrieval actually reach?
@@ -165,7 +182,18 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       // second account, with a generated username, for someone who was only
       // trying to sign back in. A positive "no old account for this verified
       // email" outranks the residue guess, so retreat to the New tab.
-      if (hint.exists === false && !userChoseModeRef.current) setMode('new');
+      //
+      // …but never out from under a migration that is already in flight. The
+      // redirect leg (below) sets mode='migrate', spends a Web3Auth round trip
+      // retrieving the key, and lands well after this one edge-function call.
+      // Flipping to 'new' in that window unmounts the confirm screen, so
+      // resolveSecret mints a FRESH mnemonic and silently discards the key the
+      // user was just told had been retrieved — the exact outcome this guard
+      // exists to prevent, on the population where exists === false is most
+      // likely to be wrong.
+      if (hint.exists === false && !userChoseModeRef.current && !legacyMigrationInFlight()) {
+        setMode('new');
+      }
       if (hint.exists === true && hint.accounts?.length) {
         if (!userChoseModeRef.current) setMode('migrate');
         const emailAccount = hint.accounts.find((a) => a.signupMethod === 'email' || a.signupMethod === 'email_passwordless');
@@ -182,7 +210,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   // when a migration round-trip is actually in progress.
   useEffect(() => {
     let pending = false;
-    try { pending = !!sessionStorage.getItem('dehub_legacy_migration_pending'); } catch { /* ignore */ }
+    try { pending = !!sessionStorage.getItem(MIGRATE_PENDING_KEY); } catch { /* ignore */ }
     const url = window.location.hash + window.location.search;
     const hasParams = url.includes('b64Params') || url.includes('sessionId') || url.includes('sessionNamespace');
     if (!pending || !hasParams) return;
