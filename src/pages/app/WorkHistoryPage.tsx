@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Search, Wallet, AlertTriangle, Plus } from 'lucide-react';
+import { ArrowLeft, Search, AlertTriangle, Plus } from 'lucide-react';
 import { useMyPostedJobs, useMyWorkSubmissions } from '@/features/work/hooks/use-work';
 import { bountyPath } from '@/features/work/seo';
 import { TxLink, statusBadgeClass, statusLabelKey } from '@/features/work/components/TxLink';
@@ -83,7 +83,7 @@ export default function WorkHistoryPage() {
 
       {!walletAddress ? (
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center">
-          <Wallet className="w-8 h-8 text-white/40 mx-auto mb-2" />
+          <ThemedIcon icon="lock" alt="" className="w-12 h-12 object-contain mx-auto mb-2 opacity-70" />
           <h2 className="text-base font-semibold text-white mb-1">{t('work.connectTitle')}</h2>
           <p className="text-sm text-white/60 max-w-md mx-auto mb-4">{t('work.connectBody')}</p>
           <button onClick={() => openLoginModal()} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold">{t('work.connectCta')}</button>
