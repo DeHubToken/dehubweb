@@ -63,6 +63,8 @@
     "live": "Suora"
   },
   "settings": {
+    "smartReplies": "Ehdotetut vastaukset",
+    "smartRepliesDesc": "Luonnostelee kaksi vastausta, joita voit napauttaa keskustelussa. Ehdotusten × poistaa tämän käytöstä.",
     "title": "Asetukset",
     "manageAccount": "Hallinnoi tiliäsi ja asetuksiasi",
     "logOut": "Kirjaudu ulos",
@@ -934,6 +936,10 @@
     "loginRequired": "Kirjautuminen vaaditaan"
   },
   "messages": {
+    "smartRepliesOff": "Ehdotetut vastaukset poistettiin käytöstä",
+    "smartRepliesOffWhere": "Ota ne takaisin käyttöön kohdassa Asetukset → Viestit.",
+    "smartRepliesUndo": "Kumoa",
+    "turnOffSmartReplies": "Poista ehdotetut vastaukset käytöstä",
     "encrypted": "Päästä päähän salattu",
     "encryptionOff": "Salaus ei ole käytössä tässä laitteessa",
     "encryptionTurnOn": "Ota käyttöön",

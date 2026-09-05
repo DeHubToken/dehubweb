@@ -35,6 +35,8 @@ interface SmartReplyRailProps {
   /** Card tapped: the text goes into the composer, unsent. */
   onPick: (text: string) => void;
   onDismiss: () => void;
+  /** Label for the × — the composer owns the copy, because it owns the `t`. */
+  dismissLabel?: string;
   /** Padding and dividers around the rail. The only thing that differs
    *  between the band above the composer and the strip below it. */
   className?: string;
@@ -47,6 +49,7 @@ export function SmartReplyRail({
   onGenerate,
   onPick,
   onDismiss,
+  dismissLabel,
   className = '',
 }: SmartReplyRailProps) {
   // 'idle' is unresolved, not empty: the call is on its way, so it reads as
@@ -181,7 +184,8 @@ export function SmartReplyRail({
           type="button"
           onMouseDown={(e) => e.preventDefault()}
           onClick={onDismiss}
-          aria-label="Hide suggested replies"
+          aria-label={dismissLabel ?? 'Turn off suggested replies'}
+          title={dismissLabel ?? 'Turn off suggested replies'}
           className="absolute right-1 top-1 rounded-full p-1.5 text-zinc-600 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
         >
           <X className="h-3.5 w-3.5" />

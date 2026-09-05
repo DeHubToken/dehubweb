@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Image, Send, Sparkles, Loader2, X, Gem, Reply, Wand2, MessageCircleQuestion, Paperclip, FileText } from 'lucide-react';
@@ -15,6 +16,7 @@ import type { Message } from './ChatMessage';
 import { VoiceRecorder } from './VoiceRecorder';
 import { SmartReplyRail } from './SmartReplyRail';
 import { useSmartReplies, type SmartReplyTurn } from '@/hooks/use-smart-replies';
+import { setSmartRepliesEnabled, useSmartRepliesEnabled } from '@/hooks/use-smart-replies-enabled';
 import {
   ATTACHMENT_ACCEPT,
   formatAttachmentSize,
@@ -78,6 +80,7 @@ interface ChatInputProps {
 }
 
 export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey }: ChatInputProps) {
+  const { t } = useTranslation();
   const [message, setMessage] = useDraft(draftKey, initialText ?? '');
   // initialText can arrive a tick after mount (MessagesPage sets the prefill
   // in an effect once the conversation resolves) — adopt it only while the
@@ -100,8 +103,13 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     onMentionInsert: (_user, newText) => setMessage(newText),
   });
 
+  // Down for THIS message only — the send handler drops the rail whose drafts
+  // the send just invalidated. Switching the feature off is a separate thing
+  // and lives in `smartRepliesEnabled`.
   const [railDismissed, setRailDismissed] = useState(false);
+  const smartRepliesEnabled = useSmartRepliesEnabled();
   const smartReplies = useSmartReplies(thread ?? [], peerName);
+
   const hasThread = !!thread && thread.length > 0;
 
   const [composerFocused, setComposerFocused] = useState(false);
@@ -154,7 +162,8 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
   const composerEmpty = !message.trim();
 
   useEffect(() => {
-    if (!hasThread || !composerEmpty) return;
+    // Switched off is switched off: no rail, and no model call behind it.
+    if (!hasThread || !composerEmpty || !smartRepliesEnabled) return;
     const { smartReplies: sr } = latest.current;
     if (draftedFor.current === sr.tailKey) return;
     draftedFor.current = sr.tailKey;
@@ -162,17 +171,28 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     // SUCCESSFUL draft goes stale, so a single failure would otherwise leave
     // the rail showing that failure for every message after it.
     if (sr.status === 'idle' || sr.status === 'error') sr.generate();
-  }, [hasThread, composerEmpty, smartReplies.tailKey]);
+  }, [hasThread, composerEmpty, smartRepliesEnabled, smartReplies.tailKey]);
 
-  // A new message re-arms a dismissed rail. Dismissing is "not for this
-  // message", not "never again" — the alternative is a feature the user can
-  // switch off by accident and never find again, since there is no orb
-  // anywhere else to press.
+  // A new message re-arms the per-message stand-down. It does NOT reopen a
+  // rail the user switched off — that is what `smartRepliesEnabled` is for.
   useEffect(() => {
     setRailDismissed(false);
   }, [smartReplies.tailKey]);
 
-  const handleDismissRail = () => setRailDismissed(true);
+  // The × switches the feature off, for every thread, until it is switched
+  // back on. There is no orb anywhere else to press once it is down, so the
+  // toast has to say where the switch lives — otherwise this is a control that
+  // makes a feature disappear with no way back.
+  const handleDismissRail = () => {
+    setSmartRepliesEnabled(false);
+    toast(t('messages.smartRepliesOff', 'Suggested replies turned off'), {
+      description: t('messages.smartRepliesOffWhere', 'Turn them back on in Settings → Messages.'),
+      action: {
+        label: t('messages.smartRepliesUndo', 'Undo'),
+        onClick: () => setSmartRepliesEnabled(true),
+      },
+    });
+  };
 
   /**
    * Drop a suggestion into the composer rather than sending it. The user still
@@ -413,7 +433,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
   // text, and on phones while the composer holds focus: the keyboard claims
   // exactly the band it sits in.
   const showRail =
-    hasThread && !railDismissed && !message.trim() && (!narrowViewport || !composerFocused);
+    hasThread && smartRepliesEnabled && !railDismissed && !message.trim() && (!narrowViewport || !composerFocused);
 
   const railProps = {
     status: smartReplies.status,
@@ -422,6 +442,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     onGenerate: () => smartReplies.generate(),
     onPick: handlePickSuggestion,
     onDismiss: handleDismissRail,
+    dismissLabel: t('messages.turnOffSmartReplies', 'Turn off suggested replies'),
   };
 
   return (

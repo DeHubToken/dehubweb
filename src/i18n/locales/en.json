@@ -63,6 +63,8 @@
     "live": "Live"
   },
   "settings": {
+    "smartReplies": "Suggested replies",
+    "smartRepliesDesc": "Draft two replies you can tap in a chat. The × on the suggestions turns this off.",
     "title": "Settings",
     "manageAccount": "Manage your account and preferences",
     "logOut": "Log out",
@@ -943,6 +945,10 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "smartRepliesOff": "Suggested replies turned off",
+    "smartRepliesOffWhere": "Turn them back on in Settings → Messages.",
+    "smartRepliesUndo": "Undo",
+    "turnOffSmartReplies": "Turn off suggested replies",
     "encrypted": "End-to-end encrypted",
     "encryptionOff": "Encryption is off on this device",
     "encryptionTurnOn": "Turn on",
