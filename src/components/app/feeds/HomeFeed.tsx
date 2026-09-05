@@ -15,6 +15,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
+import { flattenFeedPages } from '@/lib/feed-pages';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { RefreshCw, Radio, ChevronRight, ArrowUp, Rocket } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
@@ -998,9 +999,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     if (!useInterleavedFeed) return [];
     
     // Extract all items from each feed
-    const allVideos = videosFeed.data?.pages.flatMap(page => page.items || []) || [];
-    const allImages = imagesFeed.data?.pages.flatMap(page => page.items || []) || [];
-    const allTexts = textsFeed.data?.pages.flatMap(page => page.items || []) || [];
+    // Deduped: each of these three pages independently, and offset paging
+    // repeats rows across a page boundary. See lib/feed-pages.
+    const allVideos = flattenFeedPages(videosFeed.data?.pages);
+    const allImages = flattenFeedPages(imagesFeed.data?.pages);
+    const allTexts = flattenFeedPages(textsFeed.data?.pages);
     
     // Filter out pinned post from all feeds
     const filterPinned = (items: any[]) => 
@@ -1038,7 +1041,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const singleFeedItems = useMemo((): FeedItemType[] => {
     if (useInterleavedFeed || !singleFeed.data?.pages) return [];
     
-    let allItems = singleFeed.data.pages.flatMap(page => page.items || []);
+    let allItems = flattenFeedPages(singleFeed.data.pages);
     
     // Filter out pinned post
     const filteredItems = featuredPostId 
