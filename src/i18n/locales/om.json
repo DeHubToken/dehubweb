@@ -1266,6 +1266,12 @@
     "noMenuMatches": "Menuu keessatti wanti walsimu hin jiru",
     "searchDehubFor": "DeHub irraa \"{{query}}\" barbaadi"
   },
+  "comments": {
+    "discardTitle": "Yaada kee gatta?",
+    "discardBody": "Akka wixinee ol kaa'ameera, yeroo deebitu asuma jira.",
+    "keepWriting": "Barreessuu itti fufi",
+    "closeAnyway": "Haa ta'u malee cufi"
+  },
   "postInfo": {
     "title": "Odeeffannoo maxxansaa",
     "tokenId": "Token ID",

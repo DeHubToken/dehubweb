@@ -1,14 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 
 /**
  * True while an editable element (input / textarea / contenteditable) has
  * focus on a touch-primary device — i.e. while the on-screen keyboard is up.
  * Lets chrome (mobile bottom nav) hide so chat surfaces reclaim the space.
  */
-export function useKeyboardOpen() {
+export function useKeyboardOpen(enabled = true) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    // Gated so a hook mounted once per feed card only listens while its own
+    // surface is open — dozens of dormant focus listeners is exactly the
+    // pile-up ui/drawer.tsx defers Roots to avoid.
+    if (!enabled) {
+      setOpen(false);
+      return;
+    }
     // Fine-pointer devices type on a physical keyboard — no OSK ever appears,
     // so a desktop window resized below lg must keep its nav while typing.
     if (!window.matchMedia('(pointer: coarse)').matches) return;
@@ -38,7 +45,7 @@ export function useKeyboardOpen() {
       document.removeEventListener('focusin', onFocusIn);
       document.removeEventListener('focusout', onFocusOut);
     };
-  }, []);
+  }, [enabled]);
 
   return open;
 }
@@ -101,4 +108,63 @@ export function useVisualViewportBox(enabled: boolean) {
   }, [enabled]);
 
   return enabled ? box : { height: null, offsetTop: 0 };
+}
+
+/** Breathing room between the top of a keyboard-fitted sheet and the viewport. */
+const KEYBOARD_SHEET_GAP = 8;
+/** Never squeeze a sheet smaller than this, whatever the keyboard leaves. */
+const MIN_KEYBOARD_SHEET_HEIGHT = 180;
+
+/**
+ * Inline geometry that keeps a bottom sheet — and therefore its composer —
+ * inside the area the on-screen keyboard leaves visible.
+ *
+ * A vaul sheet is `position: fixed; bottom: 0`, i.e. pinned to the LAYOUT
+ * viewport. Android shrinks that viewport for the keyboard
+ * (`interactive-widget=resizes-content`, set in index.html) so bottom-0 stays
+ * where the reader can see it. iOS does not: the layout viewport keeps its
+ * full height, the keyboard is drawn over the bottom of it, and Safari pans
+ * the visual viewport to chase the focused field. So on iOS the sheet's whole
+ * lower half — the reply box included — sits behind the keyboard, and the
+ * band where the reader can still see the page is showing the scrim, which
+ * dismisses the sheet on a tap. That is the "I can't see what I'm typing, and
+ * it keeps closing on me" report.
+ *
+ * Measuring is the only portable answer: pin the sheet to the visual viewport
+ * (`top` = the pan offset, `height` = what is visible) and both platforms land
+ * in the same place. Positioned with top/height and never a transform —
+ * vaul writes `transform: translate3d(...)` inline to drive the slide-up.
+ *
+ * Pass `repositionInputs={false}` on any Drawer using this: vaul has its own
+ * keyboard handling that writes `height`/`bottom` straight onto the same node,
+ * knows nothing about the pan offset, and only fires on `resize`.
+ */
+export function useKeyboardSafeSheet(enabled: boolean): {
+  keyboardOpen: boolean;
+  style: CSSProperties | null;
+} {
+  const keyboardOpen = useKeyboardOpen(enabled);
+  const { height, offsetTop } = useVisualViewportBox(enabled && keyboardOpen);
+
+  // Only step in where the keyboard actually eats into the visible area
+  // without the layout viewport following — iOS. On Android the two shrink
+  // together, `bottom: 0` already lands above the keyboard, and this would be
+  // a resize for nothing. Also skips the beat between focus and the keyboard
+  // finishing its slide-up, where the viewport still measures full height.
+  const layoutHeight = typeof window === 'undefined' ? 0 : window.innerHeight;
+  const keyboardTakesSpace =
+    height !== null && (offsetTop > 1 || height < layoutHeight - 40);
+
+  if (!enabled || !keyboardOpen || !height || !keyboardTakesSpace) {
+    return { keyboardOpen: enabled && keyboardOpen, style: null };
+  }
+  return {
+    keyboardOpen: true,
+    style: {
+      top: offsetTop + KEYBOARD_SHEET_GAP,
+      bottom: 'auto',
+      height: Math.max(height - KEYBOARD_SHEET_GAP, MIN_KEYBOARD_SHEET_HEIGHT),
+      maxHeight: 'none',
+    },
+  };
 }
