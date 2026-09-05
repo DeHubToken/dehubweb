@@ -4266,6 +4266,7 @@ export type Database = {
           summary_status: string
           updated_at: string
           visibility: string
+          visibility_locked: boolean
           vtt: string | null
         }
         Insert: {
@@ -4292,6 +4293,7 @@ export type Database = {
           summary_status?: string
           updated_at?: string
           visibility?: string
+          visibility_locked?: boolean
           vtt?: string | null
         }
         Update: {
@@ -4318,6 +4320,7 @@ export type Database = {
           summary_status?: string
           updated_at?: string
           visibility?: string
+          visibility_locked?: boolean
           vtt?: string | null
         }
         Relationships: []
@@ -5497,6 +5500,13 @@ export type Database = {
         Returns: number
       }
       bulk_insert_category_log: { Args: { entries: Json }; Returns: number }
+      category_counts: {
+        Args: { p_since?: string }
+        Returns: {
+          name: string
+          post_count: number
+        }[]
+      }
       chess_ladder: {
         Args: { p_limit?: number }
         Returns: {
