@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Loader2, Mail } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import {
   SettingsRow,
   SETTINGS_CONTROL_CLASS,
@@ -116,7 +117,7 @@ export function EmailSignInSettings() {
   return (
     <div className="space-y-3">
       <SettingsRow
-        icon={<Mail />}
+        icon={<ThemedIcon icon="email" alt="" className="size-5 object-contain" />}
         title={t('settings.emailSignIn', 'Sign-in email')}
         description={
           linked

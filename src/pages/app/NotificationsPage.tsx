@@ -1939,8 +1939,8 @@ export default function NotificationsPage() {
                     <div className="space-y-2">
                       <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                            <ThumbsUp className="w-5 h-5 text-white" />
+                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
+                            <ThemedIcon icon="trophy" alt="" className="w-8 h-8 object-contain" />
                           </div>
                           <div>
                             <p className="text-white font-medium">{t('notifications.likes')}</p>
@@ -1954,8 +1954,8 @@ export default function NotificationsPage() {
                       
                       <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                            <MessageSquareText className="w-5 h-5 text-white" />
+                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
+                            <ThemedIcon icon="posts" alt="" className="w-8 h-8 object-contain" />
                           </div>
                           <div>
                             <p className="text-white font-medium">{t('notifications.comments')}</p>
@@ -1969,8 +1969,8 @@ export default function NotificationsPage() {
                       
                       <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                            <UserPlus className="w-5 h-5 text-white" />
+                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
+                            <ThemedIcon icon="accounts" alt="" className="w-8 h-8 object-contain" />
                           </div>
                           <div>
                             <p className="text-white font-medium">{t('notifications.follows')}</p>
@@ -1984,8 +1984,8 @@ export default function NotificationsPage() {
                       
                       <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                            <Gem className="w-5 h-5 text-white" />
+                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
+                            <ThemedIcon icon="superpowers" alt="" className="w-8 h-8 object-contain" />
                           </div>
                           <div>
                             <p className="text-white font-medium">{t('notifications.tips')}</p>
@@ -1999,8 +1999,8 @@ export default function NotificationsPage() {
                       
                       <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                            <Users className="w-5 h-5 text-white" />
+                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
+                            <ThemedIcon icon="subscriptions" alt="" className="w-8 h-8 object-contain" />
                           </div>
                           <div>
                             <p className="text-white font-medium">{t('notifications.subscriptions')}</p>
@@ -2014,8 +2014,8 @@ export default function NotificationsPage() {
                       
                       <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                            <Zap className="w-5 h-5 text-white" />
+                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
+                            <ThemedIcon icon="live" alt="" className="w-8 h-8 object-contain" />
                           </div>
                           <div>
                             <p className="text-white font-medium">{t('notifications.livestreams')}</p>

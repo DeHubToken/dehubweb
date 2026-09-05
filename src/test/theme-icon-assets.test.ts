@@ -12,6 +12,7 @@ const PAGE_KEYS = [
   'wand', 'communities', 'careers', 'features', 'glossary', 'governance',
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
+  'email', 'accounts', 'usernames', 'tv', 'superpowers',
 ];
 
 describe('theme icon assets', () => {
@@ -65,6 +66,10 @@ describe('theme icon assets', () => {
       'src/pages/app/SettingsPage.tsx',
       'src/pages/app/StatsPage.tsx',
       'src/pages/app/StoresPage.tsx',
+      'src/pages/app/AccountsPage.tsx',
+      'src/pages/app/UsernamesPage.tsx',
+      'src/pages/app/TVPage.tsx',
+      'src/pages/app/SuperPowersPage.tsx',
       'src/pages/app/WorkPage.tsx',
     ];
 
@@ -74,7 +79,7 @@ describe('theme icon assets', () => {
     }
   });
 
-  it('keeps Store and Bounty identity states on themed icons', () => {
+  it('keeps page and state identity surfaces on themed icons', () => {
     const guardedImports: Record<string, RegExp> = {
       'src/pages/app/StoresPage.tsx': /\b(Store|ShoppingBag|PackagePlus)\b/,
       'src/pages/app/WorkPage.tsx': /\b(Briefcase|Search|Scissors|MessageSquare)\b/,
@@ -85,6 +90,14 @@ describe('theme icon assets', () => {
       'src/components/app/stores/StoreListingCard.tsx': /\bImageIcon\b/,
       'src/components/app/stores/StoreLinkEmbed.tsx': /\b(StoreIcon|ImageIcon)\b/,
       'src/features/work/components/JobCard.tsx': /\bBriefcase\b/,
+      'src/features/work/components/BountyLinkEmbed.tsx': /\bBriefcase\b/,
+      'src/components/app/settings/EmailSignInSettings.tsx': /\bMail\b/,
+      'src/components/app/login/LoginModalBody.tsx': /\bMail\b/,
+      'src/pages/app/AccountsPage.tsx': /\bUsers\b/,
+      'src/pages/app/UsernamesPage.tsx': /\bAtSign\b/,
+      'src/pages/app/SuperPowersPage.tsx': /\bRocket\b/,
+      'src/components/app/tv/TVPreviewCard.tsx': /\bTv\b/,
+      'src/components/app/tv/TVChannelCard.tsx': /\bTv\b/,
     };
 
     for (const [file, pattern] of Object.entries(guardedImports)) {

@@ -1,6 +1,7 @@
 import type React from 'react';
 import {
   AudioLines,
+  AtSign,
   BarChart3,
   Bookmark,
   CalendarDays,
@@ -34,8 +35,10 @@ import {
   Store,
   Ticket,
   Trophy,
+  Tv,
   User,
   type LucideIcon,
+  Zap,
 } from 'lucide-react';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
@@ -135,7 +138,8 @@ export type ThemeIconKey =
   | 'wand' | 'communities' | 'careers' | 'features' | 'glossary'
   | 'governance' | 'trophy' | 'notifications' | 'settings' | 'stages'
   | 'assistant' | 'lock' | 'profile' | 'arcade' | 'stores' | 'bounties'
-  | 'events' | 'stats' | 'ads' | 'command';
+  | 'events' | 'stats' | 'ads' | 'command' | 'email' | 'accounts'
+  | 'usernames' | 'tv' | 'superpowers';
 
 /**
  * Raster icon replacements shared by every non-War themed page.
@@ -193,6 +197,7 @@ const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
   'wand', 'communities', 'careers', 'features', 'glossary', 'governance',
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
+  'email', 'accounts', 'usernames', 'tv', 'superpowers',
 ]);
 
 const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
@@ -228,6 +233,11 @@ const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
   stats: BarChart3,
   ads: Megaphone,
   command: LayoutDashboard,
+  email: Mail,
+  accounts: Users,
+  usernames: AtSign,
+  tv: Tv,
+  superpowers: Zap,
 };
 
 export function resolveThemeIconKey(src: string): ThemeIconKey | null {
