@@ -1426,6 +1426,12 @@
     "noMenuMatches": "মেনুত কিছু মিলতেছে না",
     "searchDehubFor": "DeHub-ত \"{{query}}\" খোঁজেন"
   },
+  "comments": {
+    "discardTitle": "তোমার মন্তব্য বাদ দিবেন?",
+    "discardBody": "এইটা খসড়া হিসাবে জমা আছে, ফিরি আসলে এটেই পাইবেন।",
+    "keepWriting": "লেখা চালাইয়া যান",
+    "closeAnyway": "তাও বন্ধ করেন"
+  },
   "postInfo": {
     "title": "পোস্ট তথ্য",
     "tokenId": "টোকেন ID",

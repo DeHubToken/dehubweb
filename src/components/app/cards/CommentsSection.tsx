@@ -12,7 +12,7 @@
 
 import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback, createContext, useContext, lazy, Suspense } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
-import { saveDraft, loadDraft, clearDraft } from '@/lib/comment-draft-cache';
+import { saveDraft, loadDraft, clearDraft, type CommentDraft } from '@/lib/comment-draft-cache';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -89,6 +89,34 @@ interface CommentsSectionProps {
    * have no thread block, and hiding without showing would lose comments.
    */
   postAuthorAddress?: string;
+  /**
+   * Fires whenever the composer goes from empty to holding something unsent,
+   * and back. The host sheet uses it to refuse to close mid-sentence — see
+   * CommentsWrapper. Must be stable; it is an effect dependency.
+   */
+  onDirtyChange?: (dirty: boolean) => void;
+}
+
+/**
+ * Rebuild the "Replying to @x" target from a stored draft.
+ *
+ * Only the id and the username were worth persisting — the id is what the
+ * server needs as `parentId` and the username is all the composer's chip
+ * shows — so the rest of the shape is filled in with blanks. Nothing reads
+ * them: this object never reaches the list, only the composer.
+ */
+function draftReplyTarget(draft: CommentDraft | null): Comment | null {
+  if (!draft?.parentId) return null;
+  return {
+    id: draft.parentId,
+    username: draft.parentUsername || '',
+    text: '',
+    likes: 0,
+    dislikes: 0,
+    views: 0,
+    timeAgo: '',
+    createdAt: new Date(draft.updatedAt),
+  };
 }
 
 const SORT_OPTIONS = [
@@ -604,7 +632,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
 // MAIN COMPONENT
 // ============================================================================
 
-export function CommentsSection({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, postAuthorAddress }: CommentsSectionProps) {
+export function CommentsSection({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, postAuthorAddress, onDirtyChange }: CommentsSectionProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, isAuthenticated, walletAddress } = useAuth();
@@ -658,8 +686,12 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const { layerRef: commentsTabLayerRef, setRef: setCommentsTabRef, rect: commentsTabRect } = useTabIndicator(activeTab, undefined, commentsIsDraggingRef);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'recent' | 'oldest' | 'liked'>('recent');
-  const [newComment, setNewComment] = useState(() => loadDraft(tokenId));
-  const [replyTo, setReplyTo] = useState<Comment | null>(null);
+  // Whatever was left unsent last time, restored whole: the text, the reply it
+  // was aimed at and a GIF. Read once here rather than in each initialiser so
+  // the three can't disagree.
+  const [restoredDraft] = useState(() => loadDraft(tokenId));
+  const [newComment, setNewComment] = useState(() => restoredDraft?.text ?? '');
+  const [replyTo, setReplyTo] = useState<Comment | null>(() => draftReplyTarget(restoredDraft));
   const [tipComment, setTipComment] = useState<Comment | null>(null);
   // Which of the viewer's own comments has its likers drawer open.
   const [likersCommentId, setLikersCommentId] = useState<string | null>(null);
@@ -689,10 +721,12 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const [commentImagePreview, setCommentImagePreview] = useState<string | null>(null);
   // A GIF is already hosted (GIPHY), so unlike commentImage it needs no
   // upload step — just the URL, carried straight through to comment_image.
-  const [commentGifUrl, setCommentGifUrl] = useState<string | null>(null);
+  const [commentGifUrl, setCommentGifUrl] = useState<string | null>(restoredDraft?.gifUrl ?? null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [isInputExpanded, setIsInputExpanded] = useState(false);
+  // A restored draft opens the composer already expanded: the collapsed well is
+  // one line tall, so anything longer would come back apparently truncated.
+  const [isInputExpanded, setIsInputExpanded] = useState(() => Boolean(restoredDraft?.text));
   const mention = useMention({
     inputRef,
     onMentionInsert: (_user, newText) => setNewComment(newText),
@@ -725,15 +759,27 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   // an emoji, and a restored draft all arrive without an input event.
   useLayoutEffect(resizeInput, [resizeInput, newComment]);
 
-  // Persist draft to localStorage on every keystroke
+  // Persist the whole composer on every keystroke, GIF and change of reply
+  // target. One entry per post, so switching reply target carries the text
+  // over instead of filing it under a key nothing reads again.
   useEffect(() => {
-    saveDraft(tokenId, newComment, replyTo?.id);
-  }, [newComment, tokenId, replyTo?.id]);
+    saveDraft(tokenId, {
+      text: newComment,
+      parentId: replyTo?.id,
+      parentUsername: replyTo?.username,
+      gifUrl: commentGifUrl ?? undefined,
+    });
+  }, [newComment, tokenId, replyTo?.id, replyTo?.username, commentGifUrl]);
 
-  // Restore draft when switching reply target
+  // Something unsent in the box. The host sheet reads this to refuse to close
+  // mid-sentence; an unmount reports clean so a closed sheet can't latch it on.
+  const hasUnsentContent = Boolean(
+    newComment.trim() || voiceNote || commentImage || commentGifUrl,
+  );
   useEffect(() => {
-    setNewComment(loadDraft(tokenId, replyTo?.id));
-  }, [replyTo?.id, tokenId]);
+    onDirtyChange?.(hasUnsentContent);
+  }, [hasUnsentContent, onDirtyChange]);
+  useEffect(() => () => onDirtyChange?.(false), [onDirtyChange]);
 
   const MAX_VOICE_DURATION = 30;
 
@@ -1282,9 +1328,16 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     }
   };
 
+  /**
+   * Drop the reply target, keep what was typed — it posts as a top-level
+   * comment instead. This used to blank the box as well, which meant the X on
+   * the "Replying to" chip, and Escape in the field, both threw away a written
+   * comment. That was load-bearing when drafts were stored per reply target
+   * (clearing the target reloaded the top-level draft over it); one draft per
+   * post now, so the text simply stays.
+   */
   const handleClearReply = () => {
     setReplyTo(null);
-    setNewComment('');
   };
 
   const handleTip = (commentId: string) => {
@@ -1375,7 +1428,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     }
     const imageFile = commentImage;
     const gifUrl = commentGifUrl;
-    clearDraft(tokenId, replyTo?.id);
+    const audioNote = voiceNote;
+    const submittedText = newComment;
+    clearDraft(tokenId);
     setReplyTo(null);
     setNewComment('');
     setVoiceNote(null);
@@ -1442,6 +1497,21 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       if (mentionsAssistant(newComment)) armAssistantReply();
     } catch (err) {
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
+      // Put the message back in the composer. The box was cleared the moment
+      // Post was tapped, so a refusal used to destroy what the author wrote —
+      // the one moment losing it hurts most. The image and the voice note are
+      // still in this closure, which is the only place they can come back from
+      // (an object URL means nothing to the next page load); the preview URL
+      // was revoked with the old state, so mint a fresh one.
+      setNewComment(submittedText);
+      setReplyTo(replyTarget);
+      setVoiceNote(audioNote);
+      if (gifUrl) setCommentGifUrl(gifUrl);
+      if (imageFile) {
+        setCommentImage(imageFile);
+        setCommentImagePreview(URL.createObjectURL(imageFile));
+      }
+      setIsInputExpanded(true);
       // The server's own words when it has them — a refusal explains itself
       // ("comments are turned off", a link that cannot be posted) and a
       // generic failure message would leave the author guessing.

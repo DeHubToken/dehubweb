@@ -1284,6 +1284,12 @@
     "noMenuMatches": "Akukho okufanayo kumenyu",
     "searchDehubFor": "Sesha \"{{query}}\" ku-DeHub"
   },
+  "comments": {
+    "discardTitle": "Ulahla umbono wakho?",
+    "discardBody": "Ulondolozwe njengohlaka, ngakho uzoba lapha uma ubuya.",
+    "keepWriting": "Qhubeka ubhala",
+    "closeAnyway": "Vala noma kunjalo"
+  },
   "postInfo": {
     "title": "Ulwazi Lokuthunyelwe",
     "tokenId": "Token ID",

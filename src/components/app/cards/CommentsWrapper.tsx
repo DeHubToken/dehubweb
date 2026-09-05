@@ -17,7 +17,9 @@ import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
-import { lazy, Suspense, useState, useEffect, useRef } from 'react';
+import { dismissKeyboard, useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
+import { lazy, Suspense, useState, useEffect, useRef, useCallback, type PointerEvent as ReactPointerEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // The thread itself is a lazy chunk. This wrapper sits inside every feed card,
 // so CommentsSection (the composer, reactions, likers drawer, translation…)
@@ -152,6 +154,125 @@ function useWheelChaining(enabled: boolean) {
   return ref;
 }
 
+/** Far enough down to have been a dismiss, had the sheet been dismissible. */
+const SWIPE_WARN_PX = 60;
+
+/**
+ * Refuse to close a comment sheet out from under someone mid-sentence.
+ *
+ * Every dismissal route is covered: the scrim, Escape, and the drag-down —
+ * which vaul is told to stop honouring (`dismissible={false}`) while there is
+ * unsent text, since its close path leaves the sheet mid-drag if the parent
+ * declines to close. Each of them raises the same confirmation instead of
+ * silently swallowing the gesture, so the sheet never just sits there
+ * ignoring the reader either.
+ *
+ * The text itself is never at stake — it is in the draft store before this
+ * runs (lib/comment-draft-cache) — but "I typed a paragraph and it vanished"
+ * is what an unexpected dismiss feels like, whatever is on disk.
+ */
+function useCloseGuard(onOpenChange: (open: boolean) => void) {
+  const [hasUnsent, setHasUnsent] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const dragStart = useRef<number | null>(null);
+
+  // Stable: CommentsSection has this in an effect's dependencies.
+  const onDirtyChange = useCallback((dirty: boolean) => setHasUnsent(dirty), []);
+
+  const requestClose = useCallback(() => {
+    if (!hasUnsent) {
+      onOpenChange(false);
+      return;
+    }
+    // Let the keyboard go first, or the sheet is still keyboard-sized and the
+    // confirmation renders in a sliver.
+    dismissKeyboard();
+    setConfirming(true);
+  }, [hasUnsent, onOpenChange]);
+
+  const handleOpenChange = useCallback(
+    (next: boolean) => {
+      if (!next) {
+        requestClose();
+        return;
+      }
+      onOpenChange(next);
+    },
+    [onOpenChange, requestClose],
+  );
+
+  const discard = useCallback(() => {
+    setConfirming(false);
+    onOpenChange(false);
+  }, [onOpenChange]);
+
+  const keepWriting = useCallback(() => setConfirming(false), []);
+
+  /** Watches for the drag-down that `dismissible={false}` is now swallowing. */
+  const dragProps = {
+    onPointerDown: (e: ReactPointerEvent<HTMLDivElement>) => {
+      const target = e.target as Element | null;
+      // The sheet body is `data-vaul-no-drag`, so a gesture starting there was
+      // never a dismiss — it is the list scrolling or the composer.
+      dragStart.current = target?.closest?.('[data-vaul-no-drag]') ? null : e.clientY;
+    },
+    onPointerMove: (e: ReactPointerEvent<HTMLDivElement>) => {
+      if (dragStart.current === null || !hasUnsent) return;
+      if (e.clientY - dragStart.current < SWIPE_WARN_PX) return;
+      dragStart.current = null;
+      requestClose();
+    },
+    onPointerUp: () => {
+      dragStart.current = null;
+    },
+  };
+
+  return {
+    hasUnsent,
+    confirming,
+    onDirtyChange,
+    handleOpenChange,
+    requestClose,
+    discard,
+    keepWriting,
+    dragProps,
+  };
+}
+
+/** The confirmation itself — drawn inside the sheet, not as a nested overlay. */
+function DiscardGuard({ onKeepWriting, onDiscard }: { onKeepWriting: () => void; onDiscard: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <div
+      data-comments-discard-guard
+      data-vaul-no-drag
+      className="absolute inset-0 z-30 flex items-center justify-center bg-black/70 backdrop-blur-sm px-6"
+      onClick={e => e.stopPropagation()}
+    >
+      <div className="w-full max-w-[300px] rounded-2xl border border-white/10 bg-zinc-900/95 p-4 text-center shadow-2xl">
+        <p className="text-sm font-semibold text-white">{t('comments.discardTitle')}</p>
+        <p className="mt-1.5 text-xs leading-relaxed text-zinc-400">{t('comments.discardBody')}</p>
+        <div className="mt-4 flex gap-2">
+          <button
+            type="button"
+            onClick={onKeepWriting}
+            className="flex-1 rounded-xl bg-white px-3 py-2.5 text-sm font-semibold text-black"
+          >
+            {t('comments.keepWriting')}
+          </button>
+          <button
+            type="button"
+            onClick={onDiscard}
+            className="flex-1 rounded-xl border border-white/15 px-3 py-2.5 text-sm font-medium text-zinc-300"
+          >
+            {t('comments.closeAnyway')}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false, postAuthorAddress }: CommentsWrapperProps) {
   const isTabletOrMobile = useIsTabletOrMobile();
   const isPhone = useIsPhone();
@@ -169,10 +290,17 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
   //
   // Counted, so it nests with the viewer's own lock instead of fighting it.
   const immersiveSheet = isTabletOrMobile && immersive;
+  const phoneSheet = isPhone && !immersive;
   useEffect(() => {
     if (!immersiveSheet || !open) return;
     return lockBodyScroll();
   }, [immersiveSheet, open]);
+
+  // Both sheets put the composer at their bottom edge, which on iOS is behind
+  // the keyboard: see useKeyboardSafeSheet for why `dvh` and `bottom: 0` are
+  // not enough there.
+  const { style: keyboardStyle } = useKeyboardSafeSheet(open && (phoneSheet || immersiveSheet));
+  const guard = useCloseGuard(onOpenChange);
   // Inline expansion only — the immersive drawer sits over fullscreen media and
   // should keep the scroll to itself.
   const wheelChainRef = useWheelChaining(open && !isPhone && !(isTabletOrMobile && immersive));
@@ -180,9 +308,22 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
   // Phone, non-immersive: the sheet. Modal, because unlike the immersive case
   // there is nothing behind it worth keeping visible, and the scrim is what
   // makes the thread read as its own surface instead of part of the card.
-  if (isPhone && !immersive) {
+  if (phoneSheet) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange} modal dismissible>
+      <Drawer
+        open={open}
+        onOpenChange={guard.handleOpenChange}
+        modal
+        // Unsent text turns the drag-down off rather than letting vaul run its
+        // close path and be refused — `closeDrawer` does not put the transform
+        // back, so a declined drag would leave the sheet stranded half off the
+        // screen. useCloseGuard's dragProps warn in its place.
+        dismissible={!guard.hasUnsent}
+        // vaul's own keyboard handling writes height/bottom onto this same
+        // node from a `resize` listener that never sees iOS's viewport pan.
+        // The geometry below is measured; the two cannot both be right.
+        repositionInputs={false}
+      >
         <DrawerContent
           glass
           hideHandle={false}
@@ -191,26 +332,46 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
           style={{
             height: '82dvh',
             maxHeight: 'calc(100dvh - env(safe-area-inset-top) - 8px)',
+            ...keyboardStyle,
           }}
+          onPointerDownOutside={e => {
+            if (!guard.hasUnsent) return;
+            e.preventDefault();
+            guard.requestClose();
+          }}
+          onEscapeKeyDown={e => {
+            if (!guard.hasUnsent) return;
+            e.preventDefault();
+            guard.requestClose();
+          }}
+          {...guard.dragProps}
         >
           {/* One padding step and no nested card: the indent budget the replies
               spend is the viewport's, not what a bento left over. The section itself
               carries px-2 on mobile, so this is one 12px gutter, not two. */}
           <div
             className="flex-1 min-h-0 h-full px-1"
-            style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 12px)' }}
+            style={{
+              // Above the keyboard there is no home indicator to clear, and
+              // every pixel spent here comes off the composer.
+              paddingBottom: keyboardStyle ? 4 : 'max(env(safe-area-inset-bottom), 12px)',
+            }}
             data-vaul-no-drag
           >
             <Suspense fallback={null}>
               <CommentsSection
                 tokenId={tokenId}
-                onClose={() => onOpenChange(false)}
+                onClose={guard.requestClose}
                 initialTab={initialTab}
                 commentsDisabled={commentsDisabled}
                 postAuthorAddress={postAuthorAddress}
+                onDirtyChange={guard.onDirtyChange}
               />
             </Suspense>
           </div>
+          {guard.confirming && (
+            <DiscardGuard onKeepWriting={guard.keepWriting} onDiscard={guard.discard} />
+          )}
         </DrawerContent>
       </Drawer>
     );
@@ -218,13 +379,14 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
 
   // Only fullscreen/immersive surfaces use the bottom-sheet drawer. Feed cards
   // fall through to the inline expansion below on every breakpoint.
-  if (isTabletOrMobile && immersive) {
+  if (immersiveSheet) {
     return (
       <Drawer
         open={open}
-        onOpenChange={onOpenChange}
+        onOpenChange={guard.handleOpenChange}
         modal={false}
-        dismissible={true}
+        dismissible={!guard.hasUnsent}
+        repositionInputs={false}
       >
         <DrawerContent
           glass
@@ -233,19 +395,39 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
           style={{
             height: adaptiveDrawerHeight,
             maxHeight: 'calc(100dvh - env(safe-area-inset-top) - 8px)',
+            ...keyboardStyle,
           }}
+          onPointerDownOutside={e => {
+            if (!guard.hasUnsent) return;
+            e.preventDefault();
+            guard.requestClose();
+          }}
+          onEscapeKeyDown={e => {
+            if (!guard.hasUnsent) return;
+            e.preventDefault();
+            guard.requestClose();
+          }}
+          {...guard.dragProps}
         >
-          <div className="flex-1 min-h-0 px-3 pb-3 h-full" data-vaul-no-drag>
+          <div
+            className="flex-1 min-h-0 px-3 h-full"
+            style={{ paddingBottom: keyboardStyle ? 4 : 12 }}
+            data-vaul-no-drag
+          >
             <Suspense fallback={null}>
               <CommentsSection
                 tokenId={tokenId}
-                onClose={() => onOpenChange(false)}
+                onClose={guard.requestClose}
                 initialTab={initialTab}
                 commentsDisabled={commentsDisabled}
                 postAuthorAddress={postAuthorAddress}
+                onDirtyChange={guard.onDirtyChange}
               />
             </Suspense>
           </div>
+          {guard.confirming && (
+            <DiscardGuard onKeepWriting={guard.keepWriting} onDiscard={guard.discard} />
+          )}
         </DrawerContent>
       </Drawer>
     );

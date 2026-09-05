@@ -1066,6 +1066,12 @@
     "noMenuMatches": "Không có mục nào trong menu khớp",
     "searchDehubFor": "Tìm \"{{query}}\" trên DeHub"
   },
+  "comments": {
+    "discardTitle": "Bỏ bình luận của bạn?",
+    "discardBody": "Đã lưu thành bản nháp, nên nó vẫn ở đây khi bạn quay lại.",
+    "keepWriting": "Viết tiếp",
+    "closeAnyway": "Vẫn đóng"
+  },
   "postInfo": {
     "title": "Post Info",
     "tokenId": "Token ID",
