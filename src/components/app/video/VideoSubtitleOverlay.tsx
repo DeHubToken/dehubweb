@@ -144,8 +144,21 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   // The dub follows the subtitle language: pick Spanish captions and "Dubbed"
   // plays Spanish speech. Only languages the synthesiser knows qualify.
   const dubLang = normalizedLang === 'original' ? null : dubLangFor(normalizedLang);
+
+  // With captions on Original there is no language to dub into yet, so the
+  // toggle borrows the viewer's own — but only when that differs from what is
+  // already being spoken. An English viewer on an English video has nowhere to
+  // go, and the pill has to say so by staying disabled: switching on and then
+  // doing nothing, with no hint, is how this looked broken.
+  const autoDubLang = useMemo(() => {
+    if (normalizedLang !== 'original') return null;
+    const guess = detectLocaleLang();
+    const voiced = dubLangFor(guess);
+    return voiced && voiced !== sourceLang ? guess : null;
+  }, [normalizedLang, sourceLang]);
+
   const wantDub = dubOn && isReady && !!dubLang;
-  const { dub, request: requestDub } = useVideoDub(transcript?.id ?? null, dubLang, wantDub);
+  const { dub, request: requestDub, stalled: dubStalled } = useVideoDub(transcript?.id ?? null, dubLang, wantDub);
 
   // Ask once for a language nobody has rendered yet. A failed row is asked
   // again — the function owns the attempt ceiling and backoff, not the client.
@@ -307,10 +320,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   // "Dubbed" with captions still on Original: switch to the viewer's own
   // language if it can be voiced, otherwise there is nothing to dub into.
   const handleDubToggle = (next: boolean) => {
-    if (next && normalizedLang === 'original') {
-      const guess = detectLocaleLang();
-      if (dubLangFor(guess) && dubLangFor(guess) !== sourceLang) setLang(guess);
-    }
+    if (next && autoDubLang) setLang(autoDubLang);
     setDubOn(next);
   };
 
@@ -406,7 +416,8 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
         dubOn={dubOn}
         setDubOn={handleDubToggle}
         dubStatus={dubStatus}
-        dubPossible={!!dubLang || normalizedLang === 'original'}
+        dubStalled={dubStalled}
+        dubPossible={!!dubLang || !!autoDubLang}
       />
     </>
   );
@@ -439,6 +450,7 @@ interface SubtitleMenuProps {
   dubOn: boolean;
   setDubOn: (next: boolean) => void;
   dubStatus: DubStatus | 'absent' | null;
+  dubStalled: boolean;
   /** False when the chosen caption language has no voice. */
   dubPossible: boolean;
 }
@@ -448,15 +460,17 @@ function SubtitleMenu(props: SubtitleMenuProps) {
     open, setOpen, handleToggle, buttonVisible, buttonClassName, buttonState,
     enabled, setEnabled, showSettings, setShowSettings, size, setSize, sizePx,
     isReady, isWorking, isEmpty, isFailed, langLabel, query, setQuery, filteredLangs, lang, setLang,
-    dubOn, setDubOn, dubStatus, dubPossible,
+    dubOn, setDubOn, dubStatus, dubStalled, dubPossible,
   } = props;
   const isTouch = useIsTouchDevice();
   const { t } = useTranslation();
 
+  // A row that has not moved in ten minutes is not on its way — say so rather
+  // than spinning at someone indefinitely.
   const dubHint =
     dubStatus === 'ready' || dubStatus === null
       ? null
-      : dubStatus === 'failed'
+      : dubStatus === 'failed' || dubStalled
       ? t('dub.unavailable')
       : t('dub.preparing');
 
@@ -572,7 +586,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       </div>
       {dubOn && dubHint && (
         <p className="mt-1 text-[11px] text-white/50 flex items-center gap-1">
-          {dubStatus !== 'failed' && <Loader2 className="w-3 h-3 animate-spin" />}
+          {dubStatus !== 'failed' && !dubStalled && <Loader2 className="w-3 h-3 animate-spin" />}
           {dubHint}
         </p>
       )}
