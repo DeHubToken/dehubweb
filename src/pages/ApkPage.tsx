@@ -19,23 +19,65 @@ const RELEASE_REPO = "DeHubToken/dehub-mobile";
 const DOWNLOAD_URL = `https://github.com/${RELEASE_REPO}/releases/latest/download/dehub.apk`;
 const RELEASE_API = `https://api.github.com/repos/${RELEASE_REPO}/releases/latest`;
 
-// What the page shows before the live release lookup answers — and permanently
-// if it never does. The API 404s while the repo has no release at all and rate
-// limits unauthenticated callers at 60/hour per visitor IP, so the button is
-// never allowed to depend on it.
-const FALLBACK_VERSION = "1.14.1";
-const FALLBACK_SIZE = "194 MB";
-const FALLBACK_DATE = "17 Aug 2026";
-const FALLBACK_ISO = "2026-08-17";
+// The page used to carry hardcoded version/size/date constants for when the
+// lookup below fails. It fails routinely — unauthenticated GitHub allows 60
+// calls an hour per IP, which a shared or CGNAT address burns through — so
+// those constants were shown to real visitors, and they went three releases
+// stale while the button beside them kept serving the newest build. Nothing
+// here may assert a version that was not read from GitHub. The page instead
+// remembers the last release THIS browser successfully looked up, and shows no
+// version at all rather than a number it cannot stand behind.
+const CACHE_KEY = "dehub-apk-release";
+// A remembered release is only honest for as long as it is plausibly still the
+// latest. Builds have been landing every week or two, so a month is generous;
+// past it the entry is dropped and the meta line goes version-less again.
+const CACHE_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 
 interface ReleaseInfo {
   version: string;
-  size: string;
+  /** Every field but the version is optional: the meta line drops what it lacks. */
+  size?: string;
   /** Human-readable, for the meta line. */
-  date: string;
+  date?: string;
   /** The same day as `date`, in ISO form, for the structured data. */
-  iso: string;
+  iso?: string;
   url: string;
+}
+
+/**
+ * The remembered release, or null when there is nothing trustworthy to show.
+ * Anything malformed, unversioned or past `CACHE_MAX_AGE_MS` is treated as
+ * absent — the whole point is that a doubtful value is never rendered.
+ */
+function readCachedRelease(): ReleaseInfo | null {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const c = JSON.parse(raw) as Record<string, unknown>;
+    if (typeof c.version !== "string" || !c.version) return null;
+    if (typeof c.cachedAt !== "number") return null;
+    if (Date.now() - c.cachedAt > CACHE_MAX_AGE_MS) return null;
+    const str = (v: unknown) => (typeof v === "string" && v ? v : undefined);
+    return {
+      version: c.version,
+      size: str(c.size),
+      date: str(c.date),
+      iso: str(c.iso),
+      // Never trust a stored URL: the download contract lives in DOWNLOAD_URL
+      // and a cached href could outlive the asset it points at.
+      url: DOWNLOAD_URL,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function cacheRelease(info: ReleaseInfo): void {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ ...info, cachedAt: Date.now() }));
+  } catch {
+    /* private mode or a full quota — the lookup just won't be remembered */
+  }
 }
 
 /** GitHub reports asset sizes in bytes; the page wants one decimal of MB. */
@@ -50,9 +92,9 @@ function formatSize(bytes: number): string {
  * visitor's zone — otherwise the same release reads as two different days either
  * side of midnight.
  */
-function formatDate(iso: string): string {
+function formatDate(iso: string): string | undefined {
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return FALLBACK_DATE;
+  if (Number.isNaN(d.getTime())) return undefined;
   return new Intl.DateTimeFormat("en-GB", {
     day: "numeric",
     month: "short",
@@ -64,40 +106,46 @@ function formatDate(iso: string): string {
 const SHARE_TEXT = "Skip the stores — grab the latest DeHub Android build direct.";
 
 export default function ApkPage() {
-  const [release, setRelease] = useState<ReleaseInfo>({
-    version: FALLBACK_VERSION,
-    size: FALLBACK_SIZE,
-    date: FALLBACK_DATE,
-    iso: FALLBACK_ISO,
-    url: DOWNLOAD_URL,
-  });
+  // Seeded from this browser's last successful lookup so a returning visitor
+  // paints a real version immediately, with no flash and no network. Null means
+  // "we do not know yet", which the meta line renders as no version rather than
+  // a guess.
+  const [release, setRelease] = useState<ReleaseInfo | null>(readCachedRelease);
   const [copied, setCopied] = useState(false);
 
-  // Read the version, size, date and direct URL off the latest release so a new
-  // upload updates the page on its own. Any failure keeps the fallback.
+  // Read the version, size and date off the latest release so a new upload
+  // updates the page on its own, and remember it for the next visit.
   useEffect(() => {
     let cancelled = false;
     fetch(RELEASE_API, { headers: { Accept: "application/vnd.github+json" } })
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
       .then((data) => {
-        if (cancelled) return;
+        // A response with no tag names no version, so there is nothing to show
+        // and nothing worth remembering.
+        const tag = typeof data?.tag_name === "string" ? data.tag_name.trim() : "";
+        if (cancelled || !tag) return;
         const asset = (data.assets ?? []).find((a: { name?: string }) =>
           a.name?.toLowerCase().endsWith(".apk"),
         );
-        setRelease({
-          version: String(data.tag_name ?? FALLBACK_VERSION).replace(/^v/i, ""),
-          size: asset?.size ? formatSize(asset.size) : FALLBACK_SIZE,
+        const fresh: ReleaseInfo = {
+          version: tag.replace(/^v/i, ""),
+          size: asset?.size ? formatSize(asset.size) : undefined,
           // `published_at` is when the release went public; `created_at` only
           // tracks the tag, which can predate the upload by days.
-          date: data.published_at ? formatDate(data.published_at) : FALLBACK_DATE,
+          date: data.published_at ? formatDate(String(data.published_at)) : undefined,
           iso: data.published_at
             ? String(data.published_at).slice(0, 10)
-            : FALLBACK_ISO,
+            : undefined,
           url: asset?.browser_download_url ?? DOWNLOAD_URL,
-        });
+        };
+        setRelease(fresh);
+        cacheRelease(fresh);
       })
       .catch(() => {
-        /* keep the fallback — a stale version string beats a dead button */
+        /* Rate limited, offline or no release yet. The button is unaffected —
+           `releases/latest/download` resolves server-side — so the page keeps
+           whatever it remembered and simply names no version if it remembered
+           nothing. */
       });
     return () => {
       cancelled = true;
@@ -116,6 +164,19 @@ export default function ApkPage() {
   const encodedUrl = encodeURIComponent(PAGE_URL);
   const encodedText = encodeURIComponent(SHARE_TEXT);
 
+  // Built from whatever is actually known. With no confirmed release this is
+  // just "Android 8+" — the copy above already promises the latest version and
+  // the link genuinely delivers it, so an unnamed build is honest where a
+  // hardcoded one was not.
+  const metaLine = [
+    release && `v${release.version}`,
+    release?.size,
+    release?.date,
+    "Android 8+",
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -126,10 +187,12 @@ export default function ApkPage() {
     url: PAGE_URL,
     installUrl: PAGE_URL,
     downloadUrl: DOWNLOAD_URL,
-    softwareVersion: release.version,
-    fileSize: release.size,
-    datePublished: release.iso,
-    dateModified: release.iso,
+    // Omitted entirely rather than filled in with a guess — a stale
+    // softwareVersion in structured data is the same lie as one on the page,
+    // and every field here is optional to Schema.org.
+    ...(release?.version ? { softwareVersion: release.version } : {}),
+    ...(release?.size ? { fileSize: release.size } : {}),
+    ...(release?.iso ? { datePublished: release.iso, dateModified: release.iso } : {}),
     applicationCategory: "SocialNetworkingApplication",
     operatingSystem: "Android 8.0 and up",
     image: OG_IMAGE,
@@ -211,7 +274,7 @@ export default function ApkPage() {
         </p>
 
         <a
-          href={release.url}
+          href={release?.url ?? DOWNLOAD_URL}
           className="group mt-[clamp(1.25rem,4vh,2.5rem)] inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-7 py-4 text-base font-bold backdrop-blur-xl transition-all duration-200 hover:scale-105 hover:border-white/40 hover:bg-white/20 hover:shadow-[0_0_28px_rgba(255,255,255,0.22)] sm:px-9 sm:py-5 sm:text-lg"
         >
           <Download className="h-5 w-5 transition-transform duration-200 group-hover:translate-y-0.5" />
@@ -219,7 +282,7 @@ export default function ApkPage() {
         </a>
 
         <p className="mt-[clamp(0.75rem,2.2vh,1.25rem)] font-mono text-[11px] tracking-wider text-white/45 sm:text-xs">
-          v{release.version} · {release.size} · {release.date} · Android 8+
+          {metaLine}
         </p>
         <p className="mt-1.5 max-w-[40ch] text-[11px] leading-relaxed text-white/35 sm:text-xs">
           Allow installs from your browser when Android asks.
