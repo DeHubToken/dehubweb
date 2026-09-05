@@ -876,13 +876,29 @@ export interface FreeAccessUser {
 }
 
 /**
+ * None of the three calls below has ever reached the server.
+ *
+ * The routes are `POST` and `DELETE /dm/free-access` and `GET /dm/free-access`;
+ * `grant-free-access`, `revoke-free-access` and `free-access-list` exist
+ * nowhere in the backend and never did, so all three 404'd. The `try/catch`
+ * around each one turned that into a thrown error the UI reported as a failed
+ * grant, and into a silently empty list — which is why the free-DM-access
+ * feature has always looked like it does nothing.
+ *
+ * The body key is `userAddress`, not `address`: the server takes the list
+ * owner from the auth token and ignores any `address` the client sends, so a
+ * body keyed `address` would 400 on a missing `userAddress` even once the path
+ * was right.
+ */
+
+/**
  * Grant free DM access to a specific user (they can message you without paying the fee).
  */
 export async function grantFreeDmAccess(targetAddress: string): Promise<{ success: boolean }> {
   try {
-    const response = await apiCall<any>('/api/dm/grant-free-access', {
+    const response = await apiCall<any>('/api/dm/free-access', {
       method: 'POST',
-      body: { address: targetAddress },
+      body: { userAddress: targetAddress },
       requiresAuth: true,
     });
     return { success: response?.success !== false };
@@ -897,9 +913,9 @@ export async function grantFreeDmAccess(targetAddress: string): Promise<{ succes
  */
 export async function revokeFreeDmAccess(targetAddress: string): Promise<{ success: boolean }> {
   try {
-    const response = await apiCall<any>('/api/dm/revoke-free-access', {
-      method: 'POST',
-      body: { address: targetAddress },
+    const response = await apiCall<any>('/api/dm/free-access', {
+      method: 'DELETE',
+      body: { userAddress: targetAddress },
       requiresAuth: true,
     });
     return { success: response?.success !== false };
@@ -930,11 +946,13 @@ export async function unpinDmMessage(dmId: string, messageId: string, address: s
  */
 export async function getFreeDmAccessList(): Promise<FreeAccessUser[]> {
   try {
-    const response = await apiCall<any>('/api/dm/free-access-list', {
+    const response = await apiCall<any>('/api/dm/free-access', {
       method: 'GET',
       requiresAuth: true,
     });
-    const items = response?.result?.items || response?.result || response?.items || [];
+    // The list is in `data`. None of `result.items`, `result` or `items` has
+    // ever been a key on this response, so even a 200 used to read as empty.
+    const items = response?.data ?? [];
     return Array.isArray(items) ? items : [];
   } catch (error) {
     console.error('[DM API] getFreeDmAccessList failed:', error);
