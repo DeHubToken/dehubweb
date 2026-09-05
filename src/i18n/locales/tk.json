@@ -66,6 +66,8 @@
     "live": "Göni"
   },
   "settings": {
+    "smartReplies": "Teklip edilýän jogaplar",
+    "smartRepliesDesc": "Söhbetde basyp bolýan iki jogap taýýarlaýar. Tekliplerdäki × muny öçürýär.",
     "title": "Sazlamalar",
     "manageAccount": "Hasabyňyzy we islegleriňizi dolandyryň",
     "logOut": "Çykmak",
@@ -946,6 +948,10 @@
     "loginRequired": "Girmek talap edilýär"
   },
   "messages": {
+    "smartRepliesOff": "Teklip edilýän jogaplar öçürildi",
+    "smartRepliesOffWhere": "Sazlamalar → Habarlar bölüminden ýene açyň.",
+    "smartRepliesUndo": "Yzyna al",
+    "turnOffSmartReplies": "Teklip edilýän jogaplary öçür",
     "encrypted": "Uçdan-uca şifrlenen",
     "encryptionOff": "Bu enjamda şifrleme öçürilen",
     "encryptionTurnOn": "Açmak",

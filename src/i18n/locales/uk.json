@@ -61,6 +61,8 @@
     "live": "Наживо"
   },
   "settings": {
+    "smartReplies": "Запропоновані відповіді",
+    "smartRepliesDesc": "Складає дві відповіді, які можна торкнутися в чаті. × на підказках вимикає це.",
     "title": "Налаштування",
     "manageAccount": "Керуйте своїм акаунтом і налаштуваннями",
     "loggedOut": "Ви вийшли з акаунта",
@@ -1174,7 +1176,12 @@
     "shippingAppearHere": "Тут з'являться запити, які вже роблять."
   },
   "auth": {},
-  "messages": {},
+  "messages": {
+    "smartRepliesOff": "Запропоновані відповіді вимкнено",
+    "smartRepliesOffWhere": "Увімкни їх знову в Налаштування → Повідомлення.",
+    "smartRepliesUndo": "Скасувати",
+    "turnOffSmartReplies": "Вимкнути запропоновані відповіді"
+  },
   "music": {},
   "notFound": {},
   "profile": {},
