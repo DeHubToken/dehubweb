@@ -1828,6 +1828,7 @@
     "aimAtTiers": "Welche Badge-Stufen sollen ihn sehen?"
   },
   "work": {
+    "budgetExhausted": "Das Budget dieser Prämie ist vollständig vergeben.",
     "title": "Bounties",
     "subtitle": "Stell eine Bounty ein oder jag eine. Bezahlt in DHB oder USDC.",
     "myBounties": "Meine Bounties",

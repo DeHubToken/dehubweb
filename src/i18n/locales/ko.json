@@ -1831,6 +1831,7 @@
     "aimAtTiers": "어떤 배지 등급에 보여줄까요?"
   },
   "work": {
+    "budgetExhausted": "이 현상금의 예산이 모두 배정되었습니다.",
     "title": "바운티",
     "subtitle": "바운티를 올리거나 하나 잡아보세요. DHB 또는 USDC로 지급됩니다.",
     "myBounties": "내 바운티",

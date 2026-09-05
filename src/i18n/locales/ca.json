@@ -1770,6 +1770,7 @@
     "aimAtTiers": "Quins nivells d'insígnia l'han de veure?"
   },
   "work": {
+    "budgetExhausted": "El pressupost d'aquesta recompensa està compromès del tot.",
     "title": "Recompenses",
     "subtitle": "Publica una recompensa o busca-la. Pagat en DHB o USDC.",
     "myBounties": "Les Meves Recompenses",

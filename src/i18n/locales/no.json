@@ -1,4 +1,7 @@
 {
+  "work": {
+    "budgetExhausted": "Budsjettet for denne dusøren er brukt opp."
+  },
   "nav": {
     "home": "Hjem",
     "explore": "Utforsk",

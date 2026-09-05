@@ -1828,6 +1828,7 @@
     "aimAtTiers": "Które poziomy odznak mają go zobaczyć?"
   },
   "work": {
+    "budgetExhausted": "Budżet tej nagrody został w całości rozdysponowany.",
     "title": "Nagrody",
     "subtitle": "Opublikuj nagrodę lub ją zdobądź. Płatność w DHB lub USDC.",
     "myBounties": "Moje nagrody",

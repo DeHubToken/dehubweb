@@ -1,4 +1,7 @@
 {
+  "work": {
+    "budgetExhausted": "Dis bounty money don finish."
+  },
   "nav": {
     "home": "Home",
     "explore": "Explore",

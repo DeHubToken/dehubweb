@@ -447,35 +447,91 @@ export function useSubmitProof() {
 }
 
 /**
- * Settle one approved submission on-chain and return the transaction hash.
+ * Refuse to pay a submission twice.
+ *
+ * Re-read straight from the table rather than trusting the cached row the page
+ * rendered from: the guard has to see a payout written by another tab, another
+ * device, or this same poster's previous click that only looked like it failed.
+ */
+async function assertUnpaid(submissionId: string) {
+  const { data } = await supabase
+    .from(TBL_SUBS)
+    .select('payout_tx_hash')
+    .eq('id', submissionId)
+    .maybeSingle();
+  const hash = (data as { payout_tx_hash?: string | null } | null)?.payout_tx_hash;
+  if (hash) throw new Error('This submission has already been paid.');
+}
+
+/**
+ * Everything already released against a job, read from its submissions.
+ *
+ * The budget is what the poster agreed to spend, and each submission card used
+ * to offer the whole of it: three submissions on one contract bounty meant
+ * three full-budget Pay buttons and no arithmetic anywhere stopping the poster
+ * from clicking all three. Paying checks the total first.
+ */
+async function releasedSoFar(jobId: string): Promise<number> {
+  const { data } = await supabase
+    .from(TBL_SUBS)
+    .select('payout_amount, payout_tx_hash')
+    .eq('job_id', jobId);
+  return ((data || []) as { payout_amount?: number | null; payout_tx_hash?: string | null }[])
+    .filter(r => !!r.payout_tx_hash)
+    .reduce((sum, r) => sum + Number(r.payout_amount || 0), 0);
+}
+
+/** The budget a job has left. Payouts may not take it below zero. */
+export async function remainingBudget(job: Pick<WorkJob, 'id' | 'total_budget'>): Promise<number> {
+  return Math.max(0, Number(job.total_budget || 0) - (await releasedSoFar(job.id)));
+}
+
+async function assertWithinBudget(jobId: string, totalBudget: number, amount: number) {
+  const left = Math.max(0, Number(totalBudget || 0) - (await releasedSoFar(jobId)));
+  // A rounding-sized overshoot is the token's own precision, not an overspend.
+  if (amount - left > 1e-9) {
+    throw new Error(
+      left <= 0
+        ? 'This bounty’s budget is fully paid out.'
+        : `Only ${left.toLocaleString(undefined, { maximumFractionDigits: 4 })} left in this bounty’s budget.`
+    );
+  }
+}
+
+/**
+ * Send one payout on-chain and hand back its hash the moment it is broadcast.
  *
  * Two routes, in preference order: release from escrow when the job was funded
  * through a deployed DeHubWork, otherwise a direct ERC-20 transfer from the
- * poster's wallet. Today only the second exists â€” see `payWorkerDirect`. Either
- * way the caller gets a real hash back, and a payout without one is not
- * recorded as paid.
+ * poster's wallet. Today only the second exists.
+ *
+ * It returns before confirmation on purpose. This used to await `wait(1)` and
+ * only then report the hash, so an RPC that timed out threw away the hash of a
+ * transfer that had already left the wallet: the row stayed "awaiting payment",
+ * the Pay button stayed on screen, and the next click paid the worker a second
+ * time. A hash exists as soon as the transaction is broadcast, and that is the
+ * thing worth recording — the caller writes it first and confirms afterwards.
  */
-async function releasePayout(params: {
+async function sendPayout(params: {
   currency: WorkCurrency;
   onchain_job_id?: number | null;
   worker_address: string;
   payout_amount: number;
   units?: number;
-}): Promise<string> {
-  if (isWorkContractDeployed() && params.onchain_job_id) {
-    const r = await approveSubmissionOnChain(params.onchain_job_id, params.worker_address, params.units ?? 1);
-    if (r) {
-      const rec = await r.wait(1);
-      return rec.hash;
-    }
-  }
-  const r = await payWorkerDirect({
+}): Promise<{ hash: string; confirm: () => Promise<void> }> {
+  const sent = (isWorkContractDeployed() && params.onchain_job_id
+    ? await approveSubmissionOnChain(params.onchain_job_id, params.worker_address, params.units ?? 1)
+    : null
+  ) ?? await payWorkerDirect({
     currency: params.currency,
     to: params.worker_address,
     amount: params.payout_amount,
   });
-  const rec = await r.wait(1);
-  return rec.hash;
+
+  return {
+    hash: sent.hash,
+    confirm: async () => { await sent.wait(1); },
+  };
 }
 
 /**
@@ -531,13 +587,25 @@ export function useApproveSubmission() {
       currency: WorkCurrency;
       worker_address: string;
       payout_amount: number;
+      total_budget: number;
       units?: number;
       pay: boolean;
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
 
-      const txHash = params.pay ? await releasePayout(params) : null;
+      let txHash: string | null = null;
+      let confirm: (() => Promise<void>) | null = null;
+      if (params.pay) {
+        await assertUnpaid(params.submission_id);
+        await assertWithinBudget(params.job_id, params.total_budget, params.payout_amount);
+        const sent = await sendPayout(params);
+        txHash = sent.hash;
+        confirm = sent.confirm;
+      }
 
+      // The hash lands in the row before the wait, never after it. A payout
+      // that is broadcast but not yet mined is still money out of the wallet,
+      // and the row has to say so or the poster pays again.
       const { error } = await withWalletHeader(
         supabase.from(TBL_SUBS).update({
           approval_status: txHash ? 'paid' : 'approved',
@@ -548,6 +616,7 @@ export function useApproveSubmission() {
       );
       if (error) throw error;
       await syncJobTotals(params.job_id, walletAddress);
+      if (confirm) await confirm().catch(() => {});
       return { paid: !!txHash };
     },
     onSuccess: (result, v) => {
@@ -580,21 +649,26 @@ export function usePaySubmission() {
       currency: WorkCurrency;
       worker_address: string;
       payout_amount: number;
+      total_budget: number;
       units?: number;
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
-      const txHash = await releasePayout(params);
+      await assertUnpaid(params.submission_id);
+      await assertWithinBudget(params.job_id, params.total_budget, params.payout_amount);
+      const sent = await sendPayout(params);
 
       const { error } = await withWalletHeader(
         supabase.from(TBL_SUBS).update({
           approval_status: 'paid',
           payout_amount: params.payout_amount,
-          payout_tx_hash: txHash,
+          payout_tx_hash: sent.hash,
         } as any).eq('id', params.submission_id),
         walletAddress
       );
       if (error) throw error;
       await syncJobTotals(params.job_id, walletAddress);
+      // Confirmation is for the receipt, not for whether the row is written.
+      await sent.confirm().catch(() => {});
     },
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-subs', v.job_id] });

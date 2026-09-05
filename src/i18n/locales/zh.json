@@ -1832,6 +1832,7 @@
     "aimAtTiers": "让哪些徽章等级看到？"
   },
   "work": {
+    "budgetExhausted": "此赏金的预算已全部分配完毕。",
     "title": "悬赏",
     "subtitle": "发布悬赏，或去接一个。以 DHB 或 USDC 结算。",
     "myBounties": "我的悬赏",

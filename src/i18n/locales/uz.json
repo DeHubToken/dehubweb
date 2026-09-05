@@ -1,4 +1,7 @@
 {
+  "work": {
+    "budgetExhausted": "Bu mukofotning byudjeti to'liq taqsimlangan."
+  },
   "nav": {
     "home": "Bosh sahifa",
     "explore": "Kashf qilish",

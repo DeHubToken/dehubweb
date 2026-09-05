@@ -1829,6 +1829,7 @@
     "aimAtTiers": "どのバッジ階層に見せますか？"
   },
   "work": {
+    "budgetExhausted": "この報奨金の予算はすべて割り当て済みです。",
     "title": "バウンティ",
     "subtitle": "バウンティを掲載する、あるいは受けて稼ぐ。報酬は DHB または USDC。",
     "myBounties": "自分のバウンティ",
