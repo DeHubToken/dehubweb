@@ -63,6 +63,8 @@
     "live": "Live"
   },
   "settings": {
+    "smartReplies": "Câu trả lời gợi ý",
+    "smartRepliesDesc": "Soạn hai câu trả lời bạn có thể chạm trong cuộc trò chuyện. Dấu × trên các gợi ý sẽ tắt tính năng này.",
     "title": "Settings",
     "logOut": "Log out",
     "loggedOut": "Logged out",
@@ -837,6 +839,10 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "smartRepliesOff": "Đã tắt câu trả lời gợi ý",
+    "smartRepliesOffWhere": "Bật lại trong Cài đặt → Tin nhắn.",
+    "smartRepliesUndo": "Hoàn tác",
+    "turnOffSmartReplies": "Tắt câu trả lời gợi ý",
     "encrypted": "Mã hóa đầu cuối",
     "encryptionOff": "Mã hóa chưa bật trên thiết bị này",
     "encryptionTurnOn": "Bật",

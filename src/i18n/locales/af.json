@@ -63,6 +63,8 @@
     "live": "Regstreeks"
   },
   "settings": {
+    "smartReplies": "Voorgestelde antwoorde",
+    "smartRepliesDesc": "Stel twee antwoorde op wat jy in 'n klets kan tik. Die × op die voorstelle skakel dit af.",
     "title": "Instellings",
     "manageAccount": "Bestuur jou rekening en voorkeure",
     "logOut": "Log out",
@@ -946,6 +948,10 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "smartRepliesOff": "Voorgestelde antwoorde afgeskakel",
+    "smartRepliesOffWhere": "Skakel hulle weer aan by Instellings → Boodskappe.",
+    "smartRepliesUndo": "Ontdoen",
+    "turnOffSmartReplies": "Skakel voorgestelde antwoorde af",
     "encrypted": "End-tot-end geënkripteer",
     "encryptionOff": "Enkripsie is af op hierdie toestel",
     "encryptionTurnOn": "Skakel aan",

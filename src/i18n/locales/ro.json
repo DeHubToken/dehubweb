@@ -63,6 +63,8 @@
     "live": "Live"
   },
   "settings": {
+    "smartReplies": "Răspunsuri sugerate",
+    "smartRepliesDesc": "Redactează două răspunsuri pe care le poți atinge într-un chat. × de pe sugestii dezactivează asta.",
     "title": "Setări",
     "manageAccount": "Gestionează-ți contul și preferințele",
     "logOut": "Log out",
@@ -922,6 +924,10 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "smartRepliesOff": "Răspunsurile sugerate au fost dezactivate",
+    "smartRepliesOffWhere": "Reactivează-le din Setări → Mesaje.",
+    "smartRepliesUndo": "Anulează",
+    "turnOffSmartReplies": "Dezactivează răspunsurile sugerate",
     "encrypted": "Criptat end-to-end",
     "encryptionOff": "Criptarea este dezactivată pe acest dispozitiv",
     "encryptionTurnOn": "Activează",

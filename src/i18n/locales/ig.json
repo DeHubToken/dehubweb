@@ -66,6 +66,8 @@
     "live": "Na ndụ"
   },
   "settings": {
+    "smartReplies": "Nzaghachi atụrụ aro",
+    "smartRepliesDesc": "Ọ na-edepụta nzaghachi abụọ ị nwere ike ịpị na nkata. Akara × dị na ndụmọdụ na-agbanyụ ya.",
     "title": "Ntọala",
     "manageAccount": "Jikwaa akaụntụ gị na mmasị gị",
     "logOut": "Pụọ",
@@ -946,6 +948,10 @@
     "loginRequired": "Achọrọ ịbanye"
   },
   "messages": {
+    "smartRepliesOff": "Agbanyụọla nzaghachi atụrụ aro",
+    "smartRepliesOffWhere": "Gbanyee ha ọzọ na Ntọala → Ozi.",
+    "smartRepliesUndo": "Mezie ya",
+    "turnOffSmartReplies": "Gbanyụọ nzaghachi atụrụ aro",
     "encrypted": "Ezoro ezo site na njedebe ruo njedebe",
     "encryptionOff": "Agbanyeghị nzuzo na ngwaọrụ a",
     "encryptionTurnOn": "Gbanye",
