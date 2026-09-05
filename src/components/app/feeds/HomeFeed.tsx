@@ -785,7 +785,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const shorts = useMemo((): ShortVideo[] => {
     if (!shortsEnabled) return [];
     if (!scrollFeed.data?.pages) return [];
-    const allItems = scrollFeed.data.pages.flatMap(page => page.items || []);
+    // Same offset-paging overlap as the main feed: without this the carousel
+    // can show one short twice inside its ten slots.
+    const allItems = flattenFeedPages(scrollFeed.data.pages);
     // Exclude PPV content from shorts carousels
     const nonPPV = allItems.filter(item => !item.streamInfo?.isPayPerView);
     return nonPPV.slice(0, 10).map((item) => {
