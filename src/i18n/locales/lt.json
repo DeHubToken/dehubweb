@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Nemokamos operacijos pristabdytos mūsų pusėje, ne jūsų piniginėje. Netrukus bandykite dar kartą.",
+    "gasSponsorshipFailed": "Šios operacijos nepavyko padengti. Po akimirkos bandykite dar kartą."
+  },
   "work": {
     "budgetExhausted": "Visas šio atlygio biudžetas jau paskirstytas."
   },

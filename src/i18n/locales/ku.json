@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Danûstandinên belaş li aliyê me rawestiyane, ne li berîka we. Ji kerema xwe piştî demekê dîsa biceribîne.",
+    "gasSponsorshipFailed": "Nekarî lêçûna vê danûstandinê were dayîn. Ji kerema xwe piştî demekê dîsa biceribîne."
+  },
   "work": {
     "budgetExhausted": "Bûdceya vê xelatê bi tevahî hatiye veqetandin."
   },

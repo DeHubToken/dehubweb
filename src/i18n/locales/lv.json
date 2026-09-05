@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Bezmaksas darījumi ir apturēti mūsu pusē, nevis jūsu makā. Lūdzu, drīzumā mēģiniet vēlreiz.",
+    "gasSponsorshipFailed": "Šo darījumu neizdevās segt. Lūdzu, pēc brīža mēģiniet vēlreiz."
+  },
   "work": {
     "budgetExhausted": "Šīs atlīdzības budžets ir pilnībā izlietots."
   },

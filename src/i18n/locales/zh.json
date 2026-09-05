@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "免费交易在我们这边暂停了，不是你的钱包有问题。请稍后再试。",
+    "gasSponsorshipFailed": "这笔交易的费用无法代付。请稍后再试。"
+  },
   "nav": {
     "home": "首页",
     "explore": "发现",

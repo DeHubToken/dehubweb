@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "免費交易喺我哋呢邊暫停咗，唔係你個銀包有問題。請稍後再試。",
+    "gasSponsorshipFailed": "呢筆交易嘅費用付唔到。請稍後再試。"
+  },
   "work": {
     "budgetExhausted": "呢個賞金嘅預算已經全部分配咗。"
   },

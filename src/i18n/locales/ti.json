@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "ናጻ ልውውጣት ብወገንና ጠጠው ኢሎም ኣለዉ፣ ኣብ ዋሌትካ ኣይኮነን። በጃኻ ድሕሪ ቁሩብ እንደገና ፈትን።",
+    "gasSponsorshipFailed": "ወጻኢ እዚ ልውውጥ ክኽፈል ኣይተኻእለን። በጃኻ ድሕሪ ቁሩብ ፈትን።"
+  },
   "work": {
     "budgetExhausted": "ናይዚ ሽልማት ባጀት ብምሉኡ ተመዲቡ እዩ።"
   },

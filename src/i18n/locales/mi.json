@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Kua tārewa ngā whakawhitinga kore utu i tō mātou taha, ehara i tō pūkoro. Ngana anō ā tōna wā.",
+    "gasSponsorshipFailed": "Kāore i taea te utu i tēnei whakawhitinga. Ngana anō ā tōna wā."
+  },
   "work": {
     "budgetExhausted": "Kua oti te pūtea o tēnei utu te tuku katoa."
   },

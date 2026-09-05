@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Les transactions gratuites sont suspendues de notre côté, pas sur votre portefeuille. Réessayez dans un instant.",
+    "gasSponsorshipFailed": "Cette transaction n'a pas pu être prise en charge. Réessayez dans un instant."
+  },
   "nav": {
     "home": "Accueil",
     "explore": "Explorer",
