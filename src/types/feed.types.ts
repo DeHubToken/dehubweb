@@ -443,6 +443,15 @@ export interface ShortVideo extends BaseFeedItem {
   /** Async video transcode state, written optimistically before the CDN file
    *  exists. Absent on posts predating this field — treat as 'done'. */
   transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
+  /**
+   * The post's own title, kept apart from `description`.
+   *
+   * The composer writes the caption into the title and leaves the description
+   * empty on most shorts, so the two used to be collapsed into one field to
+   * make sure something showed. That cost every short that has both: only the
+   * description drew, and the title was silently dropped.
+   */
+  title?: string;
   description?: string;
   sound?: string;
   comments?: string;
