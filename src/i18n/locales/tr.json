@@ -944,6 +944,8 @@
   },
   "messages": {
     "encrypted": "Uçtan uca şifreli",
+    "encryptionOff": "Bu cihazda şifreleme kapalı",
+    "encryptionTurnOn": "Aç",
     "cannotDecrypt": "Şifreli mesaj — bu cihazda açılamıyor",
     "title": "Mesajlar",
     "searchConversations": "Sohbetlerde ara...",

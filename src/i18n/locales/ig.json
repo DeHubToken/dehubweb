@@ -944,6 +944,8 @@
   },
   "messages": {
     "encrypted": "Ezoro ezo site na njedebe ruo njedebe",
+    "encryptionOff": "Agbanyeghị nzuzo na ngwaọrụ a",
+    "encryptionTurnOn": "Gbanye",
     "cannotDecrypt": "Ozi ezoro ezo — enweghị ike imeghe ya na ngwaọrụ a",
     "title": "Ozi",
     "searchConversations": "Chọọ mkparịta ụka...",
