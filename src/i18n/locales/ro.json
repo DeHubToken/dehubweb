@@ -1041,6 +1041,9 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "welcomeBack": "Bine ai revenit! Acest cont este încă al tău. Conectează-te cu datele vechi de conectare de mai jos pentru a le readuce, cu postările, urmăritorii și soldul tău.",
+    "welcomeBackWithLogin": "Bine ai revenit! Acest cont este încă al tău. Conectează-te cu {{login}} de mai jos pentru a-l readuce, cu postările, urmăritorii și soldul tău.",
+    "welcomeBackWaiting": "se așteaptă",
     "migrateNothingToRecover": "Nu există un cont DeHub anterior pentru această autentificare, deci nu este nimic de adus. Revino la Cont nou pentru a finaliza configurarea acestuia.",
     "migrateUnmatchedWarning": "Această autentificare nu are un cont DeHub înregistrat. Continuarea nu recuperează nimic — creează un al doilea cont cu un nou nume de utilizator și îl lasă în urmă pe cel pe care îl aveți deja.",
     "migrateUnmatchedDetail": "Nu există profil la această adresă de portofel. Dacă v-ați conectat din nou, reveniți și utilizați în schimb datele de conectare cu care v-ați înscris.",

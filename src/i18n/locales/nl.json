@@ -1296,6 +1296,9 @@
     "failedSubmit": "Aanvraag indienen mislukt. Probeer het opnieuw."
   },
   "loginModal": {
+    "welcomeBack": "Welkom terug — dit account is nog steeds van jou. Log hieronder in met je oude login om het terug te brengen, met je berichten, volgers en saldo.",
+    "welcomeBackWithLogin": "Welkom terug — dit account is nog steeds van jou. Meld je hieronder aan met {{login}} om het terug te brengen, met je berichten, volgers en saldo.",
+    "welcomeBackWaiting": "er op te wachten",
     "migrateNothingToRecover": "Er is geen eerdere DeHub-account op deze login, dus er is niets om over te brengen. Ga terug naar Nieuw account om het instellen van dit account te voltooien.",
     "migrateUnmatchedWarning": "Deze login heeft geen DeHub-account geregistreerd. Doorgaan herstelt niets — het maakt een tweede account aan met een nieuwe gebruikersnaam en laat degene achter die je al hebt.",
     "migrateUnmatchedDetail": "Er bestaat geen profiel op dit portefeuilleadres. Als je weer aan het inloggen was, ga dan terug en gebruik in plaats daarvan de login waarmee je je hebt aangemeld.",

@@ -1092,6 +1092,9 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "welcomeBack": "Maligayang pagbabalik — ang account na ito ay sa iyo pa rin. Mag - sign in gamit ang iyong lumang login sa ibaba upang dalhin ito pabalik, sa iyong mga post, mga tagasunod at balanse.",
+    "welcomeBackWithLogin": "Maligayang pagbabalik — ang account na ito ay sa iyo pa rin. Mag - sign in sa {{login}} sa ibaba para maibalik ito sa iyong mga post, tagasunod, at balanse.",
+    "welcomeBackWaiting": "naghihintay dito",
     "migrateNothingToRecover": "Walang naunang DeHub account sa pag - login na ito, kaya walang dapat dalhin. Bumalik sa Bagong account para tapusin ang pagtatakda nito.",
     "migrateUnmatchedWarning": "Ang login na ito ay walang DeHub account sa record. Ang pagpapatuloy ay hindi nakakabawi ng anumang bagay — lumilikha ito ng pangalawang account na may bagong username, at iniiwan ang isa na mayroon ka na sa likod.",
     "migrateUnmatchedDetail": "Walang profile na umiiral sa address ng wallet na ito. Kung nagsa - sign in ka ulit, bumalik at gamitin na lang ang login na na - sign up mo.",

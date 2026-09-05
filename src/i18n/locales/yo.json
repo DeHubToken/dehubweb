@@ -1080,6 +1080,9 @@
     "failedSubmit": "Kò le fi ìbéèrè ránṣẹ́. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí."
   },
   "loginModal": {
+    "welcomeBack": "Káàbọ̀ padà — àkọsílẹ̀ yìí ṣì jẹ́ tìrẹ. Wọlé pẹ̀lú ìforúkọsílẹ̀ àtijọ́ rẹ nísàlẹ̀ láti mú un padà, pẹ̀lú àwọn iṣẹ́ rẹ, àwọn ọmọlẹ́yìn àti ìdúróṣánṣán rẹ.",
+    "welcomeBackWithLogin": "Káàbọ̀ padà — àkọsílẹ̀ yìí ṣì jẹ́ tìrẹ. Wọlé pẹ̀lú {{login}}@ nísàlẹ̀ láti mú un padà, pẹ̀lú àwọn iṣẹ́ rẹ, àwọn ọmọlẹ́yìn àti ìdúróṣánṣán.",
+    "welcomeBackWaiting": "ó ń dúró dè é",
     "migrateNothingToRecover": "Kò sí àkọsílẹ̀ DeHub tẹ́lẹ̀ lórí ìforúkọsílẹ̀ yìí, nítorí náà kò sí nǹkankan láti mú wá. Pada sí àkọọ́lẹ̀ tuntun láti parí ètò èyí.",
     "migrateUnmatchedWarning": "Ìwọlé yìí kò ní àkọsílẹ̀ DeHub lórí àkọsílẹ̀. Tesiwaju ko gba ohunkohun pada — o ṣẹda akọọlẹ keji pẹlu orukọ olumulo tuntun, o si fi eyi ti o ti ni tẹlẹ silẹ.",
     "migrateUnmatchedDetail": "Kò sí àkọsílẹ̀ kankan ní àdírẹ́sì àpamọ́wọ́ yìí. Tí o bá ń wọlé padà, padà lọ lo ìforúkọsílẹ̀ tí o wọlé sí dípò.",

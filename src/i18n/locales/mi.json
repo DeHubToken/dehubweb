@@ -1079,6 +1079,9 @@
     "failedSubmit": "Kāore i taea te tuku tono. Ngana anō."
   },
   "loginModal": {
+    "welcomeBack": "Nau mai — kei a koe tonu tenei kaute. Hokona ki to takiuru tawhito i raro nei ki te whakahoki mai, me o pou, nga kaiwhaiwhai me te toenga.",
+    "welcomeBackWithLogin": "Nau mai — kei a koe tonu tenei kaute. Hokona ki {{login}} i raro nei hei whakahoki mai, me o pou, nga kaiwhaiwhai me te toenga.",
+    "welcomeBackWaiting": "kei te tatari ahau ki a ia",
     "migrateNothingToRecover": "Kahore he pūkete DeHub i mua i runga i tenei takiuru, na reira kahore he mea ki te tiki i runga i. Hoki ki te pūkete hou ki te whakaoti i te tāuta i tenei.",
     "migrateUnmatchedWarning": "Kaore he kaute DeHub i runga i te rekoata. Kaore e taea e te haere tonu te whakahoki mai i tetahi mea — ka hanga i tetahi kaute tuarua me te ingoa kaiwhakamahi hou, ka waiho i te mea kua oti i a koe te whakahoki mai.",
     "migrateUnmatchedDetail": "Kahore he pūkete i roto i tenei wāhitau putea. Ki te haina koe i roto i, haere hoki, me te whakamahi i te takiuru i haina koe ki te wahi.",

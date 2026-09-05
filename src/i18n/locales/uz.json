@@ -1097,6 +1097,9 @@
     "failedSubmit": "Arizani yuborish amalga oshmadi. Iltimos qayta urinib koʻring."
   },
   "loginModal": {
+    "welcomeBack": "Xush kelibsiz — bu akkaunt hali ham sizniki. Postlaringiz, obunachilaringiz va balansingiz bilan uni qayta tiklash uchun quyidagi eski loginingiz bilan tizimga kiring.",
+    "welcomeBackWithLogin": "Xush kelibsiz — bu akkaunt hali ham sizniki. Postlaringiz, obunachilaringiz va balansingiz bilan uni qayta tiklash uchun quyidagi {{login}} bilan tizimga kiring.",
+    "welcomeBackWaiting": "uni kutmoqdaman",
     "migrateNothingToRecover": "Bu tizimga kirishda avvalgi DeHub hisobi yo&#39;q, shuning uchun qayta tiklash uchun hech narsa yo&#39;q. Buni sozlashni yakunlash uchun &quot;Yangi hisob&quot;ga qayting.",
     "migrateUnmatchedWarning": "Bu loginda DeHub hisobi qayd etilmagan. Davom etish hech narsani tiklamaydi — yangi foydalanuvchi nomi bilan ikkinchi hisob yaratiladi va sizda allaqachon mavjud bo&#39;lgan hisob qolib ketadi.",
     "migrateUnmatchedDetail": "Ushbu hamyon manzilida hech qanday profil mavjud emas. Agar siz qayta kirgan bo&#39;lsangiz, orqaga qayting va ro&#39;yxatdan o&#39;tgan loginingizdan foydalaning.",

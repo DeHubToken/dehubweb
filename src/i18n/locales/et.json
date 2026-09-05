@@ -1090,6 +1090,9 @@
     "failedSubmit": "Avalduse esitamine ebaõnnestus. Palun proovi uuesti."
   },
   "loginModal": {
+    "welcomeBack": "Tere tulemast tagasi — see konto on endiselt sinu. Logi sisse oma vana sisselogimisnimega allpool, et see oma postituste, jälgijate ja saldoga tagasi tuua.",
+    "welcomeBackWithLogin": "Tere tulemast tagasi — see konto on endiselt sinu. Logi alla {{login}}, et see oma postituste, jälgijate ja saldoga tagasi tuua.",
+    "welcomeBackWaiting": "ootab seda",
     "migrateNothingToRecover": "Sellel sisselogimisel pole varasemat DeHubi kontot, seega pole midagi kaasa võtta. Selle konto seadistamise lõpetamiseks mine tagasi jaotisse Uus konto.",
     "migrateUnmatchedWarning": "Sellel sisselogimisel pole registreeritud DeHubi kontot. Jätkamine ei taasta midagi — see loob uue kasutajanimega teise konto ja jätab maha selle, mis sul juba olemas on.",
     "migrateUnmatchedDetail": "Sellel rahakoti aadressil pole profiili. Kui logisid uuesti sisse, mine tagasi ja kasuta selle asemel sisselogimisnime, millega registreerusid.",

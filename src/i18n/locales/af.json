@@ -1071,6 +1071,8 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "welcomeBack": "Welkom terug — hierdie rekening is nog steeds joune. Teken in met jou ou aanmelding hieronder om dit terug te bring, met jou plasings, volgelinge en balans.",
+    "welcomeBackWaiting": "wag daarop",
     "migrateNothingToRecover": "Daar is geen vorige DeHub-rekening op hierdie aanmelding nie, so daar is niks om oor te bring nie. Gaan terug na nuwe rekening om hierdie een te voltooi.",
     "migrateUnmatchedWarning": "Hierdie aanmelding het geen DeHub-rekening op rekord nie. Deur voort te gaan, herstel niks nie — dit skep 'n tweede rekening met 'n nuwe gebruikersnaam en laat die een wat u reeds het, agter.",
     "migrateUnmatchedDetail": "Geen profiel bestaan by hierdie beursie adres nie. As jy weer inteken, gaan terug en gebruik die aanmelding waarmee jy ingeteken het.",

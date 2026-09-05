@@ -1079,6 +1079,9 @@
     "failedSubmit": "Enweghị ike inyefe arịrịọ. Biko nwaa ọzọ."
   },
   "loginModal": {
+    "welcomeBack": "Nabata ọzọ — akaụntụ a ka bụ nke gị. Banye na gị ochie nbanye n 'okpuru na-ewetara ya azụ, na gị posts, na-eso ụzọ na itule.",
+    "welcomeBackWithLogin": "Nabata ọzọ — akaụntụ a ka bụ nke gị. Banye na {{login}} n 'okpuru iji weghachite ya, ya na posts gị, ndị na-eso ụzọ gị na nguzozi.",
+    "welcomeBackWaiting": "n 'okpuru bụ mpempe ihe akaebe vidiyo.",
     "migrateNothingToRecover": "Enweghị akaụntụ DeHub mbụ na nbanye a, ya mere ọ nweghị ihe ọ ga-eweta. Laghachi na akaụntụ ọhụrụ iji mezue ịtọlite nke a.",
     "migrateUnmatchedWarning": "Nbanye a enweghị akaụntụ DeHub na ndekọ. Ịga n 'ihu adịghị agbake ihe ọ bụla — ọ na-emepụta akaụntụ nke abụọ na aha njirimara ọhụrụ, ma hapụ nke ị nwereworị n' azụ.",
     "migrateUnmatchedDetail": "Enweghị profaịlụ dị na adreesị akpa ego a. Ọ bụrụ na ị na-abanyeghachi, laghachi azụ ma jiri nbanye ị debanyere aha kama.",

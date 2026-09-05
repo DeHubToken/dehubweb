@@ -1099,6 +1099,9 @@
     "failedSubmit": "Gagal mengirim aplikasi. Silakan coba lagi."
   },
   "loginModal": {
+    "welcomeBack": "Selamat datang kembali — akun ini masih milik Anda. Masuk dengan login lama Anda di bawah ini untuk mengembalikannya, dengan postingan, pengikut, dan saldo Anda.",
+    "welcomeBackWithLogin": "Selamat datang kembali — akun ini masih milik Anda. Masuk dengan {{login}} di bawah ini untuk mengembalikannya, dengan postingan, pengikut, dan saldo Anda.",
+    "welcomeBackWaiting": "menunggunya",
     "migrateNothingToRecover": "Tidak ada akun DeHub sebelumnya pada login ini, jadi tidak ada yang perlu dibawa. Kembali ke Akun baru untuk menyelesaikan pengaturan ini.",
     "migrateUnmatchedWarning": "Login ini tidak memiliki akun DeHub. Melanjutkan tidak memulihkan apa pun — itu membuat akun kedua dengan nama pengguna baru, dan meninggalkan yang sudah Anda miliki.",
     "migrateUnmatchedDetail": "Tidak ada profil di alamat dompet ini. Jika Anda masuk kembali, kembalilah dan gunakan info masuk yang Anda daftarkan.",

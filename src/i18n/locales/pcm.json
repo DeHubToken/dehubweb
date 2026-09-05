@@ -1080,6 +1080,7 @@
     "failedSubmit": "E no fit submit application. Try again."
   },
   "loginModal": {
+    "welcomeBackWaiting": "waiting on it",
     "migrateGoBack": "Go back",
     "title": "Log in",
     "addProfileTitle": "Add profile",

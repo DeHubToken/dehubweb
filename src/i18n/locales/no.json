@@ -1079,6 +1079,9 @@
     "failedSubmit": "Kunne ikke sende søknad. Prøv igjen."
   },
   "loginModal": {
+    "welcomeBack": "Velkommen tilbake – denne kontoen er fortsatt din. Logg inn med den gamle brukernavnet ditt nedenfor for å få den tilbake, med innleggene, følgerne og saldoen din.",
+    "welcomeBackWithLogin": "Velkommen tilbake – denne kontoen er fortsatt din. Logg inn med {{login}} nedenfor for å få den tilbake, med innleggene, følgerne og saldoen din.",
+    "welcomeBackWaiting": "venter på det",
     "migrateNothingToRecover": "Det finnes ingen tidligere DeHub-konto på denne påloggingen, så det er ingenting å ta med seg. Gå tilbake til Ny konto for å fullføre oppsettet.",
     "migrateUnmatchedWarning": "Denne påloggingen har ingen registrert DeHub-konto. Hvis du fortsetter, gjenopprettes ingenting – det oppretter en ny konto med et nytt brukernavn, og det du allerede har, legges igjen.",
     "migrateUnmatchedDetail": "Det finnes ingen profil på denne lommebokadressen. Hvis du logget på igjen, gå tilbake og bruk påloggingsinformasjonen du registrerte deg med i stedet.",

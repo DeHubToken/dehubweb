@@ -1090,6 +1090,9 @@
     "email": "E-mail"
   },
   "loginModal": {
+    "welcomeBack": "Vítej zpět — tento účet je stále tvůj. Přihlaste se pomocí svého starého přihlašovacího jména níže, abyste jej vrátili zpět, se svými příspěvky, následovníky a zůstatkem.",
+    "welcomeBackWithLogin": "Vítej zpět — tento účet je stále tvůj. Přihlaste se pomocí {{login}} níže a získejte zpět své příspěvky, sledující a zůstatek.",
+    "welcomeBackWaiting": "čekám na to",
     "migrateNothingToRecover": "Na tomto přihlášení není žádný dřívější účet DeHub, takže není co přinést. Vrať se na Nový účet a dokonči nastavení tohoto účtu.",
     "migrateUnmatchedWarning": "Toto přihlašovací jméno nemá v záznamu žádný účet DeHub. Pokračování nic neobnoví — vytvoří druhý účet s novým uživatelským jménem a nechá za sebou ten, který již máte.",
     "migrateUnmatchedDetail": "Na této adrese peněženky neexistuje žádný profil. Pokud ses znovu přihlašoval/a, vrať se a použij přihlašovací údaje, které jsi použil/a.",

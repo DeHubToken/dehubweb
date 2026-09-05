@@ -1092,6 +1092,9 @@
     "failedSubmit": "Failed to submit application. Please try again."
   },
   "loginModal": {
+    "welcomeBack": "Baga nagaan dhufte — akkaawuntii kun ammallee kan keessani. Galmee kee isa durii armaan gadii kanaan deebi&#39;ee fiduuf galmaa&#39;i, maxxansa kee, hordoftootaa fi madaallii kee waliin.",
+    "welcomeBackWithLogin": "Baga nagaan dhufte — akkaawuntii kun ammallee kan keessani. Deebisuuf {{login}} armaan gadiitiin galmaa&#39;aa, maxxansa keessan, hordoftoota keessanii fi madaallii keessan waliin.",
+    "welcomeBackWaiting": "irratti eegaa jira",
     "migrateNothingToRecover": "Seensa kana irratti akkaawuntii DeHub duraanii hin jiru, kanaaf wanti fidu hin jiru. Isa kana saaguu xumuruuf gara New account tti deebi&#39;aa.",
     "migrateUnmatchedWarning": "Galmeen kun herrega DeHub galmee irratti hin qabu. Itti fufuun homaa hin deebisu — herrega lammaffaa maqaa fayyadamaa haaraa qabu uuma, kan duraan qabdu immoo dhiisa.",
     "migrateUnmatchedDetail": "Teessoo boorsaa kana irratti piroofaayilli tokkollee hin jiru. Yoo deebitee galchaa turte ta&#39;e, deebi&#39;ii bakka isaa galmee ittiin galmoofte fayyadami.",

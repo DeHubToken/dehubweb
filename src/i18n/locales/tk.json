@@ -1079,6 +1079,9 @@
     "failedSubmit": "Arza ibermek başa barmady. Gaýtadan synanyşyň."
   },
   "loginModal": {
+    "welcomeBack": "Hoşgeldin — bu hasabat henizem seniňki. Öňki logyňy aşak goýup, ony yzyna getir, işleriňi, yzyna eýerenleriňi we deň-de-sarygyňy.",
+    "welcomeBackWithLogin": "Hoşgeldin — bu hasabat henizem seniňki. Bulary yzyna getirmek üçin {{login}} bilen gir, öz postlaryňy, yzyna eýerenleriňi we deň-de-sarygyňy.",
+    "welcomeBackWaiting": "ony garaşyň",
     "migrateNothingToRecover": "Bu girişde öňki DeHub hasaby ýok, şonuň üçin hiç zat getirilmeýär. Bulary goýup gutarmak üçin Täze hasabatyň ýanyna dolan.",
     "migrateUnmatchedWarning": "Bu girişde DeHub-da hiç hili hasabat ýok. Bu hiç zat gaýtaryp bermeýär — täze ulanýan ad bilen ikinji hasabat döredýär we öňki hasabatyňyzy goýýar.",
     "migrateUnmatchedDetail": "Bu adresde hiç hili profily ýok. Eger siz ýene-de imza atsaňyz, gaýdyp baryň we onuň ýerine imza atýan imzaňyzy ulanyň.",

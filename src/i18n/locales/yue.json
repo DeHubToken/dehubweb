@@ -1079,6 +1079,9 @@
     "failedSubmit": "提交申請失敗。請再試過。"
   },
   "loginModal": {
+    "welcomeBack": "歡迎返嚟 — 呢個帳戶仲係你嘅。用你喺下面嘅舊登入資料登入，將佢帶返嚟，同埋你嘅文章、追蹤者同埋餘額。",
+    "welcomeBackWithLogin": "歡迎返嚟 — 呢個帳戶仲係你嘅。喺下面用 {{login}} 登入嚟將佢帶返嚟，同埋你嘅帖子、追蹤者同埋餘額。",
+    "welcomeBackWaiting": "等緊",
     "migrateNothingToRecover": "呢個登入上面冇早期嘅 DeHub 帳戶，所以冇嘢可以帶過嚟。返去新帳戶完成呢個帳戶嘅設定。",
     "migrateUnmatchedWarning": "呢個登入冇記錄到嘅 DeHub 帳戶。繼續唔會恢復任何嘢 — 佢會建立第二個用新用戶名嘅帳戶，然後留低你已經有嘅帳戶。",
     "migrateUnmatchedDetail": "呢個錢包地址冇個人檔案。如果你係重新登入，返去用你用嚟登入嘅登入名稱代替。",

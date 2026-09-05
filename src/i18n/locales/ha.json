@@ -1079,6 +1079,8 @@
     "failedSubmit": "Ba a iya miƙa nema ba. Da fatan za a sake gwadawa."
   },
   "loginModal": {
+    "welcomeBack": "Barka da dawowa — wannan asusun har yanzu naku ne. Shiga tare da tsohuwar shigarku a ƙasa don dawo da shi, tare da sakonninku, mabiyan ku da daidaituwa.",
+    "welcomeBackWaiting": "jiraiya a kan shi",
     "migrateNothingToRecover": "Babu wani asusun DeHub na baya akan wannan shiga, don haka babu wani abu da za a kawo. Koma zuwa New lissafi don gama kafa wannan daya up.",
     "migrateUnmatchedWarning": "Wannan shiga ba shi da asusun DeHub akan rikodin. Ci gaba ba ya dawo da komai — yana haifar da asusu na biyu tare da sabon sunan mai amfani, kuma ya bar wanda kuka riga kuka samu a baya.",
     "migrateUnmatchedDetail": "Babu bayanin martaba a wannan adireshin walat. Idan kun shiga baya, koma kuma ku yi amfani da login da kuka sanya hannu tare da maimakon.",

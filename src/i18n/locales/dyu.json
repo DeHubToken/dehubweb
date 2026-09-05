@@ -1079,6 +1079,8 @@
     "failedSubmit": "Kɔrɔbɔ bɔ"
   },
   "loginModal": {
+    "welcomeBack": "I ka la a la ko i ye mɔgɔ dɔ ye min be se ka kɛ i ka mɔgɔ dɔ ye. I ka siginiden kɔrɔ ka sɔrɔ ka segi n'a ye, i ka lɛtɛrɛw, i ka kalandenw ani i ka sumanikɛnan fɛ.",
+    "welcomeBackWaiting": "ne tun be miiri o la.",
     "migrateNothingToRecover": "An kana mɔgɔ si halakinin to, min tun kɔnna ka ladili di. I ka segi ka taga kunnafoni kura dɔ la walisa k'o sigi sen kan.",
     "migrateUnmatchedWarning": "O la, a tun tɛ se ka kɛ ko a tun ye mɔgɔ dɔ ye min tun ye mɔgɔ dɔ ye. Ka to ka koo dɔ kɛ, o tɛ foyi sɔrɔ — a be mɔgɔ tɔgɔ kura di mɔgɔ wɛrɛ ma ani a be mɔgɔ min to yen, a be o tigi to yen.",
     "migrateUnmatchedDetail": "O la, a tɛ se ka kɛ ko a ye fɛɛrɛ dɔ sɔrɔ min be se ka kɛ. N'i ye mɔgɔ dɔ weele ka na i ka site web kan, i ka segi k'a ɲini k'a lɔn i ye mɔgɔ min weele ka na i ka site web kan.",

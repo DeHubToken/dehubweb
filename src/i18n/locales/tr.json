@@ -1099,6 +1099,9 @@
     "failedSubmit": "Başvuru gönderilemedi. Lütfen tekrar deneyin."
   },
   "loginModal": {
+    "welcomeBack": "Tekrar hoş geldiniz. Bu hesap hâlâ sizin. Gönderileriniz, takipçileriniz ve bakiyenizle geri getirmek için aşağıdaki eski giriş bilgilerinizle oturum açın.",
+    "welcomeBackWithLogin": "Tekrar hoş geldiniz. Bu hesap hâlâ sizin. Gönderilerinizi, takipçilerinizi ve bakiyenizi geri getirmek için aşağıdaki {{login}} ile oturum açın.",
+    "welcomeBackWaiting": "bekliyor",
     "migrateNothingToRecover": "Bu girişte daha eski bir DeHub hesabı yok, bu yüzden getirilecek bir şey yok. Bunu ayarlamayı tamamlamak için Yeni hesaba geri dönün.",
     "migrateUnmatchedWarning": "Bu girişin kayıtlı bir DeHub hesabı yok. Devam etmek hiçbir şeyi kurtarmaz — yeni bir kullanıcı adıyla ikinci bir hesap oluşturur ve zaten sahip olduğunuz hesabı geride bırakır.",
     "migrateUnmatchedDetail": "Bu cüzdan adresinde profil yok. Yeniden oturum açıyorsanız geri dönün ve bunun yerine kaydolduğunuz oturum açma bilgilerini kullanın.",

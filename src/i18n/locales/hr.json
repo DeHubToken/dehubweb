@@ -1085,6 +1085,9 @@
     "failedSubmit": "Slanje prijave nije uspjelo. Pokušajte ponovo."
   },
   "loginModal": {
+    "welcomeBack": "Dobro došli natrag — ovaj je račun i dalje vaš. Prijavite se starom prijavom u nastavku kako biste je vratili, sa svojim objavama, pratiteljima i saldom.",
+    "welcomeBackWithLogin": "Dobro došli natrag — ovaj je račun i dalje vaš. Prijavite se s {{login}} u nastavku kako biste ga vratili, sa svojim objavama, pratiteljima i saldom.",
+    "welcomeBackWaiting": "čekanje na njega",
     "migrateNothingToRecover": "Nema ranijeg DeHub računa na ovoj prijavi, tako da nema ništa za prenijeti. Vratite se na Novi račun kako biste dovršili uređivanje postavki.",
     "migrateUnmatchedWarning": "Ova prijava nema DeHub račun u evidenciji. Nastavak ne oporavlja ništa — stvara drugi račun s novim korisničkim imenom i ostavlja onaj koji već imate.",
     "migrateUnmatchedDetail": "Na ovoj adresi novčanika ne postoji profil. Ako si se ponovno prijavljivao/la, vrati se i upotrijebi način na koji si se prijavio/la.",

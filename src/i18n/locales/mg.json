@@ -1102,6 +1102,8 @@
     "failedSubmit": "Tsy nahomby ny fandefasana fangatahana. Avereno azafady."
   },
   "loginModal": {
+    "welcomeBack": "Miarahaba anao AR tafaverina ity kaonty ity — Mbola anao ity kaonty ity. Midira amin'ny fidiranao taloha eto ambany mba hamerenana azy indray, miaraka amin'ny lahatsoratrao, mpanaraka ary fifandanjana.",
+    "welcomeBackWaiting": "miandry izany",
     "migrateNothingToRecover": "Tsy misy kaonty DeHub teo aloha amin'ity fidirana ity, noho izany dia tsy misy zavatra tokony hipoitra. Miverina any amin'ny kaonty vaovao raha hamarana ny fametrahana ity iray ity.",
     "migrateUnmatchedWarning": "Tsy manana kaonty DeHub ao amin'ny firaketana an-tsoratra ity fidirana ity. Mitohy tsy sitrana na inona na inona — dia miteraka tantara faharoa amin'ny solonanarana vaovao, ary mamela ny iray efa manana aoriana.",
     "migrateUnmatchedDetail": "Tsy misy profil aty amin'ity adiresy kitapom-batsy ity. Raha toa ianao ka nanao sonia, hiverina ary mampiasa ny fidirana no nanao sonia fa tsy.",

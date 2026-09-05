@@ -1099,6 +1099,9 @@
     "failedSubmit": "Nie udało się wysłać zgłoszenia. Spróbuj ponownie."
   },
   "loginModal": {
+    "welcomeBack": "Witamy ponownie — to konto jest nadal Twoje. Zaloguj się za pomocą starego loginu poniżej, aby przywrócić go ze swoimi postami, obserwującymi i saldem.",
+    "welcomeBackWithLogin": "Witamy ponownie — to konto jest nadal Twoje. Zaloguj się za pomocą {{login}} poniżej, aby przywrócić go ze swoimi postami, obserwującymi i saldem.",
+    "welcomeBackWaiting": "oczekiwanie na to",
     "migrateNothingToRecover": "Na tym loginie nie ma wcześniejszego konta DeHub, więc nie ma co przynosić. Wróć do nowego konta, aby dokończyć konfigurację.",
     "migrateUnmatchedWarning": "Ten login nie ma zarejestrowanego konta DeHub. Kontynuacja niczego nie odzyskuje — tworzy drugie konto z nową nazwą użytkownika i pozostawia to, które już masz za sobą.",
     "migrateUnmatchedDetail": "Pod tym adresem portfela nie istnieje żaden profil. Jeśli logowałeś się ponownie, wróć i użyj loginu, którego użyłeś.",

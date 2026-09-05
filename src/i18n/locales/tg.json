@@ -1079,6 +1079,8 @@
     "failedSubmit": "Фиристодани дархост ноком шуд. Дубора кӯшиш кунед."
   },
   "loginModal": {
+    "welcomeBack": "Welcome back — ang account na ito ay mayroon nang iyong. Mag-sign in sa iyong lumang pag-login sa ibaba upang bumalik ito, gamit ang iyong mga post, mga follow at balanse.",
+    "welcomeBackWaiting": "интизори он ҳастем,",
     "migrateNothingToRecover": "Ҳисоби қаблии DeHub дар ин вуруд вуҷуд надорад, бинобар ин ҳеҷ чиз нест. Bumalik sa Bagong account upang makumpleto ang pag-set ng ito up.",
     "migrateUnmatchedWarning": "Ин вуруд ягон ҳисоби DeHub дар сабт надорад. Идомаи ҳеҷ чизро барқарор намекунад — он ҳисоби дуюмро бо номи корбари нав эҷод мекунад ва онеро, ки шумо аллакай доред, тарк мекунад.",
     "migrateUnmatchedDetail": "Ягон профил дар ин суроғаи ҳамён вуҷуд надорад. Kung naka-sign in ka na, bumalik at gamitin ang pag-login na iyong naka-sign up sa halip.",

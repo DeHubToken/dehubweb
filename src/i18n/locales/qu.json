@@ -1080,6 +1080,9 @@
     "failedSubmit": "Mana mañakuyta apachita atirqanchu. Musuqmanta ruwaway."
   },
   "loginModal": {
+    "welcomeBack": "Allin hamusqayki — kay yupayqa qampaqraqmi. Uraypi ñawpaq yaykuyniykiwan yaykuy kutichimunaykipaq, qillqasqaykiwan, qatiqniykikunawan chaymanta equilibrioykiwan.",
+    "welcomeBackWithLogin": "Allin hamusqayki — kay yupayqa qampaqraqmi. Uraypi {{login}} nisqawan yaykuy kutichimunaykipaq, qillqasqaykikunawan, qatiqninkunawan hinaspa balanzaykiwan.",
+    "welcomeBackWaiting": "chaypi suyaspa",
     "migrateNothingToRecover": "Kay yaykuypi mana ñawpaq DeHub yupay kanchu, chayrayku mana imapas apamunapaq kanchu. Musuq yupayman kutiy kayta churayta tukunaykipaq.",
     "migrateUnmatchedWarning": "Kay yaykuyqa mana DeHub yupayniyuqchu registropi. Katiyqa manam imatapas kutichinchu — iskay kaq yupayta musuq ruraqpa sutinwan ruwan, chaymanta kapuqniyki saqillan.",
     "migrateUnmatchedDetail": "Kay billetera direccionpiqa manam ima perfilpas kanchu. Sichus wakmanta yaykuchkarqanki, kutiy chaymanta chaypa rantinpi qillqakusqayki yaykuyta llamk&#39;achiy.",
