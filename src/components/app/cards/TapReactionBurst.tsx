@@ -17,8 +17,18 @@
  *
  * Purely decorative: `pointer-events-none` throughout, so it can never take a
  * tap from the carousel, the player, or the card underneath.
+ *
+ * It DRAWS from <body>, not from the box it is mounted in. A firework thrown
+ * out of a tap point reaches ~130px, and a feed card is a rounded, clipped
+ * bento: drawn in place, half of it was sliced off against the card's own edge,
+ * the image's rounded corner or the media box's `overflow-hidden`, and on a
+ * short card the top of it landed under the sticky nav. The mount point stays
+ * where it is — it is the anchor that says which post was tapped and where the
+ * card is — but the hearts are portalled to <body> and positioned in viewport
+ * coordinates, so nothing between here and the root can cut them.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Heart, ThumbsUp } from 'lucide-react';
 import {
@@ -30,9 +40,9 @@ import {
 interface Burst {
   id: number;
   reaction: TapReaction;
-  /** Percentage coords within this box, so the burst starts under the finger. */
-  left: number;
-  top: number;
+  /** Viewport coords, so the burst starts under the finger wherever it landed. */
+  x: number;
+  y: number;
 }
 
 /**
@@ -72,6 +82,21 @@ const LOVE_SPARKS = LOVE_SPARK_SEEDS.map((spark) => {
 /** Flight time of one spark. The stagger above adds ~0.13s on top. */
 const SPARK_DURATION = 0.95;
 
+/**
+ * How much room the widest burst needs around its centre: the furthest spark
+ * flies 106px and is drawn from its own middle. A tap right on the edge of the
+ * screen slides inwards by this much so the explosion stays whole — the burst
+ * is feedback for a tap that already registered, not a hit target, so moving it
+ * costs nothing and losing half of it costs the whole effect.
+ */
+const BURST_MARGIN = 120;
+
+/** Pull a coordinate inside the viewport; centre it if the axis is too short. */
+const keepOnScreen = (value: number, extent: number) =>
+  extent < BURST_MARGIN * 2
+    ? extent / 2
+    : Math.min(extent - BURST_MARGIN, Math.max(BURST_MARGIN, value));
+
 export function TapReactionBurst({ postId }: { postId?: string | number }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const [bursts, setBursts] = useState<Burst[]>([]);
@@ -89,24 +114,29 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
       const detail = (event as CustomEvent<DoubleTapLikeEventDetail>).detail;
       if (!detail || String(detail.postId) !== id) return;
 
-      // Place it under the finger when we know where that was, else dead centre
-      // — a mouse double-click and a keyboard-driven cast have no point.
-      let left = 50;
-      let top = 50;
+      // Place it under the finger when we know where that was. A mouse
+      // double-click and a keyboard-driven cast carry no point, so those fall
+      // back to the middle of the anchor — which is the only reason the anchor
+      // still exists now that the drawing happens at the root.
       const box = hostRef.current?.getBoundingClientRect();
-      if (box && box.width > 0 && detail.x != null && detail.y != null) {
-        left = ((detail.x - box.left) / box.width) * 100;
-        top = ((detail.y - box.top) / box.height) * 100;
-        // A tap can land just outside during a fling; keep the burst on screen.
-        left = Math.min(92, Math.max(8, left));
-        top = Math.min(92, Math.max(8, top));
+      let x: number;
+      let y: number;
+      if (detail.x != null && detail.y != null) {
+        x = detail.x;
+        y = detail.y;
+      } else if (box && box.width > 0) {
+        x = box.left + box.width / 2;
+        y = box.top + box.height / 2;
+      } else {
+        x = window.innerWidth / 2;
+        y = window.innerHeight / 2;
       }
 
       const burst: Burst = {
         id: nextId.current++,
         reaction: detail.reaction ?? 'like',
-        left,
-        top,
+        x: keepOnScreen(x, window.innerWidth),
+        y: keepOnScreen(y, window.innerHeight),
       };
       setBursts((current) => {
         // A love always arrives on top of the 👍 that the same gesture's second
@@ -124,18 +154,22 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
     return () => window.removeEventListener(TAP_REACTION_CAST_EVENT, listener as EventListener);
   }, [postId]);
 
-  return (
-    <div
-      ref={hostRef}
-      aria-hidden
-      className="pointer-events-none absolute inset-0 z-40 overflow-hidden"
-    >
+  // The anchor: an empty, unclipped box that marks where this post's media is,
+  // for a cast that arrives without a tap point. It draws nothing itself.
+  const anchor = <div ref={hostRef} aria-hidden className="pointer-events-none absolute inset-0" />;
+
+  // Everything visible lives at the root instead, above the whole app — over
+  // the card border, the bento, the sticky nav and any open viewer. Safe at
+  // this height because every layer of it is pointer-events-none, and it is
+  // gone again inside a second.
+  const layer = (
+    <div aria-hidden className="pointer-events-none fixed inset-0 z-[9999]">
       <AnimatePresence>
         {bursts.map((burst) => (
           <motion.div
             key={burst.id}
-            className="pointer-events-none absolute"
-            style={{ left: `${burst.left}%`, top: `${burst.top}%` }}
+            className="pointer-events-none fixed"
+            style={{ left: burst.x, top: burst.y }}
             initial={{ opacity: 0, scale: 0.4, x: '-50%', y: '-50%' }}
             animate={{ opacity: 1, scale: 1 }}
             // Exit is a flat 120ms rather than the entry spring: a 👍 replaced
@@ -210,5 +244,17 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
         ))}
       </AnimatePresence>
     </div>
+  );
+
+  return (
+    <>
+      {anchor}
+      {/* Only while something is actually flying: a feed mounts one of these
+          per card, and an idle full-viewport fixed layer each is a compositing
+          bill for nothing. */}
+      {bursts.length > 0 && typeof document !== 'undefined'
+        ? createPortal(layer, document.body)
+        : null}
+    </>
   );
 }
