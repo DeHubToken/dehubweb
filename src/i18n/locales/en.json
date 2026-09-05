@@ -1828,6 +1828,7 @@
     "aimAtTiers": "Which badge tiers should see it?"
   },
   "work": {
+    "budgetExhausted": "This bounty's budget is fully committed.",
     "title": "Bounties",
     "subtitle": "Post a bounty or hunt one down. Paid in DHB or USDC.",
     "myBounties": "My Bounties",

@@ -1828,6 +1828,7 @@
     "aimAtTiers": "Quali livelli di badge dovrebbero vederlo?"
   },
   "work": {
+    "budgetExhausted": "Il budget di questa taglia è interamente impegnato.",
     "title": "Taglie",
     "subtitle": "Pubblica una taglia o vai a caccia. Pagamento in DHB o USDC.",
     "myBounties": "Le mie taglie",

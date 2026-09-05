@@ -1,4 +1,7 @@
 {
+  "work": {
+    "budgetExhausted": "ई इनाम के पूरा बजट लग गेल बा।"
+  },
   "nav": {
     "home": "घर",
     "explore": "खोजो",

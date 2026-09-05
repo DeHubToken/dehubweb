@@ -1,4 +1,7 @@
 {
+  "work": {
+    "budgetExhausted": "Šīs atlīdzības budžets ir pilnībā izlietots."
+  },
   "nav": {
     "home": "Sākums",
     "explore": "Izpētīt",

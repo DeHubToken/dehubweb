@@ -1770,6 +1770,7 @@
     "aimAtTiers": "Millised märgitasemed peaksid seda nägema?"
   },
   "work": {
+    "budgetExhausted": "Selle preemia eelarve on täielikult kaetud.",
     "title": "Preemiad",
     "subtitle": "Postita preemia või otsi üles. Makstud DHB või USDC-ga.",
     "myBounties": "Minu preemiad",

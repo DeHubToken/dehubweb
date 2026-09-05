@@ -1570,6 +1570,7 @@
     "aimAtTiers": "Những hạng huy hiệu nào nên thấy nó?"
   },
   "work": {
+    "budgetExhausted": "Ngân sách của tiền thưởng này đã được phân bổ hết.",
     "title": "Nhiệm vụ thưởng",
     "subtitle": "Đăng một nhiệm vụ hoặc đi săn một nhiệm vụ. Trả bằng DHB hoặc USDC.",
     "myBounties": "Nhiệm vụ của tôi",

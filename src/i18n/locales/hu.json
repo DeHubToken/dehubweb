@@ -1770,6 +1770,7 @@
     "aimAtTiers": "Mely jelvényszintek lássák?"
   },
   "work": {
+    "budgetExhausted": "Ennek a jutalomnak a kerete teljesen le van kötve.",
     "title": "Jutalmazások",
     "subtitle": "Tegyél fel jutalmat vagy keress egyet. DHB vagy USDC-ben fizetett.",
     "myBounties": "Saját jutalmaim",
