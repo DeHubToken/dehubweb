@@ -8,6 +8,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const registry = new Map<string, string>();
 let caller = '';
+// Reproduces the server fault: its auth guard overwrote the address in the
+// path with the caller's own, so every key lookup answered about the caller.
+let guardBug = false;
 
 vi.mock('@/lib/api/dehub/core', () => ({
   apiCall: vi.fn(async (endpoint: string, opts: any = {}) => {
@@ -16,7 +19,10 @@ vi.mock('@/lib/api/dehub/core', () => ({
       return { address: caller, publicKey: opts.body.publicKey };
     }
     const m = endpoint.match(/^\/api\/dm\/e2ee-key\/(0x[0-9a-f]+)$/);
-    if (m) return { address: m[1], publicKey: registry.get(m[1]) ?? null };
+    if (m) {
+      const answered = guardBug ? caller : m[1];
+      return { address: answered, publicKey: registry.get(answered) ?? null };
+    }
     throw new Error(`unexpected call ${endpoint}`);
   }),
 }));
@@ -120,5 +126,20 @@ describe('dm-e2ee client flow', () => {
     expect(loadIdentity(A)).toBe(true);
     expect(getIdentity()!.publicKey).toBe(pubA);
     expect(sign).not.toHaveBeenCalled();
+  });
+
+  it('sends plaintext rather than encrypt to a key the server answered about someone else', async () => {
+    await become(A);
+    await become(B);
+    guardBug = true;
+    try {
+      // B asks for A's key and is handed B's own. Encrypting to it would seal
+      // the message to B — readable here, an unopenable envelope for A, and no
+      // error anywhere. Falling back to plaintext is the safe answer.
+      expect(await prepareOutgoing(A, 'hi from B')).toEqual({ content: 'hi from B', encrypted: false });
+      expect(await encryptForPeer(A, 'hi from B')).toBeNull();
+    } finally {
+      guardBug = false;
+    }
   });
 });
