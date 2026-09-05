@@ -665,7 +665,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[92vh] flex flex-col [&>div:first-child]:hidden">
+      <DrawerContent column className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[92dvh] flex flex-col [&>div:first-child]:hidden">
         <DrawerHeader className="border-b-0 p-3 pb-1">
           <div className="flex items-center justify-between gap-2">
             <DrawerTitle className="text-white flex items-center gap-2 min-w-0">

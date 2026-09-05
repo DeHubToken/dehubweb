@@ -409,7 +409,7 @@ export function CropRotateEditor({
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent column hideHandle className="bg-zinc-950 border-zinc-800 max-h-[90vh] max-h-[90dvh] overflow-hidden flex flex-col">
+      <DrawerContent column hideHandle className="bg-zinc-950 border-zinc-800 max-h-[90dvh] overflow-hidden flex flex-col">
         <DrawerTitle className="sr-only">Crop & Rotate</DrawerTitle>
         
         {/* Header */}

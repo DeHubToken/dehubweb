@@ -334,7 +334,7 @@ export function AudioSpacesModalBody() {
           hand-raise queue, screen share, soundboard, radio, TTS, captions — and
           those controls need the room. `currentSpace` is the same flag the live
           branch below renders on, so the width can never disagree with the view. */}
-      <DrawerContent column={!currentSpace} className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh] max-h-[90dvh] flex flex-col [&>div:first-child]:hidden">
+      <DrawerContent column={!currentSpace} className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90dvh] flex flex-col [&>div:first-child]:hidden">
         {!currentSpace ? (
           <DrawerHeader className="border-b-0 p-3 pb-1">
             <div className="flex items-center justify-between">

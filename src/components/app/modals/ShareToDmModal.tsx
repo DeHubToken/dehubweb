@@ -187,7 +187,7 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent column
         glass
-        className="max-h-[85vh]"
+        className="max-h-[85dvh]"
         data-no-navigate
         onClick={(e: React.MouseEvent) => e.stopPropagation()}
         onPointerDown={(e: React.PointerEvent) => e.stopPropagation()}

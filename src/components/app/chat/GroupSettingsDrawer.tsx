@@ -185,7 +185,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
   return (
     <>
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent column glass className="px-4 pb-8 max-h-[80vh]">
+        <DrawerContent column glass className="px-4 pb-8 max-h-[80dvh]">
           <DrawerHeader className="border-b border-white/10 mb-4">
             <DrawerTitle className="text-white flex items-center gap-2">
               <Users className="w-5 h-5" />

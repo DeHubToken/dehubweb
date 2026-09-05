@@ -179,7 +179,7 @@ export function UserMentionDropdown({
       }}
     >
       <DrawerContent column
-        className="bg-black/95 border-t border-white/[0.08] max-h-[70vh] rounded-t-3xl"
+        className="bg-black/95 border-t border-white/[0.08] max-h-[70dvh] rounded-t-3xl"
         style={{
           backdropFilter: 'blur(40px)',
           WebkitBackdropFilter: 'blur(40px)',

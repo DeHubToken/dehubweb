@@ -541,7 +541,7 @@ export function PostActionBar({
         </Button>
         
         <Drawer open={enhanceSheetOpen} onOpenChange={handleCloseEnhance}>
-          <DrawerContent column glass className="border-t border-white/10 max-h-[90vh] max-h-[90dvh]">
+          <DrawerContent column glass className="border-t border-white/10 max-h-[90dvh]">
             <DrawerHeader className="border-b border-white/10">
               {styleView && (
                 <button

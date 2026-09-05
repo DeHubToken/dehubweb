@@ -60,7 +60,7 @@ export function DeletePostModal({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column glass className="max-h-[50vh]">
+      <DrawerContent column glass className="max-h-[50dvh]">
         <DrawerHeader className="text-left">
           <DrawerTitle className="flex items-center gap-2 text-white">
             <Trash2 className="w-5 h-5 text-red-500" />

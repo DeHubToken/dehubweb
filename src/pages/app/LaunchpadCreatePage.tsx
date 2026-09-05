@@ -117,7 +117,7 @@ export default function LaunchpadCreatePage() {
           glass
           hideHandle={false}
           column
-          className="max-h-[92vh]"
+          className="max-h-[92dvh]"
         >
           <div className="flex items-center justify-between px-5 pt-3 pb-2">
             <div>

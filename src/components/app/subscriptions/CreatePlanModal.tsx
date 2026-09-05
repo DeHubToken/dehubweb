@@ -146,7 +146,7 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
         glass
         hideHandle
         column
-        className="text-white max-h-[85vh] max-h-[85dvh] overflow-hidden flex flex-col px-4 pb-6"
+        className="text-white max-h-[85dvh] overflow-hidden flex flex-col px-4 pb-6"
       >
         <DrawerHeader className="relative pb-4 border-b border-white/10 shrink-0 px-0 text-left">
           <div className="flex items-center justify-between gap-2">

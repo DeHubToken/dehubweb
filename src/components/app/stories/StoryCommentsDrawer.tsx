@@ -142,7 +142,7 @@ export function StoryCommentsDrawer({ isOpen, onClose, storyId }: StoryCommentsD
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent glass className="max-h-[70vh] flex flex-col">
+      <DrawerContent glass className="max-h-[70dvh] flex flex-col">
         <DrawerHeader className="flex items-center justify-between px-4 pb-2 flex-shrink-0">
           <DrawerTitle className="text-white/90 font-semibold">
             {t('stories.commentsCount', { count: commentCount })}

@@ -299,7 +299,7 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
   if (isTouchLayout) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent glass hideHandle={false} className="text-white px-5 pb-8 max-h-[92vh] overflow-y-auto">
+        <DrawerContent glass hideHandle={false} className="text-white px-5 pb-8 max-h-[92dvh] overflow-y-auto">
           {body}
         </DrawerContent>
       </Drawer>

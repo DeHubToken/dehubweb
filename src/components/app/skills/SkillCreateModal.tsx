@@ -80,7 +80,7 @@ export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column className="bg-zinc-900 border-white/10 max-h-[92vh]">
+      <DrawerContent column className="bg-zinc-900 border-white/10 max-h-[92dvh]">
         <div className="mx-auto w-full max-w-xl px-4 pb-6 overflow-y-auto">
         <DrawerHeader className="px-0">
           <DrawerTitle>{t(editing ? 'skills.editSkill' : 'skills.createSkill')}</DrawerTitle>

@@ -329,7 +329,7 @@ export function VideoPaywallModal({
         onOpenChange(next);
       }}
     >
-      <DrawerContent column glass hideHandle={false} className="max-h-[85vh]">
+      <DrawerContent column glass hideHandle={false} className="max-h-[85dvh]">
         <DrawerHeader className="text-left pb-2">
           <DrawerTitle className="flex items-center gap-2 text-white">
             <Video className="w-5 h-5 text-purple-400" />

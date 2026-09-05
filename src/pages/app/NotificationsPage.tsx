@@ -1352,7 +1352,7 @@ const NotificationItem = memo(function NotificationItem({
         if (!open) { drawerJustClosed.current = true; setTimeout(() => { drawerJustClosed.current = false; }, 300); }
         setShowActorsDrawer(open);
       }}>
-        <DrawerContent column data-notifications-page className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[70vh]">
+        <DrawerContent column data-notifications-page className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[70dvh]">
           <DrawerHeader className="text-center pb-2">
             <DrawerTitle className="text-white text-base">
               {(notification.type as string) === 'like' ? 'Reacted by' : (notification.type as string) === 'repost' ? 'Reposted by' : (notification.type as string) === 'comment' ? 'Commented by' : 'Users'}
@@ -1393,7 +1393,7 @@ const NotificationItem = memo(function NotificationItem({
         if (!open) { drawerJustClosed.current = true; setTimeout(() => { drawerJustClosed.current = false; }, 300); }
         setShowPostsDrawer(open);
       }}>
-        <DrawerContent column data-notifications-page className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[80vh]">
+        <DrawerContent column data-notifications-page className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[80dvh]">
           <DrawerHeader className="text-center pb-2">
             <DrawerTitle className="text-white text-base">
               {notification.type === 'like' ? 'Reacted posts' : notification.type === 'comment' ? 'Commented posts' : (notification.type as string) === 'repost' ? 'Reposted posts' : 'Posts'}

@@ -412,7 +412,7 @@ export function FollowersListDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column glass className="max-h-[85vh]" hideHandle>
+      <DrawerContent column glass className="max-h-[85dvh]" hideHandle>
         <DrawerHeader className="px-4 pb-2">
           <DrawerTitle className="text-white flex items-center gap-2">
             <Users className="w-5 h-5" />
