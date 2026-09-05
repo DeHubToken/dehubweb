@@ -15,9 +15,9 @@
 
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Trophy } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { profileAvatar, profileName, useWalletProfiles } from '@/hooks/use-wallet-profiles';
 import type { DeHubUser } from '@/lib/api/dehub/types';
 import { fetchChessLadder, fetchRunBoard, type ArcadeBoardRow } from '@/lib/api/arcade-leaderboard';
@@ -130,7 +130,7 @@ export function ArcadeLeaderboard({
   return (
     <section className={cn('space-y-2', className)}>
       <div className="flex items-center gap-2">
-        <Trophy className="h-4 w-4 shrink-0 text-zinc-500" />
+        <ThemedIcon icon="trophy" alt="" className="h-5 w-5 shrink-0 object-contain opacity-70" />
         <h3 className="text-sm font-semibold text-white">{board.valueLabel}</h3>
       </div>
       <p className="text-[11px] leading-relaxed text-zinc-500">{board.blurb}</p>

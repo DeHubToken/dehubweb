@@ -13,6 +13,8 @@ interface PageHeaderProps {
   innerClassName?: string;
   /** Optional right-side actions aligned to the end of the bar */
   rightActions?: ReactNode;
+  /** Optional themed page identity icon shown before the title. */
+  icon?: ReactNode;
   /** Fallback route when no history exists (e.g., direct URL access) */
   fallbackRoute?: string;
   /** Override the back action (e.g., to close a drawer with animation before navigating) */
@@ -26,6 +28,7 @@ export function PageHeader({
   className,
   innerClassName,
   rightActions,
+  icon,
   fallbackRoute = '/app',
   onBack,
 }: PageHeaderProps) {
@@ -69,6 +72,11 @@ export function PageHeader({
           >
             <ArrowLeft className="w-5 h-5 text-white" />
           </button>
+        )}
+        {icon && (
+          <span className="flex size-10 shrink-0 items-center justify-center">
+            {icon}
+          </span>
         )}
         {(title || subtitle) && (
           <div className="min-w-0 flex-1">

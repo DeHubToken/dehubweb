@@ -10,7 +10,8 @@
 import { useTranslation } from 'react-i18next';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Tv, Volume2, VolumeX, Maximize, Minimize, Play, Pause, PictureInPicture2 } from 'lucide-react';
+import { Volume2, VolumeX, Maximize, Minimize, Play, Pause, PictureInPicture2 } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { usePiP } from '@/contexts/PiPContext';
 import { cn } from '@/lib/utils';
 // Type-only: the hls.js runtime (~540 kB raw) loads dynamically when the user
@@ -354,7 +355,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
                 }}
               />
             ) : (
-              <Tv className="w-10 h-10 text-zinc-600" />
+              <ThemedIcon icon="tv" alt="" className="w-14 h-14 object-contain opacity-70" />
             )}
           </div>
         )}
@@ -438,7 +439,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
               }}
             />
           ) : (
-            <Tv className="w-4 h-4 text-zinc-500" />
+            <ThemedIcon icon="tv" alt="" className="w-6 h-6 object-contain opacity-70" />
           )}
         </div>
         <div className="flex-1 min-w-0">

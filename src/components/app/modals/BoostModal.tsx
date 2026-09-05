@@ -44,6 +44,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { badgeImage } from '@/lib/staking-badges';
@@ -178,7 +179,7 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
       <DrawerContent column glass className="px-4 pb-6">
         <DrawerHeader className="pb-2">
           <DrawerTitle className="text-white text-lg flex items-center gap-2">
-            <Rocket className="w-5 h-5" />
+            <ThemedIcon icon="superpowers" alt="" className="w-8 h-8 object-contain" />
             {t('superpowers.title')}
           </DrawerTitle>
         </DrawerHeader>
@@ -195,7 +196,7 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
           </div>
         ) : !status?.tier ? (
           <div className="flex flex-col gap-4 py-4 text-center">
-            <Lock className="w-8 h-8 mx-auto text-zinc-500" />
+            <ThemedIcon icon="lock" alt="" className="w-12 h-12 mx-auto object-contain opacity-70" />
             <p className="text-white text-sm">{t('superpowers.needBadge')}</p>
             <Button variant="outline" onClick={() => { onOpenChange(false); navigate('/app/stake'); }}>
               {t('superpowers.stakeDhb')}
@@ -250,7 +251,11 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
                       !power.enabled && 'opacity-50 cursor-not-allowed',
                     )}
                   >
-                    <Icon className="w-4 h-4 mt-0.5 shrink-0 text-zinc-300" />
+                    {power.key === 'boost' ? (
+                      <ThemedIcon icon="superpowers" alt="" className="w-5 h-5 mt-0.5 shrink-0 object-contain" />
+                    ) : (
+                      <Icon className="w-4 h-4 mt-0.5 shrink-0 text-zinc-300" />
+                    )}
                     <span className="min-w-0 flex-1">
                       <span className="flex items-center gap-2">
                         <span className="text-sm text-white">{power.label}</span>
