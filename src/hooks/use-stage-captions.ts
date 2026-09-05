@@ -166,8 +166,10 @@ export function useStageCaptionPublisher(options: CaptionPublisherOptions): Capt
     // the captions panel would stop their own outbound captions.
     const lease = leaseChannel(stageCaptionChannel(spaceId), {
       config: { presence: { key: `speaker-${Math.random().toString(36).slice(2, 10)}` } },
-      bind: (chan) => {
-        chan.on('presence', { event: 'sync' }, () => {
+      listen: [{
+        type: 'presence',
+        filter: { event: 'sync' },
+        handler: (_payload, chan) => {
           const state = chan.presenceState<{ lang?: string }>();
           const languages = new Set<string>();
           for (const entries of Object.values(state)) {
@@ -185,8 +187,8 @@ export function useStageCaptionPublisher(options: CaptionPublisherOptions): Capt
           }
           dubTokensRef.current = tokens;
           activeLanguagesRef.current = [...languages];
-        });
-      },
+        },
+      }],
     });
     channelRef.current = lease.channel;
 
@@ -737,9 +739,11 @@ export function useStageCaptionFeed(
     // See the note there.
     const lease = leaseChannel(stageCaptionChannel(spaceId), {
       config: { presence: { key: `viewer-${Math.random().toString(36).slice(2, 10)}` } },
-      bind: (chan) => {
-        chan
-          .on('broadcast', { event: CAPTION_EVENT }, ({ payload }) => {
+      listen: [
+        {
+          type: 'broadcast',
+          filter: { event: CAPTION_EVENT },
+          handler: ({ payload }) => {
             const message = payload as StageCaptionMessage | undefined;
             if (!message?.id || typeof message.text !== 'string') return;
 
@@ -755,15 +759,20 @@ export function useStageCaptionFeed(
             }
 
             setLines((prev) => foldCaption(prev, toLine(message, wallet)));
-          })
-          .on('broadcast', { event: CAPTION_TRANSLATION_EVENT }, ({ payload }) => {
+          },
+        },
+        {
+          type: 'broadcast',
+          filter: { event: CAPTION_TRANSLATION_EVENT },
+          handler: ({ payload }) => {
             const translation = payload as StageCaptionTranslation | undefined;
             if (!translation?.id || !translation.translations) return;
             // No roster check needed: a translation can only attach to a line
             // that already passed one, and it cannot create a line of its own.
             setLines((prev) => foldTranslation(prev, translation));
-          });
-      },
+          },
+        },
+      ],
       // Fires immediately if the publisher already joined this topic, which is
       // the case on a host — otherwise a second holder waits for a subscribe
       // callback that has already been and gone, and never publishes its

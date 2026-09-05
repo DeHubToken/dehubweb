@@ -400,13 +400,15 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
     // who is also dubbing both are on one object and either cleanup would close
     // it for the other.
     const lease = leaseChannel(`${stageCaptionChannel(spaceId)}:audio`, {
-      bind: (chan) => {
-        chan.on('broadcast', { event: DUB_AUDIO_EVENT }, ({ payload }) => {
+      listen: [{
+        type: 'broadcast',
+        filter: { event: DUB_AUDIO_EVENT },
+        handler: ({ payload }) => {
           const clip = payload as StageDubAudio | undefined;
           if (!clip?.audio || clip.lang !== languageRef.current) return;
           playerRef.current?.enqueue(clip.id, clip.audio);
-        });
-      },
+        },
+      }],
     });
 
     return () => { lease.release(); };
