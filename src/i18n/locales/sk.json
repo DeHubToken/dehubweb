@@ -1,4 +1,7 @@
 {
+  "work": {
+    "budgetExhausted": "Rozpočet tejto odmeny je úplne vyčerpaný."
+  },
   "nav": {
     "home": "Domov",
     "explore": "Objavovať",

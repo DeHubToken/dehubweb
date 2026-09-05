@@ -1,4 +1,7 @@
 {
+  "work": {
+    "budgetExhausted": "今場賞金其預算已經用完了。"
+  },
   "nav": {
     "home": "厝里",
     "explore": "探索",

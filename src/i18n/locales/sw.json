@@ -1829,6 +1829,7 @@
     "aimAtTiers": "Viwango vipi vya beji vinapaswa kukiona?"
   },
   "work": {
+    "budgetExhausted": "Bajeti ya zawadi hii imetumika yote.",
     "title": "Zawadi",
     "subtitle": "Chapisho zawadi au tafuta moja. Kulipwa kwa DHB au USDC.",
     "myBounties": "Zawadi Zangu",

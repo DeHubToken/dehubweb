@@ -1762,6 +1762,7 @@
     "aimAtTiers": "Vilka badgenivåer ska se det?"
   },
   "work": {
+    "budgetExhausted": "Budgeten för den här dusören är helt intecknad.",
     "title": "Bounties",
     "subtitle": "Posta en bounty eller jaga en. Betald i DHB eller USDC.",
     "myBounties": "Mina Bounties",

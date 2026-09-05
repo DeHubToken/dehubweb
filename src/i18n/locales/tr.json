@@ -1828,6 +1828,7 @@
     "aimAtTiers": "Hangi rozet seviyeleri görsün?"
   },
   "work": {
+    "budgetExhausted": "Bu ödülün bütçesi tamamen tahsis edildi.",
     "title": "Ödüller",
     "subtitle": "Bir ödül ilanı açın ya da bir ödülün peşine düşün. DHB veya USDC ile ödenir.",
     "myBounties": "Ödüllerim",

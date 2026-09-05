@@ -1706,6 +1706,7 @@
     "aimAtTiers": "Aling mga badge tier ang dapat makakita nito?"
   },
   "work": {
+    "budgetExhausted": "Nagamit na nang buo ang budget ng bounty na ito.",
     "title": "Mga Bounty",
     "subtitle": "Mag-post ng bounty o humabol ng isa. Bayad sa DHB o USDC.",
     "myBounties": "Mga Bounty Ko",

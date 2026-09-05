@@ -1832,6 +1832,7 @@
     "aimAtTiers": "Quels niveaux de badge doivent la voir ?"
   },
   "work": {
+    "budgetExhausted": "Le budget de cette prime est entièrement engagé.",
     "title": "Primes",
     "subtitle": "Publiez une prime ou partez en chasse. Payé en DHB ou USDC.",
     "myBounties": "Mes primes",

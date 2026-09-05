@@ -1832,6 +1832,7 @@
     "aimAtTiers": "Que níveis de emblema devem vê-la?"
   },
   "work": {
+    "budgetExhausted": "O orçamento desta recompensa está totalmente comprometido.",
     "title": "Recompensas",
     "subtitle": "Publique uma recompensa ou vá atrás de uma. Pago em DHB ou USDC.",
     "myBounties": "Minhas recompensas",

@@ -1765,6 +1765,7 @@
     "aimAtTiers": "Koje razine značaka bi to trebale vidjeti?"
   },
   "work": {
+    "budgetExhausted": "Proračun ove nagrade u cijelosti je raspoređen.",
     "title": "Nagrade",
     "subtitle": "Objavite nagradu ili je pronađite. Plaćeno u DHB ili USDC.",
     "myBounties": "Moje nagrade",

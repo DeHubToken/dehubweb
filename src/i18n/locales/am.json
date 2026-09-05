@@ -1,4 +1,7 @@
 {
+  "work": {
+    "budgetExhausted": "የዚህ ሽልማት በጀት ሙሉ በሙሉ ተይዟል።"
+  },
   "nav": {
     "home": "መነሻ",
     "explore": "አስስ",
