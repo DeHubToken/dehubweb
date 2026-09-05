@@ -136,6 +136,10 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   const [backendHint, setBackendHint] = useState<LegacyAccountHint | null>(null);
   const [residueDetected, setResidueDetected] = useState(false);
   const userChoseModeRef = useRef(false);
+  // A legacy migration has been started or resumed on this mount. A ref, not
+  // state: the backend-hint callback closes over its mount-time render, so any
+  // state it read would be permanently stale.
+  const migrationStartedRef = useRef(false);
   // The mnemonic for a brand-new wallet, generated once per setup attempt.
   //
   // It used to be minted inside resolveSecret(), which runs on every submit —
@@ -191,7 +195,21 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       // user was just told had been retrieved — the exact outcome this guard
       // exists to prevent, on the population where exists === false is most
       // likely to be wrong.
-      if (hint.exists === false && !userChoseModeRef.current && !legacyMigrationInFlight()) {
+      //
+      // The ref, not the sessionStorage flag, is what makes this safe.
+      // resumeLegacyMigration clears that flag in its own `finally`, which
+      // runs BEFORE the retrieved key reaches setMigratedKey — so a slow
+      // edge-function call and a fast resume still land in the wrong order.
+      // The ref is set synchronously the moment a migration is started or
+      // resumed and never cleared: once someone is on that path, the
+      // automatic retreat has no business moving them off it. Choosing a tab
+      // by hand still works.
+      if (
+        hint.exists === false &&
+        !userChoseModeRef.current &&
+        !migrationStartedRef.current &&
+        !legacyMigrationInFlight()
+      ) {
         setMode('new');
       }
       if (hint.exists === true && hint.accounts?.length) {
@@ -215,6 +233,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     const hasParams = url.includes('b64Params') || url.includes('sessionId') || url.includes('sessionNamespace');
     if (!pending || !hasParams) return;
 
+    migrationStartedRef.current = true;
     setMode('migrate');
     setMigrateBusy('resume');
     let resumedProvider: string | null = null;
@@ -270,6 +289,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       }
       phoneHint = normalised;
     }
+    migrationStartedRef.current = true;
     setMigrateBusy(provider);
     try { sessionStorage.setItem(MIGRATE_PROVIDER_KEY, provider); } catch { /* ignore */ }
     try {
