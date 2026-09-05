@@ -70,8 +70,23 @@ export function NewMembersList({ listClassName }: NewMembersListProps) {
     return () => el.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
+  /**
+   * Open by address, never by the username on the row.
+   *
+   * The roster row is a snapshot taken when someone registered, and at that
+   * moment most accounts still carry the generated placeholder the client
+   * shows before a username is chosen — `rapidbadger_7a38`, `echoblade_38ba`.
+   * That string was never a username the API knows, so `/rapidbadger_7a38`
+   * resolved to nothing and the reader got "not found" on a member who is
+   * perfectly real: 75 of the 680 rows on the roster are in this state, and
+   * anyone who has since renamed is in it too.
+   *
+   * The address is the identity that cannot drift. `/api/account_info` takes
+   * one, and the profile page canonicalises the URL to the real username once
+   * it has loaded the account.
+   */
   const openProfile = useCallback((member: NewMember) => {
-    navigate(`/${member.username || member.address}`);
+    navigate(`/${member.address}`);
   }, [navigate]);
 
   const handleFollow = useCallback((e: React.MouseEvent, member: NewMember) => {
