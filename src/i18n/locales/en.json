@@ -1105,7 +1105,7 @@
     "welcomeBackWithLogin": "Welcome back — this account is still yours. Sign in with {{login}} below to bring it back, with your posts, followers and balance.",
     "welcomeBackWaiting": "waiting on it",
     "migrateNothingToRecover": "There is no earlier DeHub account on this login, so there is nothing to bring over. Go back to New account to finish setting this one up.",
-    "migrateUnmatchedWarning": "This login has no DeHub account on record. Continuing does not recover anything â it creates a second account with a new username, and leaves the one you already have behind.",
+    "migrateUnmatchedWarning": "This login has no DeHub account on record. Continuing does not recover anything — it creates a second account with a new username, and leaves the one you already have behind.",
     "migrateUnmatchedDetail": "No profile exists at this wallet address. If you were signing back in, go back and use the login you signed up with instead.",
     "migrateGoBack": "Go back",
     "migrateContinueAnyway": "Create a new account anyway",
