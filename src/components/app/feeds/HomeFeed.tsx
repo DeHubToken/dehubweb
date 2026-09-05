@@ -808,7 +808,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           ? (item.videoUrl.startsWith('http') ? item.videoUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.videoUrl}`)
           : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4`,
         transcodingStatus: item.transcodingStatus,
-        description: item.description || item.name || '',
+        // Both, not one: the caption usually lives in the title, and a short
+        // that carried a title AND a description only ever showed the second.
+        title: item.name || '',
+        description: item.description || '',
         sound: 'Original Sound',
         comments: formatCount(item.commentCount || 0),
         shares: '0',

@@ -151,7 +151,10 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
     videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || (id ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4` : ''),
     transcodingStatus: nft.transcodingStatus,
-    description: nft.description || nft.name || nft.title || '',
+    // Title and body separately, and both are rendered: the caption usually
+    // lives in the title, but a short that has both used to show only one.
+    title: nft.name || nft.title || '',
+    description: nft.description || '',
     sound: 'Original Sound',
     comments: formatLikes(nft.commentCount || nft.comment_count || 0),
     shares: '0',
