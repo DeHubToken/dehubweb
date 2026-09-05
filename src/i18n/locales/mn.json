@@ -944,6 +944,8 @@
   },
   "messages": {
     "encrypted": "Төгсгөл хоорондын шифрлэлттэй",
+    "encryptionOff": "Энэ төхөөрөмжид шифрлэлт унтраалттай",
+    "encryptionTurnOn": "Асаах",
     "cannotDecrypt": "Шифрлэгдсэн мессеж — энэ төхөөрөмж дээр нээх боломжгүй",
     "title": "Зурвасууд",
     "searchConversations": "Яриа хайх...",
