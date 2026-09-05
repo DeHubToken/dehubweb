@@ -121,47 +121,43 @@ async function viaFal(
   }
 }
 
-async function viaGateway(
+async function viaAiChat(
   text: string,
   context: string,
   languages: string[],
 ): Promise<Record<string, string>> {
-  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-  if (!LOVABLE_API_KEY) return {};
+  const AI_KEY = Deno.env.get("GEMINI_API_KEY") ?? Deno.env.get("LOVABLE_API_KEY");
+  if (!AI_KEY) return {};
   const properties: Record<string, unknown> = {};
   for (const code of languages) {
     properties[code] = { type: "string", description: `The line in ${LANGUAGE_NAMES[code]}` };
   }
 
-  const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "google/gemini-2.5-flash-lite",
-      messages: [
-        { role: "system", content: systemPrompt(languages) },
-        { role: "user", content: context ? `CONTEXT: ${context}\nLINE: ${text}` : `LINE: ${text}` },
-      ],
-      tools: [
-        {
-          type: "function",
-          function: {
-            name: "return_translations",
-            description: "Return the line translated into each requested language",
-            parameters: {
-              type: "object",
-              properties,
-              required: languages,
-              additionalProperties: false,
-            },
+  const res = await aiChat({
+    model: "google/gemini-2.5-flash-lite",
+    messages: [
+      { role: "system", content: systemPrompt(languages) },
+      { role: "user", content: context ? `CONTEXT: ${context}\nLINE: ${text}` : `LINE: ${text}` },
+    ],
+    tools: [
+      {
+        type: "function",
+        function: {
+          name: "return_translations",
+          description: "Return the line translated into each requested language",
+          parameters: {
+            type: "object",
+            properties,
+            required: languages,
+            additionalProperties: false,
           },
         },
-      ],
-      tool_choice: { type: "function", function: { name: "return_translations" } },
-    }),
-  });
+      },
+    ],
+    tool_choice: { type: "function", function: { name: "return_translations" } },
+  }, { expectToolCall: "return_translations", label: "translate-caption" });
   if (!res.ok) {
-    console.error(`[translate-caption] gateway ${res.status}`);
+    console.error(`[translate-caption] ai ${res.status}`);
     return {};
   }
   const json = await res.json();
@@ -228,7 +224,7 @@ Deno.serve(async (req) => {
 
     let translations = await viaFal(text, context, languages);
     if (!translations || Object.keys(translations).length === 0) {
-      translations = await viaGateway(text, context, languages);
+      translations = await viaAiChat(text, context, languages);
     }
 
     // Partial results ship. A line translated into eight of ten languages is

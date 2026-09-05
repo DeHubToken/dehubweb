@@ -10,8 +10,7 @@
 // `data: [DONE]`. Non-streaming callers get `{ text }`.
 import { corsHeaders, handleCorsPreflight } from "../_shared/cors.ts";
 import { rateLimitByIp } from "../_shared/auth.ts";
-
-const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
+import { aiChat } from "../_shared/ai-chat.ts";
 
 /** Models the picker offers, keyed by the id the client sends. */
 const MODELS: Record<string, string> = {
@@ -88,8 +87,9 @@ Deno.serve(async (req) => {
   const limited = await rateLimitByIp(req, "creator_prompt_assistant", { limit: 90, windowMs: 60 * 60 * 1000 });
   if (limited) return limited;
 
-  const apiKey = Deno.env.get("LOVABLE_API_KEY");
-  if (!apiKey) return json({ error: "AI service not configured" }, 500);
+  if (!Deno.env.get("GEMINI_API_KEY") && !Deno.env.get("LOVABLE_API_KEY")) {
+    return json({ error: "AI service not configured" }, 500);
+  }
 
   let body: {
     messages?: Message[];
@@ -121,11 +121,10 @@ Deno.serve(async (req) => {
   const messages: Message[] = [{ role: "system", content: persona }, ...history];
   const stream = body.stream === true;
 
-  const upstream = await fetch(GATEWAY_URL, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ model, messages, stream, max_tokens: 1024 }),
-  });
+  const upstream = await aiChat(
+    { model, messages, stream, max_tokens: 1024 },
+    { label: "creator-prompt-assistant" },
+  );
 
   if (!upstream.ok) {
     const detail = await upstream.text().catch(() => "");

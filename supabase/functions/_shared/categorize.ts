@@ -13,9 +13,9 @@
 // nothing about the manual path had to be touched to make the automatic one
 // exist. If the prompt changes, change it in both.
 import { DEHUB_CDN_BASE } from './transcripts.ts';
+import { aiChat } from './ai-chat.ts';
 
-const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY') ?? '';
-const GATEWAY_URL = 'https://ai.gateway.lovable.dev/v1/chat/completions';
+const AI_KEY = Deno.env.get('GEMINI_API_KEY') ?? Deno.env.get('LOVABLE_API_KEY') ?? '';
 const MODEL = 'google/gemini-2.5-flash';
 
 export const DEFAULT_MIN_CONFIDENCE = 0.35;
@@ -100,7 +100,7 @@ function trimTranscript(raw: string): string {
 }
 
 export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
-  if (!LOVABLE_API_KEY) throw new Error('LOVABLE_API_KEY not configured');
+  if (!AI_KEY) throw new Error('No AI provider key configured');
 
   const title = (input.title ?? '').trim();
   const description = (input.description ?? '').trim();
@@ -145,50 +145,46 @@ export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
     : baseContent;
 
   const request = (content: any[]) => ({
-    method: 'POST',
-    headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: MODEL,
-      messages: [
-        {
-          role: 'system',
-          content:
-            `You categorize social posts. Return up to ${maxCount} categories that best fit, ranked best first, picked only from the allowed list (exact spelling). ` +
-            (existing.length
-              ? `The post is already partly tagged; return only categories that are MISSING, and an empty array if nothing is missing. `
-              : `ALWAYS commit to at least 1 category - pick the closest fit rather than returning empty. Only return empty if the post is literally blank. `) +
-            `Never default to the platform's dominant theme (Crypto/Blockchain) unless the post is clearly about that. Return via the categorize_post tool.`,
-        },
-        { role: 'user', content },
-      ],
-      tools: [{
-        type: 'function',
-        function: {
-          name: 'categorize_post',
-          description: 'Assign categories to a post from a fixed allowed list given in the prompt',
-          parameters: {
-            type: 'object',
-            properties: {
-              categories: {
-                type: 'array',
-                items: { type: 'string' },
-                minItems: 0,
-                maxItems: maxCount,
-                description: `Up to ${maxCount} categories that genuinely fit, ranked best first, copied verbatim from the allowed list. Empty array if nothing fits.`,
-              },
-              confidence: { type: 'number', minimum: 0, maximum: 1, description: 'Confidence 0-1 in the chosen categories' },
-              reasoning: { type: 'string', description: 'Brief one-sentence reasoning' },
+    model: MODEL,
+    messages: [
+      {
+        role: 'system',
+        content:
+          `You categorize social posts. Return up to ${maxCount} categories that best fit, ranked best first, picked only from the allowed list (exact spelling). ` +
+          (existing.length
+            ? `The post is already partly tagged; return only categories that are MISSING, and an empty array if nothing is missing. `
+            : `ALWAYS commit to at least 1 category - pick the closest fit rather than returning empty. Only return empty if the post is literally blank. `) +
+          `Never default to the platform's dominant theme (Crypto/Blockchain) unless the post is clearly about that. Return via the categorize_post tool.`,
+      },
+      { role: 'user', content },
+    ],
+    tools: [{
+      type: 'function',
+      function: {
+        name: 'categorize_post',
+        description: 'Assign categories to a post from a fixed allowed list given in the prompt',
+        parameters: {
+          type: 'object',
+          properties: {
+            categories: {
+              type: 'array',
+              items: { type: 'string' },
+              minItems: 0,
+              maxItems: maxCount,
+              description: `Up to ${maxCount} categories that genuinely fit, ranked best first, copied verbatim from the allowed list. Empty array if nothing fits.`,
             },
-            required: ['categories', 'confidence', 'reasoning'],
-            additionalProperties: false,
+            confidence: { type: 'number', minimum: 0, maximum: 1, description: 'Confidence 0-1 in the chosen categories' },
+            reasoning: { type: 'string', description: 'Brief one-sentence reasoning' },
           },
+          required: ['categories', 'confidence', 'reasoning'],
+          additionalProperties: false,
         },
-      }],
-      tool_choice: { type: 'function', function: { name: 'categorize_post' } },
-    }),
+      },
+    }],
+    tool_choice: { type: 'function', function: { name: 'categorize_post' } },
   });
 
-  let resp = await fetch(GATEWAY_URL, request(fullContent));
+  let resp = await aiChat(request(fullContent), { expectToolCall: 'categorize_post', label: 'categorize' });
 
   if (!resp.ok) {
     const detail = await resp.text();
@@ -199,7 +195,7 @@ export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
         return { categories: [], confidence: null, reasoning: 'Image unreachable and no text to read', model: MODEL, usedTranscript: false };
       }
       console.warn('categorize: image unreachable, retrying text-only', imageUrl);
-      resp = await fetch(GATEWAY_URL, request(baseContent));
+      resp = await aiChat(request(baseContent), { expectToolCall: 'categorize_post', label: 'categorize' });
     }
     if (!resp.ok) {
       const txt = await resp.text().catch(() => detail);

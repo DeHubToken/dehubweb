@@ -18,7 +18,7 @@ import {
   type Target,
 } from '../_shared/transcripts.ts';
 
-const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+const AI_KEY = Deno.env.get('GEMINI_API_KEY') ?? Deno.env.get('LOVABLE_API_KEY');
 const FAL_KEY = Deno.env.get('FAL_KEY');
 
 const OVERVIEW_PROMPT =
@@ -63,34 +63,30 @@ async function viaFal(system: string, prompt: string): Promise<string | null> {
   }
 }
 
-async function viaGateway(system: string, prompt: string): Promise<string | null> {
-  if (!LOVABLE_API_KEY) return null;
+async function viaAiChat(system: string, prompt: string): Promise<string | null> {
+  if (!AI_KEY) return null;
   try {
-    const res = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash-lite',
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: prompt },
-        ],
-      }),
-    });
+    const res = await aiChat({
+      model: 'google/gemini-2.5-flash-lite',
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user', content: prompt },
+      ],
+    }, { label: 'summarize-transcript' });
     if (!res.ok) {
-      console.error(`gateway ${res.status}: ${(await res.text()).slice(0, 300)}`);
+      console.error(`ai ${res.status}: ${(await res.text()).slice(0, 300)}`);
       return null;
     }
     const j = await res.json();
     return (j?.choices?.[0]?.message?.content ?? '').trim() || null;
   } catch (e) {
-    console.error('gateway summarize failed', e);
+    console.error('ai summarize failed', e);
     return null;
   }
 }
 
 async function ask(system: string, prompt: string): Promise<string | null> {
-  return (await viaFal(system, prompt)) ?? (await viaGateway(system, prompt));
+  return (await viaFal(system, prompt)) ?? (await viaAiChat(system, prompt));
 }
 
 function timedTranscript(segments: Segment[], budget = 12000): string {
