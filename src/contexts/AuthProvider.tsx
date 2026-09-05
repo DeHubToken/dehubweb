@@ -908,14 +908,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const { data: sessionData } = await supabase.auth.getSession();
         const readWasAuthed = sessionData?.session?.user?.id === userId;
         if (!readWasAuthed) {
-          const cached = getCachedWallet();
+          // Deliberately NOT handing the device cache to
+          // finishLoginWithLiveUnlock. That function's safety property is that
+          // the restored key provably belongs to THIS identity's wallet row —
+          // and `dehub_wallet_enc` is a single device-global entry with no
+          // user binding at all, so the signer would be checked against a
+          // value read from the same vault it came from. The check would agree
+          // with itself and prove nothing, then tag whatever account that
+          // wallet owns with the incoming uid. Routing to the unlock sheet is
+          // the whole point here: it avoids minting a second wallet without
+          // asserting an identity nothing has established.
           authLogger.warn(
             'Wallet lookup ran without a session for this identity — not treating it as a new account',
-            { hasCachedWallet: !!cached },
+            { hasCachedWallet: !!getCachedWallet() },
           );
-          if (cached?.ethAddress && await finishLoginWithLiveUnlock(userId, cached.ethAddress)) {
-            return;
-          }
           setWalletPhase('unlock');
           openLoginModal();
           return;
