@@ -2502,6 +2502,72 @@ html[data-theme="light"] .hover\:bg-zinc-700\/50:hover {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
 
+/* Every translucent dark zinc surface, not the eight that happened to get
+   reported. The list above grew one utility at a time as each dark patch was
+   found by hand, and covered 8 of the 30 the app actually uses — so a wash
+   like bg-zinc-800/40 kept its dark background while the .text-white remap
+   turned its label to ink, leaving ink on charcoal. Measured on /app/features
+   in light mode: the Requests tab came out at 1.17:1 against WCAG AA's 4.5.
+   Generated from the classes in src, so a step cannot be missed again. */
+html[data-theme="light"] .bg-zinc-600\/50:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-700\/30:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-700\/40:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-700\/50:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-700\/60:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-700\/70:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-700\/80:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-800\/30:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-800\/40:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-800\/50:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-800\/60:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-800\/70:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-800\/80:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-800\/90:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-900\/10:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-900\/40:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-900\/50:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-900\/60:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-900\/70:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-900\/80:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-900\/85:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-900\/90:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-900\/95:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-950\/60:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-950\/80:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-950\/85:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-950\/90:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-950\/95:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-600\/50:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-700\/30:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-700\/40:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-700\/50:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-700\/60:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-700\/70:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-700\/80:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-800\/30:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-800\/40:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-800\/50:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-800\/60:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-800\/70:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-800\/80:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-800\/90:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-900\/10:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-900\/40:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-900\/50:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-900\/60:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-900\/70:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-900\/80:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-900\/85:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-900\/90:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-900\/95:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-950\/60:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-950\/80:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-950\/85:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-950\/90:hover:not([data-keep-dark]),
+html[data-theme="light"] .hover\:bg-zinc-950\/95:hover:not([data-keep-dark]) {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
 /* Active-state pills / indicators that use bg-white in dark mode read as
    invisible on paper. Flip them to ink so the active tab is legible. */
 html[data-theme="light"] .bg-white:not([data-keep-white]),
