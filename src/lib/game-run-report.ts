@@ -47,8 +47,20 @@ interface RunMessage {
   life?: number;
 }
 
-/** Floor on how often a report is relayed, whatever the frame does. */
-const MIN_RELAY_GAP_MS = 1000;
+/**
+ * Floor on how often a report is relayed, whatever the frame does.
+ *
+ * Below the game's own sampling interval on purpose. Street Slayer checks its
+ * position every 500ms and only posts when it has crossed a checkpoint, so an
+ * honest report is never held here — the floor exists for a frame that misbehaves,
+ * not for the one we ship.
+ *
+ * It used to be 1000ms, which is ABOVE that sample, so two checkpoints crossed
+ * in one second had the second one silently dropped. That cost nothing when the
+ * server scored on the clock alone. It costs a tenth of the run now that the
+ * server also asks how much of it was reported, which is why this moved.
+ */
+const MIN_RELAY_GAP_MS = 400;
 
 export interface GameRunState {
   /** The finished run's standing, once the server has answered. */
@@ -82,11 +94,29 @@ export function useGameRun(
   // them on the floor.
   const runId = useRef<Promise<string | null> | null>(null);
   const lastRelay = useRef(0);
+  /** A report the floor above is holding, and the timer that will send it. */
+  const queued = useRef<{ progress: number; life: number } | null>(null);
+  const flushTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const dismiss = useCallback(() => setResult(null), []);
 
   useEffect(() => {
     if (!source || !enabled) return;
+
+    /**
+     * Send one report. Fire and forget: a run must never stall on the network,
+     * and rejections are already swallowed inside the API layer. A report that
+     * fails to reach the server does now cost the player something, so the
+     * floor above holds reports rather than binning them — but a network
+     * failure is still a network failure and the closing report is what
+     * carries the final reach either way.
+     */
+    const relay = (progress: number, life: number) => {
+      const pending = runId.current;
+      if (!pending) return;
+      lastRelay.current = Date.now();
+      void pending.then((id) => (id ? reportRun(id, progress, life) : undefined));
+    };
 
     const onMessage = (event: MessageEvent<RunMessage | null>) => {
       const data = event.data;
@@ -100,20 +130,36 @@ export function useGameRun(
       if (data.type === 'run-start') {
         setResult(null);
         lastRelay.current = 0;
+        // A report held from the previous run belongs to that run's id.
+        if (flushTimer.current !== null) {
+          clearTimeout(flushTimer.current);
+          flushTimer.current = null;
+        }
+        queued.current = null;
         runId.current = openRun(game);
         return;
       }
 
       if (data.type === 'run-progress') {
         const now = Date.now();
-        if (now - lastRelay.current < MIN_RELAY_GAP_MS) return;
-        lastRelay.current = now;
-        const pending = runId.current;
-        if (!pending) return;
-        // Fire and forget: a run must never stall on the network, and a
-        // dropped report costs the player nothing the closing one cannot make
-        // up. Rejections are already swallowed inside the API layer.
-        void pending.then((id) => (id ? reportRun(id, progress, life) : undefined));
+        const wait = MIN_RELAY_GAP_MS - (now - lastRelay.current);
+        if (wait > 0) {
+          // Held, not dropped. The server scores partly on how much of the run
+          // it was shown, so a report thrown away here comes off the player's
+          // final standing — and `progress` is the furthest reached so far, so
+          // holding the newest one loses nothing.
+          queued.current = { progress, life };
+          if (flushTimer.current === null) {
+            flushTimer.current = setTimeout(() => {
+              flushTimer.current = null;
+              const held = queued.current;
+              queued.current = null;
+              if (held) relay(held.progress, held.life);
+            }, wait);
+          }
+          return;
+        }
+        relay(progress, life);
         return;
       }
 
@@ -137,7 +183,14 @@ export function useGameRun(
     };
 
     window.addEventListener('message', onMessage);
-    return () => window.removeEventListener('message', onMessage);
+    return () => {
+      window.removeEventListener('message', onMessage);
+      if (flushTimer.current !== null) {
+        clearTimeout(flushTimer.current);
+        flushTimer.current = null;
+      }
+      queued.current = null;
+    };
   }, [source, game, frame, enabled]);
 
   return { result, settling, dismiss };
