@@ -280,6 +280,18 @@ export interface SubscriptionCost {
   price: bigint;
   fee: bigint;
   total: bigint;
+  /**
+   * True when the contract actually answered the fee question, false when
+   * `total` rests on the assumed default below.
+   *
+   * The approval reads this. An unlimited allowance used to cover any fee the
+   * contract turned out to want; approving the exact total instead means an
+   * assumed fee that is too low reverts the purchase on allowance, which is a
+   * worse failure than the standing exposure that change removed. So a total
+   * built on a guess is approved with headroom and a quoted one is approved
+   * exactly.
+   */
+  feeQuoted: boolean;
 }
 
 /** What the buyer will actually be debited, fee included. */
@@ -297,7 +309,7 @@ export async function getSubscriptionCost(
   // 10%, so assume that rather than telling someone the price is the price and
   // then reverting on their balance.
   const resolvedFee = fee ?? price / 10n;
-  return { price, fee: resolvedFee, total: price + resolvedFee };
+  return { price, fee: resolvedFee, total: price + resolvedFee, feeQuoted: fee !== null };
 }
 
 /**
@@ -366,8 +378,17 @@ export async function buySubscriptionOnChain(
     // exactly that reason. The swap and work paths already approve the amount.
     //
     // cost.total is the price including fees — the same figure the balance
-    // check above rejects against — so this cannot come up short.
-    const approval = await approveERC20(chainConfig.dhbToken, contract, cost.total, params.chainId);
+    // check above rejects against — so this cannot come up short when the
+    // contract answered the fee question.
+    //
+    // When it did not, `total` rests on the assumed 10% default, and approving
+    // that exactly turns a guess that is too low into a revert on allowance.
+    // The unlimited approval this replaced could never fail that way, so a
+    // guessed total gets a second helping of the assumed fee — enough for a
+    // real fee up to twice the default, and still nothing like a claim on the
+    // whole balance.
+    const approvalAmount = cost.feeQuoted ? cost.total : cost.total + cost.fee;
+    const approval = await approveERC20(chainConfig.dhbToken, contract, approvalAmount, params.chainId);
     await approval.wait(1);
   }
 
