@@ -37,7 +37,13 @@ import {
   setupIdentity,
   unloadIdentity,
 } from '../keys';
-import { encryptionSignMessage, isEncryptedContent } from '../crypto';
+import {
+  deriveIdentityFromSignature,
+  deriveSessionKey,
+  encryptText,
+  encryptionSignMessage,
+  isEncryptedContent,
+} from '../crypto';
 
 const A = '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 const B = '0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
@@ -141,5 +147,24 @@ describe('dm-e2ee client flow', () => {
     } finally {
       guardBug = false;
     }
+  });
+
+  it("still opens the sender's own messages from before the server was fixed", async () => {
+    // What the broken server made a device produce: the peer lookup handed back
+    // the CALLER's own key, so B sealed to itself. Built here from B's own
+    // keypair, because the client now refuses to encrypt that way at all.
+    const sigB = '0x' + Buffer.from(`${B}:${encryptionSignMessage(B)}`).toString('hex').padEnd(130, '0').slice(0, 130);
+    const idB = deriveIdentityFromSignature(sigB);
+    const sealed = encryptText('sent while the server was wrong', deriveSessionKey(idB.privateKey, idB.publicKey, B, A));
+
+    await become(A);
+    await become(B);
+    // B now gets A's real key, so the session key does not open its own old
+    // line — but B wrote it, and should still be able to read it.
+    expect(await decryptFromPeer(A, sealed)).toBe('sent while the server was wrong');
+
+    // A never could open it, and still cannot. Nothing here changes that.
+    await become(A);
+    expect(await decryptFromPeer(B, sealed)).toBeNull();
   });
 });
