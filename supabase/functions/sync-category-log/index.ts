@@ -112,22 +112,65 @@ Deno.serve(async (req: Request) => {
     let purged = 0;
 
     if (fetchedAll) {
-      // FULL REPLACE: wipe log and re-insert from the live feed so deleted
-      // posts AND edited categories both propagate.
-      const wipeRes = await fetch(
-        `${supabaseUrl}/rest/v1/category_post_log?id=not.is.null`,
-        { method: 'DELETE', headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey, Prefer: 'return=minimal' } },
-      );
-      if (!wipeRes.ok) {
-        const err = await wipeRes.text();
-        console.error(`[sync-category-log] Wipe failed: ${wipeRes.status} ${err}`);
-      } else {
-        purged = 1; // marker
+      // DELTA SYNC — work out what actually changed, then write only that.
+      //
+      // This used to wipe the whole log and re-insert every row on every run.
+      // For a 12,500-row log that is ~25,000 write operations a day to record
+      // a handful of new posts, and those writes are not free: every one lands
+      // in the WAL that Supabase Realtime's decoder walks on each poll, which
+      // made this job the largest single source of database churn on the
+      // project. The feed is still the source of truth and the end state is
+      // identical — deleted posts and edited categories both still propagate.
+      // The only difference is that we diff before writing.
+      const existing = new Map<string, string>();
+      const READ_PAGE = 1000;
+      let readOk = true;
+
+      for (let offset = 0; ; offset += READ_PAGE) {
+        const snapRes = await fetch(
+          `${supabaseUrl}/rest/v1/category_post_log?select=id,token_id,name&token_id=not.is.null&order=id.asc&offset=${offset}&limit=${READ_PAGE}`,
+          { headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey } },
+        );
+        if (!snapRes.ok) {
+          console.error(`[sync-category-log] Snapshot read failed: ${snapRes.status} ${await snapRes.text()}`);
+          readOk = false;
+          break;
+        }
+        const rows: Array<{ id: string; token_id: number; name: string }> = await snapRes.json();
+        for (const r of rows) existing.set(`${r.token_id}|${r.name}`, r.id);
+        if (rows.length < READ_PAGE) break;
+      }
+
+      const wanted = new Map<string, { token_id: number; name: string; posted_at: string }>();
+      for (const row of allRows) wanted.set(`${row.token_id}|${row.name}`, row);
+
+      // A failed snapshot read makes the "no longer present" set untrustworthy,
+      // so skip the purge and insert only — the same defence the partial-fetch
+      // branch below uses. Never delete on incomplete information.
+      const toInsert = readOk
+        ? [...wanted].filter(([key]) => !existing.has(key)).map(([, row]) => row)
+        : [...wanted.values()];
+      const staleIds = readOk
+        ? [...existing].filter(([key]) => !wanted.has(key)).map(([, id]) => id)
+        : [];
+
+      const DELETE_BATCH = 200;
+      for (let i = 0; i < staleIds.length; i += DELETE_BATCH) {
+        const batch = staleIds.slice(i, i + DELETE_BATCH);
+        const delRes = await fetch(
+          `${supabaseUrl}/rest/v1/category_post_log?id=in.(${batch.join(',')})`,
+          { method: 'DELETE', headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey, Prefer: 'return=minimal' } },
+        );
+        if (!delRes.ok) {
+          console.error(`[sync-category-log] Purge batch failed: ${delRes.status} ${await delRes.text()}`);
+        } else {
+          purged += batch.length;
+        }
       }
 
       const BATCH_SIZE = 500;
-      for (let i = 0; i < allRows.length; i += BATCH_SIZE) {
-        const batch = allRows.slice(i, i + BATCH_SIZE);
+      for (let i = 0; i < toInsert.length; i += BATCH_SIZE) {
+        const batch = toInsert.slice(i, i + BATCH_SIZE);
         const rpcRes = await fetch(
           `${supabaseUrl}/rest/v1/rpc/bulk_insert_category_log`,
           {
@@ -216,7 +259,7 @@ Deno.serve(async (req: Request) => {
     console.log(`[sync-category-log] fetchedAll=${fetchedAll} inserted=${inserted} rows=${allRows.length}`);
 
     return new Response(
-      JSON.stringify({ ok: true, pages: page - 1, inserted, rows: allRows.length, fetchedAll, fullReplace: !!purged }),
+      JSON.stringify({ ok: true, pages: page - 1, inserted, rows: allRows.length, fetchedAll, purged }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
   } catch (err) {

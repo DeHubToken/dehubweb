@@ -1,7 +1,8 @@
 /**
  * Hook to fetch trending categories.
- * 1D/1W/1M/1Y use time-filtered data from category_post_log (synced from feed API).
- * "All" uses the trending_categories aggregate table.
+ * All periods are counted in Postgres by the `category_counts` RPC over
+ * category_post_log (synced from the feed API by sync-category-log).
+ * "All" is the same call with no time cutoff.
  */
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -25,7 +26,6 @@ export interface CategoryCount {
 
 const EXCLUDED_CATEGORIES = new Set(['general', '', '-', 'other']);
 const TOP_LIMIT = 10;
-const PAGE_SIZE = 1000;
 const TRENDING_CACHE_MS = 60_000;
 
 function getPeriodCutoff(period: TopicPeriod): string {
@@ -74,74 +74,35 @@ function withTopTenPlaceholders(items: CategoryCount[]): CategoryCount[] {
 }
 
 /**
- * Fetch category counts from the per-post event log, filtered by time window.
- * This table is synced from the DeHub feed API by the sync-category-log edge function.
+ * Fetch category counts from the per-post event log.
+ *
+ * The log is one row per post per category — 12,500+ of them — and this hook
+ * only ever needs the ~335 distinct names and their totals. It used to page
+ * the entire table into the browser in 1,000-row chunks and count here, which
+ * meant thirteen requests and ~225 kB on every view of a sidebar that renders
+ * ten words. Postgres does the counting now.
+ *
+ * Normalisation stays on this side on purpose: two raw names can fold to the
+ * same key, so the merge below is still required for a correct total — it just
+ * runs over 335 rows instead of 12,533.
+ *
+ * `period` of 'all' passes no cutoff at all rather than a three-year one, which
+ * is what the old "All" path did.
  */
-async function fetchFromLog(period: TopicPeriod): Promise<CategoryCount[]> {
-  const cutoff = getPeriodCutoff(period);
-  const rows: Array<{ name: string | null }> = [];
-  let from = 0;
+async function fetchCategoryCounts(period: TopicPeriod): Promise<CategoryCount[]> {
+  const { data, error } = await supabase.rpc('category_counts' as never, {
+    p_since: period === 'all' ? null : getPeriodCutoff(period),
+  } as never);
 
-  while (true) {
-    const { data, error } = await supabase
-      .from('category_post_log')
-      .select('name, posted_at')
-      .gte('posted_at', cutoff)
-      .order('posted_at', { ascending: false })
-      .range(from, from + PAGE_SIZE - 1);
+  if (error) throw error;
 
-    if (error) throw error;
-
-    const chunk = (data || []).map((row) => ({ name: row.name }));
-    if (chunk.length === 0) break;
-
-    rows.push(...chunk);
-    if (chunk.length < PAGE_SIZE) break;
-    from += PAGE_SIZE;
-  }
-
-  if (!rows.length) return [];
-
+  const rows = (data || []) as Array<{ name: string | null; post_count: number | string }>;
   const counts = new Map<string, number>();
+
   for (const row of rows) {
     const normalized = normalizeCategoryName(row.name);
     if (!normalized || EXCLUDED_CATEGORIES.has(normalized)) continue;
-    counts.set(normalized, (counts.get(normalized) || 0) + 1);
-  }
-
-  return Array.from(counts.entries())
-    .map(([name, post_count]) => ({ name: formatCategoryName(name), post_count }))
-    .sort((a, b) => b.post_count - a.post_count);
-}
-
-/**
- * Fetch from category_post_log without time cutoff (for "All" period).
- */
-async function fetchFromLogAll(): Promise<CategoryCount[]> {
-  const rows: Array<{ name: string | null }> = [];
-  let from = 0;
-
-  while (true) {
-    const { data, error } = await supabase
-      .from('category_post_log')
-      .select('name')
-      .range(from, from + PAGE_SIZE - 1);
-
-    if (error) throw error;
-    const chunk = data || [];
-    if (chunk.length === 0) break;
-    rows.push(...chunk);
-    if (chunk.length < PAGE_SIZE) break;
-    from += PAGE_SIZE;
-  }
-
-  if (!rows.length) return [];
-
-  const counts = new Map<string, number>();
-  for (const row of rows) {
-    const normalized = normalizeCategoryName(row.name);
-    if (!normalized || EXCLUDED_CATEGORIES.has(normalized)) continue;
-    counts.set(normalized, (counts.get(normalized) || 0) + 1);
+    counts.set(normalized, (counts.get(normalized) || 0) + Number(row.post_count || 0));
   }
 
   return Array.from(counts.entries())
@@ -150,15 +111,7 @@ async function fetchFromLogAll(): Promise<CategoryCount[]> {
 }
 
 async function fetchTrendingCategories(period: TopicPeriod, fetchAll = false): Promise<CategoryCount[]> {
-  let computed: CategoryCount[];
-
-  if (period === 'all') {
-    // "All" aggregates the full event log (synced from feed API)
-    computed = await fetchFromLogAll();
-  } else {
-    // 1D/1W/1M/1Y use the time-filtered event log
-    computed = await fetchFromLog(period);
-  }
+  const computed = await fetchCategoryCounts(period);
 
   if (fetchAll) return computed;
   return withTopTenPlaceholders(computed);
