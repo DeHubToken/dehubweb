@@ -20,7 +20,9 @@ interface FakeChannel {
   removed: boolean;
   bindings: string[];
   subscribeCalls: number;
-  on: (type: string, filter: unknown, cb: unknown) => FakeChannel;
+  on: (type: string, filter: unknown, cb: (payload: unknown) => void) => FakeChannel;
+  /** Fire everything bound for a type, the way the server would. */
+  emit: (type: string, payload: unknown) => void;
   subscribe: (cb?: (status: string) => void) => FakeChannel;
 }
 
@@ -29,15 +31,20 @@ const channels: FakeChannel[] = [];
 let pendingJoins: (() => void)[] = [];
 
 function makeChannel(topic: string, config: unknown): FakeChannel {
+  const bound: { type: string; cb: (payload: unknown) => void }[] = [];
   const chan: FakeChannel = {
     topic,
     config,
     removed: false,
     bindings: [],
     subscribeCalls: 0,
-    on(type: string) {
+    on(type: string, _filter: unknown, cb: (payload: unknown) => void) {
       chan.bindings.push(type);
+      bound.push({ type, cb });
       return chan;
+    },
+    emit(type: string, payload: unknown) {
+      for (const b of bound) if (b.type === type) b.cb(payload);
     },
     subscribe(cb?: (status: string) => void) {
       chan.subscribeCalls += 1;
@@ -86,9 +93,12 @@ beforeEach(async () => {
 describe('leaseChannel', () => {
   it('gives both holders the one channel and joins it once', async () => {
     const { leaseChannel } = await import('../realtime-channel-lease');
-    const bindAs = (type: string) => (c: unknown) => void asFake(c).on(type, {}, () => {});
-    const first = leaseChannel(TOPIC, { bind: bindAs('presence') });
-    const second = leaseChannel(TOPIC, { bind: bindAs('broadcast') });
+    const first = leaseChannel(TOPIC, {
+      listen: [{ type: 'presence', filter: { event: 'sync' }, handler: () => {} }],
+    });
+    const second = leaseChannel(TOPIC, {
+      listen: [{ type: 'broadcast', filter: { event: 'line' }, handler: () => {} }],
+    });
 
     expect(second.channel).toBe(first.channel);
     expect(channels).toHaveLength(1);
@@ -181,6 +191,69 @@ describe('leaseChannel', () => {
     // The real client silently drops the second config, which is why the
     // module documents it rather than pretending to apply it.
     expect(channels[0].config).toEqual({ config: { presence: { key: 'speaker-1' } } });
+  });
+
+  /**
+   * The leak this module was rebuilt to close.
+   *
+   * A holder that releases while another keeps the channel alive used to leave
+   * its handlers attached — RealtimeChannel has no public way to take a binding
+   * back off, and the plain-client version only got away with it because
+   * removeChannel destroyed the channel. The captions feed re-runs its effect
+   * every time the panel is toggled, so each toggle stacked another full set of
+   * handlers over a dead component.
+   */
+  describe('handler lifetime', () => {
+    const listenFor = (calls: string[], name: string) => [{
+      type: 'broadcast',
+      filter: { event: 'line' },
+      handler: () => calls.push(name),
+    }];
+
+    it('stops delivering to a holder that released', async () => {
+      const { leaseChannel } = await import('../realtime-channel-lease');
+      const calls: string[] = [];
+      const publisher = leaseChannel(TOPIC, { listen: listenFor(calls, 'publisher') });
+      const feed = leaseChannel(TOPIC, { listen: listenFor(calls, 'feed') });
+
+      asFake(publisher.channel).emit('broadcast', {});
+      expect(calls).toEqual(['publisher', 'feed']);
+
+      calls.length = 0;
+      feed.release();
+      asFake(publisher.channel).emit('broadcast', {});
+      expect(calls).toEqual(['publisher']);
+
+      publisher.release();
+    });
+
+    it('does not stack handlers when a holder remounts', async () => {
+      const { leaseChannel } = await import('../realtime-channel-lease');
+      const calls: string[] = [];
+      const publisher = leaseChannel(TOPIC, { listen: listenFor(calls, 'publisher') });
+
+      // The captions panel, toggled five times while the publisher holds on.
+      for (let i = 0; i < 5; i++) {
+        leaseChannel(TOPIC, { listen: listenFor(calls, 'feed') }).release();
+      }
+
+      calls.length = 0;
+      asFake(publisher.channel).emit('broadcast', {});
+      expect(calls).toEqual(['publisher']);
+
+      publisher.release();
+    });
+
+    it('binds the underlying channel once per event, however many holders', async () => {
+      const { leaseChannel } = await import('../realtime-channel-lease');
+      const calls: string[] = [];
+      const a = leaseChannel(TOPIC, { listen: listenFor(calls, 'a') });
+      const b = leaseChannel(TOPIC, { listen: listenFor(calls, 'b') });
+
+      expect(channels[0].bindings).toEqual(['broadcast']);
+      a.release();
+      b.release();
+    });
   });
 
   it('keeps separate topics separate', async () => {
