@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Transaksi percuma dijeda di pihak kami, bukan pada dompet anda. Sila cuba lagi sebentar lagi.",
+    "gasSponsorshipFailed": "Transaksi ini tidak dapat ditaja. Sila cuba lagi sebentar lagi."
+  },
   "nav": {
     "home": "Laman Utama",
     "explore": "Terokai",

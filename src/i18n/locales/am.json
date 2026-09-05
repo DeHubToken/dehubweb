@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "ነጻ ግብይቶች በእኛ በኩል ቆመዋል፣ በኪስ ቦርሳዎ ላይ አይደለም። እባክዎ በቅርቡ እንደገና ይሞክሩ።",
+    "gasSponsorshipFailed": "ይህ ግብይት መደገፍ አልተቻለም። እባክዎ ከጥቂት ጊዜ በኋላ ይሞክሩ።"
+  },
   "work": {
     "budgetExhausted": "የዚህ ሽልማት በጀት ሙሉ በሙሉ ተይዟል።"
   },

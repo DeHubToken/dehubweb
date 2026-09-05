@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "免费交易辣阿拉搿面停脱了，勿是侬钱包个问题。歇歇再试。",
+    "gasSponsorshipFailed": "搿笔交易垫勿出。歇歇再试。"
+  },
   "work": {
     "budgetExhausted": "箇个赏金个预算已经全用光哉。"
   },

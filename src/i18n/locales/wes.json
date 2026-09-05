@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Free transaction dem don stop for we side, no be your wallet. Try again small time.",
+    "gasSponsorshipFailed": "We no fit pay for dis transaction. Try again small time."
+  },
   "work": {
     "budgetExhausted": "Dis bounty money don finish."
   },

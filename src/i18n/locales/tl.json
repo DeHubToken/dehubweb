@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Naka-pause ang mga libreng transaksyon sa panig namin, hindi sa wallet mo. Pakisubukan ulit mamaya.",
+    "gasSponsorshipFailed": "Hindi nasagot ang bayad para sa transaksyong ito. Pakisubukan ulit mamaya."
+  },
   "nav": {
     "home": "Home",
     "explore": "Galugarin",

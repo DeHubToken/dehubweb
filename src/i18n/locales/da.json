@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Gratis transaktioner er sat på pause hos os, ikke i din tegnebog. Prøv igen om lidt.",
+    "gasSponsorshipFailed": "Denne transaktion kunne ikke betales for dig. Prøv igen om et øjeblik."
+  },
   "nav": {
     "home": "Hjem",
     "explore": "Udforsk",

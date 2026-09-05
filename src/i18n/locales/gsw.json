@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Gratis Transaktione sind bi üs pausiert, nid bi dinere Wallet. Probier s glii nomol.",
+    "gasSponsorshipFailed": "Die Transaktion het nid chöne übernoh werde. Probier s glii nomol."
+  },
   "work": {
     "budgetExhausted": "S Budget vo dere Prämie isch ganz vergäh."
   },

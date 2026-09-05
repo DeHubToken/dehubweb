@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "עסקאות חינם מושהות אצלנו, לא בארנק שלך. נסה שוב בקרוב.",
+    "gasSponsorshipFailed": "לא ניתן היה לממן את העסקה הזו. נסה שוב בעוד רגע."
+  },
   "nav": {
     "home": "דף הבית",
     "explore": "חקור",

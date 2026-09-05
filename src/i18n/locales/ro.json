@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Tranzacțiile gratuite sunt suspendate de partea noastră, nu în portofelul tău. Încearcă din nou în scurt timp.",
+    "gasSponsorshipFailed": "Această tranzacție nu a putut fi acoperită. Încearcă din nou peste un moment."
+  },
   "nav": {
     "home": "Acasă",
     "explore": "Explorează",

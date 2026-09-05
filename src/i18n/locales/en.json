@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Free transactions are paused on our side, not on your wallet. Please try again shortly.",
+    "gasSponsorshipFailed": "This transaction could not be sponsored. Please try again in a moment."
+  },
   "nav": {
     "home": "Home",
     "explore": "Explore",
