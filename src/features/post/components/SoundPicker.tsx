@@ -124,7 +124,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DrawerContent column glass className="border-t border-white/10 max-h-[90vh] max-h-[90dvh]">
+      <DrawerContent column glass className="border-t border-white/10 max-h-[90dvh]">
         <DrawerHeader className="border-b border-white/10 pb-3">
           <DrawerTitle className="text-white flex items-center gap-2">
             <Music className="w-5 h-5" />

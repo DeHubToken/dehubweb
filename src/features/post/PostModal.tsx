@@ -259,7 +259,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
           // ui/drawer.
           column
           className={cn(
-            "max-h-[90vh] max-h-[90dvh]",
+            "max-h-[90dvh]",
             state.isCameraModalOpen && "invisible pointer-events-none"
           )}
         >

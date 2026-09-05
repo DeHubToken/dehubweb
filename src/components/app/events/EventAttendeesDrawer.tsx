@@ -123,7 +123,7 @@ export function EventAttendeesDrawer({ eventId, type, open, onOpenChange }: Even
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column className={cn(GLASS_STYLES.drawer, 'max-h-[80vh]')}>
+      <DrawerContent column className={cn(GLASS_STYLES.drawer, 'max-h-[80dvh]')}>
         <DrawerHeader>
           <DrawerTitle className="text-white">{t(type === 'going' ? 'events.going' : 'events.interested')} ({attendees.length}{hasMore ? '+' : ''})</DrawerTitle>
         </DrawerHeader>

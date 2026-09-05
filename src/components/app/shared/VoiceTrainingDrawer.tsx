@@ -134,7 +134,7 @@ export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess, customApiKe
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column className="bg-black/90 border-white/10 text-white max-h-[85vh]">
+      <DrawerContent column className="bg-black/90 border-white/10 text-white max-h-[85dvh]">
         <DrawerHeader className="flex items-center justify-between">
           <DrawerTitle className="text-white">Train Custom Voice</DrawerTitle>
           <button onClick={() => onOpenChange(false)} className="p-1 rounded-lg hover:bg-white/10">

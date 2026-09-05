@@ -1148,7 +1148,7 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
 
       {/* Activity Log Drawer */}
       <Drawer open={showActivityLog} onOpenChange={setShowActivityLog}>
-        <DrawerContent column glass className="px-4 pb-8 max-h-[70vh]">
+        <DrawerContent column glass className="px-4 pb-8 max-h-[70dvh]">
           <DrawerHeader className="border-b border-white/10 mb-4">
             <DrawerTitle className="text-white flex items-center gap-2">
               <Activity className="w-5 h-5" />

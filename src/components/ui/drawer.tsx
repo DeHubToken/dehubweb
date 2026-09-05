@@ -285,6 +285,22 @@ const DrawerContent = React.forwardRef<
       ref={ref}
       className={cn(
         "fixed inset-x-0 bottom-0 z-[100] mt-24 flex h-auto flex-col rounded-t-[20px]",
+        /* Ceiling for a sheet that names no height of its own, in the unit that
+           matches what the reader can see. `vh` is the LARGE viewport — measured
+           as if the browser chrome were hidden — while the sheet is pinned to the
+           bottom of the visible area. On iOS Safari the two differ by the height
+           of the address bar, so a sheet sized in `vh` can put its top edge off
+           screen and whatever sits there (a search field, a title, a close
+           button) out of reach. Sheets cap themselves in `dvh` for that reason,
+           and so does this.
+
+           A class and not an inline style, because `cn` runs twMerge and a later
+           `max-h-*` from the call site replaces this one. An inline cap wins over
+           every class instead, which is how this started overriding the height
+           each sheet was designed at: share, save-to-folder, the mobile menu and
+           the delete/report dialogs all ask for half or three-quarters of the
+           screen, and all of them grew to fill it. */
+        "max-h-[calc(100dvh_-_env(safe-area-inset-top))]",
         glass
           ? "bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl"
           : "border bg-background",
@@ -294,14 +310,6 @@ const DrawerContent = React.forwardRef<
       )}
       onClick={(e) => e.stopPropagation()}
       {...props}
-      /* Hard cap in the unit that matches what the reader can see. Sheets cap
-         themselves in `vh`, which is the LARGE viewport — measured as if the
-         browser chrome were hidden — while the sheet is pinned to the bottom of
-         the visible area. On iOS Safari the two differ by the height of the
-         address bar, so a tall sheet's top edge lands off screen and whatever
-         sits there (a search field, a title, a close button) is unreachable.
-         Inline, so a caller's own `max-h-[…vh]` class cannot lift it. */
-      style={{ maxHeight: "calc(100dvh - env(safe-area-inset-top))", ...props.style }}
       /* After the spread: a sheet that opens another sheet, a Select, a menu or
          a toast must not read that surface's own clicks as "clicked off me"
          (lib/overlay-dismiss). vaul composes this handler ahead of its own and
