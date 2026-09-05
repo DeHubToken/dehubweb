@@ -14,7 +14,8 @@ import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, VolumeX, Bookmark, Pin, Pencil, Coins, Rocket, Gift, Lock, Star } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, VolumeX, Bookmark, Pin, Pencil, Coins, Gift, Lock, Star } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -532,7 +533,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                     disabled={!postTokenId}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
                   >
-                    <Rocket className="w-5 h-5" /> {t('postOptions.boostPost')}
+                    <ThemedIcon icon="superpowers" alt="" className="w-5 h-5 object-contain" /> {t('postOptions.boostPost')}
                   </button>
                   {/* Only for posts that were published off-chain — a minted
                       post has nothing to do here, and 'signed' is the status

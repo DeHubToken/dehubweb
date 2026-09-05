@@ -19,7 +19,8 @@ import { stripAssetRefs } from '@/lib/asset-refs';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Bookmark, Pin, Pencil, Rocket, Star } from 'lucide-react';
+import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Bookmark, Pin, Pencil, Star } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
@@ -878,7 +879,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                       disabled={!postTokenId}
                       className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
                     >
-                      <Rocket className="w-5 h-5" /> {t('postOptions.boostPost')}
+                      <ThemedIcon icon="superpowers" alt="" className="w-5 h-5 object-contain" /> {t('postOptions.boostPost')}
                     </button>
                     <button
                       onClick={() => {

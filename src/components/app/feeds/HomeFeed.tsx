@@ -16,7 +16,7 @@ import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import { isHomeFeedRoute } from '@/lib/home-routes';
-import { RefreshCw, Radio, ChevronRight, ArrowUp, Rocket } from 'lucide-react';
+import { RefreshCw, Radio, ChevronRight, ArrowUp } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
 import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
@@ -2072,7 +2072,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                   */}
                   {isBoosted && (
                     <div className="flex items-center gap-1.5 px-1 pb-1.5">
-                      <Rocket className="w-3 h-3 text-muted-foreground" />
+                      <ThemedIcon icon="superpowers" alt="" className="w-4 h-4 object-contain opacity-70" />
                       <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
                         {t('superpowers.boostedLabel')}
                       </span>

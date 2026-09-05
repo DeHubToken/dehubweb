@@ -5,9 +5,10 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { disarmHomeNavIntent, resolveHomeNavIntent } from '@/lib/home-nav-intent';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
-import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll, Map, Wand2, Loader2, BarChart3, Gamepad2 } from 'lucide-react';
+import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll, Map, Wand2, Loader2, BarChart3, Gamepad2, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { preloadRoute } from '@/lib/route-preload';
+import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 // Lazy: the composer pulls minting/wallet contract code — a static import
 // here (eager via AppLayout) would land it in the entry bundle
 // (scripts/check-entry-bundle.mjs fails the build if that happens).
@@ -40,6 +41,7 @@ const NAV_LABEL_KEYS: Record<string, string> = {
   Command: 'nav.commandCentre',
   Wallet: 'nav.wallet',
   Staking: 'nav.staking',
+  SuperPowers: 'superpowers.title',
   Governance: 'nav.governance',
   Leaderboard: 'nav.leaderboard',
   Bookmarks: 'nav.bookmarks',
@@ -66,6 +68,14 @@ const RIGHT_NAV_ITEMS = [
   { icon: Sparkles, label: 'AI', path: '/app/assistant' },
 ];
 
+type MobileNavItem = {
+  icon: React.ComponentType<{ className?: string }>;
+  themedIcon?: ThemeIconKey;
+  label: string;
+  path: string;
+  requiresAuth?: boolean;
+};
+
 const SCROLL_NAV_ITEMS = [
   { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
@@ -75,6 +85,7 @@ const SCROLL_NAV_ITEMS = [
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Wallet, label: 'Wallet', path: '/app/wallet' },
   { icon: Vault, label: 'Staking', path: '/app/stake' },
+  { icon: Zap, themedIcon: 'superpowers', label: 'SuperPowers', path: '/app/superpowers' },
   { icon: ShieldCheck, label: 'Governance', path: '/governance' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
@@ -88,7 +99,7 @@ const SCROLL_NAV_ITEMS = [
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
   { icon: Wand2, label: 'Prompt', path: '/prompt' },
   { icon: Users, label: 'Communities', path: '/app/communities' },
-];
+] satisfies MobileNavItem[];
 
 export function MobileBottomNav() {
   const location = useLocation();
@@ -96,6 +107,14 @@ export function MobileBottomNav() {
   const { isAuthenticated } = useAuth();
   const { t } = useTranslation();
   const navLabel = (label: string) => t(NAV_LABEL_KEYS[label] ?? label);
+  const navIcon = (
+    item: MobileNavItem,
+    className: string,
+  ) => item.themedIcon ? (
+    <ThemedIcon icon={item.themedIcon} alt="" className={cn(className, 'object-contain')} />
+  ) : (
+    <item.icon className={className} />
+  );
 
   const dmUnread = useTotalUnreadCount();
   // Same badge sources as DesktopSidebar — keep the two navs in sync
@@ -376,7 +395,7 @@ export function MobileBottomNav() {
                     className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
                     style={{ width: 'calc((50% - 24px) / 2)' }}
                   >
-                    <item.icon className="w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]" />
+                    {navIcon(item, "w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]")}
                   </a>
                 );
               }
@@ -390,7 +409,7 @@ export function MobileBottomNav() {
                     className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
                     style={{ width: 'calc((50% - 24px) / 2)' }}
                   >
-                    <item.icon className="w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]" />
+                    {navIcon(item, "w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]")}
                   </button>
                 );
               }
@@ -407,14 +426,12 @@ export function MobileBottomNav() {
                   style={{ width: 'calc((50% - 24px) / 2)' }}
                 >
                   <div className="relative">
-                    <item.icon
-                      className={cn(
+                    {navIcon(item, cn(
                         'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
                         isActive
                           ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]'
                           : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
-                      )}
-                    />
+                      ))}
                     {item.label === 'Notifications' && totalNotifUnread > 0 && (
                       <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
                         {totalNotifUnread > 99 ? '99+' : totalNotifUnread}
