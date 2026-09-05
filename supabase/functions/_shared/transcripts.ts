@@ -81,7 +81,7 @@ export interface TranscriptRow {
  *  segment array are large, and a status poll asked for them every 3 seconds. */
 export const STATUS_COLUMNS =
   'id, source_kind, source_ref, status, source_lang, duration_seconds, ' +
-  'summary, summary_status, visibility, attempts, error, created_at, updated_at';
+  'summary, summary_status, visibility, visibility_locked, attempts, error, created_at, updated_at';
 
 export const FULL_COLUMNS = `${STATUS_COLUMNS}, provider, model, segments, full_text, vtt, chapters, speaker_map, speaker_timeline, speaker_overrides`;
 
