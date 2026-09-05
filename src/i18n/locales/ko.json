@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "무료 거래가 저희 쪽에서 일시 중지되었습니다. 지갑 문제가 아닙니다. 잠시 후 다시 시도해 주세요.",
+    "gasSponsorshipFailed": "이 거래의 수수료를 대신 낼 수 없었습니다. 잠시 후 다시 시도해 주세요."
+  },
   "nav": {
     "home": "홈",
     "explore": "탐색",

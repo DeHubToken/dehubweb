@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "An dakatar da hada-hadar kyauta a gefenmu, ba a walat dinka ba. Ka sake gwadawa nan ba da jimawa ba.",
+    "gasSponsorshipFailed": "Ba a iya ɗaukar nauyin wannan hada-hada ba. Ka sake gwadawa nan da ɗan lokaci."
+  },
   "work": {
     "budgetExhausted": "Kasafin kuɗin wannan lada ya ƙare gaba ɗaya."
   },

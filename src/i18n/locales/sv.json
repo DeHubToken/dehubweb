@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Gratis transaktioner är pausade hos oss, inte i din plånbok. Försök igen om en stund.",
+    "gasSponsorshipFailed": "Den här transaktionen kunde inte bekostas. Försök igen om en stund."
+  },
   "nav": {
     "home": "Hem",
     "explore": "Utforska",

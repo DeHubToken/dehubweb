@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Bezplatné transakce jsou pozastavené na naší straně, ne ve vaší peněžence. Zkuste to prosím za chvíli.",
+    "gasSponsorshipFailed": "Tuto transakci se nepodařilo uhradit. Zkuste to prosím za chvíli."
+  },
   "nav": {
     "home": "Domů",
     "explore": "Prozkoumejte",

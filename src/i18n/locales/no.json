@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Gratis transaksjoner er satt på pause hos oss, ikke i lommeboken din. Prøv igjen om litt.",
+    "gasSponsorshipFailed": "Denne transaksjonen kunne ikke dekkes. Prøv igjen om et øyeblikk."
+  },
   "work": {
     "budgetExhausted": "Budsjettet for denne dusøren er brukt opp."
   },

@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Giao dịch miễn phí đang tạm dừng ở phía chúng tôi, không phải ở ví của bạn. Vui lòng thử lại sau giây lát.",
+    "gasSponsorshipFailed": "Không thể tài trợ cho giao dịch này. Vui lòng thử lại sau giây lát."
+  },
   "nav": {
     "home": "Trang chủ",
     "explore": "Khám phá",

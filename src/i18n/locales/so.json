@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Macaamilaadaha bilaashka ah waa la joojiyay dhankeenna, ma aha boorsadaada. Fadlan wax yar ka dib isku day mar kale.",
+    "gasSponsorshipFailed": "Kharashka macaamilkan lama bixin karin. Fadlan wax yar ka dib isku day."
+  },
   "work": {
     "budgetExhausted": "Miisaaniyadda abaalmarintan gebi ahaanba waa la qoondeeyay."
   },

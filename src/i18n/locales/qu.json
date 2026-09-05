@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Mana qullqiyuq rurayku ñuqaykuq ladunpi sayachisqa, mana qullqi waqaychanaykipichu. Ama hina kaspa, pisi pachamanta yapamanta ruray.",
+    "gasSponsorshipFailed": "Kay rurayta mana qullqichayta atirqaykuchu. Ama hina kaspa, pisi pachamanta yapamanta ruray."
+  },
   "work": {
     "budgetExhausted": "Kay t'inkap qullqin tukuyta rakisqaña."
   },

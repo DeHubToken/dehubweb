@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Darmowe transakcje są wstrzymane po naszej stronie, nie w Twoim portfelu. Spróbuj ponownie za chwilę.",
+    "gasSponsorshipFailed": "Nie udało się pokryć tej transakcji. Spróbuj ponownie za chwilę."
+  },
   "nav": {
     "home": "Strona główna",
     "explore": "Odkrywaj",

@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Tasuta tehingud on meie poolel peatatud, mitte teie rahakotis. Proovige varsti uuesti.",
+    "gasSponsorshipFailed": "Seda tehingut ei õnnestunud katta. Proovige hetke pärast uuesti."
+  },
   "nav": {
     "home": "Avaleht",
     "explore": "Avasta",

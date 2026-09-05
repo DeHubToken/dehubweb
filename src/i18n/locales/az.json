@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Pulsuz əməliyyatlar bizim tərəfimizdə dayandırılıb, cüzdanınızda deyil. Bir azdan yenidən cəhd edin.",
+    "gasSponsorshipFailed": "Bu əməliyyat sponsorluq edilə bilmədi. Bir azdan yenidən cəhd edin."
+  },
   "nav": {
     "home": "Ana səhifə",
     "explore": "Kəşf et",

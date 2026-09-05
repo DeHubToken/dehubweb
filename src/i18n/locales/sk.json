@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Bezplatné transakcie sú pozastavené na našej strane, nie vo vašej peňaženke. Skúste to prosím o chvíľu znova.",
+    "gasSponsorshipFailed": "Túto transakciu sa nepodarilo uhradiť. Skúste to prosím o chvíľu znova."
+  },
   "work": {
     "budgetExhausted": "Rozpočet tejto odmeny je úplne vyčerpaný."
   },

@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Ilmaiset tapahtumat ovat tauolla meidän päässämme, eivät lompakossasi. Yritä pian uudelleen.",
+    "gasSponsorshipFailed": "Tätä tapahtumaa ei voitu kustantaa. Yritä hetken kuluttua uudelleen."
+  },
   "nav": {
     "home": "Koti",
     "explore": "Tutustu",
