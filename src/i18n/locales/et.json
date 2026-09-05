@@ -1261,6 +1261,12 @@
     "noMenuMatches": "Menüüs ei vasta midagi",
     "searchDehubFor": "Otsi DeHubist „{{query}}“"
   },
+  "comments": {
+    "discardTitle": "Kas loobuda kommentaarist?",
+    "discardBody": "See on salvestatud mustandina ja ootab siin, kui tagasi tuled.",
+    "keepWriting": "Kirjuta edasi",
+    "closeAnyway": "Sulge ikkagi"
+  },
   "postInfo": {
     "title": "Postituse info",
     "tokenId": "Tokeni ID",

@@ -1253,6 +1253,12 @@
     "noMenuMatches": "Waxba liiska kuma jiraan oo u dhigma",
     "searchDehubFor": "Ka raadi \"{{query}}\" DeHub"
   },
+  "comments": {
+    "discardTitle": "Ma tuuraysaa faalladaada?",
+    "discardBody": "Waxaa loo kaydiyay qabyo, markaad soo noqotona halkan bay joogi doontaa.",
+    "keepWriting": "Sii qor",
+    "closeAnyway": "Si kastaba xir"
+  },
   "postInfo": {
     "title": "Macluumaadka qoraalka",
     "tokenId": "Token ID",
