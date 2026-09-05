@@ -163,8 +163,15 @@ export async function fetchPeerPublicKey(
   const ttl = cached?.key ? PEER_KEY_TTL_MS : PEER_KEY_MISS_TTL_MS;
   if (!opts.force && cached && Date.now() - cached.at < ttl) return cached.key;
   try {
-    const res = await apiCall<{ publicKey?: string | null }>(`/api/dm/e2ee-key/${addr}`, { requiresAuth: true });
-    const key = isValidPublicKey(res?.publicKey) ? res.publicKey : null;
+    const res = await apiCall<{ address?: string; publicKey?: string | null }>(`/api/dm/e2ee-key/${addr}`, { requiresAuth: true });
+    // The response names the address it answered for, and it has to be the one
+    // we asked about. A key for anyone else is not a key we can use: encrypting
+    // to it produces a message only its holder can open, and the recipient sees
+    // an envelope they cannot touch. The server did exactly that for three days
+    // (its auth guard overwrote the address in the path with the caller's own),
+    // and no client could tell, because a wrong key is still a valid key.
+    const answered = String(res?.address || '').toLowerCase();
+    const key = answered === addr && isValidPublicKey(res?.publicKey) ? res.publicKey : null;
     peerKeys.set(addr, { key, at: Date.now() });
     return key;
   } catch {
