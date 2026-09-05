@@ -945,6 +945,8 @@
   },
   "messages": {
     "encrypted": "Kubethelwe kusukela ekuqaleni kuya ekugcineni",
+    "encryptionOff": "Ukubethela kuvaliwe kule divayisi",
+    "encryptionTurnOn": "Vula",
     "cannotDecrypt": "Umlayezo obethelwe — awukwazi ukuvulwa kule divayisi",
     "title": "Layezo",
     "searchConversations": "Sesha izingxoxo...",

@@ -5,12 +5,19 @@
  * then stored locally and published. Every later visit loads it silently. A
  * locked embedded wallet is reported as `locked` rather than an error, and
  * the hook retries when the tab regains focus (the unlock sheet lives in
- * another surface, so focus is the cheapest "something changed" signal).
+ * another surface, so focus is the cheapest "something changed" signal) and,
+ * more precisely, the moment the vault actually opens.
+ *
+ * The status is not decoration. Without an identity the chat degrades in
+ * silence — everything typed goes out in the clear and everything the peer
+ * encrypted renders as "can't be opened on this device" — so whatever renders
+ * this hook has to show `locked`/`error` and offer `retry`.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { loadIdentity, setupIdentity, syncPublishedKey } from '@/lib/dm-e2ee/keys';
 import { signEncryptionMessage, WalletLockedError } from '@/lib/dm-e2ee/signer';
+import { WALLET_LOCK_CHANGED_EVENT } from '@/lib/smart-wallet';
 
 export type DmEncryptionStatus = 'idle' | 'pending' | 'ready' | 'locked' | 'error';
 
@@ -55,10 +62,16 @@ export function useDmEncryption(enabled = true) {
   }, [enabled, isAuthenticated, walletAddress, run]);
 
   useEffect(() => {
-    if (status !== 'locked') return;
-    const onFocus = () => { void run(); };
-    window.addEventListener('focus', onFocus);
-    return () => window.removeEventListener('focus', onFocus);
+    if (status !== 'locked' && status !== 'error') return;
+    const onChange = () => { void run(); };
+    window.addEventListener('focus', onChange);
+    // The vault opening is the event this is actually waiting for; focus is
+    // only the backstop for an unlock that happened in another surface.
+    window.addEventListener(WALLET_LOCK_CHANGED_EVENT, onChange);
+    return () => {
+      window.removeEventListener('focus', onChange);
+      window.removeEventListener(WALLET_LOCK_CHANGED_EVENT, onChange);
+    };
   }, [status, run]);
 
   return { status, retry: run };

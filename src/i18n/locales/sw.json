@@ -945,6 +945,8 @@
   },
   "messages": {
     "encrypted": "Imesimbwa kutoka mwanzo hadi mwisho",
+    "encryptionOff": "Usimbaji fiche umezimwa kwenye kifaa hiki",
+    "encryptionTurnOn": "Washa",
     "cannotDecrypt": "Ujumbe uliosimbwa — hauwezi kufunguliwa kwenye kifaa hiki",
     "title": "Ujumbe",
     "searchConversations": "Tafuta mazungumzo...",
