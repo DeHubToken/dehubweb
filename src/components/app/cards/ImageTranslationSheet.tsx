@@ -44,7 +44,7 @@ export function ImageTranslationSheet({
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent column glass className="max-h-[70vh] overflow-hidden">
+      <DrawerContent column glass className="max-h-[70dvh] overflow-hidden">
         <DrawerHeader className="border-b border-white/10 pb-3">
           <div className="flex items-center justify-between">
             <DrawerTitle className="text-white font-semibold flex items-center gap-2">

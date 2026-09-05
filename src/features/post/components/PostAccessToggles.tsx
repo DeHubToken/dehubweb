@@ -642,7 +642,7 @@ export function PostAccessToggles({
 
       {/* Category Drawer */}
       <Drawer open={categoryDrawerOpen} onOpenChange={setCategoryDrawerOpen}>
-        <DrawerContent column glass hideHandle className="max-h-[90vh] max-h-[90dvh]">
+        <DrawerContent column glass hideHandle className="max-h-[90dvh]">
           <div className="flex items-center justify-between px-4 pt-4 pb-2">
             <div className="flex items-center gap-2 text-white font-medium">
               <Hash className="w-5 h-5" />
@@ -753,7 +753,7 @@ export function PostAccessToggles({
 
       {/* Community Drawer */}
       <Drawer open={communityDrawerOpen} onOpenChange={setCommunityDrawerOpen}>
-        <DrawerContent column glass hideHandle className="max-h-[90vh] max-h-[90dvh]">
+        <DrawerContent column glass hideHandle className="max-h-[90dvh]">
           <div className="flex items-center justify-between px-4 pt-4 pb-2">
             <div className="flex items-center gap-2 text-white font-medium">
               <Users className="w-5 h-5" />

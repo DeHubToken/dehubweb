@@ -30,7 +30,7 @@ export function LanguageSelector() {
         </button>
       </DrawerTrigger>
       <DrawerContent
-        className="border-t border-white/10 max-h-[85vh]"
+        className="border-t border-white/10 max-h-[85dvh]"
         style={{
           background: 'rgba(30, 30, 30, 0.65)',
           backdropFilter: 'blur(40px) saturate(1.8)',

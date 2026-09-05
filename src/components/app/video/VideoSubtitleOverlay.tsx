@@ -700,7 +700,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       <>
         {triggerButton}
         <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerContent glass hideHandle={false} className="px-0 pb-4 max-h-[85vh]">
+          <DrawerContent glass hideHandle={false} className="px-0 pb-4 max-h-[85dvh]">
             <DrawerTitle className="sr-only">Subtitles</DrawerTitle>
             <div onClick={(e) => e.stopPropagation()}>
               {header}

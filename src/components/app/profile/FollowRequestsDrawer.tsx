@@ -128,7 +128,7 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column glass className="px-4 pb-8 max-h-[85vh]">
+      <DrawerContent column glass className="px-4 pb-8 max-h-[85dvh]">
         <DrawerHeader className="px-0">
           <DrawerTitle className="text-white text-lg font-bold flex items-center gap-2">
             <UserPlus className="w-5 h-5" />

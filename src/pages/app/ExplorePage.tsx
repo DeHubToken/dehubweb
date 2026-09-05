@@ -181,7 +181,7 @@ const FilterDropdown = ({
       </button>
       
       <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerContent column glass className="max-h-[70vh]">
+        <DrawerContent column glass className="max-h-[70dvh]">
           <DrawerHeader className="border-b border-white/10">
             <DrawerTitle className="text-white">{t('explorePage.selectLabel', { label })}</DrawerTitle>
           </DrawerHeader>
