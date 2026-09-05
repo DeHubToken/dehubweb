@@ -215,9 +215,13 @@ function ShortCaption({
           onClick={onToggleExpanded}
           className="text-left w-full"
         >
+          {/* Collapsed height comes from the line clamps below, not a fixed
+              max-height. The 2.5rem this used to carry was two lines of body
+              and nothing else; with a title above it, the first line of the
+              caption sat half outside the box. */}
           <div
             className={`overflow-y-auto scrollbar-hide transition-all duration-200 ${
-              expanded ? 'max-h-[calc(2.5rem+200px)]' : 'max-h-[2.5rem]'
+              expanded ? 'max-h-[calc(2.5rem+200px)]' : ''
             }`}
           >
             {shownTitle && (
