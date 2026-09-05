@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Az ingyenes tranzakciók a mi oldalunkon szünetelnek, nem a tárcádban. Próbáld újra hamarosan.",
+    "gasSponsorshipFailed": "Ezt a tranzakciót nem sikerült átvállalni. Próbáld újra egy pillanat múlva."
+  },
   "nav": {
     "home": "Kezdőlap",
     "explore": "Felfedezés",

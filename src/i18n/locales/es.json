@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Las transacciones gratuitas están pausadas de nuestro lado, no en tu monedero. Inténtalo de nuevo en breve.",
+    "gasSponsorshipFailed": "No se pudo patrocinar esta transacción. Inténtalo de nuevo en un momento."
+  },
   "nav": {
     "home": "Inicio",
     "explore": "Explorar",

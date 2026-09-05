@@ -8,6 +8,7 @@
  */
 
 import { Interface, parseUnits, formatUnits } from 'ethers';
+import i18n from 'i18next';
 import { getWeb3AuthProvider, getAAProvider, getAAProviderForChain, setupAAProviderForChain, setupAAProvider, setAAProvider, getOrInitWeb3Auth, refreshWeb3AuthProvider } from '@/lib/web3auth';
 import { getAccount } from '@wagmi/core';
 import { sendTransaction, waitForTransactionReceipt, switchChain as wagmiSwitchChain } from '@wagmi/core';
@@ -571,9 +572,31 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
     lowerError.includes('safetransfer') || lowerError.includes('token transfer failed')) {
     return 'Token transfer failed. Please check your DHB balance and wallet approval.';
   }
+  // DeHub's own sponsorship account, not the reader's wallet.
+  //
+  // When the Pimlico balance empties, every smart-account user stops being
+  // able to post or tip while external-wallet users carry on paying their own
+  // gas — so it reads as "it works for me" rather than as an outage. It ran to
+  // zero once before and posting was dead for three days.
+  //
+  // The message this used to fall through to told the reader to add ETH to
+  // their wallet. That is not something they can act on: the balance that is
+  // empty is ours, adding ETH to their own account changes nothing, and it
+  // sends a confused person to a bridge. Say whose problem it is.
+  //
+  // Checked before the generic paymaster branch below, which matches on
+  // "paymaster" and would otherwise swallow it. Pimlico's own wording is
+  // "Insufficient Pimlico balance for sponsorship, please top up".
+  if (
+    (lowerError.includes('pimlico balance') && lowerError.includes('sponsorship')) ||
+    lowerError.includes('please top up') ||
+    lowerError.includes('insufficient balance for sponsorship')
+  ) {
+    return i18n.t('errors.sponsorshipUnavailable');
+  }
   if (lowerError.includes('aa21') || lowerError.includes('aa25') || lowerError.includes('aa31') ||
     (lowerError.includes('paymaster') && !lowerError.includes('execution reverted'))) {
-    return 'Gas sponsorship failed. Please add ETH to your wallet for gas fees.';
+    return i18n.t('errors.gasSponsorshipFailed');
   }
   // Skip generic 'nonce' check — "nonce" appears in every UserOperation request body and
   // fires a false match. AA25 already covers the real invalid-nonce case above.

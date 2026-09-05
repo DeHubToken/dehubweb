@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Miamala isiyolipishwa imesitishwa upande wetu, si kwenye pochi yako. Tafadhali jaribu tena hivi karibuni.",
+    "gasSponsorshipFailed": "Muamala huu haukuweza kugharimiwa. Tafadhali jaribu tena baada ya muda mfupi."
+  },
   "nav": {
     "home": "Nyumbani",
     "explore": "Gundua",

@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Nampiatoana avy amin'ny anjaranay ny fifanakalozana maimaim-poana, fa tsy amin'ny kitapo-bolanao. Andramo indray afaka kelikely.",
+    "gasSponsorshipFailed": "Tsy afaka nandoa ity fifanakalozana ity izahay. Andramo indray afaka kelikely."
+  },
   "work": {
     "budgetExhausted": "Efa lany daholo ny tetibolan'ity valisoa ity."
   },

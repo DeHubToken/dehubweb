@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Wari tɛ sara min na, o dabilala an fɛ, i ka wari marayɔrɔ tɛ. I ka segin ka a lajɛ dɔɔnin kɔfɛ.",
+    "gasSponsorshipFailed": "An ma se ka nin baara sara. I ka segin ka a lajɛ dɔɔnin kɔfɛ."
+  },
   "work": {
     "budgetExhausted": "Nafolo nin ka wari bɛɛ dilala ka ban."
   },

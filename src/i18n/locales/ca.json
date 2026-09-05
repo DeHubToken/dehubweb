@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Les transaccions gratuïtes estan pausades a la nostra banda, no al teu moneder. Torna-ho a provar aviat.",
+    "gasSponsorshipFailed": "No s'ha pogut patrocinar aquesta transacció. Torna-ho a provar d'aquí a un moment."
+  },
   "nav": {
     "home": "Inici",
     "explore": "Explorar",

@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Azụmahịa n'efu kwụsịtụrụ n'akụkụ anyị, ọ bụghị n'obere akpa gị. Biko nwaa ọzọ n'oge na-adịghị anya.",
+    "gasSponsorshipFailed": "Enweghị ike ịkwụ ụgwọ azụmahịa a. Biko nwaa ọzọ obere oge."
+  },
   "work": {
     "budgetExhausted": "Ego a kwadoro maka onyinye a ejizuola."
   },

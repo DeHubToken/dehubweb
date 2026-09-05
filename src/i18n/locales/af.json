@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Gratis transaksies is aan ons kant onderbreek, nie by jou beursie nie. Probeer binnekort weer.",
+    "gasSponsorshipFailed": "Hierdie transaksie kon nie geborg word nie. Probeer oor 'n oomblik weer."
+  },
   "nav": {
     "home": "Tuis",
     "explore": "Verken",

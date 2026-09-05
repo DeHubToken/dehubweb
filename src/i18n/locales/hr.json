@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Besplatne transakcije pauzirane su na našoj strani, ne u vašem novčaniku. Pokušajte ponovno uskoro.",
+    "gasSponsorshipFailed": "Ovu transakciju nije bilo moguće pokriti. Pokušajte ponovno za trenutak."
+  },
   "nav": {
     "home": "Početna",
     "explore": "Istraži",

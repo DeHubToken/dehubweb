@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "A ti da awon idunaadura ofe duro ni egbe wa, ki i se ninu apamowo re. Jowo gbiyanju leekansi laipe.",
+    "gasSponsorshipFailed": "A ko le san owo idunaadura yii. Jowo gbiyanju leekansi laipe."
+  },
   "work": {
     "budgetExhausted": "Ìsúná ẹ̀bùn yìí ti pin tán."
   },

@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "sponsorshipUnavailable": "Transaksi gratis lagi dijeda saka pihak kita, dudu ing dompet sampeyan. Coba maneh sedhela maneh.",
+    "gasSponsorshipFailed": "Transaksi iki ora bisa disponsori. Coba maneh sedhela."
+  },
   "work": {
     "budgetExhausted": "Anggaran bounty iki wis kepakai kabeh."
   },
