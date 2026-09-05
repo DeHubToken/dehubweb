@@ -10,6 +10,7 @@
 // may return is a reply on the user's behalf.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { rateLimitByIp } from "../_shared/auth.ts";
+import { aiChat } from "../_shared/ai-chat.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -111,67 +112,62 @@ serve(async (req) => {
       );
     }
 
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
-      console.error('LOVABLE_API_KEY is not configured');
+    if (!Deno.env.get('GEMINI_API_KEY') && !Deno.env.get('LOVABLE_API_KEY')) {
+      console.error('No AI provider key is configured');
       return new Response(
         JSON.stringify({ error: 'AI service not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: renderThread(turns, peerName) },
-        ],
-        // Forced tool call rather than "return JSON" in prose: the same trick
-        // translate-transcript uses, and the only shape the gateway reliably
-        // hands back without a fenced-code wrapper to strip.
-        tools: [
-          {
-            type: 'function',
-            function: {
-              name: 'return_suggestions',
-              description: 'Return the two drafted replies.',
-              parameters: {
-                type: 'object',
-                properties: {
-                  suggestions: {
-                    type: 'array',
-                    minItems: 2,
-                    maxItems: 2,
-                    items: {
-                      type: 'object',
-                      properties: {
-                        label: { type: 'string', description: '2-4 words naming the move' },
-                        text: { type: 'string', description: 'the reply, ready to send' },
-                      },
-                      required: ['label', 'text'],
-                      additionalProperties: false,
+    const response = await aiChat({
+      model: 'google/gemini-2.5-flash',
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: renderThread(turns, peerName) },
+      ],
+      // Forced tool call rather than "return JSON" in prose: the same trick
+      // translate-transcript uses, and the only shape the gateway reliably
+      // hands back without a fenced-code wrapper to strip.
+      tools: [
+        {
+          type: 'function',
+          function: {
+            name: 'return_suggestions',
+            description: 'Return the two drafted replies.',
+            parameters: {
+              type: 'object',
+              properties: {
+                suggestions: {
+                  type: 'array',
+                  minItems: 2,
+                  maxItems: 2,
+                  items: {
+                    type: 'object',
+                    properties: {
+                      label: { type: 'string', description: '2-4 words naming the move' },
+                      text: { type: 'string', description: 'the reply, ready to send' },
                     },
+                    required: ['label', 'text'],
+                    additionalProperties: false,
                   },
                 },
-                required: ['suggestions'],
-                additionalProperties: false,
               },
+              required: ['suggestions'],
+              additionalProperties: false,
             },
           },
-        ],
-        tool_choice: { type: 'function', function: { name: 'return_suggestions' } },
-      }),
+        },
+      ],
+      tool_choice: { type: 'function', function: { name: 'return_suggestions' } },
+    }, {
+      expectToolCall: 'return_suggestions',
+      label: 'suggest-replies',
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('AI gateway error:', response.status, errorText);
+      console.error('AI provider error:', response.status, errorText);
 
       if (response.status === 429) {
         return new Response(

@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { aiChat } from "../_shared/ai-chat.ts";
 import { rateLimitByIp } from "../_shared/auth.ts";
 
 const corsHeaders = {
@@ -57,9 +58,9 @@ serve(async (req) => {
       );
     }
 
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
-      console.error('LOVABLE_API_KEY is not configured');
+    const AI_KEY = Deno.env.get('GEMINI_API_KEY') ?? Deno.env.get('LOVABLE_API_KEY');
+    if (!AI_KEY) {
+      console.error('No AI provider key is configured');
       return new Response(
         JSON.stringify({ error: 'AI service not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -97,20 +98,13 @@ serve(async (req) => {
 
     console.log('Processing text:', text.substring(0, 50), 'mode:', mode, 'style:', style);
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: text }
-        ],
-      }),
-    });
+    const response = await aiChat({
+      model: 'google/gemini-2.5-flash',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: text }
+      ],
+    }, { label: 'enhance-text' });
 
     if (!response.ok) {
       const errorText = await response.text();
