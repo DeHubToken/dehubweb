@@ -226,7 +226,10 @@ async function setVisibility(id: string, body: any) {
   const response = await rest(`/rest/v1/transcripts?id=eq.${encodeURIComponent(id)}`, {
     method: "PATCH",
     headers: { Prefer: "return=representation" },
-    body: JSON.stringify({ visibility: next }),
+    // Locked, because a person chose it. The transcriber leaves a locked row's
+    // visibility alone in both directions — without this, a re-run derives the
+    // value from the post again and quietly undoes the moderation call.
+    body: JSON.stringify({ visibility: next, visibility_locked: true }),
   });
   const [updated] = await response.json();
   if (!updated) throw new HttpError(404, "Transcript not found");
