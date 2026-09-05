@@ -1100,6 +1100,9 @@
     "failedSubmit": "Imeshindwa kuwasilisha ombi. Tafadhali jaribu tena."
   },
   "loginModal": {
+    "welcomeBack": "Karibu tena — akaunti hii bado ni yako. Ingia ukitumia ingia yako ya zamani hapa chini ili uirudishe, ukitumia machapisho yako, wafuasi na salio.",
+    "welcomeBackWithLogin": "Karibu tena — akaunti hii bado ni yako. Ingia ukitumia {{login}} hapa chini ili uirudishe, ukitumia machapisho yako, wafuasi na salio.",
+    "welcomeBackWaiting": "inasubiri",
     "migrateNothingToRecover": "Hakuna akaunti ya awali ya DeHub kwenye kuingia hii, kwa hivyo hakuna kitu cha kuleta. Rudi kwenye akaunti Mpya ili ukamilishe kuweka hii.",
     "migrateUnmatchedWarning": "Kuingia huku hakuna akaunti ya DeHub kwenye rekodi. Kuendelea hakurejeshi chochote — huunda akaunti ya pili iliyo na jina jipya la mtumiaji na kuacha ile ambayo tayari unayo.",
     "migrateUnmatchedDetail": "Hakuna wasifu uliopo kwenye anwani hii ya pochi. Ikiwa ulikuwa unaingia tena, rudi na utumie ingia uliyojisajili nayo badala yake.",

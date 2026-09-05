@@ -956,6 +956,9 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "welcomeBack": "Chào mừng bạn trở lại — tài khoản này vẫn là của bạn. Đăng nhập bằng thông tin đăng nhập cũ của bạn bên dưới để đưa thông tin đăng nhập trở lại, với các bài đăng, người theo dõi và số dư của bạn.",
+    "welcomeBackWithLogin": "Chào mừng bạn trở lại — tài khoản này vẫn là của bạn. Đăng nhập bằng {{login}} bên dưới để trả lại, với các bài đăng, người theo dõi và số dư của bạn.",
+    "welcomeBackWaiting": "đang chờ",
     "migrateNothingToRecover": "Không có tài khoản DeHub trước đó về thông tin đăng nhập này, vì vậy không có gì để mang lại. Quay lại Tài khoản mới để hoàn tất thiết lập tài khoản này.",
     "migrateUnmatchedWarning": "Thông tin đăng nhập này không có tài khoản DeHub trong hồ sơ. Việc tiếp tục không khôi phục được gì — nó tạo một tài khoản thứ hai với tên người dùng mới và để lại tài khoản bạn đã có.",
     "migrateUnmatchedDetail": "Không có hồ sơ nào tồn tại tại địa chỉ ví này. Nếu bạn đăng nhập lại, hãy quay lại và sử dụng thông tin đăng nhập mà bạn đã đăng ký.",

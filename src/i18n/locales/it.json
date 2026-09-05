@@ -1099,6 +1099,9 @@
     "failedSubmit": "Invio candidatura fallito. Riprova."
   },
   "loginModal": {
+    "welcomeBack": "Bentornato: questo account è ancora tuo. Accedi con il tuo vecchio login qui sotto per ripristinarlo, con i tuoi post, follower e saldo.",
+    "welcomeBackWithLogin": "Bentornato: questo account è ancora tuo. Accedi con {{login}} qui sotto per ripristinarlo, con i tuoi post, follower e saldo.",
+    "welcomeBackWaiting": "in attesa",
     "migrateNothingToRecover": "Non esiste un account DeHub precedente su questo accesso, quindi non c'è nulla da portare. Torna su Nuovo account per completare la configurazione.",
     "migrateUnmatchedWarning": "Questo accesso non ha un account DeHub registrato. Continuare non recupera nulla: crea un secondo account con un nuovo nome utente e lascia quello che hai già.",
     "migrateUnmatchedDetail": "Non esiste alcun profilo a questo indirizzo di portafoglio. Se stavi accedendo di nuovo, torna indietro e utilizza invece l'accesso con cui ti sei registrato.",

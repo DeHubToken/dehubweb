@@ -1367,6 +1367,9 @@
     "failedSubmit": "Gagal menghantar permohonan. Sila cuba lagi."
   },
   "loginModal": {
+    "welcomeBack": "Selamat kembali — akaun ini masih milik anda. Log masuk dengan log masuk lama anda di bawah untuk membawanya kembali, dengan hantaran, pengikut dan baki anda.",
+    "welcomeBackWithLogin": "Selamat kembali — akaun ini masih milik anda. Log masuk dengan {{login}} di bawah untuk mendapatkannya semula, dengan hantaran, pengikut dan baki anda.",
+    "welcomeBackWaiting": "menunggunya",
     "migrateNothingToRecover": "Tiada akaun DeHub yang lebih awal pada log masuk ini, jadi tiada apa yang perlu dibawa. Kembali ke Akaun baharu untuk menyelesaikan tetapan ini.",
     "migrateUnmatchedWarning": "Log masuk ini tidak mempunyai akaun DeHub dalam rekod. Meneruskan tidak memulihkan apa-apa — ia mencipta akaun kedua dengan nama pengguna baharu, dan meninggalkan akaun yang anda sudah ada.",
     "migrateUnmatchedDetail": "Tiada profil wujud di alamat dompet ini. Jika anda mendaftar masuk semula, kembali dan gunakan log masuk yang anda daftar.",

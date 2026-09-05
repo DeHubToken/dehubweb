@@ -1080,6 +1080,9 @@
     "failedSubmit": "Kuhlulekile ukuthumela isicelo. Sicela uzame futhi."
   },
   "loginModal": {
+    "welcomeBack": "Siyakwamukela futhi — le akhawunti iseyakho. Ngena ngemvume ku-akhawunti yakho endala ngezansi ukuze uyibuyise, ngamaphosti akho, abalandeli kanye nebhalansi.",
+    "welcomeBackWithLogin": "Siyakwamukela futhi — le akhawunti iseyakho. Ngena ngemvume nge- {{login}} ngezansi ukuze uyibuyise, ngamaphosti akho, abalandeli kanye nebhalansi.",
+    "welcomeBackWaiting": "ulinde kuyo",
     "migrateNothingToRecover": "Ayikho i-akhawunti yangaphambilini ye-DeHub kulokhu kungena ku-akhawunti, ngakho-ke akukho okumele ukwenze. Buyela ku-akhawunti Entsha ukuze uqedele ukusetha le.",
     "migrateUnmatchedWarning": "Lokhu kungena ku-akhawunti akunayo i-akhawunti ye-DeHub erekhodiwe. Ukuqhubeka akubuyiseli lutho — kuvula i-akhawunti yesibili enegama lomsebenzisi elisha, bese kushiya leyo osuvele unayo.",
     "migrateUnmatchedDetail": "Ayikho iphrofayili ekhona kuleli kheli lesikhwama semali. Uma ubuphinde ungene ngemvume, buyela emuva futhi usebenzise ukungena ku-akhawunti okubhalise ngakho esikhundleni salokho.",

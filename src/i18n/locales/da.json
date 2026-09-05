@@ -1103,6 +1103,9 @@
     "email": "E-mail"
   },
   "loginModal": {
+    "welcomeBack": "Velkommen tilbage — denne konto er stadig din. Log ind med dit gamle login nedenfor for at få det tilbage med dine opslag, følgere og saldo.",
+    "welcomeBackWithLogin": "Velkommen tilbage — denne konto er stadig din. Log ind med {{login}} nedenfor for at få det tilbage med dine opslag, følgere og saldo.",
+    "welcomeBackWaiting": "venter på den",
     "migrateNothingToRecover": "Der er ingen tidligere DeHub-konto på dette login, så der er intet at overføre. Gå tilbage til Ny konto for at afslutte opsætningen af denne.",
     "migrateUnmatchedWarning": "Dette login har ingen registreret DeHub-konto. Fortsættelse genopretter ikke noget — det opretter en anden konto med et nyt brugernavn og efterlader den, du allerede har.",
     "migrateUnmatchedDetail": "Der findes ingen profil på denne tegnebogsadresse. Hvis du loggede ind igen, skal du gå tilbage og bruge det login, du tilmeldte dig med, i stedet.",

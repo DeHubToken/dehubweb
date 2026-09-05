@@ -1099,6 +1099,9 @@
     "failedSubmit": "Einreichung fehlgeschlagen. Bitte erneut versuchen."
   },
   "loginModal": {
+    "welcomeBack": "Willkommen zurück — dieses Konto gehört immer noch Ihnen. Melden Sie sich mit Ihrem alten Login unten an, um es mit Ihren Beiträgen, Followern und Ihrem Guthaben wiederherzustellen.",
+    "welcomeBackWithLogin": "Willkommen zurück — dieses Konto gehört immer noch Ihnen. Melden Sie sich unten mit {{login}} an, um es mit Ihren Beiträgen, Followern und Ihrem Guthaben wiederherzustellen.",
+    "welcomeBackWaiting": "darauf wartend",
     "migrateNothingToRecover": "Es gibt kein früheres DeHub-Konto bei diesem Login, daher gibt es nichts, was Sie mitbringen können. Gehen Sie zurück zu Neues Konto, um die Einrichtung dieses Kontos abzuschließen.",
     "migrateUnmatchedWarning": "Diese Anmeldung hat kein DeHub-Konto. Fortfahren stellt nichts wieder her — es erstellt ein zweites Konto mit einem neuen Benutzernamen und lässt dasjenige zurück, das Sie bereits haben.",
     "migrateUnmatchedDetail": "Unter dieser Wallet-Adresse existiert kein Profil. Wenn Sie sich erneut angemeldet haben, gehen Sie zurück und verwenden Sie stattdessen das Login, mit dem Sie sich angemeldet haben.",

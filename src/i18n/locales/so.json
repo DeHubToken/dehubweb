@@ -1079,6 +1079,9 @@
     "failedSubmit": "Diridda codsiga ayaa fashilmay. Fadlan mar kale isku day."
   },
   "loginModal": {
+    "welcomeBack": "Ku soo dhawow soo noqoshada — koontadani wali waa adiga. Ku qor galitaankaaga hore ee hoose si aad dib ugu soo celiso, oo leh qoraalladaada, kuwa raacsan iyo dheelitirkaaga.",
+    "welcomeBackWithLogin": "Ku soo dhawow soo noqoshada — koontadani wali waa adiga. Ku qor {{login}} hoos si aad dib ugu soo celiso, oo leh qoraalladaada, kuwa raacsan iyo dheelitirkaaga.",
+    "welcomeBackWaiting": "sugaya",
     "migrateNothingToRecover": "Ma jiro xisaab hore oo DeHub ah oo ku saabsan galitaankan, sidaa darteed ma jiraan wax la soo gudbiyo. Dib ugu noqo koontada cusub si aad u dhammaystirto dejinta midkan.",
     "migrateUnmatchedWarning": "Galitaankani ma laha koonto DeHub ah oo ku yaal diiwaanka. Sii wadida ma soo kabanayso wax — waxay abuurtaa koonto labaad oo leh magac cusub oo isticmaale ah, waxayna ka tagtaa midka aad horey u haysato.",
     "migrateUnmatchedDetail": "Ma jiro wax astaamo ah oo ku jira cinwaankan boorsada. Haddii aad dib u saxiixday, dib u noqo oo isticmaal gelitaanka aad la saxiixatay halkii.",

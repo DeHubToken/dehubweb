@@ -1168,6 +1168,9 @@
     "failedSubmit": "Nepodarilo sa odoslať žiadosť. Skúste to znova."
   },
   "loginModal": {
+    "welcomeBack": "Vitajte späť — tento účet je stále váš. Nižšie sa prihláste pomocou svojho starého prihlasovacieho mena a vráťte ho späť spolu so svojimi príspevkami, sledovateľmi a zostatkom.",
+    "welcomeBackWithLogin": "Vitajte späť — tento účet je stále váš. Prihláste sa pomocou {{login}} nižšie a vráťte ho späť so svojimi príspevkami, sledovateľmi a zostatkom.",
+    "welcomeBackWaiting": "čaká sa na to",
     "migrateNothingToRecover": "Na tomto prihlásení nie je žiadny predchádzajúci účet DeHub, takže nie je čo priniesť. Prejdite späť na Nový účet a dokončite nastavenie tohto účtu.",
     "migrateUnmatchedWarning": "Toto prihlasovacie meno nemá v zázname žiadny účet DeHub. Pokračovanie nič neobnoví — vytvorí druhý účet s novým používateľským menom a zanechá za sebou ten, ktorý už máte.",
     "migrateUnmatchedDetail": "Na tejto adrese peňaženky neexistuje žiadny profil. Ak ste sa znova prihlasovali, vráťte sa a namiesto toho použite prihlasovacie údaje, pomocou ktorých ste sa zaregistrovali.",

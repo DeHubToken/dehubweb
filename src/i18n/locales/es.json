@@ -1099,6 +1099,9 @@
     "failedSubmit": "Error al enviar solicitud. Inténtalo de nuevo."
   },
   "loginModal": {
+    "welcomeBack": "Te damos la bienvenida de nuevo: esta cuenta sigue siendo tuya. Inicia sesión con tu antiguo inicio de sesión a continuación para recuperarlo, con tus publicaciones, seguidores y saldo.",
+    "welcomeBackWithLogin": "Te damos la bienvenida de nuevo: esta cuenta sigue siendo tuya. Inicia sesión con {{login}} a continuación para recuperarlo, con tus publicaciones, seguidores y saldo.",
+    "welcomeBackWaiting": "esperando en él",
     "migrateNothingToRecover": "No hay una cuenta anterior de DeHub en este inicio de sesión, por lo que no hay nada que traer. Vuelve a Nueva cuenta para terminar de configurar esta.",
     "migrateUnmatchedWarning": "Este inicio de sesión no tiene ninguna cuenta de DeHub registrada. Continuar no recupera nada, crea una segunda cuenta con un nuevo nombre de usuario y deja atrás la que ya tienes.",
     "migrateUnmatchedDetail": "No existe ningún perfil en esta dirección de monedero. Si volvías a iniciar sesión, vuelve atrás y utiliza el inicio de sesión con el que te registraste.",

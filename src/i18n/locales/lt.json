@@ -1079,6 +1079,9 @@
     "failedSubmit": "Nepavyko pateikti paraiškos. Bandykite dar kartą."
   },
   "loginModal": {
+    "welcomeBack": "Sveiki sugrįžę — ši paskyra vis dar jūsų. Prisijunkite naudodami seną toliau pateiktą prisijungimo vardą, kad jį sugrąžintumėte, su savo įrašais, sekėjais ir balansu.",
+    "welcomeBackWithLogin": "Sveiki sugrįžę — ši paskyra vis dar jūsų. Prisijunkite naudodami toliau pateiktą {{login}}, kad sugrąžintumėte jį su savo įrašais, sekėjais ir balansu.",
+    "welcomeBackWaiting": "laukiama",
     "migrateNothingToRecover": "Šiame prisijungime nėra ankstesnės „DeHub“ paskyros, todėl nėra ką perkelti. Grįžkite į skiltį „Nauja paskyra“ ir užbaikite šios paskyros nustatymą.",
     "migrateUnmatchedWarning": "Šis prisijungimas neturi užregistruotos „DeHub“ paskyros. Tęsinys nieko neatkuria — sukuriama antra paskyra su nauju vartotojo vardu ir paliekama ta, kurią jau turite.",
     "migrateUnmatchedDetail": "Šiuo piniginės adresu profilio nėra. Jei vėl prisijungėte, grįžkite ir naudokite prisijungimo vardą, kuriuo prisiregistravote.",

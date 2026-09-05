@@ -1079,6 +1079,9 @@
     "failedSubmit": "Dështoi dërgimi i aplikimit. Ju lutem provoni përsëri."
   },
   "loginModal": {
+    "welcomeBack": "Mirë se u ktheve — kjo llogari është ende e jotja. Hyr me hyrjen tënde të vjetër më poshtë për ta rikthyer atë, me postimet, ndjekësit dhe ekuilibrin tënd.",
+    "welcomeBackWithLogin": "Mirë se u ktheve — kjo llogari është ende e jotja. Hyni me {{login}} më poshtë për ta rikthyer atë, me postimet, ndjekësit dhe ekuilibrin tuaj.",
+    "welcomeBackWaiting": "duke e pritur",
     "migrateNothingToRecover": "Nuk ka llogari të mëparshme DeHub në këtë hyrje, kështu që nuk ka asgjë për të sjellë. Kthehu te Llogaria e re për të përfunduar konfigurimin e kësaj llogarie.",
     "migrateUnmatchedWarning": "Ky identifikim nuk ka llogari në DeHub. Vazhdimi nuk rikuperon asgjë — krijon një llogari të dytë me një emër të ri përdoruesi dhe lë pas atë që tashmë e ke.",
     "migrateUnmatchedDetail": "Nuk ekziston asnjë profil në këtë adresë portofoli. Nëse po regjistroheshe përsëri, kthehu dhe përdor më mirë hyrjen me të cilën je regjistruar.",

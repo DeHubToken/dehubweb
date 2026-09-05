@@ -1085,6 +1085,9 @@
     "email": "E-post"
   },
   "loginModal": {
+    "welcomeBack": "Välkommen tillbaka — det här kontot är fortfarande ditt. Logga in med din gamla inloggning nedan för att få tillbaka den, med dina inlägg, följare och saldo.",
+    "welcomeBackWithLogin": "Välkommen tillbaka — det här kontot är fortfarande ditt. Logga in med {{login}} nedan för att få tillbaka det, med dina inlägg, följare och saldo.",
+    "welcomeBackWaiting": "väntar på den",
     "migrateNothingToRecover": "Det finns inget tidigare DeHub-konto för denna inloggning, så det finns inget att ta med sig. Gå tillbaka till Nytt konto för att slutföra konfigurationen av det här.",
     "migrateUnmatchedWarning": "Denna inloggning har inget registrerat DeHub-konto. Att fortsätta återställer ingenting — det skapar ett andra konto med ett nytt användarnamn och lämnar det du redan har bakom dig.",
     "migrateUnmatchedDetail": "Det finns ingen profil på den här portföljadressen. Om du loggade in igen går du tillbaka och använder inloggningen du registrerade dig med istället.",

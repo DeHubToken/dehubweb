@@ -1103,6 +1103,9 @@
     "email": "Email"
   },
   "loginModal": {
+    "welcomeBack": "Heureux de vous revoir, ce compte est toujours le vôtre. Connectez-vous avec votre ancien identifiant ci-dessous pour le ramener, avec vos publications, vos abonnés et votre solde.",
+    "welcomeBackWithLogin": "Heureux de vous revoir, ce compte est toujours le vôtre. Connectez-vous avec {{login}} ci-dessous pour le ramener, avec vos publications, vos abonnés et votre solde.",
+    "welcomeBackWaiting": "en attente",
     "migrateNothingToRecover": "Il n'y a pas de compte DeHub antérieur sur cette connexion, il n'y a donc rien à apporter. Revenez à Nouveau compte pour terminer la configuration de celui-ci.",
     "migrateUnmatchedWarning": "Cette connexion n'a pas de compte DeHub enregistré. Continuer ne récupère rien — il crée un deuxième compte avec un nouveau nom d'utilisateur et laisse celui que vous avez déjà derrière vous.",
     "migrateUnmatchedDetail": "Aucun profil n'existe à cette adresse de portefeuille. Si vous vous reconnectiez, revenez en arrière et utilisez plutôt la connexion avec laquelle vous vous êtes inscrit.",

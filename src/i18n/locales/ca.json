@@ -1090,6 +1090,9 @@
     "failedSubmit": "Error en enviar la sol·licitud. Si us plau, torna-ho a provar."
   },
   "loginModal": {
+    "welcomeBack": "Et donem la benvinguda de nou: aquest compte encara és teu. Inicia sessió amb el teu antic inici de sessió a continuació per recuperar-lo, amb les teves publicacions, els teus seguidors i el teu saldo.",
+    "welcomeBackWithLogin": "Et donem la benvinguda de nou: aquest compte encara és teu. Inicia sessió amb {{login}} a continuació per recuperar-lo, amb les teves publicacions, els teus seguidors i el teu saldo.",
+    "welcomeBackWaiting": "esperant-ho",
     "migrateNothingToRecover": "No hi ha cap compte anterior de DeHub en aquest inici de sessió, de manera que no hi ha res a aportar. Torna a Compte nou per acabar de configurar aquest compte.",
     "migrateUnmatchedWarning": "Aquest inici de sessió no té cap compte de DeHub registrat. Continuar no recupera res: crea un segon compte amb un nou nom d'usuari i deixa el que ja tens.",
     "migrateUnmatchedDetail": "No existeix cap perfil en aquesta adreça de moneder. Si has tornat a iniciar la sessió, torna enrere i utilitza l'inici de sessió amb el qual t'has registrat.",
