@@ -235,8 +235,36 @@ export async function prepareOutgoing(
 export async function decryptFromPeer(peerAddress: string, envelope: string): Promise<string | null> {
   if (!isEncryptedContent(envelope)) return envelope;
   const key = await getSessionKey(peerAddress);
-  if (!key) return null;
+  if (key) {
+    try {
+      return decryptText(envelope, key);
+    } catch { /* not sealed with the current session key — try the legacy one */ }
+  }
+  return decryptLegacySelfSealed(peerAddress, envelope);
+}
+
+/**
+ * Open a message this device sealed to ITSELF, before 2026-09-05.
+ *
+ * Until then the API answered every peer-key lookup with the caller's own key,
+ * so everything sent was encrypted under a session key derived from this
+ * device's own keypair. Correcting the lookup changes that key, which would
+ * otherwise turn a sender's whole outbox into padlocks — the one place those
+ * lines had always opened. The recipient never could read them and still
+ * cannot; nothing here changes that.
+ *
+ * Read path only: nothing is written this way again, and the key it derives is
+ * worthless to anyone but this device.
+ */
+function decryptLegacySelfSealed(peerAddress: string, envelope: string): string | null {
+  if (!current) return null;
   try {
+    const key = deriveSessionKey(
+      current.keys.privateKey,
+      current.keys.publicKey,
+      current.address,
+      norm(peerAddress),
+    );
     return decryptText(envelope, key);
   } catch {
     return null;
