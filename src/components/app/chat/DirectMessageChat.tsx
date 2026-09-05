@@ -8,7 +8,7 @@ import { useState, useRef, useEffect, useCallback, useMemo, useReducer, memo } f
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight, FileText, Download, Pencil, Check, Lock } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight, FileText, Download, Pencil, Check, Lock, Unlock } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useDmEncryption } from '@/hooks/use-dm-encryption';
 import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
@@ -994,7 +994,11 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
 
   // Silent when this device already holds the key; one wallet signature the
   // first time. Opening a chat is the moment to ask, not page load.
-  useDmEncryption();
+  //
+  // The status is rendered. Discarding it was half the reason this failed
+  // quietly: a locked vault set `locked`, nothing showed it, and the thread
+  // went on sending in the clear.
+  const { status: encryptionStatus, retry: retryEncryption } = useDmEncryption();
 
   // Lets handleSaveEdit read current content without depending on `messages` —
   // that array changes on every incoming socket message, and putting it in a
@@ -1811,6 +1815,22 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
         <div className="px-4 py-2 text-xs flex items-center gap-2 bg-white/5 text-zinc-300 border-b border-white/10">
           <Gem className="w-3 h-3 flex-shrink-0 text-current" />
           You have free access to message this user
+        </div>
+      )}
+
+      {/* No key on this device. Says so, instead of quietly sending in the
+          clear and rendering the other side's lines as unopenable. */}
+      {(encryptionStatus === 'locked' || encryptionStatus === 'error') && (
+        <div className="px-4 py-2 text-xs flex items-center gap-2 bg-white/5 text-zinc-300 border-b border-white/10">
+          <Unlock className="w-3 h-3 flex-shrink-0 text-current" />
+          <span className="flex-1 truncate">{tr('messages.encryptionOff')}</span>
+          <button
+            type="button"
+            onClick={() => { void retryEncryption(); }}
+            className="text-white font-medium hover:underline"
+          >
+            {tr('messages.encryptionTurnOn')}
+          </button>
         </div>
       )}
 

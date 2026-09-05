@@ -944,6 +944,8 @@
   },
   "messages": {
     "encrypted": "Užšifruota ištisai",
+    "encryptionOff": "Šiame įrenginyje šifravimas išjungtas",
+    "encryptionTurnOn": "Įjungti",
     "cannotDecrypt": "Užšifruota žinutė — šiame įrenginyje jos atidaryti negalima",
     "title": "Žinutės",
     "searchConversations": "Ieškoti pokalbių...",

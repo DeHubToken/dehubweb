@@ -923,6 +923,8 @@
   },
   "messages": {
     "encrypted": "Criptat end-to-end",
+    "encryptionOff": "Criptarea este dezactivată pe acest dispozitiv",
+    "encryptionTurnOn": "Activează",
     "cannotDecrypt": "Mesaj criptat — nu poate fi deschis pe acest dispozitiv",
     "title": "Messages",
     "searchConversations": "Search conversations...",
