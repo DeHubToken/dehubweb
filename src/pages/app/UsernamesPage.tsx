@@ -10,12 +10,12 @@
 
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AtSign, Search, Tag } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { BrowseTab } from '@/components/app/usernames/BrowseTab';
 import { SellTab } from '@/components/app/usernames/SellTab';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 const JSON_LD = {
   '@context': 'https://schema.org',
@@ -57,9 +57,7 @@ export default function UsernamesPage() {
       >
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
           <div className="flex items-center gap-3">
-            <span className="w-10 h-10 shrink-0 rounded-xl bg-white/10 flex items-center justify-center">
-              <AtSign className="w-5 h-5 text-white" />
-            </span>
+            <ThemedIcon icon="usernames" alt="" className="w-10 h-10 shrink-0 object-contain" />
             <div className="min-w-0">
               <h1 className="text-xl font-bold text-white">{t('usernames.title')}</h1>
               <p className="text-[11px] text-zinc-500 truncate">{t('usernames.subtitle')}</p>
@@ -69,7 +67,7 @@ export default function UsernamesPage() {
           <div className="flex items-center gap-2">
             <LiquidGlassBubble2
               label={t('usernames.tabBrowse')}
-              icon={<Search className="w-4 h-4" />}
+              icon={<ThemedIcon icon="search" alt="" className="w-4 h-4 object-contain" />}
               onClick={() => setTab('browse')}
               width="auto"
               height="38px"
@@ -78,7 +76,7 @@ export default function UsernamesPage() {
             />
             <LiquidGlassBubble2
               label={t('usernames.tabSell')}
-              icon={<Tag className="w-4 h-4" />}
+              icon={<ThemedIcon icon="usernames" alt="" className="w-4 h-4 object-contain" />}
               onClick={() => setTab('sell')}
               width="auto"
               height="38px"

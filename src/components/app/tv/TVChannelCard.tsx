@@ -13,7 +13,8 @@
 import { useTranslation } from 'react-i18next';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Play, Pause, Tv, Loader2, Volume2, VolumeX, RotateCcw, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
+import { Play, Pause, Loader2, Volume2, VolumeX, RotateCcw, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { usePiP } from '@/contexts/PiPContext';
 import { cn } from '@/lib/utils';
 // Type-only: the hls.js runtime (~540 kB raw) loads dynamically at attach time
@@ -496,7 +497,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
                 }}
               />
             ) : (
-              <Tv className="w-12 h-12 text-zinc-600" />
+              <ThemedIcon icon="tv" alt="" className="w-16 h-16 object-contain opacity-70" />
             )}
           </div>
         )}
@@ -510,7 +511,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
         {/* Error State */}
         {hasError && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80">
-            <Tv className="w-8 h-8 text-zinc-500 mb-2" />
+            <ThemedIcon icon="tv" alt="" className="w-12 h-12 object-contain opacity-70 mb-2" />
             <p className="text-zinc-400 text-sm">{t('tv.geoBlocked')}</p>
             <p className="text-zinc-500 text-xs mb-3">{t('tv.sorryInconvenience')}</p>
             {canRetry && (
@@ -640,7 +641,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
             'w-full h-full flex items-center justify-center bg-zinc-800',
             channel.logo && 'hidden'
           )}>
-            <Tv className="w-5 h-5 text-zinc-500" />
+            <ThemedIcon icon="tv" alt="" className="w-7 h-7 object-contain opacity-70" />
           </div>
         </div>
         

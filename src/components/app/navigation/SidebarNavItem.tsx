@@ -10,6 +10,7 @@ import { resolveHomeNavIntent } from '@/lib/home-nav-intent';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import type { NavItem } from '@/types/app.types';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 // Map nav item labels to i18n keys. Exported because the menu-search filter
 // (nav-search.ts) has to match on the same translated label a row renders.
@@ -118,6 +119,11 @@ export function SidebarNavItem({
   };
 
   const showAvatar = avatarUrl !== undefined;
+  const navIcon = (className: string) => item.themedIcon ? (
+    <ThemedIcon icon={item.themedIcon} alt="" className={cn(className, 'object-contain')} />
+  ) : (
+    <item.icon className={className} />
+  );
   
   const isForceCollapsed = forceCollapsed;
   const collapsedItemClass = collapsed
@@ -172,7 +178,7 @@ export function SidebarNavItem({
               ? "bg-white/[0.10] backdrop-blur-sm border border-white/[0.12]"
               : "bg-white/[0.06] backdrop-blur-sm border border-white/[0.08]"
         )}>
-          <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
+          {navIcon(cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]"))}
         </div>
         <span className={cn("relative z-10 truncate", labelClass)}>{translatedLabel}</span>
       </a>
@@ -206,7 +212,7 @@ export function SidebarNavItem({
               ? "bg-white/[0.10] backdrop-blur-sm border border-white/[0.12]"
               : "bg-white/[0.06] backdrop-blur-sm border border-white/[0.08]"
         )}>
-          <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
+          {navIcon(cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]"))}
         </div>
         <span className={cn("relative z-10 truncate", labelClass)}>{translatedLabel}</span>
       </button>
@@ -255,7 +261,7 @@ export function SidebarNavItem({
               ? "bg-white/[0.10] backdrop-blur-sm border border-white/[0.12]"
               : "bg-white/[0.06] backdrop-blur-sm border border-white/[0.08]"
         )}>
-          <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
+          {navIcon(cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]"))}
           {notificationCount !== undefined && notificationCount > 0 && (
             <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full z-20 leading-none">
               {notificationCount > 99 ? '99+' : notificationCount}

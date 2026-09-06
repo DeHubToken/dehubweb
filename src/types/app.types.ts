@@ -1,7 +1,9 @@
 import type { LucideIcon } from 'lucide-react';
+import type { ThemeIconKey } from '@/components/app/war/WarHudIcon';
 
 export interface NavItem {
   icon: LucideIcon;
+  themedIcon?: ThemeIconKey;
   label: string;
   path: string;
   external?: boolean;

@@ -1,7 +1,8 @@
 import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LayoutGrid, Loader2, Rocket } from 'lucide-react';
+import { LayoutGrid, Loader2 } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { cn } from '@/lib/utils';
@@ -205,7 +206,7 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
                         popularity.
                       */}
                       {cat.boosted && (
-                        <Rocket className="w-3 h-3 text-zinc-500 shrink-0" aria-label="Boosted" />
+                        <ThemedIcon icon="superpowers" alt="Boosted" className="w-4 h-4 shrink-0 object-contain opacity-70" />
                       )}
                     </div>
                     <span className="text-[11px] text-zinc-500 shrink-0 ml-2">

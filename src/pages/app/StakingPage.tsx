@@ -8,7 +8,8 @@ import { useState, useEffect } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { motion } from 'framer-motion';
 import { Interface, parseUnits } from 'ethers';
-import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, Rocket, X, Copy, ChevronRight } from 'lucide-react';
+import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, X, Copy, ChevronRight } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { Link } from 'react-router-dom';
 import { BadgeProgress } from '@/components/app/BadgeProgress';
 import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserStakingData, useIsStakeRouteActive, getUserDHBBalance, type UnstakeEvent } from '@/hooks/use-staking-data';
@@ -1078,6 +1079,7 @@ export default function StakingPage() {
             className="block break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2 hover:border-white/25 transition-colors"
           >
             <h3 className="text-sm font-semibold text-white flex items-center gap-1.5">
+              <ThemedIcon icon="superpowers" alt="" className="w-6 h-6 object-contain" />
               {t('staking.superPowers')}
               <ChevronRight className="w-3.5 h-3.5 text-white/40" />
             </h3>
