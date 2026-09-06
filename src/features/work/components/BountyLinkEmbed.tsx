@@ -8,9 +8,10 @@
 
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Briefcase, Clock } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import type { ReactNode } from 'react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useWorkJob } from '@/features/work/hooks/use-work';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { statusLabelKey } from '@/features/work/components/TxLink';
@@ -47,8 +48,8 @@ export function BountyLinkEmbed({ jobKey, path, fallback = null }: BountyLinkEmb
       data-no-navigate
       className="w-full flex items-stretch gap-3 p-3 mt-2 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.07] transition-colors text-left overflow-hidden"
     >
-      <div className="w-12 h-12 rounded-lg bg-white/[0.06] flex items-center justify-center flex-shrink-0">
-        <Briefcase className="w-5 h-5 text-zinc-500" />
+      <div className="w-12 h-12 rounded-lg bg-white/[0.06] flex items-center justify-center flex-shrink-0 overflow-visible">
+        <ThemedIcon icon="bounties" alt="" className="w-10 h-10 object-contain opacity-80" />
       </div>
       <div className="flex-1 min-w-0 flex flex-col justify-center gap-0.5">
         <p className="text-sm font-semibold text-white truncate">{job.title}</p>

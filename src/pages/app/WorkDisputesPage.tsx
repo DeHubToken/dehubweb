@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ShieldAlert, ExternalLink, Wallet } from 'lucide-react';
+import { ExternalLink, Wallet } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useAuth } from '@/contexts/AuthContext';
 import { isWorkAdmin } from '@/constants/app.constants';
 import { useAdminDisputes, useAdminResolveDispute } from '@/features/work/hooks/use-work';
@@ -36,7 +37,7 @@ export default function WorkDisputesPage() {
   if (!isWorkAdmin(walletAddress)) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-12 text-center">
-        <ShieldAlert className="w-10 h-10 text-white/40 mx-auto mb-3" />
+        <ThemedIcon icon="governance" alt="" className="w-12 h-12 object-contain mx-auto mb-3 opacity-70" />
         <h1 className="text-xl font-bold text-white mb-1">{t('work.adminsOnly')}</h1>
         <p className="text-sm text-white/60">
           {t('work.adminsOnlyBody')}{' '}
