@@ -35,7 +35,9 @@ import {
   showTestNotification,
   useNotificationPermission,
   useStoredEnabled,
+  useWebPushState,
 } from '@/hooks/use-browser-notifications';
+import { subscribeToWebPush } from '@/lib/web-push';
 
 /** iOS only delivers web notifications to a home-screen install, never a tab. */
 function isIOS(): boolean {
@@ -84,6 +86,7 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
   const { t } = useTranslation();
   const permission = useNotificationPermission();
   const stored = useStoredEnabled();
+  const pushState = useWebPushState();
   const [busy, setBusy] = useState(false);
   // Set when the switch is clicked while the browser is blocking us: the ask
   // stands, it just can't be honoured until they change it in the browser.
@@ -94,6 +97,17 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
   const unsupported = permission === 'unsupported';
   // Our flag alone is not "on": the browser has the last word on delivery.
   const isOn = stored && permission === 'granted';
+  // Permission granted, flag on, and the browser still would not register for
+  // push. Everything closed-tab is silently impossible; in-tab still works.
+  const tabOnly = isOn && pushState === 'unavailable';
+
+  // Normally the reconcile in useBrowserNotifications has already resolved this
+  // by the time anyone opens Settings. It has not when this is the first mount
+  // of the load, and a row that quietly waits for a state it never asks for is
+  // how the switch ends up lying again. Deduped and reused inside.
+  useEffect(() => {
+    if (isOn && pushState === 'unknown') void subscribeToWebPush();
+  }, [isOn, pushState]);
 
   const testBody = t(
     'settings.browserNotificationsTestBody',
@@ -184,7 +198,7 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
 
   const title = t('settings.browserNotifications', 'Browser notifications');
 
-  const description = unsupported
+  const baseDescription = unsupported
     ? isIOS()
       ? t(
           'settings.browserNotificationsIosHint',
@@ -200,7 +214,13 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
             'Get a heads-up about replies, tips and DMs while you’re in another tab',
           );
 
-  const Icon = blocked || unsupported ? BellOff : isOn ? BellRing : Bell;
+  // Only the push failure changes the copy; every other state keeps the wording
+  // it had, because every other state was already telling the truth.
+  const description = tabOnly
+    ? t('settings.browserNotificationsTabOnlyDesc', 'On, but only while DeHub is open in a tab')
+    : baseDescription;
+
+  const Icon = blocked || unsupported || tabOnly ? BellOff : isOn ? BellRing : Bell;
 
   const control = (
     <Switch
@@ -231,6 +251,22 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
                   'settings.browserNotificationsBlockedNote',
                   'Only your browser can undo this — DeHub can’t ask again once it’s blocked.',
                 )}
+          </p>
+        </div>
+      )}
+      {tabOnly && (
+        <div className="mt-2 rounded-xl border border-amber-400/30 bg-amber-400/[0.07] p-3">
+          <p className="text-sm font-medium text-white">
+            {t(
+              'settings.browserNotificationsTabOnlyTitle',
+              'This browser will not accept background notifications',
+            )}
+          </p>
+          <p className="mt-1 text-xs text-zinc-400">
+            {t(
+              'settings.browserNotificationsTabOnlyHint',
+              'DeHub asked to register for push and your browser refused, so notifications can only reach you while DeHub is open in a tab. Restarting your browser usually clears it.',
+            )}
           </p>
         </div>
       )}
