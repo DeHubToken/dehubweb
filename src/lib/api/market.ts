@@ -31,6 +31,7 @@ import {
   type AssetRef,
   type RankablePair,
 } from '@/lib/asset-refs';
+import { correctDhbMarketCap } from '@/lib/market/dhb-market-cap';
 import type { PricePoint } from '@/hooks/use-token-chart';
 
 const DEXSCREENER = 'https://api.dexscreener.com';
@@ -207,7 +208,7 @@ async function invoke<T>(fn: string, body: Record<string, unknown>): Promise<T |
 async function cmcBySymbol(symbol: string): Promise<CmcAsset | null> {
   const data = await invoke<CmcAsset & { error?: string }>('cmc-market-cap', { symbol });
   if (!data || data.error || !data.symbol) return null;
-  return data;
+  return correctDhbMarketCap(data);
 }
 
 interface StockQuoteResponse {
