@@ -1920,6 +1920,9 @@ export const tr = {
     addressCopied: "Adres Kopyalandı",
     addressCopiedDesc: "adres panoya kopyalandı",
     thankYou: "DeHub topluluğunu desteklediğiniz ve daha iyi bir merkeziyetsiz gelecek kurmamıza yardım ettiğiniz için teşekkür ederiz.",
+    daoTitle: 'DAO aracılığıyla katkıda bulunun',
+    daoBody: 'Yukarıdaki KDY adresi DAO hazinesidir. DHB\'yi uygulamadan gönderin ve katkınız, DAO\'nun nasıl harcanacağına karar verdiğinde oyunuzun taşıdığı ağırlık olan havuzdaki payınıza dahil edilir.',
+    daoLink: 'DAO hazinesini açın',
   },
   brandGuidelines: {
     title: "Marka Kuralları",

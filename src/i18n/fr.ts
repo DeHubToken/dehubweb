@@ -1271,6 +1271,9 @@ export const fr = {
     addressCopied: 'Adresse copiée',
     addressCopiedDesc: 'adresse copiée dans le presse-papiers',
     thankYou: "Merci de soutenir la communauté DeHub et de nous aider à construire un meilleur avenir décentralisé.",
+    daoTitle: 'Contribuer par le biais de la DAO',
+    daoBody: 'L\'adresse EVM ci-dessus est la trésorerie du DAO. Envoyez-lui DHB depuis l\'application et votre contribution est comptabilisée dans votre part du pool, qui correspond au poids de votre vote lorsque le DAO décide de la manière dont il est dépensé.',
+    daoLink: 'Ouvrir le Trésor DAO',
   },
   brandGuidelines: {
     title: 'Directives de marque',

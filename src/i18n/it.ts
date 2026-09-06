@@ -1173,6 +1173,9 @@ export const it = {
     addressCopied: 'Indirizzo Copiato',
     addressCopiedDesc: 'indirizzo copiato negli appunti',
     thankYou: 'Grazie per aver supportato la comunità DeHub e averci aiutato a costruire un futuro decentralizzato migliore.',
+    daoTitle: 'Contribuire attraverso il DAO',
+    daoBody: 'L\'indirizzo EVM di cui sopra è la tesoreria DAO. Inviaci DHB dall\'app e il tuo contributo viene conteggiato per la tua quota del pool, che è il peso del tuo voto quando il DAO decide come viene speso.',
+    daoLink: 'Apri la tesoreria DAO',
   },
   brandGuidelines: {
     title: 'Linee Guida del Brand',

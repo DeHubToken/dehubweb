@@ -1144,6 +1144,9 @@ export const ms = {
     addressCopied: 'Alamat disalin',
     addressCopiedDesc: 'Alamat disalin ke papan klip',
     thankYou: 'Terima kasih kerana menyokong komuniti DeHub.',
+    daoTitle: 'Menyumbang melalui Dao',
+    daoBody: 'Alamat EVM di atas adalah perbendaharaan DAO. Hantar DHB kepadanya dari aplikasi dan sumbangan anda dikira untuk bahagian kumpulan anda, iaitu berat yang dibawa oleh undian anda apabila DAO memutuskan bagaimana ia dibelanjakan.',
+    daoLink: 'Buka perbendaharaan DAO',
   },
   brandGuidelines: {
     title: 'Garis Panduan Jenama',

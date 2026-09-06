@@ -1413,6 +1413,9 @@ export const om = {
     addressCopied: 'Teessoon Waraabameera',
     addressCopiedDesc: 'teessoon gara clipboard tti waraabameera',
     thankYou: 'Hawaasa DeHub deeggaruu fi boruu giddugaleessa hin qabne fooyya\'aa ijaaruuf gargaaruuf galatoomaa.',
+    daoTitle: 'DAO keessaan gumaachuu',
+    daoBody: "Teessoon EVM olitti jiru kuusaa qabeenyaa DAO ti. Appii irraa DHB itti ergi; gumaachi kee qooda kee kan kuusaa keessaa ta'ee lakkaa'ama, innis ulfina sagaleen kee qabu yeroo DAOn akkamitti akka baasu murteessu dha.",
+    daoLink: 'Kuusaa qabeenyaa DAO bani',
   },
   brandGuidelines: {
     title: 'Qajeelfama Maqaa',

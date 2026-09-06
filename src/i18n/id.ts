@@ -1304,6 +1304,9 @@ export const id = {
     addressCopied: 'Alamat disalin',
     addressCopiedDesc: 'alamat disalin ke clipboard',
     thankYou: 'Terima kasih telah mendukung komunitas DeHub dan membantu membangun masa depan terdesentralisasi yang lebih baik.',
+    daoTitle: 'Berkontribusi melalui Dao',
+    daoBody: 'Alamat EVM di atas adalah kas DAO. Kirim DHB ke sana dari aplikasi dan kontribusi Anda dihitung untuk bagian kolam renang Anda, yang merupakan bobot suara Anda saat DAO memutuskan bagaimana pengeluarannya.',
+    daoLink: 'Buka perbendaharaan DAO',
   },
   brandGuidelines: {
     title: 'Pedoman Merek',

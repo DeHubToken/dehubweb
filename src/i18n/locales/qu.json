@@ -3,9 +3,6 @@
     "sponsorshipUnavailable": "Mana qullqiyuq rurayku ñuqaykuq ladunpi sayachisqa, mana qullqi waqaychanaykipichu. Ama hina kaspa, pisi pachamanta yapamanta ruray.",
     "gasSponsorshipFailed": "Kay rurayta mana qullqichayta atirqaykuchu. Ama hina kaspa, pisi pachamanta yapamanta ruray."
   },
-  "work": {
-    "budgetExhausted": "Kay t'inkap qullqin tukuyta rakisqaña."
-  },
   "nav": {
     "home": "Qallariy",
     "explore": "Maskay",
@@ -26,6 +23,7 @@
     "featureRequests": "Mañakuy",
     "staking": "Staking",
     "governance": "Kamachiy",
+    "dao": "DAO",
     "careers": "Llamkay",
     "glossary": "Simi qullqa",
     "arcade": "Pukllana",
@@ -1198,6 +1196,42 @@
     "applicationSuccess": "Mañakuy allinta apachisqa! Rimanakusunchis.",
     "applicationFailed": "Mana apachisqachu. Musuqmanta ruwaway."
   },
+  "dao": {
+    "title": "DAO Qullqa",
+    "subtitle": "Huk qatuy, runakunamanta hunt'asqa, paykunap kamachisninwan ususqa",
+    "contribute": "Qullqata Yupay",
+    "contributeIntro": "Apuy DHB waqaychana wasiman. Tukuy token yapasqaykiqa hatunmanmi wiñachin qullqayta, chaymi kachkan hatun kayninmi kunan pichus kamachin imaynatas ususqa.",
+    "amountLabel": "Suni (DHB)",
+    "youHold": "Qan hapinki {{amount}} DHB",
+    "irreversible": "Yupaykunaqa churasqam kachkan chainpi. Mana kutichiyta atinchu ichaqa urquykta.",
+    "switchChain": "Billeteraykita {{chains}} nisqaman tikray yanapakunaykipaq.",
+    "sendAmount": "Apuy {{amount}} DHB",
+    "sentTitle": "Yupaykuna churasqa",
+    "sentDesc": "{{amount}} DHB churasqa waqaychana wasiman {{chain}} punchawpi. Qanpa hatun kayniyki musuqchaykuyta atinmi block indexasqa kachkaptin.",
+    "viewTx": "Riqiy qhawana",
+    "sendFailed": "Yupaykuna mana allin kasqan",
+    "treasuryBalance": "Waqaychana kaynin",
+    "refresh": "Musuqchay",
+    "treasuryAddress": "Waqaychana tiqsi",
+    "copyAddress": "Kopiyay tiqsi",
+    "addressCopied": "Kopiasqa",
+    "sendAnyWallet": "Piqpas chaymanmi apuyta atin DHB waqaychana wasiman imaymana waqaychana wasimanta utaq qhatuy wasimanta. Base chaymanta BNBpi churasqakunaqa qanpa hatun kayniykiwanmi yupaychasqa.",
+    "loadFailed": "Mana atichkanchu kunan waqaychana wasita riqiyta. Waqaychana wasita musuqchay.",
+    "yourPower": "Qanpa atiy",
+    "yourContribution": "{{amount}} DHB churasqa",
+    "addMore": "Astawan yapay",
+    "noContributionYet": "Mana chaykuchu. Qanpa hatun kayniykiqa qallarin qanpa ñawpaq churasqaywanmi.",
+    "howItWorksTitle": "Imaynata atiy llamk'an",
+    "howItWorksBody": "Qanpa atiyqa qanpa churasqayniyki rakisqa tukuy imaymana chayman churasqawanmi. Chayqa directom chainmanta rikusqa, mana tukukunchu, chaymi kamachin imaynata qanpa simiyki hatun kayninmi kunan pichus kamachin imaynatas ususqa.",
+    "contributors": "Yupayqkuna",
+    "pooledTotal": "{{amount}} DHB hunt'asqa",
+    "noContributors": "Mana chaykuchu. Ñawpaq kaq kay.",
+    "recent": "Musuq yupaykuna",
+    "you": "Qan",
+    "transferCount_one": "{{count}} transferencia",
+    "transferCount_other": "{{count}} transferenciakuna",
+    "power": "Atiq"
+  },
   "governance": {
     "title": "Kamachiy",
     "proposalCount": "{{count}} yuyaychay",
@@ -1859,6 +1893,9 @@
     "aimAtAccount": "¿Pipa qatiqninkunam rikunanku tiyan?",
     "aimPlaceholder": "Ruraq suti icha qullqi wayaqa dirección",
     "aimAtTiers": "¿Mayqin unancha hawakunam rikunanku tiyan?"
+  },
+  "work": {
+    "budgetExhausted": "Kay t'inkap qullqin tukuyta rakisqaña."
   },
   "videoLooks": {
     "button": "Kamara rikchaykuna",

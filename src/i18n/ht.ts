@@ -1304,6 +1304,9 @@ export const ht = {
     addressCopied: 'Adrès Kopye',
     addressCopiedDesc: 'adrès kopye nan clipboard',
     thankYou: 'Mèsi pou sipòte kominote DeHub ak ede konstwi yon avni desantralize pi bon.',
+    daoTitle: 'Kontribye atravè DAO a',
+    daoBody: 'Adrès EVM ki anwo a se kès DAO a. Voye DHB ba li soti nan app a epi kontribisyon ou konte nan direksyon pati ou nan pisin lan, ki se pwa vòt ou pote lè DAO deside ki jan li depanse.',
+    daoLink: 'Louvri trezò DAO a',
   },
   brandGuidelines: {
     title: 'Gid Mak',

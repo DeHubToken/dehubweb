@@ -3,9 +3,6 @@
     "sponsorshipUnavailable": "Bezmaksas darījumi ir apturēti mūsu pusē, nevis jūsu makā. Lūdzu, drīzumā mēģiniet vēlreiz.",
     "gasSponsorshipFailed": "Šo darījumu neizdevās segt. Lūdzu, pēc brīža mēģiniet vēlreiz."
   },
-  "work": {
-    "budgetExhausted": "Šīs atlīdzības budžets ir pilnībā izlietots."
-  },
   "nav": {
     "home": "Sākums",
     "explore": "Izpētīt",
@@ -26,6 +23,7 @@
     "featureRequests": "Funkciju pieprasījumi",
     "staking": "Steikings",
     "governance": "Pārvaldība",
+    "dao": "DAO",
     "careers": "Karjera",
     "glossary": "Glosārijs",
     "arcade": "Arcade",
@@ -1197,6 +1195,42 @@
     "applicationSuccess": "Pieteikums veiksmīgi iesniegts! Sazināsimies ar jums.",
     "applicationFailed": "Iesniegšana neizdevās. Lūdzu, mēģiniet vēlreiz."
   },
+  "dao": {
+    "title": "DAO kase",
+    "subtitle": "Viena maku, ko finansē kopiena, ko tērē tās balsojums",
+    "contribute": "Sniegt ieguldījumu",
+    "contributeIntro": "Nosūtiet DHB no sava maka uz kasi. Katrs jūsu pievienotais žetons palielina jūsu daļu kopējā fondā, un jūsu daļa ir svars, ko jūsu balss nes, kad DAO izlemj, kā tas tiek tērēts.",
+    "amountLabel": "Summa (DHB)",
+    "youHold": "Jums pieder {{amount}} DHB",
+    "irreversible": "Ieguldījumi ir pārskaitījumi ķēdē. Tos nevar atcelt vai izņemt.",
+    "switchChain": "Pārslēdziet maku uz {{chains}}, lai sniegtu savu ieguldījumu.",
+    "sendAmount": "Nosūtīt {{amount}} DHB",
+    "sentTitle": "Ieguldījums nosūtīts",
+    "sentDesc": "{{amount}} DHB nosūtīti uz kasi {{chain}}. Jūsu daļa tiks atjaunināta, tiklīdz bloks tiks indeksēts.",
+    "viewTx": "Skatīt darījumu",
+    "sendFailed": "Ieguldījums neizdevās",
+    "treasuryBalance": "Kases atlikums",
+    "refresh": "Atsvaidzināt",
+    "treasuryAddress": "Kases adrese",
+    "copyAddress": "Kopēt adresi",
+    "addressCopied": "Adrese kopēta",
+    "sendAnyWallet": "Ikviens var nosūtīt DHB šeit no jebkura maka vai biržas. Pārskaitījumi uz Base un BNB tiek ieskaitīti jūsu daļā.",
+    "loadFailed": "Pašlaik nevar nolasīt kasi. Mēģiniet vēlreiz pēc brīža.",
+    "yourPower": "Jūsu spēks",
+    "yourContribution": "{{amount}} DHB ieguldīts",
+    "addMore": "Pievienot vairāk",
+    "noContributionYet": "Jūs vēl neesat ieguldījis. Jūsu daļa kopējā fondā sākas ar jūsu pirmo pārskaitījumu.",
+    "howItWorksTitle": "Kā darbojas spēks",
+    "howItWorksBody": "Jūsu spēks ir jūsu ieguldījums, kas dalīts ar visu, kas jebkad nosūtīts uz kasi. Tas tiek nolasīts tieši no ķēdes, tas nekad nezaudē derīgumu un nosaka, cik daudz svara jūsu balss nes, kad DAO balso par tēriņiem.",
+    "contributors": "Ieguldītāji",
+    "pooledTotal": "{{amount}} DHB kopējā fondā",
+    "noContributors": "Vēl nav ieguldījumu. Esiet pirmais.",
+    "recent": "Jaunākie ieguldījumi",
+    "you": "Jūs",
+    "transferCount_one": "{{count}} pārsūtīšana",
+    "transferCount_other": "{{count}} pārskaitījumi",
+    "power": "jauda"
+  },
   "governance": {
     "title": "Pārvaldība",
     "proposalCount": "{{count}} priekšlikums iesniegts",
@@ -1828,6 +1862,9 @@
     "aimAtAccount": "Kuru sekotājiem tas jāredz?",
     "aimPlaceholder": "Lietotājvārds vai maka adrese",
     "aimAtTiers": "Kuriem nozīmīšu līmeņiem tas jāredz?"
+  },
+  "work": {
+    "budgetExhausted": "Šīs atlīdzības budžets ir pilnībā izlietots."
   },
   "videoLooks": {
     "button": "Kameras izskati",

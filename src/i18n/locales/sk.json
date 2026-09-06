@@ -3,9 +3,6 @@
     "sponsorshipUnavailable": "Bezplatné transakcie sú pozastavené na našej strane, nie vo vašej peňaženke. Skúste to prosím o chvíľu znova.",
     "gasSponsorshipFailed": "Túto transakciu sa nepodarilo uhradiť. Skúste to prosím o chvíľu znova."
   },
-  "work": {
-    "budgetExhausted": "Rozpočet tejto odmeny je úplne vyčerpaný."
-  },
   "nav": {
     "home": "Domov",
     "explore": "Objavovať",
@@ -26,6 +23,7 @@
     "featureRequests": "Požiadavky na funkcie",
     "staking": "Staking",
     "governance": "Správa",
+    "dao": "DAO)",
     "careers": "Kariéra",
     "glossary": "Slovník",
     "arcade": "Arcade",
@@ -1299,6 +1297,42 @@
     "applyNow": "Uchádzať sa teraz",
     "applicationSubmitted": "Žiadosť odoslaná"
   },
+  "dao": {
+    "title": "DAO pokladnica",
+    "subtitle": "Jedna peňaženka, financovaná komunitou, míňaná jej hlasovaním",
+    "contribute": "Prispejte",
+    "contributeIntro": "Pošlite DHB z vašej peňaženky do pokladnice. Každý token, ktorý pridáte, zvyšuje váš podiel v pool-e a váš podiel je váha, ktorú váš hlas nesie, keď DAO rozhoduje o tom, ako sa míňa.",
+    "amountLabel": "Suma (DHB)",
+    "youHold": "Vlastníte {{amount}} DHB",
+    "irreversible": "Príspevky sú prevody na reťazci. Nedajú sa vrátiť ani stiahnuť.",
+    "switchChain": "Ak chceš prispieť, prepni peňaženku na {{chains}}.",
+    "sendAmount": "Pošlite {{amount}} DHB",
+    "sentTitle": "Príspevok odoslaný",
+    "sentDesc": "{{amount}} DHB bolo odoslaných do pokladnice dňa {{chain}}. Váš podiel sa aktualizuje po indexovaní bloku.",
+    "viewTx": "Zobraziť transakciu",
+    "sendFailed": "Príspevok zlyhal",
+    "treasuryBalance": "Zostatok v pokladnici",
+    "refresh": "Obnoviť",
+    "treasuryAddress": "Adresa pokladnice",
+    "copyAddress": "Skopírovať adresu",
+    "addressCopied": "Adresa skopírovaná",
+    "sendAnyWallet": "Ktokoľvek môže poslať DHB sem z akejkoľvek peňaženky alebo burzy. Prevody na Base a BNB sa započítavajú do vášho podielu.",
+    "loadFailed": "Momentálne sa nedá prečítať pokladnica. Skúste to znova o chvíľu.",
+    "yourPower": "Vaša sila",
+    "yourContribution": "{{amount}} DHB prispelo",
+    "addMore": "Pridajte viac",
+    "noContributionYet": "Zatiaľ ste neprispeli. Váš podiel v pool-e začína vaším prvým prevodom.",
+    "howItWorksTitle": "Ako sila funguje",
+    "howItWorksBody": "Vaša sila je váš príspevok vydelený všetkým, čo bolo kedy poslané do pokladnice. Číta sa priamo z reťazca, nikdy nevyprší a rozhoduje o tom, akú váhu má váš hlas, keď DAO hlasuje o výdavkoch.",
+    "contributors": "Prispievatelia",
+    "pooledTotal": "{{amount}} DHB v pool-e",
+    "noContributors": "Zatiaľ žiadne príspevky. Buďte prvý.",
+    "recent": "Najnovšie príspevky",
+    "you": "Vy",
+    "transferCount_one": "{{count}} prevod",
+    "transferCount_other": "{{count}} prevody",
+    "power": "napájanie"
+  },
   "governance": {
     "title": "Správa",
     "proposalCount": "{{count}} proposal submitted",
@@ -1945,6 +1979,9 @@
     "aimAtAccount": "Čí sledovatelia by to mali vidieť?",
     "aimPlaceholder": "Používateľské meno alebo adresa peňaženky",
     "aimAtTiers": "Ktoré úrovne odznakov by to mali vidieť?"
+  },
+  "work": {
+    "budgetExhausted": "Rozpočet tejto odmeny je úplne vyčerpaný."
   },
   "videoLooks": {
     "button": "Vzhľady kamery",

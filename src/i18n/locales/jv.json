@@ -3,9 +3,6 @@
     "sponsorshipUnavailable": "Transaksi gratis lagi dijeda saka pihak kita, dudu ing dompet sampeyan. Coba maneh sedhela maneh.",
     "gasSponsorshipFailed": "Transaksi iki ora bisa disponsori. Coba maneh sedhela."
   },
-  "work": {
-    "budgetExhausted": "Anggaran bounty iki wis kepakai kabeh."
-  },
   "nav": {
     "home": "Beranda",
     "explore": "Jelajah",
@@ -26,6 +23,7 @@
     "featureRequests": "Panjalukan Fitur",
     "staking": "Staking",
     "governance": "Tata Kelola",
+    "dao": "DAO",
     "careers": "Lowongan",
     "glossary": "Glosarium",
     "arcade": "Arcade",
@@ -1189,6 +1187,42 @@
     "applicationSuccess": "Lamaran kasil dikirim! Kita bakal hubungi kowe.",
     "applicationFailed": "Gagal ngirim. Mangga coba maneh."
   },
+  "dao": {
+    "title": "Perbendaharaan DAO",
+    "subtitle": "Siji dompet, dibiayai dening komunitas, dibelanjakake kanthi voting",
+    "contribute": "Sumbang",
+    "contributeIntro": "Kirim DHB saka dompetmu menyang perbendaharaan. Saben token sing koktambahake bakal nambah bagianmu ing pool, lan bagianmu iku bobot votingmu nalika DAO mutusake carane bakal dibelanjakake.",
+    "amountLabel": "Jumlah (DHB)",
+    "youHold": "Sampeyan duwe {{amount}} DHB",
+    "irreversible": "Sumbangan iku transfer on-chain. Ora bisa dibalekake utawa ditarik.",
+    "switchChain": "Ganti dompetmu menyang {{chains}} kanggo nyumbang.",
+    "sendAmount": "Kirim {{amount}} DHB",
+    "sentTitle": "Sumbangan dikirim",
+    "sentDesc": "{{amount}} DHB dikirim menyang perbendaharaan ing {{chain}}. Bagianmu bakal dianyari sawise blok diindeks.",
+    "viewTx": "Deleng transaksi",
+    "sendFailed": "Sumbangan gagal",
+    "treasuryBalance": "Saldo perbendaharaan",
+    "refresh": "Segarke",
+    "treasuryAddress": "Alamat perbendaharaan",
+    "copyAddress": "Salin alamat",
+    "addressCopied": "Alamat disalin",
+    "sendAnyWallet": "Sapa wae bisa ngirim DHB ing kene saka dompet utawa bursa apa wae. Transfer ing Base lan BNB bakal diitung kanggo bagianmu.",
+    "loadFailed": "Ora bisa maca perbendaharaan saiki. Coba maneh sedhela.",
+    "yourPower": "Kekuatanmu",
+    "yourContribution": "{{amount}} DHB wis disumbangake",
+    "addMore": "Tambahake maneh",
+    "noContributionYet": "Sampeyan durung nyumbang. Bagianmu ing pool diwiwiti saka transfer pertamamu.",
+    "howItWorksTitle": "Carane kekuatan bisa digunakake",
+    "howItWorksBody": "Kekuatanmu iku sumbanganmu dibagi kabeh sing tau dikirim menyang perbendaharaan. Iki diwaca langsung saka rantai, ora bakal kadaluwarsa, lan nemtokake bobot suaramu nalika DAO voting babagan pengeluaran.",
+    "contributors": "Panyumbang",
+    "pooledTotal": "{{amount}} DHB ing pool",
+    "noContributors": "Durung ana sumbangan. Dadi sing pertama.",
+    "recent": "Sumbangan paling anyar",
+    "you": "Sampeyan",
+    "transferCount_one": "{{count}} transfer",
+    "transferCount_other": "{{count}} transfer",
+    "power": "daya"
+  },
   "governance": {
     "title": "Tata Kelola",
     "proposalCount": "{{count}} proposal dikirim",
@@ -1820,6 +1854,9 @@
     "aimAtAccount": "Pengikut sapa sing kudu ndeleng iki?",
     "aimPlaceholder": "Jeneng pangguna utawa alamat dompet",
     "aimAtTiers": "Tingkat lencana endi sing kudu ndeleng iki?"
+  },
+  "work": {
+    "budgetExhausted": "Anggaran bounty iki wis kepakai kabeh."
   },
   "videoLooks": {
     "button": "Tampilan kamera",

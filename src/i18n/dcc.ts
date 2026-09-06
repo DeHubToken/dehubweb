@@ -1437,6 +1437,9 @@ export const dcc = {
     addressCopied: 'एड्रेस कॉपी हो गया',
     addressCopiedDesc: 'एड्रेस क्लिपबोर्ड में कॉपी हो गया',
     thankYou: 'DeHub कम्युनिटी को सपोर्ट करने और एक बेहतर डिसेंट्रलाइज़्ड भविष्य बनाने में मदद करने का शुक्रिया।',
+    daoTitle: 'DAO dwara contribute cheyandi',
+    daoBody: 'Paina unna EVM address DAO treasury. App nunchi DHB ni daaniki pampandi mariyu mee contribution pool lo mee share ki count avuthundi, idi DAO ela kharchu cheyalo decide chesinappudu mee vote weight ni carry chestundi.',
+    daoLink: 'DAO treasury open cheyandi',
   },
   brandGuidelines: {
     title: 'ब्रांड गाइडलाइन',
