@@ -142,6 +142,19 @@ export const DHB_TOKEN = {
   isSubscriptionSupported: true,
 } as const;
 
+/**
+ * Total DHB supply, the denominator behind every "% of supply" and every market
+ * cap we quote.
+ *
+ * Not read from `totalSupply()`: DHB is deployed on three chains and the same
+ * tokens are bridged between them, so summing the contracts double-counts and
+ * reading any one of them undercounts. 4.2B is the issued supply.
+ *
+ * The `cmc-market-cap` edge function holds the same number for its $DHB stub —
+ * Deno cannot import from `src`, so change both together.
+ */
+export const DHB_TOTAL_SUPPLY = 4_200_000_000;
+
 // ERC20 ABI for token approval and balance checks
 export const ERC20_ABI = [
   {

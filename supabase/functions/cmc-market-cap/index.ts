@@ -137,6 +137,13 @@ serve(async (req) => {
 
     // Manual override: $DHB (Dehub) — CMC doesn't list yet, trading paused.
     // Hard-code price/name so the cashtag/search UI surfaces it.
+    //
+    // Supply is 4.2B, not the 1B this used to claim. That single wrong number
+    // is what put a $1M market cap on every ticker card in the feed while the
+    // explore page said $4.2M — the card read this response, the explore page
+    // quietly recomputed price × 4.2B on the client instead of trusting it.
+    // Keep in step with DHB_TOTAL_SUPPLY in src/lib/contracts/dhb-token.ts;
+    // an edge function cannot import from src, so this is the second copy.
     if (cleanSymbol === 'DHB' || cleanSymbol === 'DEHUB') {
       return new Response(JSON.stringify({
         symbol: 'DHB',
@@ -145,13 +152,13 @@ serve(async (req) => {
         cmcRank: null,
         dateAdded: null,
         tags: [],
-        maxSupply: 1_000_000_000,
-        circulatingSupply: 1_000_000_000,
-        totalSupply: 1_000_000_000,
+        maxSupply: 4_200_000_000,
+        circulatingSupply: 4_200_000_000,
+        totalSupply: 4_200_000_000,
         platform: { name: 'Base', symbol: 'ETH', tokenAddress: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c' },
         price: 0.001,
-        marketCap: 1_000_000,
-        fullyDilutedMarketCap: null,
+        marketCap: 4_200_000,
+        fullyDilutedMarketCap: 4_200_000,
         volume24h: null,
         volumeChange24h: null,
         percentChange1h: null,
