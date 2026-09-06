@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { correctDhbMarketCap } from '@/lib/market/dhb-market-cap';
 
 export interface CmcMarketData {
   symbol: string;
@@ -50,7 +51,7 @@ async function fetchCmcMarketCap(symbol: string): Promise<CmcMarketData | null> 
   });
 
   if (error || !data?.marketCap) return null;
-  return data as CmcMarketData;
+  return correctDhbMarketCap(data as CmcMarketData);
 }
 
 export function useCmcMarketCap(query: string, enabled: boolean) {
