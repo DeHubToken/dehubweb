@@ -25,6 +25,7 @@ import {
   Lamp,
   Lightbulb,
   LayoutDashboard,
+  Landmark,
   Lock,
   MessageCircle,
   Megaphone,
@@ -139,7 +140,7 @@ export type ThemeIconKey =
   | 'governance' | 'trophy' | 'notifications' | 'settings' | 'stages'
   | 'assistant' | 'lock' | 'profile' | 'arcade' | 'stores' | 'bounties'
   | 'events' | 'stats' | 'ads' | 'command' | 'email' | 'accounts'
-  | 'usernames' | 'tv' | 'superpowers';
+  | 'usernames' | 'tv' | 'superpowers' | 'dao-treasury';
 
 /**
  * Raster icon replacements shared by every non-War themed page.
@@ -188,6 +189,7 @@ const THEME_ICON_KEYS: ReadonlyArray<readonly [string, ThemeIconKey]> = [
   ['stats.webp', 'stats'],
   ['ads.webp', 'ads'],
   ['command.webp', 'command'],
+  ['dao-treasury.webp', 'dao-treasury'],
 ];
 
 const FULL_RASTER_THEMES = new Set(['hazy', 'swarms', 'winter', 'osaka', 'jungle']);
@@ -198,6 +200,7 @@ const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
   'email', 'accounts', 'usernames', 'tv', 'superpowers',
+  'dao-treasury',
 ]);
 
 const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
@@ -238,6 +241,7 @@ const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
   usernames: AtSign,
   tv: Tv,
   superpowers: Zap,
+  'dao-treasury': Landmark,
 };
 
 export function resolveThemeIconKey(src: string): ThemeIconKey | null {
