@@ -1437,6 +1437,9 @@ export const da = {
     addressCopied: 'Adresse kopieret',
     addressCopiedDesc: 'adresse kopieret til udklipsholder',
     thankYou: 'Tak fordi du støtter DeHub-fællesskabet og hjælper os med at bygge en bedre decentraliseret fremtid.',
+    daoTitle: 'Bidrage gennem DAO',
+    daoBody: 'EVM-adressen ovenfor er DAO-KASSEN. Send DHB til den fra appen, og dit bidrag tælles med i din andel af puljen, som er den vægt, din stemme bærer, når DAO beslutter, hvordan den skal bruges.',
+    daoLink: 'Åbn DAO-kassen',
   },
   brandGuidelines: {
     title: 'Brandretningslinjer',

@@ -1372,6 +1372,9 @@ export const et = {
     addressCopied: 'Aadress kopeeritud',
     addressCopiedDesc: 'aadress kopeeritud lõikelauale',
     thankYou: 'Täname DeHubi kogukonna toetamise ja parema detsentraliseeritud tuleviku ehitamise eest.',
+    daoTitle: 'Andke oma panus DAO kaudu',
+    daoBody: 'EVMi aadress ülal on DAO riigikassa. Saatke rakendusest DHB ja teie panus arvestatakse teie osakaalu hulka basseinis, mis on teie hääl, kui DAO otsustab, kuidas seda kulutatakse.',
+    daoLink: 'Ava DAO VARAKAMBER',
   },
   brandGuidelines: {
     title: 'Brändijuhised',

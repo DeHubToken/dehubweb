@@ -104,7 +104,7 @@ const OG_CARD_ROUTES = new Set([
   'connect', 'connect/chatgpt', 'connect/claude', 'communities',
   'stages', 'guide', 'features', 'pricing', 'depin',
   'builder', 'creator', 'editor', 'prompt', 'work',
-  'affiliate', 'premium', 'governance', 'leaderboard',
+  'affiliate', 'premium', 'governance', 'leaderboard', 'dao',
   'top-100', 'music', 'tv', 'cinema',
   'glossary', 'bridge', 'agents', 'assistant',
   'creators', 'jobs', 'apk', 'admin-manual',
@@ -1068,6 +1068,13 @@ const MARKETING_PAGES = {
 <li>Exclusive drops, badges and community events.</li>
 </ul>
 <p>DeHub Extra is billed monthly and unlocks across the whole network — social, video, music and TV. For Creator Studio plans instead, see <a href="${APP_URL}/pricing">pricing</a>.</p>`,
+  },
+  'dao': {
+    title: 'DAO Treasury — Fund DeHub and Earn a Say',
+    description: 'The DeHub DAO treasury: one wallet anyone can send DHB to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent.',
+    heading: 'DeHub DAO Treasury',
+    bodyHtml: `<p>The DAO treasury is a single wallet that anyone can send DHB to, from inside the app or from any exchange or wallet. Its balance and every contribution are read straight from the Base and BNB chains, so nothing on this page depends on a database.</p>
+<p>Each contributor holds a share of the pool equal to what they put in. That share is the weight their vote carries when the DAO decides how the treasury is spent — see <a href="${APP_URL}/governance">governance</a> for the proposals.</p>`,
   },
   'governance': {
     title: 'Governance — Vote on Community Proposals',
@@ -2352,7 +2359,7 @@ export function appHref(url) {
 // Kept in sync with the STATIC_ROUTES map inside supabase/functions/ssr-seo.
 const SSR_STATIC_ROUTES = new Set([
   'features', 'pricing', 'depin', 'creator', 'editor', 'prompt', 'work',
-  'affiliate', 'premium', 'governance', 'leaderboard', 'top-100',
+  'affiliate', 'premium', 'governance', 'leaderboard', 'top-100', 'dao',
   'music', 'radio', 'tv', 'bridge', 'agents',
   'assistant', 'creators', 'jobs',
   // Same reason as 'arcade' below: /app/usernames and /usernames are the same

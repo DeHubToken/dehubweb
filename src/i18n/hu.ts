@@ -1304,6 +1304,9 @@ export const hu = {
     addressCopied: 'Cím másolva',
     addressCopiedDesc: 'cím a vágólapra másolva',
     thankYou: 'Köszönjük a DeHub közösség támogatását és a jobb decentralizált jövő építésében nyújtott segítségét.',
+    daoTitle: 'Hozzájárulás a DAO-n keresztül',
+    daoBody: 'Az EVM fenti címe a DAO Treasury. Küldj DHB-t az alkalmazásból, és a hozzájárulásod beleszámít a medencéből való részesedésedbe, ami az a súly, amit a szavazatod hordoz, amikor a DAO eldönti, hogyan költik el.',
+    daoLink: 'Nyissa meg a DAO KINCSTÁRÁT',
   },
   brandGuidelines: {
     title: 'Márka irányelvek',

@@ -654,6 +654,9 @@ export const az = {
     patron: 'Himayəçi',
     champion: 'Çempion',
     legend: 'Əfsanə',
+    daoTitle: 'DAO vasitəsilə yardım edin',
+    daoBody: 'Yuxarıdakı EVM ünvanı DAO XƏZİNƏSİDİR. Tətbiqdən ona DHB göndərin. DAO necə xərcləndiyinə qərar verdikdə səsinizin daşıdığı ağırlıq sizin hovuzdakı payınıza hesablanır.',
+    daoLink: 'DAO xəzinəsini aç',
   },
   blog: {
     title: 'Bloq',

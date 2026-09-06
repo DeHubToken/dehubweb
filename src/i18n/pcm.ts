@@ -466,6 +466,9 @@ export const pcm = {
     walletAddress: 'Wallet Address',
     supportedTokens: 'Supported Tokens',
     thankYou: 'Thank you for your support!',
+    daoTitle: 'Contribute through the DAO',
+    daoBody: 'The EVM address above is the DAO treasury. Send DHB to it from the app and your contribution is counted towards your share of the pool, which is the weight your vote carries when the DAO decides how it is spent.',
+    daoLink: 'Open the DAO treasury',
   },
   blog: {
     title: 'Blog',

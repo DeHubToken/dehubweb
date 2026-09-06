@@ -3,9 +3,6 @@
     "sponsorshipUnavailable": "Free transaction dem don stop for we side, no be your wallet. Try again small time.",
     "gasSponsorshipFailed": "We no fit pay for dis transaction. Try again small time."
   },
-  "work": {
-    "budgetExhausted": "Dis bounty money don finish."
-  },
   "nav": {
     "home": "Home",
     "explore": "Explore",
@@ -26,6 +23,7 @@
     "featureRequests": "Request dem",
     "staking": "Staking",
     "governance": "Govnas",
+    "dao": "DAO",
     "careers": "Careers",
     "glossary": "Glossary",
     "arcade": "Arcade",
@@ -1189,6 +1187,42 @@
     "applicationSuccess": "Application don submit well well! We go reach out.",
     "applicationFailed": "E no fit submit. Abeg try again."
   },
+  "dao": {
+    "title": "DAO Treasury",
+    "contribute": "Contribute",
+    "amountLabel": "Amount (DHB)",
+    "sendAmount": "Send {{amount}} DHB",
+    "sentTitle": "Contribution sent",
+    "viewTx": "View transaction",
+    "sendFailed": "Contribution failed",
+    "treasuryBalance": "Treasury balance",
+    "refresh": "Refresh",
+    "treasuryAddress": "Treasury address",
+    "copyAddress": "Copy address",
+    "addressCopied": "Address copied",
+    "yourPower": "Your power",
+    "yourContribution": "{{amount}} DHB contributed",
+    "addMore": "Add more",
+    "contributors": "Contributors",
+    "pooledTotal": "{{amount}} DHB pooled",
+    "recent": "Recent contributions",
+    "you": "You",
+    "transferCount_one": "{{count}} transfer",
+    "transferCount_other": "{{count}} transfers",
+    "power": "power",
+    "subtitle": "One wallet, community di fund am, na vote di spend am",
+    "contributeIntro": "Send DHB from ya wallet go for treasury. Every token weh you add go raise ya share for the pool, and na ya share be the weight weh ya vote carry when DAO decide how for spend am.",
+    "youHold": "You get {{amount}} DHB",
+    "irreversible": "Contribution na transfer on-chain. E no fit reverse or withdraw.",
+    "switchChain": "Switch ya wallet go for {{chains}} make you fit contribute.",
+    "sentDesc": "{{amount}} DHB don go for treasury on {{chain}}. Ya share go update once the block don index.",
+    "sendAnyWallet": "Any person fit send DHB here from any wallet or exchange. Transfer on Base and BNB di count for ya share.",
+    "loadFailed": "We no fit read the treasury now. Try again small time.",
+    "noContributionYet": "You never contribute. Ya share for the pool go start with ya first transfer.",
+    "howItWorksTitle": "How power di work",
+    "howItWorksBody": "Ya power na ya contribution divide by everything weh people don ever send for treasury. E di read straight from the chain, e no di expire, and na yi decide how much weight ya voice carry when DAO vote on spending.",
+    "noContributors": "No person don contribute yet. Be the first."
+  },
   "governance": {
     "title": "Govnas",
     "proposalCount": "{{count}} proposal don submit",
@@ -1798,6 +1832,9 @@
     "aimAtAccount": "Wich pesin i follower dem sopos si-am?",
     "aimPlaceholder": "Username or wallet address",
     "aimAtTiers": "Wich badge tier dem sopos si-am?"
+  },
+  "work": {
+    "budgetExhausted": "Dis bounty money don finish."
   },
   "videoLooks": {
     "button": "Camera looks",

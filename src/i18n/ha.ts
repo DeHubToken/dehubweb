@@ -1420,6 +1420,9 @@ export const ha = {
     addressCopied: 'An Kwafa Adireshin',
     addressCopiedDesc: 'an kwafa adireshin zuwa clipboard',
     thankYou: 'Na gode da tallafawa al\'ummar DeHub da taimaka mana gina kyakkyawan makomar mara cibiya.',
+    daoTitle: 'Taimakawa ta hanyar DAO',
+    daoBody: 'Adireshin EVM da ke sama shine ajiyar DAO. Aika DHB zuwa gare shi daga aikace-aikacen kuma an ƙidaya gudummawar ku zuwa rabon ku na tafkin, wanda shine nauyin da kuri\'unku ke ɗauka lokacin da DAO ya yanke shawarar yadda ake kashe shi.',
+    daoLink: 'Bude Taskar DAO',
   },
   brandGuidelines: {
     title: 'Jagororin Alama',

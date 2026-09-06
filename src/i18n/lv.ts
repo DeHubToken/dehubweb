@@ -1144,6 +1144,9 @@ export const lv = {
     addressCopied: 'Adrese nokopēta',
     addressCopiedDesc: 'Adrese nokopēta starpliktuvē',
     thankYou: 'Paldies par DeHub kopienas atbalstu.',
+    daoTitle: 'Sniedziet ieguldījumu, izmantojot DAO',
+    daoBody: 'Iepriekš minētā EVM adrese ir DAO kase. Nosūtiet DHB uz to no lietotnes, un jūsu ieguldījums tiek ieskaitīts jūsu kopējā fondā, kas ir jūsu balss svars, kad DAO izlemj, kā tas tiek iztērēts.',
+    daoLink: 'Atveriet DAO KASI',
   },
   brandGuidelines: {
     title: 'Zīmola vadlīnijas',

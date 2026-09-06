@@ -1214,6 +1214,9 @@ export const cjy = {
     addressCopied: '地址已复制',
     addressCopiedDesc: '地址已复制到剪贴板',
     thankYou: '感谢支持 DeHub 社区，帮助咱构建更好嘞去中心化未来。',
+    daoTitle: '通过 DAO 贡献',
+    daoBody: '上面的 EVM 地址是 DAO 金库。从应用程序向其发送 DHB，您的贡献将计入您在资金池中的份额，这是您在 DAO 决定资金用途时投票权重的体现。',
+    daoLink: '打开 DAO 金库',
   },
   brandGuidelines: {
     title: '品牌指南',

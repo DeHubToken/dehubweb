@@ -1214,6 +1214,9 @@ export const ca = {
     addressCopied: 'Adreça copiada',
     addressCopiedDesc: 'adreça copiada al porta-retalls',
     thankYou: "Gràcies per donar suport a la comunitat DeHub i ajudar-nos a construir un futur descentralitzat millor.",
+    daoTitle: 'Contribuir a través de la DAO',
+    daoBody: 'L\'adreça EVM anterior és la tresoreria DAO. Envia-li DHB des de l\'aplicació i la teva contribució es comptarà per a la teva part del fons, que és el pes que té el teu vot quan la DAO decideix com es gasta.',
+    daoLink: 'Obre la tresoreria de la DAO',
   },
   brandGuidelines: {
     title: 'Directrius de marca',

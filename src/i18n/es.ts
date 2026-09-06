@@ -1372,6 +1372,9 @@ export const es = {
     addressCopied: 'Dirección copiada',
     addressCopiedDesc: 'dirección copiada al portapapeles',
     thankYou: 'Gracias por apoyar a la comunidad DeHub y ayudarnos a construir un futuro descentralizado mejor.',
+    daoTitle: 'Contribuir a través de la Dao',
+    daoBody: 'La dirección del EVM anterior es la tesorería de la DAO. Envíelo a DHB desde la aplicación y su contribución se contará para su parte del fondo, que es el peso que tiene su voto cuando la DAO decide cómo se gasta.',
+    daoLink: 'Abrir la tesorería DAO',
   },
   brandGuidelines: {
     title: 'Directrices de marca',

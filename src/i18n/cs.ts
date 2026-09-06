@@ -1401,6 +1401,9 @@ export const cs = {
     addressCopied: 'Adresa Zkopírována',
     addressCopiedDesc: 'adresa zkopírována do schránky',
     thankYou: 'Děkujeme za podporu komunity DeHub a pomoc při budování lepší decentralizované budoucnosti.',
+    daoTitle: 'Přispějte prostřednictvím DAO',
+    daoBody: 'Výše uvedená adresa EVM je pokladna DAO. Pošlete do něj DHB z aplikace a váš příspěvek se započítá do vašeho podílu na fondu, což je váha, kterou váš hlas nese, když DAO rozhodne, jak bude vynaložen.',
+    daoLink: 'Otevřete pokladnu DAO',
   },
   brandGuidelines: {
     title: 'Směrnice Značky',

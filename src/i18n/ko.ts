@@ -1290,6 +1290,9 @@ export const ko = {
     addressCopied: '주소 복사됨',
     addressCopiedDesc: '주소가 클립보드에 복사됨',
     thankYou: 'DeHub 커뮤니티를 지원하고 더 나은 탈중앙화 미래를 구축하는 데 도움을 주셔서 감사합니다.',
+    daoTitle: 'DAO를 통해 기여',
+    daoBody: '위의 EVM 주소는 DAO 재무부입니다. 앱에서 DHB를 전송하면 귀하의 기부금은 DAO가 지출 방식을 결정할 때 귀하의 투표가 수행하는 무게인 풀에 대한 귀하의 몫으로 계산됩니다.',
+    daoLink: 'DAO 자금 열기',
   },
   brandGuidelines: {
     title: '브랜드 가이드라인',

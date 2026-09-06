@@ -540,6 +540,7 @@ function AppContent() {
             <Route path="/stats" element={null} />
             <Route path="/features" element={null} />
             <Route path="/governance" element={null} />
+            <Route path="/dao" element={null} />
             <Route path="/stake" element={null} />
             <Route path="/communities" element={null} />
             <Route path="/communities/join/:code" element={<Suspense fallback={<PageLoader />}><CommunityInvitePage /></Suspense>} />
@@ -592,6 +593,7 @@ function AppContent() {
               <Route path="tv" element={null} />
               <Route path="features" element={null} />
               <Route path="governance" element={null} />
+              <Route path="dao" element={null} />
               <Route path="governance/:proposalId" element={<Suspense fallback={<PageLoader />}><GovernanceProposalPage /></Suspense>} />
               <Route path="stake" element={null} />
               <Route path="superpowers" element={<Suspense fallback={<PageLoader />}><SuperPowersPage /></Suspense>} />
