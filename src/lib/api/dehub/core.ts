@@ -4,6 +4,18 @@ export const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/
 // DeHub API base URL
 export const DEHUB_API_BASE = "https://api.dehub.io";
 
+// JSON API traffic uses the apex worker as a relay. Some mobile networks can
+// reach dehub.io while connections to the api.dehub.io hostname stall before
+// they ever reach the backend. Keeping the alternate path on the already-
+// loaded origin removes that hostname as a single point of failure. Uploads
+// still use DEHUB_API_BASE directly below so large bodies do not cross Worker
+// limits.
+export const DEHUB_API_REQUEST_BASE = "https://dehub.io/_api";
+
+function apiRequestUrl(endpoint: string): string {
+  return `${DEHUB_API_REQUEST_BASE}/${endpoint.replace(/^\/+/, '')}`;
+}
+
 /**
  * Wall-clock ceiling for ordinary API calls.
  *
@@ -273,7 +285,7 @@ export async function refreshTokenSharedDetailed(): Promise<TokenRefreshOutcome>
     // requiring a full page reload to recover.
     const timeout = timeoutSignal(10000);
     try {
-      const response = await fetch(`${DEHUB_API_BASE}/api/auth/refresh`, {
+      const response = await fetch(apiRequestUrl('/api/auth/refresh'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refreshToken }),
@@ -404,7 +416,7 @@ export async function apiCall<T>(
     timeoutMs = DEFAULT_API_TIMEOUT_MS,
   } = options;
 
-  const url = new URL(endpoint, DEHUB_API_BASE);
+  const url = new URL(apiRequestUrl(endpoint));
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined) {
       url.searchParams.set(key, String(value));

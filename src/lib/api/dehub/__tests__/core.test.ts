@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import {
   DEHUB_CDN_BASE,
-  DEHUB_API_BASE,
+  DEHUB_API_REQUEST_BASE,
   getMediaUrl,
   AuthenticationError,
   RequestTimeoutError,
@@ -154,7 +154,7 @@ describe('apiCall', () => {
     expect(fetch).toHaveBeenCalledOnce();
     const call = vi.mocked(fetch).mock.calls[0];
     const url = call[0] as string;
-    expect(url).toContain(`${DEHUB_API_BASE}/api/test`);
+    expect(url).toContain(`${DEHUB_API_REQUEST_BASE}/api/test`);
     expect(url).toContain('page=1');
     expect(result).toEqual(mockResponse);
   });

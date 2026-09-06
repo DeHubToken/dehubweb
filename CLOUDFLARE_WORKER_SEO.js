@@ -2946,6 +2946,56 @@ async function handleStatsRequest(request, env, isRaw) {
   return response;
 }
 
+const API_RELAY_PREFIX = '/_api';
+
+/**
+ * Carry ordinary API traffic over the apex hostname visitors have already
+ * reached. The upstream remains private to this hop, so a device whose route
+ * to api.dehub.io is stalled can still load and authenticate through dehub.io.
+ */
+export async function proxyApiRequest(request) {
+  const incoming = new URL(request.url);
+  const upstreamUrl = new URL(
+    `${incoming.pathname.slice(API_RELAY_PREFIX.length)}${incoming.search}`,
+    'https://api.dehub.io',
+  );
+
+  try {
+    const method = request.method.toUpperCase();
+    const body = method === 'GET' || method === 'HEAD'
+      ? undefined
+      : await request.arrayBuffer();
+    const upstreamHeaders = new Headers(request.headers);
+    // Cloudflare regenerates these for the subrequest. Do not let an incoming
+    // value masquerade as edge metadata at the API origin.
+    upstreamHeaders.delete('host');
+    upstreamHeaders.delete('cf-connecting-ip');
+    upstreamHeaders.delete('cf-ray');
+    upstreamHeaders.delete('cf-worker');
+    const upstream = await fetch(upstreamUrl, {
+      method,
+      headers: upstreamHeaders,
+      body,
+      redirect: 'manual',
+    });
+    const response = new Response(upstream.body, upstream);
+    response.headers.set('X-DeHub-Relay', 'dehub.io');
+    return response;
+  } catch {
+    return new Response(JSON.stringify({
+      status: false,
+      message: 'API temporarily unreachable',
+    }), {
+      status: 502,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'no-store',
+        'X-DeHub-Relay': 'dehub.io',
+      },
+    });
+  }
+}
+
 async function handleRequest(request, env) {
   const url = new URL(request.url);
   const pathname = url.pathname;
@@ -3098,6 +3148,16 @@ async function handleRequest(request, env) {
   // target, so upgrading first would cost them a second hop.
   if (url.protocol === 'http:') {
     return redirect301(`https://${url.host}${url.pathname}${url.search}`);
+  }
+
+  // Same-origin API relay for clients that reached the site but cannot open a
+  // separate connection to api.dehub.io. Restrict it to the canonical host and
+  // the real /api namespace so this cannot become a general-purpose proxy.
+  if (
+    isCanonicalHost &&
+    (pathname === `${API_RELAY_PREFIX}/api` || pathname.startsWith(`${API_RELAY_PREFIX}/api/`))
+  ) {
+    return proxyApiRequest(request);
   }
 
   // Live visitor stats for the /stats page. Answered here at the edge, ahead
