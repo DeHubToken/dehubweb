@@ -4,7 +4,7 @@
  * The card a contract address or a `$TICKER` turns into: logo, name, price, the
  * 24h move and a 24h sparkline.
  *
- * Two decisions worth keeping:
+ * Three decisions worth keeping:
  *
  * **The chart is hand-drawn SVG, not the charting library.** These render in the
  * eager feed path, and `recharts` is ~500 kB raw — `CashtagPriceCard` already
@@ -17,6 +17,10 @@
  * with no pool yet, a chain DexScreener does not index, a rate-limited minute —
  * would silently delete the address from the post. `AddressChip` is that
  * fallback, and it keeps the address copyable.
+ *
+ * **A chart with no data is a flat line, not a gap.** A pinned price and an
+ * unindexed pool both come back as an empty series, and leaving the row out
+ * made a card that had a price and a market cap look half-loaded.
  */
 
 import { useMemo, useState } from 'react';
@@ -60,25 +64,35 @@ const SPARK_W = 240;
 const SPARK_H = 40;
 
 function Sparkline({ points, positive }: { points: PricePoint[]; positive: boolean }) {
-  if (points.length < 2) return <div style={{ height: SPARK_H }} />;
+  const stroke = positive ? '#34d399' : '#f87171';
+  const gradientId = `asset-spark-${positive ? 'up' : 'down'}`;
 
-  const prices = points.map((p) => p.price);
-  const min = Math.min(...prices);
-  const max = Math.max(...prices);
-  // A flat series has zero range; without the guard every y is NaN and the path
-  // disappears rather than drawing a straight line.
-  const range = max - min || Math.abs(max) || 1;
-  const step = SPARK_W / (points.length - 1);
-
-  const coords = prices.map((price, i) => ({
-    x: i * step,
-    y: SPARK_H - ((price - min) / range) * (SPARK_H - 4) - 2,
-  }));
+  // No series to draw — a pinned price, a token with no indexed pool, a
+  // rate-limited minute. The card already shows a price and a market cap, so
+  // hiding the chart made it look half-loaded; a flat line says the same thing
+  // the numbers do.
+  const flat = points.length < 2;
+  const coords = flat
+    ? [
+        { x: 0, y: SPARK_H / 2 },
+        { x: SPARK_W, y: SPARK_H / 2 },
+      ]
+    : (() => {
+        const prices = points.map((p) => p.price);
+        const min = Math.min(...prices);
+        const max = Math.max(...prices);
+        // A flat series has zero range; without the guard every y is NaN and the path
+        // disappears rather than drawing a straight line.
+        const range = max - min || Math.abs(max) || 1;
+        const step = SPARK_W / (points.length - 1);
+        return prices.map((price, i) => ({
+          x: i * step,
+          y: SPARK_H - ((price - min) / range) * (SPARK_H - 4) - 2,
+        }));
+      })();
 
   const line = coords.map((c, i) => `${i === 0 ? 'M' : 'L'}${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ');
   const area = `${line} L${SPARK_W},${SPARK_H} L0,${SPARK_H} Z`;
-  const stroke = positive ? '#34d399' : '#f87171';
-  const gradientId = `asset-spark-${positive ? 'up' : 'down'}`;
 
   return (
     <svg
@@ -130,7 +144,10 @@ function AddressChip({ address }: { address: string }) {
 
 function AssetCard({ asset }: { asset: ResolvedAsset }) {
   const navigate = useNavigate();
-  const { data: series } = useAsset24hSeries(asset);
+  // `isPending` gates the chart, not `series.length`: an asset whose series is
+  // still in flight and one that will never have a series both arrive as an
+  // empty array, and only the second should draw the flat line.
+  const { data: series, isPending: seriesPending } = useAsset24hSeries(asset);
   const change = asset.changePercent24h;
   const positive = change == null ? true : change >= 0;
 
@@ -210,10 +227,10 @@ function AssetCard({ asset }: { asset: ResolvedAsset }) {
         </div>
       </div>
 
-      {series && series.length >= 2 && (
+      {!seriesPending && (
         <div className="mt-2 flex items-end gap-2">
           <div className="flex-1 min-w-0">
-            <Sparkline points={series} positive={positive} />
+            <Sparkline points={series ?? []} positive={positive} />
           </div>
           <span className="text-white/30 text-[10px] pb-1 shrink-0">24h</span>
         </div>
