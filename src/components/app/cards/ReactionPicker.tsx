@@ -25,7 +25,12 @@ import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { REACTION_LIST, type PostReaction, type ReactionCounts } from '@/lib/reactions';
+import {
+  NEGATIVE_REACTION_LIST,
+  POSITIVE_REACTION_LIST,
+  type PostReaction,
+  type ReactionCounts,
+} from '@/lib/reactions';
 // Shared with the card's like/dislike button, which wears the same colour once
 // the reaction is yours — see the table's own note on why it isn't in
 // `lib/reactions`.
@@ -58,10 +63,16 @@ interface ReactionPickerProps {
   align?: 'left' | 'center' | 'right';
   /**
    * Opens the reaction breakdown. Passed only on your own posts — who reacted
-   * is the author's to see, so on anyone else's post the tray ends at the
-   * ninth emoji and there is no ⓘ to press.
+   * is the author's to see, so on anyone else's post the tray ends at the last
+   * emoji and there is no ⓘ to press.
    */
   onShowInfo?: () => void;
+  /**
+   * Which thumb this tray hangs off. The positive one wears the seven faces
+   * that count as a like; the negative one wears 👎 and 💩 — see the note on
+   * POSITIVE_REACTION_LIST for why they are not one tray of nine.
+   */
+  polarity?: 'positive' | 'negative';
 }
 
 export function ReactionPicker({
@@ -72,7 +83,9 @@ export function ReactionPicker({
   onClose,
   align = 'right',
   onShowInfo,
+  polarity = 'positive',
 }: ReactionPickerProps) {
+  const reactions = polarity === 'negative' ? NEGATIVE_REACTION_LIST : POSITIVE_REACTION_LIST;
   const trayRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
 
@@ -103,7 +116,7 @@ export function ReactionPicker({
         <motion.div
           ref={trayRef}
           role="menu"
-          aria-label="Pick a reaction"
+          aria-label={polarity === 'negative' ? 'Pick a downvote reaction' : 'Pick a reaction'}
           initial={reduceMotion ? false : { opacity: 0, y: 6, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 6, scale: 0.96 }}
@@ -126,7 +139,7 @@ export function ReactionPicker({
             align === 'center' && 'left-1/2 -translate-x-1/2',
           )}
         >
-          {REACTION_LIST.map((reaction) => {
+          {reactions.map((reaction) => {
             const isCurrent = current === reaction.key;
             const glow = isCurrent ? REACTION_GLOW[reaction.key] : null;
             const tally = counts ? (counts[reaction.key] ?? 0) : null;

@@ -33,10 +33,12 @@ import {
   reactionMeta,
   reconcileReactionCounts,
   resolveLeadReaction,
+  resolveNegativeLeadReaction,
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
 import { reactionGlowProps } from '@/lib/reaction-glow';
+import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { resolveMyReaction } from '@/lib/engagement';
 import { ReactionPicker } from './ReactionPicker';
 import { ReactionInfoDrawer } from './ReactionInfoDrawer';
@@ -374,7 +376,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
   const [myReaction, setMyReaction] = useState<PostReaction | null>(null);
   const [localReactionCounts, setLocalReactionCounts] = useState<ReactionCounts>({});
-  const [pickerOpen, setPickerOpen] = useState(false);
+  // The two reaction trays are declared further down, past the vote handlers
+  // that have to put them away. These are how those handlers reach them.
+  const closeTrays = useRef<() => void>(() => {});
+  const openLikeTray = useRef<() => void>(() => {});
   const [reactionInfoOpen, setReactionInfoOpen] = useState(false);
 
   const inlineCommentRef = useRef<HTMLInputElement>(null);
@@ -484,7 +489,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // exists on your own shorts (and the API refuses the list to anyone else).
   const canViewReactionInfo = isOwnShort && !!currentShort?.id;
   const showReactionInfo = () => {
-    setPickerOpen(false);
+    closeTrays.current();
     setReactionInfoOpen(true);
   };
   const [showTipModal, setShowTipModal] = useState(false);
@@ -642,7 +647,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       // to fit rather than served raw.
       setLocalReactionCounts(reconcileReactionCounts(likes, dislikes, (currentShort as never as { reactionCounts?: ReactionCounts })?.reactionCounts));
     }
-    setPickerOpen(false);
+    closeTrays.current();
     setShowComments(false);
     setCommentsInitialTab(undefined);
     setInlineCommentText('');
@@ -724,7 +729,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const newReactionCounts = applyReactionDelta(localReactionCounts, previous, next, voteWeight);
 
     setIsVoting(true);
-    setPickerOpen(false);
+    closeTrays.current();
     if (!isRemovingVote) setJustVoted(nextPositive ? 'like' : 'dislike');
 
     // Apply optimistic UI
@@ -818,7 +823,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const onOpenReactions = (e: Event) => {
       const detail = (e as CustomEvent<OpenReactionsEventDetail>).detail;
       if (!detail || String(detail.postId) !== id) return;
-      setPickerOpen(true);
+      openLikeTray.current();
     };
 
     window.addEventListener(DOUBLE_TAP_LIKE_EVENT, onTapReaction as EventListener);
@@ -829,25 +834,24 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     };
   }, [currentShort?.id, myReaction, isLiked]);
 
-  // Hold the thumbs-up to open the reaction tray (see ActionBar for the same gesture).
-  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const longPressFired = useRef(false);
-  const startLongPress = useCallback(() => {
-    longPressFired.current = false;
-    longPressTimer.current = setTimeout(() => {
-      longPressFired.current = true;
-      setPickerOpen(true);
-    }, 400);
-  }, []);
-  const cancelLongPress = useCallback(() => {
-    if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null; }
-  }, []);
-  useEffect(() => cancelLongPress, [cancelLongPress]);
+  // Hold a thumb to open its reaction tray (see ActionBar for the same pair).
+  // `hover: false` here alone: the shorts chrome auto-hides, and a resting
+  // cursor popping a tray open over the video is not what a viewer asked for.
+  const likeTray = useReactionTray(true, { hover: false });
+  const dislikeTray = useReactionTray(true, { hover: false });
+  useEffect(() => { if (likeTray.open) dislikeTray.close(); }, [likeTray.open, dislikeTray]);
+  useEffect(() => { if (dislikeTray.open) likeTray.close(); }, [dislikeTray.open, likeTray]);
+  useEffect(() => {
+    closeTrays.current = () => { likeTray.close(); dislikeTray.close(); };
+    openLikeTray.current = likeTray.openNow;
+  }, [likeTray, dislikeTray]);
 
   /** One glyph on the thumb: your own positive reaction, else the post's most-used. */
   const leadReaction = resolveLeadReaction(localReactionCounts, myReaction);
   /** A 👎 or 💩 of your own belongs to the thumbs-DOWN button, not this one. */
   const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
+  /** …and that button wears it — your own 💩 only, never the crowd's. */
+  const negativeLeadReaction = resolveNegativeLeadReaction(myReaction);
   /** …which is where the other two land, and where their glow goes. */
   const myNegativeReaction = myReaction && !isPositiveReaction(myReaction) ? myReaction : null;
 
@@ -1591,22 +1595,45 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(tipCount)}</span>
                   </button>
 
-                  {/* Dislike */}
-                  <motion.button
-                    onClick={() => handleVote(false)}
-                    disabled={isVoting}
-                    {...reactionGlowProps(myNegativeReaction)}
-                    className="flex items-center gap-1"
-                    animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    aria-label="Dislike"
-                  >
-                    <ThumbsDown className={cn(
-                      "w-5 h-5 drop-shadow-lg",
-                      isDisliked ? "fill-white text-white" : "text-white"
-                    )} />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(localDislikeCount)}</span>
-                  </motion.button>
+                  {/* Dislike — tap the thumb, hold it for 💩. */}
+                  <span className="relative flex items-center" {...dislikeTray.areaProps}>
+                    <ReactionPicker
+                      open={dislikeTray.open}
+                      polarity="negative"
+                      current={myReaction}
+                      counts={localReactionCounts}
+                      onSelect={(reaction) => { dislikeTray.close(); handleReaction(reaction); }}
+                      onClose={dislikeTray.close}
+                      align="left"
+                    />
+                    <motion.button
+                      onClick={() => {
+                        if (dislikeTray.consumePress()) return;
+                        handleVote(false);
+                      }}
+                      {...dislikeTray.buttonProps}
+                      disabled={isVoting}
+                      {...reactionGlowProps(myNegativeReaction)}
+                      className="flex items-center gap-1 select-none touch-none"
+                      animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      aria-label={myNegativeReaction ? `${reactionMeta(myNegativeReaction).label} — hold to change your reaction` : 'Dislike — hold to react'}
+                      aria-haspopup="menu"
+                      aria-expanded={dislikeTray.open}
+                    >
+                      {negativeLeadReaction ? (
+                        <span data-engaged-glyph className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
+                          {reactionMeta(negativeLeadReaction).emoji}
+                        </span>
+                      ) : (
+                        <ThumbsDown className={cn(
+                          "w-5 h-5 drop-shadow-lg",
+                          isDisliked ? "fill-white text-white" : "text-white"
+                        )} />
+                      )}
+                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(localDislikeCount)}</span>
+                    </motion.button>
+                  </span>
 
                   {/* Share */}
                   <button
@@ -1632,27 +1659,23 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   )}
 
                   {/* Like — furthest right, like feed cards */}
-                  <span className="relative flex items-center">
+                  <span className="relative flex items-center" {...likeTray.areaProps}>
                     <ReactionPicker
-                      open={pickerOpen}
+                      open={likeTray.open}
                       current={myReaction}
                       counts={localReactionCounts}
-                      onSelect={handleReaction}
-                      onClose={() => setPickerOpen(false)}
+                      onSelect={(reaction) => { likeTray.close(); handleReaction(reaction); }}
+                      onClose={likeTray.close}
                       align="right"
                       onShowInfo={canViewReactionInfo ? showReactionInfo : undefined}
                     />
                     <motion.button
                       onClick={() => {
                         // The click that ends a hold must not also cast a like.
-                        if (longPressFired.current) { longPressFired.current = false; return; }
+                        if (likeTray.consumePress()) return;
                         handleVote(true);
                       }}
-                      onPointerDown={startLongPress}
-                      onPointerUp={cancelLongPress}
-                      onPointerLeave={cancelLongPress}
-                      onPointerCancel={cancelLongPress}
-                      onContextMenu={(e) => e.preventDefault()}
+                      {...likeTray.buttonProps}
                       disabled={isVoting}
                       /* Same halo the tray puts on your pick — see ActionBar. */
                       {...reactionGlowProps(myPositiveReaction)}
@@ -1661,7 +1684,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       transition={{ duration: 0.3, ease: "easeOut" }}
                       aria-label={myPositiveReaction ? `${reactionMeta(myPositiveReaction).label} — hold to change your reaction` : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`}
                       aria-haspopup="menu"
-                      aria-expanded={pickerOpen}
+                      aria-expanded={likeTray.open}
                     >
                       {leadReaction ? (
                         <span data-engaged-glyph className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
@@ -1848,22 +1871,45 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(tipCount)}</span>
                   </button>
 
-                  {/* Dislike */}
-                  <motion.button
-                    onClick={() => handleVote(false)}
-                    disabled={isVoting}
-                    {...reactionGlowProps(myNegativeReaction)}
-                    className="flex items-center gap-1"
-                    animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    aria-label="Dislike"
-                  >
-                    <ThumbsDown className={cn(
-                      "w-5 h-5 drop-shadow-lg",
-                      isDisliked ? "fill-white text-white" : "text-white"
-                    )} />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(localDislikeCount)}</span>
-                  </motion.button>
+                  {/* Dislike — tap the thumb, hold it for 💩. */}
+                  <span className="relative flex items-center" {...dislikeTray.areaProps}>
+                    <ReactionPicker
+                      open={dislikeTray.open}
+                      polarity="negative"
+                      current={myReaction}
+                      counts={localReactionCounts}
+                      onSelect={(reaction) => { dislikeTray.close(); handleReaction(reaction); }}
+                      onClose={dislikeTray.close}
+                      align="left"
+                    />
+                    <motion.button
+                      onClick={() => {
+                        if (dislikeTray.consumePress()) return;
+                        handleVote(false);
+                      }}
+                      {...dislikeTray.buttonProps}
+                      disabled={isVoting}
+                      {...reactionGlowProps(myNegativeReaction)}
+                      className="flex items-center gap-1 select-none touch-none"
+                      animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      aria-label={myNegativeReaction ? `${reactionMeta(myNegativeReaction).label} — hold to change your reaction` : 'Dislike — hold to react'}
+                      aria-haspopup="menu"
+                      aria-expanded={dislikeTray.open}
+                    >
+                      {negativeLeadReaction ? (
+                        <span data-engaged-glyph className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
+                          {reactionMeta(negativeLeadReaction).emoji}
+                        </span>
+                      ) : (
+                        <ThumbsDown className={cn(
+                          "w-5 h-5 drop-shadow-lg",
+                          isDisliked ? "fill-white text-white" : "text-white"
+                        )} />
+                      )}
+                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(localDislikeCount)}</span>
+                    </motion.button>
+                  </span>
 
                   {/* Share */}
                   <button
@@ -1886,27 +1932,23 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   </button>
 
                   {/* Like — furthest right for easy thumb reach, like feed cards */}
-                  <span className="relative flex items-center">
+                  <span className="relative flex items-center" {...likeTray.areaProps}>
                     <ReactionPicker
-                      open={pickerOpen}
+                      open={likeTray.open}
                       current={myReaction}
                       counts={localReactionCounts}
-                      onSelect={handleReaction}
-                      onClose={() => setPickerOpen(false)}
+                      onSelect={(reaction) => { likeTray.close(); handleReaction(reaction); }}
+                      onClose={likeTray.close}
                       align="right"
                       onShowInfo={canViewReactionInfo ? showReactionInfo : undefined}
                     />
                     <motion.button
                       onClick={() => {
                         // The click that ends a hold must not also cast a like.
-                        if (longPressFired.current) { longPressFired.current = false; return; }
+                        if (likeTray.consumePress()) return;
                         handleVote(true);
                       }}
-                      onPointerDown={startLongPress}
-                      onPointerUp={cancelLongPress}
-                      onPointerLeave={cancelLongPress}
-                      onPointerCancel={cancelLongPress}
-                      onContextMenu={(e) => e.preventDefault()}
+                      {...likeTray.buttonProps}
                       disabled={isVoting}
                       /* Same halo the tray puts on your pick — see ActionBar. */
                       {...reactionGlowProps(myPositiveReaction)}
@@ -1915,7 +1957,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       transition={{ duration: 0.3, ease: "easeOut" }}
                       aria-label={myPositiveReaction ? `${reactionMeta(myPositiveReaction).label} — hold to change your reaction` : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`}
                       aria-haspopup="menu"
-                      aria-expanded={pickerOpen}
+                      aria-expanded={likeTray.open}
                     >
                       {leadReaction ? (
                         <span data-engaged-glyph className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
