@@ -9,6 +9,12 @@
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import type { ApiCommentResponse } from '@/lib/api/dehub';
+import {
+  asReaction,
+  reconcileReactionCounts,
+  type PostReaction,
+  type ReactionCounts,
+} from '@/lib/reactions';
 
 export interface VoiceNote {
   url: string;
@@ -36,6 +42,14 @@ export interface Comment {
   createdAt: Date; // For sorting
   isLiked?: boolean;
   isDisliked?: boolean;
+  /**
+   * Which of the nine reactions the viewer holds on this comment.
+   * `isLiked`/`isDisliked` are its POLARITY, exactly as on a post — a comment
+   * somebody loved is still a comment they liked.
+   */
+  myReaction?: PostReaction | null;
+  /** Per-reaction totals, for the tray on the comment's thumb. */
+  reactionCounts?: ReactionCounts;
   voiceNote?: VoiceNote;
   replyToId?: string;
   address?: string;
@@ -87,6 +101,23 @@ export function mapApiComment(apiComment: ApiCommentResponse): Comment {
     createdAt,
     isLiked: apiComment.isLiked ?? false,
     isDisliked: apiComment.isDisliked ?? false,
+    // Falls back to the polarity flags, which is what a plain like always was.
+    // Covers both a comment voted on before reactions existed and an API that
+    // has not shipped them yet — without it the viewer's own like would draw
+    // as no reaction at all.
+    myReaction:
+      asReaction(apiComment.myReaction) ??
+      (apiComment.isLiked ? 'like' : apiComment.isDisliked ? 'dislike' : null),
+    // Reconciled rather than passed through: a comment from before reactions
+    // shipped carries no split at all, and one whose totals were edited by
+    // hand carries a split that adds up to less than the count beside it. The
+    // number people can see is the one that has to be right, so the split is
+    // scaled to fit it — same rule posts follow.
+    reactionCounts: reconcileReactionCounts(
+      apiComment.likeCount ?? 0,
+      apiComment.dislikeCount ?? 0,
+      apiComment.reactionCounts as ReactionCounts | undefined,
+    ),
     replyToId: apiComment.parentId ? String(apiComment.parentId) : undefined,
     address,
     voiceNote,

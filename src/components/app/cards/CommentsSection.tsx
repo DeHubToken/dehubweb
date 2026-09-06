@@ -46,7 +46,21 @@ import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
 import { BadgedName } from '@/components/app/BadgedName';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo } from '@/lib/api/dehub';
+import { getNFTComments, postComment, reactToComment, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo } from '@/lib/api/dehub';
+import {
+  applyReactionDelta,
+  isPositiveReaction,
+  reactionForTap,
+  reactionMeta,
+  reconcileReactionCounts,
+  resolveLeadReaction,
+  resolveNegativeLeadReaction,
+  type PostReaction,
+  type ReactionCounts,
+} from '@/lib/reactions';
+import { reactionGlowProps } from '@/lib/reaction-glow';
+import { ReactionPicker } from './ReactionPicker';
+import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { useCommentTips } from '@/hooks/use-comment-tips';
@@ -168,6 +182,8 @@ interface CommentItemProps {
   /** Own comments only: the like button opens the likers list instead. */
   onShowLikers: (id: string) => void;
   onDislike: (id: string) => void;
+  /** Cast a specific one of the nine — what the hold-open trays route to. */
+  onReact: (id: string, reaction: PostReaction) => void;
   onReply: (id: string) => void;
   onShare: (id: string) => void;
   onEdit: (id: string, newContent: string) => void;
@@ -252,7 +268,7 @@ const PostCreatorContext = createContext<{
   username?: string | null;
 } | null>(null);
 
-function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
   const avatarUrl = comment.avatar;
@@ -274,6 +290,25 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
   const { links: commentLinks, displayText: commentLinkFreeText } = useDehubLinks(commentBody);
   const { refs: commentAssetRefs, displayText: commentDisplayText } =
     useAssetRefsInText(commentLinkFreeText);
+
+  // One tray per thumb, the same pair a feed card's action bar has. The like
+  // side is off on your own comment: its button is the door to the likers
+  // list, and every reaction the tray could cast there would be refused.
+  const likeTray = useReactionTray(!isOwnComment);
+  const dislikeTray = useReactionTray(true);
+  useEffect(() => { if (likeTray.open) dislikeTray.close(); }, [likeTray.open, dislikeTray]);
+  useEffect(() => { if (dislikeTray.open) likeTray.close(); }, [dislikeTray.open, likeTray]);
+
+  /** The glyph the thumbs-up wears — yours, else the thread's most-used. */
+  const leadReaction = isOwnComment
+    ? null
+    : resolveLeadReaction(comment.reactionCounts, comment.myReaction);
+  const myPositiveReaction =
+    comment.myReaction && isPositiveReaction(comment.myReaction) ? comment.myReaction : null;
+  const myNegativeReaction =
+    comment.myReaction && !isPositiveReaction(comment.myReaction) ? comment.myReaction : null;
+  /** …and the one the thumbs-DOWN wears: your own 💩, never the crowd's. */
+  const negativeLeadReaction = resolveNegativeLeadReaction(comment.myReaction);
 
   return (
     <motion.div
@@ -454,33 +489,90 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
           <div className="flex items-center gap-4">
             {/* You can't like your own comment — for the author this same
                 button opens the likers list instead, count included even at 0
-                so the door is visible. */}
-            <button
-              onClick={() => (isOwnComment ? onShowLikers(comment.id) : onLike(comment.id))}
-              className={cn(
-                COMMENT_ACTION_HIT,
-                "flex items-center gap-1 transition-colors",
-                !isOwnComment && comment.isLiked ? "text-white" : "text-white/70 hover:text-white"
-              )}
-              aria-label={isOwnComment ? "See who liked" : "Like"}
-            >
-              <ThumbsUp className={cn("w-4 h-4", !isOwnComment && comment.isLiked && "fill-current")} />
-              {(comment.likes > 0 || isOwnComment) && <span className="text-xs">{comment.likes}</span>}
-            </button>
+                so the door is visible. On anyone else's, hold it (or hover on
+                desktop) for the seven positive faces, and a tap casts whichever
+                one the thumb is wearing. No tray on your own comment, because
+                every reaction it could cast would be refused. */}
+            <span className="relative flex items-center gap-1" {...likeTray.areaProps}>
+              <ReactionPicker
+                open={likeTray.open}
+                current={comment.myReaction ?? null}
+                counts={comment.reactionCounts}
+                onSelect={(reaction) => { likeTray.close(); onReact(comment.id, reaction); }}
+                onClose={likeTray.close}
+                align="left"
+              />
+              <button
+                onClick={() => {
+                  if (likeTray.consumePress()) return;
+                  if (isOwnComment) { onShowLikers(comment.id); return; }
+                  onLike(comment.id);
+                }}
+                {...likeTray.buttonProps}
+                {...reactionGlowProps(isOwnComment ? null : myPositiveReaction)}
+                className={cn(
+                  COMMENT_ACTION_HIT,
+                  "flex items-center gap-1 transition-colors select-none touch-none",
+                  !isOwnComment && comment.isLiked ? "text-white" : "text-white/70 hover:text-white"
+                )}
+                aria-label={isOwnComment ? "See who liked" : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`}
+                aria-haspopup={isOwnComment ? undefined : 'menu'}
+                aria-expanded={isOwnComment ? undefined : likeTray.open}
+              >
+                {leadReaction ? (
+                  <span data-engaged-glyph className="w-4 h-4 flex items-center justify-center text-sm leading-none" aria-hidden="true">
+                    {reactionMeta(leadReaction).emoji}
+                  </span>
+                ) : (
+                  <ThumbsUp className={cn("w-4 h-4", !isOwnComment && comment.isLiked && "fill-current")} />
+                )}
+                {(comment.likes > 0 || isOwnComment) && <span className="text-xs">{comment.likes}</span>}
+              </button>
+            </span>
             {/* Downvote a comment — the count shows once someone has actually
-                disliked. The server swaps polarity with like, one vote per viewer. */}
-            <button
-              onClick={() => onDislike(comment.id)}
-              className={cn(
-                COMMENT_ACTION_HIT,
-                "flex items-center gap-1 transition-colors",
-                comment.isDisliked ? "text-white" : "text-white/70 hover:text-white"
-              )}
-              aria-label="Dislike"
-            >
-              <ThumbsDown className={cn("w-4 h-4", comment.isDisliked && "fill-current")} />
-              {comment.dislikes > 0 && <span className="text-xs">{comment.dislikes}</span>}
-            </button>
+                disliked. The server swaps polarity with like, one vote per
+                viewer. Holding this one opens 👎/💩, the pair that moves THIS
+                count — the same split the feed card's two thumbs make. */}
+            <span className="relative flex items-center gap-1" {...dislikeTray.areaProps}>
+              <ReactionPicker
+                open={dislikeTray.open}
+                polarity="negative"
+                current={comment.myReaction ?? null}
+                counts={comment.reactionCounts}
+                onSelect={(reaction) => { dislikeTray.close(); onReact(comment.id, reaction); }}
+                onClose={dislikeTray.close}
+                align="left"
+              />
+              <button
+                onClick={() => {
+                  if (dislikeTray.consumePress()) return;
+                  onDislike(comment.id);
+                }}
+                {...dislikeTray.buttonProps}
+                {...reactionGlowProps(myNegativeReaction)}
+                className={cn(
+                  COMMENT_ACTION_HIT,
+                  "flex items-center gap-1 transition-colors select-none touch-none",
+                  comment.isDisliked ? "text-white" : "text-white/70 hover:text-white"
+                )}
+                aria-label={
+                  myNegativeReaction
+                    ? `${reactionMeta(myNegativeReaction).label} — hold to change your reaction`
+                    : 'Dislike — hold to react'
+                }
+                aria-haspopup="menu"
+                aria-expanded={dislikeTray.open}
+              >
+                {negativeLeadReaction ? (
+                  <span data-engaged-glyph className="w-4 h-4 flex items-center justify-center text-sm leading-none" aria-hidden="true">
+                    {reactionMeta(negativeLeadReaction).emoji}
+                  </span>
+                ) : (
+                  <ThumbsDown className={cn("w-4 h-4", comment.isDisliked && "fill-current")} />
+                )}
+                {comment.dislikes > 0 && <span className="text-xs">{comment.dislikes}</span>}
+              </button>
+            </span>
             {/* Every comment is replyable, replies included — threads nest without limit. */}
             <button
               onClick={() => onReply(comment.id)}
@@ -703,9 +795,21 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   // reverted if the server call fails.
   const [deletedCommentIds, setDeletedCommentIds] = useState<Set<string>>(new Set());
   const [editOverrides, setEditOverrides] = useState<Map<string, string>>(new Map());
-  // Track like/dislike state overrides for optimistic updates. Every field is
+  // Track reaction state overrides for optimistic updates. Every field is
   // optional so a like tap never clobbers a dislike count it didn't touch.
-  const [likeOverrides, setLikeOverrides] = useState<Map<string, { isLiked?: boolean; isDisliked?: boolean; likes?: number; dislikes?: number }>>(new Map());
+  const [likeOverrides, setLikeOverrides] = useState<
+    Map<
+      string,
+      {
+        isLiked?: boolean;
+        isDisliked?: boolean;
+        myReaction?: PostReaction | null;
+        likes?: number;
+        dislikes?: number;
+        reactionCounts?: ReactionCounts;
+      }
+    >
+  >(new Map());
   
   // Voice note recording state
   const [isRecording, setIsRecording] = useState(false);
@@ -1204,115 +1308,121 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     navigate(`/${username}`);
   }, [navigate, onClose]);
 
-  const handleLike = async (commentId: string) => {
+  /**
+   * Cast one of the nine reactions on a comment.
+   *
+   * The single vote path for a comment row, the way ActionBar.handleReaction is
+   * for a post — the plain thumbs below just pick which reaction a tap means.
+   *
+   * The optimistic arithmetic is the same three rules the server follows:
+   * re-casting the reaction you already hold removes it, `likes`/`dislikes`
+   * move only when the polarity changes, and the per-reaction split moves
+   * every time. A comment reaction is worth one, never a badge weight — see
+   * the note on the API's Comment model.
+   */
+  const handleReact = async (commentId: string, reaction: PostReaction) => {
     if (!isAuthenticated) {
-      toast.error('Please log in to like comments');
+      toast.error('Please log in to react to comments');
       return;
     }
-    
-    // Find current comment state
+
     const comment = allComments.find(c => c.id === commentId);
     if (!comment) return;
 
-    // Own comments can't be liked — their like button shows who liked them.
+    // Your own comment's thumbs-up is the door to the likers list, not a vote
+    // — so it offers no tray, and a positive reaction can only arrive here
+    // from some other caller. Downvoting yourself was always allowed.
+    if (
+      walletAddress &&
+      comment.address?.toLowerCase() === walletAddress.toLowerCase() &&
+      isPositiveReaction(reaction)
+    ) {
+      setLikersCommentId(comment.id);
+      return;
+    }
+
+    const previous =
+      comment.myReaction ??
+      (comment.isLiked ? 'like' : comment.isDisliked ? 'dislike' : null);
+    const next: PostReaction | null = previous === reaction ? null : reaction;
+
+    const wasPositive = previous ? isPositiveReaction(previous) : null;
+    const nowPositive = next ? isPositiveReaction(next) : null;
+    let likes = comment.likes;
+    let dislikes = comment.dislikes;
+    if (wasPositive !== nowPositive) {
+      if (wasPositive === true) likes = Math.max(0, likes - 1);
+      if (wasPositive === false) dislikes = Math.max(0, dislikes - 1);
+      if (nowPositive === true) likes += 1;
+      if (nowPositive === false) dislikes += 1;
+    }
+
+    const optimistic = {
+      isLiked: nowPositive === true,
+      isDisliked: nowPositive === false,
+      myReaction: next,
+      likes,
+      dislikes,
+      reactionCounts: applyReactionDelta(comment.reactionCounts, previous, next),
+    };
+    setLikeOverrides(prev => new Map(prev).set(commentId, optimistic));
+
+    try {
+      const result = await reactToComment({ commentId, reaction });
+      setLikeOverrides(prev =>
+        new Map(prev).set(commentId, {
+          isLiked: result.liked,
+          isDisliked: result.disliked,
+          myReaction: result.currentReaction ?? null,
+          likes: result.likes ?? optimistic.likes,
+          dislikes: result.dislikes ?? optimistic.dislikes,
+          reactionCounts: reconcileReactionCounts(
+            result.likes ?? optimistic.likes,
+            result.dislikes ?? optimistic.dislikes,
+            (result.reactionCounts as ReactionCounts | undefined) ?? optimistic.reactionCounts,
+          ),
+        }),
+      );
+    } catch (error) {
+      // Revert — the row goes back to whatever the last fetch said.
+      setLikeOverrides(prev => {
+        const next = new Map(prev);
+        next.delete(commentId);
+        return next;
+      });
+      toast.error(
+        isPositiveReaction(reaction) ? 'Failed to react to comment' : 'Failed to dislike comment',
+      );
+    }
+  };
+
+  /**
+   * A plain tap on the comment's thumbs-up.
+   *
+   * Casts whatever the thumb is WEARING, not always a 👍 — a comment leading
+   * with 🔥 draws a 🔥 thumb, and tapping it has to mean that, or the button
+   * lies about what it does. Same promise `reactionForTap` keeps on a post.
+   */
+  const handleLike = (commentId: string) => {
+    const comment = allComments.find(c => c.id === commentId);
+    if (!comment) return;
+    // Own comments can't be liked — their thumb shows who liked them instead.
     // CommentItem already routes there; this covers any other caller.
     if (walletAddress && comment.address?.toLowerCase() === walletAddress.toLowerCase()) {
       setLikersCommentId(comment.id);
       return;
     }
-
-    const wasLiked = comment.isLiked;
-    const wasDisliked = comment.isDisliked ?? false;
-    const newLikes = wasLiked ? Math.max(0, comment.likes - 1) : comment.likes + 1;
-    // The server swaps polarity — liking removes this viewer's dislike.
-    const newDislikes = wasDisliked ? Math.max(0, comment.dislikes - 1) : comment.dislikes;
-
-    // Optimistic update using overrides
-    setLikeOverrides(prev => {
-      const next = new Map(prev);
-      next.set(commentId, {
-        isLiked: !wasLiked,
-        isDisliked: false,
-        likes: newLikes,
-        dislikes: newDislikes,
-      });
-      return next;
-    });
-
-    try {
-      const result = await toggleCommentLike({ commentId });
-      // Update override with server-confirmed state
-      if (result.likeCount !== undefined) {
-        setLikeOverrides(prev => {
-          const next = new Map(prev);
-          next.set(commentId, {
-            isLiked: result.isLiked,
-            isDisliked: false,
-            likes: result.likeCount ?? newLikes,
-            dislikes: newDislikes,
-          });
-          return next;
-        });
-      }
-    } catch (error) {
-      // Revert on error
-      setLikeOverrides(prev => {
-        const next = new Map(prev);
-        next.delete(commentId);
-        return next;
-      });
-      toast.error('Failed to like comment');
-    }
+    return handleReact(
+      commentId,
+      reactionForTap(true, comment.myReaction, comment.reactionCounts),
+    );
   };
 
-  const handleDislike = async (commentId: string) => {
-    if (!isAuthenticated) {
-      toast.error('Please log in to dislike comments');
-      return;
-    }
-
+  /** …and on the thumbs-down: a plain 👎, unless a 💩 is being toggled off. */
+  const handleDislike = (commentId: string) => {
     const comment = allComments.find(c => c.id === commentId);
     if (!comment) return;
-
-    const wasDisliked = comment.isDisliked ?? false;
-    const wasLiked = comment.isLiked ?? false;
-    const newDislikes = wasDisliked ? Math.max(0, comment.dislikes - 1) : comment.dislikes + 1;
-    // A dislike replaces a like — same one-vote-per-viewer rule as posts.
-    const newLikes = wasLiked && !wasDisliked ? Math.max(0, comment.likes - 1) : comment.likes;
-
-    // Optimistic update
-    setLikeOverrides(prev => {
-      const next = new Map(prev);
-      next.set(commentId, {
-        isLiked: false,
-        isDisliked: !wasDisliked,
-        likes: newLikes,
-        dislikes: newDislikes,
-      });
-      return next;
-    });
-
-    try {
-      const result = await toggleCommentDislike({ commentId });
-      setLikeOverrides(prev => {
-        const next = new Map(prev);
-        next.set(commentId, {
-          isLiked: false,
-          isDisliked: result.disliked,
-          likes: newLikes,
-          dislikes: result.dislikes ?? newDislikes,
-        });
-        return next;
-      });
-    } catch {
-      // Revert on error
-      setLikeOverrides(prev => {
-        const next = new Map(prev);
-        next.delete(commentId);
-        return next;
-      });
-      toast.error('Failed to dislike comment');
-    }
+    return handleReact(commentId, reactionForTap(false, comment.myReaction));
   };
 
   const handleReply = (commentId: string) => {
@@ -1562,6 +1672,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           comment={comment}
           tokenId={tokenId}
           onLike={handleLike}
+          onReact={handleReact}
           onShowLikers={setLikersCommentId}
           onDislike={handleDislike}
           onReply={handleReply}
@@ -1582,6 +1693,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             comment={reply}
             tokenId={tokenId}
             onLike={handleLike}
+            onReact={handleReact}
             onShowLikers={setLikersCommentId}
             onDislike={handleDislike}
             onReply={handleReply}

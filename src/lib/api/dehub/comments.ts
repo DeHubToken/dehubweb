@@ -18,6 +18,14 @@ export interface ApiCommentResponse {
   /** Times this comment has scrolled into a reader's viewport. */
   views?: number;
   isDisliked?: boolean;
+  /**
+   * Which of the nine reactions the viewer holds on this comment.
+   * `isLiked`/`isDisliked` stay its polarity, so a comment somebody loved
+   * still reads as liked to every client that never learned about reactions.
+   */
+  myReaction?: string | null;
+  /** Per-reaction totals — what the tray on the comment's thumb shows. */
+  reactionCounts?: Record<string, number> | null;
   writor: {
     username: string;
     displayName?: string;

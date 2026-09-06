@@ -11,7 +11,7 @@
  * which is what the share action copies and what a tap on the row opens.
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { ThumbsUp, ThumbsDown, Share2, Trash2 } from 'lucide-react';
@@ -23,11 +23,21 @@ import { BadgedName } from '@/components/app/BadgedName';
 import { TranslatableText } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from './DehubLinkEmbed';
 import { FeedLinkPreviews } from './FeedLinkPreviews';
+import { reactToComment, deleteComment } from '@/lib/api/dehub';
 import {
-  toggleCommentLike,
-  toggleCommentDislike,
-  deleteComment,
-} from '@/lib/api/dehub';
+  applyReactionDelta,
+  isPositiveReaction,
+  reactionForTap,
+  reactionMeta,
+  reconcileReactionCounts,
+  resolveLeadReaction,
+  resolveNegativeLeadReaction,
+  type PostReaction,
+  type ReactionCounts,
+} from '@/lib/reactions';
+import { reactionGlowProps } from '@/lib/reaction-glow';
+import { ReactionPicker } from './ReactionPicker';
+import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { useAuth } from '@/contexts/AuthContext';
 import { isAssistantAddress } from '@/lib/assistant';
@@ -43,12 +53,15 @@ interface AuthorThreadProps {
 }
 
 /** Reaction overrides for one entry, mirroring the comments-section semantics:
- *  like and dislike swap polarity, one vote per viewer. */
+ *  the nine reactions ride on one vote per viewer, and the polarity of that
+ *  reaction is what `isLiked`/`isDisliked` and the two counts keep meaning. */
 interface VoteOverride {
   isLiked?: boolean;
   isDisliked?: boolean;
+  myReaction?: PostReaction | null;
   likes?: number;
   dislikes?: number;
+  reactionCounts?: ReactionCounts;
 }
 
 function ThreadEntry({
@@ -74,65 +87,84 @@ function ThreadEntry({
   const bodyText = state.text || '';
   const { links, displayText } = useDehubLinks(bodyText);
 
+  // One tray per thumb, as on a feed card. Off entirely on your own entry —
+  // the like button there is a readout, not a vote.
+  const likeTray = useReactionTray(!isOwn);
+  const dislikeTray = useReactionTray(!isOwn);
+  useEffect(() => { if (likeTray.open) dislikeTray.close(); }, [likeTray.open, dislikeTray]);
+  useEffect(() => { if (dislikeTray.open) likeTray.close(); }, [dislikeTray.open, likeTray]);
+
+  const leadReaction = isOwn ? null : resolveLeadReaction(state.reactionCounts, state.myReaction);
+  const myPositiveReaction =
+    state.myReaction && isPositiveReaction(state.myReaction) ? state.myReaction : null;
+  const myNegativeReaction =
+    state.myReaction && !isPositiveReaction(state.myReaction) ? state.myReaction : null;
+  const negativeLeadReaction = resolveNegativeLeadReaction(state.myReaction);
+
   if (removed) return null;
 
-  const handleLike = async () => {
-    if (isOwn) return;
-    if (!isAuthenticated) {
-      toast.error('Please log in to like comments');
-      return;
-    }
-    const wasLiked = !!state.isLiked;
-    const wasDisliked = !!state.isDisliked;
-    setVotes((prev) => ({
-      ...prev,
-      isLiked: !wasLiked,
-      isDisliked: false,
-      likes: wasLiked ? Math.max(0, state.likes - 1) : state.likes + 1,
-      dislikes: wasDisliked ? Math.max(0, state.dislikes - 1) : state.dislikes,
-    }));
-    try {
-      const result = await toggleCommentLike({ commentId: entry.id });
-      setVotes((prev) => ({
-        ...prev,
-        isLiked: result.isLiked,
-        isDisliked: false,
-        likes: result.likeCount ?? prev.likes,
-      }));
-    } catch {
-      setVotes({});
-      toast.error('Failed to like comment');
-    }
-  };
-
-  const handleDislike = async () => {
+  /**
+   * Cast one of the nine on this entry — the thread block's copy of
+   * CommentsSection.handleReact, holding the same three rules: re-casting what
+   * you hold removes it, the counts move only when the polarity changes, and
+   * the split moves every time.
+   */
+  const handleReact = async (reaction: PostReaction) => {
     if (isOwn) return;
     if (!isAuthenticated) {
       toast.error('Please log in to react to comments');
       return;
     }
-    const wasDisliked = !!state.isDisliked;
-    const wasLiked = !!state.isLiked;
-    setVotes((prev) => ({
-      ...prev,
-      isLiked: false,
-      isDisliked: !wasDisliked,
-      dislikes: wasDisliked ? Math.max(0, state.dislikes - 1) : state.dislikes + 1,
-      likes: wasLiked && !wasDisliked ? Math.max(0, state.likes - 1) : state.likes,
-    }));
+    const previous =
+      state.myReaction ?? (state.isLiked ? 'like' : state.isDisliked ? 'dislike' : null);
+    const next: PostReaction | null = previous === reaction ? null : reaction;
+    const wasPositive = previous ? isPositiveReaction(previous) : null;
+    const nowPositive = next ? isPositiveReaction(next) : null;
+
+    let likes = state.likes;
+    let dislikes = state.dislikes;
+    if (wasPositive !== nowPositive) {
+      if (wasPositive === true) likes = Math.max(0, likes - 1);
+      if (wasPositive === false) dislikes = Math.max(0, dislikes - 1);
+      if (nowPositive === true) likes += 1;
+      if (nowPositive === false) dislikes += 1;
+    }
+
+    setVotes({
+      isLiked: nowPositive === true,
+      isDisliked: nowPositive === false,
+      myReaction: next,
+      likes,
+      dislikes,
+      reactionCounts: applyReactionDelta(state.reactionCounts, previous, next),
+    });
+
     try {
-      const result = await toggleCommentDislike({ commentId: entry.id });
-      setVotes((prev) => ({
-        ...prev,
-        isLiked: false,
+      const result = await reactToComment({ commentId: entry.id, reaction });
+      setVotes({
+        isLiked: result.liked,
         isDisliked: result.disliked,
-        dislikes: result.dislikes ?? prev.dislikes,
-      }));
+        myReaction: result.currentReaction ?? null,
+        likes: result.likes ?? likes,
+        dislikes: result.dislikes ?? dislikes,
+        reactionCounts: reconcileReactionCounts(
+          result.likes ?? likes,
+          result.dislikes ?? dislikes,
+          (result.reactionCounts as ReactionCounts | undefined) ?? undefined,
+        ),
+      });
     } catch {
       setVotes({});
-      toast.error('Failed to dislike comment');
+      toast.error(
+        isPositiveReaction(reaction) ? 'Failed to react to comment' : 'Failed to dislike comment',
+      );
     }
   };
+
+  /** A plain tap casts whatever the thumb is wearing — see reactionForTap. */
+  const handleLike = () =>
+    handleReact(reactionForTap(true, state.myReaction, state.reactionCounts));
+  const handleDislike = () => handleReact(reactionForTap(false, state.myReaction));
 
   const handleShare = () => {
     navigator.clipboard
@@ -224,29 +256,83 @@ function ThreadEntry({
         )}
         <div className="flex items-center gap-4 mt-1.5">
           {/* Own entries can't be liked — same rule as the comments list; the
-              count stays visible so the author sees traction. */}
-          <button
-            onClick={(e) => { e.stopPropagation(); if (!isOwn) handleLike(); }}
-            className={cn(
-              'flex items-center gap-1 transition-colors',
-              !isOwn && state.isLiked ? 'text-white' : 'text-white/70 hover:text-white',
-            )}
-            aria-label={isOwn ? 'Likes' : 'Like'}
-          >
-            <ThumbsUp className={cn('w-3.5 h-3.5', !isOwn && state.isLiked && 'fill-current')} />
-            {(state.likes > 0 || isOwn) && <span className="text-xs">{state.likes}</span>}
-          </button>
-          <button
-            onClick={(e) => { e.stopPropagation(); if (!isOwn) handleDislike(); }}
-            className={cn(
-              'flex items-center gap-1 transition-colors',
-              state.isDisliked ? 'text-white' : 'text-white/70 hover:text-white',
-            )}
-            aria-label="Dislike"
-          >
-            <ThumbsDown className={cn('w-3.5 h-3.5', state.isDisliked && 'fill-current')} />
-            {state.dislikes > 0 && <span className="text-xs">{state.dislikes}</span>}
-          </button>
+              count stays visible so the author sees traction, and the tray is
+              off because every reaction it could cast would be refused. */}
+          <span className="relative flex items-center gap-1" {...likeTray.areaProps}>
+            <ReactionPicker
+              open={likeTray.open}
+              current={state.myReaction ?? null}
+              counts={state.reactionCounts}
+              onSelect={(reaction) => { likeTray.close(); handleReact(reaction); }}
+              onClose={likeTray.close}
+              align="left"
+            />
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (likeTray.consumePress()) return;
+                if (!isOwn) handleLike();
+              }}
+              {...likeTray.buttonProps}
+              {...reactionGlowProps(isOwn ? null : myPositiveReaction)}
+              className={cn(
+                'flex items-center gap-1 transition-colors select-none touch-none',
+                !isOwn && state.isLiked ? 'text-white' : 'text-white/70 hover:text-white',
+              )}
+              aria-label={isOwn ? 'Likes' : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`}
+              aria-haspopup={isOwn ? undefined : 'menu'}
+              aria-expanded={isOwn ? undefined : likeTray.open}
+            >
+              {leadReaction ? (
+                <span data-engaged-glyph className="w-3.5 h-3.5 flex items-center justify-center text-[0.8rem] leading-none" aria-hidden="true">
+                  {reactionMeta(leadReaction).emoji}
+                </span>
+              ) : (
+                <ThumbsUp className={cn('w-3.5 h-3.5', !isOwn && state.isLiked && 'fill-current')} />
+              )}
+              {(state.likes > 0 || isOwn) && <span className="text-xs">{state.likes}</span>}
+            </button>
+          </span>
+          <span className="relative flex items-center gap-1" {...dislikeTray.areaProps}>
+            <ReactionPicker
+              open={dislikeTray.open}
+              polarity="negative"
+              current={state.myReaction ?? null}
+              counts={state.reactionCounts}
+              onSelect={(reaction) => { dislikeTray.close(); handleReact(reaction); }}
+              onClose={dislikeTray.close}
+              align="left"
+            />
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (dislikeTray.consumePress()) return;
+                if (!isOwn) handleDislike();
+              }}
+              {...dislikeTray.buttonProps}
+              {...reactionGlowProps(myNegativeReaction)}
+              className={cn(
+                'flex items-center gap-1 transition-colors select-none touch-none',
+                state.isDisliked ? 'text-white' : 'text-white/70 hover:text-white',
+              )}
+              aria-label={
+                myNegativeReaction
+                  ? `${reactionMeta(myNegativeReaction).label} — hold to change your reaction`
+                  : 'Dislike — hold to react'
+              }
+              aria-haspopup={isOwn ? undefined : 'menu'}
+              aria-expanded={isOwn ? undefined : dislikeTray.open}
+            >
+              {negativeLeadReaction ? (
+                <span data-engaged-glyph className="w-3.5 h-3.5 flex items-center justify-center text-[0.8rem] leading-none" aria-hidden="true">
+                  {reactionMeta(negativeLeadReaction).emoji}
+                </span>
+              ) : (
+                <ThumbsDown className={cn('w-3.5 h-3.5', state.isDisliked && 'fill-current')} />
+              )}
+              {state.dislikes > 0 && <span className="text-xs">{state.dislikes}</span>}
+            </button>
+          </span>
           <button
             onClick={(e) => { e.stopPropagation(); handleShare(); }}
             className="text-white/70 hover:text-white transition-colors"
