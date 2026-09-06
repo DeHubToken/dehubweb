@@ -18,7 +18,7 @@ import { sendERC20Token } from '@/lib/wallet/send';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { STAKING_ADDRESS, claimBNBRewards, unstakeBNB, getForceUnstakeFeeBps, DEFAULT_FORCE_UNSTAKE_FEE_BPS } from '@/lib/contracts/staking';
-import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS, fromWei } from '@/lib/contracts/dhb-token';
+import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS, DHB_TOTAL_SUPPLY, fromWei } from '@/lib/contracts/dhb-token';
 import { getWalletAddress, switchChain, isWalletLockedError } from '@/lib/contracts/aa-utils';
 import { toast } from 'sonner';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
@@ -689,7 +689,7 @@ export default function StakingPage() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-        <StatCard icon={Lock} label={t('staking.totalStaked')} value={statsLoading || (statsError && !stats) ? '—' : formatNumber(stats?.totalStaked ?? '0')} subtitle={statsLoading || (statsError && !stats) ? '' : `${((Number(stats?.totalStaked ?? 0) / 4_200_000_000) * 100).toFixed(2)}% ${t('staking.ofSupply')}`} accent="bg-white/20" delay={0} />
+        <StatCard icon={Lock} label={t('staking.totalStaked')} value={statsLoading || (statsError && !stats) ? '—' : formatNumber(stats?.totalStaked ?? '0')} subtitle={statsLoading || (statsError && !stats) ? '' : `${((Number(stats?.totalStaked ?? 0) / DHB_TOTAL_SUPPLY) * 100).toFixed(2)}% ${t('staking.ofSupply')}`} accent="bg-white/20" delay={0} />
         <StatCard icon={DollarSign} label={t('staking.totalValueLocked')} value={statsLoading || (statsError && !stats) ? '—' : formatUSD(tvl)} subtitle={`@ $${dhbPrice.toFixed(6)}/DHB`} accent="bg-white/20" delay={0.05} />
         <StatCard icon={TrendingUp} label={t('staking.estApy')} value={`${ESTIMATED_APY}%`} subtitle={t('staking.variableRate')} accent="bg-white/20" delay={0.1} />
       </div>
