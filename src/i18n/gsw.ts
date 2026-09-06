@@ -1271,6 +1271,9 @@ export const gsw = {
     addressCopied: 'Adrässe kopiert',
     addressCopiedDesc: 'Adrässe in Zwüscheablag kopiert',
     thankYou: "Danke für d Unterstützig vo dr DeHub-Community und fürs Hälfe bim Ufbaue vomene bessere dezentralisierte Zuekumft.",
+    daoTitle: 'Bietrag über d\'DAO',
+    daoBody: 'D\'EVM-Adress obe isch d\'DAO-Schatzchämmer. Schick DHB vo dr App dorthin und din Beitrag wird zu dinere Uusdeilig am Pool verzellt, was s\'Gwicht vo dinere Stimm isch, wenn d\'DAO entscheided, wie s\'uusgä wird.',
+    daoLink: 'Öffne d\'DAO-Schatzchämmer',
   },
   brandGuidelines: {
     title: 'Markerichtlinie',

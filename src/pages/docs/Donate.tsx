@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heart, Copy, Check } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Heart, Copy, Check, Landmark, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -87,6 +88,26 @@ const Donate = () => {
           ))}
         </div>
       </div>
+
+      <Card className="docs-glass">
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-muted shrink-0">
+              <Landmark className="w-6 h-6 text-foreground" />
+            </div>
+            <div className="space-y-2 min-w-0">
+              <h3 className="font-semibold text-foreground font-exo">{t('donate.daoTitle')}</h3>
+              <p className="text-muted-foreground text-sm">{t('donate.daoBody')}</p>
+              <Button asChild variant="outline" size="sm" className="mt-1">
+                <Link to="/dao">
+                  {t('donate.daoLink')}
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card className="docs-glass">
         <CardContent className="p-6 text-center">

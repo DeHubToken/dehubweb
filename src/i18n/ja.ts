@@ -1173,6 +1173,9 @@ export const ja = {
     addressCopied: 'アドレスがコピーされました',
     addressCopiedDesc: 'アドレスがクリップボードにコピーされました',
     thankYou: 'DeHubコミュニティをサポートし、より良い分散型の未来を構築するのにご協力いただきありがとうございます。',
+    daoTitle: 'DAOを通じて貢献する',
+    daoBody: '上記のEVMアドレスはDAOトレジャリーです。 アプリからDHBを送信すると、あなたの貢献はプールのあなたのシェアにカウントされます。これは、DAOがそれがどのように費やされるかを決定したときにあなたの投票が持つ重みです。',
+    daoLink: 'DAO宝庫を開く',
   },
   brandGuidelines: {
     title: 'ブランドガイドライン',

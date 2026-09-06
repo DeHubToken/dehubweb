@@ -53,6 +53,8 @@ const PRELOADERS: Record<string, Preloader | Preloader[]> = {
     () => import('@/pages/app/GovernancePage'),
     () => import('@/pages/app/GovernanceProposalPage'),
   ],
+  '/app/dao': () => import('@/pages/app/DaoPage'),
+  '/dao': () => import('@/pages/app/DaoPage'),
   '/app/jobs': () => import('@/pages/app/CareersPage'),
   '/jobs': () => import('@/pages/app/CareersPage'),
   '/app/glossary': () => import('@/pages/app/GlossaryPage'),

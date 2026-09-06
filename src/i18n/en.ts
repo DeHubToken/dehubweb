@@ -1937,6 +1937,9 @@ export const en = {
     addressCopied: 'Address Copied',
     addressCopiedDesc: 'address copied to clipboard',
     thankYou: 'Thank you for supporting the DeHub community and helping us build a better decentralised future.',
+    daoTitle: 'Contribute through the DAO',
+    daoBody: 'The EVM address above is the DAO treasury. Send DHB to it from the app and your contribution is counted towards your share of the pool, which is the weight your vote carries when the DAO decides how it is spent.',
+    daoLink: 'Open the DAO treasury',
   },
   brandGuidelines: {
     title: 'Brand Guidelines',

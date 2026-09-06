@@ -1214,6 +1214,9 @@ export const ceb = {
     addressCopied: 'Nakopya na ang Adres',
     addressCopiedDesc: 'adres nakopya na sa clipboard',
     thankYou: 'Salamat sa pagsuporta sa DeHub community ug pagtabang namo sa pagtukod sa mas maayong decentralised future.',
+    daoTitle: 'Pag-amot pinaagi sa DAO',
+    daoBody: 'Ang adres sa EVM sa ibabaw mao ang treasury sa DAO. Ipadala ang DHB niini gikan sa app ug ang imong kontribusyon giihap padulong sa imong bahin sa pool, nga mao ang gibug-aton nga gidala sa imong boto kung ang DAO ang mohukom kung giunsa kini gigasto.',
+    daoLink: 'Ablihi ang treasury sa DAO',
   },
   brandGuidelines: {
     title: 'Brand Guidelines',

@@ -464,6 +464,9 @@ export const sk = {
     walletAddress: 'Adresa peňaženky',
     supportedTokens: 'Podporované tokeny',
     thankYou: 'Ďakujeme za vašu podporu!',
+    daoTitle: 'Prispievať prostredníctvom DAO',
+    daoBody: 'Vyššie uvedená adresa EVM je DAO Treasury. Pošlite mu DHB z aplikácie a váš príspevok sa započíta do vášho podielu na bazéne, čo je váha, ktorú váš hlas nesie, keď DAO rozhodne, ako sa minie.',
+    daoLink: 'Otvorte pokladnicu DAO',
   },
   blog: {
     title: 'Blog',

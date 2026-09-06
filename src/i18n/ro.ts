@@ -464,6 +464,9 @@ export const ro = {
     walletAddress: 'Adresa Portofelului',
     supportedTokens: 'Token-uri Acceptate',
     thankYou: 'Mulțumim pentru sprijin!',
+    daoTitle: 'Contribuiți prin Dao',
+    daoBody: 'Adresa EVM de mai sus este trezoreria DAO. Trimiteți DHB din aplicație și contribuția dvs. este luată în considerare pentru partea dvs. din fond, care este ponderea pe care o are votul dvs. atunci când DAO decide cum este cheltuită.',
+    daoLink: 'Deschideți trezoreria DAO',
   },
   blog: {
     title: 'Blog',

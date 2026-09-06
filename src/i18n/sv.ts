@@ -464,6 +464,9 @@ export const sv = {
     walletAddress: 'Plånboksadress',
     supportedTokens: 'Stödda tokens',
     thankYou: 'Tack för ditt stöd!',
+    daoTitle: 'Bidra genom DAO',
+    daoBody: 'EVM-adressen ovan är DAO-KASSAN. Skicka DHB till den från appen och ditt bidrag räknas mot din andel av poolen, vilket är vikten din röst bär när DAO bestämmer hur den spenderas.',
+    daoLink: 'Öppna DAO-kassan',
   },
   blog: {
     title: 'Blogg',

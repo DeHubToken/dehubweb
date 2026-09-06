@@ -3,9 +3,6 @@
     "sponsorshipUnavailable": "Bepul tranzaksiyalar bizning tomonimizda toxtatilgan, hamyoningizda emas. Iltimos, birozdan keyin qayta urinib koring.",
     "gasSponsorshipFailed": "Bu tranzaksiya xarajati qoplanmadi. Iltimos, birozdan keyin urinib koring."
   },
-  "work": {
-    "budgetExhausted": "Bu mukofotning byudjeti to'liq taqsimlangan."
-  },
   "nav": {
     "home": "Bosh sahifa",
     "explore": "Kashf qilish",
@@ -26,6 +23,7 @@
     "featureRequests": "Soʻrovlar",
     "staking": "Steyking",
     "governance": "Boshqaruv",
+    "dao": "DAO",
     "careers": "Karyera",
     "glossary": "Lug'at",
     "arcade": "Arcade",
@@ -1215,6 +1213,42 @@
     "applicationSuccess": "Ariza muvaffaqiyatli yuborildi! Siz bilan bogʻlanamiz.",
     "applicationFailed": "Yuborish amalga oshmadi. Iltimos qayta urinib koʻring."
   },
+  "dao": {
+    "title": "DAO xazinasi",
+    "subtitle": "Bir hamyon, hamjamiyat tomonidan moliyalashtirilgan, uning ovozi bilan sarflangan",
+    "contribute": "Hissa qo'shing",
+    "contributeIntro": "Hamyoningizdan xazinaga DHB yuboring. Har bir token qo'shganingizda, sizning ulushingiz havuzda ko'payadi va DAO uni qanday sarflashni hal qilganda ovozingizning og'irligi sizning ulushingiz hisoblanadi.",
+    "amountLabel": "Miqdor (DHB)",
+    "youHold": "Sizda {{amount}} DHB bor",
+    "irreversible": "Hissalar zanjirdagi o'tkazmalar. Ularni bekor qilib bo'lmaydi yoki qaytarib olinmaydi.",
+    "switchChain": "Hissa qo&#39;shish uchun hamyoningizni {{chains}} ga o&#39;zgartiring.",
+    "sendAmount": "{{amount}} DHB yuboring",
+    "sentTitle": "Hissa qo'shildi",
+    "sentDesc": "{{amount}} DHB xazinaga {{chain}} sanasida yuborildi. Sizning ulushingiz blok indekslangandan so'ng yangilanadi.",
+    "viewTx": "Tranzaksiyani ko'rish",
+    "sendFailed": "Hissa qo'shish muvaffaqiyatsiz tugadi",
+    "treasuryBalance": "Xazina balansi",
+    "refresh": "Yangilash",
+    "treasuryAddress": "Xazina manzili",
+    "copyAddress": "Manzilni nusxalash",
+    "addressCopied": "Manzil nusxalandi",
+    "sendAnyWallet": "Kimdir bu yerga istalgan hamyondan yoki birjadan DHB yuborishi mumkin. Base va BNB dagi o'tkazmalar sizning ulushingizga hisoblanadi.",
+    "loadFailed": "Hozirda xazinani o'qib bo'lmadi. Bir ozdan keyin yana urinib ko'ring.",
+    "yourPower": "Sizning kuchingiz",
+    "yourContribution": "{{amount}} DHB hissa qo'shilgan",
+    "addMore": "Ko'proq qo'shing",
+    "noContributionYet": "Siz hali hissa qo'shmagansiz. Havuzdagi ulushingiz birinchi o'tkazmadan boshlanadi.",
+    "howItWorksTitle": "Kuch qanday ishlaydi",
+    "howItWorksBody": "Sizning kuchingiz sizning hissangizni xazinaga yuborilgan barcha mablag'ga bo'lingan. U to'g'ridan-to'g'ri zanjirdan o'qiladi, hech qachon o'chmaydi va DAO sarflashga ovoz berganda ovozingizning og'irligini belgilaydi.",
+    "contributors": "Hissa qo'shuvchilar",
+    "pooledTotal": "{{amount}} DHB jamlangan",
+    "noContributors": "Hali hissa qo'shilmagan. Birinchi bo'ling.",
+    "recent": "So'nggi hissalar",
+    "you": "Siz",
+    "transferCount_other": "{{count}} transferlar",
+    "power": "Quvvat",
+    "transferCount_one": "{{count}} transfer"
+  },
   "governance": {
     "title": "Boshqaruv",
     "proposalCount": "{{count}} taklif taqdim etildi",
@@ -1846,6 +1880,9 @@
     "aimAtAccount": "Kimning obunachilari buni ko'rishi kerak?",
     "aimPlaceholder": "Foydalanuvchi nomi yoki hamyon manzili",
     "aimAtTiers": "Qaysi nishon darajalari buni ko'rishi kerak?"
+  },
+  "work": {
+    "budgetExhausted": "Bu mukofotning byudjeti to'liq taqsimlangan."
   },
   "videoLooks": {
     "button": "Kamera koʻrinishlari",

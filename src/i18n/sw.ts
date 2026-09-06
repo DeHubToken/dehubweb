@@ -464,6 +464,9 @@ export const sw = {
     walletAddress: 'Anwani ya Pochi',
     supportedTokens: 'Tokeni Zinazosaidiwa',
     thankYou: 'Asante kwa msaada wako!',
+    daoTitle: 'Changia kupitia DAO',
+    daoBody: 'Anwani ya EVM hapo juu ni hazina ya DAO. Tuma DHB kwake kutoka kwenye programu na mchango wako unahesabiwa kwenye sehemu yako ya bwawa, ambayo ni uzito ambao kura yako inabeba wakati DAO itaamua jinsi inavyotumika.',
+    daoLink: 'Fungua hazina ya DAO',
   },
   blog: {
     title: 'Blogu',

@@ -1308,6 +1308,9 @@ export const fi = {
     addressCopied: 'Osoite kopioitu',
     addressCopiedDesc: 'osoite kopioitu leikepöydälle',
     thankYou: 'Kiitos DeHub-yhteisön tukemisesta ja paremman hajautetun tulevaisuuden rakentamisesta.',
+    daoTitle: 'Osallistu DAO: n kautta',
+    daoBody: 'Yllä oleva EVM-osoite on DAO-KASSA. Lähetä DHB sille sovelluksesta, ja panoksesi lasketaan osaksi osuuttasi poolista, mikä on äänesi painoarvo, kun DAO päättää, miten se käytetään.',
+    daoLink: 'Avaa DAO-kassa',
   },
   brandGuidelines: {
     title: 'Brändiohjeet',

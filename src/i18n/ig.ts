@@ -1304,6 +1304,9 @@ export const ig = {
     addressCopied: 'Edepụtara adreesị',
     addressCopiedDesc: 'edepụtara adreesị na klipbọọdụ',
     thankYou: 'Daalụ maka ịkwado obodo DeHub na inyere aka wuo ọdịnihu enweghị etiti ka mma.',
+    daoTitle: 'Nye onyinye site na DAO',
+    daoBody: 'Adreesị EVM dị n \'elu bụ akụ DAO. Send DHB na ya si ngwa na gị onyinye na-agụta kwupụta gị òkè nke ọdọ mmiri, nke bụ ibu gị votu eburu mgbe DAO na-ekpebi otú ọ na-emefu.',
+    daoLink: 'Mepee akụ DAO',
   },
   brandGuidelines: {
     title: 'Ntuziaka Aha',

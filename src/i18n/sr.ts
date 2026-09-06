@@ -464,6 +464,9 @@ export const sr = {
     walletAddress: 'Адреса новчаника',
     supportedTokens: 'Подржани токени',
     thankYou: 'Хвала на подршци!',
+    daoTitle: 'Doprinos preko DAO-a',
+    daoBody: 'Adresa EVM iznad je trezor DAO. Pošaljite mu DHB iz aplikacije i vaš doprinos se računa u vaš udeo u fondu, što je težina koju vaš glas nosi kada DAO odluči kako se troši.',
+    daoLink: 'Otvorite trezor TAO',
   },
   blog: {
     title: 'Блог',
