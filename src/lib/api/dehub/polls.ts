@@ -25,6 +25,24 @@ export async function getPoll(
   return apiCall(`/api/poll/${tokenId}`);
 }
 
+// ─── Get Polls (batch) ────────────────────────────────────────────────
+
+/** Upper bound the API enforces on one batch lookup. */
+export const POLL_BATCH_LIMIT = 50;
+
+/**
+ * Polls for a whole page of cards, keyed by tokenId.
+ *
+ * Ids with no poll are absent from the result rather than reported — which is
+ * the answer the caller needs, and a permanent one, since a poll can only be
+ * attached when a post is created.
+ */
+export async function getPolls(
+  tokenIds: number[],
+): Promise<{ status: boolean; result: Record<string, DeHubPoll> }> {
+  return apiCall(`/api/polls?tokenIds=${tokenIds.join(",")}`);
+}
+
 // ─── Vote ─────────────────────────────────────────────────────────────
 
 export async function voteOnPoll(
