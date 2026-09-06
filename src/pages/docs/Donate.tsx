@@ -13,7 +13,7 @@ const Donate = () => {
   const addresses = [
     {
       network: t('donate.evmNetwork'),
-      address: '0x1759ceb6255dbebfe2c0c51edbcd29ad7efb9229',
+      address: '0xb6FCACda06676B775188Dfc9c4D7C4AEb564d3c4',
       icon: '⟠'
     },
     {
