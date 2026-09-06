@@ -91,8 +91,15 @@ function ThreadEntry({
   // the like button there is a readout, not a vote.
   const likeTray = useReactionTray(!isOwn);
   const dislikeTray = useReactionTray(!isOwn);
-  useEffect(() => { if (likeTray.open) dislikeTray.close(); }, [likeTray.open, dislikeTray]);
-  useEffect(() => { if (dislikeTray.open) likeTray.close(); }, [dislikeTray.open, likeTray]);
+  // Deps are the tray's OWN `open` plus the sibling's `close`, which the hook
+  // keeps stable — not the tray objects, which are new on every render. With
+  // the objects in there both effects ran on every render, so a moment where
+  // both were open (a hold landing inside the other's 220ms hover grace) had
+  // each of them closing the other and the tray the reader just asked for shut
+  // with the one they were leaving. Keyed on `open`, only the newly opened one
+  // runs, and it wins.
+  useEffect(() => { if (likeTray.open) dislikeTray.close(); }, [likeTray.open, dislikeTray.close]);
+  useEffect(() => { if (dislikeTray.open) likeTray.close(); }, [dislikeTray.open, likeTray.close]);
 
   const leadReaction = isOwn ? null : resolveLeadReaction(state.reactionCounts, state.myReaction);
   const myPositiveReaction =
