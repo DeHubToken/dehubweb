@@ -78,9 +78,7 @@ import { unlockWithBiometrics, hasBiometricUsableHere } from '@/lib/wallet-core/
 import {
   WALLET_UNLOCK_INTERVAL_KEY,
   DEFAULT_WALLET_UNLOCK_INTERVAL,
-  type WalletUnlockIntervalOption,
 } from '@/hooks/use-wallet-unlock-interval';
-import { WalletUnlockToastBody } from '@/components/app/wallet-setup/WalletUnlockToastBody';
 import { clearPasskeyCache, deleteAllPasskeyWraps } from '@/lib/wallet-core/passkey-store';
 import { deriveFromSecret, generateMnemonic12 } from '@/lib/wallet-core/derive';
 import { encryptString, decryptString } from '@/lib/wallet-core/crypto';
@@ -341,6 +339,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Settings while already signed in. Only changes the sheet's title.
   const [loginIntent, setLoginIntent] = useState<'login' | 'add-profile'>('login');
   const [walletPhase, setWalletPhase] = useState<WalletPhase>('none');
+  // Signing can fail concurrently in several mounted surfaces (the DM thread,
+  // fee gate and encryption bootstrap all do work on entry). Treat their
+  // unlock requests as one UI operation so they cannot repeatedly reopen the
+  // same sheet while the user is already completing it.
+  const walletUnlockPromptActiveRef = useRef(false);
   // The address this Supabase identity is linked to, when it is NOT the wallet
   // this browser holds — set by completeLoginWithoutUnlock when it refuses the
   // exchange, and consumed by the signature that follows, which moves the
@@ -560,6 +563,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const closeLoginModal = useCallback(() => {
+    walletUnlockPromptActiveRef.current = false;
+    toast.dismiss('wallet-unlock-required');
     connectionAbortedRef.current = true;
     setIsLoginModalOpen(false);
     setLoginIntent('login');
@@ -1164,39 +1169,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Mid-session unlock requests — a post, tip or stream attempted with the key
   // no longer in memory. Raised by aa-utils when no signing provider exists.
   useEffect(() => {
-    // Re-raised (same toast id) rather than driven from component state so the
-    // picker can also swap the toast's duration: 10s is right for a toast you
-    // only read, and far too short for one you are picking an option in.
-    const showUnlockToast: (
-      expanded: boolean,
-      chosen: WalletUnlockIntervalOption | null,
-    ) => void = (expanded, chosen) => {
-      toast.info('Unlock your wallet to continue', {
-        id: 'wallet-unlock-required',
-        description: (
-          <WalletUnlockToastBody
-            expanded={expanded}
-            chosen={chosen}
-            onExpand={() => showUnlockToast(true, null)}
-            onPicked={(next) => showUnlockToast(false, next)}
-            onUnlock={() => {
-              // Custom buttons live in the description, which sonner does not
-              // auto-dismiss the way it does its own action buttons.
-              toast.dismiss('wallet-unlock-required');
-              requestWalletUnlock();
-            }}
-          />
-        ),
-        action: { label: 'Unlock', onClick: () => requestWalletUnlock() },
-        duration: expanded ? 30000 : 10000,
-      });
-    };
-
     const handler = () => {
       // Matches the condition aa-utils used to decide to raise this event at
       // all; if the two ever disagree the dialog silently never opens and the
       // action just fails.
       if (!isSmartWalletSession()) return;
+
+      // A late failure from work started before the vault opened must not put
+      // the password sheet back over an already-unlocked app. Likewise, the
+      // first request owns the sheet until it succeeds or is dismissed; all
+      // concurrent requests simply wait for that same unlock.
+      if (isWalletUnlocked() || getAAProvider()) {
+        walletUnlockPromptActiveRef.current = false;
+        toast.dismiss('wallet-unlock-required');
+        return;
+      }
+      if (walletUnlockPromptActiveRef.current) return;
+      walletUnlockPromptActiveRef.current = true;
 
       // How often this fires is the entire complaint about the built-in
       // wallet, and until now nothing counted it: authLogger.info is
@@ -1232,20 +1221,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       requestWalletUnlock();
 
-      // One explanation for the whole app, raised where the prompt is raised.
-      //
-      // Every surface that signs — tipping, boosting, unlocking paid content,
-      // staking, sending — used to catch the "wallet is locked" error in its
-      // own way and toast its own generic wording, so the moment the password
-      // sheet appeared people were also told the transaction had FAILED. It
-      // hadn't; it was waiting for them. Callers now stay silent on this error
-      // (isWalletLockedError) and this is the only toast that fires.
-      //
-      // The second half is the part people asked for: nobody found the
-      // frequency setting, so the wallet felt like it was nagging at random.
-      // The choice is made inside the toast — sending them to Settings meant
-      // abandoning the page and the half-finished action to answer it.
-      showUnlockToast(false, null);
+      // The sheet already explains what is needed. A second notification next
+      // to it made the transition noisy and looked like another failure.
+      toast.dismiss('wallet-unlock-required');
     };
     window.addEventListener('dehub:wallet-unlock-required', handler);
     return () => window.removeEventListener('dehub:wallet-unlock-required', handler);
