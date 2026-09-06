@@ -3,9 +3,6 @@
     "sponsorshipUnavailable": "ናጻ ልውውጣት ብወገንና ጠጠው ኢሎም ኣለዉ፣ ኣብ ዋሌትካ ኣይኮነን። በጃኻ ድሕሪ ቁሩብ እንደገና ፈትን።",
     "gasSponsorshipFailed": "ወጻኢ እዚ ልውውጥ ክኽፈል ኣይተኻእለን። በጃኻ ድሕሪ ቁሩብ ፈትን።"
   },
-  "work": {
-    "budgetExhausted": "ናይዚ ሽልማት ባጀት ብምሉኡ ተመዲቡ እዩ።"
-  },
   "nav": {
     "home": "ገዛ",
     "explore": "ድለ",
@@ -26,6 +23,7 @@
     "featureRequests": "ጠለባት",
     "staking": "ምቕማጥ",
     "governance": "ምሕደራ",
+    "dao": "ዳኦ",
     "careers": "ስራሕ",
     "glossary": "መዝገበ ቃላት",
     "arcade": "ኣርኬድ",
@@ -1197,6 +1195,42 @@
     "applicationSuccess": "ምልክታ ብዓወት ቀሪቡ! ክንረኽበካ ኢና።",
     "applicationFailed": "ምቕራብ ኣይተዓወተን። በጃኻ ዳግማይ ፈትን።"
   },
+  "dao": {
+    "title": "ገንዘብ ቤት DAO",
+    "subtitle": "ሓደ ገንዘብ ፡ ብማሕበረሰብ ዝተዋፈረ ፡ ብድምጺኡ ዝተወፈየ",
+    "contribute": "ኣበርክቶ",
+    "contributeIntro": "DHB ካብ ቦርሳኻ ናብ መዝገብካ ልኢኽ ። እቲ እትውስኽዎ ምልክት ፡ ነቲ ናይ ገንዳ ክፋልካ የዕብዮ ፡ እቲ ድምጺኻ ድማ እቲ ዳኦ ብኸመይ ከም ዚውዕል ምስ ዚውስኖ ፡ እቲ ድምጺኻ ዚወስዶ ክብደት እዩ ።",
+    "amountLabel": "መጠን (DHB)",
+    "irreversible": "እቲ ኣበርክቶታት ኣብ ቻይን ዝውውር እዩ ። ድሕሪ 2 ግንቦት ፡ ብህይወት ክተርፉ ኣይክእሉን እዮም ።",
+    "sentTitle": "እቲ እተላእከ ወፈያ",
+    "viewTx": "ግብረ-ሰናይ ርአ",
+    "sendFailed": "ኣበርክቶ ኣይተኻየደን",
+    "treasuryBalance": "ሚዛን መዝገብ",
+    "refresh": "ተሐድሶ",
+    "treasuryAddress": "ኣድራሻ መዝገብ",
+    "copyAddress": "ኣድራሻ ቅዳሕ",
+    "addressCopied": "እተቐዳደመ ኣድራሻ",
+    "sendAnyWallet": "ዝኾነ ሰብ ኣብዚ DHB ካብ ዝኾነ ቦርሳ ወይ ልውውጥ ክልእኽ ይኽእል እዩ ። ኣብ BASEን BNBን ዘሎ ምትሕልላፍ ናብ ድርሻኻ ይቑጸር ።",
+    "loadFailed": "ሕጂ ነቲ መዝገብ ክነንብቦ ኣይከኣልኩን ። ኣብ ሓደ እዋን እንደገና ፈትኖ ።",
+    "yourPower": "ሓይልኻ",
+    "addMore": "ዝያዳ ወስኽ",
+    "noContributionYet": "ገና ኣይተዋህበካን ። እቲ ናይ መጀመርታ ምትሕልላፍካ እዩ ዝጅምር ።",
+    "howItWorksTitle": "ሓይሊ ብኸመይ ከም ዚሰርሕ",
+    "howItWorksBody": "ሓይሊኻ እቲ ኣብ መዝገብ እተላእከ ዅሉ ኣበርክቶኻ እዩ ። ካብ ሰንሰለት ብቐጥታ ኣንቢቡ ፡ ፈጺሙ ኣይጠፍእን እዩ ፣ እቲ ዳኦ ኣብ ወፍሪ ምስ ዚመርጽ ፡ ድምጺኻ ኽሳዕ ክንደይ ክብደት ከም ዘለዎ ድማ ይውስን ።",
+    "contributors": "ኣበርክቶ ዝገበሩ",
+    "noContributors": "ገና ኣበርክቶ ኣይገበረን ። ቀዳመይቲ ኩን ።",
+    "recent": "ናይ ቀረባ ኣበርክቶታት",
+    "you": "ንስኻ/ኺ",
+    "power": "ሓይሊ",
+    "youHold": "{{amount}} DHB ኣለካ",
+    "switchChain": "ንምብርካት ቦርሳኻ ናብ {{chains}} ቀይር።",
+    "sendAmount": "{{amount}} DHB ልኣኽ",
+    "sentDesc": "{{amount}} DHB ኣብ {{chain}} ናብ መዝገብ ተላኢኹ። እቲ ብሎክ ምስ ተመዝገበ ድርሻኻ ይሕደስ።",
+    "yourContribution": "{{amount}} DHB ኣበርኪትካ",
+    "pooledTotal": "{{amount}} DHB ተኣኪቡ",
+    "transferCount_one": "{{count}} ምትሕልላፍ",
+    "transferCount_other": "{{count}} ምትሕልላፋት"
+  },
   "governance": {
     "title": "ምሕደራ",
     "proposalCount": "{{count}} ቅድመ-ሓሳብ ቀሪቡ",
@@ -1811,6 +1845,9 @@
     "aimAtAccount": "ናይ መን ሰዓብቲ ክርእይዎ ኣለዎም?",
     "aimPlaceholder": "ናይ ተጠቃሚ ስም ወይ ኣድራሻ ዋሌት",
     "aimAtTiers": "ኣየኖት ደረጃታት ባጅ ክርእይዎ ኣለዎም?"
+  },
+  "work": {
+    "budgetExhausted": "ናይዚ ሽልማት ባጀት ብምሉኡ ተመዲቡ እዩ።"
   },
   "videoLooks": {
     "button": "ናይ ካሜራ ትርኢታት",

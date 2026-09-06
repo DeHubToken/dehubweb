@@ -466,6 +466,9 @@ export const qu = {
     walletAddress: 'Wayaqa dirección',
     supportedTokens: 'Yanapasqa token nisqakuna',
     thankYou: 'Yanapayniykimanta añaychayki!',
+    daoTitle: 'DAO nisqawan yanapay',
+    daoBody: 'Hanaq EVM dirección DAO qullqi waqaychana. Aplicacionmanta DHB apachiy, yanapayniykiqa qullqi huñusqa ukhupi partenykiman yupasqa kanqa; chaymi votoykipa llasan DAO imaynata gastananta yuyaykuptin.',
+    daoLink: 'DAO qullqi waqaychanata kichay',
   },
   blog: {
     title: 'Blog',

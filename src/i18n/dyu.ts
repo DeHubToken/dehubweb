@@ -1268,6 +1268,9 @@ export const dyu = {
     addressCopied: 'Adirɛsi kopira',
     addressCopiedDesc: 'adirɛsi kopira clipboard la',
     thankYou: 'Aw ni cɛ ka DeHub jɛkulu dɛmɛ ani ka jatebɔlen sini ɲuman jɔ.',
+    daoTitle: 'Ka dɛmɛ don o baara la',
+    daoBody: 'O yɔrɔ la, a be weele ko DAO ka nafolo marayɔrɔ. I ka DHB ci a ma ka bɔ a kan ani i ka wari be jati i ka wari hakɛ la, min ye i ka vote ka doni ye tuma min na DAO b\'a latigɛ a bena kɛ cogo min na.',
+    daoLink: 'Dao ka nafolo marayɔrɔ dayɛlɛ',
   },
   brandGuidelines: {
     title: 'Tɔgɔ ladilikanw',

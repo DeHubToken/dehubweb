@@ -1144,6 +1144,9 @@ export const lt = {
     addressCopied: 'Adresas nukopijuotas',
     addressCopiedDesc: 'Adresas nukopijuotas į iškarpinę',
     thankYou: 'Dėkojame už DeHub bendruomenės palaikymą.',
+    daoTitle: 'Prisidėti per DAO',
+    daoBody: 'Pirmiau nurodytas EVM adresas yra DAO iždas. Siųskite DHB į jį iš programėlės ir jūsų įnašas bus įskaičiuotas į jūsų dalį fonde, o tai yra jūsų balso svoris, kai DAO nusprendžia, kaip jis bus išleistas.',
+    daoLink: 'Atidarykite DAO IŽDĄ',
   },
   brandGuidelines: {
     title: 'Prekės ženklo gairės',

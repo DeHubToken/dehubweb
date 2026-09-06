@@ -3,9 +3,6 @@
     "sponsorshipUnavailable": "المعاملات المجانيه واقفه من عندنا، مش من محفظتك. جرب تانى كمان شويه.",
     "gasSponsorshipFailed": "ماقدرناش نغطى المعامله دى. جرب تانى بعد شويه."
   },
-  "work": {
-    "budgetExhausted": "ميزانية الجايزة دي كلها اتحجزت."
-  },
   "nav": {
     "home": "الرئيسية",
     "explore": "استكشاف",
@@ -26,6 +23,7 @@
     "featureRequests": "طلبات",
     "staking": "الستيكينج",
     "governance": "الحوكمة",
+    "dao": "داو",
     "careers": "وظايف",
     "glossary": "المسرد",
     "arcade": "الأركيد",
@@ -1197,6 +1195,42 @@
     "applicationSuccess": "الطلب اتقدّم بنجاح! هنتواصل معاك.",
     "applicationFailed": "فشل التقديم. جرّب تاني."
   },
+  "dao": {
+    "title": "خزانة الـ DAO",
+    "subtitle": "محفظة واحدة، ممولة من المجتمع، تُصرف بتصويتهم",
+    "contribute": "ساهم",
+    "contributeIntro": "أرسل DHB من محفظتك إلى الخزانة. كل توكن تضيفه يزيد حصتك في المجمع، وحصتك هي وزن صوتك عندما يقرر الـ DAO كيفية إنفاقه.",
+    "amountLabel": "المبلغ (DHB)",
+    "youHold": "لديك {{amount}} DHB",
+    "irreversible": "المساهمات هي تحويلات على السلسلة. لا يمكن عكسها أو سحبها.",
+    "switchChain": "بدّل محفظتك إلى {{chains}} للمساهمة.",
+    "sendAmount": "أرسل {{amount}} DHB",
+    "sentTitle": "تم إرسال المساهمة",
+    "sentDesc": "تم إرسال {{amount}} DHB إلى الخزانة في {{chain}}. ستتحدث حصتك بمجرد فهرسة الكتلة.",
+    "viewTx": "عرض المعاملة",
+    "sendFailed": "فشلت المساهمة",
+    "treasuryBalance": "رصيد الخزانة",
+    "refresh": "تحديث",
+    "treasuryAddress": "عنوان الخزانة",
+    "copyAddress": "نسخ العنوان",
+    "addressCopied": "تم نسخ العنوان",
+    "sendAnyWallet": "يمكن لأي شخص إرسال DHB هنا من أي محفظة أو بورصة. التحويلات على Base و BNB تُحتسب ضمن حصتك.",
+    "loadFailed": "تعذر قراءة الخزانة الآن. حاول مرة أخرى بعد لحظة.",
+    "yourPower": "قوتك",
+    "yourContribution": "{{amount}} DHB مساهمة",
+    "addMore": "أضف المزيد",
+    "noContributionYet": "لم تساهم بعد. حصتك في المجمع تبدأ بأول تحويل لك.",
+    "howItWorksTitle": "كيف تعمل القوة",
+    "howItWorksBody": "قوتك هي مساهمتك مقسومة على كل ما تم إرساله إلى الخزانة على الإطلاق. تُقرأ مباشرة من السلسلة، ولا تنتهي صلاحيتها أبدًا، وهي تحدد وزن صوتك عندما يصوت الـ DAO على الإنفاق.",
+    "contributors": "المساهمون",
+    "pooledTotal": "{{amount}} DHB مجمعة",
+    "noContributors": "لا توجد مساهمات بعد. كن الأول.",
+    "recent": "المساهمات الأخيرة",
+    "you": "أنت",
+    "transferCount_one": "تحويل {{count}}",
+    "transferCount_other": "عمليات النقل {{count}}",
+    "power": "الطاقة"
+  },
   "governance": {
     "title": "الحوكمة",
     "proposalCount": "{{count}} مقترح اتقدّم",
@@ -1828,6 +1862,9 @@
     "aimAtAccount": "متابعين مين المفروض يشوفوه؟",
     "aimPlaceholder": "اليوزرنيم أو عنوان المحفظة",
     "aimAtTiers": "مستويات الشارة اللي المفروض تشوفه إيه؟"
+  },
+  "work": {
+    "budgetExhausted": "ميزانية الجايزة دي كلها اتحجزت."
   },
   "videoLooks": {
     "button": "مظاهر الكاميرا",

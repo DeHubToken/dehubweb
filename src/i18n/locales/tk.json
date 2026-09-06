@@ -3,9 +3,6 @@
     "sponsorshipUnavailable": "Mugt amallar biziň tarapymyzda saklandy, siziň gapjygyňyzda däl. Haýyş, biraz wagtdan gaýtadan synanyşyň.",
     "gasSponsorshipFailed": "Bu amalyň çykdajysy tölenip bilinmedi. Haýyş, biraz wagtdan synanyşyň."
   },
-  "work": {
-    "budgetExhausted": "Bu sylagyň býujeti doly paýlanyldy."
-  },
   "nav": {
     "home": "Baş sahypa",
     "explore": "Gözle",
@@ -26,6 +23,7 @@
     "featureRequests": "Haýyşlar",
     "staking": "Goýum",
     "governance": "Dolandyryş",
+    "dao": "DAO",
     "careers": "Işler",
     "glossary": "Sözlük",
     "arcade": "Arkada",
@@ -1197,6 +1195,42 @@
     "applicationSuccess": "Arza üstünlikli iberildi! Habarlaşarys.",
     "applicationFailed": "Ibermek başa barmady. Gaýtadan synanyşyň."
   },
+  "dao": {
+    "title": "DAO hazynasy",
+    "subtitle": "Jemgyýet tarapyndan maliýeleşdirilýän, ses bermek arkaly harçlanýan bir gap",
+    "contribute": "Goşant goş",
+    "contributeIntro": "Öz gapyňyzdan hazynasyna DHB iberiň. Goşýan her bir nyşanyňyz paýyňyzy artdyrýar, paýyňyz bolsa DAO harçlanylmagy nädip çözýändigine karar berende ses bermegiňiziň agramyny kesgitleýär.",
+    "amountLabel": "Mukdar (DHB)",
+    "youHold": "Siz {{amount}} DHB saklaýarsyňyz",
+    "irreversible": "Goşantlar zynjyrdaky geçirişlerdir. Olaryň yzyna dolanyp ýa-da çykarylyp bilinmeýär.",
+    "switchChain": "Çapagyňyzy {{chains}} -eüýtgetip, goşmaça goşmaçagoşmaça goşmaça goşmaça goşmaça goş",
+    "sendAmount": "{{amount}} DHB iberiň",
+    "sentTitle": "Goşant iberildi",
+    "sentDesc": "{{amount}} DHB hazynasyna {{chain}}-da iberildi. Paýyňyz blok indekslenen dessine täzelener.",
+    "viewTx": "Geçirişi görmek",
+    "sendFailed": "Goşant başa barmady",
+    "treasuryBalance": "Hazynanyň balansi",
+    "refresh": "Täzelemek",
+    "treasuryAddress": "Hazynanyň salgysy",
+    "copyAddress": "Salgy göçüriň",
+    "addressCopied": "Salgysy göçürildi",
+    "sendAnyWallet": "Her kim islendik gapdan ýa-da biržadan bu ýere DHB iberip biler. Base we BNB-däki geçirişler paýyňyza goşulýar.",
+    "loadFailed": "Hazynany şu wagt okap bolmady. Bir salymdan täzeden synanyşyň.",
+    "yourPower": "Siziň güýjüňiz",
+    "yourContribution": "{{amount}} DHB goşant goşdy",
+    "addMore": "Goşmaça goş",
+    "noContributionYet": "Heniz goşant goşmadyňyz. Paýyňyz ilkinji geçirişiňiz bilen başlaýar.",
+    "howItWorksTitle": "Güýç nädip işleýär",
+    "howItWorksBody": "Siziň güýjüňiz, goşantlaryňyzyň hazynasyna iberilen ähli zatlara bölünmegidir. Ol göni zynjyrdan okalýar, hiç haçan möhleti gutarmaýar we DAO harçlamak barada ses berende sesiňiziň agramyny kesgitleýär.",
+    "contributors": "Goşant goşanlar",
+    "pooledTotal": "{{amount}} DHB paýlandy",
+    "noContributors": "Heniz goşant ýok. Ilkinji boluň.",
+    "recent": "Soňky goşantlar",
+    "you": "Siz",
+    "transferCount_one": "{{count}} transfer",
+    "transferCount_other": "{{count}} Transfers",
+    "power": "güýç"
+  },
   "governance": {
     "title": "Dolandyryş",
     "proposalCount": "{{count}} teklip iberildi",
@@ -1806,6 +1840,9 @@
     "aimAtAccount": "Ony kimiň yzarlaýjylary görmeli?",
     "aimPlaceholder": "Ulanyjy ady ýa-da gapjyk salgysy",
     "aimAtTiers": "Ony haýsy nyşan derejeleri görmeli?"
+  },
+  "work": {
+    "budgetExhausted": "Bu sylagyň býujeti doly paýlanyldy."
   },
   "videoLooks": {
     "button": "Kamera görnüşleri",

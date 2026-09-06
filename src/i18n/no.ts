@@ -1144,6 +1144,9 @@ export const no = {
     addressCopied: 'Adresse kopiert',
     addressCopiedDesc: 'Adressen er kopiert til utklippstavlen',
     thankYou: 'Takk for at du støtter DeHub-fellesskapet.',
+    daoTitle: 'Bidra gjennom DAO-en',
+    daoBody: 'EVM-adressen ovenfor er DAO-ens kasse. Send DHB til den fra appen, så teller bidraget ditt mot din andel av potten – vekten stemmen din har når DAO-en bestemmer hvordan den skal brukes.',
+    daoLink: 'Åpne DAO-kassen',
   },
   brandGuidelines: {
     title: 'Merkevareretningslinjer',

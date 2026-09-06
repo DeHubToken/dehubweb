@@ -259,6 +259,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   Staking: ['stake', 'apy', 'apr', 'yield', 'rewards', 'earn', 'vault', 'lock', 'pool'],
   SuperPowers: ['boost', 'boosts', 'second wind', 'promote', 'amplify', 'reach', 'top of feed', 'badge perks', 'powers'],
   Governance: ['vote', 'voting', 'votes', 'proposals', 'dao', 'poll', 'ballot', 'referendum'],
+  DAO: ['treasury', 'donate', 'donation', 'contribute', 'contribution', 'fund', 'pool', 'power'],
   Bounties: ['work', 'jobs', 'tasks', 'gigs', 'freelance', 'hire', 'earn', 'escrow', 'contracts'],
   // Nobody types "bounty history" — they type the thing they are chasing, which
   // is usually a payment or a job they already finished.

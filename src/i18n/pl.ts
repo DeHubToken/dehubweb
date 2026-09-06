@@ -466,6 +466,9 @@ export const pl = {
     walletAddress: 'Adres Portfela',
     supportedTokens: 'Obsługiwane Tokeny',
     thankYou: 'Dziękujemy za wsparcie!',
+    daoTitle: 'Wspieraj poprzez DAO',
+    daoBody: 'Powyższy adres EVM to skarbnic DAO. Wyślij DHB z aplikacji, a Twój wkład zostanie zaliczony do Twojego udziału w puli, co stanowi wagę Twojego głosu, gdy DAO decyduje o jego wydatkowaniu.',
+    daoLink: 'Otwórz skarbnicę DAO',
   },
   blog: {
     title: 'Blog',

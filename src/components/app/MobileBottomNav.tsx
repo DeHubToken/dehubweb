@@ -5,7 +5,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { disarmHomeNavIntent, resolveHomeNavIntent } from '@/lib/home-nav-intent';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
-import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll, Map, Wand2, Loader2, BarChart3, Gamepad2, Zap } from 'lucide-react';
+import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Landmark, Scroll, Map, Wand2, Loader2, BarChart3, Gamepad2, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { preloadRoute } from '@/lib/route-preload';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
@@ -87,6 +87,7 @@ const SCROLL_NAV_ITEMS = [
   { icon: Vault, label: 'Staking', path: '/app/stake' },
   { icon: Zap, themedIcon: 'superpowers', label: 'SuperPowers', path: '/app/superpowers' },
   { icon: ShieldCheck, label: 'Governance', path: '/governance' },
+  { icon: Landmark, label: 'DAO', path: '/dao' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },

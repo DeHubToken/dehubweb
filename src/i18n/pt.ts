@@ -466,6 +466,9 @@ export const pt = {
     walletAddress: 'Endereço da Carteira',
     supportedTokens: 'Tokens Suportados',
     thankYou: 'Obrigado pelo seu apoio!',
+    daoTitle: 'Contribua através do DAO',
+    daoBody: 'O endereço EVM acima é o tesouro DO DAO. Envie DHB para ele a partir do aplicativo e sua contribuição é contada para a sua parte do pool, que é o peso que seu voto carrega quando o DAO decide como ele é gasto.',
+    daoLink: 'Abrir o tesouro DO DAO',
   },
   blog: {
     title: 'Blog',

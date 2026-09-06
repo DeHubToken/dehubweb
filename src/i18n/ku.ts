@@ -1290,6 +1290,9 @@ export const ku = {
     addressCopied: 'Navnîşan Hat Kopîkirin',
     addressCopiedDesc: 'navnîşan ji clipboard re hat kopîkirin',
     thankYou: 'Spas ji bo piştgirîkirina civaka DeHub û alîkariya me di avakirina pêşerojek nenavendî ya baştir de.',
+    daoTitle: 'Beşdarî bi rêya DAO',
+    daoBody: 'Navnîşana EVM ya jorîn xezîneya DAO ye. Ji sepanê DHB bişîne û beşdariya te di para te ya hewzê de tê hesibandin; ev par giraniya dengê te ye dema DAO biryar dide ka çawa were xerckirin.',
+    daoLink: 'Xezîneya DAO veke',
   },
   brandGuidelines: {
     title: 'Rêwerzên Brandê',

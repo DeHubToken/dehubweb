@@ -49,6 +49,7 @@ const BuyCoinsPage = lazyWithRetry(() => import('@/pages/app/BuyCoinsPage'));
 const AgentsPage = lazyWithRetry(() => import('@/pages/app/AgentsPage'));
 const FeaturesPage = lazyWithRetry(() => import('@/pages/app/FeaturesPage'));
 const GovernancePage = lazyWithRetry(() => import('@/pages/app/GovernancePage'));
+const DaoPage = lazyWithRetry(() => import('@/pages/app/DaoPage'));
 const FullWalletPage = lazyWithRetry(() => import('@/pages/app/FullWalletPage'));
 const CareersPage = lazyWithRetry(() => import('@/pages/app/CareersPage'));
 const GlossaryPage = lazyWithRetry(() => import('@/pages/app/GlossaryPage'));
@@ -103,6 +104,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'agents', path: ['/app/agents', '/agents'], component: AgentsPage, skeleton: GenericPageSkeleton },
   { key: 'features', path: ['/app/features', '/features'], component: FeaturesPage, skeleton: FeaturesSkeleton },
   { key: 'governance', path: ['/app/governance', '/governance'], component: GovernancePage, skeleton: FeaturesSkeleton },
+  { key: 'dao', path: ['/app/dao', '/dao'], component: DaoPage, skeleton: FeaturesSkeleton },
   { key: 'careers', path: ['/app/jobs', '/jobs'], component: CareersPage, skeleton: GenericPageSkeleton },
   { key: 'glossary', path: ['/app/glossary', '/glossary'], component: GlossaryPage, skeleton: GenericPageSkeleton },
   { key: 'stats', path: ['/stats', '/app/stats'], component: StatsPage, skeleton: GenericPageSkeleton },

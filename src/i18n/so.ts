@@ -464,6 +464,9 @@ export const so = {
     walletAddress: 'Cinwaanka Jeebka',
     supportedTokens: 'Token-yada La taageero',
     thankYou: 'Waad ku mahadsantahay taageeradaada!',
+    daoTitle: 'Ku darso iyada oo loo marayo DAO',
+    daoBody: 'Cinwaanka EVM ee kor ku xusan waa khasnadda DAO. DHB u soo dir barnaamijka oo kaalintaada waxaa lagu tiriyaa qaybtaada barkadda, taas oo ah culeyska codbixintaadu qaadato marka DAO go \'aansato sida loo isticmaalo.',
+    daoLink: 'Fur khasnadda DAO',
   },
   blog: {
     title: 'Blog',

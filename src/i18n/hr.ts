@@ -1304,6 +1304,9 @@ export const hr = {
     addressCopied: 'Adresa kopirana',
     addressCopiedDesc: 'adresa kopirana u međuspremnik',
     thankYou: 'Hvala vam na podršci DeHub zajednici i pomoći u izgradnji bolje decentralizirane budućnosti.',
+    daoTitle: 'Doprinos putem DAO-a',
+    daoBody: 'Gore navedena adresa EVM-a je TAO riznica. Pošaljite joj DHB iz aplikacije i vaš se doprinos računa u vaš udio u fondu, što je težina koju vaš glas nosi kada DAO odluči kako se troši.',
+    daoLink: 'Otvorite TAO RIZNICU',
   },
   brandGuidelines: {
     title: 'Smjernice brenda',

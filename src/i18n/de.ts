@@ -1268,6 +1268,9 @@ export const de = {
     addressCopied: 'Adresse kopiert',
     addressCopiedDesc: 'Adresse in die Zwischenablage kopiert',
     thankYou: 'Vielen Dank für Ihre Unterstützung der DeHub-Community und den Aufbau einer besseren dezentralen Zukunft.',
+    daoTitle: 'Über die DAO beitragen',
+    daoBody: 'Die obige EVM-Adresse ist die DAO-Schatzkammer. Senden Sie DHB über die App an sie und Ihr Beitrag wird auf Ihren Anteil am Pool angerechnet. Dies ist das Gewicht, das Ihre Stimme hat, wenn die DAO entscheidet, wie sie ausgegeben wird.',
+    daoLink: 'Öffne die DAO-Schatzkammer',
   },
   brandGuidelines: {
     title: 'Markenrichtlinien',

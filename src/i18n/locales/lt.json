@@ -3,9 +3,6 @@
     "sponsorshipUnavailable": "Nemokamos operacijos pristabdytos mūsų pusėje, ne jūsų piniginėje. Netrukus bandykite dar kartą.",
     "gasSponsorshipFailed": "Šios operacijos nepavyko padengti. Po akimirkos bandykite dar kartą."
   },
-  "work": {
-    "budgetExhausted": "Visas šio atlygio biudžetas jau paskirstytas."
-  },
   "nav": {
     "home": "Pradžia",
     "explore": "Naršyti",
@@ -26,6 +23,7 @@
     "featureRequests": "Užklausos",
     "staking": "Staking",
     "governance": "Valdymas",
+    "dao": "DAO",
     "careers": "Karjera",
     "glossary": "Žodynas",
     "arcade": "Arcade",
@@ -1197,6 +1195,42 @@
     "applicationSuccess": "Paraiška sėkmingai pateikta! Susisieksime.",
     "applicationFailed": "Nepavyko pateikti. Bandykite dar kartą."
   },
+  "dao": {
+    "title": "DAO iždas",
+    "subtitle": "Viena piniginė, finansuojama bendruomenės, išleidžiama jos balsu",
+    "contribute": "Prisidėkite",
+    "contributeIntro": "Nusiųskite DHB iš savo piniginės į iždą. Kiekvienas jūsų pridėtas žetonas padidina jūsų dalį fonde, o jūsų dalis lemia jūsų balso svorį, kai DAO sprendžia, kaip jis bus išleistas.",
+    "amountLabel": "Suma (DHB)",
+    "youHold": "Jūs turite {{amount}} DHB",
+    "irreversible": "Įnašai yra pervedimai grandinėje. Jų negalima atšaukti ar atsiimti.",
+    "switchChain": "Pakeiskite savo piniginę į {{chains}}, kad prisidėtumėte.",
+    "sendAmount": "Siųsti {{amount}} DHB",
+    "sentTitle": "Įnašas išsiųstas",
+    "sentDesc": "{{amount}} DHB išsiųsta į iždą {{chain}}. Jūsų dalis bus atnaujinta, kai bus indeksuotas blokas.",
+    "viewTx": "Peržiūrėti operaciją",
+    "sendFailed": "Įnašas nepavyko",
+    "treasuryBalance": "Iždo likutis",
+    "refresh": "Atnaujinti",
+    "treasuryAddress": "Iždo adresas",
+    "copyAddress": "Kopijuoti adresą",
+    "addressCopied": "Adresas nukopijuotas",
+    "sendAnyWallet": "Kiekvienas gali čia siųsti DHB iš bet kurios piniginės ar biržos. Pervedimai Base ir BNB įskaitomi į jūsų dalį.",
+    "loadFailed": "Šiuo metu nepavyksta nuskaityti iždo. Pabandykite dar kartą po akimirkos.",
+    "yourPower": "Jūsų galia",
+    "yourContribution": "{{amount}} DHB prisidėta",
+    "addMore": "Pridėti daugiau",
+    "noContributionYet": "Jūs dar neprisidėjote. Jūsų dalis fonde prasideda nuo pirmojo pervedimo.",
+    "howItWorksTitle": "Kaip veikia galia",
+    "howItWorksBody": "Jūsų galia yra jūsų įnašas, padalintas iš visko, kas kada nors buvo išsiųsta į iždą. Ji skaitoma tiesiai iš grandinės, niekada nepasibaigia ir lemia jūsų balso svorį, kai DAO balsuoja dėl išlaidų.",
+    "contributors": "Prisidėjusieji",
+    "pooledTotal": "{{amount}} DHB fonde",
+    "noContributors": "Dar nėra įnašų. Būkite pirmas.",
+    "recent": "Naujausi įnašai",
+    "you": "Jūs",
+    "transferCount_one": "{{count}} perdavimas",
+    "transferCount_other": "{{count}} pervedimai",
+    "power": "galia"
+  },
   "governance": {
     "title": "Valdymas",
     "proposalCount": "{{count}} pasiūlymas pateiktas",
@@ -1828,6 +1862,9 @@
     "aimAtAccount": "Kieno sekėjai turėtų tai matyti?",
     "aimPlaceholder": "Naudotojo vardas arba piniginės adresas",
     "aimAtTiers": "Kurie ženklelių lygiai turėtų tai matyti?"
+  },
+  "work": {
+    "budgetExhausted": "Visas šio atlygio biudžetas jau paskirstytas."
   },
   "videoLooks": {
     "button": "Kameros stiliai",
