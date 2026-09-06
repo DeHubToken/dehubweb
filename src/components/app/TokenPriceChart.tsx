@@ -14,6 +14,38 @@ interface TokenPriceChartProps {
   externalUrl?: string;
 }
 
+/**
+ * What a token with no series looks like.
+ *
+ * A pinned or untraded price has no history to draw, and the old "Chart
+ * unavailable" text read as breakage next to a live price and a real market
+ * cap. A flat line is the honest picture: the price did not move. It is plain
+ * SVG rather than a two-point recharts series so there is no tooltip inviting
+ * anyone to read a data point off a line that has none.
+ */
+function FlatLine() {
+  return (
+    <div className="w-full h-[180px] bg-zinc-900/50">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full" aria-hidden="true">
+        <defs>
+          <linearGradient id="chartGrad-flat" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#34d399" stopOpacity={0.3} />
+            <stop offset="100%" stopColor="#34d399" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        <path d="M0,50 L100,50 L100,100 L0,100 Z" fill="url(#chartGrad-flat)" />
+        <path
+          d="M0,50 L100,50"
+          fill="none"
+          stroke="#34d399"
+          strokeWidth={2}
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+    </div>
+  );
+}
+
 const SELECTABLE_TIMEFRAMES: ChartTimeframe[] = ['1D', '7D', '30D', '90D', '1Y'];
 
 function formatTime(timestamp: number, timeframe: ChartTimeframe = '7D'): string {
@@ -60,9 +92,7 @@ export function TokenPriceChart({ data, isLoading, timeframe = '7D', onTimeframe
       <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
     </div>
   ) : !data || data.length === 0 ? (
-    <div className="w-full h-[180px] bg-zinc-900/50 flex items-center justify-center">
-      <span className="text-zinc-600 text-sm">Chart unavailable</span>
-    </div>
+    <FlatLine />
   ) : (
     <div className="w-full h-[180px] bg-zinc-900/50">
       <ResponsiveContainer width="100%" height="100%">
