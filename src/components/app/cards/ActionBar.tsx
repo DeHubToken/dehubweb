@@ -649,11 +649,18 @@ export function ActionBar({
 
   // Only ever one open. They sit inches apart on the same row, and two trays
   // stacked over each other is unreadable however they are anchored.
-  useEffect(() => { if (likeTray.open) dislikeTray.close(); }, [likeTray.open, dislikeTray]);
-  useEffect(() => { if (dislikeTray.open) likeTray.close(); }, [dislikeTray.open, likeTray]);
+  // Deps are the tray's OWN `open` plus the sibling's `close`, which the hook
+  // keeps stable — not the tray objects, which are new on every render. With
+  // the objects in there both effects ran on every render, so a moment where
+  // both were open (a hold landing inside the other's 220ms hover grace) had
+  // each of them closing the other and the tray the reader just asked for shut
+  // with the one they were leaving. Keyed on `open`, only the newly opened one
+  // runs, and it wins.
+  useEffect(() => { if (likeTray.open) dislikeTray.close(); }, [likeTray.open, dislikeTray.close]);
+  useEffect(() => { if (dislikeTray.open) likeTray.close(); }, [dislikeTray.open, likeTray.close]);
   useEffect(() => {
     closeTrays.current = () => { likeTray.close(); dislikeTray.close(); };
-  }, [likeTray, dislikeTray]);
+  }, [likeTray.close, dislikeTray.close]);
 
   // A hold on the post's media opens the positive tray. Declared down here
   // rather than beside the other gesture listener because `reactionsEnabled`
@@ -667,7 +674,7 @@ export function ActionBar({
     };
     window.addEventListener(OPEN_REACTIONS_EVENT, listener as EventListener);
     return () => window.removeEventListener(OPEN_REACTIONS_EVENT, listener as EventListener);
-  }, [postId, enableDoubleTapLike, reactionsEnabled, likeTray]);
+  }, [postId, enableDoubleTapLike, reactionsEnabled, likeTray.openNow]);
 
   /**
    * The one glyph the thumbs-up wears: the viewer's own positive reaction, else
