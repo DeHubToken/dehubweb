@@ -839,12 +839,19 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // cursor popping a tray open over the video is not what a viewer asked for.
   const likeTray = useReactionTray(true, { hover: false });
   const dislikeTray = useReactionTray(true, { hover: false });
-  useEffect(() => { if (likeTray.open) dislikeTray.close(); }, [likeTray.open, dislikeTray]);
-  useEffect(() => { if (dislikeTray.open) likeTray.close(); }, [dislikeTray.open, likeTray]);
+  // Deps are the tray's OWN `open` plus the sibling's `close`, which the hook
+  // keeps stable — not the tray objects, which are new on every render. With
+  // the objects in there both effects ran on every render, so a moment where
+  // both were open (a hold landing inside the other's 220ms hover grace) had
+  // each of them closing the other and the tray the reader just asked for shut
+  // with the one they were leaving. Keyed on `open`, only the newly opened one
+  // runs, and it wins.
+  useEffect(() => { if (likeTray.open) dislikeTray.close(); }, [likeTray.open, dislikeTray.close]);
+  useEffect(() => { if (dislikeTray.open) likeTray.close(); }, [dislikeTray.open, likeTray.close]);
   useEffect(() => {
     closeTrays.current = () => { likeTray.close(); dislikeTray.close(); };
     openLikeTray.current = likeTray.openNow;
-  }, [likeTray, dislikeTray]);
+  }, [likeTray.close, likeTray.openNow, dislikeTray.close]);
 
   /** One glyph on the thumb: your own positive reaction, else the post's most-used. */
   const leadReaction = resolveLeadReaction(localReactionCounts, myReaction);
