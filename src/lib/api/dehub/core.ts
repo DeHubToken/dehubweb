@@ -5,6 +5,15 @@ export const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/
 export const DEHUB_API_BASE = "https://api.dehub.io";
 
 /**
+ * Wall-clock ceiling for ordinary API calls.
+ *
+ * Browsers do not time fetch out. If a deployment or mobile network change
+ * strands a socket, the promise otherwise stays pending and every loading
+ * state waiting on it can remain visible forever.
+ */
+const DEFAULT_API_TIMEOUT_MS = 20_000;
+
+/**
  * Convert relative media paths to absolute CDN URLs
  * The DeHub API returns relative paths like "images/xxx.jpg"
  */
@@ -26,6 +35,17 @@ export class AuthenticationError extends Error {
   constructor(message: string = 'Session expired. Please sign in again.') {
     super(message);
     this.name = 'AuthenticationError';
+  }
+}
+
+export class RequestTimeoutError extends Error {
+  readonly isTimeout = true;
+  readonly url: string;
+
+  constructor(url: string, ms: number) {
+    super(`Request timed out after ${ms}ms`);
+    this.name = 'RequestTimeoutError';
+    this.url = url;
   }
 }
 
@@ -371,9 +391,18 @@ export async function apiCall<T>(
     params?: Record<string, string | number | undefined>;
     requiresAuth?: boolean;
     _retry?: boolean;
+    /** Override the request ceiling. Defaults to 20 seconds. */
+    timeoutMs?: number;
   } = {},
 ): Promise<T> {
-  const { method = "GET", body, params = {}, requiresAuth = false, _retry = false } = options;
+  const {
+    method = "GET",
+    body,
+    params = {},
+    requiresAuth = false,
+    _retry = false,
+    timeoutMs = DEFAULT_API_TIMEOUT_MS,
+  } = options;
 
   const url = new URL(endpoint, DEHUB_API_BASE);
   Object.entries(params).forEach(([key, value]) => {
@@ -403,12 +432,28 @@ export async function apiCall<T>(
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch(url.toString(), {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-    cache: 'no-store',
-  });
+  const controller = new AbortController();
+  let timedOut = false;
+  const timer = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, timeoutMs);
+
+  let response: Response;
+  try {
+    response = await fetch(url.toString(), {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+      cache: 'no-store',
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (timedOut) throw new RequestTimeoutError(url.toString(), timeoutMs);
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
