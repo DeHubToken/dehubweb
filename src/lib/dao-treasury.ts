@@ -28,7 +28,7 @@ import {
 } from '@/lib/contracts/dhb-token';
 
 /** Same address as the EVM line on /docs/donate. Change both or neither. */
-export const DAO_TREASURY_ADDRESS = '0x1759ceb6255dbebfe2c0c51edbcd29ad7efb9229';
+export const DAO_TREASURY_ADDRESS = '0xb6FCACda06676B775188Dfc9c4D7C4AEb564d3c4';
 
 export const DAO_CONTRIBUTION_CHAINS = [BASE_CHAIN_ID, BNB_CHAIN_ID] as const;
 export const DAO_BALANCE_CHAINS = [BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID] as const;
