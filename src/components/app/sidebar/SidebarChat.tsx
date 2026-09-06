@@ -255,7 +255,10 @@ export function SidebarChat() {
     const replyToId = replyTo?.id;
     setReplyTo(null);
     try {
-      await send(gifUrl, 'gif', undefined, replyToId);
+      // The URL belongs in the attachment: passed as the body it arrived with
+      // no image_url at all, so the row below fell through to the text branch
+      // and the GIF rendered as a link on every client.
+      await send('', 'gif', gifUrl, replyToId);
     } catch (err) {
       console.error('[SidebarChat] GIF send failed:', err);
       toast.error('Failed to send GIF');
@@ -475,8 +478,8 @@ export function SidebarChat() {
                         </div>
                       ) : msg.message_type === 'image' && msg.image_url ? (
                         <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5" />
-                      ) : msg.message_type === 'gif' && msg.image_url ? (
-                        <img src={msg.image_url} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
+                      ) : msg.message_type === 'gif' && (msg.image_url || msg.content) ? (
+                        <img src={msg.image_url || msg.content} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
                       ) : (msg.message_type === 'audio' || msg.message_type === 'voice') && (msg.audio_url || msg.image_url) ? (
                         <div className="mt-1">
                           <VoiceWaveformPlayer src={msg.audio_url || msg.image_url || ''} />

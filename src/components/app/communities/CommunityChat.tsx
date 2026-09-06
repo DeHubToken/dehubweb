@@ -503,7 +503,9 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
     const replyToId = replyTo?.id;
     setReplyTo(null);
     try {
-      await sendMessage(gifUrl, 'gif', gifUrl, replyToId, {
+      // image_url carries the picture; the body stays empty so a client that
+      // renders the text does not print the URL under the GIF as a link.
+      await sendMessage('', 'gif', gifUrl, replyToId, {
         username: profileData?.handle || undefined,
         displayName: profileData?.name || undefined,
         avatarUrl: profileData?.avatarUrl || undefined,
@@ -785,8 +787,8 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                             </span>
                           )}
                         </span>
-                        {msg.message_type === 'gif' && msg.image_url ? (
-                          <img src={msg.image_url} alt="GIF" className="max-w-[280px] max-h-32 rounded mt-0.5" loading="lazy" />
+                        {msg.message_type === 'gif' && (msg.image_url || msg.content) ? (
+                          <img src={msg.image_url || msg.content} alt="GIF" className="max-w-[280px] max-h-32 rounded mt-0.5" loading="lazy" />
                         ) : msg.message_type === 'voice' && msg.image_url ? (
                           <div className="mt-1">
                             <VoiceWaveformPlayer src={msg.image_url} />

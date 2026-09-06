@@ -235,7 +235,10 @@ export function PublicChat({ onBack }: PublicChatProps) {
         const { url: imageUrl } = await uploadChatImage(args.mediaFile);
         await send(args.content || '', 'image', imageUrl, replyToId);
       } else if (args.type === 'gif' && args.gifUrl) {
-        await send(args.gifUrl, 'gif', args.gifUrl, replyToId);
+        // The picture goes in the attachment, never in the body. A GIF posted
+        // with its URL as the message text reads as a picture here — every
+        // other client that renders the text renders a stray link instead.
+        await send('', 'gif', args.gifUrl, replyToId);
       } else if (args.type === 'voice' && args.mediaFile) {
         const { url: audioUrl, duration } = await uploadLiveChatVoice(args.mediaFile);
         await send('', 'audio', undefined, replyToId, audioUrl, duration);

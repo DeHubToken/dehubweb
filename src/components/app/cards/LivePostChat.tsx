@@ -453,8 +453,8 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                       </div>
                     ) : msg.message_type === 'image' && msg.image_url ? (
                       <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5" />
-                    ) : msg.message_type === 'gif' && msg.image_url ? (
-                      <img src={msg.image_url} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
+                    ) : msg.message_type === 'gif' && (msg.image_url || msg.content) ? (
+                      <img src={msg.image_url || msg.content} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
                     ) : (
                       <TranslatableChatMsg content={msg.content} />
                     )}
