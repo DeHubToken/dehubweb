@@ -141,6 +141,13 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
       setUploadProgress(100);
       toast.dismiss('quote-mint');
       toast.success('Quote posted!');
+      if (mintSig.homeFeedRestricted) {
+        toast.warning('Home feed limit reached', {
+          description:
+            'This quote is live on your profile and in Following, but it will not appear on the Home feed. Hold more DHB to unlock higher badges and more daily Home-feed reach.',
+          duration: 12000,
+        });
+      }
       queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
       setContent('');
       onOpenChange(false);
