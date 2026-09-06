@@ -326,6 +326,48 @@ export async function toggleCommentDislike(params: {
   return response as { result: boolean; disliked: boolean; dislikes: number };
 }
 
+/** What /react_comment answers with — enough to settle a row without refetching it. */
+export interface CommentReactionResponse {
+  result?: boolean;
+  action?: 'added' | 'removed' | 'changed';
+  currentReaction: PostReaction | null;
+  previousReaction?: PostReaction | null;
+  liked: boolean;
+  disliked: boolean;
+  likes: number;
+  dislikes: number;
+  reactionCounts?: Record<string, number>;
+}
+
+/**
+ * Cast one of the nine reactions on a comment or reply.
+ *
+ * The comment-level twin of `reactToPost`, and the endpoint `like_comment` and
+ * `dislike_comment` are now wrappers on server-side. Same toggle contract:
+ * sending the reaction the viewer already holds removes it, a different one
+ * swaps it, and `likes`/`dislikes` only move when the polarity changed.
+ */
+export async function reactToComment(params: {
+  commentId: string;
+  reaction: PostReaction;
+}): Promise<CommentReactionResponse> {
+  const response = await apiCall<{ result: CommentReactionResponse } | CommentReactionResponse>(
+    '/api/react_comment',
+    {
+      method: 'POST',
+      // Mirrors reactToPost: the backend's reqParam reads query OR body, and
+      // sending it both ways survives any middleware that drops one of them.
+      params: { reaction: params.reaction },
+      body: { commentId: params.commentId, reaction: params.reaction },
+      requiresAuth: true,
+    },
+  );
+  if (response && typeof response === 'object' && 'result' in response && typeof response.result === 'object') {
+    return response.result as CommentReactionResponse;
+  }
+  return response as CommentReactionResponse;
+}
+
 // ============ Repost / Quote Post ============
 
 export async function getUserReposts(address: string, page: number = 1, limit: number = 20): Promise<{ result: DeHubNFT[]; pagination?: { page: number; limit: number; totalCount: number; totalPages: number; hasMore: boolean } }> {
