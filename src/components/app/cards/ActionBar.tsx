@@ -27,6 +27,7 @@ import {
   reactionMeta,
   reconcileReactionCounts,
   resolveLeadReaction,
+  resolveNegativeLeadReaction,
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
@@ -57,7 +58,7 @@ import {
   type DoubleTapLikeEventDetail,
   type OpenReactionsEventDetail,
 } from '@/lib/tap-reactions';
-import { useIsTouchDevice } from '@/hooks/use-touch-device';
+import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { Gem } from 'lucide-react';
 import {
   Drawer,
@@ -307,7 +308,10 @@ export function ActionBar({
     cachedVote?.reactionCounts ??
       reactionCountsOrSeed(initialReactionCounts, likeCount ?? 0, dislikeCount ?? 0),
   );
-  const [pickerOpen, setPickerOpen] = useState(false);
+  // Closes whichever reaction tray is open. A ref because handleReaction is
+  // declared above the trays and every cast — thumb, tray or double-tap —
+  // should put them away.
+  const closeTrays = useRef<() => void>(() => {});
   const [reactionInfoOpen, setReactionInfoOpen] = useState(false);
   const [isSharingImage, setIsSharingImage] = useState(false);
   // Track when user voted locally so we don't let stale API refetches overwrite optimistic state
@@ -465,7 +469,7 @@ export function ActionBar({
     const newReactionCounts = optimistic.reactionCounts;
 
     setIsVoting(true);
-    setPickerOpen(false);
+    closeTrays.current();
     lastVoteTimeRef.current = Date.now();
 
     if (!hasExternalHandler) {
@@ -638,61 +642,32 @@ export function ActionBar({
   const reactionInfoTokenId = tokenId ?? (isNaN(numericPostId) ? undefined : numericPostId);
   const canViewReactionInfo = isOwnPost && reactionInfoTokenId !== undefined;
 
-  const isTouchDevice = useIsTouchDevice();
-  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Set when a hold opened the tray, so the click that ends the same press
-  // doesn't also cast a plain like.
-  const longPressFired = useRef(false);
+  // One tray per thumb: the seven positive faces hang off the thumbs-up, 👎 and
+  // 💩 off the thumbs-down. Hold or hover opens either — see use-reaction-tray.
+  const likeTray = useReactionTray(reactionsEnabled);
+  const dislikeTray = useReactionTray(reactionsEnabled);
 
-  const clearTimers = useCallback(() => {
-    if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null; }
-    if (hoverTimer.current) { clearTimeout(hoverTimer.current); hoverTimer.current = null; }
-  }, []);
+  // Only ever one open. They sit inches apart on the same row, and two trays
+  // stacked over each other is unreadable however they are anchored.
+  useEffect(() => { if (likeTray.open) dislikeTray.close(); }, [likeTray.open, dislikeTray]);
+  useEffect(() => { if (dislikeTray.open) likeTray.close(); }, [dislikeTray.open, likeTray]);
+  useEffect(() => {
+    closeTrays.current = () => { likeTray.close(); dislikeTray.close(); };
+  }, [likeTray, dislikeTray]);
 
-  useEffect(() => clearTimers, [clearTimers]);
-
-  const startLongPress = useCallback(() => {
-    if (!reactionsEnabled) return;
-    longPressFired.current = false;
-    longPressTimer.current = setTimeout(() => {
-      longPressFired.current = true;
-      setPickerOpen(true);
-    }, 400);
-  }, [reactionsEnabled]);
-
-  const cancelLongPress = useCallback(() => {
-    if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null; }
-  }, []);
-
-  // A hold on the post's media opens this same tray. Declared down here rather
-  // than beside the other gesture listener because `reactionsEnabled` and
-  // `setPickerOpen` are defined above this point and below that one.
+  // A hold on the post's media opens the positive tray. Declared down here
+  // rather than beside the other gesture listener because `reactionsEnabled`
+  // and the tray are defined above this point and below that one.
   useEffect(() => {
     if (!postId || !enableDoubleTapLike || !reactionsEnabled) return;
     const listener = (e: Event) => {
       const detail = (e as CustomEvent<OpenReactionsEventDetail>).detail;
       if (!detail || String(detail.postId) !== String(postId)) return;
-      setPickerOpen(true);
+      likeTray.openNow();
     };
     window.addEventListener(OPEN_REACTIONS_EVENT, listener as EventListener);
     return () => window.removeEventListener(OPEN_REACTIONS_EVENT, listener as EventListener);
-  }, [postId, enableDoubleTapLike, reactionsEnabled]);
-
-  // Mouse users get the tray on hover instead of a hold. The handlers sit on
-  // the wrapper that contains both the thumb and the tray, so travelling from
-  // one to the other doesn't count as leaving.
-  const handleReactionAreaEnter = useCallback(() => {
-    if (!reactionsEnabled || isTouchDevice) return;
-    if (hoverTimer.current) clearTimeout(hoverTimer.current);
-    hoverTimer.current = setTimeout(() => setPickerOpen(true), 450);
-  }, [reactionsEnabled, isTouchDevice]);
-
-  const handleReactionAreaLeave = useCallback(() => {
-    if (isTouchDevice) return;
-    if (hoverTimer.current) clearTimeout(hoverTimer.current);
-    hoverTimer.current = setTimeout(() => setPickerOpen(false), 220);
-  }, [isTouchDevice]);
+  }, [postId, enableDoubleTapLike, reactionsEnabled, likeTray]);
 
   /**
    * The one glyph the thumbs-up wears: the viewer's own positive reaction, else
@@ -706,6 +681,12 @@ export function ActionBar({
   const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
   /** …and its counterpart, which lights the thumbs-down instead. */
   const myNegativeReaction = myReaction && !isPositiveReaction(myReaction) ? myReaction : null;
+  /**
+   * The glyph the thumbs-DOWN wears — your own 💩 and nothing else. It never
+   * leads with the crowd's pick the way the thumb above it does; see
+   * resolveNegativeLeadReaction.
+   */
+  const negativeLeadReaction = resolveNegativeLeadReaction(myReaction);
 
   // An off-chain post shares as its own slug, never as an NFT-style URL.
   const shareUrlForPost = () =>
@@ -862,27 +843,65 @@ export function ActionBar({
         <span className="text-xs text-zinc-400 relative z-10" style={{ marginLeft: '2.5px' }}>{formatCount(tipCount)}</span>
       </button>
 
+      {/* Downvotes — tap the thumb, or hold (hover on desktop) for 💩. The
+          negative pair lives here rather than in the tray on the thumbs-UP:
+          they move THIS count, and the button that means "no" is where a
+          reader goes looking for them. The wrapper is `relative` so the tray
+          anchors to it, and `align="left"` because the dislike sits at the
+          left of the row where a right-anchored tray would run off the card. */}
       {!hideDislike && (
-        <motion.button
-          onClick={() => handleVote(false)}
-          /* Theme hook for the engaged state. `fill-current` on the glyph is the
-             only other signal, and it can't cover repost (which changes stroke
-             weight instead) — so every engagement button carries the same
-             attribute and themes style one selector. */
-          data-engaged={isDisliked ? 'dislike' : undefined}
-          {...reactionGlowProps(myNegativeReaction)}
-          className={cn(
-            "flex items-center gap-0.5 transition-colors text-white",
-            isVoting && "opacity-50"
-          )}
-          aria-label="Dislike"
-          disabled={isVoting}
-          animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
-          transition={{ duration: 0.3, ease: "easeOut" }}
+        <span
+          className={cn("relative flex items-center gap-0.5", isVoting && "opacity-50")}
+          {...dislikeTray.areaProps}
         >
-          <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
+          <ReactionPicker
+            open={dislikeTray.open}
+            polarity="negative"
+            current={myReaction}
+            counts={localReactionCounts}
+            onSelect={(reaction) => { dislikeTray.close(); handleReaction(reaction); }}
+            onClose={dislikeTray.close}
+            align="left"
+          />
+          <motion.button
+            onClick={() => {
+              // The click that ends a hold must not also cast a plain dislike.
+              if (dislikeTray.consumePress()) return;
+              handleVote(false);
+            }}
+            {...dislikeTray.buttonProps}
+            /* Theme hook for the engaged state. `fill-current` on the glyph is the
+               only other signal, and it can't cover repost (which changes stroke
+               weight instead) — so every engagement button carries the same
+               attribute and themes style one selector. */
+            data-engaged={isDisliked ? 'dislike' : undefined}
+            {...reactionGlowProps(myNegativeReaction)}
+            className="flex items-center transition-colors text-white select-none touch-none"
+            aria-label={
+              myNegativeReaction
+                ? `${reactionMeta(myNegativeReaction).label} — hold to change your reaction`
+                : 'Dislike — hold to react'
+            }
+            aria-haspopup={reactionsEnabled ? 'menu' : undefined}
+            aria-expanded={reactionsEnabled ? dislikeTray.open : undefined}
+            disabled={isVoting}
+            animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
+            {negativeLeadReaction ? (
+              <span
+                data-engaged-glyph
+                className="text-[1.05rem] leading-none w-5 h-5 flex items-center justify-center"
+                aria-hidden="true"
+              >
+                {reactionMeta(negativeLeadReaction).emoji}
+              </span>
+            ) : (
+              <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
+            )}
+          </motion.button>
           <span className="text-xs text-zinc-400">{formatCount(localDislikeCount)}</span>
-        </motion.button>
+        </span>
       )}
 
       {/* Share - opens share sheet with repost/quote/copy-link/etc options */}
@@ -929,20 +948,19 @@ export function ActionBar({
           not public. The wrapper is `relative` so the tray anchors to it. */}
       <span
         className={cn("relative flex items-center gap-0.5", isVoting && "opacity-50")}
-        onMouseEnter={handleReactionAreaEnter}
-        onMouseLeave={handleReactionAreaLeave}
+        {...likeTray.areaProps}
       >
         <ReactionPicker
-          open={pickerOpen}
+          open={likeTray.open}
           current={myReaction}
           counts={localReactionCounts}
-          onSelect={handleReaction}
-          onClose={() => setPickerOpen(false)}
+          onSelect={(reaction) => { likeTray.close(); handleReaction(reaction); }}
+          onClose={likeTray.close}
           align="right"
           onShowInfo={
             canViewReactionInfo
               ? () => {
-                  setPickerOpen(false);
+                  likeTray.close();
                   setReactionInfoOpen(true);
                 }
               : undefined
@@ -952,15 +970,10 @@ export function ActionBar({
           onClick={(e) => {
             e.stopPropagation();
             // The click that ends a hold must not also cast a like.
-            if (longPressFired.current) { longPressFired.current = false; return; }
+            if (likeTray.consumePress()) return;
             handleVote(true);
           }}
-          onPointerDown={startLongPress}
-          onPointerUp={cancelLongPress}
-          onPointerLeave={cancelLongPress}
-          onPointerCancel={cancelLongPress}
-          // Holding an element on touch otherwise pops the OS text/callout menu.
-          onContextMenu={(e) => { if (reactionsEnabled) e.preventDefault(); }}
+          {...likeTray.buttonProps}
           /* Engaged whenever the viewer holds a POSITIVE reaction, not only a
              plain 👍 — a post the viewer loved is still a post they liked. */
           data-engaged={isLiked ? (myReaction && myReaction !== 'like' ? 'reaction' : 'like') : undefined}
@@ -976,7 +989,7 @@ export function ActionBar({
               : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`
           }
           aria-haspopup={reactionsEnabled ? 'menu' : undefined}
-          aria-expanded={reactionsEnabled ? pickerOpen : undefined}
+          aria-expanded={reactionsEnabled ? likeTray.open : undefined}
           disabled={isVoting}
           animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
           transition={{ duration: 0.3, ease: "easeOut" }}

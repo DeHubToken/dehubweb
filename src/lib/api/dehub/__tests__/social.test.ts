@@ -150,11 +150,43 @@ describe('toggleCommentLike', () => {
     const { toggleCommentLike } = await import('@/lib/api/dehub/social');
 
     const result = await toggleCommentLike({ commentId: 'c1' });
-    
+
     const body = JSON.parse(fetchOpts()?.body as string);
     expect(body.commentId).toBe('c1');
     expect(result.isLiked).toBe(true);
     expect(result.likeCount).toBe(5);
+  });
+});
+
+// ──────────────────────────────────────────────
+// reactToComment
+// ──────────────────────────────────────────────
+
+describe('reactToComment', () => {
+  it('sends the reaction in the body and unwraps the result envelope', async () => {
+    mockFetch({
+      result: {
+        action: 'changed',
+        currentReaction: 'love',
+        previousReaction: 'like',
+        liked: true,
+        disliked: false,
+        likes: 3,
+        dislikes: 0,
+        reactionCounts: { like: 2, love: 1 },
+      },
+    });
+    const { reactToComment } = await import('@/lib/api/dehub/social');
+
+    const result = await reactToComment({ commentId: 'c1', reaction: 'love' });
+
+    const body = JSON.parse(fetchOpts()?.body as string);
+    expect(body.commentId).toBe('c1');
+    expect(body.reaction).toBe('love');
+    expect(result.currentReaction).toBe('love');
+    // A same-polarity switch leaves the headline where it was.
+    expect(result.likes).toBe(3);
+    expect(result.reactionCounts).toEqual({ like: 2, love: 1 });
   });
 });
 
