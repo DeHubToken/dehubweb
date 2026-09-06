@@ -19,7 +19,13 @@
 
 import { useState, useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
 import { isQuietNow } from '@/lib/quiet-hours';
-import { subscribeToWebPush, unsubscribeFromWebPush } from '@/lib/web-push';
+import {
+  getWebPushState,
+  subscribeToWebPush,
+  subscribeWebPushState,
+  unsubscribeFromWebPush,
+  type WebPushState,
+} from '@/lib/web-push';
 
 /** The hook mounts on several surfaces; the reconcile below is once per load. */
 let reconciledThisLoad = false;
@@ -90,6 +96,20 @@ function subscribeStoredEnabled(onChange: () => void): () => void {
 /** The stored on/off flag, kept in sync across every surface that shows it. */
 export function useStoredEnabled(): boolean {
   return useSyncExternalStore(subscribeStoredEnabled, getStoredEnabled, () => false);
+}
+
+/**
+ * What push actually managed to do in this browser.
+ *
+ * The stored flag and the permission both say what *should* happen; only this
+ * says whether a subscription exists. A surface that shows the switch needs it,
+ * or it reports "on" for a browser that has refused to register.
+ *
+ * Resolved by the reconcile below, which runs once per page load wherever the
+ * notifications bell is mounted.
+ */
+export function useWebPushState(): WebPushState {
+  return useSyncExternalStore(subscribeWebPushState, getWebPushState, () => 'unknown' as const);
 }
 
 export function getLastSeenTimestamp(): number {

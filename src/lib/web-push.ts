@@ -17,6 +17,46 @@
 import { getVapidPublicKey, registerPushToken, unregisterPushToken } from '@/lib/api/dehub';
 import { getDeviceId } from '@/lib/device-id';
 
+/**
+ * What the browser is actually doing about push, as opposed to what our
+ * stored flag says it ought to be doing.
+ *
+ * Those are not the same thing, and the gap between them is not theoretical:
+ * a browser can hold the permission, run the service worker, and still refuse
+ * to register a subscription. A corrupt push key store does exactly that, and
+ * every subscribe() then fails with "could not retrieve the public key".
+ * None of that is visible to the reader, so the switch sits on over a channel
+ * that cannot deliver. This is what lets a surface say so instead.
+ *
+ *   'unknown'     - not resolved yet this page load
+ *   'unsupported' - no service worker, or no PushManager
+ *   'off'         - no permission, or deliberately unsubscribed
+ *   'subscribed'  - a live subscription the server knows about
+ *   'unavailable' - we asked, and the browser or the deployment said no
+ */
+export type WebPushState = 'unknown' | 'unsupported' | 'off' | 'subscribed' | 'unavailable';
+
+const STATE_EVENT = 'dehub:web-push-state-changed';
+
+let state: WebPushState = 'unknown';
+
+function setState(next: WebPushState): void {
+  if (state === next) return;
+  state = next;
+  try {
+    window.dispatchEvent(new Event(STATE_EVENT));
+  } catch {}
+}
+
+export function getWebPushState(): WebPushState {
+  return state;
+}
+
+export function subscribeWebPushState(onChange: () => void): () => void {
+  window.addEventListener(STATE_EVENT, onChange);
+  return () => window.removeEventListener(STATE_EVENT, onChange);
+}
+
 /** The VAPID key arrives base64url; `applicationServerKey` wants raw bytes. */
 function urlBase64ToUint8Array(base64: string): Uint8Array<ArrayBuffer> {
   const padding = '='.repeat((4 - (base64.length % 4)) % 4);
@@ -49,6 +89,8 @@ export function isWebPushSupported(): boolean {
   );
 }
 
+let inFlight: Promise<boolean> | null = null;
+
 /**
  * Subscribe this browser and tell the API about it.
  *
@@ -57,12 +99,36 @@ export function isWebPushSupported(): boolean {
  * notifications working either way, not to explain the browser to the reader.
  */
 export async function subscribeToWebPush(): Promise<boolean> {
-  if (!isWebPushSupported()) return false;
-  if (Notification.permission !== 'granted') return false;
+  if (!isWebPushSupported()) {
+    setState('unsupported');
+    return false;
+  }
+  if (Notification.permission !== 'granted') {
+    setState('off');
+    return false;
+  }
 
+  // Two callers race on a normal load: setStoredEnabled, when a surface flips
+  // the switch, and the once-per-load reconcile. Each one that gets through is
+  // a POST to /api/push/token, so they share one attempt rather than making
+  // two and registering the same endpoint twice.
+  if (!inFlight) {
+    inFlight = attemptSubscribe().finally(() => {
+      inFlight = null;
+    });
+  }
+  return inFlight;
+}
+
+async function attemptSubscribe(): Promise<boolean> {
   try {
     const publicKey = await getVapidPublicKey();
-    if (!publicKey) return false;
+    if (!publicKey) {
+      // No VAPID keys on this deployment: push is off for everyone, which is
+      // a different thing from broken for this reader.
+      setState('unavailable');
+      return false;
+    }
 
     // `ready` rather than `register`: the worker is registered at boot
     // (lib/register-sw), and waiting on ready avoids racing that.
@@ -79,6 +145,7 @@ export async function subscribeToWebPush(): Promise<boolean> {
         new Uint8Array(existingKey).toString() === urlBase64ToUint8Array(publicKey).toString();
       if (sameKey) {
         await registerSubscription(existing);
+        setState('subscribed');
         return true;
       }
       await existing.unsubscribe().catch(() => {});
@@ -92,9 +159,11 @@ export async function subscribeToWebPush(): Promise<boolean> {
     });
 
     await registerSubscription(subscription);
+    setState('subscribed');
     return true;
   } catch (error) {
     console.warn('[web-push] subscribe failed', error);
+    setState('unavailable');
     return false;
   }
 }
@@ -115,6 +184,7 @@ async function registerSubscription(subscription: PushSubscription): Promise<voi
 /** Unsubscribe this browser and drop the row server-side. */
 export async function unsubscribeFromWebPush(): Promise<void> {
   if (!isWebPushSupported()) return;
+  setState('off');
   try {
     const registration = await navigator.serviceWorker.ready;
     const subscription = await registration.pushManager.getSubscription();
