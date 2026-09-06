@@ -10,13 +10,14 @@
 import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Landmark, Copy, Check, Loader2, HeartHandshake, ExternalLink, RefreshCw, Info } from 'lucide-react';
+import { Copy, Check, Loader2, HeartHandshake, ExternalLink, RefreshCw, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { UserAvatar } from '@/components/app/UserAvatar';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
@@ -252,9 +253,7 @@ export default function DaoPage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
-                <Landmark className="w-6 h-6 text-white" />
-              </div>
+              <ThemedIcon icon="dao-treasury" alt="" className="w-12 h-12 object-contain shrink-0" />
               <div className="min-w-0">
                 <h1 className="text-xl font-bold text-white">{t('dao.title')}</h1>
                 <p className="text-zinc-500 text-sm truncate">{t('dao.subtitle')}</p>

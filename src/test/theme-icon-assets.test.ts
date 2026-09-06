@@ -12,7 +12,7 @@ const PAGE_KEYS = [
   'wand', 'communities', 'careers', 'features', 'glossary', 'governance',
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
-  'email', 'accounts', 'usernames', 'tv', 'superpowers',
+  'email', 'accounts', 'usernames', 'tv', 'superpowers', 'dao-treasury',
 ];
 
 describe('theme icon assets', () => {
@@ -47,6 +47,8 @@ describe('theme icon assets', () => {
       .toBe('/theme-icons/osaka/arcade.webp');
     expect(resolveThemeIconAsset('/theme-icons/system/bounties.webp', 'system'))
       .toBe('/theme-icons/system/bounties.webp');
+    expect(resolveThemeIconAsset('/theme-icons/system/dao-treasury.webp', 'osaka'))
+      .toBe('/theme-icons/osaka/dao-treasury.webp');
   });
 
   it('leaves Cosmic, Lava Lamp, Light and Minimal on their existing art', () => {
@@ -71,6 +73,7 @@ describe('theme icon assets', () => {
       'src/pages/app/TVPage.tsx',
       'src/pages/app/SuperPowersPage.tsx',
       'src/pages/app/WorkPage.tsx',
+      'src/pages/app/DaoPage.tsx',
     ];
 
     for (const file of pageFiles) {
@@ -96,6 +99,7 @@ describe('theme icon assets', () => {
       'src/pages/app/AccountsPage.tsx': /\bUsers\b/,
       'src/pages/app/UsernamesPage.tsx': /\bAtSign\b/,
       'src/pages/app/SuperPowersPage.tsx': /\bRocket\b/,
+      'src/pages/app/DaoPage.tsx': /\bLandmark\b/,
       'src/components/app/tv/TVPreviewCard.tsx': /\bTv\b/,
       'src/components/app/tv/TVChannelCard.tsx': /\bTv\b/,
     };

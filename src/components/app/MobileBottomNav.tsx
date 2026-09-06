@@ -87,7 +87,7 @@ const SCROLL_NAV_ITEMS = [
   { icon: Vault, label: 'Staking', path: '/app/stake' },
   { icon: Zap, themedIcon: 'superpowers', label: 'SuperPowers', path: '/app/superpowers' },
   { icon: ShieldCheck, label: 'Governance', path: '/governance' },
-  { icon: Landmark, label: 'DAO', path: '/dao' },
+  { icon: Landmark, themedIcon: 'dao-treasury', label: 'DAO', path: '/dao' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
