@@ -144,7 +144,7 @@ function CircleButton({
       title={title}
       disabled={disabled}
       className={cn(
-        'w-11 h-11 rounded-full flex items-center justify-center transition-all active:scale-95',
+        'w-11 h-11 rounded-xl flex items-center justify-center transition-all active:scale-95',
         'bg-[rgba(255,255,255,0.08)] text-[#fff] hover:bg-[rgba(255,255,255,0.14)]',
         disabled && 'opacity-35 pointer-events-none',
         className,
@@ -205,7 +205,7 @@ function Composer({
         <button
           onClick={() => onChange('')}
           title="Clear"
-          className="w-9 h-9 rounded-full bg-[rgba(255,255,255,0.08)] text-[#fff] flex items-center justify-center hover:bg-[rgba(255,255,255,0.14)] transition-colors"
+          className="w-9 h-9 rounded-xl bg-[rgba(255,255,255,0.08)] text-[#fff] flex items-center justify-center hover:bg-[rgba(255,255,255,0.14)] transition-colors"
         >
           <Plus className="w-5 h-5" />
         </button>
@@ -248,7 +248,7 @@ function Composer({
           disabled={disabled || sending || !value.trim()}
           title="Send"
           className={cn(
-            'w-11 h-11 rounded-full bg-[#fff] text-[#000] flex items-center justify-center transition-all active:scale-95',
+            'w-11 h-11 rounded-xl bg-[#fff] text-[#000] flex items-center justify-center transition-all active:scale-95',
             (disabled || sending || !value.trim()) && 'opacity-35',
           )}
         >
@@ -577,7 +577,7 @@ export default function BuilderPage() {
               }}
               className="flex items-center gap-4 mt-6 group"
             >
-              <span className="w-11 h-11 rounded-full bg-[#fff] text-[#000] flex items-center justify-center group-active:scale-95 transition-transform">
+              <span className="w-11 h-11 rounded-xl bg-[#fff] text-[#000] flex items-center justify-center group-active:scale-95 transition-transform">
                 <Plus className="w-5 h-5" strokeWidth={2.5} />
               </span>
               <span className="text-[19px] font-semibold text-[#fff]">New build</span>

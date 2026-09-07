@@ -57,7 +57,7 @@ export function SponsoredAdCard({ ad, className, compact = false }: SponsoredAdC
               <div className="w-full h-full bg-gradient-to-br from-zinc-700/40 to-zinc-900/40" />
             )}
             <span className="absolute inset-0 flex items-center justify-center">
-              <span className="w-12 h-12 rounded-full bg-black/60 backdrop-blur flex items-center justify-center group-hover:scale-110 transition-transform">
+              <span className="w-12 h-12 rounded-xl bg-black/60 backdrop-blur flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Play className="w-5 h-5 text-white ml-0.5" fill="currentColor" />
               </span>
             </span>

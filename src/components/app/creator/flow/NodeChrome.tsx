@@ -111,7 +111,7 @@ export function NodeActionBar({ visible, actions }: { visible: boolean; actions:
               e.stopPropagation();
               a.onClick();
             }}
-            className="flex h-7 w-7 items-center justify-center rounded-full text-white/55 transition hover:bg-white/10 hover:text-white disabled:opacity-40"
+            className="flex h-7 w-7 items-center justify-center rounded-lg text-white/55 transition hover:bg-white/10 hover:text-white disabled:opacity-40"
           >
             {a.icon}
           </button>

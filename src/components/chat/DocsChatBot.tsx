@@ -271,7 +271,7 @@ export const DocsChatBot = () => {
           <span className="text-sm font-semibold text-foreground">AI Assistant</span>
           <button
             onClick={() => setIsOpen(false)}
-            className="w-8 h-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-xl bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors"
             aria-label="Close chat"
           >
             <X className="w-4 h-4 text-foreground" />

@@ -871,7 +871,7 @@ function SubmitFeatureDrawer({
                       type="button"
                       onClick={() => removeAttachment(index)}
                       aria-label={`Remove attachment ${index + 1}`}
-                      className="absolute top-1 right-1 w-6 h-6 flex items-center justify-center rounded-full bg-black/70 text-white hover:bg-black/90 transition-colors"
+                      className="absolute top-1 right-1 w-6 h-6 flex items-center justify-center rounded-lg bg-black/70 text-white hover:bg-black/90 transition-colors"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
