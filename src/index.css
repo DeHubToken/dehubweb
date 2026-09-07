@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Shorts have their own controls. Keep Android/WebKit's video chrome from
+   painting fullscreen/rotate controls across the comments split boundary. */
+.shorts-inline-video::-webkit-media-controls,
+.shorts-inline-video::-webkit-media-controls-enclosure,
+.shorts-inline-video::-webkit-media-controls-panel,
+.shorts-inline-video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+}
+
 /* 
 ================================================================================
 DEHUB DESIGN SYSTEM RULES - MUST FOLLOW FOR ALL COMPONENTS
