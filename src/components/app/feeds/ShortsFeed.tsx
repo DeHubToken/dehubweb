@@ -35,7 +35,7 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-import { SORT_OPTIONS, DATE_FILTER_OPTIONS, applySorting, filterByDate, getApiSortMode, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
+import { SORT_OPTIONS, DEFAULT_FEED_SORT, SHORTS_RESET_SORT, DATE_FILTER_OPTIONS, applySorting, filterByDate, getApiSortMode, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
 import type { ShortVideo } from '@/types/feed.types';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { AutoplayVideo } from '@/components/app/AutoplayVideo';
@@ -182,7 +182,7 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
       <div className="relative">
         <GlassFilterRow
-          items={SORT_OPTIONS.map((o) => ({ key: o.label, label: t(`filters.${o.value === 'most-viewed' ? 'mostViewed' : o.value === 'most-liked' ? 'mostLiked' : o.value === 'most-comments' ? 'mostComments' : o.value}`, o.label) }))}
+          items={SORT_OPTIONS.map((o) => ({ key: o.label, label: t(o.labelKey, o.label) }))}
           activeKey={selected.label}
           onSelect={(key) => { const o = SORT_OPTIONS.find(x => x.label === key); if (o) onSelect(o); }}
         />
@@ -343,7 +343,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const { t } = useI18n();
   const { isCollapsed } = useSidebarCollapse();
   // Sort is now client-side - default to "Latest" instead of "Random" to avoid 5-page prefetch - persisted
-  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('shorts', 'sort', SORT_OPTIONS[0]);
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('shorts', 'sort', DEFAULT_FEED_SORT);
   // Duration and upload date are client-side filters - persisted
   const [selectedDuration, setSelectedDuration] = usePersistedFeedFilter<typeof DURATION_FILTERS[number]>('shorts', 'duration', DURATION_FILTERS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('shorts', 'date', DATE_FILTER_OPTIONS[0]);
@@ -395,8 +395,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   }, [setSelectedUploadDate, beginFilterTransition]);
   const resetAllFilters = useCallback(() => {
     beginFilterTransition();
-    // SORT_OPTIONS[1], not [0]: matches what this panel's reset has always done.
-    setSelectedSort(SORT_OPTIONS[1]);
+    setSelectedSort(SHORTS_RESET_SORT);
     setSelectedCategory(null);
     setSelectedDuration(DURATION_FILTERS[0]);
     setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);

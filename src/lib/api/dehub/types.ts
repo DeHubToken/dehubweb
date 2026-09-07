@@ -323,7 +323,7 @@ export interface SearchNFTsParams {
   page?: number;
   unit?: number;
   category?: string;
-  sortMode?: "new" | "popular" | "trending" | "by-comments";
+  sortMode?: "new" | "popular" | "trending" | "by-comments" | "by-tips";
   creator_id?: string;
   postType?: string;
   search?: string;

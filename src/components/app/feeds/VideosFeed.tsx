@@ -36,7 +36,7 @@ import { mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters, type SortValue } from '@/lib/feed-utils';
+import { SORT_OPTIONS, DEFAULT_FEED_SORT, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters, type SortValue } from '@/lib/feed-utils';
 import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
 import type { ShortVideo, VideoItem } from '@/types/feed.types';
 
@@ -144,6 +144,8 @@ function getUnifiedSortBy(sortValue: SortValue): UnifiedFeedParams['sortBy'] {
       return 'likes';
     case 'most-comments':
       return 'comments';
+    case 'most-tipped':
+      return 'tips';
     case 'random':
       return 'random';
     case 'following':
@@ -258,7 +260,7 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
       <div className="relative">
         <GlassFilterRow
-          items={SORT_OPTIONS.map((o) => ({ key: o.label, label: t(`filters.${o.value === 'most-viewed' ? 'mostViewed' : o.value === 'most-liked' ? 'mostLiked' : o.value === 'most-comments' ? 'mostComments' : o.value}`, o.label) }))}
+          items={SORT_OPTIONS.map((o) => ({ key: o.label, label: t(o.labelKey, o.label) }))}
           activeKey={selected.label}
           onSelect={(key) => { const o = SORT_OPTIONS.find(x => x.label === key); if (o) onSelect(o); }}
         />
@@ -460,7 +462,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const activeFilterClass = useActiveFilterClass();
   
   // Sort is now client-side - default to "Latest" for instant loading - persisted to sessionStorage
-  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('videos', 'sort', SORT_OPTIONS[0]);
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('videos', 'sort', DEFAULT_FEED_SORT);
   // Duration and upload date are client-side filters - persisted
   const [selectedDuration, setSelectedDuration] = usePersistedFeedFilter<typeof DURATION_FILTERS[number]>('videos', 'duration', DURATION_FILTERS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('videos', 'date', DATE_FILTER_OPTIONS[0]);
@@ -527,7 +529,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   }, [toggleContentFilter, beginFilterTransition]);
   const resetAllFilters = useCallback(() => {
     beginFilterTransition();
-    setSelectedSort(SORT_OPTIONS[0]);
+    setSelectedSort(DEFAULT_FEED_SORT);
     setSelectedCategory(null);
     setSelectedDuration(DURATION_FILTERS[0]);
     setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
