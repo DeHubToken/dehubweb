@@ -25,7 +25,7 @@ export interface ApiCommentResponse {
   notFound?: boolean;
   isDisliked?: boolean;
   /**
-   * Which of the nine reactions the viewer holds on this comment.
+   * Which of the ten reactions the viewer holds on this comment.
    * `isLiked`/`isDisliked` stay its polarity, so a comment somebody loved
    * still reads as liked to every client that never learned about reactions.
    */

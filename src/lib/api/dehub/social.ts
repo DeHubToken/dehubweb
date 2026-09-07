@@ -244,7 +244,7 @@ export async function voteOnPost(params: {
 }
 
 /**
- * Cast one of the nine reactions on a post.
+ * Cast one of the ten reactions on a post.
  *
  * Supersedes `voteOnPost`, which stays for callers that only ever mean a plain
  * like/dislike. The server toggles: sending the reaction the user already holds
@@ -340,7 +340,7 @@ export interface CommentReactionResponse {
 }
 
 /**
- * Cast one of the nine reactions on a comment or reply.
+ * Cast one of the ten reactions on a comment or reply.
  *
  * The comment-level twin of `reactToPost`, and the endpoint `like_comment` and
  * `dislike_comment` are now wrappers on server-side. Same toggle contract:
@@ -582,7 +582,7 @@ export interface PostLiker {
   avatarImageUrl?: string | null;
   badgeBalance?: number;
   isFollowing?: boolean;
-  /** Which of the nine reactions this person left. */
+  /** Which of the ten reactions this person left. */
   reaction?: PostReaction;
   likedAt?: string;
 }

@@ -43,7 +43,7 @@ export interface Comment {
   isLiked?: boolean;
   isDisliked?: boolean;
   /**
-   * Which of the nine reactions the viewer holds on this comment.
+   * Which of the ten reactions the viewer holds on this comment.
    * `isLiked`/`isDisliked` are its POLARITY, exactly as on a post — a comment
    * somebody loved is still a comment they liked.
    */

@@ -52,7 +52,9 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { getNFTComments, postComment, reactToComment, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo } from '@/lib/api/dehub';
 import {
   applyReactionDelta,
+  HAS_NEGATIVE_TRAY,
   isPositiveReaction,
+  negativeThumbLabel,
   reactionForTap,
   reactionMeta,
   reconcileReactionCounts,
@@ -186,7 +188,7 @@ interface CommentItemProps {
   /** Own comments only: the like button opens the likers list instead. */
   onShowLikers: (id: string) => void;
   onDislike: (id: string) => void;
-  /** Cast a specific one of the nine — what the hold-open trays route to. */
+  /** Cast a specific one of the ten — what the hold-open trays route to. */
   onReact: (id: string, reaction: PostReaction) => void;
   onReply: (id: string) => void;
   onShare: (id: string) => void;
@@ -302,7 +304,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
   // side is off on your own comment: its button is the door to the likers
   // list, and every reaction the tray could cast there would be refused.
   const likeTray = useReactionTray(!isOwnComment);
-  const dislikeTray = useReactionTray(true);
+  const dislikeTray = useReactionTray(HAS_NEGATIVE_TRAY);
   // Deps are the tray's OWN `open` plus the sibling's `close`, which the hook
   // keeps stable — not the tray objects, which are new on every render. With
   // the objects in there both effects ran on every render, so a moment where
@@ -321,7 +323,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
     comment.myReaction && isPositiveReaction(comment.myReaction) ? comment.myReaction : null;
   const myNegativeReaction =
     comment.myReaction && !isPositiveReaction(comment.myReaction) ? comment.myReaction : null;
-  /** …and the one the thumbs-DOWN wears: your own 💩, never the crowd's. */
+  /** …and the one the thumbs-DOWN would wear, though 👎 is its own glyph. */
   const negativeLeadReaction = resolveNegativeLeadReaction(comment.myReaction);
 
   return (
@@ -521,7 +523,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
             {/* You can't like your own comment — for the author this same
                 button opens the likers list instead, count included even at 0
                 so the door is visible. On anyone else's, hold it (or hover on
-                desktop) for the seven positive faces, and a tap casts whichever
+                desktop) for the positive faces, and a tap casts whichever
                 one the thumb is wearing. No tray on your own comment, because
                 every reaction it could cast would be refused. */}
             <span className="relative flex items-center gap-1" {...likeTray.areaProps}>
@@ -562,8 +564,8 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
             </span>
             {/* Downvote a comment — the count shows once someone has actually
                 disliked. The server swaps polarity with like, one vote per
-                viewer. Holding this one opens 👎/💩, the pair that moves THIS
-                count — the same split the feed card's two thumbs make. */}
+                viewer. No tray on this one: 👎 is the only reaction that moves
+                THIS count, so a hold would open a menu of one. */}
             <span className="relative flex items-center gap-1" {...dislikeTray.areaProps}>
               <ReactionPicker
                 open={dislikeTray.open}
@@ -586,13 +588,9 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
                   "flex items-center gap-1 transition-colors select-none touch-none",
                   comment.isDisliked ? "text-white" : "text-white/70 hover:text-white"
                 )}
-                aria-label={
-                  myNegativeReaction
-                    ? `${reactionMeta(myNegativeReaction).label} — hold to change your reaction`
-                    : 'Dislike — hold to react'
-                }
-                aria-haspopup="menu"
-                aria-expanded={dislikeTray.open}
+                aria-label={negativeThumbLabel(myNegativeReaction)}
+                aria-haspopup={HAS_NEGATIVE_TRAY ? 'menu' : undefined}
+                aria-expanded={HAS_NEGATIVE_TRAY ? dislikeTray.open : undefined}
               >
                 {negativeLeadReaction ? (
                   <span data-engaged-glyph className="w-4 h-4 flex items-center justify-center text-sm leading-none" aria-hidden="true">
@@ -1458,7 +1456,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   }, [navigate, onClose]);
 
   /**
-   * Cast one of the nine reactions on a comment.
+   * Cast one of the ten reactions on a comment.
    *
    * The single vote path for a comment row, the way ActionBar.handleReaction is
    * for a post — the plain thumbs below just pick which reaction a tap means.
@@ -1567,7 +1565,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     );
   };
 
-  /** …and on the thumbs-down: a plain 👎, unless a 💩 is being toggled off. */
+  /** …and on the thumbs-down: a plain 👎, cast or toggled off. */
   const handleDislike = (commentId: string) => {
     const comment = allComments.find(c => c.id === commentId);
     if (!comment) return;

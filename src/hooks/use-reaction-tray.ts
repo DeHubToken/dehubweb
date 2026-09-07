@@ -7,9 +7,10 @@
  *
  * This used to be written out twice (ActionBar and ShortsViewer). It is now
  * needed once per THUMB rather than once per surface — the thumbs-down carries
- * its own 👎/💩 tray — so a feed card wants two of these and a comment row
- * wants two more, and four hand-rolled copies of a 400ms timer is how one of
- * them ends up leaking a timeout on unmount.
+ * a tray of its own whenever it has more than one reaction to offer — so a
+ * feed card wants two of these and a comment row wants two more, and four
+ * hand-rolled copies of a 400ms timer is how one of them ends up leaking a
+ * timeout on unmount.
  *
  * WHY NOT A POPOVER PRIMITIVE
  * See ReactionPicker's own note: a focus-trapping primitive would swallow the
