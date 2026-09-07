@@ -830,7 +830,17 @@
     "newNotification": "แจ้งเตือนใหม่",
     "oneOther": "1 คนอื่น",
     "nOthers": "{{count}} คนอื่น",
-    "burstBody": "{{count}} การแจ้งเตือนใหม่จาก {{who}}"
+    "burstBody": "{{count}} การแจ้งเตือนใหม่จาก {{who}}",
+    "community": {
+      "joined": "{{name}} เข้าร่วมชุมชนของคุณ",
+      "joinedNamed": "{{name}} เข้าร่วม “{{community}}”",
+      "requested": "{{name}} ขอเข้าร่วมชุมชนของคุณ",
+      "requestedNamed": "{{name}} ขอเข้าร่วม “{{community}}”",
+      "mentioned": "{{name}} กล่าวถึงคุณในชุมชน",
+      "mentionedNamed": "{{name}} กล่าวถึงคุณใน “{{community}}”",
+      "here": "{{name}} ส่งข้อความถึงทุกคนในชุมชน",
+      "hereNamed": "{{name}} ส่งข้อความถึงทุกคนใน “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "กระดานคะแนน",
@@ -1672,7 +1682,14 @@
     "approve": "อนุมัติ",
     "reject": "ปฏิเสธ",
     "joinFirst": "เข้าฮ่วมซุมซนก่อนจั่งสิปักหมุดได้",
-    "pinCommunity": "ปักหมุดซุมซน"
+    "pinCommunity": "ปักหมุดซุมซน",
+    "activity": "กิจกรรม",
+    "activitySearch": "ค้นหากิจกรรม...",
+    "activityNew": "ใหม่ {{total}} รายการ",
+    "activityShowMore": "แสดงเพิ่มเติม ({{total}} รายการ)",
+    "activityNoMatches": "ไม่พบรายการที่ตรงกับ \"{{query}}\"",
+    "activityEmpty": "ยังไม่มีกิจกรรม",
+    "activityEmptyDesc": "การเข้าร่วม การกล่าวถึง และประกาศจากชุมชนของคุณจะแสดงที่นี่"
   },
   "prompt": {
     "seoTitle": "บอกความต้องการของคุณ — DeHub",

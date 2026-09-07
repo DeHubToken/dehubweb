@@ -847,7 +847,17 @@
     "newNotification": "Жаңа хабарландыру",
     "oneOther": "1 басқа",
     "nOthers": "{{count}} басқа",
-    "burstBody": "{{count}} жаңа хабарлама {{who}}-дан"
+    "burstBody": "{{count}} жаңа хабарлама {{who}}-дан",
+    "community": {
+      "joined": "{{name}} Сіздің қауымдастығыңызға қосылды",
+      "joinedNamed": "{{name}} «{{community}}» қосылды",
+      "requested": "{{name}} Сіздің қауымдастығыңызға қосылуды сұрады",
+      "requestedNamed": "{{name}} «{{community}}» қосылуды сұрады",
+      "mentioned": "{{name}} Сізді қоғамдастықта атап өтті",
+      "mentionedNamed": "{{name}} Сізді «{{community}}» бөлімінде атап өтті",
+      "here": "{{name}} қауымдастықтағы барлық адамдарға хабарлама жіберді",
+      "hereNamed": "{{name}} Барлығына «{{community}}» хабарлама жіберді"
+    }
   },
   "leaderboard": {
     "title": "Рейтинг",
@@ -1692,7 +1702,14 @@
     "approve": "Мақұлдау",
     "reject": "Қабылдамау",
     "joinFirst": "Бекіту үшін алдымен қауымдастықтарға қосылыңыз",
-    "pinCommunity": "Қауымдастықты бекіту"
+    "pinCommunity": "Қауымдастықты бекіту",
+    "activity": "Белсенділік",
+    "activitySearch": "Іздеу әрекеті...",
+    "activityNew": "{{total}} жаңа",
+    "activityShowMore": "Көбірек көрсету ({{total}})",
+    "activityNoMatches": "«{{query}}» үшін сәйкестік жоқ",
+    "activityEmpty": "Әлі әрекет жоқ",
+    "activityEmptyDesc": "Қоғамдастықтарыңыздың қосылулары, ескертулері және хабарландырулары осында көрсетіледі."
   },
   "prompt": {
     "seoTitle": "DeHub — арнаңызды баптаңыз",

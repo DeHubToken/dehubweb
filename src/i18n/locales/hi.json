@@ -837,7 +837,17 @@
     "newNotification": "नई सूचना",
     "oneOther": "1 अन्य",
     "nOthers": "{{count}} अन्य",
-    "burstBody": "{{count}} नई सूचनाएं {{who}} से"
+    "burstBody": "{{count}} नई सूचनाएं {{who}} से",
+    "community": {
+      "joined": "{{name}} आपके समुदाय में शामिल हुए",
+      "joinedNamed": "{{name}} “{{community}}” में शामिल हुए",
+      "requested": "{{name}} को आपके समुदाय में शामिल होने के लिए कहा गया",
+      "requestedNamed": "{{name}} को “{{community}}” में शामिल होने के लिए कहा गया",
+      "mentioned": "{{name}} ने आपको एक समुदाय में बताया है",
+      "mentionedNamed": "{{name}} ने \"{{community}}\" में आपका उल्लेख किया है",
+      "here": "{{name}} ने समुदाय के सभी लोगों को मैसेज भेजा",
+      "hereNamed": "{{name}} ने \"{{community}}\" में सभी को मैसेज भेजा"
+    }
   },
   "leaderboard": {
     "title": "लीडरबोर्ड",
@@ -1724,7 +1734,14 @@
     "reject": "अस्वीकार करें",
     "pinToProfile": "प्रोफ़ाइल पर समुदाय पिन करें",
     "joinFirst": "पिन करने के लिए पहले समुदायों से जुड़ें",
-    "pinCommunity": "समुदाय पिन करें"
+    "pinCommunity": "समुदाय पिन करें",
+    "activity": "गतिविधि",
+    "activitySearch": "गतिविधि खोजें...",
+    "activityNew": "{{total}} नया",
+    "activityShowMore": "और दिखाएँ ({{total}})",
+    "activityNoMatches": "\"{{query}}\" के लिए कोई मैच नहीं",
+    "activityEmpty": "अभी तक कोई गतिविधि नहीं है",
+    "activityEmptyDesc": "आपके समुदायों से जुड़ने, ज़िक्र करने और घोषणाएँ यहाँ दिखाई देती हैं।"
   },
   "prompt": {
     "seoTitle": "अपने फ़ीड को प्रॉम्प्ट करें — DeHub",

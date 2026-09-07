@@ -830,7 +830,10 @@
     "newNotification": "ନୂଆ ସୂଚନା",
     "oneOther": "୧ ଅନ୍ୟ",
     "nOthers": "{{count}} ଅନ୍ୟ",
-    "burstBody": "{{count}} ନୂତନ ବିଜ୍ଞପ୍ତି {{who}} ଠାରୁ"
+    "burstBody": "{{count}} ନୂତନ ବିଜ୍ଞପ୍ତି {{who}} ଠାରୁ",
+    "community": {
+      "joinedNamed": "{{name}} ଯୋଡିହେଲା “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "ଲିଡରବୋର୍ଡ",
@@ -1675,7 +1678,14 @@
     "approve": "ଅନୁମୋଦନ କରନ୍ତୁ",
     "reject": "ପ୍ରତ୍ୟାଖ୍ୟାନ କରନ୍ତୁ",
     "joinFirst": "ପିନ କରିବାକୁ ପ୍ରଥମେ ସମ୍ପ୍ରଦାୟରେ ଯୋଗ ଦିଅନ୍ତୁ",
-    "pinCommunity": "ସମ୍ପ୍ରଦାୟ ପିନ କରନ୍ତୁ"
+    "pinCommunity": "ସମ୍ପ୍ରଦାୟ ପିନ କରନ୍ତୁ",
+    "activity": "କାର୍ଯ୍ୟକଳାପ",
+    "activitySearch": "ସନ୍ଧାନ କାର୍ଯ୍ୟକଳାପ...",
+    "activityNew": "{{total}} new",
+    "activityShowMore": "ଅଧିକ ଦର୍ଶାନ୍ତୁ ({{total}})",
+    "activityNoMatches": "\"{{query}}\" ପାଇଁ କୌଣସି ମେଳକ ନାହିଁ",
+    "activityEmpty": "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି କାର୍ଯ୍ୟକଳାପ ନାହିଁ",
+    "activityEmptyDesc": "ଆପଣଙ୍କ ସମ୍ପ୍ରଦାୟର ଯୋଗଦାନ, ଉଲ୍ଲେଖ ଏବଂ ଘୋଷଣା ଏଠାରେ ପ୍ରଦର୍ଶିତ ହେଉଛି ।"
   },
   "prompt": {
     "seoTitle": "ଆପଣଙ୍କ ଫିଡ୍ ପ୍ରମ୍ପ୍ଟ କରନ୍ତୁ — DeHub",

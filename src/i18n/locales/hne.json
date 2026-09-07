@@ -828,7 +828,10 @@
     "newNotification": "नवा सूचना",
     "oneOther": "1 अउ",
     "nOthers": "{{count}} अउ",
-    "burstBody": "{{count}} नए सूचनाएं {{who}} से"
+    "burstBody": "{{count}} नए सूचनाएं {{who}} से",
+    "community": {
+      "requested": "{{name}} अपन समुदाय म शामिल होए बर अनुरोध करिस"
+    }
   },
   "leaderboard": {
     "title": "लीडरबोर्ड",
@@ -1694,7 +1697,13 @@
     "reject": "अस्वीकार करव",
     "pinToProfile": "प्रोफाइल मा समुदाय पिन करव",
     "joinFirst": "पिन करे बर पहिली समुदाय मा जुड़व",
-    "pinCommunity": "समुदाय ला पिन करव"
+    "pinCommunity": "समुदाय ला पिन करव",
+    "activity": "काम",
+    "activitySearch": "खोज काम...",
+    "activityShowMore": "जादा देखाव ({{total}})",
+    "activityNoMatches": "\"{{query}}\" बर कोनो मैच नइ हे",
+    "activityEmpty": "अभी तक कोनो काम नइ करे हे",
+    "activityEmptyDesc": "अपन समुदाय के सदस्यता, उल्लेख अउ घोषणा इहां दिखाई देत हवय ।"
   },
   "prompt": {
     "seoTitle": "अपन फ़ीड ल संकेत देवव — DeHub",

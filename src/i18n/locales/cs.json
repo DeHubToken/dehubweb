@@ -820,7 +820,17 @@
     "newNotification": "Nové oznámení",
     "oneOther": "1 další",
     "nOthers": "{{count}} dalších",
-    "burstBody": "{{count}} nových oznámení od {{who}}"
+    "burstBody": "{{count}} nových oznámení od {{who}}",
+    "community": {
+      "joined": "{{name}} se připojil k vaší komunitě",
+      "joinedNamed": "{{name}} se připojil/a k „{{community}}“",
+      "requested": "Uživatel{{name}} požádal o připojení ke své komunitě",
+      "requestedNamed": "{{name}} požádal o připojení k „{{community}}“",
+      "mentioned": "{{name}} vás zmínil/a v komunitě",
+      "mentionedNamed": "{{name}} vás zmínil/a v „{{community}}“",
+      "here": "{{name}} poslal/a zprávu všem členům komunity",
+      "hereNamed": "{{name}} všem v „{{community}}“ poslal/a zprávu"
+    }
   },
   "leaderboard": {
     "title": "Žebříček",
@@ -1659,7 +1669,14 @@
     "reject": "Odmítnout",
     "pinToProfile": "Připni komunity do profilu",
     "joinFirst": "Nejdřív se připoj ke komunitám, abys je mohl připnout",
-    "pinCommunity": "Připnout komunitu"
+    "pinCommunity": "Připnout komunitu",
+    "activity": "Aktivita",
+    "activitySearch": "Hledat aktivitu...",
+    "activityNew": "{{total}} nové",
+    "activityShowMore": "Zobrazit více ({{total}})",
+    "activityNoMatches": "Žádná shoda pro „{{query}}“",
+    "activityEmpty": "Zatím žádná aktivita",
+    "activityEmptyDesc": "Zde se zobrazují spojení, zmínky a oznámení z vašich komunit."
   },
   "prompt": {
     "seoDescription": "Řekněte DeHubu, co chcete vidět, a my vám vyladíme vaši časovou osu.",

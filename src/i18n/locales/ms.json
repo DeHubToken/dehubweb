@@ -1098,7 +1098,17 @@
     "newNotification": "Pemberitahuan baharu",
     "oneOther": "1 yang lain",
     "nOthers": "{{count}} yang lain",
-    "burstBody": "{{count}} pemberitahuan baharu daripada {{who}}"
+    "burstBody": "{{count}} pemberitahuan baharu daripada {{who}}",
+    "community": {
+      "joined": "{{name}} menyertai komuniti anda",
+      "joinedNamed": "{{name}} menyertai “{{community}}”",
+      "requested": "{{name}} meminta untuk menyertai komuniti anda",
+      "requestedNamed": "{{name}} diminta untuk menyertai “{{community}}”",
+      "mentioned": "{{name}} menyebut anda dalam komuniti",
+      "mentionedNamed": "{{name}} menyebut anda dalam “{{community}}”",
+      "here": "{{name}} menghantar mesej kepada semua orang dalam komuniti",
+      "hereNamed": "{{name}} menghantar mesej kepada semua orang dalam “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Papan Pendahulu",
@@ -1985,7 +1995,14 @@
     "reject": "Tolak",
     "pinToProfile": "Sematkan komuniti ke profil",
     "joinFirst": "Sertai komuniti dahulu untuk menyematkannya",
-    "pinCommunity": "Sematkan komuniti"
+    "pinCommunity": "Sematkan komuniti",
+    "activity": "Aktiviti",
+    "activitySearch": "Aktiviti carian...",
+    "activityNew": "{{total}} baharu",
+    "activityShowMore": "Tunjukkan lagi ({{total}})",
+    "activityNoMatches": "Tiada padanan untuk \"{{query}}\"",
+    "activityEmpty": "Belum ada aktiviti",
+    "activityEmptyDesc": "Penyertaan, sebutan dan pengumuman daripada komuniti anda muncul di sini."
   },
   "prompt": {
     "seoTitle": "Gesaan suapan anda — DeHub",

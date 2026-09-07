@@ -892,7 +892,17 @@
     "subscribedToYou": "{{name}} তোঁয়ারে সাবস্ক্রাইব গরছে",
     "repostedPost": "{{name}} তোঁয়ার পোস্ট রিপোস্ট গরছে",
     "quotedPost": "{{name}} তোঁয়ার পোস্ট উদ্ধৃত গরছে",
-    "videoMilestone": "তোঁয়ার ভিডিও মাইলস্টোনত পৌঁছছে!"
+    "videoMilestone": "তোঁয়ার ভিডিও মাইলস্টোনত পৌঁছছে!",
+    "community": {
+      "joined": "{{name}} আপনার কমিউনিটিতে যোগ দিছে",
+      "joinedNamed": "{{name}} “{{community}}” এ যোগ দিছে",
+      "requested": "{{name}} আপনার কমিউনিটিতে যোগ দেওয়ার জন্য অনুরোধ করছে",
+      "requestedNamed": "{{name}} “{{community}}” এ যোগ দেওয়ার জন্য অনুরোধ করছে",
+      "mentioned": "{{name}} কমিউনিটিতে আপনার নাম উল্লেখ করছে",
+      "mentionedNamed": "{{name}} “{{community}}” এ আপনার নাম উল্লেখ করছে",
+      "here": "{{name}} কমিউনিটির সবায়কে মেসেজ পাঠাইছে",
+      "hereNamed": "{{name}} “{{community}}” এর সবায়কে মেসেজ পাঠাইছে"
+    }
   },
   "leaderboard": {
     "title": "লীডারবোর্ড",
@@ -1778,7 +1788,14 @@
     "approve": "অনুমোদন গরন",
     "reject": "প্রত্যাখ্যান গরন",
     "joinFirst": "পিন গরিতে আগে সম্প্রদায়ত যোগ দেন",
-    "pinCommunity": "সম্প্রদায় পিন গরন"
+    "pinCommunity": "সম্প্রদায় পিন গরন",
+    "activity": "কামকাজ",
+    "activitySearch": "খোঁজ কামকাজ...",
+    "activityNew": "{{total}} নতুন",
+    "activityShowMore": "আরো দেখান ({{total}})",
+    "activityNoMatches": "\"{{query}}\" এর জন্য কোন মিল নাই",
+    "activityEmpty": "এখনো কোন কামকাজ নাই",
+    "activityEmptyDesc": "আপনার কমিউনিটি থেকে জয়েন, মেনশন আর ঘোষণা এখানে দেখাইবো।"
   },
   "prompt": {
     "seoTitle": "তুমার ফিডরে সাজাও — DeHub",

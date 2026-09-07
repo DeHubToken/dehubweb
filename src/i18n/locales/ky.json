@@ -830,7 +830,17 @@
     "newNotification": "Жаңы билдирүү",
     "oneOther": "1 башка",
     "nOthers": "{{count}} башка",
-    "burstBody": "{{count}} жаңы эскертүүлөр {{who}} дан"
+    "burstBody": "{{count}} жаңы эскертүүлөр {{who}} дан",
+    "community": {
+      "joined": "{{name}} Сиздин жамаатка кошулду",
+      "joinedNamed": "{{name}} кошулду “{{community}}”",
+      "requested": "{{name}} Сиздин жамаатка кошулууну суранды",
+      "requestedNamed": "{{name}} “{{community}}” кошулууну суранды",
+      "mentioned": "{{name}} Сизди коомчулукта эскертти",
+      "mentionedNamed": "{{name}} Сизди “{{community}}” деп атаган",
+      "here": "{{name}} Коомчулуктун баарына билдирүү жөнөттү",
+      "hereNamed": "{{name}} \"{{community}}\" ичиндеги баарына билдирүү жөнөттү"
+    }
   },
   "leaderboard": {
     "title": "Рейтинг",
@@ -1697,7 +1707,14 @@
     "reject": "Четке кагуу",
     "pinToProfile": "Коомчулуктарды профилге кадоо",
     "joinFirst": "Кадоо үчүн адегенде коомчулуктарга кошулуңуз",
-    "pinCommunity": "Коомчулукту кадоо"
+    "pinCommunity": "Коомчулукту кадоо",
+    "activity": "Активдүүлүк",
+    "activitySearch": "Издөө иш-аракети...",
+    "activityNew": "{{total}} NEW",
+    "activityShowMore": "Көбүрөөк көрсөтүү ({{total}})",
+    "activityNoMatches": "\"{{query}}\" үчүн дал келбейт",
+    "activityEmpty": "Активдүүлүк азырынча жок",
+    "activityEmptyDesc": "Сиздин жамааттарыңыздын кошулуусу, эскертүүлөрү жана жарыялары бул жерде көрсөтүлөт."
   },
   "prompt": {
     "seoTitle": "Сиздин тасмаңызга суроо бериңиз — DeHub",

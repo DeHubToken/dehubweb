@@ -828,7 +828,16 @@
     "newNotification": "Шинэ мэдэгдэл",
     "oneOther": "1 бусад",
     "nOthers": "{{count}} бусад",
-    "burstBody": "{{count}} шинэ мэдэгдэл {{who}}-аас"
+    "burstBody": "{{count}} шинэ мэдэгдэл {{who}}-аас",
+    "community": {
+      "joined": "{{name}} танай нийгэмд нэгдэв",
+      "requested": "{{name}} танай нийгэмд нэгдэхийг хүссэн",
+      "requestedNamed": "{{name}}{{community}} ”элсэх хүсэлт гарав.",
+      "mentioned": "{{name}} таныг нийгэмд дурдсан",
+      "mentionedNamed": "{{name}} таныг “{{community}}” гэж дурдсан",
+      "here": "{{name}} messaged нийт хүн бүр",
+      "hereNamed": "{{name}} messaged хүн бүрийг “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Тэргүүлэгчид",
@@ -1673,7 +1682,13 @@
     "approve": "Зөвшөөрөх",
     "reject": "Татгалзах",
     "joinFirst": "Бэхлэхийн тулд эхлээд нийгэмлэгт нэгдээрэй",
-    "pinCommunity": "Нийгэмлэг бэхлэх"
+    "pinCommunity": "Нийгэмлэг бэхлэх",
+    "activity": "Үйл ажиллагаа",
+    "activitySearch": "Үйл ажиллагааг хайх...",
+    "activityShowMore": "Дэлгэрэнгүй харуулах ({{total}})",
+    "activityNoMatches": "\"{{query}}\" тохирохгүй байна",
+    "activityEmpty": "Одоогоор үйл ажиллагаа хараахан байхгүй байна",
+    "activityEmptyDesc": "Танай хамт олноос ирсэн элсэж, дурьдах, зарлал энд гарч ирэв."
   },
   "prompt": {
     "seoTitle": "Таны мэдээллийн сувгийг тохируулах — DeHub",

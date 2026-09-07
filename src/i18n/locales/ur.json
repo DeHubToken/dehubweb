@@ -805,7 +805,17 @@
     "newNotification": "نئی اطلاع",
     "oneOther": "1 اور",
     "nOthers": "{{count}} اور",
-    "burstBody": "{{count}} نئے نوٹیفیکیشن {{who}} سے"
+    "burstBody": "{{count}} نئے نوٹیفیکیشن {{who}} سے",
+    "community": {
+      "joined": "{{name}} آپ کی کمیونٹی میں شامل ہوئے",
+      "joinedNamed": "{{name}} نے \"{{community}}\" جوائن کیا",
+      "requested": "{{name}} کو آپ کی کمیونٹی میں شامل ہونے کے لیے کہا گیا",
+      "requestedNamed": "{{name}} کو \"{{community}}\" میں شامل ہونے کے لیے کہا گیا",
+      "mentioned": "{{name}} نے ایک کمیونٹی میں آپ کا ذکر کیا",
+      "mentionedNamed": "{{name}} نے \"{{community}}\" میں آپ کا ذکر کیا ہے",
+      "here": "{{name}} نے کمیونٹی میں ہر ایک کو پیغام بھیجا",
+      "hereNamed": "{{name}} نے \"{{community}}\" میں سب کو میسج کیا"
+    }
   },
   "leaderboard": {
     "title": "لیڈر بورڈ",
@@ -1563,7 +1573,14 @@
     "reject": "مسترد کریں",
     "pinToProfile": "کمیونٹیز کو پروفائل پر پن کریں",
     "joinFirst": "پن کرنے کے لیے پہلے کمیونٹیز میں شامل ہوں",
-    "pinCommunity": "کمیونٹی پن کریں"
+    "pinCommunity": "کمیونٹی پن کریں",
+    "activity": "سرگرمی",
+    "activitySearch": "تلاش کی سرگرمی...",
+    "activityNew": "{{total}} نیا",
+    "activityShowMore": "مزید دکھائیں ({{total}})",
+    "activityNoMatches": "\"{{query}}\" کے لیے کوئی میچ نہیں",
+    "activityEmpty": "ابھی تک کوئی سرگرمی نہیں ہے",
+    "activityEmptyDesc": "آپ کی کمیونٹیز کی جانب سے جوائنز، تذکرے اور اعلانات یہاں ظاہر ہوتے ہیں ۔"
   },
   "prompt": {
     "seoTitle": "اپنے فیڈ کو پرامپٹ کریں — DeHub",

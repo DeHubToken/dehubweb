@@ -830,7 +830,10 @@
     "newNotification": "Täze bildiriş",
     "oneOther": "1 beýleki",
     "nOthers": "{{count}} beýleki",
-    "burstBody": "{{count}} täze bildiriş {{who}}-dan"
+    "burstBody": "{{count}} täze bildiriş {{who}}-dan",
+    "community": {
+      "joinedNamed": "{{name}} \"{{community}}\" bilen birleşdi"
+    }
   },
   "leaderboard": {
     "title": "Reýting",
@@ -1675,7 +1678,14 @@
     "approve": "Tassykla",
     "reject": "Ret et",
     "joinFirst": "Berkitmek üçin ilki jemgyýetlere goşulyň",
-    "pinCommunity": "Jemgyýeti berkit"
+    "pinCommunity": "Jemgyýeti berkit",
+    "activity": "Işgärlik",
+    "activitySearch": "Arasyş işleri...",
+    "activityNew": "{{total}} new",
+    "activityShowMore": "Mundan artyk görkeziň ({{total}})",
+    "activityNoMatches": "\"{{query}}\" üçin hiç hili oýun ýok",
+    "activityEmpty": "Hiç bir hereket",
+    "activityEmptyDesc": "Siziň jemgyýetleriňizden gelen habarlar, habarlar we habarlar bu ýerde görünýär."
   },
   "prompt": {
     "seoTitle": "Lentanyz üçin sowal ediň — DeHub",

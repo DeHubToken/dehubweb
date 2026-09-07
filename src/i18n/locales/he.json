@@ -826,7 +826,17 @@
     "newNotification": "התראה חדשה",
     "oneOther": "אחד אחר",
     "nOthers": "{{count}} אחרים",
-    "burstBody": "{{count}} התראות חדשות מ-{{who}}"
+    "burstBody": "{{count}} התראות חדשות מ-{{who}}",
+    "community": {
+      "joined": "{{name}} הצטרפת לקהילה שלך",
+      "joinedNamed": "{{name}} הצטרפו אל \"{{community}}\"",
+      "requested": "{{name}} ביקשו להצטרף לקהילה שלכם",
+      "requestedNamed": "{{name}} ביקשו להצטרף אל \"{{community}}\"",
+      "mentioned": "{{name}} הזכיר/ה אותך בקהילה",
+      "mentionedNamed": "{{name}} הזכיר/ה אותך ב -\"{{community}}\"",
+      "here": "{{name}} שלחה הודעה לכל חברי הקהילה",
+      "hereNamed": "{{name}} שלחה הודעה לכולם באזור \"{{community}}\""
+    }
   },
   "leaderboard": {
     "title": "טבלת מובילים",
@@ -1685,7 +1695,14 @@
     "reject": "דחה",
     "pinToProfile": "נעץ קהילות לפרופיל",
     "joinFirst": "הצטרף לקהילות תחילה כדי לנעוץ אותן",
-    "pinCommunity": "נעץ קהילה"
+    "pinCommunity": "נעץ קהילה",
+    "activity": "פעילות",
+    "activitySearch": "חפש פעילות...",
+    "activityNew": "{{total}} חדש",
+    "activityShowMore": "להציג עוד ({{total}})",
+    "activityNoMatches": "אין התאמות עבור \"{{query}}\"",
+    "activityEmpty": "עדיין אין פעילות",
+    "activityEmptyDesc": "כאן מופיעים מצטרפים, מזכירים ומפרסמים מהקהילות שלכם."
   },
   "prompt": {
     "seoTitle": "הגדר את הפיד שלך — DeHub",

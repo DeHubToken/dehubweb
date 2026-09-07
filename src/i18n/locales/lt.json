@@ -830,7 +830,17 @@
     "newNotification": "Naujas pranešimas",
     "oneOther": "1 kitas",
     "nOthers": "{{count}} kitų",
-    "burstBody": "{{count}} naujų pranešimų iš {{who}}"
+    "burstBody": "{{count}} naujų pranešimų iš {{who}}",
+    "community": {
+      "joined": "{{name}} prisijungė prie jūsų bendruomenės",
+      "joinedNamed": "{{name}} prisijungė prie „{{community}}“",
+      "requested": "{{name}} paprašė prisijungti prie jūsų bendruomenės",
+      "requestedNamed": "{{name}} paprašė prisijungti prie „{{community}}“",
+      "mentioned": "{{name}} paminėjo jus bendruomenėje",
+      "mentionedNamed": "{{name}} paminėjo jus „{{community}}“",
+      "here": "{{name}} susirašinėjo su visais bendruomenės nariais",
+      "hereNamed": "{{name}} susirašinėjo su visais „{{community}}“"
+    }
   },
   "leaderboard": {
     "title": "Lyderių lentelė",
@@ -1697,7 +1707,14 @@
     "reject": "Atmesti",
     "pinToProfile": "Prisegti bendruomenes prie profilio",
     "joinFirst": "Pirmiausia prisijunkite prie bendruomenių, kad galėtumėte jas prisegti",
-    "pinCommunity": "Prisegti bendruomenę"
+    "pinCommunity": "Prisegti bendruomenę",
+    "activity": "Veikla",
+    "activitySearch": "Ieškoti veiklos...",
+    "activityNew": "{{total}} naujas",
+    "activityShowMore": "Rodyti daugiau ({{total}})",
+    "activityNoMatches": "Nėra „{{query}}“ atitikmenų",
+    "activityEmpty": "Veiklos dar nėra",
+    "activityEmptyDesc": "Prisijungimai, paminėjimai ir pranešimai iš jūsų bendruomenių rodomi čia."
   },
   "prompt": {
     "seoTitle": "Valdykite savo informacijos srautą („feed“) – DeHub",

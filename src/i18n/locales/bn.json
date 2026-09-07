@@ -808,7 +808,17 @@
     "newNotification": "নতুন বিজ্ঞপ্তি",
     "oneOther": "১ জন অন্য",
     "nOthers": "{{count}} জন অন্য",
-    "burstBody": "{{count}} টি নতুন বিজ্ঞপ্তি {{who}} থেকে"
+    "burstBody": "{{count}} টি নতুন বিজ্ঞপ্তি {{who}} থেকে",
+    "community": {
+      "joined": "{{name}} আপনার কমিউনিটিতে যোগ দিন",
+      "joinedNamed": "{{name}} যোগদান করেছেন “{{community}}”",
+      "requested": "{{name}} কে আপনার কমিউনিটিতে যোগ দিতে বলা হয়েছে",
+      "requestedNamed": "{{name}} কে \"{{community}}\" -এ যোগ দিতে বলা হয়েছে",
+      "mentioned": "{{name}} আপনাকে একটি কমিউনিটিতে উল্লেখ করেছেন",
+      "mentionedNamed": "{{name}} আপনাকে “{{community}}” -এ উল্লেখ করেছেন",
+      "here": "{{name}} কমিউনিটির সবাইকে মেসেজ করেছেন",
+      "hereNamed": "{{name}} সবাইকে “{{community}}” -এ মেসেজ করেছেন"
+    }
   },
   "leaderboard": {
     "title": "লিডারবোর্ড",
@@ -1561,7 +1571,14 @@
     "reject": "প্রত্যাখ্যান করুন",
     "pinToProfile": "কমিউনিটিগুলিকে প্রোফাইলে পিন করুন",
     "joinFirst": "পিন করতে হলে আগে কমিউনিটিতে যোগ দিন",
-    "pinCommunity": "কমিউনিটি পিন করুন"
+    "pinCommunity": "কমিউনিটি পিন করুন",
+    "activity": "কার্যকলাপ",
+    "activitySearch": "অ্যাক্টিভিটি অনুসন্ধান করুন...",
+    "activityNew": "{{total}} নতুন",
+    "activityShowMore": "আরও দেখান ({{total}})",
+    "activityNoMatches": "\"{{query}}\" এর জন্য কোনও মিল নেই",
+    "activityEmpty": "এখনও কোনও অ্যাক্টিভিটি নেই",
+    "activityEmptyDesc": "আপনার সম্প্রদায়ের যোগদান, উল্লেখ এবং ঘোষণাগুলি এখানে প্রদর্শিত হয় ।"
   },
   "prompt": {
     "seoTitle": "আপনার ফিড প্রম্পট করুন — DeHub",

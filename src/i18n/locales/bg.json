@@ -812,7 +812,17 @@
     "newNotification": "Ново известие",
     "oneOther": "1 друг",
     "nOthers": "{{count}} други",
-    "burstBody": "{{count}} нови известия от {{who}}"
+    "burstBody": "{{count}} нови известия от {{who}}",
+    "community": {
+      "joined": "{{name}} се присъедини към вашата общност",
+      "joinedNamed": "{{name}} се присъедини към „{{community}}“",
+      "requested": "{{name}} поиска да се присъедини към вашата общност",
+      "requestedNamed": "{{name}} поиска да се присъедини към „{{community}}“",
+      "mentioned": "{{name}} ви спомена в общност",
+      "mentionedNamed": "{{name}} ви спомена в „{{community}}“",
+      "here": "{{name}} изпрати съобщение на всички в общността",
+      "hereNamed": "{{name}} изпрати съобщение на всички в „{{community}}“"
+    }
   },
   "leaderboard": {
     "title": "Класация",
@@ -1584,7 +1594,14 @@
     "reject": "Отхвърляне",
     "pinToProfile": "Закрепете общности към профила",
     "joinFirst": "Първо се присъединете към общности, за да ги закачите",
-    "pinCommunity": "Закачане на общността"
+    "pinCommunity": "Закачане на общността",
+    "activity": "Дейност",
+    "activitySearch": "Търсене на дейност...",
+    "activityNew": "{{total}} ново",
+    "activityShowMore": "Показване на повече (@{{total}})",
+    "activityNoMatches": "Няма съвпадения за „@{{query}}“",
+    "activityEmpty": "Все още няма активност",
+    "activityEmptyDesc": "Присъединяванията, споменаванията и съобщенията от вашите общности се показват тук."
   },
   "prompt": {
     "seoTitle": "Въведете заявка за вашата емисия — DeHub",

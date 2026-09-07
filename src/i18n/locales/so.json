@@ -830,7 +830,17 @@
     "newNotification": "Ogeysiis cusub",
     "oneOther": "1 kale",
     "nOthers": "{{count}} kale",
-    "burstBody": "{{count}} ogeysiis cusub oo ka yimid {{who}}"
+    "burstBody": "{{count}} ogeysiis cusub oo ka yimid {{who}}",
+    "community": {
+      "joined": "{{name}} ku biiray bulshadaada",
+      "joinedNamed": "{{name}} ku biiray “{{community}}@”",
+      "requested": "{{name}} waxaa laga codsaday inuu ku biiro bulshadaada",
+      "requestedNamed": "{{name}} waxaa laga codsaday inuu ku biiro “{{community}}”",
+      "mentioned": "{{name}} ku xusay bulshada dhexdeeda",
+      "mentionedNamed": "{{name}} ku xusay in “{{community}}@”",
+      "here": "{{name}} fariin qof walba oo bulshada ka mid ah",
+      "hereNamed": "{{name}} farriinta qof walba ee “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Hogaamiyaha",
@@ -1697,7 +1707,14 @@
     "reject": "Diid",
     "pinToProfile": "Ku dheji bulshooyinka bogga shaqsiga",
     "joinFirst": "Marka hore ku biir bulshooyinka si aad u dhejiso",
-    "pinCommunity": "Dheji bulshada"
+    "pinCommunity": "Dheji bulshada",
+    "activity": "Waxqabad",
+    "activitySearch": "Hawlaha raadinta...",
+    "activityNew": "{{total}} cusub",
+    "activityShowMore": "Muuji wax badan ({{total}})",
+    "activityNoMatches": "No cayaaraha for \"{{query}}\"",
+    "activityEmpty": "Wax dhaqdhaqaaq ah weli ma jiro",
+    "activityEmptyDesc": "Ku soo biir, tixraac iyo ogeysiisyo ka socda bulshooyinkaaga ayaa halkan ka muuqda."
   },
   "prompt": {
     "seoTitle": "Dejiso waxaad rabo — DeHub",

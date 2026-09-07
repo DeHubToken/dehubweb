@@ -20,6 +20,9 @@ export const customNotificationKeys = {
     [...customNotificationKeys.all, 'list', walletAddress?.toLowerCase() ?? null] as const,
   unreadCount: (walletAddress?: string | null) =>
     [...customNotificationKeys.all, 'unread', walletAddress?.toLowerCase() ?? null] as const,
+  /** Unread community rows, grouped by the community they belong to. */
+  communityUnread: (walletAddress?: string | null) =>
+    [...customNotificationKeys.all, 'community-unread', walletAddress?.toLowerCase() ?? null] as const,
 };
 
 interface CustomNotificationRow {
@@ -63,10 +66,17 @@ function toDeHubNotification(row: CustomNotificationRow): DeHubNotification {
   } as DeHubNotification & { _customReferenceId?: string; _customReferenceTitle?: string };
 }
 
-export function useCustomNotifications() {
-  const { isAuthenticated, walletAddress } = useAuth();
-
-  const query = useQuery({
+/**
+ * The one read of `custom_notifications`.
+ *
+ * Every surface that shows these rows — the bell, and the Communities page's
+ * Activity tab and badges — is a projection of this single query rather than a
+ * fetch of its own, so the two can never disagree about what is unread or which
+ * community a row belongs to. Callers that want a slice pass a `select`; the
+ * query key is identical, so they share the cache entry and the request.
+ */
+export function customNotificationListOptions(walletAddress: string | null | undefined, isAuthenticated: boolean) {
+  return {
     queryKey: customNotificationKeys.list(walletAddress),
     queryFn: async () => {
       // RLS on custom_notifications matches recipient_address against
@@ -91,7 +101,13 @@ export function useCustomNotifications() {
     enabled: isAuthenticated && !!walletAddress,
     staleTime: 2 * 60 * 1000,
     refetchInterval: 5 * 60 * 1000,
-  });
+  };
+}
+
+export function useCustomNotifications() {
+  const { isAuthenticated, walletAddress } = useAuth();
+
+  const query = useQuery(customNotificationListOptions(walletAddress, isAuthenticated));
 
   return {
     customNotifications: query.data || [],
@@ -179,8 +195,11 @@ export function useMarkCustomNotificationAsRead() {
       }
     },
     onSettled: () => {
-      // Caches already patched optimistically — mark stale without refetching
+      // Caches already patched optimistically — mark stale without refetching.
+      // The Communities page's count is a query of its own, so it does refetch:
+      // a row read here is a row off that badge too.
       queryClient.invalidateQueries({ queryKey: customNotificationKeys.all, refetchType: 'none' });
+      queryClient.invalidateQueries({ queryKey: customNotificationKeys.communityUnread(walletAddress) });
     },
   });
 }
@@ -226,8 +245,11 @@ export function useMarkAllCustomNotificationsAsRead() {
       }
     },
     onSettled: () => {
-      // Caches already patched optimistically — mark stale without refetching
+      // Caches already patched optimistically — mark stale without refetching.
+      // The Communities page's count is a query of its own, so it does refetch:
+      // a row read here is a row off that badge too.
       queryClient.invalidateQueries({ queryKey: customNotificationKeys.all, refetchType: 'none' });
+      queryClient.invalidateQueries({ queryKey: customNotificationKeys.communityUnread(walletAddress) });
     },
   });
 }
