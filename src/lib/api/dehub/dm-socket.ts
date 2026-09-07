@@ -45,6 +45,12 @@ export interface DeletedMessage {
   dmId: string;
 }
 
+export interface DmReactionUpdate {
+  dmId: string;
+  messageId: string;
+  reactions: Record<string, string[]>;
+}
+
 /** Server → client after someone marks read (`readReceipt`). */
 export interface ReadReceiptData {
   dmId: string;
@@ -369,6 +375,14 @@ export function emitEditMessage(payload: EditMessagePayload): Promise<void> {
   return emitWhenConnected('editMessage', payload);
 }
 
+export function emitAddDmReaction(dmId: string, messageId: string, emoji: string): Promise<void> {
+  return emitWhenConnected('addReaction', { dmId, messageId, emoji });
+}
+
+export function emitRemoveDmReaction(dmId: string, messageId: string, emoji: string): Promise<void> {
+  return emitWhenConnected('removeReaction', { dmId, messageId, emoji });
+}
+
 // ─── Read-receipt queue (survives disconnect/reconnect) ──────────────────────
 
 const pendingReadReceipts = new Set<string>();
@@ -435,6 +449,10 @@ export function onDmSendMessage(cb: (msg: DmMessage) => void): () => void {
 
 export function onEditMessage(cb: (data: EditedMessage) => void): () => void {
   return addPersistentListener('editMessage', cb as AnyFn);
+}
+
+export function onDmReactionUpdated(cb: (data: DmReactionUpdate) => void): () => void {
+  return addPersistentListener('reactionUpdated', cb as AnyFn);
 }
 
 /** Server echoes `forwardMessage` back to the sender with the created message (author: 'me'). */

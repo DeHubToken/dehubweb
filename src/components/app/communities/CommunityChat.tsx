@@ -52,7 +52,7 @@ import { Sparkles } from 'lucide-react';
 
 
 
-const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
+import { QUICK_CHAT_REACTIONS } from '@/components/app/chat/reaction-options';
 
 /** "Forever" mutes are stored as a date far in the future rather than as null. */
 const FOREVER_YEAR = 9000;
@@ -933,7 +933,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                               className="w-auto p-1 bg-zinc-800 border-zinc-700 rounded-xl"
                             >
                               <div className="flex gap-0.5">
-                                {QUICK_EMOJIS.map((emoji) => {
+                                {QUICK_CHAT_REACTIONS.map((emoji) => {
                                   const isActive = walletAddress && msg.reactions?.[emoji]?.some(
                                     (a) => a.toLowerCase() === walletAddress.toLowerCase()
                                   );

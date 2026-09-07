@@ -28,7 +28,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 
-const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
+import { QUICK_CHAT_REACTIONS } from '@/components/app/chat/reaction-options';
 
 function ChatAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
   const [failed, setFailed] = useState(false);
@@ -298,7 +298,7 @@ export function EventChat({ eventId }: EventChatProps) {
                             </Tooltip>
                             <PopoverContent side="top" align="end" className="w-auto p-1 bg-zinc-800 border-zinc-700 rounded-xl">
                               <div className="flex gap-0.5">
-                                {QUICK_EMOJIS.map((emoji) => {
+                                {QUICK_CHAT_REACTIONS.map((emoji) => {
                                   const isActive = walletAddress && msg.reactions?.[emoji]?.some(a => a.toLowerCase() === walletAddress.toLowerCase());
                                   return (
                                     <button key={emoji} onClick={() => handleReact(msg.id, emoji)}

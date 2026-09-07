@@ -90,6 +90,7 @@ export interface DmMessage {
   editedAt: string | null;
   isForwarded: boolean;
   replyTo: ReplyPreview | null;
+  reactions?: Record<string, string[]>;
   paymentStatus: null | 'pending' | 'confirmed';
   paymentTxHash: string | null;
   tipAmount: number | null;
@@ -258,6 +259,7 @@ function parseDmMessage(raw: any, myAddress: string): DmMessage {
     isEdited: raw.isEdited ?? false,
     editedAt: raw.editedAt ?? null,
     isForwarded: raw.isForwarded ?? false,
+    reactions: raw.reactions && typeof raw.reactions === 'object' ? raw.reactions : {},
     replyTo: raw.replyTo ?? null,
     paymentStatus: raw.paymentStatus ?? null,
     paymentTxHash: raw.paymentTxHash ?? null,

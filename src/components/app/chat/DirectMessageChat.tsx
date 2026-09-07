@@ -8,7 +8,7 @@ import { useState, useRef, useEffect, useCallback, useMemo, useReducer, memo } f
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight, FileText, Download, Pencil, Check, Lock, Unlock } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight, FileText, Download, Pencil, Check, Lock, Unlock, SmilePlus } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useDmEncryption } from '@/hooks/use-dm-encryption';
 import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
@@ -80,6 +80,8 @@ import { useCall } from '@/contexts/CallContext';
 import { dismissKeyboard } from '@/hooks/use-keyboard-open';
 import { formatUnreadCount } from '@/lib/unread-count';
 import { isDmCallNotice } from '@/lib/dm-call-notice';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { QUICK_CHAT_REACTIONS } from './reaction-options';
 
 interface DirectMessageChatProps {
   conversation: DeHubConversation;
@@ -163,6 +165,9 @@ const MessageBubble = memo(function MessageBubble({
   onSaveEdit,
   onCancelEdit,
   onOpenImage,
+  currentUserAddress,
+  onReact,
+  onRemoveReaction,
 }: {
   message: DmMessage;
   isOwnMessage: boolean;
@@ -177,6 +182,9 @@ const MessageBubble = memo(function MessageBubble({
   onSaveEdit?: (messageId: string, content: string) => void;
   onCancelEdit?: () => void;
   onOpenImage?: (url: string) => void;
+  currentUserAddress?: string;
+  onReact?: (messageId: string, emoji: string) => void;
+  onRemoveReaction?: (messageId: string, emoji: string) => void;
 }) {
   // Payment-pending spinner: memo means no incidental re-renders, so the 90s
   // "give up waiting" fallback schedules its own re-render at the boundary
@@ -242,6 +250,7 @@ const MessageBubble = memo(function MessageBubble({
    */
   const isUnsent = message._id.startsWith('temp-');
   const [draftText, setDraftText] = useState(message.content || '');
+  const [reactionPickerOpen, setReactionPickerOpen] = useState(false);
   useEffect(() => {
     if (isEditing) setDraftText(message.content || '');
   }, [isEditing, message.content]);
@@ -303,10 +312,35 @@ const MessageBubble = memo(function MessageBubble({
       id={`dm-msg-${message._id}`}
       className={`flex gap-3 py-2 ${isOwnMessage ? 'flex-row-reverse' : ''} group relative rounded-lg transition-colors`}
     >
-      {!message.isDeleted && !isUnsent && message.msgType !== 'tip' && !isEditing && (onPin || onForward || (onEdit && canEdit)) && (
+      {!message.isDeleted && !isUnsent && message.msgType !== 'tip' && !isEditing && (onReact || onPin || onForward || (onEdit && canEdit)) && (
         <div
           className={`absolute top-3 ${isOwnMessage ? 'left-1' : 'right-1'} flex items-center gap-1 transition-all opacity-0 group-hover:opacity-100 z-10`}
         >
+          {onReact && (
+            <Popover open={reactionPickerOpen} onOpenChange={setReactionPickerOpen}>
+              <PopoverTrigger asChild>
+                <button type="button" className="p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white" title="React">
+                  <SmilePlus className="w-3 h-3" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent side="top" align={isOwnMessage ? 'start' : 'end'} className="w-auto p-1.5 bg-zinc-800 border-zinc-700 rounded-xl">
+                <div className="flex gap-0.5">
+                  {QUICK_CHAT_REACTIONS.map((emoji) => {
+                    const mine = currentUserAddress && message.reactions?.[emoji]?.some(address => address.toLowerCase() === currentUserAddress.toLowerCase());
+                    return (
+                      <button type="button" key={emoji} onClick={() => {
+                        if (mine) onRemoveReaction?.(message._id, emoji);
+                        else onReact(message._id, emoji);
+                        setReactionPickerOpen(false);
+                      }} className={`w-8 h-8 flex items-center justify-center text-lg rounded-lg transition-colors ${mine ? 'bg-white/15 ring-1 ring-white/30' : 'hover:bg-zinc-700'}`}>
+                        {emoji}
+                      </button>
+                    );
+                  })}
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
           {onEdit && canEdit && (
             <button
               type="button"
@@ -582,6 +616,27 @@ const MessageBubble = memo(function MessageBubble({
           <div className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2 border border-white/[0.10] text-zinc-500 text-sm italic ${isOwnMessage ? 'rounded-br-sm' : 'rounded-bl-sm'}`}>
             <Lock className="w-3.5 h-3.5 flex-shrink-0" />
             {tr('messages.cannotDecrypt')}
+          </div>
+        )}
+
+        {!message.isDeleted && message.reactions && Object.entries(message.reactions).some(([, addresses]) => addresses.length > 0) && (
+          <div className={`mt-1 flex flex-wrap gap-1 ${isOwnMessage ? 'justify-end' : ''}`}>
+            {Object.entries(message.reactions).filter(([, addresses]) => addresses.length > 0).map(([emoji, addresses]) => {
+              const mine = !!currentUserAddress && addresses.some(address => address.toLowerCase() === currentUserAddress.toLowerCase());
+              return (
+                <button
+                  type="button"
+                  key={emoji}
+                  onClick={() => mine ? onRemoveReaction?.(message._id, emoji) : onReact?.(message._id, emoji)}
+                  className={`group/reaction inline-flex items-center gap-1 px-1 py-0.5 text-xs ${mine ? 'text-white' : 'text-zinc-400 hover:text-white'}`}
+                >
+                  <span>{emoji}</span>
+                  {mine ? (
+                    <><span className="text-[10px] group-hover/reaction:hidden">{addresses.length}</span><X className="hidden w-3 h-3 group-hover/reaction:block" /></>
+                  ) : <span className="text-[10px]">{addresses.length}</span>}
+                </button>
+              );
+            })}
           </div>
         )}
 
@@ -999,6 +1054,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
     hasNextPage,
     isFetchingNextPage,
     markAsRead,
+    addReaction,
+    removeReaction,
   } = useMessages(resolvedConversationId);
 
   // Silent when this device already holds the key; one wallet signature the
@@ -1931,6 +1988,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
                 onSaveEdit={handleSaveEdit}
                 onCancelEdit={handleCancelEdit}
                 onOpenImage={setFullscreenImage}
+                currentUserAddress={walletAddress || undefined}
+                onReact={(messageId, emoji) => { void addReaction(messageId, emoji).catch(() => toast.error('Could not add reaction.')); }}
+                onRemoveReaction={(messageId, emoji) => { void removeReaction(messageId, emoji).catch(() => toast.error('Could not remove reaction.')); }}
               />
             )});
           })()}
