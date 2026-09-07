@@ -173,12 +173,11 @@ export default function FullWalletPage() {
     return groupedTokens.filter(g => g.symbol.toLowerCase().includes(q) || g.name.toLowerCase().includes(q));
   }, [groupedTokens, searchQuery]);
 
-  // Separate tokens with balance vs zero balance
-  const { withBalance, zeroBalance } = useMemo(() => {
-    const withBalance = filteredGrouped.filter(g => g.totalBalance > BigInt(0));
-    const zeroBalance = filteredGrouped.filter(g => g.totalBalance === BigInt(0));
-    return { withBalance, zeroBalance };
-  }, [filteredGrouped]);
+  // Use raw balances so even holdings below the display precision remain visible.
+  const withBalance = useMemo(
+    () => filteredGrouped.filter(g => g.totalBalance > BigInt(0)),
+    [filteredGrouped],
+  );
 
   const [copied, setCopied] = useState(false);
 
@@ -413,14 +412,6 @@ export default function FullWalletPage() {
         ) : (
           <>
             {withBalance.map(grouped => (
-              <GroupedTokenRow key={grouped.symbol} grouped={grouped} onClick={() => handleGroupedTokenClick(grouped)} price={prices[grouped.symbol]} />
-            ))}
-            {zeroBalance.length > 0 && withBalance.length > 0 && (
-              <div className="pt-3 pb-1">
-                <span className="text-xs text-zinc-500 uppercase tracking-wider font-medium">{t('wallet.zeroBalance')}</span>
-              </div>
-            )}
-            {zeroBalance.map(grouped => (
               <GroupedTokenRow key={grouped.symbol} grouped={grouped} onClick={() => handleGroupedTokenClick(grouped)} price={prices[grouped.symbol]} />
             ))}
           </>
