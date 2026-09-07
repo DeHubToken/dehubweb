@@ -879,12 +879,6 @@
     "oneOther": "1 ďalší",
     "nOthers": "{{count}} ďalších",
     "burstBody": "{{count}} nových upozornení od {{who}}",
-    "milestones": "Míľniky",
-    "noNotifications": "Zatiaľ žiadne upozornenia",
-    "subscribedToYou": "{{name}} si vás predplatil",
-    "repostedPost": "{{name}} zdieľal váš príspevok",
-    "quotedPost": "{{name}} citoval váš príspevok",
-    "videoMilestone": "Vaše video dosiahlo míľnik!",
     "community": {
       "joined": "{{name}} sa pripojil k vašej komunite",
       "joinedNamed": "{{name}} sa pripojil/a k „{{community}}“",
@@ -894,7 +888,13 @@
       "mentionedNamed": "{{name}} vás spomenul v „{{community}}“",
       "here": "{{name}} poslal správu všetkým v komunite",
       "hereNamed": "{{name}} odoslal správu všetkým používateľom v „{{community}}“"
-    }
+    },
+    "milestones": "Míľniky",
+    "noNotifications": "Zatiaľ žiadne upozornenia",
+    "subscribedToYou": "{{name}} si vás predplatil",
+    "repostedPost": "{{name}} zdieľal váš príspevok",
+    "quotedPost": "{{name}} citoval váš príspevok",
+    "videoMilestone": "Vaše video dosiahlo míľnik!"
   },
   "leaderboard": {
     "title": "Rebríček",
@@ -1026,6 +1026,13 @@
     "shippedBadge": "Vydané",
     "noComments": "Zatiaľ žiadne komentáre",
     "addComment": "Pridať komentár...",
+    "writeReply": "Napísať odpoveď...",
+    "replyToComment": "Odpovedať",
+    "replyingTo": "Odpovedanie {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "upravené",
+    "showOneMoreReply": "Zobraziť 1 ďalšiu odpoveď",
+    "showMoreReplies": "Zobraziť {{count}} ďalších odpovedí",
     "submitDrawerTitle": "Odoslať návrh funkcie",
     "titleLabel": "Názov",
     "titlePlaceholder": "Stručný názov vášho nápadu...",

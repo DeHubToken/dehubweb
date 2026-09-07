@@ -911,12 +911,6 @@
     "oneOther": "আরো ১ জন",
     "nOthers": "আরো {{count}} জন",
     "burstBody": "{{count}} নতুন নোটিফিকেশন {{who}} থেকে",
-    "milestones": "মাইলস্টোন",
-    "noNotifications": "এহনো কোনো খবর নাই",
-    "subscribedToYou": "{{name}} তোমারে সাবস্ক্রাইব করসে",
-    "repostedPost": "{{name}} তোমার পোস্ট রিপোস্ট করসে",
-    "quotedPost": "{{name}} তোমার পোস্ট কোট করসে",
-    "videoMilestone": "তোমার ভিডিও মাইলস্টোনে পৌছসে!",
     "community": {
       "joined": "{{name}} আপনার কমিউনিটিতে যোগ দিয়েছেন",
       "joinedNamed": "{{name}} “{{community}}” কমিউনিটিতে যোগ দিয়েছেন",
@@ -926,7 +920,13 @@
       "mentionedNamed": "{{name}} আপনাকে “{{community}}” কমিউনিটিতে উল্লেখ করেছেন",
       "here": "{{name}} কমিউনিটির সবাইকে মেসেজ করেছেন",
       "hereNamed": "{{name}} “{{community}}” কমিউনিটির সবাইকে মেসেজ করেছেন"
-    }
+    },
+    "milestones": "মাইলস্টোন",
+    "noNotifications": "এহনো কোনো খবর নাই",
+    "subscribedToYou": "{{name}} তোমারে সাবস্ক্রাইব করসে",
+    "repostedPost": "{{name}} তোমার পোস্ট রিপোস্ট করসে",
+    "quotedPost": "{{name}} তোমার পোস্ট কোট করসে",
+    "videoMilestone": "তোমার ভিডিও মাইলস্টোনে পৌছসে!"
   },
   "leaderboard": {
     "title": "লিডার বোর্ড",
@@ -1062,6 +1062,13 @@
     "shippedBadge": "চালু অইসে",
     "noComments": "এখনো কোনো মন্তব্য নাই",
     "addComment": "মন্তব্য লেখো...",
+    "writeReply": "জবাব দাও...",
+    "replyToComment": "জবাব",
+    "replyingTo": "{{name}} কে জবাব দেওয়া হচ্ছে",
+    "requestAuthorChip": "লেখক",
+    "commentEdited": "সম্পাদনা করা হয়েছে",
+    "showOneMoreReply": "আরও ১টি জবাব দেখান",
+    "showMoreReplies": "আরও {{count}} টি জবাব দেখান",
     "submitDrawerTitle": "ফিচারের অনুরোধ জমা দেও",
     "titleLabel": "শিরোনাম",
     "titlePlaceholder": "তোমার আইডিয়ার ছোট শিরোনাম...",

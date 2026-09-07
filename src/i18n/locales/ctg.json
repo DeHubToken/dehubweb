@@ -887,12 +887,6 @@
     "oneOther": "আরো ১ জন",
     "nOthers": "আরো {{count}} জন",
     "burstBody": "{{count}} নতুন নোটিফিকেশন {{who}} থেকে",
-    "milestones": "মাইলস্টোন",
-    "noNotifications": "এহনো কুনো জানাইন নাই",
-    "subscribedToYou": "{{name}} তোঁয়ারে সাবস্ক্রাইব গরছে",
-    "repostedPost": "{{name}} তোঁয়ার পোস্ট রিপোস্ট গরছে",
-    "quotedPost": "{{name}} তোঁয়ার পোস্ট উদ্ধৃত গরছে",
-    "videoMilestone": "তোঁয়ার ভিডিও মাইলস্টোনত পৌঁছছে!",
     "community": {
       "joined": "{{name}} আপনার কমিউনিটিতে যোগ দিছে",
       "joinedNamed": "{{name}} “{{community}}” এ যোগ দিছে",
@@ -902,7 +896,13 @@
       "mentionedNamed": "{{name}} “{{community}}” এ আপনার নাম উল্লেখ করছে",
       "here": "{{name}} কমিউনিটির সবায়কে মেসেজ পাঠাইছে",
       "hereNamed": "{{name}} “{{community}}” এর সবায়কে মেসেজ পাঠাইছে"
-    }
+    },
+    "milestones": "মাইলস্টোন",
+    "noNotifications": "এহনো কুনো জানাইন নাই",
+    "subscribedToYou": "{{name}} তোঁয়ারে সাবস্ক্রাইব গরছে",
+    "repostedPost": "{{name}} তোঁয়ার পোস্ট রিপোস্ট গরছে",
+    "quotedPost": "{{name}} তোঁয়ার পোস্ট উদ্ধৃত গরছে",
+    "videoMilestone": "তোঁয়ার ভিডিও মাইলস্টোনত পৌঁছছে!"
   },
   "leaderboard": {
     "title": "লীডারবোর্ড",

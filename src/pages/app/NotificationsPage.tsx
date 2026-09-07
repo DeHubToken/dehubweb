@@ -746,7 +746,8 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     }
     // The row carries the comment it is about, so the thread opens on that row
     // rather than at the top — the same `?comment=` a post notification uses.
-    const commentSuffix = notification.commentId ? `&comment=${encodeURIComponent(notification.commentId)}` : '';
+    const commentId = (notification as DeHubNotification & { _customCommentId?: string })._customCommentId;
+    const commentSuffix = commentId ? `&comment=${encodeURIComponent(commentId)}` : '';
     return `/features?request=${encodeURIComponent(requestId)}&comments=1${commentSuffix}`;
   }
   // Joins, mentions and @here all land on the community they came from. The
