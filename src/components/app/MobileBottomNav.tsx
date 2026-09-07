@@ -21,7 +21,6 @@ import { openStageModal } from '@/contexts/StageContext';
 import { useTotalUnreadCount } from '@/hooks/use-messages';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
-import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-unread';
 import { useTranslation } from 'react-i18next';
 
 // Every link in this bar is an icon and nothing else, so without a name each
@@ -122,7 +121,6 @@ export function MobileBottomNav() {
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
   const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);
-  const { unreadCount: communityActivityUnread } = useCommunityActivityUnreadCount();
   const navVisible = useScrollDirection();
   // On-screen keyboard up → hide the nav entirely; typing surfaces (chat)
   // reclaim its space so the screen splits between messages and composer.
@@ -436,11 +434,6 @@ export function MobileBottomNav() {
                     {item.label === 'Notifications' && totalNotifUnread > 0 && (
                       <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
                         {totalNotifUnread > 99 ? '99+' : totalNotifUnread}
-                      </span>
-                    )}
-                    {item.label === 'Communities' && communityActivityUnread > 0 && (
-                      <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
-                        {communityActivityUnread > 99 ? '99+' : communityActivityUnread}
                       </span>
                     )}
                   </div>
