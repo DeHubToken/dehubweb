@@ -190,6 +190,35 @@ export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory 
   });
 }
 
+/**
+ * One feature request by id, for a deep link that has to work whatever the
+ * board is currently showing.
+ *
+ * A notification names a request that may be shipped, declined, filtered out by
+ * the active category, or eighty rows down the infinite list — none of which the
+ * list query would return. This fetches the single row so the page can pin it
+ * above everything else. A request that has since been deleted comes back null
+ * rather than throwing, and the page simply shows the normal board.
+ */
+export function useFeatureRequest(id: string | null) {
+  return useQuery({
+    queryKey: ['feature-request', id],
+    queryFn: async () => {
+      if (!id) return null;
+      const { data, error } = await supabase
+        .from('feature_requests')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) return null;
+      return normalizeRows([data as FeatureRequest])[0] ?? null;
+    },
+    enabled: !!id,
+    staleTime: 60_000,
+  });
+}
+
 // `total` is every idea ever submitted (the header line); `open` is what the
 // Requests tab actually lists, counted with the same status filter the list
 // uses so the badge can't drift from the rows below it.
