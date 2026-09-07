@@ -65,10 +65,15 @@ function toDeHubNotification(row: CustomNotificationRow): DeHubNotification {
     // Custom field to identify this as a custom notification
     ...(row.reference_id ? { _customReferenceId: row.reference_id } : {}),
     ...(row.reference_title ? { _customReferenceTitle: row.reference_title } : {}),
-    // Named like the API's own field so the page's comment deep-linking reads
-    // the same property whichever source the row came from.
-    ...(row.reference_comment_id ? { commentId: row.reference_comment_id } : {}),
-  } as DeHubNotification & { _customReferenceId?: string; _customReferenceTitle?: string };
+    // Its own field rather than the API's `commentId`, which is a number: these
+    // ids are uuids, and widening the API type to string|number would put the
+    // burden on every existing reader of it.
+    ...(row.reference_comment_id ? { _customCommentId: row.reference_comment_id } : {}),
+  } as DeHubNotification & {
+    _customReferenceId?: string;
+    _customReferenceTitle?: string;
+    _customCommentId?: string;
+  };
 }
 
 /**
