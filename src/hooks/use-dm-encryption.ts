@@ -43,8 +43,12 @@ export function useDmEncryption(enabled = true) {
       );
       setStatus('ready');
     } catch (err) {
-      setStatus(err instanceof WalletLockedError ? 'locked' : 'error');
-      console.warn('[dm-e2ee] identity setup failed:', err);
+      const locked = err instanceof WalletLockedError;
+      setStatus(locked ? 'locked' : 'error');
+      // A locked vault is an expected pause, already represented by the unlock
+      // sheet. Keep genuine encryption failures visible without flooding the
+      // console/backend with scary-looking errors during a normal unlock.
+      if (!locked) console.warn('[dm-e2ee] identity setup failed:', err);
     } finally {
       inFlight.current = false;
     }
