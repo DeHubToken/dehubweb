@@ -734,9 +734,20 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     return stageNotificationPath(customReferenceId(notification));
   }
 
-  // Comment-type notifications should auto-open comments on the post
+  // Comment-type notifications open the comments on the post — and land on the
+  // comment itself, not on the top of a thread that may be hundreds long. The
+  // row carries the comment it is about (the new one, the liked one, the one
+  // you were named in); `?comment=` is the form the post page and the comments
+  // list both already read, and the list pins that comment in its first page
+  // rather than paging down to find it.
+  // A mention has no suffix of its own: mentioning somebody in a post carries
+  // no comment id, and opening the comments there points at nothing.
   const isCommentType = ['comment', 'comment_reply', 'comment_like'].includes(notification.type);
-  const commentSuffix = isCommentType ? '?comments=1' : '';
+  const commentSuffix = notification.commentId
+    ? `?comments=1&comment=${notification.commentId}`
+    : isCommentType
+      ? '?comments=1'
+      : '';
 
   switch (notification.type) {
     case 'like':

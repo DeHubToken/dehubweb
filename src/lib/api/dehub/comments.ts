@@ -17,6 +17,12 @@ export interface ApiCommentResponse {
   dislikeCount?: number;
   /** Times this comment has scrolled into a reader's viewport. */
   views?: number;
+  /**
+   * The comment asked for by `commentId` no longer exists (deleted, hidden).
+   * The API still returns a placeholder row in its position so a caller can
+   * tell "gone" from "not on this page"; nothing renders one.
+   */
+  notFound?: boolean;
   isDisliked?: boolean;
   /**
    * Which of the nine reactions the viewer holds on this comment.
@@ -82,16 +88,30 @@ function assertCommentAccepted(response: unknown, fallback = 'Could not post com
   }
 }
 
+/**
+ * One page of a post's comments.
+ *
+ * `commentId` is the deep-link case: pass the comment somebody was sent here
+ * for and the API pins it as the first item of page 0 and backfills its
+ * ancestors, so the row is always in the first response no matter how far down
+ * a busy thread it actually sits. Ignored on later pages — the server only
+ * honours it at skip 0, and sending it again would duplicate the row.
+ *
+ * A `commentId` that has since been deleted comes back as a `notFound`
+ * placeholder with no author and no text. Dropped here: every caller renders
+ * these rows, and none of them has anything to render.
+ */
 export async function getNFTComments(
   tokenId: string,
   page: number = 0,
   limit: number = 20,
   address?: string,
+  commentId?: string,
 ): Promise<ApiCommentResponse[]> {
   const response = await apiCall<CommentsApiResponse>(`/api/nft/${tokenId}/comments`, {
-    params: { page, limit, address },
+    params: { page, limit, address, ...(commentId ? { commentId } : {}) },
   });
-  return response.result?.items || [];
+  return (response.result?.items || []).filter(item => !item.notFound);
 }
 
 export async function postComment(tokenId: string, content: string, replyToId?: string): Promise<PostCommentResponse> {

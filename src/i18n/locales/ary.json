@@ -1341,6 +1341,7 @@
     "searchDehubFor": "قلّب على «{{query}}» فـ DeHub"
   },
   "comments": {
+    "showAll": "عرض جميع التعليقات",
     "discardTitle": "بغيتي تسالي التعليق ديالك؟",
     "discardBody": "تسجل بحال مسودة، وغادي يكون هنا ملي ترجع.",
     "keepWriting": "كمل الكتابة",
