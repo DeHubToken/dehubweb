@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "เปิดการแจ้งเตือนเบราว์เซอร์ด้านบนเพื่อให้ได้รับการแจ้งเตือนเหล่านี้",
     "publicChatAlertsRate": "อย่างมากที่สุด",
     "publicChatAlertsRateOption": "{{count}} ต่อชั่วโมง",
-    "publicChatAlertsRateHint": "ไม่มีอะไรสูญหายเมื่อห้องแชทมีคนคุยเยอะกว่านี้ — ข้อความจะถูกเก็บไว้และมาพร้อมกันในการแจ้งเตือนครั้งต่อไป"
+    "publicChatAlertsRateHint": "ไม่มีอะไรสูญหายเมื่อห้องแชทมีคนคุยเยอะกว่านี้ — ข้อความจะถูกเก็บไว้และมาพร้อมกันในการแจ้งเตือนครั้งต่อไป",
+    "emailNotificationsDescLinked": "ส่งไปที่ {{email}}",
+    "emailNotificationsNoAddress": "เพิ่มที่อยู่อีเมลในบัญชีเจ้าก่อนเด้อ — จั่งสิส่งไปทางนั้นได้",
+    "emailNotificationsAddAddress": "เพิ่มที่อยู่อีเมล"
   },
   "common": {
     "save": "บันทึก",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} กล่าวถึงคุณใน “{{community}}”",
       "here": "{{name}} ส่งข้อความถึงทุกคนในชุมชน",
       "hereNamed": "{{name}} ส่งข้อความถึงทุกคนใน “{{community}}”"
-    }
+    },
+    "byEmail": "ทางอีเมล"
   },
   "leaderboard": {
     "title": "กระดานคะแนน",

@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "请在上方开启浏览器通知以接收这些提醒",
     "publicChatAlertsRate": "最多",
     "publicChatAlertsRateOption": "每小时 {{count}} 条",
-    "publicChatAlertsRateHint": "当房间比这更忙时，不会丢失任何消息 — 消息会被暂存，并在下次提醒时一起送达。"
+    "publicChatAlertsRateHint": "当房间比这更忙时，不会丢失任何消息 — 消息会被暂存，并在下次提醒时一起送达。",
+    "emailNotificationsDescLinked": "发给 {{email}}",
+    "emailNotificationsNoAddress": "先给您的账户添加一个电子邮箱地址——这些会发到那里。",
+    "emailNotificationsAddAddress": "添加电子邮箱地址"
   },
   "common": {
     "save": "保存",
@@ -838,7 +841,8 @@
       "mentionedNamed": "{{name}} 在“{{community}}”中提到了你",
       "here": "{{name}} 给社群里的所有人发了消息",
       "hereNamed": "{{name}} 给“{{community}}”里的所有人发了消息"
-    }
+    },
+    "byEmail": "用邮件"
   },
   "leaderboard": {
     "title": "排行榜",

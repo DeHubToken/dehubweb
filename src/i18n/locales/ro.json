@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Activează notificările browserului de mai sus pentru ca acestea să sosească",
     "publicChatAlertsRate": "La cel mult",
     "publicChatAlertsRateOption": "{{count}} pe oră",
-    "publicChatAlertsRateHint": "Nimic nu se pierde când camera este mai aglomerată decât atât — mesajele sunt reținute și sosesc împreună la următoarea alertă."
+    "publicChatAlertsRateHint": "Nimic nu se pierde când camera este mai aglomerată decât atât — mesajele sunt reținute și sosesc împreună la următoarea alertă.",
+    "emailNotificationsDescLinked": "Trimis către {{email}}",
+    "emailNotificationsNoAddress": "Mai întâi, adaugă o adresă de e-mail în contul tău — acolo vor ajunge acestea.",
+    "emailNotificationsAddAddress": "Adaugă o adresă de e-mail"
   },
   "common": {
     "save": "Salvează",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} te-a menționat în “{{community}}”",
       "here": "{{name}} a trimis mesaje tuturor membrilor comunității",
       "hereNamed": "{{name}} a trimis mesaje tuturor celor din “{{community}}”"
-    }
+    },
+    "byEmail": "Prin email"
   },
   "leaderboard": {
     "title": "Clasamente",

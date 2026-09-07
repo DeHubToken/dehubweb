@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Uključite obavijesti preglednika iznad kako biste ih primali",
     "publicChatAlertsRate": "Najviše",
     "publicChatAlertsRateOption": "{{count}} na sat",
-    "publicChatAlertsRateHint": "Ništa se ne gubi kada je soba aktivnija od ovoga — poruke se zadržavaju i stižu zajedno u sljedećoj obavijesti."
+    "publicChatAlertsRateHint": "Ništa se ne gubi kada je soba aktivnija od ovoga — poruke se zadržavaju i stižu zajedno u sljedećoj obavijesti.",
+    "emailNotificationsDescLinked": "Poslano {{email}}",
+    "emailNotificationsNoAddress": "Prvo dodajte adresu e-pošte svom računu – tamo će se nalaziti ove stavke.",
+    "emailNotificationsAddAddress": "Dodaj adresu e-pošte"
   },
   "common": {
     "save": "Spremi",
@@ -827,7 +830,8 @@
       "mentionedNamed": "{{name}} vas spominje u “{{community}}”",
       "here": "{{name}} šalje poruke svima u zajednici",
       "hereNamed": "{{name}} šalje poruke svima u “{{community}}”"
-    }
+    },
+    "byEmail": "Elektroničkom poštom"
   },
   "leaderboard": {
     "title": "Ljestvice",

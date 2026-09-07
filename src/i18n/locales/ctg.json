@@ -342,7 +342,10 @@
     "showFollowers": "ফলোয়ার/ফলোইং দেখাও",
     "hideFollowerCounts": "ফলোয়ার সংখ্যা লুকাও",
     "followersOnly": "শুধু ফলোয়ার",
-    "subscribersOnly": "শুধু সাবস্ক্রাইবার"
+    "subscribersOnly": "শুধু সাবস্ক্রাইবার",
+    "emailNotificationsDescLinked": "{{email}}-রে পাঠানো হইয়েচে",
+    "emailNotificationsNoAddress": "আগে আপনার একাউন্টে একটা ইমেইল এড্রেস যোগ করুন — ওইখানে এইগুলা যাইবো।",
+    "emailNotificationsAddAddress": "একটা ইমেইল এড্রেস যোগ করুন"
   },
   "common": {
     "save": "সেভ গরো",
@@ -903,7 +906,8 @@
       "mentionedNamed": "{{name}} “{{community}}” এ আপনার নাম উল্লেখ করছে",
       "here": "{{name}} কমিউনিটির সবায়কে মেসেজ পাঠাইছে",
       "hereNamed": "{{name}} “{{community}}” এর সবায়কে মেসেজ পাঠাইছে"
-    }
+    },
+    "byEmail": "ইমেইলর মাধ্যমে"
   },
   "leaderboard": {
     "title": "লীডারবোর্ড",

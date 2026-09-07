@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Бұлардың келуі үшін жоғарыдағы браузер хабарламаларын қосыңыз",
     "publicChatAlertsRate": "Ең көбі",
     "publicChatAlertsRateOption": "Сағатына {{count}}",
-    "publicChatAlertsRateHint": "Бөлме бұдан қызу болған кезде ештеңе жоғалмайды — хабарламалар сақталады және келесі ескертуде бірге келеді."
+    "publicChatAlertsRateHint": "Бөлме бұдан қызу болған кезде ештеңе жоғалмайды — хабарламалар сақталады және келесі ескертуде бірге келеді.",
+    "emailNotificationsDescLinked": "{{email}}-ға жіберілді",
+    "emailNotificationsNoAddress": "Алдымен тіркелгіңізге электронды пошта мекенжайын қосыңыз — сонда олар сонда барады.",
+    "emailNotificationsAddAddress": "Электронды пошта мекенжайын қосу"
   },
   "common": {
     "save": "Сақтау",
@@ -858,7 +861,8 @@
       "mentionedNamed": "{{name}} Сізді «{{community}}» бөлімінде атап өтті",
       "here": "{{name}} қауымдастықтағы барлық адамдарға хабарлама жіберді",
       "hereNamed": "{{name}} Барлығына «{{community}}» хабарлама жіберді"
-    }
+    },
+    "byEmail": "Электронды пошта арқылы"
   },
   "leaderboard": {
     "title": "Рейтинг",

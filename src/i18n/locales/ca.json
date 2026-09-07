@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Activeu les notificacions del navegador a dalt perquè arribin",
     "publicChatAlertsRate": "Com a màxim",
     "publicChatAlertsRateOption": "{{count}} per hora",
-    "publicChatAlertsRateHint": "No es perd res quan la sala està més ocupada que això: els missatges es retenen i arriben junts a la propera alerta."
+    "publicChatAlertsRateHint": "No es perd res quan la sala està més ocupada que això: els missatges es retenen i arriben junts a la propera alerta.",
+    "emailNotificationsDescLinked": "Enviat a {{email}}",
+    "emailNotificationsNoAddress": "Primer, afegeix una adreça electrònica al teu compte; aquí és on anirien aquestes.",
+    "emailNotificationsAddAddress": "Afegeix una adreça electrònica"
   },
   "common": {
     "save": "Desar",
@@ -832,7 +835,8 @@
       "mentionedNamed": "{{name}} t'ha esmentat a “{{community}}”",
       "here": "{{name}} ha enviat un missatge a tothom de la comunitat",
       "hereNamed": "{{name}}ha enviat un missatge a tothom a “{{community}}”"
-    }
+    },
+    "byEmail": "Per correu electrònic"
   },
   "leaderboard": {
     "title": "Classificació",

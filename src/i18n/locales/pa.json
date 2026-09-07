@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "ਇਹਨਾਂ ਨੂੰ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਉੱਪਰ ਬ੍ਰਾਊਜ਼ਰ ਸੂਚਨਾਵਾਂ ਚਾਲੂ ਕਰੋ",
     "publicChatAlertsRate": "ਵੱਧ ਤੋਂ ਵੱਧ",
     "publicChatAlertsRateOption": "{{count}} ਪ੍ਰਤੀ ਘੰਟਾ",
-    "publicChatAlertsRateHint": "ਜਦੋਂ ਰੂਮ ਇਸ ਤੋਂ ਜ਼ਿਆਦਾ ਵਿਅਸਤ ਹੁੰਦਾ ਹੈ ਤਾਂ ਕੁਝ ਵੀ ਗੁਆਚਦਾ ਨਹੀਂ ਹੈ — ਸੰਦੇਸ਼ ਰੋਕੇ ਜਾਂਦੇ ਹਨ ਅਤੇ ਅਗਲੇ ਅਲਰਟ 'ਤੇ ਇਕੱਠੇ ਆਉਂਦੇ ਹਨ।"
+    "publicChatAlertsRateHint": "ਜਦੋਂ ਰੂਮ ਇਸ ਤੋਂ ਜ਼ਿਆਦਾ ਵਿਅਸਤ ਹੁੰਦਾ ਹੈ ਤਾਂ ਕੁਝ ਵੀ ਗੁਆਚਦਾ ਨਹੀਂ ਹੈ — ਸੰਦੇਸ਼ ਰੋਕੇ ਜਾਂਦੇ ਹਨ ਅਤੇ ਅਗਲੇ ਅਲਰਟ 'ਤੇ ਇਕੱਠੇ ਆਉਂਦੇ ਹਨ।",
+    "emailNotificationsDescLinked": "{{email}} ਨੂੰ ਭੇਜਿਆ ਗਿਆ",
+    "emailNotificationsNoAddress": "ਪਹਿਲਾਂ ਆਪਣੇ ਖਾਤੇ ਵਿੱਚ ਇੱਕ ਈਮੇਲ ਪਤਾ ਸ਼ਾਮਲ ਕਰੋ — ਇਹ ਉਹੀ ਹੈ ਜਿੱਥੇ ਇਹ ਜਾਣਗੇ।",
+    "emailNotificationsAddAddress": "ਈਮੇਲ ਪਤਾ ਸ਼ਾਮਲ ਕਰੋ"
   },
   "common": {
     "save": "ਸੇਵ ਕਰੋ",
@@ -840,7 +843,8 @@
       "mentionedNamed": "{{name}} ਨੇ ਤੁਹਾਨੂੰ “{{community}}” ਵਿੱਚ ਜ਼ਿਕਰ ਕੀਤਾ",
       "here": "{{name}} ਕਮਿ communityਨਿਟੀ ਵਿੱਚ ਹਰੇਕ ਨੂੰ ਮੈਸੇਜ ਕੀਤਾ",
       "hereNamed": "{{name}} ਸਾਰਿਆਂ ਨੂੰ “{{community}}” ਵਿੱਚ ਸੁਨੇਹਾ ਭੇਜਿਆ"
-    }
+    },
+    "byEmail": "ਈਮੇਲ ਰਾਹੀਂ"
   },
   "leaderboard": {
     "title": "ਲੀਡਰ ਬੋਰਡ",

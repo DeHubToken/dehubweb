@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "اهي حاصل ڪرڻ لاءِ مٿي برائوزر نوٽيفڪيشن آن ڪريو",
     "publicChatAlertsRate": "گهڻو ڪري",
     "publicChatAlertsRateOption": "في ڪلاڪ {{count}}",
-    "publicChatAlertsRateHint": "جڏهن ڪمرو ان کان وڌيڪ مصروف هوندو آهي ته ڪجهه به ضايع نٿو ٿئي - پيغام روڪيا ويندا آهن ۽ ايندڙ الرٽ تي گڏجي اچن ٿا."
+    "publicChatAlertsRateHint": "جڏهن ڪمرو ان کان وڌيڪ مصروف هوندو آهي ته ڪجهه به ضايع نٿو ٿئي - پيغام روڪيا ويندا آهن ۽ ايندڙ الرٽ تي گڏجي اچن ٿا.",
+    "emailNotificationsDescLinked": "{{email}} ڏانهن موڪليو ويو",
+    "emailNotificationsNoAddress": "پهرين پنهنجي اڪائونٽ ۾ اي ميل پتو شامل ڪريو - اهي اتي ويندا.",
+    "emailNotificationsAddAddress": "اي ميل پتو شامل ڪريو"
   },
   "common": {
     "save": "محفوظ ڪريو",
@@ -839,7 +842,8 @@
       "mentioned": "{{name}} هڪ ڪميونٽي ۾ توهان جو ذڪر ڪيو",
       "mentionedNamed": "{{name}} ۾ توهان جو ذڪر ڪيو “{{community}}",
       "here": "{{name}} برادري ۾ سڀني کي پيغام موڪليو"
-    }
+    },
+    "byEmail": "اي ميل ذريعي"
   },
   "leaderboard": {
     "title": "ليڊربورڊ",

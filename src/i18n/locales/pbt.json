@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "د دې لپاره چې دا خبرتیاوې ترلاسه کړئ، د پورتنیو براوزر خبرتیاوې فعال کړئ",
     "publicChatAlertsRate": "په ډیرو",
     "publicChatAlertsRateOption": "په ساعت کې {{count}}",
-    "publicChatAlertsRateHint": "کله چې خونه له دې څخه ډکه وي هیڅ شی له لاسه نه ورکول کیږي - پیغامونه ساتل کیږي او په راتلونکې خبرتیا کې یوځای راځي."
+    "publicChatAlertsRateHint": "کله چې خونه له دې څخه ډکه وي هیڅ شی له لاسه نه ورکول کیږي - پیغامونه ساتل کیږي او په راتلونکې خبرتیا کې یوځای راځي.",
+    "emailNotificationsDescLinked": "{{email}} ته واستول شو",
+    "emailNotificationsNoAddress": "لومړی خپل حساب ته یو بریښنالیک پته اضافه کړئ - هلته به دا لاړ شي.",
+    "emailNotificationsAddAddress": "یو بریښنالیک پته اضافه کړئ"
   },
   "common": {
     "save": "خوندي",
@@ -831,7 +834,8 @@
     "newNotification": "نوې خبرتیا",
     "oneOther": "۱ بل",
     "nOthers": "{{count}} نور",
-    "burstBody": "{{count}} نوي خبرتیاوې له {{who}} څخه"
+    "burstBody": "{{count}} نوي خبرتیاوې له {{who}} څخه",
+    "byEmail": "د بریښنالیک له لارې"
   },
   "leaderboard": {
     "title": "لیډربورډونه",

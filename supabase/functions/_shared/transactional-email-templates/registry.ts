@@ -12,6 +12,7 @@ export interface TemplateEntry {
 import { template as supportTicketTemplate } from './support-ticket.tsx'
 import { template as adminInviteTemplate } from './admin-invite.tsx'
 import { template as emailLinkCodeTemplate } from './email-link-code.tsx'
+import { template as notificationTemplate } from './notification.tsx'
 
 /**
  * Template registry — maps template names to their React Email components.
@@ -21,4 +22,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'support-ticket': supportTicketTemplate,
   'admin-invite': adminInviteTemplate,
   'email-link-code': emailLinkCodeTemplate,
+  'notification': notificationTemplate,
 }

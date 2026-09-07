@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Tan ìkìlọ̀ àwọn àwòrán ìwé ìtàn lórí lórí fún àwọn wọ̀nyí láti dé",
     "publicChatAlertsRate": "Ní jù",
     "publicChatAlertsRateOption": "{{count}} fún wákàtù kan",
-    "publicChatAlertsRateHint": "Kò sí ohun tí a pàdánù nígbà tí yàrá náà bá pọ̀ ju èyí lọ — àwọn ìránṣẹ́ náà ni a mú un wá, wọ́n sì dé pọ̀ mọ́ra ní ìkìlọ̀ tò léyìn."
+    "publicChatAlertsRateHint": "Kò sí ohun tí a pàdánù nígbà tí yàrá náà bá pọ̀ ju èyí lọ — àwọn ìránṣẹ́ náà ni a mú un wá, wọ́n sì dé pọ̀ mọ́ra ní ìkìlọ̀ tò léyìn.",
+    "emailNotificationsDescLinked": "Ranṣẹ si {{email}}",
+    "emailNotificationsNoAddress": "Ṣafikun adirẹsi imeeli si akọọlẹ rẹ kọkọ — nibi ni awọn wọnyi yoo lọ.",
+    "emailNotificationsAddAddress": "Fi àdírẹ́ẹ̀sì ìwòkò sílẹ̀"
   },
   "common": {
     "save": "Fipamọ́",
@@ -842,7 +845,8 @@
       "mentionedNamed": "{{name}} darukọ rẹ ni \"{{community}}@\"",
       "here": "{{name}} fi ránṣẹ́ sí gbogbo ènìyàn ní agbègbè",
       "hereNamed": "{{name}} ránṣẹ́ sí gbogbo ènìyàn ní “{{community}}@”"
-    }
+    },
+    "byEmail": "Nípasẹ̀ ìránṣẹ́-ì-lẹ́tà"
   },
   "leaderboard": {
     "title": "Àtòjọ Ìpò",

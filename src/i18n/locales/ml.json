@@ -325,7 +325,10 @@
     "publicChatAlertsNeedsBrowser": "ഇവ ലഭിക്കാൻ മുകളിൽ ബ്രൗസർ അറിയിപ്പുകൾ ഓൺ ചെയ്യുക",
     "publicChatAlertsRate": "കൂടുതൽ",
     "publicChatAlertsRateOption": "ഒരു മണിക്കൂറിൽ {{count}}",
-    "publicChatAlertsRateHint": "ഇതിനേക്കാൾ തിരക്കുള്ളപ്പോൾ ഒന്നും നഷ്ടപ്പെടുന്നില്ല — സന്ദേശങ്ങൾ സൂക്ഷിക്കുകയും അടുത്ത അലേർട്ടിൽ ഒരുമിച്ച് എത്തുകയും ചെയ്യും."
+    "publicChatAlertsRateHint": "ഇതിനേക്കാൾ തിരക്കുള്ളപ്പോൾ ഒന്നും നഷ്ടപ്പെടുന്നില്ല — സന്ദേശങ്ങൾ സൂക്ഷിക്കുകയും അടുത്ത അലേർട്ടിൽ ഒരുമിച്ച് എത്തുകയും ചെയ്യും.",
+    "emailNotificationsDescLinked": "{{email}}-ലേക്ക് അയച്ചു",
+    "emailNotificationsNoAddress": "ആദ്യം നിങ്ങളുടെ അക്കൗണ്ടിലേക്ക് ഒരു ഇമെയിൽ വിലാസം ചേർക്കുക - അവിടെയാണ് ഇവ പോകുന്നത്.",
+    "emailNotificationsAddAddress": "ഒരു ഇമെയിൽ വിലാസം ചേർക്കുക"
   },
   "common": {
     "save": "സേവ് ചെയ്യുക",
@@ -836,7 +839,8 @@
       "mentionedNamed": "{{name}}@ നിങ്ങളെ \"{{community}}\" ൽ പരാമർശിച്ചു",
       "here": "{{name}} കമ്മ്യൂണിറ്റിയിലെ എല്ലാവർക്കും സന്ദേശമയച്ചു",
       "hereNamed": "{{name}}@\"{{community}}\" എന്നതിൽ എല്ലാവർക്കും സന്ദേശമയച്ചു"
-    }
+    },
+    "byEmail": "ഇമെയിൽ വഴി"
   },
   "leaderboard": {
     "title": "ലീഡർബോർഡ്",

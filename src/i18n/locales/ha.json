@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Kunna sanarwar burauza a sama domin wadannan su zo",
     "publicChatAlertsRate": "A mafi yawa",
     "publicChatAlertsRateOption": "{{count}} a awa",
-    "publicChatAlertsRateHint": "Babu abinda ya bata lokacin da dakin ya fi wannan cike - sakonni ana rike dasu kuma suna zuwa tare a sanarwa ta gaba."
+    "publicChatAlertsRateHint": "Babu abinda ya bata lokacin da dakin ya fi wannan cike - sakonni ana rike dasu kuma suna zuwa tare a sanarwa ta gaba.",
+    "emailNotificationsDescLinked": "An aika zuwa {{email}}",
+    "emailNotificationsNoAddress": "Da farko ka ƙara adireshin imel a asusunka — a nan za a aika waɗannan.",
+    "emailNotificationsAddAddress": "Ƙara adireshin imel"
   },
   "common": {
     "save": "Ajiye",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} ya ambace ku a “{{community}}”",
       "here": "{{name}} saƙon kowa a cikin al'umma",
       "hereNamed": "{{name}} saƙon kowa a cikin “{{community}}”"
-    }
+    },
+    "byEmail": "Ta imel"
   },
   "leaderboard": {
     "title": "Jadawalin Matsayi",

@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "ເປີດການແຈ້ງເຕືອນຂອງຕົວທ່ອງເວັບຂ້າງເທິງເພື່ອໃຫ້ສິ່ງເຫຼົ່ານີ້ມາຮອດ",
     "publicChatAlertsRate": "ຢ່າງຫຼາຍທີ່ສຸດ",
     "publicChatAlertsRateOption": "{{count}} ຕໍ່ຊົ່ວໂມງ",
-    "publicChatAlertsRateHint": "ບໍ່ມີຫຍັງສູນເສຍໄປເມື່ອຫ້ອງມີຄວາມຫຍຸ້ງຫຼາຍກວ່າ ນີ້ — ຂໍ້ຄວາມຈະຖືກເກັບໄວ້ ແລະ ມາຮອດພ້ອມກັນໃນການແຈ້ງເຕືອນຄັ້ງຕໍ່ໄປ."
+    "publicChatAlertsRateHint": "ບໍ່ມີຫຍັງສູນເສຍໄປເມື່ອຫ້ອງມີຄວາມຫຍຸ້ງຫຼາຍກວ່າ ນີ້ — ຂໍ້ຄວາມຈະຖືກເກັບໄວ້ ແລະ ມາຮອດພ້ອມກັນໃນການແຈ້ງເຕືອນຄັ້ງຕໍ່ໄປ.",
+    "emailNotificationsDescLinked": "ສົ່ງຫາ {{email}}",
+    "emailNotificationsNoAddress": "ເພີ່ມທີ່ຢູ່ອີເມວໃນບັນຊີຂອງທ່ານກ່ອນ — ທີ່ນັ້ນແມ່ນບ່ອນທີ່ສິ່ງເຫຼົ່ານີ້ຈະໄປ.",
+    "emailNotificationsAddAddress": "ເພີ່ມທີ່ຢູ່ອີເມວ"
   },
   "common": {
     "save": "ບັນທຶກ",
@@ -839,7 +842,8 @@
       "mentionedNamed": "{{name}} ໄດ້ກ່າວເຖິງທ່ານໃນ \"{{community}}\"",
       "here": "{{name}} ສົ່ງຂໍ້ຄວາມໃຫ້ທຸກຄົນໃນຊຸມຊົນ",
       "hereNamed": "{{name}} ສົ່ງຂໍ້ຄວາມໃຫ້ທຸກຄົນໃນ \"{{community}}\""
-    }
+    },
+    "byEmail": "ທາງອີເມລ"
   },
   "leaderboard": {
     "title": "ກະດານຄະແນນ",

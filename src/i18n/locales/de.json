@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Aktiviere die Browser-Benachrichtigungen oben, damit diese ankommen",
     "publicChatAlertsRate": "Maximal",
     "publicChatAlertsRateOption": "{{count}} pro Stunde",
-    "publicChatAlertsRateHint": "Es geht nichts verloren, wenn der Raum belebter ist als das – die Nachrichten werden gespeichert und kommen bei der nächsten Benachrichtigung zusammen an."
+    "publicChatAlertsRateHint": "Es geht nichts verloren, wenn der Raum belebter ist als das – die Nachrichten werden gespeichert und kommen bei der nächsten Benachrichtigung zusammen an.",
+    "emailNotificationsDescLinked": "An {{email}} gesendet",
+    "emailNotificationsNoAddress": "Füge zuerst eine E-Mail-Adresse zu deinem Konto hinzu – dort würden diese landen.",
+    "emailNotificationsAddAddress": "E-Mail-Adresse hinzufügen"
   },
   "common": {
     "save": "Speichern",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} hat Sie in „{{community}}“ erwähnt",
       "here": "{{name}} hat allen in der Community eine Nachricht gesendet",
       "hereNamed": "{{name}} hat alle in „{{community}}“ benachrichtigt"
-    }
+    },
+    "byEmail": "Per E-Mail"
   },
   "leaderboard": {
     "title": "Rangliste",

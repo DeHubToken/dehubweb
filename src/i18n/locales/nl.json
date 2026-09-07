@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Schakel browsermeldingen hierboven in om deze te ontvangen",
     "publicChatAlertsRate": "Maximaal",
     "publicChatAlertsRateOption": "{{count}} per uur",
-    "publicChatAlertsRateHint": "Niets gaat verloren wanneer de kamer drukker is dan dit — de berichten worden bewaard en komen samen aan bij de volgende melding."
+    "publicChatAlertsRateHint": "Niets gaat verloren wanneer de kamer drukker is dan dit — de berichten worden bewaard en komen samen aan bij de volgende melding.",
+    "emailNotificationsDescLinked": "Verzonden naar {{email}}",
+    "emailNotificationsNoAddress": "Voeg eerst een e-mailadres toe aan je account - daar komen deze te staan.",
+    "emailNotificationsAddAddress": "Voeg een e-mailadres toe"
   },
   "common": {
     "save": "Opslaan",
@@ -1038,7 +1041,8 @@
       "mentionedNamed": "{{name}} heeft u vermeld in \"{{community}}\"",
       "here": "{{name}} heeft iedereen in de community een bericht gestuurd",
       "hereNamed": "{{name}} heeft iedereen in \"{{community}}\" een bericht gestuurd"
-    }
+    },
+    "byEmail": "Per e-mail"
   },
   "leaderboard": {
     "title": "Ranglijsten",

@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "ჩართეთ ბრაუზერის შეტყობინებები ზემოთ, რომ ესენი მიიღოთ",
     "publicChatAlertsRate": "ყველაზე მეტი",
     "publicChatAlertsRateOption": "{{count}} საათში",
-    "publicChatAlertsRateHint": "არაფერი არ იკარგება, როდესაც ოთახი უფრო დატვირთულია, ვიდრე ეს — შეტყობინებები ინახება და მოდის შემდეგ შეტყობინებასთან ერთად."
+    "publicChatAlertsRateHint": "არაფერი არ იკარგება, როდესაც ოთახი უფრო დატვირთულია, ვიდრე ეს — შეტყობინებები ინახება და მოდის შემდეგ შეტყობინებასთან ერთად.",
+    "emailNotificationsDescLinked": "გაგზავნილია {{email}}-ზე",
+    "emailNotificationsNoAddress": "ჯერ დაამატეთ ელ. ფოსტის მისამართი თქვენს ანგარიშზე — აქ განთავსდება ეს.",
+    "emailNotificationsAddAddress": "ელ. ფოსტის მისამართის დამატება"
   },
   "common": {
     "save": "შენახვა",
@@ -858,7 +861,8 @@
       "mentionedNamed": "{{name}} @ მოგიხსენიათ „{{community}}“ -ში",
       "here": "{{name}} მესიჯი მისწერა გაერთიანების ყველა წევრს",
       "hereNamed": "{{name}} მესიჯი ყველასთვის: „{{community}}“"
-    }
+    },
+    "byEmail": "ელექტრონული ფოსტით"
   },
   "leaderboard": {
     "title": "რეიტინგი",

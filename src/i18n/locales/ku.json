@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "ڕێگە بدە ئاگادارکردنەوەکانی وێبگەڕەکە لەسەرەوە بۆ ئەمانە بێت",
     "publicChatAlertsRate": "لە زۆرترین",
     "publicChatAlertsRateOption": "لە کاتژمێرێکدا {{count}}",
-    "publicChatAlertsRateHint": "هیچ شتێک لەدەست نادات کاتێک ژوورەکە لەمە قەرەباڵغتر بێت — نامەکان هەڵدەگیرێن و لە ئاگادارکردنەوەی داهاتوودا پێکەوە دێن."
+    "publicChatAlertsRateHint": "هیچ شتێک لەدەست نادات کاتێک ژوورەکە لەمە قەرەباڵغتر بێت — نامەکان هەڵدەگیرێن و لە ئاگادارکردنەوەی داهاتوودا پێکەوە دێن.",
+    "emailNotificationsDescLinked": "نێردرا بۆ {{email}}",
+    "emailNotificationsNoAddress": "سەرەتا ئیمەیلێک بۆ هەژمارەکەت زیاد بکە - لەوێدا ئەمانە دەچن.",
+    "emailNotificationsAddAddress": "ئیمەیلێک زیاد بکە"
   },
   "common": {
     "save": "Tomar bike",
@@ -821,7 +824,8 @@
     "newNotification": "Agahdariya nû",
     "oneOther": "1 yê din",
     "nOthers": "{{count}} yên din",
-    "burstBody": "{{count}} ئاگادارکردنەوەی نوێ لە {{who}}"
+    "burstBody": "{{count}} ئاگادارکردنەوەی نوێ لە {{who}}",
+    "byEmail": "بە ئیمەیل"
   },
   "leaderboard": {
     "title": "Pêşengtî",

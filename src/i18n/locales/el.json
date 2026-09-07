@@ -316,7 +316,10 @@
     "publicChatAlertsNeedsBrowser": "Ενεργοποίησε τις ειδοποιήσεις προγράμματος περιήγησης παραπάνω για να φτάσουν αυτές",
     "publicChatAlertsRate": "Στην καλύτερη περίπτωση",
     "publicChatAlertsRateOption": "{{count}} την ώρα",
-    "publicChatAlertsRateHint": "Τίποτα δεν χάνεται όταν η αίθουσα είναι πιο πολυάσχολη από αυτό — τα μηνύματα κρατούνται και φτάνουν μαζί στην επόμενη ειδοποίηση."
+    "publicChatAlertsRateHint": "Τίποτα δεν χάνεται όταν η αίθουσα είναι πιο πολυάσχολη από αυτό — τα μηνύματα κρατούνται και φτάνουν μαζί στην επόμενη ειδοποίηση.",
+    "emailNotificationsDescLinked": "Στάλθηκε στο {{email}}",
+    "emailNotificationsNoAddress": "Προσθέστε πρώτα μια διεύθυνση email στον λογαριασμό σας — εκεί θα πηγαίνουν αυτά.",
+    "emailNotificationsAddAddress": "Προσθήκη διεύθυνσης email"
   },
   "common": {
     "save": "Αποθήκευση",
@@ -803,7 +806,8 @@
       "mentionedNamed": "Οχρήστης {{name}} σας ανέφερε στο \"{{community}}\"",
       "here": "Ο χρήστης{{name}} έστειλε μήνυμα σε όλα τα μέλη της κοινότητας",
       "hereNamed": "Ο χρήστης{{name}} έστειλε μήνυμα σε όλους στην τοποθεσία \"{{community}}\""
-    }
+    },
+    "byEmail": "Με email"
   },
   "leaderboard": {
     "title": "Κατάταξη",

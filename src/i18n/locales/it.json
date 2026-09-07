@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Attiva le notifiche del browser qui sopra affinché arrivino",
     "publicChatAlertsRate": "Al massimo",
     "publicChatAlertsRateOption": "{{count}} all'ora",
-    "publicChatAlertsRateHint": "Nulla viene perso quando la stanza è più attiva di così: i messaggi vengono conservati e arrivano insieme al prossimo avviso."
+    "publicChatAlertsRateHint": "Nulla viene perso quando la stanza è più attiva di così: i messaggi vengono conservati e arrivano insieme al prossimo avviso.",
+    "emailNotificationsDescLinked": "Inviato a {{email}}",
+    "emailNotificationsNoAddress": "Aggiungi prima un indirizzo email al tuo account: è lì che andrebbero queste informazioni.",
+    "emailNotificationsAddAddress": "Aggiungi un indirizzo email"
   },
   "common": {
     "save": "Salva",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} ti ha menzionato in \"{{community}}\"",
       "here": "{{name}} ha inviato un messaggio a tutti i membri della community",
       "hereNamed": "{{name}} ha inviato un messaggio a tutti gli utenti di \"{{community}}\""
-    }
+    },
+    "byEmail": "Via email"
   },
   "leaderboard": {
     "title": "Classifica",

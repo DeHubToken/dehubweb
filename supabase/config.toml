@@ -130,6 +130,8 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.email-link-send]
     verify_jwt = false
+  [functions.notification-email-send]
+    verify_jwt = false
   [functions.enhance-text]
     verify_jwt = false
   [functions.fal-ai-tools]

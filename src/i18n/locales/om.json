@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Isaan kun akka dhufaniif beeksisa browser armaan olii ibsi",
     "publicChatAlertsRate": "Yoo baay&#39;ate",
     "publicChatAlertsRateOption": "{{count}} sa&#39;aatii tokkotti",
-    "publicChatAlertsRateHint": "Yeroo kutaan kana caalaa hojiin itti baay’atu wanti bade hin jiru — ergaawwan qabamaniiru, akeekkachiisa itti aanu irrattis waliin ga’u."
+    "publicChatAlertsRateHint": "Yeroo kutaan kana caalaa hojiin itti baay’atu wanti bade hin jiru — ergaawwan qabamaniiru, akeekkachiisa itti aanu irrattis waliin ga’u.",
+    "emailNotificationsDescLinked": "{{email}} irratti ergame",
+    "emailNotificationsNoAddress": "E-mayila tokko gara galmee keetti duraan dabali — achi kanatti kanneen dabalaman.",
+    "emailNotificationsAddAddress": "E-mayila tokko dabali"
   },
   "common": {
     "save": "Olchi",
@@ -854,7 +857,8 @@
       "mentionedNamed": "{{name}} “{{community}}” keessatti si kaase.",
       "here": "{{name}} hawaasa keessa jiru hundaaf ergaa dabarseera",
       "hereNamed": "{{name}} “{{community}}” jechuun hundaaf ergaa dabarseera."
-    }
+    },
+    "byEmail": "Imeelidhaan"
   },
   "leaderboard": {
     "title": "Sadarkaa",

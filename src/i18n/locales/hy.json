@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Միացրեք բրաուզերի ծանուցումները վերևում, որպեսզի դրանք ստանաք",
     "publicChatAlertsRate": "Առավելագույնը",
     "publicChatAlertsRateOption": "{{count}} մեկ ժամում",
-    "publicChatAlertsRateHint": "Ոչինչ չի կորչում, երբ սենյակն ավելի զբաղված է, քան սա. հաղորդագրություններն պահվում են և գալիս են միասին հաջորդ ազդանշանով։"
+    "publicChatAlertsRateHint": "Ոչինչ չի կորչում, երբ սենյակն ավելի զբաղված է, քան սա. հաղորդագրություններն պահվում են և գալիս են միասին հաջորդ ազդանշանով։",
+    "emailNotificationsDescLinked": "Ուղարկված է {{email}}",
+    "emailNotificationsNoAddress": "Նախ հաշվին ավելացրեք էլեկտրոնային փոստի հասցե. այնտեղ պետք է գրանցվեն դրանք։",
+    "emailNotificationsAddAddress": "Ավելացնել էլեկտրոնային փոստի հասցե"
   },
   "common": {
     "save": "Pahpanel",
@@ -832,7 +835,8 @@
       "mentionedNamed": "{{name}}-ը նշել է ձեզ «@{{community}}»- ում",
       "here": "{{name}}@ հաղորդագրություն ուղարկեց համայնքի բոլոր անդամներին",
       "hereNamed": "{{name}}@-ը բոլորին հաղորդագրություն է ուղարկել «@{{community}}»- ում"
-    }
+    },
+    "byEmail": "Էլեկտրոնային փոստով"
   },
   "leaderboard": {
     "title": "Dasakargoum",

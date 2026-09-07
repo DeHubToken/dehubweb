@@ -325,7 +325,10 @@
     "publicChatAlertsNeedsBrowser": "हे येण्यासाठी वरील ब्राउझर सूचना चालू करा",
     "publicChatAlertsRate": "जास्तीत जास्त",
     "publicChatAlertsRateOption": "तासाला {{count}}",
-    "publicChatAlertsRateHint": "जेव्हा खोली यापेक्षा व्यस्त असेल तेव्हा काहीही गमावले जात नाही - संदेश ठेवले जातात आणि पुढील अलर्टवर एकत्र येतात."
+    "publicChatAlertsRateHint": "जेव्हा खोली यापेक्षा व्यस्त असेल तेव्हा काहीही गमावले जात नाही - संदेश ठेवले जातात आणि पुढील अलर्टवर एकत्र येतात.",
+    "emailNotificationsDescLinked": "{{email}} यांना पाठवले",
+    "emailNotificationsNoAddress": "प्रथम तुमच्या खात्यात ईमेल ॲड्रेस जोडा - तिथेच हे पाठवले जातील.",
+    "emailNotificationsAddAddress": "ईमेल ॲड्रेस जोडा"
   },
   "common": {
     "save": "जतन करा",
@@ -837,7 +840,8 @@
       "mentioned": "{{name}} ने एका समुदायात आपला उल्लेख केला",
       "mentionedNamed": "{{name}} यांनी “{{community}}” मध्ये आपला उल्लेख केला",
       "hereNamed": "{{name}} सर्वांनी “{{community}}” मध्ये संदेश पाठविला"
-    }
+    },
+    "byEmail": "ईमेलद्वारे"
   },
   "leaderboard": {
     "title": "लीडरबोर्ड",

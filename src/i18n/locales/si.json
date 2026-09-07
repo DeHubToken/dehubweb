@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "මේවා පැමිණීමට ඉහතින් බ්‍රව්සර් දැනුම්දීම් සක්‍රිය කරන්න",
     "publicChatAlertsRate": "උපරිම වශයෙන්",
     "publicChatAlertsRateOption": "පැයකට {{count}}",
-    "publicChatAlertsRateHint": "කාමරය මෙයට වඩා කාර්යබහුල වූ විට කිසිවක් අහිමි නොවේ - පණිවිඩ රඳවා තබා ඇති අතර ඊළඟ ඇඟවීමේදී එකට පැමිණේ."
+    "publicChatAlertsRateHint": "කාමරය මෙයට වඩා කාර්යබහුල වූ විට කිසිවක් අහිමි නොවේ - පණිවිඩ රඳවා තබා ඇති අතර ඊළඟ ඇඟවීමේදී එකට පැමිණේ.",
+    "emailNotificationsDescLinked": "{{email}} වෙත යවන ලදී",
+    "emailNotificationsNoAddress": "මුලින්ම ඔබේ ගිණුමට විද්‍යුත් තැපැල් ලිපිනයක් එක් කරන්න - ඒවා එහි යයි.",
+    "emailNotificationsAddAddress": "විද්‍යුත් තැපැල් ලිපිනයක් එක් කරන්න"
   },
   "common": {
     "save": "සුරකින්න",
@@ -846,7 +849,8 @@
     "community": {
       "joined": "{{name}} ඔබේ ප් ‍ රජාවට එක් විය",
       "mentioned": "{{name}} ඔබ ගැන සඳහන් කර ඇත්තේ ප් ‍ රජාවක ය"
-    }
+    },
+    "byEmail": "විද්‍යුත් තැපෑලෙන්"
   },
   "leaderboard": {
     "title": "ශ්‍රේණිගත කිරීම",

@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "यी सूचनाहरू प्राप्त गर्नका लागि माथि ब्राउजर सूचनाहरू सक्षम गर्नुहोस्",
     "publicChatAlertsRate": "अधिकतम",
     "publicChatAlertsRateOption": "{{count}} प्रति घण्टा",
-    "publicChatAlertsRateHint": "कोठा व्यस्त हुँदा केही पनि हराउँदैन — सन्देशहरू राखिन्छन् र अर्को सूचनामा एकसाथ आइपुग्छन्।"
+    "publicChatAlertsRateHint": "कोठा व्यस्त हुँदा केही पनि हराउँदैन — सन्देशहरू राखिन्छन् र अर्को सूचनामा एकसाथ आइपुग्छन्।",
+    "emailNotificationsDescLinked": "{{email}} लाई पठाइयो",
+    "emailNotificationsNoAddress": "पहिले आफ्नो खातामा इमेल ठेगाना थप्नुहोस् — त्यसमा यी जानेछन्।",
+    "emailNotificationsAddAddress": "इमेल ठेगाना थप्नुहोस्"
   },
   "common": {
     "save": "सुरक्षित गर्नुहोस्",
@@ -852,7 +855,8 @@
       "mentionedNamed": "{{name}}ले तपाईंलाई \"{{community}}\" मा उल्लेख गर्नुभयो",
       "here": "{{name}} समुदायका सबैलाई सन्देश पठाइयो",
       "hereNamed": "{{name}}ले \"{{community}}\" मा सबैलाई सन्देश पठायो"
-    }
+    },
+    "byEmail": "इमेलद्वारा"
   },
   "leaderboard": {
     "title": "लिडरबोर्ड",

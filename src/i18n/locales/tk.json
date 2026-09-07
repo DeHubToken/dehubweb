@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Muny almak üçin ýokardaky brauzer bildirişlerini açyň",
     "publicChatAlertsRate": "Iň köp bilen",
     "publicChatAlertsRateOption": "bir sagatda {{count}}",
-    "publicChatAlertsRateHint": "Söhbetdeşlik has işjeň bolsa, hiç zat ýitirilmeýär — hatlar saklanýar we indiki duýduryşda bile gelýär."
+    "publicChatAlertsRateHint": "Söhbetdeşlik has işjeň bolsa, hiç zat ýitirilmeýär — hatlar saklanýar we indiki duýduryşda bile gelýär.",
+    "emailNotificationsDescLinked": "{{email}}-a ugradyldy",
+    "emailNotificationsNoAddress": "Ilki bilen hasabyňyza e-poçta salgysyny goşuň — şol ýere olar barar.",
+    "emailNotificationsAddAddress": "E-poçta salgysyny goşuň"
   },
   "common": {
     "save": "Ýatda sakla",
@@ -834,7 +837,8 @@
     "burstBody": "{{count}} täze bildiriş {{who}}-dan",
     "community": {
       "joinedNamed": "{{name}} \"{{community}}\" bilen birleşdi"
-    }
+    },
+    "byEmail": "E-poçta arkaly"
   },
   "leaderboard": {
     "title": "Reýting",

@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Schalt die Browser-Notifikationä obe a, damit die chömed",
     "publicChatAlertsRate": "Maximal",
     "publicChatAlertsRateOption": "{{count}} pro Stund",
-    "publicChatAlertsRateHint": "Nüt gaht verlore, wenns Zimmer busier isch als das – die Nachrichtä werded ghaute und chömed zäme bim nächste Alarm."
+    "publicChatAlertsRateHint": "Nüt gaht verlore, wenns Zimmer busier isch als das – die Nachrichtä werded ghaute und chömed zäme bim nächste Alarm.",
+    "emailNotificationsDescLinked": "Gschickt a {{email}}",
+    "emailNotificationsNoAddress": "Füeg erscht e E-Mail-Adrässe zu dim Konto drzue – döt chömed die dru.",
+    "emailNotificationsAddAddress": "E-Mail-Adrässe füege"
   },
   "common": {
     "save": "Speichere",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} het dich i “{{community}}” erwähnt",
       "here": "{{name}} het a alli i dimere Community gschriebe",
       "hereNamed": "{{name}} het a alli i “{{community}}” gschriebe"
-    }
+    },
+    "byEmail": "Per E-Mail"
   },
   "leaderboard": {
     "title": "Rangllischte",

@@ -329,7 +329,10 @@
     "publicChatAlertsRateOption": "{{count}} per uur",
     "publicChatAlertsRateHint": "Niks gaan verlore wanneer die kamer besiger is as dit nie — die boodskappe word gehou en kom saam aan by die volgende waarskuwing.",
     "security": "Sekuriteit",
-    "about": "Oor"
+    "about": "Oor",
+    "emailNotificationsDescLinked": "Gestuur na {{email}}",
+    "emailNotificationsNoAddress": "Voeg eers 'n e-posadres by jou rekening – dit is waar hierdie sal gaan.",
+    "emailNotificationsAddAddress": "Voeg 'n e-posadres by"
   },
   "common": {
     "save": "Stoor",
@@ -852,7 +855,8 @@
       "here": "{{name}} almal in die gemeenskap",
       "hereNamed": "{{name}} @ boodskap almal in \"{{community}}\""
     },
-    "noNotifications": "Geen kennisgewings nie."
+    "noNotifications": "Geen kennisgewings nie.",
+    "byEmail": "Per e-pos"
   },
   "leaderboard": {
     "title": "Ranglyste",

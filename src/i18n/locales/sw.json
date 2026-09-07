@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Washa arifa za kivinjari hapo juu ili hizi zifike",
     "publicChatAlertsRate": "Kiwango cha juu zaidi",
     "publicChatAlertsRateOption": "{{count}} kwa saa",
-    "publicChatAlertsRateHint": "Hakuna kinachopotea wakati chumba kina shughuli nyingi zaidi ya hii — jumbe huhifadhiwa na kuwasili pamoja kwenye arifa inayofuata."
+    "publicChatAlertsRateHint": "Hakuna kinachopotea wakati chumba kina shughuli nyingi zaidi ya hii — jumbe huhifadhiwa na kuwasili pamoja kwenye arifa inayofuata.",
+    "emailNotificationsDescLinked": "Tuma kwa {{email}}",
+    "emailNotificationsNoAddress": "Ongeza anwani ya barua pepe kwenye akaunti yako kwanza — hapo ndipo hizi zitakwenda.",
+    "emailNotificationsAddAddress": "Ongeza anwani ya barua pepe"
   },
   "common": {
     "save": "Hifadhi",
@@ -842,7 +845,8 @@
       "mentionedNamed": "{{name}} amekutaja katika \"{{community}}\"",
       "here": "{{name}} alituma ujumbe kwa kila mtu katika jumuiya",
       "hereNamed": "{{name}} alituma ujumbe kwa kila mtu katika \"{{community}}\""
-    }
+    },
+    "byEmail": "Kwa barua pepe"
   },
   "leaderboard": {
     "title": "Ubao wa Viongozi",

@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Nyalakan notifikasi browser di atas agar ini tiba",
     "publicChatAlertsRate": "Paling banyak",
     "publicChatAlertsRateOption": "{{count}} per jam",
-    "publicChatAlertsRateHint": "Tidak ada yang hilang saat ruangan lebih sibuk dari ini — pesan ditahan dan tiba bersamaan pada peringatan berikutnya."
+    "publicChatAlertsRateHint": "Tidak ada yang hilang saat ruangan lebih sibuk dari ini — pesan ditahan dan tiba bersamaan pada peringatan berikutnya.",
+    "emailNotificationsDescLinked": "Dikirim ke {{email}}",
+    "emailNotificationsNoAddress": "Tambahkan alamat email ke akun Anda terlebih dahulu — di situlah ini akan masuk.",
+    "emailNotificationsAddAddress": "Tambahkan alamat email"
   },
   "common": {
     "save": "Simpan",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} menyebut Anda di “{{community}}”",
       "here": "{{name}} mengirim pesan kepada semua orang di komunitas ini",
       "hereNamed": "{{name}} mengirim pesan kepada semua orang di “{{community}}”"
-    }
+    },
+    "byEmail": "Melalui email"
   },
   "leaderboard": {
     "title": "Papan Peringkat",

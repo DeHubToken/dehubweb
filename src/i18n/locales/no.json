@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Slå på nettleservarsler ovenfor for at disse skal komme",
     "publicChatAlertsRate": "Maksimalt",
     "publicChatAlertsRateOption": "{{count}} i timen",
-    "publicChatAlertsRateHint": "Ingenting går tapt når rommet er travlere enn dette – meldingene lagres og kommer samlet ved neste varsel."
+    "publicChatAlertsRateHint": "Ingenting går tapt når rommet er travlere enn dette – meldingene lagres og kommer samlet ved neste varsel.",
+    "emailNotificationsDescLinked": "Sendt til {{email}}",
+    "emailNotificationsNoAddress": "Legg til en e-postadresse på kontoen din først – det er dit disse vil gå.",
+    "emailNotificationsAddAddress": "Legg til en e-postadresse"
   },
   "common": {
     "save": "Lagre",
@@ -840,7 +843,8 @@
       "mentionedNamed": "{{name}} nevnte deg i «{{community}}»",
       "here": "{{name}} sendte melding til alle i fellesskapet",
       "hereNamed": "{{name}} sendte melding til alle i «{{community}}»"
-    }
+    },
+    "byEmail": "Per e-post"
   },
   "leaderboard": {
     "title": "Toppliste",

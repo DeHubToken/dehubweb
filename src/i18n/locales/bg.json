@@ -323,7 +323,10 @@
     "publicChatAlertsNeedsBrowser": "Включете известията на браузъра по-горе, за да ги получавате",
     "publicChatAlertsRate": "Най-много",
     "publicChatAlertsRateOption": "{{count}} на час",
-    "publicChatAlertsRateHint": "Нищо не се губи, когато стаята е по-натоварена от това — съобщенията се пазят и пристигат заедно при следващото известие."
+    "publicChatAlertsRateHint": "Нищо не се губи, когато стаята е по-натоварена от това — съобщенията се пазят и пристигат заедно при следващото известие.",
+    "emailNotificationsDescLinked": "Изпратено до {{email}}",
+    "emailNotificationsNoAddress": "Първо добавете имейл адрес към профила си — там ще бъдат изпратени тези.",
+    "emailNotificationsAddAddress": "Добавяне на имейл адрес"
   },
   "common": {
     "save": "Запази",
@@ -823,7 +826,8 @@
       "mentionedNamed": "{{name}} ви спомена в „{{community}}“",
       "here": "{{name}} изпрати съобщение на всички в общността",
       "hereNamed": "{{name}} изпрати съобщение на всички в „{{community}}“"
-    }
+    },
+    "byEmail": "По имейл"
   },
   "leaderboard": {
     "title": "Класация",

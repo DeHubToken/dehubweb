@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "បើកការជូនដំណឹងរបស់កម្មវិធីរុករកខាងលើ ដើម្បីឱ្យការជូនដំណឹងទាំងនេះមកដល់",
     "publicChatAlertsRate": "យ៉ាងច្រើនបំផុត",
     "publicChatAlertsRateOption": "{{count}} ក្នុងមួយម៉ោង",
-    "publicChatAlertsRateHint": "គ្មានអ្វីបាត់បង់ទេ នៅពេលដែលបន្ទប់កាន់តែរវល់ជាងនេះ — សារនឹងត្រូវបានរក្សាទុក ហើយមកដល់ជាមួយគ្នានៅលើការជូនដំណឹងបន្ទាប់។"
+    "publicChatAlertsRateHint": "គ្មានអ្វីបាត់បង់ទេ នៅពេលដែលបន្ទប់កាន់តែរវល់ជាងនេះ — សារនឹងត្រូវបានរក្សាទុក ហើយមកដល់ជាមួយគ្នានៅលើការជូនដំណឹងបន្ទាប់។",
+    "emailNotificationsDescLinked": "ផ្ញើទៅ {{email}}",
+    "emailNotificationsNoAddress": "សូមបន្ថែមអាសយដ្ឋានអ៊ីម៉ែលទៅគណនីរបស់អ្នកជាមុនសិន — នៅទីនោះវានឹងទៅ។",
+    "emailNotificationsAddAddress": "បន្ថែមអាសយដ្ឋានអ៊ីម៉ែល"
   },
   "common": {
     "save": "រក្សាទុក",
@@ -853,7 +856,8 @@
       "mentionedNamed": "{{name}} បានលើកឡើងអ្នកនៅក្នុង \"{{community}}\"",
       "here": "{{name}} @ បានផ្ញើសារទៅគ្រប់គ្នានៅក្នុងសហគមន៍",
       "hereNamed": "{{name}} @ បានផ្ញើសារទៅអ្នករាល់គ្នានៅក្នុង \"{{community}}\""
-    }
+    },
+    "byEmail": "តាមអ៊ីម៉ែល"
   },
   "leaderboard": {
     "title": "តារាងចំណាត់ថ្នាក់",

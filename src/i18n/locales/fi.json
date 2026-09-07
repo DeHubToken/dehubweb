@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Ota käyttöön selaimesi ilmoitukset yllä, jotta nämä saapuvat",
     "publicChatAlertsRate": "Enintään",
     "publicChatAlertsRateOption": "{{count}} tunnissa",
-    "publicChatAlertsRateHint": "Mitään ei menetetä, kun huone on tätä vilkkaampi – viestit pidetään ja ne saapuvat yhdessä seuraavan hälytyksen yhteydessä."
+    "publicChatAlertsRateHint": "Mitään ei menetetä, kun huone on tätä vilkkaampi – viestit pidetään ja ne saapuvat yhdessä seuraavan hälytyksen yhteydessä.",
+    "emailNotificationsDescLinked": "Lähetetty käyttäjälle {{email}}",
+    "emailNotificationsNoAddress": "Lisää ensin sähköpostiosoite tilillesi – sinne nämä menevät.",
+    "emailNotificationsAddAddress": "Lisää sähköpostiosoite"
   },
   "common": {
     "save": "Tallenna",
@@ -832,7 +835,8 @@
       "mentionedNamed": "{{name}} mainitsi sinut kohteessa \"{{community}}\"",
       "here": "{{name}} lähetti viestin kaikille yhteisön jäsenille",
       "hereNamed": "{{name}} viestitti kaikille kohteessa \"{{community}}\""
-    }
+    },
+    "byEmail": "Sähköpostitse"
   },
   "leaderboard": {
     "title": "Tulostaulukko",

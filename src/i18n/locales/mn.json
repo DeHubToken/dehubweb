@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Үүнийг авахын тулд дээрх хөтчийн мэдэгдлийг асаана уу",
     "publicChatAlertsRate": "Хамгийн ихдээ",
     "publicChatAlertsRateOption": "цагт {{count}}",
-    "publicChatAlertsRateHint": "Өрөө энэ цагаас илүү завгүй байвал юу ч алдагдахгүй — мессежүүд хадгалагдаж, дараагийн сэрүүлэгт хамт ирдэг."
+    "publicChatAlertsRateHint": "Өрөө энэ цагаас илүү завгүй байвал юу ч алдагдахгүй — мессежүүд хадгалагдаж, дараагийн сэрүүлэгт хамт ирдэг.",
+    "emailNotificationsDescLinked": "{{email}}-д илгээсэн",
+    "emailNotificationsNoAddress": "Эхлээд данс руугаа имэйл хаяг нэмнэ үү - тэнд эдгээр зүйлс орно.",
+    "emailNotificationsAddAddress": "Имэйл хаяг нэмэх"
   },
   "common": {
     "save": "Хадгалах",
@@ -838,7 +841,8 @@
       "mentionedNamed": "{{name}} таныг “{{community}}” гэж дурдсан",
       "here": "{{name}} messaged нийт хүн бүр",
       "hereNamed": "{{name}} messaged хүн бүрийг “{{community}}”"
-    }
+    },
+    "byEmail": "И-мэйлээр"
   },
   "leaderboard": {
     "title": "Тэргүүлэгчид",

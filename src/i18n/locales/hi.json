@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "इनके आने के लिए ऊपर ब्राउज़र सूचनाएं चालू करें",
     "publicChatAlertsRate": "अधिकतम",
     "publicChatAlertsRateOption": "{{count}} प्रति घंटा",
-    "publicChatAlertsRateHint": "जब कमरा इससे अधिक व्यस्त होता है तो कुछ भी खोता नहीं है - संदेश रखे जाते हैं और अगले अलर्ट पर एक साथ आते हैं।"
+    "publicChatAlertsRateHint": "जब कमरा इससे अधिक व्यस्त होता है तो कुछ भी खोता नहीं है - संदेश रखे जाते हैं और अगले अलर्ट पर एक साथ आते हैं।",
+    "emailNotificationsDescLinked": "{{email}} को भेजा गया",
+    "emailNotificationsNoAddress": "पहले अपने खाते में एक ईमेल पता जोड़ें — यहीं पर ये जाएंगे।",
+    "emailNotificationsAddAddress": "ईमेल पता जोड़ें"
   },
   "common": {
     "save": "सेव करें",
@@ -848,7 +851,8 @@
       "mentionedNamed": "{{name}} ने \"{{community}}\" में आपका उल्लेख किया है",
       "here": "{{name}} ने समुदाय के सभी लोगों को मैसेज भेजा",
       "hereNamed": "{{name}} ने \"{{community}}\" में सभी को मैसेज भेजा"
-    }
+    },
+    "byEmail": "ईमेल द्वारा"
   },
   "leaderboard": {
     "title": "लीडरबोर्ड",

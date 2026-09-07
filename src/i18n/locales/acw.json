@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "شغّل إشعارات المتصفح أعلاه لتصلك هذه التنبيهات",
     "publicChatAlertsRate": "بحد أقصى",
     "publicChatAlertsRateOption": "{{count}} في الساعة",
-    "publicChatAlertsRateHint": "لا شيء يُفقد عندما تكون الغرفة أكثر انشغالاً من ذلك — تُحفظ الرسائل وتصل معًا في التنبيه التالي."
+    "publicChatAlertsRateHint": "لا شيء يُفقد عندما تكون الغرفة أكثر انشغالاً من ذلك — تُحفظ الرسائل وتصل معًا في التنبيه التالي.",
+    "emailNotificationsDescLinked": "تم الإرسال إلى {{email}}",
+    "emailNotificationsNoAddress": "أضف بريد إلكتروني لحسابك أولاً — هناك سيتم إرسال هذه.",
+    "emailNotificationsAddAddress": "أضف بريد إلكتروني"
   },
   "common": {
     "save": "حفظ",
@@ -840,7 +843,8 @@
       "mentionedNamed": "{{name}} ذكرك في “{{community}}”",
       "here": "{{name}} أرسل رسالة للجميع في المجتمع",
       "hereNamed": "{{name}} أرسل رسالة للجميع في “{{community}}”"
-    }
+    },
+    "byEmail": "بالإيميل"
   },
   "leaderboard": {
     "title": "لوحة المتصدرين",

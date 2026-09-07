@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Ieslēdziet pārlūkprogrammas paziņojumus iepriekš, lai tie tiktu saņemti",
     "publicChatAlertsRate": "Ne vairāk kā",
     "publicChatAlertsRateOption": "{{count}} stundā",
-    "publicChatAlertsRateHint": "Nekas netiek zaudēts, kad istaba ir aizņemta vairāk nekā šis — ziņojumi tiek saglabāti un tiek saņemti kopā nākamajā brīdinājumā."
+    "publicChatAlertsRateHint": "Nekas netiek zaudēts, kad istaba ir aizņemta vairāk nekā šis — ziņojumi tiek saglabāti un tiek saņemti kopā nākamajā brīdinājumā.",
+    "emailNotificationsDescLinked": "Nosūtīts uz {{email}}",
+    "emailNotificationsNoAddress": "Vispirms pievienojiet savam kontam e-pasta adresi — tur tiks nosūtīti šie ziņojumi.",
+    "emailNotificationsAddAddress": "Pievienot e-pasta adresi"
   },
   "common": {
     "save": "Saglabāt",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} pieminēja jūs “{{community}}”",
       "here": "{{name}} nosūtīja ziņojumu visiem kopienas dalībniekiem",
       "hereNamed": "{{name}} ziņoja visiem \"{{community}}\""
-    }
+    },
+    "byEmail": "Ar e-pastu"
   },
   "leaderboard": {
     "title": "Līderu tabula",

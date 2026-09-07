@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "이 알림을 받으려면 위에서 브라우저 알림을 켜세요.",
     "publicChatAlertsRate": "최대",
     "publicChatAlertsRateOption": "시간당 {{count}}",
-    "publicChatAlertsRateHint": "방이 이보다 바쁠 때는 아무것도 손실되지 않습니다. 메시지는 보류되었다가 다음 알림에서 함께 도착합니다."
+    "publicChatAlertsRateHint": "방이 이보다 바쁠 때는 아무것도 손실되지 않습니다. 메시지는 보류되었다가 다음 알림에서 함께 도착합니다.",
+    "emailNotificationsDescLinked": "{{email}}님께",
+    "emailNotificationsNoAddress": "먼저 계정에 이메일 주소를 추가하세요. 그러면 이메일이 전송됩니다.",
+    "emailNotificationsAddAddress": "이메일 주소 추가"
   },
   "common": {
     "save": "저장",
@@ -840,7 +843,8 @@
       "mentionedNamed": "{{name}} 님이 “{{community}}” 에서 회원님을 멘션했습니다",
       "here": "{{name}} 님이 커뮤니티의 모든 사람에게 메시지를 보냈습니다.",
       "hereNamed": "{{name}} 님이 '{{community}}' 의 모든 사람에게 메시지를 보냈습니다."
-    }
+    },
+    "byEmail": "이메일로"
   },
   "leaderboard": {
     "title": "리더보드",

@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "شغل إشعارات المتصفح فوق عشان توصلك",
     "publicChatAlertsRate": "بالكتير",
     "publicChatAlertsRateOption": "{{count}} في الساعة",
-    "publicChatAlertsRateHint": "مفيش حاجة بتضيع لما الأوضة تكون أزحم من كده - الرسائل بتتحفظ وبتوصل مع بعض في التنبيه اللي جاي."
+    "publicChatAlertsRateHint": "مفيش حاجة بتضيع لما الأوضة تكون أزحم من كده - الرسائل بتتحفظ وبتوصل مع بعض في التنبيه اللي جاي.",
+    "emailNotificationsDescLinked": "بعت لـ {{email}}",
+    "emailNotificationsNoAddress": "ضيف إيميل لحسابك الأول - هو ده اللي هتروح عليه الحاجات دي.",
+    "emailNotificationsAddAddress": "ضيف إيميل"
   },
   "common": {
     "save": "احفظ",
@@ -838,7 +841,8 @@
       "mentionedNamed": "{{name}} عمل لك منشن في \"{{community}}\"",
       "here": "{{name}} بعت رسالة لكل الناس في المجتمع",
       "hereNamed": "{{name}} بعت رسالة لكل الناس في \"{{community}}\""
-    }
+    },
+    "byEmail": "بالإيميل"
   },
   "leaderboard": {
     "title": "لوحة الترتيب",

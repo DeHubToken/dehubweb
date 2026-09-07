@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Bunların gəlməsi üçün yuxarıdakı brauzer bildirişlərini yandırın",
     "publicChatAlertsRate": "Ən çox",
     "publicChatAlertsRateOption": "Saatda {{count}}",
-    "publicChatAlertsRateHint": "Otaq bundan daha məşğul olduqda heç nə itirilmir — mesajlar saxlanılır və növbəti bildirişdə birlikdə gəlir."
+    "publicChatAlertsRateHint": "Otaq bundan daha məşğul olduqda heç nə itirilmir — mesajlar saxlanılır və növbəti bildirişdə birlikdə gəlir.",
+    "emailNotificationsDescLinked": "{{email}} ünvanına göndərildi",
+    "emailNotificationsNoAddress": "Əvvəlcə hesabınıza e-poçt ünvanı əlavə edin - bunlar ora gedəcək.",
+    "emailNotificationsAddAddress": "E-poçt ünvanı əlavə et"
   },
   "common": {
     "save": "Saxla",
@@ -832,7 +835,8 @@
       "mentionedNamed": "{{name}} sizi “{{community}}” -da qeyd edib",
       "here": "{{name}} icmadakı hər kəsə mesaj yazdı",
       "hereNamed": "{{name}} “{{community}}” -da hər kəs mesajlaşdı"
-    }
+    },
+    "byEmail": "E-poçt vasitəsilə"
   },
   "leaderboard": {
     "title": "Lider Lövhəsi",

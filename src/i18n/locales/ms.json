@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Hidupkan pemberitahuan penyemak imbas di atas agar ini tiba",
     "publicChatAlertsRate": "Paling banyak",
     "publicChatAlertsRateOption": "{{count}} sejam",
-    "publicChatAlertsRateHint": "Tiada yang hilang apabila bilik lebih sibuk daripada ini — mesej disimpan dan tiba bersama pada makluman seterusnya."
+    "publicChatAlertsRateHint": "Tiada yang hilang apabila bilik lebih sibuk daripada ini — mesej disimpan dan tiba bersama pada makluman seterusnya.",
+    "emailNotificationsDescLinked": "Dihantar kepada {{email}}",
+    "emailNotificationsNoAddress": "Tambah alamat e-mel pada akaun anda dahulu — di situlah ini akan dihantar.",
+    "emailNotificationsAddAddress": "Tambah alamat e-mel"
   },
   "common": {
     "save": "Simpan",
@@ -1109,7 +1112,8 @@
       "mentionedNamed": "{{name}} menyebut anda dalam “{{community}}”",
       "here": "{{name}} menghantar mesej kepada semua orang dalam komuniti",
       "hereNamed": "{{name}} menghantar mesej kepada semua orang dalam “{{community}}”"
-    }
+    },
+    "byEmail": "Melalui e-mel"
   },
   "leaderboard": {
     "title": "Papan Pendahulu",
