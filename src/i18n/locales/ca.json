@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Així es veu una notificació de DeHub.",
     "browserNotificationsTabOnlyDesc": "Activat, però només mentre el DeHub estigui obert en una pestanya",
     "browserNotificationsTabOnlyTitle": "Aquest navegador no acceptarà notificacions en segon pla",
-    "browserNotificationsTabOnlyHint": "DeHub ha sol·licitat registrar-se i el teu navegador s'ha rebutjat, de manera que les notificacions només et poden arribar mentre DeHub estigui obert en una pestanya. Si reinicies el navegador, normalment s'esborra.",
+    "browserNotificationsTabOnlyHint": "Les notificacions només et poden arribar mentre el DeHub estigui obert en una pestanya: el teu navegador s'ha negat a registrar-se en segon pla. Normalment, el sistema operatiu bloqueja les notificacions del propi navegador, així que troba el teu navegador a la configuració de notificacions del sistema i apaga'l i torna a encendre'l.",
     "activity": "Activitat",
     "likes": "M'agrada",
     "likesDesc": "Quan algú li agrada les teves publicacions",

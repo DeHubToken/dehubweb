@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "هيك بيبين إشعار DeHub.",
     "browserNotificationsTabOnlyDesc": "بس، بس لما يكون DeHub مفتوح بتاب",
     "browserNotificationsTabOnlyTitle": "هذا المتصفح ما بيقبل إشعارات الخلفية",
-    "browserNotificationsTabOnlyHint": "DeHub طلب يسجل لإشعارات الدفع ومتصفحك رفض، لهيك الإشعارات ما رح توصلك إلا إذا DeHub مفتوح بتاب. إعادة تشغيل المتصفح عادةً بحل المشكلة.",
+    "browserNotificationsTabOnlyHint": "الإشعارات بتوصلك بس لما يكون DeHub مفتوح بتاب، لأن المتصفح رفض يسجل إشعارات خلفية. هاد عادةً بيكون بسبب نظام التشغيل اللي بيمنع إشعارات المتصفح نفسه، فدور على متصفحك بإعدادات إشعارات النظام عندك وشغّله واطفيه.",
     "activity": "النشاط",
     "likes": "إعجابات",
     "likesDesc": "لما حدا يعجب بمنشوراتك",

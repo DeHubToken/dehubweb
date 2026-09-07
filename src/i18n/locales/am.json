@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "የDeHub ማሳወቂያ የሚመስለው እንደዚህ ነው።",
     "browserNotificationsTabOnlyDesc": "ላይ, ነገር ግን DeHub አንድ ትር ውስጥ ክፍት ሳለ ብቻ",
     "browserNotificationsTabOnlyTitle": "ይህ አሳሽ የጀርባ ማሳወቂያዎችን አይቀበልም",
-    "browserNotificationsTabOnlyHint": "DeHub ለመገፋፋት እንዲመዘገብ ጠየቀ እና አሳሽዎ እምቢ አለ, ስለዚህ ማሳወቂያዎች እርስዎን መድረስ የሚችሉት DeHub በትር ውስጥ ሲከፈት ብቻ ነው. አሳሽዎን እንደገና ማስጀመር በተለምዶ ያጸዳል ።",
+    "browserNotificationsTabOnlyHint": "ማሳወቂያዎች ሊደርሱዎት የሚችሉት DeHub በትር ውስጥ ሲከፈት ብቻ ነው-አሳሽዎ ለጀርባ ግፊት ለመመዝገብ ፈቃደኛ አልሆነም ። ያ ብዙውን ጊዜ ለአሳሹ ራሱ የአሠራር ስርዓት ማገድ ማሳወቂያዎች ነው ፣ ስለሆነም አሳሽዎን በስርዓት ማሳወቂያ ቅንብሮችዎ ውስጥ ያግኙ እና ያጥፉት እና ወደኋላ ይለውጡት ።",
     "activity": "እንቅስቃሴ",
     "likes": "ወደዶች",
     "likesDesc": "አንድ ሰው ልጥፎችህን ሲወድ",

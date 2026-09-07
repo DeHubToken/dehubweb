@@ -265,7 +265,7 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
           <p className="mt-1 text-xs text-zinc-400">
             {t(
               'settings.browserNotificationsTabOnlyHint',
-              'DeHub asked to register for push and your browser refused, so notifications can only reach you while DeHub is open in a tab. Restarting your browser usually clears it.',
+              'Notifications can only reach you while DeHub is open in a tab: your browser refused to register for background push. That is usually the operating system blocking notifications for the browser itself, so find your browser in your system notification settings and switch it off and back on.',
             )}
           </p>
         </div>

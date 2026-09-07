@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Begitulah tampilan notifikasi DeHub.",
     "browserNotificationsTabOnlyDesc": "Aktif, tetapi hanya saat DeHub terbuka di tab",
     "browserNotificationsTabOnlyTitle": "Browser ini tidak akan menerima pemberitahuan latar belakang",
-    "browserNotificationsTabOnlyHint": "DeHub meminta untuk mendaftar push dan browser Anda menolak, jadi pemberitahuan hanya dapat menghubungi Anda saat DeHub terbuka di tab. Memulai ulang peramban Anda biasanya akan menghapusnya.",
+    "browserNotificationsTabOnlyHint": "Pemberitahuan hanya dapat menghubungi Anda saat DeHub terbuka di tab: browser Anda menolak mendaftar untuk mendapatkan dorongan latar belakang. Biasanya itu adalah pemberitahuan pemblokiran sistem operasi untuk browser itu sendiri, jadi temukan browser Anda di pengaturan pemberitahuan sistem Anda dan matikan dan hidupkan kembali.",
     "activity": "Aktivitas",
     "likes": "Suka",
     "likesDesc": "Ketika seseorang menyukai postingan Anda",

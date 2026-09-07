@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Štai kaip atrodo DeHub pranešimas.",
     "browserNotificationsTabOnlyDesc": "Įjungta, bet tik tada, kai skirtuke atidarytas „DeHub“",
     "browserNotificationsTabOnlyTitle": "Ši naršyklė nepriims foninių pranešimų",
-    "browserNotificationsTabOnlyHint": "„DeHub“ paprašė užsiregistruoti „push“, o jūsų naršyklė atsisakė, todėl pranešimai gali su jumis susisiekti tik tada, kai „DeHub“ yra atidarytas skirtuke. Iš naujo paleidus naršyklę, ji paprastai išvaloma.",
+    "browserNotificationsTabOnlyHint": "Pranešimai gali jus pasiekti tik tada, kai DeHub yra atidarytas skirtuke: jūsų naršyklė atsisakė užsiregistruoti fone. Paprastai tai yra pačios naršyklės pranešimus blokuojanti operacinė sistema, todėl sistemos pranešimų nustatymuose raskite naršyklę ir ją išjunkite bei vėl įjunkite.",
     "activity": "Veikla",
     "likes": "Patinka",
     "likesDesc": "Kai kam nors patinka jūsų įrašai",

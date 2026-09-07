@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Sådan ser en DeHub-notifikation ud.",
     "browserNotificationsTabOnlyDesc": "Til, men kun mens DeHub er åben i en fane",
     "browserNotificationsTabOnlyTitle": "Denne browser accepterer ikke baggrundsmeddelelser",
-    "browserNotificationsTabOnlyHint": "DeHub blev bedt om at tilmelde sig push, og din browser blev afvist, så meddelelser kan kun nå dig, mens DeHub er åben i en fane. Hvis du genstarter din browser, ryddes den normalt.",
+    "browserNotificationsTabOnlyHint": "Meddelelser kan kun nå dig, mens DeHub er åben i en fane: Din browser nægtede at tilmelde sig baggrundspush. Det er normalt operativsystemet, der blokerer meddelelser for selve browseren, så find din browser i dine systemmeddelelsesindstillinger og slå den fra og til igen.",
     "activity": "Aktivitet",
     "likes": "Likes",
     "likesDesc": "Når nogen liker dit opslag",

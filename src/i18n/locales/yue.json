@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "DeHub 嘅通知就係咁樣。",
     "browserNotificationsTabOnlyDesc": "開，但係只可以喺標籤入面打開 DeHub 嘅時候",
     "browserNotificationsTabOnlyTitle": "呢個瀏覽器唔會接受背景通知",
-    "browserNotificationsTabOnlyHint": "DeHub 要求註冊推送，但係你嘅瀏覽器拒絕咗，所以通知只可以喺 DeHub 喺標籤入面打開嗰陣先可以到達你。重新啟動你嘅瀏覽器通常會清除佢。",
+    "browserNotificationsTabOnlyHint": "通知只會喺 DeHub 喺標籤入面打開嗰陣收到：你嘅瀏覽器拒絕註冊後台推送。通常係操作系統封鎖瀏覽器本身嘅通知，所以喺你嘅系統通知設定入面搵你嘅瀏覽器，然後閂咗佢，然後重新開啟。",
     "activity": "活動",
     "likes": "讚好",
     "likesDesc": "有人讚咗你嘅帖文",

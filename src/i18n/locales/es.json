@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Así es como se ve una notificación de DeHub.",
     "browserNotificationsTabOnlyDesc": "Activado, pero solo mientras DeHub esté abierto en una pestaña",
     "browserNotificationsTabOnlyTitle": "Este navegador no aceptará notificaciones en segundo plano",
-    "browserNotificationsTabOnlyHint": "DeHub solicitó registrarse para push y su navegador se negó, por lo que las notificaciones solo pueden llegarle mientras DeHub esté abierto en una pestaña. Reiniciar el navegador generalmente lo borra.",
+    "browserNotificationsTabOnlyHint": "Las notificaciones solo pueden llegarle mientras DeHub está abierto en una pestaña: su navegador se negó a registrarse para la inserción en segundo plano. Ese suele ser el sistema operativo que bloquea las notificaciones para el navegador en sí, así que busca tu navegador en la configuración de notificaciones de tu sistema y apágalo y vuelve a encenderlo.",
     "activity": "Actividad",
     "likes": "Me gusta",
     "likesDesc": "Cuando alguien da me gusta a tus publicaciones",

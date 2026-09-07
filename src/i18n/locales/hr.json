@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Ovako izgleda DeHub obavijest.",
     "browserNotificationsTabOnlyDesc": "Uključeno, ali samo dok je DeHub otvoren na kartici",
     "browserNotificationsTabOnlyTitle": "Ovaj preglednik neće prihvaćati pozadinske obavijesti",
-    "browserNotificationsTabOnlyHint": "DeHub je zatražio da se registrira za push, a vaš preglednik je odbio, tako da vas obavijesti mogu kontaktirati samo dok je DeHub otvoren na kartici. Ponovno pokretanje preglednika obično ga briše.",
+    "browserNotificationsTabOnlyHint": "Obavijesti vas mogu kontaktirati samo dok je DeHub otvoren na kartici: vaš preglednik odbio se registrirati za pozadinsko prosljeđivanje. To je obično operativni sustav koji blokira obavijesti za sam preglednik, pa pronađite svoj preglednik u postavkama obavijesti sustava i uključite ga i ponovno uključite.",
     "activity": "Aktivnost",
     "likes": "Sviđanja",
     "likesDesc": "Kada netko označi vaše objave sa sviđa mi se",

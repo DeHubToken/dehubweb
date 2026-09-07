@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "DeHubi teavitus näeb välja selline.",
     "browserNotificationsTabOnlyDesc": "Sees, kuid ainult siis, kui DeHub on vahekaardil avatud",
     "browserNotificationsTabOnlyTitle": "See brauser ei võta vastu taustateavitusi",
-    "browserNotificationsTabOnlyHint": "DeHub palus end registreerida ja sinu brauser keeldus, nii et teavitused jõuavad sinuni ainult siis, kui DeHub on vahekaardil avatud. Brauseri taaskäivitamine tavaliselt kustutab selle.",
+    "browserNotificationsTabOnlyHint": "Teavitused saavad sinuni jõuda ainult siis, kui DeHub on vahekaardil avatud: sinu brauser keeldus taustalülituseks registreerumast. See on tavaliselt operatsioonisüsteem, mis blokeerib brauseri enda teavitused, nii et leidke oma brauser oma süsteemi teavitusseadetest ja lülitage see välja ja uuesti sisse.",
     "activity": "Tegevus",
     "likes": "Meeldimised",
     "likesDesc": "Kui kellelegi meeldib sinu postitus",

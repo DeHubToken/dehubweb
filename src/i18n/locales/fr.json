@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Voilà à quoi ressemble une notification DeHub.",
     "browserNotificationsTabOnlyDesc": "Activé, mais uniquement lorsque DeHub est ouvert dans un onglet",
     "browserNotificationsTabOnlyTitle": "Ce navigateur n'acceptera pas les notifications en arrière-plan",
-    "browserNotificationsTabOnlyHint": "DeHub a demandé à s'inscrire à push et votre navigateur a refusé, de sorte que les notifications ne peuvent vous parvenir que lorsque DeHub est ouvert dans un onglet. Le redémarrage de votre navigateur l'efface généralement.",
+    "browserNotificationsTabOnlyHint": "Les notifications ne peuvent vous parvenir que lorsque DeHub est ouvert dans un onglet : votre navigateur a refusé de s'inscrire pour un push en arrière-plan. C'est généralement le système d'exploitation qui bloque les notifications pour le navigateur lui-même, alors trouvez votre navigateur dans les paramètres de notification de votre système et éteignez-le et rallumez-le.",
     "activity": "Activité",
     "likes": "J'aime",
     "likesDesc": "Quand quelqu'un aime vos publications",

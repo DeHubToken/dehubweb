@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Zo ziet een DeHub-melding eruit.",
     "browserNotificationsTabOnlyDesc": "Aan, maar alleen als DeHub is geopend in een tabblad",
     "browserNotificationsTabOnlyTitle": "Deze browser accepteert geen achtergrondmeldingen",
-    "browserNotificationsTabOnlyHint": "DeHub vroeg om zich te registreren voor push en je browser weigerde, dus meldingen kunnen je alleen bereiken terwijl DeHub geopend is in een tabblad. Als u uw browser opnieuw opstart, wordt deze meestal gewist.",
+    "browserNotificationsTabOnlyHint": "Meldingen kunnen u alleen bereiken terwijl DeHub geopend is in een tabblad: uw browser weigerde zich te registreren voor een push op de achtergrond. Dat is meestal het besturingssysteem dat meldingen voor de browser zelf blokkeert, dus zoek uw browser in uw systeemmeldingsinstellingen en schakel deze uit en weer in.",
     "activity": "Activiteit",
     "likes": "Likes",
     "likesDesc": "Wanneer iemand je berichten liket",

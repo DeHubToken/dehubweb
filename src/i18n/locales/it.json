@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Ecco come appare una notifica DeHub.",
     "browserNotificationsTabOnlyDesc": "On, ma solo mentre DeHub è aperto in una scheda",
     "browserNotificationsTabOnlyTitle": "Questo browser non accetterà notifiche in background",
-    "browserNotificationsTabOnlyHint": "DeHub ha chiesto di registrarsi per il push e il tuo browser ha rifiutato, quindi le notifiche possono raggiungerti solo mentre DeHub è aperto in una scheda. Il riavvio del browser di solito lo cancella.",
+    "browserNotificationsTabOnlyHint": "Le notifiche possono raggiungerti solo mentre DeHub è aperto in una scheda: il tuo browser ha rifiutato di registrarsi per il push in background. Di solito si tratta del sistema operativo che blocca le notifiche per il browser stesso, quindi trova il tuo browser nelle impostazioni di notifica del sistema e spegnilo e riaccendilo.",
     "activity": "Attività",
     "likes": "Mi piace",
     "likesDesc": "Quando qualcuno mette mi piace ai tuoi post",

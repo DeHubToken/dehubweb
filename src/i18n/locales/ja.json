@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "DeHub の通知はこのように表示されます。",
     "browserNotificationsTabOnlyDesc": "オン、ただしDeHubがタブで開いている間のみ",
     "browserNotificationsTabOnlyTitle": "このブラウザはバックグラウンド通知を受け付けません",
-    "browserNotificationsTabOnlyHint": "DeHubがプッシュ通知の登録を求めましたが、ブラウザが拒否されたため、通知はタブでDeHubが開いている間にのみ届きます。ブラウザを再起動すると、通常は消去されます。",
+    "browserNotificationsTabOnlyHint": "通知が届くのは、DeHubがタブで開いている間のみです。ブラウザがバックグラウンドプッシュの登録を拒否しました。これは通常、ブラウザ自体の通知をブロックするオペレーティングシステムです。システムの通知設定でブラウザを見つけ、オフにしてから再度オンにしてください。",
     "activity": "アクティビティ",
     "likes": "いいね",
     "likesDesc": "誰かがあなたの投稿にいいねした時",

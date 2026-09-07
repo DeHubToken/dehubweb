@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "DeHub bildirişi şeýle görünýär.",
     "browserNotificationsTabOnlyDesc": "On, ýöne diňe DeHub bir tab açylýar",
     "browserNotificationsTabOnlyTitle": "Bu brauzer arkaýyn habarlamalary kabul etmez",
-    "browserNotificationsTabOnlyHint": "DeHub Push üçin ýazylmagy haýyş etdi we brauzeriniz ret etdi, şonuň üçin habarlar size diňe DeHub tabda açyk bolanda ýetip biler. Brauzerini ýene-de başlatmak, esasanam, ony aýdyňlaşdyrýar.",
+    "browserNotificationsTabOnlyHint": "DeHub tabda açylýança habarlar diňe size ýetip biler: brauzeriniz arkaýyn basmak üçin ýazylmagy ret etdi. Bu esasanam, işleji sistemasy öz brauzeriniň habarlaryny bloklaýar, şonuň üçin brauzerini sistemanyň habar beriş guramalarynda tapyp, ony söndürýär we yzyna öwrýär.",
     "activity": "Işjeňlik",
     "likes": "Halanlar",
     "likesDesc": "Biri ýazgyňyzy halanda",

@@ -126,7 +126,7 @@
     "browserNotificationsTestBody": "Thông báo của DeHub trông như thế này.",
     "browserNotificationsTabOnlyDesc": "Bật, nhưng chỉ khi DeHub mở trong một tab",
     "browserNotificationsTabOnlyTitle": "Trình duyệt này sẽ không chấp nhận thông báo nền",
-    "browserNotificationsTabOnlyHint": "DeHub yêu cầu đăng ký đẩy và trình duyệt của bạn từ chối, vì vậy thông báo chỉ có thể liên lạc với bạn trong khi DeHub đang mở trong một tab. Việc khởi động lại trình duyệt của bạn thường sẽ xóa nó.",
+    "browserNotificationsTabOnlyHint": "Thông báo chỉ có thể liên lạc với bạn khi DeHub mở trong một tab: trình duyệt của bạn từ chối đăng ký đẩy nền. Đó thường là hệ điều hành chặn thông báo cho chính trình duyệt, vì vậy hãy tìm trình duyệt của bạn trong cài đặt thông báo hệ thống và tắt và bật lại.",
     "activity": "Activity",
     "likes": "Likes",
     "comments": "Comments",

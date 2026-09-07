@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "DeHub 알림은 이렇게 표시됩니다.",
     "browserNotificationsTabOnlyDesc": "DeHub가 탭에서 열려 있는 동안에만 켜짐",
     "browserNotificationsTabOnlyTitle": "이 브라우저는 백그라운드 알림을 수락하지 않습니다",
-    "browserNotificationsTabOnlyHint": "DeHub가 푸시 등록을 요청했지만 브라우저가 거부하여 DeHub가 탭에 열려 있는 동안에만 알림이 전송됩니다. 일반적으로 브라우저를 다시 시작하면 지워집니다.",
+    "browserNotificationsTabOnlyHint": "DeHub가 탭에 열려 있는 동안에만 알림이 전송됩니다. 브라우저가 백그라운드 푸시 등록을 거부했습니다. 일반적으로 브라우저 자체에 대한 운영 체제 차단 알림이므로 시스템 알림 설정에서 브라우저를 찾아 전원을 껐다가 다시 켭니다.",
     "activity": "활동",
     "likes": "좋아요",
     "likesDesc": "누군가 게시물에 좋아요를 누를 때",

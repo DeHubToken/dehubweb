@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "DeHub کی اطلاع ایسی دکھتی۔",
     "browserNotificationsTabOnlyDesc": "On, kani DeHub open unte ne tab lo",
     "browserNotificationsTabOnlyTitle": "Ee browser background notifications accept cheyyadu",
-    "browserNotificationsTabOnlyHint": "DeHub push ki register hone ko bola tha aur aapka browser refuse kiya, isliye notifications sirf tab mein DeHub open hone par hi aap tak pahunch sakte hain. Browser restart karne se yeh theek ho jata hai.",
+    "browserNotificationsTabOnlyHint": "DeHub open unte ne notifications oorko vachay: mee browser background push kosam register avvadaniki reject chesindi. Idi samanyanga operating system browser kosam notifications block cheyadam, so mee system notification settings lo mee browser ni find chesi, danini off chesi malli on cheyandi.",
     "activity": "سرگرمی",
     "likes": "لائک",
     "likesDesc": "کوئی تمہاری پوسٹ لائک کرے تو",

@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "DeHub bildirişi belə görünür.",
     "browserNotificationsTabOnlyDesc": "Aktiv olsa da, ancaq DeHub tabda açıqdır",
     "browserNotificationsTabOnlyTitle": "Bu brauzer fon bildirişlərini qəbul etməyəcək",
-    "browserNotificationsTabOnlyHint": "DeHub mobil telefon üçün qeydiyyatdan keçməyi xahiş etdi və brauzeriniz imtina etdi. Odur ki, bildirişlər yalnız DeHub tabda açıq olarkən sizinlə əlaqə saxlaya bilər. Brauzerinizin yenidən başladılması, adətən, onu təmizləyir.",
+    "browserNotificationsTabOnlyHint": "Bildirişlər yalnız DeHub tabda açıq olarkən sizinlə əlaqə saxlaya bilər: brauzeriniz fon basqısı üçün qeydiyyatdan imtina etdi. Bu, adətən, əməliyyat sisteminin brauzerin özü üçün bildirişləri bloklamasıdır. Odur ki, brauzerinizi sistem bildiriş parametrlərinizdə tapın və onu söndürüb yenidən aktiv edin.",
     "activity": "Fəaliyyət",
     "likes": "Bəyənmələr",
     "likesDesc": "Kimsə paylaşımlarınızı bəyəndikdə",
