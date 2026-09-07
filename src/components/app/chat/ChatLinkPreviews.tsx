@@ -62,7 +62,7 @@ export function ChatLinkPreviews({ content }: ChatLinkPreviewsProps) {
           rel="noopener noreferrer"
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          className="block max-w-sm bg-white/5 border border-white/10 rounded-lg overflow-hidden hover:bg-white/[0.08] transition-colors cursor-pointer"
+          className="block w-full max-w-sm bg-white/5 border border-white/10 rounded-lg overflow-hidden hover:bg-white/[0.08] transition-colors cursor-pointer"
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
@@ -71,11 +71,24 @@ export function ChatLinkPreviews({ content }: ChatLinkPreviewsProps) {
           onPointerDown={(e) => e.stopPropagation()}
         >
           {preview.image && (
-            <div className="w-full h-32 bg-white/5">
+            // 1.91:1 — the ratio share images are authored to everywhere on the
+            // web, and the one the feed card already uses. The fixed 128px band
+            // this replaces cropped a 1200x630 OG image into a 3:1 strip and
+            // sliced off whatever the page actually wanted to show. `contain`
+            // rather than `cover` so an image that is not the standard ratio is
+            // still shown whole; the blurred copy behind it fills the margins.
+            <div className="relative w-full aspect-[1.91/1] bg-white/5 overflow-hidden">
+              <img
+                src={preview.image}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-40"
+                loading="lazy"
+              />
               <img
                 src={preview.image}
                 alt={preview.title}
-                className="w-full h-full object-cover"
+                className="relative w-full h-full object-contain"
                 loading="lazy"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
               />
@@ -97,8 +110,8 @@ export function ChatLinkPreviews({ content }: ChatLinkPreviewsProps) {
           </div>
         </motion.a>
       ) : loading ? (
-        <div className="max-w-sm bg-white/5 border border-white/10 rounded-lg overflow-hidden">
-          <Skeleton className="w-full h-24" />
+        <div className="w-full max-w-sm bg-white/5 border border-white/10 rounded-lg overflow-hidden">
+          <Skeleton className="w-full aspect-[1.91/1]" />
           <div className="p-2.5 space-y-1.5">
             <Skeleton className="h-2.5 w-16" />
             <Skeleton className="h-3 w-full" />
