@@ -18,6 +18,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { AppState } from '@/components/app/AppState';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, Star } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -113,14 +114,13 @@ export function NewMembersList({ listClassName }: NewMembersListProps) {
 
   if (members.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-8 px-6 text-center">
-        <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
-          <Star className="w-6 h-6 text-zinc-500" />
-        </div>
-        <p className="text-zinc-400 text-sm">
-          {error ? 'Failed to load members' : 'No members to show yet'}
-        </p>
-      </div>
+      <AppState
+        icon="subscriptions"
+        title={error ? 'Members could not load' : 'No members to show yet'}
+        description={error ? 'Try loading the member list again.' : 'New members will appear here.'}
+        kind={error ? 'error' : 'empty'}
+        size="section"
+      />
     );
   }
 

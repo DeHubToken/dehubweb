@@ -86,4 +86,5 @@ scripts/*
 !scripts/i18n-coverage.mjs
 !scripts/i18n-fanout.mjs
 !scripts/edge-cors-check.mjs
+!scripts/build-theme-icon-materials.mjs
 !scripts/edge-imports-check.mjs

@@ -12,6 +12,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { searchNFTs, getMediaUrl, DEHUB_CDN_BASE } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { formatDuration } from '@/lib/feed-utils';
+import { AppState } from '@/components/app/AppState';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -152,9 +153,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
               <Loader2 className="w-6 h-6 text-white/40 animate-spin" />
             </div>
           ) : allTracks.length === 0 ? (
-            <div className="text-center py-12 text-white/40 text-sm">
-              {debouncedSearch ? 'No sounds found' : 'No audio tracks available'}
-            </div>
+            <AppState icon={debouncedSearch ? 'search' : 'audio'} title={debouncedSearch ? 'No sounds found' : 'No audio tracks available'} kind={debouncedSearch ? 'search-empty' : 'empty'} size="compact" />
           ) : (
             <>
               {allTracks.map((nft) => {

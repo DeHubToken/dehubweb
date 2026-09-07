@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { AppState } from '@/components/app/AppState';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import usdcLogo from '@/assets/usdc-logo.png';
@@ -323,7 +324,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
               </button>
             ))}
             {filteredUsers.length === 0 && (
-              <p className="text-center text-zinc-400 py-4">No users found</p>
+              <AppState icon="search" title="No users found" kind="search-empty" size="compact" />
             )}
           </div>
         </>
@@ -644,7 +645,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
                 </button>
               ))}
               {filteredUsers.length === 0 && (
-                <p className="text-center text-zinc-400 py-4">No users found</p>
+                <AppState icon="search" title="No users found" kind="search-empty" size="compact" />
               )}
             </div>
           </>

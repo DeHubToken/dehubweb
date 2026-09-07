@@ -8,7 +8,7 @@
 
 import { useState } from 'react';
 import { Search, Loader2 } from 'lucide-react';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { AppState } from '@/components/app/AppState';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
@@ -129,28 +129,18 @@ export function RadioSection({ showFilters = false }: RadioSectionProps) {
         
         {/* Error State */}
         {error && !isLoading && (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <ThemedIcon icon="audio" alt="" className="w-16 h-16 object-contain mb-4 opacity-70" />
-            <h3 className="text-white font-semibold mb-2">Failed to load stations</h3>
-            <p className="text-zinc-500 text-sm max-w-[280px]">
-              Please check your connection and try again.
-            </p>
-          </div>
+          <AppState icon="audio" title="Stations could not load" description="Check your connection and try again." kind="error" size="section" />
         )}
         
         {/* Empty State */}
         {!isLoading && !error && stations.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <ThemedIcon icon="audio" alt="" className="w-16 h-16 object-contain mb-4 opacity-70" />
-            <h3 className="text-white font-semibold mb-2">
-              {isSearching ? 'No stations found' : 'No stations available'}
-            </h3>
-            <p className="text-zinc-500 text-sm max-w-[280px]">
-              {isSearching 
-                ? 'Try a different search term.'
-                : 'Try selecting a different genre.'}
-            </p>
-          </div>
+          <AppState
+            icon={isSearching ? 'search' : 'audio'}
+            title={isSearching ? 'No stations found' : 'No stations available'}
+            description={isSearching ? 'Try a different search term.' : 'Try selecting a different genre.'}
+            kind={isSearching ? 'search-empty' : 'empty'}
+            size="section"
+          />
         )}
         
         {/* Station List */}

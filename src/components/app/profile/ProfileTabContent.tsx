@@ -15,6 +15,7 @@ import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { PlanCard } from '@/components/app/subscriptions';
 import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
+import { AppState } from '@/components/app/AppState';
 import { ProfileImageGrid } from '@/components/app/profile/ProfileImageGrid';
 import { getUserComments, getNFTInfo, getMediaUrl, editComment, deleteComment } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
@@ -653,11 +654,12 @@ function SubscribersTabPanel({
   
   if (!hasPlans) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <BrandIcon src={subs3dIcon} alt="Subs" className="w-16 h-16 mb-3" />
-        <p className="text-zinc-400 text-lg font-medium">No subscription plans</p>
-        <p className="text-zinc-500 text-sm mt-1">{profile?.name || 'This creator'} hasn't set up any plans yet</p>
-      </div>
+      <AppState
+        icon="subscriptions"
+        title="No subscription plans"
+        description={`${profile?.name || 'This creator'} hasn't set up any plans yet.`}
+        size="section"
+      />
     );
   }
   
@@ -695,11 +697,7 @@ function PinnedTabPanel({ profileAddress }: { profileAddress: string }) {
 
   if (pins.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-14 text-center">
-        <Pin className="w-10 h-10 text-zinc-600 mb-3" />
-        <p className="text-zinc-400 font-medium">No pinned posts</p>
-        <p className="text-zinc-600 text-sm mt-1">Pinned posts will appear here</p>
-      </div>
+      <AppState icon="pinned" title="No pinned posts" description="Pinned posts will appear here." size="section" />
     );
   }
 

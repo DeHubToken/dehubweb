@@ -16,6 +16,7 @@ import {
   ThumbsUp, ThumbsDown, AlertTriangle, Timer, FileAudio,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { AppState } from '@/components/app/AppState';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
@@ -364,9 +365,12 @@ export function SoundboardPanel({
           </button>
 
           {customSounds.length === 0 ? (
-            <p className="text-center text-xs text-white/30 py-3">
-              No custom sounds yet. Upload MP3, WAV, or OGG files (max {MAX_FILE_SIZE_MB}MB).
-            </p>
+            <AppState
+              icon="audio"
+              title="No custom sounds yet"
+              description={`Upload MP3, WAV, or OGG files up to ${MAX_FILE_SIZE_MB}MB.`}
+              size="compact"
+            />
           ) : (
             <div className="grid grid-cols-4 gap-2">
               {customSounds.map((sound) => {

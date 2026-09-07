@@ -10,7 +10,7 @@ import { useState, useMemo, useRef, useCallback, useEffect, useId } from 'react'
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useNavigate } from 'react-router-dom';
 import { Play, Music, Mic2, Radio, Disc3, ChevronRight, Pause, Volume2, VolumeX, Loader2, Headphones } from 'lucide-react';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { AppState } from '@/components/app/AppState';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -152,13 +152,12 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
 
 function EmptyState({ type }: { type: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
-      <ThemedIcon icon="audio" alt="" className="w-16 h-16 object-contain mb-4 opacity-70" />
-      <h3 className="text-white font-semibold mb-2">No {type} yet</h3>
-      <p className="text-zinc-500 text-sm max-w-[280px]">
-        Music content will appear here once creators start uploading.
-      </p>
-    </div>
+    <AppState
+      icon="audio"
+      title={`No ${type} yet`}
+      description="Music content will appear here once creators start uploading."
+      size="section"
+    />
   );
 }
 
@@ -456,7 +455,7 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
           ))}
         </div>
       ) : videos.length === 0 ? (
-        <p className="text-zinc-500 text-sm">No music videos yet</p>
+        <AppState icon="videos" title="No music videos yet" size="compact" />
       ) : (
         <div className="relative">
           <SwipeableCarousel
@@ -509,7 +508,7 @@ function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem
           ))}
         </div>
       ) : audioItems.length === 0 ? (
-        <p className="text-zinc-500 text-sm">No audio uploads yet</p>
+        <AppState icon="audio" title="No audio uploads yet" size="compact" />
       ) : (
         <div className="relative">
           <SwipeableCarousel
@@ -539,7 +538,7 @@ function TracksCarousel() {
   return (
     <div>
       <SectionHeader icon={Disc3} title="Tracks" />
-      <p className="text-zinc-500 text-sm">No tracks yet</p>
+      <AppState icon="audio" title="No tracks yet" size="compact" />
     </div>
   );
 }
@@ -548,7 +547,7 @@ function PodcastsCarousel() {
   return (
     <div>
       <SectionHeader icon={Mic2} title="Podcasts" />
-      <p className="text-zinc-500 text-sm">No podcasts yet</p>
+      <AppState icon="stages" title="No podcasts yet" size="compact" />
     </div>
   );
 }

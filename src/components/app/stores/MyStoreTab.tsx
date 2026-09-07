@@ -23,6 +23,7 @@ import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { AppState } from '@/components/app/AppState';
 
 type StoreSubTab = 'listings' | 'orders' | 'purchases';
 
@@ -181,9 +182,7 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
       {/* Content */}
       {subTab === 'listings' && (
         storeListings.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground text-sm">
-            No listings yet. Create your first one!
-          </div>
+          <AppState icon="stores" title="No listings yet" description="Create your first listing to start selling." size="section" />
         ) : (
           <div className="space-y-2">
             {storeListings.map((l: any) => (

@@ -6,6 +6,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import { AppState } from '@/components/app/AppState';
 import {
   claimMediaSession,
   releaseMediaSession,
@@ -1161,7 +1162,7 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
                 <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
               </div>
             ) : activities.length === 0 ? (
-              <p className="text-center text-zinc-500 text-sm py-8">No activity yet</p>
+              <AppState icon="live" title="No activity yet" size="compact" />
             ) : (
               activities.map((activity) => (
                 <div

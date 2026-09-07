@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
+import { AppState } from '@/components/app/AppState';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import {
   ADMIN_LOG_COPY,
@@ -367,15 +368,17 @@ export function RecentActionsTab({ community, membership }: RecentActionsTabProp
             ))}
           </div>
         ) : shown.length === 0 ? (
-          <p className="text-center text-zinc-500 text-sm py-10">
-            {filter === 'all'
-              ? t('communities.manage.recentActions.empty', {
-                  defaultValue: 'Nothing here yet. Moderation actions will show up as they happen.',
-                })
-              : t('communities.manage.recentActions.emptyFilter', {
-                  defaultValue: 'No actions of this kind yet.',
-                })}
-          </p>
+          <AppState
+            icon={filter === 'all' ? 'command' : 'search'}
+            title={filter === 'all'
+              ? t('communities.manage.recentActions.emptyTitle', { defaultValue: 'No recent actions' })
+              : t('communities.manage.recentActions.emptyFilter', { defaultValue: 'No actions of this kind yet.' })}
+            description={filter === 'all'
+              ? t('communities.manage.recentActions.empty', { defaultValue: 'Moderation actions will show up as they happen.' })
+              : undefined}
+            kind={filter === 'all' ? 'empty' : 'search-empty'}
+            size="section"
+          />
         ) : (
           <div className="space-y-0.5">
             {shown.map(entry => (

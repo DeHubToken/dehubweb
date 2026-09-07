@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Share2, Users, Wallet, Sparkles, RefreshCw, ExternalLink, Copy } from "lucide-react";
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { AppState } from '@/components/app/AppState';
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { AuthGate } from "@/components/app/AuthGate";
@@ -462,17 +462,14 @@ function AffiliatesList({
             ))}
           </div>
         ) : list.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-10 text-center">
-            <ThemedIcon icon="profile" alt="" className="w-14 h-14 object-contain mb-3 opacity-60" />
-            <p className="text-white/70 font-medium">
-              {tab === "direct" ? "No affiliates yet" : "No secondary affiliates yet"}
-            </p>
-            <p className="text-white/40 text-sm mt-1">
-              {tab === "direct"
-                ? "Share your invite link — everyone who joins through it shows up here."
-                : "When your affiliates invite their own friends, they’ll appear here."}
-            </p>
-          </div>
+          <AppState
+            icon="subscriptions"
+            title={tab === "direct" ? "No affiliates yet" : "No secondary affiliates yet"}
+            description={tab === "direct"
+              ? "Share your invite link and new affiliates will appear here."
+              : "Friends invited by your affiliates will appear here."}
+            size="section"
+          />
         ) : (
           <div className="space-y-2">
             {shown.map((entry) => (

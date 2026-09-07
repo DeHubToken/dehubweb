@@ -13,6 +13,7 @@ import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
 import { RefreshCw, Play, Eye, Loader2 } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { AppState } from '@/components/app/AppState';
 import { ShortsFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
 import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
@@ -542,22 +543,14 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const isLoading = isApiLoading || isRefreshing;
 
   const EmptyState = () => (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <ThemedIcon icon="videos" alt="" className="w-16 h-16 object-contain mb-4 opacity-75" />
-      <h3 className="text-white font-semibold text-lg mb-2">No Shorts Yet</h3>
-      <p className="text-zinc-400 text-sm max-w-xs mb-4">
-        {isError 
-          ? 'Unable to load shorts. Please try again.'
-          : 'Be the first to create a short!'}
-      </p>
-      <button 
-        onClick={() => refetch()}
-        className="px-4 py-2 rounded-xl bg-white/10 text-white text-sm hover:bg-white/20 transition-colors flex items-center gap-2"
-      >
-        <RefreshCw className="w-4 h-4" />
-        Refresh
-      </button>
-    </div>
+    <AppState
+      icon={isError ? 'notifications' : 'videos'}
+      title={isError ? 'Shorts could not load' : 'No shorts yet'}
+      description={isError ? 'Try loading the shorts feed again.' : 'Short videos will appear here.'}
+      kind={isError ? 'error' : 'empty'}
+      size="page"
+      primaryAction={isError ? { label: 'Try again', onClick: () => refetch(), icon: <RefreshCw /> } : undefined}
+    />
   );
 
   const FilteredEmptyState = () => (

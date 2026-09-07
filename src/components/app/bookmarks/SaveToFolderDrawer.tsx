@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useBookmarkFolders, useFolderContainment } from '@/hooks/use-bookmark-folders';
+import { AppState } from '@/components/app/AppState';
 
 interface SaveToFolderDrawerProps {
   open: boolean;
@@ -152,10 +153,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
               })}
             </div>
           ) : (
-            <div className="flex flex-col items-center py-8 text-center">
-              <FolderPlus className="w-12 h-12 text-zinc-700 mb-3" />
-              <p className="text-zinc-500 text-sm">No folders yet</p>
-            </div>
+            <AppState icon="bookmarks" title="No folders yet" description="Create one below to organize this post." size="drawer" />
           )}
 
           {showCreateForm ? (

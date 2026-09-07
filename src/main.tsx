@@ -76,7 +76,10 @@ const render = () => {
   );
 };
 const bootThemeCss = loadThemeCss(document.documentElement.dataset.theme);
-Promise.all([bootThemeCss, preloadWalletProviders()]).then(render, render);
+const bootDependencies = import.meta.env.DEV && location.pathname === '/app/state-gallery'
+  ? [bootThemeCss]
+  : [bootThemeCss, preloadWalletProviders()];
+Promise.all(bootDependencies).then(render, render);
 
 // Register the offline-shell / asset-cache service worker (production only,
 // deferred to `load` so it doesn't compete with first paint). See lib/register-sw.ts.

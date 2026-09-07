@@ -26,6 +26,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getCommentLikers, type CommentLiker } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
+import { AppState } from '@/components/app/AppState';
 
 const PAGE_SIZE = 50;
 
@@ -89,11 +90,9 @@ export function CommentLikersDrawer({ open, onOpenChange, commentId }: CommentLi
               <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
             </div>
           ) : !canView ? (
-            <p className="text-zinc-500 text-sm text-center py-10">
-              Only the author can see who liked a comment.
-            </p>
+            <AppState icon="lock" title="Likes are private" description="Only the comment author can view this list." kind="restricted" size="drawer" />
           ) : rows.length === 0 ? (
-            <p className="text-zinc-500 text-sm text-center py-10">No likes yet.</p>
+            <AppState icon="pinned" title="No likes yet" description="Likes on this comment will appear here." size="drawer" />
           ) : (
             <div className="space-y-2">
               {rows.map((person) => {

@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { AppState } from '@/components/app/AppState';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   AlertDialog,
@@ -669,17 +670,22 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                 ))}
               </div>
             ) : messages.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-center">
-                <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
-                  <MessageSquare className="w-6 h-6 text-zinc-500" />
-                </div>
-                <p className="text-zinc-500 text-sm">{t('communities.noMessagesYet')}</p>
-                <p className="text-zinc-600 text-xs mt-1">{t('communities.beFirstToChat')}</p>
-              </div>
+              <AppState
+                icon="messages"
+                title={t('communities.noMessagesYet')}
+                description={t('communities.beFirstToChat')}
+                size="section"
+                className="h-full"
+              />
             ) : displayedMessages.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-center px-3">
-                <p className="text-zinc-500 text-sm">No messages match "{searchQuery}"</p>
-              </div>
+              <AppState
+                icon="search"
+                title="No matching messages"
+                description={`No messages match "${searchQuery}".`}
+                kind="search-empty"
+                size="compact"
+                className="h-full"
+              />
             ) : (
               <>
                 {hasMore && (

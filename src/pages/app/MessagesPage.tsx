@@ -1,4 +1,5 @@
-import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { AppState } from '@/components/app/AppState';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -575,27 +576,26 @@ export default function MessagesPage() {
 
             {/* Error State */}
             {isError && (
-              <div className="flex flex-col items-center justify-center py-12 text-center px-4">
-                <ThemedIcon icon="messages" alt="" className="w-14 h-14 object-contain mb-4 opacity-70" />
-                <p className="text-zinc-400 mb-4">{t('messages.failedToLoad')}</p>
-                <Button 
-                  variant="outline" 
-                  onClick={() => refetch()}
-                  className="border-zinc-700 text-white hover:bg-zinc-800"
-                >
-                  {t('messages.tryAgain')}
-                </Button>
-              </div>
+              <AppState
+                icon="messages"
+                title={t('messages.failedToLoad')}
+                description="Your conversations are still safe. Try loading them again."
+                kind="error"
+                size="drawer"
+                primaryAction={{ label: t('messages.tryAgain'), onClick: () => refetch() }}
+              />
             )}
 
 
 
             {/* Empty state */}
             {!isLoading && !isError && !searchQuery.trim() && (conversations?.length ?? 0) === 0 && (
-              <div className="text-center py-8 px-4">
-                <ThemedIcon icon="messages" alt="" className="w-14 h-14 object-contain mx-auto mb-3 opacity-60" />
-                <p className="text-zinc-500 text-sm">{t('messages.noConversationsYet', 'No conversations yet — say hi to someone')}</p>
-              </div>
+              <AppState
+                icon="messages"
+                title={t('messages.noConversationsYet', 'No conversations yet')}
+                description="Start a conversation and it will appear here."
+                size="drawer"
+              />
             )}
 
             {/* Conversations */}

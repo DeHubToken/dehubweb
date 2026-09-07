@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
+import { AppState } from '@/components/app/AppState';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
@@ -690,7 +691,7 @@ export default function YoutubeMigratePage() {
 
         {stage === 'listing' && videos.length === 0 && (
           <section data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-            <p className="text-sm text-zinc-400">No uploads found on your channel.</p>
+            <AppState icon="videos" title="No uploads found" description="This channel has no videos available to migrate." size="section" />
           </section>
         )}
 

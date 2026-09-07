@@ -17,6 +17,7 @@ import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { BadgedName } from '@/components/app/BadgedName';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { AppState } from '@/components/app/AppState';
 
 interface CommunityMembersProps {
   members: CommunityMember[];
@@ -163,9 +164,13 @@ export function CommunityMembers({ members, community, membership, onManage }: C
       </div>
 
       {filtered.length === 0 && (
-        <p className="text-center text-zinc-500 text-sm py-6">
-          {t('communities.noMembersFound', { defaultValue: 'No members found' })}
-        </p>
+        <AppState
+          icon={query ? 'search' : 'subscriptions'}
+          title={t('communities.noMembersFound', { defaultValue: 'No members found' })}
+          description={query ? 'Try a different wallet address.' : 'Members will appear here after they join.'}
+          kind={query ? 'search-empty' : 'empty'}
+          size="compact"
+        />
       )}
 
       {visible < filtered.length && (

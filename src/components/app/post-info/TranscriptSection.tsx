@@ -8,6 +8,7 @@
  */
 import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { AppState } from '@/components/app/AppState';
 import { Input } from '@/components/ui/input';
 import {
   ChevronDown, ChevronUp, FileText, Loader2, Copy, Download,
@@ -303,18 +304,13 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
           )}
 
           {!isLoading && status === 'absent' && (
-            <div className="space-y-2">
-              <p className="text-sm text-white/70">
-                No transcript for this video yet. One is written automatically shortly
-                after a video is posted.
-              </p>
-              <Button className="rounded-xl" onClick={() => start.mutate()} disabled={start.isPending}>
-                {start.isPending
-                  ? <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  : <FileText className="w-4 h-4 mr-2" />}
-                Write it now
-              </Button>
-            </div>
+            <AppState
+              icon="posts"
+              title="No transcript yet"
+              description="A transcript is written automatically shortly after a video is posted."
+              size="drawer"
+              primaryAction={{ label: 'Write it now', onClick: () => start.mutate(), loading: start.isPending }}
+            />
           )}
 
           {inFlight && (
@@ -419,7 +415,7 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
 
               <div className="max-h-96 overflow-y-auto space-y-2 pr-2 text-sm">
                 {filtered.length === 0 ? (
-                  <p className="text-white/50 text-sm py-4 text-center">No matches found</p>
+                  <AppState icon="search" title="No transcript matches" kind="search-empty" size="compact" />
                 ) : (
                   filtered.map(({ segment: s, index }) => (
                     <TranscriptLine

@@ -19,6 +19,7 @@ import { flattenFeedPages } from '@/lib/feed-pages';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { RefreshCw, Radio, ChevronRight, ArrowUp } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { AppState } from '@/components/app/AppState';
 import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
 import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
@@ -1760,18 +1761,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       description = 'Follow some creators to see their posts here!';
     }
     
+    const failed = isError || retriesExhausted;
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <ThemedIcon icon="home" alt="" className="w-16 h-16 object-contain mb-4 opacity-75" />
-        <h3 className="text-white font-semibold text-lg mb-2">{title}</h3>
-        <p className="text-zinc-400 text-sm max-w-xs mb-4">{description}</p>
-        <button 
-          onClick={refetch}
-          className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
-        >
-          Refresh
-        </button>
-      </div>
+      <AppState
+        icon={failed ? 'notifications' : 'home'}
+        title={title}
+        description={description}
+        kind={failed ? 'error' : 'empty'}
+        size="page"
+        primaryAction={failed ? { label: 'Try again', onClick: refetch } : undefined}
+      />
     );
   };
 
