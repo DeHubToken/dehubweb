@@ -1294,6 +1294,7 @@
     "searchDehubFor": "Li DeHub li \"{{query}}\" bigere"
   },
   "comments": {
+    "showAll": "Hemû şîroveyan nîşan bide",
     "discardTitle": "Şîroveya xwe bavêjî?",
     "discardBody": "Wek reşnivîs hate tomarkirin, dema vegerî wê li vir be.",
     "keepWriting": "Berdewam binivîse",

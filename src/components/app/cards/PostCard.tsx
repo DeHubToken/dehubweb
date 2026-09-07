@@ -121,7 +121,7 @@ interface PostCardProps {
 export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
-  useAutoOpenComments(setShowComments);
+  useAutoOpenComments(setShowComments, post.id);
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);

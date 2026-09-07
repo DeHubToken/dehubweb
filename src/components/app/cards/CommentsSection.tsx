@@ -22,7 +22,9 @@ import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem , Anchor, Eye } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';
+import { useFocusComment } from '@/lib/focus-comment';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import {
@@ -213,6 +215,8 @@ interface CommentItemProps {
    * the thread-entry sub-URL (/posts/<tokenId>/b/<id>) rather than ?comment=.
    */
   isThreadEntry?: boolean;
+  /** The comment a notification or a shared link pointed at — ringed. */
+  highlighted?: boolean;
 }
 
 interface VoiceNotePlayerProps {
@@ -270,7 +274,7 @@ const PostCreatorContext = createContext<{
   username?: string | null;
 } | null>(null);
 
-function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, highlighted }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
   const [imageFullscreen, setImageFullscreen] = useState(false);
@@ -324,7 +328,12 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative flex items-start gap-3 py-3 cursor-pointer"
+      className={cn(
+        'relative flex items-start gap-3 py-3 cursor-pointer',
+        // The row the reader was sent here to read. A ring rather than a fill:
+        // the comment has to still look like the comments around it.
+        highlighted && 'rounded-xl ring-1 ring-white/30 bg-white/[0.04] px-2 -mx-2',
+      )}
       data-comment-id={comment.id}
       /*
         Tap the comment to answer it.
@@ -789,6 +798,22 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     walletAddress,
   );
 
+  /**
+   * The comment a notification (or a shared link) pointed at, when this
+   * section is the one showing that post. Everything below hangs off it: the
+   * page-0 fetch pins it, the thread it sits in opens, the row is ringed and
+   * scrolled to, and until the reader asks for the rest it is the only thread
+   * on screen — a long post's other two hundred comments are not what they
+   * came for and paying to render them is what made this feel like a dead end.
+   */
+  const focusCommentId = useFocusComment(tokenId);
+  const { t } = useI18n();
+  /** Cleared by "Show all comments", and by arriving with nothing to focus. */
+  const [showAllThreads, setShowAllThreads] = useState(!focusCommentId);
+  useEffect(() => {
+    setShowAllThreads(!focusCommentId);
+  }, [focusCommentId]);
+
   const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'reposts' | 'search'>(initialTab ?? 'replies');
   // The mount-time initial value alone doesn't cover a section that's already
   // open: tapping the like count while comments are expanded changes initialTab
@@ -920,9 +945,18 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['comments', tokenId, walletAddress],
+    queryKey: ['comments', tokenId, walletAddress, focusCommentId ?? null],
     queryFn: ({ pageParam }) =>
-      getNFTComments(tokenId, pageParam as number, COMMENTS_PAGE_SIZE, walletAddress?.toLowerCase()),
+      getNFTComments(
+        tokenId,
+        pageParam as number,
+        COMMENTS_PAGE_SIZE,
+        walletAddress?.toLowerCase(),
+        // Only page 0: the server pins the comment there and backfills its
+        // ancestors, so one request holds the linked row however deep in the
+        // thread it sits. Sending it again on page 1 would duplicate it.
+        pageParam === 0 ? focusCommentId : undefined,
+      ),
     initialPageParam: 0,
     // A short page is the last page — the API exposes no total.
     getNextPageParam: (lastPage, allPages) =>
@@ -949,9 +983,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const MAX_AUTO_PAGES = 5;
   useEffect(() => {
     if (!apiComments?.length || !hasNextPage || isFetchingNextPage) return;
+    // Nothing but the linked thread is on screen yet, and the server already
+    // backfilled that thread's ancestors — so walking up to four more pages
+    // here would be a hundred comments fetched to render one. It resumes the
+    // moment the reader asks for the rest.
+    if (focusCommentId && !showAllThreads) return;
     if ((commentPages?.pages.length ?? 0) >= MAX_AUTO_PAGES) return;
     if (hasUnresolvedParent(apiComments)) fetchNextPage();
-  }, [apiComments, commentPages, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [apiComments, commentPages, hasNextPage, isFetchingNextPage, fetchNextPage, focusCommentId, showAllThreads]);
 
   const loadMoreRow = !isLoading && !error && hasNextPage ? (
     <div className="flex justify-center py-3">
@@ -1136,6 +1175,29 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     return threads;
   }, [allComments, authorThreadIds]);
 
+  /**
+   * The root of the thread the linked comment sits in, once it has loaded.
+   *
+   * Undefined while the fetch is in flight, and undefined for good if the
+   * comment was deleted between the notification being written and the tap —
+   * which is what makes the narrowing below fail open rather than showing an
+   * empty list.
+   */
+  const focusThreadId = useMemo(() => {
+    if (!focusCommentId) return undefined;
+    return groupedComments.find(
+      ({ comment, replies }) =>
+        comment.id === focusCommentId || replies.some(({ comment: r }) => r.id === focusCommentId),
+    )?.comment.id;
+  }, [groupedComments, focusCommentId]);
+
+  // A thread shows one reply until asked; a linked reply is usually not that
+  // one, so open its thread or the row nobody was sent to is the row on screen.
+  useEffect(() => {
+    if (!focusThreadId) return;
+    setExpandedThreads(prev => (prev.has(focusThreadId) ? prev : new Set(prev).add(focusThreadId)));
+  }, [focusThreadId]);
+
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -1279,10 +1341,23 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     }
   };
 
+  /**
+   * Showing the linked thread on its own, with the rest a tap away.
+   *
+   * Only on the replies tab, and only while the linked comment is actually in
+   * the list: a search is a different question, and a comment that has since
+   * been deleted must not leave the reader staring at nothing.
+   */
+  const focusOnlyThread = activeTab === 'replies' && !showAllThreads && !!focusThreadId;
+
   // Filter and sort comments
   const filteredGroupedComments = useMemo(() => {
     let filtered = groupedComments;
-    
+
+    if (focusOnlyThread) {
+      return groupedComments.filter(({ comment }) => comment.id === focusThreadId);
+    }
+
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = groupedComments.filter(
@@ -1305,7 +1380,42 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       // Default: sort by most recent (newest first)
       return b.comment.createdAt.getTime() - a.comment.createdAt.getTime();
     });
-  }, [groupedComments, searchQuery, sortBy]);
+  }, [groupedComments, searchQuery, sortBy, focusOnlyThread, focusThreadId]);
+
+  /**
+   * Bring the linked comment into view once it has actually rendered.
+   *
+   * Once per id: a second pass would yank the list back under a reader who had
+   * started scrolling. `scrollIntoView` walks every scrolling ancestor, which
+   * is what also brings the comments panel itself up the page on the
+   * standalone post route.
+   */
+  const scrolledToFocusRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!focusCommentId || scrolledToFocusRef.current === focusCommentId) return;
+    const root = sectionRef.current;
+    if (!root) return;
+    const row = root.querySelector(`[data-comment-id="${CSS.escape(focusCommentId)}"]`);
+    if (!row) return;
+    scrolledToFocusRef.current = focusCommentId;
+    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [focusCommentId, filteredGroupedComments]);
+
+  /**
+   * The way out of the focused view. Sits where "Load more comments" would,
+   * because it is the same question one step earlier.
+   */
+  const showAllCommentsRow = focusOnlyThread ? (
+    <div className="flex justify-center py-3">
+      <button
+        type="button"
+        onClick={() => setShowAllThreads(true)}
+        className="px-4 py-1.5 text-xs text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors"
+      >
+        {t('comments.showAll', 'Show all comments')}
+      </button>
+    </div>
+  ) : null;
 
   /**
    * Comment Anchor — the Piranha rung.
@@ -1571,7 +1681,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     // it belongs to. Replying to a reply still means the root's thread.
     if (replyTo) {
       const root = groupedComments.find(
-        t => t.comment.id === replyTo.id || t.replies.some(({ comment: r }) => r.id === replyTo.id),
+        thread => thread.comment.id === replyTo.id || thread.replies.some(({ comment: r }) => r.id === replyTo.id),
       );
       if (root) setExpandedThreads(prev => new Set(prev).add(root.comment.id));
     }
@@ -1725,6 +1835,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           onAnchor={canAnchor ? handleAnchor : undefined}
           threadLineBelow={shown.length > 0}
           isThreadEntry={authorThreadIds.has(comment.id)}
+          highlighted={comment.id === focusCommentId}
         />
         {shown.map(({ comment: reply }, i) => (
           <CommentItem
@@ -1748,6 +1859,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             // above a control that belongs to the thread.
             threadLineBelow={i < shown.length - 1 || hiddenCount > 0}
             isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
+            highlighted={reply.id === focusCommentId}
           />
         ))}
         {hiddenCount > 0 && (
@@ -1928,7 +2040,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 )}
               </AnimatePresence>
             )}
-            {loadMoreRow}
+            {showAllCommentsRow ?? loadMoreRow}
           </div>
         )}
 
