@@ -182,6 +182,26 @@ export type TokenRefreshOutcome =
   | { ok: false; reason: TokenRefreshFailure; tokens?: never };
 
 let refreshInFlight: Promise<TokenRefreshOutcome> | null = null;
+const REFRESH_LOCK_NAME = 'dehub-refresh-token';
+
+/**
+ * Pick up the pair another tab wrote while this one was waiting to refresh.
+ * localStorage is shared synchronously across same-origin tabs, so the changed
+ * refresh token is proof that the submitted token has already been rotated.
+ */
+function readSiblingRefresh(
+  submittedRefreshToken: string,
+): TokenRefreshOutcome | null {
+  const refreshToken = getRefreshToken();
+  const accessToken = getAuthToken();
+  if (!refreshToken || refreshToken === submittedRefreshToken || !accessToken) return null;
+
+  const expiresAt = Number(localStorage.getItem('dehub_token_expires_at'));
+  const expiresIn = Number.isFinite(expiresAt)
+    ? Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000))
+    : 0;
+  return { ok: true, tokens: { accessToken, refreshToken, expiresIn } };
+}
 
 /**
  * Who owns the live session keys right now. Deliberately local and cheap —
@@ -278,7 +298,17 @@ export async function refreshTokenSharedDetailed(): Promise<TokenRefreshOutcome>
   // its rightful stash instead.
   const ownerAtStart = readSessionOwner();
 
-  refreshInFlight = (async (): Promise<TokenRefreshOutcome> => {
+  const performRefresh = async (): Promise<TokenRefreshOutcome> => {
+    // A profile switch while waiting means these credentials no longer own the
+    // live keys. Do not mistake the new account's pair for a sibling refresh.
+    if (!sameSessionOwner(ownerAtStart)) return { ok: false, reason: 'transient' };
+
+    // A sibling tab may have completed the rotation while this tab waited for
+    // the origin-wide lock. Reuse its pair instead of submitting the spent
+    // token and tripping server-side reuse detection.
+    const siblingRefresh = readSiblingRefresh(refreshToken);
+    if (siblingRefresh) return siblingRefresh;
+
     // Without a timeout, a stalled request never settles, and the
     // single-flight promise above never resolves — every subsequent
     // caller awaiting it (or gated behind isRefreshing) hangs forever,
@@ -298,6 +328,13 @@ export async function refreshTokenSharedDetailed(): Promise<TokenRefreshOutcome>
         // server or network problem, not proof the session is dead — treating
         // it the same as a 401 would silently log the user out on a blip.
         if (response.status === 401) {
+          // An older tab or build may not participate in the Web Lock. If it
+          // won the rotation while this request was in flight, its fresh pair
+          // is already in shared storage; adopt that result and never erase it.
+          const siblingRefresh = sameSessionOwner(ownerAtStart)
+            ? readSiblingRefresh(refreshToken)
+            : null;
+          if (siblingRefresh) return siblingRefresh;
           console.warn('[Auth] Refresh token rejected (401), clearing session');
           // Only wipe when these keys still belong to whoever started the
           // refresh. A revoke landing after a profile switch must not take
@@ -348,6 +385,16 @@ export async function refreshTokenSharedDetailed(): Promise<TokenRefreshOutcome>
     } finally {
       timeout.cancel();
     }
+  };
+
+  refreshInFlight = (async (): Promise<TokenRefreshOutcome> => {
+    // The module promise above covers components in this JS realm. Web Locks
+    // extends the same single-flight guarantee across every tab/window on the
+    // origin, which is where the remaining refresh-token replays came from.
+    if (typeof navigator !== 'undefined' && navigator.locks?.request) {
+      return navigator.locks.request(REFRESH_LOCK_NAME, performRefresh);
+    }
+    return performRefresh();
   })().finally(() => {
     refreshInFlight = null;
   });
