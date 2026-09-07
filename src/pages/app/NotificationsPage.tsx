@@ -557,7 +557,10 @@ function getNotificationContent(
   }
   if ((notification.type as string) === 'community_join') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} joined your community "${title}"` : `${actorName} joined your community`;
+    const action = notification.content === 'requested to join your community'
+      ? 'requested to join your community'
+      : 'joined your community';
+    return title ? `${actorName} ${action} "${title}"` : `${actorName} ${action}`;
   }
   if ((notification.type as string) === 'store_order') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
@@ -705,8 +708,8 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   if ((notification.type as string) === 'feature_request_like' || (notification.type as string) === 'feature_request_comment') {
     return '/features';
   }
-  // Community notifications store the slug, so they land in the chat that
-  // raised them rather than on the communities index.
+  // Mentions store a slug; membership activity stores the stable community ID.
+  // The community page resolves both forms.
   if (
     (notification.type as string) === 'community_mention' ||
     (notification.type as string) === 'community_here' ||

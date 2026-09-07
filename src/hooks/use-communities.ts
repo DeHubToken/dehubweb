@@ -129,7 +129,7 @@ export function useUserCommunities() {
   });
 }
 
-// ─── Fetch single community by slug ───────────────────────────────────────────
+// ─── Fetch single community by slug or notification's stable ID ───────────────
 
 export function useCommunity(slug: string | undefined) {
   const queryClient = useQueryClient();
@@ -140,7 +140,7 @@ export function useCommunity(slug: string | undefined) {
       const { data, error } = await supabase
         .from('communities')
         .select('*')
-        .eq('slug', slug)
+        .eq(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug) ? 'id' : 'slug', slug)
         .single();
       if (error) throw error;
       return data as Community;
