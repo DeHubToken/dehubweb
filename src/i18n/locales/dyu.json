@@ -319,7 +319,15 @@
     "saving": "A bɛ mara...",
     "noNewMessages": "Baro kura si tɛ yen",
     "noNewMessagesDesc": "I ka baro kɔrɔw to, nka mɔgɔ kura si tɛ se ka dɔ daminɛ",
-    "dmNoNewHelp": "Baro kɔrɔw bɛ to ka taa; mɔgɔ kura si tɛ se ka dɔ daminɛ"
+    "dmNoNewHelp": "Baro kɔrɔw bɛ to ka taa; mɔgɔ kura si tɛ se ka dɔ daminɛ",
+    "chat": "Chat",
+    "publicChatAlerts": "Public chat",
+    "publicChatAlertsDesc": "N'i be baro kɛra ni mɔgɔ dɔ ye, i ka kan k'a fɔ a ye tuma min na i be baro kɛra ni mɔgɔ dɔ ye.",
+    "publicChatAlertsOnDesc": "Busy stretches arrive as one combined alert",
+    "publicChatAlertsNeedsBrowser": "I ka kan ka tɛmɛ o kan ka tɛmɛ o kan.",
+    "publicChatAlertsRate": "At most",
+    "publicChatAlertsRateOption": "{{count}} an hour",
+    "publicChatAlertsRateHint": "O kama, n'i ye mɔgɔ dɔ ye, i be se k'a fɔ ko i ye mɔgɔ dɔ ye min be se ka mɔgɔ dɔ faga."
   },
   "common": {
     "save": "Bɔ",
@@ -2090,5 +2098,14 @@
     "dubbed": "Audio ka baara kɛ",
     "preparing": "O ye kumakanw ye minw man kan ka mɛn.",
     "unavailable": "O video nin tɛ se ka mɔgɔ bali ka kuma n'a ye."
+  },
+  "digest": {
+    "someone": "Someone"
+  },
+  "publicChatAlerts": {
+    "title": "Public chat",
+    "mentionTitle": "Ka kumaɲɔgɔnya kɛ ni mɔgɔ dɔ ye",
+    "voiceMessage": "Voice message",
+    "image": "Sent an image"
   }
 }

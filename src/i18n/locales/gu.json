@@ -319,7 +319,15 @@
     "saving": "સાચવી રહ્યું છે...",
     "noNewMessages": "નવી વાતચીતો નહીં",
     "noNewMessagesDesc": "તમારી હાલની વાતચીતો રહેશે, પણ નવું કોઈ શરૂ કરી શકશે નહીં",
-    "dmNoNewHelp": "હાલની વાતચીતો ચાલુ રહેશે; નવું કોઈ શરૂ કરી શકશે નહીં"
+    "dmNoNewHelp": "હાલની વાતચીતો ચાલુ રહેશે; નવું કોઈ શરૂ કરી શકશે નહીં",
+    "chat": "ચેટ",
+    "publicChatAlerts": "પબ્લિક ચેટ",
+    "publicChatAlertsDesc": "જ્યારે તમે બીજી ટેબમાં હોવ ત્યારે પબ્લિક ચેટ વાત કરી રહી હોય ત્યારે તમને જણાવવામાં આવશે",
+    "publicChatAlertsOnDesc": "વ્યસ્ત સમયગાળો એક સંયુક્ત એલર્ટ તરીકે આવે છે",
+    "publicChatAlertsNeedsBrowser": "આ પ્રાપ્ત કરવા માટે ઉપર બ્રાઉઝર સૂચનાઓ ચાલુ કરો",
+    "publicChatAlertsRate": "વધુમાં વધુ",
+    "publicChatAlertsRateOption": "એક કલાકમાં {{count}}",
+    "publicChatAlertsRateHint": "જ્યારે રૂમ આના કરતાં વધુ વ્યસ્ત હોય ત્યારે કંઈપણ ગુમાવતું નથી — સંદેશાઓ રાખવામાં આવે છે અને આગામી એલર્ટ પર એકસાથે આવે છે."
   },
   "common": {
     "save": "સાચવો",
@@ -820,7 +828,8 @@
     "postRemoved": "તમારી પોસ્ટ દૂર કરાઈ",
     "newNotification": "નવી સૂચના",
     "oneOther": "1 અન્ય",
-    "nOthers": "{{count}} અન્ય"
+    "nOthers": "{{count}} અન્ય",
+    "burstBody": "{{count}} નવા સૂચનો {{who}} તરફથી"
   },
   "leaderboard": {
     "title": "લીડરબોર્ડ",
@@ -2090,5 +2099,17 @@
     "dubbed": "ડબ કરેલ ઑડિઓ",
     "preparing": "ડબ ઓડિયો તૈયાર કરી રહ્યા છીએ...",
     "unavailable": "આ વિડિઓ માટે ડબ કરેલ ઑડિઓ ઉપલબ્ધ નથી."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} અને {{count}} અન્ય",
+    "andOthers_other": "{{names}} અને {{count}} અન્ય",
+    "someone": "કોઈક"
+  },
+  "publicChatAlerts": {
+    "title": "પબ્લિક ચેટ",
+    "mentionTitle": "પબ્લિક ચેટમાં ઉલ્લેખ કર્યો",
+    "digest": "{{count}} નવા સંદેશાઓ {{who}} તરફથી: {{message}}",
+    "voiceMessage": "વોઇસ મેસેજ",
+    "image": "એક છબી મોકલી"
   }
 }

@@ -319,7 +319,15 @@
     "saving": "بيتحفظ...",
     "noNewMessages": "مفيش محادثات جديدة",
     "noNewMessagesDesc": "خلي محادثاتك الموجودة، بس محدش جديد يقدر يبدأ واحدة",
-    "dmNoNewHelp": "المحادثات الموجودة هتفضل شغالة؛ محدش جديد هيقدر يبدأ واحدة"
+    "dmNoNewHelp": "المحادثات الموجودة هتفضل شغالة؛ محدش جديد هيقدر يبدأ واحدة",
+    "chat": "شات",
+    "publicChatAlerts": "شات عام",
+    "publicChatAlertsDesc": "احصل على تنبيه عندما يكون الشات العام نشطًا أثناء تواجدك في تبويب آخر",
+    "publicChatAlertsOnDesc": "فترات الانشغال تصل كتنبيه واحد مدمج",
+    "publicChatAlertsNeedsBrowser": "قم بتشغيل إشعارات المتصفح أعلاه لتصلك هذه التنبيهات",
+    "publicChatAlertsRate": "بحد أقصى",
+    "publicChatAlertsRateOption": "{{count}} في الساعة",
+    "publicChatAlertsRateHint": "لا شيء يُفقد عندما تكون الغرفة أكثر انشغالاً من ذلك — يتم الاحتفاظ بالرسائل وتصل معًا في التنبيه التالي."
   },
   "common": {
     "save": "حفظ",
@@ -820,7 +828,8 @@
     "postRemoved": "بوستك اتشال",
     "newNotification": "إشعار جديد",
     "oneOther": "١ تاني",
-    "nOthers": "{{count}} تانيين"
+    "nOthers": "{{count}} تانيين",
+    "burstBody": "{{count}} إشعارات جديدة من {{who}}"
   },
   "leaderboard": {
     "title": "لوحة المتصدرين",
@@ -2112,5 +2121,17 @@
     "dubbed": "صوت مدبلج",
     "preparing": "جارٍ إعداد الصوت المدبلج...",
     "unavailable": "الصوت المدبلج غير متاح لهذا الفيديو."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} و {{count}} آخر",
+    "andOthers_other": "{{names}} و {{count}} آخرون",
+    "someone": "شخص ما"
+  },
+  "publicChatAlerts": {
+    "title": "شات عام",
+    "mentionTitle": "تم ذكرك في الشات العام",
+    "digest": "{{count}} رسالة جديدة من {{who}}: {{message}}",
+    "voiceMessage": "رسالة صوتية",
+    "image": "تم إرسال صورة"
   }
 }

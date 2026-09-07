@@ -319,7 +319,15 @@
     "saving": "خوندي کیږي...",
     "noNewMessages": "هیڅ نوې خبرې اترې نشته",
     "noNewMessagesDesc": "خپلې موجودې لړۍ وساتئ، خو هیڅ نوی کس یې نشي پیلولی",
-    "dmNoNewHelp": "موجوده لړۍ کار کوي؛ هیڅ نوی کس یې نشي پیلولی"
+    "dmNoNewHelp": "موجوده لړۍ کار کوي؛ هیڅ نوی کس یې نشي پیلولی",
+    "chat": "چت",
+    "publicChatAlerts": "عام چت",
+    "publicChatAlertsDesc": "کله چې په بل ټب کې یاست، خبر شئ چې عام چت خبرې کوي",
+    "publicChatAlertsOnDesc": "د مصروف وختونو لپاره یوځای خبرتیا راځي",
+    "publicChatAlertsNeedsBrowser": "د دې لپاره چې دا خبرتیاوې ترلاسه کړئ، د پورتنیو براوزر خبرتیاوې فعال کړئ",
+    "publicChatAlertsRate": "په ډیرو",
+    "publicChatAlertsRateOption": "په ساعت کې {{count}}",
+    "publicChatAlertsRateHint": "کله چې خونه له دې څخه ډکه وي هیڅ شی له لاسه نه ورکول کیږي - پیغامونه ساتل کیږي او په راتلونکې خبرتیا کې یوځای راځي."
   },
   "common": {
     "save": "خوندي",
@@ -821,7 +829,8 @@
     "postRemoved": "ستاسو پوسټ لرې شو",
     "newNotification": "نوې خبرتیا",
     "oneOther": "۱ بل",
-    "nOthers": "{{count}} نور"
+    "nOthers": "{{count}} نور",
+    "burstBody": "{{count}} نوي خبرتیاوې له {{who}} څخه"
   },
   "leaderboard": {
     "title": "لیډربورډونه",
@@ -2085,5 +2094,17 @@
     "dubbed": "دي وي دي دوجداره",
     "preparing": "د دوبي لپاره چمتو کول...",
     "unavailable": "د دې ویدیو د کتلو لپاره غږیز البوم نه دی جوړ شوی."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} او {{count}} نور",
+    "andOthers_other": "{{names}} او {{count}} نور",
+    "someone": "یو څوک"
+  },
+  "publicChatAlerts": {
+    "title": "عام چت",
+    "mentionTitle": "په عام چت کې یادونه وشوه",
+    "digest": "له {{who}} څخه {{count}} نوي پیغامونه: {{message}}",
+    "voiceMessage": "غږیز پیغام",
+    "image": "یو انځور واستول شو"
   }
 }

@@ -256,7 +256,15 @@ export default function MessagesPage() {
   const pendingUserPromiseRef = useRef<Promise<DeHubUser | null> | null>(null);
 
   useEffect(() => {
-    const state = location.state as { openDmWith?: string; username?: string; autoSendBody?: string; draftBody?: string } | null;
+    const state = location.state as { openDmWith?: string; username?: string; autoSendBody?: string; draftBody?: string; openPublicChat?: boolean } | null;
+    // Where a public-chat notification lands. Without it the card drops the
+    // reader on the conversation list and makes them find the room that just
+    // interrupted them.
+    if (state?.openPublicChat) {
+      setShowPublicChat(true);
+      window.history.replaceState({}, document.title);
+      return;
+    }
     if (state?.openDmWith) {
       pendingDmRef.current = { address: state.openDmWith, username: state.username, autoSendBody: state.autoSendBody };
       if (state.autoSendBody) {

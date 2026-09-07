@@ -315,7 +315,15 @@
     "saving": "Запазва се...",
     "noNewMessages": "Без нови разговори",
     "noNewMessagesDesc": "Запазете съществуващите си разговори, но никой нов не може да започне",
-    "dmNoNewHelp": "Съществуващите разговори продължават; никой нов не може да започне"
+    "dmNoNewHelp": "Съществуващите разговори продължават; никой нов не може да започне",
+    "chat": "Чат",
+    "publicChatAlerts": "Публичен чат",
+    "publicChatAlertsDesc": "Получавайте известия, когато публичният чат говори, докато сте в друг раздел",
+    "publicChatAlertsOnDesc": "Натоварените периоди идват като едно комбинирано известие",
+    "publicChatAlertsNeedsBrowser": "Включете известията на браузъра по-горе, за да ги получавате",
+    "publicChatAlertsRate": "Най-много",
+    "publicChatAlertsRateOption": "{{count}} на час",
+    "publicChatAlertsRateHint": "Нищо не се губи, когато стаята е по-натоварена от това — съобщенията се пазят и пристигат заедно при следващото известие."
   },
   "common": {
     "save": "Запази",
@@ -803,7 +811,8 @@
     "postRemoved": "Публикацията ви е премахната",
     "newNotification": "Ново известие",
     "oneOther": "1 друг",
-    "nOthers": "{{count}} други"
+    "nOthers": "{{count}} други",
+    "burstBody": "{{count}} нови известия от {{who}}"
   },
   "leaderboard": {
     "title": "Класация",
@@ -4219,5 +4228,17 @@
     "dubbed": "Наречено аудио",
     "preparing": "Подготовка на дублирано аудио...",
     "unavailable": "Озаглавеното аудио не е налично за този видеоклип."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} и {{count}} други",
+    "andOthers_other": "{{names}} и {{count}} други",
+    "someone": "Някой"
+  },
+  "publicChatAlerts": {
+    "title": "Публичен чат",
+    "mentionTitle": "Споменат в публичен чат",
+    "digest": "{{count}} нови съобщения от {{who}}: {{message}}",
+    "voiceMessage": "Гласово съобщение",
+    "image": "Изпрати изображение"
   }
 }

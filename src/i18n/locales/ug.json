@@ -319,7 +319,15 @@
     "saving": "ساقلىنىۋاتىدۇ...",
     "noNewMessages": "يېڭى سۆھبەت يوق",
     "noNewMessagesDesc": "مەۋجۇت سۆھبەتلىرىڭىزنى ساقلاڭ، ئەمما يېڭى ھېچكىم باشلىيالمايدۇ",
-    "dmNoNewHelp": "مەۋجۇت سۆھبەتلەر ئىشلەۋېرىدۇ؛ يېڭى ھېچكىم باشلىيالمايدۇ"
+    "dmNoNewHelp": "مەۋجۇت سۆھبەتلەر ئىشلەۋېرىدۇ؛ يېڭى ھېچكىم باشلىيالمايدۇ",
+    "chat": "چات",
+    "publicChatAlerts": "ئاممىۋى چات",
+    "publicChatAlertsDesc": "باشقا بىر تاختا بىلەن تۇرغاندا ئاممىۋى چاتنىڭ سۆزلەۋاتقانلىقىنى بىلدۈرۈڭ",
+    "publicChatAlertsOnDesc": "باندىكى ئۇزۇن دەۋر بىر بىرلەشكەن ئاگاھلاندۇرۇش سۈپىتىدە كېلىدۇ",
+    "publicChatAlertsNeedsBrowser": "بۇلارنىڭ كېلىشى ئۈچۈن تۆۋەندىكىدەك ئىخچام ئاگاھلاندۇرۇشلارنى قېتىڭ",
+    "publicChatAlertsRate": "ئېنىق",
+    "publicChatAlertsRateOption": "ھەر سائەتتە {{count}}",
+    "publicChatAlertsRateHint": "ئۆي تېخىمۇ قىزىق بولغاندا ھېچ نەرسە يوقاپ كەتمەيدۇ - خەۋەرلەر ساقلىنىدۇ ۋە كېيىنكى ئاگاھلاندۇرۇشتا بىللە كېلىدۇ."
   },
   "common": {
     "save": "ساقلاش",
@@ -821,7 +829,8 @@
     "postRemoved": "يوللانمىڭىز ئۆچۈرۈلدى",
     "newNotification": "يېڭى ئۇقتۇرۇش",
     "oneOther": "1 باشقا",
-    "nOthers": "{{count}} باشقا"
+    "nOthers": "{{count}} باشقا",
+    "burstBody": "{{count}} يېڭى ئاگاھلاندۇرۇش {{who}} دىن"
   },
   "leaderboard": {
     "title": "تەرتىپنامە",
@@ -2089,5 +2098,17 @@
     "dubbed": "كۆچۈرۈلگەن ئاۋاز",
     "preparing": "قوشۇمچە ئاۋازنى تەييارلاش پروگراممىسى",
     "unavailable": "بۇ فىلىمنىڭ قوش ئاۋازلىق نۇسخىسى يوق."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} ۋە {{count}} باشقا",
+    "andOthers_other": "{{names}} ۋە {{count}} باشقىلار",
+    "someone": "بىرەرسى"
+  },
+  "publicChatAlerts": {
+    "title": "ئاممىۋى چات",
+    "mentionTitle": "ئاممىۋى چاتتا تىلغا ئېلىندى",
+    "digest": "{{count}} يېڭى خەۋەر {{who}} دىن: {{message}}",
+    "voiceMessage": "ئاۋازلىق خەت",
+    "image": "رەسىم ئەۋەتىلدى"
   }
 }

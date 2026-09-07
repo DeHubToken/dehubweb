@@ -313,7 +313,15 @@
     "saving": "Збереження...",
     "noNewMessages": "Жодних нових розмов",
     "noNewMessagesDesc": "Наявні розмови залишаться, але нові люди почати не зможуть",
-    "dmNoNewHelp": "Наявні розмови й далі працюють; нові люди почати не зможуть"
+    "dmNoNewHelp": "Наявні розмови й далі працюють; нові люди почати не зможуть",
+    "chat": "Чат",
+    "publicChatAlerts": "Публічний чат",
+    "publicChatAlertsDesc": "Отримуйте сповіщення, коли в публічному чаті хтось пише, поки ви на іншій вкладці",
+    "publicChatAlertsOnDesc": "Напружені моменти надходять як одне сукупне сповіщення",
+    "publicChatAlertsNeedsBrowser": "Увімкніть браузерні сповіщення вище, щоб вони надходили",
+    "publicChatAlertsRate": "Не більше ніж",
+    "publicChatAlertsRateOption": "{{count}} на годину",
+    "publicChatAlertsRateHint": "Нічого не втрачається, коли в кімнаті багато людей — повідомлення зберігаються і надходять разом з наступним сповіщенням."
   },
   "common": {
     "save": "Зберегти",
@@ -1168,7 +1176,8 @@
     "postRemoved": "Ваш допис було видалено",
     "newNotification": "Нове сповіщення",
     "oneOther": "1 інший",
-    "nOthers": "інших: {{count}}"
+    "nOthers": "інших: {{count}}",
+    "burstBody": "{{count}} нових сповіщень від {{who}}"
   },
   "leaderboard": {
     "title": "Таблиці лідерів",
@@ -4184,6 +4193,18 @@
     "dubbed": "Аудіо з дубляжем",
     "preparing": "Підготовка дубльованого аудіо…",
     "unavailable": "Дубльований аудіо недоступний для цього відео."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} та {{count}} інших",
+    "andOthers_other": "{{names}} та {{count}} інших",
+    "someone": "Хтось"
+  },
+  "publicChatAlerts": {
+    "title": "Публічний чат",
+    "mentionTitle": "Згадали в публічному чаті",
+    "digest": "{{count}} нових повідомлень від {{who}}: {{message}}",
+    "voiceMessage": "Голосове повідомлення",
+    "image": "Надіслано зображення"
   },
   "pages": {
     "home": {

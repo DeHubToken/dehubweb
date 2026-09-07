@@ -319,7 +319,15 @@
     "saving": "सहेजत हे...",
     "noNewMessages": "नवा बातचीत नइ",
     "noNewMessagesDesc": "तोर पहिली के थ्रेड मन रखव, फेर कोनो नवा मनखे नवा थ्रेड शुरू नइ कर सके",
-    "dmNoNewHelp": "पहिली के थ्रेड चलत रहिथें; कोनो नवा मनखे नवा थ्रेड शुरू नइ कर सके"
+    "dmNoNewHelp": "पहिली के थ्रेड चलत रहिथें; कोनो नवा मनखे नवा थ्रेड शुरू नइ कर सके",
+    "chat": "चैट",
+    "publicChatAlerts": "सार्वजनिक चैट",
+    "publicChatAlertsDesc": "जब आप दूसरे टैब में हों तो सार्वजनिक चैट के बात करने पर आपको बताया जाएगा",
+    "publicChatAlertsOnDesc": "व्यस्तता एक साथ एक संयुक्त अलर्ट के रूप में आती है",
+    "publicChatAlertsNeedsBrowser": "इनके आने के लिए ऊपर ब्राउज़र सूचनाएं चालू करें",
+    "publicChatAlertsRate": "अधिकतम",
+    "publicChatAlertsRateOption": "{{count}} प्रति घंटा",
+    "publicChatAlertsRateHint": "जब कमरा इससे अधिक व्यस्त होता है तो कुछ भी खोता नहीं है - संदेश रखे जाते हैं और अगले अलर्ट पर एक साथ आते हैं।"
   },
   "common": {
     "save": "बचाव",
@@ -819,7 +827,8 @@
     "postRemoved": "तोर पोस्ट हटा दे गइस",
     "newNotification": "नवा सूचना",
     "oneOther": "1 अउ",
-    "nOthers": "{{count}} अउ"
+    "nOthers": "{{count}} अउ",
+    "burstBody": "{{count}} नए सूचनाएं {{who}} से"
   },
   "leaderboard": {
     "title": "लीडरबोर्ड",
@@ -2083,6 +2092,18 @@
     "dubbed": "दुबारा आडियो",
     "preparing": "डबलेड आडियो तैयार करत हे...",
     "unavailable": "ए वीडियो बर डबल ऑडियो उपलब्ध नी हवय ।"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} और {{count}} अन्य",
+    "andOthers_other": "{{names}} और {{count}} अन्य",
+    "someone": "कोई"
+  },
+  "publicChatAlerts": {
+    "title": "सार्वजनिक चैट",
+    "mentionTitle": "सार्वजनिक चैट में उल्लेख किया गया",
+    "digest": "{{count}} नए संदेश {{who}} से: {{message}}",
+    "voiceMessage": "वॉयस मैसेज",
+    "image": "एक छवि भेजी"
   },
   "post": {
     "like": "पसंद",

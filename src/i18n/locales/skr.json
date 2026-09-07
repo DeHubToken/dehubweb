@@ -319,7 +319,15 @@
     "saving": "محفوظ ہو ریہا ہے...",
     "noNewMessages": "کوئی نویں گالھ کائنی",
     "noNewMessagesDesc": "تہاڈے پرانے دھاگے رکھو، پر کوئی نواں شروع کائنی کر سگدا",
-    "dmNoNewHelp": "پرانے دھاگے چلدے رہسن؛ کوئی نواں شروع کائنی کر سگدا"
+    "dmNoNewHelp": "پرانے دھاگے چلدے رہسن؛ کوئی نواں شروع کائنی کر سگدا",
+    "chat": "چیٹ",
+    "publicChatAlerts": "پبلک چیٹ",
+    "publicChatAlertsDesc": "جب آپ دوسری ٹیب میں ہوں تو پبلک چیٹ کے بات کرنے پر بتائیں",
+    "publicChatAlertsOnDesc": "مصروفیت کے اوقات ایک مشترکہ الرٹ کے طور پر آتے ہیں",
+    "publicChatAlertsNeedsBrowser": "ان کے آنے کے لیے اوپر براؤزر نوٹیفیکیشن آن کریں۔",
+    "publicChatAlertsRate": "زیادہ سے زیادہ",
+    "publicChatAlertsRateOption": "فی گھنٹہ {{count}}",
+    "publicChatAlertsRateHint": "جب کمرہ اس سے زیادہ مصروف ہو تو کچھ بھی ضائع نہیں ہوتا — پیغامات رکھے جاتے ہیں اور اگلے الرٹ پر اکٹھے آتے ہیں۔"
   },
   "common": {
     "save": "محفوظ کرو",
@@ -821,7 +829,8 @@
     "postRemoved": "تہاڈی پوسٹ ہٹا ݙتی گئی",
     "newNotification": "نویں اطلاع",
     "oneOther": "1 ہور",
-    "nOthers": "{{count}} ہور"
+    "nOthers": "{{count}} ہور",
+    "burstBody": "{{count}} نئے نوٹیفیکیشن {{who}} سے"
   },
   "leaderboard": {
     "title": "لیڈر بورڈ",
@@ -2075,5 +2084,17 @@
     "dubbed": "ڈب آڈیو",
     "preparing": "ڈب شدہ آڈیو تیار کر رہے ہیں…",
     "unavailable": "Azi video da dubbed audio available nai."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} اور {{count}} دوسرے",
+    "andOthers_other": "{{names}} اور {{count}} دیگر",
+    "someone": "کوئی"
+  },
+  "publicChatAlerts": {
+    "title": "پبلک چیٹ",
+    "mentionTitle": "پبلک چیٹ میں ذکر کیا گیا",
+    "digest": "{{count}} نئے پیغامات {{who}} سے: {{message}}",
+    "voiceMessage": "وائس میسج",
+    "image": "تصویر بھیجی"
   }
 }

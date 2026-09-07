@@ -319,7 +319,15 @@
     "saving": "සුරකිමින්...",
     "noNewMessages": "නව සංවාද නොවේ",
     "noNewMessagesDesc": "ඔබේ පවතින සංවාද තබාගන්න, නමුත් අලුත් කිසිවෙකුට ආරම්භ කළ නොහැක",
-    "dmNoNewHelp": "පවතින සංවාද දිගටම ක්‍රියා කරයි; අලුත් කිසිවෙකුට ආරම්භ කළ නොහැක"
+    "dmNoNewHelp": "පවතින සංවාද දිගටම ක්‍රියා කරයි; අලුත් කිසිවෙකුට ආරම්භ කළ නොහැක",
+    "chat": "චැට්",
+    "publicChatAlerts": "පොදු චැට්",
+    "publicChatAlertsDesc": "ඔබ වෙනත් ටැබ් එකක සිටින විට පොදු චැට් එකේ කතා කරන විට දැනුම් දෙන්න",
+    "publicChatAlertsOnDesc": "තදබද සහිත කාල පරිච්ඡේද එක් ඒකාබද්ධ ඇඟවීමක් ලෙස පැමිණේ",
+    "publicChatAlertsNeedsBrowser": "මේවා පැමිණීමට ඉහතින් බ්‍රව්සර් දැනුම්දීම් සක්‍රිය කරන්න",
+    "publicChatAlertsRate": "උපරිම වශයෙන්",
+    "publicChatAlertsRateOption": "පැයකට {{count}}",
+    "publicChatAlertsRateHint": "කාමරය මෙයට වඩා කාර්යබහුල වූ විට කිසිවක් අහිමි නොවේ - පණිවිඩ රඳවා තබා ඇති අතර ඊළඟ ඇඟවීමේදී එකට පැමිණේ."
   },
   "common": {
     "save": "සුරකින්න",
@@ -832,7 +840,8 @@
     "postRemoved": "ඔබේ පළ කිරීම ඉවත් කරන ලදි",
     "newNotification": "නව දැනුම්දීමක්",
     "oneOther": "තවත් 1 ක්",
-    "nOthers": "තවත් {{count}} ක්"
+    "nOthers": "තවත් {{count}} ක්",
+    "burstBody": "{{count}} නව දැනුම්දීම් {{who}} වෙතින්"
   },
   "leaderboard": {
     "title": "ශ්‍රේණිගත කිරීම",
@@ -4034,6 +4043,18 @@
     "dubbed": "ද්විත්ව ශ් ‍ රව් ‍ ය",
     "preparing": "DUBED ශ් ‍ රව් ‍ ය සූදානම් කරමින්...",
     "unavailable": "මෙම වීඩියෝව සඳහා ඩබ්බෙඩ් ඕඩියෝ නොමැත."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} සහ {{count}} අනෙකුත්",
+    "andOthers_other": "{{names}} සහ {{count}} අනෙකුත් අය",
+    "someone": "කෙනෙක්"
+  },
+  "publicChatAlerts": {
+    "title": "පොදු චැට්",
+    "mentionTitle": "පොදු චැට් එකේ සඳහන් කර ඇත",
+    "digest": "{{count}} නව පණිවිඩ {{who}} වෙතින්: {{message}}",
+    "voiceMessage": "හඬ පණිවිඩය",
+    "image": "පින්තූරයක් යවන ලදි"
   },
   "spaces": {
     "title": "අවකාශ",

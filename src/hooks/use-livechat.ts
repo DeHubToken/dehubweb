@@ -213,8 +213,14 @@ function cacheRoomMessages(roomId: string, msgs: SupabaseLiveChatMessage[]) {
   liveChatMessagesCache.set(roomId, msgs);
 }
 
-/** Normalize socket message to our format */
-function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChatMessage | null {
+/**
+ * Normalize socket message to our format.
+ *
+ * Exported because use-public-chat-alerts listens to the same socket to decide
+ * whether to interrupt the reader, and a second hand-rolled copy of this field
+ * salad would drift the first time the gateway renamed anything.
+ */
+export function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChatMessage | null {
   const m = msg as Record<string, unknown>;
   if (!m || typeof m !== 'object') return null;
   const id = String(m.id ?? m._id ?? '');

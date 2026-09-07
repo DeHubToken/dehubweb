@@ -212,6 +212,12 @@ export function useBrowserNotifications() {
    *   Without one, a delivered notification is inert — clicking it does not even
    *   raise the tab it came from, which reads as the notification being broken.
    *   The tab is focused first so the navigation happens somewhere visible.
+   * @param tag The OS-level identity of the card. Defaults to `id`, which is
+   *   right when the id is the thing being announced. Pass it separately for a
+   *   surface that keeps ONE standing card and rewrites it — public chat sends
+   *   a fresh id every time (so the once-only guard above lets it through) with
+   *   a fixed tag (so each digest replaces the last instead of stacking behind
+   *   it).
    */
   const showNotification = useCallback((
     title: string,
@@ -219,6 +225,7 @@ export function useBrowserNotifications() {
     icon?: string,
     id?: string,
     onClick?: () => void,
+    tag?: string,
   ) => {
     // Only show when tab is not focused, permission granted, and feature enabled
     if (!document.hidden) return;
@@ -234,7 +241,7 @@ export function useBrowserNotifications() {
       const notification = new Notification(title, {
         body,
         icon: icon || '/favicon.ico',
-        tag: id, // prevents duplicate OS-level notifications with same tag
+        tag: tag || id, // prevents duplicate OS-level notifications with same tag
       });
       if (id) shownRef.current.add(id);
 

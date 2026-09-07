@@ -319,7 +319,15 @@
     "saving": "Opslaan...",
     "noNewMessages": "Geen nieuwe gesprekken",
     "noNewMessagesDesc": "Houd je bestaande gesprekken, maar niemand nieuws kan er een starten",
-    "dmNoNewHelp": "Bestaande gesprekken blijven werken; niemand nieuws kan er een starten"
+    "dmNoNewHelp": "Bestaande gesprekken blijven werken; niemand nieuws kan er een starten",
+    "chat": "Chat",
+    "publicChatAlerts": "Openbare chat",
+    "publicChatAlertsDesc": "Krijg een melding wanneer de openbare chat actief is terwijl je in een ander tabblad bent",
+    "publicChatAlertsOnDesc": "Drukte wordt als één gecombineerde melding weergegeven",
+    "publicChatAlertsNeedsBrowser": "Schakel browsermeldingen hierboven in om deze te ontvangen",
+    "publicChatAlertsRate": "Maximaal",
+    "publicChatAlertsRateOption": "{{count}} per uur",
+    "publicChatAlertsRateHint": "Niets gaat verloren wanneer de kamer drukker is dan dit — de berichten worden bewaard en komen samen aan bij de volgende melding."
   },
   "common": {
     "save": "Opslaan",
@@ -1018,7 +1026,8 @@
     "postRemoved": "Je bericht is verwijderd",
     "newNotification": "Nieuwe melding",
     "oneOther": "1 andere",
-    "nOthers": "{{count}} anderen"
+    "nOthers": "{{count}} anderen",
+    "burstBody": "{{count}} nieuwe meldingen van {{who}}"
   },
   "leaderboard": {
     "title": "Ranglijsten",
@@ -4620,6 +4629,18 @@
     "dubbed": "Gesynchroniseerde audio",
     "preparing": "Voorbereiden van nagesynchroniseerde audio...",
     "unavailable": "Gesynchroniseerde audio is niet beschikbaar voor deze video."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} en {{count}} andere",
+    "andOthers_other": "{{names}} en {{count}} anderen",
+    "someone": "Iemand"
+  },
+  "publicChatAlerts": {
+    "title": "Openbare chat",
+    "mentionTitle": "Vermeld in openbare chat",
+    "digest": "{{count}} nieuwe berichten van {{who}}: {{message}}",
+    "voiceMessage": "Spraakbericht",
+    "image": "Een afbeelding verzonden"
   },
   "home": {
     "title": "Home",

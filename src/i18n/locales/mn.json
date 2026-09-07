@@ -319,7 +319,15 @@
     "saving": "Хадгалж байна...",
     "noNewMessages": "Шинэ харилцан яриа байхгүй",
     "noNewMessagesDesc": "Одоо байгаа харилцан яриагаа хадгална, гэхдээ шинэ хүн эхлүүлэх боломжгүй",
-    "dmNoNewHelp": "Одоо байгаа харилцан яриа үргэлжилнэ; шинэ хүн эхлүүлэх боломжгүй"
+    "dmNoNewHelp": "Одоо байгаа харилцан яриа үргэлжилнэ; шинэ хүн эхлүүлэх боломжгүй",
+    "chat": "Чат",
+    "publicChatAlerts": "Олон нийтийн чат",
+    "publicChatAlertsDesc": "Өөр таб дээр байхдаа олон нийтийн чат ярихад мэдэгдэл аваарай",
+    "publicChatAlertsOnDesc": "Амжилттай сунгах нь нэгдсэн сэрүүлэг болж ирдэг",
+    "publicChatAlertsNeedsBrowser": "Үүнийг авахын тулд дээрх хөтчийн мэдэгдлийг асаана уу",
+    "publicChatAlertsRate": "Хамгийн ихдээ",
+    "publicChatAlertsRateOption": "цагт {{count}}",
+    "publicChatAlertsRateHint": "Өрөө энэ цагаас илүү завгүй байвал юу ч алдагдахгүй — мессежүүд хадгалагдаж, дараагийн сэрүүлэгт хамт ирдэг."
   },
   "common": {
     "save": "Хадгалах",
@@ -819,7 +827,8 @@
     "postRemoved": "Таны нийтлэл устгагдлаа",
     "newNotification": "Шинэ мэдэгдэл",
     "oneOther": "1 бусад",
-    "nOthers": "{{count}} бусад"
+    "nOthers": "{{count}} бусад",
+    "burstBody": "{{count}} шинэ мэдэгдэл {{who}}-аас"
   },
   "leaderboard": {
     "title": "Тэргүүлэгчид",
@@ -2089,5 +2098,17 @@
     "dubbed": "ХАРИУЦЛАГА АУДИО",
     "preparing": "Аудио гэж нэрлэгдэхийг бэлтгэж байна...",
     "unavailable": "Энэ видеонд нэртэй аудио байхгүй байна."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} болон {{count}} бусад",
+    "andOthers_other": "{{names}} болон {{count}} бусад",
+    "someone": "Хэн нэгэн"
+  },
+  "publicChatAlerts": {
+    "title": "Олон нийтийн чат",
+    "mentionTitle": "Олон нийтийн чатад дурдагдсан",
+    "digest": "{{count}} шинэ мессеж {{who}}-аас: {{message}}",
+    "voiceMessage": "Дуут мессеж",
+    "image": "Зураг илгээсэн"
   }
 }

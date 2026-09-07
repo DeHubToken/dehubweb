@@ -319,7 +319,15 @@
     "saving": "در حال ذخیره...",
     "noNewMessages": "بدون گفت‌وگوی جدید",
     "noNewMessagesDesc": "گفت‌وگوهای موجودتان می‌ماند، اما کسی تازه نمی‌تواند گفت‌وگویی آغاز کند",
-    "dmNoNewHelp": "گفت‌وگوهای موجود ادامه می‌یابند؛ کسی تازه نمی‌تواند گفت‌وگویی آغاز کند"
+    "dmNoNewHelp": "گفت‌وگوهای موجود ادامه می‌یابند؛ کسی تازه نمی‌تواند گفت‌وگویی آغاز کند",
+    "chat": "چت",
+    "publicChatAlerts": "چت عمومی",
+    "publicChatAlertsDesc": "هنگامی که در تب دیگری هستید، از صحبت کردن چت عمومی مطلع شوید",
+    "publicChatAlertsOnDesc": "بخش‌های شلوغ به صورت یک هشدار ترکیبی می‌رسند",
+    "publicChatAlertsNeedsBrowser": "برای دریافت این موارد، اعلان‌های مرورگر را در بالا روشن کنید",
+    "publicChatAlertsRate": "حداکثر",
+    "publicChatAlertsRateOption": "{{count}} در ساعت",
+    "publicChatAlertsRateHint": "وقتی اتاق شلوغ‌تر از این باشد، هیچ چیز از دست نمی‌رود - پیام‌ها نگهداری می‌شوند و در هشدار بعدی با هم می‌رسند."
   },
   "common": {
     "save": "ذخیره",
@@ -820,7 +828,8 @@
     "postRemoved": "پست شما حذف شد",
     "newNotification": "اعلان جدید",
     "oneOther": "۱ نفر دیگر",
-    "nOthers": "{{count}} نفر دیگر"
+    "nOthers": "{{count}} نفر دیگر",
+    "burstBody": "{{count}} اعلان جدید از {{who}}"
   },
   "leaderboard": {
     "title": "جدول امتیازات",
@@ -4360,5 +4369,17 @@
     "dubbed": "صدای دوبله شده",
     "preparing": "در حال آماده‌سازی صدای دوبله…",
     "unavailable": "صدای دوبله برای این ویدیو موجود نیست."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} و {{count}} دیگر",
+    "andOthers_other": "{{names}} و {{count}} نفر دیگر",
+    "someone": "شخصی"
+  },
+  "publicChatAlerts": {
+    "title": "چت عمومی",
+    "mentionTitle": "در چت عمومی ذکر شده‌اید",
+    "digest": "{{count}} پیام جدید از {{who}}: {{message}}",
+    "voiceMessage": "پیام صوتی",
+    "image": "تصویری ارسال شد"
   }
 }

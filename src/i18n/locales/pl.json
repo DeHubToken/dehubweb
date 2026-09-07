@@ -319,7 +319,15 @@
     "saving": "Zapisywanie...",
     "noNewMessages": "Brak nowych rozmów",
     "noNewMessagesDesc": "Zachowaj istniejące rozmowy, ale nikt nowy nie może zacząć nowej",
-    "dmNoNewHelp": "Istniejące rozmowy nadal działają; nikt nowy nie może zacząć rozmowy"
+    "dmNoNewHelp": "Istniejące rozmowy nadal działają; nikt nowy nie może zacząć rozmowy",
+    "chat": "Czat",
+    "publicChatAlerts": "Czat publiczny",
+    "publicChatAlertsDesc": "Otrzymuj powiadomienia, gdy trwa czat publiczny, nawet gdy jesteś w innej karcie",
+    "publicChatAlertsOnDesc": "Intensywne okresy są zgłaszane jako jedno połączone powiadomienie",
+    "publicChatAlertsNeedsBrowser": "Włącz powyższe powiadomienia przeglądarki, aby je otrzymywać",
+    "publicChatAlertsRate": "Maksymalnie",
+    "publicChatAlertsRateOption": "{{count}} na godzinę",
+    "publicChatAlertsRateHint": "Nic nie ginie, gdy pokój jest bardziej ruchliwy niż ten — wiadomości są przechowywane i przychodzą razem w następnym powiadomieniu."
   },
   "common": {
     "save": "Zapisz",
@@ -821,7 +829,8 @@
     "postRemoved": "Twój post został usunięty",
     "newNotification": "Nowe powiadomienie",
     "oneOther": "1 inny",
-    "nOthers": "{{count}} innych"
+    "nOthers": "{{count}} innych",
+    "burstBody": "{{count}} nowych powiadomień od {{who}}"
   },
   "leaderboard": {
     "title": "Rankingi",
@@ -4420,6 +4429,18 @@
     "dubbed": "Dźwięk dubbingowany",
     "preparing": "Przygotowywanie dubbingowanego dźwięku…",
     "unavailable": "Dźwięk dubbingowany nie jest dostępny dla tego filmu."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} i {{count}} innych",
+    "andOthers_other": "{{names}} i {{count}} innych",
+    "someone": "Ktoś"
+  },
+  "publicChatAlerts": {
+    "title": "Czat publiczny",
+    "mentionTitle": "Wzmianka na czacie publicznym",
+    "digest": "{{count}} nowych wiadomości od {{who}}: {{message}}",
+    "voiceMessage": "Wiadomość głosowa",
+    "image": "Wysłano obrazek"
   },
   "glossary": {
     "title": "Słownik",

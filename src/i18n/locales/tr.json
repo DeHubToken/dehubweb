@@ -319,7 +319,15 @@
     "saving": "Kaydediliyor...",
     "noNewMessages": "Yeni sohbet yok",
     "noNewMessagesDesc": "Mevcut sohbetleriniz kalsın ama yeni kimse sohbet başlatamasın",
-    "dmNoNewHelp": "Mevcut sohbetler çalışmaya devam eder; yeni kimse sohbet başlatamaz"
+    "dmNoNewHelp": "Mevcut sohbetler çalışmaya devam eder; yeni kimse sohbet başlatamaz",
+    "chat": "Sohbet",
+    "publicChatAlerts": "Genel sohbet",
+    "publicChatAlertsDesc": "Başka bir sekmedeyken genel sohbetin konuştuğunu bildirin",
+    "publicChatAlertsOnDesc": "Yoğun anlar tek bir birleşik uyarı olarak gelir",
+    "publicChatAlertsNeedsBrowser": "Bunların gelmesi için yukarıdaki tarayıcı bildirimlerini açın",
+    "publicChatAlertsRate": "En fazla",
+    "publicChatAlertsRateOption": "Saatte {{count}}",
+    "publicChatAlertsRateHint": "Oda bundan daha yoğun olduğunda hiçbir şey kaybolmaz — mesajlar tutulur ve bir sonraki uyarıda birlikte gelir."
   },
   "common": {
     "save": "Kaydet",
@@ -821,7 +829,8 @@
     "postRemoved": "Gönderiniz kaldırıldı",
     "newNotification": "Yeni bildirim",
     "oneOther": "1 diğer kişi",
-    "nOthers": "{{count}} diğer kişi"
+    "nOthers": "{{count}} diğer kişi",
+    "burstBody": "{{count}} yeni bildirim {{who}}'dan"
   },
   "leaderboard": {
     "title": "Sıralama Tablosu",
@@ -4477,5 +4486,17 @@
       "feature_request": "Özellik önerisi",
       "other": "Diğer"
     }
+  },
+  "digest": {
+    "andOthers_one": "{{names}} ve {{count}} diğer",
+    "andOthers_other": "{{names}} ve {{count}} diğerleri",
+    "someone": "Biri"
+  },
+  "publicChatAlerts": {
+    "title": "Genel sohbet",
+    "mentionTitle": "Genel sohbette bahsedildi",
+    "digest": "{{count}} yeni mesaj {{who}}'dan: {{message}}",
+    "voiceMessage": "Sesli mesaj",
+    "image": "Bir resim gönderildi"
   }
 }

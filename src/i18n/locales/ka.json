@@ -319,7 +319,15 @@
     "saving": "ინახება...",
     "noNewMessages": "ახალი საუბრები არა",
     "noNewMessagesDesc": "შეინახეთ არსებული საუბრები, მაგრამ ახალი ვერავინ დაიწყებს",
-    "dmNoNewHelp": "არსებული საუბრები გრძელდება; ახალი ვერავინ დაიწყებს"
+    "dmNoNewHelp": "არსებული საუბრები გრძელდება; ახალი ვერავინ დაიწყებს",
+    "chat": "ჩეთი",
+    "publicChatAlerts": "საჯარო ჩეთი",
+    "publicChatAlertsDesc": "მიიღეთ შეტყობინება, როდესაც საჯარო ჩეთში საუბრობენ, სანამ სხვა ჩანართში ხართ",
+    "publicChatAlertsOnDesc": "დატვირთული პერიოდები მოდის, როგორც ერთი გაერთიანებული შეტყობინება",
+    "publicChatAlertsNeedsBrowser": "ჩართეთ ბრაუზერის შეტყობინებები ზემოთ, რომ ესენი მიიღოთ",
+    "publicChatAlertsRate": "ყველაზე მეტი",
+    "publicChatAlertsRateOption": "{{count}} საათში",
+    "publicChatAlertsRateHint": "არაფერი არ იკარგება, როდესაც ოთახი უფრო დატვირთულია, ვიდრე ეს — შეტყობინებები ინახება და მოდის შემდეგ შეტყობინებასთან ერთად."
   },
   "common": {
     "save": "შენახვა",
@@ -838,7 +846,8 @@
     "postRemoved": "თქვენი პოსტი წაიშალა",
     "newNotification": "ახალი შეტყობინება",
     "oneOther": "1 სხვა",
-    "nOthers": "{{count}} სხვა"
+    "nOthers": "{{count}} სხვა",
+    "burstBody": "{{count}} ახალი შეტყობინება {{who}}-ისგან"
   },
   "leaderboard": {
     "title": "რეიტინგი",
@@ -2123,6 +2132,18 @@
     "dubbed": "Გახმოვანებული აუდიო",
     "preparing": "Მიმდინარეობს გახმოვანებული აუდიოს მომზადება…",
     "unavailable": "Გახმოვანებული აუდიო ამ ვიდეოსთვის მიუწვდომელია."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} და {{count}} სხვა",
+    "andOthers_other": "{{names}} და {{count}} სხვები",
+    "someone": "ვიღაც"
+  },
+  "publicChatAlerts": {
+    "title": "საჯარო ჩეთი",
+    "mentionTitle": "მოხსენიებული საჯარო ჩეთში",
+    "digest": "{{count}} ახალი შეტყობინება {{who}}-ისგან: {{message}}",
+    "voiceMessage": "ხმოვანი შეტყობინება",
+    "image": "გაგზავნილი სურათი"
   },
   "spaces": {
     "title": "სივრცეები",

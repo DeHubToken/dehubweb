@@ -319,7 +319,15 @@
     "saving": "Išsaugoma...",
     "noNewMessages": "Jokių naujų pokalbių",
     "noNewMessagesDesc": "Išsaugokite esamus pokalbius, bet naujas žmogus pradėti negalės",
-    "dmNoNewHelp": "Esami pokalbiai veikia toliau; naujas žmogus pradėti negali"
+    "dmNoNewHelp": "Esami pokalbiai veikia toliau; naujas žmogus pradėti negali",
+    "chat": "Pokalbis",
+    "publicChatAlerts": "Viešas pokalbis",
+    "publicChatAlertsDesc": "Gaukite pranešimą, kai vyksta viešas pokalbis, kol esate kitoje kortelėje",
+    "publicChatAlertsOnDesc": "Užimti laikotarpiai ateina kaip vienas bendras įspėjimas",
+    "publicChatAlertsNeedsBrowser": "Įjunkite naršyklės pranešimus aukščiau, kad jie pasiektų",
+    "publicChatAlertsRate": "Ne daugiau kaip",
+    "publicChatAlertsRateOption": "{{count}} per valandą",
+    "publicChatAlertsRateHint": "Nieko neprarandama, kai kambarys yra užimtesnis nei šis – pranešimai saugomi ir ateina kartu su kitu įspėjimu."
   },
   "common": {
     "save": "Saugoti",
@@ -821,7 +829,8 @@
     "postRemoved": "Jūsų įrašas buvo pašalintas",
     "newNotification": "Naujas pranešimas",
     "oneOther": "1 kitas",
-    "nOthers": "{{count}} kitų"
+    "nOthers": "{{count}} kitų",
+    "burstBody": "{{count}} naujų pranešimų iš {{who}}"
   },
   "leaderboard": {
     "title": "Lyderių lentelė",
@@ -2113,5 +2122,17 @@
     "dubbed": "Dubliuotas garsas",
     "preparing": "Ruošiamas dubliuotas garsas...",
     "unavailable": "Šiam vaizdo įrašui dubliuotas garsas negalimas."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} ir {{count}} kiti",
+    "andOthers_other": "{{names}} ir {{count}} kiti",
+    "someone": "Kažkas"
+  },
+  "publicChatAlerts": {
+    "title": "Viešas pokalbis",
+    "mentionTitle": "Paminėtas viešame pokalbyje",
+    "digest": "{{count}} naujų pranešimų iš {{who}}: {{message}}",
+    "voiceMessage": "Balso pranešimas",
+    "image": "Nusiuntė vaizdą"
   }
 }

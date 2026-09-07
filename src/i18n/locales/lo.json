@@ -319,7 +319,15 @@
     "saving": "ກຳລັງບັນທຶກ...",
     "noNewMessages": "ບໍ່ຮັບການສົນທະນາໃໝ່",
     "noNewMessagesDesc": "ຮັກສາການສົນທະນາທີ່ມີຢູ່ໄວ້ ແຕ່ຄົນໃໝ່ເລີ່ມບໍ່ໄດ້",
-    "dmNoNewHelp": "ການສົນທະນາທີ່ມີຢູ່ຍັງໃຊ້ໄດ້; ຄົນໃໝ່ເລີ່ມບໍ່ໄດ້"
+    "dmNoNewHelp": "ການສົນທະນາທີ່ມີຢູ່ຍັງໃຊ້ໄດ້; ຄົນໃໝ່ເລີ່ມບໍ່ໄດ້",
+    "chat": "ສົນທະນາ",
+    "publicChatAlerts": "ສົນທະນາສາທາລະນະ",
+    "publicChatAlertsDesc": "ຮັບການແຈ້ງເຕືອນເມື່ອການສົນທະນາສາທາລະນະກຳລັງເວົ້າໃນຂະນະທີ່ທ່ານຢູ່ໃນແຖບອື່ນ",
+    "publicChatAlertsOnDesc": "ຊ່ວງເວລາທີ່ຫຍຸ້ງຈະມາຮອດເປັນການແຈ້ງເຕືອນລວມ",
+    "publicChatAlertsNeedsBrowser": "ເປີດການແຈ້ງເຕືອນຂອງຕົວທ່ອງເວັບຂ້າງເທິງເພື່ອໃຫ້ສິ່ງເຫຼົ່ານີ້ມາຮອດ",
+    "publicChatAlertsRate": "ຢ່າງຫຼາຍທີ່ສຸດ",
+    "publicChatAlertsRateOption": "{{count}} ຕໍ່ຊົ່ວໂມງ",
+    "publicChatAlertsRateHint": "ບໍ່ມີຫຍັງສູນເສຍໄປເມື່ອຫ້ອງມີຄວາມຫຍຸ້ງຫຼາຍກວ່າ ນີ້ — ຂໍ້ຄວາມຈະຖືກເກັບໄວ້ ແລະ ມາຮອດພ້ອມກັນໃນການແຈ້ງເຕືອນຄັ້ງຕໍ່ໄປ."
   },
   "common": {
     "save": "ບັນທຶກ",
@@ -819,7 +827,8 @@
     "postRemoved": "ໂພສຂອງທ່ານຖືກລຶບ",
     "newNotification": "ແຈ້ງເຕືອນໃໝ່",
     "oneOther": "1 ຄົນອື່ນ",
-    "nOthers": "{{count}} ຄົນອື່ນ"
+    "nOthers": "{{count}} ຄົນອື່ນ",
+    "burstBody": "ການແຈ້ງເຕືອນໃໝ່ {{count}} ຈາກ {{who}}"
   },
   "leaderboard": {
     "title": "ກະດານຄະແນນ",
@@ -2109,5 +2118,17 @@
     "dubbed": "ຊື່ສຽງ",
     "preparing": "ກຳລັງກະກຽມສຽງທີ່ຮອງຮັບ...",
     "unavailable": "Désolé, ວິດີໂອນີ້ບໍ່ສາມາດໃຊ້ໄດ້ອີກຕໍ່ໄປ."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} ແລະ {{count}} ອື່ນ",
+    "andOthers_other": "{{names}} ແລະ {{count}} ອື່ນໆ",
+    "someone": "ບາງຄົນ"
+  },
+  "publicChatAlerts": {
+    "title": "ສົນທະນາສາທາລະນະ",
+    "mentionTitle": "ຖືກກ່າວເຖິງໃນການສົນທະນາສາທາລະນະ",
+    "digest": "ຂໍ້ຄວາມໃໝ່ {{count}} ຈາກ {{who}}: {{message}}",
+    "voiceMessage": "ຂໍ້ຄວາມສຽງ",
+    "image": "ສົ່ງຮູບພາບ"
   }
 }

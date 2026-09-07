@@ -319,7 +319,15 @@
     "saving": "Duke ruajtur...",
     "noNewMessages": "Asnjë bisedë e re",
     "noNewMessagesDesc": "Ruaj bisedat ekzistuese, por askush i ri nuk mund të nisë një",
-    "dmNoNewHelp": "Bisedat ekzistuese vazhdojnë të punojnë; askush i ri nuk mund të nisë një"
+    "dmNoNewHelp": "Bisedat ekzistuese vazhdojnë të punojnë; askush i ri nuk mund të nisë një",
+    "chat": "Bisedë",
+    "publicChatAlerts": "Bisedë publike",
+    "publicChatAlertsDesc": "Merr njoftim kur biseda publike po flet ndërsa je në një skedë tjetër",
+    "publicChatAlertsOnDesc": "Periudhat e ngarkuara vijnë si një njoftim i vetëm",
+    "publicChatAlertsNeedsBrowser": "Aktivizo njoftimet e shfletuesit më sipër që këto të mbërrijnë",
+    "publicChatAlertsRate": "Maksimumi",
+    "publicChatAlertsRateOption": "{{count}} në orë",
+    "publicChatAlertsRateHint": "Asgjë nuk humbet kur dhoma është më e ngarkuar se kaq — mesazhet mbahen dhe mbërrijnë së bashku në njoftimin e radhës."
   },
   "common": {
     "save": "Ruaj",
@@ -821,7 +829,8 @@
     "postRemoved": "Postimi juaj u hoq",
     "newNotification": "Njoftim i ri",
     "oneOther": "1 tjetër",
-    "nOthers": "{{count}} të tjerë"
+    "nOthers": "{{count}} të tjerë",
+    "burstBody": "{{count}} njoftime të reja nga {{who}}"
   },
   "leaderboard": {
     "title": "Tabela e Liderëve",
@@ -2113,5 +2122,17 @@
     "dubbed": "Audio e quajtur",
     "preparing": "Duke përgatitur audion e quajtur...",
     "unavailable": "Audio e quajtur nuk është e disponueshme për këtë video."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} dhe {{count}} tjetër",
+    "andOthers_other": "{{names}} dhe {{count}} të tjerë",
+    "someone": "Dikush"
+  },
+  "publicChatAlerts": {
+    "title": "Bisedë publike",
+    "mentionTitle": "Të përmendur në bisedën publike",
+    "digest": "{{count}} mesazhe të reja nga {{who}}: {{message}}",
+    "voiceMessage": "Mesazh zanor",
+    "image": "Dërgoi një imazh"
   }
 }

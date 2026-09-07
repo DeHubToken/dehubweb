@@ -317,7 +317,15 @@
     "saving": "সংরক্ষণ হচ্ছে...",
     "noNewMessages": "নতুন কথোপকথন নয়",
     "noNewMessagesDesc": "আপনার চলমান কথোপকথন থাকবে, কিন্তু নতুন কেউ শুরু করতে পারবে না",
-    "dmNoNewHelp": "চলমান কথোপকথন চলতেই থাকবে; নতুন কেউ শুরু করতে পারবে না"
+    "dmNoNewHelp": "চলমান কথোপকথন চলতেই থাকবে; নতুন কেউ শুরু করতে পারবে না",
+    "chat": "চ্যাট",
+    "publicChatAlerts": "পাবলিক চ্যাট",
+    "publicChatAlertsDesc": "অন্য ট্যাবে থাকাকালীন পাবলিক চ্যাট কথা বলছে তা জানুন",
+    "publicChatAlertsOnDesc": "ব্যস্ততার সময় একটি সম্মিলিত সতর্কতা হিসাবে আসে",
+    "publicChatAlertsNeedsBrowser": "এগুলি পেতে উপরে ব্রাউজার বিজ্ঞপ্তিগুলি চালু করুন",
+    "publicChatAlertsRate": "সর্বোচ্চ",
+    "publicChatAlertsRateOption": "প্রতি ঘন্টায় {{count}}",
+    "publicChatAlertsRateHint": "রুম ব্যস্ত থাকলে কিছুই হারাবে না — বার্তাগুলি ধরে রাখা হয় এবং পরবর্তী সতর্কতায় একসাথে আসে।"
   },
   "common": {
     "save": "সংরক্ষণ",
@@ -799,7 +807,8 @@
     "postRemoved": "আপনার পোস্ট সরানো হয়েছে",
     "newNotification": "নতুন বিজ্ঞপ্তি",
     "oneOther": "১ জন অন্য",
-    "nOthers": "{{count}} জন অন্য"
+    "nOthers": "{{count}} জন অন্য",
+    "burstBody": "{{count}} টি নতুন বিজ্ঞপ্তি {{who}} থেকে"
   },
   "leaderboard": {
     "title": "লিডারবোর্ড",
@@ -4190,5 +4199,17 @@
     "dubbed": "ডাব করা অডিও",
     "preparing": "ডাব করা অডিও প্রস্তুত করা হচ্ছে...",
     "unavailable": "এই ভিডিওর জন্য ডাব করা অডিও উপলভ্য নয় ।"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} এবং {{count}} জন অন্য",
+    "andOthers_other": "{{names}} এবং {{count}} জন অন্যেরা",
+    "someone": "কেউ"
+  },
+  "publicChatAlerts": {
+    "title": "পাবলিক চ্যাট",
+    "mentionTitle": "পাবলিক চ্যাটে উল্লেখ করা হয়েছে",
+    "digest": "{{count}} টি নতুন বার্তা {{who}} থেকে: {{message}}",
+    "voiceMessage": "ভয়েস মেসেজ",
+    "image": "একটি ছবি পাঠানো হয়েছে"
   }
 }
