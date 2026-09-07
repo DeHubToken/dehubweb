@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Toy izao ny endriky ny fampandrenesan'ny DeHub.",
     "browserNotificationsTabOnlyDesc": "Amin'ny, fa raha mbola misokatra amin'ny tabilao ny DeHub",
     "browserNotificationsTabOnlyTitle": "Tsy hanaiky ny fampilazana afara ity mpitety ity",
-    "browserNotificationsTabOnlyHint": "DeHub dia nangataka ny hisoratra anarana noho ny fanosehana ary ny navigateur dia nandà, noho izany dia tsy afaka mahatratra anao ny fampandrenesana raha mbola misokatra ao anaty tabilao i DeHub. Manadio azy matetika ny famerenana ny fitaovanao.",
+    "browserNotificationsTabOnlyHint": "Ny fampandrenesana dia afaka manatona anao raha mbola misokatra ao anaty tabilao ny DeHub: tsy nety nisoratra anarana ny fanosehana ny navigateur. Izany dia matetika ny rafitra fanakanana ny fampandrenesana ny navigateur, noho izany dia tadiavo ny navigateur ao amin'ny fikirakirana ny fampandrenesana ny rafitra ary esory izany ary miverina.",
     "activity": "Hetsika",
     "likes": "Tia",
     "likesDesc": "Rehefa misy olona tia ny lahatsoratrao",

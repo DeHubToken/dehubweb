@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Tältä DeHubin ilmoitus näyttää.",
     "browserNotificationsTabOnlyDesc": "Päällä, mutta vain, kun DeHub on avoinna välilehdellä",
     "browserNotificationsTabOnlyTitle": "Tämä selain ei hyväksy taustailmoituksia",
-    "browserNotificationsTabOnlyHint": "DeHub pyysi rekisteröitymään push-palveluun, mutta selaimesi hylkäsi pyynnön, joten ilmoitukset voivat tavoittaa sinut vain, kun DeHub on avoinna välilehdellä. Selaimen käynnistäminen uudelleen tyhjentää sen yleensä.",
+    "browserNotificationsTabOnlyHint": "Ilmoitukset voivat tavoittaa sinut vain, kun DeHub on avoinna välilehdellä: selaimesi kieltäytyi rekisteröitymästä taustapainallukseen. Tämä on yleensä käyttöjärjestelmä, joka estää ilmoitukset itse selaimelle, joten etsi selaimesi järjestelmäilmoitusasetuksista ja kytke se pois päältä ja takaisin päälle.",
     "activity": "Toiminta",
     "likes": "Tykkäykset",
     "likesDesc": "Kun joku tykkää julkaisuistasi",

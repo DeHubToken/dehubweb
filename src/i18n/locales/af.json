@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Só lyk 'n DeHub-kennisgewing.",
     "browserNotificationsTabOnlyDesc": "Op, maar net terwyl DeHub is oop in 'n oortjie",
     "browserNotificationsTabOnlyTitle": "Hierdie blaaier sal nie agtergrondkennisgewings aanvaar nie",
-    "browserNotificationsTabOnlyHint": "DeHub het gevra om vir stoot te registreer en u blaaier het geweier, sodat kennisgewings u slegs kan bereik terwyl DeHub in 'n oortjie oop is. As u u blaaier weer begin, maak dit dit gewoonlik skoon.",
+    "browserNotificationsTabOnlyHint": "Kennisgewings kan jou net bereik terwyl DeHub in 'n oortjie oop is: jou blaaier het geweier om te registreer vir agtergronddruk. Dit is gewoonlik die bedryfstelsel blokkeer kennisgewings vir die leser self, so vind jou leser in jou stelsel kennisgewing instellings en skakel dit af en terug op.",
     "activity": "Aktiwiteit",
     "likes": "Laaiks",
     "likesDesc": "Wanneer iemand van jou plasings hou",

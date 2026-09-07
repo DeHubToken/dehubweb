@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "DeHub 嘞通知就长这样。",
     "browserNotificationsTabOnlyDesc": "开启，但仅限于DeHub在标签页中打开时",
     "browserNotificationsTabOnlyTitle": "此浏览器不支持后台通知",
-    "browserNotificationsTabOnlyHint": "DeHub 请求注册推送，但您的浏览器拒绝了，因此通知只能在 DeHub 打开的标签页中送达。重启浏览器通常可以解决此问题。",
+    "browserNotificationsTabOnlyHint": "通知只能在 DeHub 打开标签页时才能收到：您的浏览器拒绝注册后台推送。这通常是操作系统阻止了浏览器本身的通知，因此请在系统通知设置中找到您的浏览器，将其关闭后再重新打开。",
     "activity": "活动",
     "likes": "喜欢",
     "likesDesc": "有人喜欢你的帖子时",

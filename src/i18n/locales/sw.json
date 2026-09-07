@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Hivi ndivyo arifa ya DeHub inavyoonekana.",
     "browserNotificationsTabOnlyDesc": "Imewashwa, lakini tu wakati DeHub imefunguliwa kwenye kichupo",
     "browserNotificationsTabOnlyTitle": "Kivinjari hiki hakitakubali arifa za uhalifu",
-    "browserNotificationsTabOnlyHint": "DeHub iliomba kujisajili kwa programu ya simu na kivinjari chako kilikataa, kwa hivyo arifa zinaweza kukufikia tu wakati DeHub iko wazi kwenye kichupo. Kuanzisha upya kivinjari chako kwa kawaida huiondoa.",
+    "browserNotificationsTabOnlyHint": "Arifa zinaweza kukufikia tu wakati DeHub imefunguliwa kwenye kichupo: kivinjari chako kilikataa kujisajili kwa programu ya usuli. Kwa kawaida hiyo ni arifa za mfumo wa uendeshaji zinazozuia kivinjari chenyewe, kwa hivyo tafuta kivinjari chako katika mipangilio ya arifa ya mfumo wako kisha uizime na uiwashe tena.",
     "activity": "Shughuli",
     "likes": "Kupenda",
     "likesDesc": "Mtu anapopenda machapisho yako",

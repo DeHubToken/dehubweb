@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "So sieht eine DeHub-Benachrichtigung aus.",
     "browserNotificationsTabOnlyDesc": "Ein, aber nur, wenn DeHub in einem Tab geöffnet ist",
     "browserNotificationsTabOnlyTitle": "Dieser Browser akzeptiert keine Hintergrundbenachrichtigungen",
-    "browserNotificationsTabOnlyHint": "DeHub hat darum gebeten, sich für Push zu registrieren, und Ihr Browser hat dies abgelehnt, sodass Benachrichtigungen nur dann an Sie gesendet werden können, wenn DeHub in einem Tab geöffnet ist. Wenn Sie Ihren Browser neu starten, wird er normalerweise gelöscht.",
+    "browserNotificationsTabOnlyHint": "Benachrichtigungen können Sie nur erreichen, wenn DeHub in einem Tab geöffnet ist: Ihr Browser hat sich geweigert, sich für einen Hintergrund-Push zu registrieren. Das ist in der Regel das Betriebssystem, das Benachrichtigungen für den Browser selbst blockiert. Suchen Sie Ihren Browser also in Ihren Systembenachrichtigungseinstellungen und schalten Sie ihn aus und wieder ein.",
     "activity": "Aktivität",
     "likes": "Gefällt mir",
     "likesDesc": "Wenn jemand deine Beiträge liked",

@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Ganito ang hitsura ng abiso ng DeHub.",
     "browserNotificationsTabOnlyDesc": "Sa, ngunit lamang habang DeHub ay bukas sa isang tab",
     "browserNotificationsTabOnlyTitle": "Hindi tatanggapin ng browser na ito ang mga notification sa background",
-    "browserNotificationsTabOnlyHint": "Hiniling ng DeHub na magparehistro para sa push at tumanggi ang iyong browser, kaya maaabot ka lang ng mga notipikasyon habang bukas ang DeHub sa isang tab. Karaniwang ina - clear ito ng pag - restart ng iyong browser.",
+    "browserNotificationsTabOnlyHint": "Makakaabot ka lang ng mga notipikasyon habang bukas ang DeHub sa isang tab: tumangging magparehistro ang iyong browser para sa background push. Karaniwang iyon ang mga abiso sa pag - block ng operating system para sa browser mismo, kaya hanapin ang iyong browser sa mga setting ng abiso ng iyong system at i - off at i - back on ito.",
     "activity": "Aktibidad",
     "likes": "Mga Like",
     "likesDesc": "Kapag may nag-like sa mga post mo",

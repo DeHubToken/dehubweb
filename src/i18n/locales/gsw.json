@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "So gseht e DeHub-Benachrichtigung us.",
     "browserNotificationsTabOnlyDesc": "Uf, aber nur, solang DeHub i dim Tab uf isch",
     "browserNotificationsTabOnlyTitle": "Dä Browser akzeptiert kei Hintergrund-Notifikatione",
-    "browserNotificationsTabOnlyHint": "DeHub het gfroget, sich für Push z'registriere und din Browser het das verbote, drum chönd Benachrichtigune dich nur erreiche, solang DeHub i dim Tab offe isch. Wenn de Browser neu starte, löst das meistens s'Problem.",
+    "browserNotificationsTabOnlyHint": "Notifikationen chönd dich nur erreiche, solangs DeHub i dim Browser uf isch. Din Browser het sich nöd chönne für Hintergrund-Push-Nachrichte registriere. Das isch meistens s'Betriebssystem wo Notifikationen für de Browser selber blockiert. Drum sueche dini Browser i dim System-Notifikations-Stellige und schalt es us und wieder a.",
     "activity": "Aktivität",
     "likes": "Gfäut-mir",
     "likesDesc": "Wenn öpper dini Biträg liket",

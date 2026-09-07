@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "DeHub bildirishnomasi mana shunday ko'rinadi.",
     "browserNotificationsTabOnlyDesc": "Yoqilgan, lekin faqat DeHub yorliqda ochiq bo&#39;lganda",
     "browserNotificationsTabOnlyTitle": "Bu brauzer fon bildirishnomalarini qabul qilmaydi",
-    "browserNotificationsTabOnlyHint": "DeHub push-ga ro&#39;yxatdan o&#39;tishni so&#39;radi, ammo brauzeringiz rad etdi, shuning uchun bildirishnomalar faqat DeHub yorliqda ochiq bo&#39;lganda sizga yetib borishi mumkin. Brauzeringizni qayta ishga tushirish odatda muammoni hal qiladi.",
+    "browserNotificationsTabOnlyHint": "Bildirishnomalar sizga faqat DeHub yorlig&#39;ida ochiq bo&#39;lganda yetib borishi mumkin: brauzeringiz fonda push-up uchun ro&#39;yxatdan o&#39;tishdan bosh tortdi. Odatda bu operatsion tizimning brauzerning o&#39;zi uchun bildirishnomalarni bloklashidir, shuning uchun brauzeringizni tizim bildirishnoma sozlamalarida toping va uni o&#39;chirib yoqing.",
     "activity": "Faoliyat",
     "likes": "Yoqtirishlar",
     "likesDesc": "Kimdir postingizni yoqtirganida",

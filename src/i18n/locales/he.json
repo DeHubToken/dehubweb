@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "כך נראית התראה של DeHub.",
     "browserNotificationsTabOnlyDesc": "מופעל, אבל רק בזמן ש - DeHub פתוח בכרטיסייה",
     "browserNotificationsTabOnlyTitle": "דפדפן זה לא יקבל התראות רקע",
-    "browserNotificationsTabOnlyHint": "DeHub ביקש להירשם לדחיפה והדפדפן שלך סירב, כך שהודעות יכולות להגיע אליך רק כאשר DeHub פתוח בכרטיסייה. הפעלה מחדש של הדפדפן בדרך כלל מנקה אותו.",
+    "browserNotificationsTabOnlyHint": "התראות יכולות להגיע אליכם רק בזמן ש - DeHub פתוח בכרטיסייה: הדפדפן שלכם סירב להירשם לדחיפת רקע. זוהי בדרך כלל מערכת ההפעלה החוסמת התראות עבור הדפדפן עצמו, לכן מצא את הדפדפן שלך בהגדרות ההתראות של המערכת וכבה אותו והפעל אותו מחדש.",
     "activity": "פעילות",
     "likes": "לייקים",
     "likesDesc": "כשמישהו אוהב את הפוסטים שלך",

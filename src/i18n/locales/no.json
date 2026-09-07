@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Slik ser et DeHub-varsel ut.",
     "browserNotificationsTabOnlyDesc": "På, men bare mens DeHub er åpen i en fane",
     "browserNotificationsTabOnlyTitle": "Denne nettleseren godtar ikke bakgrunnsvarsler",
-    "browserNotificationsTabOnlyHint": "DeHub ba om å registrere deg for push, men nettleseren din nektet. Varsler kan derfor bare nå deg mens DeHub er åpen i en fane. Hvis du starter nettleseren på nytt, slettes det vanligvis.",
+    "browserNotificationsTabOnlyHint": "Varsler kan bare nå deg mens DeHub er åpen i en fane: nettleseren din nektet å registrere seg for bakgrunns-push. Det er vanligvis operativsystemet som blokkerer varsler for selve nettleseren, så finn nettleseren din i systemvarslingsinnstillingene og slå den av og på igjen.",
     "activity": "Aktivitet",
     "likes": "Liker",
     "likesDesc": "Når noen liker innleggene dine",

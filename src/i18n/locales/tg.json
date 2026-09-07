@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Огоҳиномаи DeHub ана ҳамин тавр менамояд.",
     "browserNotificationsTabOnlyDesc": "On, but only when DeHub is open in a tab",
     "browserNotificationsTabOnlyTitle": "Ang browser na ito ay hindi makatanggap ng mga abiso ng",
-    "browserNotificationsTabOnlyHint": "Ang DeHub ay naghiling upang magrehistro para sa push at ang iyong browser na hindi napahintulot, kaya maaaring makakuha ng mga abiso lamang habang ang DeHub a Одатан аз нав оғоз кардани браузери шумо онро тоза мекунад.",
+    "browserNotificationsTabOnlyHint": "Ang mga abiso ay maaaring makakatanggap lamang habang ang DeHub ay buksan sa isang tab: ang iyong browser na hindi nagrehistro para sa paglipat ng background. Ин аст, ки одатан системаи оператсионӣ блок огоҳинома барои браузери худ, Пас пайдо браузери худро дар танзимоти огоҳинома системаи шумо ва хомӯш ва бозгашт.",
     "activity": "Фаъолият",
     "likes": "Писандҳо",
     "likesDesc": "Вақте ки касе нашри шуморо писанд мекунад",

@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Tak wygląda powiadomienie z DeHub.",
     "browserNotificationsTabOnlyDesc": "Włączone, ale tylko wtedy, gdy DeHub jest otwarty w karcie",
     "browserNotificationsTabOnlyTitle": "Ta przeglądarka nie akceptuje powiadomień w tle",
-    "browserNotificationsTabOnlyHint": "DeHub poprosił o rejestrację na push, a Twoja przeglądarka odmówiła, więc powiadomienia mogą do Ciebie dotrzeć tylko wtedy, gdy DeHub jest otwarty na karcie. Ponowne uruchomienie przeglądarki zwykle ją czyści.",
+    "browserNotificationsTabOnlyHint": "Powiadomienia mogą do Ciebie dotrzeć tylko wtedy, gdy DeHub jest otwarty na karcie: Twoja przeglądarka odmówiła rejestracji w celu wysłania powiadomienia w tle. Zwykle jest to system operacyjny blokujący powiadomienia dla samej przeglądarki, więc znajdź przeglądarkę w ustawieniach powiadomień systemowych i wyłącz ją i włącz ponownie.",
     "activity": "Aktywność",
     "likes": "Polubienia",
     "likesDesc": "Gdy ktoś polubi Twoje posty",
