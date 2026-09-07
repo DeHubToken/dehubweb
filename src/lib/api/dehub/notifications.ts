@@ -69,6 +69,18 @@ export interface DeHubNotification {
   actor?: DeHubUser;
   post?: DeHubNFT;
   /**
+   * The comment this row is about — the new one for `comment`/`comment_reply`,
+   * the liked one for `comment_like`, the one you were named in for `mention`.
+   * Already rode through `normalizeNotification`'s spread; declaring it is what
+   * lets the row link to the comment rather than to the post it is buried in.
+   * On an aggregated row it is whichever comment opened the group.
+   */
+  commentId?: number;
+  /** First 150 characters of that comment. */
+  commentPreview?: string;
+  /** For a reply, the comment it answers. */
+  parentCommentId?: number;
+  /**
    * Which reaction produced a `like` notification. Absent when the actors in an
    * aggregated row disagree (render it as a generic "reacted to"), and on rows
    * written before multi-reaction shipped (render them as a plain like).
@@ -119,6 +131,9 @@ interface RawNotification {
   reaction?: PostReaction;
   amount?: number;
   currency?: string;
+  commentId?: number;
+  commentPreview?: string;
+  parentCommentId?: number;
   metadata?: NotificationMetadata;
 }
 

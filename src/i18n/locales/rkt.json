@@ -1464,6 +1464,7 @@
     "searchDehubFor": "DeHub-ত \"{{query}}\" খোঁজেন"
   },
   "comments": {
+    "showAll": "সোগ্লা মন্তব্য দেখান",
     "discardTitle": "তোমার মন্তব্য বাদ দিবেন?",
     "discardBody": "এইটা খসড়া হিসাবে জমা আছে, ফিরি আসলে এটেই পাইবেন।",
     "keepWriting": "লেখা চালাইয়া যান",

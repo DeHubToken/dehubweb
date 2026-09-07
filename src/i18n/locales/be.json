@@ -1322,6 +1322,7 @@
     "searchDehubFor": "Шукаць «{{query}}» у DeHub"
   },
   "comments": {
+    "showAll": "Усе каментарыі",
     "discardTitle": "Адкінуць каментарый?",
     "discardBody": "Ён захаваны як чарнавік і будзе тут, калі вы вернецеся.",
     "keepWriting": "Працягнуць пісаць",

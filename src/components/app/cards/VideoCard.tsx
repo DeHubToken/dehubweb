@@ -596,7 +596,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [showAIChat, setShowAIChat] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
-  useAutoOpenComments(setShowComments);
+  useAutoOpenComments(setShowComments, video.id);
   const [showBountyDrawer, setShowBountyDrawer] = useState(false);
   const [showPPVDrawer, setShowPPVDrawer] = useState(false);
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
