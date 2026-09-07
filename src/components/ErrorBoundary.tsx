@@ -15,7 +15,7 @@
 import { Component, type ReactNode, type ErrorInfo } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { isChunkLoadError, shouldReloadForChunkError } from '@/lib/lazy-with-retry';
+import { isChunkLoadError, recoverFromChunkError } from '@/lib/lazy-with-retry';
 import assistantAvatar from '@/assets/ai-assistant-avatar.png';
 
 /**
@@ -96,12 +96,14 @@ interface ErrorBoundaryState {
   error: Error | null;
   /** Last `resetKey` we reconciled against (for auto-recovery on change). */
   lastResetKey: unknown;
+  /** A chunk-failure reload is in flight; render nothing until it lands. */
+  recovering: boolean;
 }
 
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false, error: null, lastResetKey: props.resetKey };
+    this.state = { hasError: false, error: null, lastResetKey: props.resetKey, recovering: false };
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
@@ -114,7 +116,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   ): Partial<ErrorBoundaryState> | null {
     // Auto-recover when the reset key (route) changes.
     if (props.resetKey !== state.lastResetKey) {
-      return { hasError: false, error: null, lastResetKey: props.resetKey };
+      return { hasError: false, error: null, lastResetKey: props.resetKey, recovering: false };
     }
     return null;
   }
@@ -122,12 +124,20 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
 
-    // Auto-reload on chunk load failures (stale deploys). Detection and the
-    // reload cooldown are shared with lazyWithRetry and main.tsx's
-    // vite:preloadError handler — see lib/lazy-with-retry.
-    if (isChunkLoadError(error) && shouldReloadForChunkError()) {
-      window.location.reload();
-      return;
+    // Auto-recover from chunk load failures (stale deploys) rather than showing
+    // a crash screen: reload, and if that already failed once, purge the caches
+    // and service worker and reload again. Detection and the recovery ladder are
+    // shared with lazyWithRetry and main.tsx's vite:preloadError handler — see
+    // lib/lazy-with-retry.
+    if (isChunkLoadError(error)) {
+      if (recoverFromChunkError() === 'reloading') {
+        // render() draws nothing while the navigation lands, so the user sees a
+        // blank beat rather than "Something went wrong" followed by a reload.
+        this.setState({ recovering: true });
+        return;
+      }
+      // Recovery is spent and it is still broken — report it and let the
+      // fallback through, because the reload is demonstrably not the answer.
     }
 
     reportError(error, errorInfo, this.props.label);
@@ -143,6 +153,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   };
 
   render(): ReactNode {
+    // A reload is already on its way; anything drawn here would flash and vanish.
+    if (this.state.recovering) return null;
+
     if (this.state.hasError) {
       if (this.props.fallback) {
         return this.props.fallback;
