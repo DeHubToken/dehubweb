@@ -319,7 +319,15 @@
     "saving": "በማስቀመጥ ላይ...",
     "noNewMessages": "አዲስ ውይይቶች የሉም",
     "noNewMessagesDesc": "ነባር ውይይቶችዎን ይያዙ፣ ግን ማንም አዲስ ሰው መጀመር አይችልም",
-    "dmNoNewHelp": "ነባር ውይይቶች መስራታቸውን ይቀጥላሉ፤ ማንም አዲስ ሰው መጀመር አይችልም"
+    "dmNoNewHelp": "ነባር ውይይቶች መስራታቸውን ይቀጥላሉ፤ ማንም አዲስ ሰው መጀመር አይችልም",
+    "chat": "ቻት",
+    "publicChatAlerts": "የህዝብ ቻት",
+    "publicChatAlertsDesc": "በሌላ ትር ውስጥ እያሉ የህዝብ ቻት ሲናገር ያሳውቅዎታል",
+    "publicChatAlertsOnDesc": "ስራ የበዛባቸው ጊዜያት እንደ አንድ የጋራ ማስጠንቀቂያ ይመጣሉ",
+    "publicChatAlertsNeedsBrowser": "እነዚህ እንዲመጡ ከላይ የብሮውዘር ማሳወቂያዎችን ያብሩ",
+    "publicChatAlertsRate": "በጣም",
+    "publicChatAlertsRateOption": "በሰዓት {{count}}",
+    "publicChatAlertsRateHint": "ክፍሉ ከዚህ የበለጠ ስራ ሲበዛበት ምንም ነገር አይጠፋም — መልዕክቶች ተይዘው በሚቀጥለው ማስጠንቀቂያ አብረው ይመጣሉ።"
   },
   "common": {
     "save": "አስቀምጥ",
@@ -820,7 +828,8 @@
     "postRemoved": "ልጥፍህ ተወግዷል",
     "newNotification": "አዲስ ማሳወቂያ",
     "oneOther": "1 ሌላ",
-    "nOthers": "{{count}} ሌሎች"
+    "nOthers": "{{count}} ሌሎች",
+    "burstBody": "{{count}} አዲስ ማሳወቂያዎች ከ {{who}}"
   },
   "leaderboard": {
     "title": "ደረጃ ሰሌዳዎች",
@@ -2120,5 +2129,17 @@
     "dubbed": "የተነደፈ ኦዲዮ",
     "preparing": "የተሰየመ ኦዲዮ ማዘጋጀት…",
     "unavailable": "በዚህ ቪዲዮ ላይ የተነደፈ ኦዲዮ አይገኝም ።"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} እና {{count}} ሌሎች",
+    "andOthers_other": "{{names}} እና {{count}} ሌሎች",
+    "someone": "አንድ ሰው"
+  },
+  "publicChatAlerts": {
+    "title": "የህዝብ ቻት",
+    "mentionTitle": "በህዝብ ቻት ውስጥ ተጠቅሷል",
+    "digest": "{{count}} አዲስ መልዕክቶች ከ {{who}}: {{message}}",
+    "voiceMessage": "የድምፅ መልዕክት",
+    "image": "ምስል ላከ"
   }
 }

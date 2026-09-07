@@ -319,7 +319,15 @@
     "saving": "Menyimpan...",
     "noNewMessages": "Tidak ada percakapan baru",
     "noNewMessagesDesc": "Simpan percakapan yang ada, tetapi tidak ada orang baru yang bisa memulai",
-    "dmNoNewHelp": "Percakapan yang ada tetap berjalan; tidak ada orang baru yang bisa memulai"
+    "dmNoNewHelp": "Percakapan yang ada tetap berjalan; tidak ada orang baru yang bisa memulai",
+    "chat": "Obrolan",
+    "publicChatAlerts": "Obrolan publik",
+    "publicChatAlertsDesc": "Diberi tahu saat obrolan publik sedang berbicara saat Anda berada di tab lain",
+    "publicChatAlertsOnDesc": "Rentetan sibuk tiba sebagai satu peringatan gabungan",
+    "publicChatAlertsNeedsBrowser": "Nyalakan notifikasi browser di atas agar ini tiba",
+    "publicChatAlertsRate": "Paling banyak",
+    "publicChatAlertsRateOption": "{{count}} per jam",
+    "publicChatAlertsRateHint": "Tidak ada yang hilang saat ruangan lebih sibuk dari ini — pesan ditahan dan tiba bersamaan pada peringatan berikutnya."
   },
   "common": {
     "save": "Simpan",
@@ -821,7 +829,8 @@
     "postRemoved": "Postingan Anda telah dihapus",
     "newNotification": "Notifikasi baru",
     "oneOther": "1 lainnya",
-    "nOthers": "{{count}} lainnya"
+    "nOthers": "{{count}} lainnya",
+    "burstBody": "{{count}} notifikasi baru dari {{who}}"
   },
   "leaderboard": {
     "title": "Papan Peringkat",
@@ -4477,5 +4486,17 @@
       "feature_request": "Usulan fitur",
       "other": "Lainnya"
     }
+  },
+  "digest": {
+    "andOthers_one": "{{names}} dan {{count}} lainnya",
+    "andOthers_other": "{{names}} dan {{count}} lainnya",
+    "someone": "Seseorang"
+  },
+  "publicChatAlerts": {
+    "title": "Obrolan publik",
+    "mentionTitle": "Disebutkan di obrolan publik",
+    "digest": "{{count}} pesan baru dari {{who}}: {{message}}",
+    "voiceMessage": "Pesan suara",
+    "image": "Mengirim gambar"
   }
 }

@@ -318,7 +318,15 @@
     "saving": "Mentés...",
     "noNewMessages": "Nincs új beszélgetés",
     "noNewMessagesDesc": "Tartsd meg a meglévő beszélgetéseidet, de új ember ne indíthasson egyet sem",
-    "dmNoNewHelp": "A meglévő beszélgetések működnek tovább; új ember nem indíthat egyet sem"
+    "dmNoNewHelp": "A meglévő beszélgetések működnek tovább; új ember nem indíthat egyet sem",
+    "chat": "Csevegés",
+    "publicChatAlerts": "Nyilvános csevegés",
+    "publicChatAlertsDesc": "Értesülj, ha a nyilvános csevegésben beszélnek, miközben más lapon vagy",
+    "publicChatAlertsOnDesc": "A forgalmas időszakok egyetlen, összevont figyelmeztetésként érkeznek",
+    "publicChatAlertsNeedsBrowser": "Kapcsold be a böngészőértesítéseket fent, hogy ezek megérkezzenek",
+    "publicChatAlertsRate": "Legfeljebb",
+    "publicChatAlertsRateOption": "{{count}} óránként",
+    "publicChatAlertsRateHint": "Semmi sem vész el, amikor a szoba forgalmasabb ennél – az üzenetek tárolódnak, és a következő figyelmeztetéskor együtt érkeznek meg."
   },
   "common": {
     "save": "Mentés",
@@ -811,7 +819,8 @@
     "postRemoved": "Bejegyzése eltávolításra került",
     "newNotification": "Új értesítés",
     "oneOther": "1 másik",
-    "nOthers": "{{count}} másik"
+    "nOthers": "{{count}} másik",
+    "burstBody": "{{count}} új értesítés innen: {{who}}"
   },
   "leaderboard": {
     "title": "Ranglista",
@@ -4361,5 +4370,17 @@
     "dubbed": "Szinkronizált hang",
     "preparing": "Szinkronizált hang előkészítése…",
     "unavailable": "Ehhez a videóhoz nem áll rendelkezésre szinkronizált hang."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} és még {{count}}",
+    "andOthers_other": "{{names}} és még {{count}}",
+    "someone": "Valaki"
+  },
+  "publicChatAlerts": {
+    "title": "Nyilvános csevegés",
+    "mentionTitle": "Megemlítve a nyilvános csevegésben",
+    "digest": "{{count}} új üzenet innen: {{who}}: {{message}}",
+    "voiceMessage": "Hangüzenet",
+    "image": "Képet küldött"
   }
 }

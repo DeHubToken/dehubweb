@@ -317,7 +317,15 @@
     "saving": "సేవ్ అవుతోంది...",
     "noNewMessages": "కొత్త సంభాషణలు వద్దు",
     "noNewMessagesDesc": "మీ ఉన్న సంభాషణలు ఉంచుకోండి, కానీ కొత్తవారు ఎవరూ మొదలుపెట్టలేరు",
-    "dmNoNewHelp": "ఉన్న సంభాషణలు కొనసాగుతాయి; కొత్తవారు ఎవరూ మొదలుపెట్టలేరు"
+    "dmNoNewHelp": "ఉన్న సంభాషణలు కొనసాగుతాయి; కొత్తవారు ఎవరూ మొదలుపెట్టలేరు",
+    "chat": "చాట్",
+    "publicChatAlerts": "పబ్లిక్ చాట్",
+    "publicChatAlertsDesc": "మీరు వేరే ట్యాబ్‌లో ఉన్నప్పుడు పబ్లిక్ చాట్ మాట్లాడుతున్నప్పుడు మీకు తెలియజేయండి",
+    "publicChatAlertsOnDesc": "బిజీగా ఉన్నప్పుడు ఒకే అలర్ట్‌గా వస్తాయి",
+    "publicChatAlertsNeedsBrowser": "ఇవి రావడానికి పైన బ్రౌజర్ నోటిఫికేషన్‌లను ఆన్ చేయండి",
+    "publicChatAlertsRate": "గరిష్టంగా",
+    "publicChatAlertsRateOption": "గంటకు {{count}}",
+    "publicChatAlertsRateHint": "గది దీనికంటే బిజీగా ఉన్నప్పుడు ఏమీ కోల్పోదు — సందేశాలు నిలిపివేయబడతాయి మరియు తదుపరి అలర్ట్‌లో కలిసి వస్తాయి."
   },
   "common": {
     "save": "సేవ్",
@@ -817,7 +825,8 @@
     "postRemoved": "మీ పోస్ట్ తొలగించబడింది",
     "newNotification": "కొత్త నోటిఫికేషన్",
     "oneOther": "1 ఇతరుడు",
-    "nOthers": "{{count}} ఇతరులు"
+    "nOthers": "{{count}} ఇతరులు",
+    "burstBody": "{{count}} కొత్త నోటిఫికేషన్‌లు {{who}} నుండి"
   },
   "leaderboard": {
     "title": "లీడర్‌బోర్డ్",
@@ -4281,5 +4290,17 @@
     "dubbed": "డబ్ చేసిన ఆడియో",
     "preparing": "డబ్బింగ్ ఆడియోను సిద్ధం చేస్తోంది...",
     "unavailable": "ఈ వీడియో కోసం డబ్ చేసిన ఆడియో అందుబాటులో లేదు."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} మరియు {{count}} ఇతరులు",
+    "andOthers_other": "{{names}} మరియు {{count}} ఇతరులు",
+    "someone": "ఎవరైనా"
+  },
+  "publicChatAlerts": {
+    "title": "పబ్లిక్ చాట్",
+    "mentionTitle": "పబ్లిక్ చాట్‌లో ప్రస్తావించబడింది",
+    "digest": "{{count}} కొత్త సందేశాలు {{who}} నుండి: {{message}}",
+    "voiceMessage": "వాయిస్ మెసేజ్",
+    "image": "చిత్రాన్ని పంపారు"
   }
 }

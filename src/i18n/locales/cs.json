@@ -318,7 +318,15 @@
     "saving": "Ukládá se...",
     "noNewMessages": "Žádné nové konverzace",
     "noNewMessagesDesc": "Ponech si stávající konverzace, ale nikdo nový nezačne novou",
-    "dmNoNewHelp": "Existující konverzace fungují dál; nikdo nový nemůže začít novou"
+    "dmNoNewHelp": "Existující konverzace fungují dál; nikdo nový nemůže začít novou",
+    "chat": "Chat",
+    "publicChatAlerts": "Veřejný chat",
+    "publicChatAlertsDesc": "Dostávejte upozornění, když někdo píše ve veřejném chatu, i když jste v jiné záložce",
+    "publicChatAlertsOnDesc": "Rušná období přicházejí jako jedno souhrnné upozornění",
+    "publicChatAlertsNeedsBrowser": "Zapněte si výše oznámení prohlížeče, aby vám tato upozornění chodila",
+    "publicChatAlertsRate": "Nejvýše",
+    "publicChatAlertsRateOption": "{{count}} za hodinu",
+    "publicChatAlertsRateHint": "Nic se neztratí, když je místnost rušnější než toto – zprávy se podrží a dorazí společně s dalším upozorněním."
   },
   "common": {
     "save": "Uložit",
@@ -811,7 +819,8 @@
     "postRemoved": "Váš příspěvek byl odstraněn",
     "newNotification": "Nové oznámení",
     "oneOther": "1 další",
-    "nOthers": "{{count}} dalších"
+    "nOthers": "{{count}} dalších",
+    "burstBody": "{{count}} nových oznámení od {{who}}"
   },
   "leaderboard": {
     "title": "Žebříček",
@@ -4362,5 +4371,17 @@
     "dubbed": "Dabovaný zvuk",
     "preparing": "Připravuje se dabovaný zvuk...",
     "unavailable": "Pro toto video není k dispozici dabovaný zvuk."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} a {{count}} další",
+    "andOthers_other": "{{names}} a {{count}} dalších",
+    "someone": "Někdo"
+  },
+  "publicChatAlerts": {
+    "title": "Veřejný chat",
+    "mentionTitle": "Zmíněno ve veřejném chatu",
+    "digest": "{{count}} nových zpráv od {{who}}: {{message}}",
+    "voiceMessage": "Hlasová zpráva",
+    "image": "Odeslal obrázek"
   }
 }

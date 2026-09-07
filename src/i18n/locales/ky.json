@@ -319,7 +319,15 @@
     "saving": "Сакталууда...",
     "noNewMessages": "Жаңы сүйлөшүү жок",
     "noNewMessagesDesc": "Учурдагы сүйлөшүүлөрүңүздү сактаңыз, бирок жаңы адам башталта албайт",
-    "dmNoNewHelp": "Учурдагы сүйлөшүүлөр иштей берет; жаңы адам башталта албайт"
+    "dmNoNewHelp": "Учурдагы сүйлөшүүлөр иштей берет; жаңы адам башталта албайт",
+    "chat": "Чат",
+    "publicChatAlerts": "Коомдук чат",
+    "publicChatAlertsDesc": "Башка өтмөктө турганда коомдук чат сүйлөп жатканда билдирүү алыңыз",
+    "publicChatAlertsOnDesc": "Бош эмес учурлар бирдиктүү эскертүү катары келет",
+    "publicChatAlertsNeedsBrowser": "Аларды алуу үчүн жогорудагы браузер эскертүүлөрүн күйгүзүңүз",
+    "publicChatAlertsRate": "Эң көп дегенде",
+    "publicChatAlertsRateOption": "саатына {{count}}",
+    "publicChatAlertsRateHint": "Бөлмө мындан бош эмес болгондо эч нерсе жоголбойт — билдирүүлөр сакталып, кийинки эскертүүдө бирге келет."
   },
   "common": {
     "save": "Сактоо",
@@ -821,7 +829,8 @@
     "postRemoved": "Жазууңуз алынып салынды",
     "newNotification": "Жаңы билдирүү",
     "oneOther": "1 башка",
-    "nOthers": "{{count}} башка"
+    "nOthers": "{{count}} башка",
+    "burstBody": "{{count}} жаңы эскертүүлөр {{who}} дан"
   },
   "leaderboard": {
     "title": "Рейтинг",
@@ -2113,5 +2122,17 @@
     "dubbed": "Дубляждалган аудио",
     "preparing": "Дубликатталган аудиону даярдоодо…",
     "unavailable": "Дубляждалган аудио бул видео үчүн жеткиликтүү эмес."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} жана {{count}} башка",
+    "andOthers_other": "{{names}} жана {{count}} башкалар",
+    "someone": "Кимдир бирөө"
+  },
+  "publicChatAlerts": {
+    "title": "Коомдук чат",
+    "mentionTitle": "Коомдук чатта белгиленди",
+    "digest": "{{count}} жаңы билдирүүлөр {{who}} дан: {{message}}",
+    "voiceMessage": "Үн билдирүүсү",
+    "image": "Сүрөт жөнөттү"
   }
 }

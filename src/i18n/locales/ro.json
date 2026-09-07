@@ -319,7 +319,15 @@
     "saving": "Se salvează...",
     "noNewMessages": "Fără conversații noi",
     "noNewMessagesDesc": "Păstrează conversațiile existente, dar nimeni nou nu poate începe una",
-    "dmNoNewHelp": "Conversațiile existente merg mai departe; nimeni nou nu poate începe una"
+    "dmNoNewHelp": "Conversațiile existente merg mai departe; nimeni nou nu poate începe una",
+    "chat": "Chat",
+    "publicChatAlerts": "Chat public",
+    "publicChatAlertsDesc": "Primești notificări când chatul public vorbește, chiar dacă ești pe altă filă",
+    "publicChatAlertsOnDesc": "Perioadele aglomerate sosesc ca o singură alertă combinată",
+    "publicChatAlertsNeedsBrowser": "Activează notificările browserului de mai sus pentru ca acestea să sosească",
+    "publicChatAlertsRate": "La cel mult",
+    "publicChatAlertsRateOption": "{{count}} pe oră",
+    "publicChatAlertsRateHint": "Nimic nu se pierde când camera este mai aglomerată decât atât — mesajele sunt reținute și sosesc împreună la următoarea alertă."
   },
   "common": {
     "save": "Salvează",
@@ -821,7 +829,8 @@
     "postRemoved": "Postarea ta a fost eliminată",
     "newNotification": "Notificare nouă",
     "oneOther": "încă 1 persoană",
-    "nOthers": "alte {{count}} persoane"
+    "nOthers": "alte {{count}} persoane",
+    "burstBody": "{{count}} notificări noi de la {{who}}"
   },
   "leaderboard": {
     "title": "Clasamente",
@@ -4233,6 +4242,18 @@
     "dubbed": "Sunet dublat",
     "preparing": "Se pregătește sunetul dublat...",
     "unavailable": "Sunetul dublat nu este disponibil pentru acest videoclip."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} și încă {{count}}",
+    "andOthers_other": "{{names}} și încă {{count}}",
+    "someone": "Cineva"
+  },
+  "publicChatAlerts": {
+    "title": "Chat public",
+    "mentionTitle": "Menționat în chatul public",
+    "digest": "{{count}} mesaje noi de la {{who}}: {{message}}",
+    "voiceMessage": "Mesaj vocal",
+    "image": "A trimis o imagine"
   },
   "footer": {
     "about": "Despre noi",

@@ -319,7 +319,15 @@
     "saving": "Desant...",
     "noNewMessages": "Cap conversa nova",
     "noNewMessagesDesc": "Conserva els teus fils existents, però ningú de nou en pot començar cap",
-    "dmNoNewHelp": "Els fils existents continuen funcionant; ningú de nou en pot començar cap"
+    "dmNoNewHelp": "Els fils existents continuen funcionant; ningú de nou en pot començar cap",
+    "chat": "Xat",
+    "publicChatAlerts": "Xat públic",
+    "publicChatAlertsDesc": "Rebeu un avís quan el xat públic estigui parlant mentre esteu en una altra pestanya",
+    "publicChatAlertsOnDesc": "Els períodes intensos arriben com una alerta combinada",
+    "publicChatAlertsNeedsBrowser": "Activeu les notificacions del navegador a dalt perquè arribin",
+    "publicChatAlertsRate": "Com a màxim",
+    "publicChatAlertsRateOption": "{{count}} per hora",
+    "publicChatAlertsRateHint": "No es perd res quan la sala està més ocupada que això: els missatges es retenen i arriben junts a la propera alerta."
   },
   "common": {
     "save": "Desar",
@@ -812,7 +820,8 @@
     "postRemoved": "La teva publicació ha estat eliminada",
     "newNotification": "Nova notificació",
     "oneOther": "1 altre",
-    "nOthers": "{{count}} altres"
+    "nOthers": "{{count}} altres",
+    "burstBody": "{{count}} notificacions noves de {{who}}"
   },
   "leaderboard": {
     "title": "Classificació",
@@ -4358,5 +4367,17 @@
     "dubbed": "Àudio doblat",
     "preparing": "S'està preparant l'àudio doblat...",
     "unavailable": "L'àudio doblat no està disponible per a aquest vídeo."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} i {{count}} més",
+    "andOthers_other": "{{names}} i {{count}} més",
+    "someone": "Algú"
+  },
+  "publicChatAlerts": {
+    "title": "Xat públic",
+    "mentionTitle": "Mencionat al xat públic",
+    "digest": "{{count}} missatges nous de {{who}}: {{message}}",
+    "voiceMessage": "Missatge de veu",
+    "image": "Ha enviat una imatge"
   }
 }

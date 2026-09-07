@@ -22,6 +22,16 @@ import { sanitiseGroups, useFollowGroupList, writeGroups } from '@/lib/follow-gr
 import { DEFAULT_AD_LOAD, normaliseAdLoad, useAdLoad, writeAdLoad } from '@/lib/ad-load';
 import { useSkipSegments, writeSkipSegments } from '@/lib/skip-segments';
 import { useVideoGlitch, writeVideoGlitch } from '@/lib/video-glitch';
+import {
+  PUBLIC_CHAT_ALERTS_PREF_KEY,
+  PUBLIC_CHAT_DEFAULT_PER_HOUR,
+  PUBLIC_CHAT_RATE_PREF_KEY,
+  normalisePerHour,
+  usePublicChatAlertsEnabled,
+  usePublicChatAlertsPerHour,
+  writePublicChatAlerts,
+  writePublicChatPerHour,
+} from '@/lib/public-chat-alerts';
 
 const PREF_KEY = 'videoChannelSpeeds';
 const GROUPS_KEY = 'followGroups';
@@ -71,11 +81,37 @@ function useVideoGlitchSync() {
   useSyncedPreference(VIDEO_GLITCH_KEY, videoGlitch, apply, false);
 }
 
+/**
+ * Public chat alerts: the switch and the hourly ceiling under it. Two keys
+ * because they are two decisions — someone who turns the room back on should
+ * get the limit they picked last time, not the default.
+ */
+function usePublicChatAlertsSync() {
+  const enabled = usePublicChatAlertsEnabled();
+  const perHour = usePublicChatAlertsPerHour();
+
+  const applyEnabled = useCallback((value: unknown) => {
+    writePublicChatAlerts(value === true || value === 'true');
+  }, []);
+  useSyncedPreference(PUBLIC_CHAT_ALERTS_PREF_KEY, enabled, applyEnabled, false);
+
+  const applyRate = useCallback((value: unknown) => {
+    writePublicChatPerHour(normalisePerHour(value));
+  }, []);
+  useSyncedPreference(
+    PUBLIC_CHAT_RATE_PREF_KEY,
+    perHour,
+    applyRate,
+    PUBLIC_CHAT_DEFAULT_PER_HOUR,
+  );
+}
+
 export function ViewingPreferencesSync() {
   useFollowGroupSync();
   useAdLoadSync();
   useSkipSegmentsSync();
   useVideoGlitchSync();
+  usePublicChatAlertsSync();
   const [rates, setRates] = useState<Record<string, number>>(() => getCreatorPlaybackRates());
 
   // What the server last handed us. A server-applied map re-fires the same

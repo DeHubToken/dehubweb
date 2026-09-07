@@ -316,7 +316,15 @@
     "saving": "بچل جا رہل ہے...",
     "noNewMessages": "کوئی نیا بات چیت نہیں",
     "noNewMessagesDesc": "تہار پرانا دھاگا رکھو، پر کوئی نیا شروع نہیں کر سکی",
-    "dmNoNewHelp": "پرانا دھاگا چلتے رہی؛ کوئی نیا شروع نہیں کر سکی"
+    "dmNoNewHelp": "پرانا دھاگا چلتے رہی؛ کوئی نیا شروع نہیں کر سکی",
+    "chat": "Chat",
+    "publicChatAlerts": "Public chat",
+    "publicChatAlertsDesc": "دہلیہ کے وقت جب عوامی چیٹ بات کر رہی ہو جب آپ کسی دوسرے ٹیب میں ہوں",
+    "publicChatAlertsOnDesc": "Busy stretches arrive as one combined alert",
+    "publicChatAlertsNeedsBrowser": "ان کے آنے کے لیے اوپر براؤزر کی اطلاعات کو آن کریں",
+    "publicChatAlertsRate": "At most",
+    "publicChatAlertsRateOption": "{{count}} an hour",
+    "publicChatAlertsRateHint": "جب کمرہ اس سے زیادہ مصروف ہو تو کچھ بھی ضائع نہیں ہوتا — پیغامات رکھے جاتے ہیں اور اگلی الرٹ پر ایک ساتھ آتے ہیں۔"
   },
   "common": {
     "save": "محفوظ کرو",
@@ -2072,6 +2080,18 @@
     "dubbed": "Dubbed audio",
     "preparing": "Dabbed audio tayar kar rahey hain…",
     "unavailable": "ई वीडियो खातिर डबेड ऑडियो उपलब्ध नइखे।"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} اور {{count}} دوسرے",
+    "andOthers_other": "{{names}} اور {{count}} دوسرے",
+    "someone": "Someone"
+  },
+  "publicChatAlerts": {
+    "title": "Public chat",
+    "mentionTitle": "عوامی چیٹ میں ذکر کیا گیا",
+    "digest": "{{who}} سے {{count}} نئے پیغامات: {{message}}",
+    "voiceMessage": "Voice message",
+    "image": "Sent an image"
   },
   "post": {
     "like": "پسند",

@@ -319,7 +319,15 @@
     "saving": "सेव हो रहल हे...",
     "noNewMessages": "कोनो नया बातचीत नै",
     "noNewMessagesDesc": "अपन पुरनका बातचीत रखूँ, मुदा कोनो नया आदमी शुरू नै क' सक' हे",
-    "dmNoNewHelp": "पुरनका बातचीत चल' रहतै; कोनो नया आदमी शुरू नै क' सक' हे"
+    "dmNoNewHelp": "पुरनका बातचीत चल' रहतै; कोनो नया आदमी शुरू नै क' सक' हे",
+    "chat": "चैट",
+    "publicChatAlerts": "सार्वजनिक चैट",
+    "publicChatAlertsDesc": "जब आप दूसरे टैब में हों तो सार्वजनिक चैट के बारे में बताया जाए",
+    "publicChatAlertsOnDesc": "व्यस्तता एक साथ एक अलर्ट के रूप में आएगी",
+    "publicChatAlertsNeedsBrowser": "इनके आने के लिए ऊपर ब्राउज़र सूचनाएं चालू करें",
+    "publicChatAlertsRate": "अधिकतम",
+    "publicChatAlertsRateOption": "{{count}} प्रति घंटा",
+    "publicChatAlertsRateHint": "जब कमरा इससे अधिक व्यस्त हो तो कुछ भी खोता नहीं है - संदेश रखे जाते हैं और अगले अलर्ट पर एक साथ आते हैं।"
   },
   "common": {
     "save": "सेव",
@@ -821,7 +829,8 @@
     "postRemoved": "तोहर पोस्ट हटावल गेल",
     "newNotification": "नया सूचना",
     "oneOther": "१ अउर",
-    "nOthers": "{{count}} अउर"
+    "nOthers": "{{count}} अउर",
+    "burstBody": "{{count}} नई सूचनाएं {{who}} से"
   },
   "leaderboard": {
     "title": "लीडरबोर्ड",
@@ -2112,5 +2121,17 @@
     "dubbed": "डबल होलोग्राफिक ऑडियो",
     "preparing": "डुप्लिकेट के साथ, उदाहरण के लिए, डेटा कैप्चर करें...",
     "unavailable": "येई मामला में, समाधान सूचीबद्ध ना कैल जा सकई छलो ।"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} और {{count}} अन्य",
+    "andOthers_other": "{{names}} और {{count}} अन्य",
+    "someone": "कोई"
+  },
+  "publicChatAlerts": {
+    "title": "सार्वजनिक चैट",
+    "mentionTitle": "सार्वजनिक चैट में उल्लेख किया गया",
+    "digest": "{{count}} नए संदेश {{who}} से: {{message}}",
+    "voiceMessage": "वॉयस मैसेज",
+    "image": "एक छवि भेजी"
   }
 }

@@ -319,7 +319,15 @@
     "saving": "Yadda saxlanılır...",
     "noNewMessages": "Yeni söhbət yoxdur",
     "noNewMessagesDesc": "Mövcud söhbətlərinizi saxlayın, amma yeni heç kim başlaya bilməsin",
-    "dmNoNewHelp": "Mövcud söhbətlər işləməyə davam edir; yeni heç kim başlaya bilmir"
+    "dmNoNewHelp": "Mövcud söhbətlər işləməyə davam edir; yeni heç kim başlaya bilmir",
+    "chat": "Söhbət",
+    "publicChatAlerts": "İctimai söhbət",
+    "publicChatAlertsDesc": "Başqa sekmedeyken ictimai söhbətin danışdığını bildirin",
+    "publicChatAlertsOnDesc": "Meşğul vaxtlar vahid bir bildiriş kimi gəlir",
+    "publicChatAlertsNeedsBrowser": "Bunların gəlməsi üçün yuxarıdakı brauzer bildirişlərini yandırın",
+    "publicChatAlertsRate": "Ən çox",
+    "publicChatAlertsRateOption": "Saatda {{count}}",
+    "publicChatAlertsRateHint": "Otaq bundan daha məşğul olduqda heç nə itirilmir — mesajlar saxlanılır və növbəti bildirişdə birlikdə gəlir."
   },
   "common": {
     "save": "Saxla",
@@ -812,7 +820,8 @@
     "postRemoved": "Paylaşımınız silindi",
     "newNotification": "Yeni bildiriş",
     "oneOther": "1 başqası",
-    "nOthers": "{{count}} başqası"
+    "nOthers": "{{count}} başqası",
+    "burstBody": "{{count}} yeni bildiriş {{who}}-dan"
   },
   "leaderboard": {
     "title": "Lider Lövhəsi",
@@ -4322,5 +4331,17 @@
     "dubbed": "Dublyaj edilmiş səs",
     "preparing": "Dublyaj səsi hazırlanır...",
     "unavailable": "Bu video üçün quraşdırılmış səs mövcud deyil."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} və {{count}} digər",
+    "andOthers_other": "{{names}} və {{count}} digərləri",
+    "someone": "Kimsə"
+  },
+  "publicChatAlerts": {
+    "title": "İctimai söhbət",
+    "mentionTitle": "İctimai söhbətdə adı çəkildi",
+    "digest": "{{count}} yeni mesaj {{who}}-dan: {{message}}",
+    "voiceMessage": "Səsli mesaj",
+    "image": "Şəkil göndərildi"
   }
 }

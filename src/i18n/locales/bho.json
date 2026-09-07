@@ -319,7 +319,15 @@
     "saving": "सहेजत बा...",
     "noNewMessages": "कवनो नया बातचीत नइखे",
     "noNewMessagesDesc": "आपन मौजूदा बातचीत राखीं, बाकिर कवनो नया आदमी नया शुरू ना कर सके",
-    "dmNoNewHelp": "मौजूदा बातचीत चलत रही; कवनो नया आदमी नया शुरू ना कर सके"
+    "dmNoNewHelp": "मौजूदा बातचीत चलत रही; कवनो नया आदमी नया शुरू ना कर सके",
+    "chat": "चैट",
+    "publicChatAlerts": "सार्वजनिक चैट",
+    "publicChatAlertsDesc": "जब आप किसी दूसरे टैब में हों तो सार्वजनिक चैट के बारे में बताएं",
+    "publicChatAlertsOnDesc": "व्यस्तता एक साथ अलर्ट के रूप में आती है",
+    "publicChatAlertsNeedsBrowser": "इनके आने के लिए ऊपर ब्राउज़र सूचनाएं चालू करें",
+    "publicChatAlertsRate": "अधिकतम",
+    "publicChatAlertsRateOption": "{{count}} प्रति घंटा",
+    "publicChatAlertsRateHint": "जब कमरा इससे व्यस्त होता है तो कुछ भी खोता नहीं है - संदेश रखे जाते हैं और अगले अलर्ट पर एक साथ आते हैं।"
   },
   "common": {
     "save": "सहेजीं",
@@ -820,7 +828,8 @@
     "postRemoved": "रउआ पोस्ट हटा दिहल गइल",
     "newNotification": "नया सूचना",
     "oneOther": "1 और",
-    "nOthers": "{{count}} और"
+    "nOthers": "{{count}} और",
+    "burstBody": "{{count}} नई सूचनाएं {{who}} से"
   },
   "leaderboard": {
     "title": "लीडरबोर्ड",
@@ -2088,5 +2097,17 @@
     "dubbed": "ऑडियो समायोजित करें",
     "preparing": "डबल ऑडियो समायोजित करें...",
     "unavailable": "अस्थिर ऑडियो फ़ाइल देखी नहीं जा सकती"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} और {{count}} अन्य",
+    "andOthers_other": "{{names}} और {{count}} अन्य",
+    "someone": "कोई"
+  },
+  "publicChatAlerts": {
+    "title": "सार्वजनिक चैट",
+    "mentionTitle": "सार्वजनिक चैट में उल्लेख किया गया",
+    "digest": "{{count}} नए संदेश {{who}} से: {{message}}",
+    "voiceMessage": "वॉयस मैसेज",
+    "image": "एक छवि भेजी"
   }
 }

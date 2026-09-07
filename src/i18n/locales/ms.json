@@ -319,7 +319,15 @@
     "saving": "Menyimpan...",
     "noNewMessages": "Tiada perbualan baharu",
     "noNewMessagesDesc": "Kekalkan perbualan sedia ada, tetapi tiada orang baharu boleh memulakannya",
-    "dmNoNewHelp": "Perbualan sedia ada terus berfungsi; tiada orang baharu boleh memulakannya"
+    "dmNoNewHelp": "Perbualan sedia ada terus berfungsi; tiada orang baharu boleh memulakannya",
+    "chat": "Sembang",
+    "publicChatAlerts": "Sembang awam",
+    "publicChatAlertsDesc": "Diberitahu apabila sembang awam sedang berbual semasa anda berada di tab lain",
+    "publicChatAlertsOnDesc": "Regangan sibuk tiba sebagai satu makluman gabungan",
+    "publicChatAlertsNeedsBrowser": "Hidupkan pemberitahuan penyemak imbas di atas agar ini tiba",
+    "publicChatAlertsRate": "Paling banyak",
+    "publicChatAlertsRateOption": "{{count}} sejam",
+    "publicChatAlertsRateHint": "Tiada yang hilang apabila bilik lebih sibuk daripada ini — mesej disimpan dan tiba bersama pada makluman seterusnya."
   },
   "common": {
     "save": "Simpan",
@@ -1089,7 +1097,8 @@
     "postRemoved": "Hantaran anda telah dibuang",
     "newNotification": "Pemberitahuan baharu",
     "oneOther": "1 yang lain",
-    "nOthers": "{{count}} yang lain"
+    "nOthers": "{{count}} yang lain",
+    "burstBody": "{{count}} pemberitahuan baharu daripada {{who}}"
   },
   "leaderboard": {
     "title": "Papan Pendahulu",
@@ -4684,5 +4693,17 @@
     "dubbed": "Audio bergelar",
     "preparing": "Menyediakan audio yang digelar...",
     "unavailable": "Audio bergelar tidak tersedia untuk video ini."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} dan {{count}} yang lain",
+    "andOthers_other": "{{names}} dan {{count}} yang lain",
+    "someone": "Seseorang"
+  },
+  "publicChatAlerts": {
+    "title": "Sembang awam",
+    "mentionTitle": "Disebut dalam sembang awam",
+    "digest": "{{count}} mesej baharu daripada {{who}}: {{message}}",
+    "voiceMessage": "Mesej suara",
+    "image": "Menghantar imej"
   }
 }

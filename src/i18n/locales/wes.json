@@ -319,7 +319,15 @@
     "saving": "I di save...",
     "noNewMessages": "No nyu conversation dei",
     "noNewMessagesDesc": "Keep yua thread dem weh dei ya, bot nobody nyu no fit start wan",
-    "dmNoNewHelp": "Thread dem weh dei ya go keep di work; nobody nyu no fit start wan"
+    "dmNoNewHelp": "Thread dem weh dei ya go keep di work; nobody nyu no fit start wan",
+    "chat": "Chat",
+    "publicChatAlerts": "Public chat",
+    "publicChatAlertsDesc": "Make dem tell you when public chat dey talk when you dey for another tab",
+    "publicChatAlertsOnDesc": "Busy times come as one alert",
+    "publicChatAlertsNeedsBrowser": "Turn on browser notifications above for dis one to come",
+    "publicChatAlertsRate": "At most",
+    "publicChatAlertsRateOption": "{{count}} for one hour",
+    "publicChatAlertsRateHint": "Nothing dey lost when the room dey busy pass dis — the messages dey hold and come together for the next alert."
   },
   "common": {
     "save": "Save am",
@@ -2072,5 +2080,16 @@
     "dubbed": "Audio wey dem dub",
     "preparing": "Prepare audio wey dem go dub…",
     "unavailable": "Dubbed audio no dey for this video."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} and {{count}} oda pipo",
+    "andOthers_other": "{{names}} and {{count}} oda pipo",
+    "someone": "Someone"
+  },
+  "publicChatAlerts": {
+    "title": "Public chat",
+    "mentionTitle": "Mentioned for public chat",
+    "voiceMessage": "Voice message",
+    "image": "Send picture"
   }
 }

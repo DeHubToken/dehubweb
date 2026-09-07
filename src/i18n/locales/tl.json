@@ -319,7 +319,15 @@
     "saving": "Sini-save...",
     "noNewMessages": "Walang bagong usapan",
     "noNewMessagesDesc": "Panatilihin ang mga umiiral mong usapan, pero walang bagong makakasimula",
-    "dmNoNewHelp": "Patuloy ang mga umiiral na usapan; walang bagong makakasimula"
+    "dmNoNewHelp": "Patuloy ang mga umiiral na usapan; walang bagong makakasimula",
+    "chat": "Chat",
+    "publicChatAlerts": "Pampublikong chat",
+    "publicChatAlertsDesc": "Malaman kung kailan nagsasalita ang pampublikong chat habang nasa ibang tab ka",
+    "publicChatAlertsOnDesc": "Ang mga abalang sandali ay dumarating bilang isang pinagsamang alerto",
+    "publicChatAlertsNeedsBrowser": "I-on ang mga notipikasyon sa browser sa itaas para dumating ang mga ito",
+    "publicChatAlertsRate": "Sa pinakamarami",
+    "publicChatAlertsRateOption": "{{count}} kada oras",
+    "publicChatAlertsRateHint": "Walang nawawala kapag mas abala ang silid kaysa dito — ang mga mensahe ay itinatabi at dumarating nang magkakasama sa susunod na alerto."
   },
   "common": {
     "save": "I-save",
@@ -868,7 +876,8 @@
     "postRemoved": "Inalis ang post mo",
     "newNotification": "Bagong abiso",
     "oneOther": "1 pa",
-    "nOthers": "{{count}} pa"
+    "nOthers": "{{count}} pa",
+    "burstBody": "{{count}} bagong notipikasyon mula sa {{who}}"
   },
   "leaderboard": {
     "title": "Leaderboard",
@@ -4234,6 +4243,18 @@
     "dubbed": "Audio na may Dubbed",
     "preparing": "Inihahanda ang tinaguriang audio...",
     "unavailable": "Hindi available ang Dubbed audio para sa video na ito."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} at {{count}} iba pa",
+    "andOthers_other": "{{names}} at {{count}} iba pa",
+    "someone": "May isang tao"
+  },
+  "publicChatAlerts": {
+    "title": "Pampublikong chat",
+    "mentionTitle": "Binanggit sa pampublikong chat",
+    "digest": "{{count}} bagong mensahe mula sa {{who}}: {{message}}",
+    "voiceMessage": "Voice message",
+    "image": "Nagpadala ng larawan"
   },
   "walletSelector": {
     "title": "Piliin ang Wallet",

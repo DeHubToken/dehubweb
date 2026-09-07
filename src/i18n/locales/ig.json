@@ -319,7 +319,15 @@
     "saving": "Na-echekwa...",
     "noNewMessages": "Enweghị mkparịta ụka ọhụrụ",
     "noNewMessagesDesc": "Debe mmalite gị gara aga, mana ọ dịghị onye ọhụrụ nwere ike ịmalite otu",
-    "dmNoNewHelp": "Ndị mmalite gara aga ka na-arụ ọrụ; ọ dịghị onye ọhụrụ nwere ike ịmalite otu"
+    "dmNoNewHelp": "Ndị mmalite gara aga ka na-arụ ọrụ; ọ dịghị onye ọhụrụ nwere ike ịmalite otu",
+    "chat": "Nkata",
+    "publicChatAlerts": "Nkata ọha",
+    "publicChatAlertsDesc": "Nweta ozi mgbe nkata ọha na-ekwu okwu mgbe ị nọ na taabụ ọzọ",
+    "publicChatAlertsOnDesc": "Oge ntinye aka na-abịa dị ka otu mkpu ejikọtara ọnụ",
+    "publicChatAlertsNeedsBrowser": "Gbanye ngosi ihe nchọgharị n'elu ka ndị a bịarute",
+    "publicChatAlertsRate": "Na oke",
+    "publicChatAlertsRateOption": "{{count}} kwa elekere",
+    "publicChatAlertsRateHint": "Ọ dịghị ihe furu mgbe ụlọ ahụ ji ọrụ karịa nke a - a na-ejide ozi ndị ahụ ma bịarute ọnụ na mkpu ọzọ."
   },
   "common": {
     "save": "Chekwaa",
@@ -821,7 +829,8 @@
     "postRemoved": "Ewepụla ozi gị",
     "newNotification": "Ọkwa ọhụrụ",
     "oneOther": "1 ọzọ",
-    "nOthers": "{{count}} ndị ọzọ"
+    "nOthers": "{{count}} ndị ọzọ",
+    "burstBody": "{{count}} ngosi ọhụrụ sitere na {{who}}"
   },
   "leaderboard": {
     "title": "Ndepụta Ọkwa",
@@ -2086,5 +2095,17 @@
     "dubbed": "Egwú a dọgburu adọ",
     "preparing": "Ịkwadebe ụda a na-akpọ dubbed...",
     "unavailable": "E nweghị ụda dọbbed maka ihe onyonyo a."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} na {{count}} ndị ọzọ",
+    "andOthers_other": "{{names}} na {{count}} ndị ọzọ",
+    "someone": "Onye"
+  },
+  "publicChatAlerts": {
+    "title": "Nkata ọha",
+    "mentionTitle": "Kpọtụrụ aha na nkata ọha",
+    "digest": "{{count}} ozi ọhụrụ sitere na {{who}}: {{message}}",
+    "voiceMessage": "Ozi olu",
+    "image": "Zipụrụ onyonyo"
   }
 }

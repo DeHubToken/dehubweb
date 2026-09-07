@@ -7,6 +7,7 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   getNotifications,
   getUnreadNotificationCount,
@@ -17,6 +18,7 @@ import {
   type UnreadNotificationCount,
 } from '@/lib/api/dehub';
 import { useBrowserNotifications, getLastSeenTimestamp, setLastSeenTimestamp } from '@/hooks/use-browser-notifications';
+import { buildDigest, type DigestItem } from '@/lib/notification-digest';
 
 // Query keys for cache management
 export const notificationKeys = {
@@ -43,6 +45,7 @@ export function useNotifications(
   options?: { notifyOnNew?: boolean },
 ) {
   const { isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const { showNotification } = useBrowserNotifications();
   const prevIdsRef = useRef<Set<string>>(new Set());
 
@@ -74,12 +77,20 @@ export function useNotifications(
   // tip already sitting in the list.
   const notifyOnNew = (options?.notifyOnNew ?? true) && !types?.length;
 
-  // Trigger browser notifications for newly arrived unread items
+  // Trigger browser notifications for newly arrived unread items.
+  //
+  // Collected first, announced once. The feed is polled every five minutes, so
+  // a pile-up is the normal case rather than the exception: nine things
+  // happening between two polls used to raise nine cards, and the reader
+  // dismissed eight of them to read the ninth. One card describing the pile is
+  // what they were going to reconstruct anyway.
   useEffect(() => {
     if (!notifyOnNew) return;
     if (!notifications.length) return;
     const lastSeen = getLastSeenTimestamp();
     const isFirstLoad = prevIdsRef.current.size === 0;
+
+    const arrived: { at: number; id: string; item: DigestItem }[] = [];
 
     for (const n of notifications) {
       if (prevIdsRef.current.has(n.id)) continue;
@@ -87,17 +98,55 @@ export function useNotifications(
       if (!isFirstLoad && !n.read) {
         const createdAt = new Date(n.createdAt || 0).getTime();
         if (createdAt > lastSeen) {
-          const title = n.actorUsername ? `${n.actorUsername}` : 'DeHub';
-          showNotification(title, n.content || '', n.actorAvatar, n.id);
+          arrived.push({
+            at: createdAt,
+            id: n.id,
+            item: {
+              from: n.actorUsername || undefined,
+              text: n.content || '',
+              avatar: n.actorAvatar || undefined,
+            },
+          });
         }
       }
+    }
+
+    // The API hands these back newest-first; a digest quotes the newest line,
+    // so it needs them the other way round.
+    arrived.sort((a, b) => a.at - b.at);
+    const newest = arrived[arrived.length - 1];
+
+    if (arrived.length === 1 && newest) {
+      showNotification(
+        newest.item.from || 'DeHub',
+        newest.item.text || '',
+        newest.item.avatar,
+        newest.id,
+      );
+    } else if (arrived.length > 1 && newest) {
+      const digest = buildDigest(arrived.map((a) => a.item));
+      const who = digest.otherNames > 0
+        ? t('digest.andOthers', { names: digest.names.join(', '), count: digest.otherNames })
+        : digest.names.join(', ') || t('digest.someone', 'Someone');
+      showNotification(
+        'DeHub',
+        t('notifications.burstBody', '{{count}} new notifications from {{who}}', {
+          count: arrived.length,
+          who,
+        }),
+        newest.item.avatar,
+        // Keyed on the newest row so a later burst replaces this card rather
+        // than stacking behind it, but a re-render of the same burst cannot
+        // raise it twice.
+        `dehub-burst-${newest.id}`,
+      );
     }
 
     // Update refs
     prevIdsRef.current = new Set(notifications.map(n => n.id));
     // Update last seen to now
     setLastSeenTimestamp(Date.now());
-  }, [notifications, showNotification, notifyOnNew]);
+  }, [notifications, showNotification, notifyOnNew, t]);
 
   return {
     notifications,

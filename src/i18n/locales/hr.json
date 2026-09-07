@@ -319,7 +319,15 @@
     "saving": "Spremanje...",
     "noNewMessages": "Bez novih razgovora",
     "noNewMessagesDesc": "Zadržite postojeće razgovore, ali nitko novi ne može započeti",
-    "dmNoNewHelp": "Postojeći razgovori i dalje rade; nitko novi ne može započeti"
+    "dmNoNewHelp": "Postojeći razgovori i dalje rade; nitko novi ne može započeti",
+    "chat": "Chat",
+    "publicChatAlerts": "Javni chat",
+    "publicChatAlertsDesc": "Primajte obavijesti kada se odvija javni chat dok ste u drugom tabu",
+    "publicChatAlertsOnDesc": "Učestali razgovori stižu kao jedna objedinjena obavijest",
+    "publicChatAlertsNeedsBrowser": "Uključite obavijesti preglednika iznad kako biste ih primali",
+    "publicChatAlertsRate": "Najviše",
+    "publicChatAlertsRateOption": "{{count}} na sat",
+    "publicChatAlertsRateHint": "Ništa se ne gubi kada je soba aktivnija od ovoga — poruke se zadržavaju i stižu zajedno u sljedećoj obavijesti."
   },
   "common": {
     "save": "Spremi",
@@ -807,7 +815,8 @@
     "postRemoved": "Vaša objava je uklonjena",
     "newNotification": "Nova obavijest",
     "oneOther": "1 drugi",
-    "nOthers": "{{count}} drugih"
+    "nOthers": "{{count}} drugih",
+    "burstBody": "{{count}} nove obavijesti od {{who}}"
   },
   "leaderboard": {
     "title": "Ljestvice",
@@ -4358,5 +4367,17 @@
     "dubbed": "Dijagnosticirani zvuk",
     "preparing": "Priprema sinkroniziranog zvuka…",
     "unavailable": "Diferencirani zvuk nije dostupan za ovaj videozapis."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} i {{count}} drugi",
+    "andOthers_other": "{{names}} i {{count}} drugi",
+    "someone": "Netko"
+  },
+  "publicChatAlerts": {
+    "title": "Javni chat",
+    "mentionTitle": "Spomenuto u javnom chatu",
+    "digest": "{{count}} nove poruke od {{who}}: {{message}}",
+    "voiceMessage": "Glasovna poruka",
+    "image": "Poslana slika"
   }
 }

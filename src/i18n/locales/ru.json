@@ -319,7 +319,15 @@
     "saving": "Сохранение...",
     "noNewMessages": "Никаких новых переписок",
     "noNewMessagesDesc": "Существующие переписки останутся, но новые люди начать не смогут",
-    "dmNoNewHelp": "Существующие переписки продолжают работать; новые люди начать не смогут"
+    "dmNoNewHelp": "Существующие переписки продолжают работать; новые люди начать не смогут",
+    "chat": "Чат",
+    "publicChatAlerts": "Публичный чат",
+    "publicChatAlertsDesc": "Получайте уведомления, когда в публичном чате кто-то пишет, пока вы находитесь на другой вкладке",
+    "publicChatAlertsOnDesc": "Периоды высокой активности приходят как одно общее оповещение",
+    "publicChatAlertsNeedsBrowser": "Включите уведомления браузера выше, чтобы они приходили",
+    "publicChatAlertsRate": "Не более",
+    "publicChatAlertsRateOption": "{{count}} в час",
+    "publicChatAlertsRateHint": "Ничего не теряется, когда в комнате больше сообщений, чем это — сообщения сохраняются и приходят вместе со следующим оповещением."
   },
   "common": {
     "save": "Сохранить",
@@ -820,7 +828,8 @@
     "postRemoved": "Ваш пост был удалён",
     "newNotification": "Новое уведомление",
     "oneOther": "1 другой",
-    "nOthers": "{{count}} других"
+    "nOthers": "{{count}} других",
+    "burstBody": "{{count}} новых уведомлений от {{who}}"
   },
   "leaderboard": {
     "title": "Рейтинг",
@@ -4415,5 +4424,17 @@
       "feature_request": "Пожелание",
       "other": "Другое"
     }
+  },
+  "digest": {
+    "andOthers_one": "{{names}} и {{count}} других",
+    "andOthers_other": "{{names}} и {{count}} других",
+    "someone": "Кто-то"
+  },
+  "publicChatAlerts": {
+    "title": "Публичный чат",
+    "mentionTitle": "Упомянут в публичном чате",
+    "digest": "{{count}} новых сообщений от {{who}}: {{message}}",
+    "voiceMessage": "Голосовое сообщение",
+    "image": "Отправил изображение"
   }
 }

@@ -319,7 +319,15 @@
     "saving": "儲存緊...",
     "noNewMessages": "唔收新對話",
     "noNewMessagesDesc": "保留你現有嘅對話，但新人開唔到新對話",
-    "dmNoNewHelp": "現有嘅對話照樣用得；新人開唔到新對話"
+    "dmNoNewHelp": "現有嘅對話照樣用得；新人開唔到新對話",
+    "chat": "傾偈",
+    "publicChatAlerts": "公開傾偈",
+    "publicChatAlertsDesc": "當你喺另一個分頁時，收到公開傾偈嘅提示",
+    "publicChatAlertsOnDesc": "忙碌嘅時段會合併成一個提示",
+    "publicChatAlertsNeedsBrowser": "開啟上面嘅瀏覽器通知，以便接收",
+    "publicChatAlertsRate": "最多",
+    "publicChatAlertsRateOption": "每小時 {{count}} 個",
+    "publicChatAlertsRateHint": "當房間比呢個更忙碌時，唔會遺失任何嘢 — 訊息會被保留，並喺下次提示時一齊送達。"
   },
   "common": {
     "save": "儲存",
@@ -820,7 +828,8 @@
     "postRemoved": "你嘅帖文已被移除",
     "newNotification": "新通知",
     "oneOther": "1位其他人",
-    "nOthers": "{{count}}位其他人"
+    "nOthers": "{{count}}位其他人",
+    "burstBody": "{{count}} 個新通知來自 {{who}}"
   },
   "leaderboard": {
     "title": "排行榜",
@@ -2112,5 +2121,17 @@
     "dubbed": "配音為音頻",
     "preparing": "準備緊配音音頻⋯",
     "unavailable": "呢段片冇配音音訊。"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} 同埋 {{count}} 位其他人",
+    "andOthers_other": "{{names}} 同埋 {{count}} 位其他人",
+    "someone": "有人"
+  },
+  "publicChatAlerts": {
+    "title": "公開傾偈",
+    "mentionTitle": "喺公開傾偈中被提及",
+    "digest": "{{count}} 個新訊息來自 {{who}}： {{message}}",
+    "voiceMessage": "語音訊息",
+    "image": "傳送咗一張圖片"
   }
 }

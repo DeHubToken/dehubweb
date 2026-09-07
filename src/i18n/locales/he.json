@@ -317,7 +317,15 @@
     "saving": "שומר...",
     "noNewMessages": "בלי שיחות חדשות",
     "noNewMessagesDesc": "שמרו על השיחות הקיימות, אבל אף אחד חדש לא יוכל לפתוח שיחה",
-    "dmNoNewHelp": "שיחות קיימות ממשיכות לפעול; אף אחד חדש לא יכול לפתוח שיחה"
+    "dmNoNewHelp": "שיחות קיימות ממשיכות לפעול; אף אחד חדש לא יכול לפתוח שיחה",
+    "chat": "צ'אט",
+    "publicChatAlerts": "צ'אט ציבורי",
+    "publicChatAlertsDesc": "קבל התראה כאשר הצ'אט הציבורי מדבר בזמן שאתה בלשונית אחרת",
+    "publicChatAlertsOnDesc": "הפסקות עמוסות מגיעות כהתראה אחת משולבת",
+    "publicChatAlertsNeedsBrowser": "הפעל התראות דפדפן למעלה כדי שאלו יגיעו",
+    "publicChatAlertsRate": "לכל היותר",
+    "publicChatAlertsRateOption": "{{count}} בשעה",
+    "publicChatAlertsRateHint": "שום דבר לא הולך לאיבוד כאשר החדר עמוס יותר מזה — ההודעות נשמרות ומגיעות יחד בהתראה הבאה."
   },
   "common": {
     "save": "שמור",
@@ -817,7 +825,8 @@
     "postRemoved": "הפוסט שלך הוסר",
     "newNotification": "התראה חדשה",
     "oneOther": "אחד אחר",
-    "nOthers": "{{count}} אחרים"
+    "nOthers": "{{count}} אחרים",
+    "burstBody": "{{count}} התראות חדשות מ-{{who}}"
   },
   "leaderboard": {
     "title": "טבלת מובילים",
@@ -4172,5 +4181,17 @@
     "dubbed": "שמע מדובב",
     "preparing": "מכין אודיו שזכה לכינוי...",
     "unavailable": "אודיו מדובב אינו זמין עבור סרטון זה."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} ו-{{count}} נוספים",
+    "andOthers_other": "{{names}} ו-{{count}} אחרים",
+    "someone": "מישהו"
+  },
+  "publicChatAlerts": {
+    "title": "צ'אט ציבורי",
+    "mentionTitle": "הוזכר בצ'אט ציבורי",
+    "digest": "{{count}} הודעות חדשות מ-{{who}}: {{message}}",
+    "voiceMessage": "הודעת קול",
+    "image": "שלח תמונה"
   }
 }

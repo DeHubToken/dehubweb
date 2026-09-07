@@ -319,7 +319,15 @@
     "saving": "Чување...",
     "noNewMessages": "Без нових разговора",
     "noNewMessagesDesc": "Задржите постојеће разговоре, али нико нов не може да започне",
-    "dmNoNewHelp": "Постојећи разговори настављају да раде; нико нов не може да започне"
+    "dmNoNewHelp": "Постојећи разговори настављају да раде; нико нов не може да започне",
+    "chat": "Ћаскање",
+    "publicChatAlerts": "Јавно ћаскање",
+    "publicChatAlertsDesc": "Добијајте обавештења када се јавно ћаскање одвија док сте у другој картици",
+    "publicChatAlertsOnDesc": "Заузети периоди стижу као једно комбиновано обавештење",
+    "publicChatAlertsNeedsBrowser": "Укључите обавештења прегледача изнад да бисте их примили",
+    "publicChatAlertsRate": "Највише",
+    "publicChatAlertsRateOption": "{{count}} на сат",
+    "publicChatAlertsRateHint": "Ништа се не губи када је соба заузетија од овога — поруке се задржавају и стижу заједно при следећем обавештењу."
   },
   "common": {
     "save": "Сачувај",
@@ -809,7 +817,8 @@
     "postRemoved": "Ваша објава је уклоњена",
     "newNotification": "Ново обавештење",
     "oneOther": "1 други",
-    "nOthers": "{{count}} других"
+    "nOthers": "{{count}} других",
+    "burstBody": "{{count}} нових обавештења од {{who}}"
   },
   "leaderboard": {
     "title": "Ранг листа",
@@ -2067,5 +2076,17 @@
     "dubbed": "Dijagnostikovani zvuk",
     "preparing": "Pripremanje sinhronizovanog zvuka…",
     "unavailable": "Nazvani zvuk nije dostupan za ovaj video."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} и {{count}} други",
+    "andOthers_other": "{{names}} и {{count}} други",
+    "someone": "Неко"
+  },
+  "publicChatAlerts": {
+    "title": "Јавно ћаскање",
+    "mentionTitle": "Поменуто у јавном ћаскању",
+    "digest": "{{count}} нових порука од {{who}}: {{message}}",
+    "voiceMessage": "Гласовна порука",
+    "image": "Послата слика"
   }
 }

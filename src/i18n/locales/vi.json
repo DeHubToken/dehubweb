@@ -246,7 +246,15 @@
     "saving": "Đang lưu...",
     "noNewMessages": "Không nhận trò chuyện mới",
     "noNewMessagesDesc": "Giữ các cuộc trò chuyện hiện có, nhưng không ai mới bắt đầu được",
-    "dmNoNewHelp": "Các cuộc trò chuyện hiện có vẫn hoạt động; không ai mới bắt đầu được"
+    "dmNoNewHelp": "Các cuộc trò chuyện hiện có vẫn hoạt động; không ai mới bắt đầu được",
+    "chat": "Trò chuyện",
+    "publicChatAlerts": "Trò chuyện công khai",
+    "publicChatAlertsDesc": "Nhận thông báo khi trò chuyện công khai đang hoạt động trong khi bạn đang ở tab khác",
+    "publicChatAlertsOnDesc": "Các khoảng thời gian bận rộn sẽ đến dưới dạng một cảnh báo kết hợp",
+    "publicChatAlertsNeedsBrowser": "Bật thông báo trình duyệt ở trên để nhận các thông báo này",
+    "publicChatAlertsRate": "Tối đa",
+    "publicChatAlertsRateOption": "{{count}} mỗi giờ",
+    "publicChatAlertsRateHint": "Không có gì bị mất khi phòng bận hơn thế này — tin nhắn sẽ được giữ lại và đến cùng nhau trong cảnh báo tiếp theo."
   },
   "common": {
     "save": "Lưu",
@@ -736,7 +744,8 @@
     "postRemoved": "Bài đăng của bạn đã bị gỡ",
     "newNotification": "Thông báo mới",
     "oneOther": "1 người khác",
-    "nOthers": "{{count}} người khác"
+    "nOthers": "{{count}} người khác",
+    "burstBody": "{{count}} thông báo mới từ {{who}}"
   },
   "leaderboard": {
     "title": "Bảng xếp hạng",
@@ -4146,6 +4155,18 @@
     "dubbed": "Âm thanh được lồng tiếng",
     "preparing": "Đang chuẩn bị âm thanh lồng tiếng...",
     "unavailable": "Âm thanh được lồng tiếng không khả dụng cho video này."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} và {{count}} người khác",
+    "andOthers_other": "{{names}} và {{count}} người khác",
+    "someone": "Một người nào đó"
+  },
+  "publicChatAlerts": {
+    "title": "Trò chuyện công khai",
+    "mentionTitle": "Được đề cập trong trò chuyện công khai",
+    "digest": "{{count}} tin nhắn mới từ {{who}}: {{message}}",
+    "voiceMessage": "Tin nhắn thoại",
+    "image": "Đã gửi một hình ảnh"
   },
   "glossary": {
     "title": "Bảng thuật ngữ",

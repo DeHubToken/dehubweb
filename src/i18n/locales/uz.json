@@ -319,7 +319,15 @@
     "saving": "Saqlanmoqda...",
     "noNewMessages": "Yangi suhbatlar yo'q",
     "noNewMessagesDesc": "Mavjud suhbatlaringizni saqlang, lekin yangi odam boshlay olmaydi",
-    "dmNoNewHelp": "Mavjud suhbatlar ishlashda davom etadi; yangi odam boshlay olmaydi"
+    "dmNoNewHelp": "Mavjud suhbatlar ishlashda davom etadi; yangi odam boshlay olmaydi",
+    "chat": "Chat",
+    "publicChatAlerts": "Ommaviy chat",
+    "publicChatAlertsDesc": "Boshqa tabda bo'lganingizda ommaviy chat gaplashayotganini bilib oling",
+    "publicChatAlertsOnDesc": "Bandlik cho'qqilari bitta birlashtirilgan ogohlantirish sifatida keladi",
+    "publicChatAlertsNeedsBrowser": "Bularning kelishi uchun yuqoridagi brauzer bildirishnomalarini yoqing",
+    "publicChatAlertsRate": "Eng ko'pi bilan",
+    "publicChatAlertsRateOption": "soatiga {{count}}",
+    "publicChatAlertsRateHint": "Xona band bo'lganda hech narsa yo'qolmaydi — xabarlar saqlanadi va keyingi ogohlantirishda birga keladi."
   },
   "common": {
     "save": "Saqlash",
@@ -839,7 +847,8 @@
     "postRemoved": "Postingiz oʻchirildi",
     "newNotification": "Yangi bildirishnoma",
     "oneOther": "1 boshqa",
-    "nOthers": "{{count}} boshqa"
+    "nOthers": "{{count}} boshqa",
+    "burstBody": "{{count}} ta yangi bildirishnomalar {{who}} dan"
   },
   "leaderboard": {
     "title": "Reyting",
@@ -2142,6 +2151,18 @@
     "dubbed": "Dublyaj qilingan audio",
     "preparing": "Dublyaj qilingan audio tayyorlanmoqda…",
     "unavailable": "Bu video uchun dublyaj qilingan audio mavjud emas."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} va {{count}} boshqa",
+    "andOthers_other": "{{names}} va {{count}} boshqalar",
+    "someone": "Kimdir"
+  },
+  "publicChatAlerts": {
+    "title": "Ommaviy chat",
+    "mentionTitle": "Ommaviy chatda tilga olindi",
+    "digest": "{{count}} ta yangi xabar {{who}} dan: {{message}}",
+    "voiceMessage": "Ovozli xabar",
+    "image": "Rasm yuborildi"
   },
   "spaces": {
     "title": "Boʻlimlar",

@@ -316,7 +316,12 @@
     "saving": "E dey save...",
     "noNewMessages": "No new conversation dey",
     "noNewMessagesDesc": "Keep your threads wey dey there, but no new person fit start one",
-    "dmNoNewHelp": "Threads wey dey there still dey work; no new person fit start one"
+    "dmNoNewHelp": "Threads wey dey there still dey work; no new person fit start one",
+    "chat": "Chat",
+    "publicChatAlerts": "Public chat",
+    "publicChatAlertsOnDesc": "Busy stretches arrive as one combined alert",
+    "publicChatAlertsRate": "At most",
+    "publicChatAlertsRateOption": "{{count}} an hour"
   },
   "common": {
     "save": "Save Am",
@@ -2003,5 +2008,13 @@
     "dubbed": "Dubbed audio",
     "preparing": "Preparing dubbed audio…",
     "unavailable": "Dubbed audio is not available for this video."
+  },
+  "digest": {
+    "someone": "Someone"
+  },
+  "publicChatAlerts": {
+    "title": "Public chat",
+    "voiceMessage": "Voice message",
+    "image": "Sent an image"
   }
 }

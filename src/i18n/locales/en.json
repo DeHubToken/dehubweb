@@ -319,7 +319,15 @@
     "saving": "Saving...",
     "noNewMessages": "No new conversations",
     "noNewMessagesDesc": "Keep your existing threads, but nobody new can start one",
-    "dmNoNewHelp": "Existing threads keep working; nobody new can start one"
+    "dmNoNewHelp": "Existing threads keep working; nobody new can start one",
+    "chat": "Chat",
+    "publicChatAlerts": "Public chat",
+    "publicChatAlertsDesc": "Get told when the public chat is talking while you’re in another tab",
+    "publicChatAlertsOnDesc": "Busy stretches arrive as one combined alert",
+    "publicChatAlertsNeedsBrowser": "Turn on browser notifications above for these to arrive",
+    "publicChatAlertsRate": "At most",
+    "publicChatAlertsRateOption": "{{count}} an hour",
+    "publicChatAlertsRateHint": "Nothing is lost when the room is busier than this — the messages are held and arrive together on the next alert."
   },
   "common": {
     "save": "Save",
@@ -821,7 +829,8 @@
     "postRemoved": "Your post was removed",
     "newNotification": "New notification",
     "oneOther": "1 other",
-    "nOthers": "{{count}} others"
+    "nOthers": "{{count}} others",
+    "burstBody": "{{count}} new notifications from {{who}}"
   },
   "leaderboard": {
     "title": "Leaderboards",
@@ -4477,5 +4486,17 @@
       "feature_request": "Feature request",
       "other": "Other"
     }
+  },
+  "digest": {
+    "andOthers_one": "{{names}} and {{count}} other",
+    "andOthers_other": "{{names}} and {{count}} others",
+    "someone": "Someone"
+  },
+  "publicChatAlerts": {
+    "title": "Public chat",
+    "mentionTitle": "Mentioned in public chat",
+    "digest": "{{count}} new messages from {{who}}: {{message}}",
+    "voiceMessage": "Voice message",
+    "image": "Sent an image"
   }
 }
