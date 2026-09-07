@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "આ પ્રાપ્ત કરવા માટે ઉપર બ્રાઉઝર સૂચનાઓ ચાલુ કરો",
     "publicChatAlertsRate": "વધુમાં વધુ",
     "publicChatAlertsRateOption": "એક કલાકમાં {{count}}",
-    "publicChatAlertsRateHint": "જ્યારે રૂમ આના કરતાં વધુ વ્યસ્ત હોય ત્યારે કંઈપણ ગુમાવતું નથી — સંદેશાઓ રાખવામાં આવે છે અને આગામી એલર્ટ પર એકસાથે આવે છે."
+    "publicChatAlertsRateHint": "જ્યારે રૂમ આના કરતાં વધુ વ્યસ્ત હોય ત્યારે કંઈપણ ગુમાવતું નથી — સંદેશાઓ રાખવામાં આવે છે અને આગામી એલર્ટ પર એકસાથે આવે છે.",
+    "emailNotificationsDescLinked": "{{email}} ને મોકલેલ",
+    "emailNotificationsNoAddress": "પહેલા તમારા એકાઉન્ટમાં ઇમેઇલ સરનામું ઉમેરો — ત્યાં આ જશે.",
+    "emailNotificationsAddAddress": "ઇમેઇલ સરનામું ઉમેરો"
   },
   "common": {
     "save": "સાચવો",
@@ -840,7 +843,8 @@
       "mentionedNamed": "{{name}} એ \"{{community}}\" માં તમારો ઉલ્લેખ કર્યો છે",
       "here": "{{name}} @ એ સમુદાયમાં દરેકને મેસેજ કર્યો",
       "hereNamed": "{{name}} એ \"{{community}}\" માં દરેકને મેસેજ કર્યો"
-    }
+    },
+    "byEmail": "ઈમેલ દ્વારા"
   },
   "leaderboard": {
     "title": "લીડરબોર્ડ",

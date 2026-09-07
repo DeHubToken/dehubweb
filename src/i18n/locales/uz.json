@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Bularning kelishi uchun yuqoridagi brauzer bildirishnomalarini yoqing",
     "publicChatAlertsRate": "Eng ko'pi bilan",
     "publicChatAlertsRateOption": "soatiga {{count}}",
-    "publicChatAlertsRateHint": "Xona band bo'lganda hech narsa yo'qolmaydi — xabarlar saqlanadi va keyingi ogohlantirishda birga keladi."
+    "publicChatAlertsRateHint": "Xona band bo'lganda hech narsa yo'qolmaydi — xabarlar saqlanadi va keyingi ogohlantirishda birga keladi.",
+    "emailNotificationsDescLinked": "{{email}} ga yuborildi",
+    "emailNotificationsNoAddress": "Avval hisobingizga elektron pochta manzilini qo'shing — ular shu yerga boradi.",
+    "emailNotificationsAddAddress": "Elektron pochta manzilini qo'shing"
   },
   "common": {
     "save": "Saqlash",
@@ -859,7 +862,8 @@
       "mentionedNamed": "{{name}} sizni “{{community}}” da tilga olgan",
       "here": "{{name}} hamjamiyatdagi barchaga xabar yubordi",
       "hereNamed": "{{name}} hammaga “{{community}}” xatida xabar yubordi"
-    }
+    },
+    "byEmail": "Elektron pochta orqali"
   },
   "leaderboard": {
     "title": "Reyting",

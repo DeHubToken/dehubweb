@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Whakāwhia ngā whakamōhiotanga pūwhiti i runga ake nei kia tae mai ai ēnei",
     "publicChatAlertsRate": "Mō te nuinga",
     "publicChatAlertsRateOption": "{{count}} ia haora",
-    "publicChatAlertsRateHint": "Kāore he mea i ngaro i te wā e kaha ake ana te ruma i tēnei — ka mauhia ngā karere, ka tae mai hoki i te whakaoho e whai ake nei."
+    "publicChatAlertsRateHint": "Kāore he mea i ngaro i te wā e kaha ake ana te ruma i tēnei — ka mauhia ngā karere, ka tae mai hoki i te whakaoho e whai ake nei.",
+    "emailNotificationsDescLinked": "Tukua ki {{email}}",
+    "emailNotificationsNoAddress": "Tāpirihia he wāhitau īmēra ki tō pūkete i te tuatahi — ki reira ka haere ai ēnei.",
+    "emailNotificationsAddAddress": "Tāpirihia he wāhitau īmēra"
   },
   "common": {
     "save": "Tiaki",
@@ -839,7 +842,8 @@
       "mentioned": "{{name}} korero ki a koe i roto i te hapori",
       "here": "{{name}} karere katoa i roto i te hapori",
       "hereNamed": "{{name}} karere katoa i roto i {{community}}"
-    }
+    },
+    "byEmail": "Mā te īmēra"
   },
   "leaderboard": {
     "title": "Rārangi Rangatira",

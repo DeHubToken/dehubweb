@@ -325,7 +325,10 @@
     "publicChatAlertsNeedsBrowser": "এগুলি পেতে উপরে ব্রাউজার বিজ্ঞপ্তিগুলি চালু করুন",
     "publicChatAlertsRate": "সর্বোচ্চ",
     "publicChatAlertsRateOption": "প্রতি ঘন্টায় {{count}}",
-    "publicChatAlertsRateHint": "রুম ব্যস্ত থাকলে কিছুই হারাবে না — বার্তাগুলি ধরে রাখা হয় এবং পরবর্তী সতর্কতায় একসাথে আসে।"
+    "publicChatAlertsRateHint": "রুম ব্যস্ত থাকলে কিছুই হারাবে না — বার্তাগুলি ধরে রাখা হয় এবং পরবর্তী সতর্কতায় একসাথে আসে।",
+    "emailNotificationsDescLinked": "{{email}}-কে পাঠানো হয়েছে",
+    "emailNotificationsNoAddress": "প্রথমে আপনার অ্যাকাউন্টে একটি ইমেল ঠিকানা যোগ করুন — এখানেই এগুলো যাবে।",
+    "emailNotificationsAddAddress": "একটি ইমেল ঠিকানা যোগ করুন"
   },
   "common": {
     "save": "সংরক্ষণ",
@@ -819,7 +822,8 @@
       "mentionedNamed": "{{name}} আপনাকে “{{community}}” -এ উল্লেখ করেছেন",
       "here": "{{name}} কমিউনিটির সবাইকে মেসেজ করেছেন",
       "hereNamed": "{{name}} সবাইকে “{{community}}” -এ মেসেজ করেছেন"
-    }
+    },
+    "byEmail": "ইমেলের মাধ্যমে"
   },
   "leaderboard": {
     "title": "লিডারবোর্ড",

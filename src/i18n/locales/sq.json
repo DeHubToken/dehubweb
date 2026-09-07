@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Aktivizo njoftimet e shfletuesit më sipër që këto të mbërrijnë",
     "publicChatAlertsRate": "Maksimumi",
     "publicChatAlertsRateOption": "{{count}} në orë",
-    "publicChatAlertsRateHint": "Asgjë nuk humbet kur dhoma është më e ngarkuar se kaq — mesazhet mbahen dhe mbërrijnë së bashku në njoftimin e radhës."
+    "publicChatAlertsRateHint": "Asgjë nuk humbet kur dhoma është më e ngarkuar se kaq — mesazhet mbahen dhe mbërrijnë së bashku në njoftimin e radhës.",
+    "emailNotificationsDescLinked": "Dërguar {{email}}",
+    "emailNotificationsNoAddress": "Së pari shtoni një adresë emaili në llogarinë tuaj — aty do të shkojnë këto.",
+    "emailNotificationsAddAddress": "Shtoni një adresë emaili"
   },
   "common": {
     "save": "Ruaj",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} të përmendi në “{{community}}”",
       "here": "{{name}} u dërgoi mesazhe të gjithëve në komunitet",
       "hereNamed": "{{name}} u dërgoi mesazhe të gjithëve në “{{community}}”"
-    }
+    },
+    "byEmail": "Me email"
   },
   "leaderboard": {
     "title": "Tabela e Liderëve",

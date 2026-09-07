@@ -325,7 +325,10 @@
     "publicChatAlertsNeedsBrowser": "הפעל התראות דפדפן למעלה כדי שאלו יגיעו",
     "publicChatAlertsRate": "לכל היותר",
     "publicChatAlertsRateOption": "{{count}} בשעה",
-    "publicChatAlertsRateHint": "שום דבר לא הולך לאיבוד כאשר החדר עמוס יותר מזה — ההודעות נשמרות ומגיעות יחד בהתראה הבאה."
+    "publicChatAlertsRateHint": "שום דבר לא הולך לאיבוד כאשר החדר עמוס יותר מזה — ההודעות נשמרות ומגיעות יחד בהתראה הבאה.",
+    "emailNotificationsDescLinked": "נשלח אל {{email}}",
+    "emailNotificationsNoAddress": "הוסף כתובת דוא\"ל לחשבונך תחילה - לשם יגיעו אלה.",
+    "emailNotificationsAddAddress": "הוסף כתובת דוא\"ל"
   },
   "common": {
     "save": "שמור",
@@ -837,7 +840,8 @@
       "mentionedNamed": "{{name}} הזכיר/ה אותך ב -\"{{community}}\"",
       "here": "{{name}} שלחה הודעה לכל חברי הקהילה",
       "hereNamed": "{{name}} שלחה הודעה לכולם באזור \"{{community}}\""
-    }
+    },
+    "byEmail": "במייל"
   },
   "leaderboard": {
     "title": "טבלת מובילים",

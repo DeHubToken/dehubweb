@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Vula izaziso zesiphequluli ngenhla ukuze lezi zifikwe",
     "publicChatAlertsRate": "Kakhulu",
     "publicChatAlertsRateOption": "{{count}} ngehora",
-    "publicChatAlertsRateHint": "Akukho okulahlekile lapho igumbi limatasa kunalokhu - imilayezo iyagcinwa futhi ifike ndawonye esazisweni esilandelayo."
+    "publicChatAlertsRateHint": "Akukho okulahlekile lapho igumbi limatasa kunalokhu - imilayezo iyagcinwa futhi ifike ndawonye esazisweni esilandelayo.",
+    "emailNotificationsDescLinked": "Thumela ku-{{email}}",
+    "emailNotificationsNoAddress": "Faka ikheli le-imeyili ku-akhawunti yakho kuqala — yilapho lezi zizoya khona.",
+    "emailNotificationsAddAddress": "Faka ikheli le-imeyili"
   },
   "common": {
     "save": "Gcina",
@@ -842,7 +845,8 @@
       "mentionedNamed": "{{name}} kukushilo kokuthi “{{community}}”",
       "here": "{{name}} uthumele umyalezo kuwo wonke umuntu emphakathini",
       "hereNamed": "{{name}} uthumele umyalezo kuwo wonke umuntu kokuthi “{{community}}”"
-    }
+    },
+    "byEmail": "Nge-imeyili"
   },
   "leaderboard": {
     "title": "Bhodi Yabaholi",

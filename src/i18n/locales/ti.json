@@ -326,7 +326,10 @@
     "publicChatAlertsOnDesc": "ከም ሓደ ናይ ሓባር መጠንቀቕታ",
     "publicChatAlertsNeedsBrowser": "ነዚ ንምብጻሕ ኣብ ላዕሊ ዘሎ ናይ ብራውዘር ኣፍልጦታት ኣበራብር",
     "publicChatAlertsRate": "መብዛሕትኡ",
-    "publicChatAlertsRateHint": "እቲ ክፍሊ ካብዚ ንላዕሊ ምስ ዚዓዪ ፡ ዋላ ሓንቲ ኣይጠፍእን እዩ — እቲ መልእኽቲ ይዕቀብን ኣብ ቀጻሊ መጠንቀቕታ ይእከብን እዩ ።"
+    "publicChatAlertsRateHint": "እቲ ክፍሊ ካብዚ ንላዕሊ ምስ ዚዓዪ ፡ ዋላ ሓንቲ ኣይጠፍእን እዩ — እቲ መልእኽቲ ይዕቀብን ኣብ ቀጻሊ መጠንቀቕታ ይእከብን እዩ ።",
+    "emailNotificationsDescLinked": "ን {{email}} ተላኢኹ",
+    "emailNotificationsNoAddress": "ቀዳምነት ንሂሳብኩም ኢመይል ኣስመዝግቡ — እዚኣቶም ኣብኡ እዮም ዝኸዱ።",
+    "emailNotificationsAddAddress": "ኢመይል ኣስመዝግቡ"
   },
   "common": {
     "save": "ዓቅብ",
@@ -830,7 +833,8 @@
     "nOthers": "{{count}} ካልኦት",
     "community": {
       "joined": "{{name}} ምስ ማሕበረሰብካ ተጸምቢርካ"
-    }
+    },
+    "byEmail": "ብኢመይል"
   },
   "leaderboard": {
     "title": "ሰሌዳ ደረጃ",

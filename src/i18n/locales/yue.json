@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "開啟上面嘅瀏覽器通知，以便接收",
     "publicChatAlertsRate": "最多",
     "publicChatAlertsRateOption": "每小時 {{count}} 個",
-    "publicChatAlertsRateHint": "當房間比呢個更忙碌時，唔會遺失任何嘢 — 訊息會被保留，並喺下次提示時一齊送達。"
+    "publicChatAlertsRateHint": "當房間比呢個更忙碌時，唔會遺失任何嘢 — 訊息會被保留，並喺下次提示時一齊送達。",
+    "emailNotificationsDescLinked": "發送至 {{email}}",
+    "emailNotificationsNoAddress": "請先為您的帳戶新增電郵地址 — 這些將會發送到該地址。",
+    "emailNotificationsAddAddress": "新增電郵地址"
   },
   "common": {
     "save": "儲存",
@@ -840,7 +843,8 @@
       "mentionedNamed": "{{name}} 喺「 {{community}} 」入面提過你",
       "here": "{{name}} 留言畀社區入面嘅每個人",
       "hereNamed": "{{name}} 喺「 {{community}} 」入面留言畀所有人"
-    }
+    },
+    "byEmail": "用電郵"
   },
   "leaderboard": {
     "title": "排行榜",

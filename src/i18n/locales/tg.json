@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Барои гирифтани инҳо, огоҳиҳои браузерро дар боло фаъол кунед",
     "publicChatAlertsRate": "Дар ҳадди аксар",
     "publicChatAlertsRateOption": "{{count}} дар як соат",
-    "publicChatAlertsRateHint": "Ҳеҷ чиз гум намешавад, вақте ки ҳуҷра аз ин сертар аст - паёмҳо нигоҳ дошта мешаванд ва дар огоҳии навбатӣ якҷоя меоянд."
+    "publicChatAlertsRateHint": "Ҳеҷ чиз гум намешавад, вақте ки ҳуҷра аз ин сертар аст - паёмҳо нигоҳ дошта мешаванд ва дар огоҳии навбатӣ якҷоя меоянд.",
+    "emailNotificationsDescLinked": "Ба {{email}} фиристода шуд",
+    "emailNotificationsNoAddress": "Аввал ба ҳисоби худ суроғаи почтаи электронӣ илова кунед — онҳо ба он ҷо мераванд.",
+    "emailNotificationsAddAddress": "Суроғаи почтаи электронӣ илова кунед"
   },
   "common": {
     "save": "Сабт",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} {{community}}",
       "here": "{{name}}info: whatsthis",
       "hereNamed": "{{name}} mesaged all in “{{community}}”"
-    }
+    },
+    "byEmail": "Бо почта"
   },
   "leaderboard": {
     "title": "Рейтинг",

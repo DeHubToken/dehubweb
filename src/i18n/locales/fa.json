@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "برای دریافت این موارد، اعلان‌های مرورگر را در بالا روشن کنید",
     "publicChatAlertsRate": "حداکثر",
     "publicChatAlertsRateOption": "{{count}} در ساعت",
-    "publicChatAlertsRateHint": "وقتی اتاق شلوغ‌تر از این باشد، هیچ چیز از دست نمی‌رود - پیام‌ها نگهداری می‌شوند و در هشدار بعدی با هم می‌رسند."
+    "publicChatAlertsRateHint": "وقتی اتاق شلوغ‌تر از این باشد، هیچ چیز از دست نمی‌رود - پیام‌ها نگهداری می‌شوند و در هشدار بعدی با هم می‌رسند.",
+    "emailNotificationsDescLinked": "به {{email}} ارسال شد",
+    "emailNotificationsNoAddress": "ابتدا یک آدرس ایمیل به حساب خود اضافه کنید - این همان جایی است که این موارد ارسال می‌شوند.",
+    "emailNotificationsAddAddress": "افزودن آدرس ایمیل"
   },
   "common": {
     "save": "ذخیره",
@@ -840,7 +843,8 @@
       "mentionedNamed": "{{name}} شما را در عبارت «{{community}}» معرفی کرد.",
       "here": "{{name}} به همه افراد جامعه پیام داد",
       "hereNamed": "{{name}} به همه افراد با شناسه «{{community}}» پیام داد"
-    }
+    },
+    "byEmail": "از طریق ایمیل"
   },
   "leaderboard": {
     "title": "جدول امتیازات",

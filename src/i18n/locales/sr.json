@@ -819,7 +819,8 @@
     "newNotification": "Ново обавештење",
     "oneOther": "1 други",
     "nOthers": "{{count}} других",
-    "burstBody": "{{count}} нових обавештења од {{who}}"
+    "burstBody": "{{count}} нових обавештења од {{who}}",
+    "byEmail": "Е-поштом"
   },
   "leaderboard": {
     "title": "Ранг листа",

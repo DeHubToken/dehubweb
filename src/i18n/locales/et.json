@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Nende saabumiseks lülitage ülal brauseriteated sisse",
     "publicChatAlertsRate": "Maksimaalselt",
     "publicChatAlertsRateOption": "{{count}} tunnis",
-    "publicChatAlertsRateHint": "Midagi ei lähe kaduma, kui ruum on tihedam kui see – sõnumid hoitakse kinni ja saabuvad koos järgmise hoiatusena."
+    "publicChatAlertsRateHint": "Midagi ei lähe kaduma, kui ruum on tihedam kui see – sõnumid hoitakse kinni ja saabuvad koos järgmise hoiatusena.",
+    "emailNotificationsDescLinked": "Saadetud {{email}}-le",
+    "emailNotificationsNoAddress": "Lisa kõigepealt oma kontole e-posti aadress – sinna need lähevad.",
+    "emailNotificationsAddAddress": "Lisa e-posti aadress"
   },
   "common": {
     "save": "Salvesta",
@@ -832,7 +835,8 @@
       "mentionedNamed": "{{name}} mainis sind dokumendis „{{community}}“",
       "here": "{{name}} saatis sõnumi kõigile kogukonna liikmetele",
       "hereNamed": "{{name}} saatis sõnumi kõigile asukohas „{{community}}“"
-    }
+    },
+    "byEmail": "E-postiga"
   },
   "leaderboard": {
     "title": "Edetabel",

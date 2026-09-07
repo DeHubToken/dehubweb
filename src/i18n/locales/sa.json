@@ -326,7 +326,10 @@
     "publicChatAlertsOnDesc": "संयुक्ते संयुक्ते संयुक्ते संयुगे यथा",
     "publicChatAlertsNeedsBrowser": "उपर्युक्तां सूचनां प्रेषयामास यथाक्रमम्",
     "publicChatAlertsRate": "अधिकतमा",
-    "publicChatAlertsRateHint": "१३ यत इतरेषां विरामेण युष्माकञ्च क्लेशेन भवितव्यं तन्नहि किन्तु समतयैव ।"
+    "publicChatAlertsRateHint": "१३ यत इतरेषां विरामेण युष्माकञ्च क्लेशेन भवितव्यं तन्नहि किन्तु समतयैव ।",
+    "emailNotificationsDescLinked": "{{email}} ला पाठवले",
+    "emailNotificationsNoAddress": "प्रथम तुमच्या खात्यात ईमेल ॲड्रेस जोडा — तिथे हे जातील.",
+    "emailNotificationsAddAddress": "ईमेल ॲड्रेस जोडा"
   },
   "common": {
     "save": "रक्षतु",
@@ -829,7 +832,8 @@
     "postRemoved": "भवतः प्रकाशनम् अपसारितम्",
     "newNotification": "नवसूचना",
     "oneOther": "१ अन्यः",
-    "nOthers": "{{count}} अन्ये"
+    "nOthers": "{{count}} अन्ये",
+    "byEmail": "ईमेल द्वारा"
   },
   "leaderboard": {
     "title": "श्रेष्ठतासूची",

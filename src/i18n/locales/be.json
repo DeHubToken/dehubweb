@@ -324,7 +324,10 @@
     "publicChatAlertsNeedsBrowser": "Уключыце браўзэрныя апавяшчэнні вышэй, каб яны прыходзілі",
     "publicChatAlertsRate": "Не больш за",
     "publicChatAlertsRateOption": "{{count}} у гадзіну",
-    "publicChatAlertsRateHint": "Нічога не губляецца, калі пакой больш загружаны, чым гэта — паведамленні захоўваюцца і прыходзяць разам з наступным апавяшчэннем."
+    "publicChatAlertsRateHint": "Нічога не губляецца, калі пакой больш загружаны, чым гэта — паведамленні захоўваюцца і прыходзяць разам з наступным апавяшчэннем.",
+    "emailNotificationsDescLinked": "Даслана {{email}}",
+    "emailNotificationsNoAddress": "Спачатку дадайце адрас электроннай пошты ў свой уліковы запіс — туды будуць адпраўляцца гэтыя паведамленні.",
+    "emailNotificationsAddAddress": "Дадаць адрас электроннай пошты"
   },
   "common": {
     "save": "Захаваць",
@@ -844,7 +847,8 @@
       "mentionedNamed": "{{name}} згадваецца ў «{{community}}»",
       "here": "{{name}} паведамляў усім у супольнасці",
       "hereNamed": "{{name}} паведамляў усім у «{{community}}»"
-    }
+    },
+    "byEmail": "Па электроннай пошце"
   },
   "leaderboard": {
     "title": "Табліца лідараў",

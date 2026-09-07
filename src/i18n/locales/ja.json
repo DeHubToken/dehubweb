@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "これらを受け取るには、上記のブラウザ通知をオンにしてください",
     "publicChatAlertsRate": "最大で",
     "publicChatAlertsRateOption": "1時間に{{count}}回",
-    "publicChatAlertsRateHint": "この時間帯よりも部屋が混雑しても何も失われることはありません。メッセージは保持され、次回の通知でまとめて届きます。"
+    "publicChatAlertsRateHint": "この時間帯よりも部屋が混雑しても何も失われることはありません。メッセージは保持され、次回の通知でまとめて届きます。",
+    "emailNotificationsDescLinked": "{{email}}に送信",
+    "emailNotificationsNoAddress": "まずアカウントにメールアドレスを追加してください。そこにこれらが送信されます。",
+    "emailNotificationsAddAddress": "メールアドレスを追加"
   },
   "common": {
     "save": "保存",
@@ -840,7 +843,8 @@
       "mentionedNamed": "{{name}}さんが「{{community}}」であなたをメンションしました",
       "here": "{{name}}さんがコミュニティの全員にメッセージを送りました",
       "hereNamed": "{{name}}さんが「{{community}}」の全員にメッセージを送りました"
-    }
+    },
+    "byEmail": "メールで"
   },
   "leaderboard": {
     "title": "ランキング",

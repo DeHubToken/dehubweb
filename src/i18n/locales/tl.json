@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "I-on ang mga notipikasyon sa browser sa itaas para dumating ang mga ito",
     "publicChatAlertsRate": "Sa pinakamarami",
     "publicChatAlertsRateOption": "{{count}} kada oras",
-    "publicChatAlertsRateHint": "Walang nawawala kapag mas abala ang silid kaysa dito — ang mga mensahe ay itinatabi at dumarating nang magkakasama sa susunod na alerto."
+    "publicChatAlertsRateHint": "Walang nawawala kapag mas abala ang silid kaysa dito — ang mga mensahe ay itinatabi at dumarating nang magkakasama sa susunod na alerto.",
+    "emailNotificationsDescLinked": "Ipadala kay {{email}}",
+    "emailNotificationsNoAddress": "Magdagdag muna ng email address sa iyong account — doon mapupunta ang mga ito.",
+    "emailNotificationsAddAddress": "Magdagdag ng email address"
   },
   "common": {
     "save": "I-save",
@@ -888,7 +891,8 @@
       "mentionedNamed": "Binanggit ka ni {{name}} sa “{{community}}”",
       "here": "Nagpadala ng mensahe si {{name}} sa lahat ng tao sa komunidad",
       "hereNamed": "Nagpadala ang {{name}} ng mensahe sa lahat sa “{{community}}”"
-    }
+    },
+    "byEmail": "Sa pamamagitan ng email"
   },
   "leaderboard": {
     "title": "Leaderboard",

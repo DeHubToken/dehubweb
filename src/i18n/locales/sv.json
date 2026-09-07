@@ -326,7 +326,10 @@
     "publicChatAlertsNeedsBrowser": "Aktivera webbläsaraviseringar ovan för att dessa ska komma fram",
     "publicChatAlertsRate": "Som mest",
     "publicChatAlertsRateOption": "{{count}} per timme",
-    "publicChatAlertsRateHint": "Inget går förlorat när rummet är mer aktivt än så här – meddelandena sparas och kommer tillsammans vid nästa avisering."
+    "publicChatAlertsRateHint": "Inget går förlorat när rummet är mer aktivt än så här – meddelandena sparas och kommer tillsammans vid nästa avisering.",
+    "emailNotificationsDescLinked": "Skickat till {{email}}",
+    "emailNotificationsNoAddress": "Lägg till en e-postadress i ditt konto först – dit skulle dessa skickas.",
+    "emailNotificationsAddAddress": "Lägg till en e-postadress"
   },
   "common": {
     "save": "Spara",
@@ -826,7 +829,8 @@
       "mentionedNamed": "{{name}} nämnde dig i \"{{community}}\"",
       "here": "{{name}} skickade meddelanden till alla i communityn",
       "hereNamed": "{{name}} skickade meddelanden till alla i \"{{community}}\""
-    }
+    },
+    "byEmail": "Via e-post"
   },
   "leaderboard": {
     "title": "Topplista",

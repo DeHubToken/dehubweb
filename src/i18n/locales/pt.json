@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Ative as notificações do navegador acima para que estes cheguem",
     "publicChatAlertsRate": "No máximo",
     "publicChatAlertsRateOption": "{{count}} por hora",
-    "publicChatAlertsRateHint": "Nada é perdido quando a sala está mais movimentada que isso — as mensagens são retidas e chegam juntas no próximo alerta."
+    "publicChatAlertsRateHint": "Nada é perdido quando a sala está mais movimentada que isso — as mensagens são retidas e chegam juntas no próximo alerta.",
+    "emailNotificationsDescLinked": "Enviado para {{email}}",
+    "emailNotificationsNoAddress": "Adicione primeiro um endereço de e-mail à sua conta — é para lá que estes iriam.",
+    "emailNotificationsAddAddress": "Adicionar um endereço de e-mail"
   },
   "common": {
     "save": "Salvar",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} mencionou-o em \"{{community}}\"",
       "here": "{{name}} enviou mensagens a todos na comunidade",
       "hereNamed": "{{name}} enviou uma mensagem a todos em \"{{community}}\""
-    }
+    },
+    "byEmail": "Por e-mail"
   },
   "leaderboard": {
     "title": "Classificação",

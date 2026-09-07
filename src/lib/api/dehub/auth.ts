@@ -301,6 +301,13 @@ export interface EmailLinkStatusResponse {
   /** Masked server-side (us***@example.com) — safe to render as-is. */
   email: string | null;
   /**
+   * The address a notification email would be sent to, masked, or null if
+   * there is none. NOT the same question as `linked`: that one asks whether
+   * the sign-in link came from this flow, and almost every address on the
+   * platform came from a social login instead. Absent on older servers.
+   */
+  notifyEmail?: string | null;
+  /**
    * Whether attaching an email can succeed at all. False for an account whose
    * Supabase identity came from a social signup: it already signs in without a
    * wallet, and confirm would refuse a second link with
