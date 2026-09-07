@@ -1189,9 +1189,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     }
   };
 
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const acceptCommentImage = (file: File) => {
     if (!file.type.startsWith('image/')) {
       toast.error('Please select an image file');
       return;
@@ -1203,6 +1201,25 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     setCommentGifUrl(null);
     setCommentImage(file);
     setCommentImagePreview(URL.createObjectURL(file));
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    acceptCommentImage(file);
+  };
+
+  // Pasting a screenshot is the fastest way to answer with a picture, and the
+  // textarea would otherwise swallow it silently. Only claim the paste when
+  // the clipboard carries no text — a rich copy brings its images along and
+  // the words are what was meant.
+  const handleCommentPaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    if (e.clipboardData.getData('text/plain')) return;
+    const file = Array.from(e.clipboardData.files).find((f) => f.type.startsWith('image/'));
+    if (!file) return;
+    e.preventDefault();
+    setIsInputExpanded(true);
+    acceptCommentImage(file);
   };
 
   const removeCommentImage = () => {
@@ -2275,6 +2292,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                     }
                   }}
                   onInput={resizeInput}
+                  onPaste={handleCommentPaste}
                 />
                 <UserMentionDropdown
                   query={mention.query}
