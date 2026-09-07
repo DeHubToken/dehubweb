@@ -828,7 +828,17 @@
     "newNotification": "ແຈ້ງເຕືອນໃໝ່",
     "oneOther": "1 ຄົນອື່ນ",
     "nOthers": "{{count}} ຄົນອື່ນ",
-    "burstBody": "ການແຈ້ງເຕືອນໃໝ່ {{count}} ຈາກ {{who}}"
+    "burstBody": "ການແຈ້ງເຕືອນໃໝ່ {{count}} ຈາກ {{who}}",
+    "community": {
+      "joined": "{{name}} ເຂົ້າຮ່ວມຊຸມຊົນຂອງທ່ານ",
+      "joinedNamed": "{{name}} ເຂົ້າຮ່ວມ \"{{community}}@\"",
+      "requested": "{{name}} ຖືກຮ້ອງຂໍໃຫ້ເຂົ້າຮ່ວມຊຸມຊົນຂອງທ່ານ",
+      "requestedNamed": "{{name}} ຖືກຮ້ອງຂໍໃຫ້ເຂົ້າຮ່ວມ \"{{community}}\"",
+      "mentioned": "{{name}} ໄດ້ກ່າວເຖິງທ່ານໃນຊຸມຊົນ",
+      "mentionedNamed": "{{name}} ໄດ້ກ່າວເຖິງທ່ານໃນ \"{{community}}\"",
+      "here": "{{name}} ສົ່ງຂໍ້ຄວາມໃຫ້ທຸກຄົນໃນຊຸມຊົນ",
+      "hereNamed": "{{name}} ສົ່ງຂໍ້ຄວາມໃຫ້ທຸກຄົນໃນ \"{{community}}\""
+    }
   },
   "leaderboard": {
     "title": "ກະດານຄະແນນ",
@@ -1695,7 +1705,14 @@
     "reject": "ປະຕິເສດ",
     "pinToProfile": "ປັກໝຸດຊຸມຊົນໃສ່ໂປຣໄຟລ໌",
     "joinFirst": "ເຂົ້າຮ່ວມຊຸມຊົນກ່ອນເພື່ອປັກໝຸດພວກມັນ",
-    "pinCommunity": "ປັກໝຸດຊຸມຊົນ"
+    "pinCommunity": "ປັກໝຸດຊຸມຊົນ",
+    "activity": "ກິດຈະກຳ",
+    "activitySearch": "ກິດຈະ ກໍາ ຄົ້ນຫາ...",
+    "activityNew": "{{total}} ໃຫມ່",
+    "activityShowMore": "ສະແດງເພີ່ມເຕີມ ({{total}})",
+    "activityNoMatches": "ບໍ່ມີການແຂ່ງຂັນ ສໍາ ລັບ \"{{query}}@\"",
+    "activityEmpty": "ຍັງບໍ່ມີກິດຈະກຳເທື່ອ",
+    "activityEmptyDesc": "ການເຂົ້າຮ່ວມ, ການກ່າວເຖິງ ແລະ ການປະກາດຈາກຊຸມຊົນຂອງທ່ານຈະປາກົດຢູ່ທີ່ນີ້."
   },
   "prompt": {
     "seoTitle": "ປ້ອນຂໍ້ມູນໃສ່ຟີດຂອງທ່ານ — DeHub",

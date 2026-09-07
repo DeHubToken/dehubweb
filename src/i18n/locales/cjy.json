@@ -827,7 +827,17 @@
     "newNotification": "新通知",
     "oneOther": "1位其他人",
     "nOthers": "{{count}}位其他人",
-    "burstBody": "{{count}} 条新通知来自 {{who}}"
+    "burstBody": "{{count}} 条新通知来自 {{who}}",
+    "community": {
+      "joined": "{{name}} 加入了你的社群",
+      "joinedNamed": "{{name}} 加入了“{{community}}”",
+      "requested": "{{name}} 请求加入你的社群",
+      "requestedNamed": "{{name}} 请求加入“{{community}}”",
+      "mentioned": "{{name}} 在社群中提及了你",
+      "mentionedNamed": "{{name}} 在“{{community}}”中提及了你",
+      "here": "{{name}} 向社群中的所有人发送了消息",
+      "hereNamed": "{{name}} 向“{{community}}”中的所有人发送了消息"
+    }
   },
   "leaderboard": {
     "title": "排行榜",
@@ -1669,7 +1679,14 @@
     "approve": "批准",
     "reject": "拒绝",
     "joinFirst": "先加入社区才能置顶",
-    "pinCommunity": "置顶社区"
+    "pinCommunity": "置顶社区",
+    "activity": "活动",
+    "activitySearch": "搜索活动...",
+    "activityNew": "{{total}} 新建",
+    "activityShowMore": "显示更多 ({{total}})",
+    "activityNoMatches": "未找到“{{query}}”的匹配项",
+    "activityEmpty": "暂无活动",
+    "activityEmptyDesc": "您社区的加入、提及和公告将显示在此处。"
   },
   "prompt": {
     "seoTitle": "提示你的动态 — DeHub",

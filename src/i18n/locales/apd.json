@@ -829,7 +829,17 @@
     "newNotification": "إشعار جديد",
     "oneOther": "1 تاني",
     "nOthers": "{{count}} تانيين",
-    "burstBody": "{{count}} إشعارات جديدة من {{who}}"
+    "burstBody": "{{count}} إشعارات جديدة من {{who}}",
+    "community": {
+      "joined": "{{name}} انضم لمجموعتك",
+      "joinedNamed": "{{name}} انضم لـ “{{community}}”",
+      "requested": "{{name}} طلب الانضمام لمجموعتك",
+      "requestedNamed": "{{name}} طلب الانضمام لـ “{{community}}”",
+      "mentioned": "{{name}} ذكرك في مجموعة",
+      "mentionedNamed": "{{name}} ذكرك في “{{community}}”",
+      "here": "{{name}} أرسل رسالة للجميع في المجموعة",
+      "hereNamed": "{{name}} أرسل رسالة للجميع في “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "لوحة الترتيب",
@@ -1666,7 +1676,14 @@
     "approve": "وافق",
     "reject": "ارفض",
     "joinFirst": "انضم للمجتمعات الأول عشان تثبتها",
-    "pinCommunity": "ثبّت المجتمع"
+    "pinCommunity": "ثبّت المجتمع",
+    "activity": "النشاط",
+    "activitySearch": "ابحث عن النشاط...",
+    "activityNew": "{{total}} جديد",
+    "activityShowMore": "عرض المزيد ({{total}})",
+    "activityNoMatches": "لا توجد نتائج لـ \"{{query}}\"",
+    "activityEmpty": "لا يوجد نشاط بعد",
+    "activityEmptyDesc": "الانضمامات والإشارات والإعلانات من مجتمعاتك تظهر هنا."
   },
   "prompt": {
     "seoTitle": "اكتب لصفحتك الرئيسية — DeHub",

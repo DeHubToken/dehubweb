@@ -15,12 +15,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useUserCommunities, useDiscoverCommunities, useCommunityActivityScores } from '@/hooks/use-communities';
 import { CommunityCard } from '@/components/app/communities/CommunityCard';
 import { CreateCommunityModal } from '@/components/app/communities/CreateCommunityModal';
-import { CommunityOwnerActivity } from '@/components/app/communities/CommunityOwnerActivity';
+import { CommunityActivity } from '@/components/app/communities/CommunityActivity';
+import { AppState } from '@/components/app/AppState';
 import { SEOHead } from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { withWalletHeader } from '@/lib/supabase-wallet-client';
+import { useCommunityNotifications, useCommunityUnreadCounts } from '@/hooks/use-community-notifications';
+import { communityNotificationRef, type CommunityRef } from '@/lib/community-notifications';
 import communitiesTitleIcon from '@/assets/communities-title-icon.webp';
 
 export default function CommunitiesPage() {
@@ -35,46 +35,14 @@ export default function CommunitiesPage() {
   const { data: activityScores = {} } = useCommunityActivityScores();
   const [sortMode, setSortMode] = useState<'top' | 'new' | 'hot'>('top');
 
-  // Fetch per-community unread counts for owned communities. Join
-  // notifications are keyed on the community SLUG (that is what the link they
-  // carry is built from), not the row id, so every count here is slug-keyed.
-  const ownedCommunities = useMemo(
-    () => userCommunities
-      .filter(m => m.role === 'owner' && m.communities && (m.communities as any).slug)
-      .map(m => ({ id: (m.communities as any).id as string, slug: (m.communities as any).slug as string, name: (m.communities as any).name as string })),
-    [userCommunities]
-  );
-  const ownedCommunitySlugs = useMemo(() => ownedCommunities.map(c => c.slug), [ownedCommunities]);
-
-  const { data: perCommunityUnread = {} } = useQuery({
-    queryKey: ['community-activity-unread-per', ownedCommunitySlugs],
-    queryFn: async () => {
-      if (ownedCommunitySlugs.length === 0) return {};
-      const { data, error } = await withWalletHeader(
-        supabase
-          .from('custom_notifications')
-          .select('reference_id')
-          .eq('type', 'community_join')
-          .eq('read', false)
-          .in('reference_id', ownedCommunitySlugs),
-        walletAddress!
-      );
-      if (error) throw error;
-      const counts: Record<string, number> = {};
-      (data || []).forEach((row: any) => {
-        if (row.reference_id) {
-          counts[row.reference_id] = (counts[row.reference_id] || 0) + 1;
-        }
-      });
-      return counts;
-    },
-    enabled: ownedCommunitySlugs.length > 0 && !!walletAddress,
-    staleTime: 60_000,
-  });
-
   const [tab, setTab] = useState<'communities' | 'activity'>('communities');
 
-  const totalUnread = useMemo(() => Object.values(perCommunityUnread).reduce((a, b) => a + b, 0), [perCommunityUnread]);
+  // Activity and unread badges are views of the main notification system — the
+  // same rows the bell reads, fetched once. This page used to query
+  // custom_notifications itself, which is how it ended up matching
+  // `reference_id` against a form the join trigger was no longer writing.
+  const { total: totalUnread, countFor } = useCommunityUnreadCounts();
+  const { notifications: communityNotifications } = useCommunityNotifications();
 
   const userCommunityIds = new Set(userCommunities.map(m => m.community_id));
   const roleMap = useMemo(() => {
@@ -95,6 +63,36 @@ export default function CommunitiesPage() {
       return 0;
     });
   }, [userCommunities]);
+
+  /**
+   * Activity, grouped by community, newest group first.
+   *
+   * A row files under whichever community its reference matches — slug or uuid,
+   * since the join trigger has written both — and one whose community is no
+   * longer in the list keeps a heading from the title it stored rather than
+   * disappearing from the tab.
+   */
+  const activityGroups = useMemo(() => {
+    const groups = new Map<string, { community: CommunityRef; notifications: typeof communityNotifications }>();
+    for (const notification of communityNotifications) {
+      const ref = communityNotificationRef(notification)?.toLowerCase();
+      if (!ref) continue;
+      let group = groups.get(ref);
+      if (!group) {
+        const match = myCommunities.find((c: any) =>
+          c.slug?.toLowerCase() === ref || c.id?.toLowerCase() === ref);
+        group = {
+          community: match
+            ? { id: (match as any).id, slug: (match as any).slug, name: (match as any).name }
+            : { slug: ref, name: (notification as any)._customReferenceTitle || ref },
+          notifications: [],
+        };
+        groups.set(ref, group);
+      }
+      group.notifications.push(notification);
+    }
+    return [...groups.values()];
+  }, [communityNotifications, myCommunities]);
 
   const otherCommunities = useMemo(() => {
     const list = allCommunities.filter(c => !userCommunityIds.has(c.id));
@@ -159,19 +157,19 @@ export default function CommunitiesPage() {
           </div>
 
           {/* Tabs */}
-          {isAuthenticated && ownedCommunities.length > 0 && (
+          {isAuthenticated && (activityGroups.length > 0 || totalUnread > 0) && (
             <div className="flex gap-1 p-1 rounded-xl bg-white/[0.04] border border-white/[0.06]">
               <button
                 onClick={() => setTab('communities')}
                 className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-colors ${tab === 'communities' ? 'bg-white/[0.1] text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
               >
-                Communities
+                {t('communities.title')}
               </button>
               <button
                 onClick={() => setTab('activity')}
                 className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-colors flex items-center justify-center gap-1.5 ${tab === 'activity' ? 'bg-white/[0.1] text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
               >
-                Activity
+                {t('communities.activity', 'Activity')}
                 {totalUnread > 0 && (
                   <span className="min-w-[16px] h-[16px] px-1 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full leading-none">
                     {totalUnread > 99 ? '99+' : totalUnread}
@@ -237,14 +235,23 @@ export default function CommunitiesPage() {
       {/* Content */}
       <div ref={contentRef} className="max-w-2xl mx-auto px-2 sm:px-3 pt-3 pb-6">
       {tab === 'activity' ? (
-        <div className="space-y-4">
-          {ownedCommunities.map(community => (
-            <div key={community.id}>
-              <h3 className="text-xs font-semibold text-zinc-400 mb-2 px-1">{community.name}</h3>
-              <CommunityOwnerActivity communitySlug={community.slug} />
-            </div>
-          ))}
-        </div>
+        activityGroups.length > 0 ? (
+          <div className="space-y-4">
+            {activityGroups.map(group => (
+              <div key={group.community.slug || group.community.id}>
+                <h3 className="text-xs font-semibold text-zinc-400 mb-2 px-1">{group.community.name}</h3>
+                <CommunityActivity community={group.community} notifications={group.notifications} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <AppState
+            icon="notifications"
+            title={t('communities.activityEmpty', 'No activity yet')}
+            description={t('communities.activityEmptyDesc', 'Joins, mentions and announcements from your communities show up here.')}
+            size="section"
+          />
+        )
       ) : isLoading ? (
         <div className="space-y-2">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -261,7 +268,7 @@ export default function CommunitiesPage() {
                   community={community}
                   isMember={true}
                   role={roleMap[community.id]}
-                  unreadCount={perCommunityUnread[community.slug]}
+                  unreadCount={countFor(community)}
                   onClick={() => navigate(`/app/communities/${community.slug}`)}
                 />
               ))}

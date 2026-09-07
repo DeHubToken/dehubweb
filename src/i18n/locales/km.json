@@ -842,7 +842,17 @@
     "newNotification": "ការជូនដំណឹងថ្មី",
     "oneOther": "១ នាក់ផ្សេងទៀត",
     "nOthers": "{{count}} នាក់ផ្សេងទៀត",
-    "burstBody": "{{count}} ការជូនដំណឹងថ្មីពី {{who}}"
+    "burstBody": "{{count}} ការជូនដំណឹងថ្មីពី {{who}}",
+    "community": {
+      "joined": "{{name}} @ បានចូលរួមសហគមន៍របស់អ្នក",
+      "joinedNamed": "{{name}} បានចូលរួម \"{{community}}\"",
+      "requested": "{{name}} បានស្នើសុំឱ្យចូលរួមសហគមន៍របស់អ្នក",
+      "requestedNamed": "{{name}} បានស្នើសុំឱ្យចូលរួម \"{{community}}\"",
+      "mentioned": "{{name}} @ បានលើកឡើងពីអ្នកនៅក្នុងសហគមន៍មួយ",
+      "mentionedNamed": "{{name}} បានលើកឡើងអ្នកនៅក្នុង \"{{community}}\"",
+      "here": "{{name}} @ បានផ្ញើសារទៅគ្រប់គ្នានៅក្នុងសហគមន៍",
+      "hereNamed": "{{name}} @ បានផ្ញើសារទៅអ្នករាល់គ្នានៅក្នុង \"{{community}}\""
+    }
   },
   "leaderboard": {
     "title": "តារាងចំណាត់ថ្នាក់",
@@ -1687,7 +1697,14 @@
     "approve": "អនុម័ត",
     "reject": "បដិសេធ",
     "joinFirst": "ចូលរួមសហគមន៍សិនដើម្បីខ្ទាស់វា",
-    "pinCommunity": "ខ្ទាស់សហគមន៍"
+    "pinCommunity": "ខ្ទាស់សហគមន៍",
+    "activity": "សកម្មភាព",
+    "activitySearch": "សកម្មភាព ស្វែងរក...",
+    "activityNew": "{{total}} ថ្មី",
+    "activityShowMore": "បង្ហាញ ច្រើន ទៀត ({{total}})",
+    "activityNoMatches": "គ្មានការផ្គូផ្គងសម្រាប់ \"{{query}}\"",
+    "activityEmpty": "មិនទាន់មានសកម្មភាពនៅឡើយទេ",
+    "activityEmptyDesc": "ចូលរួម, ការលើកឡើង និងការប្រកាសពីសហគមន៍របស់អ្នកបង្ហាញនៅទីនេះ ។"
   },
   "prompt": {
     "seoTitle": "រំលេចចំណីរបស់អ្នក — DeHub",

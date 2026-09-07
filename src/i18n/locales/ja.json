@@ -829,7 +829,17 @@
     "newNotification": "新しい通知",
     "oneOther": "1人の他のユーザー",
     "nOthers": "{{count}}人の他のユーザー",
-    "burstBody": "{{count}}件の新しい通知 {{who}}さんから"
+    "burstBody": "{{count}}件の新しい通知 {{who}}さんから",
+    "community": {
+      "joined": "{{name}}さんがコミュニティに参加しました",
+      "joinedNamed": "{{name}}さんが「{{community}}」に参加しました",
+      "requested": "{{name}}さんがコミュニティへの参加をリクエストしました",
+      "requestedNamed": "{{name}}さんが「{{community}}」への参加をリクエストしました",
+      "mentioned": "{{name}}さんがコミュニティであなたをメンションしました",
+      "mentionedNamed": "{{name}}さんが「{{community}}」であなたをメンションしました",
+      "here": "{{name}}さんがコミュニティの全員にメッセージを送りました",
+      "hereNamed": "{{name}}さんが「{{community}}」の全員にメッセージを送りました"
+    }
   },
   "leaderboard": {
     "title": "ランキング",
@@ -1717,7 +1727,14 @@
     "reject": "拒否",
     "pinToProfile": "コミュニティをプロフィールにピン留め",
     "joinFirst": "ピン留めするには先にコミュニティに参加してください",
-    "pinCommunity": "コミュニティをピン留め"
+    "pinCommunity": "コミュニティをピン留め",
+    "activity": "アクティビティ",
+    "activitySearch": "アクティビティを検索...",
+    "activityNew": "{{total}}新規",
+    "activityShowMore": "さらに表示({{total}})",
+    "activityNoMatches": "「{{query}}」に一致するものはありません",
+    "activityEmpty": "アクティビティはまだありません",
+    "activityEmptyDesc": "コミュニティからの参加、メンション、お知らせがここに表示されます。"
   },
   "prompt": {
     "seoTitle": "フィードをプロンプト — DeHub",

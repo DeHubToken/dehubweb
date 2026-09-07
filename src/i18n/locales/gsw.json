@@ -830,7 +830,17 @@
     "newNotification": "Neui Nachricht",
     "oneOther": "1 andere",
     "nOthers": "{{count}} anderi",
-    "burstBody": "{{count}} nöii Notifikationä vo {{who}}"
+    "burstBody": "{{count}} nöii Notifikationä vo {{who}}",
+    "community": {
+      "joined": "{{name}} isch dinere Community biitrette",
+      "joinedNamed": "{{name}} isch de “{{community}}” biitrette",
+      "requested": "{{name}} het welle bi dinere Community biitrete",
+      "requestedNamed": "{{name}} het welle bi “{{community}}” biitrete",
+      "mentioned": "{{name}} het dich i dimere Community erwähnt",
+      "mentionedNamed": "{{name}} het dich i “{{community}}” erwähnt",
+      "here": "{{name}} het a alli i dimere Community gschriebe",
+      "hereNamed": "{{name}} het a alli i “{{community}}” gschriebe"
+    }
   },
   "leaderboard": {
     "title": "Rangllischte",
@@ -1702,7 +1712,14 @@
     "approve": "Gnehmige",
     "reject": "Ablehne",
     "joinFirst": "Tritt zersch Communitys by, zum si aazpinne",
-    "pinCommunity": "Community aapinne"
+    "pinCommunity": "Community aapinne",
+    "activity": "Aktivität",
+    "activitySearch": "Suäch Aktivität...",
+    "activityNew": "{{total}} neu",
+    "activityShowMore": "Meh zeige ({{total}})",
+    "activityNoMatches": "Keini Treffer für \"{{query}}\"",
+    "activityEmpty": "Noch kei Aktivität",
+    "activityEmptyDesc": "Beitritt, Erwähnigä und Ankündigigä vo dine Gmeinschaftä gfindsch du do."
   },
   "prompt": {
     "seoTitle": "Gib dis Feedback bekannt — DeHub",

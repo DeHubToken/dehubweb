@@ -829,7 +829,17 @@
     "newNotification": "አዲስ ማሳወቂያ",
     "oneOther": "1 ሌላ",
     "nOthers": "{{count}} ሌሎች",
-    "burstBody": "{{count}} አዲስ ማሳወቂያዎች ከ {{who}}"
+    "burstBody": "{{count}} አዲስ ማሳወቂያዎች ከ {{who}}",
+    "community": {
+      "joined": "{{name}} ማህበረሰብዎን ተቀላቀሉ",
+      "joinedNamed": "{{name}} ተቀላቀል “{{community}}@”",
+      "requested": "{{name}} ማህበረሰብዎን እንዲቀላቀሉ ጠይቀዋል",
+      "requestedNamed": "{{name}} ለመቀላቀል ጠየቀ “{{community}}”",
+      "mentioned": "{{name}} በማህበረሰብ ውስጥ ጠቅሶሃል",
+      "mentionedNamed": "{{name}} በ “{{community}}” ውስጥ ጠቅሷል",
+      "here": "{{name}} በማህበረሰቡ ውስጥ ላሉት ሁሉ መልእክት አስተላልፈዋል",
+      "hereNamed": "{{name}}@ በ \"{{community}}@\" ውስጥ ለሁሉም ሰው መልእክት አስተላልፏል"
+    }
   },
   "leaderboard": {
     "title": "ደረጃ ሰሌዳዎች",
@@ -1704,7 +1714,14 @@
     "approve": "አጽድቅ",
     "reject": "ውድቅ አድርግ",
     "joinFirst": "ለመሰካት መጀመሪያ ማህበረሰቦችን ይቀላቀሉ",
-    "pinCommunity": "ማህበረሰብ ሰካ"
+    "pinCommunity": "ማህበረሰብ ሰካ",
+    "activity": "እንቅስቃሴ",
+    "activitySearch": "የፍለጋ እንቅስቃሴ...",
+    "activityNew": "{{total}} አዲስ",
+    "activityShowMore": "ተጨማሪ አሳይ ({{total}})",
+    "activityNoMatches": "ለ \"{{query}}\" ምንም ግጥሚያዎች የሉም",
+    "activityEmpty": "እስካሁን ምንም እንቅስቃሴ የለም",
+    "activityEmptyDesc": "ከማህበረሰቦችዎ የተቀላቀሉ ፣ የተጠቀሱ እና ማስታወቂያዎች እዚህ ይታያሉ ።"
   },
   "prompt": {
     "seoTitle": "የእርስዎን ምግብ ይጠይቁ — DeHub",

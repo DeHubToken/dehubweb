@@ -821,7 +821,17 @@
     "newNotification": "Nova notificació",
     "oneOther": "1 altre",
     "nOthers": "{{count}} altres",
-    "burstBody": "{{count}} notificacions noves de {{who}}"
+    "burstBody": "{{count}} notificacions noves de {{who}}",
+    "community": {
+      "joined": "{{name}} s'ha unit a la teva comunitat",
+      "joinedNamed": "{{name}} s'ha unit a “{{community}}”",
+      "requested": "{{name}}ha demanat unir-se a la teva comunitat",
+      "requestedNamed": "{{name}}ha demanat unir-se a “{{community}}”",
+      "mentioned": "{{name}} t'ha esmentat en una comunitat",
+      "mentionedNamed": "{{name}} t'ha esmentat a “{{community}}”",
+      "here": "{{name}} ha enviat un missatge a tothom de la comunitat",
+      "hereNamed": "{{name}}ha enviat un missatge a tothom a “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Classificació",
@@ -1659,7 +1669,14 @@
     "reject": "Rebutja",
     "pinToProfile": "Fixa comunitats al perfil",
     "joinFirst": "Uneix-te primer a comunitats per fixar-les",
-    "pinCommunity": "Fixa la comunitat"
+    "pinCommunity": "Fixa la comunitat",
+    "activity": "Activitat",
+    "activitySearch": "Cercar activitat...",
+    "activityNew": "{{total}} nou",
+    "activityShowMore": "Mostra'n més ({{total}})",
+    "activityNoMatches": "No hi ha coincidències per a «{{query}}»",
+    "activityEmpty": "Encara no hi ha activitat",
+    "activityEmptyDesc": "Les inscripcions, mencions i anuncis de les teves comunitats apareixen aquí."
   },
   "prompt": {
     "seoTitle": "Demana al teu feed — DeHub",

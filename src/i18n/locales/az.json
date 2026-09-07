@@ -821,7 +821,17 @@
     "newNotification": "Yeni bildiriş",
     "oneOther": "1 başqası",
     "nOthers": "{{count}} başqası",
-    "burstBody": "{{count}} yeni bildiriş {{who}}-dan"
+    "burstBody": "{{count}} yeni bildiriş {{who}}-dan",
+    "community": {
+      "joined": "{{name}} icmanıza qoşuldu",
+      "joinedNamed": "{{name}} qoşuldu “{{community}}”",
+      "requested": "{{name}} icmanıza qoşulmaq istədi",
+      "requestedNamed": "{{name}} “{{community}}” -a qoşulmaq istədi",
+      "mentioned": "{{name}} sizi icmada qeyd etdi",
+      "mentionedNamed": "{{name}} sizi “{{community}}” -da qeyd edib",
+      "here": "{{name}} icmadakı hər kəsə mesaj yazdı",
+      "hereNamed": "{{name}} “{{community}}” -da hər kəs mesajlaşdı"
+    }
   },
   "leaderboard": {
     "title": "Lider Lövhəsi",
@@ -1658,7 +1668,14 @@
     "reject": "Rədd et",
     "pinToProfile": "İcmaları profilə sancaqla",
     "joinFirst": "Sancmaq üçün əvvəlcə icmalara qoşulun",
-    "pinCommunity": "İcmanı sancaqla"
+    "pinCommunity": "İcmanı sancaqla",
+    "activity": "Fəaliyyət",
+    "activitySearch": "Axtarış fəaliyyəti...",
+    "activityNew": "{{total}} yeni",
+    "activityShowMore": "Daha çox göstər ({{total}})",
+    "activityNoMatches": "\"{{query}}\" üçün uyğun deyil",
+    "activityEmpty": "Hələ heç bir fəaliyyət yoxdur",
+    "activityEmptyDesc": "İcmalarınızdan qoşulmalar, qeydlər və elanlar burada görünür."
   },
   "prompt": {
     "seoTitle": "DeHub-da lentinizi tənzimləyin — DeHub",

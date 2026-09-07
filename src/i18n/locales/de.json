@@ -830,7 +830,17 @@
     "newNotification": "Neue Benachrichtigung",
     "oneOther": "1 anderer",
     "nOthers": "{{count}} andere",
-    "burstBody": "{{count}} neue Benachrichtigungen von {{who}}"
+    "burstBody": "{{count}} neue Benachrichtigungen von {{who}}",
+    "community": {
+      "joined": "{{name}} ist deiner Community beigetreten",
+      "joinedNamed": "{{name}} ist „{{community}}“ beigetreten",
+      "requested": "{{name}} hat darum gebeten, deiner Community beizutreten",
+      "requestedNamed": "{{name}} hat darum gebeten, „{{community}}“ beizutreten",
+      "mentioned": "{{name}} hat dich in einer Community erwähnt",
+      "mentionedNamed": "{{name}} hat Sie in „{{community}}“ erwähnt",
+      "here": "{{name}} hat allen in der Community eine Nachricht gesendet",
+      "hereNamed": "{{name}} hat alle in „{{community}}“ benachrichtigt"
+    }
   },
   "leaderboard": {
     "title": "Rangliste",
@@ -1717,7 +1727,14 @@
     "reject": "Ablehnen",
     "pinToProfile": "Communities ans Profil anpinnen",
     "joinFirst": "Tritt erst Communities bei, um sie anzupinnen",
-    "pinCommunity": "Community anpinnen"
+    "pinCommunity": "Community anpinnen",
+    "activity": "Aktivität",
+    "activitySearch": "Aktivität suchen...",
+    "activityNew": "{{total}} neu",
+    "activityShowMore": "Mehr anzeigen ({{total}})",
+    "activityNoMatches": "Keine Treffer für \"{{query}}\"",
+    "activityEmpty": "Noch keine Aktivität",
+    "activityEmptyDesc": "Beitritte, Erwähnungen und Ankündigungen aus deinen Communitys werden hier angezeigt."
   },
   "prompt": {
     "seoTitle": "Deinen Feed anstoßen — DeHub",

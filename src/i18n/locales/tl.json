@@ -877,7 +877,17 @@
     "newNotification": "Bagong abiso",
     "oneOther": "1 pa",
     "nOthers": "{{count}} pa",
-    "burstBody": "{{count}} bagong notipikasyon mula sa {{who}}"
+    "burstBody": "{{count}} bagong notipikasyon mula sa {{who}}",
+    "community": {
+      "joined": "Sumali sa iyong komunidad si {{name}}",
+      "joinedNamed": "Sumali si {{name}} sa “{{community}}”",
+      "requested": "Hiniling ni {{name}} na sumali sa iyong komunidad",
+      "requestedNamed": "Hiniling ni {{name}} na sumali sa “{{community}}”",
+      "mentioned": "Binanggit ka ni {{name}} sa isang komunidad",
+      "mentionedNamed": "Binanggit ka ni {{name}} sa “{{community}}”",
+      "here": "Nagpadala ng mensahe si {{name}} sa lahat ng tao sa komunidad",
+      "hereNamed": "Nagpadala ang {{name}} ng mensahe sa lahat sa “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Leaderboard",
@@ -1595,7 +1605,14 @@
     "reject": "Tanggihan",
     "pinToProfile": "I - pin ang mga komunidad para mag - profile",
     "joinFirst": "Sumali muna sa mga komunidad para ma-pin ang mga ito",
-    "pinCommunity": "I-pin ang komunidad"
+    "pinCommunity": "I-pin ang komunidad",
+    "activity": "Aktibidad",
+    "activitySearch": "Maghanap sa aktibidad...",
+    "activityNew": "{{total}} bago",
+    "activityShowMore": "Magpakita pa ({{total}})",
+    "activityNoMatches": "Walang pagtutugma para sa \"{{query}}\"",
+    "activityEmpty": "Wala pang aktibidad",
+    "activityEmptyDesc": "Lumilitaw dito ang mga pagsali, pagbanggit at anunsyo mula sa iyong mga komunidad."
   },
   "prompt": {
     "seoTitle": "I-prompt ang iyong feed — DeHub",

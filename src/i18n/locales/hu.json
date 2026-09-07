@@ -820,7 +820,17 @@
     "newNotification": "Új értesítés",
     "oneOther": "1 másik",
     "nOthers": "{{count}} másik",
-    "burstBody": "{{count}} új értesítés innen: {{who}}"
+    "burstBody": "{{count}} új értesítés innen: {{who}}",
+    "community": {
+      "joined": "{{name}} csatlakozott a közösségedhez",
+      "joinedNamed": "{{name}} csatlakozott: „{{community}}”",
+      "requested": "{{name}} kérte, hogy csatlakozhasson a közösségedhez",
+      "requestedNamed": "{{name}} kérte, hogy csatlakozhasson a következőhöz: „{{community}}”",
+      "mentioned": "{{name}} megemlített egy közösségben",
+      "mentionedNamed": "{{name}} megemlített „{{community}}” -ben",
+      "here": "{{name}} mindenkinek üzenetet küldött a közösségben",
+      "hereNamed": "{{name}} mindenkinek üzenetet küldött „{{community}}” területén"
+    }
   },
   "leaderboard": {
     "title": "Ranglista",
@@ -1659,7 +1669,14 @@
     "reject": "Elutasítás",
     "pinToProfile": "Közösségek kitűzése a profilra",
     "joinFirst": "Először csatlakozz közösségekhez, hogy kitűzhesd őket",
-    "pinCommunity": "Közösség kitűzése"
+    "pinCommunity": "Közösség kitűzése",
+    "activity": "Tevékenység",
+    "activitySearch": "Tevékenység keresése...",
+    "activityNew": "{{total}} új",
+    "activityShowMore": "Továbbiak megjelenítése ({{total}})",
+    "activityNoMatches": "Nincs találat erre: „{{query}}”",
+    "activityEmpty": "Még nincs tevékenység",
+    "activityEmptyDesc": "Itt jelennek meg a közösségeidből származó csatlakozások, említések és bejelentések."
   },
   "prompt": {
     "seoTitle": "Ösztönözd a hírfolyamodat — DeHub",

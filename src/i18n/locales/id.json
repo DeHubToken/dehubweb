@@ -830,7 +830,17 @@
     "newNotification": "Notifikasi baru",
     "oneOther": "1 lainnya",
     "nOthers": "{{count}} lainnya",
-    "burstBody": "{{count}} notifikasi baru dari {{who}}"
+    "burstBody": "{{count}} notifikasi baru dari {{who}}",
+    "community": {
+      "joined": "{{name}} bergabung dengan komunitas Anda",
+      "joinedNamed": "{{name}} bergabung dengan “{{community}}”",
+      "requested": "{{name}} meminta untuk bergabung dengan komunitas Anda",
+      "requestedNamed": "{{name}} meminta untuk bergabung dengan “{{community}}”",
+      "mentioned": "{{name}} menyebut Anda di komunitas",
+      "mentionedNamed": "{{name}} menyebut Anda di “{{community}}”",
+      "here": "{{name}} mengirim pesan kepada semua orang di komunitas ini",
+      "hereNamed": "{{name}} mengirim pesan kepada semua orang di “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Papan Peringkat",
@@ -1717,7 +1727,14 @@
     "reject": "Tolak",
     "pinToProfile": "Sematkan komunitas ke profil",
     "joinFirst": "Gabung komunitas terlebih dahulu untuk menyematkannya",
-    "pinCommunity": "Sematkan komunitas"
+    "pinCommunity": "Sematkan komunitas",
+    "activity": "Aktivitas",
+    "activitySearch": "Cari aktivitas...",
+    "activityNew": "{{total}} baru",
+    "activityShowMore": "Tampilkan lebih banyak ({{total}})",
+    "activityNoMatches": "Tidak ada yang cocok untuk \"{{query}}\"",
+    "activityEmpty": "Belum ada aktivitas",
+    "activityEmptyDesc": "Bergabung, penyebutan, dan pengumuman dari komunitas Anda ditampilkan di sini."
   },
   "prompt": {
     "seoTitle": "Prompt feed Anda — DeHub",

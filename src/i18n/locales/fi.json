@@ -821,7 +821,17 @@
     "newNotification": "Uusi ilmoitus",
     "oneOther": "1 muu",
     "nOthers": "{{count}} muuta",
-    "burstBody": "{{count}} uutta ilmoitusta {{who}}:ltä"
+    "burstBody": "{{count}} uutta ilmoitusta {{who}}:ltä",
+    "community": {
+      "joined": "{{name}} liittyi yhteisöösi",
+      "joinedNamed": "{{name}} liittyi \"{{community}}\"",
+      "requested": "{{name}} pyysi saada liittyä yhteisöösi",
+      "requestedNamed": "{{name}} pyysi liittymään \"{{community}}\"",
+      "mentioned": "{{name}} mainitsi sinut yhteisössä",
+      "mentionedNamed": "{{name}} mainitsi sinut kohteessa \"{{community}}\"",
+      "here": "{{name}} lähetti viestin kaikille yhteisön jäsenille",
+      "hereNamed": "{{name}} viestitti kaikille kohteessa \"{{community}}\""
+    }
   },
   "leaderboard": {
     "title": "Tulostaulukko",
@@ -1659,7 +1669,14 @@
     "reject": "Hylkää",
     "pinToProfile": "Kiinnitä yhteisöjä profiiliin",
     "joinFirst": "Liity ensin yhteisöihin kiinnittääksesi niitä",
-    "pinCommunity": "Kiinnitä yhteisö"
+    "pinCommunity": "Kiinnitä yhteisö",
+    "activity": "Toiminta",
+    "activitySearch": "Hae toimintaa...",
+    "activityNew": "{{total}} uutta",
+    "activityShowMore": "Näytä lisää ({{total}})",
+    "activityNoMatches": "Ei osumia haulle \"{{query}}\"",
+    "activityEmpty": "Ei vielä aktiviteetteja",
+    "activityEmptyDesc": "Yhteisösi liittymiset, maininnat ja ilmoitukset näkyvät täällä."
   },
   "prompt": {
     "seoTitle": "Ohjaa syötteesi – DeHub",

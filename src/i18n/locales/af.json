@@ -841,6 +841,16 @@
     "oneOther": "1 ander",
     "nOthers": "{{count}} ander",
     "burstBody": "{{count}} nuwe kennisgewings van {{who}}",
+    "community": {
+      "joined": "{{name}} Sluit aan by jou gemeenskap",
+      "joinedNamed": "{{name}} het by “{{community}}” aangesluit",
+      "requested": "{{name}} gevra om by jou gemeenskap aan te sluit",
+      "requestedNamed": "{{name}}@ gevra om aan te sluit \"{{community}}\"",
+      "mentioned": "{{name}} meld jou in 'n gemeenskap aan",
+      "mentionedNamed": "{{name}} @ vermeld jy in \"{{community}}\"",
+      "here": "{{name}} almal in die gemeenskap",
+      "hereNamed": "{{name}} @ boodskap almal in \"{{community}}\""
+    },
     "noNotifications": "Geen kennisgewings nie."
   },
   "leaderboard": {
@@ -1577,7 +1587,14 @@
     "reject": "Wys af",
     "pinToProfile": "Speld gemeenskappe aan profiel vas",
     "joinFirst": "Sluit eers by gemeenskappe aan om hulle vas te speld",
-    "pinCommunity": "Speld gemeenskap vas"
+    "pinCommunity": "Speld gemeenskap vas",
+    "activity": "Aktiwiteit",
+    "activitySearch": "Soek aktiwiteit...",
+    "activityNew": "{{total}} nuwe",
+    "activityShowMore": "Wys meer ({{total}})",
+    "activityNoMatches": "Geen ooreenstemmings vir \"{{query}}\" nie",
+    "activityEmpty": "Nog geen aktiwiteit nie",
+    "activityEmptyDesc": "Aansluitings, vermeldings en aankondigings van jou gemeenskappe verskyn hier."
   },
   "prompt": {
     "seoTitle": "Stel jou voer saam — DeHub",

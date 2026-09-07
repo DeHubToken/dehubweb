@@ -826,7 +826,17 @@
     "newNotification": "కొత్త నోటిఫికేషన్",
     "oneOther": "1 ఇతరుడు",
     "nOthers": "{{count}} ఇతరులు",
-    "burstBody": "{{count}} కొత్త నోటిఫికేషన్‌లు {{who}} నుండి"
+    "burstBody": "{{count}} కొత్త నోటిఫికేషన్‌లు {{who}} నుండి",
+    "community": {
+      "joined": "{{name}}@ మీ కమ్యూనిటీలో చేరారు",
+      "joinedNamed": "{{name}}@ \"{{community}}\" లో చేరారు",
+      "requested": "{{name}} మీ కమ్యూనిటీలో చేరమని అడిగారు",
+      "requestedNamed": "{{name}} @ \"{{community}}\" లో చేరమని అడిగారు",
+      "mentioned": "{{name}} మిమ్మల్ని కమ్యూనిటీలో ప్రస్తావించారు",
+      "mentionedNamed": "{{name}} @ మిమ్మల్ని \"{{community}}\" లో పేర్కొన్నారు",
+      "here": "{{name}} కమ్యూనిటీలోని ప్రతి ఒక్కరికీ సందేశం పంపారు",
+      "hereNamed": "{{name}}@ \"@ {{community}}\" లో అందరికీ సందేశం పంపారు"
+    }
   },
   "leaderboard": {
     "title": "లీడర్‌బోర్డ్",
@@ -1716,7 +1726,14 @@
     "reject": "తిరస్కరించండి",
     "pinToProfile": "కమ్యూనిటీలను ప్రొఫైల్‌కు పిన్ చేయండి",
     "joinFirst": "పిన్ చేయడానికి ముందు కమ్యూనిటీలలో చేరండి",
-    "pinCommunity": "కమ్యూనిటీని పిన్ చేయండి"
+    "pinCommunity": "కమ్యూనిటీని పిన్ చేయండి",
+    "activity": "కార్యాచరణ",
+    "activitySearch": "కార్యాచరణను శోధించండి...",
+    "activityNew": "{{total}} కొత్త",
+    "activityShowMore": "మరిన్ని చూపించు (@ {{total}})",
+    "activityNoMatches": "\"{{query}}\" కు మ్యాచ్ ‌ లు లేవు",
+    "activityEmpty": "ఇంకా యాక్టివిటీ లేదు",
+    "activityEmptyDesc": "మీ కమ్యూనిటీల నుండి చేరడం, ప్రస్తావించడం మరియు ప్రకటనలు ఇక్కడ కనిపిస్తాయి."
   },
   "prompt": {
     "seoTitle": "మీ ఫీడ్‌ను ప్రాంప్ట్ చేయండి — DeHub",

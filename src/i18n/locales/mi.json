@@ -830,7 +830,15 @@
     "newNotification": "Whakamōhio hou",
     "oneOther": "1 anō",
     "nOthers": "{{count}} anō",
-    "burstBody": "{{count}} whakamōhiotanga hou nā {{who}}"
+    "burstBody": "{{count}} whakamōhiotanga hou nā {{who}}",
+    "community": {
+      "joined": "{{name}} hono atu ki to hapori",
+      "joinedNamed": "{{name}} hono {{community}}",
+      "requested": "{{name}} ka tono kia uru atu ki to hapori",
+      "mentioned": "{{name}} korero ki a koe i roto i te hapori",
+      "here": "{{name}} karere katoa i roto i te hapori",
+      "hereNamed": "{{name}} karere katoa i roto i {{community}}"
+    }
   },
   "leaderboard": {
     "title": "Rārangi Rangatira",
@@ -1697,7 +1705,13 @@
     "reject": "Whakakāhore",
     "pinToProfile": "Titia ngā hapori ki te kōtaha",
     "joinFirst": "Me uru koe ki ngā hapori i mua i te titi",
-    "pinCommunity": "Titia te hapori"
+    "pinCommunity": "Titia te hapori",
+    "activity": "Mahi",
+    "activitySearch": "Te mahi rapu...",
+    "activityNew": "{{total}}@ hou",
+    "activityNoMatches": "Kaore he whakataetae mo \"{{query}}@\"",
+    "activityEmpty": "Kaore ano he mahi",
+    "activityEmptyDesc": "Ka whakaatuhia e nga hoa, nga korero me nga panui mai i o hapori i konei."
   },
   "prompt": {
     "seoTitle": "Whakahauhia to whangai — DeHub",

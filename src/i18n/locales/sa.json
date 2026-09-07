@@ -1677,7 +1677,13 @@
     "approve": "अनुमोदयतु",
     "reject": "निराकरोतु",
     "joinFirst": "पिन् कर्तुं प्रथमं समुदायान् सम्मिलतु",
-    "pinCommunity": "समुदायं पिन् करोतु"
+    "pinCommunity": "समुदायं पिन् करोतु",
+    "activity": "क्रिया",
+    "activitySearch": "अन्वेषणं क्रियताम्...",
+    "activityShowMore": "अधिक दृश्ये ({{total}})",
+    "activityNoMatches": "\"{{query}}\" सम्बद्धानि पृष्ठानि",
+    "activityEmpty": "अद्यापि न क्रियते",
+    "activityEmptyDesc": "मते कारकलक्षणादिकं शब्दार्थरत्नेऽस्मामिर्दर्शितं यथा"
   },
   "prompt": {
     "seoTitle": "प्रॉम्प्ट युअर फ़ीड — DeHub",

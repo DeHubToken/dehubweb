@@ -851,7 +851,17 @@
     "postRemoved": "Ny lahatsoratrao dia nesorina",
     "newNotification": "Fampandrenesana vaovao",
     "oneOther": "1 hafa",
-    "nOthers": "{{count}} hafa"
+    "nOthers": "{{count}} hafa",
+    "community": {
+      "joined": "{{name}} manatevin-daharana ny vondrom-piarahamonina misy anao",
+      "joinedNamed": "{{name}} nandray anjara {{community}} \"",
+      "requested": "{{name}} Nangataka ny hiditra ao amin'ny vondrom-piarahamonina misy anao aho",
+      "requestedNamed": "{{name}} nangatahana mba hanatevin-daharana ny \"{{community}}\"",
+      "mentioned": "{{name}} nanonona anao tanatinà vondrom-piarahamonina iray ianao",
+      "mentionedNamed": "{{name}} nanonona anao tao amin'ny “{{community}}”",
+      "here": "{{name}} messaged ny tsirairay tao anatin'ilay vondrom-piarahamonina",
+      "hereNamed": "{{name}} messaged ny rehetra {{community}} \""
+    }
   },
   "leaderboard": {
     "title": "Lisitry ny tsara indrindra",
@@ -1717,7 +1727,14 @@
     "reject": "Lavo",
     "pinToProfile": "Apetaho amin'ny mombamomba ny vondrom-piarahamonina",
     "joinFirst": "Mikambàna amin'ny vondrom-piarahamonina aloha vao mametaka azy",
-    "pinCommunity": "Apetaho ny vondrom-piarahamonina"
+    "pinCommunity": "Apetaho ny vondrom-piarahamonina",
+    "activity": "Asa atao",
+    "activitySearch": "Asa atao fikarohana...",
+    "activityNew": "{{total}} ny",
+    "activityShowMore": "Haneho bebe kokoa ({{total}})",
+    "activityNoMatches": "Tsy misy fihaonana amin'ny \"{{query}}\"",
+    "activityEmpty": "Tsy misy asa atao mbola",
+    "activityEmptyDesc": "Mipoitra eto ny fiarahana, ny filazàna sy ny filazàna avy amin'ny vondrom-piarahamoninao."
   },
   "prompt": {
     "seoTitle": "Ampodio ny sakafonao — DeHub",

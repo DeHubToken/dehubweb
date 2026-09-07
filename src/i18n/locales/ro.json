@@ -830,7 +830,17 @@
     "newNotification": "Notificare nouă",
     "oneOther": "încă 1 persoană",
     "nOthers": "alte {{count}} persoane",
-    "burstBody": "{{count}} notificări noi de la {{who}}"
+    "burstBody": "{{count}} notificări noi de la {{who}}",
+    "community": {
+      "joined": "{{name}} s-a alăturat comunității tale",
+      "joinedNamed": "{{name}} s-a alăturat “{{community}}”",
+      "requested": "{{name}} a solicitat să se alăture comunității tale",
+      "requestedNamed": "{{name}} a cerut să se alăture “{{community}}”",
+      "mentioned": "{{name}} te-a menționat într-o comunitate",
+      "mentionedNamed": "{{name}} te-a menționat în “{{community}}”",
+      "here": "{{name}} a trimis mesaje tuturor membrilor comunității",
+      "hereNamed": "{{name}} a trimis mesaje tuturor celor din “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Clasamente",
@@ -1544,7 +1554,14 @@
     "reject": "Respinge",
     "pinToProfile": "Fixează comunități pe profil",
     "joinFirst": "Alătură-te mai întâi comunităților pentru a le fixa",
-    "pinCommunity": "Fixează comunitatea"
+    "pinCommunity": "Fixează comunitatea",
+    "activity": "Activitate",
+    "activitySearch": "Căutare activitate...",
+    "activityNew": "{{total}} nou",
+    "activityShowMore": "Afișează mai multe ({{total}})",
+    "activityNoMatches": "Nu există potriviri pentru „{{query}}”",
+    "activityEmpty": "Nicio activitate încă",
+    "activityEmptyDesc": "Înscrierile, mențiunile și anunțurile din comunitățile dvs. apar aici."
   },
   "prompt": {
     "seoTitle": "Configurează-ți feed-ul — DeHub",

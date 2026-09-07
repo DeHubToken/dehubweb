@@ -831,7 +831,17 @@
     "newNotification": "Musuq willay",
     "oneOther": "1 huk",
     "nOthers": "{{count}} hukkuna",
-    "burstBody": "{{count}} musuq willakuykuna {{who}}manta"
+    "burstBody": "{{count}} musuq willakuykuna {{who}}manta",
+    "community": {
+      "joined": "{{name}} llaqtaykiman hukllawakurqa",
+      "joinedNamed": "{{name}} “{{community}}” nisqaman hukllawakurqan.",
+      "requested": "{{name}} llaqtaykiman hukllawakunanpaq mañakurqa",
+      "requestedNamed": "{{name}} mañasqa “{{community}}” nisqaman hukllawakunanpaq.",
+      "mentioned": "{{name}} huk ayllupi rimarqasunki",
+      "mentionedNamed": "{{name}} “{{community}}” nisqapi rimasqayki.",
+      "here": "{{name}} ayllupi llapa runakunaman mensajeta apachirqa",
+      "hereNamed": "{{name}} llapa runaman “{{community}}” nisqapi mensajeta apachirqan."
+    }
   },
   "leaderboard": {
     "title": "Ñawpaqkuna",
@@ -1728,7 +1738,14 @@
     "reject": "Mana niy",
     "pinToProfile": "Ayllukunata riqsichiyman tipay",
     "joinFirst": "Ñawpaqta ayllukunaman yaykuy tipanaykipaq",
-    "pinCommunity": "Aylluta tipay"
+    "pinCommunity": "Aylluta tipay",
+    "activity": "Ruwana",
+    "activitySearch": "Maskay ruway...",
+    "activityNew": "{{total}} musuq",
+    "activityShowMore": "Astawan rikuchiy ({{total}})",
+    "activityNoMatches": "&quot;{{query}}&quot; nisqapaqqa manam tupanchu.",
+    "activityEmpty": "Manaraqmi ima ruwaypas kanchu",
+    "activityEmptyDesc": "Llaqtaykimanta huñunakuqkuna, rimaykuna, willakuykunapas kaypim rikurin."
   },
   "prompt": {
     "seoTitle": "Yanapaqniykita tapukuy — DeHub",
