@@ -1890,7 +1890,14 @@
     "spendFor": "{{power}} {{minutes}} 分钟",
     "aimAtAccount": "啥个粉丝好看着？",
     "aimPlaceholder": "用户名或者钱包地址",
-    "aimAtTiers": "啥个徽章等级好看着？"
+    "aimAtTiers": "啥个徽章等级好看着？",
+    "homePost": "从自家个帖子里用——点“⋯”菜单，再点“Boost”。",
+    "homeGift": "从别人个帖子里用——点“⋯”菜单，再点“Boost”。",
+    "homeComment": "从自家个回复里用，在别人个帖子里。",
+    "homeStage": "从自家办个Stage里用。",
+    "homePage": "从这儿用，页面顶上。",
+    "goldenHourStarted": "Golden Hour 跑动 {{minutes}} 分钟——你现在发个帖都算双倍",
+    "trendJacked": "{{category}} 正在 trending，持续 {{minutes}} 分钟"
   },
   "work": {
     "budgetExhausted": "箇个赏金个预算已经全用光哉。"

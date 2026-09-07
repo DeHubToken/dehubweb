@@ -1862,7 +1862,19 @@
     "spendFor": "{{minutes}} dəqiqəliyə {{power}}",
     "aimAtAccount": "Onu kimin izləyiciləri görsün?",
     "aimPlaceholder": "İstifadəçi adı və ya pulqabı ünvanı",
-    "aimAtTiers": "Onu hansı nişan səviyyələri görsün?"
+    "aimAtTiers": "Onu hansı nişan səviyyələri görsün?",
+    "homePost": "Öz yazılarınızdan birindən xərcləyin — ⋯ menyusu, sonra Boost.",
+    "homeGift": "Kiminsə başqa yazısına xərcləyin — ⋯ menyusu, sonra Boost.",
+    "homeComment": "Kiminsə başqa mövzusundakı öz şərhlərinizə xərcləyin.",
+    "homeStage": "Host etdiyiniz Stage-dən xərcləyin.",
+    "homePage": "Burada, bu səhifənin yuxarısında xərcləyin.",
+    "flaresLeft": "flares",
+    "giftedTo": "hədiyyə → #{{id}}",
+    "goldenHourStarted": "Golden Hour {{minutes}} dəqiqə davam edir — indi yazdığınız hər şey ikiqat sayılır",
+    "start": "Başla",
+    "pickCategory": "Kateqoriya…",
+    "trendJacked": "{{category}} {{minutes}} dəqiqə ərzində trenddədir",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Bu mükafatın büdcəsi tam olaraq ayrılıb.",

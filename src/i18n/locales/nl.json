@@ -2118,7 +2118,19 @@
     "spendFor": "{{power}} gedurende {{minutes}} minuten",
     "aimAtAccount": "Wiens volgers moeten het zien?",
     "aimPlaceholder": "Gebruikersnaam of walletadres",
-    "aimAtTiers": "Welke badgeniveaus moeten het zien?"
+    "aimAtTiers": "Welke badgeniveaus moeten het zien?",
+    "homePost": "Geef het uit vanuit een van je eigen berichten — het ⋯ menu, dan Boost.",
+    "homeGift": "Geef het uit aan een bericht van iemand anders — het ⋯ menu, dan Boost.",
+    "homeComment": "Geef het uit aan je eigen reactie, in de thread van iemand anders.",
+    "homeStage": "Geef het uit vanuit een Stage die je host.",
+    "homePage": "Geef het hier uit, bovenaan deze pagina.",
+    "flaresLeft": "flares",
+    "giftedTo": "gift → #{{id}}",
+    "goldenHourStarted": "Golden Hour loopt voor {{minutes}} minuten — alles wat je nu post telt dubbel",
+    "start": "Start",
+    "pickCategory": "Categorie…",
+    "trendJacked": "{{category}} is trending voor {{minutes}} minuten",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Het budget van deze premie is volledig vergeven.",

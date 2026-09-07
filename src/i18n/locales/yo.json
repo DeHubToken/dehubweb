@@ -1902,7 +1902,19 @@
     "spendFor": "{{power}} fún ìṣẹ́jú {{minutes}}",
     "aimAtAccount": "Àwọn olùtẹ̀lé ta ni ó yẹ kí ó rí i?",
     "aimPlaceholder": "Orúkọ olùmúlò tàbí àdírẹ́sì àpamọ́wọ́",
-    "aimAtTiers": "Àwọn ipele àmì wo ni ó yẹ kí ó rí i?"
+    "aimAtTiers": "Àwọn ipele àmì wo ni ó yẹ kí ó rí i?",
+    "homePost": "Lo fẹ́ láti inú ìwé àpilẹ̀kọ tirẹ̀ — àtòkọ mẹ́ta (⋯) náà, lẹ́yìn náà Boost.",
+    "homeGift": "Lo fẹ́ láti inú ìwé àpilẹ̀kọ ẹlòmíì — àtòkọ mẹ́ta (⋯) náà, lẹ́yìn náà Boost.",
+    "homeComment": "Lo fẹ́ láti inú àlàyé tirẹ̀, nínú ìsọ̀rọ̀ ẹlòmíì.",
+    "homeStage": "Lo fẹ́ láti inú Stage tí o ń gbà.",
+    "homePage": "Lo fẹ́ níbí, ní òkè ojú ìwé yìí.",
+    "flaresLeft": "flares",
+    "giftedTo": "ẹ̀bùn → #{{id}}",
+    "goldenHourStarted": "Golden Hour ń ṣiṣẹ́ fún ìṣẹ́jú {{minutes}} — ohun gbogbo tí o bá kọ̀wé báyì yóò wá ní ẹ̀ẹ́ méjì",
+    "start": "Bẹ̀rẹ̀",
+    "pickCategory": "Àkójọpọ̀…",
+    "trendJacked": "{{category}} ń gbajúmọ̀ fún ìṣẹ́jú {{minutes}}",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Ìsúná ẹ̀bùn yìí ti pin tán."

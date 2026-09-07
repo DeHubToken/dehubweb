@@ -1921,7 +1921,19 @@
     "spendFor": "{{power}} przez {{minutes}} minut",
     "aimAtAccount": "Czyi obserwujący mają go zobaczyć?",
     "aimPlaceholder": "Nazwa użytkownika lub adres portfela",
-    "aimAtTiers": "Które poziomy odznak mają go zobaczyć?"
+    "aimAtTiers": "Które poziomy odznak mają go zobaczyć?",
+    "homePost": "Wykorzystaj go z jednego ze swoich postów — menu ⋯, a następnie Wzmocnij.",
+    "homeGift": "Wykorzystaj go w poście kogoś innego — menu ⋯, a następnie Wzmocnij.",
+    "homeComment": "Wykorzystaj go w swoim komentarzu, w wątku kogoś innego.",
+    "homeStage": "Wykorzystaj go z prowadzonej przez Ciebie Sceny.",
+    "homePage": "Wykorzystaj go tutaj, na górze tej strony.",
+    "flaresLeft": "flares",
+    "giftedTo": "prezent → #{{id}}",
+    "goldenHourStarted": "Golden Hour trwa {{minutes}} minut — wszystko, co teraz opublikujesz, liczy się podwójnie",
+    "start": "Start",
+    "pickCategory": "Kategoria…",
+    "trendJacked": "{{category}} jest popularny od {{minutes}} minut",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Budżet tej nagrody został w całości rozdysponowany.",

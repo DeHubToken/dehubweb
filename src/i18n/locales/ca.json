@@ -1863,7 +1863,19 @@
     "spendFor": "{{power}} durant {{minutes}} minuts",
     "aimAtAccount": "Els seguidors de qui l'han de veure?",
     "aimPlaceholder": "Nom d'usuari o adreça de cartera",
-    "aimAtTiers": "Quins nivells d'insígnia l'han de veure?"
+    "aimAtTiers": "Quins nivells d'insígnia l'han de veure?",
+    "homePost": "Gasta'l des d'una de les teves publicacions: el menú ⋯, després Impulsar.",
+    "homeGift": "Gasta'l en la publicació d'algú altre: el menú ⋯, després Impulsar.",
+    "homeComment": "Gasta'l en el teu propi comentari, en el fil d'algú altre.",
+    "homeStage": "Gasta'l des d'un Escenari que estiguis organitzant.",
+    "homePage": "Gasta'l aquí, a la part superior d'aquesta pàgina.",
+    "flaresLeft": "flares",
+    "giftedTo": "regal → #{{id}}",
+    "goldenHourStarted": "Golden Hour en marxa durant {{minutes}} minuts: tot el que publiquis ara compta el doble",
+    "start": "Començar",
+    "pickCategory": "Categoria…",
+    "trendJacked": "{{category}} és tendència durant {{minutes}} minuts",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "El pressupost d'aquesta recompensa està compromès del tot.",

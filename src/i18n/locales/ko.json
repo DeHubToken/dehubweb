@@ -1922,7 +1922,18 @@
     "spendFor": "{{power}} {{minutes}}분",
     "aimAtAccount": "누구의 팔로워에게 보여줄까요?",
     "aimPlaceholder": "사용자 이름 또는 지갑 주소",
-    "aimAtTiers": "어떤 배지 등급에 보여줄까요?"
+    "aimAtTiers": "어떤 배지 등급에 보여줄까요?",
+    "homePost": "자신의 게시물에서 사용 — ⋯ 메뉴, 부스트.",
+    "homeGift": "다른 사람의 게시물에서 사용 — ⋯ 메뉴, 부스트.",
+    "homeComment": "자신의 댓글에 사용, 다른 사람의 스레드에서.",
+    "homeStage": "호스팅 중인 스테이지에서 사용.",
+    "homePage": "여기, 이 페이지 상단에서 사용.",
+    "flaresLeft": "플레어",
+    "giftedTo": "선물 → #{{id}}",
+    "goldenHourStarted": "골든 아워 {{minutes}}분 동안 진행 중 — 지금 게시하는 모든 내용은 두 배로 계산됩니다.",
+    "start": "시작",
+    "pickCategory": "카테고리…",
+    "trendJacked": "{{category}}이 {{minutes}}분 동안 인기 급상승 중입니다."
   },
   "work": {
     "budgetExhausted": "이 현상금의 예산이 모두 배정되었습니다.",

@@ -1906,7 +1906,19 @@
     "spendFor": "{{power}} für {{minutes}} Minute",
     "aimAtAccount": "Wär sini Follower sötte s gseh?",
     "aimPlaceholder": "Benutzername oder Wallet-Adrässe",
-    "aimAtTiers": "Weli Badge-Levels sötte s gseh?"
+    "aimAtTiers": "Weli Badge-Levels sötte s gseh?",
+    "homePost": "Gib's us öpis vo dim eigete Post — s'⋯ Menü, denn Boost.",
+    "homeGift": "Gib's us öpis vo öpper anderem si Post — s'⋯ Menü, denn Boost.",
+    "homeComment": "Gib's us dim eigete Kommentar, i öpper anderem si Thread.",
+    "homeStage": "Gib's us us öim vo dim Stage, wo du grad hostisch.",
+    "homePage": "Gib's us do, obe uf dere Syte.",
+    "flaresLeft": "flares",
+    "giftedTo": "gift → #{{id}}",
+    "goldenHourStarted": "Golden Hour lauft für {{minutes}} Minute — alles, wo du jetzt postisch, zählt dopplet",
+    "start": "Start",
+    "pickCategory": "Kategorie…",
+    "trendJacked": "{{category}} isch am trende für {{minutes}} Minute",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "S Budget vo dere Prämie isch ganz vergäh."

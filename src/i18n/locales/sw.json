@@ -1922,7 +1922,19 @@
     "spendFor": "{{power}} kwa dakika {{minutes}}",
     "aimAtAccount": "Wafuasi wa nani wanapaswa kukiona?",
     "aimPlaceholder": "Jina la mtumiaji au anwani ya pochi",
-    "aimAtTiers": "Viwango vipi vya beji vinapaswa kukiona?"
+    "aimAtTiers": "Viwango vipi vya beji vinapaswa kukiona?",
+    "homePost": "Tumia kutoka kwenye mojawapo ya machapisho yako — menyu ya ⋯, kisha Boresha.",
+    "homeGift": "Tumia kwenye chapisho la mtu mwingine — menyu ya ⋯, kisha Boresha.",
+    "homeComment": "Tumia kwenye maoni yako mwenyewe, katika uzi wa mtu mwingine.",
+    "homeStage": "Tumia kutoka kwenye Jukwaa unaloendesha.",
+    "homePage": "Tumia hapa, juu ya ukurasa huu.",
+    "flaresLeft": "mianga",
+    "giftedTo": "zawadi → #{{id}}",
+    "goldenHourStarted": "Saa ya Dhahabu inaendelea kwa dakika {{minutes}} — kila kitu unachochapisha sasa kinahesabiwa mara mbili",
+    "start": "Anza",
+    "pickCategory": "Kategoria…",
+    "trendJacked": "{{category}} inazidi kupata umaarufu kwa dakika {{minutes}}",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Bajeti ya zawadi hii imetumika yote.",

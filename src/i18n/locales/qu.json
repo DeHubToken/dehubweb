@@ -1932,7 +1932,19 @@
     "spendFor": "{{power}} {{minutes}} minutopaq",
     "aimAtAccount": "¿Pipa qatiqninkunam rikunanku tiyan?",
     "aimPlaceholder": "Ruraq suti icha qullqi wayaqa dirección",
-    "aimAtTiers": "¿Mayqin unancha hawakunam rikunanku tiyan?"
+    "aimAtTiers": "¿Mayqin unancha hawakunam rikunanku tiyan?",
+    "homePost": "Chaymanta llamk'achiy kikinpa kaqninmanta — ⋯ menu, chaymanta Boost.",
+    "homeGift": "Hukpa kaqninmanta llamk'achiy — ⋯ menu, chaymanta Boost.",
+    "homeComment": "Kikinpa comentamanta llamk'achiy, hukpa threadninpi.",
+    "homeStage": "Stage kaqninmanta llamk'achiy, chaypi host kachkaptiyki.",
+    "homePage": "Kaypi llamk'achiy, kay p'anqapata patapi.",
+    "flaresLeft": "flares",
+    "giftedTo": "gift → #{{id}}",
+    "goldenHourStarted": "Golden Hourqa {{minutes}} minutokama purichkan — imaymana kaqniyki kunan iskaychayta atikun",
+    "start": "Qallariy",
+    "pickCategory": "Category…",
+    "trendJacked": "{{category}}qa {{minutes}} minutokama trending kachkan",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Kay t'inkap qullqin tukuyta rakisqaña."

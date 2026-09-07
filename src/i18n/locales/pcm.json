@@ -1852,7 +1852,12 @@
     "spendFor": "{{power}} for {{minutes}} minutes",
     "aimAtAccount": "Whose followers suppose see am?",
     "aimPlaceholder": "Username or wallet address",
-    "aimAtTiers": "Which badge tiers suppose see am?"
+    "aimAtTiers": "Which badge tiers suppose see am?",
+    "flaresLeft": "flares",
+    "giftedTo": "gift → #{{id}}",
+    "start": "Start",
+    "pickCategory": "Category…",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Dis bounty money don finish patch."

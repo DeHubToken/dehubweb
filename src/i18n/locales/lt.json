@@ -1901,7 +1901,19 @@
     "spendFor": "{{power}} {{minutes}} min.",
     "aimAtAccount": "Kieno sekėjai turėtų tai matyti?",
     "aimPlaceholder": "Naudotojo vardas arba piniginės adresas",
-    "aimAtTiers": "Kurie ženklelių lygiai turėtų tai matyti?"
+    "aimAtTiers": "Kurie ženklelių lygiai turėtų tai matyti?",
+    "homePost": "Išleiskite jį iš savo įrašo – meniu ⋯, tada „Boost“.",
+    "homeGift": "Išleiskite jį ant kito asmens įrašo – meniu ⋯, tada „Boost“.",
+    "homeComment": "Išleiskite jį ant savo komentaro, kito asmens temoje.",
+    "homeStage": "Išleiskite jį iš vedamos scenos.",
+    "homePage": "Išleiskite jį čia, šio puslapio viršuje.",
+    "flaresLeft": "žybsniai",
+    "giftedTo": "dovana → #{{id}}",
+    "goldenHourStarted": "„Golden Hour“ veikia {{minutes}} minutes – viskas, ką dabar skelbiate, skaičiuojama dvigubai",
+    "start": "Pradėti",
+    "pickCategory": "Kategorija…",
+    "trendJacked": "{{category}} populiarėja {{minutes}} minutes",
+    "jack": "Džekas"
   },
   "work": {
     "budgetExhausted": "Visas šio atlygio biudžetas jau paskirstytas."

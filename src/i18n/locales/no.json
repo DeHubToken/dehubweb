@@ -1898,7 +1898,19 @@
     "spendFor": "{{power}} i {{minutes}} minutter",
     "aimAtAccount": "Hvem sine følgere skal se det?",
     "aimPlaceholder": "Brukernavn eller lommebokadresse",
-    "aimAtTiers": "Hvilke merkenivåer skal se det?"
+    "aimAtTiers": "Hvilke merkenivåer skal se det?",
+    "homePost": "Bruk den fra et av dine egne innlegg — menyen ⋯, deretter Boost.",
+    "homeGift": "Bruk den på andres innlegg — menyen ⋯, deretter Boost.",
+    "homeComment": "Bruk den på din egen kommentar, i en annens tråd.",
+    "homeStage": "Bruk den fra en scene du er vert for.",
+    "homePage": "Bruk den her, øverst på denne siden.",
+    "flaresLeft": "flares",
+    "giftedTo": "gave → #{{id}}",
+    "goldenHourStarted": "Golden Hour kjører i {{minutes}} minutter — alt du poster teller nå dobbelt",
+    "start": "Start",
+    "pickCategory": "Kategori…",
+    "trendJacked": "{{category}} trender i {{minutes}} minutter",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Budsjettet for denne dusøren er brukt opp."

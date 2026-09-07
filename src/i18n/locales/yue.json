@@ -1900,7 +1900,14 @@
     "spendFor": "{{power}} {{minutes}} 分鐘",
     "aimAtAccount": "邊個嘅粉絲會睇到？",
     "aimPlaceholder": "用戶名或者銀包地址",
-    "aimAtTiers": "邊個徽章級別會睇到？"
+    "aimAtTiers": "邊個徽章級別會睇到？",
+    "homePost": "喺你嘅帖文入面用 — ⋯ 選單，然後 Boost。",
+    "homeGift": "喺其他人嘅帖文入面用 — ⋯ 選單，然後 Boost。",
+    "homeComment": "喺你嘅留言入面用，喺其他人嘅討論串入面。",
+    "homeStage": "喺你主持嘅 Stage 入面用。",
+    "homePage": "喺呢度用，喺呢頁頂部。",
+    "goldenHourStarted": "Golden Hour 進行緊 {{minutes}} 分鐘 — 你而家發佈嘅所有內容都會計雙倍",
+    "trendJacked": "{{category}} 正在熱門 {{minutes}} 分鐘"
   },
   "work": {
     "budgetExhausted": "呢個賞金嘅預算已經全部分配咗。"

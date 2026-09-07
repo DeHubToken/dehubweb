@@ -30,11 +30,48 @@ import { badgeImage } from '@/lib/staking-badges';
 import { useQuery } from '@tanstack/react-query';
 import { getCategories } from '@/lib/api/dehub';
 import {
+  powerHome,
   useBookBoost,
   useCancelBoost,
   useSuperpowerLadder,
   useSuperpowers,
 } from '@/hooks/use-superpowers';
+import type { SuperPowerKey } from '@/lib/api/dehub/superpowers';
+
+/**
+ * Where an unlocked power is spent, in one sentence.
+ *
+ * A badge at the middle of the ladder ticks five powers on this page and shows
+ * a control for one of them, which reads as four powers that do not work. They
+ * do work — from the post, the comment or the stage they act on, because that
+ * is where the decision happens — and until this line existed nothing on the
+ * page said where to look. `powerHome` is the same table the boost sheet
+ * filters on, so the two cannot drift apart.
+ */
+function spendHint(key: SuperPowerKey, t: (k: string, o?: Record<string, unknown>) => string): string {
+  switch (powerHome(key)) {
+    case 'gift':
+      return t('superpowers.homeGift', {
+        defaultValue: "Spend it on somebody else's post — the ⋯ menu, then Boost.",
+      });
+    case 'comment':
+      return t('superpowers.homeComment', {
+        defaultValue: "Spend it on your own comment, in somebody else's thread.",
+      });
+    case 'stage':
+      return t('superpowers.homeStage', {
+        defaultValue: 'Spend it from a Stage you are hosting.',
+      });
+    case 'page':
+      return t('superpowers.homePage', {
+        defaultValue: 'Spend it here, at the top of this page.',
+      });
+    default:
+      return t('superpowers.homePost', {
+        defaultValue: 'Spend it from one of your own posts — the ⋯ menu, then Boost.',
+      });
+  }
+}
 
 /** Total slot minutes a tier holds per cycle — the number worth comparing. */
 function cycleMinutes(boosts: number, minutes: number): number {
@@ -416,6 +453,12 @@ export default function SuperPowersPage() {
                     {!unlocked && <Lock className="w-3 h-3 text-zinc-600 shrink-0" />}
                   </div>
                   <p className="text-[13px] text-zinc-500 leading-snug">{power.summary}</p>
+                  {/* Only on a power this account actually has. On a locked
+                      one it would be instructions for something they cannot
+                      do, and the tier line below already says what it costs. */}
+                  {unlocked && power.available && (
+                    <p className="text-[11px] text-zinc-400 leading-snug">{spendHint(power.key, t)}</p>
+                  )}
                   <p className="text-[11px] text-zinc-600 mt-auto pt-1">
                     {power.tier}
                     {!power.available && ` · ${t('superpowers.comingSoon')}`}

@@ -1858,7 +1858,19 @@
     "spendFor": "{{power}} na {{minutes}} minuta",
     "aimAtAccount": "Čiji pratitelji bi to trebali vidjeti?",
     "aimPlaceholder": "Korisničko ime ili adresa novčanika",
-    "aimAtTiers": "Koje razine značaka bi to trebale vidjeti?"
+    "aimAtTiers": "Koje razine značaka bi to trebale vidjeti?",
+    "homePost": "Potrošite ga s jednog od svojih postova — izbornik ⋯, zatim Pojačaj.",
+    "homeGift": "Potrošite ga na nečiji tuđi post — izbornik ⋯, zatim Pojačaj.",
+    "homeComment": "Potrošite ga na svoj vlastiti komentar, u tuđoj temi.",
+    "homeStage": "Potrošite ga s pozornice koju vodite.",
+    "homePage": "Potrošite ga ovdje, na vrhu ove stranice.",
+    "flaresLeft": "bljeskovi",
+    "giftedTo": "poklon → #{{id}}",
+    "goldenHourStarted": "Zlatni sat traje {{minutes}} minuta — sve što sada objavite broji se dvostruko",
+    "start": "Početak",
+    "pickCategory": "Kategorija…",
+    "trendJacked": "{{category}} je u trendu {{minutes}} minuta",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Proračun ove nagrade u cijelosti je raspoređen.",

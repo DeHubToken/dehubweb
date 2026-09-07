@@ -1921,7 +1921,19 @@
     "spendFor": "{{power}}を{{minutes}}分",
     "aimAtAccount": "誰のフォロワーに見せますか？",
     "aimPlaceholder": "ユーザー名またはウォレットアドレス",
-    "aimAtTiers": "どのバッジ階層に見せますか？"
+    "aimAtTiers": "どのバッジ階層に見せますか？",
+    "homePost": "自分の投稿から使う — ⋯ メニュー、次にブースト。",
+    "homeGift": "他の人の投稿に使う — ⋯ メニュー、次にブースト。",
+    "homeComment": "自分のコメントに使う、他の人のスレッドで。",
+    "homeStage": "ホストしているステージから使う。",
+    "homePage": "ここで使う、このページのトップで。",
+    "flaresLeft": "フレア",
+    "giftedTo": "ギフト → #{{id}}",
+    "goldenHourStarted": "ゴールデンアワーが {{minutes}} 分間実行中 — 今投稿するすべてが2倍になります",
+    "start": "開始",
+    "pickCategory": "カテゴリ…",
+    "trendJacked": "{{category}} が {{minutes}} 分間トレンド入りしています",
+    "jack": "ジャック"
   },
   "work": {
     "budgetExhausted": "この報奨金の予算はすべて割り当て済みです。",

@@ -1890,7 +1890,14 @@
     "spendFor": "{{minutes}} मिनट बर {{power}}",
     "aimAtAccount": "कोन के फॉलोअर मन ये ला देखना चाही?",
     "aimPlaceholder": "यूजरनेम या वॉलेट के पता",
-    "aimAtTiers": "कोन बैज स्तर मन ये ला देखना चाही?"
+    "aimAtTiers": "कोन बैज स्तर मन ये ला देखना चाही?",
+    "homePost": "कोनो अपन पोस्ट ले – ⋯ मेन्यू, फcfgरे बूस्ट।",
+    "homeGift": "कोनो दूसर के पोस्ट म – ⋯ मेन्यू, फcfgरे बूस्ट।",
+    "homeComment": "कोनो दूसर के थ्रेड म अपन कमेंट म।",
+    "homeStage": "कोनो स्टेज ले जेला तू होस्ट करत हस।",
+    "homePage": "इथे, ए पन्ना के ऊपर म।",
+    "goldenHourStarted": "Golden Hour {{minutes}} मिनट ले चलत हे – जे पोस्ट तू करबे ओखर डबल गिने जाही",
+    "trendJacked": "{{category}} {{minutes}} मिनट ले ट्रेंड करत हे"
   },
   "work": {
     "budgetExhausted": "ये इनाम के पूरा बजट लग गे हे।"

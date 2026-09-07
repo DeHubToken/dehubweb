@@ -1863,7 +1863,12 @@
     "spendFor": "{{power}} for {{minutes}} minit",
     "aimAtAccount": "Wich pesin i follower dem sopos si-am?",
     "aimPlaceholder": "Username or wallet address",
-    "aimAtTiers": "Wich badge tier dem sopos si-am?"
+    "aimAtTiers": "Wich badge tier dem sopos si-am?",
+    "flaresLeft": "flares",
+    "giftedTo": "gift → #{{id}}",
+    "start": "Start",
+    "pickCategory": "Category…",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Dis bounty money don finish."
