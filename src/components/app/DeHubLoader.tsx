@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 /**
  * DeHub preloader — the animated DeHub mark (a ring sweeping around the "U").
  *
@@ -19,25 +21,53 @@
  * chunk that resolves quickly never shows a loading stage at all.
  */
 
+/**
+ * The mark is square art. A flex or grid parent will happily hand a replaced
+ * element less width than its intrinsic size, which squashes the ring into an
+ * oval and reads as a deformed logo — so pin every axis the layout could
+ * otherwise negotiate, and let object-contain absorb anything that still gets
+ * through.
+ */
+const lockedSquare = (size: number): CSSProperties => ({
+  width: size,
+  height: size,
+  minWidth: size,
+  minHeight: size,
+  flex: "none",
+  aspectRatio: "1 / 1",
+  objectFit: "contain",
+});
+
 interface DeHubLoaderProps {
   /** Rendered size in px (square). Default 64. */
   size?: number;
   className?: string;
 }
 
-// dehub-loader.webp: the same 240px GIF (61 KB, 33 fps) re-encoded as a
-// 144px, 16 fps animated WebP (23 KB). The mark renders at 64 CSS px at most
-// (16 in buttons), so 144 covers a 2x screen; Lighthouse flagged the GIF as
-// four times the pixels it needed and it sat on the boot path of every page.
+// dehub-loader-240.webp: the 240px source GIF (61 KB, 33 fps) re-encoded as a
+// lossless animated WebP at the SAME 240px and the same 33 fps (7 KB).
+//
+// It used to be a 144px, lossy re-encode. That was smaller on paper but wrong
+// on screen: the mark renders at 64 CSS px, which is 128-192 device px on the
+// phones this thing appears on, so 144px was being upscaled — and lossy alpha
+// on a thin white-on-transparent ring smears into a halo. The two together
+// read as a fatter, mushier logo than the brand mark actually is. Lossless at
+// native resolution is both sharper and 3x smaller than the file it replaces,
+// so nothing on the boot path pays for the fix.
+//
+// Geometry: `flex: none` + a locked square aspect ratio + object-contain. The
+// img carries an intrinsic size, so a flex row would otherwise shrink its
+// width while the height stayed put and squash the mark into an oval. Callers
+// were papering over that one at a time with `shrink-0`; it belongs here.
 export const DeHubLoader = ({ size = 64, className = "" }: DeHubLoaderProps) => (
   <img
-    src="/dehub-loader.webp"
+    src="/dehub-loader-240.webp"
     alt=""
     aria-hidden="true"
     decoding="async"
     width={size}
     height={size}
-    style={{ width: size, height: size }}
+    style={lockedSquare(size)}
     data-dehub-loader
     className={`dehub-loader-mark select-none pointer-events-none ${className}`}
   />
@@ -93,13 +123,13 @@ export const DeHubPageLoader = ({
  */
 export const ButtonLoader = ({ size = 16, className = "" }: DeHubLoaderProps) => (
   <img
-    src="/dehub-loader.webp"
+    src="/dehub-loader-240.webp"
     alt=""
     aria-hidden="true"
     decoding="async"
     width={size}
     height={size}
-    style={{ width: size, height: size }}
+    style={lockedSquare(size)}
     data-dehub-loader
     className={`select-none pointer-events-none shrink-0 ${className}`}
   />
