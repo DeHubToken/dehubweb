@@ -960,7 +960,7 @@
     "encrypted": "End-to-end encrypted",
     "encryptionOff": "Encryption is off on this device",
     "encryptionTurnOn": "Turn on",
-    "cannotDecrypt": "Encrypted message Ã¢ÂÂ can't be opened on this device",
+    "cannotDecrypt": "Encrypted message — can't be opened on this device",
     "title": "Messages",
     "searchConversations": "Search conversations...",
     "failedToLoad": "Failed to load conversations",
