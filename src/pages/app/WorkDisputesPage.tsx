@@ -29,7 +29,7 @@ export default function WorkDisputesPage() {
   const [draft, setDraft] = useState<Record<string, { worker: number; poster: number; notes: string; workerAddr: string; pay: boolean }>>({});
 
   // With no escrow contract deployed there is nothing held to split, so a
-  // resolution is a written decision plus â€” if the arbiter chooses â€” a transfer
+  // resolution is a written decision plus — if the arbiter chooses — a transfer
   // out of their own wallet. Saying so here stops the split fields reading as
   // if they move money on their own.
   const escrowed = isWorkContractDeployed();
@@ -80,7 +80,7 @@ export default function WorkDisputesPage() {
                 <div className="flex flex-wrap items-center gap-2 mt-2">
                   <span className="text-[11px] text-white/40">{t('work.openedBy')}</span>
                   <WorkUser address={d.opened_by_address} />
-                  <span className="text-[11px] text-white/40">Â· {new Date(d.created_at).toLocaleString()}</span>
+                  <span className="text-[11px] text-white/40">· {new Date(d.created_at).toLocaleString()}</span>
                 </div>
               </div>
               {j && (

@@ -33,6 +33,10 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - run: node scripts/i18n-coverage.mjs --floor
       - run: node scripts/i18n-fanout.mjs --check | tail -5
+      # A tool that reads UTF-8 as Latin-1 turns every dash, quote and emoji
+      # into two or three junk characters. The JSON still parses and the diff
+      # looks like ordinary copy, so nothing else here would catch it.
+      - run: node scripts/mojibake-check.mjs
 
   # A request header missing from a function's Access-Control-Allow-Headers
   # makes the BROWSER drop the request — no network row, no function log, and a

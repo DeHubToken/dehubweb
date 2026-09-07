@@ -1,13 +1,13 @@
 /**
- * A person on a bounty â€” poster, applicant, worker or reviewer.
+ * A person on a bounty — poster, applicant, worker or reviewer.
  *
- * Every Work surface used to print a raw `0x1234â€¦abcd`, which is unreadable and
+ * Every Work surface used to print a raw `0x1234…abcd`, which is unreadable and
  * tells you nothing about who you are about to pay. Identity comes from the same
  * `account_info` cache the leaderboards use, keyed on the address alone, so the
  * poster rendered in the header and the same wallet rendered again as a
  * submitter cost one request between them.
  *
- * The address stays visible as the subtitle wherever it identifies a payee â€”
+ * The address stays visible as the subtitle wherever it identifies a payee —
  * a username is a display name, but the money moves to the address, and the
  * poster is entitled to check it before signing.
  */
@@ -18,13 +18,13 @@ import { profileAvatar, profileName, useWalletProfiles } from '@/hooks/use-walle
 import { cn } from '@/lib/utils';
 
 export function shortAddress(address: string): string {
-  return address.length > 12 ? `${address.slice(0, 6)}â€¦${address.slice(-4)}` : address;
+  return address.length > 12 ? `${address.slice(0, 6)}…${address.slice(-4)}` : address;
 }
 
 /**
  * Profile lookup for one address. `useWalletProfiles` keys its cache on the
  * address, so calling this once per row is a single fetch per distinct wallet
- * however many rows ask â€” no need to hoist a map into every parent.
+ * however many rows ask — no need to hoist a map into every parent.
  */
 export function WorkUser({
   address,
@@ -35,7 +35,7 @@ export function WorkUser({
 }: {
   address: string;
   size?: 'sm' | 'md';
-  /** Print the raw address under the name â€” use wherever this wallet gets paid. */
+  /** Print the raw address under the name — use wherever this wallet gets paid. */
   showAddress?: boolean;
   trailing?: React.ReactNode;
   className?: string;
@@ -61,7 +61,7 @@ export function WorkUser({
           to={`/${address}`}
           className="flex items-center gap-1.5 text-sm font-medium text-white hover:underline"
         >
-          {/* pr-3 reserves the badge's corner â€” the placement WhoToFollow uses. */}
+          {/* pr-3 reserves the badge's corner — the placement WhoToFollow uses. */}
           <span className="relative min-w-0 truncate pr-3">
             {name}
             <BadgeIcon
