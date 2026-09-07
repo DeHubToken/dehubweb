@@ -18,12 +18,13 @@ import { CommunityMembers } from '@/components/app/communities/CommunityMembers'
 import { CommunityAbout } from '@/components/app/communities/CommunityAbout';
 import { CommunityChat } from '@/components/app/communities/CommunityChat';
 import { CommunityEvents } from '@/components/app/communities/CommunityEvents';
+import { CommunityTabEmptyState, type CommunityTab } from '@/components/app/communities/CommunityTabEmptyState';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
 
-type Tab = 'posts' | 'events' | 'members' | 'about' | 'chat';
+type Tab = CommunityTab;
 
 export default function CommunityPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -165,49 +166,55 @@ export default function CommunityPage() {
       </div>
 
       <div className="px-3 py-4">
-        <div className={tab === 'posts' ? '' : 'hidden'}>
-          <CommunityFeed
-            communitySlug={community.slug}
-            memberAddresses={memberAddresses}
-            isMember={isMember}
-            tickerSymbol={community.ticker_symbol}
-            tickerContractAddress={community.ticker_contract_address}
-            tickerChainId={community.ticker_chain_id}
-            tickerPairAddress={community.ticker_pair_address}
-          />
-        </div>
-        {visitedTabs.has('chat') && (
-          <div className={tab === 'chat' ? '' : 'hidden'}>
-            <CommunityChat
-              communityId={community.id}
-              community={community}
-              membership={membership}
-              isMember={isMember}
-            />
-          </div>
-        )}
-        {visitedTabs.has('events') && (
-          <div className={tab === 'events' ? '' : 'hidden'}>
-            <CommunityEvents
-              communityId={community.id}
-              canCreate={abilities.can('create_events')}
-            />
-          </div>
-        )}
-        {visitedTabs.has('members') && (
-          <div className={tab === 'members' ? '' : 'hidden'}>
-            <CommunityMembers
-              members={members}
-              community={community}
-              membership={membership}
-              onManage={() => setManageOpen(true)}
-            />
-          </div>
-        )}
-        {visitedTabs.has('about') && (
-          <div className={tab === 'about' ? '' : 'hidden'}>
-            <CommunityAbout community={community} canManageSettings={abilities.canManageSettings} />
-          </div>
+        {community.is_private && !isMember ? (
+          <CommunityTabEmptyState tab={tab} isPendingApproval={isPendingMember} />
+        ) : (
+          <>
+            <div className={tab === 'posts' ? '' : 'hidden'}>
+              <CommunityFeed
+                communitySlug={community.slug}
+                memberAddresses={memberAddresses}
+                isMember={isMember}
+                tickerSymbol={community.ticker_symbol}
+                tickerContractAddress={community.ticker_contract_address}
+                tickerChainId={community.ticker_chain_id}
+                tickerPairAddress={community.ticker_pair_address}
+              />
+            </div>
+            {visitedTabs.has('chat') && (
+              <div className={tab === 'chat' ? '' : 'hidden'}>
+                <CommunityChat
+                  communityId={community.id}
+                  community={community}
+                  membership={membership}
+                  isMember={isMember}
+                />
+              </div>
+            )}
+            {visitedTabs.has('events') && (
+              <div className={tab === 'events' ? '' : 'hidden'}>
+                <CommunityEvents
+                  communityId={community.id}
+                  canCreate={abilities.can('create_events')}
+                />
+              </div>
+            )}
+            {visitedTabs.has('members') && (
+              <div className={tab === 'members' ? '' : 'hidden'}>
+                <CommunityMembers
+                  members={members}
+                  community={community}
+                  membership={membership}
+                  onManage={() => setManageOpen(true)}
+                />
+              </div>
+            )}
+            {visitedTabs.has('about') && (
+              <div className={tab === 'about' ? '' : 'hidden'}>
+                <CommunityAbout community={community} canManageSettings={abilities.canManageSettings} />
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
