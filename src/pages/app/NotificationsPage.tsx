@@ -528,7 +528,15 @@ function getNotificationContent(
 ): React.ReactNode {
 
   const tr = t || ((key: string) => key);
-  const actorName = notification.actorUsername || 'Someone';
+  // Rows fanned into Supabase by a database trigger — community joins,
+  // feature-request likes, governance votes, bounty applications — carry an
+  // actor ADDRESS and nothing else: Postgres holds no profile table, so the
+  // trigger has no handle to write into actor_username. That is 268 of the
+  // 421 rows in the table, every one of them rendering "Someone" beside a
+  // correctly-resolved face. The page already resolves the address to a
+  // profile for the avatar and feeds it into canonicalActors, so read the
+  // handle back off that rather than fetching it twice.
+  const actorName = notification.actorUsername || canonicalActors?.[0]?.display || 'Someone';
   
   // Handle custom notification types outside the typed switch
   if ((notification.type as string) === 'feature_request_like') {
