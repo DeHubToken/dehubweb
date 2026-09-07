@@ -1870,7 +1870,14 @@
     "spendFor": "{{power}} لـ{{minutes}} دقيقة",
     "aimAtAccount": "متابعين منو المفروض يشوفوه؟",
     "aimPlaceholder": "اسم المستخدم أو عنوان المحفظة",
-    "aimAtTiers": "شنو مستويات الشارة المفروض تشوفو؟"
+    "aimAtTiers": "شنو مستويات الشارة المفروض تشوفو؟",
+    "homePost": "صرفها من بوست ليك - قائمة الـ ⋯، بعدين Boost.",
+    "homeGift": "صرفها على بوست زول تاني - قائمة الـ ⋯، بعدين Boost.",
+    "homeComment": "صرفها على كومنت ليك، في بوست زول تاني.",
+    "homeStage": "صرفها من Stage إنت مستضيفه.",
+    "homePage": "صرفها هنا، فوق في الصفحة دي.",
+    "goldenHourStarted": "Golden Hour شغالة لـ {{minutes}} دقيقة — أي حاجة تنشرها هسي بتتحسب دبل",
+    "trendJacked": "{{category}} عامل ترند لـ {{minutes}} دقيقة"
   },
   "work": {
     "budgetExhausted": "ميزانية الجائزة دي كلها اتحجزت."

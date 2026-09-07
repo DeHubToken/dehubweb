@@ -1921,7 +1921,19 @@
     "spendFor": "{{power}} for {{minutes}} minutes",
     "aimAtAccount": "Whose followers should see it?",
     "aimPlaceholder": "Username or wallet address",
-    "aimAtTiers": "Which badge tiers should see it?"
+    "aimAtTiers": "Which badge tiers should see it?",
+    "homePost": "Spend it from one of your own posts — the ⋯ menu, then Boost.",
+    "homeGift": "Spend it on somebody else’s post — the ⋯ menu, then Boost.",
+    "homeComment": "Spend it on your own comment, in somebody else’s thread.",
+    "homeStage": "Spend it from a Stage you are hosting.",
+    "homePage": "Spend it here, at the top of this page.",
+    "flaresLeft": "flares",
+    "giftedTo": "gift → #{{id}}",
+    "goldenHourStarted": "Golden Hour running for {{minutes}} minutes — everything you post now counts double",
+    "start": "Start",
+    "pickCategory": "Category…",
+    "trendJacked": "{{category}} is trending for {{minutes}} minutes",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "This bounty's budget is fully committed.",

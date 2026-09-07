@@ -1876,7 +1876,19 @@
     "spendFor": "{{power}} เป็นเวลา {{minutes}} นาที",
     "aimAtAccount": "ผู้ติดตามของใผที่ควรเห็นมัน?",
     "aimPlaceholder": "ซื่อผู้ใซ้หรือที่อยู่กระเป๋า",
-    "aimAtTiers": "ขั้นตราไหนที่ควรเห็นมัน?"
+    "aimAtTiers": "ขั้นตราไหนที่ควรเห็นมัน?",
+    "homePost": "ใช้จากโพสต์ของเจ้าของเอง — เมนู ⋯ แล้ว Boost",
+    "homeGift": "ใช้กับโพสต์ของคนอื่น — เมนู ⋯ แล้ว Boost",
+    "homeComment": "ใช้กับคอมเมนต์ของเจ้าของเอง ในเธรดของคนอื่น",
+    "homeStage": "ใช้จากเวทีที่เจ้าของกำลังจัดอยู่",
+    "homePage": "ใช้ที่นี่ ตรงด้านบนของหน้านี้",
+    "flaresLeft": "flares",
+    "giftedTo": "gift → #{{id}}",
+    "goldenHourStarted": "Golden Hour กำลังวิ่งไป {{minutes}} นาที — ทุกโพสต์ของเจ้าของตอนนี้จะนับเป็นสองเท่า",
+    "start": "Start",
+    "pickCategory": "Category…",
+    "trendJacked": "{{category}} กำลังเป็นที่นิยมมา {{minutes}} นาที",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "งบของรางวัลนี้ใซ้หมดแล้ว"

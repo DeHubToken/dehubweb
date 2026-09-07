@@ -1871,7 +1871,14 @@
     "spendFor": "{{power}} ን{{minutes}} ደቓይቕ",
     "aimAtAccount": "ናይ መን ሰዓብቲ ክርእይዎ ኣለዎም?",
     "aimPlaceholder": "ናይ ተጠቃሚ ስም ወይ ኣድራሻ ዋሌት",
-    "aimAtTiers": "ኣየኖት ደረጃታት ባጅ ክርእይዎ ኣለዎም?"
+    "aimAtTiers": "ኣየኖት ደረጃታት ባጅ ክርእይዎ ኣለዎም?",
+    "homePost": "ኣብ ሓደ ካብቲ ጽሑፍካ ወፍዮ — ምናባዊት ሰለስተ ነጥብታት (...) ፣ ድሕሪኡ ድማ Boost።",
+    "homeGift": "ኣብ ጽሑፍ ካልኦት ወፍዮ — ምናባዊት ሰለስተ ነጥብታት (...) ፣ ድሕሪኡ ድማ Boost።",
+    "homeComment": "ኣብቲ ጽሑፍካ ኣብ ጸረፍካዮ ኣብ ጸረፍ ካልኦት ወፍዮ።",
+    "homeStage": "ኣብቲ መድረኽ ክትመርሖ ካብኡ ወፍዮ።",
+    "homePage": "ኣብዚ ኣብ ላዕሊ እዚ ገጽ ወፍዮ።",
+    "goldenHourStarted": "Golden Hour ን {{minutes}} ደቓይቕ ይካየድ ኣሎ — እቲ ሎሚ እትጽሕፎ ኩሉ ክልተ እጽርፍ",
+    "trendJacked": "{{category}} ን {{minutes}} ደቓይቕ ይዝርጋሕ ኣሎ"
   },
   "work": {
     "budgetExhausted": "ናይዚ ሽልማት ባጀት ብምሉኡ ተመዲቡ እዩ።"

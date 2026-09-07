@@ -1908,7 +1908,18 @@
     "spendFor": "{{power}} ለ{{minutes}} ደቂቃዎች",
     "aimAtAccount": "የማን ተከታዮች ሊያዩት ይገባል?",
     "aimPlaceholder": "የተጠቃሚ ስም ወይም የቦርሳ አድራሻ",
-    "aimAtTiers": "የትኞቹ የባጅ ደረጃዎች ሊያዩት ይገባል?"
+    "aimAtTiers": "የትኞቹ የባጅ ደረጃዎች ሊያዩት ይገባል?",
+    "homePost": "ከራስህ ልጥፍ አውጣ — ⋯ ሜኑ፣ ከዚያም Boost።",
+    "homeGift": "በሌላ ሰው ልጥፍ ላይ አውጣ — ⋯ ሜኑ፣ ከዚያም Boost።",
+    "homeComment": "በራስህ አስተያየት ላይ፣ በሌላ ሰው ክር ውስጥ አውጣ።",
+    "homeStage": "ከምትስተናግደው መድረክ አውጣ።",
+    "homePage": "እዚህ፣ በዚህ ገጽ አናት ላይ አውጣ።",
+    "giftedTo": "ስጦታ → #{{id}}",
+    "goldenHourStarted": "Golden Hour ለ {{minutes}} ደቂቃዎች እየሮጠ ነው — የምትለጥፈው ሁሉ አሁን በእጥፍ ይቆጠራል",
+    "start": "ጀምር",
+    "pickCategory": "ምድብ…",
+    "trendJacked": "{{category}} ለ {{minutes}} ደቂቃዎች እየተናፈሰ ነው",
+    "jack": "ጃክ"
   },
   "work": {
     "budgetExhausted": "የዚህ ሽልማት በጀት ሙሉ በሙሉ ተይዟል።"

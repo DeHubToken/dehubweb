@@ -1863,7 +1863,19 @@
     "spendFor": "{{power}} {{minutes}} minuutiksi",
     "aimAtAccount": "Kenen seuraajien pitäisi nähdä se?",
     "aimPlaceholder": "Käyttäjänimi tai lompakko-osoite",
-    "aimAtTiers": "Minkä merkkitasojen pitäisi nähdä se?"
+    "aimAtTiers": "Minkä merkkitasojen pitäisi nähdä se?",
+    "homePost": "Käytä se omasta julkaisustasi – ⋯ -valikko, sitten Tehosta.",
+    "homeGift": "Käytä se jonkun muun julkaisussa – ⋯ -valikko, sitten Tehosta.",
+    "homeComment": "Käytä se omassa kommentissasi, jonkun muun ketjussa.",
+    "homeStage": "Käytä sitä isännöimästäsi Stage-tilasta.",
+    "homePage": "Käytä se tässä, tämän sivun yläosassa.",
+    "flaresLeft": "liekit",
+    "giftedTo": "lahja → #{{id}}",
+    "goldenHourStarted": "Golden Hour käynnissä {{minutes}} minuuttia – kaikki julkaisemasi lasketaan nyt kaksinkertaisesti",
+    "start": "Aloita",
+    "pickCategory": "Kategoria…",
+    "trendJacked": "{{category}} on trendaamassa {{minutes}} minuuttia",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Tämän palkkion budjetti on kokonaan varattu.",

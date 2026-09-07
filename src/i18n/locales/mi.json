@@ -1898,7 +1898,19 @@
     "spendFor": "{{power}} mō ngā meneti {{minutes}}",
     "aimAtAccount": "Ko ngā kaiwhai a wai e kite ai?",
     "aimPlaceholder": "Ingoa kaiwhakamahi, wāhitau pūkoro rānei",
-    "aimAtTiers": "Ko ēhea taumata pī e kite ai?"
+    "aimAtTiers": "Ko ēhea taumata pī e kite ai?",
+    "homePost": "Whakamahia mai i tō ake pou — te tahua ⋯, kātahi ko te Whakanui.",
+    "homeGift": "Whakamahia ki tētahi pou o tētahi atu — te tahua ⋯, kātahi ko te Whakanui.",
+    "homeComment": "Whakamahia ki tō ake kōrero, i roto i te miro a tētahi atu.",
+    "homeStage": "Whakamahia mai i tētahi atamira e manaaki ana koe.",
+    "homePage": "Whakamahia ki konei, ki te tihi o tēnei whārangi.",
+    "flaresLeft": "ngā mura",
+    "giftedTo": "koha → #{{id}}",
+    "goldenHourStarted": "Te haere o te haora koura mō {{minutes}} meneti — ka takirua ngā mea katoa e whakairia ana e koe i ēnei wā",
+    "start": "Tīmata",
+    "pickCategory": "Kāwai…",
+    "trendJacked": "Kei te rongonui a {{category}} mō {{minutes}} meneti",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Kua oti te pūtea o tēnei utu te tuku katoa."
