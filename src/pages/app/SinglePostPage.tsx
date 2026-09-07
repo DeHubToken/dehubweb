@@ -71,6 +71,7 @@ import { VideoCardSkeleton, ImageCardSkeleton, PostCardSkeleton } from '@/compon
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
 import { hlsUrlFor, liveProviderOf } from '@/lib/live-ingest';
+import { FocusCommentProvider } from '@/lib/focus-comment';
 
 /*
  * Only a live post ever renders this, and a live post is a small minority of
@@ -693,7 +694,27 @@ function postSeoUrl(pathname: string, id?: string): string {
     : `https://dehub.io/app/post/${id}`;
 }
 
-export default function SinglePostPage({ inOverlay = false, overrideId }: SinglePostPageProps = {}) {
+/**
+ * Publishes the deep-linked comment to everything under the page — the
+ * comments list included, which sits behind five card components and a lazy
+ * wrapper and has no other reason to know about notifications. Same two
+ * sources the page itself reads, resolved once here so the list and the
+ * author thread can never disagree about which comment was linked.
+ */
+export default function SinglePostPage(props: SinglePostPageProps = {}) {
+  const { postId, tokenId, commentId } = useParams<{ postId?: string; tokenId?: string; commentId?: string }>();
+  const { search } = useLocation();
+  const id = props.overrideId || postId || tokenId;
+  const focusCommentId = commentId || new URLSearchParams(search).get('comment') || undefined;
+
+  return (
+    <FocusCommentProvider tokenId={id} commentId={focusCommentId}>
+      <SinglePostPageContent {...props} />
+    </FocusCommentProvider>
+  );
+}
+
+function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPageProps = {}) {
   const { postId, tokenId, commentId } = useParams<{ postId?: string; tokenId?: string; commentId?: string }>();
   const navigate = useNavigate();
   const { t } = useI18n();
