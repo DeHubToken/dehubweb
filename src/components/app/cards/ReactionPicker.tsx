@@ -1,7 +1,7 @@
 /**
  * Reaction Picker
  * ===============
- * The nine-reaction tray that opens when you hold (touch) or hover (mouse) the
+ * The reaction tray that opens when you hold (touch) or hover (mouse) the
  * thumbs-up on a post.
  *
  * WHY IT ISN'T A POPOVER/DROPDOWN PRIMITIVE
@@ -50,7 +50,7 @@ interface ReactionPickerProps {
   /**
    * How many people hold each reaction, drawn in the corner of its emoji.
    * Reactions nobody has picked show a dimmed 0 rather than nothing, so the
-   * nine corners stay a readable row of numbers instead of a ragged few.
+   * corners stay a readable row of numbers instead of a ragged few.
    * Omit to render the tray bare, as it was before totals existed.
    */
   counts?: ReactionCounts | null;
@@ -69,8 +69,8 @@ interface ReactionPickerProps {
   onShowInfo?: () => void;
   /**
    * Which thumb this tray hangs off. The positive one wears the seven faces
-   * that count as a like; the negative one wears 👎 and 💩 — see the note on
-   * POSITIVE_REACTION_LIST for why they are not one tray of nine.
+   * that count as a like; the negative one wears the downvote — see the note on
+   * POSITIVE_REACTION_LIST for why they are not one tray.
    */
   polarity?: 'positive' | 'negative';
 }
@@ -124,7 +124,7 @@ export function ReactionPicker({
           data-no-navigate
           data-keep-round
           /* A floating menu, so it needs a menu's surface even though it is
-             absolutely positioned rather than portalled: nine emoji have to
+             absolutely positioned rather than portalled: a row of emoji has to
              read against whatever post is behind the card. */
           data-reaction-tray
           onClick={(e) => e.stopPropagation()}
@@ -169,7 +169,7 @@ export function ReactionPicker({
                 }}
                 /* No disc behind the emoji on hover. The lift and the 10% grow
                    already say which one the pointer is on, and a grey circle
-                   under one glyph in a row of nine was the only chrome in a
+                   under one glyph in a row of them was the only chrome in a
                    tray whose whole point is that the emoji are the interface. */
                 className={cn(
                   'group relative flex h-9 w-9 items-center justify-center rounded-full',
@@ -179,7 +179,7 @@ export function ReactionPicker({
                 )}
                 /* The viewer's own reaction is marked by a bloom in the
                    emoji's own colour rather than a white disc and ring — the
-                   ring drew a hard edge around one glyph in a row of nine and
+                   ring drew a hard edge around one glyph in a row of them and
                    read as chrome. Inline because the colour is per-reaction
                    data, and it needs no light-theme counterpart: a colour
                    pulled from the glyph reads on paper and on glass alike. */
@@ -199,7 +199,7 @@ export function ReactionPicker({
                 </span>
                 {/* Total for this reaction, tucked into the corner above the
                     emoji. Absolutely positioned so a four-character "1.2K"
-                    can never widen the tray — nine of those would push it off
+                    can never widen the tray — a row of those would push it off
                     a phone screen. The emoji sits in the middle 18px of a
                     36px box, so the top strip is free. */}
                 {tally !== null && (
