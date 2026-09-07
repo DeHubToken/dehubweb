@@ -653,6 +653,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
     error: translateError,
     handleTranslate,
     handleShowOriginal,
+    sourceLang,
     isTooShort: nothingToTranslate,
   } = useTranslation(descriptionText);
   const { isLoading: isTranslating, error: translationError, result: translationResult, translateImage, clearResult } = useImageTranslation();
@@ -1132,6 +1133,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
             error: translateError,
             onTranslate: handleTranslate,
             onShowOriginal: handleShowOriginal,
+            sourceLang,
           }}
         />
 

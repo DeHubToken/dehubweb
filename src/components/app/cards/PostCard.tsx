@@ -255,6 +255,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
     error: translateError,
     handleTranslate,
     handleShowOriginal,
+    sourceLang,
     isTooShort: nothingToTranslate,
   } = useTranslation(post.content);
 
@@ -734,6 +735,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
             error: translateError,
             onTranslate: handleTranslate,
             onShowOriginal: handleShowOriginal,
+            sourceLang,
           }}
         />
 
