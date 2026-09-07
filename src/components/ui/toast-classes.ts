@@ -53,8 +53,12 @@ export const TOAST_CLASSES = 'flex-col items-stretch text-start';
  */
 export const TOAST_FIT_CLASSES = [
   'w-fit max-w-full',
-  // Corner-positioned toasts need to keep the edge Sonner assigns them. Only
-  // centre-positioned groups should split their spare horizontal space.
+  // Sonner positions the 356px toaster rail, not a shrink-wrapped toast inside
+  // it. Pin corner toasts to the matching edge of that rail so a short card
+  // does not sit inset toward the centre of the viewport.
+  'group-data-[x-position=right]:left-auto group-data-[x-position=right]:right-0',
+  'group-data-[x-position=left]:left-0 group-data-[x-position=left]:right-auto',
+  // Only centre-positioned groups should split their spare horizontal space.
   'group-data-[x-position=center]:inset-x-0 group-data-[x-position=center]:mx-auto',
 ].join(' ');
 
