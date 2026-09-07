@@ -233,6 +233,13 @@ const MessageBubble = memo(function MessageBubble({
   // content carries the link the embed card is built from, so letting someone
   // edit the visible caption alone would silently drop that link on save.
   const canEdit = isOwnMessage && message.msgType === 'msg' && !isPostShare && !message.isDeleted;
+  /*
+   * A message still on its way out is on screen under a local id the API has
+   * never seen, so an edit, forward or pin aimed at it reached the server as an
+   * id it could not resolve and died there without a word — the row is held
+   * back until the send comes back with a real one.
+   */
+  const isUnsent = message._id.startsWith('temp-');
   const [draftText, setDraftText] = useState(message.content || '');
   useEffect(() => {
     if (isEditing) setDraftText(message.content || '');
@@ -295,7 +302,7 @@ const MessageBubble = memo(function MessageBubble({
       id={`dm-msg-${message._id}`}
       className={`flex gap-3 py-2 ${isOwnMessage ? 'flex-row-reverse' : ''} group relative rounded-lg transition-colors`}
     >
-      {!message.isDeleted && message.msgType !== 'tip' && !isEditing && (onPin || onForward || (onEdit && canEdit)) && (
+      {!message.isDeleted && !isUnsent && message.msgType !== 'tip' && !isEditing && (onPin || onForward || (onEdit && canEdit)) && (
         <div
           className={`absolute top-3 ${isOwnMessage ? 'left-1' : 'right-1'} flex items-center gap-1 transition-all opacity-0 group-hover:opacity-100 z-10`}
         >
