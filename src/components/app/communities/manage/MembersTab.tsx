@@ -376,7 +376,7 @@ export function MembersTab({ community, membership }: MembersTabProps) {
               </div>
             ) : shown.length === 0 ? (
               <AppState
-                icon={query ? 'search' : 'members'}
+                icon={query ? 'search' : 'accounts'}
                 title={query
                   ? t('communities.manage.noMatchingMembers', { defaultValue: 'No members match that search' })
                   : t('communities.manage.noMembers', { defaultValue: 'Nobody here yet' })}

@@ -286,7 +286,7 @@ export function AdministratorsTab({ community, membership }: AdministratorsTabPr
               </p>
             ) : (
               <AppState
-                icon="members"
+                icon="accounts"
                 title={t('communities.manage.noAdminsTitle', { defaultValue: 'No administrators yet' })}
                 description={t('communities.manage.noAdmins', { defaultValue: 'Promote a member to help you moderate.' })}
                 size="compact"
@@ -327,7 +327,7 @@ export function AdministratorsTab({ community, membership }: AdministratorsTabPr
                 </p>
               ) : (
                 <AppState
-                  icon={query ? 'search' : 'members'}
+                  icon={query ? 'search' : 'accounts'}
                   title={query
                     ? t('communities.manage.noMemberMatches', { defaultValue: 'No members match that search.' })
                     : t('communities.manage.noMembersToPromote', { defaultValue: 'Everyone here is already an admin.' })}

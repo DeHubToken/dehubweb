@@ -183,7 +183,7 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
             </div>
           ) : requests.length === 0 ? (
             <AppState
-              icon="members"
+              icon="accounts"
               title="No pending requests"
               description="Follow requests will appear here."
               size="drawer"
