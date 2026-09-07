@@ -85,6 +85,14 @@
 /dehub-loader.webp
   Cache-Control: public, max-age=31536000, immutable
 
+# The mark, re-cut at its native 240px and lossless (see DeHubLoader.tsx). The
+# old path above is served `immutable` for a year, so replacing its bytes would
+# never reach anyone who had already loaded the blurry one — hence a new name,
+# per the CHANGE THE FILENAME rule above. Both paths now hold the same art so a
+# JS chunk cached from before this deploy still gets the fixed mark.
+/dehub-loader-240.webp
+  Cache-Control: public, max-age=31536000, immutable
+
 /placeholder.svg
   Cache-Control: public, max-age=31536000, immutable
 
