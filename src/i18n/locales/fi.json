@@ -703,7 +703,19 @@
     "stake": "Stake",
     "cashOut": "Nosta",
     "stakeComingSoon": "Staking tulossa pian!",
-    "cashOutComingSoon": "Nosto tulossa pian!"
+    "cashOutComingSoon": "Nosto tulossa pian!",
+    "back": "Takaisin",
+    "chooseAddressNetwork": "Mikä verkko?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB ja Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "VAIN Sol- ja SPL-tunnukset",
+    "solanaAddressLinkedHint": "Linkitetty Phantom-lompakkosi",
+    "evmAddressCopied": "EVM-osoite kopioitu",
+    "solanaAddressCopied": "Solana-osoite kopioitu",
+    "addressCopyFailed": "Osoitetta ei voitu kopioida",
+    "receiveEvm": "Base · BNB · ETH",
+    "receiveSolanaDescription": "Lähetä TÄNNE vain Sol- ja SPL-tunnukset. Kaikki toisesta verkosta lähetetty katoaa."
   },
   "bookmarks": {
     "title": "Kirjanmerkkisi",

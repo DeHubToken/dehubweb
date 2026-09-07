@@ -712,7 +712,19 @@
     "stake": "Stake",
     "cashOut": "Retragere",
     "stakeComingSoon": "Staking-ul vine în curând!",
-    "cashOutComingSoon": "Retragerea vine în curând!"
+    "cashOutComingSoon": "Retragerea vine în curând!",
+    "back": "Înapoi",
+    "chooseAddressNetwork": "Care rețea?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Bază, BNB și Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Numai token-uri SOL și SPL",
+    "solanaAddressLinkedHint": "Portofelul dvs. Phantom conectat",
+    "evmAddressCopied": "Adresa EVM a fost copiată",
+    "solanaAddressCopied": "Adresa Solana a fost copiată",
+    "addressCopyFailed": "Adresa nu a putut fi copiată",
+    "receiveEvm": "Bază · BNB · ETH",
+    "receiveSolanaDescription": "Trimiteți numai token-uri SOL și SPL aici. Orice mesaj trimis de la o altă rețea este pierdut."
   },
   "bookmarks": {
     "title": "Marcajele tale",

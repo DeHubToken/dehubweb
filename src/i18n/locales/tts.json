@@ -712,7 +712,19 @@
     "stake": "สเตค",
     "cashOut": "ถอนเงิน",
     "stakeComingSoon": "สเตคมาเร็วๆ นี้!",
-    "cashOutComingSoon": "ถอนเงินมาเร็วๆ นี้!"
+    "cashOutComingSoon": "ถอนเงินมาเร็วๆ นี้!",
+    "back": "ກັບຄືນ",
+    "chooseAddressNetwork": "ເຄືອຂ່າຍໃດ?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB ແລະ Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "ສະເພາະ SOL ແລະ SPL tokens",
+    "solanaAddressLinkedHint": "ກະເປົາ Phantom ທີ່ເຊື່ອມຕໍ່ຂອງທ່ານ",
+    "evmAddressCopied": "ຄັດລອກທີ່ຢູ່ EVM ແລ້ວ",
+    "solanaAddressCopied": "ຄັດລອກທີ່ຢູ່ Solana ແລ້ວ",
+    "addressCopyFailed": "ບໍ່ສາມາດຄັດລອກທີ່ຢູ່ໄດ້",
+    "receiveEvm": "Base · BNB · ETH",
+    "receiveSolanaDescription": "ສົ່ງສະເພາະ SOL ແລະ SPL tokens ມາທີ່ນີ້. ສິ່ງໃດກໍຕາມທີ່ສົ່ງມາຈາກເຄືອຂ່າຍອື່ນຈະສູນເສຍໄປ."
   },
   "bookmarks": {
     "title": "บุ๊กมาร์กของเจ้า",

@@ -712,7 +712,19 @@
     "stake": "Stake",
     "cashOut": "Lacagta Ka Saar",
     "stakeComingSoon": "Staking dhow ayay imanaysaa!",
-    "cashOutComingSoon": "Lacagta ka saaridda dhow ayay imanaysaa!"
+    "cashOutComingSoon": "Lacagta ka saaridda dhow ayay imanaysaa!",
+    "back": "Dib u noqoshada",
+    "chooseAddressNetwork": "Waa maxay shabakad?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB iyo Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Calaamadaha SOL iyo SPL oo keliya",
+    "solanaAddressLinkedHint": "Boorsadaada Phantom ee ku xiran",
+    "evmAddressCopied": "Cinwaanka EVM waa la nuqulay",
+    "solanaAddressCopied": "Cinwaanka Solana waa la nuqulay",
+    "addressCopyFailed": "Ma nuquli karin cinwaanka",
+    "receiveEvm": "Base · BNB · ETH",
+    "receiveSolanaDescription": "Kaliya u dir calaamadaha SOL iyo SPL halkan. Wax kasta oo laga soo diray shabakad kale ayaa lumay."
   },
   "bookmarks": {
     "title": "Calaamadahaaga",
@@ -1203,6 +1215,7 @@
     "amountLabel": "Qaddar (DHB)",
     "youHold": "Waxaad haysataa {{amount}} DHB",
     "irreversible": "Ka qaybqaadashadu waa wareejin on-chain. Lama burin karo ama lama soo celin karo.",
+    "switchChain": "Si aad uga qaybqaadato, jeebkaaga u beddel {{chains}}.",
     "sendAmount": "Dir {{amount}} DHB",
     "sentTitle": "Ka qaybqaadasho waa la diray",
     "sentDesc": "{{amount}} DHB ayaa loo diray kaydka on {{chain}}. Saamigaaga ayaa cusboonaysiin doona marka block-ka la index-gareeyo.",
@@ -1226,10 +1239,9 @@
     "noContributors": "Weligeed ma jirto ka qaybqaadasho. Noqo kii ugu horreeyay.",
     "recent": "Ka qaybqaadashooyinka ugu dambeeyay",
     "you": "Adiga",
-    "power": "awood",
-    "switchChain": "Si aad uga qaybqaadato, jeebkaaga u beddel {{chains}}.",
     "transferCount_one": "{{count}} wareejin",
-    "transferCount_other": "{{count}} wareejin"
+    "transferCount_other": "{{count}} wareejin",
+    "power": "awood"
   },
   "governance": {
     "title": "Maamulidda",

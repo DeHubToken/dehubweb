@@ -712,7 +712,19 @@
     "stake": "Statyti",
     "cashOut": "Išsigryninti",
     "stakeComingSoon": "Statymas greitai!",
-    "cashOutComingSoon": "Išsigryninimas greitai!"
+    "cashOutComingSoon": "Išsigryninimas greitai!",
+    "back": "Atgal",
+    "chooseAddressNetwork": "Kuris tinklas?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB ir Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Tik SOL ir SPL žetonai",
+    "solanaAddressLinkedHint": "Jūsų susieta „Phantom“ piniginė",
+    "evmAddressCopied": "EVM adresas nukopijuotas",
+    "solanaAddressCopied": "Solana adresas nukopijuotas",
+    "addressCopyFailed": "Nepavyko nukopijuoti adreso",
+    "receiveEvm": "Bazė · BNB · ETH",
+    "receiveSolanaDescription": "Čia siųskite tik SOL ir SPL žetonus. Viskas, kas siunčiama iš kito tinklo, prarandama."
   },
   "bookmarks": {
     "title": "Jūsų žymės",

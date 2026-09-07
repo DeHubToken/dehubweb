@@ -712,7 +712,18 @@
     "stake": "ስቴክ",
     "cashOut": "ጥሬ ገንዘብ",
     "stakeComingSoon": "ስቴኪንግ በቅርቡ ይመጣል!",
-    "cashOutComingSoon": "ጥሬ ገንዘብ ማውጣት በቅርቡ ይመጣል!"
+    "cashOutComingSoon": "ጥሬ ገንዘብ ማውጣት በቅርቡ ይመጣል!",
+    "back": "ወደ ኋላ",
+    "chooseAddressNetwork": "የትኛው አውታረ መረብ?",
+    "evmAddressHint": "ቤዝ, BNB እና Ethereum",
+    "solanaAddressLabel": "ሶላና",
+    "solanaAddressHint": "ሶል እና SPL ምልክቶች ብቻ",
+    "solanaAddressLinkedHint": "የእርስዎ የተገናኘ Phantom የኪስ ቦርሳ",
+    "evmAddressCopied": "EVM አድራሻ ተገለበጠ",
+    "solanaAddressCopied": "የሶላና አድራሻ ተገለበጠ",
+    "addressCopyFailed": "አድራሻውን መቅዳት አልተቻለም",
+    "receiveEvm": "ቤዝ · BNB · ETH",
+    "receiveSolanaDescription": "የሶል እና SPL ምልክቶችን ብቻ እዚህ ይላኩ ። ከሌላ አውታረ መረብ የተላከ ማንኛውም ነገር ጠፍቷል ።"
   },
   "bookmarks": {
     "title": "ዕልባቶችህ",
@@ -1227,9 +1238,9 @@
     "noContributors": "ምንም መዋጮ የለም። አንደኛ ይሁኑ።",
     "recent": "የቅርብ ጊዜ መዋጮዎች",
     "you": "እርስዎ",
-    "power": "ኃይል",
     "transferCount_one": "{{count}} ዝውውር",
-    "transferCount_other": "{{count}} ዝውውሮች"
+    "transferCount_other": "{{count}} ዝውውሮች",
+    "power": "ኃይል"
   },
   "governance": {
     "title": "አስተዳደር",

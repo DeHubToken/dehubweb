@@ -712,7 +712,19 @@
     "stake": "Stake",
     "cashOut": "Çek",
     "stakeComingSoon": "Staking yakında geliyor!",
-    "cashOutComingSoon": "Çekim yakında geliyor!"
+    "cashOutComingSoon": "Çekim yakında geliyor!",
+    "back": "Geri",
+    "chooseAddressNetwork": "Hangi ağ?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB ve Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Sadece SOL ve SPL tokenleri",
+    "solanaAddressLinkedHint": "Bağlantılı Phantom cüzdanınız",
+    "evmAddressCopied": "EVM adresi kopyalandı",
+    "solanaAddressCopied": "Solana adresi kopyalandı",
+    "addressCopyFailed": "Adres kopyalanamadı",
+    "receiveEvm": "Matrah · BNB · ETH",
+    "receiveSolanaDescription": "Buraya sadece SOL ve SPL jetonları gönderin. Başka bir ağdan gönderilen her şey kaybolur."
   },
   "bookmarks": {
     "title": "Yer İmleriniz",

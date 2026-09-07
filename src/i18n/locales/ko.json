@@ -23,6 +23,7 @@
     "featureRequests": "요청",
     "staking": "스테이킹",
     "governance": "거버넌스",
+    "dao": "DAO",
     "careers": "채용",
     "glossary": "용어집",
     "arcade": "아케이드",
@@ -44,8 +45,7 @@
     "pricing": "요금제",
     "creators": "크리에이터",
     "getTheApp": "앱 받기",
-    "connectAi": "AI 연결",
-    "dao": "DAO"
+    "connectAi": "AI 연결"
   },
   "feed": {
     "viewProfile": "{{name}} 님의 프로필 보기",
@@ -712,7 +712,18 @@
     "stake": "스테이킹",
     "cashOut": "출금",
     "stakeComingSoon": "스테이킹이 곧 출시됩니다!",
-    "cashOutComingSoon": "출금이 곧 출시됩니다!"
+    "cashOutComingSoon": "출금이 곧 출시됩니다!",
+    "back": "뒤로",
+    "chooseAddressNetwork": "어떤 네트워크인가요?",
+    "evmAddressHint": "기본, BNB 및 이더리움",
+    "solanaAddressLabel": "솔라나",
+    "solanaAddressHint": "SOL 및 SPL 토큰만",
+    "solanaAddressLinkedHint": "연결된 팬텀 지갑",
+    "evmAddressCopied": "EVM 주소 복사 완료",
+    "solanaAddressCopied": "Solana 주소 복사 완료",
+    "addressCopyFailed": "주소를 복사할 수 없습니다",
+    "receiveEvm": "기본 · BNB · ETH",
+    "receiveSolanaDescription": "여기서만 SOL 및 SPL 토큰을 보내십시오. 다른 네트워크에서 전송된 모든 것이 손실됩니다."
   },
   "bookmarks": {
     "title": "북마크",

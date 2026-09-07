@@ -712,7 +712,19 @@
     "stake": "स्टेक",
     "cashOut": "कैश आउट",
     "stakeComingSoon": "स्टेकिंग जल्दी आ रहल बा!",
-    "cashOutComingSoon": "कैश आउट जल्दी आ रहल बा!"
+    "cashOutComingSoon": "कैश आउट जल्दी आ रहल बा!",
+    "back": "चल गिर के उठ जा",
+    "chooseAddressNetwork": "के केई नेट व्हाई के हो?",
+    "evmAddressLabel": "ई एम आई ई एम",
+    "evmAddressHint": "बेस, बीएनबी और एथेरियम",
+    "solanaAddressLabel": "सोलोना, हल्दी, हल्दी",
+    "solanaAddressHint": "केवल सोलो और सोलो कैलक्युलेशन",
+    "solanaAddressLinkedHint": "अपने बंधे हुंडई एलांट्रा पैकेट",
+    "evmAddressCopied": "ईएमआई कैलक्यूलेटर",
+    "solanaAddressCopied": "कॉपी कैलक्यूलेटर",
+    "addressCopyFailed": "पता नही, पता भी, पता भी बता दे",
+    "receiveEvm": "उच्चारण रेकार्ड करे bn. wikipedia. org/wiki/खासःइ",
+    "receiveSolanaDescription": "केवल सोलो और एसपीएल टोकन भेजें । और बाकी के साथ, सब कुछ उचित है, एक लाइसेंस के माध्यम से?"
   },
   "bookmarks": {
     "title": "तोहर बुकमार्क",
@@ -1202,6 +1214,7 @@
     "amountLabel": "राशि (डीएचबी)",
     "youHold": "आपके पास {{amount}} डीएचबी है",
     "irreversible": "योगदान ऑन-चेन ट्रांसफर हैं। उन्हें उलटा या वापस नहीं लिया जा सकता है।",
+    "switchChain": "योगदान करे ला अपन वॉलेट {{chains}} पर बदलो।",
     "sendAmount": "{{amount}} डीएचबी भेजें",
     "sentTitle": "योगदान भेजा गया",
     "sentDesc": "{{amount}} डीएचबी {{chain}} को ट्रेजरी में भेजा गया। ब्लॉक इंडेक्स होने पर आपकी हिस्सेदारी अपडेट हो जाएगी।",
@@ -1225,10 +1238,9 @@
     "noContributors": "कोई योगदान नहीं। पहले बनें।",
     "recent": "हाल के योगदान",
     "you": "आप",
-    "power": "सत्ता, सुदृढ",
-    "switchChain": "योगदान करे ला अपन वॉलेट {{chains}} पर बदलो।",
     "transferCount_one": "{{count}} ट्रांसफर",
-    "transferCount_other": "{{count}} ट्रांसफर"
+    "transferCount_other": "{{count}} ट्रांसफर",
+    "power": "सत्ता, सुदृढ"
   },
   "governance": {
     "title": "गवर्नेंस",

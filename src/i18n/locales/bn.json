@@ -690,7 +690,19 @@
     "stake": "স্টেক",
     "cashOut": "ক্যাশ আউট",
     "stakeComingSoon": "স্টেকিং শীঘ্রই আসছে!",
-    "cashOutComingSoon": "ক্যাশ আউট শীঘ্রই আসছে!"
+    "cashOutComingSoon": "ক্যাশ আউট শীঘ্রই আসছে!",
+    "back": "ফিরে যান",
+    "chooseAddressNetwork": "কোন নেটওয়ার্ক?",
+    "evmAddressLabel": "ইভিএম",
+    "evmAddressHint": "বেস, বিএনবি এবং ইথেরিয়াম",
+    "solanaAddressLabel": "সোলানা",
+    "solanaAddressHint": "সল এবং এসপিএল টোকেন শুধুমাত্র",
+    "solanaAddressLinkedHint": "আপনার লিঙ্ক করা ফ্যান্টম ওয়ালেট",
+    "evmAddressCopied": "ইভিএম ঠিকানা অনুলিপি করা হয়েছে",
+    "solanaAddressCopied": "সোলানার ঠিকানা অনুলিপি করা হয়েছে",
+    "addressCopyFailed": "ঠিকানাটি কপি করা যায়নি",
+    "receiveEvm": "ভিত্তি · বিএনবি · ইটিএইচ",
+    "receiveSolanaDescription": "শুধুমাত্র এখানে SOL এবং SPL টোকেন পাঠান । অন্য নেটওয়ার্ক থেকে পাঠানো সবকিছু হারিয়ে গেছে ।"
   },
   "bookmarks": {
     "title": "আপনার বুকমার্ক",
@@ -1193,6 +1205,7 @@
     "amountLabel": "পরিমাণ (DHB)",
     "youHold": "আপনার কাছে {{amount}} DHB আছে",
     "irreversible": "অবদানগুলি অন-চেইন ট্রান্সফার। সেগুলি বাতিল বা প্রত্যাহার করা যাবে না।",
+    "switchChain": "অবদান রাখতে আপনার ওয়ালেট {{chains}}-এ পরিবর্তন করুন।",
     "sendAmount": "{{amount}} DHB পাঠান",
     "sentTitle": "অবদান পাঠানো হয়েছে",
     "sentDesc": "{{amount}} DHB {{chain}} তারিখে ট্রেজারিতে পাঠানো হয়েছে। ব্লক সূচীভুক্ত হওয়ার পরে আপনার অংশ আপডেট হবে।",
@@ -1216,10 +1229,9 @@
     "noContributors": "এখনও কোনো অবদান নেই। প্রথম হন।",
     "recent": "সাম্প্রতিক অবদান",
     "you": "আপনি",
-    "power": "ক্ষমতা",
-    "switchChain": "অবদান রাখতে আপনার ওয়ালেট {{chains}}-এ পরিবর্তন করুন।",
     "transferCount_one": "{{count}}টি ট্রান্সফার",
-    "transferCount_other": "{{count}}টি ট্রান্সফার"
+    "transferCount_other": "{{count}}টি ট্রান্সফার",
+    "power": "ক্ষমতা"
   },
   "governance": {
     "title": "গভর্ন্যান্স",

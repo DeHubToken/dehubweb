@@ -1199,6 +1199,7 @@
     "amountLabel": "Износ (DHB)",
     "youHold": "Поседујете {{amount}} DHB",
     "irreversible": "Доприноси су трансфери на ланцу. Не могу се поништити нити повући.",
+    "switchChain": "Пребаците новчаник на {{chains}} да бисте допринели.",
     "sendAmount": "Пошаљите {{amount}} DHB",
     "sentTitle": "Допринос послат",
     "sentDesc": "{{amount}} DHB послато у трезор на {{chain}}. Ваш удео се ажурира када блок буде индексиран.",
@@ -1222,7 +1223,6 @@
     "noContributors": "Још увек нема доприноса. Будите први.",
     "recent": "Недавни доприноси",
     "you": "Ви",
-    "switchChain": "Пребаците новчаник на {{chains}} да бисте допринели.",
     "transferCount_one": "{{count}} трансфер",
     "transferCount_other": "{{count}} трансфера",
     "power": "моћ"

@@ -47,6 +47,10 @@ const SESSION_KEYS = [
   'dehub_supabase_uid',
   'dehub_connection_source',
   'dehub_wallet_enc',
+  // Public, but account-specific: the Solana address this profile's wallet
+  // derives to. Left behind, it would offer the outgoing account's deposit
+  // address to the incoming one.
+  'dehub_solana_address',
 ] as const;
 
 /** Same prefixes wagmi.ts clears on disconnect — kept in step with it. */

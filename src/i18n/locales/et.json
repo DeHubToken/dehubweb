@@ -703,7 +703,19 @@
     "stake": "Panusta",
     "cashOut": "Võta raha välja",
     "stakeComingSoon": "Panustamine varsti!",
-    "cashOutComingSoon": "Raha väljavõtmine varsti!"
+    "cashOutComingSoon": "Raha väljavõtmine varsti!",
+    "back": "Tagasi",
+    "chooseAddressNetwork": "Milline võrk?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB ja Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Ainult SOL-i ja SPL-i märgid",
+    "solanaAddressLinkedHint": "Sinu lingitud fantoomi rahakott",
+    "evmAddressCopied": "EVM-aadress on kopeeritud",
+    "solanaAddressCopied": "Solana aadress kopeeritud",
+    "addressCopyFailed": "Aadressi ei saanud kopeerida",
+    "receiveEvm": "Alus · BNB · ETH",
+    "receiveSolanaDescription": "Saada siia ainult SOL-i ja SPL-i märgid. Kõik teisest võrgust saadetud asjad lähevad kaotsi."
   },
   "bookmarks": {
     "title": "Sinu järjehoidjad",

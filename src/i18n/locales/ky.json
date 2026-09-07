@@ -712,7 +712,19 @@
     "stake": "Стейк",
     "cashOut": "Акча алуу",
     "stakeComingSoon": "Стейкинг жакында!",
-    "cashOutComingSoon": "Акча алуу жакында!"
+    "cashOutComingSoon": "Акча алуу жакында!",
+    "back": "Артка",
+    "chooseAddressNetwork": "Кайсы тармак?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Негизги, BNB жана Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "SOL жана SPL токендери гана",
+    "solanaAddressLinkedHint": "Сиздин байланышкан Phantom капчыгы",
+    "evmAddressCopied": "EVM дареги көчүрүлгөн",
+    "solanaAddressCopied": "Солана дареги көчүрүлдү",
+    "addressCopyFailed": "Даректи көчүрүүгө болбоду",
+    "receiveEvm": "Негизги · BNB · ETH",
+    "receiveSolanaDescription": "Бул жерге SOL жана SPL токендерин гана жөнөтүңүз. Башка тармактан жөнөтүлгөн нерсенин баары жоголду."
   },
   "bookmarks": {
     "title": "Кыстармаларыңыз",

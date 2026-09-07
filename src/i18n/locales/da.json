@@ -712,7 +712,19 @@
     "stake": "Stake",
     "cashOut": "Udbetal",
     "stakeComingSoon": "Stake kommer snart!",
-    "cashOutComingSoon": "Udbetaling kommer snart!"
+    "cashOutComingSoon": "Udbetaling kommer snart!",
+    "back": "Tilbage",
+    "chooseAddressNetwork": "Hvilket netværk?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB og Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Kun SOL og SPL tokens",
+    "solanaAddressLinkedHint": "Din tilknyttede Phantom wallet",
+    "evmAddressCopied": "EVM-adresse kopieret",
+    "solanaAddressCopied": "Solana-adresse kopieret",
+    "addressCopyFailed": "Kunne ikke kopiere adressen",
+    "receiveEvm": "Base · BNB · ETH",
+    "receiveSolanaDescription": "Send kun SOL og SPL tokens hertil. Alt, der sendes fra et andet netværk, går tabt."
   },
   "bookmarks": {
     "title": "Bogmærker",

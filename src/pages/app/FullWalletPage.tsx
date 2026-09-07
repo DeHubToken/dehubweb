@@ -40,6 +40,9 @@ import usdtLogo from '@/assets/usdt-logo.png';
 import usdcLogo from '@/assets/usdc-logo.png';
 import btcLogo from '@/assets/btc-logo.png';
 import baseLogo from '@/assets/icons/base-logo.png';
+import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
+import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 const CHAIN_OPTIONS: { id: ChainId; name: string; icon: string }[] = [
   { id: BASE_CHAIN_ID, name: 'Base', icon: baseLogo },
@@ -79,7 +82,7 @@ interface GroupedToken {
 }
 
 export default function FullWalletPage() {
-  const { isAuthenticated, walletAddress, user } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
   const { isCollapsed } = useSidebarCollapse();
   const navigate = useNavigate();
   const location = useLocation();
@@ -188,13 +191,15 @@ export default function FullWalletPage() {
    * Not cosmetic. SOL and SPL tokens sent to an `0x…` address are gone — the
    * two chains do not share an address space — so a dialog that shows only the
    * EVM address beside a list of Solana balances is an invitation to lose
-   * money. The toggle only appears when there is a linked Solana address to
-   * switch to.
+   * money. The toggle only appears when there is a Solana address to switch to
+   * — DeHub's own derived one for a built-in wallet, a linked Phantom for the
+   * rest (see hooks/use-wallet-addresses).
    */
   const [receiveNetwork, setReceiveNetwork] = useState<'evm' | 'solana'>('evm');
-  const linkedSolanaAddress = user?.solanaAddress ?? null;
+  const [copyMenuOpen, setCopyMenuOpen] = useState(false);
+  const { solana: solanaAddress, hasChoice: hasAddressChoice } = useWalletAddresses();
   const receiveAddress =
-    receiveNetwork === 'solana' && linkedSolanaAddress ? linkedSolanaAddress : walletAddress;
+    receiveNetwork === 'solana' && solanaAddress ? solanaAddress : walletAddress;
 
   // All tokens with balance across all chains (for send dialog)
   const allWithBalance = useMemo(() => allTokens.filter(tk => tk.balance > BigInt(0)), [allTokens]);
@@ -316,9 +321,22 @@ export default function FullWalletPage() {
               {t('wallet.totalWalletValue')}: ${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
           </div>
-          <Button variant="ghost" size="icon" className="shrink-0 text-zinc-400 hover:text-white" onClick={() => handleCopy()} title={walletAddress || ''}>
-            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-          </Button>
+          {hasAddressChoice ? (
+            <Popover open={copyMenuOpen} onOpenChange={setCopyMenuOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="shrink-0 text-zinc-400 hover:text-white" title={t('wallet.chooseAddressNetwork')}>
+                  {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-72 bg-black/60 backdrop-blur-[24px] border border-white/10 p-2">
+                <CopyAddressRows onCopied={() => setCopyMenuOpen(false)} />
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <Button variant="ghost" size="icon" className="shrink-0 text-zinc-400 hover:text-white" onClick={() => handleCopy()} title={walletAddress || ''}>
+              {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+            </Button>
+          )}
         </div>
         {showBalanceBreakdown && (
           <motion.div
@@ -508,11 +526,11 @@ export default function FullWalletPage() {
             <DialogTitle className="text-white">{t('wallet.receiveTokens')}</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col items-center gap-4 py-4">
-            {linkedSolanaAddress && (
+            {solanaAddress && (
               <div className="flex w-full rounded-xl bg-white/5 border border-white/10 p-1 gap-1">
                 {([
-                  { key: 'evm' as const, label: t('wallet.receiveEvm', 'Base · BNB · ETH') },
-                  { key: 'solana' as const, label: 'Solana' },
+                  { key: 'evm' as const, label: t('wallet.receiveEvm') },
+                  { key: 'solana' as const, label: t('wallet.solanaAddressLabel') },
                 ]).map(option => (
                   <button
                     key={option.key}
@@ -540,10 +558,7 @@ export default function FullWalletPage() {
             </div>
             <p className="text-xs text-white/40 text-center">
               {receiveNetwork === 'solana'
-                ? t(
-                    'wallet.receiveSolanaDescription',
-                    'Only send SOL and SPL tokens here. Anything sent from another network is lost.',
-                  )
+                ? t('wallet.receiveSolanaDescription')
                 : t('wallet.receiveDescription')}
             </p>
             <div className="w-full bg-white/5 border border-white/10 rounded-xl p-3">

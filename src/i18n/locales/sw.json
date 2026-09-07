@@ -713,7 +713,19 @@
     "stake": "Weka Hisa",
     "cashOut": "Toa Pesa",
     "stakeComingSoon": "Kuweka hisa kunakuja hivi karibuni!",
-    "cashOutComingSoon": "Kutoa pesa kunakuja hivi karibuni!"
+    "cashOutComingSoon": "Kutoa pesa kunakuja hivi karibuni!",
+    "back": "Nyuma",
+    "chooseAddressNetwork": "Mtandao upi?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB na Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Alama za SOL na SPL pekee",
+    "solanaAddressLinkedHint": "Pochi yako ya Phantom iliyounganishwa",
+    "evmAddressCopied": "Anwani ya EVM imenakiliwa",
+    "solanaAddressCopied": "Anwani ya Solana imenakiliwa",
+    "addressCopyFailed": "Haikuweza kunakili anwani",
+    "receiveEvm": "Msingi · BNB · ETH",
+    "receiveSolanaDescription": "Tuma tu tokeni za SOL na SPL hapa. Kitu chochote kinachotumwa kutoka kwenye mtandao mwingine kimepotea."
   },
   "bookmarks": {
     "title": "Alamisho",

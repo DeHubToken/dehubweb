@@ -712,7 +712,19 @@
     "stake": "Stake",
     "cashOut": "Cash Out",
     "stakeComingSoon": "Staking coming soon!",
-    "cashOutComingSoon": "Cash out coming soon!"
+    "cashOutComingSoon": "Cash out coming soon!",
+    "back": "Back",
+    "chooseAddressNetwork": "Which network?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB and Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "SOL and SPL tokens only",
+    "solanaAddressLinkedHint": "Your linked Phantom wallet",
+    "evmAddressCopied": "EVM address copied",
+    "solanaAddressCopied": "Solana address copied",
+    "addressCopyFailed": "Could not copy the address",
+    "receiveEvm": "Base · BNB · ETH",
+    "receiveSolanaDescription": "Only send SOL and SPL tokens here. Anything sent from another network is lost."
   },
   "bookmarks": {
     "title": "Your Bookmarks",

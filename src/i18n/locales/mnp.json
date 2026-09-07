@@ -23,6 +23,7 @@
     "featureRequests": "功能请求",
     "staking": "存款",
     "governance": "治理",
+    "dao": "DAO",
     "careers": "工作",
     "glossary": "术语表",
     "arcade": "游乐场",
@@ -44,8 +45,7 @@
     "pricing": "价钱",
     "creators": "创作者",
     "getTheApp": "下载应用",
-    "connectAi": "连 AI",
-    "dao": "DAO"
+    "connectAi": "连 AI"
   },
   "feed": {
     "viewProfile": "看 {{name}} 的个人资料",
@@ -712,7 +712,16 @@
     "stake": "质押",
     "cashOut": "提现",
     "stakeComingSoon": "质押即将推出！",
-    "cashOutComingSoon": "提现即将推出！"
+    "cashOutComingSoon": "提现即将推出！",
+    "back": "回",
+    "chooseAddressNetwork": "哪个网络？",
+    "evmAddressHint": "Base、BNB 和以太坊",
+    "solanaAddressHint": "仅限 SOL 和 SPL 代币",
+    "solanaAddressLinkedHint": "您已连接的 Phantom 钱包",
+    "evmAddressCopied": "EVM 地址已复制",
+    "solanaAddressCopied": "Solana 地址已复制",
+    "addressCopyFailed": "无法复制地址",
+    "receiveSolanaDescription": "仅发送 SOL 和 SPL 代币到此地址。发送其他网络代币将丢失。"
   },
   "bookmarks": {
     "title": "你其书签",
@@ -1197,6 +1206,7 @@
     "amountLabel": "金额 (DHB)",
     "youHold": "您持有 {{amount}} DHB",
     "irreversible": "贡献是在链上的转账。它们不能被撤销或提取。",
+    "switchChain": "将您的钱包切换到 {{chains}} 以进行贡献。",
     "sendAmount": "发送 {{amount}} DHB",
     "sentTitle": "贡献已发送",
     "sentDesc": "{{amount}} DHB 已于 {{chain}} 发送到财库。您的份额将在区块索引后更新。",
@@ -1222,8 +1232,7 @@
     "you": "您",
     "transferCount_one": "{{count}} 轉移",
     "transferCount_other": "{{count}} 轉移",
-    "power": "力",
-    "switchChain": "将您的钱包切换到 {{chains}} 以进行贡献。"
+    "power": "力"
   },
   "governance": {
     "title": "治理",

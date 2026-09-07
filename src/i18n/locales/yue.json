@@ -23,6 +23,7 @@
     "featureRequests": "功能請求",
     "staking": "質押",
     "governance": "治理",
+    "dao": "DAO",
     "careers": "招聘",
     "glossary": "術語表",
     "arcade": "街機",
@@ -44,8 +45,7 @@
     "pricing": "定價",
     "creators": "創作者",
     "getTheApp": "下載應用程式",
-    "connectAi": "連接 AI",
-    "dao": "DAO"
+    "connectAi": "連接 AI"
   },
   "feed": {
     "viewProfile": "睇下 {{name}} 嘅個人檔案",
@@ -712,7 +712,18 @@
     "stake": "質押",
     "cashOut": "提現",
     "stakeComingSoon": "質押即將推出！",
-    "cashOutComingSoon": "提現即將推出！"
+    "cashOutComingSoon": "提現即將推出！",
+    "back": "返回",
+    "chooseAddressNetwork": "邊個網絡？",
+    "evmAddressHint": "基礎、 BNB 同以太坊",
+    "solanaAddressLabel": "索拉娜",
+    "solanaAddressHint": "只限 SOL 同 SPL 代幣",
+    "solanaAddressLinkedHint": "你個連結咗嘅幻影錢包",
+    "evmAddressCopied": "複製咗 EVM 地址",
+    "solanaAddressCopied": "複製咗索拉納地址",
+    "addressCopyFailed": "複製唔到個地址",
+    "receiveEvm": "基礎 · BNB · ETH",
+    "receiveSolanaDescription": "喺呢度只會發送 SOL 同 SPL 代幣。任何由另一個網絡發送嘅嘢都會丟失。"
   },
   "bookmarks": {
     "title": "你嘅書籤",

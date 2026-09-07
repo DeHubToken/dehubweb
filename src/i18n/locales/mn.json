@@ -712,7 +712,17 @@
     "stake": "Стэйк",
     "cashOut": "Мөнгө гаргах",
     "stakeComingSoon": "Стэйк тун удахгүй!",
-    "cashOutComingSoon": "Мөнгө гаргах тун удахгүй!"
+    "cashOutComingSoon": "Мөнгө гаргах тун удахгүй!",
+    "back": "БУЦАХ",
+    "chooseAddressNetwork": "Аль сүлжээ вэ?",
+    "evmAddressHint": "Суурь, BNB ба Ethereum",
+    "solanaAddressHint": "Зөвхөн SOL болон SPL токенс",
+    "solanaAddressLinkedHint": "Таны холбогдсон Phantom түрийвч",
+    "evmAddressCopied": "EVM хаяг хуулсан",
+    "solanaAddressCopied": "Solana хаягийг хуулсан",
+    "addressCopyFailed": "Хаягийг хуулж чадсангүй",
+    "receiveEvm": "Суурь · BNB · ETH",
+    "receiveSolanaDescription": "Зөвхөн SOL болон SPL токенуудыг энд илгээнэ үү. Өөр сүлжээнээс илгээсэн аливаа зүйл алдагдсан байна."
   },
   "bookmarks": {
     "title": "Таны хавчуурга",
@@ -1203,6 +1213,7 @@
     "amountLabel": "Хэмжээ (DHB)",
     "youHold": "Та {{amount}} DHB эзэмшиж байна",
     "irreversible": "Хандив нь блокчэйн дээрх шилжүүлэг юм. Тэдгээр нь буцаагдах эсвэл авах боломжгүй.",
+    "switchChain": "Хандивлахын тулд хэтэвчээ {{chains}} руу шилжүүлнэ үү.",
     "sendAmount": "{{amount}} DHB илгээх",
     "sentTitle": "Хандив илгээгдсэн",
     "sentDesc": "{{amount}} DHB нь {{chain}}-нд санд илгээгдлээ. Блок индексатлагдсаны дараа таны хувь шинэчлэгдэнэ.",
@@ -1226,10 +1237,9 @@
     "noContributors": "Одоогоор хувь нэмэр байхгүй байна. Та анхных нь байгаарай.",
     "recent": "Сүүлийн хандив",
     "you": "Та",
-    "power": "хүч",
-    "switchChain": "Хандивлахын тулд хэтэвчээ {{chains}} руу шилжүүлнэ үү.",
     "transferCount_one": "{{count}} шилжүүлэг",
-    "transferCount_other": "{{count}} шилжүүлэг"
+    "transferCount_other": "{{count}} шилжүүлэг",
+    "power": "хүч"
   },
   "governance": {
     "title": "Засаглал",

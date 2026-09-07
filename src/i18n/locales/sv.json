@@ -697,7 +697,19 @@
     "stake": "Stake",
     "cashOut": "Ta ut",
     "stakeComingSoon": "Stake kommer snart!",
-    "cashOutComingSoon": "Uttag kommer snart!"
+    "cashOutComingSoon": "Uttag kommer snart!",
+    "back": "Tillbaka",
+    "chooseAddressNetwork": "Vilket nätverk?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB och Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Endast sol- och SPL-tokens",
+    "solanaAddressLinkedHint": "Din länkade Phantom-plånbok",
+    "evmAddressCopied": "EVM-adress kopierad",
+    "solanaAddressCopied": "Solana-adress kopierad",
+    "addressCopyFailed": "Det gick inte att kopiera adressen",
+    "receiveEvm": "Bas · BNB · ETH",
+    "receiveSolanaDescription": "Skicka endast sol- och SPL-tokens här. Allt som skickas från ett annat nätverk går förlorat."
   },
   "bookmarks": {
     "title": "Bokmärken",

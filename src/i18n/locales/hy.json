@@ -703,7 +703,19 @@
     "stake": "Steyq",
     "cashOut": "Drami hanom",
     "stakeComingSoon": "Steyqinge shootov!",
-    "cashOutComingSoon": "Drami hanome shootov!"
+    "cashOutComingSoon": "Drami hanome shootov!",
+    "back": "Հետ",
+    "chooseAddressNetwork": "Ո ՞ ր ցանցը",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB և Ethereum",
+    "solanaAddressLabel": "Սոլանա",
+    "solanaAddressHint": "Միայն SOL և SPL նշաններ",
+    "solanaAddressLinkedHint": "Ձեր կապակցված Phantom դրամապանակը",
+    "evmAddressCopied": "EVM - ի հասցեն պատճենված է",
+    "solanaAddressCopied": "Սոլանայի հասցեն պատճենված է",
+    "addressCopyFailed": "Չհաջողվեց պատճենել հասցեն",
+    "receiveEvm": "Հիմք · BNB · ETH",
+    "receiveSolanaDescription": "Ուղարկեք միայն SOL և SPL նշաններն այստեղ ։ Այլ ցանցից ուղարկված ցանկացած բան կորել է:"
   },
   "bookmarks": {
     "title": "Dzer ejavaorer",
@@ -1238,9 +1250,9 @@
     "noContributors": "Դեռևս ներդրումներ չկան։ եղիր առաջինը։",
     "recent": "Վերջին ներդրումները",
     "you": "Դուք",
+    "transferCount_one": "{{count}} փոխանցում",
     "transferCount_other": "{{count}} փոխանցումներ",
-    "power": "հոսանք",
-    "transferCount_one": "{{count}} փոխանցում"
+    "power": "հոսանք"
   },
   "governance": {
     "title": "Kavaroutyun",

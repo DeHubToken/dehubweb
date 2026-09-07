@@ -23,6 +23,7 @@
     "featureRequests": "需求",
     "staking": "质押",
     "governance": "治理",
+    "dao": "DAO",
     "careers": "招聘",
     "glossary": "术语表",
     "arcade": "街机",
@@ -44,8 +45,7 @@
     "pricing": "定价",
     "creators": "创作者",
     "getTheApp": "下载应用",
-    "connectAi": "连接 AI",
-    "dao": "DAO"
+    "connectAi": "连接 AI"
   },
   "feed": {
     "viewProfile": "查看{{name}}的个人资料",
@@ -712,7 +712,18 @@
     "stake": "质押",
     "cashOut": "提现",
     "stakeComingSoon": "质押功能即将推出！",
-    "cashOutComingSoon": "提现功能即将推出！"
+    "cashOutComingSoon": "提现功能即将推出！",
+    "back": "返回",
+    "chooseAddressNetwork": "哪个网络？",
+    "evmAddressHint": "BASE、BNB和以太坊",
+    "solanaAddressLabel": "索拉纳",
+    "solanaAddressHint": "仅限SOL和SPL代币",
+    "solanaAddressLinkedHint": "您关联的Phantom钱包",
+    "evmAddressCopied": "EVM地址已复制",
+    "solanaAddressCopied": "索拉纳地址已复制",
+    "addressCopyFailed": "无法复制地址",
+    "receiveEvm": "基础· BNB · ETH",
+    "receiveSolanaDescription": "仅在此处发送SOL和SPL代币。 从另一个网络发送的任何内容都将丢失。"
   },
   "bookmarks": {
     "title": "我的收藏",

@@ -712,7 +712,19 @@
     "stake": "Stake",
     "cashOut": "Бароварда",
     "stakeComingSoon": "Staking ба наздикӣ!",
-    "cashOutComingSoon": "Бароварда ба наздикӣ!"
+    "cashOutComingSoon": "Бароварда ба наздикӣ!",
+    "back": "Бозгашт",
+    "chooseAddressNetwork": "Кадом шабака?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Пойгоҳи, BNB ва Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Танҳо нишонаҳои SOL ва SPL",
+    "solanaAddressLinkedHint": "Ҳамёни Фантоми пайвастшудаи шумо",
+    "evmAddressCopied": "Адреси EVM нусхабардорӣ шудааст",
+    "solanaAddressCopied": "Суроғаи Solana нусхабардорӣ шудааст",
+    "addressCopyFailed": "Суроға нусхабардорӣ карда нашуд",
+    "receiveEvm": "Пойгоҳи · BNB · ETH",
+    "receiveSolanaDescription": "Танҳо нишонаҳои SOL ва SPL-ро ба ин ҷо фиристед. Anumang nagpadala mula sa isa pang network."
   },
   "bookmarks": {
     "title": "Хатчӯбҳои шумо",
@@ -1202,6 +1214,7 @@
     "amountLabel": "Миқдор (DHB)",
     "youHold": "Шумо {{amount}} DHB доред",
     "irreversible": "Саҳмҳо интиқолҳо дар занҷир мебошанд. Онҳоро бекор кардан ё гирифтан мумкин нест.",
+    "switchChain": "Барои саҳм гузоштан ҳамёни худро ба {{chains}} гузаронед.",
     "sendAmount": "{{amount}} DHB фиристед",
     "sentTitle": "Саҳм фиристода шуд",
     "sentDesc": "{{amount}} DHB ба хазина дар {{chain}} фиристода шуд. Саҳми шумо пас аз индексатсияи блок навсозӣ мешавад.",
@@ -1225,10 +1238,9 @@
     "noContributors": "Ҳанӯз саҳмҳо нестанд. Аввалин бошед.",
     "recent": "Саҳмҳои охирин",
     "you": "Шумо",
-    "power": "power",
-    "switchChain": "Барои саҳм гузоштан ҳамёни худро ба {{chains}} гузаронед.",
     "transferCount_one": "{{count}} интиқол",
-    "transferCount_other": "{{count}} интиқол"
+    "transferCount_other": "{{count}} интиқол",
+    "power": "power"
   },
   "governance": {
     "title": "Идоракунӣ",

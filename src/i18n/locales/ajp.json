@@ -712,7 +712,16 @@
     "stake": "ستايك",
     "cashOut": "صرف",
     "stakeComingSoon": "الستايكنق قريباً!",
-    "cashOutComingSoon": "الصرف قريباً!"
+    "cashOutComingSoon": "الصرف قريباً!",
+    "back": "رجوع",
+    "chooseAddressNetwork": "أي شبكة؟",
+    "evmAddressHint": "Base، BNB و Ethereum",
+    "solanaAddressHint": "رموز SOL و SPL فقط",
+    "solanaAddressLinkedHint": "محفظة Phantom المرتبطة بك",
+    "evmAddressCopied": "تم نسخ عنوان EVM",
+    "solanaAddressCopied": "تم نسخ عنوان Solana",
+    "addressCopyFailed": "لم يتم نسخ العنوان",
+    "receiveSolanaDescription": "أرسل رموز SOL و SPL فقط إلى هنا. أي شيء يتم إرساله من شبكة أخرى سيضيع."
   },
   "bookmarks": {
     "title": "علاماتك المرجعية",

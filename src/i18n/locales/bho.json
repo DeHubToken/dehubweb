@@ -712,7 +712,18 @@
     "stake": "स्टेक",
     "cashOut": "नकद",
     "stakeComingSoon": "स्टेक जल्दी आवत बा!",
-    "cashOutComingSoon": "नकद जल्दी आवत बा!"
+    "cashOutComingSoon": "नकद जल्दी आवत बा!",
+    "back": "वापस",
+    "chooseAddressNetwork": "कौन सा नेटवर्क?",
+    "evmAddressHint": "बेस, BNB और एथेरियम",
+    "solanaAddressLabel": "सोलाना",
+    "solanaAddressHint": "केवल SOL और SPL टोकन",
+    "solanaAddressLinkedHint": "आपका लिंक किया हुआ फैंटम वॉलेट",
+    "evmAddressCopied": "EVM एड्रेस कॉपी हो गया",
+    "solanaAddressCopied": "सोलाना एड्रेस कॉपी हो गया",
+    "addressCopyFailed": "एड्रेस कॉपी नहीं हो सका",
+    "receiveEvm": "बेस · BNB · ETH",
+    "receiveSolanaDescription": "यहां केवल SOL और SPL टोकन भेजें। किसी अन्य नेटवर्क से भेजा गया कुछ भी खो जाएगा।"
   },
   "bookmarks": {
     "title": "रउआ बुकमार्क",
@@ -1201,6 +1212,7 @@
     "amountLabel": "राशि (डीएचबी)",
     "youHold": "आपके पास {{amount}} डीएचबी है",
     "irreversible": "योगदान ऑन-चेन ट्रांसफर हैं। उन्हें उलटा या वापस नहीं लिया जा सकता है।",
+    "switchChain": "योगदान करे खातिर आपन वॉलेट {{chains}} पर बदलीं।",
     "sendAmount": "{{amount}} डीएचबी भेजें",
     "sentTitle": "योगदान भेजा गया",
     "sentDesc": "{{amount}} डीएचबी {{chain}} को ट्रेजरी में भेजा गया। ब्लॉक इंडेक्स होने के बाद आपकी हिस्सेदारी अपडेट हो जाएगी।",
@@ -1224,10 +1236,9 @@
     "noContributors": "अभी तक कोई योगदान नहीं। पहले बनें।",
     "recent": "हाल के योगदान",
     "you": "आप",
-    "power": "सत्ता खातिर",
-    "switchChain": "योगदान करे खातिर आपन वॉलेट {{chains}} पर बदलीं।",
     "transferCount_one": "{{count}} ट्रांसफर",
-    "transferCount_other": "{{count}} ट्रांसफर"
+    "transferCount_other": "{{count}} ट्रांसफर",
+    "power": "सत्ता खातिर"
   },
   "governance": {
     "title": "शासन",

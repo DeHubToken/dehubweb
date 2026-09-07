@@ -23,6 +23,7 @@
     "featureRequests": "अनुरोधाः",
     "staking": "निक्षेपः (Staking)",
     "governance": "शासनम्",
+    "dao": "DAO",
     "careers": "वृत्तयः",
     "glossary": "शब्दकोशः",
     "arcade": "क्रीडाङ्गणम्",
@@ -44,8 +45,7 @@
     "pricing": "मूल्यनिर्धारणम्",
     "creators": "निर्मातारः",
     "getTheApp": "अनुप्रयोगं प्राप्नोतु",
-    "connectAi": "AI सम्बद्ध्यताम्",
-    "dao": "DAO"
+    "connectAi": "AI सम्बद्ध्यताम्"
   },
   "feed": {
     "viewProfile": "{{name}} इत्यस्य प्रोफाइलं पश्यतु",
@@ -712,7 +712,19 @@
     "stake": "स्तम्भयतु",
     "cashOut": "नकदीकुर्वन्तु",
     "stakeComingSoon": "स्तम्भनं शीघ्रम् आगमिष्यति!",
-    "cashOutComingSoon": "नकदीकरणं शीघ्रम् आगमिष्यति!"
+    "cashOutComingSoon": "नकदीकरणं शीघ्रम् आगमिष्यति!",
+    "back": "पुनरागमनम्",
+    "chooseAddressNetwork": "कीदृशं जालम्?",
+    "evmAddressLabel": "ईवीएम",
+    "evmAddressHint": "BNB, BNB और Ethereum",
+    "solanaAddressLabel": "सोलाना",
+    "solanaAddressHint": "केवल एससी/एसटी/एसटी",
+    "solanaAddressLinkedHint": "तेरे पन्ने पन्ने पे",
+    "evmAddressCopied": "ईवीएम पताः copyed",
+    "solanaAddressCopied": "SOLANA पते की प्रतिलिपि बनाई गई",
+    "addressCopyFailed": "पते की नकल न कर सकोगे",
+    "receiveEvm": "आधारः, पुं, (आधारः इति ।",
+    "receiveSolanaDescription": "केवल, यहाँ, वहाँ, वहाँ, वहाँ । अन्यत्सर्वं गमयत्येतत्सर्वं गमयत्यत आह ।"
   },
   "bookmarks": {
     "title": "भवतः पुस्तकचिह्नानि",

@@ -23,6 +23,7 @@
     "featureRequests": "ਬੇਨਤੀਆਂ",
     "staking": "ਸਟੇਕਿੰਗ",
     "governance": "ਸ਼ਾਸਨ",
+    "dao": "DAO",
     "careers": "ਨੌਕਰੀਆਂ",
     "glossary": "ਸ਼ਬਦਾਵਲੀ",
     "arcade": "ਆਰਕੇਡ",
@@ -44,8 +45,7 @@
     "pricing": "ਕੀਮਤ",
     "creators": "ਕ੍ਰਿਏਟਰ",
     "getTheApp": "ਐਪ ਲਵੋ",
-    "connectAi": "AI ਜੋੜੋ",
-    "dao": "DAO"
+    "connectAi": "AI ਜੋੜੋ"
   },
   "feed": {
     "viewProfile": "{{name}} ਦੀ ਪ੍ਰੋਫਾਈਲ ਦੇਖੋ",
@@ -712,7 +712,19 @@
     "stake": "ਸਟੇਕ",
     "cashOut": "ਕੈਸ਼ ਆਊਟ",
     "stakeComingSoon": "ਸਟੇਕ ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ!",
-    "cashOutComingSoon": "ਕੈਸ਼ ਆਊਟ ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ!"
+    "cashOutComingSoon": "ਕੈਸ਼ ਆਊਟ ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ!",
+    "back": "ਪਿੱਛੇ",
+    "chooseAddressNetwork": "ਕਿਹੜਾ ਨੈੱਟਵਰਕ?",
+    "evmAddressLabel": "ਈਵੀਐਮ",
+    "evmAddressHint": "ਬੇਸ, BNB ਅਤੇ Ethereum",
+    "solanaAddressLabel": "ਸੋਲਾਨਾ",
+    "solanaAddressHint": "SOL ਅਤੇ SPL ਸਿਰਫ ਟੋਕਨ",
+    "solanaAddressLinkedHint": "ਤੁਹਾਡਾ ਲਿੰਕਡ ਫੈਂਟਮ ਵਾਲਿਟ",
+    "evmAddressCopied": "ਈਵੀਐਮ ਪਤਾ ਕਾਪੀ ਕੀਤਾ ਗਿਆ",
+    "solanaAddressCopied": "ਸੋਲਾਨਾ ਐਡਰੈੱਸ ਕਾਪੀ ਕੀਤਾ ਗਿਆ",
+    "addressCopyFailed": "ਐਡਰੈੱਸ ਕਾਪੀ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ",
+    "receiveEvm": "ਅਧਾਰ · ਬੀਐਨਬੀ · ਈਟੀਐਚ",
+    "receiveSolanaDescription": "ਇੱਥੇ ਸਿਰਫ SOL ਅਤੇ SPL ਟੋਕਨ ਭੇਜੋ. ਕਿਸੇ ਹੋਰ ਨੈਟਵਰਕ ਤੋਂ ਭੇਜੀ ਗਈ ਕੋਈ ਵੀ ਚੀਜ਼ ਗੁੰਮ ਜਾਂਦੀ ਹੈ."
   },
   "bookmarks": {
     "title": "ਬੁੱਕਮਾਰਕ",
@@ -1206,6 +1218,7 @@
     "amountLabel": "ਰਾਸ਼ੀ (DHB)",
     "youHold": "ਤੁਹਾਡੇ ਕੋਲ {{amount}} DHB ਹੈ",
     "irreversible": "ਯੋਗਦਾਨ ਚੇਨ 'ਤੇ ਟ੍ਰਾਂਸਫਰ ਹਨ। ਉਹਨਾਂ ਨੂੰ ਉਲਟਾਇਆ ਜਾਂ ਵਾਪਸ ਨਹੀਂ ਲਿਆ ਜਾ ਸਕਦਾ।",
+    "switchChain": "ਯੋਗਦਾਨ ਪਾਉਣ ਲਈ ਆਪਣਾ ਵਾਲਿਟ {{chains}} 'ਤੇ ਬਦਲੋ।",
     "sendAmount": "{{amount}} DHB ਭੇਜੋ",
     "sentTitle": "ਯੋਗਦਾਨ ਭੇਜਿਆ ਗਿਆ",
     "sentDesc": "{{amount}} DHB {{chain}} 'ਤੇ ਖਜ਼ਾਨੇ ਵਿੱਚ ਭੇਜਿਆ ਗਿਆ। ਬਲਾਕ ਇੰਡੈਕਸ ਹੋਣ ਤੋਂ ਬਾਅਦ ਤੁਹਾਡਾ ਹਿੱਸਾ ਅਪਡੇਟ ਹੋ ਜਾਵੇਗਾ।",
@@ -1229,10 +1242,9 @@
     "noContributors": "ਕੋਈ ਯੋਗਦਾਨ ਨਹੀਂ। ਪਹਿਲੇ ਬਣੋ।",
     "recent": "ਹਾਲੀਆ ਯੋਗਦਾਨ",
     "you": "ਤੁਸੀਂ",
-    "power": "ਪਾਵਰ",
-    "switchChain": "ਯੋਗਦਾਨ ਪਾਉਣ ਲਈ ਆਪਣਾ ਵਾਲਿਟ {{chains}} 'ਤੇ ਬਦਲੋ।",
     "transferCount_one": "{{count}} ਟ੍ਰਾਂਸਫਰ",
-    "transferCount_other": "{{count}} ਟ੍ਰਾਂਸਫਰ"
+    "transferCount_other": "{{count}} ਟ੍ਰਾਂਸਫਰ",
+    "power": "ਪਾਵਰ"
   },
   "governance": {
     "title": "ਗਵਰਨੈਂਸ",

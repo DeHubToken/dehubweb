@@ -23,6 +23,7 @@
     "featureRequests": "Daxwaz",
     "staking": "Staking",
     "governance": "Rêvebirî",
+    "dao": "DAO",
     "careers": "Kar",
     "glossary": "Ferheng",
     "arcade": "Arcade",
@@ -44,8 +45,7 @@
     "pricing": "Biha",
     "creators": "Afirîner",
     "getTheApp": "Sepanê Bistîne",
-    "connectAi": "AI Girêde",
-    "dao": "DAO"
+    "connectAi": "AI Girêde"
   },
   "feed": {
     "viewProfile": "Profîla {{name}} bibîne",
@@ -712,7 +712,9 @@
     "stake": "Stake",
     "cashOut": "Dravê Derxe",
     "stakeComingSoon": "Staking zû tê!",
-    "cashOutComingSoon": "Derxistina dravê zû tê!"
+    "cashOutComingSoon": "Derxistina dravê zû tê!",
+    "back": "پشت",
+    "solanaAddressLabel": "سۆلانا"
   },
   "bookmarks": {
     "title": "Nîşankirinên Te",

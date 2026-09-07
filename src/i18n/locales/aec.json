@@ -712,7 +712,16 @@
     "stake": "ستيك",
     "cashOut": "اسحب فلوس",
     "stakeComingSoon": "الستيكنج قريباً!",
-    "cashOutComingSoon": "السحب قريباً!"
+    "cashOutComingSoon": "السحب قريباً!",
+    "back": "رجوع",
+    "chooseAddressNetwork": "أي شبكة؟",
+    "evmAddressHint": "Base، BNB و Ethereum",
+    "solanaAddressHint": "SOL و SPL tokens بس",
+    "solanaAddressLinkedHint": "محفظة Phantom بتاعتك المتوصلة",
+    "evmAddressCopied": "عنوان EVM اتنسخ",
+    "solanaAddressCopied": "عنوان Solana اتنسخ",
+    "addressCopyFailed": "مقدرتش أنسخ العنوان",
+    "receiveSolanaDescription": "ابعُت SOL و SPL tokens بس هنا. أي حاجة تتبعت من شبكة تانية هتضيع."
   },
   "bookmarks": {
     "title": "علاماتك",

@@ -23,6 +23,7 @@
     "featureRequests": "ಫೀಚರ್ ವಿನಂತಿಗಳು",
     "staking": "ಠೇವಣಿ",
     "governance": "ಆಡಳಿತ",
+    "dao": "DAO",
     "careers": "ಉದ್ಯೋಗಗಳು",
     "glossary": "ಪದಕೋಶ",
     "arcade": "ಆರ್ಕೇಡ್",
@@ -44,8 +45,7 @@
     "pricing": "ಬೆಲೆ ನಿಗದಿ",
     "creators": "ಕ್ರಿಯೇಟರ್‌ಗಳು",
     "getTheApp": "ಆ್ಯಪ್ ಪಡೆಯಿರಿ",
-    "connectAi": "AI ಸಂಪರ್ಕಿಸಿ",
-    "dao": "DAO"
+    "connectAi": "AI ಸಂಪರ್ಕಿಸಿ"
   },
   "feed": {
     "viewProfile": "{{name}} ರ ಪ್ರೊಫೈಲ್ ಅನ್ನು ವೀಕ್ಷಿಸಿ",
@@ -712,7 +712,19 @@
     "stake": "ಸ್ಟೇಕ್",
     "cashOut": "ನಗದು",
     "stakeComingSoon": "ಸ್ಟೇಕ್ ಶೀಘ್ರದಲ್ಲಿ ಬರುತ್ತಿದೆ!",
-    "cashOutComingSoon": "ನಗದು ಶೀಘ್ರದಲ್ಲಿ ಬರುತ್ತಿದೆ!"
+    "cashOutComingSoon": "ನಗದು ಶೀಘ್ರದಲ್ಲಿ ಬರುತ್ತಿದೆ!",
+    "back": "ಹಿಂದೆ",
+    "chooseAddressNetwork": "ಯಾವ ನೆಟ್‌ವರ್ಕ್?",
+    "evmAddressLabel": "ಇವಿಎಂ",
+    "evmAddressHint": "ಬೇಸ್, ಬಿಎನ್‌ಬಿ ಮತ್ತು ಎಥೆರಿಯಮ್",
+    "solanaAddressLabel": "ಸೋಲಾನಾ",
+    "solanaAddressHint": "SOL ಮತ್ತು SPL ಟೋಕನ್‌ಗಳು ಮಾತ್ರ",
+    "solanaAddressLinkedHint": "ನಿಮ್ಮ ಲಿಂಕ್ ಮಾಡಲಾದ ಫ್ಯಾಂಟಮ್ ವಾಲೆಟ್",
+    "evmAddressCopied": "ಇವಿಎಂ ವಿಳಾಸವನ್ನು ನಕಲಿಸಲಾಗಿದೆ",
+    "solanaAddressCopied": "ಸೋಲಾನಾ ವಿಳಾಸವನ್ನು ನಕಲಿಸಲಾಗಿದೆ",
+    "addressCopyFailed": "ವಿಳಾಸವನ್ನು ನಕಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
+    "receiveEvm": "ಬೇಸ್ · ಬಿಎನ್‌ಬಿ · ಇಟಿಎಚ್",
+    "receiveSolanaDescription": "SOL ಮತ್ತು SPL ಟೋಕನ್‌ಗಳನ್ನು ಮಾತ್ರ ಇಲ್ಲಿ ಕಳುಹಿಸಿ. ಮತ್ತೊಂದು ನೆಟ್‌ವರ್ಕ್‌ನಿಂದ ಕಳುಹಿಸಿದ ಯಾವುದಾದರೂ ಕಳೆದುಹೋಗಿದೆ."
   },
   "bookmarks": {
     "title": "ನಿಮ್ಮ ಬುಕ್‌ಮಾರ್ಕ್‌ಗಳು",

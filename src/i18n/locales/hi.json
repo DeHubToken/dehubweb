@@ -719,7 +719,19 @@
     "stake": "स्टेक",
     "cashOut": "निकासी",
     "stakeComingSoon": "स्टेकिंग जल्द आ रहा है!",
-    "cashOutComingSoon": "निकासी जल्द आ रही है!"
+    "cashOutComingSoon": "निकासी जल्द आ रही है!",
+    "back": "पीछे जाएँ",
+    "chooseAddressNetwork": "कौन सा नेटवर्क?",
+    "evmAddressLabel": "ईवीएम",
+    "evmAddressHint": "बेस, बीएनबी और एथेरियम",
+    "solanaAddressLabel": "सोलाना",
+    "solanaAddressHint": "सिर्फ़ SOL और SPL टोकन",
+    "solanaAddressLinkedHint": "आपका लिंक किया गया फ़ैंटम वॉलेट",
+    "evmAddressCopied": "ईवीएम पता कॉपी किया गया",
+    "solanaAddressCopied": "सोलाना का पता कॉपी किया गया",
+    "addressCopyFailed": "पता कॉपी नहीं किया जा सका",
+    "receiveEvm": "आधार · BNB · ETH",
+    "receiveSolanaDescription": "केवल SOL और SPL टोकन यहाँ भेजें। किसी अन्य नेटवर्क से भेजा गया कुछ भी खो जाता है।"
   },
   "bookmarks": {
     "title": "बुकमार्क",

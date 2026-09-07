@@ -712,7 +712,18 @@
     "stake": "સ્ટેક",
     "cashOut": "કેશ આઉટ",
     "stakeComingSoon": "સ્ટેકિંગ ટૂંક સમયમાં!",
-    "cashOutComingSoon": "કેશ આઉટ ટૂંક સમયમાં!"
+    "cashOutComingSoon": "કેશ આઉટ ટૂંક સમયમાં!",
+    "back": "પાછળ",
+    "chooseAddressNetwork": "કયું નેટવર્ક?",
+    "evmAddressHint": "આધાર, BNB અને Ethereum",
+    "solanaAddressLabel": "સોલાના",
+    "solanaAddressHint": "ફક્ત SOL અને SPL ટોકન્સ",
+    "solanaAddressLinkedHint": "તમારું લિંક્ડ ફેન્ટમ વૉલેટ",
+    "evmAddressCopied": "EVM સરનામું કૉપિ કરેલું",
+    "solanaAddressCopied": "સોલાના સરનામાની નકલ કરવામાં આવી",
+    "addressCopyFailed": "સરનામાની નકલ કરી શક્યા નહિં",
+    "receiveEvm": "આધાર · BNB · ETH",
+    "receiveSolanaDescription": "ફક્ત અહીં SOL અને SPL ટોકન્સ મોકલો. બીજા નેટવર્કમાંથી મોકલવામાં આવેલ કંઈપણ ખોવાઈ જાય છે."
   },
   "bookmarks": {
     "title": "તમારા બુકમાર્ક્સ",

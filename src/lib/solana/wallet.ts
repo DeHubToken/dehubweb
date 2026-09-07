@@ -6,6 +6,7 @@
 // that imports these helpers (the post composer path). Address validation
 // below uses a dependency-free base58 decode instead of `new PublicKey()`.
 import type { PublicKey } from '@solana/web3.js';
+import { BASE58_ALPHABET, base58Encode } from './base58';
 
 export interface SolanaWalletProvider {
   isPhantom?: boolean;
@@ -34,8 +35,6 @@ export function getSolanaProvider(): SolanaWalletProvider | null {
   if (!provider?.isPhantom && !provider?.publicKey && !provider?.connect) return null;
   return provider;
 }
-
-const BASE58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 
 /**
  * A Solana address is base58 text that decodes to exactly 32 bytes — the same
@@ -97,39 +96,6 @@ export async function getConnectedSolanaAddress(): Promise<string | null> {
   } catch {
     return null;
   }
-}
-
-/**
- * base58, the encoding side — the mirror of the decode above and written the
- * same way for the same reason: this runs on the login path, and pulling in
- * @solana/web3.js there would put 350 kB in front of the sign-in sheet to
- * encode 64 bytes.
- */
-function base58Encode(bytes: Uint8Array): string {
-  if (bytes.length === 0) return '';
-
-  const digits: number[] = [];
-  for (const byte of bytes) {
-    let carry = byte;
-    for (let i = 0; i < digits.length; i++) {
-      carry += digits[i] << 8;
-      digits[i] = carry % 58;
-      carry = (carry / 58) | 0;
-    }
-    while (carry > 0) {
-      digits.push(carry % 58);
-      carry = (carry / 58) | 0;
-    }
-  }
-
-  // Every leading zero byte encodes as a literal '1' and is invisible to the
-  // arithmetic above, so it has to be counted separately.
-  let leadingZeros = 0;
-  while (leadingZeros < bytes.length && bytes[leadingZeros] === 0) leadingZeros++;
-
-  let out = '1'.repeat(leadingZeros);
-  for (let i = digits.length - 1; i >= 0; i--) out += BASE58_ALPHABET[digits[i]];
-  return out;
 }
 
 export interface SolanaLoginProof {

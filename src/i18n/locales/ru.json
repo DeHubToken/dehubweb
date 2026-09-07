@@ -23,6 +23,7 @@
     "featureRequests": "Запросы",
     "staking": "Стейкинг",
     "governance": "Управление",
+    "dao": "DAO",
     "careers": "Вакансии",
     "glossary": "Глоссарий",
     "arcade": "Аркада",
@@ -44,8 +45,7 @@
     "pricing": "Тарифы",
     "creators": "Авторы",
     "getTheApp": "Скачать приложение",
-    "connectAi": "Подключить ИИ",
-    "dao": "DAO"
+    "connectAi": "Подключить ИИ"
   },
   "feed": {
     "viewProfile": "Посмотреть профиль {{name}}",
@@ -712,7 +712,18 @@
     "stake": "Стейкинг",
     "cashOut": "Вывод",
     "stakeComingSoon": "Стейкинг скоро будет доступен!",
-    "cashOutComingSoon": "Вывод скоро будет доступен!"
+    "cashOutComingSoon": "Вывод скоро будет доступен!",
+    "back": "Назад",
+    "chooseAddressNetwork": "Какая сеть?",
+    "evmAddressHint": "Base, BNB и Ethereum",
+    "solanaAddressLabel": "Солана",
+    "solanaAddressHint": "Только токены SOL и SPL",
+    "solanaAddressLinkedHint": "Ваш связанный кошелек Phantom",
+    "evmAddressCopied": "Адрес EVM скопирован",
+    "solanaAddressCopied": "Адрес Solana скопирован",
+    "addressCopyFailed": "Не удалось скопировать адрес",
+    "receiveEvm": "База · BNB · ETH",
+    "receiveSolanaDescription": "Отправляйте только токены SOL и SPL здесь. Все, что отправлено из другой сети, потеряно."
   },
   "bookmarks": {
     "title": "Закладки",

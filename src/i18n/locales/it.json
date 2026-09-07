@@ -712,7 +712,19 @@
     "stake": "Stake",
     "cashOut": "Prelievo",
     "stakeComingSoon": "Staking in arrivo!",
-    "cashOutComingSoon": "Prelievo in arrivo!"
+    "cashOutComingSoon": "Prelievo in arrivo!",
+    "back": "Indietro",
+    "chooseAddressNetwork": "Quale rete?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB ed Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Solo token SOL e SPL",
+    "solanaAddressLinkedHint": "Il tuo portafoglio Phantom collegato",
+    "evmAddressCopied": "Indirizzo EVM copiato",
+    "solanaAddressCopied": "Indirizzo Solana copiato",
+    "addressCopyFailed": "Impossibile copiare l'indirizzo",
+    "receiveEvm": "Base · BNB · ETH",
+    "receiveSolanaDescription": "Invia solo token SOL e SPL qui. Tutto ciò che viene inviato da un'altra rete viene perso."
   },
   "bookmarks": {
     "title": "I tuoi segnalibri",

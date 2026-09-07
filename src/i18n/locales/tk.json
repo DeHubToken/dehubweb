@@ -712,7 +712,19 @@
     "stake": "Stake",
     "cashOut": "Çykarmak",
     "stakeComingSoon": "Staking ýakynda!",
-    "cashOutComingSoon": "Çykarmak ýakynda!"
+    "cashOutComingSoon": "Çykarmak ýakynda!",
+    "back": "Geri",
+    "chooseAddressNetwork": "Näme üçin?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "BASE, BNB we Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "SOL & SPL diňe tokenler",
+    "solanaAddressLinkedHint": "Seniň Fantom kagyzyň",
+    "evmAddressCopied": "EVM adresini nusgalamak",
+    "solanaAddressCopied": "Solana adresiniň nusgalanmagy",
+    "addressCopyFailed": "Adresini nusgalap bolmady",
+    "receiveEvm": "Baza · BNB · ETH",
+    "receiveSolanaDescription": "Sol we SPL işaretlerini bu ýere iber. Başga bir tarapyndan iberilen ähli zat ýitirilýär."
   },
   "bookmarks": {
     "title": "Bellikleriňiz",

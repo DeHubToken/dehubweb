@@ -712,7 +712,18 @@
     "stake": "ستايك",
     "cashOut": "صرف",
     "stakeComingSoon": "الستايكنق قريباً!",
-    "cashOutComingSoon": "الصرف قريباً!"
+    "cashOutComingSoon": "الصرف قريباً!",
+    "back": "رجوع",
+    "chooseAddressNetwork": "أي شبكة؟",
+    "evmAddressHint": "بيس، بي إن بي، وإيثيريوم",
+    "solanaAddressLabel": "سولانا",
+    "solanaAddressHint": "رموز SOL و SPL فقط",
+    "solanaAddressLinkedHint": "محفظة فانتوم المرتبطة بك",
+    "evmAddressCopied": "عنوان EVM تم نسخه",
+    "solanaAddressCopied": "عنوان سولانا تم نسخه",
+    "addressCopyFailed": "لم يتم نسخ العنوان",
+    "receiveEvm": "بيس · بي إن بي · إيث",
+    "receiveSolanaDescription": "أرسل رموز SOL و SPL فقط هنا. أي شيء يتم إرساله من شبكة أخرى سيضيع."
   },
   "bookmarks": {
     "title": "علاماتك المرجعية",

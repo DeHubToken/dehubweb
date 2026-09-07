@@ -711,7 +711,19 @@
     "stake": "استیک",
     "cashOut": "برداشت",
     "stakeComingSoon": "استیکینگ به زودی!",
-    "cashOutComingSoon": "برداشت به زودی!"
+    "cashOutComingSoon": "برداشت به زودی!",
+    "back": "پشت",
+    "chooseAddressNetwork": "کدام شبکه IRC؟",
+    "evmAddressLabel": "ای‌وی‌ام",
+    "evmAddressHint": "بیس، بایننس کوین و اتریوم",
+    "solanaAddressLabel": "سولانا",
+    "solanaAddressHint": "فقط توکن‌های SOL و SPL",
+    "solanaAddressLinkedHint": "کیف پول فانتوم مرتبط شما",
+    "evmAddressCopied": "آدرس EVM کپی شد",
+    "solanaAddressCopied": "آدرس سولانا کپی شد",
+    "addressCopyFailed": "آدرس کپی نشد",
+    "receiveEvm": "پایه · بایننس کوین · اتریوم",
+    "receiveSolanaDescription": "فقط توکن‌های SOL و SPL را اینجا ارسال کنید. هر چیزی که از شبکه دیگری ارسال شود، از بین می‌رود."
   },
   "bookmarks": {
     "title": "نشانک‌های شما",
@@ -1245,9 +1257,9 @@
     "noContributors": "هنوز مشارکتی وجود ندارد. اولین نفر باشید.",
     "recent": "مشارکت‌های اخیر",
     "you": "شما",
-    "power": "قدرت",
     "transferCount_one": "{{count}} انتقال",
-    "transferCount_other": "{{count}} انتقال"
+    "transferCount_other": "{{count}} انتقال",
+    "power": "قدرت"
   },
   "governance": {
     "title": "حکمرانی",

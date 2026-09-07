@@ -698,7 +698,19 @@
     "stake": "Stake",
     "cashOut": "Isplata",
     "stakeComingSoon": "Staking uskoro dolazi!",
-    "cashOutComingSoon": "Isplata uskoro dolazi!"
+    "cashOutComingSoon": "Isplata uskoro dolazi!",
+    "back": "Natrag",
+    "chooseAddressNetwork": "Koja mreža?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB i Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "SAMO SOL i SPL tokeni",
+    "solanaAddressLinkedHint": "Vaš povezani novčanik Phantom",
+    "evmAddressCopied": "Adresa EVM-a je kopirana",
+    "solanaAddressCopied": "Solana adresa je kopirana",
+    "addressCopyFailed": "Kopiranje adrese nije uspjelo",
+    "receiveEvm": "Baza · BNB · ETH",
+    "receiveSolanaDescription": "Ovdje pošalji samo SOL i SPL tokene. Sve što je poslano s druge mreže je izgubljeno."
   },
   "bookmarks": {
     "title": "Vaše oznake",

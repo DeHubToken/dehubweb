@@ -712,7 +712,19 @@
     "stake": "Stake",
     "cashOut": "Tarik Tunai",
     "stakeComingSoon": "Staking segera hadir!",
-    "cashOutComingSoon": "Tarik tunai segera hadir!"
+    "cashOutComingSoon": "Tarik tunai segera hadir!",
+    "back": "Kembali",
+    "chooseAddressNetwork": "Jaringan yang mana?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB dan Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Hanya token SOL dan SPL",
+    "solanaAddressLinkedHint": "Dompet Phantom Anda yang ditautkan",
+    "evmAddressCopied": "Alamat EVM disalin",
+    "solanaAddressCopied": "Alamat Solana disalin",
+    "addressCopyFailed": "Tidak dapat menyalin alamat",
+    "receiveEvm": "Dasar · BNB · ETH",
+    "receiveSolanaDescription": "Hanya kirim token SOL dan SPL di sini. Semua yang dikirim dari jaringan lain hilang."
   },
   "bookmarks": {
     "title": "Markah Anda",

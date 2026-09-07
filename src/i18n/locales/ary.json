@@ -23,6 +23,7 @@
     "featureRequests": "الطلبات",
     "staking": "الستاكينغ",
     "governance": "الحكامة",
+    "dao": "DAO",
     "careers": "الوظائف",
     "glossary": "المسرد",
     "arcade": "الأركيد",
@@ -44,8 +45,7 @@
     "pricing": "الأثمنة",
     "creators": "المبدعين",
     "getTheApp": "حمّل التطبيق",
-    "connectAi": "ربط الذكاء الاصطناعي",
-    "dao": "DAO"
+    "connectAi": "ربط الذكاء الاصطناعي"
   },
   "feed": {
     "viewProfile": "عرض ملف {{name}} الشخصي",
@@ -712,7 +712,18 @@
     "stake": "ستايك",
     "cashOut": "سحب",
     "stakeComingSoon": "الستايكينغ قريباً!",
-    "cashOutComingSoon": "السحب قريباً!"
+    "cashOutComingSoon": "السحب قريباً!",
+    "back": "رجوع",
+    "chooseAddressNetwork": "أي شبكة ؟",
+    "evmAddressHint": "BASE وBNB وEthereum",
+    "solanaAddressLabel": "سولانا",
+    "solanaAddressHint": "رموز SOL و SPL فقط",
+    "solanaAddressLinkedHint": "محفظتك الوهمية المرتبطة",
+    "evmAddressCopied": "تم نسخ عنوان EVM",
+    "solanaAddressCopied": "تم نسخ عنوان سولانا",
+    "addressCopyFailed": "تعذر نسخ العنوان",
+    "receiveEvm": "قاعدة · BNB · ETH",
+    "receiveSolanaDescription": "لا ترسل سوى رموز SOL و SPL هنا. يتم فقدان أي شيء يتم إرساله من شبكة أخرى."
   },
   "bookmarks": {
     "title": "المحفوظات ديالك",

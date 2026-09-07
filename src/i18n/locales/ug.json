@@ -712,7 +712,19 @@
     "stake": "Stake",
     "cashOut": "پۇل ئېلىش",
     "stakeComingSoon": "Staking پات يېقىندا!",
-    "cashOutComingSoon": "پۇل ئېلىش پات يېقىندا!"
+    "cashOutComingSoon": "پۇل ئېلىش پات يېقىندا!",
+    "back": "Back",
+    "chooseAddressNetwork": "قايسى توردىن ؟",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base، BNB ۋە Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "پەقەت SOL ۋە SPL بەلگىلىرىلا",
+    "solanaAddressLinkedHint": "باغلانغان Phantom خەجلىگۈچ",
+    "evmAddressCopied": "EVM ئادرېسى كۆچۈرۈلگەن",
+    "solanaAddressCopied": "Solana ئادرېسى كۆچۈرۈلگەن",
+    "addressCopyFailed": "ئادرېسنى كۆچۈرگىلى بولمىدى",
+    "receiveEvm": "ئاساسى · BNB · ETH",
+    "receiveSolanaDescription": "بۇ يەرگە قۇياش ۋە SPL بەلگىلىرىنى ئەۋەتىڭ. باشقا توردىن ئەۋەتىلگەن ھەرقانداق نەرسە يوقاپ كېتىدۇ."
   },
   "bookmarks": {
     "title": "خەتكۈچلىرىڭىز",
@@ -1227,9 +1239,9 @@
     "noContributors": "ھېچقانداق ھەسسە قوشۇلمىدى. تۇنجى بولۇڭ.",
     "recent": "ئاخىرقى ھەسسە قوشۇشلار",
     "you": "سىز",
-    "power": "power",
     "transferCount_one": "{{count}} يۆتكەش",
-    "transferCount_other": "{{count}} يۆتكەش"
+    "transferCount_other": "{{count}} يۆتكەش",
+    "power": "power"
   },
   "governance": {
     "title": "باشقۇرۇش",

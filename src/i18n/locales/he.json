@@ -709,7 +709,18 @@
     "stake": "סטייק",
     "cashOut": "משיכה",
     "stakeComingSoon": "סטייק בקרוב!",
-    "cashOutComingSoon": "משיכה בקרוב!"
+    "cashOutComingSoon": "משיכה בקרוב!",
+    "back": "הקודם",
+    "chooseAddressNetwork": "איזו רשת?",
+    "evmAddressHint": "בסיס, BNB ואתריום",
+    "solanaAddressLabel": "סולאנה",
+    "solanaAddressHint": "אסימוני SOL ו - SPL בלבד",
+    "solanaAddressLinkedHint": "ארנק הפאנטום המקושר שלך",
+    "evmAddressCopied": "כתובת ה - EVM הועתקה",
+    "solanaAddressCopied": "כתובת Solana הועתקה",
+    "addressCopyFailed": "לא ניתן להעתיק את הכתובת",
+    "receiveEvm": "בסיס · BNB · ETH",
+    "receiveSolanaDescription": "יש לשלוח לכאן רק אסימוני SOL ו - SPL. כל דבר שנשלח מרשת אחרת אבד."
   },
   "bookmarks": {
     "title": "סימניות",
