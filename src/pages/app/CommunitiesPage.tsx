@@ -18,7 +18,6 @@ import { CreateCommunityModal } from '@/components/app/communities/CreateCommuni
 import { CommunityOwnerActivity } from '@/components/app/communities/CommunityOwnerActivity';
 import { SEOHead } from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
-import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-unread';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';

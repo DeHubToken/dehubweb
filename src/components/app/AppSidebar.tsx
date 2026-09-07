@@ -26,7 +26,6 @@ const PostModal = React.lazy(() =>
 );
 import { useAuth } from '@/contexts/AuthContext';
 import { openStageModal } from '@/contexts/StageContext';
-import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-unread';
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -68,7 +67,6 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   useEffect(() => {
     if (isPostModalOpen) setPostModalMounted(true);
   }, [isPostModalOpen]);
-  const { unreadCount: communityActivityUnread } = useCommunityActivityUnreadCount();
 
   const mobileNavContent = (
     <>
@@ -131,7 +129,6 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               onNavigate={onToggle}
               onClick={item.action === 'open-stages' ? () => { onToggle(); openStageModal(); } : undefined}
               variant="mobile"
-              notificationCount={item.label === 'Communities' ? communityActivityUnread : undefined}
             />
           );
         })}
