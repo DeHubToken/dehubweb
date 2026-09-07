@@ -129,14 +129,23 @@ export default function FullWalletPage() {
 
   const { data: prices = {} } = useTokenPrices(extraTokensForPricing.length > 0 ? extraTokensForPricing : undefined);
 
-  // Compute total USD across all chains
+  // Compute total USD across all chains.
+  //
+  // Staked and giveaway DHB are part of the holding, not separate from it: the
+  // DHB figure above this line already reads wallet + staked + giveaway, so a
+  // total that counted only liquid wallet tokens read lower than the balance it
+  // sat under. Both are DHB, so both price off the DHB quote.
   const totalUsd = useMemo(() => {
-    return allTokens.reduce((sum, token) => {
+    const walletUsd = allTokens.reduce((sum, token) => {
       const price = prices[token.symbol] ?? 0;
       const value = parseFloat(token.formattedBalance) * price;
       return sum + (isNaN(value) ? 0 : value);
     }, 0);
-  }, [allTokens, prices]);
+    const dhbPrice = prices.DHB ?? 0;
+    const offWalletDhb = (userStakingData?.totalStaked ?? 0) + (giveaway?.amount ?? 0);
+    const offWalletUsd = offWalletDhb * dhbPrice;
+    return walletUsd + (isNaN(offWalletUsd) ? 0 : offWalletUsd);
+  }, [allTokens, prices, userStakingData?.totalStaked, giveaway?.amount]);
 
   // Group tokens by symbol across chains
   // Tokens may have different decimals across chains (e.g. USDT: 6 on Base, 18 on BNB)
