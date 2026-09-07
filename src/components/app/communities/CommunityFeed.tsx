@@ -8,7 +8,6 @@
 
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { PenSquare } from 'lucide-react';
 import { searchNFTs } from '@/lib/api/dehub';
 import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 import type { FeedItem, TextPost, VideoItem, ImagePost, ShortVideo } from '@/types/feed.types';
@@ -21,6 +20,7 @@ import { PostCard } from '@/components/app/cards/PostCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { useTranslation } from 'react-i18next';
+import { AppState } from '@/components/app/AppState';
 
 interface CommunityFeedProps {
   communitySlug: string;
@@ -111,19 +111,12 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
         {tickerSymbol && matchedPair && (
           <CashtagPriceCard pair={matchedPair} symbol={`$${tickerSymbol}`} cmcData={cmcData} />
         )}
-        <div className="text-center py-12">
-          <PenSquare className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
-          <p className="text-zinc-500 text-sm">
-            {isMember
-              ? t('communities.noPosts')
-              : t('communities.joinToSeePosts')}
-          </p>
-          {isMember && (
-            <p className="text-zinc-600 text-xs mt-2">
-              {t('communities.selectCommunityHint')}
-            </p>
-          )}
-        </div>
+        <AppState
+          icon="posts"
+          title={isMember ? t('communities.noPosts') : t('communities.joinToSeePosts')}
+          description={isMember ? t('communities.selectCommunityHint') : undefined}
+          size="section"
+        />
       </div>
     );
   }

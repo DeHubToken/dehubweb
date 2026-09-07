@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { X, Save, Trash2, FileText, Clock, Image, Video, Mic } from 'lucide-react';
+import { X, Save, Trash2, Clock, Image, Video, Mic } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { AppState } from '@/components/app/AppState';
 
 export interface Draft {
   id: string;
@@ -90,15 +91,12 @@ export function DraftsSheet({
 
         <div className="relative flex-1 overflow-y-auto pt-4">
           {drafts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="w-16 h-16 rounded-xl bg-white/5 flex items-center justify-center mb-4">
-                <FileText className="w-8 h-8 text-zinc-500" />
-              </div>
-              <p className="text-zinc-400 font-medium">No drafts yet</p>
-              <p className="text-zinc-500 text-sm mt-1">
-                Save your work to continue later
-              </p>
-            </div>
+            <AppState
+              icon="posts"
+              title="No drafts yet"
+              description="Save your work to continue later."
+              size="drawer"
+            />
           ) : (
             <div className="space-y-2 px-1">
               <AnimatePresence mode="popLayout">
