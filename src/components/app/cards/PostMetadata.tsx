@@ -5,7 +5,9 @@
  */
 
 import { Eye, Headphones, RotateCcw, Loader2, Languages } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { formatTimeAgo } from '@/lib/feed-utils';
+import { LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import { cn } from '@/lib/utils';
 
 interface PostMetadataProps {
@@ -25,10 +27,14 @@ interface PostMetadataProps {
     error: string | null;
     onTranslate: () => void;
     onShowOriginal: () => void;
+    /** ISO code the post was detected as, known once a translation came back. */
+    sourceLang?: string | null;
   };
 }
 
 export function PostMetadata({ timestamp, viewCount, tokenId, isAd, isAudio, translateControl }: PostMetadataProps) {
+  const { t } = useTranslation();
+
   // Format timestamp - if it's an ISO string, convert to relative time
   const formattedTimestamp = timestamp ? (
     timestamp.includes('T') || timestamp.includes('-') 
@@ -41,6 +47,14 @@ export function PostMetadata({ timestamp, viewCount, tokenId, isAd, isAudio, tra
   const renderTranslateControl = () => {
     if (!translateControl) return null;
 
+    // The language the post is actually written in. Only known once a
+    // translation has come back, so until then the control is just the icon.
+    const { sourceLang } = translateControl;
+    const sourceLangName =
+      sourceLang && sourceLang !== 'unknown'
+        ? LANGUAGE_NAMES[sourceLang] || sourceLang.toUpperCase()
+        : undefined;
+
     if (translateControl.isTranslated) {
       return (
         <button
@@ -48,7 +62,7 @@ export function PostMetadata({ timestamp, viewCount, tokenId, isAd, isAudio, tra
           className="flex items-center gap-1 text-white hover:text-zinc-300 transition-colors"
         >
           <RotateCcw className="w-3 h-3" />
-          <span>Show original</span>
+          <span>{t('common.showOriginal')}</span>
         </button>
       );
     }
@@ -68,12 +82,17 @@ export function PostMetadata({ timestamp, viewCount, tokenId, isAd, isAudio, tra
         {translateControl.isLoading ? (
           <>
             <Loader2 className="w-3 h-3 animate-spin" />
-            <span>Translating...</span>
+            <span>{t('common.translating')}</span>
           </>
         ) : translateControl.error ? (
           <span>{translateControl.error}</span>
         ) : (
-          <Languages className="w-4 h-4" />
+          <>
+            <Languages className="w-4 h-4" />
+            {/* Back on the original after "show original": name the language it
+                is in, so the button reads as an offer rather than a mystery. */}
+            {sourceLangName && <span>{sourceLangName}</span>}
+          </>
         )}
       </button>
     );

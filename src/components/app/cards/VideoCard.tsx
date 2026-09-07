@@ -746,6 +746,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     error: translateError,
     handleTranslate: handleVideoTranslate,
     handleShowOriginal: handleVideoShowOriginal,
+    sourceLang: videoSourceLang,
     isTooShort: nothingToTranslate,
   } = useTranslation(videoText);
 
@@ -2314,6 +2315,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               error: translateError,
               onTranslate: handleVideoTranslate,
               onShowOriginal: handleVideoShowOriginal,
+              sourceLang: videoSourceLang,
             }}
           />
         </div>
