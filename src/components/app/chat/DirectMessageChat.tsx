@@ -78,6 +78,7 @@ import { DmVideoCallButton } from '@/components/app/chat/calls/DmVideoCallButton
 import { useCall } from '@/contexts/CallContext';
 import { dismissKeyboard } from '@/hooks/use-keyboard-open';
 import { formatUnreadCount } from '@/lib/unread-count';
+import { isDmCallNotice } from '@/lib/dm-call-notice';
 
 interface DirectMessageChatProps {
   conversation: DeHubConversation;
@@ -196,7 +197,7 @@ const MessageBubble = memo(function MessageBubble({
   }, [showPaymentPending, message._id]);
   // Call message — detect by emoji prefix in content (📞/📹/📵). The branch
   // it drives lives below the hooks; see the note there.
-  const isCallMessage = message.msgType === 'msg' && /^[📞📹📵]/.test(message.content || '');
+  const isCallMessage = message.msgType === 'msg' && isDmCallNotice(message.content);
 
   const avatarUrl = buildAvatarUrl(message.sender?.address || '', message.sender?.avatarImageUrl);
   const displayName = message.sender?.displayName || message.sender?.username ||
