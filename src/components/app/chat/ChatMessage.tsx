@@ -22,6 +22,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { VoiceWaveformPlayer } from './VoiceWaveformPlayer';
+import { QUICK_CHAT_REACTIONS } from './reaction-options';
 
 /** Avatar with cascading fallback: primary → CDN → initials */
 function ChatAvatar({ src, address, name, className }: { src?: string; address?: string; name: string; className?: string }) {
@@ -88,8 +89,6 @@ interface ChatMessageProps {
   onRemoveReaction?: (messageId: string, emoji: string) => void;
   onReply?: (message: Message) => void;
 }
-
-const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
 
 /** Inline moderator badge shown next to the username */
 function ModeratorBadge({ address, moderators }: { address: string; moderators?: string[] }) {
@@ -341,7 +340,7 @@ export const ChatMessage = memo(function ChatMessage({
                   className="w-auto p-1.5 bg-zinc-800 border-zinc-700 rounded-xl"
                 >
                   <div className="flex gap-0.5">
-                    {QUICK_EMOJIS.map((emoji) => {
+                    {QUICK_CHAT_REACTIONS.map((emoji) => {
                       const isActive = currentUserAddress && message.reactions?.[emoji]?.some(
                         (a) => a.toLowerCase() === currentUserAddress.toLowerCase()
                       );
