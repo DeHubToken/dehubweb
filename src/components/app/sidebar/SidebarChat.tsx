@@ -30,8 +30,35 @@ import { isAssistantAddress } from '@/lib/assistant';
 import { useAssistantReplies, useAssistantReplyEngine, type AssistantReply } from '@/hooks/use-assistant-replies';
 import { Sparkles } from 'lucide-react';
 import assistantAvatar from '@/assets/ai-assistant-avatar.png';
+import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { ChatLinkPreviews } from '../chat/ChatLinkPreviews';
 
 const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
+
+/**
+ * A text message in the side panel, with the same cards every other chat
+ * surface gives it: a native entity card for our own links, an OG preview for
+ * an outside one. The panel was the last surface still printing a bare URL —
+ * paste a store or a stage link into live chat and it read as a 🔗 with nothing
+ * behind it, while the identical message carded up in a DM.
+ *
+ * `useDehubLinks` strips exactly the links being carded out of the printed
+ * text, which is why the paragraph is skipped when nothing survives stripping.
+ * The cards navigate in-app (see `DehubLinkEmbed`), so opening one keeps the
+ * panel and the socket alive instead of reloading the page.
+ */
+function SidebarMessageBody({ content }: { content: string }) {
+  const { links, displayText } = useDehubLinks(content);
+  return (
+    <>
+      {displayText.trim() && (
+        <TranslatableText text={displayText} className="text-xs text-zinc-300 break-words" as="p" />
+      )}
+      <DehubLinkEmbeds links={links} compact />
+      <ChatLinkPreviews content={displayText} />
+    </>
+  );
+}
 
 /** Avatar with cascading fallback: primary → CDN → initials */
 function SidebarAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
@@ -485,7 +512,7 @@ export function SidebarChat() {
                           <VoiceWaveformPlayer src={msg.audio_url || msg.image_url || ''} />
                         </div>
                       ) : (
-                        <TranslatableText text={msg.content} className="text-xs text-zinc-300 break-words" as="p" />
+                        <SidebarMessageBody content={msg.content} />
                       )}
                       {/* Reactions */}
                       {msg.reactions && (
