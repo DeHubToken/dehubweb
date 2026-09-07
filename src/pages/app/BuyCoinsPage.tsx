@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { ShimmerHoverEffect } from '@/components/ui/shimmer-hover-effect';
 import { AppState } from '@/components/app/AppState';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getDPayPrice,
@@ -366,6 +367,7 @@ export default function BuyCoinsPage() {
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
+          <ThemedIcon icon="buy" alt="" className="w-9 h-9 shrink-0 object-contain" />
           <h1 className="text-xl font-bold text-white">{t('buyCoins.title')}</h1>
         </div>
 

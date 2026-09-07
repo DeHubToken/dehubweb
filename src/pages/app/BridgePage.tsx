@@ -25,7 +25,7 @@ import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { useTranslation } from 'react-i18next';
 import { AppState } from '@/components/app/AppState';
 import { SEOHead } from '@/components/SEOHead';
-import dehubCoin from '@/assets/dehub-coin.png';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { invalidateSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
 
 const BRIDGE_ADDRESS = '0x11D79aE9a0F8a8f9Fcf5BE71e403ed203EC2394d';
@@ -206,9 +206,7 @@ export default function BridgePage() {
         className="flex items-center justify-between py-5 sm:py-6"
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center flex-shrink-0">
-            <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
-          </div>
+          <ThemedIcon icon="bridge" alt="" className="w-10 h-10 flex-shrink-0 object-contain" />
           <div>
             <h1 className="text-xl font-bold text-white">Bridge</h1>
             <p className="text-xs text-white/40">Transfer DHB between chains</p>

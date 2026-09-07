@@ -12,6 +12,7 @@ const THEMES = [
 const ICONS: ThemeIconKey[] = [
   'posts', 'images', 'videos', 'audio', 'messages', 'communities',
   'subscriptions', 'events', 'bookmarks', 'search', 'notifications', 'lock',
+  'superpowers', 'dao', 'staking', 'bridge', 'buy',
 ];
 
 export default function StateGalleryPage() {
@@ -66,7 +67,7 @@ export default function StateGalleryPage() {
 
         <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-xl">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Semantic icon family</p>
-          <div className="grid grid-cols-4 gap-3 sm:grid-cols-6 lg:grid-cols-12">
+          <div className="grid grid-cols-4 gap-3 sm:grid-cols-8">
             {ICONS.map((icon) => (
               <div key={icon} className="flex min-w-0 flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-3">
                 <ThemedIcon icon={icon} alt="" className="h-12 w-12 object-contain" />

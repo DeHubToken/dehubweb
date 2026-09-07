@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
 import { TickerLogo } from '@/components/app/TickerLogo';
 import { AppState } from '@/components/app/AppState';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import appleLogoImg from '@/assets/logo-apple.png';
 import googleLogoImg from '@/assets/logo-google.png';
 import microsoftLogoImg from '@/assets/logo-microsoft.png';
@@ -245,6 +246,7 @@ export default function Top100CryptosPage() {
             <button onClick={() => navigate(-1)} className="text-zinc-400 hover:text-white transition-colors">
               <ArrowLeft className="w-5 h-5" />
             </button>
+            <ThemedIcon icon="stats" alt="" className="w-9 h-9 shrink-0 object-contain" />
             <h2 className="text-xl font-bold text-white shrink-0">Top Assets</h2>
             {!isLoading && allAssets.length > 0 && (
               <span className="text-zinc-500 text-sm min-w-0 truncate">
