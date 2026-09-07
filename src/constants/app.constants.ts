@@ -64,7 +64,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Vault, label: 'Staking', path: '/app/stake' },
   // Directly under Staking, because it is what staking buys. Without an entry
   // here a holder who has already staked has no route to the page at all.
-  { icon: Zap, themedIcon: 'superpowers', label: 'SuperPowers', path: '/app/superpowers' },
+  { icon: Zap, label: 'SuperPowers', path: '/app/superpowers' },
   { icon: ShieldCheck, label: 'Governance', path: '/governance' },
   { icon: Landmark, label: 'DAO', path: '/dao' },
   { icon: Briefcase, label: 'Bounties', path: '/work' },
