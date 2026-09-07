@@ -46,7 +46,7 @@ export interface VoteState {
   likeCount: number;
   dislikeCount: number;
   /**
-   * Which of the nine reactions the viewer holds, or null for none.
+   * Which of the ten reactions the viewer holds, or null for none.
    *
    * OPTIONAL ON PURPOSE — `isLiked`/`isDisliked` remain the source of truth for
    * polarity, and surfaces that only ever cast a plain like (the shorts viewer,

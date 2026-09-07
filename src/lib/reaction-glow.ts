@@ -1,7 +1,7 @@
 /**
  * Reaction Glow
  * =============
- * The colour each of the nine reactions lights up in once it is *yours* — in
+ * The colour each of the ten reactions lights up in once it is *yours* — in
  * the picker tray, and on the like/dislike button of the card you set it from.
  *
  * Lives here rather than in `lib/reactions`: that file is a line-for-line
@@ -31,11 +31,12 @@ export const REACTION_GLOW: Record<PostReaction, string> = {
   love:    '221 46 68',   // ❤️ red
   respect: '255 204 77',  // ✊ yellow hand
   hot:     '244 144 12',  // 🔥 flame orange
+  hundred: '221 46 68',   // 💯 red numerals and underscore
   lol:     '255 204 77',  // 😂 yellow face
   sad:     '93 173 236',  // 😢 tear blue
   cry:     '93 173 236',  // 😭 tear blue
-  dislike: '255 204 77',  // 👎 yellow hand
   poo:     '193 105 79',  // 💩 brown
+  dislike: '255 204 77',  // 👎 yellow hand
 };
 
 /**

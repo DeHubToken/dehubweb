@@ -22,7 +22,9 @@ import { motion } from 'framer-motion';
 import { voteOnPost, reactToPost } from '@/lib/api/dehub';
 import {
   applyReactionDelta,
+  HAS_NEGATIVE_TRAY,
   isPositiveReaction,
+  negativeThumbLabel,
   reactionForTap,
   reactionMeta,
   reconcileReactionCounts,
@@ -93,7 +95,7 @@ interface ActionBarProps {
   /** Whether the current user has disliked this item */
   isDisliked?: boolean;
   /**
-   * Which of the nine reactions the viewer holds. `isLiked`/`isDisliked` stay
+   * Which of the ten reactions the viewer holds. `isLiked`/`isDisliked` stay
    * the polarity rollup of it, so a post the viewer loved still reads as liked.
    */
   myReaction?: PostReaction | null;
@@ -198,7 +200,7 @@ interface ActionBarProps {
  * Every vote cast before multi-reaction shipped is a bare boolean, so a
  * long-lived post arrives with `likeCount: 40` and no breakdown at all. That
  * used to be harmless — the breakdown only decided which icon led — but the
- * tray now prints a number under every emoji, and nine zeros beside a like
+ * tray now prints a number under every emoji, and a row of zeros beside a like
  * count of 40 reads as a bug. Attributing that history to like/dislike is
  * exactly what those votes were, and matches the API's own first write.
  *
@@ -642,10 +644,11 @@ export function ActionBar({
   const reactionInfoTokenId = tokenId ?? (isNaN(numericPostId) ? undefined : numericPostId);
   const canViewReactionInfo = isOwnPost && reactionInfoTokenId !== undefined;
 
-  // One tray per thumb: the seven positive faces hang off the thumbs-up, 👎 and
-  // 💩 off the thumbs-down. Hold or hover opens either — see use-reaction-tray.
+  // One tray per thumb in principle: every positive face hangs off the
+  // thumbs-up, and whatever counts against off the thumbs-down. Only the first
+  // opens today — 👎 is alone on its side — see HAS_NEGATIVE_TRAY.
   const likeTray = useReactionTray(reactionsEnabled);
-  const dislikeTray = useReactionTray(reactionsEnabled);
+  const dislikeTray = useReactionTray(reactionsEnabled && HAS_NEGATIVE_TRAY);
 
   // Only ever one open. They sit inches apart on the same row, and two trays
   // stacked over each other is unreadable however they are anchored.
@@ -682,16 +685,16 @@ export function ActionBar({
    */
   const leadReaction = resolveLeadReaction(localReactionCounts, myReaction);
   /**
-   * The viewer's own reaction, but only when it is a positive one — a 👎 or 💩
+   * The viewer's own reaction, but only when it is a positive one — a downvote
    * is the thumbs-DOWN button's business, so this button must not announce it.
    */
   const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
   /** …and its counterpart, which lights the thumbs-down instead. */
   const myNegativeReaction = myReaction && !isPositiveReaction(myReaction) ? myReaction : null;
   /**
-   * The glyph the thumbs-DOWN wears — your own 💩 and nothing else. It never
-   * leads with the crowd's pick the way the thumb above it does; see
-   * resolveNegativeLeadReaction.
+   * The glyph the thumbs-DOWN wears — your own negative reaction and nothing
+   * else, so nothing at all while 👎 is the only one and the button is already
+   * that glyph. See resolveNegativeLeadReaction.
    */
   const negativeLeadReaction = resolveNegativeLeadReaction(myReaction);
 
@@ -850,12 +853,12 @@ export function ActionBar({
         <span className="text-xs text-zinc-400 relative z-10" style={{ marginLeft: '2.5px' }}>{formatCount(tipCount)}</span>
       </button>
 
-      {/* Downvotes — tap the thumb, or hold (hover on desktop) for 💩. The
-          negative pair lives here rather than in the tray on the thumbs-UP:
-          they move THIS count, and the button that means "no" is where a
-          reader goes looking for them. The wrapper is `relative` so the tray
-          anchors to it, and `align="left"` because the dislike sits at the
-          left of the row where a right-anchored tray would run off the card. */}
+      {/* Downvotes — one tap, no tray: 👎 is the only reaction on this side,
+          and a hold-to-open menu of one would only swallow the press that
+          already casts it. The tray and its wrapper stay wired for the day a
+          second negative reaction arrives: `relative` so the tray anchors
+          here, and `align="left"` because the dislike sits at the left of the
+          row where a right-anchored tray would run off the card. */}
       {!hideDislike && (
         <span
           className={cn("relative flex items-center gap-0.5", isVoting && "opacity-50")}
@@ -884,13 +887,9 @@ export function ActionBar({
             data-engaged={isDisliked ? 'dislike' : undefined}
             {...reactionGlowProps(myNegativeReaction)}
             className="flex items-center transition-colors text-white select-none touch-none"
-            aria-label={
-              myNegativeReaction
-                ? `${reactionMeta(myNegativeReaction).label} — hold to change your reaction`
-                : 'Dislike — hold to react'
-            }
-            aria-haspopup={reactionsEnabled ? 'menu' : undefined}
-            aria-expanded={reactionsEnabled ? dislikeTray.open : undefined}
+            aria-label={negativeThumbLabel(myNegativeReaction)}
+            aria-haspopup={reactionsEnabled && HAS_NEGATIVE_TRAY ? 'menu' : undefined}
+            aria-expanded={reactionsEnabled && HAS_NEGATIVE_TRAY ? dislikeTray.open : undefined}
             disabled={isVoting}
             animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
             transition={{ duration: 0.3, ease: "easeOut" }}
@@ -949,7 +948,7 @@ export function ActionBar({
       </button>
 
       {/* Reactions — furthest right for easy thumb reach. Tap the thumb to
-          like/unlike, hold (or hover on desktop) to pick one of the nine. On
+          like/unlike, hold (or hover on desktop) to pick one of the ten. On
           your own posts the tray ends in an ⓘ that opens the breakdown of who
           reacted what; the count itself is inert text, since who reacted is
           not public. The wrapper is `relative` so the tray anchors to it. */}

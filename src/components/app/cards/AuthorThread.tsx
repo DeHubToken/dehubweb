@@ -26,7 +26,9 @@ import { FeedLinkPreviews } from './FeedLinkPreviews';
 import { reactToComment, deleteComment } from '@/lib/api/dehub';
 import {
   applyReactionDelta,
+  HAS_NEGATIVE_TRAY,
   isPositiveReaction,
+  negativeThumbLabel,
   reactionForTap,
   reactionMeta,
   reconcileReactionCounts,
@@ -53,7 +55,7 @@ interface AuthorThreadProps {
 }
 
 /** Reaction overrides for one entry, mirroring the comments-section semantics:
- *  the nine reactions ride on one vote per viewer, and the polarity of that
+ *  the ten reactions ride on one vote per viewer, and the polarity of that
  *  reaction is what `isLiked`/`isDisliked` and the two counts keep meaning. */
 interface VoteOverride {
   isLiked?: boolean;
@@ -90,7 +92,7 @@ function ThreadEntry({
   // One tray per thumb, as on a feed card. Off entirely on your own entry —
   // the like button there is a readout, not a vote.
   const likeTray = useReactionTray(!isOwn);
-  const dislikeTray = useReactionTray(!isOwn);
+  const dislikeTray = useReactionTray(!isOwn && HAS_NEGATIVE_TRAY);
   // Deps are the tray's OWN `open` plus the sibling's `close`, which the hook
   // keeps stable — not the tray objects, which are new on every render. With
   // the objects in there both effects ran on every render, so a moment where
@@ -111,7 +113,7 @@ function ThreadEntry({
   if (removed) return null;
 
   /**
-   * Cast one of the nine on this entry — the thread block's copy of
+   * Cast one of the ten on this entry — the thread block's copy of
    * CommentsSection.handleReact, holding the same three rules: re-casting what
    * you hold removes it, the counts move only when the polarity changes, and
    * the split moves every time.
@@ -322,13 +324,9 @@ function ThreadEntry({
                 'flex items-center gap-1 transition-colors select-none touch-none',
                 state.isDisliked ? 'text-white' : 'text-white/70 hover:text-white',
               )}
-              aria-label={
-                myNegativeReaction
-                  ? `${reactionMeta(myNegativeReaction).label} — hold to change your reaction`
-                  : 'Dislike — hold to react'
-              }
-              aria-haspopup={isOwn ? undefined : 'menu'}
-              aria-expanded={isOwn ? undefined : dislikeTray.open}
+              aria-label={negativeThumbLabel(myNegativeReaction)}
+              aria-haspopup={!isOwn && HAS_NEGATIVE_TRAY ? 'menu' : undefined}
+              aria-expanded={!isOwn && HAS_NEGATIVE_TRAY ? dislikeTray.open : undefined}
             >
               {negativeLeadReaction ? (
                 <span data-engaged-glyph className="w-3.5 h-3.5 flex items-center justify-center text-[0.8rem] leading-none" aria-hidden="true">

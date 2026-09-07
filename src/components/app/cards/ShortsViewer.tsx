@@ -30,7 +30,9 @@ import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { voteOnPost, reactToPost, getNFTComments, postComment, isFollowing as checkIsFollowing, updateTokenVisibility, type TokenVisibility, type ApiCommentResponse } from '@/lib/api/dehub';
 import {
   applyReactionDelta,
+  HAS_NEGATIVE_TRAY,
   isPositiveReaction,
+  negativeThumbLabel,
   reactionForTap,
   reactionMeta,
   reconcileReactionCounts,
@@ -842,7 +844,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // `hover: false` here alone: the shorts chrome auto-hides, and a resting
   // cursor popping a tray open over the video is not what a viewer asked for.
   const likeTray = useReactionTray(true, { hover: false });
-  const dislikeTray = useReactionTray(true, { hover: false });
+  const dislikeTray = useReactionTray(HAS_NEGATIVE_TRAY, { hover: false });
   // Deps are the tray's OWN `open` plus the sibling's `close`, which the hook
   // keeps stable — not the tray objects, which are new on every render. With
   // the objects in there both effects ran on every render, so a moment where
@@ -859,9 +861,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   /** One glyph on the thumb: your own positive reaction, else the post's most-used. */
   const leadReaction = resolveLeadReaction(localReactionCounts, myReaction);
-  /** A 👎 or 💩 of your own belongs to the thumbs-DOWN button, not this one. */
+  /** A downvote of your own belongs to the thumbs-DOWN button, not this one. */
   const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
-  /** …and that button wears it — your own 💩 only, never the crowd's. */
+  /** …and that button would wear it, though 👎 is its own glyph already. */
   const negativeLeadReaction = resolveNegativeLeadReaction(myReaction);
   /** …which is where the other two land, and where their glow goes. */
   const myNegativeReaction = myReaction && !isPositiveReaction(myReaction) ? myReaction : null;
@@ -1616,7 +1618,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(tipCount)}</span>
                   </button>
 
-                  {/* Dislike — tap the thumb, hold it for 💩. */}
+                  {/* Dislike — one tap, no tray: 👎 is alone on this side. */}
                   <span className="relative flex items-center" {...dislikeTray.areaProps}>
                     <ReactionPicker
                       open={dislikeTray.open}
@@ -1638,9 +1640,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
-                      aria-label={myNegativeReaction ? `${reactionMeta(myNegativeReaction).label} — hold to change your reaction` : 'Dislike — hold to react'}
-                      aria-haspopup="menu"
-                      aria-expanded={dislikeTray.open}
+                      aria-label={negativeThumbLabel(myNegativeReaction)}
+                      aria-haspopup={HAS_NEGATIVE_TRAY ? 'menu' : undefined}
+                      aria-expanded={HAS_NEGATIVE_TRAY ? dislikeTray.open : undefined}
                     >
                       {negativeLeadReaction ? (
                         <span data-engaged-glyph className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
@@ -1892,7 +1894,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(tipCount)}</span>
                   </button>
 
-                  {/* Dislike — tap the thumb, hold it for 💩. */}
+                  {/* Dislike — one tap, no tray: 👎 is alone on this side. */}
                   <span className="relative flex items-center" {...dislikeTray.areaProps}>
                     <ReactionPicker
                       open={dislikeTray.open}
@@ -1914,9 +1916,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
-                      aria-label={myNegativeReaction ? `${reactionMeta(myNegativeReaction).label} — hold to change your reaction` : 'Dislike — hold to react'}
-                      aria-haspopup="menu"
-                      aria-expanded={dislikeTray.open}
+                      aria-label={negativeThumbLabel(myNegativeReaction)}
+                      aria-haspopup={HAS_NEGATIVE_TRAY ? 'menu' : undefined}
+                      aria-expanded={HAS_NEGATIVE_TRAY ? dislikeTray.open : undefined}
                     >
                       {negativeLeadReaction ? (
                         <span data-engaged-glyph className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
