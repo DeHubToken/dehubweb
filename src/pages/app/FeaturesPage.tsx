@@ -35,6 +35,7 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { supabase } from '@/integrations/supabase/client';
 import {
   useFeatureRequests,
+  useFeatureRequest,
   useShippedFeatures,
   useInProgressFeatures,
 
@@ -212,15 +213,18 @@ function FeatureCard({
   currentVote,
   onVote,
   voteDisabled,
+  defaultCommentsOpen = false,
 }: {
   feature: FeatureRequest;
   currentVote: number | undefined;
   onVote: (featureId: string, voteType: 1 | -1, currentVote: number | undefined) => void;
   voteDisabled: boolean;
+  /** Open the comments on mount — set by a comment notification's deep link. */
+  defaultCommentsOpen?: boolean;
 }) {
   const { t } = useI18n();
   const { isTranslated, isLoading: isTranslateLoading, error: translateError, handleTranslate, handleShowOriginal } = useSharedTranslationControl();
-  const [showComments, setShowComments] = useState(false);
+  const [showComments, setShowComments] = useState(defaultCommentsOpen);
   const [commentText, setCommentText] = useState('');
   const [showMenu, setShowMenu] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -1051,9 +1055,34 @@ export default function FeaturesPage() {
   }, [searchParams, setSearchParams]);
 
   const { data: featuresData, isLoading, isError, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeatureRequests(sort, category, search);
-  const features = useMemo(() => featuresData?.pages.flat() ?? [], [featuresData]);
+  const allFeatures = useMemo(() => featuresData?.pages.flat() ?? [], [featuresData]);
   const { data: shippedFeatures, isLoading: isLoadingShipped } = useShippedFeatures();
   const { data: inProgressFeatures, isLoading: isLoadingInProgress } = useInProgressFeatures();
+
+  // A notification about one request pins it above the board. The list query
+  // could never be relied on to hold it — it may be shipped, declined, outside
+  // the active category, or pages down the infinite scroll — so it is fetched
+  // by id and rendered on its own, then removed from whichever list would
+  // otherwise show it twice.
+  const focusedRequestId = searchParams.get('request');
+  const { data: focusedRequest } = useFeatureRequest(focusedRequestId);
+  const focusedCommentsOpen = searchParams.get('comments') === '1';
+  const focusedId = focusedRequest?.id ?? null;
+  const withoutFocused = useCallback(
+    <T extends { id: string }>(rows: T[] | undefined): T[] =>
+      focusedId ? (rows ?? []).filter((row) => row.id !== focusedId) : (rows ?? []),
+    [focusedId],
+  );
+  const features = useMemo(() => withoutFocused(allFeatures), [allFeatures, withoutFocused]);
+
+  // Bring the pinned card into view once it has actually rendered. Scrolling on
+  // the id alone would fire before the row exists on a cold load.
+  useEffect(() => {
+    if (!focusedId) return;
+    requestAnimationFrame(() => {
+      document.getElementById(`feature-${focusedId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }, [focusedId]);
 
   useEffect(() => {
     const featureId = searchParams.get('feature');
@@ -1266,6 +1295,20 @@ export default function FeaturesPage() {
 
       {/* Content */}
       <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3">
+      {/* The request a notification pointed at, above whichever tab is open. */}
+      {focusedRequest && (
+        <div className="mb-3">
+          <SharedTranslationProvider key={focusedRequest.id}>
+            <FeatureCard
+              feature={focusedRequest}
+              currentVote={userVotes?.[focusedRequest.id]}
+              onVote={handleVote}
+              voteDisabled={voteMutation.isPending}
+              defaultCommentsOpen={focusedCommentsOpen}
+            />
+          </SharedTranslationProvider>
+        </div>
+      )}
       {/* Feature List (Requests Tab) */}
       {activeTab === 'requests' && (
         <>
@@ -1329,7 +1372,7 @@ export default function FeaturesPage() {
             <FeatureSkeletons />
           ) : inProgressFeatures && inProgressFeatures.length > 0 ? (
             <div className="space-y-3">
-              {inProgressFeatures.map((feature) => (
+              {withoutFocused(inProgressFeatures).map((feature) => (
                 <SharedTranslationProvider key={feature.id}>
                   <FeatureCard
                     feature={feature}
@@ -1358,7 +1401,7 @@ export default function FeaturesPage() {
             <FeatureSkeletons />
           ) : shippedFeatures && shippedFeatures.length > 0 ? (
             <div className="space-y-3">
-              {shippedFeatures.map((feature) => (
+              {withoutFocused(shippedFeatures).map((feature) => (
                 <SharedTranslationProvider key={feature.id}>
                   <FeatureCard
                     feature={feature}

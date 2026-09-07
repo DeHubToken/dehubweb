@@ -720,9 +720,18 @@ function customReferenceId(notification: DeHubNotification): string | undefined 
 }
 
 function getNavigationLink(notification: DeHubNotification): string | null {
-  // Handle custom notification types
+  // Handle custom notification types.
+  // A feature-request row carries the request's uuid, and every one of these
+  // used to throw it away and land on the board's first page — where the
+  // request being talked about may sit behind a tab, a sort, a category filter
+  // and several pages of infinite scroll. `?request=` pins it at the top
+  // instead, so the row always opens the thing it names. A comment row also
+  // asks for the comments to be open, the same way a post comment does.
   if ((notification.type as string) === 'feature_request_like' || (notification.type as string) === 'feature_request_comment') {
-    return '/features';
+    const requestId = customReferenceId(notification);
+    if (!requestId) return '/features';
+    const wantsComments = (notification.type as string) === 'feature_request_comment';
+    return `/features?request=${encodeURIComponent(requestId)}${wantsComments ? '&comments=1' : ''}`;
   }
   // Joins, mentions and @here all land on the community they came from. The
   // reference is normally its slug, but the join trigger has written the uuid
