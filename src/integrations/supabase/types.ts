@@ -2189,6 +2189,38 @@ export type Database = {
           },
         ]
       }
+      feature_request_comment_reactions: {
+        Row: {
+          comment_id: string
+          created_at: string
+          id: string
+          reaction: string
+          wallet_address: string
+        }
+        Insert: {
+          comment_id: string
+          created_at?: string
+          id?: string
+          reaction: string
+          wallet_address: string
+        }
+        Update: {
+          comment_id?: string
+          created_at?: string
+          id?: string
+          reaction?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_request_comment_reactions_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "feature_request_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feature_request_comments: {
         Row: {
           avatar: string | null
@@ -2196,6 +2228,8 @@ export type Database = {
           created_at: string
           feature_request_id: string
           id: string
+          parent_id: string | null
+          updated_at: string | null
           username: string | null
           wallet_address: string
         }
@@ -2205,6 +2239,8 @@ export type Database = {
           created_at?: string
           feature_request_id: string
           id?: string
+          parent_id?: string | null
+          updated_at?: string | null
           username?: string | null
           wallet_address: string
         }
@@ -2214,6 +2250,8 @@ export type Database = {
           created_at?: string
           feature_request_id?: string
           id?: string
+          parent_id?: string | null
+          updated_at?: string | null
           username?: string | null
           wallet_address?: string
         }
@@ -2223,6 +2261,13 @@ export type Database = {
             columns: ["feature_request_id"]
             isOneToOne: false
             referencedRelation: "feature_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "feature_request_comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "feature_request_comments"
             referencedColumns: ["id"]
           },
         ]
