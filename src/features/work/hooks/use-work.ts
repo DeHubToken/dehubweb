@@ -1,5 +1,5 @@
 /**
- * /work â€” Jobs marketplace hooks
+ * /work — Jobs marketplace hooks
  * Off-chain ledger + on-chain escrow via DeHubWork (best-effort; falls back
  * to off-chain when the contract address is the placeholder zero address).
  */
@@ -29,7 +29,7 @@ const TBL_REVIEWS = 'work_reviews' as any;
 const TBL_DISPUTES = 'work_disputes' as any;
 
 
-// â”€â”€ Browse jobs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Browse jobs ──────────────────────────────────────────────
 export function useBrowseJobs(filters?: {
   job_type?: WorkJobType | 'all';
   currency?: WorkCurrency | 'all';
@@ -54,7 +54,7 @@ export function useBrowseJobs(filters?: {
       if (error) throw error;
       return (data || []) as unknown as WorkJob[];
     },
-    // 5 min like the rest of the app â€” 30s meant nearly every return to /work
+    // 5 min like the rest of the app — 30s meant nearly every return to /work
     // refired the browse query.
     staleTime: 5 * 60_000,
     // Filter/search changes keep the previous list visible while the new one
@@ -90,7 +90,7 @@ export function useRecentCompletedJobs(enabled: boolean) {
  * A bounty is addressable two ways and both arrive here as a route param.
  * `/bounty/7` is the canonical form and carries a `job_number`; `/work/<uuid>`
  * is the shape every link shared before the numbers existed still uses, and
- * carries the primary key. A bare run of digits is the number â€” uuids always
+ * carries the primary key. A bare run of digits is the number — uuids always
  * contain hyphens and hex letters, so the two can never be confused.
  */
 function jobKeyColumn(key: string): 'id' | 'job_number' {
@@ -148,7 +148,7 @@ export function useMyPostedJobs(enabled = true) {
   });
 }
 
-/** Every submission this wallet has made, across all jobs, newest first â€” the "worked on" side of bounty history. */
+/** Every submission this wallet has made, across all jobs, newest first — the "worked on" side of bounty history. */
 export function useMyWorkSubmissions(enabled = true) {
   const { walletAddress } = useAuth();
   return useQuery({
@@ -167,7 +167,7 @@ export function useMyWorkSubmissions(enabled = true) {
   });
 }
 
-// â”€â”€ Create job â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Create job ───────────────────────────────────────────────
 export function useCreateJob() {
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
@@ -242,11 +242,11 @@ export function useCreateJob() {
   });
 }
 
-// â”€â”€ Edit job â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Edit job ─────────────────────────────────────────────────
 /**
  * Poster-only edit of an existing bounty. The copy fields (title, description,
  * platform, target, deadline) are always safe to change; the money fields are
- * only sent when the caller decided they're still editable â€” see
+ * only sent when the caller decided they're still editable — see
  * `isBudgetEditable`. `total_budget` has to move with them or the escrow figure
  * on the card and the detail page goes stale.
  */
@@ -305,7 +305,7 @@ export function useUpdateJob() {
 
 /**
  * A bounty stays editable while it's still live. Completed, cancelled, expired
- * and disputed jobs are the record of what was agreed, so they freeze â€” a
+ * and disputed jobs are the record of what was agreed, so they freeze — a
  * dispute in particular is being read by an admin.
  */
 export function isJobEditable(job: WorkJob): boolean {
@@ -328,7 +328,7 @@ export function isBudgetEditable(job: WorkJob): boolean {
   );
 }
 
-// â”€â”€ Applications (contract jobs) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Applications (contract jobs) ─────────────────────────────
 export function useJobApplications(jobId: string | undefined) {
   return useQuery({
     queryKey: ['work-apps', jobId],
@@ -398,14 +398,14 @@ export function useAwardApplicant() {
       qc.invalidateQueries({ queryKey: ['work-job', v.job_id] });
       // Not "funds escrowed": with no contract deployed this awards the work and
       // nothing else. The money moves when the submission is approved and paid.
-      toast.success('Awarded â€” they can start work');
+      toast.success('Awarded — they can start work');
     },
     onError: (e: any) => toast.error(e.message || 'Failed to award'),
   });
 }
 
 
-// â”€â”€ Submissions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Submissions ──────────────────────────────────────────────
 export function useJobSubmissions(jobId: string | undefined) {
   return useQuery({
     queryKey: ['work-subs', jobId],
@@ -537,8 +537,8 @@ async function sendPayout(params: {
 /**
  * Recompute a job's rollups from its submissions.
  *
- * Nothing in the database maintains `units_approved` or `released_amount` â€”
- * only `application_count` and `submission_count` have triggers â€” so both sat
+ * Nothing in the database maintains `units_approved` or `released_amount` —
+ * only `application_count` and `submission_count` have triggers — so both sat
  * at zero while the detail page printed "0/N slots" over genuinely approved
  * work. Summing the children rather than incrementing makes this self-healing:
  * a payout that races another, or a row fixed by hand, converges on the next
@@ -568,7 +568,7 @@ async function syncJobTotals(jobId: string, walletAddress: string) {
 }
 
 /**
- * Approve a submission, and â€” unless the poster explicitly opts out â€” pay it in
+ * Approve a submission, and — unless the poster explicitly opts out — pay it in
  * the same step.
  *
  * `pay: false` exists for the poster who settles elsewhere (an off-platform
@@ -623,7 +623,7 @@ export function useApproveSubmission() {
       qc.invalidateQueries({ queryKey: ['work-subs', v.job_id] });
       qc.invalidateQueries({ queryKey: ['work-job', v.job_id] });
       qc.invalidateQueries({ queryKey: ['work-my-submissions'] });
-      toast.success(result.paid ? 'Approved and paid' : 'Approved â€” not paid yet');
+      toast.success(result.paid ? 'Approved and paid' : 'Approved — not paid yet');
     },
     onError: (e: any) => toast.error(e.message || 'Failed to approve'),
   });
@@ -704,7 +704,7 @@ export function useRejectSubmission() {
   });
 }
 
-// â”€â”€ Reviews â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Reviews ──────────────────────────────────────────────────
 export function useJobReviews(jobId: string | undefined) {
   return useQuery({
     queryKey: ['work-reviews', jobId],
@@ -758,7 +758,7 @@ export function useLeaveReview() {
   });
 }
 
-// â”€â”€ Dispute â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Dispute ──────────────────────────────────────────────────
 export function useOpenDispute() {
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
@@ -790,13 +790,13 @@ export function useOpenDispute() {
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-job', v.job_id] });
       qc.invalidateQueries({ queryKey: ['work-disputes-admin'] });
-      toast.success('Dispute opened â€” admin will review');
+      toast.success('Dispute opened — admin will review');
     },
     onError: (e: any) => toast.error(e.message || 'Failed to open dispute'),
   });
 }
 
-// â”€â”€ Admin: disputes queue + resolve â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Admin: disputes queue + resolve ──────────────────────────
 export function useAdminDisputes() {
   return useQuery({
     queryKey: ['work-disputes-admin'],
@@ -863,8 +863,8 @@ export function useAdminResolveDispute() {
         : 'resolved_poster';
 
       // Column names verified against the live schema. Three of these were
-      // wrong since day one â€” `resolve_tx_hash`, `resolution_notes` and a
-      // `resolved_by_address` that did not exist at all â€” so every resolve
+      // wrong since day one — `resolve_tx_hash`, `resolution_notes` and a
+      // `resolved_by_address` that did not exist at all — so every resolve
       // attempt came back `42703 column does not exist` and bounty #2 has sat
       // disputed since June. Every `work_*` table is reached through an `as any`
       // cast, so tsc could never have caught it; check PostgREST, not the types.
