@@ -34,6 +34,8 @@ import {
   resolveLeadReaction,
   resolveNegativeLeadReaction,
   isPositiveReaction,
+  negativeThumbLabel,
+  HAS_NEGATIVE_TRAY,
   type PostReaction,
 } from '@/lib/reactions';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -90,11 +92,19 @@ function CommentRow({
   // No tray on your own comment: every reaction it could cast is one you are
   // not allowed to cast on yourself, so the button would open onto refusals.
   const likeTray = useReactionTray(!isOwn);
-  const dislikeTray = useReactionTray(!isOwn);
+  // With one negative reaction left, a hold-to-open menu of one option is worse
+  // than no menu — the hold swallows the press that would have cast the
+  // downvote. Same guard the post comment section applies; it comes back on its
+  // own the day a second negative reaction exists.
+  const dislikeTray = useReactionTray(!isOwn && HAS_NEGATIVE_TRAY);
 
   const leadReaction = isOwn ? null : resolveLeadReaction(comment.reactionCounts, comment.myReaction);
   const negativeLead = resolveNegativeLeadReaction(comment.myReaction);
   const myPositive = comment.myReaction && isPositiveReaction(comment.myReaction) ? comment.myReaction : null;
+  // Which side the viewer's reaction fell on, read through the shared predicate
+  // rather than compared against 'dislike' — reactions move between the two
+  // sides (poo just did), and a literal here would quietly stop lighting up.
+  const myNegative = !!comment.myReaction && !isPositiveReaction(comment.myReaction);
 
   const avatarUrl = comment.avatar ? buildAvatarUrl(comment.wallet_address, comment.avatar) : null;
   const handle = comment.username || `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;
@@ -256,18 +266,18 @@ function CommentRow({
                 className={cn(
                   ACTION_HIT,
                   'flex items-center gap-1 transition-colors select-none touch-none disabled:opacity-60',
-                  negativeLead || comment.myReaction === 'dislike' ? 'text-white' : 'text-white/70 hover:text-white',
+                  myNegative ? 'text-white' : 'text-white/70 hover:text-white',
                 )}
-                aria-label={reactionMeta('dislike').label}
-                aria-haspopup={isOwn ? undefined : 'menu'}
-                aria-expanded={isOwn ? undefined : dislikeTray.open}
+                aria-label={negativeThumbLabel(comment.myReaction)}
+                aria-haspopup={!isOwn && HAS_NEGATIVE_TRAY ? 'menu' : undefined}
+                aria-expanded={!isOwn && HAS_NEGATIVE_TRAY ? dislikeTray.open : undefined}
               >
                 {negativeLead ? (
                   <span data-engaged-glyph className="w-4 h-4 flex items-center justify-center text-sm leading-none" aria-hidden="true">
                     {reactionMeta(negativeLead).emoji}
                   </span>
                 ) : (
-                  <ThumbsDown className={cn('w-4 h-4', comment.myReaction === 'dislike' && 'fill-current')} />
+                  <ThumbsDown className={cn('w-4 h-4', myNegative && 'fill-current')} />
                 )}
                 {comment.dislikes > 0 && <span className="text-xs">{comment.dislikes}</span>}
               </button>
