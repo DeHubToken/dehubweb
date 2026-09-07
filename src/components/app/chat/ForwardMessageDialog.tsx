@@ -94,9 +94,9 @@ export function ForwardMessageDialog({
             <p className="text-center text-sm text-zinc-500 py-8">Loading…</p>
           ) : filtered.length === 0 ? (
             <AppState
-              icon={query ? 'search' : 'messages'}
-              title={query ? 'No conversations found' : 'No conversations yet'}
-              kind={query ? 'search-empty' : 'empty'}
+              icon={search ? 'search' : 'messages'}
+              title={search ? 'No conversations found' : 'No conversations yet'}
+              kind={search ? 'search-empty' : 'empty'}
               size="drawer"
             />
           ) : (

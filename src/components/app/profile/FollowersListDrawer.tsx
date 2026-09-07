@@ -485,7 +485,7 @@ export function FollowersListDrawer({
             </div>
           ) : users.length === 0 ? (
             <AppState
-              icon={debouncedSearch ? 'search' : 'members'}
+              icon={debouncedSearch ? 'search' : 'accounts'}
               title={debouncedSearch
                 ? 'No results found'
                 : title === 'Followers' ? 'No followers yet' : 'Not following anyone'}
