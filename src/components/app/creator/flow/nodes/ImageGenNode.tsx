@@ -205,13 +205,13 @@ export default function ImageGenNode({ id, data, selected }: NodeProps<FlowNode>
 
       {generations.length > 1 && (
         <div className="absolute left-1/2 top-full mt-2 flex -translate-x-1/2 items-center gap-1 rounded-full border border-white/10 bg-zinc-950/90 px-1 py-0.5 text-[10px] text-white/70 backdrop-blur" onMouseDown={(e) => e.stopPropagation()}>
-          <button type="button" onClick={() => step(-1)} disabled={genIdx <= 0} className="flex h-5 w-5 items-center justify-center rounded-full hover:bg-white/10 disabled:opacity-30" aria-label={t('creatorFlow.previousResult')}>
+          <button type="button" onClick={() => step(-1)} disabled={genIdx <= 0} className="flex h-5 w-5 items-center justify-center rounded-md hover:bg-white/10 disabled:opacity-30" aria-label={t('creatorFlow.previousResult')}>
             <ChevronLeft size={12} />
           </button>
           <span className="tabular-nums">
             {genIdx + 1}/{generations.length}
           </span>
-          <button type="button" onClick={() => step(1)} disabled={genIdx >= generations.length - 1} className="flex h-5 w-5 items-center justify-center rounded-full hover:bg-white/10 disabled:opacity-30" aria-label={t('creatorFlow.nextResult')}>
+          <button type="button" onClick={() => step(1)} disabled={genIdx >= generations.length - 1} className="flex h-5 w-5 items-center justify-center rounded-md hover:bg-white/10 disabled:opacity-30" aria-label={t('creatorFlow.nextResult')}>
             <ChevronRight size={12} />
           </button>
         </div>

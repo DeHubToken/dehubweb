@@ -87,7 +87,7 @@ export const ProfileImageGrid = memo(function ProfileImageGrid({ images }: Profi
           >
             <div className="sticky top-0 z-10 flex justify-end p-3">
               <button
-                className="h-8 w-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/10"
+                className="h-8 w-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/10"
                 onClick={() => setSelectedImage(null)}
               >
                 <X className="h-4 w-4 text-white" />

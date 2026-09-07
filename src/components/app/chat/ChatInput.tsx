@@ -508,7 +508,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           />
           <button
             onClick={clearImage}
-            className="absolute -top-2 -right-2 w-5 h-5 bg-zinc-800 border border-white/20 rounded-full flex items-center justify-center hover:bg-zinc-700 transition-colors"
+            className="absolute -top-2 -right-2 w-5 h-5 bg-zinc-800 border border-white/20 rounded-md flex items-center justify-center hover:bg-zinc-700 transition-colors"
           >
             <X className="w-3 h-3 text-white" />
           </button>
@@ -529,7 +529,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           </span>
           <button
             onClick={clearDoc}
-            className="absolute -top-2 -right-2 w-5 h-5 bg-zinc-800 border border-white/20 rounded-full flex items-center justify-center hover:bg-zinc-700 transition-colors"
+            className="absolute -top-2 -right-2 w-5 h-5 bg-zinc-800 border border-white/20 rounded-md flex items-center justify-center hover:bg-zinc-700 transition-colors"
             aria-label="Remove attachment"
           >
             <X className="w-3 h-3 text-white" />
@@ -546,7 +546,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           </span>
           <button
             onClick={removeAudioPreview}
-            className="ml-2 w-5 h-5 bg-zinc-800 border border-white/20 rounded-full flex items-center justify-center hover:bg-zinc-700 transition-colors"
+            className="ml-2 w-5 h-5 bg-zinc-800 border border-white/20 rounded-md flex items-center justify-center hover:bg-zinc-700 transition-colors"
           >
             <X className="w-3 h-3 text-white" />
           </button>

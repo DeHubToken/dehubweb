@@ -289,7 +289,7 @@ function PastStagesSection({ stages }: { stages: AudioSpace[] }) {
                 {stage.recording_url ? (
                   <button
                     onClick={() => toggleStageRecording(stage)}
-                    className="shrink-0 w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-all"
+                    className="shrink-0 w-9 h-9 rounded-xl bg-white/15 hover:bg-white/25 flex items-center justify-center transition-all"
                   >
                     {isPlaying ? (
                       <span className="flex gap-0.5">
@@ -302,7 +302,7 @@ function PastStagesSection({ stages }: { stages: AudioSpace[] }) {
                     )}
                   </button>
                 ) : (
-                  <div className="shrink-0 w-9 h-9 rounded-full bg-white/5 flex items-center justify-center">
+                  <div className="shrink-0 w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center">
                     <MicOff className="w-4 h-4 text-white/20" />
                   </div>
                 )}

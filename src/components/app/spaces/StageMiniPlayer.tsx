@@ -137,7 +137,7 @@ export function StageMiniPlayer() {
             <button
               onClick={toggleMute}
               className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center transition-all",
+                "w-8 h-8 rounded-xl flex items-center justify-center transition-all",
                 isMuted
                   ? "bg-white/10 hover:bg-white/20 text-white/60"
                   : "bg-white/20 hover:bg-white/30 text-white ring-2 ring-white/30"
@@ -151,7 +151,7 @@ export function StageMiniPlayer() {
           {/* Leave / End */}
           <button
             onClick={handleLeaveOrEnd}
-            className="w-8 h-8 rounded-full bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
+            className="w-8 h-8 rounded-xl bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
             title={myRole === 'host' ? t('stages.endStage') : t('stages.leaveStage')}
           >
             <X className="w-4 h-4" />
