@@ -13,4 +13,11 @@ describe('desktop toast positioning', () => {
     expect(TOAST_FIT_CLASSES).not.toMatch(/(?:^|\s)inset-x-0(?:\s|$)/);
     expect(TOAST_FIT_CLASSES).not.toMatch(/(?:^|\s)mx-auto(?:\s|$)/);
   });
+
+  it('pins shrink-wrapped corner toasts to the matching rail edge', () => {
+    expect(TOAST_FIT_CLASSES).toContain('group-data-[x-position=right]:left-auto');
+    expect(TOAST_FIT_CLASSES).toContain('group-data-[x-position=right]:right-0');
+    expect(TOAST_FIT_CLASSES).toContain('group-data-[x-position=left]:left-0');
+    expect(TOAST_FIT_CLASSES).toContain('group-data-[x-position=left]:right-auto');
+  });
 });
