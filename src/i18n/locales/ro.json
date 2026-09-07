@@ -1433,6 +1433,9 @@
     "turn_on_desktop_notifications": "Activezi notificările de pe desktop?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Află despre răspunsuri, bacșișuri și mesaje cât timp ești în altă filă.",
     "turn_on": "Activează",
+    "push_blocked_title": "Notificările nu ajung la tine",
+    "push_blocked_body": "Sistemul tău blochează notificările pentru acest browser, așa că nu primești nimic cât timp DeHub este închis. Reactivează-le pentru browserul tău în setările de notificări ale sistemului.",
+    "push_blocked_more": "Mai multe detalii",
     "not_now": "Nu acum"
   },
   "staking": {

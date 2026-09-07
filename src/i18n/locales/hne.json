@@ -1576,6 +1576,9 @@
     "turn_on_desktop_notifications": "डेस्कटॉप सूचना चालू करन?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "दूसर टैब म रहत बेरा घलो जवाब, टिप अउ संदेश के खबर पावव।",
     "turn_on": "चालू करव",
+    "push_blocked_title": "तोर ला नोटिफिकेशन नई मिलत हे",
+    "push_blocked_body": "तोर सिस्टम ए ब्राउज़र बर नोटिफ़िकेशन ब्लॉक करत हावय, जइसे डीहब बंद रहय तभे कुछु तोला नई मिलय। तोर सिस्टम नोटिफ़िकेशन सेटिंग म तोर ब्राउज़र बर ओला फेर चालू करव।",
+    "push_blocked_more": "अउर बिस्तार",
     "not_now": "अभी नइ"
   },
   "staking": {

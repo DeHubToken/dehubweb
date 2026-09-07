@@ -1749,6 +1749,9 @@
     "turn_on_desktop_notifications": "ডেস্কটপ নোটিফিকেশন চালু করবা নি?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "আরেক ট্যাবো থাকলেও জবাব, টিপ আর মেসেজর খবর পাইন।",
     "turn_on": "চালু করউকা",
+    "push_blocked_title": "Notification apnar kache pouchchhe na",
+    "push_blocked_body": "আপনার ব্রাউজারের জন্য নোটিফিকেশন ব্লক করছে আপনার সিস্টেম, তাই DeHub বন্ধ থাকা অবস্থায় কিছুই আপনার কাছে পৌঁছাবে না। আপনার সিস্টেম নোটিফিকেশন সেটিংসে আপনার ব্রাউজারের জন্য সেগুলো আবার চালু করুন।",
+    "push_blocked_more": "আরো বিস্তারিত",
     "not_now": "অখন নায়"
   },
   "staking": {

@@ -1609,6 +1609,9 @@
     "turn_on_desktop_notifications": "开启桌面通知？",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "在其他标签页时也能第一时间收到回复、打赏和私信提醒。",
     "turn_on": "开启",
+    "push_blocked_title": "通知未送达您",
+    "push_blocked_body": "您的系统正在阻止此浏览器的通知，因此当 DeHub 关闭时，您将收不到任何消息。请在您的系统通知设置中重新开启您浏览器的通知。",
+    "push_blocked_more": "更多细节",
     "not_now": "暂不"
   },
   "staking": {

@@ -1606,6 +1606,9 @@
     "turn_on_desktop_notifications": "Desktop-Benachrichtigungen einschalten?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Erfahre von Antworten, Tips und DMs, während du in einem anderen Tab bist.",
     "turn_on": "Einschalten",
+    "push_blocked_title": "Benachrichtigungen erreichen Sie nicht",
+    "push_blocked_body": "Dein System blockiert Benachrichtigungen für diesen Browser, daher erreicht dich nichts, während DeHub geschlossen ist. Schalte sie in deinen Systemeinstellungen für Benachrichtigungen für deinen Browser wieder ein.",
+    "push_blocked_more": "Mehr Details",
     "not_now": "Jetzt nicht"
   },
   "staking": {

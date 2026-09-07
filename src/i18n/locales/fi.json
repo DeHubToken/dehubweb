@@ -1548,6 +1548,9 @@
     "turn_on_desktop_notifications": "Otetaanko työpöytäilmoitukset käyttöön?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Saat tiedon vastauksista, tipeistä ja viesteistä, vaikka olisit toisella välilehdellä.",
     "turn_on": "Ota käyttöön",
+    "push_blocked_title": "Ilmoituksia ei tule sinulle",
+    "push_blocked_body": "Systeemisi estää ilmoitukset tälle selaimelle, joten mikään ei tavoita sinua DeHubin ollessa suljettuna. Kytke ne takaisin päälle selaimellesi järjestelmäsi ilmoitusasetuksissa.",
+    "push_blocked_more": "Lisää yksityiskohtia",
     "not_now": "Ei nyt"
   },
   "staking": {

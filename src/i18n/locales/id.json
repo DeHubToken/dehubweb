@@ -1606,6 +1606,9 @@
     "turn_on_desktop_notifications": "Aktifkan notifikasi desktop?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Dapat pemberitahuan soal balasan, tip, dan DM saat Anda berada di tab lain.",
     "turn_on": "Aktifkan",
+    "push_blocked_title": "Notifikasi tidak sampai kepada Anda",
+    "push_blocked_body": "Sistem Anda memblokir notifikasi untuk peramban ini, jadi tidak ada yang sampai kepada Anda saat DeHub ditutup. Aktifkan kembali untuk peramban Anda di pengaturan notifikasi sistem Anda.",
+    "push_blocked_more": "Lebih detail",
     "not_now": "Nanti saja"
   },
   "staking": {

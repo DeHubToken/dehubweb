@@ -1578,6 +1578,9 @@
     "turn_on_desktop_notifications": "نشغّل تنبيهات سطح المكتب؟",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "اعرف بالردود والإكراميات والرسائل وانت بتبويب ثاني.",
     "turn_on": "شغّلها",
+    "push_blocked_title": "ما توصلك إشعارات",
+    "push_blocked_body": "نظامك يمنع الإشعارات لهذا المتصفح، لذلك لا يصلك شيء أثناء إغلاق DeHub. أعد تشغيلها لمتصفحك في إعدادات إشعارات نظامك.",
+    "push_blocked_more": "تفاصيل أكثر",
     "not_now": "مو هسه"
   },
   "staking": {

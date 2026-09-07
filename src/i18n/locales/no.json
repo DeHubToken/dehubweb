@@ -1585,6 +1585,9 @@
     "turn_on_desktop_notifications": "Vil du slå på skrivebordsvarsler?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Få beskjed om svar, tips og DM-er mens du er i en annen fane.",
     "turn_on": "Slå på",
+    "push_blocked_title": "Varsler når ikke frem til deg",
+    "push_blocked_body": "Systemet ditt blokkerer varsler for denne nettleseren, så ingenting når deg mens DeHub er lukket. Slå dem på igjen for nettleseren din i systemets varslingsinnstillinger.",
+    "push_blocked_more": "Mer detaljert",
     "not_now": "Ikke nå"
   },
   "staking": {

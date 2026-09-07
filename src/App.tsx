@@ -1,6 +1,7 @@
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { NewVersionToast } from "@/components/app/NewVersionToast";
 import { NotificationsPromptToast } from "@/components/app/NotificationsPromptToast";
+import { PushBlockedToast } from "@/components/app/PushBlockedToast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { NativeTitleTooltips } from "@/components/app/NativeTitleTooltips";
 import { MutationCache, QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
@@ -890,6 +891,12 @@ const App = () => (
                               notifications; renders nothing itself. Reads
                               auth, so it must stay inside WalletProviders. */}
                           <NotificationsPromptToast />
+
+                          {/* Says so when a granted permission is delivering
+                              nothing, which the Settings row alone only ever
+                              tells someone who goes looking. Renders nothing
+                              itself; same provider requirement as above. */}
+                          <PushBlockedToast />
 
                           {/* Swaps the OS's grey `title=` tooltip for our own
                               hover label everywhere. Renders nothing itself. */}

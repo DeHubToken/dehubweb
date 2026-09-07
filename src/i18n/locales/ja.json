@@ -1606,6 +1606,9 @@
     "turn_on_desktop_notifications": "デスクトップ通知をオンにしますか？",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "別のタブにいる間も、返信・チップ・DM をお知らせします。",
     "turn_on": "オンにする",
+    "push_blocked_title": "通知が届いていません",
+    "push_blocked_body": "お使いのブラウザでは通知がブロックされているため、DeHubが閉じている間は何も届きません。システム通知設定でブラウザの通知を再度オンにしてください。",
+    "push_blocked_more": "詳細",
     "not_now": "後で"
   },
   "staking": {

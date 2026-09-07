@@ -1610,6 +1610,9 @@
     "turn_on_desktop_notifications": "Vil du slå skrivebordsnotifikationer til?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Få besked om svar, tips og DM'er, mens du er i en anden fane.",
     "turn_on": "Slå til",
+    "push_blocked_title": "Notifikationer når dig ikke",
+    "push_blocked_body": "Dit system blokerer notifikationer for denne browser, så intet når frem til dig, mens DeHub er lukket. Slå dem til igen for din browser i dine systemnotifikationsindstillinger.",
+    "push_blocked_more": "Mere detalje",
     "not_now": "Ikke nu"
   },
   "staking": {

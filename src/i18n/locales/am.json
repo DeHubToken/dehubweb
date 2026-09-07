@@ -1615,6 +1615,9 @@
     "turn_on_desktop_notifications": "የዴስክቶፕ ማሳወቂያዎችን ማብራት?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "በሌላ ትር ላይ እያሉም ስለ ምላሾች፣ ጉርሻዎችና መልእክቶች ማሳወቂያ ያግኙ።",
     "turn_on": "አብራ",
+    "push_blocked_title": "ማሳወቂያዎች አልደረሱዎትም",
+    "push_blocked_body": "מערכתך חוסמת התראות עבור דפדפן זה, כך ששום דבר לא מגיע אליך בזמן ש-DeHub סגור. הפעל אותן מחדש עבור הדפדפן שלך בהגדרות ההתראות של המערכת שלך.",
+    "push_blocked_more": "ተጨማሪ ዝርዝር",
     "not_now": "አሁን አይደለም"
   },
   "staking": {

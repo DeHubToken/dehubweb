@@ -1586,6 +1586,9 @@
     "turn_on_desktop_notifications": "Įjungti darbalaukio pranešimus?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Sužinokite apie atsakymus, arbatpinigius ir žinutes, kol esate kitoje kortelėje.",
     "turn_on": "Įjungti",
+    "push_blocked_title": "Pranešimai nepasiekia jūsų",
+    "push_blocked_body": "Jūsų sistema blokuoja pranešimus šiai naršyklei, todėl nieko negaunate, kai DeHub yra uždarytas. Įjunkite juos vėl savo naršyklei sistemos pranešimų nustatymuose.",
+    "push_blocked_more": "Daugiau informacijos",
     "not_now": "Ne dabar"
   },
   "staking": {

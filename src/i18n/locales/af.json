@@ -1466,6 +1466,9 @@
     "turn_on_desktop_notifications": "Skakel rekenaarkennisgewings aan?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Kry 'n wenk oor antwoorde, fooitjies en DM's terwyl jy op 'n ander oortjie is.",
     "turn_on": "Skakel aan",
+    "push_blocked_title": "Kennisgewings bereik jou nie",
+    "push_blocked_body": "Jou stelsel blokkeer kennisgewings vir hierdie blaaier, so niks bereik jou terwyl DeHub gesluit is nie. Skakel dit weer aan vir jou blaaier in jou stelselkennisgewinginstellings.",
+    "push_blocked_more": "Meer besonderhede",
     "not_now": "Nie nou nie"
   },
   "staking": {

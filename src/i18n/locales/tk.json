@@ -1579,6 +1579,9 @@
     "turn_on_desktop_notifications": "Iş stoly habarnamalary açylsynmy?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Başga tabda hem bolsaňyz jogaplar, sylaglar we habarlar barada bilip duruň.",
     "turn_on": "Aç",
+    "push_blocked_title": "Bildirişler size gelmeýär",
+    "push_blocked_body": "Siziň ulgumyňyz bu brauzer üçin bildirişleri bloklaýar, şonuň üçin DeHub ýapyk wagtynda size hiç zat ýetmeýär. Olary ulgumyňyzda brauzeriňiz üçin bildiriş sazlamalarynda ýene-de açyň.",
+    "push_blocked_more": "Goý, jikme-jik aýdyň",
     "not_now": "Häzir däl"
   },
   "staking": {

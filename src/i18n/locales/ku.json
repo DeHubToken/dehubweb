@@ -1558,6 +1558,9 @@
     "turn_on_desktop_notifications": "Agahdariyên sermaseyê bên vekirin?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Dema di tabeke din de yî jî ji bersiv, bexşîş û peyaman agahdar bibe.",
     "turn_on": "Veke",
+    "push_blocked_title": "ئاگادارکردنەوەکانت پێناگەن",
+    "push_blocked_body": "سیستمی تۆ ئاگادارکردنەوەکان بۆ ئەم وێبگەڕە بلۆک دەکات، بۆیە هیچ شتێک پێناگات کاتێک DeHub داخراوە. بیانگەڕێنەوە بۆ وێبگەڕەکەت لە ڕێکخستنەکانی ئاگادارکردنەوەی سیستمی خۆت.",
+    "push_blocked_more": "زیاتر وردەکاری",
     "not_now": "Niha na"
   },
   "staking": {

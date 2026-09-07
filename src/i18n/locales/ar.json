@@ -1609,6 +1609,9 @@
     "turn_on_desktop_notifications": "تفعيل إشعارات سطح المكتب؟",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "اعرف بالردود والإكراميات والرسائل الخاصة وأنت في تبويب آخر.",
     "turn_on": "تفعيل",
+    "push_blocked_title": "لا تصلك الإشعارات",
+    "push_blocked_body": "يقوم نظامك بحظر الإشعارات لهذا المتصفح، لذلك لا يصلك أي شيء أثناء إغلاق DeHub. قم بتشغيلها مرة أخرى لمتصفحك في إعدادات إشعارات النظام لديك.",
+    "push_blocked_more": "مزيد من التفاصيل",
     "not_now": "ليس الآن"
   },
   "staking": {

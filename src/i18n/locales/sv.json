@@ -1540,6 +1540,9 @@
     "turn_on_desktop_notifications": "Vill du slå på skrivbordsaviseringar?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Få veta om svar, tips och DM medan du är i en annan flik.",
     "turn_on": "Slå på",
+    "push_blocked_title": "Aviseringar når dig inte",
+    "push_blocked_body": "Ditt system blockerar aviseringar för den här webbläsaren, så inget når dig medan DeHub är stängt. Slå på dem igen för din webbläsare i dina systemaviseringar.",
+    "push_blocked_more": "Mer detaljer",
     "not_now": "Inte nu"
   },
   "staking": {

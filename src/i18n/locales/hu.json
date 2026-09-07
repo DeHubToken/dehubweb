@@ -1548,6 +1548,9 @@
     "turn_on_desktop_notifications": "Bekapcsolod az asztali értesítéseket?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Értesülj a válaszokról, borravalókról és üzenetekről, miközben másik lapon vagy.",
     "turn_on": "Bekapcsolás",
+    "push_blocked_title": "Az értesítések nem érkeznek meg hozzád",
+    "push_blocked_body": "A rendszer blokkolja az értesítéseket ehhez a böngészőhöz, így semmi sem ér el Önhöz, amíg a DeHub zárva van. Kapcsolja vissza őket a böngészőjéhez a rendszer értesítési beállításaiban.",
+    "push_blocked_more": "Több részlet",
     "not_now": "Most nem"
   },
   "staking": {

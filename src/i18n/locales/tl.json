@@ -1484,6 +1484,9 @@
     "turn_on_desktop_notifications": "I-on ang mga desktop notification?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Malaman agad ang mga tugon, tip at DM kahit nasa ibang tab ka.",
     "turn_on": "I-on",
+    "push_blocked_title": "Hindi dumarating sa iyo ang mga notipikasyon",
+    "push_blocked_body": "Blinablock ng iyong system ang mga notification para sa browser na ito, kaya walang nakakarating sa iyo habang sarado ang DeHub. I-on muli ang mga ito para sa iyong browser sa iyong mga setting ng notification ng system.",
+    "push_blocked_more": "Mas detalyado",
     "not_now": "Hindi muna"
   },
   "staking": {

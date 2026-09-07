@@ -1586,6 +1586,9 @@
     "turn_on_desktop_notifications": "Të aktivizohen njoftimet e desktopit?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Merrni njoftim për përgjigjet, bakshishet dhe mesazhet ndërsa jeni në një skedë tjetër.",
     "turn_on": "Aktivizo",
+    "push_blocked_title": "Njoftimet nuk po ju arrijnë",
+    "push_blocked_body": "Sistemi juaj po bllokon njoftimet për këtë shfletues, kështu që asgjë nuk ju arrin ndërsa DeHub është i mbyllur. Aktivizojini përsëri për shfletuesin tuaj në cilësimet e njoftimeve të sistemit tuaj.",
+    "push_blocked_more": "Më shumë detaje",
     "not_now": "Jo tani"
   },
   "staking": {

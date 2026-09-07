@@ -1585,6 +1585,9 @@
     "turn_on_desktop_notifications": "開啟桌面通知？",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "就算你喺第二個分頁，都可以即刻知道回覆、打賞同私訊。",
     "turn_on": "開啟",
+    "push_blocked_title": "通知未送達你",
+    "push_blocked_body": "你的系統正在封鎖此瀏覽器的通知，因此當 DeHub 關閉時，你將收不到任何通知。請在你的系統通知設定中重新開啟此瀏覽器的通知。",
+    "push_blocked_more": "更多詳情",
     "not_now": "而家唔使"
   },
   "staking": {

@@ -1689,6 +1689,9 @@
     "turn_on_desktop_notifications": "ডেস্কটপ নোটিফিকেশন চালু গরিবেন নি?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "অন্য ট্যাবত থাকিলেও জবাব, টিপ আর মেসেজর খবর পাইয়্যুন।",
     "turn_on": "চালু গরন",
+    "push_blocked_title": "Notification tumar lagge pouchar na",
+    "push_blocked_body": "Tumar system browser-ar notification block korar laggi, DeHub bondho thakle kichu pao na. Tumar system notification settings-ar browser-ar laggi eita abar on koro.",
+    "push_blocked_more": "আরো বিস্তারিত",
     "not_now": "এহন নয়"
   },
   "staking": {

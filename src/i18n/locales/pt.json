@@ -1610,6 +1610,9 @@
     "turn_on_desktop_notifications": "Ativar as notificações no computador?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Fique a saber de respostas, gorjetas e mensagens enquanto está noutro separador.",
     "turn_on": "Ativar",
+    "push_blocked_title": "Notificações não estão chegando para você",
+    "push_blocked_body": "Seu sistema está bloqueando as notificações para este navegador, então nada chega até você enquanto o DeHub estiver fechado. Reative-as para o seu navegador nas configurações de notificação do seu sistema.",
+    "push_blocked_more": "Mais detalhes",
     "not_now": "Agora não"
   },
   "staking": {

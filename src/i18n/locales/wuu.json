@@ -1575,6 +1575,9 @@
     "turn_on_desktop_notifications": "打开桌面通知？",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "侬勒别个标签页浪向个辰光也能第一时间晓得回复、打赏搭私信。",
     "turn_on": "打开",
+    "push_blocked_title": "通知呒法送达你",
+    "push_blocked_body": "侬个系统挡脱了搿只浏览器个通知，所以DeHub关脱个辰光，侬啥也收不到。到侬系统通知设置里向，重新打开侬浏览器个通知。",
+    "push_blocked_more": "更多細節",
     "not_now": "暂勿要"
   },
   "staking": {

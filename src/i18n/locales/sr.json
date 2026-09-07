@@ -1560,6 +1560,9 @@
     "turn_on_desktop_notifications": "Да укључимо обавештења на радној површини?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Сазнајте за одговоре, напојнице и поруке док сте у другој картици.",
     "turn_on": "Укључи",
+    "push_blocked_title": "Обавештења вам не стижу",
+    "push_blocked_body": "Vaš sistem blokira obaveštenja za ovaj pretraživač, tako da ništa ne stiže do vas dok je DeHub zatvoren. Ponovo ih uključite za vaš pretraživač u podešavanjima sistemskih obaveštenja.",
+    "push_blocked_more": "Više detalja",
     "not_now": "Не сада"
   },
   "staking": {

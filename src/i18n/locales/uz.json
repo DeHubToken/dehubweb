@@ -1604,6 +1604,9 @@
     "turn_on_desktop_notifications": "Ish stoli bildirishnomalari yoqilsinmi?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Boshqa varaqda bo'lsangiz ham javoblar, choychaqa va xabarlar haqida bilib turing.",
     "turn_on": "Yoqish",
+    "push_blocked_title": "Bildirishnomalar sizga yetib bormayapti",
+    "push_blocked_body": "Sizning tizimingiz ushbu brauzer uchun bildirishnomalarni bloklayapti, shuning uchun DeHub yopiq bo'lganda sizga hech narsa yetib kelmaydi. Ularni tizim bildirishnomalari sozlamalarida brauzeringiz uchun qayta yoqing.",
+    "push_blocked_more": "Qo'shimcha ma'lumot",
     "not_now": "Hozir emas"
   },
   "staking": {

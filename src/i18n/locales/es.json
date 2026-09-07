@@ -1606,6 +1606,9 @@
     "turn_on_desktop_notifications": "¿Activar las notificaciones de escritorio?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Entérate al momento de respuestas, propinas y mensajes mientras estás en otra pestaña.",
     "turn_on": "Activar",
+    "push_blocked_title": "Las notificaciones no te están llegando",
+    "push_blocked_body": "Tu sistema está bloqueando las notificaciones para este navegador, por lo que no te llega nada mientras DeHub está cerrado. Vuelve a activarlas para tu navegador en la configuración de notificaciones de tu sistema.",
+    "push_blocked_more": "Más detalle",
     "not_now": "Ahora no"
   },
   "staking": {

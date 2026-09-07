@@ -1584,6 +1584,9 @@
     "turn_on_desktop_notifications": "Me whakahohe ngā pānui pouaka?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Kia mōhio koe ki ngā whakautu, koha me ngā karere i a koe kei tētahi atu ripa.",
     "turn_on": "Whakahohea",
+    "push_blocked_title": "Kāore ngā whakamōhiotanga e tae atu ki a koe",
+    "push_blocked_body": "Kei te aukati tō pūnaha i ngā whakamōhiotanga mō tēnei pūwhara, nō reira kāore he mea e tae atu ki a koe i te wā e kati ana a DeHub. Whakakā anō ēnei mō tō pūwhara i roto i ngā tautuhinga whakamōhiotanga o tō pūnaha.",
+    "push_blocked_more": "He taipitopito atu",
     "not_now": "Kaua i tēnei wā"
   },
   "staking": {

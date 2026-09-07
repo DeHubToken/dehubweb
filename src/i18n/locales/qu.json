@@ -1617,6 +1617,9 @@
     "turn_on_desktop_notifications": "¿Antañiqiq willakuykunata kichanki?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Huk qhawanapi kachkaspapas kutichiykunamanta, quykunamanta, willakuykunamantapas yachay.",
     "turn_on": "Kichay",
+    "push_blocked_title": "Notificaciones mana chayachkankichu",
+    "push_blocked_body": "Kay sistemaqa hark’an kay browserpaq willakuykunata, chaysun mana imapas chayamusqayki DeHub wañusqa kachkaptin. Kichariyñataqmi chaykunataqa browsernikipaq sistema willakuykunapi.",
+    "push_blocked_more": "Añay",
     "not_now": "Manaraq"
   },
   "staking": {
