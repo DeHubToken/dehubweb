@@ -63,7 +63,7 @@ export default function AffiliatePage() {
   const [imgLoaded, setImgLoaded] = useState(false);
 
   // Bump this whenever the share-image renderer changes so all users pick up the new look.
-  const RENDERER_VERSION = "4";
+  const RENDERER_VERSION = "5";
   useEffect(() => {
     if (!versionKey) return;
     try {

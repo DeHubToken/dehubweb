@@ -34,7 +34,7 @@ export default function ReferralLanding() {
 
   // PNG for OG/social meta (cached cross-platform), SVG for the fast in-page preview.
   // Bump `v` whenever the share-image renderer changes so social platforms and browsers refetch.
-  const SHARE_IMG_VERSION = "4";
+  const SHARE_IMG_VERSION = "5";
   const ogImage = `${getAffiliateShareImageUrl(code, 1200, 630, "png")}&v=${SHARE_IMG_VERSION}`;
   const baseShareImage = `${getAffiliateShareImageUrl(code, 1200, 630, "svg")}&v=${SHARE_IMG_VERSION}`;
   const shareImage = imgRetry > 0 ? `${baseShareImage}&r=${imgRetry}` : baseShareImage;
