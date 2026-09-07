@@ -6,10 +6,13 @@ import {
   Bookmark,
   CalendarDays,
   Crosshair,
+  Coins,
   Film,
   Home,
   Image as ImageIcon,
   Layers,
+  Landmark,
+  Link2,
   Mail,
   MessageSquare,
   Radio,
@@ -37,6 +40,7 @@ import {
   Trophy,
   Tv,
   User,
+  Vault,
   type LucideIcon,
   Zap,
 } from 'lucide-react';
@@ -139,7 +143,7 @@ export type ThemeIconKey =
   | 'governance' | 'trophy' | 'notifications' | 'settings' | 'stages'
   | 'assistant' | 'lock' | 'profile' | 'arcade' | 'stores' | 'bounties'
   | 'events' | 'stats' | 'ads' | 'command' | 'email' | 'accounts'
-  | 'usernames' | 'tv' | 'superpowers';
+  | 'usernames' | 'tv' | 'superpowers' | 'dao' | 'staking' | 'bridge' | 'buy';
 
 /**
  * Raster icon replacements shared by every non-War themed page.
@@ -245,7 +249,11 @@ const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
   accounts: Users,
   usernames: AtSign,
   tv: Tv,
-  superpowers: Wand2,
+  superpowers: Zap,
+  dao: Landmark,
+  staking: Vault,
+  bridge: Link2,
+  buy: Coins,
 };
 
 export function resolveThemeIconKey(src: string): ThemeIconKey | null {

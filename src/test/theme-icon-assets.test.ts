@@ -15,7 +15,7 @@ const PAGE_KEYS = [
   'wand', 'communities', 'careers', 'features', 'glossary', 'governance',
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
-  'email', 'accounts', 'usernames', 'tv', 'superpowers',
+  'email', 'accounts', 'usernames', 'tv', 'superpowers', 'dao', 'staking', 'bridge', 'buy',
 ];
 
 describe('theme icon assets', () => {
@@ -37,18 +37,18 @@ describe('theme icon assets', () => {
     }
   });
 
-  it('uses each theme native wand artwork for SuperPowers', () => {
+  it('keeps SuperPowers electric and distinct from Prompt in every theme', () => {
     for (const theme of [...FULL_THEMES, 'system']) {
       const directory = resolve(__dirname, `../../public/theme-icons/${theme}`);
       expect(readFileSync(`${directory}/superpowers.webp`), theme)
-        .toEqual(readFileSync(`${directory}/wand.webp`));
+        .not.toEqual(readFileSync(`${directory}/wand.webp`));
     }
 
     const iconSource = readFileSync(
       resolve(__dirname, '../../src/components/app/war/WarHudIcon.tsx'),
       'utf8',
     );
-    expect(iconSource).toMatch(/superpowers:\s*Wand2/);
+    expect(iconSource).toMatch(/superpowers:\s*Zap/);
   });
 
   it('routes old asset stems to the matching themed WebP', () => {
@@ -106,6 +106,12 @@ describe('theme icon assets', () => {
       'src/pages/app/UsernamesPage.tsx',
       'src/pages/app/TVPage.tsx',
       'src/pages/app/SuperPowersPage.tsx',
+      'src/pages/app/DaoPage.tsx',
+      'src/pages/app/StakingPage.tsx',
+      'src/pages/app/BridgePage.tsx',
+      'src/pages/app/BuyCoinsPage.tsx',
+      'src/pages/app/Top100CryptosPage.tsx',
+      'src/pages/app/AgentsPage.tsx',
       'src/pages/app/WorkPage.tsx',
     ];
 
@@ -132,6 +138,7 @@ describe('theme icon assets', () => {
       'src/pages/app/AccountsPage.tsx': /\bUsers\b/,
       'src/pages/app/UsernamesPage.tsx': /\bAtSign\b/,
       'src/pages/app/SuperPowersPage.tsx': /\bRocket\b/,
+      'src/pages/app/DaoPage.tsx': /\bLandmark\b/,
       'src/components/app/tv/TVPreviewCard.tsx': /\bTv\b/,
       'src/components/app/tv/TVChannelCard.tsx': /\bTv\b/,
     };
@@ -142,6 +149,31 @@ describe('theme icon assets', () => {
         .filter((line) => line.includes("from 'lucide-react'"))
         .join('\n');
       expect(imports, file).not.toMatch(pattern);
+    }
+  });
+
+  it('keeps financial page identity separate from token logos and navigation glyphs', () => {
+    const identities = {
+      'src/pages/app/SuperPowersPage.tsx': 'superpowers',
+      'src/pages/app/DaoPage.tsx': 'dao',
+      'src/pages/app/StakingPage.tsx': 'staking',
+      'src/pages/app/BridgePage.tsx': 'bridge',
+      'src/pages/app/BuyCoinsPage.tsx': 'buy',
+      'src/pages/app/Top100CryptosPage.tsx': 'stats',
+      'src/pages/app/AgentsPage.tsx': 'assistant',
+    };
+
+    for (const [file, icon] of Object.entries(identities)) {
+      const source = readFileSync(resolve(__dirname, '../..', file), 'utf8');
+      expect(source, file).toContain(`<ThemedIcon icon="${icon}"`);
+    }
+
+    for (const file of ['src/pages/app/StakingPage.tsx', 'src/pages/app/BridgePage.tsx']) {
+      const imports = readFileSync(resolve(__dirname, '../..', file), 'utf8')
+        .split('\n')
+        .filter((line) => line.startsWith('import '))
+        .join('\n');
+      expect(imports, file).not.toMatch(/dehubCoin/);
     }
   });
 
