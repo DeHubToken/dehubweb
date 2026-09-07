@@ -563,6 +563,8 @@ export interface QuotePostMintResponse {
   uri?: string;
   quotedTokenId: number;
   isQuotePost: boolean;
+  /** The quote is live, but outside public Home-feed discovery for today. */
+  homeFeedRestricted?: boolean;
   /**
    * This quote was already posted by an earlier send of the same
    * `idempotencyKey` — `createdTokenId` is that quote, not a new one.

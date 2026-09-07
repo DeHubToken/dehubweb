@@ -102,6 +102,11 @@ export interface MintResponse {
   scheduled?: boolean;
   scheduledAt?: string;
   /**
+   * The post was published after the creator's free daily text-post allowance
+   * and will not appear in public Home-feed discovery.
+   */
+  homeFeedRestricted?: boolean;
+  /**
    * This upload had already been published by an earlier send of the same
    * `idempotencyKey`; `createdTokenId` is that existing post, not a new one.
    */
