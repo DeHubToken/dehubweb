@@ -821,7 +821,8 @@
     "postRemoved": "تمہاری پوسٹ ہٹا دی گئی",
     "newNotification": "نئی خبر",
     "oneOther": "1 اور",
-    "nOthers": "{{count}} اور"
+    "nOthers": "{{count}} اور",
+    "burstBody": "{{count}} نوي نوٽيفڪيشن {{who}} کان"
   },
   "leaderboard": {
     "title": "لیڈر بورڈ",
