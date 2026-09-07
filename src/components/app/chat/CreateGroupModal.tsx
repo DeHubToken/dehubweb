@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useUserSearchForDM } from '@/hooks/use-messages';
+import { AppState } from '@/components/app/AppState';
 import { createGroup, type DeHubUser, type DeHubConversation, getAuthToken, DEHUB_CDN_BASE } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { toast } from 'sonner';
@@ -279,9 +280,7 @@ export function CreateGroupModal({
                   <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
                 </div>
               ) : searchResults?.items?.length === 0 ? (
-                <div className="text-center py-6 text-zinc-500">
-                  <p className="text-sm">No users found</p>
-                </div>
+                <AppState icon="search" title="No users found" description="Try a different search." kind="search-empty" size="compact" />
               ) : (
                 <div className="space-y-1 px-2">
                   {searchResults?.items?.map((user) => {

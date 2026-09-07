@@ -33,6 +33,7 @@ import { getPostLikers, type PostLiker } from '@/lib/api/dehub';
 import { NEGATIVE_REACTIONS, REACTION_LIST, type PostReaction } from '@/lib/reactions';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { engagementWeight, formatEngagementWeight, NO_BADGE_ENGAGEMENT_WEIGHT } from '@/lib/engagement-weight';
+import { AppState } from '@/components/app/AppState';
 
 const PAGE_SIZE = 50;
 
@@ -126,11 +127,9 @@ export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfo
               <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
             </div>
           ) : !canView ? (
-            <p className="text-zinc-500 text-sm text-center py-10">
-              Only the author can see who reacted to a post.
-            </p>
+            <AppState icon="lock" title="Reactions are private" description="Only the post author can view this list." kind="restricted" size="drawer" />
           ) : groups.length === 0 ? (
-            <p className="text-zinc-500 text-sm text-center py-10">No reactions yet.</p>
+            <AppState icon="pinned" title="No reactions yet" description="Reactions to this post will appear here." size="drawer" />
           ) : (
             <div className="space-y-5">
               {groups.map(({ meta, total, people }) => (

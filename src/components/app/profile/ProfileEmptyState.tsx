@@ -1,4 +1,5 @@
-import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { AppState } from '@/components/app/AppState';
+import { resolveThemeIconKey } from '@/components/app/war/WarHudIcon';
 
 interface ProfileEmptyStateProps {
   iconSrc: string;
@@ -15,17 +16,16 @@ interface ProfileEmptyStateProps {
  * so we render immediately — no loading gate needed.
  */
 export function ProfileEmptyState({ iconSrc, iconAlt, title, subtitle, iconClassName }: ProfileEmptyStateProps) {
+  const icon = resolveThemeIconKey(iconSrc) ?? 'profile';
+
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center">
-      <BrandIcon
-        src={iconSrc}
-        alt={iconAlt}
-        decoding="sync"
-        fetchPriority="high"
-        className={`w-16 h-16 mb-3 object-contain ${iconClassName ?? ''}`}
-      />
-      <p className="text-white text-lg font-medium">{title}</p>
-      <p className="text-white/70 text-sm mt-1">{subtitle}</p>
-    </div>
+    <AppState
+      icon={icon}
+      iconAlt={iconAlt}
+      title={title}
+      description={subtitle}
+      size="section"
+      iconClassName={iconClassName}
+    />
   );
 }

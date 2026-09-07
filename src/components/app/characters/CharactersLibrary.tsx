@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { useUserCharacters, useDeleteCharacter, type UserCharacter } from '@/hooks/use-user-characters';
 import { CharacterCreateModal } from './CharacterCreateModal';
+import { AppState } from '@/components/app/AppState';
 
 type Filter = 'mine' | 'public';
 
@@ -108,13 +109,16 @@ export function CharactersLibrary() {
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-2xl bg-white/[0.02] border border-white/5 p-10 text-center text-zinc-500 text-sm">
-          {query
-            ? 'No characters match your search.'
-            : filter === 'mine'
-              ? "You haven't created any characters yet. Click \"New character\" to get started."
-              : 'No public characters yet.'}
-        </div>
+        <AppState
+          icon={query ? 'search' : 'profile'}
+          title={query
+            ? 'No characters match your search'
+            : filter === 'mine' ? 'No characters yet' : 'No public characters yet'}
+          description={query ? 'Try a different name or description.' : filter === 'mine' ? 'Create a character to get started.' : undefined}
+          kind={query ? 'search-empty' : 'empty'}
+          size="section"
+          primaryAction={filter === 'mine' && !query ? { label: 'New character', onClick: () => setCreateOpen(true) } : undefined}
+        />
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {filtered.map((c) => {

@@ -10,6 +10,7 @@ import {
   CommandSeparator,
 } from '@/components/ui/command';
 import { useDocsSearch } from '@/hooks/useDocsSearch';
+import { AppState } from '@/components/app/AppState';
 
 export const SearchDialog = () => {
   const {
@@ -118,15 +119,13 @@ export const SearchDialog = () => {
 
         {query && results.length === 0 && (
           <CommandEmpty>
-            <div className="py-6 text-center">
-              <Search className="mx-auto h-10 w-10 text-muted-foreground mb-2" />
-              <p className="text-sm text-muted-foreground">
-                No results found for "{query}"
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Try different keywords or check spelling
-              </p>
-            </div>
+            <AppState
+              icon="search"
+              title={`No results found for "${query}"`}
+              description="Try different keywords or check the spelling."
+              kind="search-empty"
+              size="compact"
+            />
           </CommandEmpty>
         )}
 

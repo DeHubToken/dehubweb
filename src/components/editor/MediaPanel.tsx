@@ -9,6 +9,7 @@ import { importFiles as importFilesShared } from "@/lib/editor/importFiles";
 import { useEditorQuota } from "@/hooks/use-editor-quota";
 import { formatBytes } from "@/lib/editor/quota";
 import { deleteEditorAsset } from "@/lib/editor/cloudMedia";
+import { AppState } from "@/components/app/AppState";
 
 function formatDuration(s?: number | null) {
   if (!s || !Number.isFinite(s)) return "—";
@@ -175,9 +176,11 @@ export function MediaPanel() {
 
       <div className="flex-1 overflow-y-auto px-2 pb-3">
         {media.length === 0 ? (
-          <p className="px-2 py-6 text-center text-xs text-white/50">
-            {hydrated ? "No media yet. Import to get started." : "Loading your media…"}
-          </p>
+          hydrated ? (
+            <AppState icon="images" title="No media yet" description="Import media to get started." size="compact" />
+          ) : (
+            <p className="px-2 py-6 text-center text-xs text-white/50">Loading your media…</p>
+          )
         ) : (
           <ul className="space-y-1.5">
             {media.map((m) => {

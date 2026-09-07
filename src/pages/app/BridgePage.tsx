@@ -23,6 +23,7 @@ import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { useTranslation } from 'react-i18next';
+import { AppState } from '@/components/app/AppState';
 import { SEOHead } from '@/components/SEOHead';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { invalidateSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
@@ -438,11 +439,15 @@ function BridgeQueue() {
           <Loader2 className="w-5 h-5 text-white/30 animate-spin" />
         </div>
       ) : error ? (
-        <p className="text-xs text-white/30 text-center py-6">Failed to load bridge transfers.</p>
+        <AppState icon="command" title="Transfers could not load" description="Try loading your bridge history again." kind="error" size="compact" />
       ) : paginated.length === 0 ? (
-        <p className="text-xs text-white/30 text-center py-6">
-          {search ? 'No transfers match your search.' : 'No bridge transfers found in the last 7 days.'}
-        </p>
+        <AppState
+          icon={search ? 'search' : 'command'}
+          title={search ? 'No matching transfers' : 'No recent bridge transfers'}
+          description={search ? 'Try a different transaction hash or address.' : 'Transfers from the last 7 days will appear here.'}
+          kind={search ? 'search-empty' : 'empty'}
+          size="compact"
+        />
       ) : (
         <div className="space-y-2">
           {paginated.map((t) => (

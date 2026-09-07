@@ -14,6 +14,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, Loader2, Ticket } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { AppState } from '@/components/app/AppState';
 import { ImagesFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
 import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
@@ -569,22 +570,14 @@ export function ImagesFeed({
 
   // Empty state component
   const EmptyState = () => (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <ThemedIcon icon="images" alt="" className="w-16 h-16 object-contain mb-4 opacity-75" />
-      <h3 className="text-white font-semibold text-lg mb-2">No Images Yet</h3>
-      <p className="text-zinc-400 text-sm max-w-xs mb-4">
-        {isError 
-          ? 'Unable to load images. Please try again.'
-          : 'Be the first to share an image!'}
-      </p>
-      <button 
-        onClick={() => refetch()}
-        className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors flex items-center gap-2"
-      >
-        <RefreshCw className="w-4 h-4" />
-        Refresh
-      </button>
-    </div>
+    <AppState
+      icon={isError ? 'notifications' : 'images'}
+      title={isError ? 'Images could not load' : 'No images yet'}
+      description={isError ? 'Try loading the image feed again.' : 'Image posts will appear here.'}
+      kind={isError ? 'error' : 'empty'}
+      size="page"
+      primaryAction={isError ? { label: 'Try again', onClick: () => refetch(), icon: <RefreshCw /> } : undefined}
+    />
   );
 
   const { isAutoRetrying } = useAutoRetryFeed({

@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { AppState } from "@/components/app/AppState";
 import { useEditorStore } from "@/store/editorStore";
 import { useEditorQuota } from "@/hooks/use-editor-quota";
 import { importOneFile } from "@/lib/editor/importFiles";
@@ -352,16 +353,22 @@ export function FreeAssetsPanel() {
         ) : null}
 
         {loading ? <ResultsSkeleton audio={isAudio} /> : error ? (
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-center">
-            <p className="text-[11px] leading-relaxed text-white/55">{error}</p>
-            <button type="button" onClick={() => void load(1, false)} className="mt-3 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-semibold text-white hover:bg-white/20">Try again</button>
-          </div>
+          <AppState
+            icon="notifications"
+            title="Assets could not load"
+            description={error}
+            kind="error"
+            size="compact"
+            primaryAction={{ label: 'Try again', onClick: () => void load(1, false) }}
+          />
         ) : items.length === 0 ? (
-          <div className="py-10 text-center">
-            <Search className="mx-auto h-5 w-5 text-white/20" />
-            <p className="mt-2 text-[12px] font-medium text-white/60">No matching assets</p>
-            <p className="mt-1 text-[10px] text-white/35">Try a broader search or another format.</p>
-          </div>
+          <AppState
+            icon="search"
+            title="No matching assets"
+            description="Try a broader search or another format."
+            kind="search-empty"
+            size="compact"
+          />
         ) : isAudio ? (
           <div className="space-y-2">
             {items.map((asset) => (

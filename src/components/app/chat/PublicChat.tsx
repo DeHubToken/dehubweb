@@ -22,6 +22,7 @@ import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 import { isAssistantAddress } from '@/lib/assistant';
 import { useAssistantReplies, useAssistantReplyEngine } from '@/hooks/use-assistant-replies';
 import { dismissKeyboard } from '@/hooks/use-keyboard-open';
+import { AppState } from '@/components/app/AppState';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -441,26 +442,17 @@ export function PublicChat({ onBack }: PublicChatProps) {
           className="absolute inset-0 overflow-y-auto py-2"
         >
           {roomsError ? (
-            <div className="flex flex-col items-center justify-center h-full text-zinc-500 gap-3">
-              <AlertCircle className="w-12 h-12 text-red-500/60" />
-              <p className="text-sm text-red-400">Failed to load chat</p>
-              <p className="text-xs text-zinc-600">{roomsError}</p>
-              <Button
-                variant="glass"
-                size="sm"
-                onClick={() => refetchRooms()}
-                className="mt-2"
-              >
-                <RefreshCw className="w-3 h-3 mr-2" />
-                Try Again
-              </Button>
-            </div>
+            <AppState
+              icon="messages"
+              title="Chat could not load"
+              description={roomsError}
+              kind="error"
+              size="section"
+              className="h-full"
+              primaryAction={{ label: 'Try again', onClick: () => refetchRooms(), icon: <RefreshCw /> }}
+            />
           ) : !roomsLoading && rooms.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-zinc-500 gap-3">
-              <MessageCircle className="w-12 h-12 text-zinc-600" />
-              <p className="text-sm">No chat rooms available</p>
-              <p className="text-xs text-zinc-600">Check back later or create a new room</p>
-            </div>
+            <AppState icon="messages" title="No chat rooms available" description="Check back later or create a room." size="section" className="h-full" />
           ) : isLoading ? (
             <>
               {[...Array(5)].map((_, i) => (
@@ -474,16 +466,9 @@ export function PublicChat({ onBack }: PublicChatProps) {
               ))}
             </>
           ) : messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-zinc-500 gap-3">
-              <MessageCircle className="w-12 h-12 text-zinc-600" />
-              <p className="text-sm">No messages yet</p>
-              <p className="text-xs text-zinc-600">Be the first to say something!</p>
-            </div>
+            <AppState icon="messages" title="No messages yet" description="Be the first to say something." size="section" className="h-full" />
           ) : filteredMessages.length === 0 && searchQuery ? (
-            <div className="flex flex-col items-center justify-center h-full text-zinc-500 gap-3">
-              <Search className="w-12 h-12 text-zinc-600" />
-              <p className="text-sm">{t('publicChat.noResults')}</p>
-            </div>
+            <AppState icon="search" title={t('publicChat.noResults')} description="Try a different search." kind="search-empty" size="compact" className="h-full" />
           ) : (
             filteredMessages.map((message) => (
               message.id.startsWith('buy-alert-') ? (

@@ -21,6 +21,7 @@ import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { useFollowGroups, MAX_GROUPS, MAX_GROUP_NAME } from '@/hooks/use-follow-groups';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { AppState } from '@/components/app/AppState';
 
 const MAX_PAGES = 3;
 const PAGE_SIZE = 30;
@@ -483,21 +484,17 @@ export function FollowersListDrawer({
               </Button>
             </div>
           ) : users.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Users className="w-12 h-12 text-zinc-600 mb-3" />
-              <p className="text-zinc-400 text-lg font-medium">
-                {debouncedSearch
-                  ? 'No results found'
-                  : title === 'Followers' ? 'No followers yet' : 'Not following anyone'}
-              </p>
-              <p className="text-zinc-500 text-sm mt-1">
-                {debouncedSearch
-                  ? `No matches for "${debouncedSearch}"`
-                  : title === 'Followers' 
-                    ? 'Followers will appear here'
-                    : 'Follow users to see them here'}
-              </p>
-            </div>
+            <AppState
+              icon={debouncedSearch ? 'search' : 'members'}
+              title={debouncedSearch
+                ? 'No results found'
+                : title === 'Followers' ? 'No followers yet' : 'Not following anyone'}
+              description={debouncedSearch
+                ? `No matches for "${debouncedSearch}"`
+                : title === 'Followers' ? 'Followers will appear here' : 'Follow users to see them here'}
+              kind={debouncedSearch ? 'search-empty' : 'empty'}
+              size="drawer"
+            />
           ) : (
             <div className="space-y-2">
               {displayUsers.map((user) => (

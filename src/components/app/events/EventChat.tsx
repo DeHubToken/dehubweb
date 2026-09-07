@@ -18,6 +18,7 @@ import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
+import { AppState } from '@/components/app/AppState';
 import { useEventChat, type EventChatMessage } from '@/hooks/use-event-chat';
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -208,13 +209,7 @@ export function EventChat({ eventId }: EventChatProps) {
                 ))}
               </div>
             ) : messages.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-center">
-                <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
-                  <MessageSquare className="w-6 h-6 text-zinc-500" />
-                </div>
-                <p className="text-zinc-500 text-sm">No messages yet</p>
-                <p className="text-zinc-600 text-xs mt-1">Be the first to chat!</p>
-              </div>
+              <AppState icon="messages" title="No messages yet" description="Be the first to chat." size="section" className="h-full" />
             ) : (
               messages.map((msg) => {
                 const avatarUrl = buildAvatarUrl(msg.wallet_address, msg.avatar_url);

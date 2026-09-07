@@ -13,6 +13,7 @@ import { ArrowDown, ArrowUp, Loader2, Plus, ScrollText, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import { AppState } from '@/components/app/AppState';
 import { Input } from '@/components/ui/input';
 import { useCommunityAbilities, useUpdateCommunitySettings } from '@/hooks/use-community-admin';
 import type { Community, CommunityMember } from '@/hooks/use-communities';
@@ -121,9 +122,12 @@ export function RulesTab({ community, membership }: RulesTabProps) {
         </p>
 
         {rules.length === 0 ? (
-          <p className="text-center text-zinc-500 text-sm py-6">
-            {t('communities.manage.rulesEmpty', { defaultValue: 'No rules yet.' })}
-          </p>
+          <AppState
+            icon="glossary"
+            title={t('communities.manage.rulesEmpty', { defaultValue: 'No rules yet.' })}
+            description={t('communities.manage.rulesEmptyHint', { defaultValue: 'Add the first rule for this community.' })}
+            size="section"
+          />
         ) : (
           <ol className="mt-2.5 space-y-1.5">
             {rules.map((rule, index) => (

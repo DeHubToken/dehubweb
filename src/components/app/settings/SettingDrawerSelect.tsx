@@ -7,6 +7,7 @@ import {
   DrawerContent,
   DrawerTrigger,
 } from '@/components/ui/drawer';
+import { AppState } from '@/components/app/AppState';
 
 interface Option {
   value: string;
@@ -116,7 +117,7 @@ export function SettingDrawerSelect({
             </button>
           ))}
           {searchable && filteredOptions.length === 0 && (
-            <p className="text-zinc-500 text-sm text-center py-4">No languages found</p>
+            <AppState icon="search" title="No languages found" kind="search-empty" size="compact" />
           )}
         </div>
       </DrawerContent>

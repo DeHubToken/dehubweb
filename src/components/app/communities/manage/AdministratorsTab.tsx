@@ -21,6 +21,7 @@ import { useCommunityAbilities, ADMIN_RIGHTS } from '@/hooks/use-community-admin
 import { useDeHubProfile, mapUserToProfile, type ProfileData } from '@/hooks/use-dehub-profile';
 import { getAccountInfo } from '@/lib/api/dehub';
 import { BadgedName } from '@/components/app/BadgedName';
+import { AppState } from '@/components/app/AppState';
 import { AdminRightsDialog } from './AdminRightsDialog';
 
 export interface AdministratorsTabProps {
@@ -279,13 +280,18 @@ export function AdministratorsTab({ community, membership }: AdministratorsTabPr
         </h3>
         <div className="rounded-xl border border-white/10 bg-white/[0.04] p-1.5">
           {admins.length === 0 ? (
-            <p className="text-center text-zinc-500 text-sm py-4 px-3">
-              {isLoading
-                ? t('communities.manage.loading', { defaultValue: 'Loading…' })
-                : t('communities.manage.noAdmins', {
-                    defaultValue: 'No administrators yet. Promote a member to help you moderate.',
-                  })}
-            </p>
+            isLoading ? (
+              <p className="text-center text-zinc-500 text-sm py-4 px-3">
+                {t('communities.manage.loading', { defaultValue: 'Loading…' })}
+              </p>
+            ) : (
+              <AppState
+                icon="members"
+                title={t('communities.manage.noAdminsTitle', { defaultValue: 'No administrators yet' })}
+                description={t('communities.manage.noAdmins', { defaultValue: 'Promote a member to help you moderate.' })}
+                size="compact"
+              />
+            )
           ) : (
             admins.map((admin) => (
               <AdminRow key={admin.id} member={admin} onManage={canManageAdmin ? openFor : null} />
@@ -315,17 +321,20 @@ export function AdministratorsTab({ community, membership }: AdministratorsTabPr
               />
             </div>
             {candidates.length === 0 ? (
-              <p className="text-center text-zinc-500 text-sm py-4 px-3">
-                {searching
-                  ? t('communities.manage.searching', { defaultValue: 'Searching…' })
-                  : query
-                    ? t('communities.manage.noMemberMatches', {
-                        defaultValue: 'No members match that search.',
-                      })
-                    : t('communities.manage.noMembersToPromote', {
-                        defaultValue: 'Everyone here is already an admin.',
-                      })}
-              </p>
+              searching ? (
+                <p className="text-center text-zinc-500 text-sm py-4 px-3">
+                  {t('communities.manage.searching', { defaultValue: 'Searching…' })}
+                </p>
+              ) : (
+                <AppState
+                  icon={query ? 'search' : 'members'}
+                  title={query
+                    ? t('communities.manage.noMemberMatches', { defaultValue: 'No members match that search.' })
+                    : t('communities.manage.noMembersToPromote', { defaultValue: 'Everyone here is already an admin.' })}
+                  kind={query ? 'search-empty' : 'empty'}
+                  size="compact"
+                />
+              )
             ) : (
               candidates.map((member) => (
                 <CandidateRow key={member.id} member={member} onPromote={openFor} />

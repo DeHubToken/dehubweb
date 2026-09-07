@@ -6,6 +6,7 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { AppState } from '@/components/app/AppState';
 import { useEffect, useState, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -300,10 +301,13 @@ export default function GlossaryPage() {
             <SectionBlock key={i} {...section} />
           ))
         ) : (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Search className="w-8 h-8 text-zinc-600 mb-3" />
-            <p className="text-zinc-500 text-sm">No results for "{searchQuery}"</p>
-          </div>
+          <AppState
+            icon="search"
+            title={`No results for "${searchQuery}"`}
+            description="Try a different term."
+            kind="search-empty"
+            size="section"
+          />
         )}
       </div>
     </div>
