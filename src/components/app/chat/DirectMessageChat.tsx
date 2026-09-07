@@ -33,6 +33,7 @@ import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { formatAttachmentSize, getAttachmentLabel, isAllowedAttachment } from '@/lib/attachments';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
+import { AppState } from '@/components/app/AppState';
 import { DmTipDialog } from './DmTipDialog';
 import { DmFeeInfoBanner } from './DmFeeInfoBanner';
 import { formatDistanceToNow } from 'date-fns';
@@ -1881,10 +1882,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
           )}
 
           {messages.length === 0 && !feeRequired && (
-            <div className="flex flex-col items-center justify-center h-full text-center text-zinc-500">
-              <p className="text-lg mb-2">No messages yet</p>
-              <p className="text-sm">Say hello to start the conversation!</p>
-            </div>
+            <AppState icon="messages" title="No messages yet" description="Say hello to start the conversation." size="section" className="h-full" />
           )}
 
           {(() => {
@@ -1895,10 +1893,14 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
 
             if (filtered.length === 0 && searchLower) {
               return (
-                <div className="flex flex-col items-center justify-center h-full text-center text-zinc-500">
-                  <Search className="w-8 h-8 mb-2 text-zinc-600" />
-                  <p className="text-sm">No messages match "{searchQuery}"</p>
-                </div>
+                <AppState
+                  icon="search"
+                  title="No matching messages"
+                  description={`No messages match "${searchQuery}".`}
+                  kind="search-empty"
+                  size="compact"
+                  className="h-full"
+                />
               );
             }
 

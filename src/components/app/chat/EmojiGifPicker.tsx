@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Smile, Search, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { AppState } from '@/components/app/AppState';
 
 const EMOJI_CATEGORIES = {
   'Smileys': ['😀', '😃', '😄', '😁', '😅', '😂', '🤣', '😊', '😇', '🙂', '😉', '😍', '🥰', '😘', '😋', '😛', '🤪', '😎', '🤩', '🥳'],
@@ -221,7 +222,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
                   <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
                 </div>
               ) : gifs.length === 0 ? (
-                <p className="text-center text-zinc-500 text-xs py-8">No GIFs found</p>
+                <AppState icon="search" title="No GIFs found" kind="search-empty" size="compact" />
               ) : (
                 <div className="grid grid-cols-2 gap-2">
                   {gifs.map((gif, index) => (

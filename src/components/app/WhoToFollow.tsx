@@ -1,9 +1,9 @@
 import { useMemo, useCallback, useRef, useEffect } from 'react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { UserPlus, Loader2, RefreshCw } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { AppState } from '@/components/app/AppState';
 import { getSuggestedAccounts, getCachedSuggestedProfiles, type SuggestedAccount } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
@@ -169,26 +169,19 @@ export function WhoToFollow() {
 
   if (filteredSuggestions.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-8 text-center">
-        <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
-          <UserPlus className="w-6 h-6 text-zinc-500" />
-        </div>
-        <p className="text-zinc-400 text-sm mb-3">{error ? 'Failed to load suggestions' : 'No suggestions yet'}</p>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => refetch()}
-          disabled={isFetching}
-          className="h-8 px-4 text-xs font-semibold rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
-        >
-          {isFetching ? (
-            <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" />
-          ) : (
-            <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
-          )}
-          Retry
-        </Button>
-      </div>
+      <AppState
+        icon="subscriptions"
+        title={error ? 'Suggestions could not load' : 'No suggestions yet'}
+        description={error ? 'Try loading account suggestions again.' : 'New account suggestions will appear here.'}
+        kind={error ? 'error' : 'empty'}
+        size="section"
+        primaryAction={error ? {
+          label: 'Try again',
+          onClick: () => refetch(),
+          disabled: isFetching,
+          loading: isFetching,
+        } : undefined}
+      />
     );
   }
 

@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useCustomVoices, type CustomVoice } from '@/hooks/use-custom-voices';
+import { AppState } from '@/components/app/AppState';
 
 interface VoiceOption {
   voice_id: string;
@@ -164,7 +165,7 @@ export function ElevenLabsVoicePicker({
             <Loader2 className="w-4 h-4 animate-spin text-white/40" />
           </div>
         ) : voices.length === 0 ? (
-          <p className="text-xs text-white/40 text-center py-4">No voices found</p>
+          <AppState icon="search" title="No voices found" kind="search-empty" size="compact" />
         ) : (
           voices.map((voice) => (
             <button

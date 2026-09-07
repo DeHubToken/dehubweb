@@ -12,6 +12,7 @@ import type { ProjectSnapshot } from "@/lib/editor/types";
 import { ExportDialog } from "@/components/editor/ExportDialog";
 import { PostToDeHub } from "@/components/editor/PostToDeHub";
 import { AboutDialog } from "@/components/editor/AboutDialog";
+import { AppState } from "@/components/app/AppState";
 
 export function EditorTopBar() {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ export function EditorTopBar() {
             </Button>
             <div className="max-h-72 overflow-y-auto">
               {projects.length === 0 && (
-                <p className="px-2 py-3 text-xs text-white/40">No saved projects yet.</p>
+                <AppState icon="posts" title="No saved projects yet" size="compact" />
               )}
               {projects.map((p) => (
                 <div key={p.id}

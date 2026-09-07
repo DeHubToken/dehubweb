@@ -12,6 +12,7 @@ import { getLeaderboard, type LeaderboardEntry, type LeaderboardPeriod } from '@
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { AppState } from '@/components/app/AppState';
 
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
@@ -104,9 +105,7 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
 
   if (!isLoading && entries.length === 0) {
     return (
-      <div className="flex items-center justify-center py-8 text-zinc-500 text-sm">
-        {apiPeriod !== 'all' ? 'No data for this period yet' : 'No data yet'}
-      </div>
+      <AppState icon="trophy" title={apiPeriod !== 'all' ? 'No data for this period yet' : 'No leaderboard data yet'} size="compact" />
     );
   }
 

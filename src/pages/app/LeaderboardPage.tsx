@@ -5,6 +5,7 @@
  */
 
 import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { AppState } from '@/components/app/AppState';
 import { useState, useMemo, useCallback, useRef, useLayoutEffect, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
@@ -499,14 +500,13 @@ export default function LeaderboardPage() {
 
         {/* Empty State */}
         {!listLoading && !listError && entries.length === 0 && (
-          <div className="text-center py-20">
-            <ThemedIcon icon="trophy" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-65" />
-            <p className="text-zinc-500">
-              {timePeriod !== 'all' 
-                ? t('leaderboard.noDataForPeriod', { defaultValue: 'No data available for this period yet' })
-                : t('leaderboard.noUsersFound')}
-            </p>
-          </div>
+          <AppState
+            icon="trophy"
+            title={timePeriod !== 'all'
+              ? t('leaderboard.noDataForPeriod', { defaultValue: 'No data available for this period yet' })
+              : t('leaderboard.noUsersFound')}
+            size="page"
+          />
         )}
 
         {/* Table Rows */}

@@ -18,6 +18,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AppState } from '@/components/app/AppState';
 import { VoiceRecorder } from '@/components/app/chat/VoiceRecorder';
 import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
@@ -350,13 +351,7 @@ export function SidebarChat() {
               ))}
             </>
           ) : mergedItems.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center">
-              <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center mb-2">
-                <Users className="w-5 h-5 text-zinc-500" />
-              </div>
-              <p className="text-zinc-500 text-xs">No messages yet</p>
-              <p className="text-zinc-600 text-xs">Be the first to say hello!</p>
-            </div>
+            <AppState icon="messages" title="No messages yet" description="Be the first to say hello." size="compact" className="h-full" />
           ) : (
             mergedItems.map((item) => {
               if (item.type === 'buy_alert') {

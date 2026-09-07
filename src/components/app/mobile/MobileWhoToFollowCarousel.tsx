@@ -18,6 +18,7 @@ import { useMemo, useCallback, useRef, useEffect } from 'react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { UserPlus, Loader2, ChevronRight, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { AppState } from '@/components/app/AppState';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { getSuggestedAccounts, getCachedSuggestedProfiles, type SuggestedAccount } from '@/lib/api/dehub';
@@ -169,24 +170,13 @@ export function MobileWhoToFollowCarousel() {
   if (filteredSuggestions.length === 0) {
     return (
       <div className="py-4 border-y border-zinc-800/50">
-        <div className="flex flex-col items-center justify-center gap-3 py-6">
-          <UserPlus className="w-5 h-5 text-zinc-500" />
-          <span className="text-sm text-zinc-500">No follow suggestions yet</span>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => refetch()}
-            disabled={isFetching}
-            className="h-8 px-4 text-xs font-semibold rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
-          >
-            {isFetching ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" />
-            ) : (
-              <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
-            )}
-            Refresh
-          </Button>
-        </div>
+        <AppState
+          icon="subscriptions"
+          title="No follow suggestions yet"
+          description="New account suggestions will appear here."
+          size="compact"
+          primaryAction={{ label: 'Refresh', onClick: () => refetch(), disabled: isFetching, loading: isFetching }}
+        />
       </div>
     );
   }

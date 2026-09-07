@@ -10,6 +10,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check, ChevronDown, Crown, Loader2, Search, Shield, Undo2, User, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { AppState } from '@/components/app/AppState';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -374,11 +375,14 @@ export function MembersTab({ community, membership }: MembersTabProps) {
                 ))}
               </div>
             ) : shown.length === 0 ? (
-              <p className="text-center text-zinc-500 text-sm py-6">
-                {query
+              <AppState
+                icon={query ? 'search' : 'members'}
+                title={query
                   ? t('communities.manage.noMatchingMembers', { defaultValue: 'No members match that search' })
                   : t('communities.manage.noMembers', { defaultValue: 'Nobody here yet' })}
-              </p>
+                kind={query ? 'search-empty' : 'empty'}
+                size="section"
+              />
             ) : (
               <>
                 {shown.map(member => (

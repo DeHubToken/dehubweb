@@ -33,6 +33,7 @@ import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
 import { getAccountInfo, type DeHubUser, type DeHubConversation } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { parseDehubLink, dehubLinkLabel } from '@/lib/dehub-links';
+import { AppState } from '@/components/app/AppState';
 
 interface ShareToDmModalProps {
   open: boolean;
@@ -290,9 +291,7 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
             )}
 
             {!convosLoading && !isSearchingUsers && !hasResults && (
-              <p className="text-zinc-500 text-sm text-center py-6">
-                {search.trim() ? 'No people found' : 'No conversations yet — search for someone above'}
-              </p>
+              <AppState icon={search.trim() ? 'search' : 'messages'} title={search.trim() ? 'No people found' : 'No conversations yet'} description={search.trim() ? 'Try a different search.' : 'Search for someone above to start a conversation.'} kind={search.trim() ? 'search-empty' : 'empty'} size="compact" />
             )}
           </div>
         </div>

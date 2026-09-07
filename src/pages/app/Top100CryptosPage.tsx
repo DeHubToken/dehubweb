@@ -7,6 +7,7 @@ import { ArrowLeft, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
 import { TickerLogo } from '@/components/app/TickerLogo';
+import { AppState } from '@/components/app/AppState';
 import appleLogoImg from '@/assets/logo-apple.png';
 import googleLogoImg from '@/assets/logo-google.png';
 import microsoftLogoImg from '@/assets/logo-microsoft.png';
@@ -265,17 +266,14 @@ export default function Top100CryptosPage() {
       )}
 
       {!isLoading && (cryptoError || assetsError || allAssets.length === 0) && (
-        <div className="text-center py-10">
-          <p className={cn('mb-3', cryptoError || assetsError ? 'text-red-400' : 'text-zinc-500')}>
-            {cryptoError || assetsError ? "Couldn't load market data." : 'No data available right now.'}
-          </p>
-          <button
-            onClick={() => { refetchCrypto(); refetchAssets(); }}
-            className="px-4 py-2 text-sm font-medium text-white rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
-          >
-            Retry
-          </button>
-        </div>
+        <AppState
+          icon={cryptoError || assetsError ? 'notifications' : 'stats'}
+          title={cryptoError || assetsError ? "Couldn't load market data" : 'No market data available'}
+          description={cryptoError || assetsError ? 'Check your connection and try again.' : 'Market data will appear here when available.'}
+          kind={cryptoError || assetsError ? 'error' : 'empty'}
+          size="page"
+          primaryAction={{ label: 'Retry', onClick: () => { refetchCrypto(); refetchAssets(); } }}
+        />
       )}
 
       {!isLoading && visibleAssets.length > 0 && (

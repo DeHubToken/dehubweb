@@ -268,6 +268,37 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   );
 }
 
+/** Lightweight provider for the development-only theme state gallery. */
+export function ThemePreviewProvider({ children, initialTheme = 'system' }: { children: ReactNode; initialTheme?: string }) {
+  const [theme, setTheme] = useState(initialTheme);
+
+  useEffect(() => {
+    let cancelled = false;
+    const pending = loadThemeCss(theme);
+    const apply = () => {
+      if (!cancelled) document.documentElement.dataset.theme = theme;
+    };
+    if (pending) pending.then(apply, apply);
+    else apply();
+    return () => { cancelled = true; };
+  }, [theme]);
+
+  const value = useMemo<ThemeContextValue>(() => ({
+    theme,
+    setTheme,
+    dimLights: false,
+    setDimLights: () => undefined,
+    dimStrength: DEFAULT_DIM_STRENGTH,
+    setDimStrength: () => undefined,
+    themeHues: { ...DEFAULT_THEME_HUES },
+    setThemeHue: () => undefined,
+    brandColors: [],
+    setBrandColors: () => undefined,
+  }), [theme]);
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+}
+
 export function useAppTheme() {
   const ctx = useContext(ThemeContext);
   if (!ctx) {

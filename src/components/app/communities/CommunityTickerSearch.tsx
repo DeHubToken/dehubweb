@@ -10,6 +10,7 @@ import { Search, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import type { DexPair } from '@/hooks/use-dexscreener';
+import { AppState } from '@/components/app/AppState';
 
 interface CommunityTickerSearchProps {
   onSelect: (pair: DexPair) => void;
@@ -163,7 +164,7 @@ export function CommunityTickerSearch({ onSelect, onCancel }: CommunityTickerSea
       </AnimatePresence>
 
       {!loading && query.length >= 2 && results.length === 0 && (
-        <p className="text-zinc-600 text-xs text-center py-3">No tokens found for "{query}"</p>
+        <AppState icon="search" title="No tokens found" description={`No tokens match "${query}".`} kind="search-empty" size="compact" />
       )}
     </div>
   );

@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronDown, ChevronUp, Languages, FileText, Loader2, AlertCircle } from 'lucide-react';
 import { LANGUAGE_NAMES } from '@/hooks/use-image-translation';
+import { AppState } from '@/components/app/AppState';
 import {
   Drawer,
   DrawerContent,
@@ -81,12 +82,7 @@ export function ImageTranslationSheet({
 
           {/* No Text Found */}
           {result && !result.hasText && !isLoading && !error && (
-            <div className="flex flex-col items-center justify-center py-8 gap-3">
-              <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center">
-                <FileText className="w-6 h-6 text-zinc-500" />
-              </div>
-              <p className="text-zinc-400 text-sm text-center">No text found in this image</p>
-            </div>
+            <AppState icon="posts" title="No text found in this image" size="drawer" />
           )}
 
           {/* Translation Result */}
