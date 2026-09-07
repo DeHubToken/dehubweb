@@ -437,6 +437,7 @@ Rules:
 - Preserve formatting, line breaks, emojis, and special characters
 - Keep URLs, @mentions, #hashtags and $tags exactly as written
 - If text contains slang or informal language, translate it naturally
+- Translate profanity, slurs and offensive wording exactly as written: never soften, censor, replace or omit a word
 - Translate ALL of the text, do not skip any part
 - If there is nothing to translate (only links, tags, numbers, emoji, or a name), or the text is already in ${targetLanguageName}, return the input EXACTLY as given
 - Never refuse and never ask for clarification: your entire output must work as a drop-in replacement for the input`;
@@ -456,6 +457,84 @@ const REFUSAL_PATTERN =
 
 function looksLikeRefusal(output: string): boolean {
   return REFUSAL_PATTERN.test(output);
+}
+
+// A model asked to translate text that is already in the target language has
+// nothing to do, and the prompt tells it to return the input exactly. What some
+// models do instead is edit it — most often softening a word they would rather
+// the author had not written. The refusal guard above cannot see that: the
+// output is fluent, confident, and almost the input.
+//
+// Caught in production on 2026-09-07. An English post reading "Follow for
+// follow / Don't be a jew" was served to English readers as "Don't be a jerk",
+// written to the permanent cache, and shown as the author's own words. The same
+// post translated into Turkish by the same tier kept the word intact — because
+// there the model actually had a translation to do.
+//
+// Token overlap separates the two cases cleanly. A real translation shares
+// almost no words with its source; a quiet edit of text already in the target
+// language shares nearly all of them. Above the threshold the author's text is
+// kept verbatim, which is the correct answer for a no-op anyway.
+const REWRITE_OVERLAP_THRESHOLD = 0.6;
+
+// Mentions, tags, links and numbers are carried across untouched by design, so
+// counting them would make a short translated sentence wrapped in hashtags look
+// like an edit. Only prose words are compared.
+function translationTokens(value: string): string[] {
+  return value
+    .replace(/https?:\/\/\S+/gu, ' ')
+    .replace(/[@#$]\S+/gu, ' ')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+    .split(/\s+/)
+    .filter((token) => token.length > 0 && !/^\p{N}+$/u.test(token));
+}
+
+function isRewriteRatherThanTranslation(input: string, output: string): boolean {
+  const source = translationTokens(input);
+  const translated = translationTokens(output);
+
+  // Too little prose to judge, or the provider obeyed and returned the input.
+  if (source.length < 3 || translated.length < 3) return false;
+  if (source.join(' ') === translated.join(' ')) return false;
+
+  // Wildly different lengths are a real translation, or a truncation the
+  // callers already handle. Only comparable texts can be a quiet edit.
+  if (translated.length < source.length * 0.6) return false;
+  if (translated.length > source.length * 1.6) return false;
+
+  const remaining = new Map<string, number>();
+  for (const token of source) remaining.set(token, (remaining.get(token) ?? 0) + 1);
+
+  let shared = 0;
+  for (const token of translated) {
+    const left = remaining.get(token) ?? 0;
+    if (left > 0) {
+      shared++;
+      remaining.set(token, left - 1);
+    }
+  }
+
+  return shared / Math.max(source.length, translated.length) >= REWRITE_OVERLAP_THRESHOLD;
+}
+
+/**
+ * Swaps a near-copy back for the author's own words. A genuine translation is
+ * returned untouched, so callers can tell the two apart by identity.
+ */
+function keepVerbatimIfRewrite(
+  input: string,
+  targetLang: string,
+  result: TranslateResponse | null,
+): TranslateResponse | null {
+  if (!result) return null;
+  if (!isRewriteRatherThanTranslation(input, result.translatedText)) return result;
+
+  console.log('Provider edited the text instead of translating it, keeping the original');
+  return {
+    translatedText: input,
+    detectedLanguage: { language: targetLang, confidence: 0.9 },
+  };
 }
 
 // Ordered newest-first, and tried in order until one answers.
@@ -799,13 +878,23 @@ serve(async (req) => {
     const textHash = await getTextHash(text);
     const persisted = await readCachedTranslation(textHash, targetLang);
     if (persisted) {
+      // A row written before the rewrite guard existed can hold a quiet edit of
+      // the author's own words. Healing it on read is what retires that backlog
+      // without a purge, and without a second trip to a provider that would
+      // only make the same edit again.
+      const healed = keepVerbatimIfRewrite(text, targetLang, persisted) ?? persisted;
       if (looksLikeTranslationJunk(text, persisted.translatedText ?? '')) {
         console.log('Translation cache hit (L2) was poisoned, regenerating');
       } else {
-        console.log('Translation cache hit (L2)');
-        rememberInIsolate(cacheKey, persisted);
+        if (healed === persisted) {
+          console.log('Translation cache hit (L2)');
+        } else {
+          console.log('Translation cache hit (L2) held an edit, serving the original');
+          await writeCachedTranslation(textHash, targetLang, healed, 'l2-verbatim');
+        }
+        rememberInIsolate(cacheKey, healed);
         return new Response(
-          JSON.stringify({ ...persisted, cached: true }),
+          JSON.stringify({ ...healed, cached: true }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
@@ -889,30 +978,48 @@ serve(async (req) => {
     // Gemini key is currently 429 RESOURCE_EXHAUSTED and the gateway is a
     // metered reseller. Reorder by moving these blocks; each returns null
     // rather than throwing, so a dead tier falls through to the next.
-    result = await translateWithFal(text, targetLanguageName);
+    const rawFal = await translateWithFal(text, targetLanguageName);
+    result = keepVerbatimIfRewrite(text, targetLang, rawFal);
     if (result) {
       rememberInIsolate(cacheKey, result);
-      await writeCachedTranslation(textHash, targetLang, result, 'fal');
+      await writeCachedTranslation(
+        textHash,
+        targetLang,
+        result,
+        result === rawFal ? 'fal' : 'fal-verbatim',
+      );
       return new Response(
         JSON.stringify(result),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    result = await translateWithGemini(text, targetLanguageName);
+    const rawGemini = await translateWithGemini(text, targetLanguageName);
+    result = keepVerbatimIfRewrite(text, targetLang, rawGemini);
     if (result) {
       rememberInIsolate(cacheKey, result);
-      await writeCachedTranslation(textHash, targetLang, result, 'gemini');
+      await writeCachedTranslation(
+        textHash,
+        targetLang,
+        result,
+        result === rawGemini ? 'gemini' : 'gemini-verbatim',
+      );
       return new Response(
         JSON.stringify(result),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    result = await translateWithAI(text, targetLanguageName);
+    const rawAI = await translateWithAI(text, targetLanguageName);
+    result = keepVerbatimIfRewrite(text, targetLang, rawAI);
     if (result) {
       rememberInIsolate(cacheKey, result);
-      await writeCachedTranslation(textHash, targetLang, result, 'lovable-gateway');
+      await writeCachedTranslation(
+        textHash,
+        targetLang,
+        result,
+        result === rawAI ? 'lovable-gateway' : 'lovable-gateway-verbatim',
+      );
       return new Response(
         JSON.stringify(result),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
