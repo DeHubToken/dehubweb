@@ -5813,6 +5813,10 @@ export type Database = {
         Args: { p_skill_id: string }
         Returns: undefined
       }
+      is_banned_from_community: {
+        Args: { _community_id: string; _wallet_address: string }
+        Returns: boolean
+      }
       is_stage_host: { Args: { p_space_id: string }; Returns: boolean }
       move_to_dlq: {
         Args: {
