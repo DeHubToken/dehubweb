@@ -85,7 +85,7 @@ const SCROLL_NAV_ITEMS = [
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Wallet, label: 'Wallet', path: '/app/wallet' },
   { icon: Vault, label: 'Staking', path: '/app/stake' },
-  { icon: Zap, themedIcon: 'superpowers', label: 'SuperPowers', path: '/app/superpowers' },
+  { icon: Zap, label: 'SuperPowers', path: '/app/superpowers' },
   { icon: ShieldCheck, label: 'Governance', path: '/governance' },
   { icon: Landmark, label: 'DAO', path: '/dao' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
