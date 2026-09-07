@@ -20,6 +20,8 @@ import { useTranslation as useContentTranslation, splitTranslatedTitleAndBody } 
 import { useTranslation as useI18n } from 'react-i18next';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useVisualViewportBox } from '@/hooks/use-keyboard-open';
+import { useCommentsPullDismiss } from '@/hooks/use-comments-pull-dismiss';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useAuth } from '@/contexts/AuthContext';
@@ -337,6 +339,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
   const [showComments, setShowComments] = useState(false);
+  const commentsPullDismiss = useCommentsPullDismiss(() => setShowComments(false));
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -407,6 +410,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // visibleIndices.
   const [pointerPinnedIndex, setPointerPinnedIndex] = useState<number | null>(null);
   const isMobile = useIsMobile();
+  const commentsViewport = useVisualViewportBox(isMobile && showComments);
 
   /**
    * Immersive fullscreen (desktop).
@@ -882,6 +886,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   }, []);
 
   const goToNext = useCallback(() => {
+    if (isMobile && showComments) return;
     if (currentIndex < shorts.length - 1 && !isTransitioning) {
       setIsTransitioning(true);
       setCurrentIndex(prev => prev + 1);
@@ -891,15 +896,16 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     if (currentIndex >= shorts.length - 4 && hasMore && !isLoadingMore && onLoadMore) {
       onLoadMore();
     }
-  }, [currentIndex, shorts.length, hasMore, isLoadingMore, onLoadMore, isTransitioning]);
+  }, [currentIndex, shorts.length, hasMore, isLoadingMore, onLoadMore, isTransitioning, isMobile, showComments]);
 
   const goToPrev = useCallback(() => {
+    if (isMobile && showComments) return;
     if (currentIndex > 0 && !isTransitioning) {
       setIsTransitioning(true);
       setCurrentIndex(prev => prev - 1);
       setTimeout(() => setIsTransitioning(false), 350);
     }
-  }, [currentIndex, isTransitioning]);
+  }, [currentIndex, isTransitioning, isMobile, showComments]);
 
   // Keep the wheel effect mounted once (below) while always calling the latest
   // navigation handlers. Re-subscribing whenever goToNext/goToPrev changed
@@ -974,7 +980,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         // fullscreen it returns to the windowed viewer. Browsers normally
         // swallow the key themselves to exit native fullscreen, so in practice
         // this branch covers the simulated path and the race where both fire.
-        if (isFullscreen) toggleFullscreen();
+        if (showComments) setShowComments(false);
+        else if (isFullscreen) toggleFullscreen();
         else onClose();
       }
       else if (e.key === 'f') toggleFullscreen();
@@ -987,7 +994,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [goToNext, goToPrev, onClose, isFullscreen, toggleFullscreen]);
+  }, [goToNext, goToPrev, onClose, isFullscreen, toggleFullscreen, showComments]);
 
   // Handle drag for visual feedback during swipe
   const handleDrag = useCallback((_: any, info: PanInfo) => {
@@ -1357,7 +1364,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       // without the `touch-action: none` that used to freeze the comments
       // panel. The video carousel manages its own swipe gestures via Framer's
       // drag (it sets `touch-action: pan-x` on the drag layer itself).
-      style={{ overscrollBehavior: 'contain' }}
+      style={{
+        overscrollBehavior: 'contain',
+        ...(commentsViewport.height !== null ? {
+          top: commentsViewport.offsetTop,
+          bottom: 'auto',
+          height: commentsViewport.height,
+        } : {}),
+      }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -1418,7 +1432,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 // bites — the frame letterboxes instead.
                 : "shrink-0 h-full aspect-[9/16] w-auto max-w-[calc(100vw-8rem)] bg-zinc-900 rounded-none"
           )}
-          animate={isMobile ? { height: showComments ? '42%' : '100%' } : undefined}
+          animate={isMobile ? { height: showComments ? '50%' : '100%' } : undefined}
           transition={SMOOTH_TRANSITION}
           // Tap-to-restore listens here (bubbled) so it can't block the drag
           // layer or the seek strip below it. No-ops unless the chrome is hidden.
@@ -1431,8 +1445,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           {/* Draggable carousel container */}
           <motion.div
             className="absolute inset-0"
-            drag={isTimelineSeeking ? false : 'y'}
-            dragListener={!isTimelineSeeking}
+            drag={isTimelineSeeking || (isMobile && showComments) ? false : 'y'}
+            dragListener={!isTimelineSeeking && !(isMobile && showComments)}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={0.15}
             onDrag={handleDrag}
@@ -1473,7 +1487,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       onSeekStart={() => setIsTimelineSeeking(true)}
                       onSeekEnd={() => setIsTimelineSeeking(false)}
                       showPlayIndicator={isActive ? showPlayIndicator : null}
-                      letterbox={!isMobile}
+                      letterbox={!isMobile || showComments}
                       isFullscreen={isFullscreen}
                       // Only the playing short draws a bar over the action
                       // bar's gradient; the neighbours keep theirs in place,
@@ -1993,15 +2007,22 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             {showComments && currentShort?.id && (
               <motion.div
                 key="mobile-comments-split"
+                {...commentsPullDismiss}
                 data-shorts-scrollable
                 initial={{ height: 0, opacity: 0 }}
-                animate={{ height: '58%', opacity: 1 }}
+                animate={{ height: '50%', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={SMOOTH_TRANSITION}
                 className="w-full shrink-0 flex flex-col overflow-hidden bg-black/60 backdrop-blur-[24px] border-t border-white/[0.08] rounded-t-2xl z-30"
               >
                 {/* Grab handle + close */}
-                <div className="relative flex items-center justify-center pt-2.5 pb-1 flex-shrink-0">
+                <motion.div
+                  className="relative h-11 flex items-center justify-center flex-shrink-0 cursor-grab active:cursor-grabbing"
+                  style={{ touchAction: 'none' }}
+                  onPanEnd={(_, info) => {
+                    if (info.offset.y > 60 || info.velocity.y > 500) setShowComments(false);
+                  }}
+                >
                   <div className="h-1 w-10 rounded-full bg-white/25" />
                   <button
                     onClick={() => setShowComments(false)}
@@ -2010,7 +2031,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   >
                     <ChevronDown className="w-5 h-5 text-white/70" />
                   </button>
-                </div>
+                </motion.div>
                 <div
                   className="flex-1 min-h-0 px-1 pb-[env(safe-area-inset-bottom)]"
                   style={{ touchAction: 'pan-y', overscrollBehavior: 'contain' }}
