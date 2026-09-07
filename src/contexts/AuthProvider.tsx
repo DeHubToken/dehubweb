@@ -978,6 +978,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               if (tokenValidationError?.name === 'AuthenticationError' ||
                   tokenValidationError?.message?.includes('Session expired') ||
                   tokenValidationError?.message?.includes('Authentication required')) {
+                if (await recoverExistingSupabaseSession()) {
+                  setIsLoading(false);
+                  return;
+                }
                 console.warn('[Auth] Token invalid server-side, clearing zombie session');
                 clearAuthSession();
                 localStorage.removeItem('dehub_user');
@@ -1006,6 +1010,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               error?.message?.includes('Authentication required');
 
             if (isAuthError) {
+              if (await recoverExistingSupabaseSession()) return;
               console.error('[Auth] Session restoration failed (auth error), clearing:', error?.message);
               clearAuthSession();
               localStorage.removeItem('dehub_user');
@@ -1054,13 +1059,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               } catch { /* ignore */ }
             }
           } else {
-            // 'revoked' or 'no-refresh-token' — genuinely unrecoverable.
+            // The DeHub pair is gone; try the independent identity session
+            // before deciding this browser is genuinely signed out.
+            if (await recoverExistingSupabaseSession()) return;
             clearAuthSession();
             localStorage.removeItem('dehub_user');
             setUser(null);
             setWalletAddress(null);
           }
         } else if (!token) {
+          if (await recoverExistingSupabaseSession()) return;
           setUser(null);
           setWalletAddress(null);
         }
@@ -1292,7 +1300,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // valid; the next tick (or the next 401) will recover.
           console.warn('[Auth] Proactive refresh failed transiently — keeping session, will retry');
         } else {
-          // 'revoked' or 'no-refresh-token' — the session really is over.
+          // The DeHub pair is dead, but the independently-managed Supabase
+          // session may still prove who this is. Exchange it before changing
+          // the visible auth state, so a cross-tab refresh collision never
+          // flashes the user through the logged-out UI.
+          if (await recoverExistingSupabaseSession()) return;
+          // No second proof remains — the session really is over.
           console.warn('[Auth] Refresh token rejected — clearing session');
           clearAuthSession();
           localStorage.removeItem('dehub_user');
@@ -2039,6 +2052,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const completeLoginWithoutUnlock = async (
     userId: string,
     ethAddress: string,
+    restoringExistingSession = false,
   ): Promise<boolean> => {
     try {
       const { data } = await supabase.auth.getSession();
@@ -2122,6 +2136,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         serverLinkedEmail && !ethAddress ? 'wagmi' : 'web3auth',
       );
       closeLoginModal();
+      if (restoringExistingSession) {
+        toast.success('Already logged in another browser, welcome back!');
+      }
       return true;
     } catch (e) {
       if (e instanceof WalletNotLinkedError) {
@@ -2139,6 +2156,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       return false;
     }
+  };
+
+  /**
+   * Recover a returning smart-wallet session from Supabase before exposing a
+   * logged-out state. Explicit logout signs Supabase out too, so reaching this
+   * path specifically means another browser auth session is still available.
+   */
+  const recoverExistingSupabaseSession = async (): Promise<boolean> => {
+    const source = connectionSource ?? readConnectionSource();
+    if (source !== 'web3auth') return false;
+    const uid =
+      supabaseUserId ?? localStorage.getItem('dehub_supabase_uid') ?? readLastSession()?.uid;
+    if (!uid) return false;
+    return completeLoginWithoutUnlock(uid, getCachedWallet()?.ethAddress ?? '', true);
   };
 
   /**
@@ -3004,9 +3035,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // refresh has already run clearAuthSession by the time we get here,
       // taking the uid tag with it; the last-session record is the one place
       // that survives that wipe.
-      const uid =
-        supabaseUserId ?? localStorage.getItem('dehub_supabase_uid') ?? readLastSession()?.uid;
-      if (uid && await completeLoginWithoutUnlock(uid, getCachedWallet()?.ethAddress ?? '')) {
+      if (await recoverExistingSupabaseSession()) {
         return true;
       }
 
