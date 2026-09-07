@@ -319,7 +319,15 @@
     "saving": "Wird gespeichert...",
     "noNewMessages": "Keine neuen Unterhaltungen",
     "noNewMessagesDesc": "Behalte deine bestehenden Unterhaltungen, aber niemand Neues kann eine starten",
-    "dmNoNewHelp": "Bestehende Unterhaltungen laufen weiter; niemand Neues kann eine starten"
+    "dmNoNewHelp": "Bestehende Unterhaltungen laufen weiter; niemand Neues kann eine starten",
+    "chat": "Chat",
+    "publicChatAlerts": "Öffentlicher Chat",
+    "publicChatAlertsDesc": "Erhalte Benachrichtigungen, wenn im öffentlichen Chat gesprochen wird, während du dich in einem anderen Tab befindest",
+    "publicChatAlertsOnDesc": "Bei vielen Nachrichten kommen diese als eine kombinierte Benachrichtigung an",
+    "publicChatAlertsNeedsBrowser": "Aktiviere die Browser-Benachrichtigungen oben, damit diese ankommen",
+    "publicChatAlertsRate": "Maximal",
+    "publicChatAlertsRateOption": "{{count}} pro Stunde",
+    "publicChatAlertsRateHint": "Es geht nichts verloren, wenn der Raum belebter ist als das – die Nachrichten werden gespeichert und kommen bei der nächsten Benachrichtigung zusammen an."
   },
   "common": {
     "save": "Speichern",
@@ -821,7 +829,8 @@
     "postRemoved": "Dein Beitrag wurde entfernt",
     "newNotification": "Neue Benachrichtigung",
     "oneOther": "1 anderer",
-    "nOthers": "{{count}} andere"
+    "nOthers": "{{count}} andere",
+    "burstBody": "{{count}} neue Benachrichtigungen von {{who}}"
   },
   "leaderboard": {
     "title": "Rangliste",
@@ -4460,5 +4469,17 @@
       "feature_request": "Funktionswunsch",
       "other": "Sonstiges"
     }
+  },
+  "digest": {
+    "andOthers_one": "{{names}} und {{count}} andere",
+    "andOthers_other": "{{names}} und {{count}} andere",
+    "someone": "Jemand"
+  },
+  "publicChatAlerts": {
+    "title": "Öffentlicher Chat",
+    "mentionTitle": "Im öffentlichen Chat erwähnt",
+    "digest": "{{count}} neue Nachrichten von {{who}}: {{message}}",
+    "voiceMessage": "Sprachnachricht",
+    "image": "Ein Bild gesendet"
   }
 }

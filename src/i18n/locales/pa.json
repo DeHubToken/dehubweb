@@ -319,7 +319,15 @@
     "saving": "ਸੰਭਾਲ ਰਿਹਾ ਹੈ...",
     "noNewMessages": "ਕੋਈ ਨਵੀਂ ਗੱਲਬਾਤ ਨਹੀਂ",
     "noNewMessagesDesc": "ਆਪਣੇ ਮੌਜੂਦਾ ਥ੍ਰੈੱਡ ਰੱਖੋ, ਪਰ ਕੋਈ ਨਵਾਂ ਵਿਅਕਤੀ ਸ਼ੁਰੂ ਨਹੀਂ ਕਰ ਸਕਦਾ",
-    "dmNoNewHelp": "ਮੌਜੂਦਾ ਥ੍ਰੈੱਡ ਕੰਮ ਕਰਦੇ ਰਹਿਣਗੇ; ਕੋਈ ਨਵਾਂ ਵਿਅਕਤੀ ਸ਼ੁਰੂ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+    "dmNoNewHelp": "ਮੌਜੂਦਾ ਥ੍ਰੈੱਡ ਕੰਮ ਕਰਦੇ ਰਹਿਣਗੇ; ਕੋਈ ਨਵਾਂ ਵਿਅਕਤੀ ਸ਼ੁਰੂ ਨਹੀਂ ਕਰ ਸਕਦਾ",
+    "chat": "ਚੈਟ",
+    "publicChatAlerts": "ਪਬਲਿਕ ਚੈਟ",
+    "publicChatAlertsDesc": "ਜਦੋਂ ਤੁਸੀਂ ਕਿਸੇ ਹੋਰ ਟੈਬ ਵਿੱਚ ਹੋਵੋ ਤਾਂ ਪਬਲਿਕ ਚੈਟ ਬਾਰੇ ਦੱਸਿਆ ਜਾਵੇ",
+    "publicChatAlertsOnDesc": "ਵਿਅਸਤ ਸਮੇਂ ਇੱਕ ਸੰਯੁਕਤ ਅਲਰਟ ਵਜੋਂ ਆਉਂਦੇ ਹਨ",
+    "publicChatAlertsNeedsBrowser": "ਇਹਨਾਂ ਨੂੰ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਉੱਪਰ ਬ੍ਰਾਊਜ਼ਰ ਸੂਚਨਾਵਾਂ ਚਾਲੂ ਕਰੋ",
+    "publicChatAlertsRate": "ਵੱਧ ਤੋਂ ਵੱਧ",
+    "publicChatAlertsRateOption": "{{count}} ਪ੍ਰਤੀ ਘੰਟਾ",
+    "publicChatAlertsRateHint": "ਜਦੋਂ ਰੂਮ ਇਸ ਤੋਂ ਜ਼ਿਆਦਾ ਵਿਅਸਤ ਹੁੰਦਾ ਹੈ ਤਾਂ ਕੁਝ ਵੀ ਗੁਆਚਦਾ ਨਹੀਂ ਹੈ — ਸੰਦੇਸ਼ ਰੋਕੇ ਜਾਂਦੇ ਹਨ ਅਤੇ ਅਗਲੇ ਅਲਰਟ 'ਤੇ ਇਕੱਠੇ ਆਉਂਦੇ ਹਨ।"
   },
   "common": {
     "save": "ਸੇਵ ਕਰੋ",
@@ -821,7 +829,8 @@
     "postRemoved": "ਤੁਹਾਡੀ ਪੋਸਟ ਮਿਟਾ ਦਿੱਤੀ ਗਈ",
     "newNotification": "ਨਵੀਂ ਸੂਚਨਾ",
     "oneOther": "1 ਹੋਰ",
-    "nOthers": "{{count}} ਹੋਰ"
+    "nOthers": "{{count}} ਹੋਰ",
+    "burstBody": "{{count}} ਨਵੀਆਂ ਸੂਚਨਾਵਾਂ {{who}} ਤੋਂ"
   },
   "leaderboard": {
     "title": "ਲੀਡਰ ਬੋਰਡ",
@@ -2093,5 +2102,17 @@
     "dubbed": "ਡੱਬਡ ਆਡੀਓ",
     "preparing": "ਡੱਬ ਆਡੀਓ ਤਿਆਰ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
     "unavailable": "ਇਸ ਵੀਡੀਓ ਲਈ ਡਬਡ ਆਡੀਓ ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ ।"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} ਅਤੇ {{count}} ਹੋਰ",
+    "andOthers_other": "{{names}} ਅਤੇ {{count}} ਹੋਰ",
+    "someone": "ਕੋਈ"
+  },
+  "publicChatAlerts": {
+    "title": "ਪਬਲਿਕ ਚੈਟ",
+    "mentionTitle": "ਪਬਲਿਕ ਚੈਟ ਵਿੱਚ ਜ਼ਿਕਰ ਕੀਤਾ ਗਿਆ",
+    "digest": "{{count}} ਨਵੇਂ ਸੰਦੇਸ਼ {{who}} ਤੋਂ: {{message}}",
+    "voiceMessage": "ਵੌਇਸ ਮੈਸੇਜ",
+    "image": "ਇੱਕ ਚਿੱਤਰ ਭੇਜਿਆ"
   }
 }

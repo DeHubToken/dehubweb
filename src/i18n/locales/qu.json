@@ -319,7 +319,15 @@
     "saving": "Waqaychachkan...",
     "noNewMessages": "Mana musuq rimanakuykuna",
     "noNewMessagesDesc": "Kaq rimanakuykunata waqaychay, ichaqa mana pipas musuqta qallarinmanchu",
-    "dmNoNewHelp": "Kaq rimanakuykuna llamk'ashallanku; mana pipas musuqta qallarinmanchu"
+    "dmNoNewHelp": "Kaq rimanakuykuna llamk'ashallanku; mana pipas musuqta qallarinmanchu",
+    "chat": "Rimaykuy",
+    "publicChatAlerts": "Sapaq rimaykuy",
+    "publicChatAlertsDesc": "Qanqa yachachisqa kanki chay public chat rimachkaptinqa, huk tab chawpi kachkaptiyki",
+    "publicChatAlertsOnDesc": "Ataq kachkaptiykiqa huk chawpilla kachkan",
+    "publicChatAlertsNeedsBrowser": "Chaykuna chayamunankupaq browser notifications kaqta chawpiman churay",
+    "publicChatAlertsRate": "Chawpilla",
+    "publicChatAlertsRateOption": "{{count}} huk horapi",
+    "publicChatAlertsRateHint": "Mana imapas chinkachkanchu chay room aswan ataq kachkaptinqa — chay willakuykuna waqaychasqa kachkan chaymanta huk chawpilla chayamun."
   },
   "common": {
     "save": "Waqaychay",
@@ -822,7 +830,8 @@
     "postRemoved": "Churasqayki pichasqa",
     "newNotification": "Musuq willay",
     "oneOther": "1 huk",
-    "nOthers": "{{count}} hukkuna"
+    "nOthers": "{{count}} hukkuna",
+    "burstBody": "{{count}} musuq willakuykuna {{who}}manta"
   },
   "leaderboard": {
     "title": "Ñawpaqkuna",
@@ -2143,5 +2152,17 @@
     "dubbed": "Doblado audio nisqa",
     "preparing": "Doblado audiota wakichispa...",
     "unavailable": "Kay videopaqqa manam kanchu doblado audio."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} chaymanta {{count}} huk",
+    "andOthers_other": "{{names}} chaymanta {{count}} huktaq",
+    "someone": "Piq"
+  },
+  "publicChatAlerts": {
+    "title": "Sapaq rimaykuy",
+    "mentionTitle": "Sapaq rimaykuypi sutichasqa",
+    "digest": "{{count}} musuq willakuykuna {{who}}manta: {{message}}",
+    "voiceMessage": "Balay willakuy",
+    "image": "Sut'inchayta kachamu"
   }
 }

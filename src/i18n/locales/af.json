@@ -320,6 +320,14 @@
     "noNewMessages": "Geen nuwe gesprekke nie",
     "noNewMessagesDesc": "Hou jou bestaande gesprekke, maar niemand nuut kan een begin nie",
     "dmNoNewHelp": "Bestaande gesprekke werk voort; niemand nuut kan een begin nie",
+    "chat": "Klets",
+    "publicChatAlerts": "Publieke klets",
+    "publicChatAlertsDesc": "Word ingelig wanneer die publieke klets praat terwyl jy in 'n ander oortjie is",
+    "publicChatAlertsOnDesc": "Besige tye kom as een gekombineerde waarskuwing",
+    "publicChatAlertsNeedsBrowser": "Skakel blaaierkennisgewings hierbo aan sodat hierdie kan aankom",
+    "publicChatAlertsRate": "Teen hoogstens",
+    "publicChatAlertsRateOption": "{{count}} per uur",
+    "publicChatAlertsRateHint": "Niks gaan verlore wanneer die kamer besiger is as dit nie — die boodskappe word gehou en kom saam aan by die volgende waarskuwing.",
     "security": "Sekuriteit",
     "about": "Oor"
   },
@@ -832,6 +840,7 @@
     "newNotification": "Nuwe kennisgewing",
     "oneOther": "1 ander",
     "nOthers": "{{count}} ander",
+    "burstBody": "{{count}} nuwe kennisgewings van {{who}}",
     "noNotifications": "Geen kennisgewings nie."
   },
   "leaderboard": {
@@ -4258,6 +4267,18 @@
     "dubbed": "Dubbele klank",
     "preparing": "Voorbereiding van benoemde oudio...",
     "unavailable": "Dubbele klank is nie beskikbaar vir hierdie video nie."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} en {{count}} ander",
+    "andOthers_other": "{{names}} en {{count}} ander",
+    "someone": "Iemand"
+  },
+  "publicChatAlerts": {
+    "title": "Publieke klets",
+    "mentionTitle": "In publieke klets genoem",
+    "digest": "{{count}} nuwe boodskappe van {{who}}: {{message}}",
+    "voiceMessage": "Stemboodskap",
+    "image": "'n Prent gestuur"
   },
   "home": {
     "title": "Volhoubare Web3-infrastruktuur",

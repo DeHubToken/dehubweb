@@ -319,7 +319,15 @@
     "saving": "保存中...",
     "noNewMessages": "新しい会話を受け付けない",
     "noNewMessagesDesc": "既存のスレッドは残りますが、新しい相手は開始できません",
-    "dmNoNewHelp": "既存のスレッドはそのまま使えますが、新しい相手は開始できません"
+    "dmNoNewHelp": "既存のスレッドはそのまま使えますが、新しい相手は開始できません",
+    "chat": "チャット",
+    "publicChatAlerts": "公開チャット",
+    "publicChatAlertsDesc": "他のタブにいるときに公開チャットが話していることを通知します",
+    "publicChatAlertsOnDesc": "忙しい時間はまとめて1つのアラートとして届きます",
+    "publicChatAlertsNeedsBrowser": "これらを受け取るには、上記のブラウザ通知をオンにしてください",
+    "publicChatAlertsRate": "最大で",
+    "publicChatAlertsRateOption": "1時間に{{count}}回",
+    "publicChatAlertsRateHint": "この時間帯よりも部屋が混雑しても何も失われることはありません。メッセージは保持され、次回の通知でまとめて届きます。"
   },
   "common": {
     "save": "保存",
@@ -820,7 +828,8 @@
     "postRemoved": "あなたの投稿が削除されました",
     "newNotification": "新しい通知",
     "oneOther": "1人の他のユーザー",
-    "nOthers": "{{count}}人の他のユーザー"
+    "nOthers": "{{count}}人の他のユーザー",
+    "burstBody": "{{count}}件の新しい通知 {{who}}さんから"
   },
   "leaderboard": {
     "title": "ランキング",
@@ -4455,5 +4464,17 @@
       "feature_request": "機能のご要望",
       "other": "その他"
     }
+  },
+  "digest": {
+    "andOthers_one": "{{names}}さんと{{count}}人",
+    "andOthers_other": "{{names}}さんと{{count}}人",
+    "someone": "誰か"
+  },
+  "publicChatAlerts": {
+    "title": "公開チャット",
+    "mentionTitle": "公開チャットでメンションされました",
+    "digest": "{{count}}件の新しいメッセージ {{who}}さんから: {{message}}",
+    "voiceMessage": "ボイスメッセージ",
+    "image": "画像を送信しました"
   }
 }

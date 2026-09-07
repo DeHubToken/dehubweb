@@ -318,7 +318,15 @@
     "saving": "Sparar...",
     "noNewMessages": "Inga nya konversationer",
     "noNewMessagesDesc": "Behåll dina befintliga trådar, men ingen ny kan starta en",
-    "dmNoNewHelp": "Befintliga trådar fungerar vidare; ingen ny kan starta en"
+    "dmNoNewHelp": "Befintliga trådar fungerar vidare; ingen ny kan starta en",
+    "chat": "Chat",
+    "publicChatAlerts": "Publik chatt",
+    "publicChatAlertsDesc": "Få besked när den publika chatten pratar medan du är i en annan flik",
+    "publicChatAlertsOnDesc": "Upptagna perioder kommer som en samlad avisering",
+    "publicChatAlertsNeedsBrowser": "Aktivera webbläsaraviseringar ovan för att dessa ska komma fram",
+    "publicChatAlertsRate": "Som mest",
+    "publicChatAlertsRateOption": "{{count}} per timme",
+    "publicChatAlertsRateHint": "Inget går förlorat när rummet är mer aktivt än så här – meddelandena sparas och kommer tillsammans vid nästa avisering."
   },
   "common": {
     "save": "Spara",
@@ -806,7 +814,8 @@
     "postRemoved": "Ditt inlägg togs bort",
     "newNotification": "Ny avisering",
     "oneOther": "1 annan",
-    "nOthers": "{{count}} andra"
+    "nOthers": "{{count}} andra",
+    "burstBody": "{{count}} nya aviseringar från {{who}}"
   },
   "leaderboard": {
     "title": "Topplista",
@@ -4356,5 +4365,17 @@
     "dubbed": "Dubbade ljud",
     "preparing": "Förbereder dubbat ljud...",
     "unavailable": "Dubbat ljud är inte tillgängligt för den här videon."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} och {{count}} andra",
+    "andOthers_other": "{{names}} och {{count}} andra",
+    "someone": "Någon"
+  },
+  "publicChatAlerts": {
+    "title": "Publik chatt",
+    "mentionTitle": "Nämnd i publik chatt",
+    "digest": "{{count}} nya meddelanden från {{who}}: {{message}}",
+    "voiceMessage": "Röstmeddelande",
+    "image": "Skickade en bild"
   }
 }

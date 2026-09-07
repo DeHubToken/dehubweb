@@ -319,7 +319,15 @@
     "saving": "Saklanýar...",
     "noNewMessages": "Täze gepleşik ýok",
     "noNewMessagesDesc": "Öňki söhbetdeşlikleriňizi saklaň, ýöne täze biri başlap bilmez",
-    "dmNoNewHelp": "Öňki söhbetdeşlikler işlemegini dowam etdirýär; täze biri başlap bilmeýär"
+    "dmNoNewHelp": "Öňki söhbetdeşlikler işlemegini dowam etdirýär; täze biri başlap bilmeýär",
+    "chat": "Söhbetdeşlik",
+    "publicChatAlerts": "Jemgyýetçilik söhbetdeşligi",
+    "publicChatAlertsDesc": "Başga birപ്പോഴും bolsaňyz, jemgyýetçilik söhbetdeşliginiň gürleşýändigini aýdyp beriň",
+    "publicChatAlertsOnDesc": "Meşgulluň dowamlylygy ýekeje duýduryş hökmünde gelýär",
+    "publicChatAlertsNeedsBrowser": "Muny almak üçin ýokardaky brauzer bildirişlerini açyň",
+    "publicChatAlertsRate": "Iň köp bilen",
+    "publicChatAlertsRateOption": "bir sagatda {{count}}",
+    "publicChatAlertsRateHint": "Söhbetdeşlik has işjeň bolsa, hiç zat ýitirilmeýär — hatlar saklanýar we indiki duýduryşda bile gelýär."
   },
   "common": {
     "save": "Ýatda sakla",
@@ -821,7 +829,8 @@
     "postRemoved": "Ýazgyňyz pozuldy",
     "newNotification": "Täze bildiriş",
     "oneOther": "1 beýleki",
-    "nOthers": "{{count}} beýleki"
+    "nOthers": "{{count}} beýleki",
+    "burstBody": "{{count}} täze bildiriş {{who}}-dan"
   },
   "leaderboard": {
     "title": "Reýting",
@@ -2091,5 +2100,17 @@
     "dubbed": "Saýlamalary nusgalamak",
     "preparing": "Saýlanan sesleri tapmak üçin...",
     "unavailable": "Désolé, bu video indi ýok."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} we {{count}} beýleki",
+    "andOthers_other": "{{names}} we {{count}} beýlekiler",
+    "someone": "Bir kişi"
+  },
+  "publicChatAlerts": {
+    "title": "Jemgyýetçilik söhbetdeşligi",
+    "mentionTitle": "Jemgyýetçilik söhbetdeşliginde agzalan",
+    "digest": "{{count}} täze hatlar {{who}}-dan: {{message}}",
+    "voiceMessage": "Sesli hat",
+    "image": "Surat iberdi"
   }
 }

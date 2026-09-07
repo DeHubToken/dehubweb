@@ -319,7 +319,15 @@
     "saving": "Nyimpen...",
     "noNewMessages": "Ora ana obrolan anyar",
     "noNewMessagesDesc": "Simpen obrolanmu sing wis ana, nanging ora ana wong anyar sing bisa miwiti",
-    "dmNoNewHelp": "Obrolan sing wis ana tetep mlaku; ora ana wong anyar sing bisa miwiti"
+    "dmNoNewHelp": "Obrolan sing wis ana tetep mlaku; ora ana wong anyar sing bisa miwiti",
+    "chat": "Obrolan",
+    "publicChatAlerts": "Obrolan umum",
+    "publicChatAlertsDesc": "Diberi tahu nalika obrolan umum lagi ngomong nalika sampeyan ana ing tab liyane",
+    "publicChatAlertsOnDesc": "Periode sibuk teka minangka siji tandha gabungan",
+    "publicChatAlertsNeedsBrowser": "Uripake kabar browser ing ndhuwur supaya iki teka",
+    "publicChatAlertsRate": "Paling akeh",
+    "publicChatAlertsRateOption": "{{count}} saben jam",
+    "publicChatAlertsRateHint": "Ora ana sing ilang nalika kamar luwih sibuk tinimbang iki — pesen ditahan lan teka bebarengan ing tandha sabanjure."
   },
   "common": {
     "save": "Simpen",
@@ -821,7 +829,8 @@
     "postRemoved": "Kirimanmu wis dibusak",
     "newNotification": "Notifikasi Anyar",
     "oneOther": "1 liyane",
-    "nOthers": "{{count}} liyane"
+    "nOthers": "{{count}} liyane",
+    "burstBody": "{{count}} kabar anyar saka {{who}}"
   },
   "leaderboard": {
     "title": "Papan Peringkat",
@@ -2105,5 +2114,17 @@
     "dubbed": "Audio dubbing",
     "preparing": "Nyiapake swara dubbing…",
     "unavailable": "Audio dubbing ora kasedhiya kanggo video iki."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} lan {{count}} liyane",
+    "andOthers_other": "{{names}} lan {{count}} liyane",
+    "someone": "Seseorang"
+  },
+  "publicChatAlerts": {
+    "title": "Obrolan umum",
+    "mentionTitle": "Disebutake ing obrolan umum",
+    "digest": "{{count}} pesen anyar saka {{who}}: {{message}}",
+    "voiceMessage": "Pesen swara",
+    "image": "Ngirim gambar"
   }
 }

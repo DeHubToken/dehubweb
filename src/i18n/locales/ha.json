@@ -319,7 +319,15 @@
     "saving": "Ana ajiyewa...",
     "noNewMessages": "Babu sababbin tattaunawa",
     "noNewMessagesDesc": "Ka riƙe tattaunawarka ta yanzu, amma sabon mutum ba zai iya fara ɗaya ba",
-    "dmNoNewHelp": "Tattaunawar da ake ciki tana ci gaba; sabon mutum ba zai iya fara ɗaya ba"
+    "dmNoNewHelp": "Tattaunawar da ake ciki tana ci gaba; sabon mutum ba zai iya fara ɗaya ba",
+    "chat": "Tattaunawa",
+    "publicChatAlerts": "Tattaunawar jama'a",
+    "publicChatAlertsDesc": "Samu labari lokacin da tattaunawar jama'a ke magana yayin da kake a wata shafin daban",
+    "publicChatAlertsOnDesc": "Lokaci mai cike da aiki yazo a matsayin guda ɗaya",
+    "publicChatAlertsNeedsBrowser": "Kunna sanarwar burauza a sama domin wadannan su zo",
+    "publicChatAlertsRate": "A mafi yawa",
+    "publicChatAlertsRateOption": "{{count}} a awa",
+    "publicChatAlertsRateHint": "Babu abinda ya bata lokacin da dakin ya fi wannan cike - sakonni ana rike dasu kuma suna zuwa tare a sanarwa ta gaba."
   },
   "common": {
     "save": "Ajiye",
@@ -821,7 +829,8 @@
     "postRemoved": "An cire rubutunka",
     "newNotification": "Sabuwar sanarwa",
     "oneOther": "1 daban",
-    "nOthers": "{{count}} dabam"
+    "nOthers": "{{count}} dabam",
+    "burstBody": "{{count}} sabbin sanarwa daga {{who}}"
   },
   "leaderboard": {
     "title": "Jadawalin Matsayi",
@@ -2112,5 +2121,17 @@
     "dubbed": "Sauti mai ban sha'awa",
     "preparing": "Shirya sautin da aka yi wa lakabi...",
     "unavailable": "Dubbed audio ba samuwa ga wannan video."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} da {{count}} wasu",
+    "andOthers_other": "{{names}} da {{count}} wasu",
+    "someone": "Wani"
+  },
+  "publicChatAlerts": {
+    "title": "Tattaunawar jama'a",
+    "mentionTitle": "An ambaci sunanka a tattaunawar jama'a",
+    "digest": "{{count}} sabbin sakonni daga {{who}}: {{message}}",
+    "voiceMessage": "Sakon murya",
+    "image": "An aika hoto"
   }
 }

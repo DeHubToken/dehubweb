@@ -324,6 +324,14 @@
     "noNewMessages": "নয়া কোনো আলাপ নাই",
     "noNewMessagesDesc": "আপনার আগর থ্রেডহকল থাকউক, কিন্তু নয়া কেউ শুরু করতা পারে না",
     "dmNoNewHelp": "আগর থ্রেডহকল চলতেই থাকে; নয়া কেউ শুরু করতা পারে না",
+    "chat": "চ্যাট",
+    "publicChatAlerts": "পাবলিক চ্যাট",
+    "publicChatAlertsDesc": "অন্য ট্যাবে থাকা অবস্থায় পাবলিক চ্যাট কখন কথা বলছে তা জানান",
+    "publicChatAlertsOnDesc": "ব্যস্ততার সময়গুলো একটি সম্মিলিত অ্যালার্ট হিসেবে আসে",
+    "publicChatAlertsNeedsBrowser": "এগুলো পেতে উপরে ব্রাউজার নোটিফিকেশন চালু করুন",
+    "publicChatAlertsRate": "সর্বোচ্চ",
+    "publicChatAlertsRateOption": "প্রতি ঘন্টায় {{count}}",
+    "publicChatAlertsRateHint": "যখন রুম এর চেয়ে বেশি ব্যস্ত থাকে তখন কিছুই হারায় না — মেসেজগুলো ধরে রাখা হয় এবং পরবর্তী অ্যালার্টে একসাথে আসে।",
     "account": "একাউন্ট",
     "cancel": "বাদ দেও",
     "deleteAccount": "একাউন্ট মুছো",
@@ -902,6 +910,7 @@
     "newNotification": "নয়া খবর",
     "oneOther": "আরো ১ জন",
     "nOthers": "আরো {{count}} জন",
+    "burstBody": "{{count}} নতুন নোটিফিকেশন {{who}} থেকে",
     "milestones": "মাইলস্টোন",
     "noNotifications": "এহনো কোনো খবর নাই",
     "subscribedToYou": "{{name}} তোমারে সাবস্ক্রাইব করসে",
@@ -2282,6 +2291,18 @@
     "dubbed": "ডাব করা অডিও",
     "preparing": "ডাবড অডিও প্রস্তুত করা হচ্ছে…",
     "unavailable": "এই ভিডিওর জন্য ডাবড অডিও উপলব্ধ নেই।"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} এবং {{count}} অন্য",
+    "andOthers_other": "{{names}} এবং {{count}} অন্যেরা",
+    "someone": "কেউ"
+  },
+  "publicChatAlerts": {
+    "title": "পাবলিক চ্যাট",
+    "mentionTitle": "পাবলিক চ্যাটে উল্লেখ করা হয়েছে",
+    "digest": "{{who}} থেকে {{count}} নতুন মেসেজ: {{message}}",
+    "voiceMessage": "ভয়েস মেসেজ",
+    "image": "একটি ছবি পাঠানো হয়েছে"
   },
   "post": {
     "like": "ভালা লাগসে",

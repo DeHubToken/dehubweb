@@ -319,7 +319,15 @@
     "saving": "Salvando...",
     "noNewMessages": "Sem novas conversas",
     "noNewMessagesDesc": "Mantenha as conversas existentes, mas ninguém novo pode iniciar uma",
-    "dmNoNewHelp": "As conversas existentes continuam a funcionar; ninguém novo pode iniciar uma"
+    "dmNoNewHelp": "As conversas existentes continuam a funcionar; ninguém novo pode iniciar uma",
+    "chat": "Chat",
+    "publicChatAlerts": "Chat público",
+    "publicChatAlertsDesc": "Receba um aviso quando o chat público estiver ativo enquanto você estiver em outra aba",
+    "publicChatAlertsOnDesc": "Períodos de grande movimento chegam como um único alerta combinado",
+    "publicChatAlertsNeedsBrowser": "Ative as notificações do navegador acima para que estes cheguem",
+    "publicChatAlertsRate": "No máximo",
+    "publicChatAlertsRateOption": "{{count}} por hora",
+    "publicChatAlertsRateHint": "Nada é perdido quando a sala está mais movimentada que isso — as mensagens são retidas e chegam juntas no próximo alerta."
   },
   "common": {
     "save": "Salvar",
@@ -821,7 +829,8 @@
     "postRemoved": "Seu post foi removido",
     "newNotification": "Nova notificação",
     "oneOther": "1 outro",
-    "nOthers": "{{count}} outros"
+    "nOthers": "{{count}} outros",
+    "burstBody": "{{count}} novas notificações de {{who}}"
   },
   "leaderboard": {
     "title": "Classificação",
@@ -4477,5 +4486,17 @@
       "feature_request": "Sugestão de funcionalidade",
       "other": "Outro"
     }
+  },
+  "digest": {
+    "andOthers_one": "{{names}} e {{count}} outros",
+    "andOthers_other": "{{names}} e {{count}} outros",
+    "someone": "Alguém"
+  },
+  "publicChatAlerts": {
+    "title": "Chat público",
+    "mentionTitle": "Mencionado no chat público",
+    "digest": "{{count}} novas mensagens de {{who}}: {{message}}",
+    "voiceMessage": "Mensagem de voz",
+    "image": "Enviou uma imagem"
   }
 }

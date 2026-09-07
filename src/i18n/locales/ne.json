@@ -319,7 +319,15 @@
     "saving": "सुरक्षित हुँदै...",
     "noNewMessages": "नयाँ कुराकानी छैन",
     "noNewMessagesDesc": "तपाईंका अवस्थित थ्रेडहरू राख्नुहोस्, तर नयाँ कसैले सुरु गर्न सक्दैन",
-    "dmNoNewHelp": "अवस्थित थ्रेडहरू चलिरहन्छन्; नयाँ कसैले सुरु गर्न सक्दैन"
+    "dmNoNewHelp": "अवस्थित थ्रेडहरू चलिरहन्छन्; नयाँ कसैले सुरु गर्न सक्दैन",
+    "chat": "च्याट",
+    "publicChatAlerts": "सार्वजनिक च्याट",
+    "publicChatAlertsDesc": "अर्को ट्याबमा हुँदा सार्वजनिक च्याट बोलिरहेको बेला सूचित हुनुहोस्",
+    "publicChatAlertsOnDesc": "व्यस्त समय एकै पटकको सूचनाको रूपमा आउँछ",
+    "publicChatAlertsNeedsBrowser": "यी सूचनाहरू प्राप्त गर्नका लागि माथि ब्राउजर सूचनाहरू सक्षम गर्नुहोस्",
+    "publicChatAlertsRate": "अधिकतम",
+    "publicChatAlertsRateOption": "{{count}} प्रति घण्टा",
+    "publicChatAlertsRateHint": "कोठा व्यस्त हुँदा केही पनि हराउँदैन — सन्देशहरू राखिन्छन् र अर्को सूचनामा एकसाथ आइपुग्छन्।"
   },
   "common": {
     "save": "सुरक्षित गर्नुहोस्",
@@ -832,7 +840,8 @@
     "postRemoved": "तपाईंको पोस्ट हटाइयो",
     "newNotification": "नयाँ सूचना",
     "oneOther": "1 अन्य",
-    "nOthers": "{{count}} अन्य"
+    "nOthers": "{{count}} अन्य",
+    "burstBody": "{{count}} नयाँ सूचनाहरू {{who}} बाट"
   },
   "leaderboard": {
     "title": "लिडरबोर्ड",
@@ -4343,6 +4352,18 @@
     "dubbed": "डब गरिएको अडियो",
     "preparing": "डब गरिएको अडियो तयार गर्दै...",
     "unavailable": "यस भिडियोको लागि डब गरिएको अडियो उपलब्ध छैन ।"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} र {{count}} अन्य",
+    "andOthers_other": "{{names}} र {{count}} अरू",
+    "someone": "कोही"
+  },
+  "publicChatAlerts": {
+    "title": "सार्वजनिक च्याट",
+    "mentionTitle": "सार्वजनिक च्याटमा उल्लेख गरियो",
+    "digest": "{{count}} नयाँ सन्देशहरू {{who}} बाट: {{message}}",
+    "voiceMessage": "भ्वाइस सन्देश",
+    "image": "एउटा तस्बिर पठाइयो"
   },
   "spaces": {
     "title": "स्पेसहरू",

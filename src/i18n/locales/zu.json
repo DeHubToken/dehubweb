@@ -319,7 +319,15 @@
     "saving": "Iyalondoloza...",
     "noNewMessages": "Azikho izingxoxo ezintsha",
     "noNewMessagesDesc": "Gcina izingxoxo zakho ezikhona, kodwa akekho omusha ongaqala eyodwa",
-    "dmNoNewHelp": "Izingxoxo ezikhona ziyaqhubeka; akekho omusha ongaqala eyodwa"
+    "dmNoNewHelp": "Izingxoxo ezikhona ziyaqhubeka; akekho omusha ongaqala eyodwa",
+    "chat": "Ingxoxo",
+    "publicChatAlerts": "Ingxoxo yomphakathi",
+    "publicChatAlertsDesc": "Thola izaziso lapho ingxoxo yomphakathi ikhuluma ngenkathi usekhona kwenye ithebhu",
+    "publicChatAlertsOnDesc": "Izingxoxo eziminyene zifika njengesaziso esisodwa esihlanganisiwe",
+    "publicChatAlertsNeedsBrowser": "Vula izaziso zesiphequluli ngenhla ukuze lezi zifikwe",
+    "publicChatAlertsRate": "Kakhulu",
+    "publicChatAlertsRateOption": "{{count}} ngehora",
+    "publicChatAlertsRateHint": "Akukho okulahlekile lapho igumbi limatasa kunalokhu - imilayezo iyagcinwa futhi ifike ndawonye esazisweni esilandelayo."
   },
   "common": {
     "save": "Gcina",
@@ -822,7 +830,8 @@
     "postRemoved": "Okuthunyelwe kwakho kususiwe",
     "newNotification": "Isaziso esisha",
     "oneOther": "omunye omu-1",
-    "nOthers": "abanye abangu-{{count}}"
+    "nOthers": "abanye abangu-{{count}}",
+    "burstBody": "{{count}} izaziso ezintsha ezivela ku {{who}}"
   },
   "leaderboard": {
     "title": "Bhodi Yabaholi",
@@ -2144,5 +2153,17 @@
     "dubbed": "Umsindo obhalwe kabili",
     "preparing": "Ilungiselela umsindo obizwa ngegama...",
     "unavailable": "Umsindo onama-dubbed awutholakali kule vidiyo."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} kanye {{count}} okunye",
+    "andOthers_other": "{{names}} kanye {{count}} abanye",
+    "someone": "Umuntu othile"
+  },
+  "publicChatAlerts": {
+    "title": "Ingxoxo yomphakathi",
+    "mentionTitle": "Kukhulunywe ngakho engxoxweni yomphakathi",
+    "digest": "{{count}} imilayezo emisha evela ku {{who}}: {{message}}",
+    "voiceMessage": "Umyalezo wezwi",
+    "image": "Kuthunyelwe isithombe"
   }
 }

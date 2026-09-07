@@ -319,7 +319,15 @@
     "saving": "저장 중...",
     "noNewMessages": "새 대화 받지 않기",
     "noNewMessagesDesc": "기존 대화는 유지하되 새로운 사람은 대화를 시작할 수 없습니다",
-    "dmNoNewHelp": "기존 대화는 계속 이용할 수 있지만 새로운 사람은 대화를 시작할 수 없습니다"
+    "dmNoNewHelp": "기존 대화는 계속 이용할 수 있지만 새로운 사람은 대화를 시작할 수 없습니다",
+    "chat": "채팅",
+    "publicChatAlerts": "공개 채팅",
+    "publicChatAlertsDesc": "다른 탭에 있을 때 공개 채팅이 말하는 것을 알려줍니다.",
+    "publicChatAlertsOnDesc": "바쁜 시간대는 하나의 통합 알림으로 도착합니다.",
+    "publicChatAlertsNeedsBrowser": "이 알림을 받으려면 위에서 브라우저 알림을 켜세요.",
+    "publicChatAlertsRate": "최대",
+    "publicChatAlertsRateOption": "시간당 {{count}}",
+    "publicChatAlertsRateHint": "방이 이보다 바쁠 때는 아무것도 손실되지 않습니다. 메시지는 보류되었다가 다음 알림에서 함께 도착합니다."
   },
   "common": {
     "save": "저장",
@@ -820,7 +828,8 @@
     "postRemoved": "게시물이 삭제됨",
     "newNotification": "새 알림",
     "oneOther": "1명",
-    "nOthers": "{{count}}명"
+    "nOthers": "{{count}}명",
+    "burstBody": "{{count}}개의 새 알림 {{who}}"
   },
   "leaderboard": {
     "title": "리더보드",
@@ -4461,5 +4470,17 @@
       "feature_request": "기능 제안",
       "other": "기타"
     }
+  },
+  "digest": {
+    "andOthers_one": "{{names}}명 및 {{count}}명의 다른 사람",
+    "andOthers_other": "{{names}}명 및 {{count}}명의 다른 사람들",
+    "someone": "누군가"
+  },
+  "publicChatAlerts": {
+    "title": "공개 채팅",
+    "mentionTitle": "공개 채팅에서 언급됨",
+    "digest": "{{count}}개의 새 메시지 {{who}}: {{message}}",
+    "voiceMessage": "음성 메시지",
+    "image": "이미지 보냄"
   }
 }

@@ -319,7 +319,15 @@
     "saving": "存着...",
     "noNewMessages": "没新对话",
     "noNewMessagesDesc": "留着你早嘞对话，可新人开不成",
-    "dmNoNewHelp": "早嘞对话还能用；新人开不成"
+    "dmNoNewHelp": "早嘞对话还能用；新人开不成",
+    "chat": "聊天",
+    "publicChatAlerts": "公开聊天",
+    "publicChatAlertsDesc": "当您在其他标签页时，会收到公开聊天正在进行的通知",
+    "publicChatAlertsOnDesc": "忙碌时段将合并为一个通知",
+    "publicChatAlertsNeedsBrowser": "请开启浏览器通知以接收这些通知",
+    "publicChatAlertsRate": "最多",
+    "publicChatAlertsRateOption": "每小时 {{count}} 条",
+    "publicChatAlertsRateHint": "当房间比这更忙时，不会丢失任何信息 — 消息会被暂存，并在下一个通知中一起送达。"
   },
   "common": {
     "save": "保存",
@@ -818,7 +826,8 @@
     "postRemoved": "你的帖子被移除了",
     "newNotification": "新通知",
     "oneOther": "1位其他人",
-    "nOthers": "{{count}}位其他人"
+    "nOthers": "{{count}}位其他人",
+    "burstBody": "{{count}} 条新通知来自 {{who}}"
   },
   "leaderboard": {
     "title": "排行榜",
@@ -2091,6 +2100,18 @@
     "dubbed": "配音",
     "preparing": "正在准备配音音频…",
     "unavailable": "此视频没有提供配音音频。"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} 和 {{count}} 位其他人",
+    "andOthers_other": "{{names}} 和 {{count}} 位其他人",
+    "someone": "有人"
+  },
+  "publicChatAlerts": {
+    "title": "公开聊天",
+    "mentionTitle": "在公开聊天中被提及",
+    "digest": "来自 {{who}} 的 {{count}} 条新消息： {{message}}",
+    "voiceMessage": "语音消息",
+    "image": "发送了图片"
   },
   "post": {
     "like": "喜欢",

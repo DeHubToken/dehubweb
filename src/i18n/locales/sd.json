@@ -319,7 +319,15 @@
     "saving": "محفوظ ٿي رهيو آهي...",
     "noNewMessages": "نيون ڳالهه ٻولهيون ناهن",
     "noNewMessagesDesc": "پنهنجا پراڻا تار رکو، پر ڪو به نئون شروع نٿو ڪري سگهي",
-    "dmNoNewHelp": "پراڻا تار هلندا رهندا؛ ڪو به نئون شروع نٿو ڪري سگهي"
+    "dmNoNewHelp": "پراڻا تار هلندا رهندا؛ ڪو به نئون شروع نٿو ڪري سگهي",
+    "chat": "چیٽ",
+    "publicChatAlerts": "عوامي چيٽ",
+    "publicChatAlertsDesc": "جڏهن توهان ٻئي ٽيب ۾ آهيو ته عوامي چيٽ جي ڳالهه ٻولهه ٻڌايو",
+    "publicChatAlertsOnDesc": "مصروفيت جا دور هڪ گڏيل الرٽ طور اچن ٿا",
+    "publicChatAlertsNeedsBrowser": "اهي حاصل ڪرڻ لاءِ مٿي برائوزر نوٽيفڪيشن آن ڪريو",
+    "publicChatAlertsRate": "گهڻو ڪري",
+    "publicChatAlertsRateOption": "في ڪلاڪ {{count}}",
+    "publicChatAlertsRateHint": "جڏهن ڪمرو ان کان وڌيڪ مصروف هوندو آهي ته ڪجهه به ضايع نٿو ٿئي - پيغام روڪيا ويندا آهن ۽ ايندڙ الرٽ تي گڏجي اچن ٿا."
   },
   "common": {
     "save": "محفوظ ڪريو",
@@ -820,7 +828,8 @@
     "postRemoved": "توهان جي پوسٽ هٽائي وئي",
     "newNotification": "نئين اطلاع",
     "oneOther": "1 ٻيو",
-    "nOthers": "{{count}} ٻيا"
+    "nOthers": "{{count}} ٻيا",
+    "burstBody": "{{count}} نوان نوٽيفڪيشن {{who}} کان"
   },
   "leaderboard": {
     "title": "ليڊربورڊ",
@@ -2085,5 +2094,17 @@
     "dubbed": "ڊبل ٿيل آڊيو",
     "preparing": "ڊب ٿيل آڊيو تيار ڪندي...",
     "unavailable": "ڊبل آڊيو هن وڊيو لاءِ دستياب ناهي."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} ۽ {{count}} ٻيا",
+    "andOthers_other": "{{names}} ۽ {{count}} ٻيا",
+    "someone": "ڪو ماڻهو"
+  },
+  "publicChatAlerts": {
+    "title": "عوامي چيٽ",
+    "mentionTitle": "عوامي چيٽ ۾ ذڪر ڪيو ويو",
+    "digest": "{{count}} نوان پيغام {{who}} کان: {{message}}",
+    "voiceMessage": "آواز جو پيغام",
+    "image": "تصوير موڪلي"
   }
 }

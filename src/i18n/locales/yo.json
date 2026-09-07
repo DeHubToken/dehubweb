@@ -319,7 +319,15 @@
     "saving": "Ó ń fi pamọ́...",
     "noNewMessages": "Kò sí ìjíròrò tuntun",
     "noNewMessagesDesc": "Pa àwọn ìjíròrò rẹ tí ó wà mọ́, ṣùgbọ́n ẹnìkan tuntun kò lè bẹ̀rẹ̀ ọ̀kan",
-    "dmNoNewHelp": "Àwọn ìjíròrò tí ó wà ń bá a lọ; ẹnìkan tuntun kò lè bẹ̀rẹ̀ ọ̀kan"
+    "dmNoNewHelp": "Àwọn ìjíròrò tí ó wà ń bá a lọ; ẹnìkan tuntun kò lè bẹ̀rẹ̀ ọ̀kan",
+    "chat": "Ìbàròpìn",
+    "publicChatAlerts": "Ìbàròpìn gbogbo ènìyàn",
+    "publicChatAlertsDesc": "Gbọ́ ìkìlọ̀ nígbà tí ìbàròpìn gbogbo ènìyàn bá ń sọ̀rọ̀ nígbà tí o wà ní ojú ìwé mìíràn",
+    "publicChatAlertsOnDesc": "Àwọn ìgbà tí kò sí ààyè wá gẹ́gẹ́ bí ìkìlọ̀ kan tí a ṣọ̀kan",
+    "publicChatAlertsNeedsBrowser": "Tan ìkìlọ̀ àwọn àwòrán ìwé ìtàn lórí lórí fún àwọn wọ̀nyí láti dé",
+    "publicChatAlertsRate": "Ní jù",
+    "publicChatAlertsRateOption": "{{count}} fún wákàtù kan",
+    "publicChatAlertsRateHint": "Kò sí ohun tí a pàdánù nígbà tí yàrá náà bá pọ̀ ju èyí lọ — àwọn ìránṣẹ́ náà ni a mú un wá, wọ́n sì dé pọ̀ mọ́ra ní ìkìlọ̀ tò léyìn."
   },
   "common": {
     "save": "Fipamọ́",
@@ -822,7 +830,8 @@
     "postRemoved": "A ti yọ àròkọ rẹ kúrò",
     "newNotification": "Ìwífúnni tuntun",
     "oneOther": "1 mìíràn",
-    "nOthers": "{{count}} mìíràn"
+    "nOthers": "{{count}} mìíràn",
+    "burstBody": "{{count}} ìkìlọ̀ tuntun láti ọ̀dọ̀ {{who}}"
   },
   "leaderboard": {
     "title": "Àtòjọ Ìpò",
@@ -2107,5 +2116,17 @@
     "dubbed": "Ohun afetigbọ ti a pe ni",
     "preparing": "Ṣíṣe ìmúrasílẹ̀ ohun afetigbọ méjì...",
     "unavailable": "Oríṣìíríṣìí ohùn kò sí fún fídíò yìí."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} àti {{count}} mìíràn",
+    "andOthers_other": "{{names}} àti {{count}} àwọn mìíràn",
+    "someone": "Ẹni kan"
+  },
+  "publicChatAlerts": {
+    "title": "Ìbàròpìn gbogbo ènìyàn",
+    "mentionTitle": "A mẹ́nu kọ̀ ọ́ nínú ìbàròpìn gbogbo ènìyàn",
+    "digest": "{{count}} ìránṣẹ́ tuntun láti ọ̀dọ̀ {{who}}: {{message}}",
+    "voiceMessage": "Ìránṣẹ́ ohùn",
+    "image": "Fi àwòrán ránṣẹ́"
   }
 }

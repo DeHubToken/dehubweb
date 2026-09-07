@@ -319,7 +319,15 @@
     "saving": "عم يحفظ...",
     "noNewMessages": "ما في محادثات جديدة",
     "noNewMessagesDesc": "خلّي محادثاتك الموجودة، بس محدا جديد فيه يبلش وحدة",
-    "dmNoNewHelp": "المحادثات الموجودة بتضل تشتغل؛ محدا جديد فيه يبلش وحدة"
+    "dmNoNewHelp": "المحادثات الموجودة بتضل تشتغل؛ محدا جديد فيه يبلش وحدة",
+    "chat": "دردشة",
+    "publicChatAlerts": "دردشة عامة",
+    "publicChatAlertsDesc": "احصل على تنبيه عندما تكون الدردشة العامة نشطة وأنت في تبويب آخر",
+    "publicChatAlertsOnDesc": "تصل فترات الانشغال كتنبيه واحد مدمج",
+    "publicChatAlertsNeedsBrowser": "شغّل إشعارات المتصفح أعلاه لتصلك هذه التنبيهات",
+    "publicChatAlertsRate": "بحد أقصى",
+    "publicChatAlertsRateOption": "{{count}} في الساعة",
+    "publicChatAlertsRateHint": "لا شيء يُفقد عندما تكون الغرفة أكثر ازدحامًا من ذلك — يتم الاحتفاظ بالرسائل وتصل معًا في التنبيه التالي."
   },
   "common": {
     "save": "حفظ",
@@ -818,7 +826,8 @@
     "postRemoved": "منشورك انحذف",
     "newNotification": "إشعار جديد",
     "oneOther": "١ تاني",
-    "nOthers": "{{count}} تانيين"
+    "nOthers": "{{count}} تانيين",
+    "burstBody": "{{count}} إشعارات جديدة من {{who}}"
   },
   "leaderboard": {
     "title": "لوحة المتصدرين",
@@ -2063,5 +2072,17 @@
     "dubbed": "صوت مدبلج",
     "preparing": "عم نجهز الصوت المدبلج...",
     "unavailable": "ما في صوت مدبلج لهالفيديو."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} و {{count}} آخر",
+    "andOthers_other": "{{names}} و {{count}} آخرون",
+    "someone": "شخص ما"
+  },
+  "publicChatAlerts": {
+    "title": "دردشة عامة",
+    "mentionTitle": "تم ذكرك في الدردشة العامة",
+    "digest": "{{count}} رسالة جديدة من {{who}}: {{message}}",
+    "voiceMessage": "رسالة صوتية",
+    "image": "أرسل صورة"
   }
 }
