@@ -830,7 +830,17 @@
     "newNotification": "ಹೊಸ ಅಧಿಸೂಚನೆ",
     "oneOther": "1 ಇತರ",
     "nOthers": "{{count}} ಇತರರು",
-    "burstBody": "{{count}} ಹೊಸ ಅಧಿಸೂಚನೆಗಳು {{who}} ರಿಂದ"
+    "burstBody": "{{count}} ಹೊಸ ಅಧಿಸೂಚನೆಗಳು {{who}} ರಿಂದ",
+    "community": {
+      "joined": "{{name}}@ ನಿಮ್ಮ ಸಮುದಾಯಕ್ಕೆ ಸೇರಿದ್ದಾರೆ",
+      "joinedNamed": "{{name}} @ \"{{community}}\" ಸೇರಿಕೊಂಡರು",
+      "requested": "{{name}} @ ನಿಮ್ಮ ಸಮುದಾಯಕ್ಕೆ ಸೇರಲು ಕೇಳಿದ್ದಾರೆ",
+      "requestedNamed": "{{name}}@ \"@ {{community}}\" ಗೆ ಸೇರಲು ಕೇಳಲಾಯಿತು",
+      "mentioned": "{{name}} @ ನಿಮ್ಮನ್ನು ಸಮುದಾಯದಲ್ಲಿ ಉಲ್ಲೇಖಿಸಿದ್ದಾರೆ",
+      "mentionedNamed": "{{name}} @ ನಿಮ್ಮನ್ನು \"{{community}}\" ನಲ್ಲಿ ಉಲ್ಲೇಖಿಸಿದ್ದಾರೆ",
+      "here": "{{name}} ಸಮುದಾಯದಲ್ಲಿರುವ ಎಲ್ಲರಿಗೂ ಸಂದೇಶ ಕಳುಹಿಸಿದ್ದಾರೆ",
+      "hereNamed": "{{name}}@ \"@ {{community}}\" ನಲ್ಲಿ ಎಲ್ಲರಿಗೂ ಸಂದೇಶ ಕಳುಹಿಸಿದ್ದಾರೆ"
+    }
   },
   "leaderboard": {
     "title": "ಲೀಡರ್‌ಬೋರ್ಡ್",
@@ -1675,7 +1685,14 @@
     "approve": "ಅನುಮೋದಿಸಿ",
     "reject": "ತಿರಸ್ಕರಿಸಿ",
     "joinFirst": "ಪಿನ್ ಮಾಡಲು ಮೊದಲು ಸಮುದಾಯಗಳಿಗೆ ಸೇರಿ",
-    "pinCommunity": "ಸಮುದಾಯ ಪಿನ್ ಮಾಡಿ"
+    "pinCommunity": "ಸಮುದಾಯ ಪಿನ್ ಮಾಡಿ",
+    "activity": "ಚಟುವಟಿಕೆ",
+    "activitySearch": "ಚಟುವಟಿಕೆಯನ್ನು ಹುಡುಕಿ...",
+    "activityNew": "{{total}} ಹೊಸ",
+    "activityShowMore": "ಇನ್ನಷ್ಟು ತೋರಿಸಿ ({{total}})",
+    "activityNoMatches": "\"{{query}}\" ಗೆ ಯಾವುದೇ ಹೊಂದಾಣಿಕೆಗಳಿಲ್ಲ",
+    "activityEmpty": "ಇನ್ನೂ ಯಾವುದೇ ಚಟುವಟಿಕೆ ಇಲ್ಲ",
+    "activityEmptyDesc": "ನಿಮ್ಮ ಸಮುದಾಯಗಳಿಂದ ಸೇರ್ಪಡೆಗಳು, ಉಲ್ಲೇಖಗಳು ಮತ್ತು ಪ್ರಕಟಣೆಗಳು ಇಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತವೆ."
   },
   "prompt": {
     "seoTitle": "ನಿಮ್ಮ ಫೀಡ್ ಅನ್ನು ಪ್ರಾಂಪ್ಟ್ ಮಾಡಿ — DeHub",

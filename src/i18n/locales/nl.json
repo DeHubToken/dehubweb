@@ -1027,7 +1027,17 @@
     "newNotification": "Nieuwe melding",
     "oneOther": "1 andere",
     "nOthers": "{{count}} anderen",
-    "burstBody": "{{count}} nieuwe meldingen van {{who}}"
+    "burstBody": "{{count}} nieuwe meldingen van {{who}}",
+    "community": {
+      "joined": "{{name}} is lid geworden van je community",
+      "joinedNamed": "{{name}} sloot zich aan bij “{{community}}”",
+      "requested": "{{name}} gevraagd om lid te worden van je community",
+      "requestedNamed": "{{name}} gevraagd om lid te worden van \"{{community}}\"",
+      "mentioned": "{{name}} heeft je genoemd in een community",
+      "mentionedNamed": "{{name}} heeft u vermeld in \"{{community}}\"",
+      "here": "{{name}} heeft iedereen in de community een bericht gestuurd",
+      "hereNamed": "{{name}} heeft iedereen in \"{{community}}\" een bericht gestuurd"
+    }
   },
   "leaderboard": {
     "title": "Ranglijsten",
@@ -1914,7 +1924,14 @@
     "reject": "Afwijzen",
     "pinToProfile": "Zet community's vast op je profiel",
     "joinFirst": "Word eerst lid van community's om ze vast te zetten",
-    "pinCommunity": "Community vastzetten"
+    "pinCommunity": "Community vastzetten",
+    "activity": "Activiteit",
+    "activitySearch": "Zoekactiviteit...",
+    "activityNew": "{{total}} nieuw",
+    "activityShowMore": "Meer weergeven ({{total}})",
+    "activityNoMatches": "Geen overeenkomsten voor \"{{query}}\"",
+    "activityEmpty": "Nog geen activiteit",
+    "activityEmptyDesc": "Meldingen, vermeldingen en aankondigingen van je community's worden hier weergegeven."
   },
   "prompt": {
     "seoTitle": "Stuur je feed aan — DeHub",

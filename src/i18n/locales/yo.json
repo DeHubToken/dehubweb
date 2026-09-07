@@ -831,7 +831,17 @@
     "newNotification": "Ìwífúnni tuntun",
     "oneOther": "1 mìíràn",
     "nOthers": "{{count}} mìíràn",
-    "burstBody": "{{count}} ìkìlọ̀ tuntun láti ọ̀dọ̀ {{who}}"
+    "burstBody": "{{count}} ìkìlọ̀ tuntun láti ọ̀dọ̀ {{who}}",
+    "community": {
+      "joined": "{{name}} darapọ mọ agbegbe rẹ",
+      "joinedNamed": "{{name}} darapọ mọ \"{{community}}@\"",
+      "requested": "{{name}} beere lati darapọ mọ agbegbe rẹ",
+      "requestedNamed": "{{name}} béèrè láti darapọ̀ mọ́ \"{{community}}@\"",
+      "mentioned": "{{name}} darukọ rẹ ni agbegbe kan",
+      "mentionedNamed": "{{name}} darukọ rẹ ni \"{{community}}@\"",
+      "here": "{{name}} fi ránṣẹ́ sí gbogbo ènìyàn ní agbègbè",
+      "hereNamed": "{{name}} ránṣẹ́ sí gbogbo ènìyàn ní “{{community}}@”"
+    }
   },
   "leaderboard": {
     "title": "Àtòjọ Ìpò",
@@ -1698,7 +1708,14 @@
     "reject": "Kọ̀",
     "pinToProfile": "Kàn àwọn àwùjọ mọ́ àkọsílẹ̀",
     "joinFirst": "Kọ́kọ́ darapọ̀ mọ́ àwọn àwùjọ kí o tó lè kàn wọ́n mọ́",
-    "pinCommunity": "Kàn àwùjọ mọ́"
+    "pinCommunity": "Kàn àwùjọ mọ́",
+    "activity": "Attività",
+    "activitySearch": "Iṣẹ́ àwárí...",
+    "activityNew": "{{total}} tuntun",
+    "activityShowMore": "Ṣàfihàn síi ({{total}})",
+    "activityNoMatches": "Kò sí ìfiwéra fún \"{{query}}\"",
+    "activityEmpty": "Ko si iṣẹ kankan sibẹsibẹ",
+    "activityEmptyDesc": "Darapọ mọ, darukọ ati awọn ikede lati ọdọ awọn agbegbe rẹ han nihin."
   },
   "prompt": {
     "seoTitle": "Se ohun tí o fẹ́ kà — DeHub",

@@ -830,7 +830,17 @@
     "newNotification": "Nova notificação",
     "oneOther": "1 outro",
     "nOthers": "{{count}} outros",
-    "burstBody": "{{count}} novas notificações de {{who}}"
+    "burstBody": "{{count}} novas notificações de {{who}}",
+    "community": {
+      "joined": "{{name}} juntou-se à sua comunidade",
+      "joinedNamed": "{{name}} juntou-se a “{{community}}”",
+      "requested": "{{name}} pediu para se juntar à sua comunidade",
+      "requestedNamed": "{{name}} pediu para participar de \"{{community}}\"",
+      "mentioned": "{{name}} mencionou-o numa comunidade",
+      "mentionedNamed": "{{name}} mencionou-o em \"{{community}}\"",
+      "here": "{{name}} enviou mensagens a todos na comunidade",
+      "hereNamed": "{{name}} enviou uma mensagem a todos em \"{{community}}\""
+    }
   },
   "leaderboard": {
     "title": "Classificação",
@@ -1721,7 +1731,14 @@
     "reject": "Rejeitar",
     "pinToProfile": "Fixar comunidades no perfil",
     "joinFirst": "Entre em comunidades primeiro para fixá-las",
-    "pinCommunity": "Fixar comunidade"
+    "pinCommunity": "Fixar comunidade",
+    "activity": "Actividade",
+    "activitySearch": "Procurar actividade...",
+    "activityNew": "{{total}} novo",
+    "activityShowMore": "Mostrar mais ({{total}})",
+    "activityNoMatches": "Nenhuma correspondência para \"{{query}}\"",
+    "activityEmpty": "Ainda não há actividade",
+    "activityEmptyDesc": "As inscrições, menções e anúncios das suas comunidades aparecem aqui."
   },
   "prompt": {
     "seoTitle": "Solicite seu feed — DeHub",

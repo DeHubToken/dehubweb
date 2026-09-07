@@ -829,7 +829,17 @@
     "newNotification": "إشعار يديد",
     "oneOther": "١ ثاني",
     "nOthers": "{{count}} ثانيين",
-    "burstBody": "{{count}} إشعارات جديدة من {{who}}"
+    "burstBody": "{{count}} إشعارات جديدة من {{who}}",
+    "community": {
+      "joined": "{{name}} دخل مجتمعك",
+      "joinedNamed": "{{name}} دخل \"{{community}}\"",
+      "requested": "{{name}} طلب الانضمام لمجتمعك",
+      "requestedNamed": "{{name}} طلب الانضمام لـ \"{{community}}\"",
+      "mentioned": "{{name}} ذكرك في مجتمع",
+      "mentionedNamed": "{{name}} ذكرك في \"{{community}}\"",
+      "here": "{{name}} أرسل رسالة للجميع في المجتمع",
+      "hereNamed": "{{name}} أرسل رسالة للجميع في \"{{community}}\""
+    }
   },
   "leaderboard": {
     "title": "لوحة المتصدرين",
@@ -1666,7 +1676,14 @@
     "approve": "وافق",
     "reject": "ارفض",
     "joinFirst": "انضم لمجتمعات أول عشان تثبتها",
-    "pinCommunity": "ثبّت المجتمع"
+    "pinCommunity": "ثبّت المجتمع",
+    "activity": "النشاط",
+    "activitySearch": "بحث النشاط...",
+    "activityNew": "{{total}} جديد",
+    "activityShowMore": "عرض المزيد ({{total}})",
+    "activityNoMatches": "لا توجد نتائج لـ \"{{query}}\"",
+    "activityEmpty": "لا يوجد نشاط بعد",
+    "activityEmptyDesc": "تظهر هنا الانضمامات والإشارات والإعلانات من مجتمعاتك."
   },
   "prompt": {
     "seoTitle": "وجّه موجزك — DeHub",

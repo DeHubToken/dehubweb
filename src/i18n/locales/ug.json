@@ -830,7 +830,17 @@
     "newNotification": "يېڭى ئۇقتۇرۇش",
     "oneOther": "1 باشقا",
     "nOthers": "{{count}} باشقا",
-    "burstBody": "{{count}} يېڭى ئاگاھلاندۇرۇش {{who}} دىن"
+    "burstBody": "{{count}} يېڭى ئاگاھلاندۇرۇش {{who}} دىن",
+    "community": {
+      "joined": "{{name}} جەمئىيىتىڭىزگە قوشۇلدى",
+      "joinedNamed": "{{name}} قوشۇلدى \"{{community}}\"",
+      "requested": "{{name}} جەمئىيىتىڭىزگە قوشۇلۇشنى تەلەپ قىلدى",
+      "requestedNamed": "{{name}}\" {{community}} \"گە قوشۇلۇشنى تەلەپ قىلدى",
+      "mentioned": "{{name}} بىر جەمئىيەتتە سىزنى تىلغا ئالغان",
+      "mentionedNamed": "{{name}}\" {{community}} \"دا سىزنى تىلغا ئالغان",
+      "here": "{{name}} جەمئىيەتتىكى ھەممە ئادەمنى خەۋەرلەندۈردى",
+      "hereNamed": "{{name}} ھەممىگە \"{{community}}\" دەپ ئۇچۇر يوللىدى"
+    }
   },
   "leaderboard": {
     "title": "تەرتىپنامە",
@@ -1675,7 +1685,14 @@
     "approve": "تەستىقلاش",
     "reject": "رەت قىلىش",
     "joinFirst": "قاداش ئۈچۈن ئالدى بىلەن مەھەللىلەرگە قوشۇلۇڭ",
-    "pinCommunity": "مەھەللىنى قاداش"
+    "pinCommunity": "مەھەللىنى قاداش",
+    "activity": "ئاكتىپلىق",
+    "activitySearch": "ئىزدىنىش پائالىيىتى...",
+    "activityNew": "{{total}} new",
+    "activityShowMore": "تېخىمۇ كۆپ كۆرسەت ({{total}})",
+    "activityNoMatches": "«{{query}}» ئۈچۈن ماس كەلمەيدۇ",
+    "activityEmpty": "تېخىچە ھەرىكەت يوق",
+    "activityEmptyDesc": "بۇ يەردە جەمئىيەتلىرىڭلاردىن كەلگەن قوشۇلۇش، ئەسكەرتىش ۋە ئېلانلار كۆرۈنىدۇ."
   },
   "prompt": {
     "seoTitle": "يەمچۈكنى چاقىرىش — DeHub",

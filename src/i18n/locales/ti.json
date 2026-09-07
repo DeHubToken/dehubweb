@@ -826,7 +826,10 @@
     "postRemoved": "ጽሑፍካ ተኣልዩ",
     "newNotification": "ሓድሽ ምልክታ",
     "oneOther": "1 ካልእ",
-    "nOthers": "{{count}} ካልኦት"
+    "nOthers": "{{count}} ካልኦት",
+    "community": {
+      "joined": "{{name}} ምስ ማሕበረሰብካ ተጸምቢርካ"
+    }
   },
   "leaderboard": {
     "title": "ሰሌዳ ደረጃ",
@@ -1676,7 +1679,12 @@
     "approve": "ኣጽድቕ",
     "reject": "ንጻግ",
     "joinFirst": "ንምፒን ቅድም ማሕበረሰባት ተጸምበር",
-    "pinCommunity": "ማሕበረሰብ ፒን ግበር"
+    "pinCommunity": "ማሕበረሰብ ፒን ግበር",
+    "activity": "ንጥፈት",
+    "activitySearch": "ናይ ምርምር ንጥፈት...",
+    "activityShowMore": "ዝያዳ ኣርኢ ({{total}})",
+    "activityEmpty": "ክሳብ ሕጂ ዝኾነ ንጥፈት የለን ።",
+    "activityEmptyDesc": "ካብ ማሕበረሰባትካ ዝመጹ ምትእኽኻባት ፡ መጠንቀቕታታትን ኣዋጃትን ኣብዚ ይረኣዩ ኣለዉ ።"
   },
   "prompt": {
     "seoTitle": "መግብኻ ኣጣጥሕ — DeHub",

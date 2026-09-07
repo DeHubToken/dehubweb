@@ -821,7 +821,17 @@
     "newNotification": "Uus teade",
     "oneOther": "1 teine",
     "nOthers": "{{count}} teist",
-    "burstBody": "{{count}} uut teadet {{who}}-lt"
+    "burstBody": "{{count}} uut teadet {{who}}-lt",
+    "community": {
+      "joined": "{{name}} liitus sinu kogukonnaga",
+      "joinedNamed": "{{name}} liitus kasutajaga „{{community}}“",
+      "requested": "{{name}} palus sul oma kogukonnaga liituda",
+      "requestedNamed": "{{name}} palus liituda dokumendiga „{{community}}“",
+      "mentioned": "{{name}} mainis sind kogukonnas",
+      "mentionedNamed": "{{name}} mainis sind dokumendis „{{community}}“",
+      "here": "{{name}} saatis sõnumi kõigile kogukonna liikmetele",
+      "hereNamed": "{{name}} saatis sõnumi kõigile asukohas „{{community}}“"
+    }
   },
   "leaderboard": {
     "title": "Edetabel",
@@ -1659,7 +1669,14 @@
     "reject": "Lükka tagasi",
     "pinToProfile": "Kinnita kogukonnad profiilile",
     "joinFirst": "Kinnitamiseks liitu esmalt kogukondadega",
-    "pinCommunity": "Kinnita kogukond"
+    "pinCommunity": "Kinnita kogukond",
+    "activity": "Tegevus",
+    "activitySearch": "Otsi tegevust...",
+    "activityNew": "{{total}} uus",
+    "activityShowMore": "Kuva rohkem ({{total}})",
+    "activityNoMatches": "\"{{query}}\" vasted puuduvad",
+    "activityEmpty": "Tegevusi pole veel",
+    "activityEmptyDesc": "Sinu kogukondade liitumised, mainimised ja teated ilmuvad siia."
   },
   "prompt": {
     "seoTitle": "Kohandage oma voogu — DeHub",

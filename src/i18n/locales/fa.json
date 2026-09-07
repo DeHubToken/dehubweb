@@ -829,7 +829,17 @@
     "newNotification": "اعلان جدید",
     "oneOther": "۱ نفر دیگر",
     "nOthers": "{{count}} نفر دیگر",
-    "burstBody": "{{count}} اعلان جدید از {{who}}"
+    "burstBody": "{{count}} اعلان جدید از {{who}}",
+    "community": {
+      "joined": "{{name}} به انجمن شما پیوست",
+      "joinedNamed": "{{name}} به «{{community}}» پیوست",
+      "requested": "{{name}} از شما خواسته شده است که به انجمن شما بپیوندد",
+      "requestedNamed": "از {{name}} درخواست شد به «{{community}}» بپیوندد",
+      "mentioned": "{{name}} شما را در یک انجمن معرفی کرد",
+      "mentionedNamed": "{{name}} شما را در عبارت «{{community}}» معرفی کرد.",
+      "here": "{{name}} به همه افراد جامعه پیام داد",
+      "hereNamed": "{{name}} به همه افراد با شناسه «{{community}}» پیام داد"
+    }
   },
   "leaderboard": {
     "title": "جدول امتیازات",
@@ -1745,7 +1755,13 @@
     "reject": "رد",
     "pinToProfile": "سنجاق کردن انجمن‌ها به پروفایل",
     "joinFirst": "برای سنجاق کردن، ابتدا به انجمن‌ها بپیوندید",
-    "pinCommunity": "سنجاق کردن انجمن"
+    "pinCommunity": "سنجاق کردن انجمن",
+    "activity": "فعالیت",
+    "activitySearch": "فعالیت جستجو ...",
+    "activityNew": "{{total}} جدید",
+    "activityNoMatches": "هیچ نتیجه‌ای برای &quot;{{query}}&quot; یافت نشد.",
+    "activityEmpty": "هیچ فعالیتی انجام نشده است.",
+    "activityEmptyDesc": "عضویت‌ها، منشن‌ها و اطلاعیه‌های انجمن‌های شما اینجا نمایش داده می‌شوند."
   },
   "prompt": {
     "seoTitle": "فید خود را درخواست کنید — DeHub",

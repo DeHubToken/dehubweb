@@ -830,7 +830,17 @@
     "newNotification": "نویں اطلاع",
     "oneOther": "1 ہور",
     "nOthers": "{{count}} ہور",
-    "burstBody": "{{count}} نئے نوٹیفیکیشن {{who}} سے"
+    "burstBody": "{{count}} نئے نوٹیفیکیشن {{who}} سے",
+    "community": {
+      "joined": "{{name}} توهان جي ڪميونٽي ۾ شامل ٿيو",
+      "joinedNamed": "{{name}} ”{{community}}“ ۾ شامل ٿيو",
+      "requested": "{{name}} توهان جي ڪميونٽي ۾ شامل ٿيڻ جي درخواست ڪئي",
+      "requestedNamed": "{{name}} ”{{community}}“ ۾ شامل ٿيڻ جي درخواست ڪئي",
+      "mentioned": "{{name}} توهان کي ڪميونٽي ۾ ذڪر ڪيو",
+      "mentionedNamed": "{{name}} توهان کي ”{{community}}“ ۾ ذڪر ڪيو",
+      "here": "{{name}} ڪميونٽي ۾ سڀني کي پيغام موڪليو",
+      "hereNamed": "{{name}} ”{{community}}“ ۾ سڀني کي پيغام موڪليو"
+    }
   },
   "leaderboard": {
     "title": "لیڈر بورڈ",
@@ -1689,7 +1699,14 @@
     "reject": "رد کرو",
     "pinToProfile": "کمیونٹیاں پروفائل تے پن کرو",
     "joinFirst": "پن کرݨ کیتے پہلے کمیونٹیاں وِچ شامل تھیوو",
-    "pinCommunity": "کمیونٹی پن کرو"
+    "pinCommunity": "کمیونٹی پن کرو",
+    "activity": "سرگرمی",
+    "activitySearch": "سرگرمی تلاش کر رہے ہیں...",
+    "activityNew": "{{total}} نیا",
+    "activityShowMore": "مزید دکھائیں ({{total}})",
+    "activityNoMatches": "\"{{query}}\" لئی کوئی میل نہیں",
+    "activityEmpty": "ہن تائیں کوئی سرگرمی نہیں",
+    "activityEmptyDesc": "تھوڈی کمیونٹیز توں شامل ہون، ذکر تے اعلانات ایتھے ظاہر ہون گے۔"
   },
   "prompt": {
     "seoTitle": "اپنڑا فیڈ پرامپٹ کیو— DeHub",

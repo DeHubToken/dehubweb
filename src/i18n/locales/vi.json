@@ -745,7 +745,17 @@
     "newNotification": "Thông báo mới",
     "oneOther": "1 người khác",
     "nOthers": "{{count}} người khác",
-    "burstBody": "{{count}} thông báo mới từ {{who}}"
+    "burstBody": "{{count}} thông báo mới từ {{who}}",
+    "community": {
+      "joined": "{{name}} đã tham gia cộng đồng của bạn",
+      "joinedNamed": "{{name}} đã tham gia “{{community}}”",
+      "requested": "{{name}} đã yêu cầu tham gia cộng đồng của bạn",
+      "requestedNamed": "{{name}} đã yêu cầu tham gia “{{community}}”",
+      "mentioned": "{{name}} đã đề cập đến bạn trong một cộng đồng",
+      "mentionedNamed": "{{name}} đã đề cập đến bạn trong “{{community}}”",
+      "here": "{{name}} đã nhắn tin cho mọi người trong cộng đồng",
+      "hereNamed": "{{name}} đã nhắn tin cho mọi người trong “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Bảng xếp hạng",
@@ -1459,7 +1469,14 @@
     "reject": "Từ chối",
     "pinToProfile": "Ghim cộng đồng vào hồ sơ",
     "joinFirst": "Hãy tham gia cộng đồng trước khi ghim",
-    "pinCommunity": "Ghim cộng đồng"
+    "pinCommunity": "Ghim cộng đồng",
+    "activity": "Hoạt động",
+    "activitySearch": "Hoạt động tìm kiếm...",
+    "activityNew": "{{total}} mới",
+    "activityShowMore": "Hiển thị thêm ({{total}})",
+    "activityNoMatches": "Không có kết quả phù hợp cho \"{{query}}\"",
+    "activityEmpty": "Chưa có hoạt động nào",
+    "activityEmptyDesc": "Tham gia, đề cập và thông báo từ cộng đồng của bạn hiển thị tại đây."
   },
   "prompt": {
     "seoTitle": "Nhắc nhở nguồn cấp dữ liệu của bạn — DeHub",

@@ -841,7 +841,11 @@
     "newNotification": "නව දැනුම්දීමක්",
     "oneOther": "තවත් 1 ක්",
     "nOthers": "තවත් {{count}} ක්",
-    "burstBody": "{{count}} නව දැනුම්දීම් {{who}} වෙතින්"
+    "burstBody": "{{count}} නව දැනුම්දීම් {{who}} වෙතින්",
+    "community": {
+      "joined": "{{name}} ඔබේ ප් ‍ රජාවට එක් විය",
+      "mentioned": "{{name}} ඔබ ගැන සඳහන් කර ඇත්තේ ප් ‍ රජාවක ය"
+    }
   },
   "leaderboard": {
     "title": "ශ්‍රේණිගත කිරීම",
@@ -1650,7 +1654,14 @@
     "reject": "ප්‍රතික්ෂේප කරන්න",
     "pinToProfile": "පැතිකඩට ප්‍රජාවන් අමුණන්න",
     "joinFirst": "අමුණන්නට පෙර ප්‍රජාවන්ට එක්වන්න",
-    "pinCommunity": "ප්‍රජාව අමුණන්න"
+    "pinCommunity": "ප්‍රජාව අමුණන්න",
+    "activity": "ක් ‍ රියාකාරකම",
+    "activitySearch": "ක් ‍ රියාකාරකම් සොයන්න...",
+    "activityNew": "{{total}} නව",
+    "activityShowMore": "තවත් පෙන්වන්න ({{total}})",
+    "activityNoMatches": "\"{{query}}\" සඳහා ගැළපීම් නොමැත",
+    "activityEmpty": "තවම ක් ‍ රියාකාරකමක් නැත",
+    "activityEmptyDesc": "ඔබේ ප් ‍ රජාවන්ගේ සම්බන්ධතා, සඳහන් කිරීම් සහ නිවේදන මෙහි පෙන්වයි."
   },
   "prompt": {
     "seoTitle": "ඔබේ සංග්‍රහය ආරම්භ කරන්න — DeHub",

@@ -822,7 +822,17 @@
     "newNotification": "نئی خبر",
     "oneOther": "1 اور",
     "nOthers": "{{count}} اور",
-    "burstBody": "{{count}} نوي نوٽيفڪيشن {{who}} کان"
+    "burstBody": "{{count}} نوي نوٽيفڪيشن {{who}} کان",
+    "community": {
+      "joined": "{{name}} به انجمن شما پیوست",
+      "joinedNamed": "{{name}} به “{{community}}” پیوست",
+      "requested": "{{name}} درخواست پیوستن به انجمن شما را داد",
+      "requestedNamed": "{{name}} درخواست پیوستن به “{{community}}” را داد",
+      "mentioned": "{{name}} در انجمن از شما نام برد",
+      "mentionedNamed": "{{name}} در “{{community}}” از شما نام برد",
+      "here": "{{name}} به همه در انجمن پیام داد",
+      "hereNamed": "{{name}} به همه در “{{community}}” پیام داد"
+    }
   },
   "leaderboard": {
     "title": "لیڈر بورڈ",
@@ -1673,7 +1683,12 @@
     "approve": "منظور کرو",
     "reject": "نامنظور کرو",
     "joinFirst": "پن کرے کے واسطے پہلے سماج میں جڑو",
-    "pinCommunity": "سماج پن کرو"
+    "pinCommunity": "سماج پن کرو",
+    "activity": "Activity",
+    "activitySearch": "Search activity...",
+    "activityNew": "{{total}} new",
+    "activityShowMore": "Daz more ({{total}})",
+    "activityEmpty": "No activity yet"
   },
   "prompt": {
     "seoTitle": "ତମ ଫିଡ୍‌କେ ପ୍ରମ୍ପ୍ଟ କରା — DeHub",

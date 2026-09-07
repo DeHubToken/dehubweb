@@ -848,7 +848,17 @@
     "newNotification": "Yangi bildirishnoma",
     "oneOther": "1 boshqa",
     "nOthers": "{{count}} boshqa",
-    "burstBody": "{{count}} ta yangi bildirishnomalar {{who}} dan"
+    "burstBody": "{{count}} ta yangi bildirishnomalar {{who}} dan",
+    "community": {
+      "joined": "{{name}} sizning hamjamiyatingizga qo&#39;shildi",
+      "joinedNamed": "{{name}} “{{community}}” ga qo&#39;shildi",
+      "requested": "{{name}} hamjamiyatingizga qo&#39;shilish so&#39;raldi",
+      "requestedNamed": "{{name}} “{{community}}” ga qo‘shilish so‘raldi",
+      "mentioned": "{{name}} sizni hamjamiyatda tilga oldi",
+      "mentionedNamed": "{{name}} sizni “{{community}}” da tilga olgan",
+      "here": "{{name}} hamjamiyatdagi barchaga xabar yubordi",
+      "hereNamed": "{{name}} hammaga “{{community}}” xatida xabar yubordi"
+    }
   },
   "leaderboard": {
     "title": "Reyting",
@@ -1715,7 +1725,13 @@
     "reject": "Rad etish",
     "pinToProfile": "Jamoalarni profilga mahkamlash",
     "joinFirst": "Mahkamlash uchun avval jamoalarga qo'shiling",
-    "pinCommunity": "Jamoani mahkamlash"
+    "pinCommunity": "Jamoani mahkamlash",
+    "activity": "Faolliyat",
+    "activitySearch": "Qidiruv faoliyati...",
+    "activityNew": "{{total}} yangi",
+    "activityNoMatches": "&quot;{{query}}&quot; uchun mosliklar yo&#39;q",
+    "activityEmpty": "Topshiriqlar mavjud emas!",
+    "activityEmptyDesc": "Hamjamiyatlaringizdan qo&#39;shilishlar, eslatmalar va e&#39;lonlar bu yerda ko&#39;rsatiladi."
   },
   "prompt": {
     "seoTitle": "Lentangizni sozlang — DeHub",

@@ -827,7 +827,16 @@
     "newNotification": "नवीन सूचना",
     "oneOther": "1 इतर",
     "nOthers": "{{count}} इतर",
-    "burstBody": "{{count}} नवीन सूचना {{who}} कडून"
+    "burstBody": "{{count}} नवीन सूचना {{who}} कडून",
+    "community": {
+      "joined": "{{name}} आपल्या समुदायात सामील झाले",
+      "joinedNamed": "{{name}} सामील झाले “{{community}}”",
+      "requested": "{{name}}यांना आपल्या समुदायात सामील होण्यास सांगितले",
+      "requestedNamed": "{{name}} यांना “{{community}}” मध्ये सामील होण्यास सांगितले",
+      "mentioned": "{{name}} ने एका समुदायात आपला उल्लेख केला",
+      "mentionedNamed": "{{name}} यांनी “{{community}}” मध्ये आपला उल्लेख केला",
+      "hereNamed": "{{name}} सर्वांनी “{{community}}” मध्ये संदेश पाठविला"
+    }
   },
   "leaderboard": {
     "title": "लीडरबोर्ड",
@@ -1688,7 +1697,13 @@
     "reject": "नाकारा",
     "pinToProfile": "प्रोफाइलवर समुदाय पिन करा",
     "joinFirst": "पिन करण्यासाठी आधी समुदायांमध्ये सामील व्हा",
-    "pinCommunity": "समुदाय पिन करा"
+    "pinCommunity": "समुदाय पिन करा",
+    "activity": "क्रियाकलाप",
+    "activitySearch": "क्रियाकलाप शोधा...",
+    "activityShowMore": "आणखी दाखवा ({{total}})",
+    "activityNoMatches": "\"{{query}}\" साठी कोणतेही जुळत नाही",
+    "activityEmpty": "अद्याप ॲक्टिव्हिटी नाही",
+    "activityEmptyDesc": "तुमच्या कम्युनिटीजमधील सामील होतात, उल्लेख करतात आणि घोषणा येथे दर्शवतात."
   },
   "prompt": {
     "seoTitle": "तुमचे फीड प्रॉम्प्ट करा — DeHub",

@@ -830,7 +830,17 @@
     "newNotification": "Nowe powiadomienie",
     "oneOther": "1 inny",
     "nOthers": "{{count}} innych",
-    "burstBody": "{{count}} nowych powiadomień od {{who}}"
+    "burstBody": "{{count}} nowych powiadomień od {{who}}",
+    "community": {
+      "joined": "{{name}} dołączył do Twojej społeczności",
+      "joinedNamed": "{{name}} dołączył (a) do „{{community}}”",
+      "requested": "{{name}} prosi o dołączenie do Twojej społeczności",
+      "requestedNamed": "{{name}} poprosił o dołączenie do „{{community}}”",
+      "mentioned": "{{name}} wspomniał o Tobie w społeczności",
+      "mentionedNamed": "{{name}} wspomniał o Tobie w „{{community}}”",
+      "here": "{{name}} wysłał (a) wiadomość do wszystkich członków społeczności",
+      "hereNamed": "{{name}} wysłał (a) wiadomość do wszystkich w „{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Rankingi",
@@ -1717,7 +1727,14 @@
     "reject": "Odrzuć",
     "pinToProfile": "Przypnij społeczności do profilu",
     "joinFirst": "Najpierw dołącz do społeczności, aby je przypiąć",
-    "pinCommunity": "Przypnij społeczność"
+    "pinCommunity": "Przypnij społeczność",
+    "activity": "Aktywność",
+    "activitySearch": "Wyszukaj aktywność...",
+    "activityNew": "{{total}} nowe",
+    "activityShowMore": "Pokaż więcej ({{total}})",
+    "activityNoMatches": "Brak dopasowań dla \"{{query}}\"",
+    "activityEmpty": "Nie ma jeszcze aktywności",
+    "activityEmptyDesc": "Dołączenia, wzmianki i ogłoszenia z Twoich społeczności pojawiają się tutaj."
   },
   "prompt": {
     "seoTitle": "Wybierz tematy dla swojego kanału — DeHub",

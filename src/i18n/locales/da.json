@@ -830,7 +830,17 @@
     "newNotification": "Ny notifikation",
     "oneOther": "1 anden",
     "nOthers": "{{count}} andre",
-    "burstBody": "{{count}} nye notifikationer fra {{who}}"
+    "burstBody": "{{count}} nye notifikationer fra {{who}}",
+    "community": {
+      "joined": "{{name}} tilsluttede sig dit netværk",
+      "joinedNamed": "{{name}} tilmeldte sig \"{{community}}\"",
+      "requested": "{{name}} blev bedt om at tilmelde sig dit fællesskab",
+      "requestedNamed": "{{name}} bad om at tilmelde sig \"{{community}}\"",
+      "mentioned": "{{name}} nævnte dig i et netværk",
+      "mentionedNamed": "{{name}} nævnte dig i \"{{community}}\"",
+      "here": "{{name}} sendte beskeder til alle i netværket",
+      "hereNamed": "{{name}} sendte beskeder til alle i \"{{community}}\""
+    }
   },
   "leaderboard": {
     "title": "Rangliste",
@@ -1721,7 +1731,14 @@
     "reject": "Afvis",
     "pinToProfile": "Fastgør fællesskaber til profil",
     "joinFirst": "Deltag i fællesskaber først for at fastgøre dem",
-    "pinCommunity": "Fastgør fællesskab"
+    "pinCommunity": "Fastgør fællesskab",
+    "activity": "Aktivitet",
+    "activitySearch": "Søg aktivitet...",
+    "activityNew": "{{total}} nyt",
+    "activityShowMore": "Vis mere ({{total}})",
+    "activityNoMatches": "Ingen resultater for \"{{query}}\"",
+    "activityEmpty": "Ingen aktivitet endnu",
+    "activityEmptyDesc": "Deltagelser, omtaler og meddelelser fra dine netværk vises her."
   },
   "prompt": {
     "seoTitle": "Styr dit feed — DeHub",

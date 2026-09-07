@@ -8,7 +8,7 @@ import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Megaphone, Send, Scale, Siren, Briefcase
+import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Send, Scale, Siren, Briefcase
 } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
@@ -26,6 +26,13 @@ import {
   type NotificationCategory,
 } from '@/hooks/use-notifications';
 import { useCustomNotifications, useCustomUnreadCount, useMarkCustomNotificationAsRead, useMarkAllCustomNotificationsAsRead } from '@/hooks/use-custom-notifications';
+import {
+  communityNotificationIcon,
+  communityNotificationPath,
+  communityNotificationPreview,
+  communityNotificationSentence,
+  isCommunityNotificationType,
+} from '@/lib/community-notifications';
 import { formatDistanceToNow } from 'date-fns';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
@@ -319,16 +326,19 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     case 'comment':
     case 'comment_reply':
     case 'mention':
-    case 'community_mention':
     case 'feature_request_comment':
     case 'governance_comment':
       return <MessageSquareText className="w-4 h-4 text-white/70" />;
-    // An @here addresses the whole room, so it reads as a megaphone rather than
-    // as one more reply in the thread.
+    // Joins, mentions and @here take their glyph from the shared community
+    // module, so the bell and the Communities page mark them the same way. An
+    // @here addresses the whole room, so it is a megaphone rather than one more
+    // reply in the thread.
+    case 'community_mention':
     case 'community_here':
-      return <Megaphone className="w-4 h-4 text-white/70" />;
-    case 'community_join':
-      return <UsersRound className="w-4 h-4 text-white/70" />;
+    case 'community_join': {
+      const CommunityIcon = communityNotificationIcon(type);
+      return <CommunityIcon className="w-4 h-4 text-white/70" />;
+    }
     case 'work_application':
     case 'work_submission':
       return <Briefcase className="w-4 h-4 text-white/70" />;
@@ -361,8 +371,6 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
       return <AlertTriangle className="w-4 h-4 text-white/70" />;
     case 'governance_vote':
       return <Star className="w-4 h-4 text-white/70" />;
-    case 'community_join':
-      return <UsersRound className="w-4 h-4 text-white/70" />;
     case 'store_order':
       return <ShoppingBag className="w-4 h-4 text-white/70" />;
     case 'fraction_offer':
@@ -563,12 +571,12 @@ function getNotificationContent(
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return title ? `${actorName} commented on your proposal "${title}"` : `${actorName} commented on your proposal`;
   }
-  if ((notification.type as string) === 'community_join') {
-    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    const action = notification.content === 'requested to join your community'
-      ? 'requested to join your community'
-      : 'joined your community';
-    return title ? `${actorName} ${action} "${title}"` : `${actorName} ${action}`;
+  // Joins, @mentions and @here all read the same way here and on the
+  // Communities page. Before this, only joins had a sentence: mention and
+  // @here rows carry the chat message in `content`, so they fell through the
+  // `default` branch below and rendered the bare message with no subject.
+  if (isCommunityNotificationType(notification.type as string)) {
+    return communityNotificationSentence(notification, actorName, tr);
   }
   if ((notification.type as string) === 'store_order') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
@@ -716,15 +724,11 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   if ((notification.type as string) === 'feature_request_like' || (notification.type as string) === 'feature_request_comment') {
     return '/features';
   }
-  // Mentions store a slug; membership activity stores the stable community ID.
-  // The community page resolves both forms.
-  if (
-    (notification.type as string) === 'community_mention' ||
-    (notification.type as string) === 'community_here' ||
-    (notification.type as string) === 'community_join'
-  ) {
-    const slug = customReferenceId(notification);
-    return slug ? `/app/communities/${slug}` : '/app/communities';
+  // Joins, mentions and @here all land on the community they came from. The
+  // reference is normally its slug, but the join trigger has written the uuid
+  // too; `useCommunity` resolves either, and so does the shared helper.
+  if (isCommunityNotificationType(notification.type as string)) {
+    return communityNotificationPath(customReferenceId(notification));
   }
   // Bounty applications/submissions store job_number, which is what the
   // canonical /bounty/<n> URL is keyed on — not the job uuid.
@@ -1228,7 +1232,14 @@ const NotificationItem = memo(function NotificationItem({
           const isReplyOrMention = notification.type === 'comment_reply' || notification.type === 'mention';
           // Strip leading @mention from comment preview
           const cleanedPreview = commentPreview ? commentPreview.replace(/^@\w+\s*/, '') : null;
-          const previewText = isReplyOrMention && cleanedPreview ? cleanedPreview : notification.tokenTitle;
+          // A community @mention or @here stores the chat message itself, which
+          // the sentence above deliberately leaves out — it belongs here, as the
+          // quoted line, the same as a comment reply's. A join has no message,
+          // and `tokenTitle` on these rows is the community name the sentence
+          // has already spent, so it would otherwise quote it back at itself.
+          const previewText = isCommunityNotificationType(notification.type as string)
+            ? communityNotificationPreview(notification)
+            : (isReplyOrMention && cleanedPreview ? cleanedPreview : notification.tokenTitle);
           if (!previewText) return null;
           return (
             <>
