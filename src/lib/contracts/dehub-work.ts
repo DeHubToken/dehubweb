@@ -1,5 +1,5 @@
 /**
- * DeHubWork â€” on-chain escrow wiring
+ * DeHubWork — on-chain escrow wiring
  * ==================================
  * Thin wagmi/AA wrapper around the DeHubWork contract. If
  * `DEHUB_WORK_ADDRESS` is the zero address (not yet deployed) every
@@ -22,7 +22,7 @@ import { CHAIN_CONFIGS, BASE_CHAIN_ID } from './dhb-token';
 import type { WorkCurrency, WorkJobType } from '@/features/work/types';
 
 
-// â”€â”€ Addresses (Base) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Addresses (Base) ─────────────────────────────────────────
 export const DEHUB_WORK_ADDRESS = '0x0000000000000000000000000000000000000000'; // TODO: deploy + paste
 export const USDC_BASE_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
 
@@ -41,7 +41,7 @@ export function workExplorerTxUrl(txHash: string): string {
 
 const ZERO = '0x0000000000000000000000000000000000000000';
 
-// â”€â”€ ABI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── ABI ──────────────────────────────────────────────────────
 export const DEHUB_WORK_ABI = [
   'function createJob(address token, uint8 jobType, uint256 pricePerUnit, uint256 maxUnits) returns (uint256)',
   'function awardApplicant(uint256 jobId, address worker)',
@@ -61,7 +61,7 @@ export function getCurrencyToken(currency: WorkCurrency): { address: string; dec
   return { address: CHAIN_CONFIGS[BASE_CHAIN_ID].dhbToken, decimals: 18 };
 }
 
-// â”€â”€ Write helpers (return null when contract not deployed) â”€â”€â”€
+// ── Write helpers (return null when contract not deployed) ───
 export async function createJobOnChain(params: {
   currency: WorkCurrency;
   jobType: WorkJobType;
@@ -148,11 +148,11 @@ export async function readOnChainJob(jobId: number) {
   return readContract(DEHUB_WORK_ADDRESS, workIface, 'jobs', [BigInt(jobId)], BASE_CHAIN_ID);
 }
 
-// â”€â”€ Direct payout (no escrow contract required) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Direct payout (no escrow contract required) ───────────────
 /**
  * Pay a worker straight from the poster's wallet.
  *
- * The escrow above needs `DEHUB_WORK_ADDRESS` deployed, and it is not â€” so
+ * The escrow above needs `DEHUB_WORK_ADDRESS` deployed, and it is not — so
  * until it is, every helper up there returns `null` and no money can move
  * through it. That is why bounties accrued ~500k DHB of *approved* payouts with
  * a null `payout_tx_hash`: approval was only ever a status column.
@@ -191,7 +191,7 @@ export async function payWorkerDirect(params: {
   const balance = await getERC20Balance(token, from, BASE_CHAIN_ID);
   if (balance < amountWei) {
     throw new Error(
-      `Not enough ${params.currency} â€” you hold ${formatUnits(balance, decimals)} and this payout is ${params.amount}.`
+      `Not enough ${params.currency} — you hold ${formatUnits(balance, decimals)} and this payout is ${params.amount}.`
     );
   }
 
