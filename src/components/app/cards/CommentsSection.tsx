@@ -68,6 +68,7 @@ import { useCommentTips } from '@/hooks/use-comment-tips';
 import { useAuthorThread } from '@/hooks/use-author-thread';
 import { TipModal } from '@/components/app/modals/TipModal';
 import { CommentLikersDrawer } from './CommentLikersDrawer';
+import { FullscreenImageViewer } from './FullscreenImageViewer';
 import { toast } from 'sonner';
 import { incrementCommentCount } from '@/lib/comment-count-cache';
 import { useMention } from '@/hooks/use-mention';
@@ -272,6 +273,7 @@ const PostCreatorContext = createContext<{
 function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
+  const [imageFullscreen, setImageFullscreen] = useState(false);
   const avatarUrl = comment.avatar;
   const translation = useTranslation(comment.text || '');
   const shownName = comment.displayName || comment.username;
@@ -478,13 +480,25 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
             <FeedLinkPreviews text={commentBody} />
             <AssetRefCards refs={commentAssetRefs} />
             {comment.imageUrl && (
-              <img
-                src={comment.imageUrl}
-                alt="Comment media"
-                className="mt-1.5 rounded-lg max-w-[240px] max-h-[200px] object-contain cursor-pointer"
-                onClick={() => window.open(comment.imageUrl, '_blank')}
-                loading="lazy"
-              />
+              <>
+                <img
+                  src={comment.imageUrl}
+                  alt="Comment media"
+                  className="mt-1.5 rounded-lg max-w-[240px] max-h-[200px] object-contain cursor-zoom-in"
+                  onClick={() => setImageFullscreen(true)}
+                  loading="lazy"
+                />
+                {/* The app's own viewer rather than a new browser tab: it
+                    portals to the body, so it covers the whole page even from
+                    inside the comments drawer, and closing it returns to the
+                    thread instead of a tab showing a bare image URL. */}
+                <FullscreenImageViewer
+                  images={[comment.imageUrl]}
+                  initialIndex={0}
+                  isOpen={imageFullscreen}
+                  onClose={() => setImageFullscreen(false)}
+                />
+              </>
             )}
             {comment.voiceNote && (
               <div className="mt-1">

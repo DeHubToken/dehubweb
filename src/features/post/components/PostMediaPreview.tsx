@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, Loader2, Paintbrush, Crop, Scissors, Image as ImageIcon } from 'lucide-react';
 import nailIcon from '@/assets/icons/nail-icon.png';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -100,6 +101,20 @@ export function PostMediaPreview({
   const [extractingFrames, setExtractingFrames] = useState<Set<number>>(new Set());
   const [fullscreenPreview, setFullscreenPreview] = useState<{ index: number; src: string; type: 'image' | 'video'; filterSettings?: FilterSettings; cropSettings?: CropSettings; currentTime?: number } | null>(null);
   const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
+
+  // Escape belongs to whatever is on top. Without this the composer drawer
+  // hears it first and closes the whole post out from under the preview.
+  useEffect(() => {
+    if (!fullscreenPreview) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      e.preventDefault();
+      e.stopPropagation();
+      setFullscreenPreview(null);
+    };
+    document.addEventListener('keydown', onKeyDown, true);
+    return () => document.removeEventListener('keydown', onKeyDown, true);
+  }, [fullscreenPreview]);
   const [audioTrimmerData, setAudioTrimmerData] = useState<{
     index: number;
     file: File;
@@ -1068,7 +1083,15 @@ export function PostMediaPreview({
         />
       )}
 
-      {/* Fullscreen Preview Modal */}
+      {/* Fullscreen Preview Modal.
+
+          Portalled to the body on purpose. The composer is a vaul drawer, and
+          vaul writes `transform: translate3d(...)` inline on its content to
+          drive the slide — a transformed ancestor becomes the containing block
+          for `position: fixed`, so rendering this in place pinned "fullscreen"
+          to the drawer's box instead of the viewport. Same reason it sits above
+          z-[100]: that is the drawer's own layer. */}
+      {createPortal(
       <AnimatePresence>
         {fullscreenPreview && (
           <motion.div
@@ -1076,7 +1099,7 @@ export function PostMediaPreview({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center"
+            className="fixed inset-0 z-[200] flex items-center justify-center"
             onClick={() => setFullscreenPreview(null)}
           >
             {/* Blurred backdrop */}
@@ -1137,7 +1160,9 @@ export function PostMediaPreview({
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body
+      )}
     </>
   );
 }
