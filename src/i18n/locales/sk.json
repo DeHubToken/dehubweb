@@ -2018,7 +2018,19 @@
     "spendFor": "{{power}} na {{minutes}} minút",
     "aimAtAccount": "Čí sledovatelia by to mali vidieť?",
     "aimPlaceholder": "Používateľské meno alebo adresa peňaženky",
-    "aimAtTiers": "Ktoré úrovne odznakov by to mali vidieť?"
+    "aimAtTiers": "Ktoré úrovne odznakov by to mali vidieť?",
+    "homePost": "Použite ho z vlastného príspevku — ponuka ⋯, potom Boost.",
+    "homeGift": "Použite ho na príspevok niekoho iného — ponuka ⋯, potom Boost.",
+    "homeComment": "Použite ho na vlastný komentár v cudzej téme.",
+    "homeStage": "Použite ho zo Stage, ktorú hostíte.",
+    "homePage": "Použite ho tu, hore na tejto stránke.",
+    "flaresLeft": "flares",
+    "giftedTo": "darček → #{{id}}",
+    "goldenHourStarted": "Golden Hour beží {{minutes}} minút — všetko, čo teraz zverejníte, sa počíta dvojnásobne",
+    "start": "Štart",
+    "pickCategory": "Kategória…",
+    "trendJacked": "{{category}} je trendom {{minutes}} minút",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Rozpočet tejto odmeny je úplne vyčerpaný."

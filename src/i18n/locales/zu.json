@@ -1932,7 +1932,19 @@
     "spendFor": "{{power}} imizuzu engu-{{minutes}}",
     "aimAtAccount": "Abalandeli bakabani okufanele bakubone?",
     "aimPlaceholder": "Igama lomsebenzisi noma ikheli lesikhwama",
-    "aimAtTiers": "Yimaphi amazinga ebheji okufanele akubone?"
+    "aimAtTiers": "Yimaphi amazinga ebheji okufanele akubone?",
+    "homePost": "Yisebenzise kokuthunyelwe kwakho — imenyu ye-⋯, bese u-Boost.",
+    "homeGift": "Yisebenzise kokuthunyelwe komunye umuntu — imenyu ye-⋯, bese u-Boost.",
+    "homeComment": "Yisebenzise kumazwana akho, endaweni yomunye umuntu.",
+    "homeStage": "Yisebenzise esiteji osibambayo.",
+    "homePage": "Yisebenzise lapha, phezulu kuleli khasi.",
+    "flaresLeft": "flares",
+    "giftedTo": "isipho → #{{id}}",
+    "goldenHourStarted": "I-Golden Hour isebenza imizuzu engu-{{minutes}} — konke okuthunyelayo manje kubalwa kabili",
+    "start": "Qala",
+    "pickCategory": "Isigaba…",
+    "trendJacked": "I-{{category}} iyathrenda imizuzu engu-{{minutes}}",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Isabelomali salo mklomelo sisetshenziswe sonke."

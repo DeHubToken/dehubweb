@@ -1663,7 +1663,19 @@
     "spendFor": "{{power}} trong {{minutes}} phút",
     "aimAtAccount": "Người theo dõi của ai nên thấy nó?",
     "aimPlaceholder": "Tên người dùng hoặc địa chỉ ví",
-    "aimAtTiers": "Những hạng huy hiệu nào nên thấy nó?"
+    "aimAtTiers": "Những hạng huy hiệu nào nên thấy nó?",
+    "homePost": "Dùng nó từ một bài đăng của riêng bạn — menu ⋯, sau đó Tăng cường.",
+    "homeGift": "Dùng nó cho bài đăng của người khác — menu ⋯, sau đó Tăng cường.",
+    "homeComment": "Dùng nó cho bình luận của riêng bạn, trong chuỗi của người khác.",
+    "homeStage": "Dùng nó từ Sân khấu bạn đang tổ chức.",
+    "homePage": "Dùng nó ở đây, trên đầu trang này.",
+    "flaresLeft": "tia sáng",
+    "giftedTo": "quà tặng → #{{id}}",
+    "goldenHourStarted": "Golden Hour đang chạy trong {{minutes}} phút — mọi thứ bạn đăng bây giờ đều được tính gấp đôi",
+    "start": "Bắt đầu",
+    "pickCategory": "Danh mục…",
+    "trendJacked": "{{category}} đang thịnh hành trong {{minutes}} phút",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Ngân sách của tiền thưởng này đã được phân bổ hết.",

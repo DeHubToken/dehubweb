@@ -1748,7 +1748,19 @@
     "spendFor": "{{power}} timp de {{minutes}} minute",
     "aimAtAccount": "Ai cui urmăritori ar trebui să o vadă?",
     "aimPlaceholder": "Nume de utilizator sau adresă de portofel",
-    "aimAtTiers": "Ce niveluri de insignă ar trebui să o vadă?"
+    "aimAtTiers": "Ce niveluri de insignă ar trebui să o vadă?",
+    "homePost": "Cheltuiește-l dintr-una dintre propriile tale postări — meniul ⋯, apoi Boost.",
+    "homeGift": "Cheltuiește-l pe postarea altcuiva — meniul ⋯, apoi Boost.",
+    "homeComment": "Cheltuiește-l pe propriul tău comentariu, într-un fir al altcuiva.",
+    "homeStage": "Cheltuiește-l dintr-o scenă pe care o găzduiești.",
+    "homePage": "Cheltuiește-l aici, în partea de sus a acestei pagini.",
+    "flaresLeft": "flares",
+    "giftedTo": "cadou → #{{id}}",
+    "goldenHourStarted": "Golden Hour rulează timp de {{minutes}} minute — tot ce postezi acum contează dublu",
+    "start": "Start",
+    "pickCategory": "Categorie…",
+    "trendJacked": "{{category}} este în trend timp de {{minutes}} minute",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Bugetul acestei recompense este alocat în întregime.",

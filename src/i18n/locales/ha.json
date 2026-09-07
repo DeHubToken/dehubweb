@@ -1900,7 +1900,19 @@
     "spendFor": "{{power}} na tsawon minti {{minutes}}",
     "aimAtAccount": "Mabiyan wanene ya kamata su gan shi?",
     "aimPlaceholder": "Sunan mai amfani ko adireshin walat",
-    "aimAtTiers": "Waɗanne matakan lamba ya kamata su gan shi?"
+    "aimAtTiers": "Waɗanne matakan lamba ya kamata su gan shi?",
+    "homePost": "Kashe shi daga ɗaya daga cikin sakonninka—menu na ⋯, sannan kuma Boost.",
+    "homeGift": "Kashe shi a kan sakon wani—menu na ⋯, sannan kuma Boost.",
+    "homeComment": "Kashe shi a kan tsokacinka, a cikin wata zaren wani.",
+    "homeStage": "Kashe shi daga Stage da kake gudanarwa.",
+    "homePage": "Kashe shi anan, a saman wannan shafi.",
+    "flaresLeft": "flares",
+    "giftedTo": "kyauta → #{{id}}",
+    "goldenHourStarted": "Golden Hour yana gudana na tsawon mintuna {{minutes}} — duk abin da ka aika yanzu yana ƙididdigewa sau biyu",
+    "start": "Fara",
+    "pickCategory": "Rukuni…",
+    "trendJacked": "{{category}} yana tasowa na tsawon mintuna {{minutes}}",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Kasafin kuɗin wannan lada ya ƙare gaba ɗaya."

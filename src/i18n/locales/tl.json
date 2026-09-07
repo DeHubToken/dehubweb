@@ -1799,7 +1799,19 @@
     "spendFor": "{{power}} sa loob ng {{minutes}} minuto",
     "aimAtAccount": "Kaninong mga tagasunod ang dapat makakita nito?",
     "aimPlaceholder": "Username o wallet address",
-    "aimAtTiers": "Aling mga badge tier ang dapat makakita nito?"
+    "aimAtTiers": "Aling mga badge tier ang dapat makakita nito?",
+    "homePost": "Gamitin ito mula sa isa sa iyong sariling mga post — ang ⋯ menu, pagkatapos ay i-Boost.",
+    "homeGift": "Gamitin ito sa post ng iba — ang ⋯ menu, pagkatapos ay i-Boost.",
+    "homeComment": "Gamitin ito sa iyong sariling komento, sa thread ng iba.",
+    "homeStage": "Gamitin ito mula sa isang Stage na iyong ina-host.",
+    "homePage": "Gamitin ito dito, sa tuktok ng pahinang ito.",
+    "flaresLeft": "flares",
+    "giftedTo": "regalo → #{{id}}",
+    "goldenHourStarted": "Golden Hour ay tumatakbo sa {{minutes}} minuto — lahat ng iyong ipo-post ngayon ay doble ang bilang",
+    "start": "Simula",
+    "pickCategory": "Kategorya…",
+    "trendJacked": "{{category}} ay trending sa {{minutes}} minuto",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Nagamit na nang buo ang budget ng bounty na ito.",

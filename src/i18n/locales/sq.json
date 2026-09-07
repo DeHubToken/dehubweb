@@ -1901,7 +1901,19 @@
     "spendFor": "{{power}} për {{minutes}} minuta",
     "aimAtAccount": "Ndjekësit e kujt duhet ta shohin?",
     "aimPlaceholder": "Emri i përdoruesit ose adresa e portofolit",
-    "aimAtTiers": "Cilat nivele distinktivi duhet ta shohin?"
+    "aimAtTiers": "Cilat nivele distinktivi duhet ta shohin?",
+    "homePost": "Shpenzojeni nga një nga postimet tuaja — menyja ⋯, pastaj Boost.",
+    "homeGift": "Shpenzojeni në postimin e dikujt tjetër — menyja ⋯, pastaj Boost.",
+    "homeComment": "Shpenzojeni në komentin tuaj, në një temë të dikujt tjetër.",
+    "homeStage": "Shpenzojeni nga një Stage që po organizoni.",
+    "homePage": "Shpenzojeni këtu, në krye të kësaj faqeje.",
+    "flaresLeft": "flares",
+    "giftedTo": "gift → #{{id}}",
+    "goldenHourStarted": "Golden Hour po zgjat {{minutes}} minuta — çdo gjë që postoni tani numërohet dyfish",
+    "start": "Start",
+    "pickCategory": "Category…",
+    "trendJacked": "{{category}} po bëhet trend për {{minutes}} minuta",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Buxheti i kësaj shpërblimi është angazhuar plotësisht."

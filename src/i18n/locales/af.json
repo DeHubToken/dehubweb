@@ -1781,7 +1781,19 @@
     "spendFor": "{{power}} vir {{minutes}} minute",
     "aimAtAccount": "Wie se volgelinge moet dit sien?",
     "aimPlaceholder": "Gebruikersnaam of beursie-adres",
-    "aimAtTiers": "Watter kentekenvlakke moet dit sien?"
+    "aimAtTiers": "Watter kentekenvlakke moet dit sien?",
+    "homePost": "Spandeer dit vanaf een van jou eie plasings — die ⋯-kieslys, dan Boost.",
+    "homeGift": "Spandeer dit op iemand anders se plasing — die ⋯-kieslys, dan Boost.",
+    "homeComment": "Spandeer dit op jou eie opmerking, in iemand anders se draad.",
+    "homeStage": "Spandeer dit vanaf 'n Verhoog wat jy aanbied.",
+    "homePage": "Spandeer dit hier, bo-aan hierdie bladsy.",
+    "flaresLeft": "flares",
+    "giftedTo": "geskenk → #{{id}}",
+    "goldenHourStarted": "Golden Hour vir {{minutes}} minute — alles wat jy nou plaas tel dubbel",
+    "start": "Begin",
+    "pickCategory": "Kategorie…",
+    "trendJacked": "{{category}} is trending vir {{minutes}} minute",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Hierdie kopgeld se begroting is heeltemal toegewys.",

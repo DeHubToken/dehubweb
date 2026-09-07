@@ -239,6 +239,53 @@ export function powerForPostAge(createdAt: string | Date | undefined): SuperPowe
   return age > 7 * 24 * 60 * 60 * 1000 ? 'second_wind' : 'boost';
 }
 
+/**
+ * Where a power is spent from.
+ *
+ * One table, read by the sheet that offers powers on a post AND by the
+ * SuperPowers page that tells a holder where the rest of theirs live. They
+ * disagreed before this existed: the sheet offered every power that was not a
+ * Golden Hour, including the three that need a comment, a stage or a category
+ * it never sends — so tapping them spent nothing and returned a refusal — and
+ * the page ticked five powers with a control for one, which reads as four
+ * powers that do not work.
+ *
+ *   - `post`    your own post's ⋯ menu → Boost
+ *   - `gift`    somebody else's post, same menu. The only one that inverts.
+ *   - `comment` your comment, in somebody else's thread
+ *   - `stage`   a Stage you are hosting
+ *   - `page`    the SuperPowers page itself — no subject to hang off
+ *
+ * Keyed by the whole union so a fourteenth power cannot be added without
+ * deciding where it is spent.
+ */
+export type PowerHome = 'post' | 'gift' | 'comment' | 'stage' | 'page';
+
+export const POWER_HOME: Record<SuperPowerKey, PowerHome> = {
+  boost: 'post',
+  second_wind: 'post',
+  comment_anchor: 'comment',
+  trend_jacker: 'page',
+  timeline_bomber: 'post',
+  signal_flare: 'post',
+  flak_jacket: 'post',
+  precision_strike: 'post',
+  harpoon: 'post',
+  golden_hour: 'page',
+  crew_boost: 'post',
+  front_row: 'stage',
+  deep_current: 'gift',
+};
+
+/**
+ * Where this power is spent. Unknown keys read as `post`, which is what the
+ * sheet did for every key before the table existed — a power the client has
+ * not heard of is better offered and refused than silently unreachable.
+ */
+export function powerHome(key: SuperPowerKey): PowerHome {
+  return POWER_HOME[key] ?? 'post';
+}
+
 /** What a power needs from the holder before it can be spent. */
 export type PowerTargeting = 'none' | 'account' | 'tiers';
 
@@ -296,7 +343,6 @@ export function spendablePowers(
   // every other power rather than an addition to them — offering it on your
   // own post, or offering a Boost on a stranger's, produces a tap the server
   // refuses with a sentence the holder could have been shown first.
-  const GIFTS: readonly SuperPowerKey[] = ['deep_current'];
 
   // Signal Flare is paid for out of a second allowance the same size as the
   // boost one. Reading boostsLeft for it tells an Octopus who has spent both
@@ -309,14 +355,18 @@ export function spendablePowers(
   return status.powers
     .filter(p => {
       if (!p.available) return false;
-      // Golden Hour acts on the account, not this post — it belongs on the
-      // SuperPowers page rather than in a post's sheet.
-      if (p.key === 'golden_hour') return false;
+      // Only the powers that act on a post belong in a post's sheet. A Golden
+      // Hour acts on the account; an Anchor, a Front Row and a Trend Jack act
+      // on a comment, a stage and a category, and the sheet has no field for
+      // any of them — offering them here spent nothing and returned "Trend
+      // Jacker needs a category".
+      const home = powerHome(p.key);
+      if (home !== 'post' && home !== 'gift') return false;
       // A gift is offered only on somebody else's post, and everything else
       // only on your own. When ownership is unknown — a caller that has not
       // resolved the author yet — nothing is hidden and the server decides.
       if (isOwnPost !== undefined) {
-        if (GIFTS.includes(p.key) !== !isOwnPost) return false;
+        if ((home === 'gift') !== !isOwnPost) return false;
       }
       // Only the age-appropriate half of the Boost/Second Wind pair.
       if (p.key === 'boost' || p.key === 'second_wind') return p.key === ageChoice;

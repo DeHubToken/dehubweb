@@ -1863,7 +1863,19 @@
     "spendFor": "{{power}} {{minutes}} minutiks",
     "aimAtAccount": "Kelle jälgijad peaksid seda nägema?",
     "aimPlaceholder": "Kasutajanimi või rahakoti aadress",
-    "aimAtTiers": "Millised märgitasemed peaksid seda nägema?"
+    "aimAtTiers": "Millised märgitasemed peaksid seda nägema?",
+    "homePost": "Kuluta see omaenda postitusest – ⋯ menüüst, seejärel Boost.",
+    "homeGift": "Kuluta see kellegi teise postitusele – ⋯ menüüst, seejärel Boost.",
+    "homeComment": "Kuluta see oma enda kommentaarile, kellegi teise lõimes.",
+    "homeStage": "Kuluta see oma juhitud lavastusest.",
+    "homePage": "Kuluta see siin, selle lehe ülaosas.",
+    "flaresLeft": "sädemed",
+    "giftedTo": "kingitus → #{{id}}",
+    "goldenHourStarted": "Kuldne tund kestab {{minutes}} minutit – kõik, mida praegu postitate, loendatakse kahekordselt",
+    "start": "Alusta",
+    "pickCategory": "Kategooria…",
+    "trendJacked": "{{category}} on trendikas {{minutes}} minutit",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Selle preemia eelarve on täielikult kaetud.",

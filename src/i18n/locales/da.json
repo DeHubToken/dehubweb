@@ -1925,7 +1925,19 @@
     "spendFor": "{{power}} i {{minutes}} minutter",
     "aimAtAccount": "Hvis følgere skal se det?",
     "aimPlaceholder": "Brugernavn eller tegnebogsadresse",
-    "aimAtTiers": "Hvilke badgeniveauer skal se det?"
+    "aimAtTiers": "Hvilke badgeniveauer skal se det?",
+    "homePost": "Brug den fra et af dine egne opslag — menuen ⋯, derefter Boost.",
+    "homeGift": "Brug den på en andens opslag — menuen ⋯, derefter Boost.",
+    "homeComment": "Brug den på din egen kommentar, i en andens tråd.",
+    "homeStage": "Brug den fra en Scene, du er vært for.",
+    "homePage": "Brug den her, øverst på denne side.",
+    "flaresLeft": "flares",
+    "giftedTo": "gave → #{{id}}",
+    "goldenHourStarted": "Golden Hour kører i {{minutes}} minutter — alt, hvad du poster nu, tæller dobbelt",
+    "start": "Start",
+    "pickCategory": "Kategori…",
+    "trendJacked": "{{category}} er trending i {{minutes}} minutter",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Denne dusørs budget er fuldt disponeret.",

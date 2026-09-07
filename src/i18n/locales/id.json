@@ -1921,7 +1921,19 @@
     "spendFor": "{{power}} selama {{minutes}} menit",
     "aimAtAccount": "Pengikut siapa yang harus melihatnya?",
     "aimPlaceholder": "Nama pengguna atau alamat dompet",
-    "aimAtTiers": "Tingkat lencana mana yang harus melihatnya?"
+    "aimAtTiers": "Tingkat lencana mana yang harus melihatnya?",
+    "homePost": "Gunakan dari salah satu postingan Anda — menu ⋯, lalu Tingkatkan.",
+    "homeGift": "Gunakan pada postingan orang lain — menu ⋯, lalu Tingkatkan.",
+    "homeComment": "Gunakan pada komentar Anda sendiri, di utas orang lain.",
+    "homeStage": "Gunakan dari Panggung yang sedang Anda host.",
+    "homePage": "Gunakan di sini, di bagian atas halaman ini.",
+    "flaresLeft": "kilatan",
+    "giftedTo": "hadiah → #{{id}}",
+    "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} menit — semua yang Anda posting sekarang dihitung ganda",
+    "start": "Mulai",
+    "pickCategory": "Kategori…",
+    "trendJacked": "{{category}} sedang tren selama {{minutes}} menit",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Anggaran bounty ini sudah terpakai sepenuhnya.",

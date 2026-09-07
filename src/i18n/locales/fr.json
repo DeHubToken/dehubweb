@@ -1925,7 +1925,19 @@
     "spendFor": "{{power}} pendant {{minutes}} minutes",
     "aimAtAccount": "Quels abonnés doivent la voir ?",
     "aimPlaceholder": "Pseudo ou adresse de portefeuille",
-    "aimAtTiers": "Quels niveaux de badge doivent la voir ?"
+    "aimAtTiers": "Quels niveaux de badge doivent la voir ?",
+    "homePost": "Dépensez-le à partir de l'un de vos propres messages — le menu ⋯, puis Booster.",
+    "homeGift": "Dépensez-le sur le message de quelqu'un d'autre — le menu ⋯, puis Booster.",
+    "homeComment": "Dépensez-le sur votre propre commentaire, dans le fil de quelqu'un d'autre.",
+    "homeStage": "Dépensez-le à partir d'une scène que vous hébergez.",
+    "homePage": "Dépensez-le ici, en haut de cette page.",
+    "flaresLeft": "flares",
+    "giftedTo": "cadeau → #{{id}}",
+    "goldenHourStarted": "Golden Hour en cours depuis {{minutes}} minutes — tout ce que vous publiez compte désormais double",
+    "start": "Commencer",
+    "pickCategory": "Catégorie…",
+    "trendJacked": "{{category}} est en tendance depuis {{minutes}} minutes",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Le budget de cette prime est entièrement engagé.",

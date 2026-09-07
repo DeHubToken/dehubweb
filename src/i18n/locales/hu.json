@@ -1863,7 +1863,19 @@
     "spendFor": "{{power}} {{minutes}} percre",
     "aimAtAccount": "Kinek a követői lássák?",
     "aimPlaceholder": "Felhasználónév vagy tárcacím",
-    "aimAtTiers": "Mely jelvényszintek lássák?"
+    "aimAtTiers": "Mely jelvényszintek lássák?",
+    "homePost": "Fordítsd el egy saját bejegyzésedből — a ⋯ menü, majd a Boost.",
+    "homeGift": "Fordítsd el valaki más bejegyzésére — a ⋯ menü, majd a Boost.",
+    "homeComment": "Fordítsd el a saját hozzászólásodra, valaki más szálában.",
+    "homeStage": "Fordítsd el egy általad hostolt Stage-ről.",
+    "homePage": "Fordítsd el itt, ezen az oldalon felül.",
+    "flaresLeft": "flares",
+    "giftedTo": "ajándék → #{{id}}",
+    "goldenHourStarted": "Golden Hour futtatása {{minutes}} percig — minden, amit most posztolsz, duplán számít",
+    "start": "Indítás",
+    "pickCategory": "Kategória…",
+    "trendJacked": "{{category}} trendel {{minutes}} percig",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Ennek a jutalomnak a kerete teljesen le van kötve.",

@@ -1855,7 +1855,12 @@
     "spendFor": "{{power}} i {{minutes}} minuter",
     "aimAtAccount": "Vems följare ska se det?",
     "aimPlaceholder": "Användarnamn eller plånboksadress",
-    "aimAtTiers": "Vilka badgenivåer ska se det?"
+    "aimAtTiers": "Vilka badgenivåer ska se det?",
+    "flaresLeft": "flares",
+    "giftedTo": "gift → #{{id}}",
+    "start": "Start",
+    "pickCategory": "Category…",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Budgeten för den här dusören är helt intecknad.",

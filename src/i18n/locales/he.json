@@ -1889,7 +1889,14 @@
     "spendFor": "{{power}} למשך {{minutes}} דקות",
     "aimAtAccount": "העוקבים של מי צריכים לראות את זה?",
     "aimPlaceholder": "שם משתמש או כתובת ארנק",
-    "aimAtTiers": "אילו דרגות תג צריכות לראות את זה?"
+    "aimAtTiers": "אילו דרגות תג צריכות לראות את זה?",
+    "homePost": "השתמש בו מהפוסט שלך — תפריט ה-⋯, ואז Boost.",
+    "homeGift": "השתמש בו על פוסט של מישהו אחר — תפריט ה-⋯, ואז Boost.",
+    "homeComment": "השתמש בו על התגובה שלך, בשרשור של מישהו אחר.",
+    "homeStage": "השתמש בו מתוך Stage שאתה מארח.",
+    "homePage": "השתמש בו כאן, בראש הדף הזה.",
+    "goldenHourStarted": "Golden Hour רץ במשך {{minutes}} דקות — כל מה שתפרסם עכשיו נחשב כפול",
+    "trendJacked": "{{category}} נמצא בטרנד במשך {{minutes}} דקות"
   },
   "work": {
     "budgetExhausted": "התקציב של הפרס הזה נוצל במלואו.",

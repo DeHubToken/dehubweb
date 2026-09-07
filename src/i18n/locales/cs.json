@@ -1862,7 +1862,19 @@
     "spendFor": "{{power}} na {{minutes}} minut",
     "aimAtAccount": "Čí sledující ho mají vidět?",
     "aimPlaceholder": "Uživatelské jméno nebo adresa peněženky",
-    "aimAtTiers": "Které úrovně odznaku ho mají vidět?"
+    "aimAtTiers": "Které úrovně odznaku ho mají vidět?",
+    "homePost": "Použijte ho z jednoho ze svých vlastních příspěvků — nabídka ⋯, pak Zvýšit.",
+    "homeGift": "Použijte ho na příspěvek někoho jiného — nabídka ⋯, pak Zvýšit.",
+    "homeComment": "Použijte ho na svůj vlastní komentář v cizím vlákně.",
+    "homeStage": "Použijte ho z jeviště, které hostujete.",
+    "homePage": "Použijte ho zde, v horní části této stránky.",
+    "flaresLeft": "flares",
+    "giftedTo": "dárek → #{{id}}",
+    "goldenHourStarted": "Golden Hour běží {{minutes}} minut — vše, co nyní zveřejníte, se počítá dvakrát",
+    "start": "Start",
+    "pickCategory": "Kategorie…",
+    "trendJacked": "{{category}} je v trendu {{minutes}} minut",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Rozpočet této odměny je zcela vyčerpán.",

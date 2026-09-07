@@ -1921,7 +1921,19 @@
     "spendFor": "{{power}} nandritra ny {{minutes}} minitra",
     "aimAtAccount": "Mpanaraky iza no tokony hahita azy?",
     "aimPlaceholder": "Anarana na adiresin'ny kitapom-bola",
-    "aimAtTiers": "Ambaratongan'ny mari-pankasitrahana manao ahoana no tokony hahita azy?"
+    "aimAtTiers": "Ambaratongan'ny mari-pankasitrahana manao ahoana no tokony hahita azy?",
+    "homePost": "Ampiasao amin'ny iray amin'ny lahatsoratrao manokana — ny sakafo ⋯, avy eo Boost.",
+    "homeGift": "Ampiasao amin'ny lahatsoratry ny olona hafa — ny sakafo ⋯, avy eo Boost.",
+    "homeComment": "Ampiasao amin'ny fanehoan-kevitrao manokana, ao anaty kofehy an'ny olona hafa.",
+    "homeStage": "Ampiasao amin'ny Stage an-tànanao.",
+    "homePage": "Ampiasao eto, eo an-tampon'ity pejy ity.",
+    "flaresLeft": "flares",
+    "giftedTo": "fanomezana → #{{id}}",
+    "goldenHourStarted": "Golden Hour mihazakazaka mandritra ny {{minutes}} minitra — izay rehetra alefanao ankehitriny dia ho avo roa heny",
+    "start": "Start",
+    "pickCategory": "Category…",
+    "trendJacked": "{{category}} dia miakatra mandritra ny {{minutes}} minitra",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Efa lany daholo ny tetibolan'ity valisoa ity."

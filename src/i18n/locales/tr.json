@@ -1921,7 +1921,19 @@
     "spendFor": "{{power}} {{minutes}} dakika",
     "aimAtAccount": "Kimin takipçileri görsün?",
     "aimPlaceholder": "Kullanıcı adı veya cüzdan adresi",
-    "aimAtTiers": "Hangi rozet seviyeleri görsün?"
+    "aimAtTiers": "Hangi rozet seviyeleri görsün?",
+    "homePost": "Kendi gönderilerinizden birinden harcayın — ⋯ menüsü, ardından Boost.",
+    "homeGift": "Başkalarının gönderilerinden birinden harcayın — ⋯ menüsü, ardından Boost.",
+    "homeComment": "Başkalarının başlattığı bir başlıkta kendi yorumunuza harcayın.",
+    "homeStage": "Ev sahipliği yaptığınız bir Sahneden harcayın.",
+    "homePage": "Burada, bu sayfanın üst kısmında harcayın.",
+    "flaresLeft": "kıvılcımlar",
+    "giftedTo": "hediye → #{{id}}",
+    "goldenHourStarted": "Altın Saat {{minutes}} dakika sürüyor — şimdi paylaştığınız her şey iki katı değerinde",
+    "start": "Başlat",
+    "pickCategory": "Kategori…",
+    "trendJacked": "{{category}} {{minutes}} dakika boyunca trend oluyor",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Bu ödülün bütçesi tamamen tahsis edildi.",

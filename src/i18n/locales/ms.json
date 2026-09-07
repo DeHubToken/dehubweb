@@ -2189,7 +2189,19 @@
     "spendFor": "{{power}} selama {{minutes}} minit",
     "aimAtAccount": "Pengikut siapa yang perlu melihatnya?",
     "aimPlaceholder": "Nama pengguna atau alamat dompet",
-    "aimAtTiers": "Peringkat lencana mana yang perlu melihatnya?"
+    "aimAtTiers": "Peringkat lencana mana yang perlu melihatnya?",
+    "homePost": "Gunakan daripada siaran anda sendiri — menu ⋯, kemudian Tingkatkan.",
+    "homeGift": "Gunakan pada siaran orang lain — menu ⋯, kemudian Tingkatkan.",
+    "homeComment": "Gunakan pada ulasan anda sendiri, dalam utas orang lain.",
+    "homeStage": "Gunakan daripada Pentas yang anda hoskan.",
+    "homePage": "Gunakan di sini, di bahagian atas halaman ini.",
+    "flaresLeft": "flares",
+    "giftedTo": "hadiah → #{{id}}",
+    "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} minit — semua yang anda siarkan kini dikira berganda",
+    "start": "Mula",
+    "pickCategory": "Kategori…",
+    "trendJacked": "{{category}} sedang sohor kini selama {{minutes}} minit",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Bajet ganjaran ini telah digunakan sepenuhnya.",

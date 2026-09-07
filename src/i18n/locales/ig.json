@@ -1875,7 +1875,19 @@
     "spendFor": "{{power}} maka nkeji {{minutes}}",
     "aimAtAccount": "Ndị na-eso onye ka ọ ga-ahụ ya?",
     "aimPlaceholder": "Aha ojiji ma ọ bụ adreesị obere akpa ego",
-    "aimAtTiers": "Ọkwa akara olee ka ọ ga-ahụ ya?"
+    "aimAtTiers": "Ọkwa akara olee ka ọ ga-ahụ ya?",
+    "homePost": "Jiri ya site na otu n'ime posts gị — menu ⋯, wee Bụkwuo elu.",
+    "homeGift": "Jiri ya na post onye ọzọ — menu ⋯, wee Bụkwuo elu.",
+    "homeComment": "Jiri ya na nkọwa nke gị, na eri onye ọzọ.",
+    "homeStage": "Jiri ya site na Stage ị na-anabata.",
+    "homePage": "Jiri ya ebe a, n'elu ibe a.",
+    "flaresLeft": "flares",
+    "giftedTo": "onyinye → #{{id}}",
+    "goldenHourStarted": "Golden Hour na-agba maka {{minutes}} nkeji — ihe niile ị bipụtara ugbu a na-agụ okpukpu abụọ",
+    "start": "Malite",
+    "pickCategory": "Ụdị…",
+    "trendJacked": "{{category}} na-ewu ewu maka {{minutes}} nkeji",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Ego a kwadoro maka onyinye a ejizuola."

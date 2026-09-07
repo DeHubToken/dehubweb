@@ -1872,7 +1872,19 @@
     "spendFor": "{{minutes}} minut üçin {{power}}",
     "aimAtAccount": "Ony kimiň yzarlaýjylary görmeli?",
     "aimPlaceholder": "Ulanyjy ady ýa-da gapjyk salgysy",
-    "aimAtTiers": "Ony haýsy nyşan derejeleri görmeli?"
+    "aimAtTiers": "Ony haýsy nyşan derejeleri görmeli?",
+    "homePost": "Özüňiziň postuňyzdan sarp ediň — ⋯ menýusy, soňra Boost.",
+    "homeGift": "Başga biriniň postuna sarp ediň — ⋯ menýusy, soňra Boost.",
+    "homeComment": "Özüňiziň bellikleriňize, başga biriniň mowzugynda sarp ediň.",
+    "homeStage": "Aparýan Sahnaňyzdan sarp ediň.",
+    "homePage": "Bu ýerde, bu sahypanyň başyny sarp ediň.",
+    "flaresLeft": "flares",
+    "giftedTo": "sowgat → #{{id}}",
+    "goldenHourStarted": "Altyn sagat {{minutes}} minut dowam edýär — indi goýýan her zadyňyz iki esse artar",
+    "start": "Başla",
+    "pickCategory": "Kategoriýa…",
+    "trendJacked": "{{category}} {{minutes}} minutlap meşhur bolýar",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Bu sylagyň býujeti doly paýlanyldy."

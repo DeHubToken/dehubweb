@@ -1870,7 +1870,19 @@
     "spendFor": "{{minutes}} निमेषान् {{power}} कृते व्ययतु",
     "aimAtAccount": "कस्य अनुयायिनः तत् पश्येयुः?",
     "aimPlaceholder": "प्रयोक्तृनाम वा कोशपता",
-    "aimAtTiers": "के पदकस्तराः तत् पश्येयुः?"
+    "aimAtTiers": "के पदकस्तराः तत् पश्येयुः?",
+    "homePost": "तव स्वस्य पोस्टात् — ⋯ मेनू, ततः बूस्ट्।",
+    "homeGift": "अन्यस्य पोस्टात् — ⋯ मेनू, ततः बूस्ट्।",
+    "homeComment": "तव स्वस्य टिप्पणीं, अन्यस्य थ्रेड् मध्ये।",
+    "homeStage": "तव स्वस्य स्टेजात् यत् त्वं होस्ट् करोषि।",
+    "homePage": "अत्र, अस्य पृष्ठस्य उपरि।",
+    "flaresLeft": "flares",
+    "giftedTo": "gift → #{{id}}",
+    "goldenHourStarted": "Golden Hour {{minutes}} मिनट् पर्यन्तं धावति — यत् किञ्चित् त्वं पोस्ट् करोषि इदानीं द्विगुणितं गण्यते",
+    "start": "Start",
+    "pickCategory": "Category…",
+    "trendJacked": "{{category}} {{minutes}} मिनट् पर्यन्तं trending अस्ति",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "अस्य पुरस्कारस्य सम्पूर्णं धनं वितीर्णम्।"

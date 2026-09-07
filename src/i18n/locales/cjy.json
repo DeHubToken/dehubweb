@@ -1873,7 +1873,14 @@
     "spendFor": "{{power}} {{minutes}} 分钟",
     "aimAtAccount": "谁嘞粉丝该看着？",
     "aimPlaceholder": "用户名或者钱包地址",
-    "aimAtTiers": "哪些徽章等级该看着？"
+    "aimAtTiers": "哪些徽章等级该看着？",
+    "homePost": "从你自己的帖子中花费 — ⋯ 菜单，然后 Boost。",
+    "homeGift": "在别人的帖子中花费 — ⋯ 菜单，然后 Boost。",
+    "homeComment": "在你自己评论中花费，在别人的帖子串中。",
+    "homeStage": "从你主持的 Stage 中花费。",
+    "homePage": "在这里花费，在此页面顶部。",
+    "goldenHourStarted": "Golden Hour 正在运行 {{minutes}} 分钟 — 你现在发布的任何内容都算双倍",
+    "trendJacked": "{{category}} 正在以 {{minutes}} 分钟的速度趋势上涨"
   },
   "work": {
     "budgetExhausted": "箇个赏金个预算已经全用完哩。"

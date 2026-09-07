@@ -1914,7 +1914,19 @@
     "spendFor": "{{power}} daqiiqaa {{minutes}}f",
     "aimAtAccount": "Hordoftoonni eenyuu isa arguu qabu?",
     "aimPlaceholder": "Maqaa fayyadamaa ykn teessoo boorsaa",
-    "aimAtTiers": "Sadarkaaleen asxaa kamtu isa argu qaba?"
+    "aimAtTiers": "Sadarkaaleen asxaa kamtu isa argu qaba?",
+    "homePost": "Isinuma keessan irraa itti dabarfadhaa — saanduqa ⋯, asii booda Boost.",
+    "homeGift": "Warra kaan irraa itti dabarfadhaa — saanduqa ⋯, asii booda Boost.",
+    "homeComment": "Yaada keessan irratti, kan nama biraa irratti.",
+    "homeStage": "Bagaa irraa itti dabarfadhaa.",
+    "homePage": "As irratti, olitti.",
+    "flaresLeft": "flares",
+    "giftedTo": "kenna → #{{id}}",
+    "goldenHourStarted": "Sa'aatii Warqee {{minutes}} daqiiqaa fiigachaa jira — amma wanti hundumaa maxxansituu lama siif ta'a",
+    "start": "Eegalu",
+    "pickCategory": "Sadarkaa…",
+    "trendJacked": "{{category}} daqiiqaa {{minutes}} fiigachaa jira",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Baajata badhaasa kanaa guutummaatti ramadameera."

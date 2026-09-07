@@ -1918,7 +1918,19 @@
     "spendFor": "{{minutes}} daqiqaga {{power}}",
     "aimAtAccount": "Kimning obunachilari buni ko'rishi kerak?",
     "aimPlaceholder": "Foydalanuvchi nomi yoki hamyon manzili",
-    "aimAtTiers": "Qaysi nishon darajalari buni ko'rishi kerak?"
+    "aimAtTiers": "Qaysi nishon darajalari buni ko'rishi kerak?",
+    "homePost": "O'z postlaringizdan biridan sarflang — ⋯ menyusi, keyin Boost.",
+    "homeGift": "Boshqa birovning postiga sarflang — ⋯ menyusi, keyin Boost.",
+    "homeComment": "O'z sharhingizga, boshqa birovning mavzusida sarflang.",
+    "homeStage": "O'zingiz olib borayotgan Stage'dan sarflang.",
+    "homePage": "Bu yerda, ushbu sahifa yuqorisida sarflang.",
+    "flaresLeft": "flares",
+    "giftedTo": "sovg'a → #{{id}}",
+    "goldenHourStarted": "Golden Hour {{minutes}} daqiqa davom etmoqda — hozirgi har bir postingiz ikki hisoblanadi",
+    "start": "Boshlash",
+    "pickCategory": "Kategoriya…",
+    "trendJacked": "{{category}} {{minutes}} daqiqa davomida trendda",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Bu mukofotning byudjeti to'liq taqsimlangan."

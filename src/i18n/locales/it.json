@@ -1921,7 +1921,19 @@
     "spendFor": "{{power}} per {{minutes}} minuti",
     "aimAtAccount": "Quali follower dovrebbero vederlo?",
     "aimPlaceholder": "Nome utente o indirizzo del portafoglio",
-    "aimAtTiers": "Quali livelli di badge dovrebbero vederlo?"
+    "aimAtTiers": "Quali livelli di badge dovrebbero vederlo?",
+    "homePost": "Usalo da uno dei tuoi post — il menu ⋯, poi Boost.",
+    "homeGift": "Usalo su un post di qualcun altro — il menu ⋯, poi Boost.",
+    "homeComment": "Usalo sul tuo commento, in un thread di qualcun altro.",
+    "homeStage": "Usalo da uno Stage che stai ospitando.",
+    "homePage": "Usalo qui, in cima a questa pagina.",
+    "flaresLeft": "flares",
+    "giftedTo": "gift → #{{id}}",
+    "goldenHourStarted": "Golden Hour in corso per {{minutes}} minuti — tutto ciò che pubblichi ora conta doppio",
+    "start": "Inizia",
+    "pickCategory": "Categoria…",
+    "trendJacked": "{{category}} è di tendenza per {{minutes}} minuti",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Il budget di questa taglia è interamente impegnato.",

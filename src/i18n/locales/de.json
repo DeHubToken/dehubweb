@@ -1921,7 +1921,19 @@
     "spendFor": "{{power}} für {{minutes}} Minuten",
     "aimAtAccount": "Wessen Follower sollen ihn sehen?",
     "aimPlaceholder": "Benutzername oder Wallet-Adresse",
-    "aimAtTiers": "Welche Badge-Stufen sollen ihn sehen?"
+    "aimAtTiers": "Welche Badge-Stufen sollen ihn sehen?",
+    "homePost": "Gib es von einem deiner eigenen Beiträge aus – das ⋯ Menü, dann Boost.",
+    "homeGift": "Gib es für den Beitrag eines anderen aus – das ⋯ Menü, dann Boost.",
+    "homeComment": "Gib es für deinen eigenen Kommentar in einem Thread eines anderen aus.",
+    "homeStage": "Gib es von einer Stage aus, die du veranstaltest.",
+    "homePage": "Gib es hier, oben auf dieser Seite, aus.",
+    "flaresLeft": "Flares",
+    "giftedTo": "Geschenk → #{{id}}",
+    "goldenHourStarted": "Golden Hour läuft für {{minutes}} Minuten – alles, was du jetzt postest, zählt doppelt",
+    "start": "Start",
+    "pickCategory": "Kategorie…",
+    "trendJacked": "{{category}} ist für {{minutes}} Minuten im Trend",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Das Budget dieser Prämie ist vollständig vergeben.",

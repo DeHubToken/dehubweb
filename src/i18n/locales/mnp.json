@@ -1870,7 +1870,14 @@
     "spendFor": "{{power}}，{{minutes}} 分钟",
     "aimAtAccount": "底一个其粉丝会得看着？",
     "aimPlaceholder": "用户名抑是钱包地址",
-    "aimAtTiers": "底寡徽章等级会得看着？"
+    "aimAtTiers": "底寡徽章等级会得看着？",
+    "homePost": "从你自己的帖子中花费 — ⋯ 菜单，然后 Boost。",
+    "homeGift": "在别人的帖子中花费 — ⋯ 菜单，然后 Boost。",
+    "homeComment": "在你自己评论中花费，在别人的帖子中。",
+    "homeStage": "在您主持的 Stage 中花费。",
+    "homePage": "在这里花费，在此页面顶部。",
+    "goldenHourStarted": "Golden Hour 运行 {{minutes}} 分钟 — 您现在发布的任何内容都算双倍",
+    "trendJacked": "{{category}} 正在 {{minutes}} 分钟内流行"
   },
   "work": {
     "budgetExhausted": "今場賞金其預算已經用完了。"

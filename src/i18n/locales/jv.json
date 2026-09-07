@@ -1893,7 +1893,19 @@
     "spendFor": "{{power}} sajrone {{minutes}} menit",
     "aimAtAccount": "Pengikut sapa sing kudu ndeleng iki?",
     "aimPlaceholder": "Jeneng pangguna utawa alamat dompet",
-    "aimAtTiers": "Tingkat lencana endi sing kudu ndeleng iki?"
+    "aimAtTiers": "Tingkat lencana endi sing kudu ndeleng iki?",
+    "homePost": "Ginaké saka salah sawijining kirimanmu dhewe — menu ⋯, banjur Boost.",
+    "homeGift": "Ginaké ing kiriman wong liya — menu ⋯, banjur Boost.",
+    "homeComment": "Ginaké ing komentar dhéwé, ing utas wong liya.",
+    "homeStage": "Ginaké saka Stage sing kok-host.",
+    "homePage": "Ginaké ing kéné, ing pucuk kaca iki.",
+    "flaresLeft": "flares",
+    "giftedTo": "gift → #{{id}}",
+    "goldenHourStarted": "Golden Hour mlaku {{minutes}} menit — kabeh sing kok-post saiki dianggep tikel",
+    "start": "Start",
+    "pickCategory": "Category…",
+    "trendJacked": "{{category}} lagi trending {{minutes}} menit",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Anggaran bounty iki wis kepakai kabeh."

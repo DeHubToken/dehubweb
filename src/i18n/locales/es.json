@@ -1921,7 +1921,19 @@
     "spendFor": "{{power}} durante {{minutes}} minutos",
     "aimAtAccount": "¿Qué seguidores deberían verla?",
     "aimPlaceholder": "Nombre de usuario o dirección de cartera",
-    "aimAtTiers": "¿Qué niveles de insignia deberían verla?"
+    "aimAtTiers": "¿Qué niveles de insignia deberían verla?",
+    "homePost": "Gástalo desde una de tus propias publicaciones: el menú ⋯, luego Impulsar.",
+    "homeGift": "Gástalo en la publicación de otra persona: el menú ⋯, luego Impulsar.",
+    "homeComment": "Gástalo en tu propio comentario, en el hilo de otra persona.",
+    "homeStage": "Gástalo desde un escenario que estés presentando.",
+    "homePage": "Gástalo aquí, en la parte superior de esta página.",
+    "flaresLeft": "destellos",
+    "giftedTo": "regalo → #{{id}}",
+    "goldenHourStarted": "Golden Hour en curso durante {{minutes}} minutos — todo lo que publiques ahora cuenta el doble",
+    "start": "Empezar",
+    "pickCategory": "Categoría…",
+    "trendJacked": "{{category}} es tendencia durante {{minutes}} minutos",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "El presupuesto de esta recompensa está comprometido por completo.",

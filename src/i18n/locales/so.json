@@ -1901,7 +1901,19 @@
     "spendFor": "Bixi {{power}} {{minutes}} daqiiqo",
     "aimAtAccount": "Yaa raacayaashiisu ay tahay inay arkaan?",
     "aimPlaceholder": "Magaca isticmaalaha ama cinwaanka boorsada",
-    "aimAtTiers": "Heerarka calaamadda ee ay tahay inay arkaan?"
+    "aimAtTiers": "Heerarka calaamadda ee ay tahay inay arkaan?",
+    "homePost": "Ku bixi mid ka mid ah qoraalladaada — liiska ⋯, ka dibna Boost.",
+    "homeGift": "Ku bixi qoraal qof kale ah — liiska ⋯, ka dibna Boost.",
+    "homeComment": "Ku bixi faallo aad adigu sameysay, oo ku jirta qoraal qof kale ah.",
+    "homeStage": "Ku bixi masraxa aad martigelinayso.",
+    "homePage": "Ku bixi halkan, dusha boggan.",
+    "flaresLeft": "flares",
+    "giftedTo": "gift → #{{id}}",
+    "goldenHourStarted": "Saacadda Dahabka ah oo socota {{minutes}} daqiiqo — wax kasta oo aad hadda qorto labanlaab bay u dhigantaa",
+    "start": "Bilow",
+    "pickCategory": "Qaybta…",
+    "trendJacked": "{{category}} ayaa trending ah {{minutes}} daqiiqo",
+    "jack": "Jack"
   },
   "work": {
     "budgetExhausted": "Miisaaniyadda abaalmarintan gebi ahaanba waa la qoondeeyay."

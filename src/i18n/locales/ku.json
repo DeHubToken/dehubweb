@@ -1867,7 +1867,14 @@
     "spendFor": "{{power}} ji bo {{minutes}} deqîqeyan",
     "aimAtAccount": "Şopînerên kê divê wê bibînin?",
     "aimPlaceholder": "Navê bikarhêner an navnîşana cizdanê",
-    "aimAtTiers": "Kîjan astên nîşanê divê wê bibînin?"
+    "aimAtTiers": "Kîjan astên nîşanê divê wê bibînin?",
+    "homePost": "خەرجی بکە لە یەکێک لە پۆستەکانی خۆت — منووی ⋯، پاشان Boost.",
+    "homeGift": "خەرجی بکە لەسەر پۆستی کەسێکی تر — منووی ⋯، پاشان Boost.",
+    "homeComment": "خەرجی بکە لەسەر کۆمێنتی خۆت، لەسەر بابەتێکی کەسێکی تر.",
+    "homeStage": "خەرجی بکە لە Stage ێک کە میوانداری دەکەیت.",
+    "homePage": "لێرە خەرجی بکە، لە سەرەوەی ئەم لاپەڕەیە.",
+    "goldenHourStarted": "Golden Hour بۆ {{minutes}} خولەک بەردەوامە — هەموو شتێک کە پۆست دەکەیت ئێستا دوو ئەژمار دەکرێت",
+    "trendJacked": "{{category}} بۆ {{minutes}} خولەک ترێندە"
   },
   "work": {
     "budgetExhausted": "Bûdceya vê xelatê bi tevahî hatiye veqetandin."
