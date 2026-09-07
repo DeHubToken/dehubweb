@@ -36,23 +36,28 @@ export default function CommunitiesPage() {
   const { data: activityScores = {} } = useCommunityActivityScores();
   const [sortMode, setSortMode] = useState<'top' | 'new' | 'hot'>('top');
 
-  // Fetch per-community unread counts for owned communities
-  const ownedCommunityIds = useMemo(
-    () => userCommunities.filter(m => m.role === 'owner').map(m => m.community_id),
+  // Fetch per-community unread counts for owned communities. Join
+  // notifications are keyed on the community SLUG (that is what the link they
+  // carry is built from), not the row id, so every count here is slug-keyed.
+  const ownedCommunities = useMemo(
+    () => userCommunities
+      .filter(m => m.role === 'owner' && m.communities && (m.communities as any).slug)
+      .map(m => ({ id: (m.communities as any).id as string, slug: (m.communities as any).slug as string, name: (m.communities as any).name as string })),
     [userCommunities]
   );
+  const ownedCommunitySlugs = useMemo(() => ownedCommunities.map(c => c.slug), [ownedCommunities]);
 
   const { data: perCommunityUnread = {} } = useQuery({
-    queryKey: ['community-activity-unread-per', ownedCommunityIds],
+    queryKey: ['community-activity-unread-per', ownedCommunitySlugs],
     queryFn: async () => {
-      if (ownedCommunityIds.length === 0) return {};
+      if (ownedCommunitySlugs.length === 0) return {};
       const { data, error } = await withWalletHeader(
         supabase
           .from('custom_notifications')
           .select('reference_id')
           .eq('type', 'community_join')
           .eq('read', false)
-          .in('reference_id', ownedCommunityIds),
+          .in('reference_id', ownedCommunitySlugs),
         walletAddress!
       );
       if (error) throw error;
@@ -64,7 +69,7 @@ export default function CommunitiesPage() {
       });
       return counts;
     },
-    enabled: ownedCommunityIds.length > 0 && !!walletAddress,
+    enabled: ownedCommunitySlugs.length > 0 && !!walletAddress,
     staleTime: 60_000,
   });
 
@@ -155,7 +160,7 @@ export default function CommunitiesPage() {
           </div>
 
           {/* Tabs */}
-          {isAuthenticated && ownedCommunityIds.length > 0 && (
+          {isAuthenticated && ownedCommunities.length > 0 && (
             <div className="flex gap-1 p-1 rounded-xl bg-white/[0.04] border border-white/[0.06]">
               <button
                 onClick={() => setTab('communities')}
@@ -234,17 +239,12 @@ export default function CommunitiesPage() {
       <div ref={contentRef} className="max-w-2xl mx-auto px-2 sm:px-3 pt-3 pb-6">
       {tab === 'activity' ? (
         <div className="space-y-4">
-          {ownedCommunityIds.map(id => {
-            const community = myCommunities.find((c: any) => c.id === id);
-            return (
-              <div key={id}>
-                {community && (
-                  <h3 className="text-xs font-semibold text-zinc-400 mb-2 px-1">{(community as any).name}</h3>
-                )}
-                <CommunityOwnerActivity communityId={id} />
-              </div>
-            );
-          })}
+          {ownedCommunities.map(community => (
+            <div key={community.id}>
+              <h3 className="text-xs font-semibold text-zinc-400 mb-2 px-1">{community.name}</h3>
+              <CommunityOwnerActivity communitySlug={community.slug} />
+            </div>
+          ))}
         </div>
       ) : isLoading ? (
         <div className="space-y-2">
@@ -262,7 +262,7 @@ export default function CommunitiesPage() {
                   community={community}
                   isMember={true}
                   role={roleMap[community.id]}
-                  unreadCount={perCommunityUnread[community.id]}
+                  unreadCount={perCommunityUnread[community.slug]}
                   onClick={() => navigate(`/app/communities/${community.slug}`)}
                 />
               ))}
