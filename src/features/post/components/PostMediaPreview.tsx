@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, Loader2, Paintbrush, Crop, Scissors, Image as ImageIcon } from 'lucide-react';
+import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, Loader2, Paintbrush, Crop, Scissors, Pencil, Image as ImageIcon } from 'lucide-react';
 import nailIcon from '@/assets/icons/nail-icon.png';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
@@ -13,7 +13,8 @@ import { FilterEditor } from './FilterEditor';
 import { CropRotateEditor } from './CropRotateEditor';
 import { AudioTrimmer } from './AudioTrimmer';
 import { VideoTrimmer } from './VideoTrimmer';
-import { generateFilterCSS } from '@/lib/filters';
+import { generateFilterCSS, applyEditsToImageFile } from '@/lib/filters';
+import { ImageAnnotator } from './ImageAnnotator';
 
 interface PostMediaPreviewProps {
   media: MediaFile[];
@@ -28,6 +29,8 @@ interface PostMediaPreviewProps {
   onApplyCrop?: (index: number, settings: CropSettings) => void;
   onClearCrop?: (index: number) => void;
   onApplyTrim?: (index: number, trimStart: number, trimEnd: number) => void;
+  /** Replace an image's bytes outright — used by the annotator, which bakes. */
+  onReplaceImage?: (index: number, file: File) => void;
 }
 
 const MAX_DURATION = 30; // 30 seconds max
@@ -87,6 +90,7 @@ export function PostMediaPreview({
   onApplyCrop,
   onClearCrop,
   onApplyTrim,
+  onReplaceImage,
 }: PostMediaPreviewProps) {
   const [recordingIndex, setRecordingIndex] = useState<number | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -115,6 +119,30 @@ export function PostMediaPreview({
     document.addEventListener('keydown', onKeyDown, true);
     return () => document.removeEventListener('keydown', onKeyDown, true);
   }, [fullscreenPreview]);
+  const [annotator, setAnnotator] = useState<{ index: number; url: string; name: string; type: string } | null>(null);
+
+  /**
+   * The annotator draws on a flattened copy: whatever filter and crop are set
+   * are baked in first, so the user marks up the picture they can actually see.
+   * On apply the caller replaces the file and drops those settings, since they
+   * are now part of the pixels.
+   */
+  const openAnnotator = useCallback(async (index: number, m: MediaFile) => {
+    const flattened = await applyEditsToImageFile(m.file, m.filterSettings, m.cropSettings);
+    setAnnotator({
+      index,
+      url: URL.createObjectURL(flattened),
+      name: m.file.name,
+      type: m.file.type,
+    });
+  }, []);
+
+  const closeAnnotator = useCallback(() => {
+    setAnnotator(prev => {
+      if (prev) URL.revokeObjectURL(prev.url);
+      return null;
+    });
+  }, []);
   const [audioTrimmerData, setAudioTrimmerData] = useState<{
     index: number;
     file: File;
@@ -560,7 +588,26 @@ export function PostMediaPreview({
                           </TooltipTrigger>
                           <TooltipContent>Crop & rotate</TooltipContent>
                         </Tooltip>
-                        
+
+                        {/* A canvas draw flattens an animated GIF to one
+                            frame, so it does not get the pencil. */}
+                        {onReplaceImage && m.file.type !== 'image/gif' && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); openAnnotator(index, m); }}
+                                className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                  bg-black/60 backdrop-blur-xl border border-white/20
+                                  hover:bg-black/70 hover:border-white/40"
+                              >
+                                <Pencil className="w-3 h-3 text-white" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>Draw & write</TooltipContent>
+                          </Tooltip>
+                        )}
+
                         {/* Audio controls for images — gated off, see IMAGE_AUDIO_SUPPORTED. */}
                         {IMAGE_AUDIO_SUPPORTED && (recordingIndex === index ? (
                           <button
@@ -1080,6 +1127,17 @@ export function PostMediaPreview({
             onApplyTrim?.(videoTrimmerIndex, trimStart, trimEnd);
             setVideoTrimmerIndex(null);
           }}
+        />
+      )}
+
+      {annotator && (
+        <ImageAnnotator
+          isOpen
+          onClose={closeAnnotator}
+          imageUrl={annotator.url}
+          fileName={annotator.name}
+          fileType={annotator.type}
+          onApply={(file) => onReplaceImage?.(annotator.index, file)}
         />
       )}
 

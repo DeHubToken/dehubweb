@@ -119,6 +119,7 @@ export interface PostFormActions {
   applyCropToMedia: (index: number, settings: CropSettings) => void;
   clearCropFromMedia: (index: number) => void;
   applyTrimToMedia: (index: number, trimStart: number, trimEnd: number) => void;
+  replaceImageFile: (index: number, file: File) => void;
   handleEnhanceWithAI: (mode?: 'spellcheck' | 'grammar' | 'style', style?: string) => Promise<void>;
   insertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   handlePost: (extra?: { soundtrackTag?: string }) => void;
