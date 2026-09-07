@@ -117,14 +117,70 @@ function protect(text) {
   return { masked, found };
 }
 
-function restore(masked, found) {
+/**
+ * One space is the only whitespace the translator inserts inside a sentinel,
+ * and never a newline — batches are split on those before we get here.
+ */
+const GAP = '[ \t\u00a0]?';
+
+/** How many @ signs a mangled sentinel is allowed on each side. */
+function sentinelPattern(index, run) {
+  return `(?:@${GAP}){1,${run}}${index}(?:${GAP}@){1,${run}}`;
+}
+
+/**
+ * Put the placeholders back.
+ *
+ * The translator does not hand the sentinels back intact. Measured against the
+ * live edge function, `@@0@@ joined "@@1@@"` comes back as `@0@ ... "@1@@"` (bn),
+ * `@0@@ ... "@1@@"` (tg) and `@ @ 1 @ @` (sr): it inserts spaces AND drops one of
+ * the four @ signs, the second being much the more common and the one the old
+ * pattern did not cover. A dropped @ left the sentinel in the string, so
+ * placeholdersMatch failed and the key stayed English in every locale whose
+ * translator did that — two-placeholder strings almost never survived.
+ *
+ * So try the sentinel forms in order of how much they assume, and take the
+ * first result that lands back on the @ count the English had:
+ *
+ *   1. intact `@@n@@` first, then a run of at most two @ per side. Matching the
+ *      intact form first stops a looser pattern eating a good sentinel, which
+ *      matters for strings like "@{{name}} is sharing" (masked `@@@0@@`).
+ *   2. the same with a run of three, for `@1 @ @@`.
+ *   3. runs of three then four WITHOUT the intact form, so a stray @ sitting
+ *      against a good sentinel (`@ @@1@@`) is absorbed rather than left behind.
+ *
+ * The @ count is what keeps step 3 honest: it can swallow an @ that belongs to
+ * the text, and a variant that does is rejected in favour of the tightest pass.
+ * Anything still unresolved falls through to looksUnfinished/placeholdersMatch
+ * and is dropped, exactly as before — English beats literal braces.
+ */
+function restoreAt(masked, found, run, exactFirst) {
   let out = masked;
   for (let i = 0; i < found.length; i++) {
-    // Tolerate the translator adding spaces inside the sentinel ("@ @ 0 @ @").
-    const loose = new RegExp(`@\\s*@\\s*${i}\\s*@\\s*@`, 'g');
-    out = out.replace(loose, found[i]);
+    const forms = exactFirst ? [`@@${i}@@`, sentinelPattern(i, run)] : [sentinelPattern(i, run)];
+    for (const pattern of forms) {
+      const next = out.replace(new RegExp(pattern, 'g'), () => found[i]);
+      if (next !== out) {
+        out = next;
+        break;
+      }
+    }
   }
   return out;
+}
+
+/** Every @ in the string. A correct restore lands back on the English count. */
+const atCount = (text) => (text.match(/@/g) || []).length;
+
+function restore(masked, found, source) {
+  const target = atCount(source);
+  let tightest = null;
+  for (const [run, exactFirst] of [[2, true], [3, true], [3, false], [4, false]]) {
+    const out = restoreAt(masked, found, run, exactFirst);
+    if (tightest === null) tightest = out;
+    if (atCount(out) === target) return out;
+  }
+  return tightest;
 }
 
 /** The check rule 2 turns on: same placeholders, same number of them. */
@@ -135,8 +191,11 @@ function placeholdersMatch(source, candidate) {
   return a.every((x, i) => x === b[i]);
 }
 
-function looksUnfinished(candidate) {
-  return candidate.includes('@@') || /@\s@/.test(candidate) || candidate.trim() === '';
+function looksUnfinished(candidate, source) {
+  if (candidate.trim() === '' || candidate.includes('@@') || /@\s@/.test(candidate)) return true;
+  // A leftover @ the English never had is sentinel debris the restore could
+  // not place — the string reads as corrupted whatever else survived.
+  return atCount(candidate) > atCount(source);
 }
 
 /**
@@ -186,13 +245,25 @@ function hasTranslatableWords(source) {
   return source.trim().split(/\s+/).filter((w) => /[a-zA-Z]{3}/.test(w)).length >= 3;
 }
 
+/**
+ * The part of a string a translator is actually asked to change. Placeholders
+ * come back unchanged in every language, so they are noise in this comparison
+ * — and on a string that is mostly placeholders they are most of the bytes.
+ */
+function proseOf(text) {
+  return text.replace(PLACEHOLDER, ' ').replace(/\s+/g, ' ').trim();
+}
+
 function isUntranslatedProse(source, candidate, locale) {
   const script = SCRIPT_OF[locale];
   // A script check needs no word threshold: two Latin words in a Cyrillic
   // locale are as untranslated as ten. Only the word rule below needs the
   // cushion, because there "unchanged" is weak evidence on its own.
   if (script) return /[a-zA-Z]{3}/.test(source) && !script.test(candidate);
-  if (candidate !== source) return false;
+  // Compare the prose rather than the whole string, and ignore case. The
+  // translator hands "{{names}} and {{count}} other" back as "... Other" often
+  // enough that a strict === let the English straight into the file.
+  if (proseOf(candidate).toLowerCase() !== proseOf(source).toLowerCase()) return false;
   return hasTranslatableWords(source) && ENGLISH_FUNCTION_WORDS.test(source);
 }
 
@@ -360,10 +431,10 @@ for (const locale of targets) {
     }
 
     keys.forEach((k, j) => {
-      const candidate = out[j] == null ? null : restore(out[j].trim(), prepared[j].found);
+      const candidate = out[j] == null ? null : restore(out[j].trim(), prepared[j].found, sources[j]);
       if (
         candidate == null ||
-        looksUnfinished(candidate) ||
+        looksUnfinished(candidate, sources[j]) ||
         isUntranslatedProse(sources[j], candidate, locale) ||
         !placeholdersMatch(sources[j], candidate)
       ) {
