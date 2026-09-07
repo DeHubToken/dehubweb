@@ -35,6 +35,8 @@ interface CustomNotificationRow {
   content: string;
   reference_id: string | null;
   reference_title: string | null;
+  /** The comment a row is about, where its type has one. */
+  reference_comment_id: string | null;
   read: boolean;
   created_at: string;
 }
@@ -63,6 +65,9 @@ function toDeHubNotification(row: CustomNotificationRow): DeHubNotification {
     // Custom field to identify this as a custom notification
     ...(row.reference_id ? { _customReferenceId: row.reference_id } : {}),
     ...(row.reference_title ? { _customReferenceTitle: row.reference_title } : {}),
+    // Named like the API's own field so the page's comment deep-linking reads
+    // the same property whichever source the row came from.
+    ...(row.reference_comment_id ? { commentId: row.reference_comment_id } : {}),
   } as DeHubNotification & { _customReferenceId?: string; _customReferenceTitle?: string };
 }
 
