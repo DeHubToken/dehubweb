@@ -429,10 +429,14 @@ export const VideoSlide = memo(function VideoSlide({
           <video
             ref={videoRef}
             src={short.videoUrl}
-            className={`w-full h-full ${fitWhole || isFullscreen ? 'object-contain' : 'object-cover'} transition-none`}
+            className={`shorts-inline-video pointer-events-none w-full h-full ${fitWhole || isFullscreen ? 'object-contain' : 'object-cover'} transition-none`}
             style={{ willChange: 'transform' }}
             loop
             playsInline
+            controls={false}
+            controlsList="nofullscreen noremoteplayback nodownload"
+            disablePictureInPicture
+            disableRemotePlayback
             {...{"webkit-playsinline": ""}}
             muted={isMuted}
             poster={thumbnail}
