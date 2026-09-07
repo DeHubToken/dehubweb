@@ -1,33 +1,107 @@
 import React from 'react';
 
 /**
- * Timestamp of the last reload we triggered for a chunk failure. Deliberately
- * a TIMESTAMP and not a boolean: the old boolean flag was cleared on every boot
- * from main.tsx, which meant it could never see the reload it had just caused.
- * Landing on a route whose chunk was dead looped forever — fail, set flag,
- * reload, flag cleared, fail — and changing the URL by hand was the only way
- * out. A timestamp survives the reload and still expires, so a genuinely new
- * stale deploy later in the same session still gets its one automatic reload.
+ * When this tab last tried to recover from a chunk failure, and how many
+ * attempts it has spent. Deliberately a TIMESTAMP and not a boolean: the old
+ * boolean flag was cleared on every boot from main.tsx, which meant it could
+ * never see the reload it had just caused. Landing on a route whose chunk was
+ * dead looped forever — fail, set flag, reload, flag cleared, fail — and
+ * changing the URL by hand was the only way out. A timestamp survives the
+ * reload and still expires, so a genuinely new stale deploy later in the same
+ * session starts again from the first tier.
  */
-const CHUNK_RELOAD_AT_KEY = 'chunk-reload-at';
-const RELOAD_COOLDOWN_MS = 30_000;
+const CHUNK_RECOVERY_AT_KEY = 'chunk-reload-at';
+const CHUNK_RECOVERY_TIER_KEY = 'chunk-reload-tier';
+/** Two failures further apart than this are separate incidents, not a loop. */
+const RECOVERY_WINDOW_MS = 120_000;
+/** A reload takes a moment to land; ignore anything caught while it is in flight. */
+const RELOAD_SETTLE_MS = 5_000;
+
+export type ChunkRecovery = 'reloading' | 'exhausted';
 
 /**
- * True if a chunk-failure reload is allowed right now; records the attempt as a
- * side effect. Returns false inside the cooldown, which is the signal that a
- * reload has already been tried and did not help — the caller should surface
- * the error instead of reloading again.
+ * Drop everything this origin has cached, so the reload that follows cannot be
+ * handed the same dead chunk again. The service worker is unregistered as well
+ * — a worker from an older build can keep answering /assets/ out of its own
+ * cache long after the deploy that orphaned those files.
+ *
+ * Best-effort by design: every step is optional and none of it may hold the
+ * reload up for long, so the whole thing races a short timer.
  */
-export function shouldReloadForChunkError(): boolean {
+function purgeCaches(): Promise<void> {
+  const jobs: Promise<unknown>[] = [];
   try {
-    const last = Number(sessionStorage.getItem(CHUNK_RELOAD_AT_KEY)) || 0;
-    if (Date.now() - last < RELOAD_COOLDOWN_MS) return false;
-    sessionStorage.setItem(CHUNK_RELOAD_AT_KEY, String(Date.now()));
-    return true;
+    if ('caches' in window) {
+      jobs.push(caches.keys().then((keys) => Promise.all(keys.map((k) => caches.delete(k)))));
+    }
+  } catch {
+    // Storage disabled — nothing to purge.
+  }
+  try {
+    if ('serviceWorker' in navigator) {
+      jobs.push(
+        navigator.serviceWorker
+          .getRegistrations()
+          .then((regs) => Promise.all(regs.map((r) => r.unregister()))),
+      );
+    }
+  } catch {
+    // Unsupported or blocked — the reload below is still worth doing.
+  }
+  return Promise.race([
+    Promise.all(jobs).then(() => undefined),
+    new Promise<void>((resolve) => setTimeout(resolve, 2_000)),
+  ]).catch(() => undefined);
+}
+
+/**
+ * Get the user back to a working page instead of showing them a crash screen.
+ * Escalates, because the cheap fix does not always take:
+ *
+ *   1st failure — plain reload. Fresh index.html carries live chunk URLs, which
+ *     is all a routine stale-deploy miss needs.
+ *   2nd failure — the reload did not help, so something is still handing out the
+ *     dead chunk. Purge Cache Storage, unregister the service worker, reload
+ *     again.
+ *   3rd failure — out of ideas. Return 'exhausted' so the caller can surface the
+ *     error rather than reloading forever.
+ *
+ * A 'reloading' result means a navigation is already scheduled and the caller
+ * should render nothing further.
+ */
+export function recoverFromChunkError(): ChunkRecovery {
+  let last = 0;
+  let tier = 0;
+  try {
+    last = Number(sessionStorage.getItem(CHUNK_RECOVERY_AT_KEY)) || 0;
+    tier = Number(sessionStorage.getItem(CHUNK_RECOVERY_TIER_KEY)) || 0;
   } catch {
     // Private-mode / storage-disabled: never auto-reload rather than risk a loop.
-    return false;
+    return 'exhausted';
   }
+
+  const since = Date.now() - last;
+  // A reload we already triggered is still landing — do not stack another.
+  if (last && since < RELOAD_SETTLE_MS) return 'reloading';
+  // Long enough since the last one that this counts as a new incident.
+  if (since > RECOVERY_WINDOW_MS) tier = 0;
+
+  const nextTier = tier + 1;
+  if (nextTier > 2) return 'exhausted';
+
+  try {
+    sessionStorage.setItem(CHUNK_RECOVERY_AT_KEY, String(Date.now()));
+    sessionStorage.setItem(CHUNK_RECOVERY_TIER_KEY, String(nextTier));
+  } catch {
+    return 'exhausted';
+  }
+
+  if (nextTier === 1) {
+    window.location.reload();
+  } else {
+    void purgeCaches().then(() => window.location.reload());
+  }
+  return 'reloading';
 }
 
 /**
@@ -60,8 +134,11 @@ export function isChunkLoadError(error: unknown): boolean {
  *
  * 1. Tries the import
  * 2. On failure, waits 1s and retries once
- * 3. If the retry fails, reloads once to get fresh HTML with live chunk URLs
- * 4. Inside the reload cooldown, rejects so the ErrorBoundary can show up
+ * 3. If the retry fails, reloads for fresh HTML with live chunk URLs — and if
+ *    that reload did not help, purges the caches and service worker and
+ *    reloads again
+ * 4. Only once both recovery tiers are spent does it reject, so the
+ *    ErrorBoundary can show up
  *
  * The retry in step 2 only earns its keep when the failure was a genuine
  * network blip. A stale-deploy miss is served from cache (the edge answers a
@@ -93,13 +170,12 @@ export function lazyWithRetry<T extends React.ComponentType<any>>(
             importFn()
               .then(resolve)
               .catch((retryError: unknown) => {
-                if (shouldReloadForChunkError()) {
-                  window.location.reload();
+                if (recoverFromChunkError() === 'reloading') {
                   // Never resolve, so no error flashes before the reload lands.
                   return;
                 }
-                // A reload was already tried and we are back here anyway — let it
-                // through to the ErrorBoundary rather than reloading in a loop.
+                // Both recovery tiers are spent and we are back here anyway —
+                // let it through to the ErrorBoundary rather than looping.
                 reject(retryError);
               });
           }, 1000);

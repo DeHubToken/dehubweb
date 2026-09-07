@@ -1,7 +1,7 @@
 import "./lib/canvas-polyfills"; // Must run before any canvas usage (Safari 15 compat)
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "./components/ErrorBoundary";
-import { shouldReloadForChunkError } from "./lib/lazy-with-retry";
+import { recoverFromChunkError } from "./lib/lazy-with-retry";
 import { registerServiceWorker } from "./lib/register-sw";
 import { installScrollFreezeWatchdog } from "./lib/scroll-freeze-watchdog";
 import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
@@ -46,12 +46,12 @@ if (dhHost !== "dehub.io" && dhHost !== "localhost" && dhHost !== "127.0.0.1") {
   dhRobots.setAttribute("content", "noindex, nofollow");
 }
 
-// Global handler for stale-deployment chunk failures. Shares the cooldown with
-// lazyWithRetry and the ErrorBoundary so the three paths can't reload over each
-// other — this one used to keep its own flag that was never cleared, so a
-// second stale deploy in the same session got no reload at all.
+// Global handler for stale-deployment chunk failures. Shares the recovery
+// ladder with lazyWithRetry and the ErrorBoundary so the three paths can't
+// reload over each other — this one used to keep its own flag that was never
+// cleared, so a second stale deploy in the same session got no reload at all.
 window.addEventListener('vite:preloadError', () => {
-  if (shouldReloadForChunkError()) window.location.reload();
+  recoverFromChunkError();
 });
 
 // Two things are awaited before the first render, both so that the HTML shell
