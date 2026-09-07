@@ -149,6 +149,11 @@ export type ThemeIconKey =
  * components never grow theme branches or import twenty-four variants.
  */
 const THEME_ICON_KEYS: ReadonlyArray<readonly [string, ThemeIconKey]> = [
+  ['community-posts-3d-icon', 'posts'],
+  ['community-chat-3d-icon', 'messages'],
+  ['community-events-3d-icon', 'events'],
+  ['community-members-3d-icon', 'subscriptions'],
+  ['community-about-3d-icon', 'glossary'],
   ['home-3d-icon', 'home'],
   ['comment-3d-icon', 'posts'],
   ['image-frame-3d-icon', 'images'],
