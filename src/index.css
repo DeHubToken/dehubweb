@@ -4,9 +4,15 @@
 
 /* Shorts have their own controls. Keep Android/WebKit's video chrome from
    painting fullscreen/rotate controls across the comments split boundary. */
-.shorts-inline-video::-webkit-media-controls,
-.shorts-inline-video::-webkit-media-controls-enclosure,
-.shorts-inline-video::-webkit-media-controls-panel,
+.shorts-inline-video::-webkit-media-controls {
+  display: none !important;
+}
+.shorts-inline-video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+.shorts-inline-video::-webkit-media-controls-panel {
+  display: none !important;
+}
 .shorts-inline-video::-webkit-media-controls-start-playback-button {
   display: none !important;
 }
