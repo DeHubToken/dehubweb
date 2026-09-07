@@ -957,7 +957,14 @@
     "statusDeclined": "مسترد",
     "shipping": "بن رہا ہے",
     "noShippingYet": "کچھ زیرِ تکمیل نہیں",
-    "shippingAppearHere": "جو درخواستیں بنائی جا رہی ہیں وہ یہاں نظر آئیں گی۔"
+    "shippingAppearHere": "جو درخواستیں بنائی جا رہی ہیں وہ یہاں نظر آئیں گی۔",
+    "writeReply": "جواب لکھیں...",
+    "replyToComment": "جواب",
+    "replyingTo": "{{name}} کو جواب دے رہے ہیں",
+    "requestAuthorChip": "مصنف",
+    "commentEdited": "ترمیم شدہ",
+    "showOneMoreReply": "مزید 1 جواب دکھائیں",
+    "showMoreReplies": "مزید {{count}} جواب دکھائیں"
   },
   "auth": {
     "loginRequired": "لاگ ان ضروری ہے"

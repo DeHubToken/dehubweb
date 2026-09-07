@@ -974,7 +974,14 @@
     "statusDeclined": "Rədd Edildi",
     "shipping": "Hazırlanır",
     "noShippingYet": "Davam edən heç nə yoxdur",
-    "shippingAppearHere": "Hazırlanan sorğular burada görünəcək."
+    "shippingAppearHere": "Hazırlanan sorğular burada görünəcək.",
+    "writeReply": "Cavab yazın...",
+    "replyToComment": "Cavab",
+    "replyingTo": "{{name}}-ya cavab verilir",
+    "requestAuthorChip": "Müəllif",
+    "commentEdited": "redaktə edildi",
+    "showOneMoreReply": "Daha 1 cavabı göstər",
+    "showMoreReplies": "Daha {{count}} cavabı göstər"
   },
   "auth": {
     "loginRequired": "Daxil olmaq lazımdır"

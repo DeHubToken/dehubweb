@@ -971,7 +971,14 @@
     "statusDeclined": "अस्वीकृतम्",
     "shipping": "प्रेषणम्",
     "noShippingYet": "किमपि प्रगतौ नास्ति",
-    "shippingAppearHere": "निर्मीयमानाः प्रार्थनाः अत्र दृश्यन्ते।"
+    "shippingAppearHere": "निर्मीयमानाः प्रार्थनाः अत्र दृश्यन्ते।",
+    "writeReply": "उत्तरं लिखतु...",
+    "replyToComment": "उत्तरम्",
+    "replyingTo": "{{name}} इत्यस्य उत्तरम्",
+    "requestAuthorChip": "लेखकः",
+    "commentEdited": "संपादितम्",
+    "showOneMoreReply": "१ अधिकं उत्तरं दर्शयतु",
+    "showMoreReplies": "{{count}} अधिकानि उत्तराणि दर्शयतु"
   },
   "auth": {
     "loginRequired": "प्रवेशः आवश्यकः"

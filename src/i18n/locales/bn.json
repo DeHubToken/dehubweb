@@ -960,7 +960,14 @@
     "statusDeclined": "প্রত্যাখ্যাত",
     "shipping": "তৈরি হচ্ছে",
     "noShippingYet": "কিছুই চলছে না",
-    "shippingAppearHere": "যেসব অনুরোধ তৈরি হচ্ছে সেগুলো এখানে দেখা যাবে।"
+    "shippingAppearHere": "যেসব অনুরোধ তৈরি হচ্ছে সেগুলো এখানে দেখা যাবে।",
+    "writeReply": "একটি উত্তর লিখুন...",
+    "replyToComment": "উত্তর",
+    "replyingTo": "{{name}} কে উত্তর দিচ্ছেন",
+    "requestAuthorChip": "লেখক",
+    "commentEdited": "সম্পাদিত",
+    "showOneMoreReply": "আরও ১টি উত্তর দেখান",
+    "showMoreReplies": "আরও {{count}} টি উত্তর দেখান"
   },
   "auth": {
     "loginRequired": "লগ ইন প্রয়োজন"

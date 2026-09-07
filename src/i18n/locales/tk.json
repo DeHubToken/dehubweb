@@ -976,7 +976,14 @@
     "statusDeclined": "Ret edildi",
     "shipping": "Taýýarlanýar",
     "noShippingYet": "Dowam edýän zat ýok",
-    "shippingAppearHere": "Gurulýan haýyşlar şu ýerde görkeziler."
+    "shippingAppearHere": "Gurulýan haýyşlar şu ýerde görkeziler.",
+    "writeReply": "Jogap ýazyň...",
+    "replyToComment": "Jogap",
+    "replyingTo": "{{name}}-a jogap berilýär",
+    "requestAuthorChip": "Awtor",
+    "commentEdited": "redaktirlendi",
+    "showOneMoreReply": "Ýene 1 jogaby görkez",
+    "showMoreReplies": "{{count}} sany has köp jogaby görkez"
   },
   "auth": {
     "loginRequired": "Girmek talap edilýär"

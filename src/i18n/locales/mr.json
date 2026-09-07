@@ -978,7 +978,14 @@
     "statusDeclined": "नाकारले",
     "shipping": "तयार होत आहे",
     "noShippingYet": "काहीही सुरू नाही",
-    "shippingAppearHere": "ज्या विनंत्यांवर काम सुरू आहे त्या इथे दिसतील."
+    "shippingAppearHere": "ज्या विनंत्यांवर काम सुरू आहे त्या इथे दिसतील.",
+    "writeReply": "उत्तर लिहा...",
+    "replyToComment": "उत्तर",
+    "replyingTo": "{{name}} ला उत्तर देत आहे",
+    "requestAuthorChip": "लेखक",
+    "commentEdited": "संपादित",
+    "showOneMoreReply": "आणखी १ उत्तर दाखवा",
+    "showMoreReplies": "{{count}} अधिक उत्तरे दाखवा"
   },
   "auth": {
     "loginRequired": "लॉगिन आवश्यक"

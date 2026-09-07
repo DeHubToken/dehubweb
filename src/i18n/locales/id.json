@@ -983,7 +983,14 @@
     "statusDeclined": "Ditolak",
     "shipping": "Sedang dikerjakan",
     "noShippingYet": "Tidak ada yang sedang dikerjakan",
-    "shippingAppearHere": "Permintaan yang sedang dibangun akan muncul di sini."
+    "shippingAppearHere": "Permintaan yang sedang dibangun akan muncul di sini.",
+    "writeReply": "Tulis balasan...",
+    "replyToComment": "Balas",
+    "replyingTo": "Membalas ke {{name}}",
+    "requestAuthorChip": "Penulis",
+    "commentEdited": "diedit",
+    "showOneMoreReply": "Tampilkan 1 balasan lagi",
+    "showMoreReplies": "Tampilkan {{count}} balasan lagi"
   },
   "auth": {
     "loginRequired": "Login diperlukan"

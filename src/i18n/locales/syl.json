@@ -1088,7 +1088,14 @@
     "openSource": "ওপেন সোর্স",
     "community": "কমিউনিটি",
     "privacy": "প্রাইভেসি",
-    "freedom": "স্বাধীনতা"
+    "freedom": "স্বাধীনতা",
+    "writeReply": "জবাব দাও...",
+    "replyToComment": "জবাব",
+    "replyingTo": "{{name}} কে জবাব দেওয়া হচ্ছে",
+    "requestAuthorChip": "লেখক",
+    "commentEdited": "সম্পাদনা করা হয়েছে",
+    "showOneMoreReply": "আরও ১টি জবাব দেখান",
+    "showMoreReplies": "আরও {{count}} টি জবাব দেখান"
   },
   "auth": {
     "loginRequired": "লগ ইন লাগবো",

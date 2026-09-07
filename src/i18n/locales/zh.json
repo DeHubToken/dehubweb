@@ -982,7 +982,14 @@
     "statusDeclined": "已拒绝",
     "shipping": "开发中",
     "noShippingYet": "暂无进行中的内容",
-    "shippingAppearHere": "正在开发的需求会显示在这里。"
+    "shippingAppearHere": "正在开发的需求会显示在这里。",
+    "writeReply": "写一条回复…",
+    "replyToComment": "回复",
+    "replyingTo": "回复 {{name}}",
+    "requestAuthorChip": "作者",
+    "commentEdited": "编辑过",
+    "showOneMoreReply": "显示另外 1 条回复",
+    "showMoreReplies": "显示 {{count}} 条更多回复"
   },
   "auth": {
     "loginRequired": "需要登录"

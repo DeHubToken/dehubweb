@@ -990,7 +990,14 @@
     "statusDeclined": "अस्वीकृत",
     "shipping": "बन रहा है",
     "noShippingYet": "कुछ भी प्रगति में नहीं",
-    "shippingAppearHere": "जिन अनुरोधों पर काम चल रहा है वे यहाँ दिखेंगे।"
+    "shippingAppearHere": "जिन अनुरोधों पर काम चल रहा है वे यहाँ दिखेंगे।",
+    "writeReply": "जवाब लिखें...",
+    "replyToComment": "जवाब",
+    "replyingTo": "{{name}} को जवाब",
+    "requestAuthorChip": "लेखक",
+    "commentEdited": "संपादित",
+    "showOneMoreReply": "1 और जवाब दिखाएं",
+    "showMoreReplies": "{{count}} और जवाब दिखाएं"
   },
   "auth": {
     "loginRequired": "लॉगिन आवश्यक है"

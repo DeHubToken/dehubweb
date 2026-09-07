@@ -1000,7 +1000,14 @@
     "statusDeclined": "Қабылданбады",
     "shipping": "Жасалуда",
     "noShippingYet": "Қолға алынған ештеңе жоқ",
-    "shippingAppearHere": "Жасалып жатқан сұраулар осында көрінеді."
+    "shippingAppearHere": "Жасалып жатқан сұраулар осында көрінеді.",
+    "writeReply": "Жауап жазу...",
+    "replyToComment": "Жауап беру",
+    "replyingTo": "{{name}}-ға жауап беру",
+    "requestAuthorChip": "Автор",
+    "commentEdited": "өңделген",
+    "showOneMoreReply": "Тағы 1 жауапты көрсету",
+    "showMoreReplies": "Тағы {{count}} жауапты көрсету"
   },
   "auth": {
     "loginRequired": "Авторизация қажет"

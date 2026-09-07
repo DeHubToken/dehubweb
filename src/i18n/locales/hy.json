@@ -974,7 +974,14 @@
     "statusDeclined": "Merzhvaats",
     "shipping": "Կառուցվում է",
     "noShippingYet": "Ոչինչ ընթացքի մեջ չէ",
-    "shippingAppearHere": "Կառուցվող հարցումները կհայտնվեն այստեղ։"
+    "shippingAppearHere": "Կառուցվող հարցումները կհայտնվեն այստեղ։",
+    "writeReply": "Գրել պատասխան...",
+    "replyToComment": "Պատասխան",
+    "replyingTo": "Պատասխանում է {{name}}-ին",
+    "requestAuthorChip": "Հեղինակ",
+    "commentEdited": "խմբագրված",
+    "showOneMoreReply": "Ցույց տալ ևս 1 պատասխան",
+    "showMoreReplies": "Ցույց տալ {{count}} պատասխան ավելի"
   },
   "auth": {
     "loginRequired": "Moutq pahanjvoum e"

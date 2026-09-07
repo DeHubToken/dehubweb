@@ -978,7 +978,14 @@
     "statusDeclined": "נדחה",
     "shipping": "בבנייה",
     "noShippingYet": "אין כלום בעבודה",
-    "shippingAppearHere": "בקשות שנמצאות בפיתוח יופיעו כאן."
+    "shippingAppearHere": "בקשות שנמצאות בפיתוח יופיעו כאן.",
+    "writeReply": "כתוב תגובה...",
+    "replyToComment": "תגובה",
+    "replyingTo": "משיב ל-{{name}}",
+    "requestAuthorChip": "מחבר",
+    "commentEdited": "נערך",
+    "showOneMoreReply": "הצג עוד תגובה אחת",
+    "showMoreReplies": "הצג עוד {{count}} תגובות"
   },
   "auth": {
     "loginRequired": "נדרשת התחברות"

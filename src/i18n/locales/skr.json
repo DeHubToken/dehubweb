@@ -982,7 +982,14 @@
     "statusDeclined": "مسترد",
     "shipping": "گھلیا جا رہیا اے",
     "noShippingYet": "کجھ کائنی چلدا پیا",
-    "shippingAppearHere": "جہڑیاں درخواستاں بݨدیاں پئیاں ہن اوہ ایتھے ݙسیسن۔"
+    "shippingAppearHere": "جہڑیاں درخواستاں بݨدیاں پئیاں ہن اوہ ایتھے ݙسیسن۔",
+    "writeReply": "جواب لکھو...",
+    "replyToComment": "جواب",
+    "replyingTo": "{{name}} دے جواب وچ",
+    "requestAuthorChip": "مصنف",
+    "commentEdited": "ترمیم شدہ",
+    "showOneMoreReply": "1 ہور جواب دکھاواں",
+    "showMoreReplies": "{{count}} ہور جواب دکھاواں"
   },
   "auth": {
     "loginRequired": "لاگ ان ضروری ہے"

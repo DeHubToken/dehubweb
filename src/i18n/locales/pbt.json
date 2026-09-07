@@ -973,7 +973,14 @@
     "statusDeclined": "رد شوی",
     "shipping": "لیږل کیږي",
     "noShippingYet": "هیڅ شی په پرمختګ کې نشته",
-    "shippingAppearHere": "هغه غوښتنې چې جوړیږي دلته به ښکاره شي."
+    "shippingAppearHere": "هغه غوښتنې چې جوړیږي دلته به ښکاره شي.",
+    "writeReply": "ځواب ولیکئ...",
+    "replyToComment": "ځواب",
+    "replyingTo": "د {{name}} ځواب ورکول",
+    "requestAuthorChip": "لیکوال",
+    "commentEdited": "سمه شوې",
+    "showOneMoreReply": "۱ نور ځوابونه وښایاست",
+    "showMoreReplies": "{{count}} نور ځوابونه وښایاست"
   },
   "auth": {
     "loginRequired": "ننوتل اړین دي"

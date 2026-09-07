@@ -986,7 +986,14 @@
     "statusDeclined": "Declined",
     "shipping": "Word gebou",
     "noShippingYet": "Niks aan die gang nie",
-    "shippingAppearHere": "Versoeke wat gebou word, verskyn hier."
+    "shippingAppearHere": "Versoeke wat gebou word, verskyn hier.",
+    "writeReply": "Skryf 'n antwoord...",
+    "replyToComment": "Antwoord",
+    "replyingTo": "Antwoord aan {{name}}",
+    "requestAuthorChip": "Outeur",
+    "commentEdited": "redigeer",
+    "showOneMoreReply": "Wys nog 1 antwoord",
+    "showMoreReplies": "Wys {{count}} meer antwoorde"
   },
   "auth": {
     "loginRequired": "Log in required"

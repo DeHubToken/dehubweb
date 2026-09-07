@@ -1180,7 +1180,14 @@
     "statusDeclined": "Afgewezen",
     "shipping": "In uitvoering",
     "noShippingYet": "Niets onderweg",
-    "shippingAppearHere": "Verzoeken die gebouwd worden verschijnen hier."
+    "shippingAppearHere": "Verzoeken die gebouwd worden verschijnen hier.",
+    "writeReply": "Schrijf een antwoord...",
+    "replyToComment": "Antwoord",
+    "replyingTo": "Antwoorden op {{name}}",
+    "requestAuthorChip": "Auteur",
+    "commentEdited": "bewerkt",
+    "showOneMoreReply": "Toon 1 meer antwoord",
+    "showMoreReplies": "Toon {{count}} meer antwoorden"
   },
   "auth": {
     "loginRequired": "Inloggen vereist"

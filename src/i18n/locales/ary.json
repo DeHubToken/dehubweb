@@ -982,7 +982,14 @@
     "statusDeclined": "مرفوض",
     "shipping": "كيتبنا دابا",
     "noShippingYet": "ما كاين والو خدّام",
-    "shippingAppearHere": "الطلبات اللي كيتبناو غادي يبانو هنا."
+    "shippingAppearHere": "الطلبات اللي كيتبناو غادي يبانو هنا.",
+    "writeReply": "كتب رد...",
+    "replyToComment": "رد",
+    "replyingTo": "رد على {{name}}",
+    "requestAuthorChip": "الكاتب",
+    "commentEdited": "تم التعديل",
+    "showOneMoreReply": "أظهر ردًا واحدًا إضافيًا",
+    "showMoreReplies": "أظهر {{count}} ردودًا إضافية"
   },
   "auth": {
     "loginRequired": "خاصك تدخل"

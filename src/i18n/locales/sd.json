@@ -981,7 +981,14 @@
     "statusDeclined": "رد",
     "shipping": "موڪليو پيو وڃي",
     "noShippingYet": "ڪجهه به هلي نه رهيو آهي",
-    "shippingAppearHere": "ٺهندڙ درخواستون هتي ظاهر ٿينديون."
+    "shippingAppearHere": "ٺهندڙ درخواستون هتي ظاهر ٿينديون.",
+    "writeReply": "جواب لکيو...",
+    "replyToComment": "جواب",
+    "replyingTo": "{{name}} کي جواب ڏيڻ",
+    "requestAuthorChip": "ليکڪ",
+    "commentEdited": "ايڊٽ ڪيو",
+    "showOneMoreReply": "1 وڌيڪ جواب ڏيکاريو",
+    "showMoreReplies": "{{count}} وڌيڪ جواب ڏيکاريو"
   },
   "auth": {
     "loginRequired": "لاگ ان ضروري"

@@ -984,7 +984,14 @@
     "statusDeclined": "Manasqa",
     "shipping": "Ruwakuchkan",
     "noShippingYet": "Manaraq imapas ruwakuchkanchu",
-    "shippingAppearHere": "Ruwakuchkaq mañakuykuna kaypi rikurinqa."
+    "shippingAppearHere": "Ruwakuchkaq mañakuykuna kaypi rikurinqa.",
+    "writeReply": "Qillqay...",
+    "replyToComment": "Kutichiy",
+    "replyingTo": "{{name}}-man kutichiy",
+    "requestAuthorChip": "Qillqaq",
+    "commentEdited": "tariy",
+    "showOneMoreReply": "1 kutiyta rikuchiy",
+    "showMoreReplies": "{{count}} kutiyta astawan rikuchiy"
   },
   "auth": {
     "loginRequired": "Yaykuy munakun"
