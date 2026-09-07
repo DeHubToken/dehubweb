@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import {
   DEHUB_CDN_BASE,
-  DEHUB_API_BASE,
+  DEHUB_API_REQUEST_BASE,
   getMediaUrl,
   AuthenticationError,
+  RequestTimeoutError,
   setAuthToken,
   getAuthToken,
   isTokenExpired,
@@ -153,7 +154,7 @@ describe('apiCall', () => {
     expect(fetch).toHaveBeenCalledOnce();
     const call = vi.mocked(fetch).mock.calls[0];
     const url = call[0] as string;
-    expect(url).toContain(`${DEHUB_API_BASE}/api/test`);
+    expect(url).toContain(`${DEHUB_API_REQUEST_BASE}/api/test`);
     expect(url).toContain('page=1');
     expect(result).toEqual(mockResponse);
   });
@@ -204,6 +205,19 @@ describe('apiCall', () => {
     const opts = vi.mocked(fetch).mock.calls[0][1];
     expect(opts?.method).toBe('POST');
     expect(opts?.body).toBe(JSON.stringify({ foo: 'bar' }));
+  });
+
+  it('aborts a stalled request instead of leaving the UI loading forever', async () => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation((_url, init) =>
+      new Promise((_resolve, reject) => {
+        init?.signal?.addEventListener('abort', () => {
+          reject(new DOMException('Aborted', 'AbortError'));
+        });
+      })
+    );
+
+    await expect(apiCall('/api/test', { timeoutMs: 1 }))
+      .rejects.toBeInstanceOf(RequestTimeoutError);
   });
 
   it('does not retry twice on repeated 401 after refresh', async () => {
