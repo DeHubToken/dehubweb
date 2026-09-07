@@ -1218,7 +1218,14 @@
     "uiUx": "UI/UX",
     "shipping": "У розробці",
     "noShippingYet": "Нічого в роботі",
-    "shippingAppearHere": "Тут з'являться запити, які вже роблять."
+    "shippingAppearHere": "Тут з'являться запити, які вже роблять.",
+    "writeReply": "Написати відповідь...",
+    "replyToComment": "Відповісти",
+    "replyingTo": "Відповідь на {{name}}",
+    "requestAuthorChip": "Автор",
+    "commentEdited": "відредаговано",
+    "showOneMoreReply": "Показати ще 1 відповідь",
+    "showMoreReplies": "Показати ще {{count}} відповідей"
   },
   "auth": {},
   "messages": {

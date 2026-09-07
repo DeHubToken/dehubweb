@@ -877,7 +877,14 @@
     "statusDeclined": "Declined",
     "shipping": "Đang triển khai",
     "noShippingYet": "Chưa có gì đang làm",
-    "shippingAppearHere": "Các yêu cầu đang được xây dựng sẽ hiện ở đây."
+    "shippingAppearHere": "Các yêu cầu đang được xây dựng sẽ hiện ở đây.",
+    "writeReply": "Viết phản hồi...",
+    "replyToComment": "Phản hồi",
+    "replyingTo": "Đang phản hồi {{name}}",
+    "requestAuthorChip": "Tác giả",
+    "commentEdited": "đã chỉnh sửa",
+    "showOneMoreReply": "Hiển thị thêm 1 phản hồi",
+    "showMoreReplies": "Hiển thị thêm {{count}} phản hồi"
   },
   "auth": {
     "loginRequired": "Log in required"

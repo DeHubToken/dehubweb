@@ -973,7 +973,14 @@
     "statusDeclined": "Zamítnuto",
     "shipping": "Ve výrobě",
     "noShippingYet": "Nic se nedělá",
-    "shippingAppearHere": "Požadavky, na kterých se pracuje, se objeví tady."
+    "shippingAppearHere": "Požadavky, na kterých se pracuje, se objeví tady.",
+    "writeReply": "Napište odpověď...",
+    "replyToComment": "Odpovědět",
+    "replyingTo": "Odpovídám {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "upraveno",
+    "showOneMoreReply": "Zobrazit ještě 1 odpověď",
+    "showMoreReplies": "Zobrazit více odpovědí {{count}}"
   },
   "auth": {
     "loginRequired": "Vyžadováno přihlášení"

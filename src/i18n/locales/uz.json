@@ -1001,7 +1001,14 @@
     "statusDeclined": "Rad etilgan",
     "shipping": "Qurilmoqda",
     "noShippingYet": "Hech nima ustida ishlanmayapti",
-    "shippingAppearHere": "Qurilayotgan so'rovlar shu yerda ko'rinadi."
+    "shippingAppearHere": "Qurilayotgan so'rovlar shu yerda ko'rinadi.",
+    "writeReply": "Javob yozing...",
+    "replyToComment": "Javob",
+    "replyingTo": "{{name}} ga javob qaytarish",
+    "requestAuthorChip": "Muallif",
+    "commentEdited": "tahrirlangan",
+    "showOneMoreReply": "Yana 1 ta javobni ko'rsatish",
+    "showMoreReplies": "{{count}} ta ko'proq javobni ko'rsatish"
   },
   "auth": {
     "loginRequired": "Avtorizatsiya kerak"

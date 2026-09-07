@@ -983,7 +983,14 @@
     "statusDeclined": "Ditolak",
     "shipping": "Lagi digawe",
     "noShippingYet": "Ora ana sing lagi digarap",
-    "shippingAppearHere": "Panjaluk sing lagi digawe bakal katon ing kene."
+    "shippingAppearHere": "Panjaluk sing lagi digawe bakal katon ing kene.",
+    "writeReply": "Balas...",
+    "replyToComment": "Balasan",
+    "replyingTo": "Membalas {{name}}",
+    "requestAuthorChip": "Penulis",
+    "commentEdited": "disunting",
+    "showOneMoreReply": "Tampilkan 1 balasan lagi",
+    "showMoreReplies": "Tampilkan {{count}} balasan lagi"
   },
   "auth": {
     "loginRequired": "Kudu Mlebu"

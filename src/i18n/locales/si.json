@@ -979,7 +979,14 @@
     "statusDeclined": "ප්‍රතික්ෂේප කරන ලදී",
     "shipping": "තැනෙමින්",
     "noShippingYet": "කිසිවක් ක්‍රියාත්මක නොවේ",
-    "shippingAppearHere": "තැනෙන ඉල්ලීම් මෙහි දිස්වේ."
+    "shippingAppearHere": "තැනෙන ඉල්ලීම් මෙහි දිස්වේ.",
+    "writeReply": "පිළිතුරක් ලියන්න...",
+    "replyToComment": "පිළිතුරු",
+    "replyingTo": "{{name}} ට පිළිතුරු දෙමින්",
+    "requestAuthorChip": "කර්තෘ",
+    "commentEdited": "සංස්කරණය කරන ලදී",
+    "showOneMoreReply": "තවත් පිළිතුරු 1ක් පෙන්වන්න",
+    "showMoreReplies": "තවත් පිළිතුරු {{count}} ක් පෙන්වන්න"
   },
   "auth": {
     "loginRequired": "පිවිසීම අවශ්‍යයි"

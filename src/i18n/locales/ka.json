@@ -1000,7 +1000,14 @@
     "statusDeclined": "უარყოფილი",
     "shipping": "მზადდება",
     "noShippingYet": "არაფერი მიმდინარეობს",
-    "shippingAppearHere": "შესაქმნელი მოთხოვნები აქ გამოჩნდება."
+    "shippingAppearHere": "შესაქმნელი მოთხოვნები აქ გამოჩნდება.",
+    "writeReply": "დაწერე პასუხი...",
+    "replyToComment": "პასუხი",
+    "replyingTo": "პასუხი {{name}}-ს",
+    "requestAuthorChip": "ავტორი",
+    "commentEdited": "რედაქტირებულია",
+    "showOneMoreReply": "აჩვენე კიდევ 1 პასუხი",
+    "showMoreReplies": "აჩვენე {{count}} მეტი პასუხი"
   },
   "auth": {
     "loginRequired": "ავტორიზაცია საჭიროა"

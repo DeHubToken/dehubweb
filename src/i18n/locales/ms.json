@@ -1251,7 +1251,14 @@
     "statusDeclined": "Declined",
     "shipping": "Sedang dibina",
     "noShippingYet": "Tiada yang sedang dibuat",
-    "shippingAppearHere": "Permintaan yang sedang dibina akan muncul di sini."
+    "shippingAppearHere": "Permintaan yang sedang dibina akan muncul di sini.",
+    "writeReply": "Tulis balasan...",
+    "replyToComment": "Balasan",
+    "replyingTo": "Membalas kepada {{name}}",
+    "requestAuthorChip": "Penulis",
+    "commentEdited": "disunting",
+    "showOneMoreReply": "Tunjukkan 1 lagi balasan",
+    "showMoreReplies": "Tunjukkan {{count}} lagi balasan"
   },
   "auth": {
     "loginRequired": "Log in required"

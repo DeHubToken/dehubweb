@@ -982,7 +982,14 @@
     "statusDeclined": "Отклонён",
     "shipping": "В разработке",
     "noShippingYet": "Ничего в работе",
-    "shippingAppearHere": "Здесь появятся заявки, которые уже делают."
+    "shippingAppearHere": "Здесь появятся заявки, которые уже делают.",
+    "writeReply": "Написать ответ...",
+    "replyToComment": "Ответить",
+    "replyingTo": "Ответ на {{name}}",
+    "requestAuthorChip": "Автор",
+    "commentEdited": "отредактировано",
+    "showOneMoreReply": "Показать еще 1 ответ",
+    "showMoreReplies": "Показать еще {{count}} ответов"
   },
   "auth": {
     "loginRequired": "Необходимо войти"

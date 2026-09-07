@@ -982,7 +982,14 @@
     "statusDeclined": "거절됨",
     "shipping": "개발 중",
     "noShippingYet": "진행 중인 항목 없음",
-    "shippingAppearHere": "개발 중인 요청이 여기에 표시됩니다."
+    "shippingAppearHere": "개발 중인 요청이 여기에 표시됩니다.",
+    "writeReply": "답글 작성...",
+    "replyToComment": "답글",
+    "replyingTo": "{{name}}님에게 답글 남기는 중",
+    "requestAuthorChip": "작성자",
+    "commentEdited": "수정됨",
+    "showOneMoreReply": "답글 1개 더 보기",
+    "showMoreReplies": "{{count}}개 더 보기"
   },
   "auth": {
     "loginRequired": "로그인 필요"

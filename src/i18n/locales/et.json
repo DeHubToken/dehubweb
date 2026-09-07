@@ -974,7 +974,14 @@
     "statusDeclined": "Tagasi lükatud",
     "shipping": "Valmimas",
     "noShippingYet": "Midagi pole töös",
-    "shippingAppearHere": "Ehitamisel olevad soovid ilmuvad siia."
+    "shippingAppearHere": "Ehitamisel olevad soovid ilmuvad siia.",
+    "writeReply": "Vasta...",
+    "replyToComment": "Vasta",
+    "replyingTo": "Vastates {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "toimetatud",
+    "showOneMoreReply": "Näita veel 1 vastust",
+    "showMoreReplies": "Näita veel {{count}} vastust"
   },
   "auth": {
     "loginRequired": "Sisselogimine nõutav"

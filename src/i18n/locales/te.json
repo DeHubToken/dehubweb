@@ -978,7 +978,14 @@
     "statusDeclined": "తిరస్కరించబడింది",
     "shipping": "తయారవుతోంది",
     "noShippingYet": "ఏమీ జరగడం లేదు",
-    "shippingAppearHere": "నిర్మాణంలో ఉన్న అభ్యర్థనలు ఇక్కడ కనిపిస్తాయి."
+    "shippingAppearHere": "నిర్మాణంలో ఉన్న అభ్యర్థనలు ఇక్కడ కనిపిస్తాయి.",
+    "writeReply": "సమాధానం రాయండి...",
+    "replyToComment": "సమాధానం",
+    "replyingTo": "{{name}} కి ప్రత్యుత్తరం",
+    "requestAuthorChip": "రచయిత",
+    "commentEdited": "సవరించబడింది",
+    "showOneMoreReply": "మరో 1 ప్రత్యుత్తరం చూపించు",
+    "showMoreReplies": "{{count}} మరిన్ని ప్రత్యుత్తరాలు చూపించు"
   },
   "auth": {
     "loginRequired": "లాగిన్ అవసరం"

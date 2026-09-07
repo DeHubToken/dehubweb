@@ -982,7 +982,14 @@
     "statusDeclined": "Адхілена",
     "shipping": "У распрацоўцы",
     "noShippingYet": "Нічога ў працы",
-    "shippingAppearHere": "Тут з'явяцца запыты, якія ўжо робяць."
+    "shippingAppearHere": "Тут з'явяцца запыты, якія ўжо робяць.",
+    "writeReply": "Напішыце адказ...",
+    "replyToComment": "Адказаць",
+    "replyingTo": "Адказ на {{name}}",
+    "requestAuthorChip": "Аўтар",
+    "commentEdited": "адрэдагаваў",
+    "showOneMoreReply": "Паказаць яшчэ 1 адказ",
+    "showMoreReplies": "Паказаць яшчэ {{count}} адказаў"
   },
   "auth": {
     "loginRequired": "Патрабуецца ўваход"

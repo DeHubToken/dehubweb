@@ -983,7 +983,14 @@
     "statusDeclined": "Afvist",
     "shipping": "På vej",
     "noShippingYet": "Intet i gang",
-    "shippingAppearHere": "Ønsker, der er under udvikling, dukker op her."
+    "shippingAppearHere": "Ønsker, der er under udvikling, dukker op her.",
+    "writeReply": "Skriv et svar...",
+    "replyToComment": "Svar",
+    "replyingTo": "Svarer til {{name}}",
+    "requestAuthorChip": "Forfatter",
+    "commentEdited": "redigeret",
+    "showOneMoreReply": "Vis 1 mere svar",
+    "showMoreReplies": "Vis {{count}} flere svar"
   },
   "auth": {
     "loginRequired": "Login påkrævet"

@@ -982,7 +982,14 @@
     "statusDeclined": "ውድቅ ተደርጓል",
     "shipping": "በመላክ ላይ",
     "noShippingYet": "በሂደት ላይ ምንም የለም",
-    "shippingAppearHere": "እየተገነቡ ያሉ ጥያቄዎች እዚህ ይታያሉ።"
+    "shippingAppearHere": "እየተገነቡ ያሉ ጥያቄዎች እዚህ ይታያሉ።",
+    "writeReply": "መልስ ጻፍ...",
+    "replyToComment": "መልስ",
+    "replyingTo": "ለ{{name}} ምላሽ እየሰጠሁ ነው",
+    "requestAuthorChip": "ደራሲ",
+    "commentEdited": "አርትዕ ተደርጓል",
+    "showOneMoreReply": "1 ተጨማሪ ምላሽ አሳይ",
+    "showMoreReplies": "{{count}} ተጨማሪ ምላሾችን አሳይ"
   },
   "auth": {
     "loginRequired": "መግባት ያስፈልጋል"

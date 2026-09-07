@@ -982,7 +982,14 @@
     "statusDeclined": "已拒絕",
     "shipping": "開發中",
     "noShippingYet": "冇嘢喺度做緊",
-    "shippingAppearHere": "開發緊嘅需求會喺呢度出現。"
+    "shippingAppearHere": "開發緊嘅需求會喺呢度出現。",
+    "writeReply": "寫覆...",
+    "replyToComment": "覆",
+    "replyingTo": "回覆 {{name}}",
+    "requestAuthorChip": "作者",
+    "commentEdited": "編輯過",
+    "showOneMoreReply": "顯示多 1 個回覆",
+    "showMoreReplies": "顯示多 {{count}} 個回覆"
   },
   "auth": {
     "loginRequired": "需要登入"

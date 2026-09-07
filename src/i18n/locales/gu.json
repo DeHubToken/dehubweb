@@ -982,7 +982,14 @@
     "statusDeclined": "નામંજૂર",
     "shipping": "મોકલાઈ રહ્યું છે",
     "noShippingYet": "પ્રગતિમાં કંઈ નથી",
-    "shippingAppearHere": "બની રહેલી વિનંતીઓ અહીં દેખાશે."
+    "shippingAppearHere": "બની રહેલી વિનંતીઓ અહીં દેખાશે.",
+    "writeReply": "જવાબ આપો...",
+    "replyToComment": "જવાબ",
+    "replyingTo": "{{name}} ને જવાબ આપી રહ્યા છીએ",
+    "requestAuthorChip": "લેખક",
+    "commentEdited": "સંપાદિત",
+    "showOneMoreReply": "વધુ 1 જવાબ બતાવો",
+    "showMoreReplies": "વધુ {{count}} જવાબો બતાવો"
   },
   "auth": {
     "loginRequired": "લૉગ ઇન જરૂરી"

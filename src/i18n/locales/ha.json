@@ -983,7 +983,14 @@
     "statusDeclined": "An ƙi",
     "shipping": "Ana ginawa",
     "noShippingYet": "Babu abin da ake yi",
-    "shippingAppearHere": "Buƙatun da ake ginawa za su bayyana nan."
+    "shippingAppearHere": "Buƙatun da ake ginawa za su bayyana nan.",
+    "writeReply": "Rubuta amsa...",
+    "replyToComment": "Amsa",
+    "replyingTo": "Amsawa ga {{name}}",
+    "requestAuthorChip": "Mawallafi",
+    "commentEdited": "An gyara",
+    "showOneMoreReply": "Nuna ƙarin amsa 1",
+    "showMoreReplies": "Nuna ƙarin amsoshi {{count}}"
   },
   "auth": {
     "loginRequired": "Ana buƙatar shiga"

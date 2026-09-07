@@ -983,7 +983,14 @@
     "statusDeclined": "Rifiutata",
     "shipping": "In consegna",
     "noShippingYet": "Niente in corso",
-    "shippingAppearHere": "Le richieste in fase di sviluppo appariranno qui."
+    "shippingAppearHere": "Le richieste in fase di sviluppo appariranno qui.",
+    "writeReply": "Scrivi una risposta...",
+    "replyToComment": "Rispondi",
+    "replyingTo": "Rispondendo a {{name}}",
+    "requestAuthorChip": "Autore",
+    "commentEdited": "modificato",
+    "showOneMoreReply": "Mostra altre 1 risposte",
+    "showMoreReplies": "Mostra altre {{count}} risposte"
   },
   "auth": {
     "loginRequired": "Accesso richiesto"

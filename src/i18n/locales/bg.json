@@ -964,7 +964,14 @@
     "statusDeclined": "Отхвърлена",
     "shipping": "В изработка",
     "noShippingYet": "Нищо не се работи",
-    "shippingAppearHere": "Заявките, по които се работи, ще се появят тук."
+    "shippingAppearHere": "Заявките, по които се работи, ще се появят тук.",
+    "writeReply": "Напишете отговор...",
+    "replyToComment": "Отговор",
+    "replyingTo": "Отговаряне на {{name}}",
+    "requestAuthorChip": "Автор",
+    "commentEdited": "редактирано",
+    "showOneMoreReply": "Покажи още 1 отговор",
+    "showMoreReplies": "Покажи още {{count}} отговора"
   },
   "auth": {
     "loginRequired": "Изисква се вход"

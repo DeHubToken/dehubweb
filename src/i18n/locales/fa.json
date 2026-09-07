@@ -981,7 +981,14 @@
     "statusDeclined": "رد شده",
     "shipping": "در حال ساخت",
     "noShippingYet": "چیزی در جریان نیست",
-    "shippingAppearHere": "درخواست‌هایی که در حال ساخت‌اند اینجا نمایان می‌شوند."
+    "shippingAppearHere": "درخواست‌هایی که در حال ساخت‌اند اینجا نمایان می‌شوند.",
+    "writeReply": "نوشتن پاسخ...",
+    "replyToComment": "پاسخ",
+    "replyingTo": "در پاسخ به {{name}}",
+    "requestAuthorChip": "نویسنده",
+    "commentEdited": "ویرایش شده",
+    "showOneMoreReply": "نمایش ۱ پاسخ دیگر",
+    "showMoreReplies": "نمایش {{count}} پاسخ دیگر"
   },
   "auth": {
     "loginRequired": "ورود لازم است"

@@ -973,7 +973,14 @@
     "statusDeclined": "अस्वीकार",
     "shipping": "निर्माणाधीन",
     "noShippingYet": "कोनो काम प्रगति में नै हे",
-    "shippingAppearHere": "जे अनुरोध बनि रहल हे ऊ इहाँ देखाय देतै।"
+    "shippingAppearHere": "जे अनुरोध बनि रहल हे ऊ इहाँ देखाय देतै।",
+    "writeReply": "जवाब लिखल जाव...",
+    "replyToComment": "जवाब",
+    "replyingTo": "{{name}} के जवाब में",
+    "requestAuthorChip": "लेखक",
+    "commentEdited": "संपादित",
+    "showOneMoreReply": "1 गो अउर जवाब देखा",
+    "showMoreReplies": "{{count}} गो अउर जवाब देखा"
   },
   "auth": {
     "loginRequired": "लॉग इन चाहिं"

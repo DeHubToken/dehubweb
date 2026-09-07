@@ -983,7 +983,14 @@
     "statusDeclined": "Rechazada",
     "shipping": "En desarrollo",
     "noShippingYet": "Nada en curso",
-    "shippingAppearHere": "Las solicitudes que se estén construyendo aparecerán aquí."
+    "shippingAppearHere": "Las solicitudes que se estén construyendo aparecerán aquí.",
+    "writeReply": "Escribe una respuesta...",
+    "replyToComment": "Responder",
+    "replyingTo": "Respondiendo a {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "editado",
+    "showOneMoreReply": "Mostrar 1 respuesta más",
+    "showMoreReplies": "Mostrar {{count}} respuestas más"
   },
   "auth": {
     "loginRequired": "Inicio de sesión requerido"

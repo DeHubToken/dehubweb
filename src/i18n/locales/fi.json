@@ -974,7 +974,14 @@
     "statusDeclined": "Hylätty",
     "shipping": "Työn alla",
     "noShippingYet": "Mitään ei ole työn alla",
-    "shippingAppearHere": "Rakenteilla olevat pyynnöt näkyvät täällä."
+    "shippingAppearHere": "Rakenteilla olevat pyynnöt näkyvät täällä.",
+    "writeReply": "Kirjoita vastaus...",
+    "replyToComment": "Vastaa",
+    "replyingTo": "Vastataan {{name}}",
+    "requestAuthorChip": "Kirjoittaja",
+    "commentEdited": "muokattu",
+    "showOneMoreReply": "Näytä 1 lisävastaus",
+    "showMoreReplies": "Näytä {{count}} lisävastausta"
   },
   "auth": {
     "loginRequired": "Kirjautuminen vaaditaan"

@@ -984,7 +984,14 @@
     "statusDeclined": "Kwenqatshiwe",
     "shipping": "Kuyakhiwa",
     "noShippingYet": "Akukho okuqhubekayo",
-    "shippingAppearHere": "Izicelo ezisakhiwa zizovela lapha."
+    "shippingAppearHere": "Izicelo ezisakhiwa zizovela lapha.",
+    "writeReply": "Bhala impendulo...",
+    "replyToComment": "Impendulo",
+    "replyingTo": "Uphendula ku-{{name}}",
+    "requestAuthorChip": "Umbhali",
+    "commentEdited": "kuhlelwe",
+    "showOneMoreReply": "Bonisa olunye u-1 impendulo",
+    "showMoreReplies": "Bonisa ezinye izimpendulo ezingi-{{count}}"
   },
   "auth": {
     "loginRequired": "Ukungena kuyadingeka"

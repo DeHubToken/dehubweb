@@ -983,7 +983,14 @@
     "statusDeclined": "Abgelehnt",
     "shipping": "In Umsetzung",
     "noShippingYet": "Nichts in Arbeit",
-    "shippingAppearHere": "Anfragen, die gerade gebaut werden, erscheinen hier."
+    "shippingAppearHere": "Anfragen, die gerade gebaut werden, erscheinen hier.",
+    "writeReply": "Antworten...",
+    "replyToComment": "Antworten",
+    "replyingTo": "Antwortet auf {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "bearbeitet",
+    "showOneMoreReply": "1 weitere Antwort anzeigen",
+    "showMoreReplies": "{{count}} weitere Antworten anzeigen"
   },
   "auth": {
     "loginRequired": "Anmeldung erforderlich"

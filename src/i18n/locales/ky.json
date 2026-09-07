@@ -983,7 +983,14 @@
     "statusDeclined": "Четке кагылды",
     "shipping": "Курулууда",
     "noShippingYet": "Эч нерсе иштелип жаткан жок",
-    "shippingAppearHere": "Курулуп жаткан суроо-талаптар ушул жерде көрүнөт."
+    "shippingAppearHere": "Курулуп жаткан суроо-талаптар ушул жерде көрүнөт.",
+    "writeReply": "Жооп жазыңыз...",
+    "replyToComment": "Жооп",
+    "replyingTo": "{{name}} ге жооп берилүүдө",
+    "requestAuthorChip": "Автор",
+    "commentEdited": "түзөтүлдү",
+    "showOneMoreReply": "Дагы 1 жоопту көрсөтүү",
+    "showMoreReplies": "Дагы {{count}} жоопту көрсөтүү"
   },
   "auth": {
     "loginRequired": "Кирүү талап кылынат"

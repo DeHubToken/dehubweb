@@ -983,7 +983,14 @@
     "statusDeclined": "Refuzuar",
     "shipping": "Në ndërtim",
     "noShippingYet": "Asgjë në punë",
-    "shippingAppearHere": "Kërkesat që po ndërtohen do të shfaqen këtu."
+    "shippingAppearHere": "Kërkesat që po ndërtohen do të shfaqen këtu.",
+    "writeReply": "Shkruaj një përgjigje...",
+    "replyToComment": "Përgjigju",
+    "replyingTo": "Duke iu përgjigjur {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "redaktuar",
+    "showOneMoreReply": "Trego 1 përgjigje më shumë",
+    "showMoreReplies": "Trego {{count}} përgjigje më shumë"
   },
   "auth": {
     "loginRequired": "Kërkohet hyrja"

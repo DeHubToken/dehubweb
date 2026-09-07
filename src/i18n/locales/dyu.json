@@ -976,7 +976,14 @@
     "statusDeclined": "Kɔrɔbɔ",
     "shipping": "Dilannen",
     "noShippingYet": "Foyi tɛ ka kɛ",
-    "shippingAppearHere": "Ɲininiw minnu bɛ ka dilan, olu bɛna bɔ yan."
+    "shippingAppearHere": "Ɲininiw minnu bɛ ka dilan, olu bɛna bɔ yan.",
+    "writeReply": "Jalɛnɛn...",
+    "replyToComment": "Jalɛnɛn",
+    "replyingTo": "Jalɛnɛn {{name}}",
+    "requestAuthorChip": "Sɛnɛkɛla",
+    "commentEdited": "kɛla",
+    "showOneMoreReply": "Ɛnɛn 1 jalɛnɛn",
+    "showMoreReplies": "Ɛnɛn {{count}} jalɛnɛn"
   },
   "auth": {
     "loginRequired": "Sɔgɔma kɛ"

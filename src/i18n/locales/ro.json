@@ -962,7 +962,14 @@
     "statusDeclined": "Declined",
     "shipping": "În lucru",
     "noShippingYet": "Nimic în lucru",
-    "shippingAppearHere": "Cererile aflate în dezvoltare vor apărea aici."
+    "shippingAppearHere": "Cererile aflate în dezvoltare vor apărea aici.",
+    "writeReply": "Scrie un răspuns...",
+    "replyToComment": "Răspunde",
+    "replyingTo": "Răspunzând la {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "editat",
+    "showOneMoreReply": "Arată încă 1 răspuns",
+    "showMoreReplies": "Arată încă {{count}} răspunsuri"
   },
   "auth": {
     "loginRequired": "Log in required"
