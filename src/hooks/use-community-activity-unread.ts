@@ -91,28 +91,3 @@ export function useCommunityActivityUnreadCount() {
   };
 }
 
-/**
- * Returns unread count for a specific community
- */
-export function useCommunityUnreadCount(communityId?: string) {
-  const { walletAddress } = useAuth();
-
-  return useQuery({
-    queryKey: ['community-activity-unread', communityId],
-    queryFn: async () => {
-      const { count, error } = await withWalletHeader(
-        supabase
-          .from('custom_notifications')
-          .select('*', { count: 'exact', head: true })
-          .eq('type', 'community_join')
-          .eq('reference_id', communityId!)
-          .eq('read', false),
-        walletAddress!
-      );
-      if (error) throw error;
-      return count || 0;
-    },
-    enabled: !!communityId && !!walletAddress,
-    staleTime: 60_000,
-  });
-}
