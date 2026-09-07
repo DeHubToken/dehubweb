@@ -702,7 +702,19 @@
     "stake": "Stake",
     "cashOut": "Kifizetés",
     "stakeComingSoon": "Stake hamarosan!",
-    "cashOutComingSoon": "Kifizetés hamarosan!"
+    "cashOutComingSoon": "Kifizetés hamarosan!",
+    "back": "Vissza",
+    "chooseAddressNetwork": "Melyik hálózat?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB és Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Csak SOL és SPL tokenek",
+    "solanaAddressLinkedHint": "Összekapcsolt Fantom pénztárcád",
+    "evmAddressCopied": "EVM-cím másolva",
+    "solanaAddressCopied": "Solana cím másolva",
+    "addressCopyFailed": "A cím másolása nem sikerült",
+    "receiveEvm": "Alap · BNB · ETH",
+    "receiveSolanaDescription": "Csak SOL és SPL tokeneket küldjön ide. Minden, amit egy másik hálózatról küldenek, elvész."
   },
   "bookmarks": {
     "title": "Könyvjelzők",

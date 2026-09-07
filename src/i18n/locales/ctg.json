@@ -23,6 +23,7 @@
     "featureRequests": "ফিচার অনুরোধ",
     "staking": "স্টেকিং",
     "governance": "শাসন",
+    "dao": "DAO",
     "careers": "চাকরি",
     "glossary": "শব্দকোষ",
     "arcade": "আর্কেড",
@@ -44,8 +45,7 @@
     "pricing": "দাম",
     "creators": "ক্রিয়েটর",
     "getTheApp": "অ্যাপ লন",
-    "connectAi": "AI সংযুক্ত গরন",
-    "dao": "DAO"
+    "connectAi": "AI সংযুক্ত গরন"
   },
   "feed": {
     "viewProfile": "{{name}} এর প্রোফাইল দেখুন",
@@ -758,6 +758,15 @@
     "cashOut": "ক্যাশ আউট",
     "stakeComingSoon": "স্টেকিং তাড়াতাড়ি আইয়ের!",
     "cashOutComingSoon": "ক্যাশ আউট তাড়াতাড়ি আইয়ের!",
+    "back": "ফিরা",
+    "chooseAddressNetwork": "কোন নেটওয়ার্ক?",
+    "evmAddressHint": "Base, BNB আর Ethereum",
+    "solanaAddressHint": "SOL আর SPL টোকেন শুধু",
+    "solanaAddressLinkedHint": "তোমার লিংক করা Phantom ওয়ালেট",
+    "evmAddressCopied": "EVM এড্রেস কপি অইগেছে",
+    "solanaAddressCopied": "Solana এড্রেস কপি অইগেছে",
+    "addressCopyFailed": "এড্রেস কপি অইতা পারে নাই",
+    "receiveSolanaDescription": "এইখানে শুধু SOL আর SPL টোকেন পাঠাইও। অন্য নেটওয়ার্ক থেইকা কিছু পাঠাইলে হারাই যাইবো।",
     "balance": "ব্যালেন্স",
     "swap": "বদলাও",
     "history": "ইতিহাস",
@@ -1302,6 +1311,7 @@
     "applicationSubmitted": "আবেদন জমা অইছে"
   },
   "dao": {
+    "title": "DAO ট্রেজারি",
     "subtitle": "এক ওয়ালেট, কমিউনিটি ফান্ডের, ভোট দিয়া খরচ",
     "contribute": "কন্ট্রিবিউট করুন",
     "contributeIntro": "আপনার ওয়ালেট থেইকা ট্রেজারিতে DHB পাঠান। যত টোকেন এড করবা, পুলের মাঝে আপনার শেয়ার তত বাড়বো, আর DAO যখন ঠিক করবো কেমনে খরচ হইবো, তখন আপনার শেয়ারই আপনার ভোটের ওজন ঠিক করবো।",
@@ -1334,8 +1344,7 @@
     "you": "আঁই",
     "transferCount_one": "{{count}} বদলি",
     "transferCount_other": "{{count}} বদলি",
-    "power": "ক্ষমতা",
-    "title": "DAO ট্রেজারি"
+    "power": "ক্ষমতা"
   },
   "governance": {
     "title": "শাসন",

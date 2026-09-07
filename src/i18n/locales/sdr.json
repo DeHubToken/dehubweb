@@ -709,7 +709,14 @@
     "stake": "سٹیک",
     "cashOut": "کیش آؤٹ",
     "stakeComingSoon": "سٹیکنگ جلد آ رہی ہے!",
-    "cashOutComingSoon": "کیش آؤٹ جلد آ رہا ہے!"
+    "cashOutComingSoon": "کیش آؤٹ جلد آ رہا ہے!",
+    "back": "Back",
+    "chooseAddressNetwork": "Which network?",
+    "evmAddressLabel": "EVM",
+    "solanaAddressLabel": "Solana",
+    "evmAddressCopied": "EVM address copied",
+    "solanaAddressCopied": "Solana address copied",
+    "receiveEvm": "Base · BNB · ETH"
   },
   "bookmarks": {
     "title": "تمہاری نشانیاں",

@@ -23,6 +23,7 @@
     "featureRequests": "Заявки за функции",
     "staking": "Стейкинг",
     "governance": "Управление",
+    "dao": "DAO",
     "careers": "Кариера",
     "glossary": "Речник",
     "arcade": "Аркада",
@@ -44,8 +45,7 @@
     "pricing": "Цени",
     "creators": "Създатели",
     "getTheApp": "Изтеглете приложението",
-    "connectAi": "Свързване на ИИ",
-    "dao": "DAO"
+    "connectAi": "Свързване на ИИ"
   },
   "feed": {
     "viewProfile": "Преглед на профила на {{name}}",
@@ -692,9 +692,21 @@
     "cannotReadContract": "Не може да се прочете договорът на токена. Проверете адреса.",
     "imported": "{{symbol}} импортиран",
     "custom": "Персонализиран",
+    "stake": "Залог",
     "cashOut": "Теглене",
     "stakeComingSoon": "Stake скоро!",
-    "cashOutComingSoon": "Теглене скоро!"
+    "cashOutComingSoon": "Теглене скоро!",
+    "back": "Назад",
+    "chooseAddressNetwork": "Коя мрежа?",
+    "evmAddressHint": "Base, BNB и Ethereum",
+    "solanaAddressLabel": "Солана",
+    "solanaAddressHint": "Само жетони SOL и SPL",
+    "solanaAddressLinkedHint": "Вашият свързан портфейл Phantom",
+    "evmAddressCopied": "EVM адресът е копиран",
+    "solanaAddressCopied": "Адресът на Солана е копиран",
+    "addressCopyFailed": "Адресът не може да бъде копиран",
+    "receiveEvm": "База · BNB · ETH",
+    "receiveSolanaDescription": "Изпращайте само SOL и SPL жетони тук. Всичко, изпратено от друга мрежа, се губи."
   },
   "bookmarks": {
     "title": "Отметки",

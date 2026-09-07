@@ -23,6 +23,7 @@
     "featureRequests": "ഫീച്ചർ അഭ്യർത്ഥനകൾ",
     "staking": "സ്റ്റേക്കിംഗ്",
     "governance": "ഭരണം",
+    "dao": "DAO",
     "careers": "ജോലികൾ",
     "glossary": "പദകോശം",
     "arcade": "ആർക്കേഡ്",
@@ -44,8 +45,7 @@
     "pricing": "വില",
     "creators": "സ്രഷ്ടാക്കൾ",
     "getTheApp": "ആപ്പ് ഡൗൺലോഡ് ചെയ്യുക",
-    "connectAi": "AI ബന്ധിപ്പിക്കുക",
-    "dao": "DAO"
+    "connectAi": "AI ബന്ധിപ്പിക്കുക"
   },
   "feed": {
     "viewProfile": "{{name}} ന്റെ പ്രൊഫൈൽ കാണുക",
@@ -709,7 +709,17 @@
     "stake": "സ്റ്റേക്ക്",
     "cashOut": "ക്യാഷ് ഔട്ട്",
     "stakeComingSoon": "സ്റ്റേക്കിംഗ് ഉടൻ!",
-    "cashOutComingSoon": "ക്യാഷ് ഔട്ട് ഉടൻ!"
+    "cashOutComingSoon": "ക്യാഷ് ഔട്ട് ഉടൻ!",
+    "back": "തിരികെ",
+    "chooseAddressNetwork": "ഏത് നെറ്റ്‌വർക്ക്?",
+    "solanaAddressLabel": "സോളാന",
+    "solanaAddressHint": "SOL, SPL ടോക്കണുകൾ മാത്രം",
+    "solanaAddressLinkedHint": "നിങ്ങളുടെ ലിങ്കുചെയ്ത ഫാന്റം വാലറ്റ്",
+    "evmAddressCopied": "EVM വിലാസം പകർത്തി",
+    "solanaAddressCopied": "സോളാന വിലാസം പകർത്തി",
+    "addressCopyFailed": "വിലാസം പകർത്താൻ കഴിഞ്ഞില്ല",
+    "receiveEvm": "അടിസ്ഥാനം · BNB · ETH",
+    "receiveSolanaDescription": "SOL, SPL ടോക്കണുകൾ മാത്രം ഇവിടെ അയയ്ക്കുക. മറ്റൊരു നെറ്റ്‌വർക്കിൽ നിന്ന് അയച്ചതെല്ലാം നഷ്ടപ്പെട്ടു."
   },
   "bookmarks": {
     "title": "നിങ്ങളുടെ ബുക്ക്മാർക്കുകൾ",
@@ -1237,9 +1247,9 @@
     "noContributors": "ഇതുവരെ സംഭാവനകളില്ല. ആദ്യത്തേതാകൂ.",
     "recent": "സമീപകാല സംഭാവനകൾ",
     "you": "നിങ്ങൾ",
-    "power": "പവർ",
     "transferCount_one": "{{count}} കൈമാറ്റം",
-    "transferCount_other": "{{count}} കൈമാറ്റങ്ങൾ"
+    "transferCount_other": "{{count}} കൈമാറ്റങ്ങൾ",
+    "power": "പവർ"
   },
   "governance": {
     "title": "ഭരണം",

@@ -712,7 +712,19 @@
     "stake": "Vendos në Stake",
     "cashOut": "Arkëto",
     "stakeComingSoon": "Stake do të vijë së shpejti!",
-    "cashOutComingSoon": "Arkëtimi do të vijë së shpejti!"
+    "cashOutComingSoon": "Arkëtimi do të vijë së shpejti!",
+    "back": "Prapa",
+    "chooseAddressNetwork": "Cilin rrjet?",
+    "evmAddressLabel": "MEV",
+    "evmAddressHint": "Baza, BNB dhe Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Vetëm argumentet SOL dhe SPL",
+    "solanaAddressLinkedHint": "Portofoli yt i lidhur Phantom",
+    "evmAddressCopied": "Adresa EVM u kopjua",
+    "solanaAddressCopied": "Adresa Solana u kopjua",
+    "addressCopyFailed": "Nuk mund të kopjohet adresa",
+    "receiveEvm": "Baza · BNB · ETH",
+    "receiveSolanaDescription": "Dërgo vetëm argumentet SOL dhe SPL këtu. Çdo gjë e dërguar nga një rrjet tjetër humbet."
   },
   "bookmarks": {
     "title": "Faqeshënuesit Tuaj",

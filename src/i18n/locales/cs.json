@@ -702,7 +702,19 @@
     "stake": "Stake",
     "cashOut": "Výběr",
     "stakeComingSoon": "Stake brzy!",
-    "cashOutComingSoon": "Výběr brzy!"
+    "cashOutComingSoon": "Výběr brzy!",
+    "back": "Zpět",
+    "chooseAddressNetwork": "Která síť?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB a Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Pouze tokeny SOL a SPL",
+    "solanaAddressLinkedHint": "Vaše propojená peněženka Phantom",
+    "evmAddressCopied": "EVM adresa zkopírována",
+    "solanaAddressCopied": "Adresa Solana zkopírována",
+    "addressCopyFailed": "Adresu se nepodařilo zkopírovat",
+    "receiveEvm": "Base · BNB · ETH",
+    "receiveSolanaDescription": "Sem posílejte pouze tokeny SOL a SPL. Vše odeslané z jiné sítě je ztraceno."
   },
   "bookmarks": {
     "title": "Záložky",

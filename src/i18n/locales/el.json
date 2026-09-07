@@ -22,6 +22,7 @@
     "roadmap": "Χάρτης Πορείας",
     "featureRequests": "Αιτήματα",
     "governance": "Διακυβέρνηση",
+    "dao": "DAO",
     "careers": "Καριέρα",
     "glossary": "Γλωσσάριο",
     "create": "Δημιουργία",
@@ -40,8 +41,7 @@
     "pricing": "Τιμές",
     "creators": "Δημιουργοί",
     "getTheApp": "Κατεβάστε την εφαρμογή",
-    "connectAi": "Σύνδεση AI",
-    "dao": "DAO"
+    "connectAi": "Σύνδεση AI"
   },
   "feed": {
     "viewProfile": "Προβολή προφίλ του/της {{name}}",
@@ -673,9 +673,21 @@
     "cannotReadContract": "Δεν ήταν δυνατή η ανάγνωση του συμβολαίου token. Βεβαιωθείτε ότι η διεύθυνση είναι σωστή.",
     "imported": "Εισήχθη {{symbol}}",
     "custom": "ΠΡΟΣΑΡΜΟΣΜΕΝΟ",
+    "stake": "Ποντάρισμα",
     "cashOut": "Ανάληψη",
     "stakeComingSoon": "Το staking έρχεται σύντομα!",
-    "cashOutComingSoon": "Η ανάληψη έρχεται σύντομα!"
+    "cashOutComingSoon": "Η ανάληψη έρχεται σύντομα!",
+    "back": "Πίσω",
+    "chooseAddressNetwork": "Ποιο δίκτυο;",
+    "evmAddressHint": "Base, BNB και Ethereum",
+    "solanaAddressLabel": "Σολάνα",
+    "solanaAddressHint": "Διακριτικά SOL και SPL μόνο",
+    "solanaAddressLinkedHint": "Το συνδεδεμένο πορτοφόλι Phantom",
+    "evmAddressCopied": "Η διεύθυνση EVM αντιγράφηκε",
+    "solanaAddressCopied": "Η διεύθυνση Solana αντιγράφηκε",
+    "addressCopyFailed": "Δεν ήταν δυνατή η αντιγραφή της διεύθυνσης",
+    "receiveEvm": "Βάση · BNB · eth",
+    "receiveSolanaDescription": "Στείλτε μόνο μάρκες SOL και SPL εδώ. Οτιδήποτε αποστέλλεται από άλλο δίκτυο χάνεται."
   },
   "bookmarks": {
     "title": "Οι Σελιδοδείκτες Σας",

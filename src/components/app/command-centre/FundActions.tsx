@@ -9,13 +9,19 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { SwapDrawer } from './SwapDrawer';
 import { CrossChainDepositDrawer } from './CrossChainDepositDrawer';
+import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
+import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
 
 export function FundActions() {
   const { walletAddress } = useAuth();
+  const { hasChoice: hasAddressChoice } = useWalletAddresses();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [addFundsOpen, setAddFundsOpen] = useState(false);
+  /** The Add funds drawer swaps to the address list rather than opening a
+   *  second sheet on top of itself — see CopyAddressRows for why. */
+  const [pickingNetwork, setPickingNetwork] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
   const [transferOpen, setTransferOpen] = useState(false);
   const [withdrawTarget, setWithdrawTarget] = useState('');
@@ -48,8 +54,17 @@ export function FundActions() {
       </Button>
 
       {/* Add Funds Drawer */}
-      <Drawer open={addFundsOpen} onOpenChange={setAddFundsOpen}>
+      <Drawer open={addFundsOpen} onOpenChange={open => { setAddFundsOpen(open); if (!open) setPickingNetwork(false); }}>
         <DrawerContent column glass hideHandle={false}>
+          {pickingNetwork ? (
+            <div className="p-5 pb-8">
+              <h3 className="text-white font-semibold text-base mb-4">{t('commandCentre.transferToMe')}</h3>
+              <CopyAddressRows
+                onBack={() => setPickingNetwork(false)}
+                onCopied={() => { setAddFundsOpen(false); setPickingNetwork(false); }}
+              />
+            </div>
+          ) : (
           <div className="p-5 pb-8 space-y-2">
             <h3 className="text-white font-semibold text-base mb-4">{t('commandCentre.addFunds')}</h3>
             <button
@@ -73,16 +88,23 @@ export function FundActions() {
               </div>
             </button>
             <button
-              onClick={() => { handleCopyAddress(); setAddFundsOpen(false); }}
+              onClick={() => {
+                if (hasAddressChoice) { setPickingNetwork(true); return; }
+                handleCopyAddress();
+                setAddFundsOpen(false);
+              }}
               className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
             >
               {copied ? <Check className="w-5 h-5 text-emerald-400" /> : <Copy className="w-5 h-5 text-white/70" />}
               <div className="text-left">
                 <span className="text-sm font-medium text-white">{t('commandCentre.transferToMe')}</span>
-                <p className="text-xs text-white/40">{t('commandCentre.copyWalletAddress')}</p>
+                <p className="text-xs text-white/40">
+                  {hasAddressChoice ? t('wallet.chooseAddressNetwork') : t('commandCentre.copyWalletAddress')}
+                </p>
               </div>
             </button>
           </div>
+          )}
         </DrawerContent>
       </Drawer>
 

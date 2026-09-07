@@ -23,6 +23,7 @@
     "featureRequests": "ຄຳຮ້ອງຂໍ",
     "staking": "ການຝາກ",
     "governance": "ການປົກຄອງ",
+    "dao": "DAO",
     "careers": "ອາຊີບ",
     "glossary": "ວັດຈະນານຸກົມ",
     "arcade": "ອາເຄດ",
@@ -44,8 +45,7 @@
     "pricing": "ລາຄາ",
     "creators": "ຜູ້ສ້າງ",
     "getTheApp": "ດາວໂຫຼດແອັບ",
-    "connectAi": "ເຊື່ອມຕໍ່ AI",
-    "dao": "DAO"
+    "connectAi": "ເຊື່ອມຕໍ່ AI"
   },
   "feed": {
     "viewProfile": "ເບິ່ງໂປຣໄຟລ໌ຂອງ {{name}}",
@@ -712,7 +712,17 @@
     "stake": "ສະເຕັກ",
     "cashOut": "ຖອນເງິນ",
     "stakeComingSoon": "ສະເຕັກມາໄວໆນີ້!",
-    "cashOutComingSoon": "ຖອນເງິນມາໄວໆນີ້!"
+    "cashOutComingSoon": "ຖອນເງິນມາໄວໆນີ້!",
+    "back": "ກັບຄືນ",
+    "chooseAddressNetwork": "ເຄືອຂ່າຍໃດ?",
+    "evmAddressHint": "ຖານ, BNB ແລະ Ethereum",
+    "solanaAddressHint": "SOL ແລະ SPL tokens ພຽງແຕ່",
+    "solanaAddressLinkedHint": "ກະເປົາເງິນ Phantom ທີ່ເຊື່ອມໂຍງຂອງທ່ານ",
+    "evmAddressCopied": "EVM ທີ່ຢູ່ສໍາເນົາ",
+    "solanaAddressCopied": "Solana ທີ່ຢູ່ ສໍາ ເນົາ",
+    "addressCopyFailed": "ບໍ່ສາມາດສຳເນົາທີ່ຢູ່ໄດ້",
+    "receiveEvm": "ຖານ · BNB · ETH",
+    "receiveSolanaDescription": "ພຽງແຕ່ສົ່ງ SOL ແລະ SPL tokens ຢູ່ທີ່ນີ້. ທຸກສິ່ງທຸກຢ່າງທີ່ສົ່ງຈາກເຄືອຂ່າຍອື່ນແມ່ນສູນເສຍ."
   },
   "bookmarks": {
     "title": "ບຸກມາກຂອງທ່ານ",

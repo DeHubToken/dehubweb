@@ -23,6 +23,7 @@
     "featureRequests": "リクエスト",
     "staking": "ステーキング",
     "governance": "ガバナンス",
+    "dao": "DAO",
     "careers": "採用情報",
     "glossary": "用語集",
     "arcade": "アーケード",
@@ -44,8 +45,7 @@
     "pricing": "料金",
     "creators": "クリエイター",
     "getTheApp": "アプリを入手",
-    "connectAi": "AI を接続",
-    "dao": "DAO"
+    "connectAi": "AI を接続"
   },
   "feed": {
     "viewProfile": "{{name}}のプロフィールを表示",
@@ -712,7 +712,18 @@
     "stake": "ステーク",
     "cashOut": "出金",
     "stakeComingSoon": "ステーキングは近日公開！",
-    "cashOutComingSoon": "出金は近日公開！"
+    "cashOutComingSoon": "出金は近日公開！",
+    "back": "戻る",
+    "chooseAddressNetwork": "どのネットワークですか？",
+    "evmAddressHint": "ベース、BNB、イーサリアム",
+    "solanaAddressLabel": "ソラナ",
+    "solanaAddressHint": "SOLとSPLトークンのみ",
+    "solanaAddressLinkedHint": "リンクされたPhantomウォレット",
+    "evmAddressCopied": "EVMアドレスがコピーされました",
+    "solanaAddressCopied": "Solanaの住所がコピーされました",
+    "addressCopyFailed": "住所をコピーできませんでした",
+    "receiveEvm": "ベース・BNB・ETH",
+    "receiveSolanaDescription": "ここではSOLとSPLトークンのみを送ります。 別のネットワークから送信されたものはすべて失われます。"
   },
   "bookmarks": {
     "title": "ブックマーク",

@@ -712,7 +712,18 @@
     "stake": "اسٽيڪ",
     "cashOut": "ڪيش آئوٽ",
     "stakeComingSoon": "اسٽيڪنگ جلد!",
-    "cashOutComingSoon": "ڪيش آئوٽ جلد!"
+    "cashOutComingSoon": "ڪيش آئوٽ جلد!",
+    "back": "پوئتي",
+    "chooseAddressNetwork": "ڪهڙو نيٽورڪ ؟",
+    "evmAddressHint": "بيس، بي اين بي ۽ ايٿيروم",
+    "solanaAddressLabel": "سولنگي",
+    "solanaAddressHint": "SOL ۽ SPL ٽوڪن صرف",
+    "solanaAddressLinkedHint": "توھان جو ڳن Phيل Phantom والٽ",
+    "evmAddressCopied": "EVM ايڊريس ڪاپي ڪئي وئي",
+    "solanaAddressCopied": "Solana ايڊريس نقل ڪئي وئي",
+    "addressCopyFailed": "ايڊريس نقل نه ٿي سگهيو",
+    "receiveEvm": "بنياد · بي اين بي · اي ٽي ايڇ",
+    "receiveSolanaDescription": "صرف SOL ۽ SPL ٽوڪن هتي موڪليو. ڪنهن ٻئي نيٽ ورڪ کان موڪليل هر شي گم ٿي وئي آهي."
   },
   "bookmarks": {
     "title": "توهان جا بڪ مارڪ",
@@ -1202,6 +1213,7 @@
     "amountLabel": "رقم (DHB)",
     "youHold": "توهان وٽ {{amount}} DHB آهي",
     "irreversible": "حصو ڏيڻ آن-چين منتقلي آهي. اهي واپس نه ٿي سگهجن يا واپس نه ٿي سگهجن.",
+    "switchChain": "حصو وٺڻ لاءِ پنهنجو والٽ {{chains}} تي تبديل ڪريو.",
     "sendAmount": "{{amount}} DHB موڪليو",
     "sentTitle": "حصو موڪليو ويو",
     "sentDesc": "{{amount}} DHB خزاني ۾ {{chain}} تي موڪليو ويو. توهان جو حصو بلاڪ انڊيڪس ٿيڻ بعد اپڊيٽ ٿيندو.",
@@ -1225,7 +1237,6 @@
     "noContributors": "اڃا تائين ڪو حصو نه ڏنو ويو آهي. پهريون بڻيو.",
     "recent": "حاليہ حصو",
     "you": "توهان",
-    "switchChain": "حصو وٺڻ لاءِ پنهنجو والٽ {{chains}} تي تبديل ڪريو.",
     "transferCount_one": "{{count}} منتقلي",
     "transferCount_other": "{{count}} منتقليون",
     "power": "طاقت"

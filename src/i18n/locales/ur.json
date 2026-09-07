@@ -689,7 +689,17 @@
     "stake": "اسٹیک",
     "cashOut": "نکلوائیں",
     "stakeComingSoon": "اسٹیک جلد آ رہا ہے!",
-    "cashOutComingSoon": "نکلوانا جلد آ رہا ہے!"
+    "cashOutComingSoon": "نکلوانا جلد آ رہا ہے!",
+    "back": "واپس جائیں",
+    "chooseAddressNetwork": "کون سا نیٹ ورک ؟",
+    "evmAddressHint": "بیس، بی این بی اور ایتھرئم",
+    "solanaAddressLabel": "سولانا",
+    "solanaAddressHint": "صرف SOL اور SPL ٹوکنز",
+    "solanaAddressLinkedHint": "آپ کا منسلک فینٹم والیٹ",
+    "evmAddressCopied": "ای وی ایم پتہ کاپی ہو گیا",
+    "solanaAddressCopied": "سولانا کا پتہ کاپی ہو گیا",
+    "addressCopyFailed": "پتہ کاپی نہیں کیا جا سکا",
+    "receiveSolanaDescription": "صرف SOL اور SPL ٹوکنز یہاں بھیجیں ۔ کسی دوسرے نیٹ ورک سے بھیجی گئی کوئی بھی چیز ضائع ہو جاتی ہے ۔"
   },
   "bookmarks": {
     "title": "بُک مارکس",

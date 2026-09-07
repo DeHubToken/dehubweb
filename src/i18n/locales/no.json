@@ -712,7 +712,18 @@
     "stake": "Stake",
     "cashOut": "Ta ut",
     "stakeComingSoon": "Staking kommer snart!",
-    "cashOutComingSoon": "Uttak kommer snart!"
+    "cashOutComingSoon": "Uttak kommer snart!",
+    "back": "Tilbake",
+    "chooseAddressNetwork": "Hvilket nettverk?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB og Ethereum",
+    "solanaAddressHint": "Kun SOL- og SPL-tokener",
+    "solanaAddressLinkedHint": "Din tilknyttede Phantom-lommebok",
+    "evmAddressCopied": "Adresse kopiert",
+    "solanaAddressCopied": "Solana-adressen er kopiert",
+    "addressCopyFailed": "Kunne ikke kopiere adressen",
+    "receiveEvm": "Base · BNB · ETH",
+    "receiveSolanaDescription": "Send bare SOL- og SPL-tokener hit. Alt som sendes fra et annet nettverk går tapt."
   },
   "bookmarks": {
     "title": "Dine bokmerker",
@@ -1227,9 +1238,9 @@
     "noContributors": "Ingen bidrag ennå. Vær den første.",
     "recent": "Nylige bidrag",
     "you": "Du",
-    "power": "kraft",
     "transferCount_one": "{{count}} overføring",
-    "transferCount_other": "{{count}} overføringer"
+    "transferCount_other": "{{count}} overføringer",
+    "power": "kraft"
   },
   "governance": {
     "title": "Styring",

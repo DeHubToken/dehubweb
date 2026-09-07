@@ -627,7 +627,19 @@
     "stake": "Stake",
     "cashOut": "Rút tiền",
     "stakeComingSoon": "Tính năng staking sắp ra mắt!",
-    "cashOutComingSoon": "Tính năng rút tiền sắp ra mắt!"
+    "cashOutComingSoon": "Tính năng rút tiền sắp ra mắt!",
+    "back": "Quay lại",
+    "chooseAddressNetwork": "Mạng nào?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB và Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Chỉ token SOL và SPL",
+    "solanaAddressLinkedHint": "Ví Phantom được liên kết của bạn",
+    "evmAddressCopied": "Đã sao chép địa chỉ EVM",
+    "solanaAddressCopied": "Đã sao chép địa chỉ Solana",
+    "addressCopyFailed": "Không thể sao chép địa chỉ",
+    "receiveEvm": "Base · BNB · ETH",
+    "receiveSolanaDescription": "Chỉ gửi mã thông báo SOL và SPL tại đây. Bất cứ thứ gì được gửi từ một mạng khác đều bị mất."
   },
   "bookmarks": {
     "title": "Dấu trang của bạn",

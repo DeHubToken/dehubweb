@@ -712,7 +712,19 @@
     "stake": "ଷ୍ଟେକ",
     "cashOut": "କ୍ୟାସ ଆଉଟ",
     "stakeComingSoon": "ଷ୍ଟେକିଂ ଶୀଘ୍ର!",
-    "cashOutComingSoon": "କ୍ୟାସ ଆଉଟ ଶୀଘ୍ର!"
+    "cashOutComingSoon": "କ୍ୟାସ ଆଉଟ ଶୀଘ୍ର!",
+    "back": "ପଛକୁ",
+    "chooseAddressNetwork": "କେଉଁ ନେଟୱାର୍କ?",
+    "evmAddressLabel": "ଇଭିଏମ୍",
+    "evmAddressHint": "ଆଧାର, BNB ଏବଂ Ethereum",
+    "solanaAddressLabel": "ଏଲିନା କହିଲ",
+    "solanaAddressHint": "କେବଳ SOL ଏବଂ SPL ଟୋକନଗୁଡ଼ିକ",
+    "solanaAddressLinkedHint": "ଆପଣଙ୍କର ସଂଯୋଗିତ Phantom ୱାଲେଟ",
+    "evmAddressCopied": "EVM ଠିକଣା ନକଲ ହୋଇଛି",
+    "solanaAddressCopied": "ସୋଲାନା ଠିକଣା ନକଲ ହୋଇଛି",
+    "addressCopyFailed": "ଠିକଣା ନକଲ କରିପାରିଲା ନାହିଁ",
+    "receiveEvm": "ଆଧାର · BNB · ETH",
+    "receiveSolanaDescription": "କେବଳ SOL ଏବଂ SPL ଟୋକନଗୁଡ଼ିକୁ ଏଠାରେ ପଠାନ୍ତୁ । ଅନ୍ୟ ନେଟୱର୍କରୁ ପଠାଯାଇଥିବା ସମସ୍ତ ଜିନିଷ ହଜିଯାଇଛି ।"
   },
   "bookmarks": {
     "title": "ଆପଣଙ୍କ ବୁକମାର୍କ",
@@ -1227,9 +1239,9 @@
     "noContributors": "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ଅବଦାନ ନାହିଁ। ପ୍ରଥମ ହୁଅନ୍ତୁ।",
     "recent": "ନିକଟ ଅବଦାନ",
     "you": "ଆପଣ",
-    "power": "ଶକ୍ତି",
     "transferCount_one": "{{count}} ସ୍ଥାନାନ୍ତର",
-    "transferCount_other": "{{count}} ସ୍ଥାନାନ୍ତର"
+    "transferCount_other": "{{count}} ସ୍ଥାନାନ୍ତର",
+    "power": "ଶକ୍ତି"
   },
   "governance": {
     "title": "ଗଭର୍ନାନ୍ସ",

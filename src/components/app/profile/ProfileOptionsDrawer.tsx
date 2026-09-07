@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { DISPLAY_WALLET_OVERRIDES } from './ProfileConstants';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
+import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
+import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
 
 interface ProfileOptionsDrawerProps {
   profile: ProfileData;
@@ -35,6 +37,16 @@ export function ProfileOptionsContent({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [pickingNetwork, setPickingNetwork] = useState(false);
+  const { hasChoice } = useWalletAddresses();
+
+  /**
+   * Only on your own profile. Someone else's Solana address is not something
+   * this app knows: the derived one is never published, and only a Phantom user
+   * has a linked one — so offering a second row on another profile would mean
+   * guessing an address, which on Solana means losing whatever is sent to it.
+   */
+  const offerAddressChoice = !!isViewingOwnProfile && hasChoice;
 
   const handleCopyProfileUrl = () => {
     navigator.clipboard.writeText(`https://dehub.io/${profile.handle.replace('@', '')}`);
@@ -91,15 +103,22 @@ export function ProfileOptionsContent({
         </div>
         <span className="text-white font-medium">{t('profileOptions.copyUsername')}</span>
       </button>
-      <button
-        onClick={handleCopyAddress}
-        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 active:scale-[0.98] transition-[background-color,transform] text-left"
-      >
-        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-          <Wallet className="w-4 h-4 text-white" />
-        </div>
-        <span className="text-white font-medium">{t('profileOptions.copyAddress')}</span>
-      </button>
+      {pickingNetwork ? (
+        <CopyAddressRows
+          onBack={() => setPickingNetwork(false)}
+          onCopied={() => { setPickingNetwork(false); setShareSheetOpen(false); }}
+        />
+      ) : (
+        <button
+          onClick={() => (offerAddressChoice ? setPickingNetwork(true) : handleCopyAddress())}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 active:scale-[0.98] transition-[background-color,transform] text-left"
+        >
+          <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+            <Wallet className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-white font-medium">{t('profileOptions.copyAddress')}</span>
+        </button>
+      )}
       {isViewingOwnProfile && (
         <button
           onClick={() => {

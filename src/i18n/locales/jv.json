@@ -712,7 +712,19 @@
     "stake": "Stake",
     "cashOut": "Cairake",
     "stakeComingSoon": "Stake bakal teka!",
-    "cashOutComingSoon": "Cairake bakal teka!"
+    "cashOutComingSoon": "Cairake bakal teka!",
+    "back": "Bali",
+    "chooseAddressNetwork": "Jaringan apa?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB lan Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Mung token SOL lan SPL",
+    "solanaAddressLinkedHint": "Dompet Phantom sing kaiket karo sampeyan",
+    "evmAddressCopied": "Alamat EVM disalin",
+    "solanaAddressCopied": "Alamat Solana disalin",
+    "addressCopyFailed": "Alamat ora bisa disalin",
+    "receiveEvm": "Base · BNB · ETH",
+    "receiveSolanaDescription": "Mung kirim token SOL lan SPL menyang kene. Apa wae sing dikirim saka jaringan liyane bakal ilang."
   },
   "bookmarks": {
     "title": "Tetenger Kowe",

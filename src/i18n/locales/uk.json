@@ -23,6 +23,7 @@
     "featureRequests": "Запити",
     "staking": "Стейкінг",
     "governance": "Управління",
+    "dao": "DAO",
     "careers": "Вакансії",
     "glossary": "Глосарій",
     "arcade": "Аркада",
@@ -44,8 +45,7 @@
     "pricing": "Тарифи",
     "creators": "Автори",
     "getTheApp": "Завантажити застосунок",
-    "connectAi": "Підключити ШІ",
-    "dao": "DAO"
+    "connectAi": "Підключити ШІ"
   },
   "feed": {
     "viewProfile": "Переглянути профіль {{name}}",
@@ -1021,6 +1021,7 @@
     "totalWalletValue": "Загальна вартість гаманця",
     "receive": "Отримати",
     "send": "Надіслати",
+    "buy": "Купити",
     "import": "Імпортувати",
     "noTokensToSend": "Немає токенів із балансом для надсилання",
     "unableOpenGateway": "Не вдалося відкрити платіжний шлюз",
@@ -1061,7 +1062,18 @@
     "stake": "Стейкінг",
     "cashOut": "Вивести кошти",
     "stakeComingSoon": "Стейкінг незабаром!",
-    "cashOutComingSoon": "Виведення коштів незабаром!"
+    "cashOutComingSoon": "Виведення коштів незабаром!",
+    "back": "Назад",
+    "chooseAddressNetwork": "Яка мережа?",
+    "evmAddressHint": "Base, BNB та Ethereum",
+    "solanaAddressLabel": "Солана",
+    "solanaAddressHint": "Тільки токени SOL і SPL",
+    "solanaAddressLinkedHint": "Ваш пов 'язаний гаманець Phantom",
+    "evmAddressCopied": "Адресу EVM скопійовано",
+    "solanaAddressCopied": "Адресу Solana скопійовано",
+    "addressCopyFailed": "Не вдалося скопіювати адресу",
+    "receiveEvm": "База · BNB · ETH",
+    "receiveSolanaDescription": "Надішліть лише токени SOL та SPL тут. Все, що надіслано з іншої мережі, втрачено."
   },
   "bookmarks": {
     "title": "Ваші закладки",

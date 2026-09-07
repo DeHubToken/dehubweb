@@ -713,7 +713,19 @@
     "stake": "Stake",
     "cashOut": "Khipha Imali",
     "stakeComingSoon": "Ukufaka isibambiso kuyeza maduze!",
-    "cashOutComingSoon": "Ukukhipha imali kuyeza maduze!"
+    "cashOutComingSoon": "Ukukhipha imali kuyeza maduze!",
+    "back": "Emuva",
+    "chooseAddressNetwork": "Iyiphi inethiwekhi?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "I-Base, I-BNB NE-ETHEREUM",
+    "solanaAddressLabel": "I-Solana",
+    "solanaAddressHint": "AMATHOKHENI e-SOL ne-SPL kuphela",
+    "solanaAddressLinkedHint": "Isikhwama sakho se-Phantom esixhunyiwe",
+    "evmAddressCopied": "Ikheli le-EVM likopishiwe",
+    "solanaAddressCopied": "Ikheli le-Solana likopishiwe",
+    "addressCopyFailed": "Ayikwazanga ukukopisha ikheli",
+    "receiveEvm": "Isisekelo · BNB · ETH",
+    "receiveSolanaDescription": "Thumela kuphela AMATHOKHENI e-SOL ne-SPL lapha. Noma yini ethunyelwe ivela kwenye inethiwekhi ilahlekile."
   },
   "bookmarks": {
     "title": "Bhukimakhi",

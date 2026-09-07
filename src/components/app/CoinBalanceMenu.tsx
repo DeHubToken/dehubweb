@@ -16,6 +16,8 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import usdcLogo from '@/assets/usdc-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWalletLocked } from '@/hooks/use-wallet-locked';
+import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
+import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
 
 /**
  * Shown at the top of the wallet menu whenever the built-in wallet's key is not
@@ -52,7 +54,7 @@ interface WalletMenuContentProps {
   onClose?: () => void;
 }
 
-type MenuView = 'main' | 'buy' | 'send' | 'history' | 'stake';
+type MenuView = 'main' | 'buy' | 'send' | 'history' | 'stake' | 'receive';
 
 // Mock users for send functionality
 const MOCK_USERS = [
@@ -91,6 +93,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
   const [sendAmount, setSendAmount] = useState('');
   const [stakeAmount, setStakeAmount] = useState('');
   const [copied, setCopied] = useState(false);
+  const { hasChoice: hasAddressChoice } = useWalletAddresses();
 
   const formattedWalletAddress = useMemo(() => {
     if (!walletAddress) return null;
@@ -217,7 +220,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         <span className="text-white font-medium">Cash Out</span>
       </button>
       <button
-        onClick={handleCopyAddress}
+        onClick={() => (hasAddressChoice ? setMenuView('receive') : handleCopyAddress())}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
@@ -478,6 +481,8 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
   const getMenuContent = () => {
     switch (menuView) {
+      case 'receive':
+        return <CopyAddressRows onBack={() => setMenuView('main')} />;
       case 'buy':
         return buyMenuContent;
       case 'send':
@@ -518,6 +523,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
   const [sendAmount, setSendAmount] = useState('');
   const [stakeAmount, setStakeAmount] = useState('');
   const [copied, setCopied] = useState(false);
+  const { hasChoice: hasAddressChoice } = useWalletAddresses();
 
   const formattedWalletAddress = useMemo(() => {
     if (!walletAddress) return null;
@@ -576,6 +582,10 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
     if (value === 0) return '0';
     return value % 1 === 0 ? value.toLocaleString() : value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
+
+  if (menuView === 'receive') {
+    return <CopyAddressRows onBack={() => setMenuView('main')} />;
+  }
 
   if (menuView === 'buy') {
     return (
@@ -831,7 +841,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
         <span className="text-white font-medium">Cash Out</span>
       </button>
       <button
-        onClick={handleCopyAddress}
+        onClick={() => (hasAddressChoice ? setMenuView('receive') : handleCopyAddress())}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
