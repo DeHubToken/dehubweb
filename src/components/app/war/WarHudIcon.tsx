@@ -195,7 +195,10 @@ const THEME_ICON_KEYS: ReadonlyArray<readonly [string, ThemeIconKey]> = [
   ['command.webp', 'command'],
 ];
 
-const FULL_RASTER_THEMES = new Set(['hazy', 'swarms', 'winter', 'osaka', 'jungle']);
+const FULL_RASTER_THEMES = new Set([
+  'cosmic', 'hazy', 'swarms', 'lavalamp', 'winter',
+  'osaka', 'jungle', 'light', 'minimal',
+]);
 const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
   'home', 'posts', 'images', 'videos', 'subscriptions', 'audio', 'live',
   'fractions', 'pinned', 'search', 'messages', 'bookmarks',
@@ -350,7 +353,7 @@ export function BrandIcon({ src, alt = '', className, ...imgProps }: BrandIconPr
   }
 
   const themedSrc = resolveThemeIconAsset(src, theme) ?? src;
-  return <img src={themedSrc} alt={alt} className={className} {...imgProps} />;
+  return <img src={themedSrc} alt={alt} className={className} data-theme-icon-family={theme} {...imgProps} />;
 }
 
 type ThemedIconProps = Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
@@ -389,6 +392,7 @@ export function ThemedIcon({ icon, alt = '', className, ...imgProps }: ThemedIco
       src={`/theme-icons/${rasterTheme}/${icon}.webp`}
       alt={alt}
       className={className}
+      data-theme-icon-family={theme}
       {...imgProps}
     />
   );

@@ -16,6 +16,7 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
+import { AppState } from '@/components/app/AppState';
 
 interface FollowRequestsDrawerProps {
   open: boolean;
@@ -181,11 +182,12 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
               <Loader2 className="w-6 h-6 text-zinc-400 animate-spin" />
             </div>
           ) : requests.length === 0 ? (
-            <div className="text-center py-12">
-              <Clock className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
-              <p className="text-zinc-400 font-medium">No pending requests</p>
-              <p className="text-zinc-500 text-sm mt-1">Follow requests will appear here</p>
-            </div>
+            <AppState
+              icon="members"
+              title="No pending requests"
+              description="Follow requests will appear here."
+              size="drawer"
+            />
           ) : (
             requests.map((request) => {
               const requestId = request.id || request.address;

@@ -7,6 +7,7 @@ import type { CommunityEvent } from '@/hooks/use-events';
 import { EventCard } from '@/components/app/events/EventCard';
 import { CreateEventDrawer } from '@/components/app/events/CreateEventDrawer';
 import { EventDetailDrawer } from '@/components/app/events/EventDetailDrawer';
+import { AppState } from '@/components/app/AppState';
 
 interface CommunityEventsProps {
   communityId: string;
@@ -42,7 +43,7 @@ export function CommunityEvents({ communityId, canCreate }: CommunityEventsProps
           {[1, 2].map(i => <div key={i} className="h-48 rounded-xl bg-white/[0.04] animate-pulse" />)}
         </div>
       ) : events.length === 0 ? (
-        <p className="text-sm text-zinc-500 text-center py-8">No events yet</p>
+        <AppState icon="events" title="No events yet" description="Community events will appear here." size="section" />
       ) : (
         <>
           {upcoming.length > 0 && (

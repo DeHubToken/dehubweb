@@ -16,6 +16,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatDistanceToNow } from 'date-fns';
+import { AppState } from '@/components/app/AppState';
 
 interface Conversation {
   id: string;
@@ -514,10 +515,13 @@ export function ConversationHistoryDrawer({
 
           <ScrollArea className="h-[70vh]">
             {!isAuthenticated ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center px-4">
-                <MessageCircle className="w-12 h-12 text-white/20 mb-3" />
-                <p className="text-white/60">Log in to see your conversation history</p>
-              </div>
+              <AppState
+                icon="lock"
+                title="Log in to view history"
+                description="Your saved conversations and generated media will appear here."
+                kind="restricted"
+                size="drawer"
+              />
             ) : isLoading ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-6 h-6 animate-spin text-white/60" />
@@ -525,11 +529,12 @@ export function ConversationHistoryDrawer({
             ) : activeTab === 'media' ? (
               /* ---- MEDIA TAB ---- */
               mediaItems.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center px-4">
-                  <ImageIcon className="w-12 h-12 text-white/20 mb-3" />
-                  <p className="text-white/60">No media generated yet</p>
-                  <p className="text-white/40 text-sm mt-1">Images, videos & music you create will appear here</p>
-                </div>
+                <AppState
+                  icon="images"
+                  title="No media generated yet"
+                  description="Images, videos and music you create will appear here."
+                  size="drawer"
+                />
               ) : (
                 <div className="p-3">
                   {/* Filter chips */}
@@ -557,11 +562,12 @@ export function ConversationHistoryDrawer({
               )
             ) : displayedConversations.length === 0 && !searchQuery ? (
               /* ---- CHATS TAB (empty) ---- */
-              <div className="flex flex-col items-center justify-center py-12 text-center px-4">
-                <MessageCircle className="w-12 h-12 text-white/20 mb-3" />
-                <p className="text-white/60">No conversations yet</p>
-                <p className="text-white/40 text-sm mt-1">Start chatting to save your conversations</p>
-              </div>
+              <AppState
+                icon="assistant"
+                title="No conversations yet"
+                description="Start chatting to save a conversation."
+                size="drawer"
+              />
             ) : (
               /* ---- CHATS TAB ---- */
               <div>

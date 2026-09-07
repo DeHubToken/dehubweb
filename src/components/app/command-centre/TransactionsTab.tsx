@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { cn } from '@/lib/utils';
+import { AppState } from '@/components/app/AppState';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 const cardClass = "rounded-2xl p-5 bg-zinc-900 border border-zinc-800";
@@ -249,9 +250,9 @@ export function TransactionsTab() {
                 </ComposedChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full text-zinc-500 text-sm">
-                {txLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'No chart data yet'}
-              </div>
+              txLoading
+                ? <div className="flex h-full items-center justify-center"><Loader2 className="w-5 h-5 animate-spin" /></div>
+                : <AppState icon="stats" title="No chart data yet" size="compact" className="h-full" />
             )}
           </div>
         </div>
@@ -303,9 +304,9 @@ export function TransactionsTab() {
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center h-40 text-zinc-500 text-sm">
-              {txLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'No transactions yet'}
-            </div>
+            txLoading
+              ? <div className="flex h-40 items-center justify-center"><Loader2 className="w-5 h-5 animate-spin" /></div>
+              : <AppState icon="command" title="No transactions yet" size="compact" className="h-40" />
           )}
         </div>
       </div>
@@ -324,16 +325,15 @@ export function TransactionsTab() {
             <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
           </div>
         ) : txError ? (
-          <div className="flex flex-col items-center justify-center py-8 text-zinc-400 gap-2">
-            <AlertCircle className="w-6 h-6" />
-            <p className="text-sm">Failed to load transactions</p>
-          </div>
+          <AppState icon="command" title="Transactions could not load" description="Try loading your transaction history again." kind="error" size="section" />
         ) : filteredTransactions.length === 0 ? (
-          <div className="text-center py-8 text-zinc-500 text-sm">
-            {transactions.length === 0
-              ? 'No transactions found. Make your first purchase!'
-              : 'No transactions in this time period.'}
-          </div>
+          <AppState
+            icon={transactions.length === 0 ? 'command' : 'search'}
+            title={transactions.length === 0 ? 'No transactions yet' : 'No transactions in this period'}
+            description={transactions.length === 0 ? 'Your completed activity will appear here.' : 'Choose another time period to view more activity.'}
+            kind={transactions.length === 0 ? 'empty' : 'search-empty'}
+            size="section"
+          />
         ) : (
           <div className={cn("divide-y", dividerClass)}>
             {filteredTransactions.map((tx) => {

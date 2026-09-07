@@ -12,6 +12,7 @@ import { useShopLinkAllowance } from '@/hooks/use-shop-links';
 import { toast } from 'sonner';
 import { useUserCommunities } from '@/hooks/use-communities';
 import { useAuth } from '@/contexts/AuthContext';
+import { AppState } from '@/components/app/AppState';
 import type { Currency } from '../types';
 import {
   getLockTokensForChain,
@@ -720,7 +721,7 @@ export function PostAccessToggles({
                   </button>
                 )}
                 {filteredCategories.length === 0 && !categorySearch.trim() ? (
-                  <p className="text-center text-sm text-zinc-500 py-8">No categories found</p>
+                  <AppState icon="search" title="No categories found" description="Try a different search." kind="search-empty" size="compact" />
                 ) : (
                 filteredCategories.map((cat) => (
                   <button

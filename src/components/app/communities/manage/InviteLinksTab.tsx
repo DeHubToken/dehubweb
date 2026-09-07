@@ -13,6 +13,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Copy, Link2, Loader2, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { AppState } from '@/components/app/AppState';
 import { Switch } from '@/components/ui/switch';
 import {
   Select,
@@ -388,11 +389,12 @@ export function InviteLinksTab({ community, membership }: InviteLinksTabProps) {
             {t('communities.manage.invites.loading', { defaultValue: 'Loading invite links…' })}
           </p>
         ) : invites.length === 0 ? (
-          <p className="text-center text-zinc-500 text-sm py-6">
-            {t('communities.manage.invites.empty', {
-              defaultValue: 'No invite links yet. Create one to invite people directly.',
-            })}
-          </p>
+          <AppState
+            icon="messages"
+            title={t('communities.manage.invites.emptyTitle', { defaultValue: 'No invite links yet' })}
+            description={t('communities.manage.invites.empty', { defaultValue: 'Create one to invite people directly.' })}
+            size="section"
+          />
         ) : (
           <div className="space-y-1">
             {invites.map(link => (

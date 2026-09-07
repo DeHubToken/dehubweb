@@ -29,6 +29,7 @@ import { useBookmarkFolders } from '@/hooks/use-bookmark-folders';
 import { getFolderItems, addItemsToFolderBulk, removeItemFromFolder, type BookmarkFolderItem } from '@/lib/api/dehub';
 import { buildImageUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
+import { AppState } from '@/components/app/AppState';
 
 type FolderSort = 'newest' | 'oldest' | 'channel';
 
@@ -197,13 +198,12 @@ export function BookmarkFoldersPanel() {
             ))}
           </div>
         ) : folders.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Folder className="w-12 h-12 text-zinc-600 mb-3" />
-            <p className="text-zinc-400 text-lg font-medium">No folders yet</p>
-            <p className="text-zinc-500 text-sm mt-1 max-w-xs">
-              Save a post with the bookmark button and file it into a folder, or make one here.
-            </p>
-          </div>
+          <AppState
+            icon="bookmarks"
+            title="No folders yet"
+            description="Create a folder here or file a saved post into one."
+            size="section"
+          />
         ) : (
           <div className="space-y-2">
             {folders.map((folder) => (

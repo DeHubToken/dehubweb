@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Button } from '@/components/ui/button';
+import { AppState } from '@/components/app/AppState';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -1268,7 +1269,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-zinc-500 text-center py-4">No tokens found</p>
+                <AppState icon="search" title="No tokens found" kind="search-empty" size="compact" />
               )}
             </div>
           </div>

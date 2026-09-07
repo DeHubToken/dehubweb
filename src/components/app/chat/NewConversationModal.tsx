@@ -21,6 +21,7 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { AppState } from '@/components/app/AppState';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState, useCallback, useEffect } from 'react';
 import { Search, Loader2, ArrowLeft, AlertCircle } from 'lucide-react';
@@ -517,10 +518,7 @@ export function NewConversationModal({
                   <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
                 </div>
               ) : searchResults?.items?.length === 0 ? (
-                <div className="text-center py-8 text-zinc-500">
-                  <p>No users found</p>
-                  <p className="text-sm mt-1">Try a different search term</p>
-                </div>
+                <AppState icon="search" title="No users found" description="Try a different search term." kind="search-empty" size="compact" />
               ) : (
                 <div className="space-y-1 px-2">
                   {searchResults?.items?.map((user) => (

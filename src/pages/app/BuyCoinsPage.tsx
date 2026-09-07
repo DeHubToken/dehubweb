@@ -13,6 +13,7 @@ import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { ShimmerHoverEffect } from '@/components/ui/shimmer-hover-effect';
+import { AppState } from '@/components/app/AppState';
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getDPayPrice,
@@ -668,7 +669,7 @@ export default function BuyCoinsPage() {
               <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
             </div>
           ) : purchaseHistory.length === 0 ? (
-            <p className="text-zinc-500 text-sm text-center py-4">No purchases yet. Be the first!</p>
+            <AppState icon="command" title="No purchases yet" description="Completed coin purchases will appear here." size="section" />
           ) : (() => {
             const isSearching = txSearch.trim().length > 0;
             const filtered = isSearching
@@ -677,7 +678,7 @@ export default function BuyCoinsPage() {
                 )
               : purchaseHistory.filter(tx => tx.status === 'completed');
             return filtered.length === 0 ? (
-              <p className="text-zinc-500 text-sm text-center py-4">No transactions found for that address.</p>
+              <AppState icon="search" title="No matching transactions" description="Try a different wallet address." kind="search-empty" size="compact" />
             ) : (
                 <div
                   ref={purchaseListRef}

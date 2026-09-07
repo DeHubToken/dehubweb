@@ -35,6 +35,7 @@ import { TranslatableText, useTranslation } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
+import { AppState } from '@/components/app/AppState';
 /** Lazy for the same reason VideoCard is: the visualizer only appears once a
  *  voice note has been recorded, and it drags ~50 KB of canvas painters. */
 const AudioVisualizer = lazy(() =>
@@ -1909,13 +1910,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 {filteredGroupedComments.length > 0 ? (
                   filteredGroupedComments.map(renderThread)
                 ) : (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
-                  >
-                    No replies yet. Be the first!
-                  </motion.p>
+                  <AppState icon="posts" title="No replies yet" description="Be the first to reply." size="section" />
                 )}
               </AnimatePresence>
             )}
@@ -1975,13 +1970,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 })}
               </div>
             ) : (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
-              >
-                No quotes yet. Be the first!
-              </motion.p>
+              <AppState icon="posts" title="No quotes yet" description="Quoted posts will appear here." size="section" />
             )}
           </div>
         )}
@@ -2057,13 +2046,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 })}
               </div>
             ) : (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
-              >
-                No reposts yet
-              </motion.p>
+              <AppState icon="subscriptions" title="No reposts yet" description="People who repost this will appear here." size="section" />
             )}
           </div>
         )}
@@ -2080,13 +2063,13 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 {filteredGroupedComments.length > 0 ? (
                   filteredGroupedComments.map(renderThread)
                 ) : (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
-                  >
-                    {searchQuery ? 'No results found' : 'No comments or quotes yet'}
-                  </motion.p>
+                  <AppState
+                    icon={searchQuery ? 'search' : 'posts'}
+                    title={searchQuery ? 'No results found' : 'No comments or quotes yet'}
+                    description={searchQuery ? 'Try a different search.' : 'Comments and quoted posts will appear here.'}
+                    kind={searchQuery ? 'search-empty' : 'empty'}
+                    size="section"
+                  />
                 )}
               </AnimatePresence>
             )}

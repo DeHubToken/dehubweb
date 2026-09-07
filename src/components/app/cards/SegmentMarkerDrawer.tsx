@@ -16,6 +16,7 @@ import { Check, Loader2, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { AppState } from '@/components/app/AppState';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSegmentActions, useVideoSegments } from '@/hooks/use-video-segments';
 import { SEGMENT_CATEGORIES, SEGMENT_LABELS, type SegmentCategory } from '@/lib/api/video-segments';
@@ -143,7 +144,7 @@ export function SegmentMarkerDrawer({ open, onOpenChange, tokenId, getCurrentTim
           {isLoading ? (
             <div className="flex justify-center py-6"><Loader2 className="w-5 h-5 animate-spin text-zinc-500" /></div>
           ) : segments.length === 0 ? (
-            <p className="text-sm text-zinc-500 text-center py-6">Nothing marked on this video yet.</p>
+            <AppState icon="videos" title="Nothing marked on this video yet" size="compact" />
           ) : (
             segments.map((segment) => {
               const isMine = !!walletAddress && segment.address.toLowerCase() === walletAddress.toLowerCase();

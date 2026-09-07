@@ -3,7 +3,10 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { resolveThemeIconAsset } from '@/components/app/war/WarHudIcon';
 
-const FULL_THEMES = ['hazy', 'swarms', 'winter', 'osaka', 'jungle'];
+const FULL_THEMES = [
+  'cosmic', 'hazy', 'swarms', 'lavalamp', 'winter',
+  'osaka', 'jungle', 'light', 'minimal',
+];
 const PROFILE_KEYS = [
   'home', 'posts', 'images', 'videos', 'subscriptions', 'audio', 'live',
   'fractions', 'pinned', 'search', 'messages', 'bookmarks',
@@ -66,10 +69,12 @@ describe('theme icon assets', () => {
     }
   });
 
-  it('leaves Cosmic, Lava Lamp, Light and Minimal on their existing art', () => {
+  it('routes Cosmic, Lava Lamp, Light and Minimal through their own complete packs', () => {
     for (const theme of ['cosmic', 'lavalamp', 'light', 'minimal']) {
-      expect(resolveThemeIconAsset('/assets/home-3d-icon-abc.png', theme)).toBeNull();
-      expect(resolveThemeIconAsset('/assets/settings-icon-abc.png', theme)).toBeNull();
+      expect(resolveThemeIconAsset('/assets/home-3d-icon-abc.png', theme))
+        .toBe(`/theme-icons/${theme}/home.webp`);
+      expect(resolveThemeIconAsset('/assets/settings-icon-abc.png', theme))
+        .toBe(`/theme-icons/${theme}/settings.webp`);
     }
   });
 

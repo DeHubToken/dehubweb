@@ -15,6 +15,7 @@ import { useGenerationStore, type GenerationJob } from '@/store/generationStore'
 import { sendJobToEditor } from '@/lib/creator/sendToEditor';
 import { useEditorUiStore } from '@/store/editorUiStore';
 import { PanelHeading } from './DesignPanel';
+import { AppState } from '@/components/app/AppState';
 
 // Must cover every JobKind. The studio and the editor share one queue, so a
 // mesh generated on /creator arrives here too, and a missing entry renders
@@ -54,20 +55,13 @@ export function LibraryPanel() {
       </PanelHeading>
 
       {jobs.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-white/12 p-4 text-center">
-          <ImageIcon className="mx-auto h-5 w-5 text-white/25" />
-          <p className="mt-2 text-[13px] font-medium text-white/70">Nothing generated yet</p>
-          <p className="mt-1 text-[11px] leading-relaxed text-white/40">
-            Anything you make here or in the Creator studio collects in this tab.
-          </p>
-          <button
-            type="button"
-            onClick={() => setPanel('generate')}
-            className="mt-3 w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-[12px] font-semibold text-white transition hover:border-white/40 hover:bg-white/20"
-          >
-            Generate something
-          </button>
-        </div>
+        <AppState
+          icon="wand"
+          title="Nothing generated yet"
+          description="Anything you make here or in the Creator studio collects in this tab."
+          size="compact"
+          primaryAction={{ label: 'Generate something', onClick: () => setPanel('generate') }}
+        />
       ) : (
         <ul className="grid grid-cols-2 gap-2">
           {jobs.map((job) => (

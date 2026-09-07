@@ -21,6 +21,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { AppState } from '@/components/app/AppState';
 import { Input } from '@/components/ui/input';
 import { useCommunityAbilities, useDeleteCommunity, useTransferOwnership } from '@/hooks/use-community-admin';
 import { useCommunityMembers, type Community, type CommunityMember } from '@/hooks/use-communities';
@@ -214,11 +215,12 @@ export function DangerZone({ community, membership, onClosePanel }: DangerZonePr
                 />
               ))}
               {visibleCount === 0 && (
-                <p className="text-center text-zinc-500 text-sm py-6">
-                  {t('communities.manage.noMemberMatches', {
-                    defaultValue: 'No members match that search.',
-                  })}
-                </p>
+                <AppState
+                  icon="search"
+                  title={t('communities.manage.noMemberMatches', { defaultValue: 'No members match that search.' })}
+                  kind="search-empty"
+                  size="compact"
+                />
               )}
             </>
           )}

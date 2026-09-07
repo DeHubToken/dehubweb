@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { AppState } from "@/components/app/AppState";
 import {
   GOOGLE_FONTS,
   fontFamilyCss,
@@ -110,7 +111,7 @@ export function FontPicker({ value, onChange }: Props) {
         <ScrollArea className="h-72">
           <div ref={listRef} className="p-1">
             {filtered.length === 0 && (
-              <p className="px-3 py-4 text-xs text-white/40">No fonts match “{query}”.</p>
+              <AppState icon="search" title={`No fonts match “${query}”`} kind="search-empty" size="compact" />
             )}
             {filtered.map((f) => {
               const isSel = f.family.toLowerCase() === currentName.toLowerCase();

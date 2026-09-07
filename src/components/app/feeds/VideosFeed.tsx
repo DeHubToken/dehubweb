@@ -16,6 +16,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { RefreshCw, Play, ChevronRight, Radio, Eye, Loader2 } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { AppState } from '@/components/app/AppState';
 import { VideosFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
 import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
@@ -752,22 +753,14 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   };
 
   const EmptyState = () => (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <ThemedIcon icon="videos" alt="" className="w-16 h-16 object-contain mb-4 opacity-75" />
-      <h3 className="text-white font-semibold text-lg mb-2">No Videos Yet</h3>
-      <p className="text-zinc-400 text-sm max-w-xs mb-4">
-        {isError 
-          ? 'Unable to load videos. Please try again.'
-          : 'Be the first to upload a video!'}
-      </p>
-      <button 
-        onClick={() => refetch()}
-        className="px-4 py-2 rounded-xl bg-white/10 text-white text-sm hover:bg-white/20 transition-colors flex items-center gap-2"
-      >
-        <RefreshCw className="w-4 h-4" />
-        Refresh
-      </button>
-    </div>
+    <AppState
+      icon={isError ? 'notifications' : 'videos'}
+      title={isError ? 'Videos could not load' : 'No videos yet'}
+      description={isError ? 'Try loading the video feed again.' : 'Video posts will appear here.'}
+      kind={isError ? 'error' : 'empty'}
+      size="page"
+      primaryAction={isError ? { label: 'Try again', onClick: () => refetch(), icon: <RefreshCw /> } : undefined}
+    />
   );
 
   // Filtered empty state (when filters return no results but API has data)

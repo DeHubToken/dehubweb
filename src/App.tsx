@@ -30,7 +30,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { ClientNavigateBridge } from "@/components/app/ClientNavigateBridge";
 import { HomeShellSkeleton } from "@/components/app/PageSkeletons";
 import { DeHubPageLoader } from "@/components/app/DeHubLoader";
-import { ThemeProvider, useAppTheme } from "@/contexts/ThemeContext";
+import { ThemePreviewProvider, ThemeProvider, useAppTheme } from "@/contexts/ThemeContext";
 import { UserPreferencesProvider } from "@/contexts/UserPreferencesContext";
 import { lazyWithRetry } from "@/lib/lazy-with-retry";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -112,8 +112,11 @@ const JungleBackground = React.lazy(() =>
 const JungleGameLauncher = React.lazy(() =>
   import("@/components/app/jungle/JungleGameLauncher").then(m => ({ default: m.JungleGameLauncher }))
 );
+const StateGalleryPage = import.meta.env.DEV
+  ? React.lazy(() => import("@/pages/app/StateGalleryPage"))
+  : null;
 
-function ThemedBackgrounds() {
+function ThemedBackgrounds({ preview = false }: { preview?: boolean }) {
   const { theme } = useAppTheme();
   // Self-gating: only a canvas theme mounts a background. It renders on ALL
   // routes including /docs and /guides — the docs surface goes transparent and
@@ -122,17 +125,17 @@ function ThemedBackgrounds() {
   // (docs-dark.css), so docs content composites above it and stays readable.
   return (
     <Suspense fallback={null}>
-      {theme === "cosmic" && <CosmicBackground />}
+      {theme === "cosmic" && !preview && <CosmicBackground />}
       {theme === "hazy" && <HazyNightsBackground />}
       {theme === "swarms" && <SwarmsBackground />}
-      {theme === "winter" && <WinterSnow />}
+      {theme === "winter" && !preview && <WinterSnow />}
       {theme === "lavalamp" && <LavaLampBackground />}
       {theme === "war" && <WarBackground />}
-      {theme === "war" && <WarPreloader />}
-      {theme === "war" && <WarGameLauncher />}
+      {theme === "war" && !preview && <WarPreloader />}
+      {theme === "war" && !preview && <WarGameLauncher />}
       {theme === "osaka" && <OsakaBackground />}
       {theme === "jungle" && <JungleBackground />}
-      {theme === "jungle" && <JungleGameLauncher />}
+      {theme === "jungle" && !preview && <JungleGameLauncher />}
     </Suspense>
   );
 }
@@ -849,6 +852,23 @@ const App = () => (
             {/* /r/<code>/<any/path> attributes the visit, then redirects to that
                 path — one shareable link that earns and lands somewhere specific. */}
             <Route path="/r/:code/*" element={<ReferralLanding />} />
+            {StateGalleryPage && (
+              <Route
+                path="/app/state-gallery"
+                element={
+                  <ThemePreviewProvider>
+                    <TooltipProvider>
+                      <ErrorBoundary fallback={null}>
+                        <ThemedBackgrounds preview />
+                      </ErrorBoundary>
+                      <Suspense fallback={<PageLoader />}>
+                        <StateGalleryPage />
+                      </Suspense>
+                    </TooltipProvider>
+                  </ThemePreviewProvider>
+                }
+              />
+            )}
             <Route
               path="*"
               element={

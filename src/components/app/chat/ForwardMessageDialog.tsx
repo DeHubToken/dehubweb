@@ -16,6 +16,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useConversations } from '@/hooks/use-messages';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { AppState } from '@/components/app/AppState';
 import type { DeHubConversation } from '@/lib/api/dehub';
 
 interface ForwardMessageDialogProps {
@@ -92,7 +93,12 @@ export function ForwardMessageDialog({
           {isLoading ? (
             <p className="text-center text-sm text-zinc-500 py-8">Loading…</p>
           ) : filtered.length === 0 ? (
-            <p className="text-center text-sm text-zinc-500 py-8">No conversations</p>
+            <AppState
+              icon={query ? 'search' : 'messages'}
+              title={query ? 'No conversations found' : 'No conversations yet'}
+              kind={query ? 'search-empty' : 'empty'}
+              size="drawer"
+            />
           ) : (
             filtered.map((conv) => {
               const other = conv.otherUser || conv.participants?.[0];

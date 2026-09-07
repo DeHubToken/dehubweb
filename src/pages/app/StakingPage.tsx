@@ -26,6 +26,7 @@ import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
+import { AppState } from '@/components/app/AppState';
 
 import dehubCoin from '@/assets/dehub-coin.png';
 
@@ -950,10 +951,7 @@ export default function StakingPage() {
               <p className="text-xs text-white/30">Loading deposits…</p>
             </div>
           ) : !depositRecords.length ? (
-            <div className="p-8 text-center">
-              <Wallet className="w-6 h-6 text-white/20 mx-auto mb-2" />
-              <p className="text-sm text-white/30">No deposit records found</p>
-            </div>
+            <AppState icon="command" title="No deposits yet" description="Completed staking deposits will appear here." size="drawer" />
           ) : (
             <div className="divide-y divide-white/5">
               <div className="hidden sm:grid grid-cols-4 gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
@@ -1011,10 +1009,7 @@ export default function StakingPage() {
               <p className="text-xs text-white/30">Loading withdrawals…</p>
             </div>
           ) : !withdrawalRecords.length ? (
-            <div className="p-8 text-center">
-              <Wallet className="w-6 h-6 text-white/20 mx-auto mb-2" />
-              <p className="text-sm text-white/30">No withdrawal records found</p>
-            </div>
+            <AppState icon="command" title="No withdrawals yet" description="Completed staking withdrawals will appear here." size="drawer" />
           ) : (
             <div className="divide-y divide-white/5">
               <div className="hidden sm:grid grid-cols-4 gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">

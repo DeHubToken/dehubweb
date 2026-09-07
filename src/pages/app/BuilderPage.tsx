@@ -13,6 +13,7 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AppState } from '@/components/app/AppState';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
@@ -586,7 +587,7 @@ export default function BuilderPage() {
 
             <div className="flex-1 overflow-y-auto -mx-2 px-2">
               {(projectsQuery.data?.length ?? 0) === 0 && (
-                <p className={cn('text-center text-[15px] mt-8', TEXT_DIM)}>No builds yet.</p>
+                <AppState icon="command" title="No builds yet" description="Create a build and it will appear here." size="drawer" />
               )}
               {projectsQuery.data?.map((p) => {
                 const s = statusMeta(p);
@@ -962,7 +963,7 @@ export default function BuilderPage() {
             <span className={cn('flex-1 text-left text-[13px] truncate', TEXT_DIM)}>{shareUrl}</span>
             <span className="text-[14px] font-semibold text-[#fff]">Copy</span>
           </button>
-          {files.length === 0 && <p className={cn('text-center text-[15px] py-6', TEXT_DIM)}>No files yet</p>}
+          {files.length === 0 && <AppState icon="posts" title="No files yet" description="Generated files will appear here." size="drawer" />}
           {files.map((f) => {
             const open = openFile === f.path;
             const lines = f.content.split('\n').length;

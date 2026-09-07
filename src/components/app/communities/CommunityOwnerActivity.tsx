@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { formatDistanceToNow } from 'date-fns';
 import { useTranslation } from 'react-i18next';
+import { AppState } from '@/components/app/AppState';
 
 interface CommunityJoinNotification {
   id: string;
@@ -178,11 +179,12 @@ export function CommunityOwnerActivity({ communityId }: CommunityOwnerActivityPr
 
   if (notifications.length === 0) {
     return (
-      <div className="text-center py-12">
-        <Bell className="w-8 h-8 text-zinc-600 mx-auto mb-3" />
-        <p className="text-zinc-500 text-sm">No activity yet</p>
-        <p className="text-zinc-600 text-xs mt-1">You'll be notified when someone joins your community</p>
-      </div>
+      <AppState
+        icon="notifications"
+        title="No activity yet"
+        description="New member activity will appear here."
+        size="section"
+      />
     );
   }
 
@@ -229,7 +231,7 @@ export function CommunityOwnerActivity({ communityId }: CommunityOwnerActivityPr
       )}
 
       {filtered.length === 0 && query && (
-        <p className="text-center text-xs text-zinc-500 py-6">No matches for "{query}"</p>
+        <AppState icon="search" title={`No matches for "${query}"`} kind="search-empty" size="compact" />
       )}
     </div>
   );

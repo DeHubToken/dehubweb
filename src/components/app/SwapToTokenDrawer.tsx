@@ -8,6 +8,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
+import { AppState } from '@/components/app/AppState';
 import { Input } from '@/components/ui/input';
 import { Loader2, ArrowDown, CheckCircle2, AlertCircle, CreditCard, Wallet, Plus, ChevronDown } from 'lucide-react';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
@@ -370,7 +371,7 @@ export function SwapToTokenDrawer({
             );
           })}
           {payTokens.length === 0 && (
-            <p className="text-center text-zinc-500 text-sm py-8">No tokens found on Base</p>
+            <AppState icon="search" title="No tokens found on Base" kind="search-empty" size="drawer" />
           )}
         </div>
       </DrawerContent>
