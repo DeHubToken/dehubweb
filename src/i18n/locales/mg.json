@@ -2116,6 +2116,7 @@
   "publicChatAlerts": {
     "title": "Resaka iraisana",
     "mentionTitle": "Misoratra anarana ao amin'ny karajia ho an'ny besinimaro",
+    "digest": "{{count}} hafatra vaovao avy amin'ny {{who}}: {{message}}",
     "voiceMessage": "Hafatra am-peo",
     "image": "Sary"
   },

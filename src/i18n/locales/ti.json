@@ -2095,6 +2095,8 @@
     "unavailable": "እዚ ቪድዮ እዚ ገና ኣይተራእየን ።"
   },
   "digest": {
+    "andOthers_one": "{{names}} and {{count}} ካልኦት",
+    "andOthers_other": "{{names}} and {{count}} ካልኦት",
     "someone": "ሓደ ሰብ"
   },
   "publicChatAlerts": {
