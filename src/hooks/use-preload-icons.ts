@@ -35,6 +35,11 @@ import filmstrip3dIcon from '@/assets/icons/filmstrip-3d-icon.png';
 import imageFrame3dIcon from '@/assets/icons/image-frame-3d-icon.png';
 import home3dIcon from '@/assets/icons/home-3d-icon.png';
 import comment3dIcon from '@/assets/icons/comment-3d-icon.png';
+import communityPosts3dIcon from '@/assets/icons/community-posts-3d-icon.png';
+import communityChat3dIcon from '@/assets/icons/community-chat-3d-icon.png';
+import communityEvents3dIcon from '@/assets/icons/community-events-3d-icon.png';
+import communityMembers3dIcon from '@/assets/icons/community-members-3d-icon.png';
+import communityAbout3dIcon from '@/assets/icons/community-about-3d-icon.png';
 
 // ── Feature icons ──
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
@@ -99,6 +104,8 @@ const CRITICAL_ICONS = [
 const DEFERRED_ICONS = [
   fractions3dIcon, live3dIcon, audio3dIcon, subs3dIcon, star3dIcon,
   filmstrip3dIcon, imageFrame3dIcon, home3dIcon, comment3dIcon,
+  communityPosts3dIcon, communityChat3dIcon, communityEvents3dIcon,
+  communityMembers3dIcon, communityAbout3dIcon,
   translateGlobeIcon, nailIcon, lock3dIcon,
   medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10,
   TortoiseBadge, CrabBadge, PiranhaBadge, LobsterBadge, OctopusBadge,
