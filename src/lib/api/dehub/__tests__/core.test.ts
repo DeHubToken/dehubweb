@@ -352,4 +352,46 @@ describe('refreshTokenSharedDetailed', () => {
     expect(one).toEqual(two);
     expect(two).toEqual(three);
   });
+
+  it('serializes refresh through the browser-wide lock when available', async () => {
+    localStorage.setItem('dehub_refresh_token', 'rt_valid');
+    const originalLocks = Object.getOwnPropertyDescriptor(navigator, 'locks');
+    const request = vi.fn(async (_name: string, callback: () => Promise<unknown>) => callback());
+    Object.defineProperty(navigator, 'locks', {
+      configurable: true,
+      value: { request },
+    });
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ accessToken: 'a', refreshToken: 'b', expiresIn: 900 }), { status: 200 })
+    );
+
+    try {
+      await refreshTokenSharedDetailed();
+      expect(request).toHaveBeenCalledWith('dehub-refresh-token', expect.any(Function));
+    } finally {
+      if (originalLocks) Object.defineProperty(navigator, 'locks', originalLocks);
+      else Reflect.deleteProperty(navigator, 'locks');
+    }
+  });
+
+  it('keeps a fresh pair written by a sibling tab when the stale request loses', async () => {
+    localStorage.setItem('dehub_token', 'old-access');
+    localStorage.setItem('dehub_refresh_token', 'old-refresh');
+    localStorage.setItem('dehub_wallet', '0xabc');
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async () => {
+      localStorage.setItem('dehub_token', 'new-access');
+      localStorage.setItem('dehub_refresh_token', 'new-refresh');
+      localStorage.setItem('dehub_token_expires_at', String(Date.now() + 900_000));
+      return new Response(JSON.stringify({ message: 'Refresh already completed' }), { status: 401 });
+    });
+
+    const outcome = await refreshTokenSharedDetailed();
+
+    expect(outcome.ok).toBe(true);
+    expect(outcome.tokens).toMatchObject({
+      accessToken: 'new-access',
+      refreshToken: 'new-refresh',
+    });
+    expect(localStorage.getItem('dehub_refresh_token')).toBe('new-refresh');
+  });
 });
