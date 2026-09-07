@@ -27,7 +27,7 @@ import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { useServedAds } from '@/hooks/use-ad-serving';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
-import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
+import { SORT_OPTIONS, DEFAULT_FEED_SORT, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
 import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
 
 import { useDeHubImages, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
@@ -116,7 +116,7 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
       <div className="relative">
         <GlassFilterRow
-          items={SORT_OPTIONS.map((o) => ({ key: o.label, label: t(`filters.${o.value === 'most-viewed' ? 'mostViewed' : o.value === 'most-liked' ? 'mostLiked' : o.value === 'most-comments' ? 'mostComments' : o.value}`, o.label) }))}
+          items={SORT_OPTIONS.map((o) => ({ key: o.label, label: t(o.labelKey, o.label) }))}
           activeKey={selected.label}
           onSelect={(key) => { const o = SORT_OPTIONS.find(x => x.label === key); if (o) onSelect(o); }}
         />
@@ -413,7 +413,7 @@ export function ImagesFeed({
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
   
   // Filter states - default to "Latest" - persisted to sessionStorage
-  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('images', 'sort', SORT_OPTIONS[0]);
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('images', 'sort', DEFAULT_FEED_SORT);
   const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('images', 'date', DATE_FILTER_OPTIONS[0]);
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('images');
   const { ref: fadeRef, style: fadeStyle } = useScrollFadeMask<HTMLDivElement>();
@@ -463,7 +463,7 @@ export function ImagesFeed({
   }, [toggleContentFilter, beginFilterTransition]);
   const resetAllFilters = useCallback(() => {
     beginFilterTransition();
-    setSelectedSort(SORT_OPTIONS[0]);
+    setSelectedSort(DEFAULT_FEED_SORT);
     setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
     resetContentFilters();
   }, [setSelectedSort, setSelectedUploadDate, resetContentFilters, beginFilterTransition]);
@@ -500,7 +500,7 @@ export function ImagesFeed({
     isLocked: contentFilters.locked || undefined,
     limit: 12,
     status: 'all',
-    sortBy: selectedSort.value === 'most-liked' ? 'likes' : 'createdAt',
+    sortBy: selectedSort.value === 'most-liked' ? 'likes' : selectedSort.value === 'most-tipped' ? 'tips' : 'createdAt',
     sortOrder: 'desc',
     followingOnly: isFollowingMode ? true : undefined,
     enabled: useUnifiedSource,

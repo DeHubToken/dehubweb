@@ -33,6 +33,10 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
       sortBy = 'comments';
       sortOrder = 'desc';
       break;
+    case 'by-tips':
+      sortBy = 'tips';
+      sortOrder = 'desc';
+      break;
   }
 
   const apiParams: Record<string, string | number | undefined> = {
