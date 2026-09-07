@@ -830,7 +830,17 @@
     "newNotification": "Yeni bildirim",
     "oneOther": "1 diğer kişi",
     "nOthers": "{{count}} diğer kişi",
-    "burstBody": "{{count}} yeni bildirim {{who}}'dan"
+    "burstBody": "{{count}} yeni bildirim {{who}}'dan",
+    "community": {
+      "joined": "{{name}} topluluğunuza katıldı",
+      "joinedNamed": "{{name}}“{{community}}” e katıldı",
+      "requested": "{{name}} topluluğunuza katılmak istedi",
+      "requestedNamed": "{{name}}“{{community}}” e katılmak istedi",
+      "mentioned": "{{name}} bir toplulukta sizden bahsetti",
+      "mentionedNamed": "{{name}} senden “{{community}}” de bahsetti",
+      "here": "{{name}} topluluktaki herkese mesaj gönderdi",
+      "hereNamed": "{{name}}“{{community}}” içindeki herkese mesaj gönderdi"
+    }
   },
   "leaderboard": {
     "title": "Sıralama Tablosu",
@@ -1717,7 +1727,14 @@
     "reject": "Reddet",
     "pinToProfile": "Toplulukları profile sabitle",
     "joinFirst": "Sabitlemek için önce topluluklara katılın",
-    "pinCommunity": "Topluluğu sabitle"
+    "pinCommunity": "Topluluğu sabitle",
+    "activity": "Etkinlik",
+    "activitySearch": "Etkinlik ara...",
+    "activityNew": "{{total}} yeni",
+    "activityShowMore": "Daha fazla göster ({{total}})",
+    "activityNoMatches": "\"{{query}}\" için eşleşme yok",
+    "activityEmpty": "Henüz etkinlik yok",
+    "activityEmptyDesc": "Topluluklarınızdan katılımlar, bahsedenler ve duyurular burada görünür."
   },
   "prompt": {
     "seoTitle": "Akışınızı Yönlendirin — DeHub",

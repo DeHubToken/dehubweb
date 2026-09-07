@@ -829,7 +829,17 @@
     "newNotification": "Nytt varsel",
     "oneOther": "1 annen",
     "nOthers": "{{count}} andre",
-    "burstBody": "{{count}} nye varsler fra {{who}}"
+    "burstBody": "{{count}} nye varsler fra {{who}}",
+    "community": {
+      "joined": "{{name}} ble med i fellesskapet ditt",
+      "joinedNamed": "{{name}} ble med i «{{community}}»",
+      "requested": "{{name}} spurte om å bli med i fellesskapet ditt",
+      "requestedNamed": "{{name}} spurte om å bli med i «{{community}}»",
+      "mentioned": "{{name}} nevnte deg i et fellesskap",
+      "mentionedNamed": "{{name}} nevnte deg i «{{community}}»",
+      "here": "{{name}} sendte melding til alle i fellesskapet",
+      "hereNamed": "{{name}} sendte melding til alle i «{{community}}»"
+    }
   },
   "leaderboard": {
     "title": "Toppliste",
@@ -1696,7 +1706,12 @@
     "reject": "Avslå",
     "pinToProfile": "Fest fellesskap til profilen",
     "joinFirst": "Bli med i fellesskap først for å feste dem",
-    "pinCommunity": "Fest fellesskap"
+    "pinCommunity": "Fest fellesskap",
+    "activity": "Aktivitet",
+    "activitySearch": "Søke aktivitet",
+    "activityNoMatches": "Ingen treff for «{{query}}»",
+    "activityEmpty": "Ingen aktivitet enda",
+    "activityEmptyDesc": "Medlemskap, omtaler og kunngjøringer fra fellesskapene dine vises her."
   },
   "prompt": {
     "seoTitle": "Be om feeden din — DeHub",

@@ -1696,7 +1696,12 @@
     "reject": "नामंजूर करऽ",
     "pinToProfile": "प्रोफाइल पर कम्युनिटी पिन करऽ",
     "joinFirst": "पिन करे ला पहिले कम्युनिटी से जुड़ऽ",
-    "pinCommunity": "कम्युनिटी पिन करऽ"
+    "pinCommunity": "कम्युनिटी पिन करऽ",
+    "activity": "गतिविधियां चलाई जायेंगी,",
+    "activitySearch": "खोज के जाम..",
+    "activityShowMore": "अधिक से अधिक स्कैल्प ({{total}} 0)",
+    "activityEmpty": "अभी तक जारी नहीं हई राशि",
+    "activityEmptyDesc": "येही तरह, ई एगो भ्रम है कि ई उह्हे व्यक्ति हई जे आई सुबह कक्षा में गेल रहई ।"
   },
   "prompt": {
     "seoTitle": "अहाँ के Feed मांगा — DeHub",

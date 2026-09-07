@@ -816,7 +816,17 @@
     "newNotification": "Nova obavijest",
     "oneOther": "1 drugi",
     "nOthers": "{{count}} drugih",
-    "burstBody": "{{count}} nove obavijesti od {{who}}"
+    "burstBody": "{{count}} nove obavijesti od {{who}}",
+    "community": {
+      "joined": "Korisnik{{name}} pridružio se vašoj zajednici",
+      "joinedNamed": "{{name}} se pridružio/la “{{community}}”",
+      "requested": "Korisnik{{name}} zatražio je da se pridruži vašoj zajednici",
+      "requestedNamed": "Korisnik{{name}} zatražio je da se pridruži korisniku „{{community}}”",
+      "mentioned": "{{name}} vas spominje u zajednici",
+      "mentionedNamed": "{{name}} vas spominje u “{{community}}”",
+      "here": "{{name}} šalje poruke svima u zajednici",
+      "hereNamed": "{{name}} šalje poruke svima u “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Ljestvice",
@@ -1654,7 +1664,14 @@
     "reject": "Odbij",
     "pinToProfile": "Prikvači zajednice na profil",
     "joinFirst": "Najprije se pridružite zajednicama da biste ih prikvačili",
-    "pinCommunity": "Prikvači zajednicu"
+    "pinCommunity": "Prikvači zajednicu",
+    "activity": "Aktivnost",
+    "activitySearch": "Pretraživanje aktivnosti...",
+    "activityNew": "{{total}} new",
+    "activityShowMore": "Prikaži više ({{total}})",
+    "activityNoMatches": "Nema rezultata za „{{query}}”",
+    "activityEmpty": "Još nema aktivnosti",
+    "activityEmptyDesc": "Ovdje se prikazuju članci, spominjanja i najave iz vaših zajednica."
   },
   "prompt": {
     "seoTitle": "Potaknite svoj feed — DeHub",

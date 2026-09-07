@@ -819,7 +819,10 @@
     "postRemoved": "Your post don remove",
     "newNotification": "New notification",
     "oneOther": "1 other",
-    "nOthers": "{{count}} others"
+    "nOthers": "{{count}} others",
+    "community": {
+      "joinedNamed": "{{name}} joined “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Leaderboard",
@@ -1658,7 +1661,11 @@
     "approve": "Approve",
     "reject": "Reject",
     "joinFirst": "Join communities first before you fit pin dem",
-    "pinCommunity": "Pin community"
+    "pinCommunity": "Pin community",
+    "activity": "Activity",
+    "activitySearch": "Search activity...",
+    "activityNew": "{{total}} new",
+    "activityEmpty": "No activity yet"
   },
   "prompt": {
     "seoTitle": "Tell us wetin go show for your feed — DeHub",

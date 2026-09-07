@@ -830,7 +830,17 @@
     "newNotification": "Огоҳии нав",
     "oneOther": "1 дигар",
     "nOthers": "{{count}} дигар",
-    "burstBody": "{{count}} огоҳии нав аз {{who}}"
+    "burstBody": "{{count}} огоҳии нав аз {{who}}",
+    "community": {
+      "joined": "{{name}}adin ang iyong komunidad",
+      "joinedNamed": "{{name}} ҳамроҳ шуд “{{community}}”",
+      "requested": "{{name}} request to join your community",
+      "requestedNamed": "{{name}} хоҳиш карда шуд, ки ба “{{community}}” ҳамроҳ шавад",
+      "mentioned": "{{name}} tajikngo sa iyo sa isang komunidad",
+      "mentionedNamed": "{{name}} {{community}}",
+      "here": "{{name}}info: whatsthis",
+      "hereNamed": "{{name}} mesaged all in “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Рейтинг",
@@ -1696,7 +1706,14 @@
     "reject": "Рад кардан",
     "pinToProfile": "Мустаҳкам кардани ҷамоатҳо ба профил",
     "joinFirst": "Аввал ба ҷамоатҳо ҳамроҳ шавед, то онҳоро мустаҳкам кунед",
-    "pinCommunity": "Мустаҳкам кардани ҷамоат"
+    "pinCommunity": "Мустаҳкам кардани ҷамоат",
+    "activity": "Фаъолият",
+    "activitySearch": "Фаъолияти ҷустуҷӯӣ...",
+    "activityNew": "{{total}} info: whatsthis",
+    "activityShowMore": "Намоиши бештар ({{total}})",
+    "activityNoMatches": "Не соответствующие \"{{query}}\"",
+    "activityEmpty": "Walang kasalukuyang aktib",
+    "activityEmptyDesc": "Ipinapakita sa iyong mga komunidad, mga pagtatanggap at mga abiso dito."
   },
   "prompt": {
     "seoTitle": "Вуруди худро дубора таъин кунед — DeHub",

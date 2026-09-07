@@ -841,7 +841,17 @@
     "newNotification": "नयाँ सूचना",
     "oneOther": "1 अन्य",
     "nOthers": "{{count}} अन्य",
-    "burstBody": "{{count}} नयाँ सूचनाहरू {{who}} बाट"
+    "burstBody": "{{count}} नयाँ सूचनाहरू {{who}} बाट",
+    "community": {
+      "joined": "{{name}} तपाईंको समुदायमा सामेल भए",
+      "joinedNamed": "{{name}} सामेल भए \"{{community}}\"",
+      "requested": "{{name}} तपाईंको समुदायमा सामेल हुन आग्रह गरियो",
+      "requestedNamed": "{{name}}लाई \"{{community}}\" मा सामेल हुन अनुरोध गरियो",
+      "mentioned": "{{name}} ले तपाईंलाई एउटा समुदायमा उल्लेख गर्नुभयो",
+      "mentionedNamed": "{{name}}ले तपाईंलाई \"{{community}}\" मा उल्लेख गर्नुभयो",
+      "here": "{{name}} समुदायका सबैलाई सन्देश पठाइयो",
+      "hereNamed": "{{name}}ले \"{{community}}\" मा सबैलाई सन्देश पठायो"
+    }
   },
   "leaderboard": {
     "title": "लिडरबोर्ड",
@@ -1724,7 +1734,14 @@
     "reject": "अस्वीकार गर्नुहोस्",
     "pinToProfile": "समुदायहरूलाई प्रोफाइलमा पिन गर्नुहोस्",
     "joinFirst": "पिन गर्न पहिले समुदायहरूमा सामेल हुनुहोस्",
-    "pinCommunity": "समुदाय पिन गर्नुहोस्"
+    "pinCommunity": "समुदाय पिन गर्नुहोस्",
+    "activity": "गतिविधि",
+    "activitySearch": "गतिविधि खोजी गर्नुहोस्...",
+    "activityNew": "{{total}} नयाँ",
+    "activityShowMore": "थप देखाउनुहोस्({{total}})",
+    "activityNoMatches": "\"{{query}}\" का लागि कुनै मेल खाँदैन",
+    "activityEmpty": "अहिलेसम्म कुनै गतिविधि छैन",
+    "activityEmptyDesc": "तपाईंको समुदायका सामेलहरू, उल्लेखहरू र घोषणाहरू यहाँ देखा पर्छन् ।"
   },
   "prompt": {
     "seoTitle": "आफ्नो फिड प्रम्प्ट गर्नुहोस् — DeHub",

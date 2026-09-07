@@ -843,7 +843,17 @@
     "newNotification": "การแจ้งเตือนใหม่",
     "oneOther": "อีก 1 คน",
     "nOthers": "อีก {{count}} คน",
-    "burstBody": "{{count}} การแจ้งเตือนใหม่จาก {{who}}"
+    "burstBody": "{{count}} การแจ้งเตือนใหม่จาก {{who}}",
+    "community": {
+      "joined": "{{name}} เข้าร่วมชุมชนของคุณ",
+      "joinedNamed": "{{name}} เข้าร่วม “{{community}}”",
+      "requested": "{{name}} ขอเข้าร่วมชุมชนของคุณ",
+      "requestedNamed": "{{name}} ขอเข้าร่วม “{{community}}”",
+      "mentioned": "{{name}} กล่าวถึงคุณในชุมชน",
+      "mentionedNamed": "{{name}} กล่าวถึงคุณใน “{{community}}”",
+      "here": "{{name}} ส่งข้อความถึงทุกคนในชุมชน",
+      "hereNamed": "{{name}} ส่งข้อความถึงทุกคนใน “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "ลีดเดอร์บอร์ด",
@@ -1227,7 +1237,14 @@
     "reject": "ปฏิเสธ",
     "pinToProfile": "ปักหมุดชุมชนไปยังโปรไฟล์",
     "joinFirst": "เข้าร่วมชุมชนก่อนจึงจะปักหมุดได้",
-    "pinCommunity": "ปักหมุดชุมชน"
+    "pinCommunity": "ปักหมุดชุมชน",
+    "activity": "กิจกรรม",
+    "activitySearch": "ค้นหากิจกรรม...",
+    "activityNew": "{{total}} ใหม่",
+    "activityShowMore": "แสดงเพิ่มเติม ({{total}})",
+    "activityNoMatches": "ไม่มีรายการที่ตรงกันสำหรับ \"{{query}}\"",
+    "activityEmpty": "ยังไม่มีกิจกรรม",
+    "activityEmptyDesc": "การเข้าร่วมการกล่าวถึงและการประกาศจากชุมชนของคุณจะปรากฏที่นี่"
   },
   "prompt": {
     "seoTitle": "พร้อมท์ฟีดของคุณ — DeHub",

@@ -831,7 +831,17 @@
     "newNotification": "Isaziso esisha",
     "oneOther": "omunye omu-1",
     "nOthers": "abanye abangu-{{count}}",
-    "burstBody": "{{count}} izaziso ezintsha ezivela ku {{who}}"
+    "burstBody": "{{count}} izaziso ezintsha ezivela ku {{who}}",
+    "community": {
+      "joined": "{{name}} ujoyine umphakathi wakini",
+      "joinedNamed": "{{name}} ujoyine \"{{community}}\"",
+      "requested": "{{name}} ucele ukujoyina umphakathi wakini",
+      "requestedNamed": "{{name}} ucele ukujoyina \"{{community}}\"",
+      "mentioned": "{{name}} ukhulume ngawe emphakathini",
+      "mentionedNamed": "{{name}} kukushilo kokuthi “{{community}}”",
+      "here": "{{name}} uthumele umyalezo kuwo wonke umuntu emphakathini",
+      "hereNamed": "{{name}} uthumele umyalezo kuwo wonke umuntu kokuthi “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Bhodi Yabaholi",
@@ -1728,7 +1738,14 @@
     "reject": "Yenqaba",
     "pinToProfile": "Phina imiphakathi ephrofayelini",
     "joinFirst": "Joyina imiphakathi kuqala ukuze uyiphine",
-    "pinCommunity": "Phina umphakathi"
+    "pinCommunity": "Phina umphakathi",
+    "activity": "Umsebenzi",
+    "activitySearch": "Umsebenzi wokusesha...",
+    "activityNew": "{{total}}@ new",
+    "activityShowMore": "Bonisa okwengeziwe ({{total}})",
+    "activityNoMatches": "Akukho okufanayo kwe- \"{{query}}\"",
+    "activityEmpty": "Awukho umsebenzi okwamanje",
+    "activityEmptyDesc": "Ukujoyina, ukukhuluma kanye nezimemezelo ezivela emiphakathini yakini ziyavela lapha."
   },
   "prompt": {
     "seoTitle": "Yenza i-feed yakho — DeHub",

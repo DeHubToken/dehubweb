@@ -830,7 +830,16 @@
     "newNotification": "ਨਵੀਂ ਸੂਚਨਾ",
     "oneOther": "1 ਹੋਰ",
     "nOthers": "{{count}} ਹੋਰ",
-    "burstBody": "{{count}} ਨਵੀਆਂ ਸੂਚਨਾਵਾਂ {{who}} ਤੋਂ"
+    "burstBody": "{{count}} ਨਵੀਆਂ ਸੂਚਨਾਵਾਂ {{who}} ਤੋਂ",
+    "community": {
+      "joined": "{{name}} ਤੁਹਾਡੀ ਕਮਿ communityਨਿਟੀ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਏ",
+      "requested": "{{name}} ਨੂੰ ਤੁਹਾਡੀ ਕਮਿ communityਨਿਟੀ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਣ ਲਈ ਕਿਹਾ ਗਿਆ",
+      "requestedNamed": "{{name}} ਨੂੰ ਸ਼ਾਮਲ ਹੋਣ ਲਈ ਕਿਹਾ ਗਿਆ “{{community}}”",
+      "mentioned": "{{name}} ਇੱਕ ਕਮਿ communityਨਿਟੀ ਵਿੱਚ ਤੁਹਾਡਾ ਜ਼ਿਕਰ ਕੀਤਾ",
+      "mentionedNamed": "{{name}} ਨੇ ਤੁਹਾਨੂੰ “{{community}}” ਵਿੱਚ ਜ਼ਿਕਰ ਕੀਤਾ",
+      "here": "{{name}} ਕਮਿ communityਨਿਟੀ ਵਿੱਚ ਹਰੇਕ ਨੂੰ ਮੈਸੇਜ ਕੀਤਾ",
+      "hereNamed": "{{name}} ਸਾਰਿਆਂ ਨੂੰ “{{community}}” ਵਿੱਚ ਸੁਨੇਹਾ ਭੇਜਿਆ"
+    }
   },
   "leaderboard": {
     "title": "ਲੀਡਰ ਬੋਰਡ",
@@ -1678,7 +1687,14 @@
     "approve": "ਮਨਜ਼ੂਰ ਕਰੋ",
     "reject": "ਰੱਦ ਕਰੋ",
     "joinFirst": "ਪਿੰਨ ਕਰਨ ਲਈ ਪਹਿਲਾਂ ਭਾਈਚਾਰਿਆਂ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ",
-    "pinCommunity": "ਭਾਈਚਾਰਾ ਪਿੰਨ ਕਰੋ"
+    "pinCommunity": "ਭਾਈਚਾਰਾ ਪਿੰਨ ਕਰੋ",
+    "activity": "ਸਰਗਰਮੀ",
+    "activitySearch": "ਸਰਗਰਮੀ ਖੋਜੋ...",
+    "activityNew": "{{total}} ਨਵਾਂ",
+    "activityShowMore": "ਹੋਰ ਦਿਖਾਓ ({{total}})",
+    "activityNoMatches": "\"{{query}}\" ਲਈ ਕੋਈ ਮੇਲ ਨਹੀਂ",
+    "activityEmpty": "ਅਜੇ ਤੱਕ ਕੋਈ ਗਤੀਵਿਧੀ ਨਹੀਂ ਹੈ",
+    "activityEmptyDesc": "ਸ਼ਾਮਲ ਹੋ ਜਾਂਦਾ ਹੈ, ਤੁਹਾਡੇ ਭਾਈਚਾਰਿਆਂ ਦੇ ਜ਼ਿਕਰ ਅਤੇ ਘੋਸ਼ਣਾਵਾਂ ਇੱਥੇ ਦਿਖਾਈ ਦਿੰਦੀਆਂ ਹਨ."
   },
   "prompt": {
     "seoTitle": "ਆਪਣੀ ਫੀਡ ਨੂੰ ਪ੍ਰੋਂਪਟ ਕਰੋ — DeHub",

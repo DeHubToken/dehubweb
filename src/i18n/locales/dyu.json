@@ -829,7 +829,13 @@
     "postRemoved": "I bɛɛ kɔrɔbɔ",
     "newNotification": "Kɔrɔbɔ",
     "oneOther": "1 kɔrɔbɔ",
-    "nOthers": "{{count}} kɔrɔbɔ"
+    "nOthers": "{{count}} kɔrɔbɔ",
+    "community": {
+      "joinedNamed": "{{name}} joined {{community}}",
+      "requested": "{{name}} ka don i ka sigida la",
+      "here": "{{name}} Messaging all in the community",
+      "hereNamed": "{{name}} Messaging everyone in {{community}}"
+    }
   },
   "leaderboard": {
     "title": "Kɛlɛya",
@@ -1673,7 +1679,14 @@
     "approve": "Sɔn",
     "reject": "Ban",
     "joinFirst": "Jɛkuluw la don fɔlɔ walisa ka u sigi",
-    "pinCommunity": "Jɛkulu sigi"
+    "pinCommunity": "Jɛkulu sigi",
+    "activity": "Baara kɛcogo",
+    "activitySearch": "O kama, a tun ka di a ye ka taga",
+    "activityNew": "{{total}} new",
+    "activityShowMore": "Ka dɔ fara a kan ({{total}})",
+    "activityNoMatches": "No Alerts for \"{{query}}\"",
+    "activityEmpty": "Baara tɛ yen tugun",
+    "activityEmptyDesc": "I ka jɛnkuluw ka kunnafoniw, kunnafoniw ani kunnafoniw be sɔrɔ yan."
   },
   "prompt": {
     "seoTitle": "Fiyɛri i ka duniŋkɛ — DeHub",

@@ -821,7 +821,17 @@
     "newNotification": "Nor tsanoutsagroum",
     "oneOther": "1 ourishe",
     "nOthers": "{{count}} ourishner",
-    "burstBody": "{{count}} նոր ծանուցում {{who}}-ից"
+    "burstBody": "{{count}} նոր ծանուցում {{who}}-ից",
+    "community": {
+      "joined": "{{name}}@ միացավ ձեր համայնքին",
+      "joinedNamed": "{{name}}@ միացել է «@{{community}}»- ին",
+      "requested": "{{name}}-ը խնդրել է միանալ ձեր համայնքին",
+      "requestedNamed": "{{name}}@-ը խնդրեց միանալ «@{{community}}»-ին",
+      "mentioned": "{{name}}-ը նշել է ձեզ համայնքում",
+      "mentionedNamed": "{{name}}-ը նշել է ձեզ «@{{community}}»- ում",
+      "here": "{{name}}@ հաղորդագրություն ուղարկեց համայնքի բոլոր անդամներին",
+      "hereNamed": "{{name}}@-ը բոլորին հաղորդագրություն է ուղարկել «@{{community}}»- ում"
+    }
   },
   "leaderboard": {
     "title": "Dasakargoum",
@@ -1659,7 +1669,14 @@
     "reject": "Մերժել",
     "pinToProfile": "Ամրացնել համայնքները պրոֆիլում",
     "joinFirst": "Նախ միացեք համայնքներին՝ դրանք ամրացնելու համար",
-    "pinCommunity": "Ամրացնել համայնքը"
+    "pinCommunity": "Ամրացնել համայնքը",
+    "activity": "Գործունեություն",
+    "activitySearch": "Որոնման գործողություն...",
+    "activityNew": "{{total}}@ new",
+    "activityShowMore": "Ցույց տալ ավելին ({{total}})",
+    "activityNoMatches": "«{{query}}»- ի համար համընկնումներ չկան",
+    "activityEmpty": "Գործունեություն դեռ չկա",
+    "activityEmptyDesc": "Ձեր համայնքների միությունները, հիշատակումները և հայտարարությունները երևում են այստեղ ։"
   },
   "prompt": {
     "seoTitle": "Ստեղծեք Ձեր լրահոսը — DeHub",

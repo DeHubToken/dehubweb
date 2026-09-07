@@ -830,7 +830,17 @@
     "newNotification": "Sabuwar sanarwa",
     "oneOther": "1 daban",
     "nOthers": "{{count}} dabam",
-    "burstBody": "{{count}} sabbin sanarwa daga {{who}}"
+    "burstBody": "{{count}} sabbin sanarwa daga {{who}}",
+    "community": {
+      "joined": "{{name}} shiga cikin al'ummar ku",
+      "joinedNamed": "{{name}} shiga “{{community}}@”",
+      "requested": "{{name}} an nemi shiga cikin al'ummar ku",
+      "requestedNamed": "{{name}} ya nemi shiga “{{community}}”",
+      "mentioned": "{{name}} ya ambace ku a cikin al'umma",
+      "mentionedNamed": "{{name}} ya ambace ku a “{{community}}”",
+      "here": "{{name}} saƙon kowa a cikin al'umma",
+      "hereNamed": "{{name}} saƙon kowa a cikin “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Jadawalin Matsayi",
@@ -1696,7 +1706,14 @@
     "reject": "Ƙi",
     "pinToProfile": "Manna al'ummomi a bayanan kai",
     "joinFirst": "Fara shiga al'ummomi kafin ka manna su",
-    "pinCommunity": "Manna al'umma"
+    "pinCommunity": "Manna al'umma",
+    "activity": "Aiki",
+    "activitySearch": "Ayyukan bincike...",
+    "activityNew": "{{total}} sabon",
+    "activityShowMore": "Nuna ƙarin ({{total}})",
+    "activityNoMatches": "Babu jituwa don \"{{query}}\"",
+    "activityEmpty": "Babu wani aiki tukuna",
+    "activityEmptyDesc": "Оооооооооооооооооооооооооооооооооооооооооооооооооооооооовввввввввввввввввввввввв"
   },
   "prompt": {
     "seoTitle": "Fadakar da abincinka - DeHub",

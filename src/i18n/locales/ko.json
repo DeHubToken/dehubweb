@@ -829,7 +829,17 @@
     "newNotification": "새 알림",
     "oneOther": "1명",
     "nOthers": "{{count}}명",
-    "burstBody": "{{count}}개의 새 알림 {{who}}"
+    "burstBody": "{{count}}개의 새 알림 {{who}}",
+    "community": {
+      "joined": "{{name}} 님이 회원님의 커뮤니티에 가입했습니다",
+      "joinedNamed": "{{name}} 님이 “{{community}}” 에 가입했습니다",
+      "requested": "{{name}} 님이 커뮤니티 가입을 요청했습니다",
+      "requestedNamed": "{{name}} 님이 “{{community}}” 에 가입을 요청했습니다",
+      "mentioned": "{{name}} 님이 커뮤니티에서 회원님을 멘션했습니다",
+      "mentionedNamed": "{{name}} 님이 “{{community}}” 에서 회원님을 멘션했습니다",
+      "here": "{{name}} 님이 커뮤니티의 모든 사람에게 메시지를 보냈습니다.",
+      "hereNamed": "{{name}} 님이 '{{community}}' 의 모든 사람에게 메시지를 보냈습니다."
+    }
   },
   "leaderboard": {
     "title": "리더보드",
@@ -1719,7 +1729,13 @@
     "reject": "거절",
     "pinToProfile": "프로필에 커뮤니티 고정",
     "joinFirst": "고정하려면 먼저 커뮤니티에 가입하세요",
-    "pinCommunity": "커뮤니티 고정"
+    "pinCommunity": "커뮤니티 고정",
+    "activity": "활동",
+    "activitySearch": "활동 검색...",
+    "activityShowMore": "더 보기 ({{total}})",
+    "activityNoMatches": "\"{{query}}\" 와 (과) 일치하는 항목이 없습니다",
+    "activityEmpty": "아직 활동 없음",
+    "activityEmptyDesc": "커뮤니티의 가입, 멘션 및 공지 사항이 여기에 표시됩니다."
   },
   "prompt": {
     "seoTitle": "피드에 메시지 보내기 — DeHub",

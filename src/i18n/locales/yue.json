@@ -829,7 +829,17 @@
     "newNotification": "新通知",
     "oneOther": "1位其他人",
     "nOthers": "{{count}}位其他人",
-    "burstBody": "{{count}} 個新通知來自 {{who}}"
+    "burstBody": "{{count}} 個新通知來自 {{who}}",
+    "community": {
+      "joined": "{{name}} 加入咗你嘅社群",
+      "joinedNamed": "{{name}} 加入 “ {{community}} ”",
+      "requested": "{{name}} 要求加入你嘅社群",
+      "requestedNamed": "{{name}} 要求加入 “ {{community}} ”",
+      "mentioned": "{{name}} 喺社區入面提過你",
+      "mentionedNamed": "{{name}} 喺「 {{community}} 」入面提過你",
+      "here": "{{name}} 留言畀社區入面嘅每個人",
+      "hereNamed": "{{name}} 喺「 {{community}} 」入面留言畀所有人"
+    }
   },
   "leaderboard": {
     "title": "排行榜",
@@ -1696,7 +1706,14 @@
     "reject": "拒絕",
     "pinToProfile": "將社群置頂喺個人檔案",
     "joinFirst": "要先加入社群先可以置頂",
-    "pinCommunity": "置頂社群"
+    "pinCommunity": "置頂社群",
+    "activity": "活動",
+    "activitySearch": "搜尋活動 …",
+    "activityNew": "{{total}} 新",
+    "activityShowMore": "顯示更多（ {{total}} ）",
+    "activityNoMatches": "「 {{query}} 」冇匹配",
+    "activityEmpty": "仲未有活動",
+    "activityEmptyDesc": "你嘅社群嘅加入、提及同公告會顯示喺呢度。"
   },
   "prompt": {
     "seoTitle": "提示你的訂閱 — DeHub",

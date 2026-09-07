@@ -825,7 +825,17 @@
     "postRemoved": "Your post don remove",
     "newNotification": "New notification",
     "oneOther": "1 other",
-    "nOthers": "{{count}} others"
+    "nOthers": "{{count}} others",
+    "community": {
+      "joined": "{{name}} join your community",
+      "joinedNamed": "{{name}} join “{{community}}”",
+      "requested": "{{name}} ask to join your community",
+      "requestedNamed": "{{name}} ask to join “{{community}}”",
+      "mentioned": "{{name}} mention you for community",
+      "mentionedNamed": "{{name}} mention you for “{{community}}”",
+      "here": "{{name}} send message to everybody for community",
+      "hereNamed": "{{name}} send message to everybody for “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Leaderboards",
@@ -1662,7 +1672,11 @@
     "approve": "Approve",
     "reject": "Reject",
     "joinFirst": "Join community dem fes bifo yu fit pin dem",
-    "pinCommunity": "Pin community"
+    "pinCommunity": "Pin community",
+    "activity": "Activity",
+    "activitySearch": "Search activity...",
+    "activityNew": "{{total}} new",
+    "activityEmpty": "No activity yet"
   },
   "prompt": {
     "seoTitle": "Tell your feed — DeHub",

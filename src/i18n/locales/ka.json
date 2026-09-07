@@ -847,7 +847,17 @@
     "newNotification": "ახალი შეტყობინება",
     "oneOther": "1 სხვა",
     "nOthers": "{{count}} სხვა",
-    "burstBody": "{{count}} ახალი შეტყობინება {{who}}-ისგან"
+    "burstBody": "{{count}} ახალი შეტყობინება {{who}}-ისგან",
+    "community": {
+      "joined": "{{name}} შეუერთდა თქვენს გაერთიანებას",
+      "joinedNamed": "{{name}} შეუერთდა „{{community}}“",
+      "requested": "{{name}} ითხოვს გაერთიანებაში გაწევრიანებას",
+      "requestedNamed": "{{name}}-მა მოითხოვა „{{community}} @“ -ში გაწევრიანება",
+      "mentioned": "{{name}} @ მოგიხსენიათ გაერთიანებაში",
+      "mentionedNamed": "{{name}} @ მოგიხსენიათ „{{community}}“ -ში",
+      "here": "{{name}} მესიჯი მისწერა გაერთიანების ყველა წევრს",
+      "hereNamed": "{{name}} მესიჯი ყველასთვის: „{{community}}“"
+    }
   },
   "leaderboard": {
     "title": "რეიტინგი",
@@ -1696,7 +1706,13 @@
     "approve": "დამტკიცება",
     "reject": "უარყოფა",
     "joinFirst": "ჯერ შეუერთდით საზოგადოებებს, რომ მიამაგროთ",
-    "pinCommunity": "საზოგადოების მიმაგრება"
+    "pinCommunity": "საზოგადოების მიმაგრება",
+    "activity": "Აქტივობა",
+    "activitySearch": "Ძიების აქტივობა...",
+    "activityShowMore": "Მეტის ჩვენება ({{total}})",
+    "activityNoMatches": "„{{query}}“ არ ემთხვევა",
+    "activityEmpty": "Აქტივობა ჯერ არ არის",
+    "activityEmptyDesc": "Აქ აისახება თქვენი გაერთიანებების წევრების განცხადებები, შენიშვნები და განცხადებები."
   },
   "prompt": {
     "seoTitle": "მოითხოვეთ თქვენი ფიდი — DeHub",

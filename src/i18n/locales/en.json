@@ -830,7 +830,17 @@
     "newNotification": "New notification",
     "oneOther": "1 other",
     "nOthers": "{{count}} others",
-    "burstBody": "{{count}} new notifications from {{who}}"
+    "burstBody": "{{count}} new notifications from {{who}}",
+    "community": {
+      "joined": "{{name}} joined your community",
+      "joinedNamed": "{{name}} joined “{{community}}”",
+      "requested": "{{name}} asked to join your community",
+      "requestedNamed": "{{name}} asked to join “{{community}}”",
+      "mentioned": "{{name}} mentioned you in a community",
+      "mentionedNamed": "{{name}} mentioned you in “{{community}}”",
+      "here": "{{name}} messaged everyone in the community",
+      "hereNamed": "{{name}} messaged everyone in “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "Leaderboards",
@@ -1717,7 +1727,14 @@
     "reject": "Reject",
     "pinToProfile": "Pin communities to profile",
     "joinFirst": "Join communities first to pin them",
-    "pinCommunity": "Pin community"
+    "pinCommunity": "Pin community",
+    "activity": "Activity",
+    "activitySearch": "Search activity...",
+    "activityNew": "{{total}} new",
+    "activityShowMore": "Show more ({{total}})",
+    "activityNoMatches": "No matches for \"{{query}}\"",
+    "activityEmpty": "No activity yet",
+    "activityEmptyDesc": "Joins, mentions and announcements from your communities show up here."
   },
   "prompt": {
     "seoTitle": "Prompt your feed — DeHub",

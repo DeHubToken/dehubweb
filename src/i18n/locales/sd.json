@@ -829,7 +829,16 @@
     "newNotification": "نئين اطلاع",
     "oneOther": "1 ٻيو",
     "nOthers": "{{count}} ٻيا",
-    "burstBody": "{{count}} نوان نوٽيفڪيشن {{who}} کان"
+    "burstBody": "{{count}} نوان نوٽيفڪيشن {{who}} کان",
+    "community": {
+      "joined": "{{name}} توهان جي ڪميونٽي ۾ شامل ٿيو",
+      "joinedNamed": "{{name}} شامل ٿيو “{{community}}",
+      "requested": "{{name}} توهان جي ڪميونٽي ۾ شامل ٿيڻ لاءِ چيو",
+      "requestedNamed": "{{name}} شامل ٿيڻ لاءِ چيو “{{community}}",
+      "mentioned": "{{name}} هڪ ڪميونٽي ۾ توهان جو ذڪر ڪيو",
+      "mentionedNamed": "{{name}} ۾ توهان جو ذڪر ڪيو “{{community}}",
+      "here": "{{name}} برادري ۾ سڀني کي پيغام موڪليو"
+    }
   },
   "leaderboard": {
     "title": "ليڊربورڊ",
@@ -1673,7 +1682,14 @@
     "approve": "منظور ڪريو",
     "reject": "رد ڪريو",
     "joinFirst": "پن ڪرڻ لاءِ پهريان ڪميونٽيز ۾ شامل ٿيو",
-    "pinCommunity": "ڪميونٽي پن ڪريو"
+    "pinCommunity": "ڪميونٽي پن ڪريو",
+    "activity": "سرگرمي",
+    "activitySearch": "سرگرمي ڳوليو...",
+    "activityNew": "{{total}} نئون",
+    "activityShowMore": "وڌيڪ ڏيکاريو ({{total}})",
+    "activityNoMatches": "\"{{query}}\" لاءِ ڪوبه ميچ ناهي",
+    "activityEmpty": "اڃان تائين ڪابه سرگرمي ناهي",
+    "activityEmptyDesc": "شامل ٿيو، توهان جي برادرين مان ذڪر ۽ اعلان هتي ظاهر ٿيندا آهن."
   },
   "prompt": {
     "seoTitle": "پنھنجي فيڊ کي تيز ڪريو — DeHub",

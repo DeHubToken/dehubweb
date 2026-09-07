@@ -830,7 +830,17 @@
     "newNotification": "إشعار جديد",
     "oneOther": "١ ثاني",
     "nOthers": "{{count}} ثانيين",
-    "burstBody": "{{count}} إشعارات جديدة من {{who}}"
+    "burstBody": "{{count}} إشعارات جديدة من {{who}}",
+    "community": {
+      "joined": "{{name}} انضم لمجتمعك",
+      "joinedNamed": "{{name}} انضم لـ “{{community}}”",
+      "requested": "{{name}} طلب الانضمام لمجتمعك",
+      "requestedNamed": "{{name}} طلب الانضمام لـ “{{community}}”",
+      "mentioned": "{{name}} ذكرك في مجتمع",
+      "mentionedNamed": "{{name}} ذكرك في “{{community}}”",
+      "here": "{{name}} دز رسالة للكل بالمجتمع",
+      "hereNamed": "{{name}} دز رسالة للكل بـ “{{community}}”"
+    }
   },
   "leaderboard": {
     "title": "لوحة المتصدرين",
@@ -1689,7 +1699,14 @@
     "reject": "ارفض",
     "pinToProfile": "ثبّت المجتمعات بالملف الشخصي",
     "joinFirst": "انضم للمجتمعات أول حتى تكدر تثبتها",
-    "pinCommunity": "ثبّت المجتمع"
+    "pinCommunity": "ثبّت المجتمع",
+    "activity": "نشاط",
+    "activitySearch": "ابحث عن نشاط...",
+    "activityNew": "{{total}} جديد",
+    "activityShowMore": "عرض المزيد ({{total}})",
+    "activityNoMatches": "لا توجد نتائج لـ \"{{query}}\"",
+    "activityEmpty": "لا يوجد نشاط بعد",
+    "activityEmptyDesc": "تظهر هنا الانضمامات والإشارات والإعلانات من مجتمعاتك."
   },
   "prompt": {
     "seoTitle": "اطلب محتواك — DeHub",

@@ -916,7 +916,17 @@
     "subscribedToYou": "{{name}} তোমারে সাবস্ক্রাইব করসে",
     "repostedPost": "{{name}} তোমার পোস্ট রিপোস্ট করসে",
     "quotedPost": "{{name}} তোমার পোস্ট কোট করসে",
-    "videoMilestone": "তোমার ভিডিও মাইলস্টোনে পৌছসে!"
+    "videoMilestone": "তোমার ভিডিও মাইলস্টোনে পৌছসে!",
+    "community": {
+      "joined": "{{name}} আপনার কমিউনিটিতে যোগ দিয়েছেন",
+      "joinedNamed": "{{name}} “{{community}}” কমিউনিটিতে যোগ দিয়েছেন",
+      "requested": "{{name}} আপনার কমিউনিটিতে যোগ দেওয়ার জন্য অনুরোধ করেছেন",
+      "requestedNamed": "{{name}} “{{community}}” কমিউনিটিতে যোগ দেওয়ার জন্য অনুরোধ করেছেন",
+      "mentioned": "{{name}} আপনাকে একটি কমিউনিটিতে উল্লেখ করেছেন",
+      "mentionedNamed": "{{name}} আপনাকে “{{community}}” কমিউনিটিতে উল্লেখ করেছেন",
+      "here": "{{name}} কমিউনিটির সবাইকে মেসেজ করেছেন",
+      "hereNamed": "{{name}} “{{community}}” কমিউনিটির সবাইকে মেসেজ করেছেন"
+    }
   },
   "leaderboard": {
     "title": "লিডার বোর্ড",
@@ -1860,7 +1870,14 @@
     "reject": "বাতিল করো",
     "pinToProfile": "প্রোফাইলো কমিউনিটি পিন করো",
     "joinFirst": "পিন করতে অইলে আগে কমিউনিটিত যোগ দেও",
-    "pinCommunity": "কমিউনিটি পিন করো"
+    "pinCommunity": "কমিউনিটি পিন করো",
+    "activity": "কাম",
+    "activitySearch": "খোঁজ কাম...",
+    "activityNew": "{{total}} নতুন",
+    "activityShowMore": "আরও দেখান ({{total}})",
+    "activityNoMatches": "\"{{query}}\" এর জন্য কোন মিল নেই",
+    "activityEmpty": "এখনও কোন কাম নেই",
+    "activityEmptyDesc": "আপনার কমিউনিটি থেকে জয়েন, মেনশন এবং ঘোষণা এখানে দেখা যাবে।"
   },
   "prompt": {
     "seoTitle": "আপনার ফিড নির্দেশ করুন — DeHub",

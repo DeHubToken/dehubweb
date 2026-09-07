@@ -830,7 +830,13 @@
     "newNotification": "Ọkwa ọhụrụ",
     "oneOther": "1 ọzọ",
     "nOthers": "{{count}} ndị ọzọ",
-    "burstBody": "{{count}} ngosi ọhụrụ sitere na {{who}}"
+    "burstBody": "{{count}} ngosi ọhụrụ sitere na {{who}}",
+    "community": {
+      "joined": "{{name}} sonyeere obodo gị",
+      "requested": "{{name}} jụrụ isonyere obodo gị",
+      "requestedNamed": "{{name}} jụrụ isonyere \"{{community}}\"",
+      "hereNamed": "{{name}} ozi onye ọ bụla na \"{{community}}\""
+    }
   },
   "leaderboard": {
     "title": "Ndepụta Ọkwa",
@@ -1675,7 +1681,14 @@
     "approve": "Kwado",
     "reject": "Jụ",
     "joinFirst": "Sonye n'obodo tupu ịkenye ha",
-    "pinCommunity": "Kenye obodo"
+    "pinCommunity": "Kenye obodo",
+    "activity": "Ọrụ",
+    "activitySearch": "Omenchọgharị...",
+    "activityNew": "{{total}} new",
+    "activityShowMore": "Gosi ihe ({{total}})",
+    "activityNoMatches": "Enweghị egwuregwu maka \"{{query}}\"",
+    "activityEmpty": "Enweghị ọrụ ma",
+    "activityEmptyDesc": "Sonyere, kpọtụrụ aha na ọkwa sitere n 'obodo gị na-egosi ebe a."
   },
   "prompt": {
     "seoTitle": "Nye nri gị—DeHub",

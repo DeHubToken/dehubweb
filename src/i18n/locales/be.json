@@ -833,7 +833,17 @@
     "newNotification": "Новае апавяшчэнне",
     "oneOther": "яшчэ 1",
     "nOthers": "яшчэ {{count}}",
-    "burstBody": "{{count}} новых апавяшчэнняў ад {{who}}"
+    "burstBody": "{{count}} новых апавяшчэнняў ад {{who}}",
+    "community": {
+      "joined": "{{name}} далучыўся да вашай суполкі",
+      "joinedNamed": "{{name}} далучана “{{community}}”",
+      "requested": "{{name}} папрасілі далучыцца да вашай суполкі",
+      "requestedNamed": "{{name}} папрасіў далучыцца да “{{community}}”",
+      "mentioned": "{{name}} згадваў вас у супольнасці",
+      "mentionedNamed": "{{name}} згадваецца ў «{{community}}»",
+      "here": "{{name}} паведамляў усім у супольнасці",
+      "hereNamed": "{{name}} паведамляў усім у «{{community}}»"
+    }
   },
   "leaderboard": {
     "title": "Табліца лідараў",
@@ -1641,7 +1651,13 @@
     "reject": "Адхіліць",
     "pinToProfile": "Замацаваць суполкі ў профілі",
     "joinFirst": "Каб замацаваць суполкі, спачатку далучыцеся да іх",
-    "pinCommunity": "Замацаваць суполку"
+    "pinCommunity": "Замацаваць суполку",
+    "activity": "Дзейнасць",
+    "activitySearch": "Актыўнасць пошуку...",
+    "activityShowMore": "Паказаць больш ({{total}})",
+    "activityNoMatches": "Няма супадзенняў для \"{{query}}\"",
+    "activityEmpty": "Актыўнасці пакуль няма",
+    "activityEmptyDesc": "Далучайцеся, згадкі і аб 'явы з вашых супольнасцяў з' яўляюцца тут."
   },
   "prompt": {
     "seoTitle": "Сфармуйце сваю стужку — DeHub",

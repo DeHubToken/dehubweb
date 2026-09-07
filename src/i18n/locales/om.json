@@ -843,7 +843,17 @@
     "newNotification": "Beeksisa Haaraa",
     "oneOther": "1 other",
     "nOthers": "{{count}} others",
-    "burstBody": "{{count}} beeksisa haaraa {{who}} irraa"
+    "burstBody": "{{count}} beeksisa haaraa {{who}} irraa",
+    "community": {
+      "joined": "{{name}} hawaasa keessanitti makame",
+      "joinedNamed": "{{name}} “{{community}}”tti makame.",
+      "requested": "{{name}} hawaasa keessanitti makamuuf gaafatan",
+      "requestedNamed": "{{name}} “{{community}}”tti akka makamaniif gaafatan.",
+      "mentioned": "{{name}} hawaasa tokko keessatti si kaase",
+      "mentionedNamed": "{{name}} “{{community}}” keessatti si kaase.",
+      "here": "{{name}} hawaasa keessa jiru hundaaf ergaa dabarseera",
+      "hereNamed": "{{name}} “{{community}}” jechuun hundaaf ergaa dabarseera."
+    }
   },
   "leaderboard": {
     "title": "Sadarkaa",
@@ -1710,7 +1720,14 @@
     "reject": "Didi",
     "pinToProfile": "Hawaasota piroofaayilii irratti maxxansi",
     "joinFirst": "Isaan maxxansuuf dursa hawaasotatti makami",
-    "pinCommunity": "Hawaasa maxxansi"
+    "pinCommunity": "Hawaasa maxxansi",
+    "activity": "Hojii",
+    "activitySearch": "Sochii barbaacha...",
+    "activityNew": "{{total}} haaraa",
+    "activityShowMore": "Dabalata agarsiisi ({{total}})",
+    "activityNoMatches": "&quot;{{query}}&quot; waliin wal hin simne.",
+    "activityEmpty": "Ammatti sochiin hin jiru",
+    "activityEmptyDesc": "Joins, mentions fi beeksisa hawaasa keessan irraa as mul&#39;atu."
   },
   "prompt": {
     "seoTitle": "Nyaata keessan kakaasi — DeHub",

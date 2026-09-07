@@ -831,7 +831,17 @@
     "newNotification": "Arifa mpya",
     "oneOther": "1 mwingine",
     "nOthers": "{{count}} wengine",
-    "burstBody": "{{count}} arifa mpya kutoka kwa {{who}}"
+    "burstBody": "{{count}} arifa mpya kutoka kwa {{who}}",
+    "community": {
+      "joined": "{{name}} alijiunga na jumuiya yako",
+      "joinedNamed": "{{name}} amejiunga \"{{community}}\"",
+      "requested": "{{name}} ameombwa kujiunga na jumuiya yako",
+      "requestedNamed": "{{name}} ameomba kujiunga na \"{{community}}\"",
+      "mentioned": "{{name}} amekutaja katika jumuiya",
+      "mentionedNamed": "{{name}} amekutaja katika \"{{community}}\"",
+      "here": "{{name}} alituma ujumbe kwa kila mtu katika jumuiya",
+      "hereNamed": "{{name}} alituma ujumbe kwa kila mtu katika \"{{community}}\""
+    }
   },
   "leaderboard": {
     "title": "Ubao wa Viongozi",
@@ -1718,7 +1728,14 @@
     "reject": "Kataa",
     "pinToProfile": "Bandika jumuiya kwenye wasifu",
     "joinFirst": "Jiunge na jumuiya kwanza ili kuzibandika",
-    "pinCommunity": "Bandika jumuiya"
+    "pinCommunity": "Bandika jumuiya",
+    "activity": "Zoezi",
+    "activitySearch": "Tafuta shughuli...",
+    "activityNew": "{{total}} mpya",
+    "activityShowMore": "Onyesha zaidi ({{total}})",
+    "activityNoMatches": "Hakuna ulinganifu wa \"{{query}}\"",
+    "activityEmpty": "Hakuna shughuli bado",
+    "activityEmptyDesc": "Inajiunga, kutaja na matangazo kutoka kwa jumuiya zako yanaonekana hapa."
   },
   "prompt": {
     "seoTitle": "Weka ishara kwenye malisho yako — DeHub",
