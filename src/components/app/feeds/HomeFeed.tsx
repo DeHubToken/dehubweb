@@ -68,6 +68,7 @@ import {
   mapToVideoItem, 
   mapToImagePost, 
   mapToTextPost,
+  type UnifiedFeedItem,
 } from '@/hooks/use-unified-feed';
 import { useDeHubStoryUsers, useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { scrollDocumentTo } from '@/lib/document-scroll';
@@ -108,6 +109,17 @@ type FeedItemType =
 
 const PAGE_SIZE = 20;
 const SHORTS_INSERT_INTERVAL = 5;
+
+/** Videos longer than this are the ones the Shorts lane does NOT carry: the
+ *  backend routes a plain video of 90s or less into Shorts by duration, whatever
+ *  its post type. So "long form" here is a duration test, not a type test. */
+const LONG_FORM_MIN_SECONDS = 90;
+/** Tiles in the reel. */
+const SCROLL_REEL_SIZE = 10;
+/** The reel filters to long-form client-side, because /api/feed has no
+ *  duration parameter. Long-form is roughly a fifth of the most-liked videos,
+ *  so this is what it takes to fill the reel. */
+const SCROLL_REEL_FETCH_LIMIT = 50;
 const RADIO_INSERT_AFTER = 8;
 const LEADERBOARD_INSERT_AFTER_LIVE_OFFSET = 10;
 
@@ -757,13 +769,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Classics feed no longer needed (trending removed)
   const classicsFeed = { data: undefined } as any;
 
-  // Fetch latest videos for the Scroll carousel using unified feed.
+  // Feed the Scroll carousel the most-liked long-form videos.
+  // It used to be the ten newest videos, which filled it with whatever had just
+  // been posted — mostly seconds-long clips nobody had watched yet, and the
+  // same material the Shorts lane already carries.
   // Gated: this is a SECOND /api/feed that used to race the primary feed at boot
   // (LCP audit 7/14), and it's dead weight entirely when shorts are disabled.
   const scrollFeed = useUnifiedFeed({
-    limit: 10,
+    limit: SCROLL_REEL_FETCH_LIMIT,
     postType: 'video',
-    sortBy: 'createdAt',
+    sortBy: 'likes',
     sortOrder: 'desc',
     status: 'all',
     enabled: shortsEnabled && railsEnabled,
@@ -791,7 +806,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     const allItems = flattenFeedPages(scrollFeed.data.pages);
     // Exclude PPV content from shorts carousels
     const nonPPV = allItems.filter(item => !item.streamInfo?.isPayPerView);
-    return nonPPV.slice(0, 10).map((item) => {
+    // Long-form first, then the rest, both already in most-liked order. Topping
+    // up rather than truncating keeps the reel ten tiles wide on a thin day
+    // instead of leaving a three-tile stub. A post with no videoDuration has
+    // not finished transcoding, so it counts as the top-up, not as long-form.
+    const isLongForm = (item: UnifiedFeedItem) => (item.videoDuration ?? 0) > LONG_FORM_MIN_SECONDS;
+    const ranked = [...nonPPV.filter(isLongForm), ...nonPPV.filter(item => !isLongForm(item))];
+    return ranked.slice(0, SCROLL_REEL_SIZE).map((item) => {
       const id = String(item.tokenId);
       const minterAddress = item.minter || '';
       const voteType = (item as any).voteType ?? (item as any).userVote ?? (item as any).myVote ?? null;
