@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "بۇلارنىڭ كېلىشى ئۈچۈن تۆۋەندىكىدەك ئىخچام ئاگاھلاندۇرۇشلارنى قېتىڭ",
     "publicChatAlertsRate": "ئېنىق",
     "publicChatAlertsRateOption": "ھەر سائەتتە {{count}}",
-    "publicChatAlertsRateHint": "ئۆي تېخىمۇ قىزىق بولغاندا ھېچ نەرسە يوقاپ كەتمەيدۇ - خەۋەرلەر ساقلىنىدۇ ۋە كېيىنكى ئاگاھلاندۇرۇشتا بىللە كېلىدۇ."
+    "publicChatAlertsRateHint": "ئۆي تېخىمۇ قىزىق بولغاندا ھېچ نەرسە يوقاپ كەتمەيدۇ - خەۋەرلەر ساقلىنىدۇ ۋە كېيىنكى ئاگاھلاندۇرۇشتا بىللە كېلىدۇ.",
+    "emailNotificationsDescLinked": "{{email}} گە ئەۋەتىلدى",
+    "emailNotificationsNoAddress": "ئالدى بىلەن ھېسابىڭىزغا ئېلخەت ئادرېسى قوشۇڭ - بۇلار شۇ يەرگە قويۇلىدۇ.",
+    "emailNotificationsAddAddress": "ئېلخەت ئادرېسى قوشۇڭ"
   },
   "common": {
     "save": "ساقلاش",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}}\" {{community}} \"دا سىزنى تىلغا ئالغان",
       "here": "{{name}} جەمئىيەتتىكى ھەممە ئادەمنى خەۋەرلەندۈردى",
       "hereNamed": "{{name}} ھەممىگە \"{{community}}\" دەپ ئۇچۇر يوللىدى"
-    }
+    },
+    "byEmail": "ئېلخەت ئارقىلىق"
   },
   "leaderboard": {
     "title": "تەرتىپنامە",

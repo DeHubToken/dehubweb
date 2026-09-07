@@ -326,7 +326,10 @@
     "publicChatAlertsNeedsBrowser": "Zapněte si výše oznámení prohlížeče, aby vám tato upozornění chodila",
     "publicChatAlertsRate": "Nejvýše",
     "publicChatAlertsRateOption": "{{count}} za hodinu",
-    "publicChatAlertsRateHint": "Nic se neztratí, když je místnost rušnější než toto – zprávy se podrží a dorazí společně s dalším upozorněním."
+    "publicChatAlertsRateHint": "Nic se neztratí, když je místnost rušnější než toto – zprávy se podrží a dorazí společně s dalším upozorněním.",
+    "emailNotificationsDescLinked": "Odesláno {{email}}",
+    "emailNotificationsNoAddress": "Nejprve přidejte do svého účtu e-mailovou adresu – tam by se tyto údaje zadávaly.",
+    "emailNotificationsAddAddress": "Přidat e-mailovou adresu"
   },
   "common": {
     "save": "Uložit",
@@ -831,7 +834,8 @@
       "mentionedNamed": "{{name}} vás zmínil/a v „{{community}}“",
       "here": "{{name}} poslal/a zprávu všem členům komunity",
       "hereNamed": "{{name}} všem v „{{community}}“ poslal/a zprávu"
-    }
+    },
+    "byEmail": "Emailem"
   },
   "leaderboard": {
     "title": "Žebříček",

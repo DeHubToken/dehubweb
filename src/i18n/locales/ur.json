@@ -324,7 +324,10 @@
     "publicChatAlertsNeedsBrowser": "ان کو حاصل کرنے کے لیے اوپر براؤزر نوٹیفیکیشن آن کریں",
     "publicChatAlertsRate": "زیادہ سے زیادہ",
     "publicChatAlertsRateOption": "فی گھنٹہ {{count}}",
-    "publicChatAlertsRateHint": "جب کمرہ اس سے زیادہ مصروف ہو تو کچھ بھی ضائع نہیں ہوتا — پیغامات محفوظ کر لیے جاتے ہیں اور اگلے الرٹ میں اکٹھے پہنچ جاتے ہیں۔"
+    "publicChatAlertsRateHint": "جب کمرہ اس سے زیادہ مصروف ہو تو کچھ بھی ضائع نہیں ہوتا — پیغامات محفوظ کر لیے جاتے ہیں اور اگلے الرٹ میں اکٹھے پہنچ جاتے ہیں۔",
+    "emailNotificationsDescLinked": "{{email}} کو بھیجا گیا۔",
+    "emailNotificationsNoAddress": "پہلے اپنے اکاؤنٹ میں ایک ای میل پتہ شامل کریں — یہیں پر یہ جائیں گے۔",
+    "emailNotificationsAddAddress": "ای میل پتہ شامل کریں"
   },
   "common": {
     "save": "محفوظ کریں",
@@ -816,7 +819,8 @@
       "mentionedNamed": "{{name}} نے \"{{community}}\" میں آپ کا ذکر کیا ہے",
       "here": "{{name}} نے کمیونٹی میں ہر ایک کو پیغام بھیجا",
       "hereNamed": "{{name}} نے \"{{community}}\" میں سب کو میسج کیا"
-    }
+    },
+    "byEmail": "بذریعہ ای میل"
   },
   "leaderboard": {
     "title": "لیڈر بورڈ",

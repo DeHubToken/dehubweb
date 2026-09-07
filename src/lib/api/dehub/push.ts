@@ -223,6 +223,8 @@ export async function resetPushPreferences(): Promise<{ result: boolean }> {
 export interface AccountNotificationPreferences {
   inAppEnabled?: boolean;
   pushEnabled?: boolean;
+  /** Opt-in, and only meaningful for an account that has linked an email. */
+  emailEnabled?: boolean;
   inApp?: Partial<Record<NotificationKey, boolean>>;
   push?: Partial<Record<NotificationKey, boolean>>;
 }
@@ -263,5 +265,21 @@ export async function updateInAppNotificationPref(
 ): Promise<{ result: boolean }> {
   return updateProfile({
     notificationPreferences: JSON.stringify({ inApp: { [key]: value } }),
+  });
+}
+
+/**
+ * Turn notification emails on or off for this account.
+ *
+ * There is no per-type email block to go with it, on purpose: the backend
+ * decides which types may mail from the `inApp` switches above, so this is a
+ * master switch over the preferences the reader has already set rather than a
+ * second matrix that would immediately drift out of step with them.
+ */
+export async function updateEmailNotificationsEnabled(
+  value: boolean,
+): Promise<{ result: boolean }> {
+  return updateProfile({
+    notificationPreferences: JSON.stringify({ emailEnabled: value }),
   });
 }

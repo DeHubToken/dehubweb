@@ -331,7 +331,10 @@
     "publicChatAlertsNeedsBrowser": "Zapnite si vyššie uvedené upozornenia prehliadača, aby ste ich dostali",
     "publicChatAlertsRate": "Najviac",
     "publicChatAlertsRateOption": "{{count}} za hodinu",
-    "publicChatAlertsRateHint": "Keď je miestnosť rušnejšia ako toto, nič sa nestratí – správy sa podržia a prídu spolu pri ďalšom upozornení."
+    "publicChatAlertsRateHint": "Keď je miestnosť rušnejšia ako toto, nič sa nestratí – správy sa podržia a prídu spolu pri ďalšom upozornení.",
+    "emailNotificationsDescLinked": "Poslané {{email}}",
+    "emailNotificationsNoAddress": "Najprv si pridajte do svojho účtu e-mailovú adresu – tam sa tieto údaje uložia.",
+    "emailNotificationsAddAddress": "Pridať e-mailovú adresu"
   },
   "common": {
     "save": "Uložiť",
@@ -895,7 +898,8 @@
       "mentionedNamed": "{{name}} vás spomenul v „{{community}}“",
       "here": "{{name}} poslal správu všetkým v komunite",
       "hereNamed": "{{name}} odoslal správu všetkým používateľom v „{{community}}“"
-    }
+    },
+    "byEmail": "E-mailom"
   },
   "leaderboard": {
     "title": "Rebríček",

@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Turn on browser notifications above for dis one to come",
     "publicChatAlertsRate": "At most",
     "publicChatAlertsRateOption": "{{count}} for one hour",
-    "publicChatAlertsRateHint": "Nothing dey lost when the room dey busy pass dis — the messages dey hold and come together for the next alert."
+    "publicChatAlertsRateHint": "Nothing dey lost when the room dey busy pass dis — the messages dey hold and come together for the next alert.",
+    "emailNotificationsDescLinked": "Send to {{email}}",
+    "emailNotificationsNoAddress": "Add one email for your account first — dat na where dem go go.",
+    "emailNotificationsAddAddress": "Add one email"
   },
   "common": {
     "save": "Save am",
@@ -836,7 +839,8 @@
       "mentionedNamed": "{{name}} mention you for “{{community}}”",
       "here": "{{name}} send message to everybody for community",
       "hereNamed": "{{name}} send message to everybody for “{{community}}”"
-    }
+    },
+    "byEmail": "By email"
   },
   "leaderboard": {
     "title": "Leaderboards",

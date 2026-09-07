@@ -51,6 +51,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Switch } from '@/components/ui/switch';
 import { BrowserNotificationsSetting } from '@/components/app/settings/BrowserNotificationsSetting';
+import { EmailNotificationsSetting } from '@/components/app/settings/EmailNotificationsSetting';
 import { FollowersListDrawer } from '@/components/app/profile';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
@@ -1972,6 +1973,15 @@ export default function NotificationsPage() {
                       prompt by accident or never saw it.
                     */}
                     <BrowserNotificationsSetting variant="card" />
+                  </div>
+
+                  {/* Account-level, and the only channel that reaches someone
+                      who is not in the app at all. */}
+                  <div className="space-y-3 mb-6">
+                    <p className="text-xs text-white/50 uppercase tracking-wider font-medium">
+                      {t('notifications.byEmail', 'By email')}
+                    </p>
+                    <EmailNotificationsSetting variant="card" />
                   </div>
 
                   {/* Notification Types Section */}

@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "شغّل إشعارات المتصفح أعلاه لتصلك هذه التنبيهات",
     "publicChatAlertsRate": "بحد أقصى",
     "publicChatAlertsRateOption": "{{count}} في الساعة",
-    "publicChatAlertsRateHint": "لا شيء يُفقد عندما تكون الغرفة أكثر ازدحامًا من ذلك — يتم الاحتفاظ بالرسائل وتصل معًا في التنبيه التالي."
+    "publicChatAlertsRateHint": "لا شيء يُفقد عندما تكون الغرفة أكثر ازدحامًا من ذلك — يتم الاحتفاظ بالرسائل وتصل معًا في التنبيه التالي.",
+    "emailNotificationsDescLinked": "تم الإرسال إلى {{email}}",
+    "emailNotificationsNoAddress": "أضف عنوان بريد إلكتروني لحسابك أولاً - هناك سيتم إرسال هذه.",
+    "emailNotificationsAddAddress": "أضف عنوان بريد إلكتروني"
   },
   "common": {
     "save": "حفظ",
@@ -838,7 +841,8 @@
       "mentionedNamed": "{{name}} عمل لك منشن في “{{community}}”",
       "here": "{{name}} بعت رسالة لكل الموجودين بالمجتمع",
       "hereNamed": "{{name}} بعت رسالة لكل الموجودين بـ “{{community}}”"
-    }
+    },
+    "byEmail": "عن طريق الإيميل"
   },
   "leaderboard": {
     "title": "لوحة المتصدرين",

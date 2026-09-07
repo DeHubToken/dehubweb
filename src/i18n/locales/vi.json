@@ -254,7 +254,10 @@
     "publicChatAlertsNeedsBrowser": "Bật thông báo trình duyệt ở trên để nhận các thông báo này",
     "publicChatAlertsRate": "Tối đa",
     "publicChatAlertsRateOption": "{{count}} mỗi giờ",
-    "publicChatAlertsRateHint": "Không có gì bị mất khi phòng bận hơn thế này — tin nhắn sẽ được giữ lại và đến cùng nhau trong cảnh báo tiếp theo."
+    "publicChatAlertsRateHint": "Không có gì bị mất khi phòng bận hơn thế này — tin nhắn sẽ được giữ lại và đến cùng nhau trong cảnh báo tiếp theo.",
+    "emailNotificationsDescLinked": "Gửi đến {{email}}",
+    "emailNotificationsNoAddress": "Trước tiên, hãy thêm địa chỉ email vào tài khoản của bạn — chúng sẽ được gửi đến đó.",
+    "emailNotificationsAddAddress": "Thêm địa chỉ email"
   },
   "common": {
     "save": "Lưu",
@@ -756,7 +759,8 @@
       "mentionedNamed": "{{name}} đã đề cập đến bạn trong “{{community}}”",
       "here": "{{name}} đã nhắn tin cho mọi người trong cộng đồng",
       "hereNamed": "{{name}} đã nhắn tin cho mọi người trong “{{community}}”"
-    }
+    },
+    "byEmail": "Qua email"
   },
   "leaderboard": {
     "title": "Bảng xếp hạng",

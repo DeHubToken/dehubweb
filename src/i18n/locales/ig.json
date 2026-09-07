@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Gbanye ngosi ihe nchọgharị n'elu ka ndị a bịarute",
     "publicChatAlertsRate": "Na oke",
     "publicChatAlertsRateOption": "{{count}} kwa elekere",
-    "publicChatAlertsRateHint": "Ọ dịghị ihe furu mgbe ụlọ ahụ ji ọrụ karịa nke a - a na-ejide ozi ndị ahụ ma bịarute ọnụ na mkpu ọzọ."
+    "publicChatAlertsRateHint": "Ọ dịghị ihe furu mgbe ụlọ ahụ ji ọrụ karịa nke a - a na-ejide ozi ndị ahụ ma bịarute ọnụ na mkpu ọzọ.",
+    "emailNotificationsDescLinked": "Ezitere {{email}}",
+    "emailNotificationsNoAddress": "Tinye adreesị email na akaụntụ gị na mbụ — ebe ahụ ka ndị a ga-aga.",
+    "emailNotificationsAddAddress": "Tinye adreesị email"
   },
   "common": {
     "save": "Chekwaa",
@@ -837,7 +840,8 @@
       "requested": "{{name}} jụrụ isonyere obodo gị",
       "requestedNamed": "{{name}} jụrụ isonyere \"{{community}}\"",
       "hereNamed": "{{name}} ozi onye ọ bụla na \"{{community}}\""
-    }
+    },
+    "byEmail": "Site na email"
   },
   "leaderboard": {
     "title": "Ndepụta Ọkwa",

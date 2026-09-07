@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "ଏଗୁଡ଼ିକ ପାଇଁ ବ୍ରାଉଜର୍ ବିଜ୍ଞପ୍ତିଗୁଡ଼ିକୁ ଉପରେ ଚାଲୁ କରନ୍ତୁ",
     "publicChatAlertsRate": "ଅଧିକରେ",
     "publicChatAlertsRateOption": "ଘଣ୍ଟା ପ୍ରତି {{count}}",
-    "publicChatAlertsRateHint": "ଏହାଠାରୁ ବ୍ୟସ୍ତ ଥିବାବେଳେ କିଛି ହଜିଯାଏ ନାହିଁ — ବାର୍ତ୍ତାଗୁଡ଼ିକ ଧାରଣ କରାଯାଏ ଏବଂ ପରବର୍ତ୍ତୀ ସତର୍କତାରେ ଏକାଠି ଆସେ |"
+    "publicChatAlertsRateHint": "ଏହାଠାରୁ ବ୍ୟସ୍ତ ଥିବାବେଳେ କିଛି ହଜିଯାଏ ନାହିଁ — ବାର୍ତ୍ତାଗୁଡ଼ିକ ଧାରଣ କରାଯାଏ ଏବଂ ପରବର୍ତ୍ତୀ ସତର୍କତାରେ ଏକାଠି ଆସେ |",
+    "emailNotificationsDescLinked": "{{email}} ଙ୍କୁ ପଠାଯାଇଛି",
+    "emailNotificationsNoAddress": "ପ୍ରଥମେ ଆପଣଙ୍କ ଆକାଉଣ୍ଟରେ ଏକ ଇମେଲ୍ ଠିକଣା ଯୋଡନ୍ତୁ — ସେଥିରେ ଏଗୁଡିକ ଯିବ ।",
+    "emailNotificationsAddAddress": "ଏକ ଇମେଲ୍ ଠିକଣା ଯୋଡନ୍ତୁ"
   },
   "common": {
     "save": "ସଞ୍ଚୟ କରନ୍ତୁ",
@@ -834,7 +837,8 @@
     "burstBody": "{{count}} ନୂତନ ବିଜ୍ଞପ୍ତି {{who}} ଠାରୁ",
     "community": {
       "joinedNamed": "{{name}} ଯୋଡିହେଲା “{{community}}”"
-    }
+    },
+    "byEmail": "ଇମେଲ୍ ଦ୍ୱାରା"
   },
   "leaderboard": {
     "title": "ଲିଡରବୋର୍ଡ",

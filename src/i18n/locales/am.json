@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "እነዚህ እንዲመጡ ከላይ የብሮውዘር ማሳወቂያዎችን ያብሩ",
     "publicChatAlertsRate": "በጣም",
     "publicChatAlertsRateOption": "በሰዓት {{count}}",
-    "publicChatAlertsRateHint": "ክፍሉ ከዚህ የበለጠ ስራ ሲበዛበት ምንም ነገር አይጠፋም — መልዕክቶች ተይዘው በሚቀጥለው ማስጠንቀቂያ አብረው ይመጣሉ።"
+    "publicChatAlertsRateHint": "ክፍሉ ከዚህ የበለጠ ስራ ሲበዛበት ምንም ነገር አይጠፋም — መልዕክቶች ተይዘው በሚቀጥለው ማስጠንቀቂያ አብረው ይመጣሉ።",
+    "emailNotificationsDescLinked": "ለ{{email}} ተላከ",
+    "emailNotificationsNoAddress": "መጀመሪያ ወደ መለያዎ የኢሜል አድራሻ ያክሉ — እነዚህ የሚሄዱት እዚያ ነው።",
+    "emailNotificationsAddAddress": "የኢሜል አድራሻ አክል"
   },
   "common": {
     "save": "አስቀምጥ",
@@ -840,7 +843,8 @@
       "mentionedNamed": "{{name}} በ “{{community}}” ውስጥ ጠቅሷል",
       "here": "{{name}} በማህበረሰቡ ውስጥ ላሉት ሁሉ መልእክት አስተላልፈዋል",
       "hereNamed": "{{name}}@ በ \"{{community}}@\" ውስጥ ለሁሉም ሰው መልእክት አስተላልፏል"
-    }
+    },
+    "byEmail": "በኢሜል"
   },
   "leaderboard": {
     "title": "ደረጃ ሰሌዳዎች",

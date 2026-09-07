@@ -862,7 +862,8 @@
       "mentionedNamed": "{{name}} nanonona anao tao amin'ny “{{community}}”",
       "here": "{{name}} messaged ny tsirairay tao anatin'ilay vondrom-piarahamonina",
       "hereNamed": "{{name}} messaged ny rehetra {{community}} \""
-    }
+    },
+    "byEmail": "Amin'ny mailaka"
   },
   "leaderboard": {
     "title": "Lisitry ny tsara indrindra",

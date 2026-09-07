@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Chaykuna chayamunankupaq browser notifications kaqta chawpiman churay",
     "publicChatAlertsRate": "Chawpilla",
     "publicChatAlertsRateOption": "{{count}} huk horapi",
-    "publicChatAlertsRateHint": "Mana imapas chinkachkanchu chay room aswan ataq kachkaptinqa — chay willakuykuna waqaychasqa kachkan chaymanta huk chawpilla chayamun."
+    "publicChatAlertsRateHint": "Mana imapas chinkachkanchu chay room aswan ataq kachkaptinqa — chay willakuykuna waqaychasqa kachkan chaymanta huk chawpilla chayamun.",
+    "emailNotificationsDescLinked": "{{email}} kaqman kachasqa",
+    "emailNotificationsNoAddress": "Ñawpaqta imaymana willakuyta yaykuchiy imaymana willakuyta yaykuchiy — chaymanmi chaykunaqa risqan.",
+    "emailNotificationsAddAddress": "Imaymana willakuyta yaykuchiy"
   },
   "common": {
     "save": "Waqaychay",
@@ -842,7 +845,8 @@
       "mentionedNamed": "{{name}} “{{community}}” nisqapi rimasqayki.",
       "here": "{{name}} ayllupi llapa runakunaman mensajeta apachirqa",
       "hereNamed": "{{name}} llapa runaman “{{community}}” nisqapi mensajeta apachirqan."
-    }
+    },
+    "byEmail": "Email-wan"
   },
   "leaderboard": {
     "title": "Ñawpaqkuna",

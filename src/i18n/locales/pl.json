@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Włącz powyższe powiadomienia przeglądarki, aby je otrzymywać",
     "publicChatAlertsRate": "Maksymalnie",
     "publicChatAlertsRateOption": "{{count}} na godzinę",
-    "publicChatAlertsRateHint": "Nic nie ginie, gdy pokój jest bardziej ruchliwy niż ten — wiadomości są przechowywane i przychodzą razem w następnym powiadomieniu."
+    "publicChatAlertsRateHint": "Nic nie ginie, gdy pokój jest bardziej ruchliwy niż ten — wiadomości są przechowywane i przychodzą razem w następnym powiadomieniu.",
+    "emailNotificationsDescLinked": "Wyślij do {{email}}",
+    "emailNotificationsNoAddress": "Najpierw dodaj adres e-mail do swojego konta — tam trafią te informacje.",
+    "emailNotificationsAddAddress": "Dodaj adres e-mail"
   },
   "common": {
     "save": "Zapisz",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} wspomniał o Tobie w „{{community}}”",
       "here": "{{name}} wysłał (a) wiadomość do wszystkich członków społeczności",
       "hereNamed": "{{name}} wysłał (a) wiadomość do wszystkich w „{{community}}”"
-    }
+    },
+    "byEmail": "Pocztą elektroniczną"
   },
   "leaderboard": {
     "title": "Rankingi",

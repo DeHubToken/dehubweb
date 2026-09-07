@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Daar ogeysiisyada biraawsarka kor kaga qoran si kuwaasi ay u yimaadaan",
     "publicChatAlertsRate": "Ugu badnaan",
     "publicChatAlertsRateOption": "{{count}} saacadii",
-    "publicChatAlertsRateHint": "Waxba ma lumin marka qolku ka mashquulsanaado tan — fariimaha waa la hayaa oo waxay yimaadaan isla mar marka xigta ee digniinta."
+    "publicChatAlertsRateHint": "Waxba ma lumin marka qolku ka mashquulsanaado tan — fariimaha waa la hayaa oo waxay yimaadaan isla mar marka xigta ee digniinta.",
+    "emailNotificationsDescLinked": "U dir {{email}}",
+    "emailNotificationsNoAddress": "Ku dar ciwaan email akoonkaaga marka hore — halkaas ayay ku socon doonaan.",
+    "emailNotificationsAddAddress": "Ku dar ciwaan email"
   },
   "common": {
     "save": "Kaydi",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} ku xusay in “{{community}}@”",
       "here": "{{name}} fariin qof walba oo bulshada ka mid ah",
       "hereNamed": "{{name}} farriinta qof walba ee “{{community}}”"
-    }
+    },
+    "byEmail": "I-meel"
   },
   "leaderboard": {
     "title": "Hogaamiyaha",

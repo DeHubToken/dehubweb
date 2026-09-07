@@ -19,7 +19,6 @@ import {
   EyeOff,
   Camera,
   Link2,
-  Mail,
   ThumbsUp,
   MessageSquare,
   Users,
@@ -123,6 +122,7 @@ import { useNewMemberSelf } from '@/hooks/use-new-members';
 import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hooks/use-wallet-unlock-interval';
 import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
 import { BiometricUnlockSettings } from '@/components/app/settings/BiometricUnlockSettings';
+import { EmailNotificationsSetting } from '@/components/app/settings/EmailNotificationsSetting';
 import { EmailSignInSettings } from '@/components/app/settings/EmailSignInSettings';
 import { EnsHandleSettings } from '@/components/app/settings/EnsHandleSettings';
 import { SolanaWalletSettings } from '@/components/app/settings/SolanaWalletSettings';
@@ -1304,14 +1304,12 @@ function NotificationSettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.general')}</h3>
         <div className="space-y-4">
-          <SettingToggle
-            icon={Mail}
-            anchor="email-notifications"
-            title={t('settings.emailNotifications')}
-            description={t('settings.emailNotificationsDesc')}
-            defaultChecked={false}
-            comingSoon
-          />
+          {/*
+            Account-level and it owns two states a plain toggle cannot show —
+            which address these go to, and that there isn't one yet. See
+            EmailNotificationsSetting.
+          */}
+          <EmailNotificationsSetting />
           {/*
             Owns the browser permission as well as the stored flag — see
             BrowserNotificationsSetting for why a plain toggle isn't enough

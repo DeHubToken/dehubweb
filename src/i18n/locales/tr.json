@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Bunların gelmesi için yukarıdaki tarayıcı bildirimlerini açın",
     "publicChatAlertsRate": "En fazla",
     "publicChatAlertsRateOption": "Saatte {{count}}",
-    "publicChatAlertsRateHint": "Oda bundan daha yoğun olduğunda hiçbir şey kaybolmaz — mesajlar tutulur ve bir sonraki uyarıda birlikte gelir."
+    "publicChatAlertsRateHint": "Oda bundan daha yoğun olduğunda hiçbir şey kaybolmaz — mesajlar tutulur ve bir sonraki uyarıda birlikte gelir.",
+    "emailNotificationsDescLinked": "{{email}}'ya gönderildi",
+    "emailNotificationsNoAddress": "Önce hesabınıza bir e-posta adresi ekleyin — bunlar oraya gider.",
+    "emailNotificationsAddAddress": "Bir e-posta adresi ekleyin"
   },
   "common": {
     "save": "Kaydet",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} senden “{{community}}” de bahsetti",
       "here": "{{name}} topluluktaki herkese mesaj gönderdi",
       "hereNamed": "{{name}}“{{community}}” içindeki herkese mesaj gönderdi"
-    }
+    },
+    "byEmail": "E-posta ile"
   },
   "leaderboard": {
     "title": "Sıralama Tablosu",

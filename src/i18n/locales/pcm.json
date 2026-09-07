@@ -321,7 +321,8 @@
     "publicChatAlerts": "Public chat",
     "publicChatAlertsOnDesc": "Busy stretches arrive as one combined alert",
     "publicChatAlertsRate": "At most",
-    "publicChatAlertsRateOption": "{{count}} an hour"
+    "publicChatAlertsRateOption": "{{count}} an hour",
+    "emailNotificationsDescLinked": "Sent to {{email}}"
   },
   "common": {
     "save": "Save Am",
@@ -823,7 +824,8 @@
     "nOthers": "{{count}} others",
     "community": {
       "joinedNamed": "{{name}} joined “{{community}}”"
-    }
+    },
+    "byEmail": "By email"
   },
   "leaderboard": {
     "title": "Leaderboard",

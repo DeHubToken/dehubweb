@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "Įjunkite naršyklės pranešimus aukščiau, kad jie pasiektų",
     "publicChatAlertsRate": "Ne daugiau kaip",
     "publicChatAlertsRateOption": "{{count}} per valandą",
-    "publicChatAlertsRateHint": "Nieko neprarandama, kai kambarys yra užimtesnis nei šis – pranešimai saugomi ir ateina kartu su kitu įspėjimu."
+    "publicChatAlertsRateHint": "Nieko neprarandama, kai kambarys yra užimtesnis nei šis – pranešimai saugomi ir ateina kartu su kitu įspėjimu.",
+    "emailNotificationsDescLinked": "Siųsta {{email}}",
+    "emailNotificationsNoAddress": "Pirmiausia pridėkite el. pašto adresą prie savo paskyros – ten jie bus siunčiami.",
+    "emailNotificationsAddAddress": "Pridėti el. pašto adresą"
   },
   "common": {
     "save": "Saugoti",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} paminėjo jus „{{community}}“",
       "here": "{{name}} susirašinėjo su visais bendruomenės nariais",
       "hereNamed": "{{name}} susirašinėjo su visais „{{community}}“"
-    }
+    },
+    "byEmail": "El. paštu"
   },
   "leaderboard": {
     "title": "Lyderių lentelė",

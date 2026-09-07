@@ -326,7 +326,10 @@
     "publicChatAlertsNeedsBrowser": "Kapcsold be a böngészőértesítéseket fent, hogy ezek megérkezzenek",
     "publicChatAlertsRate": "Legfeljebb",
     "publicChatAlertsRateOption": "{{count}} óránként",
-    "publicChatAlertsRateHint": "Semmi sem vész el, amikor a szoba forgalmasabb ennél – az üzenetek tárolódnak, és a következő figyelmeztetéskor együtt érkeznek meg."
+    "publicChatAlertsRateHint": "Semmi sem vész el, amikor a szoba forgalmasabb ennél – az üzenetek tárolódnak, és a következő figyelmeztetéskor együtt érkeznek meg.",
+    "emailNotificationsDescLinked": "{{email}}-nak küldve",
+    "emailNotificationsNoAddress": "Először adjon hozzá egy e-mail címet a fiókjához – oda kerülnek majd ezek.",
+    "emailNotificationsAddAddress": "E-mail cím hozzáadása"
   },
   "common": {
     "save": "Mentés",
@@ -831,7 +834,8 @@
       "mentionedNamed": "{{name}} megemlített „{{community}}” -ben",
       "here": "{{name}} mindenkinek üzenetet küldött a közösségben",
       "hereNamed": "{{name}} mindenkinek üzenetet küldött „{{community}}” területén"
-    }
+    },
+    "byEmail": "E-mailben"
   },
   "leaderboard": {
     "title": "Ranglista",

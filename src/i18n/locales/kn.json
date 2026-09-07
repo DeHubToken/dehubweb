@@ -327,7 +327,10 @@
     "publicChatAlertsNeedsBrowser": "ಇವುಗಳನ್ನು ಸ್ವೀಕರಿಸಲು ಮೇಲಿನ ಬ್ರೌಸರ್ ಅಧಿಸೂಚನೆಗಳನ್ನು ಆನ್ ಮಾಡಿ",
     "publicChatAlertsRate": "ಗರಿಷ್ಠ",
     "publicChatAlertsRateOption": "ಗಂಟೆಗೆ {{count}}",
-    "publicChatAlertsRateHint": "ಕೋಣೆ ಇದಕ್ಕಿಂತ ಹೆಚ್ಚು ಬಿಡುವಿಲ್ಲದಿದ್ದಾಗ ಏನೂ ಕಳೆದುಹೋಗುವುದಿಲ್ಲ - ಸಂದೇಶಗಳನ್ನು ಹಿಡಿದಿಟ್ಟುಕೊಂಡು ಮುಂದಿನ ಎಚ್ಚರಿಕೆಯಲ್ಲಿ ಒಟ್ಟಿಗೆ ಬರುತ್ತವೆ."
+    "publicChatAlertsRateHint": "ಕೋಣೆ ಇದಕ್ಕಿಂತ ಹೆಚ್ಚು ಬಿಡುವಿಲ್ಲದಿದ್ದಾಗ ಏನೂ ಕಳೆದುಹೋಗುವುದಿಲ್ಲ - ಸಂದೇಶಗಳನ್ನು ಹಿಡಿದಿಟ್ಟುಕೊಂಡು ಮುಂದಿನ ಎಚ್ಚರಿಕೆಯಲ್ಲಿ ಒಟ್ಟಿಗೆ ಬರುತ್ತವೆ.",
+    "emailNotificationsDescLinked": "{{email}} ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ",
+    "emailNotificationsNoAddress": "ಮೊದಲು ನಿಮ್ಮ ಖಾತೆಗೆ ಇಮೇಲ್ ವಿಳಾಸವನ್ನು ಸೇರಿಸಿ - ಅಲ್ಲಿ ಇವು ಹೋಗುತ್ತವೆ.",
+    "emailNotificationsAddAddress": "ಇಮೇಲ್ ವಿಳಾಸವನ್ನು ಸೇರಿಸಿ"
   },
   "common": {
     "save": "ಉಳಿಸಿ",
@@ -841,7 +844,8 @@
       "mentionedNamed": "{{name}} @ ನಿಮ್ಮನ್ನು \"{{community}}\" ನಲ್ಲಿ ಉಲ್ಲೇಖಿಸಿದ್ದಾರೆ",
       "here": "{{name}} ಸಮುದಾಯದಲ್ಲಿರುವ ಎಲ್ಲರಿಗೂ ಸಂದೇಶ ಕಳುಹಿಸಿದ್ದಾರೆ",
       "hereNamed": "{{name}}@ \"@ {{community}}\" ನಲ್ಲಿ ಎಲ್ಲರಿಗೂ ಸಂದೇಶ ಕಳುಹಿಸಿದ್ದಾರೆ"
-    }
+    },
+    "byEmail": "ಇಮೇಲ್ ಮೂಲಕ"
   },
   "leaderboard": {
     "title": "ಲೀಡರ್‌ಬೋರ್ಡ್",

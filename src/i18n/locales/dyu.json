@@ -327,7 +327,8 @@
     "publicChatAlertsNeedsBrowser": "I ka kan ka tɛmɛ o kan ka tɛmɛ o kan.",
     "publicChatAlertsRate": "At most",
     "publicChatAlertsRateOption": "{{count}} an hour",
-    "publicChatAlertsRateHint": "O kama, n'i ye mɔgɔ dɔ ye, i be se k'a fɔ ko i ye mɔgɔ dɔ ye min be se ka mɔgɔ dɔ faga."
+    "publicChatAlertsRateHint": "O kama, n'i ye mɔgɔ dɔ ye, i be se k'a fɔ ko i ye mɔgɔ dɔ ye min be se ka mɔgɔ dɔ faga.",
+    "emailNotificationsNoAddress": "The email address is where these would go."
   },
   "common": {
     "save": "Bɔ",
@@ -836,7 +837,8 @@
       "requested": "{{name}} ka don i ka sigida la",
       "here": "{{name}} Messaging all in the community",
       "hereNamed": "{{name}} Messaging everyone in {{community}}"
-    }
+    },
+    "byEmail": "Ka a-mɛnɛ"
   },
   "leaderboard": {
     "title": "Kɛlɛya",
