@@ -319,7 +319,15 @@
     "saving": "ସେଭ ହେଉଛି...",
     "noNewMessages": "ନୂଆ ବାର୍ତ୍ତାଳାପ ନାହିଁ",
     "noNewMessagesDesc": "ଆପଣଙ୍କ ପୂର୍ବ ଥ୍ରେଡ ରଖନ୍ତୁ, କିନ୍ତୁ କେହି ନୂଆ ଜଣେ ଆରମ୍ଭ କରିପାରିବେ ନାହିଁ",
-    "dmNoNewHelp": "ପୂର୍ବ ଥ୍ରେଡ କାମ କରୁଥିବ; କେହି ନୂଆ ଜଣେ ଆରମ୍ଭ କରିପାରିବେ ନାହିଁ"
+    "dmNoNewHelp": "ପୂର୍ବ ଥ୍ରେଡ କାମ କରୁଥିବ; କେହି ନୂଆ ଜଣେ ଆରମ୍ଭ କରିପାରିବେ ନାହିଁ",
+    "chat": "ଚାଟ୍",
+    "publicChatAlerts": "ପବ୍ଲିକ ଚାଟ୍",
+    "publicChatAlertsDesc": "ଅନ୍ୟ ଏକ ଟ୍ୟାବରେ ଥିବାବେଳେ ପବ୍ଲିକ ଚାଟ୍ କହୁଥିବାବେଳେ ଜଣାନ୍ତୁ",
+    "publicChatAlertsOnDesc": "ବ୍ୟସ୍ତତା ଏକ ମିଳିତ ସତର୍କତା ଭାବରେ ଆସେ",
+    "publicChatAlertsNeedsBrowser": "ଏଗୁଡ଼ିକ ପାଇଁ ବ୍ରାଉଜର୍ ବିଜ୍ଞପ୍ତିଗୁଡ଼ିକୁ ଉପରେ ଚାଲୁ କରନ୍ତୁ",
+    "publicChatAlertsRate": "ଅଧିକରେ",
+    "publicChatAlertsRateOption": "ଘଣ୍ଟା ପ୍ରତି {{count}}",
+    "publicChatAlertsRateHint": "ଏହାଠାରୁ ବ୍ୟସ୍ତ ଥିବାବେଳେ କିଛି ହଜିଯାଏ ନାହିଁ — ବାର୍ତ୍ତାଗୁଡ଼ିକ ଧାରଣ କରାଯାଏ ଏବଂ ପରବର୍ତ୍ତୀ ସତର୍କତାରେ ଏକାଠି ଆସେ |"
   },
   "common": {
     "save": "ସଞ୍ଚୟ କରନ୍ତୁ",
@@ -821,7 +829,8 @@
     "postRemoved": "ଆପଣଙ୍କ ପୋଷ୍ଟ ହଟାଗଲା",
     "newNotification": "ନୂଆ ସୂଚନା",
     "oneOther": "୧ ଅନ୍ୟ",
-    "nOthers": "{{count}} ଅନ୍ୟ"
+    "nOthers": "{{count}} ଅନ୍ୟ",
+    "burstBody": "{{count}} ନୂତନ ବିଜ୍ଞପ୍ତି {{who}} ଠାରୁ"
   },
   "leaderboard": {
     "title": "ଲିଡରବୋର୍ଡ",
@@ -2081,5 +2090,17 @@
     "dubbed": "ଡବଲ ଅଡିଓ",
     "preparing": "ଡବଡ ଅଡିଓ ପ୍ରସ୍ତୁତ କରୁଅଛି...",
     "unavailable": "ଏହି ଭିଡିଓ ପାଇଁ ଡବଲ ଅଡିଓ ଉପଲବ୍ଧ ନାହିଁ ।"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} ଏବଂ {{count}} ଅନ୍ୟ",
+    "andOthers_other": "{{names}} ଏବଂ {{count}} ଅନ୍ୟମାନେ",
+    "someone": "କେହି ଜଣେ"
+  },
+  "publicChatAlerts": {
+    "title": "ପବ୍ଲିକ ଚାଟ୍",
+    "mentionTitle": "ପବ୍ଲିକ ଚାଟରେ ଉଲ୍ଲେଖ କରାଯାଇଛି",
+    "digest": "{{count}} ନୂତନ ବାର୍ତ୍ତା {{who}} ଠାରୁ: {{message}}",
+    "voiceMessage": "କଣ୍ଠ ବାର୍ତ୍ତା",
+    "image": "ଏକ ଚିତ୍ର ପଠାଇଛନ୍ତି"
   }
 }

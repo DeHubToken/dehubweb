@@ -319,7 +319,15 @@
     "saving": "Պահպանվում է...",
     "noNewMessages": "Նոր զրույցներ չեն ընդունվում",
     "noNewMessagesDesc": "Պահեք ձեր առկա զրույցները, բայց նոր մարդը չի կարող սկսել",
-    "dmNoNewHelp": "Առկա զրույցները շարունակում են աշխատել. նոր մարդը չի կարող սկսել"
+    "dmNoNewHelp": "Առկա զրույցները շարունակում են աշխատել. նոր մարդը չի կարող սկսել",
+    "chat": "Զրույց",
+    "publicChatAlerts": "Հանրային զրույց",
+    "publicChatAlertsDesc": "Տեղեկացվեք, երբ հանրային զրույցում խոսում են, մինչ դուք այլ ներդիրում եք",
+    "publicChatAlertsOnDesc": "Ավելի զբաղված պահերը գալիս են որպես մեկ միավորված ազդանշան",
+    "publicChatAlertsNeedsBrowser": "Միացրեք բրաուզերի ծանուցումները վերևում, որպեսզի դրանք ստանաք",
+    "publicChatAlertsRate": "Առավելագույնը",
+    "publicChatAlertsRateOption": "{{count}} մեկ ժամում",
+    "publicChatAlertsRateHint": "Ոչինչ չի կորչում, երբ սենյակն ավելի զբաղված է, քան սա. հաղորդագրություններն պահվում են և գալիս են միասին հաջորդ ազդանշանով։"
   },
   "common": {
     "save": "Pahpanel",
@@ -812,7 +820,8 @@
     "postRemoved": "Dzer groume heratselvaats e",
     "newNotification": "Nor tsanoutsagroum",
     "oneOther": "1 ourishe",
-    "nOthers": "{{count}} ourishner"
+    "nOthers": "{{count}} ourishner",
+    "burstBody": "{{count}} նոր ծանուցում {{who}}-ից"
   },
   "leaderboard": {
     "title": "Dasakargoum",
@@ -4352,5 +4361,17 @@
     "dubbed": "Կրկնօրինակված աուդիո",
     "preparing": "Պատրաստվում է զուգորդված աուդիո...",
     "unavailable": "Կրկնօրինակված ձայնագրությունը հասանելի չէ այս տեսանյութի համար ։"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} և {{count}} այլ",
+    "andOthers_other": "{{names}} և {{count}} այլք",
+    "someone": "Մեկը"
+  },
+  "publicChatAlerts": {
+    "title": "Հանրային զրույց",
+    "mentionTitle": "Հիշատակվել է հանրային զրույցում",
+    "digest": "{{count}} նոր հաղորդագրություն {{who}}-ից՝ {{message}}",
+    "voiceMessage": "Ձայնային հաղորդագրություն",
+    "image": "Ուղարկվել է պատկեր"
   }
 }

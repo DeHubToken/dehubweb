@@ -319,7 +319,15 @@
     "saving": "Saglabā...",
     "noNewMessages": "Nekādu jaunu sarunu",
     "noNewMessagesDesc": "Saglabājiet esošās sarakstes, bet neviens jauns nevar sākt",
-    "dmNoNewHelp": "Esošās sarakstes turpina darboties; neviens jauns nevar sākt"
+    "dmNoNewHelp": "Esošās sarakstes turpina darboties; neviens jauns nevar sākt",
+    "chat": "Tērzēšana",
+    "publicChatAlerts": "Publiskā tērzēšana",
+    "publicChatAlertsDesc": "Saņemiet paziņojumus, kad publiskā tērzēšana notiek, kamēr esat citā cilnē",
+    "publicChatAlertsOnDesc": "Aizņemti periodi tiek saņemti kā viens apvienots brīdinājums",
+    "publicChatAlertsNeedsBrowser": "Ieslēdziet pārlūkprogrammas paziņojumus iepriekš, lai tie tiktu saņemti",
+    "publicChatAlertsRate": "Ne vairāk kā",
+    "publicChatAlertsRateOption": "{{count}} stundā",
+    "publicChatAlertsRateHint": "Nekas netiek zaudēts, kad istaba ir aizņemta vairāk nekā šis — ziņojumi tiek saglabāti un tiek saņemti kopā nākamajā brīdinājumā."
   },
   "common": {
     "save": "Saglabāt",
@@ -821,7 +829,8 @@
     "postRemoved": "Jūsu ieraksts tika noņemts",
     "newNotification": "Jauns paziņojums",
     "oneOther": "1 cits",
-    "nOthers": "{{count}} citi"
+    "nOthers": "{{count}} citi",
+    "burstBody": "{{count}} jauni paziņojumi no {{who}}"
   },
   "leaderboard": {
     "title": "Līderu tabula",
@@ -2113,5 +2122,17 @@
     "dubbed": "Dublēts audio",
     "preparing": "Notiek dublētā audio sagatavošana...",
     "unavailable": "Šim videoklipam dublētais audio nav pieejams."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} un {{count}} citi",
+    "andOthers_other": "{{names}} un {{count}} citi",
+    "someone": "Kāds"
+  },
+  "publicChatAlerts": {
+    "title": "Publiskā tērzēšana",
+    "mentionTitle": "Minēts publiskajā tērzēšanā",
+    "digest": "{{count}} jauni ziņojumi no {{who}}: {{message}}",
+    "voiceMessage": "Balss ziņojums",
+    "image": "Nosūtīja attēlu"
   }
 }

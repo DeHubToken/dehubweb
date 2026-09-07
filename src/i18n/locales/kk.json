@@ -319,7 +319,15 @@
     "saving": "Сақталуда...",
     "noNewMessages": "Жаңа әңгімелер жоқ",
     "noNewMessagesDesc": "Бар тізбектеріңіз сақталады, бірақ жаңадан ешкім бастай алмайды",
-    "dmNoNewHelp": "Бар тізбектер жұмысын жалғастырады; жаңадан ешкім бастай алмайды"
+    "dmNoNewHelp": "Бар тізбектер жұмысын жалғастырады; жаңадан ешкім бастай алмайды",
+    "chat": "Сұхбат",
+    "publicChatAlerts": "Жалпы чат",
+    "publicChatAlertsDesc": "Басқа қойындыда болған кезде жалпы чаттың сөйлесіп жатқанын естіңіз",
+    "publicChatAlertsOnDesc": "Бос емес кезеңдер бір біріктірілген ескерту ретінде келеді",
+    "publicChatAlertsNeedsBrowser": "Бұлардың келуі үшін жоғарыдағы браузер хабарламаларын қосыңыз",
+    "publicChatAlertsRate": "Ең көбі",
+    "publicChatAlertsRateOption": "Сағатына {{count}}",
+    "publicChatAlertsRateHint": "Бөлме бұдан қызу болған кезде ештеңе жоғалмайды — хабарламалар сақталады және келесі ескертуде бірге келеді."
   },
   "common": {
     "save": "Сақтау",
@@ -838,7 +846,8 @@
     "postRemoved": "Жазбаңыз жойылды",
     "newNotification": "Жаңа хабарландыру",
     "oneOther": "1 басқа",
-    "nOthers": "{{count}} басқа"
+    "nOthers": "{{count}} басқа",
+    "burstBody": "{{count}} жаңа хабарлама {{who}}-дан"
   },
   "leaderboard": {
     "title": "Рейтинг",
@@ -2119,6 +2128,18 @@
     "dubbed": "Дубляждалған аудио",
     "preparing": "Дубляждалған аудионы дайындау...",
     "unavailable": "Бұл бейне үшін дубляждалған аудио қолжетімді емес."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} және {{count}} басқа",
+    "andOthers_other": "{{names}} және {{count}} басқалар",
+    "someone": "Біреу"
+  },
+  "publicChatAlerts": {
+    "title": "Жалпы чат",
+    "mentionTitle": "Жалпы чатта аталды",
+    "digest": "{{who}}-дан {{count}} жаңа хабарлама: {{message}}",
+    "voiceMessage": "Дауыстық хабарлама",
+    "image": "Сурет жіберді"
   },
   "spaces": {
     "title": "Кеңістіктер",

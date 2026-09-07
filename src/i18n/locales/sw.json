@@ -319,7 +319,15 @@
     "saving": "Inahifadhi...",
     "noNewMessages": "Hakuna mazungumzo mapya",
     "noNewMessagesDesc": "Weka mazungumzo yako yaliyopo, lakini hakuna mtu mpya anayeweza kuanzisha",
-    "dmNoNewHelp": "Mazungumzo yaliyopo yanaendelea; hakuna mtu mpya anayeweza kuanzisha"
+    "dmNoNewHelp": "Mazungumzo yaliyopo yanaendelea; hakuna mtu mpya anayeweza kuanzisha",
+    "chat": "Ongea",
+    "publicChatAlerts": "Ongea ya umma",
+    "publicChatAlertsDesc": "Pata taarifa wakati mazungumzo ya umma yanapozungumza ukiwa kwenye kichupo kingine",
+    "publicChatAlertsOnDesc": "Vipindi vya shughuli nyingi huwasili kama arifa moja iliyojumuishwa",
+    "publicChatAlertsNeedsBrowser": "Washa arifa za kivinjari hapo juu ili hizi zifike",
+    "publicChatAlertsRate": "Kiwango cha juu zaidi",
+    "publicChatAlertsRateOption": "{{count}} kwa saa",
+    "publicChatAlertsRateHint": "Hakuna kinachopotea wakati chumba kina shughuli nyingi zaidi ya hii — jumbe huhifadhiwa na kuwasili pamoja kwenye arifa inayofuata."
   },
   "common": {
     "save": "Hifadhi",
@@ -822,7 +830,8 @@
     "postRemoved": "Chapisho lako limeondolewa",
     "newNotification": "Arifa mpya",
     "oneOther": "1 mwingine",
-    "nOthers": "{{count}} wengine"
+    "nOthers": "{{count}} wengine",
+    "burstBody": "{{count}} arifa mpya kutoka kwa {{who}}"
   },
   "leaderboard": {
     "title": "Ubao wa Viongozi",
@@ -4416,5 +4425,17 @@
     "dubbed": "Sauti iliyochapishwa mara mbili",
     "preparing": "Inaandaa sauti iliyopewa jina...",
     "unavailable": "Sauti iliyosambazwa haipatikani kwa video hii."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} na {{count}} mwingine",
+    "andOthers_other": "{{names}} na {{count}} wengine",
+    "someone": "Mtu fulani"
+  },
+  "publicChatAlerts": {
+    "title": "Ongea ya umma",
+    "mentionTitle": "Tajwa katika mazungumzo ya umma",
+    "digest": "{{count}} jumbe mpya kutoka kwa {{who}}: {{message}}",
+    "voiceMessage": "Ujumbe wa sauti",
+    "image": "Tuma picha"
   }
 }

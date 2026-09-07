@@ -323,7 +323,15 @@
     "saving": "Ukladá sa...",
     "noNewMessages": "Žiadne nové konverzácie",
     "noNewMessagesDesc": "Ponechaj si existujúce konverzácie, ale nikto nový nezačne novú",
-    "dmNoNewHelp": "Existujúce konverzácie fungujú ďalej; nikto nový nemôže začať novú"
+    "dmNoNewHelp": "Existujúce konverzácie fungujú ďalej; nikto nový nemôže začať novú",
+    "chat": "Chat",
+    "publicChatAlerts": "Verejný chat",
+    "publicChatAlertsDesc": "Dostávajte upozornenia, keď sa hovorí vo verejnom chate, aj keď ste v inej záložke",
+    "publicChatAlertsOnDesc": "Rušné obdobia prídu ako jedno spoločné upozornenie",
+    "publicChatAlertsNeedsBrowser": "Zapnite si vyššie uvedené upozornenia prehliadača, aby ste ich dostali",
+    "publicChatAlertsRate": "Najviac",
+    "publicChatAlertsRateOption": "{{count}} za hodinu",
+    "publicChatAlertsRateHint": "Keď je miestnosť rušnejšia ako toto, nič sa nestratí – správy sa podržia a prídu spolu pri ďalšom upozornení."
   },
   "common": {
     "save": "Uložiť",
@@ -870,6 +878,7 @@
     "newNotification": "Nové upozornenie",
     "oneOther": "1 ďalší",
     "nOthers": "{{count}} ďalších",
+    "burstBody": "{{count}} nových upozornení od {{who}}",
     "milestones": "Míľniky",
     "noNotifications": "Zatiaľ žiadne upozornenia",
     "subscribedToYou": "{{name}} si vás predplatil",
@@ -2236,6 +2245,18 @@
     "dubbed": "Dabovaný zvuk",
     "preparing": "Pripravuje sa dabovaný zvuk...",
     "unavailable": "Pre toto video nie je k dispozícii dabovaný zvuk."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} a {{count}} ďalší",
+    "andOthers_other": "{{names}} a {{count}} ďalších",
+    "someone": "Niekto"
+  },
+  "publicChatAlerts": {
+    "title": "Verejný chat",
+    "mentionTitle": "Spomenutý vo verejnom chate",
+    "digest": "{{count}} nových správ od {{who}}: {{message}}",
+    "voiceMessage": "Hlasová správa",
+    "image": "Odoslaný obrázok"
   },
   "post": {
     "like": "Páči sa mi",

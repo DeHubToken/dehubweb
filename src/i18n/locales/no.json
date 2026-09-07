@@ -319,7 +319,15 @@
     "saving": "Lagrer...",
     "noNewMessages": "Ingen nye samtaler",
     "noNewMessagesDesc": "Behold de eksisterende samtalene dine, men ingen ny kan starte en",
-    "dmNoNewHelp": "Eksisterende samtaler fungerer videre; ingen ny kan starte en"
+    "dmNoNewHelp": "Eksisterende samtaler fungerer videre; ingen ny kan starte en",
+    "chat": "Chat",
+    "publicChatAlerts": "Offentlig chat",
+    "publicChatAlertsDesc": "Få beskjed når den offentlige chatten snakker mens du er i en annen fane",
+    "publicChatAlertsOnDesc": "Travle perioder kommer som én samlet varsel",
+    "publicChatAlertsNeedsBrowser": "Slå på nettleservarsler ovenfor for at disse skal komme",
+    "publicChatAlertsRate": "Maksimalt",
+    "publicChatAlertsRateOption": "{{count}} i timen",
+    "publicChatAlertsRateHint": "Ingenting går tapt når rommet er travlere enn dette – meldingene lagres og kommer samlet ved neste varsel."
   },
   "common": {
     "save": "Lagre",
@@ -820,7 +828,8 @@
     "postRemoved": "Innlegget ditt ble fjernet",
     "newNotification": "Nytt varsel",
     "oneOther": "1 annen",
-    "nOthers": "{{count}} andre"
+    "nOthers": "{{count}} andre",
+    "burstBody": "{{count}} nye varsler fra {{who}}"
   },
   "leaderboard": {
     "title": "Toppliste",
@@ -2112,5 +2121,17 @@
     "dubbed": "Dubbet lyd",
     "preparing": "Forbereder dubbet lyd …",
     "unavailable": "Dubbet lyd er ikke tilgjengelig for denne videoen."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} og {{count}} andre",
+    "andOthers_other": "{{names}} og {{count}} andre",
+    "someone": "Noen"
+  },
+  "publicChatAlerts": {
+    "title": "Offentlig chat",
+    "mentionTitle": "Nevnt i offentlig chat",
+    "digest": "{{count}} nye meldinger fra {{who}}: {{message}}",
+    "voiceMessage": "Talemelding",
+    "image": "Sendte et bilde"
   }
 }

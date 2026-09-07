@@ -319,7 +319,15 @@
     "saving": "Tê tomarkirin...",
     "noNewMessages": "Tu axaftinên nû tune",
     "noNewMessagesDesc": "Peyamên xwe yên heyî bihêle, lê tu kesê nû nikare yekî nû bide destpêkirin",
-    "dmNoNewHelp": "Peyamên heyî berdewam dixebitin; tu kesê nû nikare yekî nû bide destpêkirin"
+    "dmNoNewHelp": "Peyamên heyî berdewam dixebitin; tu kesê nû nikare yekî nû bide destpêkirin",
+    "chat": "چات",
+    "publicChatAlerts": "چاتی گشتی",
+    "publicChatAlertsDesc": "کاتێک چاتی گشتی قسە دەکات ئاگادار بە کاتێک لە په‌رده‌یه‌کی تر ده‌بیت",
+    "publicChatAlertsOnDesc": "کاتی قەرەباڵغی وەک ئاگادارکردنەوەیەکی یەکگرتوو دێت",
+    "publicChatAlertsNeedsBrowser": "ڕێگە بدە ئاگادارکردنەوەکانی وێبگەڕەکە لەسەرەوە بۆ ئەمانە بێت",
+    "publicChatAlertsRate": "لە زۆرترین",
+    "publicChatAlertsRateOption": "لە کاتژمێرێکدا {{count}}",
+    "publicChatAlertsRateHint": "هیچ شتێک لەدەست نادات کاتێک ژوورەکە لەمە قەرەباڵغتر بێت — نامەکان هەڵدەگیرێن و لە ئاگادارکردنەوەی داهاتوودا پێکەوە دێن."
   },
   "common": {
     "save": "Tomar bike",
@@ -811,7 +819,8 @@
     "postRemoved": "Şandiya te hate rakirin",
     "newNotification": "Agahdariya nû",
     "oneOther": "1 yê din",
-    "nOthers": "{{count}} yên din"
+    "nOthers": "{{count}} yên din",
+    "burstBody": "{{count}} ئاگادارکردنەوەی نوێ لە {{who}}"
   },
   "leaderboard": {
     "title": "Pêşengtî",
@@ -2068,5 +2077,17 @@
     "dubbed": "Dengê dublajkirî",
     "preparing": "Dengê dublajkirî tê amadekirin…",
     "unavailable": "Dengê dublajkirî ji bo vê vîdyoyê peyda nabe."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} و {{count}} ی تر",
+    "andOthers_other": "{{names}} و {{count}} ی تر",
+    "someone": "کەسێک"
+  },
+  "publicChatAlerts": {
+    "title": "چاتی گشتی",
+    "mentionTitle": "بانگکران لە چاتی گشتی",
+    "digest": "{{count}} نامەی نوێ لە {{who}}: {{message}}",
+    "voiceMessage": "نامەی دەنگی",
+    "image": "وێنەیەکی نارد"
   }
 }

@@ -319,7 +319,15 @@
     "saving": "Waa la keydinayaa...",
     "noNewMessages": "Wax wadahadal cusub ah ma jiro",
     "noNewMessagesDesc": "Hayso wadahadaladaada jira, laakiin qof cusub mid ma bilaabi karo",
-    "dmNoNewHelp": "Wadahadalada jira way sii shaqeeyaan; qof cusub mid ma bilaabi karo"
+    "dmNoNewHelp": "Wadahadalada jira way sii shaqeeyaan; qof cusub mid ma bilaabi karo",
+    "chat": "Doodo",
+    "publicChatAlerts": "Doodo dadweyne",
+    "publicChatAlertsDesc": "Ogeysiis hel marka doodda dadweynaha ay socoto adigoo ku jira bog kale",
+    "publicChatAlertsOnDesc": "Waqtiyo mashquul ah ayaa u yimaada hal digniin oo isku dhafan",
+    "publicChatAlertsNeedsBrowser": "Daar ogeysiisyada biraawsarka kor kaga qoran si kuwaasi ay u yimaadaan",
+    "publicChatAlertsRate": "Ugu badnaan",
+    "publicChatAlertsRateOption": "{{count}} saacadii",
+    "publicChatAlertsRateHint": "Waxba ma lumin marka qolku ka mashquulsanaado tan — fariimaha waa la hayaa oo waxay yimaadaan isla mar marka xigta ee digniinta."
   },
   "common": {
     "save": "Kaydi",
@@ -821,7 +829,8 @@
     "postRemoved": "Qoraalkaaga waa la saaray",
     "newNotification": "Ogeysiis cusub",
     "oneOther": "1 kale",
-    "nOthers": "{{count}} kale"
+    "nOthers": "{{count}} kale",
+    "burstBody": "{{count}} ogeysiis cusub oo ka yimid {{who}}"
   },
   "leaderboard": {
     "title": "Hogaamiyaha",
@@ -2113,5 +2122,17 @@
     "dubbed": "Maqalka la dubay",
     "preparing": "Diyaarinta maqalka loo yaqaan...",
     "unavailable": "Codadka codka ah ee la duubay lama heli karo fiidiyowgaan."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} iyo {{count}} kale",
+    "andOthers_other": "{{names}} iyo {{count}} kuwo kale",
+    "someone": "Qof"
+  },
+  "publicChatAlerts": {
+    "title": "Doodo dadweyne",
+    "mentionTitle": "Lagu xusay doodda dadweynaha",
+    "digest": "{{count}} fariimo cusub oo ka yimid {{who}}: {{message}}",
+    "voiceMessage": "Fariin cod ah",
+    "image": "Soo diray sawir"
   }
 }

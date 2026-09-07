@@ -317,7 +317,15 @@
     "saving": "กำลังบันทึก...",
     "noNewMessages": "ไม่รับบทสนทนาใหม่",
     "noNewMessagesDesc": "เก็บบทสนทนาที่มีอยู่ไว้ แต่คนใหม่เริ่มไม่ได้",
-    "dmNoNewHelp": "บทสนทนาที่มีอยู่ยังใช้ได้ต่อ แต่คนใหม่เริ่มไม่ได้"
+    "dmNoNewHelp": "บทสนทนาที่มีอยู่ยังใช้ได้ต่อ แต่คนใหม่เริ่มไม่ได้",
+    "chat": "แชท",
+    "publicChatAlerts": "แชทสาธารณะ",
+    "publicChatAlertsDesc": "รับการแจ้งเตือนเมื่อแชทสาธารณะกำลังพูดคุยขณะที่คุณอยู่ในแท็บอื่น",
+    "publicChatAlertsOnDesc": "ช่วงเวลาที่ยุ่งจะมาถึงเป็นการแจ้งเตือนรวมครั้งเดียว",
+    "publicChatAlertsNeedsBrowser": "เปิดการแจ้งเตือนเบราว์เซอร์ด้านบนเพื่อให้ได้รับการแจ้งเตือนเหล่านี้",
+    "publicChatAlertsRate": "สูงสุด",
+    "publicChatAlertsRateOption": "{{count}} ต่อชั่วโมง",
+    "publicChatAlertsRateHint": "ไม่มีอะไรสูญหายเมื่อห้องแชทมีผู้ใช้งานมากกว่านี้ — ข้อความจะถูกเก็บไว้และมาถึงพร้อมกันในการแจ้งเตือนครั้งถัดไป"
   },
   "common": {
     "save": "บันทึก",
@@ -833,7 +841,8 @@
     "postRemoved": "โพสต์ของคุณถูกลบออก",
     "newNotification": "การแจ้งเตือนใหม่",
     "oneOther": "อีก 1 คน",
-    "nOthers": "อีก {{count}} คน"
+    "nOthers": "อีก {{count}} คน",
+    "burstBody": "{{count}} การแจ้งเตือนใหม่จาก {{who}}"
   },
   "leaderboard": {
     "title": "ลีดเดอร์บอร์ด",
@@ -3651,6 +3660,18 @@
     "dubbed": "เสียงพากย์",
     "preparing": "กำลังเตรียมเสียงพากย์ …",
     "unavailable": "เสียงที่พากย์ไม่พร้อมใช้งานสำหรับวิดีโอนี้"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} และ {{count}} อื่นๆ",
+    "andOthers_other": "{{names}} และ {{count}} คนอื่นๆ",
+    "someone": "มีคน"
+  },
+  "publicChatAlerts": {
+    "title": "แชทสาธารณะ",
+    "mentionTitle": "ถูกกล่าวถึงในแชทสาธารณะ",
+    "digest": "{{count}} ข้อความใหม่จาก {{who}}: {{message}}",
+    "voiceMessage": "ข้อความเสียง",
+    "image": "ส่งรูปภาพ"
   },
   "glossary": {
     "title": "อภิธานศัพท์",

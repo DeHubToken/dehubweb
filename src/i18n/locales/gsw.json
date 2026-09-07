@@ -319,7 +319,15 @@
     "saving": "Spycheret...",
     "noNewMessages": "Kei neue Konversatione",
     "noNewMessagesDesc": "Behalt dini bstehende Chats, aber niemert Neus cha eine aafange",
-    "dmNoNewHelp": "Bstehendi Chats laufe wiiter; niemert Neus cha eine aafange"
+    "dmNoNewHelp": "Bstehendi Chats laufe wiiter; niemert Neus cha eine aafange",
+    "chat": "Chat",
+    "publicChatAlerts": "Öffentliger Chat",
+    "publicChatAlertsDesc": "Werds informiert, wenn im öffentlige Chat gredt wird, währed du i dim andere Tab bisch",
+    "publicChatAlertsOnDesc": "Busy stretches chömed als einigi kombinierti Alarm",
+    "publicChatAlertsNeedsBrowser": "Schalt die Browser-Notifikationä obe a, damit die chömed",
+    "publicChatAlertsRate": "Maximal",
+    "publicChatAlertsRateOption": "{{count}} pro Stund",
+    "publicChatAlertsRateHint": "Nüt gaht verlore, wenns Zimmer busier isch als das – die Nachrichtä werded ghaute und chömed zäme bim nächste Alarm."
   },
   "common": {
     "save": "Speichere",
@@ -821,7 +829,8 @@
     "postRemoved": "Din Bitrag isch entfernt worde",
     "newNotification": "Neui Nachricht",
     "oneOther": "1 andere",
-    "nOthers": "{{count}} anderi"
+    "nOthers": "{{count}} anderi",
+    "burstBody": "{{count}} nöii Notifikationä vo {{who}}"
   },
   "leaderboard": {
     "title": "Rangllischte",
@@ -2118,5 +2127,17 @@
     "dubbed": "Dübbedi Tohn",
     "preparing": "Tön vorbereite zum Synchronisiere...",
     "unavailable": "Für das Video isch kei synchronisierti Audio verfügbar."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} und {{count}} anderi",
+    "andOthers_other": "{{names}} und {{count}} anderi",
+    "someone": "Öpper"
+  },
+  "publicChatAlerts": {
+    "title": "Öffentliger Chat",
+    "mentionTitle": "Im öffentlige Chat erwähnt",
+    "digest": "{{count}} nöii Nachrichtä vo {{who}}: {{message}}",
+    "voiceMessage": "Stimm-Nachricht",
+    "image": "Bild gschickt"
   }
 }

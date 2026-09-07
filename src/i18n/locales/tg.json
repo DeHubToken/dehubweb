@@ -319,7 +319,15 @@
     "saving": "Дар ҳоли захира...",
     "noNewMessages": "Ҳеҷ сӯҳбати нав нест",
     "noNewMessagesDesc": "Сӯҳбатҳои мавҷудаи худро нигоҳ доред, аммо ҳеҷ кас аз нав наметавонад сӯҳбати тоза оғоз кунад",
-    "dmNoNewHelp": "Сӯҳбатҳои мавҷуда кор карданро идома медиҳанд; ҳеҷ кас аз нав наметавонад сӯҳбати тоза оғоз кунад"
+    "dmNoNewHelp": "Сӯҳбатҳои мавҷуда кор карданро идома медиҳанд; ҳеҷ кас аз нав наметавонад сӯҳбати тоза оғоз кунад",
+    "chat": "Чат",
+    "publicChatAlerts": "Чат дар байни мардум",
+    "publicChatAlertsDesc": "Ҳангоми дар ҷадвали дигар будан, огоҳ шавед, ки чат дар байни мардум сухан мегӯяд",
+    "publicChatAlertsOnDesc": "Давраҳои серкорӣ ҳамчун як огоҳии муттаҳидшуда меоянд",
+    "publicChatAlertsNeedsBrowser": "Барои гирифтани инҳо, огоҳиҳои браузерро дар боло фаъол кунед",
+    "publicChatAlertsRate": "Дар ҳадди аксар",
+    "publicChatAlertsRateOption": "{{count}} дар як соат",
+    "publicChatAlertsRateHint": "Ҳеҷ чиз гум намешавад, вақте ки ҳуҷра аз ин сертар аст - паёмҳо нигоҳ дошта мешаванд ва дар огоҳии навбатӣ якҷоя меоянд."
   },
   "common": {
     "save": "Сабт",
@@ -821,7 +829,8 @@
     "postRemoved": "Нашри шумо нест карда шуд",
     "newNotification": "Огоҳии нав",
     "oneOther": "1 дигар",
-    "nOthers": "{{count}} дигар"
+    "nOthers": "{{count}} дигар",
+    "burstBody": "{{count}} огоҳии нав аз {{who}}"
   },
   "leaderboard": {
     "title": "Рейтинг",
@@ -2112,5 +2121,17 @@
     "dubbed": "Аудиои дубора",
     "preparing": "Тайёр кардани аудиои дубляжшуда...",
     "unavailable": "Hindi magagamit ang audio ng Dubbed para sa video na ito."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} ва {{count}} дигар",
+    "andOthers_other": "{{names}} ва {{count}} дигарон",
+    "someone": "Касе"
+  },
+  "publicChatAlerts": {
+    "title": "Чат дар байни мардум",
+    "mentionTitle": "Дар чат дар байни мардум зикр шудааст",
+    "digest": "{{count}} паёми нав аз {{who}}: {{message}}",
+    "voiceMessage": "Паёми овози",
+    "image": "Акс фиристод"
   }
 }

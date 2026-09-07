@@ -319,7 +319,15 @@
     "saving": "กำลังบันทึก...",
     "noNewMessages": "บ่มีการสนทนาใหม่",
     "noNewMessagesDesc": "ฮักษาการสนทนาเก่าของเจ้าไว้ แต่บ่มีไผใหม่เริ่มได้",
-    "dmNoNewHelp": "การสนทนาเก่ายังใซ้ได้ปกติ; บ่มีไผใหม่เริ่มได้"
+    "dmNoNewHelp": "การสนทนาเก่ายังใซ้ได้ปกติ; บ่มีไผใหม่เริ่มได้",
+    "chat": "แชท",
+    "publicChatAlerts": "แชทสาธารณะ",
+    "publicChatAlertsDesc": "รับการแจ้งเตือนเมื่อแชทสาธารณะกำลังคุยกัน ขณะที่คุณอยู่ในแท็บอื่น",
+    "publicChatAlertsOnDesc": "ช่วงเวลาที่ยุ่งจะมาพร้อมกับการแจ้งเตือนเดียวที่รวมกัน",
+    "publicChatAlertsNeedsBrowser": "เปิดการแจ้งเตือนเบราว์เซอร์ด้านบนเพื่อให้ได้รับการแจ้งเตือนเหล่านี้",
+    "publicChatAlertsRate": "อย่างมากที่สุด",
+    "publicChatAlertsRateOption": "{{count}} ต่อชั่วโมง",
+    "publicChatAlertsRateHint": "ไม่มีอะไรสูญหายเมื่อห้องแชทมีคนคุยเยอะกว่านี้ — ข้อความจะถูกเก็บไว้และมาพร้อมกันในการแจ้งเตือนครั้งต่อไป"
   },
   "common": {
     "save": "บันทึก",
@@ -821,7 +829,8 @@
     "postRemoved": "โพสต์ของเจ้าถูกลบ",
     "newNotification": "แจ้งเตือนใหม่",
     "oneOther": "1 คนอื่น",
-    "nOthers": "{{count}} คนอื่น"
+    "nOthers": "{{count}} คนอื่น",
+    "burstBody": "{{count}} การแจ้งเตือนใหม่จาก {{who}}"
   },
   "leaderboard": {
     "title": "กระดานคะแนน",
@@ -2088,5 +2097,17 @@
     "dubbed": "เสียงพากย์",
     "preparing": "กำลังเตรียมเสียงพากย์...",
     "unavailable": "บ่มีเสียงพากย์สำหรับวิดีโอนี้เด้อ"
+  },
+  "digest": {
+    "andOthers_one": "{{names}} และ {{count}} อื่น",
+    "andOthers_other": "{{names}} และ {{count}} คนอื่น",
+    "someone": "ใครบางคน"
+  },
+  "publicChatAlerts": {
+    "title": "แชทสาธารณะ",
+    "mentionTitle": "ถูกกล่าวถึงในแชทสาธารณะ",
+    "digest": "{{count}} ข้อความใหม่จาก {{who}}: {{message}}",
+    "voiceMessage": "ข้อความเสียง",
+    "image": "ส่งรูปภาพ"
   }
 }

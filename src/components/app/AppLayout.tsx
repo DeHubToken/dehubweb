@@ -75,6 +75,7 @@ import { GlobalFeedNav } from './GlobalFeedNav';
 import { GlobalFeedNavProvider } from '@/contexts/GlobalFeedNavContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useStageAlerts } from '@/hooks/use-stage-alerts';
+import { usePublicChatAlerts } from '@/hooks/use-public-chat-alerts';
 import { cn } from '@/lib/utils';
 // Lazy: only rendered as the post overlay when a post is opened from home —
 // a whole page's worth of code that shouldn't ride in the entry bundle.
@@ -157,6 +158,11 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   // wherever you are in the app, so it mounts with the shell rather than on the
   // stages page.
   useStageAlerts();
+
+  // Public chat is opt-in and rate-limited by the reader — see the hook. Same
+  // reason as the stage alerts above: it has to reach you wherever you are,
+  // not only on the page that owns the feature.
+  usePublicChatAlerts();
 
   // Expose the middle panel's live bounds (the gap between the left/right
   // sidebars) as CSS vars so anything mounted outside AppLayout — the login

@@ -319,7 +319,14 @@
     "saving": "ይዕቀብ ኣሎ...",
     "noNewMessages": "ሓድሽ ዝርርብ የለን",
     "noNewMessagesDesc": "ዘለዉ ዝርርባትካ ይቐጽሉ፡ ግን ሓድሽ ሰብ ሓድሽ ክጅምር ኣይክእልን",
-    "dmNoNewHelp": "ዘለዉ ዝርርባት ይቕጽሉ፤ ሓድሽ ሰብ ግን ሓድሽ ክጅምር ኣይክእልን"
+    "dmNoNewHelp": "ዘለዉ ዝርርባት ይቕጽሉ፤ ሓድሽ ሰብ ግን ሓድሽ ክጅምር ኣይክእልን",
+    "chat": "ዕላል",
+    "publicChatAlerts": "ህዝባዊ ዝርርብ",
+    "publicChatAlertsDesc": "ኣብ ካልእ ታብ ከለኻ እቲ ህዝባዊ ዝርርብ መዓስ ከም ዚዛረብ ንገሮ",
+    "publicChatAlertsOnDesc": "ከም ሓደ ናይ ሓባር መጠንቀቕታ",
+    "publicChatAlertsNeedsBrowser": "ነዚ ንምብጻሕ ኣብ ላዕሊ ዘሎ ናይ ብራውዘር ኣፍልጦታት ኣበራብር",
+    "publicChatAlertsRate": "መብዛሕትኡ",
+    "publicChatAlertsRateHint": "እቲ ክፍሊ ካብዚ ንላዕሊ ምስ ዚዓዪ ፡ ዋላ ሓንቲ ኣይጠፍእን እዩ — እቲ መልእኽቲ ይዕቀብን ኣብ ቀጻሊ መጠንቀቕታ ይእከብን እዩ ።"
   },
   "common": {
     "save": "ዓቅብ",
@@ -2085,5 +2092,14 @@
     "dubbed": "ብድምጺ እተጻሕፈ",
     "preparing": "ንድምጺ ምድላው...",
     "unavailable": "እዚ ቪድዮ እዚ ገና ኣይተራእየን ።"
+  },
+  "digest": {
+    "someone": "ሓደ ሰብ"
+  },
+  "publicChatAlerts": {
+    "title": "ህዝባዊ ዝርርብ",
+    "mentionTitle": "ኣብ ህዝባዊ ቻት እተጠቕሰ",
+    "voiceMessage": "መልእኽቲ ድምጺ",
+    "image": "ስእሊ ልኢኽካ"
   }
 }

@@ -319,7 +319,15 @@
     "saving": "Salvestamine...",
     "noNewMessages": "Uusi vestlusi ei võta vastu",
     "noNewMessagesDesc": "Säilita olemasolevad vestlused, kuid keegi uus ei saa alustada",
-    "dmNoNewHelp": "Olemasolevad vestlused töötavad edasi; keegi uus ei saa alustada"
+    "dmNoNewHelp": "Olemasolevad vestlused töötavad edasi; keegi uus ei saa alustada",
+    "chat": "Vestlus",
+    "publicChatAlerts": "Avalik vestlus",
+    "publicChatAlertsDesc": "Saate teate, kui avalikus vestluses räägitakse, samal ajal kui olete teises vahekaardis",
+    "publicChatAlertsOnDesc": "Kiired perioodid saabuvad ühendatud hoiatusena",
+    "publicChatAlertsNeedsBrowser": "Nende saabumiseks lülitage ülal brauseriteated sisse",
+    "publicChatAlertsRate": "Maksimaalselt",
+    "publicChatAlertsRateOption": "{{count}} tunnis",
+    "publicChatAlertsRateHint": "Midagi ei lähe kaduma, kui ruum on tihedam kui see – sõnumid hoitakse kinni ja saabuvad koos järgmise hoiatusena."
   },
   "common": {
     "save": "Salvesta",
@@ -812,7 +820,8 @@
     "postRemoved": "Sinu postitus eemaldati",
     "newNotification": "Uus teade",
     "oneOther": "1 teine",
-    "nOthers": "{{count}} teist"
+    "nOthers": "{{count}} teist",
+    "burstBody": "{{count}} uut teadet {{who}}-lt"
   },
   "leaderboard": {
     "title": "Edetabel",
@@ -4363,5 +4372,17 @@
     "dubbed": "Dubleeritud heli",
     "preparing": "Dubleeritud heli ettevalmistamine...",
     "unavailable": "Selle video jaoks pole dubleeritud heli saadaval."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} ja {{count}} teist",
+    "andOthers_other": "{{names}} ja {{count}} teist",
+    "someone": "Keegi"
+  },
+  "publicChatAlerts": {
+    "title": "Avalik vestlus",
+    "mentionTitle": "Mainitud avalikus vestluses",
+    "digest": "{{count}} uut sõnumit {{who}}-lt: {{message}}",
+    "voiceMessage": "Häälsõnum",
+    "image": "Saatis pildi"
   }
 }

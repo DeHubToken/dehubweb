@@ -319,7 +319,15 @@
     "saving": "E tiaki ana...",
     "noNewMessages": "Kāore he kōrero hou",
     "noNewMessagesDesc": "Puritia ō kōrero o mua, engari kāore e taea e tētahi tangata hou te tīmata",
-    "dmNoNewHelp": "Ka mahi tonu ngā kōrero o mua; kāore e taea e tētahi tangata hou te tīmata"
+    "dmNoNewHelp": "Ka mahi tonu ngā kōrero o mua; kāore e taea e tētahi tangata hou te tīmata",
+    "chat": "Kōrerorero",
+    "publicChatAlerts": "Kōrerorero tūmatanui",
+    "publicChatAlertsDesc": "Tonoa kia whakamōhiotia ka kōrero ana te kōrerorero tūmatanui i a koe i tētahi atu ripa",
+    "publicChatAlertsOnDesc": "Ka tae mai ngā wā pukumahi hei tētahi whakaoho kotahi",
+    "publicChatAlertsNeedsBrowser": "Whakāwhia ngā whakamōhiotanga pūwhiti i runga ake nei kia tae mai ai ēnei",
+    "publicChatAlertsRate": "Mō te nuinga",
+    "publicChatAlertsRateOption": "{{count}} ia haora",
+    "publicChatAlertsRateHint": "Kāore he mea i ngaro i te wā e kaha ake ana te ruma i tēnei — ka mauhia ngā karere, ka tae mai hoki i te whakaoho e whai ake nei."
   },
   "common": {
     "save": "Tiaki",
@@ -821,7 +829,8 @@
     "postRemoved": "Kua tangohia tō pānui",
     "newNotification": "Whakamōhio hou",
     "oneOther": "1 anō",
-    "nOthers": "{{count}} anō"
+    "nOthers": "{{count}} anō",
+    "burstBody": "{{count}} whakamōhiotanga hou nā {{who}}"
   },
   "leaderboard": {
     "title": "Rārangi Rangatira",
@@ -2113,5 +2122,17 @@
     "dubbed": "Oro reo irirangi",
     "preparing": "Te whakarite i te oro e kiia nei ko...",
     "unavailable": "E kore e wātea ana te oro o te kōpaki mō tēnei ataata."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} me {{count}} atu anō",
+    "andOthers_other": "{{names}} me {{count}} ētahi atu",
+    "someone": "Tētahi"
+  },
+  "publicChatAlerts": {
+    "title": "Kōrerorero tūmatanui",
+    "mentionTitle": "Kua whakahuatia i roto i te kōrerorero tūmatanui",
+    "digest": "{{count}} karere hou nā {{who}}: {{message}}",
+    "voiceMessage": "Karere reo",
+    "image": "Tukua he whakaahua"
   }
 }

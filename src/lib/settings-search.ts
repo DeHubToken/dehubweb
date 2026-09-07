@@ -81,6 +81,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'notifications', anchor: 'notify-milestones', label: 'Milestones', keywords: 'achievements' },
   { tab: 'notifications', anchor: 'notify-account-alerts', label: 'Account Alerts', keywords: 'security login alerts' },
   { tab: 'notifications', anchor: 'notify-announcements', label: 'Announcements', keywords: 'platform updates news' },
+  { tab: 'notifications', anchor: 'public-chat-alerts', label: 'Public chat', labelKey: 'settings.publicChatAlerts', keywords: 'chat room global alerts rate limit per hour raid spam' },
   { tab: 'notifications', anchor: 'buy-bot', label: 'Buy Bot Alerts', keywords: 'chat bot purchases hide' },
   { tab: 'notifications', anchor: 'quiet-hours', label: 'Quiet Hours', labelKey: 'settings.quietHours', keywords: 'silence mute schedule night' },
 

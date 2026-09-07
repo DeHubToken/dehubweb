@@ -317,7 +317,15 @@
     "saving": "जतन होत आहे...",
     "noNewMessages": "नवीन संभाषणे नकोत",
     "noNewMessagesDesc": "तुमची सध्याची संभाषणे ठेवा, पण नवीन कोणीही सुरू करू शकणार नाही",
-    "dmNoNewHelp": "सध्याची संभाषणे चालूच राहतील; नवीन कोणीही सुरू करू शकणार नाही"
+    "dmNoNewHelp": "सध्याची संभाषणे चालूच राहतील; नवीन कोणीही सुरू करू शकणार नाही",
+    "chat": "चॅट",
+    "publicChatAlerts": "सार्वजनिक चॅट",
+    "publicChatAlertsDesc": "तुम्ही दुसऱ्या टॅबमध्ये असताना सार्वजनिक चॅट बोलत आहे हे तुम्हाला कळेल",
+    "publicChatAlertsOnDesc": "व्यस्ततेचे टप्पे एका एकत्रित अलर्ट म्हणून येतात",
+    "publicChatAlertsNeedsBrowser": "हे येण्यासाठी वरील ब्राउझर सूचना चालू करा",
+    "publicChatAlertsRate": "जास्तीत जास्त",
+    "publicChatAlertsRateOption": "तासाला {{count}}",
+    "publicChatAlertsRateHint": "जेव्हा खोली यापेक्षा व्यस्त असेल तेव्हा काहीही गमावले जात नाही - संदेश ठेवले जातात आणि पुढील अलर्टवर एकत्र येतात."
   },
   "common": {
     "save": "जतन करा",
@@ -818,7 +826,8 @@
     "postRemoved": "तुमची पोस्ट हटवली",
     "newNotification": "नवीन सूचना",
     "oneOther": "1 इतर",
-    "nOthers": "{{count}} इतर"
+    "nOthers": "{{count}} इतर",
+    "burstBody": "{{count}} नवीन सूचना {{who}} कडून"
   },
   "leaderboard": {
     "title": "लीडरबोर्ड",
@@ -4160,5 +4169,17 @@
     "dubbed": "डब केलेला ऑडिओ",
     "preparing": "डब केलेले ऑडिओ तयार करत आहे...",
     "unavailable": "या व्हिडिओसाठी डब केलेला ऑडिओ उपलब्ध नाही."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} आणि {{count}} इतर",
+    "andOthers_other": "{{names}} आणि {{count}} इतरांकडून",
+    "someone": "कोणीतरी"
+  },
+  "publicChatAlerts": {
+    "title": "सार्वजनिक चॅट",
+    "mentionTitle": "सार्वजनिक चॅटमध्ये उल्लेखित",
+    "digest": "{{count}} नवीन संदेश {{who}} कडून: {{message}}",
+    "voiceMessage": "व्हॉइस मेसेज",
+    "image": "एक इमेज पाठवली"
   }
 }

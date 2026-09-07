@@ -319,7 +319,15 @@
     "saving": "Tallennetaan...",
     "noNewMessages": "Ei uusia keskusteluja",
     "noNewMessagesDesc": "Säilytä nykyiset keskustelusi, mutta kukaan uusi ei voi aloittaa",
-    "dmNoNewHelp": "Olemassa olevat keskustelut jatkuvat; kukaan uusi ei voi aloittaa"
+    "dmNoNewHelp": "Olemassa olevat keskustelut jatkuvat; kukaan uusi ei voi aloittaa",
+    "chat": "Chat",
+    "publicChatAlerts": "Julkinen keskustelu",
+    "publicChatAlertsDesc": "Saat ilmoituksen, kun julkisessa keskustelussa puhutaan, vaikka olisit toisella välilehdellä",
+    "publicChatAlertsOnDesc": "Kiireiset jaksot tulevat yhtenä yhdistettynä hälytyksenä",
+    "publicChatAlertsNeedsBrowser": "Ota käyttöön selaimesi ilmoitukset yllä, jotta nämä saapuvat",
+    "publicChatAlertsRate": "Enintään",
+    "publicChatAlertsRateOption": "{{count}} tunnissa",
+    "publicChatAlertsRateHint": "Mitään ei menetetä, kun huone on tätä vilkkaampi – viestit pidetään ja ne saapuvat yhdessä seuraavan hälytyksen yhteydessä."
   },
   "common": {
     "save": "Tallenna",
@@ -812,7 +820,8 @@
     "postRemoved": "Julkaisusi poistettiin",
     "newNotification": "Uusi ilmoitus",
     "oneOther": "1 muu",
-    "nOthers": "{{count}} muuta"
+    "nOthers": "{{count}} muuta",
+    "burstBody": "{{count}} uutta ilmoitusta {{who}}:ltä"
   },
   "leaderboard": {
     "title": "Tulostaulukko",
@@ -4359,5 +4368,17 @@
     "dubbed": "Kutsuttu ääni",
     "preparing": "Valmistellaan dubattua ääntä...",
     "unavailable": "Toistettu ääni ei ole käytettävissä tälle videolle."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} ja {{count}} muuta",
+    "andOthers_other": "{{names}} ja {{count}} muuta",
+    "someone": "Joku"
+  },
+  "publicChatAlerts": {
+    "title": "Julkinen keskustelu",
+    "mentionTitle": "Mainittu julkisessa keskustelussa",
+    "digest": "{{count}} uutta viestiä {{who}}:ltä: {{message}}",
+    "voiceMessage": "Ääniviesti",
+    "image": "Lähetetty kuva"
   }
 }

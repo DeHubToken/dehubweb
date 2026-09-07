@@ -319,7 +319,15 @@
     "saving": "بيحفظ...",
     "noNewMessages": "مفيش محادثات جديدة",
     "noNewMessagesDesc": "خلي محادثاتك الموجودة، بس محدش جديد يقدر يبدأ واحدة",
-    "dmNoNewHelp": "المحادثات الموجودة تفضل شغالة؛ محدش جديد يقدر يبدأ واحدة"
+    "dmNoNewHelp": "المحادثات الموجودة تفضل شغالة؛ محدش جديد يقدر يبدأ واحدة",
+    "chat": "شات",
+    "publicChatAlerts": "شات عام",
+    "publicChatAlertsDesc": "احصل على تنبيه لما الشات العام بيتكلم وانت في تاب تاني",
+    "publicChatAlertsOnDesc": "فترات الزحمة بتيجي كتنبيه واحد مجمع",
+    "publicChatAlertsNeedsBrowser": "شغل إشعارات المتصفح فوق عشان توصلك",
+    "publicChatAlertsRate": "بالكتير",
+    "publicChatAlertsRateOption": "{{count}} في الساعة",
+    "publicChatAlertsRateHint": "مفيش حاجة بتضيع لما الأوضة تكون أزحم من كده - الرسائل بتتحفظ وبتوصل مع بعض في التنبيه اللي جاي."
   },
   "common": {
     "save": "احفظ",
@@ -818,7 +826,8 @@
     "postRemoved": "منشورك اتشال",
     "newNotification": "إشعار جديد",
     "oneOther": "واحد تاني",
-    "nOthers": "{{count}} تانيين"
+    "nOthers": "{{count}} تانيين",
+    "burstBody": "{{count}} إشعارات جديدة من {{who}}"
   },
   "leaderboard": {
     "title": "لوحة الترتيب",
@@ -2086,6 +2095,18 @@
     "dubbed": "صوت مدبلج",
     "preparing": "تجهيز صوت مدبلج...",
     "unavailable": "الصوت المدبلج مش موجود للفيديو ده."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} و {{count}} تانيين",
+    "andOthers_other": "{{names}} و {{count}} آخرين",
+    "someone": "حد"
+  },
+  "publicChatAlerts": {
+    "title": "شات عام",
+    "mentionTitle": "تم ذكرك في الشات العام",
+    "digest": "{{count}} رسالة جديدة من {{who}}: {{message}}",
+    "voiceMessage": "رسالة صوتية",
+    "image": "بعت صورة"
   },
   "post": {
     "like": "إعجاب",

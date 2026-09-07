@@ -319,7 +319,15 @@
     "saving": "Olkaa'aa jira...",
     "noNewMessages": "Haasaa haaraa hin jiru",
     "noNewMessagesDesc": "Haasawwan kee jiran eegi, garuu namni haaraan tokko jalqabuu hin danda'u",
-    "dmNoNewHelp": "Haasawwan jiran itti fufu; namni haaraan tokko jalqabuu hin danda'u"
+    "dmNoNewHelp": "Haasawwan jiran itti fufu; namni haaraan tokko jalqabuu hin danda'u",
+    "chat": "Waliin dubbii",
+    "publicChatAlerts": "Chaat ummataa",
+    "publicChatAlertsDesc": "Yeroo chat ummataa haasa&#39;u osoo ati caancala biraa keessa jirtuu itti himama",
+    "publicChatAlertsOnDesc": "Busy stretches akka akeekkachiisa walitti makame tokkootti dhufa",
+    "publicChatAlertsNeedsBrowser": "Isaan kun akka dhufaniif beeksisa browser armaan olii ibsi",
+    "publicChatAlertsRate": "Yoo baay&#39;ate",
+    "publicChatAlertsRateOption": "{{count}} sa&#39;aatii tokkotti",
+    "publicChatAlertsRateHint": "Yeroo kutaan kana caalaa hojiin itti baay’atu wanti bade hin jiru — ergaawwan qabamaniiru, akeekkachiisa itti aanu irrattis waliin ga’u."
   },
   "common": {
     "save": "Olchi",
@@ -834,7 +842,8 @@
     "postRemoved": "Your post was removed",
     "newNotification": "Beeksisa Haaraa",
     "oneOther": "1 other",
-    "nOthers": "{{count}} others"
+    "nOthers": "{{count}} others",
+    "burstBody": "{{count}} beeksisa haaraa {{who}} irraa"
   },
   "leaderboard": {
     "title": "Sadarkaa",
@@ -2137,6 +2146,18 @@
     "dubbed": "Sagalee maqaa itti moggaafame",
     "preparing": "Sagalee dubbed qopheessuu...",
     "unavailable": "Viidiyoo kanaaf sagaleen dubbed ta&#39;e hin jiru."
+  },
+  "digest": {
+    "andOthers_one": "{{names}} fi {{count}} kanneen biroo",
+    "andOthers_other": "{{names}} fi {{count}} kanneen biroo",
+    "someone": "Nama ta&#39;e"
+  },
+  "publicChatAlerts": {
+    "title": "Chaat ummataa",
+    "mentionTitle": "Chaat ummataa irratti kan caqafame",
+    "digest": "{{count}} ergaa haaraa {{who}} irraa: {{message}}",
+    "voiceMessage": "Ergaa sagalee",
+    "image": "Suuraa erge"
   },
   "spaces": {
     "title": "Bakkeewwan",

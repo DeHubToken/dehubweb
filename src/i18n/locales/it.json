@@ -319,7 +319,15 @@
     "saving": "Salvataggio...",
     "noNewMessages": "Nessuna nuova conversazione",
     "noNewMessagesDesc": "Mantieni le conversazioni esistenti, ma nessuno di nuovo può iniziarne una",
-    "dmNoNewHelp": "Le conversazioni esistenti continuano a funzionare; nessuno di nuovo può iniziarne una"
+    "dmNoNewHelp": "Le conversazioni esistenti continuano a funzionare; nessuno di nuovo può iniziarne una",
+    "chat": "Chat",
+    "publicChatAlerts": "Chat pubblica",
+    "publicChatAlertsDesc": "Ricevi una notifica quando la chat pubblica è attiva mentre sei in un'altra scheda",
+    "publicChatAlertsOnDesc": "I periodi di attività arrivano come un unico avviso combinato",
+    "publicChatAlertsNeedsBrowser": "Attiva le notifiche del browser qui sopra affinché arrivino",
+    "publicChatAlertsRate": "Al massimo",
+    "publicChatAlertsRateOption": "{{count}} all'ora",
+    "publicChatAlertsRateHint": "Nulla viene perso quando la stanza è più attiva di così: i messaggi vengono conservati e arrivano insieme al prossimo avviso."
   },
   "common": {
     "save": "Salva",
@@ -821,7 +829,8 @@
     "postRemoved": "Il tuo post è stato rimosso",
     "newNotification": "Nuova notifica",
     "oneOther": "1 altra persona",
-    "nOthers": "{{count}} altre persone"
+    "nOthers": "{{count}} altre persone",
+    "burstBody": "{{count}} nuove notifiche da {{who}}"
   },
   "leaderboard": {
     "title": "Classifica",
@@ -4454,5 +4463,17 @@
       "feature_request": "Proposta di funzione",
       "other": "Altro"
     }
+  },
+  "digest": {
+    "andOthers_one": "{{names}} e {{count}} altri",
+    "andOthers_other": "{{names}} e {{count}} altri",
+    "someone": "Qualcuno"
+  },
+  "publicChatAlerts": {
+    "title": "Chat pubblica",
+    "mentionTitle": "Menzionato nella chat pubblica",
+    "digest": "{{count}} nuovi messaggi da {{who}}: {{message}}",
+    "voiceMessage": "Messaggio vocale",
+    "image": "Inviato un'immagine"
   }
 }

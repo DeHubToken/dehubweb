@@ -140,6 +140,7 @@ import { useConnectionQuality, setLiteModePref } from '@/hooks/use-connection-qu
 import { useAnimations } from '@/contexts/AnimationsContext';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { BrowserNotificationsSetting } from '@/components/app/settings/BrowserNotificationsSetting';
+import { PublicChatAlertsSetting } from '@/components/app/settings/PublicChatAlertsSetting';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import { FollowRequestsDrawer } from '@/components/app/profile/FollowRequestsDrawer';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -1462,8 +1463,10 @@ function NotificationSettings() {
 
       {/* Chat */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Chat</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.chat', 'Chat')}</h3>
         <div className="space-y-4">
+          {/* Owns its own rate limit as well as its switch — see the component. */}
+          <PublicChatAlertsSetting />
           <div data-setting-anchor="buy-bot">
             <BuyBotToggle />
           </div>

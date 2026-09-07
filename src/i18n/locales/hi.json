@@ -319,7 +319,15 @@
     "saving": "सहेजा जा रहा है...",
     "noNewMessages": "कोई नई बातचीत नहीं",
     "noNewMessagesDesc": "अपनी मौजूदा बातचीत रखें, पर कोई नया व्यक्ति नई बातचीत शुरू न कर सके",
-    "dmNoNewHelp": "मौजूदा बातचीत चलती रहेंगी; कोई नया व्यक्ति नई बातचीत शुरू नहीं कर सकेगा"
+    "dmNoNewHelp": "मौजूदा बातचीत चलती रहेंगी; कोई नया व्यक्ति नई बातचीत शुरू नहीं कर सकेगा",
+    "chat": "चैट",
+    "publicChatAlerts": "सार्वजनिक चैट",
+    "publicChatAlertsDesc": "जब आप किसी अन्य टैब में हों तो सार्वजनिक चैट के बात करने पर सूचित करें",
+    "publicChatAlertsOnDesc": "व्यस्तता एक संयुक्त अलर्ट के रूप में आएगी",
+    "publicChatAlertsNeedsBrowser": "इनके आने के लिए ऊपर ब्राउज़र सूचनाएं चालू करें",
+    "publicChatAlertsRate": "अधिकतम",
+    "publicChatAlertsRateOption": "{{count}} प्रति घंटा",
+    "publicChatAlertsRateHint": "जब कमरा इससे अधिक व्यस्त होता है तो कुछ भी खोता नहीं है - संदेश रखे जाते हैं और अगले अलर्ट पर एक साथ आते हैं।"
   },
   "common": {
     "save": "सेव करें",
@@ -828,7 +836,8 @@
     "postRemoved": "आपकी पोस्ट हटा दी गई",
     "newNotification": "नई सूचना",
     "oneOther": "1 अन्य",
-    "nOthers": "{{count}} अन्य"
+    "nOthers": "{{count}} अन्य",
+    "burstBody": "{{count}} नई सूचनाएं {{who}} से"
   },
   "leaderboard": {
     "title": "लीडरबोर्ड",
@@ -4484,5 +4493,17 @@
       "feature_request": "नई सुविधा का सुझाव",
       "other": "अन्य"
     }
+  },
+  "digest": {
+    "andOthers_one": "{{names}} और {{count}} अन्य",
+    "andOthers_other": "{{names}} और {{count}} अन्य",
+    "someone": "कोई"
+  },
+  "publicChatAlerts": {
+    "title": "सार्वजनिक चैट",
+    "mentionTitle": "सार्वजनिक चैट में उल्लेख किया गया",
+    "digest": "{{count}} नए संदेश {{who}} से: {{message}}",
+    "voiceMessage": "वॉयस मैसेज",
+    "image": "एक छवि भेजी"
   }
 }

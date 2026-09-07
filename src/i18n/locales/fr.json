@@ -319,7 +319,15 @@
     "saving": "Enregistrement...",
     "noNewMessages": "Aucune nouvelle conversation",
     "noNewMessagesDesc": "Gardez vos fils existants, mais personne de nouveau ne peut en démarrer un",
-    "dmNoNewHelp": "Les fils existants continuent de fonctionner ; personne de nouveau ne peut en démarrer un"
+    "dmNoNewHelp": "Les fils existants continuent de fonctionner ; personne de nouveau ne peut en démarrer un",
+    "chat": "Chat",
+    "publicChatAlerts": "Chat public",
+    "publicChatAlertsDesc": "Soyez informé lorsque le chat public est actif pendant que vous êtes dans un autre onglet",
+    "publicChatAlertsOnDesc": "Les périodes chargées arrivent sous forme d'une seule alerte combinée",
+    "publicChatAlertsNeedsBrowser": "Activez les notifications du navigateur ci-dessus pour qu'elles arrivent",
+    "publicChatAlertsRate": "Au plus",
+    "publicChatAlertsRateOption": "{{count}} par heure",
+    "publicChatAlertsRateHint": "Rien n'est perdu lorsque la salle est plus animée que cela — les messages sont conservés et arrivent ensemble lors de la prochaine alerte."
   },
   "common": {
     "save": "Enregistrer",
@@ -821,7 +829,8 @@
     "postRemoved": "Votre publication a été supprimée",
     "newNotification": "Nouvelle notification",
     "oneOther": "1 autre",
-    "nOthers": "{{count}} autres"
+    "nOthers": "{{count}} autres",
+    "burstBody": "{{count}} nouvelles notifications de {{who}}"
   },
   "leaderboard": {
     "title": "Classements",
@@ -4472,5 +4481,17 @@
       "feature_request": "Suggestion",
       "other": "Autre"
     }
+  },
+  "digest": {
+    "andOthers_one": "{{names}} et {{count}} autre",
+    "andOthers_other": "{{names}} et {{count}} autres",
+    "someone": "Quelqu'un"
+  },
+  "publicChatAlerts": {
+    "title": "Chat public",
+    "mentionTitle": "Mentionné dans le chat public",
+    "digest": "{{count}} nouveaux messages de {{who}} : {{message}}",
+    "voiceMessage": "Message vocal",
+    "image": "A envoyé une image"
   }
 }
