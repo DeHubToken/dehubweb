@@ -1580,6 +1580,9 @@
     "turn_on_desktop_notifications": "د ډیسک ټاپ خبرتیاوې چالانې شي؟",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "کله چې په بل ټب کې یاست، د ځوابونو، انعامونو او پیغامونو خبر ترلاسه کړئ.",
     "turn_on": "چالان کړئ",
+    "push_blocked_title": "خبرتیاوې تاسو ته نه رسیږي",
+    "push_blocked_body": "ستاسو سیسټم د دې براوزر لپاره خبرتیاوې بلاک کوي، نو کله چې DeHub بند وي هیڅ شی تاسو ته نه رسیږي. په خپل سیسټم کې د خبرتیاوو ترتیباتو کې د خپل براوزر لپاره بیرته فعال کړئ.",
+    "push_blocked_more": "نور تفصیل",
     "not_now": "اوس نه"
   },
   "staking": {

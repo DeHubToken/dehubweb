@@ -1553,6 +1553,9 @@
     "turn_on_desktop_notifications": "Zapnout oznámení na ploše?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Dozvíte se o odpovědích, spropitném a zprávách, i když jste na jiné kartě.",
     "turn_on": "Zapnout",
+    "push_blocked_title": "Oznámení se k vám nedostávají",
+    "push_blocked_body": "Váš systém blokuje oznámení pro tento prohlížeč, takže se k vám nic nedostane, když je DeHub zavřený. Zapněte je znovu pro svůj prohlížeč v nastavení oznámení vašeho systému.",
+    "push_blocked_more": "Více podrobností",
     "not_now": "Teď ne"
   },
   "staking": {

@@ -1611,6 +1611,9 @@
     "turn_on_desktop_notifications": "Masaüstü bildirimleri açılsın mı?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Başka bir sekmedeyken yanıtlardan, bahşişlerden ve mesajlardan haberdar olun.",
     "turn_on": "Aç",
+    "push_blocked_title": "Bildirimler size ulaşmıyor",
+    "push_blocked_body": "Tarayıcınız için bildirimler sisteminiz tarafından engelleniyor, bu nedenle DeHub kapalıyken size hiçbir şey ulaşmıyor. Tarayıcınız için sistem bildirim ayarlarınızdan bunları tekrar açın.",
+    "push_blocked_more": "Daha fazla ayrıntı",
     "not_now": "Şimdi değil"
   },
   "staking": {

@@ -1353,6 +1353,9 @@
     "turn_on_desktop_notifications": "Bật thông báo trên máy tính?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Nhận thông báo về phản hồi, tiền tip và tin nhắn khi bạn đang ở tab khác.",
     "turn_on": "Bật",
+    "push_blocked_title": "Thông báo không đến được với bạn",
+    "push_blocked_body": "Hệ thống của bạn đang chặn thông báo cho trình duyệt này, vì vậy bạn sẽ không nhận được gì khi DeHub đóng. Hãy bật lại chúng cho trình duyệt của bạn trong cài đặt thông báo của hệ thống.",
+    "push_blocked_more": "Chi tiết hơn",
     "not_now": "Để sau"
   },
   "staking": {

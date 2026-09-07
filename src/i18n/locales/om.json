@@ -1604,6 +1604,9 @@
     "turn_on_desktop_notifications": "Beeksisa deskitoopii banuu?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Tab biraa irra osoo jirtuu deebii, kennaa fi ergaa waa'ee beeksisa argadhu.",
     "turn_on": "Banii",
+    "push_blocked_title": "Ibsi si hin geenye",
+    "push_blocked_body": "Sistimni kee beeksisa hordoffii kanaaf banameera, kanaaf DeHub cufamee yoo jiraate si hin gahan. Sistimoota kee keessatti hordoffiiwwan kanaaf hordoffiiwwan kee irra deebi'i.",
+    "push_blocked_more": "Qubee dabaloo",
     "not_now": "Amma miti"
   },
   "staking": {

@@ -1879,6 +1879,9 @@
     "turn_on_desktop_notifications": "Hidupkan pemberitahuan desktop?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Dapat pemberitahuan tentang balasan, tip dan DM semasa anda di tab lain.",
     "turn_on": "Hidupkan",
+    "push_blocked_title": "Notifikasi tidak sampai kepada anda",
+    "push_blocked_body": "Sistem anda menyekat pemberitahuan untuk penyemak imbas ini, jadi tiada apa pun yang sampai kepada anda semasa DeHub ditutup. Hidupkan semula untuk penyemak imbas anda dalam tetapan pemberitahuan sistem anda.",
+    "push_blocked_more": "Lebih terperinci",
     "not_now": "Bukan sekarang"
   },
   "staking": {

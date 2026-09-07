@@ -1548,6 +1548,9 @@
     "turn_on_desktop_notifications": "Uključiti obavijesti na radnoj površini?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Saznajte za odgovore, napojnice i poruke dok ste u drugoj kartici.",
     "turn_on": "Uključi",
+    "push_blocked_title": "Obavijesti vam ne stižu",
+    "push_blocked_body": "Vaš sustav blokira obavijesti za ovaj preglednik, tako da ništa ne stiže dok je DeHub zatvoren. Ponovno ih uključite za svoj preglednik u postavkama obavijesti vašeg sustava.",
+    "push_blocked_more": "Više detalja",
     "not_now": "Ne sada"
   },
   "staking": {

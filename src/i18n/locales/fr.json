@@ -1615,6 +1615,9 @@
     "turn_on_desktop_notifications": "Activer les notifications du bureau ?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Soyez prévenu des réponses, pourboires et messages pendant que vous êtes dans un autre onglet.",
     "turn_on": "Activer",
+    "push_blocked_title": "Les notifications ne vous parviennent pas",
+    "push_blocked_body": "Votre système bloque les notifications pour ce navigateur, donc rien ne vous parvient lorsque DeHub est fermé. Réactivez-les pour votre navigateur dans les paramètres de notification de votre système.",
+    "push_blocked_more": "Plus de détails",
     "not_now": "Pas maintenant"
   },
   "staking": {

@@ -1613,6 +1613,9 @@
     "turn_on_desktop_notifications": "Desktop-Benachrichtigunge iischalte?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Erfahr vo Antworte, Tips und DMs, während du imene andere Tab bisch.",
     "turn_on": "Iischalte",
+    "push_blocked_title": "Benachrichtigige erreiche dich nöd",
+    "push_blocked_body": "Dini System blockiert Benachrichtigige für das Browser, drum chunt nüt bi dir a, wänn DeHub zue isch. Schalts die wider a für din Browser i de Benachrichtigigs-Iistellige vo dim System.",
+    "push_blocked_more": "Meh Detail",
     "not_now": "Jetz nöd"
   },
   "staking": {

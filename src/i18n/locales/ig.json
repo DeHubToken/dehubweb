@@ -1587,6 +1587,9 @@
     "turn_on_desktop_notifications": "Gbanye ọkwa kọmputa?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Nweta ọkwa gbasara nzaghachi, onyinye na ozi ndị nzuzo mgbe ị nọ na taabụ ọzọ.",
     "turn_on": "Gbanye",
+    "push_blocked_title": "Ngwa ngwa anaghị erute gị",
+    "push_blocked_body": "Sistemu gị na-egbochi ngosi maka ihe nchọgharị a, yabụ ọ nweghị ihe ruru gị mgbe DeHub mechiri. Gbanyụọ ha ọzọ maka ihe nchọgharị gị na ntọala ngosi sistemu gị.",
+    "push_blocked_more": "Ihe ọzọ",
     "not_now": "Ọ bụghị ugbu a"
   },
   "staking": {

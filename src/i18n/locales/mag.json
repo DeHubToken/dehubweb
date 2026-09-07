@@ -1580,6 +1580,9 @@
     "turn_on_desktop_notifications": "डेस्कटॉप सूचना चालू करी?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "दोसर टैब में रहते बखत भी जवाब, टिप आउ संदेश के खबर पाईं।",
     "turn_on": "चालू करूँ",
+    "push_blocked_title": "संदेस तोहार तक ना पहुँच रहल बा",
+    "push_blocked_body": "ई सिस्टम ई ब्राउज़र खातिर सूचना के ब्लॉक कs रहल बा, तs डीहब बंद रहेला तs कुछुओ तोहरा तक ना पहुँचेला। तोर सिस्टम सूचना सेटिंग में अपना ब्राउज़र खातिर ओकरा के फिर से चालू कs।",
+    "push_blocked_more": "और विस्तार",
     "not_now": "अभी ना"
   },
   "staking": {

@@ -1808,6 +1808,9 @@
     "turn_on_desktop_notifications": "Bureaubladmeldingen aanzetten?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Krijg een seintje bij reacties, tips en DM's terwijl je op een ander tabblad zit.",
     "turn_on": "Aanzetten",
+    "push_blocked_title": "Meldingen bereiken je niet",
+    "push_blocked_body": "Je systeem blokkeert meldingen voor deze browser, dus je ontvangt niets als DeHub gesloten is. Schakel ze weer in voor je browser in je systeemmeldinginstellingen.",
+    "push_blocked_more": "Meer details",
     "not_now": "Niet nu"
   },
   "staking": {
