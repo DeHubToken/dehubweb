@@ -52,7 +52,7 @@ import {
 } from '@/lib/api/dehub/dm-socket';
 import type { QueryClient } from '@tanstack/react-query';
 import { isEncryptedContent } from '@/lib/dm-e2ee/crypto';
-import { decryptFromPeer, decryptMessageInPlace, onIdentityChange, prepareOutgoing } from '@/lib/dm-e2ee/keys';
+import { decryptFromPeer, decryptMessageInPlace, loadIdentity, onIdentityChange, prepareOutgoing } from '@/lib/dm-e2ee/keys';
 
 /**
  * Blob URL for an optimistic message with auto-revoke. The optimistic entry is
@@ -128,6 +128,31 @@ export const messagesKeys = {
   userSearch: (query: string) => [...MESSAGES_BASE_KEY, 'userSearch', query] as const,
 };
 
+/**
+ * Open the newest encrypted line for every conversation before the list is
+ * cached. A stored identity must be loaded here, not only by the thread view,
+ * or the list incorrectly claims the same message cannot be opened.
+ */
+export async function decryptConversationPreviews(
+  items: DeHubConversation[],
+  walletAddress: string | null | undefined,
+): Promise<DeHubConversation[]> {
+  // Loading is synchronous and silent. A missing identity is still set up
+  // only after the user opens a chat, where the signing UI belongs.
+  if (walletAddress) loadIdentity(walletAddress);
+
+  const me = (walletAddress || '').toLowerCase();
+  return Promise.all(items.map(async (conv) => {
+    const lm = conv.lastMessage;
+    if (!lm || !isEncryptedContent(lm.content)) return conv;
+    const peer =
+      conv.otherUser?.address ||
+      conv.participants?.find((p) => p.address && p.address.toLowerCase() !== me)?.address;
+    const plain = peer ? await decryptFromPeer(peer, lm.content) : null;
+    return { ...conv, lastMessage: { ...lm, content: plain ?? '', encrypted: true, undecryptable: plain === null } };
+  }));
+}
+
 // ─── Conversations ────────────────────────────────────────────────────────────
 
 export function useConversations(searchQuery: string = '') {
@@ -161,16 +186,7 @@ export function useConversations(searchQuery: string = '') {
       }
       // The list preview is the newest line of each thread; open the encrypted
       // ones so the row shows text rather than an envelope.
-      const me = (walletAddress || '').toLowerCase();
-      items = await Promise.all(items.map(async (conv) => {
-        const lm = conv.lastMessage;
-        if (!lm || !isEncryptedContent(lm.content)) return conv;
-        const peer =
-          conv.otherUser?.address ||
-          conv.participants?.find((p) => p.address && p.address.toLowerCase() !== me)?.address;
-        const plain = peer ? await decryptFromPeer(peer, lm.content) : null;
-        return { ...conv, lastMessage: { ...lm, content: plain ?? '', encrypted: true, undecryptable: plain === null } };
-      }));
+      items = await decryptConversationPreviews(items, walletAddress);
       // Apply localStorage read overrides so unread badges don't reappear after refresh
       const readOverrides = getReadConversations();
       return items.map(conv => {
