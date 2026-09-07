@@ -5,7 +5,7 @@
  * Uses Socket.io /dm namespace for real-time events.
  */
 
-import { useEffect, useRef, useReducer } from 'react';
+import { useEffect, useRef, useReducer, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
@@ -48,6 +48,9 @@ import {
   onReValidateMessage,
   onFeeConfirmed,
   onReadReceipt,
+  onDmReactionUpdated,
+  emitAddDmReaction,
+  emitRemoveDmReaction,
   type SendMessagePayload,
 } from '@/lib/api/dehub/dm-socket';
 import type { QueryClient } from '@tanstack/react-query';
@@ -598,6 +601,22 @@ export function useMessages(conversationId: string | null) {
       );
     });
 
+    const unsubReaction = onDmReactionUpdated(({ dmId, messageId, reactions }) => {
+      if (dmId !== conversationId) return;
+      queryClient.setQueryData(messagesKeys.messages(conversationId), (old: any) => {
+        if (!old?.pages) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page: any) => ({
+            ...page,
+            items: page.items.map((message: DmMessage) =>
+              message._id === messageId ? { ...message, reactions } : message
+            ),
+          })),
+        };
+      });
+    });
+
     const unsubFeeConfirmed = onFeeConfirmed(({ dmId }) => {
       if (dmId === conversationId) {
         queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
@@ -673,11 +692,44 @@ export function useMessages(conversationId: string | null) {
       unsubSend();
       unsubEdit();
       unsubDelete();
+      unsubReaction();
       unsubFeeConfirmed();
       unsubRevalidate();
       unsubReadReceipt();
     };
   }, [conversationId, isAuthenticated, queryClient]);
+
+  const updateReaction = useCallback(async (messageId: string, emoji: string, add: boolean) => {
+    if (!conversationId || !walletAddress) return;
+    const key = messagesKeys.messages(conversationId);
+    const previous = queryClient.getQueryData(key);
+    queryClient.setQueryData(key, (old: any) => {
+      if (!old?.pages) return old;
+      return {
+        ...old,
+        pages: old.pages.map((page: any) => ({
+          ...page,
+          items: page.items.map((message: DmMessage) => {
+            if (message._id !== messageId) return message;
+            const reactions = { ...(message.reactions || {}) };
+            const mine = walletAddress.toLowerCase();
+            const addresses = (reactions[emoji] || []).filter(address => address.toLowerCase() !== mine);
+            if (add) addresses.push(mine);
+            if (addresses.length) reactions[emoji] = addresses;
+            else delete reactions[emoji];
+            return { ...message, reactions };
+          }),
+        })),
+      };
+    });
+    try {
+      if (add) await emitAddDmReaction(conversationId, messageId, emoji);
+      else await emitRemoveDmReaction(conversationId, messageId, emoji);
+    } catch (error) {
+      queryClient.setQueryData(key, previous);
+      throw error;
+    }
+  }, [conversationId, queryClient, walletAddress]);
 
   // Mark as read via socket + persist to localStorage
   const markAsRead = useMutation({
@@ -724,6 +776,8 @@ export function useMessages(conversationId: string | null) {
     isFetchingNextPage: query.isFetchingNextPage,
     refetch: query.refetch,
     markAsRead: markAsRead.mutate,
+    addReaction: (messageId: string, emoji: string) => updateReaction(messageId, emoji, true),
+    removeReaction: (messageId: string, emoji: string) => updateReaction(messageId, emoji, false),
   };
 }
 

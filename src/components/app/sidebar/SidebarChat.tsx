@@ -34,7 +34,7 @@ import assistantAvatar from '@/assets/ai-assistant-avatar.png';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { ChatLinkPreviews } from '../chat/ChatLinkPreviews';
 
-const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
+import { QUICK_CHAT_REACTIONS } from '@/components/app/chat/reaction-options';
 
 /**
  * A text message in the side panel, with the same cards every other chat
@@ -581,7 +581,7 @@ export function SidebarChat() {
                             className="w-auto p-1 bg-zinc-800 border-zinc-700 rounded-xl"
                           >
                             <div className="flex gap-0.5">
-                              {QUICK_EMOJIS.map((emoji) => {
+                              {QUICK_CHAT_REACTIONS.map((emoji) => {
                                 const isActive = walletAddress && msg.reactions?.[emoji]?.some(
                                   (a) => a.toLowerCase() === walletAddress.toLowerCase()
                                 );

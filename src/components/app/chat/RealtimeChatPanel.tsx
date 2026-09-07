@@ -34,7 +34,7 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { TranslatableText, SharedTranslationProvider } from '../TranslatableText';
 
-const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
+import { QUICK_CHAT_REACTIONS } from './reaction-options';
 
 /**
  * One row of any of the chat tables. The columns are the same across all of
@@ -461,7 +461,7 @@ export function RealtimeChatPanel({
                               className="w-auto p-1 bg-zinc-800 border-zinc-700 rounded-xl"
                             >
                               <div className="flex gap-0.5">
-                                {QUICK_EMOJIS.map((emoji) => {
+                                {QUICK_CHAT_REACTIONS.map((emoji) => {
                                   const isActive = walletAddress && msg.reactions?.[emoji]?.some(
                                     (a) => a.toLowerCase() === walletAddress.toLowerCase()
                                   );
