@@ -993,7 +993,14 @@
     "statusDeclined": "ငြင်းပယ်ထားသည်",
     "shipping": "ထုတ်ဝေနေသည်",
     "noShippingYet": "လုပ်ဆောင်နေဆဲ မရှိပါ",
-    "shippingAppearHere": "တည်ဆောက်နေသော တောင်းဆိုချက်များ ဤနေရာတွင် ပေါ်လာပါမည်။"
+    "shippingAppearHere": "တည်ဆောက်နေသော တောင်းဆိုချက်များ ဤနေရာတွင် ပေါ်လာပါမည်။",
+    "writeReply": "ပြန်ကြားချက်...",
+    "replyToComment": "ပြန်ကြားချက်",
+    "replyingTo": "{{name}} ကို ပြန်ကြားနေသည်",
+    "requestAuthorChip": "စာရေးသူ",
+    "commentEdited": "တည်းဖြတ်သည်",
+    "showOneMoreReply": "နောက်ထပ် ပြန်ကြားချက် ၁ ခုကို ပြပါ",
+    "showMoreReplies": "{{count}} ခုထပ်မံ ပြန်ကြားချက်များကို ပြပါ"
   },
   "auth": {
     "loginRequired": "ဝင်ရောက်ရန် လိုအပ်ပါသည်"

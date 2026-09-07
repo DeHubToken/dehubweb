@@ -982,7 +982,14 @@
     "statusDeclined": "Avslått",
     "shipping": "Under arbeid",
     "noShippingYet": "Ingenting på gang",
-    "shippingAppearHere": "Forespørsler som bygges, dukker opp her."
+    "shippingAppearHere": "Forespørsler som bygges, dukker opp her.",
+    "writeReply": "Skriv et svar...",
+    "replyToComment": "Svar",
+    "replyingTo": "Svarer til {{name}}",
+    "requestAuthorChip": "Forfatter",
+    "commentEdited": "redigert",
+    "showOneMoreReply": "Vis 1 mer svar",
+    "showMoreReplies": "Vis {{count}} flere svar"
   },
   "auth": {
     "loginRequired": "Innlogging påkrevd"

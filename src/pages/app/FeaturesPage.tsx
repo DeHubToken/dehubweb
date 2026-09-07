@@ -16,14 +16,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
-import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2, MoreVertical, Pencil, ImagePlus } from 'lucide-react';
+import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, Trash2, MoreVertical, Pencil, ImagePlus } from 'lucide-react';
 import featuresLightbulb from '@/assets/features-lightbulb.png';
 import { TranslatableText, SharedTranslationProvider, useSharedTranslationControl } from '@/components/app/TranslatableText';
 import { PostMetadata } from '@/components/app/cards/PostMetadata';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
-import { UserAvatar } from '@/components/app/UserAvatar';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import { useAuth } from '@/contexts/AuthContext';
@@ -59,9 +58,7 @@ import {
   MAX_FEATURE_ATTACHMENT_BYTES,
 } from '@/lib/feature-attachments';
 import { z } from 'zod';
-import { useFeatureRequestComments, useSubmitComment, useDeleteComment } from '@/hooks/use-feature-request-comments';
-import { UserMentionDropdown } from '@/components/app/mentions';
-import { useMention } from '@/hooks/use-mention';
+import { FeatureRequestComments } from '@/components/app/features/FeatureRequestComments';
 import { SEOHead } from '@/components/SEOHead';
 
 const featureSchema = z.object({
@@ -214,6 +211,7 @@ function FeatureCard({
   onVote,
   voteDisabled,
   defaultCommentsOpen = false,
+  focusCommentId = null,
 }: {
   feature: FeatureRequest;
   currentVote: number | undefined;
@@ -221,18 +219,18 @@ function FeatureCard({
   voteDisabled: boolean;
   /** Open the comments on mount — set by a comment notification's deep link. */
   defaultCommentsOpen?: boolean;
+  /** The comment that deep link was about, ringed once the thread is open. */
+  focusCommentId?: string | null;
 }) {
   const { t } = useI18n();
   const { isTranslated, isLoading: isTranslateLoading, error: translateError, handleTranslate, handleShowOriginal } = useSharedTranslationControl();
   const [showComments, setShowComments] = useState(defaultCommentsOpen);
-  const [commentText, setCommentText] = useState('');
   const [showMenu, setShowMenu] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(feature.title);
   const [editDescription, setEditDescription] = useState(feature.description);
   const [editCategory, setEditCategory] = useState<FeatureCategory>(feature.category);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const commentInputRef = useRef<HTMLInputElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
 
@@ -240,15 +238,6 @@ function FeatureCard({
   const deleteMutation = useDeleteFeatureRequest();
 
   const isAuthor = walletAddress && feature.author_wallet_address.toLowerCase() === walletAddress.toLowerCase();
-
-  const mention = useMention({
-    inputRef: commentInputRef,
-    onMentionInsert: (_user, newText) => setCommentText(newText.slice(0, 500)),
-  });
-
-  const { data: comments, isLoading: commentsLoading } = useFeatureRequestComments(showComments ? feature.id : null);
-  const submitComment = useSubmitComment();
-  const deleteComment = useDeleteComment();
 
   const dbAvatarUrl = feature.author_avatar
     ? buildAvatarUrl(feature.author_wallet_address, feature.author_avatar)
@@ -275,17 +264,6 @@ function FeatureCard({
   const handleDislike = useCallback(() => {
     onVote(feature.id, -1, currentVote);
   }, [feature.id, currentVote, onVote]);
-
-  const handleSubmitComment = (e: React.FormEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!isAuthenticated) { openLoginModal(); return; }
-    if (!commentText.trim()) return;
-    submitComment.mutate(
-      { featureRequestId: feature.id, content: commentText },
-      { onSuccess: () => setCommentText('') }
-    );
-  };
 
   const handleEdit = () => {
     setEditTitle(feature.title);
@@ -501,7 +479,7 @@ function FeatureCard({
           </>
         )}
 
-        {/* Comments Section */}
+        {/* Comments — the post comment section's thread, on this board's data. */}
         <AnimatePresence>
           {showComments && (
             <motion.div
@@ -512,106 +490,12 @@ function FeatureCard({
               className="overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="border-t border-white/5 pt-3 mt-1">
-                {commentsLoading ? (
-                  <div className="flex justify-center py-3">
-                    <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
-                  </div>
-                ) : comments && comments.length > 0 ? (
-                  <div className="space-y-2.5 mb-3 max-h-60 overflow-y-auto scrollbar-invisible">
-                    {comments.map((comment) => {
-                      const commentAvatar = comment.avatar && comment.wallet_address
-                        ? buildAvatarUrl(comment.wallet_address, comment.avatar)
-                        : null;
-                      const commentName = comment.username
-                        ? `@${comment.username}`
-                        : `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;
-                      const isOwn = walletAddress?.toLowerCase() === comment.wallet_address.toLowerCase();
-
-                      return (
-                        <div key={comment.id} className="flex gap-2 group">
-                          <UserAvatar
-                            name={comment.username || comment.wallet_address.slice(0, 6)}
-                            handle={comment.username || comment.wallet_address}
-                            avatarUrl={commentAvatar}
-                            size="sm"
-                            className="w-6 h-6 shrink-0 mt-0.5"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-zinc-400 text-[11px] font-medium">{commentName}</span>
-                              <span className="text-zinc-500 text-[10px]">{formatTimeAgo(comment.created_at)}</span>
-                              {isOwn && (
-                                <button
-                                  type="button"
-                                  onClick={() => deleteComment.mutate({ commentId: comment.id, featureRequestId: feature.id })}
-                                  className="opacity-0 group-hover:opacity-100 transition-opacity ml-auto"
-                                >
-                                  <Trash2 className="w-3 h-3 text-zinc-500 hover:text-red-400" />
-                                </button>
-                              )}
-                            </div>
-                            <TranslatableText text={comment.content} className="text-zinc-300 text-xs leading-relaxed" as="p" />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p className="text-zinc-500 text-xs text-center py-2 mb-2">{t('features.noComments')}</p>
-                )}
-
-                {/* Comment input */}
-                <form onSubmit={handleSubmitComment} className="relative flex gap-2">
-                  <Input
-                    ref={commentInputRef}
-                    value={commentText}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setCommentText(val);
-                      mention.handleInput(val, e.target.selectionStart ?? val.length);
-                    }}
-                    onKeyDown={(e) => {
-                      if (mention.isOpen) {
-                        const handled = mention.handleKeyDown(e);
-                        if (handled) {
-                          if (e.key === 'Enter' || e.key === 'Tab') {
-                            e.preventDefault();
-                            const liveResults = (window as any).__mentionResults || [];
-                            if (liveResults[mention.selectedIndex]) {
-                              mention.handleSelect(liveResults[mention.selectedIndex]);
-                            }
-                          }
-                          return;
-                        }
-                      }
-                    }}
-                    placeholder={t('features.addComment')}
-                    maxLength={500}
-                    className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs h-8"
-                  />
-                  <UserMentionDropdown
-                    query={mention.query}
-                    isOpen={mention.isOpen}
-                    position={mention.position}
-                    selectedIndex={mention.selectedIndex}
-                    onSelectedIndexChange={mention.setSelectedIndex}
-                    onSelect={mention.handleSelect}
-                    onClose={mention.handleClose}
-                  />
-                  <button
-                    type="submit"
-                    disabled={!commentText.trim() || submitComment.isPending}
-                    className="w-8 h-8 flex items-center justify-center rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white disabled:opacity-30 transition-opacity"
-                  >
-                    {submitComment.isPending ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
-                      <Send className="w-3.5 h-3.5" />
-                    )}
-                  </button>
-                </form>
-              </div>
+              <FeatureRequestComments
+                featureRequestId={feature.id}
+                featureTitle={feature.title}
+                featureAuthorAddress={feature.author_wallet_address}
+                focusCommentId={focusCommentId}
+              />
             </motion.div>
           )}
         </AnimatePresence>
@@ -1066,7 +950,10 @@ export default function FeaturesPage() {
   // otherwise show it twice.
   const focusedRequestId = searchParams.get('request');
   const { data: focusedRequest } = useFeatureRequest(focusedRequestId);
-  const focusedCommentsOpen = searchParams.get('comments') === '1';
+  const focusedCommentId = searchParams.get('comment');
+  // A comment link implies the thread should be open, whether or not the row
+  // that wrote the URL also said so.
+  const focusedCommentsOpen = searchParams.get('comments') === '1' || !!focusedCommentId;
   const focusedId = focusedRequest?.id ?? null;
   const withoutFocused = useCallback(
     <T extends { id: string }>(rows: T[] | undefined): T[] =>
@@ -1305,6 +1192,7 @@ export default function FeaturesPage() {
               onVote={handleVote}
               voteDisabled={voteMutation.isPending}
               defaultCommentsOpen={focusedCommentsOpen}
+              focusCommentId={focusedCommentId}
             />
           </SharedTranslationProvider>
         </div>

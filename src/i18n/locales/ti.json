@@ -972,7 +972,14 @@
     "statusDeclined": "ተነጺጉ",
     "shipping": "ህንጸት",
     "noShippingYet": "ዝካየድ ዘሎ የለን",
-    "shippingAppearHere": "ዝስርሑ ዘለዉ ሕቶታት ኣብዚ ክረኣዩ እዮም።"
+    "shippingAppearHere": "ዝስርሑ ዘለዉ ሕቶታት ኣብዚ ክረኣዩ እዮም።",
+    "writeReply": "መልሲ ጻሕፍ...",
+    "replyToComment": "መልሲ",
+    "replyingTo": "ብምጥቃስ ብዛዕባ {{name}}",
+    "requestAuthorChip": "ጸሓፊ",
+    "commentEdited": "ተስተኻኺሉ",
+    "showOneMoreReply": "1 ካልእ መልሲ ኣርእዮ",
+    "showMoreReplies": "{{count}} ካልኦት መለስቲ ኣርእዮ"
   },
   "auth": {
     "loginRequired": "ብዓል ዝድሊ"

@@ -980,7 +980,14 @@
     "statusDeclined": "已拒绝",
     "shipping": "正做着",
     "noShippingYet": "没啥正干着",
-    "shippingAppearHere": "正做着嘞请求会在这搭出来。"
+    "shippingAppearHere": "正做着嘞请求会在这搭出来。",
+    "writeReply": "写个回复……",
+    "replyToComment": "回复",
+    "replyingTo": "回复 {{name}}",
+    "requestAuthorChip": "作者",
+    "commentEdited": "编辑过",
+    "showOneMoreReply": "显示更多回复",
+    "showMoreReplies": "显示 {{count}} 条更多回复"
   },
   "auth": {
     "loginRequired": "须登录"

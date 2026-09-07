@@ -974,7 +974,14 @@
     "statusDeclined": "Rebutjat",
     "shipping": "En desenvolupament",
     "noShippingYet": "Res en curs",
-    "shippingAppearHere": "Les sol·licituds que s'estan construint apareixeran aquí."
+    "shippingAppearHere": "Les sol·licituds que s'estan construint apareixeran aquí.",
+    "writeReply": "Escriu una resposta...",
+    "replyToComment": "Resposta",
+    "replyingTo": "Responent a {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "editat",
+    "showOneMoreReply": "Mostra 1 resposta més",
+    "showMoreReplies": "Mostra {{count}} respostes més"
   },
   "auth": {
     "loginRequired": "Cal iniciar sessió"

@@ -978,7 +978,12 @@
     "statusDeclined": "Declined",
     "shipping": "I di ship",
     "noShippingYet": "Notin di hapen nau",
-    "shippingAppearHere": "Request dem weh dem di build go show hia."
+    "shippingAppearHere": "Request dem weh dem di build go show hia.",
+    "writeReply": "Write a reply...",
+    "replyToComment": "Reply",
+    "replyingTo": "Replying to {{name}}",
+    "requestAuthorChip": "Author",
+    "commentEdited": "edited"
   },
   "auth": {
     "loginRequired": "Log in required"

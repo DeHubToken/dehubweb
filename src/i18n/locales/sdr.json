@@ -973,7 +973,14 @@
     "statusDeclined": "رد",
     "shipping": "بھیجل جا رہل",
     "noShippingYet": "کچھ نہیں چل رہل",
-    "shippingAppearHere": "جے درخواست بن رہل ہے او یہاں دیکھائی۔"
+    "shippingAppearHere": "جے درخواست بن رہل ہے او یہاں دیکھائی۔",
+    "writeReply": "لکھو جواب...",
+    "replyToComment": "جواب",
+    "replyingTo": "جواب دے رہے ہو {{name}} کو",
+    "requestAuthorChip": "مصنف",
+    "commentEdited": "ترمیم کیا گیا",
+    "showOneMoreReply": "مزید ۱ جواب دکھائیں",
+    "showMoreReplies": "مزید {{count}} جواب دکھائیں"
   },
   "auth": {
     "loginRequired": "لاگ ان ضروری ہے"

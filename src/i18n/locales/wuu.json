@@ -980,7 +980,14 @@
     "statusDeclined": "已拒绝",
     "shipping": "开发当中",
     "noShippingYet": "呒没啥勒做",
-    "shippingAppearHere": "勒开发个需求会得勒搿搭出现。"
+    "shippingAppearHere": "勒开发个需求会得勒搿搭出现。",
+    "writeReply": "写个回复...",
+    "replyToComment": "回覆",
+    "replyingTo": "回覆 {{name}}",
+    "requestAuthorChip": "作者",
+    "commentEdited": "修改过",
+    "showOneMoreReply": "再显示一个回复",
+    "showMoreReplies": "显示 {{count}} 条更多回复"
   },
   "auth": {
     "loginRequired": "需要登录"

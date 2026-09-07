@@ -983,7 +983,14 @@
     "statusDeclined": "Atmesta",
     "shipping": "Kuriama",
     "noShippingYet": "Nieko nevykdoma",
-    "shippingAppearHere": "Čia atsiras pageidavimai, kurie jau kuriami."
+    "shippingAppearHere": "Čia atsiras pageidavimai, kurie jau kuriami.",
+    "writeReply": "Parašykite atsakymą...",
+    "replyToComment": "Atsakyti",
+    "replyingTo": "Atsakant į {{name}}",
+    "requestAuthorChip": "Autorius",
+    "commentEdited": "redaguota",
+    "showOneMoreReply": "Rodyti dar 1 atsakymą",
+    "showMoreReplies": "Rodyti {{count}} daugiau atsakymų"
   },
   "auth": {
     "loginRequired": "Reikia prisijungti"

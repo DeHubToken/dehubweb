@@ -963,7 +963,14 @@
     "statusDeclined": "Red bû",
     "shipping": "Tê Çêkirin",
     "noShippingYet": "Tiştek di pêşketinê de tune",
-    "shippingAppearHere": "Daxwazên ku tên çêkirin dê li vir xuya bibin."
+    "shippingAppearHere": "Daxwazên ku tên çêkirin dê li vir xuya bibin.",
+    "writeReply": "بنوسە وەڵامێک...",
+    "replyToComment": "وەڵامدانەوە",
+    "replyingTo": "وەڵامدانەوە بۆ {{name}}",
+    "requestAuthorChip": "نووسەر",
+    "commentEdited": "دەستکاری کراوە",
+    "showOneMoreReply": "١ وەڵامدانەوەی تر ببینە",
+    "showMoreReplies": "{{count}} وەڵامدانەوەی تر ببینە"
   },
   "auth": {
     "loginRequired": "Têketin pêwîst e"

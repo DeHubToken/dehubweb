@@ -978,7 +978,11 @@
     "statusDeclined": "已拒绝",
     "shipping": "发布中",
     "noShippingYet": "无物件正做",
-    "shippingAppearHere": "正做其请求会在只搭出现。"
+    "shippingAppearHere": "正做其请求会在只搭出现。",
+    "writeReply": "寫一條回覆...",
+    "replyToComment": "回",
+    "replyingTo": "回覆 {{name}}",
+    "requestAuthorChip": "作者"
   },
   "auth": {
     "loginRequired": "须登录"

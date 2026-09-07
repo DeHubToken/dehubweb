@@ -1001,7 +1001,14 @@
     "statusDeclined": "Nolavina",
     "shipping": "Amboarina",
     "noShippingYet": "Tsy misy zavatra atao",
-    "shippingAppearHere": "Hiseho eto ireo fangatahana amboarina."
+    "shippingAppearHere": "Hiseho eto ireo fangatahana amboarina.",
+    "writeReply": "Mba soraty valiny...",
+    "replyToComment": "Valiny",
+    "replyingTo": "Mamaly an'i {{name}}",
+    "requestAuthorChip": "Mpanoratra",
+    "commentEdited": "navoakan'ny",
+    "showOneMoreReply": "Asehoy valiny 1 hafa",
+    "showMoreReplies": "Asehoy valiny {{count}} hafa"
   },
   "auth": {
     "loginRequired": "Ilaina ny fidirana"

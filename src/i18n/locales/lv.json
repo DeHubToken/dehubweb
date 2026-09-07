@@ -983,7 +983,14 @@
     "statusDeclined": "Noraidīts",
     "shipping": "Top",
     "noShippingYet": "Nekas nenotiek",
-    "shippingAppearHere": "Pieprasījumi, pie kuriem strādā, parādīsies šeit."
+    "shippingAppearHere": "Pieprasījumi, pie kuriem strādā, parādīsies šeit.",
+    "writeReply": "Rakstīt atbildi...",
+    "replyToComment": "Atbildēt",
+    "replyingTo": "Atbildot uz {{name}}",
+    "requestAuthorChip": "Autors",
+    "commentEdited": "rediģēts",
+    "showOneMoreReply": "Rādīt vēl 1 atbildi",
+    "showMoreReplies": "Rādīt {{count}} vairāk atbilžu"
   },
   "auth": {
     "loginRequired": "Nepieciešama pieteikšanās"

@@ -883,7 +883,14 @@
     "uiUx": "UI/UX",
     "shipping": "กำลังพัฒนา",
     "noShippingYet": "ไม่มีอะไรกำลังทำอยู่",
-    "shippingAppearHere": "คำขอที่กำลังถูกสร้างจะปรากฏที่นี่"
+    "shippingAppearHere": "คำขอที่กำลังถูกสร้างจะปรากฏที่นี่",
+    "writeReply": "เขียนการตอบกลับ...",
+    "replyToComment": "ตอบกลับ",
+    "replyingTo": "ตอบกลับ {{name}}",
+    "requestAuthorChip": "ผู้เขียน",
+    "commentEdited": "แก้ไขแล้ว",
+    "showOneMoreReply": "แสดงการตอบกลับอีก 1 รายการ",
+    "showMoreReplies": "แสดงการตอบกลับอีก {{count}} รายการ"
   },
   "auth": {},
   "messages": {

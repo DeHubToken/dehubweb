@@ -983,7 +983,14 @@
     "statusDeclined": "Радшуда",
     "shipping": "Дар ҷараён",
     "noShippingYet": "Ҳеҷ чиз дар ҷараён нест",
-    "shippingAppearHere": "Дархостҳое, ки сохта мешаванд, дар ин ҷо пайдо мешаванд."
+    "shippingAppearHere": "Дархостҳое, ки сохта мешаванд, дар ин ҷо пайдо мешаванд.",
+    "writeReply": "Нависед ҷавоб...",
+    "replyToComment": "Ҷавоб",
+    "replyingTo": "Ҷавоб ба {{name}}",
+    "requestAuthorChip": "Муаллиф",
+    "commentEdited": "таҳрир шуд",
+    "showOneMoreReply": "1 ҷавоби дигарро нишон диҳед",
+    "showMoreReplies": "{{count}} ҷавоби дигарро нишон диҳед"
   },
   "auth": {
     "loginRequired": "Воридшавӣ лозим аст"

@@ -940,7 +940,14 @@
     "statusDeclined": "Απορρίφθηκε",
     "shipping": "Σε ανάπτυξη",
     "noShippingYet": "Τίποτα σε εξέλιξη",
-    "shippingAppearHere": "Τα αιτήματα που υλοποιούνται θα εμφανίζονται εδώ."
+    "shippingAppearHere": "Τα αιτήματα που υλοποιούνται θα εμφανίζονται εδώ.",
+    "writeReply": "Γράψτε μια απάντηση...",
+    "replyToComment": "Απάντηση",
+    "replyingTo": "Απάντηση στο {{name}}",
+    "requestAuthorChip": "Συντάκτης",
+    "commentEdited": "επεξεργάστηκε",
+    "showOneMoreReply": "Εμφάνιση 1 ακόμη απάντησης",
+    "showMoreReplies": "Εμφάνιση {{count}} ακόμη απαντήσεων"
   },
   "auth": {
     "loginRequired": "Απαιτείται σύνδεση"

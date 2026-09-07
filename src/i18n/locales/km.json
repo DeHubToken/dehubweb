@@ -995,7 +995,14 @@
     "statusDeclined": "បានបដិសេធ",
     "shipping": "កំពុងដឹកជញ្ជូន",
     "noShippingYet": "គ្មានអ្វីកំពុងដំណើរការទេ",
-    "shippingAppearHere": "សំណើដែលកំពុងសាងសង់នឹងបង្ហាញនៅទីនេះ។"
+    "shippingAppearHere": "សំណើដែលកំពុងសាងសង់នឹងបង្ហាញនៅទីនេះ។",
+    "writeReply": "សរសេរ​ការ​ឆ្លើយតប...",
+    "replyToComment": "ឆ្លើយតប",
+    "replyingTo": "ឆ្លើយតបទៅ {{name}}",
+    "requestAuthorChip": "អ្នកនិពន្ធ",
+    "commentEdited": "កែ​សម្រួល",
+    "showOneMoreReply": "បង្ហាញ​ការ​ឆ្លើយតប​បន្ថែម 1",
+    "showMoreReplies": "បង្ហាញ​ការ​ឆ្លើយតប​បន្ថែម {{count}}"
   },
   "auth": {
     "loginRequired": "តម្រូវឲ្យចូល"

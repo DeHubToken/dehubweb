@@ -979,7 +979,14 @@
     "statusDeclined": "Ajụla",
     "shipping": "Na-ewu",
     "noShippingYet": "Ọ dịghị ihe na-aga n'ihu ugbu a",
-    "shippingAppearHere": "Arịrịọ ndị a na-ewu ga-apụta ebe a."
+    "shippingAppearHere": "Arịrịọ ndị a na-ewu ga-apụta ebe a.",
+    "writeReply": "Debe nzaghachi...",
+    "replyToComment": "Zaghachi",
+    "replyingTo": "Na-aza {{name}}",
+    "requestAuthorChip": "Odee",
+    "commentEdited": "edezi",
+    "showOneMoreReply": "Gosi nzaghachi 1 ọzọ",
+    "showMoreReplies": "Gosi {{count}} nzaghachi ndị ọzọ"
   },
   "auth": {
     "loginRequired": "Achọrọ ịbanye"

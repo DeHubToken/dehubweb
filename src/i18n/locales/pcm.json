@@ -963,7 +963,12 @@
     "statusDeclined": "Declined",
     "shipping": "Dey ship",
     "noShippingYet": "Nothing dey happen now",
-    "shippingAppearHere": "Requests wey dem dey build go show here."
+    "shippingAppearHere": "Requests wey dem dey build go show here.",
+    "writeReply": "Write a reply...",
+    "replyToComment": "Reply",
+    "replyingTo": "Replying to {{name}}",
+    "requestAuthorChip": "Author",
+    "commentEdited": "edited"
   },
   "auth": {
     "loginRequired": "Login dey required"

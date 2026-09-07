@@ -981,7 +981,14 @@
     "statusDeclined": "ປະຕິເສດ",
     "shipping": "ກຳລັງສ້າງ",
     "noShippingYet": "ບໍ່ມີຫຍັງກຳລັງດຳເນີນ",
-    "shippingAppearHere": "ຄຳຮ້ອງທີ່ກຳລັງສ້າງຈະປາກົດຢູ່ນີ້."
+    "shippingAppearHere": "ຄຳຮ້ອງທີ່ກຳລັງສ້າງຈະປາກົດຢູ່ນີ້.",
+    "writeReply": "ຂຽນຄຳຕອບ...",
+    "replyToComment": "ຕອບ",
+    "replyingTo": "ກຳລັງຕອບກັບ {{name}}",
+    "requestAuthorChip": "ຜູ້ຂຽນ",
+    "commentEdited": "ແກ້ໄຂ",
+    "showOneMoreReply": "ສະແດງອີກ 1 ຄຳຕອບ",
+    "showMoreReplies": "ສະແດງອີກ {{count}} ຄຳຕອບ"
   },
   "auth": {
     "loginRequired": "ຕ້ອງເຂົ້າສູ່ລະບົບ"

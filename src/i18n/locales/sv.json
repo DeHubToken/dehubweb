@@ -968,7 +968,14 @@
     "statusDeclined": "Avvisad",
     "shipping": "Byggs nu",
     "noShippingYet": "Inget pågår",
-    "shippingAppearHere": "Förfrågningar som byggs dyker upp här."
+    "shippingAppearHere": "Förfrågningar som byggs dyker upp här.",
+    "writeReply": "Skriv ett svar...",
+    "replyToComment": "Svar",
+    "replyingTo": "Svarar på {{name}}",
+    "requestAuthorChip": "Författare",
+    "commentEdited": "redigerad",
+    "showOneMoreReply": "Visa 1 ytterligare svar",
+    "showMoreReplies": "Visa {{count}} fler svar"
   },
   "auth": {
     "loginRequired": "Inloggning krävs"

@@ -982,7 +982,14 @@
     "statusDeclined": "اترفض",
     "shipping": "بيتشحن",
     "noShippingYet": "ما في حاجة شغالة",
-    "shippingAppearHere": "الطلبات البتتبنى حتظهر هنا."
+    "shippingAppearHere": "الطلبات البتتبنى حتظهر هنا.",
+    "writeReply": "رد...",
+    "replyToComment": "رد",
+    "replyingTo": "بالرد على {{name}}",
+    "requestAuthorChip": "الكاتب",
+    "commentEdited": "معدل",
+    "showOneMoreReply": "عرض رد واحد آخر",
+    "showMoreReplies": "عرض {{count}} ردود أخرى"
   },
   "auth": {
     "loginRequired": "مطلوب تسجيل دخول"

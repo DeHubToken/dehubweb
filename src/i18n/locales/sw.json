@@ -984,7 +984,14 @@
     "statusDeclined": "Imekataliwa",
     "shipping": "Kinatengenezwa",
     "noShippingYet": "Hakuna kinachoendelea",
-    "shippingAppearHere": "Maombi yanayotengenezwa yataonekana hapa."
+    "shippingAppearHere": "Maombi yanayotengenezwa yataonekana hapa.",
+    "writeReply": "Andika jibu...",
+    "replyToComment": "Jibu",
+    "replyingTo": "Inajibu {{name}}",
+    "requestAuthorChip": "Mwandishi",
+    "commentEdited": "imehaririwa",
+    "showOneMoreReply": "Onyesha jibu 1 zaidi",
+    "showMoreReplies": "Onyesha majibu {{count}} zaidi"
   },
   "auth": {
     "loginRequired": "Kuingia kunahitajika"

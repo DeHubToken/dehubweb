@@ -983,7 +983,14 @@
     "statusDeclined": "Waa La Diiday",
     "shipping": "Waa la dhisayaa",
     "noShippingYet": "Waxba socda ma jiraan",
-    "shippingAppearHere": "Codsiyada la dhisayo halkan ayay ka soo muuqan doonaan."
+    "shippingAppearHere": "Codsiyada la dhisayo halkan ayay ka soo muuqan doonaan.",
+    "writeReply": "Qor jawaab...",
+    "replyToComment": "Jawaab",
+    "replyingTo": "Ku jawaabayo {{name}}",
+    "requestAuthorChip": "Qoraa",
+    "commentEdited": "la bedelay",
+    "showOneMoreReply": "Muuji 1 jawaab oo dheeraad ah",
+    "showMoreReplies": "Muuji {{count}} jawaabood oo dheeraad ah"
   },
   "auth": {
     "loginRequired": "Soo galitaan waa loo baahan yahay"

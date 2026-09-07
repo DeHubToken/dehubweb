@@ -264,9 +264,9 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
   likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
   follows: ['following', 'follow_request', 'follow_request_accepted', 'followRequest', 'follow-request'],
-  comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'governance_comment'],
+  comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'governance_comment'],
   reposts: ['repost', 'quote'],
-  features: ['feature_request_like', 'feature_request_comment'],
+  features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention'],
   communities: ['community_mention', 'community_here', 'community_join'],
   stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased', 'fraction_sold', 'fraction_delivered', 'fraction_settled'],
   subscriptions: ['subscription', 'ppv_purchase'],
@@ -328,6 +328,8 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     case 'comment_reply':
     case 'mention':
     case 'feature_request_comment':
+    case 'feature_request_reply':
+    case 'feature_request_mention':
     case 'governance_comment':
       return <MessageSquareText className="w-4 h-4 text-white/70" />;
     // Joins, mentions and @here take their glyph from the shared community
@@ -556,6 +558,14 @@ function getNotificationContent(
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return title ? `${actorName} commented on your feature request "${title}"` : `${actorName} commented on your feature request`;
   }
+  if ((notification.type as string) === 'feature_request_reply') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return title ? `${actorName} replied to you on "${title}"` : `${actorName} replied to your comment`;
+  }
+  if ((notification.type as string) === 'feature_request_mention') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return title ? `${actorName} mentioned you on "${title}"` : `${actorName} mentioned you on a feature request`;
+  }
   if ((notification.type as string) === 'stage_live') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return stageLiveSentence(actorName, title);
@@ -728,11 +738,18 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   // and several pages of infinite scroll. `?request=` pins it at the top
   // instead, so the row always opens the thing it names. A comment row also
   // asks for the comments to be open, the same way a post comment does.
-  if ((notification.type as string) === 'feature_request_like' || (notification.type as string) === 'feature_request_comment') {
+  const FEATURE_COMMENT_TYPES = ['feature_request_comment', 'feature_request_reply', 'feature_request_mention'];
+  if ((notification.type as string) === 'feature_request_like' || FEATURE_COMMENT_TYPES.includes(notification.type as string)) {
     const requestId = customReferenceId(notification);
     if (!requestId) return '/features';
-    const wantsComments = (notification.type as string) === 'feature_request_comment';
-    return `/features?request=${encodeURIComponent(requestId)}${wantsComments ? '&comments=1' : ''}`;
+    if (!FEATURE_COMMENT_TYPES.includes(notification.type as string)) {
+      return `/features?request=${encodeURIComponent(requestId)}`;
+    }
+    // The row carries the comment it is about, so the thread opens on that row
+    // rather than at the top — the same `?comment=` a post notification uses.
+    const commentId = (notification as DeHubNotification & { _customCommentId?: string })._customCommentId;
+    const commentSuffix = commentId ? `&comment=${encodeURIComponent(commentId)}` : '';
+    return `/features?request=${encodeURIComponent(requestId)}&comments=1${commentSuffix}`;
   }
   // Joins, mentions and @here all land on the community they came from. The
   // reference is normally its slug, but the join trigger has written the uuid
