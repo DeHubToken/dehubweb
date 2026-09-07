@@ -315,6 +315,26 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     clearDoc();
   };
 
+  // Pasting a screenshot into the composer should attach it, the way dropping
+  // or picking one does. Text wins when the clipboard carries both — a rich
+  // copy brings its inline images along and the words are what was meant.
+  const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    if (e.clipboardData.getData('text/plain')) return;
+    const file = Array.from(e.clipboardData.files).find((f) => f.type.startsWith('image/'));
+    if (!file) return;
+    e.preventDefault();
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Image must be less than 10MB');
+      return;
+    }
+
+    setImageFile(file);
+    setImagePreviewUrl(URL.createObjectURL(file));
+    setAudioPreview(null);
+    clearDoc();
+  };
+
   const handleDocUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     // Reset immediately so picking the same file twice in a row still fires.
@@ -551,6 +571,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             });
           }}
           onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
           onFocus={() => setComposerFocused(true)}
           onBlur={() => setComposerFocused(false)}
           className="min-h-[40px] max-h-32 resize-none bg-transparent border-none text-base md:text-sm text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0"

@@ -435,8 +435,20 @@ export function PostContentArea({
   // Handle paste - process links immediately
   const handlePaste = useCallback((e: React.ClipboardEvent) => {
     e.preventDefault();
-    
+
     const pastedText = e.clipboardData.getData('text/plain');
+
+    // A screenshot, or a file copied from the desktop, arrives as clipboard
+    // files with no text alongside it. Route it through the same handler
+    // drag-and-drop uses so it attaches instead of vanishing. Text wins when
+    // both are present — copying a rich paragraph out of a document carries
+    // its inline images too, and the words are what was meant.
+    const files = e.clipboardData.files;
+    if (!pastedText && files && files.length > 0) {
+      onFileDrop(files);
+      return;
+    }
+
     if (!pastedText) return;
     
     const urlRegex = createUrlRegex();
@@ -486,7 +498,7 @@ export function PostContentArea({
     
     // Update state
     handleInput();
-  }, [handleInput]);
+  }, [handleInput, onFileDrop]);
 
   // Handle drag and drop
   const handleDragEnter = useCallback((e: React.DragEvent) => {
