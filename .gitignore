@@ -88,3 +88,4 @@ scripts/*
 !scripts/edge-cors-check.mjs
 !scripts/build-theme-icon-materials.mjs
 !scripts/edge-imports-check.mjs
+!scripts/mojibake-check.mjs

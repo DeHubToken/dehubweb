@@ -28,7 +28,7 @@ function payoutFor(job: WorkJob): number {
   return job.job_type === 'contract' ? job.total_budget : job.price_per_unit;
 }
 
-/** `payout_tx_hash` is the only proof a payout happened â€” the status column alone never moved money. */
+/** `payout_tx_hash` is the only proof a payout happened — the status column alone never moved money. */
 function isPaid(s: WorkSubmission): boolean {
   return !!s.payout_tx_hash || s.approval_status === 'paid';
 }
@@ -110,7 +110,7 @@ export default function WorkJobDetailPage() {
   return (
     <div data-work-surface className="max-w-3xl mx-auto px-4 py-6">
       {/* Same title, description, canonical and indexability the edge worker
-          serves crawlers for this URL â€” see src/features/work/seo.ts. */}
+          serves crawlers for this URL — see src/features/work/seo.ts. */}
       <SEOHead
         title={bountyTitle(job)}
         description={bountyDescription(job)}
@@ -331,7 +331,7 @@ export default function WorkJobDetailPage() {
           <button
             onClick={() => {
               // Closing a job over unpaid accepted work is how the current
-              // backlog was created â€” the status said completed and the worker
+              // backlog was created — the status said completed and the worker
               // was never paid. Make the poster say it out loud.
               if (unpaid.length > 0 && !window.confirm(
                 t('work.markCompleteConfirm', { count: unpaid.length, amount: amount(owed, job.currency) })
@@ -373,7 +373,7 @@ export default function WorkJobDetailPage() {
  *
  * The approved-but-unpaid state is the one that matters. Approval and payment
  * were a single button that only ever wrote a status column, so that state is
- * both extremely common and previously invisible â€” it rendered as "Paid" with
+ * both extremely common and previously invisible — it rendered as "Paid" with
  * no transaction behind it. It now says what it is and carries the button that
  * settles it.
  */
