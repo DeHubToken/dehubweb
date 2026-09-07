@@ -49,6 +49,23 @@ describe('theme icon assets', () => {
       .toBe('/theme-icons/system/bounties.webp');
   });
 
+  it('routes community empty states through each theme icon family', () => {
+    const communityIcons = {
+      'community-posts-3d-icon': 'posts',
+      'community-chat-3d-icon': 'messages',
+      'community-events-3d-icon': 'events',
+      'community-members-3d-icon': 'subscriptions',
+      'community-about-3d-icon': 'glossary',
+    };
+
+    for (const theme of [...FULL_THEMES, 'system']) {
+      for (const [stem, key] of Object.entries(communityIcons)) {
+        expect(resolveThemeIconAsset(`/assets/${stem}-abc.png`, theme))
+          .toBe(`/theme-icons/${theme}/${key}.webp`);
+      }
+    }
+  });
+
   it('leaves Cosmic, Lava Lamp, Light and Minimal on their existing art', () => {
     for (const theme of ['cosmic', 'lavalamp', 'light', 'minimal']) {
       expect(resolveThemeIconAsset('/assets/home-3d-icon-abc.png', theme)).toBeNull();
