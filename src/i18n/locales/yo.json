@@ -1592,6 +1592,9 @@
     "turn_on_desktop_notifications": "Ṣé kí a tan àwọn ìfitónilétí kọ̀mpútà?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Gba ìròyìn nípa àwọn èsì, ẹ̀bùn àti ìránṣẹ́ nígbà tí o wà nínú táàbù mìíràn.",
     "turn_on": "Tan án",
+    "push_blocked_title": "Awọn iwifunni ko de ọ",
+    "push_blocked_body": "Ẹrọ rẹ n dènà àwọn ìfìwáráńtí fún àwọn àwòrán wẹ́ẹ̀bù yìí, nítorí náà kò sí ohun tó dé ọ nígbà tí DeHub bá ti ti. Yí wọn padà sí i fún àwòrán wẹ́ẹ̀bù rẹ nínú àwọn ìfàṣẹ́yìn ìfìwáráńtí ẹrọ rẹ.",
+    "push_blocked_more": "Alaye siwaju sii",
     "not_now": "Kì í ṣe nísinsìnyí"
   },
   "staking": {

@@ -1591,6 +1591,9 @@
     "turn_on_desktop_notifications": "Ma shidaa ogeysiisyada deskiga?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Hel ogeysiis ku saabsan jawaabaha, tabaruca iyo fariimaha inta aad ku jirto tab kale.",
     "turn_on": "Shid",
+    "push_blocked_title": "Ogeysiisyada kuma soo gaadhayaan",
+    "push_blocked_body": "Nidaamkaaga ayaa xannibaya ogeysiisyada biraawsarkaaga, sidaa darteed waxba ma gaadho adiga inta DeHub uu xiran yahay. Ku soo celi biraawsarkaaga goobaha ogeysiiska nidaamkaaga.",
+    "push_blocked_more": "Faahfaahin dheeraad ah",
     "not_now": "Hadda maya"
   },
   "staking": {

@@ -1591,6 +1591,9 @@
     "turn_on_desktop_notifications": "Vai ieslēgt darbvirsmas paziņojumus?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Uzzini par atbildēm, dzeramnaudām un ziņām, kamēr esi citā cilnē.",
     "turn_on": "Ieslēgt",
+    "push_blocked_title": "Paziņojumi jūs nesasniedz",
+    "push_blocked_body": "Jūsu sistēma bloķē paziņojumus šai pārlūkprogrammai, tāpēc nekas nenonāk pie jums, kad DeHub ir aizvērts. Ieslēdziet tos atpakaļ savai pārlūkprogrammai savos sistēmas paziņojumu iestatījumos.",
+    "push_blocked_more": "Vairāk detaļu",
     "not_now": "Ne tagad"
   },
   "staking": {

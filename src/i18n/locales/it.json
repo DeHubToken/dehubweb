@@ -1611,6 +1611,9 @@
     "turn_on_desktop_notifications": "Attivare le notifiche desktop?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Ricevi un avviso su risposte, mance e messaggi mentre sei in un'altra scheda.",
     "turn_on": "Attiva",
+    "push_blocked_title": "Le notifiche non ti stanno raggiungendo",
+    "push_blocked_body": "Il tuo sistema sta bloccando le notifiche per questo browser, quindi non ricevi nulla mentre DeHub è chiuso. Riattivale per il tuo browser nelle impostazioni di notifica del tuo sistema.",
+    "push_blocked_more": "Maggiori dettagli",
     "not_now": "Non ora"
   },
   "staking": {

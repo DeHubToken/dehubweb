@@ -1608,6 +1608,9 @@
     "turn_on_desktop_notifications": "Alefa ny fampandrenesana amin'ny solosaina?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Mahazoa fampandrenesana momba ny valiny, tolotra sy hafatra rehefa ao amin'ny vakizoro hafa ianao.",
     "turn_on": "Alefaso",
+    "push_blocked_title": "Tsy tonga aminao ny fampandrenesana",
+    "push_blocked_body": "Mihazona ny fampandrenesana ho an'ity navigateur ity ny rafitrao, ka tsy misy mahatratra anao raha tsy misokatra ny DeHub. Avereno alefa ho an'ny navigateur-nao izy ireo ao amin'ny toe-javatra fampandrenesana ao amin'ny rafitrao.",
+    "push_blocked_more": "Mba hazava kokoa",
     "not_now": "Tsy izao"
   },
   "staking": {

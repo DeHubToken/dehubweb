@@ -1583,6 +1583,9 @@
     "turn_on_desktop_notifications": "Uripake pambiwara desktop?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Ngerti bab wangsulan, tip lan DM nalika sampeyan ana ing tab liya.",
     "turn_on": "Uripake",
+    "push_blocked_title": "Notifikasi ora tekan ing sampeyan",
+    "push_blocked_body": "Sistemmu ngalang-alangi notifikasi kanggo browser iki, mula ora ana sing tekan sampeyan nalika DeHub ditutup. Uripake maneh kanggo browser sampeyan ing setelan notifikasi sistemmu.",
+    "push_blocked_more": "Rincian luwih akeh",
     "not_now": "Ora saiki"
   },
   "staking": {

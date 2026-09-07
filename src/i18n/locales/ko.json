@@ -1613,6 +1613,9 @@
     "turn_on_desktop_notifications": "데스크톱 알림을 켤까요?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "다른 탭에 있어도 답글, 팁, DM을 바로 알려드립니다.",
     "turn_on": "켜기",
+    "push_blocked_title": "알림이 도착하지 않고 있습니다",
+    "push_blocked_body": "시스템에서 이 브라우저의 알림을 차단하고 있으므로 DeHub가 닫혀 있을 때 아무것도 받지 못합니다. 시스템 알림 설정에서 브라우저의 알림을 다시 켜세요.",
+    "push_blocked_more": "더 자세히",
     "not_now": "나중에"
   },
   "staking": {

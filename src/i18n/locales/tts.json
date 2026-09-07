@@ -1583,6 +1583,9 @@
     "turn_on_desktop_notifications": "เปิดการแจ้งเตือนบนเดสก์ท็อปบ่",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "ฮู้ข่าวคำตอบ ทิป กับข้อความ ตอนเจ้าอยู่แท็บอื่น",
     "turn_on": "เปิด",
+    "push_blocked_title": "การแจ้งเตือนไปบ่ฮอดเจ้า",
+    "push_blocked_body": "ระบบเจ้าปิดกั้นการแจ้งเตือนสำหรับเบราว์เซอร์นี้ เลยบ่มีหยังส่งถึงเจ้าตอน DeHub ปิดอยู่ เปิดคืนให้เบราว์เซอร์เจ้าในตั้งค่าการแจ้งเตือนของระบบ",
+    "push_blocked_more": "ละเอียดกว่านี้",
     "not_now": "บ่เอาตอนนี้"
   },
   "staking": {

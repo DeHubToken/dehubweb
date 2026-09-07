@@ -1729,6 +1729,9 @@
     "turn_on_desktop_notifications": "ডেস্কটপ জানানি চালু করবেন?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "আন ট্যাবত থাকিলেও উত্তর, টিপ আর বার্তার খবর পান।",
     "turn_on": "চালু করেন",
+    "push_blocked_title": "सूचनाएं थ्हारे तक नीं पहुँच रीया",
+    "push_blocked_body": "Tharō system browser-ra notification block karē chē, je-thī DeHub bandh hōy tē samay thārē kuchh vī nahīṁ pahōnchē. Tharē system notification settings-māṁ thārā browser-rā notification vāpas chālu kar.",
+    "push_blocked_more": "अउर बिस्तार",
     "not_now": "এলা নোয়ায়"
   },
   "staking": {

@@ -1553,6 +1553,9 @@
     "turn_on_desktop_notifications": "Vols activar les notificacions de l'escriptori?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Assabenta't de respostes, propines i missatges mentre ets en una altra pestanya.",
     "turn_on": "Activa",
+    "push_blocked_title": "Les notificacions no t'estan arribant",
+    "push_blocked_body": "El teu sistema està bloquejant les notificacions per a aquest navegador, així que no et arriba res mentre DeHub està tancat. Torna-les a activar per al teu navegador a la configuració de notificacions del teu sistema.",
+    "push_blocked_more": "Més detall",
     "not_now": "Ara no"
   },
   "staking": {

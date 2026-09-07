@@ -1622,6 +1622,9 @@
     "turn_on_desktop_notifications": "Uvule izaziso zedeskithophu?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Thola isaziso ngezimpendulo, amathiphu nemiyalezo ngenkathi ukwelinye ithebhu.",
     "turn_on": "Vula",
+    "push_blocked_title": "Izaziso azikufiki kuwe",
+    "push_blocked_body": "Uhlelo lwakho luvimba izaziso zalesi siphequluli, ngakho-ke akukho lutho olufinyelela kuwe ngenkathi i-DeHub ivalekile. Zivule kabusha kusiphequluli sakho kuzilungiselelo zezaziso zesistimu yakho.",
+    "push_blocked_more": "Imininingwane eyengeziwe",
     "not_now": "Hhayi manje"
   },
   "staking": {

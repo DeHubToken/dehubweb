@@ -1708,6 +1708,9 @@
     "turn_on_desktop_notifications": "Zapnúť upozornenia na ploche?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Dozviete sa o odpovediach, prepitnom a správach, aj keď ste na inej karte.",
     "turn_on": "Zapnúť",
+    "push_blocked_title": "Notifikácie k vám nedosahujú",
+    "push_blocked_body": "Váš systém blokuje upozornenia pre tento prehliadač, takže sa k vám nič nedostane, keď je DeHub zatvorený. Zapnite ich znova pre váš prehliadač v nastaveniach upozornení vášho systému.",
+    "push_blocked_more": "Viac detailov",
     "not_now": "Teraz nie"
   },
   "staking": {

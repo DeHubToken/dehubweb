@@ -1579,6 +1579,9 @@
     "turn_on_desktop_notifications": "להפעיל התראות שולחן עבודה?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "קבלו התראה על תגובות, טיפים והודעות גם כשאתם בלשונית אחרת.",
     "turn_on": "הפעלה",
+    "push_blocked_title": "הודעות לא מגיעות אליך",
+    "push_blocked_body": "המערכת שלך חוסמת התראות עבור דפדפן זה, ולכן שום דבר לא מגיע אליך בזמן ש-DeHub סגור. הפעל אותן מחדש עבור הדפדפן שלך בהגדרות ההתראות של המערכת שלך.",
+    "push_blocked_more": "פרטים נוספים",
     "not_now": "לא עכשיו"
   },
   "staking": {

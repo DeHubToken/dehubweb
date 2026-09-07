@@ -1553,6 +1553,9 @@
     "turn_on_desktop_notifications": "Kas lülitada töölauateated sisse?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Saad teada vastustest, jootrahadest ja sõnumitest ka siis, kui oled teisel vahekaardil.",
     "turn_on": "Lülita sisse",
+    "push_blocked_title": "Teateid ei jõua sinuni",
+    "push_blocked_body": "Teie süsteem blokeerib selle brauseri teatisi, mistõttu te ei saa midagi, kui DeHub on suletud. Lülitage need oma brauseri jaoks uuesti sisse oma süsteemi teatiste seadetes.",
+    "push_blocked_more": "Rohkem detaile",
     "not_now": "Mitte praegu"
   },
   "staking": {

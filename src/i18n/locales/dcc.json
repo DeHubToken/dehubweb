@@ -1548,6 +1548,9 @@
     "turn_on_desktop_notifications": "ڈیسک ٹاپ اطلاع چالو کریں؟",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "دوسرے ٹیب میں رہتے ہوئے بھی جواب، ٹِپ اور پیغام کی خبر پاؤ۔",
     "turn_on": "چالو کرو",
+    "push_blocked_title": "Notifications mee ku pahonch rahin hain",
+    "push_blocked_body": "Meeru browser kosam notifications block chestunnaru, anduke DeHub band unnapudu meeku emi teliyadu. Mee system notification settings lo mee browser kosam vatini malli on cheyandi.",
+    "push_blocked_more": "Ziyada maloomat",
     "not_now": "ابھی نکو"
   },
   "staking": {

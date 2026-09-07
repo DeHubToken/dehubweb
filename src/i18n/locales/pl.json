@@ -1611,6 +1611,9 @@
     "turn_on_desktop_notifications": "Włączyć powiadomienia na pulpicie?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Dowiedz się o odpowiedziach, napiwkach i wiadomościach, gdy jesteś w innej karcie.",
     "turn_on": "Włącz",
+    "push_blocked_title": "Powiadomienia do Ciebie nie docierają",
+    "push_blocked_body": "Twój system blokuje powiadomienia dla tej przeglądarki, dlatego nic do Ciebie nie dociera, gdy DeHub jest zamknięty. Włącz je ponownie dla swojej przeglądarki w ustawieniach powiadomień systemowych.",
+    "push_blocked_more": "Więcej szczegółów",
     "not_now": "Nie teraz"
   },
   "staking": {

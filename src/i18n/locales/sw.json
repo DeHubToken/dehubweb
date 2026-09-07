@@ -1612,6 +1612,9 @@
     "turn_on_desktop_notifications": "Uwashe arifa za kompyuta?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Pata taarifa kuhusu majibu, bakshishi na jumbe ukiwa kwenye kichupo kingine.",
     "turn_on": "Washa",
+    "push_blocked_title": "Arifa hazikufikii",
+    "push_blocked_body": "Mfumo wako unazuia arifa kwa kivinjari hiki, kwa hivyo hakuna kinachokufikia wakati DeHub imefungwa. Ziwasha tena kwa kivinjari chako katika mipangilio ya arifa ya mfumo wako.",
+    "push_blocked_more": "Maelezo zaidi",
     "not_now": "Si sasa"
   },
   "staking": {

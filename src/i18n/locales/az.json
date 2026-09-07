@@ -1552,6 +1552,9 @@
     "turn_on_desktop_notifications": "Masaüstü bildirişləri açılsın?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Başqa vərəqdə olarkən cavablar, bəxşişlər və mesajlar barədə xəbər tutun.",
     "turn_on": "Aç",
+    "push_blocked_title": "Bildirişlər sizə çatdırılmır",
+    "push_blocked_body": "Sisteminiz bu brauzer üçün bildirişləri bloklayır, buna görə də DeHub qapalı olduqda sizə heç nə çatmır. Brauzeriniz üçün sistem bildiriş parametrlərində onları yenidən yandırın.",
+    "push_blocked_more": "Daha ətraflı",
     "not_now": "İndi yox"
   },
   "staking": {
