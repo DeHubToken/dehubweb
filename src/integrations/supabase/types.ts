@@ -1813,6 +1813,7 @@ export type Database = {
           id: string
           read: boolean
           recipient_address: string
+          reference_comment_id: string | null
           reference_id: string | null
           reference_title: string | null
           type: string
@@ -1826,6 +1827,7 @@ export type Database = {
           id?: string
           read?: boolean
           recipient_address: string
+          reference_comment_id?: string | null
           reference_id?: string | null
           reference_title?: string | null
           type?: string
@@ -1839,6 +1841,7 @@ export type Database = {
           id?: string
           read?: boolean
           recipient_address?: string
+          reference_comment_id?: string | null
           reference_id?: string | null
           reference_title?: string | null
           type?: string
