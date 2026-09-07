@@ -7,7 +7,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import QRCode from "https://esm.sh/qrcode@1.5.4";
 import { encode as encodeB64 } from "https://deno.land/std@0.190.0/encoding/base64.ts";
 import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
-import { DEHUB_LOGO_DATA_URI } from "./logo.ts";
+import { buildInviteSvg } from "./render.ts";
 import { BADGE_DATA_URIS } from "./badges.ts";
 
 // Staking badge tiers — mirror of src/lib/staking-badges.ts.
@@ -81,9 +81,6 @@ async function loadFonts(): Promise<Uint8Array[]> {
   fontBuffers = out;
   return out;
 }
-
-const LOGO_ASPECT = 1752 / 417; // width / height of the wordmark PNG
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-request-id, prefer",
@@ -157,14 +154,10 @@ async function fetchCoverDataUri(address: string | null, apiCoverPath: string | 
   return null;
 }
 
-function escapeXml(value: string) {
-  return value.replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" }[c] as string));
-}
-
 function cleanName(raw: string | null | undefined): string {
   const cleaned = (raw || "").trim().replace(/^@+/, "");
   if (!cleaned) return "a creator";
-  return cleaned.slice(0, 28);
+  return Array.from(cleaned).slice(0, 120).join("");
 }
 
 async function fetchAvatarDataUri(address: string | null, apiAvatarPath: string | null): Promise<string | null> {
@@ -256,104 +249,6 @@ async function buildQrSvgInner(text: string): Promise<{ path: string; count: num
   return { path, count };
 }
 
-function buildSvg(opts: {
-  code: string;
-  name: string;
-  username: string | null;
-  avatarDataUri: string | null;
-  bannerDataUri: string | null;
-  badgeDataUri: string | null;
-  qrPath: string;
-  qrCount: number;
-  width: number;
-  height: number;
-}) {
-  const W = opts.width;
-  const H = opts.height;
-  const name = escapeXml(opts.name);
-  const showHandle = Boolean(opts.username);
-  const handle = showHandle ? escapeXml(`@${opts.username}`) : "";
-  const code = escapeXml(opts.code || "INVITE");
-  const portraitR = Math.min(W, H) * 0.22;
-  const portraitCX = W * 0.30;
-  const portraitCY = H * 0.50;
-  const portraitSize = portraitR * 2;
-  const portraitX = portraitCX - portraitR;
-  const portraitY = portraitCY - portraitR;
-  const qrSize = Math.min(W, H) * 0.20;
-  const qrX = W - qrSize - W * 0.06;
-  const qrY = H - qrSize - H * 0.10;
-  const qrScale = qrSize / opts.qrCount;
-  const textX = W * 0.50;
-
-  const avatarHref = opts.avatarDataUri ?? "";
-  const hasAvatar = Boolean(opts.avatarDataUri);
-  const bannerHref = opts.bannerDataUri ?? "";
-  const hasBanner = Boolean(opts.bannerDataUri);
-
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Inter, sans-serif">
-  <defs>
-    <clipPath id="avatarClip"><rect x="${portraitX}" y="${portraitY}" width="${portraitSize}" height="${portraitSize}" rx="${portraitR * 0.22}"/></clipPath>
-    <clipPath id="bgClip"><rect width="${W}" height="${H}"/></clipPath>
-    <filter id="bgBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="18"/></filter>
-    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="10"/></filter>
-    <radialGradient id="vignette" cx="50%" cy="50%" r="75%"><stop offset="55%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity="0.85"/></radialGradient>
-    <linearGradient id="scrim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0.25"/><stop offset="1" stop-color="#000" stop-opacity="0.85"/></linearGradient>
-    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff" stop-opacity="0.9"/><stop offset="1" stop-color="#ffffff" stop-opacity="0.25"/></linearGradient>
-  </defs>
-
-  <rect width="${W}" height="${H}" fill="#0a0a0b"/>
-  <g clip-path="url(#bgClip)">
-    <image href="${bannerHref}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="xMidYMid slice" filter="${hasBanner ? "url(#bgBlur)" : "none"}" opacity="0.9"/>
-  </g>
-  <rect width="${W}" height="${H}" fill="url(#scrim)"/>
-  <rect width="${W}" height="${H}" fill="url(#vignette)"/>
-
-  <g>
-    <rect x="${portraitX - 14}" y="${portraitY - 14}" width="${portraitSize + 28}" height="${portraitSize + 28}" rx="${(portraitR + 14) * 0.22}" fill="#fff" opacity="0.08" filter="url(#softGlow)"/>
-    <rect x="${portraitX - 6}" y="${portraitY - 6}" width="${portraitSize + 12}" height="${portraitSize + 12}" rx="${(portraitR + 6) * 0.22}" fill="none" stroke="url(#ring)" stroke-width="3"/>
-    ${hasAvatar ? `<image href="${avatarHref}" x="${portraitX}" y="${portraitY}" width="${portraitSize}" height="${portraitSize}" preserveAspectRatio="xMidYMid slice" clip-path="url(#avatarClip)"/>` : `
-      <rect x="${portraitX}" y="${portraitY}" width="${portraitSize}" height="${portraitSize}" rx="${portraitR * 0.22}" fill="#1f2026"/>
-      <text x="${portraitCX}" y="${portraitCY + portraitR * 0.22}" fill="#fff" font-size="${portraitR}" font-weight="800" text-anchor="middle">${escapeXml((opts.name[0] || "D").toUpperCase())}</text>
-    `}
-  </g>
-
-  <g text-anchor="start">
-    <text x="${textX}" y="${H * 0.46}" fill="#fff" font-size="${H * 0.085}" font-weight="800" letter-spacing="-1">${name}</text>
-    ${opts.badgeDataUri ? (() => {
-      // Approximate rendered width of the name to anchor a superscript badge at its top-right.
-      const fs = H * 0.085;
-      const approxNameW = opts.name.length * fs * 0.55;
-      const badgeSize = fs * 0.55;
-      const bx = textX + approxNameW + fs * 0.28;
-      const by = H * 0.46 - fs * 0.95;
-      return `<image href="${opts.badgeDataUri}" x="${bx}" y="${by}" width="${badgeSize}" height="${badgeSize}" preserveAspectRatio="xMidYMid meet"/>`;
-    })() : ""}
-    ${handle ? `<text x="${textX}" y="${H * 0.535}" fill="#ffffff" fill-opacity="0.55" font-size="${H * 0.034}" font-weight="500">${handle}</text>` : ""}
-    <text x="${textX}" y="${handle ? H * 0.585 : H * 0.575}" fill="#ffffff" fill-opacity="0.92" font-size="${H * 0.042}" font-weight="500">invites you to join DeHub.</text>
-    <g transform="translate(${W * 0.04}, ${H * 0.85})">
-      <rect width="${H * 0.15}" height="${H * 0.072}" rx="${H * 0.014}" fill="#fff"/>
-      <text x="${H * 0.075}" y="${H * 0.05}" fill="#0a0a0b" font-size="${H * 0.034}" font-weight="800" text-anchor="middle" letter-spacing="1">JOIN</text>
-      <text x="${H * 0.17}" y="${H * 0.05}" fill="#ffffff" fill-opacity="0.85" font-size="${H * 0.030}" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">dehub.io/r/${code}</text>
-    </g>
-  </g>
-
-
-  <g transform="translate(${qrX - 18}, ${qrY - 18})">
-    <rect width="${qrSize + 36}" height="${qrSize + 36}" rx="18" fill="#ffffff"/>
-    <g transform="translate(18, 18) scale(${qrScale})" fill="#0a0a0b"><path d="${opts.qrPath}"/></g>
-    <text x="${(qrSize + 36) / 2}" y="${qrSize + 32}" fill="#0a0a0b" font-size="14" font-weight="700" text-anchor="middle" letter-spacing="2">SCAN TO JOIN</text>
-  </g>
-
-  ${(() => {
-    const tlW = W * 0.18;
-    const tlH = tlW / LOGO_ASPECT;
-    return `<image href="${DEHUB_LOGO_DATA_URI}" x="${W - tlW - W * 0.05}" y="${H * 0.06}" width="${tlW}" height="${tlH}" preserveAspectRatio="xMidYMid meet"/>`;
-  })()}
-</svg>`;
-}
-
 // In-memory PNG + SVG cache + in-flight dedup (per worker). Survives between requests.
 const PNG_CACHE = new Map<string, Uint8Array>();
 const PNG_INFLIGHT = new Map<string, Promise<Uint8Array>>();
@@ -404,9 +299,9 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
   const { path: qrPath, count: qrCount } = await buildQrSvgInner(shareUrl);
   const badgeDataUri = resolveBadgeDataUri(badgeBalance, username);
 
-  const svg = buildSvg({
+  const svg = buildInviteSvg({
     code: rawCode,
-    name: cleanName(displayName || username),
+    name: rawCode ? cleanName(displayName || username) : "DeHub",
     username,
     avatarDataUri,
     bannerDataUri,
