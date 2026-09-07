@@ -37,6 +37,7 @@ interface PostContentAreaProps {
   onApplyCrop: (index: number, settings: CropSettings) => void;
   onClearCrop: (index: number) => void;
   onApplyTrim: (index: number, trimStart: number, trimEnd: number) => void;
+  onReplaceImage: (index: number, file: File) => void;
   liveMode: LiveMode;
   canPost: boolean;
   destinations: string[];
@@ -120,6 +121,7 @@ export function PostContentArea({
   onApplyCrop,
   onClearCrop,
   onApplyTrim,
+  onReplaceImage,
   liveMode,
   canPost,
   destinations,
@@ -779,6 +781,7 @@ export function PostContentArea({
             onApplyCrop={onApplyCrop}
             onClearCrop={onClearCrop}
             onApplyTrim={onApplyTrim}
+            onReplaceImage={onReplaceImage}
           />
         </div>
 

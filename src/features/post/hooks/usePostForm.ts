@@ -923,6 +923,30 @@ export function usePostForm(
     ));
   }, []);
 
+  /**
+   * Swap an image's bytes for an edited copy — the annotator's exit.
+   *
+   * Filter and crop settings are dropped on purpose: the annotator was handed
+   * a copy with those already flattened in, so leaving them set would apply
+   * them a second time, once more at post. The old preview URL is revoked here
+   * rather than in the component, since this is the moment it stops being
+   * anyone's `src`.
+   */
+  const replaceImageFile = useCallback((index: number, file: File) => {
+    setMedia(prev => prev.map((m, i) => {
+      if (i !== index) return m;
+      if (m.preview?.startsWith('blob:')) URL.revokeObjectURL(m.preview);
+      return {
+        ...m,
+        file,
+        preview: URL.createObjectURL(file),
+        filterSettings: undefined,
+        filterPresetId: undefined,
+        cropSettings: undefined,
+      };
+    }));
+  }, []);
+
   const handleAudioSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -2442,6 +2466,7 @@ export function usePostForm(
       applyCropToMedia,
       clearCropFromMedia,
       applyTrimToMedia,
+      replaceImageFile,
       handleEnhanceWithAI,
       insertFormatting,
       handlePost,
