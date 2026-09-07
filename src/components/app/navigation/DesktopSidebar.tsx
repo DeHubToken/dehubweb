@@ -18,7 +18,6 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
-import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-unread';
 import { useTotalUnreadCount } from '@/hooks/use-messages';
 import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
 // Derived from public/brand/mark-black.png, which stays full-resolution because
@@ -67,7 +66,6 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
   const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);
-  const { unreadCount: communityActivityUnread } = useCommunityActivityUnreadCount();
   const dmUnread = useTotalUnreadCount();
 
   // Desktop sidebar active item overlay indicator refs/state
@@ -618,7 +616,6 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             );
             const isProfileItem = item.label === 'Profile';
             const isNotificationsItem = item.label === 'Notifications';
-            const isCommunitiesItem = item.label === 'Communities';
             const isMessagesItem = item.label === 'Messages';
             const isStagesItem = item.action === 'open-stages';
 
@@ -635,7 +632,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 onClick={isStagesItem ? () => openStageModal() : isProfileItem ? handleProfileClick : undefined}
                 avatarUrl={isProfileItem && isAuthenticated ? userAvatarUrl : undefined}
                 avatarFallback={isProfileItem && isAuthenticated ? displayName.charAt(0).toUpperCase() : undefined}
-                notificationCount={isNotificationsItem ? totalNotifUnread : isCommunitiesItem ? communityActivityUnread : isMessagesItem ? dmUnread : undefined}
+                notificationCount={isNotificationsItem ? totalNotifUnread : isMessagesItem ? dmUnread : undefined}
                 layoutId={isCollapsed ? 'sidebar-nav-collapsed' : 'sidebar-nav-expanded'}
                 registerActiveRef={isActive ? setActiveItemEl : undefined}
               />
