@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Beginilah rupa pemberitahuan DeHub.",
     "browserNotificationsTabOnlyDesc": "Dihidupkan, tetapi hanya semasa DeHub dibuka dalam tab",
     "browserNotificationsTabOnlyTitle": "Penyemak imbas ini tidak akan menerima pemberitahuan latar belakang",
-    "browserNotificationsTabOnlyHint": "DeHub meminta untuk mendaftar dan penyemak imbas anda menolak, jadi pemberitahuan hanya boleh sampai kepada anda semasa DeHub dibuka dalam tab. Memulakan semula penyemak imbas anda biasanya akan membersihkannya.",
+    "browserNotificationsTabOnlyHint": "Pemberitahuan hanya boleh sampai kepada anda semasa DeHub dibuka dalam tab: penyemak imbas anda enggan mendaftar untuk tolak latar belakang. Biasanya sistem operasi menyekat pemberitahuan untuk penyemak imbas itu sendiri, jadi cari penyemak imbas anda dalam tetapan pemberitahuan sistem anda dan matikan dan hidupkan semula.",
     "activity": "Aktiviti",
     "likes": "Suka",
     "likesDesc": "Apabila seseorang menyukai hantaran anda",

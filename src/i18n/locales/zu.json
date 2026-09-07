@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Isaziso se-DeHub sibukeka kanjena.",
     "browserNotificationsTabOnlyDesc": "Ivuliwe, kodwa kuphela ngenkathi i-DeHub ivuliwe kuthebhu",
     "browserNotificationsTabOnlyTitle": "Le bhrawuza ngeke yamukele izaziso zangemuva",
-    "browserNotificationsTabOnlyHint": "I-DeHub icele ukubhalisela i-Push futhi ibhrawuza yakho yenqaba, ngakho-ke izaziso zingafinyelela kuwe kuphela ngenkathi i-DeHub ivuliwe kuthebhu. Ukuqala kabusha ibhrawuza yakho kuvame ukuyisusa.",
+    "browserNotificationsTabOnlyHint": "Izaziso zingakufinyelela kuphela ngenkathi i-DeHub ivuliwe kuthebhu: ibhrawuza yakho yenqabile ukubhalisela ukucindezela ingemuva. Lokho ngokuvamile kuyizaziso zesistimu yokusebenza evimbela ibhrawuza ngokwayo, ngakho-ke thola ibhrawuza yakho kumasethingi esaziso sesistimu yakho bese uyivala bese uyayivula.",
     "activity": "Umsebenzi",
     "likes": "Okuthandwayo",
     "likesDesc": "Uma umuntu ethanda okuthunyelwe kwakho",

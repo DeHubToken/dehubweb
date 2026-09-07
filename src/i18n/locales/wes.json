@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Na so wan DeHub notification di look.",
     "browserNotificationsTabOnlyDesc": "On, but only when DeHub dey open for one tab",
     "browserNotificationsTabOnlyTitle": "Dis browser no go gree for background notifications",
-    "browserNotificationsTabOnlyHint": "DeHub ask to register for push and your browser refuse am, so notification go fit reach you only when DeHub dey open for one tab. If you restart your browser, e go usually clear am.",
+    "browserNotificationsTabOnlyHint": "Notifications fit only reach you when DeHub dey open for one tab: your browser refuse to register for background push. Dat one usually na the operating system block notifications for the browser itself, so find your browser for your system notification settings and switch am off and back on.",
     "activity": "Activity",
     "likes": "Like dem",
     "likesDesc": "When some pesin like your post",

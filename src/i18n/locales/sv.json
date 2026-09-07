@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Så här ser en DeHub-avisering ut.",
     "browserNotificationsTabOnlyDesc": "På, men bara när DeHub är öppen i en flik",
     "browserNotificationsTabOnlyTitle": "Den här webbläsaren accepterar inte bakgrundsmeddelanden",
-    "browserNotificationsTabOnlyHint": "DeHub bad om att registrera sig för push och din webbläsare vägrade, så aviseringar kan bara nå dig när DeHub är öppen i en flik. Om du startar om webbläsaren rensas den vanligtvis.",
+    "browserNotificationsTabOnlyHint": "Aviseringar kan bara nå dig när DeHub är öppen i en flik: din webbläsare vägrade att registrera sig för bakgrundspush. Det är vanligtvis operativsystemet som blockerar meddelanden för själva webbläsaren, så hitta din webbläsare i dina systeminställningar för meddelanden och stäng av och sätt på den igen.",
     "activity": "Aktivitet",
     "likes": "Gillar",
     "likesDesc": "När någon gillar dina inlägg",

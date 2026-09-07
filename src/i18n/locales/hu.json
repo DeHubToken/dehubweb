@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Így néz ki egy DeHub-értesítés.",
     "browserNotificationsTabOnlyDesc": "Be, de csak addig, amíg a DeHub nyitva van egy lapon",
     "browserNotificationsTabOnlyTitle": "Ez a böngésző nem fogadja el a háttérértesítéseket",
-    "browserNotificationsTabOnlyHint": "A DeHub azt kérte, hogy regisztrálj push-ként, és a böngésződ elutasította, így az értesítések csak akkor érhetnek el, ha a DeHub meg van nyitva egy lapon. A böngésző újraindítása általában törli azt.",
+    "browserNotificationsTabOnlyHint": "Az értesítések csak akkor érhetnek el, ha a DeHub meg van nyitva egy lapon: a böngésződ nem volt hajlandó regisztrálni a háttérben történő leküldésre. Ez általában maga az operációs rendszer blokkolja a böngésző értesítéseit, ezért keresse meg a böngészőt a rendszer értesítési beállításaiban, majd kapcsolja ki és be.",
     "activity": "Tevékenység",
     "likes": "Kedvelések",
     "likesDesc": "Ha valaki kedveli a bejegyzését",

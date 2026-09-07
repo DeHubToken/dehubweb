@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "DeHub 个通知就是搿能个。",
     "browserNotificationsTabOnlyDesc": "勒，但只当DeHub开着个tab辰光",
     "browserNotificationsTabOnlyTitle": "搿个浏览器弗接受后台通知",
-    "browserNotificationsTabOnlyHint": "DeHub 請求註冊推送，但瀏覽器拒絕了，所以通知只能在 DeHub 打開的標籤頁中才能收到。重新啟動瀏覽器通常可以解決這個問題。",
+    "browserNotificationsTabOnlyHint": "通知只得拉开DeHub个browser tab辰光才得送达：侬个browser拒绝注册后台推送。迭通常是操作系统挡脱浏览器自家个通知，所以去侬系统通知设置里寻着浏览器，关脱再开。",
     "activity": "活动",
     "likes": "赞",
     "likesDesc": "有人赞了侬个帖子",

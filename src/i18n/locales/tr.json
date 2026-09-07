@@ -136,7 +136,7 @@
     "browserNotificationsTestBody": "Bir DeHub bildirimi işte böyle görünür.",
     "browserNotificationsTabOnlyDesc": "Açık, ancak yalnızca DeHub bir sekmede açıkken",
     "browserNotificationsTabOnlyTitle": "Bu tarayıcı arka plan bildirimlerini kabul etmeyecek",
-    "browserNotificationsTabOnlyHint": "DeHub anlık ileti için kaydolmak istedi ve tarayıcınız bunu reddetti, bu nedenle bildirimler yalnızca DeHub bir sekmede açıkken size ulaşabilir. Tarayıcınızı yeniden başlatmak genellikle onu temizler.",
+    "browserNotificationsTabOnlyHint": "Bildirimler size yalnızca DeHub bir sekmede açıkken ulaşabilir: tarayıcınız arka planda gönderim için kaydolmayı reddetti. Bu genellikle tarayıcının kendisi için bildirimleri engelleyen işletim sistemidir, bu nedenle tarayıcınızı sistem bildirim ayarlarınızda bulun ve kapatın ve tekrar açın.",
     "activity": "Etkinlik",
     "likes": "Beğeniler",
     "likesDesc": "Birisi gönderinizi beğendiğinde",

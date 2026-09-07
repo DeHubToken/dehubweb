@@ -140,7 +140,7 @@
     "browserNotificationsTestBody": "Takto vyzerá upozornenie z DeHubu.",
     "browserNotificationsTabOnlyDesc": "Zapnuté, ale iba vtedy, keď je DeHub otvorený na karte",
     "browserNotificationsTabOnlyTitle": "Tento prehliadač neprijíma upozornenia na pozadí",
-    "browserNotificationsTabOnlyHint": "Spoločnosť DeHub požiadala o registráciu na push a váš prehliadač ju odmietol, takže upozornenia sa k vám môžu dostať len vtedy, keď je DeHub otvorený na karte. Reštartovanie prehliadača ho zvyčajne vymaže.",
+    "browserNotificationsTabOnlyHint": "Oznámenia sa k vám môžu dostať len vtedy, keď je DeHub otvorený na karte: váš prehliadač sa odmietol zaregistrovať na tlač na pozadí. Zvyčajne ide o upozornenia na blokovanie operačného systému pre samotný prehliadač, takže vyhľadajte svoj prehliadač v nastaveniach systémových upozornení a vypnite ho a znova zapnite.",
     "activity": "Aktivita",
     "likes": "Páči sa mi",
     "likesDesc": "Keď sa niekomu páčia vaše príspevky",
