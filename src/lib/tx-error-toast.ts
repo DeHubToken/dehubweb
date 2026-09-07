@@ -25,7 +25,13 @@ export function toastTxError(
   fallback: string,
   options?: { id?: string; context?: string; description?: string; duration?: number },
 ): boolean {
-  if (isWalletLockedError(error)) return false;
+  if (isWalletLockedError(error)) {
+    // Some flows replace an existing loading toast by id only after the async
+    // transaction starts. When signing pauses for an unlock there is no error
+    // toast to replace it with, so explicitly clear that stale spinner.
+    if (options?.id) toast.dismiss(options.id);
+    return false;
+  }
   const { context, ...toastOptions } = options ?? {};
   toast.error(parseTxError(error, context ?? 'transaction') || fallback, toastOptions);
   return true;
