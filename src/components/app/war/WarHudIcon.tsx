@@ -245,7 +245,7 @@ const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
   accounts: Users,
   usernames: AtSign,
   tv: Tv,
-  superpowers: Zap,
+  superpowers: Wand2,
 };
 
 export function resolveThemeIconKey(src: string): ThemeIconKey | null {
