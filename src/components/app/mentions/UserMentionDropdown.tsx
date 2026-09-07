@@ -15,6 +15,7 @@ import { isAssistantAddress } from '@/lib/assistant';
 import { Search, Loader2, AtSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AppState } from '@/components/app/AppState';
 
 export interface MentionUser {
   id: string;
@@ -245,18 +246,12 @@ export function UserMentionDropdown({
         <div className="overflow-y-auto px-2 pb-6" style={{ maxHeight: 'calc(70vh - 140px)' }}>
           {/* Empty state */}
           {showEmpty && (
-            <div className="flex flex-col items-center justify-center py-10 gap-2">
-              <Search className="w-8 h-8 text-white/10" />
-              <span className="text-sm text-white/25">No users found</span>
-            </div>
+            <AppState icon="search" title="No users found" kind="search-empty" size="compact" className="py-10" />
           )}
 
           {/* Initial state */}
           {!loading && users.length === 0 && searchQuery.length < 2 && (
-            <div className="flex flex-col items-center justify-center py-10 gap-2">
-              <AtSign className="w-8 h-8 text-white/10" />
-              <span className="text-sm text-white/25">Type to search users</span>
-            </div>
+            <AppState icon="usernames" title="Type to search users" size="compact" className="py-10" />
           )}
 
           {/* User list */}
