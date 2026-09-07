@@ -37,6 +37,20 @@ describe('theme icon assets', () => {
     }
   });
 
+  it('uses each theme native wand artwork for SuperPowers', () => {
+    for (const theme of [...FULL_THEMES, 'system']) {
+      const directory = resolve(__dirname, `../../public/theme-icons/${theme}`);
+      expect(readFileSync(`${directory}/superpowers.webp`), theme)
+        .toEqual(readFileSync(`${directory}/wand.webp`));
+    }
+
+    const iconSource = readFileSync(
+      resolve(__dirname, '../../src/components/app/war/WarHudIcon.tsx'),
+      'utf8',
+    );
+    expect(iconSource).toMatch(/superpowers:\s*Wand2/);
+  });
+
   it('routes old asset stems to the matching themed WebP', () => {
     expect(resolveThemeIconAsset('/assets/settings-icon-abc.png', 'system'))
       .toBe('/theme-icons/system/settings.webp');
@@ -131,13 +145,21 @@ describe('theme icon assets', () => {
     }
   });
 
-  it('keeps SuperPowers navigation on the themed icon asset', () => {
+  it('keeps SuperPowers navigation on the stock Zap icon', () => {
     const constants = readFileSync(resolve(__dirname, '../../src/constants/app.constants.ts'), 'utf8');
     const superPowersNav = constants
       .split('\n')
       .find((line) => line.includes("label: 'SuperPowers'"));
 
-    expect(superPowersNav).toContain("themedIcon: 'superpowers'");
-    expect(superPowersNav).not.toMatch(/\bRocket\b/);
+    expect(superPowersNav).toContain('icon: Zap');
+    expect(superPowersNav).not.toContain('themedIcon:');
+
+    const mobileNav = readFileSync(resolve(__dirname, '../../src/components/app/MobileBottomNav.tsx'), 'utf8');
+    const mobileSuperPowersNav = mobileNav
+      .split('\n')
+      .find((line) => line.includes("label: 'SuperPowers'"));
+
+    expect(mobileSuperPowersNav).toContain('icon: Zap');
+    expect(mobileSuperPowersNav).not.toContain('themedIcon:');
   });
 });
