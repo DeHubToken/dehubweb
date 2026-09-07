@@ -4,6 +4,27 @@ export const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/
 // DeHub API base URL
 export const DEHUB_API_BASE = "https://api.dehub.io";
 
+// JSON API traffic uses the apex worker as a relay. Some mobile networks can
+// reach dehub.io while connections to the api.dehub.io hostname stall before
+// they ever reach the backend. Keeping the alternate path on the already-
+// loaded origin removes that hostname as a single point of failure. Uploads
+// still use DEHUB_API_BASE directly below so large bodies do not cross Worker
+// limits.
+export const DEHUB_API_REQUEST_BASE = "https://dehub.io/_api";
+
+function apiRequestUrl(endpoint: string): string {
+  return `${DEHUB_API_REQUEST_BASE}/${endpoint.replace(/^\/+/, '')}`;
+}
+
+/**
+ * Wall-clock ceiling for ordinary API calls.
+ *
+ * Browsers do not time fetch out. If a deployment or mobile network change
+ * strands a socket, the promise otherwise stays pending and every loading
+ * state waiting on it can remain visible forever.
+ */
+const DEFAULT_API_TIMEOUT_MS = 20_000;
+
 /**
  * Convert relative media paths to absolute CDN URLs
  * The DeHub API returns relative paths like "images/xxx.jpg"
@@ -26,6 +47,17 @@ export class AuthenticationError extends Error {
   constructor(message: string = 'Session expired. Please sign in again.') {
     super(message);
     this.name = 'AuthenticationError';
+  }
+}
+
+export class RequestTimeoutError extends Error {
+  readonly isTimeout = true;
+  readonly url: string;
+
+  constructor(url: string, ms: number) {
+    super(`Request timed out after ${ms}ms`);
+    this.name = 'RequestTimeoutError';
+    this.url = url;
   }
 }
 
@@ -253,7 +285,7 @@ export async function refreshTokenSharedDetailed(): Promise<TokenRefreshOutcome>
     // requiring a full page reload to recover.
     const timeout = timeoutSignal(10000);
     try {
-      const response = await fetch(`${DEHUB_API_BASE}/api/auth/refresh`, {
+      const response = await fetch(apiRequestUrl('/api/auth/refresh'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refreshToken }),
@@ -371,11 +403,20 @@ export async function apiCall<T>(
     params?: Record<string, string | number | undefined>;
     requiresAuth?: boolean;
     _retry?: boolean;
+    /** Override the request ceiling. Defaults to 20 seconds. */
+    timeoutMs?: number;
   } = {},
 ): Promise<T> {
-  const { method = "GET", body, params = {}, requiresAuth = false, _retry = false } = options;
+  const {
+    method = "GET",
+    body,
+    params = {},
+    requiresAuth = false,
+    _retry = false,
+    timeoutMs = DEFAULT_API_TIMEOUT_MS,
+  } = options;
 
-  const url = new URL(endpoint, DEHUB_API_BASE);
+  const url = new URL(apiRequestUrl(endpoint));
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined) {
       url.searchParams.set(key, String(value));
@@ -403,12 +444,28 @@ export async function apiCall<T>(
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch(url.toString(), {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-    cache: 'no-store',
-  });
+  const controller = new AbortController();
+  let timedOut = false;
+  const timer = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, timeoutMs);
+
+  let response: Response;
+  try {
+    response = await fetch(url.toString(), {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+      cache: 'no-store',
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (timedOut) throw new RequestTimeoutError(url.toString(), timeoutMs);
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
