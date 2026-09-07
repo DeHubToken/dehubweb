@@ -983,7 +983,14 @@
     "statusDeclined": "Reddedildi",
     "shipping": "Geliştiriliyor",
     "noShippingYet": "Devam eden bir şey yok",
-    "shippingAppearHere": "Geliştirilmekte olan talepler burada görünecek."
+    "shippingAppearHere": "Geliştirilmekte olan talepler burada görünecek.",
+    "writeReply": "Yanıt yaz...",
+    "replyToComment": "Yanıtla",
+    "replyingTo": "{{name}}'ya yanıt veriliyor",
+    "requestAuthorChip": "Yazar",
+    "commentEdited": "düzenlendi",
+    "showOneMoreReply": "1 yanıt daha göster",
+    "showMoreReplies": "{{count}} yanıt daha göster"
   },
   "auth": {
     "loginRequired": "Giriş yapılması gerekiyor"

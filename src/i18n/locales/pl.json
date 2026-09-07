@@ -983,7 +983,14 @@
     "statusDeclined": "Odrzucona",
     "shipping": "W realizacji",
     "noShippingYet": "Nic w toku",
-    "shippingAppearHere": "Zgłoszenia, nad którymi trwają prace, pojawią się tutaj."
+    "shippingAppearHere": "Zgłoszenia, nad którymi trwają prace, pojawią się tutaj.",
+    "writeReply": "Napisz odpowiedź...",
+    "replyToComment": "Odpowiedz",
+    "replyingTo": "Odpowiadanie {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "edycja",
+    "showOneMoreReply": "Pokaż 1 więcej odpowiedzi",
+    "showMoreReplies": "Pokaż {{count}} więcej odpowiedzi"
   },
   "auth": {
     "loginRequired": "Wymagane logowanie"

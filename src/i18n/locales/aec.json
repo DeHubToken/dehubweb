@@ -980,7 +980,14 @@
     "statusDeclined": "اترفض",
     "shipping": "بيتشحن",
     "noShippingYet": "مفيش حاجة شغالة",
-    "shippingAppearHere": "الطلبات اللي بتتبني هتظهر هنا."
+    "shippingAppearHere": "الطلبات اللي بتتبني هتظهر هنا.",
+    "writeReply": "اكتب رد...",
+    "replyToComment": "رد",
+    "replyingTo": "بالرد على {{name}}",
+    "requestAuthorChip": "المؤلف",
+    "commentEdited": "تم التعديل",
+    "showOneMoreReply": "إظهار رد واحد آخر",
+    "showMoreReplies": "إظهار {{count}} ردود أخرى"
   },
   "auth": {
     "loginRequired": "سجّل دخول مطلوب"

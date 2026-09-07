@@ -958,7 +958,14 @@
     "statusDeclined": "Одбијено",
     "shipping": "У изради",
     "noShippingYet": "Ништа није у изради",
-    "shippingAppearHere": "Захтеви који се израђују појавиће се овде."
+    "shippingAppearHere": "Захтеви који се израђују појавиће се овде.",
+    "writeReply": "Напиши одговор...",
+    "replyToComment": "Одговор",
+    "replyingTo": "Одговарање на {{name}}",
+    "requestAuthorChip": "Аутор",
+    "commentEdited": "измењено",
+    "showOneMoreReply": "Прикажи још 1 одговор",
+    "showMoreReplies": "Прикажи {{count}} више одговора"
   },
   "auth": {
     "loginRequired": "Пријава је обавезна"

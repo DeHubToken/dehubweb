@@ -983,7 +983,14 @@
     "statusDeclined": "رەت قىلىندى",
     "shipping": "ئىشلىنىۋاتىدۇ",
     "noShippingYet": "داۋاملىشىۋاتقان ھېچنېمە يوق",
-    "shippingAppearHere": "قۇرۇلۇۋاتقان تەلەپلەر بۇ يەردە كۆرۈنىدۇ."
+    "shippingAppearHere": "قۇرۇلۇۋاتقان تەلەپلەر بۇ يەردە كۆرۈنىدۇ.",
+    "writeReply": "ئىنكاس يېزىڭ...",
+    "replyToComment": "Reply",
+    "replyingTo": "{{name}} گە جاۋاب بېرىۋاتقاندا",
+    "requestAuthorChip": "Author",
+    "commentEdited": "تەھرىرلەندى",
+    "showOneMoreReply": "1 دانە ئىنكاسنى كۆرسىتىڭ",
+    "showMoreReplies": "{{count}} دانە ئىنكاسنى كۆرسىتىڭ"
   },
   "auth": {
     "loginRequired": "كىرىش تەلەپ قىلىنىدۇ"

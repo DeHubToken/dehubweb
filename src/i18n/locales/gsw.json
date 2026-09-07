@@ -983,7 +983,14 @@
     "statusDeclined": "Abglehnt",
     "shipping": "Am Uslifere",
     "noShippingYet": "Nüt am Loufe",
-    "shippingAppearHere": "Aafroge wo baut wärde erschiine da."
+    "shippingAppearHere": "Aafroge wo baut wärde erschiine da.",
+    "writeReply": "Schriib en Antwort...",
+    "replyToComment": "Antwort",
+    "replyingTo": "Antworte uf {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "bearbeitet",
+    "showOneMoreReply": "Zeig 1 meh Antwort",
+    "showMoreReplies": "Zeig {{count}} meh Antworte"
   },
   "auth": {
     "loginRequired": "Aamäldig erforderlich"

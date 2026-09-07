@@ -982,7 +982,14 @@
     "statusDeclined": "却下",
     "shipping": "開発中",
     "noShippingYet": "進行中のものはありません",
-    "shippingAppearHere": "制作中のリクエストがここに表示されます。"
+    "shippingAppearHere": "制作中のリクエストがここに表示されます。",
+    "writeReply": "返信...",
+    "replyToComment": "返信",
+    "replyingTo": "{{name}}に返信",
+    "requestAuthorChip": "投稿者",
+    "commentEdited": "編集済み",
+    "showOneMoreReply": "返信をあと1件表示",
+    "showMoreReplies": "{{count}}件の返信をさらに表示"
   },
   "auth": {
     "loginRequired": "ログインが必要です"

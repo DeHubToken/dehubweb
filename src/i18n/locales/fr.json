@@ -983,7 +983,14 @@
     "statusDeclined": "Refusé",
     "shipping": "En cours de livraison",
     "noShippingYet": "Rien en cours",
-    "shippingAppearHere": "Les demandes en cours de développement apparaîtront ici."
+    "shippingAppearHere": "Les demandes en cours de développement apparaîtront ici.",
+    "writeReply": "Écrire une réponse...",
+    "replyToComment": "Répondre",
+    "replyingTo": "En réponse à {{name}}",
+    "requestAuthorChip": "Auteur",
+    "commentEdited": "modifié",
+    "showOneMoreReply": "Afficher 1 réponse de plus",
+    "showMoreReplies": "Afficher {{count}} réponses de plus"
   },
   "auth": {
     "loginRequired": "Connexion requise"

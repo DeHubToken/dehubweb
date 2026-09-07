@@ -982,7 +982,14 @@
     "statusDeclined": "مرفوض",
     "shipping": "قيد التنفيذ",
     "noShippingYet": "ما في شي شغال",
-    "shippingAppearHere": "الطلبات اللي بتنبني بتظهر هنا."
+    "shippingAppearHere": "الطلبات اللي بتنبني بتظهر هنا.",
+    "writeReply": "اكتب رد...",
+    "replyToComment": "رد",
+    "replyingTo": "بالرد على {{name}}",
+    "requestAuthorChip": "المؤلف",
+    "commentEdited": "تم التعديل",
+    "showOneMoreReply": "عرض رد واحد آخر",
+    "showMoreReplies": "عرض {{count}} ردود أخرى"
   },
   "auth": {
     "loginRequired": "مطلوب تسجيل دخول"

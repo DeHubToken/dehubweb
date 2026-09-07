@@ -996,7 +996,14 @@
     "statusDeclined": "Declined",
     "shipping": "Ijaaramaa jira",
     "noShippingYet": "Wanti hojjetamaa jiru hin jiru",
-    "shippingAppearHere": "Gaaffiiwwan ijaaramaa jiran asirratti mul'atu."
+    "shippingAppearHere": "Gaaffiiwwan ijaaramaa jiran asirratti mul'atu.",
+    "writeReply": "Deebii barreessi...",
+    "replyToComment": "Deebii",
+    "replyingTo": "{{name}} irratti deebii",
+    "requestAuthorChip": "Mootummaa",
+    "commentEdited": "fooyya’e",
+    "showOneMoreReply": "deebii 1 agarsiisi",
+    "showMoreReplies": "deebii {{count}}  saffisiisi"
   },
   "auth": {
     "loginRequired": "Seeninuun barbaachisa"

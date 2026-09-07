@@ -984,7 +984,14 @@
     "statusDeclined": "A Kọ̀",
     "shipping": "Ń kọ́",
     "noShippingYet": "Kò sí ohunkóhun tí ń lọ lọ́wọ́",
-    "shippingAppearHere": "Àwọn ìbéèrè tí a ń kọ́ yóò farahàn níbí."
+    "shippingAppearHere": "Àwọn ìbéèrè tí a ń kọ́ yóò farahàn níbí.",
+    "writeReply": "Kọ̀wé ìdáhùn kan...",
+    "replyToComment": "Ìdáhùn",
+    "replyingTo": "Ó ń dáhùn sí {{name}}",
+    "requestAuthorChip": "Òǹkọ̀wé",
+    "commentEdited": "ṣètò",
+    "showOneMoreReply": "Fi ìdáhùn 1 sí i",
+    "showMoreReplies": "Fi {{count}} sí i"
   },
   "auth": {
     "loginRequired": "Wíwọlé ni a nílò"

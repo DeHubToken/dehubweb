@@ -1046,7 +1046,14 @@
     "statusDeclined": "Zamietnuté",
     "shipping": "Vo výrobe",
     "noShippingYet": "Nič sa nerobí",
-    "shippingAppearHere": "Požiadavky, na ktorých sa pracuje, sa zobrazia tu."
+    "shippingAppearHere": "Požiadavky, na ktorých sa pracuje, sa zobrazia tu.",
+    "writeReply": "Napísať odpoveď...",
+    "replyToComment": "Odpovedať",
+    "replyingTo": "Odpovedanie {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "upravené",
+    "showOneMoreReply": "Zobraziť 1 ďalšiu odpoveď",
+    "showMoreReplies": "Zobraziť {{count}} ďalších odpovedí"
   },
   "auth": {
     "loginRequired": "Vyžaduje sa prihlásenie"

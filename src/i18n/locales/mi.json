@@ -981,7 +981,14 @@
     "statusDeclined": "Kua whakahēngia",
     "shipping": "Kei te hangaia",
     "noShippingYet": "Kāore he mahi kei te haere",
-    "shippingAppearHere": "Ka puta ki konei ngā tono e hangaia ana."
+    "shippingAppearHere": "Ka puta ki konei ngā tono e hangaia ana.",
+    "writeReply": "Whakautu...",
+    "replyToComment": "Whakautu",
+    "replyingTo": "Ka whakahoki ki {{name}}",
+    "requestAuthorChip": "Kaituhi",
+    "commentEdited": "whakatika",
+    "showOneMoreReply": "Whakaatu 1 atu whakautu",
+    "showMoreReplies": "Whakaatu {{count}} atu whakautu"
   },
   "auth": {
     "loginRequired": "Me takiuru"

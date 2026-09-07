@@ -993,7 +993,14 @@
     "statusDeclined": "अस्वीकृत",
     "shipping": "रिलिज हुँदै",
     "noShippingYet": "प्रगतिमा केही छैन",
-    "shippingAppearHere": "बनिरहेका अनुरोधहरू यहाँ देखिनेछन्।"
+    "shippingAppearHere": "बनिरहेका अनुरोधहरू यहाँ देखिनेछन्।",
+    "writeReply": "लेख्नुहोस्...",
+    "replyToComment": "जवाफ",
+    "replyingTo": "{{name}} लाई जवाफ दिँदै",
+    "requestAuthorChip": "लेखक",
+    "commentEdited": "सम्पादन गरियो",
+    "showOneMoreReply": "थप १ जवाफ देखाउनुहोस्",
+    "showMoreReplies": "थप {{count}} जवाफहरू देखाउनुहोस्"
   },
   "auth": {
     "loginRequired": "लगइन आवश्यक छ"

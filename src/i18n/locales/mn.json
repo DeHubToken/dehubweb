@@ -980,7 +980,14 @@
     "statusDeclined": "Татгалзсан",
     "shipping": "Бүтээгдэж байна",
     "noShippingYet": "Хийгдэж буй зүйл алга",
-    "shippingAppearHere": "Бүтээгдэж буй хүсэлтүүд энд харагдана."
+    "shippingAppearHere": "Бүтээгдэж буй хүсэлтүүд энд харагдана.",
+    "writeReply": "Хариу бичих...",
+    "replyToComment": "Хариу",
+    "replyingTo": "{{name}}-д хариу бичиж байна",
+    "requestAuthorChip": "Зохиогч",
+    "commentEdited": "зассан",
+    "showOneMoreReply": "Өөр 1 хариултыг үзэх",
+    "showMoreReplies": "{{count}}-ийн нэмэлт хариултыг үзэх"
   },
   "auth": {
     "loginRequired": "Нэвтрэх шаардлагатай"

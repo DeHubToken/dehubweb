@@ -978,7 +978,14 @@
     "statusDeclined": "நிராகரிக்கப்பட்டது",
     "shipping": "உருவாக்கத்தில்",
     "noShippingYet": "நடப்பில் எதுவும் இல்லை",
-    "shippingAppearHere": "உருவாக்கப்பட்டு வரும் கோரிக்கைகள் இங்கே தோன்றும்."
+    "shippingAppearHere": "உருவாக்கப்பட்டு வரும் கோரிக்கைகள் இங்கே தோன்றும்.",
+    "writeReply": "பதில்...",
+    "replyToComment": "பதில்",
+    "replyingTo": "{{name}} க்கு பதிலளித்தல்",
+    "requestAuthorChip": "ஆசிரியர்",
+    "commentEdited": "திருத்தப்பட்டது",
+    "showOneMoreReply": "மேலும் 1 பதிலைக் காட்டு",
+    "showMoreReplies": "மேலும் {{count}} பதில்களைக் காட்டு"
   },
   "auth": {
     "loginRequired": "உள்நுழைவு தேவை"

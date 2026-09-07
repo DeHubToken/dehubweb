@@ -973,7 +973,14 @@
     "statusDeclined": "Elutasítva",
     "shipping": "Készül",
     "noShippingYet": "Semmi sincs folyamatban",
-    "shippingAppearHere": "Az épülő kérések itt jelennek meg."
+    "shippingAppearHere": "Az épülő kérések itt jelennek meg.",
+    "writeReply": "Válasz...",
+    "replyToComment": "Válasz",
+    "replyingTo": "Válasz {{name}}-nak/-nek",
+    "requestAuthorChip": "Szerző",
+    "commentEdited": "szerkesztve",
+    "showOneMoreReply": "Mutass még 1 választ",
+    "showMoreReplies": "Mutass még {{count}} választ"
   },
   "auth": {
     "loginRequired": "Bejelentkezés szükséges"

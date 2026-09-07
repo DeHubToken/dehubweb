@@ -976,7 +976,14 @@
     "statusDeclined": "ପ୍ରତ୍ୟାଖ୍ୟାନ",
     "shipping": "ପଠାଯାଉଛି",
     "noShippingYet": "କିଛି ଚାଲିନାହିଁ",
-    "shippingAppearHere": "ତିଆରି ହେଉଥିବା ଅନୁରୋଧ ଏଠାରେ ଦେଖାଯିବ।"
+    "shippingAppearHere": "ତିଆରି ହେଉଥିବା ଅନୁରୋଧ ଏଠାରେ ଦେଖାଯିବ।",
+    "writeReply": "ଏକ ଉତ୍ତର ଲେଖନ୍ତୁ...",
+    "replyToComment": "ଉତ୍ତର",
+    "replyingTo": "{{name}} କୁ ଉତ୍ତର ଦେଉଛି",
+    "requestAuthorChip": "ଲେଖକ",
+    "commentEdited": "ସମ୍ପାଦିତ",
+    "showOneMoreReply": "ଆଉ 1ଟି ଉତ୍ତର ଦେଖାନ୍ତୁ",
+    "showMoreReplies": "{{count}} ଟି ଅଧିକ ଉତ୍ତର ଦେଖାନ୍ତୁ"
   },
   "auth": {
     "loginRequired": "ଲଗ ଇନ ଆବଶ୍ୟକ"
