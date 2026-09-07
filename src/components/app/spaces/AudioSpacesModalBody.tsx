@@ -1271,7 +1271,7 @@ function ParticipantAvatar({
       {canRemove && (
         <button
           onClick={onRemove}
-          className="absolute -top-1 -left-1 w-5 h-5 bg-red-500 rounded-full items-center justify-center hidden group-hover:flex"
+          className="absolute -top-1 -left-1 w-5 h-5 bg-red-500 rounded-md items-center justify-center hidden group-hover:flex"
         >
           <X className="w-3 h-3 text-white" />
         </button>
@@ -1322,7 +1322,7 @@ function ListenerItem({
           <button
             onClick={onInvite}
             title={`Invite ${participant.username || 'listener'} as speaker`}
-            className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full items-center justify-center hidden group-hover:flex"
+            className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded items-center justify-center hidden group-hover:flex"
           >
             <UserPlus className="w-2.5 h-2.5 text-white" />
           </button>

@@ -428,7 +428,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
                 variant="outline"
                 size="icon"
                 onClick={() => fileInputRef.current?.click()}
-                className="rounded-full shrink-0 border-white/20 bg-white/5 hover:bg-white/10 w-9 h-9 sm:w-10 sm:h-10"
+                className="rounded-xl shrink-0 border-white/20 bg-white/5 hover:bg-white/10 w-9 h-9 sm:w-10 sm:h-10"
               >
                 <ImageIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/70" />
               </Button>

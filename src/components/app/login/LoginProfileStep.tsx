@@ -393,7 +393,7 @@ export function LoginProfileStep() {
               onClick={() => avatarInputRef.current?.click()}
               disabled={isSubmitting}
               aria-label={t('settings.clickCameraUpload')}
-              className="absolute -bottom-1 -right-1 flex size-7 items-center justify-center rounded-full border border-white/10 bg-zinc-800 transition-colors hover:bg-zinc-700 disabled:opacity-50"
+              className="absolute -bottom-1 -right-1 flex size-7 items-center justify-center rounded-lg border border-white/10 bg-zinc-800 transition-colors hover:bg-zinc-700 disabled:opacity-50"
             >
               <Camera className="h-3.5 w-3.5 text-white" />
             </button>

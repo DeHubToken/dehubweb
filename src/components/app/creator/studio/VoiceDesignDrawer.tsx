@@ -246,7 +246,7 @@ export function VoiceDesignDrawer({
                         play(preview);
                       }
                     }}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white transition hover:bg-white/20"
                   >
                     {playing === preview.generatedVoiceId ? (
                       <Square className="h-3.5 w-3.5" />

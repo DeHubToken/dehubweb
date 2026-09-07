@@ -70,7 +70,7 @@ export function FolderBar() {
           )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button type="button" aria-label={t('creatorFlow.flowOptions')} className="mr-1 flex h-5 w-5 items-center justify-center rounded-full opacity-0 transition hover:bg-white/10 group-hover:opacity-100 data-[state=open]:opacity-100">
+              <button type="button" aria-label={t('creatorFlow.flowOptions')} className="mr-1 flex h-5 w-5 items-center justify-center rounded-md opacity-0 transition hover:bg-white/10 group-hover:opacity-100 data-[state=open]:opacity-100">
                 <MoreHorizontal size={12} />
               </button>
             </DropdownMenuTrigger>
@@ -87,7 +87,7 @@ export function FolderBar() {
         onClick={() => void create()}
         title={t('creatorFlow.foldersNew')}
         aria-label={t('creatorFlow.foldersNew')}
-        className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/60 transition hover:border-white/25 hover:text-white"
+        className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/60 transition hover:border-white/25 hover:text-white"
       >
         <FolderPlus size={13} />
       </button>

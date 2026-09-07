@@ -33,7 +33,7 @@ export default function GroupNode({ id, data, selected }: NodeProps<FlowNode>) {
         onClick();
       }}
       onMouseDown={(e) => e.stopPropagation()}
-      className="flex h-7 w-7 items-center justify-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-white"
+      className="flex h-7 w-7 items-center justify-center rounded-lg text-white/60 transition hover:bg-white/10 hover:text-white"
     >
       {children}
     </button>

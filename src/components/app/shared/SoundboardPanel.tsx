@@ -324,7 +324,7 @@ export function SoundboardPanel({
                     type="button"
                     onClick={(e) => { e.stopPropagation(); stopSound(); }}
                     aria-label={`Stop ${effect.label}`}
-                    className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center shadow-lg ring-2 ring-black/30"
+                    className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 hover:bg-red-600 rounded-md flex items-center justify-center shadow-lg ring-2 ring-black/30"
                   >
                     <X className="w-3 h-3 text-white" />
                   </button>
@@ -401,7 +401,7 @@ export function SoundboardPanel({
                         type="button"
                         onClick={(e) => { e.stopPropagation(); stopSound(); }}
                         aria-label={`Stop ${sound.name}`}
-                        className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center shadow-lg ring-2 ring-black/30"
+                        className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 hover:bg-red-600 rounded-md flex items-center justify-center shadow-lg ring-2 ring-black/30"
                       >
                         <X className="w-3 h-3 text-white" />
                       </button>
@@ -410,7 +410,7 @@ export function SoundboardPanel({
                         type="button"
                         onClick={(e) => { e.stopPropagation(); handleDelete(sound); }}
                         aria-label={`Delete ${sound.name}`}
-                        className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full items-center justify-center hidden group-hover:flex"
+                        className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded items-center justify-center hidden group-hover:flex"
                       >
                         <Trash2 className="w-2.5 h-2.5 text-white" />
                       </button>

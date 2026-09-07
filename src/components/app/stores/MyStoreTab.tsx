@@ -151,7 +151,7 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
           </div>
           <button
             onClick={() => setEditStore(activeStore)}
-            className="shrink-0 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+            className="shrink-0 w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
           >
             <Settings className="w-4 h-4 text-white" />
           </button>

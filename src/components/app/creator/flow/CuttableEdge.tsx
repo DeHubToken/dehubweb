@@ -75,7 +75,7 @@ export default function CuttableEdge({
           <button
             type="button"
             aria-label="Cut connection"
-            className="nodrag nopan pointer-events-auto flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-zinc-950/95 text-white/80 shadow-xl backdrop-blur transition hover:border-white/50 hover:text-white"
+            className="nodrag nopan pointer-events-auto flex h-7 w-7 items-center justify-center rounded-lg border border-white/20 bg-zinc-950/95 text-white/80 shadow-xl backdrop-blur transition hover:border-white/50 hover:text-white"
             style={{ position: 'absolute', transform: `translate(-50%, -50%) translate(${pos.x}px, ${pos.y}px)` }}
             onMouseEnter={() => {
               if (leaveTimer.current) clearTimeout(leaveTimer.current);

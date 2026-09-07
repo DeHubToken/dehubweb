@@ -113,7 +113,7 @@ export default function SelectionToolbar() {
   if (!visible || !pos) return null;
 
   const Btn = ({ title, onClick, children }: { title: string; onClick: () => void; children: React.ReactNode }) => (
-    <button type="button" title={title} aria-label={title} onClick={onClick} onMouseDown={(e) => e.stopPropagation()} className="flex h-7 w-7 items-center justify-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-white">
+    <button type="button" title={title} aria-label={title} onClick={onClick} onMouseDown={(e) => e.stopPropagation()} className="flex h-7 w-7 items-center justify-center rounded-lg text-white/60 transition hover:bg-white/10 hover:text-white">
       {children}
     </button>
   );

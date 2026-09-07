@@ -163,7 +163,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
   const coinButton = (
     <div 
-      className={`group flex items-center justify-center cursor-pointer transition-colors ${variant === 'desktop' ? 'bg-zinc-900 rounded-full p-2 hover:bg-zinc-800' : 'w-8 h-8 rounded-full'}`}
+      className={`group flex items-center justify-center cursor-pointer transition-colors ${variant === 'desktop' ? 'bg-zinc-900 rounded-xl p-2 hover:bg-zinc-800' : 'w-8 h-8 rounded-xl'}`}
     >
       <img 
         src={dehubCoin} 
