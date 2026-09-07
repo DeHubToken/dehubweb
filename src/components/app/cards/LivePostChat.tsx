@@ -28,6 +28,7 @@ import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import type { SupabaseLiveChatMessage } from '@/hooks/use-livechat';
+import { AppState } from '@/components/app/AppState';
 
 /** Avatar with cascading fallback: primary → CDN → initials */
 function LiveChatAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
@@ -390,12 +391,13 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center">
-            <MessageSquare className="w-8 h-8 text-zinc-600 mb-2" />
-            <p className="text-zinc-500 text-sm">
-              {isOffline ? 'Chat is no longer active' : 'No messages yet. Be the first!'}
-            </p>
-          </div>
+          <AppState
+            icon="messages"
+            title={isOffline ? 'Chat is no longer active' : 'No messages yet'}
+            description={isOffline ? undefined : 'Be the first to say something.'}
+            size="compact"
+            className="h-full"
+          />
         ) : (
           messages.map((msg) => {
             const avatarUrl = msg.sender_avatar_url
