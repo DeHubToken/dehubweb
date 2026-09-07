@@ -222,7 +222,7 @@ function SortFilterSection({
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
         <div className="relative">
           <GlassFilterRow
-            items={SORT_OPTIONS.map((o) => ({ key: o.label, label: t(`filters.${o.value === 'most-viewed' ? 'mostViewed' : o.value === 'most-liked' ? 'mostLiked' : o.value === 'most-comments' ? 'mostComments' : o.value}`, o.label) }))}
+            items={SORT_OPTIONS.map((o) => ({ key: o.label, label: t(o.labelKey, o.label) }))}
             activeKey={selectedSort.label}
             onSelect={(key) => { const o = SORT_OPTIONS.find(x => x.label === key); if (o) onSortSelect(o); }}
             borderRadius="0.75rem"
@@ -629,6 +629,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         return 'views' as const;
       case 'most-comments':
         return 'comments' as const;
+      case 'most-tipped':
+        return 'tips' as const;
       case 'random':
         return 'random' as const;
       case 'latest':
@@ -683,6 +685,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     deferredSort.value === 'most-liked' ||
     deferredSort.value === 'most-viewed' ||
     deferredSort.value === 'most-comments' ||
+    deferredSort.value === 'most-tipped' ||
     deferredSort.value === 'following' ||
     deferredSort.value === 'random';
   const hasContentFilter = deferredContentFilters.ppv || deferredContentFilters.w2e || deferredContentFilters.locked;

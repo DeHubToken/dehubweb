@@ -135,21 +135,34 @@ export function interleaveByPattern<V, I, T>(
 // ============================================================================
 
 export const SORT_OPTIONS = [
-  { label: 'For You', value: 'for-you' as const },
-  { label: 'Prompt', value: 'prompt' as const },
-  { label: 'Latest', value: 'latest' as const },
+  { label: 'For You', value: 'for-you' as const, labelKey: 'filters.for-you' },
+  // Engagement sorts lead: they are what people actually reach for, and they
+  // were buried behind the algorithmic and chronological options.
+  { label: 'Most Liked', value: 'most-liked' as const, labelKey: 'filters.mostLiked' },
+  { label: 'Most Tips', value: 'most-tipped' as const, labelKey: 'filters.mostTips' },
+  { label: 'Most Viewed', value: 'most-viewed' as const, labelKey: 'filters.mostViewed' },
+  { label: 'Most Comments', value: 'most-comments' as const, labelKey: 'filters.mostComments' },
+  { label: 'Prompt', value: 'prompt' as const, labelKey: 'filters.prompt' },
+  { label: 'Latest', value: 'latest' as const, labelKey: 'filters.latest' },
   // Engagement+recency ranking (API sortBy=score). Backup to chronological while we test it.
-  { label: 'Discovery', value: 'discovery' as const },
-  { label: 'Following', value: 'following' as const },
-  { label: 'Subscribed', value: 'subscribed' as const },
-  { label: 'Most Viewed', value: 'most-viewed' as const },
-  { label: 'Most Liked', value: 'most-liked' as const },
-  { label: 'Most Comments', value: 'most-comments' as const },
-  { label: 'Random', value: 'random' as const },
+  { label: 'Discovery', value: 'discovery' as const, labelKey: 'filters.discovery' },
+  { label: 'Following', value: 'following' as const, labelKey: 'filters.following' },
+  { label: 'Subscribed', value: 'subscribed' as const, labelKey: 'filters.subscribed' },
+  { label: 'Random', value: 'random' as const, labelKey: 'filters.random' },
 ] as const;
 
 export type SortOption = typeof SORT_OPTIONS[number];
 export type SortValue = SortOption['value'];
+
+/**
+ * The sort a feed opens on. Pinned by value, not by index: the option list is
+ * ordered for the UI and gets reordered, and an index default silently becomes
+ * a different sort when it does.
+ */
+export const DEFAULT_FEED_SORT: SortOption = SORT_OPTIONS.find(o => o.value === 'for-you') || SORT_OPTIONS[0];
+
+/** Shorts' filter panel has always reset to Prompt rather than the feed default. */
+export const SHORTS_RESET_SORT: SortOption = SORT_OPTIONS.find(o => o.value === 'prompt') || DEFAULT_FEED_SORT;
 
 // ============================================================================
 // API SORT MODE MAPPING
@@ -161,7 +174,7 @@ export type SortValue = SortOption['value'];
  * - "popular" = sorted by views/likes 
  * - "trending" = currently trending
  */
-export type ApiSortMode = 'new' | 'popular' | 'trending' | 'by-comments';
+export type ApiSortMode = 'new' | 'popular' | 'trending' | 'by-comments' | 'by-tips';
 
 export function getApiSortMode(sortValue: SortValue): ApiSortMode {
   switch (sortValue) {
@@ -171,6 +184,8 @@ export function getApiSortMode(sortValue: SortValue): ApiSortMode {
       return 'trending';
     case 'most-comments':
       return 'by-comments';
+    case 'most-tipped':
+      return 'by-tips';
     case 'latest':
     default:
       return 'new';
@@ -204,6 +219,7 @@ function getNFTSortValues(nft: DeHubNFT) {
     views: resolveViewCount(nft),
     likes: nft.totalVotes?.for || nft.like_count || 0,
     comments: nft.commentCount || nft.comment_count || 0,
+    tips: nft.totalTips || 0,
     createdAt: new Date(nft.createdAt || nft.created_at || 0).getTime(),
   };
 }
@@ -241,6 +257,15 @@ export function sortByMostLiked<T extends DeHubNFT>(items: T[]): T[] {
 export function sortByMostComments<T extends DeHubNFT>(items: T[]): T[] {
   return [...items].sort((a, b) => {
     return getNFTSortValues(b).comments - getNFTSortValues(a).comments;
+  });
+}
+
+/**
+ * Sort NFTs by total DHB tipped (highest first)
+ */
+export function sortByMostTipped<T extends DeHubNFT>(items: T[]): T[] {
+  return [...items].sort((a, b) => {
+    return getNFTSortValues(b).tips - getNFTSortValues(a).tips;
   });
 }
 
@@ -337,6 +362,8 @@ export function applySorting<T extends DeHubNFT>(items: T[], sortValue: SortValu
       return sortByMostLiked(items);
     case 'most-comments':
       return sortByMostComments(items);
+    case 'most-tipped':
+      return sortByMostTipped(items);
     case 'latest':
     default:
       return sortByLatest(items);
