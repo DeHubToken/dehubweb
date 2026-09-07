@@ -31,18 +31,18 @@ interface CommunityJoinNotification {
   created_at: string;
 }
 
-function useCommunityJoinNotifications(communityId?: string) {
+function useCommunityJoinNotifications(communitySlug?: string) {
   const { walletAddress } = useAuth();
 
   return useQuery({
-    queryKey: ['community-join-notifications', communityId],
+    queryKey: ['community-join-notifications', communitySlug],
     queryFn: async () => {
       const { data, error } = await withWalletHeader(
         supabase
           .from('custom_notifications')
           .select('*')
           .eq('type', 'community_join')
-          .eq('reference_id', communityId!)
+          .eq('reference_id', communitySlug!)
           .order('created_at', { ascending: false })
           .limit(200),
         walletAddress!
@@ -50,12 +50,12 @@ function useCommunityJoinNotifications(communityId?: string) {
       if (error) throw error;
       return (data || []) as CommunityJoinNotification[];
     },
-    enabled: !!communityId && !!walletAddress,
+    enabled: !!communitySlug && !!walletAddress,
     staleTime: 60_000,
   });
 }
 
-function useMarkCommunityNotificationsRead(communityId?: string) {
+function useMarkCommunityNotificationsRead(communitySlug?: string) {
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
 
@@ -66,14 +66,14 @@ function useMarkCommunityNotificationsRead(communityId?: string) {
           .from('custom_notifications')
           .update({ read: true })
           .eq('type', 'community_join')
-          .eq('reference_id', communityId!)
+          .eq('reference_id', communitySlug!)
           .eq('read', false),
         walletAddress!
       );
       if (error) throw error;
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['community-join-notifications', communityId] });
+      qc.invalidateQueries({ queryKey: ['community-join-notifications', communitySlug] });
       qc.invalidateQueries({ queryKey: ['community-activity-unread-per'] });
       qc.invalidateQueries({ queryKey: ['community-activity-unread'] });
     },
@@ -135,14 +135,19 @@ function ActivityRow({ notification }: { notification: CommunityJoinNotification
 }
 
 interface CommunityOwnerActivityProps {
-  communityId: string;
+  /**
+   * The community SLUG, not its row id: join notifications store the slug in
+   * reference_id, because that is what the /app/communities/<slug> link they
+   * carry is built from.
+   */
+  communitySlug: string;
 }
 
 const PAGE_SIZE = 20;
 
-export function CommunityOwnerActivity({ communityId }: CommunityOwnerActivityProps) {
-  const { data: notifications = [], isLoading } = useCommunityJoinNotifications(communityId);
-  const markReadMutation = useMarkCommunityNotificationsRead(communityId);
+export function CommunityOwnerActivity({ communitySlug }: CommunityOwnerActivityProps) {
+  const { data: notifications = [], isLoading } = useCommunityJoinNotifications(communitySlug);
+  const markReadMutation = useMarkCommunityNotificationsRead(communitySlug);
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [visible, setVisible] = useState(PAGE_SIZE);
