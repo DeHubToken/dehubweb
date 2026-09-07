@@ -712,7 +712,19 @@
     "stake": "Stakot",
     "cashOut": "Izņemt skaidrā",
     "stakeComingSoon": "Stakošana drīz!",
-    "cashOutComingSoon": "Izņemšana skaidrā drīz!"
+    "cashOutComingSoon": "Izņemšana skaidrā drīz!",
+    "back": "Atpakaļ",
+    "chooseAddressNetwork": "Kurš tīkls?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB un Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Tikai SOL un SPL marķieri",
+    "solanaAddressLinkedHint": "Jūsu saistītais Phantom maks",
+    "evmAddressCopied": "EVM adrese nokopēta",
+    "solanaAddressCopied": "Solana adrese ir nokopēta",
+    "addressCopyFailed": "Nevarēja nokopēt adresi",
+    "receiveEvm": "Base · BNB · ETH",
+    "receiveSolanaDescription": "Šeit sūtiet tikai SOL un SPL marķierus. Viss, kas nosūtīts no cita tīkla, tiek zaudēts."
   },
   "bookmarks": {
     "title": "Jūsu grāmatzīmes",

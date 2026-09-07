@@ -703,7 +703,19 @@
     "stake": "Stake",
     "cashOut": "Nağdlaşdır",
     "stakeComingSoon": "Staking tezliklə gəlir!",
-    "cashOutComingSoon": "Nağdlaşdırma tezliklə gəlir!"
+    "cashOutComingSoon": "Nağdlaşdırma tezliklə gəlir!",
+    "back": "Geri",
+    "chooseAddressNetwork": "Hansı şəbəkə?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Baza, BNB və Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Yalnız SPL və SPL tokenləri",
+    "solanaAddressLinkedHint": "Əlaqədar Fantom cüzdanınız",
+    "evmAddressCopied": "EVM ünvanı kopyalandı",
+    "solanaAddressCopied": "Solana ünvanı kopyalandı",
+    "addressCopyFailed": "Ünvanı kopyalamaq mümkün olmadı",
+    "receiveEvm": "Baza · BNB · ETH",
+    "receiveSolanaDescription": "Yalnız SOL və SPL tokenlərini buraya göndərin. Başqa şəbəkədən göndərilən hər şey itirilib."
   },
   "bookmarks": {
     "title": "Əlfəcinləriniz",
@@ -1213,6 +1225,7 @@
     "amountLabel": "Məbləğ (DHB)",
     "youHold": "Sizdə {{amount}} DHB var",
     "irreversible": "Qatqılar zəncirdə həyata keçirilən köçürmələrdir. Onlar geri qaytarıla və ya geri götürülə bilməz.",
+    "switchChain": "Qatılmaq üçün cüzdanınızı {{chains}} şəbəkəsinə keçirin.",
     "sendAmount": "{{amount}} DHB göndərin",
     "sentTitle": "Qatqı göndərildi",
     "sentDesc": "{{amount}} DHB {{chain}} tarixində xəzinəyə göndərildi. Blok indeksləndikdən sonra payınız yenilənəcək.",
@@ -1236,10 +1249,9 @@
     "noContributors": "Hələ heç bir töhfə yoxdur. İlk olun.",
     "recent": "Son töhfələr",
     "you": "Siz",
-    "power": "güc",
-    "switchChain": "Qatılmaq üçün cüzdanınızı {{chains}} şəbəkəsinə keçirin.",
     "transferCount_one": "{{count}} köçürmə",
-    "transferCount_other": "{{count}} köçürmə"
+    "transferCount_other": "{{count}} köçürmə",
+    "power": "güc"
   },
   "governance": {
     "title": "İdarəetmə",

@@ -759,7 +759,19 @@
     "stake": "Mag-stake",
     "cashOut": "Mag-cash Out",
     "stakeComingSoon": "Malapit na ang staking!",
-    "cashOutComingSoon": "Malapit na ang cash out!"
+    "cashOutComingSoon": "Malapit na ang cash out!",
+    "back": "Bumalik",
+    "chooseAddressNetwork": "Anong network?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB at Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Mga token lamang ng SOL at SPL",
+    "solanaAddressLinkedHint": "Ang iyong naka - link na Phantom wallet",
+    "evmAddressCopied": "Nakopya na ang EVM address",
+    "solanaAddressCopied": "Kinopya ang Solana address",
+    "addressCopyFailed": "Hindi makopya ang address",
+    "receiveEvm": "Base · BNB · Ethereum",
+    "receiveSolanaDescription": "Magpadala lamang ng mga token ng SOL at SPL dito. Ang anumang ipinadala mula sa ibang network ay nawala."
   },
   "bookmarks": {
     "title": "Ang Iyong mga Bookmark",

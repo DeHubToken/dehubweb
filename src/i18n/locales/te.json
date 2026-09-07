@@ -23,6 +23,7 @@
     "featureRequests": "ఫీచర్ అభ్యర్థనలు",
     "staking": "స్టేకింగ్",
     "governance": "పాలన",
+    "dao": "DAO",
     "careers": "కెరీర్లు",
     "glossary": "పదకోశం",
     "arcade": "ఆర్కేడ్",
@@ -44,8 +45,7 @@
     "pricing": "ధరలు",
     "creators": "సృష్టికర్తలు",
     "getTheApp": "యాప్ పొందండి",
-    "connectAi": "AI కనెక్ట్ చేయండి",
-    "dao": "DAO"
+    "connectAi": "AI కనెక్ట్ చేయండి"
   },
   "feed": {
     "viewProfile": "{{name}} ప్రొఫైల్ ‌ ను చూడండి",
@@ -709,7 +709,18 @@
     "stake": "స్టేక్",
     "cashOut": "క్యాష్ అవుట్",
     "stakeComingSoon": "స్టేక్ త్వరలో!",
-    "cashOutComingSoon": "క్యాష్ అవుట్ త్వరలో!"
+    "cashOutComingSoon": "క్యాష్ అవుట్ త్వరలో!",
+    "back": "వెనక్కి",
+    "chooseAddressNetwork": "ఏ నెట్ ‌ వర్క్?",
+    "evmAddressHint": "బేస్, బిఎన్ ‌ బి మరియు ఎథెరియం",
+    "solanaAddressLabel": "సోలానా",
+    "solanaAddressHint": "SOL మరియు SPL టోకెన్ ‌ లు మాత్రమే",
+    "solanaAddressLinkedHint": "మీ లింక్ చేసిన ఫాంటమ్ వాలెట్",
+    "evmAddressCopied": "EVM చిరునామా కాపీ చేయబడింది",
+    "solanaAddressCopied": "సోలానా చిరునామా కాపీ చేయబడింది",
+    "addressCopyFailed": "చిరునామాను కాపీ చేయలేకపోయాము",
+    "receiveEvm": "బేస్ · BNB · ETH",
+    "receiveSolanaDescription": "SOL మరియు SPL టోకెన్ ‌ లను మాత్రమే ఇక్కడ పంపండి. మరొక నెట్ ‌ వర్క్ నుండి పంపిన ఏదైనా పోయింది."
   },
   "bookmarks": {
     "title": "బుక్‌మార్క్‌లు",

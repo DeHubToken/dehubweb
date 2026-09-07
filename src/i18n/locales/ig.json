@@ -712,7 +712,19 @@
     "stake": "Stake",
     "cashOut": "Wepụta Ego",
     "stakeComingSoon": "Staking na-abịa n'oge na-adịghị anya!",
-    "cashOutComingSoon": "Ịwepụta ego na-abịa n'oge na-adịghị anya!"
+    "cashOutComingSoon": "Ịwepụta ego na-abịa n'oge na-adịghị anya!",
+    "back": "Azụ",
+    "chooseAddressNetwork": "Kedu netwọk?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Isi, BNB na Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "SOL na SPL tokens naanị",
+    "solanaAddressLinkedHint": "Gị ejikọrọ Phantom obere akpa",
+    "evmAddressCopied": "EVM address depụtaghachiri",
+    "solanaAddressCopied": "Solana address depụtaghachiri",
+    "addressCopyFailed": "Agaghị enwenwu ike iṅomi ngwe ahụ",
+    "receiveEvm": "Isi · BNB · ETH",
+    "receiveSolanaDescription": "Naanị zipụ akara SOL na SPL ebe a. Ihe ọ bụla e si na netwọk ọzọ zite furu efu."
   },
   "bookmarks": {
     "title": "Akara mpịnye gị",
@@ -1203,6 +1215,7 @@
     "amountLabel": "Ego (DHB)",
     "youHold": "Ị nwere {{amount}} DHB",
     "irreversible": "Ntinye aka bụ mbufe n'elu yinye. Enweghị ike ịlaghachi ha ma ọ bụ wepụ ha.",
+    "switchChain": "Gbanwee akpa ego gị gaa {{chains}} ka i nye aka.",
     "sendAmount": "Zipụ {{amount}} DHB",
     "sentTitle": "E zigara ntinye aka",
     "sentDesc": "E zigara {{amount}} DHB n'akụ̀ ego ahụ na {{chain}}. Òkè gị ga-agbanwe ozugbo egosiwo blọk ahụ.",
@@ -1228,8 +1241,7 @@
     "you": "Gị",
     "transferCount_one": "{{count}} nyefe",
     "transferCount_other": "{{count}} nyefe",
-    "power": "ike",
-    "switchChain": "Gbanwee akpa ego gị gaa {{chains}} ka i nye aka."
+    "power": "ike"
   },
   "governance": {
     "title": "Ọchịchị",

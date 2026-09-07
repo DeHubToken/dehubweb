@@ -980,7 +980,19 @@
     "stake": "Stake",
     "cashOut": "Tunaikan",
     "stakeComingSoon": "Staking akan datang tidak lama lagi!",
-    "cashOutComingSoon": "Penunaian akan datang tidak lama lagi!"
+    "cashOutComingSoon": "Penunaian akan datang tidak lama lagi!",
+    "back": "Kembali",
+    "chooseAddressNetwork": "Rangkaian yang mana?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB dan Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Token SOL dan SPL sahaja",
+    "solanaAddressLinkedHint": "Dompet Phantom anda yang dipautkan",
+    "evmAddressCopied": "Alamat EVM disalin",
+    "solanaAddressCopied": "Alamat Solana disalin",
+    "addressCopyFailed": "Tidak dapat menyalin alamat",
+    "receiveEvm": "Asas · BNB · ETH",
+    "receiveSolanaDescription": "Hanya hantar token SOL dan SPL di sini. Apa-apa yang dihantar dari rangkaian lain hilang."
   },
   "bookmarks": {
     "title": "Penanda Buku Anda",

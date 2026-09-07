@@ -909,7 +909,19 @@
     "stake": "Staken",
     "cashOut": "Uitbetalen",
     "stakeComingSoon": "Staking binnenkort beschikbaar!",
-    "cashOutComingSoon": "Uitbetaling binnenkort beschikbaar!"
+    "cashOutComingSoon": "Uitbetaling binnenkort beschikbaar!",
+    "back": "Terug",
+    "chooseAddressNetwork": "Welk netwerk?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB en Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Alleen SOL- en SPL-tokens",
+    "solanaAddressLinkedHint": "Uw gekoppelde Phantom-portemonnee",
+    "evmAddressCopied": "EVM-adres gekopieerd",
+    "solanaAddressCopied": "Solana-adres gekopieerd",
+    "addressCopyFailed": "Kon het adres niet kopiëren",
+    "receiveEvm": "Basis · BNB · ETH",
+    "receiveSolanaDescription": "Stuur hier alleen SOL- en SPL-tokens naartoe. Alles wat vanuit een ander netwerk wordt verzonden, gaat verloren."
   },
   "bookmarks": {
     "title": "Jouw bladwijzers",

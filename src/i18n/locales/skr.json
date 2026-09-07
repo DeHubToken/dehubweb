@@ -23,6 +23,7 @@
     "featureRequests": "فیچر درخواستاں",
     "staking": "سٹیکنگ",
     "governance": "حکمرانی",
+    "dao": "DAO",
     "careers": "نوکریاں",
     "glossary": "لغت",
     "arcade": "آرکیڈ",
@@ -44,8 +45,7 @@
     "pricing": "قیمتاں",
     "creators": "بݨاوݨ آلے",
     "getTheApp": "ایپ لوو",
-    "connectAi": "AI جوڑو",
-    "dao": "DAO"
+    "connectAi": "AI جوڑو"
   },
   "feed": {
     "viewProfile": "{{name}} دی پروفائل ویکھو",
@@ -712,7 +712,19 @@
     "stake": "سٹیک",
     "cashOut": "کیش آؤٹ",
     "stakeComingSoon": "سٹیکنگ جلد آ ریہا ہے!",
-    "cashOutComingSoon": "کیش آؤٹ جلد آ ریہا ہے!"
+    "cashOutComingSoon": "کیش آؤٹ جلد آ ریہا ہے!",
+    "back": "واپس",
+    "chooseAddressNetwork": "کاویں نیٹ ورک؟",
+    "evmAddressLabel": "ای وی ایم",
+    "evmAddressHint": "بیس، بی این بی تے ایتھریم",
+    "solanaAddressLabel": "سولانا",
+    "solanaAddressHint": "صرف ایس او ایل تے ایس پی ایل ٹوکن",
+    "solanaAddressLinkedHint": "تہاڈی لنکڈ فینٹم والٹ",
+    "evmAddressCopied": "ای وی ایم ایڈریس کاپی تھی گئیا",
+    "solanaAddressCopied": "سولانا ایڈریس کاپی تھی گئیا",
+    "addressCopyFailed": "ایڈریس کاپی نہ تھی سگیا",
+    "receiveEvm": "بیس · بی این بی · ای ٹی ایچ",
+    "receiveSolanaDescription": "صرف ایس او ایل تے ایس پی ایل ٹوکن ایتھرو بھیجو۔ کسے وی ٻئے نیٹ ورک توں بھیجی گئی کوئی وی شے ضائع تھی ویندی اے."
   },
   "bookmarks": {
     "title": "تہاڈے بُک مارک",
@@ -1195,6 +1207,7 @@
     "amountLabel": "رقم (DHB)",
     "youHold": "توهان وٽ {{amount}} DHB آهي",
     "irreversible": "حصو ڏيڻ آن-چين منتقليون آهن. اهي واپس نه ٿي سگهجن يا واپس نه ٿي سگهجن.",
+    "switchChain": "حصہ ݙیوݨ کیتے آپݨا والٹ {{chains}} تے بدلو۔",
     "sendAmount": "{{amount}} DHB موڪليو",
     "sentTitle": "حصو موڪليو ويو",
     "sentDesc": "{{amount}} DHB خزاني ۾ {{chain}} تي موڪليو ويو. توهان جو حصو بلاڪ انڊيڪس ٿيڻ کان پوءِ اپڊيٽ ٿيندو.",
@@ -1219,9 +1232,8 @@
     "recent": "حاليہ حصو",
     "you": "توهان",
     "transferCount_one": "{{count}} منتقل",
-    "power": "طاقت",
-    "switchChain": "حصہ ݙیوݨ کیتے آپݨا والٹ {{chains}} تے بدلو۔",
-    "transferCount_other": "{{count}} منتقلیاں"
+    "transferCount_other": "{{count}} منتقلیاں",
+    "power": "طاقت"
   },
   "governance": {
     "title": "حکمرانی",

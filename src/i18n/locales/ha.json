@@ -712,7 +712,19 @@
     "stake": "Stake",
     "cashOut": "Cire Kuɗi",
     "stakeComingSoon": "Staking yana zuwa nan ba da jimawa ba!",
-    "cashOutComingSoon": "Cire kuɗi yana zuwa nan ba da jimawa ba!"
+    "cashOutComingSoon": "Cire kuɗi yana zuwa nan ba da jimawa ba!",
+    "back": "Komawa",
+    "chooseAddressNetwork": "Wanne cibiyar sadarwa?",
+    "evmAddressLabel": "Ввввввввввввввввввввввввввввввввв",
+    "evmAddressHint": "Base, BNB da Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "SOL da SPL alamomi kawai",
+    "solanaAddressLinkedHint": "Your alaka Phantom walat",
+    "evmAddressCopied": "An kwafa adireshin EVM",
+    "solanaAddressCopied": "Solana adireshin da aka kwafa",
+    "addressCopyFailed": "Ba za a iya kwafa adireshin ba",
+    "receiveEvm": "Base · BNB · ETH",
+    "receiveSolanaDescription": "Kawai aika alamun SOL da SPL a nan. Duk wani abu da aka aika daga wani cibiyar sadarwa ya ɓace."
   },
   "bookmarks": {
     "title": "Alamomin Shafinka",
@@ -1226,9 +1238,9 @@
     "noContributors": "Babu bayarwa tukuna. Ka zama na farko.",
     "recent": "Bayarwa na baya-bayan nan",
     "you": "Kai",
+    "transferCount_one": "{{count}} canja wuri",
     "transferCount_other": "{{count}} transfers",
-    "power": "iko",
-    "transferCount_one": "{{count}} canja wuri"
+    "power": "iko"
   },
   "governance": {
     "title": "Mulki",

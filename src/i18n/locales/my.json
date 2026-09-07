@@ -23,6 +23,7 @@
     "featureRequests": "လုပ်ဆောင်ချက်တောင်းဆိုမှုများ",
     "staking": "အပ်နှံငွေ",
     "governance": "အုပ်ချုပ်ရေး",
+    "dao": "DAO",
     "careers": "အလုပ်အကိုင်",
     "glossary": "ဝေါဟာရ",
     "arcade": "ဂိမ်းရုံ",
@@ -44,8 +45,7 @@
     "pricing": "စျေးနှုန်း",
     "creators": "ဖန်တီးသူများ",
     "getTheApp": "အက်ပ် ရယူရန်",
-    "connectAi": "AI ချိတ်ဆက်ရန်",
-    "dao": "DAO"
+    "connectAi": "AI ချိတ်ဆက်ရန်"
   },
   "feed": {
     "viewProfile": "{{name}}၏ ပရိုဖိုင်ကို ကြည့်ပါ",
@@ -713,6 +713,16 @@
     "cashOut": "ငွေထုတ်",
     "stakeComingSoon": "Staking မကြာမီလာမည်!",
     "cashOutComingSoon": "ငွေထုတ်ခြင်း မကြာမီလာမည်!",
+    "back": "နောက်သို့",
+    "chooseAddressNetwork": "ဘယ်ကွန်ရက်လဲ ။",
+    "evmAddressHint": "အခြေခံ, BNB နှင့် Ethereum",
+    "solanaAddressHint": "SOL နှင့် SPL တိုကင်များသာ",
+    "solanaAddressLinkedHint": "သင် ၏ ချိတ်ဆက်ထားသော Phantom ပိုက်ဆံအိတ်",
+    "evmAddressCopied": "EVM လိပ်စာကို မိတ္တူကူးထားသည်",
+    "solanaAddressCopied": "Solana လိပ်စာကိုကူးယူထားသည်",
+    "addressCopyFailed": "လိပ်စာကိုကူးယူ ၍ မရပါ",
+    "receiveEvm": "အခြေခံ · BNB · ETH",
+    "receiveSolanaDescription": "SOL နှင့် SPL တိုကင်များကိုသာ ဤနေရာတွင် ပေးပို့ပါ ။ အခြားကွန်ယက်မှပေးပို့သောအရာအားလုံးပျောက်ဆုံးသွားသည် ။",
     "totalBalance": "စုစုပေါင်းလက်ကျန်",
     "swap": "လဲလှယ်ရန်",
     "bridge": "ဘရစ်ဂျ်",
@@ -1215,6 +1225,7 @@
     "amountLabel": "ပမာဏ (DHB)",
     "youHold": "သင်သည် {{amount}} DHB ကို ကိုင်ဆောင်ထားသည်။",
     "irreversible": "လှူဒါန်းမှုများသည် on-chain မှ လွှဲပြောင်းမှုများဖြစ်သည်။ ၎င်းတို့ကို ပြန်လည်ရုပ်သိမ်းခြင်း သို့မဟုတ် ပြန်လည်ရုပ်သိမ်းခြင်း မပြုလုပ်နိုင်ပါ။",
+    "switchChain": "လှူဒါန်းရန် သင့်ပိုက်ဆံအိတ်ကို {{chains}} သို့ ပြောင်းပါ။",
     "sendAmount": "{{amount}} DHB ပေးပို့ပါ။",
     "sentTitle": "လှူဒါန်းမှု ပေးပို့ပြီးပါပြီ",
     "sentDesc": "{{amount}} DHB ကို {{chain}} တွင် ဘဏ္ဍာရေးသို့ ပေးပို့ခဲ့သည်။ ဘလော့ကို အညွှန်းပြုပြီးသည်နှင့် သင့်ရှယ်ယာကို အပ်ဒိတ်လုပ်ပါမည်။",
@@ -1240,8 +1251,7 @@
     "you": "သင်",
     "transferCount_one": "{{count}} လွှဲပြောင်းခြင်း",
     "transferCount_other": "{{count}} လွှဲပြောင်းမှုများ",
-    "power": "အာဏာ",
-    "switchChain": "လှူဒါန်းရန် သင့်ပိုက်ဆံအိတ်ကို {{chains}} သို့ ပြောင်းပါ။"
+    "power": "အာဏာ"
   },
   "governance": {
     "title": "အုပ်ချုပ်ရေး",

@@ -229,10 +229,30 @@ export async function activateWalletKey(privKey: string): Promise<IProvider> {
   hydrationPromise = null;
 
   const address = await addressFromProvider(eoaProvider);
-  if (address) void saveVaultSession(hex, address, unlockedAt);
+  if (address) {
+    void saveVaultSession(hex, address, unlockedAt);
+    rememberSolanaAddress(hex, address);
+  }
 
   announceLockChange();
   return eoaProvider;
+}
+
+/**
+ * Record the Solana address this wallet derives to (see lib/solana/derive.ts).
+ *
+ * Done here, at the two points a plaintext key exists, rather than on demand:
+ * the address is public, and a "copy my Solana address" button that has to ask
+ * for a password first is a button nobody presses. Fire-and-forget for the same
+ * reason the vault write is — nothing in the unlock depends on it.
+ *
+ * Dynamically imported so @noble's ed25519 stays out of the boot chunk; this
+ * runs after the sign-in is already done.
+ */
+function rememberSolanaAddress(privKeyHex: string, evmAddress: string): void {
+  void import("@/lib/solana/derive")
+    .then(m => m.cacheSolanaAddress(privKeyHex, evmAddress))
+    .catch(e => console.warn("[SmartWallet] Could not derive the Solana address:", e));
 }
 
 /** The EOA address a provider will sign with, or null if it won't say. */
@@ -340,6 +360,7 @@ export async function restoreWalletSession(): Promise<IProvider | null> {
       const provider = await buildProviderFromPrivKey(hex);
       sessionPrivKey = hex;
       eoaProvider = provider;
+      rememberSolanaAddress(hex, stored.address);
       // The vault's timestamp is authoritative — a tab that restores must not
       // silently extend the window the user configured.
       try { localStorage.setItem(UNLOCKED_AT_KEY, String(stored.unlockedAt)); } catch { /* ignore */ }

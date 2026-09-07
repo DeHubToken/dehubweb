@@ -712,7 +712,19 @@
     "stake": "Stake",
     "cashOut": "Uszahle",
     "stakeComingSoon": "Staking chunnt bald!",
-    "cashOutComingSoon": "Uszahlig chunnt bald!"
+    "cashOutComingSoon": "Uszahlig chunnt bald!",
+    "back": "Zrugg",
+    "chooseAddressNetwork": "Welches Netzwerk?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB und Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Nur SOL und SPL Tokens",
+    "solanaAddressLinkedHint": "Dini verchnüpfleti Phantom Wallet",
+    "evmAddressCopied": "EVM Adrässe kopiert",
+    "solanaAddressCopied": "Solana Adrässe kopiert",
+    "addressCopyFailed": "Adrässe konnt nöd kopiert werde",
+    "receiveEvm": "Base · BNB · ETH",
+    "receiveSolanaDescription": "Schick nur SOL und SPL Tokens druf. Alles wo vo öpis anders druf chunnt, isch verlore."
   },
   "bookmarks": {
     "title": "Dini Lesezeiche",

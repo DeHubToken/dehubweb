@@ -23,6 +23,7 @@
     "featureRequests": "ফিচার রিকোয়েস্ট",
     "staking": "স্টেকিং",
     "governance": "শাসন",
+    "dao": "DAO",
     "careers": "চাকরি",
     "glossary": "শব্দকোষ",
     "arcade": "আর্কেড",
@@ -44,8 +45,7 @@
     "pricing": "দাম",
     "creators": "ক্রিয়েটর",
     "getTheApp": "অ্যাপ নামাউক্কা",
-    "connectAi": "AI সংযুক্ত করউক্কা",
-    "dao": "DAO"
+    "connectAi": "AI সংযুক্ত করউক্কা"
   },
   "feed": {
     "viewProfile": "{{name}}'র প্রোফাইল দেখ",
@@ -789,6 +789,8 @@
     "cashOut": "ক্যাশ আউট",
     "stakeComingSoon": "স্টেকিং তাড়াতাড়ি আইতাসে!",
     "cashOutComingSoon": "ক্যাশ আউট তাড়াতাড়ি আইতাসে!",
+    "back": "ফিরা",
+    "chooseAddressNetwork": "কোন নেটওয়ার্ক?",
     "balance": "ব্যালেন্স",
     "swap": "বদলাও",
     "history": "ইতিহাস",

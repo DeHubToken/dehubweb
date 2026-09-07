@@ -26,6 +26,7 @@
     "featureRequests": "คำขอ",
     "staking": "สเตกกิ้ง",
     "governance": "การกำกับดูแล",
+    "dao": "DAO",
     "careers": "สมัครงาน",
     "glossary": "อภิธานศัพท์",
     "arcade": "อาร์เคด",
@@ -47,8 +48,7 @@
     "pricing": "ราคา",
     "creators": "ครีเอเตอร์",
     "getTheApp": "ดาวน์โหลดแอป",
-    "connectAi": "เชื่อมต่อ AI",
-    "dao": "DAO"
+    "connectAi": "เชื่อมต่อ AI"
   },
   "feed": {
     "viewProfile": "ดูโปรไฟล์ของ {{name}}",
@@ -688,6 +688,7 @@
     "totalWalletValue": "มูลค่ากระเป๋าเงินรวม",
     "receive": "รับ",
     "send": "ส่ง",
+    "buy": "ซื้อ",
     "import": "นำเข้า",
     "noTokensToSend": "ไม่มีโทเคนที่มียอดคงเหลือให้ส่ง",
     "unableOpenGateway": "ไม่สามารถเปิดช่องทางชำระเงินได้",
@@ -728,7 +729,16 @@
     "stake": "สเตก",
     "cashOut": "ถอนเงินสด",
     "stakeComingSoon": "การสเตกจะมาเร็ว ๆ นี้!",
-    "cashOutComingSoon": "การถอนเงินสดจะมาเร็ว ๆ นี้!"
+    "cashOutComingSoon": "การถอนเงินสดจะมาเร็ว ๆ นี้!",
+    "back": "คืน",
+    "chooseAddressNetwork": "เครือข่ายใด?",
+    "evmAddressHint": "Base, BNB และ Ethereum",
+    "solanaAddressHint": "เฉพาะโทเค็น SOL และ SPL",
+    "solanaAddressLinkedHint": "กระเป๋าเงิน Phantom ที่เชื่อมโยงของคุณ",
+    "evmAddressCopied": "คัดลอกที่อยู่ EVM แล้ว",
+    "solanaAddressCopied": "คัดลอกที่อยู่ Solana แล้ว",
+    "addressCopyFailed": "ไม่สามารถคัดลอกที่อยู่ได้",
+    "receiveSolanaDescription": "ส่งเฉพาะโทเค็น SOL และ SPL มาที่นี่เท่านั้น สิ่งใดก็ตามที่ส่งมาจากเครือข่ายอื่นจะสูญหาย"
   },
   "bookmarks": {
     "title": "บุ๊กมาร์กของคุณ",

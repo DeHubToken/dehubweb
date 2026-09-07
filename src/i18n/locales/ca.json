@@ -703,7 +703,19 @@
     "stake": "Apostar",
     "cashOut": "Retirar efectiu",
     "stakeComingSoon": "Staking aviat!",
-    "cashOutComingSoon": "Retirada d'efectiu aviat!"
+    "cashOutComingSoon": "Retirada d'efectiu aviat!",
+    "back": "Enrere",
+    "chooseAddressNetwork": "Quina xarxa?",
+    "evmAddressLabel": "EVM",
+    "evmAddressHint": "Base, BNB i Ethereum",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "Només fitxes SOL i SPL",
+    "solanaAddressLinkedHint": "La teva cartera Phantom vinculada",
+    "evmAddressCopied": "S'ha copiat l'adreça EVM",
+    "solanaAddressCopied": "S'ha copiat l'adreça de Solana",
+    "addressCopyFailed": "No s'ha pogut copiar l'adreça",
+    "receiveEvm": "Base · BNB · ETH",
+    "receiveSolanaDescription": "Només envia fitxes SOL i SPL aquí. Tot el que s'envia des d'una altra xarxa es perd."
   },
   "bookmarks": {
     "title": "Els teus marcadors",

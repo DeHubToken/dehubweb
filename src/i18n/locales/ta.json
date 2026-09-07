@@ -23,6 +23,7 @@
     "featureRequests": "அம்ச கோரிக்கைகள்",
     "staking": "ஸ்டேக்கிங்",
     "governance": "ஆளுகை",
+    "dao": "DAO",
     "careers": "வேலைவாய்ப்புகள்",
     "glossary": "சொற்களஞ்சியம்",
     "arcade": "ஆர்கேட்",
@@ -44,8 +45,7 @@
     "pricing": "விலை",
     "creators": "படைப்பாளர்கள்",
     "getTheApp": "செயலியைப் பெறு",
-    "connectAi": "AI இணை",
-    "dao": "DAO"
+    "connectAi": "AI இணை"
   },
   "feed": {
     "viewProfile": "{{name}} இன் சுயவிவரத்தைக் காண்க",
@@ -709,7 +709,18 @@
     "stake": "ஸ்டேக்",
     "cashOut": "கேஷ் அவுட்",
     "stakeComingSoon": "ஸ்டேக் விரைவில்!",
-    "cashOutComingSoon": "கேஷ் அவுட் விரைவில்!"
+    "cashOutComingSoon": "கேஷ் அவுட் விரைவில்!",
+    "back": "பின்செல்",
+    "chooseAddressNetwork": "எந்த நெட்வொர்க்?",
+    "evmAddressHint": "அடிப்படை, BNB மற்றும் Ethereum",
+    "solanaAddressLabel": "சோலானா",
+    "solanaAddressHint": "SOL மற்றும் SPL டோக்கன்கள் மட்டுமே",
+    "solanaAddressLinkedHint": "உங்கள் இணைக்கப்பட்ட ஃபாண்டம் வாலெட்",
+    "evmAddressCopied": "EVM முகவரி நகலெடுக்கப்பட்டது",
+    "solanaAddressCopied": "சோலானா முகவரி நகலெடுக்கப்பட்டது",
+    "addressCopyFailed": "முகவரியை நகலெடுக்க முடியவில்லை",
+    "receiveEvm": "அடிப்படை · BNB · ETH",
+    "receiveSolanaDescription": "SOL மற்றும் SPL டோக்கன்களை மட்டுமே இங்கே அனுப்பவும். மற்றொரு நெட்வொர்க்கிலிருந்து அனுப்பப்படும் எதுவும் தொலைந்துவிடும்."
   },
   "bookmarks": {
     "title": "புத்தகக்குறிகள்",
@@ -1246,9 +1257,9 @@
     "noContributors": "இதுவரை பங்களிப்புகள் இல்லை. முதலில் நீங்களாக இருங்கள்.",
     "recent": "சமீபத்திய பங்களிப்புகள்",
     "you": "நீங்கள்",
+    "transferCount_one": "{{count}} இடமாற்றம்",
     "transferCount_other": "{{count}} இடமாற்றங்கள்",
-    "power": "சக்தி",
-    "transferCount_one": "{{count}} இடமாற்றம்"
+    "power": "சக்தி"
   },
   "governance": {
     "title": "ஆளுகை",

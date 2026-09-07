@@ -713,7 +713,19 @@
     "stake": "Stake",
     "cashOut": "Qullqi Hurquy",
     "stakeComingSoon": "Staking qhipaman hamunqa!",
-    "cashOutComingSoon": "Qullqi hurquy qhipaman hamunqa!"
+    "cashOutComingSoon": "Qullqi hurquy qhipaman hamunqa!",
+    "back": "Wasa",
+    "chooseAddressNetwork": "¿Mayqin llikataq?",
+    "evmAddressLabel": "EVM nisqa",
+    "evmAddressHint": "Base, BNB y Ethereum nisqa",
+    "solanaAddressLabel": "Solana",
+    "solanaAddressHint": "SOL y SPL tokenkunalla",
+    "solanaAddressLinkedHint": "T&#39;inkisqa Phantom billeterayki",
+    "evmAddressCopied": "EVM dirección copiasqa",
+    "solanaAddressCopied": "Solana dirección copiasqa",
+    "addressCopyFailed": "Mana direccionta copiayta atirqanchu",
+    "receiveEvm": "Chawpi · BNB · ETH",
+    "receiveSolanaDescription": "Kaypi SOL chaymanta SPL tokenkunallata apachiy. Huk llikamanta ima kachasqapas chinkapunmi."
   },
   "bookmarks": {
     "title": "Waqaychasqa",

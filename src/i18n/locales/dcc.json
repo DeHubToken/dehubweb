@@ -23,6 +23,7 @@
     "featureRequests": "درخواستاں",
     "staking": "جمع",
     "governance": "گورننس",
+    "dao": "DAO",
     "careers": "نوکری",
     "glossary": "لغت",
     "arcade": "آرکیڈ",
@@ -44,8 +45,7 @@
     "pricing": "قیمتیں",
     "creators": "بنانے والے",
     "getTheApp": "ایپ لو",
-    "connectAi": "AI جوڑو",
-    "dao": "DAO"
+    "connectAi": "AI جوڑو"
   },
   "feed": {
     "viewProfile": "{{name}} ಚೆ ಪ್ರೊಫೈಲ್ ನೋಡಿ",
@@ -1188,7 +1188,6 @@
     "applicationFailed": "جمع نئیں ہوئی۔ دوبارہ کوشش کرو۔"
   },
   "dao": {
-    "power": "طاقت",
     "title": "DAO خزانہ",
     "subtitle": "ایک والٹ، کمیونٹی بھرتی، ووٹ سے خرچ ہوتا",
     "contribute": "حصہ ڈالو",
@@ -1221,7 +1220,8 @@
     "recent": "حالیہ حصے",
     "you": "تم",
     "transferCount_one": "{{count}} ٹرانسفر",
-    "transferCount_other": "{{count}} ٹرانسفر"
+    "transferCount_other": "{{count}} ٹرانسفر",
+    "power": "طاقت"
   },
   "governance": {
     "title": "گورننس",
