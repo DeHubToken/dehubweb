@@ -51,7 +51,12 @@ export const TOAST_CLASSES = 'flex-col items-stretch text-start';
  * Desktop only because sonner's own `max-width: 600px` block takes the toast
  * edge to edge with real specificity, which is already right on a phone.
  */
-export const TOAST_FIT_CLASSES = 'w-fit max-w-full inset-x-0 mx-auto';
+export const TOAST_FIT_CLASSES = [
+  'w-fit max-w-full',
+  // Corner-positioned toasts need to keep the edge Sonner assigns them. Only
+  // centre-positioned groups should split their spare horizontal space.
+  'group-data-[x-position=center]:inset-x-0 group-data-[x-position=center]:mx-auto',
+].join(' ');
 
 /**
  * Desktop only: the toaster stacks over the middle app panel rather than the
@@ -65,7 +70,8 @@ export const TOAST_FIT_CLASSES = 'w-fit max-w-full inset-x-0 mx-auto';
  * `translateX(-50%)` it pairs with still does the work of pulling the stack
  * back over that point.
  */
-export const TOASTER_COLUMN_CLASSES = 'left-[var(--app-main-center-x,50%)]';
+export const TOASTER_COLUMN_CLASSES =
+  'data-[x-position=center]:left-[var(--app-main-center-x,50%)]';
 
 /**
  * The heading has to read as a heading against a 13px/400 description, so it is
