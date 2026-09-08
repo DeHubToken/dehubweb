@@ -972,6 +972,13 @@
     "shippedBadge": "Фиристода шуд",
     "noComments": "Ҳанӯз шарҳ нест",
     "addComment": "Илова кардани шарҳ...",
+    "writeReply": "Нависед ҷавоб...",
+    "replyToComment": "Ҷавоб",
+    "replyingTo": "Ҷавоб ба {{name}}",
+    "requestAuthorChip": "Муаллиф",
+    "commentEdited": "таҳрир шуд",
+    "showOneMoreReply": "1 ҷавоби дигарро нишон диҳед",
+    "showMoreReplies": "{{count}} ҷавоби дигарро нишон диҳед",
     "submitDrawerTitle": "Фиристодани дархости имконият",
     "titleLabel": "Сарлавҳа",
     "titlePlaceholder": "Сарлавҳаи кӯтоҳи идеяи шумо...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Радшуда",
     "shipping": "Дар ҷараён",
     "noShippingYet": "Ҳеҷ чиз дар ҷараён нест",
-    "shippingAppearHere": "Дархостҳое, ки сохта мешаванд, дар ин ҷо пайдо мешаванд.",
-    "writeReply": "Нависед ҷавоб...",
-    "replyToComment": "Ҷавоб",
-    "replyingTo": "Ҷавоб ба {{name}}",
-    "requestAuthorChip": "Муаллиф",
-    "commentEdited": "таҳрир шуд",
-    "showOneMoreReply": "1 ҷавоби дигарро нишон диҳед",
-    "showMoreReplies": "{{count}} ҷавоби дигарро нишон диҳед"
+    "shippingAppearHere": "Дархостҳое, ки сохта мешаванд, дар ин ҷо пайдо мешаванд."
   },
   "auth": {
     "loginRequired": "Воридшавӣ лозим аст"
@@ -1404,6 +1404,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Дар хатчӯбҳо нигоҳ дошта шуд",
+    "new_member_notice_title": "Ipinapakita mo sa mga bagong member",
+    "new_member_notice_body": "Ang iba pang mga pangkat ay maaaring makita kapag iyong pumunta, kung sa Онро ҳар вақт хомӯш кунед.",
     "removed_from_bookmarks": "Аз хатчӯбҳо хориҷ карда шуд",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

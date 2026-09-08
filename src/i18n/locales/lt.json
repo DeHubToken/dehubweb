@@ -972,6 +972,13 @@
     "shippedBadge": "Pristatyta",
     "noComments": "Dar nėra komentarų",
     "addComment": "Pridėti komentarą...",
+    "writeReply": "Parašykite atsakymą...",
+    "replyToComment": "Atsakyti",
+    "replyingTo": "Atsakant į {{name}}",
+    "requestAuthorChip": "Autorius",
+    "commentEdited": "redaguota",
+    "showOneMoreReply": "Rodyti dar 1 atsakymą",
+    "showMoreReplies": "Rodyti {{count}} daugiau atsakymų",
     "submitDrawerTitle": "Pateikti funkcijos užklausą",
     "titleLabel": "Pavadinimas",
     "titlePlaceholder": "Trumpas pavadinimas jūsų idėjai...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Atmesta",
     "shipping": "Kuriama",
     "noShippingYet": "Nieko nevykdoma",
-    "shippingAppearHere": "Čia atsiras pageidavimai, kurie jau kuriami.",
-    "writeReply": "Parašykite atsakymą...",
-    "replyToComment": "Atsakyti",
-    "replyingTo": "Atsakant į {{name}}",
-    "requestAuthorChip": "Autorius",
-    "commentEdited": "redaguota",
-    "showOneMoreReply": "Rodyti dar 1 atsakymą",
-    "showMoreReplies": "Rodyti {{count}} daugiau atsakymų"
+    "shippingAppearHere": "Čia atsiras pageidavimai, kurie jau kuriami."
   },
   "auth": {
     "loginRequired": "Reikia prisijungti"
@@ -1405,6 +1405,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Išsaugota žymėse",
+    "new_member_notice_title": "Jūs rodote Naujus narius",
+    "new_member_notice_body": "Kiti nariai gali matyti, kada prisijungėte, kad galėtų pasisveikinti. Išjunkite bet kuriuo metu.",
     "removed_from_bookmarks": "Pašalinta iš žymių",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

@@ -963,6 +963,13 @@
     "shippedBadge": "Toimitettu",
     "noComments": "Ei kommentteja vielä",
     "addComment": "Lisää kommentti...",
+    "writeReply": "Kirjoita vastaus...",
+    "replyToComment": "Vastaa",
+    "replyingTo": "Vastataan {{name}}",
+    "requestAuthorChip": "Kirjoittaja",
+    "commentEdited": "muokattu",
+    "showOneMoreReply": "Näytä 1 lisävastaus",
+    "showMoreReplies": "Näytä {{count}} lisävastausta",
     "submitDrawerTitle": "Lähetä ominaisuuspyyntö",
     "titleLabel": "Otsikko",
     "titlePlaceholder": "Lyhyt otsikko ideallesi...",
@@ -978,14 +985,7 @@
     "statusDeclined": "Hylätty",
     "shipping": "Työn alla",
     "noShippingYet": "Mitään ei ole työn alla",
-    "shippingAppearHere": "Rakenteilla olevat pyynnöt näkyvät täällä.",
-    "writeReply": "Kirjoita vastaus...",
-    "replyToComment": "Vastaa",
-    "replyingTo": "Vastataan {{name}}",
-    "requestAuthorChip": "Kirjoittaja",
-    "commentEdited": "muokattu",
-    "showOneMoreReply": "Näytä 1 lisävastaus",
-    "showMoreReplies": "Näytä {{count}} lisävastausta"
+    "shippingAppearHere": "Rakenteilla olevat pyynnöt näkyvät täällä."
   },
   "auth": {
     "loginRequired": "Kirjautuminen vaaditaan"
@@ -1416,6 +1416,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Tallennettu kirjanmerkkeihin",
+    "new_member_notice_title": "Näytät uudet jäsenet",
+    "new_member_notice_body": "Muut jäsenet näkevät, milloin liityit, jotta he voivat tervehtiä. Sammuta se milloin tahansa.",
     "removed_from_bookmarks": "Poistettu kirjanmerkeistä",
     "copied_to_clipboard": "Kopioitu leikepöydälle",
     "deposit_address_copied": "Deposit address copied",

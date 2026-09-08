@@ -971,6 +971,13 @@
     "shippedBadge": "Levert",
     "noComments": "Ingen kommentarer ennå",
     "addComment": "Legg til en kommentar...",
+    "writeReply": "Skriv et svar...",
+    "replyToComment": "Svar",
+    "replyingTo": "Svarer til {{name}}",
+    "requestAuthorChip": "Forfatter",
+    "commentEdited": "redigert",
+    "showOneMoreReply": "Vis 1 mer svar",
+    "showMoreReplies": "Vis {{count}} flere svar",
     "submitDrawerTitle": "Send inn funksjonsforespørsel",
     "titleLabel": "Tittel",
     "titlePlaceholder": "Kort tittel på ideen din...",
@@ -986,14 +993,7 @@
     "statusDeclined": "Avslått",
     "shipping": "Under arbeid",
     "noShippingYet": "Ingenting på gang",
-    "shippingAppearHere": "Forespørsler som bygges, dukker opp her.",
-    "writeReply": "Skriv et svar...",
-    "replyToComment": "Svar",
-    "replyingTo": "Svarer til {{name}}",
-    "requestAuthorChip": "Forfatter",
-    "commentEdited": "redigert",
-    "showOneMoreReply": "Vis 1 mer svar",
-    "showMoreReplies": "Vis {{count}} flere svar"
+    "shippingAppearHere": "Forespørsler som bygges, dukker opp her."
   },
   "auth": {
     "loginRequired": "Innlogging påkrevd"
@@ -1404,6 +1404,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Lagret i bokmerker",
+    "new_member_notice_title": "Du vises i Nye medlemmer",
+    "new_member_notice_body": "Andre medlemmer kan se når du ble med, slik at de kan si hei. Slå den av når som helst.",
     "removed_from_bookmarks": "Fjernet fra bokmerker",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

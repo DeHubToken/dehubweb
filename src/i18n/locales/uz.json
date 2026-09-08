@@ -990,6 +990,13 @@
     "shippedBadge": "Chiqarilgan",
     "noComments": "Hali izohlar yoʻq",
     "addComment": "Izoh qoʻshish...",
+    "writeReply": "Javob yozing...",
+    "replyToComment": "Javob",
+    "replyingTo": "{{name}} ga javob qaytarish",
+    "requestAuthorChip": "Muallif",
+    "commentEdited": "tahrirlangan",
+    "showOneMoreReply": "Yana 1 ta javobni ko'rsatish",
+    "showMoreReplies": "{{count}} ta ko'proq javobni ko'rsatish",
     "submitDrawerTitle": "Funksiya soʻrovini taqdim etish",
     "titleLabel": "Sarlavha",
     "titlePlaceholder": "Gʻoyangizning qisqa sarlavhasi...",
@@ -1005,14 +1012,7 @@
     "statusDeclined": "Rad etilgan",
     "shipping": "Qurilmoqda",
     "noShippingYet": "Hech nima ustida ishlanmayapti",
-    "shippingAppearHere": "Qurilayotgan so'rovlar shu yerda ko'rinadi.",
-    "writeReply": "Javob yozing...",
-    "replyToComment": "Javob",
-    "replyingTo": "{{name}} ga javob qaytarish",
-    "requestAuthorChip": "Muallif",
-    "commentEdited": "tahrirlangan",
-    "showOneMoreReply": "Yana 1 ta javobni ko'rsatish",
-    "showMoreReplies": "{{count}} ta ko'proq javobni ko'rsatish"
+    "shippingAppearHere": "Qurilayotgan so'rovlar shu yerda ko'rinadi."
   },
   "auth": {
     "loginRequired": "Avtorizatsiya kerak"
@@ -1423,6 +1423,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Xatchoʻplarga saqlandi",
+    "new_member_notice_title": "Siz &quot;Yangi a&#39;zolar&quot; bo&#39;limida ko&#39;rsatilmoqdasiz",
+    "new_member_notice_body": "Boshqa a&#39;zolar sizning qachon qo&#39;shilganingizni ko&#39;rishlari mumkin, shunda ular salomlashishlari mumkin. Buni istalgan vaqtda o&#39;chirib qo&#39;yishingiz mumkin.",
     "removed_from_bookmarks": "Xatchoʻplardan olib tashlandi",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",
@@ -2212,32 +2214,6 @@
     "voiceMessage": "Ovozli xabar",
     "image": "Rasm yuborildi"
   },
-  "spaces": {
-    "title": "Boʻlimlar",
-    "live": "Jonli",
-    "upcoming": "Kelgusi",
-    "past": "Oʻtgan",
-    "create": "Boʻlim yaratish",
-    "join": "Qoʻshilish",
-    "listeners": "Tinglovchilar",
-    "speakers": "Nutqchilar",
-    "host": "Boshlovchi",
-    "endSpace": "Boʻlimni tugatish",
-    "raiseHand": "Qoʻl koʻtarish",
-    "lowerHand": "Qoʻlni tushirish",
-    "mute": "Ovozni oʻchirish",
-    "unmute": "Ovozni yoqish",
-    "leave": "Boʻlimni tark etish",
-    "noSpaces": "Hali boʻlimlar yoʻq",
-    "loginDescription": "Audio boʻlimlar yaratish va qoʻshilish uchun kiring."
-  },
-  "blog": {
-    "title": "Blog",
-    "readMore": "Koʻproq oʻqish",
-    "backToBlog": "Blogga qaytish",
-    "sharePost": "Postni ulashish",
-    "relatedPosts": "Bogʻliq postlar"
-  },
   "follow": {
     "followers": "Obunachilar",
     "following": "Obunalar",
@@ -2272,5 +2248,31 @@
     "groupLimitReached": "Guruh limitiga yetdi",
     "createGroup": "Yaratish",
     "groupsHint": "Guruhlar sizning kuzatuv tasmangizni filtrlaydi. Ularni faqat siz ko&#39;rishingiz mumkin."
+  },
+  "spaces": {
+    "title": "Boʻlimlar",
+    "live": "Jonli",
+    "upcoming": "Kelgusi",
+    "past": "Oʻtgan",
+    "create": "Boʻlim yaratish",
+    "join": "Qoʻshilish",
+    "listeners": "Tinglovchilar",
+    "speakers": "Nutqchilar",
+    "host": "Boshlovchi",
+    "endSpace": "Boʻlimni tugatish",
+    "raiseHand": "Qoʻl koʻtarish",
+    "lowerHand": "Qoʻlni tushirish",
+    "mute": "Ovozni oʻchirish",
+    "unmute": "Ovozni yoqish",
+    "leave": "Boʻlimni tark etish",
+    "noSpaces": "Hali boʻlimlar yoʻq",
+    "loginDescription": "Audio boʻlimlar yaratish va qoʻshilish uchun kiring."
+  },
+  "blog": {
+    "title": "Blog",
+    "readMore": "Koʻproq oʻqish",
+    "backToBlog": "Blogga qaytish",
+    "sharePost": "Postni ulashish",
+    "relatedPosts": "Bogʻliq postlar"
   }
 }

@@ -971,6 +971,13 @@
     "shippedBadge": "已推出",
     "noComments": "暫時冇留言",
     "addComment": "加留言...",
+    "writeReply": "寫覆...",
+    "replyToComment": "覆",
+    "replyingTo": "回覆 {{name}}",
+    "requestAuthorChip": "作者",
+    "commentEdited": "編輯過",
+    "showOneMoreReply": "顯示多 1 個回覆",
+    "showMoreReplies": "顯示多 {{count}} 個回覆",
     "submitDrawerTitle": "提交功能請求",
     "titleLabel": "標題",
     "titlePlaceholder": "用簡短嘅標題描述你嘅意見...",
@@ -986,14 +993,7 @@
     "statusDeclined": "已拒絕",
     "shipping": "開發中",
     "noShippingYet": "冇嘢喺度做緊",
-    "shippingAppearHere": "開發緊嘅需求會喺呢度出現。",
-    "writeReply": "寫覆...",
-    "replyToComment": "覆",
-    "replyingTo": "回覆 {{name}}",
-    "requestAuthorChip": "作者",
-    "commentEdited": "編輯過",
-    "showOneMoreReply": "顯示多 1 個回覆",
-    "showMoreReplies": "顯示多 {{count}} 個回覆"
+    "shippingAppearHere": "開發緊嘅需求會喺呢度出現。"
   },
   "auth": {
     "loginRequired": "需要登入"
@@ -1404,6 +1404,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "已儲存到書籤",
+    "new_member_notice_title": "你喺新成員入面顯示緊",
+    "new_member_notice_body": "其他成員可以睇到你幾時加入，噉佢哋就可以打招呼。隨時閂佢。",
     "removed_from_bookmarks": "已從書籤移除",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

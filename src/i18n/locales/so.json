@@ -972,6 +972,13 @@
     "shippedBadge": "La Diray",
     "noComments": "Wali faallo ma jirto",
     "addComment": "Ku dar faallo...",
+    "writeReply": "Qor jawaab...",
+    "replyToComment": "Jawaab",
+    "replyingTo": "Ku jawaabayo {{name}}",
+    "requestAuthorChip": "Qoraa",
+    "commentEdited": "la bedelay",
+    "showOneMoreReply": "Muuji 1 jawaab oo dheeraad ah",
+    "showMoreReplies": "Muuji {{count}} jawaabood oo dheeraad ah",
     "submitDrawerTitle": "Dir Codsiga Sifooyinka",
     "titleLabel": "Cinwaan",
     "titlePlaceholder": "Cinwaan gaaban oo fikraddaada...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Waa La Diiday",
     "shipping": "Waa la dhisayaa",
     "noShippingYet": "Waxba socda ma jiraan",
-    "shippingAppearHere": "Codsiyada la dhisayo halkan ayay ka soo muuqan doonaan.",
-    "writeReply": "Qor jawaab...",
-    "replyToComment": "Jawaab",
-    "replyingTo": "Ku jawaabayo {{name}}",
-    "requestAuthorChip": "Qoraa",
-    "commentEdited": "la bedelay",
-    "showOneMoreReply": "Muuji 1 jawaab oo dheeraad ah",
-    "showMoreReplies": "Muuji {{count}} jawaabood oo dheeraad ah"
+    "shippingAppearHere": "Codsiyada la dhisayo halkan ayay ka soo muuqan doonaan."
   },
   "auth": {
     "loginRequired": "Soo galitaan waa loo baahan yahay"
@@ -1405,6 +1405,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Ku keydiyay calaamadaha",
+    "new_member_notice_title": "Waxaad ku muujineysaa xubnaha cusub",
+    "new_member_notice_body": "Xubnaha kale way arki karaan goorta aad ku biirtay, si ay kuu salaamaan. Weli waad damin kartaa.",
     "removed_from_bookmarks": "Ka saaray calaamadaha",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

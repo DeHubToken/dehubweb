@@ -972,6 +972,13 @@
     "shippedBadge": "An aika",
     "noComments": "Babu sharhi tukuna",
     "addComment": "Ƙara sharhi...",
+    "writeReply": "Rubuta amsa...",
+    "replyToComment": "Amsa",
+    "replyingTo": "Amsawa ga {{name}}",
+    "requestAuthorChip": "Mawallafi",
+    "commentEdited": "An gyara",
+    "showOneMoreReply": "Nuna ƙarin amsa 1",
+    "showMoreReplies": "Nuna ƙarin amsoshi {{count}}",
     "submitDrawerTitle": "Miƙa Buƙatun Fasali",
     "titleLabel": "Take",
     "titlePlaceholder": "Gajeriyar take ga ra'ayinka...",
@@ -987,14 +994,7 @@
     "statusDeclined": "An ƙi",
     "shipping": "Ana ginawa",
     "noShippingYet": "Babu abin da ake yi",
-    "shippingAppearHere": "Buƙatun da ake ginawa za su bayyana nan.",
-    "writeReply": "Rubuta amsa...",
-    "replyToComment": "Amsa",
-    "replyingTo": "Amsawa ga {{name}}",
-    "requestAuthorChip": "Mawallafi",
-    "commentEdited": "An gyara",
-    "showOneMoreReply": "Nuna ƙarin amsa 1",
-    "showMoreReplies": "Nuna ƙarin amsoshi {{count}}"
+    "shippingAppearHere": "Buƙatun da ake ginawa za su bayyana nan."
   },
   "auth": {
     "loginRequired": "Ana buƙatar shiga"
@@ -1404,6 +1404,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "An ajiye a cikin alamomin shafi",
+    "new_member_notice_title": "Kuna nunawa a cikin Sabon mambobi",
+    "new_member_notice_body": "Sauran mambobi za su iya ganin lokacin da kuka shiga, don haka za su iya gaisuwa. Kashe shi a kowane lokaci.",
     "removed_from_bookmarks": "An cire daga alamomin shafi",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

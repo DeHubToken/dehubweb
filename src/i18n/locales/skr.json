@@ -971,6 +971,13 @@
     "shippedBadge": "بھیج ݙتا",
     "noComments": "ابھی تائیں تبصرے کائنی",
     "addComment": "تبصرہ ڈالو...",
+    "writeReply": "جواب لکھو...",
+    "replyToComment": "جواب",
+    "replyingTo": "{{name}} دے جواب وچ",
+    "requestAuthorChip": "مصنف",
+    "commentEdited": "ترمیم شدہ",
+    "showOneMoreReply": "1 ہور جواب دکھاواں",
+    "showMoreReplies": "{{count}} ہور جواب دکھاواں",
     "submitDrawerTitle": "فیچر درخواست جمع کراؤ",
     "titleLabel": "عنوان",
     "titlePlaceholder": "اپݨے خیال دا مختصر عنوان...",
@@ -986,14 +993,7 @@
     "statusDeclined": "مسترد",
     "shipping": "گھلیا جا رہیا اے",
     "noShippingYet": "کجھ کائنی چلدا پیا",
-    "shippingAppearHere": "جہڑیاں درخواستاں بݨدیاں پئیاں ہن اوہ ایتھے ݙسیسن۔",
-    "writeReply": "جواب لکھو...",
-    "replyToComment": "جواب",
-    "replyingTo": "{{name}} دے جواب وچ",
-    "requestAuthorChip": "مصنف",
-    "commentEdited": "ترمیم شدہ",
-    "showOneMoreReply": "1 ہور جواب دکھاواں",
-    "showMoreReplies": "{{count}} ہور جواب دکھاواں"
+    "shippingAppearHere": "جہڑیاں درخواستاں بݨدیاں پئیاں ہن اوہ ایتھے ݙسیسن۔"
   },
   "auth": {
     "loginRequired": "لاگ ان ضروری ہے"
@@ -1396,6 +1396,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "بُک مارکس وچ محفوظ تھی ڳیا",
+    "new_member_notice_title": "تساں نویں ممبران وچ دِکھدے او",
+    "new_member_notice_body": "دوجے ممبران ویکھ سکن گے کہ تساں کُدوں شامل تھئے او، تاں جے او تہاڈے نال گَل بات کر سکن۔ کِسے وی ویلھے ایہنوں بند کر سکن دے او۔",
     "removed_from_bookmarks": "بُک مارکس وچوں ہٹا ڈتا ڳیا",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

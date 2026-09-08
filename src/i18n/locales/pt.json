@@ -972,6 +972,13 @@
     "shippedBadge": "Entregue",
     "noComments": "Sem comentários",
     "addComment": "Adicionar comentário...",
+    "writeReply": "Escreva uma resposta...",
+    "replyToComment": "Responder",
+    "replyingTo": "Respondendo a {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "editado",
+    "showOneMoreReply": "Mostrar mais 1 resposta",
+    "showMoreReplies": "Mostrar mais {{count}} respostas",
     "submitDrawerTitle": "Enviar solicitação",
     "titleLabel": "Título",
     "titlePlaceholder": "Título breve...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Recusada",
     "shipping": "Em desenvolvimento",
     "noShippingYet": "Nada em andamento",
-    "shippingAppearHere": "Os pedidos em construção vão aparecer aqui.",
-    "writeReply": "Escreva uma resposta...",
-    "replyToComment": "Responder",
-    "replyingTo": "Respondendo a {{name}}",
-    "requestAuthorChip": "Autor",
-    "commentEdited": "editado",
-    "showOneMoreReply": "Mostrar mais 1 resposta",
-    "showMoreReplies": "Mostrar mais {{count}} respostas"
+    "shippingAppearHere": "Os pedidos em construção vão aparecer aqui."
   },
   "auth": {
     "loginRequired": "Login necessário"
@@ -1429,6 +1429,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Salvo nos favoritos",
+    "new_member_notice_title": "Está a mostrar em Novos membros",
+    "new_member_notice_body": "Outros membros podem ver quando aderiu, para que possam dizer olá. Desligue-o a qualquer momento.",
     "removed_from_bookmarks": "Removido dos favoritos",
     "profile_url_copied_to_clipboard": "URL do perfil copiada",
     "address_copied_to_clipboard": "Endereço copiado",

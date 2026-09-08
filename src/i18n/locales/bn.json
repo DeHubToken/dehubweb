@@ -949,6 +949,13 @@
     "shippedBadge": "সম্পন্ন",
     "noComments": "এখনো কোনো মন্তব্য নেই",
     "addComment": "একটি মন্তব্য যোগ করুন...",
+    "writeReply": "একটি উত্তর লিখুন...",
+    "replyToComment": "উত্তর",
+    "replyingTo": "{{name}} কে উত্তর দিচ্ছেন",
+    "requestAuthorChip": "লেখক",
+    "commentEdited": "সম্পাদিত",
+    "showOneMoreReply": "আরও ১টি উত্তর দেখান",
+    "showMoreReplies": "আরও {{count}} টি উত্তর দেখান",
     "submitDrawerTitle": "ফিচার রিকোয়েস্ট জমা দিন",
     "titleLabel": "শিরোনাম",
     "titlePlaceholder": "আপনার ধারণার সংক্ষিপ্ত শিরোনাম...",
@@ -964,14 +971,7 @@
     "statusDeclined": "প্রত্যাখ্যাত",
     "shipping": "তৈরি হচ্ছে",
     "noShippingYet": "কিছুই চলছে না",
-    "shippingAppearHere": "যেসব অনুরোধ তৈরি হচ্ছে সেগুলো এখানে দেখা যাবে।",
-    "writeReply": "একটি উত্তর লিখুন...",
-    "replyToComment": "উত্তর",
-    "replyingTo": "{{name}} কে উত্তর দিচ্ছেন",
-    "requestAuthorChip": "লেখক",
-    "commentEdited": "সম্পাদিত",
-    "showOneMoreReply": "আরও ১টি উত্তর দেখান",
-    "showMoreReplies": "আরও {{count}} টি উত্তর দেখান"
+    "shippingAppearHere": "যেসব অনুরোধ তৈরি হচ্ছে সেগুলো এখানে দেখা যাবে।"
   },
   "auth": {
     "loginRequired": "লগ ইন প্রয়োজন"
@@ -1377,6 +1377,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "বুকমার্কে সংরক্ষিত",
+    "new_member_notice_title": "আপনি নতুন সদস্যদের মধ্যে দেখানো হচ্ছে",
+    "new_member_notice_body": "আপনি যোগদানের সময় অন্যান্য সদস্যরা দেখতে পাবেন, যাতে তারা হ্যালো বলতে পারেন । যে কোনও সময় এটি বন্ধ করুন ।",
     "removed_from_bookmarks": "বুকমার্ক থেকে সরানো হয়েছে",
     "copied_to_clipboard": "ক্লিপবোর্ডে কপি হয়েছে",
     "post_deleted": "পোস্ট মুছে ফেলা হয়েছে",

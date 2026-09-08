@@ -1240,6 +1240,13 @@
     "shippedBadge": "Shipped",
     "noComments": "No comments yet",
     "addComment": "Add a comment...",
+    "writeReply": "Tulis balasan...",
+    "replyToComment": "Balasan",
+    "replyingTo": "Membalas kepada {{name}}",
+    "requestAuthorChip": "Penulis",
+    "commentEdited": "disunting",
+    "showOneMoreReply": "Tunjukkan 1 lagi balasan",
+    "showMoreReplies": "Tunjukkan {{count}} lagi balasan",
     "submitDrawerTitle": "Submit Feature Request",
     "titleLabel": "Title",
     "titlePlaceholder": "Tajuk ringkas untuk idea anda...",
@@ -1255,14 +1262,7 @@
     "statusDeclined": "Declined",
     "shipping": "Sedang dibina",
     "noShippingYet": "Tiada yang sedang dibuat",
-    "shippingAppearHere": "Permintaan yang sedang dibina akan muncul di sini.",
-    "writeReply": "Tulis balasan...",
-    "replyToComment": "Balasan",
-    "replyingTo": "Membalas kepada {{name}}",
-    "requestAuthorChip": "Penulis",
-    "commentEdited": "disunting",
-    "showOneMoreReply": "Tunjukkan 1 lagi balasan",
-    "showMoreReplies": "Tunjukkan {{count}} lagi balasan"
+    "shippingAppearHere": "Permintaan yang sedang dibina akan muncul di sini."
   },
   "auth": {
     "loginRequired": "Log in required"
@@ -1693,6 +1693,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Disimpan ke penanda buku",
+    "new_member_notice_title": "Anda menunjukkan dalam Ahli baharu",
+    "new_member_notice_body": "Ahli lain boleh melihat apabila anda menyertai, supaya mereka boleh bertanya khabar. Matikan bila-bila masa.",
     "removed_from_bookmarks": "Dibuang dari penanda buku",
     "profile_url_copied_to_clipboard": "URL profil disalin ke papan klip",
     "address_copied_to_clipboard": "Alamat disalin ke papan klip",

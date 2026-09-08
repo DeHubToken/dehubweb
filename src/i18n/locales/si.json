@@ -968,6 +968,13 @@
     "shippedBadge": "යැවූ",
     "noComments": "තවම අදහස දක්වා නැත",
     "addComment": "අදහස එක් කරන්න...",
+    "writeReply": "පිළිතුරක් ලියන්න...",
+    "replyToComment": "පිළිතුරු",
+    "replyingTo": "{{name}} ට පිළිතුරු දෙමින්",
+    "requestAuthorChip": "කර්තෘ",
+    "commentEdited": "සංස්කරණය කරන ලදී",
+    "showOneMoreReply": "තවත් පිළිතුරු 1ක් පෙන්වන්න",
+    "showMoreReplies": "තවත් පිළිතුරු {{count}} ක් පෙන්වන්න",
     "submitDrawerTitle": "විශේෂාංගය ඉල්ලීම ඉදිරිපත් කරන්න",
     "titleLabel": "මාතෘකාව",
     "titlePlaceholder": "ඔබේ අදහසට කෙටි මාතෘකාවක්...",
@@ -983,14 +990,7 @@
     "statusDeclined": "ප්‍රතික්ෂේප කරන ලදී",
     "shipping": "තැනෙමින්",
     "noShippingYet": "කිසිවක් ක්‍රියාත්මක නොවේ",
-    "shippingAppearHere": "තැනෙන ඉල්ලීම් මෙහි දිස්වේ.",
-    "writeReply": "පිළිතුරක් ලියන්න...",
-    "replyToComment": "පිළිතුරු",
-    "replyingTo": "{{name}} ට පිළිතුරු දෙමින්",
-    "requestAuthorChip": "කර්තෘ",
-    "commentEdited": "සංස්කරණය කරන ලදී",
-    "showOneMoreReply": "තවත් පිළිතුරු 1ක් පෙන්වන්න",
-    "showMoreReplies": "තවත් පිළිතුරු {{count}} ක් පෙන්වන්න"
+    "shippingAppearHere": "තැනෙන ඉල්ලීම් මෙහි දිස්වේ."
   },
   "auth": {
     "loginRequired": "පිවිසීම අවශ්‍යයි"
@@ -1383,6 +1383,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "පිටු සලකුණු වලට සුරකින ලදී",
+    "new_member_notice_title": "You 're reviewing: නව සාමාජිකයින්",
+    "new_member_notice_body": "එතකොට අනිත් අයටත් බලන්න පුළුවන් ඒ අයට ආයුබෝවන් කියන්න පුළුවන් කියලා. ඕනෑම වේලාවක එය අක් රිය කරන්න.",
     "removed_from_bookmarks": "පිටු සලකුණු වලින් ඉවත් කරන ලදී",
     "profile_url_copied_to_clipboard": "පැතිකඩ URL පසුරු පුවරුවට පිටපත් කරන ලදී",
     "address_copied_to_clipboard": "ලිපිනය පසුරු පුවරුවට පිටපත් කරන ලදී",
@@ -4095,26 +4097,6 @@
     "voiceMessage": "හඬ පණිවිඩය",
     "image": "පින්තූරයක් යවන ලදි"
   },
-  "spaces": {
-    "title": "අවකාශ",
-    "live": "සජීවී",
-    "upcoming": "ඉදිරි",
-    "past": "පසුගිය",
-    "create": "අවකාශයක් නිර්මාණය",
-    "join": "එකතු වන්න",
-    "listeners": "සවන්දෙන්නන්",
-    "speakers": "කථිකයන්",
-    "host": "සත්කාරක",
-    "noSpaces": "තවම අවකාශ නැත",
-    "loginDescription": "ශ්‍රව්‍ය අවකාශ නිර්මාණය කිරීමට සහ එකතු වීමට පිවිසෙන්න."
-  },
-  "blog": {
-    "title": "බ්ලොග්",
-    "readMore": "තවත් කියවන්න",
-    "backToBlog": "බ්ලොග් වෙත ආපසු",
-    "sharePost": "පළකිරීම බෙදා ගන්න",
-    "relatedPosts": "සම්බන්ධ පළකිරීම්"
-  },
   "follow": {
     "followers": "අනුගාමීන්",
     "following": "අනුගමනය කරමින්",
@@ -4149,5 +4131,25 @@
     "groupLimitReached": "සමූහ සීමාවට ළඟා වී ඇත",
     "createGroup": "සාදන්න",
     "groupsHint": "කණ්ඩායම් ඔබගේ පහත දැක්වෙන පෝෂණය පෙරහන් කරන්න. ඔබට පමණක් ඔවුන්ව දැකිය හැකිය."
+  },
+  "spaces": {
+    "title": "අවකාශ",
+    "live": "සජීවී",
+    "upcoming": "ඉදිරි",
+    "past": "පසුගිය",
+    "create": "අවකාශයක් නිර්මාණය",
+    "join": "එකතු වන්න",
+    "listeners": "සවන්දෙන්නන්",
+    "speakers": "කථිකයන්",
+    "host": "සත්කාරක",
+    "noSpaces": "තවම අවකාශ නැත",
+    "loginDescription": "ශ්‍රව්‍ය අවකාශ නිර්මාණය කිරීමට සහ එකතු වීමට පිවිසෙන්න."
+  },
+  "blog": {
+    "title": "බ්ලොග්",
+    "readMore": "තවත් කියවන්න",
+    "backToBlog": "බ්ලොග් වෙත ආපසු",
+    "sharePost": "පළකිරීම බෙදා ගන්න",
+    "relatedPosts": "සම්බන්ධ පළකිරීම්"
   }
 }

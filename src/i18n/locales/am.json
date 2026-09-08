@@ -971,6 +971,13 @@
     "shippedBadge": "ተጠናቅቋል",
     "noComments": "ገና አስተያየቶች የሉም",
     "addComment": "አስተያየት ጨምር...",
+    "writeReply": "መልስ ጻፍ...",
+    "replyToComment": "መልስ",
+    "replyingTo": "ለ{{name}} ምላሽ እየሰጠሁ ነው",
+    "requestAuthorChip": "ደራሲ",
+    "commentEdited": "አርትዕ ተደርጓል",
+    "showOneMoreReply": "1 ተጨማሪ ምላሽ አሳይ",
+    "showMoreReplies": "{{count}} ተጨማሪ ምላሾችን አሳይ",
     "submitDrawerTitle": "የባህሪ ጥያቄ አቅርብ",
     "titleLabel": "ርዕስ",
     "titlePlaceholder": "ለሃሳብህ አጭር ርዕስ...",
@@ -986,14 +993,7 @@
     "statusDeclined": "ውድቅ ተደርጓል",
     "shipping": "በመላክ ላይ",
     "noShippingYet": "በሂደት ላይ ምንም የለም",
-    "shippingAppearHere": "እየተገነቡ ያሉ ጥያቄዎች እዚህ ይታያሉ።",
-    "writeReply": "መልስ ጻፍ...",
-    "replyToComment": "መልስ",
-    "replyingTo": "ለ{{name}} ምላሽ እየሰጠሁ ነው",
-    "requestAuthorChip": "ደራሲ",
-    "commentEdited": "አርትዕ ተደርጓል",
-    "showOneMoreReply": "1 ተጨማሪ ምላሽ አሳይ",
-    "showMoreReplies": "{{count}} ተጨማሪ ምላሾችን አሳይ"
+    "shippingAppearHere": "እየተገነቡ ያሉ ጥያቄዎች እዚህ ይታያሉ።"
   },
   "auth": {
     "loginRequired": "መግባት ያስፈልጋል"
@@ -1434,6 +1434,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "ወደ ዕልባቶች ተቀምጧል",
+    "new_member_notice_title": "በአዳዲስ አባላት እያሳያችሁ ነው",
+    "new_member_notice_body": "ሌሎች አባላት እርስዎ ሲቀላቀሉ ማየት ይችላሉ, ስለዚህ ሰላም ማለት ይችላሉ. በማንኛውም ጊዜ ያጥፉት.",
     "removed_from_bookmarks": "ከዕልባቶች ተወግዷል",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

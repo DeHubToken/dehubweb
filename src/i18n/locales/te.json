@@ -967,6 +967,13 @@
     "shippedBadge": "పంపబడింది",
     "noComments": "ఇంకా వ్యాఖ్యలు లేవు",
     "addComment": "వ్యాఖ్యానించు...",
+    "writeReply": "సమాధానం రాయండి...",
+    "replyToComment": "సమాధానం",
+    "replyingTo": "{{name}} కి ప్రత్యుత్తరం",
+    "requestAuthorChip": "రచయిత",
+    "commentEdited": "సవరించబడింది",
+    "showOneMoreReply": "మరో 1 ప్రత్యుత్తరం చూపించు",
+    "showMoreReplies": "{{count}} మరిన్ని ప్రత్యుత్తరాలు చూపించు",
     "submitDrawerTitle": "ఫీచర్ అభ్యర్థనను సమర్పించు",
     "titleLabel": "శీర్షిక",
     "titlePlaceholder": "మీ ఆలోచన యొక్క సంక్షిప్త శీర్షిక...",
@@ -982,14 +989,7 @@
     "statusDeclined": "తిరస్కరించబడింది",
     "shipping": "తయారవుతోంది",
     "noShippingYet": "ఏమీ జరగడం లేదు",
-    "shippingAppearHere": "నిర్మాణంలో ఉన్న అభ్యర్థనలు ఇక్కడ కనిపిస్తాయి.",
-    "writeReply": "సమాధానం రాయండి...",
-    "replyToComment": "సమాధానం",
-    "replyingTo": "{{name}} కి ప్రత్యుత్తరం",
-    "requestAuthorChip": "రచయిత",
-    "commentEdited": "సవరించబడింది",
-    "showOneMoreReply": "మరో 1 ప్రత్యుత్తరం చూపించు",
-    "showMoreReplies": "{{count}} మరిన్ని ప్రత్యుత్తరాలు చూపించు"
+    "shippingAppearHere": "నిర్మాణంలో ఉన్న అభ్యర్థనలు ఇక్కడ కనిపిస్తాయి."
   },
   "auth": {
     "loginRequired": "లాగిన్ అవసరం"
@@ -1424,6 +1424,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "బుక్‌మార్క్‌లలో సేవ్ చేయబడింది",
+    "new_member_notice_title": "మీరు కొత్త సభ్యులను చూపిస్తున్నారు",
+    "new_member_notice_body": "మీరు చేరినప్పుడు ఇతర సభ్యులు చూడగలరు, కాబట్టి వారు హలో చెప్పగలరు. ఎప్పుడైనా దాన్ని ఆఫ్ చేయండి.",
     "removed_from_bookmarks": "బుక్‌మార్క్‌ల నుండి తీసివేయబడింది",
     "profile_url_copied_to_clipboard": "ప్రొఫైల్ URL క్లిప్‌బోర్డ్‌కు కాపీ చేయబడింది",
     "address_copied_to_clipboard": "చిరునామా క్లిప్‌బోర్డ్‌కు కాపీ చేయబడింది",

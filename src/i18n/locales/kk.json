@@ -989,6 +989,13 @@
     "shippedBadge": "Шығарылды",
     "noComments": "Әлі пікірлер жоқ",
     "addComment": "Пікір қосу...",
+    "writeReply": "Жауап жазу...",
+    "replyToComment": "Жауап беру",
+    "replyingTo": "{{name}}-ға жауап беру",
+    "requestAuthorChip": "Автор",
+    "commentEdited": "өңделген",
+    "showOneMoreReply": "Тағы 1 жауапты көрсету",
+    "showMoreReplies": "Тағы {{count}} жауапты көрсету",
     "submitDrawerTitle": "Функция сұранысын ұсыну",
     "titleLabel": "Тақырып",
     "titlePlaceholder": "Идеяңыздың қысқа тақырыбы...",
@@ -1004,14 +1011,7 @@
     "statusDeclined": "Қабылданбады",
     "shipping": "Жасалуда",
     "noShippingYet": "Қолға алынған ештеңе жоқ",
-    "shippingAppearHere": "Жасалып жатқан сұраулар осында көрінеді.",
-    "writeReply": "Жауап жазу...",
-    "replyToComment": "Жауап беру",
-    "replyingTo": "{{name}}-ға жауап беру",
-    "requestAuthorChip": "Автор",
-    "commentEdited": "өңделген",
-    "showOneMoreReply": "Тағы 1 жауапты көрсету",
-    "showMoreReplies": "Тағы {{count}} жауапты көрсету"
+    "shippingAppearHere": "Жасалып жатқан сұраулар осында көрінеді."
   },
   "auth": {
     "loginRequired": "Авторизация қажет"
@@ -1422,6 +1422,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Бетбелгілерге сақталды",
+    "new_member_notice_title": "Жаңа мүшелерде көрсетілуде",
+    "new_member_notice_body": "Басқа мүшелер сіздің қосылғаныңызды көре алады, сондықтан олар сәлемдеседі. Оны кез келген уақытта өшіріңіз.",
     "removed_from_bookmarks": "Бетбелгілерден жойылды",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",
@@ -2189,32 +2191,6 @@
     "voiceMessage": "Дауыстық хабарлама",
     "image": "Сурет жіберді"
   },
-  "spaces": {
-    "title": "Кеңістіктер",
-    "live": "Тікелей",
-    "upcoming": "Алдағы",
-    "past": "Өткен",
-    "create": "Кеңістік жасау",
-    "join": "Қосылу",
-    "listeners": "Тыңдаушылар",
-    "speakers": "Сөйлеушілер",
-    "host": "Жүргізуші",
-    "endSpace": "Кеңістікті аяқтау",
-    "raiseHand": "Қол көтеру",
-    "lowerHand": "Қолды түсіру",
-    "mute": "Дыбысты өшіру",
-    "unmute": "Дыбысты қосу",
-    "leave": "Кеңістіктен шығу",
-    "noSpaces": "Әлі кеңістіктер жоқ",
-    "loginDescription": "Аудио кеңістіктер жасау және қосылу үшін кіріңіз."
-  },
-  "blog": {
-    "title": "Блог",
-    "readMore": "Көбірек оқу",
-    "backToBlog": "Блогқа қайту",
-    "sharePost": "Жазбаны бөлісу",
-    "relatedPosts": "Байланысты жазбалар"
-  },
   "follow": {
     "followers": "Ізбасарлар",
     "following": "Ізденуде",
@@ -2249,5 +2225,31 @@
     "groupLimitReached": "Топ шегіне жетті",
     "createGroup": "Жасау",
     "groupsHint": "Топтар келесі арнаңызды сүзгілейді. Оларды тек сіз көре аласыз."
+  },
+  "spaces": {
+    "title": "Кеңістіктер",
+    "live": "Тікелей",
+    "upcoming": "Алдағы",
+    "past": "Өткен",
+    "create": "Кеңістік жасау",
+    "join": "Қосылу",
+    "listeners": "Тыңдаушылар",
+    "speakers": "Сөйлеушілер",
+    "host": "Жүргізуші",
+    "endSpace": "Кеңістікті аяқтау",
+    "raiseHand": "Қол көтеру",
+    "lowerHand": "Қолды түсіру",
+    "mute": "Дыбысты өшіру",
+    "unmute": "Дыбысты қосу",
+    "leave": "Кеңістіктен шығу",
+    "noSpaces": "Әлі кеңістіктер жоқ",
+    "loginDescription": "Аудио кеңістіктер жасау және қосылу үшін кіріңіз."
+  },
+  "blog": {
+    "title": "Блог",
+    "readMore": "Көбірек оқу",
+    "backToBlog": "Блогқа қайту",
+    "sharePost": "Жазбаны бөлісу",
+    "relatedPosts": "Байланысты жазбалар"
   }
 }

@@ -948,6 +948,11 @@
     "shippedBadge": "Shipped",
     "noComments": "No comments yet",
     "addComment": "Add comment...",
+    "writeReply": "Write a reply...",
+    "replyToComment": "Reply",
+    "replyingTo": "Replying to {{name}}",
+    "requestAuthorChip": "Author",
+    "commentEdited": "edited",
     "submitDrawerTitle": "Submit Feature Request",
     "titleLabel": "Title",
     "titlePlaceholder": "Short title for your idea...",
@@ -963,12 +968,7 @@
     "statusDeclined": "Declined",
     "shipping": "Dey ship",
     "noShippingYet": "Nothing dey happen now",
-    "shippingAppearHere": "Requests wey dem dey build go show here.",
-    "writeReply": "Write a reply...",
-    "replyToComment": "Reply",
-    "replyingTo": "Replying to {{name}}",
-    "requestAuthorChip": "Author",
-    "commentEdited": "edited"
+    "shippingAppearHere": "Requests wey dem dey build go show here."
   },
   "auth": {
     "loginRequired": "Login dey required"

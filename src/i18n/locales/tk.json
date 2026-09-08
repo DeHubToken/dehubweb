@@ -965,6 +965,13 @@
     "shippedBadge": "Iberildi",
     "noComments": "Entek teswir ýok",
     "addComment": "Teswir goşmak...",
+    "writeReply": "Jogap ýazyň...",
+    "replyToComment": "Jogap",
+    "replyingTo": "{{name}}-a jogap berilýär",
+    "requestAuthorChip": "Awtor",
+    "commentEdited": "redaktirlendi",
+    "showOneMoreReply": "Ýene 1 jogaby görkez",
+    "showMoreReplies": "{{count}} sany has köp jogaby görkez",
     "submitDrawerTitle": "Funksiýa haýyşyny ibermek",
     "titleLabel": "Sözbaşy",
     "titlePlaceholder": "Pikiriňiziň gysga sözbaşysy...",
@@ -980,14 +987,7 @@
     "statusDeclined": "Ret edildi",
     "shipping": "Taýýarlanýar",
     "noShippingYet": "Dowam edýän zat ýok",
-    "shippingAppearHere": "Gurulýan haýyşlar şu ýerde görkeziler.",
-    "writeReply": "Jogap ýazyň...",
-    "replyToComment": "Jogap",
-    "replyingTo": "{{name}}-a jogap berilýär",
-    "requestAuthorChip": "Awtor",
-    "commentEdited": "redaktirlendi",
-    "showOneMoreReply": "Ýene 1 jogaby görkez",
-    "showMoreReplies": "{{count}} sany has köp jogaby görkez"
+    "shippingAppearHere": "Gurulýan haýyşlar şu ýerde görkeziler."
   },
   "auth": {
     "loginRequired": "Girmek talap edilýär"
@@ -1398,6 +1398,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Belgilere ýatda saklandy",
+    "new_member_notice_title": "Sen täze agzalar bilen tanyşdyň",
+    "new_member_notice_body": "Başga agzalar siz goşulanyňyzda görerler, şonuň üçin olar salam aýdyp bilerler. Ony her wagt aýyr.",
     "removed_from_bookmarks": "Belgilerden aýyryldy",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

@@ -969,6 +969,13 @@
     "shippedBadge": "Хэрэгжүүлсэн",
     "noComments": "Одоогоор сэтгэгдэл байхгүй",
     "addComment": "Сэтгэгдэл нэмэх...",
+    "writeReply": "Хариу бичих...",
+    "replyToComment": "Хариу",
+    "replyingTo": "{{name}}-д хариу бичиж байна",
+    "requestAuthorChip": "Зохиогч",
+    "commentEdited": "зассан",
+    "showOneMoreReply": "Өөр 1 хариултыг үзэх",
+    "showMoreReplies": "{{count}}-ийн нэмэлт хариултыг үзэх",
     "submitDrawerTitle": "Онцлог хүсэлт илгээх",
     "titleLabel": "Гарчиг",
     "titlePlaceholder": "Санаагаа товч гарчигтай бичнэ үү...",
@@ -984,14 +991,7 @@
     "statusDeclined": "Татгалзсан",
     "shipping": "Бүтээгдэж байна",
     "noShippingYet": "Хийгдэж буй зүйл алга",
-    "shippingAppearHere": "Бүтээгдэж буй хүсэлтүүд энд харагдана.",
-    "writeReply": "Хариу бичих...",
-    "replyToComment": "Хариу",
-    "replyingTo": "{{name}}-д хариу бичиж байна",
-    "requestAuthorChip": "Зохиогч",
-    "commentEdited": "зассан",
-    "showOneMoreReply": "Өөр 1 хариултыг үзэх",
-    "showMoreReplies": "{{count}}-ийн нэмэлт хариултыг үзэх"
+    "shippingAppearHere": "Бүтээгдэж буй хүсэлтүүд энд харагдана."
   },
   "auth": {
     "loginRequired": "Нэвтрэх шаардлагатай"
@@ -1402,6 +1402,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Хавчуургад хадгалагдлаа",
+    "new_member_notice_title": "Та шинэ гишүүдэд үзүүлж байна",
+    "new_member_notice_body": "Зарим гишүүд таныг хэзээ нэгдэхийг хардаг учраас тэд сайн уу гэж хэлж болно. Хүссэн үедээ унтраа.",
     "removed_from_bookmarks": "Хавчуургаас устгагдлаа",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

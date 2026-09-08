@@ -963,6 +963,11 @@
     "shippedBadge": "Shipped",
     "noComments": "No comments yet",
     "addComment": "Add comment...",
+    "writeReply": "Write a reply...",
+    "replyToComment": "Reply",
+    "replyingTo": "Replying to {{name}}",
+    "requestAuthorChip": "Author",
+    "commentEdited": "edited",
     "submitDrawerTitle": "Submit Feature Request",
     "titleLabel": "Title",
     "titlePlaceholder": "Short title for your idea...",
@@ -978,12 +983,7 @@
     "statusDeclined": "Declined",
     "shipping": "I di ship",
     "noShippingYet": "Notin di hapen nau",
-    "shippingAppearHere": "Request dem weh dem di build go show hia.",
-    "writeReply": "Write a reply...",
-    "replyToComment": "Reply",
-    "replyingTo": "Replying to {{name}}",
-    "requestAuthorChip": "Author",
-    "commentEdited": "edited"
+    "shippingAppearHere": "Request dem weh dem di build go show hia."
   },
   "auth": {
     "loginRequired": "Log in required"

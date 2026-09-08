@@ -971,6 +971,13 @@
     "shippedBadge": "リリース済み",
     "noComments": "まだコメントがありません",
     "addComment": "コメントを追加...",
+    "writeReply": "返信...",
+    "replyToComment": "返信",
+    "replyingTo": "{{name}}に返信",
+    "requestAuthorChip": "投稿者",
+    "commentEdited": "編集済み",
+    "showOneMoreReply": "返信をあと1件表示",
+    "showMoreReplies": "{{count}}件の返信をさらに表示",
     "submitDrawerTitle": "機能リクエストを提出",
     "titleLabel": "タイトル",
     "titlePlaceholder": "簡潔なタイトル...",
@@ -986,14 +993,7 @@
     "statusDeclined": "却下",
     "shipping": "開発中",
     "noShippingYet": "進行中のものはありません",
-    "shippingAppearHere": "制作中のリクエストがここに表示されます。",
-    "writeReply": "返信...",
-    "replyToComment": "返信",
-    "replyingTo": "{{name}}に返信",
-    "requestAuthorChip": "投稿者",
-    "commentEdited": "編集済み",
-    "showOneMoreReply": "返信をあと1件表示",
-    "showMoreReplies": "{{count}}件の返信をさらに表示"
+    "shippingAppearHere": "制作中のリクエストがここに表示されます。"
   },
   "auth": {
     "loginRequired": "ログインが必要です"
@@ -1425,6 +1425,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "ブックマークに保存しました",
+    "new_member_notice_title": "新規メンバーに表示されています",
+    "new_member_notice_body": "他のメンバーは、あなたがいつ参加したかを見ることができるので、彼らは挨拶することができます。 いつでもオフにできます。",
     "removed_from_bookmarks": "ブックマークから削除しました",
     "profile_url_copied_to_clipboard": "プロフィールURLをコピーしました",
     "address_copied_to_clipboard": "アドレスをコピーしました",
