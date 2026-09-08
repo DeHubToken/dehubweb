@@ -18,20 +18,35 @@
  *    that is on over a channel that will not deliver, so the row says so and
  *    points at the top-up rather than looking healthy and doing nothing.
  *
- * Which *types* get texted is not here, for the same reason it is not on the
- * email row and one more besides: the backend reuses the per-type switches
- * below this one, and the list of types that may text at all is a pricing
- * decision the server owns.
+ * The per-type switches below this row still decide what a notification IS,
+ * exactly as they do for email. What this row adds on top is **what to
+ * text** — one choice, because the reader is billed per message and the
+ * in-app toggles cannot say "only tell me when money arrives" without also
+ * silencing the notification inside the app. It only ever narrows: `all`
+ * means every eligible type already switched on, which is what the channel
+ * did before the dropdown existed.
+ *
+ * The options come from the server, never from a list in here. A scope this
+ * client invented would be refused on write and read as `all` on send, so
+ * the reader would be billed for exactly what they thought they had turned
+ * off.
  */
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { MessageSquare } from 'lucide-react';
+import { ListFilter, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Switch } from '@/components/ui/switch';
-import { SettingsRow } from '@/components/app/settings/SettingsRow';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { SettingsRow, SETTINGS_CONTROL_CLASS } from '@/components/app/settings/SettingsRow';
 import {
   SmsNotificationsDialog,
   useSmsNotificationStatus,
@@ -87,8 +102,28 @@ export function SmsNotificationsSetting({ variant = 'row' }: SmsNotificationsSet
     onSettled: () => queryClient.invalidateQueries({ queryKey: prefsKey }),
   });
 
+  const scopeMutation = useMutation({
+    mutationFn: (value: string) =>
+      import('@/lib/api/dehub').then(m => m.updateSmsNotificationScope(value)),
+    onMutate: async (value: string) => {
+      await queryClient.cancelQueries({ queryKey: prefsKey });
+      const prev = queryClient.getQueryData(prefsKey);
+      queryClient.setQueryData(prefsKey, (old: any) => ({ ...old, smsScope: value }));
+      return { prev };
+    },
+    onError: (_err, _value, context) => {
+      if (context?.prev) queryClient.setQueryData(prefsKey, context.prev);
+      toast.error(t('settings.failedUpdateProfile'));
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: prefsKey }),
+  });
+
   const loading = prefsLoading || statusLoading;
   const disabled = loading || !ready || mutation.isPending;
+
+  // Absent means `all` — every account that predates this dropdown carries
+  // nothing here, and none of them asked for their texts to stop.
+  const scope = prefs?.smsScope || 'all';
 
   const title = t('settings.smsNotifications');
   const description = describe();
@@ -141,6 +176,72 @@ export function SmsNotificationsSetting({ variant = 'row' }: SmsNotificationsSet
     </p>
   );
 
+  /**
+   * The dropdown itself, shared by both variants.
+   *
+   * Options come from `status.scopes` and never from a list in here — a
+   * scope this client invented would be refused on write and read as `all`
+   * on send, so the reader would be billed for exactly what they thought
+   * they had turned off.
+   */
+  const scopeSelect = (
+    <Select
+      value={scope}
+      onValueChange={value => scopeMutation.mutate(value)}
+      disabled={scopeMutation.isPending}
+    >
+      <SelectTrigger
+        className={`w-44 ${SETTINGS_CONTROL_CLASS}`}
+        aria-label={t('settings.smsScopeLabel')}
+      >
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {(status?.scopes ?? []).map(option => (
+          <SelectItem key={option} value={option}>
+            {t(`settings.smsScope.${option}`, option)}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+
+  /**
+   * Only while the switch is on. A "what to text" picker above a channel
+   * that is off is a control over nothing, and the row above already carries
+   * two states — locked, no number — that need the reader's attention more.
+   *
+   * Two shapes because the two surfaces are two materials: Settings is a
+   * SettingsRow, the notifications sheet is a white/10 card. Rendering the
+   * settings material inside the sheet is what makes an added control look
+   * bolted on.
+   */
+  const showScope = ready && isOn && !!status?.scopes?.length;
+
+  const scopePickerRow = showScope && (
+    <SettingsRow
+      icon={<ListFilter />}
+      title={t('settings.smsScopeLabel')}
+      description={t('settings.smsScopeDesc')}
+      action={scopeSelect}
+    />
+  );
+
+  const scopePickerCard = showScope && (
+    <div className="mt-2 flex items-center justify-between gap-3 rounded-xl bg-white/10 p-4">
+      <div className="flex min-w-0 items-center gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
+          <ListFilter className="h-5 w-5 text-white" />
+        </div>
+        <div className="min-w-0">
+          <p className="font-medium text-white">{t('settings.smsScopeLabel')}</p>
+          <p className="text-sm text-white/50">{t('settings.smsScopeDesc')}</p>
+        </div>
+      </div>
+      {scopeSelect}
+    </div>
+  );
+
   const dialog = (
     <SmsNotificationsDialog
       open={dialogOpen}
@@ -166,6 +267,7 @@ export function SmsNotificationsSetting({ variant = 'row' }: SmsNotificationsSet
           {control}
         </label>
         {footer}
+        {scopePickerCard}
         {dialog}
       </div>
     );
@@ -183,6 +285,7 @@ export function SmsNotificationsSetting({ variant = 'row' }: SmsNotificationsSet
         action={control}
       />
       {footer}
+      {scopePickerRow}
       {dialog}
     </div>
   );

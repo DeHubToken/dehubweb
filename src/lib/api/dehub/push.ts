@@ -231,6 +231,11 @@ export interface AccountNotificationPreferences {
    * spending a balance — see SmsNotificationsSetting.
    */
   smsEnabled?: boolean;
+  /**
+   * Which of the eligible types are worth paying to be texted about.
+   * Absent means `all`. The valid values come from `sms/status`.
+   */
+  smsScope?: string;
   inApp?: Partial<Record<NotificationKey, boolean>>;
   push?: Partial<Record<NotificationKey, boolean>>;
 }
@@ -303,5 +308,21 @@ export async function updateSmsNotificationsEnabled(
 ): Promise<{ result: boolean }> {
   return updateProfile({
     notificationPreferences: JSON.stringify({ smsEnabled: value }),
+  });
+}
+
+/**
+ * Narrow what the paid channel is for.
+ *
+ * `all` is the default and means every eligible type the reader already has
+ * switched on — this only ever narrows further, never widens. The server
+ * validates the value against its own list and serves that list from
+ * `sms/status`, so never offer a scope that did not come from there.
+ */
+export async function updateSmsNotificationScope(
+  scope: string,
+): Promise<{ result: boolean }> {
+  return updateProfile({
+    notificationPreferences: JSON.stringify({ smsScope: scope }),
   });
 }
