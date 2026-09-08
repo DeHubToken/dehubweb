@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { lazy, Suspense, useEffect, useState, useCallback } from 'react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
@@ -12,6 +12,11 @@ import { SoundPicker } from './components/SoundPicker';
 import { cn } from '@/lib/utils';
 import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
 
+const CreatePlanModal = lazy(() =>
+  import('@/components/app/subscriptions/CreatePlanModal').then((module) => ({
+    default: module.CreatePlanModal,
+  })),
+);
 
 interface PostModalProps {
   isOpen: boolean;
@@ -32,6 +37,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
   const { attachedSound, selectSound, clearSound } = usePostSound();
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
+  const [planDrawerOpen, setPlanDrawerOpen] = useState(false);
 
   const handleTogglePoll = useCallback(() => {
     if (state.poll) {
@@ -87,6 +93,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
     // A finished broadcast must not be able to reopen itself the next time the
     // composer is opened.
     setLiveStream(null);
+    setPlanDrawerOpen(false);
     onClose();
   };
 
@@ -183,6 +190,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         setShouldMint={actions.setShouldMint}
         mintFeeLabel={computed.mintFeeLabel}
         mintRequired={computed.mintRequired}
+        onCreatePlan={() => setPlanDrawerOpen(true)}
       />
 
       <PostActionBar
@@ -284,6 +292,16 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onSelect={selectSound}
         currentSound={attachedSound}
       />
+
+      {planDrawerOpen && (
+        <Suspense fallback={null}>
+          <CreatePlanModal
+            open={planDrawerOpen}
+            onOpenChange={setPlanDrawerOpen}
+            onCreated={() => actions.setIsSubscribersOnly(true)}
+          />
+        </Suspense>
+      )}
     </>
   );
 }

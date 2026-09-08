@@ -92,6 +92,8 @@ interface PostAccessTogglesProps {
    * bounty is enabled and passes true here so the row reads as unavailable.
    */
   mintRequired?: boolean;
+  /** Open plan setup above the composer without abandoning the post draft. */
+  onCreatePlan?: () => void;
 }
 
 export function PostAccessToggles({
@@ -139,6 +141,7 @@ export function PostAccessToggles({
   setShouldMint,
   mintFeeLabel,
   mintRequired = false,
+  onCreatePlan,
 }: PostAccessTogglesProps) {
   const { t } = useI18n();
   const { walletAddress } = useAuth();
@@ -543,7 +546,15 @@ export function PostAccessToggles({
             {!plansLoading && !hasPlans && (
               <button
                 type="button"
-                onClick={(e) => { e.preventDefault(); navigate('/app/profile?tab=subscribers'); }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (!hasAnyPlan && onCreatePlan) {
+                    onCreatePlan();
+                    return;
+                  }
+                  navigate('/app/profile?tab=subscribers');
+                }}
                 className="text-xs text-white/50 underline underline-offset-2 hover:text-white"
               >
                 {hasAnyPlan ? 'Publish your plan first' : 'Create a plan first'}
