@@ -395,7 +395,7 @@ export function ThemedIcon({ icon, alt = '', className, ...imgProps }: ThemedIco
   }
 
   const rasterTheme = FULL_RASTER_THEMES.has(theme) ? theme : 'system';
-  const assetRevision = icon === 'dao' ? '?v=2' : '';
+  const assetRevision = icon === 'dao' ? '?v=3' : '';
   return (
     <img
       src={`/theme-icons/${rasterTheme}/${icon}.webp${assetRevision}`}

@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -49,6 +50,24 @@ describe('theme icon assets', () => {
       'utf8',
     );
     expect(iconSource).toMatch(/superpowers:\s*Zap/);
+  });
+
+  it('ships a dedicated DAO landmark source for every raster theme', () => {
+    const themes = [...FULL_THEMES, 'system'];
+    const sourceHashes = new Set<string>();
+    const outputHashes = new Set<string>();
+
+    for (const theme of themes) {
+      const source = resolve(__dirname, `../../public/theme-icons/sources/dao-${theme}.png`);
+      expect(existsSync(source), `dao-${theme}.png`).toBe(true);
+      expect(statSync(source).size, `dao-${theme}.png is unexpectedly empty`).toBeGreaterThan(100_000);
+      sourceHashes.add(createHash('sha256').update(readFileSync(source)).digest('hex'));
+      const output = resolve(__dirname, `../../public/theme-icons/${theme}/dao.webp`);
+      outputHashes.add(createHash('sha256').update(readFileSync(output)).digest('hex'));
+    }
+
+    expect(sourceHashes.size).toBe(themes.length);
+    expect(outputHashes.size).toBe(themes.length);
   });
 
   it('routes old asset stems to the matching themed WebP', () => {
