@@ -21,6 +21,7 @@ import { useState, useCallback, useEffect, useRef, useSyncExternalStore } from '
 import { isQuietNow } from '@/lib/quiet-hours';
 import {
   getWebPushState,
+  probeNotificationDisplay,
   subscribeToWebPush,
   subscribeWebPushState,
   unsubscribeFromWebPush,
@@ -265,27 +266,18 @@ export function useBrowserNotifications() {
  * Fire one notification right now, ignoring the tab-hidden and quiet-hours
  * rules that gate real ones — this is the reader asking to see one.
  *
- * Returns false when the browser refused to construct it. That is the Android
- * Chrome case: `Notification.permission` can read 'granted' there while
- * `new Notification()` throws, because delivery needs a push-capable service
- * worker the app doesn't have. Enabling the setting fires one of these, so
- * that gap surfaces as an honest "not supported here" instead of a switch that
- * looks on and never delivers anything.
+ * Returns false when the browser could not display it, and that answer is only
+ * worth anything because it now goes through the service worker. The page's
+ * own `new Notification()` CONSTRUCTS quite happily on a machine whose OS is
+ * blocking the browser, so the old version reported success over a channel
+ * that showed nothing - which is exactly how a reader sat for seven months
+ * with a switch that looked on and never delivered anything.
  */
-export function showTestNotification(title: string, body: string): boolean {
-  if (typeof Notification === 'undefined') return false;
-  if (Notification.permission !== 'granted') return false;
-  try {
-    const notification = new Notification(title, {
-      body,
-      icon: '/favicon.ico',
-      tag: 'dehub-test-notification',
-    });
-    setTimeout(() => notification.close(), 5000);
-    return true;
-  } catch {
-    return false;
-  }
+export async function showTestNotification(title: string, body: string): Promise<boolean> {
+  // Goes through the service worker, not `new Notification()`. The page
+  // constructor succeeds on a machine whose OS is blocking the browser, so
+  // it reported success over a channel that displayed nothing.
+  return probeNotificationDisplay(title, body);
 }
 
 /**
