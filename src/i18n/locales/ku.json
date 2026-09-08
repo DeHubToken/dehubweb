@@ -334,7 +334,8 @@
     "publicChatAlertsRateHint": "هیچ شتێک لەدەست نادات کاتێک ژوورەکە لەمە قەرەباڵغتر بێت — نامەکان هەڵدەگیرێن و لە ئاگادارکردنەوەی داهاتوودا پێکەوە دێن.",
     "emailNotificationsDescLinked": "نێردرا بۆ {{email}}",
     "emailNotificationsNoAddress": "سەرەتا ئیمەیلێک بۆ هەژمارەکەت زیاد بکە - لەوێدا ئەمانە دەچن.",
-    "emailNotificationsAddAddress": "ئیمەیلێک زیاد بکە"
+    "emailNotificationsAddAddress": "ئیمەیلێک زیاد بکە",
+    "smsNumberLabel": "ژمارە تەلەفۆن"
   },
   "common": {
     "save": "Tomar bike",

@@ -335,7 +335,57 @@
     "publicChatAlertsRateHint": "Es geht nichts verloren, wenn der Raum belebter ist als das – die Nachrichten werden gespeichert und kommen bei der nächsten Benachrichtigung zusammen an.",
     "emailNotificationsDescLinked": "An {{email}} gesendet",
     "emailNotificationsNoAddress": "Füge zuerst eine E-Mail-Adresse zu deinem Konto hinzu – dort würden diese landen.",
-    "emailNotificationsAddAddress": "E-Mail-Adresse hinzufügen"
+    "emailNotificationsAddAddress": "E-Mail-Adresse hinzufügen",
+    "smsNotifications": "Textbenachrichtigungen",
+    "smsScopeLabel": "Was ist zu schreiben?",
+    "smsScopeDesc": "Texte kosten Geld, also beschränken Sie sie auf das, was eine Unterbrechung wert ist",
+    "smsScope": {
+      "all": "Alles, was ich eingeschaltet habe",
+      "tips": "Nur Tipps, die ich erhalte",
+      "subscriptions": "Nur neue Abonnenten",
+      "sales": "Nur Verkäufe meiner Inhalte",
+      "bounties": "Nur Prämien",
+      "fractions": "Angebote und Verkäufe nur zum Bruchteil",
+      "messages": "Nur Direktnachrichten",
+      "mentions": "Nur Erwähnungen von mir",
+      "replies": "Antwortet nur auf meine Kommentare",
+      "account": "Nur Mitteilungen über mein Konto"
+    },
+    "smsNotificationsDesc": "Holen Sie sich die wichtigen als Textnachricht",
+    "smsNotificationsLocked": "Freischalten mit {{dhb}} DHB (${{usd}}) Guthaben",
+    "smsNotificationsNeedsNumber": "Füge eine Telefonnummer hinzu und verifiziere sie, um loszulegen",
+    "smsNotificationsEmpty": "Kein Guthaben mehr — aufladen, um weiterhin Textnachrichten zu erhalten",
+    "smsUnavailable": "Textbenachrichtigungen sind derzeit nicht verfügbar",
+    "smsUnlockAction": "Textbenachrichtigungen entsperren",
+    "smsManage": "Verwalte dein Guthaben und deine Nummer",
+    "smsDialogIntro": "Der Versand von Texten kostet Geld, daher läuft dieser Kanal auf Guthaben, das Sie in DHB aufladen.",
+    "smsUnlockPrice": "{{dhb}} DHB (${{usd}}) schaltet Texte frei und wird zu deinem ersten Guthaben.",
+    "smsUnlockExplainer": "Nichts läuft ab. Guthaben wird eine Nachricht nach der anderen ausgegeben und nur für die Benachrichtigungen, die du bereits aktiviert hast.",
+    "smsPricesHeading": "Was eine Nachricht kostet",
+    "smsBand": {
+      "domestic": "Vereinigtes Königreich",
+      "global": "Andere Länder",
+      "premium": "Rest der Welt"
+    },
+    "smsDepositAction": "{{dhb}} DHB senden",
+    "smsDepositPaying": "In Ihrem Portemonnaie bestätigen...",
+    "smsDepositConfirming": "Warten auf die Kette...",
+    "smsDepositNotSent": "Die Überweisung wurde nicht eingereicht.",
+    "smsDepositSlow": "Ihre Überweisung ist noch nicht auf der Kette erschienen. Es ist sicher — öffne dies erneut und es wird gutgeschrieben. Referenz: {{hash}}",
+    "smsChainUnsupported": "DHB kann nicht in diesem Netzwerk gesendet werden.",
+    "smsUnlocked": "Textbenachrichtigungen freigeschaltet",
+    "smsBalance": "{{dhb}} DHB links (${{usd}})",
+    "smsBalanceMessages": "Über {{count}} weitere Nachrichten",
+    "smsTopUp": "{{dhb}} DHB aufladen",
+    "smsNumberLabel": "Telefonnummer",
+    "smsSendCode": "Schreibe mir einen Code",
+    "smsCodeSent": "Code gesendet. Das kostet {{price}} DHB.",
+    "smsCodeLabel": "Code, den wir an {{phone}} gesendet haben",
+    "smsVerify": "Code bestätigen",
+    "smsNumberVerified": "Anzahl verifiziert",
+    "smsRemoveNumber": "Diese Nummer entfernen",
+    "smsNumberRemoved": "Anzahl entfernt",
+    "smsCountryBlocked": "Wir können noch keine Texte in dieses Land liefern."
   },
   "common": {
     "save": "Speichern",
@@ -857,7 +907,8 @@
       "here": "{{name}} hat allen in der Community eine Nachricht gesendet",
       "hereNamed": "{{name}} hat alle in „{{community}}“ benachrichtigt"
     },
-    "byEmail": "Per E-Mail"
+    "byEmail": "Per E-Mail",
+    "byText": "Nach Text"
   },
   "leaderboard": {
     "title": "Rangliste",
