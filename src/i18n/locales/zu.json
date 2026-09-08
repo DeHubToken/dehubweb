@@ -379,7 +379,14 @@
     "endStream": "Qeda Ukusakaza",
     "linkCopied": "Isixhumanisi sikopishiwe",
     "postUrlCopied": "I-URL yokuthunyelwe ikopishiwe",
-    "boostPost": "Khuthaza okuthunyelwe"
+    "boostPost": "Khuthaza okuthunyelwe",
+    "bookmark": "Ibhukumaka",
+    "removeBookmark": "Susa ibhukumaka",
+    "pinPost": "Faka iphrofayili yakho",
+    "unpinPost": "Khipha kuphrofayili yakho",
+    "postPinned": "Kuphinwe kuphrofayili yakho",
+    "postUnpinned": "Kukhishwe kuphrofayili yakho",
+    "pinFailed": "Ayikwazanga ukufaka iphini noma ukususa le phosti"
   },
   "filters": {
     "sort": "Hlela",

@@ -379,7 +379,14 @@
     "endStream": "End Stream",
     "linkCopied": "Link copied to clipboard",
     "postUrlCopied": "Post URL copied to clipboard",
-    "boostPost": "Boost post"
+    "boostPost": "Boost post",
+    "bookmark": "Bookmark",
+    "removeBookmark": "Remove bookmark",
+    "pinPost": "Pin to your profile",
+    "unpinPost": "Unpin from your profile",
+    "postPinned": "Pinned to your profile",
+    "postUnpinned": "Unpinned from your profile",
+    "pinFailed": "Could not pin or unpin this post"
   },
   "filters": {
     "sort": "Sort",

@@ -379,7 +379,14 @@
     "endStream": "Tamsaasa Dhaabi",
     "linkCopied": "Liinkiin waraabame",
     "postUrlCopied": "URL barreeffamaa waraabame",
-    "boostPost": "Maxxansa Boost godhi"
+    "boostPost": "Maxxansa Boost godhi",
+    "bookmark": "Bookmark jedhu",
+    "removeBookmark": "Bookmark haqi",
+    "pinPost": "Profile keessan irratti pin godhaa",
+    "unpinPost": "Profaayila keessan irraa unpin",
+    "postPinned": "Profaayilii keessan irratti pinned ta&#39;eera",
+    "postUnpinned": "Profaayila keessan irraa unpinned",
+    "pinFailed": "Barreeffama kana pin ykn unpin gochuu hin dandeenye"
   },
   "filters": {
     "sort": "Tartiibsi",

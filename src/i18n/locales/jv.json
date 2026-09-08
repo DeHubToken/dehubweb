@@ -379,7 +379,14 @@
     "endStream": "Rampungake Siaran",
     "linkCopied": "Pranala wis dikopi",
     "postUrlCopied": "URL kiriman wis dikopi",
-    "boostPost": "Tingkatake kiriman"
+    "boostPost": "Tingkatake kiriman",
+    "bookmark": "Tetenger",
+    "removeBookmark": "Busak tetenger",
+    "pinPost": "Tancepake menyang profilmu",
+    "unpinPost": "Copot saka profilmu",
+    "postPinned": "Katancepake menyang profilmu",
+    "postUnpinned": "Kacopot saka profilmu",
+    "pinFailed": "Ora bisa nancepake utawa copot kiriman iki"
   },
   "filters": {
     "sort": "Urutake",

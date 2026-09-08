@@ -379,7 +379,14 @@
     "endStream": "Stream beenden",
     "linkCopied": "Link kopiert",
     "postUrlCopied": "Post-URL kopiert",
-    "boostPost": "Beitrag boosten"
+    "boostPost": "Beitrag boosten",
+    "bookmark": "Lesezeichen",
+    "removeBookmark": "Lesezeichen entfernen",
+    "pinPost": "An Ihr Profil anheften",
+    "unpinPost": "Aus deinem Profil entfernen",
+    "postPinned": "An Ihr Profil angeheftet",
+    "postUnpinned": "Aus Ihrem Profil entfernt",
+    "pinFailed": "Dieser Beitrag konnte nicht angeheftet oder gelöst werden"
   },
   "filters": {
     "sort": "Sortieren",

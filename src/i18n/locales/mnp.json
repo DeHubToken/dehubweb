@@ -378,7 +378,14 @@
     "endStream": "结束直播",
     "linkCopied": "链接复制了",
     "postUrlCopied": "帖子网址复制了",
-    "boostPost": "加推帖"
+    "boostPost": "加推帖",
+    "bookmark": "收藏",
+    "removeBookmark": "取消收藏",
+    "pinPost": "固定到你的个人资料",
+    "unpinPost": "从你的个人资料取消固定",
+    "postPinned": "已固定到你的个人资料",
+    "postUnpinned": "已从你的个人资料取消固定",
+    "pinFailed": "无法固定或取消固定此帖子"
   },
   "filters": {
     "sort": "排序",

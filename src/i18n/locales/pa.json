@@ -379,7 +379,14 @@
     "endStream": "ਸਟ੍ਰੀਮ ਖ਼ਤਮ ਕਰੋ",
     "linkCopied": "ਲਿੰਕ ਕਾਪੀ ਹੋ ਗਿਆ",
     "postUrlCopied": "ਪੋਸਟ ਲਿੰਕ ਕਾਪੀ ਹੋ ਗਿਆ",
-    "boostPost": "ਪੋਸਟ Boost ਕਰੋ"
+    "boostPost": "ਪੋਸਟ Boost ਕਰੋ",
+    "bookmark": "ਬੁੱਕਮਾਰਕ",
+    "removeBookmark": "ਬੁੱਕਮਾਰਕ ਹਟਾਓ",
+    "pinPost": "ਆਪਣੀ ਪ੍ਰੋਫਾਈਲ ਨੂੰ ਪਿੰਨ ਕਰੋ",
+    "unpinPost": "ਆਪਣੀ ਪ੍ਰੋਫਾਈਲ ਤੋਂ ਅਨਪਿਨ ਕਰੋ",
+    "postPinned": "ਤੁਹਾਡੀ ਪ੍ਰੋਫਾਈਲ 'ਤੇ ਪਿੰਨ ਕੀਤਾ ਗਿਆ",
+    "postUnpinned": "ਤੁਹਾਡੀ ਪ੍ਰੋਫਾਈਲ ਤੋਂ ਅਨਪਿਨਡ",
+    "pinFailed": "ਇਸ ਪੋਸਟ ਨੂੰ ਪਿੰਨ ਜਾਂ ਅਨਪਿਨ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ"
   },
   "filters": {
     "sort": "ਕ੍ਰਮ",

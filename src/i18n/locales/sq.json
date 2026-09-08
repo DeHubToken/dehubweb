@@ -379,7 +379,14 @@
     "endStream": "Përfundo Transmetimin",
     "linkCopied": "Lidhja u kopjua në clipboard",
     "postUrlCopied": "URL e postimit u kopjua në clipboard",
-    "boostPost": "Nxit postimin"
+    "boostPost": "Nxit postimin",
+    "bookmark": "Libërshënues",
+    "removeBookmark": "Hiq libërshënuesin",
+    "pinPost": "Vendos shënjuesin tek profili yt",
+    "unpinPost": "Hiqe nga profili yt",
+    "postPinned": "Pinned në profilin tënd",
+    "postUnpinned": "Shkëputur nga profili yt",
+    "pinFailed": "Nuk mund ta shënjoj ose çaktivizoj këtë postim"
   },
   "filters": {
     "sort": "Rendit",

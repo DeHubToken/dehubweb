@@ -379,7 +379,14 @@
     "endStream": "Parí Ìṣọ̀nà",
     "linkCopied": "A ti dàkọ ìjápọ̀",
     "postUrlCopied": "A ti dàkọ URL àròkọ",
-    "boostPost": "Gbé ìfìwéránṣẹ́ sókè"
+    "boostPost": "Gbé ìfìwéránṣẹ́ sókè",
+    "bookmark": "Àmì-ìwé",
+    "removeBookmark": "Yí àmì-ìwé kúrò",
+    "pinPost": "Pin si profaili rẹ",
+    "unpinPost": "Yọ kuro ninu profaili rẹ",
+    "postPinned": "Pọn si profaili rẹ",
+    "postUnpinned": "Unpinned lati rẹ profaili",
+    "pinFailed": "Ko le pin tabi yọ ifiweranṣẹ yii kuro."
   },
   "filters": {
     "sort": "Tò",

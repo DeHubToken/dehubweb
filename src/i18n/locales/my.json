@@ -379,7 +379,14 @@
     "endStream": "End Stream",
     "linkCopied": "လင့်ခ်ကူးပြီးပါပြီ",
     "postUrlCopied": "ပို့စ် URL ကူးပြီးပါပြီ",
-    "boostPost": "ပို့စ် Boost လုပ်ရန်"
+    "boostPost": "ပို့စ် Boost လုပ်ရန်",
+    "bookmark": "မှတ်သားရန်",
+    "removeBookmark": "မှတ်တမ်းမှတ်ရာကို ဖယ်ရှားပါ",
+    "pinPost": "သင် ၏ ပရိုဖိုင်သို့ PIN နံပါတ်",
+    "unpinPost": "သင် ၏ ပရိုဖိုင်မှ PIN ကိုဖြုတ်ပါ",
+    "postPinned": "သင် ၏ ပရိုဖိုင်သို့ Pinned",
+    "postUnpinned": "သင် ၏ ပရိုဖိုင်မှ မထည့်သွင်းရသေးပါ",
+    "pinFailed": "ဤပို့စ်ကို PIN သို့မဟုတ် ဖြုတ် ၍ မရပါ"
   },
   "filters": {
     "sort": "စီရန်",

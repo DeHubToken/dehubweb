@@ -379,7 +379,14 @@
     "endStream": "Avartel hertatsoume",
     "linkCopied": "Hghume patchervaats e",
     "postUrlCopied": "Groumi URL-e patchervaats e",
-    "boostPost": "Առաջխաղացնել գրառումը"
+    "boostPost": "Առաջխաղացնել գրառումը",
+    "bookmark": "Էջանշան դնել",
+    "removeBookmark": "Հեռացնել էջանիշը",
+    "pinPost": "Նշեք ձեր պրոֆիլը",
+    "unpinPost": "Հանեք ձեր պրոֆիլից",
+    "postPinned": "Կցված է ձեր պրոֆիլին",
+    "postUnpinned": "Հանվել է ձեր պրոֆիլից",
+    "pinFailed": "Չհաջողվեց կապել կամ անջատել այս գրառումը"
   },
   "filters": {
     "sort": "Dasavorel",

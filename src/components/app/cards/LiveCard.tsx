@@ -52,8 +52,9 @@ export function LiveCard({ stream }: LiveCardProps) {
   const navigate = useNavigate();
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
   const { like, isLiking } = useStreamActions();
-  // Bookmark state for the mobile/tablet three-dot menu (desktop shows this
-  // in the ActionBar's left-anchored utility cluster instead).
+  // Bookmark state for the three-dot menu. The same action is an icon in the
+  // ActionBar's left-anchored utility cluster on desktop; both read this one
+  // shared query, so they cannot disagree.
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(stream.id);
   const { blockAuthor } = useBlockAuthor();
   const handleMuteStreamer = useCallback(() => {
@@ -124,24 +125,25 @@ export function LiveCard({ stream }: LiveCardProps) {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
-              {/* Bookmark / Post info — mobile/tablet only; desktop shows these
-                  anchored left in the bottom action bar instead. */}
+              {/* Bookmark / Post info. Also on the action bar as icons on desktop —
+                  the menu carries them at every width so there is one
+                  reliable place to look. */}
               <DropdownMenuItem
                 onClick={() => toggleBookmark()}
                 disabled={isBookmarkLoading}
                 className={cn(
-                  "lg:hidden hover:bg-zinc-700 cursor-pointer gap-2",
+                  "hover:bg-zinc-700 cursor-pointer gap-2",
                   isBookmarked ? "text-yellow-500" : "text-white"
                 )}
               >
                 <Bookmark className={cn("w-4 h-4", isBookmarked && "fill-current")} />
-                {isBookmarked ? 'Remove bookmark' : 'Bookmark'}
+                {isBookmarked ? t("postOptions.removeBookmark", "Remove bookmark") : t("postOptions.bookmark", "Bookmark")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={openPostInfoPage}
-                className="lg:hidden text-white hover:bg-zinc-700 cursor-pointer gap-2"
+                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
               >
-                <Info className="w-4 h-4" /> Post info
+                <Info className="w-4 h-4" /> {t("postInfo.title", "Post info")}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
                 <Bell className="w-4 h-4" /> {t('postOptions.notifyWhenLive')}

@@ -375,7 +375,14 @@
     "endStream": "Farano ny fampielezana",
     "linkCopied": "Rohy voatahiry",
     "postUrlCopied": "URL lahatsoratra voatahiry",
-    "boostPost": "Manondrotra lahatsoratra"
+    "boostPost": "Manondrotra lahatsoratra",
+    "bookmark": "Ampidiro anaty toby",
+    "removeBookmark": "Manesotra ny rohy",
+    "pinPost": "Pin ny mombamomba",
+    "unpinPost": "Unpin avy amin'ny mombamomba anao",
+    "postPinned": "Nafotaka tamin'ny mombamomba anao",
+    "postUnpinned": "Tsy tafalatsaka amin'ny mombamomba anao",
+    "pinFailed": "Tsy nahafaritra na nangeja ity lahatsoratra ity"
   },
   "filters": {
     "sort": "Alamino",

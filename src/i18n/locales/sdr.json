@@ -370,7 +370,13 @@
     "endStream": "سٹریم ختم کرو",
     "linkCopied": "لنک کلپ بورڈ پر نقل ہو گیا",
     "postUrlCopied": "پوسٹ URL کلپ بورڈ پر نقل ہو گیا",
-    "boostPost": "پوسٹ بوسٹ کرو"
+    "boostPost": "پوسٹ بوسٹ کرو",
+    "bookmark": "Bookmark",
+    "removeBookmark": "Remove bookmark",
+    "pinPost": "प्रोफ़ाइल में पिन करें",
+    "unpinPost": "प्रोफ़ाइल से अनपिन करें",
+    "postPinned": "Tohre profile mein pin kar dehel",
+    "pinFailed": "E post ke pin ya unpin naikhel gail"
   },
   "filters": {
     "sort": "ترتیب",

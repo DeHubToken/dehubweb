@@ -379,7 +379,14 @@
     "endStream": "Ƙare watsa",
     "linkCopied": "An kwafi hanyar haɗi",
     "postUrlCopied": "An kwafi URL na rubutu",
-    "boostPost": "Ƙarfafa sakon"
+    "boostPost": "Ƙarfafa sakon",
+    "bookmark": "Alamar littafi",
+    "removeBookmark": "Cire alamar littafi",
+    "pinPost": "Pin zuwa bayaninka",
+    "unpinPost": "Unpin daga bayaninka",
+    "postPinned": "Pinned zuwa bayaninka",
+    "postUnpinned": "Unpinned daga bayanin martaba",
+    "pinFailed": "Ba zai iya PIN ko unpin wannan post"
   },
   "filters": {
     "sort": "Tsara",

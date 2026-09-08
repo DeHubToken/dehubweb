@@ -379,7 +379,14 @@
     "endStream": "End Stream",
     "linkCopied": "បានចម្លងតំណ",
     "postUrlCopied": "បានចម្លង URL ការបង្ហោះ",
-    "boostPost": "ជំរុញការបង្ហោះ"
+    "boostPost": "ជំរុញការបង្ហោះ",
+    "bookmark": "ចំណាំ",
+    "removeBookmark": "យក ចំណាំ ចេញ",
+    "pinPost": "ខ្ទាស់ទៅប្រូហ្វាលរបស់អ្នក",
+    "unpinPost": "ដកខ្ទាស់ពីប្រូហ្វាលរបស់អ្នក",
+    "postPinned": "បានខ្ទាស់ចូលប្រូហ្វាលរបស់អ្នក",
+    "postUnpinned": "បានដកហូតពីប្រូហ្វាលរបស់អ្នក",
+    "pinFailed": "មិន អាច ខ្ទាស់ ឬ ដក ខ្ទាស់ ប្រកាស នេះ បាន ទេ"
   },
   "filters": {
     "sort": "តម្រៀប",

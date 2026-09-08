@@ -379,7 +379,14 @@
     "endStream": "Maliza Utiririshaji",
     "linkCopied": "Kiungo kimenakiliwa",
     "postUrlCopied": "URL ya chapisho imenakiliwa",
-    "boostPost": "Inua chapisho"
+    "boostPost": "Inua chapisho",
+    "bookmark": "Alamisho",
+    "removeBookmark": "Ondoa alamisho",
+    "pinPost": "Piga siri kwenye wasifu wako",
+    "unpinPost": "Ondoa kwenye wasifu wako",
+    "postPinned": "Imewekwa kwenye wasifu wako",
+    "postUnpinned": "Imeondolewa kwenye wasifu wako",
+    "pinFailed": "Haikuweza kuweka PIN au kuiondoa kwenye chapisho hili"
   },
   "filters": {
     "sort": "Panga",

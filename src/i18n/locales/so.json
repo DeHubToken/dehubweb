@@ -379,7 +379,14 @@
     "endStream": "Dhamaystir Tooska",
     "linkCopied": "Xiriirka waa la nuqulay",
     "postUrlCopied": "URL-ka qoraalka waa la nuqulay",
-    "boostPost": "Boost garee qoraalka"
+    "boostPost": "Boost garee qoraalka",
+    "bookmark": "Bookmark",
+    "removeBookmark": "Ka saar calaamadda buugaagta",
+    "pinPost": "Pin si aad profile",
+    "unpinPost": "Ka saar astaantaada",
+    "postPinned": "Ku dheji astaantaada",
+    "postUnpinned": "La 'aan ka timid astaantaada",
+    "pinFailed": "Can 't pin or unpin this post"
   },
   "filters": {
     "sort": "Kala sooc",

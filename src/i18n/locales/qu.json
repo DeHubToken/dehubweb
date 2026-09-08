@@ -379,7 +379,14 @@
     "endStream": "Mayu tukuchiy",
     "linkCopied": "Tinkiy copiasqa",
     "postUrlCopied": "Churasqa URL copiasqa",
-    "boostPost": "Willakuyta kallpachay"
+    "boostPost": "Willakuyta kallpachay",
+    "bookmark": "Marcador",
+    "removeBookmark": "Marcadorta hurquy",
+    "pinPost": "Perfilniykiman pinchay",
+    "unpinPost": "Perfilniykimanta hurquy",
+    "postPinned": "Perfilniykiman clavado",
+    "postUnpinned": "Perfilniykimanta mana pinchasqa",
+    "pinFailed": "Mana kay qillqasqata pinchayta nitaq unpinchayta atirqanichu"
   },
   "filters": {
     "sort": "Churay",

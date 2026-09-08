@@ -55,6 +55,7 @@ import { StreamShopRail } from '@/components/app/live/StreamShop';
 import { StreamShopManager } from '@/components/app/live/StreamShopManager';
 import { PostAIChat } from '@/components/app/cards/PostAIChat';
 import { ReportModal } from '@/components/app/modals/ReportModal';
+import { PostUtilityMenuItems } from '@/components/app/cards/PostUtilityMenuItems';
 import { TipModal } from '@/components/app/modals/TipModal';
 import { EditPostModal } from '@/components/app/modals/EditPostModal';
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
@@ -1168,6 +1169,14 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
               <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-col gap-1">
+              {/* Bookmark / pin / post info — the same three rows the feed
+                  card's menu carries, which this page's menu was missing. */}
+              <PostUtilityMenuItems
+                postId={id}
+                tokenId={id ? parseInt(id, 10) || undefined : undefined}
+                isOwnPost={!!(walletAddress && videoData.creatorId?.toLowerCase() === walletAddress.toLowerCase())}
+                onBeforeNavigate={() => setShowDesktopOptionsDrawer(false)}
+              />
               {!(walletAddress && videoData.creatorId?.toLowerCase() === walletAddress.toLowerCase()) && (
                 <button
                   onClick={() => { setShowDesktopOptionsDrawer(false); setShowTipModal(true); }}

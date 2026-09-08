@@ -31,7 +31,7 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil, Star, Loader2, AlertTriangle } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2, AlertTriangle } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -100,10 +100,9 @@ const SubscriberGateDrawer = lazy(() =>
   import('./SubscriberGateDrawer').then((m) => ({ default: m.SubscriberGateDrawer }))
 );
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
-import { useBookmarkPost } from '@/hooks/use-bookmarks';
+import { PostUtilityMenuItems } from './PostUtilityMenuItems';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
-import { useTogglePin } from '@/hooks/use-pins';
 import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
 import { useMediaAspect, DEFAULT_ASPECT } from '@/hooks/use-media-aspect';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
@@ -661,15 +660,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     setShowOptionsDrawer(false);
     muteAuthor(video.creatorId, video.channel || undefined);
   }, [walletAddress, openLoginModal, video.creatorId, video.channel, muteAuthor]);
-  const openPostInfoPage = useCallback(() => {
-    setShowOptionsDrawer(false);
-    navigate(`/app/post/${video.id}/info`);
-  }, [navigate, video.id]);
-  // Bookmark/pin state for the mobile/tablet three-dot menu (desktop shows
-  // these in the ActionBar's left-anchored utility cluster instead).
-  const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(video.id);
-  const [isPinned, setIsPinned] = useState(false);
-  const togglePinMutation = useTogglePin();
   const videoTokenId = parseInt(video.id, 10) || undefined;
   const [isMuted, setIsMuted] = useState(() => video.isAudio ? false : videoPlaybackManager.globalMuted);
   const [showControls, setShowControls] = useState(false);
@@ -2419,25 +2409,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
           </DrawerHeader>
           <div className="flex flex-col gap-1">
-            {/* Bookmark / Post info — mobile/tablet only; desktop shows these
-                anchored left in the bottom action bar instead. */}
-            <button
-              onClick={() => { toggleBookmark(); }}
-              disabled={isBookmarkLoading}
-              className={cn(
-                "lg:hidden flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-50",
-                isBookmarked ? "text-yellow-500" : "text-white"
-              )}
-            >
-              <Bookmark className={cn("w-5 h-5", isBookmarked && "fill-current")} />
-              {isBookmarked ? 'Remove bookmark' : 'Bookmark'}
-            </button>
-            <button
-              onClick={openPostInfoPage}
-              className="lg:hidden flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-            >
-              <Info className="w-5 h-5" /> Post info
-            </button>
+            {/* Bookmark / pin / post info. Also on the action bar as icons on
+                desktop — both surfaces read the same state, so the menu is a
+                reliable place to find them at every width. */}
+            <PostUtilityMenuItems
+              postId={video.id}
+              tokenId={videoTokenId}
+              isOwnPost={!!isOwnPost}
+              onBeforeNavigate={() => setShowOptionsDrawer(false)}
+            />
             {!isOwnPost && (
               <button
                 onClick={() => { setShowOptionsDrawer(false); setShowTipModal(true); }}
@@ -2523,22 +2503,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
                 >
                   <ThemedIcon icon="superpowers" alt="" className="w-5 h-5 object-contain" /> {t('postOptions.boostPost')}
-                </button>
-                <button
-                  onClick={() => {
-                    if (!videoTokenId || togglePinMutation.isPending) return;
-                    togglePinMutation.mutate(videoTokenId, {
-                      onSuccess: (data) => setIsPinned(data.pinned),
-                    });
-                  }}
-                  disabled={!videoTokenId || togglePinMutation.isPending}
-                  className={cn(
-                    "lg:hidden flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40",
-                    isPinned ? "text-blue-400" : "text-white"
-                  )}
-                >
-                  <Pin className={cn("w-5 h-5", isPinned && "fill-current")} />
-                  {isPinned ? 'Unpin post' : 'Pin post'}
                 </button>
                 <button
                   onClick={() => { setShowOptionsDrawer(false); setShowDeleteModal(true); }}

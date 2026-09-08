@@ -379,7 +379,14 @@
     "endStream": "أنهي البث",
     "linkCopied": "الرابط اتنسخ",
     "postUrlCopied": "رابط المنشور اتنسخ",
-    "boostPost": "عزّز البوست"
+    "boostPost": "عزّز البوست",
+    "bookmark": "حفظ",
+    "removeBookmark": "إلغاء الحفظ",
+    "pinPost": "ثبّت على ملفك الشخصي",
+    "unpinPost": "ألغِ التثبيت من ملفك الشخصي",
+    "postPinned": "تم التثبيت على ملفك الشخصي",
+    "postUnpinned": "تم إلغاء التثبيت من ملفك الشخصي",
+    "pinFailed": "تعذر تثبيت هذه المشاركة أو إلغاء تثبيتها"
   },
   "filters": {
     "sort": "رتّب",

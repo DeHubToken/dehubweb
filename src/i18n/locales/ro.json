@@ -379,7 +379,14 @@
     "endStream": "Încheie transmisiunea",
     "linkCopied": "Linkul a fost copiat în clipboard",
     "postUrlCopied": "URL-ul postării a fost copiat în clipboard",
-    "boostPost": "Promovează postarea"
+    "boostPost": "Promovează postarea",
+    "bookmark": "Marcaj",
+    "removeBookmark": "Elimină marcajul",
+    "pinPost": "Fixează la profilul tău",
+    "unpinPost": "Anulează fixarea din profilul tău",
+    "postPinned": "Fixat la profilul tău",
+    "postUnpinned": "S-a deconectat de la profilul tău",
+    "pinFailed": "Nu s-a putut fixa sau anula fixarea acestei postări"
   },
   "filters": {
     "sort": "Sortare",
