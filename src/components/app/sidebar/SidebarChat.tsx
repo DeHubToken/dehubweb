@@ -136,7 +136,11 @@ function SidebarReactions({
   );
 }
 
-export function SidebarChat() {
+interface SidebarChatProps {
+  isActive: boolean;
+}
+
+export function SidebarChat({ isActive }: SidebarChatProps) {
   const [newMessage, setNewMessage] = useState('');
   const [replyTo, setReplyTo] = useState<SupabaseLiveChatMessage | null>(null);
   // Edits happen in the row itself rather than in the composer at the foot of
@@ -220,21 +224,14 @@ export function SidebarChat() {
     scrollToBottom(true);
   }, [mergedItems.length, scrollToBottom]);
 
-  // Watch for the panel becoming visible (tab switched in). When clientHeight
-  // transitions from 0 → >0, jump to bottom.
-  useEffect(() => {
-    const el = scrollContainerRef.current;
-    if (!el || typeof ResizeObserver === 'undefined') return;
-    const ro = new ResizeObserver(() => {
-      if (didInitialScrollRef.current) return;
-      if (el.clientHeight > 0 && mergedItems.length > 0) {
-        didInitialScrollRef.current = true;
-        scrollToBottom(true);
-      }
-    });
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [mergedItems.length, scrollToBottom]);
+  // CSS-hidden tabs do not reliably produce a ResizeObserver transition, and
+  // browsers can reset a hidden scroll container to the top. The tab owner
+  // knows exactly when Chat becomes visible, so re-anchor on every activation.
+  useLayoutEffect(() => {
+    if (!isActive || mergedItems.length === 0) return;
+    didInitialScrollRef.current = true;
+    scrollToBottom(true);
+  }, [isActive, mergedItems.length, scrollToBottom]);
 
   // When subsequent new messages arrive, smooth-scroll to bottom.
   useEffect(() => {

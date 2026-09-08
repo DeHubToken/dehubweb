@@ -107,7 +107,7 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
         {/* Chat panel — pt-3 matches the buffer above WhatsHappening's period tabs.
             Mounted lazily on first open; stays mounted after so switching away keeps state. */}
         <div className={`h-full pt-3 overflow-y-auto overscroll-contain scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'chat' ? '' : 'hidden'}`}>
-          {chatOpened && <SidebarChat />}
+          {chatOpened && <SidebarChat isActive={effectiveTab === 'chat'} />}
         </div>
       </div>
     </div>
