@@ -335,7 +335,46 @@
     "publicChatAlertsRateHint": "Nothing is lost when the room is busier than this — the messages are held and arrive together on the next alert.",
     "emailNotificationsDescLinked": "Sent to {{email}}",
     "emailNotificationsNoAddress": "Add an email address to your account first — that is where these would go.",
-    "emailNotificationsAddAddress": "Add an email address"
+    "emailNotificationsAddAddress": "Add an email address",
+    "smsNotifications": "Text Notifications",
+    "smsNotificationsDesc": "Get the ones that matter as a text message",
+    "smsNotificationsDescReady": "Sent to {{phone}} — {{dhb}} DHB each, about {{count}} left",
+    "smsNotificationsLocked": "Unlock with {{dhb}} DHB (${{usd}}) of credit",
+    "smsNotificationsNeedsNumber": "Add and verify a phone number to start",
+    "smsNotificationsEmpty": "Out of credit — top up to keep getting texts",
+    "smsUnavailable": "Text notifications are not available right now",
+    "smsUnlockAction": "Unlock text notifications",
+    "smsManage": "Manage your credit and number",
+    "smsDialogIntro": "Texts cost money to send, so this channel runs on credit you top up in DHB.",
+    "smsUnlockPrice": "{{dhb}} DHB (${{usd}}) unlocks texts and becomes your first balance.",
+    "smsUnlockExplainer": "Nothing expires. Credit is spent one message at a time, and only on the notifications you already have switched on.",
+    "smsPricesHeading": "What a message costs",
+    "smsPricePerMessage": "{{dhb}} DHB (${{usd}})",
+    "smsBand": {
+      "domestic": "United Kingdom",
+      "europe": "Europe",
+      "global": "Most other countries",
+      "premium": "Everywhere else"
+    },
+    "smsDepositAction": "Send {{dhb}} DHB",
+    "smsDepositPaying": "Confirm in your wallet…",
+    "smsDepositConfirming": "Waiting for the chain…",
+    "smsDepositNotSent": "The transfer was not submitted.",
+    "smsDepositSlow": "Your transfer has not appeared on chain yet. It is safe — reopen this and it will be credited. Reference: {{hash}}",
+    "smsChainUnsupported": "DHB cannot be sent on that network.",
+    "smsUnlocked": "Text notifications unlocked",
+    "smsBalance": "{{dhb}} DHB left (${{usd}})",
+    "smsBalanceMessages": "About {{count}} more messages",
+    "smsTopUp": "Top up {{dhb}} DHB",
+    "smsNumberLabel": "Phone number",
+    "smsSendCode": "Text me a code",
+    "smsCodeSent": "Code sent. That cost {{price}} DHB.",
+    "smsCodeLabel": "Code we texted to {{phone}}",
+    "smsVerify": "Confirm code",
+    "smsNumberVerified": "Number verified",
+    "smsRemoveNumber": "Remove this number",
+    "smsNumberRemoved": "Number removed",
+    "smsCountryBlocked": "We cannot deliver texts to that country yet."
   },
   "common": {
     "save": "Save",
@@ -857,7 +896,8 @@
       "here": "{{name}} messaged everyone in the community",
       "hereNamed": "{{name}} messaged everyone in “{{community}}”"
     },
-    "byEmail": "By email"
+    "byEmail": "By email",
+    "byText": "By text"
   },
   "leaderboard": {
     "title": "Leaderboards",
