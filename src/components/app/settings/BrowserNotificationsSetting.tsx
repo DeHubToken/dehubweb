@@ -37,7 +37,7 @@ import {
   useStoredEnabled,
   useWebPushState,
 } from '@/hooks/use-browser-notifications';
-import { subscribeToWebPush } from '@/lib/web-push';
+import { resubscribeWebPush, subscribeToWebPush } from '@/lib/web-push';
 
 /** iOS only delivers web notifications to a home-screen install, never a tab. */
 function isIOS(): boolean {
@@ -100,6 +100,10 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
   // Permission granted, flag on, and the browser still would not register for
   // push. Everything closed-tab is silently impossible; in-tab still works.
   const tabOnly = isOn && pushState === 'unavailable';
+  // Subscribed perfectly well; the operating system will not display any of
+  // it. Only the service-worker probe can see this - the page's own
+  // Notification constructor succeeds regardless.
+  const osBlocked = isOn && pushState === 'blocked';
 
   // Normally the reconcile in useBrowserNotifications has already resolved this
   // by the time anyone opens Settings. It has not when this is the first mount
@@ -115,17 +119,21 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
   );
 
   /** Permission is in hand — store the flag and prove delivery works. */
-  const finishEnable = useCallback(() => {
+  const finishEnable = useCallback(async () => {
     setStoredEnabled(true);
-    if (showTestNotification('DeHub', testBody)) {
+    if (await showTestNotification('DeHub', testBody)) {
       toast.success(t('settings.browserNotificationsEnabled', 'Browser notifications enabled'));
-    } else {
-      // Permission granted but the browser won't construct one — Android
-      // Chrome. Leaving the switch on would promise delivery that can't
-      // happen.
-      setStoredEnabled(false);
-      toast.error(t('settings.browserNotificationsUnsupported', 'Browser notifications are not supported'));
+      return;
     }
+    // The probe failed, which means the OS refused to display it. The switch
+    // stays on and the row explains: turning it off here would hide the one
+    // message that says what to do, and the fault is not DeHub's to own.
+    toast.error(
+      t(
+        'settings.browserNotificationsBlockedOsTitle',
+        'Your system is blocking notifications for this browser',
+      ),
+    );
   }, [t, testBody]);
 
   // The payoff for the blocked case: unblocking happens in the browser's own
@@ -134,7 +142,7 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
   useEffect(() => {
     if (!pendingEnable || permission !== 'granted') return;
     setPendingEnable(false);
-    finishEnable();
+    void finishEnable();
   }, [pendingEnable, permission, finishEnable]);
 
   const enable = async () => {
@@ -173,7 +181,7 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
         return;
       }
 
-      finishEnable();
+      await finishEnable();
     } finally {
       setBusy(false);
     }
@@ -188,11 +196,26 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
     void enable();
   };
 
-  const sendTest = () => {
-    if (showTestNotification('DeHub', testBody)) {
+  const sendTest = async () => {
+    if (await showTestNotification('DeHub', testBody)) {
       toast.success(t('settings.browserNotificationsTestSent', 'Test notification sent'));
     } else {
-      toast.error(t('settings.browserNotificationsUnsupported', 'Browser notifications are not supported'));
+      toast.error(
+        t(
+          'settings.browserNotificationsBlockedOsTitle',
+          'Your system is blocking notifications for this browser',
+        ),
+      );
+    }
+  };
+
+  // The off-and-on-again people find by accident, as one button.
+  const retry = async () => {
+    setBusy(true);
+    try {
+      await resubscribeWebPush();
+    } finally {
+      setBusy(false);
     }
   };
 
@@ -216,11 +239,14 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
 
   // Only the push failure changes the copy; every other state keeps the wording
   // it had, because every other state was already telling the truth.
-  const description = tabOnly
-    ? t('settings.browserNotificationsTabOnlyDesc', 'On, but only while DeHub is open in a tab')
-    : baseDescription;
+  const description = osBlocked
+    ? t('settings.browserNotificationsBlockedOsDesc', 'On, but your system is blocking them')
+    : tabOnly
+      ? t('settings.browserNotificationsTabOnlyDesc', 'On, but only while DeHub is open in a tab')
+      : baseDescription;
 
-  const Icon = blocked || unsupported || tabOnly ? BellOff : isOn ? BellRing : Bell;
+  const Icon =
+    blocked || unsupported || tabOnly || osBlocked ? BellOff : isOn ? BellRing : Bell;
 
   const control = (
     <Switch
@@ -270,10 +296,36 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
           </p>
         </div>
       )}
+      {osBlocked && (
+        <div className="mt-2 rounded-xl border border-amber-400/30 bg-amber-400/[0.07] p-3">
+          <p className="text-sm font-medium text-white">
+            {t(
+              'settings.browserNotificationsBlockedOsTitle',
+              'Your system is blocking notifications for this browser',
+            )}
+          </p>
+          <p className="mt-1 text-xs text-zinc-400">
+            {t(
+              'settings.browserNotificationsBlockedOsHint',
+              'The subscription itself is fine - your operating system is refusing to display anything from this browser. Turn notifications on for your browser in your system notification settings, then switch this off and on again.',
+            )}
+          </p>
+        </div>
+      )}
+      {(tabOnly || osBlocked) && (
+        <button
+          type="button"
+          onClick={() => void retry()}
+          disabled={busy}
+          className="mt-2 mr-3 text-xs text-zinc-400 underline underline-offset-2 transition-colors hover:text-white disabled:opacity-50"
+        >
+          {t('settings.browserNotificationsRetry', 'Try again')}
+        </button>
+      )}
       {isOn && (
         <button
           type="button"
-          onClick={sendTest}
+          onClick={() => void sendTest()}
           className="mt-2 text-xs text-zinc-400 underline underline-offset-2 transition-colors hover:text-white"
         >
           {t('settings.browserNotificationsTest', 'Send a test notification')}
