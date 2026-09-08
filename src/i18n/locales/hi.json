@@ -379,7 +379,14 @@
     "endStream": "End Stream",
     "linkCopied": "Link copied to clipboard",
     "postUrlCopied": "Post URL copied to clipboard",
-    "boostPost": "पोस्ट बूस्ट करें"
+    "boostPost": "पोस्ट बूस्ट करें",
+    "bookmark": "बुकमार्क",
+    "removeBookmark": "बुकमार्क हटाएँ",
+    "pinPost": "अपनी प्रोफ़ाइल में पिन करें",
+    "unpinPost": "अपनी प्रोफ़ाइल से अनपिन करें",
+    "postPinned": "आपकी प्रोफ़ाइल पर पिन किया गया",
+    "postUnpinned": "आपकी प्रोफ़ाइल से अनपिन किया गया",
+    "pinFailed": "इस पोस्ट को पिन या अनपिन नहीं किया जा सका"
   },
   "filters": {
     "sort": "Sort",

@@ -576,7 +576,14 @@
     "endStream": "Stream beëindigen",
     "linkCopied": "Link gekopieerd naar klembord",
     "postUrlCopied": "Bericht-URL gekopieerd naar klembord",
-    "boostPost": "Bericht boosten"
+    "boostPost": "Bericht boosten",
+    "bookmark": "Bladwijzer",
+    "removeBookmark": "Bladwijzer verwijderen",
+    "pinPost": "Vastmaken aan je profiel",
+    "unpinPost": "Loskoppelen van je profiel",
+    "postPinned": "Vastgemaakt aan je profiel",
+    "postUnpinned": "Ontkoppeld van je profiel",
+    "pinFailed": "Kan dit bericht niet vastmaken of losmaken"
   },
   "filters": {
     "sort": "Sorteren",

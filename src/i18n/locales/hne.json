@@ -379,7 +379,14 @@
     "endStream": "स्ट्रीम खतम करव",
     "linkCopied": "लिंक कॉपी होगे",
     "postUrlCopied": "पोस्ट URL कॉपी होगे",
-    "boostPost": "पोस्ट बढ़ावव"
+    "boostPost": "पोस्ट बढ़ावव",
+    "bookmark": "निसानी",
+    "removeBookmark": "निसानी मेटाव",
+    "pinPost": "अपन प्रोफ़ाइल म क्लिक करव",
+    "unpinPost": "अपन प्रोफ़ाइल ले लिंक",
+    "postPinned": "अपन प्रोफ़ाइल म खोज",
+    "postUnpinned": "अपन प्रोफ़ाइल ले साइन अप करव",
+    "pinFailed": "ये पोस्ट ल पिन या अनपिन नइ कर सकिस"
   },
   "filters": {
     "sort": "क्रम",

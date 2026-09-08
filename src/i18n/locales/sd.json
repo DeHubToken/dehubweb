@@ -379,7 +379,14 @@
     "endStream": "اسٽريم ختم ڪريو",
     "linkCopied": "لنڪ ڪلپبورڊ تي ڪاپي ٿي وئي",
     "postUrlCopied": "پوسٽ URL ڪلپبورڊ تي ڪاپي ٿيو",
-    "boostPost": "پوسٽ بوسٽ ڪريو"
+    "boostPost": "پوسٽ بوسٽ ڪريو",
+    "bookmark": "بک مارڪ",
+    "removeBookmark": "بک مارڪ هٽايو",
+    "pinPost": "پنهنجي پروفائل تي پن پن ڪريو",
+    "unpinPost": "پنهنجي پروفائل مان پن ڪ unيو",
+    "postPinned": "توھان جي پروفائل تي پن",
+    "postUnpinned": "توهان جي پروفائيل مان Unpinned",
+    "pinFailed": "هن پوسٽ کي پن يا ڪ unي نه سگھيو"
   },
   "filters": {
     "sort": "ترتيب",

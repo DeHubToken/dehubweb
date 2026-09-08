@@ -379,7 +379,14 @@
     "endStream": "방송 종료",
     "linkCopied": "링크 복사됨",
     "postUrlCopied": "게시물 URL 복사됨",
-    "boostPost": "게시물 부스트"
+    "boostPost": "게시물 부스트",
+    "bookmark": "북마크",
+    "removeBookmark": "북마크 삭제",
+    "pinPost": "프로필에 고정하기",
+    "unpinPost": "프로필에서 고정 해제하기",
+    "postPinned": "프로필에 고정됨",
+    "postUnpinned": "프로필에서 고정 해제됨",
+    "pinFailed": "이 포스트를 고정하거나 고정 해제할 수 없습니다."
   },
   "filters": {
     "sort": "정렬",

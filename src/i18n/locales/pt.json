@@ -379,7 +379,14 @@
     "endStream": "Encerrar transmissão",
     "linkCopied": "Link copiado",
     "postUrlCopied": "URL do post copiada",
-    "boostPost": "Impulsionar publicação"
+    "boostPost": "Impulsionar publicação",
+    "bookmark": "Favorito",
+    "removeBookmark": "Remover marcador",
+    "pinPost": "Fixar no seu perfil",
+    "unpinPost": "Desafixar do seu perfil",
+    "postPinned": "Fixado no seu perfil",
+    "postUnpinned": "Desafixado do seu perfil",
+    "pinFailed": "Não foi possível fixar ou desafixar este post"
   },
   "filters": {
     "sort": "Ordenar",

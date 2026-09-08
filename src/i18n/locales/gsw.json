@@ -379,7 +379,14 @@
     "endStream": "Stream beände",
     "linkCopied": "Link i d Zwüscheablage kopiert",
     "postUrlCopied": "Bitrags-URL i d Zwüscheablage kopiert",
-    "boostPost": "Byytrag boosten"
+    "boostPost": "Byytrag boosten",
+    "bookmark": "Bookmark",
+    "removeBookmark": "Bookmark lösche",
+    "pinPost": "Auf Profil pinnen",
+    "unpinPost": "Vom Profil entpinnen",
+    "postPinned": "Auf Profil gepinnt",
+    "postUnpinned": "Vom Profil entpinnt",
+    "pinFailed": "Konntä Post nöd pinnen oder entpinne"
   },
   "filters": {
     "sort": "Sortiere",

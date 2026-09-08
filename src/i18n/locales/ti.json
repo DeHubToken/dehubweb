@@ -378,7 +378,14 @@
     "endStream": "ስትሪም ኣቋርጽ",
     "linkCopied": "ሊንክ ናብ ክሊፕቦርድ ተቐዲሑ",
     "postUrlCopied": "URL ጽሑፍ ናብ ክሊፕቦርድ ተቐዲሑ",
-    "boostPost": "ልጥፊ ደፍእ"
+    "boostPost": "ልጥፊ ደፍእ",
+    "bookmark": "ምልክት ምልክት",
+    "removeBookmark": "ናይ መጽሓፍ ምልክት ኣወግድ",
+    "pinPost": "ናብ መገለጺኻ ስዓቦ",
+    "unpinPost": "ካብ መገለጺኻ ኣርሕቕ",
+    "postPinned": "ኣብ መገለጺኻ ተጸሚድካ",
+    "postUnpinned": "ካብ መገለጺኻ ርሒቕካ",
+    "pinFailed": "ነዚ ጽሑፍ እዚ ክተኣታተወሉ ወይ ክተኣታተወሉ ኣይከኣለን ።"
   },
   "filters": {
     "sort": "ደርድር",

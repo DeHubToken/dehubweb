@@ -19,7 +19,7 @@ import { stripAssetRefs } from '@/lib/asset-refs';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Bookmark, Pin, Pencil, Star } from 'lucide-react';
+import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Pencil, Star } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
@@ -66,8 +66,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { updateTokenVisibility, repostPost, type TokenVisibility } from '@/lib/api/dehub';
-import { useBookmarkPost } from '@/hooks/use-bookmarks';
-import { useTogglePin } from '@/hooks/use-pins';
+import { PostUtilityMenuItems } from './PostUtilityMenuItems';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { cacheImageForNavigation } from '@/lib/post-cache';
@@ -547,15 +546,6 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
     setShowOptionsDrawer(false);
     muteAuthor(post.creatorId, post.username || undefined);
   }, [walletAddress, openLoginModal, post.creatorId, post.username, muteAuthor]);
-  const openPostInfoPage = useCallback(() => {
-    setShowOptionsDrawer(false);
-    navigate(`/app/post/${post.id}/info`);
-  }, [navigate, post.id]);
-  // Bookmark/pin state for the mobile/tablet three-dot menu (desktop shows
-  // these in the ActionBar's left-anchored utility cluster instead).
-  const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(post.id);
-  const [isPinned, setIsPinned] = useState(false);
-  const togglePinMutation = useTogglePin();
   const postTokenId = parseInt(post.id, 10) || undefined;
 
   // PPV/Bounty/Locked status - bypass for owners & already-unlocked content
@@ -780,25 +770,15 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
               </DrawerHeader>
               <div className="flex flex-col gap-1">
-                {/* Bookmark / Post info — mobile/tablet only; desktop shows these
-                    anchored left in the bottom action bar instead. */}
-                <button
-                  onClick={() => { toggleBookmark(); }}
-                  disabled={isBookmarkLoading}
-                  className={cn(
-                    "lg:hidden flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-50",
-                    isBookmarked ? "text-yellow-500" : "text-white"
-                  )}
-                >
-                  <Bookmark className={cn("w-5 h-5", isBookmarked && "fill-current")} />
-                  {isBookmarked ? 'Remove bookmark' : 'Bookmark'}
-                </button>
-                <button
-                  onClick={openPostInfoPage}
-                  className="lg:hidden flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                >
-                  <Info className="w-5 h-5" /> Post info
-                </button>
+                {/* Bookmark / pin / post info. Also on the action bar as icons
+                    on desktop — both surfaces read the same state, so the menu
+                    is a reliable place to find them at every width. */}
+                <PostUtilityMenuItems
+                  postId={post.id}
+                  tokenId={postTokenId}
+                  isOwnPost={isOwnPost}
+                  onBeforeNavigate={() => setShowOptionsDrawer(false)}
+                />
                 {!isOwnPost && (
                   <button
                     onClick={() => { setShowOptionsDrawer(false); setShowTipModal(true); }}
@@ -881,22 +861,6 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                       className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
                     >
                       <ThemedIcon icon="superpowers" alt="" className="w-5 h-5 object-contain" /> {t('postOptions.boostPost')}
-                    </button>
-                    <button
-                      onClick={() => {
-                        if (!postTokenId || togglePinMutation.isPending) return;
-                        togglePinMutation.mutate(postTokenId, {
-                          onSuccess: (data) => setIsPinned(data.pinned),
-                        });
-                      }}
-                      disabled={!postTokenId || togglePinMutation.isPending}
-                      className={cn(
-                        "lg:hidden flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40",
-                        isPinned ? "text-blue-400" : "text-white"
-                      )}
-                    >
-                      <Pin className={cn("w-5 h-5", isPinned && "fill-current")} />
-                      {isPinned ? 'Unpin post' : 'Pin post'}
                     </button>
                     <button
                       onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowDeleteModal(true), 300); }}

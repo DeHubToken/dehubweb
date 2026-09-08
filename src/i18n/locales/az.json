@@ -379,7 +379,14 @@
     "endStream": "Yayımı Bitir",
     "linkCopied": "Keçid kopyalandı",
     "postUrlCopied": "Paylaşım URL-i kopyalandı",
-    "boostPost": "Paylaşımı gücləndir"
+    "boostPost": "Paylaşımı gücləndir",
+    "bookmark": "Əlfəcin",
+    "removeBookmark": "Əlfəcini sil",
+    "pinPost": "Profilinizə sancaqlayın",
+    "unpinPost": "Profilinizdən silin",
+    "postPinned": "Profilinizə bərkidilib",
+    "postUnpinned": "Profilinizdən silinmədi",
+    "pinFailed": "Bu yazını sancmaq və ya açmaq mümkün olmadı"
   },
   "filters": {
     "sort": "Sırala",

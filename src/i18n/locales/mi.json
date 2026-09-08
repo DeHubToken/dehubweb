@@ -379,7 +379,14 @@
     "endStream": "Whakamutu rere",
     "linkCopied": "Kua tāruatia te hononga ki te papatopenga",
     "postUrlCopied": "Kua tāruatia te URL pānui ki te papatopenga",
-    "boostPost": "Hiki pānui"
+    "boostPost": "Hiki pānui",
+    "bookmark": "Pukapuka",
+    "removeBookmark": "Tangohia te tohu pukapuka",
+    "pinPost": "PIN ki tou kōtaha",
+    "unpinPost": "Unpin i tō kōtaha",
+    "postPinned": "Whakapā mai ki tō kōtaha",
+    "postUnpinned": "Te kore e taea te tiki i to koutou pūkete",
+    "pinFailed": "Kaore e taea e au te tuhi, te whakakore ranei i tenei tuhinga"
   },
   "filters": {
     "sort": "Raupapa",

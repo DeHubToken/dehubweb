@@ -378,7 +378,14 @@
     "endStream": "Adás befejezése",
     "linkCopied": "Link másolva",
     "postUrlCopied": "Bejegyzés linkje másolva",
-    "boostPost": "Bejegyzés kiemelése"
+    "boostPost": "Bejegyzés kiemelése",
+    "bookmark": "Könyvjelző",
+    "removeBookmark": "Könyvjelző eltávolítása",
+    "pinPost": "Rögzítés a profilodhoz",
+    "unpinPost": "Leválasztás a profilodról",
+    "postPinned": "Rögzítve a profilodhoz",
+    "postUnpinned": "Eltávolítva a profilodból",
+    "pinFailed": "Nem sikerült rögzíteni vagy feloldani ezt a bejegyzést"
   },
   "filters": {
     "sort": "Rendezés",

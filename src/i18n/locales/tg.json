@@ -379,7 +379,14 @@
     "endStream": "Анҷоми ҷараён",
     "linkCopied": "Пайванд нусхабардорӣ шуд",
     "postUrlCopied": "URL-и нашр нусхабардорӣ шуд",
-    "boostPost": "Нашрро тақвият додан"
+    "boostPost": "Нашрро тақвият додан",
+    "bookmark": "Хатбарак",
+    "removeBookmark": "Нест кардани хатбарак",
+    "pinPost": "Pin sa iyong profile",
+    "unpinPost": "I-unpin mula sa iyong profile",
+    "postPinned": "Ipinapakita sa iyong profile",
+    "postUnpinned": "Hindi nagpinapakita mula sa iyong profile",
+    "pinFailed": "Наметавонам ин постро PIN кунам ё ғайри фаъол созам"
   },
   "filters": {
     "sort": "Мураттаб",

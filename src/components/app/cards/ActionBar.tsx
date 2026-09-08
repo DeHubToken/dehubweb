@@ -185,11 +185,12 @@ interface ActionBarProps {
   hideUtility?: boolean;
   /**
    * Feed-card layout: utility buttons (bookmark / pin / info) are hidden
-   * below lg (mobile/tablet get them via the card's three-dot menu instead)
-   * and anchored to the LEFT on desktop, with the engagement buttons filling
-   * the remaining row width evenly. Mutually exclusive with hideUtility/
-   * hideUtilityDesktop/centered — those stay on the original contents-based
-   * layout used by the fullscreen viewer and other non-card consumers.
+   * below lg (the card's three-dot menu carries them at every width, and is
+   * the only place they appear on mobile) and anchored to the LEFT on desktop,
+   * with the engagement buttons filling the remaining row width evenly.
+   * Mutually exclusive with hideUtility/hideUtilityDesktop/centered — those
+   * stay on the original contents-based layout used by the fullscreen viewer
+   * and other non-card consumers.
    */
   utilityDesktopAnchor?: boolean;
 }
@@ -1027,8 +1028,8 @@ export function ActionBar({
     )}>
       {utilityDesktopAnchor ? (
         <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-3">
-          {/* Utility cluster — hidden on mobile/tablet (the card's three-dot
-              menu carries bookmark/pin/info there instead). On desktop it's a
+          {/* Utility cluster — hidden on mobile/tablet, where the card's
+              three-dot menu is the only place these live. On desktop it's a
               real flex item of this justify-between row (not a separately-
               margined sibling), so the gap to the first engagement button
               matches the gaps between every other button. */}
