@@ -160,6 +160,15 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
     onMentionInsert: (_user, newText) => setNewMessage(newText.slice(0, 169)),
   });
 
+  // Auto-resize writes a fixed inline height while the user types. Clearing
+  // the controlled value after send does not clear that style, so a composer
+  // that reached several lines otherwise stays tall with an empty value.
+  useLayoutEffect(() => {
+    if (!newMessage && textareaRef.current) {
+      textareaRef.current.style.height = '';
+    }
+  }, [newMessage]);
+
   const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
   const roomId = rooms[0]?.id || null;
   const { messages, isLoading: messagesLoading, isSending, send, addReaction, removeReaction, editMessage, deleteMessage } = useLiveChatMessages(roomId);
