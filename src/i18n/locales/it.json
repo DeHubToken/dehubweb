@@ -972,6 +972,13 @@
     "shippedBadge": "Completata",
     "noComments": "Nessun commento ancora",
     "addComment": "Aggiungi un commento...",
+    "writeReply": "Scrivi una risposta...",
+    "replyToComment": "Rispondi",
+    "replyingTo": "Rispondendo a {{name}}",
+    "requestAuthorChip": "Autore",
+    "commentEdited": "modificato",
+    "showOneMoreReply": "Mostra altre 1 risposte",
+    "showMoreReplies": "Mostra altre {{count}} risposte",
     "submitDrawerTitle": "Invia richiesta funzionalità",
     "titleLabel": "Titolo",
     "titlePlaceholder": "Un breve titolo per la tua idea...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Rifiutata",
     "shipping": "In consegna",
     "noShippingYet": "Niente in corso",
-    "shippingAppearHere": "Le richieste in fase di sviluppo appariranno qui.",
-    "writeReply": "Scrivi una risposta...",
-    "replyToComment": "Rispondi",
-    "replyingTo": "Rispondendo a {{name}}",
-    "requestAuthorChip": "Autore",
-    "commentEdited": "modificato",
-    "showOneMoreReply": "Mostra altre 1 risposte",
-    "showMoreReplies": "Mostra altre {{count}} risposte"
+    "shippingAppearHere": "Le richieste in fase di sviluppo appariranno qui."
   },
   "auth": {
     "loginRequired": "Accesso richiesto"
@@ -1425,6 +1425,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Salvato nei segnalibri",
+    "new_member_notice_title": "Stai visualizzando in Nuovi membri",
+    "new_member_notice_body": "Gli altri membri possono vedere quando ti sei iscritto, in modo che possano salutarti. Spegnilo in qualsiasi momento.",
     "removed_from_bookmarks": "Rimosso dai segnalibri",
     "profile_url_copied_to_clipboard": "URL del profilo copiato",
     "address_copied_to_clipboard": "Indirizzo copiato",

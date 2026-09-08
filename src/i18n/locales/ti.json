@@ -961,6 +961,13 @@
     "shippedBadge": "ተዛዚሙ",
     "noComments": "ገና ርእይቶታት የለን",
     "addComment": "ርእይቶ ወስኽ...",
+    "writeReply": "መልሲ ጻሕፍ...",
+    "replyToComment": "መልሲ",
+    "replyingTo": "ብምጥቃስ ብዛዕባ {{name}}",
+    "requestAuthorChip": "ጸሓፊ",
+    "commentEdited": "ተስተኻኺሉ",
+    "showOneMoreReply": "1 ካልእ መልሲ ኣርእዮ",
+    "showMoreReplies": "{{count}} ካልኦት መለስቲ ኣርእዮ",
     "submitDrawerTitle": "ጠለብ ፊቸር ኣቕርብ",
     "titleLabel": "ኣርእስቲ",
     "titlePlaceholder": "ሓጺር ኣርእስቲ ንሓሳብካ...",
@@ -976,14 +983,7 @@
     "statusDeclined": "ተነጺጉ",
     "shipping": "ህንጸት",
     "noShippingYet": "ዝካየድ ዘሎ የለን",
-    "shippingAppearHere": "ዝስርሑ ዘለዉ ሕቶታት ኣብዚ ክረኣዩ እዮም።",
-    "writeReply": "መልሲ ጻሕፍ...",
-    "replyToComment": "መልሲ",
-    "replyingTo": "ብምጥቃስ ብዛዕባ {{name}}",
-    "requestAuthorChip": "ጸሓፊ",
-    "commentEdited": "ተስተኻኺሉ",
-    "showOneMoreReply": "1 ካልእ መልሲ ኣርእዮ",
-    "showMoreReplies": "{{count}} ካልኦት መለስቲ ኣርእዮ"
+    "shippingAppearHere": "ዝስርሑ ዘለዉ ሕቶታት ኣብዚ ክረኣዩ እዮም።"
   },
   "auth": {
     "loginRequired": "ብዓል ዝድሊ"
@@ -1394,6 +1394,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "ኣብ መዕቆቢ ተዓቂቡ",
+    "new_member_notice_title": "ኣብ ሓደስቲ ኣባላት ትርከብ",
+    "new_member_notice_body": "ካልኦት ኣባላት ምስ ተጸምበሩ ክርእዩ ይኽእሉ እዮም ፣ ስለዚ ሰላም ክብሉ ይኽእሉ እዮም ። ኣብ ዝኾነ እዋን ኣወግድዎ ።",
     "removed_from_bookmarks": "ካብ መዕቆቢ ተኣልዩ",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

@@ -972,6 +972,13 @@
     "shippedBadge": "Realizuar",
     "noComments": "Nuk ka komente akoma",
     "addComment": "Shto një koment...",
+    "writeReply": "Shkruaj një përgjigje...",
+    "replyToComment": "Përgjigju",
+    "replyingTo": "Duke iu përgjigjur {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "redaktuar",
+    "showOneMoreReply": "Trego 1 përgjigje më shumë",
+    "showMoreReplies": "Trego {{count}} përgjigje më shumë",
     "submitDrawerTitle": "Dërgo Kërkesë për Veçori",
     "titleLabel": "Titulli",
     "titlePlaceholder": "Titull i shkurtër për idenë tuaj...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Refuzuar",
     "shipping": "Në ndërtim",
     "noShippingYet": "Asgjë në punë",
-    "shippingAppearHere": "Kërkesat që po ndërtohen do të shfaqen këtu.",
-    "writeReply": "Shkruaj një përgjigje...",
-    "replyToComment": "Përgjigju",
-    "replyingTo": "Duke iu përgjigjur {{name}}",
-    "requestAuthorChip": "Autor",
-    "commentEdited": "redaktuar",
-    "showOneMoreReply": "Trego 1 përgjigje më shumë",
-    "showMoreReplies": "Trego {{count}} përgjigje më shumë"
+    "shippingAppearHere": "Kërkesat që po ndërtohen do të shfaqen këtu."
   },
   "auth": {
     "loginRequired": "Kërkohet hyrja"
@@ -1405,6 +1405,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "U ruajt te faqeshënuesit",
+    "new_member_notice_title": "Po shfaqet te Anëtarët e rinj",
+    "new_member_notice_body": "Anëtarët e tjerë mund ta shohin kur u bashkove, në mënyrë që ata të përshëndesin. Fikeni në çdo kohë.",
     "removed_from_bookmarks": "U hoq nga faqeshënuesit",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

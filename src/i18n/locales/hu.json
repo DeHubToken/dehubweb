@@ -962,6 +962,13 @@
     "shippedBadge": "Kiszállítva",
     "noComments": "Még nincsenek hozzászólások",
     "addComment": "Hozzászólás...",
+    "writeReply": "Válasz...",
+    "replyToComment": "Válasz",
+    "replyingTo": "Válasz {{name}}-nak/-nek",
+    "requestAuthorChip": "Szerző",
+    "commentEdited": "szerkesztve",
+    "showOneMoreReply": "Mutass még 1 választ",
+    "showMoreReplies": "Mutass még {{count}} választ",
     "submitDrawerTitle": "Funkciókérés beküldése",
     "titleLabel": "Cím",
     "titlePlaceholder": "Rövid cím az ötletéhez...",
@@ -977,14 +984,7 @@
     "statusDeclined": "Elutasítva",
     "shipping": "Készül",
     "noShippingYet": "Semmi sincs folyamatban",
-    "shippingAppearHere": "Az épülő kérések itt jelennek meg.",
-    "writeReply": "Válasz...",
-    "replyToComment": "Válasz",
-    "replyingTo": "Válasz {{name}}-nak/-nek",
-    "requestAuthorChip": "Szerző",
-    "commentEdited": "szerkesztve",
-    "showOneMoreReply": "Mutass még 1 választ",
-    "showMoreReplies": "Mutass még {{count}} választ"
+    "shippingAppearHere": "Az épülő kérések itt jelennek meg."
   },
   "auth": {
     "loginRequired": "Bejelentkezés szükséges"
@@ -1416,6 +1416,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Könyvjelzőkhöz mentve",
+    "new_member_notice_title": "Új tagokban jelenik meg",
+    "new_member_notice_body": "A többi tag láthatja, hogy mikor csatlakoztál, így üdvözölhetnek. Bármikor kikapcsolhatod.",
     "removed_from_bookmarks": "Eltávolítva a könyvjelzőkből",
     "copied_to_clipboard": "Vágólapra másolva",
     "deposit_address_copied": "Deposit address copied",

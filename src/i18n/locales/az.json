@@ -963,6 +963,13 @@
     "shippedBadge": "Göndərildi",
     "noComments": "Hələ şərh yoxdur",
     "addComment": "Şərh əlavə edin...",
+    "writeReply": "Cavab yazın...",
+    "replyToComment": "Cavab",
+    "replyingTo": "{{name}}-ya cavab verilir",
+    "requestAuthorChip": "Müəllif",
+    "commentEdited": "redaktə edildi",
+    "showOneMoreReply": "Daha 1 cavabı göstər",
+    "showMoreReplies": "Daha {{count}} cavabı göstər",
     "submitDrawerTitle": "Xüsusiyyət Sorğusu Göndər",
     "titleLabel": "Başlıq",
     "titlePlaceholder": "Fikriniz üçün qısa başlıq...",
@@ -978,14 +985,7 @@
     "statusDeclined": "Rədd Edildi",
     "shipping": "Hazırlanır",
     "noShippingYet": "Davam edən heç nə yoxdur",
-    "shippingAppearHere": "Hazırlanan sorğular burada görünəcək.",
-    "writeReply": "Cavab yazın...",
-    "replyToComment": "Cavab",
-    "replyingTo": "{{name}}-ya cavab verilir",
-    "requestAuthorChip": "Müəllif",
-    "commentEdited": "redaktə edildi",
-    "showOneMoreReply": "Daha 1 cavabı göstər",
-    "showMoreReplies": "Daha {{count}} cavabı göstər"
+    "shippingAppearHere": "Hazırlanan sorğular burada görünəcək."
   },
   "auth": {
     "loginRequired": "Daxil olmaq lazımdır"
@@ -1415,6 +1415,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Əlfəcinlərə saxlanıldı",
+    "new_member_notice_title": "Siz Yeni üzvlərdə görünürsünüz",
+    "new_member_notice_body": "Digər üzvlər nə vaxt qoşulduğunuzu görə bilər və salamlaşa bilərlər. İstənilən vaxt söndürün.",
     "removed_from_bookmarks": "Əlfəcinlərdən silindi",
     "copied_to_clipboard": "Buferə kopyalandı",
     "deposit_address_copied": "Deposit address copied",

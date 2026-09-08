@@ -885,16 +885,16 @@
   "explorePage": {},
   "features": {
     "uiUx": "UI/UX",
-    "shipping": "กำลังพัฒนา",
-    "noShippingYet": "ไม่มีอะไรกำลังทำอยู่",
-    "shippingAppearHere": "คำขอที่กำลังถูกสร้างจะปรากฏที่นี่",
     "writeReply": "เขียนการตอบกลับ...",
     "replyToComment": "ตอบกลับ",
     "replyingTo": "ตอบกลับ {{name}}",
     "requestAuthorChip": "ผู้เขียน",
     "commentEdited": "แก้ไขแล้ว",
     "showOneMoreReply": "แสดงการตอบกลับอีก 1 รายการ",
-    "showMoreReplies": "แสดงการตอบกลับอีก {{count}} รายการ"
+    "showMoreReplies": "แสดงการตอบกลับอีก {{count}} รายการ",
+    "shipping": "กำลังพัฒนา",
+    "noShippingYet": "ไม่มีอะไรกำลังทำอยู่",
+    "shippingAppearHere": "คำขอที่กำลังถูกสร้างจะปรากฏที่นี่"
   },
   "auth": {},
   "messages": {
@@ -1044,6 +1044,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "บันทึกในบุ๊กมาร์กแล้ว",
+    "new_member_notice_title": "คุณกำลังแสดงในสมาชิกใหม่",
+    "new_member_notice_body": "สมาชิกคนอื่นสามารถเห็นเมื่อคุณเข้าร่วมเพื่อให้พวกเขาสามารถทักทาย ปิดได้ทุกเมื่อ",
     "removed_from_bookmarks": "ลบออกจากบุ๊กมาร์กแล้ว",
     "copied_to_clipboard": "คัดลอกไปยังคลิปบอร์ดแล้ว",
     "post_deleted": "ลบโพสต์แล้ว",
@@ -3718,16 +3720,6 @@
     "voiceMessage": "ข้อความเสียง",
     "image": "ส่งรูปภาพ"
   },
-  "glossary": {
-    "title": "อภิธานศัพท์",
-    "description": "คำศัพท์และคำจำกัดความที่ใช้ในระบบ",
-    "badges": {
-      "white": "สีขาว"
-    }
-  },
-  "footer": {
-    "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"
-  },
   "follow": {
     "followers": "ผู้ติดตาม",
     "following": "กำลังติดตาม",
@@ -3762,5 +3754,15 @@
     "groupLimitReached": "ถึงขีดจำกัดของกลุ่มแล้ว",
     "createGroup": "สร้าง",
     "groupsHint": "กลุ่มกรองฟีดต่อไปนี้ของคุณ มีเพียงคุณเท่านั้นที่เห็น"
+  },
+  "glossary": {
+    "title": "อภิธานศัพท์",
+    "description": "คำศัพท์และคำจำกัดความที่ใช้ในระบบ",
+    "badges": {
+      "white": "สีขาว"
+    }
+  },
+  "footer": {
+    "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"
   }
 }

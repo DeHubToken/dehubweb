@@ -946,6 +946,13 @@
     "shippedBadge": "بھیج دیا",
     "noComments": "ابھی کوئی تبصرے نہیں",
     "addComment": "تبصرہ شامل کریں...",
+    "writeReply": "جواب لکھیں...",
+    "replyToComment": "جواب",
+    "replyingTo": "{{name}} کو جواب دے رہے ہیں",
+    "requestAuthorChip": "مصنف",
+    "commentEdited": "ترمیم شدہ",
+    "showOneMoreReply": "مزید 1 جواب دکھائیں",
+    "showMoreReplies": "مزید {{count}} جواب دکھائیں",
     "submitDrawerTitle": "فیچر درخواست جمع کریں",
     "titleLabel": "عنوان",
     "titlePlaceholder": "اپنے خیال کا مختصر عنوان...",
@@ -961,14 +968,7 @@
     "statusDeclined": "مسترد",
     "shipping": "بن رہا ہے",
     "noShippingYet": "کچھ زیرِ تکمیل نہیں",
-    "shippingAppearHere": "جو درخواستیں بنائی جا رہی ہیں وہ یہاں نظر آئیں گی۔",
-    "writeReply": "جواب لکھیں...",
-    "replyToComment": "جواب",
-    "replyingTo": "{{name}} کو جواب دے رہے ہیں",
-    "requestAuthorChip": "مصنف",
-    "commentEdited": "ترمیم شدہ",
-    "showOneMoreReply": "مزید 1 جواب دکھائیں",
-    "showMoreReplies": "مزید {{count}} جواب دکھائیں"
+    "shippingAppearHere": "جو درخواستیں بنائی جا رہی ہیں وہ یہاں نظر آئیں گی۔"
   },
   "auth": {
     "loginRequired": "لاگ ان ضروری ہے"
@@ -1377,6 +1377,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "بک مارکس میں محفوظ ہو گیا",
+    "new_member_notice_title": "آپ نئے ممبرز میں دکھائی دے رہے ہیں",
+    "new_member_notice_body": "دوسرے ممبرز دیکھ سکتے ہیں کہ آپ کب شامل ہوئے، تاکہ وہ ہیلو کہہ سکیں ۔ کسی بھی وقت اسے بند کر دیں ۔",
     "removed_from_bookmarks": "بک مارکس سے ہٹا دیا گیا",
     "copied_to_clipboard": "کلپ بورڈ پر کاپی ہو گیا",
     "post_deleted": "پوسٹ حذف ہو گئی",

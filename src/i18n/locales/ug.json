@@ -972,6 +972,13 @@
     "shippedBadge": "ئەۋەتىلدى",
     "noComments": "تېخى ئىنكاس يوق",
     "addComment": "ئىنكاس قوشۇش...",
+    "writeReply": "ئىنكاس يېزىڭ...",
+    "replyToComment": "Reply",
+    "replyingTo": "{{name}} گە جاۋاب بېرىۋاتقاندا",
+    "requestAuthorChip": "Author",
+    "commentEdited": "تەھرىرلەندى",
+    "showOneMoreReply": "1 دانە ئىنكاسنى كۆرسىتىڭ",
+    "showMoreReplies": "{{count}} دانە ئىنكاسنى كۆرسىتىڭ",
     "submitDrawerTitle": "ئىقتىدار ئىلتىماسى يوللاش",
     "titleLabel": "ماۋزۇ",
     "titlePlaceholder": "پىكرىڭىزنىڭ قىسقا ماۋزۇسى...",
@@ -987,14 +994,7 @@
     "statusDeclined": "رەت قىلىندى",
     "shipping": "ئىشلىنىۋاتىدۇ",
     "noShippingYet": "داۋاملىشىۋاتقان ھېچنېمە يوق",
-    "shippingAppearHere": "قۇرۇلۇۋاتقان تەلەپلەر بۇ يەردە كۆرۈنىدۇ.",
-    "writeReply": "ئىنكاس يېزىڭ...",
-    "replyToComment": "Reply",
-    "replyingTo": "{{name}} گە جاۋاب بېرىۋاتقاندا",
-    "requestAuthorChip": "Author",
-    "commentEdited": "تەھرىرلەندى",
-    "showOneMoreReply": "1 دانە ئىنكاسنى كۆرسىتىڭ",
-    "showMoreReplies": "{{count}} دانە ئىنكاسنى كۆرسىتىڭ"
+    "shippingAppearHere": "قۇرۇلۇۋاتقان تەلەپلەر بۇ يەردە كۆرۈنىدۇ."
   },
   "auth": {
     "loginRequired": "كىرىش تەلەپ قىلىنىدۇ"
@@ -1405,6 +1405,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "خەتكۈچلەرگە ساقلاندى",
+    "new_member_notice_title": "يېڭى ئەزالاردا كۆرۈنىدۇ",
+    "new_member_notice_body": "باشقا ئەزالار سىزنىڭ قوشۇلغان ۋاقتىڭىزنى كۆرەلەيدۇ، شۇڭا ئۇلار سالام دېسە بولىدۇ. ئۇنى ھەرقانداق ۋاقىتتا ئۆچۈرۈۋېتىڭ.",
     "removed_from_bookmarks": "خەتكۈچلەردىن ئۆچۈرۈلدى",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

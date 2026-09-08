@@ -968,6 +968,13 @@
     "shippedBadge": "Ezipụla",
     "noComments": "Ọ dịghị okwu ọ bụla",
     "addComment": "Tinye okwu...",
+    "writeReply": "Debe nzaghachi...",
+    "replyToComment": "Zaghachi",
+    "replyingTo": "Na-aza {{name}}",
+    "requestAuthorChip": "Odee",
+    "commentEdited": "edezi",
+    "showOneMoreReply": "Gosi nzaghachi 1 ọzọ",
+    "showMoreReplies": "Gosi {{count}} nzaghachi ndị ọzọ",
     "submitDrawerTitle": "Nyefee Arịrịọ Atụmatụ",
     "titleLabel": "Aha",
     "titlePlaceholder": "Aha dị mkpụmkpụ maka echiche gị...",
@@ -983,14 +990,7 @@
     "statusDeclined": "Ajụla",
     "shipping": "Na-ewu",
     "noShippingYet": "Ọ dịghị ihe na-aga n'ihu ugbu a",
-    "shippingAppearHere": "Arịrịọ ndị a na-ewu ga-apụta ebe a.",
-    "writeReply": "Debe nzaghachi...",
-    "replyToComment": "Zaghachi",
-    "replyingTo": "Na-aza {{name}}",
-    "requestAuthorChip": "Odee",
-    "commentEdited": "edezi",
-    "showOneMoreReply": "Gosi nzaghachi 1 ọzọ",
-    "showMoreReplies": "Gosi {{count}} nzaghachi ndị ọzọ"
+    "shippingAppearHere": "Arịrịọ ndị a na-ewu ga-apụta ebe a."
   },
   "auth": {
     "loginRequired": "Achọrọ ịbanye"
@@ -1401,6 +1401,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Echekwara na bukmaak",
+    "new_member_notice_title": "Ị na-egosi na New òtù",
+    "new_member_notice_body": "Ndị otu ndị ọzọ nwere ike ịhụ mgbe ị sonyere, ka ha wee sị kelee. Gbanyụọ ya oge ọ bụla.",
     "removed_from_bookmarks": "Ewepụrụ na bukmaak",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

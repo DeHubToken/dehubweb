@@ -961,6 +961,13 @@
     "shippedBadge": "भेज दिहल गइल",
     "noComments": "अभी तक टिप्पणी नइखे",
     "addComment": "टिप्पणी जोड़ीं...",
+    "writeReply": "जवाब लिखो...",
+    "replyToComment": "जवाब",
+    "replyingTo": "{{name}} को जवाब",
+    "requestAuthorChip": "लेखक",
+    "commentEdited": "संपादित",
+    "showOneMoreReply": "1 और जवाब दिखाएं",
+    "showMoreReplies": "{{count}} और जवाब दिखाएं",
     "submitDrawerTitle": "फीचर अनुरोध दर्ज करीं",
     "titleLabel": "शीर्षक",
     "titlePlaceholder": "रउआ विचार के संक्षिप्त शीर्षक लिखीं...",
@@ -976,14 +983,7 @@
     "statusDeclined": "अस्वीकार भइल",
     "shipping": "बनत बा",
     "noShippingYet": "कुछो चलत नइखे",
-    "shippingAppearHere": "जे अनुरोध बनत बा ऊ इहाँ लउकी।",
-    "writeReply": "जवाब लिखो...",
-    "replyToComment": "जवाब",
-    "replyingTo": "{{name}} को जवाब",
-    "requestAuthorChip": "लेखक",
-    "commentEdited": "संपादित",
-    "showOneMoreReply": "1 और जवाब दिखाएं",
-    "showMoreReplies": "{{count}} और जवाब दिखाएं"
+    "shippingAppearHere": "जे अनुरोध बनत बा ऊ इहाँ लउकी।"
   },
   "auth": {
     "loginRequired": "लॉगिन जरूरी बा"
@@ -1392,6 +1392,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "बुकमार्क में सेव भइल",
+    "new_member_notice_title": "आपहु के चलता रहे, नए लोग जुड़ जाय ।",
+    "new_member_notice_body": "भीड़ भड़क्का त हौ इहां, लेकिन एही में मजा ल. बंबई गयल हउवा । कहीं भी, कभी भी खाता विवरण प्राप्त करें ।",
     "removed_from_bookmarks": "बुकमार्क से हटल",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

@@ -971,6 +971,13 @@
     "shippedBadge": "اتنفذت",
     "noComments": "ما في تعليقات لسه",
     "addComment": "أضف تعليق...",
+    "writeReply": "رد...",
+    "replyToComment": "رد",
+    "replyingTo": "بالرد على {{name}}",
+    "requestAuthorChip": "الكاتب",
+    "commentEdited": "معدل",
+    "showOneMoreReply": "عرض رد واحد آخر",
+    "showMoreReplies": "عرض {{count}} ردود أخرى",
     "submitDrawerTitle": "قدّم طلب ميزة",
     "titleLabel": "العنوان",
     "titlePlaceholder": "اكتب عنوان مختصر لفكرتك...",
@@ -986,14 +993,7 @@
     "statusDeclined": "اترفض",
     "shipping": "بيتشحن",
     "noShippingYet": "ما في حاجة شغالة",
-    "shippingAppearHere": "الطلبات البتتبنى حتظهر هنا.",
-    "writeReply": "رد...",
-    "replyToComment": "رد",
-    "replyingTo": "بالرد على {{name}}",
-    "requestAuthorChip": "الكاتب",
-    "commentEdited": "معدل",
-    "showOneMoreReply": "عرض رد واحد آخر",
-    "showMoreReplies": "عرض {{count}} ردود أخرى"
+    "shippingAppearHere": "الطلبات البتتبنى حتظهر هنا."
   },
   "auth": {
     "loginRequired": "مطلوب تسجيل دخول"
@@ -1396,6 +1396,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "تم الحفظ في المفضلة",
+    "new_member_notice_title": "بتظهر في الأعضاء الجدد",
+    "new_member_notice_body": "الأعضاء التانيين بيشوفوا متين انضميت عشان يقدروا يقولوا ليك مرحبًا. ممكن تقفلها في أي وقت.",
     "removed_from_bookmarks": "تمت الإزالة من المفضلة",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

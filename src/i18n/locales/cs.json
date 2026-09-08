@@ -962,6 +962,13 @@
     "shippedBadge": "Dodáno",
     "noComments": "Zatím žádné komentáře",
     "addComment": "Přidat komentář...",
+    "writeReply": "Napište odpověď...",
+    "replyToComment": "Odpovědět",
+    "replyingTo": "Odpovídám {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "upraveno",
+    "showOneMoreReply": "Zobrazit ještě 1 odpověď",
+    "showMoreReplies": "Zobrazit více odpovědí {{count}}",
     "submitDrawerTitle": "Odeslat požadavek na funkci",
     "titleLabel": "Název",
     "titlePlaceholder": "Krátký název vašeho nápadu...",
@@ -977,14 +984,7 @@
     "statusDeclined": "Zamítnuto",
     "shipping": "Ve výrobě",
     "noShippingYet": "Nic se nedělá",
-    "shippingAppearHere": "Požadavky, na kterých se pracuje, se objeví tady.",
-    "writeReply": "Napište odpověď...",
-    "replyToComment": "Odpovědět",
-    "replyingTo": "Odpovídám {{name}}",
-    "requestAuthorChip": "Autor",
-    "commentEdited": "upraveno",
-    "showOneMoreReply": "Zobrazit ještě 1 odpověď",
-    "showMoreReplies": "Zobrazit více odpovědí {{count}}"
+    "shippingAppearHere": "Požadavky, na kterých se pracuje, se objeví tady."
   },
   "auth": {
     "loginRequired": "Vyžadováno přihlášení"
@@ -1416,6 +1416,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Uloženo do záložek",
+    "new_member_notice_title": "Zobrazujete v Noví členové",
+    "new_member_notice_body": "Ostatní členové vidí, kdy jste se připojili, takže vás mohou pozdravit. Kdykoli jej vypněte.",
     "removed_from_bookmarks": "Odebráno ze záložek",
     "copied_to_clipboard": "Zkopírováno do schránky",
     "deposit_address_copied": "Deposit address copied",

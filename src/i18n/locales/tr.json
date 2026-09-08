@@ -972,6 +972,13 @@
     "shippedBadge": "Tamamlandı",
     "noComments": "Henüz yorum yok",
     "addComment": "Yorum ekle...",
+    "writeReply": "Yanıt yaz...",
+    "replyToComment": "Yanıtla",
+    "replyingTo": "{{name}}'ya yanıt veriliyor",
+    "requestAuthorChip": "Yazar",
+    "commentEdited": "düzenlendi",
+    "showOneMoreReply": "1 yanıt daha göster",
+    "showMoreReplies": "{{count}} yanıt daha göster",
     "submitDrawerTitle": "Özellik İsteği Gönder",
     "titleLabel": "Başlık",
     "titlePlaceholder": "Fikriniz için kısa bir başlık...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Reddedildi",
     "shipping": "Geliştiriliyor",
     "noShippingYet": "Devam eden bir şey yok",
-    "shippingAppearHere": "Geliştirilmekte olan talepler burada görünecek.",
-    "writeReply": "Yanıt yaz...",
-    "replyToComment": "Yanıtla",
-    "replyingTo": "{{name}}'ya yanıt veriliyor",
-    "requestAuthorChip": "Yazar",
-    "commentEdited": "düzenlendi",
-    "showOneMoreReply": "1 yanıt daha göster",
-    "showMoreReplies": "{{count}} yanıt daha göster"
+    "shippingAppearHere": "Geliştirilmekte olan talepler burada görünecek."
   },
   "auth": {
     "loginRequired": "Giriş yapılması gerekiyor"
@@ -1425,6 +1425,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Yer imlerine kaydedildi",
+    "new_member_notice_title": "Yeni üyelerde gösteriliyorsunuz",
+    "new_member_notice_body": "Diğer üyeler ne zaman katıldığınızı görebilir, böylece merhaba diyebilirler. İstediğiniz zaman kapatın.",
     "removed_from_bookmarks": "Yer imlerinden kaldırıldı",
     "profile_url_copied_to_clipboard": "Profil URL'si kopyalandı",
     "address_copied_to_clipboard": "Adres kopyalandı",

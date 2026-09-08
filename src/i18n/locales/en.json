@@ -1425,6 +1425,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Saved to bookmarks",
+    "new_member_notice_title": "You are showing in New members",
+    "new_member_notice_body": "Other members can see when you joined, so they can say hello. Turn it off any time.",
     "removed_from_bookmarks": "Removed from bookmarks",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

@@ -953,6 +953,13 @@
     "shippedBadge": "Доставено",
     "noComments": "Все още няма коментари",
     "addComment": "Добави коментар...",
+    "writeReply": "Напишете отговор...",
+    "replyToComment": "Отговор",
+    "replyingTo": "Отговаряне на {{name}}",
+    "requestAuthorChip": "Автор",
+    "commentEdited": "редактирано",
+    "showOneMoreReply": "Покажи още 1 отговор",
+    "showMoreReplies": "Покажи още {{count}} отговора",
     "submitDrawerTitle": "Изпрати заявка за функция",
     "titleLabel": "Заглавие",
     "titlePlaceholder": "Кратко заглавие на идеята ви...",
@@ -968,14 +975,7 @@
     "statusDeclined": "Отхвърлена",
     "shipping": "В изработка",
     "noShippingYet": "Нищо не се работи",
-    "shippingAppearHere": "Заявките, по които се работи, ще се появят тук.",
-    "writeReply": "Напишете отговор...",
-    "replyToComment": "Отговор",
-    "replyingTo": "Отговаряне на {{name}}",
-    "requestAuthorChip": "Автор",
-    "commentEdited": "редактирано",
-    "showOneMoreReply": "Покажи още 1 отговор",
-    "showMoreReplies": "Покажи още {{count}} отговора"
+    "shippingAppearHere": "Заявките, по които се работи, ще се появят тук."
   },
   "auth": {
     "loginRequired": "Изисква се вход"
@@ -1398,6 +1398,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Запазено в отметки",
+    "new_member_notice_title": "Показвате се в Нови членове",
+    "new_member_notice_body": "Другите членове могат да видят кога сте се присъединили, за да могат да ви поздравят. Изключете го по всяко време.",
     "removed_from_bookmarks": "Премахнато от отметки",
     "copied_to_clipboard": "Копирано в буфера",
     "post_deleted": "Публикацията е изтрита",

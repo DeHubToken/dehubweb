@@ -958,6 +958,13 @@
     "shippedBadge": "Isporučeno",
     "noComments": "Još nema komentara",
     "addComment": "Dodaj komentar...",
+    "writeReply": "Napiši odgovor...",
+    "replyToComment": "Odgovori",
+    "replyingTo": "Odgovaranje na {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "uređeno",
+    "showOneMoreReply": "Prikaži još 1 odgovor",
+    "showMoreReplies": "Prikaži još {{count}} odgovora",
     "submitDrawerTitle": "Pošalji zahtjev za značajku",
     "titleLabel": "Naslov",
     "titlePlaceholder": "Kratki naslov za vašu ideju...",
@@ -973,14 +980,7 @@
     "statusDeclined": "Odbijeno",
     "shipping": "U izradi",
     "noShippingYet": "Ništa nije u izradi",
-    "shippingAppearHere": "Zahtjevi koji se izrađuju pojavit će se ovdje.",
-    "writeReply": "Napiši odgovor...",
-    "replyToComment": "Odgovori",
-    "replyingTo": "Odgovaranje na {{name}}",
-    "requestAuthorChip": "Autor",
-    "commentEdited": "uređeno",
-    "showOneMoreReply": "Prikaži još 1 odgovor",
-    "showMoreReplies": "Prikaži još {{count}} odgovora"
+    "shippingAppearHere": "Zahtjevi koji se izrađuju pojavit će se ovdje."
   },
   "auth": {
     "loginRequired": "Potrebna prijava"
@@ -1411,6 +1411,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Spremljeno u oznake",
+    "new_member_notice_title": "Prikazuje se u Novim članovima",
+    "new_member_notice_body": "Ostali članovi mogu vidjeti kada si se pridružio/la, pa te mogu pozdraviti. Isključite ga u bilo kojem trenutku.",
     "removed_from_bookmarks": "Uklonjeno iz oznaka",
     "copied_to_clipboard": "Kopirano u međuspremnik",
     "deposit_address_copied": "Deposit address copied",

@@ -329,6 +329,9 @@
     "publicChatAlertsRate": "সর্বোচ্চ",
     "publicChatAlertsRateOption": "প্রতি ঘন্টায় {{count}}",
     "publicChatAlertsRateHint": "রুম বেশি ব্যস্ত থাকলে কিছুই হারাবে না — মেসেজগুলো জমা থাকবে এবং পরের অ্যালার্টে একসাথে আসবে।",
+    "emailNotificationsDescLinked": "{{email}}-রে পাঠানো হইয়েচে",
+    "emailNotificationsNoAddress": "আগে আপনার একাউন্টে একটা ইমেইল এড্রেস যোগ করুন — ওইখানে এইগুলা যাইবো।",
+    "emailNotificationsAddAddress": "একটা ইমেইল এড্রেস যোগ করুন",
     "account": "অ্যাকাউন্ট",
     "cancel": "বাতিল",
     "deleteAccount": "অ্যাকাউন্ট মিটাও",
@@ -342,10 +345,7 @@
     "showFollowers": "ফলোয়ার/ফলোইং দেখাও",
     "hideFollowerCounts": "ফলোয়ার সংখ্যা লুকাও",
     "followersOnly": "শুধু ফলোয়ার",
-    "subscribersOnly": "শুধু সাবস্ক্রাইবার",
-    "emailNotificationsDescLinked": "{{email}}-রে পাঠানো হইয়েচে",
-    "emailNotificationsNoAddress": "আগে আপনার একাউন্টে একটা ইমেইল এড্রেস যোগ করুন — ওইখানে এইগুলা যাইবো।",
-    "emailNotificationsAddAddress": "একটা ইমেইল এড্রেস যোগ করুন"
+    "subscribersOnly": "শুধু সাবস্ক্রাইবার"
   },
   "common": {
     "save": "সেভ গরো",
@@ -891,12 +891,6 @@
     "oneOther": "আরো ১ জন",
     "nOthers": "আরো {{count}} জন",
     "burstBody": "{{count}} নতুন নোটিফিকেশন {{who}} থেকে",
-    "milestones": "মাইলস্টোন",
-    "noNotifications": "এহনো কুনো জানাইন নাই",
-    "subscribedToYou": "{{name}} তোঁয়ারে সাবস্ক্রাইব গরছে",
-    "repostedPost": "{{name}} তোঁয়ার পোস্ট রিপোস্ট গরছে",
-    "quotedPost": "{{name}} তোঁয়ার পোস্ট উদ্ধৃত গরছে",
-    "videoMilestone": "তোঁয়ার ভিডিও মাইলস্টোনত পৌঁছছে!",
     "community": {
       "joined": "{{name}} আপনার কমিউনিটিতে যোগ দিছে",
       "joinedNamed": "{{name}} “{{community}}” এ যোগ দিছে",
@@ -907,7 +901,13 @@
       "here": "{{name}} কমিউনিটির সবায়কে মেসেজ পাঠাইছে",
       "hereNamed": "{{name}} “{{community}}” এর সবায়কে মেসেজ পাঠাইছে"
     },
-    "byEmail": "ইমেইলর মাধ্যমে"
+    "byEmail": "ইমেইলর মাধ্যমে",
+    "milestones": "মাইলস্টোন",
+    "noNotifications": "এহনো কুনো জানাইন নাই",
+    "subscribedToYou": "{{name}} তোঁয়ারে সাবস্ক্রাইব গরছে",
+    "repostedPost": "{{name}} তোঁয়ার পোস্ট রিপোস্ট গরছে",
+    "quotedPost": "{{name}} তোঁয়ার পোস্ট উদ্ধৃত গরছে",
+    "videoMilestone": "তোঁয়ার ভিডিও মাইলস্টোনত পৌঁছছে!"
   },
   "leaderboard": {
     "title": "লীডারবোর্ড",
@@ -1497,6 +1497,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "বুকমার্কে সেভ অইছে",
+    "new_member_notice_title": "New members-এ তুমি দেখা যাচ্ছো",
+    "new_member_notice_body": "অন্য সদস্যরা দেখতে পাইবে তুমি কখন জয়েন করছো, যাতে তারা তোমারে হ্যালো বলতে পারে। যেকোনো সময় বন্ধ করতে পারো।",
     "removed_from_bookmarks": "বুকমার্ক থাকি সরানো অইছে",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",
@@ -2241,6 +2243,11 @@
     "voiceMessage": "ভয়েস মেসেজ",
     "image": "একটি ছবি পাঠিয়েছে"
   },
+  "follow": {
+    "groupLimitReached": "গ্রুপের সীমা শেষ",
+    "createGroup": "তৈরি করুন",
+    "groupsHint": "গ্রুপ আপনার ফলোয়িং ফিড ফিল্টার করে। শুধু আপনি দেখতে পারবেন।"
+  },
   "post": {
     "like": "পছন্দ",
     "comment": "মন্তব্য",
@@ -2291,10 +2298,5 @@
     "inProgress": "চলতাছে",
     "completed": "সম্পূর্ণ",
     "underReview": "পর্যালোচনায়"
-  },
-  "follow": {
-    "groupLimitReached": "গ্রুপের সীমা শেষ",
-    "createGroup": "তৈরি করুন",
-    "groupsHint": "গ্রুপ আপনার ফলোয়িং ফিড ফিল্টার করে। শুধু আপনি দেখতে পারবেন।"
   }
 }

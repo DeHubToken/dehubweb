@@ -970,6 +970,13 @@
     "shippedBadge": "Kua tukuna",
     "noComments": "Kāore anō he tākupu",
     "addComment": "Tāpiri tākupu...",
+    "writeReply": "Whakautu...",
+    "replyToComment": "Whakautu",
+    "replyingTo": "Ka whakahoki ki {{name}}",
+    "requestAuthorChip": "Kaituhi",
+    "commentEdited": "whakatika",
+    "showOneMoreReply": "Whakaatu 1 atu whakautu",
+    "showMoreReplies": "Whakaatu {{count}} atu whakautu",
     "submitDrawerTitle": "Tukuna tono āhuatanga",
     "titleLabel": "Taitara",
     "titlePlaceholder": "Taitara poto mō tō whakaaro...",
@@ -985,14 +992,7 @@
     "statusDeclined": "Kua whakahēngia",
     "shipping": "Kei te hangaia",
     "noShippingYet": "Kāore he mahi kei te haere",
-    "shippingAppearHere": "Ka puta ki konei ngā tono e hangaia ana.",
-    "writeReply": "Whakautu...",
-    "replyToComment": "Whakautu",
-    "replyingTo": "Ka whakahoki ki {{name}}",
-    "requestAuthorChip": "Kaituhi",
-    "commentEdited": "whakatika",
-    "showOneMoreReply": "Whakaatu 1 atu whakautu",
-    "showMoreReplies": "Whakaatu {{count}} atu whakautu"
+    "shippingAppearHere": "Ka puta ki konei ngā tono e hangaia ana."
   },
   "auth": {
     "loginRequired": "Me takiuru"
@@ -1403,6 +1403,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Kua tiakina ki ngā tohuwāhi",
+    "new_member_notice_title": "E whakaatu ana koe i roto i ngā mema hou",
+    "new_member_notice_body": "Ka taea e ētahi atu mema te kite i te wā i uru atu ai koe, kia taea ai e rātou te kī atu, \"Kia ora\". Whakamutua i nga wa katoa.",
     "removed_from_bookmarks": "Kua tangohia mai i ngā tohuwāhi",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",
