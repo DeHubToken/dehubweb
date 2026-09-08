@@ -559,7 +559,7 @@ export async function writeContractAA(
         data: data as `0x${string}`,
         gas: gasLimitBigInt,
         value: options?.value ? BigInt(options.value) : undefined,
-        ...(options?.chainId ? { chainId: options.chainId as any } : {}),
+        chainId: (options?.chainId ?? BASE_CHAIN_ID) as any,
       });
     }
 
@@ -575,7 +575,7 @@ export async function writeContractAA(
             const receipt = await waitForTransactionReceipt(wagmiConfig, {
               hash: txHash as `0x${string}`,
               confirmations,
-              ...(options?.chainId ? { chainId: options.chainId as any } : {}),
+              chainId: (options?.chainId ?? BASE_CHAIN_ID) as any,
             });
             return {
               status: receipt.status === 'success' ? 1 : 0,
