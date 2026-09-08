@@ -41,10 +41,19 @@ const identitySources = {
     path: path.join(iconRoot, 'sources', 'superpowers-electric.png'),
     removeChromaBackdrop: true,
   },
-  dao: { path: path.join(iconRoot, 'sources', 'dao-council.png') },
   staking: { path: path.join(root, 'public', 'brand-kit', 'icons', 'vault.png') },
   bridge: { path: path.join(root, 'public', 'brand-kit', 'icons', 'chain.png') },
   buy: { path: path.join(root, 'public', 'brand-kit', 'icons', 'coin-bag.png') },
+};
+
+const themeIdentitySources = {
+  dao: Object.fromEntries(
+    ['system', 'light', 'minimal', 'cosmic', 'hazy', 'jungle', 'lavalamp', 'osaka', 'swarms', 'winter']
+      .map((theme) => [theme, {
+        path: path.join(iconRoot, 'sources', `dao-${theme}.png`),
+        preserveCanvas: true,
+      }]),
+  ),
 };
 
 async function removeChromaBackdrop(input) {
@@ -79,11 +88,28 @@ async function removeChromaBackdrop(input) {
 
 async function normalizeIdentity(source) {
   if (source.removeChromaBackdrop) return removeChromaBackdrop(source.path);
+  if (source.preserveCanvas) {
+    return sharp(source.path)
+      .resize(256, 256, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+      .png()
+      .toBuffer();
+  }
   return sharp(source.path)
     .resize(224, 224, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .extend({ top: 16, bottom: 16, left: 16, right: 16, background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .png()
     .toBuffer();
+}
+
+async function writeThemeIdentitySources(theme, outputDir) {
+  for (const [key, sources] of Object.entries(themeIdentitySources)) {
+    const source = sources[theme];
+    if (!source) continue;
+    const normalized = await normalizeIdentity(source);
+    await sharp(normalized)
+      .webp({ quality: 94, alphaQuality: 100 })
+      .toFile(path.join(outputDir, `${key}.webp`));
+  }
 }
 
 async function applyTreatment(input, output, treatment) {
@@ -123,14 +149,18 @@ for (const [key, source] of Object.entries(identitySources)) {
   const normalized = await normalizeIdentity(source);
   await sharp(normalized).webp({ quality: 94, alphaQuality: 100 }).toFile(path.join(systemDir, `${key}.webp`));
 }
+await writeThemeIdentitySources('system', systemDir);
 
 const icons = (await readdir(systemDir)).filter((name) => name.endsWith('.webp'));
 for (const [theme, treatment] of Object.entries(materialThemes)) {
   const outputDir = path.join(iconRoot, theme);
   await mkdir(outputDir, { recursive: true });
   for (const icon of icons) {
+    const key = path.parse(icon).name;
+    if (themeIdentitySources[key]?.[theme]) continue;
     await applyTreatment(path.join(systemDir, icon), path.join(outputDir, icon), treatment);
   }
+  await writeThemeIdentitySources(theme, outputDir);
 }
 
 for (const [theme, treatment] of Object.entries(nativeThemeTreatments)) {
@@ -143,6 +173,8 @@ for (const [theme, treatment] of Object.entries(nativeThemeTreatments)) {
       { ...treatment, material },
     );
   }
+  await writeThemeIdentitySources(theme, outputDir);
 }
 
-console.log(`Built ${icons.length} semantic icons and ${Object.keys(identitySources).length} page identities across every raster theme.`);
+const identityCount = Object.keys(identitySources).length + Object.keys(themeIdentitySources).length;
+console.log(`Built ${icons.length} semantic icons and ${identityCount} page identities across every raster theme.`);
