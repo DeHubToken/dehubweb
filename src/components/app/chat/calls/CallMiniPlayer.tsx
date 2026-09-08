@@ -118,7 +118,7 @@ export function CallMiniPlayer() {
             <button
               onClick={toggleMute}
               className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center transition-all",
+                "w-8 h-8 rounded-xl flex items-center justify-center transition-all",
                 isMuted
                   ? "bg-red-500/80 hover:bg-red-500 text-white"
                   : "bg-white/10 hover:bg-white/20 text-white"
@@ -130,7 +130,7 @@ export function CallMiniPlayer() {
 
             <button
               onClick={endCall}
-              className="w-8 h-8 rounded-full bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
+              className="w-8 h-8 rounded-xl bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
               title="End call"
             >
               <PhoneOff className="w-4 h-4" />
@@ -184,7 +184,7 @@ export function CallMiniPlayer() {
           <button
             onClick={toggleMute}
             className={cn(
-              "w-8 h-8 rounded-full flex items-center justify-center transition-all",
+              "w-8 h-8 rounded-xl flex items-center justify-center transition-all",
               isMuted
                 ? "bg-red-500/80 hover:bg-red-500 text-white"
                 : "bg-white/10 hover:bg-white/20 text-white"
@@ -196,7 +196,7 @@ export function CallMiniPlayer() {
 
           <button
             onClick={endCall}
-            className="w-8 h-8 rounded-full bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
+            className="w-8 h-8 rounded-xl bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
             title="End call"
           >
             <PhoneOff className="w-4 h-4" />

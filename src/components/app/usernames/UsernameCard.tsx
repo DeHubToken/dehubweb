@@ -70,7 +70,7 @@ export const UsernameCard = memo(function UsernameCard({ listing, onClick, isOwn
               short leaves a gap. */}
           <span className="hidden sm:flex items-center gap-1.5 min-w-0 ml-1">
             {avatar ? (
-              <img src={avatar} alt="" className="w-4 h-4 rounded-full object-cover shrink-0" loading="lazy" />
+              <img src={avatar} alt="" className="w-4 h-4 rounded object-cover shrink-0" loading="lazy" />
             ) : (
               <span className="w-4 h-4 rounded-full bg-white/10 shrink-0" />
             )}
