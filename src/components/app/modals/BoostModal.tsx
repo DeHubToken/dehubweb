@@ -153,12 +153,15 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
       },
       {
         onSuccess: booking => {
+          const isFlare = chosen === 'signal_flare';
           toast.success(
-            t('superpowers.spent', {
-              power: active?.label ?? '',
-              minutes: booking.minutes,
-              defaultValue: `${active?.label} running for ${booking.minutes} minutes`,
-            }),
+            isFlare
+              ? 'Signal Flare sent to your followers.'
+              : t('superpowers.spent', {
+                  power: active?.label ?? '',
+                  minutes: booking.minutes,
+                  defaultValue: `${active?.label} running for ${booking.minutes} minutes`,
+                }),
           );
           onOpenChange(false);
         },
@@ -322,7 +325,9 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
             {/* The honest sentence. The slot rotates and a higher tier is dealt
                 more often, so what is bought is a window plus a share of voice
                 — never sole possession of the top of the feed. */}
-            <p className="text-[12px] text-zinc-500 px-1">{t('superpowers.shareOfVoice')}</p>
+            {chosen !== 'signal_flare' && (
+              <p className="text-[12px] text-zinc-500 px-1">{t('superpowers.shareOfVoice')}</p>
+            )}
 
             <Button
               onClick={handleBoost}
@@ -338,11 +343,13 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
                 // boosts may still have flares.
                 active.blockedReason
               ) : (
-                t('superpowers.spendFor', {
-                  power: active?.label ?? '',
-                  minutes: status.minutesPerBoost,
-                  defaultValue: `${active?.label ?? 'Spend'} for ${status.minutesPerBoost} minutes`,
-                })
+                chosen === 'signal_flare'
+                  ? 'Send Signal Flare'
+                  : t('superpowers.spendFor', {
+                      power: active?.label ?? '',
+                      minutes: status.minutesPerBoost,
+                      defaultValue: `${active?.label ?? 'Spend'} for ${status.minutesPerBoost} minutes`,
+                    })
               )}
             </Button>
           </div>
