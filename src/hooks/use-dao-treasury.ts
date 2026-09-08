@@ -8,10 +8,12 @@ export function useDaoTreasury() {
   return useQuery({
     queryKey: DAO_TREASURY_QUERY_KEY,
     queryFn: fetchDaoTreasury,
-    // Two full-history log scans plus three balance reads; a contribution
-    // lands maybe a few times a day, so a minute of staleness costs nothing.
-    staleTime: 60_000,
-    refetchOnWindowFocus: false,
+    // Direct wallet/exchange transfers never pass through this client, so a
+    // live page has to revisit the chain. Manual Refresh remains beside the
+    // total for people who do not want to wait for the next poll.
+    staleTime: 10_000,
+    refetchInterval: 30_000,
+    refetchOnWindowFocus: true,
     retry: 1,
   });
 }
