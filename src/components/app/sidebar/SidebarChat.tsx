@@ -455,7 +455,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                       <span className="truncate max-w-[120px]">{msg.reply_to.content}</span>
                     </button>
                   )}
-                  <div className="flex items-start gap-2">
+                  <div className="relative flex items-start gap-2">
                     <button onClick={goToProfile} disabled={!handle} className={`flex-shrink-0 ${handle ? 'cursor-pointer' : 'cursor-default'}`}>
                       <SidebarAvatar src={avatarUrl} address={msg.sender_address} name={name} />
                     </button>
@@ -527,7 +527,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                     </div>
                     {/* Hover action buttons */}
                     {isAuthenticated && (
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 flex-shrink-0 mt-0.5">
+                      <div className="pointer-events-none absolute right-0 top-0 z-10 flex items-center gap-0.5 rounded-l-md bg-zinc-900/90 pl-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:pointer-events-auto group-hover:opacity-100">
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
