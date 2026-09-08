@@ -191,8 +191,8 @@ export function SupportTicketDrawer({ open, onOpenChange, enabled = true }: Supp
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column glass className="border-t border-white/10">
-        <DrawerHeader className="border-b border-white/10">
+      <DrawerContent column glass className="h-[85dvh] overflow-hidden border-t border-white/10">
+        <DrawerHeader className="shrink-0 border-b border-white/10">
           <DrawerTitle className="text-white flex items-center gap-2">
             {composing ? (
               <button
@@ -213,7 +213,7 @@ export function SupportTicketDrawer({ open, onOpenChange, enabled = true }: Supp
           </p>
         </DrawerHeader>
 
-        <ScrollArea className="h-[70vh]">
+        <ScrollArea className="min-h-0 flex-1 pb-[env(safe-area-inset-bottom)]">
           <div className="p-4 space-y-4">
             {composing ? (
               <form
