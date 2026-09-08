@@ -755,6 +755,7 @@ export function prefetchUnifiedFeed(queryClient: QueryClient, options: UseUnifie
  * Hook to fetch unified feed with infinite scroll
  */
 export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
+  const queryClient = useQueryClient();
   const { enabled = true, limit = 20, ...params } = options;
   const { isAuthenticated, walletAddress } = useAuth();
   
@@ -805,8 +806,11 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
 
   return useInfiniteQuery({
     queryKey: ['unified-feed', params, limit, viewer],
-    queryFn: ({ pageParam = 1 }) =>
-      loadUnifiedFeedPage({ params, limit, pageParam, viewer, blockedAddresses, shuffleSeedRef }),
+    queryFn: async ({ pageParam = 1 }) => {
+      const page = await loadUnifiedFeedPage({ params, limit, pageParam, viewer, blockedAddresses, shuffleSeedRef });
+      mergeLiveCounts(queryClient, page.items);
+      return page;
+    },
     getNextPageParam: (lastPage) => {
       if (lastPage.pagination?.hasMore === true) {
         return lastPage.page + 1;

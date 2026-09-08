@@ -227,6 +227,14 @@ export function hasViewerFields(post: unknown): boolean {
   return VIEWER_FIELDS.some((field) => record[field] !== undefined);
 }
 
+/** Fresh totals can replace an optimistic vote once its reaction is confirmed. */
+export function isVoteConfirmed(source: CountSource, vote: VoteState): boolean {
+  return (source.isLiked !== undefined || source.isDisliked !== undefined || source.myReaction !== undefined)
+    && !!source.isLiked === vote.isLiked
+    && !!source.isDisliked === vote.isDisliked
+    && (vote.myReaction === undefined || resolveMyReaction(source) === vote.myReaction);
+}
+
 /**
  * Merge an authoritative fetch over the copy we already had.
  *

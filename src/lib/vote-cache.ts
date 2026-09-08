@@ -11,7 +11,7 @@
  */
 
 import type { QueryClient, InfiniteData } from '@tanstack/react-query';
-import { applyVoteStateToNFT, type VoteState } from '@/lib/engagement';
+import { applyVoteStateToNFT, isVoteConfirmed, resolveLikeCount, resolveDislikeCount, resolveReactionCounts, type CountSource, type VoteState } from '@/lib/engagement';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 
 interface VoteCacheEntry {
@@ -48,6 +48,18 @@ export function getVoteCache(postId: string): Omit<VoteCacheEntry, 'timestamp'> 
 
 export function clearVoteCache(postId: string): void {
   cache.delete(postId);
+}
+
+/** Keep confirmed totals current without extending the optimistic cache lifetime. */
+export function reconcileVoteCache(postId: string, source: CountSource): void {
+  const entry = cache.get(postId);
+  if (!entry || !isVoteConfirmed(source, entry)) return;
+  cache.set(postId, {
+    ...entry,
+    likeCount: resolveLikeCount(source),
+    dislikeCount: resolveDislikeCount(source),
+    reactionCounts: resolveReactionCounts(source),
+  });
 }
 
 export function clearAllVoteCaches(): void {
