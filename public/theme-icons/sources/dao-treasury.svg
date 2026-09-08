@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="metal" x1="116" y1="84" x2="388" y2="430" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="0.42" stop-color="#A9ADB5"/>
+      <stop offset="1" stop-color="#4A4E57"/>
+    </linearGradient>
+    <linearGradient id="shadow" x1="256" y1="174" x2="256" y2="398" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#777C86"/>
+      <stop offset="1" stop-color="#202329"/>
+    </linearGradient>
+    <radialGradient id="coin" cx="0" cy="0" r="1" gradientTransform="translate(256 302) rotate(90) scale(70)">
+      <stop stop-color="#FAFAFA"/>
+      <stop offset="0.7" stop-color="#9EA3AC"/>
+      <stop offset="1" stop-color="#555A64"/>
+    </radialGradient>
+  </defs>
+  <path d="M76 174 256 72l180 102-18 34H94l-18-34Z" fill="url(#metal)"/>
+  <path d="m123 166 133-75 133 75H123Z" fill="#25282E" fill-opacity=".52"/>
+  <path d="M105 198h302v38H105z" fill="url(#metal)"/>
+  <path d="M125 230h52v154h-52zM230 230h52v154h-52zM335 230h52v154h-52z" fill="url(#shadow)"/>
+  <path d="M113 376h286v38H113zM88 410h336v36H88z" fill="url(#metal)"/>
+  <circle cx="256" cy="303" r="65" fill="url(#coin)" stroke="#F4F4F5" stroke-width="9"/>
+  <path d="M256 266v74m-27-55c0-13 12-23 27-23s27 9 27 21c0 31-54 10-54 39 0 13 12 23 27 23s27-10 27-23" stroke="#353941" stroke-width="14" stroke-linecap="round"/>
+</svg>
