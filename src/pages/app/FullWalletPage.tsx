@@ -19,7 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
-import { useUserStakingData } from '@/hooks/use-staking-data';
+import { useDhbHoldings } from '@/hooks/use-dhb-holdings';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
 import { showWeb3AuthCheckout, isWeb3AuthConnected } from '@/lib/web3auth';
@@ -102,7 +102,10 @@ export default function FullWalletPage() {
   const [showBalanceBreakdown, setShowBalanceBreakdown] = useState(false);
 
   const { allTokens, isLoading } = useAllChainsTokens();
-  const { data: userStakingData } = useUserStakingData();
+
+  // Wallet + staked + giveaway, defined once in the hook so this page, the
+  // Settings row and the badge ladder cannot drift apart again.
+  const holdings = useDhbHoldings();
 
   // Twitter World Cup giveaway credit — folded into the DHB balance for winners
   // (shown like staked DHB: part of the total, itemised as a locked line in the
@@ -142,10 +145,12 @@ export default function FullWalletPage() {
       return sum + (isNaN(value) ? 0 : value);
     }, 0);
     const dhbPrice = prices.DHB ?? 0;
-    const offWalletDhb = (userStakingData?.totalStaked ?? 0) + (giveaway?.amount ?? 0);
+    // `walletUsd` already priced the DHB sitting in the wallet, so only the
+    // off-wallet halves are added here.
+    const offWalletDhb = holdings.staked + holdings.giveaway;
     const offWalletUsd = offWalletDhb * dhbPrice;
     return walletUsd + (isNaN(offWalletUsd) ? 0 : offWalletUsd);
-  }, [allTokens, prices, userStakingData?.totalStaked, giveaway?.amount]);
+  }, [allTokens, prices, holdings.staked, holdings.giveaway]);
 
   // Group tokens by symbol across chains
   // Tokens may have different decimals across chains (e.g. USDT: 6 on Base, 18 on BNB)
@@ -310,14 +315,7 @@ export default function FullWalletPage() {
             <div className="flex items-center gap-2">
               <img src={dehubCoin} alt="DHB" className="w-7 h-7" />
               <p className="text-white text-2xl font-bold">
-                {(() => {
-                  const dhb = groupedTokens.find(t => t.symbol === 'DHB');
-                  const walletBal = dhb ? parseFloat(dhb.totalFormattedBalance) : 0;
-                  const stakedBal = userStakingData?.totalStaked ?? 0;
-                  const giveawayBal = giveaway?.amount ?? 0;
-                  const total = walletBal + stakedBal + giveawayBal;
-                  return isNaN(total) ? '0' : Math.floor(total).toLocaleString();
-                })()}
+                {isNaN(holdings.total) ? '0' : Math.floor(holdings.total).toLocaleString()}
               </p>
               <button
                 onClick={() => setShowBalanceBreakdown(!showBalanceBreakdown)}
@@ -359,7 +357,7 @@ export default function FullWalletPage() {
               const bnbBal = dhb?.chains.find(c => c.chainId === BNB_CHAIN_ID);
               const baseVal = baseBal ? parseFloat(baseBal.formattedBalance) : 0;
               const bnbVal = bnbBal ? parseFloat(bnbBal.formattedBalance) : 0;
-              const stakedVal = userStakingData?.totalStaked ?? 0;
+              const stakedVal = holdings.staked;
               return (
                 <>
                   <div className="flex justify-between text-xs">
