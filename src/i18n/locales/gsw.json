@@ -1945,7 +1945,25 @@
     "start": "Start",
     "pickCategory": "Kategorie…",
     "trendJacked": "{{category}} isch am trende für {{minutes}} Minute",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Macht öppis mit eme vo dine Posts. Tipp zum uswähle.",
+    "actsGift": "En Gschänk – es landet uf em Post vo öpper anders. Tipp zum uswähle.",
+    "actsComment": "Macht öppis mit dim Kommentar i öpper anders si Thread. Tipp zum uswähle.",
+    "actsStage": "Macht öppis mit eme Stage, wo du hostisch. Tipp zum uswähle.",
+    "actsCategory": "Macht öppis mit eme vo dine Kategorie. Tipp zum uswähle.",
+    "actsAccount": "Macht öppis mit dim ganze Account. Tipp zum starte.",
+    "actsOnAccount": "Das macht öppis mit dim ganze Account – es git nüt zum ussuche.",
+    "findMyPost": "Suche dini Posts, oder füeg en Link ii",
+    "findTheirPost": "Füeg de Post-Link vo de ander ii, oder suche",
+    "searchToGift": "Suche nach eme Post, oder füeg en Link zu eme ii.",
+    "noRecentPosts": "Nüt do us de letschte Wuche. Älters brucht en Second Wind.",
+    "noOlderPosts": "Nüt do älter als ä Wuche. Neueres brucht en Boost.",
+    "noPostsFound": "Keini Posts gfunde.",
+    "anchorNeedsTheirThread": "En Anchor haltet dim Kommentar obe i öpper anders si Thread – uf dim eigete Post isch scho es Pin frei.",
+    "noComments": "Du hesch no nöd kommentiert.",
+    "noStages": "Keine vo dine Stage isch grad live oder plant.",
+    "noFlaresLeft": "Keini Signal Flares meh i dem Zyklus",
+    "spentFor": "{{power}} lauft für {{minutes}} Minute"
   },
   "work": {
     "budgetExhausted": "S Budget vo dere Prämie isch ganz vergäh."

@@ -1950,7 +1950,25 @@
     "start": "Başla",
     "pickCategory": "Kategoriýa…",
     "trendJacked": "{{category}} {{minutes}} minutlap meşhur bolýar",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Siziň postaňyzyň birine hereket edýär. Birini saýlamak üçin tuknaň.",
+    "actsGift": "Sowgat — başga biriniň postasynda gelmeli. Birini saýlamak üçin tuknaň.",
+    "actsComment": "Başga biriniň tema ulgamynda siziň teswirlerinize hereket edýär. Birini saýlamak üçin tuknaň.",
+    "actsStage": "Siziň öz sahnasynda hereket edýär. Birini saýlamak üçin tuknaň.",
+    "actsCategory": "Siziň kategoriyalaryndan birine hereket edýär. Birini saýlamak üçin tuknaň.",
+    "actsAccount": "Siziň ähli hasabynda hereket edýär. Başlamak üçin tuknaň.",
+    "actsOnAccount": "Bu bir ähli hasabynyzda hereket edýär — saýlamak üçin hiç zat ýok.",
+    "findMyPost": "Postaňyzy gözläň ýa-da baglanyşyk goýuň",
+    "findTheirPost": "Olaryň post baglanyşygyny goýuň ýa-da gözläň",
+    "searchToGift": "Postaň gözläň ýa-da onuň baglanyşygyny goýuň.",
+    "noRecentPosts": "Geçen hepde bu ýerden hiç zat ýok. Köne zatlaryň hemmesi Ikinji Şans gerek.",
+    "noOlderPosts": "Bir hepde köne bu ýerden hiç zat ýok. Täze zatlaryň hemmesi Güýçlendirme gerek.",
+    "noPostsFound": "Post tapylmady.",
+    "anchorNeedsTheirThread": "Якорь siziň teswirlerinizi başga biriniň tema ulgamynda tutup duruş — siziň öz postasynda pin eýýäm mugt.",
+    "noComments": "Henizem teswir etmediňiz.",
+    "noStages": "Siziň sahnasyndan hiç biri şu wagt elýeterli ýa-da meýilleşdirilmän.",
+    "noFlaresLeft": "Bu siklda Signal Flares galmady",
+    "spentFor": "{{power}} {{minutes}} minut üçin işleýär"
   },
   "work": {
     "budgetExhausted": "Bu sylagyň býujeti doly paýlanyldy."

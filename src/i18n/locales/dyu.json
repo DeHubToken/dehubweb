@@ -1940,7 +1940,25 @@
     "start": "Jɛnɛ",
     "pickCategory": "Kategorija…",
     "trendJacked": "{{category}} ka trending {{minutes}} minutes",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Aka ti o wa ninu ọkan ninu awọn ifiweranṣẹ rẹ. Fọwọkan lati yan ọkan.",
+    "actsGift": "Ẹbun kan — o ṣubu sori ifiweranṣẹ ẹlomin. Fọwọkan lati yan ọkan.",
+    "actsComment": "Aka ti o wa ninu asọrọ rẹ ni okun ẹlomin. Fọwọkan lati yan ọkan.",
+    "actsStage": "Aka ti o wa lori Ipele ti o gbalejo. Fọwọkan lati yan ọkan.",
+    "actsCategory": "Aka ti o wa ninu awọn ẹka rẹ. Fọwọkan lati yan ọkan.",
+    "actsAccount": "Aka ti o wa lori gbogbo akọọlẹ rẹ. Fọwọkan lati bẹrẹ rẹ.",
+    "actsOnAccount": "Eyi aka ti o wa lori gbogbo akọọlẹ rẹ — ko si ohun ti o le yan.",
+    "findMyPost": "Ṣewari awọn ifiweranṣẹ rẹ, tabi lẹ iwe asopọ kan",
+    "findTheirPost": "Lẹ iwe asopọ wọn, tabi ṣewari",
+    "searchToGift": "Ṣewari fun ifiweranṣẹ, tabi lẹ iwe asopọ si ọkan.",
+    "noRecentPosts": "Ko si ohun nibi lati ọsẹ to kọja. Ohunkohun ti o ti pẹ tẹlẹ gba Afẹfẹ Keji.",
+    "noOlderPosts": "Ko si ohun nibi ti o ti pẹ ju ọsẹ kan lọ. Ohunkohun ti o jẹ tuntun gba Igbelaruge.",
+    "noPostsFound": "Ko si awọn ifiweranṣẹ ti a ri.",
+    "anchorNeedsTheirThread": "Ankora kan di asọrọ rẹ ni oke okun ẹlomin — lori ifiweranṣẹ tirẹ, pin ti wa tẹlẹ ni ọfẹ.",
+    "noComments": "O ko tii sọrọ sibẹsibẹ.",
+    "noStages": "Ko si Ipele ti tirẹ ti nṣiṣẹ tabi ti a ti ṣeto lọwọlọwọ.",
+    "noFlaresLeft": "Ko si Awọn Imọlẹ Ifihan ti o ku ni ọmọ-ọmọ yii",
+    "spentFor": "{{power}} nṣiṣẹ fun {{minutes}} iṣẹju"
   },
   "work": {
     "budgetExhausted": "Nafolo nin ka wari bɛɛ dilala ka ban."

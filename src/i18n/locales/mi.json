@@ -1976,7 +1976,25 @@
     "start": "Tīmata",
     "pickCategory": "Kāwai…",
     "trendJacked": "Kei te rongonui a {{category}} mō {{minutes}} meneti",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Ka pā ki tētahi o āu pou. Patohia hei kōwhiri.",
+    "actsGift": "He koha — ka tau ki te pou a tētahi atu. Patohia hei kōwhiri.",
+    "actsComment": "Ka pā ki tō kōrero i roto i te miro a tētahi atu. Patohia hei kōwhiri.",
+    "actsStage": "Ka pā ki tētahi atamira e manaaki ana koe. Patohia hei kōwhiri.",
+    "actsCategory": "Ka pā ki tētahi o āu kāwai. Patohia hei kōwhiri.",
+    "actsAccount": "Ka pā ki tō pūkete katoa. Patohia hei tīmata.",
+    "actsOnAccount": "Ka pā tēnei ki tō pūkete katoa — kāore he mea hei kōwhiri.",
+    "findMyPost": "Rapua āu pou, tēnā whakapiri atu he hononga",
+    "findTheirPost": "Whakapiri atu te hononga pou a tēnā, tēnā, tēnā rānei, tēnā rapua",
+    "searchToGift": "Rapua tētahi pou, tēnā whakapiri atu he hononga ki tētahi.",
+    "noRecentPosts": "Kāore he mea kei konei mai i te wiki whakamutunga. Ko ngā mea tawhito ka whiwhi i te Hāora Tuarua.",
+    "noOlderPosts": "Kāore he mea kei konei tawhito atu i te wiki. Ko ngā mea hou ka whiwhi i te Whakanui.",
+    "noPostsFound": "Kāore he pou i kitea.",
+    "anchorNeedsTheirThread": "Ko te Mōtoka ka mau i tō kōrero ki te tihi o te miro a tētahi atu — i tō ake pou, kua wātea kē te titi.",
+    "noComments": "Kāore anō koe kia kōrero.",
+    "noStages": "Kāore he atamira nāu e ora ana, e whakaritea ana rānei i tēnei wā.",
+    "noFlaresLeft": "Kāore he rama tohu i toe i tēnei huringa",
+    "spentFor": "{{power}} e oma ana mō {{minutes}} meneti"
   },
   "work": {
     "budgetExhausted": "Kua oti te pūtea o tēnei utu te tuku katoa."

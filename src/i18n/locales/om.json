@@ -1993,7 +1993,25 @@
     "start": "Eegalu",
     "pickCategory": "Sadarkaa…",
     "trendJacked": "{{category}} daqiiqaa {{minutes}} fiigachaa jira",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Akkamitti karaa kee irratti hojjeta. Tokko filachuuf tuqi.",
+    "actsGift": "Kennaa — karaa nama biraati irratti bu'a. Tokko filachuuf tuqi.",
+    "actsComment": "Karaa nama biraati irratti yaada kee irratti hojjeta. Tokko filachuuf tuqi.",
+    "actsStage": "Stage kee irratti hojjeta. Tokko filachuuf tuqi.",
+    "actsCategory": "Kaategorii kee irratti hojjeta. Tokko filachuuf tuqi.",
+    "actsAccount": "Akaawuntii kee guutuu irratti hojjeta. Jalqabuuf tuqi.",
+    "actsOnAccount": "Kanaan akaawuntii kee guutuu irratti hojjeta — filachuuf homtuu hin jiru.",
+    "findMyPost": "Karaa kee barbaadi, ykn linkii maxxansi",
+    "findTheirPost": "Karaa isaanii maxxansi, ykn barbaadi",
+    "searchToGift": "Karaa tokko barbaadi, ykn linkii maxxansi.",
+    "noRecentPosts": "Akkasitti torban darbe irraa homtuu hin jiru. Homaa isaa duraa Second Wind fudhata.",
+    "noOlderPosts": "Akkasitti torban irraa hin caalu. Homaa isaa boodaa Boost fudhata.",
+    "noPostsFound": "Karaa hin argamne.",
+    "anchorNeedsTheirThread": "Anchor yaada kee karaa nama biraati irratti olitti qabata — karaa kee irratti immoo pin tokko duraan bilisa.",
+    "noComments": "Amma yaada hin kennine.",
+    "noStages": "Stage kee irraa ammaaf hin jiraatu ykn hin qabamne.",
+    "noFlaresLeft": "Signal Flare kana irraa hin hafne",
+    "spentFor": "{{power}} daqiiqaa {{minutes}}f fiigala"
   },
   "work": {
     "budgetExhausted": "Baajata badhaasa kanaa guutummaatti ramadameera."

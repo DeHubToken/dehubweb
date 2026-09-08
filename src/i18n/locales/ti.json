@@ -1942,7 +1942,27 @@
     "homeStage": "ኣብቲ መድረኽ ክትመርሖ ካብኡ ወፍዮ።",
     "homePage": "ኣብዚ ኣብ ላዕሊ እዚ ገጽ ወፍዮ።",
     "goldenHourStarted": "Golden Hour ን {{minutes}} ደቓይቕ ይካየድ ኣሎ — እቲ ሎሚ እትጽሕፎ ኩሉ ክልተ እጽርፍ",
-    "trendJacked": "{{category}} ን {{minutes}} ደቓይቕ ይዝርጋሕ ኣሎ"
+    "trendJacked": "{{category}} ን {{minutes}} ደቓይቕ ይዝርጋሕ ኣሎ",
+    "actsPost": "ኣብ ሓደ ኻብቲ ልኡኻትካ ግበር ። ሓደ ንምውሳድ ኣጥፊእካ ።",
+    "actsGift": "ህያብ — ኣብ ካልእ ቦታ ይወድቕ ። ሓደ ንምውሳድ ኣጥፊእካ ።",
+    "actsComment": "ኣብ ካልእ ሰብ ርእይቶኻ ግበር ። ሓደ ንምውሳድ ኣጥፊእካ ።",
+    "actsStage": "ኣብ እትቕበልዎ ደረጃ ስጕምቲ ውሰድ ። ሓደ ንምውሳድ ኣጥፊእካ ።",
+    "actsCategory": "ኣብ ሓደ ኻብቲ ምድባትካ ግበር ። ሓደ ንምውሳድ ኣጥፊእካ ።",
+    "actsAccount": "ኣብ ምሉእ ሕሳብካ ግበር ። ነዚ ንምጅማር ጠውቑ ።",
+    "actsOnAccount": "እዚ ኣብ ምሉእ መለያኻ ይሰርሕ — ክትመርጽ እትኽእል ነገር የለን ።",
+    "findMyPost": "ልኡኽኻትካ ድለዩ ወይ ሊንክ ጠውቑ",
+    "findTheirPost": "ነቲ ናይ ልኡኽ ሊንክካ ሕተቶ ፣ ወይ ድለዮ",
+    "searchToGift": "ንፖስታ ድለዩ ፡ ወይ ከኣ ናብ ሓደ ጠውቑ ።",
+    "noRecentPosts": "ኣብ ዝሓለፈ ሰሙን እውን ተመሊሰ ። እቲ ዝዓበየ ነገር ካልኣይ ንፋስ እዩ ዚወስድ ።",
+    "noOlderPosts": "ኣብዚ ካብ ሰሙን ንላዕሊ ዝኾነ ነገር የለን ። ዝኾነ ሓድሽ ነገር ቡስት ይወስድ ።",
+    "noPostsFound": "ገለ መግለጺታት ኣይርከብን እዩ ።",
+    "anchorNeedsTheirThread": "Anchor ነቲ ርእይቶኻ ኣብ ላዕሊ ናይ ካልእ ሰብ ክር ይሕዝ — ኣብ ናይ ገዛእ ርእስኻ ፖስታ PIN ድሮ ብነጻ እዩ ።",
+    "noComments": "ገና ርእይቶ ኣይሃበን ።",
+    "noStages": "ኣብዚ እዋን እዚ ዝኾነ ደረጃኻ ህያው ወይ ዝተመደበ ኣይኮነን ።",
+    "noFlaresLeft": "ዝኾነ ምልክት ነፈርቲ ካብ'ዚ ዑደት'ዚ ኣይወጹን",
+    "flaresLeft": "ዕምባባታት",
+    "giftedTo": "ህያብ → #{{id}}",
+    "pickCategory": "ምድብ"
   },
   "work": {
     "budgetExhausted": "ናይዚ ሽልማት ባጀት ብምሉኡ ተመዲቡ እዩ።"

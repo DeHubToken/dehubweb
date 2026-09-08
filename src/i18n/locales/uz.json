@@ -1995,7 +1995,25 @@
     "start": "Boshlash",
     "pickCategory": "Kategoriya…",
     "trendJacked": "{{category}} {{minutes}} daqiqa davomida trendda",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Sizning postlaridan biriga ta'sir ko'rsatadi. Birini tanlash uchun bosing.",
+    "actsGift": "Sovg'a — bu boshqa kimnidir postiga tushadi. Birini tanlash uchun bosing.",
+    "actsComment": "Boshqa kimnidir mavzusidagi sizning sharhiga ta'sir ko'rsatadi. Birini tanlash uchun bosing.",
+    "actsStage": "Siz o'tkazadigan Stage'ga ta'sir ko'rsatadi. Birini tanlash uchun bosing.",
+    "actsCategory": "Sizning kategoriyalaridan biriga ta'sir ko'rsatadi. Birini tanlash uchun bosing.",
+    "actsAccount": "Butun hisobingizga ta'sir ko'rsatadi. Uni boshlash uchun bosing.",
+    "actsOnAccount": "Bu bitta butun hisobingizga ta'sir ko'rsatadi — tanlash uchun hech narsa yo'q.",
+    "findMyPost": "Postlarni qidiring yoki havolani jopish",
+    "findTheirPost": "Ularning post havolasini jopish yoki qidiring",
+    "searchToGift": "Postni qidiring yoki unga havola jopish.",
+    "noRecentPosts": "Oxirgi haftadan bu yerda hech narsa yo'q. Qadimroq narsalar Second Wind oladi.",
+    "noOlderPosts": "Bir haftadan qadimroq bu yerda hech narsa yo'q. Yangi narsalar Boost oladi.",
+    "noPostsFound": "Hech qanday post topilmadi.",
+    "anchorNeedsTheirThread": "Anchor boshqa kimnidir mavzusidagi sizning sharhni yuqorida ushlab turadi — o'z postingizda pin allaqachon bepul.",
+    "noComments": "Siz hali sharhlamadingiz.",
+    "noStages": "Hozir sizning Stage'ingiz jonli yoki rejalashtirilgan emas.",
+    "noFlaresLeft": "Bu siklda Signal Flares qolmadi",
+    "spentFor": "{{power}} {{minutes}} daqiqa davomida ishlayapti"
   },
   "work": {
     "budgetExhausted": "Bu mukofotning byudjeti to'liq taqsimlangan."
