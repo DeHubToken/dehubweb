@@ -11,11 +11,11 @@
  */
 
 import type { InfiniteData, QueryClient } from '@tanstack/react-query';
-import { applyVoteStateToNFT, isVoteConfirmed } from '@/lib/engagement';
+import { applyVoteStateToNFT, isVoteConfirmed, type CountSource } from '@/lib/engagement';
 import { getVoteCache, reconcileVoteCache } from '@/lib/vote-cache';
 
 /** A raw /api/feed row, as cached in a unified-feed page's `items`. */
-export type RawFeedRow = Record<string, unknown> & { tokenId?: number | string };
+export type RawFeedRow = Record<string, unknown> & CountSource & { tokenId?: number | string };
 
 /**
  * The only fields a background refresh may overwrite on a card already on
