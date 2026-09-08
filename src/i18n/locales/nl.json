@@ -4754,5 +4754,40 @@
         "definition": "Een collectieve virtuele gedeelde ruimte, gecreëerd door de convergentie van virtueel verbeterde fysieke realiteit en fysiek persistente virtuele ruimte, inclusief de som van alle virtuele werelden, augmented reality en het internet."
       }
     }
+  },
+  "follow": {
+    "followers": "Volgers",
+    "following": "Volgend",
+    "follow": "Volgen",
+    "followBack": "Terug volgen",
+    "requested": "Aangevraagd",
+    "followsYou": "Volgt je",
+    "searchPlaceholder": "Zoeken...",
+    "sortNewest": "Nieuwste",
+    "sortEarliest": "Oudste",
+    "someone": "deze persoon",
+    "logInFirst": "Log eerst in",
+    "requestSentTo": "Volgverzoek verzonden naar {{name}}",
+    "requestAlreadyPending": "Volgverzoek is al in behandeling. Wachten op goedkeuring.",
+    "alreadyFollowing": "Volgt {{name}} al",
+    "updateFailed": "Kon volgstatus niet bijwerken",
+    "errHidden": "Deze gebruiker heeft zijn lijst met volgers en volgende verborgen.",
+    "errPrivate": "Deze lijst is privé.",
+    "errPrivateToast": "De volgerslijst van deze gebruiker is privé",
+    "errLoad": "Kon lijst niet laden. Probeer het opnieuw.",
+    "errLoadToast": "Kon volglijst niet laden",
+    "errorTitle": "Fout bij laden",
+    "tryAgain": "Opnieuw proberen",
+    "noResults": "Geen resultaten gevonden",
+    "noFollowersYet": "Nog geen volgers",
+    "notFollowingAnyone": "Volgt niemand",
+    "noMatches": "Geen overeenkomsten voor \"{{query}}\"",
+    "followersAppearHere": "Volgers verschijnen hier",
+    "followToSeeThem": "Volg mensen om ze hier te zien",
+    "addToGroup": "{{name}} toevoegen aan een groep",
+    "newGroupName": "Nieuwe groepsnaam",
+    "groupLimitReached": "Groepslimiet bereikt",
+    "createGroup": "Aanmaken",
+    "groupsHint": "Groepen filteren uw volgende feed. Alleen jij kunt ze zien."
   }
 }

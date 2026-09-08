@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2, Users, UserPlus, UserMinus, Search, ArrowUpDown, X, Clock, FolderPlus } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -28,9 +29,9 @@ const PAGE_SIZE = 30;
 const FOLLOWING_CACHE_PAGE_SIZE = 100; // API caps at 100 per page regardless of requested limit
 
 type SortOption = 'newest' | 'earliest';
-const SORT_LABELS: Record<SortOption, string> = {
-  newest: 'Newest',
-  earliest: 'Earliest',
+const SORT_LABEL_KEYS: Record<SortOption, string> = {
+  newest: 'follow.sortNewest',
+  earliest: 'follow.sortEarliest',
 };
 
 /** Truncate a hex address to 0x1234…abcd */
@@ -82,6 +83,7 @@ export function FollowersListDrawer({
   title,
 }: FollowersListDrawerProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { walletAddress: currentUserAddress, isAuthenticated } = useAuth();
   const { handleApiError } = useReauthHandler();
   const [users, setUsers] = useState<UserListItem[]>([]);
@@ -175,9 +177,17 @@ export function FollowersListDrawer({
         setTotalCount(pagination?.totalCount ?? null);
         setIsLoading(false);
 
-        // Phase 2: Resolve follow statuses in background
-        const needsFollowingCache = !isOwnFollowingList && isAuthenticated && currentUserAddress && !followingSetRef.current;
-        const needsFollowersCache = isOwnFollowingList && isAuthenticated && currentUserAddress && !followersSetRef.current;
+        // Phase 2: resolve follow statuses in the background — but only when
+        // the API did not already answer with them. It stamps isFollowing and
+        // followsYou on every row for an authenticated viewer, which makes the
+        // walk below (up to ten requests of a hundred, to label twenty rows)
+        // dead weight. Own row is skipped: it never carries flags, and has no
+        // button either.
+        const serverResolved = processed
+          .filter(u => u.address?.toLowerCase() !== currentUserAddress?.toLowerCase())
+          .every(u => typeof u.isFollowing === 'boolean' && typeof u.followsYou === 'boolean');
+        const needsFollowingCache = !serverResolved && !isOwnFollowingList && isAuthenticated && currentUserAddress && !followingSetRef.current;
+        const needsFollowersCache = !serverResolved && isOwnFollowingList && isAuthenticated && currentUserAddress && !followersSetRef.current;
 
         if (needsFollowingCache || needsFollowersCache) {
           setIsResolvingStatus(true);
@@ -226,13 +236,13 @@ export function FollowersListDrawer({
         console.error('Error fetching follow list:', err);
         const msg = err?.message || '';
         if (msg.toLowerCase().includes('hidden')) {
-          setError('This user has hidden their followers/following list.');
+          setError(t('follow.errHidden'));
         } else if (msg.toLowerCase().includes('authentication required')) {
-          setError('This list is private.');
-          toast.error('This user\'s followers list is private');
+          setError(t('follow.errPrivate'));
+          toast.error(t('follow.errPrivateToast'));
         } else {
-          setError('Failed to load list. Please try again.');
-          toast.error('Failed to load follow list');
+          setError(t('follow.errLoad'));
+          toast.error(t('follow.errLoadToast'));
         }
         setIsLoading(false);
       }
@@ -271,11 +281,21 @@ export function FollowersListDrawer({
 
       const followingSet = followingSetRef.current;
       const followersSet = followersSetRef.current;
+      // A server-sent flag wins over the cache; the cache is only there for
+      // API builds that answer without them.
       const finalItems: UserListItem[] = isOwnFollowingList
-        ? processed.map(u => ({ ...u, isFollowing: true, followsYou: followersSet ? followersSet.has(u.address.toLowerCase()) : false }))
+        ? processed.map(u => ({
+            ...u,
+            isFollowing: true,
+            followsYou: typeof u.followsYou === 'boolean'
+              ? u.followsYou
+              : followersSet ? followersSet.has(u.address.toLowerCase()) : false,
+          }))
         : processed.map(u => ({
             ...u,
-            isFollowing: followingSet ? followingSet.has(u.address.toLowerCase()) : false,
+            isFollowing: typeof u.isFollowing === 'boolean'
+              ? u.isFollowing
+              : followingSet ? followingSet.has(u.address.toLowerCase()) : false,
             followsYou: isOwnFollowersList ? true : u.followsYou,
           }));
 
@@ -340,11 +360,11 @@ export function FollowersListDrawer({
     e.stopPropagation();
 
     if (!isAuthenticated) {
-      toast.error('Please log in first');
+      toast.error(t('follow.logInFirst'));
       return;
     }
 
-    const name = user.displayName || user.username || 'user';
+    const name = user.displayName || user.username || t('follow.someone');
 
     // Private account (not yet followed): follow becomes a request — show
     // "Requested" instantly, revert on error. Pending is not a boolean follow
@@ -355,24 +375,24 @@ export function FollowersListDrawer({
       ));
       followUser(user.address)
         .then(() => {
-          toast.success(`Follow request sent to ${name}`);
+          toast.success(t('follow.requestSentTo', { name }));
         })
         .catch((error: any) => {
           const msg = error?.message || error?.error || String(error);
           const msgLower = typeof msg === 'string' ? msg.toLowerCase() : '';
           if (msgLower.includes('already pending')) {
-            toast.info('Follow request already pending. Waiting for approval.');
+            toast.info(t('follow.requestAlreadyPending'));
           } else if (msgLower.includes('already') || msgLower.includes('following')) {
             followingSetRef.current?.add(user.address.toLowerCase());
             setUsers(prev => prev.map(u =>
               u.address === user.address ? { ...u, isPending: false, isFollowing: true } : u
             ));
-            toast.info(`Already following ${name}`);
+            toast.info(t('follow.alreadyFollowing', { name }));
           } else {
             setUsers(prev => prev.map(u =>
               u.address === user.address ? { ...u, isPending: false } : u
             ));
-            handleApiError(error, 'Failed to update follow status');
+            handleApiError(error, t('follow.updateFailed'));
           }
         });
       return;
@@ -393,7 +413,7 @@ export function FollowersListDrawer({
         setUsers(prev => prev.map(u =>
           u.address === user.address ? { ...u, isFollowing: wasFollowing } : u
         ));
-        handleApiError(error, 'Failed to update follow status');
+        handleApiError(error, t('follow.updateFailed'));
       },
     });
   };
@@ -407,9 +427,10 @@ export function FollowersListDrawer({
     return override === undefined ? u : { ...u, isFollowing: override };
   }), [users, followOverrides]);
 
+  const heading = title === 'Followers' ? t('follow.followers') : t('follow.following');
   const titleWithCount = totalCount !== null && totalCount > 0
-    ? `${title} (${totalCount})`
-    : title;
+    ? `${heading} (${totalCount})`
+    : heading;
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
@@ -430,7 +451,7 @@ export function FollowersListDrawer({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search..."
+              placeholder={t('follow.searchPlaceholder')}
               className="w-full h-9 pl-9 pr-8 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20"
             />
             {searchQuery && (
@@ -449,7 +470,7 @@ export function FollowersListDrawer({
             className="shrink-0 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white text-xs gap-1.5"
           >
             <ArrowUpDown className="w-3.5 h-3.5" />
-            {SORT_LABELS[sortOption]}
+            {t(SORT_LABEL_KEYS[sortOption])}
           </Button>
         </div>
 
@@ -470,7 +491,7 @@ export function FollowersListDrawer({
           ) : error ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <Users className="w-12 h-12 text-zinc-600 mb-3" />
-              <p className="text-zinc-400 text-lg font-medium">Error Loading</p>
+              <p className="text-zinc-400 text-lg font-medium">{t('follow.errorTitle')}</p>
               <p className="text-zinc-500 text-sm mt-1">{error}</p>
               <Button
                 variant="glass"
@@ -480,18 +501,18 @@ export function FollowersListDrawer({
                   setTimeout(() => onOpenChange(true), 100);
                 }}
               >
-                Try Again
+                {t('follow.tryAgain')}
               </Button>
             </div>
           ) : users.length === 0 ? (
             <AppState
               icon={debouncedSearch ? 'search' : 'accounts'}
               title={debouncedSearch
-                ? 'No results found'
-                : title === 'Followers' ? 'No followers yet' : 'Not following anyone'}
+                ? t('follow.noResults')
+                : title === 'Followers' ? t('follow.noFollowersYet') : t('follow.notFollowingAnyone')}
               description={debouncedSearch
-                ? `No matches for "${debouncedSearch}"`
-                : title === 'Followers' ? 'Followers will appear here' : 'Follow users to see them here'}
+                ? t('follow.noMatches', { query: debouncedSearch })
+                : title === 'Followers' ? t('follow.followersAppearHere') : t('follow.followToSeeThem')}
               kind={debouncedSearch ? 'search-empty' : 'empty'}
               size="drawer"
             />
@@ -503,7 +524,7 @@ export function FollowersListDrawer({
                   onClick={() => handleUserClick(user)}
                   className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
                 >
-                  <Avatar className="w-12 h-12 rounded-lg">
+                  <Avatar className="w-12 h-12 rounded-lg shrink-0">
                     {user.avatarUrl ? (
                       <AvatarImage src={user.avatarUrl} alt={user.displayName || 'User'} />
                     ) : null}
@@ -512,25 +533,29 @@ export function FollowersListDrawer({
                     </AvatarFallback>
                   </Avatar>
                   
+                  {/* Name, handle and relationship get a line each. The handle
+                      used to share its row with the Follows you chip, and both
+                      were truncated, so an ordinary username was cut in half to
+                      make room for a badge. */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-semibold text-white truncate">
+                    <div className="flex items-start gap-1.5">
+                      <span className="font-semibold text-white break-words line-clamp-2">
                         {user.displayName || user.username || truncateAddress(user.address)}
                       </span>
-                      {user.isVerified && <VerifiedBadge className="w-4 h-4 shrink-0" />}
+                      {user.isVerified && <VerifiedBadge className="w-4 h-4 shrink-0 mt-1" />}
                     </div>
-                    <div className="flex items-center gap-2">
-                      {user.username ? (
-                        <span className="text-zinc-500 text-sm truncate">@{user.username.replace('@', '')}</span>
-                      ) : (
-                        <span className="text-zinc-600 text-sm truncate font-mono">{truncateAddress(user.address)}</span>
-                      )}
-                      {user.followsYou && !isCurrentUser(user.address) && (
-                        <span className="text-xs px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 shrink-0">
-                          Follows you
+                    {user.username ? (
+                      <div className="text-zinc-500 text-sm break-all">@{user.username.replace('@', '')}</div>
+                    ) : (
+                      <div className="text-zinc-600 text-sm break-all font-mono">{truncateAddress(user.address)}</div>
+                    )}
+                    {user.followsYou && !isCurrentUser(user.address) && (
+                      <div className="mt-1">
+                        <span className="text-xs px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">
+                          {t('follow.followsYou')}
                         </span>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Group filing. Sits before the follow button so the
@@ -539,7 +564,7 @@ export function FollowersListDrawer({
                     <span
                       role="button"
                       tabIndex={0}
-                      aria-label={`Add ${user.displayName || user.username || 'user'} to a group`}
+                      aria-label={t('follow.addToGroup', { name: user.displayName || user.username || t('follow.someone') })}
                       onClick={(e) => {
                         e.stopPropagation();
                         setGroupingAddress(prev => (prev === user.address ? null : user.address));
@@ -581,17 +606,17 @@ export function FollowersListDrawer({
                       {user.isFollowing ? (
                         <>
                           <UserMinus className="w-4 h-4 mr-1" />
-                          Following
+                          {t('follow.following')}
                         </>
                       ) : user.isPending ? (
                         <>
                           <Clock className="w-4 h-4 mr-1" />
-                          Requested
+                          {t('follow.requested')}
                         </>
                       ) : (
                         <>
                           <UserPlus className="w-4 h-4 mr-1" />
-                          {user.followsYou ? 'Follow Back' : 'Follow'}
+                          {user.followsYou ? t('follow.followBack') : t('follow.follow')}
                         </>
                       )}
                     </Button>
@@ -634,7 +659,7 @@ export function FollowersListDrawer({
                           if (createGroup(newGroupName, user.address)) setNewGroupName('');
                         }}
                         maxLength={MAX_GROUP_NAME}
-                        placeholder={groups.length >= MAX_GROUPS ? 'Group limit reached' : 'New group name'}
+                        placeholder={groups.length >= MAX_GROUPS ? t('follow.groupLimitReached') : t('follow.newGroupName')}
                         disabled={groups.length >= MAX_GROUPS}
                         className="flex-1 h-8 px-2.5 rounded-lg bg-zinc-800 border border-zinc-700 text-sm text-white placeholder-zinc-500 focus:border-zinc-500 focus:outline-none disabled:opacity-50"
                       />
@@ -645,11 +670,11 @@ export function FollowersListDrawer({
                         onClick={() => { if (createGroup(newGroupName, user.address)) setNewGroupName(''); }}
                         className="h-8 shrink-0 rounded-lg bg-white/10 text-white hover:bg-white/20 disabled:opacity-40"
                       >
-                        Create
+                        {t('follow.createGroup')}
                       </Button>
                     </div>
                     <p className="text-[11px] text-zinc-500">
-                      Groups filter your Following feed. Only you can see them.
+                      {t('follow.groupsHint')}
                     </p>
                   </div>
                 )}
