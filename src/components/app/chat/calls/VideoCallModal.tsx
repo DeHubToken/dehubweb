@@ -110,13 +110,13 @@ const VideoCallModal: React.FC = () => {
               <>
                 <button
                   onClick={rejectCall}
-                  className="rounded-full w-14 h-14 bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
+                  className="rounded-2xl w-14 h-14 bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
                 >
                   <PhoneOff className="h-6 w-6" />
                 </button>
                 <button
                   onClick={acceptCall}
-                  className="rounded-full w-14 h-14 bg-green-600/80 hover:bg-green-600 flex items-center justify-center text-white transition-all"
+                  className="rounded-2xl w-14 h-14 bg-green-600/80 hover:bg-green-600 flex items-center justify-center text-white transition-all"
                 >
                   <Phone className="h-6 w-6" />
                 </button>
@@ -126,7 +126,7 @@ const VideoCallModal: React.FC = () => {
                 <button
                   onClick={toggleMute}
                   className={cn(
-                    "rounded-full w-12 h-12 flex items-center justify-center transition-all",
+                    "rounded-xl w-12 h-12 flex items-center justify-center transition-all",
                     isMuted
                       ? "bg-red-500/80 hover:bg-red-500 text-white"
                       : "bg-white/10 hover:bg-white/20 text-white border border-white/10"
@@ -137,7 +137,7 @@ const VideoCallModal: React.FC = () => {
                 <button
                   onClick={toggleCamera}
                   className={cn(
-                    "rounded-full w-12 h-12 flex items-center justify-center transition-all",
+                    "rounded-xl w-12 h-12 flex items-center justify-center transition-all",
                     isCameraOff
                       ? "bg-red-500/80 hover:bg-red-500 text-white"
                       : "bg-white/10 hover:bg-white/20 text-white border border-white/10"
@@ -147,13 +147,13 @@ const VideoCallModal: React.FC = () => {
                 </button>
                 <button
                   onClick={switchCamera}
-                  className="rounded-full w-12 h-12 bg-white/10 hover:bg-white/20 text-white border border-white/10 flex items-center justify-center transition-all"
+                  className="rounded-xl w-12 h-12 bg-white/10 hover:bg-white/20 text-white border border-white/10 flex items-center justify-center transition-all"
                 >
                   <RotateCcw className="h-5 w-5" />
                 </button>
                 <button
                   onClick={endCall}
-                  className="rounded-full w-14 h-14 bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
+                  className="rounded-2xl w-14 h-14 bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
                 >
                   <PhoneOff className="h-6 w-6" />
                 </button>
