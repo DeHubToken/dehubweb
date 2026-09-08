@@ -20,6 +20,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { rateLimitByIp } from "../_shared/auth.ts";
 import { languageNameFor } from "../_shared/language-names.ts";
+import { translationChunks } from "./chunks.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -61,7 +62,7 @@ function rememberInIsolate(cacheKey: string, result: TranslateResponse): void {
 // a collision in a permanent, shared table would serve one post's translation
 // for another's until somebody deleted the row by hand.
 async function getTextHash(text: string): Promise<string> {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`v3:${text}`));
   return Array.from(new Uint8Array(digest))
     .map(b => b.toString(16).padStart(2, '0'))
     .join('');
@@ -327,7 +328,7 @@ async function translateWithMyMemory(
     const langpair = `${source}|${target}`;
     
     // MyMemory struggles with texts over ~500 chars, skip to AI for long texts
-    if (text.length > 500) {
+    if (new TextEncoder().encode(text).length > 500) {
       console.log('Text too long for MyMemory, skipping to AI');
       return null;
     }
@@ -817,13 +818,23 @@ serve(async (req) => {
   if (limited) return limited;
 
   try {
-    const { text, targetLang, sourceLang }: TranslateRequest = await req.json();
+    const { text, targetLang, sourceLang: suppliedSource }: TranslateRequest = await req.json();
+    // Legacy clients send the old short-caption guesses as authoritative.
+    const sourceLang = typeof text === 'string' && text.replace(/[^\p{L}]/gu, '').length >= 60
+      && suppliedSource && !['und', 'unknown'].includes(suppliedSource)
+      ? suppliedSource : 'auto';
 
-    if (!text || !text.trim() || !targetLang) {
+    if (typeof text !== 'string' || !text.trim() || typeof targetLang !== 'string' || !targetLang) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields: text, targetLang' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+    }
+
+    if (typeof text !== 'string' || typeof targetLang !== 'string' || text.length > 20000) {
+      return new Response(JSON.stringify({ error: 'Text is too long or invalid' }), {
+        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     // Emoji, digits and punctuation have nothing to translate. Sent upstream
@@ -926,6 +937,33 @@ serve(async (req) => {
         JSON.stringify(sameLanguage),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+    }
+
+    // A long post must not fail solely because the paid accounts are empty.
+    // Translate bounded sections using the same working provider. Do not cache
+    // or return a partially translated body if any section fails.
+    if (new TextEncoder().encode(text).length > 500) {
+      const chunks = translationChunks(text);
+      if (chunks.filter(chunk => chunk.trim()).length <= 24) {
+        const translated: string[] = [];
+        let complete = true;
+        let detected: TranslateResponse['detectedLanguage'];
+        for (const chunk of chunks) {
+          if (!chunk.trim() || !/\p{L}/u.test(chunk)) { translated.push(chunk); continue; }
+          const part = await translateWithMyMemory(chunk, targetLang, sourceLang);
+          if (!part) { complete = false; break; }
+          translated.push(part.translatedText);
+          detected ??= part.detectedLanguage;
+        }
+        if (complete) {
+          const result = { translatedText: translated.join(''), detectedLanguage: detected };
+          rememberInIsolate(cacheKey, result);
+          await writeCachedTranslation(textHash, targetLang, result, 'mymemory-segments');
+          return new Response(JSON.stringify(result), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+      }
     }
 
     // Everything below here costs money.
