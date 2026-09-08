@@ -2291,5 +2291,10 @@
     "inProgress": "চলতাছে",
     "completed": "সম্পূর্ণ",
     "underReview": "পর্যালোচনায়"
+  },
+  "follow": {
+    "groupLimitReached": "গ্রুপের সীমা শেষ",
+    "createGroup": "তৈরি করুন",
+    "groupsHint": "গ্রুপ আপনার ফলোয়িং ফিড ফিল্টার করে। শুধু আপনি দেখতে পারবেন।"
   }
 }

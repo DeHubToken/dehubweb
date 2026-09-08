@@ -2037,5 +2037,24 @@
     "title": "Public chat",
     "voiceMessage": "Voice message",
     "image": "Sent an image"
+  },
+  "follow": {
+    "followers": "Followers",
+    "following": "Following",
+    "follow": "Follow",
+    "followBack": "Follow back",
+    "requested": "Requested",
+    "followsYou": "Follows you",
+    "searchPlaceholder": "Search...",
+    "sortNewest": "Newest",
+    "sortEarliest": "Earliest",
+    "someone": "this person",
+    "alreadyFollowing": "Already following {{name}}",
+    "errorTitle": "Error loading",
+    "tryAgain": "Try again",
+    "noResults": "No results found",
+    "noFollowersYet": "No followers yet",
+    "groupLimitReached": "Group limit reached",
+    "createGroup": "Create"
   }
 }
