@@ -27,6 +27,8 @@ import { AppState } from '@/components/app/AppState';
 const MAX_PAGES = 3;
 const PAGE_SIZE = 30;
 const FOLLOWING_CACHE_PAGE_SIZE = 100; // API caps at 100 per page regardless of requested limit
+const FOLLOW_BACK_ALL_REVEAL_THRESHOLD = 2;
+const BULK_FOLLOW_CONCURRENCY = 4;
 
 type SortOption = 'newest' | 'earliest';
 const SORT_LABEL_KEYS: Record<SortOption, string> = {
@@ -38,6 +40,16 @@ const SORT_LABEL_KEYS: Record<SortOption, string> = {
 function truncateAddress(address: string): string {
   if (address.length <= 10) return address;
   return `${address.slice(0, 6)}…${address.slice(-4)}`;
+}
+
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  if (typeof error === 'object' && error !== null) {
+    const value = error as { message?: unknown; error?: unknown };
+    if (typeof value.message === 'string') return value.message;
+    if (typeof value.error === 'string') return value.error;
+  }
+  return String(error);
 }
 
 interface UserListItem {
@@ -72,7 +84,7 @@ function mapFollowListItem(item: FollowListItem & { isPrivate?: boolean }): User
     isVerified: item.isVerified,
     isFollowing: item.isFollowing,
     followsYou: item.followsYou,
-    isPrivate: (item as any).isPrivate,
+    isPrivate: item.isPrivate,
   };
 }
 
@@ -95,6 +107,9 @@ export function FollowersListDrawer({
   const [sortOption, setSortOption] = useState<SortOption>('newest');
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [showFollowBackAll, setShowFollowBackAll] = useState(false);
+  const [isFollowingBackAll, setIsFollowingBackAll] = useState(false);
+  const [bulkFollowProgress, setBulkFollowProgress] = useState({ completed: 0, total: 0 });
   
 
   // Pagination state
@@ -109,6 +124,10 @@ export function FollowersListDrawer({
     title === 'Following' &&
     !!currentUserAddress &&
     profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
+  const canFollowBackAll =
+    title === 'Followers' &&
+    !!currentUserAddress &&
+    profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
   const { groups, createGroup, toggleMember } = useFollowGroups();
   const [groupingAddress, setGroupingAddress] = useState<string | null>(null);
   const [newGroupName, setNewGroupName] = useState('');
@@ -117,6 +136,7 @@ export function FollowersListDrawer({
   const searchInputRef = useRef<HTMLInputElement>(null);
   const followingSetRef = useRef<Set<string> | null>(null);
   const followersSetRef = useRef<Set<string> | null>(null);
+  const followBackStreakRef = useRef(0);
 
   // Debounce search input
   useEffect(() => {
@@ -232,9 +252,9 @@ export function FollowersListDrawer({
             setIsResolvingStatus(false);
           }
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error fetching follow list:', err);
-        const msg = err?.message || '';
+        const msg = getErrorMessage(err);
         if (msg.toLowerCase().includes('hidden')) {
           setError(t('follow.errHidden'));
         } else if (msg.toLowerCase().includes('authentication required')) {
@@ -249,7 +269,7 @@ export function FollowersListDrawer({
     };
 
     fetchInitialPage();
-  }, [open, profileAddress, title, currentUserAddress, isAuthenticated, sortOption, debouncedSearch]);
+  }, [open, profileAddress, title, currentUserAddress, isAuthenticated, sortOption, debouncedSearch, t]);
 
   // Load more pages
   const loadMore = useCallback(async () => {
@@ -307,7 +327,7 @@ export function FollowersListDrawer({
     } finally {
       setIsLoadingMore(false);
     }
-  }, [isLoadingMore, hasMore, currentPage, title, profileAddress, currentUserAddress, isAuthenticated, sortOption, debouncedSearch]);
+  }, [isLoadingMore, hasMore, currentPage, title, profileAddress, currentUserAddress, sortOption, debouncedSearch]);
 
   // IntersectionObserver for infinite scroll
   useEffect(() => {
@@ -339,6 +359,10 @@ export function FollowersListDrawer({
       setSearchQuery('');
       setDebouncedSearch('');
       setSortOption('newest');
+      followBackStreakRef.current = 0;
+      setShowFollowBackAll(false);
+      setIsFollowingBackAll(false);
+      setBulkFollowProgress({ completed: 0, total: 0 });
       followingSetRef.current = null;
     }
   }, [open]);
@@ -355,6 +379,13 @@ export function FollowersListDrawer({
       navigate(`/profile?id=${user.address}`);
     }
   };
+
+  const recordFollowBack = useCallback(() => {
+    followBackStreakRef.current += 1;
+    if (followBackStreakRef.current >= FOLLOW_BACK_ALL_REVEAL_THRESHOLD) {
+      setShowFollowBackAll(true);
+    }
+  }, []);
 
   const handleFollowToggle = (user: UserListItem, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -375,11 +406,13 @@ export function FollowersListDrawer({
       ));
       followUser(user.address)
         .then(() => {
+          if (canFollowBackAll && user.followsYou) recordFollowBack();
+          else followBackStreakRef.current = 0;
           toast.success(t('follow.requestSentTo', { name }));
         })
-        .catch((error: any) => {
-          const msg = error?.message || error?.error || String(error);
-          const msgLower = typeof msg === 'string' ? msg.toLowerCase() : '';
+        .catch((error: unknown) => {
+          followBackStreakRef.current = 0;
+          const msgLower = getErrorMessage(error).toLowerCase();
           if (msgLower.includes('already pending')) {
             toast.info(t('follow.requestAlreadyPending'));
           } else if (msgLower.includes('already') || msgLower.includes('following')) {
@@ -400,14 +433,17 @@ export function FollowersListDrawer({
 
     // Optimistic flip via the shared store + local list state (instant, no spinner)
     const wasFollowing = user.isFollowing === true;
+    const isFollowBack = canFollowBackAll && user.followsYou && !wasFollowing;
+    if (!isFollowBack) followBackStreakRef.current = 0;
     if (wasFollowing) followingSetRef.current?.delete(user.address.toLowerCase());
     else followingSetRef.current?.add(user.address.toLowerCase());
     setUsers(prev => prev.map(u =>
       u.address === user.address ? { ...u, isFollowing: !wasFollowing } : u
     ));
-    toggleFollowFor(queryClient, user.address, wasFollowing, {
+    void toggleFollowFor(queryClient, user.address, wasFollowing, {
       name,
       onError: (error) => {
+        if (isFollowBack) followBackStreakRef.current = 0;
         if (wasFollowing) followingSetRef.current?.add(user.address.toLowerCase());
         else followingSetRef.current?.delete(user.address.toLowerCase());
         setUsers(prev => prev.map(u =>
@@ -415,17 +451,150 @@ export function FollowersListDrawer({
         ));
         handleApiError(error, t('follow.updateFailed'));
       },
+      onSuccess: () => {
+        if (isFollowBack) recordFollowBack();
+      },
     });
   };
 
-  const isCurrentUser = (address: string) =>
-    currentUserAddress?.toLowerCase() === address.toLowerCase();
+  const isCurrentUser = useCallback((address: string) =>
+    currentUserAddress?.toLowerCase() === address.toLowerCase(), [currentUserAddress]);
 
   // Cross-surface follow overrides win over the fetched list state
   const displayUsers = useMemo(() => users.map(u => {
     const override = followOverrides.get(u.address.toLowerCase());
     return override === undefined ? u : { ...u, isFollowing: override };
   }), [users, followOverrides]);
+
+  const hasVisibleFollowBacks = displayUsers.some(user =>
+    !isCurrentUser(user.address) && user.followsYou && !user.isFollowing && !user.isPending
+  );
+
+  const getEveryFollowListItem = useCallback(async (type: 'followers' | 'following') => {
+    const items: UserListItem[] = [];
+    let page = 1;
+    let hasNextPage = true;
+
+    while (hasNextPage) {
+      const response = await getFollowList(currentUserAddress!, type, {
+        page,
+        limit: FOLLOWING_CACHE_PAGE_SIZE,
+        sortBy: 'createdAt',
+        sortOrder: 'desc',
+      });
+      items.push(...response.items.map(mapFollowListItem));
+      hasNextPage = response.items.length > 0 && (response.pagination?.hasMore ?? false);
+      page += 1;
+    }
+
+    return items;
+  }, [currentUserAddress]);
+
+  const handleFollowBackAll = useCallback(async () => {
+    if (!canFollowBackAll || !currentUserAddress || isFollowingBackAll) return;
+
+    setIsFollowingBackAll(true);
+    setBulkFollowProgress({ completed: 0, total: 0 });
+
+    try {
+      const [allFollowers, allFollowing] = await Promise.all([
+        getEveryFollowListItem('followers'),
+        getEveryFollowListItem('following'),
+      ]);
+      const followingAddresses = new Set(allFollowing.map(user => user.address.toLowerCase()));
+      followingSetRef.current?.forEach(address => followingAddresses.add(address));
+      followOverrides.forEach((isFollowing, address) => {
+        if (isFollowing) followingAddresses.add(address);
+      });
+      const pendingAddresses = new Set(
+        users.filter(user => user.isPending).map(user => user.address.toLowerCase()),
+      );
+      const candidates = Array.from(
+        new Map(
+          allFollowers
+            .filter(user =>
+              !isCurrentUser(user.address) &&
+              !followingAddresses.has(user.address.toLowerCase()) &&
+              !pendingAddresses.has(user.address.toLowerCase())
+            )
+            .map(user => [user.address.toLowerCase(), user]),
+        ).values(),
+      );
+      followingSetRef.current ??= followingAddresses;
+
+      setBulkFollowProgress({ completed: 0, total: candidates.length });
+      if (candidates.length === 0) {
+        toast.info(t('follow.everyoneFollowedBack', 'You already follow back everyone'));
+        return;
+      }
+
+      let nextIndex = 0;
+      let completed = 0;
+      let failed = 0;
+
+      const worker = async () => {
+        while (nextIndex < candidates.length) {
+          const user = candidates[nextIndex++];
+          let succeeded = false;
+
+          if (user.isPrivate) {
+            try {
+              await followUser(user.address);
+              succeeded = true;
+              setUsers(current => current.map(item =>
+                item.address.toLowerCase() === user.address.toLowerCase()
+                  ? { ...item, isPending: true }
+                  : item
+              ));
+            } catch (error) {
+              const message = (error instanceof Error ? error.message : String(error)).toLowerCase();
+              if (message.includes('already pending')) {
+                succeeded = true;
+                setUsers(current => current.map(item =>
+                  item.address.toLowerCase() === user.address.toLowerCase()
+                    ? { ...item, isPending: true }
+                    : item
+                ));
+              } else {
+                failed += 1;
+              }
+            }
+          } else {
+            succeeded = await toggleFollowFor(queryClient, user.address, false, {
+              silent: true,
+              onError: () => {},
+            });
+            if (!succeeded) failed += 1;
+          }
+
+          if (succeeded) followingSetRef.current?.add(user.address.toLowerCase());
+          completed += 1;
+          setBulkFollowProgress({ completed, total: candidates.length });
+        }
+      };
+
+      await Promise.all(
+        Array.from({ length: Math.min(BULK_FOLLOW_CONCURRENCY, candidates.length) }, () => worker()),
+      );
+
+      const followed = candidates.length - failed;
+      if (failed === 0) {
+        toast.success(t('follow.followedBackAll', 'Followed back everyone'));
+      } else if (followed > 0) {
+        toast.warning(t('follow.followedBackSome', {
+          defaultValue: 'Followed back {{followed}} people; {{failed}} failed',
+          followed,
+          failed,
+        }));
+      } else {
+        toast.error(t('follow.followBackAllFailed', 'Could not follow anyone back'));
+      }
+    } catch (error) {
+      handleApiError(error, t('follow.followBackAllFailed', 'Could not follow everyone back'));
+    } finally {
+      setIsFollowingBackAll(false);
+    }
+  }, [canFollowBackAll, currentUserAddress, followOverrides, getEveryFollowListItem, handleApiError, isCurrentUser, isFollowingBackAll, queryClient, t, users]);
 
   const heading = title === 'Followers' ? t('follow.followers') : t('follow.following');
   const titleWithCount = totalCount !== null && totalCount > 0
@@ -474,12 +643,40 @@ export function FollowersListDrawer({
           </Button>
         </div>
 
+        {canFollowBackAll && showFollowBackAll && (hasVisibleFollowBacks || isFollowingBackAll) && (
+          <div className="px-4 pb-3">
+            <Button
+              onClick={handleFollowBackAll}
+              disabled={isFollowingBackAll}
+              className="w-full h-10 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 disabled:bg-white/15 disabled:text-zinc-400"
+            >
+              {isFollowingBackAll ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  {bulkFollowProgress.total > 0
+                    ? t('follow.followingBackProgress', {
+                        defaultValue: 'Following back {{completed}} of {{total}}',
+                        completed: bulkFollowProgress.completed,
+                        total: bulkFollowProgress.total,
+                      })
+                    : t('follow.findingFollowers', 'Finding followers...')}
+                </>
+              ) : (
+                <>
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  {t('follow.followBackAll', 'Follow back all')}
+                </>
+              )}
+            </Button>
+          </div>
+        )}
+
         <div className="flex-1 px-4 pb-6 overflow-y-auto overscroll-contain" style={{ maxHeight: 'calc(85vh - 140px)', WebkitOverflowScrolling: 'touch' }}>
           {isLoading ? (
             <div className="space-y-3">
               {Array.from({ length: 5 }).map((_, i) => (
                 <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
-                  <Skeleton className="w-12 h-12 rounded-lg" />
+                  <Skeleton className="w-[4.25rem] h-[4.25rem] rounded-xl" />
                   <div className="flex-1 space-y-2">
                     <Skeleton className="h-4 w-32" />
                     <Skeleton className="h-3 w-24" />
@@ -524,11 +721,11 @@ export function FollowersListDrawer({
                   onClick={() => handleUserClick(user)}
                   className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
                 >
-                  <Avatar className="w-12 h-12 rounded-lg shrink-0">
+                  <Avatar className="w-[4.25rem] h-[4.25rem] rounded-xl shrink-0 self-start">
                     {user.avatarUrl ? (
                       <AvatarImage src={user.avatarUrl} alt={user.displayName || 'User'} />
                     ) : null}
-                    <AvatarFallback className="bg-zinc-800 text-white rounded-lg">
+                    <AvatarFallback className="bg-zinc-800 text-white rounded-xl text-lg">
                       {(user.displayName || user.username || '?')[0].toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
