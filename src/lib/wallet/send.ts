@@ -61,7 +61,7 @@ export async function sendNativeToken(
   const txHash = await sendTransaction(wagmiConfig, {
     to: to as `0x${string}`,
     value: BigInt(value.toString()),
-    ...(chainId ? { chainId: chainId as any } : {}),
+    chainId: (chainId ?? BASE_CHAIN_ID) as any,
   });
 
   return {
@@ -69,7 +69,7 @@ export async function sendNativeToken(
     wait: async () => {
       const receipt = await waitForTransactionReceipt(wagmiConfig, {
         hash: txHash as `0x${string}`,
-        ...(chainId ? { chainId: chainId as any } : {}),
+        chainId: (chainId ?? BASE_CHAIN_ID) as any,
       });
       return { status: receipt.status === 'success' ? 1 : 0, hash: receipt.transactionHash };
     },
