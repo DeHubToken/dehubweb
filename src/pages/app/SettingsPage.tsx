@@ -142,6 +142,7 @@ import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { BrowserNotificationsSetting } from '@/components/app/settings/BrowserNotificationsSetting';
 import { PublicChatAlertsSetting } from '@/components/app/settings/PublicChatAlertsSetting';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
+import { useDhbHoldings } from '@/hooks/use-dhb-holdings';
 import { FollowRequestsDrawer } from '@/components/app/profile/FollowRequestsDrawer';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { useUserLanguage } from '@/hooks/use-user-language';
@@ -3000,7 +3001,9 @@ function AssetsSettings() {
   const { option: tipNetwork, setOption: setTipNetwork } = useTipNetwork();
 
   const isGasSponsored = connectionSource === 'web3auth';
-  const coinBalance = 0;
+  // Was hardcoded to 0, so this row read "0" for everyone no matter what they
+  // held. Same hook as the wallet page, so the two always agree.
+  const { total: coinBalance, isLoading: balanceLoading } = useDhbHoldings();
 
   const truncatedAddress = walletAddress 
     ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
@@ -3042,7 +3045,8 @@ function AssetsSettings() {
           as="button"
           anchor="dhb-balance"
           icon={<img src={dehubCoin} alt="DHB" />}
-          title={coinBalance.toLocaleString()}
+          title={balanceLoading && !coinBalance ? '—' : Math.floor(coinBalance).toLocaleString()}
+          description={t('settings.dhbBalanceIncludesStaked')}
           onClick={() => setWalletDrawerOpen(true)}
           action={<span className="text-sm text-zinc-500">{t('settings.manage')}</span>}
         />
