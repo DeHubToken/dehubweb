@@ -643,7 +643,7 @@ export function FollowersListDrawer({
           </Button>
         </div>
 
-        {canFollowBackAll && showFollowBackAll && (hasVisibleFollowBacks || isFollowingBackAll) && (
+        {canFollowBackAll && showFollowBackAll && (hasVisibleFollowBacks || hasMore || isFollowingBackAll) && (
           <div className="px-4 pb-3">
             <Button
               onClick={handleFollowBackAll}
