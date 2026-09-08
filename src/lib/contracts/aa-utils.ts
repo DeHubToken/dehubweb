@@ -555,6 +555,11 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   if (isWalletLockedError(error) || lowerError.includes('wallet is locked')) {
     return 'Your wallet is locked — unlock it to continue.';
   }
+  const unavailableChain = lowerError.match(/no_signer_on_chain:(\d+)/);
+  if (unavailableChain) {
+    const chain = CHAIN_CONFIGS[Number(unavailableChain[1]) as ChainId]?.name || 'That network';
+    return `${chain} transactions are temporarily unavailable. Please try again.`;
+  }
   if (lowerError.includes('user rejected') || lowerError.includes('user denied')) {
     return 'Transaction was rejected by user.';
   }

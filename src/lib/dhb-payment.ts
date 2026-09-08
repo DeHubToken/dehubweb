@@ -18,7 +18,7 @@ import {
   writeContractAA,
   getERC20Balance,
   getWalletAddress,
-  switchChain,
+  ensureSignerOnChain,
   parseTxError,
 } from '@/lib/contracts/aa-utils';
 import { toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
@@ -31,7 +31,11 @@ const erc20TransferInterface = new Interface([
 /** DHB this wallet holds right now, across both chains we accept. */
 export async function readDhbBalance(): Promise<number> {
   try {
-    const address = await getWalletAddress();
+    // Opening a payment sheet is a passive balance read. It must not raise the
+    // global wallet-unlock sheet before the user has asked to send anything —
+    // stacked drawers can swallow that prompt and leave the later Send tap
+    // believing an unlock is already being handled.
+    const address = await getWalletAddress({ silent: true });
     if (!address) return 0;
     const [base, bnb] = await Promise.all([
       getERC20Balance(getChainConfig(BASE_CHAIN_ID).dhbToken, address, BASE_CHAIN_ID).catch(() => BigInt(0)),
@@ -111,9 +115,14 @@ export async function payDhb(
     );
   }
 
-  await switchChain(payChainId);
-
   try {
+    // Embedded wallets do not have a network picker for the user to operate.
+    // Build the matching smart-account provider ourselves; external wallets
+    // still reach their connector's ordinary switch request through this same
+    // helper. `switchChain`'s old smart-wallet fallback could end by telling an
+    // embedded-wallet user to switch a chain manually, which was impossible.
+    await ensureSignerOnChain(payChainId);
+
     const result = await writeContractAA(
       getChainConfig(payChainId).dhbToken,
       erc20TransferInterface,
