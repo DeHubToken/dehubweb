@@ -1875,6 +1875,182 @@ export type Database = {
         }
         Relationships: []
       }
+      dao_proposal_voters: {
+        Row: {
+          proposal_id: string
+          vote_weight: number
+          wallet_address: string
+        }
+        Insert: {
+          proposal_id: string
+          vote_weight: number
+          wallet_address: string
+        }
+        Update: {
+          proposal_id?: string
+          vote_weight?: number
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dao_proposal_voters_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "dao_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dao_proposal_votes: {
+        Row: {
+          created_at: string
+          proposal_id: string
+          updated_at: string
+          vote_type: number
+          vote_weight: number
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          proposal_id: string
+          updated_at?: string
+          vote_type: number
+          vote_weight: number
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          proposal_id?: string
+          updated_at?: string
+          vote_type?: number
+          vote_weight?: number
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dao_proposal_votes_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "dao_proposals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dao_proposal_votes_proposal_id_wallet_address_fkey"
+            columns: ["proposal_id", "wallet_address"]
+            isOneToOne: true
+            referencedRelation: "dao_proposal_voters"
+            referencedColumns: ["proposal_id", "wallet_address"]
+          },
+        ]
+      }
+      dao_proposals: {
+        Row: {
+          accept_dhb: number
+          accepted_at: string | null
+          created_at: string
+          description: string
+          dhb_amount: number | null
+          electorate_dhb: number
+          fulfilled_at: string | null
+          fulfilment_tx_hash: string | null
+          id: string
+          kind: string
+          payment_amount: number | null
+          payment_asset: string | null
+          payment_chain_id: number | null
+          payment_due_at: string | null
+          payment_reminder_sent_at: string | null
+          payment_submitted_at: string | null
+          payment_tx_hash: string | null
+          payment_verified_at: string | null
+          payment_verified_by: string | null
+          price_usd: number | null
+          proposer_address: string
+          proposer_avatar: string | null
+          proposer_username: string | null
+          recipient_address: string | null
+          reject_dhb: number
+          spend_amount: number | null
+          spend_asset: string | null
+          status: string
+          title: string
+          total_usd: number | null
+          updated_at: string
+          voting_ends_at: string
+          voting_reminder_sent_at: string | null
+        }
+        Insert: {
+          accept_dhb?: number
+          accepted_at?: string | null
+          created_at?: string
+          description: string
+          dhb_amount?: number | null
+          electorate_dhb?: number
+          fulfilled_at?: string | null
+          fulfilment_tx_hash?: string | null
+          id?: string
+          kind: string
+          payment_amount?: number | null
+          payment_asset?: string | null
+          payment_chain_id?: number | null
+          payment_due_at?: string | null
+          payment_reminder_sent_at?: string | null
+          payment_submitted_at?: string | null
+          payment_tx_hash?: string | null
+          payment_verified_at?: string | null
+          payment_verified_by?: string | null
+          price_usd?: number | null
+          proposer_address: string
+          proposer_avatar?: string | null
+          proposer_username?: string | null
+          recipient_address?: string | null
+          reject_dhb?: number
+          spend_amount?: number | null
+          spend_asset?: string | null
+          status?: string
+          title: string
+          total_usd?: number | null
+          updated_at?: string
+          voting_ends_at: string
+          voting_reminder_sent_at?: string | null
+        }
+        Update: {
+          accept_dhb?: number
+          accepted_at?: string | null
+          created_at?: string
+          description?: string
+          dhb_amount?: number | null
+          electorate_dhb?: number
+          fulfilled_at?: string | null
+          fulfilment_tx_hash?: string | null
+          id?: string
+          kind?: string
+          payment_amount?: number | null
+          payment_asset?: string | null
+          payment_chain_id?: number | null
+          payment_due_at?: string | null
+          payment_reminder_sent_at?: string | null
+          payment_submitted_at?: string | null
+          payment_tx_hash?: string | null
+          payment_verified_at?: string | null
+          payment_verified_by?: string | null
+          price_usd?: number | null
+          proposer_address?: string
+          proposer_avatar?: string | null
+          proposer_username?: string | null
+          recipient_address?: string | null
+          reject_dhb?: number
+          spend_amount?: number | null
+          spend_asset?: string | null
+          status?: string
+          title?: string
+          total_usd?: number | null
+          updated_at?: string
+          voting_ends_at?: string
+          voting_reminder_sent_at?: string | null
+        }
+        Relationships: []
+      }
       dhb_payment_claims: {
         Row: {
           chain: string | null
@@ -5936,6 +6112,7 @@ export type Database = {
         Args: { p_listing_id: string; p_quantity: number }
         Returns: number
       }
+      resolve_due_dao_proposals: { Args: never; Returns: number }
       resolve_due_governance_proposals: { Args: never; Returns: number }
       stage_dub_tick: {
         Args: {
