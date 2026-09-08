@@ -397,7 +397,7 @@ const MessageBubble = memo(function MessageBubble({
       <div className={`flex-1 min-w-0 max-w-[75%] ${isOwnMessage ? 'text-right' : ''}`}>
         {/* Reply preview */}
         {message.replyTo && (
-          <div className={`mb-1 px-3 py-1.5 rounded-lg border-l-2 border-primary bg-zinc-800/60 text-xs text-zinc-400 max-w-full truncate ${isOwnMessage ? 'text-right border-r-2 border-l-0' : ''}`}>
+          <div className={`mb-1 px-3 py-1.5 rounded-lg bg-zinc-800/60 text-xs text-zinc-400 max-w-full truncate ${isOwnMessage ? 'text-right' : ''}`}>
             <span className="text-zinc-300 font-medium">{message.replyTo.sender?.displayName || 'User'}</span>
             <span className="ml-1">{message.replyTo.content || '📎 Media'}</span>
           </div>
