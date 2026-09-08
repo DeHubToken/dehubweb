@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
+import { useSelfBadge } from '@/hooks/use-self-badge-balance';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useCallback, useEffect, useRef, useState, memo } from 'react';
@@ -73,8 +74,10 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   const { data: customUnread } = useCustomUnreadCount();
   const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);
 
-  // Coin balance
-  const coinBalance = 0; // TODO: Get from user wallet
+  // The whole DHB position — held plus staked, across both chains. Was
+  // hardcoded to 0, so the coin in the header read 0 for everyone. Free to
+  // read: SelfBadgeSync owns the fetch, this only observes its answer.
+  const coinBalance = useSelfBadge().balance ?? 0;
 
   // Use ref for pathname so handleLogoClick is stable across renders
   const pathnameRef = useRef(location.pathname);
