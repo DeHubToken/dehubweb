@@ -26,7 +26,7 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
-import assistantAvatar from '@/assets/ai-assistant-avatar.png';
+import { ASSISTANT_AVATAR as assistantAvatar } from '@/lib/assistant';
 import aiSparkleIcon from '@/assets/icons/ai-sparkle-icon.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';

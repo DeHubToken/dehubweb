@@ -1,3 +1,5 @@
+import assistantAvatar from '@/assets/ai-assistant-avatar.png';
+
 /**
  * The @assistant bot's identity.
  *
@@ -22,6 +24,13 @@
 export const ASSISTANT_ADDRESS = '0xea0fe14398b96f3ae97f222a6cf0f933c1ccf61c';
 
 export const ASSISTANT_USERNAME = 'assistant';
+
+/**
+ * One bundled source of truth for the assistant's avatar. The API account may
+ * still return an older uploaded profile image, so assistant-aware surfaces
+ * always prefer this asset.
+ */
+export const ASSISTANT_AVATAR = assistantAvatar;
 
 /**
  * Mention forms the bot answers to. Mirrors the API's trigger exactly.

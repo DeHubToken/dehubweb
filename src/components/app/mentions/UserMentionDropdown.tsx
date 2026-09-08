@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { apiCall } from '@/lib/api/dehub/core';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { isAssistantAddress } from '@/lib/assistant';
+import { ASSISTANT_AVATAR, isAssistantAddress } from '@/lib/assistant';
 import { Search, Loader2, AtSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -120,7 +120,9 @@ export function UserMentionDropdown({
           id: u.address || u.username || '',
           username: u.username || '',
           displayName: u.displayName ?? null,
-          avatarUrl: buildAvatarUrl(u.address || '', u.avatarImageUrl) || null,
+          avatarUrl: isAssistantAddress(u.address)
+            ? ASSISTANT_AVATAR
+            : buildAvatarUrl(u.address || '', u.avatarImageUrl) || null,
           isVerified: u.isVerified ?? false,
           followerCount: typeof u.followerCount === 'number' ? u.followerCount : (typeof u.followers === 'number' ? u.followers : undefined),
           followingCount: typeof u.followingCount === 'number' ? u.followingCount : (typeof u.followings === 'number' ? u.followings : undefined),
