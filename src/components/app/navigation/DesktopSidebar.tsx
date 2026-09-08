@@ -17,6 +17,7 @@ import { openStageModal } from '@/contexts/StageContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
+import { useSelfBadge } from '@/hooks/use-self-badge-balance';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { useTotalUnreadCount } from '@/hooks/use-messages';
 import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
@@ -215,8 +216,12 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     });
   }, []);
 
-  // Get balance from user or default to 0
-  const coinBalance = 0; // TODO: Get from user wallet
+  // The whole DHB position — held plus staked, across both chains. Was
+  // hardcoded to 0, so the coin in the sidebar read 0 for everyone.
+  // SelfBadgeSync owns the fetch and this observer only reads its answer, so
+  // it costs no request; it is also what the badge beside the user's own name
+  // is drawn from, which keeps the two agreeing.
+  const coinBalance = useSelfBadge().balance ?? 0;
 
   const handleCoinClick = () => {
     if (!isAuthenticated) {
