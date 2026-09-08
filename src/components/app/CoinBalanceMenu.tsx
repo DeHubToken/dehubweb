@@ -17,6 +17,7 @@ import usdcLogo from '@/assets/usdc-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWalletLocked } from '@/hooks/use-wallet-locked';
 import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
+import { useTokenPrices } from '@/hooks/use-token-prices';
 import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
 
 /**
@@ -173,10 +174,16 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
     </div>
   );
 
-  // Mock dollar value calculation (e.g., 1 coin = $0.05)
-  const rawDollarValue = balance * 0.05;
-  const dollarValue = rawDollarValue === 0 ? '0' : rawDollarValue.toFixed(2);
-  
+  // The live DHB quote, not the 0.05 placeholder this used to multiply by —
+  // that was ~50x the real price, so the figure under the balance was wrong by
+  // that much for everyone who saw it.
+  const { data: prices } = useTokenPrices();
+  const dhbPrice = prices?.DHB ?? 0;
+  const dollarValue = (balance * dhbPrice).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
   // Format balance: show 0 when zero, otherwise show with 2 decimals if has decimals
   const formatBalance = (value: number) => {
     if (value === 0) return '0';
@@ -193,10 +200,14 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
           <span className="text-white font-semibold">{formatBalance(balance)}</span>
         </div>
         {/* USD Balance with USDC logo */}
-        <div className="flex items-center gap-2">
-          <img src={usdcLogo} alt="USD" className="w-5 h-5" />
-          <span className="text-zinc-400 font-medium">${dollarValue}</span>
-        </div>
+        {/* Held back until a quote is in: rendering $0.00 against a real
+            balance reads as "your coins are worthless", not as "loading". */}
+        {dhbPrice > 0 && (
+          <div className="flex items-center gap-2">
+            <img src={usdcLogo} alt="USD" className="w-5 h-5" />
+            <span className="text-zinc-400 font-medium">${dollarValue}</span>
+          </div>
+        )}
       </div>
       {walletLocked && <UnlockWalletRow onUnlock={requestWalletUnlock} />}
       <button
@@ -575,9 +586,14 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
     user.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const rawDollarValue = balance * 0.05;
-  const dollarValue = rawDollarValue === 0 ? '0' : rawDollarValue.toFixed(2);
-  
+  // Live DHB quote — see the note on the same calculation in CoinBalanceMenu.
+  const { data: prices } = useTokenPrices();
+  const dhbPrice = prices?.DHB ?? 0;
+  const dollarValue = (balance * dhbPrice).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
   const formatBalance = (value: number) => {
     if (value === 0) return '0';
     return value % 1 === 0 ? value.toLocaleString() : value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -814,10 +830,14 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
           <img src={dehubCoin} alt="coins" className="w-5 h-5" />
           <span className="text-white font-semibold">{formatBalance(balance)}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <img src={usdcLogo} alt="USD" className="w-5 h-5" />
-          <span className="text-zinc-400 font-medium">${dollarValue}</span>
-        </div>
+        {/* Held back until a quote is in: rendering $0.00 against a real
+            balance reads as "your coins are worthless", not as "loading". */}
+        {dhbPrice > 0 && (
+          <div className="flex items-center gap-2">
+            <img src={usdcLogo} alt="USD" className="w-5 h-5" />
+            <span className="text-zinc-400 font-medium">${dollarValue}</span>
+          </div>
+        )}
       </div>
       {walletLocked && <UnlockWalletRow onUnlock={requestWalletUnlock} />}
       <button
