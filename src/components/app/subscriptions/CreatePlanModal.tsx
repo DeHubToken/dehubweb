@@ -20,6 +20,7 @@ import bnbLogo from '@/assets/icons/bnb-logo.png';
 interface CreatePlanModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onCreated?: () => void;
 }
 
 /**
@@ -70,7 +71,7 @@ function clearDraft() {
   sessionStorage.removeItem(CACHE_KEY);
 }
 
-export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
+export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanModalProps) {
   const { t } = useTranslation();
   const draft = loadDraft();
   const [name, setName] = useState(draft?.name ?? '');
@@ -131,6 +132,7 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
       setDuration(1);
       setTier(1);
       setBenefits(['']);
+      onCreated?.();
       onOpenChange(false);
     } catch (err) {
       console.error('[CreatePlanModal] Plan creation failed:', err);
