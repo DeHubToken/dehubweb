@@ -41,7 +41,7 @@ const identitySources = {
     path: path.join(iconRoot, 'sources', 'superpowers-electric.png'),
     removeChromaBackdrop: true,
   },
-  dao: { path: path.join(root, 'public', 'brand-kit', 'icons', 'handshake.png') },
+  dao: { path: path.join(iconRoot, 'sources', 'dao-council.png') },
   staking: { path: path.join(root, 'public', 'brand-kit', 'icons', 'vault.png') },
   bridge: { path: path.join(root, 'public', 'brand-kit', 'icons', 'chain.png') },
   buy: { path: path.join(root, 'public', 'brand-kit', 'icons', 'coin-bag.png') },

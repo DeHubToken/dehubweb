@@ -395,9 +395,10 @@ export function ThemedIcon({ icon, alt = '', className, ...imgProps }: ThemedIco
   }
 
   const rasterTheme = FULL_RASTER_THEMES.has(theme) ? theme : 'system';
+  const assetRevision = icon === 'dao' ? '?v=2' : '';
   return (
     <img
-      src={`/theme-icons/${rasterTheme}/${icon}.webp`}
+      src={`/theme-icons/${rasterTheme}/${icon}.webp${assetRevision}`}
       alt={alt}
       className={className}
       data-theme-icon-family={theme}
