@@ -102,6 +102,7 @@ import {
   removeProfile,
 } from '@/lib/profiles';
 import { AuthContext, type SocialProvider, type WalletProvider, type WalletPhase } from './AuthContext';
+import { finishWalletUnlock, setWalletUnlockPrompt } from '@/lib/wallet-unlock-flow';
 
 const authLogger = createLogger('Auth');
 
@@ -563,6 +564,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const closeLoginModal = useCallback(() => {
+    finishWalletUnlock(false);
     walletUnlockPromptActiveRef.current = false;
     toast.dismiss('wallet-unlock-required');
     connectionAbortedRef.current = true;
@@ -677,7 +679,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * menu item, no settings row could offer a way in.
    */
   const requestWalletUnlock = useCallback(() => {
-    const cachedUid = supabaseUserId ?? localStorage.getItem('dehub_supabase_uid');
+    setWalletUnlockPrompt(true);
+    walletUnlockPromptActiveRef.current = true;
+    const cachedUid = supabaseUserId ?? localStorage.getItem('dehub_supabase_uid') ?? readLastSession()?.uid;
     if (cachedUid) {
       setSupabaseUserId(cachedUid);
       setWalletPhase('unlock');
@@ -685,9 +689,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    void supabase.auth
-      .getSession()
+    // Show a cancellable sheet even if the legacy session lookup stalls.
+    setIsProcessingRedirect(true);
+    openLoginModal();
+    let sessionTimeout: ReturnType<typeof setTimeout>;
+    void Promise.race([
+      supabase.auth.getSession(),
+      new Promise<never>((_, reject) => {
+        sessionTimeout = setTimeout(() => reject(new Error('Session lookup timed out')), 10_000);
+      }),
+    ])
       .then(({ data }) => {
+        if (!walletUnlockPromptActiveRef.current) return;
         const uid = data?.session?.user?.id;
         if (uid) {
           setSupabaseUserId(uid);
@@ -695,9 +708,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         // No Supabase session either — there is genuinely no identity to unlock
         // against, and signing in is the right answer.
-        openLoginModal();
       })
-      .catch(() => openLoginModal());
+      .catch(() => { /* The open sheet offers sign-in when no identity can be recovered. */ })
+      .finally(() => {
+        clearTimeout(sessionTimeout);
+        setIsProcessingRedirect(false);
+      });
   }, [supabaseUserId, openLoginModal]);
 
   /**
@@ -1187,12 +1203,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // the password sheet back over an already-unlocked app. Likewise, the
       // first request owns the sheet until it succeeds or is dismissed; all
       // concurrent requests simply wait for that same unlock.
-      if (isWalletUnlocked() || getAAProvider()) {
+      if (walletUnlockPromptActiveRef.current) return;
+      if (isWalletUnlocked()) {
+        finishWalletUnlock(true);
         walletUnlockPromptActiveRef.current = false;
         toast.dismiss('wallet-unlock-required');
         return;
       }
-      if (walletUnlockPromptActiveRef.current) return;
       walletUnlockPromptActiveRef.current = true;
 
       // How often this fires is the entire complaint about the built-in
@@ -2420,6 +2437,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setWalletPhase('none');
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
       localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
+      finishWalletUnlock(true);
       closeLoginModal();
       toast.success('New wallet ready — your account came with it', { id: toastId });
     } catch (err: any) {
@@ -2447,6 +2465,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setWalletPhase('none');
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
       localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
+      finishWalletUnlock(true);
       closeLoginModal();
     } catch (err: any) {
       console.error('[Auth] Smart-wallet login failed:', err);

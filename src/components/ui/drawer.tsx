@@ -4,6 +4,7 @@ import { Drawer as DrawerPrimitive } from "vaul";
 import { cn } from "@/lib/utils";
 import { OverlayOpenTracker } from "@/lib/overlay-open";
 import { guardOutsideDismiss } from "@/lib/overlay-dismiss";
+import { useWalletUnlockPrompt } from '@/lib/wallet-unlock-flow';
 
 // Shared guard against the vaul "ghost click": dismissing a sheet — tapping the
 // scrim, or an outside tap on a non-modal drawer — fires a synthesized click on
@@ -136,9 +137,11 @@ export function warmDeferredSheets(): void {
 type CustomDrawerProps = React.ComponentProps<typeof DrawerPrimitive.Root> & {
   /** Opt this deferred sheet in to `warmDeferredSheets()` — see the note there. */
   warmable?: boolean;
+  walletPrompt?: boolean;
 };
 
-const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, warmable = false, children, ...props }: CustomDrawerProps) => {
+const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, warmable = false, walletPrompt = false, children, ...props }: CustomDrawerProps) => {
+  const unlockOpen = useWalletUnlockPrompt();
   const canDeferRef = React.useRef<boolean | null>(null);
   if (canDeferRef.current === null) {
     canDeferRef.current =
@@ -214,6 +217,7 @@ const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, war
        */
       noBodyStyles
       onOpenChange={(open) => {
+        if (!open && unlockOpen && !walletPrompt) return;
         if (!open) lastDrawerDismissAt = Date.now();
         onOpenChange?.(open);
       }}

@@ -31,7 +31,9 @@ import {
   restoreWalletSession,
   lockWallet,
   isWalletUnlocked,
+  ensureWalletUnlocked,
 } from '@/lib/smart-wallet';
+import { finishWalletUnlock } from '@/lib/wallet-unlock-flow';
 import { WALLET_UNLOCK_INTERVAL_KEY } from '@/hooks/use-wallet-unlock-interval';
 
 const KEY = '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d';
@@ -48,7 +50,34 @@ beforeEach(() => {
   vault.clearVaultSession.mockClear();
 });
 
-afterEach(() => { lockWallet(); });
+afterEach(() => { finishWalletUnlock(false); lockWallet(); });
+
+describe('signing unlock gate', () => {
+  it('restores a valid persisted unlock without opening a password prompt', async () => {
+    const prompted = vi.fn();
+    window.addEventListener('dehub:wallet-unlock-required', prompted);
+    localStorage.setItem(UNLOCKED_AT, String(Date.now()));
+    vault.readVaultSession.mockResolvedValue({ privKeyHex: KEY_NO_PREFIX, address: ADDRESS, unlockedAt: Date.now() });
+    await ensureWalletUnlocked();
+    expect(isWalletUnlocked()).toBe(true);
+    expect(prompted).not.toHaveBeenCalled();
+    window.removeEventListener('dehub:wallet-unlock-required', prompted);
+  });
+
+  it('does not resume merely because the key decrypted before authentication finished', async () => {
+    const requested = vi.fn();
+    window.addEventListener('dehub:wallet-unlock-required', requested);
+    const send = vi.fn();
+    const pending = ensureWalletUnlocked().then(send);
+    await vi.waitFor(() => expect(requested).toHaveBeenCalledOnce());
+    await activateWalletKey(KEY);
+    expect(send).not.toHaveBeenCalled();
+    finishWalletUnlock(true);
+    await pending;
+    expect(send).toHaveBeenCalledOnce();
+    window.removeEventListener('dehub:wallet-unlock-required', requested);
+  });
+});
 
 describe('unlocking hands the key to the vault', () => {
   it('persists the key, its address, and when the unlock happened', async () => {

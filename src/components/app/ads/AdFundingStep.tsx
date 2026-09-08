@@ -154,7 +154,7 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
           return;
         }
 
-        const address = await getWalletAddress();
+        const address = await getWalletAddress({ silent: true });
         if (cancelled) return;
         addressRef.current = address;
 
