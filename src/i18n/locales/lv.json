@@ -1979,7 +1979,25 @@
     "start": "Sākt",
     "pickCategory": "Kategorija…",
     "trendJacked": "{{category}} ir populārs {{minutes}} minūtes",
-    "jack": "Džeks"
+    "jack": "Džeks",
+    "actsPost": "Veic darbību vienā no taviem ierakstiem. Pieskaries, lai izvēlētos.",
+    "actsGift": "Dāvana — tā tiek pievienota kāda cita ierakstam. Pieskaries, lai izvēlētos.",
+    "actsComment": "Veic darbību tavā komentārā kāda cita pavedienā. Pieskaries, lai izvēlētos.",
+    "actsStage": "Veic darbību tavā vadītajā Stage. Pieskaries, lai izvēlētos.",
+    "actsCategory": "Veic darbību vienā no tavām kategorijām. Pieskaries, lai izvēlētos.",
+    "actsAccount": "Veic darbību visā tavā kontā. Pieskaries, lai sāktu.",
+    "actsOnAccount": "Šis veic darbību visā tavā kontā — nav ko izvēlēties.",
+    "findMyPost": "Meklēt tavos ierakstos vai ielikt saiti",
+    "findTheirPost": "Ielikt viņu ieraksta saiti vai meklēt",
+    "searchToGift": "Meklēt ierakstu vai ielikt saiti uz to.",
+    "noRecentPosts": "Šeit nav nekā no pagājušās nedēļas. Viss vecāks saņem Second Wind.",
+    "noOlderPosts": "Šeit nav nekā vecāka par nedēļu. Viss jaunāks saņem Boost.",
+    "noPostsFound": "Nav atrasti ieraksti.",
+    "anchorNeedsTheirThread": "Anchor notur tavu komentāru kāda cita pavediena augšgalā — tavā paša ierakstā jau ir brīvs pin.",
+    "noComments": "Tu vēl neesi komentējis.",
+    "noStages": "Pašlaik nav aktīvs vai ieplānots neviens tavs Stage.",
+    "noFlaresLeft": "Šajā ciklā vairs nav palicis Signal Flares",
+    "spentFor": "{{power}} darbojas {{minutes}} minūtes"
   },
   "work": {
     "budgetExhausted": "Šīs atlīdzības budžets ir pilnībā izlietots."

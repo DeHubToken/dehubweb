@@ -1979,7 +1979,25 @@
     "start": "Pradėti",
     "pickCategory": "Kategorija…",
     "trendJacked": "{{category}} populiarėja {{minutes}} minutes",
-    "jack": "Džekas"
+    "jack": "Džekas",
+    "actsPost": "Veikia vieną iš jūsų įrašų. Palieskite, kad pasirinktumėte.",
+    "actsGift": "Dovana – ji atitenka kito asmens įrašui. Palieskite, kad pasirinktumėte.",
+    "actsComment": "Veikia jūsų komentarą kito asmens temoje. Palieskite, kad pasirinktumėte.",
+    "actsStage": "Veikia jūsų vedamą sceną. Palieskite, kad pasirinktumėte.",
+    "actsCategory": "Veikia vieną iš jūsų kategorijų. Palieskite, kad pasirinktumėte.",
+    "actsAccount": "Veikia visą jūsų paskyrą. Palieskite, kad pradėtumėte.",
+    "actsOnAccount": "Šis veikia visą jūsų paskyrą – nieko pasirinkti nereikia.",
+    "findMyPost": "Ieškokite savo įrašų arba įklijuokite nuorodą",
+    "findTheirPost": "Įklijuokite kito asmens įrašo nuorodą arba ieškokite",
+    "searchToGift": "Ieškokite įrašo arba įklijuokite jo nuorodą.",
+    "noRecentPosts": "Čia nieko nėra iš praėjusios savaitės. Viskas, kas senesnė, gauna „Second Wind“.",
+    "noOlderPosts": "Čia nieko nėra senesnio nei savaitė. Viskas, kas naujesnė, gauna „Boost“.",
+    "noPostsFound": "Įrašų nerasta.",
+    "anchorNeedsTheirThread": "„Anchor“ laiko jūsų komentarą kito asmens temos viršuje – jūsų pačio įraše jau yra nemokamas segtukas.",
+    "noComments": "Dar nekomentavote.",
+    "noStages": "Šiuo metu jokia jūsų scena nevyksta ir nėra suplanuota.",
+    "noFlaresLeft": "Šiame cikle nebeliko „Signal Flares“.",
+    "spentFor": "{{power}} veikia {{minutes}} minutes"
   },
   "work": {
     "budgetExhausted": "Visas šio atlygio biudžetas jau paskirstytas."

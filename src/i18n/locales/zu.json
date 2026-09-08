@@ -2009,7 +2009,25 @@
     "start": "Qala",
     "pickCategory": "Isigaba…",
     "trendJacked": "I-{{category}} iyathrenda imizuzu engu-{{minutes}}",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Isenzo esisebenza kunye nepost yakho. Thinta ukuze ukhethe enye.",
+    "actsGift": "Isipho — ihlela epost yomnye. Thinta ukuze ukhethe enye.",
+    "actsComment": "Isenzo esisebenza kukhomenti yakho ethreadini yomnye. Thinta ukuze ukhethe enye.",
+    "actsStage": "Isenzo esisebenza kuStage oyihostela. Thinta ukuze ukhethe enye.",
+    "actsCategory": "Isenzo esisebenza kunye nokuhlukanisa kwakho. Thinta ukuze ukhethe enye.",
+    "actsAccount": "Isenzo esisebenza kuakhaunthi yakho lonke. Thinta ukuze uqale.",
+    "actsOnAccount": "Lokhu kusebenza kuakhaunthi yakho lonke — akukho okukhetha.",
+    "findMyPost": "Sesha amaposi akho, noma namathisela ilink",
+    "findTheirPost": "Namathisela ipost link yabo, noma sesha",
+    "searchToGift": "Sesha ipost, noma namathisela ilink kuyinye.",
+    "noRecentPosts": "Akukho nto lapha kusukela kuviki eledlule. Okudala kuthatha i-Second Wind.",
+    "noOlderPosts": "Akukho nto lapha endala kunesiviki. Okusisha kuthatha i-Boost.",
+    "noPostsFound": "Akukho amaposi atholiwe.",
+    "anchorNeedsTheirThread": "I-Anchor ibamba ikhomenti yakho phezulu kethreadini yomnye — epostini yakho i-pin isele likhululekile.",
+    "noComments": "Awukakhomentanga.",
+    "noStages": "Akukho Stage yakho esiphilile noma esisethulwe ngalesi sikhathi.",
+    "noFlaresLeft": "Akukho i-Signal Flares esele kule cycle",
+    "spentFor": "{{power}} ibaleka ngo {{minutes}} amaminithi"
   },
   "work": {
     "budgetExhausted": "Isabelomali salo mklomelo sisetshenziswe sonke."

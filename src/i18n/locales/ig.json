@@ -1952,7 +1952,25 @@
     "start": "Malite",
     "pickCategory": "Ụdị…",
     "trendJacked": "{{category}} na-ewu ewu maka {{minutes}} nkeji",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Mee ihe omume na otu n'ime posts gị. Pịa iji họrọ otu.",
+    "actsGift": "Onyinye — ọ na-adakwasị post mmadụ ọzọ. Pịa iji họrọ otu.",
+    "actsComment": "Mee ihe omume na nkọwa gị na eri mmadụ ọzọ. Pịa iji họrọ otu.",
+    "actsStage": "Mee ihe omume na Stage ị kwadoro. Pịa iji họrọ otu.",
+    "actsCategory": "Mee ihe omume na otu n'ime ụdị gị. Pịa iji họrọ otu.",
+    "actsAccount": "Mee ihe omume na akaụntụ gị niile. Pịa iji malite ya.",
+    "actsOnAccount": "Nke a na-eme ihe omume na akaụntụ gị niile — ọ dịghị ihe ị ga-ahọrọ.",
+    "findMyPost": "Chọọ posts gị, ma ọ bụ mado njikọ",
+    "findTheirPost": "Mado njikọ post ha, ma ọ bụ chọọ",
+    "searchToGift": "Chọọ post, ma ọ bụ mado njikọ ya.",
+    "noRecentPosts": "Ọ dịghị ihe ebe a site n'izu gara aga. Ihe ọ bụla ochie na-ewe ume nke abụọ.",
+    "noOlderPosts": "Ọ dịghị ihe ebe a ochie karịa izu. Ihe ọ bụla ọhụrụ na-ewe nkwalite.",
+    "noPostsFound": "Achọtaghị posts.",
+    "anchorNeedsTheirThread": "Anchor na-ejide nkọwa gị n'elu eri mmadụ ọzọ — na post gị, pin adịlarị n'efu.",
+    "noComments": "Ibeghị nkọwa.",
+    "noStages": "Ọ dịghị Stage gị dị ndụ ma ọ bụ egoro ugbu a.",
+    "noFlaresLeft": "Enweghị Signal Flares fọdụrụ n'okirikiri a",
+    "spentFor": "{{power}} na-agba ọsọ maka {{minutes}} nkeji"
   },
   "work": {
     "budgetExhausted": "Ego a kwadoro maka onyinye a ejizuola."

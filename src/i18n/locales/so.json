@@ -1980,7 +1980,25 @@
     "start": "Bilow",
     "pickCategory": "Qaybta…",
     "trendJacked": "{{category}} ayaa trending ah {{minutes}} daqiiqo",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Wax ka qabta mid ka mid ah qoraalladaada. Taabo si aad mid u doorato.",
+    "actsGift": "Hadiyad — waxay ku dhacdaa qoraal qof kale ah. Taabo si aad mid u doorato.",
+    "actsComment": "Wax ka qabta faallo aad ka bixisay qoraal qof kale ah. Taabo si aad mid u doorato.",
+    "actsStage": "Wax ka qabta Stage aad martigelisay. Taabo si aad mid u doorato.",
+    "actsCategory": "Wax ka qabta mid ka mid ah qaybahaaga. Taabo si aad mid u doorato.",
+    "actsAccount": "Wax ka qabta akoonkaaga oo dhan. Taabo si aad u bilowdo.",
+    "actsOnAccount": "Kan wax ka qabta akoonkaaga oo dhan — waxba ma jiraan wax la doorto.",
+    "findMyPost": "Raadi qoraalladaada, ama ku dheji xiriiriye",
+    "findTheirPost": "Ku dheji xiriiriyaha qoraalka qofka kale, ama raadi",
+    "searchToGift": "Raadi qoraal, ama ku dheji xiriiriye mid ka mid ah.",
+    "noRecentPosts": "Waxba halkan kama jiraan usbuucii la soo dhaafay. Wax kasta oo ka duug ah waxay qaataan Neefsasho Labaad.",
+    "noOlderPosts": "Waxba halkan kama jiraan wax ka duug ah usbuuc. Wax kasta oo cusub waxay qaataan Kobcin.",
+    "noPostsFound": "Qoraal lama helin.",
+    "anchorNeedsTheirThread": "Ankarku wuxuu faalladaada ku hayaa meesha ugu sarreysa ee qoraalka qof kale — qoraalkaaga waxaad horeyba u haysataa biin lacag la'aan ah.",
+    "noComments": "Wali ma aadan faallayn.",
+    "noStages": "Ma jiraan wax Stages ah oo aad leedahay oo hadda nool ama la qorsheeyay.",
+    "noFlaresLeft": "Ma jiraan wax Signal Flares ah oo ka hadhay wareeggan",
+    "spentFor": "{{power}} oo soconaysa {{minutes}} daqiiqo"
   },
   "work": {
     "budgetExhausted": "Miisaaniyadda abaalmarintan gebi ahaanba waa la qoondeeyay."

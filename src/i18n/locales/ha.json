@@ -1979,7 +1979,25 @@
     "start": "Fara",
     "pickCategory": "Rukuni…",
     "trendJacked": "{{category}} yana tasowa na tsawon mintuna {{minutes}}",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Yana aiki akan ɗaya daga cikin abubuwan da ka wallafa. Danna don zaɓar ɗaya.",
+    "actsGift": "Kyauta — tana faɗowa akan abin da wani ya wallafa. Danna don zaɓar ɗaya.",
+    "actsComment": "Yana aiki akan tsokacinka a cikin wani rubutu na wani. Danna don zaɓar ɗaya.",
+    "actsStage": "Yana aiki akan Wasan da ka shirya. Danna don zaɓar ɗaya.",
+    "actsCategory": "Yana aiki akan ɗaya daga cikin rukunin ka. Danna don zaɓar ɗaya.",
+    "actsAccount": "Yana aiki akan dukkan asusunka. Danna don fara shi.",
+    "actsOnAccount": "Wannan yana aiki akan dukkan asusunka — babu abin da za a zaɓa.",
+    "findMyPost": "Bincika abubuwan da ka wallafa, ko liƙa hanyar haɗi",
+    "findTheirPost": "Liƙa hanyar haɗin rubutunsu, ko bincika",
+    "searchToGift": "Bincika rubutu, ko liƙa hanyar haɗi zuwa gareshi.",
+    "noRecentPosts": "Babu komai anan daga makon da ya wuce. Duk abin da ya fi tsufa yana ɗaukar iska ta biyu.",
+    "noOlderPosts": "Babu komai anan da ya fi mako tsufa. Duk abin da ya fi sabo yana ɗaukar haɓakawa.",
+    "noPostsFound": "Babu abubuwan da aka samu.",
+    "anchorNeedsTheirThread": "Anchor yana riƙe tsokacinka a saman rubutun wani — akan rubutunka ana riga ana da alƙalami.",
+    "noComments": "Baka yi tsokaci ba tukuna.",
+    "noStages": "Babu Wasan ka da ke gudana ko kuma aka tsara yanzu.",
+    "noFlaresLeft": "Babu Signal Flares da suka rage a wannan zagayen",
+    "spentFor": "{{power}} yana gudana na tsawon mintuna {{minutes}}"
   },
   "work": {
     "budgetExhausted": "Kasafin kuɗin wannan lada ya ƙare gaba ɗaya."

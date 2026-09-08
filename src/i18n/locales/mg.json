@@ -1996,7 +1996,25 @@
     "start": "Start",
     "pickCategory": "Category…",
     "trendJacked": "{{category}} dia miakatra mandritra ny {{minutes}} minitra",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Mampihatra amin'ny iray amin'ny lahatsoratrao. Tsindrio mba hisafidianana iray.",
+    "actsGift": "Fanomezana — mipetraka amin'ny lahatsoratry ny olona hafa izany. Tsindrio mba hisafidianana iray.",
+    "actsComment": "Mampihatra amin'ny fanehoan-kevitrao ao anaty kofehy an'ny olona hafa. Tsindrio mba hisafidianana iray.",
+    "actsStage": "Mampihatra amin'ny Stage tontosanao. Tsindrio mba hisafidianana iray.",
+    "actsCategory": "Mampihatra amin'ny iray amin'ny sokajinao. Tsindrio mba hisafidianana iray.",
+    "actsAccount": "Mampihatra amin'ny kaontinao manontolo. Tsindrio mba hanombohana izany.",
+    "actsOnAccount": "Ity iray ity dia mampihatra amin'ny kaontinao manontolo — tsy misy azo isafidianana.",
+    "findMyPost": "Mitadiava ny lahatsoratry ny tenanao, na mametaka rohy",
+    "findTheirPost": "Mametaka ny rohy lahatsoratry ny hafa, na mitady",
+    "searchToGift": "Mitadiava lahatsoratra, na mametaka rohy mankany amin'ny iray.",
+    "noRecentPosts": "Tsy misy eto tato anatin'ny herinandro lasa. Ny zavatra taloha kokoa dia mila Second Wind.",
+    "noOlderPosts": "Tsy misy eto talohan'ny herinandro. Ny zavatra vaovao kokoa dia mila Boost.",
+    "noPostsFound": "Tsy misy lahatsoratra hita.",
+    "anchorNeedsTheirThread": "Ny Anchor dia mitazona ny fanehoan-kevitrao eo an-tampon'ny kofehy an'ny olona hafa — amin'ny lahatsoratry ny tenanao dia efa misy pin maimaim-poana.",
+    "noComments": "Mbola tsy naneho hevitra ianao.",
+    "noStages": "Tsy misy Stage anao mihetsika na voalahatra amin'izao fotoana izao.",
+    "noFlaresLeft": "Tsy misy Signal Flare sisa tavela amin'ity tsingerina ity",
+    "spentFor": "{{power}} mihazakazaka mandritra ny {{minutes}} minitra"
   },
   "work": {
     "budgetExhausted": "Efa lany daholo ny tetibolan'ity valisoa ity."

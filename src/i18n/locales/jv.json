@@ -1964,7 +1964,25 @@
     "start": "Start",
     "pickCategory": "Category…",
     "trendJacked": "{{category}} lagi trending {{minutes}} menit",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Nindakake salah sawijining kirimanmu. Tutul kanggo milih siji.",
+    "actsGift": "Hadiah — tiba ing kiriman wong liya. Tutul kanggo milih siji.",
+    "actsComment": "Nindakake komentar ing utas wong liya. Tutul kanggo milih siji.",
+    "actsStage": "Nindakake Panggung sing kok-host. Tutul kanggo milih siji.",
+    "actsCategory": "Nindakake salah sawijining kategori. Tutul kanggo milih siji.",
+    "actsAccount": "Nindakake akunmu kabeh. Tutul kanggo miwiti.",
+    "actsOnAccount": "Iki nindakake akunmu kabeh — ora ana sing dipilih.",
+    "findMyPost": "Golèki kirimanmu, utawa tempel tautan",
+    "findTheirPost": "Tempel tautan kirimané, utawa golèki",
+    "searchToGift": "Golèki kiriman, utawa tempel tautan menyang salah sawijining.",
+    "noRecentPosts": "Ora ana ing kene saka minggu kepungkur. Apa waé sing luwih lawas mbutuhake Angin Kapindho.",
+    "noOlderPosts": "Ora ana ing kene sing luwih lawas tinimbang seminggu. Apa waé sing luwih anyar mbutuhake Dorongan.",
+    "noPostsFound": "Kiriman ora ditemokake.",
+    "anchorNeedsTheirThread": "Jangkar nahan komentarmu ing ndhuwur utas wong liya — ing kirimanmu dhewe pin wis gratis.",
+    "noComments": "Kowé durung komentar.",
+    "noStages": "Ora ana Panggungmu sing ditindakake utawa dijadwalake saiki.",
+    "noFlaresLeft": "Ora ana Sinyal Suar sing isih ana ing siklus iki",
+    "spentFor": "{{power}} mlaku kanggo {{minutes}} menit"
   },
   "work": {
     "budgetExhausted": "Anggaran bounty iki wis kepakai kabeh."

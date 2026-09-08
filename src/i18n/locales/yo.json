@@ -1979,7 +1979,25 @@
     "start": "Bẹ̀rẹ̀",
     "pickCategory": "Àkójọpọ̀…",
     "trendJacked": "{{category}} ń gbajúmọ̀ fún ìṣẹ́jú {{minutes}}",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Ṣiṣẹ lori ọkan ninu awọn postu rẹ. Tẹ lati yan ọkan.",
+    "actsGift": "Ẹbun kan — o wa lori postu ẹlomiran. Tẹ lati yan ọkan.",
+    "actsComment": "Ṣiṣẹ lori ọrọ rẹ ninu eroja ẹlomiran. Tẹ lati yan ọkan.",
+    "actsStage": "Ṣiṣẹ lori Stage ti o ṣe aṣọ. Tẹ lati yan ọkan.",
+    "actsCategory": "Ṣiṣẹ lori ọkan ninu awọn ẹka rẹ. Tẹ lati yan ọkan.",
+    "actsAccount": "Ṣiṣẹ lori akọọkan rẹ. Tẹ lati bẹrẹ rẹ.",
+    "actsOnAccount": "Eyi ṣiṣẹ lori akọọkan rẹ — ko si ohun ti o yẹ lati yan.",
+    "findMyPost": "Wa awọn postu rẹ, tabi fi ọna kan sile",
+    "findTheirPost": "Fi ọna postu wọn sile, tabi wa",
+    "searchToGift": "Wa fun postu kan, tabi fi ọna kan sile si ọkan.",
+    "noRecentPosts": "Ko si ohun kan nibi lati ọsẹ ti o kẹhin. Ohun ti o jẹ arugbo gba Second Wind.",
+    "noOlderPosts": "Ko si ohun kan nibi ti o jẹ arugbo ju ọsẹ lọ. Ohun ti o jẹ tuntun gba Boost.",
+    "noPostsFound": "A ko ri awọn postu.",
+    "anchorNeedsTheirThread": "Anchor kan n pa ọrọ rẹ ni oke ti eroja ẹlomiran — lori postu tirẹ ara, pin kan ti o jẹ ọfẹ tẹlẹ.",
+    "noComments": "O ko ti ṣe ọrọ kan.",
+    "noStages": "Ko si Stage tirẹ ti o n ṣiṣẹ tabi ti a ti ṣe iṣeduro fun ni bayi.",
+    "noFlaresLeft": "Ko si Signal Flares ti o ku fun iyalẹnu yii",
+    "spentFor": "{{power}} n ṣiṣẹ fun {{minutes}} awọn iṣẹju"
   },
   "work": {
     "budgetExhausted": "Ìsúná ẹ̀bùn yìí ti pin tán."

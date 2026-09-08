@@ -2011,7 +2011,25 @@
     "start": "Qallariy",
     "pickCategory": "Category…",
     "trendJacked": "{{category}}qa {{minutes}} minutokama trending kachkan",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Akllakuq kaynin imayna ruwayta munasqayki. Akllanayki.",
+    "actsGift": "Kachkuq — huk runapa postman chayasun. Akllanayki.",
+    "actsComment": "Akllakuq kaypa comentarioykim huk runapa threadman. Akllanayki.",
+    "actsStage": "Akllakuq Stage nisqayki host ruwaykipi. Akllanayki.",
+    "actsCategory": "Akllakuq kaypa kategoriaykikunaman. Akllanayki.",
+    "actsAccount": "Akllakuq sapaypa accountykim. Qallariyayki.",
+    "actsOnAccount": "Kayqa sapaypa accountykim akllakuq — imayanachu akllanayki.",
+    "findMyPost": "Postykikunata maskay, o linkta yapay",
+    "findTheirPost": "Paypa post linkta yapay, o maskay",
+    "searchToGift": "Postta maskay, o linkta yapay.",
+    "noRecentPosts": "Ukhu semana nisqamantachu imayanachu. Ñawpaqta kayqa Second Wind nisqata apakun.",
+    "noOlderPosts": "Semana nisqamantapas ñawpaqta imayanachu. Berriyta kayqa Boost nisqata apakun.",
+    "noPostsFound": "Postchu tapikunchu.",
+    "anchorNeedsTheirThread": "Anchor nisqaqa kaypa comentarioykim huk runapa threadman patayman tiyachisun — sapaypa postykipi pin nisqaqa libre.",
+    "noComments": "Comentarioykim imayanachu ruwaykichu.",
+    "noStages": "Sapaypa Stage nisqayki live o scheduled imayanachu.",
+    "noFlaresLeft": "Signal Flares imayanachu kaypi cycle nisqapi",
+    "spentFor": "{{power}} puriykachkaspa {{minutes}} minutukunaman"
   },
   "work": {
     "budgetExhausted": "Kay t'inkap qullqin tukuyta rakisqaña."

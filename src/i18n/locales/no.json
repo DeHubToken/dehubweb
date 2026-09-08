@@ -1974,7 +1974,25 @@
     "start": "Start",
     "pickCategory": "Kategori…",
     "trendJacked": "{{category}} trender i {{minutes}} minutter",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Reagerer på et av innleggene dine. Trykk for å velge ett.",
+    "actsGift": "En gave — den lander på noens andres innlegg. Trykk for å velge ett.",
+    "actsComment": "Reagerer på kommentaren din i noens andres tråd. Trykk for å velge ett.",
+    "actsStage": "Reagerer på en Stage du arrangerer. Trykk for å velge ett.",
+    "actsCategory": "Reagerer på en av kategoriene dine. Trykk for å velge ett.",
+    "actsAccount": "Reagerer på hele kontoen din. Trykk for å starte den.",
+    "actsOnAccount": "Denne reagerer på hele kontoen din — det er ingenting å velge.",
+    "findMyPost": "Søk i innleggene dine, eller lim inn en lenke",
+    "findTheirPost": "Lim inn lenken til innlegget deres, eller søk",
+    "searchToGift": "Søk etter et innlegg, eller lim inn en lenke til et.",
+    "noRecentPosts": "Ingenting her fra forrige uke. Alt eldre krever en Second Wind.",
+    "noOlderPosts": "Ingenting her eldre enn en uke. Alt nyere krever en Boost.",
+    "noPostsFound": "Ingen innlegg funnet.",
+    "anchorNeedsTheirThread": "Et Anker holder kommentaren din øverst i noens andres tråd — på ditt eget innlegg er en nål allerede gratis.",
+    "noComments": "Du har ikke kommentert ennå.",
+    "noStages": "Ingen Stage av deg er live eller planlagt akkurat nå.",
+    "noFlaresLeft": "Ingen Signal Flares igjen denne syklusen",
+    "spentFor": "{{power}} kjører i {{minutes}} minutter"
   },
   "work": {
     "budgetExhausted": "Budsjettet for denne dusøren er brukt opp."

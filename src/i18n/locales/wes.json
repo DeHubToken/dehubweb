@@ -1879,7 +1879,8 @@
     "giftedTo": "gift → #{{id}}",
     "start": "Start",
     "pickCategory": "Category…",
-    "jack": "Jack"
+    "jack": "Jack",
+    "noPostsFound": "No posts found."
   },
   "work": {
     "budgetExhausted": "Dis bounty money don finish."

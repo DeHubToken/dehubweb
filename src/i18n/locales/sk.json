@@ -2096,7 +2096,25 @@
     "start": "Štart",
     "pickCategory": "Kategória…",
     "trendJacked": "{{category}} je trendom {{minutes}} minút",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Použije sa na jeden z vašich príspevkov. Klepnite na výber.",
+    "actsGift": "Darček — pristane na príspevku niekoho iného. Klepnite na výber.",
+    "actsComment": "Použije sa na váš komentár v cudzej téme. Klepnite na výber.",
+    "actsStage": "Použije sa na Stage, ktorý hostujete. Klepnite na výber.",
+    "actsCategory": "Použije sa na jednu z vašich kategórií. Klepnite na výber.",
+    "actsAccount": "Použije sa na celý váš účet. Klepnite na spustenie.",
+    "actsOnAccount": "Toto sa použije na celý váš účet — nie je čo vyberať.",
+    "findMyPost": "Vyhľadajte svoje príspevky alebo vložte odkaz",
+    "findTheirPost": "Vložte odkaz na ich príspevok alebo vyhľadajte",
+    "searchToGift": "Vyhľadajte príspevok alebo vložte odkaz na jeden.",
+    "noRecentPosts": "Za posledný týždeň tu nič nie je. Čokoľvek staršie si vyžaduje Druhý dych.",
+    "noOlderPosts": "Ništa tu nie je staršie ako týždeň. Čokoľvek novšie si vyžaduje Posilnenie.",
+    "noPostsFound": "Nenašli sa žiadne príspevky.",
+    "anchorNeedsTheirThread": "Kotva drží váš komentár na vrchu cudzej témy — na vašom vlastnom príspevku je pripináčik už voľný.",
+    "noComments": "Ešte ste nekomentovali.",
+    "noStages": "Žiadny váš Stage momentálne nie je živý ani naplánovaný.",
+    "noFlaresLeft": "V tomto cykle nezostal žiadny signálny plameň",
+    "spentFor": "{{power}} beží {{minutes}} minút"
   },
   "work": {
     "budgetExhausted": "Rozpočet tejto odmeny je úplne vyčerpaný."

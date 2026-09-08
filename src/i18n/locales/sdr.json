@@ -1904,7 +1904,25 @@
     "start": "پیل",
     "pickCategory": "وېشنيزه…",
     "trendJacked": "{{category}} د {{minutes}} دقیقو لپاره په رجحان کې دی",
-    "jack": "جیک"
+    "jack": "جیک",
+    "actsPost": "Ek post pe amal karta hai. Chunne ke liye tap karein.",
+    "actsGift": "Ek tohfa — yeh kisi aur ki post pe aata hai. Chunne ke liye tap karein.",
+    "actsComment": "Kisi aur ke thread mein aapke comment pe amal karta hai. Chunne ke liye tap karein.",
+    "actsStage": "Ek Stage pe amal karta hai jise aap host karte hain. Chunne ke liye tap karein.",
+    "actsCategory": "Aapki ek category pe amal karta hai. Chunne ke liye tap karein.",
+    "actsAccount": "Aapke poore account pe amal karta hai. Shuru karne ke liye tap karein.",
+    "actsOnAccount": "Yeh aapke poore account pe amal karta hai — chunne ke liye kuch nahi hai.",
+    "findMyPost": "Apni posts search karein, ya link paste karein",
+    "findTheirPost": "Unki post ka link paste karein, ya search karein",
+    "searchToGift": "Post search karein, ya uske link ko paste karein.",
+    "noRecentPosts": "Pichhle hafte se yahan kuch nahi hai. Isse purana kuch bhi Second Wind leta hai.",
+    "noOlderPosts": "Pichhle hafte se purana kuch nahi hai. Isse naya kuch bhi Boost leta hai.",
+    "noPostsFound": "No posts found.",
+    "anchorNeedsTheirThread": "Anchor aapke comment ko kisi aur ke thread mein sabse upar rakhta hai — aapki apni post pe pin pehle se hi muft hai.",
+    "noComments": "Aapne abhi tak comment nahi kiya hai.",
+    "noStages": "Aapka koi bhi Stage abhi live ya scheduled nahi hai.",
+    "noFlaresLeft": "Is cycle mein koi Signal Flare nahi bacha hai",
+    "spentFor": "{{power}} {{minutes}} minute ke liye chal raha hai"
   },
   "work": {
     "budgetExhausted": "بودجەی ئەم خەڵاتە بە تەواوی دابەش کراوە."
