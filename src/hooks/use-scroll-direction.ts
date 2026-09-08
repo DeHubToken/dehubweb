@@ -1,6 +1,9 @@
 import { useSyncExternalStore } from 'react';
 
 const TOP_THRESHOLD = 60;
+const STICKY_NAV_TOP_THRESHOLD = 4;
+const STICKY_NAV_SELECTOR =
+  '[data-feed-nav-outer][data-nav-return-top]:not([data-nav-hide="off"])';
 
 /**
  * Module-level store: three components (HomePage, GlobalFeedNav,
@@ -26,17 +29,47 @@ export const SCROLL_NAV_SOURCE_ATTR = 'data-scroll-nav-source';
 const SCROLL_NAV_SOURCE_SELECTOR = `[${SCROLL_NAV_SOURCE_ATTR}]`;
 
 let visible = true;
+let stickyNavVisible = true;
 let lastScrollY = 0;
 let touchLastY = 0;
 /** The tagged element currently being scrolled, if any; null = the document. */
 let activeScroller: HTMLElement | null = null;
 const subscribers = new Set<() => void>();
+const stickyNavSubscribers = new Set<() => void>();
 let detach: (() => void) | null = null;
 
 function setVisible(next: boolean) {
   if (visible === next) return;
   visible = next;
   subscribers.forEach((cb) => cb());
+}
+
+function setStickyNavVisible(next: boolean) {
+  if (stickyNavVisible === next) return;
+  stickyNavVisible = next;
+  stickyNavSubscribers.forEach((cb) => cb());
+}
+
+/**
+ * Wait until the page has scrolled far enough for its content to occupy all of
+ * the space the sticky pill is about to vacate. Cached pages remain mounted,
+ * so use the first rendered pill rather than blindly measuring the first DOM
+ * match.
+ */
+function getStickyNavHideThreshold(): number {
+  const nav = Array.from(document.querySelectorAll<HTMLElement>(STICKY_NAV_SELECTOR))
+    .find((candidate) =>
+      candidate.offsetParent !== null && window.getComputedStyle(candidate).visibility !== 'hidden'
+    );
+  if (!nav) return TOP_THRESHOLD;
+
+  const top = Number.parseFloat(window.getComputedStyle(nav).top);
+  return Math.max(TOP_THRESHOLD, nav.offsetHeight + (Number.isFinite(top) ? Math.max(0, top) : 0));
+}
+
+function updateStickyNavVisibility(y: number) {
+  if (y <= STICKY_NAV_TOP_THRESHOLD) setStickyNavVisible(true);
+  else if (y >= getStickyNavHideThreshold()) setStickyNavVisible(false);
 }
 
 function attachListeners(): () => void {
@@ -51,12 +84,20 @@ function attachListeners(): () => void {
   // left while the nav was hidden, a fresh subscriber at the top of a new page
   // must start visible (the old per-hook useState(true) gave this for free).
   setVisible(lastScrollY <= TOP_THRESHOLD ? true : visible);
+  setStickyNavVisible(
+    lastScrollY <= STICKY_NAV_TOP_THRESHOLD
+      ? true
+      : lastScrollY >= getStickyNavHideThreshold()
+        ? false
+        : stickyNavVisible,
+  );
 
   // ── scroll events: attach to every possible container ──────────────────
   const onScroll = () => {
     const y = getY();
     const diff = y - lastScrollY;
     lastScrollY = y;
+    updateStickyNavVisibility(y);
     if (y <= TOP_THRESHOLD) { setVisible(true); return; }
     if (diff > 4)  setVisible(false);
     if (diff < -4) setVisible(true);
@@ -100,6 +141,7 @@ function attachListeners(): () => void {
     // up within the same touch never re-showed the nav (the stuck bug).
     const moved = touchLastY - currentY;
     touchLastY = currentY;
+    updateStickyNavVisibility(y);
     if (y <= TOP_THRESHOLD) { setVisible(true); return; }
     if (moved > 6)  setVisible(false);  // finger up   → scrolling down → hide
     if (moved < -6) setVisible(true);   // finger down → scrolling up   → show
@@ -130,11 +172,23 @@ function attachListeners(): () => void {
 }
 
 function subscribe(cb: () => void): () => void {
-  if (subscribers.size === 0 && !detach) detach = attachListeners();
+  if (subscribers.size === 0 && stickyNavSubscribers.size === 0 && !detach) detach = attachListeners();
   subscribers.add(cb);
   return () => {
     subscribers.delete(cb);
-    if (subscribers.size === 0 && detach) {
+    if (subscribers.size === 0 && stickyNavSubscribers.size === 0 && detach) {
+      detach();
+      detach = null;
+    }
+  };
+}
+
+function subscribeStickyNav(cb: () => void): () => void {
+  if (subscribers.size === 0 && stickyNavSubscribers.size === 0 && !detach) detach = attachListeners();
+  stickyNavSubscribers.add(cb);
+  return () => {
+    stickyNavSubscribers.delete(cb);
+    if (subscribers.size === 0 && stickyNavSubscribers.size === 0 && detach) {
       detach();
       detach = null;
     }
@@ -146,4 +200,10 @@ const getServerSnapshot = () => true;
 
 export function useScrollDirection() {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
+const getStickyNavSnapshot = () => stickyNavVisible;
+
+export function useStickyNavVisibility() {
+  return useSyncExternalStore(subscribeStickyNav, getStickyNavSnapshot, getServerSnapshot);
 }
