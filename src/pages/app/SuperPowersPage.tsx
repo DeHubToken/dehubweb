@@ -27,48 +27,49 @@ import { BadgeProgress } from '@/components/app/BadgeProgress';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { badgeImage } from '@/lib/staking-badges';
-import { useQuery } from '@tanstack/react-query';
-import { getCategories } from '@/lib/api/dehub';
 import {
   powerHome,
-  useBookBoost,
   useCancelBoost,
   useSuperpowerLadder,
   useSuperpowers,
 } from '@/hooks/use-superpowers';
-import type { SuperPowerKey } from '@/lib/api/dehub/superpowers';
+import { SpendPowerDrawer } from '@/components/app/modals/SpendPowerDrawer';
+import type { SuperPowerInfo, SuperPowerKey } from '@/lib/api/dehub/superpowers';
 
 /**
- * Where an unlocked power is spent, in one sentence.
+ * What an unlocked power acts on, in one line under its name.
  *
- * A badge at the middle of the ladder ticks five powers on this page and shows
- * a control for one of them, which reads as four powers that do not work. They
- * do work — from the post, the comment or the stage they act on, because that
- * is where the decision happens — and until this line existed nothing on the
- * page said where to look. `powerHome` is the same table the boost sheet
- * filters on, so the two cannot drift apart.
+ * Not directions any more. Every bento this account holds is a button that
+ * opens the picker for its own target, so the only thing left worth saying on
+ * the card is what kind of thing you are about to be asked to choose.
+ * `powerHome` is the same table the picker and the post sheet read, so the
+ * three cannot drift apart.
  */
-function spendHint(key: SuperPowerKey, t: (k: string, o?: Record<string, unknown>) => string): string {
+function actsOn(key: SuperPowerKey, t: (k: string, o?: Record<string, unknown>) => string): string {
   switch (powerHome(key)) {
     case 'gift':
-      return t('superpowers.homeGift', {
-        defaultValue: "Spend it on somebody else's post — the ⋯ menu, then Boost.",
+      return t('superpowers.actsGift', {
+        defaultValue: "A gift — it lands on somebody else's post. Tap to pick one.",
       });
     case 'comment':
-      return t('superpowers.homeComment', {
-        defaultValue: "Spend it on your own comment, in somebody else's thread.",
+      return t('superpowers.actsComment', {
+        defaultValue: "Acts on your comment in somebody else's thread. Tap to pick one.",
       });
     case 'stage':
-      return t('superpowers.homeStage', {
-        defaultValue: 'Spend it from a Stage you are hosting.',
+      return t('superpowers.actsStage', {
+        defaultValue: 'Acts on a Stage you host. Tap to pick one.',
       });
     case 'page':
-      return t('superpowers.homePage', {
-        defaultValue: 'Spend it here, at the top of this page.',
-      });
+      return key === 'trend_jacker'
+        ? t('superpowers.actsCategory', {
+            defaultValue: 'Acts on one of your categories. Tap to pick one.',
+          })
+        : t('superpowers.actsAccount', {
+            defaultValue: 'Acts on your whole account. Tap to start it.',
+          });
     default:
-      return t('superpowers.homePost', {
-        defaultValue: 'Spend it from one of your own posts — the ⋯ menu, then Boost.',
+      return t('superpowers.actsPost', {
+        defaultValue: 'Acts on one of your posts. Tap to pick one.',
       });
   }
 }
@@ -103,24 +104,11 @@ export default function SuperPowersPage() {
 
   const liveBookings = status?.bookings.filter(b => b.status === 'active') ?? [];
 
-  // The two powers with no post to hang off. Both read `status.powers` for
-  // whether this account has them, and the allowance for whether there is one
-  // spare — the server re-checks both, so this only decides what to offer.
-  const [jackCategory, setJackCategory] = useState('');
-  const spendPower = useBookBoost();
-  const hasPower = (key: string) =>
-    !!status?.powers.some(p => p.key === key && p.unlocked && p.available) &&
-    (status?.boostsLeft ?? 0) > 0;
-  const canGoldenHour = hasPower('golden_hour');
-  const canTrendJack = hasPower('trend_jacker');
+  // One drawer for all thirteen. It resolves the target a power needs — a
+  // post, a comment, a Stage, a category — and books it; the server re-checks
+  // every one of those, so this only decides what is worth offering.
+  const [spending, setSpending] = useState<SuperPowerInfo | null>(null);
 
-  // Only fetched when a category actually has to be picked.
-  const { data: categories = [] } = useQuery({
-    queryKey: ['dehub-categories'],
-    queryFn: getCategories,
-    enabled: canTrendJack,
-    staleTime: 60 * 60 * 1000,
-  });
   const spentBookings = status?.bookings.filter(b => b.status === 'completed') ?? [];
   const badgeArt = badgeImage(status?.tier);
 
@@ -282,117 +270,6 @@ export default function SuperPowersPage() {
             )}
 
 
-            {/*
-              The two powers that are not about a post.
-
-              Every other power is spent from the post's own menu, because that
-              is where the decision happens — you finish something and want it
-              seen. These two have no post to hang off: a Golden Hour acts on
-              the account for the next hour, and a Trend Jacker acts on a
-              category. Without a home here they were live on the API and
-              reachable from nowhere, which is the same debt the other eleven
-              had before their clients shipped.
-            */}
-            {(canGoldenHour || canTrendJack) && (
-              <div className="flex flex-col gap-3 border-t border-white/10 pt-3">
-                {canGoldenHour && (
-                  <div className="flex items-center gap-3">
-                    <div className="min-w-0 flex-1">
-                      <p className="text-white text-sm">
-                        {powers.find(p => p.key === 'golden_hour')?.label ?? 'Golden Hour'}
-                      </p>
-                      <p className="text-[12px] text-zinc-500 leading-snug">
-                        {powers.find(p => p.key === 'golden_hour')?.summary}
-                      </p>
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      disabled={spendPower.isPending}
-                      onClick={() =>
-                        spendPower.mutate(
-                          { tokenId: 0, power: 'golden_hour' },
-                          {
-                            onSuccess: booking =>
-                              toast.success(
-                                t('superpowers.goldenHourStarted', {
-                                  minutes: booking.minutes,
-                                  defaultValue: `Golden Hour running for ${booking.minutes} minutes — everything you post now counts double`,
-                                }),
-                              ),
-                            onError: (error: any) =>
-                              toast.error(error?.message || t('superpowers.boostFailed')),
-                          },
-                        )
-                      }
-                    >
-                      {t('superpowers.start', { defaultValue: 'Start' })}
-                    </Button>
-                  </div>
-                )}
-
-                {canTrendJack && (
-                  <div className="flex items-center gap-3">
-                    <div className="min-w-0 flex-1">
-                      <p className="text-white text-sm">
-                        {powers.find(p => p.key === 'trend_jacker')?.label ?? 'Trend Jacker'}
-                      </p>
-                      <p className="text-[12px] text-zinc-500 leading-snug">
-                        {powers.find(p => p.key === 'trend_jacker')?.summary}
-                      </p>
-                    </div>
-                    {/*
-                      A free text field would mostly produce refusals: the
-                      server only accepts a category that exists AND that the
-                      holder has posted in. The list is the same one the
-                      composer offers, so what is on screen is what can be
-                      bought.
-                    */}
-                    <select
-                      value={jackCategory}
-                      onChange={e => setJackCategory(e.target.value)}
-                      className="bg-white/5 border border-white/10 rounded-lg text-white text-[12px] px-2 py-1.5 max-w-[8rem]"
-                    >
-                      <option value="">{t('superpowers.pickCategory', { defaultValue: 'Category…' })}</option>
-                      {categories.map(c => (
-                        <option key={c.name} value={c.name} className="bg-zinc-900">
-                          {c.name}
-                        </option>
-                      ))}
-                    </select>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      disabled={!jackCategory || spendPower.isPending}
-                      onClick={() =>
-                        spendPower.mutate(
-                          { tokenId: 0, power: 'trend_jacker', category: jackCategory },
-                          {
-                            onSuccess: booking => {
-                              toast.success(
-                                t('superpowers.trendJacked', {
-                                  category: booking.category ?? jackCategory,
-                                  minutes: booking.minutes,
-                                  defaultValue: `${booking.category ?? jackCategory} is trending for ${booking.minutes} minutes`,
-                                }),
-                              );
-                              setJackCategory('');
-                            },
-                            // The server writes these sentences for a person
-                            // to read — "Post in that category first".
-                            onError: (error: any) =>
-                              toast.error(error?.message || t('superpowers.boostFailed')),
-                          },
-                        )
-                      }
-                    >
-                      {t('superpowers.jack', { defaultValue: 'Jack' })}
-                    </Button>
-                  </div>
-                )}
-              </div>
-            )}
-
             {spentBookings.length > 0 && (
               <p className="text-[12px] text-zinc-500 border-t border-white/10 pt-3">
                 {t('superpowers.finishedCount', {
@@ -430,14 +307,20 @@ export default function SuperPowersPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {powers.map((power, index) => {
               const unlocked = !!power.unlocked;
+              // Held AND built. A locked card stays inert rather than opening a
+              // picker for something the server would refuse.
+              const usable = unlocked && power.available;
               return (
-                <div
+                <button
                   key={power.key}
+                  type="button"
+                  disabled={!usable}
+                  onClick={() => setSpending(power)}
                   className={cn(
-                    'rounded-xl border p-4 flex flex-col gap-1.5 transition-colors',
-                    unlocked && power.available
-                      ? 'border-white/20 bg-white/5'
-                      : 'border-white/10 bg-white/[0.02]',
+                    'rounded-xl border p-4 flex flex-col gap-1.5 text-left transition-colors',
+                    usable
+                      ? 'border-white/20 bg-white/5 hover:bg-white/10'
+                      : 'border-white/10 bg-white/[0.02] cursor-default',
                   )}
                 >
                   <div className="flex items-center gap-2">
@@ -454,16 +337,16 @@ export default function SuperPowersPage() {
                   </div>
                   <p className="text-[13px] text-zinc-500 leading-snug">{power.summary}</p>
                   {/* Only on a power this account actually has. On a locked
-                      one it would be instructions for something they cannot
-                      do, and the tier line below already says what it costs. */}
-                  {unlocked && power.available && (
-                    <p className="text-[11px] text-zinc-400 leading-snug">{spendHint(power.key, t)}</p>
+                      one it would describe a choice they cannot make, and the
+                      tier line below already says what it costs. */}
+                  {usable && (
+                    <p className="text-[11px] text-zinc-400 leading-snug">{actsOn(power.key, t)}</p>
                   )}
                   <p className="text-[11px] text-zinc-600 mt-auto pt-1">
                     {power.tier}
                     {!power.available && ` · ${t('superpowers.comingSoon')}`}
                   </p>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -523,6 +406,10 @@ export default function SuperPowersPage() {
           <p className="text-[12px] text-zinc-500 max-w-prose">{t('superpowers.shareOfVoice')}</p>
         </section>
       </div>
+
+      {/* Literal DrawerContent lives inside this component, so vaul's deferred
+          Root still sees it — see the note in ui/drawer.tsx. */}
+      <SpendPowerDrawer power={spending} onOpenChange={open => !open && setSpending(null)} />
     </>
   );
 }

@@ -1979,7 +1979,25 @@
     "start": "Start",
     "pickCategory": "Category…",
     "trendJacked": "{{category}} po bëhet trend për {{minutes}} minuta",
-    "jack": "Jack"
+    "jack": "Jack",
+    "actsPost": "Vepron në një nga postimet tuaja. Prekni për të zgjedhur një.",
+    "actsGift": "Një dhuratë — bie në postimin e dikujt tjetër. Prekni për të zgjedhur një.",
+    "actsComment": "Vepron në komentin tuaj në një temë të dikujt tjetër. Prekni për të zgjedhur një.",
+    "actsStage": "Vepron në një Stage që ju organizoni. Prekni për të zgjedhur një.",
+    "actsCategory": "Vepron në një nga kategoritë tuaja. Prekni për të zgjedhur një.",
+    "actsAccount": "Vepron në të gjithë llogarinë tuaj. Prekni për ta filluar.",
+    "actsOnAccount": "Kjo vepron në të gjithë llogarinë tuaj — nuk ka asgjë për të zgjedhur.",
+    "findMyPost": "Kërkoni postimet tuaja, ose ngjitni një lidhje",
+    "findTheirPost": "Ngjitni lidhjen e postimit të tyre, ose kërkoni",
+    "searchToGift": "Kërkoni një postim, ose ngjitni një lidhje për të.",
+    "noRecentPosts": "Asgjë këtu nga java e kaluar. Çdo gjë më e vjetër merr një Frymëmarrje të Dytë.",
+    "noOlderPosts": "Asgjë këtu më të vjetër se një javë. Çdo gjë më e re merr një Shtysë.",
+    "noPostsFound": "Asnjë postim nuk u gjet.",
+    "anchorNeedsTheirThread": "Një Ankorë mban komentin tuaj në krye të temës së dikujt tjetër — në postimin tuaj një gjilpërë është tashmë falas.",
+    "noComments": "Nuk keni komentuar ende.",
+    "noStages": "Asnjë Stage tuaj nuk është drejtpërdrejt ose i planifikuar tani.",
+    "noFlaresLeft": "Asnjë Sinjal Flakë i mbetur këtë cikël",
+    "spentFor": "{{power}} duke u drejtuar për {{minutes}} minuta"
   },
   "work": {
     "budgetExhausted": "Buxheti i kësaj shpërblimi është angazhuar plotësisht."
