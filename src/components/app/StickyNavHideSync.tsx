@@ -23,6 +23,14 @@ import { useAnyOverlayOpen } from '@/lib/overlay-open';
  * dialog is centred and already scrims the pill, so folding overlays in there
  * would only add a visible slide behind the backdrop every time one opens.
  *
+ * A third flag, `data-overlay-open`, splits those two halves back apart for
+ * the pinned pills (`data-nav-hide='pin'`), which stay on screen through a
+ * scroll but still have to clear an overlay's scrim. Neither of the other two
+ * can tell the cases apart alone: `data-nav-hidden` is the OR of both, and
+ * `data-scroll-hidden` stays true when an overlay opens over an already
+ * scrolled page — the header slides back into view at that moment, and a pill
+ * still riding the scroll would end up underneath it.
+ *
  * Renders nothing; mount once, inside AppLayout.
  */
 export function StickyNavHideSync(): null {
@@ -33,9 +41,11 @@ export function StickyNavHideSync(): null {
     const root = document.documentElement;
     root.dataset.navHidden = !navVisible || anyOverlayOpen ? 'true' : 'false';
     root.dataset.scrollHidden = navVisible ? 'false' : 'true';
+    root.dataset.overlayOpen = anyOverlayOpen ? 'true' : 'false';
     return () => {
       delete root.dataset.navHidden;
       delete root.dataset.scrollHidden;
+      delete root.dataset.overlayOpen;
     };
   }, [navVisible, anyOverlayOpen]);
 

@@ -1085,6 +1085,9 @@ button.cursor-square-item:hover {
    - `[data-jungle-phase]`, whose hand-off animation owns this same transform
      while the game takes the viewport (styles/jungle-coverage.css). Excluded
      by selector rather than by specificity so the two can never race.
+   - `[data-nav-hide='pin']` for a pill that has to stay reachable mid-scroll —
+     Explore's, which IS the search box. It moves up by the header's height
+     instead of off-screen; see the rules below.
 
    The home feed's own pill sets `transform` inline from HomePage — inline wins,
    so its extra conditions (post overlay open, filter panel down) still hold. */
@@ -1094,7 +1097,7 @@ button.cursor-square-item:hover {
   }
 
   html:not([data-jungle-phase])[data-nav-hidden='true']
-    [data-feed-nav-outer]:not([data-nav-hide='off']) {
+    [data-feed-nav-outer]:not([data-nav-hide='off']):not([data-nav-hide='pin']) {
     transform: translateY(calc(-100% - 3rem));
   }
 
@@ -1108,6 +1111,28 @@ button.cursor-square-item:hover {
   html:not([data-jungle-phase])[data-nav-hidden='true']
     [data-feed-nav-outer]:has(:is(input, textarea, [contenteditable]):focus) {
     transform: none;
+  }
+
+  /* Pinned pills — they close the gap instead of leaving with the chrome.
+     A search box is the one bit of chrome people reach for part-way down a
+     page, so Explore's pill stays put. It cannot simply opt out, though: the
+     header it pins below is gone by then, which would leave it hanging 2.75rem
+     down the screen with feed scrolling through the gap above it. So it rides
+     up by exactly that offset (`top-11`) and sits flush at the top instead.
+
+     Keyed on the scroll flag, NOT `data-nav-hidden`, and explicitly not while
+     an overlay is up: an overlay does not send the header away — it drops it to
+     z-40 and leaves it there — so lifting the pill then would slide it under
+     the header. Overlays get the full translate instead, because the scrims a
+     z-50 pill has to clear are z-50 (dialog/sheet) and z-100 (drawer). */
+  html:not([data-jungle-phase])[data-overlay-open='true']
+    [data-feed-nav-outer][data-nav-hide='pin'] {
+    transform: translateY(calc(-100% - 3rem));
+  }
+
+  html:not([data-jungle-phase])[data-scroll-hidden='true']:not([data-overlay-open='true'])
+    [data-feed-nav-outer][data-nav-hide='pin'] {
+    transform: translateY(-2.75rem);
   }
 }
 
