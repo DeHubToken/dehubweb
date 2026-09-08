@@ -22,6 +22,7 @@ export * from './livechat';
 export * from './leaderboard';
 export * from './blocks';
 export * from './push';
+export * from './sms-notifications';
 // Both ./notifications and ./push declare NotificationCategory; the notifications
 // one is the canonical public type, so re-export it explicitly to disambiguate.
 export type { NotificationCategory } from './notifications';

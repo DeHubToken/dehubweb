@@ -52,6 +52,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Switch } from '@/components/ui/switch';
 import { BrowserNotificationsSetting } from '@/components/app/settings/BrowserNotificationsSetting';
 import { EmailNotificationsSetting } from '@/components/app/settings/EmailNotificationsSetting';
+import { SmsNotificationsSetting } from '@/components/app/settings/SmsNotificationsSetting';
 import { FollowersListDrawer } from '@/components/app/profile';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
@@ -2012,6 +2013,14 @@ export default function NotificationsPage() {
                       {t('notifications.byEmail', 'By email')}
                     </p>
                     <EmailNotificationsSetting variant="card" />
+                  </div>
+
+                  {/* The same reach, paid for per message. */}
+                  <div className="space-y-3 mb-6">
+                    <p className="text-xs text-white/50 uppercase tracking-wider font-medium">
+                      {t('notifications.byText', 'By text')}
+                    </p>
+                    <SmsNotificationsSetting variant="card" />
                   </div>
 
                   {/* Notification Types Section */}

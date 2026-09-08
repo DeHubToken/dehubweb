@@ -225,6 +225,12 @@ export interface AccountNotificationPreferences {
   pushEnabled?: boolean;
   /** Opt-in, and only meaningful for an account that has linked an email. */
   emailEnabled?: boolean;
+  /**
+   * Opt-in, and only meaningful for an account that has unlocked texts and
+   * verified a number. Unlike every other switch here, turning it on starts
+   * spending a balance — see SmsNotificationsSetting.
+   */
+  smsEnabled?: boolean;
   inApp?: Partial<Record<NotificationKey, boolean>>;
   push?: Partial<Record<NotificationKey, boolean>>;
 }
@@ -281,5 +287,21 @@ export async function updateEmailNotificationsEnabled(
 ): Promise<{ result: boolean }> {
   return updateProfile({
     notificationPreferences: JSON.stringify({ emailEnabled: value }),
+  });
+}
+
+/**
+ * Turn notification texts on or off for this account.
+ *
+ * The same single switch as email, over the same per-type toggles — but this
+ * one spends money, so it only does anything for an account that has
+ * unlocked the channel and verified a number. Those live behind
+ * `/api/notification/sms/*`; see `./sms-notifications`.
+ */
+export async function updateSmsNotificationsEnabled(
+  value: boolean,
+): Promise<{ result: boolean }> {
+  return updateProfile({
+    notificationPreferences: JSON.stringify({ smsEnabled: value }),
   });
 }
