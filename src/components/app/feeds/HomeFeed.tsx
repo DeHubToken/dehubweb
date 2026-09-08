@@ -14,7 +14,7 @@ import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { flattenFeedPages } from '@/lib/feed-pages';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { RefreshCw, Radio, ChevronRight, ArrowUp } from 'lucide-react';
@@ -337,6 +337,7 @@ function SortFilterSection({
 // ============================================================================
 
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId, filtersPortalRef, chipsPortalRef }: HomeFeedProps) {
+  const navigate = useNavigate();
   const { t } = useI18n();
   const loaderRef = useRef<HTMLDivElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
@@ -2103,10 +2104,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                   */}
                   {isBoosted && (
                     <div className="flex items-center gap-1.5 px-1 pb-1.5">
-                      <ThemedIcon icon="superpowers" alt="" className="w-4 h-4 object-contain opacity-70" />
-                      <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                        {t('superpowers.boostedLabel')}
-                      </span>
+                      <button
+                        type="button"
+                        onClick={() => navigate('/app/superpowers')}
+                        className="flex items-center gap-1.5 rounded-sm text-[11px] uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        <ThemedIcon icon="superpowers" alt="" className="w-4 h-4 object-contain opacity-70" />
+                        <span>{t('superpowers.boostedLabel')}</span>
+                      </button>
                       {/*
                         Backing a Crew Boost, offered exactly where one is being
                         served rather than on a page nobody visits — the moment
