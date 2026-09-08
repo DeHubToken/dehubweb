@@ -33,8 +33,15 @@ import { getDeviceId } from '@/lib/device-id';
  *   'off'         - no permission, or deliberately unsubscribed
  *   'subscribed'  - a live subscription the server knows about
  *   'unavailable' - we asked, and the browser or the deployment said no
+ *   'blocked'     - subscribed fine, but the OS refuses to display anything
  */
-export type WebPushState = 'unknown' | 'unsupported' | 'off' | 'subscribed' | 'unavailable';
+export type WebPushState =
+  | 'unknown'
+  | 'unsupported'
+  | 'off'
+  | 'subscribed'
+  | 'unavailable'
+  | 'blocked';
 
 const STATE_EVENT = 'dehub:web-push-state-changed';
 
@@ -182,6 +189,52 @@ async function registerSubscription(subscription: PushSubscription): Promise<voi
 }
 
 /** Unsubscribe this browser and drop the row server-side. */
+/**
+ * Ask the service worker to display one, and report whether it could.
+ *
+ * This is the only honest capability check, and the old one was not it.
+ * `new Notification()` from the page CONSTRUCTS successfully on a machine
+ * whose OS is blocking the browser's notifications - observed directly, not
+ * theorised - so the enable-time test passed while nothing was ever
+ * displayed, and no surface could tell. `registration.showNotification()` is
+ * the path a real push takes, and it rejects (with an empty reason, so there
+ * is nothing to log) when the OS refuses. Anything gating on "can we
+ * deliver" has to go through here.
+ */
+export async function probeNotificationDisplay(title: string, body: string): Promise<boolean> {
+  if (!isWebPushSupported()) return false;
+  if (Notification.permission !== 'granted') return false;
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    await registration.showNotification(title, {
+      body,
+      icon: '/icon-192.png',
+      tag: 'dehub-test-notification',
+      data: { url: '/app/notifications' },
+    });
+    return true;
+  } catch {
+    // The subscription may be perfectly healthy; the operating system is
+    // simply refusing to post it. Different fault, different advice.
+    setState('blocked');
+    return false;
+  }
+}
+
+/**
+ * Tear the subscription down and build a fresh one.
+ *
+ * The reconcile deliberately reuses a subscription whose key still matches,
+ * which is right for the ordinary case and useless for a dead one: the
+ * browser still reports it, the server still holds the endpoint, and every
+ * send is accepted and delivered nowhere. Switching the setting off and on
+ * is what people discover by accident - this is that, as one call.
+ */
+export async function resubscribeWebPush(): Promise<boolean> {
+  await unsubscribeFromWebPush();
+  return subscribeToWebPush();
+}
+
 export async function unsubscribeFromWebPush(): Promise<void> {
   if (!isWebPushSupported()) return;
   setState('off');

@@ -37,18 +37,26 @@ function fakeSubscription(endpoint = 'https://push.example/abc') {
 }
 
 /** A browser that supports push, holds the permission, and does `subscribe`. */
-function installBrowser(opts: { subscribe: () => unknown; existing?: unknown }) {
+function installBrowser(opts: {
+  subscribe: () => unknown;
+  existing?: unknown;
+  /** Left undefined, the OS accepts the notification. */
+  showNotification?: () => unknown;
+}) {
   const pushManager = {
     getSubscription: vi.fn(async () => opts.existing ?? null),
     subscribe: vi.fn(async () => opts.subscribe()),
   };
+  const showNotification = vi.fn(async () =>
+    opts.showNotification ? opts.showNotification() : undefined,
+  );
   vi.stubGlobal('navigator', {
-    serviceWorker: { ready: Promise.resolve({ pushManager }) },
+    serviceWorker: { ready: Promise.resolve({ pushManager, showNotification }) },
     userAgent: 'Mozilla/5.0 Chrome/140.0.0.0',
   });
   vi.stubGlobal('PushManager', function PushManager() {});
   vi.stubGlobal('Notification', { permission: 'granted' });
-  return pushManager;
+  return { pushManager, showNotification };
 }
 
 async function freshModule() {
@@ -112,7 +120,7 @@ describe('web push state', () => {
 
   it('treats a deployment with no VAPID key as unavailable, and asks for nothing', async () => {
     getVapidPublicKey.mockResolvedValue('');
-    const pushManager = installBrowser({ subscribe: () => fakeSubscription() });
+    const { pushManager } = installBrowser({ subscribe: () => fakeSubscription() });
 
     const mod = await freshModule();
     await expect(mod.subscribeToWebPush()).resolves.toBe(false);
@@ -148,6 +156,32 @@ describe('web push state', () => {
 
     await mod.unsubscribeFromWebPush();
     expect(mod.getWebPushState()).toBe('off');
+  });
+
+  it('reports blocked when the OS refuses to display a notification', async () => {
+    // The bug this exists for: the old check used `new Notification()` from
+    // the page, which constructs happily on a machine whose OS is blocking
+    // the browser. Only the service worker's own call rejects, so only it
+    // can tell the difference between "delivering" and "silently dropped".
+    installBrowser({
+      subscribe: () => fakeSubscription(),
+      showNotification: () => {
+        throw undefined;
+      },
+    });
+
+    const mod = await freshModule();
+    await expect(mod.probeNotificationDisplay('DeHub', 'probe')).resolves.toBe(false);
+    expect(mod.getWebPushState()).toBe('blocked');
+  });
+
+  it('leaves the state alone when the OS does display it', async () => {
+    installBrowser({ subscribe: () => fakeSubscription() });
+
+    const mod = await freshModule();
+    await mod.subscribeToWebPush();
+    await expect(mod.probeNotificationDisplay('DeHub', 'probe')).resolves.toBe(true);
+    expect(mod.getWebPushState()).toBe('subscribed');
   });
 
   it('reports off, not unavailable, when the permission is not granted', async () => {

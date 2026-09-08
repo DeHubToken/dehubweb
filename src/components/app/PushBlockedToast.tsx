@@ -63,7 +63,7 @@ function show(goToSettings: () => void): void {
         <span>
           {i18n.t(
             'toasts.push_blocked_body',
-            'Your system is blocking notifications for this browser, so nothing reaches you while DeHub is closed. Switch them back on for your browser in your system notification settings.',
+            'Your system is blocking notifications for this browser, so nothing reaches you while DeHub is closed. Turn them back on for your browser in your system notification settings, then switch DeHub notifications off and on again.',
           )}
         </span>
         <span className="flex flex-col gap-2">
@@ -116,9 +116,16 @@ export function PushBlockedToast() {
     // 'granted' plus a stored on: this reader believes notifications work.
     // A denied permission is a different fault with its own copy in Settings.
     if (permission !== 'granted' || !getStoredEnabled()) return;
-    // Only once the reconcile has actually resolved to a failure. 'unknown'
-    // is the normal state for the first second of a load.
-    if (pushState !== 'unavailable') return;
+    // Only once the state has actually resolved to a failure. 'unknown' is
+    // the normal state for the first second of a load.
+    //
+    // Both failures belong here and they are not the same thing:
+    // 'unavailable' is a subscription that could not be created, 'blocked'
+    // is one that exists while the OS refuses to display anything from the
+    // browser. The second is the one nothing used to detect, because the
+    // enable-time test used the page's Notification constructor, which
+    // succeeds on a blocked machine.
+    if (pushState !== 'unavailable' && pushState !== 'blocked') return;
     if (Date.now() < snoozedUntil()) return;
 
     const startedAt = Date.now();
