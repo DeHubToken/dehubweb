@@ -374,6 +374,15 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
       return <AlertTriangle className="w-4 h-4 text-white/70" />;
     case 'governance_vote':
       return <Star className="w-4 h-4 text-white/70" />;
+    case 'dao_proposal_open':
+    case 'dao_vote_deadline':
+    case 'dao_proposal_accepted':
+    case 'dao_proposal_rejected':
+    case 'dao_payment_deadline':
+    case 'dao_payment_submitted':
+    case 'dao_payment_expired':
+    case 'dao_proposal_completed':
+      return <Scale className="w-4 h-4 text-white/70" />;
     case 'store_order':
       return <ShoppingBag className="w-4 h-4 text-white/70" />;
     case 'fraction_offer':
@@ -766,6 +775,10 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   if ((notification.type as string) === 'governance_vote' || (notification.type as string) === 'governance_comment') {
     const refId = customReferenceId(notification);
     return refId ? `/app/governance/${refId}` : '/governance';
+  }
+  if ((notification.type as string).startsWith('dao_')) {
+    const refId = customReferenceId(notification);
+    return refId ? `/dao?proposal=${encodeURIComponent(refId)}` : '/dao';
   }
   if ((notification.type as string) === 'stage_live' || (notification.type as string) === 'stage_reminder') {
     // Shared with the live toast and the OS notification so all three land on

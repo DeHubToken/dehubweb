@@ -10,7 +10,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Copy, Check, Loader2, HeartHandshake, ExternalLink, RefreshCw, Info } from 'lucide-react';
+import { Copy, Check, Loader2, HeartHandshake, ExternalLink, RefreshCw, Info, FilePenLine } from 'lucide-react';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { DaoProposalExperience } from '@/components/app/dao/DaoProposals';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
@@ -264,6 +265,7 @@ export default function DaoPage() {
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
   const { data, isLoading, isFetching, refetch, isError } = useDaoTreasury();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [proposalDrawerOpen, setProposalDrawerOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
@@ -284,6 +286,11 @@ export default function DaoPage() {
   const handleContribute = () => {
     if (!isAuthenticated) { openLoginModal(); return; }
     setDrawerOpen(true);
+  };
+
+  const handlePropose = () => {
+    if (!isAuthenticated) { openLoginModal(); return; }
+    setProposalDrawerOpen(true);
   };
 
   return (
@@ -315,10 +322,16 @@ export default function DaoPage() {
                 <p className="text-zinc-500 text-sm truncate">{t('dao.subtitle')}</p>
               </div>
             </div>
-            <Button onClick={handleContribute} variant="glass" className="rounded-xl font-semibold text-sm shrink-0" size="sm">
-              <HeartHandshake className="w-4 h-4" />
-              <span className="hidden sm:inline">{t('dao.contribute')}</span>
-            </Button>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button onClick={handleContribute} variant="glass" className="rounded-xl font-semibold text-sm" size="sm">
+                <HeartHandshake className="w-4 h-4" />
+                <span className="hidden sm:inline">{t('dao.contribute')}</span>
+              </Button>
+              <Button onClick={handlePropose} variant="glass" className="rounded-xl font-semibold text-sm" size="sm">
+                <FilePenLine className="w-4 h-4" />
+                <span className="hidden sm:inline">Propose</span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -344,23 +357,6 @@ export default function DaoPage() {
             </button>
           </div>
 
-          {data && (
-            <div className="grid grid-cols-3 gap-2 mt-4">
-              {data.balances.map((b) => (
-                <a
-                  key={b.chainId}
-                  href={`${b.explorerUrl}/address/${DAO_TREASURY_ADDRESS}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-xl bg-white/[0.03] hover:bg-white/[0.06] px-3 py-2 transition-colors"
-                >
-                  <div className="text-[11px] text-zinc-500">{b.name}</div>
-                  <div className="text-sm font-semibold text-white tabular-nums">{formatDhb(b.amount)}</div>
-                </a>
-              ))}
-            </div>
-          )}
-
           <div className="mt-4">
             <div className="text-xs text-zinc-500 mb-1">{t('dao.treasuryAddress')}</div>
             <div className="flex items-center gap-2">
@@ -378,6 +374,8 @@ export default function DaoPage() {
             <p className="text-sm text-red-400 mt-3">{t('dao.loadFailed')}</p>
           )}
         </section>
+
+        <DaoProposalExperience proposeOpen={proposalDrawerOpen} onProposeOpenChange={setProposalDrawerOpen} />
 
         {/* Your share */}
         {isAuthenticated && data && (

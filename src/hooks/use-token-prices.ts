@@ -35,6 +35,7 @@ const STATIC_PRICE_DEFAULTS: TokenPrices = { DHB: 0, ETH: 0, BNB: 0, USDT: 1, US
 const PRICE_SURFACES = new Set([
   '/app/wallet', '/app/stake', '/stake', '/app/buy', '/buy',
   '/app/stores', '/stores', '/app/fractions', '/fractions',
+  '/dao',
 ]);
 
 /**
