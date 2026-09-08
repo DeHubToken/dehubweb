@@ -915,8 +915,15 @@ export default function ExplorePage() {
     <div className="min-h-screen" data-explore-page>
       <SEOHead title="Explore - Trending Creators, Posts & Topics" description="Discover trending posts, top creators and popular topics on DeHub — open source, user owned, censorship resistant social media." url="https://dehub.io/app/explore" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Explore DeHub', url: 'https://dehub.io/app/explore', description: 'Discover trending content, creators and topics on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">Explore DeHub — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
-      {/* Search Header - Bento Style */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 space-y-2 sm:space-y-3">
+      {/* Search Header - Bento Style.
+
+          `data-nav-hide="pin"` keeps this one on screen when the rest of the
+          mobile chrome slides away on a scroll-down: it is the search box, and
+          scrolling a few results down is exactly when someone reaches back for
+          it to change the query. It still moves — up by the header's height,
+          so it lands flush at the top rather than hanging in the gap the
+          header left. See the "Mobile chrome" block in index.css. */}
+      <div data-feed-nav-outer data-nav-hide="pin" className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 space-y-2 sm:space-y-3">
         {/* Search Input Bento */}
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
           <div className="relative flex gap-2">
