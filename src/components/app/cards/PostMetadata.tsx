@@ -51,8 +51,8 @@ export function PostMetadata({ timestamp, viewCount, tokenId, isAd, isAudio, tra
     // translation has come back, so until then the control is just the icon.
     const { sourceLang } = translateControl;
     const sourceLangName =
-      sourceLang && sourceLang !== 'unknown'
-        ? LANGUAGE_NAMES[sourceLang] || sourceLang.toUpperCase()
+      sourceLang && !['unknown', 'auto', 'und'].includes(sourceLang)
+        ? LANGUAGE_NAMES[sourceLang]
         : undefined;
 
     if (translateControl.isTranslated) {

@@ -401,8 +401,8 @@ const translationCache = new Map<string, { translated: string; sourceLang: strin
 // a wrong-language guess as the "translation", and this cache is checked before
 // the server is ever re-asked — so on affected devices the bad text would
 // outlive every server-side fix. Bumping the key is the only way to reach it.
-const TRANSLATION_STORE_KEY = 'dehub-translation-cache-v2';
-const LEGACY_TRANSLATION_STORE_KEYS = ['dehub-translation-cache-v1'];
+const TRANSLATION_STORE_KEY = 'dehub-translation-cache-v3';
+const LEGACY_TRANSLATION_STORE_KEYS = ['dehub-translation-cache-v1', 'dehub-translation-cache-v2'];
 // Well under the ~5MB localStorage budget: post bodies are large, and this
 // shares that budget with everything else the app keeps there.
 const MAX_PERSISTED_TRANSLATIONS = 300;
@@ -773,7 +773,9 @@ export function useTranslation(text: string, auto: boolean = true) {
       }
 
       const translated = data.translatedText;
-      const detected = data.detectedLanguage?.language || 'unknown';
+      const reported = data.detectedLanguage?.language;
+      const detected = text.replace(/[^\p{L}]/gu, '').length >= 60 && reported && !['auto', 'und'].includes(reported)
+        ? reported : 'unknown';
 
       // An error message is not a translation of anything. Refuse it without
       // caching — the next attempt may reach a provider that answers honestly.
