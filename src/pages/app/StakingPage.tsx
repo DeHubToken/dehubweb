@@ -27,6 +27,7 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
 import { AppState } from '@/components/app/AppState';
+import { useAuth } from '@/contexts/AuthContext';
 
 
 const UNSTAKE_COOLDOWN_DAYS = 12;
@@ -147,7 +148,8 @@ export default function StakingPage() {
   const [earlyFeeAccepted, setEarlyFeeAccepted] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
   const [stakingChainLabel, setStakingChainLabel] = useState('');
-  const [currentWallet, setCurrentWallet] = useState('');
+  const { walletAddress: sessionWalletAddress } = useAuth();
+  const currentWallet = sessionWalletAddress?.toLowerCase() || '';
   const [cancellingTx, setCancellingTx] = useState<string | null>(null);
   const [showDeposits, setShowDeposits] = useState(false);
   const [depositRecords, setDepositRecords] = useState<{ amount: number; tx_hash: string; chain: string; created_at: string; source: 'db' | 'chain' }[]>([]);
@@ -236,17 +238,6 @@ export default function StakingPage() {
     if (diff < 86400) return t('staking.hoursAgo', { count: Math.floor(diff / 3600) });
     return t('staking.daysAgo', { count: Math.floor(diff / 86400) });
   }
-
-  // Nobody asked for anything here — this only populates a query filter — so it
-  // must neither raise the unlock dialog nor reject into the void. A locked
-  // wallet simply leaves currentWallet unset until something else unlocks it.
-  useEffect(() => {
-    getWalletAddress({ silent: true })
-      .then(addr => {
-        if (addr) setCurrentWallet(addr.toLowerCase());
-      })
-      .catch(() => { /* locked or signed out — nothing to show */ });
-  }, []);
 
   // A fee someone accepted for one amount is not a fee they accepted for
   // another, so any edit puts the confirmation back.

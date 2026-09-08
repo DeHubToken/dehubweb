@@ -5,11 +5,10 @@
  */
 
 import { Interface, parseUnits } from 'ethers';
-import { writeContractAA, getWalletAddress, type AAWriteResult } from '@/lib/contracts/aa-utils';
-import { getWeb3AuthProvider } from '@/lib/web3auth';
-import { getAccount, sendTransaction, waitForTransactionReceipt } from '@wagmi/core';
+import { writeContractAA, getActiveProvider, ensureSignerOnChain, type AAWriteResult } from '@/lib/contracts/aa-utils';
+import { sendTransaction, waitForTransactionReceipt } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
-import { initChainRpcUrls } from '@/lib/contracts/dhb-token';
+import { initChainRpcUrls, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
 
 /**
@@ -23,10 +22,10 @@ export async function sendNativeToken(
 ): Promise<AAWriteResult> {
   await initChainRpcUrls();
   const value = parseUnits(amount, decimals);
-  const fromAddress = await getWalletAddress();
-
-  const web3authProvider = getWeb3AuthProvider();
+  await ensureSignerOnChain(chainId ?? BASE_CHAIN_ID);
+  const { provider: web3authProvider } = await getActiveProvider(chainId);
   if (web3authProvider) {
+    const [fromAddress] = await web3authProvider.request({ method: 'eth_accounts' }) as string[];
     // Web3Auth path
     const txHash = await web3authProvider.request({
       method: 'eth_sendTransaction',

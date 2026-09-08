@@ -214,13 +214,13 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // inline to drive the slide-up and the drag, and an inline transform beats a
   // class — the sheet would jump for the length of every animation.
   return (
-    <Drawer open={open} onOpenChange={handleClose} warmable dismissible={!requiresUsername}>
+    <Drawer open={open} onOpenChange={handleClose} warmable walletPrompt dismissible={!requiresUsername}>
       <DrawerContent
         data-login-modal
         hideHandle
         onEscapeKeyDown={(e) => { if (requiresUsername) e.preventDefault(); }}
         className={cn(
-          "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[200] flex flex-col max-h-[90dvh]",
+          "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[2147483646] flex flex-col max-h-[90dvh]",
           !isMobile && "left-[var(--app-main-left,0px)] right-auto w-[var(--app-main-width,100vw)]",
         )}
         overlayClassName={cn(
@@ -229,7 +229,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           // sidebars — and blurs everything outside the login flow to pull
           // full attention onto it (mobile keeps its darker bg-black/80
           // dim from DrawerOverlay's base classes).
-          "z-[200] login-modal-overlay backdrop-blur-xl",
+          "z-[2147483645] login-modal-overlay backdrop-blur-xl",
           !isMobile && "bg-black/40",
         )}
       >

@@ -113,7 +113,7 @@ export function usePPVPayment({
     if (isSolanaChain(postChainId)) {
       setIsPaying(true);
       try {
-        toast.loading('Sign with Phantom to unlock', { id: 'ppv-payment', duration: Infinity });
+        toast.loading('Preparing your payment…', { id: 'ppv-payment', duration: Infinity });
         const { sendSolanaPayment } = await import('@/lib/solana/payment');
         await sendSolanaPayment({ tokenId, kind: 'ppv', chainId: postChainId });
 

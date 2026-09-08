@@ -32,6 +32,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getWalletUnlockIntervalMs } from "@/hooks/use-wallet-unlock-interval";
 import { saveVaultSession, readVaultSession, clearVaultSession } from "@/lib/wallet-core/key-vault";
 import { ROBINHOOD_CHAIN_ID, ROBINHOOD_PUBLIC_RPC, ROBINHOOD_EXPLORER_URL } from "@/lib/chains/robinhood";
+import { waitForWalletUnlock } from '@/lib/wallet-unlock-flow';
 
 const CHAIN_NAMESPACES = { EIP155: "eip155" } as const;
 
@@ -308,22 +309,28 @@ export function isWalletUnlocked(): boolean {
 export async function signDerivedSolanaTransaction(
   transaction: import('@solana/web3.js').Transaction,
 ): Promise<import('@solana/web3.js').Transaction> {
-  if (!isWalletUnlocked() || !sessionPrivKey) {
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new Event('dehub:wallet-unlock-required'));
-    }
-    const error = new Error('Your wallet is locked. Please unlock it and try again.') as Error & { code?: string };
-    error.code = 'WALLET_LOCKED';
-    throw error;
-  }
+  await ensureWalletUnlocked();
 
   const [{ Keypair }, { deriveSolanaSeed }] = await Promise.all([
     import('@solana/web3.js'),
     import('@/lib/solana/derive'),
   ]);
-  const signer = Keypair.fromSeed(deriveSolanaSeed(sessionPrivKey));
+  const signer = Keypair.fromSeed(deriveSolanaSeed(sessionPrivKey!));
   transaction.partialSign(signer);
   return transaction;
+}
+
+export async function ensureWalletUnlocked(): Promise<void> {
+  if (isWalletUnlocked()) return;
+  if (await restoreWalletSession()) return;
+  await waitForWalletUnlock();
+  if (!isWalletUnlocked()) throw new Error('Wallet unlock did not complete. Please try again.');
+}
+
+export async function getDerivedSolanaAddress(): Promise<string> {
+  await ensureWalletUnlocked();
+  const { deriveSolanaAddress } = await import('@/lib/solana/derive');
+  return deriveSolanaAddress(sessionPrivKey!);
 }
 
 /**
