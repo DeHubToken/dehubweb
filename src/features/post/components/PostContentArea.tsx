@@ -571,16 +571,17 @@ export function PostContentArea({
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
-        {/* Mobile: Avatar in absolute top left */}
-        <div className="absolute top-3 left-4 z-10 sm:hidden">
-          <Avatar className="w-8 h-8 rounded-xl">
+        {/* Keep identity and composer controls in their own top row. The editor
+            starts below it at every breakpoint, so text can never run behind
+            the controls. */}
+        <div className="flex min-h-10 items-start justify-between gap-3">
+          <Avatar className="w-10 h-10 shrink-0 rounded-xl">
             <AvatarImage src={userAvatarUrl || undefined} className="rounded-xl" />
             <AvatarFallback className="rounded-xl">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
-        </div>
 
-        {/* Schedule/Drafts/Chain buttons - top right corner */}
-        <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
+          {/* Schedule/Drafts/Chain buttons - top right corner */}
+          <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
           {/* Schedule indicator */}
           {scheduledDate && (
             <motion.div
@@ -652,6 +653,7 @@ export function PostContentArea({
             </TooltipTrigger>
             <TooltipContent>Drafts</TooltipContent>
           </Tooltip>
+          </div>
         </div>
 
         {/* Drag overlay */}
@@ -708,16 +710,8 @@ export function PostContentArea({
             </motion.div>
           )}
         </AnimatePresence>
-        {/* Unified: Avatar (desktop flex row) + single contentEditable for both mobile/desktop */}
-        <div className="flex gap-3">
-          {/* Desktop avatar — hidden on mobile (mobile has absolute avatar above) */}
-          <div className="hidden sm:flex flex-shrink-0">
-            <Avatar className="w-10 h-10 rounded-xl">
-              <AvatarImage src={userAvatarUrl || undefined} className="rounded-xl" />
-              <AvatarFallback className="rounded-xl">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
-            </Avatar>
-          </div>
-          <div className="flex-1 min-w-0 mt-12 sm:mt-0">
+        {/* One full-width editor below the avatar and control row. */}
+        <div className="mt-3 min-w-0">
             {/* Title input - shown when title toggle is on OR video/audio */}
             {(showTitle || hasVideo || hasAudio) && (
               <input
@@ -763,11 +757,10 @@ export function PostContentArea({
               className="w-full bg-transparent text-white text-base sm:text-lg resize-none outline-none min-h-[72px] sm:min-h-[72px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 sm:empty:before:text-white/70 empty:before:pointer-events-none empty:before:cursor-text focus:empty:before:content-['\200b'] caret-white block"
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', caretColor: 'white' }}
             />
-          </div>
         </div>
 
-        {/* Media preview - full width on mobile, breaks out of avatar indent */}
-        <div className="-mx-4 px-4 sm:mx-0 sm:px-0 sm:pl-[52px]">
+        {/* Media preview follows the same full-width column as the editor. */}
+        <div>
           <PostMediaPreview 
             media={media} 
             onRemove={onRemoveMedia}
@@ -785,8 +778,8 @@ export function PostContentArea({
           />
         </div>
 
-        {/* Link previews - with proper indent on desktop */}
-        <div className="sm:pl-[52px]">
+        {/* Link previews follow the same full-width column as the editor. */}
+        <div>
           <LinkPreviews 
             text={text} 
             onRemoveCommunityLink={() => {
