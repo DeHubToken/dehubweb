@@ -8,6 +8,7 @@
  */
 
 import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
+import { ASSISTANT_AVATAR, isAssistantAddress } from '@/lib/assistant';
 
 /**
  * Extract avatar path from any API object.
@@ -241,6 +242,7 @@ export function bumpProfileImageVersion(address: string): void {
  * cdnImage() URL 404s at once — and this path is what still resolves.
  */
 export function buildAvatarCdnFallbackUrl(address: string, apiAvatarPath?: string | null, size?: number): string | undefined {
+  if (isAssistantAddress(address)) return ASSISTANT_AVATAR;
   if (!address) return undefined;
   const ext = apiAvatarPath ? getExtension(apiAvatarPath) : 'jpg';
   const cacheBust = getProfileImageVersion(address.toLowerCase());
@@ -262,6 +264,7 @@ export function buildAvatarUrl(
    */
   width: number = deviceWidth(DEFAULT_AVATAR_CSS_PX),
 ): string | undefined {
+  if (isAssistantAddress(address)) return ASSISTANT_AVATAR;
   return cdnImage(buildAvatarSourceUrl(address, apiAvatarPath), { width, fit: 'cover' });
 }
 

@@ -11,7 +11,7 @@
 import { Sparkles, CornerDownRight } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { renderTextWithLinks } from '../TranslatableText';
-import assistantAvatar from '@/assets/ai-assistant-avatar.png';
+import { ASSISTANT_AVATAR as assistantAvatar } from '@/lib/assistant';
 
 interface AssistantReplyCardProps {
   content: string;

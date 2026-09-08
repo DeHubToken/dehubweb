@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import assistantAvatar from '@/assets/assistant-avatar.png';
+import { ASSISTANT_AVATAR as assistantAvatar } from '@/lib/assistant';
 
 export function AuthGate({ description: _description }: { description?: string } = {}) {
   const { t } = useTranslation();

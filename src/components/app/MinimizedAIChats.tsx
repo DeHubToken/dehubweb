@@ -7,7 +7,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMinimizedChats, type MinimizedChat } from '@/hooks/use-minimized-chats';
-import assistantAvatar from '@/assets/ai-assistant-avatar.png';
+import { ASSISTANT_AVATAR as assistantAvatar } from '@/lib/assistant';
 
 interface MinimizedAIChatsProps {
   onRestore?: (chat: MinimizedChat) => void;
