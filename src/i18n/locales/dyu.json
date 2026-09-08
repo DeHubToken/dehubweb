@@ -965,6 +965,13 @@
     "shippedBadge": "Kɔrɔbɔ",
     "noComments": "Kɔrɔbɔ bɔ",
     "addComment": "Kɔrɔbɔ",
+    "writeReply": "Jalɛnɛn...",
+    "replyToComment": "Jalɛnɛn",
+    "replyingTo": "Jalɛnɛn {{name}}",
+    "requestAuthorChip": "Sɛnɛkɛla",
+    "commentEdited": "kɛla",
+    "showOneMoreReply": "Ɛnɛn 1 jalɛnɛn",
+    "showMoreReplies": "Ɛnɛn {{count}} jalɛnɛn",
     "submitDrawerTitle": "Kɔrɔbɔ",
     "titleLabel": "Kɔrɔbɔ",
     "titlePlaceholder": "Kɔrɔbɔ",
@@ -980,14 +987,7 @@
     "statusDeclined": "Kɔrɔbɔ",
     "shipping": "Dilannen",
     "noShippingYet": "Foyi tɛ ka kɛ",
-    "shippingAppearHere": "Ɲininiw minnu bɛ ka dilan, olu bɛna bɔ yan.",
-    "writeReply": "Jalɛnɛn...",
-    "replyToComment": "Jalɛnɛn",
-    "replyingTo": "Jalɛnɛn {{name}}",
-    "requestAuthorChip": "Sɛnɛkɛla",
-    "commentEdited": "kɛla",
-    "showOneMoreReply": "Ɛnɛn 1 jalɛnɛn",
-    "showMoreReplies": "Ɛnɛn {{count}} jalɛnɛn"
+    "shippingAppearHere": "Ɲininiw minnu bɛ ka dilan, olu bɛna bɔ yan."
   },
   "auth": {
     "loginRequired": "Sɔgɔma kɛ"
@@ -1397,6 +1397,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "A mara taamasiyɛn kɔnɔ",
+    "new_member_notice_title": "I be mɔgɔ kuraw yira",
+    "new_member_notice_body": "Mɔgɔ wɛrɛw be se k'i ye tuma min na i be jɛn n'u ye walisa u ka se k'i fo. Aw k'a bɔ tuma o tuma.",
     "removed_from_bookmarks": "A bɔra taamasiyɛn kɔnɔ",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

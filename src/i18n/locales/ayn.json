@@ -971,6 +971,13 @@
     "shippedBadge": "منفّذة",
     "noComments": "ما في تعليقات بعد",
     "addComment": "أضف تعليق...",
+    "writeReply": "اكتب رد...",
+    "replyToComment": "رد",
+    "replyingTo": "بالرد على {{name}}",
+    "requestAuthorChip": "المؤلف",
+    "commentEdited": "تم التعديل",
+    "showOneMoreReply": "عرض رد واحد آخر",
+    "showMoreReplies": "عرض {{count}} ردود أخرى",
     "submitDrawerTitle": "قدّم طلب ميزة",
     "titleLabel": "العنوان",
     "titlePlaceholder": "عنوان مختصر لفكرتك...",
@@ -986,14 +993,7 @@
     "statusDeclined": "مرفوض",
     "shipping": "قيد التنفيذ",
     "noShippingYet": "ما في شي شغال",
-    "shippingAppearHere": "الطلبات اللي بتنبني بتظهر هنا.",
-    "writeReply": "اكتب رد...",
-    "replyToComment": "رد",
-    "replyingTo": "بالرد على {{name}}",
-    "requestAuthorChip": "المؤلف",
-    "commentEdited": "تم التعديل",
-    "showOneMoreReply": "عرض رد واحد آخر",
-    "showMoreReplies": "عرض {{count}} ردود أخرى"
+    "shippingAppearHere": "الطلبات اللي بتنبني بتظهر هنا."
   },
   "auth": {
     "loginRequired": "مطلوب تسجيل دخول"
@@ -1396,6 +1396,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "تم الحفظ بالمفضلة",
+    "new_member_notice_title": "تظهر في الأعضاء الجدد",
+    "new_member_notice_body": "يمكن للأعضاء الآخرين رؤية متى انضممت، حتى يتمكنوا من قول مرحباً. يمكنك إيقاف تشغيله في أي وقت.",
     "removed_from_bookmarks": "تمت الإزالة من المفضلة",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

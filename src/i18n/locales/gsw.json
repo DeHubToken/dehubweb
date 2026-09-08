@@ -972,6 +972,13 @@
     "shippedBadge": "Useglieferet",
     "noComments": "No kei Kommentär",
     "addComment": "Kommentar hinzuefüege...",
+    "writeReply": "Schriib en Antwort...",
+    "replyToComment": "Antwort",
+    "replyingTo": "Antworte uf {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "bearbeitet",
+    "showOneMoreReply": "Zeig 1 meh Antwort",
+    "showMoreReplies": "Zeig {{count}} meh Antworte",
     "submitDrawerTitle": "Feature-Aafrag iireiche",
     "titleLabel": "Titel",
     "titlePlaceholder": "Churze Titel für dini Idee...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Abglehnt",
     "shipping": "Am Uslifere",
     "noShippingYet": "Nüt am Loufe",
-    "shippingAppearHere": "Aafroge wo baut wärde erschiine da.",
-    "writeReply": "Schriib en Antwort...",
-    "replyToComment": "Antwort",
-    "replyingTo": "Antworte uf {{name}}",
-    "requestAuthorChip": "Autor",
-    "commentEdited": "bearbeitet",
-    "showOneMoreReply": "Zeig 1 meh Antwort",
-    "showMoreReplies": "Zeig {{count}} meh Antworte"
+    "shippingAppearHere": "Aafroge wo baut wärde erschiine da."
   },
   "auth": {
     "loginRequired": "Aamäldig erforderlich"
@@ -1427,6 +1427,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Bi de Läsezeiche gspeicheret",
+    "new_member_notice_title": "Du bisch im \"Neui Mitgliider\" zeiglet.",
+    "new_member_notice_body": "Anderi Mitgliider chönd gseh, wann du dich agmäldet hesch, damit sie dich chönd begrüsse. Du chasch das jederzeit usschalte.",
     "removed_from_bookmarks": "Us de Läsezeiche entfernt",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

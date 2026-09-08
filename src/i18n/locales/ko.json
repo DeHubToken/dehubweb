@@ -971,6 +971,13 @@
     "shippedBadge": "출시됨",
     "noComments": "아직 댓글 없음",
     "addComment": "댓글 추가...",
+    "writeReply": "답글 작성...",
+    "replyToComment": "답글",
+    "replyingTo": "{{name}}님에게 답글 남기는 중",
+    "requestAuthorChip": "작성자",
+    "commentEdited": "수정됨",
+    "showOneMoreReply": "답글 1개 더 보기",
+    "showMoreReplies": "{{count}}개 더 보기",
     "submitDrawerTitle": "기능 요청 제출",
     "titleLabel": "제목",
     "titlePlaceholder": "간단한 제목...",
@@ -986,14 +993,7 @@
     "statusDeclined": "거절됨",
     "shipping": "개발 중",
     "noShippingYet": "진행 중인 항목 없음",
-    "shippingAppearHere": "개발 중인 요청이 여기에 표시됩니다.",
-    "writeReply": "답글 작성...",
-    "replyToComment": "답글",
-    "replyingTo": "{{name}}님에게 답글 남기는 중",
-    "requestAuthorChip": "작성자",
-    "commentEdited": "수정됨",
-    "showOneMoreReply": "답글 1개 더 보기",
-    "showMoreReplies": "{{count}}개 더 보기"
+    "shippingAppearHere": "개발 중인 요청이 여기에 표시됩니다."
   },
   "auth": {
     "loginRequired": "로그인 필요"
@@ -1427,6 +1427,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "북마크에 저장됨",
+    "new_member_notice_title": "신규 회원에 표시되고 있습니다",
+    "new_member_notice_body": "다른 회원은 내가 가입했을 때 볼 수 있으므로 인사할 수 있습니다. 언제든지 끌 수 있습니다.",
     "removed_from_bookmarks": "북마크에서 제거됨",
     "profile_url_copied_to_clipboard": "프로필 URL 복사됨",
     "address_copied_to_clipboard": "주소 복사됨",

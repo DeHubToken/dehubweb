@@ -973,6 +973,13 @@
     "shippedBadge": "Imetumwa",
     "noComments": "Hakuna maoni bado",
     "addComment": "Ongeza maoni...",
+    "writeReply": "Andika jibu...",
+    "replyToComment": "Jibu",
+    "replyingTo": "Inajibu {{name}}",
+    "requestAuthorChip": "Mwandishi",
+    "commentEdited": "imehaririwa",
+    "showOneMoreReply": "Onyesha jibu 1 zaidi",
+    "showMoreReplies": "Onyesha majibu {{count}} zaidi",
     "submitDrawerTitle": "Wasilisha Ombi la Kipengele",
     "titleLabel": "Kichwa",
     "titlePlaceholder": "Kichwa kifupi kwa wazo lako...",
@@ -988,14 +995,7 @@
     "statusDeclined": "Imekataliwa",
     "shipping": "Kinatengenezwa",
     "noShippingYet": "Hakuna kinachoendelea",
-    "shippingAppearHere": "Maombi yanayotengenezwa yataonekana hapa.",
-    "writeReply": "Andika jibu...",
-    "replyToComment": "Jibu",
-    "replyingTo": "Inajibu {{name}}",
-    "requestAuthorChip": "Mwandishi",
-    "commentEdited": "imehaririwa",
-    "showOneMoreReply": "Onyesha jibu 1 zaidi",
-    "showMoreReplies": "Onyesha majibu {{count}} zaidi"
+    "shippingAppearHere": "Maombi yanayotengenezwa yataonekana hapa."
   },
   "auth": {
     "loginRequired": "Kuingia kunahitajika"
@@ -1426,6 +1426,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Imehifadhiwa kwenye alamisho",
+    "new_member_notice_title": "Unaonekana katika washiriki wapya",
+    "new_member_notice_body": "Washiriki wengine wanaweza kuona ulipojiunga, ili waweze kusalimia. Zima wakati wowote.",
     "removed_from_bookmarks": "Imeondolewa kutoka alamisho",
     "profile_url_copied_to_clipboard": "URL ya wasifu ilinakiliwa kwenye ubao wa kunakili",
     "address_copied_to_clipboard": "Anwani ilinakiliwa kwenye ubao wa kunakili",

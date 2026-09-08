@@ -972,6 +972,13 @@
     "shippedBadge": "Dikirim",
     "noComments": "Belum ada komentar",
     "addComment": "Tambahkan komentar...",
+    "writeReply": "Tulis balasan...",
+    "replyToComment": "Balas",
+    "replyingTo": "Membalas ke {{name}}",
+    "requestAuthorChip": "Penulis",
+    "commentEdited": "diedit",
+    "showOneMoreReply": "Tampilkan 1 balasan lagi",
+    "showMoreReplies": "Tampilkan {{count}} balasan lagi",
     "submitDrawerTitle": "Ajukan Permintaan Fitur",
     "titleLabel": "Judul",
     "titlePlaceholder": "Judul singkat untuk ide Anda...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Ditolak",
     "shipping": "Sedang dikerjakan",
     "noShippingYet": "Tidak ada yang sedang dikerjakan",
-    "shippingAppearHere": "Permintaan yang sedang dibangun akan muncul di sini.",
-    "writeReply": "Tulis balasan...",
-    "replyToComment": "Balas",
-    "replyingTo": "Membalas ke {{name}}",
-    "requestAuthorChip": "Penulis",
-    "commentEdited": "diedit",
-    "showOneMoreReply": "Tampilkan 1 balasan lagi",
-    "showMoreReplies": "Tampilkan {{count}} balasan lagi"
+    "shippingAppearHere": "Permintaan yang sedang dibangun akan muncul di sini."
   },
   "auth": {
     "loginRequired": "Login diperlukan"
@@ -1425,6 +1425,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Disimpan ke bookmark",
+    "new_member_notice_title": "Anda tampil di Anggota baru",
+    "new_member_notice_body": "Anggota lain dapat melihat kapan Anda bergabung, sehingga mereka dapat menyapa. Matikan kapan saja.",
     "removed_from_bookmarks": "Dihapus dari bookmark",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

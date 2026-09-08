@@ -972,6 +972,13 @@
     "shippedBadge": "Ausgeliefert",
     "noComments": "Noch keine Kommentare",
     "addComment": "Kommentar hinzufügen...",
+    "writeReply": "Antworten...",
+    "replyToComment": "Antworten",
+    "replyingTo": "Antwortet auf {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "bearbeitet",
+    "showOneMoreReply": "1 weitere Antwort anzeigen",
+    "showMoreReplies": "{{count}} weitere Antworten anzeigen",
     "submitDrawerTitle": "Funktionsanfrage einreichen",
     "titleLabel": "Titel",
     "titlePlaceholder": "Kurzer Titel für deine Idee...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Abgelehnt",
     "shipping": "In Umsetzung",
     "noShippingYet": "Nichts in Arbeit",
-    "shippingAppearHere": "Anfragen, die gerade gebaut werden, erscheinen hier.",
-    "writeReply": "Antworten...",
-    "replyToComment": "Antworten",
-    "replyingTo": "Antwortet auf {{name}}",
-    "requestAuthorChip": "Autor",
-    "commentEdited": "bearbeitet",
-    "showOneMoreReply": "1 weitere Antwort anzeigen",
-    "showMoreReplies": "{{count}} weitere Antworten anzeigen"
+    "shippingAppearHere": "Anfragen, die gerade gebaut werden, erscheinen hier."
   },
   "auth": {
     "loginRequired": "Anmeldung erforderlich"
@@ -1425,6 +1425,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Zu Lesezeichen gespeichert",
+    "new_member_notice_title": "Sie werden in neuen Mitgliedern angezeigt",
+    "new_member_notice_body": "Andere Mitglieder können sehen, wann du beigetreten bist, damit sie Hallo sagen können. Schalten Sie es jederzeit aus.",
     "removed_from_bookmarks": "Aus Lesezeichen entfernt",
     "profile_url_copied_to_clipboard": "Profil-URL in Zwischenablage kopiert",
     "address_copied_to_clipboard": "Adresse in Zwischenablage kopiert",

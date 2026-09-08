@@ -952,6 +952,13 @@
     "shippedBadge": "Şandî",
     "noComments": "Hîn tu şîrove tune",
     "addComment": "Şîroveyek lê zêde bike...",
+    "writeReply": "بنوسە وەڵامێک...",
+    "replyToComment": "وەڵامدانەوە",
+    "replyingTo": "وەڵامدانەوە بۆ {{name}}",
+    "requestAuthorChip": "نووسەر",
+    "commentEdited": "دەستکاری کراوە",
+    "showOneMoreReply": "١ وەڵامدانەوەی تر ببینە",
+    "showMoreReplies": "{{count}} وەڵامدانەوەی تر ببینە",
     "submitDrawerTitle": "Daxwaza Taybetmendiyê Bişîne",
     "titleLabel": "Sernav",
     "titlePlaceholder": "Sernavek kurt ji bo ramana xwe...",
@@ -967,14 +974,7 @@
     "statusDeclined": "Red bû",
     "shipping": "Tê Çêkirin",
     "noShippingYet": "Tiştek di pêşketinê de tune",
-    "shippingAppearHere": "Daxwazên ku tên çêkirin dê li vir xuya bibin.",
-    "writeReply": "بنوسە وەڵامێک...",
-    "replyToComment": "وەڵامدانەوە",
-    "replyingTo": "وەڵامدانەوە بۆ {{name}}",
-    "requestAuthorChip": "نووسەر",
-    "commentEdited": "دەستکاری کراوە",
-    "showOneMoreReply": "١ وەڵامدانەوەی تر ببینە",
-    "showMoreReplies": "{{count}} وەڵامدانەوەی تر ببینە"
+    "shippingAppearHere": "Daxwazên ku tên çêkirin dê li vir xuya bibin."
   },
   "auth": {
     "loginRequired": "Têketin pêwîst e"

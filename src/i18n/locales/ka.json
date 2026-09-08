@@ -989,6 +989,13 @@
     "shippedBadge": "გაშვებული",
     "noComments": "ჯერ არ არის კომენტარები",
     "addComment": "კომენტარის დამატება...",
+    "writeReply": "დაწერე პასუხი...",
+    "replyToComment": "პასუხი",
+    "replyingTo": "პასუხი {{name}}-ს",
+    "requestAuthorChip": "ავტორი",
+    "commentEdited": "რედაქტირებულია",
+    "showOneMoreReply": "აჩვენე კიდევ 1 პასუხი",
+    "showMoreReplies": "აჩვენე {{count}} მეტი პასუხი",
     "submitDrawerTitle": "ფუნქციის მოთხოვნის წარდგენა",
     "titleLabel": "სათაური",
     "titlePlaceholder": "თქვენი იდეის მოკლე სათაური...",
@@ -1004,14 +1011,7 @@
     "statusDeclined": "უარყოფილი",
     "shipping": "მზადდება",
     "noShippingYet": "არაფერი მიმდინარეობს",
-    "shippingAppearHere": "შესაქმნელი მოთხოვნები აქ გამოჩნდება.",
-    "writeReply": "დაწერე პასუხი...",
-    "replyToComment": "პასუხი",
-    "replyingTo": "პასუხი {{name}}-ს",
-    "requestAuthorChip": "ავტორი",
-    "commentEdited": "რედაქტირებულია",
-    "showOneMoreReply": "აჩვენე კიდევ 1 პასუხი",
-    "showMoreReplies": "აჩვენე {{count}} მეტი პასუხი"
+    "shippingAppearHere": "შესაქმნელი მოთხოვნები აქ გამოჩნდება."
   },
   "auth": {
     "loginRequired": "ავტორიზაცია საჭიროა"
@@ -1422,6 +1422,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "შეინახა სანიშნეებში",
+    "new_member_notice_title": "Თქვენ აჩვენებთ ახალ წევრებს",
+    "new_member_notice_body": "Სხვა წევრებს შეუძლიათ ნახონ, როდის გაწევრიანდით, ასე რომ მათ შეუძლიათ მიესალმებიან. Ნებისმიერ დროს გამორთეთ.",
     "removed_from_bookmarks": "წაიშალა სანიშნეებიდან",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",
@@ -2188,32 +2190,6 @@
     "voiceMessage": "ხმოვანი შეტყობინება",
     "image": "გაგზავნილი სურათი"
   },
-  "spaces": {
-    "title": "სივრცეები",
-    "live": "პირდაპირი",
-    "upcoming": "მომავალი",
-    "past": "წარსული",
-    "create": "სივრცის შექმნა",
-    "join": "შეერთება",
-    "listeners": "მსმენელები",
-    "speakers": "მოსაუბრეები",
-    "host": "წამყვანი",
-    "endSpace": "სივრცის დასრულება",
-    "raiseHand": "ხელის აწევა",
-    "lowerHand": "ხელის ჩამოწევა",
-    "mute": "გაჩუმება",
-    "unmute": "ხმის ჩართვა",
-    "leave": "სივრცის დატოვება",
-    "noSpaces": "ჯერ არ არის სივრცეები",
-    "loginDescription": "შედით აუდიო სივრცეების შესაქმნელად და შესაერთებლად."
-  },
-  "blog": {
-    "title": "ბლოგი",
-    "readMore": "მეტის წაკითხვა",
-    "backToBlog": "ბლოგზე დაბრუნება",
-    "sharePost": "პოსტის გაზიარება",
-    "relatedPosts": "დაკავშირებული პოსტები"
-  },
   "follow": {
     "followers": "გამომწერები",
     "following": "გამოწერილი",
@@ -2248,5 +2224,31 @@
     "groupLimitReached": "Ჯგუფური ლიმიტი მიღწეულია",
     "createGroup": "Შექმნა",
     "groupsHint": "Ჯგუფები ფილტრავს შემდეგ არხებს. Მხოლოდ შენ შეგიძლია მათი დანახვა."
+  },
+  "spaces": {
+    "title": "სივრცეები",
+    "live": "პირდაპირი",
+    "upcoming": "მომავალი",
+    "past": "წარსული",
+    "create": "სივრცის შექმნა",
+    "join": "შეერთება",
+    "listeners": "მსმენელები",
+    "speakers": "მოსაუბრეები",
+    "host": "წამყვანი",
+    "endSpace": "სივრცის დასრულება",
+    "raiseHand": "ხელის აწევა",
+    "lowerHand": "ხელის ჩამოწევა",
+    "mute": "გაჩუმება",
+    "unmute": "ხმის ჩართვა",
+    "leave": "სივრცის დატოვება",
+    "noSpaces": "ჯერ არ არის სივრცეები",
+    "loginDescription": "შედით აუდიო სივრცეების შესაქმნელად და შესაერთებლად."
+  },
+  "blog": {
+    "title": "ბლოგი",
+    "readMore": "მეტის წაკითხვა",
+    "backToBlog": "ბლოგზე დაბრუნება",
+    "sharePost": "პოსტის გაზიარება",
+    "relatedPosts": "დაკავშირებული პოსტები"
   }
 }

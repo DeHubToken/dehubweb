@@ -967,6 +967,13 @@
     "shippedBadge": "पाठवले",
     "noComments": "अजून टिप्पण्या नाहीत",
     "addComment": "टिप्पणी करा...",
+    "writeReply": "उत्तर लिहा...",
+    "replyToComment": "उत्तर",
+    "replyingTo": "{{name}} ला उत्तर देत आहे",
+    "requestAuthorChip": "लेखक",
+    "commentEdited": "संपादित",
+    "showOneMoreReply": "आणखी १ उत्तर दाखवा",
+    "showMoreReplies": "{{count}} अधिक उत्तरे दाखवा",
     "submitDrawerTitle": "वैशिष्ट्य विनंती सबमिट करा",
     "titleLabel": "शीर्षक",
     "titlePlaceholder": "तुमच्या कल्पनेचे संक्षिप्त शीर्षक...",
@@ -982,14 +989,7 @@
     "statusDeclined": "नाकारले",
     "shipping": "तयार होत आहे",
     "noShippingYet": "काहीही सुरू नाही",
-    "shippingAppearHere": "ज्या विनंत्यांवर काम सुरू आहे त्या इथे दिसतील.",
-    "writeReply": "उत्तर लिहा...",
-    "replyToComment": "उत्तर",
-    "replyingTo": "{{name}} ला उत्तर देत आहे",
-    "requestAuthorChip": "लेखक",
-    "commentEdited": "संपादित",
-    "showOneMoreReply": "आणखी १ उत्तर दाखवा",
-    "showMoreReplies": "{{count}} अधिक उत्तरे दाखवा"
+    "shippingAppearHere": "ज्या विनंत्यांवर काम सुरू आहे त्या इथे दिसतील."
   },
   "auth": {
     "loginRequired": "लॉगिन आवश्यक"
@@ -1422,6 +1422,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "बुकमार्कमध्ये जतन केले",
+    "new_member_notice_title": "आपण नवीन सदस्यांमध्ये दर्शवित आहात",
+    "new_member_notice_body": "इतर सदस्य जेव्हा आपण सामील होऊ शकता तेव्हा ते पाहू शकतात, जेणेकरून ते त्यांना हॅलो म्हणू शकतील. कोणत्याही वेळी ते बंद करा.",
     "removed_from_bookmarks": "बुकमार्कमधून काढले",
     "profile_url_copied_to_clipboard": "प्रोफाइल URL क्लिपबोर्डवर कॉपी केले",
     "address_copied_to_clipboard": "पत्ता क्लिपबोर्डवर कॉपी केला",

@@ -953,6 +953,13 @@
     "shippedBadge": "Shipped",
     "noComments": "No comments yet",
     "addComment": "Add a comment...",
+    "writeReply": "Scrie un răspuns...",
+    "replyToComment": "Răspunde",
+    "replyingTo": "Răspunzând la {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "editat",
+    "showOneMoreReply": "Arată încă 1 răspuns",
+    "showMoreReplies": "Arată încă {{count}} răspunsuri",
     "submitDrawerTitle": "Submit Feature Request",
     "titleLabel": "Title",
     "descriptionLabel": "Description",
@@ -966,14 +973,7 @@
     "statusDeclined": "Declined",
     "shipping": "În lucru",
     "noShippingYet": "Nimic în lucru",
-    "shippingAppearHere": "Cererile aflate în dezvoltare vor apărea aici.",
-    "writeReply": "Scrie un răspuns...",
-    "replyToComment": "Răspunde",
-    "replyingTo": "Răspunzând la {{name}}",
-    "requestAuthorChip": "Autor",
-    "commentEdited": "editat",
-    "showOneMoreReply": "Arată încă 1 răspuns",
-    "showMoreReplies": "Arată încă {{count}} răspunsuri"
+    "shippingAppearHere": "Cererile aflate în dezvoltare vor apărea aici."
   },
   "auth": {
     "loginRequired": "Log in required"
@@ -1301,6 +1301,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Salvat în marcaje",
+    "new_member_notice_title": "Afișați în Membri noi",
+    "new_member_notice_body": "Alți membri pot vedea când te-ai alăturat, astfel încât să te poată saluta. Oprește-l oricând.",
     "removed_from_bookmarks": "Eliminat din marcaje",
     "copied_to_clipboard": "Copiat în clipboard",
     "deposit_address_copied": "Deposit address copied",
@@ -4304,20 +4306,6 @@
     "voiceMessage": "Mesaj vocal",
     "image": "A trimis o imagine"
   },
-  "footer": {
-    "about": "Despre noi",
-    "contact": "Contact",
-    "privacy": "Politica de confidențialitate",
-    "terms": "Termeni și condiții"
-  },
-  "glossary": {
-    "title": "Glosar",
-    "description": "Termeni și definiții pentru a înțelege mai bine platforma.",
-    "badge": {
-      "white": "Alb",
-      "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
-    }
-  },
   "follow": {
     "followers": "Urmăritori",
     "following": "Urmărește",
@@ -4352,5 +4340,19 @@
     "groupLimitReached": "Limita grupului a fost atinsă",
     "createGroup": "Creare",
     "groupsHint": "Grupurile filtrează următorul flux. Doar tu le poți vedea."
+  },
+  "footer": {
+    "about": "Despre noi",
+    "contact": "Contact",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
+  },
+  "glossary": {
+    "title": "Glosar",
+    "description": "Termeni și definiții pentru a înțelege mai bine platforma.",
+    "badge": {
+      "white": "Alb",
+      "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
+    }
   }
 }

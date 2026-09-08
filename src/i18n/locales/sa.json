@@ -960,6 +960,13 @@
     "shippedBadge": "प्रेषितम्",
     "noComments": "अद्यापि टिप्पण्यः नसन्ति",
     "addComment": "टिप्पणीं योजयतु...",
+    "writeReply": "उत्तरं लिखतु...",
+    "replyToComment": "उत्तरम्",
+    "replyingTo": "{{name}} इत्यस्य उत्तरम्",
+    "requestAuthorChip": "लेखकः",
+    "commentEdited": "संपादितम्",
+    "showOneMoreReply": "१ अधिकं उत्तरं दर्शयतु",
+    "showMoreReplies": "{{count}} अधिकानि उत्तराणि दर्शयतु",
     "submitDrawerTitle": "सुविधा-अनुरोधं प्रस्तुतं कुर्वन्तु",
     "titleLabel": "शीर्षकम्",
     "titlePlaceholder": "स्वविचारस्य संक्षिप्तशीर्षकम्...",
@@ -975,14 +982,7 @@
     "statusDeclined": "अस्वीकृतम्",
     "shipping": "प्रेषणम्",
     "noShippingYet": "किमपि प्रगतौ नास्ति",
-    "shippingAppearHere": "निर्मीयमानाः प्रार्थनाः अत्र दृश्यन्ते।",
-    "writeReply": "उत्तरं लिखतु...",
-    "replyToComment": "उत्तरम्",
-    "replyingTo": "{{name}} इत्यस्य उत्तरम्",
-    "requestAuthorChip": "लेखकः",
-    "commentEdited": "संपादितम्",
-    "showOneMoreReply": "१ अधिकं उत्तरं दर्शयतु",
-    "showMoreReplies": "{{count}} अधिकानि उत्तराणि दर्शयतु"
+    "shippingAppearHere": "निर्मीयमानाः प्रार्थनाः अत्र दृश्यन्ते।"
   },
   "auth": {
     "loginRequired": "प्रवेशः आवश्यकः"
@@ -1392,6 +1392,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "पुस्तकचिह्नेषु रक्षितम्",
+    "new_member_notice_title": "You Searched For \"नूतनपुरुष\"",
+    "new_member_notice_body": "१३ यत इतरेषां विरामेण युष्माकञ्च क्लेशेन भवितव्यं तन्नहि किन्तु समतयैव । कोई क्षण भर तो छोड़ो ।",
     "removed_from_bookmarks": "पुस्तकचिह्नेभ्यः अपनीतम्",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

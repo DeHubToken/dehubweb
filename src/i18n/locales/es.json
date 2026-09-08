@@ -972,6 +972,13 @@
     "shippedBadge": "Enviada",
     "noComments": "Aún no hay comentarios",
     "addComment": "Añadir un comentario...",
+    "writeReply": "Escribe una respuesta...",
+    "replyToComment": "Responder",
+    "replyingTo": "Respondiendo a {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "editado",
+    "showOneMoreReply": "Mostrar 1 respuesta más",
+    "showMoreReplies": "Mostrar {{count}} respuestas más",
     "submitDrawerTitle": "Enviar solicitud de función",
     "titleLabel": "Título",
     "titlePlaceholder": "Título breve de tu idea...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Rechazada",
     "shipping": "En desarrollo",
     "noShippingYet": "Nada en curso",
-    "shippingAppearHere": "Las solicitudes que se estén construyendo aparecerán aquí.",
-    "writeReply": "Escribe una respuesta...",
-    "replyToComment": "Responder",
-    "replyingTo": "Respondiendo a {{name}}",
-    "requestAuthorChip": "Autor",
-    "commentEdited": "editado",
-    "showOneMoreReply": "Mostrar 1 respuesta más",
-    "showMoreReplies": "Mostrar {{count}} respuestas más"
+    "shippingAppearHere": "Las solicitudes que se estén construyendo aparecerán aquí."
   },
   "auth": {
     "loginRequired": "Inicio de sesión requerido"
@@ -1425,6 +1425,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Guardado en marcadores",
+    "new_member_notice_title": "Se está mostrando en Nuevos miembros",
+    "new_member_notice_body": "Otros miembros pueden ver cuándo te uniste, para que puedan saludarte. Apágalo en cualquier momento.",
     "removed_from_bookmarks": "Eliminado de marcadores",
     "profile_url_copied_to_clipboard": "URL del perfil copiada",
     "address_copied_to_clipboard": "Dirección copiada",

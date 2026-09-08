@@ -982,6 +982,13 @@
     "shippedBadge": "जारी भयो",
     "noComments": "अहिलेसम्म कुनै टिप्पणी छैन",
     "addComment": "टिप्पणी थप्नुहोस्...",
+    "writeReply": "लेख्नुहोस्...",
+    "replyToComment": "जवाफ",
+    "replyingTo": "{{name}} लाई जवाफ दिँदै",
+    "requestAuthorChip": "लेखक",
+    "commentEdited": "सम्पादन गरियो",
+    "showOneMoreReply": "थप १ जवाफ देखाउनुहोस्",
+    "showMoreReplies": "थप {{count}} जवाफहरू देखाउनुहोस्",
     "submitDrawerTitle": "सुविधा अनुरोध पेश गर्नुहोस्",
     "titleLabel": "शीर्षक",
     "titlePlaceholder": "तपाईंको विचारको छोटो शीर्षक...",
@@ -997,14 +1004,7 @@
     "statusDeclined": "अस्वीकृत",
     "shipping": "रिलिज हुँदै",
     "noShippingYet": "प्रगतिमा केही छैन",
-    "shippingAppearHere": "बनिरहेका अनुरोधहरू यहाँ देखिनेछन्।",
-    "writeReply": "लेख्नुहोस्...",
-    "replyToComment": "जवाफ",
-    "replyingTo": "{{name}} लाई जवाफ दिँदै",
-    "requestAuthorChip": "लेखक",
-    "commentEdited": "सम्पादन गरियो",
-    "showOneMoreReply": "थप १ जवाफ देखाउनुहोस्",
-    "showMoreReplies": "थप {{count}} जवाफहरू देखाउनुहोस्"
+    "shippingAppearHere": "बनिरहेका अनुरोधहरू यहाँ देखिनेछन्।"
   },
   "auth": {
     "loginRequired": "लगइन आवश्यक छ"
@@ -1432,6 +1432,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "बुकमार्कमा सेभ गरियो",
+    "new_member_notice_title": "तपाईं नयाँ सदस्यहरूमा देखाइरहनु भएको छ",
+    "new_member_notice_body": "अन्य सदस्यहरूले तपाईं कहिले सामेल हुनुभयो भनेर हेर्न सक्छन्, त्यसैले तिनीहरूले नमस्कार भन्न सक्छन् । कुनै पनि समयमा यसलाई बन्द गर्नुहोस् ।",
     "removed_from_bookmarks": "बुकमार्कबाट हटाइयो",
     "profile_url_copied_to_clipboard": "प्रोफाइल URL क्लिपबोर्डमा प्रतिलिपि गरियो",
     "address_copied_to_clipboard": "ठेगाना क्लिपबोर्डमा प्रतिलिपि गरियो",
@@ -4414,26 +4416,6 @@
     "voiceMessage": "भ्वाइस सन्देश",
     "image": "एउटा तस्बिर पठाइयो"
   },
-  "spaces": {
-    "title": "स्पेसहरू",
-    "live": "प्रत्यक्ष",
-    "upcoming": "आगामी",
-    "past": "विगत",
-    "create": "स्पेस बनाउनुहोस्",
-    "join": "सामेल हुनुहोस्",
-    "listeners": "श्रोताहरू",
-    "speakers": "वक्ताहरू",
-    "host": "होस्ट",
-    "noSpaces": "अहिलेसम्म स्पेसहरू छैनन्",
-    "loginDescription": "अडियो स्पेसहरू बनाउन र सामेल हुन लगइन गर्नुहोस्।"
-  },
-  "blog": {
-    "title": "ब्लग",
-    "readMore": "थप पढ्नुहोस्",
-    "backToBlog": "ब्लगमा फर्कनुहोस्",
-    "sharePost": "पोस्ट साझा गर्नुहोस्",
-    "relatedPosts": "सम्बन्धित पोस्टहरू"
-  },
   "follow": {
     "followers": "अनुयायीहरू",
     "following": "अनुसरण गरिरहेका",
@@ -4468,5 +4450,25 @@
     "groupLimitReached": "समूह सीमा पुग्यो",
     "createGroup": "सिर्जना गर्नुहोस्",
     "groupsHint": "समूहहरूले तपाईंको निम्न फिड फिल्टर गर्छन् । तपाईंले मात्र तिनीहरूलाई देख्न सक्नुहुन्छ ।"
+  },
+  "spaces": {
+    "title": "स्पेसहरू",
+    "live": "प्रत्यक्ष",
+    "upcoming": "आगामी",
+    "past": "विगत",
+    "create": "स्पेस बनाउनुहोस्",
+    "join": "सामेल हुनुहोस्",
+    "listeners": "श्रोताहरू",
+    "speakers": "वक्ताहरू",
+    "host": "होस्ट",
+    "noSpaces": "अहिलेसम्म स्पेसहरू छैनन्",
+    "loginDescription": "अडियो स्पेसहरू बनाउन र सामेल हुन लगइन गर्नुहोस्।"
+  },
+  "blog": {
+    "title": "ब्लग",
+    "readMore": "थप पढ्नुहोस्",
+    "backToBlog": "ब्लगमा फर्कनुहोस्",
+    "sharePost": "पोस्ट साझा गर्नुहोस्",
+    "relatedPosts": "सम्बन्धित पोस्टहरू"
   }
 }

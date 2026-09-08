@@ -972,6 +972,13 @@
     "shippedBadge": "Piegādāts",
     "noComments": "Komentāru vēl nav",
     "addComment": "Pievienot komentāru...",
+    "writeReply": "Rakstīt atbildi...",
+    "replyToComment": "Atbildēt",
+    "replyingTo": "Atbildot uz {{name}}",
+    "requestAuthorChip": "Autors",
+    "commentEdited": "rediģēts",
+    "showOneMoreReply": "Rādīt vēl 1 atbildi",
+    "showMoreReplies": "Rādīt {{count}} vairāk atbilžu",
     "submitDrawerTitle": "Iesniegt funkcijas pieprasījumu",
     "titleLabel": "Virsraksts",
     "titlePlaceholder": "Īss virsraksts jūsu idejai...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Noraidīts",
     "shipping": "Top",
     "noShippingYet": "Nekas nenotiek",
-    "shippingAppearHere": "Pieprasījumi, pie kuriem strādā, parādīsies šeit.",
-    "writeReply": "Rakstīt atbildi...",
-    "replyToComment": "Atbildēt",
-    "replyingTo": "Atbildot uz {{name}}",
-    "requestAuthorChip": "Autors",
-    "commentEdited": "rediģēts",
-    "showOneMoreReply": "Rādīt vēl 1 atbildi",
-    "showMoreReplies": "Rādīt {{count}} vairāk atbilžu"
+    "shippingAppearHere": "Pieprasījumi, pie kuriem strādā, parādīsies šeit."
   },
   "auth": {
     "loginRequired": "Nepieciešama pieteikšanās"
@@ -1405,6 +1405,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Saglabāts grāmatzīmēs",
+    "new_member_notice_title": "Jūs rādāt Jaunus dalībniekus",
+    "new_member_notice_body": "Citi dalībnieki var redzēt, kad pievienojāties, lai viņi varētu sasveicināties. Izslēdziet to jebkurā laikā.",
     "removed_from_bookmarks": "Noņemts no grāmatzīmēm",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

@@ -984,6 +984,13 @@
     "shippedBadge": "បានចេញផ្សាយ",
     "noComments": "មិនទាន់មានមតិទេ",
     "addComment": "បន្ថែមមតិ...",
+    "writeReply": "សរសេរ​ការ​ឆ្លើយតប...",
+    "replyToComment": "ឆ្លើយតប",
+    "replyingTo": "ឆ្លើយតបទៅ {{name}}",
+    "requestAuthorChip": "អ្នកនិពន្ធ",
+    "commentEdited": "កែ​សម្រួល",
+    "showOneMoreReply": "បង្ហាញ​ការ​ឆ្លើយតប​បន្ថែម 1",
+    "showMoreReplies": "បង្ហាញ​ការ​ឆ្លើយតប​បន្ថែម {{count}}",
     "submitDrawerTitle": "ដាក់ស្នើសំណើមុខងារ",
     "titleLabel": "ចំណងជើង",
     "titlePlaceholder": "ចំណងជើងខ្លីសម្រាប់គំនិតរបស់អ្នក...",
@@ -999,14 +1006,7 @@
     "statusDeclined": "បានបដិសេធ",
     "shipping": "កំពុងដឹកជញ្ជូន",
     "noShippingYet": "គ្មានអ្វីកំពុងដំណើរការទេ",
-    "shippingAppearHere": "សំណើដែលកំពុងសាងសង់នឹងបង្ហាញនៅទីនេះ។",
-    "writeReply": "សរសេរ​ការ​ឆ្លើយតប...",
-    "replyToComment": "ឆ្លើយតប",
-    "replyingTo": "ឆ្លើយតបទៅ {{name}}",
-    "requestAuthorChip": "អ្នកនិពន្ធ",
-    "commentEdited": "កែ​សម្រួល",
-    "showOneMoreReply": "បង្ហាញ​ការ​ឆ្លើយតប​បន្ថែម 1",
-    "showMoreReplies": "បង្ហាញ​ការ​ឆ្លើយតប​បន្ថែម {{count}}"
+    "shippingAppearHere": "សំណើដែលកំពុងសាងសង់នឹងបង្ហាញនៅទីនេះ។"
   },
   "auth": {
     "loginRequired": "តម្រូវឲ្យចូល"
@@ -1417,6 +1417,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "បានរក្សាទុកក្នុងចំណាំ",
+    "new_member_notice_title": "អ្នកកំពុងបង្ហាញនៅក្នុងសមាជិកថ្មី",
+    "new_member_notice_body": "សមាជិក ផ្សេង ទៀត អាច មើល ពេល ដែល អ្នក បាន ចូលរួម ដើម្បី ឲ្យ ពួកគេ អាច និយាយ hello ។ សូមចុចលើវានៅពេលណាមួយ ។",
     "removed_from_bookmarks": "បានដកចេញពីចំណាំ",
     "profile_url_copied_to_clipboard": "URL ប្រវត្តិរូបត្រូវបានចម្លងទៅក្ដារតម្បៀតខ្ទាស់",
     "address_copied_to_clipboard": "អាសយដ្ឋានត្រូវបានចម្លងទៅក្ដារតម្បៀតខ្ទាស់",
@@ -2176,26 +2178,6 @@
     "voiceMessage": "សារជាសំឡេង",
     "image": "បានផ្ញើរូបភាព"
   },
-  "spaces": {
-    "title": "ស្ពេស",
-    "live": "ផ្សាយផ្ទាល់",
-    "upcoming": "នាពេលខាងមុខ",
-    "past": "កន្លងមក",
-    "create": "បង្កើតស្ពេស",
-    "join": "ចូលរួម",
-    "listeners": "អ្នកស្តាប់",
-    "speakers": "អ្នកនិយាយ",
-    "host": "ម្ចាស់ផ្ទះ",
-    "noSpaces": "មិនទាន់មានស្ពេស",
-    "loginDescription": "ចូលដើម្បីបង្កើត និងចូលរួមស្ពេសអូឌីយ៉ូ។"
-  },
-  "blog": {
-    "title": "ប្លក់",
-    "readMore": "អានបន្ថែម",
-    "backToBlog": "ត្រឡប់ទៅប្លក់",
-    "sharePost": "ចែករំលែកការបង្ហោះ",
-    "relatedPosts": "ការបង្ហោះពាក់ព័ន្ធ"
-  },
   "follow": {
     "followers": "អ្នកតាមដាន",
     "following": "កំពុងតាមដាន",
@@ -2230,5 +2212,25 @@
     "groupLimitReached": "បានឈានដល់ដែនកំណត់ក្រុម",
     "createGroup": "បង្កើត",
     "groupsHint": "ក្រុម ត្រង មតិព័ត៌មាន ខាងក្រោម របស់ អ្នក & # 160; ។ មាន តែ អ្នក ប៉ុណ្ណោះ ដែល អាច មើល ឃើញ ពួក គេ ។"
+  },
+  "spaces": {
+    "title": "ស្ពេស",
+    "live": "ផ្សាយផ្ទាល់",
+    "upcoming": "នាពេលខាងមុខ",
+    "past": "កន្លងមក",
+    "create": "បង្កើតស្ពេស",
+    "join": "ចូលរួម",
+    "listeners": "អ្នកស្តាប់",
+    "speakers": "អ្នកនិយាយ",
+    "host": "ម្ចាស់ផ្ទះ",
+    "noSpaces": "មិនទាន់មានស្ពេស",
+    "loginDescription": "ចូលដើម្បីបង្កើត និងចូលរួមស្ពេសអូឌីយ៉ូ។"
+  },
+  "blog": {
+    "title": "ប្លក់",
+    "readMore": "អានបន្ថែម",
+    "backToBlog": "ត្រឡប់ទៅប្លក់",
+    "sharePost": "ចែករំលែកការបង្ហោះ",
+    "relatedPosts": "ការបង្ហោះពាក់ព័ន្ធ"
   }
 }

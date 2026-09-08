@@ -969,6 +969,13 @@
     "shippedBadge": "已推出",
     "noComments": "暂时呒没评论",
     "addComment": "加评论...",
+    "writeReply": "写个回复...",
+    "replyToComment": "回覆",
+    "replyingTo": "回覆 {{name}}",
+    "requestAuthorChip": "作者",
+    "commentEdited": "修改过",
+    "showOneMoreReply": "再显示一个回复",
+    "showMoreReplies": "显示 {{count}} 条更多回复",
     "submitDrawerTitle": "提交功能请求",
     "titleLabel": "标题",
     "titlePlaceholder": "用简短个标题描述侬个意见...",
@@ -984,14 +991,7 @@
     "statusDeclined": "已拒绝",
     "shipping": "开发当中",
     "noShippingYet": "呒没啥勒做",
-    "shippingAppearHere": "勒开发个需求会得勒搿搭出现。",
-    "writeReply": "写个回复...",
-    "replyToComment": "回覆",
-    "replyingTo": "回覆 {{name}}",
-    "requestAuthorChip": "作者",
-    "commentEdited": "修改过",
-    "showOneMoreReply": "再显示一个回复",
-    "showMoreReplies": "显示 {{count}} 条更多回复"
+    "shippingAppearHere": "勒开发个需求会得勒搿搭出现。"
   },
   "auth": {
     "loginRequired": "需要登录"
@@ -1394,6 +1394,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "保存到书签了",
+    "new_member_notice_title": "搿个是“新成员”里向显示个",
+    "new_member_notice_body": "别个成员会晓得搿个辰光加入，方便讲声“你好”。随时可以关脱。",
     "removed_from_bookmarks": "从书签里去掉了",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

@@ -971,6 +971,13 @@
     "shippedBadge": "શિપ થયેલ",
     "noComments": "હજુ ટિપ્પણીઓ નથી",
     "addComment": "ટિપ્પણી ઉમેરો...",
+    "writeReply": "જવાબ આપો...",
+    "replyToComment": "જવાબ",
+    "replyingTo": "{{name}} ને જવાબ આપી રહ્યા છીએ",
+    "requestAuthorChip": "લેખક",
+    "commentEdited": "સંપાદિત",
+    "showOneMoreReply": "વધુ 1 જવાબ બતાવો",
+    "showMoreReplies": "વધુ {{count}} જવાબો બતાવો",
     "submitDrawerTitle": "ફીચર વિનંતી સબમિટ કરો",
     "titleLabel": "શીર્ષક",
     "titlePlaceholder": "તમારા વિચારનું ટૂંકું શીર્ષક...",
@@ -986,14 +993,7 @@
     "statusDeclined": "નામંજૂર",
     "shipping": "મોકલાઈ રહ્યું છે",
     "noShippingYet": "પ્રગતિમાં કંઈ નથી",
-    "shippingAppearHere": "બની રહેલી વિનંતીઓ અહીં દેખાશે.",
-    "writeReply": "જવાબ આપો...",
-    "replyToComment": "જવાબ",
-    "replyingTo": "{{name}} ને જવાબ આપી રહ્યા છીએ",
-    "requestAuthorChip": "લેખક",
-    "commentEdited": "સંપાદિત",
-    "showOneMoreReply": "વધુ 1 જવાબ બતાવો",
-    "showMoreReplies": "વધુ {{count}} જવાબો બતાવો"
+    "shippingAppearHere": "બની રહેલી વિનંતીઓ અહીં દેખાશે."
   },
   "auth": {
     "loginRequired": "લૉગ ઇન જરૂરી"
@@ -1404,6 +1404,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "બુકમાર્કમાં સાચવ્યું",
+    "new_member_notice_title": "તમે નવા સભ્યોમાં બતાવી રહ્યા છો",
+    "new_member_notice_body": "જ્યારે તમે જોડાયા ત્યારે અન્ય સભ્યો જોઈ શકે છે, જેથી તેઓ હેલો કહી શકે. કોઈપણ સમયે તેને બંધ કરો.",
     "removed_from_bookmarks": "બુકમાર્કમાંથી દૂર કર્યું",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",
