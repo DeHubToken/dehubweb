@@ -169,6 +169,10 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.governance-vote]
     verify_jwt = false
+  # DAO proposal writes use the DeHub token in x-dehub-token. Vote weight is
+  # read from the server-created contribution snapshot, never from the client.
+  [functions.dao-proposals]
+    verify_jwt = false
   # Reads are public; writes carry the DeHub token in x-dehub-token and are
   # verified by requireDeHubAuth, not by a Supabase JWT.
   [functions.film-reviews]

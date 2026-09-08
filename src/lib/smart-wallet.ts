@@ -301,6 +301,32 @@ export function isWalletUnlocked(): boolean {
 }
 
 /**
+ * Sign a Solana transaction with the ed25519 wallet derived from the unlocked
+ * DeHub key. The private key never leaves this module; callers hand in an
+ * unsigned transaction and receive that same transaction with one signature.
+ */
+export async function signDerivedSolanaTransaction(
+  transaction: import('@solana/web3.js').Transaction,
+): Promise<import('@solana/web3.js').Transaction> {
+  if (!isWalletUnlocked() || !sessionPrivKey) {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('dehub:wallet-unlock-required'));
+    }
+    const error = new Error('Your wallet is locked. Please unlock it and try again.') as Error & { code?: string };
+    error.code = 'WALLET_LOCKED';
+    throw error;
+  }
+
+  const [{ Keypair }, { deriveSolanaSeed }] = await Promise.all([
+    import('@solana/web3.js'),
+    import('@/lib/solana/derive'),
+  ]);
+  const signer = Keypair.fromSeed(deriveSolanaSeed(sessionPrivKey));
+  transaction.partialSign(signer);
+  return transaction;
+}
+
+/**
  * True when an unlock exists that this page either has or can rehydrate from
  * the vault without asking the user for anything.
  *
