@@ -962,6 +962,13 @@
     "shippedBadge": "لیږل شوی",
     "noComments": "تر اوسه نظرونه نشته",
     "addComment": "نظر اضافه کړئ...",
+    "writeReply": "ځواب ولیکئ...",
+    "replyToComment": "ځواب",
+    "replyingTo": "د {{name}} ځواب ورکول",
+    "requestAuthorChip": "لیکوال",
+    "commentEdited": "سمه شوې",
+    "showOneMoreReply": "۱ نور ځوابونه وښایاست",
+    "showMoreReplies": "{{count}} نور ځوابونه وښایاست",
     "submitDrawerTitle": "د فیچر غوښتنه وسپارئ",
     "titleLabel": "سرلیک",
     "titlePlaceholder": "د خپل نظر لنډ سرلیک...",
@@ -977,14 +984,7 @@
     "statusDeclined": "رد شوی",
     "shipping": "لیږل کیږي",
     "noShippingYet": "هیڅ شی په پرمختګ کې نشته",
-    "shippingAppearHere": "هغه غوښتنې چې جوړیږي دلته به ښکاره شي.",
-    "writeReply": "ځواب ولیکئ...",
-    "replyToComment": "ځواب",
-    "replyingTo": "د {{name}} ځواب ورکول",
-    "requestAuthorChip": "لیکوال",
-    "commentEdited": "سمه شوې",
-    "showOneMoreReply": "۱ نور ځوابونه وښایاست",
-    "showMoreReplies": "{{count}} نور ځوابونه وښایاست"
+    "shippingAppearHere": "هغه غوښتنې چې جوړیږي دلته به ښکاره شي."
   },
   "auth": {
     "loginRequired": "ننوتل اړین دي"
@@ -1394,6 +1394,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "بکمارکونو کې خوندي شو",
+    "new_member_notice_title": "تاسو د نوي غړي په لټه کې یاست",
+    "new_member_notice_body": "نور غړي کولی شي وګوري کله چې تاسو سره یوځای شئ، نو دوی کولی شي سلام ووایی. هر وخت یې لرې کړئ.",
     "removed_from_bookmarks": "له بکمارکونو لرې شو",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

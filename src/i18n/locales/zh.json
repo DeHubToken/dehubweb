@@ -971,6 +971,13 @@
     "shippedBadge": "已发布",
     "noComments": "暂无评论",
     "addComment": "添加评论...",
+    "writeReply": "写一条回复…",
+    "replyToComment": "回复",
+    "replyingTo": "回复 {{name}}",
+    "requestAuthorChip": "作者",
+    "commentEdited": "编辑过",
+    "showOneMoreReply": "显示另外 1 条回复",
+    "showMoreReplies": "显示 {{count}} 条更多回复",
     "submitDrawerTitle": "提交功能请求",
     "titleLabel": "标题",
     "titlePlaceholder": "简短标题...",
@@ -986,14 +993,7 @@
     "statusDeclined": "已拒绝",
     "shipping": "开发中",
     "noShippingYet": "暂无进行中的内容",
-    "shippingAppearHere": "正在开发的需求会显示在这里。",
-    "writeReply": "写一条回复…",
-    "replyToComment": "回复",
-    "replyingTo": "回复 {{name}}",
-    "requestAuthorChip": "作者",
-    "commentEdited": "编辑过",
-    "showOneMoreReply": "显示另外 1 条回复",
-    "showMoreReplies": "显示 {{count}} 条更多回复"
+    "shippingAppearHere": "正在开发的需求会显示在这里。"
   },
   "auth": {
     "loginRequired": "需要登录"
@@ -1428,6 +1428,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "已保存到书签",
+    "new_member_notice_title": "您正在新成员中显示",
+    "new_member_notice_body": "其他成员可以看到您加入的时间，这样他们就可以打招呼了。 您可以随时将其关闭。",
     "removed_from_bookmarks": "已从书签移除",
     "profile_url_copied_to_clipboard": "个人资料链接已复制",
     "address_copied_to_clipboard": "地址已复制",

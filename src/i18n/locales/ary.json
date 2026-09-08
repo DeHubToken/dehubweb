@@ -971,6 +971,13 @@
     "shippedBadge": "تنجز",
     "noComments": "ما كاين حتى تعليق حتى دابا",
     "addComment": "زيد تعليق...",
+    "writeReply": "كتب رد...",
+    "replyToComment": "رد",
+    "replyingTo": "رد على {{name}}",
+    "requestAuthorChip": "الكاتب",
+    "commentEdited": "تم التعديل",
+    "showOneMoreReply": "أظهر ردًا واحدًا إضافيًا",
+    "showMoreReplies": "أظهر {{count}} ردودًا إضافية",
     "submitDrawerTitle": "قدم طلب ميزة",
     "titleLabel": "العنوان",
     "titlePlaceholder": "عنوان قصير للفكرة ديالك...",
@@ -986,14 +993,7 @@
     "statusDeclined": "مرفوض",
     "shipping": "كيتبنا دابا",
     "noShippingYet": "ما كاين والو خدّام",
-    "shippingAppearHere": "الطلبات اللي كيتبناو غادي يبانو هنا.",
-    "writeReply": "كتب رد...",
-    "replyToComment": "رد",
-    "replyingTo": "رد على {{name}}",
-    "requestAuthorChip": "الكاتب",
-    "commentEdited": "تم التعديل",
-    "showOneMoreReply": "أظهر ردًا واحدًا إضافيًا",
-    "showMoreReplies": "أظهر {{count}} ردودًا إضافية"
+    "shippingAppearHere": "الطلبات اللي كيتبناو غادي يبانو هنا."
   },
   "auth": {
     "loginRequired": "خاصك تدخل"
@@ -1434,6 +1434,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "تحفظ فالمفضلة",
+    "new_member_notice_title": "أنت تظهر في الأعضاء الجدد",
+    "new_member_notice_body": "يمكن للأعضاء الآخرين معرفة موعد انضمامك، حتى يتمكنوا من إلقاء التحية. قم بإيقاف تشغيله في أي وقت.",
     "removed_from_bookmarks": "تمسح من المفضلة",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

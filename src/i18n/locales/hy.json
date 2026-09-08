@@ -963,6 +963,13 @@
     "shippedBadge": "Ougharkvaats",
     "noComments": "Meknabanoutyunner derevs chkan",
     "addComment": "Avelatsnel meknabanoutyun...",
+    "writeReply": "Գրել պատասխան...",
+    "replyToComment": "Պատասխան",
+    "replyingTo": "Պատասխանում է {{name}}-ին",
+    "requestAuthorChip": "Հեղինակ",
+    "commentEdited": "խմբագրված",
+    "showOneMoreReply": "Ցույց տալ ևս 1 պատասխան",
+    "showMoreReplies": "Ցույց տալ {{count}} պատասխան ավելի",
     "submitDrawerTitle": "Ougharkuhr gortsiqayin hayts",
     "titleLabel": "Veragir",
     "titlePlaceholder": "Hamardzoum veragir dzer motqi hamar...",
@@ -978,14 +985,7 @@
     "statusDeclined": "Merzhvaats",
     "shipping": "Կառուցվում է",
     "noShippingYet": "Ոչինչ ընթացքի մեջ չէ",
-    "shippingAppearHere": "Կառուցվող հարցումները կհայտնվեն այստեղ։",
-    "writeReply": "Գրել պատասխան...",
-    "replyToComment": "Պատասխան",
-    "replyingTo": "Պատասխանում է {{name}}-ին",
-    "requestAuthorChip": "Հեղինակ",
-    "commentEdited": "խմբագրված",
-    "showOneMoreReply": "Ցույց տալ ևս 1 պատասխան",
-    "showMoreReplies": "Ցույց տալ {{count}} պատասխան ավելի"
+    "shippingAppearHere": "Կառուցվող հարցումները կհայտնվեն այստեղ։"
   },
   "auth": {
     "loginRequired": "Moutq pahanjvoum e"
@@ -1416,6 +1416,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Պահված է էջdelays",
+    "new_member_notice_title": "Դուք ցույց եք տալիս նոր անդամներ",
+    "new_member_notice_body": "Մյուս անդամները կարող են տեսնել, թե երբ եք միացել, որպեսզի կարողանան բարևել: Անջատեք այն ցանկացած պահի ։",
     "removed_from_bookmarks": "Հեռացված է delays",
     "copied_to_clipboard": "Պատdelays",
     "deposit_address_copied": "Deposit address copied",

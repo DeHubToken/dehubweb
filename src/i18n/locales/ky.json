@@ -972,6 +972,13 @@
     "shippedBadge": "Жеткирилди",
     "noComments": "Комментарийлер азырынча жок",
     "addComment": "Комментарий кошуу...",
+    "writeReply": "Жооп жазыңыз...",
+    "replyToComment": "Жооп",
+    "replyingTo": "{{name}} ге жооп берилүүдө",
+    "requestAuthorChip": "Автор",
+    "commentEdited": "түзөтүлдү",
+    "showOneMoreReply": "Дагы 1 жоопту көрсөтүү",
+    "showMoreReplies": "Дагы {{count}} жоопту көрсөтүү",
     "submitDrawerTitle": "Функция сурамын жөнөтүү",
     "titleLabel": "Аталышы",
     "titlePlaceholder": "Идеяңыздын кыска аталышы...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Четке кагылды",
     "shipping": "Курулууда",
     "noShippingYet": "Эч нерсе иштелип жаткан жок",
-    "shippingAppearHere": "Курулуп жаткан суроо-талаптар ушул жерде көрүнөт.",
-    "writeReply": "Жооп жазыңыз...",
-    "replyToComment": "Жооп",
-    "replyingTo": "{{name}} ге жооп берилүүдө",
-    "requestAuthorChip": "Автор",
-    "commentEdited": "түзөтүлдү",
-    "showOneMoreReply": "Дагы 1 жоопту көрсөтүү",
-    "showMoreReplies": "Дагы {{count}} жоопту көрсөтүү"
+    "shippingAppearHere": "Курулуп жаткан суроо-талаптар ушул жерде көрүнөт."
   },
   "auth": {
     "loginRequired": "Кирүү талап кылынат"
@@ -1405,6 +1405,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Кыстармаларга сакталды",
+    "new_member_notice_title": "Жаңы мүчөлөрдө көрсөтүлүүдө",
+    "new_member_notice_body": "Башка мүчөлөр кошулганда көрө алышат, ошондуктан алар салам айта алышат. Каалаган убакта өчүрүп коюңуз.",
     "removed_from_bookmarks": "Кыстармалардан алынды",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

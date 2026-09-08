@@ -967,6 +967,13 @@
     "shippedBadge": "அனுப்பப்பட்டது",
     "noComments": "இன்னும் கருத்துகள் இல்லை",
     "addComment": "கருத்திடு...",
+    "writeReply": "பதில்...",
+    "replyToComment": "பதில்",
+    "replyingTo": "{{name}} க்கு பதிலளித்தல்",
+    "requestAuthorChip": "ஆசிரியர்",
+    "commentEdited": "திருத்தப்பட்டது",
+    "showOneMoreReply": "மேலும் 1 பதிலைக் காட்டு",
+    "showMoreReplies": "மேலும் {{count}} பதில்களைக் காட்டு",
     "submitDrawerTitle": "அம்ச கோரிக்கையைச் சமர்ப்பி",
     "titleLabel": "தலைப்பு",
     "titlePlaceholder": "உங்கள் யோசனையின் சுருக்கமான தலைப்பு...",
@@ -982,14 +989,7 @@
     "statusDeclined": "நிராகரிக்கப்பட்டது",
     "shipping": "உருவாக்கத்தில்",
     "noShippingYet": "நடப்பில் எதுவும் இல்லை",
-    "shippingAppearHere": "உருவாக்கப்பட்டு வரும் கோரிக்கைகள் இங்கே தோன்றும்.",
-    "writeReply": "பதில்...",
-    "replyToComment": "பதில்",
-    "replyingTo": "{{name}} க்கு பதிலளித்தல்",
-    "requestAuthorChip": "ஆசிரியர்",
-    "commentEdited": "திருத்தப்பட்டது",
-    "showOneMoreReply": "மேலும் 1 பதிலைக் காட்டு",
-    "showMoreReplies": "மேலும் {{count}} பதில்களைக் காட்டு"
+    "shippingAppearHere": "உருவாக்கப்பட்டு வரும் கோரிக்கைகள் இங்கே தோன்றும்."
   },
   "auth": {
     "loginRequired": "உள்நுழைவு தேவை"
@@ -1423,6 +1423,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "புக்மார்க்குகளில் சேமிக்கப்பட்டது",
+    "new_member_notice_title": "நீங்கள் புதிய உறுப்பினர்களில் காட்டுகிறீர்கள்",
+    "new_member_notice_body": "நீங்கள் எப்போது இணைந்தீர்கள் என்பதை மற்ற உறுப்பினர்கள் பார்க்க முடியும், எனவே அவர்கள் வணக்கம் சொல்ல முடியும். எந்த நேரத்திலும் அதை அணைக்கவும்.",
     "removed_from_bookmarks": "புக்மார்க்குகளிலிருந்து நீக்கப்பட்டது",
     "profile_url_copied_to_clipboard": "சுயவிவர URL ஆல்பத்திற்கு நகலெடுக்கப்பட்டது",
     "address_copied_to_clipboard": "முகவரி ஆல்பத்திற்கு நகலெடுக்கப்பட்டது",

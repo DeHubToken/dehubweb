@@ -970,6 +970,13 @@
     "shippedBadge": "موڪليل",
     "noComments": "اڃا رايا ناهن",
     "addComment": "راءِ شامل ڪريو...",
+    "writeReply": "جواب لکيو...",
+    "replyToComment": "جواب",
+    "replyingTo": "{{name}} کي جواب ڏيڻ",
+    "requestAuthorChip": "ليکڪ",
+    "commentEdited": "ايڊٽ ڪيو",
+    "showOneMoreReply": "1 وڌيڪ جواب ڏيکاريو",
+    "showMoreReplies": "{{count}} وڌيڪ جواب ڏيکاريو",
     "submitDrawerTitle": "فيچر درخواست داخل ڪريو",
     "titleLabel": "عنوان",
     "titlePlaceholder": "پنهنجي خيال جو مختصر عنوان...",
@@ -985,14 +992,7 @@
     "statusDeclined": "رد",
     "shipping": "موڪليو پيو وڃي",
     "noShippingYet": "ڪجهه به هلي نه رهيو آهي",
-    "shippingAppearHere": "ٺهندڙ درخواستون هتي ظاهر ٿينديون.",
-    "writeReply": "جواب لکيو...",
-    "replyToComment": "جواب",
-    "replyingTo": "{{name}} کي جواب ڏيڻ",
-    "requestAuthorChip": "ليکڪ",
-    "commentEdited": "ايڊٽ ڪيو",
-    "showOneMoreReply": "1 وڌيڪ جواب ڏيکاريو",
-    "showMoreReplies": "{{count}} وڌيڪ جواب ڏيکاريو"
+    "shippingAppearHere": "ٺهندڙ درخواستون هتي ظاهر ٿينديون."
   },
   "auth": {
     "loginRequired": "لاگ ان ضروري"
@@ -1402,6 +1402,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "بُڪ مارڪ ۾ محفوظ ٿيو",
+    "new_member_notice_title": "توهان نون ميمبرن ۾ ڏيکاري رهيا آهيو",
+    "new_member_notice_body": "ٻيا ميمبر ڏسي سگھن ٿا جڏھن توھان شامل ٿيو، تنھنڪري اھي سلام ڪري سگھن ٿا. ڪنهن به وقت ان کي بند ڪريو.",
     "removed_from_bookmarks": "بُڪ مارڪ مان هٽايو ويو",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

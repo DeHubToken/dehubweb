@@ -972,6 +972,13 @@
     "shippedBadge": "Livrée",
     "noComments": "Pas encore de commentaires",
     "addComment": "Ajouter un commentaire...",
+    "writeReply": "Écrire une réponse...",
+    "replyToComment": "Répondre",
+    "replyingTo": "En réponse à {{name}}",
+    "requestAuthorChip": "Auteur",
+    "commentEdited": "modifié",
+    "showOneMoreReply": "Afficher 1 réponse de plus",
+    "showMoreReplies": "Afficher {{count}} réponses de plus",
     "submitDrawerTitle": "Soumettre une demande",
     "titleLabel": "Titre",
     "titlePlaceholder": "Titre bref de votre idée...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Refusé",
     "shipping": "En cours de livraison",
     "noShippingYet": "Rien en cours",
-    "shippingAppearHere": "Les demandes en cours de développement apparaîtront ici.",
-    "writeReply": "Écrire une réponse...",
-    "replyToComment": "Répondre",
-    "replyingTo": "En réponse à {{name}}",
-    "requestAuthorChip": "Auteur",
-    "commentEdited": "modifié",
-    "showOneMoreReply": "Afficher 1 réponse de plus",
-    "showMoreReplies": "Afficher {{count}} réponses de plus"
+    "shippingAppearHere": "Les demandes en cours de développement apparaîtront ici."
   },
   "auth": {
     "loginRequired": "Connexion requise"
@@ -1429,6 +1429,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Ajouté aux favoris",
+    "new_member_notice_title": "Vous affichez dans Nouveaux membres",
+    "new_member_notice_body": "Les autres membres peuvent voir quand vous vous êtes inscrit, afin qu'ils puissent vous dire bonjour. Éteignez-le à tout moment.",
     "removed_from_bookmarks": "Retiré des favoris",
     "profile_url_copied_to_clipboard": "URL du profil copiée",
     "address_copied_to_clipboard": "Adresse copiée",

@@ -929,6 +929,13 @@
     "shippedBadge": "Ολοκληρωμένο",
     "noComments": "Δεν υπάρχουν σχόλια ακόμα",
     "addComment": "Προσθέστε σχόλιο...",
+    "writeReply": "Γράψτε μια απάντηση...",
+    "replyToComment": "Απάντηση",
+    "replyingTo": "Απάντηση στο {{name}}",
+    "requestAuthorChip": "Συντάκτης",
+    "commentEdited": "επεξεργάστηκε",
+    "showOneMoreReply": "Εμφάνιση 1 ακόμη απάντησης",
+    "showMoreReplies": "Εμφάνιση {{count}} ακόμη απαντήσεων",
     "submitDrawerTitle": "Υποβολή Αιτήματος Χαρακτηριστικού",
     "titleLabel": "Τίτλος",
     "titlePlaceholder": "Σύντομος τίτλος για την ιδέα σας...",
@@ -944,14 +951,7 @@
     "statusDeclined": "Απορρίφθηκε",
     "shipping": "Σε ανάπτυξη",
     "noShippingYet": "Τίποτα σε εξέλιξη",
-    "shippingAppearHere": "Τα αιτήματα που υλοποιούνται θα εμφανίζονται εδώ.",
-    "writeReply": "Γράψτε μια απάντηση...",
-    "replyToComment": "Απάντηση",
-    "replyingTo": "Απάντηση στο {{name}}",
-    "requestAuthorChip": "Συντάκτης",
-    "commentEdited": "επεξεργάστηκε",
-    "showOneMoreReply": "Εμφάνιση 1 ακόμη απάντησης",
-    "showMoreReplies": "Εμφάνιση {{count}} ακόμη απαντήσεων"
+    "shippingAppearHere": "Τα αιτήματα που υλοποιούνται θα εμφανίζονται εδώ."
   },
   "auth": {
     "loginRequired": "Απαιτείται σύνδεση"
@@ -1372,6 +1372,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Αποθηκεύτηκε στους σελιδοδείκτες",
+    "new_member_notice_title": "Εμφανίζεστε στα Νέα μέλη",
+    "new_member_notice_body": "Τα άλλα μέλη μπορούν να δουν πότε γίνατε μέλος, ώστε να μπορούν να σας χαιρετήσουν. Απενεργοποιήστε το ανά πάσα στιγμή.",
     "removed_from_bookmarks": "Αφαιρέθηκε από τους σελιδοδείκτες",
     "copied_to_clipboard": "Αντιγράφηκε στο πρόχειρο",
     "post_deleted": "Η ανάρτηση διαγράφηκε",

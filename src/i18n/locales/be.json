@@ -971,6 +971,13 @@
     "shippedBadge": "Выпушчана",
     "noComments": "Пакуль няма каментарыяў",
     "addComment": "Дадаць каментарый...",
+    "writeReply": "Напішыце адказ...",
+    "replyToComment": "Адказаць",
+    "replyingTo": "Адказ на {{name}}",
+    "requestAuthorChip": "Аўтар",
+    "commentEdited": "адрэдагаваў",
+    "showOneMoreReply": "Паказаць яшчэ 1 адказ",
+    "showMoreReplies": "Паказаць яшчэ {{count}} адказаў",
     "submitDrawerTitle": "Прапанаваць функцыю",
     "titleLabel": "Загаловак",
     "titlePlaceholder": "Кароткая назва вашай ідэі...",
@@ -986,14 +993,7 @@
     "statusDeclined": "Адхілена",
     "shipping": "У распрацоўцы",
     "noShippingYet": "Нічога ў працы",
-    "shippingAppearHere": "Тут з'явяцца запыты, якія ўжо робяць.",
-    "writeReply": "Напішыце адказ...",
-    "replyToComment": "Адказаць",
-    "replyingTo": "Адказ на {{name}}",
-    "requestAuthorChip": "Аўтар",
-    "commentEdited": "адрэдагаваў",
-    "showOneMoreReply": "Паказаць яшчэ 1 адказ",
-    "showMoreReplies": "Паказаць яшчэ {{count}} адказаў"
+    "shippingAppearHere": "Тут з'явяцца запыты, якія ўжо робяць."
   },
   "auth": {
     "loginRequired": "Патрабуецца ўваход"
@@ -1415,6 +1415,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Захавана ў закладкі",
+    "new_member_notice_title": "Вы паказваеце ў новых удзельніках",
+    "new_member_notice_body": "Іншыя члены могуць бачыць, калі вы далучыцеся, каб яны маглі павітацца. Выключыце яго ў любы час.",
     "removed_from_bookmarks": "Выдалена з закладак",
     "profile_url_copied_to_clipboard": "Спасылка на профіль скапіравана ў буфер абмену",
     "address_copied_to_clipboard": "Адрас скапіраваны ў буфер абмену",
@@ -4328,26 +4330,6 @@
     "voiceMessage": "Галасавое паведамленне",
     "image": "Адправіў выяву"
   },
-  "spaces": {
-    "title": "Прасторы",
-    "live": "Прамая трансляцыя",
-    "upcoming": "Надыходныя",
-    "past": "Мінулыя",
-    "create": "Стварыць прастору",
-    "join": "Далучыцца",
-    "listeners": "Слухачы",
-    "speakers": "Выступоўцы",
-    "host": "Вядучы",
-    "noSpaces": "Пакуль няма прастораў",
-    "loginDescription": "Увайдзіце, каб ствараць і далучацца да аўдыяпрастораў."
-  },
-  "blog": {
-    "title": "Блог",
-    "readMore": "Чытаць далей",
-    "backToBlog": "Вярнуцца да блога",
-    "sharePost": "Падзяліцца публікацыяй",
-    "relatedPosts": "Звязаныя публікацыі"
-  },
   "follow": {
     "followers": "Падпісчыкі",
     "following": "Падпіскі",
@@ -4382,5 +4364,25 @@
     "groupLimitReached": "Дасягнуты ліміт груп",
     "createGroup": "Стварыць",
     "groupsHint": "Групы фільтруюць вашу наступную стужку. Толькі ты іх бачыш."
+  },
+  "spaces": {
+    "title": "Прасторы",
+    "live": "Прамая трансляцыя",
+    "upcoming": "Надыходныя",
+    "past": "Мінулыя",
+    "create": "Стварыць прастору",
+    "join": "Далучыцца",
+    "listeners": "Слухачы",
+    "speakers": "Выступоўцы",
+    "host": "Вядучы",
+    "noSpaces": "Пакуль няма прастораў",
+    "loginDescription": "Увайдзіце, каб ствараць і далучацца да аўдыяпрастораў."
+  },
+  "blog": {
+    "title": "Блог",
+    "readMore": "Чытаць далей",
+    "backToBlog": "Вярнуцца да блога",
+    "sharePost": "Падзяліцца публікацыяй",
+    "relatedPosts": "Звязаныя публікацыі"
   }
 }

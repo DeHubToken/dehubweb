@@ -985,6 +985,13 @@
     "shippedBadge": "Shipped",
     "noComments": "No comments yet",
     "addComment": "Add a comment...",
+    "writeReply": "Deebii barreessi...",
+    "replyToComment": "Deebii",
+    "replyingTo": "{{name}} irratti deebii",
+    "requestAuthorChip": "Mootummaa",
+    "commentEdited": "fooyya’e",
+    "showOneMoreReply": "deebii 1 agarsiisi",
+    "showMoreReplies": "deebii {{count}}  saffisiisi",
     "submitDrawerTitle": "Submit Feature Request",
     "titleLabel": "Mata-duree",
     "titlePlaceholder": "Brief title for your idea...",
@@ -1000,14 +1007,7 @@
     "statusDeclined": "Declined",
     "shipping": "Ijaaramaa jira",
     "noShippingYet": "Wanti hojjetamaa jiru hin jiru",
-    "shippingAppearHere": "Gaaffiiwwan ijaaramaa jiran asirratti mul'atu.",
-    "writeReply": "Deebii barreessi...",
-    "replyToComment": "Deebii",
-    "replyingTo": "{{name}} irratti deebii",
-    "requestAuthorChip": "Mootummaa",
-    "commentEdited": "fooyya’e",
-    "showOneMoreReply": "deebii 1 agarsiisi",
-    "showMoreReplies": "deebii {{count}}  saffisiisi"
+    "shippingAppearHere": "Gaaffiiwwan ijaaramaa jiran asirratti mul'atu."
   },
   "auth": {
     "loginRequired": "Seeninuun barbaachisa"
@@ -1418,6 +1418,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Mallattoo keessa kuufame",
+    "new_member_notice_title": "Miseensota Haaraa keessatti agarsiisaa jirtu",
+    "new_member_notice_body": "Miseensonni biroo yeroo ati itti makamte arguu danda&#39;u, kanaaf nagaa si gaafachuu danda&#39;u. Yeroo barbaaddanitti dhaamsaa.",
     "removed_from_bookmarks": "Mallattoo keessaa haqame",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",
@@ -2208,32 +2210,6 @@
     "voiceMessage": "Ergaa sagalee",
     "image": "Suuraa erge"
   },
-  "spaces": {
-    "title": "Bakkeewwan",
-    "live": "Kallattii",
-    "upcoming": "Dhufaa jiru",
-    "past": "Darbe",
-    "create": "Bakkee Uumi",
-    "join": "Makamsi",
-    "listeners": "Dhaggeeffattoota",
-    "speakers": "Dubbattoota",
-    "host": "Keessummeessaa",
-    "endSpace": "Bakkee Dhaabi",
-    "raiseHand": "Harka Ol Kaasi",
-    "lowerHand": "Harka Gadi Buusi",
-    "mute": "Callisuun",
-    "unmute": "Sagalee Bansi",
-    "leave": "Bakkee Gadi Dhiisi",
-    "noSpaces": "Ammallee bakkeewwan hin jiran",
-    "loginDescription": "Bakkee sagalee uumuuf fi makamsuuf seeni."
-  },
-  "blog": {
-    "title": "Biloogii",
-    "readMore": "Dabalataa dubbisi",
-    "backToBlog": "Biloogiitti deebi'i",
-    "sharePost": "Barreeffama qoodi",
-    "relatedPosts": "Barreeffamoota Walqabatan"
-  },
   "follow": {
     "followers": "Hordofaa",
     "following": "Hordofaa",
@@ -2268,5 +2244,31 @@
     "groupLimitReached": "Daangaan garee irra gahe",
     "createGroup": "Uumuu",
     "groupsHint": "Gareen nyaata Hordofaa kee calalu. Isaan arguu kan dandeessu si qofa."
+  },
+  "spaces": {
+    "title": "Bakkeewwan",
+    "live": "Kallattii",
+    "upcoming": "Dhufaa jiru",
+    "past": "Darbe",
+    "create": "Bakkee Uumi",
+    "join": "Makamsi",
+    "listeners": "Dhaggeeffattoota",
+    "speakers": "Dubbattoota",
+    "host": "Keessummeessaa",
+    "endSpace": "Bakkee Dhaabi",
+    "raiseHand": "Harka Ol Kaasi",
+    "lowerHand": "Harka Gadi Buusi",
+    "mute": "Callisuun",
+    "unmute": "Sagalee Bansi",
+    "leave": "Bakkee Gadi Dhiisi",
+    "noSpaces": "Ammallee bakkeewwan hin jiran",
+    "loginDescription": "Bakkee sagalee uumuuf fi makamsuuf seeni."
+  },
+  "blog": {
+    "title": "Biloogii",
+    "readMore": "Dabalataa dubbisi",
+    "backToBlog": "Biloogiitti deebi'i",
+    "sharePost": "Barreeffama qoodi",
+    "relatedPosts": "Barreeffamoota Walqabatan"
   }
 }

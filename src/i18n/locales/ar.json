@@ -971,6 +971,13 @@
     "shippedBadge": "تم الشحن",
     "noComments": "لا توجد تعليقات بعد",
     "addComment": "أضف تعليقاً...",
+    "writeReply": "اكتب ردًا...",
+    "replyToComment": "رد",
+    "replyingTo": "الرد على {{name}}",
+    "requestAuthorChip": "المؤلف",
+    "commentEdited": "تم التعديل",
+    "showOneMoreReply": "عرض رد واحد آخر",
+    "showMoreReplies": "عرض {{count}} ردود أخرى",
     "submitDrawerTitle": "تقديم طلب ميزة",
     "titleLabel": "العنوان",
     "titlePlaceholder": "عنوان موجز لفكرتك...",
@@ -986,14 +993,7 @@
     "statusDeclined": "مرفوض",
     "shipping": "قيد التنفيذ",
     "noShippingYet": "لا شيء قيد التنفيذ",
-    "shippingAppearHere": "ستظهر هنا الطلبات التي يجري بناؤها.",
-    "writeReply": "اكتب ردًا...",
-    "replyToComment": "رد",
-    "replyingTo": "الرد على {{name}}",
-    "requestAuthorChip": "المؤلف",
-    "commentEdited": "تم التعديل",
-    "showOneMoreReply": "عرض رد واحد آخر",
-    "showMoreReplies": "عرض {{count}} ردود أخرى"
+    "shippingAppearHere": "ستظهر هنا الطلبات التي يجري بناؤها."
   },
   "auth": {
     "loginRequired": "تسجيل الدخول مطلوب"
@@ -1428,6 +1428,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "تم الحفظ في المفضلة",
+    "new_member_notice_title": "أنت تظهر في الأعضاء الجدد",
+    "new_member_notice_body": "يمكن للأعضاء الآخرين معرفة موعد انضمامك، حتى يتمكنوا من إلقاء التحية. قم بإيقاف تشغيله في أي وقت.",
     "removed_from_bookmarks": "تمت الإزالة من المفضلة",
     "profile_url_copied_to_clipboard": "تم نسخ رابط الملف الشخصي",
     "address_copied_to_clipboard": "تم نسخ العنوان",

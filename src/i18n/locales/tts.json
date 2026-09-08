@@ -972,6 +972,13 @@
     "shippedBadge": "ส่งแล้ว",
     "noComments": "ยังบ่มีความเห็น",
     "addComment": "เพิ่มความเห็น...",
+    "writeReply": "เขียนตอบ...",
+    "replyToComment": "ตอบกลับ",
+    "replyingTo": "ตอบกลับ {{name}}",
+    "requestAuthorChip": "ผู้เขียน",
+    "commentEdited": "แก้ไขแล้ว",
+    "showOneMoreReply": "แสดงอีก 1 ความเห็น",
+    "showMoreReplies": "แสดงอีก {{count}} ความเห็น",
     "submitDrawerTitle": "ส่งคำขอฟีเจอร์",
     "titleLabel": "หัวข้อ",
     "titlePlaceholder": "หัวข้อสั้นๆ สำหรับไอเดีย...",
@@ -987,14 +994,7 @@
     "statusDeclined": "ปฏิเสธ",
     "shipping": "กำลังเฮ็ดอยู่",
     "noShippingYet": "บ่มีหยังกำลังเฮ็ดอยู่",
-    "shippingAppearHere": "คำขอที่กำลังสร้างสิปรากฏอยู่นี่.",
-    "writeReply": "เขียนตอบ...",
-    "replyToComment": "ตอบกลับ",
-    "replyingTo": "ตอบกลับ {{name}}",
-    "requestAuthorChip": "ผู้เขียน",
-    "commentEdited": "แก้ไขแล้ว",
-    "showOneMoreReply": "แสดงอีก 1 ความเห็น",
-    "showMoreReplies": "แสดงอีก {{count}} ความเห็น"
+    "shippingAppearHere": "คำขอที่กำลังสร้างสิปรากฏอยู่นี่."
   },
   "auth": {
     "loginRequired": "ต้องเข้าสู่ระบบ"
@@ -1397,6 +1397,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "เซฟในบุ๊กมาร์กแล้ว",
+    "new_member_notice_title": "เจ้ากำลังแสดงในสมาชิกใหม่",
+    "new_member_notice_body": "สมาชิกอื่นสามารถเห็นได้ว่าเจ้าเข้าร่วมเมื่อใด เพื่อที่พวกเขาจะได้ทักทาย เจ้าสามารถปิดได้ทุกเมื่อ",
     "removed_from_bookmarks": "ลบออกจากบุ๊กมาร์กแล้ว",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

@@ -971,6 +971,13 @@
     "shippedBadge": "Выпущено",
     "noComments": "Комментариев пока нет",
     "addComment": "Добавить комментарий...",
+    "writeReply": "Написать ответ...",
+    "replyToComment": "Ответить",
+    "replyingTo": "Ответ на {{name}}",
+    "requestAuthorChip": "Автор",
+    "commentEdited": "отредактировано",
+    "showOneMoreReply": "Показать еще 1 ответ",
+    "showMoreReplies": "Показать еще {{count}} ответов",
     "submitDrawerTitle": "Отправить запрос функции",
     "titleLabel": "Заголовок",
     "titlePlaceholder": "Краткий заголовок...",
@@ -986,14 +993,7 @@
     "statusDeclined": "Отклонён",
     "shipping": "В разработке",
     "noShippingYet": "Ничего в работе",
-    "shippingAppearHere": "Здесь появятся заявки, которые уже делают.",
-    "writeReply": "Написать ответ...",
-    "replyToComment": "Ответить",
-    "replyingTo": "Ответ на {{name}}",
-    "requestAuthorChip": "Автор",
-    "commentEdited": "отредактировано",
-    "showOneMoreReply": "Показать еще 1 ответ",
-    "showMoreReplies": "Показать еще {{count}} ответов"
+    "shippingAppearHere": "Здесь появятся заявки, которые уже делают."
   },
   "auth": {
     "loginRequired": "Необходимо войти"
@@ -1427,6 +1427,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Сохранено в закладки",
+    "new_member_notice_title": "Вы отображаетесь в разделе «Новые участники»",
+    "new_member_notice_body": "Другие участники могут видеть, когда вы присоединились, чтобы они могли поздороваться. Выключите его в любое время.",
     "removed_from_bookmarks": "Удалено из закладок",
     "profile_url_copied_to_clipboard": "URL профиля скопирован",
     "address_copied_to_clipboard": "Адрес скопирован",

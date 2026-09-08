@@ -25,6 +25,7 @@
 
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -44,7 +45,7 @@ const PAGE_SIZE = 15;
 /** Once per tab: registering twice in a session tells us nothing new. */
 const REGISTERED_KEY = 'dehub_new_member_registered';
 
-/** Once ever, per device: "you are visible on the roster, here is the off switch". */
+/** Once ever, per device: "you are showing as new, here is the off switch". */
 const NOTICE_KEY = 'dehub_new_member_notice_seen';
 
 /**
@@ -284,6 +285,7 @@ export function useRegisterNewMember() {
   const { isAuthenticated, walletAddress } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!isAuthenticated || !walletAddress) return;
@@ -316,21 +318,28 @@ export function useRegisterNewMember() {
           queryClient.invalidateQueries({ queryKey: ['new-member-self', walletAddress.toLowerCase()] });
         }
 
-        // `isListed`, not `isNew`: the roster carries members whether or not
-        // they are still inside the 30-day window, so the notice has to follow
-        // being *on the list* — otherwise somebody listed at 40 days is never
-        // told they are on it and never sees the way off.
-        if (!result?.isListed) return;
+        // Both flags, and `isNew` is the one that matters. Everyone who signs
+        // in is rostered — the list is a full chronological directory, not a
+        // 30-day window — so `isListed` alone was true for an account from
+        // 2023, and a notice saying it shows in *New members* reads as being
+        // labelled a new user. Only somebody inside the window is actually
+        // shown as new, so only they are told about the switch; anyone past it
+        // has no chip and no place near the top of the list, and finds the
+        // setting under Privacy like every other one.
+        if (!result?.isListed || !result?.isNew) return;
         if (localStorage.getItem(NOTICE_KEY)) return;
 
         noticeTimer = setTimeout(() => {
           if (cancelled) return;
           localStorage.setItem(NOTICE_KEY, 'true');
-          toast('You are showing in New members', {
-            description: 'Other members can see when you joined, so they can say hello. Turn it off any time.',
+          toast(t('toasts.new_member_notice_title', 'You are showing in New members'), {
+            description: t(
+              'toasts.new_member_notice_body',
+              'Other members can see when you joined, so they can say hello. Turn it off any time.',
+            ),
             duration: 10_000,
             action: {
-              label: 'Settings',
+              label: t('nav.settings', 'Settings'),
               onClick: () => navigate('/app/settings?tab=privacy'),
             },
           });
@@ -346,5 +355,5 @@ export function useRegisterNewMember() {
       cancelled = true;
       if (noticeTimer) clearTimeout(noticeTimer);
     };
-  }, [isAuthenticated, walletAddress, queryClient, navigate]);
+  }, [isAuthenticated, walletAddress, queryClient, navigate, t]);
 }

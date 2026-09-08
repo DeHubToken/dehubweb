@@ -963,6 +963,13 @@
     "shippedBadge": "Tarnitud",
     "noComments": "Kommentaare veel pole",
     "addComment": "Lisa kommentaar...",
+    "writeReply": "Vasta...",
+    "replyToComment": "Vasta",
+    "replyingTo": "Vastates {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "toimetatud",
+    "showOneMoreReply": "Näita veel 1 vastust",
+    "showMoreReplies": "Näita veel {{count}} vastust",
     "submitDrawerTitle": "Esita funktsioonisoov",
     "titleLabel": "Pealkiri",
     "titlePlaceholder": "Lühike pealkiri sinu ideele...",
@@ -978,14 +985,7 @@
     "statusDeclined": "Tagasi lükatud",
     "shipping": "Valmimas",
     "noShippingYet": "Midagi pole töös",
-    "shippingAppearHere": "Ehitamisel olevad soovid ilmuvad siia.",
-    "writeReply": "Vasta...",
-    "replyToComment": "Vasta",
-    "replyingTo": "Vastates {{name}}",
-    "requestAuthorChip": "Autor",
-    "commentEdited": "toimetatud",
-    "showOneMoreReply": "Näita veel 1 vastust",
-    "showMoreReplies": "Näita veel {{count}} vastust"
+    "shippingAppearHere": "Ehitamisel olevad soovid ilmuvad siia."
   },
   "auth": {
     "loginRequired": "Sisselogimine nõutav"
@@ -1416,6 +1416,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Salvestatud järjehoidjatesse",
+    "new_member_notice_title": "Kuvatakse uutes liikmetes",
+    "new_member_notice_body": "Teised liikmed näevad, millal sa liitusid, et nad saaksid sind tervitada. Lülita see igal ajal välja.",
     "removed_from_bookmarks": "Eemaldatud järjehoidjatest",
     "copied_to_clipboard": "Kopeeritud lõikelauale",
     "deposit_address_copied": "Deposit address copied",

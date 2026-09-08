@@ -963,6 +963,13 @@
     "shippedBadge": "Lliurat",
     "noComments": "Encara no hi ha comentaris",
     "addComment": "Afegir un comentari...",
+    "writeReply": "Escriu una resposta...",
+    "replyToComment": "Resposta",
+    "replyingTo": "Responent a {{name}}",
+    "requestAuthorChip": "Autor",
+    "commentEdited": "editat",
+    "showOneMoreReply": "Mostra 1 resposta més",
+    "showMoreReplies": "Mostra {{count}} respostes més",
     "submitDrawerTitle": "Enviar sol·licitud de funció",
     "titleLabel": "Títol",
     "titlePlaceholder": "Títol breu per a la teva idea...",
@@ -978,14 +985,7 @@
     "statusDeclined": "Rebutjat",
     "shipping": "En desenvolupament",
     "noShippingYet": "Res en curs",
-    "shippingAppearHere": "Les sol·licituds que s'estan construint apareixeran aquí.",
-    "writeReply": "Escriu una resposta...",
-    "replyToComment": "Resposta",
-    "replyingTo": "Responent a {{name}}",
-    "requestAuthorChip": "Autor",
-    "commentEdited": "editat",
-    "showOneMoreReply": "Mostra 1 resposta més",
-    "showMoreReplies": "Mostra {{count}} respostes més"
+    "shippingAppearHere": "Les sol·licituds que s'estan construint apareixeran aquí."
   },
   "auth": {
     "loginRequired": "Cal iniciar sessió"
@@ -1416,6 +1416,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Desat als marcadors",
+    "new_member_notice_title": "T'estàs mostrant a Membres nous",
+    "new_member_notice_body": "Altres membres poden veure quan t'has unit, així que poden saludar-te. Desactiva-la quan vulguis.",
     "removed_from_bookmarks": "Eliminat dels marcadors",
     "copied_to_clipboard": "Copiat al porta-retalls",
     "deposit_address_copied": "Deposit address copied",

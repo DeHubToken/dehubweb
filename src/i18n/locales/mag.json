@@ -962,6 +962,13 @@
     "shippedBadge": "शिप हो गेल",
     "noComments": "अभी टिप्पणी नइ बा",
     "addComment": "टिप्पणी जोड़ो...",
+    "writeReply": "जवाब लिखल जाव...",
+    "replyToComment": "जवाब",
+    "replyingTo": "{{name}} के जवाब में",
+    "requestAuthorChip": "लेखक",
+    "commentEdited": "संपादित",
+    "showOneMoreReply": "1 गो अउर जवाब देखा",
+    "showMoreReplies": "{{count}} गो अउर जवाब देखा",
     "submitDrawerTitle": "फीचर रिक्वेस्ट जमा करो",
     "titleLabel": "शीर्षक",
     "titlePlaceholder": "तोहर आइडिया के छोट शीर्षक...",
@@ -977,14 +984,7 @@
     "statusDeclined": "अस्वीकार",
     "shipping": "निर्माणाधीन",
     "noShippingYet": "कोनो काम प्रगति में नै हे",
-    "shippingAppearHere": "जे अनुरोध बनि रहल हे ऊ इहाँ देखाय देतै।",
-    "writeReply": "जवाब लिखल जाव...",
-    "replyToComment": "जवाब",
-    "replyingTo": "{{name}} के जवाब में",
-    "requestAuthorChip": "लेखक",
-    "commentEdited": "संपादित",
-    "showOneMoreReply": "1 गो अउर जवाब देखा",
-    "showMoreReplies": "{{count}} गो अउर जवाब देखा"
+    "shippingAppearHere": "जे अनुरोध बनि रहल हे ऊ इहाँ देखाय देतै।"
   },
   "auth": {
     "loginRequired": "लॉग इन चाहिं"
@@ -1394,6 +1394,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "बुकमार्क में सेव हो गेल",
+    "new_member_notice_title": "नए articlequality model के निर्माण के लिए मदद मांगना",
+    "new_member_notice_body": "हेल्लो दोस्तों अक्सर जब हमे सर्जरी करे हटाओ ई छौंड़ा को कभी भी,",
     "removed_from_bookmarks": "बुकमार्क से हटा दिहल गेल",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

@@ -967,6 +967,13 @@
     "shippedBadge": "נשלח",
     "noComments": "אין תגובות עדיין",
     "addComment": "הוסף תגובה...",
+    "writeReply": "כתוב תגובה...",
+    "replyToComment": "תגובה",
+    "replyingTo": "משיב ל-{{name}}",
+    "requestAuthorChip": "מחבר",
+    "commentEdited": "נערך",
+    "showOneMoreReply": "הצג עוד תגובה אחת",
+    "showMoreReplies": "הצג עוד {{count}} תגובות",
     "submitDrawerTitle": "הגש בקשת תכונה",
     "titleLabel": "כותרת",
     "titlePlaceholder": "כותרת קצרה לרעיון שלך...",
@@ -982,14 +989,7 @@
     "statusDeclined": "נדחה",
     "shipping": "בבנייה",
     "noShippingYet": "אין כלום בעבודה",
-    "shippingAppearHere": "בקשות שנמצאות בפיתוח יופיעו כאן.",
-    "writeReply": "כתוב תגובה...",
-    "replyToComment": "תגובה",
-    "replyingTo": "משיב ל-{{name}}",
-    "requestAuthorChip": "מחבר",
-    "commentEdited": "נערך",
-    "showOneMoreReply": "הצג עוד תגובה אחת",
-    "showMoreReplies": "הצג עוד {{count}} תגובות"
+    "shippingAppearHere": "בקשות שנמצאות בפיתוח יופיעו כאן."
   },
   "auth": {
     "loginRequired": "נדרשת התחברות"
@@ -1424,6 +1424,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "נשמר בסימניות",
+    "new_member_notice_title": "אתה מציג במנויים חדשים",
+    "new_member_notice_body": "חברים אחרים יכולים לראות מתי הצטרפתם, כדי שהם יוכלו להגיד שלום. אפשר לכבות אותו מתי שרוצים.",
     "removed_from_bookmarks": "הוסר מסימניות",
     "profile_url_copied_to_clipboard": "כתובת ה - URL של הפרופיל הועתקה ללוח העריכה",
     "address_copied_to_clipboard": "הכתובת הועתקה ללוח העריכה.",

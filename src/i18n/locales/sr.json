@@ -947,6 +947,13 @@
     "shippedBadge": "Испоручено",
     "noComments": "Још нема коментара",
     "addComment": "Додај коментар...",
+    "writeReply": "Напиши одговор...",
+    "replyToComment": "Одговор",
+    "replyingTo": "Одговарање на {{name}}",
+    "requestAuthorChip": "Аутор",
+    "commentEdited": "измењено",
+    "showOneMoreReply": "Прикажи још 1 одговор",
+    "showMoreReplies": "Прикажи {{count}} више одговора",
     "submitDrawerTitle": "Пошаљи захтев за функцију",
     "titleLabel": "Наслов",
     "titlePlaceholder": "Кратак наслов ваше идеје...",
@@ -962,14 +969,7 @@
     "statusDeclined": "Одбијено",
     "shipping": "У изради",
     "noShippingYet": "Ништа није у изради",
-    "shippingAppearHere": "Захтеви који се израђују појавиће се овде.",
-    "writeReply": "Напиши одговор...",
-    "replyToComment": "Одговор",
-    "replyingTo": "Одговарање на {{name}}",
-    "requestAuthorChip": "Аутор",
-    "commentEdited": "измењено",
-    "showOneMoreReply": "Прикажи још 1 одговор",
-    "showMoreReplies": "Прикажи {{count}} више одговора"
+    "shippingAppearHere": "Захтеви који се израђују појавиће се овде."
   },
   "auth": {
     "loginRequired": "Пријава је обавезна"

@@ -973,6 +973,13 @@
     "shippedBadge": "Ti ránṣẹ́",
     "noComments": "Kò sí àsọyé síbẹ̀",
     "addComment": "Ṣàfikún àsọyé...",
+    "writeReply": "Kọ̀wé ìdáhùn kan...",
+    "replyToComment": "Ìdáhùn",
+    "replyingTo": "Ó ń dáhùn sí {{name}}",
+    "requestAuthorChip": "Òǹkọ̀wé",
+    "commentEdited": "ṣètò",
+    "showOneMoreReply": "Fi ìdáhùn 1 sí i",
+    "showMoreReplies": "Fi {{count}} sí i",
     "submitDrawerTitle": "Fi Ìbéèrè Ẹ̀yà Ránṣẹ́",
     "titleLabel": "Àkọlé",
     "titlePlaceholder": "Àkọlé kúkúrú fún èrò rẹ...",
@@ -988,14 +995,7 @@
     "statusDeclined": "A Kọ̀",
     "shipping": "Ń kọ́",
     "noShippingYet": "Kò sí ohunkóhun tí ń lọ lọ́wọ́",
-    "shippingAppearHere": "Àwọn ìbéèrè tí a ń kọ́ yóò farahàn níbí.",
-    "writeReply": "Kọ̀wé ìdáhùn kan...",
-    "replyToComment": "Ìdáhùn",
-    "replyingTo": "Ó ń dáhùn sí {{name}}",
-    "requestAuthorChip": "Òǹkọ̀wé",
-    "commentEdited": "ṣètò",
-    "showOneMoreReply": "Fi ìdáhùn 1 sí i",
-    "showMoreReplies": "Fi {{count}} sí i"
+    "shippingAppearHere": "Àwọn ìbéèrè tí a ń kọ́ yóò farahàn níbí."
   },
   "auth": {
     "loginRequired": "Wíwọlé ni a nílò"
@@ -1406,6 +1406,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Ti fi pamọ́ sí àmì ìwé",
+    "new_member_notice_title": "O ń ṣe àfihàn nínú àwọn ọmọ ẹgbẹ́ tuntun",
+    "new_member_notice_body": "Àwọn ọmọ ẹgbẹ́ mìíràn lè rí ìgbà tí o bá darapọ̀ mọ́ wọn, kí wọ́n lè kí ẹ. Pa á nígbàkigbà.",
     "removed_from_bookmarks": "Ti yọ kúrò nínú àmì ìwé",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

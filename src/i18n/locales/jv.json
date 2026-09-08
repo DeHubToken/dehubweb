@@ -972,6 +972,13 @@
     "shippedBadge": "Wis Diluncurake",
     "noComments": "Durung ana komentar",
     "addComment": "Tambah komentar...",
+    "writeReply": "Balas...",
+    "replyToComment": "Balasan",
+    "replyingTo": "Membalas {{name}}",
+    "requestAuthorChip": "Penulis",
+    "commentEdited": "disunting",
+    "showOneMoreReply": "Tampilkan 1 balasan lagi",
+    "showMoreReplies": "Tampilkan {{count}} balasan lagi",
     "submitDrawerTitle": "Kirim Panjalukan Fitur",
     "titleLabel": "Judul",
     "titlePlaceholder": "Tulis judul singkat kanggo idemu...",
@@ -987,14 +994,7 @@
     "statusDeclined": "Ditolak",
     "shipping": "Lagi digawe",
     "noShippingYet": "Ora ana sing lagi digarap",
-    "shippingAppearHere": "Panjaluk sing lagi digawe bakal katon ing kene.",
-    "writeReply": "Balas...",
-    "replyToComment": "Balasan",
-    "replyingTo": "Membalas {{name}}",
-    "requestAuthorChip": "Penulis",
-    "commentEdited": "disunting",
-    "showOneMoreReply": "Tampilkan 1 balasan lagi",
-    "showMoreReplies": "Tampilkan {{count}} balasan lagi"
+    "shippingAppearHere": "Panjaluk sing lagi digawe bakal katon ing kene."
   },
   "auth": {
     "loginRequired": "Kudu Mlebu"
@@ -1397,6 +1397,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "Disimpen ing bookmark",
+    "new_member_notice_title": "Sampeyan katon ing Anggota anyar",
+    "new_member_notice_body": "Anggota liyane bisa ndeleng kapan sampeyan gabung, supaya bisa ngucapake salam. Pateni kapan wae.",
     "removed_from_bookmarks": "Dicopot saka bookmark",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",

@@ -1398,6 +1398,8 @@
   },
   "toasts": {
     "saved_to_bookmarks": "ಬುಕ್‌ಮಾರ್ಕ್‌ಗಳಿಗೆ ಉಳಿಸಲಾಗಿದೆ",
+    "new_member_notice_title": "ನೀವು ಹೊಸ ಸದಸ್ಯರಲ್ಲಿ ತೋರಿಸುತ್ತಿದ್ದೀರಿ",
+    "new_member_notice_body": "ನೀವು ಸೇರ್ಪಡೆಗೊಂಡಾಗ ಇತರ ಸದಸ್ಯರು ನೋಡಬಹುದು, ಆದ್ದರಿಂದ ಅವರು ಹಲೋ ಹೇಳಬಹುದು. ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಅದನ್ನು ಆಫ್ ಮಾಡಿ.",
     "removed_from_bookmarks": "ಬುಕ್‌ಮಾರ್ಕ್‌ಗಳಿಂದ ತೆಗೆದುಹಾಕಲಾಗಿದೆ",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",
     "address_copied_to_clipboard": "Address copied to clipboard",
