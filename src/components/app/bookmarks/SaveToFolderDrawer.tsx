@@ -104,26 +104,29 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[85dvh]">
-        <DrawerHeader className="relative">
+      <DrawerContent column className="bg-black/80 backdrop-blur-[24px] border-white/10 h-[min(85dvh,640px)] rounded-t-[24px] overflow-hidden">
+        <DrawerHeader className="relative shrink-0 border-b border-white/10 px-5 pb-4 pt-5 text-left">
           <DrawerTitle className="text-white text-lg font-bold">Save to folder</DrawerTitle>
+          <p className="mt-1 pr-12 text-xs leading-5 text-zinc-400">
+            Choose where you want to keep this post.
+          </p>
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="absolute right-4 top-4 w-8 h-8 flex items-center justify-center rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
-            aria-label="Close"
+            className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-xl bg-white/[0.06] text-zinc-400 transition-colors hover:bg-white/10 hover:text-white active:scale-[0.98]"
+            aria-label="Close folder picker"
           >
             <X className="w-4 h-4" />
           </button>
         </DrawerHeader>
 
-        <div className="px-4 pb-6 overflow-y-auto">
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3 overscroll-contain">
           {showSpinner ? (
-            <div className="flex items-center justify-center py-10">
+            <div className="flex h-full min-h-40 items-center justify-center">
               <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
             </div>
           ) : folders.length > 0 ? (
-            <div className="space-y-1.5 mb-3">
+            <div className="space-y-2">
               {folders.map((folder) => {
                 const checked = isChecked(folder._id);
                 return (
@@ -131,7 +134,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
                     key={folder._id}
                     type="button"
                     onClick={() => handleToggleFolder(folder._id, folder.name)}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
+                    className="flex min-h-14 w-full items-center gap-3 rounded-[14px] border border-white/[0.07] bg-white/[0.045] px-3.5 py-2.5 text-left transition-colors hover:bg-white/[0.08] active:scale-[0.99]"
                   >
                     <Folder className="w-5 h-5 text-yellow-500 shrink-0" />
                     <div className="flex-1 min-w-0">
@@ -155,37 +158,46 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
           ) : (
             <AppState icon="bookmarks" title="No folders yet" description="Create one below to organize this post." size="drawer" />
           )}
+        </div>
 
+        <div className="shrink-0 border-t border-white/10 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
           {showCreateForm ? (
-            <div className="space-y-2">
-              <Input
-                autoFocus
-                value={newFolderName}
-                onChange={(e) => setNewFolderName(e.target.value)}
-                placeholder="Folder name (e.g. Cooking, Travel)"
-                maxLength={50}
-                className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
-              />
-              <Input
-                value={newFolderDesc}
-                onChange={(e) => setNewFolderDesc(e.target.value)}
-                placeholder="Description (optional)"
-                maxLength={200}
-                className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
-              />
+            <div className="space-y-2.5">
+              <label className="block space-y-1.5">
+                <span className="text-xs font-semibold text-zinc-300">Folder name</span>
+                <Input
+                  autoFocus
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  placeholder="e.g. Cooking, Travel"
+                  maxLength={50}
+                  className="h-12 rounded-xl border-white/10 bg-white/[0.06] text-white placeholder:text-zinc-500 focus-visible:ring-yellow-500/70"
+                />
+              </label>
+              <label className="block space-y-1.5">
+                <span className="text-xs font-semibold text-zinc-300">
+                  Description <span className="font-normal text-zinc-500">(optional)</span>
+                </span>
+                <Input
+                  value={newFolderDesc}
+                  onChange={(e) => setNewFolderDesc(e.target.value)}
+                  placeholder="What belongs in this folder?"
+                  maxLength={200}
+                  className="h-12 rounded-xl border-white/10 bg-white/[0.06] text-white placeholder:text-zinc-500 focus-visible:ring-yellow-500/70"
+                />
+              </label>
               <div className="flex gap-2">
                 <Button
                   variant="ghost"
                   onClick={() => setShowCreateForm(false)}
-                  className="flex-1 rounded-xl text-zinc-400"
+                  className="h-12 flex-1 rounded-xl bg-white/[0.05] text-zinc-300 hover:bg-white/10 hover:text-white"
                 >
                   Cancel
                 </Button>
                 <Button
-                  variant="glass"
                   onClick={handleCreateFolder}
                   disabled={!newFolderName.trim() || isCreating}
-                  className="flex-1 rounded-xl font-semibold"
+                  className="h-12 flex-1 rounded-xl bg-yellow-400 font-semibold text-zinc-950 hover:bg-yellow-300 active:scale-[0.98]"
                 >
                   {isCreating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Create & save'}
                 </Button>
@@ -193,9 +205,8 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
             </div>
           ) : (
             <Button
-              variant="glass"
               onClick={() => setShowCreateForm(true)}
-              className="w-full rounded-xl font-semibold"
+              className="h-12 w-full rounded-xl bg-yellow-400 font-semibold text-zinc-950 hover:bg-yellow-300 active:scale-[0.98]"
             >
               <FolderPlus className="w-4 h-4" />
               Create new folder
