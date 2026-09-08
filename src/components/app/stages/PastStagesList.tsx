@@ -37,6 +37,7 @@ import { BadgedName } from '@/components/app/BadgedName';
 import { StageTranscriptDrawer } from '@/components/app/spaces/StageTranscriptDrawer';
 import { StageChat } from '@/components/app/spaces/StageChat';
 import { StageRateButton } from '@/components/app/stages/StageRateButton';
+import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import {
   closeStagePopout,
@@ -252,6 +253,20 @@ export function PastStagesList({
               data-page-bento
               className="bg-zinc-900 rounded-2xl p-3 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3"
             >
+              {/* The host's artwork, through the shared component so it is the
+                  same whole-image 16:9 the live and upcoming cards show. This
+                  was the one stage surface with no cover on it, which left the
+                  Recorded tab — the part people actually browse — as an
+                  anonymous stack of rows. Full width on a phone, a fixed
+                  thumbnail once the row goes horizontal. */}
+              {space.cover_image_url && (
+                <StageCoverArt
+                  src={space.cover_image_url}
+                  title={space.title}
+                  className="w-full sm:w-40 shrink-0 rounded-xl overflow-hidden"
+                />
+              )}
+
               <div className="flex items-center gap-3 shrink-0 min-w-0 sm:max-w-[380px]">
                 <button
                   type="button"
