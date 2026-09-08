@@ -835,6 +835,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   /** Root comment ids whose full reply thread the reader has opened. */
   const [expandedThreads, setExpandedThreads] = useState<Set<string>>(() => new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // A ref closes the gap before React commits isSubmitting, including the
+  // pointer-down + click pair used by the touch composer below.
+  const submitInFlightRef = useRef(false);
   const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
   // Optimistic delete/edit overlays — applied instantly in allComments below,
   // reverted if the server call fails.
@@ -1642,13 +1645,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   };
 
   const handlePostComment = useCallback(async () => {
-    if ((!newComment.trim() && !voiceNote && !commentImage && !commentGifUrl) || isSubmitting) return;
+    if ((!newComment.trim() && !voiceNote && !commentImage && !commentGifUrl) || isSubmitting || submitInFlightRef.current) return;
     
     if (!isAuthenticated || !user) {
       toast.error('Please log in to comment');
       return;
     }
 
+    submitInFlightRef.current = true;
     const tempId = `temp-${Date.now()}`;
     const userAddress = user.address || user.wallet_address || '';
     const rawAvatarPath = extractAvatarPath(user);
@@ -1776,6 +1780,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       console.error('Comment error:', err);
     } finally {
       setIsSubmitting(false);
+      submitInFlightRef.current = false;
     }
   }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient, armAssistantReply]);
 
@@ -2448,6 +2453,12 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                   )}
                   <button
                     type="button"
+                    onPointerDown={(event) => {
+                      // Mobile viewport/keyboard changes can move the button
+                      // before touch-up and cancel click. Latch touch while the
+                      // pointer is still down; mouse and keyboard keep onClick.
+                      if (event.pointerType === 'touch' && canPost) void handlePostComment();
+                    }}
                     onClick={() => { if (canPost) handlePostComment(); }}
                     disabled={!canPost}
                     data-comment-send
