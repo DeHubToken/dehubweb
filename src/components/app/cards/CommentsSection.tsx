@@ -77,7 +77,7 @@ import { toast } from 'sonner';
 import { incrementCommentCount } from '@/lib/comment-count-cache';
 import { useMention } from '@/hooks/use-mention';
 import { useAssistantPendingReply } from '@/hooks/use-assistant-pending-reply';
-import { mentionsAssistant, isAssistantAddress } from '@/lib/assistant';
+import { ASSISTANT_AVATAR, mentionsAssistant, isAssistantAddress } from '@/lib/assistant';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { mapApiComment, type Comment, type VoiceNote } from '@/lib/comment-mapper';
 import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
@@ -280,7 +280,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
   const [imageFullscreen, setImageFullscreen] = useState(false);
-  const avatarUrl = comment.avatar;
+  const avatarUrl = isAssistantAddress(comment.address) ? ASSISTANT_AVATAR : comment.avatar;
   const translation = useTranslation(comment.text || '');
   const shownName = comment.displayName || comment.username;
 

@@ -27,10 +27,9 @@ import type { ReactionData } from '../chat/ChatMessage';
 import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
 import { BuyAlertCard } from '../chat/BuyAlertCard';
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
-import { isAssistantAddress } from '@/lib/assistant';
+import { ASSISTANT_AVATAR as assistantAvatar, isAssistantAddress } from '@/lib/assistant';
 import { useAssistantReplies, useAssistantReplyEngine, type AssistantReply } from '@/hooks/use-assistant-replies';
 import { Sparkles } from 'lucide-react';
-import assistantAvatar from '@/assets/ai-assistant-avatar.png';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { ChatLinkPreviews } from '../chat/ChatLinkPreviews';
 

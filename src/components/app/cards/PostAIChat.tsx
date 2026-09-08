@@ -24,7 +24,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { MarkdownText } from '@/lib/markdown';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { toast } from 'sonner';
-import assistantAvatar from '@/assets/ai-assistant-avatar.png';
+import { ASSISTANT_AVATAR as assistantAvatar } from '@/lib/assistant';
 
 interface Message {
   id: string;
