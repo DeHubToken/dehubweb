@@ -333,7 +333,9 @@
     "publicChatAlertsRateOption": "每小时 {{count}} 条",
     "publicChatAlertsRateHint": "当房间比这更忙时，不会丢失任何信息 — 消息会被暂存，并在下一个通知时一起送达。",
     "emailNotificationsNoAddress": "先加一个邮箱到你的账户——这些会发到那里。",
-    "emailNotificationsAddAddress": "加一个邮箱"
+    "emailNotificationsAddAddress": "加一个邮箱",
+    "smsUnlockAction": "解锁文字通知",
+    "smsCountryBlocked": "阮今犹未能发信息去许个国家。"
   },
   "common": {
     "save": "保存",

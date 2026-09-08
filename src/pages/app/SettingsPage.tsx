@@ -123,6 +123,7 @@ import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hook
 import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
 import { BiometricUnlockSettings } from '@/components/app/settings/BiometricUnlockSettings';
 import { EmailNotificationsSetting } from '@/components/app/settings/EmailNotificationsSetting';
+import { SmsNotificationsSetting } from '@/components/app/settings/SmsNotificationsSetting';
 import { EmailSignInSettings } from '@/components/app/settings/EmailSignInSettings';
 import { EnsHandleSettings } from '@/components/app/settings/EnsHandleSettings';
 import { SolanaWalletSettings } from '@/components/app/settings/SolanaWalletSettings';
@@ -1311,6 +1312,12 @@ function NotificationSettings() {
             EmailNotificationsSetting.
           */}
           <EmailNotificationsSetting />
+          {/*
+            The paid channel, and the only switch on this page that spends
+            money — so it owns an unlock flow of its own rather than being a
+            toggle. See SmsNotificationsSetting.
+          */}
+          <SmsNotificationsSetting />
           {/*
             Owns the browser permission as well as the stored flag — see
             BrowserNotificationsSetting for why a plain toggle isn't enough
