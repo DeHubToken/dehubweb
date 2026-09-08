@@ -8,7 +8,8 @@
  */
 
 import { useMemo } from 'react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
+import { mergeLiveCounts } from '@/lib/live-counts';
 import {
   searchNFTs,
   getMediaUrl,
@@ -447,6 +448,7 @@ interface UseDeHubFeedOptions extends SearchNFTsParams {
  * By default shows all published content — minted and off-chain ('signed') alike.
  */
 export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
+  const queryClient = useQueryClient();
   const { enabled = true, status = 'all', ...searchParams } = options;
   const { isAuthenticated } = useAuth();
 
@@ -478,6 +480,7 @@ export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
 
       // Handle both response formats: { result: [...] } or { data: [...] }
       const rawData = (response as any).result || response.data || [];
+      mergeLiveCounts(queryClient, rawData);
 
       // Filter out blocked creators and blocked posts
       const data = rawData.filter((nft: DeHubNFT) => !isBlockedCreator(nft, blockedAddresses) && !isBlockedPost(nft));

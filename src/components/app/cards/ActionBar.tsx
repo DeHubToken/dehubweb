@@ -49,7 +49,7 @@ const ReactionInfoDrawer = lazy(() =>
   import('./ReactionInfoDrawer').then((m) => ({ default: m.ReactionInfoDrawer }))
 );
 import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
-import { applyVoteStateToNFT } from '@/lib/engagement';
+import { applyVoteStateToNFT, isVoteConfirmed } from '@/lib/engagement';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
 import { getCommentCountDelta } from '@/lib/comment-count-cache';
@@ -342,61 +342,24 @@ export function ActionBar({
   // When external handlers are provided (governance), always sync from props
   const hasExternalHandlers = !!(onLike || onDislike);
 
-  // Sync local state with props when they change, but prefer vote cache over stale API props
+  // Confirmed reactions accept fresh totals immediately, including during the
+  // short vote guard. Only an unconfirmed local mutation keeps its overlay.
   useEffect(() => {
-    if (!hasExternalHandlers) {
-      if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
-      const cached = postId ? getVoteCache(postId) : null;
-      if (cached) { setIsLiked(cached.isLiked); return; }
-    }
-    setIsLiked(initialIsLiked);
-  }, [initialIsLiked]);
-
-  useEffect(() => {
-    if (!hasExternalHandlers) {
-      if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
-      const cached = postId ? getVoteCache(postId) : null;
-      if (cached) { setIsDisliked(cached.isDisliked); return; }
-    }
-    setIsDisliked(initialIsDisliked);
-  }, [initialIsDisliked]);
-
-  useEffect(() => {
-    if (!hasExternalHandlers) {
-      if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
-      const cached = postId ? getVoteCache(postId) : null;
-      if (cached) { setLocalLikeCount(cached.likeCount); return; }
-    }
-    setLocalLikeCount(likeCount ?? 0);
-  }, [likeCount]);
-
-  useEffect(() => {
-    if (!hasExternalHandlers) {
-      if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
-      const cached = postId ? getVoteCache(postId) : null;
-      if (cached) { setLocalDislikeCount(cached.dislikeCount); return; }
-    }
-    setLocalDislikeCount(dislikeCount ?? 0);
-  }, [dislikeCount]);
-
-  useEffect(() => {
-    if (!hasExternalHandlers) {
-      if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
-      const cached = postId ? getVoteCache(postId) : null;
-      if (cached?.myReaction !== undefined) { setMyReaction(cached.myReaction); return; }
-    }
-    setMyReaction(initialMyReaction);
-  }, [initialMyReaction]);
-
-  useEffect(() => {
-    if (!hasExternalHandlers) {
-      if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
-      const cached = postId ? getVoteCache(postId) : null;
-      if (cached?.reactionCounts) { setLocalReactionCounts(cached.reactionCounts); return; }
-    }
-    setLocalReactionCounts(reactionCountsOrSeed(initialReactionCounts, likeCount ?? 0, dislikeCount ?? 0));
-  }, [initialReactionCounts]);
-
+    const cached = !hasExternalHandlers && postId ? getVoteCache(postId) : null;
+    const confirmed = cached && isVoteConfirmed({
+      isLiked: initialIsLiked,
+      isDisliked: initialIsDisliked,
+      myReaction: initialMyReaction,
+    }, cached);
+    if (!hasExternalHandlers && !confirmed && Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
+    const pending = confirmed ? null : cached;
+    setIsLiked(pending?.isLiked ?? initialIsLiked);
+    setIsDisliked(pending?.isDisliked ?? initialIsDisliked);
+    setLocalLikeCount(pending?.likeCount ?? likeCount ?? 0);
+    setLocalDislikeCount(pending?.dislikeCount ?? dislikeCount ?? 0);
+    setMyReaction(pending && pending.myReaction !== undefined ? pending.myReaction : initialMyReaction);
+    setLocalReactionCounts(pending?.reactionCounts ?? reactionCountsOrSeed(initialReactionCounts, likeCount ?? 0, dislikeCount ?? 0));
+  }, [postId, hasExternalHandlers, initialIsLiked, initialIsDisliked, initialMyReaction, likeCount, dislikeCount, initialReactionCounts]);
   // Propagate API-sourced like/dislike state to all feed caches
   // so old likes from previous sessions sync across all feeds
   useEffect(() => {
