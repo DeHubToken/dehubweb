@@ -778,6 +778,11 @@
   "notifications": {
     "title": "Notifications",
     "markAllRead": "Mark all read",
+    "sortOrder": "Notification order",
+    "priority": "Priority",
+    "newest": "Newest",
+    "actNow": "Act now",
+    "important": "Important",
     "settings": "Notification Settings",
     "actions": "Actions",
     "markAllAsRead": "Mark all as read",
@@ -842,7 +847,8 @@
       "here": "{{name}} send message to everybody for community",
       "hereNamed": "{{name}} send message to everybody for “{{community}}”"
     },
-    "byEmail": "By email"
+    "byEmail": "By email",
+    "byText": "By text"
   },
   "leaderboard": {
     "title": "Leaderboards",

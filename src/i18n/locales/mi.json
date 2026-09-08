@@ -830,6 +830,11 @@
   "notifications": {
     "title": "Whakamōhio",
     "markAllRead": "Tohu katoa hei kua pānui",
+    "sortOrder": "Whakahau whakamōhio",
+    "priority": "Te kaupapa matua",
+    "newest": "Ko te mea hou",
+    "actNow": "Mahi inaianei",
+    "important": "He mea nui",
     "settings": "Tautuhinga whakamōhio",
     "actions": "Mahi",
     "markAllAsRead": "Tohu katoa hei kua pānui",
@@ -893,7 +898,8 @@
       "here": "{{name}} karere katoa i roto i te hapori",
       "hereNamed": "{{name}} karere katoa i roto i {{community}}"
     },
-    "byEmail": "Mā te īmēra"
+    "byEmail": "Mā te īmēra",
+    "byText": "Na te kuputuhi"
   },
   "leaderboard": {
     "title": "Rārangi Rangatira",

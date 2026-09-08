@@ -830,6 +830,11 @@
   "notifications": {
     "title": "ਸੂਚਨਾਵਾਂ",
     "markAllRead": "ਸਭ ਪੜ੍ਹਿਆ ਨਿਸ਼ਾਨ ਲਗਾਓ",
+    "sortOrder": "ਨੋਟੀਫਿਕੇਸ਼ਨ ਆਰਡਰ",
+    "priority": "ਤਰਜੀਹ",
+    "newest": "ਸਭ ਤੋਂ ਨਵਾਂ",
+    "actNow": "ਹੁਣੇ ਕੰਮ ਕਰੋ",
+    "important": "ਖਾਸ",
     "settings": "ਸੂਚਨਾ ਸੈਟਿੰਗਾਂ",
     "actions": "ਕਾਰਵਾਈਆਂ",
     "markAllAsRead": "ਸਭ ਪੜ੍ਹਿਆ",
@@ -894,7 +899,8 @@
       "here": "{{name}} ਕਮਿ communityਨਿਟੀ ਵਿੱਚ ਹਰੇਕ ਨੂੰ ਮੈਸੇਜ ਕੀਤਾ",
       "hereNamed": "{{name}} ਸਾਰਿਆਂ ਨੂੰ “{{community}}” ਵਿੱਚ ਸੁਨੇਹਾ ਭੇਜਿਆ"
     },
-    "byEmail": "ਈਮੇਲ ਰਾਹੀਂ"
+    "byEmail": "ਈਮੇਲ ਰਾਹੀਂ",
+    "byText": "ਟੈਕਸਟ ਰਾਹੀਂ"
   },
   "leaderboard": {
     "title": "ਲੀਡਰ ਬੋਰਡ",

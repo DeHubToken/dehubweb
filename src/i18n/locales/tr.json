@@ -845,6 +845,11 @@
   "notifications": {
     "title": "Bildirimler",
     "markAllRead": "Tümünü okundu işaretle",
+    "sortOrder": "Bildirim sırası",
+    "priority": "Öncelik",
+    "newest": "En Yeni",
+    "actNow": "Hemen harekete geçin",
+    "important": "Önemli",
     "settings": "Bildirim Ayarları",
     "actions": "İşlemler",
     "markAllAsRead": "Tümünü okundu işaretle",

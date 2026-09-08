@@ -829,6 +829,11 @@
   "notifications": {
     "title": "الإشعارات",
     "markAllRead": "تحديد الكل كمقروء",
+    "sortOrder": "أمر الإشعار",
+    "priority": "الأولوية",
+    "newest": "الأحدث",
+    "actNow": "تصرّف الآن",
+    "important": "مهم",
     "settings": "إعدادات الإشعارات",
     "actions": "إجراءات",
     "markAllAsRead": "تحديد الكل كمقروء",
@@ -894,7 +899,8 @@
       "here": "{{name}} راسل الجميع في المجتمع",
       "hereNamed": "أرسل {{name}} رسالة إلى الجميع في \\\"{{community}}\\\""
     },
-    "byEmail": "بالبريد الإلكتروني"
+    "byEmail": "بالبريد الإلكتروني",
+    "byText": "بالنص"
   },
   "leaderboard": {
     "title": "لوحة المتصدرين",

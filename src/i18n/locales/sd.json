@@ -829,6 +829,11 @@
   "notifications": {
     "title": "اطلاعون",
     "markAllRead": "سڀ پڙهيل نشان ڪريو",
+    "sortOrder": "نوٽيفڪيشن آرڊر",
+    "priority": "ترجيح",
+    "newest": "نئون",
+    "actNow": "ھاڻي عمل ڪريو",
+    "important": "اهم",
     "settings": "اطلاع سيٽنگون",
     "actions": "ڪارروائيون",
     "markAllAsRead": "سڀ پڙهيل نشان ڪريو",
@@ -893,7 +898,8 @@
       "mentionedNamed": "{{name}} ۾ توهان جو ذڪر ڪيو “{{community}}",
       "here": "{{name}} برادري ۾ سڀني کي پيغام موڪليو"
     },
-    "byEmail": "اي ميل ذريعي"
+    "byEmail": "اي ميل ذريعي",
+    "byText": "ٽيڪسٽ ذريعي"
   },
   "leaderboard": {
     "title": "ليڊربورڊ",
@@ -1948,7 +1954,10 @@
     "homeComment": "پنهنجي تبصري تي خرچ ڪريو، ٻئي جي ڌاڳي ۾.",
     "homeStage": "توهان جي ميزباني ڪيل اسٽيج مان خرچ ڪريو.",
     "homePage": "هتي خرچ ڪريو، هن صفحي جي مٿي تي.",
+    "flaresLeft": "فليئرز",
+    "giftedTo": "تحفو → #{{id}}",
     "goldenHourStarted": "Golden Hour {{minutes}} منٽن تائين هلي رهيو آهي — توهان هاڻي جيڪي به پوسٽ ڪندا آهيو اهو ٻيڻو ٿي ويندو",
+    "pickCategory": "زمرو…",
     "trendJacked": "{{category}} {{minutes}} منٽن تائين ٽرينڊنگ ۾ آهي",
     "actsPost": "توهان جي پوسٽن مان هڪ تي عمل ڪري ٿو. چونڊڻ لاءِ ٽيپ ڪريو.",
     "actsGift": "هڪ تحفو — اهو ڪنهن ٻئي جي پوسٽ تي اچي ٿو. چونڊڻ لاءِ ٽيپ ڪريو.",
@@ -1967,10 +1976,7 @@
     "noComments": "توهان اڃا تبصرو نه ڪيو آهي.",
     "noStages": "توهان جو ڪو به اسٽيج هن وقت لائيو يا شيڊول نه آهي.",
     "noFlaresLeft": "هن چڪر ۾ ڪا به سگنل فليئر نه بچي",
-    "spentFor": "{{power}} {{minutes}} منٽن لاءِ هلي رهيو آهي",
-    "flaresLeft": "فليئرز",
-    "giftedTo": "تحفو → #{{id}}",
-    "pickCategory": "زمرو…"
+    "spentFor": "{{power}} {{minutes}} منٽن لاءِ هلي رهيو آهي"
   },
   "work": {
     "budgetExhausted": "هن انعام جو سمورو بجيٽ ورهائجي چڪو آهي."

@@ -832,6 +832,11 @@
   "notifications": {
     "title": "Willay",
     "markAllRead": "Llapanta ñawiriyta churay",
+    "sortOrder": "Willakuy kamachiy",
+    "priority": "Ñawpariq",
+    "newest": "Aswan musuq",
+    "actNow": "Kunanpacha ruway",
+    "important": "Chaniyuq",
     "settings": "Willay churanakuna",
     "actions": "Ruraykuna",
     "markAllAsRead": "Llapanta ñawiriyta churay",
@@ -897,7 +902,8 @@
       "here": "{{name}} ayllupi llapa runakunaman mensajeta apachirqa",
       "hereNamed": "{{name}} llapa runaman “{{community}}” nisqapi mensajeta apachirqan."
     },
-    "byEmail": "Email-wan"
+    "byEmail": "Email-wan",
+    "byText": "Qillqasqawan"
   },
   "leaderboard": {
     "title": "Ñawpaqkuna",

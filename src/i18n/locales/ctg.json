@@ -846,6 +846,11 @@
   "notifications": {
     "title": "জানাইন",
     "markAllRead": "সব পড়া চিহ্নিত গরো",
+    "sortOrder": "নোটিফিকেশন অর্ডার",
+    "priority": "প্রায়োরিটি",
+    "newest": "নিউয়েস্ট",
+    "actNow": "এক্ট নাও",
+    "important": "ইম্পরট্যান্ট",
     "settings": "জানাইনর সেটিংস",
     "actions": "কাজ",
     "markAllAsRead": "বেগ্গিন পড়া বুলি চিহ্নিত গরো",
@@ -912,6 +917,7 @@
       "hereNamed": "{{name}} “{{community}}” এর সবায়কে মেসেজ পাঠাইছে"
     },
     "byEmail": "ইমেইলর মাধ্যমে",
+    "byText": "বাই টেক্সট",
     "milestones": "মাইলস্টোন",
     "noNotifications": "এহনো কুনো জানাইন নাই",
     "subscribedToYou": "{{name}} তোঁয়ারে সাবস্ক্রাইব গরছে",

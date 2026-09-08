@@ -830,6 +830,11 @@
   "notifications": {
     "title": "Bildirişler",
     "markAllRead": "Ählisini okaldy diýip bellemek",
+    "sortOrder": "Habar beriş tabşyrygy",
+    "priority": "Öňürti",
+    "newest": "Täze",
+    "actNow": "Häzir hereket et",
+    "important": "Öňki",
     "settings": "Bildiriş sazlamalary",
     "actions": "Hereketler",
     "markAllAsRead": "Ählisini okaldy diýip bellemek",
@@ -888,7 +893,8 @@
     "community": {
       "joinedNamed": "{{name}} \"{{community}}\" bilen birleşdi"
     },
-    "byEmail": "E-poçta arkaly"
+    "byEmail": "E-poçta arkaly",
+    "byText": "Metin boýunça"
   },
   "leaderboard": {
     "title": "Reýting",

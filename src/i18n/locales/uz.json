@@ -847,6 +847,11 @@
   "notifications": {
     "title": "Bildirishnomalar",
     "markAllRead": "Hammasini oʻqilgan deb belgilash",
+    "sortOrder": "Bildirishnoma buyurtmasi",
+    "priority": "Ustuvorlik",
+    "newest": "Yangi roʻyxat",
+    "actNow": "Hozir harakat qiling",
+    "important": "Muhim",
     "settings": "Bildirishnoma sozlamalari",
     "actions": "Amallar",
     "markAllAsRead": "Hammasini oʻqilgan deb belgilash",
@@ -912,7 +917,8 @@
       "here": "{{name}} hamjamiyatdagi barchaga xabar yubordi",
       "hereNamed": "{{name}} hammaga “{{community}}” xatida xabar yubordi"
     },
-    "byEmail": "Elektron pochta orqali"
+    "byEmail": "Elektron pochta orqali",
+    "byText": "Matn bo&#39;yicha"
   },
   "leaderboard": {
     "title": "Reyting",

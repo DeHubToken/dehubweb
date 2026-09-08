@@ -843,6 +843,11 @@
   "notifications": {
     "title": "通知",
     "markAllRead": "すべて既読にする",
+    "sortOrder": "通知順序",
+    "priority": "優先順位",
+    "newest": "最新",
+    "actNow": "今すぐ行動する",
+    "important": "重要",
     "settings": "通知設定",
     "actions": "アクション",
     "markAllAsRead": "すべて既読にする",

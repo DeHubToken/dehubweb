@@ -831,6 +831,11 @@
   "notifications": {
     "title": "Arifa",
     "markAllRead": "Tia alama zote kuwa zimesomwa",
+    "sortOrder": "Agizo la arifa",
+    "priority": "Kipaumbele",
+    "newest": "Mpya zaidi",
+    "actNow": "Chukua hatua sasa",
+    "important": "Muhimu",
     "settings": "Mipangilio ya Arifa",
     "actions": "Vitendo",
     "markAllAsRead": "Tia alama zote kuwa zimesomwa",
@@ -896,7 +901,8 @@
       "here": "{{name}} alituma ujumbe kwa kila mtu katika jumuiya",
       "hereNamed": "{{name}} alituma ujumbe kwa kila mtu katika \"{{community}}\""
     },
-    "byEmail": "Kwa barua pepe"
+    "byEmail": "Kwa barua pepe",
+    "byText": "Kwa maandishi"
   },
   "leaderboard": {
     "title": "Ubao wa Viongozi",

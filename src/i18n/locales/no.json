@@ -827,6 +827,11 @@
   "notifications": {
     "title": "Varsler",
     "markAllRead": "Merk alle som lest",
+    "sortOrder": "Varslingsordre",
+    "priority": "Prioritet",
+    "newest": "Nyest",
+    "actNow": "Handle nå.",
+    "important": "Viktig",
     "settings": "Varslingsinnstillinger",
     "actions": "Handlinger",
     "markAllAsRead": "Merk alle som lest",
@@ -892,7 +897,8 @@
       "here": "{{name}} sendte melding til alle i fellesskapet",
       "hereNamed": "{{name}} sendte melding til alle i «{{community}}»"
     },
-    "byEmail": "Per e-post"
+    "byEmail": "Per e-post",
+    "byText": "Etter tejst"
   },
   "leaderboard": {
     "title": "Toppliste",
