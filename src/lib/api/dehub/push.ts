@@ -225,6 +225,17 @@ export interface AccountNotificationPreferences {
   pushEnabled?: boolean;
   /** Opt-in, and only meaningful for an account that has linked an email. */
   emailEnabled?: boolean;
+  /**
+   * Opt-in, and only meaningful for an account that has unlocked texts and
+   * verified a number. Unlike every other switch here, turning it on starts
+   * spending a balance — see SmsNotificationsSetting.
+   */
+  smsEnabled?: boolean;
+  /**
+   * Which of the eligible types are worth paying to be texted about.
+   * Absent means `all`. The valid values come from `sms/status`.
+   */
+  smsScope?: string;
   inApp?: Partial<Record<NotificationKey, boolean>>;
   push?: Partial<Record<NotificationKey, boolean>>;
 }
@@ -281,5 +292,37 @@ export async function updateEmailNotificationsEnabled(
 ): Promise<{ result: boolean }> {
   return updateProfile({
     notificationPreferences: JSON.stringify({ emailEnabled: value }),
+  });
+}
+
+/**
+ * Turn notification texts on or off for this account.
+ *
+ * The same single switch as email, over the same per-type toggles — but this
+ * one spends money, so it only does anything for an account that has
+ * unlocked the channel and verified a number. Those live behind
+ * `/api/notification/sms/*`; see `./sms-notifications`.
+ */
+export async function updateSmsNotificationsEnabled(
+  value: boolean,
+): Promise<{ result: boolean }> {
+  return updateProfile({
+    notificationPreferences: JSON.stringify({ smsEnabled: value }),
+  });
+}
+
+/**
+ * Narrow what the paid channel is for.
+ *
+ * `all` is the default and means every eligible type the reader already has
+ * switched on — this only ever narrows further, never widens. The server
+ * validates the value against its own list and serves that list from
+ * `sms/status`, so never offer a scope that did not come from there.
+ */
+export async function updateSmsNotificationScope(
+  scope: string,
+): Promise<{ result: boolean }> {
+  return updateProfile({
+    notificationPreferences: JSON.stringify({ smsScope: scope }),
   });
 }

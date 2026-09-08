@@ -322,7 +322,24 @@
     "publicChatAlertsOnDesc": "Busy stretches arrive as one combined alert",
     "publicChatAlertsRate": "At most",
     "publicChatAlertsRateOption": "{{count}} an hour",
-    "emailNotificationsDescLinked": "Sent to {{email}}"
+    "emailNotificationsDescLinked": "Sent to {{email}}",
+    "smsNotifications": "Text Notifications",
+    "smsUnlockAction": "Unlock text notifications",
+    "smsPricePerMessage": "{{dhb}} DHB (${{usd}})",
+    "smsBand": {
+      "domestic": "United Kingdom",
+      "europe": "Europe",
+      "global": "Most other countries",
+      "premium": "Everywhere else"
+    },
+    "smsDepositAction": "Send {{dhb}} DHB",
+    "smsUnlocked": "Text notifications unlocked",
+    "smsBalance": "{{dhb}} DHB left (${{usd}})",
+    "smsNumberLabel": "Phone number",
+    "smsSendCode": "Text me a code",
+    "smsVerify": "Confirm code",
+    "smsNumberVerified": "Number verified",
+    "smsNumberRemoved": "Number removed"
   },
   "common": {
     "save": "Save Am",
