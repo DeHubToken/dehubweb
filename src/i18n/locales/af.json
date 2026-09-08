@@ -381,7 +381,14 @@
     "endStream": "Beëindig stroom",
     "linkCopied": "Skakel na knipbord gekopieer",
     "postUrlCopied": "Plasing-URL na knipbord gekopieer",
-    "boostPost": "Boost plasing"
+    "boostPost": "Boost plasing",
+    "bookmark": "Boekmerk",
+    "removeBookmark": "Verwyder boekmerk",
+    "pinPost": "Speld na jou profiel",
+    "unpinPost": "Ontkoppel van jou profiel",
+    "postPinned": "Vasgepen op jou profiel",
+    "postUnpinned": "Ongestemd van jou profiel",
+    "pinFailed": "Kon nie hierdie plasing vaspen of ontgin nie"
   },
   "filters": {
     "sort": "Sorteer",

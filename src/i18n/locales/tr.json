@@ -379,7 +379,14 @@
     "endStream": "Yayını Sonlandır",
     "linkCopied": "Bağlantı panoya kopyalandı",
     "postUrlCopied": "Gönderi URL'si panoya kopyalandı",
-    "boostPost": "Gönderiyi öne çıkar"
+    "boostPost": "Gönderiyi öne çıkar",
+    "bookmark": "Yer imi",
+    "removeBookmark": "Yer işaretini kaldır",
+    "pinPost": "Profiline sabitle",
+    "unpinPost": "Profilinden sabitlemeyi kaldır",
+    "postPinned": "Profiline sabitlendi",
+    "postUnpinned": "Profilinden sabitleme kaldırıldı",
+    "pinFailed": "Bu gönderi sabitlenemedi veya sabitlemesi kaldırılamadı"
   },
   "filters": {
     "sort": "Sırala",

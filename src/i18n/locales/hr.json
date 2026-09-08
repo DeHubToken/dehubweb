@@ -379,7 +379,14 @@
     "endStream": "Završi prijenos",
     "linkCopied": "Poveznica kopirana u međuspremnik",
     "postUrlCopied": "URL objave kopiran u međuspremnik",
-    "boostPost": "Promoviraj objavu"
+    "boostPost": "Promoviraj objavu",
+    "bookmark": "Knjižna oznaka",
+    "removeBookmark": "Ukloni knjižnu oznaku",
+    "pinPost": "Prikvači na svoj profil",
+    "unpinPost": "Otkvači sa svog profila",
+    "postPinned": "Prikvačeno na tvoj profil",
+    "postUnpinned": "Otkvačeno s tvog profila",
+    "pinFailed": "Nije moguće prikvačiti ili otkvačiti ovu objavu"
   },
   "filters": {
     "sort": "Sortiraj",

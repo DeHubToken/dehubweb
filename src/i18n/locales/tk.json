@@ -379,7 +379,14 @@
     "endStream": "Ýaýlymy gutarmak",
     "linkCopied": "Baglanyşyk göçürildi",
     "postUrlCopied": "Ýazgynyň URL-i göçürildi",
-    "boostPost": "Ýazgyny güýçlendir"
+    "boostPost": "Ýazgyny güýçlendir",
+    "bookmark": "Nyşan",
+    "removeBookmark": "Nyşany Ewez Et",
+    "pinPost": "Profiline gir",
+    "unpinPost": "Profilinden çyk",
+    "postPinned": "Profiline gir",
+    "postUnpinned": "Profilinden çykyş",
+    "pinFailed": "Bu posty ýazmaga ýa-da ýazmaga rugsat berilmeýär"
   },
   "filters": {
     "sort": "Tertiple",

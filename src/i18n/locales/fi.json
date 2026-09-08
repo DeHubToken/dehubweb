@@ -379,7 +379,14 @@
     "endStream": "Lopeta lähetys",
     "linkCopied": "Linkki kopioitu leikepöydälle",
     "postUrlCopied": "Julkaisun URL kopioitu",
-    "boostPost": "Nosta postaus"
+    "boostPost": "Nosta postaus",
+    "bookmark": "Kirjanmerkki",
+    "removeBookmark": "Poista kirjanmerkki",
+    "pinPost": "Kiinnitä profiilisi",
+    "unpinPost": "Poista kiinnitys profiilistasi",
+    "postPinned": "Kiinnitetty profiiliisi",
+    "postUnpinned": "Profiilisi kiinnitys poistettu",
+    "pinFailed": "Tätä julkaisua ei voitu kiinnittää tai poistaa"
   },
   "filters": {
     "sort": "Lajittele",

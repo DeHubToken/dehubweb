@@ -367,7 +367,9 @@
     "endStream": "End Di Stream",
     "linkCopied": "Link don copy to clipboard",
     "postUrlCopied": "Post URL don copy to clipboard",
-    "boostPost": "Boost post"
+    "boostPost": "Boost post",
+    "bookmark": "Bookmark",
+    "removeBookmark": "Remove bookmark"
   },
   "filters": {
     "sort": "Arrange Am",

@@ -378,7 +378,14 @@
     "endStream": "Avsluta sändning",
     "linkCopied": "Länk kopierad",
     "postUrlCopied": "Inläggslänk kopierad",
-    "boostPost": "Boosta inlägg"
+    "boostPost": "Boosta inlägg",
+    "bookmark": "Bokmärke",
+    "removeBookmark": "Ta bort bokmärke",
+    "pinPost": "Fäst i din profil",
+    "unpinPost": "Ta bort fästet från din profil",
+    "postPinned": "Fäst i din profil",
+    "postUnpinned": "Frigjord från din profil",
+    "pinFailed": "Det gick inte att fästa eller ta bort det här inlägget"
   },
   "filters": {
     "sort": "Sortera",

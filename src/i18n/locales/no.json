@@ -379,7 +379,14 @@
     "endStream": "Avslutt sending",
     "linkCopied": "Lenke kopiert til utklippstavle",
     "postUrlCopied": "Innleggs-URL kopiert",
-    "boostPost": "Boost innlegg"
+    "boostPost": "Boost innlegg",
+    "bookmark": "Lagre",
+    "removeBookmark": "Fjern bokmerke",
+    "pinPost": "Fest til profilen din",
+    "unpinPost": "Fjern fra profilen din",
+    "postPinned": "Festet til profilen din",
+    "postUnpinned": "Løsnet fra profilen din",
+    "pinFailed": "Kunne ikke feste eller løsne dette innlegget"
   },
   "filters": {
     "sort": "Sorter",

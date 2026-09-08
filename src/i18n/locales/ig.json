@@ -379,7 +379,14 @@
     "endStream": "Kwụsị nkwasa",
     "linkCopied": "Edetuola njikọ",
     "postUrlCopied": "Edetuola URL ozi",
-    "boostPost": "Kwalite post"
+    "boostPost": "Kwalite post",
+    "bookmark": "Búùkmáàkị̀",
+    "removeBookmark": "Wepụ búùkmáàkị",
+    "pinPost": "Pin gị profaịlụ",
+    "unpinPost": "Wepụ site na profaịlụ gị",
+    "postPinned": "Pinned na profaịlụ gị",
+    "postUnpinned": "Ewepụghị na profaịlụ gị",
+    "pinFailed": "Agaghị enwenwu PIN ma ọ bụ wepu ọkwa a"
   },
   "filters": {
     "sort": "Hazie",

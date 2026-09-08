@@ -46,6 +46,7 @@ import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { resolveMyReaction } from '@/lib/engagement';
 import { ReactionPicker } from './ReactionPicker';
 import { ReactionInfoDrawer } from './ReactionInfoDrawer';
+import { PostUtilityMenuItems } from './PostUtilityMenuItems';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { toast } from 'sonner';
 import { CommentsSection } from './CommentsSection';
@@ -2196,24 +2197,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
           </DrawerHeader>
           <div className="flex flex-col gap-1">
-            {/* Bookmark — moved here off the mobile bottom action row */}
-            <button
-              onClick={() => toggleBookmark()}
-              disabled={isBookmarkLoading}
-              className={cn(
-                "flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-50",
-                isBookmarked ? "text-yellow-500" : "text-white"
-              )}
-            >
-              <Bookmark className={cn("w-5 h-5", isBookmarked && "fill-current")} />
-              {isBookmarked ? 'Remove bookmark' : 'Bookmark'}
-            </button>
-            <button
-              onClick={() => { setShareSheetOpen(false); navigate(`/app/post/${currentShort.id}/info`); onClose(); }}
-              className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-            >
-              <Info className="w-5 h-5" /> Post info
-            </button>
+            {/* Bookmark / pin / post info — the same three the feed card's
+                menu and action bar carry. */}
+            <PostUtilityMenuItems
+              postId={currentShort.id}
+              tokenId={parseInt(currentShort.id, 10) || undefined}
+              isOwnPost={isOwnShort}
+              onBeforeNavigate={() => { setShareSheetOpen(false); onClose(); }}
+            />
             <button
               onClick={() => { setShareSheetOpen(false); setTimeout(() => setShowReportModal(true), 300); }}
               className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"

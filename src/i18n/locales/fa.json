@@ -379,7 +379,14 @@
     "endStream": "پایان پخش",
     "linkCopied": "لینک کپی شد",
     "postUrlCopied": "آدرس پست کپی شد",
-    "boostPost": "تقویت پست"
+    "boostPost": "تقویت پست",
+    "bookmark": "نشانک",
+    "removeBookmark": "پاک کردن علاقه مندي ها",
+    "pinPost": "سنجاق کردن به نمایه",
+    "unpinPost": "برداشتن سنجاق از نمایه",
+    "postPinned": "به نمایه شما سنجاق شد",
+    "postUnpinned": "سنجاق از نمایه شما برداشته شد",
+    "pinFailed": "سنجاق کردن یا برداشتن سنجاق این پست ممکن نشد"
   },
   "filters": {
     "sort": "مرتب‌سازی",

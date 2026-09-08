@@ -10,18 +10,20 @@
  *    controls (Close / Translate). Used on desktop to lift these actions up to
  *    the top-right corner for easy reach.
  *
- * Bookmark and pin state are owned here (via the shared hooks), so an inline
- * instance and a chip instance are never mounted for the same post at the same
- * time — the caller shows one per breakpoint.
+ * Bookmark and pin state both come from shared queries, so this component, a
+ * second instance of it, and the same post's `PostUtilityMenuItems` rows in the
+ * three-dot menu always show the same thing — they are on screen together now
+ * that the menu rows are no longer hidden on desktop.
  */
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Bookmark, Pin, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
-import { useTogglePin } from '@/hooks/use-pins';
+import { useTogglePin, useIsPostPinned } from '@/hooks/use-pins';
 import { SaveToFolderDrawer } from '@/components/app/bookmarks/SaveToFolderDrawer';
 
 interface PostUtilityButtonsProps {
@@ -43,8 +45,12 @@ export function PostUtilityButtons({
   variant = 'inline',
 }: PostUtilityButtonsProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const isChip = variant === 'chip';
-  const [isPinned, setIsPinned] = useState(false);
+  // Shared with the three-dot menu's pin row for the same post — see
+  // `usePinnedPostIds`. A local boolean here would start at "not pinned" on
+  // every mount and contradict whichever control the user last used.
+  const isPinned = useIsPostPinned(tokenId);
   const togglePinMutation = useTogglePin();
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(postId || '');
   const [showFolderDrawer, setShowFolderDrawer] = useState(false);
@@ -82,7 +88,7 @@ export function PostUtilityButtons({
             : cn('transition-colors', isBookmarked ? 'text-yellow-500' : 'text-zinc-400 hover:text-white'),
           isBookmarkLoading && 'opacity-50',
         )}
-        aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark'}
+        aria-label={isBookmarked ? t('postOptions.removeBookmark', 'Remove bookmark') : t('postOptions.bookmark', 'Bookmark')}
         data-engaged={isBookmarked ? 'bookmark' : undefined}
         disabled={isBookmarkLoading}
         animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
@@ -96,12 +102,10 @@ export function PostUtilityButtons({
           onClick={(e) => {
             e.stopPropagation();
             if (!tokenId || togglePinMutation.isPending) return;
-            togglePinMutation.mutate(tokenId, {
-              onSuccess: (data) => setIsPinned(data.pinned),
-            });
+            togglePinMutation.mutate(tokenId);
           }}
           disabled={!tokenId || togglePinMutation.isPending}
-          aria-label={isPinned ? 'Unpin post' : 'Pin post'}
+          aria-label={isPinned ? t('postOptions.unpinPost', 'Unpin from your profile') : t('postOptions.pinPost', 'Pin to your profile')}
           data-engaged={isPinned ? 'pin' : undefined}
           className={cn(
             isChip
@@ -116,7 +120,7 @@ export function PostUtilityButtons({
       <button
         onClick={handleInfoClick}
         className={cn(isChip ? CHIP_BASE : 'text-zinc-400 hover:text-white transition-colors')}
-        aria-label="Post info"
+        aria-label={t('postInfo.title', 'Post info')}
       >
         <Info className={iconSize} />
       </button>

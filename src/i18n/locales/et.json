@@ -379,7 +379,14 @@
     "endStream": "Lõpeta ülekanne",
     "linkCopied": "Link kopeeritud lõikelauale",
     "postUrlCopied": "Postituse URL kopeeritud lõikelauale",
-    "boostPost": "Võimenda postitust"
+    "boostPost": "Võimenda postitust",
+    "bookmark": "Järjehoidja",
+    "removeBookmark": "Eemalda järjehoidja",
+    "pinPost": "Kinnita oma profiilile",
+    "unpinPost": "Tühista oma profiili kinnitamine",
+    "postPinned": "Kinnitatud sinu profiilile",
+    "postUnpinned": "Sinu profiili kinnitamine on tühistatud",
+    "pinFailed": "Seda postitust ei saanud kinnitada või eemaldada"
   },
   "filters": {
     "sort": "Sorteeri",

@@ -62,5 +62,5 @@ export { useStoryReactions } from './use-story-reactions';
 export { useStoryViews } from './use-story-views';
 export { useStoryComments, type StoryComment } from './use-story-comments';
 export { useBookmarkFolders, useFolderItems, useBulkAddToFolder } from './use-bookmark-folders';
-export { useUserPins, useTogglePin, usePinCount, usePinners } from './use-pins';
+export { useUserPins, useTogglePin, usePinCount, usePinners, usePinnedPostIds, useIsPostPinned } from './use-pins';
 export { usePoll, useCreatePoll, useVoteOnPoll, useRemovePollVote, useClosePoll } from './use-polls';
