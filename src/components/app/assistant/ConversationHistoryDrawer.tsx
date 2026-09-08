@@ -415,8 +415,8 @@ export function ConversationHistoryDrawer({
   return (
     <>
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent column glass hideHandle className="border-t border-white/10">
-          <DrawerHeader className="border-b border-white/10">
+        <DrawerContent column glass hideHandle className="h-[85dvh] overflow-hidden border-t border-white/10">
+          <DrawerHeader className="shrink-0 border-b border-white/10">
             <div className="flex items-center justify-between">
               <DrawerTitle className="text-white flex items-center gap-2">
                 <History className="w-5 h-5 text-white" />
@@ -513,7 +513,7 @@ export function ConversationHistoryDrawer({
             )}
           </DrawerHeader>
 
-          <ScrollArea className="h-[70vh]">
+          <ScrollArea className="min-h-0 flex-1 pb-[env(safe-area-inset-bottom)]">
             {!isAuthenticated ? (
               <AppState
                 icon="lock"
