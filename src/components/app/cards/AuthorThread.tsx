@@ -42,7 +42,7 @@ import { ReactionPicker } from './ReactionPicker';
 import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { useAuth } from '@/contexts/AuthContext';
-import { isAssistantAddress } from '@/lib/assistant';
+import { ASSISTANT_AVATAR, isAssistantAddress } from '@/lib/assistant';
 import { useAuthorThread } from '@/hooks/use-author-thread';
 import type { Comment } from '@/lib/comment-mapper';
 
@@ -218,7 +218,12 @@ function ThreadEntry({
         className="flex-shrink-0 relative z-10"
       >
         <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
-          {entry.avatar && <AvatarImage src={entry.avatar} className="object-cover" />}
+          {(isAssistantAddress(entry.address) || entry.avatar) && (
+            <AvatarImage
+              src={isAssistantAddress(entry.address) ? ASSISTANT_AVATAR : entry.avatar}
+              className="object-cover"
+            />
+          )}
           <AvatarFallback className="bg-zinc-700">{entry.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
         </Avatar>
       </button>
