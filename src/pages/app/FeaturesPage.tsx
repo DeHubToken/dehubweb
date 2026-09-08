@@ -1022,11 +1022,11 @@ export default function FeaturesPage() {
       <h1 className="sr-only">DeHub Features — Feature Requests, Bug Reporting & Community Roadmap</h1>
       {/* Sticky nav pill. `data-feed-nav-outer` already rides the scroll on
           mobile; `data-nav-hide-desktop` opts this one into the same thing on
-          desktop too (see the "Desktop chrome" block in index.css), because
-          this header is a full bento — title, search, three tabs, category
-          pills, sort tabs — and pinned it leaves barely any room for the list
-          it filters. */}
-      <div data-feed-nav-outer data-nav-hide-desktop className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
+          desktop too. Because this header is a full bento — title, search,
+          three tabs, category pills and sort tabs — `data-nav-return-top`
+          keeps it hidden until the page reaches the top instead of covering a
+          request after any small upward correction. */}
+      <div data-feed-nav-outer data-nav-hide-desktop data-nav-return-top className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">

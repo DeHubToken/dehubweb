@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useScrollDirection } from '@/hooks/use-scroll-direction';
+import { useScrollDirection, useStickyNavVisibility } from '@/hooks/use-scroll-direction';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
 
 /**
@@ -17,8 +17,15 @@ import { useAnyOverlayOpen } from '@/lib/overlay-open';
  * way: a drawer or dialog should own the screen on mobile, and the pill's z-50
  * otherwise floats it crisp above a dimmed scrim.
  *
- * A second flag, `data-scroll-hidden`, carries the scroll direction ALONE for
- * the pills that also ride the scroll on desktop (`data-nav-hide-desktop`).
+ * Oversized page pills marked `data-nav-return-top` use a separate depth-based
+ * flag. They hide only after the page has scrolled far enough to replace their
+ * full footprint with content, and remain hidden until the page reaches the
+ * top. Ordinary pills keep the direction behavior, as do the Home pill and
+ * mobile bottom navigation.
+ *
+ * `data-scroll-hidden` still carries scroll direction for the pinned search
+ * pill: unlike the other pills it remains reachable mid-page and only closes
+ * the mobile header gap.
  * The overlay half of the rule above is a mobile concern: on a wide screen the
  * dialog is centred and already scrims the pill, so folding overlays in there
  * would only add a visible slide behind the backdrop every time one opens.
@@ -35,19 +42,24 @@ import { useAnyOverlayOpen } from '@/lib/overlay-open';
  */
 export function StickyNavHideSync(): null {
   const navVisible = useScrollDirection();
+  const stickyNavVisible = useStickyNavVisibility();
   const anyOverlayOpen = useAnyOverlayOpen();
 
   useEffect(() => {
     const root = document.documentElement;
     root.dataset.navHidden = !navVisible || anyOverlayOpen ? 'true' : 'false';
     root.dataset.scrollHidden = navVisible ? 'false' : 'true';
+    root.dataset.stickyNavHidden = !stickyNavVisible || anyOverlayOpen ? 'true' : 'false';
+    root.dataset.stickyScrollHidden = stickyNavVisible ? 'false' : 'true';
     root.dataset.overlayOpen = anyOverlayOpen ? 'true' : 'false';
     return () => {
       delete root.dataset.navHidden;
       delete root.dataset.scrollHidden;
+      delete root.dataset.stickyNavHidden;
+      delete root.dataset.stickyScrollHidden;
       delete root.dataset.overlayOpen;
     };
-  }, [navVisible, anyOverlayOpen]);
+  }, [navVisible, stickyNavVisible, anyOverlayOpen]);
 
   return null;
 }
