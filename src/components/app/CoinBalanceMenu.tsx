@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Copy, Send, ArrowLeft, CreditCard, Bitcoin, Search, Check, History, Lock, Minus } from 'lucide-react';
+import { Plus, Copy, ArrowLeft, CreditCard, Bitcoin, Check, Lock, Minus } from 'lucide-react';
 import {
   Drawer,
   DrawerContent,
@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { AppState } from '@/components/app/AppState';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import usdcLogo from '@/assets/usdc-logo.png';
@@ -55,25 +54,7 @@ interface WalletMenuContentProps {
   onClose?: () => void;
 }
 
-type MenuView = 'main' | 'buy' | 'send' | 'history' | 'stake' | 'receive';
-
-// Mock users for send functionality
-const MOCK_USERS = [
-  { id: '1', username: 'alex_web3', avatar: null },
-  { id: '2', username: 'crypto_queen', avatar: null },
-  { id: '3', username: 'defi_degen', avatar: null },
-  { id: '4', username: 'nft_collector', avatar: null },
-  { id: '5', username: 'blockchain_dev', avatar: null },
-];
-
-// Mock transaction history
-const MOCK_TRANSACTIONS = [
-  { id: '1', type: 'received', amount: 500, from: 'alex_web3', date: '2024-01-15' },
-  { id: '2', type: 'sent', amount: 200, to: 'crypto_queen', date: '2024-01-14' },
-  { id: '3', type: 'staked', amount: 1000, date: '2024-01-13' },
-  { id: '4', type: 'earned', amount: 50, description: 'Staking reward', date: '2024-01-12' },
-  { id: '5', type: 'received', amount: 300, from: 'nft_collector', date: '2024-01-10' },
-];
+type MenuView = 'main' | 'buy' | 'stake' | 'receive';
 
 export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanceMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -89,9 +70,6 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
     if (!open) resetMenu();
   };
   const [menuView, setMenuView] = useState<MenuView>('main');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedUser, setSelectedUser] = useState<typeof MOCK_USERS[0] | null>(null);
-  const [sendAmount, setSendAmount] = useState('');
   const [stakeAmount, setStakeAmount] = useState('');
   const [copied, setCopied] = useState(false);
   const { hasChoice: hasAddressChoice } = useWalletAddresses();
@@ -125,15 +103,6 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
     navigate('/app/buy');
   };
 
-  const handleSendCoins = () => {
-    if (!selectedUser || !sendAmount) return;
-    toast.success(`Sent ${sendAmount} coins to @${selectedUser.username}`);
-    setIsOpen(false);
-    setMenuView('main');
-    setSelectedUser(null);
-    setSendAmount('');
-  };
-
   const handleStakeCoins = () => {
     if (!stakeAmount || Number(stakeAmount) <= 0) return;
     toast.success(`Staked ${stakeAmount} coins`);
@@ -152,15 +121,8 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
   const resetMenu = () => {
     setMenuView('main');
-    setSearchQuery('');
-    setSelectedUser(null);
-    setSendAmount('');
     setStakeAmount('');
   };
-
-  const filteredUsers = MOCK_USERS.filter((user) =>
-    user.username.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const coinButton = (
     <div 
@@ -243,24 +205,6 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         </div>
       </button>
       <button
-        onClick={() => setMenuView('send')}
-        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
-      >
-        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-          <Send className="w-4 h-4 text-white" />
-        </div>
-        <span className="text-white font-medium">Send Coins</span>
-      </button>
-      <button
-        onClick={() => setMenuView('history')}
-        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
-      >
-        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-          <History className="w-4 h-4 text-white" />
-        </div>
-        <span className="text-white font-medium">Transactions</span>
-      </button>
-      <button
         onClick={() => { setIsOpen(false); navigate('/app/stake'); }}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
@@ -300,141 +244,6 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         </div>
         <span className="text-white font-medium">Buy with Crypto</span>
       </button>
-    </div>
-  );
-
-  const sendMenuContent = (
-    <div className="space-y-3">
-      <button
-        onClick={() => setMenuView('main')}
-        className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        <span className="text-sm">Back</span>
-      </button>
-
-      {!selectedUser ? (
-        <>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-            <Input
-              placeholder="Search users..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-zinc-400"
-            />
-          </div>
-          <div className="space-y-1 max-h-48 overflow-y-auto">
-            {filteredUsers.map((user) => (
-              <button
-                key={user.id}
-                onClick={() => setSelectedUser(user)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
-              >
-                <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-white text-sm font-medium">
-                  {user.username[0].toUpperCase()}
-                </div>
-                <span className="text-white">@{user.username}</span>
-              </button>
-            ))}
-            {filteredUsers.length === 0 && (
-              <AppState icon="search" title="No users found" kind="search-empty" size="compact" />
-            )}
-          </div>
-        </>
-      ) : (
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg border border-white/10">
-            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-medium">
-              {selectedUser.username[0].toUpperCase()}
-            </div>
-            <div>
-              <p className="text-white font-medium">@{selectedUser.username}</p>
-              <button
-                onClick={() => setSelectedUser(null)}
-                className="text-xs text-zinc-400 hover:text-zinc-300"
-              >
-                Change
-              </button>
-            </div>
-          </div>
-          <div>
-            <label className="text-sm text-zinc-400 mb-1 block">Amount</label>
-            <div className="relative">
-              <img src={dehubCoin} alt="coins" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
-              <Input
-                type="number"
-                placeholder="0"
-                value={sendAmount}
-                onChange={(e) => setSendAmount(e.target.value)}
-                className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-400"
-              />
-            </div>
-          </div>
-          <Button
-            onClick={handleSendCoins}
-            disabled={!sendAmount || Number(sendAmount) <= 0}
-            className="w-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white disabled:opacity-50"
-          >
-            Send Coins
-          </Button>
-        </div>
-      )}
-    </div>
-  );
-
-  const historyMenuContent = (
-    <div className="space-y-3">
-      <button
-        onClick={() => setMenuView('main')}
-        className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        <span className="text-sm">Back</span>
-      </button>
-      
-      <h3 className="text-white font-medium text-sm">Transactions</h3>
-      
-      <div className="space-y-2 max-h-64 overflow-y-auto">
-        {MOCK_TRANSACTIONS.map((tx) => (
-          <div
-            key={tx.id}
-            className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10"
-          >
-            <div className="flex items-center gap-3">
-              <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
-                tx.type === 'received' || tx.type === 'earned' 
-                  ? 'bg-white/10' 
-                  : tx.type === 'staked' 
-                    ? 'bg-white/10' 
-                    : 'bg-white/10'
-              }`}>
-                {tx.type === 'received' || tx.type === 'earned' ? (
-                  <Plus className="w-4 h-4 text-white" />
-                ) : tx.type === 'staked' ? (
-                  <Lock className="w-4 h-4 text-white" />
-                ) : (
-                  <Send className="w-4 h-4 text-white" />
-                )}
-              </div>
-              <div>
-                <p className="text-white text-sm font-medium capitalize">{tx.type}</p>
-                <p className="text-xs text-zinc-400">
-                  {tx.from && `from @${tx.from}`}
-                  {tx.to && `to @${tx.to}`}
-                  {tx.description && tx.description}
-                </p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-medium text-white">
-                {tx.type === 'received' || tx.type === 'earned' ? '+' : '-'}{tx.amount}
-              </p>
-              <p className="text-xs text-zinc-400">{tx.date}</p>
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
   );
 
@@ -496,10 +305,6 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         return <CopyAddressRows onBack={() => setMenuView('main')} />;
       case 'buy':
         return buyMenuContent;
-      case 'send':
-        return sendMenuContent;
-      case 'history':
-        return historyMenuContent;
       case 'stake':
         return stakeMenuContent;
       default:
@@ -529,9 +334,6 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
   const walletLocked = useWalletLocked();
   const navigate = useNavigate();
   const [menuView, setMenuView] = useState<MenuView>('main');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedUser, setSelectedUser] = useState<typeof MOCK_USERS[0] | null>(null);
-  const [sendAmount, setSendAmount] = useState('');
   const [stakeAmount, setStakeAmount] = useState('');
   const [copied, setCopied] = useState(false);
   const { hasChoice: hasAddressChoice } = useWalletAddresses();
@@ -562,12 +364,6 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
     navigate('/app/buy');
   };
 
-  const handleSendCoins = () => {
-    if (!selectedUser || !sendAmount) return;
-    toast.success(`Sent ${sendAmount} coins to @${selectedUser.username}`);
-    onClose?.();
-  };
-
   const handleStakeCoins = () => {
     if (!stakeAmount || Number(stakeAmount) <= 0) return;
     toast.success(`Staked ${stakeAmount} coins`);
@@ -581,10 +377,6 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
     }
     setStakeAmount(balance.toString());
   };
-
-  const filteredUsers = MOCK_USERS.filter((user) =>
-    user.username.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   // Live DHB quote — see the note on the same calculation in CoinBalanceMenu.
   const { data: prices } = useTokenPrices();
@@ -631,139 +423,6 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
           </div>
           <span className="text-white font-medium">Buy with Crypto</span>
         </button>
-      </div>
-    );
-  }
-
-  if (menuView === 'send') {
-    return (
-      <div className="space-y-3">
-        <button
-          onClick={() => setMenuView('main')}
-          className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span className="text-sm">Back</span>
-        </button>
-
-        {!selectedUser ? (
-          <>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-              <Input
-                placeholder="Search users..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-zinc-400"
-              />
-            </div>
-            <div className="space-y-1 max-h-48 overflow-y-auto">
-              {filteredUsers.map((user) => (
-                <button
-                  key={user.id}
-                  onClick={() => setSelectedUser(user)}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
-                >
-                  <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-white text-sm font-medium">
-                    {user.username[0].toUpperCase()}
-                  </div>
-                  <span className="text-white">@{user.username}</span>
-                </button>
-              ))}
-              {filteredUsers.length === 0 && (
-                <AppState icon="search" title="No users found" kind="search-empty" size="compact" />
-              )}
-            </div>
-          </>
-        ) : (
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg border border-white/10">
-              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-medium">
-                {selectedUser.username[0].toUpperCase()}
-              </div>
-              <div>
-                <p className="text-white font-medium">@{selectedUser.username}</p>
-                <button
-                  onClick={() => setSelectedUser(null)}
-                  className="text-xs text-zinc-400 hover:text-zinc-300"
-                >
-                  Change
-                </button>
-              </div>
-            </div>
-            <div>
-              <label className="text-sm text-zinc-400 mb-1 block">Amount</label>
-              <div className="relative">
-                <img src={dehubCoin} alt="coins" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
-                <Input
-                  type="number"
-                  placeholder="0"
-                  value={sendAmount}
-                  onChange={(e) => setSendAmount(e.target.value)}
-                  className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-400"
-                />
-              </div>
-            </div>
-            <Button
-              onClick={handleSendCoins}
-              disabled={!sendAmount || Number(sendAmount) <= 0}
-              className="w-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white disabled:opacity-50"
-            >
-              Send Coins
-            </Button>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  if (menuView === 'history') {
-    return (
-      <div className="space-y-3">
-        <button
-          onClick={() => setMenuView('main')}
-          className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span className="text-sm">Back</span>
-        </button>
-        
-        <h3 className="text-white font-medium text-sm">Transactions</h3>
-        
-        <div className="space-y-2 max-h-64 overflow-y-auto">
-          {MOCK_TRANSACTIONS.map((tx) => (
-            <div
-              key={tx.id}
-              className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-white/10">
-                  {tx.type === 'received' || tx.type === 'earned' ? (
-                    <Plus className="w-4 h-4 text-white" />
-                  ) : tx.type === 'staked' ? (
-                    <Lock className="w-4 h-4 text-white" />
-                  ) : (
-                    <Send className="w-4 h-4 text-white" />
-                  )}
-                </div>
-                <div>
-                  <p className="text-white text-sm font-medium capitalize">{tx.type}</p>
-                  <p className="text-xs text-zinc-400">
-                    {tx.from && `from @${tx.from}`}
-                    {tx.to && `to @${tx.to}`}
-                    {tx.description && tx.description}
-                  </p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-medium text-white">
-                  {tx.type === 'received' || tx.type === 'earned' ? '+' : '-'}{tx.amount}
-                </p>
-                <p className="text-xs text-zinc-400">{tx.date}</p>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     );
   }
@@ -871,24 +530,6 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
           <span className="text-white font-medium">Receive Coins</span>
           <span className="text-xs text-zinc-400">{formattedWalletAddress ?? 'Connect wallet'}</span>
         </div>
-      </button>
-      <button
-        onClick={() => setMenuView('send')}
-        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
-      >
-        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-          <Send className="w-4 h-4 text-white" />
-        </div>
-        <span className="text-white font-medium">Send Coins</span>
-      </button>
-      <button
-        onClick={() => setMenuView('history')}
-        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
-      >
-        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-          <History className="w-4 h-4 text-white" />
-        </div>
-        <span className="text-white font-medium">Transactions</span>
       </button>
       <button
         onClick={() => setMenuView('stake')}
