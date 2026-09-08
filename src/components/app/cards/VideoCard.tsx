@@ -1,3 +1,4 @@
+import { isVideoOutsideFeed } from '@/lib/video-background-playback';
 /**
  * Video Card Component
  * ====================
@@ -841,7 +842,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       ([entry]) => {
         // Never unload mid-playback (the visibility observer pauses at
         // viewport exit anyway, so this only guards races).
-        if (!entry.isIntersecting && !isPlayingRef.current) setNearViewport(false);
+        if (!entry.isIntersecting && !isPlayingRef.current && !isVideoOutsideFeed(videoRef.current)) setNearViewport(false);
       },
       { rootMargin: '2500px 0px' },
     );
@@ -893,6 +894,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       (entries) => {
         entries.forEach((entry) => {
           isIntersectingRef.current = entry.isIntersecting;
+          // Backgrounding is not a scroll-away; PiP owns its own visible surface.
+          if (isVideoOutsideFeed(videoRef.current)) return;
           if (!entry.isIntersecting && isPlayingRef.current) {
             pauseVideo();
             videoPlaybackManager.stop(instanceId);
@@ -913,7 +916,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 // Scroll-away race: if the card left the viewport while play() was
                 // pending, the pause branch above was skipped (isPlayingRef was
                 // still false), so bail here to avoid playing/holding audio off-screen.
-                if (!isIntersectingRef.current) {
+                if (!isIntersectingRef.current && !isVideoOutsideFeed(vid)) {
                   vid.pause();
                   videoPlaybackManager.stop(instanceId);
                   setIsLoading(false);
