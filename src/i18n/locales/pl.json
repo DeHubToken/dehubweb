@@ -4558,5 +4558,40 @@
         }
       ]
     }
+  },
+  "follow": {
+    "followers": "Obserwujący",
+    "following": "Obserwowani",
+    "follow": "Obserwuj",
+    "followBack": "Obserwuj z powrotem",
+    "requested": "Poproszono",
+    "followsYou": "Obserwuje Cię",
+    "searchPlaceholder": "Szukaj...",
+    "sortNewest": "Najnowsze",
+    "sortEarliest": "Najstarsze",
+    "someone": "ta osoba",
+    "logInFirst": "Zaloguj się najpierw",
+    "requestSentTo": "Poproszono {{name}} o obserwowanie",
+    "requestAlreadyPending": "Prośba o obserwowanie już oczekuje. Czekamy na zatwierdzenie.",
+    "alreadyFollowing": "Już obserwujesz {{name}}",
+    "updateFailed": "Nie udało się zaktualizować statusu obserwowania",
+    "errHidden": "Ten użytkownik ukrył listę swoich obserwujących i obserwowanych.",
+    "errPrivate": "Ta lista jest prywatna.",
+    "errPrivateToast": "Lista obserwujących tego użytkownika jest prywatna",
+    "errLoad": "Nie udało się załadować listy. Spróbuj ponownie.",
+    "errLoadToast": "Nie udało się załadować listy obserwujących",
+    "errorTitle": "Błąd ładowania",
+    "tryAgain": "Spróbuj ponownie",
+    "noResults": "Nie znaleziono wyników",
+    "noFollowersYet": "Brak obserwujących",
+    "notFollowingAnyone": "Nie obserwuje nikogo",
+    "noMatches": "Brak wyników dla \"{{query}}\"",
+    "followersAppearHere": "Obserwujący pojawią się tutaj",
+    "followToSeeThem": "Obserwuj ludzi, aby zobaczyć ich tutaj",
+    "addToGroup": "Dodaj {{name}} do grupy",
+    "newGroupName": "Nowa nazwa grupy",
+    "groupLimitReached": "Osiągnięto limit grupowy",
+    "createGroup": "Utwórz",
+    "groupsHint": "Grupy filtrują Twój kanał obserwowania. Tylko Ty je widzisz."
   }
 }
