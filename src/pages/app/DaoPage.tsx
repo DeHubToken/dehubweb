@@ -7,7 +7,7 @@
  * weight their voice carries when the DAO decides how the treasury is spent.
  */
 
-import { useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Copy, Check, Loader2, HeartHandshake, ExternalLink, RefreshCw, Info } from 'lucide-react';
@@ -21,9 +21,12 @@ import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
+import { useWalletLocked } from '@/hooks/use-wallet-locked';
 import { useDaoTreasury, useContributeToDao, useOwnDhbBalance } from '@/hooks/use-dao-treasury';
 import { getAccountInfo } from '@/lib/api/dehub';
 import { DAO_TREASURY_ADDRESS, daoTxUrl, shortAddress, type DaoContributor, type DaoContribution } from '@/lib/dao-treasury';
+import { isWalletLockedError } from '@/lib/contracts/aa-utils';
+import { toastTxError } from '@/lib/tx-error-toast';
 
 const QUICK_AMOUNTS = [100, 1_000, 10_000];
 
@@ -103,20 +106,33 @@ function RecentRow({ item }: { item: DaoContribution }) {
 
 function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const { t } = useTranslation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoginModalOpen, requestWalletUnlock } = useAuth();
   const [amount, setAmount] = useState('');
-  const contribute = useContributeToDao();
+  const [pendingAfterUnlock, setPendingAfterUnlock] = useState<number | null>(null);
+  const [unlockSheetSeen, setUnlockSheetSeen] = useState(false);
+  const { mutate: contribute, isPending } = useContributeToDao();
+  const walletLocked = useWalletLocked();
   const { data: held } = useOwnDhbBalance(open && isAuthenticated);
 
   const parsed = Math.floor(Number(amount));
   const valid = Number.isFinite(parsed) && parsed > 0;
 
-  const handleSend = () => {
-    if (!valid) return;
-    contribute.mutate(parsed, {
+  const queueAfterUnlock = useCallback((value: number) => {
+    setPendingAfterUnlock(value);
+    setUnlockSheetSeen(false);
+
+    // Do not stack the password sheet on top of another vaul drawer. Closing
+    // this one first is the difference between an unlock prompt the user can
+    // complete and the dead-end toast captured in the support recording.
+    onOpenChange(false);
+    window.requestAnimationFrame(() => requestWalletUnlock());
+  }, [onOpenChange, requestWalletUnlock]);
+
+  const sendContribution = useCallback((value: number) => {
+    contribute(value, {
       onSuccess: (result) => {
         toast.success(t('dao.sentTitle'), {
-          description: t('dao.sentDesc', { amount: parsed.toLocaleString(), chain: result.chain }),
+          description: t('dao.sentDesc', { amount: value.toLocaleString(), chain: result.chain }),
           action: {
             label: t('dao.viewTx'),
             onClick: () => window.open(daoTxUrl(result.chainId, result.txHash), '_blank', 'noopener'),
@@ -126,9 +142,49 @@ function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange:
         onOpenChange(false);
       },
       onError: (err) => {
-        toast.error(t('dao.sendFailed'), { description: err instanceof Error ? err.message : undefined });
+        // A stale lock reading can still arrive here if the auto-lock interval
+        // expires between render and tap. Treat it exactly like the preflight:
+        // unlock, then resume this same amount automatically.
+        if (isWalletLockedError(err)) {
+          queueAfterUnlock(value);
+          return;
+        }
+        toastTxError(err, t('dao.sendFailed'), {
+          description: err instanceof Error ? err.message : undefined,
+        });
       },
     });
+  }, [contribute, onOpenChange, queueAfterUnlock, t]);
+
+  // The password/biometric sheet is controlled by AuthProvider. Once it has
+  // visibly opened and then closed, either resume the exact transfer that led
+  // there or restore this drawer unchanged when the user cancelled. Nothing
+  // remains armed for some unrelated unlock later in the session.
+  useEffect(() => {
+    if (pendingAfterUnlock === null) return;
+    if (isLoginModalOpen) {
+      if (!unlockSheetSeen) setUnlockSheetSeen(true);
+      return;
+    }
+    if (!unlockSheetSeen) return;
+
+    const value = pendingAfterUnlock;
+    setPendingAfterUnlock(null);
+    setUnlockSheetSeen(false);
+    if (walletLocked) {
+      onOpenChange(true);
+      return;
+    }
+    sendContribution(value);
+  }, [isLoginModalOpen, onOpenChange, pendingAfterUnlock, sendContribution, unlockSheetSeen, walletLocked]);
+
+  const handleSend = () => {
+    if (!valid) return;
+    if (walletLocked) {
+      queueAfterUnlock(parsed);
+      return;
+    }
+    sendContribution(parsed);
   };
 
   return (
@@ -184,11 +240,11 @@ function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange:
 
           <Button
             onClick={handleSend}
-            disabled={!valid || contribute.isPending}
+            disabled={!valid || isPending}
             variant="glass"
             className="w-full rounded-xl font-semibold"
           >
-            {contribute.isPending ? (
+            {isPending ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <>
