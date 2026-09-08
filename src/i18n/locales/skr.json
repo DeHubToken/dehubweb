@@ -783,6 +783,11 @@
   "notifications": {
     "title": "اطلاع",
     "markAllRead": "سارے پڑھے نشان لاؤ",
+    "sortOrder": "اطلاع دی ترتیب",
+    "priority": "ترجیح",
+    "newest": "نویا ترین",
+    "actNow": "ہن کم کرو",
+    "important": "اہم",
     "settings": "اطلاع ترتیباں",
     "actions": "عمل",
     "markAllAsRead": "سارے پڑھے نشان لاؤ",
@@ -848,7 +853,8 @@
       "here": "{{name}} ڪميونٽي ۾ سڀني کي پيغام موڪليو",
       "hereNamed": "{{name}} ”{{community}}“ ۾ سڀني کي پيغام موڪليو"
     },
-    "byEmail": "بذریعہ ای میل"
+    "byEmail": "بذریعہ ای میل",
+    "byText": "متن ذریعے"
   },
   "leaderboard": {
     "title": "لیڈر بورڈ",
@@ -1913,6 +1919,8 @@
     "aimAtAccount": "کیہدے پیروکار ایہ ݙیکھن؟",
     "aimPlaceholder": "یوزرنیم یا بٹوے دا پتہ",
     "aimAtTiers": "کہڑے بیج درجے ایہ ݙیکھن؟",
+    "giftedTo": "تحفہ → #{{id}}",
+    "pickCategory": "قسم…",
     "actsPost": "تہاڈی اک پوسٹ تے کم کردا اے۔ اک چننے لئی ٹیپ کرو۔",
     "actsGift": "اک تحفہ — ایہ کسے ہور دی پوسٹ تے آندا اے۔ اک چننے لئی ٹیپ کرو۔",
     "actsComment": "تہاڈے کمنٹ تے کم کردا اے کسے ہور دے تھریڈ وچ۔ اک چننے لئی ٹیپ کرو۔",
@@ -1930,9 +1938,7 @@
     "noComments": "تسیں ابھی تک کمنٹ نئیں کیتا۔",
     "noStages": "تہاڈا کوئی Stage اب لائیو یا شیڈول نئیں اے۔",
     "noFlaresLeft": "اس سائیکل وچ کوئی Signal Flares نئیں رہیا",
-    "spentFor": "{{power}} {{minutes}} منٹاں لئی چل رہیا اے",
-    "giftedTo": "تحفہ → #{{id}}",
-    "pickCategory": "قسم…"
+    "spentFor": "{{power}} {{minutes}} منٹاں لئی چل رہیا اے"
   },
   "work": {
     "budgetExhausted": "ایں انعام دا سارا بجٹ ونڈیا ونج چکے۔"

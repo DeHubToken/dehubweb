@@ -805,6 +805,11 @@
   "notifications": {
     "title": "اطلاعات",
     "markAllRead": "سب پڑھا ہوا نشان زد کریں",
+    "sortOrder": "نوٹیفکیشن آرڈر",
+    "priority": "ترجیح",
+    "newest": "تازہ ترین",
+    "actNow": "ابھی عمل کریں",
+    "important": "اہم",
     "settings": "اطلاعات ترتیبات",
     "actions": "اقدامات",
     "markAllAsRead": "سب پڑھا ہوا",
@@ -870,7 +875,8 @@
       "here": "{{name}} نے کمیونٹی میں ہر ایک کو پیغام بھیجا",
       "hereNamed": "{{name}} نے \"{{community}}\" میں سب کو میسج کیا"
     },
-    "byEmail": "بذریعہ ای میل"
+    "byEmail": "بذریعہ ای میل",
+    "byText": "بذریعہ متن"
   },
   "leaderboard": {
     "title": "لیڈر بورڈ",

@@ -825,6 +825,11 @@
   "notifications": {
     "title": "ምልክታታት",
     "markAllRead": "ኩሉ ከም ዝተነበ ምልክት ግበር",
+    "sortOrder": "ናይ ኣፍልጦ ትእዛዝ",
+    "priority": "ቀዳምነት",
+    "newest": "ሓድሽ",
+    "actNow": "ሕጂ ስጕምቲ ውሰድ",
+    "important": "ኣገዳሲ",
     "settings": "ቅጥዕታት ምልክታ",
     "actions": "ተግባራት",
     "markAllAsRead": "ኩሉ ከም ዝተነበ ምልክት ግበር",
@@ -882,7 +887,8 @@
     "community": {
       "joined": "{{name}} ምስ ማሕበረሰብካ ተጸምቢርካ"
     },
-    "byEmail": "ብኢመይል"
+    "byEmail": "ብኢመይል",
+    "byText": "ብጽሑፍ"
   },
   "leaderboard": {
     "title": "ሰሌዳ ደረጃ",
@@ -1941,7 +1947,10 @@
     "homeComment": "ኣብቲ ጽሑፍካ ኣብ ጸረፍካዮ ኣብ ጸረፍ ካልኦት ወፍዮ።",
     "homeStage": "ኣብቲ መድረኽ ክትመርሖ ካብኡ ወፍዮ።",
     "homePage": "ኣብዚ ኣብ ላዕሊ እዚ ገጽ ወፍዮ።",
+    "flaresLeft": "ዕምባባታት",
+    "giftedTo": "ህያብ → #{{id}}",
     "goldenHourStarted": "Golden Hour ን {{minutes}} ደቓይቕ ይካየድ ኣሎ — እቲ ሎሚ እትጽሕፎ ኩሉ ክልተ እጽርፍ",
+    "pickCategory": "ምድብ",
     "trendJacked": "{{category}} ን {{minutes}} ደቓይቕ ይዝርጋሕ ኣሎ",
     "actsPost": "ኣብ ሓደ ኻብቲ ልኡኻትካ ግበር ። ሓደ ንምውሳድ ኣጥፊእካ ።",
     "actsGift": "ህያብ — ኣብ ካልእ ቦታ ይወድቕ ። ሓደ ንምውሳድ ኣጥፊእካ ።",
@@ -1959,10 +1968,7 @@
     "anchorNeedsTheirThread": "Anchor ነቲ ርእይቶኻ ኣብ ላዕሊ ናይ ካልእ ሰብ ክር ይሕዝ — ኣብ ናይ ገዛእ ርእስኻ ፖስታ PIN ድሮ ብነጻ እዩ ።",
     "noComments": "ገና ርእይቶ ኣይሃበን ።",
     "noStages": "ኣብዚ እዋን እዚ ዝኾነ ደረጃኻ ህያው ወይ ዝተመደበ ኣይኮነን ።",
-    "noFlaresLeft": "ዝኾነ ምልክት ነፈርቲ ካብ'ዚ ዑደት'ዚ ኣይወጹን",
-    "flaresLeft": "ዕምባባታት",
-    "giftedTo": "ህያብ → #{{id}}",
-    "pickCategory": "ምድብ"
+    "noFlaresLeft": "ዝኾነ ምልክት ነፈርቲ ካብ'ዚ ዑደት'ዚ ኣይወጹን"
   },
   "work": {
     "budgetExhausted": "ናይዚ ሽልማት ባጀት ብምሉኡ ተመዲቡ እዩ።"

@@ -845,6 +845,11 @@
   "notifications": {
     "title": "Notifikasi",
     "markAllRead": "Tandai semua dibaca",
+    "sortOrder": "Perintah notifikasi",
+    "priority": "Prioritas",
+    "newest": "Terbaru",
+    "actNow": "Bertindak sekarang",
+    "important": "Penting",
     "settings": "Pengaturan Notifikasi",
     "actions": "Tindakan",
     "markAllAsRead": "Tandai semua sebagai dibaca",

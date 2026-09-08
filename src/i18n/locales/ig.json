@@ -829,6 +829,11 @@
   "notifications": {
     "title": "Ọkwa",
     "markAllRead": "Mee ka niile ka a gụrụ",
+    "sortOrder": "Usoro ngosi",
+    "priority": "Ihe kacha mkpa",
+    "newest": "Kacha ọhụrụ",
+    "actNow": "Mee ugbu a",
+    "important": "Mkpa",
     "settings": "Ntọala Ọkwa",
     "actions": "Omume",
     "markAllAsRead": "Mee ka niile dị ka a gụrụ",
@@ -890,7 +895,8 @@
       "requestedNamed": "{{name}} jụrụ isonyere \"{{community}}\"",
       "hereNamed": "{{name}} ozi onye ọ bụla na \"{{community}}\""
     },
-    "byEmail": "Site na email"
+    "byEmail": "Site na email",
+    "byText": "Site na ngwe"
   },
   "leaderboard": {
     "title": "Ndepụta Ọkwa",

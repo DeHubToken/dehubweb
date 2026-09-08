@@ -830,6 +830,11 @@
   "notifications": {
     "title": "Njoftimet",
     "markAllRead": "Shëno të gjitha si të lexuara",
+    "sortOrder": "Urdhër njoftimi",
+    "priority": "Prioriteti",
+    "newest": "Më të rejat",
+    "actNow": "Vepro tani",
+    "important": "E rëndësishme",
     "settings": "Cilësimet e Njoftimeve",
     "actions": "Veprimet",
     "markAllAsRead": "Shëno të gjitha si të lexuara",
@@ -895,7 +900,8 @@
       "here": "{{name}} u dërgoi mesazhe të gjithëve në komunitet",
       "hereNamed": "{{name}} u dërgoi mesazhe të gjithëve në “{{community}}”"
     },
-    "byEmail": "Me email"
+    "byEmail": "Me email",
+    "byText": "Me tekst"
   },
   "leaderboard": {
     "title": "Tabela e Liderëve",

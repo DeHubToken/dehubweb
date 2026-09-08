@@ -828,6 +828,11 @@
   "notifications": {
     "title": "ସୂଚନା",
     "markAllRead": "ସବୁ ପଢ଼ା ଭାବେ ଚିହ୍ନିତ କରନ୍ତୁ",
+    "sortOrder": "ବିଜ୍ଞପ୍ତି ଆଦେଶ",
+    "priority": "ଅଗ୍ରାଧିକାର",
+    "newest": "ନୂତନ",
+    "actNow": "ବର୍ତ୍ତମାନ କାର୍ଯ୍ୟ କରନ୍ତୁ",
+    "important": "ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ",
     "settings": "ସୂଚନା ସେଟିଂ",
     "actions": "କ୍ରିୟା",
     "markAllAsRead": "ସବୁ ପଢ଼ା ଭାବେ ଚିହ୍ନିତ କରନ୍ତୁ",
@@ -886,7 +891,8 @@
     "community": {
       "joinedNamed": "{{name}} ଯୋଡିହେଲା “{{community}}”"
     },
-    "byEmail": "ଇମେଲ୍ ଦ୍ୱାରା"
+    "byEmail": "ଇମେଲ୍ ଦ୍ୱାରା",
+    "byText": "ପାଠ୍ୟ ଅନୁଯାୟୀ"
   },
   "leaderboard": {
     "title": "ଲିଡରବୋର୍ଡ",

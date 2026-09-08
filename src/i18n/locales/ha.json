@@ -831,6 +831,11 @@
   "notifications": {
     "title": "Sanarwa",
     "markAllRead": "Yi wa duka alama an karanta",
+    "sortOrder": "Umurnin sanarwar",
+    "priority": "Mahimmanci",
+    "newest": "Sabon",
+    "actNow": "Yi aiki yanzu",
+    "important": "Muhimmancin",
     "settings": "Saituna na Sanarwa",
     "actions": "Ayyuka",
     "markAllAsRead": "Yi wa duka alama an karanta",
@@ -896,7 +901,8 @@
       "here": "{{name}} saƙon kowa a cikin al'umma",
       "hereNamed": "{{name}} saƙon kowa a cikin “{{community}}”"
     },
-    "byEmail": "Ta imel"
+    "byEmail": "Ta imel",
+    "byText": "Ta hanyar rubutu"
   },
   "leaderboard": {
     "title": "Jadawalin Matsayi",

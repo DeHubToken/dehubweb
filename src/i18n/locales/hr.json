@@ -816,6 +816,11 @@
   "notifications": {
     "title": "Obavijesti",
     "markAllRead": "Označi sve kao pročitano",
+    "sortOrder": "Narudžba obavijesti",
+    "priority": "Prioritet",
+    "newest": "Najnovije",
+    "actNow": "Djelujte odmah",
+    "important": "Važno",
     "settings": "Postavke obavijesti",
     "actions": "Radnje",
     "markAllAsRead": "Označi sve kao pročitano",
@@ -881,7 +886,8 @@
       "here": "{{name}} šalje poruke svima u zajednici",
       "hereNamed": "{{name}} šalje poruke svima u “{{community}}”"
     },
-    "byEmail": "Elektroničkom poštom"
+    "byEmail": "Elektroničkom poštom",
+    "byText": "Po tekstu"
   },
   "leaderboard": {
     "title": "Ljestvice",

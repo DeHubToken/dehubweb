@@ -844,6 +844,11 @@
   "notifications": {
     "title": "Beeksisa",
     "markAllRead": "Hundaa dubbifame jedhi",
+    "sortOrder": "Ajaja beeksisa",
+    "priority": "Dursa",
+    "newest": "Kan haaraa",
+    "actNow": "Amma hojjedhu",
+    "important": "Barbaachisaa",
     "settings": "Qindaa'ina Beeksisaa",
     "actions": "Tarkaanfii",
     "markAllAsRead": "Hundaa dubbifame jedhi",
@@ -909,7 +914,8 @@
       "here": "{{name}} hawaasa keessa jiru hundaaf ergaa dabarseera",
       "hereNamed": "{{name}} “{{community}}” jechuun hundaaf ergaa dabarseera."
     },
-    "byEmail": "Imeelidhaan"
+    "byEmail": "Imeelidhaan",
+    "byText": "Barreeffamadhaan"
   },
   "leaderboard": {
     "title": "Sadarkaa",

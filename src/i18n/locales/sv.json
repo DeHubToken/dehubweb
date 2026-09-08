@@ -829,6 +829,11 @@
   "notifications": {
     "title": "Aviseringar",
     "markAllRead": "Markera alla som lästa",
+    "sortOrder": "Meddelandeorder",
+    "priority": "Prioritet",
+    "newest": "Nyaste",
+    "actNow": "Agera nu",
+    "important": "Viktigt",
     "settings": "Aviseringsinställningar",
     "actions": "Åtgärder",
     "markAllAsRead": "Markera alla som lästa",

@@ -1,14 +1,14 @@
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { memo, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Send, Scale, Siren, Briefcase
+import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Send, Scale, Siren, Briefcase, ArrowDownUp
 } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
@@ -61,6 +61,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { FeedItem } from '@/types/feed.types';
 import { reactionMeta, type PostReaction } from '@/lib/reactions';
 import { getNotificationFilterLabel, type NotificationTypeFilter } from '@/lib/notification-filter-labels';
+import {
+  notificationPriorityBand,
+  sortNotifications,
+  type NotificationSortMode,
+} from '@/lib/notification-priority';
+import { useNotificationRealtime } from '@/hooks/use-notification-realtime';
 
 // ============================================================================
 // NotificationPostCards — fetches full NFT data and renders real feed cards
@@ -1071,6 +1077,7 @@ const NotificationItem = memo(function NotificationItem({
         return !notification.read;
       })
     : !notification.read;
+  const priorityBand = notificationPriorityBand(notification);
 
   const { walletAddress } = useAuth();
 
@@ -1304,9 +1311,21 @@ const NotificationItem = memo(function NotificationItem({
           </p>
         )}
         
-        <p className="text-xs text-zinc-500 mt-1">
-          {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
-        </p>
+        <div className="mt-1 flex items-center gap-2 text-xs">
+          <span className="text-zinc-500">
+            {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
+          </span>
+          {priorityBand === 'action' && (
+            <span className="rounded-md bg-red-500/15 px-1.5 py-0.5 font-semibold text-red-300">
+              {t('notifications.actNow', 'Act now')}
+            </span>
+          )}
+          {priorityBand === 'important' && (
+            <span className="rounded-md bg-amber-500/15 px-1.5 py-0.5 font-semibold text-amber-300">
+              {t('notifications.important', 'Important')}
+            </span>
+          )}
+        </div>
 
         {/* Settle a fraction trade from the notification that told you about it.
             Renders nothing unless this wallet actually owes the leg. */}
@@ -1489,6 +1508,16 @@ export default function NotificationsPage() {
   const isDraggingRef = useRef(false);
   const { layerRef: notifTabLayerRef, setRef: setNotifTabRef, rect: notifTabRect, onScroll: onNotifTabScroll } = useTabIndicator(activeTab, undefined, isDraggingRef);
   const { isAuthenticated, walletAddress: pageWalletAddress } = useAuth();
+  const reduceMotion = useReducedMotion();
+  const [sortMode, setSortMode] = useState<NotificationSortMode>('priority');
+  const [priorityNow, setPriorityNow] = useState(Date.now);
+  useNotificationRealtime();
+
+  useEffect(() => {
+    if (sortMode !== 'priority') return;
+    const timer = window.setInterval(() => setPriorityNow(Date.now()), 30_000);
+    return () => window.clearInterval(timer);
+  }, [sortMode]);
 
   // Swallow the notifications list at the sticky header bento's top edge under
   // the glass themes, exactly like the home feed cuts at its nav pill.
@@ -1812,12 +1841,15 @@ export default function NotificationsPage() {
   }, [markCustomAsRead.mutate, markAsRead.mutate]);
 
   // Filter notifications by selected tab type
-  const notifications = activeTab === 'all'
-    ? allNotifications
-    : allNotifications.filter(n => {
-        const allowedTypes = filterTypeMap[activeTab];
-        return allowedTypes ? allowedTypes.includes(n.type) : true;
-      });
+  const notifications = useMemo(() => {
+    const filtered = activeTab === 'all'
+      ? allNotifications
+      : allNotifications.filter(n => {
+          const allowedTypes = filterTypeMap[activeTab];
+          return allowedTypes ? allowedTypes.includes(n.type) : true;
+        });
+    return sortNotifications(filtered, sortMode, priorityNow);
+  }, [activeTab, allNotifications, priorityNow, sortMode]);
 
   // Bundling is O(n²) over ~130 rows; memoized so the avatar-enrichment
   // drip (one state update per resolved actor) doesn't recompute it every
@@ -1906,8 +1938,8 @@ export default function NotificationsPage() {
     // portaled settings sheet / actors drawer carry the same attribute
     // (portals escape this subtree).
     <div data-notifications-page className="min-h-screen">
-      <SEOHead title="Notifications — Stay Updated" description="Stay on top of likes, comments, follows, tips, mentions and more on DeHub. Never miss an interaction from your community." url="https://dehub.io/app/notifications" />
-      <h1 className="sr-only">DeHub Notifications — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title="Notifications - Stay Updated" description="Stay on top of likes, comments, follows, tips, mentions and more on DeHub. Never miss an interaction from your community." url="https://dehub.io/app/notifications" />
+      <h1 className="sr-only">DeHub Notifications - Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Header */}
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
@@ -2124,6 +2156,31 @@ export default function NotificationsPage() {
             </div>
           </div>
 
+          <div className="mt-2 flex justify-end">
+            <div
+              className="flex items-center rounded-xl bg-black/20 p-0.5"
+              role="group"
+              aria-label={t('notifications.sortOrder', 'Notification order')}
+            >
+              {(['priority', 'newest'] as const).map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => setSortMode(mode)}
+                  aria-pressed={sortMode === mode}
+                  className={`flex h-8 items-center gap-1 rounded-lg px-2.5 text-xs font-medium transition-colors active:scale-[0.98] ${
+                    sortMode === mode ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-zinc-300'
+                  }`}
+                >
+                  {mode === 'priority' && <ArrowDownUp className="h-3.5 w-3.5" aria-hidden="true" />}
+                  {mode === 'priority'
+                    ? t('notifications.priority', 'Priority')
+                    : t('notifications.newest', 'Newest')}
+                </button>
+              ))}
+            </div>
+          </div>
+
            {/* Tabs - merged into header bento */}
           <div className="mt-3 -mx-2" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
             <div ref={notifTabLayerRef} className="relative overflow-visible">
@@ -2218,17 +2275,24 @@ export default function NotificationsPage() {
             </div>
           ) : (
             <div className="divide-y divide-zinc-800">
-              {bundledNotifications.map((bundle, index) => (
-                <NotificationItem
-                  key={bundle.primary.id}
-                  notification={bundle.primary}
-                  bundle={bundle}
-                  onMarkAsRead={handleMarkAsRead}
-                  isMarkingAsRead={bundle.allIds.includes(markingNotificationId || '')}
-                  enrichedAvatars={enrichedAvatars}
-                  style={offscreenRowStyle(index)}
-                />
-              ))}
+              <AnimatePresence initial={false}>
+                {bundledNotifications.map((bundle, index) => (
+                  <motion.div
+                    key={bundle.primary.id}
+                    layout={reduceMotion ? false : 'position'}
+                    transition={{ type: 'spring', stiffness: 420, damping: 38 }}
+                  >
+                    <NotificationItem
+                      notification={bundle.primary}
+                      bundle={bundle}
+                      onMarkAsRead={handleMarkAsRead}
+                      isMarkingAsRead={bundle.allIds.includes(markingNotificationId || '')}
+                      enrichedAvatars={enrichedAvatars}
+                      style={offscreenRowStyle(index)}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
               
               {/* Load More */}
               {hasNextPage && (

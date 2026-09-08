@@ -828,6 +828,11 @@
   "notifications": {
     "title": "ማሳወቂያዎች",
     "markAllRead": "ሁሉንም እንደተነበቡ ምልክት አድርግ",
+    "sortOrder": "የማሳወቂያ ትዕዛዝ",
+    "priority": "ቅድሚያ",
+    "newest": "አዲስ",
+    "actNow": "አሁን እርምጃ ውሰድ",
+    "important": "አስፈላጊ",
     "settings": "የማሳወቂያ ቅንብሮች",
     "actions": "ድርጊቶች",
     "markAllAsRead": "ሁሉንም እንደተነበቡ ምልክት አድርግ",
@@ -893,7 +898,8 @@
       "here": "{{name}} በማህበረሰቡ ውስጥ ላሉት ሁሉ መልእክት አስተላልፈዋል",
       "hereNamed": "{{name}}@ በ \"{{community}}@\" ውስጥ ለሁሉም ሰው መልእክት አስተላልፏል"
     },
-    "byEmail": "በኢሜል"
+    "byEmail": "በኢሜል",
+    "byText": "በጽሑፍ"
   },
   "leaderboard": {
     "title": "ደረጃ ሰሌዳዎች",
@@ -1979,6 +1985,7 @@
     "homeComment": "በራስህ አስተያየት ላይ፣ በሌላ ሰው ክር ውስጥ አውጣ።",
     "homeStage": "ከምትስተናግደው መድረክ አውጣ።",
     "homePage": "እዚህ፣ በዚህ ገጽ አናት ላይ አውጣ።",
+    "flaresLeft": "ፍላየር",
     "giftedTo": "ስጦታ → #{{id}}",
     "goldenHourStarted": "Golden Hour ለ {{minutes}} ደቂቃዎች እየሮጠ ነው — የምትለጥፈው ሁሉ አሁን በእጥፍ ይቆጠራል",
     "start": "ጀምር",
@@ -2002,8 +2009,7 @@
     "noComments": "እስካሁን አስተያየት አልሰጠህም።",
     "noStages": "የአንተ ምንም መድረክ አሁን ላይቭም ሆነ ታቅዶ የለም።",
     "noFlaresLeft": "ምንም የሲግናል ፍላየር በዚህ ዑደት አልቀረም።",
-    "spentFor": "{{power}} ለ {{minutes}} ደቂቃዎች እየሮጠ ነው።",
-    "flaresLeft": "ፍላየር"
+    "spentFor": "{{power}} ለ {{minutes}} ደቂቃዎች እየሮጠ ነው።"
   },
   "work": {
     "budgetExhausted": "የዚህ ሽልማት በጀት ሙሉ በሙሉ ተይዟል።"

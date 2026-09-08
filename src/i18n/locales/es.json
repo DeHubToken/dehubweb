@@ -844,6 +844,11 @@
   "notifications": {
     "title": "Notificaciones",
     "markAllRead": "Marcar todo leído",
+    "sortOrder": "Orden de notificación",
+    "priority": "Prioridad",
+    "newest": "Más reciente",
+    "actNow": "Actúa ahora",
+    "important": "Importante",
     "settings": "Configuración de notificaciones",
     "actions": "Acciones",
     "markAllAsRead": "Marcar todo como leído",

@@ -831,6 +831,11 @@
   "notifications": {
     "title": "Notifikationer",
     "markAllRead": "Marker alle som læst",
+    "sortOrder": "Notifikationsordre",
+    "priority": "Prioritet",
+    "newest": "Nyeste",
+    "actNow": "Handl nu",
+    "important": "Vigtigt",
     "settings": "Notifikationsindstillinger",
     "actions": "Handlinger",
     "markAllAsRead": "Marker alle som læst",
@@ -896,7 +901,8 @@
       "here": "{{name}} sendte beskeder til alle i netværket",
       "hereNamed": "{{name}} sendte beskeder til alle i \"{{community}}\""
     },
-    "byEmail": "Via e-mail"
+    "byEmail": "Via e-mail",
+    "byText": "Efter tekst"
   },
   "leaderboard": {
     "title": "Rangliste",

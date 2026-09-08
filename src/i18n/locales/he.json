@@ -825,6 +825,11 @@
   "notifications": {
     "title": "התראות",
     "markAllRead": "סמן הכל כנקרא",
+    "sortOrder": "סדר התראות",
+    "priority": "עדיפות",
+    "newest": "החדש ביותר",
+    "actNow": "לפעול עכשיו",
+    "important": "חשוב",
     "settings": "הגדרות התראות",
     "actions": "פעולות",
     "markAllAsRead": "סמן הכל כנקרא",
@@ -890,7 +895,8 @@
       "here": "{{name}} שלחה הודעה לכל חברי הקהילה",
       "hereNamed": "{{name}} שלחה הודעה לכולם באזור \"{{community}}\""
     },
-    "byEmail": "במייל"
+    "byEmail": "במייל",
+    "byText": "לפי טקסט"
   },
   "leaderboard": {
     "title": "טבלת מובילים",
@@ -1960,7 +1966,10 @@
     "homeComment": "השתמש בו על התגובה שלך, בשרשור של מישהו אחר.",
     "homeStage": "השתמש בו מתוך Stage שאתה מארח.",
     "homePage": "השתמש בו כאן, בראש הדף הזה.",
+    "flaresLeft": "הבזקים",
+    "giftedTo": "מתנה → #{{id}}",
     "goldenHourStarted": "Golden Hour רץ במשך {{minutes}} דקות — כל מה שתפרסם עכשיו נחשב כפול",
+    "pickCategory": "קטגוריה…",
     "trendJacked": "{{category}} נמצא בטרנד במשך {{minutes}} דקות",
     "actsPost": "פועל על אחת מהפוסטים שלך. הקש כדי לבחור אחד.",
     "actsGift": "מתנה — היא נוחתת על פוסט של מישהו אחר. הקש כדי לבחור אחד.",
@@ -1979,10 +1988,7 @@
     "noComments": "עדיין לא הגבת.",
     "noStages": "אין במה פעילה או מתוזמנת שלך כרגע.",
     "noFlaresLeft": "לא נותרו הבזקי איתות במחזור זה",
-    "spentFor": "{{power}} רץ במשך {{minutes}} דקות",
-    "flaresLeft": "הבזקים",
-    "giftedTo": "מתנה → #{{id}}",
-    "pickCategory": "קטגוריה…"
+    "spentFor": "{{power}} רץ במשך {{minutes}} דקות"
   },
   "work": {
     "budgetExhausted": "התקציב של הפרס הזה נוצל במלואו.",

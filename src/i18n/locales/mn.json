@@ -828,6 +828,11 @@
   "notifications": {
     "title": "Мэдэгдлүүд",
     "markAllRead": "Бүгдийг уншсан гэж тэмдэглэх",
+    "sortOrder": "Мэдэгдэлийн дараалал",
+    "priority": "Тэргүүлэх чиглэл",
+    "newest": "Шинэ",
+    "actNow": "Одоо ажиллах",
+    "important": "Чухал",
     "settings": "Мэдэгдлийн тохиргоо",
     "actions": "Үйлдлүүд",
     "markAllAsRead": "Бүгдийг уншсан гэж тэмдэглэх",
@@ -892,7 +897,8 @@
       "here": "{{name}} messaged нийт хүн бүр",
       "hereNamed": "{{name}} messaged хүн бүрийг “{{community}}”"
     },
-    "byEmail": "И-мэйлээр"
+    "byEmail": "И-мэйлээр",
+    "byText": "Текстээр"
   },
   "leaderboard": {
     "title": "Тэргүүлэгчид",

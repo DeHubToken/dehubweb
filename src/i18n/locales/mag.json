@@ -820,6 +820,11 @@
   "notifications": {
     "title": "सूचना",
     "markAllRead": "सब पढ़ल चिह्नित करो",
+    "sortOrder": "अधिसूचना जारी करे सरकार",
+    "priority": "वरीयता दी जायेगी",
+    "newest": "नवा नवा, नवा हुंकार",
+    "actNow": "अभी प्रोडक्ट करे",
+    "important": "महत्त्वपूर्ण हय",
     "settings": "सूचना सेटिंग",
     "actions": "काम",
     "markAllAsRead": "सब पढ़ल चिह्नित करो",
@@ -875,7 +880,8 @@
     "oneOther": "१ अउर",
     "nOthers": "{{count}} अउर",
     "burstBody": "{{count}} नई सूचनाएं {{who}} से",
-    "byEmail": "ईमेल से"
+    "byEmail": "ईमेल से",
+    "byText": "पाठ कैलक्यूलेटर"
   },
   "leaderboard": {
     "title": "लीडरबोर्ड",

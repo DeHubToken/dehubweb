@@ -1892,7 +1892,10 @@
     "homeComment": "خەرجی بکە لەسەر کۆمێنتی خۆت، لەسەر بابەتێکی کەسێکی تر.",
     "homeStage": "خەرجی بکە لە Stage ێک کە میوانداری دەکەیت.",
     "homePage": "لێرە خەرجی بکە، لە سەرەوەی ئەم لاپەڕەیە.",
+    "flaresLeft": "بڵێسەکان",
+    "giftedTo": "دیاری → #{{id}}",
     "goldenHourStarted": "Golden Hour بۆ {{minutes}} خولەک بەردەوامە — هەموو شتێک کە پۆست دەکەیت ئێستا دوو ئەژمار دەکرێت",
+    "pickCategory": "پۆل...",
     "trendJacked": "{{category}} بۆ {{minutes}} خولەک ترێندە",
     "actsPost": "کار لەسەر یەکێک لە پۆستەکانت دەکات. لێبدە بۆ هەڵبژاردنی یەکێک.",
     "actsGift": "دیارییەک - دەکەوێتە سەر پۆستی کەسێکی تر. لێبدە بۆ هەڵبژاردنی یەکێک.",
@@ -1911,10 +1914,7 @@
     "noComments": "تائێستا هیچ کۆمێنتێکت نەکردووە.",
     "noStages": "هیچ قۆناغێکی تۆ لە ئێستادا زیندوو یان داڕێژراو نییە.",
     "noFlaresLeft": "هیچ بڵێسەیەکی سیگنال ئەم بازنەیەدا نەماوە",
-    "spentFor": "{{power}} بۆ ماوەی {{minutes}} خولەک بەڕێوەدەچێت",
-    "flaresLeft": "بڵێسەکان",
-    "giftedTo": "دیاری → #{{id}}",
-    "pickCategory": "پۆل..."
+    "spentFor": "{{power}} بۆ ماوەی {{minutes}} خولەک بەڕێوەدەچێت"
   },
   "work": {
     "budgetExhausted": "Bûdceya vê xelatê bi tevahî hatiye veqetandin."

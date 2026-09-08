@@ -844,6 +844,11 @@
   "notifications": {
     "title": "Notificări",
     "markAllRead": "Marchează tot ca citit",
+    "sortOrder": "Ordin de notificare",
+    "priority": "Prioritate",
+    "newest": "Cele mai noi",
+    "actNow": "Acționează acum",
+    "important": "Important",
     "settings": "Setări notificări",
     "actions": "Acțiuni",
     "markAllAsRead": "Marchează tot ca citit",

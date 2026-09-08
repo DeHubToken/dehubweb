@@ -828,6 +828,11 @@
   "notifications": {
     "title": "Огоҳиҳо",
     "markAllRead": "Ҳамаро хондашуда қайд кардан",
+    "sortOrder": "Тартиби огоҳӣ",
+    "priority": "Афзалият",
+    "newest": "Навтарин",
+    "actNow": "Ҳоло амал кунед",
+    "important": "Муҳим",
     "settings": "Танзимоти огоҳиҳо",
     "actions": "Амалҳо",
     "markAllAsRead": "Ҳамаро хондашуда қайд кардан",
@@ -893,7 +898,8 @@
       "here": "{{name}}info: whatsthis",
       "hereNamed": "{{name}} mesaged all in “{{community}}”"
     },
-    "byEmail": "Бо почта"
+    "byEmail": "Бо почта",
+    "byText": "Бо матн"
   },
   "leaderboard": {
     "title": "Рейтинг",

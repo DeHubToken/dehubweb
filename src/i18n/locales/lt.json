@@ -830,6 +830,11 @@
   "notifications": {
     "title": "Pranešimai",
     "markAllRead": "Pažymėti viską kaip skaitytą",
+    "sortOrder": "Pranešimų tvarka",
+    "priority": "Pirmenybė",
+    "newest": "Naujausi",
+    "actNow": "Veikite dabar",
+    "important": "Svarbu",
     "settings": "Pranešimų nustatymai",
     "actions": "Veiksmai",
     "markAllAsRead": "Pažymėti viską kaip skaitytą",
@@ -895,7 +900,8 @@
       "here": "{{name}} susirašinėjo su visais bendruomenės nariais",
       "hereNamed": "{{name}} susirašinėjo su visais „{{community}}“"
     },
-    "byEmail": "El. paštu"
+    "byEmail": "El. paštu",
+    "byText": "Pagal tekstą"
   },
   "leaderboard": {
     "title": "Lyderių lentelė",

@@ -1097,6 +1097,11 @@
   "notifications": {
     "title": "Pemberitahuan",
     "markAllRead": "Tandakan semua dibaca",
+    "sortOrder": "Pesanan pemberitahuan",
+    "priority": "Keutamaan",
+    "newest": "Terbaru",
+    "actNow": "Bertindak sekarang",
+    "important": "Penting",
     "settings": "Tetapan Pemberitahuan",
     "actions": "Tindakan",
     "markAllAsRead": "Tandakan semua sebagai dibaca",
@@ -1162,7 +1167,8 @@
       "here": "{{name}} menghantar mesej kepada semua orang dalam komuniti",
       "hereNamed": "{{name}} menghantar mesej kepada semua orang dalam “{{community}}”"
     },
-    "byEmail": "Melalui e-mel"
+    "byEmail": "Melalui e-mel",
+    "byText": "Melalui teks"
   },
   "leaderboard": {
     "title": "Papan Pendahulu",

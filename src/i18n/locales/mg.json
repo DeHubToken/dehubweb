@@ -849,6 +849,11 @@
   "notifications": {
     "title": "Fampandrenesana",
     "markAllRead": "Mariho fa voavaky daholo",
+    "sortOrder": "Filaharana fampahafantarana",
+    "priority": "Hamehana",
+    "newest": "Latsia",
+    "actNow": "Amin'izao fotoana izao",
+    "important": "Mavesa-danja",
     "settings": "Fikiran'ny fampandrenesana",
     "actions": "Hetsika",
     "markAllAsRead": "Mariho fa voavaky daholo",
@@ -903,6 +908,7 @@
     "newNotification": "Fampandrenesana vaovao",
     "oneOther": "1 hafa",
     "nOthers": "{{count}} hafa",
+    "burstBody": "{{count}}NEW filazana avy amin'ny {{who}}",
     "community": {
       "joined": "{{name}} manatevin-daharana ny vondrom-piarahamonina misy anao",
       "joinedNamed": "{{name}} nandray anjara {{community}} \"",
@@ -913,7 +919,8 @@
       "here": "{{name}} messaged ny tsirairay tao anatin'ilay vondrom-piarahamonina",
       "hereNamed": "{{name}} messaged ny rehetra {{community}} \""
     },
-    "byEmail": "Amin'ny mailaka"
+    "byEmail": "Amin'ny mailaka",
+    "byText": "Araka ny lahatsoratra"
   },
   "leaderboard": {
     "title": "Lisitry ny tsara indrindra",

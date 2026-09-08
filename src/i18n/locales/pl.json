@@ -844,6 +844,11 @@
   "notifications": {
     "title": "Powiadomienia",
     "markAllRead": "Oznacz wszystkie jako przeczytane",
+    "sortOrder": "Kolejność powiadomień",
+    "priority": "Priorytet",
+    "newest": "Najnowsze",
+    "actNow": "Działaj teraz",
+    "important": "Ważne",
     "settings": "Ustawienia powiadomień",
     "actions": "Akcje",
     "markAllAsRead": "Oznacz wszystkie jako przeczytane",

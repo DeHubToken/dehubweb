@@ -841,6 +841,11 @@
   "notifications": {
     "title": "Kennisgewings",
     "markAllRead": "Merk alles gelees",
+    "sortOrder": "Kennisgewing volgorde",
+    "priority": "Prioriteit",
+    "newest": "Nuutste",
+    "actNow": "WET NOU",
+    "important": "Belangrik",
     "settings": "Kennisgewinginstellings",
     "actions": "Aksies",
     "markAllAsRead": "Merk alles as gelees",
@@ -907,6 +912,7 @@
       "hereNamed": "{{name}} @ boodskap almal in \"{{community}}\""
     },
     "byEmail": "Per e-pos",
+    "byText": "Deur teks",
     "noNotifications": "Geen kennisgewings nie."
   },
   "leaderboard": {

@@ -830,6 +830,11 @@
   "notifications": {
     "title": "Ìwífúnni",
     "markAllRead": "Samisi gbogbo rẹ̀ bíi pé a ti kà",
+    "sortOrder": "Bere fun iwifunni",
+    "priority": "Àkójọpọ̀",
+    "newest": "Tuntun julọ",
+    "actNow": "Ṣiṣẹ ni bayi",
+    "important": "Pataki",
     "settings": "Ètò Ìwífúnni",
     "actions": "Àwọn ìṣe",
     "markAllAsRead": "Samisi gbogbo rẹ̀ bíi pé a ti kà",
@@ -895,7 +900,8 @@
       "here": "{{name}} fi ránṣẹ́ sí gbogbo ènìyàn ní agbègbè",
       "hereNamed": "{{name}} ránṣẹ́ sí gbogbo ènìyàn ní “{{community}}@”"
     },
-    "byEmail": "Nípasẹ̀ ìránṣẹ́-ì-lẹ́tà"
+    "byEmail": "Nípasẹ̀ ìránṣẹ́-ì-lẹ́tà",
+    "byText": "Nipasẹ ọrọ"
   },
   "leaderboard": {
     "title": "Àtòjọ Ìpò",

@@ -788,6 +788,11 @@
   "notifications": {
     "title": "الإشعارات",
     "markAllRead": "قرأ الكل",
+    "sortOrder": "ترتيب الإشعارات",
+    "priority": "الأولوية",
+    "newest": "الأحدث",
+    "actNow": "تصرف الآن",
+    "important": "هام",
     "settings": "إعدادات الإشعارات",
     "actions": "الإجراءات",
     "markAllAsRead": "حدد الكل كمقروء",
@@ -853,7 +858,8 @@
       "here": "{{name}} بعت رسالة لكل الموجودين بالمجتمع",
       "hereNamed": "{{name}} بعت رسالة لكل الموجودين بـ “{{community}}”"
     },
-    "byEmail": "عن طريق الإيميل"
+    "byEmail": "عن طريق الإيميل",
+    "byText": "عبر الرسائل النصية"
   },
   "leaderboard": {
     "title": "لوحة المتصدرين",

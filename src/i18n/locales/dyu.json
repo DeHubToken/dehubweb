@@ -822,6 +822,11 @@
   "notifications": {
     "title": "Kɔrɔbɔ",
     "markAllRead": "Kɔrɔbɔ",
+    "sortOrder": "Kɔrɔbɔli ɲini",
+    "priority": "Fɛɛn minw kɔrɔtanin lo ka tɛmɛ",
+    "newest": "O ye koo kura ye.",
+    "actNow": "An ka baara kɛ sisan",
+    "important": "Min kɔrɔtanin lo",
     "settings": "Sɔrɔw",
     "actions": "Kɔrɔbɔ",
     "markAllAsRead": "Kɔrɔbɔ",
@@ -882,7 +887,8 @@
       "here": "{{name}} Messaging all in the community",
       "hereNamed": "{{name}} Messaging everyone in {{community}}"
     },
-    "byEmail": "Ka a-mɛnɛ"
+    "byEmail": "Ka a-mɛnɛ",
+    "byText": "Ka kɛɲɛ ni Bibulu ka fɔta ye"
   },
   "leaderboard": {
     "title": "Kɛlɛya",
