@@ -5,7 +5,6 @@ import { ensureSignerOnChain, writeBatchAA } from '@/lib/contracts/aa-utils';
 import { isSmartWalletSession } from '@/lib/connection-source';
 import { sendERC20Token, sendNativeToken } from '@/lib/wallet/send';
 import { DAO_TREASURY_ADDRESS } from '@/lib/dao-treasury';
-import { getCachedSolanaAddress } from '@/lib/solana/address-cache';
 import { connectSolanaWallet, getSolanaProvider, isValidSolanaAddress } from '@/lib/solana/wallet';
 import { SOLANA_PUBLIC_RPC, SPL_TOKEN_PROGRAM_ID } from '@/lib/chains/solana';
 import { ROBINHOOD_CHAIN_ID, ROBINHOOD_ENABLED, ROBINHOOD_TOKENS } from '@/lib/chains/robinhood';
@@ -102,8 +101,11 @@ async function sendSolana(
     TransactionInstruction,
   } = await import('@solana/web3.js');
   const connection = new Connection(SOLANA_PUBLIC_RPC, 'confirmed');
-  const phantom = getSolanaProvider();
-  const payerAddress = phantom ? await connectSolanaWallet() : getCachedSolanaAddress();
+  const embedded = isSmartWalletSession();
+  const phantom = embedded ? null : getSolanaProvider();
+  const payerAddress = embedded
+    ? await import('@/lib/smart-wallet').then(wallet => wallet.getDerivedSolanaAddress())
+    : phantom ? await connectSolanaWallet() : null;
   if (!payerAddress) {
     throw new Error('Unlock your DeHub wallet or connect Phantom to pay on Solana.');
   }

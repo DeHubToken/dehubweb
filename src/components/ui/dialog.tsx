@@ -5,8 +5,15 @@ import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { OverlayOpenTracker } from "@/lib/overlay-open";
 import { guardOutsideDismiss } from "@/lib/overlay-dismiss";
+import { useWalletUnlockPrompt } from '@/lib/wallet-unlock-flow';
 
-const Dialog = DialogPrimitive.Root;
+const Dialog = ({ modal = true, onOpenChange, ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) => {
+  const unlockOpen = useWalletUnlockPrompt();
+  return <DialogPrimitive.Root {...props} modal={modal} onOpenChange={open => {
+    if (!open && unlockOpen) return;
+    onOpenChange?.(open);
+  }} />;
+};
 
 const DialogTrigger = DialogPrimitive.Trigger;
 

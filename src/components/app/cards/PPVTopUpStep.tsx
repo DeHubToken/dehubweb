@@ -108,7 +108,7 @@ export function PPVTopUpStep({ shortfall, formatCompact, onFunded, onCancel, onC
           return;
         }
 
-        const address = await getWalletAddress();
+        const address = await getWalletAddress({ silent: true });
         if (cancelled) return;
         addressRef.current = address;
 

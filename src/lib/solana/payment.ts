@@ -18,6 +18,7 @@ import type { Transaction } from '@solana/web3.js';
 import { connectSolanaWallet, getSolanaProvider } from './wallet';
 import { buildSolanaPayment, confirmSolanaPayment, type SolanaPaymentKind } from '@/lib/api/dehub/solana';
 import { SOLANA_MAINNET_CHAIN_ID, SOLANA_DEVNET_CHAIN_ID } from '@/lib/chains/constants';
+import { isSmartWalletSession } from '@/lib/connection-source';
 
 // Public mainnet-beta RPC forbids browser sendTransaction (403). Same
 // broadcast-friendly default and override as ./mint.ts.
@@ -45,15 +46,18 @@ export interface SolanaPaymentResult {
 export async function sendSolanaPayment(
   params: SolanaPaymentParams,
 ): Promise<SolanaPaymentResult> {
-  const provider = getSolanaProvider();
-  if (!provider) {
+  const embedded = isSmartWalletSession();
+  const provider = embedded ? null : getSolanaProvider();
+  if (!embedded && !provider) {
     throw new Error(
       'Phantom wallet required to pay on Solana. Install Phantom or open this page in the Phantom browser.',
     );
   }
 
   const chainId = params.chainId ?? SOLANA_MAINNET_CHAIN_ID;
-  const payerWallet = await connectSolanaWallet();
+  const payerWallet = embedded
+    ? await import('@/lib/smart-wallet').then(wallet => wallet.getDerivedSolanaAddress())
+    : await connectSolanaWallet();
 
   // 1. Backend builds the unsigned transfer.
   const build = await buildSolanaPayment({
@@ -85,7 +89,9 @@ export async function sendSolanaPayment(
   // 2. Sign as payer + broadcast.
   let signed: Transaction;
   try {
-    signed = await provider.signTransaction(tx);
+    signed = embedded
+      ? await import('@/lib/smart-wallet').then(wallet => wallet.signDerivedSolanaTransaction(tx))
+      : await provider!.signTransaction(tx);
   } catch (err: unknown) {
     const code = (err as { code?: number })?.code;
     if (code === 4001) throw new Error('Payment was rejected');

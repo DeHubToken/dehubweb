@@ -120,7 +120,7 @@ export default function BridgePage() {
         await switchChain(sourceChainId);
       } catch (switchErr: any) {
         toast.dismiss(loadingToastId);
-        toast.error('Chain switch failed', { description: `Could not switch to ${sourceChainLabel}. Please switch manually in your wallet.` });
+        toast.error('Could not prepare your wallet', { description: switchErr?.message || `Please try again on ${sourceChainLabel}.` });
         return;
       }
 

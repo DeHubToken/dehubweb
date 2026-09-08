@@ -9,14 +9,14 @@
 
 import { Interface, parseUnits, formatUnits } from 'ethers';
 import i18n from 'i18next';
-import { getWeb3AuthProvider, getAAProvider, getAAProviderForChain, setupAAProviderForChain, setupAAProvider, setAAProvider, getOrInitWeb3Auth, refreshWeb3AuthProvider } from '@/lib/web3auth';
+import { setupAAProviderForChain, setupAAProvider, getOrInitWeb3Auth } from '@/lib/web3auth';
 import { getAccount } from '@wagmi/core';
 import { sendTransaction, waitForTransactionReceipt, switchChain as wagmiSwitchChain } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import { isSmartWalletSession } from '@/lib/connection-source';
 import { requestSessionWalletConnect } from '@/lib/wallet-reconnect';
 import type { ChainId } from '@/components/app/ChainSelector';
-import { CHAIN_CONFIGS, BASE_CHAIN_ID, BNB_CHAIN_ID, initChainRpcUrls } from './dhb-token';
+import { CHAIN_CONFIGS, BASE_CHAIN_ID, initChainRpcUrls } from './dhb-token';
 
 // Hex type for AA transactions
 type Hex = `0x${string}`;
@@ -141,76 +141,24 @@ export function isWalletLockedError(error: unknown): boolean {
  * Get the active EIP-1193 provider - Web3Auth (social login) or wagmi (wallet).
  * For external wallets, provider is null -- callers use wagmi actions or public RPC instead.
  */
-async function getActiveProvider(chainId?: number): Promise<{ provider: any; isWeb3Auth: boolean }> {
-  // Prefer chain-specific AA provider (e.g. BNB) if chainId provided
-  if (chainId !== undefined) {
-    const chainAA = getAAProviderForChain(chainId);
-    if (chainAA) return { provider: chainAA, isWeb3Auth: true };
+export async function getActiveProvider(chainId: number = BASE_CHAIN_ID): Promise<{ provider: any; isWeb3Auth: boolean }> {
+  if (isSmartWalletSession()) {
+    const { ensureWalletUnlocked } = await import('@/lib/smart-wallet');
+    await ensureWalletUnlocked();
+    // Never substitute Base or the owner EOA for the requested Safe signer.
+    const provider = chainId === BASE_CHAIN_ID
+      ? await setupAAProvider()
+      : await setupAAProviderForChain(chainId);
+    if (!provider) throw new Error(`NO_SIGNER_ON_CHAIN:${chainId}`);
+    const actualChain = await provider.request({ method: 'eth_chainId' }) as string;
+    if (Number(BigInt(actualChain)) !== chainId) throw new Error(`NO_SIGNER_ON_CHAIN:${chainId}`);
+    return { provider, isWeb3Auth: true };
   }
-  // Prefer default AA provider (Base Smart Account, set after social login)
-  const aaProvider = getAAProvider();
-  if (aaProvider) return { provider: aaProvider, isWeb3Auth: true };
-
-  // Check wagmi (external wallet) BEFORE falling back to raw Web3Auth provider.
-  // External wallets use their own popups — that's expected and correct.
-  //
-  // Only trust this for sessions that aren't backed by the built-in smart wallet.
-  // wagmi auto-reconnects on its own (reconnectOnMount), independent of DeHub's
-  // login method — a browser extension authorized in an earlier, unrelated
-  // session can report isConnected/reconnecting even though the current user
-  // logged in with email/social. Routing a smart-wallet session through wagmi
-  // here is exactly what pops the real "pay gas" wallet prompt for a user whose
-  // posts should be gasless via the AA/Pimlico path.
-  if (!isSmartWalletSession()) {
-    const account = getAccount(wagmiConfig);
-    if (account.address && (account.isConnected || account.status === 'reconnecting')) {
-      return { provider: null, isWeb3Auth: false };
-    }
+  const account = getAccount(wagmiConfig);
+  if (account.address && (account.isConnected || account.status === 'reconnecting')) {
+    return { provider: null, isWeb3Auth: false };
   }
-
-  // Web3Auth is connected but AA provider not set up yet (page restore race condition or
-  // AA setup failed). Always try on-demand AA setup — the raw modal provider would route
-  // through WalletServices which shows an ETH gas popup and requires ETH balance.
-  // On-demand AA uses Pimlico paymaster so gas is sponsored (no ETH needed).
-  const web3authProvider = getWeb3AuthProvider();
-  if (web3authProvider) {
-    try {
-      console.log('[AA] AA provider missing — setting up on-demand...');
-      const onDemandAA = await setupAAProvider(web3authProvider);
-      if (onDemandAA) {
-        setAAProvider(onDemandAA);
-        console.log('[AA] On-demand AA provider ready');
-        return { provider: onDemandAA, isWeb3Auth: true };
-      }
-    } catch (e) {
-      console.warn('[AA] On-demand AA setup failed, falling back to raw provider:', e);
-    }
-    // AA setup failed — fall back to raw provider (will show WalletServices popup)
-    return { provider: web3authProvider, isWeb3Auth: true };
-  }
-
-  // Last resort: restore the smart-wallet key session (page refresh in-tab)
-  try {
-    const w3a = await getOrInitWeb3Auth();
-    if (w3a.connected && w3a.provider) {
-      console.log('[AA] Restored wallet session — setting up AA on-demand...');
-      const onDemandAA = await setupAAProvider(w3a.provider);
-      if (onDemandAA) {
-        setAAProvider(onDemandAA);
-        return { provider: onDemandAA, isWeb3Auth: true };
-      }
-      return { provider: w3a.provider, isWeb3Auth: true };
-    }
-  } catch { /* ignore */ }
-
   throw requestUnlockForSigning();
-}
-
-/**
- * Convert chain ID to hex format
- */
-function chainIdToHex(chainId: ChainId): Hex {
-  return `0x${chainId.toString(16)}` as Hex;
 }
 
 /**
@@ -242,150 +190,25 @@ async function publicRpcCall(rpcUrl: string, method: string, params: unknown[]):
  * Switch the wallet to a different chain
  */
 export async function switchChain(chainId: ChainId): Promise<void> {
-  // Ensure we have Alchemy RPC URLs before switching
   await initChainRpcUrls();
-
-  const { provider, isWeb3Auth } = await getActiveProvider(chainId);
-
-  const chainConfig = CHAIN_CONFIGS[chainId];
-  if (!chainConfig) {
-    throw new Error(`Unsupported chain ID: ${chainId}`);
-  }
-
-  // External wallet: use wagmi's switchChain action
-  if (!isWeb3Auth) {
-    try {
-      await wagmiSwitchChain(wagmiConfig, { chainId: chainId as any });
-      console.log('[AA] Switched chain via wagmi:', chainConfig.name);
-      return;
-    } catch (error) {
-      console.warn('[AA] wagmi switchChain failed:', error);
-      // Wagmi config only has Base -- if already on Base, ignore
-      if (chainId === BASE_CHAIN_ID) return;
-      throw new Error(`Please switch to ${chainConfig.name} network in your wallet app.`);
-    }
-  }
-
-  // Web3Auth path: use raw provider.request
-  const targetChainHex = chainIdToHex(chainId);
-
-  // 1. Check current chain -- skip if already correct
-  try {
-    const currentChainHex = await provider.request({ method: 'eth_chainId' }) as string;
-    if (parseInt(currentChainHex, 16) === chainId) {
-      console.log('[AA] Already on correct chain:', chainConfig.name);
-      return;
-    }
-  } catch {
-    // If we can't check, proceed with switch attempt
-  }
-
-  // 2. Try switching with retry
-  for (let attempt = 0; attempt < 2; attempt++) {
-    try {
-      await provider.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: targetChainHex }],
-      });
-      console.log('[AA] Switched to chain:', chainConfig.name);
-      return;
-    } catch (switchError: any) {
-      const code = switchError?.code ?? switchError?.data?.code;
-
-      // Chain not added -- try adding it
-      if (code === 4902 || switchError?.message?.includes('Unrecognized chain')) {
-        try {
-          await provider.request({
-            method: 'wallet_addEthereumChain',
-            params: [{
-              chainId: targetChainHex,
-              chainName: chainConfig.name,
-              nativeCurrency: {
-                name: chainId === BNB_CHAIN_ID ? 'BNB' : 'ETH',
-                symbol: chainId === BNB_CHAIN_ID ? 'BNB' : 'ETH',
-                decimals: 18,
-              },
-              rpcUrls: [chainConfig.rpcUrl],
-              blockExplorerUrls: [chainConfig.explorerUrl],
-            }],
-          });
-          console.log('[AA] Added and switched to chain:', chainConfig.name);
-          return;
-        } catch (addError) {
-          console.error('[AA] Failed to add chain:', addError);
-          throw new Error(`Failed to add ${chainConfig.name} network to wallet`);
-        }
-      }
-
-      // Method not supported — AA provider is single-chain; set up a chain-specific one
-      if (code === -32601 || code === -32603 ||
-        switchError?.message?.includes('does not exist')) {
-        console.warn('[AA] wallet_switchEthereumChain not supported, setting up chain-specific AA provider...');
-        try {
-          const chainAA = await setupAAProviderForChain(chainId);
-          if (chainAA) {
-            console.log('[AA] Chain-specific AA provider ready for', chainConfig.name);
-            return; // getActiveProvider(chainId) will now return this provider
-          }
-        } catch (e) {
-          console.warn('[AA] Chain-specific AA setup failed:', e);
-        }
-        throw new Error(
-          `Please switch to ${chainConfig.name} network in your wallet app and try again.`
-        );
-      }
-
-      // Transient error on first attempt -- retry
-      if (attempt === 0) {
-        console.warn('[AA] Chain switch attempt failed, retrying...', switchError);
-        await new Promise(r => setTimeout(r, 1000));
-        continue;
-      }
-
-      console.error('[AA] Failed to switch chain:', switchError);
-      throw new Error(`Failed to switch to ${chainConfig.name} network`);
-    }
+  const { isWeb3Auth } = await getActiveProvider(chainId);
+  if (isWeb3Auth) return;
+  const account = getAccount(wagmiConfig);
+  if (account.chainId === chainId) return;
+  await wagmiSwitchChain(wagmiConfig, { chainId: chainId as any });
+  if (getAccount(wagmiConfig).chainId !== chainId) {
+    throw new Error('The wallet did not change networks. Reconnect it and try again.');
   }
 }
 
 /**
  * Make sure whatever is about to sign is actually on `chainId`, or throw.
  *
- * `writeContractAA`'s `chainId` option only reaches the wagmi branch. A
- * smart-account session signs with whichever AA provider is loaded, and the
- * default one is built for Base — so a call built for another chain goes out
- * on Base unless a provider for that chain has been set up first. That is not
- * a failed transaction: the contract address it names has no code on Base, so
- * a call carrying value succeeds, the receipt comes back status 1, and the
- * value is gone. Anything that writes on a chain the caller chose at runtime
- * goes through here before it builds calldata.
+ * Smart wallets prepare a signer for that chain; external wallets prompt for
+ * a network change. All shared senders enforce this before sending.
  */
 export async function ensureSignerOnChain(chainId: ChainId): Promise<void> {
-  const { isWeb3Auth } = await getActiveProvider(chainId);
-
-  // External wallet: wagmi carries the chain id on the call itself and the
-  // connector prompts for the switch.
-  if (!isWeb3Auth) {
-    await switchChain(chainId);
-    return;
-  }
-
-  // The session's default AA provider is Base's; every other chain needs one
-  // of its own, which exists only for the chains in AA_CHAIN_CONFIGS.
-  if (chainId === BASE_CHAIN_ID) return;
-
-  let chainAA = getAAProviderForChain(chainId);
-  if (!chainAA) {
-    try {
-      chainAA = await setupAAProviderForChain(chainId);
-    } catch (error) {
-      console.warn('[AA] Chain-specific AA provider failed for', chainId, error);
-      chainAA = null;
-    }
-  }
-  if (!chainAA) {
-    throw new Error(`NO_SIGNER_ON_CHAIN:${chainId}`);
-  }
+  await switchChain(chainId);
 }
 
 /**
@@ -427,44 +250,21 @@ export async function isSmartAccountSession(): Promise<boolean> {
  * unhandled one is how a passive read becomes a console error.
  */
 export async function getWalletAddress(opts?: { silent?: boolean }): Promise<string> {
-  // Prefer AA provider (Smart Account address)
-  const aaProvider = getAAProvider();
-  if (aaProvider) {
-    const accounts = await aaProvider.request({ method: 'eth_accounts' }) as string[];
-    if (accounts?.length) return accounts[0];
-  }
-
-  // Fall back to raw Web3Auth EOA provider
-  const web3authProvider = getWeb3AuthProvider();
-  if (web3authProvider) {
-    const accounts = await web3authProvider.request({ method: 'eth_accounts' }) as string[];
-    if (accounts?.length) return accounts[0];
-  }
-
-  // Fall back to wagmi -- same guard as getActiveProvider: a smart-wallet
-  // (social-login) session must never resolve to a stale, auto-reconnected
-  // wagmi address just because the built-in wallet/AA provider isn't warmed
-  // up yet. Falling through to requestUnlockForSigning below is correct here.
-  if (!isSmartWalletSession()) {
-    const account = getAccount(wagmiConfig);
-    if (account.address) return account.address;
-  }
-
-  // Nothing in memory — but the unlock may just be sitting in the vault,
-  // unread because this is the first signing attempt since a reload. Restoring
-  // it costs one IDB read; NOT doing it is what made "post right after signup"
-  // ask for the password a second time. Do this before any prompt.
-  try {
-    const w3a = await getOrInitWeb3Auth();
-    if (w3a.connected && w3a.provider) {
-      const accounts = await w3a.provider.request({ method: 'eth_accounts' }) as string[];
-      if (accounts?.length) return accounts[0];
+  if (opts?.silent) {
+    // Public balance/history reads need the session address, never a decrypted key.
+    const address = localStorage.getItem('dehub_wallet');
+    if (address) return address;
+    if (!isSmartWalletSession()) {
+      const account = getAccount(wagmiConfig);
+      if (account.address) return account.address;
     }
-  } catch { /* fall through to the prompt below */ }
-
-  throw opts?.silent
-    ? new Error(noSigningProviderMessage())
-    : requestUnlockForSigning();
+    throw new Error(noSigningProviderMessage());
+  }
+  const { provider, isWeb3Auth } = await getActiveProvider(BASE_CHAIN_ID);
+  if (!isWeb3Auth) return getAccount(wagmiConfig).address!;
+  const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+  if (accounts?.length) return accounts[0];
+  throw new Error('Could not read your wallet address. Please try again.');
 }
 
 /**
@@ -663,6 +463,7 @@ export async function writeContractAA(
     chainId?: number;
   }
 ): Promise<AAWriteResult> {
+  await ensureSignerOnChain((options?.chainId ?? BASE_CHAIN_ID) as ChainId);
   const { provider, isWeb3Auth } = await getActiveProvider(options?.chainId);
   const context = options?.context || 'send transaction';
 
@@ -670,7 +471,9 @@ export async function writeContractAA(
   const data = contractInterface.encodeFunctionData(functionName, args) as Hex;
   // getActiveProvider above has already raised the unlock request if one was
   // needed, so this read must not raise a second one.
-  const fromAddress = await getWalletAddress({ silent: true });
+  const fromAddress = isWeb3Auth
+    ? (await provider.request({ method: 'eth_accounts' }) as string[])[0]
+    : getAccount(wagmiConfig).address;
 
   // Estimate gas
   let gasLimit: Hex | undefined;
@@ -743,35 +546,11 @@ export async function writeContractAA(
           : '0x0',
       };
 
-      const sendTx = async (p: any) => p.request({
+      // Never retry a failed Safe send through its owner EOA.
+      txHash = await provider.request({
         method: 'eth_sendTransaction',
         params: [txParams],
-      }) as Promise<string>;
-      try {
-        txHash = await sendTx(provider);
-      } catch (firstErr: unknown) {
-        const msg = String(firstErr).toLowerCase();
-        const isSessionError = (
-          msg.includes('unable to find matching address') ||
-          msg.includes('torus keyring') ||
-          msg.includes('unknown account')
-        );
-        if (isSessionError) {
-          // The Torus key shard wasn't loaded after session restore — try re-initializing
-          // the Web3Auth provider (keeps storage so session can be re-read from openlogin_* keys).
-          console.warn('[AA] Provider session error - refreshing Web3Auth provider before retry...');
-          const freshProvider = await refreshWeb3AuthProvider();
-          if (freshProvider) {
-            console.log('[AA] Provider refreshed, retrying transaction...');
-            txHash = await sendTx(freshProvider);
-          } else {
-            // Session truly expired — tell user to log in again
-            throw new Error('Session expired. Please log in again to complete this transaction.');
-          }
-        } else {
-          throw firstErr;
-        }
-      }
+      }) as string;
     } else {
       // External wallet via wagmi -- use wagmi's sendTransaction
       // which properly routes through the wallet connector for signing
@@ -780,7 +559,7 @@ export async function writeContractAA(
         data: data as `0x${string}`,
         gas: gasLimitBigInt,
         value: options?.value ? BigInt(options.value) : undefined,
-        ...(options?.chainId ? { chainId: options.chainId as any } : {}),
+        chainId: (options?.chainId ?? BASE_CHAIN_ID) as any,
       });
     }
 
@@ -796,7 +575,7 @@ export async function writeContractAA(
             const receipt = await waitForTransactionReceipt(wagmiConfig, {
               hash: txHash as `0x${string}`,
               confirmations,
-              ...(options?.chainId ? { chainId: options.chainId as any } : {}),
+              chainId: (options?.chainId ?? BASE_CHAIN_ID) as any,
             });
             return {
               status: receipt.status === 'success' ? 1 : 0,
@@ -873,9 +652,7 @@ export async function writeBatchAA(
 ): Promise<AAWriteResult> {
   const context = options?.context || 'send transaction';
   if (!calls.length) throw new Error('writeBatchAA called with no calls');
-
-  const aaProvider: any =
-    (options?.chainId !== undefined ? getAAProviderForChain(options.chainId) : null) ?? getAAProvider();
+  const { provider: aaProvider } = await getActiveProvider(options?.chainId);
 
   const bundlerClient = aaProvider?.bundlerClient;
   const smartAccount = aaProvider?.smartAccount;
