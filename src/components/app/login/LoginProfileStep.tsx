@@ -382,7 +382,7 @@ export function LoginProfileStep() {
         <Label className="text-white/70">{t('settings.profilePicture')}</Label>
         <div className="flex items-center gap-4">
           <div className="relative">
-            <Avatar className="h-16 w-16 rounded-full border border-white/10">
+            <Avatar className="h-16 w-16 rounded-lg border border-white/10">
               <AvatarImage src={avatarPreview} className="object-cover" />
               <AvatarFallback className="bg-white/10 text-lg font-medium text-white">
                 {displayName.trim()[0]?.toUpperCase() || username.trim()[0]?.toUpperCase() || 'U'}

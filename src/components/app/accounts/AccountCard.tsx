@@ -62,7 +62,7 @@ export const AccountCard = memo(function AccountCard({ listing, onClick, isOwn }
     >
       {/* The account's face. */}
       {avatar ? (
-        <img src={avatar} alt="" className="w-12 h-12 rounded-full object-cover shrink-0" loading="lazy" />
+        <img src={avatar} alt="" className="w-12 h-12 rounded-lg object-cover shrink-0" loading="lazy" />
       ) : (
         <span className="w-12 h-12 rounded-full bg-white/10 shrink-0" />
       )}

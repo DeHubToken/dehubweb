@@ -109,7 +109,7 @@ export function SellTab() {
       <div className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-4">
         <div className="flex items-center gap-3">
           {avatar ? (
-            <img src={avatar} alt="" className="w-11 h-11 rounded-full object-cover shrink-0" />
+            <img src={avatar} alt="" className="w-11 h-11 rounded-lg object-cover shrink-0" />
           ) : (
             <span className="w-11 h-11 rounded-full bg-white/10 shrink-0" />
           )}
