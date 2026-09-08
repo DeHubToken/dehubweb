@@ -130,4 +130,26 @@ describe('mergeLiveCounts', () => {
     // Still stale: the list itself was never revalidated, only its numbers.
     expect(query.state.dataUpdatedAt).toBe(0);
   });
+
+  it('accepts fresh totals immediately when the server confirms the cached reaction', () => {
+    queryClient.setQueryData(KEY, feed([{ tokenId: 1, isLiked: true, totalVotes: { for: 2 } }]));
+    setVoteCache('1', { isLiked: true, isDisliked: false, myReaction: 'love', likeCount: 2, dislikeCount: 0 });
+    mergeLiveCounts(queryClient, [{ tokenId: 1, isLiked: true, isDisliked: false, myReaction: 'love', totalVotes: { for: 12 } }]);
+    expect(itemsIn(queryClient)[0].totalVotes.for).toBe(12);
+  });
+
+  it('shares refreshed totals with profile and media feeds', () => {
+    const profileKey = ['dehub-user-content', 'creator', 'viewer'];
+    const mediaKey = ['dehub-feed', 'video'];
+    for (const key of [profileKey, mediaKey]) {
+      queryClient.setQueryData(key, { pages: [{ data: [{ tokenId: 1, totalVotes: { for: 2 }, isSaved: true }] }], pageParams: [0] });
+    }
+    mergeLiveCounts(queryClient, [{ tokenId: 1, totalVotes: { for: 12 }, commentCount: 3 }]);
+    for (const key of [profileKey, mediaKey]) {
+      const row = (queryClient.getQueryData(key) as any).pages[0].data[0];
+      expect(row.totalVotes.for).toBe(12);
+      expect(row.commentCount).toBe(3);
+      expect(row.isSaved).toBe(true);
+    }
+  });
 });

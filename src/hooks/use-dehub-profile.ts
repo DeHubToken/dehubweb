@@ -7,6 +7,7 @@
  */
 
 import { useQuery, useInfiniteQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
+import { mergeLiveCounts } from '@/lib/live-counts';
 import { useMemo, useEffect } from 'react';
 import i18n from 'i18next';
 import { getAccountInfo, getAccountByUsername, getAuthToken, getNFTInfo, type DeHubUser } from '@/lib/api/dehub';
@@ -369,6 +370,7 @@ export function useDeHubUserContent({
   search = '',
   filters = EMPTY_PROFILE_FILTERS,
 }: UseDeHubUserContentOptions = {}) {
+  const queryClient = useQueryClient();
   const trimmedSearch = search.trim();
   return useInfiniteQuery({
     queryKey: ['dehub-user-content', userId, viewerAddress, sortMode, trimmedSearch, filters],
@@ -417,6 +419,7 @@ export function useDeHubUserContent({
       
       const json = await response.json();
       const items = json.result || [];
+      mergeLiveCounts(queryClient, items);
       
       // Enrich quote posts that are missing their quotedPost data
       const needsEnrich: { idx: number; item: any }[] = [];

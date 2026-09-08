@@ -11,11 +11,11 @@
  */
 
 import type { InfiniteData, QueryClient } from '@tanstack/react-query';
-import { applyVoteStateToNFT } from '@/lib/engagement';
-import { getVoteCache } from '@/lib/vote-cache';
+import { applyVoteStateToNFT, isVoteConfirmed, type CountSource } from '@/lib/engagement';
+import { getVoteCache, reconcileVoteCache } from '@/lib/vote-cache';
 
 /** A raw /api/feed row, as cached in a unified-feed page's `items`. */
-export type RawFeedRow = Record<string, unknown> & { tokenId?: number | string };
+export type RawFeedRow = Record<string, unknown> & CountSource & { tokenId?: number | string };
 
 /**
  * The only fields a background refresh may overwrite on a card already on
@@ -70,21 +70,25 @@ export function mergeLiveCounts(queryClient: QueryClient, rows: readonly RawFeed
   for (const row of rows) {
     if (row?.tokenId === undefined || row.tokenId === null) continue;
     fresh.set(String(row.tokenId), row);
+    reconcileVoteCache(String(row.tokenId), row);
   }
   if (!fresh.size) return;
 
-  for (const query of queryClient.getQueryCache().findAll({ queryKey: ['unified-feed'] })) {
-    const data = query.state.data as InfiniteData<{ items?: RawFeedRow[] }> | undefined;
+  for (const query of queryClient.getQueryCache().findAll({
+    predicate: (query) => ['unified-feed', 'dehub-feed', 'dehub-user-content'].includes(String(query.queryKey[0])),
+  })) {
+    const data = query.state.data as InfiniteData<{ items?: RawFeedRow[]; data?: RawFeedRow[] }> | undefined;
     if (!data?.pages?.length) continue;
 
     let changed = false;
     const pages = data.pages.map((page) => {
-      if (!Array.isArray(page?.items)) return page;
+      const listKey = Array.isArray(page?.items) ? 'items' : Array.isArray(page?.data) ? 'data' : null;
+      if (!listKey) return page;
 
       let pageChanged = false;
       // `any` deliberately: a cached page holds raw API objects, not one of the
       // mapped card types, and this walks them by field name.
-      const items = (page.items as any[]).map((item: any) => {
+      const items = (page[listKey] as any[]).map((item: any) => {
         const row = item?.tokenId === undefined ? undefined : fresh.get(String(item.tokenId));
         if (!row) return item;
 
@@ -100,12 +104,13 @@ export function mergeLiveCounts(queryClient: QueryClient, rows: readonly RawFeed
         pageChanged = true;
         const merged = { ...item, ...patch };
         const pendingVote = getVoteCache(String(item.tokenId));
-        return pendingVote ? applyVoteStateToNFT(merged, pendingVote) : merged;
+        return pendingVote && !isVoteConfirmed(row, pendingVote)
+          ? applyVoteStateToNFT(merged, pendingVote) : merged;
       });
 
       if (!pageChanged) return page;
       changed = true;
-      return { ...page, items };
+      return { ...page, [listKey]: items };
     });
 
     if (!changed) continue;
@@ -116,4 +121,3 @@ export function mergeLiveCounts(queryClient: QueryClient, rows: readonly RawFeed
     queryClient.setQueryData(query.queryKey, { ...data, pages }, { updatedAt: query.state.dataUpdatedAt });
   }
 }
-
