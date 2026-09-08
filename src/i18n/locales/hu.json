@@ -820,6 +820,11 @@
   "notifications": {
     "title": "Értesítések",
     "markAllRead": "Összes olvasottnak jelölése",
+    "sortOrder": "Értesítési megbízás",
+    "priority": "Elsőbbség",
+    "newest": "Legújabb",
+    "actNow": "Cselekedj most",
+    "important": "Fontos",
     "settings": "Értesítési beállítások",
     "actions": "Műveletek",
     "markAllAsRead": "Összes olvasottnak jelölése",
@@ -885,7 +890,8 @@
       "here": "{{name}} mindenkinek üzenetet küldött a közösségben",
       "hereNamed": "{{name}} mindenkinek üzenetet küldött „{{community}}” területén"
     },
-    "byEmail": "E-mailben"
+    "byEmail": "E-mailben",
+    "byText": "Szöveg szerint"
   },
   "leaderboard": {
     "title": "Ranglista",

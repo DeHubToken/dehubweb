@@ -830,6 +830,11 @@
   "notifications": {
     "title": "Paziņojumi",
     "markAllRead": "Atzīmēt visus kā lasītus",
+    "sortOrder": "Paziņojuma secība",
+    "priority": "Prioritāte",
+    "newest": "Jaunākais",
+    "actNow": "Rīcībā uzreiz",
+    "important": "Svarīgi",
     "settings": "Paziņojumu iestatījumi",
     "actions": "Darbības",
     "markAllAsRead": "Atzīmēt visus kā lasītus",
@@ -895,7 +900,8 @@
       "here": "{{name}} nosūtīja ziņojumu visiem kopienas dalībniekiem",
       "hereNamed": "{{name}} ziņoja visiem \"{{community}}\""
     },
-    "byEmail": "Ar e-pastu"
+    "byEmail": "Ar e-pastu",
+    "byText": "Pēc teksta"
   },
   "leaderboard": {
     "title": "Līderu tabula",

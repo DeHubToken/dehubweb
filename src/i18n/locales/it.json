@@ -845,6 +845,11 @@
   "notifications": {
     "title": "Notifiche",
     "markAllRead": "Segna tutto come letto",
+    "sortOrder": "Ordine di notifica",
+    "priority": "Priorità",
+    "newest": "Più recenti",
+    "actNow": "Agisci ora",
+    "important": "Importante",
     "settings": "Impostazioni notifiche",
     "actions": "Azioni",
     "markAllAsRead": "Segna tutto come letto",

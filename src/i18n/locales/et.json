@@ -820,6 +820,11 @@
   "notifications": {
     "title": "Teated",
     "markAllRead": "Märgi kõik loetuks",
+    "sortOrder": "Teavituskorraldus",
+    "priority": "Prioriteet",
+    "newest": "Uusimad",
+    "actNow": "Tegutse kohe",
+    "important": "Oluline",
     "settings": "Teavitusseaded",
     "actions": "Toimingud",
     "markAllAsRead": "Märgi kõik loetuks",
@@ -885,7 +890,8 @@
       "here": "{{name}} saatis sõnumi kõigile kogukonna liikmetele",
       "hereNamed": "{{name}} saatis sõnumi kõigile asukohas „{{community}}“"
     },
-    "byEmail": "E-postiga"
+    "byEmail": "E-postiga",
+    "byText": "Teksti järgi"
   },
   "leaderboard": {
     "title": "Edetabel",

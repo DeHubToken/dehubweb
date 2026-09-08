@@ -821,6 +821,11 @@
   "notifications": {
     "title": "Bildirişlər",
     "markAllRead": "Hamısını oxunmuş et",
+    "sortOrder": "Bildiriş sifarişi",
+    "priority": "Prioritet",
+    "newest": "Ən yeni",
+    "actNow": "İndi hərəkət et",
+    "important": "Vacib",
     "settings": "Bildiriş Parametrləri",
     "actions": "Əməliyyatlar",
     "markAllAsRead": "Hamısını oxunmuş et",
@@ -886,7 +891,8 @@
       "here": "{{name}} icmadakı hər kəsə mesaj yazdı",
       "hereNamed": "{{name}} “{{community}}” -da hər kəs mesajlaşdı"
     },
-    "byEmail": "E-poçt vasitəsilə"
+    "byEmail": "E-poçt vasitəsilə",
+    "byText": "Mətn ilə"
   },
   "leaderboard": {
     "title": "Lider Lövhəsi",

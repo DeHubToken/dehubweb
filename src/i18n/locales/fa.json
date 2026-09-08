@@ -829,6 +829,11 @@
   "notifications": {
     "title": "اعلان‌ها",
     "markAllRead": "همه را خوانده علامت بزن",
+    "sortOrder": "دستور ابلاغ",
+    "priority": "اولویت",
+    "newest": "جدیدترین",
+    "actNow": "همین الان عمل کنید.",
+    "important": "مهم",
     "settings": "تنظیمات اعلان‌ها",
     "actions": "اقدامات",
     "markAllAsRead": "همه را خوانده علامت بزن",
@@ -894,7 +899,8 @@
       "here": "{{name}} به همه افراد جامعه پیام داد",
       "hereNamed": "{{name}} به همه افراد با شناسه «{{community}}» پیام داد"
     },
-    "byEmail": "از طریق ایمیل"
+    "byEmail": "از طریق ایمیل",
+    "byText": "از متن"
   },
   "leaderboard": {
     "title": "جدول امتیازات",

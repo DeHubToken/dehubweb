@@ -790,6 +790,11 @@
   "notifications": {
     "title": "الإشعارات",
     "markAllRead": "علّم الكل كمقروء",
+    "sortOrder": "ترتيب التنبيهات",
+    "priority": "الأولوية",
+    "newest": "الأحدث",
+    "actNow": "تصرف الآن",
+    "important": "مهم",
     "settings": "إعدادات الإشعارات",
     "actions": "الإجراءات",
     "markAllAsRead": "علّم الكل كمقروء",
@@ -855,7 +860,8 @@
       "here": "{{name}} أرسل رسالة للجميع في المجموعة",
       "hereNamed": "{{name}} أرسل رسالة للجميع في “{{community}}”"
     },
-    "byEmail": "بالإيميل"
+    "byEmail": "بالإيميل",
+    "byText": "بالرسالة النصية"
   },
   "leaderboard": {
     "title": "لوحة الترتيب",
@@ -1904,6 +1910,7 @@
     "homeStage": "صرفها من Stage إنت مستضيفه.",
     "homePage": "صرفها هنا، فوق في الصفحة دي.",
     "goldenHourStarted": "Golden Hour شغالة لـ {{minutes}} دقيقة — أي حاجة تنشرها هسي بتتحسب دبل",
+    "pickCategory": "تصنيف...",
     "trendJacked": "{{category}} عامل ترند لـ {{minutes}} دقيقة",
     "actsPost": "بتعمل حاجة على بوست من بوستاتك. اضغط عشان تختار واحد.",
     "actsGift": "هدية — بتنزل في بوست زول تاني. اضغط عشان تختار واحدة.",
@@ -1922,8 +1929,7 @@
     "noComments": "لسه ما علقت.",
     "noStages": "مافي أي مرحلة ليك شغالة أو مجدولة هسي.",
     "noFlaresLeft": "ما فاضل إشارات دخان الليلة دي",
-    "spentFor": "{{power}} جاري لمدة {{minutes}} دقيقة",
-    "pickCategory": "تصنيف..."
+    "spentFor": "{{power}} جاري لمدة {{minutes}} دقيقة"
   },
   "work": {
     "budgetExhausted": "ميزانية الجائزة دي كلها اتحجزت."

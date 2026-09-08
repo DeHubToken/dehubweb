@@ -821,6 +821,11 @@
   "notifications": {
     "title": "Ilmoitukset",
     "markAllRead": "Merkitse kaikki luetuksi",
+    "sortOrder": "Ilmoitustilaus",
+    "priority": "Prioriteetti",
+    "newest": "Uusin",
+    "actNow": "Toimi nyt",
+    "important": "Tärkeää",
     "settings": "Ilmoitusasetukset",
     "actions": "Toiminnot",
     "markAllAsRead": "Merkitse kaikki luetuksi",
@@ -886,7 +891,8 @@
       "here": "{{name}} lähetti viestin kaikille yhteisön jäsenille",
       "hereNamed": "{{name}} viestitti kaikille kohteessa \"{{community}}\""
     },
-    "byEmail": "Sähköpostitse"
+    "byEmail": "Sähköpostitse",
+    "byText": "Tekstin mukaan"
   },
   "leaderboard": {
     "title": "Tulostaulukko",

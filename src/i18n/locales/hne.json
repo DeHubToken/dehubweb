@@ -825,6 +825,11 @@
   "notifications": {
     "title": "सूचना",
     "markAllRead": "सब पढ़े चिन्हित करव",
+    "sortOrder": "अधिसूचना अनुक्रम",
+    "priority": "प्राथमिकता",
+    "newest": "नवा",
+    "actNow": "अभी काम करव",
+    "important": "महत्वपूर्ण",
     "settings": "सूचना सेटिंग",
     "actions": "कार्य",
     "markAllAsRead": "सब पढ़े चिन्हित करव",
@@ -883,7 +888,8 @@
     "community": {
       "requested": "{{name}} अपन समुदाय म शामिल होए बर अनुरोध करिस"
     },
-    "byEmail": "ईमेल ले"
+    "byEmail": "ईमेल ले",
+    "byText": "पाठ से"
   },
   "leaderboard": {
     "title": "लीडरबोर्ड",
@@ -1959,7 +1965,10 @@
     "homeComment": "कोनो दूसर के थ्रेड म अपन कमेंट म।",
     "homeStage": "कोनो स्टेज ले जेला तू होस्ट करत हस।",
     "homePage": "इथे, ए पन्ना के ऊपर म।",
+    "flaresLeft": "फलेयर्स",
+    "giftedTo": "उपहार → #{{id}}",
     "goldenHourStarted": "Golden Hour {{minutes}} मिनट ले चलत हे – जे पोस्ट तू करबे ओखर डबल गिने जाही",
+    "pickCategory": "श्रेणी…",
     "trendJacked": "{{category}} {{minutes}} मिनट ले ट्रेंड करत हे",
     "actsPost": "आपकी एक पोस्ट पर काम करता है। चुनने के लिए टैप करें।",
     "actsGift": "एक उपहार — यह किसी और की पोस्ट पर गिरता है। चुनने के लिए टैप करें।",
@@ -1978,10 +1987,7 @@
     "noComments": "आपने अभी तक टिप्पणी नहीं की है।",
     "noStages": "आपका कोई भी स्टेज अभी लाइव या निर्धारित नहीं है।",
     "noFlaresLeft": "इस चक्र में कोई सिग्नल फ्लेयर्स नहीं बचे हैं",
-    "spentFor": "{{minutes}} मिनट के लिए {{power}} चल रहा है",
-    "flaresLeft": "फलेयर्स",
-    "giftedTo": "उपहार → #{{id}}",
-    "pickCategory": "श्रेणी…"
+    "spentFor": "{{minutes}} मिनट के लिए {{power}} चल रहा है"
   },
   "work": {
     "budgetExhausted": "ये इनाम के पूरा बजट लग गे हे।"

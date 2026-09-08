@@ -877,6 +877,11 @@
   "notifications": {
     "title": "Mga Abiso",
     "markAllRead": "Markahang nabasa lahat",
+    "sortOrder": "Notification",
+    "priority": "Priyoridad",
+    "newest": "Pinakabago",
+    "actNow": "Kumilos ngayon",
+    "important": "Mahalaga",
     "settings": "Mga Setting ng Abiso",
     "actions": "Mga Aksyon",
     "markAllAsRead": "Markahang nabasa na ang lahat",
@@ -942,7 +947,8 @@
       "here": "Nagpadala ng mensahe si {{name}} sa lahat ng tao sa komunidad",
       "hereNamed": "Nagpadala ang {{name}} ng mensahe sa lahat sa “{{community}}”"
     },
-    "byEmail": "Sa pamamagitan ng email"
+    "byEmail": "Sa pamamagitan ng email",
+    "byText": "Sa pamamagitan ng text"
   },
   "leaderboard": {
     "title": "Leaderboard",

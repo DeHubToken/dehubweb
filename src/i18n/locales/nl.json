@@ -1041,6 +1041,11 @@
   "notifications": {
     "title": "Meldingen",
     "markAllRead": "Alles als gelezen markeren",
+    "sortOrder": "Meldingsvolgorde",
+    "priority": "Prioriteit",
+    "newest": "Nieuwste",
+    "actNow": "Handelen nu",
+    "important": "Belangrijk",
     "settings": "Meldingsinstellingen",
     "actions": "Acties",
     "markAllAsRead": "Alles als gelezen markeren",

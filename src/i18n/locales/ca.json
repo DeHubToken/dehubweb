@@ -821,6 +821,11 @@
   "notifications": {
     "title": "Notificacions",
     "markAllRead": "Marcar tot com a llegit",
+    "sortOrder": "Ordre de notificació",
+    "priority": "Prioritat",
+    "newest": "Més recent",
+    "actNow": "Actua ara",
+    "important": "Important",
     "settings": "Configuració de notificacions",
     "actions": "Accions",
     "markAllAsRead": "Marcar tot com a llegit",
@@ -886,7 +891,8 @@
       "here": "{{name}} ha enviat un missatge a tothom de la comunitat",
       "hereNamed": "{{name}}ha enviat un missatge a tothom a “{{community}}”"
     },
-    "byEmail": "Per correu electrònic"
+    "byEmail": "Per correu electrònic",
+    "byText": "Per text"
   },
   "leaderboard": {
     "title": "Classificació",
