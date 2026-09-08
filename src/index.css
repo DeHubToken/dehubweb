@@ -1067,11 +1067,12 @@ button.cursor-square-item:hover {
    that one stayed pinned, so the chrome half-vanished and left the pill
    hanging in the gap the header used to fill.
 
-   Driven from CSS off a single `data-nav-hidden` flag on <html> (written by
-   StickyNavHideSync) rather than per page: the pages keep the pill markup
-   they already have, PersistentPageCache's twenty-odd mounted pages don't
-   re-render on every direction flip, and a page added later inherits the
-   behaviour for free.
+   Ordinary pills follow `data-nav-hidden` (scroll direction) as before. Large
+   pills can opt into `data-nav-return-top`; those follow the depth-based
+   `data-sticky-nav-hidden` flag instead, so they do not return over content
+   until the page reaches the top. Both flags are written once by
+   StickyNavHideSync, avoiding per-page scroll re-renders across
+   PersistentPageCache's twenty-odd mounted pages.
 
    `-100% - 3rem` because the pill is `sticky top-11`: its own height alone
    only lifts it back to the header line, and the extra 3rem clears the 2.75rem
@@ -1097,7 +1098,9 @@ button.cursor-square-item:hover {
   }
 
   html:not([data-jungle-phase])[data-nav-hidden='true']
-    [data-feed-nav-outer]:not([data-nav-hide='off']):not([data-nav-hide='pin']) {
+    [data-feed-nav-outer]:not([data-nav-hide='off']):not([data-nav-hide='pin']):not([data-nav-return-top]),
+  html:not([data-jungle-phase])[data-sticky-nav-hidden='true']
+    [data-feed-nav-outer][data-nav-return-top]:not([data-nav-hide='off']):not([data-nav-hide='pin']) {
     transform: translateY(calc(-100% - 3rem));
   }
 
@@ -1109,7 +1112,9 @@ button.cursor-square-item:hover {
      above: a browser without `:has()` drops the rule it cannot parse, and this
      way that costs the typing exemption instead of the whole feature. */
   html:not([data-jungle-phase])[data-nav-hidden='true']
-    [data-feed-nav-outer]:has(:is(input, textarea, [contenteditable]):focus) {
+    [data-feed-nav-outer]:not([data-nav-return-top]):has(:is(input, textarea, [contenteditable]):focus),
+  html:not([data-jungle-phase])[data-sticky-nav-hidden='true']
+    [data-feed-nav-outer][data-nav-return-top]:has(:is(input, textarea, [contenteditable]):focus) {
     transform: none;
   }
 
@@ -1147,8 +1152,8 @@ button.cursor-square-item:hover {
    mark their pill `data-nav-hide-desktop` and it rides the scroll on desktop
    the way every pill already does on mobile.
 
-   Keyed on `data-scroll-hidden` (scroll direction alone), NOT `data-nav-hidden`
-   (scroll direction OR an open overlay). A centred desktop dialog scrims the
+   Keyed on `data-sticky-scroll-hidden` (scroll depth alone), not the overlay-
+   aware mobile flag. A centred desktop dialog scrims the
    pill already, so folding overlays in would only add a visible slide behind
    the backdrop each time one opened.
 
@@ -1163,12 +1168,12 @@ button.cursor-square-item:hover {
     transition: transform 300ms ease-in-out;
   }
 
-  html:not([data-jungle-phase])[data-scroll-hidden='true']
+  html:not([data-jungle-phase])[data-sticky-scroll-hidden='true']
     [data-feed-nav-outer][data-nav-hide-desktop]:not([data-nav-hide='off']) {
     transform: translateY(-100%);
   }
 
-  html:not([data-jungle-phase])[data-scroll-hidden='true']
+  html:not([data-jungle-phase])[data-sticky-scroll-hidden='true']
     [data-feed-nav-outer][data-nav-hide-desktop]:has(
       :is(input, textarea, [contenteditable]):focus
     ) {
