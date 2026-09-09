@@ -1,10 +1,10 @@
 /**
- * Profile Cache Seeding (Visual-only)
- * ====================================
- * Pre-populates ONLY visual fields (avatar, cover, name, handle)
- * so the profile page renders the header image instantly.
- * Stats (followers, following, posts) are NEVER seeded to avoid
- * the "0 followers" flash bug.
+ * Profile Cache Seeding
+ * =====================
+ * Pre-populates whatever trustworthy profile fields the source already has.
+ * Missing stats stay undefined so they render as skeletons rather than a false
+ * zero; notification actor snapshots can additionally paint counts and the
+ * viewer relationship immediately while the full profile revalidates.
  */
 
 import { QueryClient } from '@tanstack/react-query';
@@ -19,12 +19,18 @@ interface SeedableProfileData {
   avatarImageUrl?: string;
   coverUrl?: string;
   badgeBalance?: number;
+  followers?: number;
+  following?: number;
+  postsCount?: number;
+  isFollowing?: boolean;
+  followsYou?: boolean;
+  isPending?: boolean;
+  isPrivate?: boolean;
 }
 
 /**
- * Seed the profile query cache with VISUAL-ONLY data from a feed card.
- * Only avatar, cover, name, and handle are seeded.
- * Stats are intentionally excluded — let the real fetch populate them.
+ * Seed the profile query cache without inventing missing values. The real
+ * profile request is always invalidated so this remains a first-paint hint.
  */
 export function seedProfileCache(
   queryClient: QueryClient,
@@ -35,32 +41,38 @@ export function seedProfileCache(
 
   const username = data.username?.replace('@', '');
   const address = data.address || '';
+  const lookupKey = username || address;
 
   const avatarRaw = data.avatarUrl || data.avatarImageUrl;
 
   const keys = [
-    ['dehub-profile', username, viewerAddress],
-    ['dehub-profile', username, undefined],
+    ['dehub-profile', lookupKey, viewerAddress],
+    ['dehub-profile', lookupKey, undefined],
   ];
 
   for (const key of keys) {
     const existing = queryClient.getQueryData<ProfileData>(key);
 
-    // Existing visual-only shell can get stuck as "fresh" due staleTime,
-    // so explicitly mark it stale to force a real profile fetch on mount.
     if (existing) {
-      const isVisualOnlyShell =
-        existing.followers == null ||
-        existing.following == null ||
-        existing.postsCount == null;
-
-      if (isVisualOnlyShell) {
-        queryClient.invalidateQueries({ queryKey: key, exact: true, refetchType: 'none' });
-      }
+      queryClient.setQueryData<ProfileData>(key, {
+        ...existing,
+        ...(data.displayName ? { name: data.displayName } : {}),
+        ...(avatarRaw ? { avatarUrl: avatarRaw.startsWith('http') ? avatarRaw : buildAvatarUrl(address, avatarRaw) } : {}),
+        ...(data.coverUrl ? { coverUrl: data.coverUrl } : {}),
+        ...(data.badgeBalance != null ? { badgeBalance: data.badgeBalance } : {}),
+        ...(data.followers != null ? { followers: data.followers } : {}),
+        ...(data.following != null ? { following: data.following } : {}),
+        ...(data.postsCount != null ? { postsCount: data.postsCount } : {}),
+        ...(data.isFollowing != null ? { isFollowing: data.isFollowing } : {}),
+        ...(data.followsYou != null ? { followsYou: data.followsYou } : {}),
+        ...(data.isPending != null ? { isPending: data.isPending } : {}),
+        ...(data.isPrivate != null ? { isPrivate: data.isPrivate } : {}),
+      });
+      queryClient.invalidateQueries({ queryKey: key, exact: true, refetchType: 'none' });
       continue;
     }
 
-    // Seed a minimal visual-only shell — stats left undefined so UI shows skeleton for them
+    // Leave unavailable stats undefined so the UI never flashes a made-up zero.
     const shell: ProfileData = {
       id: address,
       name: data.displayName || username || 'Unknown User',
@@ -70,11 +82,15 @@ export function seedProfileCache(
       avatarUrl: avatarRaw?.startsWith('http') ? avatarRaw : buildAvatarUrl(address, avatarRaw),
       coverUrl: data.coverUrl,
       joinedDate: '',
-      followers: undefined as unknown as number,
-      following: undefined as unknown as number,
-      postsCount: undefined as unknown as number,
+      followers: data.followers as number,
+      following: data.following as number,
+      postsCount: data.postsCount as number,
       walletAddress: address,
       badgeBalance: data.badgeBalance,
+      isFollowing: data.isFollowing,
+      followsYou: data.followsYou,
+      isPending: data.isPending,
+      isPrivate: data.isPrivate,
     };
 
     queryClient.setQueryData(key, shell);

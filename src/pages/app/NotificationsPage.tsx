@@ -1077,14 +1077,23 @@ const NotificationItem = memo(function NotificationItem({
 
   // Seed profile cache before navigating to a profile so the header renders instantly
   const seedAndNavigateToProfile = (n: DeHubNotification) => {
-    const username = n.actorUsername?.replace('@', '');
-    const address = n.actorAddress;
+    const actor = n.actor;
+    const username = (actor?.username || n.actorUsername)?.replace('@', '');
+    const address = actor?.address || n.actorAddress;
     if (username || address) {
       seedProfileCache(queryClient, {
         address: address || '',
         username,
-        avatarUrl: n.actorAvatar || (n.actor as any)?.avatar,
-        displayName: (n.actor as any)?.displayName || username,
+        avatarUrl: n.actorAvatar || actor?.avatarImageUrl,
+        displayName: actor?.displayName || username,
+        badgeBalance: actor?.badgeBalance,
+        followers: typeof actor?.followers === 'number' ? actor.followers : undefined,
+        following: typeof actor?.followings === 'number' ? actor.followings : undefined,
+        postsCount: actor?.uploads,
+        isFollowing: actor?.isFollowing,
+        followsYou: actor?.followsYou,
+        isPending: actor?.isFollowRequestPending,
+        isPrivate: actor?.isPrivate,
       }, walletAddress || undefined);
     }
     const target = username || address;
