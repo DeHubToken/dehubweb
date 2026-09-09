@@ -207,10 +207,10 @@
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=0, must-revalidate
 
-# GOD'S EYE VIEW. Put the unhashed entry document first: this host uses the
-# first matching rule, so placing the wildcard first would pin index.html for a
-# year too. The launch URL also carries the current bundle fingerprint to
+# GOD'S EYE VIEW. The launch URL carries the current bundle fingerprint to
 # bypass immutable responses already stored by browsers from older deploys.
+# Cloudflare combines this exact rule with the wildcard below, so the Worker
+# pins the final entry response to must-revalidate as well.
 /gods-eye-game/index.html
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=0, must-revalidate
