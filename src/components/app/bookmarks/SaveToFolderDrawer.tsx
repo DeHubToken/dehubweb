@@ -12,8 +12,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Folder, FolderPlus, Check, Loader2, X } from 'lucide-react';
-import { toast } from 'sonner';
+import { Folder, FolderPlus, Check, CircleAlert, CircleCheck, Loader2, X } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -25,6 +24,11 @@ interface SaveToFolderDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   tokenId: number | null;
+}
+
+interface DrawerNotice {
+  message: string;
+  tone: 'success' | 'error';
 }
 
 export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolderDrawerProps) {
@@ -44,6 +48,13 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
   // Folder IDs whose checkbox has been flipped locally but whose request hasn't
   // settled yet — the row reads from this first so the tick is instant.
   const [pending, setPending] = useState<Record<string, boolean>>({});
+  const [notice, setNotice] = useState<DrawerNotice | null>(null);
+
+  useEffect(() => {
+    if (!notice) return;
+    const timer = window.setTimeout(() => setNotice(null), 2600);
+    return () => window.clearTimeout(timer);
+  }, [notice]);
 
   // Reset the form each time the drawer opens so a half-typed folder name from
   // last time doesn't reappear on the next post.
@@ -53,6 +64,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
       setNewFolderName('');
       setNewFolderDesc('');
       setPending({});
+      setNotice(null);
     }
   }, [open]);
 
@@ -65,15 +77,15 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
 
     try {
       if (adding) {
-        await addToFolderAsync({ folderId, tokenId });
-        toast.success(`Added to ${folderName}`);
+        await addToFolderAsync({ folderId, tokenId, suppressToast: true });
+        setNotice({ message: `Added to ${folderName}`, tone: 'success' });
       } else {
-        await removeFromFolderAsync({ folderId, tokenId });
-        toast.success(`Removed from ${folderName}`);
+        await removeFromFolderAsync({ folderId, tokenId, suppressToast: true });
+        setNotice({ message: `Removed from ${folderName}`, tone: 'success' });
       }
     } catch {
-      // Roll the tick back; the mutation's own onError raises the toast.
       setPending((prev) => ({ ...prev, [folderId]: !adding }));
+      setNotice({ message: 'Failed to update folder', tone: 'error' });
     }
   };
 
@@ -82,7 +94,11 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
     if (!name || isCreating || tokenId == null) return;
 
     try {
-      const res = await createFolderAsync({ name, description: newFolderDesc.trim() || undefined });
+      const res = await createFolderAsync({
+        name,
+        description: newFolderDesc.trim() || undefined,
+        suppressToast: true,
+      });
       const created = res.result;
       if (!created) return;
 
@@ -93,10 +109,15 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
       // Creating a folder from this drawer implies filing the post into it —
       // otherwise the user has to create it and then hunt for its row.
       setPending((prev) => ({ ...prev, [created._id]: true }));
-      await addToFolderAsync({ folderId: created._id, tokenId });
-      toast.success(`Saved to ${created.name}`);
+      try {
+        await addToFolderAsync({ folderId: created._id, tokenId, suppressToast: true });
+        setNotice({ message: `Saved to ${created.name}`, tone: 'success' });
+      } catch {
+        setPending((prev) => ({ ...prev, [created._id]: false }));
+        setNotice({ message: "Folder created, but the post wasn't added", tone: 'error' });
+      }
     } catch {
-      // Both mutations toast their own failure.
+      setNotice({ message: 'Failed to create folder', tone: 'error' });
     }
   };
 
@@ -104,7 +125,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column className="bg-black/80 backdrop-blur-[24px] border-white/10 h-[min(85dvh,640px)] rounded-t-[24px] overflow-hidden">
+      <DrawerContent column className="h-[calc(100dvh_-_env(safe-area-inset-top)_-_0.75rem)] max-h-none overflow-hidden rounded-t-[24px] border-white/10 bg-black/80 backdrop-blur-[24px] md:h-[min(85dvh,640px)]">
         <DrawerHeader className="relative shrink-0 border-b border-white/10 px-5 pb-4 pt-5 text-left">
           <DrawerTitle className="text-white text-lg font-bold">Save to folder</DrawerTitle>
           <p className="mt-1 pr-12 text-xs leading-5 text-zinc-400">
@@ -119,6 +140,24 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
             <X className="w-4 h-4" />
           </button>
         </DrawerHeader>
+
+        {notice && (
+          <div
+            role="status"
+            aria-live="polite"
+            className={cn(
+              'mx-4 mt-3 flex shrink-0 items-center gap-2 rounded-xl border bg-zinc-900 px-3 py-2.5 text-sm font-semibold text-zinc-100',
+              notice.tone === 'error' ? 'border-red-400/30' : 'border-white/15',
+            )}
+          >
+            {notice.tone === 'error' ? (
+              <CircleAlert className="size-4 shrink-0 text-red-300" />
+            ) : (
+              <CircleCheck className="size-4 shrink-0 text-zinc-200" />
+            )}
+            <span>{notice.message}</span>
+          </div>
+        )}
 
         <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3 overscroll-contain">
           {showSpinner ? (
@@ -136,7 +175,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
                     onClick={() => handleToggleFolder(folder._id, folder.name)}
                     className="flex min-h-14 w-full items-center gap-3 rounded-[14px] border border-white/[0.07] bg-white/[0.045] px-3.5 py-2.5 text-left transition-colors hover:bg-white/[0.08] active:scale-[0.99]"
                   >
-                    <Folder className="w-5 h-5 text-yellow-500 shrink-0" />
+                    <Folder className="w-5 h-5 text-zinc-300 shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="text-white text-sm font-semibold truncate">{folder.name}</p>
                       {folder.description && (
@@ -146,7 +185,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
                     <span
                       className={cn(
                         'w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-colors',
-                        checked ? 'bg-yellow-500 border-yellow-500' : 'border-zinc-600'
+                        checked ? 'border-zinc-100 bg-zinc-100' : 'border-zinc-600'
                       )}
                     >
                       {checked && <Check className="w-3 h-3 text-black" strokeWidth={3} />}
@@ -160,7 +199,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
           )}
         </div>
 
-        <div className="shrink-0 border-t border-white/10 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
+        <div className="shrink-0 border-t border-white/10 px-4 pb-[max(1.25rem,calc(env(safe-area-inset-bottom)_+_0.5rem))] pt-3">
           {showCreateForm ? (
             <div className="space-y-2.5">
               <label className="block space-y-1.5">
@@ -171,7 +210,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
                   onChange={(e) => setNewFolderName(e.target.value)}
                   placeholder="e.g. Cooking, Travel"
                   maxLength={50}
-                  className="h-12 rounded-xl border-white/10 bg-white/[0.06] text-white placeholder:text-zinc-500 focus-visible:ring-yellow-500/70"
+                  className="h-12 rounded-xl border-white/10 bg-white/[0.06] text-white placeholder:text-zinc-500 focus-visible:ring-white/30"
                 />
               </label>
               <label className="block space-y-1.5">
@@ -183,7 +222,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
                   onChange={(e) => setNewFolderDesc(e.target.value)}
                   placeholder="What belongs in this folder?"
                   maxLength={200}
-                  className="h-12 rounded-xl border-white/10 bg-white/[0.06] text-white placeholder:text-zinc-500 focus-visible:ring-yellow-500/70"
+                  className="h-12 rounded-xl border-white/10 bg-white/[0.06] text-white placeholder:text-zinc-500 focus-visible:ring-white/30"
                 />
               </label>
               <div className="flex gap-2">
@@ -197,7 +236,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
                 <Button
                   onClick={handleCreateFolder}
                   disabled={!newFolderName.trim() || isCreating}
-                  className="h-12 flex-1 rounded-xl bg-yellow-400 font-semibold text-zinc-950 hover:bg-yellow-300 active:scale-[0.98]"
+                  className="h-12 flex-1 rounded-xl bg-zinc-100 font-semibold text-zinc-950 hover:bg-white active:scale-[0.98]"
                 >
                   {isCreating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Create & save'}
                 </Button>
@@ -206,7 +245,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
           ) : (
             <Button
               onClick={() => setShowCreateForm(true)}
-              className="h-12 w-full rounded-xl bg-yellow-400 font-semibold text-zinc-950 hover:bg-yellow-300 active:scale-[0.98]"
+              className="h-12 w-full rounded-xl bg-zinc-100 font-semibold text-zinc-950 hover:bg-white active:scale-[0.98]"
             >
               <FolderPlus className="w-4 h-4" />
               Create new folder
