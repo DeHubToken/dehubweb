@@ -535,16 +535,22 @@ describe('arcade headers', () => {
     }
   });
 
-  it("matches God's Eye's revalidating entry rule before its immutable wildcard", () => {
+  it("keeps God's Eye's entry rule separate from every asset rule", () => {
     const entry = headers.indexOf('/gods-eye-game/index.html');
-    const wildcard = headers.indexOf('/gods-eye-game/*');
     expect(entry).toBeGreaterThan(-1);
-    expect(wildcard).toBeGreaterThan(entry);
+    expect(headers).not.toMatch(/^\/gods-eye-game\/\*\s*$/m);
 
     const block = headers.slice(entry, headers.indexOf('\n\n', entry));
     expect(block).toContain('Access-Control-Allow-Origin: *');
     expect(block).toContain('must-revalidate');
     expect(block).not.toContain('immutable');
+
+    for (const path of ['assets/*', 'cesium/*', 'models/*', '*.svg']) {
+      const start = headers.indexOf(`/gods-eye-game/${path}`);
+      const assetBlock = headers.slice(start, headers.indexOf('\n\n', start));
+      expect(start, path).toBeGreaterThan(-1);
+      expect(assetBlock, path).toContain('Access-Control-Allow-Origin: *');
+    }
   });
 
   it("keeps God's Eye's entry revalidating after Cloudflare combines static rules", async () => {
