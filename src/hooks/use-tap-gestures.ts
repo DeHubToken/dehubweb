@@ -18,7 +18,11 @@
  * `MOVE_SLOP_PX` stops being a tap and is left entirely to those layers.
  */
 import { useCallback, useEffect, useRef } from 'react';
-import { emitOpenReactions, emitTapReaction } from '@/lib/tap-reactions';
+import {
+  emitOpenReactions,
+  emitTapReaction,
+  emitTapReactionFeedback,
+} from '@/lib/tap-reactions';
 
 /** How long after a tap another one still counts as part of the same gesture. */
 const TAP_WINDOW_MS = 260;
@@ -199,13 +203,14 @@ export function useTapGestures({
       }
 
       if (taps.current === 2) {
-        // Do not cast yet. If tap three arrives, it replaces this pending like
-        // with love, so one gesture can never create two votes, two
-        // notifications or two overlapping bursts.
+        // Acknowledge tap two now, but do not cast yet. If tap three arrives,
+        // it replaces this pending like before persistence, so one gesture can
+        // never create two votes or two notifications.
         if (tapTimer.current) clearTimeout(tapTimer.current);
         // Put back whatever the first tap did, now that it turned out to be
         // half of a double tap rather than a tap of its own.
         onUndoSingleTap?.();
+        emitTapReactionFeedback(id, 'like', point);
         tapTimer.current = setTimeout(() => {
           tapTimer.current = null;
           taps.current = 0;
@@ -218,6 +223,8 @@ export function useTapGestures({
       if (tapTimer.current) clearTimeout(tapTimer.current);
       tapTimer.current = null;
       taps.current = 0;
+      // The Love feedback replaces the in-flight thumb in the renderer.
+      emitTapReactionFeedback(id, 'love', point);
       emitTapReaction(id, 'love', point);
     },
     [disabled, id, onSingleTap, onUndoSingleTap],
