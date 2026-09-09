@@ -807,15 +807,17 @@ export function ActionBar({
   // Engagement actions — order left → right: tip · dislike · share · comment · like
   const engagementButtons = (
     <>
-      {/* Tip counter (diamond) */}
-      <button
-        onClick={(e) => { e.stopPropagation(); onTip?.(); }}
-        className="flex items-center gap-0 text-white hover:text-zinc-400 transition-colors"
-        aria-label="Tips"
-      >
-         <Gem className="w-[17px] h-[17px] text-white" />
-        <span className="text-xs text-zinc-400 relative z-10" style={{ marginLeft: '2.5px' }}>{formatCount(tipCount)}</span>
-      </button>
+      {/* A private-balance creator has no DeHub payment entry point. */}
+      {onTip ? (
+        <button
+          onClick={(e) => { e.stopPropagation(); onTip(); }}
+          className="flex items-center gap-0 text-white hover:text-zinc-400 transition-colors"
+          aria-label="Tips"
+        >
+           <Gem className="w-[17px] h-[17px] text-white" />
+          <span className="text-xs text-zinc-400 relative z-10" style={{ marginLeft: '2.5px' }}>{formatCount(tipCount)}</span>
+        </button>
+      ) : null}
 
       {/* Downvotes — one tap, no tray: 👎 is the only reaction on this side,
           and a hold-to-open menu of one would only swallow the press that

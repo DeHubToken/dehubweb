@@ -163,6 +163,7 @@ export interface VideoItem extends BaseFeedItem {
   creatorUsername?: string;
   /** Creator's badge balance from API (avoids edge function call) */
   creatorBadgeBalance?: number;
+  creatorPaymentsDisabled?: boolean;
   /** Whether the current user has liked this item */
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
@@ -290,6 +291,7 @@ export interface ImagePost extends BaseFeedItem {
   creatorUsername?: string;
   /** Creator's badge balance from API (avoids edge function call) */
   creatorBadgeBalance?: number;
+  creatorPaymentsDisabled?: boolean;
   /** Whether the current user has liked this item */
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
@@ -387,6 +389,7 @@ export interface LiveStream extends BaseFeedItem {
   creatorUsername?: string;
   /** Creator's badge balance from API (avoids edge function call) */
   creatorBadgeBalance?: number;
+  creatorPaymentsDisabled?: boolean;
   /** Number of likes */
   likeCount?: number;
   /** Number of comments */

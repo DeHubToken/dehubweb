@@ -121,7 +121,8 @@ function PinnedPostItem({ pin }: { pin: any }) {
           isOwner: false, isUnlocked: false,
           creatorId: resolvedAddress,
           creatorUsername: post.minterUsername || creatorObj?.username,
-          creatorBadgeBalance: post.minterUser?.badgeBalance,
+          creatorBadgeBalance: post.minterUser?.hideBadgeAndBalance ? 0 : post.minterUser?.badgeBalance,
+          creatorPaymentsDisabled: post.minterUser?.hideBadgeAndBalance === true,
         }} />
       ) : postType === 'image' || postType === 'feed-images' ? (
         <ImageCard post={{
@@ -136,7 +137,8 @@ function PinnedPostItem({ pin }: { pin: any }) {
           timeAgo: formatTimeAgo(rawTimestamp),
           creatorId: resolvedAddress,
           creatorUsername: post.minterUsername || creatorObj?.username,
-          creatorBadgeBalance: post.minterUser?.badgeBalance,
+          creatorBadgeBalance: post.minterUser?.hideBadgeAndBalance ? 0 : post.minterUser?.badgeBalance,
+          creatorPaymentsDisabled: post.minterUser?.hideBadgeAndBalance === true,
           isOwner: false, isUnlocked: false,
           repostCount: (post.totalReposts || 0) + (post.quotes || 0),
         }} />
@@ -150,7 +152,8 @@ function PinnedPostItem({ pin }: { pin: any }) {
             name: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
             handle: post.minterUsername || creatorObj?.username || resolvedAddress?.slice(0, 8) || 'anon',
             avatarSeed: avatar, verified: false,
-            badgeBalance: post.minterUser?.badgeBalance,
+            badgeBalance: post.minterUser?.hideBadgeAndBalance ? 0 : post.minterUser?.badgeBalance,
+            paymentsDisabled: post.minterUser?.hideBadgeAndBalance === true,
           },
           content: post.description || post.name || '',
           stats: {
@@ -348,7 +351,7 @@ export default function ProfilePage() {
       handleUnfollow={handleUnfollow}
       setShareSheetOpen={setShareSheetOpen}
       onMakeOffer={handleMakeOffer}
-      onTip={!data.isViewingOwnProfile ? () => setShowTipModal(true) : undefined}
+      onTip={!data.isViewingOwnProfile && !data.profile.hideBadgeAndBalance ? () => setShowTipModal(true) : undefined}
       isBlocked={data.isBlocked}
       isBlockLoading={data.isBlockLoading}
       handleBlock={data.handleBlock}

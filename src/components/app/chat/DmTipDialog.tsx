@@ -5,7 +5,7 @@
  * Matches the liquid glass aesthetic of TipModal.
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Gem, Loader2 } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
@@ -28,6 +28,7 @@ import { toastTxError } from '@/lib/tx-error-toast';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
 import { apiCall } from '@/lib/api/dehub/core';
+import { getAccountInfo } from '@/lib/api/dehub';
 
 const QUICK_AMOUNTS = [500, 1_000, 5_000, 10_000, 25_000, 50_000, 100_000, 1_000_000];
 
@@ -48,6 +49,19 @@ export function DmTipDialog({
 }: DmTipDialogProps) {
   const [amount, setAmount] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [recipientPrivate, setRecipientPrivate] = useState(false);
+  const [privacyChecking, setPrivacyChecking] = useState(false);
+
+  useEffect(() => {
+    if (!open || !recipientAddress) return;
+    let cancelled = false;
+    setPrivacyChecking(true);
+    getAccountInfo(recipientAddress)
+      .then((profile) => { if (!cancelled) setRecipientPrivate(profile?.hideBadgeAndBalance === true); })
+      .catch(() => { if (!cancelled) setRecipientPrivate(false); })
+      .finally(() => { if (!cancelled) setPrivacyChecking(false); });
+    return () => { cancelled = true; };
+  }, [open, recipientAddress]);
 
   const parsedAmount = parseFloat(amount);
   const isValidAmount = !Number.isNaN(parsedAmount) && parsedAmount >= 1;
@@ -58,6 +72,17 @@ export function DmTipDialog({
 
   const handleTip = async () => {
     if (!isValidAmount) return;
+    try {
+      const profile = await getAccountInfo(recipientAddress);
+      if (profile?.hideBadgeAndBalance) {
+        setRecipientPrivate(true);
+        toast.error('This account has disabled tips while private balance mode is on.');
+        return;
+      }
+    } catch {
+      toast.error('Could not verify the recipient privacy setting. No tip was sent.');
+      return;
+    }
 
     setIsSending(true);
     try {
@@ -131,6 +156,11 @@ export function DmTipDialog({
           )}
         </DrawerHeader>
         <div className="flex flex-col gap-4">
+          {recipientPrivate ? (
+            <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300">
+              This account has private balance mode on, so DeHub cannot send tokens or tips to it.
+            </div>
+          ) : null}
           {/* Quick amounts */}
           <div>
             <p className="text-white/60 text-xs mb-2">Quick amounts</p>
@@ -183,7 +213,7 @@ export function DmTipDialog({
               variant="glass"
               className="flex-1 bg-yellow-500/25 hover:bg-yellow-500/35 border-yellow-500/40 text-yellow-300"
               onClick={handleTip}
-              disabled={isSending || !isValidAmount}
+              disabled={isSending || privacyChecking || recipientPrivate || !isValidAmount}
             >
               {isSending ? (
                 <>

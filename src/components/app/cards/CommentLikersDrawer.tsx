@@ -60,6 +60,7 @@ export function CommentLikersDrawer({ open, onOpenChange, commentId }: CommentLi
 
   const firstPage = data?.pages?.[0];
   const canView = firstPage?.canViewLikers !== false;
+  const anonymousCount = firstPage?.anonymousBadgeHolderCount ?? 0;
   const rows = useMemo(() => data?.pages.flatMap((page) => page.data ?? []) ?? [], [data]);
   const totalCount = firstPage?.pagination?.totalCount ?? 0;
 
@@ -91,10 +92,15 @@ export function CommentLikersDrawer({ open, onOpenChange, commentId }: CommentLi
             </div>
           ) : !canView ? (
             <AppState icon="lock" title="Likes are private" description="Only the comment author can view this list." kind="restricted" size="drawer" />
-          ) : rows.length === 0 ? (
+          ) : rows.length === 0 && anonymousCount === 0 ? (
             <AppState icon="pinned" title="No likes yet" description="Likes on this comment will appear here." size="drawer" />
           ) : (
             <div className="space-y-2">
+              {anonymousCount > 0 ? (
+                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300">
+                  {anonymousCount} {anonymousCount === 1 ? 'like' : 'likes'} from anonymous badge {anonymousCount === 1 ? 'holder' : 'holders'}
+                </div>
+              ) : null}
               {rows.map((person) => {
                 const displayName =
                   person.displayName || person.username || person.address?.slice(0, 8) || 'Unknown';

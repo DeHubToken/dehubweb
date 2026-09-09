@@ -1559,7 +1559,7 @@ function QuietHoursSection() {
 
 function PrivacySettings() {
   const { t } = useTranslation();
-  const { showFollowersFollowing, hideFollowerCounts, isPrivate, defaultPostVisibility, updateSettings, isUpdating, isLoading } = usePrivacySettings();
+  const { showFollowersFollowing, hideFollowerCounts, isPrivate, hideBadgeAndBalance, defaultPostVisibility, updateSettings, isUpdating, isLoading } = usePrivacySettings();
   const { whoCanMessage, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateDoNotDisturb } = useDmSettings();
   const { option: walletUnlockInterval, setOption: setWalletUnlockInterval } = useWalletUnlockInterval();
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
@@ -1696,6 +1696,18 @@ function PrivacySettings() {
             onCheckedChange={handlePrivateToggle}
             disabled={isUpdating || isLoading}
           />
+          <SettingToggle
+            icon={EyeOff}
+            anchor="private-balance"
+            title="Hide badge and balance"
+            description="Hides your badge, token balances, and tip history from public view. DeHub will also disable sends and tips to you."
+            defaultChecked={hideBadgeAndBalance}
+            onCheckedChange={(checked) => updateSettings({ hide_badge_and_balance: checked })}
+            disabled={isUpdating || isLoading}
+          />
+          <div className="rounded-xl border border-amber-500/25 bg-amber-500/10 p-4 text-xs leading-relaxed text-amber-100/80">
+            On-chain transactions are public. Sending tokens or tips can reveal your wallet address, including transactions made before private balance mode was enabled.
+          </div>
           {isPrivate && (
             <div className="pl-8">
               <Button

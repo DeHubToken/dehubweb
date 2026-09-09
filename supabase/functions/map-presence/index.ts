@@ -19,12 +19,12 @@ Deno.serve(async (req) => {
   const db = serviceClient();
   if (req.method === 'GET') {
     const { data, error } = await db.from('arcade_map_presence')
-      .select('wallet_address,latitude,longitude,username,avatar_url,updated_at')
+      .select('public_id,latitude,longitude,username,avatar_url,updated_at')
       .order('updated_at', { ascending: false }).limit(MAX_ROWS);
     if (error) return jsonResponse({ error: 'Could not load the community map.' }, 500);
     return jsonResponse({ people: (data || []).map((row) => ({
-      id: row.wallet_address,
-      name: row.username || `${row.wallet_address.slice(0, 6)}…${row.wallet_address.slice(-4)}`,
+      id: row.public_id,
+      name: row.username || 'Community member',
       latitude: row.latitude,
       longitude: row.longitude,
       avatar_url: row.avatar_url,

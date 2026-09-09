@@ -48,6 +48,7 @@ export function usePrivacySettings() {
   const customs = profile?.customs;
   const { showFollowersFollowing, hideFollowerCounts } = parseVisibility(customs?.followVisibility);
   const isPrivate = profile?.isPrivate === true;
+  const hideBadgeAndBalance = profile?.hideBadgeAndBalance === true;
 
   const updateMutation = useMutation({
     mutationFn: async (updates: {
@@ -56,6 +57,7 @@ export function usePrivacySettings() {
       default_post_visibility?: 'public' | 'private';
       default_profile_tab?: string;
       is_private?: boolean;
+      hide_badge_and_balance?: boolean;
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
 
@@ -70,6 +72,9 @@ export function usePrivacySettings() {
 
       if (updates.is_private !== undefined) {
         profileUpdate.isPrivate = updates.is_private;
+      }
+      if (updates.hide_badge_and_balance !== undefined) {
+        profileUpdate.hideBadgeAndBalance = updates.hide_badge_and_balance;
       }
 
       // Keep customs for follow visibility granularity and default post visibility
@@ -115,6 +120,7 @@ export function usePrivacySettings() {
     default_post_visibility?: 'public' | 'private';
     default_profile_tab?: string;
     is_private?: boolean;
+    hide_badge_and_balance?: boolean;
   }) => {
     updateMutation.mutate(updates);
   };
@@ -125,6 +131,7 @@ export function usePrivacySettings() {
     showFollowersFollowing,
     hideFollowerCounts,
     isPrivate,
+    hideBadgeAndBalance,
     defaultPostVisibility: (customs?.defaultPostVisibility as 'public' | 'private') ?? 'public',
     defaultProfileTab: parseDefaultProfileTab(customs?.defaultProfileTab),
     updateSettings,

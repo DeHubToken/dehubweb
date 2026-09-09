@@ -605,6 +605,8 @@ export interface PostLikersResponse {
    * a headline must use this one. Absent from an older API.
    */
   weightedTotalCount?: number;
+  /** People whose private-balance setting hides their identity in this list. */
+  anonymousBadgeHolderCount?: number;
   pagination: { page: number; limit: number; totalCount: number; hasMore: boolean };
 }
 
@@ -638,6 +640,8 @@ export interface CommentLikersResponse {
    * design rather than because nobody liked it — same contract as post likers.
    */
   canViewLikers: boolean;
+  /** People whose private-balance setting hides their identity in this list. */
+  anonymousBadgeHolderCount?: number;
   data: CommentLiker[];
   pagination: { page: number; limit: number; totalCount: number; hasMore: boolean };
 }

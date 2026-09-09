@@ -75,6 +75,7 @@ export interface DeHubUser {
   isPending?: boolean;
   isFollowRequestPending?: boolean;
   isPrivate?: boolean;
+  hideBadgeAndBalance?: boolean;
   /**
    * The account is banned. The API already leaves banned accounts out of every
    * list it builds itself, so this matters to the lists we build here — an

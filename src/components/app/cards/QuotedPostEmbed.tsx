@@ -139,7 +139,7 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
             </AvatarFallback>
           </Avatar>
           <BadgedName
-            badgeBalance={quotedPost.minterUser?.badgeBalance}
+            badgeBalance={quotedPost.minterUser?.hideBadgeAndBalance ? 0 : quotedPost.minterUser?.badgeBalance}
             username={handle}
             className="text-sm font-semibold text-white"
           >

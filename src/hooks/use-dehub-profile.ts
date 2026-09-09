@@ -49,6 +49,8 @@ export interface ProfileData {
   isPending?: boolean;
   /** Whether this account is private (requires follow approval) */
   isPrivate?: boolean;
+  /** Hides badge/financial details and disables DeHub payments to this account. */
+  hideBadgeAndBalance?: boolean;
   /**
    * This viewer asked to be served mature posts. Only meaningful on your own
    * profile — it is a viewing preference, not something about the account.
@@ -140,6 +142,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     followsYou: user.followsYou,
     isPending: user.isPending ?? user.isFollowRequestPending,
     isPrivate: user.isPrivate || customs?.isPrivate === 'true' || customs?.isPrivate === true,
+    hideBadgeAndBalance: user.hideBadgeAndBalance === true,
     showMatureContent: user.showMatureContent === true,
     youBlocked: user.youBlocked ?? false,
     blockedYou: user.blockedYou ?? false,
