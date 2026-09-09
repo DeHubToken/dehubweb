@@ -320,6 +320,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   'Connect AI': ['mcp', 'chatgpt', 'claude', 'api', 'integration', 'connect ai', 'model context protocol'],
   // Games. Their titles are the labels, so these are only the ways in that the
   // title itself does not cover.
+  "God's Eye": ['globe', 'world map', '3d map', 'community map', 'social map', 'earth', 'satellite'],
   "King's Gambit": ['chess', '3d chess', 'play chess', 'online chess', 'board game', 'multiplayer'],
   'Claude of Duty': ['fps', 'shooter', 'first person', 'war', 'shooting game', 'call of duty'],
   'Jungle Trail': ['walk', 'rainforest', 'jungle', 'exploration', 'first person', 'nature'],
@@ -369,6 +370,7 @@ export const SEARCH_ONLY_ITEMS: readonly NavItem[] = [
   { icon: Star, label: 'Creators', path: '/creators' },
   { icon: Smartphone, label: 'Get the App', path: '/apk' },
   { icon: Plug, label: 'Connect AI', path: '/connect' },
+  { icon: Gamepad2, label: "God's Eye", path: '/arcade/gods-eye' },
   { icon: Gamepad2, label: "King's Gambit", path: '/arcade/kings-gambit' },
   { icon: Gamepad2, label: 'Claude of Duty', path: '/arcade/claude-of-duty' },
   { icon: Gamepad2, label: 'Jungle Trail', path: '/arcade/jungle-trail' },

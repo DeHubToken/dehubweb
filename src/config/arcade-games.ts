@@ -149,6 +149,8 @@ export interface ArcadeGame {
    * untouched.
    */
   onlineHref?: string;
+  /** Host the opt-in DeHub community-presence bridge for this globe. */
+  socialPresence?: boolean;
   /**
    * This game's board, for the games that are a competition.
    *
@@ -201,6 +203,8 @@ const SLAYER_URL =
   (import.meta.env.VITE_STREET_SLAYER_URL as string | undefined) || '/street-slayer-game/index.html';
 const TRENCHSTAR_URL =
   (import.meta.env.VITE_TRENCHSTAR_URL as string | undefined) || '/trenchstar-game/index.html';
+const GODS_EYE_URL =
+  (import.meta.env.VITE_GODS_EYE_URL as string | undefined) || '/gods-eye-game/index.html';
 
 /**
  * Shared preflight for the two engines that are WebGL2-only and heavy.
@@ -318,6 +322,28 @@ export const ARCADE_SANDBOX = 'allow-scripts allow-pointer-lock';
 export const FIRST_PARTY_SANDBOX = `${ARCADE_SANDBOX} allow-same-origin`;
 
 export const ARCADE_GAMES: ArcadeGame[] = [
+  {
+    slug: 'gods-eye',
+    title: "God's Eye",
+    tagline: 'Find the DeHub community across a living 3D Earth.',
+    description:
+      'Explore a live spatial-intelligence globe and, if you choose, place a deliberately approximate version of yourself among the DeHub community.',
+    action: 'Open the globe',
+    art: '/arcade/gods-eye.gif',
+    artAlt: "God's Eye View orbiting a live 3D globe through its spatial-intelligence displays",
+    credit: {
+      name: "God's Eye View",
+      url: 'https://github.com/bilawalsidhu/gods-eye-view',
+      licence: 'MIT',
+      licenceFile: 'LICENSE-GodsEyeView',
+    },
+    buildUrl: () => GODS_EYE_URL,
+    bootTauMs: 8000,
+    exitSource: 'gods-eye-view',
+    allow: 'fullscreen; autoplay',
+    checkCapability: () => requireHardwareWebgl('The globe', true),
+    socialPresence: true,
+  },
   {
     slug: 'trenchstar',
     title: 'Trenchstar',
