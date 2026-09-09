@@ -78,7 +78,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
                   />
                 </div>
               )}
-              <div className="p-2.5 sm:p-3 min-w-0">
+              <div className="px-3 pb-3 pt-3.5 sm:pt-4 min-w-0">
                 <div className="flex items-center gap-1.5 text-xs text-white/50 mb-0.5">
                   <ExternalLink className="w-3 h-3 flex-shrink-0" />
                   <span className="truncate">{preview.siteName || domain}</span>
@@ -100,7 +100,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
       {loading && (
         <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
           <Skeleton className="w-full aspect-[1.91/1]" />
-          <div className="p-2.5 sm:p-3 space-y-2">
+          <div className="px-3 pb-3 pt-3.5 sm:pt-4 space-y-2">
             <Skeleton className="h-3 w-20" />
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-3 w-3/4" />
@@ -110,4 +110,3 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
     </div>
   );
 }
-

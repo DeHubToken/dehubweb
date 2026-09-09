@@ -903,7 +903,15 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           <>
             {/* Combo PPV + Holdings Locked: blurred image with dual icons */}
             <div className="relative rounded-2xl overflow-hidden">
-              <img src={images[0]} alt="" className="w-full object-cover blur-lg" style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }} loading="lazy" />
+              <img
+                src={images[0]}
+                alt=""
+                className="w-full object-cover blur-lg"
+                style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }}
+                loading={aboveFold ? 'eager' : 'lazy'}
+                fetchPriority={aboveFold ? 'high' : 'auto'}
+                decoding={aboveFold ? 'sync' : 'async'}
+              />
               <div 
                 className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
                 onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
@@ -937,7 +945,15 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           <>
             {/* PPV only: blurred image with ticket overlay */}
             <div className="relative rounded-2xl overflow-hidden">
-              <img src={images[0]} alt="" className="w-full object-cover blur-lg" style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }} loading="lazy" />
+              <img
+                src={images[0]}
+                alt=""
+                className="w-full object-cover blur-lg"
+                style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }}
+                loading={aboveFold ? 'eager' : 'lazy'}
+                fetchPriority={aboveFold ? 'high' : 'auto'}
+                decoding={aboveFold ? 'sync' : 'async'}
+              />
               <div 
                 className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
                 onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
@@ -967,7 +983,15 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 holdings branch because a post carrying both is more likely to
                 be a creator's subscriber post than a token play. */}
             <div className="relative rounded-2xl overflow-hidden">
-              <img src={images[0]} alt="" className="w-full object-cover blur-lg" style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }} loading="lazy" />
+              <img
+                src={images[0]}
+                alt=""
+                className="w-full object-cover blur-lg"
+                style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }}
+                loading={aboveFold ? 'eager' : 'lazy'}
+                fetchPriority={aboveFold ? 'high' : 'auto'}
+                decoding={aboveFold ? 'sync' : 'async'}
+              />
               <div
                 className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
                 onClick={(e) => { e.stopPropagation(); setShowSubDrawer(true); }}
@@ -1000,7 +1024,15 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           <>
             {/* Holdings Locked: blurred image with lock icon overlay */}
             <div className="relative rounded-2xl overflow-hidden">
-              <img src={images[0]} alt="" className="w-full object-cover blur-lg" style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }} loading="lazy" />
+              <img
+                src={images[0]}
+                alt=""
+                className="w-full object-cover blur-lg"
+                style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }}
+                loading={aboveFold ? 'eager' : 'lazy'}
+                fetchPriority={aboveFold ? 'high' : 'auto'}
+                decoding={aboveFold ? 'sync' : 'async'}
+              />
               <div
                 className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
                 onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
