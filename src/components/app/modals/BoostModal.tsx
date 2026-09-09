@@ -178,7 +178,8 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
         // The server writes these sentences for a person to read — "That post
         // is over a week old", "That account is private and cannot be
         // targeted". Show its words rather than a generic failure.
-        onError: (error: any) => toast.error(error?.message || t('superpowers.boostFailed')),
+        onError: (error: unknown) =>
+          toast.error(error instanceof Error ? error.message : t('superpowers.boostFailed')),
       },
     );
   };
