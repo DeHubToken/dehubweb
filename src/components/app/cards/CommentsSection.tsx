@@ -2457,7 +2457,13 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                       // Mobile viewport/keyboard changes can move the button
                       // before touch-up and cancel click. Latch touch while the
                       // pointer is still down; mouse and keyboard keep onClick.
-                      if (event.pointerType === 'touch' && canPost) void handlePostComment();
+                      if ((event.pointerType === 'touch' || event.pointerType === 'pen') && canPost) {
+                        // Keep focus from moving until the send is already
+                        // latched; that prevents the keyboard resize from
+                        // swallowing this gesture on touch browsers.
+                        event.preventDefault();
+                        void handlePostComment();
+                      }
                     }}
                     onClick={() => { if (canPost) handlePostComment(); }}
                     disabled={!canPost}

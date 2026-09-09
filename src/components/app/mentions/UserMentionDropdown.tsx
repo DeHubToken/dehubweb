@@ -261,6 +261,8 @@ export function UserMentionDropdown({
             {users.map((user, index) => (
               <motion.button
                 key={user.id || user.username}
+                type="button"
+                aria-label={`Mention @${user.username}`}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
@@ -270,10 +272,18 @@ export function UserMentionDropdown({
                   e.stopPropagation();
                   handleSelect(user);
                 }}
-                onTouchEnd={(e) => {
+                // Touch-end arrives after the keyboard has already started
+                // resizing the drawer, which can move this row and cancel the
+                // selection. Commit while the row is still under the finger.
+                onTouchStart={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                   handleSelect(user);
+                }}
+                // Assistive technology and keyboard activation do not emit a
+                // mouse/touch start event.
+                onClick={(e) => {
+                  if (e.detail === 0) handleSelect(user);
                 }}
                 onMouseEnter={() => onSelectedIndexChange(index)}
                 className={cn(
