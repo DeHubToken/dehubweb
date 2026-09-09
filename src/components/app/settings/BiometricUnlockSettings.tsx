@@ -334,6 +334,12 @@ export function BiometricUnlockSettings() {
           ) : undefined}
         />
 
+        <p className="pl-8 text-xs text-zinc-500">
+          Web biometric unlock uses a browser passkey. The Android app uses that phone&apos;s
+          fingerprint or device lock separately, after the wallet is unlocked there once with its
+          password or recovery phrase.
+        </p>
+
         {wraps.length > 0 && (
           <ul className="space-y-2 pl-8">
             {wraps.map((wrap) => {
