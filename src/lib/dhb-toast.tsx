@@ -4,6 +4,14 @@
  */
 import dehubCoin from '@/assets/dehub-coin.png';
 
+/** Branded token-purchase label for toast actions. */
+export const buyTokensLabel = (
+  <span className="inline-flex items-center gap-1.5">
+    <img src={dehubCoin} alt="" aria-hidden="true" className="h-4 w-4" />
+    <span>Buy Tokens</span>
+  </span>
+);
+
 /** Renders an inline coin icon + amount, replacing "DHB" text in toasts */
 export const DhbInline = ({ amount }: { amount: string | number }) => (
   <span className="inline-flex items-center gap-1">
