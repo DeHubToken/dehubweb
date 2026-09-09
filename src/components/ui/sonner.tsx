@@ -45,7 +45,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
           // `group` is what ICON_CLASSES selects the loading case from.
           toast: [
             "group toast",
-            "bg-white/10 backdrop-blur-xl border border-white/20 text-white",
+            isMobile
+              ? "bg-zinc-950 border border-white/20 text-white"
+              : "bg-white/10 backdrop-blur-xl border border-white/20 text-white",
             "shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-xl",
             TOAST_CLASSES,
             isMobile ? "" : TOAST_FIT_CLASSES,
