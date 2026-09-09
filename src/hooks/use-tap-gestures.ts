@@ -181,6 +181,15 @@ export function useTapGestures({
         origin.current = null;
         return;
       }
+
+      // Some Android WebViews coalesce the entire flick and deliver no
+      // pointermove before pointerup. The release coordinates are the final
+      // authority: travel still makes this a scroll even when the intermediate
+      // event that normally disqualifies it never arrived.
+      if (Math.hypot(event.clientX - from.x, event.clientY - from.y) > MOVE_SLOP_PX) {
+        origin.current = null;
+        return;
+      }
       origin.current = null;
 
       const point = { x: event.clientX, y: event.clientY };

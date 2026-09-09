@@ -328,6 +328,20 @@ describe('what the ladder refuses to claim', () => {
     expect(casts).toEqual([]);
   });
 
+  it('refuses a flick even when the browser coalesces away pointermove', () => {
+    const onSingleTap = vi.fn();
+    const h = mountGesture({ postId: '7', onSingleTap });
+
+    act(() => {
+      h.current!.onPointerDown(pointer(50, 50));
+      h.current!.onPointerUp(pointer(50, 140));
+    });
+    act(() => void vi.advanceTimersByTime(500));
+
+    expect(onSingleTap).not.toHaveBeenCalled();
+    expect(casts).toEqual([]);
+  });
+
   it('cancels a pending hold when the finger starts moving', () => {
     const h = mountGesture({ postId: '7' });
     act(() => h.current!.onPointerDown(pointer(50, 50)));
