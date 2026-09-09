@@ -207,16 +207,20 @@
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=0, must-revalidate
 
-# GOD'S EYE VIEW. Vite modules and Cesium workers are fetched from the opaque
-# sandbox origin, so the complete vendored tree needs CORS. Hashed assets may
-# cache; index.html is revalidated by the more-specific rule below.
-/gods-eye-game/*
-  Access-Control-Allow-Origin: *
-  Cache-Control: public, max-age=31536000, immutable
-
+# GOD'S EYE VIEW. Put the unhashed entry document first: this host uses the
+# first matching rule, so placing the wildcard first would pin index.html for a
+# year too. The launch URL also carries the current bundle fingerprint to
+# bypass immutable responses already stored by browsers from older deploys.
 /gods-eye-game/index.html
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=0, must-revalidate
+
+# Vite modules and Cesium workers are fetched from the opaque sandbox origin,
+# so the complete vendored tree needs CORS. Their generated build is immutable;
+# re-vendoring changes the version on the launch URL above.
+/gods-eye-game/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=31536000, immutable
 
 # Arcade card art. Unhashed, so the convention for everything else in /public
 # applies: CHANGE THE FILENAME when the capture changes.

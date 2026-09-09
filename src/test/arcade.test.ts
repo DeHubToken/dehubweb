@@ -146,6 +146,11 @@ describe('arcade registry', () => {
     }
   });
 
+  it("versions God's Eye's unhashed entry URL with its current bundle", () => {
+    const game = ARCADE_GAMES.find(({ slug }) => slug === 'gods-eye');
+    expect(game?.buildUrl()).toBe('/gods-eye-game/index.html?v=D1_67NVT');
+  });
+
   it('gives every game the copy the cards and SEO read', () => {
     for (const game of ARCADE_GAMES) {
       expect(game.title, game.slug).toBeTruthy();
@@ -527,6 +532,18 @@ describe('arcade headers', () => {
       expect(block.slice(0, 200), dir).toContain('must-revalidate');
       expect(block.slice(0, 200), dir).not.toContain('immutable');
     }
+  });
+
+  it("matches God's Eye's revalidating entry rule before its immutable wildcard", () => {
+    const entry = headers.indexOf('/gods-eye-game/index.html');
+    const wildcard = headers.indexOf('/gods-eye-game/*');
+    expect(entry).toBeGreaterThan(-1);
+    expect(wildcard).toBeGreaterThan(entry);
+
+    const block = headers.slice(entry, headers.indexOf('\n\n', entry));
+    expect(block).toContain('Access-Control-Allow-Origin: *');
+    expect(block).toContain('must-revalidate');
+    expect(block).not.toContain('immutable');
   });
 
   it('keeps the touch layer revalidating', () => {
