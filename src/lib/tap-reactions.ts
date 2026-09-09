@@ -61,19 +61,24 @@ export interface OpenReactionsEventDetail {
 type TapReactionFeedbackListener = (detail: DoubleTapLikeEventDetail) => void;
 
 /**
- * Visual feedback stays in-process instead of depending on a DOM CustomEvent.
- *
- * The vote bridge still uses window events because ActionBar is deliberately
- * decoupled from the tapped surface. The burst is different: it is mounted in
- * the same React bundle as the recogniser and must paint in the same frame as
- * tap two. A direct subscriber cannot be swallowed by a patched/shadowed
- * CustomEvent implementation and does not wait for any vote/network work.
+ * Keep an in-process listener set as a fallback for browsers where dispatching
+ * a CustomEvent fails. The normal path is the window event below: production
+ * can load the recogniser and renderer from separate lazy chunks, and each
+ * chunk may otherwise end up with its own module-local Set. A window event is
+ * the shared bridge that both chunks can always hear.
  */
 const tapReactionFeedbackListeners = new Set<TapReactionFeedbackListener>();
 
 export function subscribeTapReactionFeedback(listener: TapReactionFeedbackListener) {
   tapReactionFeedbackListeners.add(listener);
-  return () => tapReactionFeedbackListeners.delete(listener);
+  const onFeedback = (event: Event) => {
+    listener((event as CustomEvent<DoubleTapLikeEventDetail>).detail);
+  };
+  window.addEventListener(TAP_REACTION_FEEDBACK_EVENT, onFeedback);
+  return () => {
+    tapReactionFeedbackListeners.delete(listener);
+    window.removeEventListener(TAP_REACTION_FEEDBACK_EVENT, onFeedback);
+  };
 }
 
 function dispatch<T>(name: string, detail: T) {
@@ -111,16 +116,23 @@ export function emitTapReactionFeedback(
     y: point?.y,
   };
 
-  tapReactionFeedbackListeners.forEach((listener) => {
-    try {
-      listener(detail);
-    } catch {
-      // Decorative feedback must never interrupt the gesture or its vote.
-    }
-  });
-
-  // Keep the public event for diagnostics and any older surface integrations.
-  dispatch<DoubleTapLikeEventDetail>(TAP_REACTION_FEEDBACK_EVENT, detail);
+  try {
+    // The window is the one bridge shared by every lazy chunk. Dispatching only
+    // here also means a subscriber present in this chunk receives exactly one
+    // burst rather than one direct callback plus the public event.
+    window.dispatchEvent(
+      new CustomEvent<DoubleTapLikeEventDetail>(TAP_REACTION_FEEDBACK_EVENT, { detail }),
+    );
+  } catch {
+    // Old or patched browsers can still paint through the same-chunk fallback.
+    tapReactionFeedbackListeners.forEach((listener) => {
+      try {
+        listener(detail);
+      } catch {
+        // Decorative feedback must never interrupt the gesture or its vote.
+      }
+    });
+  }
 }
 
 /**
