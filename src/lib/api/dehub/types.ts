@@ -60,7 +60,7 @@ export interface DeHubUser {
   is_verified?: boolean;
   followers?: number | string[];
   follower_count?: number;
-  followings?: string[];
+  followings?: number | string[];
   followingsList?: string[];
   followersList?: string[];
   following_count?: number;
