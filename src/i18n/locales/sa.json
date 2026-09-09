@@ -825,11 +825,6 @@
   "notifications": {
     "title": "सूचनाः",
     "markAllRead": "सर्वाः पठिताः इति चिह्नयतु",
-    "sortOrder": "अधिसूचना क्रम",
-    "priority": "प्राधान्यम्",
-    "newest": "नवीनतमम्",
-    "actNow": "अधुना क्रियताम्",
-    "important": "महत्वपूर्णम्",
     "settings": "सूचनाविन्यासः",
     "actions": "कर्माणि",
     "markAllAsRead": "सर्वाः पठिताः इति चिह्नयतु",

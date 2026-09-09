@@ -841,11 +841,6 @@
   "notifications": {
     "title": "အကြောင်းကြားချက်များ",
     "markAllRead": "အားလုံးဖတ်ပြီးအဖြစ်မှတ်ရန်",
-    "sortOrder": "အသိပေးချက် အော်ဒါ",
-    "priority": "ဦးစားပေးမှု",
-    "newest": "အသစ်ဆုံး",
-    "actNow": "ယခုလုပ်ဆောင်ပါ",
-    "important": "အရေးကြီး",
     "settings": "အကြောင်းကြားချက်ဆက်တင်များ",
     "actions": "Actions",
     "markAllAsRead": "Mark all as read",

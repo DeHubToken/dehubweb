@@ -831,11 +831,6 @@
   "notifications": {
     "title": "Arifa",
     "markAllRead": "Tia alama zote kuwa zimesomwa",
-    "sortOrder": "Agizo la arifa",
-    "priority": "Kipaumbele",
-    "newest": "Mpya zaidi",
-    "actNow": "Chukua hatua sasa",
-    "important": "Muhimu",
     "settings": "Mipangilio ya Arifa",
     "actions": "Vitendo",
     "markAllAsRead": "Tia alama zote kuwa zimesomwa",

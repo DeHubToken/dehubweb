@@ -827,11 +827,6 @@
   "notifications": {
     "title": "Varsler",
     "markAllRead": "Merk alle som lest",
-    "sortOrder": "Varslingsordre",
-    "priority": "Prioritet",
-    "newest": "Nyest",
-    "actNow": "Handle nå.",
-    "important": "Viktig",
     "settings": "Varslingsinnstillinger",
     "actions": "Handlinger",
     "markAllAsRead": "Merk alle som lest",

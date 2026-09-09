@@ -831,11 +831,6 @@
   "notifications": {
     "title": "Билдирүүлөр",
     "markAllRead": "Баарын окулду деп белгилөө",
-    "sortOrder": "Билдирүү тартиби",
-    "priority": "Приоритет",
-    "newest": "Жаңы",
-    "actNow": "Азыр иштөө",
-    "important": "Маанилүү",
     "settings": "Билдирүү орнотуулары",
     "actions": "Аракеттер",
     "markAllAsRead": "Баарын окулду деп белгилөө",

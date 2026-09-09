@@ -828,11 +828,6 @@
   "notifications": {
     "title": "Огоҳиҳо",
     "markAllRead": "Ҳамаро хондашуда қайд кардан",
-    "sortOrder": "Тартиби огоҳӣ",
-    "priority": "Афзалият",
-    "newest": "Навтарин",
-    "actNow": "Ҳоло амал кунед",
-    "important": "Муҳим",
     "settings": "Танзимоти огоҳиҳо",
     "actions": "Амалҳо",
     "markAllAsRead": "Ҳамаро хондашуда қайд кардан",

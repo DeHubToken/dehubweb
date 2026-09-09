@@ -831,11 +831,6 @@
   "notifications": {
     "title": "Notifikationer",
     "markAllRead": "Marker alle som læst",
-    "sortOrder": "Notifikationsordre",
-    "priority": "Prioritet",
-    "newest": "Nyeste",
-    "actNow": "Handl nu",
-    "important": "Vigtigt",
     "settings": "Notifikationsindstillinger",
     "actions": "Handlinger",
     "markAllAsRead": "Marker alle som læst",

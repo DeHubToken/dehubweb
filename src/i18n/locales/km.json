@@ -842,11 +842,6 @@
   "notifications": {
     "title": "ការជូនដំណឹង",
     "markAllRead": "សម្គាល់ទាំងអស់ថាបានអាន",
-    "sortOrder": "លំដាប់នៃការជូនដំណឹង",
-    "priority": "អាទិភាព",
-    "newest": "ថ្មីបំផុត",
-    "actNow": "ធ្វើសកម្មភាពឥឡូវនេះ",
-    "important": "សំខាន់",
     "settings": "ការកំណត់ការជូនដំណឹង",
     "actions": "Actions",
     "markAllAsRead": "Mark all as read",

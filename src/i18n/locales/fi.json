@@ -821,11 +821,6 @@
   "notifications": {
     "title": "Ilmoitukset",
     "markAllRead": "Merkitse kaikki luetuksi",
-    "sortOrder": "Ilmoitustilaus",
-    "priority": "Prioriteetti",
-    "newest": "Uusin",
-    "actNow": "Toimi nyt",
-    "important": "Tärkeää",
     "settings": "Ilmoitusasetukset",
     "actions": "Toiminnot",
     "markAllAsRead": "Merkitse kaikki luetuksi",

@@ -829,11 +829,6 @@
   "notifications": {
     "title": "Ọkwa",
     "markAllRead": "Mee ka niile ka a gụrụ",
-    "sortOrder": "Usoro ngosi",
-    "priority": "Ihe kacha mkpa",
-    "newest": "Kacha ọhụrụ",
-    "actNow": "Mee ugbu a",
-    "important": "Mkpa",
     "settings": "Ntọala Ọkwa",
     "actions": "Omume",
     "markAllAsRead": "Mee ka niile dị ka a gụrụ",
