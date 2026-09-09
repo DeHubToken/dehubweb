@@ -18,7 +18,8 @@ import {
  * claim. Driven with real PointerEvents rather than a component so the timing
  * is exercised directly.
  */
-(globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
+(globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean })
+  .IS_REACT_ACT_ENVIRONMENT = true;
 
 function mountGesture(options: Parameters<typeof useTapGestures>[0]) {
   const host = document.createElement('div');
@@ -90,21 +91,26 @@ describe('the tap ladder', () => {
     act(() => void vi.advanceTimersByTime(80));
     tapAt(h);
 
+    expect(casts).toEqual([]);
+    act(() => void vi.advanceTimersByTime(220));
     expect(casts.map((c) => c.reaction)).toEqual(['like']);
     act(() => void vi.advanceTimersByTime(500));
     expect(onSingleTap).not.toHaveBeenCalled();
   });
 
-  it('casts the like immediately rather than waiting for a possible third tap', () => {
-    // The point of the gesture is that it feels instant.
+  it('holds the like briefly so a third tap can replace it', () => {
     const h = mountGesture({ postId: '7' });
     tapAt(h);
     act(() => void vi.advanceTimersByTime(80));
     tapAt(h);
+    expect(casts).toHaveLength(0);
+    act(() => void vi.advanceTimersByTime(219));
+    expect(casts).toHaveLength(0);
+    act(() => void vi.advanceTimersByTime(1));
     expect(casts).toHaveLength(1);
   });
 
-  it('upgrades to love on a third tap', () => {
+  it('casts only love on a third tap', () => {
     const h = mountGesture({ postId: '7' });
 
     tapAt(h);
@@ -113,7 +119,9 @@ describe('the tap ladder', () => {
     act(() => void vi.advanceTimersByTime(80));
     tapAt(h);
 
-    expect(casts.map((c) => c.reaction)).toEqual(['like', 'love']);
+    expect(casts.map((c) => c.reaction)).toEqual(['love']);
+    act(() => void vi.advanceTimersByTime(500));
+    expect(casts.map((c) => c.reaction)).toEqual(['love']);
   });
 
   it('fires a reversible single tap instantly, with no wait at all', () => {
@@ -140,6 +148,8 @@ describe('the tap ladder', () => {
 
     expect(onSingleTap).toHaveBeenCalledTimes(1);
     expect(onUndoSingleTap).toHaveBeenCalledTimes(1);
+    expect(casts).toEqual([]);
+    act(() => void vi.advanceTimersByTime(220));
     expect(casts.map((c) => c.reaction)).toEqual(['like']);
   });
 
@@ -155,7 +165,7 @@ describe('the tap ladder', () => {
     tapAt(h);
 
     expect(onUndoSingleTap).toHaveBeenCalledTimes(1);
-    expect(casts.map((c) => c.reaction)).toEqual(['like', 'love']);
+    expect(casts.map((c) => c.reaction)).toEqual(['love']);
   });
 
   it('leaves a lone reversible tap standing', () => {
@@ -189,6 +199,7 @@ describe('the tap ladder', () => {
     act(() => void vi.advanceTimersByTime(80));
     tapAt(h, 122, 241);
 
+    act(() => void vi.advanceTimersByTime(220));
     expect(casts[0]).toMatchObject({ postId: '7', x: 122, y: 241 });
   });
 

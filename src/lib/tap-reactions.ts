@@ -9,7 +9,7 @@
  * The ladder, on every feed surface:
  *
  *   double tap → 👍 like
- *   triple tap → ❤️ love (an upgrade — the third tap replaces the like)
+ *   triple tap → ❤️ love (tap three cancels the pending like before it casts)
  *   hold       → the reaction tray
  *
  * A gesture only ever ADDS. Double-tapping something already liked does

@@ -23,6 +23,14 @@ import { emitOpenReactions, emitTapReaction } from '@/lib/tap-reactions';
 /** How long after a tap another one still counts as part of the same gesture. */
 const TAP_WINDOW_MS = 260;
 
+/**
+ * A short grace period after tap two lets tap three replace the pending like
+ * before anything is sent. This is deliberately shorter than the first tap
+ * window: the single-tap action still needs comfortable disambiguation, while
+ * reaction feedback should land as soon as the gesture is resolved.
+ */
+const REACTION_RESOLUTION_MS = 220;
+
 /** Hold time before the reaction tray opens. Matches ActionBar's own thumb. */
 const LONG_PRESS_MS = 400;
 
@@ -191,27 +199,28 @@ export function useTapGestures({
       }
 
       if (taps.current === 2) {
-        // Cast immediately — this is meant to feel like a quick like, not
-        // something that waits to see whether a third tap is coming.
+        // Do not cast yet. If tap three arrives, it replaces this pending like
+        // with love, so one gesture can never create two votes, two
+        // notifications or two overlapping bursts.
         if (tapTimer.current) clearTimeout(tapTimer.current);
         // Put back whatever the first tap did, now that it turned out to be
         // half of a double tap rather than a tap of its own.
         onUndoSingleTap?.();
-        emitTapReaction(id, 'like', point);
         tapTimer.current = setTimeout(() => {
           tapTimer.current = null;
           taps.current = 0;
-        }, TAP_WINDOW_MS);
+          emitTapReaction(id, 'like', point);
+        }, REACTION_RESOLUTION_MS);
         return;
       }
 
-      // Third tap: upgrade the like that just landed to a love.
+      // Third tap: cancel the uncommitted like and cast love by itself.
       if (tapTimer.current) clearTimeout(tapTimer.current);
       tapTimer.current = null;
       taps.current = 0;
       emitTapReaction(id, 'love', point);
     },
-    [disabled, id, onSingleTap],
+    [disabled, id, onSingleTap, onUndoSingleTap],
   );
 
   const onPointerCancel = useCallback(() => {
