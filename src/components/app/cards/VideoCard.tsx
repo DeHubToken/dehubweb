@@ -2344,7 +2344,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               isReposted={video.isReposted}
               isOptimistic={video.isOptimistic}
               tipCount={tipCount}
-              onTip={() => setShowTipModal(true)}
+              onTip={video.creatorPaymentsDisabled ? undefined : () => setShowTipModal(true)}
               onSeeEngagements={() => {
                 setCommentsInitialTab('reposts');
                 setShowComments(true);

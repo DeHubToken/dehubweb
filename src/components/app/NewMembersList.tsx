@@ -149,10 +149,10 @@ export function NewMembersList({ listClassName }: NewMembersListProps) {
             </div>
             <div className="flex-1 min-w-0 overflow-hidden">
               {/* pr-3 only when a badge actually draws — see BadgedName's gutter note. */}
-              <span className={`relative inline-flex items-baseline shrink min-w-0 max-w-full${getBadgeUrl(member.badgeBalance, member.username) ? ' pr-3' : ''}`}>
+              <span className={`relative inline-flex items-baseline shrink min-w-0 max-w-full${getBadgeUrl(member.hideBadgeAndBalance ? 0 : member.badgeBalance, member.username) ? ' pr-3' : ''}`}>
                 <span className="font-semibold text-white text-sm truncate">{member.displayName}</span>
                 <BadgeIcon
-                  badgeBalance={member.badgeBalance}
+                  badgeBalance={member.hideBadgeAndBalance ? 0 : member.badgeBalance}
                   username={member.username}
                   className="w-[9px] h-[9px] absolute -top-0.5 right-0"
                 />

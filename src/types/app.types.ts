@@ -17,6 +17,7 @@ export interface User {
   verified: boolean;
   avatarSeed?: string;
   badgeBalance?: number;
+  paymentsDisabled?: boolean;
 }
 
 export interface Post {

@@ -733,7 +733,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
             isReposted={post.isReposted}
             isOptimistic={post.isOptimistic}
             tipCount={tipCount}
-            onTip={() => setShowTipModal(true)}
+            onTip={post.author.paymentsDisabled ? undefined : () => setShowTipModal(true)}
             onSeeEngagements={() => {
               setCommentsInitialTab('reposts');
               setShowComments(true);

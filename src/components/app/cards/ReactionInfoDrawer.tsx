@@ -68,6 +68,7 @@ export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfo
 
   const firstPage = data?.pages?.[0];
   const canView = firstPage?.canViewLikers !== false;
+  const anonymousCount = firstPage?.anonymousBadgeHolderCount ?? 0;
   const rows = useMemo(() => data?.pages.flatMap((page) => page.data ?? []) ?? [], [data]);
   // The weighted total, not the row count: a badge holder's reaction counts for
   // more than one, and the per-reaction group totals below are weighted too, so
@@ -128,10 +129,15 @@ export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfo
             </div>
           ) : !canView ? (
             <AppState icon="lock" title="Reactions are private" description="Only the post author can view this list." kind="restricted" size="drawer" />
-          ) : groups.length === 0 ? (
+          ) : groups.length === 0 && anonymousCount === 0 ? (
             <AppState icon="pinned" title="No reactions yet" description="Reactions to this post will appear here." size="drawer" />
           ) : (
             <div className="space-y-5">
+              {anonymousCount > 0 ? (
+                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300">
+                  {anonymousCount} {anonymousCount === 1 ? 'like' : 'likes'} from anonymous badge {anonymousCount === 1 ? 'holder' : 'holders'}
+                </div>
+              ) : null}
               {groups.map(({ meta, total, people }) => (
                 <section key={meta.key}>
                   <h3 className="flex items-center gap-2 px-1 pb-2 text-sm text-white/70">

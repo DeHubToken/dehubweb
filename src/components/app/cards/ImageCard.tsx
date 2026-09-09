@@ -1131,7 +1131,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           isReposted={post.isReposted}
           isOptimistic={post.isOptimistic}
           tipCount={tipCount}
-          onTip={() => setShowTipModal(true)}
+          onTip={post.creatorPaymentsDisabled ? undefined : () => setShowTipModal(true)}
           onSeeEngagements={() => {
             setCommentsInitialTab('reposts');
             setShowComments(true);

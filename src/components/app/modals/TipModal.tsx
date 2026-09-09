@@ -44,6 +44,8 @@ import { useAuth } from '@/contexts/AuthContext';
 // of the entry bundle (scripts/check-entry-bundle.mjs fails the build
 // otherwise).
 import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { getAccountInfo } from '@/lib/api/dehub';
+import { toast } from 'sonner';
 
 const QUICK_AMOUNTS = [500, 1000, 5000, 10000, 25000, 50000, 100000, 1000000];
 
@@ -77,6 +79,8 @@ export function TipModal({
   const [amount, setAmount] = useState('');
   const [balances, setBalances] = useState<Record<number, number> | null>(null);
   const [lastTipAmount, setLastTipAmount] = useState(0);
+  const [recipientPrivate, setRecipientPrivate] = useState(false);
+  const [privacyChecking, setPrivacyChecking] = useState(false);
   const resolvedTokenId = tokenId || context;
   const { pinnedChainId } = useTipNetwork();
 
@@ -140,6 +144,17 @@ export function TipModal({
     return () => { cancelled = true; };
   }, [open, walletAddress]);
 
+  useEffect(() => {
+    if (!open || !creatorAddress) return;
+    let cancelled = false;
+    setPrivacyChecking(true);
+    getAccountInfo(creatorAddress)
+      .then((profile) => { if (!cancelled) setRecipientPrivate(profile?.hideBadgeAndBalance === true); })
+      .catch(() => { if (!cancelled) setRecipientPrivate(false); })
+      .finally(() => { if (!cancelled) setPrivacyChecking(false); });
+    return () => { cancelled = true; };
+  }, [open, creatorAddress]);
+
   function parseAbbreviatedAmount(val: string): number {
     const trimmed = val.trim().toLowerCase();
     const match = trimmed.match(/^(\d+(?:\.\d+)?)\s*(k|m)?$/);
@@ -158,8 +173,20 @@ export function TipModal({
     ? Math.max(...AUTO_TIP_CHAINS.map(id => balances[id] ?? 0))
     : null;
 
-  const handleSendTip = () => {
+  const handleSendTip = async () => {
     if (!isValidAmount) return;
+    if (!creatorAddress) return;
+    try {
+      const profile = await getAccountInfo(creatorAddress);
+      if (profile?.hideBadgeAndBalance) {
+        setRecipientPrivate(true);
+        toast.error('This account has disabled tips while private balance mode is on.');
+        return;
+      }
+    } catch {
+      toast.error('Could not verify the recipient privacy setting. No tip was sent.');
+      return;
+    }
     setLastTipAmount(parsedAmount);
     tip(parsedAmount);
   };
@@ -191,6 +218,11 @@ export function TipModal({
           )}
         </DrawerHeader>
         <div className="flex flex-col gap-4">
+          {recipientPrivate ? (
+            <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300">
+              This account has private balance mode on, so DeHub cannot send tokens or tips to it.
+            </div>
+          ) : null}
           <div>
             <p className="text-white/60 text-xs mb-2">{t('tip.quickAmounts', 'Quick amounts')}</p>
             <div className="flex flex-wrap gap-2">
@@ -259,7 +291,7 @@ export function TipModal({
               variant="glass"
               className="flex-1"
               onClick={handleSendTip}
-              disabled={isTipping || !isValidAmount}
+              disabled={isTipping || privacyChecking || recipientPrivate || !isValidAmount}
             >
               {isTipping ? (
                 <>
