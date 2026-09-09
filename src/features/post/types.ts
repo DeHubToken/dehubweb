@@ -144,8 +144,6 @@ export interface PostFormComputed {
   mintRequired: boolean;
   /** Today’s free posting allowance and what is left of it. Null when unread. */
   postQuota: PostQuotaStatus | null;
-  /** e.g. "7 of 10 free posts left today". Null when there is nothing to say. */
-  postQuotaLabel: string | null;
 }
 
 /**
