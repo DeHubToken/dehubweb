@@ -87,7 +87,7 @@ describe('the tap ladder', () => {
     tapAt(h);
     expect(onSingleTap).not.toHaveBeenCalled(); // held back for a possible second
 
-    act(() => void vi.advanceTimersByTime(300));
+    act(() => void vi.advanceTimersByTime(360));
     expect(onSingleTap).toHaveBeenCalledTimes(1);
     expect(casts).toEqual([]);
   });
@@ -102,7 +102,7 @@ describe('the tap ladder', () => {
 
     expect(casts).toEqual([]);
     expect(feedback.map((item) => item.reaction)).toEqual(['like']);
-    act(() => void vi.advanceTimersByTime(220));
+    act(() => void vi.advanceTimersByTime(360));
     expect(casts.map((c) => c.reaction)).toEqual(['like']);
     act(() => void vi.advanceTimersByTime(500));
     expect(onSingleTap).not.toHaveBeenCalled();
@@ -115,7 +115,7 @@ describe('the tap ladder', () => {
     tapAt(h);
     expect(casts).toHaveLength(0);
     expect(feedback.map((item) => item.reaction)).toEqual(['like']);
-    act(() => void vi.advanceTimersByTime(219));
+    act(() => void vi.advanceTimersByTime(359));
     expect(casts).toHaveLength(0);
     act(() => void vi.advanceTimersByTime(1));
     expect(casts).toHaveLength(1);
@@ -134,6 +134,19 @@ describe('the tap ladder', () => {
     expect(feedback.map((item) => item.reaction)).toEqual(['like', 'love']);
     act(() => void vi.advanceTimersByTime(500));
     expect(casts.map((c) => c.reaction)).toEqual(['love']);
+  });
+
+  it('recognises a deliberate desktop triple-click cadence', () => {
+    const h = mountGesture({ postId: '7' });
+
+    tapAt(h);
+    act(() => void vi.advanceTimersByTime(315));
+    tapAt(h);
+    act(() => void vi.advanceTimersByTime(315));
+    tapAt(h);
+
+    expect(feedback.map((item) => item.reaction)).toEqual(['like', 'love']);
+    expect(casts.map((item) => item.reaction)).toEqual(['love']);
   });
 
   it('renders tap-two feedback immediately and replaces it on tap three', () => {
@@ -200,7 +213,7 @@ describe('the tap ladder', () => {
     expect(onSingleTap).toHaveBeenCalledTimes(1);
     expect(onUndoSingleTap).toHaveBeenCalledTimes(1);
     expect(casts).toEqual([]);
-    act(() => void vi.advanceTimersByTime(220));
+    act(() => void vi.advanceTimersByTime(360));
     expect(casts.map((c) => c.reaction)).toEqual(['like']);
   });
 
@@ -251,7 +264,7 @@ describe('the tap ladder', () => {
     tapAt(h, 122, 241);
 
     expect(feedback[0]).toMatchObject({ postId: '7', x: 122, y: 241 });
-    act(() => void vi.advanceTimersByTime(220));
+    act(() => void vi.advanceTimersByTime(360));
     expect(casts[0]).toMatchObject({ postId: '7', x: 122, y: 241 });
   });
 

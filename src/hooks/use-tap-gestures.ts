@@ -25,7 +25,10 @@ import {
 } from '@/lib/tap-reactions';
 
 /** How long after a tap another one still counts as part of the same gesture. */
-const TAP_WINDOW_MS = 260;
+// Desktop browsers commonly deliver a deliberate click cadence around 300ms
+// (measured at 298-315ms in Chrome on the production feed). The old 260ms
+// cutoff split an ordinary triple-click into three unrelated singles.
+const TAP_WINDOW_MS = 360;
 
 /**
  * A short grace period after tap two lets tap three replace the pending like
@@ -33,7 +36,7 @@ const TAP_WINDOW_MS = 260;
  * window: the single-tap action still needs comfortable disambiguation, while
  * reaction feedback should land as soon as the gesture is resolved.
  */
-const REACTION_RESOLUTION_MS = 220;
+const REACTION_RESOLUTION_MS = 360;
 
 /** Hold time before the reaction tray opens. Matches ActionBar's own thumb. */
 const LONG_PRESS_MS = 400;
