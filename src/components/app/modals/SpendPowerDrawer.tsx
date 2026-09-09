@@ -163,8 +163,7 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
    * the gift's inversion of ownership.
    */
   const posts = useMemo(() => {
-    const rows: any[] =
-      pastedId !== null ? (pastedPost ? [pastedPost as any] : []) : ((found?.data as any[]) ?? []);
+    const rows = pastedId !== null ? (pastedPost ? [pastedPost] : []) : (found?.data ?? []);
     return rows.filter(row => {
       if (!ageSuits(power?.key, row?.createdAt)) return false;
       if (home !== 'gift') return true;
@@ -212,21 +211,12 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
         onSuccess: booking => {
           if (power.key === 'signal_flare') {
             toast.promise(waitForSignalFlareReceipt(booking.id), {
-              loading: t('superpowers.flareCounting', {
-                defaultValue: 'Signal Flare sent. Counting notifications...',
-              }),
+              loading: 'Signal Flare sent. Counting notifications...',
               success: recipients =>
                 recipients === null
-                  ? t('superpowers.flareCountPending', {
-                      defaultValue: 'Signal Flare sent. The final count will appear in Past usage.',
-                    })
-                  : t('superpowers.flareNotified', {
-                      count: recipients,
-                      defaultValue: `Signal Flare notified ${recipients} ${recipients === 1 ? 'person' : 'people'}`,
-                    }),
-              error: t('superpowers.flareCountPending', {
-                defaultValue: 'Signal Flare sent. The final count will appear in Past usage.',
-              }),
+                  ? 'Signal Flare sent. The final count will appear in Past usage.'
+                  : `Signal Flare notified ${recipients} ${recipients === 1 ? 'person' : 'people'}`,
+              error: 'Signal Flare sent. The final count will appear in Past usage.',
             });
           } else {
             toast.success(
@@ -241,7 +231,8 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
         },
         // The server writes these sentences for a person to read — "Post in
         // that category first", "That post is over a week old". Show them.
-        onError: (error: any) => toast.error(error?.message || t('superpowers.boostFailed')),
+        onError: (error: unknown) =>
+          toast.error(error instanceof Error ? error.message : t('superpowers.boostFailed')),
       },
     );
   };
@@ -460,7 +451,7 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
                   })}
                 </p>
               )}
-              {((stages ?? []) as any[]).map(stage => {
+              {(stages ?? []).map(stage => {
                 const picked = pickedStage === stage.id;
                 return (
                   <button

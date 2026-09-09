@@ -257,13 +257,10 @@ export default function SuperPowersPage() {
                       )}
                     >
                       {usable && allowance !== undefined
-                        ? t('superpowers.usesLeft', {
-                            count: allowance,
-                            defaultValue: `${allowance} ${allowance === 1 ? 'use' : 'uses'} left`,
-                          })
+                        ? `${allowance} ${allowance === 1 ? 'use' : 'uses'} left`
                         : !power.available
                           ? t('superpowers.comingSoon')
-                          : t('superpowers.locked', { defaultValue: 'Locked' })}
+                          : 'Locked'}
                     </span>
                     <button
                       type="button"
@@ -274,7 +271,7 @@ export default function SuperPowersPage() {
                       disabled={!status?.tier}
                       className="group inline-flex items-center gap-1 text-[12px] text-zinc-400 hover:text-white active:text-white transition-colors disabled:opacity-35 disabled:pointer-events-none"
                     >
-                      {t('superpowers.pastUsage', { defaultValue: 'Past usage' })}
+                      Past usage
                       <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
                     </button>
                   </div>
@@ -348,10 +345,10 @@ export default function SuperPowersPage() {
           <DrawerHeader className="pb-3 flex flex-row items-start justify-between gap-3">
             <div className="min-w-0">
               <DrawerTitle className="text-white text-lg">
-                {historyPower?.label} {t('superpowers.usage', { defaultValue: 'usage' })}
+                {historyPower?.label} usage
               </DrawerTitle>
               <p className="text-[12px] text-zinc-500 mt-1">
-                {t('superpowers.currentCycleHistory', { defaultValue: 'This cycle and anything still active.' })}
+                This cycle and anything still active.
               </p>
             </div>
             <button
@@ -368,31 +365,23 @@ export default function SuperPowersPage() {
             {historyBookings.length === 0 ? (
               <div className="rounded-xl border border-white/10 bg-white/[0.03] px-5 py-8 flex flex-col items-center text-center gap-2">
                 <History className="w-6 h-6 text-zinc-500" aria-hidden="true" />
-                <p className="text-sm text-zinc-300">
-                  {t('superpowers.noPastUsage', { defaultValue: 'No past usage for this power yet.' })}
-                </p>
+                <p className="text-sm text-zinc-300">No past usage for this power yet.</p>
               </div>
             ) : (
               historyBookings.map(booking => {
                 const flare = booking.power === 'signal_flare';
                 const result = flare
                   ? booking.signalDeliveryStatus === 'sent'
-                    ? t('superpowers.notifiedCount', {
-                        count: booking.signalRecipients ?? 0,
-                        defaultValue: `${booking.signalRecipients ?? 0} notified`,
-                      })
+                    ? `${booking.signalRecipients ?? 0} notified`
                     : booking.signalDeliveryStatus === 'failed'
-                      ? t('superpowers.deliveryRetrying', { defaultValue: 'Delivery retrying' })
-                      : t('superpowers.notifyingFollowers', { defaultValue: 'Notifying followers' })
+                      ? 'Delivery retrying'
+                      : 'Notifying followers'
                   : t('superpowers.seenCount', {
                       count: booking.served,
                       defaultValue: `${booking.served} seen`,
                     });
                 const subject = booking.tokenId != null
-                  ? t('superpowers.postNumber', {
-                      id: booking.tokenId,
-                      defaultValue: `Post #${booking.tokenId}`,
-                    })
+                  ? `Post #${booking.tokenId}`
                   : booking.category || historyPower?.label || booking.power;
 
                 return (
@@ -423,10 +412,10 @@ export default function SuperPowersPage() {
                       {!flare && (
                         <p className="text-[10px] text-zinc-500 mt-0.5">
                           {booking.live
-                            ? t('superpowers.live', { defaultValue: 'Live' })
+                            ? 'Live'
                             : booking.status === 'active'
                               ? t('superpowers.queued')
-                              : t('superpowers.finished', { defaultValue: 'Finished' })}
+                              : 'Finished'}
                         </p>
                       )}
                     </div>
@@ -441,8 +430,10 @@ export default function SuperPowersPage() {
                                   ? t('superpowers.cancelledRefunded')
                                   : t('superpowers.cancelledSpent'),
                               ),
-                            onError: (error: any) =>
-                              toast.error(error?.message || t('superpowers.cancelFailed')),
+                            onError: (error: unknown) =>
+                              toast.error(
+                                error instanceof Error ? error.message : t('superpowers.cancelFailed'),
+                              ),
                           })
                         }
                         disabled={cancelBoost.isPending}
