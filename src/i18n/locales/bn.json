@@ -808,11 +808,6 @@
   "notifications": {
     "title": "বিজ্ঞপ্তি",
     "markAllRead": "সব পঠিত করুন",
-    "sortOrder": "নোটিফিকেশন অর্ডার",
-    "priority": "অগ্রাধিকার",
-    "newest": "নতুন",
-    "actNow": "এখনই আইন করুন",
-    "important": "গুরুত্বপূর্ণ",
     "settings": "বিজ্ঞপ্তি সেটিংস",
     "actions": "অ্যাকশন",
     "markAllAsRead": "সব পঠিত হিসেবে চিহ্নিত করুন",

@@ -820,11 +820,6 @@
   "notifications": {
     "title": "Oznámení",
     "markAllRead": "Označit vše jako přečtené",
-    "sortOrder": "Objednávka oznámení",
-    "priority": "Priorita",
-    "newest": "Nejnovější",
-    "actNow": "Jednat nyní",
-    "important": "Důležité",
     "settings": "Nastavení oznámení",
     "actions": "Akce",
     "markAllAsRead": "Označit vše jako přečtené",

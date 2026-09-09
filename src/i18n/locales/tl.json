@@ -877,11 +877,6 @@
   "notifications": {
     "title": "Mga Abiso",
     "markAllRead": "Markahang nabasa lahat",
-    "sortOrder": "Notification",
-    "priority": "Priyoridad",
-    "newest": "Pinakabago",
-    "actNow": "Kumilos ngayon",
-    "important": "Mahalaga",
     "settings": "Mga Setting ng Abiso",
     "actions": "Mga Aksyon",
     "markAllAsRead": "Markahang nabasa na ang lahat",

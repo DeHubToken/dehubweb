@@ -849,11 +849,6 @@
   "notifications": {
     "title": "খবর",
     "markAllRead": "সব পড়া মার্ক করো",
-    "sortOrder": "নোটিফিকেশন অর্ডার",
-    "priority": "অগ্রাধিকার",
-    "newest": "সবচেয়ে নতুন",
-    "actNow": "এখনই কাজ করুন",
-    "important": "গুরুত্বপূর্ণ",
     "settings": "খবরের সেটিংস",
     "actions": "কাজ",
     "markAllAsRead": "সগ পড়া বুলি দাগাও",

@@ -819,11 +819,6 @@
   "notifications": {
     "title": "सूचना",
     "markAllRead": "सभे पढ़ल गइल मानीं",
-    "sortOrder": "अधिसूचना जारी कइल गइल",
-    "priority": "प्राथमिकता हवे",
-    "newest": "नया नया सब कुछ",
-    "actNow": "अभी खातिर एक्टिंग",
-    "important": "अउरी महत्ववाला",
     "settings": "सूचना सेटिंग",
     "actions": "कार्य",
     "markAllAsRead": "सभे पढ़ल गइल मानीं",

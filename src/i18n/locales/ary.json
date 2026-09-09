@@ -829,11 +829,6 @@
   "notifications": {
     "title": "الإشعارات",
     "markAllRead": "علم كلشي كمقروء",
-    "sortOrder": "أمر الإشعار",
-    "priority": "الأولوية",
-    "newest": "الأحدث",
-    "actNow": "تصرّف الآن",
-    "important": "مهم",
     "settings": "إعدادات الإشعارات",
     "actions": "الإجراءات",
     "markAllAsRead": "علم كلشي كمقروء",

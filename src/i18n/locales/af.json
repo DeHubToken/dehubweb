@@ -841,11 +841,6 @@
   "notifications": {
     "title": "Kennisgewings",
     "markAllRead": "Merk alles gelees",
-    "sortOrder": "Kennisgewing volgorde",
-    "priority": "Prioriteit",
-    "newest": "Nuutste",
-    "actNow": "WET NOU",
-    "important": "Belangrik",
     "settings": "Kennisgewinginstellings",
     "actions": "Aksies",
     "markAllAsRead": "Merk alles as gelees",

@@ -821,11 +821,6 @@
   "notifications": {
     "title": "Notificacions",
     "markAllRead": "Marcar tot com a llegit",
-    "sortOrder": "Ordre de notificació",
-    "priority": "Prioritat",
-    "newest": "Més recent",
-    "actNow": "Actua ara",
-    "important": "Important",
     "settings": "Configuració de notificacions",
     "actions": "Accions",
     "markAllAsRead": "Marcar tot com a llegit",

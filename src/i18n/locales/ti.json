@@ -825,11 +825,6 @@
   "notifications": {
     "title": "ምልክታታት",
     "markAllRead": "ኩሉ ከም ዝተነበ ምልክት ግበር",
-    "sortOrder": "ናይ ኣፍልጦ ትእዛዝ",
-    "priority": "ቀዳምነት",
-    "newest": "ሓድሽ",
-    "actNow": "ሕጂ ስጕምቲ ውሰድ",
-    "important": "ኣገዳሲ",
     "settings": "ቅጥዕታት ምልክታ",
     "actions": "ተግባራት",
     "markAllAsRead": "ኩሉ ከም ዝተነበ ምልክት ግበር",

@@ -783,11 +783,6 @@
   "notifications": {
     "title": "اطلاع",
     "markAllRead": "سارے پڑھے نشان لاؤ",
-    "sortOrder": "اطلاع دی ترتیب",
-    "priority": "ترجیح",
-    "newest": "نویا ترین",
-    "actNow": "ہن کم کرو",
-    "important": "اہم",
     "settings": "اطلاع ترتیباں",
     "actions": "عمل",
     "markAllAsRead": "سارے پڑھے نشان لاؤ",

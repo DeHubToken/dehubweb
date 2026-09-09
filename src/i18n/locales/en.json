@@ -845,11 +845,6 @@
   "notifications": {
     "title": "Notifications",
     "markAllRead": "Mark all read",
-    "sortOrder": "Notification order",
-    "priority": "Priority",
-    "newest": "Newest",
-    "actNow": "Act now",
-    "important": "Important",
     "settings": "Notification Settings",
     "actions": "Actions",
     "markAllAsRead": "Mark all as read",
