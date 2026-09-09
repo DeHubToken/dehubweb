@@ -204,7 +204,7 @@ const SLAYER_URL =
 const TRENCHSTAR_URL =
   (import.meta.env.VITE_TRENCHSTAR_URL as string | undefined) || '/trenchstar-game/index.html';
 const GODS_EYE_URL =
-  (import.meta.env.VITE_GODS_EYE_URL as string | undefined) || '/gods-eye-game/index.html';
+  (import.meta.env.VITE_GODS_EYE_URL as string | undefined) || '/gods-eye-game/index.html?v=D1_67NVT';
 
 /**
  * Shared preflight for the two engines that are WebGL2-only and heavy.
