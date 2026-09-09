@@ -13,6 +13,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { ARCADE_GAMES, ARCADE_SANDBOX, getArcadeGame } from '@/config/arcade-games';
+import worker from '../../CLOUDFLARE_WORKER_SEO.js';
 
 beforeAll(() => {
   // jsdom has no canvas backend, and `buildUrl` probes the GPU to choose a
@@ -544,6 +545,22 @@ describe('arcade headers', () => {
     expect(block).toContain('Access-Control-Allow-Origin: *');
     expect(block).toContain('must-revalidate');
     expect(block).not.toContain('immutable');
+  });
+
+  it("keeps God's Eye's entry revalidating after Cloudflare combines static rules", async () => {
+    const fetch = vi.fn().mockResolvedValue(
+      new Response('<!doctype html>', {
+        headers: { 'Cache-Control': 'public, max-age=31536000, immutable' },
+      }),
+    );
+    const response = await worker.fetch(
+      new Request('https://dehub.io/gods-eye-game/index.html?v=D1_67NVT'),
+      { ASSETS: { fetch } },
+    );
+
+    expect(fetch).toHaveBeenCalledOnce();
+    expect(response.headers.get('Access-Control-Allow-Origin')).toBe('*');
+    expect(response.headers.get('Cache-Control')).toBe('public, max-age=0, must-revalidate');
   });
 
   it('keeps the touch layer revalidating', () => {
