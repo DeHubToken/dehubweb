@@ -18,8 +18,8 @@
  * Purely decorative: `pointer-events-none` throughout, so it can never take a
  * tap from the carousel, the player, or the card underneath.
  *
- * It DRAWS from <body>, not from the box it is mounted in. A firework thrown
- * out of a tap point reaches ~130px, and a feed card is a rounded, clipped
+ * It DRAWS from <body>, not from the box it is mounted in. The bloom extends
+ * beyond its tap point, and a feed card is a rounded, clipped
  * bento: drawn in place, half of it was sliced off against the card's own edge,
  * the image's rounded corner or the media box's `overflow-hidden`, and on a
  * short card the top of it landed under the sticky nav. The mount point stays
@@ -29,7 +29,7 @@
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Heart, ThumbsUp } from 'lucide-react';
 import {
   TAP_REACTION_CAST_EVENT,
@@ -46,27 +46,20 @@ interface Burst {
 }
 
 /**
- * The love burst is a firework, not one heart with a halo: eleven hearts at
- * eleven sizes thrown out of the tap point and then pulled back down.
+ * Love gets a restrained bloom: six small hearts lift away from the main one.
+ * The shorter travel keeps the acknowledgement close to the finger and avoids
+ * the rough, confetti-like cloud the old eleven-spark firework created.
  *
- * `angle` is degrees clockwise from due right, so negative is upward — the
- * spray is weighted there because that is where there is room above a finger.
- * The size spread is what sells it as an explosion; a single size reads as a
- * ring instead. `fall` is the sag applied over the last third of the flight,
- * and small sparks fly furthest and sag least.
+ * `angle` is degrees clockwise from due right. The bloom leans upward, where
+ * there is usually more room above a fingertip.
  */
 const LOVE_SPARK_SEEDS = [
-  { angle: -90, distance: 106, size: 26, delay: 0, rotate: -8, fall: 22, tone: 'fill-rose-500 text-rose-500' },
-  { angle: -138, distance: 92, size: 16, delay: 0.04, rotate: -26, fall: 18, tone: 'fill-rose-400 text-rose-400' },
-  { angle: -42, distance: 96, size: 18, delay: 0.03, rotate: 24, fall: 18, tone: 'fill-rose-500 text-rose-500' },
-  { angle: -166, distance: 72, size: 12, delay: 0.07, rotate: -34, fall: 14, tone: 'fill-rose-300 text-rose-300' },
-  { angle: -14, distance: 76, size: 13, delay: 0.06, rotate: 30, fall: 14, tone: 'fill-rose-400 text-rose-400' },
-  { angle: -114, distance: 62, size: 22, delay: 0.09, rotate: -18, fall: 12, tone: 'fill-rose-500 text-rose-500' },
-  { angle: -66, distance: 66, size: 20, delay: 0.08, rotate: 16, fall: 12, tone: 'fill-rose-400 text-rose-400' },
-  { angle: 154, distance: 82, size: 11, delay: 0.11, rotate: -40, fall: 10, tone: 'fill-rose-300 text-rose-300' },
-  { angle: 26, distance: 86, size: 14, delay: 0.1, rotate: 36, fall: 10, tone: 'fill-rose-400 text-rose-400' },
-  { angle: 104, distance: 50, size: 10, delay: 0.13, rotate: 12, fall: 8, tone: 'fill-rose-300 text-rose-300' },
-  { angle: 74, distance: 56, size: 15, delay: 0.12, rotate: -12, fall: 8, tone: 'fill-rose-500 text-rose-500' },
+  { angle: -100, distance: 68, size: 15, delay: 0, rotate: -8, tone: 'fill-rose-500 text-rose-500' },
+  { angle: -145, distance: 58, size: 11, delay: 0.03, rotate: -18, tone: 'fill-rose-400 text-rose-400' },
+  { angle: -42, distance: 62, size: 12, delay: 0.02, rotate: 16, tone: 'fill-rose-500 text-rose-500' },
+  { angle: -174, distance: 46, size: 9, delay: 0.05, rotate: -22, tone: 'fill-rose-300 text-rose-300' },
+  { angle: -8, distance: 50, size: 10, delay: 0.04, rotate: 20, tone: 'fill-rose-400 text-rose-400' },
+  { angle: 72, distance: 42, size: 9, delay: 0.06, rotate: 10, tone: 'fill-rose-300 text-rose-300' },
 ] as const;
 
 /** Polar → cartesian once at module load; none of it changes per burst. */
@@ -79,17 +72,16 @@ const LOVE_SPARKS = LOVE_SPARK_SEEDS.map((spark) => {
   };
 });
 
-/** Flight time of one spark. The stagger above adds ~0.13s on top. */
-const SPARK_DURATION = 0.95;
+/** Flight time of one spark. */
+const SPARK_DURATION = 0.62;
 
 /**
- * How much room the widest burst needs around its centre: the furthest spark
- * flies 106px and is drawn from its own middle. A tap right on the edge of the
+ * How much room the widest burst needs around its centre. A tap right on the edge of the
  * screen slides inwards by this much so the explosion stays whole — the burst
  * is feedback for a tap that already registered, not a hit target, so moving it
  * costs nothing and losing half of it costs the whole effect.
  */
-const BURST_MARGIN = 120;
+const BURST_MARGIN = 84;
 
 /** Pull a coordinate inside the viewport; centre it if the axis is too short. */
 const keepOnScreen = (value: number, extent: number) =>
@@ -101,6 +93,8 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const [bursts, setBursts] = useState<Burst[]>([]);
   const nextId = useRef(0);
+  const removalTimers = useRef(new Set<ReturnType<typeof setTimeout>>());
+  const reduceMotion = useReducedMotion();
 
   const remove = useCallback((id: number) => {
     setBursts((current) => current.filter((b) => b.id !== id));
@@ -109,6 +103,7 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
   useEffect(() => {
     const id = postId != null ? String(postId) : '';
     if (!id) return;
+    const timers = removalTimers.current;
 
     const listener = (event: Event) => {
       const detail = (event as CustomEvent<DoubleTapLikeEventDetail>).detail;
@@ -139,20 +134,27 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
         y: keepOnScreen(y, window.innerHeight),
       };
       setBursts((current) => {
-        // A love always arrives on top of the 👍 that the same gesture's second
-        // tap cast a moment earlier. Drop that one the instant the explosion
-        // starts instead of leaving a thumb sitting behind the hearts for the
-        // rest of its own 450ms — the ladder upgraded, so the rung below it
-        // should be gone. AnimatePresence still fades it, under the flash.
+        // Defensive only: the recognizer now resolves double versus triple
+        // before casting, but an older emitter must not put a thumb behind love.
         const kept =
           burst.reaction === 'love' ? current.filter((b) => b.reaction !== 'like') : current;
         return [...kept, burst];
       });
+
+      const timer = setTimeout(() => {
+        timers.delete(timer);
+        remove(burst.id);
+      }, reduceMotion ? 320 : burst.reaction === 'love' ? 780 : 640);
+      timers.add(timer);
     };
 
     window.addEventListener(TAP_REACTION_CAST_EVENT, listener as EventListener);
-    return () => window.removeEventListener(TAP_REACTION_CAST_EVENT, listener as EventListener);
-  }, [postId]);
+    return () => {
+      window.removeEventListener(TAP_REACTION_CAST_EVENT, listener as EventListener);
+      timers.forEach(clearTimeout);
+      timers.clear();
+    };
+  }, [postId, reduceMotion, remove]);
 
   // The anchor: an empty, unclipped box that marks where this post's media is,
   // for a cast that arrives without a tap point. It draws nothing itself.
@@ -164,68 +166,52 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
   // gone again inside a second.
   const layer = (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-[9999]">
-      <AnimatePresence>
-        {bursts.map((burst) => (
-          <motion.div
-            key={burst.id}
-            className="pointer-events-none fixed"
-            style={{ left: burst.x, top: burst.y }}
-            initial={{ opacity: 0, scale: 0.4, x: '-50%', y: '-50%' }}
-            animate={{ opacity: 1, scale: 1 }}
-            // Exit is a flat 120ms rather than the entry spring: a 👍 replaced
-            // by a love has to be gone before the eye finds it again.
-            exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.12, ease: 'easeOut' } }}
-            transition={{ type: 'spring', stiffness: 420, damping: 18 }}
-            onAnimationComplete={() => {
-              // Long enough to read, short enough not to stack up on a fast
-              // triple tap. Removal is driven from here rather than a timer so
-              // it cannot outlive an unmount. Love waits for the last spark.
-              setTimeout(() => remove(burst.id), burst.reaction === 'love' ? 900 : 450);
-            }}
-          >
+      {bursts.map((burst) => (
+        <div
+          key={burst.id}
+          className="pointer-events-none fixed"
+          style={{ left: burst.x, top: burst.y, transform: 'translate(-50%, -50%)' }}
+        >
             {burst.reaction === 'love' ? (
               <>
-                {/* The flash the sparks come out of. Sits behind the lot and is
-                    gone well before the hearts land. */}
-                <motion.span
-                  className="absolute left-1/2 top-1/2 -z-10 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full"
-                  style={{
-                    background:
-                      'radial-gradient(circle, rgba(244,63,94,0.55) 0%, rgba(244,63,94,0.18) 45%, rgba(244,63,94,0) 70%)',
-                  }}
-                  initial={{ opacity: 0.9, scale: 0.2 }}
-                  animate={{ opacity: 0, scale: 1.8 }}
-                  transition={{ duration: 0.5, ease: 'easeOut' }}
-                />
                 <motion.div
-                  initial={{ scale: 0.4 }}
-                  animate={{ scale: [0.4, 1.3, 1] }}
-                  transition={{ duration: 0.45 }}
+                  initial={reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.62, y: 6, rotate: -4 }}
+                  animate={
+                    reduceMotion
+                      ? { opacity: 1 }
+                      : {
+                          opacity: [0, 1, 1, 0],
+                          scale: [0.62, 1.08, 1, 0.94],
+                          y: [6, 0, -2, -10],
+                          rotate: [-4, 0, 0, 2],
+                        }
+                  }
+                  transition={{ duration: 0.76, times: [0, 0.18, 0.68, 1], ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <Heart className="h-16 w-16 fill-rose-500 text-rose-500 drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]" />
+                  <Heart className="h-16 w-16 fill-rose-500 text-rose-500 drop-shadow-[0_3px_6px_rgba(190,18,60,0.22)]" />
                 </motion.div>
-                {LOVE_SPARKS.map((spark, i) => (
+                {!reduceMotion && LOVE_SPARKS.map((spark, i) => (
                   <motion.span
                     key={i}
                     className="absolute left-1/2 top-1/2"
                     style={{ marginLeft: -spark.size / 2, marginTop: -spark.size / 2 }}
-                    initial={{ opacity: 0, x: 0, y: 0, scale: 0.2, rotate: 0 }}
+                    initial={{ opacity: 0, x: 0, y: 0, scale: 0.55, rotate: 0 }}
                     animate={{
-                      opacity: [0, 1, 1, 0],
-                      x: [0, spark.x * 0.62, spark.x * 0.93, spark.x],
-                      y: [0, spark.y * 0.62, spark.y * 0.93, spark.y + spark.fall],
-                      scale: [0.2, 1, 0.92, 0.5],
-                      rotate: [0, spark.rotate * 0.5, spark.rotate * 0.85, spark.rotate],
+                      opacity: [0, 0.9, 0],
+                      x: [0, spark.x * 0.7, spark.x],
+                      y: [0, spark.y * 0.7, spark.y - 6],
+                      scale: [0.55, 1, 0.72],
+                      rotate: [0, spark.rotate * 0.6, spark.rotate],
                     }}
                     transition={{
                       duration: SPARK_DURATION,
                       delay: spark.delay,
-                      times: [0, 0.25, 0.6, 1],
-                      ease: 'easeOut',
+                      times: [0, 0.22, 1],
+                      ease: [0.22, 1, 0.36, 1],
                     }}
                   >
                     <Heart
-                      className={`${spark.tone} drop-shadow-[0_1px_6px_rgba(0,0,0,0.4)]`}
+                      className={`${spark.tone} drop-shadow-[0_2px_4px_rgba(190,18,60,0.18)]`}
                       style={{ width: spark.size, height: spark.size }}
                     />
                   </motion.span>
@@ -233,16 +219,23 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
               </>
             ) : (
               <motion.div
-                initial={{ scale: 0.4 }}
-                animate={{ scale: [0.4, 1.2, 1] }}
-                transition={{ duration: 0.35 }}
+                initial={reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.68, y: 5 }}
+                animate={
+                  reduceMotion
+                    ? { opacity: 1 }
+                    : {
+                        opacity: [0, 1, 1, 0],
+                        scale: [0.68, 1.06, 1, 0.94],
+                        y: [5, 0, -2, -12],
+                      }
+                }
+                transition={{ duration: 0.62, times: [0, 0.2, 0.66, 1], ease: [0.22, 1, 0.36, 1] }}
               >
-                <ThumbsUp className="h-14 w-14 fill-white text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]" />
+                <ThumbsUp className="h-14 w-14 fill-sky-500 text-sky-500 drop-shadow-[0_3px_6px_rgba(2,132,199,0.20)]" />
               </motion.div>
             )}
-          </motion.div>
-        ))}
-      </AnimatePresence>
+        </div>
+      ))}
     </div>
   );
 
