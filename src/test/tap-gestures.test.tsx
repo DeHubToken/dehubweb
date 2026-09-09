@@ -4,9 +4,11 @@ import { act, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
+import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import {
   DOUBLE_TAP_LIKE_EVENT,
   OPEN_REACTIONS_EVENT,
+  TAP_REACTION_FEEDBACK_EVENT,
   type DoubleTapLikeEventDetail,
 } from '@/lib/tap-reactions';
 
@@ -47,17 +49,22 @@ function tapAt(h: ReturnType<typeof mountGesture>, x = 50, y = 50, id = 1) {
 }
 
 let casts: DoubleTapLikeEventDetail[];
+let feedback: DoubleTapLikeEventDetail[];
 let opens: string[];
 let onCast: EventListener;
+let onFeedback: EventListener;
 let onOpen: EventListener;
 
 beforeEach(() => {
   vi.useFakeTimers();
   casts = [];
+  feedback = [];
   opens = [];
   onCast = (e) => casts.push((e as CustomEvent<DoubleTapLikeEventDetail>).detail);
+  onFeedback = (e) => feedback.push((e as CustomEvent<DoubleTapLikeEventDetail>).detail);
   onOpen = (e) => opens.push((e as CustomEvent<{ postId: string }>).detail.postId);
   window.addEventListener(DOUBLE_TAP_LIKE_EVENT, onCast);
+  window.addEventListener(TAP_REACTION_FEEDBACK_EVENT, onFeedback);
   window.addEventListener(OPEN_REACTIONS_EVENT, onOpen);
 });
 
@@ -65,6 +72,7 @@ afterEach(() => {
   // These are window listeners: without removal they accumulate across cases
   // and every later assertion counts the earlier tests' events too.
   window.removeEventListener(DOUBLE_TAP_LIKE_EVENT, onCast);
+  window.removeEventListener(TAP_REACTION_FEEDBACK_EVENT, onFeedback);
   window.removeEventListener(OPEN_REACTIONS_EVENT, onOpen);
   vi.useRealTimers();
   document.body.innerHTML = '';
@@ -92,6 +100,7 @@ describe('the tap ladder', () => {
     tapAt(h);
 
     expect(casts).toEqual([]);
+    expect(feedback.map((item) => item.reaction)).toEqual(['like']);
     act(() => void vi.advanceTimersByTime(220));
     expect(casts.map((c) => c.reaction)).toEqual(['like']);
     act(() => void vi.advanceTimersByTime(500));
@@ -104,6 +113,7 @@ describe('the tap ladder', () => {
     act(() => void vi.advanceTimersByTime(80));
     tapAt(h);
     expect(casts).toHaveLength(0);
+    expect(feedback.map((item) => item.reaction)).toEqual(['like']);
     act(() => void vi.advanceTimersByTime(219));
     expect(casts).toHaveLength(0);
     act(() => void vi.advanceTimersByTime(1));
@@ -120,8 +130,32 @@ describe('the tap ladder', () => {
     tapAt(h);
 
     expect(casts.map((c) => c.reaction)).toEqual(['love']);
+    expect(feedback.map((item) => item.reaction)).toEqual(['like', 'love']);
     act(() => void vi.advanceTimersByTime(500));
     expect(casts.map((c) => c.reaction)).toEqual(['love']);
+  });
+
+  it('renders tap-two feedback immediately and replaces it on tap three', () => {
+    const burstHost = document.createElement('div');
+    document.body.appendChild(burstHost);
+    const burstRoot = createRoot(burstHost);
+    act(() => burstRoot.render(createElement(TapReactionBurst, { postId: '7' })));
+    const h = mountGesture({ postId: '7' });
+
+    tapAt(h);
+    act(() => void vi.advanceTimersByTime(80));
+    tapAt(h);
+
+    expect(casts).toEqual([]);
+    expect(document.querySelector('svg.fill-sky-500')).not.toBeNull();
+
+    act(() => void vi.advanceTimersByTime(80));
+    tapAt(h);
+
+    expect(document.querySelector('svg.fill-sky-500')).toBeNull();
+    expect(document.querySelector('svg.fill-rose-500')).not.toBeNull();
+    expect(casts.map((item) => item.reaction)).toEqual(['love']);
+    act(() => burstRoot.unmount());
   });
 
   it('fires a reversible single tap instantly, with no wait at all', () => {
@@ -199,6 +233,7 @@ describe('the tap ladder', () => {
     act(() => void vi.advanceTimersByTime(80));
     tapAt(h, 122, 241);
 
+    expect(feedback[0]).toMatchObject({ postId: '7', x: 122, y: 241 });
     act(() => void vi.advanceTimersByTime(220));
     expect(casts[0]).toMatchObject({ postId: '7', x: 122, y: 241 });
   });
@@ -330,12 +365,10 @@ describe('surfaces are wired consistently', () => {
     }
   });
 
-  it('never replays the burst over a reaction the viewer already holds', () => {
-    // The guards above make a repeat tap a no-op. Drawing the burst off the
-    // GESTURE would still animate it, telling someone their like landed again
-    // when the vote never moved. So the burst listens for the cast the vote
-    // owner emits after its guards pass, and only those two emit it.
-    expect(BURST).toContain('TAP_REACTION_CAST_EVENT');
+  it('draws immediate feedback independently from the delayed vote', () => {
+    // The second tap must feel immediate even though persistence waits for a
+    // possible third tap. Vote owners still guard repeats from toggling off.
+    expect(BURST).toContain('TAP_REACTION_FEEDBACK_EVENT');
     expect(BURST).not.toContain('DOUBLE_TAP_LIKE_EVENT');
     for (const [name, src] of [['ActionBar', ACTION_BAR], ['ShortsViewer', SHORTS]] as const) {
       // ...and emits it below the guards, never above them.
