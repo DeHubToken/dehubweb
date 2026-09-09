@@ -847,11 +847,6 @@
   "notifications": {
     "title": "Bildirishnomalar",
     "markAllRead": "Hammasini oʻqilgan deb belgilash",
-    "sortOrder": "Bildirishnoma buyurtmasi",
-    "priority": "Ustuvorlik",
-    "newest": "Yangi roʻyxat",
-    "actNow": "Hozir harakat qiling",
-    "important": "Muhim",
     "settings": "Bildirishnoma sozlamalari",
     "actions": "Amallar",
     "markAllAsRead": "Hammasini oʻqilgan deb belgilash",

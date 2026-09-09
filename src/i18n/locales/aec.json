@@ -788,11 +788,6 @@
   "notifications": {
     "title": "الإشعارات",
     "markAllRead": "علّم الكل مقروء",
-    "sortOrder": "ترتيب التنبيهات",
-    "priority": "الأولوية",
-    "newest": "الأحدث",
-    "actNow": "تصرف دلوقتي",
-    "important": "مهم",
     "settings": "إعدادات الإشعارات",
     "actions": "إجراءات",
     "markAllAsRead": "علّم الكل مقروء",

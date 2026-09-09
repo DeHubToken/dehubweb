@@ -829,11 +829,6 @@
   "notifications": {
     "title": "通知",
     "markAllRead": "全部標為已讀",
-    "sortOrder": "通知令",
-    "priority": "優先",
-    "newest": "最新嘅",
-    "actNow": "即刻行動",
-    "important": "重要",
     "settings": "通知設定",
     "actions": "操作",
     "markAllAsRead": "全部標為已讀",

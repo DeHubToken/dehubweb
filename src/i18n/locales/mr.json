@@ -826,11 +826,6 @@
   "notifications": {
     "title": "सूचना",
     "markAllRead": "सर्व वाचलेले म्हणून चिन्हांकित करा",
-    "sortOrder": "अधिसूचना ऑर्डर",
-    "priority": "प्राधान्य",
-    "newest": "नवीनतम",
-    "actNow": "आता कृती करा",
-    "important": "महत्त्वाचे",
     "settings": "सूचना सेटिंग्ज",
     "actions": "क्रिया",
     "markAllAsRead": "सर्व वाचलेले",

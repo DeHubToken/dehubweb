@@ -822,11 +822,6 @@
   "notifications": {
     "title": "Tsanoutsagroumner",
     "markAllRead": "Nshel bolaore ibrev kartsevaats",
-    "sortOrder": "Ծանուցման պատվեր",
-    "priority": "Առաջնահերթություն",
-    "newest": "Նորագույն",
-    "actNow": "Գործել հիմա",
-    "important": "Կարևոր է",
     "settings": "Tsanoutsagroutyounneri kargavoroumner",
     "actions": "Gortsoghoutyunner",
     "markAllAsRead": "Nshel bolaore ibrev kartsevaats",

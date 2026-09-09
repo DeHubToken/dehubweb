@@ -830,11 +830,6 @@
   "notifications": {
     "title": "Paziņojumi",
     "markAllRead": "Atzīmēt visus kā lasītus",
-    "sortOrder": "Paziņojuma secība",
-    "priority": "Prioritāte",
-    "newest": "Jaunākais",
-    "actNow": "Rīcībā uzreiz",
-    "important": "Svarīgi",
     "settings": "Paziņojumu iestatījumi",
     "actions": "Darbības",
     "markAllAsRead": "Atzīmēt visus kā lasītus",

@@ -831,11 +831,6 @@
   "notifications": {
     "title": "Sanarwa",
     "markAllRead": "Yi wa duka alama an karanta",
-    "sortOrder": "Umurnin sanarwar",
-    "priority": "Mahimmanci",
-    "newest": "Sabon",
-    "actNow": "Yi aiki yanzu",
-    "important": "Muhimmancin",
     "settings": "Saituna na Sanarwa",
     "actions": "Ayyuka",
     "markAllAsRead": "Yi wa duka alama an karanta",

@@ -842,11 +842,6 @@
   "notifications": {
     "title": "알림",
     "markAllRead": "모두 읽음 처리",
-    "sortOrder": "알림 순서",
-    "priority": "우선순위",
-    "newest": "최신순",
-    "actNow": "지금 실행하기",
-    "important": "중요",
     "settings": "알림 설정",
     "actions": "작업",
     "markAllAsRead": "모두 읽음 처리",

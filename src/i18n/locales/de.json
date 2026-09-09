@@ -842,11 +842,6 @@
   "notifications": {
     "title": "Benachrichtigungen",
     "markAllRead": "Alle als gelesen markieren",
-    "sortOrder": "Benachrichtigungsauftrag",
-    "priority": "Priorität",
-    "newest": "Neueste",
-    "actNow": "Jetzt handeln",
-    "important": "Wichtig",
     "settings": "Benachrichtigungseinstellungen",
     "actions": "Aktionen",
     "markAllAsRead": "Alle als gelesen markieren",

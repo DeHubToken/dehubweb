@@ -828,11 +828,6 @@
   "notifications": {
     "title": "ማሳወቂያዎች",
     "markAllRead": "ሁሉንም እንደተነበቡ ምልክት አድርግ",
-    "sortOrder": "የማሳወቂያ ትዕዛዝ",
-    "priority": "ቅድሚያ",
-    "newest": "አዲስ",
-    "actNow": "አሁን እርምጃ ውሰድ",
-    "important": "አስፈላጊ",
     "settings": "የማሳወቂያ ቅንብሮች",
     "actions": "ድርጊቶች",
     "markAllAsRead": "ሁሉንም እንደተነበቡ ምልክት አድርግ",

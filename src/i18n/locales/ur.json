@@ -805,11 +805,6 @@
   "notifications": {
     "title": "اطلاعات",
     "markAllRead": "سب پڑھا ہوا نشان زد کریں",
-    "sortOrder": "نوٹیفکیشن آرڈر",
-    "priority": "ترجیح",
-    "newest": "تازہ ترین",
-    "actNow": "ابھی عمل کریں",
-    "important": "اہم",
     "settings": "اطلاعات ترتیبات",
     "actions": "اقدامات",
     "markAllAsRead": "سب پڑھا ہوا",

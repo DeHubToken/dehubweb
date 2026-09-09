@@ -825,11 +825,6 @@
   "notifications": {
     "title": "सूचना",
     "markAllRead": "सब पढ़े चिन्हित करव",
-    "sortOrder": "अधिसूचना अनुक्रम",
-    "priority": "प्राथमिकता",
-    "newest": "नवा",
-    "actNow": "अभी काम करव",
-    "important": "महत्वपूर्ण",
     "settings": "सूचना सेटिंग",
     "actions": "कार्य",
     "markAllAsRead": "सब पढ़े चिन्हित करव",
