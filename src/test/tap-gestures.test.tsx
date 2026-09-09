@@ -439,9 +439,13 @@ describe('surfaces are wired consistently', () => {
     expect(BURST.match(/className="[^"]*overflow-hidden[^"]*"/)).toBeNull();
   });
 
-  it('leaves the immersive player its own double-tap for seek', () => {
-    // Double-tap-to-seek is the gesture people already use to scrub a video.
-    expect(VIDEO_CARD).toContain('disabled: isImmersive || hideActions || !!video.isAudio');
+  it('uses the reaction ladder in the immersive video player too', () => {
+    expect(VIDEO_CARD).toContain('disabled: hideActions || !!video.isAudio || isContentGated');
+    expect(VIDEO_CARD).toContain('onSingleTap: isImmersive ? () =>');
+    expect(VIDEO_CARD).toContain('onUndoSingleTap: isImmersive ? handlePlayClick : undefined');
+    expect(VIDEO_CARD).not.toContain('handleDoubleTapSeek');
+    expect(VIDEO_CARD).not.toContain('lastTapRef');
+    expect(VIDEO_CARD).toContain('{!hideActions && !video.isAudio && (');
   });
 
   it('gives shorts its own listener, since it renders no ActionBar', () => {
