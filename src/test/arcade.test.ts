@@ -27,6 +27,7 @@ const repo = (...parts: string[]) => resolve(__dirname, '../..', ...parts);
 
 /** Vendored game directory for a slug, as `_headers` and the URLs spell it. */
 const GAME_DIRS: Record<string, string> = {
+  'gods-eye': 'gods-eye-game',
   'kings-gambit': 'chess-game',
   'claude-of-duty': 'war-game',
   'jungle-trail': 'jungle-game',
@@ -221,6 +222,7 @@ describe('arcade exit bridge', () => {
   // game posts, and the fact that the button is gated on being embedded. A
   // mismatch is silent — the button just does nothing — so it is asserted here.
   const GAME_ENTRY: Record<string, string> = {
+    'gods-eye': 'gods-eye-game/assets',
     'kings-gambit': 'chess-game/assets',
     'claude-of-duty': 'war-game/assets',
     // Vendored as source, so the panel lives in the page itself.
