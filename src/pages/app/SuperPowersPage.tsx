@@ -19,12 +19,13 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Loader2, Lock, Check, Clock } from 'lucide-react';
+import { Loader2, Lock, Check, Clock, History, ChevronRight, X } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { BadgeProgress } from '@/components/app/BadgeProgress';
 import { Button } from '@/components/ui/button';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import { badgeImage } from '@/lib/staking-badges';
 import {
@@ -88,7 +89,7 @@ function formatMinutes(total: number): string {
 
 export default function SuperPowersPage() {
   const { t } = useTranslation();
-  const { data: status, isLoading: loadingStatus, isError } = useSuperpowers();
+  const { data: status, isLoading: loadingStatus, isError, refetch: refetchStatus } = useSuperpowers();
   const { data: ladder, isLoading: loadingLadder } = useSuperpowerLadder();
   const cancelBoost = useCancelBoost();
 
@@ -102,15 +103,16 @@ export default function SuperPowersPage() {
     return new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'long' });
   }, [status?.cycleEndsAt, ladder?.cycleEndsAt]);
 
-  const liveBookings = status?.bookings.filter(b => b.status === 'active') ?? [];
-
   // One drawer for all thirteen. It resolves the target a power needs — a
   // post, a comment, a Stage, a category — and books it; the server re-checks
   // every one of those, so this only decides what is worth offering.
   const [spending, setSpending] = useState<SuperPowerInfo | null>(null);
+  const [historyPower, setHistoryPower] = useState<SuperPowerInfo | null>(null);
 
-  const spentBookings = status?.bookings.filter(b => b.status === 'completed') ?? [];
   const badgeArt = badgeImage(status?.tier);
+  const historyBookings = historyPower
+    ? (status?.bookings.filter(booking => booking.power === historyPower.key) ?? [])
+    : [];
 
   return (
     <>
@@ -165,31 +167,6 @@ export default function SuperPowersPage() {
                   })}
                 </p>
               </div>
-              {/* Two numbers, because there are two allowances. A Signal
-                  Flare is paid for out of a second pot the same size as the
-                  boost one, so one figure covering both tells an Octopus who
-                  has spent their boosts that they have no flares either — and
-                  takes away the power they climbed a rung for. */}
-              <div className="flex items-start gap-5 shrink-0">
-                <div className="text-right">
-                  <span className="block text-2xl font-semibold text-white tabular-nums">
-                    {status.boostsLeft}
-                  </span>
-                  <span className="block text-[10px] uppercase tracking-wider text-zinc-500">
-                    {t('superpowers.left')}
-                  </span>
-                </div>
-                {status.signalsLeft !== undefined && (
-                  <div className="text-right">
-                    <span className="block text-2xl font-semibold text-white tabular-nums">
-                      {status.signalsLeft}
-                    </span>
-                    <span className="block text-[10px] uppercase tracking-wider text-zinc-500">
-                      {t('superpowers.flaresLeft', { defaultValue: 'flares' })}
-                    </span>
-                  </div>
-                )}
-              </div>
             </div>
 
             {refillsOn && (
@@ -201,84 +178,6 @@ export default function SuperPowersPage() {
               </p>
             )}
 
-            {/* Live and queued boosts. Cancelling one that has not opened yet
-                gives the boost back; once it has been in the slot it has not. */}
-            {liveBookings.length > 0 && (
-              <div className="flex flex-col gap-2 border-t border-white/10 pt-3">
-                {liveBookings.map(booking => (
-                  <div key={booking.id} className="flex items-center gap-3 text-sm">
-                    <Clock className={cn('w-4 h-4 shrink-0', booking.live ? 'text-green-400' : 'text-zinc-500')} />
-                    {/* A Golden Hour acts on the whole account, so it has no
-                        post to link to — `/app/post/null` would 404. */}
-                    {booking.tokenId != null ? (
-                      <Link
-                        to={`/app/post/${booking.tokenId}`}
-                        className="text-white hover:underline truncate"
-                      >
-                        {/* A Deep Current lands on somebody else's post, so the
-                            bare id would show the holder a number they do not
-                            recognise as theirs. */}
-                        {booking.power === 'deep_current'
-                          ? t('superpowers.giftedTo', {
-                              id: booking.tokenId,
-                              defaultValue: `gift → #${booking.tokenId}`,
-                            })
-                          : `#${booking.tokenId}`}
-                      </Link>
-                    ) : (
-                      <span className="text-white truncate">
-                        {status?.powers.find(p => p.key === booking.power)?.label ?? booking.power}
-                      </span>
-                    )}
-                    <span className="text-zinc-500 text-[12px] shrink-0">
-                      {booking.live
-                        ? t('superpowers.liveUntil', {
-                            time: new Date(booking.endsAt).toLocaleTimeString(undefined, {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            }),
-                            defaultValue: `live until ${new Date(booking.endsAt).toLocaleTimeString()}`,
-                          })
-                        : t('superpowers.queued')}
-                    </span>
-                    <span className="ml-auto text-zinc-500 text-[12px] tabular-nums shrink-0">
-                      {t('superpowers.seenCount', {
-                        count: booking.served,
-                        defaultValue: `${booking.served} seen`,
-                      })}
-                    </span>
-                    <button
-                      onClick={() =>
-                        cancelBoost.mutate(booking.id, {
-                          onSuccess: ({ refunded }) =>
-                            toast.success(
-                              refunded
-                                ? t('superpowers.cancelledRefunded')
-                                : t('superpowers.cancelledSpent'),
-                            ),
-                          onError: (error: any) => toast.error(error?.message || t('superpowers.cancelFailed')),
-                        })
-                      }
-                      disabled={cancelBoost.isPending}
-                      className="text-[12px] text-zinc-400 hover:text-white transition-colors shrink-0 disabled:opacity-40"
-                    >
-                      {t('common.cancel')}
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-
-            {spentBookings.length > 0 && (
-              <p className="text-[12px] text-zinc-500 border-t border-white/10 pt-3">
-                {t('superpowers.finishedCount', {
-                  count: spentBookings.length,
-                  seen: spentBookings.reduce((sum, b) => sum + b.served, 0),
-                  defaultValue: `${spentBookings.length} finished this cycle, seen ${spentBookings.reduce((sum, b) => sum + b.served, 0)} times`,
-                })}
-              </p>
-            )}
           </section>
         ) : isError ? (
           // A failed request is not the same as no badge. Telling a Meglodon
@@ -310,43 +209,73 @@ export default function SuperPowersPage() {
               // Held AND built. A locked card stays inert rather than opening a
               // picker for something the server would refuse.
               const usable = unlocked && power.available;
+              const allowance =
+                power.key === 'signal_flare'
+                  ? (status?.signalsLeft ?? status?.boostsLeft)
+                  : status?.boostsLeft;
               return (
-                <button
+                <article
                   key={power.key}
-                  type="button"
-                  disabled={!usable}
-                  onClick={() => setSpending(power)}
                   className={cn(
-                    'rounded-xl border p-4 flex flex-col gap-1.5 text-left transition-colors',
+                    'rounded-xl border overflow-hidden flex flex-col transition-colors',
                     usable
-                      ? 'border-white/20 bg-white/5 hover:bg-white/10'
-                      : 'border-white/10 bg-white/[0.02] cursor-default',
+                      ? 'border-white/20 bg-white/5'
+                      : 'border-white/10 bg-white/[0.02]',
                   )}
                 >
-                  <div className="flex items-center gap-2">
-                    {/* Numbered because it IS a sequence: one power per rung,
-                        in ladder order. */}
-                    <span className="text-[11px] text-zinc-600 tabular-nums">
-                      {String(index + 1).padStart(2, '0')}
+                  <button
+                    type="button"
+                    disabled={!usable}
+                    onClick={() => setSpending(power)}
+                    className={cn(
+                      'p-4 pb-3 flex flex-1 flex-col gap-1.5 text-left transition-colors',
+                      usable ? 'hover:bg-white/5 active:bg-white/10' : 'cursor-default',
+                    )}
+                  >
+                    <div className="flex items-center gap-2">
+                      {/* Numbered because it IS a sequence: one power per rung,
+                          in ladder order. */}
+                      <span className="text-[11px] text-zinc-600 tabular-nums">
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <span className={cn('text-sm font-medium', unlocked ? 'text-white' : 'text-zinc-400')}>
+                        {power.label}
+                      </span>
+                      {unlocked && power.available && <Check className="w-3.5 h-3.5 text-green-400 shrink-0" />}
+                      {!unlocked && <Lock className="w-3 h-3 text-zinc-600 shrink-0" />}
+                    </div>
+                    <p className="text-[13px] text-zinc-500 leading-snug">{power.summary}</p>
+                    {usable && (
+                      <p className="text-[11px] text-zinc-400 leading-snug">{actsOn(power.key, t)}</p>
+                    )}
+                  </button>
+                  <div className="min-h-11 border-t border-white/10 px-4 py-2.5 flex items-center justify-between gap-3">
+                    <span
+                      className={cn(
+                        'text-[12px] font-semibold tabular-nums',
+                        usable ? 'text-white' : 'text-zinc-500',
+                      )}
+                    >
+                      {usable && allowance !== undefined
+                        ? `${allowance} ${allowance === 1 ? 'use' : 'uses'} left`
+                        : !power.available
+                          ? t('superpowers.comingSoon')
+                          : 'Locked'}
                     </span>
-                    <span className={cn('text-sm font-medium', unlocked ? 'text-white' : 'text-zinc-400')}>
-                      {power.label}
-                    </span>
-                    {unlocked && power.available && <Check className="w-3.5 h-3.5 text-green-400 shrink-0" />}
-                    {!unlocked && <Lock className="w-3 h-3 text-zinc-600 shrink-0" />}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setHistoryPower(power);
+                        void refetchStatus();
+                      }}
+                      disabled={!status?.tier}
+                      className="group inline-flex items-center gap-1 text-[12px] text-zinc-400 hover:text-white active:text-white transition-colors disabled:opacity-35 disabled:pointer-events-none"
+                    >
+                      Past usage
+                      <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                    </button>
                   </div>
-                  <p className="text-[13px] text-zinc-500 leading-snug">{power.summary}</p>
-                  {/* Only on a power this account actually has. On a locked
-                      one it would describe a choice they cannot make, and the
-                      tier line below already says what it costs. */}
-                  {usable && (
-                    <p className="text-[11px] text-zinc-400 leading-snug">{actsOn(power.key, t)}</p>
-                  )}
-                  <p className="text-[11px] text-zinc-600 mt-auto pt-1">
-                    {power.tier}
-                    {!power.available && ` · ${t('superpowers.comingSoon')}`}
-                  </p>
-                </button>
+                </article>
               );
             })}
           </div>
@@ -410,6 +339,116 @@ export default function SuperPowersPage() {
       {/* Literal DrawerContent lives inside this component, so vaul's deferred
           Root still sees it — see the note in ui/drawer.tsx. */}
       <SpendPowerDrawer power={spending} onOpenChange={open => !open && setSpending(null)} />
+
+      <Drawer open={!!historyPower} onOpenChange={open => !open && setHistoryPower(null)}>
+        <DrawerContent column glass className="px-4 pb-6">
+          <DrawerHeader className="pb-3 flex flex-row items-start justify-between gap-3">
+            <div className="min-w-0">
+              <DrawerTitle className="text-white text-lg">
+                {historyPower?.label} usage
+              </DrawerTitle>
+              <p className="text-[12px] text-zinc-500 mt-1">
+                This cycle and anything still active.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setHistoryPower(null)}
+              aria-label={t('common.close', { defaultValue: 'Close' })}
+              className="text-zinc-400 hover:text-white transition-colors shrink-0"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </DrawerHeader>
+
+          <div className="max-h-[62vh] overflow-y-auto flex flex-col gap-2">
+            {historyBookings.length === 0 ? (
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] px-5 py-8 flex flex-col items-center text-center gap-2">
+                <History className="w-6 h-6 text-zinc-500" aria-hidden="true" />
+                <p className="text-sm text-zinc-300">No past usage for this power yet.</p>
+              </div>
+            ) : (
+              historyBookings.map(booking => {
+                const flare = booking.power === 'signal_flare';
+                const result = flare
+                  ? booking.signalDeliveryStatus === 'sent'
+                    ? `${booking.signalRecipients ?? 0} notified`
+                    : booking.signalDeliveryStatus === 'failed'
+                      ? 'Delivery retrying'
+                      : 'Notifying followers'
+                  : t('superpowers.seenCount', {
+                      count: booking.served,
+                      defaultValue: `${booking.served} seen`,
+                    });
+                const subject = booking.tokenId != null
+                  ? `Post #${booking.tokenId}`
+                  : booking.category || historyPower?.label || booking.power;
+
+                return (
+                  <div
+                    key={booking.id}
+                    className="rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-3 flex items-center gap-3"
+                  >
+                    <Clock className="w-4 h-4 text-zinc-500 shrink-0" aria-hidden="true" />
+                    <div className="min-w-0 flex-1">
+                      {booking.tokenId != null ? (
+                        <Link to={`/app/post/${booking.tokenId}`} className="text-sm text-white hover:underline truncate block">
+                          {subject}
+                        </Link>
+                      ) : (
+                        <p className="text-sm text-white truncate">{subject}</p>
+                      )}
+                      <p className="text-[11px] text-zinc-500 mt-0.5">
+                        {new Date(booking.startsAt).toLocaleString(undefined, {
+                          day: 'numeric',
+                          month: 'short',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-[12px] font-medium text-zinc-200 tabular-nums">{result}</p>
+                      {!flare && (
+                        <p className="text-[10px] text-zinc-500 mt-0.5">
+                          {booking.live
+                            ? 'Live'
+                            : booking.status === 'active'
+                              ? t('superpowers.queued')
+                              : 'Finished'}
+                        </p>
+                      )}
+                    </div>
+                    {booking.status === 'active' && !flare && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          cancelBoost.mutate(booking.id, {
+                            onSuccess: ({ refunded }) =>
+                              toast.success(
+                                refunded
+                                  ? t('superpowers.cancelledRefunded')
+                                  : t('superpowers.cancelledSpent'),
+                              ),
+                            onError: (error: unknown) =>
+                              toast.error(
+                                error instanceof Error ? error.message : t('superpowers.cancelFailed'),
+                              ),
+                          })
+                        }
+                        disabled={cancelBoost.isPending}
+                        className="text-[12px] text-zinc-400 hover:text-white transition-colors disabled:opacity-40 shrink-0"
+                      >
+                        {t('common.cancel')}
+                      </button>
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }

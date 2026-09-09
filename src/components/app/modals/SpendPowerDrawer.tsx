@@ -30,7 +30,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, Search, Check, X } from 'lucide-react';
+import { Loader2, Search, Check, X, SquarePen, Play } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -47,7 +47,10 @@ import {
   useSuperpowers,
 } from '@/hooks/use-superpowers';
 import { FRONT_ROW_STATUSES, ageSuits, postIdFromInput } from '@/lib/spend-power-target';
-import type { SuperPowerInfo } from '@/lib/api/dehub/superpowers';
+import {
+  waitForSignalFlareReceipt,
+  type SuperPowerInfo,
+} from '@/lib/api/dehub/superpowers';
 
 interface SpendPowerDrawerProps {
   /** The power being spent. Null closes the drawer. */
@@ -160,8 +163,7 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
    * the gift's inversion of ownership.
    */
   const posts = useMemo(() => {
-    const rows: any[] =
-      pastedId !== null ? (pastedPost ? [pastedPost as any] : []) : ((found?.data as any[]) ?? []);
+    const rows = pastedId !== null ? (pastedPost ? [pastedPost] : []) : (found?.data ?? []);
     return rows.filter(row => {
       if (!ageSuits(power?.key, row?.createdAt)) return false;
       if (home !== 'gift') return true;
@@ -207,18 +209,30 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
       },
       {
         onSuccess: booking => {
-          toast.success(
-            t('superpowers.spentFor', {
-              power: power.label,
-              minutes: booking.minutes,
-              defaultValue: `${power.label} running for ${booking.minutes} minutes`,
-            }),
-          );
+          if (power.key === 'signal_flare') {
+            toast.promise(waitForSignalFlareReceipt(booking.id), {
+              loading: 'Signal Flare sent. Counting notifications...',
+              success: recipients =>
+                recipients === null
+                  ? 'Signal Flare sent. The final count will appear in Past usage.'
+                  : `Signal Flare notified ${recipients} ${recipients === 1 ? 'person' : 'people'}`,
+              error: 'Signal Flare sent. The final count will appear in Past usage.',
+            });
+          } else {
+            toast.success(
+              t('superpowers.spentFor', {
+                power: power.label,
+                minutes: booking.minutes,
+                defaultValue: `${power.label} running for ${booking.minutes} minutes`,
+              }),
+            );
+          }
           onOpenChange(false);
         },
         // The server writes these sentences for a person to read — "Post in
         // that category first", "That post is over a week old". Show them.
-        onError: (error: any) => toast.error(error?.message || t('superpowers.boostFailed')),
+        onError: (error: unknown) =>
+          toast.error(error instanceof Error ? error.message : t('superpowers.boostFailed')),
       },
     );
   };
@@ -327,7 +341,14 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
                   // comes back as the SPA's index.html, which draws nothing.
                   const thumb = post.imageUrl
                     ? buildImageUrl(id, post.imageUrl, 96)
-                    : (buildFeedImageUrls(post.imageUrls, 96) ?? [])[0];
+                    : post.thumbnail_url
+                      ? buildImageUrl(id, post.thumbnail_url, 96)
+                      : (buildFeedImageUrls(post.imageUrls, 96) ?? [])[0];
+                  const postText = String(post.description ?? '').trim();
+                  const postTitle = String(post.name ?? post.title ?? '').trim();
+                  const hasVideo = Boolean(
+                    post.videoUrl || post.media_url || post.postType === 'video' || post.media_type === 'video',
+                  );
                   return (
                     <button
                       key={id}
@@ -346,11 +367,22 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
                           className="w-12 h-12 rounded-lg object-cover shrink-0 bg-white/5"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded-lg bg-white/5 shrink-0" />
+                        <div className="w-12 h-12 rounded-lg bg-white/[0.07] shrink-0 flex items-center justify-center">
+                          {hasVideo ? (
+                            <Play className="w-5 h-5 text-zinc-400" aria-hidden="true" />
+                          ) : (
+                            <SquarePen className="w-5 h-5 text-zinc-400" aria-hidden="true" />
+                          )}
+                        </div>
                       )}
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm text-white truncate">{post.name || `#${id}`}</p>
-                        <p className="text-[11px] text-zinc-500">
+                        <p className="text-sm text-white line-clamp-2 leading-snug">
+                          {postText || postTitle || `Post #${id}`}
+                        </p>
+                        {postText && postTitle && postTitle !== postText && (
+                          <p className="text-[11px] text-zinc-400 truncate mt-0.5">{postTitle}</p>
+                        )}
+                        <p className="text-[11px] text-zinc-500 mt-0.5">
                           {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : `#${id}`}
                         </p>
                       </div>
@@ -419,7 +451,7 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
                   })}
                 </p>
               )}
-              {((stages ?? []) as any[]).map(stage => {
+              {(stages ?? []).map(stage => {
                 const picked = pickedStage === stage.id;
                 return (
                   <button
