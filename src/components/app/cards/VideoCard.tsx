@@ -2201,6 +2201,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         </SharedTranslationProvider>
         <div className="mb-3">
           <PostMetadata 
+            className="mt-3"
             timestamp={video.uploadedAgo}
             viewCount={video.views?.replace(' views', '') || '0'}
             tokenId={video.id}
