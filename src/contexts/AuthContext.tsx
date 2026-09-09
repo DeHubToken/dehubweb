@@ -64,7 +64,7 @@ export interface AuthContextType {
    */
   exportPrivateKeyWithBiometrics: () => Promise<string>;
   /** Replace the active wallet with a different old account's key. */
-  switchActiveWallet: (secret: string, password: string) => Promise<void>;
+  switchActiveWallet: (secret: string, password: string, expectedProfileAddress?: string) => Promise<void>;
   /**
    * Last resort for a wallet nothing on this device can open — the passkey
    * lived on a handset that is gone. Mints a fresh wallet and MOVES the
