@@ -1031,7 +1031,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
       case 'video':
         return <VideoCard video={toVideoItem(post)} isImmersive={!isAudioPost} />;
       case 'image':
-        return <ImageCard post={toImagePost(post)} />;
+        return <ImageCard post={toImagePost(post)} aboveFold />;
       case 'live': {
         if (!liveData) return <NotFoundState />;
         return (
