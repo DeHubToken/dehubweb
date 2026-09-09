@@ -161,13 +161,13 @@ describe('the tap ladder', () => {
     tapAt(h);
 
     expect(casts).toEqual([]);
-    expect(document.querySelector('[data-tap-reaction-burst="like"] svg.fill-sky-500')).not.toBeNull();
+    expect(document.querySelector('[data-tap-reaction-burst="like"] .dehub-tap-reaction-main')).not.toBeNull();
 
     act(() => void vi.advanceTimersByTime(80));
     tapAt(h);
 
     expect(document.querySelector('[data-tap-reaction-burst="like"]')).toBeNull();
-    expect(document.querySelector('[data-tap-reaction-burst="love"] svg.fill-rose-500')).not.toBeNull();
+    expect(document.querySelector('[data-tap-reaction-burst="love"] .dehub-tap-reaction-main')).not.toBeNull();
     expect(document.querySelectorAll('[data-tap-reaction-burst="love"]')).toHaveLength(1);
     expect(casts.map((item) => item.reaction)).toEqual(['love']);
     act(() => burstRoot.unmount());
@@ -184,7 +184,7 @@ describe('the tap ladder', () => {
 
     act(() => emitTapReactionFeedback('7', 'love', { x: 60, y: 70 }));
 
-    expect(document.querySelector('svg.fill-rose-500')).not.toBeNull();
+    expect(document.querySelector('[data-tap-reaction-burst="love"] .dehub-tap-reaction-main')).not.toBeNull();
     dispatch.mockRestore();
     act(() => burstRoot.unmount());
   });
