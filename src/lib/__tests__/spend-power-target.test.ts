@@ -8,7 +8,7 @@
  * Pinned here: one input box can tell a pasted link from a search term, and
  * the Boost/Second Wind age line cuts the right way round.
  */
-import { describe, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { WEEK_MS, ageSuits, postIdFromInput } from '../spend-power-target';
 
 describe('postIdFromInput', () => {
@@ -35,6 +35,13 @@ describe('postIdFromInput', () => {
 });
 
 describe('ageSuits', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-09-09T12:00:00.000Z'));
+  });
+
+  afterEach(() => vi.useRealTimers());
+
   const iso = (msAgo: number) => new Date(Date.now() - msAgo).toISOString();
 
   it('gives Boost the recent half and Second Wind the archive', () => {
