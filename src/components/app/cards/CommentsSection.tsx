@@ -2355,7 +2355,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 <textarea
                   ref={inputRef}
                   data-vaul-no-drag
-                  placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Type here...'}
+                  placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Type here'}
                   value={newComment}
                   onChange={(e) => {
                     setNewComment(e.target.value);
@@ -2372,10 +2372,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                     }
                   }}
                   className={cn(
-                    "bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 w-full",
+                    "bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 w-full min-w-0",
                     isInputExpanded
                       ? cn("shrink-0 pt-2.5 pb-1 pr-1 min-h-[74px]", isMobile ? "max-h-[140px]" : "max-h-[180px]")
-                      : "flex-1 self-center h-5 min-h-5 py-0 leading-5 overflow-hidden pr-0"
+                      : "flex-1 self-center h-5 min-h-5 py-0 leading-5 overflow-hidden whitespace-nowrap text-ellipsis pr-0"
                   )}
                   rows={1}
                   // The return key writes a line break on touch, so don't let the
