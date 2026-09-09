@@ -142,7 +142,7 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
       const timer = setTimeout(() => {
         timers.delete(timer);
         remove(burst.id);
-      }, reduceMotion ? 420 : burst.reaction === 'love' ? 1120 : 920);
+      }, reduceMotion ? 700 : burst.reaction === 'love' ? 1560 : 1260);
       timers.add(timer);
     };
 
@@ -167,26 +167,31 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
       {bursts.map((burst) => (
         <div
           key={burst.id}
+          data-tap-reaction-burst={burst.reaction}
           className="pointer-events-none fixed"
           style={{ left: burst.x, top: burst.y, transform: 'translate(-50%, -50%)' }}
         >
             {burst.reaction === 'love' ? (
               <>
                 <motion.div
-                  initial={reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.62, y: 6, rotate: -4 }}
+                  // Start visible. A newly-mounted portal can miss its first
+                  // animation frame while the video is painting; beginning at
+                  // opacity zero made the whole acknowledgement effectively
+                  // invisible on the production feed.
+                  initial={reduceMotion ? { opacity: 1 } : { opacity: 1, scale: 0.72, y: 5, rotate: -5 }}
                   animate={
                     reduceMotion
                       ? { opacity: 1 }
                       : {
-                          opacity: [0, 1, 1, 0],
-                          scale: [0.62, 1.08, 1, 0.94],
-                          y: [6, 0, -2, -10],
-                          rotate: [-4, 0, 0, 2],
+                          opacity: [1, 1, 0.96, 0],
+                          scale: [0.72, 1.1, 1, 0.92],
+                          y: [5, 0, -2, -14],
+                          rotate: [-5, 0, 0, 2],
                         }
                   }
-                  transition={{ duration: 1.02, times: [0, 0.16, 0.72, 1], ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 1.42, times: [0, 0.17, 0.7, 1], ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <Heart className="h-16 w-16 fill-rose-500 text-rose-500 drop-shadow-[0_3px_6px_rgba(190,18,60,0.22)]" />
+                  <Heart className="h-[4.5rem] w-[4.5rem] fill-rose-500 text-rose-500 drop-shadow-[0_2px_5px_rgba(190,18,60,0.20)]" />
                 </motion.div>
                 {!reduceMotion && LOVE_SPARKS.map((spark, i) => (
                   <motion.span
@@ -217,19 +222,19 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
               </>
             ) : (
               <motion.div
-                initial={reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.68, y: 5 }}
+                initial={reduceMotion ? { opacity: 1 } : { opacity: 1, scale: 0.76, y: 4 }}
                 animate={
                   reduceMotion
                     ? { opacity: 1 }
                     : {
-                        opacity: [0, 1, 1, 0],
-                        scale: [0.68, 1.06, 1, 0.94],
-                        y: [5, 0, -2, -12],
+                        opacity: [1, 1, 0.94, 0],
+                        scale: [0.76, 1.07, 1, 0.92],
+                        y: [4, 0, -2, -14],
                       }
                 }
-                transition={{ duration: 0.82, times: [0, 0.18, 0.7, 1], ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 1.12, times: [0, 0.18, 0.68, 1], ease: [0.22, 1, 0.36, 1] }}
               >
-                <ThumbsUp className="h-14 w-14 fill-sky-500 text-sky-500 drop-shadow-[0_3px_6px_rgba(2,132,199,0.20)]" />
+                <ThumbsUp className="h-16 w-16 fill-sky-500 text-sky-500 drop-shadow-[0_2px_5px_rgba(2,132,199,0.18)]" />
               </motion.div>
             )}
         </div>

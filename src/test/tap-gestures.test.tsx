@@ -161,13 +161,13 @@ describe('the tap ladder', () => {
     tapAt(h);
 
     expect(casts).toEqual([]);
-    expect(document.querySelector('svg.fill-sky-500')).not.toBeNull();
+    expect(document.querySelector('[data-tap-reaction-burst="like"] svg.fill-sky-500')).not.toBeNull();
 
     act(() => void vi.advanceTimersByTime(80));
     tapAt(h);
 
-    expect(document.querySelector('svg.fill-sky-500')).toBeNull();
-    expect(document.querySelector('svg.fill-rose-500')).not.toBeNull();
+    expect(document.querySelector('[data-tap-reaction-burst="like"]')).toBeNull();
+    expect(document.querySelector('[data-tap-reaction-burst="love"] svg.fill-rose-500')).not.toBeNull();
     expect(casts.map((item) => item.reaction)).toEqual(['love']);
     act(() => burstRoot.unmount());
   });
@@ -185,6 +185,23 @@ describe('the tap ladder', () => {
 
     expect(document.querySelector('svg.fill-rose-500')).not.toBeNull();
     dispatch.mockRestore();
+    act(() => burstRoot.unmount());
+  });
+
+  it('keeps the visible Love burst mounted long enough to paint over video', () => {
+    const burstHost = document.createElement('div');
+    document.body.appendChild(burstHost);
+    const burstRoot = createRoot(burstHost);
+    act(() => burstRoot.render(createElement(TapReactionBurst, { postId: '7' })));
+
+    act(() => emitTapReactionFeedback('7', 'love', { x: 60, y: 70 }));
+    expect(document.querySelector('[data-tap-reaction-burst="love"]')).not.toBeNull();
+
+    act(() => void vi.advanceTimersByTime(1200));
+    expect(document.querySelector('[data-tap-reaction-burst="love"]')).not.toBeNull();
+
+    act(() => void vi.advanceTimersByTime(360));
+    expect(document.querySelector('[data-tap-reaction-burst="love"]')).toBeNull();
     act(() => burstRoot.unmount());
   });
 
