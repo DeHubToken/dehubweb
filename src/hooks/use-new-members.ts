@@ -66,6 +66,8 @@ export interface NewMember {
   avatarUrl?: string;
   /** Denormalised at registration so a row draws its badge with no lookup. */
   badgeBalance: number;
+  /** New-member rows are public cache data, so their badge is suppressed. */
+  hideBadgeAndBalance: boolean;
   joinedAt: string;
 }
 
@@ -87,6 +89,7 @@ function toNewMember(row: {
     displayName: row.display_name || row.username || `${row.wallet_address.slice(0, 6)}…${row.wallet_address.slice(-4)}`,
     avatarUrl: buildAvatarUrl(row.wallet_address, row.avatar_url || undefined, 96),
     badgeBalance: row.badge_balance ?? 0,
+    hideBadgeAndBalance: true,
     joinedAt: row.joined_at,
   };
 }

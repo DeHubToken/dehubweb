@@ -253,6 +253,7 @@ export interface SuggestedAccount {
   followers?: number;
   isFollowing?: boolean;
   badgeBalance?: number;
+  hideBadgeAndBalance?: boolean;
 }
 
 export async function getSuggestedAccounts(limit: number = 10, page: number = 1): Promise<{ items: SuggestedAccount[]; hasMore: boolean }> {
@@ -324,6 +325,8 @@ export async function getCachedSuggestedProfiles(limit: number = 10, offset: num
     followers: row.followers || 0,
     isFollowing: false,
     badgeBalance: row.badge_balance || 0,
+    // This cache cannot carry the live account privacy preference. Fail closed.
+    hideBadgeAndBalance: true,
   }));
 
   return { items, hasMore: items.length === limit };

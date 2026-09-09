@@ -140,6 +140,7 @@ export interface UnifiedFeedItem {
     avatarImageUrl?: string;
     isVerified?: boolean;
     badgeBalance?: number;
+    hideBadgeAndBalance?: boolean;
   };
   minterFollowers?: number;
   minterFollowings?: number;
