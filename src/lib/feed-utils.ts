@@ -135,15 +135,14 @@ export function interleaveByPattern<V, I, T>(
 // ============================================================================
 
 export const SORT_OPTIONS = [
+  // Keep the default home sort at the leading edge of the filter row.
+  { label: 'Latest', value: 'latest' as const, labelKey: 'filters.latest' },
   { label: 'For You', value: 'for-you' as const, labelKey: 'filters.for-you' },
-  // Engagement sorts lead: they are what people actually reach for, and they
-  // were buried behind the algorithmic and chronological options.
   { label: 'Most Liked', value: 'most-liked' as const, labelKey: 'filters.mostLiked' },
   { label: 'Most Tips', value: 'most-tipped' as const, labelKey: 'filters.mostTips' },
   { label: 'Most Viewed', value: 'most-viewed' as const, labelKey: 'filters.mostViewed' },
   { label: 'Most Comments', value: 'most-comments' as const, labelKey: 'filters.mostComments' },
   { label: 'Prompt', value: 'prompt' as const, labelKey: 'filters.prompt' },
-  { label: 'Latest', value: 'latest' as const, labelKey: 'filters.latest' },
   // Engagement+recency ranking (API sortBy=score). Backup to chronological while we test it.
   { label: 'Discovery', value: 'discovery' as const, labelKey: 'filters.discovery' },
   { label: 'Following', value: 'following' as const, labelKey: 'filters.following' },
