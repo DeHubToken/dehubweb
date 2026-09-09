@@ -16,7 +16,7 @@ describe('bookmark folder drawer regression contract', () => {
     expect(drawer).toContain('h-[calc(100dvh_-_env(safe-area-inset-top)_-_0.75rem)]');
     expect(drawer).toContain('max-h-none');
     expect(drawer).toContain('env(safe-area-inset-bottom)');
-    expect(drawer).not.toContain('h-[min(85dvh,640px)]');
+    expect(drawer).toContain('md:h-[min(85dvh,640px)]');
   });
 
   it('keeps drawer controls monochrome', () => {
