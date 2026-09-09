@@ -751,6 +751,39 @@ export type Database = {
         }
         Relationships: []
       }
+      arcade_map_presence: {
+        Row: {
+          avatar_url: string | null
+          latitude: number
+          longitude: number
+          precision_km: number
+          public_id: string
+          updated_at: string
+          username: string | null
+          wallet_address: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          latitude: number
+          longitude: number
+          precision_km?: number
+          public_id?: string
+          updated_at?: string
+          username?: string | null
+          wallet_address: string
+        }
+        Update: {
+          avatar_url?: string | null
+          latitude?: number
+          longitude?: number
+          precision_km?: number
+          public_id?: string
+          updated_at?: string
+          username?: string | null
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       arcade_runs: {
         Row: {
           checkpoints: number
