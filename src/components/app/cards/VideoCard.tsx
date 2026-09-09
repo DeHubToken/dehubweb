@@ -681,8 +681,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // restart the clip (lib/video-handoff).
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const lastTapRef = useRef<{ time: number; x: number }>({ time: 0, x: 0 });
-  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const controlsTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isHoveringRef = useRef(false);
   
@@ -1325,33 +1323,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     }
   }, []);
 
-  const handleDoubleTapSeek = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const clientX = 'touches' in e ? e.changedTouches[0].clientX : e.clientX;
-    const x = clientX - rect.left;
-    const relativeX = x / rect.width; // 0 to 1
-    
-    // Center zone (37.5% - 62.5%) - fullscreen only, no seek
-    if (relativeX >= 0.375 && relativeX <= 0.625) {
-      toggleFullscreen();
-      return;
-    }
-    
-    // Only seek if video is playing
-    if (videoRef.current && isPlaying) {
-      if (relativeX > 0.625) {
-        // Right 37.5% - fast forward
-        videoRef.current.currentTime = Math.min(videoRef.current.currentTime + 10, videoRef.current.duration);
-        setSeekIndicator('right');
-      } else {
-        // Left 37.5% - rewind
-        videoRef.current.currentTime = Math.max(videoRef.current.currentTime - 10, 0);
-        setSeekIndicator('left');
-      }
-      setTimeout(() => setSeekIndicator(null), 500);
-    }
-  }, [isPlaying, toggleFullscreen]);
-
   /**
    * Open the dedicated post page for this video, seeding the query cache so it
    * paints immediately. The shared <video> moves with it — see useHandoffVideo.
@@ -1364,16 +1335,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, [navigate, queryClient, video, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
 
   /**
-   * Double / triple / hold on the media — feed surfaces only.
-   *
-   * The immersive player keeps its own double-tap for ±10s seek and centre
-   * fullscreen, which is the gesture people already use to scrub a video. The
-   * ladder is for the feed, where the media is content to react to rather than
-   * a player to drive. Audio posts opt out too: their surface is the visualiser
-   * and the tap handlers above are already undefined there.
-   *
-   * `enableLongPress` is off in immersive for the same reason — nothing else
-   * here should start competing with the player's own press handling.
+   * One tap drives playback; two taps Like; three taps Love. Playback is
+   * reversible, so the first tap happens immediately and is put back on tap
+   * two rather than making every ordinary play/pause wait for the gesture
+   * window. Fullscreen and seeking stay on their visible controls.
    */
   const tapGestures = useTapGestures({
     postId: video.id,
@@ -1383,45 +1348,23 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     // see. On gated media the tap belongs to the unlock overlay. ImageCard
     // already behaves this way: its gate branch replaces the carousel that
     // carries the gesture, so this only brings video into line.
-    disabled: isImmersive || hideActions || !!video.isAudio || isContentGated,
+    disabled: hideActions || !!video.isAudio || isContentGated,
+    onSingleTap: isImmersive ? () => {
+      showControlsBriefly();
+      handlePlayClick();
+    } : undefined,
+    onUndoSingleTap: isImmersive ? handlePlayClick : undefined,
   });
 
-  const handleVideoAreaClick = useCallback((e: React.MouseEvent) => {
-    // In the feed the media is the content, not a link to it: a click reveals
-    // this player's own controls (play, scrubber, subtitles, mute, fullscreen)
-    // and they fade out again after CONTROLS_HIDE_MS. Opening the post is the
-    // bento's job — see handleCardClick — exactly as it is for every other
-    // post type. A click that landed on a control still runs through here by
-    // bubbling, and re-arming on it is deliberate: the panel must not be
-    // pulled out from under someone midway through using it.
+  // Playback and reactions run from pointer events above. The compatibility
+  // click only keeps the visible controls awake; it must never toggle twice.
+  const handleVideoAreaClick = useCallback(() => {
     if (!isImmersive) {
       showControlsBriefly();
       return;
     }
-    const now = Date.now();
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    
-    // Clear any pending single-click timeout
-    if (clickTimeoutRef.current) {
-      clearTimeout(clickTimeoutRef.current);
-      clickTimeoutRef.current = null;
-    }
-    
-    // Check for double-click (within 300ms and similar x position)
-    if (now - lastTapRef.current.time < 300 && Math.abs(x - lastTapRef.current.x) < 50) {
-      // Double-click detected - seek without pausing
-      handleDoubleTapSeek(e);
-      lastTapRef.current = { time: 0, x: 0 }; // Reset to prevent triple-tap
-    } else {
-      lastTapRef.current = { time: now, x };
-      // Delay single click action to distinguish from double-click
-      clickTimeoutRef.current = setTimeout(() => {
-        handlePlayClick();
-        clickTimeoutRef.current = null;
-      }, 300);
-    }
-  }, [isImmersive, showControlsBriefly, handleDoubleTapSeek, handlePlayClick]);
+    showControlsBriefly();
+  }, [isImmersive, showControlsBriefly]);
 
   // Both the click and the touch handler are bound unconditionally on the player.
   // `isTouchDevice` is a width check, not a capability one, so gating the click on
@@ -1446,8 +1389,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
     const touch = e.changedTouches[0];
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-
     // A flick that scrolled the feed past this card is not a tap on it. Without
     // this the touchend that ends a scroll landed as a tap and toggled playback.
     const start = touchStartRef.current;
@@ -1466,54 +1407,17 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       return;
     }
 
-    // Feed: a tap reveals the controls (see handleVideoAreaClick) rather than
-    // opening the post. preventDefault so the browser's synthesized click
-    // doesn't arrive after us — harmless here, but it would land on the
-    // container and run the whole reveal a second time.
     if (!isImmersive) {
       e.preventDefault();
       showControlsBriefly();
       return;
     }
 
-    const x = touch.clientX - rect.left;
-    const y = touch.clientY - rect.top;
-    const relativeX = x / rect.width; // 0 to 1
-    const relativeY = y / rect.height; // 0 to 1
-
-    // Ignore touches in top-right corner (where controls are) - top 20% and right 40%
-    if (relativeY < 0.20 && relativeX > 0.60) {
-      return; // Let the button handle the touch natively
-    }
-    
-    // Also ignore bottom area where progress bar is - bottom 20%
-    if (relativeY > 0.80) {
-      return; // Let the progress bar handle the touch natively
-    }
-    
-    // Only prevent default after we've confirmed this isn't a button/control touch
+    // Pointer events own the one/two/three-tap ladder. Suppress the browser's
+    // compatibility click so touch cannot run a second playback action.
     e.preventDefault();
-    
-    // Center zone (37.5% - 62.5%) for play/pause
-    if (relativeX >= 0.375 && relativeX <= 0.625) {
-      handlePlayClick();
-      return;
-    }
-    
-    // Left/right zones for seeking (only when playing)
-    if (videoRef.current && isPlaying) {
-      if (relativeX > 0.625) {
-        // Right 37.5% - fast forward
-        videoRef.current.currentTime = Math.min(videoRef.current.currentTime + 10, videoRef.current.duration);
-        setSeekIndicator('right');
-      } else {
-        // Left 37.5% - rewind
-        videoRef.current.currentTime = Math.max(videoRef.current.currentTime - 10, 0);
-        setSeekIndicator('left');
-      }
-      setTimeout(() => setSeekIndicator(null), 500);
-    }
-  }, [isPlaying, handlePlayClick, isImmersive, showControlsBriefly]);
+    showControlsBriefly();
+  }, [isImmersive, showControlsBriefly]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -2023,7 +1927,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
         {/* Draws the 👍 / ❤️ for the tap ladder above. Inert and self-contained;
             it listens for this post's own events rather than taking state. */}
-        {!isImmersive && !hideActions && !video.isAudio && (
+        {!hideActions && !video.isAudio && (
           <TapReactionBurst postId={video.id} />
         )}
 
@@ -2134,7 +2038,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </div>
         )}
 
-        {/* Seek indicator */}
+        {/* Feedback for explicit seek controls and keyboard/media-session seeking. */}
         <AnimatePresence>
           {seekIndicator && (
             <motion.div
