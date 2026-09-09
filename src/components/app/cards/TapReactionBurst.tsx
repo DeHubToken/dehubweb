@@ -9,11 +9,10 @@
  * surface opts in by dropping one self-contained element inside its media box —
  * no state to thread, and the emitting hook stays independent of the drawing.
  *
- * It listens for the CAST event, not the gesture. The gesture fires on every
- * double tap; the cast only fires when the vote actually moves. A post you have
- * already liked refuses the gesture (a repeat would read as "clear it"), and
- * animating that anyway tells you a like landed when nothing happened — enough
- * to make someone think they had un-liked and re-liked the post in public.
+ * It listens for immediate FEEDBACK, not the delayed vote request. Persistence
+ * waits briefly to distinguish double from triple tap, but visible feedback must
+ * never inherit that lag. If tap three arrives, Love replaces the in-flight
+ * thumb in this renderer while the pending Like request is cancelled.
  *
  * Purely decorative: `pointer-events-none` throughout, so it can never take a
  * tap from the carousel, the player, or the card underneath.
@@ -32,7 +31,7 @@ import { createPortal } from 'react-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Heart, ThumbsUp } from 'lucide-react';
 import {
-  TAP_REACTION_CAST_EVENT,
+  TAP_REACTION_FEEDBACK_EVENT,
   type DoubleTapLikeEventDetail,
   type TapReaction,
 } from '@/lib/tap-reactions';
@@ -148,9 +147,9 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
       timers.add(timer);
     };
 
-    window.addEventListener(TAP_REACTION_CAST_EVENT, listener as EventListener);
+    window.addEventListener(TAP_REACTION_FEEDBACK_EVENT, listener as EventListener);
     return () => {
-      window.removeEventListener(TAP_REACTION_CAST_EVENT, listener as EventListener);
+      window.removeEventListener(TAP_REACTION_FEEDBACK_EVENT, listener as EventListener);
       timers.forEach(clearTimeout);
       timers.clear();
     };
