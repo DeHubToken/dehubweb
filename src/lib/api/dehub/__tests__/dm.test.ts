@@ -31,6 +31,28 @@ describe('getConversations', () => {
     expect(result.items).toHaveLength(1);
   });
 
+  it('normalizes badge data from compact contact participant fields', async () => {
+    mockFetch([{
+      id: 'c-badge',
+      participants: [{
+        address: '0xpeer',
+        username: 'alice',
+        displayName: 'Alice',
+        badge_balance: 25000,
+        badge_lock: { tier: 'Lobster', requirement: 25000 },
+      }],
+      unreadCount: 0,
+    }]);
+    const { getConversations } = await import('@/lib/api/dehub/dm');
+    const result = await getConversations(0, 20);
+
+    expect(result.items[0].otherUser?.badgeBalance).toBe(25000);
+    expect(result.items[0].otherUser?.badgeLock).toEqual({
+      tier: 'Lobster',
+      requirement: 25000,
+    });
+  });
+
   it('returns empty when no token', async () => {
     localStorage.clear();
     const { getConversations } = await import('@/lib/api/dehub/dm');
