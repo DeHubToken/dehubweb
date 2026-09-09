@@ -19,7 +19,6 @@ import { getMediaUrl, getAccountInfo, type DeHubConversation, type DeHubUser } f
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useDMRealtime } from '@/hooks/use-dm-realtime';
 import { conversationIdentity } from '@/lib/conversation-identity';
@@ -32,10 +31,17 @@ import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
 import dehubLogo from '@/assets/dehub-logo.png';
 import { SEOHead } from '@/components/SEOHead';
 
-function ConversationBadge({ badgeBalance }: { badgeBalance?: number }) {
-  const badgeUrl = getBadgeUrl(badgeBalance);
-  if (!badgeUrl) return null;
-  return <BadgeIcon badgeBalance={badgeBalance} className="w-[14px] h-[14px]" />;
+function ConversationBadge({ user }: { user?: DeHubUser }) {
+  if (!user) return null;
+  return (
+    <BadgeIcon
+      badgeBalance={user.badgeBalance}
+      badgeLock={user.badgeLock}
+      username={user.username}
+      lookupId={user.address || user.wallet_address || user.username}
+      className="w-[14px] h-[14px]"
+    />
+  );
 }
 
 function ConversationsSkeleton() {
@@ -114,13 +120,13 @@ function ConversationItem({
             {displayName ? (
               <>
                 <span className="font-semibold text-white truncate">{displayName}</span>
-                <ConversationBadge badgeBalance={otherUser?.badgeBalance} />
+                <ConversationBadge user={otherUser} />
                 {username && <span className="text-zinc-500 text-sm truncate">@{username}</span>}
               </>
             ) : (
               <>
                 <span className="font-semibold text-white truncate">{fallbackName}</span>
-                <ConversationBadge badgeBalance={otherUser?.badgeBalance} />
+                <ConversationBadge user={otherUser} />
               </>
             )}
           </span>
