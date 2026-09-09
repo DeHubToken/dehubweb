@@ -70,6 +70,7 @@ import { PostUtilityMenuItems } from './PostUtilityMenuItems';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { cacheImageForNavigation } from '@/lib/post-cache';
+import { FEED_IMAGE_MAX_HEIGHT } from '@/lib/feed-image-layout';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
 
 /** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
@@ -191,7 +192,8 @@ function ImageSlide({
         alt=""
         width={ratio ? Math.round(ratio * 1000) : undefined}
         height={ratio ? 1000 : undefined}
-        className="block w-auto h-auto max-w-full max-h-[600px] object-contain rounded-2xl"
+        className="block w-auto h-auto max-w-full object-contain rounded-2xl"
+        style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }}
         loading={aboveFold && idx === 0 ? 'eager' : 'lazy'}
         fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}
         decoding={aboveFold && idx === 0 ? 'sync' : 'async'}
@@ -901,7 +903,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           <>
             {/* Combo PPV + Holdings Locked: blurred image with dual icons */}
             <div className="relative rounded-2xl overflow-hidden">
-              <img src={images[0]} alt="" className="w-full max-h-[600px] object-cover blur-lg" loading="lazy" />
+              <img src={images[0]} alt="" className="w-full object-cover blur-lg" style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }} loading="lazy" />
               <div 
                 className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
                 onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
@@ -935,7 +937,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           <>
             {/* PPV only: blurred image with ticket overlay */}
             <div className="relative rounded-2xl overflow-hidden">
-              <img src={images[0]} alt="" className="w-full max-h-[600px] object-cover blur-lg" loading="lazy" />
+              <img src={images[0]} alt="" className="w-full object-cover blur-lg" style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }} loading="lazy" />
               <div 
                 className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
                 onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
@@ -965,7 +967,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 holdings branch because a post carrying both is more likely to
                 be a creator's subscriber post than a token play. */}
             <div className="relative rounded-2xl overflow-hidden">
-              <img src={images[0]} alt="" className="w-full max-h-[600px] object-cover blur-lg" loading="lazy" />
+              <img src={images[0]} alt="" className="w-full object-cover blur-lg" style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }} loading="lazy" />
               <div
                 className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
                 onClick={(e) => { e.stopPropagation(); setShowSubDrawer(true); }}
@@ -998,7 +1000,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           <>
             {/* Holdings Locked: blurred image with lock icon overlay */}
             <div className="relative rounded-2xl overflow-hidden">
-              <img src={images[0]} alt="" className="w-full max-h-[600px] object-cover blur-lg" loading="lazy" />
+              <img src={images[0]} alt="" className="w-full object-cover blur-lg" style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }} loading="lazy" />
               <div
                 className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
                 onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
