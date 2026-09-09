@@ -121,6 +121,13 @@ interface RawNotification {
     displayName?: string;
     avatarImageUrl?: string;
     avatarUrl?: string;
+    followers?: number;
+    followings?: number;
+    uploads?: number;
+    isPrivate?: boolean;
+    isFollowing?: boolean;
+    isFollowRequestPending?: boolean;
+    followsYou?: boolean;
   };
   tokenId?: number;
   tokenTitle?: string;
@@ -193,9 +200,10 @@ function normalizeNotification(raw: RawNotification): DeHubNotification {
     id: raw._id,
     type: normalizedType,
     actorAvatar: actorAvatarPath,
-    actor: raw.actorUsername || raw.actorAddress ? {
-      address: raw.actorAddress,
-      username: raw.actorUsername,
+    actor: raw.actor || raw.actorUsername || raw.actorAddress ? {
+      ...raw.actor,
+      address: raw.actor?.address || raw.actorAddress,
+      username: raw.actor?.username || raw.actorUsername,
       avatarImageUrl: actorAvatarPath,
     } : undefined,
     post: raw.tokenId ? {
