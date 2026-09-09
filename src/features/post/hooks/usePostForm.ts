@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
-import { dhbText } from '@/lib/dhb-toast';
+import { buyTokensLabel, dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
@@ -63,22 +63,8 @@ function formatFeeAmount(amount: number): string {
   return amount.toFixed(8).replace(/\.?0+$/, '');
 }
 
-/**
- * Bytes as MB or GB, for the daily allowance counter.
- *
- * 1024-based, matching the server's definition of a gigabyte — a 1000-based
- * reading here would show "953 MB of 1 GB used" at the exact moment the
- * server started charging.
- *
- * Its own three lines rather than the editor's `formatBytes`: that module
- * statically imports all thirteen badge images through `staking-badges`, and
- * usePostForm reaches eager UI where the entry-bundle check would fail.
- */
-function formatDataSize(bytes: number): string {
-  const GB = 1024 * 1024 * 1024;
-  if (bytes >= GB) return `${(bytes / GB).toFixed(bytes >= 10 * GB ? 0 : 1)} GB`;
-  return `${Math.round(bytes / (1024 * 1024))} MB`;
-}
+const TIER_VISIBILITY_MESSAGE =
+  'Climb tiers to increase your visibility and get more feeds on the post per day';
 
 interface ActiveDraft {
   text: string;
@@ -545,33 +531,6 @@ export function usePostForm(
   const isShort = hasVideo && media.some(m => m.type === 'video' && m.duration && m.duration < 90);
   const hasMusicVideo = media.some(m => m.type === 'video' && m.isMusicVideo);
   const isLive = liveMode !== null;
-
-  /**
-   * The one line the composer shows about today's allowance.
-   *
-   * Follows what is actually attached, because text posts and media draw on
-   * separate pools — telling someone with a video queued how many text posts
-   * they have left would be answering a question they did not ask.
-   *
-   * Null when there is nothing to say: no quota read, or charging switched
-   * off server-side. Never a zero, which reads as "you are out" when it
-   * really means "we do not know".
-   */
-  const postQuotaLabel = (() => {
-    if (!postQuota?.chargingEnabled) return null;
-
-    if (hasVideo || hasImage || hasAudio || isLive) {
-      const left = Math.max(0, postQuota.mediaBytesPerDay - postQuota.mediaBytesUsed);
-      return left > 0
-        ? `${formatDataSize(left)} of ${formatDataSize(postQuota.mediaBytesPerDay)} left today`
-        : `${postQuota.dhbPerGb.toLocaleString()} DHB/GB — today's data used`;
-    }
-
-    const left = Math.max(0, postQuota.textPostsPerDay - postQuota.textPostsUsed);
-    return left > 0
-      ? `${left} of ${postQuota.textPostsPerDay} free posts left today`
-      : `${postQuota.dhbPerTextPost.toLocaleString()} DHB per post — today's free posts used`;
-  })();
 
   const getPostDestinations = useCallback(() => {
     const destinations: string[] = ['Home'];
@@ -1652,20 +1611,24 @@ export function usePostForm(
         const { readDhbBalance } = await import('@/lib/dhb-payment');
         const held = await readDhbBalance();
         const owed = quotaCost.amountDhb + (postQuota?.outstandingDhb ?? 0);
+        const tierToast = {
+          id: 'tier-visibility',
+          action: { label: buyTokensLabel, onClick: () => navigate('/app/buy') },
+          duration: 10000,
+        };
 
         if (held < owed) {
-          toast.error(dhbText(`You've used today's free posting allowance`), {
-            id: 'mint-progress',
+          toast.info(TIER_VISIBILITY_MESSAGE, {
+            ...tierToast,
             description: dhbText(
-              `This post costs ${owed.toLocaleString()} DHB and you hold ${Math.floor(held).toLocaleString()}. Top up, or it's free again tomorrow.`,
+              `This post costs ${owed.toLocaleString()} DHB and you hold ${Math.floor(held).toLocaleString()}.`,
             ),
-            action: { label: 'Get DHB', onClick: () => navigate('/app/buy') },
-            duration: 12000,
           });
           setIsPosting(false);
           setUploadProgress(0);
           return;
         }
+        toast.info(TIER_VISIBILITY_MESSAGE, tierToast);
       }
 
       /**
@@ -2505,7 +2468,6 @@ export function usePostForm(
       mintFeeLabel,
       mintRequired,
       postQuota,
-      postQuotaLabel,
     },
     refs: {
       imageInputRef,
