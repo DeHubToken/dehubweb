@@ -3291,6 +3291,18 @@ async function handleRequest(request, env) {
     return resp;
   };
 
+  // The broad /gods-eye-game/* static rule keeps the generated Cesium tree
+  // immutable, but Cloudflare combines that rule with the exact index rule
+  // even when the latter appears first. Pin the unhashed entry response here:
+  // run_worker_first means this code is the final authority over its headers.
+  if (pathname === '/gods-eye-game/index.html') {
+    const resp = await guardNext();
+    const out = new Response(resp.body, resp);
+    out.headers.set('Access-Control-Allow-Origin', '*');
+    out.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
+    return out;
+  }
+
   // Android App Links and Apple Universal Links association files. Three
   // separate things go wrong if these are left to the default asset path, and
   // all three fail silently — which is how the app links shipped broken and
