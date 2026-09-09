@@ -776,11 +776,6 @@
   "notifications": {
     "title": "خبر",
     "markAllRead": "سب پڑھا نشان لگاؤ",
-    "sortOrder": "सूचना क्रम",
-    "priority": "प्राथमिकता",
-    "newest": "नवीनतम",
-    "actNow": "अभी कार्य करें",
-    "important": "महत्वपूर्ण",
     "settings": "خبر سیٹنگ",
     "actions": "عمل",
     "markAllAsRead": "سب پڑھا نشان لگاؤ",

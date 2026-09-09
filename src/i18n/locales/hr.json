@@ -816,11 +816,6 @@
   "notifications": {
     "title": "Obavijesti",
     "markAllRead": "Označi sve kao pročitano",
-    "sortOrder": "Narudžba obavijesti",
-    "priority": "Prioritet",
-    "newest": "Najnovije",
-    "actNow": "Djelujte odmah",
-    "important": "Važno",
     "settings": "Postavke obavijesti",
     "actions": "Radnje",
     "markAllAsRead": "Označi sve kao pročitano",

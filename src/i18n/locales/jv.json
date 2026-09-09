@@ -823,11 +823,6 @@
   "notifications": {
     "title": "Notifikasi",
     "markAllRead": "Tandhai Kabeh Wis Diwaca",
-    "sortOrder": "Notifikasi pesan",
-    "priority": "Prioritas",
-    "newest": "Paling anyar",
-    "actNow": "Tumindak saiki",
-    "important": "Penting",
     "settings": "Setelan Notifikasi",
     "actions": "Aksi",
     "markAllAsRead": "Tandhai Kabeh Wis Diwaca",

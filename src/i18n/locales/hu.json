@@ -820,11 +820,6 @@
   "notifications": {
     "title": "Értesítések",
     "markAllRead": "Összes olvasottnak jelölése",
-    "sortOrder": "Értesítési megbízás",
-    "priority": "Elsőbbség",
-    "newest": "Legújabb",
-    "actNow": "Cselekedj most",
-    "important": "Fontos",
     "settings": "Értesítési beállítások",
     "actions": "Műveletek",
     "markAllAsRead": "Összes olvasottnak jelölése",

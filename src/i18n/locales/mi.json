@@ -830,11 +830,6 @@
   "notifications": {
     "title": "Whakamōhio",
     "markAllRead": "Tohu katoa hei kua pānui",
-    "sortOrder": "Whakahau whakamōhio",
-    "priority": "Te kaupapa matua",
-    "newest": "Ko te mea hou",
-    "actNow": "Mahi inaianei",
-    "important": "He mea nui",
     "settings": "Tautuhinga whakamōhio",
     "actions": "Mahi",
     "markAllAsRead": "Tohu katoa hei kua pānui",

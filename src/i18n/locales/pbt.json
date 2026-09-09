@@ -820,11 +820,6 @@
   "notifications": {
     "title": "خبرتیاوې",
     "markAllRead": "ټول لوستل شوي نښه کړئ",
-    "sortOrder": "د خبرتیا امر",
-    "priority": "لومړيتوبونه",
-    "newest": "په نه په جديد",
-    "actNow": "د اوس لپاره ګډون وکړئ",
-    "important": "مهم او مهم",
     "settings": "د خبرتیا تنظیمات",
     "actions": "عملونه",
     "markAllAsRead": "ټول لوستل شوي نښه کړئ",

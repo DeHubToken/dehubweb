@@ -843,11 +843,6 @@
   "notifications": {
     "title": "Уведомления",
     "markAllRead": "Прочитать все",
-    "sortOrder": "Порядок уведомления",
-    "priority": "Приоритет",
-    "newest": "Новейшие",
-    "actNow": "Действовать сейчас",
-    "important": "Важно",
     "settings": "Настройки уведомлений",
     "actions": "Действия",
     "markAllAsRead": "Отметить все как прочитанные",

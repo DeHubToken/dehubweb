@@ -828,11 +828,6 @@
   "notifications": {
     "title": "ການແຈ້ງເຕືອນ",
     "markAllRead": "ໝາຍທັງໝົດວ່າອ່ານແລ້ວ",
-    "sortOrder": "ຄໍາສັ່ງແຈ້ງການ",
-    "priority": "ບູລິມະສິດ",
-    "newest": "ໃໝ່ທີ່ສຸດ",
-    "actNow": "ປະຕິບັດດຽວນີ້",
-    "important": "ສຳຄັນ",
     "settings": "ການຕັ້ງຄ່າແຈ້ງເຕືອນ",
     "actions": "ການດຳເນີນການ",
     "markAllAsRead": "ໝາຍທັງໝົດວ່າອ່ານແລ້ວ",

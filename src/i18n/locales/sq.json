@@ -830,11 +830,6 @@
   "notifications": {
     "title": "Njoftimet",
     "markAllRead": "Shëno të gjitha si të lexuara",
-    "sortOrder": "Urdhër njoftimi",
-    "priority": "Prioriteti",
-    "newest": "Më të rejat",
-    "actNow": "Vepro tani",
-    "important": "E rëndësishme",
     "settings": "Cilësimet e Njoftimeve",
     "actions": "Veprimet",
     "markAllAsRead": "Shëno të gjitha si të lexuara",

@@ -846,11 +846,6 @@
   "notifications": {
     "title": "জানাইন",
     "markAllRead": "সব পড়া চিহ্নিত গরো",
-    "sortOrder": "নোটিফিকেশন অর্ডার",
-    "priority": "প্রায়োরিটি",
-    "newest": "নিউয়েস্ট",
-    "actNow": "এক্ট নাও",
-    "important": "ইম্পরট্যান্ট",
     "settings": "জানাইনর সেটিংস",
     "actions": "কাজ",
     "markAllAsRead": "বেগ্গিন পড়া বুলি চিহ্নিত গরো",

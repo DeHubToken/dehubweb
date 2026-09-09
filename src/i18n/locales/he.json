@@ -825,11 +825,6 @@
   "notifications": {
     "title": "התראות",
     "markAllRead": "סמן הכל כנקרא",
-    "sortOrder": "סדר התראות",
-    "priority": "עדיפות",
-    "newest": "החדש ביותר",
-    "actNow": "לפעול עכשיו",
-    "important": "חשוב",
     "settings": "הגדרות התראות",
     "actions": "פעולות",
     "markAllAsRead": "סמן הכל כנקרא",

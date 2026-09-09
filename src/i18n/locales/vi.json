@@ -763,11 +763,6 @@
   "notifications": {
     "title": "Thông báo",
     "markAllRead": "Đánh dấu đã đọc tất cả",
-    "sortOrder": "Lệnh thông báo",
-    "priority": "Ưu tiên",
-    "newest": "Mới nhất",
-    "actNow": "Hành động ngay",
-    "important": "Quan trọng",
     "settings": "Cài đặt thông báo",
     "actions": "Thao tác",
     "markAllAsRead": "Đánh dấu tất cả là đã đọc",
