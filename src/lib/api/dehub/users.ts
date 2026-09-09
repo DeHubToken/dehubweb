@@ -84,6 +84,7 @@ export interface UpdateProfileData {
   aboutMe?: string;
   hideFollowers?: boolean;
   isPrivate?: boolean;
+  hideBadgeAndBalance?: boolean;
   /**
    * Include mature posts in the public feeds this viewer is served. Top level
    * rather than inside `customs` — the API keeps only numeric keys 1-5 in that
@@ -120,6 +121,7 @@ export async function updateProfile(data: UpdateProfileData): Promise<{ result: 
   if (data.aboutMe !== undefined) formData.append("aboutMe", data.aboutMe);
   if (data.hideFollowers !== undefined) formData.append("hideFollowers", String(data.hideFollowers));
   if (data.isPrivate !== undefined) formData.append("isPrivate", String(data.isPrivate));
+  if (data.hideBadgeAndBalance !== undefined) formData.append("hideBadgeAndBalance", String(data.hideBadgeAndBalance));
   if (data.showMatureContent !== undefined) formData.append("showMatureContent", String(data.showMatureContent));
   if (data.notificationPreferences !== undefined) formData.append("notificationPreferences", data.notificationPreferences);
   if (data.twitterLink !== undefined) formData.append("twitterLink", data.twitterLink);

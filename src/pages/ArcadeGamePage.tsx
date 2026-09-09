@@ -28,7 +28,7 @@
 
 import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Gamepad2, Loader2 } from 'lucide-react';
+import { AlertTriangle, Gamepad2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { useAuth } from '@/contexts/AuthContext';
@@ -308,6 +308,18 @@ export default function ArcadeGamePage() {
           }}
         />
       )}
+
+      {game.socialPresence ? (
+        <div className="pointer-events-none absolute bottom-4 right-4 z-20 w-[min(24rem,calc(100%-2rem))] rounded-xl border border-amber-400/25 bg-black/80 p-3 text-xs leading-relaxed text-zinc-300 backdrop-blur-xl">
+          <div className="flex items-start gap-2">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
+            <p>
+              If you hold a large amount of tokens or live in an insecure area, hide your badge and balance before using this feature. On-chain transactions still reveal your address.
+              {' '}<Link className="pointer-events-auto font-medium text-white underline underline-offset-2" to="/app/settings?tab=privacy#private-balance">Change privacy settings</Link>
+            </p>
+          </div>
+        </div>
+      ) : null}
 
       {/* Boot readout. A percentage and a bar, nothing else: the only question
           somebody staring at a black frame has is "how far along is this".
