@@ -3278,13 +3278,12 @@ function MessagesSettings() {
             defaultChecked
             comingSoon
           />
-          <SettingToggle
-            icon={Lock}
+          <SettingsRow
+            icon={<Lock />}
             anchor="e2e-encryption"
             title={t('settings.e2eEncryption')}
             description={t('settings.e2eEncryptionDesc')}
-            defaultChecked
-            comingSoon
+            action={<span className="text-sm font-medium text-zinc-300">{t('settings.automatic', 'Automatic')}</span>}
           />
           <SettingToggle
             icon={Filter}
