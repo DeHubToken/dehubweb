@@ -168,6 +168,7 @@ describe('the tap ladder', () => {
 
     expect(document.querySelector('[data-tap-reaction-burst="like"]')).toBeNull();
     expect(document.querySelector('[data-tap-reaction-burst="love"] svg.fill-rose-500')).not.toBeNull();
+    expect(document.querySelectorAll('[data-tap-reaction-burst="love"]')).toHaveLength(1);
     expect(casts.map((item) => item.reaction)).toEqual(['love']);
     act(() => burstRoot.unmount());
   });
