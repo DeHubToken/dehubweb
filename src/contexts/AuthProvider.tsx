@@ -2318,7 +2318,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * user_wallets row. The PREVIOUS wallet's encrypted seed is gone once this
    * completes — callers must have the user export/back it up first.
    */
-  const switchActiveWallet = async (secret: string, password: string) => {
+  const switchActiveWallet = async (
+    secret: string,
+    password: string,
+    expectedProfileAddress?: string,
+  ) => {
     if (!supabaseUserId) throw new Error('Not signed in');
     // Reaching a DIFFERENT account on purpose. Any drift recorded earlier in
     // this session must not turn that into a move of the account being left.
@@ -2327,6 +2331,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsConnecting(true);
     try {
       const derived = deriveFromSecret(secret);
+      if (expectedProfileAddress) {
+        const expected = expectedProfileAddress.toLowerCase();
+        const predictedSafe = await predictSafeAddress(derived.ethAddress);
+        const matchesExpected =
+          expected === derived.ethAddress.toLowerCase() || expected === predictedSafe;
+        if (!matchesExpected) {
+          throw new Error(
+            predictedSafe
+              ? 'This login recovered a different wallet from the selected DeHub profile. Nothing was changed.'
+              : 'We could not verify this wallet against the selected DeHub profile. Try the recovery again.',
+          );
+        }
+      }
       const encrypted = await encryptString(derived.secret, password);
       await saveWallet(supabaseUserId, derived.ethAddress, encrypted);
       // Every biometric wrap still holds the PREVIOUS wallet's seed, so they

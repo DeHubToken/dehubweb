@@ -21,6 +21,11 @@ import { assessPassword, MIN_PASSWORD_LENGTH } from '@/lib/wallet-core/passwordS
 import { copyThenClear } from '@/lib/wallet-core/clipboard';
 import { PasswordStrengthMeter } from '@/components/app/wallet-setup/PasswordStrengthMeter';
 import { checkLegacyAccount, type LegacyAccountMatch } from '@/lib/wallet-core/legacy-detect';
+import {
+  legacyAccountForWallet,
+  legacyAccountsForProvider,
+} from '@/lib/wallet-core/legacy-match';
+import { predictSafeAddress } from '@/lib/smart-account-address';
 import { getWalletProtection } from '@/lib/wallet-core/protection';
 import { PasskeyCancelledError } from '@/lib/wallet-core/biometric-unlock';
 import { SettingsRow } from '@/components/app/settings/SettingsRow';
@@ -176,6 +181,9 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [knownAccounts, setKnownAccounts] = useState<LegacyAccountMatch[]>([]);
+  const [knownAccountsChecked, setKnownAccountsChecked] = useState(false);
+  const [previewSafeAddress, setPreviewSafeAddress] = useState<string | null>(null);
+  const [safeAddressChecked, setSafeAddressChecked] = useState(false);
 
   // Preview what's on each old account BEFORE the user picks a login — the
   // login step itself can't be skipped (it's what proves ownership and lets
@@ -191,21 +199,51 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
         const emailAccount = hint.accounts.find((a) => a.signupMethod === 'email' || a.signupMethod === 'email_passwordless');
         if (emailAccount && hint.email) setMigrateEmail((prev) => prev || hint.email!);
       }
+    }).finally(() => {
+      if (!cancelled) setKnownAccountsChecked(true);
     });
     return () => { cancelled = true; };
   }, [open]);
 
-  const accountFor = (provider: string) => knownAccounts.find((a) => a.signupMethod === provider);
+  const accountFor = (provider: string) => {
+    const matches = legacyAccountsForProvider(knownAccounts, provider);
+    return matches.length === 1 ? matches[0] : undefined;
+  };
 
   const reset = () => {
     setMigratedKey(null); setMigrateEmail(''); setMigrateBusy(null);
     setPassword(''); setConfirm(''); setAck(false); setBusy(false); setError(null);
-    setKnownAccounts([]);
+    setKnownAccounts([]); setKnownAccountsChecked(false);
+    setPreviewSafeAddress(null); setSafeAddressChecked(false);
   };
   const close = (v: boolean) => { if (!v) reset(); onOpenChange(v); };
 
   const previewAddress = migratedKey ? deriveFromSecret(migratedKey).ethAddress : null;
-  const sameAsCurrent = !!previewAddress && !!walletAddress && previewAddress.toLowerCase() === walletAddress.toLowerCase();
+  const matchedAccount = previewAddress && safeAddressChecked
+    ? legacyAccountForWallet(knownAccounts, previewAddress, previewSafeAddress)
+    : undefined;
+  const targetProfileAddress = matchedAccount?.ethAddress ?? previewSafeAddress;
+  const profileMatchFailed =
+    !!previewAddress && safeAddressChecked && knownAccounts.length > 0 && !matchedAccount;
+  const sameAsCurrent =
+    !!targetProfileAddress &&
+    !!walletAddress &&
+    targetProfileAddress.toLowerCase() === walletAddress.toLowerCase();
+
+  useEffect(() => {
+    setPreviewSafeAddress(null);
+    setSafeAddressChecked(false);
+    if (!previewAddress) return;
+    let cancelled = false;
+    predictSafeAddress(previewAddress)
+      .then((address) => {
+        if (!cancelled) setPreviewSafeAddress(address);
+      })
+      .finally(() => {
+        if (!cancelled) setSafeAddressChecked(true);
+      });
+    return () => { cancelled = true; };
+  }, [previewAddress]);
 
   const handleLegacyLogin = async (provider: 'google' | 'twitter' | 'discord' | 'apple' | 'email_passwordless') => {
     setError(null);
@@ -217,6 +255,7 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
     try {
       const { startLegacyMigration } = await import('@/lib/legacy-web3auth');
       const key = await startLegacyMigration(provider, provider === 'email_passwordless' ? migrateEmail : undefined);
+      deriveFromSecret(key);
       setMigratedKey(key);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Could not retrieve that old wallet. Please try again.');
@@ -228,13 +267,17 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
   const handleSwitch = async () => {
     if (!migratedKey) return;
     setError(null);
+    if (profileMatchFailed || !targetProfileAddress) {
+      setError('This login did not recover either profile shown. Nothing was changed.');
+      return;
+    }
     if (password !== confirm) { setError("Passwords don't match"); return; }
     setBusy(true);
     try {
       const assessment = await assessPassword(password);
       // Same wording as the meter above the field — see WalletCreateStep.
       if (!assessment.acceptable) { setError(assessment.warnings[0] ?? 'Choose a stronger password'); return; }
-      await switchActiveWallet(migratedKey, password);
+      await switchActiveWallet(migratedKey, password, targetProfileAddress);
       close(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to switch wallet');
@@ -256,7 +299,43 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
                 <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
                 <p>This replaces your active wallet. Export your current private key first if you want to keep access to it.</p>
               </div>
-              <p className="text-white/60 text-sm">Sign in with the OLD login for the account you want to switch to:</p>
+              {!knownAccountsChecked ? (
+                <p className="text-white/60 text-sm flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" /> Loading your older profiles...
+                </p>
+              ) : knownAccounts.length > 0 ? (
+              <div className="space-y-2">
+                <p className="text-white/70 text-sm">
+                  We found {knownAccounts.length} older profiles linked to this email. Different sign-ins could create separate profiles before login methods were linked.
+                </p>
+                <div className="space-y-1">
+                  {knownAccounts.map((account, index) => (
+                    <div key={account.ethAddress || index} className="flex items-center justify-between gap-3 rounded-lg bg-white/5 px-3 py-2 text-xs">
+                      <span className="min-w-0">
+                        <span className="block truncate font-medium text-white">
+                          {account.username ? `@${account.username}` : `Older profile ${index + 1}`}
+                        </span>
+                        <span className="block text-white/50">
+                          {account.signupMethod
+                            ? `Original sign-in: ${OLD_LOGIN_LABELS[account.signupMethod] ?? account.signupMethod}`
+                            : 'Original sign-in was not recorded'}
+                        </span>
+                      </span>
+                      {typeof account.badgeBalance === 'number' && (
+                        <span className="shrink-0 text-white/50">{account.badgeBalance.toLocaleString()} DHB</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              ) : (
+                <p className="text-white/60 text-sm">
+                  We could not load the profile list. Use the original sign-in that created the old profile.
+                </p>
+              )}
+              <p className="text-white/60 text-sm">
+                Use the original sign-in for the profile you want. We verify its DeHub wallet before switching.
+              </p>
               {migrateBusy && migrateBusy !== 'email_passwordless' ? (
                 <p className="text-white/60 text-sm flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Retrieving old wallet…</p>
               ) : (
@@ -273,12 +352,11 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
                       >
                         <span className="flex items-center">
                           {migrateBusy === p ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                          Old account: {OLD_LOGIN_LABELS[p]}
+                          {known?.username ? `${OLD_LOGIN_LABELS[p]} for @${known.username}` : `Try ${OLD_LOGIN_LABELS[p]}`}
                         </span>
                         {known && (
                           <span className="text-[10px] text-green-300 text-right">
-                            {known.username ? `@${known.username}` : ''}
-                            {typeof known.badgeBalance === 'number' ? ` · ${known.badgeBalance.toLocaleString()} DHB` : ''}
+                            Matched
                           </span>
                         )}
                       </Button>
@@ -301,37 +379,55 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
                       {migrateBusy === 'email_passwordless' ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowDownToLine className="w-4 h-4" />}
                     </Button>
                   </div>
-                  {(() => {
-                    const emailAcc = accountFor('email') ?? accountFor('email_passwordless');
-                    return emailAcc ? (
-                      <p className="text-[10px] text-green-300 px-1">
-                        {emailAcc.username ? `@${emailAcc.username}` : ''}
-                        {typeof emailAcc.badgeBalance === 'number' ? ` · ${emailAcc.badgeBalance.toLocaleString()} DHB` : ''}
-                      </p>
-                    ) : null;
-                  })()}
+                  {accountFor('email_passwordless') && (
+                    <p className="text-xs text-green-300 px-1">
+                      {accountFor('email_passwordless')?.username
+                        ? `Email recovers @${accountFor('email_passwordless')?.username}`
+                        : 'Email recovers the matched profile'}
+                    </p>
+                  )}
                 </div>
               )}
               {error && <p className="text-sm text-red-400">{error}</p>}
             </>
           )}
 
-          {migratedKey && sameAsCurrent && (
+          {migratedKey && !safeAddressChecked && (
+            <p className="text-white/60 text-sm flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" /> Matching this wallet to your DeHub profile...
+            </p>
+          )}
+
+          {migratedKey && safeAddressChecked && profileMatchFailed && (
+            <div className="space-y-3">
+              <div className="flex items-start gap-2 rounded-xl border border-red-400/40 bg-red-400/10 p-3 text-sm text-white">
+                <AlertTriangle className="w-4 h-4 mt-0.5 text-red-400 shrink-0" />
+                <p>This login recovered a different wallet from the profiles shown above. Nothing was changed.</p>
+              </div>
+              <Button variant="ghost" onClick={() => setMigratedKey(null)} className="w-full">
+                Try a different login
+              </Button>
+            </div>
+          )}
+
+          {migratedKey && safeAddressChecked && !profileMatchFailed && sameAsCurrent && (
             <>
-              <p className="text-white/70 text-sm">This is already your active wallet — nothing to switch.</p>
+              <p className="text-white/70 text-sm">This profile is already active. There is nothing to switch.</p>
               <Button onClick={() => close(false)} className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl">
                 Close
               </Button>
             </>
           )}
 
-          {migratedKey && !sameAsCurrent && (
+          {migratedKey && safeAddressChecked && !profileMatchFailed && !sameAsCurrent && targetProfileAddress && (
             <>
               <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-white space-y-1">
                 <p className="text-white/50">Current active wallet</p>
                 <p className="break-all">{walletAddress}</p>
-                <p className="text-white/50 pt-2">Will switch to</p>
-                <p className="break-all text-green-300">{previewAddress}</p>
+                <p className="text-white/50 pt-2">
+                  Will switch to {matchedAccount?.username ? `@${matchedAccount.username}` : 'recovered profile'}
+                </p>
+                <p className="break-all text-green-300">{targetProfileAddress}</p>
               </div>
               <label className="flex items-start gap-2 text-sm text-white">
                 <Checkbox checked={ack} onCheckedChange={(v) => setAck(v === true)} className="mt-0.5" />

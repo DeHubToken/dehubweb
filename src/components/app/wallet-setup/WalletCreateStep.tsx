@@ -31,7 +31,13 @@ import {
 } from '@/lib/wallet-core/biometric-unlock';
 import { fetchWallet, saveWallet } from '@/lib/wallet-core/store';
 import { normalisePhoneHint } from '@/lib/wallet-core/phone-hint';
-import { hasLegacyBrowserResidue, checkLegacyAccount, type LegacyAccountHint, type LegacyAccountMatch } from '@/lib/wallet-core/legacy-detect';
+import { hasLegacyBrowserResidue, checkLegacyAccount, type LegacyAccountHint } from '@/lib/wallet-core/legacy-detect';
+import {
+  legacyAccountForWallet,
+  legacyAccountsForProvider,
+  matchRecoveredLegacyAccount,
+} from '@/lib/wallet-core/legacy-match';
+import { predictSafeAddress } from '@/lib/smart-account-address';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PasswordStrengthMeter } from './PasswordStrengthMeter';
 
@@ -52,6 +58,12 @@ const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text
 const MIGRATE_PROVIDER_KEY = 'dehub_legacy_migrate_provider';
 const MIGRATE_PENDING_KEY = 'dehub_legacy_migration_pending';
 
+const OLD_LOGIN_LABELS: Record<string, string> = {
+  google: 'Google', apple: 'Apple', twitter: 'X (Twitter)', discord: 'Discord',
+  email: 'Email', email_passwordless: 'Email',
+  sms: 'Phone (SMS)', sms_passwordless: 'Phone (SMS)', phone: 'Phone (SMS)',
+};
+
 /**
  * A legacy migration is mid-round-trip on this browser.
  *
@@ -68,39 +80,6 @@ function legacyMigrationInFlight(): boolean {
   }
 }
 
-/**
- * Which legacy account did this retrieval actually reach?
- *
- * NOT by address: the address we derive from the recovered key is the EOA
- * behind the old Web3Auth key, whereas legacy_accounts.eth_address is the
- * account's (smart) wallet address. For the same person those differ, so an
- * address comparison reports "no match" on a perfectly correct migration —
- * which is why the confirm screen used to show an address the user didn't
- * recognise. The login method just used is the reliable signal, since old
- * Web3Auth keys are per-provider. Address equality is still honoured first
- * for the accounts where the two happen to coincide.
- */
-function matchLegacyAccount(
-  accounts: LegacyAccountMatch[],
-  provider: string | null,
-  derivedAddress: string,
-): LegacyAccountMatch | undefined {
-  const byAddress = accounts.find((a) => a.ethAddress?.toLowerCase() === derivedAddress.toLowerCase());
-  if (byAddress) return byAddress;
-  if (provider) {
-    const wanted = provider === 'email_passwordless'
-      ? ['email', 'email_passwordless']
-      : provider === 'sms_passwordless'
-        ? ['sms', 'sms_passwordless', 'phone']
-        : [provider];
-    const byProvider = accounts.filter((a) => a.signupMethod && wanted.includes(a.signupMethod));
-    if (byProvider.length === 1) return byProvider[0];
-    // Ambiguous (several old accounts on the same provider) — don't guess.
-    if (byProvider.length > 1) return undefined;
-  }
-  return accounts.length === 1 ? accounts[0] : undefined;
-}
-
 export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) {
   const { t } = useTranslation();
   const [mode, setMode] = useState<Mode>('new');
@@ -111,6 +90,10 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   const [error, setError] = useState<string | null>(null);
   // Key recovered from the old Web3Auth account (one-time migration)
   const [migratedKey, setMigratedKey] = useState<string | null>(null);
+  // The profile uses its Safe address, while the recovered Web3Auth key first
+  // derives an owner EOA. Resolve the Safe before showing or approving a wallet.
+  const [migratedSafeAddress, setMigratedSafeAddress] = useState<string | null>(null);
+  const [safeAddressChecked, setSafeAddressChecked] = useState(false);
   // Require an explicit look at the derived address before persisting it —
   // Migrate retrieves whichever account the login used actually belongs to,
   // which is NOT always the one the user meant to reach (e.g. someone else's
@@ -245,7 +228,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
           setAddressConfirmed(false);
           setMigrateProvider(resumedProvider);
           setMigratedKey(key);
-          toast.success('Old wallet retrieved — check the address before continuing');
+          toast.success('Old wallet retrieved. Matching it to your profile...');
         }
       })
       .catch((e) => {
@@ -254,6 +237,30 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       })
       .finally(() => setMigrateBusy(null));
   }, []);
+
+  useEffect(() => {
+    setMigratedSafeAddress(null);
+    setSafeAddressChecked(false);
+    if (!migratedKey) return;
+
+    let cancelled = false;
+    let ownerAddress: string;
+    try {
+      ownerAddress = deriveFromSecret(migratedKey).ethAddress;
+    } catch {
+      setSafeAddressChecked(true);
+      return;
+    }
+
+    predictSafeAddress(ownerAddress)
+      .then((address) => {
+        if (!cancelled) setMigratedSafeAddress(address);
+      })
+      .finally(() => {
+        if (!cancelled) setSafeAddressChecked(true);
+      });
+    return () => { cancelled = true; };
+  }, [migratedKey]);
 
   const handleLegacyLogin = async (provider: 'google' | 'twitter' | 'discord' | 'apple' | 'email_passwordless' | 'sms_passwordless') => {
     setError(null);
@@ -301,7 +308,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       setAddressConfirmed(false);
       setMigrateProvider(provider);
       setMigratedKey(key);
-      toast.success('Old wallet retrieved — check the address before continuing');
+      toast.success('Old wallet retrieved. Matching it to your profile...');
     } catch (e) {
       console.error('[Migrate] Legacy login failed:', e);
       setError(e instanceof Error ? e.message : 'Could not retrieve your old wallet. Please try again.');
@@ -383,11 +390,24 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     }
   };
 
+  const assertRecoveredProfileMatches = async (ownerAddress: string) => {
+    if (mode !== 'migrate' || backendHint?.exists !== true || foundAccounts.length === 0) return;
+    const safeAddress = await predictSafeAddress(ownerAddress);
+    if (!legacyAccountForWallet(foundAccounts, ownerAddress, safeAddress)) {
+      throw new Error(
+        safeAddress
+          ? 'This login recovered a different wallet from the profile you selected. Nothing was changed.'
+          : 'We could not verify this wallet against your DeHub profile. Try the recovery again before continuing.',
+      );
+    }
+  };
+
   const persist = async (secret: string) => {
     setBusy(true);
     setError(null);
     try {
       const derived = deriveFromSecret(secret);
+      await assertRecoveredProfileMatches(derived.ethAddress);
       const encrypted = await encryptString(derived.secret, password);
       await assertNotReplacingWallet(derived.ethAddress);
       await saveWallet(userId, derived.ethAddress, encrypted);
@@ -416,6 +436,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     setBusy(true);
     try {
       const derived = deriveFromSecret(secret);
+      await assertRecoveredProfileMatches(derived.ethAddress);
       await enrollBiometricUnlock(userId, derived.secret);
       await assertNotReplacingWallet(derived.ethAddress);
       await saveWallet(userId, derived.ethAddress, null);
@@ -450,36 +471,36 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   // identity, but each was its own separate old account) — highlight ALL of
   // them, not just one, and preview what's on each before they pick.
   const foundAccounts = backendHint?.exists === true ? (backendHint.accounts ?? []) : [];
-  const oldLoginMethods = new Set(foundAccounts.map((a) => a.signupMethod).filter((m): m is string => !!m));
   const hasMultipleOldAccounts = foundAccounts.length > 1;
-  const hasOldEmailLogin = oldLoginMethods.has('email') || oldLoginMethods.has('email_passwordless');
+  const oldEmailAccounts = legacyAccountsForProvider(foundAccounts, 'email_passwordless');
+  const hasOldEmailLogin = oldEmailAccounts.length > 0;
+  const knownEmailAccount = oldEmailAccounts.length === 1 ? oldEmailAccounts[0] : undefined;
   // SMS-era Web3Auth accounts have no email on the old key at all — the number
   // IS the verifier id. They were unreachable until this button existed, since
   // every other provider reconstructs a different key.
-  const hasOldSmsLogin = oldLoginMethods.has('sms') || oldLoginMethods.has('sms_passwordless') || oldLoginMethods.has('phone');
+  const oldSmsAccounts = legacyAccountsForProvider(foundAccounts, 'sms_passwordless');
+  const hasOldSmsLogin = oldSmsAccounts.length > 0;
+  const knownSmsAccount = oldSmsAccounts.length === 1 ? oldSmsAccounts[0] : undefined;
 
   const migrateProviderButton = (
     provider: 'google' | 'twitter' | 'discord' | 'apple',
     label: string,
   ) => {
-    const isOldLogin = oldLoginMethods.has(provider);
+    const providerAccounts = legacyAccountsForProvider(foundAccounts, provider);
+    const known = providerAccounts.length === 1 ? providerAccounts[0] : undefined;
+    const isOldLogin = providerAccounts.length > 0;
     return (
     <Button
       key={provider}
       variant="outline"
       disabled={!!migrateBusy}
       onClick={() => handleLegacyLogin(provider)}
-      className={`w-full h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 ${
+      className={`w-full min-h-11 h-auto py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 ${
         isOldLogin ? 'ring-1 ring-green-400/50 bg-white/15' : ''
       }`}
     >
       {migrateBusy === provider ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-      {label}
-      {isOldLogin && (
-        <span className="ml-2 text-[10px] uppercase tracking-wide bg-green-400/15 text-green-300 rounded-full px-2 py-0.5">
-          Your old login
-        </span>
-      )}
+      {known?.username ? `${label} for @${known.username}` : isOldLogin ? `Continue with ${label}` : `Try ${label}`}
     </Button>
     );
   };
@@ -500,9 +521,18 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       migratedKeyError = 'We could not read that old wallet key. Please try another login method, or contact support.';
     }
   }
-  const matchedAccount = migratedAddress
-    ? matchLegacyAccount(foundAccounts, migrateProvider, migratedAddress)
+  const matchedAccount = migratedAddress && safeAddressChecked
+    ? matchRecoveredLegacyAccount(foundAccounts, migrateProvider, migratedAddress, migratedSafeAddress)
     : undefined;
+  const matchedByWallet = migratedAddress && safeAddressChecked
+    ? legacyAccountForWallet(foundAccounts, migratedAddress, migratedSafeAddress)
+    : undefined;
+  const recoveredProfileAddress = matchedAccount?.ethAddress ?? migratedSafeAddress;
+  const profileMatchFailed =
+    safeAddressChecked &&
+    backendHint?.exists === true &&
+    foundAccounts.length > 0 &&
+    !matchedByWallet;
 
   // Resolve the matched account's profile picture. account_info is public, and
   // the CDN avatar path is keyed by the account's wallet address — so the
@@ -540,12 +570,6 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   const showPasswordFields = showProtectionStep && protection === 'password';
   const showBiometricStep = showProtectionStep && protection === 'biometric';
 
-  const OLD_LOGIN_LABELS: Record<string, string> = {
-    google: 'Google', apple: 'Apple', twitter: 'X (Twitter)', discord: 'Discord',
-    email: 'Email', email_passwordless: 'Email',
-    sms: 'Phone (SMS)', sms_passwordless: 'Phone (SMS)', phone: 'Phone (SMS)',
-  };
-
   return (
     <div className="space-y-4">
       {/* Returning-user detection banners (hidden once the old key is retrieved) */}
@@ -553,18 +577,33 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
         <div className="rounded-xl border border-green-400/40 bg-green-400/10 p-3 text-sm text-white space-y-2">
           <div className="flex items-start gap-2">
             <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-400 shrink-0" />
-            <p>We found <span className="font-semibold">{foundAccounts.length} old accounts</span> for this email. Pick which one to bring over below — you can switch later from Settings.</p>
+            <p>
+              We found <span className="font-semibold">{foundAccounts.length} older profiles</span> linked to this email.
+              Different sign-ins could create separate profiles before login methods were linked.
+            </p>
           </div>
           <div className="space-y-1 pl-6">
             {foundAccounts.map((a, i) => (
-              <div key={i} className="flex items-center justify-between text-xs text-white/70 bg-black/20 rounded-lg px-2.5 py-1.5">
-                <span>{a.signupMethod ? OLD_LOGIN_LABELS[a.signupMethod] ?? a.signupMethod : 'Unknown login'}{a.username ? ` — @${a.username}` : ''}</span>
+              <div key={a.ethAddress || i} className="flex items-center justify-between gap-3 text-xs text-white/70 bg-black/20 rounded-lg px-2.5 py-2">
+                <span className="min-w-0">
+                  <span className="block truncate font-medium text-white">
+                    {a.username ? `@${a.username}` : `Older profile ${i + 1}`}
+                  </span>
+                  <span className="block text-white/50">
+                    {a.signupMethod
+                      ? `Original sign-in: ${OLD_LOGIN_LABELS[a.signupMethod] ?? a.signupMethod}`
+                      : 'Original sign-in was not recorded'}
+                  </span>
+                </span>
                 {typeof a.badgeBalance === 'number' && (
-                  <span className="text-white/50">{a.badgeBalance.toLocaleString()} <DhbCoin /></span>
+                  <span className="shrink-0 text-white/50">{a.badgeBalance.toLocaleString()} <DhbCoin /></span>
                 )}
               </div>
             ))}
           </div>
+          <p className="pl-6 text-xs text-white/60">
+            Use the original sign-in for the profile you want. We verify the recovered wallet before anything changes.
+          </p>
         </div>
       )}
       {!migratedKey && !hasMultipleOldAccounts && backendHint?.exists === true && foundAccounts[0] && (
@@ -686,18 +725,13 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
             </p>
           ) : (
             <>
-              {migrateProviderButton('google', 'Old account: Google')}
-              {migrateProviderButton('apple', 'Old account: Apple')}
-              {migrateProviderButton('twitter', 'Old account: X (Twitter)')}
-              {migrateProviderButton('discord', 'Old account: Discord')}
+              {migrateProviderButton('google', 'Google')}
+              {migrateProviderButton('apple', 'Apple')}
+              {migrateProviderButton('twitter', 'X (Twitter)')}
+              {migrateProviderButton('discord', 'Discord')}
               <div className="space-y-1.5">
                 <p className={`text-xs px-1 ${hasOldSmsLogin ? 'text-green-300' : 'text-white/50'}`}>
-                  Old account: Phone (SMS)
-                  {hasOldSmsLogin && (
-                    <span className="ml-2 text-[10px] uppercase tracking-wide bg-green-400/15 text-green-300 rounded-full px-2 py-0.5">
-                      Your old login
-                    </span>
-                  )}
+                  {knownSmsAccount?.username ? `Phone for @${knownSmsAccount.username}` : 'Old account phone'}
                 </p>
                 <div className="flex gap-2">
                   <Input
@@ -721,18 +755,13 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
                 </div>
                 {hasOldSmsLogin && (
                   <p className="text-[11px] text-white/40 px-1">
-                    Include the country code — it must be the same number the old account was created with.
+                    Include the country code. It must be the same number used to create the old profile.
                   </p>
                 )}
               </div>
               <div className="space-y-1.5">
                 <p className={`text-xs px-1 ${hasOldEmailLogin ? 'text-green-300' : 'text-white/50'}`}>
-                  Old account: Email
-                  {hasOldEmailLogin && (
-                    <span className="ml-2 text-[10px] uppercase tracking-wide bg-green-400/15 text-green-300 rounded-full px-2 py-0.5">
-                      Your old login
-                    </span>
-                  )}
+                  {knownEmailAccount?.username ? `Email for @${knownEmailAccount.username}` : 'Old account email'}
                 </p>
                 <div className="flex gap-2">
                   <Input
@@ -778,31 +807,34 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
         </div>
       )}
 
-      {mode === 'migrate' && migratedKey && !addressConfirmed && migratedAddress && (() => {
-        const matched = matchedAccount;
-        // Unmatched is only PROOF of a mint when the backend positively answered
-        // "this email has no old account" — which now only reaches this screen
-        // through the redirect resume, whose popup opened before the hint
-        // landed. An unknown hint (check unavailable) or an ambiguous one
-        // (several old accounts on the same provider, so matchLegacyAccount
-        // refuses to guess) must keep the old wording: a real migrator must
-        // never be told their own account does not exist.
+      {mode === 'migrate' && migratedKey && !migratedKeyError && (!safeAddressChecked || backendHint === null) && (
+        <p className="text-white/60 text-sm flex items-center gap-2">
+          <Loader2 className="w-4 h-4 animate-spin" /> Matching this wallet to your DeHub profile...
+        </p>
+      )}
+
+      {mode === 'migrate' && migratedKey && safeAddressChecked && backendHint !== null && !addressConfirmed && migratedAddress && (() => {
+        const matched = profileMatchFailed ? undefined : matchedAccount;
         const looksLikeDuplicate = !matched && backendHint?.exists === false;
+        const cannotVerifyProfile = profileMatchFailed;
+        const isBlockingMismatch = looksLikeDuplicate || cannotVerifyProfile;
         return (
           <div className="space-y-3">
             <div
               className={`flex items-start gap-2 rounded-xl border p-3 text-sm text-white ${
-                looksLikeDuplicate ? 'border-red-400/40 bg-red-400/10' : 'border-amber-400/40 bg-amber-400/10'
+                isBlockingMismatch ? 'border-red-400/40 bg-red-400/10' : 'border-amber-400/40 bg-amber-400/10'
               }`}
             >
-              <AlertTriangle className={`w-4 h-4 mt-0.5 shrink-0 ${looksLikeDuplicate ? 'text-red-400' : 'text-amber-400'}`} />
+              <AlertTriangle className={`w-4 h-4 mt-0.5 shrink-0 ${isBlockingMismatch ? 'text-red-400' : 'text-amber-400'}`} />
               <p>
-                {!looksLikeDuplicate
-                  ? "This retrieved a real account — double check it's actually yours before continuing. This can't be undone once you set a password."
-                  : t(
+                {cannotVerifyProfile
+                  ? 'This login recovered a different wallet from the profiles shown above. Nothing changed. Try the original sign-in for the profile you want.'
+                  : looksLikeDuplicate
+                    ? t(
                       'loginModal.migrateUnmatchedWarning',
                       'This login has no DeHub account on record. Continuing does not recover anything — it creates a SECOND account with a new username, and leaves the one you already have behind.',
-                    )}
+                    )
+                    : "We matched this wallet to your DeHub profile. Confirm the username before continuing."}
               </p>
             </div>
             <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white space-y-2">
@@ -820,10 +852,10 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
                     </p>
                     <p className="text-xs text-white/50">
                       {matched.signupMethod && OLD_LOGIN_LABELS[matched.signupMethod]
-                        ? OLD_LOGIN_LABELS[matched.signupMethod]
-                        : 'Old DeHub account'}
+                        ? `Original sign-in: ${OLD_LOGIN_LABELS[matched.signupMethod]}`
+                        : 'Original sign-in was not recorded'}
                       {typeof matched.badgeBalance === 'number'
-                        ? ` — ${matched.badgeBalance.toLocaleString()} DHB`
+                        ? `, ${matched.badgeBalance.toLocaleString()} DHB`
                         : ''}
                     </p>
                   </div>
@@ -835,25 +867,23 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
                         'loginModal.migrateUnmatchedDetail',
                         'No profile exists at this wallet address. If you were signing back in, go back and use the login you signed up with instead.',
                       )
-                    : "We retrieved a wallet for this login, but couldn't match it to a profile on record. Check the address before continuing."}
+                    : "We could not match this wallet to a profile on record. Nothing has been changed."}
                 </p>
               )}
-              {matched ? (
+              {matched && recoveredProfileAddress ? (
                 <>
                   <button
                     type="button"
                     onClick={() => setShowMigratedAddress((v) => !v)}
                     className="text-[11px] text-white/40 hover:text-white/70 transition-colors"
                   >
-                    {showMigratedAddress ? 'Hide wallet address' : 'Show wallet address'}
+                    {showMigratedAddress ? 'Hide DeHub wallet' : 'Show DeHub wallet'}
                   </button>
                   {showMigratedAddress && (
-                    <p className="break-all text-[11px] text-white/50">{migratedAddress}</p>
+                    <p className="break-all text-[11px] text-white/50">{recoveredProfileAddress}</p>
                   )}
                 </>
-              ) : (
-                <p className="break-all text-[11px] text-white/50">{migratedAddress}</p>
-              )}
+              ) : null}
             </div>
             <div className="flex gap-2">
               <Button
@@ -868,18 +898,20 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
                   ? t('loginModal.migrateGoBack', 'Go back')
                   : 'Try a different login'}
               </Button>
-              <Button
-                onClick={() => setAddressConfirmed(true)}
-                className={
-                  looksLikeDuplicate
-                    ? 'flex-1 h-11 text-white/50 hover:text-white/80 rounded-xl bg-transparent hover:bg-white/10'
-                    : 'flex-1 h-11 bg-white hover:bg-white/90 text-black font-semibold rounded-xl'
-                }
-              >
-                {looksLikeDuplicate
-                  ? t('loginModal.migrateContinueAnyway', 'Create a new account anyway')
-                  : 'Yes, this is mine'}
-              </Button>
+              {!cannotVerifyProfile && (
+                <Button
+                  onClick={() => setAddressConfirmed(true)}
+                  className={
+                    looksLikeDuplicate
+                      ? 'flex-1 h-11 text-white/50 hover:text-white/80 rounded-xl bg-transparent hover:bg-white/10'
+                      : 'flex-1 h-11 bg-white hover:bg-white/90 text-black font-semibold rounded-xl'
+                  }
+                >
+                  {looksLikeDuplicate
+                    ? t('loginModal.migrateContinueAnyway', 'Create a new account anyway')
+                    : 'Yes, recover this profile'}
+                </Button>
+              )}
             </div>
           </div>
         );
