@@ -29,6 +29,7 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Gamepad2, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBootProgress } from '@/lib/game-boot-progress';
@@ -39,6 +40,9 @@ import { formatProgress } from '@/lib/api/arcade-leaderboard';
 import { ArcadeLeaderboard } from '@/components/app/arcade/ArcadeLeaderboard';
 import { scheduleBackgroundResume, setBackgroundPaused } from '@/lib/background-gate';
 import { ARCADE_SANDBOX, getArcadeGame } from '@/config/arcade-games';
+import { getAuthToken } from '@/lib/api/dehub';
+
+const MAP_PRESENCE_ENDPOINT = `${import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co'}/functions/v1/map-presence`;
 
 /**
  * Hard ceiling on the boot readout, in ms.
@@ -82,9 +86,64 @@ export default function ArcadeGamePage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const game = getArcadeGame(slug);
-  const { walletAddress } = useAuth();
+  const { walletAddress, user } = useAuth();
   const wallet = walletAddress?.toLowerCase() ?? null;
   const frameRef = useRef<HTMLIFrameElement>(null);
+
+  const configurePresenceFrame = useCallback(() => {
+    if (!game?.socialPresence) return;
+    frameRef.current?.contentWindow?.postMessage({
+      source: 'social-presence-host', type: 'configure', endpoint: MAP_PRESENCE_ENDPOINT,
+    }, '*');
+  }, [game?.socialPresence]);
+
+  useEffect(() => {
+    if (!game?.socialPresence) return;
+    const onMessage = async (event: MessageEvent) => {
+      if (event.source !== frameRef.current?.contentWindow) return;
+      const message = event.data as { source?: string; type?: string } | null;
+      if (message?.source !== 'gods-eye-view' || message.type !== 'presence-place-requested') return;
+      const token = getAuthToken();
+      if (!token || !wallet) {
+        toast.error('Sign in to place yourself on the globe.');
+        return;
+      }
+      if (!navigator.geolocation) {
+        toast.error('Location is not available in this browser.');
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+        try {
+          const response = await fetch(MAP_PRESENCE_ENDPOINT, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-dehub-token': token,
+              'x-wallet-address': wallet,
+            },
+            body: JSON.stringify({
+              latitude: coords.latitude,
+              longitude: coords.longitude,
+              precisionKm: 25,
+              username: user?.username,
+              avatarUrl: user?.avatarImageUrl || user?.avatarUrl || user?.avatar_url,
+            }),
+          });
+          if (!response.ok) throw new Error('save failed');
+          frameRef.current?.contentWindow?.postMessage({
+            source: 'social-presence-host', type: 'refresh',
+          }, '*');
+          toast.success('You are on the globe — shown within an approximate 25 km area.');
+        } catch {
+          toast.error('Could not place you on the globe.');
+        }
+      }, () => toast.error('Location permission was not granted.'), {
+        enableHighAccuracy: false, timeout: 15_000, maximumAge: 300_000,
+      });
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, [game?.socialPresence, user, wallet]);
 
   // Resolved once per game. Re-running buildUrl on a render would change the
   // iframe's src and restart a boot that can take the better part of a minute.
@@ -244,6 +303,7 @@ export default function ArcadeGamePage() {
           // side can model. The host panel only has to cover the gap before
           // the frame's first paint, so it retires the moment there is one.
           onLoad={() => {
+            configurePresenceFrame();
             if (!game.readySource) setReady(true);
           }}
         />

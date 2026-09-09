@@ -204,6 +204,9 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.mark-stream-live]
     verify_jwt = false
+  # GET is public; writes authenticate with the DeHub token in-function.
+  [functions.map-presence]
+    verify_jwt = false
   [functions.og-image]
     verify_jwt = false
   [functions.preview-transactional-email]
