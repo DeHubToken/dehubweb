@@ -31,7 +31,7 @@ import { createPortal } from 'react-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Heart, ThumbsUp } from 'lucide-react';
 import {
-  TAP_REACTION_FEEDBACK_EVENT,
+  subscribeTapReactionFeedback,
   type DoubleTapLikeEventDetail,
   type TapReaction,
 } from '@/lib/tap-reactions';
@@ -104,8 +104,7 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
     if (!id) return;
     const timers = removalTimers.current;
 
-    const listener = (event: Event) => {
-      const detail = (event as CustomEvent<DoubleTapLikeEventDetail>).detail;
+    const listener = (detail: DoubleTapLikeEventDetail) => {
       if (!detail || String(detail.postId) !== id) return;
 
       // Place it under the finger when we know where that was. A mouse
@@ -143,13 +142,13 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
       const timer = setTimeout(() => {
         timers.delete(timer);
         remove(burst.id);
-      }, reduceMotion ? 320 : burst.reaction === 'love' ? 780 : 640);
+      }, reduceMotion ? 420 : burst.reaction === 'love' ? 1120 : 920);
       timers.add(timer);
     };
 
-    window.addEventListener(TAP_REACTION_FEEDBACK_EVENT, listener as EventListener);
+    const unsubscribe = subscribeTapReactionFeedback(listener);
     return () => {
-      window.removeEventListener(TAP_REACTION_FEEDBACK_EVENT, listener as EventListener);
+      unsubscribe();
       timers.forEach(clearTimeout);
       timers.clear();
     };
@@ -185,7 +184,7 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
                           rotate: [-4, 0, 0, 2],
                         }
                   }
-                  transition={{ duration: 0.76, times: [0, 0.18, 0.68, 1], ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 1.02, times: [0, 0.16, 0.72, 1], ease: [0.22, 1, 0.36, 1] }}
                 >
                   <Heart className="h-16 w-16 fill-rose-500 text-rose-500 drop-shadow-[0_3px_6px_rgba(190,18,60,0.22)]" />
                 </motion.div>
@@ -228,7 +227,7 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
                         y: [5, 0, -2, -12],
                       }
                 }
-                transition={{ duration: 0.62, times: [0, 0.2, 0.66, 1], ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.82, times: [0, 0.18, 0.7, 1], ease: [0.22, 1, 0.36, 1] }}
               >
                 <ThumbsUp className="h-14 w-14 fill-sky-500 text-sky-500 drop-shadow-[0_3px_6px_rgba(2,132,199,0.20)]" />
               </motion.div>

@@ -58,6 +58,24 @@ export interface OpenReactionsEventDetail {
   postId: string;
 }
 
+type TapReactionFeedbackListener = (detail: DoubleTapLikeEventDetail) => void;
+
+/**
+ * Visual feedback stays in-process instead of depending on a DOM CustomEvent.
+ *
+ * The vote bridge still uses window events because ActionBar is deliberately
+ * decoupled from the tapped surface. The burst is different: it is mounted in
+ * the same React bundle as the recogniser and must paint in the same frame as
+ * tap two. A direct subscriber cannot be swallowed by a patched/shadowed
+ * CustomEvent implementation and does not wait for any vote/network work.
+ */
+const tapReactionFeedbackListeners = new Set<TapReactionFeedbackListener>();
+
+export function subscribeTapReactionFeedback(listener: TapReactionFeedbackListener) {
+  tapReactionFeedbackListeners.add(listener);
+  return () => tapReactionFeedbackListeners.delete(listener);
+}
+
 function dispatch<T>(name: string, detail: T) {
   try {
     window.dispatchEvent(new CustomEvent<T>(name, { detail }));
@@ -86,12 +104,23 @@ export function emitTapReactionFeedback(
   point?: { x: number; y: number },
 ) {
   if (!postId) return;
-  dispatch<DoubleTapLikeEventDetail>(TAP_REACTION_FEEDBACK_EVENT, {
+  const detail: DoubleTapLikeEventDetail = {
     postId: String(postId),
     reaction,
     x: point?.x,
     y: point?.y,
+  };
+
+  tapReactionFeedbackListeners.forEach((listener) => {
+    try {
+      listener(detail);
+    } catch {
+      // Decorative feedback must never interrupt the gesture or its vote.
+    }
   });
+
+  // Keep the public event for diagnostics and any older surface integrations.
+  dispatch<DoubleTapLikeEventDetail>(TAP_REACTION_FEEDBACK_EVENT, detail);
 }
 
 /**

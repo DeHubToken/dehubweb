@@ -7,6 +7,7 @@ import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import {
   DOUBLE_TAP_LIKE_EVENT,
+  emitTapReactionFeedback,
   OPEN_REACTIONS_EVENT,
   TAP_REACTION_FEEDBACK_EVENT,
   type DoubleTapLikeEventDetail,
@@ -155,6 +156,22 @@ describe('the tap ladder', () => {
     expect(document.querySelector('svg.fill-sky-500')).toBeNull();
     expect(document.querySelector('svg.fill-rose-500')).not.toBeNull();
     expect(casts.map((item) => item.reaction)).toEqual(['love']);
+    act(() => burstRoot.unmount());
+  });
+
+  it('renders feedback even when the browser event bridge is unavailable', () => {
+    const burstHost = document.createElement('div');
+    document.body.appendChild(burstHost);
+    const burstRoot = createRoot(burstHost);
+    act(() => burstRoot.render(createElement(TapReactionBurst, { postId: '7' })));
+    const dispatch = vi.spyOn(window, 'dispatchEvent').mockImplementation(() => {
+      throw new Error('event bridge unavailable');
+    });
+
+    act(() => emitTapReactionFeedback('7', 'love', { x: 60, y: 70 }));
+
+    expect(document.querySelector('svg.fill-rose-500')).not.toBeNull();
+    dispatch.mockRestore();
     act(() => burstRoot.unmount());
   });
 
@@ -368,7 +385,7 @@ describe('surfaces are wired consistently', () => {
   it('draws immediate feedback independently from the delayed vote', () => {
     // The second tap must feel immediate even though persistence waits for a
     // possible third tap. Vote owners still guard repeats from toggling off.
-    expect(BURST).toContain('TAP_REACTION_FEEDBACK_EVENT');
+    expect(BURST).toContain('subscribeTapReactionFeedback');
     expect(BURST).not.toContain('DOUBLE_TAP_LIKE_EVENT');
     for (const [name, src] of [['ActionBar', ACTION_BAR], ['ShortsViewer', SHORTS]] as const) {
       // ...and emits it below the guards, never above them.
