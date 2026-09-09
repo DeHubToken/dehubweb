@@ -106,6 +106,10 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
 
     const listener = (detail: DoubleTapLikeEventDetail) => {
       if (!detail || String(detail.postId) !== id) return;
+      // The normal browser path paints synchronously at document.body before
+      // this React event subscription runs. Stay as a compatibility renderer
+      // only for environments where that direct root painter was unavailable.
+      if (detail.painted) return;
 
       // Place it under the finger when we know where that was. A mouse
       // double-click and a keyboard-driven cast carry no point, so those fall
