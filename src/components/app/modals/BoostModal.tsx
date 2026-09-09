@@ -55,6 +55,7 @@ import {
   spendablePowers,
 } from '@/hooks/use-superpowers';
 import type { SuperPowerKey } from '@/lib/api/dehub/superpowers';
+import { waitForSignalFlareReceipt } from '@/lib/api/dehub/superpowers';
 
 interface BoostModalProps {
   open: boolean;
@@ -154,21 +155,31 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
       {
         onSuccess: booking => {
           const isFlare = chosen === 'signal_flare';
-          toast.success(
-            isFlare
-              ? 'Signal Flare sent to your followers.'
-              : t('superpowers.spent', {
-                  power: active?.label ?? '',
-                  minutes: booking.minutes,
-                  defaultValue: `${active?.label} running for ${booking.minutes} minutes`,
-                }),
-          );
+          if (isFlare) {
+            toast.promise(waitForSignalFlareReceipt(booking.id), {
+              loading: 'Signal Flare sent. Counting notifications...',
+              success: recipients =>
+                recipients === null
+                  ? 'Signal Flare sent. The final count will appear in Past usage.'
+                  : `Signal Flare notified ${recipients} ${recipients === 1 ? 'person' : 'people'}`,
+              error: 'Signal Flare sent. The final count will appear in Past usage.',
+            });
+          } else {
+            toast.success(
+              t('superpowers.spent', {
+                power: active?.label ?? '',
+                minutes: booking.minutes,
+                defaultValue: `${active?.label} running for ${booking.minutes} minutes`,
+              }),
+            );
+          }
           onOpenChange(false);
         },
         // The server writes these sentences for a person to read — "That post
         // is over a week old", "That account is private and cannot be
         // targeted". Show its words rather than a generic failure.
-        onError: (error: any) => toast.error(error?.message || t('superpowers.boostFailed')),
+        onError: (error: unknown) =>
+          toast.error(error instanceof Error ? error.message : t('superpowers.boostFailed')),
       },
     );
   };
