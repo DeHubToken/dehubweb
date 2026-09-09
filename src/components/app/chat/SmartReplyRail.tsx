@@ -124,7 +124,7 @@ export function SmartReplyRail({
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => s && onPick(s.text)}
                   aria-label={s ? `${s.label}: ${s.text}` : 'Drafting a reply'}
-                  className={`group min-w-0 min-h-[108px] lg:min-h-[92px] flex flex-col items-center justify-center border py-3 text-center transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-inset ${
+                  className={`group min-w-0 min-h-[120px] lg:min-h-[100px] flex flex-col items-center justify-center border py-4 text-center transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-inset ${
                     // The cut-out bites a notch radius into the edge each card
                     // turns to the orb, and the mask erases card CONTENT, not
                     // just fill — so the inner padding has to clear it.
@@ -148,7 +148,7 @@ export function SmartReplyRail({
                       <span className="w-full truncate text-[9px] uppercase tracking-[0.1em] leading-4 text-zinc-500 transition-colors group-hover:text-zinc-300">
                         {s.label}
                       </span>
-                      <span className="mt-1.5 h-[35px] w-full text-[13px] leading-[1.35] text-white line-clamp-2">
+                      <span className="mt-2 min-h-[53px] w-full text-[13px] leading-[1.45] text-white line-clamp-3">
                         {s.text}
                       </span>
                     </>
