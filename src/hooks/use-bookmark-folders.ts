@@ -15,6 +15,16 @@ import type { BookmarkFolder, BookmarkFolderItem } from '@/lib/api/dehub';
 
 const FOLDERS_KEY = ['bookmark-folders'];
 
+type CreateFolderVariables = Parameters<typeof createBookmarkFolder>[0] & {
+  suppressToast?: boolean;
+};
+
+type FolderItemVariables = {
+  folderId: string;
+  tokenId: number;
+  suppressToast?: boolean;
+};
+
 export function useBookmarkFolders() {
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
@@ -30,12 +40,15 @@ export function useBookmarkFolders() {
   });
 
   const createMutation = useMutation({
-    mutationFn: createBookmarkFolder,
-    onSuccess: () => {
+    mutationFn: ({ suppressToast: _suppressToast, ...params }: CreateFolderVariables) =>
+      createBookmarkFolder(params),
+    onSuccess: (_data, { suppressToast }) => {
       queryClient.invalidateQueries({ queryKey: FOLDERS_KEY });
-      toast.success('Folder created');
+      if (!suppressToast) toast.success('Folder created');
     },
-    onError: () => toast.error('Failed to create folder'),
+    onError: (_error, { suppressToast }) => {
+      if (!suppressToast) toast.error('Failed to create folder');
+    },
   });
 
   const updateMutation = useMutation({
@@ -58,25 +71,29 @@ export function useBookmarkFolders() {
   });
 
   const addItemMutation = useMutation({
-    mutationFn: ({ folderId, tokenId }: { folderId: string; tokenId: number }) =>
+    mutationFn: ({ folderId, tokenId }: FolderItemVariables) =>
       addItemToFolder(folderId, tokenId),
     onSuccess: (_data, { tokenId }) => {
       queryClient.invalidateQueries({ queryKey: FOLDERS_KEY });
       queryClient.invalidateQueries({ queryKey: ['folder-items'] });
       queryClient.invalidateQueries({ queryKey: ['folder-containment', tokenId] });
     },
-    onError: () => toast.error('Failed to add to folder'),
+    onError: (_error, { suppressToast }) => {
+      if (!suppressToast) toast.error('Failed to add to folder');
+    },
   });
 
   const removeItemMutation = useMutation({
-    mutationFn: ({ folderId, tokenId }: { folderId: string; tokenId: number }) =>
+    mutationFn: ({ folderId, tokenId }: FolderItemVariables) =>
       removeItemFromFolder(folderId, tokenId),
     onSuccess: (_data, { tokenId }) => {
       queryClient.invalidateQueries({ queryKey: FOLDERS_KEY });
       queryClient.invalidateQueries({ queryKey: ['folder-items'] });
       queryClient.invalidateQueries({ queryKey: ['folder-containment', tokenId] });
     },
-    onError: () => toast.error('Failed to remove from folder'),
+    onError: (_error, { suppressToast }) => {
+      if (!suppressToast) toast.error('Failed to remove from folder');
+    },
   });
 
   return {
