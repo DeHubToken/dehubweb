@@ -14,7 +14,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { BadgeIcon } from "@/components/app/BadgeIcon";
 import { VerifiedBadge } from "@/components/app/VerifiedBadge";
 import { useDeHubProfile } from "@/hooks/use-dehub-profile";
-import { AFFILIATE_COMMISSION_PCT, AFFILIATE_L1_COMMISSION_PCT, AFFILIATE_L2_COMMISSION_PCT, loadAffiliateStats, type AffiliateStats, type AffiliateReferralEntry } from "@/lib/affiliate";
+import { AFFILIATE_COMMISSION_PCT, AFFILIATE_L1_COMMISSION_PCT, AFFILIATE_L2_COMMISSION_PCT, DEFAULT_AFFILIATE_LANDING, loadAffiliateStats, saveAffiliateLanding, type AffiliateLandingCustomization, type AffiliateStats, type AffiliateReferralEntry } from "@/lib/affiliate";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 import { buildReferralDeepLink, sanitizeDeepLinkPath } from "@/lib/affiliateDeepLink";
 import { Input } from "@/components/ui/input";
@@ -61,6 +61,8 @@ export default function AffiliatePage() {
     return "1";
   });
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [landing, setLanding] = useState<AffiliateLandingCustomization>(DEFAULT_AFFILIATE_LANDING);
+  const [savingLanding, setSavingLanding] = useState(false);
 
   // Bump this whenever the share-image renderer changes so all users pick up the new look.
   const RENDERER_VERSION = "5";
@@ -89,6 +91,7 @@ export default function AffiliatePage() {
       const fallbackName = wallet ? `${wallet.slice(0, 6)}…${wallet.slice(-4)}` : null;
       const s = await loadAffiliateStats(wallet, displayName ?? fallbackName);
       setStats(s);
+      setLanding(s.landing);
       try { window.localStorage.setItem(`affiliate-stats:${wallet.toLowerCase()}`, JSON.stringify(s)); } catch { /* ignore */ }
       if (opts?.refreshImage && s?.code) {
         const next = String(Date.now());
@@ -126,6 +129,20 @@ export default function AffiliatePage() {
       nav.share({ title: "DeHub", text: "Join me on DeHub.", url: shareUrl }).catch(() => undefined);
     } else {
       void copy(shareUrl, "Invite link copied");
+    }
+  };
+
+  const saveLanding = async () => {
+    if (!wallet || !stats?.code) return;
+    setSavingLanding(true);
+    try {
+      await saveAffiliateLanding(wallet, stats.code, landing);
+      setStats((current) => current ? { ...current, landing } : current);
+      toast.success("Invite page published");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not save invite page");
+    } finally {
+      setSavingLanding(false);
     }
   };
 
@@ -176,7 +193,19 @@ export default function AffiliatePage() {
           </div>
 
           {/* Stats grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <StatCard
+              icon={<ExternalLink className="w-4 h-4" />}
+              label="Page views"
+              value={loading ? null : String(stats?.totalViews ?? 0)}
+              hint={`${stats?.views30d ?? 0} in 30 days`}
+            />
+            <StatCard
+              icon={<Users className="w-4 h-4" />}
+              label="Unique visitors"
+              value={loading ? null : String(stats?.uniqueVisitors ?? 0)}
+              hint={stats?.uniqueVisitors ? `${((stats.referrals / stats.uniqueVisitors) * 100).toFixed(1)}% joined` : "No visits yet"}
+            />
             <StatCard
               icon={<Users className="w-4 h-4" />}
               label="Direct"
@@ -212,6 +241,45 @@ export default function AffiliatePage() {
             viewerWallet={wallet}
             loading={loading}
           />
+
+          <Card className="border-white/10 bg-white/[0.03] backdrop-blur">
+            <CardContent className="p-5 md:p-6 space-y-5">
+              <div>
+                <h2 className="text-lg font-semibold text-white">Customize your invite page</h2>
+                <p className="text-sm text-white/60">Make the page sound like you. Visitors see this copy before they join.</p>
+              </div>
+              <div className="grid gap-5 lg:grid-cols-2">
+                <div className="space-y-4">
+                  <LabeledField label="Headline" count={`${landing.headline.length}/80`}>
+                    <Input value={landing.headline} maxLength={80} onChange={(e) => setLanding((v) => ({ ...v, headline: e.target.value }))} placeholder={DEFAULT_AFFILIATE_LANDING.headline} />
+                  </LabeledField>
+                  <LabeledField label="Welcome message" count={`${landing.message.length}/280`}>
+                    <textarea className="flex min-h-28 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-white placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" value={landing.message} maxLength={280} onChange={(e) => setLanding((v) => ({ ...v, message: e.target.value }))} />
+                  </LabeledField>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <LabeledField label="Button text" count={`${landing.ctaLabel.length}/32`}>
+                      <Input value={landing.ctaLabel} maxLength={32} onChange={(e) => setLanding((v) => ({ ...v, ctaLabel: e.target.value }))} />
+                    </LabeledField>
+                    <LabeledField label="DeHub destination">
+                      <Input value={landing.destination} maxLength={200} onChange={(e) => setLanding((v) => ({ ...v, destination: e.target.value }))} placeholder="/app" />
+                    </LabeledField>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button onClick={() => void saveLanding()} disabled={savingLanding || !landing.headline.trim() || !landing.message.trim() || !landing.ctaLabel.trim()}>
+                      {savingLanding ? "Publishing…" : "Publish changes"}
+                    </Button>
+                    <Button variant="ghost" onClick={() => setLanding(DEFAULT_AFFILIATE_LANDING)}>Reset</Button>
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black p-6 flex min-h-72 flex-col items-center justify-center text-center">
+                  <p className="text-xs uppercase tracking-[0.25em] text-white/40">Live preview</p>
+                  <h3 className="mt-4 text-3xl font-bold text-white whitespace-pre-line">{landing.headline || DEFAULT_AFFILIATE_LANDING.headline}</h3>
+                  <p className="mt-3 max-w-md text-sm text-white/65 whitespace-pre-line">{landing.message || DEFAULT_AFFILIATE_LANDING.message}</p>
+                  <span className="mt-6 rounded-md bg-white px-5 py-2.5 text-sm font-semibold text-black">{landing.ctaLabel || DEFAULT_AFFILIATE_LANDING.ctaLabel}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Share section */}
           <Card className="border-white/10 bg-white/[0.03] backdrop-blur">
@@ -293,6 +361,15 @@ export default function AffiliatePage() {
         </div>
       )}
     </>
+  );
+}
+
+function LabeledField({ label, count, children }: { label: string; count?: string; children: React.ReactNode }) {
+  return (
+    <label className="block space-y-1.5">
+      <span className="flex items-center justify-between text-xs font-medium text-white/70"><span>{label}</span>{count ? <span className="text-white/35">{count}</span> : null}</span>
+      {children}
+    </label>
   );
 }
 
