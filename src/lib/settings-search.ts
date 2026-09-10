@@ -55,7 +55,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'profile', anchor: 'profiles', label: 'Profiles', labelKey: 'settings.profiles', keywords: 'accounts switch add account multiple' },
 
   // Appearance
-  { tab: 'appearance', anchor: 'theme', label: 'Theme', labelKey: 'settings.theme', keywords: 'dark mode skin cosmic jungle osaka winter minimal appearance' },
+  { tab: 'appearance', anchor: 'theme', label: 'Theme', labelKey: 'settings.theme', keywords: 'dark light mode skin cosmic jungle osaka winter minimal appearance' },
   { tab: 'appearance', anchor: 'theme-color', label: 'Theme Color', labelKey: 'settings.themeColor', keywords: 'hue colour accent brand rainbow' },
   { tab: 'appearance', anchor: 'dim-lights', label: 'Dim Lights', labelKey: 'settings.dimLights', keywords: 'brightness blue light night filter' },
   { tab: 'appearance', anchor: 'language', label: 'Language', labelKey: 'settings.language', keywords: 'translate locale english' },

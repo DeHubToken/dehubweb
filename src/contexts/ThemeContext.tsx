@@ -14,11 +14,6 @@ const DIM_MIN_OPACITY = 0.12;
 const DIM_MAX_OPACITY = 0.72;
 const DEFAULT_DIM_STRENGTH = 50;
 
-function normaliseThemeName(value: unknown): string {
-  if (typeof value !== 'string' || !value || value === 'light') return 'system';
-  return value === 'christmas' ? 'winter' : value;
-}
-
 // Built-in theme colour each customisable theme ships with. A value of 0–359
 // is a hue; negative values are special modes (see THEME_COLOR). Cosmic ships
 // as White to preserve its classic white/grey nebula look.
@@ -90,12 +85,9 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<string>(() => {
     if (typeof window === 'undefined') return 'system';
-    const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-    const normalised = normaliseThemeName(stored);
-    if (stored !== normalised) {
-      try { window.localStorage.setItem(THEME_STORAGE_KEY, normalised); } catch { /* ignore */ }
-    }
-    return normalised;
+    const stored = window.localStorage.getItem(THEME_STORAGE_KEY) || 'system';
+    // Migrate old 'christmas' theme name to 'winter'.
+    return stored === 'christmas' ? 'winter' : stored;
   });
 
   const [dimLights, setDimLightsState] = useState<boolean>(() => {
@@ -128,7 +120,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // account, so signing out drops back to the default system theme (no dim, no
   // hue/brand overrides) and signing back in restores the saved look.
   const applyTheme = useCallback((v: unknown) => {
-    const val = normaliseThemeName(v);
+    let val = typeof v === 'string' && v ? v : 'system';
+    if (val === 'christmas') val = 'winter';
     setThemeState(val);
     try { window.localStorage.setItem(THEME_STORAGE_KEY, val); } catch { /* ignore */ }
   }, []);
@@ -171,14 +164,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const { push: pushBrandColors } = useSyncedPreference('brandColors', brandColors, applyBrandColors, [], { resetOnLogout: true });
 
   const setTheme = useCallback((value: string) => {
-    const nextTheme = normaliseThemeName(value);
-    setThemeState(nextTheme);
+    setThemeState(value);
     try {
-      window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+      window.localStorage.setItem(THEME_STORAGE_KEY, value);
     } catch {
       // ignore quota / private-mode errors
     }
-    pushTheme(nextTheme);
+    pushTheme(value);
   }, [pushTheme]);
 
   const setThemeHue = useCallback((themeName: string, hue: number | null) => {
