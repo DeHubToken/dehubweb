@@ -61,7 +61,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
     width: '1.15em',
     height: '1.15em',
     marginInlineStart: '0.125em',
-    transform: `scale(${opticalScale ?? 1})`,
+    transform: `translateY(-1px) scale(${opticalScale ?? 1})`,
     transformOrigin: 'center',
   };
 
