@@ -179,7 +179,7 @@ export function usePPVPayment({
       let txHash: string;
 
       if (useRouter && routerAddress) {
-        toast.loading(dhbText('Processing atomic payment (swap + unlock + tip)...'), { id: 'ppv-payment' });
+        toast.loading(dhbText('Processing payment...'), { id: 'ppv-payment' });
         const result = await unlockPPVAndTipViaRouter({
           routerAddress,
           tokenId,

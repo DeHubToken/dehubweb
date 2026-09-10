@@ -110,7 +110,7 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
       if (!mintSig.alreadyMinted) {
         setUploadProgress(65);
         startCreepProgress();
-        toast.loading('Publishing to decentralized database...', { id: 'quote-mint', duration: Infinity });
+        toast.loading('Publishing quote...', { id: 'quote-mint', duration: Infinity });
 
         const { mintOnChain } = await import('@/lib/contracts/stream-collection');
         const mintResult = await mintOnChain({
