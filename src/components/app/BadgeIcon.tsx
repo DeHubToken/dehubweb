@@ -46,7 +46,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
           height={16}
           loading="lazy"
           decoding="async"
-          className={`shrink-0 self-center align-middle rounded-none bg-transparent object-contain cursor-pointer hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.8)] transition-all ${className}`}
+          className={`shrink-0 self-end align-middle rounded-none bg-transparent object-contain cursor-pointer hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.8)] transition-all ${className}`}
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();

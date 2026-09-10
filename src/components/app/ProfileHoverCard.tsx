@@ -234,7 +234,7 @@ export function ProfileHoverCard({
                     className="w-[1em] h-[1em]"
                   />
                 </span>
-                {profile.verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 ml-1" />}
+                {profile.verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 self-end ml-1" />}
                 <NewMemberChip address={profile.address} className="ml-1" />
               </div>
               {profile.username && (
