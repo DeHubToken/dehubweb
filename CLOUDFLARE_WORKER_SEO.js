@@ -1187,7 +1187,7 @@ const MARKETING_PAGES = {
   // the default canonical (`/<key>`) is the right one and the overrides are out.
   'superpowers': {
     title: 'SuperPowers — Spend Your DeHub Badge on Reach',
-    description: 'Badge holders get boosts every fortnight: put a post in the slot at the top of the DeHub home feed. Thirteen tiers, thirteen powers, one unlock per rung.',
+    description: 'Badge holders get boosts every fortnight: twelve powers across thirteen tiers, with a larger allowance at every rung.',
     heading: 'DeHub SuperPowers',
     bodyHtml: `<p>A DeHub staking badge is not only the art beside your name. Each tier carries powers, and the first of them is reach: a boost that lifts one of your posts into the slot at the top of the home feed.</p>
 <h2>Refilled, not bought</h2>

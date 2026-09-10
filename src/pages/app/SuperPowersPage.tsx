@@ -11,9 +11,8 @@
  * ladder renders for everyone from the public endpoint, and the allowance
  * panel is the part that needs an account.
  *
- * Two of the thirteen powers are built. The other eleven are listed anyway,
- * dimmed and labelled, because the ladder is the product: the reason to climb
- * a rung is knowing what the next one holds.
+ * All twelve powers are listed in unlock order. Killer Whale remains a badge
+ * tier with a stronger allowance, but it does not add a separate power.
  */
 
 import { useMemo, useState } from 'react';
@@ -61,13 +60,9 @@ function actsOn(key: SuperPowerKey, t: (k: string, o?: Record<string, unknown>) 
         defaultValue: 'Acts on a Stage you host. Tap to pick one.',
       });
     case 'page':
-      return key === 'trend_jacker'
-        ? t('superpowers.actsCategory', {
-            defaultValue: 'Acts on one of your categories. Tap to pick one.',
-          })
-        : t('superpowers.actsAccount', {
-            defaultValue: 'Acts on your whole account. Tap to start it.',
-          });
+      return t('superpowers.actsCategory', {
+        defaultValue: 'Acts on one of your categories. Tap to pick one.',
+      });
     default:
       return t('superpowers.actsPost', {
         defaultValue: 'Acts on one of your posts. Tap to pick one.',
@@ -95,7 +90,9 @@ export default function SuperPowersPage() {
 
   // The public ladder carries every power; the signed-in one adds `unlocked`.
   // Prefer the personal copy so the page lights up without a second render.
-  const powers = status?.powers ?? ladder?.powers ?? [];
+  const powers = (status?.powers ?? ladder?.powers ?? []).filter(
+    power => String(power.key) !== 'golden_hour',
+  );
 
   const refillsOn = useMemo(() => {
     const iso = status?.cycleEndsAt ?? ladder?.cycleEndsAt;
@@ -103,7 +100,7 @@ export default function SuperPowersPage() {
     return new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'long' });
   }, [status?.cycleEndsAt, ladder?.cycleEndsAt]);
 
-  // One drawer for all thirteen. It resolves the target a power needs — a
+  // One drawer for all twelve. It resolves the target a power needs — a
   // post, a comment, a Stage, a category — and books it; the server re-checks
   // every one of those, so this only decides what is worth offering.
   const [spending, setSpending] = useState<SuperPowerInfo | null>(null);
@@ -118,7 +115,7 @@ export default function SuperPowersPage() {
     <>
       <SEOHead
         title="SuperPowers — Spend Your DeHub Badge on Reach"
-        description="Badge holders get boosts every fortnight: put a post in the slot at the top of the DeHub home feed. Thirteen tiers, thirteen powers, one unlock per rung."
+        description="Badge holders get boosts every fortnight: twelve powers across thirteen tiers, with a larger allowance at every rung."
         url="https://dehub.io/app/superpowers"
         image="https://dehub.io/og/superpowers.jpg"
         jsonLd={{
@@ -138,7 +135,12 @@ export default function SuperPowersPage() {
             <ThemedIcon icon="superpowers" alt="" className="w-8 h-8 object-contain" />
             {t('superpowers.title')}
           </h1>
-          <p className="text-sm text-zinc-400 max-w-prose">{t('superpowers.intro')}</p>
+          <p className="text-sm text-zinc-400 max-w-prose">
+            {t('superpowers.currentIntro', {
+              defaultValue:
+                'A badge buys more than the art beside your name. Every fortnight it grants boosts that put posts at the top of the home feed. Thirteen tiers, twelve powers, and a stronger allowance at every rung.',
+            })}
+          </p>
         </header>
 
         {/* ── Your allowance ─────────────────────────────────────────── */}
@@ -198,10 +200,10 @@ export default function SuperPowersPage() {
           </section>
         )}
 
-        {/* ── The thirteen powers ────────────────────────────────────── */}
+        {/* ── The twelve powers ──────────────────────────────────────── */}
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">
-            {t('superpowers.powersHeading')}
+            {t('superpowers.currentPowersHeading', { defaultValue: 'The twelve powers' })}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {powers.map((power, index) => {

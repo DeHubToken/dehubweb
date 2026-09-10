@@ -6,8 +6,8 @@
  *
  * The page used to tick a power and then leave you to find the surface it is
  * spent from — a post's menu, a comment, a Stage. At Cobra that was five ticks
- * and one control; at Meglodon it is thirteen ticks and two, which reads as
- * eleven powers that do not work. They all work. What they need is a target,
+ * and one control; at Meglodon it is twelve ticks and two, which reads as ten
+ * powers that do not work. They all work. What they need is a target,
  * and picking the target is the whole job of this drawer.
  *
  * **One box, two behaviours.** The post picker takes a search term *or* a
@@ -179,7 +179,7 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
 
   const targetChosen =
     home === 'page'
-      ? power?.key !== 'trend_jacker' || !!category
+      ? !!category
       : home === 'comment'
         ? !!pickedComment
         : home === 'stage'
@@ -258,15 +258,6 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
 
         <div className="flex flex-col gap-3 max-h-[70vh] overflow-y-auto">
           <p className="text-[13px] text-zinc-400 leading-snug px-1">{power?.summary}</p>
-
-          {/* Golden Hour is the only power with nothing to pick. */}
-          {home === 'page' && power?.key !== 'trend_jacker' && (
-            <p className="text-[12px] text-zinc-500 px-1">
-              {t('superpowers.actsOnAccount', {
-                defaultValue: 'This one acts on your whole account — there is nothing to choose.',
-              })}
-            </p>
-          )}
 
           {power?.key === 'trend_jacker' && (
             <select

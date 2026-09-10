@@ -6,11 +6,8 @@
  * an allowance of boosts each fortnight, and a boost puts one of their posts
  * in the slot at the top of the home feed.
  *
- * Thirteen tiers, thirteen powers, one unlock per rung — so the next rung
- * always buys exactly one new thing. Two are built: **Boost** for a post under
- * a week old, and **Second Wind** for anything older, which unlocks a rung up
- * because bringing something back from the archive is a different act from
- * amplifying what you just posted.
+ * Thirteen tiers grant twelve powers. Every rung improves the allowance,
+ * window, or share of voice; most also unlock a new way to spend that reach.
  *
  * Two things worth knowing before touching this:
  *
@@ -45,7 +42,6 @@ export type SuperPowerKey =
   | 'flak_jacket'
   | 'precision_strike'
   | 'harpoon'
-  | 'golden_hour'
   | 'crew_boost'
   | 'front_row'
   | 'deep_current';
@@ -64,10 +60,7 @@ export interface SuperPowerInfo {
 
 export interface SuperPowerBooking {
   id: string;
-  /**
-   * Null for a power that does not act on a post — a Golden Hour acts on the
-   * whole account. Check before linking to `/app/post/`.
-   */
+  /** Null for powers that act on a comment, stage, or category. */
   tokenId: number | null;
   power: SuperPowerKey;
   startsAt: string;
