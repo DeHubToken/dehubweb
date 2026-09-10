@@ -1789,16 +1789,16 @@ export default function NotificationsPage() {
         const values = Array.isArray(outcome.value) ? outcome.value : [outcome.value];
         for (const value of values) {
           if (!value?.resolved) {
-            if ((value as any)?.attemptedKey) {
-              moduleEnrichedKeys.delete((value as any).attemptedKey);
+            if ('attemptedKey' in value && value.attemptedKey) {
+              moduleEnrichedKeys.delete(value.attemptedKey);
             }
             continue;
           }
-          if (!value.key || !value.info) continue;
+          if (!('key' in value) || !value.key || !value.info) continue;
           resolvedEntries.push({
             key: value.key,
             info: value.info as EnrichedAvatar,
-            extraKeys: (((value as any).extraKeys || []) as string[]).filter(Boolean),
+            extraKeys: ('extraKeys' in value ? value.extraKeys || [] : []).filter(Boolean),
           });
         }
       }
