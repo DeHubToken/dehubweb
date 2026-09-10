@@ -226,7 +226,7 @@ function BadgeMedallion({
           <img
             src={url}
             alt={tier || 'Badge'}
-            className="w-7 h-7 sm:w-8 sm:h-8 object-contain brightness-0 invert drop-shadow-[0_0_6px_rgba(255,255,255,0.5)]"
+            className="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow-[0_0_6px_rgba(255,255,255,0.5)]"
           />
         ) : (
           <span className="text-[9px] uppercase tracking-wider text-white/30">None</span>
@@ -275,7 +275,7 @@ function BadgeLadderRail({
                     loading="lazy"
                     decoding="async"
                     className={cn(
-                      'w-4 h-4 sm:w-[18px] sm:h-[18px] object-contain brightness-0 invert transition-all',
+                      'w-4 h-4 sm:w-[18px] sm:h-[18px] object-contain transition-all',
                       earned ? 'opacity-100' : 'opacity-25',
                       current && 'drop-shadow-[0_0_6px_rgba(255,255,255,0.75)]',
                     )}

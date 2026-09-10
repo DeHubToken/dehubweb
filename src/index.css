@@ -3113,14 +3113,7 @@ html[data-theme="light"] [data-bottom-nav] .border-white\/30 {
 /* Login modal light-mode overrides live above (~L1351). Do NOT reintroduce
    dark-glass styling here — the modal must be paper/ink on light theme. */
 
-/* Staking badge silhouettes: white in dark mode via `brightness-0 invert`.
-   On paper, drop the invert so they render as black ink silhouettes. */
-html[data-theme="light"] img[data-badge-icon] {
-  filter: brightness(0) !important;
-}
-html[data-theme="light"] img[data-badge-icon]:hover {
-  filter: brightness(0) drop-shadow(0 0 4px rgba(0, 0, 0, 0.4)) !important;
-}
+/* Staking badge artwork keeps its native tier colours in every theme. */
 /* Video hover playback controls: chips have a translucent black background,
    so their icons and text must stay white on light mode (otherwise .text-white
    remaps to ink and disappears against the dark chip). */
