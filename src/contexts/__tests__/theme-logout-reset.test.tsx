@@ -150,4 +150,13 @@ describe('appearance reset on sign-out', () => {
     await waitFor(() => expect(screen.getByTestId('theme').textContent).toBe('system'));
     expect(localStorage.getItem('user-preferred-language')).toBe('es');
   });
+
+  it('migrates the removed light theme back to system', async () => {
+    localStorage.setItem('dehub.theme', 'light');
+    authState.isLoading = true;
+    renderApp();
+    await waitFor(() => expect(screen.getByTestId('theme').textContent).toBe('system'));
+    expect(document.documentElement.dataset.theme).toBe('system');
+    expect(localStorage.getItem('dehub.theme')).toBe('system');
+  });
 });
