@@ -52,7 +52,7 @@ import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
 import { applyVoteStateToNFT, isVoteConfirmed } from '@/lib/engagement';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
-import { getCommentCountDelta } from '@/lib/comment-count-cache';
+import { reconcileCommentCount, subscribeToCommentCreated } from '@/lib/comment-count-events';
 import {
   DOUBLE_TAP_LIKE_EVENT,
   OPEN_REACTIONS_EVENT,
@@ -269,9 +269,23 @@ export function ActionBar({
   const selfWeight = useEngagementWeight();
   const voteWeight = voteWeightProp ?? selfWeight;
 
-  // Add localStorage delta to comment count for instant feedback
-  const commentCountDelta = postId ? getCommentCountDelta(postId) : 0;
-  const commentCount = (rawCommentCount ?? 0) + commentCountDelta;
+  const serverCommentCount = rawCommentCount ?? 0;
+  const [commentCount, setCommentCount] = useState(serverCommentCount);
+  const commentCountPostRef = useRef(postId);
+  useEffect(() => {
+    if (commentCountPostRef.current !== postId) {
+      commentCountPostRef.current = postId;
+      setCommentCount(serverCommentCount);
+      return;
+    }
+    setCommentCount((current) => reconcileCommentCount(current, serverCommentCount));
+  }, [postId, serverCommentCount]);
+  useEffect(() => {
+    if (!postId) return;
+    return subscribeToCommentCreated(postId, () => {
+      setCommentCount((current) => current + 1);
+    });
+  }, [postId]);
   
   // Optimistic repost count: increment locally on repost for instant feedback
   const [repostDelta, setRepostDelta] = useState(0);
