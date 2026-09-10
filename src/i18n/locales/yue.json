@@ -1841,6 +1841,7 @@
       "3d": "3 日",
       "7d": "7 日",
       "30d": "30 日",
+      "1y": "1 年",
       "all": "全部時間"
     },
     "unavailable": {
@@ -1975,7 +1976,6 @@
     "homePage": "喺呢度用，喺呢頁頂部。",
     "flaresLeft": "火花",
     "giftedTo": "禮物 → #{{id}}",
-    "goldenHourStarted": "Golden Hour 進行緊 {{minutes}} 分鐘 — 你而家發佈嘅所有內容都會計雙倍",
     "pickCategory": "類別…",
     "trendJacked": "{{category}} 正在熱門 {{minutes}} 分鐘",
     "actsPost": "對你其中一篇帖文作出反應。點擊以選擇一個。",
@@ -1995,7 +1995,8 @@
     "noComments": "你尚未留言。",
     "noStages": "你目前沒有正在進行或已排程的舞台。",
     "noFlaresLeft": "本週期沒有剩餘的訊號火花",
-    "spentFor": "{{power}} 正在運行 {{minutes}} 分鐘"
+    "spentFor": "{{power}} 正在運行 {{minutes}} 分鐘",
+    "goldenHourStarted": "Golden Hour 進行緊 {{minutes}} 分鐘 — 你而家發佈嘅所有內容都會計雙倍"
   },
   "work": {
     "budgetExhausted": "呢個賞金嘅預算已經全部分配咗。"

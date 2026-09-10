@@ -1703,6 +1703,7 @@
       "3d": "3 zile",
       "7d": "7 zile",
       "30d": "30 de zile",
+      "1y": "1 an",
       "all": "Toată perioada"
     },
     "unavailable": {
@@ -1837,7 +1838,6 @@
     "homePage": "Cheltuiește-l aici, în partea de sus a acestei pagini.",
     "flaresLeft": "flares",
     "giftedTo": "cadou → #{{id}}",
-    "goldenHourStarted": "Golden Hour rulează timp de {{minutes}} minute — tot ce postezi acum contează dublu",
     "start": "Start",
     "pickCategory": "Categorie…",
     "trendJacked": "{{category}} este în trend timp de {{minutes}} minute",
@@ -1859,7 +1859,8 @@
     "noComments": "Nu ai comentat încă.",
     "noStages": "Niciun Stage de-al tău nu este live sau programat acum.",
     "noFlaresLeft": "Nu au mai rămas Semnale de Alarmă în acest ciclu",
-    "spentFor": "{{power}} rulează de {{minutes}} minute"
+    "spentFor": "{{power}} rulează de {{minutes}} minute",
+    "goldenHourStarted": "Golden Hour rulează timp de {{minutes}} minute — tot ce postezi acum contează dublu"
   },
   "work": {
     "budgetExhausted": "Bugetul acestei recompense este alocat în întregime.",

@@ -1723,6 +1723,7 @@
       "3d": "3 dae",
       "7d": "7 dae",
       "30d": "30 dae",
+      "1y": "1 jaar",
       "all": "Die hele tyd"
     },
     "unavailable": {
@@ -1857,7 +1858,6 @@
     "homePage": "Spandeer dit hier, bo-aan hierdie bladsy.",
     "flaresLeft": "flares",
     "giftedTo": "geskenk → #{{id}}",
-    "goldenHourStarted": "Golden Hour vir {{minutes}} minute — alles wat jy nou plaas tel dubbel",
     "start": "Begin",
     "pickCategory": "Kategorie…",
     "trendJacked": "{{category}} is trending vir {{minutes}} minute",
@@ -1879,7 +1879,8 @@
     "noComments": "Jy het nog nie kommentaar gelewer nie.",
     "noStages": "Geen Verhoog van jou is tans regstreeks of geskeduleer nie.",
     "noFlaresLeft": "Geen Sein Vlamme oor hierdie siklus oor nie",
-    "spentFor": "{{power}} hardloop vir {{minutes}} minute"
+    "spentFor": "{{power}} hardloop vir {{minutes}} minute",
+    "goldenHourStarted": "Golden Hour vir {{minutes}} minute — alles wat jy nou plaas tel dubbel"
   },
   "work": {
     "budgetExhausted": "Hierdie kopgeld se begroting is heeltemal toegewys.",

@@ -1842,6 +1842,7 @@
       "3d": "3 ditë",
       "7d": "7 ditë",
       "30d": "30 ditë",
+      "1y": "1 vit",
       "all": "Gjithë koha"
     },
     "unavailable": {
@@ -1976,7 +1977,6 @@
     "homePage": "Shpenzojeni këtu, në krye të kësaj faqeje.",
     "flaresLeft": "flares",
     "giftedTo": "gift → #{{id}}",
-    "goldenHourStarted": "Golden Hour po zgjat {{minutes}} minuta — çdo gjë që postoni tani numërohet dyfish",
     "start": "Start",
     "pickCategory": "Category…",
     "trendJacked": "{{category}} po bëhet trend për {{minutes}} minuta",
@@ -1998,7 +1998,8 @@
     "noComments": "Nuk keni komentuar ende.",
     "noStages": "Asnjë Stage tuaj nuk është drejtpërdrejt ose i planifikuar tani.",
     "noFlaresLeft": "Asnjë Sinjal Flakë i mbetur këtë cikël",
-    "spentFor": "{{power}} duke u drejtuar për {{minutes}} minuta"
+    "spentFor": "{{power}} duke u drejtuar për {{minutes}} minuta",
+    "goldenHourStarted": "Golden Hour po zgjat {{minutes}} minuta — çdo gjë që postoni tani numërohet dyfish"
   },
   "work": {
     "budgetExhausted": "Buxheti i kësaj shpërblimi është angazhuar plotësisht."

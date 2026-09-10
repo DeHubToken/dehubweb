@@ -1877,6 +1877,7 @@
       "3d": "3 hari",
       "7d": "7 hari",
       "30d": "30 hari",
+      "1y": "1 tahun",
       "all": "Sepanjang waktu"
     },
     "unavailable": {
@@ -2011,7 +2012,6 @@
     "homePage": "Gunakan di sini, di bagian atas halaman ini.",
     "flaresLeft": "kilatan",
     "giftedTo": "hadiah → #{{id}}",
-    "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} menit — semua yang Anda posting sekarang dihitung ganda",
     "start": "Mulai",
     "pickCategory": "Kategori…",
     "trendJacked": "{{category}} sedang tren selama {{minutes}} menit",
@@ -2033,7 +2033,8 @@
     "noComments": "Anda belum berkomentar.",
     "noStages": "Tidak ada Stage Anda yang sedang tayang atau dijadwalkan saat ini.",
     "noFlaresLeft": "Tidak ada Signal Flare tersisa siklus ini",
-    "spentFor": "{{power}} berjalan selama {{minutes}} menit"
+    "spentFor": "{{power}} berjalan selama {{minutes}} menit",
+    "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} menit — semua yang Anda posting sekarang dihitung ganda"
   },
   "work": {
     "budgetExhausted": "Anggaran bounty ini sudah terpakai sepenuhnya.",

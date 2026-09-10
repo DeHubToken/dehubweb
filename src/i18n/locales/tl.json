@@ -1740,6 +1740,7 @@
       "3d": "3 araw",
       "7d": "7 araw",
       "30d": "30 araw",
+      "1y": "1 na taon",
       "all": "Buong panahon"
     },
     "unavailable": {
@@ -1874,7 +1875,6 @@
     "homePage": "Gamitin ito dito, sa tuktok ng pahinang ito.",
     "flaresLeft": "flares",
     "giftedTo": "regalo → #{{id}}",
-    "goldenHourStarted": "Golden Hour ay tumatakbo sa {{minutes}} minuto — lahat ng iyong ipo-post ngayon ay doble ang bilang",
     "start": "Simula",
     "pickCategory": "Kategorya…",
     "trendJacked": "{{category}} ay trending sa {{minutes}} minuto",
@@ -1896,7 +1896,8 @@
     "noComments": "Hindi ka pa nakakapagkomento.",
     "noStages": "Walang Stage mo na live o naka-schedule ngayon.",
     "noFlaresLeft": "Walang natitirang Signal Flares ngayong cycle",
-    "spentFor": "{{power}} tumatakbo para sa {{minutes}} minuto"
+    "spentFor": "{{power}} tumatakbo para sa {{minutes}} minuto",
+    "goldenHourStarted": "Golden Hour ay tumatakbo sa {{minutes}} minuto — lahat ng iyong ipo-post ngayon ay doble ang bilang"
   },
   "work": {
     "budgetExhausted": "Nagamit na nang buo ang budget ng bounty na ito.",

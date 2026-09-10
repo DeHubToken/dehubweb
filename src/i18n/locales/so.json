@@ -1843,6 +1843,7 @@
       "3d": "3 maalmood",
       "7d": "7 maalmood",
       "30d": "30 maalmood",
+      "1y": "1 sano",
       "all": "Waqtiga oo dhan"
     },
     "unavailable": {
@@ -1977,7 +1978,6 @@
     "homePage": "Ku bixi halkan, dusha boggan.",
     "flaresLeft": "flares",
     "giftedTo": "gift → #{{id}}",
-    "goldenHourStarted": "Saacadda Dahabka ah oo socota {{minutes}} daqiiqo — wax kasta oo aad hadda qorto labanlaab bay u dhigantaa",
     "start": "Bilow",
     "pickCategory": "Qaybta…",
     "trendJacked": "{{category}} ayaa trending ah {{minutes}} daqiiqo",
@@ -1999,7 +1999,8 @@
     "noComments": "Wali ma aadan faallayn.",
     "noStages": "Ma jiraan wax Stages ah oo aad leedahay oo hadda nool ama la qorsheeyay.",
     "noFlaresLeft": "Ma jiraan wax Signal Flares ah oo ka hadhay wareeggan",
-    "spentFor": "{{power}} oo soconaysa {{minutes}} daqiiqo"
+    "spentFor": "{{power}} oo soconaysa {{minutes}} daqiiqo",
+    "goldenHourStarted": "Saacadda Dahabka ah oo socota {{minutes}} daqiiqo — wax kasta oo aad hadda qorto labanlaab bay u dhigantaa"
   },
   "work": {
     "budgetExhausted": "Miisaaniyadda abaalmarintan gebi ahaanba waa la qoondeeyay."

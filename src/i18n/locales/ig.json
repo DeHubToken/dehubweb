@@ -1815,6 +1815,7 @@
       "3d": "Ụbọchị 3",
       "7d": "Ụbọchị 7",
       "30d": "Ụbọchị 30",
+      "1y": "1 afọ",
       "all": "Oge Niile"
     },
     "unavailable": {
@@ -1949,7 +1950,6 @@
     "homePage": "Jiri ya ebe a, n'elu ibe a.",
     "flaresLeft": "flares",
     "giftedTo": "onyinye → #{{id}}",
-    "goldenHourStarted": "Golden Hour na-agba maka {{minutes}} nkeji — ihe niile ị bipụtara ugbu a na-agụ okpukpu abụọ",
     "start": "Malite",
     "pickCategory": "Ụdị…",
     "trendJacked": "{{category}} na-ewu ewu maka {{minutes}} nkeji",
@@ -1971,7 +1971,8 @@
     "noComments": "Ibeghị nkọwa.",
     "noStages": "Ọ dịghị Stage gị dị ndụ ma ọ bụ egoro ugbu a.",
     "noFlaresLeft": "Enweghị Signal Flares fọdụrụ n'okirikiri a",
-    "spentFor": "{{power}} na-agba ọsọ maka {{minutes}} nkeji"
+    "spentFor": "{{power}} na-agba ọsọ maka {{minutes}} nkeji",
+    "goldenHourStarted": "Golden Hour na-agba maka {{minutes}} nkeji — ihe niile ị bipụtara ugbu a na-agụ okpukpu abụọ"
   },
   "work": {
     "budgetExhausted": "Ego a kwadoro maka onyinye a ejizuola."

@@ -1842,6 +1842,7 @@
       "3d": "kwanaki 3",
       "7d": "kwanaki 7",
       "30d": "kwanaki 30",
+      "1y": "1 shekara",
       "all": "Dukan lokacin"
     },
     "unavailable": {
@@ -1976,7 +1977,6 @@
     "homePage": "Kashe shi anan, a saman wannan shafi.",
     "flaresLeft": "flares",
     "giftedTo": "kyauta → #{{id}}",
-    "goldenHourStarted": "Golden Hour yana gudana na tsawon mintuna {{minutes}} — duk abin da ka aika yanzu yana ƙididdigewa sau biyu",
     "start": "Fara",
     "pickCategory": "Rukuni…",
     "trendJacked": "{{category}} yana tasowa na tsawon mintuna {{minutes}}",
@@ -1998,7 +1998,8 @@
     "noComments": "Baka yi tsokaci ba tukuna.",
     "noStages": "Babu Wasan ka da ke gudana ko kuma aka tsara yanzu.",
     "noFlaresLeft": "Babu Signal Flares da suka rage a wannan zagayen",
-    "spentFor": "{{power}} yana gudana na tsawon mintuna {{minutes}}"
+    "spentFor": "{{power}} yana gudana na tsawon mintuna {{minutes}}",
+    "goldenHourStarted": "Golden Hour yana gudana na tsawon mintuna {{minutes}} — duk abin da ka aika yanzu yana ƙididdigewa sau biyu"
   },
   "work": {
     "budgetExhausted": "Kasafin kuɗin wannan lada ya ƙare gaba ɗaya."

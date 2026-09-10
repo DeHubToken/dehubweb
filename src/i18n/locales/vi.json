@@ -1622,6 +1622,7 @@
       "3d": "3 ngày",
       "7d": "7 ngày",
       "30d": "30 ngày",
+      "1y": "1 năm",
       "all": "Toàn bộ thời gian"
     },
     "unavailable": {
@@ -1756,7 +1757,6 @@
     "homePage": "Dùng nó ở đây, trên đầu trang này.",
     "flaresLeft": "tia sáng",
     "giftedTo": "quà tặng → #{{id}}",
-    "goldenHourStarted": "Golden Hour đang chạy trong {{minutes}} phút — mọi thứ bạn đăng bây giờ đều được tính gấp đôi",
     "start": "Bắt đầu",
     "pickCategory": "Danh mục…",
     "trendJacked": "{{category}} đang thịnh hành trong {{minutes}} phút",
@@ -1778,7 +1778,8 @@
     "noComments": "Bạn chưa bình luận.",
     "noStages": "Không có Stage nào của bạn đang phát trực tiếp hoặc được lên lịch ngay bây giờ.",
     "noFlaresLeft": "Không còn Signal Flares nào trong chu kỳ này",
-    "spentFor": "{{power}} chạy trong {{minutes}} phút"
+    "spentFor": "{{power}} chạy trong {{minutes}} phút",
+    "goldenHourStarted": "Golden Hour đang chạy trong {{minutes}} phút — mọi thứ bạn đăng bây giờ đều được tính gấp đôi"
   },
   "work": {
     "budgetExhausted": "Ngân sách của tiền thưởng này đã được phân bổ hết.",

@@ -1804,6 +1804,7 @@
       "3d": "3 nap",
       "7d": "7 nap",
       "30d": "30 nap",
+      "1y": "1 év",
       "all": "Teljes időszak"
     },
     "unavailable": {
@@ -1938,7 +1939,6 @@
     "homePage": "Fordítsd el itt, ezen az oldalon felül.",
     "flaresLeft": "flares",
     "giftedTo": "ajándék → #{{id}}",
-    "goldenHourStarted": "Golden Hour futtatása {{minutes}} percig — minden, amit most posztolsz, duplán számít",
     "start": "Indítás",
     "pickCategory": "Kategória…",
     "trendJacked": "{{category}} trendel {{minutes}} percig",
@@ -1960,7 +1960,8 @@
     "noComments": "Még nem kommenteltél.",
     "noStages": "Egyik Stage-ed sem élő vagy ütemezett jelenleg.",
     "noFlaresLeft": "Nincs több Jelzőrakéta ebben a ciklusban",
-    "spentFor": "{{power}} fut {{minutes}} percig"
+    "spentFor": "{{power}} fut {{minutes}} percig",
+    "goldenHourStarted": "Golden Hour futtatása {{minutes}} percig — minden, amit most posztolsz, duplán számít"
   },
   "work": {
     "budgetExhausted": "Ennek a jutalomnak a kerete teljesen le van kötve.",

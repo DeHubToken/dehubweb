@@ -1821,6 +1821,7 @@
       "3d": "3 كۈن",
       "7d": "7 كۈن",
       "30d": "30 كۈن",
+      "1y": "1 يىل",
       "all": "بارلىق ۋاقىت"
     },
     "unavailable": {
@@ -1955,7 +1956,6 @@
     "homePage": "بۇ يەردە، بۇ بەتنىڭ ئۈستىدە ئىشلىتىڭ.",
     "flaresLeft": "flares",
     "giftedTo": "gift → #{{id}}",
-    "goldenHourStarted": "Golden Hour {{minutes}} مىنۇت داۋام قىلىدۇ — ھازىر سىز نەشر قىلغان ھەممە نەرسە ئىككى ھەسسە قىممەتكە ئىگە بولىدۇ",
     "start": "Start",
     "pickCategory": "Category…",
     "trendJacked": "{{category}} {{minutes}} مىنۇتتىن بۇيان trending بولۇۋاتىدۇ",
@@ -1977,7 +1977,8 @@
     "noComments": "سىز تېخى شەرھ قىلمىغان.",
     "noStages": "سىزنىڭ ھېچقانداق Stage ھازىر جانلىق ياكى پىلانلانغان ئەمەس.",
     "noFlaresLeft": "بۇ سىكىلدا Signal Flares قالمىدى",
-    "spentFor": "{{power}} ئۈچۈن {{minutes}} مىنۇت ئىشلىتىۋاتىدۇ"
+    "spentFor": "{{power}} ئۈچۈن {{minutes}} مىنۇت ئىشلىتىۋاتىدۇ",
+    "goldenHourStarted": "Golden Hour {{minutes}} مىنۇت داۋام قىلىدۇ — ھازىر سىز نەشر قىلغان ھەممە نەرسە ئىككى ھەسسە قىممەتكە ئىگە بولىدۇ"
   },
   "work": {
     "budgetExhausted": "بۇ مۇكاپاتنىڭ بىۇدجىتى تولۇق تەقسىم قىلىندى."

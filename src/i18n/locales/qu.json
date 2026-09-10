@@ -1874,6 +1874,7 @@
       "3d": "3 punchawkuna",
       "7d": "7 punchawkuna",
       "30d": "30 punchawkuna",
+      "1y": "1 wata",
       "all": "Llapan pacha"
     },
     "unavailable": {
@@ -2008,7 +2009,6 @@
     "homePage": "Kaypi llamk'achiy, kay p'anqapata patapi.",
     "flaresLeft": "flares",
     "giftedTo": "gift → #{{id}}",
-    "goldenHourStarted": "Golden Hourqa {{minutes}} minutokama purichkan — imaymana kaqniyki kunan iskaychayta atikun",
     "start": "Qallariy",
     "pickCategory": "Category…",
     "trendJacked": "{{category}}qa {{minutes}} minutokama trending kachkan",
@@ -2030,7 +2030,8 @@
     "noComments": "Comentarioykim imayanachu ruwaykichu.",
     "noStages": "Sapaypa Stage nisqayki live o scheduled imayanachu.",
     "noFlaresLeft": "Signal Flares imayanachu kaypi cycle nisqapi",
-    "spentFor": "{{power}} puriykachkaspa {{minutes}} minutukunaman"
+    "spentFor": "{{power}} puriykachkaspa {{minutes}} minutukunaman",
+    "goldenHourStarted": "Golden Hourqa {{minutes}} minutokama purichkan — imaymana kaqniyki kunan iskaychayta atikun"
   },
   "work": {
     "budgetExhausted": "Kay t'inkap qullqin tukuyta rakisqaña."

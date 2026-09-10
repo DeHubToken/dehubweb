@@ -1829,6 +1829,7 @@
       "3d": "3 ימים",
       "7d": "7 ימים",
       "30d": "30 יום",
+      "1y": "1 שנה",
       "all": "כל הזמן"
     },
     "unavailable": {
@@ -1963,7 +1964,6 @@
     "homePage": "השתמש בו כאן, בראש הדף הזה.",
     "flaresLeft": "הבזקים",
     "giftedTo": "מתנה → #{{id}}",
-    "goldenHourStarted": "Golden Hour רץ במשך {{minutes}} דקות — כל מה שתפרסם עכשיו נחשב כפול",
     "pickCategory": "קטגוריה…",
     "trendJacked": "{{category}} נמצא בטרנד במשך {{minutes}} דקות",
     "actsPost": "פועל על אחת מהפוסטים שלך. הקש כדי לבחור אחד.",
@@ -1983,7 +1983,8 @@
     "noComments": "עדיין לא הגבת.",
     "noStages": "אין במה פעילה או מתוזמנת שלך כרגע.",
     "noFlaresLeft": "לא נותרו הבזקי איתות במחזור זה",
-    "spentFor": "{{power}} רץ במשך {{minutes}} דקות"
+    "spentFor": "{{power}} רץ במשך {{minutes}} דקות",
+    "goldenHourStarted": "Golden Hour רץ במשך {{minutes}} דקות — כל מה שתפרסם עכשיו נחשב כפול"
   },
   "work": {
     "budgetExhausted": "התקציב של הפרס הזה נוצל במלואו.",

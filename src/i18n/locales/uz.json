@@ -1858,6 +1858,7 @@
       "3d": "3 kun",
       "7d": "7 kun",
       "30d": "30 kun",
+      "1y": "1 yil",
       "all": "Butun davr"
     },
     "unavailable": {
@@ -1992,7 +1993,6 @@
     "homePage": "Bu yerda, ushbu sahifa yuqorisida sarflang.",
     "flaresLeft": "flares",
     "giftedTo": "sovg'a → #{{id}}",
-    "goldenHourStarted": "Golden Hour {{minutes}} daqiqa davom etmoqda — hozirgi har bir postingiz ikki hisoblanadi",
     "start": "Boshlash",
     "pickCategory": "Kategoriya…",
     "trendJacked": "{{category}} {{minutes}} daqiqa davomida trendda",
@@ -2014,7 +2014,8 @@
     "noComments": "Siz hali sharhlamadingiz.",
     "noStages": "Hozir sizning Stage'ingiz jonli yoki rejalashtirilgan emas.",
     "noFlaresLeft": "Bu siklda Signal Flares qolmadi",
-    "spentFor": "{{power}} {{minutes}} daqiqa davomida ishlayapti"
+    "spentFor": "{{power}} {{minutes}} daqiqa davomida ishlayapti",
+    "goldenHourStarted": "Golden Hour {{minutes}} daqiqa davom etmoqda — hozirgi har bir postingiz ikki hisoblanadi"
   },
   "work": {
     "budgetExhausted": "Bu mukofotning byudjeti to'liq taqsimlangan."

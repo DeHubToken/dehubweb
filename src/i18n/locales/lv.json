@@ -1842,6 +1842,7 @@
       "3d": "3 dienas",
       "7d": "7 dienas",
       "30d": "30 dienas",
+      "1y": "1 gads",
       "all": "Viss laiks"
     },
     "unavailable": {
@@ -1976,7 +1977,6 @@
     "homePage": "Tērē to šeit, šīs lapas augšdaļā.",
     "flaresLeft": "uzliesmojumi",
     "giftedTo": "dāvana → #{{id}}",
-    "goldenHourStarted": "Zelta stunda norit {{minutes}} minūtes — viss, ko tagad publicē, skaitās dubultā",
     "start": "Sākt",
     "pickCategory": "Kategorija…",
     "trendJacked": "{{category}} ir populārs {{minutes}} minūtes",
@@ -1998,7 +1998,8 @@
     "noComments": "Tu vēl neesi komentējis.",
     "noStages": "Pašlaik nav aktīvs vai ieplānots neviens tavs Stage.",
     "noFlaresLeft": "Šajā ciklā vairs nav palicis Signal Flares",
-    "spentFor": "{{power}} darbojas {{minutes}} minūtes"
+    "spentFor": "{{power}} darbojas {{minutes}} minūtes",
+    "goldenHourStarted": "Zelta stunda norit {{minutes}} minūtes — viss, ko tagad publicē, skaitās dubultā"
   },
   "work": {
     "budgetExhausted": "Šīs atlīdzības budžets ir pilnībā izlietots."

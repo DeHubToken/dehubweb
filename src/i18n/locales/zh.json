@@ -1879,6 +1879,7 @@
       "3d": "3 天",
       "7d": "7 天",
       "30d": "30 天",
+      "1y": "1 年",
       "all": "全部时间"
     },
     "unavailable": {
@@ -2013,7 +2014,6 @@
     "homePage": "在这里花费，在此页面顶部。",
     "flaresLeft": "闪光灯",
     "giftedTo": "礼物 → #{{id}}",
-    "goldenHourStarted": "Golden Hour 正在运行 {{minutes}} 分钟 — 你现在发布的任何内容都算双倍",
     "pickCategory": "类别…",
     "trendJacked": "{{category}} 正在 {{minutes}} 分钟内流行",
     "actsPost": "对你的一篇帖子采取行动。点击选择一个。",
@@ -2033,7 +2033,8 @@
     "noComments": "你还没有评论。",
     "noStages": "你没有正在进行或已安排的舞台。",
     "noFlaresLeft": "本周期没有剩余的信号闪光灯",
-    "spentFor": "{{power}} 运行 {{minutes}} 分钟"
+    "spentFor": "{{power}} 运行 {{minutes}} 分钟",
+    "goldenHourStarted": "Golden Hour 正在运行 {{minutes}} 分钟 — 你现在发布的任何内容都算双倍"
   },
   "work": {
     "budgetExhausted": "此赏金的预算已全部分配完毕。",
