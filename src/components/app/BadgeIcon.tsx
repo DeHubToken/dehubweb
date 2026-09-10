@@ -35,31 +35,33 @@ interface BadgeIconProps {
  * share the PNG/WebP box's centre or scale. These per-tier corrections align
  * the check itself with the adjacent text rather than aligning transparent
  * pixels around it. Lobster is the neutral reference; darker wide marks get a
- * little more optical size so they do not recede at one-em rendering sizes.
+ * little more optical size so they do not recede at compact rendering sizes.
  */
-const BADGE_OPTICS: Record<string, { scale: number; y: string }> = {
-  Crab: { scale: 1.02, y: '-0.07em' },
-  Lobster: { scale: 1.08, y: '-0.08em' },
-  Piranha: { scale: 1.03, y: '-0.05em' },
-  Tortoise: { scale: 1.02, y: '-0.04em' },
-  Cobra: { scale: 1.02, y: '-0.07em' },
-  Octopus: { scale: 1.04, y: '-0.06em' },
-  Crocodite: { scale: 1.03, y: '-0.04em' },
-  Dolphin: { scale: 1.07, y: '-0.05em' },
-  'Tiger Shark': { scale: 1.06, y: '-0.05em' },
-  'Killer Whale': { scale: 1.08, y: '-0.05em' },
-  'Great White Shark': { scale: 1.07, y: '-0.05em' },
-  'Blue Whale': { scale: 1.16, y: '0.02em' },
-  Meglodon: { scale: 1.12, y: '-0.01em' },
+const BADGE_OPTICS: Record<string, number> = {
+  Crab: 1,
+  Lobster: 1.04,
+  Piranha: 1,
+  Tortoise: 1,
+  Cobra: 1,
+  Octopus: 1.02,
+  Crocodite: 1,
+  Dolphin: 1.03,
+  'Tiger Shark': 1.03,
+  'Killer Whale': 1.04,
+  'Great White Shark': 1.04,
+  'Blue Whale': 1.1,
+  Meglodon: 1.08,
 };
 
 export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, className = 'w-[1em] h-[1em]' }: BadgeIconProps) {
   const navigate = useNavigate();
   const { url, name } = useBadgeVisual({ badgeBalance, username, lookupId, badgeLock, src });
-  const optics = name ? BADGE_OPTICS[name] : undefined;
+  const opticalScale = name ? BADGE_OPTICS[name] : undefined;
   const opticalStyle: CSSProperties = {
+    width: '1.15em',
+    height: '1.15em',
     marginInlineStart: '0.125em',
-    transform: `translateY(${optics?.y ?? '-0.05em'}) scale(${optics?.scale ?? 1.04})`,
+    transform: `scale(${opticalScale ?? 1})`,
     transformOrigin: 'center',
   };
 
@@ -77,7 +79,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
           loading="lazy"
           decoding="async"
           style={opticalStyle}
-          className={`shrink-0 self-end align-middle rounded-none bg-transparent object-contain cursor-pointer hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.8)] transition-all ${className}`}
+          className={`shrink-0 self-center align-middle rounded-none bg-transparent object-contain cursor-pointer hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.8)] transition-all ${className}`}
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
