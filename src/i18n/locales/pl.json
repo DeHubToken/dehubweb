@@ -1876,6 +1876,7 @@
       "3d": "3 dni",
       "7d": "7 dni",
       "30d": "30 dni",
+      "1y": "1 rok",
       "all": "Cały okres"
     },
     "unavailable": {
@@ -2010,7 +2011,6 @@
     "homePage": "Wykorzystaj go tutaj, na górze tej strony.",
     "flaresLeft": "flares",
     "giftedTo": "prezent → #{{id}}",
-    "goldenHourStarted": "Golden Hour trwa {{minutes}} minut — wszystko, co teraz opublikujesz, liczy się podwójnie",
     "start": "Start",
     "pickCategory": "Kategoria…",
     "trendJacked": "{{category}} jest popularny od {{minutes}} minut",
@@ -2032,7 +2032,8 @@
     "noComments": "Nie skomentowałeś jeszcze.",
     "noStages": "Żaden Twój Stage nie jest obecnie na żywo ani zaplanowany.",
     "noFlaresLeft": "Nie pozostały żadne Flary Sygnałowe w tym cyklu",
-    "spentFor": "{{power}} działa przez {{minutes}} minut"
+    "spentFor": "{{power}} działa przez {{minutes}} minut",
+    "goldenHourStarted": "Golden Hour trwa {{minutes}} minut — wszystko, co teraz opublikujesz, liczy się podwójnie"
   },
   "work": {
     "budgetExhausted": "Budżet tej nagrody został w całości rozdysponowany.",

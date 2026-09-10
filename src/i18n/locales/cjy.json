@@ -1909,7 +1909,6 @@
     "homePage": "在这里花费，在此页面顶部。",
     "flaresLeft": "闪光",
     "giftedTo": "礼物 → #{{id}}",
-    "goldenHourStarted": "Golden Hour 正在运行 {{minutes}} 分钟 — 你现在发布的任何内容都算双倍",
     "pickCategory": "类别…",
     "trendJacked": "{{category}} 正在以 {{minutes}} 分钟的速度趋势上涨",
     "actsPost": "对你的一篇帖子采取行动。点击选择一个。",
@@ -1929,7 +1928,8 @@
     "noComments": "你还没有评论过。",
     "noStages": "你没有正在直播或计划中的舞台。",
     "noFlaresLeft": "本周期没有信号闪光了",
-    "spentFor": "{{power}} 运行 {{minutes}} 分钟"
+    "spentFor": "{{power}} 运行 {{minutes}} 分钟",
+    "goldenHourStarted": "Golden Hour 正在运行 {{minutes}} 分钟 — 你现在发布的任何内容都算双倍"
   },
   "work": {
     "budgetExhausted": "箇个赏金个预算已经全用完哩。"

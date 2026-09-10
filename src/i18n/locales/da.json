@@ -1867,6 +1867,7 @@
       "3d": "3 dage",
       "7d": "7 dage",
       "30d": "30 dage",
+      "1y": "1 år",
       "all": "Hele perioden"
     },
     "unavailable": {
@@ -2001,7 +2002,6 @@
     "homePage": "Brug den her, øverst på denne side.",
     "flaresLeft": "flares",
     "giftedTo": "gave → #{{id}}",
-    "goldenHourStarted": "Golden Hour kører i {{minutes}} minutter — alt, hvad du poster nu, tæller dobbelt",
     "start": "Start",
     "pickCategory": "Kategori…",
     "trendJacked": "{{category}} er trending i {{minutes}} minutter",
@@ -2023,7 +2023,8 @@
     "noComments": "Du har endnu ikke kommenteret.",
     "noStages": "Ingen af dine Scener er live eller planlagt lige nu.",
     "noFlaresLeft": "Ingen Signal Flares tilbage denne cyklus",
-    "spentFor": "{{power}} kører i {{minutes}} minutter"
+    "spentFor": "{{power}} kører i {{minutes}} minutter",
+    "goldenHourStarted": "Golden Hour kører i {{minutes}} minutter — alt, hvad du poster nu, tæller dobbelt"
   },
   "work": {
     "budgetExhausted": "Denne dusørs budget er fuldt disponeret.",

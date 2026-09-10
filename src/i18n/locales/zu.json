@@ -1872,6 +1872,7 @@
       "3d": "izinsuku ezingu-3",
       "7d": "izinsuku ezingu-7",
       "30d": "izinsuku ezingu-30",
+      "1y": "Unyaka ongu-1",
       "all": "Isikhathi sonke"
     },
     "unavailable": {
@@ -2006,7 +2007,6 @@
     "homePage": "Yisebenzise lapha, phezulu kuleli khasi.",
     "flaresLeft": "flares",
     "giftedTo": "isipho → #{{id}}",
-    "goldenHourStarted": "I-Golden Hour isebenza imizuzu engu-{{minutes}} — konke okuthunyelayo manje kubalwa kabili",
     "start": "Qala",
     "pickCategory": "Isigaba…",
     "trendJacked": "I-{{category}} iyathrenda imizuzu engu-{{minutes}}",
@@ -2028,7 +2028,8 @@
     "noComments": "Awukakhomentanga.",
     "noStages": "Akukho Stage yakho esiphilile noma esisethulwe ngalesi sikhathi.",
     "noFlaresLeft": "Akukho i-Signal Flares esele kule cycle",
-    "spentFor": "{{power}} ibaleka ngo {{minutes}} amaminithi"
+    "spentFor": "{{power}} ibaleka ngo {{minutes}} amaminithi",
+    "goldenHourStarted": "I-Golden Hour isebenza imizuzu engu-{{minutes}} — konke okuthunyelayo manje kubalwa kabili"
   },
   "work": {
     "budgetExhausted": "Isabelomali salo mklomelo sisetshenziswe sonke."

@@ -1879,6 +1879,7 @@
       "3d": "3 jours",
       "7d": "7 jours",
       "30d": "30 jours",
+      "1y": "1&#160;an",
       "all": "Toute la période"
     },
     "unavailable": {
@@ -2013,7 +2014,6 @@
     "homePage": "Dépensez-le ici, en haut de cette page.",
     "flaresLeft": "flares",
     "giftedTo": "cadeau → #{{id}}",
-    "goldenHourStarted": "Golden Hour en cours depuis {{minutes}} minutes — tout ce que vous publiez compte désormais double",
     "start": "Commencer",
     "pickCategory": "Catégorie…",
     "trendJacked": "{{category}} est en tendance depuis {{minutes}} minutes",
@@ -2035,7 +2035,8 @@
     "noComments": "Vous n'avez pas encore commenté.",
     "noStages": "Aucune de vos Scènes n'est en direct ou programmée pour le moment.",
     "noFlaresLeft": "Plus de Feux de signalisation ce cycle-ci",
-    "spentFor": "{{power}} en cours pour {{minutes}} minutes"
+    "spentFor": "{{power}} en cours pour {{minutes}} minutes",
+    "goldenHourStarted": "Golden Hour en cours depuis {{minutes}} minutes — tout ce que vous publiez compte désormais double"
   },
   "work": {
     "budgetExhausted": "Le budget de cette prime est entièrement engagé.",

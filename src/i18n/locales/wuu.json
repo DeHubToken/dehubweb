@@ -1924,8 +1924,8 @@
     "homeComment": "从自家个回复里用，在别人个帖子里。",
     "homeStage": "从自家办个Stage里用。",
     "homePage": "从这儿用，页面顶上。",
-    "goldenHourStarted": "Golden Hour 跑动 {{minutes}} 分钟——你现在发个帖都算双倍",
-    "trendJacked": "{{category}} 正在 trending，持续 {{minutes}} 分钟"
+    "trendJacked": "{{category}} 正在 trending，持续 {{minutes}} 分钟",
+    "goldenHourStarted": "Golden Hour 跑动 {{minutes}} 分钟——你现在发个帖都算双倍"
   },
   "work": {
     "budgetExhausted": "箇个赏金个预算已经全用光哉。"

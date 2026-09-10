@@ -1807,6 +1807,7 @@
       "3d": "3 दिनानि",
       "7d": "7 दिनानि",
       "30d": "30 दिनानि",
+      "1y": "१ वर्षे",
       "all": "सर्वकालः"
     },
     "unavailable": {
@@ -1941,7 +1942,6 @@
     "homePage": "अत्र, अस्य पृष्ठस्य उपरि।",
     "flaresLeft": "flares",
     "giftedTo": "gift → #{{id}}",
-    "goldenHourStarted": "Golden Hour {{minutes}} मिनट् पर्यन्तं धावति — यत् किञ्चित् त्वं पोस्ट् करोषि इदानीं द्विगुणितं गण्यते",
     "start": "Start",
     "pickCategory": "Category…",
     "trendJacked": "{{category}} {{minutes}} मिनट् पर्यन्तं trending अस्ति",
@@ -1963,7 +1963,8 @@
     "noComments": "त्वं अद्यापि टिप्पणीं न कृतवान्।",
     "noStages": "तव किञ्चित् अपि स्टेज् इदानीं लाइव् वा अनुसूचितं वा न अस्ति।",
     "noFlaresLeft": "अस्मिन् चक्रे सिग्नल् फ्लेर्-इ अवशेषाः न सन्ति",
-    "spentFor": "{{power}} {{minutes}} मिनट्-इ चलति"
+    "spentFor": "{{power}} {{minutes}} मिनट्-इ चलति",
+    "goldenHourStarted": "Golden Hour {{minutes}} मिनट् पर्यन्तं धावति — यत् किञ्चित् त्वं पोस्ट् करोषि इदानीं द्विगुणितं गण्यते"
   },
   "work": {
     "budgetExhausted": "अस्य पुरस्कारस्य सम्पूर्णं धनं वितीर्णम्।"

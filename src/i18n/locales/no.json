@@ -1837,6 +1837,7 @@
       "3d": "3 dager",
       "7d": "7 dager",
       "30d": "30 dager",
+      "1y": "1 år",
       "all": "Hele perioden"
     },
     "unavailable": {
@@ -1971,7 +1972,6 @@
     "homePage": "Bruk den her, øverst på denne siden.",
     "flaresLeft": "flares",
     "giftedTo": "gave → #{{id}}",
-    "goldenHourStarted": "Golden Hour kjører i {{minutes}} minutter — alt du poster teller nå dobbelt",
     "start": "Start",
     "pickCategory": "Kategori…",
     "trendJacked": "{{category}} trender i {{minutes}} minutter",
@@ -1993,7 +1993,8 @@
     "noComments": "Du har ikke kommentert ennå.",
     "noStages": "Ingen Stage av deg er live eller planlagt akkurat nå.",
     "noFlaresLeft": "Ingen Signal Flares igjen denne syklusen",
-    "spentFor": "{{power}} kjører i {{minutes}} minutter"
+    "spentFor": "{{power}} kjører i {{minutes}} minutter",
+    "goldenHourStarted": "Golden Hour kjører i {{minutes}} minutter — alt du poster teller nå dobbelt"
   },
   "work": {
     "budgetExhausted": "Budsjettet for denne dusøren er brukt opp."

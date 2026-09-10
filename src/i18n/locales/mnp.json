@@ -1902,8 +1902,8 @@
     "homeComment": "在你自己评论中花费，在别人的帖子中。",
     "homeStage": "在您主持的 Stage 中花费。",
     "homePage": "在这里花费，在此页面顶部。",
-    "goldenHourStarted": "Golden Hour 运行 {{minutes}} 分钟 — 您现在发布的任何内容都算双倍",
-    "trendJacked": "{{category}} 正在 {{minutes}} 分钟内流行"
+    "trendJacked": "{{category}} 正在 {{minutes}} 分钟内流行",
+    "goldenHourStarted": "Golden Hour 运行 {{minutes}} 分钟 — 您现在发布的任何内容都算双倍"
   },
   "work": {
     "budgetExhausted": "今場賞金其預算已經用完了。"

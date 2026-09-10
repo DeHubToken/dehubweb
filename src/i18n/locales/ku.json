@@ -1894,7 +1894,6 @@
     "homePage": "لێرە خەرجی بکە، لە سەرەوەی ئەم لاپەڕەیە.",
     "flaresLeft": "بڵێسەکان",
     "giftedTo": "دیاری → #{{id}}",
-    "goldenHourStarted": "Golden Hour بۆ {{minutes}} خولەک بەردەوامە — هەموو شتێک کە پۆست دەکەیت ئێستا دوو ئەژمار دەکرێت",
     "pickCategory": "پۆل...",
     "trendJacked": "{{category}} بۆ {{minutes}} خولەک ترێندە",
     "actsPost": "کار لەسەر یەکێک لە پۆستەکانت دەکات. لێبدە بۆ هەڵبژاردنی یەکێک.",
@@ -1914,7 +1913,8 @@
     "noComments": "تائێستا هیچ کۆمێنتێکت نەکردووە.",
     "noStages": "هیچ قۆناغێکی تۆ لە ئێستادا زیندوو یان داڕێژراو نییە.",
     "noFlaresLeft": "هیچ بڵێسەیەکی سیگنال ئەم بازنەیەدا نەماوە",
-    "spentFor": "{{power}} بۆ ماوەی {{minutes}} خولەک بەڕێوەدەچێت"
+    "spentFor": "{{power}} بۆ ماوەی {{minutes}} خولەک بەڕێوەدەچێت",
+    "goldenHourStarted": "Golden Hour بۆ {{minutes}} خولەک بەردەوامە — هەموو شتێک کە پۆست دەکەیت ئێستا دوو ئەژمار دەکرێت"
   },
   "work": {
     "budgetExhausted": "Bûdceya vê xelatê bi tevahî hatiye veqetandin."

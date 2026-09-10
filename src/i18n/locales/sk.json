@@ -1959,6 +1959,7 @@
       "3d": "3 dni",
       "7d": "7 dní",
       "30d": "30 dní",
+      "1y": "1 rok",
       "all": "Celé obdobie"
     },
     "unavailable": {
@@ -2093,7 +2094,6 @@
     "homePage": "Použite ho tu, hore na tejto stránke.",
     "flaresLeft": "flares",
     "giftedTo": "darček → #{{id}}",
-    "goldenHourStarted": "Golden Hour beží {{minutes}} minút — všetko, čo teraz zverejníte, sa počíta dvojnásobne",
     "start": "Štart",
     "pickCategory": "Kategória…",
     "trendJacked": "{{category}} je trendom {{minutes}} minút",
@@ -2115,7 +2115,8 @@
     "noComments": "Ešte ste nekomentovali.",
     "noStages": "Žiadny váš Stage momentálne nie je živý ani naplánovaný.",
     "noFlaresLeft": "V tomto cykle nezostal žiadny signálny plameň",
-    "spentFor": "{{power}} beží {{minutes}} minút"
+    "spentFor": "{{power}} beží {{minutes}} minút",
+    "goldenHourStarted": "Golden Hour beží {{minutes}} minút — všetko, čo teraz zverejníte, sa počíta dvojnásobne"
   },
   "work": {
     "budgetExhausted": "Rozpočet tejto odmeny je úplne vyčerpaný."

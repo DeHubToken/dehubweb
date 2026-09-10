@@ -1804,6 +1804,7 @@
       "3d": "3 päivää",
       "7d": "7 päivää",
       "30d": "30 päivää",
+      "1y": "1 vuosi",
       "all": "Koko aika"
     },
     "unavailable": {
@@ -1938,7 +1939,6 @@
     "homePage": "Käytä se tässä, tämän sivun yläosassa.",
     "flaresLeft": "liekit",
     "giftedTo": "lahja → #{{id}}",
-    "goldenHourStarted": "Golden Hour käynnissä {{minutes}} minuuttia – kaikki julkaisemasi lasketaan nyt kaksinkertaisesti",
     "start": "Aloita",
     "pickCategory": "Kategoria…",
     "trendJacked": "{{category}} on trendaamassa {{minutes}} minuuttia",
@@ -1960,7 +1960,8 @@
     "noComments": "Et ole vielä kommentoinut.",
     "noStages": "Sinun Stagiasi ei ole tällä hetkellä käynnissä tai ajoitettu.",
     "noFlaresLeft": "Tässä syklissä ei ole enää Signal Flareja jäljellä",
-    "spentFor": "{{power}} käynnissä {{minutes}} minuuttia"
+    "spentFor": "{{power}} käynnissä {{minutes}} minuuttia",
+    "goldenHourStarted": "Golden Hour käynnissä {{minutes}} minuuttia – kaikki julkaisemasi lasketaan nyt kaksinkertaisesti"
   },
   "work": {
     "budgetExhausted": "Tämän palkkion budjetti on kokonaan varattu.",

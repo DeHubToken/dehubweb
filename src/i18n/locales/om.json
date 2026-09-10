@@ -1856,6 +1856,7 @@
       "3d": "guyyoota 3",
       "7d": "guyyoota 7",
       "30d": "guyyoota 30",
+      "1y": "Waggaa 1",
       "all": "Yeroo guutuu"
     },
     "unavailable": {
@@ -1990,7 +1991,6 @@
     "homePage": "As irratti, olitti.",
     "flaresLeft": "flares",
     "giftedTo": "kenna → #{{id}}",
-    "goldenHourStarted": "Sa'aatii Warqee {{minutes}} daqiiqaa fiigachaa jira — amma wanti hundumaa maxxansituu lama siif ta'a",
     "start": "Eegalu",
     "pickCategory": "Sadarkaa…",
     "trendJacked": "{{category}} daqiiqaa {{minutes}} fiigachaa jira",
@@ -2012,7 +2012,8 @@
     "noComments": "Amma yaada hin kennine.",
     "noStages": "Stage kee irraa ammaaf hin jiraatu ykn hin qabamne.",
     "noFlaresLeft": "Signal Flare kana irraa hin hafne",
-    "spentFor": "{{power}} daqiiqaa {{minutes}}f fiigala"
+    "spentFor": "{{power}} daqiiqaa {{minutes}}f fiigala",
+    "goldenHourStarted": "Sa'aatii Warqee {{minutes}} daqiiqaa fiigachaa jira — amma wanti hundumaa maxxansituu lama siif ta'a"
   },
   "work": {
     "budgetExhausted": "Baajata badhaasa kanaa guutummaatti ramadameera."
