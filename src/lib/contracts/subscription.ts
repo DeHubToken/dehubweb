@@ -16,8 +16,8 @@
  * reverts with "Duration should be between 0 to 12 (0 for lifetime)". n months
  * is n × 30 days, except 12, which is 365 days.
  *
- * **The fee is charged on top of the price, not taken out of it.** A 1,000 DHB
- * plan debits the buyer 1,100 and pays the creator the full 1,000. So the
+ * **The fee is charged on top of the price, not taken out of it.** A 10 USDT
+ * plan debits the buyer 11 and pays the creator the full 10. So the
  * balance check, the approval and the number shown on the confirm button all
  * have to be price + fee, or the transaction reverts on a balance the buyer
  * was told was enough. `quoteSubscriptionFee` asks the contract for that
@@ -35,7 +35,7 @@ import {
   getWalletAddress,
   switchChain,
 } from './aa-utils';
-import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from './dhb-token';
+import { toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from './dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
 
 /** Chains where the subscription contract is deployed and initialised. */
@@ -223,9 +223,11 @@ export interface PublishPlanParams {
   duration: number;
   title: string;
   description?: string;
-  /** Human-readable DHB, e.g. 1000 */
+  /** Human-readable amount in the plan's payment token, e.g. 10 USDT. */
   price: number;
   chainId: ChainId;
+  token: string;
+  decimals: number;
 }
 
 /**
@@ -244,8 +246,6 @@ export async function publishPlanOnChain(
   }
 
   const contract = getSubscriptionContract(params.chainId);
-  const chainConfig = getChainConfig(params.chainId);
-
   await switchChain(params.chainId);
 
   const result = await writeContractAA(
@@ -257,9 +257,9 @@ export async function publishPlanOnChain(
       BigInt(months),
       params.title,
       params.description || '',
-      toWei(params.price, DHB_TOKEN.decimals),
+      toWei(params.price, params.decimals),
       true,
-      chainConfig.dhbToken,
+      params.token,
     ],
     { context: 'publish subscription plan', chainId: params.chainId },
   );
@@ -271,9 +271,12 @@ export interface BuySubscriptionParams {
   creator: string;
   planId: string | number;
   duration: number;
-  /** Human-readable DHB list price — the fee is added on top. */
+  /** Human-readable payment-token list price. The fee is added on top. */
   price: number;
   chainId: ChainId;
+  token: string;
+  decimals: number;
+  currency?: string;
 }
 
 export interface SubscriptionCost {
@@ -298,7 +301,7 @@ export interface SubscriptionCost {
 export async function getSubscriptionCost(
   params: Omit<BuySubscriptionParams, 'price'> & { price: number; subscriber: string },
 ): Promise<SubscriptionCost> {
-  const price = toWei(params.price, DHB_TOKEN.decimals);
+  const price = toWei(params.price, params.decimals);
   const fee = await quoteSubscriptionFee(
     params.creator,
     params.subscriber,
@@ -313,7 +316,7 @@ export async function getSubscriptionCost(
 }
 
 /**
- * Buy a subscription. Approves DHB for the total (price + fee) if needed, then
+ * Buy a subscription. Approves the plan's token for the total (price + fee), then
  * calls the contract.
  */
 export async function buySubscriptionOnChain(
@@ -327,8 +330,6 @@ export async function buySubscriptionOnChain(
   }
 
   const contract = getSubscriptionContract(params.chainId);
-  const chainConfig = getChainConfig(params.chainId);
-
   await switchChain(params.chainId);
 
   const subscriber = await getWalletAddress();
@@ -349,9 +350,9 @@ export async function buySubscriptionOnChain(
   const [balance, allowance] = await Promise.all([
     params.skipBalanceCheck
       ? Promise.resolve(cost.total)
-      : getERC20Balance(chainConfig.dhbToken, subscriber, params.chainId),
+      : getERC20Balance(params.token, subscriber, params.chainId),
     readContract<bigint>(
-      chainConfig.dhbToken,
+      params.token,
       new Interface(['function allowance(address owner, address spender) view returns (uint256)']),
       'allowance',
       [subscriber, contract],
@@ -360,10 +361,11 @@ export async function buySubscriptionOnChain(
   ]);
 
   if (!params.skipBalanceCheck && balance < cost.total) {
-    const held = Number(balance) / 10 ** DHB_TOKEN.decimals;
-    const needed = Number(cost.total) / 10 ** DHB_TOKEN.decimals;
+    const held = Number(balance) / 10 ** params.decimals;
+    const needed = Number(cost.total) / 10 ** params.decimals;
+    const currency = params.currency || 'tokens';
     throw new Error(
-      `Not enough DHB. This subscription costs ${needed.toLocaleString()} DHB including fees, and you hold ${held.toLocaleString()}.`,
+      `Not enough ${currency}. This subscription costs ${needed.toLocaleString()} ${currency} including fees, and you hold ${held.toLocaleString()}.`,
     );
   }
 
@@ -388,7 +390,7 @@ export async function buySubscriptionOnChain(
     // real fee up to twice the default, and still nothing like a claim on the
     // whole balance.
     const approvalAmount = cost.feeQuoted ? cost.total : cost.total + cost.fee;
-    const approval = await approveERC20(chainConfig.dhbToken, contract, approvalAmount, params.chainId);
+    const approval = await approveERC20(params.token, contract, approvalAmount, params.chainId);
     await approval.wait(1);
   }
 

@@ -155,6 +155,8 @@ export function usePublishPlan() {
       const targetChain = (chainId || chainEntry?.chainId || BASE_CHAIN_ID) as ChainId;
       const price = planPrice(plan);
       if (!price) throw new Error('Plan is missing a price');
+      const token = chainEntry?.token || plan.token;
+      if (!token) throw new Error('Plan is missing a payment token');
 
       setStage('wallet');
       const { confirmed } = await publishPlanOnChain({
@@ -164,6 +166,8 @@ export function usePublishPlan() {
         description: plan.description,
         price,
         chainId: targetChain,
+        token,
+        decimals: chainEntry?.decimals ?? plan.decimals ?? 18,
       });
 
       setStage('confirming');
@@ -202,7 +206,7 @@ export function useCreatePlan() {
       duration: number;
       tier: number;
       benefits?: string[];
-      chains: { chainId: number; token: string; price: number }[];
+      chains: { chainId: number; token: string; price: number; currency?: string; decimals?: number }[];
     }) => {
       if (normaliseDuration(planData.duration) === null) {
         throw new Error('Plan duration must be between 0 and 12 months (0 = lifetime)');
@@ -224,6 +228,8 @@ export function useCreatePlan() {
         description: planData.description,
         price: target.price,
         chainId: target.chainId as ChainId,
+        token: target.token,
+        decimals: target.decimals ?? 18,
       });
 
       setStage('confirming');
@@ -317,6 +323,9 @@ export function useBuyPlan() {
         duration: intent.duration ?? plan.duration,
         price: intent.price,
         chainId: targetChain,
+        token: intent.token,
+        decimals: intent.decimals ?? 18,
+        currency: intent.currency,
       });
 
       setStage('confirming');

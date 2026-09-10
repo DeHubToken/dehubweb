@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
-import { Plus, X, Loader2, Star, Clock, DollarSign, FileText, Gift, Trash2 } from 'lucide-react';
+import { Plus, X, Loader2, Star, Clock, FileText, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,7 +11,9 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { useUpdatePlan } from '@/hooks/use-subscriptions';
-import { type SubscriptionPlan, planPrice, isPlanPublished } from '@/lib/api/dehub';
+import { type SubscriptionPlan, planPrice, primaryPlanChain, isPlanPublished } from '@/lib/api/dehub';
+import { useTokenPrices } from '@/hooks/use-token-prices';
+import { dhbForUsd, formatDhbEstimate } from '@/lib/subscription-pricing';
 import dehubCoin from '@/assets/dehub-coin.png';
 
 interface EditPlanModalProps {
@@ -53,8 +55,15 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
   const [benefits, setBenefits] = useState<string[]>(plan.benefits?.length ? plan.benefits : ['']);
 
   const updatePlanMutation = useUpdatePlan();
+  const { data: tokenPrices = {} } = useTokenPrices();
   const planId = plan.id || plan._id || '';
   const published = isPlanPublished(plan);
+  const chainEntry = primaryPlanChain(plan);
+  const priceCurrency = (chainEntry?.currency || plan.currency || 'DHB').toUpperCase();
+  const isUsdPriced = ['USD', 'USDT', 'USDC'].includes(priceCurrency);
+  const dhbEstimate = isUsdPriced
+    ? dhbForUsd(Number(price), Number(tokenPrices.DHB))
+    : null;
 
   // Sync form when plan prop changes
   useEffect(() => {
@@ -161,9 +170,8 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
 
           {/* Price */}
           <div>
-            <label className="text-sm text-zinc-400 mb-1.5 block flex items-center gap-1">
-              <DollarSign className="w-3.5 h-3.5" />
-              {t('subscriptions.price')}
+            <label className="text-sm text-zinc-400 mb-1.5 block">
+              {t('subscriptions.price')} ({isUsdPriced ? 'USD' : priceCurrency})
             </label>
             <div className="relative">
               <Input
@@ -173,10 +181,11 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
                 placeholder="0.00"
                 min="0"
                 step="0.01"
-                className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 pr-16"
+                className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 pr-40"
               />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-xs text-zinc-400 pointer-events-none">
+                {isUsdPriced && <img src={dehubCoin} alt="DHB" className="w-4 h-4" />}
+                <span>{isUsdPriced ? (price ? formatDhbEstimate(dhbEstimate) : 'DHB') : priceCurrency}</span>
               </div>
             </div>
           </div>

@@ -1,11 +1,11 @@
 import { TrendingUp, Loader2, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
-import dehubCoin from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMySubscriptions, useCreatorPlans } from '@/hooks/use-subscriptions';
 import { isLiveSubscription, monthlySpend } from '@/lib/api/dehub';
 import { cn } from '@/lib/utils';
+import { useTokenPrices } from '@/hooks/use-token-prices';
 
 const cardClass = "rounded-2xl p-5 max-h-[420px] overflow-y-auto bg-zinc-900 border border-zinc-800";
 const statBoxClass = "rounded-xl bg-zinc-800/50 p-3";
@@ -15,11 +15,12 @@ export function SubscriptionsSummary() {
   const { t } = useTranslation();
   const { subscriptions, isLoading: subsLoading } = useMySubscriptions();
   const { plans, isLoading: plansLoading } = useCreatorPlans(walletAddress || undefined);
+  const { data: tokenPrices = {} } = useTokenPrices();
 
   const isLoading = subsLoading || plansLoading;
 
   const activeSubscriptions = subscriptions.filter(isLiveSubscription);
-  const totalMonthlySpend = monthlySpend(activeSubscriptions);
+  const totalMonthlySpend = monthlySpend(activeSubscriptions, Number(tokenPrices.DHB));
 
   if (!isAuthenticated) {
     return (
@@ -71,11 +72,11 @@ export function SubscriptionsSummary() {
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-baseline gap-2">
               <span className="text-2xl font-bold text-white">
-                {Math.round(totalMonthlySpend).toLocaleString()}
+                {totalMonthlySpend.toLocaleString(undefined, { maximumFractionDigits: 2 })}
               </span>
-              <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+              <span className="text-zinc-500 text-sm">USDT</span>
             </div>
           </div>
 
