@@ -12,8 +12,12 @@ import {
 } from '@/components/ui/drawer';
 import { useUpdatePlan } from '@/hooks/use-subscriptions';
 import { type SubscriptionPlan, planPrice, primaryPlanChain, isPlanPublished } from '@/lib/api/dehub';
-import { useTokenPrices } from '@/hooks/use-token-prices';
-import { dhbForUsd, formatDhbEstimate } from '@/lib/subscription-pricing';
+import {
+  DHB_PRELISTING_USD,
+  dhbForUsd,
+  formatDhbPayment,
+  subscriptionPaymentToken,
+} from '@/lib/subscription-pricing';
 import dehubCoin from '@/assets/dehub-coin.png';
 
 interface EditPlanModalProps {
@@ -43,6 +47,14 @@ function toPresetMonths(duration: number): number {
   return duration === 999 ? 0 : duration;
 }
 
+function dollarPrice(plan: SubscriptionPlan): number | undefined {
+  const value = planPrice(plan);
+  if (value === undefined) return undefined;
+  const chain = primaryPlanChain(plan);
+  const currency = (chain?.currency || plan.currency || 'DHB').toUpperCase();
+  return ['USD', 'USDT', 'USDC'].includes(currency) ? value : value * DHB_PRELISTING_USD;
+}
+
 export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) {
   const { t } = useTranslation();
   const [name, setName] = useState(plan.name);
@@ -50,31 +62,29 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
   // `plan.price` is only populated for plans the API has flattened; the price
   // otherwise lives inside `chains`. `String(undefined)` put the literal text
   // "undefined" in the price box.
-  const [price, setPrice] = useState(String(planPrice(plan) ?? ''));
+  const [price, setPrice] = useState(String(dollarPrice(plan) ?? ''));
   const [duration, setDuration] = useState(toPresetMonths(plan.duration));
   const [benefits, setBenefits] = useState<string[]>(plan.benefits?.length ? plan.benefits : ['']);
 
   const updatePlanMutation = useUpdatePlan();
-  const { data: tokenPrices = {} } = useTokenPrices();
   const planId = plan.id || plan._id || '';
   const published = isPlanPublished(plan);
   const chainEntry = primaryPlanChain(plan);
   const priceCurrency = (chainEntry?.currency || plan.currency || 'DHB').toUpperCase();
   const isUsdPriced = ['USD', 'USDT', 'USDC'].includes(priceCurrency);
-  const dhbEstimate = isUsdPriced
-    ? dhbForUsd(Number(price), Number(tokenPrices.DHB))
-    : null;
+  const dhbEstimate = dhbForUsd(Number(price), DHB_PRELISTING_USD);
+  const paymentToken = chainEntry ? subscriptionPaymentToken(chainEntry.chainId) : undefined;
 
   // Sync form when plan prop changes
   useEffect(() => {
     setName(plan.name);
     setDescription(plan.description || '');
-    setPrice(String(planPrice(plan) ?? ''));
+    setPrice(String(dollarPrice(plan) ?? ''));
     setDuration(toPresetMonths(plan.duration));
     setBenefits(plan.benefits?.length ? plan.benefits : ['']);
   }, [plan]);
 
-  const priceChanged = parseFloat(price) !== planPrice(plan);
+  const priceChanged = parseFloat(price) !== dollarPrice(plan);
   const durationChanged = duration !== toPresetMonths(plan.duration);
 
   const handleAddBenefit = () => {
@@ -97,12 +107,25 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
 
     const filteredBenefits = benefits.filter(b => b.trim());
 
+    const migratePricing = !isUsdPriced || priceChanged;
+    if (migratePricing && (!chainEntry || !paymentToken)) return;
+
     await updatePlanMutation.mutateAsync({
       planId: String(planId),
       data: {
         name: name.trim(),
         description: description.trim() || undefined,
-        price: parseFloat(price),
+        ...(migratePricing && chainEntry && paymentToken
+          ? {
+              chains: [{
+                chainId: chainEntry.chainId,
+                token: paymentToken.address,
+                price: parseFloat(price),
+                currency: paymentToken.symbol,
+                decimals: paymentToken.decimals,
+              }],
+            }
+          : {}),
         duration,
         // Always sent, including empty. `undefined` means "leave alone" to the
         // API, so a creator who deleted every benefit saw them all come back.
@@ -171,7 +194,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
           {/* Price */}
           <div>
             <label className="text-sm text-zinc-400 mb-1.5 block">
-              {t('subscriptions.price')} ({isUsdPriced ? 'USD' : priceCurrency})
+              {t('subscriptions.price')} (USD)
             </label>
             <div className="relative">
               <Input
@@ -184,10 +207,15 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
                 className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 pr-40"
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-xs text-zinc-400 pointer-events-none">
-                {isUsdPriced && <img src={dehubCoin} alt="DHB" className="w-4 h-4" />}
-                <span>{isUsdPriced ? (price ? formatDhbEstimate(dhbEstimate) : 'DHB') : priceCurrency}</span>
+                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                <span>{price ? formatDhbPayment(dhbEstimate) : 'DHB'}</span>
               </div>
             </div>
+            {!isUsdPriced && (
+              <p className="text-xs text-zinc-500 mt-1.5">
+                Saving migrates this legacy DHB plan to dollar pricing at the pre-listing rate.
+              </p>
+            )}
           </div>
 
           {/* Duration */}

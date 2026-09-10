@@ -8,16 +8,16 @@ import {
   buyPlan,
   confirmPlanPublished,
   confirmSubscriptionPurchase,
+  rememberPendingSubscriptionPayment,
+  clearPendingSubscriptionPayment,
   isSubscribedToCreator,
+  getSubscriptionEarnings,
+  withdrawSubscriptionEarnings,
   planPrice,
   primaryPlanChain,
   type SubscriptionPlan,
 } from '@/lib/api/dehub';
-import {
-  buySubscriptionOnChain,
-  publishPlanOnChain,
-  normaliseDuration,
-} from '@/lib/contracts';
+import { publishPlanOnChain, normaliseDuration } from '@/lib/contracts';
 import { BASE_CHAIN_ID } from '@/lib/contracts';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { useAuth } from '@/contexts/AuthContext';
@@ -102,6 +102,31 @@ export function useMySubscriptions() {
   };
 }
 
+export function useSubscriptionEarnings() {
+  const { isAuthenticated } = useAuth();
+  const query = useQuery({
+    queryKey: ['subscription-earnings'],
+    queryFn: getSubscriptionEarnings,
+    enabled: isAuthenticated,
+    staleTime: 15_000,
+  });
+  return { earnings: query.data, isLoading: query.isLoading, refetch: query.refetch };
+}
+
+export function useWithdrawSubscriptionEarnings() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: withdrawSubscriptionEarnings,
+    onSuccess: (result) => {
+      queryClient.setQueryData(['subscription-earnings'], result.status);
+      toast.success(`${result.amountUsdt.toLocaleString(undefined, { maximumFractionDigits: 6 })} USDT sent`);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Subscription fees will be withdrawable soon');
+    },
+  });
+}
+
 /**
  * Hook to check if subscribed to a specific creator
  */
@@ -130,6 +155,7 @@ function useSubscriptionInvalidation() {
     queryClient.invalidateQueries({ queryKey: ['plans'] });
     queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
     queryClient.invalidateQueries({ queryKey: ['subscription-check'] });
+    queryClient.invalidateQueries({ queryKey: ['subscription-earnings'] });
     queryClient.refetchQueries({ queryKey: ['plans', walletAddress?.toLowerCase() || 'self'] });
   }, [queryClient, walletAddress]);
 }
@@ -277,14 +303,17 @@ export function useUpdatePlan() {
         price: number;
         duration: number;
         benefits: string[];
-        chains: { chainId: number; token: string; price: number }[];
+        chains: { chainId: number; token: string; price: number; currency?: string; decimals?: number }[];
       }>;
     }) => updatePlan(planId, data),
     onSuccess: (_result, variables) => {
       invalidate();
       // Changing the price or duration revokes the on-chain listing, because
       // the contract charges what it holds rather than what we display.
-      const republishes = variables.data.price !== undefined || variables.data.duration !== undefined;
+      const republishes =
+        variables.data.price !== undefined ||
+        variables.data.chains !== undefined ||
+        variables.data.duration !== undefined;
       toast.success(
         republishes
           ? 'Plan updated — publish it again to make the new price live'
@@ -316,32 +345,39 @@ export function useBuyPlan() {
       }
 
       const targetChain = (intent.chainId || chainId || BASE_CHAIN_ID) as ChainId;
+      if (
+        intent.settlementMode !== 'dhb_custody' ||
+        !intent.dhbToken ||
+        !intent.treasuryAddress ||
+        !intent.dhbAmount
+      ) {
+        throw new Error('The DHB subscription checkout is not ready — please try again shortly');
+      }
 
+      // DHB stays in DeHub custody. Nothing is sold or swapped at checkout;
+      // the backend verifies this exact transfer before activating access and
+      // credits the creator the frozen USDT value of the plan.
       setStage('wallet');
-      const { confirmed, hash } = await buySubscriptionOnChain({
-        creator: intent.creatorAddress,
-        planId,
-        duration: intent.duration ?? plan.duration,
-        price: intent.price,
-        chainId: targetChain,
-        token: intent.token,
-        decimals: intent.decimals ?? 18,
-        currency: intent.currency,
-        onFundingStage: () => setStage('funding'),
-      });
+      const { sendERC20Token } = await import('@/lib/wallet/send');
+      const tx = await sendERC20Token(
+        intent.dhbToken,
+        intent.treasuryAddress,
+        String(intent.dhbAmount),
+        18,
+        targetChain,
+      );
 
       setStage('confirming');
-      await confirmed;
+      await tx.wait();
 
-      // The server verifies against chain state, so a failure here costs the
-      // buyer nothing permanent — the next read of their subscriptions
-      // reconciles it. Which is why this does not throw.
       setStage('recording');
-      try {
-        await confirmSubscriptionPurchase(String(intent.id), hash, targetChain);
-      } catch (err) {
-        console.warn('[useBuyPlan] confirmation call failed, will reconcile on next read:', err);
-      }
+      rememberPendingSubscriptionPayment({
+        subId: String(intent.id),
+        hash: tx.hash,
+        chainId: targetChain,
+      });
+      await confirmSubscriptionPurchase(String(intent.id), tx.hash, targetChain);
+      clearPendingSubscriptionPayment(String(intent.id));
       setStage('done');
       return intent;
     },
@@ -351,6 +387,7 @@ export function useBuyPlan() {
     },
     onError: (error: Error) => {
       setStage('idle');
+      invalidate();
       toastTxError(error, 'Could not subscribe', { context: 'subscribe' });
     },
     onSettled: () => setStage('idle'),

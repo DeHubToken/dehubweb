@@ -4,6 +4,9 @@ export interface SubscriptionPaymentToken {
   symbol: 'USDT';
 }
 
+/** Fixed sale price while DHB trading is paused. Mirrors backend dehub-pay/peg.ts. */
+export const DHB_PRELISTING_USD = 0.001;
+
 /** USDT is the stable settlement asset behind new USD-priced plans. */
 const USDT_BY_CHAIN: Record<number, SubscriptionPaymentToken> = {
   8453: {
@@ -40,4 +43,9 @@ export function dhbForUsd(usd: number, dhbUsd: number): number | null {
 export function formatDhbEstimate(value: number | null): string {
   if (value === null || !Number.isFinite(value)) return 'Live DHB quote unavailable';
   return `≈ ${value.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB`;
+}
+
+export function formatDhbPayment(value: number | null): string {
+  if (value === null || !Number.isFinite(value)) return 'DHB amount unavailable';
+  return `${value.toLocaleString(undefined, { maximumFractionDigits: 3 })} DHB`;
 }
