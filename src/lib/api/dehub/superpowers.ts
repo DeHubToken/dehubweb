@@ -42,7 +42,7 @@ export type SuperPowerKey =
   | 'flak_jacket'
   | 'precision_strike'
   | 'harpoon'
-  | 'crew_boost'
+  | 'team_up'
   | 'front_row'
   | 'deep_current';
 
@@ -51,7 +51,7 @@ export interface SuperPowerInfo {
   label: string;
   summary: string;
   /** Badge tier this unlocks at, matching the art in `@/lib/staking-badges`. */
-  tier: string;
+  tier: string | null;
   /** False while a power is published but not yet built. */
   available: boolean;
   /** Whether this account's tier reaches it. Absent on the public ladder. */
@@ -73,7 +73,7 @@ export interface SuperPowerBooking {
   stageId?: string | null;
   /** The category a Trend Jacker is lifting. Null for every other power. */
   category?: string | null;
-  /** Who else has put a boost behind this one, for a Crew Boost. */
+  /** Legacy pooled-boost contributors retained for older booking records. */
   contributors?: { address: string; tier: string; minutes: number }[];
   /**
    * Whose post it landed on.
@@ -136,6 +136,68 @@ export interface SuperPowerLadder {
   powers: SuperPowerInfo[];
 }
 
+export interface TeamUpMember {
+  address: string;
+  username: string | null;
+  displayName: string | null;
+  avatarImageUrl: string | null;
+  ownBadgeBalance: number;
+  joinedAt: string;
+}
+
+export interface TeamUpTeam {
+  id: string;
+  name: string;
+  ownerAddress: string;
+  memberCount: number;
+  maxMembers: number;
+  pooledBadgeBalance: number;
+  tier: string | null;
+  members: TeamUpMember[];
+}
+
+export async function fetchMyTeamUp(): Promise<TeamUpTeam | null> {
+  const response = await apiCall<{ result: TeamUpTeam | null }>('/api/superpowers/team-up', {
+    requiresAuth: true,
+  });
+  return response.result ?? null;
+}
+
+export async function fetchTeamUpTeams(query = ''): Promise<TeamUpTeam[]> {
+  const suffix = query.trim() ? `?q=${encodeURIComponent(query.trim())}` : '';
+  const response = await apiCall<{ result: TeamUpTeam[] }>(`/api/superpowers/team-up/teams${suffix}`);
+  return response.result ?? [];
+}
+
+export async function createTeamUp(name: string): Promise<TeamUpTeam> {
+  const response = await apiCall<{ result: TeamUpTeam }>('/api/superpowers/team-up', {
+    method: 'POST',
+    body: { name },
+    requiresAuth: true,
+  });
+  return response.result;
+}
+
+export async function joinTeamUp(teamId: string): Promise<TeamUpTeam> {
+  const response = await apiCall<{ result: TeamUpTeam }>(
+    `/api/superpowers/team-up/${encodeURIComponent(teamId)}/join`,
+    { method: 'POST', requiresAuth: true },
+  );
+  return response.result;
+}
+
+export async function leaveTeamUp(): Promise<void> {
+  await apiCall('/api/superpowers/team-up', { method: 'DELETE', requiresAuth: true });
+}
+
+export async function removeTeamUpMember(teamId: string, address: string): Promise<TeamUpTeam> {
+  const response = await apiCall<{ result: TeamUpTeam }>(
+    `/api/superpowers/team-up/${encodeURIComponent(teamId)}/members/${encodeURIComponent(address)}`,
+    { method: 'DELETE', requiresAuth: true },
+  );
+  return response.result;
+}
+
 /** The category holding the trending slot, or null when nothing is running. */
 export interface TrendingTopic {
   category: string;
@@ -177,21 +239,6 @@ export interface FrontRow {
 export async function fetchFrontRow(): Promise<FrontRow | null> {
   const response = await apiCall<{ result: FrontRow | null }>('/api/superpowers/front-row');
   return response?.result ?? null;
-}
-
-/**
- * Put one of your boosts behind somebody else's Crew Boost.
- *
- * Minutes pool; weight does not — the leader's tier still decides how often
- * the slot is dealt. Never write copy promising a joiner more reach; what
- * they buy is a longer window for the post they are backing.
- */
-export async function joinCrewBoost(bookingId: string): Promise<SuperPowerBooking> {
-  const response = await apiCall<{ result: SuperPowerBooking }>(
-    `/api/superpowers/boost/${encodeURIComponent(bookingId)}/join`,
-    { method: 'POST', requiresAuth: true },
-  );
-  return response.result;
 }
 
 export interface BoostSlot {

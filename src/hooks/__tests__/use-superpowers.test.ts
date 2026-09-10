@@ -1,7 +1,7 @@
 /**
  * Which powers a post's boost sheet may offer.
  * ============================================
- * Three powers act on a comment, a Stage, and a category, and the sheet has no
+ * Four powers act on a comment, a Stage, a category, or a team, and the sheet has no
  * field for any of them: it sends `{ tokenId, power }`
  * and the server answers "Trend Jacker needs a category". So a Cobra saw five
  * powers ticked on the SuperPowers page, four offers in the sheet, and two
@@ -16,7 +16,7 @@ import { POWER_HOME, powerHome, spendablePowers } from '../use-superpowers';
 import type { SuperPowerKey, SuperPowerStatus } from '@/lib/api/dehub/superpowers';
 
 /** Every power on the ladder, unlocked, with an allowance to spend. */
-const LADDER: { key: SuperPowerKey; tier: string }[] = [
+const LADDER: { key: SuperPowerKey; tier: string | null }[] = [
   { key: 'boost', tier: 'Crab' },
   { key: 'second_wind', tier: 'Lobster' },
   { key: 'comment_anchor', tier: 'Piranha' },
@@ -26,7 +26,7 @@ const LADDER: { key: SuperPowerKey; tier: string }[] = [
   { key: 'flak_jacket', tier: 'Crocodite' },
   { key: 'precision_strike', tier: 'Dolphin' },
   { key: 'harpoon', tier: 'Tiger Shark' },
-  { key: 'crew_boost', tier: 'Great White Shark' },
+  { key: 'team_up', tier: null },
   { key: 'front_row', tier: 'Blue Whale' },
   { key: 'deep_current', tier: 'Meglodon' },
 ];
@@ -69,7 +69,6 @@ describe('spendablePowers', () => {
       'flak_jacket',
       'precision_strike',
       'harpoon',
-      'crew_boost',
     ]);
   });
 
@@ -80,6 +79,7 @@ describe('spendablePowers', () => {
     expect(offered).not.toContain('comment_anchor');
     expect(offered).not.toContain('trend_jacker');
     expect(offered).not.toContain('front_row');
+    expect(offered).not.toContain('team_up');
   });
 
   it('offers the gift, and only the gift, on somebody else post', () => {
