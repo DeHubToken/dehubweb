@@ -75,7 +75,7 @@ export const AccountCard = memo(function AccountCard({ listing, onClick, isOwn }
             <span className="text-zinc-500">@</span>
             {listing.username}
           </span>
-          <BadgeIcon badgeBalance={listing.seller.badgeBalance} className="w-[11px] h-[11px] shrink-0" />
+          <BadgeIcon badgeBalance={listing.seller.badgeBalance} className="w-[1em] h-[1em] shrink-0" />
         </p>
 
         <div className="flex flex-wrap items-center gap-1.5 mt-1.5">

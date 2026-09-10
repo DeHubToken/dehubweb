@@ -110,9 +110,9 @@ function UserSearchResult({
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5 min-w-0">
-          <span className="relative inline-flex items-baseline shrink min-w-0 pr-3">
+          <span className="inline-flex items-center gap-1 shrink min-w-0">
             <span className="font-semibold text-white text-sm truncate leading-tight">{displayName}</span>
-            <BadgeIcon badgeBalance={badgeBalance} username={user.username || displayName} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
+            <BadgeIcon badgeBalance={badgeBalance} username={user.username || displayName} className="w-[1em] h-[1em]" />
           </span>
           {isVerified && <VerifiedBadge className="w-3.5 h-3.5 shrink-0" />}
         </div>

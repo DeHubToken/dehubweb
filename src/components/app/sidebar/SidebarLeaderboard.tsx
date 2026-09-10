@@ -198,7 +198,7 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
                   {!isPlaceholder && (() => {
                     const badgeUrl = getBadgeUrl(entry.badgeBalance || entry.total);
                     return badgeUrl ? (
-                      <BadgeIcon badgeBalance={entry.badgeBalance || entry.total} className="w-[9px] h-[9px] absolute -top-0.5 -right-3" />
+                      <BadgeIcon badgeBalance={entry.badgeBalance || entry.total} className="w-[1em] h-[1em]" />
                     ) : null;
                   })()}
                 </span>

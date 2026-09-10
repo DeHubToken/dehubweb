@@ -357,7 +357,7 @@ export function RealtimeChatPanel({
                               badgeBalance={msg.badge_balance}
                               username={msg.username}
                               lookupId={msg.username || msg.wallet_address}
-                              className="w-[9px] h-[9px] absolute -top-0.5 -right-0"
+                              className="w-[1em] h-[1em]"
                             />
                           </span>
                           <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>

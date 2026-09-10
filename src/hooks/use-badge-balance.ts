@@ -110,10 +110,9 @@ export interface BadgeVisual {
 }
 
 /**
- * Resolve the badge a user should draw. Callers that need to know whether a
- * badge exists *before* rendering — to reserve the gutter the icon is absolutely
- * positioned into — share this hook with BadgeIcon rather than recomputing
- * `getBadgeUrl` themselves, which is what kept the two out of step.
+ * Resolve the badge a user should draw. BadgeIcon shares this hook with callers
+ * that need the resolved art or tier name, rather than recomputing `getBadgeUrl`
+ * themselves and allowing the two results to drift out of step.
  *
  * When the name being drawn is the signed-in user's own, the live on-chain
  * balance is allowed to win — but only upward, so this can promote a badge the

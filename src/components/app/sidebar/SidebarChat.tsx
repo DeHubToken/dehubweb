@@ -83,7 +83,7 @@ function SidebarAvatar({ src, address, name }: { src?: string | null; address?: 
 
 /** Sidebar chat badge */
 function SidebarChatBadge({ badgeBalance, username }: { badgeBalance?: number | null; username?: string | null }) {
-  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] absolute -top-0.5 -right-0" />;
+  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[1em] h-[1em]" />;
 }
 
 /** Compact reaction pills for sidebar */

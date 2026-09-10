@@ -82,9 +82,9 @@ const LeaderboardCard = memo(function LeaderboardCard({
         )}
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-0.5">
-            <span className="relative inline-flex items-baseline shrink min-w-0">
+            <span className="inline-flex items-center gap-1 shrink min-w-0">
               <span className="text-sm font-semibold text-white truncate">{displayName}</span>
-              <BadgeIcon badgeBalance={entry.badgeBalance || entry.total} className="w-[9px] h-[9px] absolute -top-0.5 -right-3" />
+              <BadgeIcon badgeBalance={entry.badgeBalance || entry.total} className="w-[1em] h-[1em]" />
             </span>
           </div>
         </div>

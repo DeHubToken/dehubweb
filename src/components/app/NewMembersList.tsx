@@ -24,7 +24,6 @@ import { Loader2, Star } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
-import { getBadgeUrl } from '@/lib/staking-badges';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
@@ -148,13 +147,12 @@ export function NewMembersList({ listClassName }: NewMembersListProps) {
               </Avatar>
             </div>
             <div className="flex-1 min-w-0 overflow-hidden">
-              {/* pr-3 only when a badge actually draws — see BadgedName's gutter note. */}
-              <span className={`relative inline-flex items-baseline shrink min-w-0 max-w-full${getBadgeUrl(member.hideBadgeAndBalance ? 0 : member.badgeBalance, member.username) ? ' pr-3' : ''}`}>
+              <span className="inline-flex items-center gap-1 shrink min-w-0 max-w-full">
                 <span className="font-semibold text-white text-sm truncate">{member.displayName}</span>
                 <BadgeIcon
                   badgeBalance={member.hideBadgeAndBalance ? 0 : member.badgeBalance}
                   username={member.username}
-                  className="w-[9px] h-[9px] absolute -top-0.5 right-0"
+                  className="w-[1em] h-[1em]"
                 />
               </span>
             </div>
