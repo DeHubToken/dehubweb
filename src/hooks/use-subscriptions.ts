@@ -34,11 +34,12 @@ import { toastTxError } from '@/lib/tx-error-toast';
  * Both mutations below run the whole sequence and report which leg they are
  * on, because the middle one opens a wallet and can sit there for a while.
  */
-export type ChainStage = 'idle' | 'preparing' | 'wallet' | 'confirming' | 'recording' | 'done';
+export type ChainStage = 'idle' | 'preparing' | 'funding' | 'wallet' | 'confirming' | 'recording' | 'done';
 
 export const STAGE_LABELS: Record<ChainStage, string> = {
   idle: '',
   preparing: 'Preparing…',
+  funding: 'Funding with your wallet…',
   wallet: 'Confirm in your wallet…',
   confirming: 'Waiting for the transaction…',
   recording: 'Finishing up…',
@@ -326,6 +327,7 @@ export function useBuyPlan() {
         token: intent.token,
         decimals: intent.decimals ?? 18,
         currency: intent.currency,
+        onFundingStage: () => setStage('funding'),
       });
 
       setStage('confirming');

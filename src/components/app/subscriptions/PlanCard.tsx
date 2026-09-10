@@ -306,6 +306,11 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
                   )}
                 </span>
               </div>
+              {isUsdPriced && (
+                <p className="mt-2 pt-2 border-t border-white/10 text-[11px] leading-relaxed text-zinc-500">
+                  Uses USDT already in your wallet first. If you are short, DeHub automatically swaps a supported asset on this chain to cover only the difference.
+                </p>
+              )}
             </div>
             <AlertDialogFooter>
               <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">
