@@ -502,7 +502,7 @@ export default function ProfilePage() {
         </div>
       )}
       
-      <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
+      <div className="p-2 sm:p-3 space-y-3">
         {/* Back button */}
         {location.key !== 'default' && (
           <div className="flex items-center gap-2 mb-2">
@@ -583,7 +583,7 @@ export default function ProfilePage() {
         <div
           data-feed-nav-outer
           data-nav-hide={isTabsStuck ? undefined : 'off'}
-          className="sticky top-11 lg:top-0 bg-black z-50 -mx-2 sm:-mx-3 -mb-2 sm:-mb-3 px-2 sm:px-3 pt-1 pb-2 sm:pb-3 lg:pt-2"
+          className="sticky top-11 lg:top-0 bg-black z-50 -mx-2 sm:-mx-3 -mb-2 sm:-mb-3 px-2 sm:px-3 pt-1 pb-1"
         >
         <div data-page-bento className="bg-zinc-900 rounded-xl relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <div ref={tabsIndicatorLayerRef} className="relative overflow-visible">
