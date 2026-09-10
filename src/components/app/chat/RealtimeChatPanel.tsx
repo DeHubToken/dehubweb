@@ -338,7 +338,7 @@ export function RealtimeChatPanel({
                       </button>
                       <div className="min-w-0 flex-1">
                         <span className="inline-flex items-baseline gap-1.5">
-                          <span className="relative inline-flex items-baseline shrink min-w-0 pr-3">
+                          <span className="relative inline-flex items-center gap-1 shrink min-w-0 pr-3">
                             <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white truncate ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>
                               {name}
                             </button>
