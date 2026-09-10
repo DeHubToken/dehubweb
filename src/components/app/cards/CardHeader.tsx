@@ -163,7 +163,7 @@ export function CardHeader({
             <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
             <BadgeIcon badgeBalance={badgeBalance} lookupId={badgeLookupId} username={handle || username} className="w-[1em] h-[1em]" />
           </span>
-          {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />}
+          {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 self-end" />}
           <NewMemberChip address={creatorId} className="shrink-0 ml-0.5" />
         </div>
         {(formattedHandle || timestamp) && (
