@@ -9,12 +9,13 @@ import {
   planPrice,
   isLiveSubscription,
   monthlySpend,
+  primaryPlanChain,
   type Subscription,
   type SubscriptionPlan,
 } from '@/lib/api/dehub';
-import dehubCoin from '@/assets/dehub-coin.png';
 import { format, isPast, differenceInDays } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { useTokenPrices } from '@/hooks/use-token-prices';
 
 const cardClass = "rounded-2xl p-5 bg-zinc-900 border border-zinc-800";
 
@@ -43,6 +44,8 @@ function SubscriptionRow({ sub, index }: { sub: Subscription; index: number }) {
   const daysLeft = endDate ? differenceInDays(endDate, new Date()) : 0;
   const planName = sub.plan?.name || t('subscriptions.planFallback');
   const price = planPrice(sub.plan || ({} as SubscriptionPlan));
+  const planChain = sub.plan ? primaryPlanChain(sub.plan) : undefined;
+  const currency = (planChain?.currency || sub.plan?.currency || 'DHB').toUpperCase();
   const creatorAddress = sub.creatorAddress || sub.plan?.address;
   const creatorShort = creatorAddress
     ? `${creatorAddress.slice(0, 6)}...${creatorAddress.slice(-4)}`
@@ -71,9 +74,8 @@ function SubscriptionRow({ sub, index }: { sub: Subscription; index: number }) {
       </td>
       <td className="py-4">
         {price !== undefined ? (
-          <span className="flex items-center gap-1 text-white text-sm">
-            {price.toLocaleString(undefined, { maximumFractionDigits: 4 })}
-            <img src={dehubCoin} alt="DHB" className="w-3.5 h-3.5" />
+          <span className="text-white text-sm">
+            {price.toLocaleString(undefined, { maximumFractionDigits: currency === 'DHB' ? 4 : 2 })} {currency}
           </span>
         ) : (
           <span className="text-zinc-500">—</span>
@@ -112,12 +114,13 @@ export function SubscriptionsTab() {
   const { isAuthenticated, walletAddress } = useAuth();
   const { subscriptions, isLoading: isLoadingSubs } = useMySubscriptions();
   const { plans: myPlans, isLoading: isLoadingPlans } = useCreatorPlans(walletAddress || undefined);
+  const { data: tokenPrices = {} } = useTokenPrices();
 
   const tableHeaderBorder = "border-b border-zinc-800";
   const tableDivider = "divide-y divide-zinc-800";
 
   const activeSubscriptions = subscriptions.filter(isLiveSubscription);
-  const totalMonthlySpend = monthlySpend(activeSubscriptions);
+  const totalMonthlySpend = monthlySpend(activeSubscriptions, Number(tokenPrices.DHB));
 
   const isLoading = isLoadingSubs || isLoadingPlans;
 
@@ -159,9 +162,11 @@ export function SubscriptionsTab() {
         {/* Monthly spend */}
         <div data-page-bento className={cardClass}>
           <span className="text-zinc-400 text-sm">{t('subscriptions.estMonthlySpend')}</span>
-          <div className="flex items-center gap-2 mt-2">
-            <span className="text-3xl font-bold text-white">{Math.round(totalMonthlySpend)}</span>
-            <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+          <div className="flex items-baseline gap-2 mt-2">
+            <span className="text-3xl font-bold text-white">
+              {totalMonthlySpend.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+            </span>
+            <span className="text-zinc-500 text-sm">USDT</span>
           </div>
         </div>
 

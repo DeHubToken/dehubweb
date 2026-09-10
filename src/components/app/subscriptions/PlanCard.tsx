@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
-import { DhbCoin } from '@/components/app/DhbAmount';
 import { Check, Clock, Loader2, Star, Users, Upload, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,9 +15,11 @@ import {
 } from '@/components/ui/alert-dialog';
 import { type SubscriptionPlan, planPrice, primaryPlanChain, isPlanPublished } from '@/lib/api/dehub';
 import { useBuyPlan, usePublishPlan } from '@/hooks/use-subscriptions';
+import { useTokenPrices } from '@/hooks/use-token-prices';
 import { formatDuration, getSubscriptionCost, normaliseDuration, fromWei, BASE_CHAIN_ID } from '@/lib/contracts';
 import { useAuth } from '@/contexts/AuthContext';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { dhbForUsd, formatDhbEstimate } from '@/lib/subscription-pricing';
 import dehubCoin from '@/assets/dehub-coin.png';
 
 /**
@@ -39,9 +40,9 @@ interface PlanCardProps {
   onEdit?: () => void;
 }
 
-function formatDhb(value: number | undefined): string {
-  if (value === undefined || value === null || Number.isNaN(value)) return '—';
-  return value.toLocaleString(undefined, { maximumFractionDigits: 4 });
+function formatAmount(value: number | undefined, maximumFractionDigits = 4): string {
+  if (value === undefined || value === null || Number.isNaN(value)) return 'Unavailable';
+  return value.toLocaleString(undefined, { maximumFractionDigits });
 }
 
 /** Shared shape for the two "you cannot buy this" notices. */
@@ -59,10 +60,22 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
   const { walletAddress } = useAuth();
   const buyPlanMutation = useBuyPlan();
   const publishMutation = usePublishPlan();
+  const { data: tokenPrices = {} } = useTokenPrices();
 
   const price = planPrice(plan);
   const chainEntry = primaryPlanChain(plan);
   const chainId = (chainEntry?.chainId || BASE_CHAIN_ID) as ChainId;
+  const paymentToken = chainEntry?.token || plan.token || '';
+  const currency = (chainEntry?.currency || plan.currency || 'DHB').toUpperCase();
+  const settlementCurrency = currency === 'USD' ? 'USDT' : currency;
+  const decimals = chainEntry?.decimals ?? plan.decimals ?? 18;
+  const isUsdPriced = currency === 'USDT' || currency === 'USDC' || currency === 'USD';
+  const numericPrice = Number(price || 0);
+  const dhbUsd = Number(tokenPrices.DHB);
+  const dhbEstimate = isUsdPriced ? dhbForUsd(numericPrice, dhbUsd) : null;
+  const formattedPrice = isUsdPriced
+    ? `${formatAmount(price, 2)} ${settlementCurrency}`
+    : `${formatAmount(price)} DHB`;
   const published = isPlanPublished(plan);
   // 999 is what lifetime plans were stored as before the contract's 0–12 range
   // was respected. Buying one reverts, so it is surfaced rather than hidden.
@@ -74,8 +87,9 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
   const [quoteOpen, setQuoteOpen] = useState(false);
 
   useEffect(() => {
-    if (!quoteOpen || !walletAddress || !price || isOwner || !published) return;
+    if (!quoteOpen || !walletAddress || !price || !paymentToken || isOwner || !published) return;
     let cancelled = false;
+    setTotal(null);
     getSubscriptionCost({
       creator: plan.address || plan.creatorAddress || '',
       subscriber: walletAddress,
@@ -83,13 +97,20 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
       duration: plan.duration,
       price,
       chainId,
+      token: paymentToken,
+      decimals,
+      currency,
     })
       .then((cost) => {
-        if (!cancelled) setTotal(fromWei(cost.total, 18));
+        if (!cancelled) setTotal(fromWei(cost.total, decimals));
       })
       .catch(() => { /* fall back to showing the list price alone */ });
     return () => { cancelled = true; };
-  }, [quoteOpen, walletAddress, price, isOwner, published, plan, chainId]);
+  }, [quoteOpen, walletAddress, price, paymentToken, decimals, currency, isOwner, published, plan, chainId]);
+
+  const totalDhbEstimate = isUsdPriced && total
+    ? dhbForUsd(Number(total), dhbUsd)
+    : null;
 
   const handleSubscribe = async () => {
     await buyPlanMutation.mutateAsync({ plan, chainId });
@@ -128,16 +149,24 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
       </div>
 
       {/* Price & Duration */}
-      <div className="flex items-baseline gap-2 mb-4">
-        <div className="flex items-center gap-1.5">
-          <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
-          <span className="text-2xl font-bold text-white">{formatDhb(price)}</span>
+      <div className="mb-4">
+        <div className="flex items-baseline gap-2">
+          <div className="flex items-center gap-1.5">
+            {!isUsdPriced && <img src={dehubCoin} alt="DHB" className="w-5 h-5" />}
+            <span className="text-2xl font-bold text-white">{formattedPrice}</span>
+          </div>
+          <span className="text-zinc-500">/</span>
+          <div className="flex items-center gap-1 text-zinc-400">
+            <Clock className="w-3.5 h-3.5" />
+            <span className="text-sm">{formatDuration(plan.duration, t)}</span>
+          </div>
         </div>
-        <span className="text-zinc-500">/</span>
-        <div className="flex items-center gap-1 text-zinc-400">
-          <Clock className="w-3.5 h-3.5" />
-          <span className="text-sm">{formatDuration(plan.duration, t)}</span>
-        </div>
+        {isUsdPriced && (
+          <div className="mt-1 flex items-center gap-1.5 text-xs text-zinc-400">
+            <img src={dehubCoin} alt="" className="w-3.5 h-3.5" />
+            <span>{formatDhbEstimate(dhbEstimate)} at the current price</span>
+          </div>
+        )}
       </div>
 
       {/* Benefits */}
@@ -250,19 +279,31 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
               <AlertDialogTitle className="text-white">{t('subscriptions.confirmSubscription')}</AlertDialogTitle>
               <AlertDialogDescription className="text-zinc-400">
                 Subscribe to <span className="text-white font-medium">{plan.name}</span> for{' '}
-                <span className="text-white font-medium">{formatDhb(price)} <DhbCoin /></span> /{' '}
+                <span className="text-white font-medium">{formattedPrice}</span>
+                {isUsdPriced && <> ({formatDhbEstimate(dhbEstimate)})</>} /{' '}
                 {formatDuration(plan.duration, t)}.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="rounded-xl bg-white/5 border border-white/10 p-3 text-sm">
               <div className="flex justify-between text-zinc-400">
                 <span>{t('subscriptions.planPrice')}</span>
-                <span className="text-white">{formatDhb(price)} <DhbCoin /></span>
+                <span className="text-white">{formattedPrice}</span>
               </div>
+              {isUsdPriced && (
+                <div className="flex justify-between gap-4 text-zinc-400 mt-1.5">
+                  <span>Live DHB equivalent</span>
+                  <span className="text-white text-right">{formatDhbEstimate(dhbEstimate)}</span>
+                </div>
+              )}
               <div className="flex justify-between text-zinc-400 mt-1.5 pt-1.5 border-t border-white/10">
                 <span>{t('subscriptions.youPayInclFee')}</span>
-                <span className="text-white font-medium">
-                  {total ? formatDhb(Number(total)) + ' DHB' : t('subscriptions.calculating')}
+                <span className="text-white font-medium text-right">
+                  {total ? `${formatAmount(Number(total), isUsdPriced ? 2 : 4)} ${settlementCurrency}` : t('subscriptions.calculating')}
+                  {totalDhbEstimate !== null && (
+                    <span className="block text-xs font-normal text-zinc-400">
+                      {formatDhbEstimate(totalDhbEstimate)} at checkout
+                    </span>
+                  )}
                 </span>
               </div>
             </div>

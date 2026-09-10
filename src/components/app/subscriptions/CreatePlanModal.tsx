@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
-import { Plus, X, Loader2, Star, Clock, DollarSign, FileText, Gift } from 'lucide-react';
+import { Plus, X, Loader2, Star, Clock, FileText, Gift, Settings2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -10,12 +10,25 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useCreatePlan } from '@/hooks/use-subscriptions';
-import { getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID, isSubscriptionChain } from '@/lib/contracts';
-import type { ChainId } from '@/components/app/ChainSelector';
+import { BASE_CHAIN_ID, BNB_CHAIN_ID, isSubscriptionChain } from '@/lib/contracts';
+import { useTokenPrices } from '@/hooks/use-token-prices';
+import { dhbForUsd, formatDhbEstimate, subscriptionPaymentToken } from '@/lib/subscription-pricing';
 import dehubCoin from '@/assets/dehub-coin.png';
 import baseLogo from '@/assets/icons/base-logo.png';
 import bnbLogo from '@/assets/icons/bnb-logo.png';
+import solanaLogo from '@/assets/icons/solana-logo.png';
+import robinhoodLogo from '@/assets/icons/robinhood-chain-logo.svg';
+import { SOLANA_MAINNET_CHAIN_ID } from '@/lib/chains/constants';
+import { ROBINHOOD_CHAIN_ID } from '@/lib/chains/robinhood';
 
 interface CreatePlanModalProps {
   open: boolean;
@@ -39,9 +52,11 @@ const DURATION_PRESETS = [
   { labelKey: 'subscriptions.presetLifetime', months: 0, tier: 5 },
 ];
 
-const CHAIN_OPTIONS: { chainId: ChainId; label: string; icon: string }[] = [
-  { chainId: BASE_CHAIN_ID as ChainId, label: 'Base', icon: baseLogo },
-  { chainId: BNB_CHAIN_ID as ChainId, label: 'BNB', icon: bnbLogo },
+const CHAIN_OPTIONS: { chainId: number; label: string; icon: string }[] = [
+  { chainId: BASE_CHAIN_ID, label: 'Base', icon: baseLogo },
+  { chainId: BNB_CHAIN_ID, label: 'BNB', icon: bnbLogo },
+  { chainId: ROBINHOOD_CHAIN_ID, label: 'Robinhood', icon: robinhoodLogo },
+  { chainId: SOLANA_MAINNET_CHAIN_ID, label: 'Solana', icon: solanaLogo },
 ];
 
 const CACHE_KEY = 'create_plan_draft';
@@ -79,10 +94,17 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
   const [price, setPrice] = useState(draft?.price ?? '');
   const [duration, setDuration] = useState(draft?.duration ?? 1);
   const [tier, setTier] = useState(draft?.tier ?? 1);
-  const [chainId, setChainId] = useState<ChainId>((draft?.chainId as ChainId) ?? (BASE_CHAIN_ID as ChainId));
+  const savedChainId = Number(draft?.chainId);
+  const [chainId, setChainId] = useState<number>(
+    isSubscriptionChain(savedChainId) ? savedChainId : BASE_CHAIN_ID,
+  );
   const [benefits, setBenefits] = useState<string[]>(draft?.benefits ?? ['']);
 
   const createPlanMutation = useCreatePlan();
+  const { data: tokenPrices = {} } = useTokenPrices();
+  const numericPrice = Number(price);
+  const dhbEstimate = dhbForUsd(numericPrice, Number(tokenPrices.DHB));
+  const selectedChain = CHAIN_OPTIONS.find((option) => option.chainId === chainId) || CHAIN_OPTIONS[0];
 
   // Auto-save draft on changes
   useEffect(() => {
@@ -107,6 +129,8 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
     if (!name.trim()) return;
     if (!price || parseFloat(price) <= 0) return;
     if (!isSubscriptionChain(chainId)) return;
+    const paymentToken = subscriptionPaymentToken(chainId);
+    if (!paymentToken) return;
 
     const filteredBenefits = benefits.filter(b => b.trim());
 
@@ -117,10 +141,14 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
         duration,
         tier,
         benefits: filteredBenefits.length > 0 ? filteredBenefits : undefined,
-        // The token is pinned to that chain's DHB — the API rejects anything
-        // else, because the contract will charge in whatever it is handed.
         chains: [
-          { chainId, token: getChainConfig(chainId).dhbToken, price: parseFloat(price) },
+          {
+            chainId,
+            token: paymentToken.address,
+            price: parseFloat(price),
+            currency: paymentToken.symbol,
+            decimals: paymentToken.decimals,
+          },
         ],
       });
 
@@ -158,13 +186,54 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
             </DrawerTitle>
             {/* Drawer has no built-in close affordance the way Dialog did, and the
                 scrim alone is not discoverable enough for a form this long. */}
-            <button
-              onClick={() => onOpenChange(false)}
-              aria-label={t('subscriptions.close')}
-              className="p-2 -mr-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-colors shrink-0"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-1">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label={`Subscription network: ${selectedChain.label}`}
+                    className="relative p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+                  >
+                    <Settings2 className="w-5 h-5" />
+                    <img
+                      src={selectedChain.icon}
+                      alt=""
+                      className="absolute -right-0.5 -bottom-0.5 w-3 h-3 rounded-full border border-zinc-900 object-cover"
+                    />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-60 bg-zinc-950/95 border-white/10 text-white backdrop-blur-xl">
+                  <DropdownMenuLabel>Subscription network</DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-white/10" />
+                  {CHAIN_OPTIONS.map((option) => {
+                    const available = isSubscriptionChain(option.chainId);
+                    return (
+                      <DropdownMenuItem
+                        key={option.chainId}
+                        disabled={!available}
+                        onSelect={() => available && setChainId(option.chainId)}
+                        className="flex items-center gap-3 py-2.5"
+                      >
+                        <img src={option.icon} alt="" className="w-6 h-6 rounded-md object-cover" />
+                        <span className="flex-1">{option.label}</span>
+                        {available ? (
+                          option.chainId === chainId && <Check className="w-4 h-4" />
+                        ) : (
+                          <span className="text-[10px] uppercase tracking-wide text-zinc-500">Soon</span>
+                        )}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <button
+                onClick={() => onOpenChange(false)}
+                aria-label={t('subscriptions.close')}
+                className="p-2 -mr-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </DrawerHeader>
 
@@ -197,9 +266,8 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
 
           {/* Price */}
           <div>
-            <label className="text-sm text-zinc-400 mb-1.5 block flex items-center gap-1">
-              <DollarSign className="w-3.5 h-3.5" />
-              {t('subscriptions.price')}
+            <label className="text-sm text-zinc-400 mb-1.5 block">
+              {t('subscriptions.price')} (USD)
             </label>
             <div className="relative">
               <Input
@@ -209,36 +277,16 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
                 placeholder="0.00"
                 min="0"
                 step="0.01"
-                className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 pr-16"
+                className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 pr-40"
               />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-xs text-zinc-400 pointer-events-none">
                 <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                <span>{price ? formatDhbEstimate(dhbEstimate) : 'DHB'}</span>
               </div>
             </div>
             <p className="text-xs text-zinc-500 mt-1.5">
               {t('subscriptions.youReceiveInFull')}
             </p>
-          </div>
-
-          {/* Chain */}
-          <div>
-            <label className="text-sm text-zinc-400 mb-1.5 block">{t('subscriptions.chain')}</label>
-            <div className="grid grid-cols-2 gap-2">
-              {CHAIN_OPTIONS.map((option) => (
-                <button
-                  key={option.chainId}
-                  onClick={() => setChainId(option.chainId)}
-                  className={`flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all border ${
-                    chainId === option.chainId
-                      ? 'bg-white/20 border-white/30 text-white'
-                      : 'bg-white/5 border-white/10 text-zinc-400 hover:bg-white/10'
-                  }`}
-                >
-                  <img src={option.icon} alt="" className="w-4 h-4 rounded-full" />
-                  {option.label}
-                </button>
-              ))}
-            </div>
           </div>
 
           {/* Duration */}

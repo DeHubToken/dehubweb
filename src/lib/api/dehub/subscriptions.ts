@@ -19,6 +19,8 @@ export interface SubscriptionPlanChain {
   chainId: number;
   token: string;
   price: number;
+  currency?: string;
+  decimals?: number;
   isPublished?: boolean;
   status?: boolean;
 }
@@ -33,6 +35,7 @@ export interface SubscriptionPlan {
   /** Headline price, mirrored from the primary chain entry. */
   price?: number;
   currency?: string;
+  decimals?: number;
   /** Whole months. 0 is lifetime — see normaliseDuration in lib/contracts. */
   duration: number;
   tier?: number;
@@ -79,6 +82,7 @@ export interface SubscriptionIntent {
   token: string;
   price: number;
   currency: string;
+  decimals?: number;
 }
 
 type Envelope<T> = Record<string, unknown> | T;
@@ -132,18 +136,22 @@ export function isLiveSubscription(sub: Subscription): boolean {
 }
 
 /**
- * Monthly cost of a set of subscriptions.
+ * Monthly USD cost of a set of subscriptions. Stablecoin plans are already
+ * dollar-denominated; legacy DHB plans use the current DHB/USD quote.
  *
  * `duration` is whole months. The old sum did `(price / duration) * 30`,
  * reading duration as days — so a 1,000 DHB monthly plan was reported as
  * 30,000 a month. Lifetime plans (0 months) are one-off purchases and are
  * excluded rather than divided by zero.
  */
-export function monthlySpend(subscriptions: Subscription[]): number {
+export function monthlySpend(subscriptions: Subscription[], dhbUsd = 0): number {
   return subscriptions.reduce((sum, sub) => {
     const months = sub.plan?.duration ?? 1;
     if (!months) return sum;
-    return sum + (planPrice(sub.plan || ({} as SubscriptionPlan)) || 0) / months;
+    const plan = sub.plan || ({} as SubscriptionPlan);
+    const monthlyPrice = (planPrice(plan) || 0) / months;
+    const currency = (primaryPlanChain(plan)?.currency || plan.currency || 'DHB').toUpperCase();
+    return sum + (currency === 'DHB' ? monthlyPrice * dhbUsd : monthlyPrice);
   }, 0);
 }
 
@@ -188,7 +196,7 @@ export async function createPlan(planData: {
   duration: number;
   tier: number;
   benefits?: string[];
-  chains: { chainId: number; token: string; price: number }[];
+  chains: { chainId: number; token: string; price: number; currency?: string; decimals?: number }[];
 }): Promise<SubscriptionPlan | undefined> {
   const response = await apiCall<Envelope<SubscriptionPlan>>('/api/plans', {
     method: 'POST',
@@ -206,7 +214,7 @@ export async function updatePlan(
     price: number;
     duration: number;
     benefits: string[];
-    chains: { chainId: number; token: string; price: number }[];
+    chains: { chainId: number; token: string; price: number; currency?: string; decimals?: number }[];
   }>,
 ): Promise<SubscriptionPlan | undefined> {
   const response = await apiCall<Envelope<SubscriptionPlan>>(`/api/plans/${planId}`, {
