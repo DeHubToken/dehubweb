@@ -15,6 +15,23 @@ export async function getAccountInfo(userId: string, address?: string): Promise<
   return response as DeHubUser;
 }
 
+export interface AccountSummary {
+  address: string;
+  username?: string | null;
+  displayName?: string | null;
+  avatarImageUrl?: string | null;
+}
+
+/** Lightweight identity lookup for notification actors. */
+export async function getAccountSummaries(addresses: string[]): Promise<AccountSummary[]> {
+  if (addresses.length === 0) return [];
+  const response = await apiCall<{ result: AccountSummary[] }>('/api/account_info/batch', {
+    method: 'POST',
+    body: { addresses },
+  });
+  return response?.result || [];
+}
+
 /** Detect empty-shell API responses that return 200 but have no real user data */
 function isEmptyUserResult(user: any): boolean {
   return !user?._id && !user?.address && !user?.wallet_address && !user?.username;
