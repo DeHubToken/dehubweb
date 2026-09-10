@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { badgeImage } from '@/lib/staking-badges';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import BadgeFlowchart from '../../components/BadgeFlowchart';
 import TippingFlowchart from '../../components/TippingFlowchart';
@@ -172,19 +173,19 @@ const Dapp = () => {
 
   const feeReductions = [
     { badgeKey: 'badgeNone', threshold: "< 10,000 $DHB", fee: "10.00%", color: "bg-muted", image: null },
-    { badgeKey: 'badgeCrab', threshold: "10,000+ $DHB", fee: "9.31%", color: "bg-muted", image: "/media/60bc125c-8efd-4058-9e12-7ca393df4fce.png" },
-    { badgeKey: 'badgeLobster', threshold: "25k+ $DHB", fee: "8.62%", color: "bg-muted", image: "/media/2c7200c2-681e-4499-863b-ea24fdbdb70c.png" },
-    { badgeKey: 'badgePiranha', threshold: "50k+ $DHB", fee: "7.93%", color: "bg-muted", image: "/media/38387f75-fd38-4380-9588-1f19f68d8435.png" },
-    { badgeKey: 'badgeTortoise', threshold: "100k+ $DHB", fee: "7.24%", color: "bg-muted", image: "/media/fc47a759-390a-4f41-ba96-5bc0066e82b9.png" },
-    { badgeKey: 'badgeCobra', threshold: "250k+ $DHB", fee: "6.55%", color: "bg-muted", image: "/media/b3306c99-31b8-4bfc-bc25-f73abc68fc38.png" },
-    { badgeKey: 'badgeOctopus', threshold: "500k+ $DHB", fee: "5.86%", color: "bg-muted", image: "/media/8fcbb3f6-223d-4e2f-9d82-30082a175491.png" },
-    { badgeKey: 'badgeCrocodile', threshold: "1m+ $DHB", fee: "5.17%", color: "bg-muted", image: "/media/c84eee0a-97c7-4938-9b9c-c991c802593e.png" },
-    { badgeKey: 'badgeDolphin', threshold: "2m+ $DHB", fee: "4.48%", color: "bg-muted", image: "/media/4558c158-75d9-40fc-adfa-41125344a48e.png" },
-    { badgeKey: 'badgeTigerShark', threshold: "3m+ $DHB", fee: "3.79%", color: "bg-muted", image: "/media/6be493f1-51b4-481b-9ca1-340c030b2ef8.png" },
-    { badgeKey: 'badgeKillerWhale', threshold: "5m+ $DHB", fee: "3.10%", color: "bg-muted", image: "/media/fcc288eb-67d7-49a0-b561-94bb5d1b8896.png" },
-    { badgeKey: 'badgeGreatWhiteShark', threshold: "10m+ $DHB", fee: "2.41%", color: "bg-muted", image: "/media/dfcc3420-f654-486b-bc94-f84f0209ba5c.png" },
-    { badgeKey: 'badgeBlueWhale', threshold: "25m+ $DHB", fee: "1.72%", color: "bg-muted", image: "/media/bc6b4bb7-aa43-4015-adb0-194568cc0858.png" },
-    { badgeKey: 'badgeMegalodon', threshold: "50m+ $DHB", fee: "1.00%", color: "bg-muted", image: "/media/9282e1c6-fa68-4b7c-b3cd-22d860df35af.png" },
+    { badgeKey: 'badgeCrab', threshold: "10,000+ $DHB", fee: "9.31%", color: "bg-muted", image: badgeImage('Crab') },
+    { badgeKey: 'badgeLobster', threshold: "25k+ $DHB", fee: "8.62%", color: "bg-muted", image: badgeImage('Lobster') },
+    { badgeKey: 'badgePiranha', threshold: "50k+ $DHB", fee: "7.93%", color: "bg-muted", image: badgeImage('Piranha') },
+    { badgeKey: 'badgeTortoise', threshold: "100k+ $DHB", fee: "7.24%", color: "bg-muted", image: badgeImage('Tortoise') },
+    { badgeKey: 'badgeCobra', threshold: "250k+ $DHB", fee: "6.55%", color: "bg-muted", image: badgeImage('Cobra') },
+    { badgeKey: 'badgeOctopus', threshold: "500k+ $DHB", fee: "5.86%", color: "bg-muted", image: badgeImage('Octopus') },
+    { badgeKey: 'badgeCrocodile', threshold: "1m+ $DHB", fee: "5.17%", color: "bg-muted", image: badgeImage('Crocodite') },
+    { badgeKey: 'badgeDolphin', threshold: "2m+ $DHB", fee: "4.48%", color: "bg-muted", image: badgeImage('Dolphin') },
+    { badgeKey: 'badgeTigerShark', threshold: "3m+ $DHB", fee: "3.79%", color: "bg-muted", image: badgeImage('Tiger Shark') },
+    { badgeKey: 'badgeKillerWhale', threshold: "5m+ $DHB", fee: "3.10%", color: "bg-muted", image: badgeImage('Killer Whale') },
+    { badgeKey: 'badgeGreatWhiteShark', threshold: "10m+ $DHB", fee: "2.41%", color: "bg-muted", image: badgeImage('Great White Shark') },
+    { badgeKey: 'badgeBlueWhale', threshold: "25m+ $DHB", fee: "1.72%", color: "bg-muted", image: badgeImage('Blue Whale') },
+    { badgeKey: 'badgeMegalodon', threshold: "50m+ $DHB", fee: "1.00%", color: "bg-muted", image: badgeImage('Meglodon') },
   ];
 
   return <div className="space-y-8">
