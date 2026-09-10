@@ -222,7 +222,7 @@ export default function GlossaryPage() {
         ...badgeLadder.map((b, i) => {
           const fee = i === badgeLadder.length - 1 ? 1 : parseFloat((10 - i * 0.69).toFixed(2));
           return {
-            icon: <img src={badgeImage(b.name) || ''} alt={b.name} className="w-6 h-6 brightness-0 invert" />,
+            icon: <img src={badgeImage(b.name) || ''} alt={b.name} className="w-6 h-6 object-contain" />,
             title: b.name,
             description: `Requires ${b.min.toLocaleString()} DHB · ${fee}% platform fee`,
           };

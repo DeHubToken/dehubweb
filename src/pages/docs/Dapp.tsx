@@ -1545,7 +1545,7 @@ const Dapp = () => {
                 <div className="grid gap-2">
                   {feeReductions.map((tier, index) => <div key={tier.badgeKey} className="flex items-center justify-between p-3 rounded-lg border bg-muted/20">
                       <div className="flex items-center gap-3">
-                        {tier.image ? <img src={tier.image} alt={t(`dapp.${tier.badgeKey}`)} className="w-8 h-8 object-contain dark:invert" /> : <div className="w-8 h-8 rounded-full bg-muted border border-border"></div>}
+                        {tier.image ? <img src={tier.image} alt={t(`dapp.${tier.badgeKey}`)} className="w-8 h-8 object-contain" /> : <div className="w-8 h-8 rounded-full bg-muted border border-border"></div>}
                         <div className="flex flex-col">
                           <span className="font-medium">{t(`dapp.${tier.badgeKey}`)}</span>
                           <span className="text-sm text-muted-foreground">{tier.threshold}</span>

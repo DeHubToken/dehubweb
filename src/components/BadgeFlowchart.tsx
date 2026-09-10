@@ -51,7 +51,7 @@ const BadgeFlowchart = () => {
                 <img
                   src={badge.image}
                   alt={badge.badge}
-                  className="w-8 h-8 object-contain dark:invert shrink-0"
+                  className="w-8 h-8 object-contain shrink-0"
                 />
                 <span className="font-medium truncate">{badge.badge}</span>
               </div>
