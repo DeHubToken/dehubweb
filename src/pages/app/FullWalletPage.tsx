@@ -24,9 +24,10 @@ import { useTokenPrices } from '@/hooks/use-token-prices';
 import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
 import { showWeb3AuthCheckout, isWeb3AuthConnected } from '@/lib/web3auth';
 import { getDexBuyLink } from '@/lib/wallet/buy-links';
-import { getERC20Metadata, saveCustomToken, formatBalance, type WalletToken } from '@/lib/wallet/tokens';
+import { getERC20Metadata, saveCustomToken, formatBalance, type WalletChainId, type WalletToken } from '@/lib/wallet/tokens';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { SOLANA_MAINNET_CHAIN_ID, isSolanaChainId } from '@/lib/chains/solana';
+import { ROBINHOOD_CHAIN_ID } from '@/lib/chains/robinhood';
 import { switchChain, isWalletLockedError } from '@/lib/contracts/aa-utils';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { toast } from 'sonner';
@@ -40,15 +41,19 @@ import usdtLogo from '@/assets/usdt-logo.png';
 import usdcLogo from '@/assets/usdc-logo.png';
 import btcLogo from '@/assets/btc-logo.png';
 import baseLogo from '@/assets/icons/base-logo.png';
+import solLogo from '@/assets/icons/solana-logo.png';
+import robinhoodLogo from '@/assets/icons/robinhood-chain-logo.svg';
 import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
 import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useSubscriptionEarnings, useWithdrawSubscriptionEarnings } from '@/hooks/use-subscriptions';
 
-const CHAIN_OPTIONS: { id: ChainId; name: string; icon: string }[] = [
+const CHAIN_OPTIONS: { id: WalletChainId; name: string; icon: string }[] = [
   { id: BASE_CHAIN_ID, name: 'Base', icon: baseLogo },
   { id: BNB_CHAIN_ID, name: 'BNB Chain', icon: bnbLogo },
   { id: ETH_CHAIN_ID, name: 'Ethereum', icon: ethLogo },
+  { id: ROBINHOOD_CHAIN_ID, name: 'Robinhood', icon: robinhoodLogo },
+  { id: SOLANA_MAINNET_CHAIN_ID, name: 'Solana', icon: solLogo },
 ];
 
 const TOKEN_ICONS: Record<string, string> = {
@@ -94,7 +99,7 @@ export default function FullWalletPage() {
   const [buyDrawerOpen, setBuyDrawerOpen] = useState(false);
   const [crossChainBuyOpen, setCrossChainBuyOpen] = useState(false);
   const [crossChainDestSymbol, setCrossChainDestSymbol] = useState<string>('ETH');
-  const [importChainId, setImportChainId] = useState<ChainId>(BASE_CHAIN_ID);
+  const [importChainId, setImportChainId] = useState<WalletChainId>(BASE_CHAIN_ID);
   const [selectedToken, setSelectedToken] = useState<WalletToken | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [actionGrouped, setActionGrouped] = useState<GroupedToken | null>(null);
@@ -1155,46 +1160,60 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
 function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImported }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  chainId: ChainId;
+  chainId: WalletChainId;
   onImported: () => void;
 }) {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
-  const [chainId, setChainId] = useState<ChainId>(initialChainId);
+  const { solana: solanaAddress } = useWalletAddresses();
+  const [chainId, setChainId] = useState<WalletChainId>(initialChainId);
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const [tokenInfo, setTokenInfo] = useState<{ name: string; symbol: string; decimals: number } | null>(null);
 
   // Discover all wallet tokens via Alchemy
+  const selectedAddress = chainId === SOLANA_MAINNET_CHAIN_ID ? solanaAddress : walletAddress;
+  const selectedChain = CHAIN_OPTIONS.find((chain) => chain.id === chainId);
+  const isSolana = chainId === SOLANA_MAINNET_CHAIN_ID;
+
   const { data: discoveredTokens = [], isLoading: discovering } = useQuery({
-    queryKey: ['alchemy-discover', walletAddress?.toLowerCase(), chainId],
+    queryKey: ['wallet-discover', selectedAddress?.toLowerCase(), chainId],
     queryFn: async () => {
+      if (isSolana) {
+        const { getSolanaTokenBalances } = await import('@/lib/wallet/solana-tokens');
+        return getSolanaTokenBalances(selectedAddress, chainId);
+      }
       const { discoverAlchemyTokens } = await import('@/lib/wallet/alchemy-tokens');
       // Get ALL tokens (including defaults) for display
       const { getAllTokenBalances } = await import('@/lib/wallet/tokens');
       // Independent lookups — run in parallel
       const [allKnown, discovered] = await Promise.all([
-        getAllTokenBalances(walletAddress!, chainId),
-        discoverAlchemyTokens(walletAddress!, chainId),
+        getAllTokenBalances(selectedAddress!, chainId),
+        discoverAlchemyTokens(selectedAddress!, chainId),
       ]);
       // Merge: known tokens first, then discovered (no duplicates)
       const knownAddrs = new Set(allKnown.map(t => t.address.toLowerCase()));
       const extra = discovered.filter(t => !knownAddrs.has(t.address.toLowerCase()));
       return [...allKnown.filter(t => !t.isNative && t.balance > BigInt(0)), ...extra];
     },
-    enabled: !!walletAddress && open,
+    enabled: !!selectedAddress && open,
     staleTime: 5 * 60_000,
   });
 
   const handleLookup = async () => {
     const trimmed = address.trim();
-    if (!/^0x[a-fA-F0-9]{40}$/.test(trimmed)) {
-      toast.error(t('wallet.invalidContractAddress'));
+    const valid = isSolana
+      ? /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(trimmed)
+      : /^0x[a-fA-F0-9]{40}$/.test(trimmed);
+    if (!valid) {
+      toast.error(isSolana ? 'Enter a valid Solana mint address' : t('wallet.invalidContractAddress'));
       return;
     }
     setLoading(true);
     try {
-      const info = await getERC20Metadata(trimmed, chainId);
+      const info = isSolana
+        ? await (await import('@/lib/wallet/solana-tokens')).getSolanaTokenMetadata(trimmed, chainId)
+        : await getERC20Metadata(trimmed, chainId);
       setTokenInfo(info);
     } catch {
       toast.error(t('wallet.cannotReadContract'));
@@ -1247,11 +1266,11 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
               ))}
             </div>
 
-            <p className="text-xs text-zinc-400">{t('wallet.importDescription', { network: CHAIN_CONFIGS[chainId]?.name || 'this network' })}</p>
+            <p className="text-xs text-zinc-400">{t('wallet.importDescription', { network: selectedChain?.name || CHAIN_CONFIGS[chainId as ChainId]?.name || 'this network' })}</p>
             <div className="space-y-2">
-              <label className="text-sm text-zinc-400">{t('wallet.tokenContractAddress')}</label>
+              <label className="text-sm text-zinc-400">{isSolana ? 'Token mint address' : t('wallet.tokenContractAddress')}</label>
               <Input
-                placeholder="0x..."
+                placeholder={isSolana ? 'Solana mint address' : '0x...'}
                 value={address}
                 onChange={e => { setAddress(e.target.value); setTokenInfo(null); }}
                 className="bg-white/5 border-white/10 text-white font-mono text-sm placeholder:text-zinc-500"
@@ -1288,7 +1307,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
 
             {/* Discovered wallet tokens */}
             <div className="pt-2 border-t border-white/10">
-              <p className="text-xs text-zinc-400 mb-3">Your tokens on {CHAIN_CONFIGS[chainId]?.name || 'this network'}</p>
+              <p className="text-xs text-zinc-400 mb-3">Your tokens on {selectedChain?.name || CHAIN_CONFIGS[chainId as ChainId]?.name || 'this network'}</p>
               {discovering ? (
                 <div className="flex items-center justify-center py-6">
                   <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />

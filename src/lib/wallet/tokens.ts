@@ -201,7 +201,7 @@ export async function getAllTokenBalances(walletAddress: string, chainId: ChainI
 /**
  * Custom token persistence
  */
-export function getCustomTokens(chainId: ChainId): { address: string; symbol: string; name: string; decimals: number; logo?: string; isCustom: boolean }[] {
+export function getCustomTokens(chainId: WalletChainId): { address: string; symbol: string; name: string; decimals: number; logo?: string; isCustom: boolean }[] {
   try {
     const raw = localStorage.getItem(CUSTOM_TOKENS_KEY);
     if (!raw) return [];
@@ -212,7 +212,7 @@ export function getCustomTokens(chainId: ChainId): { address: string; symbol: st
   }
 }
 
-export function saveCustomToken(chainId: ChainId, token: { address: string; symbol: string; name: string; decimals: number }) {
+export function saveCustomToken(chainId: WalletChainId, token: { address: string; symbol: string; name: string; decimals: number }) {
   try {
     const raw = localStorage.getItem(CUSTOM_TOKENS_KEY);
     const all = raw ? JSON.parse(raw) : {};
@@ -225,7 +225,7 @@ export function saveCustomToken(chainId: ChainId, token: { address: string; symb
   } catch { /* ignore */ }
 }
 
-export function removeCustomToken(chainId: ChainId, tokenAddress: string) {
+export function removeCustomToken(chainId: WalletChainId, tokenAddress: string) {
   try {
     const raw = localStorage.getItem(CUSTOM_TOKENS_KEY);
     if (!raw) return;

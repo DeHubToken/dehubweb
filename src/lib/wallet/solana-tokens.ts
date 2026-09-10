@@ -13,7 +13,7 @@
  * attached to the page, and their holdings should still show.
  */
 
-import type { WalletToken } from '@/lib/wallet/tokens';
+import { getCustomTokens, type WalletToken } from '@/lib/wallet/tokens';
 import {
   SOLANA_MAINNET_CHAIN_ID,
   SOLANA_TOKENS,
@@ -115,6 +115,7 @@ export async function getSolanaTokenBalances(
 
   const tokens: WalletToken[] = [];
   const named = knownMints();
+  const customTokens = getCustomTokens(chainId as WalletToken['chainId']);
 
   // Native SOL. Listed even at zero so the chain is visibly present in the
   // wallet rather than appearing only once somebody funds it.
@@ -187,5 +188,32 @@ export async function getSolanaTokenBalances(
     });
   }
 
+  // An imported mint should remain visible even before it receives a balance,
+  // matching the EVM wallet behavior. A real token account above wins because
+  // its decimals and balance come directly from Solana.
+  for (const token of customTokens) {
+    if (tokens.some((existing) => existing.address === token.address)) continue;
+    tokens.push({
+      ...token,
+      balance: BigInt(0),
+      formattedBalance: '0',
+      chainId: chainId as WalletToken['chainId'],
+    });
+  }
+
   return tokens;
+}
+
+/** Read the immutable decimal precision from an SPL mint. Token naming is not
+ * guaranteed on-chain, so custom mints use a concise mint-derived label. */
+export async function getSolanaTokenMetadata(
+  mint: string,
+  chainId: number = SOLANA_MAINNET_CHAIN_ID,
+): Promise<{ name: string; symbol: string; decimals: number }> {
+  const result = await rpc(chainId, 'getTokenSupply', [mint]);
+  const decimals = result?.value?.decimals;
+  if (!Number.isInteger(decimals)) throw new Error('Could not read SPL mint');
+  const known = knownMints()[mint];
+  const shortMint = `${mint.slice(0, 4)}…${mint.slice(-4)}`;
+  return { name: known?.name ?? `Solana token ${shortMint}`, symbol: known?.symbol ?? shortMint, decimals };
 }
