@@ -902,7 +902,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         ) : isComboLocked ? (
           <>
             {/* Combo PPV + Holdings Locked: blurred image with dual icons */}
-            <div className="relative rounded-2xl overflow-hidden">
+            <div data-media-full className="relative rounded-2xl overflow-hidden">
               <img
                 src={images[0]}
                 alt=""
@@ -944,7 +944,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         ) : isPPV ? (
           <>
             {/* PPV only: blurred image with ticket overlay */}
-            <div className="relative rounded-2xl overflow-hidden">
+            <div data-media-full className="relative rounded-2xl overflow-hidden">
               <img
                 src={images[0]}
                 alt=""
@@ -982,7 +982,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
             {/* Subscriber gated: same blur, different ask. Ordered above the
                 holdings branch because a post carrying both is more likely to
                 be a creator's subscriber post than a token play. */}
-            <div className="relative rounded-2xl overflow-hidden">
+            <div data-media-full className="relative rounded-2xl overflow-hidden">
               <img
                 src={images[0]}
                 alt=""
@@ -1023,7 +1023,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         ) : isLocked ? (
           <>
             {/* Holdings Locked: blurred image with lock icon overlay */}
-            <div className="relative rounded-2xl overflow-hidden">
+            <div data-media-full className="relative rounded-2xl overflow-hidden">
               <img
                 src={images[0]}
                 alt=""

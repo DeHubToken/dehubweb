@@ -35,4 +35,15 @@ describe('post media presentation', () => {
       expect(card).toContain('className="!mt-3"');
     }
   });
+
+  it('clips every image state to its enclosing feed bento radius', () => {
+    const imageCard = readSource('components/app/cards/ImageCard.tsx');
+    const matureGate = readSource('components/app/cards/MatureContentGate.tsx');
+    const styles = readSource('index.css');
+
+    expect(imageCard.match(/data-media-full/g)).toHaveLength(5);
+    expect(matureGate).toContain('<div data-media-full');
+    expect(styles).toContain('[data-feed-item].rounded-xl [data-media-full]');
+    expect(styles).toContain('[data-feed-item].rounded-2xl [data-media-full]');
+  });
 });

@@ -1894,6 +1894,18 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   padding-bottom: 1.5rem !important;
 }
 
+/* A feed image is inset inside its bento, but it is still the bento's media
+   face. Keep its clipping radius tied to the card variant instead of leaving
+   ImageCard's default 16px curve inside 12px image/profile-feed cards. This is
+   especially visible on the plain system theme, where there is no canvas
+   texture to disguise the mismatched corners. */
+[data-feed-item].rounded-xl [data-media-full] {
+  border-radius: 0.75rem;
+}
+[data-feed-item].rounded-2xl [data-media-full] {
+  border-radius: 1rem;
+}
+
 /* ==========================================================================
    Minimalistic theme — replaces bento panels with thin white grid lines
    and swaps per-post borders for a hairline horizontal separator.
