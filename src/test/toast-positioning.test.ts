@@ -1,7 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { TOAST_CLASSES, TOAST_FIT_CLASSES, TOASTER_COLUMN_CLASSES } from '@/components/ui/toast-classes';
+import {
+  BUTTON_CLASSES,
+  TOAST_CLASSES,
+  TOAST_FIT_CLASSES,
+  TOASTER_COLUMN_CLASSES,
+} from '@/components/ui/toast-classes';
 
 describe('desktop toast positioning', () => {
+  it('keeps paired action labels on one line at equal widths', () => {
+    expect(BUTTON_CLASSES).toContain('flex-1');
+    expect(BUTTON_CLASSES).toContain('min-w-0');
+    expect(BUTTON_CLASSES).toContain('whitespace-nowrap');
+    expect(BUTTON_CLASSES).toContain('text-ellipsis');
+  });
+
   it('keeps loading indicators and their status on one row', () => {
     expect(TOAST_CLASSES).toContain('group-[[data-type=loading]]:flex-row');
     expect(TOAST_CLASSES).toContain('group-[[data-type=loading]]:items-center');
