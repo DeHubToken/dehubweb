@@ -13,6 +13,7 @@ import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { getGiveawayPrizeFor } from '@/lib/worldCupGiveaway';
 import { cn } from '@/lib/utils';
+import { useSubscriptionEarnings } from '@/hooks/use-subscriptions';
 
 const OTHER_SYMBOLS = ['ETH', 'BTC', 'USDT'] as const;
 const LOGOS: Record<string, string> = { ETH: ethLogo, BTC: btcLogo, USDT: usdtLogo };
@@ -31,6 +32,7 @@ export function BalanceCard() {
 
   // Real on-chain token balances across Base, BNB Chain, Ethereum
   const { allTokens, isLoading: tokensLoading } = useAllChainsTokens();
+  const { earnings: subscriptionEarnings } = useSubscriptionEarnings();
 
   // Aggregate balances per symbol across chains
   const otherBalances = useMemo(() => {
@@ -103,6 +105,22 @@ export function BalanceCard() {
               </span>
             </div>
           ))}
+          {((subscriptionEarnings?.pendingUsdt || 0) + (subscriptionEarnings?.processingUsdt || 0)) > 0 && (
+            <div className="flex items-center justify-between py-1.5 border-t border-zinc-800 pt-2 mt-1">
+              <div className="flex items-center gap-2">
+                <img src={usdtLogo} alt="USDT" className="w-6 h-6 rounded-full" />
+                <div>
+                  <span className="text-sm text-white">Subscription earnings</span>
+                  <span className="text-xs text-zinc-500 ml-1.5">
+                    {subscriptionEarnings.withdrawalAvailable ? 'Available' : 'Pending'}
+                  </span>
+                </div>
+              </div>
+              <span className="text-sm text-zinc-400">
+                {(subscriptionEarnings.pendingUsdt + subscriptionEarnings.processingUsdt).toLocaleString(undefined, { maximumFractionDigits: 6 })} USDT
+              </span>
+            </div>
+          )}
         </div>
       </div>
 

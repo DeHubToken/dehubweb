@@ -43,6 +43,7 @@ import baseLogo from '@/assets/icons/base-logo.png';
 import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
 import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useSubscriptionEarnings, useWithdrawSubscriptionEarnings } from '@/hooks/use-subscriptions';
 
 const CHAIN_OPTIONS: { id: ChainId; name: string; icon: string }[] = [
   { id: BASE_CHAIN_ID, name: 'Base', icon: baseLogo },
@@ -102,6 +103,8 @@ export default function FullWalletPage() {
   const [showBalanceBreakdown, setShowBalanceBreakdown] = useState(false);
 
   const { allTokens, isLoading } = useAllChainsTokens();
+  const { earnings: subscriptionEarnings, isLoading: subscriptionEarningsLoading } = useSubscriptionEarnings();
+  const withdrawSubscriptionEarnings = useWithdrawSubscriptionEarnings();
 
   // Wallet + staked + giveaway, defined once in the hook so this page, the
   // Settings row and the badge ladder cannot drift apart again.
@@ -291,6 +294,14 @@ export default function FullWalletPage() {
     }
   };
 
+  const handleCashOut = () => {
+    if (!subscriptionEarnings?.withdrawalAvailable) {
+      toast.info(subscriptionEarnings?.withdrawalMessage || 'Subscription fees will be withdrawable soon');
+      return;
+    }
+    withdrawSubscriptionEarnings.mutate();
+  };
+
   return (
     // data-wallet-page scopes the light-mode remaps in index.css; the
     // portaled Send/Receive/Buy/Import dialogs and drawers carry the same
@@ -385,7 +396,33 @@ export default function FullWalletPage() {
         )}
       </div>
 
-
+      {(subscriptionEarningsLoading || ((subscriptionEarnings?.pendingUsdt || 0) + (subscriptionEarnings?.processingUsdt || 0)) > 0) && (
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 mb-4">
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-xs uppercase tracking-wider text-zinc-500">Subscription earnings</p>
+              <p className="mt-1 text-xl font-bold text-white">
+                {subscriptionEarningsLoading
+                  ? '…'
+                  : `${((subscriptionEarnings?.pendingUsdt || 0) + (subscriptionEarnings?.processingUsdt || 0)).toLocaleString(undefined, { maximumFractionDigits: 6 })} USDT`}
+              </p>
+              <p className="mt-1 text-xs text-zinc-500">
+                {subscriptionEarnings?.withdrawalAvailable
+                  ? 'Available to withdraw on Base'
+                  : 'USDT-denominated balance · pending treasury reserve'}
+              </p>
+            </div>
+            <Button
+              variant="glass"
+              className="rounded-xl"
+              disabled={subscriptionEarningsLoading || withdrawSubscriptionEarnings.isPending}
+              onClick={handleCashOut}
+            >
+              {withdrawSubscriptionEarnings.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Withdraw'}
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Action buttons — horizontally scrollable */}
       <div className="flex gap-2 mb-4 pb-1">
@@ -412,8 +449,8 @@ export default function FullWalletPage() {
           <ArrowDownUp className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap hidden lg:inline">Bridge</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => toast.info(t('wallet.cashOutComingSoon'))}>
-          <Minus className="w-5 h-5" />
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={handleCashOut} disabled={withdrawSubscriptionEarnings.isPending}>
+          {withdrawSubscriptionEarnings.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Minus className="w-5 h-5" />}
           <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.cashOut')}</span>
         </Button>
       </div>

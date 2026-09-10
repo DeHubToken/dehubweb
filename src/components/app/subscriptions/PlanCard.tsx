@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
 import { Check, Clock, Loader2, Star, Users, Upload, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,11 +14,9 @@ import {
 } from '@/components/ui/alert-dialog';
 import { type SubscriptionPlan, planPrice, primaryPlanChain, isPlanPublished } from '@/lib/api/dehub';
 import { useBuyPlan, usePublishPlan } from '@/hooks/use-subscriptions';
-import { useTokenPrices } from '@/hooks/use-token-prices';
-import { formatDuration, getSubscriptionCost, normaliseDuration, fromWei, BASE_CHAIN_ID } from '@/lib/contracts';
-import { useAuth } from '@/contexts/AuthContext';
+import { formatDuration, normaliseDuration, BASE_CHAIN_ID } from '@/lib/contracts';
 import type { ChainId } from '@/components/app/ChainSelector';
-import { dhbForUsd, formatDhbEstimate } from '@/lib/subscription-pricing';
+import { DHB_PRELISTING_USD, dhbForUsd, formatDhbPayment } from '@/lib/subscription-pricing';
 import dehubCoin from '@/assets/dehub-coin.png';
 
 /**
@@ -57,22 +54,18 @@ function PlanNotice({ children }: { children: React.ReactNode }) {
 
 export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps) {
   const { t } = useTranslation();
-  const { walletAddress } = useAuth();
   const buyPlanMutation = useBuyPlan();
   const publishMutation = usePublishPlan();
-  const { data: tokenPrices = {} } = useTokenPrices();
 
   const price = planPrice(plan);
   const chainEntry = primaryPlanChain(plan);
   const chainId = (chainEntry?.chainId || BASE_CHAIN_ID) as ChainId;
-  const paymentToken = chainEntry?.token || plan.token || '';
   const currency = (chainEntry?.currency || plan.currency || 'DHB').toUpperCase();
   const settlementCurrency = currency === 'USD' ? 'USDT' : currency;
-  const decimals = chainEntry?.decimals ?? plan.decimals ?? 18;
   const isUsdPriced = currency === 'USDT' || currency === 'USDC' || currency === 'USD';
   const numericPrice = Number(price || 0);
-  const dhbUsd = Number(tokenPrices.DHB);
-  const dhbEstimate = isUsdPriced ? dhbForUsd(numericPrice, dhbUsd) : null;
+  const dhbUsd = DHB_PRELISTING_USD;
+  const dhbEstimate = isUsdPriced ? dhbForUsd(numericPrice, dhbUsd) : numericPrice;
   const formattedPrice = isUsdPriced
     ? `${formatAmount(price, 2)} ${settlementCurrency}`
     : `${formatAmount(price)} DHB`;
@@ -81,36 +74,8 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
   // was respected. Buying one reverts, so it is surfaced rather than hidden.
   const isBuyable = normaliseDuration(plan.duration) !== null;
 
-  // The contract charges its fee on TOP of the list price, and the fee depends
-  // on the buyer's badges — so the only honest total is one it quotes.
-  const [total, setTotal] = useState<string | null>(null);
-  const [quoteOpen, setQuoteOpen] = useState(false);
-
-  useEffect(() => {
-    if (!quoteOpen || !walletAddress || !price || !paymentToken || isOwner || !published) return;
-    let cancelled = false;
-    setTotal(null);
-    getSubscriptionCost({
-      creator: plan.address || plan.creatorAddress || '',
-      subscriber: walletAddress,
-      planId: plan.id || plan._id || 0,
-      duration: plan.duration,
-      price,
-      chainId,
-      token: paymentToken,
-      decimals,
-      currency,
-    })
-      .then((cost) => {
-        if (!cancelled) setTotal(fromWei(cost.total, decimals));
-      })
-      .catch(() => { /* fall back to showing the list price alone */ });
-    return () => { cancelled = true; };
-  }, [quoteOpen, walletAddress, price, paymentToken, decimals, currency, isOwner, published, plan, chainId]);
-
-  const totalDhbEstimate = isUsdPriced && total
-    ? dhbForUsd(Number(total), dhbUsd)
-    : null;
+  const total = isUsdPriced ? numericPrice : numericPrice * DHB_PRELISTING_USD;
+  const totalDhbEstimate = dhbEstimate;
 
   const handleSubscribe = async () => {
     await buyPlanMutation.mutateAsync({ plan, chainId });
@@ -164,7 +129,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
         {isUsdPriced && (
           <div className="mt-1 flex items-center gap-1.5 text-xs text-zinc-400">
             <img src={dehubCoin} alt="" className="w-3.5 h-3.5" />
-            <span>{formatDhbEstimate(dhbEstimate)} at the current price</span>
+            <span>{formatDhbPayment(dhbEstimate)} at the pre-listing rate</span>
           </div>
         )}
       </div>
@@ -255,7 +220,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
           {t('subscriptions.subscribed')}
         </Button>
       ) : (
-        <AlertDialog onOpenChange={setQuoteOpen}>
+        <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
               disabled={busy || !published || !isBuyable}
@@ -280,7 +245,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
               <AlertDialogDescription className="text-zinc-400">
                 Subscribe to <span className="text-white font-medium">{plan.name}</span> for{' '}
                 <span className="text-white font-medium">{formattedPrice}</span>
-                {isUsdPriced && <> ({formatDhbEstimate(dhbEstimate)})</>} /{' '}
+                {isUsdPriced && <> ({formatDhbPayment(dhbEstimate)})</>} /{' '}
                 {formatDuration(plan.duration, t)}.
               </AlertDialogDescription>
             </AlertDialogHeader>
@@ -291,24 +256,24 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
               </div>
               {isUsdPriced && (
                 <div className="flex justify-between gap-4 text-zinc-400 mt-1.5">
-                  <span>Live DHB equivalent</span>
-                  <span className="text-white text-right">{formatDhbEstimate(dhbEstimate)}</span>
+                  <span>Pre-listing DHB amount</span>
+                  <span className="text-white text-right">{formatDhbPayment(dhbEstimate)}</span>
                 </div>
               )}
               <div className="flex justify-between text-zinc-400 mt-1.5 pt-1.5 border-t border-white/10">
                 <span>{t('subscriptions.youPayInclFee')}</span>
                 <span className="text-white font-medium text-right">
-                  {total ? `${formatAmount(Number(total), isUsdPriced ? 2 : 4)} ${settlementCurrency}` : t('subscriptions.calculating')}
+                  {total ? formatDhbPayment(totalDhbEstimate) : t('subscriptions.calculating')}
                   {totalDhbEstimate !== null && (
                     <span className="block text-xs font-normal text-zinc-400">
-                      {formatDhbEstimate(totalDhbEstimate)} at checkout
+                      Credits the creator {formatAmount(total, 2)} USDT
                     </span>
                   )}
                 </span>
               </div>
               {isUsdPriced && (
                 <p className="mt-2 pt-2 border-t border-white/10 text-[11px] leading-relaxed text-zinc-500">
-                  Uses USDT already in your wallet first. If you are short, DeHub automatically swaps a supported asset on this chain to cover only the difference.
+                  Your DHB stays in DeHub treasury custody and is not sold. The creator receives a USDT-denominated subscription balance.
                 </p>
               )}
             </div>
