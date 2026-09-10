@@ -15,7 +15,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { getAccountInfo, getAccountByUsername } from '@/lib/api/dehub';
+import { getAccountInfo, getAccountByUsername, getAccountSummariesByUsernames } from '@/lib/api/dehub';
 import { extractAvatarPath } from '@/lib/media-url';
 import {
   isPositiveReaction,
@@ -202,16 +202,11 @@ async function notifyMentions(params: {
   const skip = new Set(params.skipAddresses.map((address) => address.toLowerCase()));
   const recipients = new Set<string>();
 
-  await Promise.all(handles.map(async (handle) => {
-    try {
-      const account = await getAccountByUsername(handle);
-      const address = (account?.address || account?.wallet_address || '').toLowerCase();
-      if (!address || skip.has(address)) return;
-      recipients.add(address);
-    } catch {
-      // No such handle, or the API is down. Either way, nobody to tell.
-    }
-  }));
+  const mentionedAccounts = await getAccountSummariesByUsernames(handles).catch(() => []);
+  mentionedAccounts.forEach(account => {
+    const address = account.address.toLowerCase();
+    if (address && !skip.has(address)) recipients.add(address);
+  });
 
   if (recipients.size === 0) return;
 

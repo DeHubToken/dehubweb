@@ -12,7 +12,7 @@
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
-import { getAccountInfo, type DeHubUser } from '@/lib/api/dehub';
+import { getAccountInfo, getAccountSummaries, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 
 /** Cache time for avatar data - balanced for freshness vs API load */
@@ -83,18 +83,13 @@ export function useAvatarPrefetch() {
         (addr) => !queryClient.getQueryData([AVATAR_QUERY_KEY, addr])
       );
 
-      // Prefetch up to 10 at a time
-      const batch = uncachedAddresses.slice(0, 10);
-
-      await Promise.allSettled(
-        batch.map((address) =>
-          queryClient.prefetchQuery({
-            queryKey: [AVATAR_QUERY_KEY, address],
-            queryFn: () => fetchAvatarDirect(address),
-            staleTime: AVATAR_CACHE_STALE_MS,
-          })
-        )
-      );
+      const profiles = await getAccountSummaries(uncachedAddresses.slice(0, 100)).catch(() => []);
+      profiles.forEach(profile => {
+        queryClient.setQueryData(
+          [AVATAR_QUERY_KEY, profile.address],
+          buildAvatarUrl(profile.address, profile.avatarImageUrl || undefined) || null,
+        );
+      });
     },
     [queryClient]
   );
