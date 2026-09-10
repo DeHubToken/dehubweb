@@ -211,7 +211,9 @@ export default function SuperPowersPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {powers.map((power, index) => {
               const isTeamUp = power.key === 'team_up';
-              const unlocked = isTeamUp ? !!status : !!power.unlocked;
+              // Team up itself is public. Opening it while signed out leads
+              // straight to the sign-in action in the drawer.
+              const unlocked = isTeamUp || !!power.unlocked;
               // Held AND built. A locked card stays inert rather than opening a
               // picker for something the server would refuse.
               const usable = unlocked && power.available;
