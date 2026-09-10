@@ -3,7 +3,7 @@ import { buildInviteSvg, fitInviteText, type InviteImageOptions } from '../../su
 
 const base: InviteImageOptions = {
   code: 'CFMVZEH2', name: 'mal', username: 'maldoteth',
-  avatarDataUri: null, bannerDataUri: null, badgeDataUri: null,
+  avatarDataUri: null, bannerDataUri: null, badgeDataUri: null, badgeName: null,
   qrPath: 'M0,0h1v1h-1z', qrCount: 25, width: 1200, height: 630,
 };
 
@@ -14,9 +14,15 @@ describe('affiliate invitation layout', () => {
       const result = fitInviteText(name, 708, 78, 44);
       expect(result.width).toBeLessThanOrEqual(708);
       expect(result.fontSize).toBeGreaterThanOrEqual(44);
-      expect(366 + result.width + 16 + 40).toBeLessThanOrEqual(1136);
+      expect(366 + result.width + 10 + 64).toBeLessThanOrEqual(1148);
     }
     expect(fitInviteText('W'.repeat(120), 708, 78, 44).text).toMatch(/…$/);
+  });
+
+  it('aligns canonical badge artwork to the display-name baseline', () => {
+    const svg = buildInviteSvg({ ...base, badgeDataUri: 'data:image/png;base64,abc', badgeName: 'Meglodon' });
+    expect(svg).toContain('width="62.64" height="62.64"');
+    expect(svg).toContain('preserveAspectRatio="xMidYMid meet"');
   });
 
   it('never truncates a valid referral code, including the widest 40-character code', () => {

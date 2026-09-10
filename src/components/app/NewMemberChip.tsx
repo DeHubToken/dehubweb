@@ -1,7 +1,7 @@
 /**
  * New Member Chip
  * ===============
- * The temporary "New here" marker beside a name, for the first
+ * The temporary "New" marker beside a name, for the first
  * NEW_MEMBER_WINDOW_DAYS after an account is created. Profile header, feed
  * cards, comments, quotes, repost lists, hovercards, DMs — anywhere a name is
  * drawn, this sits beside it.
@@ -49,7 +49,7 @@ export function NewMemberChip({ address, lookupId, className }: NewMemberChipPro
       )}
     >
       <Star className="w-2.5 h-2.5" />
-      New here
+      New
     </span>
   );
 }
