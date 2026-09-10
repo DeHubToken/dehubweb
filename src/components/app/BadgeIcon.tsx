@@ -53,10 +53,24 @@ const BADGE_OPTICS: Record<string, { scale: number; bottomInset: number }> = {
   Meglodon: { scale: 1.08, bottomInset: 4 },
 };
 
+function badgeNameFromAssetUrl(url: string | null): string | undefined {
+  if (!url) return undefined;
+  let decodedUrl = url;
+  try {
+    decodedUrl = decodeURIComponent(url);
+  } catch {
+    // A malformed external URL can still render; it simply gets neutral optics.
+  }
+  return Object.keys(BADGE_OPTICS).find((tier) => decodedUrl.includes(tier));
+}
+
 export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, className = 'w-[1em] h-[1em]' }: BadgeIconProps) {
   const navigate = useNavigate();
   const { url, name } = useBadgeVisual({ badgeBalance, username, lookupId, badgeLock, src });
-  const optics = name ? BADGE_OPTICS[name] : undefined;
+  // Profiles already hold a resolved asset URL. Recover its tier so the same
+  // size and measured artwork inset still apply there as everywhere else.
+  const visualName = name ?? badgeNameFromAssetUrl(url);
+  const optics = visualName ? BADGE_OPTICS[visualName] : undefined;
   const renderedSize = 1.15 * (optics?.scale ?? 1);
   // The artwork uses a 128px transparent canvas. Baseline-align the image box,
   // then lower it only by its measured transparent bottom inset so the badge's
@@ -78,7 +92,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
         <img
           data-badge-icon
           src={url}
-          alt={name || 'Badge'}
+          alt={visualName || 'Badge'}
           width={16}
           height={16}
           loading="lazy"
@@ -93,7 +107,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
         />
       </TooltipTrigger>
       <TooltipContent side="top" className="text-xs capitalize">
-        {name || 'Badge'}
+        {visualName || 'Badge'}
       </TooltipContent>
     </Tooltip>
   );
