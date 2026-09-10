@@ -232,7 +232,7 @@ export function EventChat({ eventId }: EventChatProps) {
                       </button>
                       <div className="min-w-0 flex-1">
                         <span className="inline-flex items-baseline gap-1.5">
-                          <span className="inline-flex items-center gap-1 shrink min-w-0">
+                          <span className="inline-flex items-end gap-1 shrink min-w-0">
                             <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white truncate ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>
                               {name}
                             </button>
