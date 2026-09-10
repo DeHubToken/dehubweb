@@ -900,7 +900,7 @@ export default function HomePage() {
       <div
         data-feed-nav-outer
         data-home-tabs
-        className={cn("sticky top-11 lg:top-0 bg-black px-2 sm:px-3 pt-1 pb-2 sm:pt-1 sm:pb-3 lg:px-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", anyOverlayOpen ? "z-[40]" : "z-[110]", isCollapsed && "lg:pl-2 lg:pr-0", isCollapsed && "lg:hidden")}
+        className={cn("sticky top-11 lg:top-0 bg-black px-2 sm:px-3 pt-1 pb-4 sm:pt-1 sm:pb-4 lg:px-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", anyOverlayOpen ? "z-[40]" : "z-[110]", isCollapsed && "lg:pl-2 lg:pr-0", isCollapsed && "lg:hidden")}
         style={{ transform: (isMobile && (anyOverlayOpen || (!navVisible && !isPostOverlayActive && !(showHomeFilters && deferredTab === 'home')))) ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)', willChange: 'transform' }}
       >
         <div data-feed-nav className="flex flex-col bg-zinc-900 overflow-visible rounded-xl">
