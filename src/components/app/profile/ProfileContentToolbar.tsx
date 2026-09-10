@@ -24,6 +24,7 @@ import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { useEffect, useRef, useState } from 'react';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { ProfileFilterPanel } from '@/components/app/profile/ProfileFilterPanel';
 import { getCategories } from '@/lib/api/dehub';
@@ -90,6 +91,17 @@ export function ProfileContentToolbar({
 }: ProfileContentToolbarProps) {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
+  const [isSearchOpen, setIsSearchOpen] = useState(Boolean(search));
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isSearchOpen) searchInputRef.current?.focus();
+  }, [isSearchOpen]);
+
+  const closeSearch = () => {
+    onSearchChange('');
+    setIsSearchOpen(false);
+  };
 
   // Off the All tab the post-type row is neither shown nor sent, so it must not
   // be badged or chipped either — a chip for a filter that isn't applied is a
@@ -125,58 +137,89 @@ export function ProfileContentToolbar({
 
   return (
     <div className="mb-3 space-y-2">
-      <div className="relative min-w-0 w-full">
+      <AnimatePresence initial={false} mode="wait">
+        {isSearchOpen ? (
+          <motion.div
+            key="profile-search"
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.16, ease: 'easeOut' }}
+            className="relative min-w-0"
+          >
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
             <input
+              ref={searchInputRef}
               type="search"
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') closeSearch();
+              }}
               placeholder={t('profile.searchThisChannel', 'Search this channel')}
               aria-label={t('profile.searchThisChannel', 'Search this channel')}
               className="w-full h-9 pl-9 pr-9 rounded-xl bg-zinc-800 border border-zinc-700 text-sm text-white placeholder-zinc-500 focus:border-zinc-500 focus:outline-none transition-colors [&::-webkit-search-cancel-button]:hidden"
             />
-            {!!search && (
-              <button
-                type="button"
-                onClick={() => onSearchChange('')}
-                aria-label={t('common.clear', 'Clear')}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-700 transition-colors"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-      </div>
-
-      <GlassFilterRow
-        items={sortItems}
-        activeKey={sort}
-        onSelect={onSortChange}
-        className="-mx-2 min-w-0"
-        borderRadius="0.75rem"
-        buttonClassName="h-9 px-3 py-0 rounded-xl text-xs"
-        trailingContent={(
-          <button
-            type="button"
-            onClick={() => onFiltersOpenChange(!filtersOpen)}
-            aria-expanded={filtersOpen}
-            aria-label={t('explorePage.filters', 'Filters')}
-            className={cn(
-              'relative flex-shrink-0 flex items-center justify-center gap-1.5 h-9 px-3 rounded-xl transition-colors',
-              filtersOpen || activeFilterCount > 0
-                ? 'text-white'
-                : 'bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-700',
-            )}
+            <button
+              type="button"
+              onClick={closeSearch}
+              aria-label={search ? t('common.clear', 'Clear') : t('common.close', 'Close')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-700 transition-colors"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="profile-controls"
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            transition={{ duration: 0.16, ease: 'easeOut' }}
           >
-            {(filtersOpen || activeFilterCount > 0) && (
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]" />
-            )}
-            <SlidersHorizontal className="relative z-10 w-4 h-4" />
-            {activeFilterCount > 0 && (
-              <span className="relative z-10 text-xs font-medium">{activeFilterCount}</span>
-            )}
-          </button>
+            <GlassFilterRow
+              items={sortItems}
+              activeKey={sort}
+              onSelect={onSortChange}
+              className="-mx-2 min-w-0"
+              borderRadius="0.75rem"
+              buttonClassName="h-9 px-3 py-0 rounded-xl text-xs"
+              trailingContent={(
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setIsSearchOpen(true)}
+                    aria-label={t('profile.searchThisChannel', 'Search this channel')}
+                    className="flex-shrink-0 flex items-center justify-center h-9 w-9 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors"
+                  >
+                    <Search className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onFiltersOpenChange(!filtersOpen)}
+                    aria-expanded={filtersOpen}
+                    aria-label={t('explorePage.filters', 'Filters')}
+                    className={cn(
+                      'relative flex-shrink-0 flex items-center justify-center gap-1.5 h-9 px-3 rounded-xl transition-colors',
+                      filtersOpen || activeFilterCount > 0
+                        ? 'text-white'
+                        : 'bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-700',
+                    )}
+                  >
+                    {(filtersOpen || activeFilterCount > 0) && (
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]" />
+                    )}
+                    <SlidersHorizontal className="relative z-10 w-4 h-4" />
+                    {activeFilterCount > 0 && (
+                      <span className="relative z-10 text-xs font-medium">{activeFilterCount}</span>
+                    )}
+                  </button>
+                </>
+              )}
+            />
+          </motion.div>
         )}
-      />
+      </AnimatePresence>
 
       {!isMobile && (
         <AnimatePresence initial={false}>
