@@ -158,7 +158,7 @@ export default function BridgePage() {
         return;
       }
 
-      toast.loading('Transaction submitted — waiting for confirmation...', { id: loadingToastId });
+      toast.loading('Waiting for confirmation...', { id: loadingToastId });
 
       let receipt;
       try {

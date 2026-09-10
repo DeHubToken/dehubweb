@@ -133,7 +133,7 @@ function showPrompt(): void {
             "Get a heads-up about replies, tips and DMs while you're in another tab."
           )}
         </span>
-        <span className="flex flex-col gap-2">
+        <span className="flex flex-row gap-2">
           <button type="button" className={BUTTON_CLASSES} onClick={() => void accept(id)}>
             {i18n.t('toasts.turn_on', 'Turn on')}
           </button>

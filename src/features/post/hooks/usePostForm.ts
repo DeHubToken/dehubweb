@@ -1796,7 +1796,7 @@ export function usePostForm(
 
       if (mintingThisPost) {
         setUploadProgress(65);
-        toast.loading('Publishing to decentralized database', { id: 'mint-progress', duration: Infinity });
+        toast.loading('Publishing post', { id: 'mint-progress', duration: Infinity });
 
         // Slowly creep progress from 69→99% while waiting for chain confirmation
         // Faster initially, then decelerates as it approaches 99%
@@ -1845,7 +1845,7 @@ export function usePostForm(
         // timers above instead of awaited with no way to stop.
         const signMint = (async (): Promise<{ hash: string; confirmed?: Promise<string> }> => {
           if (isSolanaMint) {
-            toast.loading('Sign with Phantom to publish', { id: 'mint-progress', duration: Infinity });
+            toast.loading('Waiting for Phantom', { id: 'mint-progress', duration: Infinity });
             const solResult = await broadcastSolanaMint({
               transactionBase64: mintResponse.transaction!,
               mintAddress: mintResponse.mintAddress!,
@@ -1994,7 +1994,7 @@ export function usePostForm(
           try {
             const { payDhb } = await import('@/lib/dhb-payment');
             const { settleWithRetry } = await import('@/lib/post-quota-settle');
-            toast.loading(dhbText(`Paying ${owed.toLocaleString()} DHB for this post`), {
+            toast.loading(dhbText(`Paying ${owed.toLocaleString()} DHB`), {
               id: 'post-quota-pay',
               duration: Infinity,
             });

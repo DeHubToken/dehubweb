@@ -404,7 +404,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
     }
 
     try {
-      toast.loading(`Paying ${sessionDhb.toLocaleString()} DHB for a voice session...`, { id: 'voice-session' });
+      toast.loading(`Paying ${sessionDhb.toLocaleString()} DHB...`, { id: 'voice-session' });
       sessionTxRef.current = await payForVoiceSession();
       setExchangesLeft(VOICE_SESSION_EXCHANGES);
       toast.success(
