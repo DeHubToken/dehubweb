@@ -1,9 +1,8 @@
 /**
  * Which powers a post's boost sheet may offer.
  * ============================================
- * `spendablePowers` used to exclude one power by name — Golden Hour, which
- * acts on the account. Three others act on a comment, a Stage and a category,
- * and the sheet has no field for any of them: it sends `{ tokenId, power }`
+ * Three powers act on a comment, a Stage, and a category, and the sheet has no
+ * field for any of them: it sends `{ tokenId, power }`
  * and the server answers "Trend Jacker needs a category". So a Cobra saw five
  * powers ticked on the SuperPowers page, four offers in the sheet, and two
  * that could actually be spent.
@@ -27,7 +26,6 @@ const LADDER: { key: SuperPowerKey; tier: string }[] = [
   { key: 'flak_jacket', tier: 'Crocodite' },
   { key: 'precision_strike', tier: 'Dolphin' },
   { key: 'harpoon', tier: 'Tiger Shark' },
-  { key: 'golden_hour', tier: 'Killer Whale' },
   { key: 'crew_boost', tier: 'Great White Shark' },
   { key: 'front_row', tier: 'Blue Whale' },
   { key: 'deep_current', tier: 'Meglodon' },
@@ -82,7 +80,6 @@ describe('spendablePowers', () => {
     expect(offered).not.toContain('comment_anchor');
     expect(offered).not.toContain('trend_jacker');
     expect(offered).not.toContain('front_row');
-    expect(offered).not.toContain('golden_hour');
   });
 
   it('offers the gift, and only the gift, on somebody else post', () => {

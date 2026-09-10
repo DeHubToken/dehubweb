@@ -244,10 +244,10 @@ export function powerForPostAge(createdAt: string | Date | undefined): SuperPowe
  *
  * One table, read by the sheet that offers powers on a post AND by the
  * SuperPowers page that tells a holder where the rest of theirs live. They
- * disagreed before this existed: the sheet offered every power that was not a
- * Golden Hour, including the three that need a comment, a stage or a category
- * it never sends — so tapping them spent nothing and returned a refusal — and
- * the page ticked five powers with a control for one, which reads as four
+ * disagreed before this existed: the sheet offered powers that need a comment,
+ * a stage, or a category it never sends, so tapping them spent nothing and
+ * returned a refusal, and the page ticked five powers with a control for one,
+ * which reads as four
  * powers that do not work.
  *
  *   - `post`    your own post's ⋯ menu → Boost
@@ -256,7 +256,7 @@ export function powerForPostAge(createdAt: string | Date | undefined): SuperPowe
  *   - `stage`   a Stage you are hosting
  *   - `page`    the SuperPowers page itself — no subject to hang off
  *
- * Keyed by the whole union so a fourteenth power cannot be added without
+ * Keyed by the whole union so a new power cannot be added without
  * deciding where it is spent.
  */
 export type PowerHome = 'post' | 'gift' | 'comment' | 'stage' | 'page';
@@ -271,7 +271,6 @@ export const POWER_HOME: Record<SuperPowerKey, PowerHome> = {
   flak_jacket: 'post',
   precision_strike: 'post',
   harpoon: 'post',
-  golden_hour: 'page',
   crew_boost: 'post',
   front_row: 'stage',
   deep_current: 'gift',
