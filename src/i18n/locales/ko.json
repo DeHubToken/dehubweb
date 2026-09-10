@@ -1876,6 +1876,7 @@
       "3d": "3일",
       "7d": "7일",
       "30d": "30일",
+      "1y": "1년",
       "all": "전체 기간"
     },
     "unavailable": {
@@ -2010,7 +2011,6 @@
     "homePage": "여기, 이 페이지 상단에서 사용.",
     "flaresLeft": "플레어",
     "giftedTo": "선물 → #{{id}}",
-    "goldenHourStarted": "골든 아워 {{minutes}}분 동안 진행 중 — 지금 게시하는 모든 내용은 두 배로 계산됩니다.",
     "start": "시작",
     "pickCategory": "카테고리…",
     "trendJacked": "{{category}}이 {{minutes}}분 동안 인기 급상승 중입니다.",
@@ -2031,7 +2031,8 @@
     "noComments": "아직 댓글을 작성하지 않았습니다.",
     "noStages": "현재 진행 중이거나 예약된 스테이지가 없습니다.",
     "noFlaresLeft": "이번 주기에 남은 Signal Flare가 없습니다.",
-    "spentFor": "{{power}} 분 동안 {{minutes}} 실행 중"
+    "spentFor": "{{power}} 분 동안 {{minutes}} 실행 중",
+    "goldenHourStarted": "골든 아워 {{minutes}}분 동안 진행 중 — 지금 게시하는 모든 내용은 두 배로 계산됩니다."
   },
   "work": {
     "budgetExhausted": "이 현상금의 예산이 모두 배정되었습니다.",

@@ -1877,6 +1877,7 @@
       "3d": "3 gün",
       "7d": "7 gün",
       "30d": "30 gün",
+      "1y": "1 yıl",
       "all": "Tüm zamanlar"
     },
     "unavailable": {
@@ -2011,7 +2012,6 @@
     "homePage": "Burada, bu sayfanın üst kısmında harcayın.",
     "flaresLeft": "kıvılcımlar",
     "giftedTo": "hediye → #{{id}}",
-    "goldenHourStarted": "Altın Saat {{minutes}} dakika sürüyor — şimdi paylaştığınız her şey iki katı değerinde",
     "start": "Başlat",
     "pickCategory": "Kategori…",
     "trendJacked": "{{category}} {{minutes}} dakika boyunca trend oluyor",
@@ -2033,7 +2033,8 @@
     "noComments": "Henüz yorum yapmadın.",
     "noStages": "Şu anda yayında veya planlanmış bir Sahnen yok.",
     "noFlaresLeft": "Bu döngüde Sinyal Fişekleri kalmadı",
-    "spentFor": "{{power}} , {{minutes}} dakika boyunca çalışıyor"
+    "spentFor": "{{power}} , {{minutes}} dakika boyunca çalışıyor",
+    "goldenHourStarted": "Altın Saat {{minutes}} dakika sürüyor — şimdi paylaştığınız her şey iki katı değerinde"
   },
   "work": {
     "budgetExhausted": "Bu ödülün bütçesi tamamen tahsis edildi.",

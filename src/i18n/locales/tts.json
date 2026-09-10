@@ -1778,6 +1778,7 @@
       "3d": "3 มื้อ",
       "7d": "7 มื้อ",
       "30d": "30 มื้อ",
+      "1y": "1 year",
       "all": "ตลอดเวลา"
     },
     "unavailable": {
@@ -1912,7 +1913,6 @@
     "homePage": "ใช้ที่นี่ ตรงด้านบนของหน้านี้",
     "flaresLeft": "flares",
     "giftedTo": "gift → #{{id}}",
-    "goldenHourStarted": "Golden Hour กำลังวิ่งไป {{minutes}} นาที — ทุกโพสต์ของเจ้าของตอนนี้จะนับเป็นสองเท่า",
     "start": "Start",
     "pickCategory": "Category…",
     "trendJacked": "{{category}} กำลังเป็นที่นิยมมา {{minutes}} นาที",
@@ -1934,7 +1934,8 @@
     "noComments": "คุณยังไม่ได้คอมเมนต์",
     "noStages": "ไม่มีสเตจของคุณที่กำลังถ่ายทอดสดหรือกำหนดเวลาไว้ในตอนนี้",
     "noFlaresLeft": "ไม่มี Signal Flare เหลือในรอบนี้",
-    "spentFor": "{{power}} กำลังวิ่งเป็นเวลา {{minutes}} นาที"
+    "spentFor": "{{power}} กำลังวิ่งเป็นเวลา {{minutes}} นาที",
+    "goldenHourStarted": "Golden Hour กำลังวิ่งไป {{minutes}} นาที — ทุกโพสต์ของเจ้าของตอนนี้จะนับเป็นสองเท่า"
   },
   "work": {
     "budgetExhausted": "งบของรางวัลนี้ใซ้หมดแล้ว"

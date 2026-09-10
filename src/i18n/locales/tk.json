@@ -1813,6 +1813,7 @@
       "3d": "3 gün",
       "7d": "7 gün",
       "30d": "30 gün",
+      "1y": "Bir ýyl",
       "all": "Ähli döwür"
     },
     "unavailable": {
@@ -1947,7 +1948,6 @@
     "homePage": "Bu ýerde, bu sahypanyň başyny sarp ediň.",
     "flaresLeft": "flares",
     "giftedTo": "sowgat → #{{id}}",
-    "goldenHourStarted": "Altyn sagat {{minutes}} minut dowam edýär — indi goýýan her zadyňyz iki esse artar",
     "start": "Başla",
     "pickCategory": "Kategoriýa…",
     "trendJacked": "{{category}} {{minutes}} minutlap meşhur bolýar",
@@ -1969,7 +1969,8 @@
     "noComments": "Henizem teswir etmediňiz.",
     "noStages": "Siziň sahnasyndan hiç biri şu wagt elýeterli ýa-da meýilleşdirilmän.",
     "noFlaresLeft": "Bu siklda Signal Flares galmady",
-    "spentFor": "{{power}} {{minutes}} minut üçin işleýär"
+    "spentFor": "{{power}} {{minutes}} minut üçin işleýär",
+    "goldenHourStarted": "Altyn sagat {{minutes}} minut dowam edýär — indi goýýan her zadyňyz iki esse artar"
   },
   "work": {
     "budgetExhausted": "Bu sylagyň býujeti doly paýlanyldy."

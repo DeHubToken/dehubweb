@@ -1842,6 +1842,7 @@
       "3d": "ọjọ́ 3",
       "7d": "ọjọ́ 7",
       "30d": "ọjọ́ 30",
+      "1y": "Ọdun 1",
       "all": "Gbogbo àkókò"
     },
     "unavailable": {
@@ -1976,7 +1977,6 @@
     "homePage": "Lo fẹ́ níbí, ní òkè ojú ìwé yìí.",
     "flaresLeft": "flares",
     "giftedTo": "ẹ̀bùn → #{{id}}",
-    "goldenHourStarted": "Golden Hour ń ṣiṣẹ́ fún ìṣẹ́jú {{minutes}} — ohun gbogbo tí o bá kọ̀wé báyì yóò wá ní ẹ̀ẹ́ méjì",
     "start": "Bẹ̀rẹ̀",
     "pickCategory": "Àkójọpọ̀…",
     "trendJacked": "{{category}} ń gbajúmọ̀ fún ìṣẹ́jú {{minutes}}",
@@ -1998,7 +1998,8 @@
     "noComments": "O ko ti ṣe ọrọ kan.",
     "noStages": "Ko si Stage tirẹ ti o n ṣiṣẹ tabi ti a ti ṣe iṣeduro fun ni bayi.",
     "noFlaresLeft": "Ko si Signal Flares ti o ku fun iyalẹnu yii",
-    "spentFor": "{{power}} n ṣiṣẹ fun {{minutes}} awọn iṣẹju"
+    "spentFor": "{{power}} n ṣiṣẹ fun {{minutes}} awọn iṣẹju",
+    "goldenHourStarted": "Golden Hour ń ṣiṣẹ́ fún ìṣẹ́jú {{minutes}} — ohun gbogbo tí o bá kọ̀wé báyì yóò wá ní ẹ̀ẹ́ méjì"
   },
   "work": {
     "budgetExhausted": "Ìsúná ẹ̀bùn yìí ti pin tán."

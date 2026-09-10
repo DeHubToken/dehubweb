@@ -1828,6 +1828,7 @@
       "3d": "3 दिन",
       "7d": "7 दिन",
       "30d": "30 दिन",
+      "1y": "1 साल",
       "all": "जम्मो समय"
     },
     "unavailable": {
@@ -1962,7 +1963,6 @@
     "homePage": "इथे, ए पन्ना के ऊपर म।",
     "flaresLeft": "फलेयर्स",
     "giftedTo": "उपहार → #{{id}}",
-    "goldenHourStarted": "Golden Hour {{minutes}} मिनट ले चलत हे – जे पोस्ट तू करबे ओखर डबल गिने जाही",
     "pickCategory": "श्रेणी…",
     "trendJacked": "{{category}} {{minutes}} मिनट ले ट्रेंड करत हे",
     "actsPost": "आपकी एक पोस्ट पर काम करता है। चुनने के लिए टैप करें।",
@@ -1982,7 +1982,8 @@
     "noComments": "आपने अभी तक टिप्पणी नहीं की है।",
     "noStages": "आपका कोई भी स्टेज अभी लाइव या निर्धारित नहीं है।",
     "noFlaresLeft": "इस चक्र में कोई सिग्नल फ्लेयर्स नहीं बचे हैं",
-    "spentFor": "{{minutes}} मिनट के लिए {{power}} चल रहा है"
+    "spentFor": "{{minutes}} मिनट के लिए {{power}} चल रहा है",
+    "goldenHourStarted": "Golden Hour {{minutes}} मिनट ले चलत हे – जे पोस्ट तू करबे ओखर डबल गिने जाही"
   },
   "work": {
     "budgetExhausted": "ये इनाम के पूरा बजट लग गे हे।"

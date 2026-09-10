@@ -1880,6 +1880,7 @@
       "3d": "3 dias",
       "7d": "7 dias",
       "30d": "30 dias",
+      "1y": "1 ano",
       "all": "Todo o histórico"
     },
     "unavailable": {
@@ -2014,7 +2015,6 @@
     "homePage": "Gaste-o aqui, no topo desta página.",
     "flaresLeft": "flares",
     "giftedTo": "presente → #{{id}}",
-    "goldenHourStarted": "Golden Hour a decorrer durante {{minutes}} minutos — tudo o que publicar agora conta a dobrar",
     "start": "Iniciar",
     "pickCategory": "Categoria…",
     "trendJacked": "{{category}} está em alta há {{minutes}} minutos",
@@ -2036,7 +2036,8 @@
     "noComments": "Você ainda não comentou.",
     "noStages": "Nenhum Stage seu está ativo ou agendado no momento.",
     "noFlaresLeft": "Não restam Sinalizadores neste ciclo",
-    "spentFor": "{{power}} rodando por {{minutes}} minutos"
+    "spentFor": "{{power}} rodando por {{minutes}} minutos",
+    "goldenHourStarted": "Golden Hour a decorrer durante {{minutes}} minutos — tudo o que publicar agora conta a dobrar"
   },
   "work": {
     "budgetExhausted": "O orçamento desta recompensa está totalmente comprometido.",
