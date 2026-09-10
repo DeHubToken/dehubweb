@@ -27,7 +27,13 @@
  * the content div is normally the toast's only in-flow child — the action slot
  * carries its own top margin for the case where it is not.
  */
-export const TOAST_CLASSES = 'flex-col items-stretch text-start';
+export const TOAST_CLASSES = [
+  'flex-col items-stretch text-start',
+  // A loading toast has an icon-sized DeHub mark and one short status label.
+  // Keep those on the same row; the generic column layout used to put the
+  // loader above the copy and made even "Sending tip…" two lines tall.
+  'group-[[data-type=loading]]:flex-row group-[[data-type=loading]]:items-center',
+].join(' ');
 
 /**
  * Desktop only: the card shrinks to its own text, and stays centred while it

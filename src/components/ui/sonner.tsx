@@ -1,6 +1,7 @@
 import { useTheme } from "next-themes";
 import { Toaster as Sonner, toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ButtonLoader } from "@/components/app/DeHubLoader";
 import {
   TOAST_CLASSES,
   TOAST_FIT_CLASSES,
@@ -39,7 +40,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
       position={isMobile ? "top-right" : "top-center"}
       duration={3000}
       visibleToasts={3}
-      expand={false}
+      expand
+      icons={{ loading: <ButtonLoader size={16} /> }}
       toastOptions={{
         classNames: {
           // `group` is what ICON_CLASSES selects the loading case from.
