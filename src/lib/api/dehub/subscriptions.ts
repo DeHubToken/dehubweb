@@ -83,6 +83,81 @@ export interface SubscriptionIntent {
   price: number;
   currency: string;
   decimals?: number;
+  settlementMode?: 'onchain_usdt' | 'dhb_custody';
+  dhbToken?: string;
+  treasuryAddress?: string;
+  dhbAmount?: number;
+  dhbAmountWei?: string;
+  usdtCredit?: number;
+  quoteExpiresAt?: string;
+}
+
+export interface SubscriptionEarnings {
+  currency: 'USDT';
+  payoutChainId: number;
+  pendingUsdt: number;
+  processingUsdt: number;
+  paidUsdt: number;
+  totalEarnedUsdt: number;
+  reserveCovered: boolean;
+  withdrawalAvailable: boolean;
+  withdrawalMessage: string | null;
+}
+
+interface PendingSubscriptionPayment {
+  subId: string;
+  hash: string;
+  chainId: number;
+}
+
+const PENDING_SUBSCRIPTION_PAYMENTS_KEY = 'dehub.pending-subscription-payments.v1';
+
+function pendingSubscriptionPayments(): PendingSubscriptionPayment[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const stored = JSON.parse(localStorage.getItem(PENDING_SUBSCRIPTION_PAYMENTS_KEY) || '[]');
+    return Array.isArray(stored) ? stored : [];
+  } catch {
+    return [];
+  }
+}
+
+function storePendingSubscriptionPayments(payments: PendingSubscriptionPayment[]): void {
+  if (typeof window === 'undefined') return;
+  if (payments.length) {
+    localStorage.setItem(PENDING_SUBSCRIPTION_PAYMENTS_KEY, JSON.stringify(payments));
+  } else {
+    localStorage.removeItem(PENDING_SUBSCRIPTION_PAYMENTS_KEY);
+  }
+}
+
+export function rememberPendingSubscriptionPayment(payment: PendingSubscriptionPayment): void {
+  const payments = pendingSubscriptionPayments().filter((item) => item.subId !== payment.subId);
+  storePendingSubscriptionPayments([...payments, payment]);
+}
+
+export function clearPendingSubscriptionPayment(subId: string): void {
+  storePendingSubscriptionPayments(
+    pendingSubscriptionPayments().filter((payment) => payment.subId !== subId),
+  );
+}
+
+/**
+ * Finish any checkout whose DHB transfer succeeded while the confirmation
+ * request was interrupted. This runs before subscription reads, so reopening
+ * the app credits the existing transfer instead of asking for another one.
+ */
+export async function reconcilePendingSubscriptionPayments(): Promise<void> {
+  const payments = pendingSubscriptionPayments();
+  for (const payment of payments) {
+    try {
+      await confirmSubscriptionPurchase(payment.subId, payment.hash, payment.chainId);
+      clearPendingSubscriptionPayment(payment.subId);
+    } catch {
+      // Keep it for the next authenticated read. The backend is idempotent,
+      // and a failed confirmation must never result in a second DHB payment.
+    }
+  }
 }
 
 type Envelope<T> = Record<string, unknown> | T;
@@ -177,10 +252,41 @@ export async function getMyPlans(creatorAddress: string): Promise<SubscriptionPl
 }
 
 export async function getMySubscriptions(): Promise<Subscription[]> {
+  await reconcilePendingSubscriptionPayments();
   const response = await apiCall<Envelope<Subscription[]>>('/api/subscription/me', {
     requiresAuth: true,
   });
   return unwrap<Subscription[]>(response, 'subscription', 'subscriptions') || [];
+}
+
+export async function getSubscriptionEarnings(): Promise<SubscriptionEarnings> {
+  const response = await apiCall<Envelope<SubscriptionEarnings>>('/api/subscription/earnings', {
+    requiresAuth: true,
+  });
+  return unwrap<SubscriptionEarnings>(response, 'earnings') || {
+    currency: 'USDT',
+    payoutChainId: 8453,
+    pendingUsdt: 0,
+    processingUsdt: 0,
+    paidUsdt: 0,
+    totalEarnedUsdt: 0,
+    reserveCovered: false,
+    withdrawalAvailable: false,
+    withdrawalMessage: 'Subscription fees will be withdrawable soon',
+  };
+}
+
+export async function withdrawSubscriptionEarnings(): Promise<{
+  success: true;
+  amountUsdt: number;
+  txHash: string;
+  status: SubscriptionEarnings;
+}> {
+  return apiCall('/api/subscription/earnings/withdraw', {
+    method: 'POST',
+    body: {},
+    requiresAuth: true,
+  });
 }
 
 export async function getSubscription(subscriptionId: string): Promise<Subscription | undefined> {

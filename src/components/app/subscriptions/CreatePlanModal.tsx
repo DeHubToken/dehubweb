@@ -20,8 +20,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useCreatePlan } from '@/hooks/use-subscriptions';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, isSubscriptionChain } from '@/lib/contracts';
-import { useTokenPrices } from '@/hooks/use-token-prices';
-import { dhbForUsd, formatDhbEstimate, subscriptionPaymentToken } from '@/lib/subscription-pricing';
+import {
+  DHB_PRELISTING_USD,
+  dhbForUsd,
+  formatDhbPayment,
+  subscriptionPaymentToken,
+} from '@/lib/subscription-pricing';
 import dehubCoin from '@/assets/dehub-coin.png';
 import baseLogo from '@/assets/icons/base-logo.png';
 import bnbLogo from '@/assets/icons/bnb-logo.png';
@@ -101,9 +105,8 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
   const [benefits, setBenefits] = useState<string[]>(draft?.benefits ?? ['']);
 
   const createPlanMutation = useCreatePlan();
-  const { data: tokenPrices = {} } = useTokenPrices();
   const numericPrice = Number(price);
-  const dhbEstimate = dhbForUsd(numericPrice, Number(tokenPrices.DHB));
+  const dhbEstimate = dhbForUsd(numericPrice, DHB_PRELISTING_USD);
   const selectedChain = CHAIN_OPTIONS.find((option) => option.chainId === chainId) || CHAIN_OPTIONS[0];
 
   // Auto-save draft on changes
@@ -281,11 +284,11 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-xs text-zinc-400 pointer-events-none">
                 <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-                <span>{price ? formatDhbEstimate(dhbEstimate) : 'DHB'}</span>
+                <span>{price ? formatDhbPayment(dhbEstimate) : 'DHB'}</span>
               </div>
             </div>
             <p className="text-xs text-zinc-500 mt-1.5">
-              {t('subscriptions.youReceiveInFull')}
+              Buyers pay the displayed DHB amount at the pre-listing rate. You receive the USD value as a USDT balance.
             </p>
           </div>
 
