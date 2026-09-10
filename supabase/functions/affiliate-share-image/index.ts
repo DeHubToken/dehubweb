@@ -31,11 +31,11 @@ const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
   "mal": "Meglodon",
   "aaron": "Meglodon",
 };
-function resolveBadgeDataUri(badgeBalance: number | null, username: string | null): string | null {
+function resolveBadge(badgeBalance: number | null, username: string | null): { name: string; dataUri: string } | null {
   if (username) {
     const key = username.replace(/^@+/, "").toLowerCase();
     const override = USERNAME_BADGE_OVERRIDES[key];
-    if (override && BADGE_DATA_URIS[override]) return BADGE_DATA_URIS[override];
+    if (override && BADGE_DATA_URIS[override]) return { name: override, dataUri: BADGE_DATA_URIS[override] };
   }
   if (badgeBalance === null || !Number.isFinite(badgeBalance) || badgeBalance < 10000) return null;
   let current: string | null = null;
@@ -43,7 +43,7 @@ function resolveBadgeDataUri(badgeBalance: number | null, username: string | nul
     if (badgeBalance >= b.min) current = b.name;
     else break;
   }
-  return current ? BADGE_DATA_URIS[current] || null : null;
+  return current && BADGE_DATA_URIS[current] ? { name: current, dataUri: BADGE_DATA_URIS[current] } : null;
 }
 
 let resvgReady: Promise<void> | null = null;
@@ -297,7 +297,7 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
   const bannerDataUri = coverDataUri || (await fetchAsDataUri(pickDefaultBanner(address)));
   const shareUrl = rawCode ? `${SITE}/r/${rawCode}` : SITE;
   const { path: qrPath, count: qrCount } = await buildQrSvgInner(shareUrl);
-  const badgeDataUri = resolveBadgeDataUri(badgeBalance, username);
+  const badge = resolveBadge(badgeBalance, username);
 
   const svg = buildInviteSvg({
     code: rawCode,
@@ -305,7 +305,8 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
     username,
     avatarDataUri,
     bannerDataUri,
-    badgeDataUri,
+    badgeDataUri: badge?.dataUri ?? null,
+    badgeName: badge?.name ?? null,
     qrPath,
     qrCount,
     width,

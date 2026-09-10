@@ -7,6 +7,7 @@ export interface InviteImageOptions {
   avatarDataUri: string | null;
   bannerDataUri: string | null;
   badgeDataUri: string | null;
+  badgeName: string | null;
   qrPath: string;
   qrCount: number;
   width: number;
@@ -55,6 +56,20 @@ export function buildInviteSvg(opts: InviteImageOptions): string {
   const qrInset = qrQuietModules * qrScale;
   const fitted = (value: ReturnType<typeof fitInviteText>) =>
     `font-size="${value.fontSize}" textLength="${value.width}" lengthAdjust="spacingAndGlyphs"`;
+  const badgeOptics: Record<string, { scale: number; bottomInset: number }> = {
+    Crab: { scale: 1, bottomInset: 5 }, Lobster: { scale: 1.04, bottomInset: 4 },
+    Piranha: { scale: 1, bottomInset: 7 }, Tortoise: { scale: 1, bottomInset: 10 },
+    Cobra: { scale: 1, bottomInset: 4 }, Octopus: { scale: 1.02, bottomInset: 4 },
+    Crocodite: { scale: 1, bottomInset: 10 }, Dolphin: { scale: 1.03, bottomInset: 4 },
+    "Tiger Shark": { scale: 1.03, bottomInset: 5 }, "Killer Whale": { scale: 1.04, bottomInset: 6 },
+    "Great White Shark": { scale: 1.04, bottomInset: 4 }, "Blue Whale": { scale: 1.1, bottomInset: 11 },
+    Meglodon: { scale: 1.08, bottomInset: 4 },
+  };
+  const badgeOptic = opts.badgeName ? badgeOptics[opts.badgeName] : undefined;
+  const badgeSize = 58 * (badgeOptic?.scale ?? 1);
+  // The visible animal/check artwork, not its transparent PNG canvas, shares
+  // the display-name baseline. This mirrors BadgeIcon in the product UI.
+  const badgeY = 219 - badgeSize + ((badgeOptic?.bottomInset ?? 0) / 128) * badgeSize;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${opts.width}" height="${opts.height}" viewBox="0 0 ${opts.width} ${opts.height}" font-family="Inter, Arial, sans-serif">
@@ -73,7 +88,7 @@ export function buildInviteSvg(opts: InviteImageOptions): string {
     <rect x="64" y="171" width="246" height="246" rx="28" fill="#25272c"/>
     <text x="187" y="330" fill="#fff" font-size="112" font-weight="700" text-anchor="middle">${escapeXml(Array.from(hasIdentity ? opts.name : "DeHub")[0]?.toUpperCase() || "D")}</text>`}
     <text x="366" y="219" fill="#fff" font-weight="700" ${fitted(name)}>${escapeXml(name.text)}</text>
-    ${opts.badgeDataUri ? `<image href="${escapeXml(opts.badgeDataUri)}" x="${366 + name.width + 16}" y="158" width="40" height="40" preserveAspectRatio="xMidYMid meet"/>` : ""}
+    ${opts.badgeDataUri ? `<image href="${escapeXml(opts.badgeDataUri)}" x="${366 + name.width + 10}" y="${badgeY}" width="${badgeSize}" height="${badgeSize}" preserveAspectRatio="xMidYMid meet"/>` : ""}
     ${handle.text ? `<text x="366" y="271" fill="#bdc0c5" ${fitted(handle)}>${escapeXml(handle.text)}</text>` : ""}
     <text x="366" y="365" fill="#fff" font-size="56" font-weight="700">${hasIdentity ? "Join me on DeHub." : "You’re invited."}</text>
     <path d="M64 464H917" stroke="#56595e"/>
