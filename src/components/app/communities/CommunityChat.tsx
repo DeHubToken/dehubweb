@@ -777,11 +777,11 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                       </button>
                        <div className="min-w-0 flex-1">
                         <span className="inline-flex items-baseline gap-1.5">
-                          <span className="relative inline-flex items-baseline shrink min-w-0 pr-3">
+                          <span className="inline-flex items-center gap-1 shrink min-w-0">
                             <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white truncate ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>
                               {name}
                             </button>
-                            <BadgeIcon badgeBalance={(msg as any).badge_balance} username={msg.username} className="w-[9px] h-[9px] absolute -top-0.5 -right-0" />
+                            <BadgeIcon badgeBalance={(msg as any).badge_balance} username={msg.username} className="w-[1em] h-[1em]" />
                           </span>
                           <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
                           {isPinned && (
