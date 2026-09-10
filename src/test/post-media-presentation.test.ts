@@ -32,7 +32,7 @@ describe('post media presentation', () => {
 
     expect(metadata).toContain('className?: string');
     for (const card of cards) {
-      expect(card).toContain('className="mt-3"');
+      expect(card).toContain('className="!mt-3"');
     }
   });
 });

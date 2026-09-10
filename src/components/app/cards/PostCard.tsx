@@ -689,7 +689,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
 
         {/* Metadata: timestamp and views */}
         <PostMetadata
-          className="mt-3"
+          className="!mt-3"
           timestamp={post.createdAt}
           viewCount={post.views}
           tokenId={post.id}
