@@ -125,9 +125,7 @@ export function ProfileContentToolbar({
 
   return (
     <div className="mb-3 space-y-2">
-      <div className="flex gap-2">
-        <div className="flex min-w-0 flex-1 gap-2 sm:max-w-md">
-          <div className="relative flex-1 min-w-0">
+      <div className="relative min-w-0 w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
             <input
               type="search"
@@ -147,8 +145,16 @@ export function ProfileContentToolbar({
                 <X className="w-3.5 h-3.5" />
               </button>
             )}
-          </div>
+      </div>
 
+      <GlassFilterRow
+        items={sortItems}
+        activeKey={sort}
+        onSelect={onSortChange}
+        className="-mx-2 min-w-0"
+        borderRadius="0.75rem"
+        buttonClassName="h-9 px-3 py-0 rounded-xl text-xs"
+        trailingContent={(
           <button
             type="button"
             onClick={() => onFiltersOpenChange(!filtersOpen)}
@@ -169,17 +175,7 @@ export function ProfileContentToolbar({
               <span className="relative z-10 text-xs font-medium">{activeFilterCount}</span>
             )}
           </button>
-        </div>
-
-      </div>
-
-      <GlassFilterRow
-        items={sortItems}
-        activeKey={sort}
-        onSelect={onSortChange}
-        className="-mx-2 min-w-0"
-        borderRadius="0.75rem"
-        buttonClassName="h-9 px-3 py-0 rounded-xl text-xs"
+        )}
       />
 
       {!isMobile && (
