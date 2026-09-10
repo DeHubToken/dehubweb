@@ -1,5 +1,5 @@
 import {
-  UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check, Ban
+  UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check, Ban, MessageCircle
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
@@ -128,6 +128,32 @@ export function ProfileHeader({
   const navigate = useNavigate();
 
   const { t } = useTranslation();
+  const messageSettings = (apiProfile as (ProfileData & {
+    dmSettings?: { disables?: string[] } | Array<{ disables?: string[] }>;
+    dmSetting?: { disables?: string[] } | Array<{ disables?: string[] }>;
+  }) | undefined)?.dmSettings ?? (apiProfile as (ProfileData & {
+    dmSetting?: { disables?: string[] } | Array<{ disables?: string[] }>;
+  }) | undefined)?.dmSetting;
+  const dmDisables = Array.isArray(messageSettings)
+    ? messageSettings[0]?.disables
+    : messageSettings?.disables;
+  // NEW_DM closes new conversations as well as ALL. Existing threads remain
+  // available in Messages, but this profile control always starts a new one.
+  const canStartDirectMessage = !dmDisables?.some((value) => {
+    const status = value.toUpperCase();
+    return status === 'ALL' || status === 'NEW_DM';
+  });
+  const openDirectMessage = () => {
+    if (!isAuthenticated) {
+      setLoginModalOpen(true);
+      return;
+    }
+    const address = apiProfile?.walletAddress ?? profile.walletAddress;
+    if (!address) return;
+    navigate('/app/messages', {
+      state: { openDmWith: address, username: profile.handle },
+    });
+  };
   const [showUnfollowConfirm, setShowUnfollowConfirm] = useState(false);
   const [avatarFailed, setAvatarFailed] = useState(false);
   const [avatarCdnFailed, setAvatarCdnFailed] = useState(false);
@@ -342,6 +368,17 @@ export function ProfileHeader({
                     </Button>
                   )}
                 </>
+              )}
+              {!isViewingOwnProfile && !isBlocked && canStartDirectMessage && (
+                <Button
+                  variant="glass"
+                  size="icon"
+                  className="rounded-xl h-9 w-9"
+                  onClick={openDirectMessage}
+                  aria-label={t('messages.message', 'Message')}
+                >
+                  <MessageCircle className="w-4 h-4" />
+                </Button>
               )}
               <Drawer open={shareSheetOpen} onOpenChange={(open) => {
                 if (!isAuthenticated && open) {
