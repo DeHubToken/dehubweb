@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { TOAST_FIT_CLASSES, TOASTER_COLUMN_CLASSES } from '@/components/ui/toast-classes';
+import { TOAST_CLASSES, TOAST_FIT_CLASSES, TOASTER_COLUMN_CLASSES } from '@/components/ui/toast-classes';
 
 describe('desktop toast positioning', () => {
+  it('keeps loading indicators and their status on one row', () => {
+    expect(TOAST_CLASSES).toContain('group-[[data-type=loading]]:flex-row');
+    expect(TOAST_CLASSES).toContain('group-[[data-type=loading]]:items-center');
+  });
+
   it('only applies the app-column anchor to centered toaster groups', () => {
     expect(TOASTER_COLUMN_CLASSES).toContain('data-[x-position=center]:left-');
     expect(TOASTER_COLUMN_CLASSES).not.toMatch(/^left-/);
