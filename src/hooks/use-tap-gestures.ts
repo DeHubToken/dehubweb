@@ -46,7 +46,9 @@ const LONG_PRESS_MS = 400;
  * carousel the competing gesture starts almost immediately, and a "tap" that
  * survived 20px of travel is usually a failed swipe rather than a tap.
  */
-const MOVE_SLOP_PX = 10;
+// 14px absorbs ordinary thumb jitter on high-density phone screens while
+// remaining far below the travel of an intentional carousel swipe.
+const MOVE_SLOP_PX = 14;
 
 export interface UseTapGesturesOptions {
   postId?: string | number;
