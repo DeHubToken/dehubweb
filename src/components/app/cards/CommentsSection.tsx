@@ -408,7 +408,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
             <BadgedName
               badgeBalance={comment.badgeBalance}
               username={comment.username}
-              className="font-semibold text-white text-sm max-w-[120px] leading-tight"
+              className="font-semibold text-white text-base max-w-[140px] leading-5"
             >
               {shownName}
             </BadgedName>
@@ -439,9 +439,9 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
             </span>
           )}
           {comment.displayName && (
-            <span data-war-readout className="text-zinc-500 text-xs truncate max-w-[100px]">@{comment.username}</span>
+            <span data-war-readout className="text-zinc-500 text-[13px] leading-5 truncate max-w-[110px]">@{comment.username}</span>
           )}
-          <span data-war-readout className="text-zinc-500 text-xs">{comment.timeAgo}</span>
+          <span data-war-readout className="text-zinc-500 text-[13px] leading-5">{comment.timeAgo}</span>
         </div>
         {isEditing ? (
           <div className="flex items-center gap-2 mt-1">
@@ -481,7 +481,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
             {commentDisplayText && (
               <TranslatableText
                 text={commentDisplayText}
-                className="text-zinc-300 text-sm leading-relaxed break-words"
+                className="text-zinc-300 text-base leading-6 break-words"
                 as="p"
                 hideControls
                 auto={false}
