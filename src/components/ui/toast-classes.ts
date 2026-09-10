@@ -124,7 +124,10 @@ export const ICON_CLASSES = 'hidden group-[[data-type=loading]]:flex';
  * SLOT_BUTTON_CLASSES.
  */
 export const BUTTON_CLASSES = [
-  'inline-flex h-9 w-full items-center justify-center px-4',
+  // Paired toast actions share a narrow row. Never let a label make one
+  // button taller than its neighbour; min-width lets flex divide the row and
+  // truncation is the final guard for unusually long translations.
+  'inline-flex h-9 min-w-0 w-full flex-1 items-center justify-center overflow-hidden whitespace-nowrap text-ellipsis px-4',
   'rounded-lg border border-white/30',
   'bg-gradient-to-br from-white/20 via-white/10 to-white/5',
   'backdrop-blur-xl',
