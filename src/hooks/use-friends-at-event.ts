@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
-import { getAccountInfo } from '@/lib/api/dehub/users';
+import { getAccountSummaries } from '@/lib/api/dehub/users';
 import { buildAvatarUrl } from '@/lib/media-url';
 
 export interface FriendAtEvent {
@@ -54,24 +54,16 @@ export function useFriendsAtEvent(eventId: string | undefined) {
       if (friendAddresses.length === 0) return [];
 
       // Resolve avatars
-      const resolved = await Promise.allSettled(
-        friendAddresses.map(async (addr) => {
-          try {
-            const info = await getAccountInfo(addr);
-            const avatarPath = (info as any)?.avatarImageUrl || (info as any)?.avatarUrl || (info as any)?.avatar_url;
-            return {
-              address: addr,
-              avatarUrl: buildAvatarUrl(addr, avatarPath),
-            };
-          } catch {
-            return { address: addr };
-          }
-        })
-      );
-
-      return resolved
-        .filter(r => r.status === 'fulfilled')
-        .map(r => (r as PromiseFulfilledResult<FriendAtEvent>).value);
+      try {
+        const profiles = await getAccountSummaries(friendAddresses);
+        const byAddress = new Map(profiles.map(profile => [profile.address.toLowerCase(), profile]));
+        return friendAddresses.map(address => ({
+          address,
+          avatarUrl: buildAvatarUrl(address, byAddress.get(address)?.avatarImageUrl || undefined),
+        }));
+      } catch {
+        return friendAddresses.map(address => ({ address }));
+      }
     },
   });
 }

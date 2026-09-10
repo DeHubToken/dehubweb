@@ -10,7 +10,7 @@
  */
 
 import { useMemo, useState } from 'react';
-import { useQueries } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { ChevronRight, Crown, Search, Shield, User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -19,7 +19,7 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useCommunityMembers, type Community, type CommunityMember } from '@/hooks/use-communities';
 import { useCommunityAbilities, ADMIN_RIGHTS } from '@/hooks/use-community-admin';
 import { useDeHubProfile, mapUserToProfile, type ProfileData } from '@/hooks/use-dehub-profile';
-import { getAccountInfo } from '@/lib/api/dehub';
+import { getAccountSummaries } from '@/lib/api/dehub';
 import { BadgedName } from '@/components/app/BadgedName';
 import { AppState } from '@/components/app/AppState';
 import { AdminRightsDialog } from './AdminRightsDialog';
@@ -140,12 +140,13 @@ function AdminRow({
 function CandidateRow({
   member,
   onPromote,
+  profile,
 }: {
   member: CommunityMember;
   onPromote: (member: CommunityMember) => void;
+  profile?: ProfileData | null;
 }) {
   const { t } = useTranslation();
-  const { data: profile } = useDeHubProfile({ userId: member.wallet_address });
   const displayName = profile?.name || shortAddress(member.wallet_address);
 
   return (
@@ -208,37 +209,23 @@ export function AdministratorsTab({ community, membership }: AdministratorsTabPr
 
   const query = debouncedSearch.trim().toLowerCase();
 
-  // Shares the cache key with useDeHubProfile, so the rows we end up painting
-  // read straight out of this fan-out instead of refetching.
-  const profileQueries = useQueries({
-    queries: pool.map((member) => ({
-      queryKey: ['dehub-profile', member.wallet_address, undefined],
-      queryFn: async (): Promise<ProfileData | null> => {
-        try {
-          return mapUserToProfile(await getAccountInfo(member.wallet_address));
-        } catch {
-          return null;
-        }
-      },
-      enabled: query.length > 0,
-      staleTime: 5 * 60_000,
-      retry: 1,
-    })),
+  const { data: profileSummaries = [], isLoading: searching } = useQuery({
+    queryKey: ['community-admin-candidate-profiles', community.id, pool.map(member => member.wallet_address).join(',')],
+    queryFn: () => getAccountSummaries(pool.map(member => member.wallet_address)),
+    enabled: query.length > 0 && pool.length > 0,
+    staleTime: 5 * 60_000,
+    retry: 1,
   });
-
-  // useQueries widens its result element type depending on the version, so the
-  // one place it is read gets an explicit shape.
-  const profileAt = (index: number): ProfileData | null =>
-    (profileQueries[index]?.data as ProfileData | null | undefined) ?? null;
-
-  /** Name matches only land once the fan-out resolves — say so rather than "no matches". */
-  const searching = query.length > 0 && profileQueries.some((result) => result.isLoading);
+  const profiles = useMemo(() => new Map(profileSummaries.map(summary => [
+    summary.address.toLowerCase(),
+    mapUserToProfile(summary as any),
+  ])), [profileSummaries]);
 
   const candidates: CommunityMember[] = [];
   for (let i = 0; i < pool.length && candidates.length < MAX_RESULTS; i++) {
     const member = pool[i];
     if (query) {
-      const profile = profileAt(i);
+      const profile = profiles.get(member.wallet_address.toLowerCase());
       const haystack = [member.wallet_address, profile?.name ?? '', profile?.handle ?? '']
         .join(' ')
         .toLowerCase();
@@ -337,7 +324,12 @@ export function AdministratorsTab({ community, membership }: AdministratorsTabPr
               )
             ) : (
               candidates.map((member) => (
-                <CandidateRow key={member.id} member={member} onPromote={openFor} />
+                <CandidateRow
+                  key={member.id}
+                  member={member}
+                  profile={profiles.get(member.wallet_address.toLowerCase())}
+                  onPromote={openFor}
+                />
               ))
             )}
           </div>

@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getDPayTransactions, type DPayTransaction } from '@/lib/api/dpay';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { getAccountInfo } from '@/lib/api/dehub/users';
+import { getAccountSummaries } from '@/lib/api/dehub/users';
 import { getNotifications } from '@/lib/api/dehub/notifications';
 import { format, subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import { useState, useMemo } from 'react';
@@ -149,15 +149,13 @@ export function RecentTransactions() {
     queryFn: async () => {
       const map: Record<string, string> = {};
       const toResolve = counterpartyAddresses.slice(0, 10);
-      const results = await Promise.allSettled(
-        toResolve.map(async (addr) => {
-          try {
-            const user = await getAccountInfo(addr);
-            if (user?.username) map[addr] = user.username;
-            else if (user?.displayName) map[addr] = user.displayName;
-          } catch { /* ignore */ }
-        })
-      );
+      try {
+        const users = await getAccountSummaries(toResolve);
+        users.forEach(user => {
+          if (user.username) map[user.address.toLowerCase()] = user.username;
+          else if (user.displayName) map[user.address.toLowerCase()] = user.displayName;
+        });
+      } catch { /* keep shortened addresses */ }
       return map;
     },
     enabled: counterpartyAddresses.length > 0,
