@@ -396,7 +396,7 @@ export default function YoutubeMigratePage() {
       } else {
         if (!q.recipient) throw new Error('Payments are not configured right now.');
         const { payDhb } = await import('@/lib/dhb-payment');
-        toast.loading(`Paying ${q.amountDhb.toLocaleString()} DHB to migrate ${q.videoCount} video${q.videoCount === 1 ? '' : 's'}`, {
+        toast.loading(`Paying ${q.amountDhb.toLocaleString()} DHB...`, {
           id: 'migration-pay',
           duration: Infinity,
         });
