@@ -364,6 +364,18 @@ describe('what the ladder refuses to claim', () => {
     expect(onSingleTap).toHaveBeenCalledTimes(1);
   });
 
+  it('tolerates realistic thumb jitter on a phone', () => {
+    const onSingleTap = vi.fn();
+    const h = mountGesture({ postId: '7', onSingleTap });
+    act(() => {
+      h.current!.onPointerDown(pointer(50, 50));
+      h.current!.onPointerMove(pointer(61, 57));
+      h.current!.onPointerUp(pointer(61, 57));
+    });
+    act(() => void vi.advanceTimersByTime(400));
+    expect(onSingleTap).toHaveBeenCalledTimes(1);
+  });
+
   it('ignores a second finger', () => {
     const h = mountGesture({ postId: '7' });
     act(() => h.current!.onPointerDown(pointer(50, 50, 1)));
