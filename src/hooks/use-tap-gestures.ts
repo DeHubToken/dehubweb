@@ -50,6 +50,15 @@ const LONG_PRESS_MS = 400;
 // remaining far below the travel of an intentional carousel swipe.
 const MOVE_SLOP_PX = 14;
 
+/** Controls nested inside the media own their pointer stream. In particular,
+ * a range input bubbles pointer events to the video surface even though its
+ * click is stopped, which previously made a seek also toggle playback. */
+function isMediaControl(target: EventTarget | null) {
+  return !!(target as HTMLElement | null)?.closest?.(
+    'button, a, input, textarea, [role="button"], [data-video-controls]',
+  );
+}
+
 export interface UseTapGesturesOptions {
   postId?: string | number;
   /**
@@ -116,6 +125,10 @@ export function useTapGestures({
 
   const onPointerDown = useCallback(
     (event: React.PointerEvent) => {
+      if (isMediaControl(event.target)) {
+        reset();
+        return;
+      }
       if (disabled || !id) return;
       // A second finger means a pinch or a two-finger scroll, never a tap.
       if (origin.current && origin.current.id !== event.pointerId) {
@@ -160,6 +173,10 @@ export function useTapGestures({
 
   const onPointerUp = useCallback(
     (event: React.PointerEvent) => {
+      if (isMediaControl(event.target)) {
+        reset();
+        return;
+      }
       if (holdTimer.current) {
         clearTimeout(holdTimer.current);
         holdTimer.current = null;
@@ -241,7 +258,7 @@ export function useTapGestures({
       emitTapReactionFeedback(id, 'love', point);
       emitTapReaction(id, 'love', point);
     },
-    [disabled, id, onSingleTap, onUndoSingleTap],
+    [disabled, id, onSingleTap, onUndoSingleTap, reset],
   );
 
   const onPointerCancel = useCallback(() => {

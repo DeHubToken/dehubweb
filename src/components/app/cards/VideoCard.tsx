@@ -2018,7 +2018,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 value={currentTime}
                 onChange={handleSeek}
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 h-1 bg-white/30 rounded-full appearance-none cursor-pointer
+                aria-label="Video progress"
+                className="flex-1 h-6 bg-transparent rounded-full appearance-none cursor-pointer touch-none
                   [&::-webkit-slider-thumb]:appearance-none 
                   [&::-webkit-slider-thumb]:w-3 
                   [&::-webkit-slider-thumb]:h-3 
@@ -2031,7 +2032,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   [&::-moz-range-thumb]:rounded-full
                   [&::-moz-range-thumb]:border-0"
                 style={{
-                  background: `linear-gradient(to right, white ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.3) ${(currentTime / (duration || 1)) * 100}%)`
+                  backgroundImage: `linear-gradient(to right, white ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.3) ${(currentTime / (duration || 1)) * 100}%)`,
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: '100% 4px',
                 }}
               />
               <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(duration)}</span>
