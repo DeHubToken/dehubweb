@@ -42,6 +42,10 @@ function pointer(x: number, y: number, id = 1) {
   return { clientX: x, clientY: y, pointerId: id } as unknown as React.PointerEvent;
 }
 
+function controlPointer(target: HTMLElement, x = 50, y = 50, id = 1) {
+  return { clientX: x, clientY: y, pointerId: id, target } as unknown as React.PointerEvent;
+}
+
 function tapAt(h: ReturnType<typeof mountGesture>, x = 50, y = 50, id = 1) {
   act(() => {
     h.current!.onPointerDown(pointer(x, y, id));
@@ -312,6 +316,22 @@ describe('the tap ladder', () => {
 });
 
 describe('what the ladder refuses to claim', () => {
+  it('leaves nested video controls and the seek slider fully interactive', () => {
+    const onSingleTap = vi.fn();
+    const h = mountGesture({ postId: '7', onSingleTap, onUndoSingleTap: vi.fn() });
+    const slider = document.createElement('input');
+    slider.type = 'range';
+
+    act(() => {
+      h.current!.onPointerDown(controlPointer(slider));
+      h.current!.onPointerUp(controlPointer(slider));
+    });
+    act(() => void vi.advanceTimersByTime(500));
+
+    expect(onSingleTap).not.toHaveBeenCalled();
+    expect(casts).toEqual([]);
+  });
+
   it('abandons the gesture once the finger travels — that is a scroll', () => {
     // The shorts carousel drags vertically on this same element.
     const onSingleTap = vi.fn();
