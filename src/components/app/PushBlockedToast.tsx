@@ -66,7 +66,7 @@ function show(goToSettings: () => void): void {
             'Your system is blocking notifications for this browser, so nothing reaches you while DeHub is closed. Turn them back on for your browser in your system notification settings, then switch DeHub notifications off and on again.',
           )}
         </span>
-        <span className="flex flex-col gap-2">
+        <span className="flex flex-row gap-2">
           <button
             type="button"
             className={BUTTON_CLASSES}

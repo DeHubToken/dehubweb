@@ -16,8 +16,6 @@
  */
 
 import { toast } from 'sonner';
-import { DeHubLoader } from '@/components/app/DeHubLoader';
-
 const TOAST_ID = 'stage-recording-upload';
 
 /**
@@ -34,17 +32,11 @@ function corner(): { position?: 'bottom-right' } {
 
 /** The upload has started: recording is the only copy, keep the tab open. */
 export function showRecordingUploading(): void {
-  toast.message('Saving stage recording', {
+  toast.loading('Uploading recording', {
     id: TOAST_ID,
     // Stays until the upload resolves it one way or the other.
     duration: Infinity,
     ...corner(),
-    description: (
-      <span className="flex items-center gap-3">
-        <DeHubLoader size={28} className="shrink-0" />
-        <span>Keep this tab open — the recording is uploading.</span>
-      </span>
-    ),
   });
 }
 
@@ -54,7 +46,7 @@ export function showRecordingSaved(): void {
     id: TOAST_ID,
     duration: 6_000,
     ...corner(),
-    description: "It's safe to close this tab. The stage will appear under Recorded shortly.",
+    description: "It's safe to close this tab.",
   });
 }
 
@@ -65,7 +57,7 @@ export function showRecordingFailed(): void {
     duration: Infinity,
     closeButton: true,
     ...corner(),
-    description: 'The upload failed after retrying. The recording could not be kept.',
+    description: 'The recording could not be kept after retrying.',
   });
 }
 

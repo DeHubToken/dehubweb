@@ -90,7 +90,7 @@ async function showUpdateToast(version: BuildVersion, isMobile: boolean): Promis
     description: (
       <span className="flex flex-col gap-3">
         <span>{note}</span>
-        <span className="flex flex-col gap-2">
+        <span className="flex flex-row gap-2">
           <button
             type="button"
             className={BUTTON_CLASSES}
