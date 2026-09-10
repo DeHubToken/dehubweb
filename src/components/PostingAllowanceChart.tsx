@@ -82,7 +82,7 @@ const PostingAllowanceChart = () => (
                   aria-hidden="true"
                   loading="lazy"
                   decoding="async"
-                  className="w-8 h-8 object-contain dark:invert flex-shrink-0"
+                  className="w-8 h-8 object-contain flex-shrink-0"
                 />
               ) : (
                 <div className="w-8 h-8 rounded-full bg-muted border border-border flex-shrink-0" />

@@ -223,7 +223,7 @@ const CampaignCreator = () => {
                 {badgeTiers.map(tier => <div key={tier.name} className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${selectedTiers.includes(tier.name) ? 'border-white bg-white/5' : 'border-white/10'}`} onClick={() => handleTierToggle(tier.name)}>
                     <div className="flex items-center space-x-2 mb-3">
                       <Checkbox checked={selectedTiers.includes(tier.name)} onChange={() => handleTierToggle(tier.name)} />
-                      {badgeImages[tier.name] ? <img src={badgeImages[tier.name]} alt={tier.name} className="w-6 h-6 object-contain dark:invert" /> : <div className="w-6 h-6 rounded-full bg-zinc-300"></div>}
+                      {badgeImages[tier.name] ? <img src={badgeImages[tier.name]} alt={tier.name} className="w-6 h-6 object-contain" /> : <div className="w-6 h-6 rounded-full bg-zinc-300"></div>}
                       <span className="font-medium text-sm">
                         {tier.name === 'No Badge' ? t('adTools.noBadge') : fill(t('adTools.tierBadge'), { tier: tier.name })}
                       </span>
