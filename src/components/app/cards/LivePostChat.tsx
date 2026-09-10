@@ -417,7 +417,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                   <LiveChatAvatar src={avatarUrl} address={msg.sender_address} name={displayName} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-1.5">
-                      <span className="relative inline-flex items-end gap-1 shrink min-w-0 pr-3">
+                      <span className="relative inline-flex items-baseline gap-1 shrink min-w-0 pr-3">
                         <span className="text-xs font-semibold text-white truncate max-w-[120px]">
                           {displayName}
                         </span>

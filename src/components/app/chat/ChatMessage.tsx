@@ -292,7 +292,7 @@ export const ChatMessage = memo(function ChatMessage({
         )}
 
         <div className="flex items-baseline gap-2">
-          <span className="relative inline-flex items-end gap-1 shrink min-w-0 pr-3">
+          <span className="relative inline-flex items-baseline gap-1 shrink min-w-0 pr-3">
             <button
               onClick={handleProfileClick}
               disabled={!isClickable}
