@@ -10,7 +10,7 @@ import { useState, useCallback, useMemo, useRef } from 'react';
 import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { getAccountByUsername } from '@/lib/api/dehub';
+import { getAccountSummaries, type AccountSummary } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 
 // Template bot avatar imports
@@ -96,25 +96,6 @@ const avatarCache = new Map<string, string>();
  * Fetch fresh avatar for a user from DeHub API by username.
  * Results are cached in a module-level Map so they persist across remounts.
  */
-async function fetchFreshAvatarByUsername(username: string): Promise<string | null> {
-  const key = username.toLowerCase();
-
-  // Return cached value immediately
-  const cached = avatarCache.get(key);
-  if (cached) return cached;
-
-  try {
-    const user = await getAccountByUsername(username);
-    const rawAvatar = user.avatarImageUrl || user.avatarUrl || user.avatar_url;
-    const address = user.address || user.wallet_address || '';
-    const url = buildAvatarUrl(address, rawAvatar);
-    if (url) avatarCache.set(key, url);
-    return url;
-  } catch {
-    return null;
-  }
-}
-
 /**
  * Template story video URLs mapped by agent username.
  * These videos are shown as stories for template agents.
@@ -343,14 +324,21 @@ export function useStories({ enrichAvatars = true }: { enrichAvatars?: boolean }
       const storiesWithUsernames = activeStories.filter(s => s.username);
       if (storiesWithUsernames.length === 0) return activeStories;
 
-      // Fetch fresh avatars by username in parallel (module-level cache handles dedup)
+      // Resolve all uncached story avatars in one compact request.
       const avatarMap = new Map<string, string | null>();
-      await Promise.all(
-        [...new Set(storiesWithUsernames.map(s => s.username!))].map(async (username) => {
-          const freshAvatar = await fetchFreshAvatarByUsername(username);
-          avatarMap.set(username.toLowerCase(), freshAvatar);
-        })
-      );
+      const uncached = storiesWithUsernames.filter(story => !avatarCache.has(story.username!.toLowerCase()));
+      const profiles: AccountSummary[] = await getAccountSummaries(uncached.map(story => story.wallet_address)).catch(() => []);
+      const profileByAddress = new Map(profiles.map(profile => [profile.address.toLowerCase(), profile] as const));
+      for (const story of storiesWithUsernames) {
+        const key = story.username!.toLowerCase();
+        let avatar = avatarCache.get(key) || null;
+        if (!avatar) {
+          const profile = profileByAddress.get(story.wallet_address.toLowerCase());
+          avatar = profile ? buildAvatarUrl(profile.address, profile.avatarImageUrl || undefined) : null;
+          if (avatar) avatarCache.set(key, avatar);
+        }
+        avatarMap.set(key, avatar);
+      }
 
       return activeStories.map(story => {
         if (!story.username) return story;

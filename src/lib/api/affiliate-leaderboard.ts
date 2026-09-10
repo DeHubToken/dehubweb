@@ -21,7 +21,7 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
-import { getAccountInfo } from '@/lib/api/dehub';
+import { getAccountSummaries, type AccountSummary } from '@/lib/api/dehub';
 import type { LeaderboardEntry, LeaderboardPeriod } from '@/lib/api/dehub';
 
 /** Referral rows read per request. Well above the live row count. */
@@ -97,19 +97,12 @@ export async function getAffiliateLeaderboard(
   // profile miss is not an error here — the row falls back to a short address,
   // the same as any wallet-only entry elsewhere on the page.
   const resolvable = ranked.slice(0, MAX_PROFILE_LOOKUPS);
-  const profiles = await Promise.all(
-    resolvable.map(async (row) => {
-      try {
-        return await getAccountInfo(row.account);
-      } catch {
-        return null;
-      }
-    })
-  );
+  const profiles: AccountSummary[] = await getAccountSummaries(resolvable.map(row => row.account)).catch(() => []);
+  const profileByAddress = new Map(profiles.map(profile => [profile.address.toLowerCase(), profile] as const));
 
   return ranked
-    .map((row, index) => {
-      const profile = index < profiles.length ? profiles[index] : null;
+    .map((row) => {
+      const profile = profileByAddress.get(row.account.toLowerCase());
       return {
         account: row.account,
         total: row.directReferrals,

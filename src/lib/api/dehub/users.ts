@@ -20,14 +20,31 @@ export interface AccountSummary {
   username?: string | null;
   displayName?: string | null;
   avatarImageUrl?: string | null;
+  badgeBalance?: number | null;
+  isBanned?: boolean;
 }
 
 /** Lightweight identity lookup for notification actors. */
 export async function getAccountSummaries(addresses: string[]): Promise<AccountSummary[]> {
   if (addresses.length === 0) return [];
+  const unique = [...new Set(addresses.filter(Boolean).map(address => address.toLowerCase()))];
+  const batches: string[][] = [];
+  for (let start = 0; start < unique.length; start += 100) {
+    batches.push(unique.slice(start, start + 100));
+  }
+  const responses = await Promise.all(batches.map(batch => apiCall<{ result: AccountSummary[] }>('/api/account_info/batch', {
+      method: 'POST',
+      body: { addresses: batch },
+    })));
+  return responses.flatMap(response => response?.result || []);
+}
+
+export async function getAccountSummariesByUsernames(usernames: string[]): Promise<AccountSummary[]> {
+  if (usernames.length === 0) return [];
+  const unique = [...new Set(usernames.filter(Boolean).map(username => username.replace(/^@/, '').trim().toLowerCase()))];
   const response = await apiCall<{ result: AccountSummary[] }>('/api/account_info/batch', {
     method: 'POST',
-    body: { addresses },
+    body: { usernames: unique.slice(0, 100) },
   });
   return response?.result || [];
 }
