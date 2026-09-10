@@ -18,6 +18,7 @@ interface GlassFilterRowProps<T extends string> {
   className?: string;
   buttonClassName?: string;
   borderRadius?: string;
+  trailingContent?: React.ReactNode;
 }
 
 export function GlassFilterRow<T extends string>({
@@ -28,6 +29,7 @@ export function GlassFilterRow<T extends string>({
   className,
   buttonClassName,
   borderRadius = '0.5rem',
+  trailingContent,
 }: GlassFilterRowProps<T>) {
   const layerRef = useRef<HTMLDivElement>(null);
   const btnRefs = useRef<Partial<Record<T, HTMLElement | null>>>({});
@@ -107,6 +109,7 @@ export function GlassFilterRow<T extends string>({
             </button>
           );
         })}
+        {trailingContent}
       </div>
     </div>
   );
