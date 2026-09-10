@@ -186,6 +186,10 @@ export function useTipPayment({
         if (!aa || !aa.isWalletLockedError(error)) {
           const message = aa ? aa.parseTxError(error as Error) : '';
           toast.error(message || 'Tip failed', { id: 'tip-payment' });
+        } else {
+          // The wallet unlock flow owns the next toast. Remove this pending
+          // state so its prompt never lands on top of a stale "Sending tip".
+          toast.dismiss('tip-payment');
         }
       } finally {
         setIsTipping(false);
