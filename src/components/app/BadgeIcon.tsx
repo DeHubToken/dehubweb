@@ -53,6 +53,13 @@ const BADGE_OPTICS: Record<string, { scale: number; bottomInset: number }> = {
   Meglodon: { scale: 1.08, bottomInset: 4 },
 };
 
+// At compact sizes the source artwork's narrowest transparent edge is less
+// than one rendered pixel. Give every badge a full CSS pixel of protected
+// internal space so anti-aliased details cannot be sampled against the image
+// boundary. The content box remains the same size, so this does not shrink the
+// artwork users see.
+const ARTWORK_GUTTER_PX = 1;
+
 function badgeNameFromAssetUrl(url: string | null): string | undefined {
   if (!url) return undefined;
   let decodedUrl = url;
@@ -77,11 +84,13 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   // visible mark — not the canvas edge — finishes exactly on the text baseline.
   const artworkBaselineOffset = ((optics?.bottomInset ?? 0) / 128) * renderedSize;
   const opticalStyle: CSSProperties = {
-    width: `${renderedSize}em`,
-    height: `${renderedSize}em`,
+    width: `calc(${renderedSize}em + ${ARTWORK_GUTTER_PX * 2}px)`,
+    height: `calc(${renderedSize}em + ${ARTWORK_GUTTER_PX * 2}px)`,
+    padding: `${ARTWORK_GUTTER_PX}px`,
+    boxSizing: 'border-box',
     marginInlineStart: '0.125em',
     position: 'relative',
-    top: `${artworkBaselineOffset}em`,
+    top: `calc(${artworkBaselineOffset}em + ${ARTWORK_GUTTER_PX}px)`,
   };
 
   if (!url) return null;
