@@ -1,5 +1,5 @@
 import {
-  UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check, Ban, MessageCircle
+  UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check, Ban, MessageSquare
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
@@ -377,7 +377,7 @@ export function ProfileHeader({
                   onClick={openDirectMessage}
                   aria-label={t('messages.message', 'Message')}
                 >
-                  <MessageCircle className="w-4 h-4" />
+                  <MessageSquare className="w-4 h-4" />
                 </Button>
               )}
               <Drawer open={shareSheetOpen} onOpenChange={(open) => {
