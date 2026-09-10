@@ -74,7 +74,7 @@ import { TipModal } from '@/components/app/modals/TipModal';
 import { CommentLikersDrawer } from './CommentLikersDrawer';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
 import { toast } from 'sonner';
-import { incrementCommentCount } from '@/lib/comment-count-cache';
+import { emitCommentCreated } from '@/lib/comment-count-events';
 import { useMention } from '@/hooks/use-mention';
 import { useAssistantPendingReply } from '@/hooks/use-assistant-pending-reply';
 import { ASSISTANT_AVATAR, mentionsAssistant, isAssistantAddress } from '@/lib/assistant';
@@ -1751,7 +1751,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         await postComment(tokenId, newComment, replyTarget?.id);
       }
       await queryClient.refetchQueries({ queryKey: ['comments', tokenId] });
-      incrementCommentCount(tokenId);
+      emitCommentCreated(tokenId);
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
       // The refetch above is always too early for a tagged assistant — it has
       // to call the model first — so hand off to the poller.
