@@ -18,9 +18,10 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { WarLogo } from '@/components/app/war/WarLogoLazy';
 import { warmLoginSheet } from '@/components/app/LoginModal';
 // The centred slot is narrow, so this bar wears the bare mark rather than the
-// wordmark. Same asset the collapsed desktop rail uses. Its transparent alpha
-// channel is part of the header contract: theme recolouring must only ever
-// affect the mark, never the rectangular image bounds.
+// wordmark. Same asset the collapsed desktop rail uses; it is a white PNG, and
+// the light theme's `header … img[alt="dehub"]` rule inverts it to ink on paper
+// — so it must NOT be swapped for the black mark here the way the rail does it,
+// or light mode would invert a black mark back to white.
 import dehubMark from '@/assets/dehub-logo-compact.png';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 
@@ -36,7 +37,7 @@ const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.Mo
         <img
           src={dehubMark}
           alt="dehub"
-          className="h-7 w-[33px] object-contain"
+          className="h-7 w-auto"
           loading="eager"
           decoding="async"
           fetchPriority="high"
