@@ -16,9 +16,23 @@ describe('post media presentation', () => {
     expect(imageCard).toContain("loading={aboveFold ? 'eager' : 'lazy'}");
   });
 
-  it('keeps breathing room between link-preview media and metadata', () => {
+  it('keeps breathing room inside link-preview metadata', () => {
     const preview = readSource('components/app/cards/FeedLinkPreviews.tsx');
 
     expect(preview.match(/px-3 pb-3 pt-3\.5 sm:pt-4/g)).toHaveLength(2);
+  });
+
+  it('separates post content from its metadata row', () => {
+    const metadata = readSource('components/app/cards/PostMetadata.tsx');
+    const cards = [
+      readSource('components/app/cards/PostCard.tsx'),
+      readSource('components/app/cards/ImageCard.tsx'),
+      readSource('components/app/cards/VideoCard.tsx'),
+    ];
+
+    expect(metadata).toContain('className?: string');
+    for (const card of cards) {
+      expect(card).toContain('className="mt-3"');
+    }
   });
 });

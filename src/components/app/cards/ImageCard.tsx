@@ -1122,6 +1122,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         
         {/* Metadata: timestamp and views */}
         <PostMetadata 
+          className="mt-3"
           timestamp={post.timeAgo}
           viewCount={post.views}
           tokenId={post.id}

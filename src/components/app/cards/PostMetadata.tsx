@@ -11,6 +11,7 @@ import { LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import { cn } from '@/lib/utils';
 
 interface PostMetadataProps {
+  className?: string;
   timestamp?: string;
   /** Already includes signed-out viewers — the API serves one total. */
   viewCount?: string | number;
@@ -32,7 +33,7 @@ interface PostMetadataProps {
   };
 }
 
-export function PostMetadata({ timestamp, viewCount, tokenId, isAd, isAudio, translateControl }: PostMetadataProps) {
+export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, isAudio, translateControl }: PostMetadataProps) {
   const { t } = useTranslation();
 
   // Format timestamp - if it's an ISO string, convert to relative time
@@ -101,7 +102,7 @@ export function PostMetadata({ timestamp, viewCount, tokenId, isAd, isAudio, tra
   if (!hasMetadata && !translateControl && !isAd) return null;
 
   return (
-    <div className="flex items-center gap-2 text-zinc-500 text-xs flex-wrap">
+    <div className={cn("flex items-center gap-2 text-zinc-500 text-xs flex-wrap", className)}>
       {isAd && (
         <span className="px-1.5 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded">
           AD
