@@ -33,6 +33,7 @@ import {
   type ContentTypeFilterValue,
 } from '@/lib/feed-utils';
 import type { ProfileContentFilters } from '@/hooks/use-dehub-profile';
+import { cn } from '@/lib/utils';
 
 /** Same label mapping the home feed's panel uses, so the two rows read alike. */
 function postTypeLabelKey(value: PostTypeFilterValue): string {
@@ -55,9 +56,11 @@ interface ProfileFilterPanelProps {
    * tab would empty it with nothing on screen to explain why.
    */
   showPostType: boolean;
+  /** Removes the nested card treatment when the panel is already in a drawer. */
+  drawer?: boolean;
 }
 
-export function ProfileFilterPanel({ filters, onChange, onReset, showPostType }: ProfileFilterPanelProps) {
+export function ProfileFilterPanel({ filters, onChange, onReset, showPostType, drawer = false }: ProfileFilterPanelProps) {
   const { t } = useTranslation();
   const [categorySearch, setCategorySearch] = useState('');
 
@@ -79,7 +82,11 @@ export function ProfileFilterPanel({ filters, onChange, onReset, showPostType }:
     <div
       data-no-swipe
       data-feed-filter-panel
-      className="relative flex flex-col gap-4 rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3"
+      className={cn(
+        'relative flex flex-col gap-4 px-2 sm:px-3 py-3',
+        !drawer && 'rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px]',
+        drawer && 'px-0 pt-0 pb-3',
+      )}
     >
       {/* Category */}
       {categories.length > 0 && (
