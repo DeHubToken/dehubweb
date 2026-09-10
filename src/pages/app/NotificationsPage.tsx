@@ -559,7 +559,10 @@ function getNotificationContent(
   // correctly-resolved face. The page already resolves the address to a
   // profile for the avatar and feeds it into canonicalActors, so read the
   // handle back off that rather than fetching it twice.
-  const actorName = notification.actorUsername || canonicalActors?.[0]?.display || 'Someone';
+  const actorAddressFallback = notification.actorAddress
+    ? `${notification.actorAddress.slice(0, 6)}…${notification.actorAddress.slice(-4)}`
+    : 'Someone';
+  const actorName = notification.actorUsername || canonicalActors?.[0]?.display || actorAddressFallback;
   
   // Handle custom notification types outside the typed switch
   if ((notification.type as string) === 'feature_request_like') {
@@ -1630,15 +1633,15 @@ export default function NotificationsPage() {
     [unfilteredNotifications, customNotifications, isVisibleNotification]
   );
 
-  // Rank categories by activity in the current recent-notification snapshot.
-  // Read state does not affect position, so opening a notification cannot make
-  // the tabs jump around under the pointer. All remains the fixed first tab.
-  const tabActivityCounts = useMemo(() => {
+  // Rank categories by the unread counts printed on the tabs. Historical read
+  // rows must not outrank a category whose visible badge is larger.
+  const tabUnreadCounts = useMemo(() => {
+    const unreadNotifications = countableNotifications.filter((item) => !item.read);
     const counts = Object.fromEntries(
-      tabs.map(({ value }) => [value, value === 'all' ? countableNotifications.length : 0]),
+      tabs.map(({ value }) => [value, value === 'all' ? unreadNotifications.length : 0]),
     ) as Record<NotificationTypeFilter, number>;
 
-    for (const notification of countableNotifications) {
+    for (const notification of unreadNotifications) {
       for (const { value } of tabs) {
         if (value !== 'all' && filterTypeMap[value]?.includes(notification.type)) {
           counts[value] += 1;
@@ -1650,8 +1653,8 @@ export default function NotificationsPage() {
   }, [countableNotifications]);
 
   const orderedTabKeys = useMemo(
-    () => orderNotificationTabKeys(tabs.map(({ value }) => value), tabActivityCounts, 'all'),
-    [tabActivityCounts],
+    () => orderNotificationTabKeys(tabs.map(({ value }) => value), tabUnreadCounts, 'all'),
+    [tabUnreadCounts],
   );
   
   // Batch-avatar enrichment for fresh profile pictures
@@ -1694,37 +1697,32 @@ export default function NotificationsPage() {
       if (cacheKey) moduleEnrichedKeys.add(cacheKey);
     });
     
-    const addressFetches = uniqueNewAddresses.map(async (addr) => {
+    const addressFetches = Array.from(
+      { length: Math.ceil(uniqueNewAddresses.length / 100) },
+      (_, index) => uniqueNewAddresses.slice(index * 100, (index + 1) * 100),
+    ).map(async (addresses) => {
       try {
-        const { getAccountInfo } = await import('@/lib/api/dehub');
+        const { getAccountSummaries } = await import('@/lib/api/dehub');
         const { extractAvatarPath, buildAvatarUrl } = await import('@/lib/media-url');
-        const user = await getAccountInfo(addr);
-        const rawPath = extractAvatarPath(user);
-        const avatarUrl = buildAvatarUrl(user.address || addr, rawPath);
-
-        return {
-          resolved: true,
-          key: addr,
-          info: {
-            address: (user.address || addr).toLowerCase(),
-            avatarUrl,
-            username: user.username || null,
-            displayName: user.displayName || null,
-          } as EnrichedAvatar,
-          extraKeys: [] as string[],
-        };
+        const users = await getAccountSummaries(addresses);
+        const byAddress = new Map(users.map((user) => [user.address.toLowerCase(), user]));
+        return addresses.map((addr) => {
+          const user = byAddress.get(addr);
+          const rawPath = user ? extractAvatarPath(user) : null;
+          return {
+            resolved: true,
+            key: addr,
+            info: {
+              address: addr,
+              avatarUrl: user ? buildAvatarUrl(addr, rawPath) : null,
+              username: user?.username || null,
+              displayName: user?.displayName || null,
+            } as EnrichedAvatar,
+            extraKeys: [] as string[],
+          };
+        });
       } catch {
-        return {
-          resolved: true,
-          key: addr,
-          info: {
-            address: addr,
-            avatarUrl: null,
-            username: null,
-            displayName: null,
-          } as EnrichedAvatar,
-          extraKeys: [] as string[],
-        };
+        return addresses.map((attemptedKey) => ({ resolved: false, attemptedKey }));
       }
     });
     
@@ -1788,19 +1786,21 @@ export default function NotificationsPage() {
       const resolvedEntries: Array<{ key: string; info: EnrichedAvatar; extraKeys: string[] }> = [];
       for (const outcome of outcomes) {
         if (outcome.status !== 'fulfilled') continue;
-        const value = outcome.value;
-        if (!value?.resolved) {
-          if ((value as any)?.attemptedKey) {
-            moduleEnrichedKeys.delete((value as any).attemptedKey);
+        const values = Array.isArray(outcome.value) ? outcome.value : [outcome.value];
+        for (const value of values) {
+          if (!value?.resolved) {
+            if ('attemptedKey' in value && value.attemptedKey) {
+              moduleEnrichedKeys.delete(value.attemptedKey);
+            }
+            continue;
           }
-          continue;
+          if (!('key' in value) || !value.key || !value.info) continue;
+          resolvedEntries.push({
+            key: value.key,
+            info: value.info as EnrichedAvatar,
+            extraKeys: ('extraKeys' in value ? value.extraKeys || [] : []).filter(Boolean),
+          });
         }
-        if (!value.key || !value.info) continue;
-        resolvedEntries.push({
-          key: value.key,
-          info: value.info as EnrichedAvatar,
-          extraKeys: (((value as any).extraKeys || []) as string[]).filter(Boolean),
-        });
       }
       if (resolvedEntries.length === 0) return;
 
