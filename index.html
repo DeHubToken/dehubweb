@@ -23,6 +23,10 @@
           var d = document.documentElement;
           var t = localStorage.getItem('dehub.theme') || 'system';
           if (t === 'christmas') t = 'winter'; // legacy name migration
+          if (t === 'light') {
+            t = 'system';
+            localStorage.setItem('dehub.theme', t);
+          }
           d.dataset.theme = t;
 
           // color-scheme is what the browser paints the CANVAS with — the
