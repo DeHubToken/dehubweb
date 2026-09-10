@@ -91,9 +91,9 @@ export default function SuperPowersPage() {
 
   // The public ladder carries every power; the signed-in one adds `unlocked`.
   // Prefer the personal copy so the page lights up without a second render.
-  const powers = (status?.powers ?? ladder?.powers ?? []).filter(
-    power => String(power.key) !== 'golden_hour',
-  );
+  const powers = [...(status?.powers ?? ladder?.powers ?? [])]
+    .filter(power => String(power.key) !== 'golden_hour')
+    .sort((a, b) => Number(b.key === 'team_up') - Number(a.key === 'team_up'));
 
   const refillsOn = useMemo(() => {
     const iso = status?.cycleEndsAt ?? ladder?.cycleEndsAt;
@@ -211,6 +211,7 @@ export default function SuperPowersPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {powers.map((power, index) => {
               const isTeamUp = power.key === 'team_up';
+              const unlockBadge = badgeImage(power.tier);
               // Team up itself is public. Opening it while signed out leads
               // straight to the sign-in action in the drawer.
               const unlocked = isTeamUp || !!power.unlocked;
@@ -245,7 +246,7 @@ export default function SuperPowersPage() {
                       <span className="text-[11px] text-zinc-600 tabular-nums">
                         {String(index + 1).padStart(2, '0')}
                       </span>
-                      <span className={cn('text-sm font-medium', unlocked ? 'text-white' : 'text-zinc-400')}>
+                      <span className={cn('text-sm font-medium flex-1', unlocked ? 'text-white' : 'text-zinc-400')}>
                         {power.label}
                       </span>
                       {isTeamUp && unlocked
@@ -254,6 +255,18 @@ export default function SuperPowersPage() {
                       {!unlocked && <Lock className="w-3 h-3 text-zinc-600 shrink-0" />}
                     </div>
                     <p className="text-[13px] text-zinc-500 leading-snug">{power.summary}</p>
+                    {!isTeamUp && unlockBadge && (
+                      <span className="inline-flex items-center gap-1.5 self-start text-[10px] text-zinc-400">
+                        Unlocks at
+                        <img
+                          src={unlockBadge}
+                          alt=""
+                          aria-hidden="true"
+                          className="w-6 h-6 shrink-0 object-contain"
+                        />
+                        <span className="text-zinc-300">{power.tier}</span>
+                      </span>
+                    )}
                     {usable && <p className="text-[11px] text-zinc-400 leading-snug">
                       {isTeamUp ? 'Make or join a team. Tap to manage yours.' : actsOn(power.key, t)}
                     </p>}
