@@ -46,4 +46,13 @@ describe('post media presentation', () => {
     expect(styles).toContain('[data-feed-item].rounded-xl [data-media-full]');
     expect(styles).toContain('[data-feed-item].rounded-2xl [data-media-full]');
   });
+
+  it('releases feed bitmaps only after a generous offscreen grace period', () => {
+    const imageCard = readSource('components/app/cards/ImageCard.tsx');
+
+    expect(imageCard).toContain("const BITMAP_RETAIN_MARGIN = '1200px 100%'");
+    expect(imageCard).toContain('const BITMAP_RELEASE_DELAY_MS = 15_000');
+    expect(imageCard).toContain('src={retainBitmap ? img : undefined}');
+    expect(imageCard).toContain('srcSet={retainBitmap ? cdnImageSrcSet(img, FEED_IMAGE_WIDTHS) : undefined}');
+  });
 });
