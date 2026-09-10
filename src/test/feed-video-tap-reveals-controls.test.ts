@@ -72,4 +72,10 @@ describe('feed video — a tap on the media toggles playback, it does not naviga
       bar![1].indexOf('{duration > 0 &&')
     );
   });
+
+  it('gives the seek line a touch-sized hit target without thickening its rail', () => {
+    expect(VIDEO_CARD).toContain('aria-label="Video progress"');
+    expect(VIDEO_CARD).toContain('className="flex-1 h-6 bg-transparent');
+    expect(VIDEO_CARD).toContain("backgroundSize: '100% 4px'");
+  });
 });
