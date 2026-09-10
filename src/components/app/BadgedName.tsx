@@ -1,12 +1,8 @@
 /**
- * BadgedName — a display name with its staking badge in the top-right corner.
+ * BadgedName — a display name with its staking badge inline beside it.
  *
- * The badge is absolutely positioned so it reads as a superscript rather than
- * pushing the name around, which means the name needs a right gutter — but only
- * when there is actually a badge to sit in it. Every surface used to inline that
- * `getBadgeUrl(...) ? 'pr-3' : ''` test itself; this shares one resolution with
- * the icon so the gutter can never disagree with what renders, including when
- * the balance arrives from a lookup a moment later.
+ * It follows the familiar social verification pattern: one text-em square,
+ * immediately after the display name and vertically centred on the line.
  *
  * Pass `badgeBalance` when the payload carries one (feed cards), or `lookupId`
  * — a username or wallet address — when it does not (stage hosts, community
@@ -15,7 +11,6 @@
 
 import { cn } from '@/lib/utils';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
-import { useBadgeVisual } from '@/hooks/use-badge-balance';
 import type { BadgeLock } from '@/lib/staking-badges';
 
 interface BadgedNameProps {
@@ -47,13 +42,10 @@ export function BadgedName({
   className,
   wrapperClassName,
 }: BadgedNameProps) {
-  const { url } = useBadgeVisual({ badgeBalance, lookupId, username, badgeLock });
-
   return (
     <span
       className={cn(
-        'relative inline-flex items-baseline shrink min-w-0 max-w-full',
-        url && 'pr-3',
+        'inline-flex items-center gap-1 shrink min-w-0 max-w-full',
         wrapperClassName,
       )}
     >
@@ -65,7 +57,7 @@ export function BadgedName({
         lookupId={lookupId}
         username={username}
         badgeLock={badgeLock}
-        className="w-[9px] h-[9px] absolute -top-0.5 right-0"
+        className="w-[1em] h-[1em]"
       />
     </span>
   );

@@ -224,14 +224,14 @@ export function ProfileHoverCard({
             {/* Name + handle */}
             <button onClick={handleNavigate} className="cursor-pointer text-left">
               <div className="flex items-center gap-1.5">
-                <span className="relative inline-flex items-baseline shrink min-w-0">
+                <span className="inline-flex items-center gap-1 shrink min-w-0">
                   <span className="font-semibold text-white text-sm truncate max-w-[180px] leading-tight">
                     {profile.displayName || profile.username || 'Unknown'}
                   </span>
                   <BadgeIcon
                     badgeBalance={profile.badgeBalance}
                     username={profile.username || ''}
-                    className="w-[9px] h-[9px] absolute -top-0.5 -right-2.5"
+                    className="w-[1em] h-[1em]"
                   />
                 </span>
                 {profile.verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 ml-1" />}

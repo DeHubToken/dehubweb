@@ -75,7 +75,7 @@ export const UsernameCard = memo(function UsernameCard({ listing, onClick, isOwn
               <span className="w-4 h-4 rounded-full bg-white/10 shrink-0" />
             )}
             <span className="text-xs text-zinc-400 truncate max-w-[14rem]">{sellerName}</span>
-            <BadgeIcon badgeBalance={listing.seller.badgeBalance} className="w-[9px] h-[9px] shrink-0" />
+            <BadgeIcon badgeBalance={listing.seller.badgeBalance} className="w-[1em] h-[1em] shrink-0" />
           </span>
         </div>
 
@@ -98,7 +98,7 @@ export const UsernameCard = memo(function UsernameCard({ listing, onClick, isOwn
             instead of vanishing entirely. */}
         <span className="sm:hidden flex items-center justify-end gap-1 mt-1 min-w-0">
           <span className="text-[10px] text-zinc-500 truncate max-w-[7rem]">{sellerName}</span>
-          <BadgeIcon badgeBalance={listing.seller.badgeBalance} className="w-[8px] h-[8px] shrink-0" />
+          <BadgeIcon badgeBalance={listing.seller.badgeBalance} className="w-[1em] h-[1em] shrink-0" />
         </span>
       </div>
     </button>

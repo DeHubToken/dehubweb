@@ -23,7 +23,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
-import { getBadgeUrl } from '@/lib/staking-badges';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -154,13 +153,12 @@ export function NewMembersCarousel({
                   {member.displayName.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              {/* pr-3 only when a badge actually draws — see BadgedName's gutter note. */}
-              <span className={`relative inline-flex items-baseline shrink min-w-0 max-w-full${getBadgeUrl(member.hideBadgeAndBalance ? 0 : member.badgeBalance, member.username) ? ' pr-3' : ''}`}>
+              <span className="inline-flex items-center gap-1 shrink min-w-0 max-w-full">
                 <span className="font-semibold text-white text-xs truncate">{member.displayName}</span>
                 <BadgeIcon
                   badgeBalance={member.hideBadgeAndBalance ? 0 : member.badgeBalance}
                   username={member.username}
-                  className="w-[9px] h-[9px] absolute -top-0.5 right-0"
+                  className="w-[1em] h-[1em]"
                 />
               </span>
               <span className="text-[10px] text-zinc-500 mb-1.5 truncate max-w-full">

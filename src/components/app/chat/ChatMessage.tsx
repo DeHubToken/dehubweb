@@ -111,7 +111,7 @@ function ModeratorBadge({ address, moderators }: { address: string; moderators?:
 
 /** Inline staking badge for chat messages */
 function StakingBadgeInline({ badgeBalance, username }: { badgeBalance?: number | null; username?: string }) {
-  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] absolute -top-0.5 -right-0" />;
+  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[1em] h-[1em]" />;
 }
 
 /** Reaction pills displayed below a message */

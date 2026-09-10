@@ -179,7 +179,7 @@ export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfo
                           </div>
                           {hasBadge && (
                             <div className="flex items-center gap-1 shrink-0">
-                              <BadgeIcon badgeBalance={person.badgeBalance} username={person.username} className="w-[14px] h-[14px]" />
+                              <BadgeIcon badgeBalance={person.badgeBalance} username={person.username} className="w-[1em] h-[1em]" />
                               <span className="font-mono text-xs text-white/60">{formatEngagementWeight(weight)}</span>
                             </div>
                           )}
