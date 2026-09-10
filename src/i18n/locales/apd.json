@@ -1772,6 +1772,7 @@
       "3d": "3 أيام",
       "7d": "7 أيام",
       "30d": "30 يوم",
+      "1y": "سنة واحدة",
       "all": "كل الوقت"
     },
     "unavailable": {
@@ -1904,7 +1905,6 @@
     "homeComment": "صرفها على كومنت ليك، في بوست زول تاني.",
     "homeStage": "صرفها من Stage إنت مستضيفه.",
     "homePage": "صرفها هنا، فوق في الصفحة دي.",
-    "goldenHourStarted": "Golden Hour شغالة لـ {{minutes}} دقيقة — أي حاجة تنشرها هسي بتتحسب دبل",
     "pickCategory": "تصنيف...",
     "trendJacked": "{{category}} عامل ترند لـ {{minutes}} دقيقة",
     "actsPost": "بتعمل حاجة على بوست من بوستاتك. اضغط عشان تختار واحد.",
@@ -1924,7 +1924,8 @@
     "noComments": "لسه ما علقت.",
     "noStages": "مافي أي مرحلة ليك شغالة أو مجدولة هسي.",
     "noFlaresLeft": "ما فاضل إشارات دخان الليلة دي",
-    "spentFor": "{{power}} جاري لمدة {{minutes}} دقيقة"
+    "spentFor": "{{power}} جاري لمدة {{minutes}} دقيقة",
+    "goldenHourStarted": "Golden Hour شغالة لـ {{minutes}} دقيقة — أي حاجة تنشرها هسي بتتحسب دبل"
   },
   "work": {
     "budgetExhausted": "ميزانية الجائزة دي كلها اتحجزت."

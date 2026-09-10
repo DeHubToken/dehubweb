@@ -1876,6 +1876,7 @@
       "3d": "3 días",
       "7d": "7 días",
       "30d": "30 días",
+      "1y": "1 año",
       "all": "Histórico"
     },
     "unavailable": {
@@ -2010,7 +2011,6 @@
     "homePage": "Gástalo aquí, en la parte superior de esta página.",
     "flaresLeft": "destellos",
     "giftedTo": "regalo → #{{id}}",
-    "goldenHourStarted": "Golden Hour en curso durante {{minutes}} minutos — todo lo que publiques ahora cuenta el doble",
     "start": "Empezar",
     "pickCategory": "Categoría…",
     "trendJacked": "{{category}} es tendencia durante {{minutes}} minutos",
@@ -2032,7 +2032,8 @@
     "noComments": "Aún no has comentado.",
     "noStages": "Ningún escenario tuyo está en vivo o programado ahora mismo.",
     "noFlaresLeft": "No quedan Destellos de Señal este ciclo",
-    "spentFor": "{{power}} corriendo durante {{minutes}} minutos"
+    "spentFor": "{{power}} corriendo durante {{minutes}} minutos",
+    "goldenHourStarted": "Golden Hour en curso durante {{minutes}} minutos — todo lo que publiques ahora cuenta el doble"
   },
   "work": {
     "budgetExhausted": "El presupuesto de esta recompensa está comprometido por completo.",

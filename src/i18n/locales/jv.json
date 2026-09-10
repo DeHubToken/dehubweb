@@ -1827,6 +1827,7 @@
       "3d": "3 dina",
       "7d": "7 dina",
       "30d": "30 dina",
+      "1y": "1 taun",
       "all": "Kabeh wektu"
     },
     "unavailable": {
@@ -1961,7 +1962,6 @@
     "homePage": "Ginaké ing kéné, ing pucuk kaca iki.",
     "flaresLeft": "flares",
     "giftedTo": "gift → #{{id}}",
-    "goldenHourStarted": "Golden Hour mlaku {{minutes}} menit — kabeh sing kok-post saiki dianggep tikel",
     "start": "Start",
     "pickCategory": "Category…",
     "trendJacked": "{{category}} lagi trending {{minutes}} menit",
@@ -1983,7 +1983,8 @@
     "noComments": "Kowé durung komentar.",
     "noStages": "Ora ana Panggungmu sing ditindakake utawa dijadwalake saiki.",
     "noFlaresLeft": "Ora ana Sinyal Suar sing isih ana ing siklus iki",
-    "spentFor": "{{power}} mlaku kanggo {{minutes}} menit"
+    "spentFor": "{{power}} mlaku kanggo {{minutes}} menit",
+    "goldenHourStarted": "Golden Hour mlaku {{minutes}} menit — kabeh sing kok-post saiki dianggep tikel"
   },
   "work": {
     "budgetExhausted": "Anggaran bounty iki wis kepakai kabeh."

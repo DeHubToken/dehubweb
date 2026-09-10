@@ -1803,6 +1803,7 @@
       "3d": "3 päeva",
       "7d": "7 päeva",
       "30d": "30 päeva",
+      "1y": "1 aasta",
       "all": "Kogu aeg"
     },
     "unavailable": {
@@ -1937,7 +1938,6 @@
     "homePage": "Kuluta see siin, selle lehe ülaosas.",
     "flaresLeft": "sädemed",
     "giftedTo": "kingitus → #{{id}}",
-    "goldenHourStarted": "Kuldne tund kestab {{minutes}} minutit – kõik, mida praegu postitate, loendatakse kahekordselt",
     "start": "Alusta",
     "pickCategory": "Kategooria…",
     "trendJacked": "{{category}} on trendikas {{minutes}} minutit",
@@ -1959,7 +1959,8 @@
     "noComments": "Sa pole veel kommenteerinud.",
     "noStages": "Sinust mitte ükski lava pole praegu otse-eetris ega ajastatud.",
     "noFlaresLeft": "Selleks tsükliks pole enam \"Signaali rakette\" jäänud",
-    "spentFor": "{{power}} töötab {{minutes}} minutit"
+    "spentFor": "{{power}} töötab {{minutes}} minutit",
+    "goldenHourStarted": "Kuldne tund kestab {{minutes}} minutit – kõik, mida praegu postitate, loendatakse kahekordselt"
   },
   "work": {
     "budgetExhausted": "Selle preemia eelarve on täielikult kaetud.",

@@ -2129,6 +2129,7 @@
       "3d": "3 hari",
       "7d": "7 hari",
       "30d": "30 hari",
+      "1y": "1 tahun",
       "all": "Sepanjang masa"
     },
     "unavailable": {
@@ -2263,7 +2264,6 @@
     "homePage": "Gunakan di sini, di bahagian atas halaman ini.",
     "flaresLeft": "flares",
     "giftedTo": "hadiah → #{{id}}",
-    "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} minit — semua yang anda siarkan kini dikira berganda",
     "start": "Mula",
     "pickCategory": "Kategori…",
     "trendJacked": "{{category}} sedang sohor kini selama {{minutes}} minit",
@@ -2285,7 +2285,8 @@
     "noComments": "Anda belum mengulas lagi.",
     "noStages": "Tiada Pentas anda yang sedang berlangsung atau dijadualkan sekarang.",
     "noFlaresLeft": "Tiada Signal Flare berbaki kitaran ini",
-    "spentFor": "{{power}} berjalan selama {{minutes}} minit"
+    "spentFor": "{{power}} berjalan selama {{minutes}} minit",
+    "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} minit — semua yang anda siarkan kini dikira berganda"
   },
   "work": {
     "budgetExhausted": "Bajet ganjaran ini telah digunakan sepenuhnya.",

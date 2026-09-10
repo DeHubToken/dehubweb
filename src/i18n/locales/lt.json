@@ -1842,6 +1842,7 @@
       "3d": "3 dienos",
       "7d": "7 dienos",
       "30d": "30 dienų",
+      "1y": "1 metai",
       "all": "Visas laikas"
     },
     "unavailable": {
@@ -1976,7 +1977,6 @@
     "homePage": "Išleiskite jį čia, šio puslapio viršuje.",
     "flaresLeft": "žybsniai",
     "giftedTo": "dovana → #{{id}}",
-    "goldenHourStarted": "„Golden Hour“ veikia {{minutes}} minutes – viskas, ką dabar skelbiate, skaičiuojama dvigubai",
     "start": "Pradėti",
     "pickCategory": "Kategorija…",
     "trendJacked": "{{category}} populiarėja {{minutes}} minutes",
@@ -1998,7 +1998,8 @@
     "noComments": "Dar nekomentavote.",
     "noStages": "Šiuo metu jokia jūsų scena nevyksta ir nėra suplanuota.",
     "noFlaresLeft": "Šiame cikle nebeliko „Signal Flares“.",
-    "spentFor": "{{power}} veikia {{minutes}} minutes"
+    "spentFor": "{{power}} veikia {{minutes}} minutes",
+    "goldenHourStarted": "„Golden Hour“ veikia {{minutes}} minutes – viskas, ką dabar skelbiate, skaičiuojama dvigubai"
   },
   "work": {
     "budgetExhausted": "Visas šio atlygio biudžetas jau paskirstytas."

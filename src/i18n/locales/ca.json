@@ -1804,6 +1804,7 @@
       "3d": "3 dies",
       "7d": "7 dies",
       "30d": "30 dies",
+      "1y": "1 any",
       "all": "Tot el període"
     },
     "unavailable": {
@@ -1938,7 +1939,6 @@
     "homePage": "Gasta'l aquí, a la part superior d'aquesta pàgina.",
     "flaresLeft": "flares",
     "giftedTo": "regal → #{{id}}",
-    "goldenHourStarted": "Golden Hour en marxa durant {{minutes}} minuts: tot el que publiquis ara compta el doble",
     "start": "Començar",
     "pickCategory": "Categoria…",
     "trendJacked": "{{category}} és tendència durant {{minutes}} minuts",
@@ -1960,7 +1960,8 @@
     "noComments": "Encara no has comentat.",
     "noStages": "Cap Stage teu no està actiu ni programat ara mateix.",
     "noFlaresLeft": "No queden Senyals de Flaix aquest cicle",
-    "spentFor": "{{power}} corrent durant {{minutes}} minuts"
+    "spentFor": "{{power}} corrent durant {{minutes}} minuts",
+    "goldenHourStarted": "Golden Hour en marxa durant {{minutes}} minuts: tot el que publiquis ara compta el doble"
   },
   "work": {
     "budgetExhausted": "El pressupost d'aquesta recompensa està compromès del tot.",

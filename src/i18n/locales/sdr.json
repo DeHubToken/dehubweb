@@ -1767,6 +1767,7 @@
       "3d": "3 دن",
       "7d": "7 دن",
       "30d": "30 دن",
+      "1y": "1 साल",
       "all": "پورا وقت"
     },
     "unavailable": {
@@ -1901,7 +1902,6 @@
     "homePage": "دلته یې وکاروئ، د دې پاڼې په سر کې.",
     "flaresLeft": "فلیرز",
     "giftedTo": "ډالۍ → #{{id}}",
-    "goldenHourStarted": "د سرو زرو ساعت د {{minutes}} دقیقو لپاره روان دی — هر څه چې تاسو اوس پوسټ کوئ دوه چنده حساب کیږي",
     "start": "پیل",
     "pickCategory": "وېشنيزه…",
     "trendJacked": "{{category}} د {{minutes}} دقیقو لپاره په رجحان کې دی",
@@ -1923,7 +1923,8 @@
     "noComments": "Aapne abhi tak comment nahi kiya hai.",
     "noStages": "Aapka koi bhi Stage abhi live ya scheduled nahi hai.",
     "noFlaresLeft": "Is cycle mein koi Signal Flare nahi bacha hai",
-    "spentFor": "{{power}} {{minutes}} minute ke liye chal raha hai"
+    "spentFor": "{{power}} {{minutes}} minute ke liye chal raha hai",
+    "goldenHourStarted": "د سرو زرو ساعت د {{minutes}} دقیقو لپاره روان دی — هر څه چې تاسو اوس پوسټ کوئ دوه چنده حساب کیږي"
   },
   "work": {
     "budgetExhausted": "بودجەی ئەم خەڵاتە بە تەواوی دابەش کراوە."

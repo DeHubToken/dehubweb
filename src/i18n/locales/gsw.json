@@ -1808,6 +1808,7 @@
       "3d": "3 Täg",
       "7d": "7 Täg",
       "30d": "30 Täg",
+      "1y": "1 Jahr",
       "all": "Sit Aafang"
     },
     "unavailable": {
@@ -1942,7 +1943,6 @@
     "homePage": "Gib's us do, obe uf dere Syte.",
     "flaresLeft": "flares",
     "giftedTo": "gift → #{{id}}",
-    "goldenHourStarted": "Golden Hour lauft für {{minutes}} Minute — alles, wo du jetzt postisch, zählt dopplet",
     "start": "Start",
     "pickCategory": "Kategorie…",
     "trendJacked": "{{category}} isch am trende für {{minutes}} Minute",
@@ -1964,7 +1964,8 @@
     "noComments": "Du hesch no nöd kommentiert.",
     "noStages": "Keine vo dine Stage isch grad live oder plant.",
     "noFlaresLeft": "Keini Signal Flares meh i dem Zyklus",
-    "spentFor": "{{power}} lauft für {{minutes}} Minute"
+    "spentFor": "{{power}} lauft für {{minutes}} Minute",
+    "goldenHourStarted": "Golden Hour lauft für {{minutes}} Minute — alles, wo du jetzt postisch, zählt dopplet"
   },
   "work": {
     "budgetExhausted": "S Budget vo dere Prämie isch ganz vergäh."

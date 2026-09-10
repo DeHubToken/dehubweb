@@ -1803,6 +1803,7 @@
       "3d": "Tile 3",
       "7d": "Tile 7",
       "30d": "Tile 30",
+      "1y": "Saan kelen",
       "all": "Waati bɛɛ"
     },
     "unavailable": {
@@ -1937,7 +1938,6 @@
     "homePage": "Kɛ́lɛ́ kɛ́lɛ́, ní kɛ́lɛ́ kɛ́lɛ́, ní kɛ́lɛ́ kɛ́lɛ́.",
     "flaresLeft": "flares",
     "giftedTo": "gift → #{{id}}",
-    "goldenHourStarted": "Golden Hour 跑 {{minutes}} 分钟 — 你现在发布的每一条内容都将获得双倍计数",
     "start": "Jɛnɛ",
     "pickCategory": "Kategorija…",
     "trendJacked": "{{category}} ka trending {{minutes}} minutes",
@@ -1959,7 +1959,8 @@
     "noComments": "O ko tii sọrọ sibẹsibẹ.",
     "noStages": "Ko si Ipele ti tirẹ ti nṣiṣẹ tabi ti a ti ṣeto lọwọlọwọ.",
     "noFlaresLeft": "Ko si Awọn Imọlẹ Ifihan ti o ku ni ọmọ-ọmọ yii",
-    "spentFor": "{{power}} nṣiṣẹ fun {{minutes}} iṣẹju"
+    "spentFor": "{{power}} nṣiṣẹ fun {{minutes}} iṣẹju",
+    "goldenHourStarted": "Golden Hour 跑 {{minutes}} 分钟 — 你现在发布的每一条内容都将获得双倍计数"
   },
   "work": {
     "budgetExhausted": "Nafolo nin ka wari bɛɛ dilala ka ban."

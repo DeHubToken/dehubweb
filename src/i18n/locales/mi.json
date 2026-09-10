@@ -1839,6 +1839,7 @@
       "3d": "3 rā",
       "7d": "7 rā",
       "30d": "30 rā",
+      "1y": "1 tau",
       "all": "Wā katoa"
     },
     "unavailable": {
@@ -1973,7 +1974,6 @@
     "homePage": "Whakamahia ki konei, ki te tihi o tēnei whārangi.",
     "flaresLeft": "ngā mura",
     "giftedTo": "koha → #{{id}}",
-    "goldenHourStarted": "Te haere o te haora koura mō {{minutes}} meneti — ka takirua ngā mea katoa e whakairia ana e koe i ēnei wā",
     "start": "Tīmata",
     "pickCategory": "Kāwai…",
     "trendJacked": "Kei te rongonui a {{category}} mō {{minutes}} meneti",
@@ -1995,7 +1995,8 @@
     "noComments": "Kāore anō koe kia kōrero.",
     "noStages": "Kāore he atamira nāu e ora ana, e whakaritea ana rānei i tēnei wā.",
     "noFlaresLeft": "Kāore he rama tohu i toe i tēnei huringa",
-    "spentFor": "{{power}} e oma ana mō {{minutes}} meneti"
+    "spentFor": "{{power}} e oma ana mō {{minutes}} meneti",
+    "goldenHourStarted": "Te haere o te haora koura mō {{minutes}} meneti — ka takirua ngā mea katoa e whakairia ana e koe i ēnei wā"
   },
   "work": {
     "budgetExhausted": "Kua oti te pūtea o tēnei utu te tuku katoa."

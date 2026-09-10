@@ -1876,6 +1876,7 @@
       "3d": "3 日",
       "7d": "7 日",
       "30d": "30 日",
+      "1y": "1年",
       "all": "全期間"
     },
     "unavailable": {
@@ -2010,7 +2011,6 @@
     "homePage": "ここで使う、このページのトップで。",
     "flaresLeft": "フレア",
     "giftedTo": "ギフト → #{{id}}",
-    "goldenHourStarted": "ゴールデンアワーが {{minutes}} 分間実行中 — 今投稿するすべてが2倍になります",
     "start": "開始",
     "pickCategory": "カテゴリ…",
     "trendJacked": "{{category}} が {{minutes}} 分間トレンド入りしています",
@@ -2032,7 +2032,8 @@
     "noComments": "まだコメントしていません。",
     "noStages": "現在、あなたのステージはライブまたはスケジュールされていません。",
     "noFlaresLeft": "今サイクルはシグナルフレアが残っていません",
-    "spentFor": "{{power}} が {{minutes}} 分間実行中"
+    "spentFor": "{{power}} が {{minutes}} 分間実行中",
+    "goldenHourStarted": "ゴールデンアワーが {{minutes}} 分間実行中 — 今投稿するすべてが2倍になります"
   },
   "work": {
     "budgetExhausted": "この報奨金の予算はすべて割り当て済みです。",

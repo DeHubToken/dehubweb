@@ -1770,6 +1770,7 @@
       "3d": "3 أيام",
       "7d": "7 أيام",
       "30d": "30 يوم",
+      "1y": "سنة واحدة",
       "all": "كل الوقت"
     },
     "unavailable": {
@@ -1904,7 +1905,6 @@
     "homePage": "صرفها هنا، في أعلى هذه الصفحة.",
     "flaresLeft": "توهجات",
     "giftedTo": "هدية → #{{id}}",
-    "goldenHourStarted": "الساعة الذهبية تعمل لمدة {{minutes}} دقيقة — كل ما تنشره الآن يُحتسب مضاعفاً",
     "start": "ابدأ",
     "pickCategory": "فئة…",
     "trendJacked": "{{category}} يتصدر الترند لمدة {{minutes}} دقيقة",
@@ -1926,7 +1926,8 @@
     "noComments": "ما علقت بعد.",
     "noStages": "ما في Stage إلك مباشر أو مجدول حالياً.",
     "noFlaresLeft": "ما ضل Signal Flares بهالدورة",
-    "spentFor": "{{power}} شغالة لـ {{minutes}} دقيقة"
+    "spentFor": "{{power}} شغالة لـ {{minutes}} دقيقة",
+    "goldenHourStarted": "الساعة الذهبية تعمل لمدة {{minutes}} دقيقة — كل ما تنشره الآن يُحتسب مضاعفاً"
   },
   "work": {
     "budgetExhausted": "ميزانية هاي المكافأة كلها محجوزة."

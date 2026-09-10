@@ -2073,6 +2073,7 @@
       "3d": "3 dagen",
       "7d": "7 dagen",
       "30d": "30 dagen",
+      "1y": "1 Jaar",
       "all": "Alle tijd"
     },
     "unavailable": {
@@ -2207,7 +2208,6 @@
     "homePage": "Geef het hier uit, bovenaan deze pagina.",
     "flaresLeft": "flares",
     "giftedTo": "gift → #{{id}}",
-    "goldenHourStarted": "Golden Hour loopt voor {{minutes}} minuten — alles wat je nu post telt dubbel",
     "start": "Start",
     "pickCategory": "Categorie…",
     "trendJacked": "{{category}} is trending voor {{minutes}} minuten",
@@ -2229,7 +2229,8 @@
     "noComments": "Je hebt nog niet gereageerd.",
     "noStages": "Geen Stage van jou is live of gepland op dit moment.",
     "noFlaresLeft": "Geen Signal Flares meer deze cyclus",
-    "spentFor": "{{power}} loopt voor {{minutes}} minuten"
+    "spentFor": "{{power}} loopt voor {{minutes}} minuten",
+    "goldenHourStarted": "Golden Hour loopt voor {{minutes}} minuten — alles wat je nu post telt dubbel"
   },
   "work": {
     "budgetExhausted": "Het budget van deze premie is volledig vergeven.",

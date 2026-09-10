@@ -1810,6 +1810,7 @@
       "3d": "3 መዓልታት",
       "7d": "7 መዓልታት",
       "30d": "30 መዓልታት",
+      "1y": "ሓደ ዓመት ።",
       "all": "ኩሉ ግዜ"
     },
     "unavailable": {
@@ -1944,7 +1945,6 @@
     "homePage": "ኣብዚ ኣብ ላዕሊ እዚ ገጽ ወፍዮ።",
     "flaresLeft": "ዕምባባታት",
     "giftedTo": "ህያብ → #{{id}}",
-    "goldenHourStarted": "Golden Hour ን {{minutes}} ደቓይቕ ይካየድ ኣሎ — እቲ ሎሚ እትጽሕፎ ኩሉ ክልተ እጽርፍ",
     "pickCategory": "ምድብ",
     "trendJacked": "{{category}} ን {{minutes}} ደቓይቕ ይዝርጋሕ ኣሎ",
     "actsPost": "ኣብ ሓደ ኻብቲ ልኡኻትካ ግበር ። ሓደ ንምውሳድ ኣጥፊእካ ።",
@@ -1963,7 +1963,8 @@
     "anchorNeedsTheirThread": "Anchor ነቲ ርእይቶኻ ኣብ ላዕሊ ናይ ካልእ ሰብ ክር ይሕዝ — ኣብ ናይ ገዛእ ርእስኻ ፖስታ PIN ድሮ ብነጻ እዩ ።",
     "noComments": "ገና ርእይቶ ኣይሃበን ።",
     "noStages": "ኣብዚ እዋን እዚ ዝኾነ ደረጃኻ ህያው ወይ ዝተመደበ ኣይኮነን ።",
-    "noFlaresLeft": "ዝኾነ ምልክት ነፈርቲ ካብ'ዚ ዑደት'ዚ ኣይወጹን"
+    "noFlaresLeft": "ዝኾነ ምልክት ነፈርቲ ካብ'ዚ ዑደት'ዚ ኣይወጹን",
+    "goldenHourStarted": "Golden Hour ን {{minutes}} ደቓይቕ ይካየድ ኣሎ — እቲ ሎሚ እትጽሕፎ ኩሉ ክልተ እጽርፍ"
   },
   "work": {
     "budgetExhausted": "ናይዚ ሽልማት ባጀት ብምሉኡ ተመዲቡ እዩ።"

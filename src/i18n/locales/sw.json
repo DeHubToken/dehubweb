@@ -1863,6 +1863,7 @@
       "3d": "siku 3",
       "7d": "siku 7",
       "30d": "siku 30",
+      "1y": "Mwaka 1",
       "all": "Muda wote"
     },
     "unavailable": {
@@ -1997,7 +1998,6 @@
     "homePage": "Tumia hapa, juu ya ukurasa huu.",
     "flaresLeft": "mianga",
     "giftedTo": "zawadi → #{{id}}",
-    "goldenHourStarted": "Saa ya Dhahabu inaendelea kwa dakika {{minutes}} — kila kitu unachochapisha sasa kinahesabiwa mara mbili",
     "start": "Anza",
     "pickCategory": "Kategoria…",
     "trendJacked": "{{category}} inazidi kupata umaarufu kwa dakika {{minutes}}",
@@ -2019,7 +2019,8 @@
     "noComments": "Hujatoa maoni bado.",
     "noStages": "Hakuna Jukwaa lako linaloendelea au limepangwa sasa hivi.",
     "noFlaresLeft": "Hakuna Mishumaa ya Ishara iliyoachwa katika mzunguko huu",
-    "spentFor": "{{power}} inakimbia kwa dakika {{minutes}}"
+    "spentFor": "{{power}} inakimbia kwa dakika {{minutes}}",
+    "goldenHourStarted": "Saa ya Dhahabu inaendelea kwa dakika {{minutes}} — kila kitu unachochapisha sasa kinahesabiwa mara mbili"
   },
   "work": {
     "budgetExhausted": "Bajeti ya zawadi hii imetumika yote.",

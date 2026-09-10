@@ -1848,6 +1848,7 @@
       "3d": "3 ቀናት",
       "7d": "7 ቀናት",
       "30d": "30 ቀናት",
+      "1y": "1 ዓመት",
       "all": "ሁሉንም ጊዜ"
     },
     "unavailable": {
@@ -1982,7 +1983,6 @@
     "homePage": "እዚህ፣ በዚህ ገጽ አናት ላይ አውጣ።",
     "flaresLeft": "ፍላየር",
     "giftedTo": "ስጦታ → #{{id}}",
-    "goldenHourStarted": "Golden Hour ለ {{minutes}} ደቂቃዎች እየሮጠ ነው — የምትለጥፈው ሁሉ አሁን በእጥፍ ይቆጠራል",
     "start": "ጀምር",
     "pickCategory": "ምድብ…",
     "trendJacked": "{{category}} ለ {{minutes}} ደቂቃዎች እየተናፈሰ ነው",
@@ -2004,7 +2004,8 @@
     "noComments": "እስካሁን አስተያየት አልሰጠህም።",
     "noStages": "የአንተ ምንም መድረክ አሁን ላይቭም ሆነ ታቅዶ የለም።",
     "noFlaresLeft": "ምንም የሲግናል ፍላየር በዚህ ዑደት አልቀረም።",
-    "spentFor": "{{power}} ለ {{minutes}} ደቂቃዎች እየሮጠ ነው።"
+    "spentFor": "{{power}} ለ {{minutes}} ደቂቃዎች እየሮጠ ነው።",
+    "goldenHourStarted": "Golden Hour ለ {{minutes}} ደቂቃዎች እየሮጠ ነው — የምትለጥፈው ሁሉ አሁን በእጥፍ ይቆጠራል"
   },
   "work": {
     "budgetExhausted": "የዚህ ሽልማት በጀት ሙሉ በሙሉ ተይዟል።"

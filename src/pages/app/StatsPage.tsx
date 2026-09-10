@@ -55,10 +55,10 @@ import { USER_STATS_ENDPOINT, useUserStats } from '@/hooks/use-user-stats';
 import { cn } from '@/lib/utils';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
-type Range = '24h' | '3d' | '7d' | '30d' | 'all';
+type Range = '24h' | '3d' | '7d' | '30d' | '1y' | 'all';
 
 /**
- * The five ranges, and the resolution each one can actually be drawn at.
+ * The six ranges, and the resolution each one can actually be drawn at.
  *
  * Cloudflare refuses any hourly window wider than 3 days on this plan, so 24h
  * and 3d are the only hourly views that can exist — everything longer is daily.
@@ -69,6 +69,7 @@ const RANGES: { key: Range; label: string; hourly: boolean; hours?: number; days
   { key: '3d', label: '3 days', hourly: true, hours: 72 },
   { key: '7d', label: '7 days', hourly: false, days: 7 },
   { key: '30d', label: '30 days', hourly: false, days: 30 },
+  { key: '1y', label: '1 year', hourly: false, days: 365 },
   { key: 'all', label: 'All time', hourly: false, days: null },
 ];
 
@@ -394,6 +395,7 @@ function ProvenancePanel({ stats }: { stats: SiteStats }) {
  */
 function communityWindowDays(range: Range): number | null {
   if (range === 'all') return null;
+  if (range === '1y') return 365;
   if (range === '30d') return 30;
   if (range === '7d') return 7;
   return 14;

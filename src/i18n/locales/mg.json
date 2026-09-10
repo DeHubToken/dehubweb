@@ -1860,6 +1860,7 @@
       "3d": "3 andro",
       "7d": "7 andro",
       "30d": "30 andro",
+      "1y": "1 taona",
       "all": "Fotoana rehetra"
     },
     "unavailable": {
@@ -1994,7 +1995,6 @@
     "homePage": "Ampiasao eto, eo an-tampon'ity pejy ity.",
     "flaresLeft": "flares",
     "giftedTo": "fanomezana → #{{id}}",
-    "goldenHourStarted": "Golden Hour mihazakazaka mandritra ny {{minutes}} minitra — izay rehetra alefanao ankehitriny dia ho avo roa heny",
     "start": "Start",
     "pickCategory": "Category…",
     "trendJacked": "{{category}} dia miakatra mandritra ny {{minutes}} minitra",
@@ -2016,7 +2016,8 @@
     "noComments": "Mbola tsy naneho hevitra ianao.",
     "noStages": "Tsy misy Stage anao mihetsika na voalahatra amin'izao fotoana izao.",
     "noFlaresLeft": "Tsy misy Signal Flare sisa tavela amin'ity tsingerina ity",
-    "spentFor": "{{power}} mihazakazaka mandritra ny {{minutes}} minitra"
+    "spentFor": "{{power}} mihazakazaka mandritra ny {{minutes}} minitra",
+    "goldenHourStarted": "Golden Hour mihazakazaka mandritra ny {{minutes}} minitra — izay rehetra alefanao ankehitriny dia ho avo roa heny"
   },
   "work": {
     "budgetExhausted": "Efa lany daholo ny tetibolan'ity valisoa ity."

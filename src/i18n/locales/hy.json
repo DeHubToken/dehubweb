@@ -1805,6 +1805,7 @@
       "3d": "3 օր",
       "7d": "7 օր",
       "30d": "30 օր",
+      "1y": "1 տարի",
       "all": "Ամբողջ ժամանակը"
     },
     "unavailable": {
@@ -1939,7 +1940,6 @@
     "homePage": "Օգտագործեք այն այստեղ, այս էջի վերևում:",
     "flaresLeft": "flares",
     "giftedTo": "gift → #{{id}}",
-    "goldenHourStarted": "Golden Hour-ը գործում է {{minutes}} րոպե — այն ամենը, ինչ դուք հիմա գրառում եք, կրկնակի է հաշվում",
     "start": "Start",
     "pickCategory": "Category…",
     "trendJacked": "{{category}}-ը թրենդային է {{minutes}} րոպե",
@@ -1961,7 +1961,8 @@
     "noComments": "Դեռևս մեկնաբանություն չեք արել։",
     "noStages": "Ձեր Stage-ներից ոչ մեկը ներկայումս ուղիղ եթերում չէ կամ չի նախատեսված։",
     "noFlaresLeft": "Այս ցիկլում Signal Flares-ներ չեն մնացել։",
-    "spentFor": "{{power}}-ը վազում է {{minutes}} րոպե"
+    "spentFor": "{{power}}-ը վազում է {{minutes}} րոպե",
+    "goldenHourStarted": "Golden Hour-ը գործում է {{minutes}} րոպե — այն ամենը, ինչ դուք հիմա գրառում եք, կրկնակի է հաշվում"
   },
   "work": {
     "budgetExhausted": "Այս պարգևի ամբողջ բյուջեն հատկացված է։",
