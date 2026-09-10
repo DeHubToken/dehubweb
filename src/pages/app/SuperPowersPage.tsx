@@ -28,48 +28,13 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { cn } from '@/lib/utils';
 import { badgeImage } from '@/lib/staking-badges';
 import {
-  powerHome,
   useCancelBoost,
   useSuperpowerLadder,
   useSuperpowers,
 } from '@/hooks/use-superpowers';
 import { SpendPowerDrawer } from '@/components/app/modals/SpendPowerDrawer';
-import type { SuperPowerInfo, SuperPowerKey } from '@/lib/api/dehub/superpowers';
+import type { SuperPowerInfo } from '@/lib/api/dehub/superpowers';
 import { TeamUpDrawer } from '@/components/app/TeamUpDrawer';
-
-/**
- * What an unlocked power acts on, in one line under its name.
- *
- * Not directions any more. Every bento this account holds is a button that
- * opens the picker for its own target, so the only thing left worth saying on
- * the card is what kind of thing you are about to be asked to choose.
- * `powerHome` is the same table the picker and the post sheet read, so the
- * three cannot drift apart.
- */
-function actsOn(key: SuperPowerKey, t: (k: string, o?: Record<string, unknown>) => string): string {
-  switch (powerHome(key)) {
-    case 'gift':
-      return t('superpowers.actsGift', {
-        defaultValue: "A gift — it lands on somebody else's post. Tap to pick one.",
-      });
-    case 'comment':
-      return t('superpowers.actsComment', {
-        defaultValue: "Acts on your comment in somebody else's thread. Tap to pick one.",
-      });
-    case 'stage':
-      return t('superpowers.actsStage', {
-        defaultValue: 'Acts on a Stage you host. Tap to pick one.',
-      });
-    case 'page':
-      return t('superpowers.actsCategory', {
-        defaultValue: 'Acts on one of your categories. Tap to pick one.',
-      });
-    default:
-      return t('superpowers.actsPost', {
-        defaultValue: 'Acts on one of your posts. Tap to pick one.',
-      });
-  }
-}
 
 /** Total slot minutes a tier holds per cycle — the number worth comparing. */
 function cycleMinutes(boosts: number, minutes: number): number {
@@ -267,9 +232,6 @@ export default function SuperPowersPage() {
                         <span className="text-zinc-300">{power.tier}</span>
                       </span>
                     )}
-                    {usable && <p className="text-[11px] text-zinc-400 leading-snug">
-                      {isTeamUp ? 'Make or join a team. Tap to manage yours.' : actsOn(power.key, t)}
-                    </p>}
                   </button>
                   <div className="min-h-11 border-t border-white/10 px-4 py-2.5 flex items-center justify-between gap-3">
                     <span
