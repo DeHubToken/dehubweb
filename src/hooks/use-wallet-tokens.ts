@@ -11,8 +11,9 @@ import { getAllTokenBalances, type WalletToken } from '@/lib/wallet/tokens';
 import { getSolanaTokenBalances } from '@/lib/wallet/solana-tokens';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { ROBINHOOD_CHAIN_ID } from '@/lib/chains/robinhood';
 
-const ALL_CHAINS: ChainId[] = [BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID];
+const ALL_CHAINS: ChainId[] = [BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, ROBINHOOD_CHAIN_ID];
 
 export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
   const { walletAddress, isAuthenticated } = useAuth();
@@ -88,6 +89,17 @@ export function useAllChainsTokens() {
     refetchOnWindowFocus: false,
   });
 
+  // Robinhood custom tokens use the public chain RPC and do not depend on the
+  // stream contracts being configured, so they remain available while those
+  // contracts are rolled out separately.
+  const robinhoodQuery = useQuery<WalletToken[]>({
+    queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), ROBINHOOD_CHAIN_ID],
+    queryFn: () => getAllTokenBalances(walletAddress!, ROBINHOOD_CHAIN_ID),
+    enabled: !!walletAddress && isAuthenticated,
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
+  });
+
   /**
    * Solana holdings, read from the account's LINKED Solana address rather than
    * from a connected wallet — someone signed in with Google has no Phantom
@@ -111,13 +123,14 @@ export function useAllChainsTokens() {
     ...(baseQuery.data ?? []),
     ...(bnbQuery.data ?? []),
     ...(ethQuery.data ?? []),
+    ...(robinhoodQuery.data ?? []),
     ...(solanaQuery.data ?? []),
-  ], [baseQuery.data, bnbQuery.data, ethQuery.data, solanaQuery.data]);
+  ], [baseQuery.data, bnbQuery.data, ethQuery.data, robinhoodQuery.data, solanaQuery.data]);
 
   // Solana is excluded on purpose: it is optional (most accounts have no
   // linked address) and slower, and gating the whole wallet's skeleton on it
   // would delay balances that are already in hand.
-  const isLoading = baseQuery.isLoading || bnbQuery.isLoading || ethQuery.isLoading;
+  const isLoading = baseQuery.isLoading || bnbQuery.isLoading || ethQuery.isLoading || robinhoodQuery.isLoading;
 
   return { allTokens, isLoading };
 }
