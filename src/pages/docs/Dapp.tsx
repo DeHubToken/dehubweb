@@ -1434,7 +1434,7 @@ const Dapp = () => {
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo">{t('dapp.superPowersTitle')}</h2>
             
             <div className="space-y-6">
-              <p className="text-lg text-muted-foreground leading-relaxed font-exo">{t('dapp.superPowersDesc')}</p>
+              <p className="text-lg text-muted-foreground leading-relaxed font-exo">{t('dapp.superPowersDescV2')}</p>
               
               {/* The two that are built lead, and say so. The page previously
                   listed only the four unbuilt targeting powers, numbered 1–4
@@ -1514,7 +1514,7 @@ const Dapp = () => {
                 </Card>
               </div>
 
-              <p className="text-muted-foreground font-exo">{t('dapp.superPowersMore2')}</p>
+              <p className="text-muted-foreground font-exo">{t('dapp.superPowersMoreV2')}</p>
 
               <Link
                 to="/app/superpowers"
