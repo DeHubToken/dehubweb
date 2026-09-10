@@ -21,11 +21,9 @@ vi.mock('@/integrations/supabase/client', () => {
 });
 
 vi.mock('@/lib/api/dehub', () => ({
-  getAccountInfo: async (address: string) => {
-    const profile = accounts.current[address];
-    if (!profile) throw new Error('not found');
-    return profile;
-  },
+  getAccountSummaries: async (addresses: string[]) => addresses
+    .map((address) => accounts.current[address] ? { address, ...accounts.current[address] } : null)
+    .filter(Boolean),
 }));
 
 const { getAffiliateLeaderboard } = await import('@/lib/api/affiliate-leaderboard');

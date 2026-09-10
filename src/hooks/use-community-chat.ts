@@ -6,11 +6,11 @@
  */
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { useQuery, useQueries, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
-import { getAccountInfo } from '@/lib/api/dehub';
+import { getAccountSummaries } from '@/lib/api/dehub';
 import { adminErrorMessage } from '@/hooks/use-community-admin';
 import { notifyCommunityMentions } from '@/lib/community-mention-notify';
 import { toast } from 'sonner';
@@ -107,48 +107,26 @@ export function useCommunityChat(
     return Array.from(set);
   }, [rawMessages, myAddress]);
 
-  const profileQueries = useQueries({
-    queries: uniqueSenderAddresses.map(addr => ({
-      queryKey: ['community-chat-sender-profile', addr],
-      queryFn: async () => {
-        try {
-          const info = await getAccountInfo(addr, addr);
-          return {
-            address: addr,
-            displayName: (info as any)?.displayName ?? (info as any)?.display_name ?? null,
-            username: (info as any)?.username ?? null,
-            avatarUrl:
-              (info as any)?.avatarImageUrl ??
-              (info as any)?.avatarUrl ??
-              (info as any)?.avatar_url ??
-              null,
-          };
-        } catch {
-          return { address: addr, displayName: null, username: null, avatarUrl: null };
-        }
-      },
-      // Sender profiles rarely change — long cache windows keep repeat
-      // community visits from refiring the whole per-sender fan-out.
-      staleTime: 30 * 60_000,
-      gcTime: 60 * 60_000,
-      retry: 1,
-    })),
+  const { data: senderProfiles = [] } = useQuery({
+    queryKey: ['community-chat-sender-profiles', communityId, uniqueSenderAddresses.join(',')],
+    queryFn: () => getAccountSummaries(uniqueSenderAddresses),
+    enabled: uniqueSenderAddresses.length > 0,
+    staleTime: 30 * 60_000,
+    gcTime: 60 * 60_000,
+    retry: 1,
   });
 
   const senderProfileMap = useMemo(() => {
     const map = new Map<string, { displayName: string | null; username: string | null; avatarUrl: string | null }>();
-    for (const q of profileQueries) {
-      const d = q.data as any;
-      if (d?.address) {
-        map.set(d.address, {
-          displayName: d.displayName,
-          username: d.username,
-          avatarUrl: d.avatarUrl,
-        });
-      }
+    for (const profile of senderProfiles) {
+      map.set(profile.address.toLowerCase(), {
+        displayName: profile.displayName ?? null,
+        username: profile.username ?? null,
+        avatarUrl: profile.avatarImageUrl ?? null,
+      });
     }
     return map;
-  }, [profileQueries]);
+  }, [senderProfiles]);
 
   // Overlay latest profile onto each message: current user from useAuth, others
   // from the cached DeHub profile lookup. Messages store a snapshot at insert

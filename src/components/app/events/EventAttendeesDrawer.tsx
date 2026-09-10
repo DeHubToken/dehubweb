@@ -16,7 +16,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useNavigate } from 'react-router-dom';
 import { formatTimeAgo } from '@/lib/feed-utils';
-import { getAccountInfo } from '@/lib/api/dehub/users';
+import { getAccountSummaries } from '@/lib/api/dehub/users';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 
 interface Attendee {
@@ -48,23 +48,23 @@ export function EventAttendeesDrawer({ eventId, type, open, onOpenChange }: Even
   const navigate = useNavigate();
 
   const resolveProfiles = useCallback(async (items: Attendee[]): Promise<Attendee[]> => {
-    const resolved = await Promise.allSettled(
-      items.map(async (a) => {
-        try {
-          const profile = await getAccountInfo(a.wallet_address);
-          return {
-            ...a,
-            username: profile?.username || undefined,
-            display_name: (profile as any)?.displayName || (profile as any)?.display_name || undefined,
-            avatar_url: (profile as any)?.avatarImageUrl || (profile as any)?.avatarUrl || (profile as any)?.avatar_url || (profile as any)?.avatar || undefined,
-            badge_balance: profile?.badgeBalance,
-          };
-        } catch {
-          return a;
-        }
-      })
-    );
-    return resolved.map((r) => r.status === 'fulfilled' ? r.value : items[0]);
+    if (items.length === 0) return items;
+    try {
+      const profiles = await getAccountSummaries(items.map(item => item.wallet_address));
+      const byAddress = new Map(profiles.map(profile => [profile.address.toLowerCase(), profile]));
+      return items.map(item => {
+        const profile = byAddress.get(item.wallet_address.toLowerCase());
+        return profile ? {
+          ...item,
+          username: profile.username || undefined,
+          display_name: profile.displayName || undefined,
+          avatar_url: profile.avatarImageUrl || undefined,
+          badge_balance: profile.badgeBalance ?? undefined,
+        } : item;
+      });
+    } catch {
+      return items;
+    }
   }, []);
 
   const loadPage = useCallback(async (pageNum: number) => {
@@ -82,9 +82,12 @@ export function EventAttendeesDrawer({ eventId, type, open, onOpenChange }: Even
       const newData = (data ?? []) as Attendee[];
       if (newData.length < PAGE_SIZE) setHasMore(false);
 
-      // Resolve profiles from API
+      // Paint rows immediately, then enrich the same page with one compact request.
+      setAttendees(prev => pageNum === 0 ? newData : [...prev, ...newData]);
       const withProfiles = await resolveProfiles(newData);
-      setAttendees(prev => pageNum === 0 ? withProfiles : [...prev, ...withProfiles]);
+      setAttendees(prev => pageNum === 0
+        ? withProfiles
+        : prev.map(item => withProfiles.find(profile => profile.id === item.id) || item));
     } catch (err) {
       console.error('[EventAttendees] Load error:', err);
     } finally {

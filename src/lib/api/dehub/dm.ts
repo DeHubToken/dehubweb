@@ -1,6 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { apiCall, getAuthToken, authedUpload, ensureFreshToken } from './core';
-import { getAccountInfo } from './users';
+import { getAccountSummaries, type AccountSummary } from './users';
 import type { DeHubUser, DeHubNFT } from './types';
 
 // ─── Legacy types (kept for backward compat with GroupSettingsDrawer etc.) ────
@@ -314,30 +314,23 @@ export async function getContacts(
   );
 
 
-  // Enrich DeHub conversations with profile data (displayName, badgeBalance) when missing
-  await Promise.all(
-    dehubItems.map(async (conv) => {
-      const other = conv.otherUser;
-      if (!other?.address) return;
-      const needsEnrich = !other.displayName || other.badgeBalance == null;
-      if (!needsEnrich) return;
-      try {
-        const profile = await getAccountInfo(other.address);
-        if (profile) {
-          if (!other.displayName) {
-            other.displayName = profile.displayName || profile.display_name || '';
-            other.display_name = other.displayName;
-          }
-          if (other.badgeBalance == null) {
-            other.badgeBalance = profile.badgeBalance;
-          }
-          if (!other.avatarImageUrl) {
-            other.avatarImageUrl = profile.avatarImageUrl || profile.avatarUrl || '';
-          }
-        }
-      } catch { /* keep existing data */ }
-    })
-  );
+  // New contacts responses already embed these fields. Older responses and
+  // partial records are repaired with one compact lookup, never one request per row.
+  const missing = dehubItems
+    .map(conv => conv.otherUser)
+    .filter((user): user is DeHubUser => !!user?.address && (!user.displayName || user.badgeBalance == null));
+  if (missing.length > 0) {
+    const profiles: AccountSummary[] = await getAccountSummaries(missing.map(user => user.address!)).catch(() => []);
+    const byAddress = new Map(profiles.map(profile => [profile.address.toLowerCase(), profile] as const));
+    for (const user of missing) {
+      const profile = byAddress.get(user.address!.toLowerCase());
+      if (!profile) continue;
+      user.displayName ||= profile.displayName || '';
+      user.display_name ||= user.displayName;
+      user.badgeBalance ??= profile.badgeBalance ?? undefined;
+      user.avatarImageUrl ||= profile.avatarImageUrl || '';
+    }
+  }
 
   // Filter out permanently deleted conversations
   const deletedIds = (() => {

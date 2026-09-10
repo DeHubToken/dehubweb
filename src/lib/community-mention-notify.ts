@@ -11,7 +11,7 @@
  */
 
 import { callRpc } from '@/hooks/use-community-admin';
-import { getAccountByUsername } from '@/lib/api/dehub';
+import { getAccountSummariesByUsernames } from '@/lib/api/dehub';
 import { parseCommunityMentions, hasCommunityMentions } from '@/lib/community-mentions';
 
 /** Handles resolved per message. Mentioning more than this is spam, not a mention. */
@@ -29,18 +29,9 @@ interface NotifyArgs {
  * One unknown handle must not cost the others their notification, so failures
  * are per-handle rather than per-message.
  */
-async function resolveHandles(handles: string[], viewer: string): Promise<string[]> {
-  const settled = await Promise.allSettled(
-    handles.slice(0, MAX_RESOLVED_HANDLES).map(handle => getAccountByUsername(handle, viewer)),
-  );
-
-  const wallets: string[] = [];
-  for (const result of settled) {
-    if (result.status !== 'fulfilled') continue;
-    const address = result.value?.address;
-    if (typeof address === 'string' && address.length > 0) wallets.push(address.toLowerCase());
-  }
-  return wallets;
+async function resolveHandles(handles: string[], _viewer: string): Promise<string[]> {
+  const profiles = await getAccountSummariesByUsernames(handles.slice(0, MAX_RESOLVED_HANDLES));
+  return profiles.map(profile => profile.address.toLowerCase());
 }
 
 export async function notifyCommunityMentions({
