@@ -59,7 +59,7 @@ export function MatureContentGate({
   className,
 }: MatureContentGateProps) {
   return (
-    <div className={cn('relative rounded-2xl overflow-hidden', className)}>
+    <div data-media-full className={cn('relative rounded-2xl overflow-hidden', className)}>
       {preview ? (
         <img
           src={preview}
