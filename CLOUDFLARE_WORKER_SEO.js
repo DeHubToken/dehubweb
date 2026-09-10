@@ -158,7 +158,7 @@ const ORG_JSONLD = {
   name: 'DeHub',
   url: APP_URL,
   logo: DEHUB_LOGO,
-  description: 'DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities.',
+  description: 'DeHub is an open source, user owned and censorship resistant social media protocol giving you all the features incumbents refused to.',
   sameAs: ORG_SAME_AS,
 };
 // Browser SPA <title> in index.html — bot HTML must carry the same string so
@@ -166,7 +166,7 @@ const ORG_JSONLD = {
 const HOME_TITLE = 'DeHub — Open Source, User Owned Social Media';
 const HOME_TITLE_LEGACY = 'DeHub — Open Source, User Owned & Censorship Resistant Media';
 // Browser SPA <meta name="description"> in index.html, for the same reason.
-const HOME_DESCRIPTION = 'DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities.';
+const HOME_DESCRIPTION = 'DeHub is an open source, user owned and censorship resistant social media protocol giving you all the features incumbents refused to.';
 
 // Signed-out introduction on "/". MIRRORS src/components/app/HomeIntro.tsx —
 // keep the prose identical in both, or the bot and browser variants diverge and
