@@ -840,8 +840,12 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
 /** Rows pulled per head poll. Also the ceiling on the count the pill can show. */
 const NEW_POSTS_HEAD_SIZE = 20;
 
-/** How often the head is re-checked while the feed is on screen. */
-const NEW_POSTS_POLL_MS = 60_000;
+/**
+ * How often the visible head is re-checked while the feed is on screen.
+ * The response is also merged into every cached copy of each post, so views
+ * and reactions move on screen without the reader refreshing the page.
+ */
+export const LIVE_ENGAGEMENT_POLL_MS = 10_000;
 
 interface UseNewPostsSignalOptions extends Omit<UnifiedFeedParams, 'page'> {
   /**
@@ -886,11 +890,11 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
     queryFn: () =>
       fetchUnifiedFeedFromAPI({ ...params, page: 1, limit: NEW_POSTS_HEAD_SIZE }, viewer),
     enabled,
-    refetchInterval: NEW_POSTS_POLL_MS,
+    refetchInterval: LIVE_ENGAGEMENT_POLL_MS,
     // A backgrounded tab shouldn't keep hitting the API to update a pill
     // nobody can see.
     refetchIntervalInBackground: false,
-    staleTime: NEW_POSTS_POLL_MS / 2,
+    staleTime: LIVE_ENGAGEMENT_POLL_MS / 2,
     gcTime: 5 * 60_000,
     retry: 1,
   });
