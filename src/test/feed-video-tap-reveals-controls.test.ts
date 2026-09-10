@@ -16,7 +16,7 @@ const VIDEO_CARD = readFileSync(
  * player "a preview" to justify it, so the pull back in this direction is easy
  * to make by accident. Assert on the two handlers that own a press on the media.
  */
-describe('feed video — a tap on the media reveals controls, it does not navigate', () => {
+describe('feed video — a tap on the media toggles playback, it does not navigate', () => {
   /** The `!isImmersive` (feed) branch of a handler, up to its `return`. */
   function feedBranch(handler: string) {
     const fn = VIDEO_CARD.match(
@@ -31,13 +31,19 @@ describe('feed video — a tap on the media reveals controls, it does not naviga
   it('does not open the post from a click on the player', () => {
     const branch = feedBranch('handleVideoAreaClick');
     expect(branch).toContain('showControlsBriefly()');
+    expect(branch).toContain('handlePlayClick()');
     expect(branch).not.toContain('openPost');
   });
 
   it('does not open the post from a tap on the player', () => {
     const branch = feedBranch('handleTouchEnd');
     expect(branch).toContain('showControlsBriefly()');
+    expect(branch).toContain('handlePlayClick()');
     expect(branch).not.toContain('openPost');
+  });
+
+  it('never paints a focus outline around the video surface', () => {
+    expect(VIDEO_CARD).toContain('focus-visible:outline-none');
   });
 
   it('still opens the post from the surrounding bento', () => {
