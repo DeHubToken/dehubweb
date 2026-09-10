@@ -10,6 +10,7 @@ import { isValidAffiliateCode, setAffiliateRef } from "@/lib/affiliateRef";
 import { resolveDeepLinkTarget } from "@/lib/affiliateDeepLink";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 import { getBadgeUrl, getBadgeName } from "@/lib/staking-badges";
+import { DEFAULT_AFFILIATE_LANDING, type AffiliateLandingCustomization } from "@/lib/affiliate";
 
 
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
@@ -31,6 +32,8 @@ export default function ReferralLanding() {
   const [inviterBadgeBalance, setInviterBadgeBalance] = useState<number | null>(null);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgRetry, setImgRetry] = useState(0);
+  const [landing, setLanding] = useState<AffiliateLandingCustomization>(DEFAULT_AFFILIATE_LANDING);
+  const [hasCustomHeadline, setHasCustomHeadline] = useState(false);
 
   // PNG for OG/social meta (cached cross-platform), SVG for the fast in-page preview.
   // Bump `v` whenever the share-image renderer changes so social platforms and browsers refetch.
@@ -58,11 +61,20 @@ export default function ReferralLanding() {
       // @ts-ignore - new table not in generated types
       const { data } = await supabase
         .from("affiliate_codes" as never)
-        .select("share_name,owner_address")
+        .select("share_name,owner_address,landing_headline,landing_message,landing_cta_label,landing_destination")
         .eq("code", code)
         .eq("active", true)
-        .maybeSingle() as unknown as { data: { share_name: string | null; owner_address: string } | null };
+        .maybeSingle() as unknown as { data: { share_name: string | null; owner_address: string; landing_headline: string | null; landing_message: string | null; landing_cta_label: string | null; landing_destination: string | null } | null };
       if (cancelled) return;
+      if (data) {
+        setHasCustomHeadline(Boolean(data.landing_headline?.trim()));
+        setLanding({
+          headline: data.landing_headline || DEFAULT_AFFILIATE_LANDING.headline,
+          message: data.landing_message || DEFAULT_AFFILIATE_LANDING.message,
+          ctaLabel: data.landing_cta_label || DEFAULT_AFFILIATE_LANDING.ctaLabel,
+          destination: data.landing_destination || DEFAULT_AFFILIATE_LANDING.destination,
+        });
+      }
       let resolved: string | null = null;
       if (data?.owner_address) {
         try {
@@ -90,6 +102,30 @@ export default function ReferralLanding() {
     })();
     return () => { cancelled = true; };
   }, [code, valid, deepLink]);
+
+  useEffect(() => {
+    if (!valid) return;
+    try {
+      const key = "dehub-affiliate-visitor";
+      let visitorId = window.localStorage.getItem(key);
+      if (!visitorId) {
+        visitorId = typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        window.localStorage.setItem(key, visitorId);
+      }
+      let source: string | null = null;
+      if (document.referrer) {
+        try { source = new URL(document.referrer).hostname; } catch { /* ignore malformed referrer */ }
+      }
+      // @ts-ignore - RPC is introduced by the affiliate customization migration
+      void supabase.rpc("record_affiliate_page_view" as never, {
+        p_code: code,
+        p_visitor_id: visitorId,
+        p_source: source,
+      } as never);
+    } catch { /* analytics must never block the invite */ }
+  }, [code, valid]);
 
   // Preload the share image immediately — its URL only depends on the code,
   // so it downloads in parallel with the inviter lookup instead of after it.
@@ -148,7 +184,9 @@ export default function ReferralLanding() {
             <>
               <p className="text-sm uppercase tracking-[0.3em] text-white/50">{t('referral.youveBeenInvited')}</p>
               <h1 className="text-4xl md:text-6xl font-bold leading-tight flex flex-col items-center gap-4">
-                {inviter ? (() => {
+                {hasCustomHeadline ? (
+                  <span>{landing.headline}</span>
+                ) : inviter ? (() => {
                   const badgeUrl = getBadgeUrl(inviterBadgeBalance ?? undefined, inviterUsername);
                   const badgeName = getBadgeName(inviterBadgeBalance ?? undefined, inviterUsername);
                   return (
@@ -172,6 +210,7 @@ export default function ReferralLanding() {
                   <span>{t('referral.youveBeenInvitedToDehub')}</span>
                 )}
               </h1>
+              <p className="mx-auto max-w-2xl text-lg text-white/70 whitespace-pre-line">{landing.message}</p>
               <p className="text-lg text-white/70">
                 {t('referral.joinWithCode')} <span className="font-mono font-bold tracking-[0.3em] text-white">{code}</span>
               </p>
@@ -187,7 +226,7 @@ export default function ReferralLanding() {
               </div>
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                 <Button asChild size="lg">
-                  <Link to={ctaUrl}>{t('referral.continueToDehub')} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                  <Link to={landing.destination || ctaUrl}>{landing.ctaLabel || t('referral.continueToDehub')} <ArrowRight className="ml-2 h-4 w-4" /></Link>
                 </Button>
                 <Button size="lg" variant="outline" onClick={() => copy(pageUrl)}>
                   <Copy className="mr-2 h-4 w-4" /> {t('referral.copyInviteLink')}
