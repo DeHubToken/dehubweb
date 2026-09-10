@@ -412,7 +412,7 @@ export function ProfileHeader({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="group inline-flex items-baseline gap-1">
-                  <h2 className="text-xl font-bold text-white">{profile.name}</h2>
+                  <h2 className="text-2xl font-bold leading-8 text-white">{profile.name}</h2>
                   <BadgeIcon src={badgeUrl} className="w-[1em] h-[1em]" />
                   {/* A lent badge draws like any other badge everywhere else
                       on the site. Hovering the name it sits on is the one
@@ -483,7 +483,7 @@ export function ProfileHeader({
           })()}
           
           {profile.bio && (
-            <TranslatableText text={translatedBio || profile.bio} className="mt-3 text-white/90 text-sm sm:text-base block" as="p" />
+            <TranslatableText text={translatedBio || profile.bio} className="mt-3 text-white/90 text-base leading-6 block" as="p" />
           )}
 
           {/* Pinned Communities */}

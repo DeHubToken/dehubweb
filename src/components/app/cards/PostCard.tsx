@@ -610,7 +610,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                   correctly over whatever sits behind the card. */}
               <div className="relative overflow-hidden" style={{ maxHeight: '2.6em' }}>
                 <p
-                  className="text-white/90 text-sm sm:text-base"
+                  className="text-white/90 text-base leading-6"
                   style={{
                     WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 45%, transparent 95%)',
                     maskImage: 'linear-gradient(to bottom, black 0%, black 45%, transparent 95%)',
@@ -666,7 +666,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
             ran a second translation of the same body — and once the first one
             landed, a third of the translated text. */}
         {displayBody?.trim() ? (
-          <TranslatableText text={displayBody} className="text-white/90 text-sm sm:text-base" as="p" auto={false} flagged={post.communityAlertPending} />
+          <TranslatableText text={displayBody} className="text-white/90 text-base leading-6" as="p" auto={false} flagged={post.communityAlertPending} />
         ) : null}
 
         {/* Quoted post embed (Twitter-style) */}

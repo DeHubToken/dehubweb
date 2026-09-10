@@ -141,18 +141,18 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
           <BadgedName
             badgeBalance={quotedPost.minterUser?.hideBadgeAndBalance ? 0 : quotedPost.minterUser?.badgeBalance}
             username={handle}
-            className="text-sm font-semibold text-white"
+            className="text-[15px] leading-5 font-semibold text-white"
           >
             {displayName}
           </BadgedName>
           <NewMemberChip address={avatarAddress || undefined} />
           <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 hidden" />
-          <span className="text-xs text-zinc-500 truncate">@{handle}</span>
+          <span className="text-[13px] leading-5 text-zinc-500 truncate">@{handle}</span>
         </div>
 
         {/* Text content */}
         {content && (
-          <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">{content}</p>
+          <p className="text-[15px] leading-[22px] text-zinc-300 whitespace-pre-wrap">{content}</p>
         )}
       </div>
     </div>

@@ -160,7 +160,7 @@ export function CardHeader({
       >
         <div className="flex items-center gap-1.5 min-w-0">
           <span className="inline-flex items-baseline gap-1 shrink min-w-0">
-            <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
+            <span className="font-semibold text-white text-base truncate max-w-[160px] sm:max-w-none leading-5">{username}</span>
             <BadgeIcon badgeBalance={badgeBalance} lookupId={badgeLookupId} username={handle || username} className="w-[1em] h-[1em]" />
           </span>
           {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 self-end" />}
@@ -169,12 +169,12 @@ export function CardHeader({
         {(formattedHandle || timestamp) && (
           <div className="flex items-center gap-1 min-w-0">
             {formattedHandle && (
-              <span className="text-zinc-500 text-xs truncate max-w-[160px] sm:max-w-none">{formattedHandle}</span>
+              <span className="text-zinc-500 text-sm truncate max-w-[160px] sm:max-w-none leading-5">{formattedHandle}</span>
             )}
             {timestamp && (
               <>
-                <span className="text-zinc-600 text-xs">·</span>
-                <span className="text-zinc-500 text-xs shrink-0">{timestamp}</span>
+                <span className="text-zinc-600 text-[13px]">·</span>
+                <span className="text-zinc-500 text-[13px] leading-5 shrink-0">{timestamp}</span>
               </>
             )}
           </div>
