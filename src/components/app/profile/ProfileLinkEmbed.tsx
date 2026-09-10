@@ -74,7 +74,7 @@ export function ProfileLinkEmbed({ username, fallback = null }: ProfileLinkEmbed
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
-          <span className="inline-flex items-center gap-1 shrink min-w-0">
+          <span className="inline-flex items-baseline gap-1 shrink min-w-0">
             <span className="text-sm font-semibold text-white truncate">{displayName}</span>
             <BadgeIcon
               badgeBalance={user.badgeBalance ?? 0}

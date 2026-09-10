@@ -2,7 +2,7 @@
  * BadgedName — a display name with its staking badge inline beside it.
  *
  * It follows the familiar social verification pattern: one text-em square,
- * immediately after the display name and vertically centred on the line.
+ * immediately after the display name and aligned to its baseline.
  *
  * Pass `badgeBalance` when the payload carries one (feed cards), or `lookupId`
  * — a username or wallet address — when it does not (stage hosts, community
@@ -45,7 +45,7 @@ export function BadgedName({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 shrink min-w-0 max-w-full',
+        'inline-flex items-baseline gap-1 shrink min-w-0 max-w-full',
         wrapperClassName,
       )}
     >

@@ -224,7 +224,7 @@ export function ProfileHoverCard({
             {/* Name + handle */}
             <button onClick={handleNavigate} className="cursor-pointer text-left">
               <div className="flex items-center gap-1.5">
-                <span className="inline-flex items-center gap-1 shrink min-w-0">
+                <span className="inline-flex items-baseline gap-1 shrink min-w-0">
                   <span className="font-semibold text-white text-sm truncate max-w-[180px] leading-tight">
                     {profile.displayName || profile.username || 'Unknown'}
                   </span>

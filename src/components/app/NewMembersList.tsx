@@ -147,7 +147,7 @@ export function NewMembersList({ listClassName }: NewMembersListProps) {
               </Avatar>
             </div>
             <div className="flex-1 min-w-0 overflow-hidden">
-              <span className="inline-flex items-center gap-1 shrink min-w-0 max-w-full">
+              <span className="inline-flex items-baseline gap-1 shrink min-w-0 max-w-full">
                 <span className="font-semibold text-white text-sm truncate">{member.displayName}</span>
                 <BadgeIcon
                   badgeBalance={member.hideBadgeAndBalance ? 0 : member.badgeBalance}

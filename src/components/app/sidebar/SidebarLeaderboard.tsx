@@ -191,7 +191,7 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
             {/* User Info */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-0 min-w-0">
-                <span className="relative inline-flex items-baseline shrink min-w-0">
+                <span className="relative inline-flex items-baseline gap-1 shrink min-w-0">
                   <span className="font-semibold text-white text-sm truncate min-w-0">
                     {isPlaceholder ? '—' : getDisplayName(entry)}
                   </span>

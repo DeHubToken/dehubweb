@@ -411,7 +411,7 @@ export function ProfileHeader({
           <div className="flex flex-col">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="group inline-flex items-center gap-1">
+                <span className="group inline-flex items-baseline gap-1">
                   <h2 className="text-xl font-bold text-white">{profile.name}</h2>
                   <BadgeIcon src={badgeUrl} className="w-[1em] h-[1em]" />
                   {/* A lent badge draws like any other badge everywhere else
