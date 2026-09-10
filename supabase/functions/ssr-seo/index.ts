@@ -450,7 +450,7 @@ serve(async (req) => {
                 } catch { /* keep default */ }
 
                 const referralUrl = `${APP_URL}/r/${code}`;
-                const shareImage = `${SUPABASE_URL}/functions/v1/affiliate-share-image?code=${encodeURIComponent(code)}&width=1200&height=630&format=png&v=5`;
+                const shareImage = `${SUPABASE_URL}/functions/v1/affiliate-share-image?code=${encodeURIComponent(code)}&width=1200&height=630&format=png&v=6`;
                 const title = `${inviter} invited you to DeHub — earn, post & build on-chain`;
                 const description = `Use invite code ${code} to join DeHub. The decentralised creator network for video, music, social, jobs and Web3.`;
 
