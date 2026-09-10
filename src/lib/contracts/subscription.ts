@@ -37,6 +37,7 @@ import {
 } from './aa-utils';
 import { toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from './dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { ensureSubscriptionFunding } from './subscription-funding';
 
 /** Chains where the subscription contract is deployed and initialised. */
 export const SUBSCRIPTION_CONTRACTS: Partial<Record<number, string>> = {
@@ -277,6 +278,8 @@ export interface BuySubscriptionParams {
   token: string;
   decimals: number;
   currency?: string;
+  /** Keeps checkout copy in step with an automatic shortfall swap. */
+  onFundingStage?: (message: string) => void;
 }
 
 export interface SubscriptionCost {
@@ -347,25 +350,45 @@ export async function buySubscriptionOnChain(
     throw new Error('This plan is not published on chain yet — the creator needs to publish it first');
   }
 
-  const [balance, allowance] = await Promise.all([
-    params.skipBalanceCheck
-      ? Promise.resolve(cost.total)
-      : getERC20Balance(params.token, subscriber, params.chainId),
-    readContract<bigint>(
-      params.token,
-      new Interface(['function allowance(address owner, address spender) view returns (uint256)']),
-      'allowance',
-      [subscriber, contract],
-      params.chainId,
-    ),
-  ]);
+  let balance = params.skipBalanceCheck
+    ? cost.total
+    : await getERC20Balance(params.token, subscriber, params.chainId);
+
+  // Plans stay denominated and settled in their configured token. For the new
+  // fixed-dollar plans that token is USDT; if the buyer is short, fill only the
+  // gap from another liquid asset on the same chain before approving the plan.
+  // Legacy DHB plans retain their original direct-token behaviour.
+  const currency = (params.currency || '').toUpperCase();
+  if (
+    !params.skipBalanceCheck &&
+    balance < cost.total &&
+    (currency === 'USDT' || currency === 'USDC' || currency === 'USD')
+  ) {
+    await ensureSubscriptionFunding({
+      chainId: params.chainId,
+      owner: subscriber,
+      outputToken: params.token,
+      outputSymbol: currency === 'USD' ? 'USDT' : currency,
+      total: cost.total,
+      onStage: params.onFundingStage,
+    });
+    balance = await getERC20Balance(params.token, subscriber, params.chainId);
+  }
+
+  const allowance = await readContract<bigint>(
+    params.token,
+    new Interface(['function allowance(address owner, address spender) view returns (uint256)']),
+    'allowance',
+    [subscriber, contract],
+    params.chainId,
+  );
 
   if (!params.skipBalanceCheck && balance < cost.total) {
     const held = Number(balance) / 10 ** params.decimals;
     const needed = Number(cost.total) / 10 ** params.decimals;
-    const currency = params.currency || 'tokens';
+    const displayCurrency = params.currency || 'tokens';
     throw new Error(
-      `Not enough ${currency}. This subscription costs ${needed.toLocaleString()} ${currency} including fees, and you hold ${held.toLocaleString()}.`,
+      `Not enough ${displayCurrency}. This subscription costs ${needed.toLocaleString()} ${displayCurrency} including fees, and you hold ${held.toLocaleString()}.`,
     );
   }
 
