@@ -353,7 +353,7 @@ export default function AffiliatePage() {
               {displayName ? (
                 <span className="inline-flex items-center gap-1.5">
                   <span>· {displayName}</span>
-                  <BadgeIcon badgeBalance={badgeBalance ?? undefined} username={username} className="w-3 h-3" />
+                  <BadgeIcon badgeBalance={badgeBalance ?? undefined} username={username} className="w-[1em] h-[1em]" />
                 </span>
               ) : null}
             </p>
@@ -602,7 +602,7 @@ function AffiliateRow({ entry, viewerWallet }: { entry: AffiliateReferralEntry; 
             <span className="font-medium text-white truncate">{name}</span>
           )}
           {profile?.verified && <VerifiedBadge className="w-3.5 h-3.5 shrink-0" />}
-          <BadgeIcon badgeBalance={profile?.badgeBalance ?? undefined} username={username} className="w-3 h-3" />
+          <BadgeIcon badgeBalance={profile?.badgeBalance ?? undefined} username={username} className="w-[1em] h-[1em]" />
         </div>
         <div className="text-xs text-white/45 truncate">
           {username ? `@${username}` : truncateAddress(entry.address)}

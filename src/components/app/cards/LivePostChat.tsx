@@ -54,7 +54,7 @@ function LiveChatAvatar({ src, address, name }: { src?: string | null; address?:
 
 /** Live chat badge */
 function LiveChatBadge({ badgeBalance, username }: { badgeBalance?: number | null; username?: string | null }) {
-  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] absolute -top-0.5 -right-0" />;
+  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[1em] h-[1em]" />;
 }
 
 /** Translatable text message with inline translate button */

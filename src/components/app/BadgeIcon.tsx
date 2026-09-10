@@ -29,9 +29,9 @@ interface BadgeIconProps {
   className?: string;
 }
 
-export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, className = 'w-[9px] h-[9px]' }: BadgeIconProps) {
+export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, className = 'w-[1em] h-[1em]' }: BadgeIconProps) {
   const navigate = useNavigate();
-  const { url, name, big } = useBadgeVisual({ badgeBalance, username, lookupId, badgeLock, src });
+  const { url, name } = useBadgeVisual({ badgeBalance, username, lookupId, badgeLock, src });
 
   if (!url) return null;
 
@@ -42,11 +42,11 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
           data-badge-icon
           src={url}
           alt={name || 'Badge'}
-          width={9}
-          height={9}
+          width={16}
+          height={16}
           loading="lazy"
           decoding="async"
-          className={`shrink-0 rounded-none bg-transparent object-contain cursor-pointer hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.8)] transition-all ${big ? 'scale-110' : ''} ${className}`}
+          className={`shrink-0 self-center align-middle rounded-none bg-transparent object-contain cursor-pointer hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.8)] transition-all ${className}`}
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();

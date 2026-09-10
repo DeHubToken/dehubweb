@@ -6,7 +6,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AppState } from '@/components/app/AppState';
 import { getSuggestedAccounts, getCachedSuggestedProfiles, type SuggestedAccount } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
@@ -206,9 +205,9 @@ export function WhoToFollow() {
               </Avatar>
             </div>
             <div className="flex-1 min-w-0 overflow-hidden">
-              <span className={`relative inline-flex items-baseline shrink min-w-0 max-w-full${getBadgeUrl(user.hideBadgeAndBalance ? 0 : user.badgeBalance, user.username) ? ' pr-3' : ''}`}>
+              <span className="inline-flex items-center gap-1 shrink min-w-0 max-w-full">
                 <span className="font-semibold text-white text-sm truncate">{getDisplayName(user)}</span>
-                <BadgeIcon badgeBalance={user.hideBadgeAndBalance ? 0 : user.badgeBalance} username={user.username} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
+                <BadgeIcon badgeBalance={user.hideBadgeAndBalance ? 0 : user.badgeBalance} username={user.username} className="w-[1em] h-[1em]" />
               </span>
             </div>
             <button

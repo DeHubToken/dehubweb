@@ -61,13 +61,12 @@ export function WorkUser({
           to={`/${address}`}
           className="flex items-center gap-1.5 text-sm font-medium text-white hover:underline"
         >
-          {/* pr-3 reserves the badge's corner — the placement WhoToFollow uses. */}
-          <span className="relative min-w-0 truncate pr-3">
+          <span className="inline-flex items-center gap-1 min-w-0 truncate">
             {name}
             <BadgeIcon
               badgeBalance={profile?.badgeBalance}
               username={profile?.username}
-              className="absolute right-0 top-0 h-[9px] w-[9px]"
+              className="h-[1em] w-[1em]"
             />
           </span>
         </Link>

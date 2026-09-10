@@ -219,13 +219,12 @@ function ChallengeRow({
         </Avatar>
         <div className="min-w-0">
           <p className="flex items-center gap-1.5 text-sm font-medium text-white">
-            {/* pr-3 reserves the badge's corner — same placement WhoToFollow uses. */}
-            <span className="relative min-w-0 truncate pr-3">
+            <span className="inline-flex items-center gap-1 min-w-0 truncate">
               {name}
               <BadgeIcon
                 badgeBalance={profile?.badgeBalance}
                 username={profile?.username}
-                className="absolute right-0 top-0 h-[9px] w-[9px]"
+                className="h-[1em] w-[1em]"
               />
             </span>
             {mine ? <span className="shrink-0 text-[10px] font-normal text-zinc-500">(you)</span> : null}

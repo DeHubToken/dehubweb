@@ -41,13 +41,13 @@ function CreatorInfo({ event }: { event: CommunityEvent }) {
         <AvatarImage src={avatarUrl} />
         <AvatarFallback className="bg-zinc-700 text-white text-[9px]">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
       </Avatar>
-      <span className="relative inline-flex items-baseline shrink min-w-0 pr-3">
+      <span className="inline-flex items-center gap-1 shrink min-w-0">
         <span className="text-xs text-zinc-400 group-hover:text-white transition-colors">
           Created by <span className="font-medium text-zinc-300 group-hover:text-white">{displayName}</span>
         </span>
         <BadgeIcon
           lookupId={handle || event.creator_wallet_address}
-          className="w-[9px] h-[9px] absolute -top-0.5 -right-0"
+          className="w-[1em] h-[1em]"
         />
       </span>
     </button>
