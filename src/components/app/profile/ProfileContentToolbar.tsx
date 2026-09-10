@@ -28,6 +28,13 @@ import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { ProfileFilterPanel } from '@/components/app/profile/ProfileFilterPanel';
 import { getCategories } from '@/lib/api/dehub';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
 import {
   DATE_FILTER_OPTIONS,
   POST_TYPE_FILTERS,
@@ -82,6 +89,7 @@ export function ProfileContentToolbar({
   isLoading,
 }: ProfileContentToolbarProps) {
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
 
   // Off the All tab the post-type row is neither shown nor sent, so it must not
   // be badged or chipped either — a chip for a filter that isn't applied is a
@@ -117,8 +125,8 @@ export function ProfileContentToolbar({
 
   return (
     <div className="mb-3 space-y-2">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <div className="flex gap-2 sm:w-64 sm:flex-shrink-0">
+      <div className="flex gap-2">
+        <div className="flex min-w-0 flex-1 gap-2 sm:max-w-md">
           <div className="relative flex-1 min-w-0">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
             <input
@@ -163,18 +171,20 @@ export function ProfileContentToolbar({
           </button>
         </div>
 
-        <GlassFilterRow
-          items={sortItems}
-          activeKey={sort}
-          onSelect={onSortChange}
-          className="min-w-0 flex-1"
-          borderRadius="0.75rem"
-          buttonClassName="px-3 py-1.5 rounded-xl text-xs"
-        />
       </div>
 
-      <AnimatePresence initial={false}>
-        {filtersOpen && (
+      <GlassFilterRow
+        items={sortItems}
+        activeKey={sort}
+        onSelect={onSortChange}
+        className="-mx-2 min-w-0"
+        borderRadius="0.75rem"
+        buttonClassName="h-9 px-3 py-0 rounded-xl text-xs"
+      />
+
+      {!isMobile && (
+        <AnimatePresence initial={false}>
+          {filtersOpen && (
           <motion.div
             key="profile-filters"
             initial={{ opacity: 0, height: 0 }}
@@ -190,8 +200,28 @@ export function ProfileContentToolbar({
               showPostType={showPostType}
             />
           </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
+      )}
+
+      {isMobile && (
+        <Drawer open={filtersOpen} onOpenChange={onFiltersOpenChange}>
+          <DrawerContent glass hideHandle={false} className="max-h-[85dvh] px-3 pb-[calc(12px_+_env(safe-area-inset-bottom))]">
+            <DrawerHeader className="px-0 pb-3 pt-1 text-left">
+              <DrawerTitle className="text-white">{t('explorePage.filters', 'Filters')}</DrawerTitle>
+            </DrawerHeader>
+            <div className="min-h-0 overflow-y-auto overscroll-contain">
+              <ProfileFilterPanel
+                filters={filters}
+                onChange={onFiltersChange}
+                onReset={onFiltersReset}
+                showPostType={showPostType}
+                drawer
+              />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
 
       {/* Active filters, always visible — a chip is the only thing that
           explains an empty tab once the panel is closed again. */}
