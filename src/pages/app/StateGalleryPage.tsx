@@ -5,7 +5,7 @@ import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
 const THEMES = [
-  'system', 'minimal', 'cosmic', 'hazy', 'swarms',
+  'system', 'minimal', 'light', 'cosmic', 'hazy', 'swarms',
   'lavalamp', 'winter', 'war', 'osaka', 'jungle',
 ] as const;
 
