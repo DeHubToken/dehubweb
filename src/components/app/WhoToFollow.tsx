@@ -205,7 +205,7 @@ export function WhoToFollow() {
               </Avatar>
             </div>
             <div className="flex-1 min-w-0 overflow-hidden">
-              <span className="inline-flex items-center gap-1 shrink min-w-0 max-w-full">
+              <span className="inline-flex items-baseline gap-1 shrink min-w-0 max-w-full">
                 <span className="font-semibold text-white text-sm truncate">{getDisplayName(user)}</span>
                 <BadgeIcon badgeBalance={user.hideBadgeAndBalance ? 0 : user.badgeBalance} username={user.username} className="w-[1em] h-[1em]" />
               </span>

@@ -153,7 +153,7 @@ export function NewMembersCarousel({
                   {member.displayName.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <span className="inline-flex items-center gap-1 shrink min-w-0 max-w-full">
+              <span className="inline-flex items-baseline gap-1 shrink min-w-0 max-w-full">
                 <span className="font-semibold text-white text-xs truncate">{member.displayName}</span>
                 <BadgeIcon
                   badgeBalance={member.hideBadgeAndBalance ? 0 : member.badgeBalance}

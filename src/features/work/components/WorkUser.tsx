@@ -61,7 +61,7 @@ export function WorkUser({
           to={`/${address}`}
           className="flex items-center gap-1.5 text-sm font-medium text-white hover:underline"
         >
-          <span className="inline-flex items-center gap-1 min-w-0 truncate">
+          <span className="inline-flex items-baseline gap-1 min-w-0 truncate">
             {name}
             <BadgeIcon
               badgeBalance={profile?.badgeBalance}
