@@ -18,6 +18,7 @@ interface GlassFilterRowProps<T extends string> {
   className?: string;
   buttonClassName?: string;
   borderRadius?: string;
+  leadingContent?: React.ReactNode;
   trailingContent?: React.ReactNode;
 }
 
@@ -29,6 +30,7 @@ export function GlassFilterRow<T extends string>({
   className,
   buttonClassName,
   borderRadius = '0.5rem',
+  leadingContent,
   trailingContent,
 }: GlassFilterRowProps<T>) {
   const layerRef = useRef<HTMLDivElement>(null);
@@ -90,6 +92,7 @@ export function GlassFilterRow<T extends string>({
         className="relative z-40 flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap px-2 py-1"
         style={{ touchAction: 'pan-x', ...fadeStyle }}
       >
+        {leadingContent}
         {items.map((item) => {
           const isActive = activeSet.has(item.key);
           return (
