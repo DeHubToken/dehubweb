@@ -41,6 +41,22 @@ describe('pending wallet actions', () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
+  it('opens a fresh unlock prompt when the user retries after dismissal', async () => {
+    const requested = vi.fn();
+    window.addEventListener('dehub:wallet-unlock-required', requested);
+
+    const first = waitForWalletUnlock().catch(error => error);
+    finishWalletUnlock(false);
+    expect(await first).toBeInstanceOf(WalletActionCancelledError);
+
+    const retry = waitForWalletUnlock();
+    expect(requested).toHaveBeenCalledTimes(2);
+    finishWalletUnlock(true);
+    await expect(retry).resolves.toBeUndefined();
+
+    window.removeEventListener('dehub:wallet-unlock-required', requested);
+  });
+
   it.each(['dehub_wallet', 'dehub_supabase_uid'])('cancels if %s changes while unlocking', async key => {
     const outcome = waitForWalletUnlock().catch(error => error);
     localStorage.setItem(key, 'different-account');
