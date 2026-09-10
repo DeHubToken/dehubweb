@@ -555,7 +555,7 @@ export default function LeaderboardPage() {
                     />
                     <div className="min-w-0">
                       <div className="flex items-center gap-1">
-                        <span className="inline-flex items-center gap-1 shrink min-w-0">
+                        <span className="inline-flex items-baseline gap-1 shrink min-w-0">
                           <span className="font-semibold text-white truncate">{getDisplayName(entry)}</span>
                           <BadgeIcon badgeBalance={entry.badgeBalance || entry.total} username={entry.username} className="w-[1em] h-[1em]" />
                         </span>

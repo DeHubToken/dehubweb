@@ -41,7 +41,7 @@ function CreatorInfo({ event }: { event: CommunityEvent }) {
         <AvatarImage src={avatarUrl} />
         <AvatarFallback className="bg-zinc-700 text-white text-[9px]">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
       </Avatar>
-      <span className="inline-flex items-center gap-1 shrink min-w-0">
+      <span className="inline-flex items-baseline gap-1 shrink min-w-0">
         <span className="text-xs text-zinc-400 group-hover:text-white transition-colors">
           Created by <span className="font-medium text-zinc-300 group-hover:text-white">{displayName}</span>
         </span>

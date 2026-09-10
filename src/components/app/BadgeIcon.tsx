@@ -37,32 +37,37 @@ interface BadgeIconProps {
  * pixels around it. Lobster is the neutral reference; darker wide marks get a
  * little more optical size so they do not recede at compact rendering sizes.
  */
-const BADGE_OPTICS: Record<string, number> = {
-  Crab: 1,
-  Lobster: 1.04,
-  Piranha: 1,
-  Tortoise: 1,
-  Cobra: 1,
-  Octopus: 1.02,
-  Crocodite: 1,
-  Dolphin: 1.03,
-  'Tiger Shark': 1.03,
-  'Killer Whale': 1.04,
-  'Great White Shark': 1.04,
-  'Blue Whale': 1.1,
-  Meglodon: 1.08,
+const BADGE_OPTICS: Record<string, { scale: number; bottomInset: number }> = {
+  Crab: { scale: 1, bottomInset: 5 },
+  Lobster: { scale: 1.04, bottomInset: 4 },
+  Piranha: { scale: 1, bottomInset: 7 },
+  Tortoise: { scale: 1, bottomInset: 10 },
+  Cobra: { scale: 1, bottomInset: 4 },
+  Octopus: { scale: 1.02, bottomInset: 4 },
+  Crocodite: { scale: 1, bottomInset: 10 },
+  Dolphin: { scale: 1.03, bottomInset: 4 },
+  'Tiger Shark': { scale: 1.03, bottomInset: 5 },
+  'Killer Whale': { scale: 1.04, bottomInset: 6 },
+  'Great White Shark': { scale: 1.04, bottomInset: 4 },
+  'Blue Whale': { scale: 1.1, bottomInset: 11 },
+  Meglodon: { scale: 1.08, bottomInset: 4 },
 };
 
 export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, className = 'w-[1em] h-[1em]' }: BadgeIconProps) {
   const navigate = useNavigate();
   const { url, name } = useBadgeVisual({ badgeBalance, username, lookupId, badgeLock, src });
-  const opticalScale = name ? BADGE_OPTICS[name] : undefined;
+  const optics = name ? BADGE_OPTICS[name] : undefined;
+  const renderedSize = 1.15 * (optics?.scale ?? 1);
+  // The artwork uses a 128px transparent canvas. Baseline-align the image box,
+  // then lower it only by its measured transparent bottom inset so the badge's
+  // visible mark — not the canvas edge — finishes exactly on the text baseline.
+  const artworkBaselineOffset = ((optics?.bottomInset ?? 0) / 128) * renderedSize;
   const opticalStyle: CSSProperties = {
-    width: '1.15em',
-    height: '1.15em',
+    width: `${renderedSize}em`,
+    height: `${renderedSize}em`,
     marginInlineStart: '0.125em',
-    transform: `translateY(-1px) scale(${opticalScale ?? 1})`,
-    transformOrigin: 'center',
+    position: 'relative',
+    top: `${artworkBaselineOffset}em`,
   };
 
   if (!url) return null;
@@ -79,7 +84,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
           loading="lazy"
           decoding="async"
           style={opticalStyle}
-          className={`shrink-0 self-center align-middle rounded-none bg-transparent object-contain cursor-pointer hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.8)] transition-all ${className}`}
+          className={`shrink-0 self-baseline align-baseline rounded-none bg-transparent object-contain cursor-pointer hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.8)] transition-all ${className}`}
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
