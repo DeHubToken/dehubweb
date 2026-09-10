@@ -139,6 +139,8 @@ function cacheAspectRatio(url: string, ratio: number) {
 // so a 720 rung loses to 1080; 412 at 2.625x is 1081.5, so 1080 lost to 1440.
 const FEED_IMAGE_WIDTHS = [480, 736, 1100, 1440];
 const FEED_IMAGE_SIZES = '(max-width: 767px) 100vw, 640px';
+const BITMAP_RETAIN_MARGIN = '1200px 100%';
+const BITMAP_RELEASE_DELAY_MS = 15_000;
 
 function ImageSlide({
   img,
@@ -164,14 +166,51 @@ function ImageSlide({
   // every LATER mount (tab switch, feed revisit, carousel re-render) reserves
   // the exact final height up front.
   const [ratio, setRatio] = useState<number | undefined>(() => imageAspectRatioCache.get(img));
+  const slideRef = useRef<HTMLDivElement>(null);
+  const [retainBitmap, setRetainBitmap] = useState(aboveFold);
   // Slides are keyed by index, so the same mounted slide can receive a new
   // image URL (post edit → refetch). Re-resolve instead of keeping the old
   // image's ratio, which would letterbox/crop the replacement forever.
   useEffect(() => {
     setRatio(imageAspectRatioCache.get(img));
   }, [img]);
+
+  useEffect(() => {
+    if (aboveFold || typeof IntersectionObserver === 'undefined') {
+      setRetainBitmap(true);
+      return;
+    }
+
+    let releaseTimer: ReturnType<typeof setTimeout> | undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (releaseTimer) clearTimeout(releaseTimer);
+          releaseTimer = undefined;
+          setRetainBitmap(true);
+          return;
+        }
+
+        // Native lazy-loading never unloads an image once decoded. Release it
+        // only after it has stayed far outside the viewport, leaving a wide
+        // buffer and grace period so ordinary scroll-back remains instant.
+        if (!releaseTimer) {
+          releaseTimer = setTimeout(() => setRetainBitmap(false), BITMAP_RELEASE_DELAY_MS);
+        }
+      },
+      { rootMargin: BITMAP_RETAIN_MARGIN },
+    );
+    const node = slideRef.current;
+    if (node) observer.observe(node);
+    return () => {
+      observer.disconnect();
+      if (releaseTimer) clearTimeout(releaseTimer);
+    };
+  }, [aboveFold, img]);
+
   return (
     <div
+      ref={slideRef}
       className="relative flex justify-start cursor-pointer select-none"
       style={{ minHeight: ratio ? undefined : '200px' }}
       // Still stops the click reaching the card's navigate handler; the ladder
@@ -186,8 +225,8 @@ function ImageSlide({
           side-fill. width/height attrs (from the cached ratio) reserve the box
           up front so there's no layout shift on load. */}
       <img
-        src={img}
-        srcSet={cdnImageSrcSet(img, FEED_IMAGE_WIDTHS)}
+        src={retainBitmap ? img : undefined}
+        srcSet={retainBitmap ? cdnImageSrcSet(img, FEED_IMAGE_WIDTHS) : undefined}
         sizes={FEED_IMAGE_SIZES}
         alt=""
         width={ratio ? Math.round(ratio * 1000) : undefined}
