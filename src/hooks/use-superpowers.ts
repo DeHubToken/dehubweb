@@ -25,8 +25,13 @@ import {
   cancelBoost,
   fetchBoostSlot,
   fetchFrontRow,
+  fetchMyTeamUp,
+  fetchTeamUpTeams,
   fetchTrendingTopic,
-  joinCrewBoost,
+  createTeamUp,
+  joinTeamUp,
+  leaveTeamUp,
+  removeTeamUpMember,
   fetchSuperpowerStatus,
   fetchSuperpowerTiers,
   type SuperPowerKey,
@@ -134,24 +139,56 @@ export function useFrontRow() {
 }
 
 /**
- * Put one of your own boosts behind somebody else's Crew Boost.
- *
- * Minutes pool; weight does not — the leader's tier still decides how often
- * the slot is dealt. Never write copy promising a joiner more reach: what
- * they buy is a longer window for the post they are backing.
+ * Team up is open to every signed-in account, including accounts without a badge.
  */
-export function useJoinCrewBoost() {
-  const queryClient = useQueryClient();
+export function useTeamUp(enabled = true) {
+  const isAuthenticated = useIsAuthed();
+  return useQuery({
+    queryKey: ['superpowers', 'team-up', 'mine'],
+    queryFn: fetchMyTeamUp,
+    enabled: isAuthenticated && enabled,
+    staleTime: 30 * 1000,
+    retry: 1,
+  });
+}
 
+export function useTeamUpTeams(query: string, enabled = true) {
+  return useQuery({
+    queryKey: ['superpowers', 'team-up', 'teams', query.trim()],
+    queryFn: () => fetchTeamUpTeams(query),
+    enabled,
+    staleTime: 15 * 1000,
+    retry: 1,
+  });
+}
+
+function useTeamUpMutation<TVariables>(mutationFn: (variables: TVariables) => Promise<unknown>) {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (bookingId: string) => joinCrewBoost(bookingId),
+    mutationFn,
     onSuccess: () => {
-      // The joiner's own allowance changed, and the boost they backed now
-      // runs longer — both are on screen.
+      queryClient.invalidateQueries({ queryKey: ['superpowers', 'team-up'] });
       queryClient.invalidateQueries({ queryKey: ['superpowers', 'status'] });
-      queryClient.invalidateQueries({ queryKey: ['superpowers', 'slot'] });
+      queryClient.invalidateQueries({ queryKey: ['account'] });
     },
   });
+}
+
+export function useCreateTeamUp() {
+  return useTeamUpMutation((name: string) => createTeamUp(name));
+}
+
+export function useJoinTeamUp() {
+  return useTeamUpMutation((teamId: string) => joinTeamUp(teamId));
+}
+
+export function useLeaveTeamUp() {
+  return useTeamUpMutation(() => leaveTeamUp());
+}
+
+export function useRemoveTeamUpMember() {
+  return useTeamUpMutation(({ teamId, address }: { teamId: string; address: string }) =>
+    removeTeamUpMember(teamId, address));
 }
 
 export function useBoostSlot(enabled = true) {
@@ -271,7 +308,7 @@ export const POWER_HOME: Record<SuperPowerKey, PowerHome> = {
   flak_jacket: 'post',
   precision_strike: 'post',
   harpoon: 'post',
-  crew_boost: 'post',
+  team_up: 'page',
   front_row: 'stage',
   deep_current: 'gift',
 };

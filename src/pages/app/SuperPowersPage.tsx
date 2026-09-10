@@ -18,7 +18,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Loader2, Lock, Check, Clock, History, ChevronRight, X } from 'lucide-react';
+import { Loader2, Lock, Check, Clock, History, ChevronRight, Users, X } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
@@ -35,6 +35,7 @@ import {
 } from '@/hooks/use-superpowers';
 import { SpendPowerDrawer } from '@/components/app/modals/SpendPowerDrawer';
 import type { SuperPowerInfo, SuperPowerKey } from '@/lib/api/dehub/superpowers';
+import { TeamUpDrawer } from '@/components/app/TeamUpDrawer';
 
 /**
  * What an unlocked power acts on, in one line under its name.
@@ -100,11 +101,12 @@ export default function SuperPowersPage() {
     return new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'long' });
   }, [status?.cycleEndsAt, ladder?.cycleEndsAt]);
 
-  // One drawer for all twelve. It resolves the target a power needs — a
+  // One drawer for every spendable power. It resolves the target a power needs — a
   // post, a comment, a Stage, a category — and books it; the server re-checks
   // every one of those, so this only decides what is worth offering.
   const [spending, setSpending] = useState<SuperPowerInfo | null>(null);
   const [historyPower, setHistoryPower] = useState<SuperPowerInfo | null>(null);
+  const [teamUpOpen, setTeamUpOpen] = useState(false);
 
   const badgeArt = badgeImage(status?.tier);
   const historyBookings = historyPower
@@ -115,7 +117,7 @@ export default function SuperPowersPage() {
     <>
       <SEOHead
         title="SuperPowers — Spend Your DeHub Badge on Reach"
-        description="Badge holders get boosts every fortnight: twelve powers across thirteen tiers, with a larger allowance at every rung."
+        description="Use badge-powered boosts, or Team up with as many as seven others to unlock a higher shared badge."
         url="https://dehub.io/app/superpowers"
         image="https://dehub.io/og/superpowers.jpg"
         jsonLd={{
@@ -123,7 +125,7 @@ export default function SuperPowersPage() {
           '@type': 'WebPage',
           name: 'DeHub SuperPowers',
           description:
-            'What a DeHub staking badge buys: boosts to the top of the home feed, refilled every fortnight, scaling across thirteen tiers.',
+            'DeHub SuperPowers include badge-powered boosts and Team up, which combines wallet power for a higher shared badge.',
           url: 'https://dehub.io/app/superpowers',
           isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
         }}
@@ -138,7 +140,7 @@ export default function SuperPowersPage() {
           <p className="text-sm text-zinc-400 max-w-prose">
             {t('superpowers.currentIntro', {
               defaultValue:
-                'A badge buys more than the art beside your name. Every fortnight it grants boosts that put posts at the top of the home feed. Thirteen tiers, twelve powers, and a stronger allowance at every rung.',
+                'Badge holders get fresh boosts every fortnight. Team up is open to everyone: combine wallet power with up to seven others and every member gets the badge your total unlocks.',
             })}
           </p>
         </header>
@@ -193,6 +195,7 @@ export default function SuperPowersPage() {
           // No badge — the page's real audience. Say what it costs and where.
           <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3">
             <p className="text-white text-sm">{t('superpowers.noBadgeYet')}</p>
+            <p className="text-[12px] text-zinc-400">Team up is open to every account, even without a badge.</p>
             <BadgeProgress variant="rail" />
             <Button asChild variant="outline" className="self-start">
               <Link to="/app/stake">{t('superpowers.stakeDhb')}</Link>
@@ -207,7 +210,8 @@ export default function SuperPowersPage() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {powers.map((power, index) => {
-              const unlocked = !!power.unlocked;
+              const isTeamUp = power.key === 'team_up';
+              const unlocked = isTeamUp ? !!status : !!power.unlocked;
               // Held AND built. A locked card stays inert rather than opening a
               // picker for something the server would refuse.
               const usable = unlocked && power.available;
@@ -228,28 +232,29 @@ export default function SuperPowersPage() {
                   <button
                     type="button"
                     disabled={!usable}
-                    onClick={() => setSpending(power)}
+                    onClick={() => isTeamUp ? setTeamUpOpen(true) : setSpending(power)}
                     className={cn(
                       'p-4 pb-3 flex flex-1 flex-col gap-1.5 text-left transition-colors',
                       usable ? 'hover:bg-white/5 active:bg-white/10' : 'cursor-default',
                     )}
                   >
                     <div className="flex items-center gap-2">
-                      {/* Numbered because it IS a sequence: one power per rung,
-                          in ladder order. */}
+                      {/* Numbered because this is a fixed, ordered power list. */}
                       <span className="text-[11px] text-zinc-600 tabular-nums">
                         {String(index + 1).padStart(2, '0')}
                       </span>
                       <span className={cn('text-sm font-medium', unlocked ? 'text-white' : 'text-zinc-400')}>
                         {power.label}
                       </span>
-                      {unlocked && power.available && <Check className="w-3.5 h-3.5 text-green-400 shrink-0" />}
+                      {isTeamUp && unlocked
+                        ? <Users className="w-3.5 h-3.5 text-white shrink-0" />
+                        : unlocked && power.available && <Check className="w-3.5 h-3.5 text-green-400 shrink-0" />}
                       {!unlocked && <Lock className="w-3 h-3 text-zinc-600 shrink-0" />}
                     </div>
                     <p className="text-[13px] text-zinc-500 leading-snug">{power.summary}</p>
-                    {usable && (
-                      <p className="text-[11px] text-zinc-400 leading-snug">{actsOn(power.key, t)}</p>
-                    )}
+                    {usable && <p className="text-[11px] text-zinc-400 leading-snug">
+                      {isTeamUp ? 'Make or join a team. Tap to manage yours.' : actsOn(power.key, t)}
+                    </p>}
                   </button>
                   <div className="min-h-11 border-t border-white/10 px-4 py-2.5 flex items-center justify-between gap-3">
                     <span
@@ -258,13 +263,15 @@ export default function SuperPowersPage() {
                         usable ? 'text-white' : 'text-zinc-500',
                       )}
                     >
-                      {usable && allowance !== undefined
+                      {isTeamUp && unlocked
+                        ? 'Open to everyone'
+                        : usable && allowance !== undefined
                         ? `${allowance} ${allowance === 1 ? 'use' : 'uses'} left`
                         : !power.available
                           ? t('superpowers.comingSoon')
                           : 'Locked'}
                     </span>
-                    <button
+                    {!isTeamUp && <button
                       type="button"
                       onClick={() => {
                         setHistoryPower(power);
@@ -275,7 +282,7 @@ export default function SuperPowersPage() {
                     >
                       Past usage
                       <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
-                    </button>
+                    </button>}
                   </div>
                 </article>
               );
@@ -341,6 +348,7 @@ export default function SuperPowersPage() {
       {/* Literal DrawerContent lives inside this component, so vaul's deferred
           Root still sees it — see the note in ui/drawer.tsx. */}
       <SpendPowerDrawer power={spending} onOpenChange={open => !open && setSpending(null)} />
+      <TeamUpDrawer open={teamUpOpen} onOpenChange={setTeamUpOpen} />
 
       <Drawer open={!!historyPower} onOpenChange={open => !open && setHistoryPower(null)}>
         <DrawerContent column glass className="px-4 pb-6">
