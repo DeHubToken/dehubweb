@@ -29,6 +29,7 @@ import {
   MessageCircle,
   Filter,
   Repeat2,
+  Sun,
   Monitor,
   LayoutGrid,
   Play,
@@ -2413,6 +2414,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
           <div ref={themePickerFadeRef} style={themePickerFadeStyle} className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
             {[
               { value: 'system', icon: Monitor, labelKey: 'settings.system', available: true },
+              { value: 'light', icon: Sun, labelKey: 'settings.light', available: true },
               { value: 'minimal', icon: Minus, labelKey: 'settings.minimal', available: true },
               { value: 'cosmic', icon: Orbit, labelKey: 'settings.cosmic', available: true },
               { value: 'hazy', icon: CloudMoon, labelKey: 'settings.hazy', available: true },
