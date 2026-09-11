@@ -3655,7 +3655,7 @@
     "seoTitle": "यूज़रनेम मार्केटप्लेस | DeHub",
     "seoDescription": "DHB से DeHub यूज़रनेम खरीदें और बेचें। बिक्री के लिए छोटे, संख्यात्मक और मूल handle खोजें, या अपना लिस्ट करें — भुगतान होते ही ट्रांसफ़र ऑन-चेन हो जाता है।",
     "title": "यूज़रनेम",
-    "subtitle": "बिक्री के लिए handle, कीमत DHB में",
+    "subtitle": "बिक्री के लिए handle, कीमत USD में",
     "tabBrowse": "ब्राउज़",
     "tabSell": "बेचें",
     "searchPlaceholder": "कोई handle खोजें…",
@@ -3715,7 +3715,13 @@
     "signInToBuy": "खरीदने के लिए साइन इन करें",
     "buyHandle": "@{{handle}} खरीदें",
     "transferGuarantee": "handle तभी बदलता है जब DeHub आपका DHB ट्रांसफ़र चेन से पढ़ लेता है। अगर नहीं पढ़ पाया, तो भुगतान उस बिक्री के विरुद्ध दर्ज हो जाता है ताकि विक्रेता आपको वापस कर सके।",
-    "shareTitle": "@{{handle}} DeHub पर बिक्री के लिए है"
+    "shareTitle": "@{{handle}} DeHub पर बिक्री के लिए है",
+    "askingPriceUsd": "बिक्री मूल्य (USD)",
+    "dollarPriceRange": "1 से 1,000,000 USD तक की राशि, अधिकतम दो दशमलव अंकों के साथ दर्ज करें।",
+    "fixedDollarPrice": "डॉलर का मूल्य तय रहता है; टोकन की संख्या बदलती है।",
+    "priceUpdated": "मूल्य अपडेट हुआ। राशि जाँचें और फिर से खरीदें पर टैप करें।",
+    "tokensPaidToSeller": "सीधे विक्रेता को भुगतान",
+    "priceUsd": "मूल्य (USD)"
   },
   "accounts": {
     "seoTitle": "अकाउंट मार्केटप्लेस — DeHub",

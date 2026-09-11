@@ -3630,7 +3630,7 @@
     "seoTitle": "사용자 이름 마켓플레이스 | DeHub",
     "seoDescription": "DHB로 DeHub 사용자 이름을 사고 팔 수 있습니다. 판매할 숏 핸들, 숫자 핸들, 오리지널 핸들을 검색하거나 나만의 핸들을 나열하세요. 결제가 완료되는 순간 온체인 방식으로 이체가 이루어집니다.",
     "title": "사용자 이름",
-    "subtitle": "판매용 핸들, 가격: DHB",
+    "subtitle": "판매용 핸들, 가격: USD",
     "tabBrowse": "찾아보기",
     "tabSell": "매도",
     "searchPlaceholder": "핸들 검색...",
@@ -3689,7 +3689,13 @@
     "signInToBuy": "구매하려면 로그인하세요",
     "buyHandle": "@{{handle}} 구매",
     "transferGuarantee": "핸들은 DeHub이 체인에서 DHB 전송을 읽은 후에만 이동합니다. 읽을 수 없으면 결제가 판매에 기록되어 판매자가 환불할 수 있습니다.",
-    "shareTitle": "@{{handle}}는 DeHub에서 판매 중입니다"
+    "shareTitle": "@{{handle}}는 DeHub에서 판매 중입니다",
+    "askingPriceUsd": "판매 가격 (USD)",
+    "dollarPriceRange": "1~1,000,000달러를 소수점 둘째 자리까지 입력하세요.",
+    "fixedDollarPrice": "달러 가격은 고정되며 토큰 수량은 갱신됩니다.",
+    "priceUpdated": "가격이 갱신되었습니다. 금액을 확인하고 구매를 다시 누르세요.",
+    "tokensPaidToSeller": "판매자에게 직접 지급",
+    "priceUsd": "가격 (USD)"
   },
   "accounts": {
     "seoTitle": "계정 마켓플레이스 — DeHub",
