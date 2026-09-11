@@ -371,6 +371,10 @@ export type Database = {
           commission_pct: number
           created_at: string
           id: string
+          landing_cta_label: string | null
+          landing_destination: string | null
+          landing_headline: string | null
+          landing_message: string | null
           owner_address: string
           share_name: string | null
           updated_at: string
@@ -381,6 +385,10 @@ export type Database = {
           commission_pct?: number
           created_at?: string
           id?: string
+          landing_cta_label?: string | null
+          landing_destination?: string | null
+          landing_headline?: string | null
+          landing_message?: string | null
           owner_address: string
           share_name?: string | null
           updated_at?: string
@@ -391,6 +399,10 @@ export type Database = {
           commission_pct?: number
           created_at?: string
           id?: string
+          landing_cta_label?: string | null
+          landing_destination?: string | null
+          landing_headline?: string | null
+          landing_message?: string | null
           owner_address?: string
           share_name?: string | null
           updated_at?: string
@@ -441,6 +453,41 @@ export type Database = {
           tier?: number
         }
         Relationships: []
+      }
+      affiliate_page_views: {
+        Row: {
+          code: string
+          id: string
+          owner_address: string
+          source: string | null
+          viewed_at: string
+          visitor_id: string
+        }
+        Insert: {
+          code: string
+          id?: string
+          owner_address: string
+          source?: string | null
+          viewed_at?: string
+          visitor_id: string
+        }
+        Update: {
+          code?: string
+          id?: string
+          owner_address?: string
+          source?: string | null
+          viewed_at?: string
+          visitor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_page_views_code_fkey"
+            columns: ["code"]
+            isOneToOne: false
+            referencedRelation: "affiliate_codes"
+            referencedColumns: ["code"]
+          },
+        ]
       }
       affiliate_referrals: {
         Row: {
@@ -6004,6 +6051,14 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      get_affiliate_page_stats: {
+        Args: never
+        Returns: {
+          total_views: number
+          unique_visitors: number
+          views_30d: number
+        }[]
+      }
       get_anonymous_view_counts: {
         Args: { p_token_ids: string[] }
         Returns: {
@@ -6132,6 +6187,10 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      record_affiliate_page_view: {
+        Args: { p_code: string; p_source?: string; p_visitor_id: string }
+        Returns: undefined
       }
       record_anonymous_views: {
         Args: { p_token_ids: string[]; p_viewer_hash: string }
