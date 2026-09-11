@@ -1,3 +1,4 @@
+import { predictSafeAddress } from '@/lib/smart-account-address';
 import { DEHUB_API_BASE, setAuthToken, setRefreshToken, setTokenExpiresAt, getRefreshToken, getAuthToken, refreshTokenShared, refreshTokenSharedDetailed } from './core';
 import type { TokenRefreshOutcome } from './core';
 import type { AuthResponse } from './types';
@@ -287,6 +288,13 @@ export async function authenticateWithSupabaseSession(
 
   if (!data.token || !/^0x[0-9a-f]{40}$/i.test(data.user?.address ?? '')) {
     throw new Error('Could not finish signing in to your profile. Please try again.');
+  }
+
+  // Check public addresses before adopting any credential. This never opens a wallet.
+  const linked = data.user.address.toLowerCase();
+  if (expectedAddress && data.user.loginLinkSource !== 'wallet-email' &&
+      linked !== expectedAddress.toLowerCase() && linked !== await predictSafeAddress(expectedAddress)) {
+    throw new Error('Could not confirm your existing profile. Please try again.');
   }
 
   if (data.token) setAuthToken(data.token);
