@@ -46,6 +46,7 @@ import { VideoCard } from '@/components/app/cards/VideoCard';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
+import { CommentsWrapper } from '@/components/app/cards/CommentsWrapper';
 import { AuthorThread } from '@/components/app/cards/AuthorThread';
 import { LiveStreamCard } from '@/components/app/cards/LiveStreamCard';
 import { RelatedVideosFeed } from '@/components/app/feeds/RelatedVideosFeed';
@@ -747,8 +748,24 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
   const [showTipModal, setShowTipModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showPageComments, setShowPageComments] = useState(true);
+  const [pageCommentsInitialTab, setPageCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>();
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    setShowPageComments(true);
+    setPageCommentsInitialTab(undefined);
+  }, [id]);
+
+  const handleOpenPageComments = useCallback((tab?: 'replies' | 'quotes' | 'reposts' | 'search') => {
+    setPageCommentsInitialTab(tab);
+    if (tab) {
+      setShowPageComments(true);
+      return;
+    }
+    setShowPageComments((open) => !open);
+  }, []);
   
   // Mobile/tablet vs desktop layout. The post used to open in a vaul bottom
   // sheet on mobile; it is now the same page it is on desktop, so this only
@@ -1029,9 +1046,9 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
 
     switch (contentType) {
       case 'video':
-        return <VideoCard video={toVideoItem(post)} isImmersive={!isAudioPost} />;
+        return <VideoCard video={toVideoItem(post)} isImmersive={!isAudioPost} onOpenComments={handleOpenPageComments} />;
       case 'image':
-        return <ImageCard post={toImagePost(post)} aboveFold />;
+        return <ImageCard post={toImagePost(post)} aboveFold onOpenComments={handleOpenPageComments} />;
       case 'live': {
         if (!liveData) return <NotFoundState />;
         return (
@@ -1060,6 +1077,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
         return (
           <PostCard
             post={toTextPost(post)}
+            onOpenComments={handleOpenPageComments}
             threadSlot={
               id ? <AuthorThread tokenId={String(id)} authorAddress={post.minter} highlightId={highlightCommentId} /> : undefined
             }
@@ -1067,6 +1085,18 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
         );
     }
   };
+
+  const pageComments = post && id ? (
+    <CommentsWrapper
+      open={showPageComments}
+      onOpenChange={setShowPageComments}
+      tokenId={String(id)}
+      initialTab={pageCommentsInitialTab}
+      commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+      postAuthorAddress={isTextPost ? post.minter : undefined}
+      forceInline
+    />
+  ) : null;
 
   // Immersive layout for videos - uses fixed positioning to overlay the header area on mobile/tablet
   // Desktop gets standard layout with PageHeader
@@ -1111,6 +1141,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
               <ImmersiveVideoHeader onBack={goBack} />
               {renderContent()}
             </div>
+            <div className="px-2 sm:px-3">{pageComments}</div>
             {showRelated && id && <RelatedVideosFeed currentVideoId={id} />}
           </div>
         ) : (
@@ -1138,6 +1169,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
                   {renderContent()}
                   {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
                 </div>
+                {pageComments}
                 {/* Related Videos Feed */}
                 {showRelated && id && <RelatedVideosFeed currentVideoId={id} />}
               </div>
@@ -1291,6 +1323,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
             {renderContent()}
             {!isTextPost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
           </div>
+          {pageComments}
           {/* Shop rail sits between the player and the chat: close enough to the
               stream to read as part of it, above the chat so a busy room does
               not push it off screen. The host sees the manager instead — they

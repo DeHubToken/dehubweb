@@ -580,6 +580,8 @@ function ExpandableDescription({ description: rawDescription, isImmersive }: Exp
 
 interface VideoCardProps {
   video: VideoItem;
+  /** Dedicated pages own one shared comments window below the post card. */
+  onOpenComments?: (tab?: 'replies' | 'quotes' | 'reposts' | 'search') => void;
   /** When true, renders full-width without rounded corners or header for immersive view */
   isImmersive?: boolean;
   /** When true, disables intersection-based autoplay (video only plays on explicit click) */
@@ -590,7 +592,7 @@ interface VideoCardProps {
   aboveFold?: boolean;
 }
 
-export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false }: VideoCardProps) {
+export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, onOpenComments }: VideoCardProps) {
   const instanceId = useId();
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
@@ -2243,6 +2245,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               myReaction={video.myReaction}
               reactionCounts={video.reactionCounts}
               onComment={() => {
+                if (onOpenComments) {
+                  onOpenComments();
+                  return;
+                }
                 setCommentsInitialTab(undefined);
                 setShowComments(!showComments);
               }}
@@ -2257,6 +2263,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               tipCount={tipCount}
               onTip={video.creatorPaymentsDisabled ? undefined : () => setShowTipModal(true)}
               onSeeEngagements={() => {
+                if (onOpenComments) {
+                  onOpenComments('reposts');
+                  return;
+                }
                 setCommentsInitialTab('reposts');
                 setShowComments(true);
               }}
@@ -2264,14 +2274,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
             {/* Comments — drawer in immersive mode (video shrinks to make room),
                 inline bento expansion in the feed. */}
-            <CommentsWrapper
-              open={showComments}
-              onOpenChange={setShowComments}
-              tokenId={video.id}
-              initialTab={commentsInitialTab}
-              commentsDisabled={!!(video as { commentsDisabled?: boolean }).commentsDisabled}
-              immersive={isImmersive}
-            />
+            {!onOpenComments && (
+              <CommentsWrapper
+                open={showComments}
+                onOpenChange={setShowComments}
+                tokenId={video.id}
+                initialTab={commentsInitialTab}
+                commentsDisabled={!!(video as { commentsDisabled?: boolean }).commentsDisabled}
+                immersive={isImmersive}
+              />
+            )}
           </>
         )}
       </div>

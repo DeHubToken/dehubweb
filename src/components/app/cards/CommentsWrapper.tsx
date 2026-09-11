@@ -48,6 +48,13 @@ interface CommentsWrapperProps {
    * renders those comments itself (the author thread on the post page).
    */
   postAuthorAddress?: string;
+  /**
+   * Dedicated post pages keep comments in the document flow on every
+   * breakpoint. That gives the page one bounded, internally scrolling comment
+   * window before the ad and related-post continuation instead of replacing
+   * the page with a phone drawer.
+   */
+  forceInline?: boolean;
 }
 
 function useIsTabletOrMobile() {
@@ -273,7 +280,7 @@ function DiscardGuard({ onKeepWriting, onDiscard }: { onKeepWriting: () => void;
   );
 }
 
-export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false, postAuthorAddress }: CommentsWrapperProps) {
+export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false, postAuthorAddress, forceInline = false }: CommentsWrapperProps) {
   const isTabletOrMobile = useIsTabletOrMobile();
   const isPhone = useIsPhone();
   const adaptiveDrawerHeight = useAdaptiveDrawerHeight(isTabletOrMobile && immersive);
@@ -289,8 +296,11 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
   // locks the body itself; immersive video does not, so there it was visible.
   //
   // Counted, so it nests with the viewer's own lock instead of fighting it.
-  const immersiveSheet = isTabletOrMobile && immersive;
-  const phoneSheet = isPhone && !immersive;
+  const immersiveSheet = !forceInline && isTabletOrMobile && immersive;
+  const phoneSheet = !forceInline && isPhone && !immersive;
+  const inlineWindowClass = forceInline
+    ? 'h-[60dvh] min-h-[360px] max-h-[600px] overflow-hidden md:h-[600px] md:max-h-[70dvh]'
+    : 'h-[60vh] overflow-hidden md:h-auto md:overflow-y-auto';
   useEffect(() => {
     if (!immersiveSheet || !open) return;
     return lockBodyScroll();
@@ -463,8 +473,8 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
             // viewport height and let the section scroll internally. Desktop
             // keeps the grow-to-content behaviour (CommentsSection carries its
             // own min-h-[400px]).
-            className={`bg-black/60 backdrop-blur-2xl rounded-2xl border border-white/10 mt-3 h-[60vh] overflow-hidden md:h-auto md:overflow-y-auto ${
-              isCompact ? 'px-2 pb-2 pt-1 md:max-h-[40vh] text-sm' : 'px-4 pb-4 pt-2 md:max-h-[70vh]'
+            className={`bg-black/60 backdrop-blur-2xl rounded-2xl border border-white/10 mt-3 ${inlineWindowClass} ${
+              isCompact && !forceInline ? 'px-2 pb-2 pt-1 md:max-h-[40vh] text-sm' : 'px-4 pb-4 pt-2'
             }`}
           >
             <Suspense fallback={null}>
