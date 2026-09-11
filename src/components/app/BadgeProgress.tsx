@@ -22,13 +22,11 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import {
-  BADGE_USD_TARGETS,
   badgeImage,
   badgeThresholds,
   getBadgeStanding,
   type BadgeLock,
 } from '@/lib/staking-badges';
-import { engagementWeightForBadge, formatEngagementWeight } from '@/lib/engagement-weight';
 import { useBadgeLadderPrice, useBadgeScale } from '@/hooks/use-badge-scale';
 import { useSelfBadge, preferLiveBalance } from '@/hooks/use-self-badge-balance';
 import { AuthContext } from '@/contexts/AuthContext';
@@ -90,8 +88,6 @@ export function BadgeProgress({ balance, username, lock, variant = 'full', class
   );
 
   const percent = Math.round(standing.progress * 100);
-  const nextThresholdUsd = standing.nextTier ? BADGE_USD_TARGETS[standing.nextTier] : null;
-  const weight = engagementWeightForBadge(standing.tier);
 
   return (
     <div
@@ -104,7 +100,7 @@ export function BadgeProgress({ balance, username, lock, variant = 'full', class
       <div className="pointer-events-none absolute -top-16 -left-10 w-40 h-40 rounded-full bg-white/[0.07] blur-3xl" />
 
       <div className="relative flex items-center gap-3 sm:gap-4">
-        <BadgeMedallion url={standing.imageUrl} tier={standing.tier} reduceMotion={!!reduceMotion} />
+        <BadgeMedallion url={standing.imageUrl} tier={standing.tier} />
 
         <div className="min-w-0 flex-1">
           <div className="text-sm sm:text-base font-semibold text-white truncate">
@@ -170,36 +166,14 @@ export function BadgeProgress({ balance, username, lock, variant = 'full', class
         </span>
       </div>
 
-      {/* What the tier actually does, beyond drawing a picture. */}
-      <div className="mt-3 flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2">
-        <span className="font-mono text-sm text-white shrink-0">{formatEngagementWeight(weight)}</span>
-        <span className="text-[11px] leading-snug text-white/55">
-          {standing.tier
-            ? `Every view you give and every reaction you leave counts ${formatEngagementWeight(weight)}. Still one reaction — it is just worth more.`
-            : 'Views and reactions count once. A badge multiplies that — ×2 at Crab, up to ×14 at Meglodon.'}
-        </span>
-      </div>
-
       {variant === 'full' && (
         <BadgeLadderRail ladder={ladder} index={standing.index} reduceMotion={!!reduceMotion} price={price} />
       )}
 
-      <p className="mt-3 text-[10px] leading-relaxed text-white/35">
-        Tiers are priced in dollars, so the DHB each one costs moves with the token.
-        {standing.nextTier && nextThresholdUsd
-          ? ` ${standing.nextTier} is about ${formatUsd(nextThresholdUsd)} of DHB — ${formatDhb(
-              standing.nextThreshold ?? 0,
-            )} at today's price.`
-          : ' Meglodon is about $50,000 of DHB at any price.'}
+      <p className="mt-3 text-[10px] leading-relaxed text-white/45">
+        Once a badge is unlocked, it is yours for as long as you hold your DHB. The number of tokens
+        needed to unlock a new badge can change with the token price.
       </p>
-
-      {standing.grandfathered && (
-        <p className="mt-1.5 text-[10px] leading-relaxed text-white/50">
-          {standing.tier} is locked in. You keep it while you hold at least{' '}
-          <span className="font-mono text-white/70">{formatDhb(effectiveLock?.requirement ?? 0)} <DhbCoin /></span> — what it
-          cost when you earned it — whatever the ladder does after.
-        </p>
-      )}
     </div>
   );
 }
@@ -208,30 +182,21 @@ export function BadgeProgress({ balance, username, lock, variant = 'full', class
 function BadgeMedallion({
   url,
   tier,
-  reduceMotion,
 }: {
   url: string | null;
   tier: string | null;
-  reduceMotion: boolean;
 }) {
   return (
     <div className="relative w-12 h-12 sm:w-14 sm:h-14 shrink-0">
-      <motion.div
-        className="absolute inset-0 rounded-full bg-white/10 blur-md"
-        animate={reduceMotion || !url ? undefined : { opacity: [0.35, 0.75, 0.35] }}
-        transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <div className="relative w-full h-full rounded-full border border-white/15 bg-white/[0.04] flex items-center justify-center">
-        {url ? (
-          <img
-            src={url}
-            alt={tier || 'Badge'}
-            className="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow-[0_0_6px_rgba(255,255,255,0.5)]"
-          />
-        ) : (
-          <span className="text-[9px] uppercase tracking-wider text-white/30">None</span>
-        )}
-      </div>
+      {url ? (
+        <img
+          src={url}
+          alt={tier || 'Badge'}
+          className="w-full h-full object-contain drop-shadow-[0_0_6px_rgba(255,255,255,0.5)]"
+        />
+      ) : (
+        <span className="absolute inset-0 flex items-center justify-center text-[9px] uppercase tracking-wider text-white/30">None</span>
+      )}
     </div>
   );
 }
@@ -265,7 +230,7 @@ function BadgeLadderRail({
                 className={cn(
                   'relative shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-all',
                   earned ? 'bg-white/[0.07]' : 'bg-white/[0.02]',
-                  current && 'ring-1 ring-white/50 bg-white/[0.12]',
+                  current && 'bg-white/[0.12]',
                 )}
               >
                 {art && (
