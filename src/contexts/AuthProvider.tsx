@@ -27,7 +27,6 @@ import type { SolanaLoginProof } from '@/lib/api/dehub/auth';
 import { buildDeHubLoginMessage } from '@/lib/dehub-login-message';
 import {
   authenticateWallet,
-  authenticateWithSupabaseSession,
   rotateWallet,
   WalletNotLinkedError,
   WalletSignupBlockedError,
@@ -53,12 +52,12 @@ import {
   healConnectionSource,
   writeLastSession,
   readLastSession,
-  readLastSessionAddress,
   clearLastSession,
   type ConnectionSource,
 } from '@/lib/connection-source';
 import { isWalletReconnectGuardActive } from '@/lib/wallet-reconnect';
 import { predictSafeAddress } from '@/lib/smart-account-address';
+import { authenticateProfileSession } from '@/lib/profile-login';
 import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
 import { clearPersistedQueryCache } from '@/lib/query-persist';
 import { supabase } from '@/integrations/supabase/client';
@@ -718,95 +717,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabaseUserId, openLoginModal]);
 
   /**
-   * Produce the login signature WITHOUT any UI, using only key material that
-   * is already legitimately available.
-   *
-   * This is what keeps the wallet password strictly contextual. The Supabase
-   * exchange covers most logins with zero key material at all; when it cannot
-   * run — identity not linked yet, endpoint switched off, a stale link — some
-   * signature is genuinely required to establish the DeHub session, and THIS
-   * is the last chance to produce one silently: a vault unlock still inside
-   * its auto-lock window rehydrates without asking anything, and personal_sign
-   * with that provider is local computation. Only when this returns false does
-   * the login route to the password step.
-   *
-   * Safety: the restored key must provably belong to THIS identity's wallet
-   * row before anything is signed or stored. After an identity switch the
-   * local cache is deliberately cleared, which disables the vault's own
-   * address check — so the signer address is matched against the row's EOA
-   * and its predicted Safe here, and any disagreement aborts toward the
-   * unlock step rather than risk linking the wrong wallet.
-   */
-  const finishLoginWithLiveUnlock = async (
-    userId: string,
-    ethAddress: string,
-  ): Promise<boolean> => {
-    try {
-      if (!ethAddress) return false;
-      const eoaProvider = await restoreWalletSession();
-      if (!eoaProvider) return false;
-
-      let signingProvider: any = eoaProvider;
-      try {
-        const aaProvider = await setupAAProvider();
-        if (aaProvider) {
-          setAAProvider(aaProvider);
-          signingProvider = aaProvider;
-        }
-      } catch (e) {
-        console.warn('[Auth] AA setup failed, falling back to EOA:', e);
-      }
-
-      const accounts: string[] = await signingProvider.request({ method: 'eth_accounts' });
-      const signerAddress = accounts?.[0]?.toLowerCase();
-      const allowed = new Set([ethAddress.toLowerCase()]);
-      try {
-        allowed.add((await predictSafeAddress(ethAddress)).toLowerCase());
-      } catch { /* prediction is best-effort */ }
-      if (!signerAddress || !allowed.has(signerAddress)) {
-        authLogger.warn('Restored key does not match this identity\'s wallet — not signing', {
-          signerAddress,
-        });
-        return false;
-      }
-
-      const timestamp = Math.floor(Date.now() / 1000);
-      const { address, signature } = await signWithProvider(
-        signingProvider,
-        new Date(timestamp * 1000),
-        'SMART-RESUME',
-      );
-      const meta = await getSupabaseAuthMeta();
-      const supabaseToken = await getSupabaseAccessToken();
-      toast.loading('Signing in...', { id: 'auth-smart-wallet' });
-      // Same drift, one step earlier in the flow: this silent resume is reached
-      // straight after the exchange was refused, so it signs for the same
-      // wallet the account is not linked to.
-      await moveAccountToThisWallet(address, signature, timestamp, 8453);
-      const authResponse = await authenticateWallet(address, signature, timestamp, 8453, meta, supabaseToken);
-      applyAuthenticatedSession(authResponse, address, userId, 'SMART-RESUME');
-      toast.success(
-        authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!',
-        { id: 'auth-smart-wallet' },
-      );
-      closeLoginModal();
-      return true;
-    } catch (e) {
-      // A refused signup is not a reason to ask for a password. The server has
-      // said this wallet cannot open an account; the unlock step would prompt
-      // for a vault password that cannot change that answer, so tell the person
-      // why and stop rather than degrading into a dead end.
-      if (reportWalletSignupBlocked(e)) throw e;
-      // Locked vault, address mismatch, network failure — all land here and
-      // fall back to the unlock step, exactly as before this existed.
-      authLogger.warn('Silent login signature unavailable — routing to wallet unlock', {
-        reason: e instanceof Error ? e.message : String(e),
-      });
-      return false;
-    }
-  };
-
-  /**
    * After a Supabase session exists: look up the wallet row and route the
    * login modal to the create or unlock step.
    *
@@ -886,75 +796,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setConnectionSource('web3auth');
     writeConnectionSource('web3auth');
     try {
-      const existing = await fetchWallet(userId);
+      // The server verifies the identity and selects its linked profile.
+      // Wallet storage and key availability are unrelated to profile access.
+      if (await completeLoginWithoutUnlock(userId, '')) return;
 
+      const existing = await fetchWallet(userId);
       if (existing) {
-        // A wallet already exists, so nothing here needs the seed: the address
-        // is stored in the clear and the DeHub session can be minted from the
-        // Supabase identity. Finish login with the wallet still locked, and let
-        // the first action that actually signs ask for the unlock. This is the
-        // difference between "log in, then immediately prove yourself again"
-        // and "log in".
-        if (await completeLoginWithoutUnlock(userId, existing.ethAddress)) {
-          return;
-        }
-        // Exchange unavailable (identity not linked yet, endpoint off,
-        // offline, stale link). Before routing to any password UI: a signature
-        // may still be producible silently from a vault unlock inside its
-        // auto-lock window. The password step is the LAST resort, reached only
-        // when nothing else can establish the session.
-        if (await finishLoginWithLiveUnlock(userId, existing.ethAddress)) {
-          return;
-        }
-        setWalletPhase('unlock');
-      } else {
-        // No wallet row is two very different situations wearing the same
-        // result: a brand-new social signup with nothing linked yet, and a
-        // wallet-first (external-wallet) account signing in through an email
-        // link attached from settings. The exchange tells them apart — its
-        // success proves the backend holds a vetted link for THIS identity,
-        // so finish the login right here. Routing to 'create' instead would
-        // start generating a second wallet and silently split the account.
-        if (await completeLoginWithoutUnlock(userId, '')) {
-          return;
-        }
-        // …and "no wallet row" is not even reliably an answer. user_wallets is
-        // RLS-scoped, so a read made without a live Supabase session for THIS
-        // uid comes back as zero rows and no error — indistinguishable from a
-        // genuinely empty account. Sending that case to 'create' mints a second
-        // wallet for someone who already has one: the address the backend knows
-        // is left behind, the signature login registers a SIGNUP, and the user
-        // lands on a brand-new account with a generated username. Prove the
-        // read was authenticated before believing it, and trust this device's
-        // ciphertext cache over an unproven empty answer.
-        const { data: sessionData } = await supabase.auth.getSession();
-        const readWasAuthed = sessionData?.session?.user?.id === userId;
-        if (!readWasAuthed) {
-          // Deliberately NOT handing the device cache to
-          // finishLoginWithLiveUnlock. That function's safety property is that
-          // the restored key provably belongs to THIS identity's wallet row —
-          // and `dehub_wallet_enc` is a single device-global entry with no
-          // user binding at all, so the signer would be checked against a
-          // value read from the same vault it came from. The check would agree
-          // with itself and prove nothing, then tag whatever account that
-          // wallet owns with the incoming uid. Routing to the unlock sheet is
-          // the whole point here: it avoids minting a second wallet without
-          // asserting an identity nothing has established.
-          authLogger.warn(
-            'Wallet lookup ran without a session for this identity — not treating it as a new account',
-            { hasCachedWallet: !!getCachedWallet() },
-          );
-          setWalletPhase('unlock');
-          openLoginModal();
-          return;
-        }
-        setWalletPhase('create');
+        throw new Error('Could not finish signing in to your profile. Please try again.');
       }
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (sessionData?.session?.user?.id !== userId) {
+        throw new Error('Your sign-in session expired. Please sign in again.');
+      }
+      setWalletPhase('create');
     } catch (e) {
-      console.warn('[Auth] Wallet lookup failed, defaulting to create check on retry:', e);
-      // Network hiccup — let the modal retry; default to unlock so we never
-      // overwrite an existing wallet by accident.
-      setWalletPhase('unlock');
+      // A failed profile login must not escalate to decrypting or signing.
+      setWalletPhase('none');
+      toast.error(e instanceof Error ? e.message : 'Could not sign in. Please try again.');
     }
     openLoginModal();
     // completeLoginWithoutUnlock is recreated each render but closes only over
@@ -2058,14 +1916,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * signature, at which point aa-utils raises dehub:wallet-unlock-required and
    * they are asked then — in context, having chosen to do the thing.
    *
-   * Returns false when the exchange is unavailable for any reason (identity not
-   * linked yet, endpoint switched off server-side, network failure). Every such
-   * case is non-fatal: the caller falls back to the unlock-and-sign flow, which
-   * is exactly the previous behaviour.
+   * Returns false when the identity has no linked profile or the exchange is
+   * unavailable. Callers must not turn that failure into a wallet unlock.
    *
-   * `ethAddress` is the EOA from user_wallets, and may be '' when the caller
-   * has no wallet row handy (the session-refresh path); the last-session check
-   * below carries the verification alone in that case.
+   * `ethAddress` only identifies the signing source for linked external wallets.
    */
   const completeLoginWithoutUnlock = async (
     userId: string,
@@ -2073,12 +1927,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     restoringExistingSession = false,
   ): Promise<boolean> => {
     try {
-      const { data } = await supabase.auth.getSession();
-      const accessToken = data?.session?.access_token;
-      if (!accessToken) return false;
-
-      const authResponse = await authenticateWithSupabaseSession(accessToken, ethAddress || undefined);
-      const address = (authResponse.user?.address || ethAddress).toLowerCase();
+      const authResponse = await authenticateProfileSession(userId);
+      const address = authResponse.user?.address?.toLowerCase();
       if (!address) {
         // The exchange succeeded, so a DeHub token is already in storage, but
         // there is no address to hang a session on. Drop the token rather than
@@ -2087,63 +1937,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return false;
       }
 
-      // The backend links whatever address the user last SIGNED with. On the AA
-      // flow that is the Safe smart account, while user_wallets stores the owner
-      // EOA the seed derives to — two different strings for the same person.
-      //
-      // The two cheap checks come first because they cost nothing. Session
-      // continuity is the strongest: the address the last completed login for
-      // this SAME Supabase identity ran under, on this browser. EOA equality is
-      // the one that matches when the link was created by an EOA-flow signature.
-      //
-      // Neither helps on a browser that has not completed a login before, which
-      // is where this was failing: EOA equality can never hold for a
-      // smart-account user, so every first login on a new browser, phone or
-      // in-app webview was rejected and sent to the wallet-password sheet. 40
-      // rejections across ~24 accounts in the five days to 2026-08-21, every one
-      // with no prior session record.
-      //
-      // So when both miss, derive the answer instead of asking the browser to
-      // remember it. A Safe's address is a pure CREATE2 function of its owner
-      // ADDRESS — no key involved — so predicting it from the stored EOA proves
-      // the linked account is the smart account of the wallet this Supabase
-      // identity owns per user_wallets, which is an RLS-scoped read keyed on the
-      // authenticated user. Checked against every account seen failing in
-      // production: 29 of 32 predicted the exact linked address, and all three
-      // that did not were stale links — two at addresses never deployed on Base,
-      // one at a Safe owned by a different key entirely. Those must keep failing
-      // closed, which is also what protects the case the backend cannot see: a
-      // wallet replaced locally and not yet re-signed with still predicts to the
-      // NEW Safe, so the OLD link is refused and signing re-establishes it.
-      // An email-link login carries its proof with it: the backend only puts
-      // loginLinkSource:'wallet-email' on a link its own confirm endpoint
-      // wrote after a wallet-signed session, so the linked address needs no
-      // local corroboration — and on a browser that has never held this
-      // account's wallet there is nothing local to corroborate with anyway.
+      // The server's verified identity link authorizes this profile. A missing
+      // or different local wallet affects signing, not account access.
       const serverLinkedEmail = authResponse.user?.loginLinkSource === 'wallet-email';
-      const lastSessionAddress = readLastSessionAddress(userId);
-      const storedEoa = ethAddress ? ethAddress.toLowerCase() : null;
-      let matched: 'last-session' | 'stored-eoa' | 'predicted-safe' | null =
-        lastSessionAddress === address ? 'last-session' : storedEoa === address ? 'stored-eoa' : null;
-      if (!matched && storedEoa) {
-        matched = (await predictSafeAddress(storedEoa)) === address ? 'predicted-safe' : null;
-      }
-      if (!matched && !serverLinkedEmail) {
-        // The signature about to be taken would arrive as a NEW signup — a
-        // second empty account beside the real one, or, since the wallet
-        // history gate, no account at all and a dead end on every device.
-        // Record the link so that signature moves the account here instead.
-        driftedLinkRef.current = address;
-        authLogger.warn('Supabase session maps to a different wallet — falling back to signing', {
-          linked: address,
-          stored: storedEoa,
-          // null = this browser has no completed login for this identity, which
-          // is now expected rather than fatal; the prediction carries it.
-          lastSession: lastSessionAddress,
-        });
-        return false;
-      }
-
       applyAuthenticatedSession(
         authResponse,
         address,
@@ -2164,13 +1960,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // this whole branch was invisible in client_error_logs while the
         // rejection beside it was not — and it covers WALLET_LINK_AMBIGUOUS,
         // which is a real fault rather than a first-login formality.
-        authLogger.warn('No wallet linked to this login yet — signing once to link it', {
+        authLogger.warn('No profile linked to this login yet', {
           reason: e.message,
         });
       } else {
-        authLogger.warn('Supabase session exchange unavailable, falling back to signing', {
+        authLogger.warn('Supabase profile session exchange unavailable', {
           error: e instanceof Error ? e.message : String(e),
         });
+        if (!restoringExistingSession) throw e;
       }
       return false;
     }
@@ -3039,72 +2836,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.warn('[Auth] Refresh failed transiently — not escalating to wallet re-sign');
         return false;
       }
-      console.warn('[Auth] Refresh token rejected, falling back to wallet re-sign');
+      console.warn('[Auth] Refresh token rejected, trying identity session recovery');
     }
 
-    // ── Step 2: wallet re-sign ──
-    const walletBefore = walletAddress || localStorage.getItem('dehub_wallet');
-    const savedSource = readConnectionSource();
-
-    if ((connectionSource === 'wagmi' || savedSource === 'wagmi') && isWagmiConnected && wagmiAddress) {
-      try {
-        setConnectionSource('wagmi');
-        writeConnectionSource('wagmi');
-        // Reached from any 401 mid-session (use-reauth-handler, usePostForm), so
-        // the wallet popup lands while the user is tipping or posting and has
-        // asked for nothing of the sort. Say why it appeared.
-        await completeDeHubAuthWagmi(wagmiAddress, 'background');
-        const walletAfter = localStorage.getItem('dehub_wallet');
-        if (walletBefore && walletAfter && walletBefore.toLowerCase() !== walletAfter.toLowerCase()) {
-          await disconnect();
-          return false;
-        }
-        return true;
-      } catch (e) {
-        console.warn('[Auth] Silent wagmi re-auth failed:', e);
-        return false;
-      }
-    }
-
-    if (connectionSource === 'web3auth' || savedSource === 'web3auth') {
-      // ── Step 2a: Supabase session exchange — still no wallet interaction ──
-      // The Supabase client refreshes its own token independently of ours, so
-      // it is usually still alive when the DeHub refresh token has died. Until
-      // now this path went straight to re-signing, which needs the decrypted
-      // key — so an expired session with a locked wallet became a password
-      // prompt for something a plain HTTP exchange could have done.
-      //
-      // Sources are consulted in memory-then-storage order because a rejected
-      // refresh has already run clearAuthSession by the time we get here,
-      // taking the uid tag with it; the last-session record is the one place
-      // that survives that wipe.
-      if (await recoverExistingSupabaseSession()) {
-        return true;
-      }
-
-      // ── Step 2b: silent re-sign if the key session is still live ──
-      try {
-        // Rehydrate from the vault before concluding anything: after a reload
-        // the key is not in memory yet, and treating that as "locked" here is
-        // what turned an ordinary token refresh into a password prompt.
-        if (!isWalletUnlocked() && !await restoreWalletSession()) {
-          // Genuinely locked — a UI unlock is required; the next tx attempt
-          // triggers it too, but prompting here saves the user a dead click.
-          window.dispatchEvent(new Event('dehub:wallet-unlock-required'));
-          return false;
-        }
-        await signAndAuthenticateSmartWallet('auth-refresh');
-        const walletAfter = localStorage.getItem('dehub_wallet');
-        if (walletBefore && walletAfter && walletBefore.toLowerCase() !== walletAfter.toLowerCase()) {
-          await disconnect();
-          return false;
-        }
-        return true;
-      } catch (e) {
-        console.warn('[Auth] Silent smart-wallet re-auth failed:', e);
-        return false;
-      }
-    }
+    // Background profile/session recovery never requests a wallet signature.
+    if (await recoverExistingSupabaseSession()) return true;
 
     return false;
   };

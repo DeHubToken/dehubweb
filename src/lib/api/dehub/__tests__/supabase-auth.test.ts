@@ -86,11 +86,11 @@ describe('authenticateWithSupabaseSession', () => {
     );
   });
 
-  it('treats an ambiguous link as a fallback case too', async () => {
+  it('does not treat an ambiguous link as a new signup', async () => {
     mockFetch({ status: false, code: 'WALLET_LINK_AMBIGUOUS', message: 'two wallets' }, 409);
-    await expect(authenticateWithSupabaseSession('supabase-jwt')).rejects.toBeInstanceOf(
-      WalletNotLinkedError,
-    );
+    const error = await authenticateWithSupabaseSession('supabase-jwt').catch(e => e);
+    expect(error).toBeInstanceOf(Error);
+    expect(error).not.toBeInstanceOf(WalletNotLinkedError);
   });
 
   it('does not store a session when the exchange fails', async () => {
@@ -98,6 +98,12 @@ describe('authenticateWithSupabaseSession', () => {
     await expect(authenticateWithSupabaseSession('supabase-jwt')).rejects.toThrow();
     expect(localStorage.getItem('dehub_token')).toBeNull();
     expect(localStorage.getItem('dehub_refresh_token')).toBeNull();
+  });
+
+  it.each([{ token: 'token', user: {} }, { user: { address: ADDRESS } }])('rejects incomplete successful responses before persisting tokens', async (body) => {
+    mockFetch(body);
+    await expect(authenticateWithSupabaseSession('supabase-jwt')).rejects.toThrow('Could not finish');
+    expect(localStorage.getItem('dehub_token')).toBeNull();
   });
 
   it('reports a switched-off endpoint as a plain error, distinct from "not linked"', async () => {
