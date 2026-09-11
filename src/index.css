@@ -4381,3 +4381,15 @@ specificity animation declarations above.
     animation-iteration-count: 1 !important;
   }
 }
+
+/* Notification targets keep the same row geometry and thread connectors. */
+@keyframes reply-text-glow {
+  from { text-shadow: 0 0 6px currentColor; }
+  to { text-shadow: none; }
+}
+.reply-text-glow {
+  animation: reply-text-glow 1600ms ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reply-text-glow { animation: none; }
+}
