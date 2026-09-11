@@ -10,7 +10,7 @@ describe('post media presentation', () => {
     const detail = readSource('pages/app/SinglePostPage.tsx');
     const imageCard = readSource('components/app/cards/ImageCard.tsx');
 
-    expect(detail).toContain('<ImageCard post={toImagePost(post)} aboveFold />');
+    expect(detail).toContain('<ImageCard post={toImagePost(post)} aboveFold onOpenComments={handleOpenPageComments} />');
     expect(imageCard).toContain("loading={aboveFold && idx === 0 ? 'eager' : 'lazy'}");
     expect(imageCard).toContain("fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}");
     expect(imageCard).toContain("loading={aboveFold ? 'eager' : 'lazy'}");

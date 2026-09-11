@@ -108,6 +108,8 @@ function useIsTabletOrMobile() {
 
 interface PostCardProps {
   post: TextPost;
+  /** Dedicated pages own one shared comments window below the post card. */
+  onOpenComments?: (tab?: 'replies' | 'quotes' | 'reposts' | 'search') => void;
   /**
    * Rendered inside the card, between the action bar and the comments — the
    * author-thread block on the post page. Its presence also tells the comments
@@ -117,7 +119,7 @@ interface PostCardProps {
   threadSlot?: ReactNode;
 }
 
-export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardProps) {
+export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComments }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   useAutoOpenComments(setShowComments, post.id);
@@ -717,6 +719,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
             utilityDesktopAnchor
             className="p-0"
             onComment={() => {
+              if (onOpenComments) {
+                onOpenComments();
+                return;
+              }
               setCommentsInitialTab(undefined);
               setShowComments(prev => !prev);
             }}
@@ -736,6 +742,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
             tipCount={tipCount}
             onTip={post.author.paymentsDisabled ? undefined : () => setShowTipModal(true)}
             onSeeEngagements={() => {
+              if (onOpenComments) {
+                onOpenComments('reposts');
+                return;
+              }
               setCommentsInitialTab('reposts');
               setShowComments(true);
             }}
@@ -747,14 +757,16 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
         {threadSlot}
 
         {/* Comments */}
-        <CommentsWrapper
-          open={showComments}
-          onOpenChange={setShowComments}
-          tokenId={post.id}
-          initialTab={commentsInitialTab}
-          commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
-          postAuthorAddress={threadSlot ? post.author.id : undefined}
-        />
+        {!onOpenComments && (
+          <CommentsWrapper
+            open={showComments}
+            onOpenChange={setShowComments}
+            tokenId={post.id}
+            initialTab={commentsInitialTab}
+            commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+            postAuthorAddress={threadSlot ? post.author.id : undefined}
+          />
+        )}
       </div>
 
       {/* Poll Creator Drawer */}
