@@ -840,6 +840,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (healed) setConnectionSource(healed);
         }
 
+        // Re-resolve social identity before restoring an older cached profile.
+        // Recovery used to select the owner EOA instead of its existing Safe.
+        if (token && savedWallet && await recoverExistingSupabaseSession()) return;
+
         if (token && savedWallet && !isTokenExpired()) {
           try {
             // Run profile fetch + token validation in parallel
@@ -1950,9 +1954,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         serverLinkedEmail && !ethAddress ? 'wagmi' : 'web3auth',
       );
       closeLoginModal();
-      if (restoringExistingSession) {
-        toast.success('Already logged in another browser, welcome back!');
-      }
       return true;
     } catch (e) {
       if (e instanceof WalletNotLinkedError) {
