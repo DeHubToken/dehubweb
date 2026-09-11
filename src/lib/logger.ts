@@ -23,6 +23,7 @@ interface LogData {
 // ============================================================================
 
 const LOG_QUEUE: LogData[] = [];
+const BATCH_MAX = 50;
 const FLUSH_INTERVAL_MS = 30_000; // 30 seconds
 let flushTimer: ReturnType<typeof setInterval> | null = null;
 
@@ -30,7 +31,7 @@ async function flushLogs() {
     if (LOG_QUEUE.length === 0) return;
 
     // Drain the queue
-    const batch = LOG_QUEUE.splice(0);
+    const batch = LOG_QUEUE.splice(0, BATCH_MAX);
 
     try {
         const { error } = await supabase.functions.invoke('client-logs', {
@@ -113,7 +114,7 @@ function ensureFlushTimer() {
  */
 function signedInWallet(): string | undefined {
     try {
-        return localStorage.getItem('dehub_wallet') || undefined;
+        return localStorage.getItem('dehub_wallet')?.toLowerCase() || undefined;
     } catch {
         return undefined;
     }
@@ -146,6 +147,9 @@ export async function logToBackend(data: LogData) {
         user_address: data.user_address ?? signedInWallet(),
         metadata: { ...(data.metadata || {}), client_time: new Date().toISOString() },
     });
+    // The endpoint accepts only 50 rows. Flush a full batch before a burst
+    // can grow past that cap and silently lose the remaining errors.
+    if (LOG_QUEUE.length >= BATCH_MAX) void flushLogs();
     ensureFlushTimer();
 }
 
