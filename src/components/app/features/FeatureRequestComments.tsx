@@ -112,10 +112,7 @@ function CommentRow({
 
   return (
     <div
-      className={cn(
-        'relative flex gap-3 py-2',
-        highlighted && 'rounded-xl ring-1 ring-white/30 bg-white/[0.04] px-2 -mx-2',
-      )}
+      className="relative flex gap-3 py-2"
       // The row is the reply target, not just the 16px icon in it. Anything
       // interactive inside keeps its own behaviour, and a drag that selected
       // text is not a tap — both the same rules the post section applies.
@@ -201,7 +198,7 @@ function CommentRow({
             </button>
           </div>
         ) : (
-          <TranslatableText text={comment.content} className="text-zinc-300 text-sm leading-relaxed break-words" as="p" />
+          <TranslatableText text={comment.content} className={cn("text-zinc-300 text-sm leading-relaxed break-words", highlighted && "reply-text-glow")} as="p" />
         )}
 
         {!isEditing && (

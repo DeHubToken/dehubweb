@@ -330,12 +330,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={cn(
-        'relative flex items-start gap-3 py-3 cursor-pointer',
-        // The row the reader was sent here to read. A ring rather than a fill:
-        // the comment has to still look like the comments around it.
-        highlighted && 'rounded-xl ring-1 ring-white/30 bg-white/[0.04] px-2 -mx-2',
-      )}
+      className="relative flex items-start gap-3 py-3 cursor-pointer"
       data-comment-id={comment.id}
       /*
         Tap the comment to answer it.
@@ -481,7 +476,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
             {commentDisplayText && (
               <TranslatableText
                 text={commentDisplayText}
-                className="text-zinc-300 text-base leading-6 break-words"
+                className={cn("text-zinc-300 text-base leading-6 break-words", highlighted && "reply-text-glow")}
                 as="p"
                 hideControls
                 auto={false}
