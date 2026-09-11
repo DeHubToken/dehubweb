@@ -1,14 +1,13 @@
 /**
  * Username marketplace hooks
  * ==========================
- * Browse, list and buy handles, all denominated in DHB.
+ * Browse dollar-priced handles and pay the current token equivalent.
  *
  * The buy path is the part with rules, and both of them exist because the
  * money moves before the handle does:
  *
  * - **Nothing is priced here.** The server quotes the asking price and names
- *   the seller; the wallet sends exactly that, to exactly them. The USD figure
- *   beside it is decoration.
+ *   the seller; the wallet sends exactly that, to exactly them. The dollar asking price is fixed.
  * - **The buyer never picks a network.** `pickPayChain` reads their DHB balance
  *   on each chain the server quoted and spends the first that covers the price,
  *   Base first. A picker asked a question only the wallet could answer, and
@@ -54,28 +53,30 @@ export type UsernameSort = 'newest' | 'price_asc' | 'price_desc' | 'shortest';
 export interface BrowseParams {
   search?: string;
   sort?: UsernameSort;
-  minPriceDhb?: number;
-  maxPriceDhb?: number;
+  minPriceUsd?: number;
+  maxPriceUsd?: number;
 }
 
-/** Price floor, DHB contracts and the peg — read once and cached for the day. */
+/** Price limits, token contracts and the current rate, refreshed every 30 seconds. */
 export function useUsernameMarketConfig() {
   return useQuery({
     queryKey: ['username-market-config'],
     queryFn: getUsernameMarketConfig,
-    staleTime: 60 * 60 * 1000,
+    staleTime: 30 * 1000,
+    refetchInterval: 30 * 1000,
     gcTime: 24 * 60 * 60 * 1000,
   });
 }
 
 export function useBrowseUsernames(params: BrowseParams) {
   return useQuery<BrowseUsernamesResult>({
-    queryKey: ['username-market-browse', params.search || '', params.sort || 'newest', params.minPriceDhb ?? null, params.maxPriceDhb ?? null],
+    queryKey: ['username-market-browse', params.search || '', params.sort || 'newest', params.minPriceUsd ?? null, params.maxPriceUsd ?? null],
     queryFn: () => browseUsernames({ ...params, limit: 48 }),
     // Typing in the search box keeps the current grid on screen rather than
     // flashing an empty state between every keystroke.
     placeholderData: keepPreviousData,
     staleTime: 30 * 1000,
+    refetchInterval: 30 * 1000,
   });
 }
 
@@ -86,6 +87,7 @@ export function useMyUsernameMarket() {
     queryFn: getMyUsernameMarket,
     enabled: isAuthenticated,
     staleTime: 30 * 1000,
+    refetchInterval: 30 * 1000,
   });
 }
 
@@ -105,7 +107,7 @@ export function useCreateUsernameListing() {
 export function useUpdateUsernameListing() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ listingId, ...input }: { listingId: string; priceDhb?: number; replacementUsername?: string; description?: string }) =>
+    mutationFn: ({ listingId, ...input }: { listingId: string; priceUsd?: number; replacementUsername?: string; description?: string }) =>
       updateUsernameListing(listingId, input),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['username-market-mine'] });
@@ -157,6 +159,9 @@ export function useBuyUsername() {
 
   const buy = useMutation({
     mutationFn: async (quote: UsernameQuote) => {
+      if (!quote.quoteId || Date.parse(quote.expiresAt) < Date.now() + 30_000) {
+        throw new Error('Refresh the checkout price before paying.');
+      }
       // Imported at call time: this hook is reachable from a cached page, and
       // scripts/check-entry-bundle.mjs fails the build if wagmi lands in the
       // entry chunk.
@@ -195,6 +200,7 @@ export function useBuyUsername() {
         try {
           const result = await claimUsername({
             listingId: quote.listingId,
+            quoteId: quote.quoteId,
             txHash: sent.hash,
             chainId,
           });

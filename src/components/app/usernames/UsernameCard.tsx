@@ -88,11 +88,10 @@ export const UsernameCard = memo(function UsernameCard({ listing, onClick, isOwn
           digits rather than on the end of each name. */}
       <div className="shrink-0 text-right">
         <p className="text-base sm:text-lg font-semibold text-white flex items-center justify-end gap-1.5 whitespace-nowrap">
-          <img src={dehubCoin} alt="DHB" className="w-4 h-4 sm:w-5 sm:h-5" />
-          {listing.priceDhb.toLocaleString()}
+          ${listing.priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </p>
         <p className="text-[11px] text-zinc-500 whitespace-nowrap">
-          ≈ ${listing.priceUsd.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+          <img src={dehubCoin} alt="DHB" className="inline w-3 h-3 mr-1" />{listing.priceDhb.toLocaleString(undefined, { maximumFractionDigits: 6 })}
         </p>
         {/* Below sm the seller drops out of the chip row, so it lands here
             instead of vanishing entirely. */}
