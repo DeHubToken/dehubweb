@@ -2089,7 +2089,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="font-semibold text-white text-sm truncate">{displayName}</span>
+                          <BadgedName
+                            badgeBalance={post.minterUser?.hideBadgeAndBalance ? 0 : post.minterUser?.badgeBalance}
+                            lookupId={post.minter || post.minterUser?.address}
+                            username={post.minterUser?.username || post.minterUsername}
+                            className="font-semibold text-white text-sm"
+                          >
+                            {displayName}
+                          </BadgedName>
                           <NewMemberChip address={post.minter || post.minterUser?.address} />
                         </div>
                         {preview && <span className="text-zinc-400 text-xs line-clamp-2 mt-0.5">{preview}</span>}
@@ -2115,9 +2122,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
               <div className="space-y-2">
                 {repostersData.items.map((user) => {
                   const displayName = user.displayName || user.username || user.address?.slice(0, 8) || 'Unknown';
-                  const avatarUrl = user.avatarImageUrl
-                    ? (user.avatarImageUrl.startsWith('http') ? user.avatarImageUrl : `https://api.dehub.io/${user.avatarImageUrl}`)
-                    : undefined;
+                  const avatarUrl = buildAvatarUrl(user.address, extractAvatarPath(user));
                   return (
                     <button
                       key={user.address}
@@ -2138,7 +2143,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="font-semibold text-white text-sm truncate">{displayName}</span>
+                          <BadgedName
+                            badgeBalance={user.hideBadgeAndBalance ? 0 : user.badgeBalance}
+                            lookupId={user.address || user.username}
+                            username={user.username}
+                            className="font-semibold text-white text-sm"
+                          >
+                            {displayName}
+                          </BadgedName>
                           <NewMemberChip address={user.address} />
                         </div>
                         {user.username && (

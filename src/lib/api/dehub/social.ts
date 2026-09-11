@@ -72,6 +72,8 @@ export interface FollowListItem {
   isVerified?: boolean;
   isFollowing?: boolean;
   followsYou?: boolean;
+  badgeBalance?: number | string | null;
+  hideBadgeAndBalance?: boolean;
 }
 
 export interface CommentLikeResponse {
@@ -415,6 +417,13 @@ const normalizeReposter = (entry: any): FollowListItem => {
     isVerified: !!(u?.isVerified ?? entry?.isVerified),
     isFollowing: !!(u?.isFollowing ?? entry?.isFollowing),
     followsYou: !!(u?.followsYou ?? entry?.followsYou),
+    badgeBalance:
+      u?.badgeBalance ??
+      u?.badge_balance ??
+      entry?.badgeBalance ??
+      entry?.badge_balance ??
+      null,
+    hideBadgeAndBalance: !!(u?.hideBadgeAndBalance ?? entry?.hideBadgeAndBalance),
   };
 };
 
