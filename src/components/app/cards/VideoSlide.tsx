@@ -84,6 +84,11 @@ export const VideoSlide = memo(function VideoSlide({
   progressLayer = null,
 }: VideoSlideProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  // Native media play requests may settle after React has already advanced the
+  // carousel. Keep the latest ownership state available to those callbacks so
+  // a slide that has left the active position can never restart itself.
+  const isActiveRef = useRef(isActive);
+  isActiveRef.current = isActive;
   // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
   // images/{id}.jpg — resolve to whichever exists so the poster isn't a 403.
   const thumbnail = useResolvedThumbnail(short.thumbnail);
@@ -157,17 +162,29 @@ export const VideoSlide = memo(function VideoSlide({
     if (isActive) {
       // Delay playback slightly to let transition settle completely
       const timer = setTimeout(() => {
+        if (!isActiveRef.current) return;
         if (video.currentTime === 0 || video.ended) {
           video.currentTime = 0;
         }
         video.play().catch(() => {});
       }, 50); // 50ms delay for buttery smooth landing
       
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        // Pausing in cleanup closes the hand-off gap before the next render's
+        // inactive effect runs, including when the viewer itself unmounts.
+        video.pause();
+      };
     } else {
       video.pause();
     }
   }, [isActive]);
+
+  const handlePlay = useCallback(() => {
+    // Safari can complete an older play() request after pause(). Treat React's
+    // active slide as the authority and immediately silence that stale start.
+    if (!isActiveRef.current) videoRef.current?.pause();
+  }, []);
 
   // Update muted state
   useEffect(() => {
@@ -444,6 +461,7 @@ export const VideoSlide = memo(function VideoSlide({
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
             onCanPlay={handleCanPlay}
+            onPlay={handlePlay}
             onError={() => console.error('Video load error:', short.videoUrl)}
           />
         ) : (
