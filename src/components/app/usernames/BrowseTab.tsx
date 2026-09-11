@@ -39,10 +39,10 @@ const SORTS: { value: UsernameSort; labelKey: string }[] = [
  * carry a stable `id` rather than being identified by their own display text.
  */
 const PRICE_PRESETS = [
-  { id: 'under10k', labelKey: 'usernames.bandUnder10k', min: undefined, max: 10_000 },
-  { id: '10kTo100k', labelKey: 'usernames.band10kTo100k', min: 10_000, max: 100_000 },
-  { id: '100kTo1m', labelKey: 'usernames.band100kTo1m', min: 100_000, max: 1_000_000 },
-  { id: '1mPlus', labelKey: 'usernames.band1mPlus', min: 1_000_000, max: undefined },
+  { id: 'under10k', label: '< $10', min: undefined, max: 10 },
+  { id: '10kTo100k', label: '$10–$100', min: 10, max: 100 },
+  { id: '100kTo1m', label: '$100–$1,000', min: 100, max: 1_000 },
+  { id: '1mPlus', labelKey: 'usernames.band1mPlus', min: 1_000, max: undefined },
 ];
 
 export function BrowseTab() {
@@ -52,8 +52,8 @@ export function BrowseTab() {
   // A shared listing link lands here with the handle already in the box.
   const [search, setSearch] = useState(() => searchParams.get('handle') || '');
   const [sort, setSort] = useState<UsernameSort>('newest');
-  const [minPriceDhb, setMinPriceDhb] = useState<number | undefined>();
-  const [maxPriceDhb, setMaxPriceDhb] = useState<number | undefined>();
+  const [minPriceUsd, setMinPriceUsd] = useState<number | undefined>();
+  const [maxPriceUsd, setMaxPriceUsd] = useState<number | undefined>();
   const [selected, setSelected] = useState<UsernameListing | null>(null);
   const [filterOpen, setFilterOpen] = useState(false);
 
@@ -61,8 +61,8 @@ export function BrowseTab() {
   const { data, isLoading, isFetching } = useBrowseUsernames({
     search: debouncedSearch,
     sort,
-    minPriceDhb,
-    maxPriceDhb,
+    minPriceUsd,
+    maxPriceUsd,
   });
 
   // Drop the deep-link param once it has been read into the box, so a later
@@ -77,12 +77,12 @@ export function BrowseTab() {
   }, []);
 
   const listings = data?.listings ?? [];
-  const hasPriceFilter = minPriceDhb !== undefined || maxPriceDhb !== undefined;
+  const hasPriceFilter = minPriceUsd !== undefined || maxPriceUsd !== undefined;
   const activeFilters = (hasPriceFilter ? 1 : 0) + (sort !== 'newest' ? 1 : 0);
 
   const clearFilters = () => {
-    setMinPriceDhb(undefined);
-    setMaxPriceDhb(undefined);
+    setMinPriceUsd(undefined);
+    setMaxPriceUsd(undefined);
     setSort('newest');
   };
 
@@ -137,19 +137,19 @@ export function BrowseTab() {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs text-zinc-400">{t('usernames.priceDhb')}</Label>
+              <Label className="text-xs text-zinc-400">{t('usernames.priceUsd', 'Price (USD)')}</Label>
               <div className="grid grid-cols-2 gap-1.5">
                 {PRICE_PRESETS.map(preset => (
                   <button
                     key={preset.id}
-                    onClick={() => { setMinPriceDhb(preset.min); setMaxPriceDhb(preset.max); }}
+                    onClick={() => { setMinPriceUsd(preset.min); setMaxPriceUsd(preset.max); }}
                     className={`text-xs rounded-lg border px-2 py-1.5 ${
-                      minPriceDhb === preset.min && maxPriceDhb === preset.max
+                      minPriceUsd === preset.min && maxPriceUsd === preset.max
                         ? 'border-white/60 bg-white/10 text-white'
                         : 'border-white/10 bg-white/5 text-zinc-400'
                     }`}
                   >
-                    {t(preset.labelKey)}
+                    {preset.label}
                   </button>
                 ))}
               </div>

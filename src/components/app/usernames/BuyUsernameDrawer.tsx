@@ -18,7 +18,7 @@
  * not a decision to hand them.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -41,6 +41,8 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
   const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const { getQuote, buy, stage } = useBuyUsername();
+  const paying = useRef(false);
+  paying.current = buy.isPending;
   const [quote, setQuote] = useState<UsernameQuote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
@@ -62,7 +64,13 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
       .mutateAsync(listingId!)
       .then(q => { if (!cancelled) setQuote(q); })
       .catch((err: Error) => { if (!cancelled) setQuoteError(err.message); });
-    return () => { cancelled = true; };
+    const interval = setInterval(() => {
+      if (paying.current) return;
+      getQuote.mutateAsync(listingId!).then(q => {
+        if (!cancelled && !paying.current) setQuote(q);
+      }).catch((err: Error) => { if (!cancelled) setQuoteError(err.message); });
+    }, 30_000);
+    return () => { cancelled = true; clearInterval(interval); };
     // getQuote is a fresh mutation object each render; keying on the listing is
     // what stops this re-firing forever.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,13 +78,21 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
 
   if (!listing) return null;
 
-  const busy = stage === 'paying' || stage === 'confirming';
+  const busy = stage === 'quoting' || stage === 'paying' || stage === 'confirming';
   const payChainMeta = SUPPORTED_CHAINS.find(c => c.id === payChain?.chainId);
 
   const handleBuy = async () => {
     if (!isAuthenticated) return openLoginModal();
     if (!quote) return;
-    const result = await buy.mutateAsync(quote).catch(() => null);
+    const fresh = await getQuote.mutateAsync(quote.listingId).catch((err: Error) => { setQuoteError(err.message); return null; });
+    if (!fresh) return;
+    setQuote(fresh);
+    if (fresh.priceDhb !== quote.priceDhb || fresh.priceUsd !== quote.priceUsd) {
+      setQuoteError(t('usernames.priceUpdated', 'Price updated. Review the amount and tap Buy again.'));
+      return;
+    }
+    setQuoteError(null);
+    const result = await buy.mutateAsync(fresh).catch(() => null);
     if (result && !result.pending) onClose();
   };
 
@@ -99,13 +115,12 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
             <div className="rounded-xl bg-white/5 border border-white/10 p-4">
               <p className="text-xs text-zinc-500 mb-1">{t('usernames.askingPrice')}</p>
               <p className="text-2xl font-bold text-white flex items-center gap-2">
-                <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
-                {(quote?.priceDhb ?? listing.priceDhb).toLocaleString()}
+                ${(quote?.priceUsd ?? listing.priceUsd).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
-              <p className="text-xs text-zinc-500 mt-1">
-                {t('usernames.paidStraightToSeller', {
-                  usd: (quote?.priceUsd ?? listing.priceUsd).toLocaleString(undefined, { maximumFractionDigits: 2 }),
-                })}
+              <p className="text-xs text-zinc-500 mt-1 flex items-center gap-1">
+                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                {(quote?.priceDhb ?? listing.priceDhb).toLocaleString(undefined, { maximumFractionDigits: 6 })}
+                {' · '}{t('usernames.tokensPaidToSeller', 'Paid directly to the seller')}
               </p>
             </div>
 

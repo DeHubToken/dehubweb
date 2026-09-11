@@ -3630,7 +3630,7 @@
     "seoTitle": "Benutzername Marketplace | DeHub",
     "seoDescription": "Kaufe und verkaufe DeHub-Benutzernamen bei DHB. Suchen Sie nach kurzen, numerischen und originalen Griffen zum Verkauf oder listen Sie Ihre eigenen auf — die Übertragung erfolgt in der Kette, sobald die Zahlung abgeschlossen ist.",
     "title": "Benutzernamen",
-    "subtitle": "Griffe zum Verkauf, preislich in DHB",
+    "subtitle": "Griffe zum Verkauf, preislich in USD",
     "tabBrowse": "Durchsuchen",
     "tabSell": "Verkaufen",
     "searchPlaceholder": "Handle durchsuchen...",
@@ -3689,7 +3689,13 @@
     "signInToBuy": "Melde dich an zum Kaufen",
     "buyHandle": "Kaufe @{{handle}}",
     "transferGuarantee": "Das Handle wird nur übertragen, nachdem DeHub deine DHB-Überweisung aus der Blockchain ausliest. Falls dies nicht möglich ist, wird die Zahlung gegen den Verkauf verbucht, damit der Verkäufer dir eine Rückerstattung geben kann.",
-    "shareTitle": "@{{handle}} steht zum Verkauf auf DeHub"
+    "shareTitle": "@{{handle}} steht zum Verkauf auf DeHub",
+    "askingPriceUsd": "Verkaufspreis (USD)",
+    "dollarPriceRange": "Gib 1 bis 1.000.000 USD mit höchstens zwei Nachkommastellen ein.",
+    "fixedDollarPrice": "Der Dollarpreis bleibt fest; die Tokenmenge wird aktualisiert.",
+    "priceUpdated": "Preis aktualisiert. Prüfe den Betrag und tippe erneut auf Kaufen.",
+    "tokensPaidToSeller": "Direkt an den Verkäufer gezahlt",
+    "priceUsd": "Preis (USD)"
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",

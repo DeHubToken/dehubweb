@@ -3645,7 +3645,7 @@
     "seoTitle": "Nom d'utilisateur Marketplace | DeHub",
     "seoDescription": "Achetez et vendez des noms d'utilisateur DeHub avec DHB. Recherchez des poignées courtes, numériques et originales à vendre, ou répertoriez les vôtres — le transfert se fait en chaîne au moment où le paiement est effacé.",
     "title": "Noms d’utilisateurs",
-    "subtitle": "Poignées à vendre, prix en DHB",
+    "subtitle": "Poignées à vendre, prix en USD",
     "tabBrowse": "Parcourir",
     "tabSell": "Alléger",
     "searchPlaceholder": "Rechercher une poignée…",
@@ -3702,7 +3702,13 @@
     "signInToBuy": "Connectez-vous pour acheter",
     "buyHandle": "Acheter @{{handle}}",
     "transferGuarantee": "L'identifiant ne se transfère qu'après que DeHub lise votre transfert DHB hors de la chaîne. Si ce n'est pas possible, le paiement est enregistré par rapport à la vente afin que le vendeur puisse vous rembourser.",
-    "shareTitle": "@{{handle}} est à vendre sur DeHub"
+    "shareTitle": "@{{handle}} est à vendre sur DeHub",
+    "askingPriceUsd": "Prix demandé (USD)",
+    "dollarPriceRange": "Saisissez de 1 à 1 000 000 USD, avec deux décimales maximum.",
+    "fixedDollarPrice": "Le prix en dollars reste fixe ; le nombre de jetons évolue.",
+    "priceUpdated": "Prix mis à jour. Vérifiez le montant et appuyez à nouveau sur Acheter.",
+    "tokensPaidToSeller": "Payé directement au vendeur",
+    "priceUsd": "Prix (USD)"
   },
   "accounts": {
     "seoTitle": "Marché des comptes — DeHub",

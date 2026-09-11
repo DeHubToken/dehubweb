@@ -3648,7 +3648,7 @@
     "seoTitle": "Username Marketplace | DeHub",
     "seoDescription": "Buy and sell DeHub usernames with DHB. Search short, numeric and original handles for sale, or list your own — the transfer happens on-chain the moment payment clears.",
     "title": "Usernames",
-    "subtitle": "Handles for sale, priced in DHB",
+    "subtitle": "Handles for sale, priced in USD",
     "tabBrowse": "Browse",
     "tabSell": "Sell",
     "searchPlaceholder": "Search a handle…",
@@ -3708,7 +3708,13 @@
     "signInToBuy": "Sign in to buy",
     "buyHandle": "Buy @{{handle}}",
     "transferGuarantee": "The handle moves only after DeHub reads your DHB transfer back off the chain. If it cannot, the payment is recorded against the sale so the seller can refund you.",
-    "shareTitle": "@{{handle}} is for sale on DeHub"
+    "shareTitle": "@{{handle}} is for sale on DeHub",
+    "askingPriceUsd": "Asking price (USD)",
+    "dollarPriceRange": "Enter $1–$1,000,000, with up to two decimal places.",
+    "fixedDollarPrice": "Dollar price stays fixed; token amount updates.",
+    "priceUpdated": "Price updated. Review the amount and tap Buy again.",
+    "tokensPaidToSeller": "Paid directly to the seller",
+    "priceUsd": "Price (USD)"
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",
