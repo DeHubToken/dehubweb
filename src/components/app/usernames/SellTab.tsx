@@ -22,7 +22,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import dehubCoin from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   useCancelUsernameListing,
@@ -40,7 +39,7 @@ export function SellTab() {
   const createListing = useCreateUsernameListing();
   const cancelListing = useCancelUsernameListing();
 
-  const [priceDhb, setPriceDhb] = useState('');
+  const [priceUsd, setPriceUsd] = useState('');
   const [replacement, setReplacement] = useState('');
   const [description, setDescription] = useState('');
 
@@ -50,7 +49,7 @@ export function SellTab() {
   // Seed the form from an existing listing so "list" doubles as "edit".
   useEffect(() => {
     if (!active) return;
-    setPriceDhb(String(active.priceDhb));
+    setPriceUsd(String(active.priceUsd));
     setReplacement(active.replacementUsername);
     setDescription(active.description || '');
   }, [active?.id]);
@@ -79,17 +78,17 @@ export function SellTab() {
     );
   }
 
-  const priceNumber = Math.floor(Number(priceDhb));
+  const priceNumber = Number(priceUsd);
   const priceValid =
-    Number.isFinite(priceNumber) &&
-    priceNumber >= (config?.minPriceDhb ?? 1000) &&
-    priceNumber <= (config?.maxPriceDhb ?? Number.MAX_SAFE_INTEGER);
+    Number.isFinite(priceNumber) && Math.abs(priceNumber * 100 - Math.round(priceNumber * 100)) < 0.000001 &&
+    priceNumber >= (config?.minPriceUsd ?? 1) &&
+    priceNumber <= (config?.maxPriceUsd ?? Number.MAX_SAFE_INTEGER);
   const replacementValid = /^[a-z0-9_-]{1,30}$/.test(replacement.trim().toLowerCase());
-  const canSubmit = priceValid && replacementValid && !createListing.isPending;
+  const canSubmit = !!config && config.dhbUsdPeg > 0 && priceValid && replacementValid && !createListing.isPending;
 
   const submit = () => {
     createListing.mutate({
-      priceDhb: priceNumber,
+      priceUsd: priceNumber,
       replacementUsername: replacement.trim().toLowerCase(),
       description: description.trim() || undefined,
     });
@@ -107,26 +106,22 @@ export function SellTab() {
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-xs text-zinc-400">{t('usernames.askingPriceDhb')}</Label>
+          <Label className="text-xs text-zinc-400">{t('usernames.askingPriceUsd', 'Asking price (USD)')}</Label>
           <div className="relative">
-            <img src={dehubCoin} alt="" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" />
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">$</span>
             <Input
-              value={priceDhb}
-              onChange={e => setPriceDhb(e.target.value.replace(/[^0-9]/g, ''))}
-              inputMode="numeric"
-              placeholder={String(config?.minPriceDhb ?? 1000)}
+              value={priceUsd}
+              onChange={e => setPriceUsd(e.target.value.replace(/[^0-9.]/g, ''))}
+              inputMode="decimal"
+              placeholder={String(config?.minPriceUsd ?? 1)}
               className="pl-9 bg-black/60 border-white/10 rounded-xl text-white"
             />
           </div>
-          <p className="text-[11px] text-zinc-500">
-            {priceValid && config
-              ? t('usernames.priceApprox', {
-                  usd: (priceNumber * config.dhbUsdPeg).toLocaleString(undefined, { maximumFractionDigits: 2 }),
-                })
-              : t('usernames.priceRange', {
-                  min: (config?.minPriceDhb ?? 1000).toLocaleString(),
-                  max: (config?.maxPriceDhb ?? 0).toLocaleString(),
-                })}
+          <p className="text-[11px] text-zinc-500 flex items-center gap-1">
+            {priceValid && config?.dhbUsdPeg > 0 ? <>
+              ≈ <DhbCoin />{(Math.ceil(priceNumber / config.dhbUsdPeg * 1e6) / 1e6).toLocaleString(undefined, { maximumFractionDigits: 6 })}
+              {' · '}{t('usernames.fixedDollarPrice', 'Dollar price stays fixed; token amount updates.')}
+            </> : t('usernames.dollarPriceRange', 'Enter $1–$1,000,000, with up to two decimal places.')}
           </p>
         </div>
 
@@ -221,8 +216,8 @@ function SaleRow({ sale, kind }: { sale: UsernameSale; kind: 'sold' | 'bought' }
         <p className="text-[11px] text-zinc-500">{t(kind === 'sold' ? 'usernames.sold' : 'usernames.bought')}</p>
       </div>
       <p className="text-sm font-semibold text-white flex items-center gap-1.5 shrink-0">
-        <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-        {sale.paidDhb.toLocaleString()}
+        ${sale.priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        <span className="text-xs text-zinc-500"><DhbCoin /> {sale.paidDhb.toLocaleString()}</span>
       </p>
     </div>
   );
@@ -240,7 +235,7 @@ function HistoryRow({ listing }: { listing: MyUsernameListing }) {
           {listing.status === 'cancelled' ? listing.cancelReason || t('usernames.withdrawn') : t('usernames.sold')}
         </p>
       </div>
-      <p className="text-xs text-zinc-500 shrink-0">{listing.priceDhb.toLocaleString()} <DhbCoin /></p>
+      <p className="text-xs text-zinc-500 shrink-0">${listing.priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} · <DhbCoin /> {listing.priceDhb.toLocaleString()}</p>
     </div>
   );
 }

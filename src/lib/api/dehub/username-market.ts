@@ -25,11 +25,13 @@
 import { apiCall } from './core';
 
 export interface UsernameMarketConfig {
+  minPriceUsd: number;
+  maxPriceUsd: number;
   minPriceDhb: number;
   maxPriceDhb: number;
   maxDescriptionLength: number;
   usernameMaxLength: number;
-  /** USD per DHB. Display only — every price here is denominated in DHB. */
+  /** Current USD per token. Listing dollar prices stay fixed. */
   dhbUsdPeg: number;
   chains: { chainId: number; tokenAddress: string }[];
 }
@@ -101,6 +103,8 @@ export interface MyUsernameMarket {
 }
 
 export interface UsernameQuote {
+  quoteId: string;
+  expiresAt: string;
   listingId: string;
   username: string;
   priceDhb: number;
@@ -135,8 +139,8 @@ export async function getUsernameMarketConfig(): Promise<UsernameMarketConfig> {
 export async function browseUsernames(params: {
   search?: string;
   sort?: 'newest' | 'price_asc' | 'price_desc' | 'shortest';
-  minPriceDhb?: number;
-  maxPriceDhb?: number;
+  minPriceUsd?: number;
+  maxPriceUsd?: number;
   page?: number;
   limit?: number;
 }): Promise<BrowseUsernamesResult> {
@@ -144,8 +148,8 @@ export async function browseUsernames(params: {
     params: {
       search: params.search || undefined,
       sort: params.sort,
-      minPriceDhb: params.minPriceDhb,
-      maxPriceDhb: params.maxPriceDhb,
+      minPriceUsd: params.minPriceUsd,
+      maxPriceUsd: params.maxPriceUsd,
       page: params.page,
       limit: params.limit,
     },
@@ -168,11 +172,11 @@ export async function getMyUsernameMarket(): Promise<MyUsernameMarket> {
  * when it sells, and it is validated now rather than at the moment of sale.
  */
 export async function createUsernameListing(input: {
-  priceDhb: number;
+  priceUsd: number;
   replacementUsername: string;
   description?: string;
-}): Promise<{ id: string; username: string; priceDhb: number; replacementUsername: string }> {
-  const res = await apiCall<Envelope<{ id: string; username: string; priceDhb: number; replacementUsername: string }>>(
+}): Promise<{ id: string; username: string; priceUsd: number; priceDhb: number; replacementUsername: string }> {
+  const res = await apiCall<Envelope<{ id: string; username: string; priceUsd: number; priceDhb: number; replacementUsername: string }>>(
     '/api/username_market/listings',
     { method: 'POST', body: { ...input }, requiresAuth: true },
   );
@@ -181,9 +185,9 @@ export async function createUsernameListing(input: {
 
 export async function updateUsernameListing(
   listingId: string,
-  input: { priceDhb?: number; replacementUsername?: string; description?: string },
-): Promise<{ id: string; priceDhb: number }> {
-  const res = await apiCall<Envelope<{ id: string; priceDhb: number }>>(
+  input: { priceUsd?: number; replacementUsername?: string; description?: string },
+): Promise<{ id: string; priceUsd: number; priceDhb: number }> {
+  const res = await apiCall<Envelope<{ id: string; priceUsd: number; priceDhb: number }>>(
     `/api/username_market/listings/${listingId}`,
     { method: 'PATCH', body: { ...input }, requiresAuth: true },
   );
@@ -208,6 +212,7 @@ export async function quoteUsername(listingId: string): Promise<UsernameQuote> {
 
 export async function claimUsername(input: {
   listingId: string;
+  quoteId: string;
   txHash: string;
   chainId: number;
 }): Promise<ClaimResult> {
