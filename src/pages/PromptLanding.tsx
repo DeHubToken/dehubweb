@@ -1,7 +1,7 @@
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowUp, Mic, MicOff } from 'lucide-react';
+import { ArrowLeft, ArrowUp, Mic, MicOff } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { NebulaBackground } from '@/components/ui/NebulaBackground';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
@@ -83,6 +83,15 @@ export default function PromptLanding() {
       {theme === 'system' && <NebulaBackground />}
 
       <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 sm:px-6 py-4">
+        <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={() => navigate('/app', { replace: true })}
+          className="flex h-11 w-11 items-center justify-center rounded-full hover:bg-white/10 transition-colors"
+          aria-label={t('common.back', 'Back')}
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </button>
         <button
           onClick={() => navigate('/app')}
           className="block cursor-pointer hover:opacity-80 transition-opacity"
@@ -98,6 +107,7 @@ export default function PromptLanding() {
             height={28}
           />
         </button>
+        </div>
         {!isAuthenticated && (
           // The wrapper span carries the warm handlers — LiquidGlassBubble2
           // forwards only onClick, and the events bubble up to here.
