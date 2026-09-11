@@ -38,11 +38,11 @@ const SORTS: { value: UsernameSort; labelKey: string }[] = [
  * The band labels are read back as the key for the selected preset, so they
  * carry a stable `id` rather than being identified by their own display text.
  */
-const PRICE_PRESETS = [
+const PRICE_PRESETS: { id: string; label: string; min?: number; max?: number }[] = [
   { id: 'under10k', label: '< $10', min: undefined, max: 10 },
   { id: '10kTo100k', label: '$10–$100', min: 10, max: 100 },
   { id: '100kTo1m', label: '$100–$1,000', min: 100, max: 1_000 },
-  { id: '1mPlus', labelKey: 'usernames.band1mPlus', min: 1_000, max: undefined },
+  { id: '1mPlus', label: '$1,000+', min: 1_000, max: undefined },
 ];
 
 export function BrowseTab() {
