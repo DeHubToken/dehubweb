@@ -2077,7 +2077,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const accessToken = data?.session?.access_token;
       if (!accessToken) return false;
 
-      const authResponse = await authenticateWithSupabaseSession(accessToken);
+      const authResponse = await authenticateWithSupabaseSession(accessToken, ethAddress || undefined);
       const address = (authResponse.user?.address || ethAddress).toLowerCase();
       if (!address) {
         // The exchange succeeded, so a DeHub token is already in storage, but

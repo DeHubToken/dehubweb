@@ -245,13 +245,15 @@ export async function rotateWallet(
  * signature — so login can finish without unlocking the wallet.
  *
  * The wallet stays encrypted; anything that needs to sign triggers an unlock at
- * that point (see the dehub:wallet-unlock-required flow). Requires the Supabase
- * identity to already be linked, which the signature flow does on first login.
+ * that point (see the dehub:wallet-unlock-required flow). The backend can repair
+ * a stale link from an authenticated Supabase wallet row, but a genuinely new
+ * identity still needs the signature flow once.
  *
  * @throws WalletNotLinkedError when no link exists yet (HTTP 409)
  */
 export async function authenticateWithSupabaseSession(
   supabaseAccessToken: string,
+  expectedAddress?: string,
 ): Promise<AuthResponse> {
   const response = await fetch(`${DEHUB_API_BASE}/api/web/auth/supabase`, {
     method: 'POST',
@@ -263,7 +265,7 @@ export async function authenticateWithSupabaseSession(
       Authorization: `Bearer ${supabaseAccessToken}`,
       ...deviceHeaders(),
     },
-    body: JSON.stringify({}),
+    body: JSON.stringify(expectedAddress ? { expectedAddress } : {}),
   });
 
   if (!response.ok) {
