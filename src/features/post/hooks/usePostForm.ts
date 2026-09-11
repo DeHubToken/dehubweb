@@ -14,6 +14,7 @@ import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, keepPo
 import { isSmartWalletSession } from '@/lib/connection-source';
 import { applyEditsToImageFile } from '@/lib/filters';
 import { MEDIA_LIMITS } from '@/constants/post.constants';
+import { getPostImageLimitForBadge } from '@/lib/post-image-allowance';
 // NOTE: mint/bounty helpers reach wallet/contract code (wagmi + web3auth).
 // usePostForm is reachable from eager UI (PostModal is used by the sidebar /
 // bottom nav / feed), so those helpers are dynamically imported inside
@@ -569,10 +570,11 @@ export function usePostForm(
     }
 
     const currentImageCount = media.filter(m => m.type === 'image').length;
-    const availableSlots = 4 - currentImageCount;
+    const imageLimit = getPostImageLimitForBadge(user?.badgeBalance, user?.username, user?.badgeLock);
+    const availableSlots = imageLimit - currentImageCount;
     
     if (availableSlots <= 0) {
-      toast.error('Maximum 4 images allowed');
+      toast.error(`Maximum ${imageLimit} images allowed for your badge tier`);
       return;
     }
 
@@ -586,14 +588,14 @@ export function usePostForm(
     const filesToAdd = imageFiles.filter(f => f.size <= MEDIA_LIMITS.MAX_FILE_SIZE).slice(0, availableSlots);
 
     if (files.length > availableSlots) {
-      toast.info(`Only ${availableSlots} image${availableSlots > 1 ? 's' : ''} added (max 4)`);
+      toast.info(`Only ${availableSlots} image${availableSlots > 1 ? 's' : ''} added (max ${imageLimit})`);
     }
 
     filesToAdd.forEach(file => {
       const preview = URL.createObjectURL(file);
       setMedia(prev => [...prev, { file, preview, type: 'image' }]);
     });
-  }, [hasVideo, media]);
+  }, [hasVideo, media, user?.badgeBalance, user?.badgeLock, user?.username]);
     
   const handleVideoSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
