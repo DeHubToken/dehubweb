@@ -51,11 +51,11 @@ const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.Mo
 
 interface MobileHeaderProps {
   isOpen: boolean;
-  onToggle: () => void;
+  onOpenChange: (open: boolean) => void;
   children: React.ReactNode;
 }
 
-export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) {
+export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderProps) {
   const location = useLocation();
   const navigate = useNavigate();
   // NOT useNavigationType() — see use-history-nav-type: react-router reports
@@ -173,7 +173,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
           so we keep the normal menu/avatar here to preserve the "you never left the feed" feel. */}
       <div className="flex items-center">
         {isAuthenticated ? (
-          <Drawer open={isOpen} onOpenChange={onToggle}>
+          <Drawer open={isOpen} onOpenChange={onOpenChange}>
 
             <DrawerTrigger asChild>
               {user ? (

@@ -29,10 +29,11 @@ import { openStageModal } from '@/contexts/StageContext';
 
 interface AppSidebarProps {
   isOpen: boolean;
-  onToggle: () => void;
+  onOpenChange: (open: boolean) => void;
 }
 
-export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
+export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
+  const closeMenu = useCallback(() => onOpenChange(false), [onOpenChange]);
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, disconnect } = useAuth();
@@ -59,8 +60,8 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
     addToHistory(query);
     navigate(exploreSearchHref(query));
     setMenuQuery('');
-    onToggle();
-  }, [menuQuery, addToHistory, navigate, onToggle]);
+    closeMenu();
+  }, [menuQuery, addToHistory, navigate, closeMenu]);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   // Mount on first open, keep mounted afterwards (close animation).
   const [postModalMounted, setPostModalMounted] = useState(false);
@@ -73,7 +74,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
       {/* Log in Button - shown at top when not authenticated */}
       {!isAuthenticated && (
         <div className="mb-4 pb-4 px-1">
-          <LiquidGlassBubble shimmer noBorder className="w-full box-border cursor-pointer border border-white/30 rounded-2xl" onClick={() => setIsPostModalOpen(true)}>
+          <LiquidGlassBubble shimmer noBorder className="w-full box-border cursor-pointer border border-white/30 rounded-2xl" onClick={() => { closeMenu(); setIsPostModalOpen(true); }}>
             <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
               <LogIn className="w-5 h-5" />
               {t('sidebar.logIn')}
@@ -126,8 +127,8 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               isActive={isActive}
               isHome={item.path === '/app'}
               currentPath={location.pathname}
-              onNavigate={onToggle}
-              onClick={item.action === 'open-stages' ? () => { onToggle(); openStageModal(); } : undefined}
+              onNavigate={closeMenu}
+              onClick={item.action === 'open-stages' ? () => openStageModal() : undefined}
               variant="mobile"
             />
           );
@@ -154,7 +155,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
       {/* Post Button - only shown when authenticated */}
       {isAuthenticated && (
         <div className="mt-4 pt-4 space-y-3 px-1">
-          <LiquidGlassBubble shimmer noBorder className="w-full box-border cursor-pointer border border-white/30 rounded-2xl" onClick={() => setIsPostModalOpen(true)}>
+          <LiquidGlassBubble shimmer noBorder className="w-full box-border cursor-pointer border border-white/30 rounded-2xl" onClick={() => { closeMenu(); setIsPostModalOpen(true); }}>
             <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
               <PenSquare className="w-5 h-5" />
               {t('sidebar.post')}
@@ -164,7 +165,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               → Profile used to be the only surface for this, which made
               multi-account invisible unless you already knew it existed. */}
           <Suspense fallback={null}>
-            <SidebarProfileSwitcher onNavigate={onToggle} />
+            <SidebarProfileSwitcher onNavigate={closeMenu} />
           </Suspense>
           <div className="flex items-center justify-center gap-3">
             {/* forgetProfile: logging out revokes this session's tokens
@@ -174,7 +175,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                 are untouched — that is what makes this a log out of ONE
                 account rather than of the device. */}
             <button
-              onClick={() => { onToggle(); disconnect({ forgetProfile: true }); }}
+              onClick={() => { closeMenu(); disconnect({ forgetProfile: true }); }}
               className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors py-2"
             >
               <LogOut className="w-4 h-4" />
@@ -189,7 +190,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   return (
     <>
       {/* Mobile Header with Drawer */}
-      <MobileHeader isOpen={isOpen} onToggle={onToggle}>
+      <MobileHeader isOpen={isOpen} onOpenChange={onOpenChange}>
         {mobileNavContent}
       </MobileHeader>
 
