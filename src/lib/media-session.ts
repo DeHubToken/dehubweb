@@ -88,6 +88,31 @@ type Action = (typeof ACTIONS)[number];
  * Module scope on purpose: the point is that there is exactly one.
  */
 let owner: string | null = null;
+const shutdownHandlers = new Map<string, () => void>();
+let pageClosed = false;
+
+/** Stop detached audio players as well as media mounted in the document. */
+export function stopPagePlayback(): void {
+  pageClosed = true;
+  const callbacks = [...shutdownHandlers.values()];
+  shutdownHandlers.clear();
+  for (const stop of callbacks) {
+    try { stop(); } catch { /* Continue stopping the remaining players. */ }
+  }
+  document.querySelectorAll<HTMLMediaElement>('audio, video').forEach(media => {
+    try { media.pause(); } catch { /* A player may already be released. */ }
+  });
+  if (owner) releaseMediaSession(owner);
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('pagehide', stopPagePlayback);
+  window.addEventListener('pageshow', () => { pageClosed = false; });
+  // A queued autoplay callback must not restart a departing/cached page.
+  document.addEventListener('play', event => {
+    if (pageClosed && event.target instanceof HTMLMediaElement) event.target.pause();
+  }, true);
+}
 
 function session(): MediaSession | null {
   if (typeof navigator === 'undefined') return null;
@@ -119,6 +144,13 @@ export function claimMediaSession(
   track: MediaSessionTrack,
   handlers: MediaSessionHandlers,
 ): void {
+  const stop = handlers.stop ?? handlers.pause;
+  if (pageClosed) {
+    stop?.();
+    return;
+  }
+  if (stop) shutdownHandlers.set(ownerId, stop);
+  else shutdownHandlers.delete(ownerId);
   const ms = session();
   if (!ms) return;
 
@@ -229,6 +261,7 @@ export function setMediaSessionPosition(
  * race is normal — closing the stage drawer while a radio station plays on.
  */
 export function releaseMediaSession(ownerId: string): void {
+  shutdownHandlers.delete(ownerId);
   const ms = session();
   if (!ms || owner !== ownerId) return;
 
