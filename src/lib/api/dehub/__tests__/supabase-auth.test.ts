@@ -13,6 +13,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { authenticateWithSupabaseSession, WalletNotLinkedError } from '@/lib/api/dehub/auth';
 
+const predict = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/smart-account-address', () => ({ predictSafeAddress: predict }));
+
 const ADDRESS = '0x1234567890abcdef1234567890abcdef12345678';
 
 function mockFetch(body: unknown, status = 200) {
@@ -42,6 +45,22 @@ afterEach(() => {
 });
 
 describe('authenticateWithSupabaseSession', () => {
+  it('accepts the existing Safe profile for its owner EOA', async () => {
+    const owner = '0x0e240d0eaa38f6c210afab2925cda30e0b86882b';
+    const safe = '0xd627ad6a37e91985b9413a721a000feed9d9125f';
+    predict.mockResolvedValue(safe);
+    mockFetch({ ...successBody(), user: { address: safe, username: 'dehu_b' } });
+    expect((await authenticateWithSupabaseSession('supabase-jwt', owner)).user.username).toBe('dehu_b');
+  });
+
+  it('rejects a different identity before persisting its tokens', async () => {
+    predict.mockResolvedValue('0x2222222222222222222222222222222222222222');
+    mockFetch(successBody());
+    await expect(authenticateWithSupabaseSession('supabase-jwt', '0x1111111111111111111111111111111111111111')).rejects.toThrow('confirm your existing profile');
+    expect(localStorage.getItem('dehub_token')).toBeNull();
+    expect(localStorage.getItem('dehub_refresh_token')).toBeNull();
+  });
+
   it('posts to the supabase exchange endpoint', async () => {
     mockFetch(successBody());
     await authenticateWithSupabaseSession('supabase-jwt');
