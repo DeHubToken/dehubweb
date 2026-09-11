@@ -73,7 +73,6 @@ export default function SuperPowersPage() {
   const [historyPower, setHistoryPower] = useState<SuperPowerInfo | null>(null);
   const [teamUpOpen, setTeamUpOpen] = useState(false);
 
-  const badgeArt = badgeImage(status?.tier);
   const historyBookings = historyPower
     ? (status?.bookings.filter(booking => booking.power === historyPower.key) ?? [])
     : [];
@@ -116,28 +115,8 @@ export default function SuperPowersPage() {
             <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
           </div>
         ) : status?.tier ? (
-          <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-4">
-            <div className="flex items-center gap-3">
-              {/* `badgeImage(status.tier)`, not `getBadgeUrl(balance)`: the server already
-                  resolved the tier WITH the grandfathering lock, and re-deriving it
-                  from the balance alone drops that — a locked holder would see art
-                  a rung below the tier they are actually spending at. And a null
-                  never becomes src="", which requests the page again. */}
-              {badgeArt && (
-                <img src={badgeArt} alt={status.tier} className="w-11 h-11 shrink-0" />
-              )}
-              <div className="min-w-0 flex-1">
-                <p className="text-white font-medium">{status.tier}</p>
-                <p className="text-[12px] text-zinc-400">
-                  {t('superpowers.grantLine', {
-                    boosts: status.boostsPerCycle,
-                    minutes: status.minutesPerBoost,
-                    defaultValue: `${status.boostsPerCycle} × ${status.minutesPerBoost} minutes a cycle`,
-                  })}
-                </p>
-              </div>
-            </div>
-
+          <>
+            <BadgeProgress variant="rail" />
             {refillsOn && (
               <p className="text-[12px] text-zinc-500">
                 {t('superpowers.refillsOn', {
@@ -146,8 +125,7 @@ export default function SuperPowersPage() {
                 })}
               </p>
             )}
-
-          </section>
+          </>
         ) : isError ? (
           // A failed request is not the same as no badge. Telling a Meglodon
           // to go and stake because the API blipped is worse than saying
@@ -159,11 +137,11 @@ export default function SuperPowersPage() {
         ) : (
           // No badge — the page's real audience. Say what it costs and where.
           <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3">
-            <p className="text-white text-sm">{t('superpowers.noBadgeYet')}</p>
+            <p className="text-white text-sm">Hold DHB to unlock a badge and its SuperPowers.</p>
             <p className="text-[12px] text-zinc-400">Team up is open to every account, even without a badge.</p>
             <BadgeProgress variant="rail" />
             <Button asChild variant="outline" className="self-start">
-              <Link to="/app/stake">{t('superpowers.stakeDhb')}</Link>
+              <Link to="/app/buy">Get DHB</Link>
             </Button>
           </section>
         )}
