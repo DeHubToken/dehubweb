@@ -3711,7 +3711,13 @@
     "signInToBuy": "سجّل الدخول للشراء",
     "buyHandle": "اشترِ @{{handle}}",
     "transferGuarantee": "لا ينتقل الاسم إلا بعد أن تقرأ DeHub تحويل DHB الخاص بك من السلسلة. وإن تعذّر ذلك، يُسجَّل الدفع على الصفقة ليتمكن البائع من ردّه إليك.",
-    "shareTitle": "@{{handle}} معروض للبيع على DeHub"
+    "shareTitle": "@{{handle}} معروض للبيع على DeHub",
+    "askingPriceUsd": "سعر البيع (USD)",
+    "dollarPriceRange": "أدخل مبلغًا من 1 إلى 1,000,000 دولار، بمنزلتين عشريتين كحد أقصى.",
+    "fixedDollarPrice": "يبقى السعر بالدولار ثابتًا وتتحدث كمية الرموز.",
+    "priceUpdated": "تم تحديث السعر. راجع المبلغ واضغط على شراء مجددًا.",
+    "tokensPaidToSeller": "يُدفع مباشرة إلى البائع",
+    "priceUsd": "السعر (USD)"
   },
   "accounts": {
     "seoTitle": "سوق الحسابات — DeHub",

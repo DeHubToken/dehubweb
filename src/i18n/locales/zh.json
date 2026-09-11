@@ -3709,7 +3709,13 @@
     "signInToBuy": "登录后购买",
     "buyHandle": "购买 @{{handle}}",
     "transferGuarantee": "只有在 DeHub 从链上读到你的 DHB 转账之后，handle 才会转移。如果读不到，这笔付款会记在该笔交易上，卖家可以退款给你。",
-    "shareTitle": "@{{handle}} 正在 DeHub 上出售"
+    "shareTitle": "@{{handle}} 正在 DeHub 上出售",
+    "askingPriceUsd": "售价（美元）",
+    "dollarPriceRange": "请输入1至1,000,000美元，最多保留两位小数。",
+    "fixedDollarPrice": "美元价格保持固定，代币数量随价格更新。",
+    "priceUpdated": "价格已更新。请核对金额后再次点击购买。",
+    "tokensPaidToSeller": "直接支付给卖家",
+    "priceUsd": "价格（美元）"
   },
   "accounts": {
     "seoTitle": "账号市场 — DeHub",
