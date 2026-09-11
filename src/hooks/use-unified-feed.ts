@@ -106,6 +106,7 @@ export interface UnifiedFeedItem {
   minterAvatarUrl?: string;
   minterAboutMe?: string;
   minterStaked?: number;
+  is_w2e?: boolean;
   streamInfo?: {
     isLockContent: boolean;
     lockContentAmount?: number;
@@ -258,7 +259,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     : 'user';
   
   const isPPV = item.streamInfo?.isPayPerView ?? false;
-  const isW2E = item.streamInfo?.isAddBounty ?? false;
+  const isW2E = item.streamInfo?.isAddBounty || item.is_w2e || false;
   const isLocked = item.streamInfo?.isLockContent ?? false;
   
   return {
@@ -387,7 +388,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     isPPV: item.streamInfo?.isPayPerView ?? false,
     ppvPrice: item.streamInfo?.payPerViewAmount,
     ppvCurrency: 'DHB',
-    isW2E: item.streamInfo?.isAddBounty ?? false,
+    isW2E: item.streamInfo?.isAddBounty || item.is_w2e || false,
     isLocked: item.streamInfo?.isLockContent ?? false,
     lockedPrice: item.streamInfo?.lockContentAmount,
     lockedCurrency: item.streamInfo?.lockContentTokenSymbol || 'DHB',
