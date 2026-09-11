@@ -81,6 +81,7 @@ import {
 } from '@/hooks/use-wallet-unlock-interval';
 import { clearPasskeyCache, deleteAllPasskeyWraps } from '@/lib/wallet-core/passkey-store';
 import { deriveFromSecret, generateMnemonic12 } from '@/lib/wallet-core/derive';
+import { assertWalletAddress } from '@/lib/wallet-core/assert-wallet-address';
 import { encryptString, decryptString } from '@/lib/wallet-core/crypto';
 import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { isUserRejection, isRequestAlreadyPending, isRequestTimeout, describeWalletError, WalletRequestTimeoutError } from '@/lib/wallet-errors';
@@ -2294,7 +2295,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw new Error('This wallet has no password — export it with biometrics instead.');
     }
     const secret = await decryptString(wallet.payload, password);
-    return deriveFromSecret(secret).ethPrivateKey;
+    const derived = deriveFromSecret(secret);
+    await assertWalletAddress(derived.ethAddress, wallet.ethAddress);
+    return derived.ethPrivateKey;
   };
 
   /**
@@ -2305,8 +2308,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const exportPrivateKeyWithBiometrics = async (): Promise<string> => {
     if (!supabaseUserId) throw new Error('Not signed in');
+    const wallet = await fetchWallet(supabaseUserId);
+    if (!wallet) throw new Error('No wallet found for this account.');
     const secret = await unlockWithBiometrics(supabaseUserId);
-    return deriveFromSecret(secret).ethPrivateKey;
+    const derived = deriveFromSecret(secret);
+    await assertWalletAddress(derived.ethAddress, wallet.ethAddress);
+    return derived.ethPrivateKey;
   };
 
   /**
