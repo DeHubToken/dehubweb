@@ -119,11 +119,14 @@ export default function ReferralLanding() {
         try { source = new URL(document.referrer).hostname; } catch { /* ignore malformed referrer */ }
       }
       // @ts-ignore - RPC is introduced by the affiliate customization migration
-      void supabase.rpc("record_affiliate_page_view" as never, {
+      // PostgREST builders are lazy: consume the promise to send the visit.
+      void Promise.resolve(supabase.rpc("record_affiliate_page_view" as never, {
         p_code: code,
         p_visitor_id: visitorId,
         p_source: source,
-      } as never);
+      } as never)).then(({ error }) => {
+        if (error) console.warn("Affiliate view could not be recorded", error.code);
+      }).catch(() => { /* analytics must never block the invite */ });
     } catch { /* analytics must never block the invite */ }
   }, [code, valid]);
 
