@@ -9,7 +9,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { isValidAffiliateCode, setAffiliateRef } from "@/lib/affiliateRef";
 import { resolveDeepLinkTarget } from "@/lib/affiliateDeepLink";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
-import { getBadgeUrl, getBadgeName } from "@/lib/staking-badges";
 import { DEFAULT_AFFILIATE_LANDING, type AffiliateLandingCustomization } from "@/lib/affiliate";
 
 
@@ -28,8 +27,6 @@ export default function ReferralLanding() {
   // destination — with one, this page is a redirect and paints nothing.
   const deepLink = useMemo(() => (valid ? resolveDeepLinkTarget(splat, search) : null), [splat, search, valid]);
   const [inviter, setInviter] = useState<string | null>(null);
-  const [inviterUsername, setInviterUsername] = useState<string | null>(null);
-  const [inviterBadgeBalance, setInviterBadgeBalance] = useState<number | null>(null);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgRetry, setImgRetry] = useState(0);
   const [landing, setLanding] = useState<AffiliateLandingCustomization>(DEFAULT_AFFILIATE_LANDING);
@@ -85,11 +82,6 @@ export default function ReferralLanding() {
             const apiDisplay = (u?.displayName || "").trim();
             const apiUser = (u?.username || "").trim();
             resolved = apiDisplay || apiUser || null;
-            if (!cancelled) {
-              setInviterUsername(apiUser || null);
-              const bb = Number(u?.badgeBalance);
-              setInviterBadgeBalance(Number.isFinite(bb) ? bb : null);
-            }
           }
         } catch { /* ignore */ }
       }
@@ -189,27 +181,12 @@ export default function ReferralLanding() {
               <h1 className="text-4xl md:text-6xl font-bold leading-tight flex flex-col items-center gap-4">
                 {hasCustomHeadline ? (
                   <span>{landing.headline}</span>
-                ) : inviter ? (() => {
-                  const badgeUrl = getBadgeUrl(inviterBadgeBalance ?? undefined, inviterUsername);
-                  const badgeName = getBadgeName(inviterBadgeBalance ?? undefined, inviterUsername);
-                  return (
-                    <>
-                      <span className="relative inline-block">
-                        <span>{inviter}</span>
-                        {badgeUrl && (
-                          <img
-                            src={badgeUrl}
-                            alt={badgeName || t('referral.badge')}
-                            width={16}
-                            height={16}
-                            className="absolute -top-1 -right-3 md:-top-2 md:-right-4 w-3 h-3 md:w-4 md:h-4 object-contain pointer-events-none select-none"
-                          />
-                        )}
-                      </span>
-                      <span>{t('referral.invitedYouToDehub')}</span>
-                    </>
-                  );
-                })() : (
+                ) : inviter ? (
+                  <>
+                    <span>{inviter}</span>
+                    <span>{t('referral.invitedYouToDehub')}</span>
+                  </>
+                ) : (
                   <span>{t('referral.youveBeenInvitedToDehub')}</span>
                 )}
               </h1>
