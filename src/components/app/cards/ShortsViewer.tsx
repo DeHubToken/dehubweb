@@ -379,6 +379,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [localLikeCount, setLocalLikeCount] = useState(0);
   const [localDislikeCount, setLocalDislikeCount] = useState(0);
   const [isVoting, setIsVoting] = useState(false);
+  const voteInFlightRef = useRef(false);
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
   const [myReaction, setMyReaction] = useState<PostReaction | null>(null);
   const [localReactionCounts, setLocalReactionCounts] = useState<ReactionCounts>({});
@@ -706,7 +707,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const handleReaction = useCallback(async (reaction: PostReaction) => {
     const tokenId = String(currentShort?.id);
 
-    if (!tokenId || tokenId === 'undefined' || isVoting) return;
+    if (!tokenId || tokenId === 'undefined' || isVoting || voteInFlightRef.current) return;
 
     if (!isAuthenticated) {
       openLoginModal();
@@ -735,6 +736,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const newDisliked = nextNegative;
     const newReactionCounts = applyReactionDelta(localReactionCounts, previous, next, voteWeight);
 
+    voteInFlightRef.current = true;
     setIsVoting(true);
     closeTrays.current();
     if (!isRemovingVote) setJustVoted(nextPositive ? 'like' : 'dislike');
@@ -787,6 +789,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       });
       toast.error('Failed to react. Please try again.');
     } finally {
+      voteInFlightRef.current = false;
       setIsVoting(false);
     }
   }, [currentShort?.id, isVoting, isLiked, isDisliked, myReaction, localReactionCounts, isAuthenticated, localLikeCount, localDislikeCount, voteWeight]);
