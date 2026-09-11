@@ -272,7 +272,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     }
   }, [location.pathname]);
 
-  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+
   
   const navigatingFromHomeToPost = isPostRoute && isHomeFeedRoute(prevPathRef.current);
   // Only persist home behind the post when navigation actually originated from home.
@@ -326,7 +326,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           maxWidth: isCollapsed && (isHomeFeedRoute(location.pathname) || showHomePagePersisted) ? '100%' : '80rem',
         }}
       >
-        <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+        <AppSidebar isOpen={sidebarOpen} onOpenChange={setSidebarOpen} />
         
          <main ref={mainRef} data-main-panel data-post-route={isPostRoute ? '' : undefined} className={cn(
           "flex-1 min-h-screen lg:pt-0 lg:pb-0 min-w-0 w-full bg-black pt-11 relative",
