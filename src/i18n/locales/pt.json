@@ -3709,7 +3709,13 @@
     "signInToBuy": "Faça login para comprar",
     "buyHandle": "Comprar @{{handle}}",
     "transferGuarantee": "O identificador se move apenas depois que DeHub lê sua transferência de DHB de volta da cadeia. Se não conseguir, o pagamento é registrado contra a venda para que o vendedor possa reembolsá-lo.",
-    "shareTitle": "@{{handle}} está à venda em DeHub"
+    "shareTitle": "@{{handle}} está à venda em DeHub",
+    "askingPriceUsd": "Preço de venda (USD)",
+    "dollarPriceRange": "Insira de 1 a 1.000.000 USD, com até duas casas decimais.",
+    "fixedDollarPrice": "O preço em dólares fica fixo; a quantidade de tokens é atualizada.",
+    "priceUpdated": "Preço atualizado. Confira o valor e toque em Comprar novamente.",
+    "tokensPaidToSeller": "Pago diretamente ao vendedor",
+    "priceUsd": "Preço (USD)"
   },
   "accounts": {
     "seoTitle": "Marketplace de Contas — DeHub",
