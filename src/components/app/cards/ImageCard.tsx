@@ -104,6 +104,8 @@ function useIsTabletOrMobile() {
 
 interface ImageCardProps {
   post: ImagePost;
+  /** Dedicated pages own one shared comments window below the post card. */
+  onOpenComments?: (tab?: 'replies' | 'quotes' | 'reposts' | 'search') => void;
   /** First few feed items — skip lazy loading so LCP image loads immediately */
   aboveFold?: boolean;
 }
@@ -518,7 +520,7 @@ function FeedDescription({
   );
 }
 
-export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: ImageCardProps) {
+export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOpenComments }: ImageCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   useAutoOpenComments(setShowComments, post.id);
@@ -1189,6 +1191,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           // mute this one so a single double-tap doesn't cast two votes.
           enableDoubleTapLike={!fullscreenOpen}
           onComment={() => {
+            if (onOpenComments) {
+              onOpenComments();
+              return;
+            }
             setCommentsInitialTab(undefined);
             setShowComments(prev => !prev);
           }} 
@@ -1207,6 +1213,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           tipCount={tipCount}
           onTip={post.creatorPaymentsDisabled ? undefined : () => setShowTipModal(true)}
           onSeeEngagements={() => {
+            if (onOpenComments) {
+              onOpenComments('reposts');
+              return;
+            }
             setCommentsInitialTab('reposts');
             setShowComments(true);
           }}
@@ -1214,13 +1224,15 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         
 
         {/* Comments */}
-        <CommentsWrapper
-          open={showComments}
-          onOpenChange={setShowComments}
-          tokenId={post.id}
-          initialTab={commentsInitialTab}
-          commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
-        />
+        {!onOpenComments && (
+          <CommentsWrapper
+            open={showComments}
+            onOpenChange={setShowComments}
+            tokenId={post.id}
+            initialTab={commentsInitialTab}
+            commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+          />
+        )}
       </div>
 
       {/* AI Chat */}
