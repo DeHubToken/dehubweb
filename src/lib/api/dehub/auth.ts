@@ -271,22 +271,23 @@ export async function authenticateWithSupabaseSession(
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({} as Record<string, unknown>));
     const code = errorData.code as string | undefined;
-    // 409 means "not linked" or "linked ambiguously". Both are resolved by
-    // signing once, so both fall back rather than dead-ending the user.
-    if (response.status === 409 || code === 'WALLET_NOT_LINKED' || code === 'WALLET_LINK_AMBIGUOUS') {
+    // Only a genuinely missing link can be a new signup. An ambiguous link
+    // is an account error, never permission to provision another wallet.
+    if (code === 'WALLET_NOT_LINKED') {
       throw new WalletNotLinkedError(
         (errorData.message as string) || 'No wallet is linked to this login yet.',
       );
     }
-    // 503 (endpoint switched off server-side) is deliberately NOT special-cased
-    // here — the caller treats any non-409 failure as "fall back to signing",
-    // so a server without SUPABASE_JWT_SECRET simply keeps the old behaviour.
     throw new Error(
       (errorData.message as string) || (errorData.error as string) || 'Authentication failed',
     );
   }
 
   const data: AuthResponse = await response.json();
+
+  if (!data.token || !/^0x[0-9a-f]{40}$/i.test(data.user?.address ?? '')) {
+    throw new Error('Could not finish signing in to your profile. Please try again.');
+  }
 
   if (data.token) setAuthToken(data.token);
   if (data.refreshToken) setRefreshToken(data.refreshToken);
