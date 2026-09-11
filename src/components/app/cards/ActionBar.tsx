@@ -317,6 +317,7 @@ export function ActionBar({
   const [localLikeCount, setLocalLikeCount] = useState(cachedVote ? cachedVote.likeCount : (likeCount ?? 0));
   const [localDislikeCount, setLocalDislikeCount] = useState(cachedVote ? cachedVote.dislikeCount : (dislikeCount ?? 0));
   const [isVoting, setIsVoting] = useState(false);
+  const voteInFlightRef = useRef(false);
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
   const [myReaction, setMyReaction] = useState<PostReaction | null>(
     cachedVote?.myReaction !== undefined ? cachedVote.myReaction : initialMyReaction,
@@ -400,7 +401,7 @@ export function ActionBar({
    * every time somebody changed their mind.
    */
   const handleReaction = useCallback(async (reaction: PostReaction) => {
-    if (!postId || isVoting || externalDisabled) return;
+    if (!postId || isVoting || voteInFlightRef.current || externalDisabled) return;
 
     if (!isAuthenticated) {
       openLoginModal();
@@ -448,6 +449,7 @@ export function ActionBar({
     const newDisliked = nextNegative;
     const newReactionCounts = optimistic.reactionCounts;
 
+    voteInFlightRef.current = true;
     setIsVoting(true);
     closeTrays.current();
     lastVoteTimeRef.current = Date.now();
@@ -560,6 +562,7 @@ export function ActionBar({
       }
       toast.error('Failed to react. Please try again.');
     } finally {
+      voteInFlightRef.current = false;
       setIsVoting(false);
     }
   }, [postId, isVoting, externalDisabled, isLiked, isDisliked, myReaction, localLikeCount, localDislikeCount, localReactionCounts, isAuthenticated, queryClient, onLike, onDislike, voteWeight]);
