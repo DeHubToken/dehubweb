@@ -160,7 +160,7 @@ export function ReactionPicker({
                 data-active={isCurrent ? 'true' : undefined}
                 onClick={(e) => {
                   e.stopPropagation();
-                  onSelect(reaction.key);
+                  if (e.detail === 0) onSelect(reaction.key);
                 }}
                 // Fires when a hold-and-slide gesture releases over this item.
                 onPointerUp={(e) => {
@@ -232,7 +232,7 @@ export function ReactionPicker({
                 data-keep-round
                 onClick={(e) => {
                   e.stopPropagation();
-                  onShowInfo();
+                  if (e.detail === 0) onShowInfo();
                 }}
                 onPointerUp={(e) => {
                   e.stopPropagation();
