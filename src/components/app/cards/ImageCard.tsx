@@ -488,13 +488,13 @@ function FeedDescription({
   return (
     <div className="space-y-1">
       {linkFreeTitle && (
-        <h3 className="text-white text-sm font-semibold leading-tight">
+        <h3 className="text-white text-[13px] leading-tight">
           {renderTextWithLinks(linkFreeTitle)}
         </h3>
       )}
       {shownDescription && (
         <div>
-          <p className="text-zinc-300 text-sm leading-relaxed">
+          <p className="text-zinc-300 text-[13px] leading-relaxed">
             {renderTextWithLinks(shownDescription)}
           </p>
           {hasLongDescription && (

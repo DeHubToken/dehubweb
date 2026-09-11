@@ -597,7 +597,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
         <>
         {/* Title stays visible as the headline; only the body is gated. */}
         {post.title && (
-          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{renderTextWithLinks(post.title, { flagged: post.communityAlertPending })}</h3>
+          <h3 className="text-white text-[14.5px] sm:text-[16px] leading-snug">{renderTextWithLinks(post.title, { flagged: post.communityAlertPending })}</h3>
         )}
         {displayBody?.trim() && (() => {
           const firstLine = displayBody.split('\n')[0];
@@ -610,7 +610,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                   correctly over whatever sits behind the card. */}
               <div className="relative overflow-hidden" style={{ maxHeight: '2.6em' }}>
                 <p
-                  className="text-white/90 text-base leading-6"
+                  className="text-white/90 text-[14.5px] leading-[21.5px]"
                   style={{
                     WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 45%, transparent 95%)',
                     maskImage: 'linear-gradient(to bottom, black 0%, black 45%, transparent 95%)',
@@ -659,14 +659,14 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
         <>
         {/* Title */}
         {post.title && (
-          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{renderTextWithLinks(post.title, { flagged: post.communityAlertPending })}</h3>
+          <h3 className="text-white text-[14.5px] sm:text-[16px] leading-snug">{renderTextWithLinks(post.title, { flagged: post.communityAlertPending })}</h3>
         )}
         {/* auto={false}: the useTranslation above owns this post's translation
             and `bodyWithoutLinks` is already its output. Left on, TranslatableText
             ran a second translation of the same body — and once the first one
             landed, a third of the translated text. */}
         {displayBody?.trim() ? (
-          <TranslatableText text={displayBody} className="text-white/90 text-base leading-6" as="p" auto={false} flagged={post.communityAlertPending} />
+          <TranslatableText text={displayBody} className="text-white/90 text-[14.5px] leading-[21.5px]" as="p" auto={false} flagged={post.communityAlertPending} />
         ) : null}
 
         {/* Quoted post embed (Twitter-style) */}
