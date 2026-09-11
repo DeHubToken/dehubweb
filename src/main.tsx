@@ -1,4 +1,5 @@
 import "./lib/canvas-polyfills"; // Must run before any canvas usage (Safari 15 compat)
+import "./lib/media-session"; // Install page-close cleanup before any player mounts.
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { recoverFromChunkError } from "./lib/lazy-with-retry";
