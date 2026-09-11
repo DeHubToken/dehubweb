@@ -21,6 +21,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { decryptString, encryptString } from '@/lib/wallet-core/crypto';
 import { deriveFromSecret } from '@/lib/wallet-core/derive';
+import { assertWalletAddress } from '@/lib/wallet-core/assert-wallet-address';
 import {
   generateRecoveryCode,
   encryptSeedWithRecoveryCode,
@@ -140,13 +141,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       if (!wallet) setWallet(current);
       const secret = await unlockWithBiometrics(userId, wraps);
       const derived = deriveFromSecret(secret);
-      // Stricter than the password path's warn-only check below: a passkey wrap
-      // that opens to a different address means this credential belongs to
-      // another wallet (e.g. a stale wrap from an interrupted signup). Signing
-      // in with it would silently switch the user's wallet, so refuse.
-      if (current.ethAddress && derived.ethAddress.toLowerCase() !== current.ethAddress.toLowerCase()) {
-        throw new Error('That passkey unlocks a different wallet. Use your wallet password instead.');
-      }
+      await assertWalletAddress(derived.ethAddress, current.ethAddress);
       // A wallet whose ONLY key is this passkey is one lost handset from being
       // unreachable, and the person cannot discover that until the day they
       // try DeHub somewhere else. This is the moment to warn them: they have
@@ -205,11 +200,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       }
       const secret = await decryptString(current.payload, password);
       const derived = deriveFromSecret(secret);
-      if (current.ethAddress && derived.ethAddress.toLowerCase() !== current.ethAddress.toLowerCase()) {
-        console.warn('[WalletUnlock] Derived address differs from stored address', {
-          derived: derived.ethAddress, stored: current.ethAddress,
-        });
-      }
+      await assertWalletAddress(derived.ethAddress, current.ethAddress);
       // The one moment we hold the plaintext seed with the user's attention:
       // offer to make the next unlock a fingerprint instead of this. Asked once
       // per device — someone who said no must not be asked at every login.
@@ -275,8 +266,10 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       }
 
       const derived = deriveFromSecret(pendingSecret);
+      const current = await loadWallet();
+      await assertWalletAddress(derived.ethAddress, current.ethAddress);
       const encrypted = await encryptString(derived.secret, password);
-      await saveWallet(userId, derived.ethAddress, encrypted);
+      await saveWallet(userId, current.ethAddress, encrypted);
       toast.success('Password backup saved — your wallet now opens on any device');
     } catch (err) {
       reject(err instanceof Error ? err.message : 'Could not save the password backup');
@@ -427,12 +420,14 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       }
       const secret = await decryptSeedWithRecoveryCode(recoveryPayload, recoveryInput);
       const derived = deriveFromSecret(secret);
+      const current = await loadWallet();
+      await assertWalletAddress(derived.ethAddress, current.ethAddress);
 
       // Re-encrypt under the new password and rotate the recovery code.
       const encrypted = await encryptString(derived.secret, newPassword);
       const freshCode = generateRecoveryCode();
       const freshRecoveryPayload = await encryptSeedWithRecoveryCode(derived.secret, freshCode);
-      await saveWallet(userId, derived.ethAddress, encrypted, freshRecoveryPayload);
+      await saveWallet(userId, current.ethAddress, encrypted, freshRecoveryPayload);
 
       setPendingPrivKey(derived.ethPrivateKey);
       setNewRecoveryCode(freshCode);
