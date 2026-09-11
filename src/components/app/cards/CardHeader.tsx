@@ -161,7 +161,7 @@ export function CardHeader({
         <div className="flex items-center gap-1.5 min-w-0">
           <span className="inline-flex items-center gap-1 shrink min-w-0">
             <span className="font-semibold text-white text-base truncate max-w-[160px] sm:max-w-none leading-5">{username}</span>
-            <BadgeIcon badgeBalance={badgeBalance} lookupId={badgeLookupId} username={handle || username} className="w-[1em] h-[1em] shrink-0" />
+            <BadgeIcon badgeBalance={badgeBalance} lookupId={badgeLookupId} username={handle || username} className="w-[1em] h-[1em] shrink-0 -translate-y-px" />
             <NewMemberChip address={creatorId} className="shrink-0 ml-0.5" />
           </span>
           {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 self-end" />}
