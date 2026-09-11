@@ -1954,9 +1954,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         serverLinkedEmail && !ethAddress ? 'wagmi' : 'web3auth',
       );
       closeLoginModal();
-      if (restoringExistingSession) {
-        toast.success('Already logged in another browser, welcome back!');
-      }
       return true;
     } catch (e) {
       if (e instanceof WalletNotLinkedError) {
