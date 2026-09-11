@@ -1912,6 +1912,22 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </div>
         )}
         
+        {video.isW2E && (
+          <button
+            type="button"
+            aria-label={t('drawers.bountyTitle')}
+            className="absolute top-2 left-2 z-10 flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+            onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
+          >
+            <Gift className="w-3 h-3 text-white" />
+            <span className="text-white text-xs font-medium">
+              {video.bountyAmount && video.bountyAmount > 0
+                ? `${formatCompact(video.bountyAmount)} ${video.bountyCurrency || 'DHB'}`
+                : t('drawers.bountyTitle')}
+            </span>
+          </button>
+        )}
+
         {/* Top-left lock badge removed — centered Holdings Required overlay covers this */}
 
         {/* Optional CC subtitle overlay */}
@@ -2150,7 +2166,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             tokenId={video.id}
             ppvPrice={video.ppvPrice}
             ppvCurrency={video.ppvCurrency}
-            isW2E={isBountyLocked ? video.isW2E : false}
+            isW2E={video.isW2E}
             bountyAmount={video.bountyAmount}
             bountyCurrency={video.bountyCurrency}
             bountyViews={video.bountyViews}
