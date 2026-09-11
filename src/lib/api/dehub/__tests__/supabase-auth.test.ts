@@ -61,6 +61,15 @@ describe('authenticateWithSupabaseSession', () => {
     expect(String(opts?.body)).not.toContain('supabase-jwt');
   });
 
+  it('sends the expected wallet address for server-side link recovery', async () => {
+    mockFetch(successBody());
+    await authenticateWithSupabaseSession('supabase-jwt', ADDRESS);
+
+    const opts = vi.mocked(fetch).mock.calls[0][1];
+    expect(JSON.parse(String(opts?.body))).toEqual({ expectedAddress: ADDRESS });
+    expect(String(opts?.body)).not.toContain('supabase-jwt');
+  });
+
   it('stores the session on success', async () => {
     mockFetch(successBody());
     const data = await authenticateWithSupabaseSession('supabase-jwt');
