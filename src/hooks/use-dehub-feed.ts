@@ -171,7 +171,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const isPPV = nft.is_ppv ?? false;
   const ppvPrice = nft.ppv_price;
   const ppvCurrency = nft.ppv_currency || 'USDC';
-  const isW2E = nft.is_w2e ?? false;
+  const isW2E = nft.is_w2e || nft.streamInfo?.isAddBounty || false;
   const isLocked = nft.is_locked ?? false;
   const lockedPrice = nft.locked_price;
   const lockedCurrency = nft.locked_currency || 'DHB';
@@ -223,6 +223,10 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     ppvPrice,
     ppvCurrency,
     isW2E,
+    bountyViews: nft.streamInfo?.addBountyFirstXViewers != null ? Number(nft.streamInfo.addBountyFirstXViewers) : undefined,
+    bountyComments: nft.streamInfo?.addBountyFirstXComments != null ? Number(nft.streamInfo.addBountyFirstXComments) : undefined,
+    bountyAmount: nft.streamInfo?.addBountyAmount,
+    bountyCurrency: nft.streamInfo?.addBountyTokenSymbol || 'DHB',
     isLocked,
     lockedPrice,
     lockedCurrency,
