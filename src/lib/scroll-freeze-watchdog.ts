@@ -169,8 +169,12 @@ function unstick(): string[] {
 function report(message: string, extra: Record<string, unknown>, recover: boolean) {
   const now = Date.now();
   // One episode, not one row per gesture inside it.
-  if (now - lastReportAt < 10_000) return;
-  if (reports >= MAX_REPORTS) return;
+  if (now - lastReportAt < 10_000 || reports >= MAX_REPORTS) {
+    // Limit telemetry, not recovery: a fourth leaked lock must not leave the
+    // reader stuck for the rest of this page load.
+    if (recover) unstick();
+    return;
+  }
   reports++;
   lastReportAt = now;
 
@@ -197,7 +201,6 @@ function report(message: string, extra: Record<string, unknown>, recover: boolea
 
 function checkBodyState() {
   if (document.visibilityState !== 'visible') return;
-  if (reports >= MAX_REPORTS) return;
   if (!pageIsTallerThanViewport()) return;
   if (overlayIsOpen()) return;
   if (coveringLayer()) return;
@@ -222,6 +225,7 @@ let dragStartScroll = 0;
 let dragTarget: Element | null = null;
 let dragArmed = false;
 let settleTimer = 0;
+let wheelTimer = 0;
 
 /** The nearest ancestor that scrolls on its own — dragging inside one is not a freeze. */
 function hasOwnScroller(start: Element | null): boolean {
@@ -334,13 +338,37 @@ function onTouchMove(e: TouchEvent) {
   }, SETTLE_MS);
 }
 
-/**
- * Install once, from the entry. Touch only: this is a mobile failure, and
- * gating on it keeps the cost at exactly zero on desktop.
- */
-export function installScrollFreezeWatchdog(): void {
-  if (typeof window === 'undefined') return;
-  if (!('ontouchstart' in window) && navigator.maxTouchPoints < 1) return;
+/** Watch an actual wheel attempt, including events swallowed later in capture. */
+function onWheel(e: WheelEvent) {
+  if (wheelTimer || e.ctrlKey || !e.deltaY || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+  if (document.visibilityState !== 'visible' || reports >= MAX_REPORTS) return;
+  if (overlayIsOpen() || !pageIsTallerThanViewport() || !couldHaveScrolled(-e.deltaY)) return;
+  const target = e.target instanceof Element ? e.target : null;
+  if (hasOwnScroller(target)) return;
+
+  const startScroll = getDocumentScrollTop();
+  const { clientX, clientY, deltaY, deltaMode } = e;
+  // Do not restart on every wheel tick: a continuous gesture must still get
+  // a verdict. Normal scrolling, even when delayed, cancels the report below.
+  wheelTimer = window.setTimeout(() => {
+    wheelTimer = 0;
+    if (document.visibilityState !== 'visible' || overlayIsOpen()) return;
+    if (getDocumentScrollTop() !== startScroll || !couldHaveScrolled(-deltaY)) return;
+    checkBodyState();
+    report('A wheel gesture did not move the page', {
+      input: 'wheel',
+      target: describeMaybe(target),
+      atPointer: describeMaybe(document.elementFromPoint(clientX, clientY)),
+      defaultPrevented: e.defaultPrevented,
+      deltaY,
+      deltaMode,
+    }, false);
+  }, SETTLE_MS);
+}
+
+/** Desktop needs the same orphaned-lock recovery as touch devices. */
+export function installScrollFreezeWatchdog(): () => void {
+  if (typeof window === 'undefined') return () => {};
 
   window.addEventListener('touchstart', onTouchStart, { passive: true });
   window.addEventListener('touchmove', onTouchMove, { passive: true });
@@ -349,5 +377,18 @@ export function installScrollFreezeWatchdog(): void {
   // card happens to own it now — which is why these logs read as video-heavy.
   window.addEventListener('touchend', endDrag, { passive: true });
   window.addEventListener('touchcancel', endDrag, { passive: true });
-  window.setInterval(checkBodyState, POLL_MS);
+  window.addEventListener('wheel', onWheel, { passive: true, capture: true });
+  const poll = window.setInterval(checkBodyState, POLL_MS);
+  return () => {
+    window.removeEventListener('touchstart', onTouchStart);
+    window.removeEventListener('touchmove', onTouchMove);
+    window.removeEventListener('touchend', endDrag);
+    window.removeEventListener('touchcancel', endDrag);
+    window.removeEventListener('wheel', onWheel, { capture: true });
+    window.clearInterval(poll);
+    window.clearTimeout(settleTimer);
+    window.clearTimeout(wheelTimer);
+    wheelTimer = 0;
+    endDrag();
+  };
 }

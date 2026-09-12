@@ -87,6 +87,6 @@ Promise.all(bootDependencies).then(render, render);
 registerServiceWorker();
 
 // Watch for the page losing the ability to scroll — a leaked body lock or a
-// stuck overlay — report what caused it and put it back. Touch devices only.
+// stuck overlay — report what caused it and put it back on desktop and touch.
 // See lib/scroll-freeze-watchdog.ts.
 installScrollFreezeWatchdog();
