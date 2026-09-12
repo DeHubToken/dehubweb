@@ -1,0 +1,19 @@
+name: Edge canary checks
+on:
+  pull_request:
+    paths: ['ops/edge-canary/**', '.github/workflows/edge-canary.yml']
+  push:
+    branches: [main]
+    paths: ['ops/edge-canary/**', '.github/workflows/edge-canary.yml']
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test ops/edge-canary/checks/probe.check.mjs
