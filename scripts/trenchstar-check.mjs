@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const source=fs.readFileSync('public/trenchstar-game/index.html','utf8');
+const modules=[...source.matchAll(/<script\s+type="module"[^>]*>([\s\S]*?)<\/script>/g)];
+assert(modules.length>0,'Trenchstar module exists');
+for(const [,code] of modules)new vm.SourceTextModule(code);
+new vm.SourceTextModule(fs.readFileSync('public/trenchstar-game/connected.js','utf8'));
+for(const asset of ['connected.css','backdrops/harbour.webp','backdrops/alpine.webp','vendor/agora/AgoraRTC_N-production.esm.js'])assert(fs.statSync('public/trenchstar-game/'+asset).size>0,asset);
+console.log('Trenchstar modules parse; connected interface, environments and voice assets are present.');
