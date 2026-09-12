@@ -1013,6 +1013,7 @@
   /* focus ring for keyboard users, in the same light */
   .holo :focus-visible,.btn:focus-visible{outline:1px solid rgb(var(--holo));outline-offset:2px}
 </style>
+<link rel="stylesheet" href="connected.css">
 <!-- Where the character library loads from. Blank = these folders,
      which is how it runs locally and offline. Point it at the bucket's public
      hostname to serve the models from R2 instead of shipping them in the repo:
@@ -4749,6 +4750,7 @@ function buildBackdrop(id){
     new THREE.MeshBasicMaterial({map:tex,side:THREE.BackSide,fog:false}));
   skyMesh.position.y=SKY_Y;
   scene.add(skyMesh);
+  SCENE_ID=id;
   tryPhoto(id);
   buildCityRing(S);
 
@@ -4769,10 +4771,17 @@ function buildBackdrop(id){
   try{localStorage.setItem('trenchstar.scene',id);}catch(e){}
 }
 Object.assign(SCENES,THEME_SCENES);   /* the app's own themes join the picker */
+SCENES.harbour={...SCENES.lair,label:'HARBOUR · BLUE HOUR',fog:0x15202a,fogD:0.004,
+  clear:0x15202a,floor:0x141b22,rough:0.48,metal:0.38,grid:[0x29343b,0x19232b],gridOp:0.035,
+  mirror:0x748592,lift:0,haze:0.08,az:0,city:null,
+  lights:[0xb6d0dd,0xdacbb8,0xa0bacd],hemi:[0x9cb5c5,0x10151b,0.65],dust:0x81949f};
+SCENES.alpine={...SCENES.harbour,label:'ALPINE · FIRST LIGHT',fog:0x28353b,clear:0x28353b,
+  floor:0x242b2c,rough:0.62,metal:0.2,lights:[0xd9c9b1,0xc4d8df,0xc8d0c1],hemi:[0xc6d2d8,0x151b1b,0.75]};
 
-let SCENE_ID='lair';
-try{SCENE_ID=localStorage.getItem('trenchstar.scene')||'lair';}catch(e){}
-if(!SCENES[SCENE_ID])SCENE_ID='lair';
+let SCENE_ID='harbour';
+try{SCENE_ID=localStorage.getItem('trenchstar.scene')||'harbour';}catch(e){}
+if(!SCENES[SCENE_ID])SCENE_ID='harbour';
+if(SCENE_ID==='lair')SCENE_ID='harbour';
 buildBackdrop(SCENE_ID);
 
 /* ============================ canvas painters ========================= */
@@ -9095,6 +9104,7 @@ function connectWS(){
     try{
       const d=JSON.parse(ev.data).data;if(!d)return;
       const m=markets[d.s.replace('USDT','')];if(!m)return;
+      m.lastLiveAt=Date.now();
       if(d.e==='kline')m.pushKline(d.k);
       else if(d.e==='24hrMiniTicker'){m.pct24=(+d.c-+d.o)/+d.o*100;m.vol24=+d.q;}
     }catch(e){}
@@ -11407,7 +11417,7 @@ function walkTick(dt,t){
   }
   /* Nobody chosen yet: open on the roster rather than on an empty desk, so
      the first thing anyone does is pick who they are. */
-  if(!valid)$('#charSel').classList.add('on');
+  // The desk is the entry point. Avatar selection remains available in the toolbar.
 })();
 
 /* ========================== wall settings panel ======================= */
@@ -13005,6 +13015,7 @@ const gfx=(()=>{
    so a headset session is a small step from here rather than a rewrite. */
 function tick(t){
   const dt=Math.min((t-lastT)/1000,0.1);lastT=t;frame++;
+  if(firstFrame&&document.body.classList.contains('ts-focused')&&!vr.on)return;
 
   /* Inside a session the pose is written by the headset every frame, so each
      of these would be arm-wrestling the player's own neck. The rig moves. */
@@ -13073,6 +13084,42 @@ function tick(t){
   if(!vr.on&&firstFrame)gfx.sample(dt);
 }
 renderer.setAnimationLoop(tick);
+const guestMeshes=new Map();
+window.TRENCHSTAR.updateGuests=members=>{
+  const live=new Set();
+  for(const member of members){
+    if(member.id==='me')continue;live.add(member.id);
+    let mesh=guestMeshes.get(member.id);
+    if(!mesh){
+      mesh=new THREE.Mesh(new THREE.CapsuleGeometry(.22,.85,4,8),new THREE.MeshStandardMaterial({color:0xb2c9d6,roughness:.6,metalness:.15}));
+      const cv=document.createElement('canvas');cv.width=256;cv.height=64;const c=cv.getContext('2d');c.fillStyle='#101820';c.fillRect(0,0,256,64);c.font='24px sans-serif';c.fillStyle='#e1e9ed';c.textAlign='center';c.fillText(String(member.name).slice(0,20),128,40);
+      const label=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),depthTest:false}));label.position.y=1;label.scale.set(1.7,.42,1);mesh.add(label);scene.add(mesh);guestMeshes.set(member.id,mesh);
+    }
+    mesh.position.set(Number(member.pose?.x)||0,.8,Number(member.pose?.z)||0);
+  }
+  for(const [id,mesh] of guestMeshes)if(!live.has(id)){scene.remove(mesh);mesh.geometry.dispose();mesh.material.dispose();mesh.children.forEach(c=>{c.material.map?.dispose();c.material.dispose();});guestMeshes.delete(id);}
+};
+window.TRENCHSTAR.captureDesk=()=>{
+  const parse=(key,f)=>{try{return JSON.parse(localStorage.getItem('trenchstar.'+key))??f;}catch{return f;}};
+  return {wall:{...WALL},layout:LAYOUT?{v:WALL_CFG_VERSION,screens:screens.filter(s=>!s.floating&&s.kind!=='empty').map(defOf)}:null,
+    screens:parse('screens',{}),tf:{...SCREEN_TF},scene:SCENE_ID};
+};
+window.TRENCHSTAR.restoreDesk=doc=>{
+  if(!doc||typeof doc!=='object')throw new Error('This desk could not be read');
+  const wall=doc.wall||{};
+  for(const [key,limits] of Object.entries(WALL_LIMITS))if(Number.isFinite(wall[key]))WALL[key]=clamp(wall[key],limits[0],limits[1]);
+  SCREEN_TF=Object.fromEntries(Object.entries(doc.tf||{}).filter(([k,v])=>k.length<80&&TF_BY_ID[v]));
+  SCREEN_TPL=Object.fromEntries(Object.entries(doc.screens||{}).filter(([k,v])=>k.length<80&&TEMPLATES[v]));
+  if(doc.layout&&Array.isArray(doc.layout.screens)&&doc.layout.screens.length<=80){
+    LAYOUT={v:WALL_CFG_VERSION,screens:doc.layout.screens.filter(s=>s&&['tpl','site','radio','image','video'].includes(s.kind)).map(s=>({...s,w:clamp(Number(s.w)||2,.5,12),h:clamp(Number(s.h)||1,.4,8),y:clamp(Number(s.y)||2,.5,12),aX:clamp(Number(s.aX)||0,-40,40),url:typeof s.url==='string'&&/^https:\/\//.test(s.url)?s.url:null,stream:typeof s.stream==='string'&&/^https:\/\//.test(s.stream)?s.stream:null}))};
+  }else LAYOUT=null;
+  buildWall();saveLayout();saveScreenTf();saveScreenTpl();
+  if(SCENES[doc.scene])buildBackdrop(doc.scene);
+  try{localStorage.setItem('trenchstar.wall',JSON.stringify({...WALL,v:WALL_CFG_VERSION}));}catch{}
+  syncCustomUI();
+};
+bloom.strength=Math.min(bloom.strength,.18);
+import('./connected.js').then(({mountConnected})=>mountConnected(window.TRENCHSTAR)).catch(e=>console.error('Could not load connected desk',e));
 </script>
 </body>
 </html>
