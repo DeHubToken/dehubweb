@@ -181,7 +181,9 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
     muteAuthor(post.author.id, post.author.name || post.author.handle || undefined);
   }, [walletAddress, openLoginModal, post.author.id, post.author.name, post.author.handle, muteAuthor]);
 
-  const isOwnPost = walletAddress && post.author.id?.toLowerCase() === walletAddress.toLowerCase();
+  const isOwnPost = !!post.isOwner || !!(
+    walletAddress && post.author.id?.toLowerCase() === walletAddress.toLowerCase()
+  );
 
   // The warning is for whoever is looking at the screen, so it covers the
   // author's own post too.
