@@ -1001,17 +1001,17 @@ const MARKETING_PAGES = {
 </ul>`,
   },
   'creator': {
-    title: 'DeHub Creator Studio — AI Image, Video & Music',
-    description: 'Generate images, videos, songs and branded posters with the DeHub Creator Studio. One workspace for every AI tool a modern creator needs.',
+    title: 'DeHub Creator — Image, Video, Audio & 3D Studio',
+    description: 'Create images, videos, audio and 3D assets. See the price before generating, save to your private library, and edit in your browser.',
     heading: 'DeHub Creator Studio',
-    bodyHtml: `<p>The Creator Studio bundles image, video, music, voice and poster generation behind a single credit balance. Pick a model, describe what you want, and publish the result straight to the decentralized feed.</p>
+    bodyHtml: `<p>Choose image, video, audio or 3D, enter a prompt and optionally attach reference media. Paid generations show a server quote and use DHB per job. Existing unspent payment receipts are reused before requesting another transfer.</p>
 <ul>
-<li>Image generation with FLUX, Ideogram, Recraft and Nano Banana models.</li>
-<li>Video generation with Kling, Luma, Runway, Pika, Minimax and ByteDance.</li>
-<li>Song generation with Suno, plus voice cloning and text-to-speech with ElevenLabs.</li>
-<li>Branded poster templates built on the DeHub design system.</li>
+<li>Image generation with Nano Banana, Gemini, FLUX and other available models.</li>
+<li>Video generation with Kling, Veo, Seedance and other available models.</li>
+<li>Music, speech, sound effects, dubbing and transcription through ElevenLabs. Music is paid; other audio tools require sign-in and have usage limits.</li>
+<li>A private generation library shared with mobile, Creator Flow workflows, and an in-browser timeline editor.</li>
 </ul>
-<p>See <a href="${APP_URL}/pricing">Creator Studio pricing</a> for plans and monthly credits.</p>`,
+<p>Choose a model in <a href="${APP_URL}/creator">Creator</a> to see its current per-job price before paying. A confirmed failed render restores its receipt amount for reuse; this is not an on-chain refund transfer.</p>`,
   },
   'editor': {
     title: 'DeHub Editor — In-Browser Video Editor',
