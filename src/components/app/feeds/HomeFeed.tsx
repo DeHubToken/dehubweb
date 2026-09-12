@@ -109,6 +109,11 @@ type FeedItemType =
 
 const PAGE_SIZE = 20;
 const SHORTS_INSERT_INTERVAL = 5;
+// Start the next page while several cards are still below the fold. At 600px a
+// fast wheel/trackpad gesture could reach the document bottom before the
+// request completed, so subsequent wheel deltas had nowhere to go and appeared
+// to freeze until another input arrived.
+const INFINITE_SCROLL_PREFETCH_MARGIN = '2400px 0px';
 
 /** Videos longer than this are the ones the Shorts lane does NOT carry: the
  *  backend routes a plain video of 90s or less into Shorts by duration, whatever
@@ -1302,7 +1307,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           });
         }
       },
-      { threshold: 0.1, rootMargin: '600px' }
+      { threshold: 0, rootMargin: INFINITE_SCROLL_PREFETCH_MARGIN }
     );
 
     observer.observe(loaderRef.current);
@@ -2115,7 +2120,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               {renderFeedWithShorts()}
               
               {/* Infinite scroll loader */}
-              <div ref={loaderRef} className="py-4 flex justify-center">
+              <div
+                ref={loaderRef}
+                className={cn(
+                  'py-4 flex justify-center',
+                  // Preserve scroll runway while the request is in flight so
+                  // wheel momentum is not discarded at the old document end.
+                  isFetchingNextPage && 'min-h-[50vh]',
+                )}
+              >
                 {isFetchingNextPage && (
                   <div className="flex items-center gap-2 text-zinc-400">
                     <div className="w-5 h-5 border-2 border-zinc-500 border-t-white rounded-full animate-spin" />
