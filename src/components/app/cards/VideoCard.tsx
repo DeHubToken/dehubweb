@@ -2073,7 +2073,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 onChange={handleSeek}
                 onClick={(e) => e.stopPropagation()}
                 aria-label="Video progress"
-                className="flex-1 h-6 bg-transparent rounded-full appearance-none cursor-pointer touch-none
+                className="flex-1 h-6 bg-transparent rounded-full appearance-none cursor-pointer touch-pan-y
                   [&::-webkit-slider-thumb]:appearance-none 
                   [&::-webkit-slider-thumb]:w-3 
                   [&::-webkit-slider-thumb]:h-3 
