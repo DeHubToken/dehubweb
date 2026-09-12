@@ -306,7 +306,7 @@ export default function StakingPage() {
       if (outcome === 'confirmed') {
         if (!attempt.confirmed) {
           attempt = { ...attempt, confirmed: true };
-          setPendingStake(attempt);
+          setPendingStake(previous => previous?.hash === attempt.hash ? attempt : previous);
           try { localStorage.setItem(pendingStakeKey(attempt.wallet), JSON.stringify(attempt)); } catch {}
           toast.success(t('toasts.staked_successfully'), { description: `${attempt.amount} DHB confirmed on ${attempt.chainId === 56 ? 'BNB Chain' : 'Base'}.` });
         }
