@@ -211,6 +211,25 @@ describe('scroll freeze watchdog', () => {
     expect(messages()).toEqual([]);
   });
 
+  it('accepts compositor scroll notifications even when the sampled offset is unchanged', () => {
+    scrollTop = 900;
+    window.dispatchEvent(new WheelEvent('wheel', { deltaY: 120 }));
+    document.body.dispatchEvent(new Event('scroll'));
+    settle();
+    expect(messages()).toEqual([]);
+  });
+
+  it('ignores wheel events delivered just after the compositor moved the page', () => {
+    document.body.dispatchEvent(new Event('scroll'));
+    window.dispatchEvent(new WheelEvent('wheel', { deltaY: 120 }));
+    settle();
+    expect(messages()).toEqual([]);
+    // A later, genuinely stationary attempt still gets diagnosed.
+    window.dispatchEvent(new WheelEvent('wheel', { deltaY: 120 }));
+    settle();
+    expect(messages()).toEqual(['A wheel gesture did not move the page']);
+  });
+
   it('ignores wheel movement beyond page boundaries and pinch zoom', () => {
     window.dispatchEvent(new WheelEvent('wheel', { deltaY: -120 }));
     settle();
