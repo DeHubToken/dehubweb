@@ -474,3 +474,24 @@ describe('fullscreen lifecycle regressions', () => {
     parent.remove();
   });
 });
+
+it('restores a React-owned player before its route unmounts', () => {
+  const host = document.createElement('div');
+  document.body.appendChild(host);
+  let fullscreen: ReturnType<typeof useVideoFullscreen>;
+  const videoRef = { current: null as HTMLVideoElement | null };
+  const containerRef = { current: null as HTMLDivElement | null };
+  function Player() {
+    fullscreen = useVideoFullscreen(videoRef, containerRef, { escapeAncestors: true });
+    return createElement('div', { ref: containerRef }, createElement('video', { ref: videoRef }));
+  }
+  const root = createRoot(host);
+  act(() => root.render(createElement(Player)));
+  const playerNode = containerRef.current;
+  act(() => fullscreen.toggleFullscreen());
+  expect(playerNode?.parentNode).toBe(document.body);
+  expect(() => act(() => root.unmount())).not.toThrow();
+  expect(playerNode?.isConnected).toBe(false);
+  expect(host.childNodes.length).toBe(0);
+  host.remove();
+});
