@@ -35,7 +35,8 @@ Deno.serve(async req=>{
     const raw=await req.text();if(raw.length>150000)return jsonResponse({error:'Request too large'},413);
     const b=JSON.parse(raw);
     if(b.action==='tick'){
-      if(req.headers.get('Authorization')!==`Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`)return jsonResponse({error:'Not authorized'},401);
+      const token=req.headers.get('Authorization')?.replace(/^Bearer /,'')||'';
+      if(!token||!checked(await db().rpc('trench_scheduler_authorized',{p_token:token})))return jsonResponse({error:'Not authorized'},401);
       return jsonResponse(await tick());
     }
     const auth=await requireDeHubAuth(req);if(!auth.ok)return auth.response;
