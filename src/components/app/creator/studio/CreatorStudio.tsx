@@ -39,7 +39,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useJobQuote, formatDhb } from '@/hooks/use-ai-quote';
-import { apiCall } from '@/lib/api/dehub/core';
+import { AuthenticationError, apiCall } from '@/lib/api/dehub/core';
 import {
   IMAGE_MODELS,
   IMAGE_MODEL_OPTIONS,
@@ -455,10 +455,8 @@ interface CreatorStudioProps {
 
 export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioProps) {
   const { t } = useTranslation();
-  const { walletAddress, isAuthenticated } = useAuth() as {
-    walletAddress: string | null;
-    isAuthenticated: boolean;
-  };
+  const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
+  const checkingSession = useRef(false);
 
   const startImage = useGenerationStore((s) => s.startImage);
   const startVideo = useGenerationStore((s) => s.startVideo);
@@ -1053,6 +1051,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     : mode === 'video' ? { kind: 'video', modelId: videoModel, durationSeconds: duration }
     : mode === '3d' ? { kind: 'model3d', modelId: model3dModel, quality: 'standard' }
     : { kind: 'image', modelId: imageModel, quantity: batch });
+  const estimatedTime = mode === 'audio' ? activeAudioTask.typicalDuration : mode === '3d' ? activeModel3d?.typicalDuration : null;
   const priceLabel = mode === 'audio' && !activeAudioTask.paid ? 'Free · rate limits apply'
     : generationQuote.isLoading ? 'Checking price…'
     : generationQuote.error ? 'Price unavailable — retry before paying'
@@ -1190,6 +1189,8 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   ]);
 
   const openPaywall = useCallback(async () => {
+    if (checkingSession.current) return;
+    if (!isAuthenticated) { openLoginModal(); return; }
     if (promptMissing) {
       openComposer();
       return;
@@ -1198,12 +1199,13 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       toast.error(blockingIssue);
       return;
     }
+    checkingSession.current = true;
     try {
       await apiCall('/api/auth/verify', { requiresAuth: true });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not verify your session.');
+      toast.error(error instanceof Error ? error.message : 'Could not verify your session.', error instanceof AuthenticationError ? { action: { label: 'Sign in', onClick: () => openLoginModal() } } : undefined);
       return;
-    }
+    } finally { checkingSession.current = false; }
     if (mode === 'image') {
       setImagePaywallOpen(true);
       return;
@@ -1220,8 +1222,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
         setVoiceDesignOpen(true);
         return;
       }
-      // Six of the nine cost a fraction of a cent and skip the paywall
-      // entirely; only music, the voice changer and dubbing settle on chain.
+      // Music is paid; the other audio endpoints are free with rate limits.
       if (activeAudioTask.paid) setAudioPaywallOpen(true);
       else runAudio();
       return;
@@ -1247,6 +1248,8 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     }
     setModel3dPaywallOpen(true);
   }, [
+    isAuthenticated,
+    openLoginModal,
     promptMissing,
     openComposer,
     blockingIssue,
@@ -1620,6 +1623,17 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
             </div>
           ) : (
             <>
+              {mode === 'image' && (
+                <div className="mb-3 flex flex-wrap gap-2" aria-label="Image quality presets">
+                  {[
+                    ['Fast', 'gemini-3.1-flash-image'], ['Balanced', 'nano-banana-2'], ['Best', 'gemini-3-pro-image'],
+                  ].map(([label, model]) => (
+                    <button type="button" key={model} aria-pressed={imageModel === model} onClick={() => setImageModel(model)} title={IMAGE_MODELS[model].name} className={cn('rounded-lg border px-3 py-1.5 text-xs', imageModel === model ? 'border-white/40 bg-white/15 text-white' : 'border-white/15 text-white/60')}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
               {mode === 'audio' && audioFile && (
                 <div className="mb-2 flex items-center gap-2.5 rounded-xl border border-white/10 bg-black/40 p-2">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white/[0.08]">
@@ -2039,7 +2053,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                 {generateButton()}
               </div>
 
-              <p aria-live="polite" className="mt-2 px-1 text-[12px] text-white/65">{priceLabel}</p>
+              <p aria-live="polite" className="mt-2 px-1 text-[12px] text-white/65">{priceLabel}{estimatedTime ? ` · Usually ${estimatedTime}; queues may take longer` : ''}</p>
               {blockingIssue && (
                 <p id="studio-blocking-reason" className="mt-2 px-1 text-[12px] text-white/45">
                   {blockingIssue}
