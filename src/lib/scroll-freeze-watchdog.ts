@@ -226,6 +226,17 @@ let dragTarget: Element | null = null;
 let dragArmed = false;
 let settleTimer = 0;
 let wheelTimer = 0;
+let lastDocumentScrollAt = -Infinity;
+
+function onDocumentScroll(e: Event) {
+  if (e.target !== document && e.target !== document.body && e.target !== document.documentElement) return;
+  lastDocumentScrollAt = Date.now();
+  // Chromium can scroll on the compositor before delivering the passive
+  // wheel event to JavaScript. A scroll notification is evidence of movement
+  // even if the offset already had its final value when onWheel sampled it.
+  window.clearTimeout(wheelTimer);
+  wheelTimer = 0;
+}
 
 /** The nearest ancestor that scrolls on its own — dragging inside one is not a freeze. */
 function hasOwnScroller(start: Element | null): boolean {
@@ -341,6 +352,7 @@ function onTouchMove(e: TouchEvent) {
 /** Watch an actual wheel attempt, including events swallowed later in capture. */
 function onWheel(e: WheelEvent) {
   if (wheelTimer || e.ctrlKey || !e.deltaY || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+  if (Date.now() - lastDocumentScrollAt < SETTLE_MS) return;
   if (document.visibilityState !== 'visible' || reports >= MAX_REPORTS) return;
   if (overlayIsOpen() || !pageIsTallerThanViewport() || !couldHaveScrolled(-e.deltaY)) return;
   const target = e.target instanceof Element ? e.target : null;
@@ -378,6 +390,7 @@ export function installScrollFreezeWatchdog(): () => void {
   window.addEventListener('touchend', endDrag, { passive: true });
   window.addEventListener('touchcancel', endDrag, { passive: true });
   window.addEventListener('wheel', onWheel, { passive: true, capture: true });
+  window.addEventListener('scroll', onDocumentScroll, { passive: true, capture: true });
   const poll = window.setInterval(checkBodyState, POLL_MS);
   return () => {
     window.removeEventListener('touchstart', onTouchStart);
@@ -385,10 +398,12 @@ export function installScrollFreezeWatchdog(): () => void {
     window.removeEventListener('touchend', endDrag);
     window.removeEventListener('touchcancel', endDrag);
     window.removeEventListener('wheel', onWheel, { capture: true });
+    window.removeEventListener('scroll', onDocumentScroll, { capture: true });
     window.clearInterval(poll);
     window.clearTimeout(settleTimer);
     window.clearTimeout(wheelTimer);
     wheelTimer = 0;
+    lastDocumentScrollAt = -Infinity;
     endDrag();
   };
 }
