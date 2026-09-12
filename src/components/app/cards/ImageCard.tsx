@@ -28,7 +28,6 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { cdnImageSrcSet } from '@/lib/media-url';
 import { motion, AnimatePresence } from 'framer-motion';
-import useEmblaCarousel from 'embla-carousel-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
@@ -56,7 +55,6 @@ import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
-import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
@@ -273,91 +271,67 @@ function ImageCarousel({
   aboveFold?: boolean;
   postId?: string;
 }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  
-  // Gesture lock refs for trackpad navigation
-  const gestureTriggered = useRef(false);
-  const gestureLockTimeout = useRef<NodeJS.Timeout | null>(null);
-  
-  const TRACKPAD_THRESHOLD = 50;
-  const GESTURE_LOCK_DURATION = 400;
-  const TAB_SWITCH_COOLDOWN = 500; // Ignore gestures for 500ms after any tab switch
-  
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    const idx = emblaApi.selectedScrollSnap();
+
+  const updateCurrentIndex = useCallback(() => {
+    const viewport = scrollRef.current;
+    if (!viewport) return;
+    const slides = Array.from(viewport.children) as HTMLElement[];
+    if (!slides.length) return;
+    const viewportCenter = viewport.scrollLeft + viewport.clientWidth / 2;
+    const idx = slides.reduce((nearest, slide, index) => {
+      const center = slide.offsetLeft + slide.offsetWidth / 2;
+      const nearestSlide = slides[nearest];
+      const nearestCenter = nearestSlide.offsetLeft + nearestSlide.offsetWidth / 2;
+      return Math.abs(center - viewportCenter) < Math.abs(nearestCenter - viewportCenter)
+        ? index
+        : nearest;
+    }, 0);
     setCurrentIndex(idx);
     onIndexChange?.(idx);
-  }, [emblaApi, onIndexChange]);
-  
-  // Set up the select callback when emblaApi becomes available
-  useEffect(() => {
-    if (!emblaApi) return;
-    emblaApi.on('select', onSelect);
-    onSelect();
-    return () => {
-      emblaApi.off('select', onSelect);
-    };
-  }, [emblaApi, onSelect]);
+  }, [onIndexChange]);
 
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
-  
-  // Handle trackpad swipe for image navigation - one gesture = one image
+  const scrollToImage = useCallback((index: number) => {
+    const viewport = scrollRef.current;
+    const slide = viewport?.children[index] as HTMLElement | undefined;
+    if (!viewport || !slide) return;
+    viewport.scrollTo({ left: slide.offsetLeft, behavior: 'smooth' });
+  }, []);
+
+  const scrollPrev = useCallback(() => scrollToImage(Math.max(0, currentIndex - 1)), [currentIndex, scrollToImage]);
+  const scrollNext = useCallback(() => scrollToImage(Math.min(images.length - 1, currentIndex + 1)), [currentIndex, images.length, scrollToImage]);
+
+  // Keep horizontal trackpad momentum inside the gallery while allowing the
+  // browser to move the strip by the gesture's full, continuous distance.
   const handleWheel = useCallback((e: React.WheelEvent) => {
-    if (!emblaApi || images.length <= 1) return;
-    
-    // Ignore gestures during global tab switch cooldown (prevents bleed-through)
-    if (isWithinTabSwitchCooldown(TAB_SWITCH_COOLDOWN)) return;
-    
-    // LOCKED? Ignore all events until lock expires
-    if (gestureTriggered.current) return;
-    
+    if (images.length <= 1) return;
     const absDeltaX = Math.abs(e.deltaX);
     const absDeltaY = Math.abs(e.deltaY);
-    
-    // Only respond to horizontal swipes
-    if (absDeltaY > absDeltaX) return;
-    
-    // Stop propagation to prevent tab switching
-    e.stopPropagation();
-    
-    // Single event threshold check
-    if (absDeltaX > TRACKPAD_THRESHOLD) {
-      if (e.deltaX > 0) {
-        emblaApi.scrollNext();
-      } else {
-        emblaApi.scrollPrev();
-      }
-      
-      gestureTriggered.current = true;
-      if (gestureLockTimeout.current) clearTimeout(gestureLockTimeout.current);
-      gestureLockTimeout.current = setTimeout(() => {
-        gestureTriggered.current = false;
-      }, GESTURE_LOCK_DURATION);
-    }
-  }, [emblaApi, images.length]);
+    if (absDeltaX >= absDeltaY && absDeltaX > 0) e.stopPropagation();
+  }, [images.length]);
   
   const hasMultiple = images.length > 1;
   
   return (
     <div data-media-full className="relative rounded-2xl overflow-hidden" onWheel={handleWheel} data-no-navigate>
       {/* Carousel container */}
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
-          {images.map((img, idx) => (
-            <div key={idx} className="flex-[0_0_100%] min-w-0">
-              <ImageSlide
-                img={img}
-                idx={idx}
-                aboveFold={aboveFold}
-                postId={postId}
-                onImageClick={onImageClick}
-              />
-            </div>
-          ))}
-        </div>
+      <div
+        ref={scrollRef}
+        onScroll={updateCurrentIndex}
+        className="flex gap-2 overflow-x-auto overscroll-x-contain scrollbar-hide touch-pan-x"
+      >
+        {images.map((img, idx) => (
+          <div key={idx} className="flex-[0_0_100%] min-w-0 lg:flex-[0_0_86%]">
+            <ImageSlide
+              img={img}
+              idx={idx}
+              aboveFold={aboveFold}
+              postId={postId}
+              onImageClick={onImageClick}
+            />
+          </div>
+        ))}
       </div>
       
       {/* Navigation arrows - only show if multiple images */}
@@ -390,7 +364,7 @@ function ImageCarousel({
           {images.map((_, idx) => (
             <button
               key={idx}
-              onClick={() => emblaApi?.scrollTo(idx)}
+              onClick={() => scrollToImage(idx)}
               className={`w-1.5 h-1.5 rounded-full transition-all ${
                 idx === currentIndex 
                   ? 'bg-white w-2' 
