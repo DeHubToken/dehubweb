@@ -33,7 +33,7 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2, AlertTriangle } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2, AlertTriangle } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -369,7 +369,7 @@ function MobileCreatorInfo({
                 className="w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
                 aria-label={t('postOptions.boostPost')}
               >
-                <ThemedIcon icon="superpowers" alt="" className="w-[23.5px] h-[23.5px] object-contain" />
+                <Zap className="w-[23.5px] h-[23.5px]" />
               </button>
             )}
             <button aria-label="Post options" 
@@ -1586,7 +1586,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 whileTap={{ scale: 0.95 }}
                 aria-label={t('postOptions.boostPost')}
               >
-                <ThemedIcon icon="superpowers" alt="" className="w-[23.5px] h-[23.5px] object-contain" />
+                <Zap className="w-[23.5px] h-[23.5px]" />
               </motion.button>
             )}
             {/* Plain button, not DrawerTrigger — see PostCard: a trigger pins
@@ -2168,7 +2168,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 whileTap={{ scale: 0.95 }}
                 aria-label={t('postOptions.boostPost')}
               >
-                <ThemedIcon icon="superpowers" alt="" className="w-4 h-4 object-contain" />
+                <Zap className="w-4 h-4" />
               </motion.button>
             )}
             <button 
