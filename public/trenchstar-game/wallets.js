@@ -7,15 +7,15 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 const rejected=()=>Object.assign(new Error('Transaction cancelled.'),{code:4001});
 export function mountWallets(api){
   let selected=null,secret=null,selection=null,epoch=0,busy=false,signing=false,closePending=null,hideTimer=null,lastUse=Date.now();
-  const panel=document.createElement('dialog');panel.id='twDialog';panel.className='ts';
-  panel.innerHTML='<section class="twPanel"><header><div><small>TRADING WALLETS</small><h2>Your funds. Your wallets.</h2></div><button id="twClose" aria-label="Close wallets">'+icon('close')+'</button></header><div id="twBody"></div><p id="twStatus" role="status" aria-live="polite"></p></section>';
+  const panel=document.createElement('dialog');panel.id='twDialog';panel.className='ts';panel.setAttribute('aria-labelledby','twTitle');
+  panel.innerHTML='<section class="twPanel"><header><div><small>TRADING WALLETS</small><h2 id="twTitle">Your funds. Your wallets.</h2></div><button id="twClose" aria-label="Close wallets">'+icon('close')+'</button></header><div id="twBody"></div><p id="twStatus" role="status" aria-live="polite"></p></section>';
   document.body.append(panel);
   const body=panel.querySelector('#twBody'),status=panel.querySelector('#twStatus');
   const launch=document.createElement('button');launch.className='btn tsIconButton';launch.id='twLaunch';launch.innerHTML=icon('wallet')+'Trading wallets';
   document.getElementById('wlConnect').parentElement.before(launch);
   const focusLaunch=launch.cloneNode(true);focusLaunch.id='twFocusLaunch';document.getElementById('tsFocusHead')?.after(focusLaunch);
   const badge=document.createElement('div');badge.id='twBadge';launch.after(badge);
-  const field=(id,label,type='text',extra='')=>`<label>${label}<input id="${id}" type="${type}" ${extra} autocomplete="${type==='password'?'new-password':'off'}" spellcheck="false" autocapitalize="none"></label>`;
+  const field=(id,label,type='text',extra='')=>`<label>${label}<input id="${id}" type="${type}" ${extra} autocomplete="${id==='twKey'?'off':id==='twUnlockPassword'?'current-password':type==='password'?'new-password':'off'}" spellcheck="false" autocapitalize="none"></label>`;
   const button=(id,label,name='wallet')=>`<button id="${id}" class="tsIconButton">${icon(name)}${label}</button>`;
   const get=id=>panel.querySelector('#'+id);
   const read=id=>{
@@ -90,6 +90,7 @@ export function mountWallets(api){
   }
   function form(importing){
     notify('');body.innerHTML=`<h3>${importing?'Import a wallet':'Create a trading wallet'}</h3>${field('twName','Wallet name','text','maxlength="40" placeholder="Trading wallet"')}<label>Wallet type<select id="twChain"><option value="evm">EVM · Base + Robinhood</option><option value="solana">Solana</option></select></label>${importing?field('twKey','Private key','password','maxlength="1200" data-private="true"'):''}${field('twPassword','Vault password · at least 12 characters','password','maxlength="256"')}${field('twRepeat','Repeat vault password','password','maxlength="256"')}<p class="twHint">This password protects this wallet on this device. Keep an exported key backup somewhere private.</p><div class="twActions">${button('twBack','Back','exit')}${button('twSave',importing?'Import wallet':'Create wallet','save')}</div>`;
+    if(importing){const format=()=>{get('twKey').placeholder=get('twChain').value==='evm'?'0x… (64 hexadecimal characters)':'Base58 key or 64-byte JSON array';};get('twChain').onchange=format;format();}
     get('twBack').onclick=home;get('twSave').onclick=()=>action(async()=>{
       const version=epoch;
       if(records().length>=20)throw new Error('This device already has 20 trading wallets.');
