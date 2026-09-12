@@ -1084,7 +1084,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // Shared with the shorts viewer — see hooks/use-video-fullscreen for the iOS
   // and WebView fallbacks, which fail silently rather than throwing.
-  const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, containerRef);
+  const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, containerRef, { escapeAncestors: true });
 
   const handleFullscreen = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -2034,6 +2034,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             <button 
               className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
               onClick={handleFullscreen}
+              aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
             >
               {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
             </button>
