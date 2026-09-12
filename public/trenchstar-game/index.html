@@ -4947,13 +4947,13 @@ function paintCandles(s){
   const ctx=s.ctx,w=s.cw,h=s.ch,m=s.market;
   screenBG(ctx,w,h);
   if(!m.fed){noFeedCard(ctx,w,h,m,noFeedNote(m));return;}
-  const big=w>600;
+  const big=s.focusDesk?s.w>600:w>600;
   /* Resolve the book BEFORE anything is drawn: the header carries the width
      as a chip, and a screen that is still waiting for a history has to say
      which one it is waiting for. */
   const N=big?110:44;
   const bk=resolveBook(s,m,big,N);
-  const hf=Math.round(h*(big?0.085:0.115));
+  const hf=Math.round(s.focusDesk?Math.min(h*(big?0.085:0.115),w*0.045):h*(big?0.085:0.115));
   ctx.textBaseline='alphabetic';
   ctx.font='700 '+hf+'px "Chakra Petch"';
   ctx.fillStyle='#fff';ctx.textAlign='left';

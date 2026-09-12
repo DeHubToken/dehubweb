@@ -52,7 +52,7 @@ export function mountConnected(T){
     $('#tsFreshness').textContent=!m.fed?'Simulated':fresh?'Live · Binance':'Stale · reconnecting';
     const canvas=$('#tsChart'),r=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio,2),w=Math.round(r.width*dpr),h=Math.round(r.height*dpr);if(w<1||h<1)return;
     if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;chartScreen=null;}
-    if(!chartScreen){chartScreen={...T.screens.find(s=>s.market&&s.kind==='tpl'),market:m,canvas,ctx:canvas.getContext('2d'),cw:w,ch:h,w:r.width,h:r.height,tf};}
+    if(!chartScreen){chartScreen={...T.screens.find(s=>s.market&&s.kind==='tpl'),market:m,focusDesk:true,canvas,ctx:canvas.getContext('2d'),cw:w,ch:h,w:r.width,h:r.height,tf};}
     chartScreen.market=m;chartScreen.tf=tf;T.TEMPLATES.candles.paint(chartScreen);
   }
   setInterval(chart,250);
