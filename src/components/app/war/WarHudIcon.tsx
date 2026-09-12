@@ -131,7 +131,6 @@ const GLYPHS: ReadonlyArray<readonly [string, LucideIcon]> = [
   // Assistant. Sparkles is the closest stroked equivalent to the glossy star.
   ['ai-sparkle-icon', Sparkles],
   ['ai-star-icon', Sparkles],
-  ['rocket.png', Rocket],
 
   // The prompt landing's wand. Not a "-3d-icon" asset, but the same glossy
   // treatment and the same problem under War.
@@ -145,7 +144,7 @@ export type ThemeIconKey =
   | 'governance' | 'trophy' | 'notifications' | 'settings' | 'stages'
   | 'assistant' | 'lock' | 'profile' | 'arcade' | 'stores' | 'bounties'
   | 'events' | 'stats' | 'ads' | 'command' | 'email' | 'accounts'
-  | 'usernames' | 'tv' | 'superpowers' | 'dao' | 'staking' | 'bridge' | 'buy';
+  | 'usernames' | 'tv' | 'superpowers' | 'boost' | 'dao' | 'staking' | 'bridge' | 'buy';
 
 /**
  * Raster icon replacements shared by every non-War themed page.
@@ -211,7 +210,7 @@ const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
   'wand', 'communities', 'careers', 'features', 'glossary', 'governance',
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
-  'email', 'accounts', 'usernames', 'tv', 'superpowers',
+  'email', 'accounts', 'usernames', 'tv', 'superpowers', 'boost',
 ]);
 
 const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
@@ -252,6 +251,7 @@ const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
   usernames: AtSign,
   tv: Tv,
   superpowers: Zap,
+  boost: Rocket,
   dao: Landmark,
   staking: Vault,
   bridge: Link2,

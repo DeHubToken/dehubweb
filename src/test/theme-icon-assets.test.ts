@@ -16,7 +16,7 @@ const PAGE_KEYS = [
   'wand', 'communities', 'careers', 'features', 'glossary', 'governance',
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
-  'email', 'accounts', 'usernames', 'tv', 'superpowers', 'dao', 'staking', 'bridge', 'buy',
+  'email', 'accounts', 'usernames', 'tv', 'superpowers', 'boost', 'dao', 'staking', 'bridge', 'buy',
 ];
 
 describe('theme icon assets', () => {
@@ -38,11 +38,13 @@ describe('theme icon assets', () => {
     }
   });
 
-  it('keeps SuperPowers electric and distinct from Prompt in every theme', () => {
+  it('keeps SuperPowers electric and distinct from Boost and Prompt in every theme', () => {
     for (const theme of [...FULL_THEMES, 'system']) {
       const directory = resolve(__dirname, `../../public/theme-icons/${theme}`);
       expect(readFileSync(`${directory}/superpowers.webp`), theme)
         .not.toEqual(readFileSync(`${directory}/wand.webp`));
+      expect(readFileSync(`${directory}/superpowers.webp`), theme)
+        .not.toEqual(readFileSync(`${directory}/boost.webp`));
     }
 
     const iconSource = readFileSync(
@@ -50,6 +52,7 @@ describe('theme icon assets', () => {
       'utf8',
     );
     expect(iconSource).toMatch(/superpowers:\s*Zap/);
+    expect(iconSource).toMatch(/boost:\s*Rocket/);
   });
 
   it('ships a dedicated DAO landmark source for every raster theme', () => {
