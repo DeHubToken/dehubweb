@@ -14,7 +14,7 @@ import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, VolumeX, Pencil, Coins, Gift, Lock, Star } from 'lucide-react';
+import { Sparkles, Zap, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, VolumeX, Pencil, Coins, Gift, Lock, Star } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { toast } from 'sonner';
@@ -402,7 +402,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             className="text-zinc-400 hover:text-white transition-colors active:scale-95 disabled:opacity-40"
             aria-label={t('postOptions.boostPost')}
           >
-            <ThemedIcon icon="superpowers" alt="" className="w-[23.5px] h-[23.5px] object-contain" />
+            <Zap className="w-[23.5px] h-[23.5px]" />
           </button>
         )}
         
