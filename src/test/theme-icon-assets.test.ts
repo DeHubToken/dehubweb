@@ -94,6 +94,18 @@ describe('theme icon assets', () => {
     }
   });
 
+  it('keeps the SuperPowers drawer title distinct from the Boost power', () => {
+    const source = readFileSync(
+      resolve(__dirname, '../../src/components/app/modals/BoostModal.tsx'),
+      'utf8',
+    );
+    const title = source.match(/<DrawerTitle[\s\S]*?<\/DrawerTitle>/)?.[0] ?? '';
+
+    expect(title).toContain('icon="superpowers"');
+    expect(title).not.toContain('icon="boost"');
+    expect(source).toContain('<SuperPowerIcon power={power.key}');
+  });
+
   it('ships a dedicated DAO landmark source for every raster theme', () => {
     const themes = [...FULL_THEMES, 'system'];
     const sourceHashes = new Set<string>();
