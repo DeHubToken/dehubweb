@@ -617,6 +617,60 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_generation_jobs: {
+        Row: {
+          created_at: string
+          endpoint: string
+          id: string
+          kind: string
+          metadata: Json
+          model: string
+          prediction_id: string | null
+          price_dhb: number
+          provider: string | null
+          provider_app: string | null
+          result: Json | null
+          status: string
+          tx_hash: string
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          endpoint: string
+          id: string
+          kind: string
+          metadata?: Json
+          model: string
+          prediction_id?: string | null
+          price_dhb: number
+          provider?: string | null
+          provider_app?: string | null
+          result?: Json | null
+          status?: string
+          tx_hash: string
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string
+          id?: string
+          kind?: string
+          metadata?: Json
+          model?: string
+          prediction_id?: string | null
+          price_dhb?: number
+          provider?: string | null
+          provider_app?: string | null
+          result?: Json | null
+          status?: string
+          tx_hash?: string
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       ai_messages: {
         Row: {
           attached_image: string | null
@@ -1777,6 +1831,33 @@ export type Database = {
           twitch_username?: string | null
           x_username?: string | null
           youtube_username?: string | null
+        }
+        Relationships: []
+      }
+      creator_assets: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json
+          ready: boolean
+          storage_path: string | null
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          metadata?: Json
+          ready?: boolean
+          storage_path?: string | null
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json
+          ready?: boolean
+          storage_path?: string | null
+          wallet_address?: string
         }
         Relationships: []
       }
@@ -4644,6 +4725,191 @@ export type Database = {
         }
         Relationships: []
       }
+      trench_alerts: {
+        Row: {
+          created_at: string
+          direction: string
+          fired_at: string | null
+          fired_price: number | null
+          id: string
+          notify: boolean
+          symbol: string
+          target: number
+          wallet: string
+        }
+        Insert: {
+          created_at?: string
+          direction: string
+          fired_at?: string | null
+          fired_price?: number | null
+          id?: string
+          notify?: boolean
+          symbol: string
+          target: number
+          wallet: string
+        }
+        Update: {
+          created_at?: string
+          direction?: string
+          fired_at?: string | null
+          fired_price?: number | null
+          id?: string
+          notify?: boolean
+          symbol?: string
+          target?: number
+          wallet?: string
+        }
+        Relationships: []
+      }
+      trench_desks: {
+        Row: {
+          document: Json
+          name: string
+          revision: number
+          updated_at: string
+          wallet: string
+        }
+        Insert: {
+          document: Json
+          name: string
+          revision?: number
+          updated_at?: string
+          wallet: string
+        }
+        Update: {
+          document?: Json
+          name?: string
+          revision?: number
+          updated_at?: string
+          wallet?: string
+        }
+        Relationships: []
+      }
+      trench_members: {
+        Row: {
+          name: string
+          pose: Json
+          room: string
+          seen_at: string
+          wallet: string
+        }
+        Insert: {
+          name: string
+          pose?: Json
+          room: string
+          seen_at?: string
+          wallet: string
+        }
+        Update: {
+          name?: string
+          pose?: Json
+          room?: string
+          seen_at?: string
+          wallet?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trench_members_room_fkey"
+            columns: ["room"]
+            isOneToOne: false
+            referencedRelation: "trench_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trench_paper: {
+        Row: {
+          cash: number
+          drawdown: number
+          equity: number
+          holdings: Json
+          name: string
+          peak: number
+          updated_at: string
+          wallet: string
+          week: string
+        }
+        Insert: {
+          cash?: number
+          drawdown?: number
+          equity?: number
+          holdings?: Json
+          name: string
+          peak?: number
+          updated_at?: string
+          wallet: string
+          week: string
+        }
+        Update: {
+          cash?: number
+          drawdown?: number
+          equity?: number
+          holdings?: Json
+          name?: string
+          peak?: number
+          updated_at?: string
+          wallet?: string
+          week?: string
+        }
+        Relationships: []
+      }
+      trench_rooms: {
+        Row: {
+          expires_at: string
+          focus: Json
+          host: string
+          id: string
+          name: string
+        }
+        Insert: {
+          expires_at?: string
+          focus?: Json
+          host: string
+          id?: string
+          name: string
+        }
+        Update: {
+          expires_at?: string
+          focus?: Json
+          host?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      trench_trades: {
+        Row: {
+          created_at: string
+          id: string
+          price: number
+          quantity: number
+          side: string
+          symbol: string
+          wallet: string
+          week: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          price: number
+          quantity: number
+          side: string
+          symbol: string
+          wallet: string
+          week: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          price?: number
+          quantity?: number
+          side?: string
+          symbol?: string
+          wallet?: string
+          week?: string
+        }
+        Relationships: []
+      }
       trending_categories: {
         Row: {
           id: string
@@ -5790,6 +6056,19 @@ export type Database = {
         }
         Returns: Json
       }
+      ai_job_spend: {
+        Args: {
+          p_dhb: number
+          p_endpoint: string
+          p_job_id: string
+          p_kind: string
+          p_metadata: Json
+          p_model: string
+          p_tx_hash: string
+          p_wallet: string
+        }
+        Returns: undefined
+      }
       ai_payment_release: {
         Args: {
           p_dhb: number
@@ -6232,6 +6511,58 @@ export type Database = {
       track_post_link_copy: {
         Args: { p_token_id: number; p_wallet?: string }
         Returns: undefined
+      }
+      trench_fire_alert: {
+        Args: { p_id: string; p_price: number }
+        Returns: boolean
+      }
+      trench_save_desk: {
+        Args: {
+          p_document: Json
+          p_name: string
+          p_revision: number
+          p_wallet: string
+        }
+        Returns: {
+          document: Json
+          name: string
+          revision: number
+          updated_at: string
+          wallet: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "trench_desks"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      trench_trade: {
+        Args: {
+          p_id: string
+          p_price: number
+          p_quantity: number
+          p_side: string
+          p_symbol: string
+          p_wallet: string
+        }
+        Returns: {
+          cash: number
+          drawdown: number
+          equity: number
+          holdings: Json
+          name: string
+          peak: number
+          updated_at: string
+          wallet: string
+          week: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "trench_paper"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       upsert_phone_otp: {
         Args: { p_code_hash: string; p_phone: string; p_ttl_ms: number }
