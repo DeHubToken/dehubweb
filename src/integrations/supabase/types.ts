@@ -6537,6 +6537,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      trench_scheduler_authorized: {
+        Args: { p_token: string }
+        Returns: boolean
+      }
       trench_trade: {
         Args: {
           p_id: string
