@@ -6516,6 +6516,7 @@ export type Database = {
         Args: { p_id: string; p_price: number }
         Returns: boolean
       }
+      trench_market_watch: { Args: never; Returns: Json }
       trench_save_desk: {
         Args: {
           p_document: Json
