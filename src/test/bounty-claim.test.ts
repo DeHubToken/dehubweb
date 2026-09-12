@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { bountyClaimCall, submitBountyClaim } from '@/lib/bounty-claim';
+import { bountyClaimCall, getBountyEligibility, submitBountyClaim } from '@/lib/bounty-claim';
 import { apiCall } from '@/lib/api/dehub/core';
 import { getNFTInfo } from '@/lib/api/dehub/feed';
 import { writeContractAA } from '@/lib/contracts/aa-utils';
@@ -7,11 +7,28 @@ import { writeContractAA } from '@/lib/contracts/aa-utils';
 vi.mock('@/lib/api/dehub/core', () => ({ apiCall: vi.fn() }));
 vi.mock('@/lib/api/dehub/feed', () => ({ getNFTInfo: vi.fn() }));
 vi.mock('@/lib/contracts/aa-utils', () => ({ writeContractAA: vi.fn() }));
+const { bounties } = vi.hoisted(() => ({ bounties: vi.fn() }));
+vi.mock('ethers', async importOriginal => ({
+  ...await importOriginal<typeof import('ethers')>(),
+  JsonRpcProvider: class { destroy() {} },
+  Contract: class { bounties = bounties; },
+}));
 
 const sig = { r: `0x${'11'.repeat(32)}`, s: `0x${'22'.repeat(32)}`, v: 27 };
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  vi.clearAllMocks();
+  bounties.mockResolvedValue({ totalAmount: 500n, reserveAmount: 500n });
+});
 
 describe('bounty claims', () => {
+  it('rejects an advertised bounty with no on-chain funding before requesting a signature', async () => {
+    vi.mocked(getNFTInfo).mockResolvedValue({ chainId: 8453 } as any);
+    bounties.mockResolvedValue({ totalAmount: 0n, reserveAmount: 0n });
+    expect((await getBountyEligibility('5588')).error).toContain('not been funded');
+    expect(apiCall).not.toHaveBeenCalled();
+    await expect(submitBountyClaim('5588', 'commentor')).rejects.toThrow('not been funded');
+    expect(writeContractAA).not.toHaveBeenCalled();
+  });
   it('encodes the legacy commenter signature in contract order', () => {
     expect(bountyClaimCall('5588', 'commentor', 8453, sig).args).toEqual([5588n, sig.r, sig.s, 27, 1]);
     expect(bountyClaimCall('5588', 'viewer', 56, sig).args[4]).toBe(0);

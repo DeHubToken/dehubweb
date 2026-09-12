@@ -12,16 +12,16 @@ export default function BountyClaimActions({ tokenId, open }: { tokenId: string;
   const [claimed, setClaimed] = useState<Record<string, boolean>>({});
   const eligibility = useQuery({
     queryKey: ['bounty-eligibility', tokenId, walletAddress],
-    queryFn: () => getBountyEligibility(tokenId),
-    enabled: open && !!walletAddress && !!tokenId,
+    queryFn: () => getBountyEligibility(tokenId, !!walletAddress),
+    enabled: open && !!tokenId,
     staleTime: 0,
     retry: false,
   });
   if (!open) return null;
-  if (!walletAddress) return <button className="w-full rounded-xl border border-white/10 p-3" onClick={() => openLoginModal()}>{t('nav.login')}</button>;
   if (eligibility.isFetching) return <p role="status">{t('common.loading')}</p>;
   const result = eligibility.data?.result;
   return <div className="space-y-2" onClick={e => e.stopPropagation()}>
+    {!walletAddress && !eligibility.error && !eligibility.data?.error && <button className="w-full rounded-xl border border-white/10 p-3" onClick={() => openLoginModal()}>{t('nav.login')}</button>}
     {(['viewer', 'commentor'] as const).map(type => {
       const key = `${walletAddress}:${tokenId}:${type}`;
       if (claimed[key] || result?.[`${type}_claimed`]) return <p key={type} role="status">{t('toasts.rewards_claimed')}</p>;

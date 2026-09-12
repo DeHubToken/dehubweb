@@ -1,4 +1,4 @@
-import { Interface } from 'ethers';
+import { Contract, Interface, JsonRpcProvider } from 'ethers';
 import { apiCall } from '@/lib/api/dehub/core';
 import { getNFTInfo } from '@/lib/api/dehub/feed';
 import { writeContractAA } from '@/lib/contracts/aa-utils';
@@ -23,8 +23,17 @@ export interface BountyEligibility {
   };
 }
 
-export function getBountyEligibility(tokenId: string): Promise<BountyEligibility> {
-  return apiCall('/api/claim-bounty', { params: { tokenId }, requiresAuth: true });
+export async function getBountyEligibility(tokenId: string, authenticated = true): Promise<BountyEligibility> {
+  const post = await getNFTInfo(tokenId);
+  const config = getChainConfig((post.chainId || 56) as ChainId);
+  const provider = new JsonRpcProvider(config.rpcUrl, config.chainId, { staticNetwork: true });
+  try {
+    const bounty = await new Contract(config.streamController,
+      ['function bounties(uint256) view returns (uint256 totalAmount, uint256 reserveAmount, uint256 bountyAmount)'], provider).bounties(tokenId);
+    if (bounty.totalAmount === 0n) return { error: 'This bounty has not been funded. The creator must fund it before rewards can be claimed.' };
+    if (bounty.reserveAmount === 0n) return { error: 'This bounty has no rewards remaining.' };
+  } finally { provider.destroy(); }
+  return authenticated ? apiCall('/api/claim-bounty', { params: { tokenId }, requiresAuth: true }) : {};
 }
 
 export function bountyClaimCall(tokenId: string, type: 'viewer' | 'commentor', chainId: number, sig: BountySignature) {
@@ -48,6 +57,7 @@ export async function submitBountyClaim(tokenId: string, type: 'viewer' | 'comme
   // while the drawer is open. The post's chain determines the signed domain.
   const [post, eligibility] = await Promise.all([getNFTInfo(tokenId), getBountyEligibility(tokenId)]);
   const sig = eligibility.result?.[type];
+  if (eligibility.error) throw new Error(String(eligibility.error));
   if (eligibility.result?.[`${type}_claimed`] || !sig) throw new Error('Not Eligible');
   const chainId = (post.chainId || 56) as ChainId;
   const config = getChainConfig(chainId);
