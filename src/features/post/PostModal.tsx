@@ -11,6 +11,7 @@ import { CameraCaptureModal } from './components/CameraCaptureModal';
 import { SoundPicker } from './components/SoundPicker';
 import { cn } from '@/lib/utils';
 import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
+import { useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
 
 const CreatePlanModal = lazy(() =>
   import('@/components/app/subscriptions/CreatePlanModal').then((module) => ({
@@ -29,6 +30,7 @@ interface PostModalProps {
 }
 
 export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll }: PostModalProps) {
+  const { style: keyboardStyle } = useKeyboardSafeSheet(isOpen);
   // Where a live post goes once its mint has provisioned the stream. Held here
   // rather than in the action bar so it survives the bar's own re-renders, and
   // cleared on close so reopening the composer never reopens a dead broadcast.
@@ -251,11 +253,12 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
   // Use Drawer/Sheet on ALL devices (mobile, tablet, desktop)
   return (
     <>
-      <Drawer open={isOpen} onOpenChange={handleDrawerChange}>
+      <Drawer open={isOpen} onOpenChange={handleDrawerChange} repositionInputs={false}>
         <DrawerContent
           glass
           hideHandle
           data-post-modal
+          style={keyboardStyle ?? undefined}
           // The composer opens over the feed it posts into, so on desktop it
           // takes that column rather than the whole viewport — see `column` in
           // ui/drawer.
