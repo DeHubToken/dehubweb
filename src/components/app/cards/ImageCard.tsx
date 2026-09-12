@@ -322,7 +322,10 @@ function ImageCarousel({
         className="flex gap-2 overflow-x-auto overscroll-x-contain scrollbar-hide touch-pan-x"
       >
         {images.map((img, idx) => (
-          <div key={idx} className="flex-[0_0_100%] min-w-0 lg:flex-[0_0_86%]">
+          <div
+            key={idx}
+            className={cn('flex-[0_0_100%] min-w-0', hasMultiple && 'lg:flex-[0_0_86%]')}
+          >
             <ImageSlide
               img={img}
               idx={idx}
