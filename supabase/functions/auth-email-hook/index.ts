@@ -18,7 +18,7 @@ const corsHeaders = {
 const SITE_NAME = "DeHub"
 const SENDER_DOMAIN = "notify.dehub.io"
 const ROOT_DOMAIN = "dehub.io"
-const FROM_DOMAIN = "notify.dehub.io"
+const FROM_DOMAIN = "dehub.io"
 const SITE_URL = `https://${ROOT_DOMAIN}`
 
 // Rewrite the backend-hosted confirmation URL into a branded dehub.io link.
