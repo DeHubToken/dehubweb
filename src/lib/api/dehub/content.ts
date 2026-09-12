@@ -455,6 +455,16 @@ export async function replaceVideoFile(
   });
 }
 
+export async function replacePostImage(tokenId: number | string, index: number, file: File) {
+  const formData = new FormData();
+  formData.append('image', file);
+  const response = await authedUpload<{ result: boolean; data: { imageUrls: string[] } }>(
+    `/api/nft/${tokenId}/images/${index}`, formData,
+  );
+  if (!response.result || !Array.isArray(response.data?.imageUrls)) throw new Error('Could not replace that image');
+  return response.data.imageUrls;
+}
+
 export async function deletePost(tokenId: number | string): Promise<{ result: boolean }> {
   return apiCall<{ result: boolean }>(`/api/nft/${tokenId}`, {
     method: "DELETE",
