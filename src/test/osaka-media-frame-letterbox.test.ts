@@ -57,7 +57,7 @@ describe('Osaka media frames do not letterbox narrow images', () => {
   // painting them, because the guard can no longer tell them apart from the
   // image wrapper.
   it('keeps every deliberate dark bed carrying its own bg class', () => {
-    expect(VIDEO_CARD).toMatch(/data-media-full\s+className=\{`relative bg-black/);
+    expect(VIDEO_CARD).toMatch(/data-media-full\s+className=\{`bg-black/);
     expect(LIVE_CARD).toMatch(/data-media-full className=\{`bg-black overflow-hidden/);
     // The Shorts viewer's scrim and its video column, in that order.
     expect(SHORTS).toMatch(/data-media-full[\s\S]{0,160}?isMobile \? "bg-black" :/);
