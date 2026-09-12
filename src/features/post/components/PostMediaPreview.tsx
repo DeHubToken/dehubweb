@@ -108,6 +108,20 @@ export function PostMediaPreview({
   const [extractingFrames, setExtractingFrames] = useState<Set<number>>(new Set());
   const [fullscreenPreview, setFullscreenPreview] = useState<{ index: number; src: string; type: 'image' | 'video'; filterSettings?: FilterSettings; cropSettings?: CropSettings; currentTime?: number } | null>(null);
   const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
+  const replacementInputRef = useRef<HTMLInputElement | null>(null);
+  const [replacementIndex, setReplacementIndex] = useState<number | null>(null);
+
+  const chooseReplacementImage = useCallback((index: number) => {
+    setReplacementIndex(index);
+    replacementInputRef.current?.click();
+  }, []);
+
+  const handleReplacementImage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (file && replacementIndex !== null) onReplaceImage?.(replacementIndex, file);
+    setReplacementIndex(null);
+  }, [onReplaceImage, replacementIndex]);
 
   useEffect(() => {
     onFullscreenChange?.(fullscreenPreview !== null);
@@ -530,6 +544,13 @@ export function PostMediaPreview({
         className="hidden"
         onChange={handleThumbnailUpload}
       />
+      <input
+        ref={replacementInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleReplacementImage}
+      />
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, height: 0 }}
@@ -567,6 +588,23 @@ export function PostMediaPreview({
                     
                       {/* Top left: Filter + Crop + Audio buttons */}
                       <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
+                        {onReplaceImage && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); chooseReplacementImage(index); }}
+                                className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                  bg-black/60 backdrop-blur-xl border border-white/20
+                                  hover:bg-black/70 hover:border-white/40"
+                                aria-label={`Change image ${index + 1}`}
+                              >
+                                <Upload className="w-3 h-3 text-white" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>Change image</TooltipContent>
+                          </Tooltip>
+                        )}
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
