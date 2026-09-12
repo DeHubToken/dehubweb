@@ -14,9 +14,8 @@ import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, VolumeX, Pencil, Coins, Gift, Lock, Star } from 'lucide-react';
-import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
-import aiSparkleIcon from '@/assets/icons/ai-sparkle-icon.png';
+import { Sparkles, Zap, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, VolumeX, Pencil, Coins, Gift, Lock, Star } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -396,7 +395,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             className="mr-[3.2px] text-zinc-400 hover:text-white transition-colors active:scale-95 disabled:opacity-40"
             aria-label={t('postOptions.boostPost')}
           >
-            <ThemedIcon icon="boost" alt="" className="w-[23.5px] h-[23.5px] object-contain" />
+            <Zap className="w-[23.5px] h-[23.5px]" />
           </button>
         )}
         <button
@@ -404,7 +403,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
           className="text-zinc-400 hover:text-white transition-colors active:scale-95"
           aria-label="Ask AI about this post"
         >
-          <BrandIcon src={aiSparkleIcon} alt="" className="w-[23.5px] h-[23.5px] object-contain" />
+          <Sparkles className="w-[23.5px] h-[23.5px]" />
         </button>
         
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
@@ -528,7 +527,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
                     disabled={!postTokenId}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
                   >
-                    <ThemedIcon icon="boost" alt="" className="w-5 h-5 object-contain" /> {t('postOptions.boostPost')}
+                    <ThemedIcon icon="superpowers" alt="" className="w-5 h-5 object-contain" /> {t('postOptions.boostPost')}
                   </button>
                   {/* Only for posts that were published off-chain — a minted
                       post has nothing to do here, and 'signed' is the status
