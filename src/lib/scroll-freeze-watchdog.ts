@@ -54,6 +54,7 @@ const SLACK_PX = 80;
 const SETTLE_MS = 400;
 
 const OPEN_OVERLAY_SELECTOR = [
+  '[data-media-fullscreen="true"]',
   '[data-vaul-drawer][data-state="open"]',
   '[role="dialog"][data-state="open"]',
   '[role="alertdialog"][data-state="open"]',
@@ -68,6 +69,7 @@ let lastReportAt = 0;
 /** An overlay that is meant to be holding the page still. */
 function overlayIsOpen(): boolean {
   return (
+    !!document.fullscreenElement ||
     !!document.querySelector(OPEN_OVERLAY_SELECTOR) ||
     document.body.classList.contains('shorts-viewer-open')
   );
