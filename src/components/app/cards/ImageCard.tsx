@@ -70,6 +70,7 @@ import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { cacheImageForNavigation } from '@/lib/post-cache';
 import { FEED_IMAGE_MAX_HEIGHT } from '@/lib/feed-image-layout';
+import { chainVerticalWheel } from '@/lib/chain-vertical-wheel';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
 
 /** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
@@ -230,10 +231,12 @@ function ImageSlide({
         width={ratio ? Math.round(ratio * 1000) : undefined}
         height={ratio ? 1000 : undefined}
         className="block w-auto h-auto max-w-full object-contain rounded-2xl"
-        style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }}
+        // Keep the slide's geometry when its offscreen bitmap is released.
+        // An img without src otherwise collapses and changes the feed height.
+        style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT, width: ratio ? ratio * FEED_IMAGE_MAX_HEIGHT : undefined, aspectRatio: ratio }}
         loading={aboveFold && idx === 0 ? 'eager' : 'lazy'}
         fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}
-        decoding={aboveFold && idx === 0 ? 'sync' : 'async'}
+        decoding="async"
         draggable={false}
         onLoad={(e) => {
           const el = e.currentTarget;
@@ -273,6 +276,14 @@ function ImageCarousel({
   const scrollRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentSlideFillsViewport, setCurrentSlideFillsViewport] = useState(false);
+
+  useEffect(() => {
+    const viewport = scrollRef.current;
+    if (!viewport) return;
+    const onWheel = (event: WheelEvent) => chainVerticalWheel(event, viewport);
+    viewport.addEventListener('wheel', onWheel, { passive: false });
+    return () => viewport.removeEventListener('wheel', onWheel);
+  }, []);
 
   const updateCurrentIndex = useCallback(() => {
     const viewport = scrollRef.current;
@@ -331,7 +342,7 @@ function ImageCarousel({
   const hasMultiple = images.length > 1;
   
   return (
-    <div data-media-full className="relative rounded-2xl overflow-hidden" onWheel={handleWheel} data-no-navigate>
+    <div data-media-full className="relative rounded-2xl overflow-hidden" onWheel={handleWheel} data-no-navigate data-no-swipe>
       {/* Carousel container */}
       <div
         ref={scrollRef}
