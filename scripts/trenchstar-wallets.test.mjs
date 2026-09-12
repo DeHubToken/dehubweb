@@ -44,6 +44,28 @@ test('EVM signing rejects an unexpected sender before touching an RPC',async()=>
   const one=createSecret('evm'),two=createSecret('evm');
   await assert.rejects(prepareEvm(one.secret,{id:8453,rpc:'https://invalid.invalid'},{from:two.address,to:one.address,value:'0x0'}),/selected wallet changed/);
 });
+test('EVM transactions recover the selected signer and a late lock stops broadcast',async()=>{
+  const {Transaction,keccak256}=require('ethers');
+  const originalFetch=globalThis.fetch;let sent=[];
+  globalThis.fetch=async(_url,init)=>{
+    const req=JSON.parse(typeof init.body==='string'?init.body:new TextDecoder().decode(init.body));
+    const block={hash:'0x'+'11'.repeat(32),parentHash:'0x'+'00'.repeat(32),number:'0x1',timestamp:'0x1',nonce:'0x0000000000000000',difficulty:'0x0',gasLimit:'0x1c9c380',gasUsed:'0x0',miner:'0x'+'00'.repeat(20),extraData:'0x',transactions:[],baseFeePerGas:'0x3b9aca00'};
+    const replies={eth_chainId:'0x2105',eth_getTransactionCount:'0x0',eth_estimateGas:'0x5208',eth_getBlockByNumber:block,eth_gasPrice:'0x3b9aca00',eth_maxPriorityFeePerGas:'0x3b9aca00',eth_blockNumber:'0x1'};
+    let result;
+    if(req.method==='eth_sendRawTransaction'){sent.push(req.params[0]);result=keccak256(req.params[0]);}
+    else {assert(Object.hasOwn(replies,req.method),'Unexpected mock RPC method '+req.method);result=replies[req.method];}
+    return new Response(JSON.stringify({jsonrpc:'2.0',id:req.id,result}),{status:200,headers:{'content-type':'application/json'}});
+  };
+  try{
+    const wallet=createSecret('evm'),to=createSecret('evm').address,network={id:8453,rpc:'https://wallet-test.invalid'};
+    const first=await prepareEvm(wallet.secret,network,{from:wallet.address,to,value:'0x1'});
+    await first.send();assert.equal(sent.length,1);
+    const tx=Transaction.from(sent[0]);assert.equal(tx.from,wallet.address);assert.equal(tx.to,to);assert.equal(tx.chainId,8453n);assert.equal(tx.value,1n);
+    const second=await prepareEvm(wallet.secret,network,{from:wallet.address,to,value:'0x1'});
+    let checks=0;await assert.rejects(second.send(()=>{if(++checks===2)throw new Error('Wallet locked');}),/Wallet locked/);
+    assert.equal(sent.length,1,'Locking during signing prevents broadcast');
+  }finally{globalThis.fetch=originalFetch;}
+});
 
 test('wallet manager keeps a saved wallet locked, unlocks locally, and cancels on native lock',async()=>{
   const {JSDOM}=require('jsdom');
