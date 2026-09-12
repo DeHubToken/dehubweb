@@ -388,6 +388,16 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
 
       {/* AI Button and Options Drawer - positioned in header area */}
       <div className="absolute top-0 right-0 z-10 flex items-start gap-2">
+        {isOwnPost && (
+          <button
+            onClick={() => setShowBoostModal(true)}
+            disabled={!postTokenId}
+            className="mr-[3.2px] text-zinc-400 hover:text-white transition-colors active:scale-95 disabled:opacity-40"
+            aria-label={t('postOptions.boostPost')}
+          >
+            <Zap className="w-[23.5px] h-[23.5px]" />
+          </button>
+        )}
         <button
           onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
           className="text-zinc-400 hover:text-white transition-colors active:scale-95"
@@ -395,16 +405,6 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
         >
           <Sparkles className="w-[23.5px] h-[23.5px]" />
         </button>
-        {isOwnPost && (
-          <button
-            onClick={() => setShowBoostModal(true)}
-            disabled={!postTokenId}
-            className="text-zinc-400 hover:text-white transition-colors active:scale-95 disabled:opacity-40"
-            aria-label={t('postOptions.boostPost')}
-          >
-            <Zap className="w-[23.5px] h-[23.5px]" />
-          </button>
-        )}
         
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
           {/* Opens via state, not DrawerTrigger: a trigger forces vaul's Root to
