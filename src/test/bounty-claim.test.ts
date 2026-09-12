@@ -40,4 +40,10 @@ describe('bounty claims', () => {
       await expect(submitBountyClaim('5588', 'commentor')).rejects.toThrow('Not Eligible');
       expect(writeContractAA).not.toHaveBeenCalled();
     });
+  it('does not report success for a reverted receipt', async () => {
+    vi.mocked(getNFTInfo).mockResolvedValue({ chainId: 8453 } as any);
+    vi.mocked(apiCall).mockResolvedValue({ result: { commentor: sig } });
+    vi.mocked(writeContractAA).mockResolvedValue({ hash: '0x123', wait: vi.fn().mockResolvedValue({ status: 0 }) } as any);
+    await expect(submitBountyClaim('5588', 'commentor')).rejects.toThrow('reverted');
+  });
 });
