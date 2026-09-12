@@ -28,10 +28,10 @@ import { getSignedAssetUrl, listEditorAssets, type CloudAsset } from '@/lib/edit
 import { useEditorQuota } from '@/hooks/use-editor-quota';
 import type { MediaItem } from '@/store/editorStore';
 
-async function cloudAssetToMediaItem(a: CloudAsset): Promise<MediaItem | null> {
+async function cloudAssetToMediaItem(wallet: string, a: CloudAsset): Promise<MediaItem | null> {
   try {
-    const url = await getSignedAssetUrl(a.storage_path);
-    const thumbnailUrl = a.thumbnail_path ? await getSignedAssetUrl(a.thumbnail_path) : undefined;
+    const url = await getSignedAssetUrl(wallet, a.storage_path);
+    const thumbnailUrl = a.thumbnail_path ? await getSignedAssetUrl(wallet, a.thumbnail_path) : undefined;
     return {
       id: a.id,
       name: a.name,
@@ -102,7 +102,7 @@ export function MediaLibraryLoader() {
 
         const localIds = new Set(useEditorStore.getState().media.map((m) => m.id));
         for (const a of cloud.filter((x) => !localIds.has(x.id))) {
-          const item = await cloudAssetToMediaItem(a);
+          const item = await cloudAssetToMediaItem(quota.walletAddress!, a);
           if (item && !cancelled) addMedia(item);
         }
       } catch (e) {
