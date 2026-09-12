@@ -19,7 +19,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Loader2, Lock, Check, Clock, History, ChevronRight, Users, X, Zap } from 'lucide-react';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { SuperPowerIcon } from '@/components/app/SuperPowerIcon';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { BadgeProgress } from '@/components/app/BadgeProgress';
@@ -185,9 +185,7 @@ export default function SuperPowersPage() {
                     )}
                   >
                     <div className="flex items-center gap-2">
-                      {power.key === 'boost' && (
-                        <ThemedIcon icon="boost" alt="" className="w-8 h-8 shrink-0 object-contain" />
-                      )}
+                      <SuperPowerIcon power={power.key} alt="" className="w-8 h-8 shrink-0 object-contain" />
                       {/* Numbered because this is a fixed, ordered power list. */}
                       <span className="text-[11px] text-zinc-600 tabular-nums">
                         {String(index + 1).padStart(2, '0')}
@@ -312,7 +310,10 @@ export default function SuperPowersPage() {
         <DrawerContent scrollable column glass className="px-4 pb-6">
           <DrawerHeader className="pb-3 flex flex-row items-start justify-between gap-3">
             <div className="min-w-0">
-              <DrawerTitle className="text-white text-lg">
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                {historyPower && (
+                  <SuperPowerIcon power={historyPower.key} alt="" className="w-8 h-8 shrink-0 object-contain" />
+                )}
                 {historyPower?.label} usage
               </DrawerTitle>
               <p className="text-[12px] text-zinc-500 mt-1">

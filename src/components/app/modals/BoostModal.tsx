@@ -29,22 +29,15 @@ import { useQuery } from '@tanstack/react-query';
 import { getNFTInfo } from '@/lib/api/dehub';
 import {
   Loader2,
-  Rocket,
-  History,
   Lock,
-  Shield,
-  Crosshair,
-  Target,
   Check,
-  Siren,
-  Radio,
-  Gift,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { SuperPowerIcon } from '@/components/app/SuperPowerIcon';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { badgeImage } from '@/lib/staking-badges';
@@ -54,7 +47,6 @@ import {
   useSuperpowers,
   spendablePowers,
 } from '@/hooks/use-superpowers';
-import type { SuperPowerKey } from '@/lib/api/dehub/superpowers';
 import { waitForSignalFlareReceipt } from '@/lib/api/dehub/superpowers';
 
 interface BoostModalProps {
@@ -63,17 +55,6 @@ interface BoostModalProps {
   tokenId?: string | number;
   postTitle?: string;
 }
-
-const ICONS: Partial<Record<SuperPowerKey, typeof Rocket>> = {
-  boost: Rocket,
-  second_wind: History,
-  timeline_bomber: Radio,
-  signal_flare: Siren,
-  flak_jacket: Shield,
-  precision_strike: Crosshair,
-  harpoon: Target,
-  deep_current: Gift,
-};
 
 export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModalProps) {
   const { t } = useTranslation();
@@ -247,7 +228,6 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
                 what the next tier buys is the reason to climb to it. */}
             <div className="flex flex-col gap-1.5">
               {powers.map(power => {
-                const Icon = ICONS[power.key] ?? Rocket;
                 const isChosen = power.key === chosen;
                 return (
                   <button
@@ -263,11 +243,7 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
                       !power.enabled && 'opacity-50 cursor-not-allowed',
                     )}
                   >
-                    {power.key === 'boost' ? (
-                      <ThemedIcon icon="boost" alt="" className="w-5 h-5 mt-0.5 shrink-0 object-contain" />
-                    ) : (
-                      <Icon className="w-4 h-4 mt-0.5 shrink-0 text-zinc-300" />
-                    )}
+                    <SuperPowerIcon power={power.key} alt="" className="w-8 h-8 -mt-1 shrink-0 object-contain" />
                     <span className="min-w-0 flex-1">
                       <span className="flex items-center gap-2">
                         <span className="text-sm text-white">{power.label}</span>
