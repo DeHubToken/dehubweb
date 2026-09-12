@@ -384,7 +384,7 @@ export function spendablePowers(
   // boost one. Reading boostsLeft for it tells an Octopus who has spent both
   // boosts that they have no flares either, which is wrong in the direction
   // that costs them the power they climbed a rung for.
-  const SIGNALS: readonly SuperPowerKey[] = ['signal_flare'];
+  const SIGNALS: readonly SuperPowerKey[] = ['signal_flare', 'harpoon'];
   const left = (key: SuperPowerKey) =>
     SIGNALS.includes(key) ? (status.signalsLeft ?? status.boostsLeft) : status.boostsLeft;
 

@@ -162,7 +162,7 @@ export default function SuperPowersPage() {
               // picker for something the server would refuse.
               const usable = unlocked && power.available;
               const allowance =
-                power.key === 'signal_flare'
+                power.key === 'signal_flare' || power.key === 'harpoon'
                   ? (status?.signalsLeft ?? status?.boostsLeft)
                   : status?.boostsLeft;
               return (
@@ -334,13 +334,13 @@ export default function SuperPowersPage() {
               </div>
             ) : (
               historyBookings.map(booking => {
-                const flare = booking.power === 'signal_flare';
-                const result = flare
+                const notificationPower = booking.power === 'signal_flare' || booking.power === 'harpoon';
+                const result = notificationPower
                   ? booking.signalDeliveryStatus === 'sent'
                     ? `${booking.signalRecipients ?? 0} notified`
                     : booking.signalDeliveryStatus === 'failed'
                       ? 'Delivery retrying'
-                      : 'Notifying followers'
+                      : booking.power === 'harpoon' ? 'Notifying badge holders' : 'Notifying followers'
                   : t('superpowers.seenCount', {
                       count: booking.served,
                       defaultValue: `${booking.served} seen`,
@@ -374,7 +374,7 @@ export default function SuperPowersPage() {
                     </div>
                     <div className="text-right shrink-0">
                       <p className="text-[12px] font-medium text-zinc-200 tabular-nums">{result}</p>
-                      {!flare && (
+                      {!notificationPower && (
                         <p className="text-[10px] text-zinc-500 mt-0.5">
                           {booking.live
                             ? 'Live'
@@ -384,7 +384,7 @@ export default function SuperPowersPage() {
                         </p>
                       )}
                     </div>
-                    {booking.status === 'active' && !flare && (
+                    {booking.status === 'active' && !notificationPower && (
                       <button
                         type="button"
                         onClick={() =>

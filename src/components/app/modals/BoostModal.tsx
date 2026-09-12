@@ -154,15 +154,16 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
       },
       {
         onSuccess: booking => {
-          const isFlare = chosen === 'signal_flare';
-          if (isFlare) {
+          const isNotification = chosen === 'signal_flare' || chosen === 'harpoon';
+          if (isNotification) {
+            const label = chosen === 'harpoon' ? 'Harpoon' : 'Signal Flare';
             toast.promise(waitForSignalFlareReceipt(booking.id), {
-              loading: 'Signal Flare sent. Counting notifications...',
+              loading: `${label} sent. Counting notifications...`,
               success: recipients =>
                 recipients === null
-                  ? 'Signal Flare sent. The final count will appear in Past usage.'
-                  : `Signal Flare notified ${recipients} ${recipients === 1 ? 'person' : 'people'}`,
-              error: 'Signal Flare sent. The final count will appear in Past usage.',
+                  ? `${label} sent. The final count will appear in Past usage.`
+                  : `${label} notified ${recipients} ${recipients === 1 ? 'person' : 'people'}`,
+              error: `${label} sent. The final count will appear in Past usage.`,
             });
           } else {
             toast.success(
