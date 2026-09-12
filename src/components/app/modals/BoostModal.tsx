@@ -47,6 +47,7 @@ import {
   useSuperpowers,
   spendablePowers,
 } from '@/hooks/use-superpowers';
+import type { SuperPowerKey } from '@/lib/api/dehub/superpowers';
 import { waitForSignalFlareReceipt } from '@/lib/api/dehub/superpowers';
 
 interface BoostModalProps {
