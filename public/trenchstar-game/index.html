@@ -4750,6 +4750,7 @@ function buildBackdrop(id){
     new THREE.MeshBasicMaterial({map:tex,side:THREE.BackSide,fog:false}));
   skyMesh.position.y=SKY_Y;
   scene.add(skyMesh);
+  SCENE_ID=id;
   tryPhoto(id);
   buildCityRing(S);
 
@@ -4774,10 +4775,13 @@ SCENES.harbour={...SCENES.lair,label:'HARBOUR · BLUE HOUR',fog:0x15202a,fogD:0.
   clear:0x15202a,floor:0x141b22,rough:0.48,metal:0.38,grid:[0x29343b,0x19232b],gridOp:0.035,
   mirror:0x748592,lift:0,haze:0.08,az:0,city:null,
   lights:[0xb6d0dd,0xdacbb8,0xa0bacd],hemi:[0x9cb5c5,0x10151b,0.65],dust:0x81949f};
+SCENES.alpine={...SCENES.harbour,label:'ALPINE · FIRST LIGHT',fog:0x28353b,clear:0x28353b,
+  floor:0x242b2c,rough:0.62,metal:0.2,lights:[0xd9c9b1,0xc4d8df,0xc8d0c1],hemi:[0xc6d2d8,0x151b1b,0.75]};
 
 let SCENE_ID='harbour';
 try{SCENE_ID=localStorage.getItem('trenchstar.scene')||'harbour';}catch(e){}
 if(!SCENES[SCENE_ID])SCENE_ID='harbour';
+if(SCENE_ID==='lair')SCENE_ID='harbour';
 buildBackdrop(SCENE_ID);
 
 /* ============================ canvas painters ========================= */
@@ -13011,6 +13015,7 @@ const gfx=(()=>{
    so a headset session is a small step from here rather than a rewrite. */
 function tick(t){
   const dt=Math.min((t-lastT)/1000,0.1);lastT=t;frame++;
+  if(firstFrame&&document.body.classList.contains('ts-focused')&&!vr.on)return;
 
   /* Inside a session the pose is written by the headset every frame, so each
      of these would be arm-wrestling the player's own neck. The rig moves. */
