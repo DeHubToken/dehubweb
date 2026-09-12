@@ -894,6 +894,14 @@ export function usePostForm(
    * anyone's `src`.
    */
   const replaceImageFile = useCallback((index: number, file: File) => {
+    if (!file.type.startsWith('image/')) {
+      toast.error('Choose an image file');
+      return;
+    }
+    if (file.size > MEDIA_LIMITS.MAX_FILE_SIZE) {
+      toast.error(`${file.name} is too large — images are capped at ${Math.round(MEDIA_LIMITS.MAX_FILE_SIZE / (1024 * 1024))}MB`);
+      return;
+    }
     setMedia(prev => prev.map((m, i) => {
       if (i !== index) return m;
       if (m.preview?.startsWith('blob:')) URL.revokeObjectURL(m.preview);
