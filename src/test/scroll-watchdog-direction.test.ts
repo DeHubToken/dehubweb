@@ -30,6 +30,7 @@ vi.mock('@/lib/logger', () => ({
 }));
 
 let scrollTop = 0;
+let uninstall: () => void;
 vi.mock('@/lib/document-scroll', () => ({
   getDocumentScrollTop: () => scrollTop,
 }));
@@ -72,6 +73,7 @@ describe('scroll freeze watchdog', () => {
     document.body.style.cssText = '';
     document.body.innerHTML = '';
     makePageScrollable();
+    Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
     // jsdom has no elementFromPoint. Null is the honest answer for these cases:
     // nothing is covering the page, which is what makes the drag reportable.
     (document as unknown as { elementFromPoint: () => Element | null }).elementFromPoint = () => null;
@@ -90,10 +92,12 @@ describe('scroll freeze watchdog', () => {
     vi.useFakeTimers();
     vi.resetModules();
     const mod = await import('@/lib/scroll-freeze-watchdog');
-    mod.installScrollFreezeWatchdog();
+    uninstall = mod.installScrollFreezeWatchdog();
   });
 
   afterEach(() => {
+    uninstall();
+    vi.restoreAllMocks();
     vi.useRealTimers();
     document.body.style.cssText = '';
     document.body.innerHTML = '';
@@ -156,5 +160,93 @@ describe('scroll freeze watchdog', () => {
 
     expect(document.body.style.getPropertyValue('overflow')).toBe('hidden');
     expect(document.body.style.getPropertyValue('position')).toBe('fixed');
+  });
+
+  it('recovers an orphaned body lock on a desktop with no touch support', async () => {
+    uninstall();
+    const touchDescriptor = Object.getOwnPropertyDescriptor(window, 'ontouchstart');
+    const pointsDescriptor = Object.getOwnPropertyDescriptor(navigator, 'maxTouchPoints');
+    Reflect.deleteProperty(window, 'ontouchstart');
+    Object.defineProperty(navigator, 'maxTouchPoints', { value: 0, configurable: true });
+    try {
+      const mod = await import('@/lib/scroll-freeze-watchdog');
+      uninstall = mod.installScrollFreezeWatchdog();
+      document.body.style.overflowY = 'hidden';
+      document.body.style.pointerEvents = 'none';
+      vi.advanceTimersByTime(5000);
+      expect(document.body.style.overflowY).not.toBe('hidden');
+      expect(document.body.style.pointerEvents).not.toBe('none');
+      expect(REPORTS[0].meta.recovered).toBe(true);
+    } finally {
+      if (touchDescriptor) Object.defineProperty(window, 'ontouchstart', touchDescriptor);
+      if (pointsDescriptor) Object.defineProperty(navigator, 'maxTouchPoints', pointsDescriptor);
+      else Reflect.deleteProperty(navigator, 'maxTouchPoints');
+    }
+  });
+
+  it('preserves the lock while a real dialog is open', () => {
+    document.body.innerHTML = '<div role="dialog" data-state="open"></div>';
+    document.body.style.overflowY = 'hidden';
+    window.dispatchEvent(new WheelEvent('wheel', { deltaY: 120 }));
+    vi.advanceTimersByTime(6000);
+    expect(document.body.style.overflowY).toBe('hidden');
+    expect(messages()).toEqual([]);
+  });
+
+  it('reports a swallowed desktop wheel without unlocking unknown content', () => {
+    scrollTop = 900;
+    const event = new WheelEvent('wheel', { deltaY: 120, cancelable: true });
+    window.dispatchEvent(event);
+    event.preventDefault();
+    settle();
+    expect(messages()).toEqual(['A wheel gesture did not move the page']);
+    expect(REPORTS[0].meta.defaultPrevented).toBe(true);
+    expect(REPORTS[0].meta.recovered).toBe(false);
+  });
+
+  it('does not mistake delayed wheel movement for a freeze', () => {
+    window.dispatchEvent(new WheelEvent('wheel', { deltaY: 120 }));
+    scrollTop = 120;
+    settle();
+    expect(messages()).toEqual([]);
+  });
+
+  it('ignores wheel movement beyond page boundaries and pinch zoom', () => {
+    window.dispatchEvent(new WheelEvent('wheel', { deltaY: -120 }));
+    settle();
+    scrollTop = 2000;
+    window.dispatchEvent(new WheelEvent('wheel', { deltaY: 120 }));
+    settle();
+    scrollTop = 900;
+    window.dispatchEvent(new WheelEvent('wheel', { deltaY: 120, ctrlKey: true }));
+    settle();
+    expect(messages()).toEqual([]);
+  });
+
+  it('leaves nested scrolling to its own container', () => {
+    document.body.innerHTML = '<div style="overflow-y:auto"><span>Comments</span></div>';
+    const list = document.body.firstElementChild!;
+    Object.defineProperty(list, 'scrollHeight', { value: 1000 });
+    Object.defineProperty(list, 'clientHeight', { value: 300 });
+    list.firstElementChild!.dispatchEvent(new WheelEvent('wheel', { deltaY: 120, bubbles: true }));
+    settle();
+    expect(messages()).toEqual([]);
+  });
+
+  it('checks continuous wheel input without postponing forever', () => {
+    for (let i = 0; i < 6; i++) {
+      window.dispatchEvent(new WheelEvent('wheel', { deltaY: 120 }));
+      vi.advanceTimersByTime(100);
+    }
+    expect(messages()).toEqual(['A wheel gesture did not move the page']);
+  });
+
+  it('keeps recovering leaked locks after its three-report telemetry limit', () => {
+    for (let i = 0; i < 5; i++) {
+      document.body.style.overflowY = 'hidden';
+      vi.advanceTimersByTime(10000);
+      expect(document.body.style.overflowY).not.toBe('hidden');
+    }
+    expect(REPORTS).toHaveLength(3);
   });
 });
