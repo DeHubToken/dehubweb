@@ -166,15 +166,12 @@ function ImageSlide({
   // the card grows on load (CLS). Remembering the measured ratio per URL means
   // every LATER mount (tab switch, feed revisit, carousel re-render) reserves
   // the exact final height up front.
-  const [ratio, setRatio] = useState<number | undefined>(() => imageAspectRatioCache.get(img));
+  const [measurement, setMeasurement] = useState<{ img: string; ratio: number }>();
+  const ratio = measurement?.img === img ? measurement.ratio : imageAspectRatioCache.get(img);
   const slideRef = useRef<HTMLDivElement>(null);
   const [retainBitmap, setRetainBitmap] = useState(aboveFold);
-  // Slides are keyed by index, so the same mounted slide can receive a new
-  // image URL (post edit → refetch). Re-resolve instead of keeping the old
-  // image's ratio, which would letterbox/crop the replacement forever.
-  useEffect(() => {
-    setRatio(imageAspectRatioCache.get(img));
-  }, [img]);
+  // Resolve the ratio during render so a replaced image never paints with the
+  // previous image's dimensions or needs a second render just to reset them.
 
   useEffect(() => {
     if (aboveFold || typeof IntersectionObserver === 'undefined') {
@@ -243,7 +240,9 @@ function ImageSlide({
           if (el.naturalWidth > 0 && el.naturalHeight > 0) {
             const measured = el.naturalWidth / el.naturalHeight;
             cacheAspectRatio(img, measured);
-            setRatio(measured);
+            setMeasurement((previous) => previous?.img === img && previous.ratio === measured
+              ? previous
+              : { img, ratio: measured });
           }
         }}
         onError={(e) => {
