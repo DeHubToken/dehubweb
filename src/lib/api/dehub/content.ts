@@ -455,6 +455,20 @@ export async function replaceVideoFile(
   });
 }
 
+export function getPostImageAllowance(tokenId: number | string) {
+  return apiCall<{ imageLimit: number }>(`/api/nft/${tokenId}/image-allowance`);
+}
+
+export async function addPostImages(tokenId: number | string, files: File[]) {
+  const formData = new FormData();
+  files.forEach(file => formData.append('images', file));
+  const response = await authedUpload<{ result: boolean; data: { imageUrls: string[] } }>(
+    `/api/nft/${tokenId}/images`, formData,
+  );
+  if (!response.result || !Array.isArray(response.data?.imageUrls)) throw new Error('Could not add those images');
+  return response.data.imageUrls;
+}
+
 export async function replacePostImage(tokenId: number | string, index: number, file: File) {
   const formData = new FormData();
   formData.append('image', file);
