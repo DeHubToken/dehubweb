@@ -702,7 +702,8 @@ function getNotificationContent(
 
   switch (notification.type) {
     case 'like':
-      return notification.content || `${actorName} reacted to your post`;
+      return localizedNotificationContent({ ...notification, actorUsername: actorName }, tr)
+        ?? tr('notifications.likedPost', { name: actorName });
     case 'comment':
       return tr('notifications.commentedPost', { name: actorName });
     case 'comment_reply':
@@ -717,7 +718,8 @@ function getNotificationContent(
     case 'ppv_purchase':
       return tr('notifications.purchasedContent', { name: actorName });
     case 'following':
-      return tr('notifications.startedFollowing', { name: actorName });
+      return localizedNotificationContent({ ...notification, actorUsername: actorName }, tr)
+        ?? tr('notifications.startedFollowing', { name: actorName });
     case 'follow_request':
       return `${actorName} requested to follow you`;
     case 'video_milestone':
