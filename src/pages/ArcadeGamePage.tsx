@@ -27,6 +27,7 @@
  */
 
 import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTrenchstarHost } from '@/lib/trenchstar-host';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AlertTriangle, Gamepad2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -148,7 +149,15 @@ export default function ArcadeGamePage() {
   // Resolved once per game. Re-running buildUrl on a render would change the
   // iframe's src and restart a boot that can take the better part of a minute.
   // Same for the preflight, which costs a throwaway GL context each call.
-  const gameUrl = useMemo(() => game?.buildUrl() ?? '', [game]);
+  const gameUrl = useMemo(() => {
+    const raw=game?.buildUrl() ?? '';
+    if(game?.slug!=='trenchstar')return raw;
+    const url=new URL(raw,window.location.origin);
+    const params=new URLSearchParams(window.location.search);
+    for(const key of ['room','symbol','view'])if(params.has(key))url.searchParams.set(key,params.get(key)!);
+    return url.href;
+  }, [game]);
+  useTrenchstarHost(game?.slug==='trenchstar',frameRef);
   const cap = useMemo(() => game?.checkCapability() ?? { ok: true, reason: '', detail: '' }, [game]);
 
   const [ready, setReady] = useState(false);
