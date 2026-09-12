@@ -11,6 +11,7 @@ import { readContract } from '@/lib/contracts/aa-utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { Interface } from 'ethers';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { legacyWalletAddresses } from '@/lib/legacy-wallet-addresses';
 
 export interface UnstakeEvent {
   wallet: string;
@@ -162,12 +163,14 @@ export function useUserStakingData() {
 
       // Fetch on-chain balances, legacy contract stake, transfer-based stake
       // sums (both chains) + DB staking records in parallel
+      const legacyAddresses = await legacyWalletAddresses(walletAddress);
+
       const [
         bnbBalanceRaw,
         baseBalanceRaw,
         bnbEarnedRaw,
         bnbAllowance,
-        legacyPosition,
+        legacyPositions,
         bnbTransfers,
         baseTransfers,
         { data: stakingRecords },
@@ -176,7 +179,7 @@ export function useUserStakingData() {
         getUserDHBBalance(walletAddress, BASE_CHAIN_ID),
         getUserEarnedBNB(walletAddress),
         getStakingAllowance(walletAddress),
-        getUserLegacyStake(walletAddress),
+        Promise.all(legacyAddresses.map(address => getUserLegacyStake(address))),
         getUserStakingTransfers(walletAddress, BNB_CHAIN_ID),
         getUserStakingTransfers(walletAddress, BASE_CHAIN_ID),
         supabase
@@ -200,6 +203,13 @@ export function useUserStakingData() {
       }
       if (dbStaked < 0) dbStaked = 0;
 
+      // A pre-migration position may belong to the raw owner EOA while the
+      // current DeHub session uses its deterministic Safe (or vice versa).
+      // Both addresses are controlled by the same recovered wallet key.
+      const legacyPosition = legacyPositions.reduce(
+        (best, position) => position.amountRaw > best.amountRaw ? position : best,
+        { amountRaw: BigInt(0), unlockAt: 0 },
+      );
       const legacyStakedNum = parseFloat(fromWei(legacyPosition.amountRaw));
 
       let totalStakedNum: number;
