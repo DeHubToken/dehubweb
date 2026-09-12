@@ -265,7 +265,9 @@ export async function mintOnChainWithFee(
 
   await switchChain(chainId);
 
-  const amountWei = parseUnits(fee.amount.toFixed(fee.decimals), fee.decimals);
+    const { currentMintFeeRecipient } = await import('./mint-fee-recipient');
+    fee = { ...fee, recipient: await currentMintFeeRecipient(chainId) };
+    const amountWei = parseUnits(fee.amount.toFixed(fee.decimals), fee.decimals);
   const isV3 = params.sigVersion === 3 || isV3Chain(chainId);
 
   const mintData = isV3
