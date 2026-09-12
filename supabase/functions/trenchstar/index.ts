@@ -8,7 +8,7 @@ const db=()=>serviceClient();
 function checked<T>(r:{data:T;error:unknown}):T {if(r.error)throw new Error('Could not save or read this update. Please retry.');return r.data;}
 async function quotes():Promise<Record<string,number>> {
   const r=await fetch('https://data-api.binance.vision/api/v3/ticker/price',{signal:AbortSignal.timeout(8000)});
-  if(!r.ok)throw new Error('Live prices are unavailable. No practice order was placed.');
+  if(!r.ok)throw new Error('Live prices are unavailable. Refresh your portfolio before retrying.');
   const rows=await r.json();const out:Record<string,number>={};
   for(const s of SYMBOLS){const n=Number(rows.find((v:{symbol:string})=>v.symbol===s+'USDT')?.price);if(Number.isFinite(n)&&n>0)out[s]=n;}
   return out;
@@ -65,7 +65,15 @@ Deno.serve(async req=>{
       case 'delete-alert':if(!uuid(b.id))throw new Error('Invalid alert');checked(await d.from('trench_alerts').delete().eq('wallet',wallet).eq('id',b.id));return jsonResponse({ok:true});
       case 'paper':{
         const prices=await quotes();
-        const board=checked(await d.from('trench_paper').select('wallet,name,cash,holdings,peak,drawdown,updated_at').eq('week',week()).limit(1000))||[];
+        let query=d.from('trench_paper').select('wallet,name,cash,holdings,peak,drawdown,updated_at').eq('week',week());
+        if(b.scopeRoom){
+          if(!uuid(b.scopeRoom))throw new Error('Invalid room');
+          const membership=checked(await d.from('trench_members').select('wallet').eq('room',b.scopeRoom).eq('wallet',wallet).maybeSingle());
+          if(!membership)throw new Error('Join the room before viewing its leaderboard');
+          const peers=checked(await d.from('trench_members').select('wallet').eq('room',b.scopeRoom))||[];
+          query=query.in('wallet',peers.map(p=>p.wallet));
+        }
+        const board=checked(await query.limit(1000))||[];
         const ranked=board.map(v=>{const complete=Object.keys(v.holdings).every(s=>prices[s]);const equity=complete?Number(v.cash)+Object.entries(v.holdings).reduce((n,[s,q])=>n+Number(q)*prices[s],0):null;return {name:v.name,mine:v.wallet===wallet,equity,drawdown:Number(v.drawdown),returnPct:equity===null?null:(equity/100000-1)*100};}).sort((a,b)=>(b.equity??-1)-(a.equity??-1));
         return jsonResponse({week:week(),prices,book:board.find(v=>v.wallet===wallet)||null,board:ranked.slice(0,100),asOf:new Date().toISOString()});
       }
@@ -98,6 +106,8 @@ Deno.serve(async req=>{
     const host=room.host===wallet;
     if(b.action==='join-room'){
       if(!name)throw new Error('Choose a name for this room');
+      const count=await d.from('trench_members').select('wallet',{count:'exact',head:true}).eq('room',b.room).neq('wallet',wallet).gt('seen_at',new Date(Date.now()-30000).toISOString());
+      if(count.error)throw new Error('Could not check room capacity');if((count.count||0)>=12)throw new Error('This room is full. Try again when a seat opens.');
       checked(await d.from('trench_members').upsert({room:b.room,wallet,name,seen_at:new Date().toISOString()}));
     }
     const member=checked(await d.from('trench_members').select('*').eq('room',b.room).eq('wallet',wallet).maybeSingle());
