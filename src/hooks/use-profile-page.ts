@@ -104,6 +104,11 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   // immediately without waiting for the profile query to resolve first.
   const lookupIsAddress = !!(lookupUserId && /^0x[a-fA-F0-9]{40}$/i.test(lookupUserId));
   const contentUserId = apiProfile?.walletAddress ?? (lookupIsAddress ? lookupUserId : undefined);
+  const isOwnContent = !!(
+    contentUserId &&
+    currentWalletAddress &&
+    contentUserId.toLowerCase() === currentWalletAddress.toLowerCase()
+  );
 
   // Sort + search over this creator's own content. Both are server-side
   // (/api/feed takes sortBy/sortOrder/search alongside minter) — sorting only
@@ -160,6 +165,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     sortMode: contentSort,
     search: debouncedContentSearch,
     filters: appliedContentFilters,
+    includeOwnScheduled: isOwnContent,
   });
 
   // Prefetch ONLY page 2 in the background after first paint. The old

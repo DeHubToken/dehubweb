@@ -357,6 +357,8 @@ interface UseDeHubUserContentOptions {
   search?: string;
   /** Category / date / post type / access narrowing, all server-side. */
   filters?: ProfileContentFilters;
+  /** Use the authenticated creator endpoint so future scheduled posts are included. */
+  includeOwnScheduled?: boolean;
 }
 
 /**
@@ -372,13 +374,45 @@ export function useDeHubUserContent({
   sortMode = 'newest',
   search = '',
   filters = EMPTY_PROFILE_FILTERS,
+  includeOwnScheduled = false,
 }: UseDeHubUserContentOptions = {}) {
   const queryClient = useQueryClient();
   const trimmedSearch = search.trim();
   return useInfiniteQuery({
-    queryKey: ['dehub-user-content', userId, viewerAddress, sortMode, trimmedSearch, filters],
+    queryKey: ['dehub-user-content', userId, viewerAddress, sortMode, trimmedSearch, filters, includeOwnScheduled],
     queryFn: async ({ pageParam = 1 }) => {
       if (!userId) throw new Error('User ID (wallet address) is required');
+
+      // Public feeds must hide future posts, but the creator still needs a
+      // durable place to confirm what they just scheduled. The authenticated
+      // endpoint is deliberately the only list that includes those posts.
+      const isDefaultView =
+        sortMode === 'newest' &&
+        !trimmedSearch &&
+        countActiveProfileFilters(filters) === 0;
+      if (includeOwnScheduled && isDefaultView) {
+        const url = new URL('/api/myPosts', DEHUB_API_BASE);
+        url.searchParams.set('page', String(pageParam));
+        url.searchParams.set('limit', String(limit));
+        const token = getAuthToken();
+        const response = await fetch(url.toString(), {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        });
+        if (!response.ok) throw new Error(`My posts API error: ${response.status}`);
+        const json = await response.json();
+        const items = json.result || [];
+        mergeLiveCounts(queryClient, items);
+        return {
+          data: items,
+          page: pageParam,
+          has_more: json.pagination?.hasMore ?? false,
+          total: json.pagination?.totalCount ?? items.length,
+        };
+      }
 
       // Use /api/feed with minter parameter - the same API that powers the home feed
       const url = new URL('/api/feed', DEHUB_API_BASE);
