@@ -364,24 +364,6 @@ function ImageCarousel({
         </>
       )}
       
-      {/* Dot indicators - only show if multiple images */}
-      {hasMultiple && (
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-          {images.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => scrollToImage(idx)}
-              className={`w-1.5 h-1.5 rounded-full transition-all ${
-                idx === currentIndex 
-                  ? 'bg-white w-2' 
-                  : 'bg-white/50 hover:bg-white/70'
-              }`}
-              aria-label={`Go to image ${idx + 1}`}
-            />
-          ))}
-        </div>
-      )}
-      
     </div>
   );
 }
