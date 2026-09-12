@@ -324,7 +324,10 @@ function ImageCarousel({
         {images.map((img, idx) => (
           <div
             key={idx}
-            className={cn('flex-[0_0_100%] min-w-0', hasMultiple && 'lg:flex-[0_0_86%]')}
+            className={cn(
+              'min-w-0',
+              hasMultiple ? 'flex-none max-w-full' : 'flex-[0_0_100%]',
+            )}
           >
             <ImageSlide
               img={img}
