@@ -382,7 +382,7 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // failure would look exactly like a machine with no headset rather than
     // like a withheld permission. It works standalone either way, which is
     // precisely what makes this cheap to miss.
-    allow: 'fullscreen; autoplay; xr-spatial-tracking',
+    allow: 'fullscreen; autoplay; xr-spatial-tracking; microphone',
     // Ours, in this repo, and the only frame that gets same-origin — the desk
     // monitors are the real DeHub pages and dehub.io answers SAMEORIGIN, which
     // an opaque parent can never satisfy. See FIRST_PARTY_SANDBOX.
