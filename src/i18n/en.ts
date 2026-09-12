@@ -466,7 +466,7 @@ export const en = {
     precisionStrike: '8) Precision Strike',
     precisionStrikeDesc: 'Reach the people who follow an account you name. Unlocks at Dolphin. Live now.',
     harpoon: '9) Harpoon',
-    harpoonDesc: 'Reach chosen badge tiers only — whales, sharks, or everyone below. Unlocks at Tiger Shark. Live now.',
+    harpoonDesc: 'Notify every holder in the badge tiers you choose about one post. Unlocks at Tiger Shark. Live now.',
     superPowersMore2: 'All twelve powers are live and listed in the app. Comment Anchor holds your comment at the top of somebody else’s thread. Signal Flare sends one notification to every account that follows you. Flak Jacket makes a post immune to downvote burial while it runs. Team up lets as many as eight accounts combine their wallet power, so every member wears the badge their pooled balance unlocks. Front Row puts the Stage you are hosting at the top of the stages rail. Deep Current gives one of your boosts to somebody else’s post.',
     superPowersMoreV2: 'All twelve powers are live and listed in the app. Comment Anchor holds your comment at the top of somebody else’s thread. Signal Flare sends one notification to every account that follows you. Flak Jacket makes a post immune to downvote burial while it runs. Team up lets as many as eight accounts combine their wallet power, so every member wears the badge their pooled balance unlocks. Front Row puts the Stage you are hosting at the top of the stages rail. Deep Current gives one of your boosts to somebody else’s post.',
     superPowersLink: 'See your allowance and the full ladder',
