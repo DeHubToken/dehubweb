@@ -1944,7 +1944,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           <button
             type="button"
             aria-label={t('drawers.bountyTitle')}
-            className={cn("absolute top-2 z-10 flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors", video.isAudio ? "right-12" : "left-2")}
+            className="absolute top-2 left-2 z-10 flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
             onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
           >
             <Gift className="w-3 h-3 text-white" />
