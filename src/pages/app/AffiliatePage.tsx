@@ -251,17 +251,17 @@ export default function AffiliatePage() {
               <div className="grid gap-5 lg:grid-cols-2">
                 <div className="space-y-4">
                   <LabeledField label="Headline" count={`${landing.headline.length}/80`}>
-                    <Input value={landing.headline} maxLength={80} onChange={(e) => setLanding((v) => ({ ...v, headline: e.target.value }))} placeholder={DEFAULT_AFFILIATE_LANDING.headline} />
+                    <Input className="border-white/15 !bg-black/50 !text-white placeholder:text-white/45" value={landing.headline} maxLength={80} onChange={(e) => setLanding((v) => ({ ...v, headline: e.target.value }))} placeholder={DEFAULT_AFFILIATE_LANDING.headline} />
                   </LabeledField>
                   <LabeledField label="Welcome message" count={`${landing.message.length}/280`}>
-                    <textarea className="flex min-h-28 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-white placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" value={landing.message} maxLength={280} onChange={(e) => setLanding((v) => ({ ...v, message: e.target.value }))} />
+                    <textarea className="flex min-h-28 w-full rounded-md border border-white/15 !bg-black/50 px-3 py-2 text-sm !text-white placeholder:text-white/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40" value={landing.message} maxLength={280} onChange={(e) => setLanding((v) => ({ ...v, message: e.target.value }))} />
                   </LabeledField>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <LabeledField label="Button text" count={`${landing.ctaLabel.length}/32`}>
-                      <Input value={landing.ctaLabel} maxLength={32} onChange={(e) => setLanding((v) => ({ ...v, ctaLabel: e.target.value }))} />
+                      <Input className="border-white/15 !bg-black/50 !text-white placeholder:text-white/45" value={landing.ctaLabel} maxLength={32} onChange={(e) => setLanding((v) => ({ ...v, ctaLabel: e.target.value }))} />
                     </LabeledField>
                     <LabeledField label="DeHub destination">
-                      <Input value={landing.destination} maxLength={200} onChange={(e) => setLanding((v) => ({ ...v, destination: e.target.value }))} placeholder="/app" />
+                      <Input className="border-white/15 !bg-black/50 !text-white placeholder:text-white/45" value={landing.destination} maxLength={200} onChange={(e) => setLanding((v) => ({ ...v, destination: e.target.value }))} placeholder="/app" />
                     </LabeledField>
                   </div>
                   <div className="flex gap-2">
