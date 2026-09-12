@@ -4,13 +4,14 @@ export const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/
 // DeHub API base URL
 export const DEHUB_API_BASE = "https://api.dehub.io";
 
-// JSON API traffic uses the apex worker as a relay. Some mobile networks can
-// reach dehub.io while connections to the api.dehub.io hostname stall before
-// they ever reach the backend. Keeping the alternate path on the already-
-// loaded origin removes that hostname as a single point of failure. Uploads
-// still use DEHUB_API_BASE directly below so large bodies do not cross Worker
-// limits.
-export const DEHUB_API_REQUEST_BASE = "https://dehub.io/_api";
+// Keep API access independent of the website's DNS-selected edge address.
+// The relay remains a fallback for reads, never a replay path for mutations.
+export const DEHUB_API_REQUEST_BASE = DEHUB_API_BASE;
+
+function apiRelayBase(): string {
+  return typeof window !== 'undefined' && window.location.hostname === 'staging.dehub.io'
+    ? 'https://staging.dehub.io/_api' : 'https://dehub.io/_api';
+}
 
 function apiRequestUrl(endpoint: string): string {
   return `${DEHUB_API_REQUEST_BASE}/${endpoint.replace(/^\/+/, '')}`;
@@ -491,27 +492,30 @@ export async function apiCall<T>(
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const controller = new AbortController();
-  let timedOut = false;
-  const timer = setTimeout(() => {
-    timedOut = true;
-    controller.abort();
-  }, timeoutMs);
-
-  let response: Response;
-  try {
-    response = await fetch(url.toString(), {
+  const attempt = async (target: string): Promise<Response> => {
+    const controller = new AbortController();
+    let timedOut = false;
+    const timer = setTimeout(() => { timedOut = true; controller.abort(); }, timeoutMs);
+    try {
+      return await fetch(target, {
       method,
       headers,
       body: body ? JSON.stringify(body) : undefined,
       cache: 'no-store',
       signal: controller.signal,
-    });
-  } catch (error) {
-    if (timedOut) throw new RequestTimeoutError(url.toString(), timeoutMs);
-    throw error;
-  } finally {
-    clearTimeout(timer);
+      });
+    } catch (error) {
+      if (timedOut) throw new RequestTimeoutError(target, timeoutMs);
+      throw error;
+    } finally { clearTimeout(timer); }
+  };
+  let response: Response;
+  try { response = await attempt(url.toString()); }
+  catch (error) {
+    // HTTP responses, including 401/429/5xx, are handled below. Only a failed
+    // transport triggers this alternate read; POST/PUT/PATCH/DELETE never replay.
+    if (method !== 'GET') throw error;
+    response = await attempt(`${apiRelayBase()}${url.pathname}${url.search}`);
   }
 
   if (!response.ok) {
