@@ -190,7 +190,7 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column glass className="px-4 pb-6">
+      <DrawerContent scrollable column glass className="px-4 pb-6">
         <DrawerHeader className="pb-2">
           <DrawerTitle className="text-white text-lg flex items-center gap-2">
             <ThemedIcon icon="superpowers" alt="" className="w-8 h-8 object-contain" />
