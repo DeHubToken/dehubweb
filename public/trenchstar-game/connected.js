@@ -1,3 +1,4 @@
+import { mountIcons } from './icons.js';
 export function mountConnected(T){
   const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const symbols=['BTC','ETH','SOL','XRP','DOGE','ADA','AVAX','LINK','SUI','PEPE','WIF','BONK','TON','NEAR','ARB','OP','INJ','FET','SEI','JUP'];
@@ -108,5 +109,6 @@ export function mountConnected(T){
   $('#tsNav').onclick=e=>{const tab=e.target.dataset.tab;if(tab==='focus'){close();setFocus(!focusView);}else if(tab==='desks')openDesks();else if(tab==='alerts')openAlerts();else if(tab==='paper')openPaper();else if(tab==='room')openRoom();};
   $('#tsRoomPill').onclick=()=>openRoom();
   setFocus(params.get('view')==='focus'||params.has('symbol')||read('view',null)==='focus'||matchMedia('(max-width:700px)').matches);
+  mountIcons();
   if(params.has('room'))openRoom();
 }

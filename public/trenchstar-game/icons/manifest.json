@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "viewBox": "0 0 64 64",
+  "icons": [
+    "focus",
+    "desk",
+    "room",
+    "trophy",
+    "bell",
+    "wallet",
+    "search",
+    "avatar",
+    "exit",
+    "add",
+    "cast",
+    "settings",
+    "environment",
+    "star",
+    "close",
+    "save",
+    "trash",
+    "mic",
+    "link",
+    "play",
+    "volume",
+    "buy",
+    "sell"
+  ]
+}
