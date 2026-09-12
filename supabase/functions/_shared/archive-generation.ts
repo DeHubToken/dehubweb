@@ -23,14 +23,14 @@ export async function archiveGeneration(wallet: string, id: string, metadata: Re
     if (Number(response.headers.get('content-length')) > limit) { await response.body?.cancel(); throw new Error('Save large media through the client'); }
     const reader = response.body?.getReader();
     if (!reader) throw new Error('Provider returned no media');
-    const chunks: Uint8Array[] = [];
+    const chunks: ArrayBuffer[] = [];
     let bytes = 0;
     for (;;) {
       const part = await reader.read();
       if (part.done) break;
       bytes += part.value.byteLength;
       if (bytes > limit) { await reader.cancel(); throw new Error('Save large media through the client'); }
-      chunks.push(part.value);
+      chunks.push(Uint8Array.from(part.value).buffer);
     }
     const blob = new Blob(chunks, { type: response.headers.get('content-type') || 'application/octet-stream' });
     if (!blob.size || blob.size > 524288000) throw new Error('Generated media exceeds the storage limit');
