@@ -16,6 +16,7 @@ import {
   Mail,
   MessageSquare,
   Radio,
+  Rocket,
   Star,
   Users,
   Wand2,
@@ -130,6 +131,7 @@ const GLYPHS: ReadonlyArray<readonly [string, LucideIcon]> = [
   // Assistant. Sparkles is the closest stroked equivalent to the glossy star.
   ['ai-sparkle-icon', Sparkles],
   ['ai-star-icon', Sparkles],
+  ['rocket.png', Rocket],
 
   // The prompt landing's wand. Not a "-3d-icon" asset, but the same glossy
   // treatment and the same problem under War.
