@@ -243,7 +243,7 @@ const tools: Tool[] = [
 export default function CreatorPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, openLoginModal } = useAuth();
   const [activeCategory, setActiveCategory] = useState<typeof categories[number]>('All');
   const [activeNav, setActiveNav] = useState<typeof navItems[number]>('Explore');
   const [bannerDismissed, setBannerDismissed] = useState(false);
@@ -390,7 +390,7 @@ export default function CreatorPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => navigate('/app')}
+                  onClick={() => isAuthenticated ? navigate('/app') : openLoginModal()}
                   className="rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/15"
                   style={{ color: accent }}
                 >
@@ -398,7 +398,7 @@ export default function CreatorPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => navigate('/app')}
+                  onClick={() => isAuthenticated ? navigate('/app') : openLoginModal()}
                   className="rounded-lg px-4 py-2 text-sm font-bold text-black hover:brightness-95"
                   style={metallicStyle}
                 >
