@@ -98,7 +98,7 @@ export function FolderBar() {
 export function FolderPicker({ itemId }: { itemId: string }) {
   const { t } = useTranslation();
   const folders = useCreatorFolderStore((s) => s.folders);
-  const memberOf = useCreatorFolderStore((s) => s.itemFolderMap[itemId] ?? []);
+  const memberOf = useCreatorFolderStore((s) => s.itemFolderMap[itemId]) ?? [];
   const assign = useCreatorFolderStore((s) => s.assignItemsToFolder);
   const unassign = useCreatorFolderStore((s) => s.removeItemsFromFolder);
   const createFolder = useCreatorFolderStore((s) => s.createFolder);
