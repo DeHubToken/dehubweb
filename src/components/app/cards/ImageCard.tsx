@@ -20,7 +20,7 @@ import { stripAssetRefs } from '@/lib/asset-refs';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Pencil, Star } from 'lucide-react';
+import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, Zap, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Pencil, Star } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
@@ -808,7 +808,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
               className="text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all disabled:opacity-40"
               aria-label={t('postOptions.boostPost')}
             >
-              <ThemedIcon icon="superpowers" alt="" className="w-[23.5px] h-[23.5px] object-contain" />
+              <Zap className="w-[23.5px] h-[23.5px]" />
             </button>
           )}
           <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
