@@ -13,10 +13,12 @@
 import { supabase } from '@/integrations/supabase/client';
 import { invokeAi, dehubAuthHeaders } from '@/lib/ai-invoke';
 import { forgetPayment } from '@/lib/ai-payment';
+import { ensureFreshToken } from '@/lib/api/dehub/core';
 
 export type GenerationKind = 'image' | 'video' | 'audio' | 'model3d';
 
 export interface ImageRequest {
+  clientJobId?: string;
   prompt: string;
   model: string;
   /** Data URL or https URL of an image to edit / use as reference. */
@@ -28,6 +30,7 @@ export interface ImageRequest {
 }
 
 export interface VideoRequest {
+  clientJobId?: string;
   prompt: string;
   model: string;
   sourceImage?: string;
@@ -98,6 +101,7 @@ export interface SfxRequest {
 }
 
 export interface MusicRequest {
+  clientJobId?: string;
   task: 'music';
   prompt: string;
   lengthSeconds: number;
@@ -175,6 +179,7 @@ export interface AudioTaskResult {
 }
 
 export interface Model3dRequest {
+  clientJobId?: string;
   /** Optional for the image-only models, required for the text path. */
   prompt?: string;
   model: string;
@@ -378,6 +383,7 @@ export async function generateImage(
 
   const res = await invokeAi('generate-image', {
     body: {
+      clientJobId: req.clientJobId,
       prompt: req.prompt,
       model: req.model,
       ...(sourceImage ? { sourceImage } : {}),
@@ -415,6 +421,7 @@ export async function generateVideo(
 
   const start = await invokeAi('generate-video', {
     body: {
+      clientJobId: req.clientJobId,
       prompt: req.prompt,
       model: req.model,
       duration: `${req.duration ?? 5}s`,
@@ -522,11 +529,12 @@ async function pollRender(
           videoUrl?: string;
           modelUrl?: string;
           previewImageUrl?: string;
+          paymentRestored?: boolean;
           error?: string;
         }
       | null;
 
-    if (status?.status === 'failed') throw new Error(status.error || 'The render failed');
+    if (status && ['failed', 'canceled', 'cancelled'].includes(status.status ?? '')) throw new Error((status.error || 'The render failed') + (status.paymentRestored ? '. Your payment is available for another generation.' : ''));
     if (status?.status === 'succeeded') {
       if (status.previewImageUrl) handlers.onPreview?.(status.previewImageUrl);
       const url = status[config.resultKey];
@@ -676,6 +684,7 @@ export async function generateAudio(
 
 /** Supabase auth headers. Falls back to the anon key when nobody is signed in. */
 async function functionHeaders(): Promise<Record<string, string>> {
+  await ensureFreshToken();
   const { data: session } = await supabase.auth.getSession();
   const token = session?.session?.access_token ?? SUPABASE_ANON_KEY;
   return {
@@ -898,7 +907,8 @@ export async function runAudioTask(
         callAudioFunction(
           'elevenlabs-music',
           {
-            prompt: req.prompt,
+            clientJobId: req.clientJobId,
+      prompt: req.prompt,
             lengthSeconds: req.lengthSeconds,
             instrumental: req.instrumental,
             outputFormat: req.outputFormat,

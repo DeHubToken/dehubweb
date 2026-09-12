@@ -14,6 +14,7 @@
 // x-dehub-token, which chargeForJob requires and the browser will not send
 // unless the preflight says they are allowed. A local copy silently drops them.
 import { corsHeaders, rateLimitByIp } from '../_shared/auth.ts';
+import { recordGeneration, settleGeneration, generationTicket } from '../_shared/generation-jobs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 
 type Mode = 'text-to-3d' | 'image-to-3d';
@@ -285,7 +286,9 @@ Deno.serve(async (req) => {
         windowMs: 60 * 60 * 1000,
       });
       if (pollLimited) return pollLimited;
-      return await handleStatusCheck(body.predictionId, body.falAppId);
+      const ticket = await generationTicket('generate-3d', body.predictionId);
+      if (ticket) body.falAppId = ticket.provider_app;
+      return await settleGeneration('generate-3d', body.predictionId, await handleStatusCheck(body.predictionId, body.falAppId));
     }
 
     // ─── New generation ───
@@ -348,9 +351,9 @@ Deno.serve(async (req) => {
       falAppId: appId,
     };
 
-    return new Response(JSON.stringify(response), {
+    return await recordGeneration(charged, new Response(JSON.stringify(response), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    }));
   } catch (error) {
     console.error('Error in generate-3d:', error);
     const message = error instanceof Error ? error.message : 'Unknown error';
