@@ -78,7 +78,7 @@ export function SegmentMarkerDrawer({ open, onOpenChange, tokenId, getCurrentTim
     <Drawer open={open} onOpenChange={onOpenChange}>
       {/* No overlay dim and no modal lock: the point is to watch the video
           underneath while marking where the sponsor read ends. */}
-      <DrawerContent column glass className="px-4 pb-6">
+      <DrawerContent scrollable column glass className="px-4 pb-6">
         <DrawerHeader className="pb-2">
           <DrawerTitle className="text-white text-lg">Skippable sections</DrawerTitle>
         </DrawerHeader>

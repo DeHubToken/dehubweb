@@ -272,8 +272,8 @@ const COLUMN_CLASS =
 
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean; hideHandle?: boolean; noOverlay?: boolean; overlayClassName?: string; column?: boolean }
->(({ className, children, glass = false, hideHandle = true, noOverlay = false, overlayClassName, column = false, onPointerDownOutside, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean; hideHandle?: boolean; noOverlay?: boolean; overlayClassName?: string; column?: boolean; scrollable?: boolean }
+>(({ className, children, glass = false, hideHandle = true, noOverlay = false, overlayClassName, column = false, scrollable = false, onPointerDownOutside, ...props }, ref) => {
   const rootMounted = React.useContext(DrawerRootMounted);
   // No Root above us — this sheet is dormant (or the content escaped its
   // Drawer entirely). Render nothing rather than portalling into no Dialog.
@@ -326,7 +326,13 @@ const DrawerContent = React.forwardRef<
           glass ? "bg-white/40" : "bg-muted"
         )} />
       )}
-      {children}
+      {scrollable ? (
+        /* Scroll inside the drawer: vaul's root has touch-action:none and an
+           offscreen ::after background, neither belongs in a native scroller. */
+        <div className="min-h-0 flex-auto overflow-y-auto [touch-action:pan-y]">
+          {children}
+        </div>
+      ) : children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
   );
