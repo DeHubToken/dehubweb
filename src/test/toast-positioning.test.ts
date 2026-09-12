@@ -15,8 +15,10 @@ describe('desktop toast positioning', () => {
   });
 
   it('keeps loading indicators and their status on one row', () => {
-    expect(TOAST_CLASSES).toContain('group-[[data-type=loading]]:flex-row');
-    expect(TOAST_CLASSES).toContain('group-[[data-type=loading]]:items-center');
+    expect(TOAST_CLASSES).toContain('[&[data-type=loading]]:flex-row');
+    expect(TOAST_CLASSES).toContain('[&[data-type=loading]]:items-center');
+    expect(TOAST_CLASSES).toContain('[&[data-type=loading]_[data-title]]:whitespace-nowrap');
+    expect(TOAST_CLASSES).not.toContain('group-[[data-type=loading]]');
   });
 
   it('only applies the app-column anchor to centered toaster groups', () => {
