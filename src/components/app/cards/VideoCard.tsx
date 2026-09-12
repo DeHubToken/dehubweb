@@ -356,6 +356,15 @@ function MobileCreatorInfo({
           )}
           
           <div className="flex items-start gap-0.5">
+            {onBoostClick && (
+              <button
+                onClick={onBoostClick}
+                className="mr-[0.8px] w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
+                aria-label={t('postOptions.boostPost')}
+              >
+                <Zap className="w-[23.5px] h-[23.5px]" />
+              </button>
+            )}
             <button
               onClick={onAIClick}
               className="w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
@@ -363,15 +372,6 @@ function MobileCreatorInfo({
             >
               <Sparkles className="w-[23.5px] h-[23.5px]" />
             </button>
-            {onBoostClick && (
-              <button
-                onClick={onBoostClick}
-                className="w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
-                aria-label={t('postOptions.boostPost')}
-              >
-                <Zap className="w-[23.5px] h-[23.5px]" />
-              </button>
-            )}
             <button aria-label="Post options" 
               onClick={onMenuClick}
               className="w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
@@ -1569,6 +1569,17 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             badgeBalance={video.creatorBadgeBalance}
           />
           <div className="flex items-center gap-1">
+            {isOwnPost && (
+              <motion.button
+                onClick={() => setShowBoostModal(true)}
+                className="mr-[1.6px] text-zinc-400 hover:text-white transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label={t('postOptions.boostPost')}
+              >
+                <Zap className="w-[23.5px] h-[23.5px]" />
+              </motion.button>
+            )}
             <motion.button
               onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
               className="text-zinc-400 hover:text-white transition-colors"
@@ -1578,17 +1589,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             >
               <Sparkles className="w-[23.5px] h-[23.5px]" />
             </motion.button>
-            {isOwnPost && (
-              <motion.button
-                onClick={() => setShowBoostModal(true)}
-                className="text-zinc-400 hover:text-white transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                aria-label={t('postOptions.boostPost')}
-              >
-                <Zap className="w-[23.5px] h-[23.5px]" />
-              </motion.button>
-            )}
             {/* Plain button, not DrawerTrigger — see PostCard: a trigger pins
                 vaul's Root (and its window scroll listener) into every card.
                 The sheet itself is mounted once at the card root and shared
@@ -2151,6 +2151,17 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             </Avatar>
           </button>
           <div className="flex items-center gap-1">
+            {isOwnPost && (
+              <motion.button
+                onClick={(e) => { e.stopPropagation(); setShowBoostModal(true); }}
+                className="mr-[1.6px] text-zinc-400 hover:text-white transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label={t('postOptions.boostPost')}
+              >
+                <Zap className="w-4 h-4" />
+              </motion.button>
+            )}
             <motion.button
               onClick={(e) => { e.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
               className="text-zinc-400 hover:text-white transition-colors"
@@ -2160,17 +2171,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             >
               <Sparkles className="w-4 h-4" />
             </motion.button>
-            {isOwnPost && (
-              <motion.button
-                onClick={(e) => { e.stopPropagation(); setShowBoostModal(true); }}
-                className="text-zinc-400 hover:text-white transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                aria-label={t('postOptions.boostPost')}
-              >
-                <Zap className="w-4 h-4" />
-              </motion.button>
-            )}
             <button 
               onClick={(e) => { e.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
               className="text-zinc-400 hover:text-white transition-colors"

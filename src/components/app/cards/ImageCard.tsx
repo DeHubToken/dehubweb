@@ -774,6 +774,16 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           badgeBalance={post.creatorBadgeBalance}
         />
         <div className="flex items-center gap-1">
+          {isOwnPost && (
+            <button
+              onClick={() => setShowBoostModal(true)}
+              disabled={!postTokenId}
+              className="mr-[1.6px] text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all disabled:opacity-40"
+              aria-label={t('postOptions.boostPost')}
+            >
+              <Zap className="w-[23.5px] h-[23.5px]" />
+            </button>
+          )}
           <button
             onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
             className="text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all"
@@ -781,16 +791,6 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           >
             <Sparkles className="w-[23.5px] h-[23.5px]" />
           </button>
-          {isOwnPost && (
-            <button
-              onClick={() => setShowBoostModal(true)}
-              disabled={!postTokenId}
-              className="text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all disabled:opacity-40"
-              aria-label={t('postOptions.boostPost')}
-            >
-              <Zap className="w-[23.5px] h-[23.5px]" />
-            </button>
-          )}
           <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
             {/* State-driven, not DrawerTrigger — see PostCard: a trigger pins
                 vaul's Root (and its window scroll listener) into every card. */}

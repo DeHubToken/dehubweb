@@ -114,18 +114,15 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
     [status, postInfo?.createdAt, isOwnPost],
   );
 
-  // Default to the first one they can actually spend, so the common case is
-  // one tap. Re-runs when the list arrives, and resets between openings.
+  // Clear the choice on close so every opening starts neutral and the user
+  // explicitly picks which power to spend.
   useEffect(() => {
     if (!open) {
       setChosen(null);
       setTargetAccount('');
       setTargetTiers([]);
-      return;
     }
-    if (chosen) return;
-    setChosen(powers.find(p => p.enabled)?.key ?? powers[0]?.key ?? null);
-  }, [open, powers, chosen]);
+  }, [open]);
 
   const active = powers.find(p => p.key === chosen);
   const numericTokenId = Number(tokenId);
