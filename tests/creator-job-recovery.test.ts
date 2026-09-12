@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => ({ job: null as any, update: vi.fn(), rpc: vi.fn(), archive: vi.fn() }));
-vi.mock('../../supabase/functions/_shared/auth.ts', () => ({ serviceClient: () => ({
+vi.mock('../supabase/functions/_shared/auth.ts', () => ({ serviceClient: () => ({
   rpc: mocks.rpc,
   from: () => ({ select: () => { const query: any = { eq: () => query, maybeSingle: async () => ({ data: mocks.job, error: null }) }; return query; },
     update: (value: unknown) => { mocks.update(value); return { eq: async () => ({ error: null }) }; } }),
 }) }));
-vi.mock('../../supabase/functions/_shared/archive-generation.ts', () => ({ archiveGeneration: mocks.archive }));
-import { recordGeneration, settleGeneration, retryGenerationSave } from '../../supabase/functions/_shared/generation-jobs';
+vi.mock('../supabase/functions/_shared/archive-generation.ts', () => ({ archiveGeneration: mocks.archive }));
+import { recordGeneration, settleGeneration, retryGenerationSave } from '../supabase/functions/_shared/generation-jobs';
 const response = (body: unknown) => new Response(JSON.stringify(body), { headers: { 'Content-Type': 'application/json' } });
 beforeEach(() => {
   vi.clearAllMocks();
