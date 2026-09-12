@@ -3004,7 +3004,17 @@ export async function proxyApiRequest(request) {
   }
 }
 
+export function canonicalOriginRequest(request) {
+  const target = new URL(request.url);
+  // The direct gateway uses a separate upstream DNS name to avoid a loop
+  // after the public apex moves. This affects URL semantics, not access rights.
+  if (target.hostname !== 'origin.dehub.io' || request.headers.get('X-DeHub-Public-Host') !== 'dehub.io') return request;
+  target.hostname = 'dehub.io';
+  return new Request(target, request);
+}
+
 async function handleRequest(request, env) {
+  request = canonicalOriginRequest(request);
   const url = new URL(request.url);
   const pathname = url.pathname;
 
