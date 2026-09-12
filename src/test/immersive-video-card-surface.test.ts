@@ -52,6 +52,6 @@ describe('immersive video card — the wrapper draws no surface of its own', () 
     // [data-media-full] is exempted by name from every net precisely so it can
     // keep a dark surround behind a video that does not fill the frame. Only the
     // wrapper around it lost its fill.
-    expect(VIDEO_CARD).toMatch(/data-media-full\s+className=\{`relative bg-black/);
+    expect(VIDEO_CARD).toMatch(/data-media-full\s+className=\{`bg-black/);
   });
 });
