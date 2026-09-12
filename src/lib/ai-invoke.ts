@@ -14,6 +14,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub';
+import { ensureFreshToken } from '@/lib/api/dehub/core';
 import { forgetPayment } from '@/lib/ai-payment';
 
 /** Headers the paid AI functions authenticate against. Empty when signed out. */
@@ -50,6 +51,7 @@ export async function invokeAi<T = any>(
   name: string,
   options: { body?: unknown; headers?: Record<string, string> } = {},
 ) {
+  await ensureFreshToken();
   const result = await supabase.functions.invoke<T>(name, {
     ...options,
     headers: { ...dehubAuthHeaders(), ...options.headers },

@@ -38,6 +38,8 @@ import {
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
+import { useJobQuote, formatDhb } from '@/hooks/use-ai-quote';
+import { apiCall } from '@/lib/api/dehub/core';
 import {
   IMAGE_MODELS,
   IMAGE_MODEL_OPTIONS,
@@ -1046,6 +1048,16 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     [activeAudioTask, audioTask, musicSeconds, audioFile],
   );
 
+  const generationQuote = useJobQuote(mode === 'audio'
+    ? activeAudioTask.paid && activeAudioTask.quoteModelId ? { kind: 'tool', modelId: activeAudioTask.quoteModelId, quantity: audioUnits } : null
+    : mode === 'video' ? { kind: 'video', modelId: videoModel, durationSeconds: duration }
+    : mode === '3d' ? { kind: 'model3d', modelId: model3dModel, quality: 'standard' }
+    : { kind: 'image', modelId: imageModel, quantity: batch });
+  const priceLabel = mode === 'audio' && !activeAudioTask.paid ? 'Free · rate limits apply'
+    : generationQuote.isLoading ? 'Checking price…'
+    : generationQuote.error ? 'Price unavailable — retry before paying'
+    : `${formatDhb(generationQuote.priceDhb)} DHB · USD ${generationQuote.priceUsd.toFixed(3)}${mode === '3d' ? ' · standard texture' : ''}`;
+
   const audioQuantityLabel = useMemo(() => {
     if (audioTask === 'music') return `${musicSeconds}s track`;
     const seconds = audioFile?.seconds;
@@ -1058,8 +1070,8 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   /**
    * Queue the chosen audio task.
    *
-   * Called directly for the six free tools, and by the paywall's onConfirm for
-   * the three paid ones. Every setting was chosen before the transfer, so the
+   * Called directly for free tools, and by the paywall's onConfirm for
+   * music. Every setting was chosen before the transfer, so the
    * only thing the modal hands back is the hash of the payment it took — which
    * the generation function needs in order to verify it on chain.
    */
@@ -1184,6 +1196,12 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     }
     if (blockingIssue) {
       toast.error(blockingIssue);
+      return;
+    }
+    try {
+      await apiCall('/api/auth/verify', { requiresAuth: true });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Could not verify your session.');
       return;
     }
     if (mode === 'image') {
@@ -2021,6 +2039,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                 {generateButton()}
               </div>
 
+              <p aria-live="polite" className="mt-2 px-1 text-[12px] text-white/65">{priceLabel}</p>
               {blockingIssue && (
                 <p id="studio-blocking-reason" className="mt-2 px-1 text-[12px] text-white/45">
                   {blockingIssue}
@@ -2109,8 +2128,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
           />
         )}
 
-        {/* Only ever opened for music, the voice changer and dubbing — the
-            other six tools call runAudio directly. */}
+        {/* Only music requires the payment dialog; other audio tools run directly. */}
         <AudioPaywallModal
           key={audioPaywallOpen ? 'audio-open' : `audio-${surfaceEpoch}`}
           open={audioPaywallOpen}

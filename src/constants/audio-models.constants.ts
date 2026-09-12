@@ -24,9 +24,8 @@
  * ── Why most tasks are free ──────────────────────────────────────────────────
  * The voiceover in /editor has always been free, and a two-second line of
  * speech costs a fraction of a cent — putting an on-chain transfer in front of
- * it would cost more in friction than it recovers. Only the three tasks that
- * bill real money per run (music, voice changer, dubbing) go through the DHB
- * paywall. `paid` is the single source of truth for that split; the composer
+ * it would cost more in friction than it recovers. Music goes through the DHB paywall. Other audio tools follow the
+ * authenticated, rate-limited free endpoints. `paid` is the single source of truth for that split; the composer
  * reads it rather than hard-coding a list.
  */
 
@@ -211,7 +210,7 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
     mediaAccept: 'audio/*',
     usesVoice: true,
     output: 'audio',
-    paid: true,
+    paid: false,
     baseCostUsd: 0.06,
     meteredBy: 'per-minute',
     typicalDuration: '10-40s',
@@ -232,7 +231,7 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
     mediaAccept: 'audio/*,video/*',
     usesVoice: false,
     output: 'audio',
-    paid: true,
+    paid: false,
     baseCostUsd: 0.3,
     meteredBy: 'per-minute',
     typicalDuration: '1-5 min',

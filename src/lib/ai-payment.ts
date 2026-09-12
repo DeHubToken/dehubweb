@@ -20,6 +20,7 @@ import { Interface } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { getAuthToken } from '@/lib/api/dehub';
+import { apiCall } from '@/lib/api/dehub/core';
 import { supabase } from '@/integrations/supabase/client';
 import { writeContractAA, getERC20Balance, getWalletAddress, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
 import { toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
@@ -240,6 +241,7 @@ export async function payForJob(
   { remember = true }: { remember?: boolean } = {},
 ): Promise<string> {
   if (!getAuthToken()) throw new Error('Sign in to pay for a generation.');
+  await apiCall('/api/auth/verify', { requiresAuth: true });
   if (!Number.isFinite(priceDhb) || priceDhb <= 0) {
     throw new Error('Nothing to pay.');
   }

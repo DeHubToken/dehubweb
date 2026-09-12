@@ -25,11 +25,14 @@ const mocks = vi.hoisted(() => ({
   getERC20Balance: vi.fn(),
   switchChain: vi.fn(),
   getAuthToken: vi.fn(),
+  apiCall: vi.fn(),
 }));
 
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: { functions: { invoke: mocks.invoke } },
 }));
+
+vi.mock('@/lib/api/dehub/core', () => ({ apiCall: mocks.apiCall, ensureFreshToken: vi.fn().mockResolvedValue('token-123') }));
 
 vi.mock('@/lib/api/dehub', () => ({ getAuthToken: mocks.getAuthToken }));
 
@@ -58,11 +61,19 @@ describe('a paid transfer is never lost', () => {
     localStorage.clear();
     localStorage.setItem('dehub_wallet', WALLET);
     mocks.getAuthToken.mockReturnValue('token-123');
+    mocks.apiCall.mockResolvedValue({});
     mocks.getWalletAddress.mockResolvedValue(WALLET);
     mocks.switchChain.mockResolvedValue(undefined);
     // Enough DHB on Base to pay for anything these tests ask for.
     mocks.getERC20Balance.mockResolvedValue(BigInt('1000000000000000000000000'));
     mocks.invoke.mockResolvedValue({ data: { payments: [] }, error: null });
+  });
+
+  it('does not transfer funds when the session cannot be verified', { timeout: 30000 }, async () => {
+    const { payForJob } = await import('@/lib/ai-payment');
+    mocks.apiCall.mockRejectedValueOnce(new Error('Sign in again'));
+    await expect(payForJob(100)).rejects.toThrow('Sign in again');
+    expect(mocks.writeContractAA).not.toHaveBeenCalled();
   });
 
   // Generous: the first import in the file pulls the whole wallet/contract
