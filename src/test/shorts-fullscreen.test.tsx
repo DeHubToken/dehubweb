@@ -495,3 +495,35 @@ it('restores a React-owned player before its route unmounts', () => {
   expect(host.childNodes.length).toBe(0);
   host.remove();
 });
+
+it('keeps fullscreen controls inside React event delegation', () => {
+  const host = document.createElement('div');
+  host.id = 'root';
+  document.body.appendChild(host);
+  let fullscreen: ReturnType<typeof useVideoFullscreen>;
+  const videoRef = { current: null as HTMLVideoElement | null };
+  const containerRef = { current: null as HTMLDivElement | null };
+  function Player() {
+    fullscreen = useVideoFullscreen(videoRef, containerRef, { escapeAncestors: true });
+    return createElement('section', { style: { transform: 'translateY(100px)' } },
+      createElement('div', { ref: containerRef },
+        createElement('video', { ref: videoRef }),
+        createElement('button', { onClick: fullscreen.toggleFullscreen }, 'Fullscreen')));
+  }
+  const root = createRoot(host);
+  try {
+    act(() => root.render(createElement(Player)));
+    const player = containerRef.current!;
+    const video = videoRef.current;
+    const inlineParent = player.parentNode;
+    act(() => player.querySelector('button')!.click());
+    expect(fullscreen!.isFullscreen).toBe(true);
+    act(() => player.querySelector('button')!.click());
+    expect(fullscreen!.isFullscreen).toBe(false);
+    expect(player.parentNode).toBe(inlineParent);
+    expect(videoRef.current).toBe(video);
+  } finally {
+    act(() => root.unmount());
+    host.remove();
+  }
+});
