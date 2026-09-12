@@ -663,7 +663,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Slow-network / Data-Saver mode: suppress autoplay and video preloading so a
   // metered connection isn't spent fetching 50MB clips the user hasn't asked for.
   const { liteMode } = useConnectionQuality();
-  const isOwnPost = walletAddress && video.creatorId?.toLowerCase() === walletAddress.toLowerCase();
+  const isOwnPost = !!video.isOwner || !!(
+    walletAddress && video.creatorId?.toLowerCase() === walletAddress.toLowerCase()
+  );
   const { blockAuthor } = useBlockAuthor();
   const { muteAuthor } = useMuteAuthor();
   const handleBlockCreator = useCallback(() => {

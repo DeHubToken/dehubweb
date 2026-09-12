@@ -575,7 +575,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   // request — and the bump lands on the card's own share counter.
   const { data: linkCopyCount = 0 } = usePostLinkCopyCount(post.id);
   const trackLinkCopy = useTrackPostLinkCopy();
-  const isOwnPost = walletAddress && post.creatorId?.toLowerCase() === walletAddress.toLowerCase();
+  const isOwnPost = !!post.isOwner || !!(
+    walletAddress && post.creatorId?.toLowerCase() === walletAddress.toLowerCase()
+  );
   const { blockAuthor } = useBlockAuthor();
   const { muteAuthor } = useMuteAuthor();
   const handleBlockCreator = useCallback(() => {
