@@ -22,7 +22,7 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
     setLoading(true);
     setFailed(false);
     getNFTInfo(String(tokenId)).then(post => {
-      if (active) setImages(post.postType === 'feed-images' ? post.imageUrls ?? [] : []);
+      if (active) setImages(['feed-images', 'image'].includes(post.postType) ? post.imageUrls ?? [] : []);
     }).catch(() => { if (active) setFailed(true); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
