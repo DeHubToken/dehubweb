@@ -608,10 +608,10 @@ export function AudioVisualizer({
         onPointerCancel={cancelScrub}
       />
 
-      {/* Top chrome: volume left, fullscreen right. Always drawn, never on
+      {/* Top chrome: volume immediately before fullscreen on the right. Always drawn, never on
           hover — the whole point of the last pass was that chrome appearing
           under the cursor is what made this card unusable. */}
-      <div className="absolute inset-x-0 top-0 z-20 flex items-start justify-between gap-2 px-2 pt-2 pointer-events-none">
+      <div className="absolute inset-x-0 top-0 z-20 flex items-start justify-end gap-2 px-2 pt-2 pointer-events-none">
         {showVolume && (
         <div
           className={cn('pointer-events-auto shrink-0 flex items-center gap-1.5 pl-1.5 pr-2.5', CONTROL_H, GLASS_PILL, glassShadow)}
@@ -669,7 +669,7 @@ export function AudioVisualizer({
             onClick={(e) => { e.stopPropagation(); onFullscreen(e); }}
             onPointerDown={stopBubble}
             className={cn(
-              'pointer-events-auto shrink-0 w-7 ml-auto flex items-center justify-center transition-colors',
+              'pointer-events-auto shrink-0 w-7 flex items-center justify-center transition-colors',
               CONTROL_H,
               GLASS_PILL,
               glassShadow,
