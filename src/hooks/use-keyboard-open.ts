@@ -39,6 +39,8 @@ export function useKeyboardOpen(enabled = true) {
       });
     };
 
+    // An auto-focused field can mount before this effect installs listeners.
+    setOpen(isEditable(document.activeElement));
     document.addEventListener('focusin', onFocusIn);
     document.addEventListener('focusout', onFocusOut);
     return () => {
@@ -112,8 +114,6 @@ export function useVisualViewportBox(enabled: boolean) {
 
 /** Breathing room between the top of a keyboard-fitted sheet and the viewport. */
 const KEYBOARD_SHEET_GAP = 8;
-/** Never squeeze a sheet smaller than this, whatever the keyboard leaves. */
-const MIN_KEYBOARD_SHEET_HEIGHT = 180;
 
 /**
  * Inline geometry that keeps a bottom sheet — and therefore its composer —
@@ -163,7 +163,11 @@ export function useKeyboardSafeSheet(enabled: boolean): {
     style: {
       top: offsetTop + KEYBOARD_SHEET_GAP,
       bottom: 'auto',
-      height: Math.max(height - KEYBOARD_SHEET_GAP, MIN_KEYBOARD_SHEET_HEIGHT),
+      // DrawerContent's default mt-24 otherwise shifts this measured box
+      // down 96px, putting its composer back underneath Safari's keyboard.
+      marginTop: 0,
+      height: Math.max(height - KEYBOARD_SHEET_GAP * 2, 0),
+      minHeight: 0,
       maxHeight: 'none',
     },
   };
