@@ -415,3 +415,83 @@ describe('the desktop shorts frame', () => {
     expect(SLIDE).toContain('pointer-events-none');
   });
 });
+
+describe('fullscreen lifecycle regressions', () => {
+  it('updates only the player that owns native fullscreen', () => {
+    const one = refs(document.createElement('div'));
+    const two = refs(document.createElement('div'));
+    const first = renderHook(() => useVideoFullscreen(one.videoRef, one.containerRef));
+    const second = renderHook(() => useVideoFullscreen(two.videoRef, two.containerRef));
+    act(() => { setNativeFullscreen(one.containerRef.current); document.dispatchEvent(new Event('fullscreenchange')); });
+    expect(first.result.current.isFullscreen).toBe(true);
+    expect(second.result.current.isFullscreen).toBe(false);
+    act(() => { setNativeFullscreen(null); document.dispatchEvent(new Event('fullscreenchange')); });
+    expect(first.result.current.isFullscreen).toBe(false);
+    first.unmount(); second.unmount();
+  });
+  it('does not resurrect fullscreen after the browser exits before the fallback timer', async () => {
+    vi.useFakeTimers();
+    const container = document.createElement('div');
+    (container as any).requestFullscreen = vi.fn(async () => {});
+    const r = refs(container);
+    const hook = renderHook(() => useVideoFullscreen(r.videoRef, r.containerRef));
+    act(() => hook.result.current.toggleFullscreen());
+    act(() => { setNativeFullscreen(container); document.dispatchEvent(new Event('fullscreenchange')); });
+    act(() => { setNativeFullscreen(null); document.dispatchEvent(new Event('fullscreenchange')); });
+    await act(async () => { vi.advanceTimersByTime(500); });
+    expect(hook.result.current.isFullscreen).toBe(false);
+    hook.unmount(); vi.useRealTimers();
+  });
+  it('exits iPhone native video fullscreen through the video API', () => {
+    const video = document.createElement('video');
+    (video as any).webkitDisplayingFullscreen = true;
+    (video as any).webkitExitFullscreen = vi.fn();
+    const r = refs(document.createElement('div'), video);
+    const hook = renderHook(() => useVideoFullscreen(r.videoRef, r.containerRef));
+    act(() => hook.result.current.toggleFullscreen());
+    expect((video as any).webkitExitFullscreen).toHaveBeenCalledTimes(1);
+    hook.unmount();
+  });
+  it('lifts fallback media out of the feed and restores the same node on Escape and unmount', () => {
+    const parent = document.createElement('div');
+    parent.style.transform = 'translateY(100px)';
+    document.body.appendChild(parent);
+    const container = document.createElement('div');
+    const video = document.createElement('video');
+    container.appendChild(video); parent.appendChild(container);
+    const r = refs(container, video);
+    const hook = renderHook(() => useVideoFullscreen(r.videoRef, r.containerRef, { escapeAncestors: true }));
+    act(() => hook.result.current.toggleFullscreen());
+    expect(container.parentNode).toBe(document.body);
+    expect(container.firstChild).toBe(video);
+    act(() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' })));
+    expect(container.parentNode).toBe(parent);
+    expect(parent.children.length).toBe(1);
+    act(() => hook.result.current.toggleFullscreen());
+    hook.unmount();
+    expect(container.parentNode).toBe(parent);
+    expect(parent.children.length).toBe(1);
+    parent.remove();
+  });
+});
+
+it('restores a React-owned player before its route unmounts', () => {
+  const host = document.createElement('div');
+  document.body.appendChild(host);
+  let fullscreen: ReturnType<typeof useVideoFullscreen>;
+  const videoRef = { current: null as HTMLVideoElement | null };
+  const containerRef = { current: null as HTMLDivElement | null };
+  function Player() {
+    fullscreen = useVideoFullscreen(videoRef, containerRef, { escapeAncestors: true });
+    return createElement('div', { ref: containerRef }, createElement('video', { ref: videoRef }));
+  }
+  const root = createRoot(host);
+  act(() => root.render(createElement(Player)));
+  const playerNode = containerRef.current;
+  act(() => fullscreen.toggleFullscreen());
+  expect(playerNode?.parentNode).toBe(document.body);
+  expect(() => act(() => root.unmount())).not.toThrow();
+  expect(playerNode?.isConnected).toBe(false);
+  expect(host.childNodes.length).toBe(0);
+  host.remove();
+});
