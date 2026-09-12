@@ -16,13 +16,19 @@ export function liftFullscreenElement(element: HTMLElement): () => void {
   const parent = element.parentNode;
   if (!parent) return () => {};
   const placeholder = document.createElement('div');
+  const bodyOverflow = document.body.style.overflow;
+  const rootOverflow = document.documentElement.style.overflow;
   placeholder.style.height = `${element.getBoundingClientRect().height}px`;
   placeholder.setAttribute('aria-hidden', 'true');
   parent.insertBefore(placeholder, element);
   document.body.appendChild(element);
+  document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
   return () => {
     if (placeholder.parentNode) placeholder.parentNode.insertBefore(element, placeholder);
     placeholder.remove();
+    document.body.style.overflow = bodyOverflow;
+    document.documentElement.style.overflow = rootOverflow;
   };
 }
 export function useVideoFullscreen(
