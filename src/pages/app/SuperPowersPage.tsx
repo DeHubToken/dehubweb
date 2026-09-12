@@ -306,7 +306,7 @@ export default function SuperPowersPage() {
       <TeamUpDrawer open={teamUpOpen} onOpenChange={setTeamUpOpen} />
 
       <Drawer open={!!historyPower} onOpenChange={open => !open && setHistoryPower(null)}>
-        <DrawerContent column glass className="px-4 pb-6">
+        <DrawerContent scrollable column glass className="px-4 pb-6">
           <DrawerHeader className="pb-3 flex flex-row items-start justify-between gap-3">
             <div className="min-w-0">
               <DrawerTitle className="text-white text-lg">

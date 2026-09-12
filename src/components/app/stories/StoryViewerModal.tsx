@@ -800,7 +800,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
 
       {/* Share Drawer */}
       <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
-        <DrawerContent glass className="px-4 pb-6">
+        <DrawerContent scrollable glass className="px-4 pb-6">
           <DrawerHeader className="relative">
             <DrawerTitle className="text-white/90 font-semibold">Share</DrawerTitle>
           </DrawerHeader>

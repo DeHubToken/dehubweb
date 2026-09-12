@@ -2195,7 +2195,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
       {/* Options Drawer — mirrors the main-feed post card's three-dot menu. */}
       <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
-        <DrawerContent glass className="px-4 pb-6">
+        <DrawerContent scrollable glass className="px-4 pb-6">
           <DrawerHeader className="relative pb-2">
             <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
           </DrawerHeader>

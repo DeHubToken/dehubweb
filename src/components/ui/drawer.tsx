@@ -272,8 +272,8 @@ const COLUMN_CLASS =
 
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean; hideHandle?: boolean; noOverlay?: boolean; overlayClassName?: string; column?: boolean }
->(({ className, children, glass = false, hideHandle = true, noOverlay = false, overlayClassName, column = false, onPointerDownOutside, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean; hideHandle?: boolean; noOverlay?: boolean; overlayClassName?: string; column?: boolean; scrollable?: boolean }
+>(({ className, children, glass = false, hideHandle = true, noOverlay = false, overlayClassName, column = false, scrollable = false, onPointerDownOutside, ...props }, ref) => {
   const rootMounted = React.useContext(DrawerRootMounted);
   // No Root above us — this sheet is dormant (or the content escaped its
   // Drawer entirely). Render nothing rather than portalling into no Dialog.
@@ -288,7 +288,7 @@ const DrawerContent = React.forwardRef<
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed inset-x-0 bottom-0 z-[100] mt-24 flex h-auto min-h-0 flex-col overflow-y-auto rounded-t-[20px]",
+        "fixed inset-x-0 bottom-0 z-[100] mt-24 flex h-auto flex-col rounded-t-[20px]",
         /* Ceiling for a sheet that names no height of its own, in the unit that
            matches what the reader can see. `vh` is the LARGE viewport — measured
            as if the browser chrome were hidden — while the sheet is pinned to the
@@ -326,7 +326,13 @@ const DrawerContent = React.forwardRef<
           glass ? "bg-white/40" : "bg-muted"
         )} />
       )}
-      {children}
+      {scrollable ? (
+        /* Scroll inside the drawer: vaul's root has touch-action:none and an
+           offscreen ::after background, neither belongs in a native scroller. */
+        <div className="min-h-0 flex-auto overflow-y-auto [touch-action:pan-y]">
+          {children}
+        </div>
+      ) : children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
   );

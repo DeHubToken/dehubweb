@@ -808,7 +808,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             >
               <MoreVertical className="w-[23.5px] h-[23.5px]" />
             </button>
-            <DrawerContent column glass className="px-4 pb-6">
+            <DrawerContent scrollable column glass className="px-4 pb-6">
               <DrawerHeader className="pb-2">
                 <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
               </DrawerHeader>
@@ -1381,7 +1381,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       {/* Bounty Drawer - controlled, rendered at root level for mobile compatibility */}
       {isW2E && (
         <Drawer open={showBountyDrawer} onOpenChange={setShowBountyDrawer}>
-          <DrawerContent column glass className="px-4 pb-6">
+          <DrawerContent scrollable column glass className="px-4 pb-6">
             <DrawerHeader className="pb-3 relative">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Gift className="w-5 h-5 text-white" />
@@ -1435,7 +1435,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       {/* Subscriber sheet — a different gate to the holdings one below. */}
       {isSubGated && (
         <Drawer open={showSubDrawer} onOpenChange={setShowSubDrawer}>
-          <DrawerContent column glass className="px-4 pb-6">
+          <DrawerContent scrollable column glass className="px-4 pb-6">
             <Suspense fallback={<div className="py-10 text-center text-white/60 text-sm">Loading…</div>}>
               <SubscriberGateDrawer
                 creatorAddress={post.creatorId || ""}
@@ -1456,7 +1456,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       {/* Locked Drawer - controlled, rendered at root level for mobile compatibility */}
       {isLocked && (
         <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
-          <DrawerContent column glass className="px-4 pb-6">
+          <DrawerContent scrollable column glass className="px-4 pb-6">
             <DrawerHeader className="pb-3 relative">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Lock className="w-5 h-5 text-white" />
@@ -1508,7 +1508,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
 
       {/* Poll Creator Drawer */}
       <Drawer open={showPollCreator} onOpenChange={setShowPollCreator}>
-        <DrawerContent column glass className="px-4 pb-6">
+        <DrawerContent scrollable column glass className="px-4 pb-6">
           <DrawerHeader className="pb-2">
             <DrawerTitle className="text-white text-lg">Create Poll</DrawerTitle>
           </DrawerHeader>

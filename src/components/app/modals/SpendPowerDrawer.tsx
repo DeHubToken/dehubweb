@@ -262,7 +262,7 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column glass className="px-4 pb-6">
+      <DrawerContent scrollable column glass className="px-4 pb-6">
         <DrawerHeader className="pb-2 flex flex-row items-center justify-between gap-3">
           <DrawerTitle className="text-white text-lg">{power?.label}</DrawerTitle>
           {/* shadcn's DialogContent renders its own X; DrawerContent does not,
