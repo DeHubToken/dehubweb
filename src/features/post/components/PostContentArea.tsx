@@ -564,7 +564,7 @@ export function PostContentArea({
   return (
     <>
       <div 
-        className="p-4 max-h-[60vh] overflow-y-auto relative"
+        className="p-4 min-h-0 max-h-[60vh] overflow-y-auto relative"
         data-vaul-no-drag
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}

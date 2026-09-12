@@ -30,6 +30,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { type LoginStep, resumingStep } from '@/components/app/login/steps';
 import dehubLogo from '@/assets/dehub-logo-white.png';
+import { useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
 
 const LoginModalBody = React.lazy(() =>
   import('@/components/app/login/LoginModalBody').then(m => ({ default: m.LoginModalBody })),
@@ -95,6 +96,7 @@ function LoginBodySkeleton() {
 }
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
+  const { style: keyboardStyle } = useKeyboardSafeSheet(open);
   const { walletPhase, isProcessingRedirect, loginIntent, requiresUsername } = useAuth();
   const { t } = useTranslation();
 
@@ -214,9 +216,10 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // inline to drive the slide-up and the drag, and an inline transform beats a
   // class — the sheet would jump for the length of every animation.
   return (
-    <Drawer open={open} onOpenChange={handleClose} warmable walletPrompt dismissible={!requiresUsername}>
+    <Drawer open={open} onOpenChange={handleClose} warmable walletPrompt dismissible={!requiresUsername} repositionInputs={false}>
       <DrawerContent
         data-login-modal
+        style={keyboardStyle ?? undefined}
         hideHandle
         onEscapeKeyDown={(e) => { if (requiresUsername) e.preventDefault(); }}
         className={cn(
