@@ -7,6 +7,7 @@ assert(modules.length>0,'Trenchstar module exists');
 for(const [,code] of modules)new vm.SourceTextModule(code);
 new vm.SourceTextModule(fs.readFileSync('public/trenchstar-game/connected.js','utf8'));
 new vm.SourceTextModule(fs.readFileSync('public/trenchstar-game/icons.js','utf8'));
+new vm.SourceTextModule(fs.readFileSync('public/trenchstar-game/wallets.js','utf8'));
 const iconNames=JSON.parse(fs.readFileSync('public/trenchstar-game/icons/manifest.json','utf8')).icons;
 for(const name of iconNames)assert(fs.readFileSync(`public/trenchstar-game/icons/${name}.svg`,'utf8').includes('viewBox="0 0 64 64"'),`${name} has the shared icon canvas`);
 for(const asset of ['connected.css','backdrops/harbour.webp','backdrops/alpine.webp','vendor/agora/AgoraRTC_N-production.esm.js'])assert(fs.statSync('public/trenchstar-game/'+asset).size>0,asset);
