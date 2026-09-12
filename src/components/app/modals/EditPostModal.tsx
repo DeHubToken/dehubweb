@@ -107,9 +107,13 @@ export function EditPostModal({
     }
   };
 
-  // Sync with props when modal opens
+  const editingTokenRef = useRef<string | null>(null);
+  // Image replacement refreshes the post cache. Keep unsaved text edits while
+  // that happens; initialize the draft only when opening a post.
   useEffect(() => {
-    if (open) {
+    if (!open) { editingTokenRef.current = null; return; }
+    if (editingTokenRef.current !== String(tokenId)) {
+      editingTokenRef.current = String(tokenId);
       setName(currentTitle);
       setDescription(currentDescription);
       setCategories(currentCategories);
@@ -117,7 +121,7 @@ export function EditPostModal({
       setIsMature(currentContentRating === 'mature');
       setCategoryInput('');
     }
-  }, [open, currentTitle, currentDescription, currentCategories, currentCommentsDisabled, currentContentRating]);
+  }, [open, tokenId, currentTitle, currentDescription, currentCategories, currentCommentsDisabled, currentContentRating]);
 
   const handleAddCategory = () => {
     const trimmed = categoryInput.trim();
