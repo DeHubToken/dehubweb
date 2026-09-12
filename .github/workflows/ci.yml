@@ -134,7 +134,9 @@ jobs:
         run: pnpm test
 
       - name: Trenchstar wallet encryption and signing
-        run: node scripts/trenchstar-wallets.test.mjs
+        run: |
+          node scripts/trenchstar-wallets.test.mjs
+          node scripts/trenchstar-navigation.test.mjs
 
   stage-remux:
     name: Stage remux

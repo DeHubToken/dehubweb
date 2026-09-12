@@ -1311,6 +1311,7 @@
     <!-- Only ever shown inside a frame: standalone this app has nothing to
          return to, and a dead button is worse than no button. -->
     <button class="btn" id="btnExit" style="display:none">✕ EXIT</button>
+    <button class="btn" id="btnChartControls" hidden aria-expanded="false" aria-controls="focusPanel">Chart controls</button>
     <button class="btn" id="btnAdd">+ SCREEN</button>
     <button class="btn" id="btnAlerts">⚡ ALERTS</button>
     <button class="btn" id="btnMove" style="display:none">↔ MOVE</button>
@@ -2764,6 +2765,8 @@ renderer.shadowMap.enabled=!GFX.phone;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const host=$('#gl');
 host.appendChild(renderer.domElement);
+renderer.domElement.tabIndex=0;
+renderer.domElement.setAttribute("aria-label","Trading wall. Arrow keys switch screens; Escape returns to the floor.");
 /* the host can be 0x0 at load (hidden tab, iframe not yet laid out); never bake that in */
 const viewport=()=>[Math.max(1,host.clientWidth||innerWidth),Math.max(1,host.clientHeight||innerHeight)];
 renderer.setSize(...viewport());
@@ -2942,19 +2945,6 @@ function fcNudge(fwd,side){
   }
   if(freeCam.vel.length()>FC_MAX_SPEED)freeCam.vel.setLength(FC_MAX_SPEED);
 }
-/* Keep the camera out of the desk. Same box the avatar uses, grown a little
-   so you never end up inside it looking at the underside of the top. */
-function fcAvoidDesk(p){
-  const DX=3.5,Z0=3.0,Z1=6.5,YTOP=1.55;
-  if(p.y>YTOP)return;
-  if(Math.abs(p.x)>DX||p.z<Z0||p.z>Z1)return;
-  const outX=DX-Math.abs(p.x),outZ0=p.z-Z0,outZ1=Z1-p.z,outY=YTOP-p.y;
-  const m=Math.min(outX,outZ0,outZ1,outY);
-  if(m===outY){p.y=YTOP;freeCam.vel.y=Math.max(0,freeCam.vel.y);}
-  else if(m===outX){p.x=(p.x<0?-1:1)*DX;freeCam.vel.x*=0.2;}
-  else if(m===outZ0){p.z=Z0;freeCam.vel.z*=0.2;}
-  else {p.z=Z1;freeCam.vel.z*=0.2;}
-}
 /* --------------------------- mouselook ---------------------------------
    The view follows the cursor instead of waiting to be dragged. This is a
    BOUNDED offset, not a rate: push the mouse left and the view leans left by
@@ -3037,7 +3027,6 @@ function freeCamTick(dt){
     }
     if(camera.position.y<FC_LIMIT.yMin){camera.position.y=FC_LIMIT.yMin;freeCam.vel.y=0;}
     if(camera.position.y>FC_LIMIT.yMax){camera.position.y=FC_LIMIT.yMax;freeCam.vel.y=0;}
-    fcAvoidDesk(camera.position);
   }
 
   /* the mouselook offset rides on top of the base heading, so dragging still
@@ -3696,7 +3685,6 @@ function buildCity(){
   beacons.frustumCulled=false;beacons.renderOrder=1;beacons.layers.set(CITY_LAYER);
   cityGrp.add(beacons);
 }
-buildCity();
 
 /* dust */
 const dustMat=new THREE.PointsMaterial({color:0x9fd8ff,size:0.035,transparent:true,
@@ -4770,7 +4758,7 @@ function buildBackdrop(id){
   scene.add(skyMesh);
   SCENE_ID=id;
   tryPhoto(id);
-  buildCityRing(S);
+  clearCityRing();
 
   scene.fog.color.setHex(S.fog);scene.fog.density=S.fogD;
   scene.background=new THREE.Color(S.clear);
@@ -7361,173 +7349,6 @@ function hit(x,y,w,h,label,fn){if(dhHits)dhHits.push({x,y,w,h,label,fn});}
 
 /* ================================ desk ================================ */
 const deskMons=[];
-{
-  const desk=new THREE.Group();
-  /* Rougher and less metallic AGAIN. 0.35/0.55 was the original, 0.52/0.38 was
-     the first attempt at fixing it, and both still blew out: three 7x4.5m area
-     emitters hang 2.3 m directly above this surface, and at any metalness worth
-     the name their specular lobe covers the whole desk at once. Turned to the
-     desk you were looking at a sheet of white — brighter than the monitor
-     standing on it, brighter than the wall the room is named after.
-     A desk is not a mirror. 0.78/0.06 is matte, and the surface finally reads
-     as the dark slab its colour has always said it was. */
-  /* A SURFACE, NOT A TONE.
-     The desk is the largest single object in the lower half of the frame and
-     it was one flat value of grey across the whole 4.8 m — no grain, no edge,
-     nothing for a light to break up on. Everything around it is dense: the
-     wall, the city, the character. It read as untextured placeholder geometry
-     sitting in a finished room, which is exactly what it was.
-     Fixed with a roughness map rather than a colour one. Colour would fight
-     the room's lighting, and it is not what is missing — what is missing is
-     variation in HOW the surface takes light, so the three area lights above
-     it land as brushed grain instead of one even sheet. The same canvas drives
-     a shallow bump so the grain has relief at a grazing angle. */
-  const grainCv=document.createElement('canvas');grainCv.width=grainCv.height=512;
-  {
-    const g=grainCv.getContext('2d');
-    g.fillStyle='#9a9a9a';g.fillRect(0,0,512,512);
-    /* brushed along the desk's length */
-    for(let i=0;i<2600;i++){
-      const y=Math.random()*512,len=40+Math.random()*300,x=Math.random()*512;
-      g.strokeStyle='rgba('+(Math.random()<0.5?'255,255,255,':'0,0,0,')+(0.02+Math.random()*0.05)+')';
-      g.lineWidth=Math.random()<0.85?1:2;
-      g.beginPath();g.moveTo(x,y);g.lineTo(x+len,y+(Math.random()-0.5)*1.5);g.stroke();
-    }
-    /* and a coarse mottle, so it is not pure corduroy */
-    for(let i=0;i<700;i++){
-      const r=6+Math.random()*26;
-      g.fillStyle='rgba('+(Math.random()<0.5?'255,255,255,':'0,0,0,')+(0.012+Math.random()*0.022)+')';
-      g.beginPath();g.arc(Math.random()*512,Math.random()*512,r,0,6.3);g.fill();
-    }
-  }
-  const grainTex=new THREE.CanvasTexture(grainCv);
-  grainTex.wrapS=grainTex.wrapT=THREE.RepeatWrapping;
-  grainTex.repeat.set(6,2.2);
-  grainTex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
-  const deskMat=new THREE.MeshStandardMaterial({
-    color:0x0e131a,roughness:0.78,metalness:0.06,
-    roughnessMap:grainTex,bumpMap:grainTex,bumpScale:0.012});
-  const top=new THREE.Mesh(new THREE.BoxGeometry(4.8,0.09,1.7),deskMat);
-  top.position.y=1.12;desk.add(top);
-  /* THE PEDESTAL FASCIA.
-     This is the biggest single area of the opening shot after the wall, and it
-     was one dead flat charcoal rectangle running straight into the floor: no
-     seam, no plinth, no falloff, nothing to say how big it is or what it is
-     made of. A surface that large with no information on it reads as a hole,
-     and it was the last thing in the room still doing that.
-     Two panel seams and a gradient, painted rather than modelled — at this
-     distance an engraved line is three pixels and geometry would be waste. */
-  const pedCv=document.createElement('canvas');pedCv.width=256;pedCv.height=512;
-  {
-    const p=pedCv.getContext('2d');
-    /* Darker toward the floor. Light in this room comes from above, so the
-       bottom of a tall face should fall off — the flat version was lit as
-       though it were floating in open space. */
-    const grd=p.createLinearGradient(0,0,0,512);
-    grd.addColorStop(0,'#141c26');grd.addColorStop(0.55,'#0d131b');grd.addColorStop(1,'#05080c');
-    p.fillStyle=grd;p.fillRect(0,0,256,512);
-    /* Two seams. An engraved line is a dark groove with a lit edge under it —
-       one line on its own reads as a scratch. */
-    for(const y of [176,352]){
-      p.fillStyle='rgba(0,0,0,0.85)';p.fillRect(0,y,256,3);
-      p.fillStyle='rgba(150,190,215,0.16)';p.fillRect(0,y+3,256,1);
-    }
-    for(let i=0;i<2200;i++){
-      p.fillStyle='rgba('+(Math.random()<0.5?'255,255,255,':'0,0,0,')+(0.015+Math.random()*0.03)+')';
-      p.fillRect(Math.random()*256,Math.random()*512,1,1);
-    }
-  }
-  const pedTex=new THREE.CanvasTexture(pedCv);
-  pedTex.colorSpace=THREE.SRGBColorSpace;
-  pedTex.wrapS=pedTex.wrapT=THREE.ClampToEdgeWrapping;
-  pedTex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
-  const ped=new THREE.Mesh(new THREE.BoxGeometry(3.6,0.92,1.2),
-    new THREE.MeshStandardMaterial({color:0xffffff,map:pedTex,roughness:0.84,metalness:0.05}));
-  ped.position.y=0.62;desk.add(ped);
-  /* A RECESSED PLINTH. The pedestal used to meet the floor flush, which is the
-     one thing furniture never does — every cabinet has a toe-kick, and the
-     dark line it throws is what sets the object down on the ground instead of
-     leaving it pasted against it. Inset on all four sides so the fascia
-     overhangs it. */
-  const plinth=new THREE.Mesh(new THREE.BoxGeometry(3.34,0.18,1.04),
-    new THREE.MeshStandardMaterial({color:0x05070a,roughness:0.9,metalness:0.04}));
-  plinth.position.y=0.09;desk.add(plinth);
-  /* A LIP ON THE FRONT EDGE. A box has one hard 90 degree corner and reads as
-     a slab; every real worktop has a few millimetres of chamfer, and that
-     chamfer is the bit that catches a light and tells you where the surface
-     ends. Slightly brighter and slightly glossier than the top so it reads as
-     an edge rather than a seam. */
-  const lip=new THREE.Mesh(new THREE.BoxGeometry(4.8,0.035,0.05),
-    new THREE.MeshStandardMaterial({color:0x1b2430,roughness:0.42,metalness:0.28}));
-  lip.position.set(0,1.145,0.845);desk.add(lip);
-  const lipBack=lip.clone();lipBack.position.z=-0.845;desk.add(lipBack);
-  const strip=new THREE.Mesh(new THREE.BoxGeometry(4.8,0.02,0.02),
-    new THREE.MeshBasicMaterial({color:new THREE.Color(CYAN).multiplyScalar(1.2)}));
-  strip.position.set(0,1.075,0.86);desk.add(strip);
-
-  /* keyboard glow */
-  const kbCv=document.createElement('canvas');kbCv.width=256;kbCv.height=88;
-  const kx=kbCv.getContext('2d');
-  kx.fillStyle='#05070b';kx.fillRect(0,0,256,88);
-  for(let r=0;r<4;r++)for(let c=0;c<14;c++){
-    kx.fillStyle=Math.random()<0.08?'rgba(56,224,255,0.9)':'rgba(56,224,255,0.28)';
-    kx.fillRect(6+c*18,8+r*20,14,14);
-  }
-  const kbTex=new THREE.CanvasTexture(kbCv);kbTex.colorSpace=THREE.SRGBColorSpace;
-  const kb=new THREE.Mesh(new THREE.BoxGeometry(1.15,0.03,0.38),
-    new THREE.MeshStandardMaterial({color:0x0a0d12,roughness:0.6,metalness:0.3,emissive:0xffffff,emissiveMap:kbTex,emissiveIntensity:0.8}));
-  kb.position.set(0,1.18,0.42);desk.add(kb);
-
-  /* mug */
-  const mug=new THREE.Mesh(new THREE.CylinderGeometry(0.075,0.065,0.17,20),
-    new THREE.MeshStandardMaterial({color:0x5c1420,roughness:0.35,metalness:0.1}));
-  mug.position.set(1.65,1.25,0.35);desk.add(mug);
-  const handle=new THREE.Mesh(new THREE.TorusGeometry(0.05,0.013,10,20),
-    mug.material);
-  handle.position.set(1.73,1.25,0.35);handle.rotation.y=Math.PI/2;desk.add(handle);
-
-  /* The desk monitor carries a canvas of its own — it does not borrow a wall
-     screen's texture, which used to mean a wall rebuild could leave a disposed
-     map pointed at the desk. */
-  const DESK_MON_W=1.74,DESK_MON_H=DESK_MON_W*DH_H/DH_W;   /* 640x364, kept exact */
-  const deskMon=(page,x,ry)=>{
-    const g=new THREE.Group();
-    const cv=document.createElement('canvas');cv.width=DH_W;cv.height=DH_H;
-    const tex=new THREE.CanvasTexture(cv);
-    tex.colorSpace=THREE.SRGBColorSpace;tex.generateMipmaps=false;
-    tex.minFilter=THREE.LinearFilter;
-    const p=new THREE.Mesh(new THREE.PlaneGeometry(DESK_MON_W,DESK_MON_H),
-      new THREE.MeshBasicMaterial({map:tex}));
-    const f=new THREE.Mesh(new THREE.PlaneGeometry(DESK_MON_W+0.08,DESK_MON_H+0.08),frameMat);
-    f.position.z=-0.012;
-    const stand=new THREE.Mesh(new THREE.BoxGeometry(0.09,0.26,0.07),frameMat);
-    stand.position.set(0,-DESK_MON_H/2-0.13,-0.02);
-    const foot=new THREE.Mesh(new THREE.BoxGeometry(0.44,0.02,0.18),frameMat);
-    foot.position.set(0,-DESK_MON_H/2-0.26,-0.02);
-    g.add(f,p,stand,foot);g.position.set(x,1.78,-0.35);g.rotation.y=ry;
-    desk.add(g);
-    /* A desk monitor is a SCREEN, not a special case. It carries the same
-       fields a wall screen carries, so focusOn zooms it with the same code
-       that zooms a chart — clicking one brings it to you before it can be
-       used. `kind` is what keeps the chart chrome (template picker,
-       timeframes, the buy box) off a screen none of it applies to. */
-    deskMons.push({mesh:p,ctx:cv.getContext('2d'),tex,page,
-      w:DESK_MON_W,h:DESK_MON_H,kind:'desk',label:page.label,src:'DEHUB',
-      frame:null,blocked:false,mounted:0});
-  };
-  /* Dead ahead, and bigger than the three it replaced — a single monitor can
-     have the width they were splitting between them. */
-  deskMon(DESK_PAGES[0],0,Math.PI);
-
-  desk.position.set(0,0,4.7);
-  desk.rotation.y=Math.PI;   /* face the wall */
-  /* The desk is the only thing in the room with a floor under it and a light
-     over it, so it is where a shadow does the most work — it is what turns a
-     grey slab hovering over a grid into a desk standing on a floor. */
-  desk.traverse(o=>{if(o.isMesh)o.castShadow=true;});
-  scene.add(desk);
-}
-
 /* Repaint the desk. Cheap enough to run on a slow timer AND on demand — the
    pages only change when the wallet connects or the sim ticks, so 2 s is
    generous. Each paint is wrapped: a throw here would take the wall build
@@ -7882,7 +7703,10 @@ function focusOn(s,dur){
      booting behind a WebGL room is not something to do at load. */
   if(s.kind==='desk')deskMount(s);
   syncTfRow();
-  $('#focusPanel').classList.add('on');
+  $('#focusPanel').classList.remove('on');
+  $('#btnChartControls').hidden=false;
+  $('#btnChartControls').setAttribute('aria-expanded','false');
+  renderer.domElement.focus({preventScroll:true});
   /* Only promise the arrows do something when they actually do -- one desk
      monitor has nothing beside it to step to. */
   $('#fpFlick').style.display=flickAny(s)?'':'none';
@@ -7893,6 +7717,8 @@ function release(){
   focus.screen=null;
   syncSiteFocus();
   $('#focusPanel').classList.remove('on');
+  $('#btnChartControls').hidden=true;
+  $('#btnChartControls').setAttribute('aria-expanded','false');
   /* in walk mode the chase camera takes straight over — no fly-back */
   if(MODE==='walk'){setCtl();return;}
   flyTo(focus.savedP,focus.savedT,1.05,()=>{setCtl();});
@@ -8004,7 +7830,6 @@ function flickFocus(dir,vert){
     return false;                             /* the end of the row */
   }
   flickAt=performance.now();
-  playSound('blip');
   focusOn(next,FLICK_DUR);
   /* focusOn just cleared it. Carry it only while the screen you landed on
      still covers it -- step off the lane and the new row IS the lane. */
@@ -8087,7 +7912,6 @@ function goToFloor(e){
      only correction is coming down when you were up near the ceiling, rather
      than sailing across the room hovering over the spot. */
   const eye=new V3(p.x,clamp(camera.position.y,FC_LIMIT.yMin,3.2),p.z);
-  fcAvoidDesk(eye);
   pingFloor(p.x,p.z);playSound('blip');
   flyTo(eye,eye.clone().addScaledVector(fcForward(new V3()),4),0.8,setCtl);
   return true;
@@ -8538,7 +8362,8 @@ function radiusTick(dt){
 }
 
 addEventListener('keydown',e=>{
-  if(e.target&&/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))return;
+  if(e.defaultPrevented||e.target?.isContentEditable||e.target&&/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))return;
+  if(document.querySelector('#tsDialog.open,dialog[open]'))return;
   const k=(e.key||"").toLowerCase();   /* synthetic events can arrive with no key at all */
   if((e.ctrlKey||e.metaKey)&&k==='z'){e.preventDefault();undoLast();return;}
   /* A held key repeats. Everything below except movement is a one-shot
@@ -11159,16 +10984,11 @@ async function savePreviews(){
   return n;
 }
 
-/* keep the trader out of the desk and inside the room */
+/* Keep the trader inside the room. */
 function collideWalk(p){
   const r=Math.hypot(p.x,p.z),maxR=WALL.radius-1.35;
   if(r>maxR){p.x*=maxR/r;p.z*=maxR/r;}
-  const DX=3.1,Z0=3.35,Z1=6.15;
-  if(Math.abs(p.x)<DX&&p.z>Z0&&p.z<Z1){
-    const pushX=DX-Math.abs(p.x),pushZ=Math.min(p.z-Z0,Z1-p.z);
-    if(pushX<pushZ)p.x=(p.x<0?-1:1)*DX;
-    else p.z=(p.z-Z0<Z1-p.z)?Z0:Z1;
-  }
+
 }
 
 /* ---------------- what they do once they reach the wall -----------------
@@ -11574,7 +11394,7 @@ function queueRebuild(){
     hideAff();
     const hadCast=!!cast.screen;
     if(hadCast)unmountCast();
-    if(focus.screen){focus.screen=null;$('#focusPanel').classList.remove('on');}
+    if(focus.screen){focus.screen=null;$('#focusPanel').classList.remove('on');$('#btnChartControls').hidden=true;$('#btnChartControls').setAttribute('aria-expanded','false');}
     buildWall();saveWall();showSetVals();
     if(hadCast)beginPlacement();
   },140);
@@ -12579,6 +12399,11 @@ $('#btnAlerts').addEventListener('click',()=>{
    nothing in the app can strand you needing to remember which button opened
    it. Keyboard and backdrop routes stay where they were; this is the visible
    one people actually look for. */
+$('#btnChartControls').addEventListener('click',()=>{
+  if(!focus.screen)return;
+  const open=$('#focusPanel').classList.toggle('on');
+  $('#btnChartControls').setAttribute('aria-expanded',String(open));
+});
 function closeOverlay(name){
   if(name==='alerts')$('#alertPanel').classList.remove('on');
   else if(name==='set')$('#setPanel').classList.remove('on');
@@ -12586,7 +12411,11 @@ function closeOverlay(name){
   else if(name==='picker')closePicker();
   else if(name==='search')closeSearch();
   else if(name==='chars')$('#charSel').classList.remove('on');
-  else if(name==='focus')release();
+  else if(name==='focus'){
+    $('#focusPanel').classList.remove('on');
+    $('#btnChartControls').setAttribute('aria-expanded','false');
+    renderer.domElement.focus({preventScroll:true});
+  }
 }
 document.querySelectorAll('[data-close]').forEach(b=>{
   b.addEventListener('click',e=>{e.stopPropagation();closeOverlay(b.dataset.close);});
@@ -12687,7 +12516,7 @@ const holoWatch=new MutationObserver(list=>{
     if(a!==b)holoTone(b?'open':'close');
   }
 });
-for(const sel of ['#walletPanel','#setPanel','#alertPanel','#focusPanel','#prev','#picker','#charSel','#search']){
+for(const sel of ['#walletPanel','#setPanel','#alertPanel','#prev','#picker','#charSel','#search']){
   const el=$(sel);if(el)holoWatch.observe(el,{attributes:true,attributeFilter:['class'],attributeOldValue:true});
 }
 addEventListener('pointerover',e=>{
@@ -12811,21 +12640,12 @@ const VR_SPEED=2.4;         /* m/s, walking pace — speed is what makes people 
 const VR_TURN=Math.PI/6;    /* 30 deg SNAP; smooth yaw is the other thing that does */
 const VR_DEAD=0.15;
 
-/* Keep the player in the room and out of the desk. Same box fcAvoidDesk uses,
-   grown a little, but resolved in XZ only: at floor level you cannot step over
-   a desk, and lifting somebody's view to clear one is how you make them sick. */
+/* Keep the player inside the room. */
 function vrClamp(p){
   const lim=Math.max(4,WALL.radius-1.3);
   const d=Math.hypot(p.x,p.z);
   if(d>lim){p.x*=lim/d;p.z*=lim/d;}
-  const DX=3.7,Z0=2.8,Z1=6.7;
-  if(Math.abs(p.x)<DX&&p.z>Z0&&p.z<Z1){
-    const outX=DX-Math.abs(p.x),outZ0=p.z-Z0,outZ1=Z1-p.z;
-    const m=Math.min(outX,outZ0,outZ1);
-    if(m===outX)p.x=(p.x<0?-1:1)*DX;
-    else if(m===outZ0)p.z=Z0;
-    else p.z=Z1;
-  }
+
 }
 
 /* A controller you cannot see is a controller you cannot aim. Two short rays
