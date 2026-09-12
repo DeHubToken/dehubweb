@@ -96,8 +96,8 @@ export async function registerPushToken(params: {
   deviceName?: string;
   /** Web only — the payload is encrypted to these keys, so an endpoint alone is useless. */
   webSubscription?: WebPushSubscriptionPayload;
-}): Promise<{ result: boolean }> {
-  return apiCall<{ result: boolean }>("/api/push/token", {
+}): Promise<{ success: boolean; message: string }> {
+  return apiCall<{ success: boolean; message: string }>("/api/push/token", {
     method: "POST",
     body: { ...params },
     requiresAuth: true,
