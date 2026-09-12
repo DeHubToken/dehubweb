@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { SuperPowerIcon } from '@/components/app/SuperPowerIcon';
 
 const compactNumber = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
 
@@ -41,7 +42,10 @@ export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChan
       <DrawerContent scrollable column glass className="px-4 pb-6">
         <DrawerHeader className="pb-3 flex flex-row items-start justify-between gap-3">
           <div className="min-w-0">
-            <DrawerTitle className="text-white text-lg">Team up</DrawerTitle>
+            <DrawerTitle className="text-white text-lg flex items-center gap-2">
+              <SuperPowerIcon power="team_up" alt="" className="w-8 h-8 shrink-0 object-contain" />
+              Team up
+            </DrawerTitle>
             <p className="text-[12px] text-zinc-400 mt-1">
               Combine wallet power with up to seven others. Everyone wears the badge your total unlocks.
             </p>

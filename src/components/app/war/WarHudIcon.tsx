@@ -44,6 +44,16 @@ import {
   Vault,
   type LucideIcon,
   Zap,
+  Anchor,
+  Armchair,
+  Bomb,
+  Handshake,
+  Hourglass,
+  Shield,
+  Siren,
+  TrendingUp,
+  Waves,
+  Target,
 } from 'lucide-react';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
@@ -144,7 +154,10 @@ export type ThemeIconKey =
   | 'governance' | 'trophy' | 'notifications' | 'settings' | 'stages'
   | 'assistant' | 'lock' | 'profile' | 'arcade' | 'stores' | 'bounties'
   | 'events' | 'stats' | 'ads' | 'command' | 'email' | 'accounts'
-  | 'usernames' | 'tv' | 'superpowers' | 'boost' | 'dao' | 'staking' | 'bridge' | 'buy';
+  | 'usernames' | 'tv' | 'superpowers' | 'boost' | 'dao' | 'staking' | 'bridge' | 'buy'
+  | 'second-wind' | 'comment-anchor' | 'trend-jacker' | 'timeline-bomber'
+  | 'signal-flare' | 'flak-jacket' | 'precision-strike' | 'harpoon'
+  | 'team-up' | 'front-row' | 'deep-current';
 
 /**
  * Raster icon replacements shared by every non-War themed page.
@@ -212,6 +225,15 @@ const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
   'email', 'accounts', 'usernames', 'tv', 'superpowers', 'boost',
+  'second-wind', 'comment-anchor', 'trend-jacker', 'timeline-bomber',
+  'signal-flare', 'flak-jacket', 'precision-strike', 'harpoon',
+  'team-up', 'front-row', 'deep-current',
+]);
+
+const TRANSPARENT_PNG_KEYS = new Set<ThemeIconKey>([
+  'boost', 'second-wind', 'comment-anchor', 'trend-jacker', 'timeline-bomber',
+  'signal-flare', 'flak-jacket', 'precision-strike', 'harpoon',
+  'team-up', 'front-row', 'deep-current',
 ]);
 
 const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
@@ -253,6 +275,17 @@ const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
   tv: Tv,
   superpowers: Zap,
   boost: Rocket,
+  'second-wind': Hourglass,
+  'comment-anchor': Anchor,
+  'trend-jacker': TrendingUp,
+  'timeline-bomber': Bomb,
+  'signal-flare': Siren,
+  'flak-jacket': Shield,
+  'precision-strike': Crosshair,
+  harpoon: Target,
+  'team-up': Handshake,
+  'front-row': Armchair,
+  'deep-current': Waves,
   dao: Landmark,
   staking: Vault,
   bridge: Link2,
@@ -270,7 +303,7 @@ export function resolveThemeIconKey(src: string): ThemeIconKey | null {
 export function resolveThemeIconAsset(src: string, theme: string): string | null {
   const key = resolveThemeIconKey(src);
   if (!key) return null;
-  const extension = key === 'boost' ? 'png' : 'webp';
+  const extension = TRANSPARENT_PNG_KEYS.has(key) ? 'png' : 'webp';
   if (FULL_RASTER_THEMES.has(theme)) return `/theme-icons/${theme}/${key}.${extension}`;
   if (theme === 'system' && SYSTEM_REFRESHED_KEYS.has(key)) {
     return `/theme-icons/system/${key}.${extension}`;
@@ -400,7 +433,7 @@ export function ThemedIcon({ icon, alt = '', className, ...imgProps }: ThemedIco
 
   const rasterTheme = FULL_RASTER_THEMES.has(theme) ? theme : 'system';
   const assetRevision = icon === 'dao' ? '?v=3' : '';
-  const extension = icon === 'boost' ? 'png' : 'webp';
+  const extension = TRANSPARENT_PNG_KEYS.has(icon) ? 'png' : 'webp';
   return (
     <img
       src={`/theme-icons/${rasterTheme}/${icon}.${extension}${assetRevision}`}

@@ -18,6 +18,11 @@ const PAGE_KEYS = [
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
   'email', 'accounts', 'usernames', 'tv', 'superpowers', 'dao', 'staking', 'bridge', 'buy',
 ];
+const SUPERPOWER_KEYS = [
+  'boost', 'second-wind', 'comment-anchor', 'trend-jacker', 'timeline-bomber',
+  'signal-flare', 'flak-jacket', 'precision-strike', 'harpoon',
+  'team-up', 'front-row', 'deep-current',
+];
 
 describe('theme icon assets', () => {
   it('ships every profile and page icon for each full raster theme', () => {
@@ -55,13 +60,26 @@ describe('theme icon assets', () => {
     expect(iconSource).toMatch(/boost:\s*Rocket/);
   });
 
-  it('ships Boost as a transparent PNG in every raster theme', () => {
+  it('ships every SuperPower as a transparent PNG in every raster theme', () => {
     for (const theme of [...FULL_THEMES, 'system']) {
-      const file = resolve(__dirname, `../../public/theme-icons/${theme}/boost.png`);
-      const bytes = readFileSync(file);
-      expect(statSync(file).size, `${theme}/boost.png is unexpectedly empty`).toBeGreaterThan(10_000);
-      expect(bytes.subarray(1, 4).toString('ascii'), `${theme}/boost.png is not a PNG`).toBe('PNG');
-      expect(bytes[25], `${theme}/boost.png is not RGBA`).toBe(6);
+      for (const key of SUPERPOWER_KEYS) {
+        const file = resolve(__dirname, `../../public/theme-icons/${theme}/${key}.png`);
+        const bytes = readFileSync(file);
+        expect(statSync(file).size, `${theme}/${key}.png is unexpectedly empty`).toBeGreaterThan(10_000);
+        expect(bytes.subarray(1, 4).toString('ascii'), `${theme}/${key}.png is not a PNG`).toBe('PNG');
+        expect(bytes[25], `${theme}/${key}.png is not RGBA`).toBe(6);
+      }
+    }
+  });
+
+  it('maps all twelve API powers to dedicated themed artwork', () => {
+    const source = readFileSync(resolve(__dirname, '../../src/components/app/SuperPowerIcon.tsx'), 'utf8');
+    for (const key of [
+      'boost', 'second_wind', 'comment_anchor', 'trend_jacker', 'timeline_bomber',
+      'signal_flare', 'flak_jacket', 'precision_strike', 'harpoon',
+      'team_up', 'front_row', 'deep_current',
+    ]) {
+      expect(source, key).toMatch(new RegExp(`${key}:\\s*['"]`));
     }
   });
 
