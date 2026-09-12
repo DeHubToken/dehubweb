@@ -152,22 +152,16 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
         </>
       )}
 
-      {/* Post Button - only shown when authenticated */}
+      {/* Account actions - only shown when authenticated */}
       {isAuthenticated && (
         <div className="mt-4 pt-4 space-y-3 px-1">
-          <LiquidGlassBubble shimmer noBorder className="w-full box-border cursor-pointer border border-white/30 rounded-2xl" onClick={() => { closeMenu(); setIsPostModalOpen(true); }}>
-            <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
-              <PenSquare className="w-5 h-5" />
-              {t('sidebar.post')}
-            </div>
-          </LiquidGlassBubble>
           {/* Every other account saved on this device, one tap away. Settings
               → Profile used to be the only surface for this, which made
               multi-account invisible unless you already knew it existed. */}
           <Suspense fallback={null}>
             <SidebarProfileSwitcher onNavigate={closeMenu} />
           </Suspense>
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex items-center justify-between px-2">
             {/* forgetProfile: logging out revokes this session's tokens
                 server-side, so its stored snapshot is dead the moment this
                 runs. Left on the list it looked like a working profile and
@@ -180,6 +174,15 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
             >
               <LogOut className="w-4 h-4" />
               {t('sidebar.logOut')}
+            </button>
+            <button
+              type="button"
+              onClick={() => { closeMenu(); setIsPostModalOpen(true); }}
+              aria-label={t('sidebar.post')}
+              title={t('sidebar.post')}
+              className="flex h-12 w-12 items-center justify-center text-white hover:text-zinc-300 transition-colors"
+            >
+              <PenSquare className="w-5 h-5" />
             </button>
           </div>
         </div>
