@@ -52,7 +52,7 @@ describe('mobile menu dismissal', () => {
 
   it('closes the menu when opening the composer', async () => {
     mount();
-    fireEvent.click(screen.getByText('sidebar.post'));
+    fireEvent.click(screen.getByRole('button', { name: 'sidebar.post' }));
     expect(screen.queryByTestId('menu')).toBeNull();
     expect(await screen.findByText('Composer open')).toBeTruthy();
   });
