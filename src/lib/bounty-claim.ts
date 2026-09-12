@@ -55,6 +55,7 @@ export async function submitBountyClaim(tokenId: string, type: 'viewer' | 'comme
   const tx = await writeContractAA(config.streamController, new Interface([call.abi]), 'claimBounty', call.args, {
     chainId, context: 'claim bounty',
   });
-  await tx.wait(1);
+  const receipt = await tx.wait(1);
+  if (receipt.status !== 1) throw new Error('Bounty claim transaction reverted');
   return tx.hash;
 }
