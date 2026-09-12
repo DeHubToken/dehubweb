@@ -6,6 +6,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { AppState } from '@/components/app/AppState';
 import {
   claimMediaSession,
@@ -121,7 +122,6 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
   const [showActivityLog, setShowActivityLog] = useState(false);
   const [showGiftDrawer, setShowGiftDrawer] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMuted, setIsMuted] = useState(videoPlaybackManager.globalMuted);
   const urlsToTry = useMemo(() => [
     stream.playbackUrl,
@@ -148,6 +148,7 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
   const [balanceLoading, setBalanceLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, containerRef, { escapeAncestors: true });
   // Records the view once the player has been on screen long enough to mean it.
   const viewRef = useFeedViewTracking(stream.tokenId || stream.id);
   // Read here rather than below the presence hook: whether this viewer is the
@@ -611,36 +612,6 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
     videoPlaybackManager.globalMuted = !isMuted;
   }, [isMuted]);
 
-  const toggleFullscreen = useCallback(() => {
-    // Exit simulated fullscreen (SafePal/WebView)
-    if (isFullscreen && !document.fullscreenElement && !(document as any).webkitFullscreenElement) {
-      setIsFullscreen(false);
-      return;
-    }
-
-    if (document.fullscreenElement || (document as any).webkitFullscreenElement) {
-      document.exitFullscreen?.().catch(() => {});
-      (document as any).webkitExitFullscreen?.();
-    } else {
-      const el = containerRef.current as any;
-      if (!el) return;
-      const activateSimulated = () => {
-        if (!document.fullscreenElement && !(document as any).webkitFullscreenElement) {
-          setIsFullscreen(true);
-        }
-      };
-      if (el.requestFullscreen) {
-        el.requestFullscreen().catch(activateSimulated);
-        setTimeout(activateSimulated, 300);
-      } else if (el.webkitRequestFullscreen) {
-        try { el.webkitRequestFullscreen(); } catch { activateSimulated(); }
-        setTimeout(activateSimulated, 300);
-      } else {
-        setIsFullscreen(true);
-      }
-    }
-  }, [isFullscreen]);
-
   const handleLike = useCallback(async () => {
     if (!isAuthenticated) {
       toast.error('Sign in to like');
@@ -914,7 +885,7 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
       </div>
 
       {/* Video Player or Stream Ended State */}
-      <div ref={containerRef} data-media-full className={`aspect-video bg-black relative rounded-lg overflow-hidden${isFullscreen ? ' fixed inset-0 z-[9999] !aspect-auto w-screen h-screen rounded-none' : ''}`}>
+      <div ref={containerRef} data-media-full className={`bg-black overflow-hidden ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh]' : 'relative aspect-video rounded-lg'}`}>
         {/* The paywall. It wraps the player rather than covering it, so a
             gated stream never mounts the <video> at all — no WHEP subscription
             and no HLS ladder for a broadcast the viewer has not paid for. The
@@ -1017,7 +988,7 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
               </button>
             </div>
             
-            <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent opacity-0 hover:opacity-100 transition-opacity">
+            <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span data-live-badge className="px-2 py-0.5 bg-red-500 text-white text-xs font-semibold rounded">
@@ -1028,12 +999,14 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={toggleMute}
+                    aria-label={isMuted ? t('stages.unmute', 'Unmute') : t('stages.mute', 'Mute')}
                     className="p-2 text-white hover:bg-white/20 rounded transition-colors"
                   >
                     {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
                   </button>
                   <button
                     onClick={toggleFullscreen}
+                    aria-label={isFullscreen ? t('stages.exitFullscreen', 'Exit fullscreen') : t('stages.fullscreen', 'Fullscreen')}
                     className="p-2 text-white hover:bg-white/20 rounded transition-colors"
                   >
                     {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
