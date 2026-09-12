@@ -69,7 +69,7 @@ describe('web push state', () => {
     vi.clearAllMocks();
     vi.unstubAllGlobals();
     getVapidPublicKey.mockResolvedValue(VAPID);
-    registerPushToken.mockResolvedValue({ result: true });
+    registerPushToken.mockResolvedValue({ success: true, message: 'registered' });
   });
 
   it('reports unavailable when the browser refuses to register', async () => {
@@ -116,6 +116,16 @@ describe('web push state', () => {
     expect(first).toBe(true);
     expect(second).toBe(true);
     expect(registerPushToken).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not claim subscription when the backend rejects registration', async () => {
+    registerPushToken.mockResolvedValue({ success: false, message: 'conflicting token' });
+    installBrowser({ subscribe: () => fakeSubscription() });
+
+    const mod = await freshModule();
+    await expect(mod.subscribeToWebPush()).resolves.toBe(false);
+
+    expect(mod.getWebPushState()).toBe('unavailable');
   });
 
   it('treats a deployment with no VAPID key as unavailable, and asks for nothing', async () => {
