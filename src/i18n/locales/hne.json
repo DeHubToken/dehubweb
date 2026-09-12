@@ -2244,6 +2244,28 @@
     "createGroup": "बनाव",
     "groupsHint": "समूहमन अपन अगला फ़ीड ल फ़िल्टर करत हंवय । तुमन ओमन ला देख सकत हव ।"
   },
+  "reactionInfo": {
+    "title": "प्रतिक्रिया",
+    "privateTitle": "निजी प्रतिक्रिया",
+    "privateDescription": "केवल लेखक ए सूची ल देख सकत हवय ।",
+    "empty": "कोनो प्रतिक्रिया नी",
+    "emptyDescription": "ए लेख म प्रतिक्रिया एहां दिखाई दिही ।",
+    "labels": {
+      "like": "जइसन",
+      "love": "प्यार",
+      "respect": "सम्मान",
+      "hot": "गरम",
+      "hundred": "100",
+      "sad": "उदास",
+      "cry": "रोवत हे",
+      "poo": "पूConstellation name (",
+      "dislike": "पसंद"
+    },
+    "mediaSource": "मीडिया स्रोत चुनव",
+    "photoLibrary": "फोटू लाइब्रेरी",
+    "videoFiles": "फाइल मन के वीडियो",
+    "fileError": "ओहा वीडियो ल खोले म असमर्थ रहिस । एक ठन अउ सुगंध ल देखव ।"
+  },
   "post": {
     "like": "पसंद",
     "comment": "टिप्पणी",

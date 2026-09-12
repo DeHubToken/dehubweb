@@ -2145,5 +2145,23 @@
     "noFollowersYet": "No followers yet",
     "groupLimitReached": "Group limit reached",
     "createGroup": "Create"
+  },
+  "reactionInfo": {
+    "title": "Reactions",
+    "empty": "No reactions yet",
+    "labels": {
+      "like": "Like",
+      "love": "Love",
+      "respect": "Respect",
+      "hot": "Hot",
+      "hundred": "100",
+      "lol": "LOL",
+      "sad": "Sad",
+      "cry": "Crying",
+      "poo": "Poo",
+      "dislike": "Dislike"
+    },
+    "mediaSource": "Choose media source",
+    "photoLibrary": "Photo library"
   }
 }
