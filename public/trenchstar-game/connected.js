@@ -45,6 +45,13 @@ export function mountConnected(T){
   $('#tsFavorite').onclick=()=>{favorites=favorites.includes(selected)?favorites.filter(s=>s!==selected):[...favorites,selected];write('favorites',favorites);paintMarkets();};
   $('#tsTimeframes').onclick=e=>{if(!e.target.dataset.tf)return;tf=e.target.dataset.tf;choose(selected);};$('#tsPractice').onclick=()=>openPaper();
   let swipeX=null;$('#tsChart').addEventListener('pointerdown',e=>{swipeX=e.clientX;});$('#tsChart').addEventListener('pointerup',e=>{if(swipeX===null)return;const d=e.clientX-swipeX;swipeX=null;if(Math.abs(d)>60&&favorites.length){const i=favorites.indexOf(selected);choose(favorites[(i+(d<0?1:-1)+favorites.length)%favorites.length]);}});
+  document.addEventListener('keydown',e=>{
+    if(!focusView||dialogKind||document.querySelector('dialog[open]')||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target?.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target?.tagName))return;
+    if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;
+    e.preventDefault();e.stopImmediatePropagation();
+    if(favorites.length){const i=favorites.indexOf(selected),step=e.key==='ArrowRight'||e.key==='ArrowUp'?1:-1;choose(favorites[(i+step+favorites.length)%favorites.length]);}
+  },true);
   function chart(){
     if(!focusView||document.hidden)return;
     const m=T.markets[selected];if(!m)return;

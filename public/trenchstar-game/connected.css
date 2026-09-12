@@ -35,3 +35,6 @@
 @media(max-width:700px){#tsNav{bottom:calc(10px + env(safe-area-inset-bottom));padding:6px 3px;gap:0}#tsNav button{flex-direction:column;gap:2px;min-height:58px;padding:4px 7px;font-size:10px;white-space:nowrap}#tsNav .tsIcon{width:26px;height:26px}#btnRow{bottom:calc(94px + env(safe-area-inset-bottom))}#tsFocus{padding-bottom:112px}#tsToast{bottom:102px}.tsKicker .tsIcon{width:34px;height:34px}.tsKicker{margin-bottom:8px}#tsFocusHead .tsIcon{width:20px;height:20px}#tsFocusHead .tsRow button{padding:6px 9px}}
 @media(hover:none){#tsNav button:hover .tsIcon,#btnRow button:hover .tsIcon{transform:none}}
 @media(prefers-reduced-motion:reduce){#tsNav .tsIcon,#btnRow .tsIcon{transition:none!important;transform:none!important}}
+
+#btnChartControls[hidden]{display:none!important}#gl canvas:focus{outline:none}
+#focusPanel{background:#10171ff5!important;border:1px solid #ffffff20!important;border-radius:16px!important;box-shadow:0 20px 60px #0008!important}
