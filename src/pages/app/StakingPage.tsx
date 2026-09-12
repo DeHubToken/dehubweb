@@ -32,6 +32,12 @@ import { confirmStake, readStakeReceipt, type StakeAttempt } from '@/lib/stake-c
 import { createLogger } from '@/lib/logger';
 const stakeLog = createLogger('Staking');
 const pendingStakeKey = (wallet: string) => `dehub:pending-stake:${wallet.toLowerCase()}`;
+const recordStakeEvent = (message: string, attempt: StakeAttempt, outcome?: string) => {
+  void supabase.functions.invoke('client-logs', { body: {
+    level: 'info', component: 'Staking', message, user_address: attempt.wallet,
+    metadata: { ...attempt, outcome, client_time: new Date().toISOString() },
+  } }).catch(() => {});
+};
 
 
 const UNSTAKE_COOLDOWN_DAYS = 12;
@@ -323,7 +329,7 @@ export default function StakingPage() {
       } else {
         toast.error(t('toasts.transaction_reverted'), { description: 'The blockchain confirmed this transaction reverted.' });
       }
-      void stakeLog.warn('Stake outcome verified', { hash: attempt.hash, chainId: attempt.chainId, outcome });
+      recordStakeEvent('Stake outcome verified', attempt, outcome);
       try { localStorage.removeItem(pendingStakeKey(attempt.wallet)); } catch {}
       setPendingStake(previous => previous?.hash === attempt.hash ? null : previous);
     } finally { checkingStake.current = false; }
@@ -452,7 +458,7 @@ export default function StakingPage() {
     setStakeAmount('');
     try { localStorage.setItem(pendingStakeKey(walletAddress), JSON.stringify(attempt)); }
     catch (error) { void stakeLog.warn('Pending stake storage unavailable', { hash: attempt.hash, error: String(error) }); }
-    void stakeLog.warn('Stake submitted; awaiting receipt', { ...attempt });
+    recordStakeEvent('Stake submitted; awaiting receipt', attempt);
     toast.dismiss();
     toast.info('Stake submitted', { description: 'Checking the blockchain. You do not need to send it again.' });
   };
