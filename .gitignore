@@ -78,6 +78,7 @@ doc.md
 # written without this exception and silently never shipped, freezing the
 # bot-visible blog at Feb 2026 — keep every build-referenced script negated.
 scripts/*
+!scripts/edge-route-recovery.mjs
 !scripts/check-entry-bundle.mjs
 !scripts/generate-blog-manifest.mjs
 !scripts/build-home-intro-html.mjs

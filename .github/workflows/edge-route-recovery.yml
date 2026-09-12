@@ -1,0 +1,35 @@
+name: Edge route recovery
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Inspect current routing, or migrate the apex to the existing Worker zone route
+        type: choice
+        options: [inspect, zone-route]
+        default: inspect
+        required: true
+permissions:
+  contents: read
+concurrency:
+  group: edge-route-recovery
+  cancel-in-progress: false
+jobs:
+  routing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/edge-route-recovery.mjs
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_APITOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ID }}
+          ROUTING_MODE: ${{ inputs.mode }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: edge-route-before
+          path: edge-route-before.json
+          retention-days: 30

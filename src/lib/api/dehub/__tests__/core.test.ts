@@ -207,6 +207,22 @@ describe('apiCall', () => {
     expect(opts?.body).toBe(JSON.stringify({ foo: 'bar' }));
   });
 
+  it('falls back to the relay only for a failed read transport', async () => {
+    const spy = vi.spyOn(globalThis, 'fetch')
+      .mockRejectedValueOnce(new TypeError('Failed to fetch'))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ ok: true }), { status: 200 }));
+    await expect(apiCall('/api/feed', { params: { page: 2 } })).resolves.toEqual({ ok: true });
+    expect(spy.mock.calls.map(call => call[0])).toEqual([
+      'https://api.dehub.io/api/feed?page=2', 'https://dehub.io/_api/api/feed?page=2',
+    ]);
+  });
+
+  it('never replays a mutation after a transport failure', async () => {
+    const spy = vi.spyOn(globalThis, 'fetch').mockRejectedValue(new TypeError('Failed to fetch'));
+    await expect(apiCall('/api/purchase', { method: 'POST', body: { amount: 1 } })).rejects.toThrow('Failed to fetch');
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
   it('aborts a stalled request instead of leaving the UI loading forever', async () => {
     vi.spyOn(globalThis, 'fetch').mockImplementation((_url, init) =>
       new Promise((_resolve, reject) => {
