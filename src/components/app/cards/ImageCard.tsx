@@ -390,17 +390,22 @@ function ImageCarousel({
  * Uses useTranslation hook directly to properly display translated content
  */
 function FeedDescription({ 
+  postId,
+  disabled,
   title, 
   description,
   isTranslated,
   translatedText,
 }: { 
+  postId: string;
+  disabled?: boolean;
   title?: string; 
   description?: string;
   isTranslated?: boolean;
   translatedText?: string;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const tapGestures = useTapGestures({ postId, disabled, enableLongPress: false });
   const MAX_LENGTH = 150;
   
   // Parse translated text back into title/description.
@@ -468,7 +473,8 @@ function FeedDescription({
   if (!title && !description && dehubLinks.length === 0) return null;
 
   return (
-    <div className="space-y-1">
+    <div className="relative space-y-1" data-no-navigate {...tapGestures} onClick={(event) => event.stopPropagation()}>
+      {!disabled && <TapReactionBurst postId={postId} />}
       {linkFreeTitle && (
         <h3 className="text-white text-[14px] leading-tight">
           {renderTextWithLinks(linkFreeTitle)}
@@ -1142,6 +1148,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       <div className="pt-3 space-y-2">
         {/* Title & Description */}
         <FeedDescription 
+          postId={post.id}
+          disabled={matureGate.isGated || isPPV || isW2E || isLocked || isSubGated}
           title={post.title} 
           description={post.description}
           isTranslated={isTranslated}

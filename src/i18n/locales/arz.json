@@ -2285,5 +2285,36 @@
     "groupLimitReached": "تم الوصول إلى حد المجموعة",
     "createGroup": "إنشاء",
     "groupsHint": "تقوم المجموعات بتصفية خلاصتك التالية. أنت فقط من يمكنه رؤيتهم."
+  },
+  "reactionInfo": {
+    "title": "ردود الفعل",
+    "privateTitle": "ردود الفعل خاصة",
+    "privateDescription": "يمكن لمؤلف المقالة فقط عرض هذه القائمة.",
+    "empty": "لا توجد ردود فعل حتى الآن",
+    "emptyDescription": "ستظهر ردود الفعل على هذا المنشور هنا.",
+    "anonymous": "{{count}} إعجابات من حاملي شارات مجهولين",
+    "labels": {
+      "like": "إعجاب",
+      "love": "الحب",
+      "respect": "الاحترام",
+      "hot": "ساخن",
+      "hundred": "100",
+      "sad": "حزين",
+      "cry": "البكاء",
+      "poo": "براز",
+      "dislike": "عدم الإعجاب"
+    },
+    "mediaSource": "اختيار مصدر الوسائط",
+    "photoLibrary": "مكتبة الصور",
+    "videoFiles": "فيديو من الملفات",
+    "fileError": "تعذر فتح هذا الفيديو. يرجى تجربة ملف آخر.",
+    "reactedPost": "تفاعل {{name}} مع منشورك",
+    "repostedPost": "أعاد {{name}} نشر مقالتك",
+    "quotedPost": "{{name}} نقلت مقالتك",
+    "mentionedYou": "أشار إليك {{name}}",
+    "followRequest": "طلب {{name}} متابعتك",
+    "followAccepted": "قبل {{name}} طلبك للمتابعة",
+    "signalFlare": "أرسل {{name}} إشارة مضيئة",
+    "newMessage": "أرسل لك {{name}} رسالة"
   }
 }

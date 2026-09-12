@@ -1,3 +1,4 @@
+import { localizedNotificationContent } from "@/lib/notification-content";
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { memo, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
@@ -564,6 +565,11 @@ function getNotificationContent(
     : 'Someone';
   const actorName = notification.actorUsername || canonicalActors?.[0]?.display || actorAddressFallback;
   
+  // Aggregated web rows retain their interactive list of other actors below.
+  if (!(notification.aggregatedCount && notification.aggregatedCount > 1) && !(bundle && bundle.postCount > 1)) {
+    const localized = localizedNotificationContent({ ...notification, actorUsername: actorName }, tr);
+    if (localized) return localized;
+  }
   // Handle custom notification types outside the typed switch
   if ((notification.type as string) === 'feature_request_like') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
@@ -639,7 +645,7 @@ function getNotificationContent(
     const count = bundle.postCount;
     switch (notification.type) {
       case 'like':
-        return `${actorName} reacted to ${count} of your posts`;
+        return tr('notifications.likedPosts', { name: actorName, count });
       case 'comment':
         return tr('notifications.commentedPosts', { name: actorName, count });
       case 'comment_reply':
@@ -661,8 +667,8 @@ function getNotificationContent(
     if (canonical.length <= 1) {
       const name = canonical[0]?.display || actorName;
       const postCount = aggCount;
-      if (typeStr === 'like') return `${name} reacted to ${postCount} of your posts`;
-      if (typeStr === 'comment') return `${name} commented on ${postCount} of your posts`;
+      if (typeStr === 'like') return tr('notifications.likedPosts', { name, count: postCount });
+      if (typeStr === 'comment') return tr('notifications.commentedPosts', { name, count: postCount });
       if (typeStr === 'repost') return `${name} reposted ${postCount} of your posts`;
     } else {
       // Multiple users — first name and others count come from the exact same canonical source as the grid
@@ -675,9 +681,10 @@ function getNotificationContent(
         </span>
       ) : othersText;
 
-      if (typeStr === 'like') return <>{first} and {othersSpan} reacted to your post</>;
-      if (typeStr === 'comment') return <>{first} and {othersSpan} commented on your post</>;
-      if (typeStr === 'repost') return <>{first} and {othersSpan} reposted your post</>;
+      const key = typeStr === 'like' ? 'notifications.likedPost'
+        : typeStr === 'comment' ? 'notifications.commentedPost' : 'reactionInfo.repostedPost';
+      const [before, after] = tr(key, { name: '\uFFFC' }).split('\uFFFC');
+      return <>{before}{first}, {othersSpan}{after}</>;
     }
   }
 
@@ -695,7 +702,8 @@ function getNotificationContent(
 
   switch (notification.type) {
     case 'like':
-      return notification.content || `${actorName} reacted to your post`;
+      return localizedNotificationContent({ ...notification, actorUsername: actorName }, tr)
+        ?? tr('notifications.likedPost', { name: actorName });
     case 'comment':
       return tr('notifications.commentedPost', { name: actorName });
     case 'comment_reply':
@@ -710,7 +718,8 @@ function getNotificationContent(
     case 'ppv_purchase':
       return tr('notifications.purchasedContent', { name: actorName });
     case 'following':
-      return tr('notifications.startedFollowing', { name: actorName });
+      return localizedNotificationContent({ ...notification, actorUsername: actorName }, tr)
+        ?? tr('notifications.startedFollowing', { name: actorName });
     case 'follow_request':
       return `${actorName} requested to follow you`;
     case 'video_milestone':
