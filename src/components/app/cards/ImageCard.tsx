@@ -798,6 +798,16 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           >
             <Sparkles className="w-[23.5px] h-[23.5px]" />
           </button>
+          {isOwnPost && (
+            <button
+              onClick={() => setShowBoostModal(true)}
+              disabled={!postTokenId}
+              className="text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all disabled:opacity-40"
+              aria-label={t('postOptions.boostPost')}
+            >
+              <ThemedIcon icon="superpowers" alt="" className="w-[23.5px] h-[23.5px] object-contain" />
+            </button>
+          )}
           <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
             {/* State-driven, not DrawerTrigger — see PostCard: a trigger pins
                 vaul's Root (and its window scroll listener) into every card. */}

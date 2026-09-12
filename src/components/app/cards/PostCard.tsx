@@ -393,6 +393,16 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
         >
           <Sparkles className="w-[23.5px] h-[23.5px]" />
         </button>
+        {isOwnPost && (
+          <button
+            onClick={() => setShowBoostModal(true)}
+            disabled={!postTokenId}
+            className="text-zinc-400 hover:text-white transition-colors active:scale-95 disabled:opacity-40"
+            aria-label={t('postOptions.boostPost')}
+          >
+            <ThemedIcon icon="superpowers" alt="" className="w-[23.5px] h-[23.5px] object-contain" />
+          </button>
+        )}
         
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
           {/* Opens via state, not DrawerTrigger: a trigger forces vaul's Root to
