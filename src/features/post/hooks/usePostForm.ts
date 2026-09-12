@@ -733,8 +733,7 @@ export function usePostForm(
 
   const processAudioFile = useCallback((file: File) => {
     if (file.size > MEDIA_LIMITS.MAX_AUDIO_SIZE) {
-      // The server rejects feed-audio over 10MB; catching it here beats
-      // uploading the whole file to learn that.
+      // Match the video upload ceiling so audio posts are not penalized.
       toast.error(`Audio is too large — the cap is ${Math.round(MEDIA_LIMITS.MAX_AUDIO_SIZE / (1024 * 1024))}MB`);
       return;
     }
