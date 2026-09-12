@@ -1200,7 +1200,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
 
         {/* Desktop Options Drawer */}
         <Drawer open={showDesktopOptionsDrawer} onOpenChange={setShowDesktopOptionsDrawer}>
-          <DrawerContent column glass className="px-4 pb-6">
+          <DrawerContent scrollable column glass className="px-4 pb-6">
             <DrawerHeader className="pb-2">
               <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
             </DrawerHeader>

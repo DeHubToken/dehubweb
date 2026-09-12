@@ -406,7 +406,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
           >
             <MoreVertical className="w-[23.5px] h-[23.5px]" />
           </button>
-          <DrawerContent column glass className="px-4 pb-6">
+          <DrawerContent scrollable column glass className="px-4 pb-6">
             <DrawerHeader className="pb-2">
               <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
             </DrawerHeader>
@@ -864,7 +864,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
           asks a different question and buys a different thing. */}
       {isSubGated && (
         <Drawer open={showSubDrawer} onOpenChange={setShowSubDrawer}>
-          <DrawerContent column glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+          <DrawerContent scrollable column glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()}>
             <Suspense fallback={<div className="py-10 text-center text-white/60 text-sm">Loading…</div>}>
               <SubscriberGateDrawer
                 creatorAddress={post.author.id}
@@ -885,7 +885,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
       {/* Locked Drawer - controlled, rendered at root level for mobile compatibility */}
       {isLocked && (
         <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
-          <DrawerContent column glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+          <DrawerContent scrollable column glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()}>
             <DrawerHeader className="pb-3 relative">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Lock className="w-5 h-5 text-white" />

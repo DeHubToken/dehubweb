@@ -223,7 +223,7 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
       </Drawer>
 
       <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
-        <DrawerContent glass className="px-4 pb-6">
+        <DrawerContent scrollable glass className="px-4 pb-6">
           <DrawerHeader className="pb-3 relative">
             <DrawerTitle className="text-white text-lg flex items-center gap-2">
               <Lock className="w-5 h-5 text-white" />
@@ -269,7 +269,7 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
       </Drawer>
 
       <Drawer open={showSubDrawer} onOpenChange={setShowSubDrawer}>
-        <DrawerContent glass className="px-4 pb-6">
+        <DrawerContent scrollable glass className="px-4 pb-6">
           <Suspense
             fallback={
               <div className="flex items-center justify-center py-10">
