@@ -187,6 +187,7 @@ const THEME_ICON_KEYS: ReadonlyArray<readonly [string, ThemeIconKey]> = [
   ['stages-mic-icon', 'stages'],
   ['ai-sparkle-icon', 'assistant'],
   ['ai-star-icon', 'assistant'],
+  ['boost-3d-icon', 'boost'],
   ['lock-3d', 'lock'],
   ['padlock', 'lock'],
   ['profile-icon', 'profile'],
@@ -269,9 +270,10 @@ export function resolveThemeIconKey(src: string): ThemeIconKey | null {
 export function resolveThemeIconAsset(src: string, theme: string): string | null {
   const key = resolveThemeIconKey(src);
   if (!key) return null;
-  if (FULL_RASTER_THEMES.has(theme)) return `/theme-icons/${theme}/${key}.webp`;
+  const extension = key === 'boost' ? 'png' : 'webp';
+  if (FULL_RASTER_THEMES.has(theme)) return `/theme-icons/${theme}/${key}.${extension}`;
   if (theme === 'system' && SYSTEM_REFRESHED_KEYS.has(key)) {
-    return `/theme-icons/system/${key}.webp`;
+    return `/theme-icons/system/${key}.${extension}`;
   }
   return null;
 }
@@ -398,9 +400,10 @@ export function ThemedIcon({ icon, alt = '', className, ...imgProps }: ThemedIco
 
   const rasterTheme = FULL_RASTER_THEMES.has(theme) ? theme : 'system';
   const assetRevision = icon === 'dao' ? '?v=3' : '';
+  const extension = icon === 'boost' ? 'png' : 'webp';
   return (
     <img
-      src={`/theme-icons/${rasterTheme}/${icon}.webp${assetRevision}`}
+      src={`/theme-icons/${rasterTheme}/${icon}.${extension}${assetRevision}`}
       alt={alt}
       className={className}
       data-theme-icon-family={theme}
