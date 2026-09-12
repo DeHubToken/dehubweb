@@ -25,6 +25,7 @@ import { useStreamProducts, useStreamProductActions } from '@/hooks/use-stream-s
 import { useShopLinkAllowance } from '@/hooks/use-shop-links';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { EditPostImages } from './EditPostImages';
 
 export interface EditPostResult {
   name: string;
@@ -106,9 +107,13 @@ export function EditPostModal({
     }
   };
 
-  // Sync with props when modal opens
+  const editingTokenRef = useRef<string | null>(null);
+  // Image replacement refreshes the post cache. Keep unsaved text edits while
+  // that happens; initialize the draft only when opening a post.
   useEffect(() => {
-    if (open) {
+    if (!open) { editingTokenRef.current = null; return; }
+    if (editingTokenRef.current !== String(tokenId)) {
+      editingTokenRef.current = String(tokenId);
       setName(currentTitle);
       setDescription(currentDescription);
       setCategories(currentCategories);
@@ -116,7 +121,7 @@ export function EditPostModal({
       setIsMature(currentContentRating === 'mature');
       setCategoryInput('');
     }
-  }, [open, currentTitle, currentDescription, currentCategories, currentCommentsDisabled, currentContentRating]);
+  }, [open, tokenId, currentTitle, currentDescription, currentCategories, currentCommentsDisabled, currentContentRating]);
 
   const handleAddCategory = () => {
     const trimmed = categoryInput.trim();
@@ -194,7 +199,7 @@ export function EditPostModal({
 
   return (
     <>
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    <Drawer open={open} onOpenChange={(next) => { if (!isReplacing && !isSubmitting) onOpenChange(next); }}>
       <DrawerContent column glass className="max-h-[90dvh]">
         <DrawerHeader className="text-left">
           <DrawerTitle className="flex items-center gap-2 text-white">
@@ -211,6 +216,7 @@ export function EditPostModal({
           style={{ maxHeight: 'calc(90vh - 160px)', WebkitOverflowScrolling: 'touch' }}
           data-vaul-no-drag
         >
+          {open && <EditPostImages tokenId={tokenId} disabled={isSubmitting || isReplacing} onBusyChange={setIsReplacing} />}
           {/* Title */}
           <div className="space-y-2">
             <Label htmlFor="edit-title" className="text-sm font-medium text-zinc-300">
@@ -428,14 +434,14 @@ export function EditPostModal({
             <Button
               variant="ghost"
               onClick={() => onOpenChange(false)}
-              disabled={isSubmitting}
+              disabled={isSubmitting || isReplacing}
               className="flex-1 text-zinc-400 hover:text-white hover:bg-white/10"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSubmit}
-              disabled={isSubmitting}
+              disabled={isSubmitting || isReplacing}
               variant="glass"
               className="flex-1"
             >

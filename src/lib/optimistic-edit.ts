@@ -7,6 +7,21 @@
 
 import type { QueryClient, InfiniteData } from '@tanstack/react-query';
 import type { EditPostResult } from '@/components/app/modals/EditPostModal';
+import { buildFeedImageUrls } from '@/lib/media-url';
+
+export function applyImageReplacement(queryClient: QueryClient, tokenId: string | number, imageUrls: string[]) {
+  const id = String(tokenId);
+  const images = buildFeedImageUrls(imageUrls) ?? [];
+  const patch = { imageUrls: images, image: images[0], thumbnail: images[0] };
+  for (const queryKey of [['unified-feed'], ['dehub-feed'], ['dehub-user-content']]) {
+    patchInfiniteQuery(queryClient, queryKey, id, patch);
+    void queryClient.invalidateQueries({ queryKey });
+  }
+  for (const queryKey of [['single-post', id], ['nft-info', id]]) {
+    queryClient.setQueriesData<any>({ queryKey }, old => old ? { ...old, imageUrls } : old);
+    void queryClient.invalidateQueries({ queryKey });
+  }
+}
 
 /**
  * Compute title/content display values using the same normalization as feeds.
