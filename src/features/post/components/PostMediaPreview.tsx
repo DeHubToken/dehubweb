@@ -31,6 +31,8 @@ interface PostMediaPreviewProps {
   onApplyTrim?: (index: number, trimStart: number, trimEnd: number) => void;
   /** Replace an image's bytes outright — used by the annotator, which bakes. */
   onReplaceImage?: (index: number, file: File) => void;
+  /** Keeps the parent composer from treating the portalled viewer as an outside press. */
+  onFullscreenChange?: (open: boolean) => void;
 }
 
 const MAX_DURATION = 30; // 30 seconds max
@@ -91,6 +93,7 @@ export function PostMediaPreview({
   onClearCrop,
   onApplyTrim,
   onReplaceImage,
+  onFullscreenChange,
 }: PostMediaPreviewProps) {
   const [recordingIndex, setRecordingIndex] = useState<number | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -105,6 +108,11 @@ export function PostMediaPreview({
   const [extractingFrames, setExtractingFrames] = useState<Set<number>>(new Set());
   const [fullscreenPreview, setFullscreenPreview] = useState<{ index: number; src: string; type: 'image' | 'video'; filterSettings?: FilterSettings; cropSettings?: CropSettings; currentTime?: number } | null>(null);
   const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    onFullscreenChange?.(fullscreenPreview !== null);
+    return () => onFullscreenChange?.(false);
+  }, [fullscreenPreview, onFullscreenChange]);
 
   // Escape belongs to whatever is on top. Without this the composer drawer
   // hears it first and closes the whole post out from under the preview.

@@ -69,6 +69,7 @@ interface PostContentAreaProps {
   // Poll
   poll: PollData | null;
   onPollChange: (poll: PollData | null) => void;
+  onMediaFullscreenChange?: (open: boolean) => void;
 }
 
 // URL regex pattern - create fresh each time to avoid state issues with global flag
@@ -147,6 +148,7 @@ export function PostContentArea({
   onOpenCategories,
   poll,
   onPollChange,
+  onMediaFullscreenChange,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
   const isProcessingLinks = useRef(false);
@@ -775,6 +777,7 @@ export function PostContentArea({
             onClearCrop={onClearCrop}
             onApplyTrim={onApplyTrim}
             onReplaceImage={onReplaceImage}
+            onFullscreenChange={onMediaFullscreenChange}
           />
         </div>
 
