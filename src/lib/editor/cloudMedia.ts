@@ -4,7 +4,7 @@
  * Supabase Storage, with a matching row in `public.editor_assets`.
  */
 import { supabase } from "@/integrations/supabase/client";
-import { withWalletHeader } from "@/lib/supabase-wallet-client";
+import { walletScopedClient, withWalletHeader } from "@/lib/supabase-wallet-client";
 import type { MediaProvenance } from "@/lib/editor/mediaStore";
 import type { Json } from "@/integrations/supabase/types";
 
@@ -53,13 +53,14 @@ function extForMime(mime: string, fallback = "bin"): string {
 /** Signed URL cache so we don't re-hit the API on every render. */
 const signedUrlCache = new Map<string, { url: string; expiresAt: number }>();
 
-export async function getSignedAssetUrl(path: string, ttlSeconds = 60 * 60 * 4): Promise<string> {
-  const cached = signedUrlCache.get(path);
+export async function getSignedAssetUrl(wallet: string, path: string, ttlSeconds = 60 * 60 * 4): Promise<string> {
+  const cacheKey = `${wallet.toLowerCase()}:${path}`;
+  const cached = signedUrlCache.get(cacheKey);
   const now = Date.now();
   if (cached && cached.expiresAt - 60_000 > now) return cached.url;
-  const { data, error } = await supabase.storage.from(BUCKET).createSignedUrl(path, ttlSeconds);
+  const { data, error } = await walletScopedClient(wallet).storage.from(BUCKET).createSignedUrl(path, ttlSeconds);
   if (error || !data?.signedUrl) throw error ?? new Error("signed url failed");
-  signedUrlCache.set(path, { url: data.signedUrl, expiresAt: now + ttlSeconds * 1000 });
+  signedUrlCache.set(cacheKey, { url: data.signedUrl, expiresAt: now + ttlSeconds * 1000 });
   return data.signedUrl;
 }
 
@@ -82,11 +83,12 @@ export interface UploadArgs {
 
 export async function uploadEditorAsset(args: UploadArgs): Promise<CloudAsset> {
   const wallet = args.wallet.toLowerCase();
+  const storage = walletScopedClient(wallet).storage;
   const id = args.id ?? crypto.randomUUID();
   const ext = extForMime(args.mimeType, args.kind === "image" ? "jpg" : "bin");
   const storagePath = `${wallet}/${id}/original.${ext}`;
 
-  const { error: upErr } = await supabase.storage
+  const { error: upErr } = await storage
     .from(BUCKET)
     .upload(storagePath, args.blob, {
       contentType: args.mimeType,
@@ -99,7 +101,7 @@ export async function uploadEditorAsset(args: UploadArgs): Promise<CloudAsset> {
   let thumbnailPath: string | null = null;
   if (args.thumbnail && args.thumbnail.size > 0) {
     thumbnailPath = `${wallet}/${id}/thumb.jpg`;
-    const { error: thErr } = await supabase.storage
+    const { error: thErr } = await storage
       .from(BUCKET)
       .upload(thumbnailPath, args.thumbnail, {
         contentType: args.thumbnail.type || "image/jpeg",
@@ -137,7 +139,7 @@ export async function uploadEditorAsset(args: UploadArgs): Promise<CloudAsset> {
   );
   if (error) {
     // best-effort cleanup on DB failure
-    await supabase.storage.from(BUCKET).remove([storagePath, thumbnailPath].filter(Boolean) as string[]);
+    await storage.from(BUCKET).remove([storagePath, thumbnailPath].filter(Boolean) as string[]);
     throw error;
   }
   args.onProgress?.(1);
@@ -160,7 +162,7 @@ export async function listEditorAssets(wallet: string): Promise<CloudAsset[]> {
 export async function deleteEditorAsset(wallet: string, asset: Pick<CloudAsset, "id" | "storage_path" | "thumbnail_path">): Promise<void> {
   const paths = [asset.storage_path, asset.thumbnail_path].filter(Boolean) as string[];
   if (paths.length) {
-    const { error: rmErr } = await supabase.storage.from(BUCKET).remove(paths);
+    const { error: rmErr } = await walletScopedClient(wallet).storage.from(BUCKET).remove(paths);
     if (rmErr) console.warn("[editor] storage remove failed", rmErr);
   }
   const { error } = await withWalletHeader(
