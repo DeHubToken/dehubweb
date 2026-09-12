@@ -1,145 +1,115 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { RefObject } from 'react';
 
-/**
- * Fullscreen for a video player, with the fallbacks that actually matter.
- *
- * Three environments need three different things, and the wrong one fails
- * silently rather than throwing:
- *
- * - **iOS Safari on iPhone** has no element fullscreen at all. Only
- *   `webkitEnterFullscreen()` on the `<video>` itself works, and it reports
- *   through `webkitbeginfullscreen`/`webkitendfullscreen` on the element rather
- *   than `fullscreenchange` on the document.
- * - **Embedded WebViews** (SafePal's in particular) expose `requestFullscreen`
- *   and then do nothing — the promise resolves and no fullscreen happens. The
- *   300ms re-check catches that and falls back to simulated fullscreen.
- * - **Everything else** takes the standard API on the container, so the
- *   player's own controls come with it rather than being left behind.
- *
- * "Simulated fullscreen" is the caller's job: when `isFullscreen` is true and
- * `document.fullscreenElement` is null, the caller pins its container with
- * `fixed inset-0 z-[9999]`. That is the only thing that works in a WebView.
- */
-/**
- * Whether a real, native fullscreen is reachable in this browser.
- *
- * Callers that refuse the simulated fallback use this to decide whether to draw
- * a control at all — a button that provably cannot do anything is worse than no
- * button. Feature-detected off the prototype so it can be called during render,
- * before any ref is attached.
- */
 export function canNativeFullscreen(): boolean {
   if (typeof document === 'undefined') return false;
-  return !!(
-    document.fullscreenEnabled ||
-    (document as any).webkitFullscreenEnabled ||
-    typeof (HTMLVideoElement.prototype as any).webkitEnterFullscreen === 'function'
-  );
+  return !!(document.fullscreenEnabled || (document as any).webkitFullscreenEnabled
+    || typeof (HTMLVideoElement.prototype as any).webkitEnterFullscreen === 'function');
 }
-
 export interface VideoFullscreenOptions {
-  /**
-   * Whether the caller can actually paint a simulated fullscreen.
-   *
-   * It pins the container with `fixed inset-0`, and **a transformed ancestor
-   * makes `fixed` resolve against that ancestor instead of the viewport**. The
-   * shorts carousel animates every slide with `translateY`, so a pinned slide
-   * would be laid out inside the moving wrapper and land somewhere arbitrary.
-   * Those callers pass `false` and get nothing rather than something broken —
-   * native fullscreen puts the element in the top layer, where no ancestor
-   * transform applies, so the real path is unaffected either way.
-   */
   allowSimulated?: boolean;
+  /** Keep the fallback outside transformed or clipped feed ancestors. */
+  escapeAncestors?: boolean;
 }
-
+/** Move the existing player without replacing its media connection. */
+export function liftFullscreenElement(element: HTMLElement): () => void {
+  const parent = element.parentNode;
+  if (!parent) return () => {};
+  const placeholder = document.createElement('div');
+  placeholder.style.height = `${element.getBoundingClientRect().height}px`;
+  placeholder.setAttribute('aria-hidden', 'true');
+  parent.insertBefore(placeholder, element);
+  document.body.appendChild(element);
+  return () => {
+    if (placeholder.parentNode) placeholder.parentNode.insertBefore(element, placeholder);
+    placeholder.remove();
+  };
+}
 export function useVideoFullscreen(
   videoRef: RefObject<HTMLVideoElement | null>,
   containerRef: RefObject<HTMLElement | null>,
-  { allowSimulated = true }: VideoFullscreenOptions = {},
+  { allowSimulated = true, escapeAncestors = false }: VideoFullscreenOptions = {},
 ) {
   const [isFullscreen, setIsFullscreen] = useState(false);
-
+  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const generation = useRef(0);
+  const restore = useRef<(() => void) | null>(null);
+  const simulated = useRef(false);
+  const cancelPending = useCallback(() => {
+    generation.current++;
+    clearTimeout(timer.current);
+    timer.current = undefined;
+  }, []);
+  const restoreInline = useCallback(() => {
+    restore.current?.(); restore.current = null; simulated.current = false;
+  }, []);
+  // Restore before React removes its children, including on route changes.
+  useLayoutEffect(() => () => { cancelPending(); restoreInline(); }, [cancelPending, restoreInline]);
   useEffect(() => {
     const onFullscreenChange = () => {
-      setIsFullscreen(
-        !!(document.fullscreenElement || (document as any).webkitFullscreenElement),
-      );
+      const active = document.fullscreenElement || (document as any).webkitFullscreenElement;
+      const own = !!active && (active === containerRef.current || active === videoRef.current);
+      cancelPending();
+      if (!own) restoreInline();
+      setIsFullscreen(own);
+    };
+    const video = videoRef.current;
+    const onIOSFullscreen = () => { cancelPending(); setIsFullscreen(true); };
+    const onIOSExit = () => { cancelPending(); restoreInline(); setIsFullscreen(false); };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && simulated.current) {
+        cancelPending(); restoreInline(); setIsFullscreen(false);
+      }
     };
     document.addEventListener('fullscreenchange', onFullscreenChange);
     document.addEventListener('webkitfullscreenchange', onFullscreenChange);
-
-    // iOS fires these on the video element itself, not the document.
-    const videoEl = videoRef.current;
-    const onIOSFullscreen = () => setIsFullscreen(true);
-    const onIOSExitFullscreen = () => setIsFullscreen(false);
-    videoEl?.addEventListener('webkitbeginfullscreen', onIOSFullscreen);
-    videoEl?.addEventListener('webkitendfullscreen', onIOSExitFullscreen);
-
+    document.addEventListener('keydown', onKeyDown);
+    video?.addEventListener('webkitbeginfullscreen', onIOSFullscreen);
+    video?.addEventListener('webkitendfullscreen', onIOSExit);
     return () => {
       document.removeEventListener('fullscreenchange', onFullscreenChange);
       document.removeEventListener('webkitfullscreenchange', onFullscreenChange);
-      videoEl?.removeEventListener('webkitbeginfullscreen', onIOSFullscreen);
-      videoEl?.removeEventListener('webkitendfullscreen', onIOSExitFullscreen);
+      document.removeEventListener('keydown', onKeyDown);
+      video?.removeEventListener('webkitbeginfullscreen', onIOSFullscreen);
+      video?.removeEventListener('webkitendfullscreen', onIOSExit);
     };
-  }, [videoRef]);
-
+  }); // A gated or loading stream can mount its video after the first render.
   const toggleFullscreen = useCallback(() => {
-    const videoEl = videoRef.current as any;
-    const containerEl = containerRef.current as any;
-
-    // Leaving simulated fullscreen: there is no native state to exit.
-    if (
-      isFullscreen &&
-      !document.fullscreenElement &&
-      !(document as any).webkitFullscreenElement
-    ) {
-      setIsFullscreen(false);
-      return;
-    }
-
-    if (document.fullscreenElement || (document as any).webkitFullscreenElement) {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if ((document as any).webkitExitFullscreen) {
-        (document as any).webkitExitFullscreen();
-      }
-      return;
-    }
-
-    if (videoEl && typeof videoEl.webkitEnterFullscreen === 'function') {
+    const video = videoRef.current as any;
+    const container = containerRef.current as any;
+    const active = document.fullscreenElement || (document as any).webkitFullscreenElement;
+    cancelPending();
+    if (video?.webkitDisplayingFullscreen) { video.webkitExitFullscreen?.(); return; }
+    if (active === container && active) {
       try {
-        videoEl.webkitEnterFullscreen();
-        return;
-      } catch {
-        // Fall through to container fullscreen or simulated.
-      }
+        const result = document.exitFullscreen ? document.exitFullscreen() : (document as any).webkitExitFullscreen?.();
+        result?.catch?.(() => {});
+      } catch {}
+      return;
     }
-
-    if (containerEl) {
-      const activateSimulated = () => {
-        if (!allowSimulated) return;
-        if (!document.fullscreenElement && !(document as any).webkitFullscreenElement) {
-          setIsFullscreen(true);
-        }
-      };
-      if (containerEl.requestFullscreen) {
-        containerEl.requestFullscreen().catch(activateSimulated);
-        setTimeout(activateSimulated, 300);
-        return;
-      } else if (containerEl.webkitRequestFullscreen) {
-        try {
-          containerEl.webkitRequestFullscreen();
-        } catch {
-          activateSimulated();
-        }
-        setTimeout(activateSimulated, 300);
+    if (isFullscreen || simulated.current) { restoreInline(); setIsFullscreen(false); return; }
+    if (!container) return;
+    if (typeof video?.webkitEnterFullscreen === 'function') {
+      try { video.webkitEnterFullscreen(); return; } catch { /* Try the container next. */ }
+    }
+    const requestGeneration = generation.current;
+    const activateSimulated = () => {
+      if (requestGeneration !== generation.current || !allowSimulated || simulated.current) return;
+      if (document.fullscreenElement || (document as any).webkitFullscreenElement) return;
+      simulated.current = true;
+      if (escapeAncestors) restore.current = liftFullscreenElement(container);
+      setIsFullscreen(true);
+    };
+    try {
+      const request = container.requestFullscreen || container.webkitRequestFullscreen;
+      if (request) {
+        const result = request.call(container);
+        result?.catch?.(activateSimulated);
+        timer.current = setTimeout(activateSimulated, 300);
         return;
       }
-    }
-
-    if (allowSimulated) setIsFullscreen(true);
-  }, [isFullscreen, videoRef, containerRef, allowSimulated]);
-
+    } catch { /* Synchronous rejection uses the same fallback. */ }
+    activateSimulated();
+  }, [isFullscreen, videoRef, containerRef, allowSimulated, escapeAncestors, cancelPending, restoreInline]);
   return { isFullscreen, toggleFullscreen, setIsFullscreen };
 }
