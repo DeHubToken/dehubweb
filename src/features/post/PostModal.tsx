@@ -40,6 +40,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
   const [planDrawerOpen, setPlanDrawerOpen] = useState(false);
+  const [mediaFullscreenOpen, setMediaFullscreenOpen] = useState(false);
 
   const handleTogglePoll = useCallback(() => {
     if (state.poll) {
@@ -144,6 +145,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onOpenCategories={() => setCategoryDrawerOpen(true)}
         poll={state.poll}
         onPollChange={actions.setPoll}
+        onMediaFullscreenChange={setMediaFullscreenOpen}
       />
 
       <PostAccessToggles
@@ -246,14 +248,19 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
 
   // Prevent drawer from closing when camera is open
   const handleDrawerChange = (open: boolean) => {
-    if (!open && state.isCameraModalOpen) return; // Don't close if camera is active
+    if (!open && (state.isCameraModalOpen || mediaFullscreenOpen)) return;
     if (!open) handleClose();
   };
 
   // Use Drawer/Sheet on ALL devices (mobile, tablet, desktop)
   return (
     <>
-      <Drawer open={isOpen} onOpenChange={handleDrawerChange} repositionInputs={false}>
+      <Drawer
+        open={isOpen}
+        onOpenChange={handleDrawerChange}
+        repositionInputs={false}
+        dismissible={!mediaFullscreenOpen}
+      >
         <DrawerContent
           glass
           hideHandle
