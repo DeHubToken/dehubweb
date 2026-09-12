@@ -10,6 +10,7 @@
  * genuinely shared live state rather than a handoff through storage.
  */
 import { create } from 'zustand';
+import { cacheGeneration, loadCachedGenerations, saveCloudGeneration, loadCloudGenerations, removeCloudGeneration, removeCachedGeneration } from '@/lib/creator/cloudLibrary';
 import { nanoid } from 'nanoid';
 import {
   audioTaskOf,
@@ -59,6 +60,8 @@ export interface GenerationJob {
   url?: string;
   /** Poster frame for video results, when one is available. */
   posterUrl?: string;
+  cloudSaved?: boolean;
+  saveError?: string;
   error?: string;
   createdAt: number;
   finishedAt?: number;
@@ -348,6 +351,8 @@ interface JobMeta {
 
 interface GenerationState {
   jobs: GenerationJob[];
+  syncLibrary: () => Promise<void>;
+  save: (id: string) => Promise<void>;
   /** Currently open in the result viewer, or null. */
   focusedId: string | null;
 
@@ -384,7 +389,7 @@ interface GenerationState {
 export const useGenerationStore = create<GenerationState>((set, get) => {
   /** Insert a running job and return its id. */
   function open(kind: JobKind, model: string, meta: JobMeta, sourceImage?: string): string {
-    const id = nanoid(10);
+    const id = crypto.randomUUID();
     const job: GenerationJob = {
       id,
       kind,
@@ -418,8 +423,18 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
 
   /** Shared completion handling so the three start* calls stay thin. */
   function finish(id: string, run: Promise<string>) {
+    const scope = storageKey;
     run
-      .then((url) => settle(id, { status: 'done', url }))
+      .then(async (url) => {
+        if (scope !== storageKey) return;
+        patch(id, { url, stage: 'Saving your generation' });
+        const job = get().jobs.find((j) => j.id === id);
+        if (!job) return;
+        try { await cacheGeneration(scope, { ...job, status: 'done' }); } catch { /* Still attempt cloud saving. */ }
+        if (scope !== storageKey) return;
+        settle(id, { status: 'done', url });
+        await get().save(id);
+      })
       .catch((e: unknown) => {
         if (isAborted(e)) {
           settle(id, { status: 'cancelled', error: 'Cancelled' });
@@ -435,13 +450,43 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
     jobs: loadPersisted(),
     focusedId: null,
 
+    save: async (id) => {
+      const scope = storageKey;
+      const wallet = scope.slice(STORAGE_PREFIX.length + 1);
+      const job = get().jobs.find((j) => j.id === id);
+      if (!job || wallet === 'anon' || job.status !== 'done') return;
+      try {
+        await saveCloudGeneration(wallet, job);
+        if (scope === storageKey) patch(id, { cloudSaved: true, saveError: undefined });
+        await removeCachedGeneration(scope, id).catch(() => {});
+      } catch {
+        if (scope === storageKey) patch(id, { cloudSaved: false, saveError: 'Cloud save pending. Retry saving' });
+      }
+    },
+
+    syncLibrary: async () => {
+      const scope = storageKey;
+      const wallet = scope.slice(STORAGE_PREFIX.length + 1);
+      const cached = await loadCachedGenerations(scope).catch(() => []);
+      if (scope !== storageKey) return;
+      const cloud = wallet === 'anon' ? [] : await loadCloudGenerations(wallet).catch(() => []);
+      if (scope !== storageKey) return;
+      const merged = new Map<string, GenerationJob>();
+      for (const job of [...cached, ...cloud, ...get().jobs]) {
+        const previous = merged.get(job.id);
+        merged.set(job.id, previous?.cloudSaved && job.status === 'done' ? previous : job);
+      }
+      set({ jobs: trimJobs([...merged.values()].sort((a,b) => b.createdAt - a.createdAt)) });
+      for (const job of get().jobs) if (job.status === 'done' && !job.cloudSaved) void get().save(job.id);
+    },
+
     startImage: (req, meta) => {
       const id = open('image', req.model, meta, req.sourceImage);
       const ctrl = new AbortController();
       controllers.set(id, ctrl);
       finish(
         id,
-        generateImage(req, {
+        generateImage({ ...req, clientJobId: id }, {
           signal: ctrl.signal,
           onStage: (stage) => patch(id, { stage }),
         }),
@@ -455,7 +500,7 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
       controllers.set(id, ctrl);
       finish(
         id,
-        generateVideo(req, {
+        generateVideo({ ...req, clientJobId: id }, {
           signal: ctrl.signal,
           onStage: (stage) => patch(id, { stage }),
           onQueued: (ticket) => {
@@ -479,7 +524,7 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
       controllers.set(id, ctrl);
       finish(
         id,
-        generate3d(req, {
+        generate3d({ ...req, clientJobId: id }, {
           signal: ctrl.signal,
           onStage: (stage) => patch(id, { stage }),
           onPreview: (posterUrl) => patch(id, { posterUrl }),
@@ -520,6 +565,7 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
       }
       set({ jobs: loadPersisted(), focusedId: null });
       get().resumeInterrupted();
+      void get().syncLibrary();
     },
 
     resumeInterrupted: () => {
@@ -606,6 +652,9 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
     },
 
     remove: (id) => {
+      const wallet = storageKey.slice(STORAGE_PREFIX.length + 1);
+      void removeCachedGeneration(storageKey, id).catch(() => {});
+      if (wallet !== 'anon') void removeCloudGeneration(wallet, id).catch(() => {});
       controllers.get(id)?.abort();
       controllers.delete(id);
       const job = get().jobs.find((j) => j.id === id);
@@ -626,6 +675,9 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
     clearFinished: () => {
       for (const job of get().jobs) {
         if (job.status === 'running') continue;
+        const wallet = storageKey.slice(STORAGE_PREFIX.length + 1);
+        void removeCachedGeneration(storageKey, job.id).catch(() => {});
+        if (wallet !== 'anon') void removeCloudGeneration(wallet, job.id).catch(() => {});
         if (job.kind === 'audio' && job.url?.startsWith('blob:')) {
           try {
             URL.revokeObjectURL(job.url);

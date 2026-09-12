@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { recordGeneration, settleGeneration, generationTicket } from '../_shared/generation-jobs.ts';
 import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 // The shared list — the only one that names x-wallet-address and x-dehub-token,
 // which chargeForJob requires and the browser will not send unless the preflight
@@ -220,6 +221,10 @@ serve(async (req) => {
     const body = await req.json();
     // txHash and purpose are payment fields, not tool inputs — pulled out here
     // so they never reach buildInput and get forwarded to the provider.
+    if (body.requestId) {
+      const ticket = await generationTicket('fal-ai-tools', body.requestId);
+      if (ticket) { body.appId = ticket.provider_app; body.statusUrl = ticket.result?.statusUrl; body.responseUrl = ticket.result?.responseUrl; }
+    }
     const { tool, requestId, appId: statusAppId, statusUrl, responseUrl, txHash: _txHash, purpose: _purpose, ...params } = body;
 
     // ─── Status check for async tools ───
@@ -228,6 +233,10 @@ serve(async (req) => {
       const sUrl = statusUrl || `https://queue.fal.run/${statusAppId}/requests/${requestId}/status`;
       const rUrl = responseUrl || `https://queue.fal.run/${statusAppId}/requests/${requestId}`;
       
+      for (const url of [sUrl, rUrl]) {
+        const parsed = new URL(url);
+        if (parsed.protocol !== 'https:' || parsed.hostname !== 'queue.fal.run') throw new Error('Invalid provider status URL');
+      }
       console.log(`[fal-tools] Checking status at: ${sUrl}`);
       const statusData = await falQueueStatus(FAL_KEY, sUrl);
       const mappedStatus = mapFalStatus(statusData.status);
@@ -239,14 +248,14 @@ serve(async (req) => {
         result = toolConfig ? toolConfig.extractResult(resultData) : resultData;
       }
 
-      return new Response(JSON.stringify({
+      return await settleGeneration('fal-ai-tools', requestId, new Response(JSON.stringify({
         status: mappedStatus,
         requestId,
         ...result,
         ...(mappedStatus === 'failed' && { error: 'Processing failed on fal.ai' }),
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      }));
     }
 
     // ─── New tool request ───
@@ -276,7 +285,7 @@ serve(async (req) => {
         console.log(`[fal-tools] ${toolConfig.name} queued: ${submission.request_id}`);
         console.log(`[fal-tools] status_url: ${submission.status_url}, response_url: ${submission.response_url}`);
 
-        return new Response(JSON.stringify({
+        return await recordGeneration(charged, new Response(JSON.stringify({
           status: 'starting',
           requestId: submission.request_id,
           appId: toolConfig.appId,
@@ -285,20 +294,20 @@ serve(async (req) => {
           tool,
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        }));
       } else {
         // Synchronous execution
         const resultData = await falRun(FAL_KEY, toolConfig.appId, input);
         const result = toolConfig.extractResult(resultData);
         console.log(`[fal-tools] ${toolConfig.name} completed`);
 
-        return new Response(JSON.stringify({
+        return await recordGeneration(charged, new Response(JSON.stringify({
           status: 'succeeded',
           tool,
           ...result,
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        }));
       }
     } catch (providerError) {
       await charged.refund();

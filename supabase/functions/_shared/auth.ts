@@ -38,19 +38,25 @@ export function jsonResponse(data: unknown, status = 200): Response {
  * `/auth/verify` is guarded and returns the address off the verified token, so
  * callers can stop believing the header.
  */
-export async function resolveDeHubAddress(token: string): Promise<string | null> {
+async function verifyDeHubAddress(token: string): Promise<{ wallet: string | null; unavailable?: boolean }> {
   try {
     const res = await fetch(`${DEHUB_API_BASE}/api/auth/verify`, {
       headers: { Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(12000),
     });
-    if (!res.ok) return null;
+    if ([400, 401, 403].includes(res.status)) return { wallet: null };
+    if (!res.ok) return { wallet: null, unavailable: true };
     const data = await res.json();
     const address = typeof data?.address === "string" ? data.address.toLowerCase() : "";
-    return /^0x[a-f0-9]{40}$/.test(address) ? address : null;
+    return /^0x[a-f0-9]{40}$/.test(address) ? { wallet: address } : { wallet: null, unavailable: true };
   } catch {
     // Fail closed: an unreachable auth service must not authenticate anyone.
-    return null;
+    return { wallet: null, unavailable: true };
   }
+}
+
+export async function resolveDeHubAddress(token: string): Promise<string | null> {
+  return (await verifyDeHubAddress(token)).wallet;
 }
 
 export type AuthResult =
@@ -76,7 +82,11 @@ export async function requireDeHubAuth(req: Request): Promise<AuthResult> {
     };
   }
 
-  const wallet = await resolveDeHubAddress(token);
+  const verified = await verifyDeHubAddress(token);
+  if (verified.unavailable) {
+    return { ok: false, response: jsonResponse({ error: 'Session verification is temporarily unavailable. Please retry.', code: 'AUTH_UNAVAILABLE' }, 503) };
+  }
+  const wallet = verified.wallet;
   if (!wallet) {
     return { ok: false, response: jsonResponse({ error: "Invalid or expired DeHub token." }, 401) };
   }

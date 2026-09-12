@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { SEOHead } from '@/components/SEOHead';
 import { PricingSection } from '@/components/pricing/PricingSection';
@@ -242,6 +243,7 @@ const tools: Tool[] = [
 export default function CreatorPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [activeCategory, setActiveCategory] = useState<typeof categories[number]>('All');
   const [activeNav, setActiveNav] = useState<typeof navItems[number]>('Explore');
   const [bannerDismissed, setBannerDismissed] = useState(false);
@@ -392,7 +394,7 @@ export default function CreatorPage() {
                   className="rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/15"
                   style={{ color: accent }}
                 >
-                  {t('creator.login')}
+                  {isAuthenticated ? 'My account' : t('creator.login')}
                 </button>
                 <button
                   type="button"
@@ -400,17 +402,15 @@ export default function CreatorPage() {
                   className="rounded-lg px-4 py-2 text-sm font-bold text-black hover:brightness-95"
                   style={metallicStyle}
                 >
-                  {t('creator.signUp')}
+                  {isAuthenticated ? 'Open app' : t('creator.signUp')}
                 </button>
               </div>
             </div>
           </header>
         </div>
 
-        {/* Both horizontal rails sit above the composer: the composer parks
-            under the header for the rest of the page once it scrolls past, so
-            anything below it is content you browse with the bar in hand, not
-            the shelf you pick a starting point from. */}
+        <CreatorStudio onOpenEditor={() => navigate('/editor')} stickyTop={headerHeight} />
+        <div ref={belowComposerRef}>
         <section className="px-3 py-4 sm:px-4">
           <SwipeableCarousel className="flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory scroll-pl-3 scroll-pr-3">
             {heroCards.map((card) => (
@@ -434,13 +434,6 @@ export default function CreatorPage() {
           <ModelMarquee />
         </section>
 
-        <CreatorStudio onOpenEditor={() => navigate('/editor')} stickyTop={headerHeight} />
-
-        {/* Swallowed by the composer, same as the studio's own feed above.
-            Left unindented deliberately — this wrapper exists only to give the
-            clip a single box to cut, and re-indenting the whole lower page for
-            it would bury the change. */}
-        <div ref={belowComposerRef}>
         <MountOnVisible minHeight={240} rootMargin="800px">
         <section className="grid gap-3 px-3 pb-4 sm:px-4 md:grid-cols-2">
 

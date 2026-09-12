@@ -3,6 +3,10 @@ project_id = "aigxuutjaqsywioxjefr"
 [functions]
   [functions.trenchstar]
     verify_jwt = false
+  [functions.creator-library]
+    verify_jwt = false
+  [functions.creator-reconcile]
+    verify_jwt = false
   # Auth is an ADMIN JWT from api.dehub.io in the Authorization header, checked
   # against GET /api/admin/me — not a Supabase JWT, so the platform check would
   # reject every legitimate call.
