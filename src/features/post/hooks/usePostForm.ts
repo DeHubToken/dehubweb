@@ -454,6 +454,8 @@ export function usePostForm(
    * never a zero, which would read as "you are out".
    */
   const [postQuota, setPostQuota] = useState<PostQuotaStatus | null>(null);
+  const mediaUploadLimit = postQuota?.mediaBytesPerDay ?? MEDIA_LIMITS.BASE_MEDIA_UPLOAD_SIZE;
+  const mediaUploadLimitLabel = `${Number((mediaUploadLimit / (1024 ** 3)).toFixed(1))}GB`;
   const refreshPostQuota = useCallback(() => {
     getPostQuota().then(setPostQuota);
   }, []);
@@ -617,10 +619,10 @@ export function usePostForm(
       return;
     }
 
-    if (file.size > MEDIA_LIMITS.MAX_FILE_SIZE) {
+    if (file.size > mediaUploadLimit) {
       // Without this an oversized video uploaded for up to 8 minutes and died
       // at the XHR timeout with a generic failure.
-      toast.error(`Video is too large — the cap is ${Math.round(MEDIA_LIMITS.MAX_FILE_SIZE / (1024 * 1024))}MB`);
+      toast.error(`Video is too large — your ${postQuota?.tier || 'base'} tier allows ${mediaUploadLimitLabel}`);
       return;
     }
 
@@ -719,7 +721,7 @@ export function usePostForm(
     } finally {
       setIsGeneratingThumbnail(false);
     }
-  }, [hasImage, hasVideo, text, titleText, editorRef]);
+  }, [hasImage, hasVideo, text, titleText, editorRef, mediaUploadLimit, mediaUploadLimitLabel, postQuota?.tier]);
 
   const removeMedia = useCallback((index: number) => {
     setMedia(prev => {
@@ -732,9 +734,8 @@ export function usePostForm(
   }, []);
 
   const processAudioFile = useCallback((file: File) => {
-    if (file.size > MEDIA_LIMITS.MAX_AUDIO_SIZE) {
-      // Match the video upload ceiling so audio posts are not penalized.
-      toast.error(`Audio is too large — the cap is ${Math.round(MEDIA_LIMITS.MAX_AUDIO_SIZE / (1024 * 1024))}MB`);
+    if (file.size > mediaUploadLimit) {
+      toast.error(`Audio is too large — your ${postQuota?.tier || 'base'} tier allows ${mediaUploadLimitLabel}`);
       return;
     }
     const url = URL.createObjectURL(file);
@@ -765,7 +766,7 @@ export function usePostForm(
         toast.success('Audio uploaded');
       }
     };
-  }, [hasImage, text, titleText, editorRef]);
+  }, [hasImage, text, titleText, editorRef, mediaUploadLimit, mediaUploadLimitLabel, postQuota?.tier]);
 
   const handleFileDrop = useCallback((files: FileList) => {
     const fileArray = Array.from(files);
