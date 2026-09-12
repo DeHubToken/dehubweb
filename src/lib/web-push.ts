@@ -177,7 +177,7 @@ async function attemptSubscribe(): Promise<boolean> {
 
 async function registerSubscription(subscription: PushSubscription): Promise<void> {
   const payload = toSubscriptionPayload(subscription);
-  await registerPushToken({
+  const result = await registerPushToken({
     // The endpoint IS the device identity on the web — unique per browser
     // install, and stable until the subscription is replaced.
     token: payload.endpoint,
@@ -186,6 +186,9 @@ async function registerSubscription(subscription: PushSubscription): Promise<voi
     deviceName: browserName(),
     webSubscription: payload,
   });
+  if (!result.success) {
+    throw new Error(result.message || 'Push registration was rejected');
+  }
 }
 
 /** Unsubscribe this browser and drop the row server-side. */
