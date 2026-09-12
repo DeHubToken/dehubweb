@@ -18,7 +18,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Loader2, Lock, Check, Clock, History, ChevronRight, Users, X } from 'lucide-react';
+import { Loader2, Lock, Check, Clock, History, ChevronRight, Users, X, Zap } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
@@ -98,7 +98,7 @@ export default function SuperPowersPage() {
       <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col gap-6">
         <header className="flex flex-col gap-2">
           <h1 className="text-xl font-bold text-white flex items-center gap-2">
-            <ThemedIcon icon="superpowers" alt="" className="w-8 h-8 object-contain" />
+            <Zap className="w-6 h-6" aria-hidden="true" />
             {t('superpowers.title')}
           </h1>
           <p className="text-sm text-zinc-400 max-w-prose">
@@ -185,6 +185,9 @@ export default function SuperPowersPage() {
                     )}
                   >
                     <div className="flex items-center gap-2">
+                      {power.key === 'boost' && (
+                        <ThemedIcon icon="boost" alt="" className="w-8 h-8 shrink-0 object-contain" />
+                      )}
                       {/* Numbered because this is a fixed, ordered power list. */}
                       <span className="text-[11px] text-zinc-600 tabular-nums">
                         {String(index + 1).padStart(2, '0')}

@@ -16,7 +16,7 @@ const PAGE_KEYS = [
   'wand', 'communities', 'careers', 'features', 'glossary', 'governance',
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
-  'email', 'accounts', 'usernames', 'tv', 'superpowers', 'boost', 'dao', 'staking', 'bridge', 'buy',
+  'email', 'accounts', 'usernames', 'tv', 'superpowers', 'dao', 'staking', 'bridge', 'buy',
 ];
 
 describe('theme icon assets', () => {
@@ -44,7 +44,7 @@ describe('theme icon assets', () => {
       expect(readFileSync(`${directory}/superpowers.webp`), theme)
         .not.toEqual(readFileSync(`${directory}/wand.webp`));
       expect(readFileSync(`${directory}/superpowers.webp`), theme)
-        .not.toEqual(readFileSync(`${directory}/boost.webp`));
+        .not.toEqual(readFileSync(`${directory}/boost.png`));
     }
 
     const iconSource = readFileSync(
@@ -53,6 +53,27 @@ describe('theme icon assets', () => {
     );
     expect(iconSource).toMatch(/superpowers:\s*Zap/);
     expect(iconSource).toMatch(/boost:\s*Rocket/);
+  });
+
+  it('ships Boost as a transparent PNG in every raster theme', () => {
+    for (const theme of [...FULL_THEMES, 'system']) {
+      const file = resolve(__dirname, `../../public/theme-icons/${theme}/boost.png`);
+      const bytes = readFileSync(file);
+      expect(statSync(file).size, `${theme}/boost.png is unexpectedly empty`).toBeGreaterThan(10_000);
+      expect(bytes.subarray(1, 4).toString('ascii'), `${theme}/boost.png is not a PNG`).toBe('PNG');
+      expect(bytes[25], `${theme}/boost.png is not RGBA`).toBe(6);
+    }
+  });
+
+  it('keeps custom Boost artwork out of post-card controls', () => {
+    for (const file of [
+      'src/components/app/cards/PostCard.tsx',
+      'src/components/app/cards/ImageCard.tsx',
+      'src/components/app/cards/VideoCard.tsx',
+    ]) {
+      const source = readFileSync(resolve(__dirname, '../..', file), 'utf8');
+      expect(source, file).not.toMatch(/(?:ThemedIcon\s+icon=["']boost|boost\.png|boost-3d)/);
+    }
   });
 
   it('ships a dedicated DAO landmark source for every raster theme', () => {
@@ -86,6 +107,8 @@ describe('theme icon assets', () => {
       .toBe('/theme-icons/osaka/arcade.webp');
     expect(resolveThemeIconAsset('/theme-icons/system/bounties.webp', 'system'))
       .toBe('/theme-icons/system/bounties.webp');
+    expect(resolveThemeIconAsset('/assets/boost-3d-icon-abc.png', 'winter'))
+      .toBe('/theme-icons/winter/boost.png');
   });
 
   it('routes community empty states through each theme icon family', () => {
@@ -176,7 +199,6 @@ describe('theme icon assets', () => {
 
   it('keeps financial page identity separate from token logos and navigation glyphs', () => {
     const identities = {
-      'src/pages/app/SuperPowersPage.tsx': 'superpowers',
       'src/pages/app/DaoPage.tsx': 'dao',
       'src/pages/app/StakingPage.tsx': 'staking',
       'src/pages/app/BridgePage.tsx': 'bridge',

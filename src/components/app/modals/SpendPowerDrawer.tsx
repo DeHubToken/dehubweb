@@ -35,6 +35,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { getCategories, getNFTInfo, searchNFTs, getUserComments } from '@/lib/api/dehub';
@@ -265,7 +266,12 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent scrollable column glass className="px-4 pb-6">
         <DrawerHeader className="pb-2 flex flex-row items-center justify-between gap-3">
-          <DrawerTitle className="text-white text-lg">{power?.label}</DrawerTitle>
+          <DrawerTitle className="text-white text-lg flex items-center gap-2">
+            {power?.key === 'boost' && (
+              <ThemedIcon icon="boost" alt="" className="w-8 h-8 shrink-0 object-contain" />
+            )}
+            {power?.label}
+          </DrawerTitle>
           {/* shadcn's DialogContent renders its own X; DrawerContent does not,
               and this body scrolls — the scrim should not be the only exit. */}
           <button

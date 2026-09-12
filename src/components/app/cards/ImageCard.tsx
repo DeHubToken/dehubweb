@@ -20,9 +20,8 @@ import { stripAssetRefs } from '@/lib/asset-refs';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, VolumeX, EyeOff, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Pencil, Star } from 'lucide-react';
-import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
-import aiSparkleIcon from '@/assets/icons/ai-sparkle-icon.png';
+import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, Zap, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Pencil, Star } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
@@ -782,7 +781,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
               className="mr-[1.6px] text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all disabled:opacity-40"
               aria-label={t('postOptions.boostPost')}
             >
-              <ThemedIcon icon="boost" alt="" className="w-[23.5px] h-[23.5px] object-contain" />
+              <Zap className="w-[23.5px] h-[23.5px]" />
             </button>
           )}
           <button
@@ -790,7 +789,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             className="text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all"
             aria-label="Ask AI about this post"
           >
-            <BrandIcon src={aiSparkleIcon} alt="" className="w-[23.5px] h-[23.5px] object-contain" />
+            <Sparkles className="w-[23.5px] h-[23.5px]" />
           </button>
           <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
             {/* State-driven, not DrawerTrigger — see PostCard: a trigger pins
@@ -897,7 +896,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                       disabled={!postTokenId}
                       className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
                     >
-                      <ThemedIcon icon="boost" alt="" className="w-5 h-5 object-contain" /> {t('postOptions.boostPost')}
+                      <ThemedIcon icon="superpowers" alt="" className="w-5 h-5 object-contain" /> {t('postOptions.boostPost')}
                     </button>
                     <button
                       onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowDeleteModal(true), 300); }}

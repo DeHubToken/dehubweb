@@ -191,7 +191,7 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
       <DrawerContent scrollable column glass className="px-4 pb-6">
         <DrawerHeader className="pb-2">
           <DrawerTitle className="text-white text-lg flex items-center gap-2">
-            <ThemedIcon icon="superpowers" alt="" className="w-8 h-8 object-contain" />
+            <ThemedIcon icon="boost" alt="" className="w-8 h-8 object-contain" />
             {t('superpowers.title')}
           </DrawerTitle>
         </DrawerHeader>
@@ -264,7 +264,7 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
                     )}
                   >
                     {power.key === 'boost' ? (
-                      <ThemedIcon icon="superpowers" alt="" className="w-5 h-5 mt-0.5 shrink-0 object-contain" />
+                      <ThemedIcon icon="boost" alt="" className="w-5 h-5 mt-0.5 shrink-0 object-contain" />
                     ) : (
                       <Icon className="w-4 h-4 mt-0.5 shrink-0 text-zinc-300" />
                     )}

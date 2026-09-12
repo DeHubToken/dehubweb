@@ -33,9 +33,8 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2, AlertTriangle } from 'lucide-react';
-import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
-import aiSparkleIcon from '@/assets/icons/ai-sparkle-icon.png';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2, AlertTriangle } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
@@ -363,7 +362,7 @@ function MobileCreatorInfo({
                 className="mr-[0.8px] w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
                 aria-label={t('postOptions.boostPost')}
               >
-                <ThemedIcon icon="boost" alt="" className="w-[23.5px] h-[23.5px] object-contain" />
+                <Zap className="w-[23.5px] h-[23.5px]" />
               </button>
             )}
             <button
@@ -371,7 +370,7 @@ function MobileCreatorInfo({
               className="w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
               aria-label="Ask AI about this video"
             >
-              <BrandIcon src={aiSparkleIcon} alt="" className="w-[23.5px] h-[23.5px] object-contain" />
+              <Sparkles className="w-[23.5px] h-[23.5px]" />
             </button>
             <button aria-label="Post options" 
               onClick={onMenuClick}
@@ -1578,7 +1577,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 whileTap={{ scale: 0.95 }}
                 aria-label={t('postOptions.boostPost')}
               >
-                <ThemedIcon icon="boost" alt="" className="w-[23.5px] h-[23.5px] object-contain" />
+                <Zap className="w-[23.5px] h-[23.5px]" />
               </motion.button>
             )}
             <motion.button
@@ -1588,7 +1587,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               whileTap={{ scale: 0.95 }}
               aria-label="Ask AI about this video"
             >
-              <BrandIcon src={aiSparkleIcon} alt="" className="w-[23.5px] h-[23.5px] object-contain" />
+              <Sparkles className="w-[23.5px] h-[23.5px]" />
             </motion.button>
             {/* Plain button, not DrawerTrigger — see PostCard: a trigger pins
                 vaul's Root (and its window scroll listener) into every card.
@@ -2160,7 +2159,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 whileTap={{ scale: 0.95 }}
                 aria-label={t('postOptions.boostPost')}
               >
-                <ThemedIcon icon="boost" alt="" className="w-4 h-4 object-contain" />
+                <Zap className="w-4 h-4" />
               </motion.button>
             )}
             <motion.button
@@ -2170,7 +2169,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               whileTap={{ scale: 0.95 }}
               aria-label="Ask AI about this video"
             >
-              <BrandIcon src={aiSparkleIcon} alt="" className="w-4 h-4 object-contain" />
+              <Sparkles className="w-4 h-4" />
             </motion.button>
             <button 
               onClick={(e) => { e.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
@@ -2485,7 +2484,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   disabled={!videoTokenId}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
                 >
-                  <ThemedIcon icon="boost" alt="" className="w-5 h-5 object-contain" /> {t('postOptions.boostPost')}
+                  <ThemedIcon icon="superpowers" alt="" className="w-5 h-5 object-contain" /> {t('postOptions.boostPost')}
                 </button>
                 <button
                   onClick={() => { setShowOptionsDrawer(false); setShowDeleteModal(true); }}
