@@ -288,7 +288,7 @@ const DrawerContent = React.forwardRef<
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed inset-x-0 bottom-0 z-[100] mt-24 flex h-auto flex-col rounded-t-[20px]",
+        "fixed inset-x-0 bottom-0 z-[100] mt-24 flex h-auto min-h-0 flex-col overflow-y-auto rounded-t-[20px]",
         /* Ceiling for a sheet that names no height of its own, in the unit that
            matches what the reader can see. `vh` is the LARGE viewport — measured
            as if the browser chrome were hidden — while the sheet is pinned to the
