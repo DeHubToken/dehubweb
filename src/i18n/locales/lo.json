@@ -2259,5 +2259,35 @@
     "groupLimitReached": "ຮອດຂີດຈຳກັດກຸ່ມແລ້ວ",
     "createGroup": "ສ້າງ",
     "groupsHint": "ກຸ່ມກັ່ນຕອງອາຫານຕໍ່ໄປນີ້ຂອງທ່ານ. ແລະ, hey, ພຽງແຕ່ເຂົ້າຮ່ວມເຂົາເຈົ້າ!"
+  },
+  "reactionInfo": {
+    "title": "ປະຕິກິລິຍາ",
+    "privateTitle": "ປະຕິກິລິຍາແມ່ນສ່ວນຕົວ",
+    "privateDescription": "ມີພຽງແຕ່ຜູ້ຂຽນເທົ່ານັ້ນທີ່ສາມາດເບິ່ງລາຍຊື່ນີ້ໄດ້.",
+    "empty": "ບໍ່ມີປະຕິກິລິຍາ",
+    "emptyDescription": "ການຕອບໂຕ້ຕໍ່ບົດຄວາມນີ້ຈະປາກົດຢູ່ບ່ອນນີ້.",
+    "anonymous": "{{count}} ມັກຈາກຜູ້ຖືປ້າຍທີ່ບໍ່ຮູ້ຊື່",
+    "labels": {
+      "like": "ມັກ",
+      "love": "ຄວາມຮັກ",
+      "respect": "ເຄົາລົບ",
+      "hot": "ຮ້ອນ",
+      "hundred": "100",
+      "sad": "ໂສກເສົ້າ",
+      "cry": "ຮ້ອງໄຫ້",
+      "dislike": "ບໍ່ມັກ"
+    },
+    "mediaSource": "ເລືອກແຫຼ່ງຂໍ້ມູນສື່",
+    "photoLibrary": "ຫ້ອງສະຫມຸດຮູບພາບ",
+    "videoFiles": "ວິດີໂອຂອງ Files",
+    "fileError": "ບໍ່ສາມາດເປີດວິດີໂອນີ້ໄດ້. ກະລຸນາກວດເບິ່ງເອກະສານອື່ນ.",
+    "reactedPost": "{{name}} ປະຕິກິລິຍາຕໍ່ໂພສຂອງທ່ານ",
+    "repostedPost": "{{name}} reposted ໂພສຂອງທ່ານ",
+    "quotedPost": "{{name}} ອ້າງເຖິງຂໍ້ຄວາມຂອງທ່ານ",
+    "mentionedYou": "{{name}} ໄດ້ກ່າວເຖິງທ່ານ",
+    "followRequest": "{{name}} ໄດ້ຮ້ອງຂໍໃຫ້ຕິດຕາມທ່ານ",
+    "followAccepted": "{{name}} ຮັບເອົາ ຄໍາ ຮ້ອງຂໍຕິດຕາມຂອງທ່ານ",
+    "signalFlare": "{{name}} ສົ່ງສັນຍານ Flare",
+    "newMessage": "{{name}} ສົ່ງຂໍ້ຄວາມຫາທ່ານ"
   }
 }

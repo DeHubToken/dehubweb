@@ -4670,5 +4670,37 @@
     "groupLimitReached": "Group limit reached",
     "createGroup": "Create",
     "groupsHint": "Groups filter your Following feed. Only you can see them."
+  },
+  "reactionInfo": {
+    "title": "Reactions",
+    "privateTitle": "Reactions are private",
+    "privateDescription": "Only the post author can view this list.",
+    "empty": "No reactions yet",
+    "emptyDescription": "Reactions to this post will appear here.",
+    "anonymous": "{{count}} likes from anonymous badge holders",
+    "labels": {
+      "like": "Like",
+      "love": "Love",
+      "respect": "Respect",
+      "hot": "Hot",
+      "hundred": "100",
+      "lol": "LOL",
+      "sad": "Sad",
+      "cry": "Crying",
+      "poo": "Poo",
+      "dislike": "Dislike"
+    },
+    "mediaSource": "Choose media source",
+    "photoLibrary": "Photo library",
+    "videoFiles": "Video from Files",
+    "fileError": "Could not open this video. Please try another file.",
+    "reactedPost": "{{name}} reacted to your post",
+    "repostedPost": "{{name}} reposted your post",
+    "quotedPost": "{{name}} quoted your post",
+    "mentionedYou": "{{name}} mentioned you",
+    "followRequest": "{{name}} requested to follow you",
+    "followAccepted": "{{name}} accepted your follow request",
+    "signalFlare": "{{name}} sent a Signal Flare",
+    "newMessage": "{{name}} sent you a message"
   }
 }
