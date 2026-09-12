@@ -204,7 +204,7 @@ describe('the two players share one fullscreen implementation', () => {
     // The iOS and WebView fallbacks are subtle enough that a second copy would
     // drift. Neither file should re-implement the raw API.
     expect(VIEWER).toContain('useVideoFullscreen(noVideoRef, fullscreenTargetRef, {');
-    expect(CARD).toContain('useVideoFullscreen(videoRef, containerRef)');
+    expect(CARD).toContain('useVideoFullscreen(videoRef, containerRef, { escapeAncestors: true })');
     expect(CARD).not.toContain('webkitEnterFullscreen');
   });
 
