@@ -746,6 +746,10 @@ function customReferenceId(notification: DeHubNotification): string | undefined 
 }
 
 function getNavigationLink(notification: DeHubNotification): string | null {
+  if ((notification.type as string) === 'trench_price_alert') {
+    const symbol=(notification as DeHubNotification & {_customReferenceTitle?:string})._customReferenceTitle || 'BTC';
+    return `/arcade/trenchstar?view=focus&symbol=${encodeURIComponent(symbol)}`;
+  }
   // Handle custom notification types.
   // A feature-request row carries the request's uuid, and every one of these
   // used to throw it away and land on the board's first page — where the
