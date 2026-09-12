@@ -337,7 +337,7 @@ function ImageCarousel({
       <div
         ref={scrollRef}
         onScroll={updateCurrentIndex}
-        className="flex gap-2 overflow-x-auto overscroll-x-contain scrollbar-hide touch-pan-x"
+        className="flex gap-2 overflow-x-auto overscroll-x-contain scrollbar-hide touch-auto"
       >
         {images.map((img, idx) => (
           <div
