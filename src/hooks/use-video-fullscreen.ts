@@ -21,7 +21,9 @@ export function liftFullscreenElement(element: HTMLElement): () => void {
   placeholder.style.height = `${element.getBoundingClientRect().height}px`;
   placeholder.setAttribute('aria-hidden', 'true');
   parent.insertBefore(placeholder, element);
-  document.body.appendChild(element);
+  // Keep delegated React controls under their root while escaping feed wrappers.
+  const fullscreenHost = element.closest('#root') || document.body;
+  fullscreenHost.appendChild(element);
   document.body.style.overflow = 'hidden';
   document.documentElement.style.overflow = 'hidden';
   return () => {
