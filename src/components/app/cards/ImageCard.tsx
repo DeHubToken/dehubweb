@@ -10,6 +10,7 @@
  */
 
 import { useState, memo, useCallback, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
+const BountyClaimActions = lazy(() => import('./BountyClaimActions'));
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
@@ -1427,6 +1428,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
               <p className="text-center text-white/60 text-sm">
                 {t('drawers.bountyDescription')}
               </p>
+              <Suspense fallback={null}>
+                <BountyClaimActions tokenId={post.id} open={showBountyDrawer} />
+              </Suspense>
             </div>
           </DrawerContent>
         </Drawer>

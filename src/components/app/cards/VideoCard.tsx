@@ -11,6 +11,7 @@ import { isVideoOutsideFeed } from '@/lib/video-background-playback';
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId, lazy, Suspense } from 'react';
+const BountyClaimActions = lazy(() => import('./BountyClaimActions'));
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
@@ -426,6 +427,9 @@ function MobileCreatorInfo({
                 </div>
               )}
               
+              <Suspense fallback={null}>
+                <BountyClaimActions tokenId={tokenId || ''} open={showBountyDrawer} />
+              </Suspense>
               <p className="text-center text-white/60 text-sm">
                 {t('drawers.bountyDescription')}
               </p>
@@ -2584,6 +2588,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 {t('drawers.bountyDescription')}
               </p>
               {/* Close / View action buttons */}
+              <Suspense fallback={null}>
+                <BountyClaimActions tokenId={video.id} open={showBountyDrawer} />
+              </Suspense>
               <div className="flex items-center gap-3">
                 <LiquidGlassBubble
                   shimmer={false}
