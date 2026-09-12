@@ -23,6 +23,7 @@
  */
 
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
@@ -45,6 +46,7 @@ interface ReactionInfoDrawerProps {
 
 export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfoDrawerProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const {
     data,
@@ -117,7 +119,7 @@ export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfo
       >
         <DrawerHeader className="px-5 pt-4 pb-3 shrink-0">
           <DrawerTitle className="text-base font-medium text-white text-center">
-            Reactions
+            {t("reactionInfo.title")}
             {totalCount > 0 && <span className="text-white/40 font-normal"> · {totalCount}</span>}
           </DrawerTitle>
         </DrawerHeader>
@@ -128,21 +130,21 @@ export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfo
               <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
             </div>
           ) : !canView ? (
-            <AppState icon="lock" title="Reactions are private" description="Only the post author can view this list." kind="restricted" size="drawer" />
+            <AppState icon="lock" title={t("reactionInfo.privateTitle")} description={t("reactionInfo.privateDescription")} kind="restricted" size="drawer" />
           ) : groups.length === 0 && anonymousCount === 0 ? (
-            <AppState icon="pinned" title="No reactions yet" description="Reactions to this post will appear here." size="drawer" />
+            <AppState icon="pinned" title={t("reactionInfo.empty")} description={t("reactionInfo.emptyDescription")} size="drawer" />
           ) : (
             <div className="space-y-5">
               {anonymousCount > 0 ? (
                 <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300">
-                  {anonymousCount} {anonymousCount === 1 ? 'like' : 'likes'} from anonymous badge {anonymousCount === 1 ? 'holder' : 'holders'}
+                  {t("reactionInfo.anonymous", { count: anonymousCount })}
                 </div>
               ) : null}
               {groups.map(({ meta, total, people }) => (
                 <section key={meta.key}>
                   <h3 className="flex items-center gap-2 px-1 pb-2 text-sm text-white/70">
                     <span aria-hidden="true" className="text-base leading-none">{meta.emoji}</span>
-                    <span className="font-medium text-white">{meta.label}</span>
+                    <span className="font-medium text-white">{t(`reactionInfo.labels.${meta.key}`, meta.label)}</span>
                     <span className="text-white/40">{total}</span>
                   </h3>
                   <div className="space-y-2">
@@ -196,7 +198,7 @@ export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfo
                   disabled={isFetchingNextPage}
                   className="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white/70 hover:bg-white/10 hover:text-white transition-colors disabled:opacity-50"
                 >
-                  {isFetchingNextPage ? 'Loading…' : 'Load more'}
+                  {isFetchingNextPage ? t("common.loading") : t("common.loadMore")}
                 </button>
               )}
             </div>

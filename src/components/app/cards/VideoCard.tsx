@@ -1375,6 +1375,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     onUndoSingleTap: isImmersive ? handlePlayClick : undefined,
   });
 
+  const captionTapGestures = useTapGestures({
+    postId: video.id,
+    disabled: hideActions || isContentGated,
+    enableLongPress: false,
+  });
+
   // Playback and reactions run from pointer events above. The compatibility
   // click only keeps the visible controls awake; it must never toggle twice.
   const handleVideoAreaClick = useCallback(() => {
@@ -2227,6 +2233,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           />
           </div>
         )}
+        <div className="relative" data-no-navigate {...captionTapGestures} onClick={(event) => event.stopPropagation()}>
+        {!hideActions && !isContentGated && <TapReactionBurst postId={video.id} />}
         <SharedTranslationProvider>
           {(() => {
             // Split translated text back into title + description. When the
@@ -2263,6 +2271,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             );
           })()}
         </SharedTranslationProvider>
+        </div>
         <div className="mb-3">
           <PostMetadata 
             className="!mt-3"
