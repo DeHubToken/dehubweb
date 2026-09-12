@@ -5,6 +5,7 @@ import { mintExistingPost, getMintFee, type MintFeeQuoteResponse } from '@/lib/a
 import { confirmEvmMint } from '@/lib/api/dehub/solana';
 import { isSmartWalletSession } from '@/lib/connection-source';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { getNFTInfo } from '@/lib/api/dehub/feed';
 import type { ChainId } from '@/components/app/ChainSelector';
 
 /**
@@ -28,9 +29,18 @@ export function useMintExistingPost() {
     const toastId = 'mint-existing';
 
     try {
-      const targetChain = (chainId || BASE_CHAIN_ID) as ChainId;
+      const post = await getNFTInfo(String(tokenId));
+      const targetChain = (post.chainId || chainId || BASE_CHAIN_ID) as ChainId;
+      const info = post.streamInfo;
+      const hasBounty = !!info?.isAddBounty;
+      const bountyAmount = Number(info?.addBountyAmount);
+      const viewers = Number(info?.addBountyFirstXViewers ?? 0);
+      const commenters = Number(info?.addBountyFirstXComments ?? 0);
+      if (hasBounty && (!(bountyAmount > 0) || !Number.isFinite(bountyAmount) ||
+        !Number.isInteger(viewers) || viewers < 0 || !Number.isInteger(commenters) || commenters < 0 || viewers + commenters === 0 ||
+        info?.addBountyTokenSymbol !== 'DHB')) throw new Error('Invalid bounty terms. Funding cannot be skipped.');
 
-      const [{ mintOnChainWithFee }, { getDHBBalance }, { getERC20Balance }] = await Promise.all([
+      const [{ mintOnChainWithFee }, { getDHBBalance, mintWithBounty }, { getERC20Balance }] = await Promise.all([
         import('@/lib/contracts/stream-collection'),
         import('@/lib/contracts/stream-controller'),
         import('@/lib/contracts/aa-utils'),
@@ -40,7 +50,7 @@ export function useMintExistingPost() {
       // issued would leave the post briefly exempt from nothing and the creator
       // staring at a failed transfer.
       let fee: MintFeeQuoteResponse | null = null;
-      if (isSmartWalletSession()) {
+      if (!hasBounty && isSmartWalletSession()) {
         fee = await getMintFee(targetChain);
         if (fee?.chargeable && fee.amount > 0 && !fee.isNative) {
           const { getWeb3AuthSigner } = await import('@/lib/contracts/stream-collection');
@@ -67,7 +77,11 @@ export function useMintExistingPost() {
       toast.loading('Minting post', { id: toastId, duration: Infinity });
 
       const sig = await mintExistingPost(tokenId);
-      const result = await mintOnChainWithFee(
+      // A retry must fund the saved reward pool, just like the original composer.
+      const result = hasBounty ? { hash: await mintWithBounty({
+        tokenId: sig.createdTokenId, timestamp: sig.timestamp, v: sig.v, r: sig.r, s: sig.s,
+        uri: sig.uri, chainId: targetChain, bountyAmount, countOfViewers: viewers, countOfCommentors: commenters,
+      }) } : await mintOnChainWithFee(
         {
           tokenId: sig.createdTokenId,
           timestamp: sig.timestamp,
