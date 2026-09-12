@@ -4,6 +4,7 @@ import Replicate from "https://esm.sh/replicate@0.25.2";
 // x-dehub-token, which chargeForJob requires and the browser will not send
 // unless the preflight says they are allowed. A local copy silently drops them.
 import { corsHeaders, rateLimitByIp } from "../_shared/auth.ts";
+import { recordGeneration, settleGeneration, generationTicket } from '../_shared/generation-jobs.ts';
 import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 import {
   kieKey,
@@ -804,6 +805,8 @@ async function tryKieGeneration(
 ): Promise<Response | null> {
   const key = kieKey();
   if (!key) return null;
+  // Use the full-capability route when kie would silently omit a control.
+  if (o.seed !== undefined || o.negativePrompt || o.endFrameUrl) return null;
 
   // kie fetches every input by URL, so inline data: payloads stay on fal.
   const inputUrls = [o.sourceImage, o.endFrameUrl, ...(o.referenceImageUrls ?? [])];
@@ -915,18 +918,20 @@ serve(async (req) => {
       });
       if (pollLimited) return pollLimited;
 
-      const provider = body.provider || 'replicate';
+      const ticket = await generationTicket('generate-video', body.predictionId);
+      const provider = ticket?.provider || body.provider || 'replicate';
+      if (ticket) body.falAppId = ticket.provider_app;
 
       if (provider === 'kie') {
-        return await handleKieStatusCheck(body.predictionId);
+        return await settleGeneration('generate-video', body.predictionId, await handleKieStatusCheck(body.predictionId));
       }
       if (provider === 'kie-veo') {
-        return await handleKieVeoStatusCheck(body.predictionId);
+        return await settleGeneration('generate-video', body.predictionId, await handleKieVeoStatusCheck(body.predictionId));
       }
       if (provider === 'fal') {
-        return await handleFalStatusCheck(body.predictionId, body.falAppId);
+        return await settleGeneration('generate-video', body.predictionId, await handleFalStatusCheck(body.predictionId, body.falAppId));
       }
-      return await handleReplicateStatusCheck(body.predictionId);
+      return await settleGeneration('generate-video', body.predictionId, await handleReplicateStatusCheck(body.predictionId));
     }
 
     // ─── New generation ───
@@ -986,7 +991,7 @@ serve(async (req) => {
           ? await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed)
           : await handleReplicateGeneration(modelConfig, model, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, seed));
       if (!response.ok) await charged.refund();
-      return response;
+      return await recordGeneration(charged, response);
     } catch (providerError) {
       await charged.refund();
       throw providerError;

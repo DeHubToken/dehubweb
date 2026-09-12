@@ -5,6 +5,7 @@ import {
   pickLayoutForFormat,
 } from '../_shared/dehub-brand-composite.ts';
 import { DEHUB_LOGO_DATA_URI } from '../_shared/dehub-logo.ts';
+import { recordGeneration } from '../_shared/generation-jobs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 // The shared list — the only one that names x-wallet-address and x-dehub-token,
 // which chargeForJob requires and the browser will not send unless the preflight
@@ -1019,5 +1020,5 @@ serve(async (req) => {
   // Anything short of a success hands the credit back — a refusal or a provider
   // outage must not be billable.
   if (!response.ok) await charged.refund();
-  return response;
+  return await recordGeneration(charged, response);
 });

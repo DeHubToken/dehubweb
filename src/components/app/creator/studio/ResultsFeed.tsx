@@ -110,6 +110,8 @@ export function ResultsFeed({ wallet, onAnimate, onModel3d, onOpenEditor }: Resu
   const focused = allJobs.find((j) => j.id === focusedId) ?? null;
   const finishedCount = allJobs.filter((j) => j.status !== 'running').length;
   const runningCount = allJobs.length - finishedCount;
+  const readyCount = allJobs.filter((j) => j.status === 'done').length;
+  const failedCount = allJobs.filter((j) => j.status === 'failed').length;
 
   /**
    * Stable identity matters here. The viewer's focus-and-scroll-lock effect is
@@ -155,7 +157,7 @@ export function ResultsFeed({ wallet, onAnimate, onModel3d, onOpenEditor }: Resu
         {runningCount > 0
           ? t('creator.generationsRunning', { count: runningCount })
           : finishedCount > 0
-            ? t('creator.generationsFinished', { count: finishedCount })
+            ? `${t('creator.generationsFinished', { count: readyCount })}${failedCount ? ` ${failedCount} failed.` : ''}`
             : ''}
       </p>
 
@@ -359,6 +361,7 @@ function ResultViewer({
   const remove = useGenerationStore((s) => s.remove);
   const retry = useGenerationStore((s) => s.retry);
   const [sending, setSending] = useState(false);
+  const save = useGenerationStore((s) => s.save);
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const closeRef = useRef<HTMLButtonElement | null>(null);
 
@@ -585,6 +588,8 @@ function ResultViewer({
             <div className="min-w-0">
               <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
                 {job.modelName}
+                {job.cloudSaved && <span className="ml-2 text-xs text-white/60">Saved to your account</span>}
+                {job.saveError && <button type="button" className="ml-2 text-xs underline" onClick={() => void save(job.id)}>{job.saveError}</button>}
               </p>
               <p className="mt-0.5 text-[11px] text-white/55">
                 {job.kind === 'model3d' ? t('creator.threeDModel') : t('creator.aspectGeneration', { aspect: job.aspect })}

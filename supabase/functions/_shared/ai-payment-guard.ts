@@ -94,7 +94,7 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
   // already parsed it hands it over; otherwise cloning leaves the original
   // readable, so nothing downstream had to learn about payment.
   const body = (opts.body
-    ?? await req.clone().json().catch(() => ({}))) as { txHash?: unknown; purpose?: unknown };
+    ?? await req.clone().json().catch(() => ({}))) as { txHash?: unknown; purpose?: unknown; clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown };
   const txHash = typeof body.txHash === 'string' ? body.txHash.toLowerCase() : '';
 
   if (!/^0x[a-f0-9]{64}$/.test(txHash)) {
@@ -108,7 +108,16 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
   }
 
   const supabase = serviceClient();
-  const jobId = crypto.randomUUID();
+  const jobId = typeof body.clientJobId === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.clientJobId) ? body.clientJobId : crypto.randomUUID();
+  if (body.clientJobId) {
+    const previous = await supabase.from('ai_generation_jobs').select('*').eq('id', jobId).maybeSingle();
+    if (previous.error) return { ok: false, response: jsonResponse({ error: 'Could not check the previous generation. Please retry.' }, 503) };
+    if (previous.data) {
+      const job = previous.data;
+      if (job.wallet_address !== guard.wallet || job.tx_hash !== txHash || job.model !== opts.modelId || job.endpoint !== opts.actionType) return { ok: false, response: jsonResponse({ error: 'Generation id is already in use.' }, 409) };
+      return { ok: false, response: jsonResponse(job.result || { error: 'This generation is already being submitted. Check your library before retrying.' }, job.result ? 200 : 409) };
+    }
+  }
 
   const { data: existing } = await supabase
     .from('ai_payments')
@@ -153,10 +162,12 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
     }
   }
 
-  const { error } = await supabase.rpc('ai_payment_spend', {
+  const journalled = ['generate-image', 'generate-video', 'generate-3d', 'fal-ai-tools'].includes(opts.actionType);
+  const { error } = await supabase.rpc(journalled ? 'ai_job_spend' : 'ai_payment_spend', {
     p_tx_hash: txHash,
     p_wallet: guard.wallet,
     p_dhb: priceDhb,
+    ...(journalled ? { p_job_id: jobId, p_kind: opts.kind, p_model: opts.modelId, p_endpoint: opts.actionType, p_metadata: { prompt: typeof body.prompt === 'string' ? body.prompt.slice(0, 20000) : '', aspectRatio: typeof body.aspectRatio === 'string' ? body.aspectRatio : '' } } : {}),
   });
 
   if (error) {
@@ -192,6 +203,14 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
         p_dhb: priceDhb,
         p_job_id: jobId,
       });
+      if (journalled) {
+        const restored = !refundError || String(refundError.message || '').includes('REFUND_ALREADY_APPLIED');
+        await supabase.from('ai_generation_jobs').update({
+          status: restored ? 'failed' : 'refund_pending',
+          result: { status: 'failed', error: 'Generation could not be completed', paymentRestored: restored },
+          updated_at: new Date().toISOString(),
+        }).eq('id', jobId);
+      }
       // A failed release must not mask the provider error that triggered it.
       if (refundError && !String(refundError.message || '').includes('REFUND_ALREADY_APPLIED')) {
         console.error(`[ai-payment] release failed for job ${jobId}:`, refundError);

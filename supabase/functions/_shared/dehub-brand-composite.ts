@@ -57,7 +57,7 @@ async function fetchLogoDataUri(): Promise<string | null> {
     const ct = r.headers.get("content-type") || "";
     if (!ct.startsWith("image/")) return null;
     const buf = new Uint8Array(await r.arrayBuffer());
-    return `data:image/png;base64,${encodeB64(buf)}`;
+    return `data:image/png;base64,${encodeB64(Uint8Array.from(buf).buffer)}`;
   } catch {
     return null;
   }
@@ -193,7 +193,7 @@ export async function compositeDeHubBranding(
       font: { fontBuffers: fonts, loadSystemFonts: false, defaultFontFamily: "Inter" },
     });
     const png = resvg.render().asPng();
-    return `data:image/png;base64,${encodeB64(png)}`;
+    return `data:image/png;base64,${encodeB64(Uint8Array.from(png).buffer)}`;
   } catch (e) {
     console.warn("[dehub-brand-composite] raster failed:", (e as Error).message);
     return null;

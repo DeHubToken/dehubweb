@@ -81,6 +81,7 @@ export default function CreatorEditorHost() {
 
   useEffect(() => {
     useGenerationStore.getState().resumeInterrupted();
+    void useGenerationStore.getState().syncLibrary();
   }, []);
 
   // Preload the other side after first idle so the first switch is instant.
