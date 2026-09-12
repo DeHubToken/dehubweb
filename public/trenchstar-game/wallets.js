@@ -62,7 +62,7 @@ export function mountWallets(api){
           const prepared=await prepareEvm(secret,chain,params[0]||{});
           try{
             assertCurrent(record.id,version);
-            const ok=await confirm(prepared.contract?'Confirm contract transaction':'Confirm transfer',`<dl><dt>Network</dt><dd>${esc(chain.name)}</dd><dt>Signing wallet</dt><dd>${esc(record.name)}</dd><dt>From</dt><dd class="twAddress">${record.address}</dd><dt>To</dt><dd class="twAddress">${prepared.to}</dd><dt>Amount</dt><dd>${prepared.value} ETH</dd><dt>Maximum network fee</dt><dd>${prepared.fee} ETH</dd></dl>${prepared.contract?'<p>This is a contract call, which may approve or swap tokens. Review the trade ticket before confirming.</p>':''}`);
+            const ok=await confirm(prepared.contract?'Confirm contract transaction':'Confirm transfer',`<dl><dt>Network</dt><dd>${esc(chain.name)}</dd><dt>Signing wallet</dt><dd>${esc(record.name)}</dd><dt>From</dt><dd class="twAddress">${record.address}</dd><dt>To</dt><dd class="twAddress">${prepared.to}</dd><dt>Amount</dt><dd>${prepared.value} ETH</dd><dt>Estimated execution fee</dt><dd>${prepared.fee} ETH</dd></dl>${prepared.contract?'<p>This is a contract call, which may approve or swap tokens. Review the trade ticket before confirming.</p>':''}`);
             if(!ok)throw rejected();assertCurrent(record.id,version);return await prepared.send(()=>assertCurrent(record.id,version));
           }finally{prepared.cancel();}
         }
