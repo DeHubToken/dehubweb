@@ -1144,7 +1144,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       {
         title: video.title || 'DeHub video',
         artist: video.channel || 'DeHub',
-        artwork: thumbnail || null,
+        album: video.isAudio ? 'DeHub • Audio' : 'DeHub • Video',
+        artwork: (video.isAudio ? video.channelAvatar : thumbnail) || null,
       },
       {
         // handlePlayClick toggles, which is exactly what both actions want.
@@ -1158,7 +1159,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       },
     );
     setMediaSessionPlaying(instanceId, true);
-  }, [isPlaying, isMuted, instanceId, video.title, video.channel, thumbnail, handlePlayClick, seekBy]);
+  }, [isPlaying, isMuted, instanceId, video.title, video.channel, video.channelAvatar, video.isAudio, thumbnail, handlePlayClick, seekBy]);
 
   // A card unmounting mid-play — scrolled out of the virtualised feed, or the
   // route changed — must not leave the OS holding a dead session.
