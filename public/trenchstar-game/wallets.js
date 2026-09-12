@@ -13,6 +13,7 @@ export function mountWallets(api){
   const body=panel.querySelector('#twBody'),status=panel.querySelector('#twStatus');
   const launch=document.createElement('button');launch.className='btn tsIconButton';launch.id='twLaunch';launch.innerHTML=icon('wallet')+'Trading wallets';
   document.getElementById('wlConnect').parentElement.before(launch);
+  const focusLaunch=launch.cloneNode(true);focusLaunch.id='twFocusLaunch';document.getElementById('tsFocusHead')?.after(focusLaunch);
   const badge=document.createElement('div');badge.id='twBadge';launch.after(badge);
   const field=(id,label,type='text',extra='')=>`<label>${label}<input id="${id}" type="${type}" ${extra} autocomplete="${type==='password'?'new-password':'off'}" spellcheck="false" autocapitalize="none"></label>`;
   const button=(id,label,name='wallet')=>`<button id="${id}" class="tsIconButton">${icon(name)}${label}</button>`;
@@ -138,6 +139,7 @@ export function mountWallets(api){
     get('twNetwork').onchange=update;update();get('twCopyAddress').onclick=()=>action(async()=>{await copy(record.address);notify('Deposit address copied.');});get('twBack').onclick=()=>details(record);
   }
   launch.onclick=()=>{home();panel.showModal();get('twClose').focus();};get('twClose').onclick=()=>{if(closePending)closePending(false);else close();};
+  focusLaunch.onclick=launch.onclick;
   panel.addEventListener('cancel',event=>{event.preventDefault();if(closePending)closePending(false);else close();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden)lock();});window.addEventListener('pagehide',lock);
   window.addEventListener('trenchstar:wallet-lock',lock);
@@ -145,5 +147,5 @@ export function mountWallets(api){
   const inactivity=setInterval(()=>{if(secret&&Date.now()-lastUse>5*60*1000)lock();},15000);
   window.addEventListener('storage',event=>{if(event.key===activeKey||event.key?.startsWith(prefix)){lock();try{const id=localStorage.getItem(activeKey);selected=id?read(id):null;selection=selected?adapter(selected):null;api.select(selection);renderBadge();}catch{notify('Wallet changed in another tab. Reload before continuing.');}}});
   try{const id=localStorage.getItem(activeKey);if(id){selected=read(id);selection=adapter(selected);api.select(selection);}renderBadge();}catch(e){badge.textContent='Trading wallet locked · open Trading wallets';}
-  return ()=>{lock();clearInterval(inactivity);panel.remove();launch.remove();badge.remove();};
+  return ()=>{lock();clearInterval(inactivity);panel.remove();launch.remove();focusLaunch.remove();badge.remove();};
 }

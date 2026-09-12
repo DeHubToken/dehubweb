@@ -13141,9 +13141,9 @@ window.TRENCHSTAR.restoreDesk=doc=>{
   syncCustomUI();
 };
 bloom.strength=Math.min(bloom.strength,.18);
-import('./connected.js').then(({mountConnected})=>mountConnected(window.TRENCHSTAR)).catch(e=>console.error('Could not load connected desk',e));
+const connectedReady=import('./connected.js').then(({mountConnected})=>mountConnected(window.TRENCHSTAR)).catch(e=>console.error('Could not load connected desk',e));
 const walletStyles=document.createElement('link');walletStyles.rel='stylesheet';walletStyles.href='./wallets.css';document.head.append(walletStyles);
-import('./wallets.js').then(({mountWallets})=>mountWallets({
+Promise.all([connectedReady,import('./wallets.js')]).then(([, {mountWallets}])=>mountWallets({
   chains:CHAINS,rpc:rpcPublic,isTrading:()=>td.busy,review:()=>localTradeReview,
   refresh:()=>{syncWalletUI();tdRender();},disarm:tdDisarm,
   select:next=>{localTradingWallet=next;wallet.chainId=null;walletRevision++;tdDisarm();wallet.assets=[];wallet.usd=0;wallet.pnl24=0;wallet.pnlReal=null;syncWalletUI();tdRender();renderFills();refreshWallet();}
