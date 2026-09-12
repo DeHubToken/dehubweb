@@ -274,6 +274,7 @@ function ImageCarousel({
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentSlideFillsViewport, setCurrentSlideFillsViewport] = useState(false);
 
   const updateCurrentIndex = useCallback(() => {
     const viewport = scrollRef.current;
@@ -290,8 +291,25 @@ function ImageCarousel({
         : nearest;
     }, 0);
     setCurrentIndex(idx);
+    // A narrower/tall image already reveals the next image, which is the best
+    // possible scroll affordance. Keep the buttons for edge-to-edge slides,
+    // where the rest of the gallery would otherwise be completely hidden.
+    setCurrentSlideFillsViewport(slides[idx].offsetWidth >= viewport.clientWidth - 1);
     onIndexChange?.(idx);
   }, [onIndexChange]);
+
+  useEffect(() => {
+    const viewport = scrollRef.current;
+    if (!viewport) return;
+
+    updateCurrentIndex();
+    if (typeof ResizeObserver === 'undefined') return;
+
+    const observer = new ResizeObserver(updateCurrentIndex);
+    observer.observe(viewport);
+    Array.from(viewport.children).forEach((slide) => observer.observe(slide));
+    return () => observer.disconnect();
+  }, [images, updateCurrentIndex]);
 
   const scrollToImage = useCallback((index: number) => {
     const viewport = scrollRef.current;
@@ -341,8 +359,8 @@ function ImageCarousel({
         ))}
       </div>
       
-      {/* Navigation arrows - only show if multiple images */}
-      {hasMultiple && (
+      {/* A peeking next image explains the scroll itself; full-width slides need controls. */}
+      {hasMultiple && currentSlideFillsViewport && (
         <>
           {currentIndex > 0 && (
             <button
