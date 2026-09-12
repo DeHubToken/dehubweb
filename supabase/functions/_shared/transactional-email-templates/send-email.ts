@@ -13,7 +13,7 @@ const SITE_NAME = "DeHub"
 const SENDER_DOMAIN = "notify.dehub.io"
 // FROM_DOMAIN is the domain shown in the From: header (e.g., "example.com").
 // Can be the root domain when display_from_root is enabled — this is cosmetic only.
-const FROM_DOMAIN = "notify.dehub.io"
+const FROM_DOMAIN = "dehub.io"
 
 export type SendTemplateEmailResult =
   | { sent: true }
