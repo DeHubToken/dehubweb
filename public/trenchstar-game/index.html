@@ -2071,7 +2071,14 @@ const CHAINS={
 const EVM_CHAINS=[CHAINS.base,CHAINS.robinhood];
 const BASE=CHAINS.base;   /* the name the older code reads */
 const FEE_TIERS=[500,3000,10000];
-const wallet={eip6963:[],provider:null,addr:null,chainId:null,
+let localTradingWallet=null,walletRevision=0,browserWalletAddress=null,browserWalletProvider=null;
+// A saved trading-wallet choice must never fall back to the account while its vault loads.
+try{if(localStorage.getItem('trenchstar.wallet.active'))localTradingWallet={chain:'blocked',address:'',name:'Locked trading wallet',locked:true};}catch{}
+const wallet={eip6963:[],
+  get provider(){return localTradingWallet?(localTradingWallet.chain==='evm'?localTradingWallet.provider:null):browserWalletProvider;},
+  set provider(value){browserWalletProvider=value;},
+  get addr(){return localTradingWallet?(localTradingWallet.chain==='evm'?localTradingWallet.address:null):browserWalletAddress;},
+  set addr(value){browserWalletAddress=value;},chainId:null,
   assets:[],usd:0,pnl24:0,pnlReal:null,connecting:false};
 
 const pad32=h=>h.replace(/^0x/,'').padStart(64,'0');
@@ -2111,6 +2118,7 @@ addEventListener('eip6963:announceProvider',e=>{
 dispatchEvent(new Event('eip6963:requestProvider'));
 
 async function connectWallet(){
+  if(localTradingWallet){toast('Choose Account / connected wallet in Trading wallets first.');return;}
   if(wallet.connecting)return;
   wallet.connecting=true;
   try{
@@ -2122,7 +2130,7 @@ async function connectWallet(){
     wallet.addr=accs&&accs[0];
     wallet.chainId=parseInt(await prov.request({method:'eth_chainId'}),16);
     prov.on&&prov.on('accountsChanged',a=>{wallet.addr=a&&a[0];refreshWallet();});
-    prov.on&&prov.on('chainChanged',c=>{wallet.chainId=parseInt(c,16);refreshWallet();});
+    prov.on&&prov.on('chainChanged',c=>{if(!localTradingWallet)wallet.chainId=parseInt(c,16);refreshWallet();});
     toast('WALLET CONNECTED · '+wallet.addr.slice(0,6)+'…'+wallet.addr.slice(-4));
     syncWalletUI();
     refreshWallet();
@@ -2179,6 +2187,7 @@ function dehubAddr(){
   }catch(e){return '';}
 }
 function watchAddr(){
+  if(localTradingWallet)return localTradingWallet.chain==='evm'?localTradingWallet.address:'';
   return wallet.addr||(dhData.me&&dhData.me.address)||dehubAddr()||'';
 }
 /* Price a native coin off the wall itself. ETH and SOL are majors with a live
@@ -2268,6 +2277,7 @@ async function solBag(who){
 }
 let refreshing=false;
 async function refreshWallet(){
+  const revision=walletRevision;
   const who=watchAddr(),sol=solAddr();
   if(!who&&!sol){wallet.assets=[];wallet.usd=0;syncWalletUI();return;}
   if(refreshing)return;
@@ -2278,6 +2288,7 @@ async function refreshWallet(){
     if(who)for(const ch of EVM_CHAINS)jobs.push(evmBag(ch,who).then(a=>assets.push(...a)).catch(()=>{}));
     if(sol)jobs.push(solBag(sol).then(a=>assets.push(...a)).catch(()=>{}));
     await Promise.all(jobs);
+    if(revision!==walletRevision)return;
     assets.sort((a,b)=>b.qty*b.px-a.qty*a.px);
     wallet.assets=assets;
     wallet.usd=assets.reduce((s,a)=>s+a.qty*a.px,0);
@@ -2290,11 +2301,11 @@ async function refreshWallet(){
     syncWalletUI();
     tdRender();
   }catch(e){}
-  refreshing=false;
+  finally{refreshing=false;if(revision!==walletRevision)refreshWallet();}
 }
 function snapshotWallet(){
   try{
-    const key='trenchstar.snaps';
+    const key='trenchstar.snaps.v2.'+watchAddr().toLowerCase()+'.'+solAddr();
     const snaps=JSON.parse(localStorage.getItem(key)||'[]');
     const now=Date.now();
     if(!snaps.length||now-snaps[snaps.length-1].t>3600e3){
@@ -2485,6 +2496,7 @@ function hostTraded(d){
   if(d.stage==='mined'){tradeWaits.delete(d.key);w.onStage&&w.onStage('mined',d);}
 }
 function evmSigner(){
+  if(localTradingWallet)return localTradingWallet.chain==='evm'?'local':null;
   if(wallet.addr)return 'injected';
   if(dhFramed&&watchAddr())return 'native';
   return null;
@@ -2588,12 +2600,18 @@ function watchEvmTx(ch,hash,onStage){
 }
 
 /* ---- Solana ---- */
-const sol={prov:null,addr:null,connecting:false};
+let phantomAddress=null,phantomProvider=null;
+const sol={
+  get prov(){return localTradingWallet?(localTradingWallet.chain==='solana'?localTradingWallet.provider:null):phantomProvider;},
+  set prov(value){phantomProvider=value;},
+  get addr(){return localTradingWallet?(localTradingWallet.chain==='solana'?localTradingWallet.address:null):phantomAddress;},
+  set addr(value){phantomAddress=value;},connecting:false};
 function solProvider(){
   const p=(window.phantom&&window.phantom.solana)||window.solana;
   return p&&typeof p.request==='function'?p:null;
 }
 async function solConnect(){
+  if(localTradingWallet){toast('Choose a Solana trading wallet, or switch to Account / connected wallet first.');return;}
   if(sol.connecting)return;
   const p=solProvider();
   if(!p){toast('No Solana wallet found — install Phantom, then reload.');return;}
@@ -2609,7 +2627,7 @@ async function solConnect(){
   }catch(e){toast(e.code===4001?'Connection rejected.':'Phantom error — '+String(e.message||'').slice(0,60));}
   finally{sol.connecting=false;}
 }
-function solAddr(){return sol.addr||(dhData.me&&dhData.me.solana)||'';}
+function solAddr(){if(localTradingWallet)return localTradingWallet.chain==='solana'?localTradingWallet.address:'';return sol.addr||(dhData.me&&dhData.me.solana)||'';}
 const JUP='https://lite-api.jup.ag/swap/v1';
 function b64ToBytes(b64){const s=atob(b64);const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u;}
 const B58='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
@@ -2676,7 +2694,7 @@ async function planSol(m,side,amountRaw,slipPct){
 /* ---- the book of what this desk actually did ---- */
 const fills=(()=>{try{return JSON.parse(localStorage.getItem('trenchstar.fills')||'[]');}catch(e){return [];}})();
 function saveFills(){try{localStorage.setItem('trenchstar.fills',JSON.stringify(fills.slice(0,60)));}catch(e){}}
-function recordFill(f){fills.unshift(f);saveFills();renderFills();return f;}
+function recordFill(f){f.walletAddress=f.chain==='solana'?solAddr():evmAddr();fills.unshift(f);saveFills();renderFills();return f;}
 function updateFill(hash,patch){
   const f=fills.find(x=>x.hash===hash);
   if(f){Object.assign(f,patch);saveFills();renderFills();}
@@ -11620,10 +11638,10 @@ function syncWalletUI(){
   /* say who signs, because it is not always the same wallet the bag is read from */
   const signer=evmSigner();
   $('#wlSrc').textContent=on?[
-    signer==='native'?'DEHUB WALLET · GAS SPONSORED':signer==='injected'?'BROWSER WALLET':'READ ONLY',
-    sol.addr?'PHANTOM':(sa?'SOLANA READ ONLY':'')].filter(Boolean).join(' · '):'';
+    localTradingWallet?'TRADING WALLET · '+(localTradingWallet.locked?'LOCKED':'UNLOCKED'):signer==='native'?'DEHUB WALLET · GAS SPONSORED':signer==='injected'?'BROWSER WALLET':'READ ONLY',
+    localTradingWallet?'':sol.addr?'PHANTOM':(sa?'SOLANA READ ONLY':'')].filter(Boolean).join(' · '):'';
   $('#wlConnect').textContent=wallet.addr?'↻ REFRESH':(signer==='native'?'＋ BROWSER WALLET':'CONNECT WALLET');
-  $('#wlSol').textContent=sol.addr?'◎ PHANTOM · '+sol.addr.slice(0,4)+'…':'◎ CONNECT PHANTOM';
+  $('#wlSol').textContent=sol.addr?(localTradingWallet?'SOLANA WALLET · ':'◎ PHANTOM · ')+sol.addr.slice(0,4)+'…':'◎ CONNECT PHANTOM';
   $('#wlSol').classList.toggle('live',!!sol.addr);
   $('#btnWallet').classList.toggle('live',on);
   $('#wlTotal').textContent=on?'$'+fmtBig(wallet.usd):'—';
@@ -11683,6 +11701,7 @@ document.querySelectorAll('.wtab').forEach(t=>t.addEventListener('click',()=>{
 
 /* ------------------------------ the ticket ------------------------------ */
 const td={m:null,side:'buy',amt:null,pct:null,slip:3,plan:null,busy:false,armTimer:0};
+let localTradeReview=null;
 function tradable(m){return !!(m&&m.fed&&m.tokenAddr&&CHAINS[m.chain]);}
 function tdFillSelect(){
   const sel=$('#tdSel');
@@ -11816,11 +11835,11 @@ function tdRender(){
   }
   if(td.plan&&go.dataset.armed==='1')return;   /* armed text stays until it fires */
   const amtOk=td.side==='buy'?td.amt>0:(td.pct>0&&held);
-  const canSign=ch.sol?true:!!evmSigner();     /* Phantom connects on press */
+  const canSign=localTradingWallet?localTradingWallet.chain===(ch.sol?'solana':'evm')&&!localTradingWallet.locked:ch.sol?true:!!evmSigner();
   go.disabled=!(amtOk&&canSign)||td.busy;
   /* a dead button with no reason on it is why nobody knew the desk needs a
      signer at the standalone URL */
-  go.textContent=td.busy?'WORKING…':!canSign?'CONNECT A WALLET TO TRADE':td.side==='buy'
+  go.textContent=td.busy?'WORKING…':!canSign?(localTradingWallet?(localTradingWallet.chain!==(ch.sol?'solana':'evm')?'SELECT A MATCHING TRADING WALLET':'UNLOCK YOUR TRADING WALLET'):'CONNECT A WALLET TO TRADE'):td.side==='buy'
     ?(td.amt?'BUY '+m.sym+' FOR '+td.amt+' '+ch.gas:'PICK AN AMOUNT')
     :(td.pct&&held?'SELL '+td.pct+'% '+m.sym+' → '+ch.gas:held?'PICK A SIZE':'NOTHING TO SELL');
 }
@@ -11836,7 +11855,7 @@ $('#tdGo').addEventListener('click',async()=>{
   const m=td.m;if(!m||td.busy)return;
   const go=$('#tdGo'),msg=$('#tdMsg');
   if(go.dataset.armed==='1'&&td.plan){
-    const plan=td.plan;tdDisarm();
+    const plan=td.plan;localTradeReview=plan.review;tdDisarm();
     td.busy=true;tdRender();
     const ch=plan.ch;
     const inUnit=plan.side==='buy'?ch.gas:m.sym,outUnit=plan.side==='buy'?m.sym:ch.gas;
@@ -11861,7 +11880,7 @@ $('#tdGo').addEventListener('click',async()=>{
       const s=String(e&&e.message||e);
       msg.innerHTML='<b>'+(e&&e.code===4001?'REJECTED IN WALLET':'NOT SENT')+'</b> · '+s.slice(0,90);
     }
-    td.busy=false;tdSideUI();tdRender();
+    localTradeReview=null;td.busy=false;tdSideUI();tdRender();
     return;
   }
   /* first press: quote */
@@ -11890,7 +11909,8 @@ $('#tdGo').addEventListener('click',async()=>{
       :plan.q.v4?'UNISWAP V4 · '+(plan.q.key.hooks&&plan.q.key.hooks!==ZERO?'HOOKED':'HOOKLESS')+' POOL'
       :'UNISWAP V3 · '+(plan.q.fee/10000)+'% POOL';
     const impact=ch.sol&&plan.q.priceImpactPct!=null?' · IMPACT '+(+plan.q.priceImpactPct*100).toFixed(2)+'%':'';
-    const who=ch.sol?'PHANTOM':(evmSigner()==='native'?'DEHUB WALLET · GAS SPONSORED':'YOUR WALLET');
+    const who=localTradingWallet?'TRADING WALLET · '+localTradingWallet.address:ch.sol?'PHANTOM':(evmSigner()==='native'?'DEHUB WALLET · GAS SPONSORED':'YOUR WALLET');
+    plan.review={action:plan.side.toUpperCase()+' '+m.sym,spend:fmtUnits(plan.amountIn,plan.side==='buy'?ch.dec:(tdHeld()||{dec:18}).dec)+' '+(plan.side==='buy'?ch.gas:m.sym),minimum:minOut||plan.minOut.toString()+' token base units',slippage:td.slip+'%',token:m.tokenAddr};
     msg.innerHTML='ROUTE '+route+impact+'<br>MIN RECEIVED '+(minOut||('per quote, '+td.slip+'% slippage'))+
       '<br>SIGNS WITH '+who+' · <b>PRESS AGAIN TO SEND</b>';
     go.dataset.armed='1';
@@ -11905,7 +11925,9 @@ $('#tdGo').addEventListener('click',async()=>{
 function renderFills(){
   const box=$('#tdLog');box.innerHTML='';
   if(!fills.length){box.innerHTML='<div id="tdEmpty">NO FILLS FROM THIS DESK YET</div>';return;}
-  for(const f of fills.slice(0,40)){
+  const visibleFills=fills.filter(f=>f.walletAddress?(f.chain==='solana'?f.walletAddress===solAddr():f.walletAddress.toLowerCase()===evmAddr().toLowerCase()):!localTradingWallet);
+  if(!visibleFills.length){box.innerHTML='<div id="tdEmpty">NO FILLS FOR THIS WALLET YET</div>';return;}
+  for(const f of visibleFills.slice(0,40)){
     const d=document.createElement('div');d.className='fill';
     const st=f.status||'SENT';
     d.innerHTML='<span class="side '+f.side+'">'+f.side.toUpperCase()+'</span><b>'+f.sym+'</b>'+
@@ -13120,6 +13142,12 @@ window.TRENCHSTAR.restoreDesk=doc=>{
 };
 bloom.strength=Math.min(bloom.strength,.18);
 import('./connected.js').then(({mountConnected})=>mountConnected(window.TRENCHSTAR)).catch(e=>console.error('Could not load connected desk',e));
+const walletStyles=document.createElement('link');walletStyles.rel='stylesheet';walletStyles.href='./wallets.css';document.head.append(walletStyles);
+import('./wallets.js').then(({mountWallets})=>mountWallets({
+  chains:CHAINS,rpc:rpcPublic,isTrading:()=>td.busy,review:()=>localTradeReview,
+  refresh:()=>{syncWalletUI();tdRender();},disarm:tdDisarm,
+  select:next=>{localTradingWallet=next;wallet.chainId=null;walletRevision++;tdDisarm();wallet.assets=[];wallet.usd=0;wallet.pnl24=0;wallet.pnlReal=null;syncWalletUI();tdRender();renderFills();refreshWallet();}
+})).catch(()=>{const note=document.createElement('p');note.textContent='Trading wallets could not load. Reload to access your vault. Your saved trading wallet will not use the account wallet instead.';document.getElementById('wlConnRow').before(note);});
 </script>
 </body>
 </html>
