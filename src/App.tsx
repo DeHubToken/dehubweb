@@ -168,6 +168,7 @@ const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
 const BestDecentralizedSocialMedia = React.lazy(() => import("./pages/BestDecentralizedSocialMedia"));
 const BestWeb3SocialMediaDapps = React.lazy(() => import("./pages/BestWeb3SocialMediaDapps"));
+const BestDecentralizedStreaming = React.lazy(() => import("./pages/BestDecentralizedStreaming"));
 const PromptLanding = React.lazy(() => import("./pages/PromptLanding"));
 const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
 const CommunityInvitePage = React.lazy(() => import("./pages/app/CommunityInvitePage"));
@@ -418,6 +419,7 @@ function AppContent() {
               /guides/* splat below, so they always win. */}
           <Route path="/guides/best-decentralized-social-media" element={<Suspense fallback={<PageLoader />}><BestDecentralizedSocialMedia /></Suspense>} />
           <Route path="/guides/best-web3-social-media-dapps" element={<Suspense fallback={<PageLoader />}><BestWeb3SocialMediaDapps /></Suspense>} />
+          <Route path="/guides/best-decentralized-streaming-apps" element={<Suspense fallback={<PageLoader />}><BestDecentralizedStreaming /></Suspense>} />
 
           {/* Unified docs/blog surface. This pathless parent stays mounted for
               ALL of /docs, /docs/*, and /guides/<slug> (blog) — so crossing the
