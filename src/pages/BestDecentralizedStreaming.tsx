@@ -19,10 +19,12 @@ const platforms = [
     network: 'Base + BNB (multi-chain)',
     launched: '2021',
     model: 'User-owned media platform — video, live, audio, posts',
-    monetization: 'Tips, pay-per-view, subscriptions, token gating, 20% affiliate share',
+    monetization: 'Real-time tips, pay-per-view, subscriptions, token gating, 20% affiliate share',
     strengths: [
+      'Tips land as they are sent — no payout threshold, no monthly cycle, yours to spend or cash out immediately',
+      'Live production built in: voice changers, a sound-effects board, camera looks and screen share — no plugins',
+      'AI creator studio for image, video, music and poster generation',
       'Live, video-on-demand, audio rooms and shorts in one app',
-      'Monetization built in from the first view, no follower threshold',
       'Email or social login — a wallet is optional, not a gate',
       'Streams can be minted on-chain or published off-chain entirely',
     ],
@@ -129,6 +131,10 @@ const FAQ_ITEMS: { q: string; a: string }[] = [
   {
     q: 'Is decentralized streaming actually usable in 2026?',
     a: 'For uploaded video and music, yes — Odysee and Audius both have real audiences and mature apps. For live video the honest answer is that audiences are still small; the drawcards are ownership, payments that are not gated behind follower counts, and the fact that nobody can demonetize you unilaterally.',
+  },
+  {
+    q: 'How quickly do tips actually reach the creator?',
+    a: 'On DeHub a tip settles on-chain to your own wallet as it is sent, during the stream. There is no payout threshold to clear, no monthly payout date and no holding period, so the balance is yours to spend, swap or cash out straight away. That is the practical difference from an ad-funded platform, where the same money reaches you weeks later and only once you have cleared a minimum.',
   },
   {
     q: 'Do I need crypto to start streaming on DeHub?',
@@ -265,13 +271,35 @@ export default function BestDecentralizedStreaming() {
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-3">Which one should you pick?</h2>
             <ul className="space-y-3 text-zinc-300">
-              <li><strong className="text-white">Want to get paid from your first viewer?</strong> DeHub — tips, pay-per-view and subscriptions with no follower threshold.</li>
+              <li><strong className="text-white">Want to get paid from your first viewer?</strong> DeHub — real-time tips, pay-per-view and subscriptions, no follower threshold.</li>
+              <li><strong className="text-white">Want production tools without a plugin stack?</strong> DeHub — voice changers, sound effects and camera looks in the browser.</li>
               <li><strong className="text-white">Already have a Bluesky following?</strong> Streamplace — same identity, no new account.</li>
               <li><strong className="text-white">Want the biggest audience available?</strong> Odysee.</li>
               <li><strong className="text-white">Want rewards paid by the chain itself?</strong> 3Speak.</li>
               <li><strong className="text-white">Want to be paid in Bitcoin?</strong> zap.stream.</li>
               <li><strong className="text-white">Making music rather than video?</strong> Audius.</li>
             </ul>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-semibold mb-3">The production gap</h2>
+            <p className="text-zinc-300 leading-relaxed mb-4">
+              Comparisons in this category usually stop at protocols and payments, which skips the
+              thing you actually feel on day one: every other app here hands you a video player and
+              a chat box, and everything else is your problem. You bring OBS, you wire up your own
+              audio chain, you find your own plugins. DeHub ships the production tools in the
+              browser:
+            </p>
+            <ul className="space-y-3 text-zinc-300 mb-4">
+              <li><strong className="text-white">Voice changers</strong> — Anonymous, Robot, Chipmunk, Echo and Radio, applied to the audio you publish rather than just your own monitor. Anonymous is the one that matters if you are covering something that makes you a target.</li>
+              <li><strong className="text-white">A sound-effects board</strong> — air horn, applause, drum roll, buzzer, crickets, boo, countdown and more, on pads you can hit mid-sentence.</li>
+              <li><strong className="text-white">Camera looks</strong> — mono, noir, warm, vivid and neon, applied live to the published picture, with nine native looks on mobile.</li>
+              <li><strong className="text-white">Screen share with a camera bubble</strong> — share a game or a tab at 1080p with your face composited over it, no encoder needed.</li>
+              <li><strong className="text-white">An AI creator studio</strong> — generate images, video, music and posters for your channel without leaving the app.</li>
+            </ul>
+            <p className="text-zinc-300 leading-relaxed">
+              None of the other five platforms on this list ship any of it.
+            </p>
           </section>
 
           <section className="mb-12">
@@ -290,8 +318,9 @@ export default function BestDecentralizedStreaming() {
           <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 mb-12">
             <h2 className="text-xl font-semibold mb-2">Go live on DeHub</h2>
             <p className="text-zinc-400 mb-4">
-              Stream from your browser, your phone or OBS. Monetize from the first view with tips,
-              pay-per-view and subscriptions — no follower threshold, no wallet required to start.
+              Stream from your browser, your phone or OBS, with voice changers, sound effects and
+              camera looks built in. Tips land in your wallet as they are sent — no follower
+              threshold, no payout cycle, and no wallet required to start.
             </p>
             <Link
               to="/app"

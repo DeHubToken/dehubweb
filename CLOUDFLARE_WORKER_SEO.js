@@ -265,7 +265,7 @@ const GUIDE_PAGES = {
     bodyHtml: `<p>Most "decentralized streaming" lists open with Theta and Livepeer. Neither is a streaming app — they are decentralized delivery and transcoding networks that sit underneath other products, and you cannot open either one and watch anything. Most of those lists also still feature DLive, which <strong>shut down in April 2026</strong>. This guide covers six apps that have a front door, an audience and a pulse.</p>
 <h2>The six</h2>
 <ul>
-<li><strong>DeHub</strong> — user-owned media platform on Base and BNB Chain. Live video, uploads, audio and shorts in one app, with tips, pay-per-view and subscriptions from the first view and no follower threshold.</li>
+<li><strong>DeHub</strong> — user-owned media platform on Base and BNB Chain. Live video, uploads, audio and shorts in one app, with voice changers, a sound-effects board, camera looks and screen share built into the browser broadcaster. Tips settle on-chain as they are sent: no follower threshold, no payout cycle, spendable immediately.</li>
 <li><strong>Streamplace</strong> — open-source live video for the AT Protocol, so your Bluesky handle is your streaming identity. Very early, and no creator payments yet.</li>
 <li><strong>Odysee</strong> — the largest audience here, built on the LBRY protocol. Video-first, with livestreaming as a supplement to uploads.</li>
 <li><strong>3Speak</strong> — video and live on the Hive blockchain, where creator rewards are paid by the chain rather than by advertisers.</li>
@@ -273,7 +273,7 @@ const GUIDE_PAGES = {
 <li><strong>Audius</strong> — decentralized music streaming on Solana, and the largest user base of any app in this category.</li>
 </ul>
 <h2>How to choose</h2>
-<p>If you want reach today, Odysee. If you already have a Bluesky following, Streamplace. If you want to be paid in Bitcoin, zap.stream. If you make music, Audius. If you want <strong>live streaming with ownership and monetization that works from your first viewer</strong>, that is the gap DeHub is built to fill.</p>
+<p>If you want reach today, Odysee. If you already have a Bluesky following, Streamplace. If you want to be paid in Bitcoin, zap.stream. If you make music, Audius. If you want <strong>live streaming with ownership and monetization that works from your first viewer</strong>, that is the gap DeHub is built to fill — and it is the only one of the six that ships live production tools rather than leaving you to assemble them.</p>
 <p><a href="${APP_URL}/guides/best-decentralized-streaming-apps">Read the full comparison</a> or <a href="${APP_URL}/">try DeHub free</a>.</p>`,
   },
 };
