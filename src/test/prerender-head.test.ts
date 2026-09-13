@@ -37,7 +37,7 @@ const { stylePrerendered, VIEWPORT_META, TITLE_MAX } = new Function(`
   ${decl('function truncate(text, max) {')}
   ${decl('function clampEscapedTitle(escaped, max) {')}
   ${decl('function normalizePrerenderedHead(html) {')}
-  ${decl('export function stylePrerendered(html) {')}
+  ${decl('export function stylePrerendered(html) {').replace(/^export /, '')}
   return { stylePrerendered, VIEWPORT_META, TITLE_MAX };
 `)() as { stylePrerendered: (html: string) => string; VIEWPORT_META: string; TITLE_MAX: number };
 
