@@ -1533,6 +1533,35 @@ const PROFILE_DESCRIPTION_MIN = 40;
 /** What the composer stores for an upload with no caption. */
 const UNTITLED_POST_TITLES = new Set(['', 'untitled']);
 
+/**
+ * A title that identifies nothing.
+ *
+ * `UNTITLED_POST_TITLES` only ever caught the two strings the composer writes
+ * itself, but a caption the *phone* wrote is no better: a census of all 3,256
+ * sitemap posts on 2026-09-13 found 368 whose whole `<title>` and `<h1>` was a
+ * camera filename (`VID-20220824-WA0031.mp4`, `trim.5576BE10-….MOV`), an emoji
+ * reaction (`😂`, `👑`), a placeholder (`test`), or one or two characters. Those
+ * are indexed exactly as written, and they collide with every sibling doing the
+ * same — `test` alone was 24 posts.
+ *
+ * Deliberately narrow. A short title someone actually chose is left to the
+ * suffix path below; only a string that could describe any post at all is
+ * replaced outright.
+ */
+const FILENAME_TITLE = /(?:\.(?:mp4|mov|m4v|avi|webm|mkv|jpe?g|png|gif|heic|webp|mp3|wav|m4a)$)|^(?:vid|img|pxl|trim|dsc|gopr|screenshot|whatsapp|snapchat)[-_. ]?\d/i;
+// Only strings that express no intent at all. `Hello` and `Hi` are greetings
+// somebody chose to type — they collide, but the suffix path disambiguates
+// them without throwing away what was written.
+const PLACEHOLDER_TITLE = /^(?:test|testing|asdf|a+|untitled|new post|post|abc|123|\.+)$/i;
+function titleSaysNothing(title) {
+  const t = String(title || '').trim();
+  if (UNTITLED_POST_TITLES.has(t.toLowerCase())) return true;
+  if (FILENAME_TITLE.test(t) || PLACEHOLDER_TITLE.test(t)) return true;
+  // Emoji and punctuation carry no query a crawler can match.
+  const letters = t.replace(/[^\p{L}\p{N}]/gu, '');
+  return letters.length < 3;
+}
+
 /** The fn escapes exactly `"`, `<`, `>` in attributes and JSON.stringifies
  *  its JSON-LD; both decode to the same plain text. */
 function decodeFnText(s) {
@@ -1559,10 +1588,52 @@ function postKind(nft, html) {
   return /property="og:video"/.test(html) ? ['video', 'Watch'] : ['post', 'Read'];
 }
 
+/**
+ * The author, from wherever this page happens to carry one.
+ *
+ * The description template is the cheapest source but only a bodyless post has
+ * one, and the title work below runs on every post. `nft` is the record the
+ * post branch already fetched; the JSON-LD is the last resort.
+ */
+function postAuthor(html, nft, templated) {
+  const fromTemplate = templated ? decodeFnText(templated[1]).replace(/\s+/g, ' ').trim() : '';
+  if (fromTemplate) return fromTemplate;
+  const fromRecord = String((nft && (nft.displayName || nft.username)) || '').replace(/\s+/g, ' ').trim();
+  if (fromRecord) return fromRecord;
+  const ld = html.match(/"author":\{"@type":"Person","name":"((?:[^"\\]|\\.)*)"/);
+  return ld ? decodeFnText(ld[1]).replace(/\s+/g, ' ').trim() : '';
+}
+
+/**
+ * Swap a post's title everywhere the fn wrote it.
+ *
+ * Nine places, and they have to move together or the tab, the share card, the
+ * heading and the structured data describe one page four different ways. The
+ * `<h1>` and the image `alt` are in that list: they were missed when only the
+ * "Untitled" case was handled, so a retitled page still shouted the filename at
+ * the top of its own body.
+ */
+function replacePostTitle(html, oldTitle, newTitle) {
+  const attr = escFnAttr(newTitle);
+  let out = html
+    .replace(/(<title>)[^<]*(<\/title>)/i, (m, a, b) => `${a}${attr}${b}`)
+    .replace(
+      /(<meta (?:property|name)="(?:og:title|twitter:title|og:image:alt|twitter:image:alt)" content=")[^"]*(">)/g,
+      (m, a, b) => `${a}${attr}${b}`,
+    )
+    .replace(/(<h1[^>]*>)[^<]*(<\/h1>)/i, (m, a, b) => `${a}${attr}${b}`);
+  const oldAttr = escFnAttr(oldTitle);
+  if (oldAttr) out = out.split(` alt="${oldAttr}"`).join(` alt="${attr}"`);
+  const oldJson = escJsonText(oldTitle);
+  const newJson = escJsonText(newTitle);
+  out = out.split(`"headline":"${oldJson}"`).join(`"headline":"${newJson}"`);
+  if (oldJson) out = out.split(`"name":"${oldJson}"`).join(`"name":"${newJson}"`);
+  return out;
+}
+
 function enrichPostMeta(html, postId, nft) {
   const templated = html.match(POST_DESCRIPTION_TEMPLATE);
-  if (!templated) return html;
-  const author = decodeFnText(templated[1]).replace(/\s+/g, ' ').trim() || 'someone';
+  const author = postAuthor(html, nft, templated) || 'someone';
   const titleTag = html.match(/<title>([^<]*)<\/title>/i);
   const title = decodeFnText(titleTag ? titleTag[1] : '').replace(/\s+/g, ' ').trim();
   const [kind, verb] = postKind(nft, html);
@@ -1570,26 +1641,37 @@ function enrichPostMeta(html, postId, nft) {
     .map((c) => String(c || '').replace(/\s+/g, ' ').trim())
     .filter(Boolean)
     .slice(0, 5);
-  const untitled = UNTITLED_POST_TITLES.has(title.toLowerCase());
+  const untitled = titleSaysNothing(title);
   let out = html;
 
   if (untitled) {
-    // "Untitled" is what the composer stores for a captionless upload, so
+    // A caption the composer or the phone wrote, not one anybody chose, so
     // three of those from one account are three identical <title>s. The fn's
     // own fallback shape, with the id keeping siblings apart.
-    const newTitle = `${kind.charAt(0).toUpperCase()}${kind.slice(1)} #${postId} by ${author} on DeHub`;
-    const attr = escFnAttr(newTitle);
-    out = out
-      .replace(/(<title>)[^<]*(<\/title>)/i, (m, a, b) => `${a}${attr}${b}`)
-      .replace(
-        /(<meta (?:property|name)="(?:og:title|twitter:title|og:image:alt|twitter:image:alt)" content=")[^"]*(">)/g,
-        (m, a, b) => `${a}${attr}${b}`,
-      );
-    const oldJson = escJsonText(title);
-    const newJson = escJsonText(newTitle);
-    out = out.split(`"headline":"${oldJson}"`).join(`"headline":"${newJson}"`);
-    if (oldJson) out = out.split(`"name":"${oldJson}"`).join(`"name":"${newJson}"`);
+    out = replacePostTitle(out, title, `${kind.charAt(0).toUpperCase()}${kind.slice(1)} #${postId} by ${author} on DeHub`);
+  } else if (author) {
+    // A real but short title — `Fun`, `stream`, `DeHub` — is a weak result on
+    // its own and collides with everyone else who typed it: `stream` was 30
+    // posts, `Promote DeHub` 14. Name the author and the format rather than
+    // discard what they wrote. Longer titles are distinctive already and are
+    // left exactly as they are, which is also what keeps this inside
+    // TITLE_MAX: the suffix is only applied when the result still fits, and
+    // the shorter form is tried before giving up.
+    const article = `a${/^[aeiou]/i.test(kind) ? 'n' : ''} ${kind}`;
+    const suffixed = [`${title} — ${article} by ${author} on DeHub`, `${title} — ${author} on DeHub`].find(
+      (candidate) => candidate.length <= TITLE_MAX,
+    );
+    // A title that already carries the brand needs no branding, and one that
+    // already has an em-dash clause reads badly with a second one bolted on
+    // (`A — B — davyJones on DeHub`). Both are distinctive enough as they are.
+    const alreadyShaped = /\bon DeHub\b/i.test(title) || title.includes(' — ');
+    if (suffixed && !alreadyShaped) out = replacePostTitle(out, title, suffixed);
   }
+
+  // The description rewrite below only has something to rewrite when the fn
+  // fell back to its per-author template, i.e. the post carries no body text.
+  // A real body is better copy than anything built here, so it is left alone.
+  if (!templated) return out;
 
   const lead = untitled
     ? `${verb} ${kind} #${postId} by ${author} on DeHub`
