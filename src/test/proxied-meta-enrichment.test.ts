@@ -283,6 +283,17 @@ describe('short post titles that collide', () => {
     expect(value.length).toBeLessThanOrEqual(70);
   });
 
+  it('leaves the JSON-LD author alone when the post is titled with their name', () => {
+    const out = enrichPostMeta(postPage('7', 'davyJones', 'body', true, 'davyJones'), '7', {
+      postType: 'video',
+      displayName: 'davyJones',
+    });
+    const ld = jsonLd(out);
+    expect(ld['@graph'][0].headline).toBe('davyJones — a video by davyJones on DeHub');
+    expect(ld['@graph'][1].name).toBe('davyJones — a video by davyJones on DeHub');
+    expect(ld['@graph'][0].author.name).toBe('davyJones');
+  });
+
   it('never claims an author the page does not name', () => {
     const anonymous = postPage('2376', 'Stream', 'body', false).replace(/,"author":\{[^}]*\}/, '');
     const out = enrichPostMeta(anonymous, '2376', null);
