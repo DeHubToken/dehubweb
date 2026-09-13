@@ -1188,6 +1188,10 @@
     "failedSubmit": "فشل تقديم الطلب. جرّب تاني."
   },
   "loginModal": {
+    "unlockBiometricContinue": "افتح محفظتك ببصمة إصبعك أو وجهك للمتابعة.",
+    "unlockBiometricSignIn": "افتح محفظتك ببصمة إصبعك أو وجهك لتسجيل الدخول.",
+    "unlockPasswordContinue": "أدخِل كلمة مرور محفظتك للمتابعة.",
+    "unlockPasswordSignIn": "أدخل كلمة مرور محفظتك لفتح محفظتك وتسجيل الدخول.",
     "welcomeBack": "مرحبًا بعودتك — لا يزال هذا الحساب ملكك. سجّل الدخول باستخدام معلومات تسجيل الدخول القديمة أدناه لإعادتها، مع منشوراتك ومتابعيك ورصيدك.",
     "welcomeBackWithLogin": "مرحبًا بعودتك — لا يزال هذا الحساب ملكك. سجّل الدخول باستخدام {{login}} أدناه لإعادته، مع مشاركاتك ومتابعيك ورصيدك.",
     "welcomeBackWaiting": "في انتظاره",
@@ -1493,6 +1497,7 @@
     "signed_in_successfully": "اتسجل الدخول",
     "signed_out": "اتسجل الخروج",
     "signing_in": "بيسجل الدخول...",
+    "wallet_unlocked": "تم إلغاء قفل المحفظة",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

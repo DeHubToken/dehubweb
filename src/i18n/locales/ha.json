@@ -1190,6 +1190,10 @@
     "failedSubmit": "Ba a iya miƙa nema ba. Da fatan za a sake gwadawa."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Bude walat ɗinku tare da yatsan yatsa ko fuska don ci gaba.",
+    "unlockBiometricSignIn": "Bude walat ɗinku tare da yatsan yatsa ko fuska don shiga.",
+    "unlockPasswordContinue": "Shigar da kalmarka ta walat don ci gaba.",
+    "unlockPasswordSignIn": "Shigar da kalmar sirrin walat ɗinka don buɗe walat ɗinka kuma shiga.",
     "welcomeBack": "Barka da dawowa — wannan asusun har yanzu naku ne. Shiga tare da tsohuwar shigarku a ƙasa don dawo da shi, tare da sakonninku, mabiyan ku da daidaituwa.",
     "welcomeBackWaiting": "jiraiya a kan shi",
     "migrateNothingToRecover": "Babu wani asusun DeHub na baya akan wannan shiga, don haka babu wani abu da za a kawo. Koma zuwa New lissafi don gama kafa wannan daya up.",
@@ -1494,6 +1498,7 @@
     "signed_in_successfully": "An shiga cikin nasara",
     "signed_out": "An fita",
     "signing_in": "Ana shiga...",
+    "wallet_unlocked": "Wallet ba a buɗe ba",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

@@ -1150,6 +1150,10 @@
     "failedSubmit": "ส่งใบสมัครล้มเหลว กะรุนาลองใหม่"
   },
   "loginModal": {
+    "unlockBiometricContinue": "ปลดล็อกกระเป๋าเงินของคุณด้วยลายนิ้วมือหรือใบหน้าเพื่อดำเนินการต่อ",
+    "unlockBiometricSignIn": "ปลดล็อกกระเป๋าเงินของคุณด้วยลายนิ้วมือหรือใบหน้าเพื่อลงชื่อเข้า",
+    "unlockPasswordContinue": "ป้อนรหัสผ่านกระเป๋าเงินของคุณเพื่อดำเนินการต่อ",
+    "unlockPasswordSignIn": "ป้อนรหัสผ่านกระเป๋าเงินของคุณเพื่อปลดล็อกกระเป๋าเงินและลงชื่อเข้า",
     "title": "เข้าสู่ระบบ",
     "addProfileTitle": "เพิ่มโปรไฟล์",
     "continueEmail": "ต่อด้วยอีเมล",
@@ -1447,6 +1451,7 @@
     "signed_in_successfully": "เข้าสู่ระบบสำเร็จ",
     "signed_out": "ออกจากระบบแล้ว",
     "signing_in": "กำลังเข้าสู่ระบบ...",
+    "wallet_unlocked": "กระเป๋าเงินปลดล็อกแล้ว",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

@@ -1223,6 +1223,10 @@
     "failedSubmit": "Nie udało się wysłać zgłoszenia. Spróbuj ponownie."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Aby kontynuować, odblokuj portfel za pomocą odcisku palca lub twarzy.",
+    "unlockBiometricSignIn": "Odblokuj portfel odciskiem palca lub twarzą, aby się zalogować.",
+    "unlockPasswordContinue": "Wprowadź hasło do portfela, aby kontynuować.",
+    "unlockPasswordSignIn": "Wprowadź hasło do portfela, aby odblokować portfel i zalogować się.",
     "welcomeBack": "Witamy ponownie — to konto jest nadal Twoje. Zaloguj się za pomocą starego loginu poniżej, aby przywrócić go ze swoimi postami, obserwującymi i saldem.",
     "welcomeBackWithLogin": "Witamy ponownie — to konto jest nadal Twoje. Zaloguj się za pomocą {{login}} poniżej, aby przywrócić go ze swoimi postami, obserwującymi i saldem.",
     "welcomeBackWaiting": "oczekiwanie na to",
@@ -1528,6 +1532,7 @@
     "signed_in_successfully": "Zalogowano pomyślnie",
     "signed_out": "Wylogowano",
     "signing_in": "Logowanie...",
+    "wallet_unlocked": "Portfel odblokowany",
     "welcome_back": "Witaj ponownie!",
     "welcome_to_dehub": "Witaj na DeHub!",
     "connecting_to_google": "Łączenie z Google...",

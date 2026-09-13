@@ -1187,6 +1187,10 @@
     "failedSubmit": "درخواست داخل نه ٿي سگهيو. ٻيهر ڪوشش ڪريو."
   },
   "loginModal": {
+    "unlockBiometricContinue": "جاري رکڻ لاءِ پنهنجي آ fingerر جي نشان يا منهن سان پنهنجو پرس کوليو.",
+    "unlockBiometricSignIn": "سائن ان ڪرڻ لاءِ پنهنجي آ fingerر جي نشان يا منهن سان پنهنجو پرس کوليو.",
+    "unlockPasswordContinue": "جاري رکڻ لاءِ پنهنجو والٽ پاسورڊ داخل ڪريو.",
+    "unlockPasswordSignIn": "پنهنجو پرس کولڻ ۽ سائن ان ڪرڻ لاءِ پنهنجو پرس پاسورڊ داخل ڪريو.",
     "welcomeBack": "ڀلي ڪري آيا واپس — هي اڪائونٽ اڃا تائين توهان جي آهي. ھيٺ ڏنل پنھنجي پراڻي لاگ ان سان سائن ان ڪريو ان کي واپس آڻڻ لاءِ، پنھنجي پوسٽن، پوئلڳن ۽ توازن سان.",
     "welcomeBackWaiting": "ان تي منتظر",
     "migrateNothingToRecover": "هن لاگ ان تي اڳ ۾ ڪو DeHub اڪائونٽ نه آهي, پوء اتي جي حوالي سان آڻڻ لاء ڪجھ به نه آهي. ان کي ٻيهر انسٽال ڪرڻ لاءِ نئين اڪائونٽ ڏانهن واپس وڃو.",
@@ -1491,6 +1495,7 @@
     "signed_in_successfully": "ڪاميابيءَ سان سائن ان ٿيو",
     "signed_out": "سائن آئوٽ ٿيو",
     "signing_in": "سائن ان ٿيندو آهي...",
+    "wallet_unlocked": "پرس کي انلاڪ ڪيو ويو",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

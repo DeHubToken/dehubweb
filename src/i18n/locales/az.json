@@ -1200,6 +1200,10 @@
     "failedSubmit": "Müraciəti göndərmək uğursuz oldu. Zəhmət olmasa yenidən cəhd edin."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Davam etmək üçün barmaq iziniz və ya üzünüzlə cüzdanınızı açın.",
+    "unlockBiometricSignIn": "Daxil olmaq üçün barmaq iziniz və ya üzünüzlə cüzdanınızı açın.",
+    "unlockPasswordContinue": "Davam etmək üçün cüzdan parolunuzu daxil edin.",
+    "unlockPasswordSignIn": "Pul kisənizin kilidini açmaq və daxil olmaq üçün cüzdan parolunuzu daxil edin.",
     "welcomeBack": "Yenidən xoş gəldiniz — bu hesab hələ də sizin hesabınızdır. Postlarınızı, izləyicilərinizi və balansınızı geri gətirmək üçün aşağıdakı köhnə girişinizlə daxil olun.",
     "welcomeBackWaiting": "onu gözləyir",
     "migrateNothingToRecover": "Bu girişdə daha əvvəlki DeHub hesabı yoxdur, buna görə də davam etmək üçün heç nə yoxdur. Bunu qurmağı tamamlamaq üçün Yeni hesaba qayıdın.",
@@ -1498,6 +1502,7 @@
     "signed_in_successfully": "Uğurla daxil oldunuz",
     "signed_out": "Çıxış edildi",
     "signing_in": "Daxil olunur...",
+    "wallet_unlocked": "Pul kisəsi kiliddən çıxarıldı",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

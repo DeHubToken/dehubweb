@@ -1200,6 +1200,10 @@
     "email": "E-mail"
   },
   "loginModal": {
+    "unlockBiometricContinue": "Pokračujte odemknutím peněženky otiskem prstu nebo obličejem.",
+    "unlockBiometricSignIn": "Odemkni si peněženku otiskem prstu nebo obličejem a přihlas se.",
+    "unlockPasswordContinue": "Pokračujte zadáním hesla do peněženky.",
+    "unlockPasswordSignIn": "Zadej heslo k peněžence, odemkni peněženku a přihlas se.",
     "welcomeBack": "Vítej zpět — tento účet je stále tvůj. Přihlaste se pomocí svého starého přihlašovacího jména níže, abyste jej vrátili zpět, se svými příspěvky, následovníky a zůstatkem.",
     "welcomeBackWithLogin": "Vítej zpět — tento účet je stále tvůj. Přihlaste se pomocí {{login}} níže a získejte zpět své příspěvky, sledující a zůstatek.",
     "welcomeBackWaiting": "čekám na to",
@@ -1499,6 +1503,7 @@
     "signed_in_successfully": "Úspěšně přihlášeno",
     "signed_out": "Odhlášeno",
     "signing_in": "Přihlašování...",
+    "wallet_unlocked": "Peněženka odemčena",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

@@ -1149,6 +1149,10 @@
     "failedSubmit": "درخواست جمع نہیں ہوئی۔ دوبارہ کوشش کرو۔"
   },
   "loginModal": {
+    "unlockBiometricContinue": "अपनो वॉलेट खोलबे अपनो अंगुरी छाप या चेहरा से आगे बढ़बे के लिए।",
+    "unlockBiometricSignIn": "अपनो वॉलेट खोलबे अपनो अंगुरी छाप या चेहरा से साइन इन करबे के लिए।",
+    "unlockPasswordContinue": "अपनो वॉलेट पासवर्ड दाखिल करो आगे बढ़बे के लिए।",
+    "unlockPasswordSignIn": "अपनो वॉलेट पासवर्ड दाखिल करो अपनो वॉलेट खोलबे और साइन इन करबे के लिए।",
     "title": "لاگ ان کرو",
     "addProfileTitle": "پروفائل جوڑو",
     "continueEmail": "ای میل سے جاری رکھو",
@@ -1446,6 +1450,7 @@
     "signed_in_successfully": "ڪاميابيءَ سان سائن ان ٿيو",
     "signed_out": "سائن آئوٽ ٿيو",
     "signing_in": "سائن ان ٿيندو آهي...",
+    "wallet_unlocked": "Wallet खुल गेल",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

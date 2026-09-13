@@ -1227,6 +1227,10 @@
     "email": "Email"
   },
   "loginModal": {
+    "unlockBiometricContinue": "Desbloqueie a sua carteira com a sua impressão digital ou rosto para continuar.",
+    "unlockBiometricSignIn": "Desbloqueie a sua carteira com a sua impressão digital ou o seu rosto para iniciar sessão.",
+    "unlockPasswordContinue": "Introduza a palavra-passe da sua carteira para continuar.",
+    "unlockPasswordSignIn": "Introduza a palavra-passe da sua carteira para desbloquear a sua carteira e iniciar sessão.",
     "welcomeBack": "Bem-vindo (a) de volta — esta conta ainda é sua. Inicie sessão com o seu antigo início de sessão abaixo para o trazer de volta, com as suas publicações, seguidores e saldo.",
     "welcomeBackWithLogin": "Bem-vindo (a) de volta — esta conta ainda é sua. Inicie sessão com {{login}} abaixo para o trazer de volta, com as suas publicações, seguidores e saldo.",
     "welcomeBackWaiting": "à espera",
@@ -1532,6 +1536,7 @@
     "signed_in_successfully": "Conectado com sucesso",
     "signed_out": "Desconectado",
     "signing_in": "Conectando...",
+    "wallet_unlocked": "Carteira desbloqueada",
     "welcome_back": "Bem-vindo de volta!",
     "welcome_to_dehub": "Bem-vindo ao DeHub!",
     "connecting_to_google": "Conectando ao Google...",

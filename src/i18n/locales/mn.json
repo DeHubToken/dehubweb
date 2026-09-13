@@ -1186,6 +1186,10 @@
     "failedSubmit": "Өргөдөл илгээхэд алдаа гарлаа. Дахин оролдоно уу."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Түрийвчээ хурууны хээгээр нээнэ үү эсвэл үргэлжлүүлэхийн тулд нүүрээ нээнэ үү.",
+    "unlockBiometricSignIn": "Түрийвчээ хурууны хээгээр нээнэ үү эсвэл нэвтэрнэ үү.",
+    "unlockPasswordContinue": "Үргэлжлүүлэхийн тулд түрийвчний нууц үгээ оруулна уу.",
+    "unlockPasswordSignIn": "Түрийвчээ онгойлгож, нэвтэрэхийн тулд түрийвчний нууц үгээ оруулна уу.",
     "welcomeBack": "Буцаад тавтай морил — энэ данс таных юм. Өөрийн бичлэг, дагалдагч, тэнцвэртэйгээр доорх хуучин нэвтрэх үедээ нэвтэрнэ үү.",
     "welcomeBackWithLogin": "Буцаад тавтай морил — энэ данс таных юм. Бичлэг, дагалдагчид, тэнцвэртэйгээр {{login}} @ доор оруулаарай.",
     "welcomeBackWaiting": "хүлээх",
@@ -1491,6 +1495,7 @@
     "signed_in_successfully": "Амжилттай нэвтэрлээ",
     "signed_out": "Гарлаа",
     "signing_in": "Нэвтэрч байна...",
+    "wallet_unlocked": "Түрийвч түгжээгүй",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

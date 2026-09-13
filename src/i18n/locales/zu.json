@@ -1189,6 +1189,10 @@
     "failedSubmit": "Kuhlulekile ukuthumela isicelo. Sicela uzame futhi."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Vula isikhwama sakho semali ngeminwe yakho noma ubuso ukuze uqhubeke.",
+    "unlockBiometricSignIn": "Vula isikhwama sakho semali ngeminwe yakho noma ubuso ukuze ungene ngemvume.",
+    "unlockPasswordContinue": "Faka iphasiwedi yakho ye-wallet ukuze uqhubeke.",
+    "unlockPasswordSignIn": "Faka iphasiwedi yakho yesikhwama ukuze uvule isikhwama sakho bese ungena ngemvume.",
     "welcomeBack": "Siyakwamukela futhi — le akhawunti iseyakho. Ngena ngemvume ku-akhawunti yakho endala ngezansi ukuze uyibuyise, ngamaphosti akho, abalandeli kanye nebhalansi.",
     "welcomeBackWithLogin": "Siyakwamukela futhi — le akhawunti iseyakho. Ngena ngemvume nge- {{login}} ngezansi ukuze uyibuyise, ngamaphosti akho, abalandeli kanye nebhalansi.",
     "welcomeBackWaiting": "ulinde kuyo",
@@ -1524,6 +1528,7 @@
     "signed_in_successfully": "Ungene ngempumelelo",
     "signed_out": "Uphumile",
     "signing_in": "Uyangeniswa...",
+    "wallet_unlocked": "I-wallet ivuliwe",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

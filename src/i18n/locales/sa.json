@@ -1173,6 +1173,10 @@
     "failedSubmit": "आवेदनं प्रस्तोतुं विफलम्। कृपया पुनः प्रयतताम्।"
   },
   "loginModal": {
+    "unlockBiometricContinue": "मुखे वापि वापि वापि वापि वापि वा पुनः ।",
+    "unlockBiometricSignIn": "भवतः ऐपि सङ्केतः अवरुद्धः यतः अयं कश्चन मुक्तप्रतिहस्तकः ।",
+    "unlockPasswordContinue": "भवतः कूटशब्दस्य प्रवेष्टुम् आगमिष्यति ।",
+    "unlockPasswordSignIn": "भवतः ऐपि सङ्केतः अवरुद्धः यतः अयं कूटशब्दः भवतः ऐपि सङ्केतः अवरुद्धः ।",
     "welcomeBack": "अभिवादन, इह तु अद्यापि भवतः लेखकः अस्ति । तद्वन्याप्तं दुनुजाधिपस्य जयिनः पादेन चैकेन खे तत्वं चेतसिधारयस्यविरतं त्वत्तोऽस्तिनान्यो महान् ॥",
     "welcomeBackWaiting": "प्रतीक्षारत - प्रतीक्षारत",
     "migrateNothingToRecover": "एतादृशी स्थितिः न विद्यते, अतः एतादृशी स्थितिः न विद्यते । इत्युक्ते, नूतनपृष्ठं प्रति गत्वा, एतत् पृष्ठं पूरयत ।",
@@ -1477,6 +1481,7 @@
     "signed_in_successfully": "सफलतया प्रविष्टम्",
     "signed_out": "निर्गतम्",
     "signing_in": "प्रविशति...",
+    "wallet_unlocked": "पञ्जीकृतः unlocked",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

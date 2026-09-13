@@ -1201,6 +1201,10 @@
     "failedSubmit": "Chehaghordagrvats ougharkuhr haytse. Khndreum enq photsek nor angam."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Շարունակելու համար բացեք դրամապանակը ձեր մատնահետքով կամ դեմքով ։",
+    "unlockBiometricSignIn": "Մուտք գործելու համար բացեք դրամապանակը ձեր մատնահետքով կամ դեմքով ։",
+    "unlockPasswordContinue": "Շարունակելու համար մուտքագրեք դրամապանակի գաղտնաբառը ։",
+    "unlockPasswordSignIn": "Մուտքագրեք դրամապանակի գաղտնաբառը ՝ դրամապանակը բացելու և մուտք գործելու համար:",
     "welcomeBack": "Բարի վերադարձ. այս հաշիվը դեռ ձերն է ։ Մուտք գործեք ստորև նշված հին մուտքով ՝ այն հետ բերելու համար ՝ ձեր գրառումներով, հետևորդներով և հավասարակշռությամբ ։",
     "welcomeBackWithLogin": "Բարի վերադարձ. այս հաշիվը դեռ ձերն է ։ Մուտք գործեք {{login}}- ով ՝ այն հետ բերելու համար ՝ ձեր գրառումներով, հետևորդներով և հավասարակշռությամբ ։",
     "welcomeBackWaiting": "սպասում է դրան",
@@ -1500,6 +1504,7 @@
     "signed_in_successfully": "Հdelays մուdelays",
     "signed_out": "Դudelays",
     "signing_in": "Մdelays...",
+    "wallet_unlocked": "Դրամապանակն արգելափակված է",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

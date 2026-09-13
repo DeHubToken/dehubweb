@@ -1186,6 +1186,10 @@
     "failedSubmit": "Kunne ikke sende søknad. Prøv igjen."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Lås opp lommeboken med fingeravtrykket eller ansiktet ditt for å fortsette.",
+    "unlockBiometricSignIn": "Lås opp lommeboken med fingeravtrykket eller ansiktet ditt for å logge på.",
+    "unlockPasswordContinue": "Skriv inn lommebokpassordet ditt for å fortsette.",
+    "unlockPasswordSignIn": "Skriv inn lommebokpassordet ditt for å låse opp lommeboken og logge på.",
     "welcomeBack": "Velkommen tilbake – denne kontoen er fortsatt din. Logg inn med den gamle brukernavnet ditt nedenfor for å få den tilbake, med innleggene, følgerne og saldoen din.",
     "welcomeBackWithLogin": "Velkommen tilbake – denne kontoen er fortsatt din. Logg inn med {{login}} nedenfor for å få den tilbake, med innleggene, følgerne og saldoen din.",
     "welcomeBackWaiting": "venter på det",
@@ -1491,6 +1495,7 @@
     "signed_in_successfully": "Logget inn",
     "signed_out": "Logget ut",
     "signing_in": "Logger inn...",
+    "wallet_unlocked": "Lommebok ulåst",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

@@ -1226,6 +1226,10 @@
     "email": "Email"
   },
   "loginModal": {
+    "unlockBiometricContinue": "Déverrouillez votre portefeuille avec votre empreinte digitale ou votre visage pour continuer.",
+    "unlockBiometricSignIn": "Déverrouillez votre portefeuille avec votre empreinte digitale ou votre visage pour vous connecter.",
+    "unlockPasswordContinue": "Saisissez le mot de passe de votre portefeuille pour continuer.",
+    "unlockPasswordSignIn": "Saisissez le mot de passe de votre portefeuille pour le déverrouiller et vous connecter.",
     "welcomeBack": "Heureux de vous revoir, ce compte est toujours le vôtre. Connectez-vous avec votre ancien identifiant ci-dessous pour le ramener, avec vos publications, vos abonnés et votre solde.",
     "welcomeBackWithLogin": "Heureux de vous revoir, ce compte est toujours le vôtre. Connectez-vous avec {{login}} ci-dessous pour le ramener, avec vos publications, vos abonnés et votre solde.",
     "welcomeBackWaiting": "en attente",
@@ -1531,6 +1535,7 @@
     "signed_in_successfully": "Connecté avec succès",
     "signed_out": "Déconnecté",
     "signing_in": "Connexion...",
+    "wallet_unlocked": "Portefeuille déverrouillé",
     "welcome_back": "Bon retour !",
     "welcome_to_dehub": "Bienvenue sur DeHub !",
     "connecting_to_google": "Connexion à Google...",

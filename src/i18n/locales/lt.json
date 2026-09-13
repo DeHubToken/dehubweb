@@ -1189,6 +1189,10 @@
     "failedSubmit": "Nepavyko pateikti paraiškos. Bandykite dar kartą."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Norėdami tęsti, atrakinkite piniginę piršto atspaudu arba veidu.",
+    "unlockBiometricSignIn": "Norėdami prisijungti, atrakinkite piniginę piršto atspaudu arba veidu.",
+    "unlockPasswordContinue": "Norėdami tęsti, įveskite piniginės slaptažodį.",
+    "unlockPasswordSignIn": "Įveskite „Wallet“ slaptažodį, kad atrakintumėte „Wallet“ ir prisijungtumėte.",
     "welcomeBack": "Sveiki sugrįžę — ši paskyra vis dar jūsų. Prisijunkite naudodami seną toliau pateiktą prisijungimo vardą, kad jį sugrąžintumėte, su savo įrašais, sekėjais ir balansu.",
     "welcomeBackWithLogin": "Sveiki sugrįžę — ši paskyra vis dar jūsų. Prisijunkite naudodami toliau pateiktą {{login}}, kad sugrąžintumėte jį su savo įrašais, sekėjais ir balansu.",
     "welcomeBackWaiting": "laukiama",
@@ -1494,6 +1498,7 @@
     "signed_in_successfully": "Sėkmingai prisijungta",
     "signed_out": "Atsijungta",
     "signing_in": "Jungiamasi...",
+    "wallet_unlocked": "Piniginė atrakinta",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

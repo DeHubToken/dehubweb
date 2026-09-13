@@ -1177,6 +1177,10 @@
     "failedSubmit": "आवेदन जमा नइ होइस। फेर कोशिश करव।"
   },
   "loginModal": {
+    "unlockBiometricContinue": "अपन बटुआ ल अपन फिंगरप्रिंट या चेहरा ले खोले बर जारी रखे बर ।",
+    "unlockBiometricSignIn": "अपन बटुआ ल अपन फिंगरप्रिंट या चेहरे ले खोलव ताकि आप साइन अप कर सकव ।",
+    "unlockPasswordContinue": "जारी रखे बर अपन बटुआ पासवर्ड भरव.",
+    "unlockPasswordSignIn": "अपन पोर्टफोलियो ल अनलॉक करे बर अपन पोर्टफोलियो पासवर्ड दर्ज करव अउ साइन इन करव ।",
     "welcomeBack": "स्वागत हे — ए खाता अभी घलो तोर हे । अपन पुराना लॉगिन के साथ साइन इन करें, अपन पोस्ट, अनुयायी अउ संतुलन के साथ, एला वापस लाने बर ।",
     "welcomeBackWaiting": "म प्रतीक्षा गर्दै थिएँ!",
     "migrateNothingToRecover": "अऊ हमन ओ सहरमन ला झन नास करन, जऊन मन पहिली ले सचेत करे गे हवंय । ए खाता ल बंद करे बर नवा खाता म वापस जाओ ।",
@@ -1481,6 +1485,7 @@
     "signed_in_successfully": "लॉग इन होइस",
     "signed_out": "लॉग आउट होइस",
     "signing_in": "लॉग इन होत हे...",
+    "wallet_unlocked": "बटुआ अनलॉक करे",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

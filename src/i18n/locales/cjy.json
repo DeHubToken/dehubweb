@@ -1147,6 +1147,10 @@
     "failedSubmit": "提交失败。再试一下。"
   },
   "loginModal": {
+    "unlockBiometricContinue": "用你的指纹或面部解锁你的钱包以继续。",
+    "unlockBiometricSignIn": "用你的指纹或面部解锁你的钱包以登录。",
+    "unlockPasswordContinue": "输入你的钱包密码以继续。",
+    "unlockPasswordSignIn": "输入你的钱包密码以解锁你的钱包并登录。",
     "title": "登录",
     "addProfileTitle": "添账户",
     "continueEmail": "用邮箱继续",
@@ -1444,6 +1448,7 @@
     "signed_in_successfully": "登录成功",
     "signed_out": "已退出",
     "signing_in": "登录中...",
+    "wallet_unlocked": "钱包已解锁",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

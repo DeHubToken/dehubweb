@@ -1306,6 +1306,10 @@
     "earnings": "আয়"
   },
   "loginModal": {
+    "unlockBiometricContinue": "আপনার ওয়ালেট আনলক করতে আপনার ফিঙ্গারপ্রিন্ট বা ফেস ব্যবহার করুন।",
+    "unlockBiometricSignIn": "আপনার ওয়ালেট আনলক করতে আপনার ফিঙ্গারপ্রিন্ট বা ফেস দিয়ে সাইন ইন করুন।",
+    "unlockPasswordContinue": "আপনার ওয়ালেট পাসওয়ার্ড দিয়ে এগিয়ে যান।",
+    "unlockPasswordSignIn": "আপনার ওয়ালেট আনলক করতে এবং সাইন ইন করতে আপনার ওয়ালেট পাসওয়ার্ড দিন।",
     "title": "লগইন করো",
     "addProfileTitle": "প্রোফাইল যোগ করউক্কা",
     "continueEmail": "ইমেইলে আগাও",
@@ -1616,6 +1620,7 @@
     "signed_in_successfully": "সফলভাবে সাইন ইন অইছে",
     "signed_out": "সাইন আউট অইছে",
     "signing_in": "সাইন ইন অইতেছে...",
+    "wallet_unlocked": "ওয়ালেট আনলক হইয়া গেছে",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",
