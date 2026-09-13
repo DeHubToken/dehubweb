@@ -4326,6 +4326,12 @@ let skyMesh=null,photoTried={};
    The plate subtends the IDENTICAL solid angle — it is simply five times
    further away, which is what makes room for real geometry in front of it. */
 const SKY_R=150,SKY_H=260,SKY_Y=52.5,SKY_HORIZON_V=0.30;
+/* What fraction of the cylinder's circumference ONE copy of the plate covers.
+   fitSky sets it; buildSpandrels reads it to find where the plate meets itself. */
+let SKY_FRAC=0.75;
+/* buildBackdrop runs long before there is a wall to measure against, and it
+   runs again every time you change scene — this is what tells it apart. */
+let spandrelReady=false;
 /* Caps the open bottom of the sky cylinder. Looking down between towers the
    sightline would otherwise exit to scene.background — harmless in the lair,
    but california's clear purple against its orange fog is not. */
@@ -4341,6 +4347,7 @@ const hazeMat=new THREE.MeshBasicMaterial({color:0x04060a,fog:false});
 function fitSky(tex,aspect){
   const circ=2*Math.PI*SKY_R;
   const frac=clamp(aspect*SKY_H/circ,0.18,0.98);
+  SKY_FRAC=frac;                 /* the spandrels need to know where it joins */
   tex.wrapS=THREE.RepeatWrapping;
   tex.repeat.x=-1/frac;
   tex.offset.x=0.5;      /* centre the plate on the front of the room */
@@ -4720,6 +4727,7 @@ function tryPhoto(id){
     const old=skyMesh.material.map;
     skyMesh.material.map=t;skyMesh.material.needsUpdate=true;
     if(old)old.dispose();
+    if(spandrelReady)buildSpandrels();   /* a photo's aspect moves the join */
     SCENES[id].photo=true;
   };
   const c=photoImgs[id];
@@ -4758,6 +4766,8 @@ function buildBackdrop(id){
   scene.add(skyMesh);
   SCENE_ID=id;
   tryPhoto(id);
+  /* the join moves with the plate's aspect, so the panels follow it */
+  if(spandrelReady)buildSpandrels();
   clearCityRing();
 
   scene.fog.color.setHex(S.fog);scene.fog.density=S.fogD;
@@ -6661,6 +6671,7 @@ function finishWall(){
     for(const s of screens)if(s.kind==='tpl')s.every=Math.round(s.every*k);
   }
   buildTicker();
+  spandrelReady=true;buildSpandrels();
   placePnl();
   syncDesk();
   boot.stage('world',1);
@@ -6924,6 +6935,126 @@ function buildTicker(){
     const t=new THREE.Mesh(
       new THREE.CylinderGeometry(R-0.02,R-0.02,0.03,72,1,true,Math.PI-arc/2,arc),trimMat);
     t.position.y=y+dy;tickerGroup.add(t);
+  }
+}
+/* ===================== seam spandrels ===============================
+   The backdrop is ONE plate wrapped onto the sky cylinder: fitSky lays a copy
+   of it across `frac` of the circumference and RepeatWrapping fills the rest,
+   so somewhere out there the plate runs into itself. Every one of those joins
+   is a hard vertical line with a skyline either side of it that does not line
+   up, and the glazing band — sill to head, the full 360 — is exactly what you
+   look through to see them. No plate is wide enough to fix that and no amount
+   of dressing hides a repeat.
+   So stop showing that part of the window. A run of solid spandrel panels
+   takes the place of the glass over each join. Joins the screen wall already
+   stands in front of are left alone: the wall is taller than the head trim, so
+   those were never visible to begin with.
+
+   HOW WIDE. The camera is clamped to WALL.radius-0.9 and the join is out at
+   SKY_R, so walking to the far corner of the room slides a join sideways by
+   about maxR*(1-SHELL.R/SKY_R) — roughly 10.5 m at the defaults, which is why
+   a panel only as wide as the join itself would not hold. 45 degrees each side
+   covers it with margin, snapped to whole bays so the panels land BETWEEN the
+   existing mullions rather than across them. */
+const SPANDREL_HALF=Math.PI/4;
+const spandrelGrp=new THREE.Group();scene.add(spandrelGrp);
+let spandrelMat=null;
+function spandrelMaterial(){
+  if(spandrelMat)return spandrelMat;
+  /* Painted, not modelled — the same reasoning as the pedestal fascia: a flat
+     face this size with no information on it reads as a hole. A top-lit
+     gradient, two engraved joints and some grain are enough at this distance. */
+  const cv=document.createElement('canvas');cv.width=128;cv.height=512;
+  const p=cv.getContext('2d');
+  const g=p.createLinearGradient(0,0,0,512);
+  g.addColorStop(0,'#151b24');g.addColorStop(0.6,'#0c1119');g.addColorStop(1,'#05080c');
+  p.fillStyle=g;p.fillRect(0,0,128,512);
+  for(const y of [168,344]){
+    p.fillStyle='rgba(0,0,0,0.85)';p.fillRect(0,y,128,3);
+    p.fillStyle='rgba(150,190,215,0.14)';p.fillRect(0,y+3,128,1);
+  }
+  for(let i=0;i<1600;i++){
+    p.fillStyle='rgba('+(Math.random()<0.5?'255,255,255,':'0,0,0,')+(0.012+Math.random()*0.028)+')';
+    p.fillRect(Math.random()*128,Math.random()*512,1,1);
+  }
+  const tex=new THREE.CanvasTexture(cv);
+  tex.colorSpace=THREE.SRGBColorSpace;
+  tex.wrapS=tex.wrapT=THREE.RepeatWrapping;
+  tex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+  spandrelMat=new THREE.MeshStandardMaterial({
+    color:0xffffff,map:tex,roughness:0.82,metalness:0.08,side:THREE.BackSide});
+  return spandrelMat;
+}
+/* Where the wrapped plate joins itself, in the WALL's theta. The cylinder's
+   own uv seam at u=0 is always one of them; the rest are wherever the repeat
+   rolls over, and those move with the plate's aspect. */
+function seamThetas(){
+  const out=[Math.PI];            /* u=0 sits at world +Z: straight behind you */
+  const f=SKY_FRAC;
+  for(let k=-6;k<=6;k++){
+    const u=f*(0.5-k);            /* fitSky: u' = 0.5 - u/frac, so u' hits an integer here */
+    if(u<0.001||u>0.999)continue;
+    out.push(Math.PI-u*Math.PI*2);/* sky uv -> wall theta: the two run opposite ways */
+  }
+  return out;
+}
+function clearSpandrels(){
+  spandrelGrp.traverse(o=>{if(o.geometry)o.geometry.dispose();});
+  spandrelGrp.clear();
+}
+function buildSpandrels(){
+  clearSpandrels();
+  const S=SHELL,n=S.panels,bay=Math.PI*2/n;
+  /* how far the screens reach; inside that arc the glazing is already blind */
+  let guard=0;
+  for(const s of screens){
+    if(s.floating)continue;
+    guard=Math.max(guard,Math.abs(s.theta)+(s.w/2+frameEdge())/WALL.radius);
+  }
+  const wrap=a=>{a=(a+Math.PI)%(Math.PI*2);return (a<0?a+Math.PI*2:a)-Math.PI;};
+  const hide=new Set();
+  for(const th of seamThetas()){
+    if(Math.abs(wrap(th))<guard-0.02)continue;
+    for(let k=0;k<n;k++){
+      const c=k*bay;                          /* buildShell centres a PANEL on k*bay */
+      if(Math.abs(wrap(c-th))>SPANDREL_HALF)continue;
+      if(Math.abs(wrap(c))<guard)continue;    /* never blind a bay the room looks out of */
+      hide.add(k);
+    }
+  }
+  if(!hide.size)return;
+  const gh=(S.head-S.headDrop)-S.sillTop;
+  const mat=spandrelMaterial();
+  /* Contiguous bays become ONE arc. Two arcs butted at the same radius z-fight
+     down the joint, and the mullion already draws that line for free. */
+  const runs=[];
+  for(let k=0;k<n;k++){
+    if(!hide.has(k))continue;
+    const last=runs[runs.length-1];
+    if(last&&last[1]===k-1)last[1]=k;else runs.push([k,k]);
+  }
+  if(runs.length>1&&runs[0][0]===0&&runs[runs.length-1][1]===n-1){
+    runs[0][0]=runs[runs.length-1][0]-n;runs.pop();
+  }
+  for(const r of runs){
+    const bays=r[1]-r[0]+1,arc=bays*bay,cMid=(r[0]+r[1])/2*bay;
+    const seg=Math.max(8,bays*6),start=Math.PI-cMid-arc/2;
+    const m=new THREE.Mesh(
+      /* 5 mm inboard of the glass — which does not write depth — and outboard
+         of the mullions, so the existing verticals still read in front of it. */
+      new THREE.CylinderGeometry(S.R-0.005,S.R-0.005,gh,seg,1,true,start,arc),mat);
+    m.position.y=S.sillTop+gh/2;
+    const uv=m.geometry.attributes.uv;        /* one copy of the paint per bay */
+    for(let i=0;i<uv.count;i++)uv.setX(i,uv.getX(i)*bays);
+    uv.needsUpdate=true;
+    spandrelGrp.add(m);
+    /* the cyan base strip every other vertical surface in this room carries */
+    const strip=new THREE.Mesh(
+      new THREE.CylinderGeometry(S.R-0.02,S.R-0.02,0.035,seg,1,true,start,arc),
+      new THREE.MeshBasicMaterial({color:new THREE.Color(CYAN).multiplyScalar(0.55),
+        side:THREE.BackSide}));
+    strip.position.y=S.sillTop+0.06;
+    spandrelGrp.add(strip);
   }
 }
 function paintTicker(){
@@ -12590,6 +12721,7 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
      the assertion that nothing is being invented. */
   pnlSource,paperPnl,bnx,bnxRevalue,bnxStartStream,bnxStopStream,bnxSnapshot,
   get cityRing(){return cityRing;},buildCityRing,clearCityRing,dressPlate,cityLife,life,
+  get spandrelGrp(){return spandrelGrp;},buildSpandrels,seamThetas,get SKY_FRAC(){return SKY_FRAC;},
   get skyMesh(){return skyMesh;},
   wallet,dehubAddr,watchAddr,connectWallet,refreshWallet,quoteBest,quoteEvm,encExactInputSingle,encMulticall,
   CHAINS,td,tdTarget,tdRender,fills,sol,solConnect,solAddr,planBuyEvm,planSellEvm,planSol,bs58,hostTrade,tradeWaits,
