@@ -67,8 +67,27 @@ function thresholds(scale: number): { name: string; min: number }[] {
   });
 }
 
+/**
+ * Tier names as they were spelled before 2026-09-13, mapped to the real ones.
+ *
+ * Mirrors `LEGACY_TIER_NAMES` in `src/lib/staking-badges.ts`. It matters more
+ * here than anywhere else, because **an edge function does not ride the
+ * deploy** — this file ships only when somebody redeploys governance-vote, so
+ * it is routinely a different age from the data it reads. It has to survive a
+ * stored lock in either spelling, in both directions: old rows before the
+ * backend's rename migration, new rows after it.
+ */
+const LEGACY_TIER_NAMES: Record<string, string> = {
+  Crocodite: "Crocodile",
+  Meglodon: "Megalodon",
+};
+
+function canonicalTierName(name: string): string {
+  return LEGACY_TIER_NAMES[name] ?? name;
+}
+
 function tierIndex(name: string | null): number {
-  return name ? BADGE_ORDER.indexOf(name) : -1;
+  return name ? BADGE_ORDER.indexOf(canonicalTierName(name)) : -1;
 }
 
 function earnedTier(amount: number, scale: number): string | null {
@@ -91,7 +110,10 @@ export function parseBadgeLock(raw: unknown): BadgeLock | null {
   if (typeof tier !== "string" || tierIndex(tier) < 0) return null;
   const amount = typeof requirement === "string" ? parseFloat(requirement) : requirement;
   if (typeof amount !== "number" || !Number.isFinite(amount) || amount <= 0) return null;
-  return { tier, requirement: amount };
+  // Return the current spelling — `weightedTier` below compares it against the
+  // ladder, and a lock that parses but never matches is the same bug wearing a
+  // different hat.
+  return { tier: canonicalTierName(tier), requirement: amount };
 }
 
 /**
