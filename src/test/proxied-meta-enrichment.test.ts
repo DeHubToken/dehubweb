@@ -32,7 +32,7 @@ function constant(name: string): string {
   return line![0];
 }
 
-type Nft = { postType?: string; category?: string[] } | null;
+type Nft = { postType?: string; category?: string[]; displayName?: string; username?: string } | null;
 
 const { enrichPostMeta, enrichProfileMeta, DESCRIPTION_MAX, HOME_DESCRIPTION, PROFILE_DESCRIPTION_MIN } = new Function(`
   ${constant('TITLE_MAX')}
@@ -41,12 +41,17 @@ const { enrichPostMeta, enrichProfileMeta, DESCRIPTION_MAX, HOME_DESCRIPTION, PR
   ${constant('PROFILE_DESCRIPTION_TEMPLATE')}
   ${constant('PROFILE_DESCRIPTION_MIN')}
   ${constant('UNTITLED_POST_TITLES')}
+  ${constant('FILENAME_TITLE')}
+  ${constant('PLACEHOLDER_TITLE')}
   ${constant('HOME_DESCRIPTION')}
   ${decl('function truncate(text, max) {')}
   ${decl('function decodeFnText(s) {')}
   ${decl('function escFnAttr(s) {')}
   ${decl('function escJsonText(s) {')}
   ${decl('function postKind(nft, html) {')}
+  ${decl('function titleSaysNothing(title) {')}
+  ${decl('function postAuthor(html, nft, templated) {')}
+  ${decl('function replacePostTitle(html, oldTitle, newTitle) {')}
   ${decl('function enrichPostMeta(html, postId, nft) {')}
   ${decl('function enrichProfileMeta(html, username) {')}
   return { enrichPostMeta, enrichProfileMeta, DESCRIPTION_MAX, HOME_DESCRIPTION, PROFILE_DESCRIPTION_MIN };
@@ -65,7 +70,7 @@ const POST_TEMPLATE = (author: string) => `Post by ${author} on DeHub — join t
 const PROFILE_TEMPLATE = (name: string) => `Connect with ${name} on DeHub, the open source alternative to legacy media.`;
 
 /** The shape the deployed fn emits for a post, trimmed to the tags in play. */
-const postPage = (id: string, title: string, description: string, video = true) => `<!DOCTYPE html>
+const postPage = (id: string, title: string, description: string, video = true, author = 'davyJones') => `<!DOCTYPE html>
 <html lang="en">
 <head>
   <title>${attr(title)}</title>
@@ -82,11 +87,21 @@ ${video ? `  <meta property="og:video" content="https://dehubcdn.ams3.cdn.digita
   <script type="application/ld+json">${JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'Article', headline: title, description, url: `https://dehub.io/app/post/${id}` },
+      {
+        '@type': 'Article',
+        headline: title,
+        description,
+        url: `https://dehub.io/app/post/${id}`,
+        author: { '@type': 'Person', name: author },
+      },
       { '@type': 'VideoObject', name: title, description },
     ],
   })}</script>
 </head>
+<body>
+  <h1>${attr(title)}</h1>
+  <img src="https://dehubcdn.ams3.cdn.digitaloceanspaces.com/images/${id}.png" alt="${attr(title)}">
+</body>
 </html>`;
 
 const profilePage = (handle: string, description: string) => `<!DOCTYPE html>
@@ -117,8 +132,12 @@ const VIDEO: Nft = {
 };
 
 describe('post description enrichment', () => {
-  it('leaves a post that has its own body text exactly as it was', () => {
-    const html = postPage('2008', 'Last Chad Standing', 'Built by fighters and gamers. Coming 2025.');
+  it('leaves a post with its own body text and a distinctive title exactly as it was', () => {
+    const html = postPage(
+      '2008',
+      'Last Chad Standing — built by fighters and gamers',
+      'Built by fighters and gamers. Coming 2025.',
+    );
     expect(enrichPostMeta(html, '2008', VIDEO)).toBe(html);
   });
 
@@ -134,8 +153,9 @@ describe('post description enrichment', () => {
     expect(ld['@graph'][0].description).toContain('Watch "Business" — a video by LiberoArbitro on DeHub');
     expect(ld['@graph'][1].description).toBe(ld['@graph'][0].description);
     expect(ld['@graph'][0].description.length).toBeLessThanOrEqual(DESCRIPTION_MAX);
-    for (const tag of TITLE_TAGS) expect(valueOf(out, tag)).toBe('Business');
-    expect(ld['@graph'][0].headline).toBe('Business');
+    const branded = 'Business — a video by LiberoArbitro on DeHub';
+    for (const tag of TITLE_TAGS) expect(valueOf(out, tag)).toBe(attr(branded));
+    expect(ld['@graph'][0].headline).toBe(branded);
   });
 
   it('gives two bodyless posts by one author different descriptions', () => {
@@ -193,6 +213,93 @@ describe('post description enrichment', () => {
     expect(v).not.toMatch(/[<>]/);
     // "$1" in the copy must never be read as a replacement pattern.
     expect(v).toContain('$1');
+  });
+});
+
+describe('post titles that say nothing', () => {
+  const AUTHORED: Nft = { postType: 'video', displayName: 'davyJones' };
+
+  it.each([
+    ['a camera filename', 'VID-20220824-WA0031.mp4'],
+    ['a trimmed clip', 'trim.5576BE10-E8CE-4D03-AB21-BEDA77457ED6.MOV'],
+    ['an emoji reaction', '😂😜'],
+    ['a placeholder', 'test'],
+    ['a single letter', 'F'],
+  ])('replaces %s with the id, format and author', (_label, junk) => {
+    const out = enrichPostMeta(postPage('122', junk, 'thorrrr 🤔😂'), '122', AUTHORED);
+    const expected = 'Video #122 by davyJones on DeHub';
+    for (const tag of TITLE_TAGS) expect(valueOf(out, tag)).toBe(expected);
+    expect(out).toContain(`<h1>${expected}</h1>`);
+    expect(out).toContain(`alt="${expected}"`);
+    expect(jsonLd(out)['@graph'][0].headline).toBe(expected);
+  });
+
+  it('leaves no trace of the filename anywhere on the page', () => {
+    const junk = 'VID-20220824-WA0031.mp4';
+    const out = enrichPostMeta(postPage('122', junk, 'thorrrr 🤔😂'), '122', AUTHORED);
+    expect(out).not.toContain(junk);
+  });
+
+  it('keeps the real body text — only the title was useless', () => {
+    const out = enrichPostMeta(postPage('122', 'VID-20220824-WA0031.mp4', 'thorrrr 🤔😂'), '122', AUTHORED);
+    for (const tag of DESCRIPTION_TAGS) expect(valueOf(out, tag)).toBe(attr('thorrrr 🤔😂'));
+  });
+
+  it('reads the author off the JSON-LD when there is no record and no template', () => {
+    const out = enrichPostMeta(postPage('122', '😂', 'a real caption', true, 'Mart Vader'), '122', null);
+    expect(valueOf(out, 'title')).toBe('Video #122 by Mart Vader on DeHub');
+  });
+
+  it('leaves a title that only looks filename-ish but reads as a sentence', () => {
+    const title = 'How we shipped v2.0';
+    const out = enrichPostMeta(postPage('900', title, 'a real caption'), '900', AUTHORED);
+    expect(valueOf(out, 'title')).toBe(attr(`${title} — a video by davyJones on DeHub`));
+  });
+});
+
+describe('short post titles that collide', () => {
+  it('names the author and format so two people who both typed "stream" differ', () => {
+    const a = enrichPostMeta(postPage('10', 'stream', 'body a', true, 'davyJones'), '10', {
+      postType: 'video',
+      displayName: 'davyJones',
+    });
+    const b = enrichPostMeta(postPage('11', 'stream', 'body b', true, 'Mart Vader'), '11', {
+      postType: 'video',
+      displayName: 'Mart Vader',
+    });
+    expect(valueOf(a, 'title')).toBe(attr('stream — a video by davyJones on DeHub'));
+    expect(valueOf(b, 'title')).toBe(attr('stream — a video by Mart Vader on DeHub'));
+    expect(valueOf(a, 'title')).not.toBe(valueOf(b, 'title'));
+  });
+
+  it('falls back to the shorter suffix rather than overrunning the title limit', () => {
+    const title = 'Give someone stuck in the rain an Umbrella';
+    const out = enrichPostMeta(postPage('12', title, 'body', true, 'Bartholomew'), '12', {
+      postType: 'feed-images',
+      displayName: 'Bartholomew',
+    });
+    const value = valueOf(out, 'title');
+    expect(value).toBe(attr(`${title} — Bartholomew on DeHub`));
+    expect(value.length).toBeLessThanOrEqual(70);
+  });
+
+  it('leaves a title long enough that no suffix fits', () => {
+    const title = 'Everything we learned building a user-owned social network in public';
+    const html = postPage('13', title, 'body', true, 'davyJones');
+    expect(enrichPostMeta(html, '13', { postType: 'video', displayName: 'davyJones' })).toBe(html);
+  });
+
+  it('disambiguates the fourteen posts that all said "Promote DeHub"', () => {
+    const out = enrichPostMeta(postPage('14', 'Promote DeHub', 'body', true, 'davyJones'), '14', {
+      postType: 'video',
+      displayName: 'davyJones',
+    });
+    expect(valueOf(out, 'title')).toBe(attr('Promote DeHub — a video by davyJones on DeHub'));
+  });
+
+  it('does not brand a title that already carries the brand', () => {
+    const html = postPage('15', 'Shipping day one on DeHub', 'body', true, 'davyJones');
+    expect(enrichPostMeta(html, '15', { postType: 'video', displayName: 'davyJones' })).toBe(html);
   });
 });
 
