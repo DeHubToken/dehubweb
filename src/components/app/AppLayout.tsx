@@ -64,6 +64,7 @@ const PostModal = React.lazy(() =>
 import { RadioMiniPlayer } from '@/components/app/radio/RadioMiniPlayer';
 import { StageMiniPlayer } from '@/components/app/spaces/StageMiniPlayer';
 import { StageRecordingMiniPlayer } from '@/components/app/stages/StageRecordingMiniPlayer';
+import { AudioPostMiniPlayer } from '@/components/app/audio/AudioPostMiniPlayer';
 import { AudioSpacesModal } from '@/components/app/spaces/AudioSpacesModal';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 
@@ -455,6 +456,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       <RadioMiniPlayer />
       <StageMiniPlayer />
       <StageRecordingMiniPlayer />
+      <AudioPostMiniPlayer />
       <AudioSpacesModal />
       <MinimizedAIChats />
       

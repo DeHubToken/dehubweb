@@ -4540,5 +4540,17 @@
     "followAccepted": "{{name}} izləmə sorğunuzu qəbul etdi",
     "signalFlare": "{{name}} Siqnal Parıltısı göndərdi",
     "newMessage": "{{name}} sizə mesaj göndərdi"
+  },
+  "audioPost": {
+    "popOut": "Pop out — göz gəzdirərkən dinləməyə davam edin",
+    "closeCornerPlayer": "Künc oyunçusunu bağlayın",
+    "cornerPlayer": "Səsli postun səsləndirilməsi",
+    "stopAndClose": "Dayan və oyunçunu bağla",
+    "untitled": "Səs yazısı",
+    "creator": "DeHub yaradıcısı",
+    "play": "Oxut",
+    "pause": "Fasilə ver",
+    "listens_one": "{{count}} dinlə",
+    "listens_other": "{{count}} dinləyir"
   }
 }
