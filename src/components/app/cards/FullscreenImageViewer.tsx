@@ -208,6 +208,10 @@ export function FullscreenImageViewer({
   // Calculate opacity based on drag offset
   const bgOpacity = Math.max(0.3, 1 - dragOffset / 300);
 
+  // Portalled to the body, so when the viewer is opened from inside a drawer
+  // (comments, DMs) it inherits the `pointer-events: none` Radix pins on the
+  // body for the open dialog. Without `pointer-events-auto` the viewer paints
+  // over the page but every click falls through to the drawer behind it.
   return createPortal(
     <AnimatePresence>
       {isOpen && (
@@ -217,7 +221,7 @@ export function FullscreenImageViewer({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
           data-overlay-content
-          className="fixed inset-0 z-[200] flex items-center justify-center"
+          className="pointer-events-auto fixed inset-0 z-[200] flex items-center justify-center"
           style={{ backgroundColor: `rgba(0, 0, 0, ${bgOpacity * 0.95})` }}
           onClick={onClose}
           onWheel={handleWheel}
