@@ -1209,6 +1209,10 @@
     "email": "E-post"
   },
   "loginModal": {
+    "unlockBiometricContinue": "Lås upp din plånbok med ditt fingeravtryck eller ansikte för att fortsätta.",
+    "unlockBiometricSignIn": "Lås upp din plånbok med ditt fingeravtryck eller ansikte för att logga in.",
+    "unlockPasswordContinue": "Ange ditt lösenord för plånboken för att fortsätta.",
+    "unlockPasswordSignIn": "Ange ditt plånbokslösenord för att låsa upp din plånbok och logga in.",
     "welcomeBack": "Välkommen tillbaka — det här kontot är fortfarande ditt. Logga in med din gamla inloggning nedan för att få tillbaka den, med dina inlägg, följare och saldo.",
     "welcomeBackWithLogin": "Välkommen tillbaka — det här kontot är fortfarande ditt. Logga in med {{login}} nedan för att få tillbaka det, med dina inlägg, följare och saldo.",
     "welcomeBackWaiting": "väntar på den",
@@ -1505,6 +1509,7 @@
     "signed_in_successfully": "Inloggad",
     "signed_out": "Utloggad",
     "signing_in": "Loggar in...",
+    "wallet_unlocked": "Plånboken är olåst",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

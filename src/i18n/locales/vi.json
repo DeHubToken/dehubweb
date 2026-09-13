@@ -1084,6 +1084,10 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "unlockBiometricContinue": "Mở khóa ví bằng dấu vân tay hoặc khuôn mặt để tiếp tục.",
+    "unlockBiometricSignIn": "Mở khóa ví bằng dấu vân tay hoặc mặt để đăng nhập.",
+    "unlockPasswordContinue": "Nhập mật khẩu ví của bạn để tiếp tục.",
+    "unlockPasswordSignIn": "Nhập mật khẩu ví của bạn để mở khóa ví và đăng nhập.",
     "welcomeBack": "Chào mừng bạn trở lại — tài khoản này vẫn là của bạn. Đăng nhập bằng thông tin đăng nhập cũ của bạn bên dưới để đưa thông tin đăng nhập trở lại, với các bài đăng, người theo dõi và số dư của bạn.",
     "welcomeBackWithLogin": "Chào mừng bạn trở lại — tài khoản này vẫn là của bạn. Đăng nhập bằng {{login}} bên dưới để trả lại, với các bài đăng, người theo dõi và số dư của bạn.",
     "welcomeBackWaiting": "đang chờ",
@@ -1317,6 +1321,7 @@
     "signed_in_successfully": "Đăng nhập thành công",
     "signed_out": "Đã đăng xuất",
     "signing_in": "Đang đăng nhập...",
+    "wallet_unlocked": "Đã mở khóa ví",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

@@ -1203,6 +1203,10 @@
     "failedSubmit": "Failed to submit application. Please try again."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Itti fufuuf ashaaraa qubaa ykn fuula keessaniin boorsaa keessan banaa.",
+    "unlockBiometricSignIn": "Boorsaa keessan ashaaraa qubaa ykn fuula keessaniin banaa seenuuf.",
+    "unlockPasswordContinue": "Itti fufuuf jecha icciitii boorsaa keessan galchaa.",
+    "unlockPasswordSignIn": "Wallet keessan banuun seenuuf jecha icciitii boorsaa keessan galchaa.",
     "welcomeBack": "Baga nagaan dhufte — akkaawuntii kun ammallee kan keessani. Galmee kee isa durii armaan gadii kanaan deebi&#39;ee fiduuf galmaa&#39;i, maxxansa kee, hordoftootaa fi madaallii kee waliin.",
     "welcomeBackWithLogin": "Baga nagaan dhufte — akkaawuntii kun ammallee kan keessani. Deebisuuf {{login}} armaan gadiitiin galmaa&#39;aa, maxxansa keessan, hordoftoota keessanii fi madaallii keessan waliin.",
     "welcomeBackWaiting": "irratti eegaa jira",
@@ -1508,6 +1512,7 @@
     "signed_in_successfully": "Milkaa'inaan seename",
     "signed_out": "Ba'ame",
     "signing_in": "Seenaa jira...",
+    "wallet_unlocked": "Wallet baname",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

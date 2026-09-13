@@ -1187,6 +1187,10 @@
     "failedSubmit": "Фиристодани дархост ноком шуд. Дубора кӯшиш кунед."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Кушодани ҳамён бо изи ангуштон ё барои идома додан.",
+    "unlockBiometricSignIn": "Кушодани ҳамён бо ангуштон ё рӯ ба рӯ барои ворид шудан.",
+    "unlockPasswordContinue": "Барои идома додан гузарвожаи ҳамёни худро ворид кунед.",
+    "unlockPasswordSignIn": "Пароли ҳамёни худро барои кушодани ҳамёни худ ворид кунед ва ворид шавед.",
     "welcomeBack": "Welcome back — ang account na ito ay mayroon nang iyong. Mag-sign in sa iyong lumang pag-login sa ibaba upang bumalik ito, gamit ang iyong mga post, mga follow at balanse.",
     "welcomeBackWaiting": "интизори он ҳастем,",
     "migrateNothingToRecover": "Ҳисоби қаблии DeHub дар ин вуруд вуҷуд надорад, бинобар ин ҳеҷ чиз нест. Bumalik sa Bagong account upang makumpleto ang pag-set ng ito up.",
@@ -1491,6 +1495,7 @@
     "signed_in_successfully": "Бомуваффақият ворид шудед",
     "signed_out": "Баромадед",
     "signing_in": "Ворид шудан...",
+    "wallet_unlocked": "Ҳамён кушода шуд",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

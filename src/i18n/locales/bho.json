@@ -1168,6 +1168,10 @@
     "failedSubmit": "आवेदन दर्ज नइखे भइल। कृपया फिर से कोशिश करीं।"
   },
   "loginModal": {
+    "unlockBiometricContinue": "आप अपने पोस्ट में Image जरूर Use करें लेकिन याद रहे Image Copyright Free हो.",
+    "unlockBiometricSignIn": "आप अपने पोस्ट में Image जरूर Use करें लेकिन याद रहे Image Copyright Free हो.",
+    "unlockPasswordContinue": "आपन पासवर्ड दर्ज करीं ताकि आप आगे बढ़ सकीं.",
+    "unlockPasswordSignIn": "अपना पासवर्ड दर्ज करें, अपना पासवर्ड दर्ज करें, फिर लॉग इन करें ।",
     "welcomeBack": "बधाई हो, आपने एक नया ट्रेडिंग खाता खोला है । अपने पोस्ट, फॉलोअर्स और बैलेंस के साथ, इसे वापस लाने के लिए, नीचे अपने पुराने लॉगिन के साथ साइन इन करें ।",
     "welcomeBackWaiting": "इन्तजार कइल जाव...",
     "migrateNothingToRecover": "एह लॉगिन पर पहिले से कवनो खाता नइखे, एहसे कुछ करे के नइखे । नया खाता खोलें, फिर इसे खोलें ।",
@@ -1471,6 +1475,7 @@
     "signed_in_successfully": "लॉग इन भइल",
     "signed_out": "लॉग आउट भइल",
     "signing_in": "लॉग इन हो रहल बा...",
+    "wallet_unlocked": "जेब खाली नहीं रहने दें",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

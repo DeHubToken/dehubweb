@@ -1176,6 +1176,10 @@
     "failedSubmit": "ምልክታ ምቕራብ ኣይተዓወተን። በጃኻ ዳግማይ ፈትን።"
   },
   "loginModal": {
+    "unlockBiometricContinue": "ነቲ ቦርሳኻ ብኢድካ ወይ ብገጽካ ብምኽፋት ክትቅጽል ትኽእል ኢኻ ።",
+    "unlockBiometricSignIn": "ነቲ ቦርሳኻ ብኢድካ ወይ ብኢድካ ክፉት ግበር ።",
+    "unlockPasswordContinue": "ንምቕጻል ናይ ቦርሳ ፓስወርድካ ኣእቲኻ ።",
+    "unlockPasswordSignIn": "ነቲ ቦርሳኻ ንምኽፋት ፓስወርድካ ኣእቲኻ ኣቲኻ ኣቲኻ ኣቲኻ ኣቲኻ ኣቲኻ ኣቲኻ ።",
     "welcomeBack": "ብኽብሪ ተመሊስካ - እዚ ሕሳብ እዚ ገና ናትካ እዩ ። ምስ ናይ ቀደም መእተዊኻ ኣብ ታሕቲ ብምእታው ፡ ምስ ልኡኻትካ ፡ ተኸታተልቲኻን ሚዛንካን ክትመልሶ ትኽእል ኢኻ ።",
     "welcomeBackWithLogin": "ብኽብሪ ተመሊስካ - እዚ ሕሳብ እዚ ገና ናትካ እዩ ። ምስ {{login}} ኣብ ታሕቲ ብምእታው ፡ ምስ ልኡኻትካ ፡ ተኸታተልቲኻን ሚዛንካን ክትመልሶ ትኽእል ኢኻ ።",
     "welcomeBackWaiting": "እንሆ ፡ ተጸበኹ ።",
@@ -1481,6 +1485,7 @@
     "signed_in_successfully": "ብዓወት ኣቲኻ",
     "signed_out": "ወጺእካ",
     "signing_in": "ይኣቱ ኣሎ...",
+    "wallet_unlocked": "ቦርሳ ተኸፊቱ",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

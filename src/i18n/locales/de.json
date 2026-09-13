@@ -1221,6 +1221,10 @@
     "failedSubmit": "Einreichung fehlgeschlagen. Bitte erneut versuchen."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Entsperren Sie Ihre Brieftasche mit Ihrem Fingerabdruck oder Gesicht, um fortzufahren.",
+    "unlockBiometricSignIn": "Entsperren Sie Ihre Brieftasche mit Ihrem Fingerabdruck oder Gesicht, um sich anzumelden.",
+    "unlockPasswordContinue": "Geben Sie Ihr Wallet-Passwort ein, um fortzufahren.",
+    "unlockPasswordSignIn": "Geben Sie Ihr Wallet-Passwort ein, um Ihr Wallet zu entsperren und sich anzumelden.",
     "welcomeBack": "Willkommen zurück — dieses Konto gehört immer noch Ihnen. Melden Sie sich mit Ihrem alten Login unten an, um es mit Ihren Beiträgen, Followern und Ihrem Guthaben wiederherzustellen.",
     "welcomeBackWithLogin": "Willkommen zurück — dieses Konto gehört immer noch Ihnen. Melden Sie sich unten mit {{login}} an, um es mit Ihren Beiträgen, Followern und Ihrem Guthaben wiederherzustellen.",
     "welcomeBackWaiting": "darauf wartend",
@@ -1526,6 +1530,7 @@
     "signed_in_successfully": "Erfolgreich angemeldet",
     "signed_out": "Abgemeldet",
     "signing_in": "Anmeldung...",
+    "wallet_unlocked": "Geldbörse freigeschaltet",
     "welcome_back": "Willkommen zurück!",
     "welcome_to_dehub": "Willkommen bei DeHub!",
     "connecting_to_google": "Verbindung mit Google...",

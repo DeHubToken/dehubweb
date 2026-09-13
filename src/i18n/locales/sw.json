@@ -1210,6 +1210,10 @@
     "failedSubmit": "Imeshindwa kuwasilisha ombi. Tafadhali jaribu tena."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Fungua pochi yako kwa alama yako ya kidole au uso ili uendelee.",
+    "unlockBiometricSignIn": "Fungua mkoba wako kwa alama yako ya kidole au uso ili uingie.",
+    "unlockPasswordContinue": "Weka nenosiri lako la mkoba ili uendelee.",
+    "unlockPasswordSignIn": "Weka nenosiri lako la mkoba ili ufungue mkoba wako na uingie.",
     "welcomeBack": "Karibu tena — akaunti hii bado ni yako. Ingia ukitumia ingia yako ya zamani hapa chini ili uirudishe, ukitumia machapisho yako, wafuasi na salio.",
     "welcomeBackWithLogin": "Karibu tena — akaunti hii bado ni yako. Ingia ukitumia {{login}} hapa chini ili uirudishe, ukitumia machapisho yako, wafuasi na salio.",
     "welcomeBackWaiting": "inasubiri",
@@ -1515,6 +1519,7 @@
     "signed_in_successfully": "Umeingia kwa mafanikio",
     "signed_out": "Umetoka",
     "signing_in": "Inaingia...",
+    "wallet_unlocked": "Wallet imefunguliwa",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

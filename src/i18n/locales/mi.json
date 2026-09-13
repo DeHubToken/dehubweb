@@ -1187,6 +1187,10 @@
     "failedSubmit": "Kāore i taea te tuku tono. Ngana anō."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Whakatuwherahia to putea me to tohu maihao, kanohi ranei ki te haere tonu.",
+    "unlockBiometricSignIn": "Whakatuwherahia to putea me to tohu maihao, kanohi ranei ki te haina.",
+    "unlockPasswordContinue": "Whakauru i to kupuhipa putea ki te haere tonu.",
+    "unlockPasswordSignIn": "Whakauru i to kupuhipa putea ki te whakatuwhera i to putea me te haina ki roto.",
     "welcomeBack": "Nau mai — kei a koe tonu tenei kaute. Hokona ki to takiuru tawhito i raro nei ki te whakahoki mai, me o pou, nga kaiwhaiwhai me te toenga.",
     "welcomeBackWithLogin": "Nau mai — kei a koe tonu tenei kaute. Hokona ki {{login}} i raro nei hei whakahoki mai, me o pou, nga kaiwhaiwhai me te toenga.",
     "welcomeBackWaiting": "kei te tatari ahau ki a ia",
@@ -1492,6 +1496,7 @@
     "signed_in_successfully": "Kua uru pai",
     "signed_out": "Kua puta",
     "signing_in": "E uru ana...",
+    "wallet_unlocked": "Whakatuwherahia te papanga",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

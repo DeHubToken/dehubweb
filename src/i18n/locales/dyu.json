@@ -1176,6 +1176,10 @@
     "failedSubmit": "Kɔrɔbɔ bɔ"
   },
   "loginModal": {
+    "unlockBiometricContinue": "I ka wari bila i bolokunnaden wala i ɲada la walisa ka to ka baara kɛ.",
+    "unlockBiometricSignIn": "I ka wari bila i bolokunnaden wala i ɲada la walisa ka se ka sɛbɛri kɛ.",
+    "unlockPasswordContinue": "I ka sɛbɛri kɛ ka sɔrɔ ka sɛbɛri kɛ.",
+    "unlockPasswordSignIn": "I ka wari bila ka bɔ i ka wari la.",
     "welcomeBack": "I ka la a la ko i ye mɔgɔ dɔ ye min be se ka kɛ i ka mɔgɔ dɔ ye. I ka siginiden kɔrɔ ka sɔrɔ ka segi n'a ye, i ka lɛtɛrɛw, i ka kalandenw ani i ka sumanikɛnan fɛ.",
     "welcomeBackWaiting": "ne tun be miiri o la.",
     "migrateNothingToRecover": "An kana mɔgɔ si halakinin to, min tun kɔnna ka ladili di. I ka segi ka taga kunnafoni kura dɔ la walisa k'o sigi sen kan.",
@@ -1480,6 +1484,7 @@
     "signed_in_successfully": "I donna ka ɲi",
     "signed_out": "I bɔra",
     "signing_in": "Donna bɛ kɛ...",
+    "wallet_unlocked": "O kɔ, a ye n' ka soow bɛɛ datugu.",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

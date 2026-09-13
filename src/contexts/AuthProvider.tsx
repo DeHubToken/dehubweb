@@ -16,6 +16,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import i18n from 'i18next';
 import { createLogger } from '@/lib/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -57,12 +58,14 @@ import {
 } from '@/lib/connection-source';
 import { isWalletReconnectGuardActive } from '@/lib/wallet-reconnect';
 import { predictSafeAddress } from '@/lib/smart-account-address';
+import { isMidSessionUnlock } from '@/lib/session-unlock';
 import { authenticateProfileSession } from '@/lib/profile-login';
 import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
 import { clearPersistedQueryCache } from '@/lib/query-persist';
 import { supabase } from '@/integrations/supabase/client';
 import {
   activateWalletKey,
+  addressFromProvider,
   restoreWalletSession,
   isWalletUnlocked,
   isUnlockAvailable,
@@ -1807,7 +1810,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       snapshotCurrentSession();
     }
 
-    toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!');
+    toast.success(
+      authResponse.result?.isNewAccount
+        ? i18n.t('toasts.welcome_to_dehub', 'Welcome to DeHub!')
+        : i18n.t('toasts.welcome_back', 'Welcome back!'),
+    );
     authLogger.info('Login success', { method: 'wagmi', address: authAddress, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
   };
 
@@ -2069,13 +2076,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const meta = await getSupabaseAuthMeta();
     const supabaseToken = await getSupabaseAccessToken();
-    toast.loading('Signing in...', { id: toastId });
+    toast.loading(i18n.t('toasts.signing_in', 'Signing in...'), { id: toastId });
     await moveAccountToThisWallet(address, signature, timestamp, BASE_CHAIN_ID);
     const authResponse = await authenticateWallet(address, signature, timestamp, BASE_CHAIN_ID, meta, supabaseToken);
 
     applyAuthenticatedSession(authResponse, address, supabaseUserId, flow);
 
-    toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: toastId });
+    toast.success(
+      authResponse.result?.isNewAccount
+        ? i18n.t('toasts.welcome_to_dehub', 'Welcome to DeHub!')
+        : i18n.t('toasts.welcome_back', 'Welcome back!'),
+      { id: toastId },
+    );
   };
 
   /**
@@ -2275,20 +2287,72 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Final step of the smart-wallet login flow — called by the login modal
-   * after the wallet was created/unlocked and the private key is available.
+   * Final step of the smart-wallet flow — called by the login modal after the
+   * wallet was created or unlocked and the private key is available.
+   *
+   * Two different things arrive here and only one of them is a login. A LOGIN
+   * has no session yet: the signature exchange below is what creates one. An
+   * UNLOCK happens inside a session that is already live — a tip, a mint or
+   * going live asked for a signature, the vault had auto-locked, and the same
+   * sheet opened to take the password. Since login stopped unlocking the
+   * wallet on the way in, that second case is now the common one.
+   *
+   * Running the login path over a live session narrated it as one: "Signing
+   * in…" and then "Welcome back!" landed on top of a half-finished tip, which
+   * reads as though the app had signed the user out and back in. It also put a
+   * signature and a round trip in front of the action, so a blocked signup
+   * gate, the address guard or a backend hiccup could fail the tip for a
+   * wallet that had just unlocked perfectly.
+   *
+   * dehub-mobile's WalletUnlockHost has always drawn this line — "the session
+   * already exists; all that is missing is a key on this device" — so this is
+   * web catching up to it rather than a new idea.
    */
   const completeSmartWalletLogin = async (privKeyHex: string) => {
     const toastId = 'auth-smart-wallet';
     setIsConnecting(true);
     try {
-      await activateWalletKey(privKeyHex);
-      await signAndAuthenticateSmartWallet(toastId);
+      const eoaProvider = await activateWalletKey(privKeyHex);
+
+      // Read the owner address off the key that just opened, not off the
+      // wallet cache: the question is whether THIS key is the one the session
+      // signs with, and the cache is a copy of a row that may be a login old.
+      const walletEoa = await addressFromProvider(eoaProvider);
+      const midSessionUnlock = isMidSessionUnlock({
+        intent: loginIntent,
+        sessionAddress: walletAddress,
+        // Not merely "a token exists": an expired one would leave the session
+        // resting on a refresh that may already be dead, and the sign-in path
+        // is the honest answer for that.
+        hasLiveSession: !!user && !!getAuthToken() && !isTokenExpired(),
+        walletEoa,
+        walletSafe: await predictSafeAddress(walletEoa),
+      });
+
+      if (midSessionUnlock) {
+        // Warm the AA provider rather than leaving the waiting action to build
+        // it — same call getActiveProvider would make, so the tip signs the
+        // moment the sheet closes. Best-effort: AA is optional and the EOA can
+        // sign without it.
+        try {
+          const aaProvider = await setupAAProvider();
+          if (aaProvider) setAAProvider(aaProvider);
+        } catch (e) {
+          console.warn('[Auth] AA setup after unlock failed:', e);
+        }
+        authLogger.info('Wallet unlocked mid-session', { address: walletAddress });
+      } else {
+        await signAndAuthenticateSmartWallet(toastId);
+      }
+
       setWalletPhase('none');
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
       localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
       finishWalletUnlock(true);
       closeLoginModal();
+      if (midSessionUnlock) {
+        toast.success(i18n.t('toasts.wallet_unlocked', 'Wallet unlocked'), { id: toastId });
+      }
     } catch (err: any) {
       console.error('[Auth] Smart-wallet login failed:', err);
       // Same wording as every other path — the generic title here read as a

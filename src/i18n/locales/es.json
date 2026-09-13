@@ -1223,6 +1223,10 @@
     "failedSubmit": "Error al enviar solicitud. Inténtalo de nuevo."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Desbloquea tu billetera con tu huella digital o cara para continuar.",
+    "unlockBiometricSignIn": "Desbloquea tu billetera con tu huella digital o cara para iniciar sesión.",
+    "unlockPasswordContinue": "Introduce la contraseña de tu monedero para continuar.",
+    "unlockPasswordSignIn": "Introduce la contraseña de tu monedero para desbloquearlo e iniciar sesión.",
     "welcomeBack": "Te damos la bienvenida de nuevo: esta cuenta sigue siendo tuya. Inicia sesión con tu antiguo inicio de sesión a continuación para recuperarlo, con tus publicaciones, seguidores y saldo.",
     "welcomeBackWithLogin": "Te damos la bienvenida de nuevo: esta cuenta sigue siendo tuya. Inicia sesión con {{login}} a continuación para recuperarlo, con tus publicaciones, seguidores y saldo.",
     "welcomeBackWaiting": "esperando en él",
@@ -1528,6 +1532,7 @@
     "signed_in_successfully": "Sesión iniciada con éxito",
     "signed_out": "Sesión cerrada",
     "signing_in": "Iniciando sesión...",
+    "wallet_unlocked": "Billetera desbloqueada",
     "welcome_back": "¡Bienvenido de nuevo!",
     "welcome_to_dehub": "¡Bienvenido a DeHub!",
     "connecting_to_google": "Conectando con Google...",

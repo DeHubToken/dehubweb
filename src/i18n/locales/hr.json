@@ -1195,6 +1195,10 @@
     "failedSubmit": "Slanje prijave nije uspjelo. Pokušajte ponovo."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Za nastavak otključaj novčanik otiskom prsta ili licem.",
+    "unlockBiometricSignIn": "Otključaj novčanik otiskom prsta ili licem za prijavu.",
+    "unlockPasswordContinue": "Za nastavak unesi lozinku novčanika.",
+    "unlockPasswordSignIn": "Unesi lozinku novčanika za otključavanje novčanika i prijavu.",
     "welcomeBack": "Dobro došli natrag — ovaj je račun i dalje vaš. Prijavite se starom prijavom u nastavku kako biste je vratili, sa svojim objavama, pratiteljima i saldom.",
     "welcomeBackWithLogin": "Dobro došli natrag — ovaj je račun i dalje vaš. Prijavite se s {{login}} u nastavku kako biste ga vratili, sa svojim objavama, pratiteljima i saldom.",
     "welcomeBackWaiting": "čekanje na njega",
@@ -1494,6 +1498,7 @@
     "signed_in_successfully": "Uspješno prijavljeni",
     "signed_out": "Odjavljeni",
     "signing_in": "Prijava...",
+    "wallet_unlocked": "Novčanik je otključan",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

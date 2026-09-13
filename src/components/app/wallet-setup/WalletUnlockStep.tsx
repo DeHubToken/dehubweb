@@ -13,6 +13,7 @@
  * hold the plaintext seed and can wrap it without asking for anything again.
  */
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Loader2, KeyRound, AlertTriangle, Copy, Fingerprint, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -67,7 +68,15 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
   // wallet, moves the account onto it and finishes the sign-in itself, so it
   // cannot go through onComplete — which expects a key for the wallet this
   // row already names. The other two serve the no-built-in-wallet hand-off.
-  const { replaceLostWallet, isAuthenticated, closeLoginModal } = useAuth();
+  const { replaceLostWallet, isAuthenticated, loginIntent, closeLoginModal } = useAuth();
+  const { t } = useTranslation();
+  /**
+   * This sheet is standing in front of a tip, a post or a mint rather than a
+   * login: the session is already there and only the key is missing. Adding a
+   * profile is the exception — a session is live, but the wallet being
+   * unlocked belongs to the account being signed IN to.
+   */
+  const midSession = isAuthenticated && loginIntent !== 'add-profile';
   const [phase, setPhase] = useState<Phase>('unlock');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
@@ -858,12 +867,16 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       {canUseBiometrics ? (
         <p className="text-white/60 text-sm flex items-center gap-2">
           <Fingerprint className="w-4 h-4 shrink-0" />
-          Unlock your wallet with your fingerprint or face to sign in.
+          {midSession
+            ? t('loginModal.unlockBiometricContinue', 'Unlock your wallet with your fingerprint or face to continue.')
+            : t('loginModal.unlockBiometricSignIn', 'Unlock your wallet with your fingerprint or face to sign in.')}
         </p>
       ) : (
         <p className="text-white/60 text-sm flex items-center gap-2">
           <KeyRound className="w-4 h-4 shrink-0" />
-          Enter your wallet password to unlock your wallet and sign in.
+          {midSession
+            ? t('loginModal.unlockPasswordContinue', 'Enter your wallet password to continue.')
+            : t('loginModal.unlockPasswordSignIn', 'Enter your wallet password to unlock your wallet and sign in.')}
         </p>
       )}
 

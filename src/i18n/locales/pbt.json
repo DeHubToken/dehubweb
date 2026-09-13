@@ -1169,6 +1169,10 @@
     "failedSubmit": "غوښتنلیک نشي سپارل کیدلی. بیا هڅه وکړئ."
   },
   "loginModal": {
+    "unlockBiometricContinue": "خپل د ګوتې نښه یا مخ خلاص کړئ ترڅو دوام ورکړئ.",
+    "unlockBiometricSignIn": "خپل د ګوتې نښه یا مخ د ننوتلو لپاره خلاص کړئ.",
+    "unlockPasswordContinue": "د دوام لپاره خپل پټنوم دننه کړئ.",
+    "unlockPasswordSignIn": "خپل پټنوم دننه کړئ ترڅو خپل پټنوم خلاص کړئ او ننوځئ.",
     "welcomeBack": "مبارک شه، دا حساب اوس هم ستاسو په لاس کې دی. لاندې خپل زوړ ننوتل سره لاسلیک کړئ ترڅو دا بیرته راوړي، ستاسو د پوسټونو، پیروانو او توازن سره.",
     "welcomeBackWaiting": "د دې په تمه",
     "migrateNothingToRecover": "تر اوسه په دې تړاو کومي ډلي څه نه دي ويلي، نو ځکه يې په اړه څه نه دي ويل سوي. د دې نصبولو بشپړولو لپاره نوي حساب ته لاړ شئ.",
@@ -1473,6 +1477,7 @@
     "signed_in_successfully": "په بریالیتوب سره ننوتل",
     "signed_out": "وتل",
     "signing_in": "ننوتنه...",
+    "wallet_unlocked": "د بسته بندۍ بسته بندي بسته شوې",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

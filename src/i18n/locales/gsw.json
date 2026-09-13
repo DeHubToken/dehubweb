@@ -1150,6 +1150,10 @@
     "failedSubmit": "Bewärbig iireiche fehlgschlage. Bitte probier s nomol."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Entsperr dini Brieftasche mit dim Fingerabdruck oder dim Gsicht zum Witermaache.",
+    "unlockBiometricSignIn": "Entsperr dini Brieftasche mit dim Fingerabdruck oder dim Gsicht zum Aameelde.",
+    "unlockPasswordContinue": "Gib dini Brieftasche-Passwort ii zum Witermaache.",
+    "unlockPasswordSignIn": "Gib dini Brieftasche-Passwort ii zum Entsperre vo diner Brieftasche und zum Aameelde.",
     "title": "Aamälde",
     "addProfileTitle": "Es Profil dezuefüege",
     "continueEmail": "Wiiter mit E-Mail",
@@ -1477,6 +1481,7 @@
     "signed_in_successfully": "Erfolgriich aagmeldet",
     "signed_out": "Abgmeldet",
     "signing_in": "Aamälde...",
+    "wallet_unlocked": "Portemonnaie entsperrt",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

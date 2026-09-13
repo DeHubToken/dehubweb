@@ -1224,6 +1224,10 @@
     "failedSubmit": "Invio candidatura fallito. Riprova."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Sblocca il portafoglio con l'impronta digitale o il volto per continuare.",
+    "unlockBiometricSignIn": "Sblocca il portafoglio con l'impronta digitale o il volto per accedere.",
+    "unlockPasswordContinue": "Inserisci la password del tuo portafoglio per continuare.",
+    "unlockPasswordSignIn": "Inserisci la password del tuo portafoglio per sbloccarlo e accedi.",
     "welcomeBack": "Bentornato: questo account è ancora tuo. Accedi con il tuo vecchio login qui sotto per ripristinarlo, con i tuoi post, follower e saldo.",
     "welcomeBackWithLogin": "Bentornato: questo account è ancora tuo. Accedi con {{login}} qui sotto per ripristinarlo, con i tuoi post, follower e saldo.",
     "welcomeBackWaiting": "in attesa",
@@ -1529,6 +1533,7 @@
     "signed_in_successfully": "Accesso effettuato",
     "signed_out": "Disconnesso",
     "signing_in": "Accesso in corso...",
+    "wallet_unlocked": "Portafoglio sbloccato",
     "welcome_back": "Bentornato!",
     "welcome_to_dehub": "Benvenuto su DeHub!",
     "connecting_to_google": "Connessione a Google...",

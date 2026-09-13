@@ -1191,6 +1191,10 @@
     "failedSubmit": "Mana mañakuyta apachita atirqanchu. Musuqmanta ruwaway."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Billeteraykita kichay dedoykiwan utaq uyaykiwan hinalla ruwanaykipaq.",
+    "unlockBiometricSignIn": "Dedoykiwan utaq uyaykiwan billeteraykita kichay yaykunaykipaq.",
+    "unlockPasswordContinue": "Billetera contraseñaykita qillqay hinalla ruwanaykipaq.",
+    "unlockPasswordSignIn": "Billeteraykipa contraseña nisqaykita qillqay billeteraykita kichanaykipaq hinaspa yaykunaykipaq.",
     "welcomeBack": "Allin hamusqayki — kay yupayqa qampaqraqmi. Uraypi ñawpaq yaykuyniykiwan yaykuy kutichimunaykipaq, qillqasqaykiwan, qatiqniykikunawan chaymanta equilibrioykiwan.",
     "welcomeBackWithLogin": "Allin hamusqayki — kay yupayqa qampaqraqmi. Uraypi {{login}} nisqawan yaykuy kutichimunaykipaq, qillqasqaykikunawan, qatiqninkunawan hinaspa balanzaykiwan.",
     "welcomeBackWaiting": "chaypi suyaspa",
@@ -1526,6 +1530,7 @@
     "signed_in_successfully": "Allinlla yaykusqa",
     "signed_out": "Lloqsisqa",
     "signing_in": "Yaykuchkanki...",
+    "wallet_unlocked": "Wallet desbloqueado",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

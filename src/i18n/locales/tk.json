@@ -1182,6 +1182,10 @@
     "failedSubmit": "Arza ibermek başa barmady. Gaýtadan synanyşyň."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Çuwallaryňyzy barmaklaryňyz bilen ýa-da ýüzüňiz bilen açyň.",
+    "unlockBiometricSignIn": "Çuwallaryňyzy barmaklaryňyz bilen ýa-da ýüzüňiz bilen açyň.",
+    "unlockPasswordContinue": "Öňki ýaly, siz hem öz paroluny girip bilersiňiz.",
+    "unlockPasswordSignIn": "Çuwalyňyzyň açylmagy üçin paroluny girip, ony girip bilersiňiz.",
     "welcomeBack": "Hoşgeldin — bu hasabat henizem seniňki. Öňki logyňy aşak goýup, ony yzyna getir, işleriňi, yzyna eýerenleriňi we deň-de-sarygyňy.",
     "welcomeBackWithLogin": "Hoşgeldin — bu hasabat henizem seniňki. Bulary yzyna getirmek üçin {{login}} bilen gir, öz postlaryňy, yzyna eýerenleriňi we deň-de-sarygyňy.",
     "welcomeBackWaiting": "ony garaşyň",
@@ -1487,6 +1491,7 @@
     "signed_in_successfully": "Üstünlikli girdiňiz",
     "signed_out": "Çykdyňyz",
     "signing_in": "Girýär...",
+    "wallet_unlocked": "Kalkülýator açylmady",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

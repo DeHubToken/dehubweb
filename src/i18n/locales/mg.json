@@ -1208,6 +1208,10 @@
     "failedSubmit": "Tsy nahomby ny fandefasana fangatahana. Avereno azafady."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Hamaha ny kitaponao amin'ny tondro na ny tavanao hanohy.",
+    "unlockBiometricSignIn": "Hamaha ny kitaponao amin'ny tondro na ny tavanao hiditra.",
+    "unlockPasswordContinue": "Ampidiro ny tenimiafinao hanohy.",
+    "unlockPasswordSignIn": "Ampidiro ny kitaponao mba hamahana ny kitaponao ary midira ao.",
     "welcomeBack": "Miarahaba anao AR tafaverina ity kaonty ity — Mbola anao ity kaonty ity. Midira amin'ny fidiranao taloha eto ambany mba hamerenana azy indray, miaraka amin'ny lahatsoratrao, mpanaraka ary fifandanjana.",
     "welcomeBackWaiting": "miandry izany",
     "migrateNothingToRecover": "Tsy misy kaonty DeHub teo aloha amin'ity fidirana ity, noho izany dia tsy misy zavatra tokony hipoitra. Miverina any amin'ny kaonty vaovao raha hamarana ny fametrahana ity iray ity.",
@@ -1512,6 +1516,7 @@
     "signed_in_successfully": "Tafiditra soa aman-tsara",
     "signed_out": "Nivoaka",
     "signing_in": "Miditra...",
+    "wallet_unlocked": "Wallet nisokatra",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

@@ -1224,6 +1224,10 @@
     "failedSubmit": "Failed to submit application. Please try again."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Unlock your wallet with your fingerprint or face to continue.",
+    "unlockBiometricSignIn": "Unlock your wallet with your fingerprint or face to sign in.",
+    "unlockPasswordContinue": "Enter your wallet password to continue.",
+    "unlockPasswordSignIn": "Enter your wallet password to unlock your wallet and sign in.",
     "welcomeBack": "Welcome back — this account is still yours. Sign in with your old login below to bring it back, with your posts, followers and balance.",
     "welcomeBackWithLogin": "Welcome back — this account is still yours. Sign in with {{login}} below to bring it back, with your posts, followers and balance.",
     "welcomeBackWaiting": "waiting on it",
@@ -1529,6 +1533,7 @@
     "signed_in_successfully": "Signed in successfully",
     "signed_out": "Signed out",
     "signing_in": "Signing in...",
+    "wallet_unlocked": "Wallet unlocked",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

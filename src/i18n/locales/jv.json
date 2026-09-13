@@ -1182,6 +1182,10 @@
     "failedSubmit": "Gagal ngirim lamaran. Mangga coba maneh."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Mbukak dompetmu nganggo sidik jari utawa pasuryan kanggo nerusake.",
+    "unlockBiometricSignIn": "Mbukak dompetmu nganggo sidik jari utawa pasuryan kanggo mlebu.",
+    "unlockPasswordContinue": "Ketik tembung sandi dompetmu kanggo nerusake.",
+    "unlockPasswordSignIn": "Ketik tembung sandi dompetmu kanggo mbukak dompetmu lan mlebu.",
     "title": "Mlebu",
     "addProfileTitle": "Tambah profil",
     "continueEmail": "Lanjut nganggo Email",
@@ -1479,6 +1483,7 @@
     "signed_in_successfully": "Sukses mlebu",
     "signed_out": "Metu",
     "signing_in": "Lagi mlebu...",
+    "wallet_unlocked": "Dompet mbukak",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

@@ -1190,6 +1190,10 @@
     "failedSubmit": "Diridda codsiga ayaa fashilmay. Fadlan mar kale isku day."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Ku fur boorsadaada farahaaga ama wejigaaga si aad u sii wadato.",
+    "unlockBiometricSignIn": "Ku fur boorsadaada farahaaga ama wejigaaga si aad u gasho.",
+    "unlockPasswordContinue": "Gali lambarka sirta ah ee boorsadaada si aad u sii wado.",
+    "unlockPasswordSignIn": "Gali lambarka sirta ah ee boorsadaada si aad u furto boorsadaada oo aad u gasho.",
     "welcomeBack": "Ku soo dhawow soo noqoshada — koontadani wali waa adiga. Ku qor galitaankaaga hore ee hoose si aad dib ugu soo celiso, oo leh qoraalladaada, kuwa raacsan iyo dheelitirkaaga.",
     "welcomeBackWithLogin": "Ku soo dhawow soo noqoshada — koontadani wali waa adiga. Ku qor {{login}} hoos si aad dib ugu soo celiso, oo leh qoraalladaada, kuwa raacsan iyo dheelitirkaaga.",
     "welcomeBackWaiting": "sugaya",
@@ -1495,6 +1499,7 @@
     "signed_in_successfully": "Si guul leh ayaa loo galay",
     "signed_out": "Waa laga baxay",
     "signing_in": "Waa la gelayaa...",
+    "wallet_unlocked": "Wallet aan la furin",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

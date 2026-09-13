@@ -1169,6 +1169,10 @@
     "failedSubmit": "आवेदन जमा नइ हो पावल। फिर से कोशिश करो।"
   },
   "loginModal": {
+    "unlockBiometricContinue": "आगे बढ़े के लिए अपने उंगलियों के निशान या चेहरे के निशान के साथ अपना पर्स खोलें ।",
+    "unlockBiometricSignIn": "फिंगरप्रिंट (fingerprint) के साथ लॉगिन करे या लॉगिन करे",
+    "unlockPasswordContinue": "अपना Password enter करे और Continue पर क्लिक करे ।",
+    "unlockPasswordSignIn": "उसके बाद अपना Password enter करे और Enter करे",
     "welcomeBack": "Album :- हमार हई तोहार हउ अपने पोस्ट, फॉलोअर्स और बैलेंस के साथ इसे वापस लाने के लिए नीचे अपने पुराने लॉगिन के साथ साइन इन करें ।",
     "welcomeBackWaiting": "ऊ देहरी पर बैठ के इन्तजार करे लगल",
     "migrateNothingToRecover": "ई लॉगिन पर कोई पहिले के DeHub अकाउंट न हई, येहिलेल एकरा पर कुछ ले जाय के न हई । एक नया खाता बनाएँ, और जांचें कि क्या त्रुटि हल हो गई है ।",
@@ -1473,6 +1477,7 @@
     "signed_in_successfully": "सफलता से साइन इन हो गेल",
     "signed_out": "साइन आउट हो गेल",
     "signing_in": "साइन इन हो रहल बा...",
+    "wallet_unlocked": "बैग के लिए तैयार, प्रिय सहयोगियों, तैयार",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

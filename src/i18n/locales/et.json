@@ -1199,6 +1199,10 @@
     "failedSubmit": "Avalduse esitamine ebaõnnestus. Palun proovi uuesti."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Jätkamiseks ava oma rahakott sõrmejälje või näoga.",
+    "unlockBiometricSignIn": "Sisselogimiseks ava oma rahakott sõrmejälje või näoga.",
+    "unlockPasswordContinue": "Jätkamiseks sisesta oma rahakoti parool.",
+    "unlockPasswordSignIn": "Rahakoti avamiseks ja sisselogimiseks sisesta oma rahakoti parool.",
     "welcomeBack": "Tere tulemast tagasi — see konto on endiselt sinu. Logi sisse oma vana sisselogimisnimega allpool, et see oma postituste, jälgijate ja saldoga tagasi tuua.",
     "welcomeBackWithLogin": "Tere tulemast tagasi — see konto on endiselt sinu. Logi alla {{login}}, et see oma postituste, jälgijate ja saldoga tagasi tuua.",
     "welcomeBackWaiting": "ootab seda",
@@ -1498,6 +1502,7 @@
     "signed_in_successfully": "Edukalt sisse logitud",
     "signed_out": "Välja logitud",
     "signing_in": "Sisselogimine...",
+    "wallet_unlocked": "Rahakott on lukustamata",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

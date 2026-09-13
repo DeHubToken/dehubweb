@@ -1182,6 +1182,10 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "unlockBiometricContinue": "Ontsluit jou beursie met jou vingerafdruk of gesig om voort te gaan.",
+    "unlockBiometricSignIn": "Ontsluit jou beursie met jou vingerafdruk of gesig om aan te meld.",
+    "unlockPasswordContinue": "Voer jou beursie wagwoord in om voort te gaan.",
+    "unlockPasswordSignIn": "Voer jou beursie wagwoord in om jou beursie te ontsluit en in te teken.",
     "welcomeBack": "Welkom terug — hierdie rekening is nog steeds joune. Teken in met jou ou aanmelding hieronder om dit terug te bring, met jou plasings, volgelinge en balans.",
     "welcomeBackWaiting": "wag daarop",
     "migrateNothingToRecover": "Daar is geen vorige DeHub-rekening op hierdie aanmelding nie, so daar is niks om oor te bring nie. Gaan terug na nuwe rekening om hierdie een te voltooi.",
@@ -1418,6 +1422,7 @@
     "signed_in_successfully": "Suksesvol aangemeld",
     "signed_out": "Afgemeld",
     "signing_in": "Meld tans aan...",
+    "wallet_unlocked": "Beursie oopgesluit",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

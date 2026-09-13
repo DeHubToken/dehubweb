@@ -1188,6 +1188,10 @@
     "failedSubmit": "提交申請失敗。請再試過。"
   },
   "loginModal": {
+    "unlockBiometricContinue": "用指紋或者面部解鎖銀包就可以繼續。",
+    "unlockBiometricSignIn": "用指紋或者面部解鎖銀包嚟登入。",
+    "unlockPasswordContinue": "輸入你嘅錢包密碼就可以繼續。",
+    "unlockPasswordSignIn": "輸入錢包密碼就可以解鎖錢包同登入。",
     "welcomeBack": "歡迎返嚟 — 呢個帳戶仲係你嘅。用你喺下面嘅舊登入資料登入，將佢帶返嚟，同埋你嘅文章、追蹤者同埋餘額。",
     "welcomeBackWithLogin": "歡迎返嚟 — 呢個帳戶仲係你嘅。喺下面用 {{login}} 登入嚟將佢帶返嚟，同埋你嘅帖子、追蹤者同埋餘額。",
     "welcomeBackWaiting": "等緊",
@@ -1493,6 +1497,7 @@
     "signed_in_successfully": "成功登入",
     "signed_out": "已登出",
     "signing_in": "登入緊...",
+    "wallet_unlocked": "銀包解鎖咗",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

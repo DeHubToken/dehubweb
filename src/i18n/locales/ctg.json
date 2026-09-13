@@ -1239,6 +1239,10 @@
     "failedSubmit": "জমা দিতে পারি নাই। আবার চেষ্টা গরো।"
   },
   "loginModal": {
+    "unlockBiometricContinue": "আপনার ওয়ালেট আনলক করতে আপনার ফিঙ্গারপ্রিন্ট বা ফেস ব্যবহার করুন।",
+    "unlockBiometricSignIn": "আপনার ওয়ালেট আনলক করতে আপনার ফিঙ্গারপ্রিন্ট বা ফেস দিয়ে সাইন ইন করুন।",
+    "unlockPasswordContinue": "আপনার ওয়ালেট পাসওয়ার্ড এন্টার করুন।",
+    "unlockPasswordSignIn": "আপনার ওয়ালেট আনলক করতে এবং সাইন ইন করতে আপনার ওয়ালেট পাসওয়ার্ড এন্টার করুন।",
     "migrateUnmatchedDetail": "이 ওয়ালেট ঠিকানায় কোনো প্রোফাইল নাই। আপ্নে যদি আবার সাইন ইন করতে চান, তাইলে পিছে যাইয়া যে লগইন দিয়া অ্যাকাউন্ট খুলছিলেন হেইডা দিয়া লগইন করন।",
     "title": "লগইন গরো",
     "addProfileTitle": "একখান প্রোফাইল যোগ গরন",
@@ -1550,6 +1554,7 @@
     "signed_in_successfully": "লগ ইন অইছে",
     "signed_out": "লগ আউট অইছে",
     "signing_in": "লগ ইন অইতেছে...",
+    "wallet_unlocked": "ওয়ালেট আনলক হইয়া গেছে",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

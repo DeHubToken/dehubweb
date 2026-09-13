@@ -1145,6 +1145,10 @@
     "failedSubmit": "提交失败。请再试一下。"
   },
   "loginModal": {
+    "unlockBiometricContinue": "用你的指纹或脸孔来解锁你的钱包以继续。",
+    "unlockBiometricSignIn": "用你的指纹或脸孔来解锁你的钱包并登录。",
+    "unlockPasswordContinue": "输入你的钱包密码以继续。",
+    "unlockPasswordSignIn": "输入你的钱包密码来解锁你的钱包并登录。",
     "migrateUnmatchedDetail": "该钱包地址不存在个人资料。如果您是重新登录，请返回并使用您注册时使用的登录方式。",
     "migrateContinueAnyway": "嘸管按怎，再开蜀个新帐号",
     "title": "登录",
@@ -1444,6 +1448,7 @@
     "signed_in_successfully": "登录成功",
     "signed_out": "已退出登录",
     "signing_in": "登录中...",
+    "wallet_unlocked": "錢包解鎖了",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

@@ -1278,6 +1278,10 @@
     "failedSubmit": "Nepodarilo sa odoslať žiadosť. Skúste to znova."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Ak chceš pokračovať, odomkni si peňaženku odtlačkom prsta alebo tvárou.",
+    "unlockBiometricSignIn": "Odomkni peňaženku odtlačkom prsta alebo tvárou a prihlás sa.",
+    "unlockPasswordContinue": "Ak chceš pokračovať, zadaj heslo do peňaženky.",
+    "unlockPasswordSignIn": "Zadaj heslo do peňaženky, odomkni peňaženku a prihlás sa.",
     "welcomeBack": "Vitajte späť — tento účet je stále váš. Nižšie sa prihláste pomocou svojho starého prihlasovacieho mena a vráťte ho späť spolu so svojimi príspevkami, sledovateľmi a zostatkom.",
     "welcomeBackWithLogin": "Vitajte späť — tento účet je stále váš. Prihláste sa pomocou {{login}} nižšie a vráťte ho späť so svojimi príspevkami, sledovateľmi a zostatkom.",
     "welcomeBackWaiting": "čaká sa na to",
@@ -1611,6 +1615,7 @@
     "signed_in_successfully": "Úspešne prihlásený",
     "signed_out": "Odhlásený",
     "signing_in": "Prihlasovanie...",
+    "wallet_unlocked": "Peňaženka je odomknutá",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

@@ -1224,6 +1224,10 @@
     "email": "이메일"
   },
   "loginModal": {
+    "unlockBiometricContinue": "계속하려면 지문이나 얼굴로 지갑을 여세요.",
+    "unlockBiometricSignIn": "지문이나 얼굴로 지갑을 잠금 해제하고 로그인하세요.",
+    "unlockPasswordContinue": "계속하려면 지갑 비밀번호를 입력하세요.",
+    "unlockPasswordSignIn": "지갑 비밀번호를 입력하여 지갑 잠금을 해제하고 로그인하세요.",
     "welcomeBack": "다시 오신 것을 환영합니다. 이 계정은 여전히 사용하실 수 있습니다. 아래에서 이전 로그인으로 로그인하여 포스트, 팔로워, 잔액으로 다시 가져올 수 있습니다.",
     "welcomeBackWithLogin": "다시 오신 것을 환영합니다. 이 계정은 여전히 사용하실 수 있습니다. 아래에서 {{login}} (으) 로 로그인하여 포스트, 팔로워, 잔액으로 다시 불러오세요.",
     "welcomeBackWaiting": "대기 중",
@@ -1529,6 +1533,7 @@
     "signed_in_successfully": "로그인 성공",
     "signed_out": "로그아웃됨",
     "signing_in": "로그인 중...",
+    "wallet_unlocked": "지갑 잠금 해제됨",
     "welcome_back": "다시 오신 것을 환영합니다!",
     "welcome_to_dehub": "DeHub에 오신 것을 환영합니다!",
     "connecting_to_google": "Google에 연결 중...",

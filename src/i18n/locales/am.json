@@ -1187,6 +1187,10 @@
     "failedSubmit": "ማመልከቻ ማቅረብ አልተሳካም። እባክህ ደግመህ ሞክር።"
   },
   "loginModal": {
+    "unlockBiometricContinue": "ለመቀጠል ቦርሳዎን በጣት አሻራዎ ወይም ፊትዎ ይክፈቱ ።",
+    "unlockBiometricSignIn": "ለመግባት ቦርሳዎን በጣት አሻራዎ ወይም ፊትዎ ይክፈቱ ።",
+    "unlockPasswordContinue": "ለመቀጠል የኪስ ቦርሳዎን የይለፍ ቃል ያስገቡ ።",
+    "unlockPasswordSignIn": "የኪስ ቦርሳዎን ለመክፈት እና ለመግባት የኪስ ቦርሳዎን የይለፍ ቃል ያስገቡ ።",
     "welcomeBack": "እንኳን ደህና መጡ — ይህ መለያ አሁንም የአንተ ነው ። እንደገና ለማምጣት ከዚህ በታች ባለው የድሮ መግቢያዎ ይግቡ ፣ በልጥፎችዎ ፣ በተከታዮችዎ እና ሚዛናዊነትዎ ።",
     "welcomeBackWithLogin": "እንኳን ደህና መጡ — ይህ መለያ አሁንም የአንተ ነው ። ከእርስዎ ልጥፎች ፣ ተከታዮች እና ሚዛን ጋር እንደገና ለማምጣት ከዚህ በታች ከ{{login}} @ ጋር ይግቡ ።",
     "welcomeBackWaiting": "እሱን በመጠባበቅ ላይ",
@@ -1522,6 +1526,7 @@
     "signed_in_successfully": "በተሳካ ሁኔታ ገብተዋል",
     "signed_out": "ወጥተዋል",
     "signing_in": "በመግባት ላይ...",
+    "wallet_unlocked": "የኪስ ቦርሳ ተከፍቷል",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",
