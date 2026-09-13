@@ -22,6 +22,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import {
   adsCorsHeaders,
+  canonicalTierName,
   impressionPriceUsd,
   jsonResponse,
   signServeToken,
@@ -219,7 +220,11 @@ Deno.serve(async (req) => {
     for (const c of candidates) {
       const t = (c.targeting || {}) as Targeting;
 
-      if (t.tiers?.length && !t.tiers.includes(viewerTier)) continue;
+      // `t.tiers` is the advertiser's stored targeting. A campaign saved before
+      // the 2026-09-13 tier rename can still hold Crocodite/Meglodon, and this
+      // is a silent skip — the campaign simply stops being served, with nothing
+      // logged anywhere. Normalise before matching.
+      if (t.tiers?.length && !t.tiers.map(canonicalTierName).includes(viewerTier)) continue;
       if (typeof t.followerMin === 'number' && viewerFollowers < t.followerMin) continue;
       if (typeof t.followerMax === 'number' && viewerFollowers > t.followerMax) continue;
       if (t.languages?.length && (!viewerLanguage || !t.languages.includes(viewerLanguage))) continue;
