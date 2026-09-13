@@ -1780,6 +1780,94 @@ function enrichProfileMeta(html, username) {
  * costs the section, never the page. Pure string functions below the fetch,
  * tested in src/test/crawler-page-content.test.ts.
  */
+/**
+ * Localised crawler pages — ?hl=<code> — and the hreflang cluster that ties
+ * each one to its siblings.
+ *
+ * The site ships 110 UI locales and, until now, exactly one indexable
+ * language: every page said lang="en", nothing carried hreflang, and there
+ * was no localised URL at all. The translations already exist for the
+ * pages whose SEOHead strings live in the locale files; public/seo-i18n.json
+ * (built by scripts/build-seo-i18n.mjs, checked by seo-i18n-sync.test.ts)
+ * collects them by route and language, and this serves them.
+ *
+ * ?hl= rather than a path prefix because four locale codes — de, ha, no, uk
+ * — are registered usernames whose profiles live at /de, /ha, /no and /uk.
+ * A query parameter is a distinct URL to a crawler, cannot collide with a
+ * route, and needs nothing changed in the router. Google's own localised
+ * pages use the same parameter.
+ *
+ * The body of these pages stays English: what is translated is the title,
+ * description, heading and share card, which is what a search result shows
+ * and what hreflang describes. Only ISO 639-1 codes are in the table, because
+ * hreflang accepts nothing else; ?hl=en is the bare page and redirects to it.
+ */
+let seoI18nPromise = null;
+function seoI18nTable(env, requestUrl) {
+  if (!seoI18nPromise) {
+    seoI18nPromise = env.ASSETS.fetch(new URL('/seo-i18n.json', requestUrl), { headers: { Accept: 'application/json' } })
+      .then((res) => (res.ok ? res.json() : {}))
+      .catch(() => {
+        seoI18nPromise = null;
+        return {};
+      });
+  }
+  return seoI18nPromise;
+}
+
+/** The hl the request asked for, or '' — two lowercase letters, nothing else. */
+function requestedLocale(url) {
+  const raw = String(url.searchParams.get('hl') || '').toLowerCase();
+  return /^[a-z]{2}$/.test(raw) ? raw : '';
+}
+
+function localizedUrl(route, lang) {
+  return lang && lang !== 'en' ? `${APP_URL}${route}?hl=${lang}` : `${APP_URL}${route}`;
+}
+
+/** One <link rel="alternate"> per language the route is translated into, plus x-default. */
+function hreflangLinks(route, table) {
+  const langs = Object.keys((table && table[route]) || {});
+  if (!langs.length) return '';
+  const all = langs.includes('en') ? langs : [...langs, 'en'];
+  return all
+    .sort()
+    .map((l) => `<link rel="alternate" hreflang="${l}" href="${localizedUrl(route, l)}">`)
+    .concat(`<link rel="alternate" hreflang="x-default" href="${localizedUrl(route, 'en')}">`)
+    .join('\n');
+}
+
+/**
+ * The page in `hl`, or the English page carrying its cluster.
+ *
+ * A route with no translations comes back untouched. The bare page gains the
+ * cluster and keeps its own canonical; a translated page swaps the title,
+ * description, heading and share-card text, declares its language, and is
+ * canonical to its own ?hl= URL — every variant self-canonical, every variant
+ * naming all the others, which is the only shape Google honours.
+ */
+function localizePage(html, route, hl, table) {
+  const langs = table && table[route];
+  if (!langs) return html;
+  let out = html.replace('</head>', `${hreflangLinks(route, table)}\n</head>`);
+  const t = hl && hl !== 'en' ? langs[hl] : null;
+  if (!t) return out;
+  const title = escHtml(t.title);
+  const description = escHtml(t.description);
+  const self = localizedUrl(route, hl);
+  return out
+    .replace(/<html lang="[^"]*"/i, `<html lang="${hl}"`)
+    .replace(/(<title>)[^<]*(<\/title>)/i, (m, a, b) => `${a}${title}${b}`)
+    .replace(/(<meta (?:property|name)="(?:og:title|twitter:title)" content=")[^"]*(">)/g, (m, a, b) => `${a}${title}${b}`)
+    .replace(
+      /(<meta (?:property|name)="(?:description|og:description|twitter:description)" content=")[^"]*(">)/g,
+      (m, a, b) => `${a}${description}${b}`,
+    )
+    .replace(/(<link rel="canonical" href=")[^"]*(">)/i, (m, a, b) => `${a}${self}${b}`)
+    .replace(/(<meta property="og:url" content=")[^"]*(">)/i, (m, a, b) => `${a}${self}${b}`)
+    .replace(/(<h1[^>]*>)[^<]*(<\/h1>)/i, (m, a, b) => `${a}${title}${b}`);
+}
+
 const DEHUB_API = 'https://api.dehub.io/api';
 async function fetchFeedRows(query, limit = 12) {
   try {
@@ -2188,6 +2276,17 @@ function isBountyIndexable(job) {
   return job.status === 'open' || job.status === 'in_progress';
 }
 
+/** The poster's full brief as paragraphs, or the meta description when there is none. */
+function bountyBriefHtml(brief, fallback) {
+  const paragraphs = String(brief || '')
+    .replace(/\r/g, '')
+    .split(/\n{2,}|\n(?=[-*•]\s)/)
+    .map((p) => p.replace(/\s+/g, ' ').trim())
+    .filter(Boolean);
+  if (!paragraphs.length) return `<p>${escHtml(fallback)}</p>`;
+  return paragraphs.map((p) => `<p>${escHtml(p)}</p>`).join('\n');
+}
+
 function buildBountyHtml(job) {
   const canonicalUrl = `${APP_URL}/bounty/${job.job_number}`;
   const name = job.title || 'Bounty';
@@ -2237,10 +2336,15 @@ function buildBountyHtml(job) {
     noindex: !isBountyIndexable(job),
     heading: name,
     breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/work">Bounties</a>`,
-    bodyHtml: `<p>${escHtml(description)}</p>
+    // The whole brief, not the 200-character meta cut of it: the crawl found
+    // every bounty page at ~76 words, which was that cut plus the facts line.
+    bodyHtml: `${bountyBriefHtml(job.description, description)}
 <p><strong>${escHtml(budget)} ${escHtml(job.currency)}</strong> · ${escHtml(job.job_type)}${job.platform ? ` · ${escHtml(job.platform)}` : ''} · ${escHtml(String(job.status).replace(/_/g, ' '))}</p>
+${Array.isArray(job.tags) && job.tags.length ? `<p>Tags: ${job.tags.slice(0, 10).map((t) => escHtml(String(t))).join(', ')}</p>` : ''}
 ${deadline ? `<p>Closes ${escHtml(deadline)}</p>` : ''}
-<p>${Number(job.units_approved) || 0} of ${Number(job.max_units) || 0} slots filled · ${Number(job.application_count) || 0} applicants</p>`,
+<p>${Number(job.units_approved) || 0} of ${Number(job.max_units) || 0} slots filled · ${Number(job.application_count) || 0} applicants${Number(job.view_count) ? ` · ${Number(job.view_count).toLocaleString('en-US')} views` : ''}</p>
+<h2>How a DeHub bounty works</h2>
+<p>A bounty is a scoped task with a budget attached, posted by a DeHub account and open to anyone. The poster funds it up front and the money is held in escrow; a worker applies, does the work, submits it, and is paid in ${escHtml(job.currency || 'DHB')} on approval${Number(job.price_per_unit) > 0 ? ` — ${escHtml(Number(job.price_per_unit).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(job.currency || '')} per completed unit, up to ${Number(job.max_units) || 0} on this one` : ''}. Disputes go to the platform, and an unfilled bounty returns its funds to the poster when it closes. The open board is at <a href="${APP_URL}/work">dehub.io/work</a>.</p>`,
   });
 }
 
@@ -4130,6 +4234,10 @@ async function handleRequest(request, env) {
     if (sectionKey === 'music') {
       html = injectBeforeCta(html, await sectionLiveHtml('music'));
     }
+    // The localised variant when ?hl= names one, otherwise the English page
+    // with its hreflang cluster (see localizePage). ?hl=en is the bare page.
+    if (requestedLocale(url) === 'en') return redirect301(`${APP_URL}/${sectionKey}`);
+    html = localizePage(html, `/${sectionKey}`, requestedLocale(url), await seoI18nTable(env, request.url));
     return guard(new Response(html, {
       status: 200,
       headers: MARKETING_PAGES[sectionKey].noindex
