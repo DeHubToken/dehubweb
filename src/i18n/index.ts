@@ -16,7 +16,7 @@ const STORAGE_KEY = 'user-preferred-language';
 // Read cached language (same key as useUserLanguage hook)
 const savedLang = localStorage.getItem(STORAGE_KEY);
 const browserLang = navigator.language?.split('-')[0] || 'en';
-const defaultLang = savedLang || browserLang;
+let defaultLang = savedLang || browserLang;
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', name: 'English', nativeName: 'English' },
@@ -130,6 +130,28 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'hy', name: 'Armenian', nativeName: 'Հայերեն' },
   { code: 'ky', name: 'Kyrgyz', nativeName: 'Кыргызча' },
 ];
+
+// ?hl=<code> is the URL a localised search result lands on: the crawler is
+// served that page in that language with an hreflang cluster (see
+// CLOUDFLARE_WORKER_SEO.js). Someone arriving on it asked for that language,
+// so for this visit it beats the saved preference, and it becomes the saved
+// preference so the next page keeps it after the router drops the parameter.
+const urlLang = (() => {
+  try {
+    const raw = (new URLSearchParams(window.location.search).get('hl') || '').toLowerCase();
+    return SUPPORTED_LANGUAGES.some((l) => l.code === raw) ? raw : '';
+  } catch {
+    return '';
+  }
+})();
+if (urlLang) {
+  defaultLang = urlLang;
+  try {
+    localStorage.setItem(STORAGE_KEY, urlLang);
+  } catch {
+    /* private mode: the visit still gets the language, the next one will not */
+  }
+}
 
 // Dynamic import map for lazy loading locale files
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
