@@ -84,7 +84,10 @@ describe('title clamp', () => {
   it('cuts a 108-character blog title to the limit, in every tag that carries it', () => {
     const out = stylePrerendered(page(LONG));
     const t = titleOf(out);
-    expect(t.length).toBeLessThanOrEqual(TITLE_MAX);
+    // The limit is on what a reader sees, so measure the decoded text: escHtml
+    // writes & and ' as five characters each.
+    const decoded = t.replace(/&(?:amp|quot|lt|gt|#39);/g, (e) => ({ '&amp;': '&', '&quot;': '"', '&lt;': '<', '&gt;': '>', '&#39;': "'" })[e]);
+    expect(decoded.length).toBeLessThanOrEqual(TITLE_MAX);
     expect(t.endsWith('…')).toBe(true);
     expect(out.match(/property="og:title" content="([^"]*)"/)![1]).toBe(t);
     expect(out.match(/name="twitter:title" content="([^"]*)"/)![1]).toBe(t);
