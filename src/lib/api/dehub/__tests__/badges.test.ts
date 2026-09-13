@@ -78,6 +78,30 @@ describe('badges.ts', () => {
     await expect(grantDelegation('someone')).rejects.toThrow('No free delegation slots');
   });
 
+  it('setDelegationAcceptance PUTs a boolean and unwraps what it ended', async () => {
+    const { setDelegationAcceptance } = await import('../badges');
+    mockOk({ result: { accepts: false, endedWith: '0xabc' } });
+
+    await expect(setDelegationAcceptance(false)).resolves.toEqual({
+      accepts: false,
+      endedWith: '0xabc',
+    });
+    expect(mockFetch.mock.calls[0][0]).toContain('/api/badge/delegations/acceptance');
+    expect(mockFetch.mock.calls[0][1].method).toBe('PUT');
+    // The server refuses anything that is not a boolean: for a setting whose
+    // off position ends a live loan, a missing field must not read as "off".
+    expect(JSON.parse(mockFetch.mock.calls[0][1].body)).toEqual({ accepts: false });
+  });
+
+  it('tells the lender the grantee is not accepting, in the server’s words', async () => {
+    const { grantDelegation } = await import('../badges');
+    mockFail(403, { error: 'That account is not accepting lent badges', reason: 'grantee_refuses' });
+
+    // A 403 whose message mentions tokens is treated as a dead session by the
+    // API client — this one must reach the lender as written.
+    await expect(grantDelegation('someone')).rejects.toThrow('not accepting lent badges');
+  });
+
   it('revokeDelegation encodes the counterparty into the path', async () => {
     const { revokeDelegation } = await import('../badges');
     mockOk({ result: { ended: true } });

@@ -330,7 +330,14 @@
     "publicChatAlertsRateHint": "Nothing dey lost when the room dey busy pass dis — the messages dey hold and come together for the next alert.",
     "emailNotificationsDescLinked": "Send to {{email}}",
     "emailNotificationsNoAddress": "Add one email for your account first — dat na where dem go go.",
-    "emailNotificationsAddAddress": "Add one email"
+    "emailNotificationsAddAddress": "Add one email",
+    "badgeDelegation": "Badge delegation",
+    "badgeDelegationLoading": "Loading delegations…",
+    "badgeDelegationAccept": "Let others lend me their badge",
+    "badgeDelegationLend": "Lend",
+    "badgeDelegationLentToYou": "Lent to you",
+    "badgeDelegationHandBack": "Hand it back",
+    "badgeDelegationEnded": "Delegation ended"
   },
   "common": {
     "save": "Save am",

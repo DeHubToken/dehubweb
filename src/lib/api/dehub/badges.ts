@@ -50,6 +50,11 @@ export interface BadgeDelegationSummary {
   granted: DelegationEntry[];
   /** The badge this account is wearing, if it was lent one. */
   received: DelegationEntry | null;
+  /**
+   * Whether this account will accept a badge lent to it. A loan applies the
+   * instant it is made, so this is the only way to say no in advance.
+   */
+  acceptsDelegations: boolean;
 }
 
 export interface BadgePatron {
@@ -96,6 +101,24 @@ export async function revokeDelegation(counterparty: string): Promise<void> {
     method: 'DELETE',
     requiresAuth: true,
   });
+}
+
+/**
+ * Accept lent badges, or stop accepting them.
+ *
+ * Switching it off also ends the loan this account is wearing right now — the
+ * server does that in the same call, because leaving the badge on somebody who
+ * has just said they do not want it is the thing the setting exists to spare
+ * them.
+ */
+export async function setDelegationAcceptance(
+  accepts: boolean,
+): Promise<{ accepts: boolean; endedWith: string | null }> {
+  const response = await apiCall<{ result: { accepts: boolean; endedWith: string | null } }>(
+    '/api/badge/delegations/acceptance',
+    { method: 'PUT', body: { accepts }, requiresAuth: true },
+  );
+  return response.result;
 }
 
 /**

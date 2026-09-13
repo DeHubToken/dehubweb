@@ -1,8 +1,8 @@
 /**
  * Badge delegation — lending your tier to other accounts
  * ======================================================
- * Rendered in Settings → Assets, under the wallet rows, because a badge is
- * bought with DHB and this is where the rest of that lives.
+ * Rendered in Settings → Profile, above the profile list, because a lent badge
+ * reads as identity — who is backing whom — rather than as a wallet asset.
  *
  * What the panel has to make obvious, because none of it is guessable:
  *
@@ -10,15 +10,31 @@
  * - What you hand out is **your own tier** — the person you lend to wears the
  *   badge you wear.
  * - A returned slot is not free straight away.
+ * - A loan can only ever **raise** somebody: lending a tier at or below the one
+ *   they already earn is refused, because `effectiveBadgeBalance` is a max and
+ *   such a loan changed nothing while still spending a slot.
+ *
+ * And the switch at the top, which is the answer to a question the rest of the
+ * panel cannot answer: a loan applies the instant it is made, with no accept
+ * step, so without a standing no the only recourse was to hand the badge back
+ * afterwards — by which point it had been rendering everywhere the account
+ * appears, and the lender could lend it again out of another slot.
  *
  * A lent badge draws identically to an earned one everywhere else on the site,
  * which is the whole point — it is the same influence. This panel and the
  * patron line on a profile are the only two places that say otherwise.
  */
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Award, Loader2, X } from 'lucide-react';
 import { badgeImage } from '@/lib/staking-badges';
-import { useBadgeDelegations, useGrantDelegation, useRevokeDelegation } from '@/hooks/use-badge-delegations';
+import { Switch } from '@/components/ui/switch';
+import {
+  useBadgeDelegations,
+  useGrantDelegation,
+  useRevokeDelegation,
+  useSetDelegationAcceptance,
+} from '@/hooks/use-badge-delegations';
 import type { DelegationEntry } from '@/lib/api/dehub/badges';
 
 function shortAddress(address: string): string {
@@ -46,6 +62,7 @@ function DelegationRow({
   ending: boolean;
   label: string;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-between gap-3 rounded-xl bg-zinc-800 p-3">
       <div className="flex min-w-0 flex-col gap-0.5">
@@ -58,7 +75,7 @@ function DelegationRow({
           type="button"
           onClick={onEnd}
           disabled={ending}
-          aria-label={`End delegation with ${entry.address}`}
+          aria-label={t('settings.badgeDelegationEnd', { address: entry.address })}
           className="rounded-lg p-1.5 text-zinc-500 transition-colors hover:bg-zinc-700 hover:text-white disabled:opacity-50"
         >
           {ending ? <Loader2 className="size-4 animate-spin" /> : <X className="size-4" />}
@@ -69,16 +86,18 @@ function DelegationRow({
 }
 
 export function BadgeDelegationSection() {
+  const { t } = useTranslation();
   const { data, isLoading } = useBadgeDelegations();
   const grant = useGrantDelegation();
   const revoke = useRevokeDelegation();
+  const acceptance = useSetDelegationAcceptance();
   const [recipient, setRecipient] = useState('');
 
   if (isLoading) {
     return (
       <div className="flex items-center gap-2 text-sm text-zinc-500">
         <Loader2 className="size-4 animate-spin" />
-        Loading delegations…
+        {t('settings.badgeDelegationLoading')}
       </div>
     );
   }
@@ -99,22 +118,41 @@ export function BadgeDelegationSection() {
     <div className="space-y-4">
       <h3 className="flex items-center gap-2 text-sm font-medium text-zinc-400">
         <Award className="size-4" />
-        Badge delegation
+        {t('settings.badgeDelegation')}
       </h3>
+
+      {/* The standing no. First in the panel because it governs everything
+          below it, and because somebody arriving here from a notification about
+          a badge they did not ask for is looking for exactly this. */}
+      <div className="flex items-start justify-between gap-3 rounded-xl bg-zinc-800 p-3">
+        <div className="min-w-0">
+          <p className="text-sm text-white">{t('settings.badgeDelegationAccept')}</p>
+          <p className="mt-0.5 text-xs leading-4 text-zinc-500">
+            {t('settings.badgeDelegationAcceptHint')}
+          </p>
+        </div>
+        <Switch
+          checked={data.acceptsDelegations}
+          onCheckedChange={(next) => acceptance.mutate(next)}
+          disabled={acceptance.isPending}
+          aria-label={t('settings.badgeDelegationAccept')}
+        />
+      </div>
 
       <p className="text-sm leading-5 text-zinc-500">
         {data.ownTier ? (
           <>
-            Your {data.ownTier} badge carries{' '}
-            <span className="text-white">
-              {data.slots} slot{data.slots === 1 ? '' : 's'}
-            </span>
-            , {slotsFree} free. Each one lends another account{' '}
-            <span className="text-white">your own {data.grantableTier ?? data.ownTier} badge</span> —
-            they wear what you wear. Take it back whenever you like; the slot frees up a day later.
+            {t('settings.badgeDelegationSlots', {
+              count: data.slots,
+              tier: data.ownTier,
+              free: slotsFree,
+            })}{' '}
+            {t('settings.badgeDelegationLends', { tier: data.grantableTier ?? data.ownTier })}{' '}
+            {t('settings.badgeDelegationRaisesOnly')}{' '}
+            {t('settings.badgeDelegationTakeBack')}
           </>
         ) : (
-          <>Delegation slots come with a staking badge. Stake DHB to earn one.</>
+          <>{t('settings.badgeDelegationNoBadge')}</>
         )}
       </p>
 
@@ -123,8 +161,8 @@ export function BadgeDelegationSection() {
           <input
             value={recipient}
             onChange={event => setRecipient(event.target.value)}
-            placeholder="Username or wallet address"
-            aria-label="Account to lend your badge to"
+            placeholder={t('settings.badgeDelegationPlaceholder')}
+            aria-label={t('settings.badgeDelegationLendAria')}
             disabled={!canGrant || grant.isPending}
             className="h-10 min-w-0 flex-1 rounded-xl border border-zinc-700 bg-zinc-800 px-3 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-600 disabled:opacity-50"
           />
@@ -133,25 +171,25 @@ export function BadgeDelegationSection() {
             disabled={!canGrant || !recipient.trim() || grant.isPending}
             className="flex h-10 shrink-0 items-center justify-center rounded-xl bg-white px-4 text-sm font-medium text-black transition-opacity hover:opacity-90 disabled:opacity-40"
           >
-            {grant.isPending ? <Loader2 className="size-4 animate-spin" /> : 'Lend'}
+            {grant.isPending ? <Loader2 className="size-4 animate-spin" /> : t('settings.badgeDelegationLend')}
           </button>
         </form>
       ) : null}
 
       {!canGrant && data.grantableTier ? (
-        <p className="text-sm text-zinc-500">
-          Every slot is in use. End one below, or climb a tier for another.
-        </p>
+        <p className="text-sm text-zinc-500">{t('settings.badgeDelegationFull')}</p>
       ) : null}
 
       {data.granted.length ? (
         <div className="space-y-2">
-          <p className="text-xs uppercase tracking-wide text-zinc-600">Wearing your badge</p>
+          <p className="text-xs uppercase tracking-wide text-zinc-600">
+            {t('settings.badgeDelegationWearing')}
+          </p>
           {data.granted.map(entry => (
             <DelegationRow
               key={entry.address}
               entry={entry}
-              label="You lent this"
+              label={t('settings.badgeDelegationYouLent')}
               ending={revoke.isPending && revoke.variables === entry.address}
               onEnd={() => revoke.mutate(entry.address)}
             />
@@ -161,10 +199,12 @@ export function BadgeDelegationSection() {
 
       {data.received ? (
         <div className="space-y-2">
-          <p className="text-xs uppercase tracking-wide text-zinc-600">Lent to you</p>
+          <p className="text-xs uppercase tracking-wide text-zinc-600">
+            {t('settings.badgeDelegationLentToYou')}
+          </p>
           <DelegationRow
             entry={data.received}
-            label="Hand it back"
+            label={t('settings.badgeDelegationHandBack')}
             ending={revoke.isPending && revoke.variables === data.received.address}
             onEnd={() => revoke.mutate(data.received!.address)}
           />

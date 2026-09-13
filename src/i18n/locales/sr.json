@@ -331,7 +331,8 @@
     "publicChatAlertsNeedsBrowser": "Укључите обавештења прегледача изнад да бисте их примили",
     "publicChatAlertsRate": "Највише",
     "publicChatAlertsRateOption": "{{count}} на сат",
-    "publicChatAlertsRateHint": "Ништа се не губи када је соба заузетија од овога — поруке се задржавају и стижу заједно при следећем обавештењу."
+    "publicChatAlertsRateHint": "Ништа се не губи када је соба заузетија од овога — поруке се задржавају и стижу заједно при следећем обавештењу.",
+    "badgeDelegationAcceptHint": "Isključi ovo da odbijеš pozajmljene značke. Svaka značka koju trenutno nosiš biće vraćena."
   },
   "common": {
     "save": "Сачувај",
