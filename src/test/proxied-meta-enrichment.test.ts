@@ -283,6 +283,20 @@ describe('short post titles that collide', () => {
     expect(value.length).toBeLessThanOrEqual(70);
   });
 
+  it('never claims an author the page does not name', () => {
+    const anonymous = postPage('2376', 'Stream', 'body', false).replace(/,"author":\{[^}]*\}/, '');
+    const out = enrichPostMeta(anonymous, '2376', null);
+    expect(out).not.toContain('someone');
+    expect(valueOf(out, 'title')).toBe('Stream');
+  });
+
+  it('titles an untitled post by id alone when nobody is named', () => {
+    const anonymous = postPage('2376', '😂', 'body', false).replace(/,"author":\{[^}]*\}/, '');
+    const out = enrichPostMeta(anonymous, '2376', null);
+    expect(valueOf(out, 'title')).toBe('Post #2376 on DeHub');
+    expect(out).not.toContain('someone');
+  });
+
   it('leaves a greeting alone as a title but still names the author', () => {
     const out = enrichPostMeta(postPage('16', 'Hello', 'body', true, 'davyJones'), '16', {
       postType: 'video',
