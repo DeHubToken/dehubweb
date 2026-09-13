@@ -232,8 +232,12 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCa
 
   if (!isOpen) return null;
 
+  // The composer drawer stays mounted underneath this, and Radix pins
+  // `pointer-events: none` on the body while a dialog is open — a portalled
+  // child of the body inherits that lock, so the camera UI would paint and
+  // take no clicks. `pointer-events-auto` opts this subtree back in.
   const modalContent = (
-    <div data-overlay-content className="fixed inset-0 z-[9999] bg-black flex flex-col">
+    <div data-overlay-content className="pointer-events-auto fixed inset-0 z-[9999] bg-black flex flex-col">
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent">
         <button
