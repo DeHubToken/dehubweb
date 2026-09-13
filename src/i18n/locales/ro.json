@@ -1165,6 +1165,10 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "unlockBiometricContinue": "Deblochează-ți portofelul cu amprenta sau fața pentru a continua.",
+    "unlockBiometricSignIn": "Deblochează-ți portofelul cu amprenta digitală sau cu fața pentru a te conecta.",
+    "unlockPasswordContinue": "Introdu parola portofelului pentru a continua.",
+    "unlockPasswordSignIn": "Introdu parola portofelului pentru a debloca portofelul și conectează-te.",
     "welcomeBack": "Bine ai revenit! Acest cont este încă al tău. Conectează-te cu datele vechi de conectare de mai jos pentru a le readuce, cu postările, urmăritorii și soldul tău.",
     "welcomeBackWithLogin": "Bine ai revenit! Acest cont este încă al tău. Conectează-te cu {{login}} de mai jos pentru a-l readuce, cu postările, urmăritorii și soldul tău.",
     "welcomeBackWaiting": "se așteaptă",
@@ -1398,6 +1402,7 @@
     "signed_in_successfully": "Autentificat cu succes",
     "signed_out": "Deconectat",
     "signing_in": "Se autentifică...",
+    "wallet_unlocked": "Portofel deblocat",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

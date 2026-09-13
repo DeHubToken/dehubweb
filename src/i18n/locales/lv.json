@@ -1189,6 +1189,10 @@
     "failedSubmit": "Pieteikuma iesniegšana neizdevās. Lūdzu, mēģiniet vēlreiz."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Lai turpinātu, atbloķējiet maku ar pirksta nospiedumu vai seju.",
+    "unlockBiometricSignIn": "Atbloķējiet maku ar pirksta nospiedumu vai seju, lai pierakstītos.",
+    "unlockPasswordContinue": "Lai turpinātu, ievadiet maka paroli.",
+    "unlockPasswordSignIn": "Ievadiet maka paroli, lai atbloķētu maku un pierakstītos.",
     "welcomeBack": "Apsveicam ar atgriešanos — šis konts joprojām ir jūsu. Pierakstieties ar savu veco pieteikumvārdu zemāk, lai to atjaunotu, ar saviem ierakstiem, sekotājiem un bilanci.",
     "welcomeBackWithLogin": "Apsveicam ar atgriešanos — šis konts joprojām ir jūsu. Pierakstieties, izmantojot tālāk redzamo {{login}}, lai atgrieztos ar saviem ierakstiem, sekotājiem un bilanci.",
     "welcomeBackWaiting": "gaida to",
@@ -1494,6 +1498,7 @@
     "signed_in_successfully": "Veiksmīgi pieslēdzies",
     "signed_out": "Atslēdzies",
     "signing_in": "Pieslēdzas...",
+    "wallet_unlocked": "Maks atbloķēts",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

@@ -1206,6 +1206,10 @@
     "failedSubmit": "Arizani yuborish amalga oshmadi. Iltimos qayta urinib koʻring."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Davom etish uchun hamyoningizni barmoq izingiz yoki yuzingiz bilan oching.",
+    "unlockBiometricSignIn": "Kirish uchun hamyoningizni barmoq izingiz yoki yuzingiz bilan qulfdan chiqaring.",
+    "unlockPasswordContinue": "Davom etish uchun hamyon parolingizni kiriting.",
+    "unlockPasswordSignIn": "Hamyoningizni qulfdan chiqarish va tizimga kirish uchun hamyon parolingizni kiriting.",
     "welcomeBack": "Xush kelibsiz — bu akkaunt hali ham sizniki. Postlaringiz, obunachilaringiz va balansingiz bilan uni qayta tiklash uchun quyidagi eski loginingiz bilan tizimga kiring.",
     "welcomeBackWithLogin": "Xush kelibsiz — bu akkaunt hali ham sizniki. Postlaringiz, obunachilaringiz va balansingiz bilan uni qayta tiklash uchun quyidagi {{login}} bilan tizimga kiring.",
     "welcomeBackWaiting": "uni kutmoqdaman",
@@ -1511,6 +1515,7 @@
     "signed_in_successfully": "Muvaffaqiyatli kirdingiz",
     "signed_out": "Chiqdingiz",
     "signing_in": "Kirilmoqda...",
+    "wallet_unlocked": "Hamyon qulfdan chiqarildi",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

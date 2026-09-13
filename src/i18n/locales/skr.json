@@ -1142,6 +1142,10 @@
     "failedSubmit": "درخواست جمع کائنی ہوئی۔ ولا کوشش کرو۔"
   },
   "loginModal": {
+    "unlockBiometricContinue": "اپنے والٹ کو کھولن لئی اپنے فنگرپرنٹ یا چہرے نال انلاک کریں۔",
+    "unlockBiometricSignIn": "اپنے والٹ کو کھولن لئی اپنے فنگرپرنٹ یا چہرے نال سائن ان کریں۔",
+    "unlockPasswordContinue": "اپنے والٹ کا پاس ورڈ درج کریں۔",
+    "unlockPasswordSignIn": "اپنے والٹ کو انلاک کرن لئی اپنا پاس ورڈ درج کریں اور سائن ان کریں۔",
     "title": "لاگ ان کرو",
     "addProfileTitle": "پروفائل ولاؤ",
     "continueEmail": "ای میل نال اگے ودھو",
@@ -1439,6 +1443,7 @@
     "signed_in_successfully": "کامیابی نال سائن ان تھی ڳیا",
     "signed_out": "سائن آؤٹ تھی ڳیا",
     "signing_in": "سائن ان تھیندا پئے...",
+    "wallet_unlocked": "بٹوہ کھل گیا",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

@@ -1200,6 +1200,10 @@
     "failedSubmit": "Hakemuksen lähetys epäonnistui. Yritä uudelleen."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Avaa lompakkosi lukitus sormenjäljelläsi tai kasvoillasi jatkaaksesi.",
+    "unlockBiometricSignIn": "Kirjaudu sisään avaamalla lompakkosi lukitus sormenjäljelläsi tai kasvoillasi.",
+    "unlockPasswordContinue": "Anna lompakkosi salasana jatkaaksesi.",
+    "unlockPasswordSignIn": "Anna lompakkosi salasana avataksesi lompakkosi lukituksen ja kirjautuaksesi sisään.",
     "welcomeBack": "Tervetuloa takaisin — tämä tili on edelleen sinun. Kirjaudu sisään alla olevalla vanhalla kirjautumistunnuksellasi ja tuo se takaisin julkaisuillasi, seuraajillasi ja saldollasi.",
     "welcomeBackWithLogin": "Tervetuloa takaisin — tämä tili on edelleen sinun. Kirjaudu sisään {{login}} -sovelluksella ja tuo se takaisin julkaisuillasi, seuraajillasi ja saldollasi.",
     "welcomeBackWaiting": "odottaa sitä",
@@ -1499,6 +1503,7 @@
     "signed_in_successfully": "Kirjautuminen onnistui",
     "signed_out": "Kirjauduttu ulos",
     "signing_in": "Kirjaudutaan...",
+    "wallet_unlocked": "Lompakko avattu",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

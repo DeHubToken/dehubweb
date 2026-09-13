@@ -1224,6 +1224,10 @@
     "failedSubmit": "Başvuru gönderilemedi. Lütfen tekrar deneyin."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Devam etmek için parmak izinizle veya yüzünüzle cüzdanınızın kilidini açın.",
+    "unlockBiometricSignIn": "Oturum açmak için parmak izinizle veya yüzünüzle cüzdanınızın kilidini açın.",
+    "unlockPasswordContinue": "Devam etmek için cüzdan şifrenizi girin.",
+    "unlockPasswordSignIn": "Cüzdanınızın kilidini açmak ve oturum açmak için cüzdan şifrenizi girin.",
     "welcomeBack": "Tekrar hoş geldiniz. Bu hesap hâlâ sizin. Gönderileriniz, takipçileriniz ve bakiyenizle geri getirmek için aşağıdaki eski giriş bilgilerinizle oturum açın.",
     "welcomeBackWithLogin": "Tekrar hoş geldiniz. Bu hesap hâlâ sizin. Gönderilerinizi, takipçilerinizi ve bakiyenizi geri getirmek için aşağıdaki {{login}} ile oturum açın.",
     "welcomeBackWaiting": "bekliyor",
@@ -1529,6 +1533,7 @@
     "signed_in_successfully": "Başarıyla giriş yapıldı",
     "signed_out": "Çıkış yapıldı",
     "signing_in": "Giriş yapılıyor...",
+    "wallet_unlocked": "Cüzdanın kilidi açıldı",
     "welcome_back": "Tekrar hoş geldiniz!",
     "welcome_to_dehub": "DeHub'a hoş geldiniz!",
     "connecting_to_google": "Google'a bağlanılıyor...",

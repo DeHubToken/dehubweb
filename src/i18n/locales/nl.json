@@ -1420,6 +1420,10 @@
     "failedSubmit": "Aanvraag indienen mislukt. Probeer het opnieuw."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Ontgrendel je portemonnee met je vingerafdruk of gezicht om door te gaan.",
+    "unlockBiometricSignIn": "Ontgrendel je portemonnee met je vingerafdruk of gezicht om in te loggen.",
+    "unlockPasswordContinue": "Voer het wachtwoord van je portemonnee in om door te",
+    "unlockPasswordSignIn": "Voer het wachtwoord van je portemonnee in om je portemonnee te ontgrendelen",
     "welcomeBack": "Welkom terug — dit account is nog steeds van jou. Log hieronder in met je oude login om het terug te brengen, met je berichten, volgers en saldo.",
     "welcomeBackWithLogin": "Welkom terug — dit account is nog steeds van jou. Meld je hieronder aan met {{login}} om het terug te brengen, met je berichten, volgers en saldo.",
     "welcomeBackWaiting": "er op te wachten",
@@ -1725,6 +1729,7 @@
     "signed_in_successfully": "Succesvol ingelogd",
     "signed_out": "Uitgelogd",
     "signing_in": "Inloggen...",
+    "wallet_unlocked": "Portemonnee ontgrendeld",
     "welcome_back": "Welkom terug!",
     "welcome_to_dehub": "Welkom bij DeHub!",
     "connecting_to_google": "Verbinden met Google...",

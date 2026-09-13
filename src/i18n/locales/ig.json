@@ -1184,6 +1184,10 @@
     "failedSubmit": "Enweghị ike inyefe arịrịọ. Biko nwaa ọzọ."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Meghee obere akpa gị na mkpịsịaka gị ma ọ bụ ihu gị ka ị gaa n 'ihu.",
+    "unlockBiometricSignIn": "Meghee obere akpa gị na mkpịsịaka gị ma ọ bụ ihu iji banye.",
+    "unlockPasswordContinue": "Tinye paswọọdụ obere akpa gị ka ị gaa n 'ihu.",
+    "unlockPasswordSignIn": "Tinye paswọọdụ obere akpa gị iji kpọghee obere akpa gị ma banye.",
     "welcomeBack": "Nabata ọzọ — akaụntụ a ka bụ nke gị. Banye na gị ochie nbanye n 'okpuru na-ewetara ya azụ, na gị posts, na-eso ụzọ na itule.",
     "welcomeBackWithLogin": "Nabata ọzọ — akaụntụ a ka bụ nke gị. Banye na {{login}} n 'okpuru iji weghachite ya, ya na posts gị, ndị na-eso ụzọ gị na nguzozi.",
     "welcomeBackWaiting": "n 'okpuru bụ mpempe ihe akaebe vidiyo.",
@@ -1489,6 +1493,7 @@
     "signed_in_successfully": "Ịbanye nke ọma",
     "signed_out": "Ịpụọ",
     "signing_in": "Na-abanye...",
+    "wallet_unlocked": "Obere akpa unlocked",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

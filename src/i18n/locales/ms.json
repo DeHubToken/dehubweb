@@ -1476,6 +1476,10 @@
     "failedSubmit": "Gagal menghantar permohonan. Sila cuba lagi."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Buka kunci dompet anda dengan cap jari atau muka anda untuk meneruskan.",
+    "unlockBiometricSignIn": "Buka kunci dompet anda dengan cap jari atau muka anda untuk log masuk.",
+    "unlockPasswordContinue": "Masukkan kata laluan dompet anda untuk meneruskan.",
+    "unlockPasswordSignIn": "Masukkan kata laluan dompet anda untuk membuka kunci dompet anda dan log masuk.",
     "welcomeBack": "Selamat kembali — akaun ini masih milik anda. Log masuk dengan log masuk lama anda di bawah untuk membawanya kembali, dengan hantaran, pengikut dan baki anda.",
     "welcomeBackWithLogin": "Selamat kembali — akaun ini masih milik anda. Log masuk dengan {{login}} di bawah untuk mendapatkannya semula, dengan hantaran, pengikut dan baki anda.",
     "welcomeBackWaiting": "menunggunya",
@@ -1781,6 +1785,7 @@
     "signed_in_successfully": "Berjaya log masuk",
     "signed_out": "Log keluar",
     "signing_in": "Sedang log masuk...",
+    "wallet_unlocked": "Dompet dibuka",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

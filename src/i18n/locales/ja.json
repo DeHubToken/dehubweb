@@ -1223,6 +1223,10 @@
     "emailRequired": "メールは必須です"
   },
   "loginModal": {
+    "unlockBiometricContinue": "続行するには、指紋または顔でウォレットのロックを解除してください。",
+    "unlockBiometricSignIn": "指紋または顔でウォレットのロックを解除してサインインします。",
+    "unlockPasswordContinue": "続行するにはウォレットのパスワードを入力してください。",
+    "unlockPasswordSignIn": "ウォレットのパスワードを入力してウォレットのロックを解除し、サインインします。",
     "welcomeBack": "おかえりなさい。このアカウントは引き続きあなたのものです。 以下の古いログインでサインインして、投稿、フォロワー、残高を元に戻します。",
     "welcomeBackWithLogin": "おかえりなさい。このアカウントは引き続きあなたのものです。 以下の{{login}}でサインインして、投稿、フォロワー、バランスを取り戻しましょう。",
     "welcomeBackWaiting": "それを待っています",
@@ -1528,6 +1532,7 @@
     "signed_in_successfully": "ログインしました",
     "signed_out": "ログアウトしました",
     "signing_in": "ログイン中...",
+    "wallet_unlocked": "ウォレットのロックが解除されました",
     "welcome_back": "おかえりなさい！",
     "welcome_to_dehub": "DeHubへようこそ！",
     "connecting_to_google": "Googleに接続中...",

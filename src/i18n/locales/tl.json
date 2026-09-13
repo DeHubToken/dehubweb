@@ -1202,6 +1202,10 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "unlockBiometricContinue": "I - unlock ang iyong wallet gamit ang iyong fingerprint o mukha para magpatuloy.",
+    "unlockBiometricSignIn": "I - unlock ang iyong wallet gamit ang iyong fingerprint o mukha para mag - sign in.",
+    "unlockPasswordContinue": "Ilagay ang password ng iyong wallet para magpatuloy.",
+    "unlockPasswordSignIn": "Ipasok ang iyong wallet password upang i - unlock ang iyong wallet at mag - sign in.",
     "welcomeBack": "Maligayang pagbabalik — ang account na ito ay sa iyo pa rin. Mag - sign in gamit ang iyong lumang login sa ibaba upang dalhin ito pabalik, sa iyong mga post, mga tagasunod at balanse.",
     "welcomeBackWithLogin": "Maligayang pagbabalik — ang account na ito ay sa iyo pa rin. Mag - sign in sa {{login}} sa ibaba para maibalik ito sa iyong mga post, tagasunod, at balanse.",
     "welcomeBackWaiting": "naghihintay dito",
@@ -1435,6 +1439,7 @@
     "signed_in_successfully": "Matagumpay na naka-sign in",
     "signed_out": "Naka-sign out",
     "signing_in": "Nagsa-sign in...",
+    "wallet_unlocked": "Na - unlock ang wallet",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

@@ -1200,6 +1200,10 @@
     "email": "E-mail"
   },
   "loginModal": {
+    "unlockBiometricContinue": "A folytatáshoz oldja fel pénztárcáját ujjlenyomatával vagy arcával.",
+    "unlockBiometricSignIn": "A bejelentkezéshez oldja fel a pénztárcáját az ujjlenyomatával vagy az arcával.",
+    "unlockPasswordContinue": "A folytatáshoz adja meg a pénztárca jelszavát.",
+    "unlockPasswordSignIn": "Adja meg a pénztárca jelszavát a pénztárca feloldásához és a bejelentkezéshez.",
     "welcomeBack": "Üdvözlünk újra itt — ez a fiók továbbra is az Öné. Jelentkezzen be az alábbi régi bejelentkezési adataival, hogy visszahozza, a bejegyzéseivel, követőivel és egyenlegével.",
     "welcomeBackWithLogin": "Üdvözlünk újra itt — ez a fiók továbbra is az Öné. Jelentkezz be az alábbi {{login}} fiókkal, hogy visszaállíthasd a fiókodat a bejegyzéseiddel, a követőiddel és az egyenlegeddel.",
     "welcomeBackWaiting": "várakozik rá",
@@ -1499,6 +1503,7 @@
     "signed_in_successfully": "Sikeres bejelentkezés",
     "signed_out": "Kijelentkezve",
     "signing_in": "Bejelentkezés...",
+    "wallet_unlocked": "Pénztárca feloldva",
     "welcome_back": "Welcome back!",
     "welcome_to_dehub": "Welcome to DeHub!",
     "connecting_to_google": "Connecting to Google...",

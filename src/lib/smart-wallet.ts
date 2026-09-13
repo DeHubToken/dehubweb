@@ -257,7 +257,7 @@ function rememberSolanaAddress(privKeyHex: string, evmAddress: string): void {
 }
 
 /** The EOA address a provider will sign with, or null if it won't say. */
-async function addressFromProvider(provider: IProvider): Promise<string | null> {
+export async function addressFromProvider(provider: IProvider): Promise<string | null> {
   try {
     const accounts = await provider.request({ method: "eth_accounts" }) as string[];
     return accounts?.[0] ?? null;
