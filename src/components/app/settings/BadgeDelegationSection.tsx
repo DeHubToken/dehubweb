@@ -7,8 +7,9 @@
  * What the panel has to make obvious, because none of it is guessable:
  *
  * - You get **one slot per rung climbed**, not one slot flat.
- * - What you hand out is **your own tier** — the person you lend to wears the
- *   badge you wear.
+ * - What you hand out is **any tier you have unlocked**, up to your own — a
+ *   Megalodon can lend a Crab. Never one above your own. A smaller badge
+ *   still spends a whole slot, because slots count relationships.
  * - A returned slot is not free straight away.
  * - A loan can only ever **raise** somebody: lending a tier at or below the one
  *   they already earn is refused, because `effectiveBadgeBalance` is a max and
@@ -24,7 +25,7 @@
  * which is the whole point — it is the same influence. This panel and the
  * patron line on a profile are the only two places that say otherwise.
  */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Award, Loader2, X } from 'lucide-react';
 import { badgeImage } from '@/lib/staking-badges';
@@ -92,6 +93,20 @@ export function BadgeDelegationSection() {
   const revoke = useRevokeDelegation();
   const acceptance = useSetDelegationAcceptance();
   const [recipient, setRecipient] = useState('');
+  // Which unlocked badge to lend. Null until the summary arrives, and reset to
+  // the grantor's own tier whenever the ceiling moves (a chain read can
+  // re-tier them mid-session), so the picker never holds a tier they no
+  // longer have.
+  const [tier, setTier] = useState<string | null>(null);
+  const grantableTiers = data?.grantableTiers?.length
+    ? data.grantableTiers
+    : data?.grantableTier
+      ? [data.grantableTier]
+      : [];
+  const ceiling = data?.grantableTier ?? null;
+  useEffect(() => {
+    setTier(ceiling);
+  }, [ceiling]);
 
   if (isLoading) {
     return (
@@ -111,7 +126,8 @@ export function BadgeDelegationSection() {
     event.preventDefault();
     const to = recipient.trim();
     if (!to || grant.isPending) return;
-    grant.mutate(to, { onSuccess: () => setRecipient('') });
+    const chosen = tier && grantableTiers.includes(tier) ? tier : null;
+    grant.mutate({ to, tier: chosen }, { onSuccess: () => setRecipient('') });
   };
 
   return (
@@ -147,14 +163,50 @@ export function BadgeDelegationSection() {
               tier: data.ownTier,
               free: slotsFree,
             })}{' '}
-            {t('settings.badgeDelegationLends', { tier: data.grantableTier ?? data.ownTier })}{' '}
-            {t('settings.badgeDelegationRaisesOnly')}{' '}
+            {t('settings.badgeDelegationLendsAny', { tier: data.grantableTier ?? data.ownTier })}{' '}
+            {t('settings.badgeDelegationRaisesOnlyTier')}{' '}
             {t('settings.badgeDelegationTakeBack')}
           </>
         ) : (
           <>{t('settings.badgeDelegationNoBadge')}</>
         )}
       </p>
+
+      {data.grantableTier && grantableTiers.length > 1 ? (
+        <div className="space-y-2">
+          <p className="text-xs uppercase tracking-wide text-zinc-600">
+            {t('settings.badgeDelegationPickTier')}
+          </p>
+          <div
+            role="radiogroup"
+            aria-label={t('settings.badgeDelegationPickTier')}
+            className="flex flex-wrap gap-2"
+          >
+            {grantableTiers.map(name => {
+              const selected = name === tier;
+              const src = badgeImage(name);
+              return (
+                <button
+                  key={name}
+                  type="button"
+                  role="radio"
+                  aria-checked={selected}
+                  onClick={() => setTier(name)}
+                  disabled={!canGrant || grant.isPending}
+                  className={`flex h-9 items-center gap-1.5 rounded-xl border px-3 text-sm transition-colors disabled:opacity-50 ${
+                    selected
+                      ? 'border-white bg-white text-black'
+                      : 'border-zinc-700 bg-zinc-800 text-zinc-300 hover:border-zinc-500 hover:text-white'
+                  }`}
+                >
+                  {src ? <img src={src} alt="" className="size-4 shrink-0" /> : null}
+                  {name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
 
       {data.grantableTier ? (
         <form onSubmit={submit} className="flex gap-2">
