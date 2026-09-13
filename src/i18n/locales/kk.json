@@ -2334,6 +2334,17 @@
     "signalFlare": "{{name}} Сигнал жалынын жіберді",
     "newMessage": "{{name}} Сізге хабарлама жіберді"
   },
+  "audioPost": {
+    "popOut": "Шығып кетіңіз - шолу кезінде тыңдауды жалғастырыңыз",
+    "closeCornerPlayer": "Бұрыш ойнатқышын жабу",
+    "cornerPlayer": "Аудио постты ойнату",
+    "stopAndClose": "Ойнатқышты тоқтату және жабу",
+    "untitled": "Аудио пост",
+    "creator": "DeHub жасаушысы",
+    "play": "Ойнату",
+    "pause": "Пауза",
+    "listens_one": "{{count}} тыңдаңыз"
+  },
   "spaces": {
     "title": "Кеңістіктер",
     "live": "Тікелей",

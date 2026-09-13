@@ -2292,5 +2292,17 @@
     "followRequest": "{{name}} rịọrọ ka ị soro gị",
     "followAccepted": "{{name}} nabatara arịrịọ na-eso gị",
     "newMessage": "{{name}} zitere gị ozi"
+  },
+  "audioPost": {
+    "popOut": "Pop si — nọgide na-ege ntị mgbe ị na-agagharị",
+    "closeCornerPlayer": "Mechie ọkpụkpọ nkuku",
+    "cornerPlayer": "Audio post playback",
+    "stopAndClose": "Kwụsị ma mechie ọkpụkpọ ahụ",
+    "untitled": "Audio post",
+    "creator": "DeHub Onye Okike",
+    "play": "Gwuo",
+    "pause": "Kwụsị",
+    "listens_one": "{{count}} gee ntị",
+    "listens_other": "{{count}} na-ege ntị"
   }
 }

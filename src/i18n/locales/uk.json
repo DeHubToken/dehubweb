@@ -4415,6 +4415,18 @@
     "signalFlare": "{{name}} надіслав вам Signal Flare",
     "newMessage": "{{name}} надіслав вам повідомлення"
   },
+  "audioPost": {
+    "popOut": "Спливаюче вікно — продовжуйте слухати під час перегляду",
+    "closeCornerPlayer": "Закрити кутовий плеєр",
+    "cornerPlayer": "Відтворення аудіо допису",
+    "stopAndClose": "Зупиніть і закрийте програвач",
+    "untitled": "Аудіодопис",
+    "creator": "Автор DeHub",
+    "play": "Відтворити",
+    "pause": "Пауза",
+    "listens_one": "{{count}} прослуховування",
+    "listens_other": "{{count}} прослуховувань"
+  },
   "pages": {
     "home": {
       "title": "Головна",

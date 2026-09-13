@@ -2284,5 +2284,16 @@
     "followAccepted": "{{name}} Ka sɔn i ka fɔta ma",
     "signalFlare": "{{name}} send a signal flare",
     "newMessage": "{{name}} send you a message"
+  },
+  "audioPost": {
+    "popOut": "Aw ye to ka mɛnni kɛ, aw ye to ka mɛnni kɛ",
+    "closeCornerPlayer": "I ka juru don i ka juru la",
+    "cornerPlayer": "# Dɔgɔtɔrɔ tɛ siginidenw ka kan ka min fɔ",
+    "stopAndClose": "I ka kan ka taga ni a ye yɔrɔ dɔ la min ka ɲi ka kɛ",
+    "untitled": "# Fɛɛn min be mɔgɔ lasun ka kuma",
+    "creator": "Danbaga",
+    "play": "A be to ka to ka to",
+    "pause": "N' ye n' ka baara dabila",
+    "listens_other": "{{count}} listens"
   }
 }
