@@ -1155,7 +1155,9 @@
     "redirectingOnramp": "リダイレクト中...",
     "onrampCreated": "入金セッション作成",
     "failedOnramp": "入金失敗",
-    "badgeDiscount": "{{tier}} 保有者 — {{percent}}% オフ"
+    "badgeDiscount": "{{tier}} 保有者 — {{percent}}% オフ",
+    "otherTokens": "その他のトークン",
+    "otherTokensDesc": "カードで Base 上の ETH または USDC を購入"
   },
   "agents": {
     "title": "AIエージェント",

@@ -1144,7 +1144,9 @@
     "redirectingOnramp": "Inaelekeza kwa njia...",
     "onrampCreated": "Kipindi cha njia kimeundwa",
     "failedOnramp": "Imeshindwa kuanza njia",
-    "badgeDiscount": "Mmiliki wa {{tier}} — punguzo la {{percent}}%"
+    "badgeDiscount": "Mmiliki wa {{tier}} — punguzo la {{percent}}%",
+    "otherTokens": "Tokeni nyingine",
+    "otherTokensDesc": "Nunua ETH au USDC kwenye Base kwa kadi yako"
   },
   "agents": {
     "title": "Mawakala wa AI",

@@ -1083,7 +1083,9 @@
     "redirectingOnramp": "جاري التحويل للأونرامب...",
     "onrampCreated": "جلسة الأونرامب اتنشأت",
     "failedOnramp": "ما قدرنا ننشئ الأونرامب",
-    "badgeDiscount": "حامل {{tier}} — خصم {{percent}}%"
+    "badgeDiscount": "حامل {{tier}} — خصم {{percent}}%",
+    "otherTokens": "عملات تانية",
+    "otherTokensDesc": "اشتري ETH أو USDC على Base بالكرت بتاعك"
   },
   "agents": {
     "title": "وكلاء AI",

@@ -1133,7 +1133,9 @@
     "redirectingOnramp": "Suunamine rambile...",
     "onrampCreated": "Rambi seanss loodud",
     "failedOnramp": "Rambi alustamine ebaõnnestus",
-    "badgeDiscount": "{{tier}} omanik — {{percent}}% soodsam"
+    "badgeDiscount": "{{tier}} omanik — {{percent}}% soodsam",
+    "otherTokens": "Muud tokenid",
+    "otherTokensDesc": "Osta ETH või USDC Base'is oma kaardiga"
   },
   "agents": {
     "title": "AI agendid",

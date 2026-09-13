@@ -1070,7 +1070,9 @@
     "redirectingOnramp": "E dey redirect to onramp...",
     "onrampCreated": "Onramp session don create",
     "failedOnramp": "E no fit start onramp",
-    "badgeDiscount": "{{tier}} holder — {{percent}}% off"
+    "badgeDiscount": "{{tier}} holder — {{percent}}% off",
+    "otherTokens": "Oda tokens",
+    "otherTokensDesc": "Use yor card buy ETH or USDC for Base"
   },
   "agents": {
     "title": "AI Agents",

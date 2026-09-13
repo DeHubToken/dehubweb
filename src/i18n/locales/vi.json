@@ -1036,7 +1036,9 @@
     "sessionCreated": "Session created",
     "redirectingOnramp": "Redirecting to onramp...",
     "onrampCreated": "Onramp session created",
-    "badgeDiscount": "Chủ sở hữu {{tier}} — giảm {{percent}}%"
+    "badgeDiscount": "Chủ sở hữu {{tier}} — giảm {{percent}}%",
+    "otherTokens": "Token khác",
+    "otherTokensDesc": "Mua ETH hoặc USDC trên Base bằng thẻ của bạn"
   },
   "agents": {
     "title": "AI Agents",

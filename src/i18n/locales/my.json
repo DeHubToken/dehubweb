@@ -1133,7 +1133,9 @@
     "redirectingOnramp": "Onramp သို့ ပြောင်းရွှေ့နေသည်...",
     "onrampCreated": "Onramp စက်ရှင် ဖန်တီးပြီးပါပြီ",
     "failedOnramp": "Onramp စတင်၍မရပါ",
-    "badgeDiscount": "{{tier}} ပိုင်ရှင် — {{percent}}% လျှော့"
+    "badgeDiscount": "{{tier}} ပိုင်ရှင် — {{percent}}% လျှော့",
+    "otherTokens": "အခြားတိုကင်များ",
+    "otherTokensDesc": "သင့်ကတ်ဖြင့် Base ပေါ်တွင် ETH သို့မဟုတ် USDC ဝယ်ပါ"
   },
   "agents": {
     "title": "AI အေးဂျင့်",

@@ -1125,7 +1125,9 @@
     "redirectingOnramp": "Yaykuna kaqman apachkan...",
     "onrampCreated": "Yaykuna sesión kamarisqa",
     "failedOnramp": "Mana yaykuna qallayta atirqanchu",
-    "badgeDiscount": "{{tier}} hap'iq — {{percent}}% pisiyachisqa"
+    "badgeDiscount": "{{tier}} hap'iq — {{percent}}% pisiyachisqa",
+    "otherTokens": "Huk tokenkuna",
+    "otherTokensDesc": "Base nisqapi ETH icha USDC rantiy tarjetaykiwan"
   },
   "agents": {
     "title": "AI Wakinkuna",

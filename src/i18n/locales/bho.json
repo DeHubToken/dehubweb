@@ -1102,7 +1102,9 @@
     "redirectingOnramp": "ऑनरैंप पर भेजात बा...",
     "onrampCreated": "ऑनरैंप सत्र बन गइल",
     "failedOnramp": "ऑनरैंप बनावे में विफल",
-    "badgeDiscount": "{{tier}} धारक — {{percent}}% छूट"
+    "badgeDiscount": "{{tier}} धारक — {{percent}}% छूट",
+    "otherTokens": "दूसर टोकन",
+    "otherTokensDesc": "आपन कार्ड से Base पर ETH भा USDC खरीदीं"
   },
   "agents": {
     "title": "AI एजेंट",

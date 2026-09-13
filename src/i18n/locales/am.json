@@ -1121,7 +1121,9 @@
     "redirectingOnramp": "ወደ ኦንራምፕ እየዛወረ...",
     "onrampCreated": "የኦንራምፕ ክፍለ ጊዜ ተፈጥሯል",
     "failedOnramp": "ኦንራምፕን መጀመር አልተሳካም",
-    "badgeDiscount": "{{tier}} ያለው — {{percent}}% ቅናሽ"
+    "badgeDiscount": "{{tier}} ያለው — {{percent}}% ቅናሽ",
+    "otherTokens": "ሌሎች ቶከኖች",
+    "otherTokensDesc": "በካርድዎ በBase ላይ ETH ወይም USDC ይግዙ"
   },
   "agents": {
     "title": "AI ወኪሎች",

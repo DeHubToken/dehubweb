@@ -1122,7 +1122,9 @@
     "redirectingOnramp": "ਰੀਡਾਇਰੈਕਟ ਹੋ ਰਿਹਾ ਹੈ...",
     "onrampCreated": "ਸੈਸ਼ਨ ਬਣ ਗਿਆ",
     "failedOnramp": "ਸ਼ੁਰੂ ਕਰਨ ਵਿੱਚ ਅਸਫ਼ਲ",
-    "badgeDiscount": "{{tier}} ਧਾਰਕ — {{percent}}% ਛੋਟ"
+    "badgeDiscount": "{{tier}} ਧਾਰਕ — {{percent}}% ਛੋਟ",
+    "otherTokens": "ਹੋਰ ਟੋਕਨ",
+    "otherTokensDesc": "ਆਪਣੇ ਕਾਰਡ ਨਾਲ Base ਉੱਤੇ ETH ਜਾਂ USDC ਖਰੀਦੋ"
   },
   "agents": {
     "title": "AI ਏਜੰਟ",

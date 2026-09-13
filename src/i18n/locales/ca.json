@@ -1134,7 +1134,9 @@
     "redirectingOnramp": "Redirigint a la rampa...",
     "onrampCreated": "Sessió de rampa creada",
     "failedOnramp": "Error en iniciar la rampa",
-    "badgeDiscount": "Titular {{tier}} — {{percent}}% de descompte"
+    "badgeDiscount": "Titular {{tier}} — {{percent}}% de descompte",
+    "otherTokens": "Altres tokens",
+    "otherTokensDesc": "Compra ETH o USDC a Base amb la teva targeta"
   },
   "agents": {
     "title": "Agents IA",

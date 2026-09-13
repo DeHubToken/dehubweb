@@ -1158,7 +1158,9 @@
     "redirectingOnramp": "Reindirizzamento alla rampa...",
     "onrampCreated": "Sessione rampa creata",
     "failedOnramp": "Impossibile avviare la rampa",
-    "badgeDiscount": "Possessore {{tier}} — {{percent}}% di sconto"
+    "badgeDiscount": "Possessore {{tier}} — {{percent}}% di sconto",
+    "otherTokens": "Altri token",
+    "otherTokensDesc": "Acquista ETH o USDC su Base con la tua carta"
   },
   "agents": {
     "title": "Agenti AI",

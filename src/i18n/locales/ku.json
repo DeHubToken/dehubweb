@@ -1057,7 +1057,9 @@
     "redirectingOnramp": "Ber bi onramp-ê ve tê veguheztin...",
     "onrampCreated": "Danişîna onramp hate çêkirin",
     "failedOnramp": "Destpêkirina onramp têkçû",
-    "badgeDiscount": "Xwedanê {{tier}} — %{{percent}} daxistin"
+    "badgeDiscount": "Xwedanê {{tier}} — %{{percent}} daxistin",
+    "otherTokens": "Tokenên din",
+    "otherTokensDesc": "Bi karta xwe li ser Base ETH an USDC bikire"
   },
   "agents": {
     "title": "Ajanên AI",

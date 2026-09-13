@@ -1205,7 +1205,9 @@
     "amount": "পরিমাণ",
     "price": "দাম",
     "success": "কেনা হইছে!",
-    "failed": "কেনা ব্যর্থ"
+    "failed": "কেনা ব্যর্থ",
+    "otherTokens": "আর টোকেন",
+    "otherTokensDesc": "তোমার কার্ড দিয়া Base-ত ETH বা USDC কিনেন"
   },
   "agents": {
     "title": "AI এজেন্ট",

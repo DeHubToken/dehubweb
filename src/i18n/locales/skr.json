@@ -1076,7 +1076,9 @@
     "redirectingOnramp": "آن ریمپ تے بھیج ریہا ہے...",
     "onrampCreated": "آن ریمپ سیشن بݨ گیا",
     "failedOnramp": "آن ریمپ شروع کائنی ہوئیا",
-    "badgeDiscount": "{{tier}} رکھݨ آلا — {{percent}}% گھٹ"
+    "badgeDiscount": "{{tier}} رکھݨ آلا — {{percent}}% گھٹ",
+    "otherTokens": "ٻئے ٹوکن",
+    "otherTokensDesc": "اپݨے کارڈ نال Base تے ETH یا USDC خریدو"
   },
   "agents": {
     "title": "AI ایجنٹ",

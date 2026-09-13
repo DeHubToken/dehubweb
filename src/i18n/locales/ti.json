@@ -1110,7 +1110,9 @@
     "redirectingOnramp": "ናብ ኦንራምፕ ይቕየር ኣሎ...",
     "onrampCreated": "ክፍለ-ግዜ ኦንራምፕ ተፈጢሩ",
     "failedOnramp": "ኦንራምፕ ምጅማር ኣይተዓወተን",
-    "badgeDiscount": "ናይ {{tier}} ዋና — {{percent}}% ቅናሽ"
+    "badgeDiscount": "ናይ {{tier}} ዋና — {{percent}}% ቅናሽ",
+    "otherTokens": "ካልኦት ቶከናት",
+    "otherTokensDesc": "ብካርድኻ ኣብ Base ETH ወይ USDC ግዛእ"
   },
   "agents": {
     "title": "AI ኤጀንት",

@@ -1157,7 +1157,9 @@
     "redirectingOnramp": "Redirecionando...",
     "onrampCreated": "Sessão criada",
     "failedOnramp": "Falha na rampa",
-    "badgeDiscount": "Titular {{tier}} — {{percent}}% de desconto"
+    "badgeDiscount": "Titular {{tier}} — {{percent}}% de desconto",
+    "otherTokens": "Outros tokens",
+    "otherTokensDesc": "Compre ETH ou USDC na Base com o seu cartão"
   },
   "agents": {
     "title": "Agentes IA",

@@ -1129,7 +1129,9 @@
     "redirectingOnramp": "Preusmjeravanje na pristupnik...",
     "onrampCreated": "Sesija pristupnika stvorena",
     "failedOnramp": "Pokretanje pristupnika nije uspjelo",
-    "badgeDiscount": "Vlasnik {{tier}} — {{percent}} % popusta"
+    "badgeDiscount": "Vlasnik {{tier}} — {{percent}} % popusta",
+    "otherTokens": "Ostali tokeni",
+    "otherTokensDesc": "Kupite ETH ili USDC na Baseu svojom karticom"
   },
   "agents": {
     "title": "AI Agenti",

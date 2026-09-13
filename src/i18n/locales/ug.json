@@ -1124,7 +1124,9 @@
     "redirectingOnramp": "رامپىغا يۆتكىلىۋاتىدۇ...",
     "onrampCreated": "رامپا يىغىنى قۇرۇلدى",
     "failedOnramp": "رامپىنى باشلاش مەغلۇب بولدى",
-    "badgeDiscount": "{{tier}} ئىگىسى — {{percent}}% ئېتىبار"
+    "badgeDiscount": "{{tier}} ئىگىسى — {{percent}}% ئېتىبار",
+    "otherTokens": "باشقا توكەنلار",
+    "otherTokensDesc": "كارتىڭىز بىلەن Base دا ETH ياكى USDC سېتىۋېلىڭ"
   },
   "agents": {
     "title": "سۈنئىي ئەقىل ۋاكالەتچىلىرى",

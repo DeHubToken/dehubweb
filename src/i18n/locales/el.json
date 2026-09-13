@@ -1094,7 +1094,9 @@
     "redirectingOnramp": "Ανακατεύθυνση στο onramp...",
     "onrampCreated": "Συνεδρία onramp δημιουργήθηκε",
     "failedOnramp": "Αποτυχία έναρξης onramp",
-    "badgeDiscount": "Κάτοχος {{tier}} — έκπτωση {{percent}}%"
+    "badgeDiscount": "Κάτοχος {{tier}} — έκπτωση {{percent}}%",
+    "otherTokens": "Άλλα tokens",
+    "otherTokensDesc": "Αγόρασε ETH ή USDC στο Base με την κάρτα σου"
   },
   "agents": {
     "connectToManage": "Συνδεθείτε για Διαχείριση AI Agents",

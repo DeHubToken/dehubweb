@@ -1232,7 +1232,9 @@
     "amount": "পরিমাণ",
     "price": "দাম",
     "success": "কেনা অইসে!",
-    "failed": "কেনা ব্যর্থ"
+    "failed": "কেনা ব্যর্থ",
+    "otherTokens": "আর টোকেন",
+    "otherTokensDesc": "তুাইনর কার্ড দি Base-ও ETH বা USDC কিনউক্কা"
   },
   "agents": {
     "title": "AI এজেন্ট",

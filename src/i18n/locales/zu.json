@@ -1123,7 +1123,9 @@
     "redirectingOnramp": "Iqondisa endleleni...",
     "onrampCreated": "Iseshini yendlela idalwe",
     "failedOnramp": "Kuhlulekile ukuqala indlela",
-    "badgeDiscount": "Umnikazi we-{{tier}} — isaphulelo se-{{percent}}%"
+    "badgeDiscount": "Umnikazi we-{{tier}} — isaphulelo se-{{percent}}%",
+    "otherTokens": "Amanye amathokheni",
+    "otherTokensDesc": "Thenga i-ETH noma i-USDC ku-Base ngekhadi lakho"
   },
   "agents": {
     "title": "Ejensi ye-AI",

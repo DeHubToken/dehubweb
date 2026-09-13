@@ -1156,7 +1156,9 @@
     "redirectingOnramp": "جارٍ التحويل...",
     "onrampCreated": "تم إنشاء الجلسة",
     "failedOnramp": "فشل البدء",
-    "badgeDiscount": "حامل {{tier}} — خصم {{percent}}%"
+    "badgeDiscount": "حامل {{tier}} — خصم {{percent}}%",
+    "otherTokens": "عملات أخرى",
+    "otherTokensDesc": "اشترِ ETH أو USDC على Base ببطاقتك"
   },
   "agents": {
     "title": "وكلاء AI",

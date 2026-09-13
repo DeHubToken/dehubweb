@@ -1123,7 +1123,9 @@
     "redirectingOnramp": "Nukreipiama į rampą...",
     "onrampCreated": "Rampos sesija sukurta",
     "failedOnramp": "Nepavyko pradėti rampos",
-    "badgeDiscount": "{{tier}} turėtojui — {{percent}} % nuolaida"
+    "badgeDiscount": "{{tier}} turėtojui — {{percent}} % nuolaida",
+    "otherTokens": "Kiti tokenai",
+    "otherTokensDesc": "Pirkite ETH arba USDC „Base“ tinkle savo kortele"
   },
   "agents": {
     "title": "DI agentai",

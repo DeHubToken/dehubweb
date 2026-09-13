@@ -1123,7 +1123,9 @@
     "redirectingOnramp": "Ó ń darí lọ sí ọ̀nà...",
     "onrampCreated": "A ti ṣẹ̀dá àkókò ọ̀nà",
     "failedOnramp": "Kò le bẹ̀rẹ̀ ọ̀nà",
-    "badgeDiscount": "Olùní {{tier}} — ẹ̀dínwó {{percent}}%"
+    "badgeDiscount": "Olùní {{tier}} — ẹ̀dínwó {{percent}}%",
+    "otherTokens": "Àwọn tóòkẹ̀nì mìíràn",
+    "otherTokensDesc": "Fi káàdì rẹ ra ETH tàbí USDC lórí Base"
   },
   "agents": {
     "title": "Àwọn Aṣojú AI",

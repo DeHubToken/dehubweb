@@ -1155,7 +1155,9 @@
     "redirectingOnramp": "Weiterleitung zur Rampe...",
     "onrampCreated": "Rampe-Sitzung erstellt",
     "failedOnramp": "Rampe fehlgeschlagen",
-    "badgeDiscount": "{{tier}}-Inhaber – {{percent}} % Rabatt"
+    "badgeDiscount": "{{tier}}-Inhaber – {{percent}} % Rabatt",
+    "otherTokens": "Andere Token",
+    "otherTokensDesc": "ETH oder USDC auf Base mit deiner Karte kaufen"
   },
   "agents": {
     "title": "KI-Agenten",

@@ -1117,7 +1117,9 @@
     "sessionCreated": "Session created",
     "redirectingOnramp": "Redirecting to onramp...",
     "onrampCreated": "Onramp session created",
-    "badgeDiscount": "Deținător {{tier}} — {{percent}}% reducere"
+    "badgeDiscount": "Deținător {{tier}} — {{percent}}% reducere",
+    "otherTokens": "Alte tokenuri",
+    "otherTokensDesc": "Cumpără ETH sau USDC pe Base cu cardul tău"
   },
   "agents": {
     "title": "AI Agents",

@@ -1051,7 +1051,9 @@
     "redirectingOnramp": "Преусмеравање...",
     "onrampCreated": "Сесија креирана",
     "failedOnramp": "Покретање неуспешно",
-    "badgeDiscount": "Власник {{tier}} — {{percent}}% попуста"
+    "badgeDiscount": "Власник {{tier}} — {{percent}}% попуста",
+    "otherTokens": "Остали токени",
+    "otherTokensDesc": "Купите ETH или USDC на Base-у својом картицом"
   },
   "agents": {
     "title": "AI агенти",

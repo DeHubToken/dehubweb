@@ -1134,7 +1134,9 @@
     "redirectingOnramp": "Onramp-a yönləndirilir...",
     "onrampCreated": "Onramp seansı yaradıldı",
     "failedOnramp": "Onramp başlatmaq uğursuz oldu",
-    "badgeDiscount": "{{tier}} sahibi — {{percent}}% endirim"
+    "badgeDiscount": "{{tier}} sahibi — {{percent}}% endirim",
+    "otherTokens": "Digər tokenlər",
+    "otherTokensDesc": "Kartınızla Base şəbəkəsində ETH və ya USDC alın"
   },
   "agents": {
     "title": "AI Agentləri",

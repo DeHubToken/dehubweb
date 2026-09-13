@@ -1156,7 +1156,9 @@
     "redirectingOnramp": "Redirection vers la rampe...",
     "onrampCreated": "Session de rampe créée",
     "failedOnramp": "Échec de la rampe",
-    "badgeDiscount": "Détenteur {{tier}} — {{percent}} % de réduction"
+    "badgeDiscount": "Détenteur {{tier}} — {{percent}} % de réduction",
+    "otherTokens": "Autres jetons",
+    "otherTokensDesc": "Achetez de l'ETH ou de l'USDC sur Base avec votre carte"
   },
   "agents": {
     "title": "Agents IA",

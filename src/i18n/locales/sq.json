@@ -1123,7 +1123,9 @@
     "redirectingOnramp": "Po ridrejtohet te onramp...",
     "onrampCreated": "Sesioni onramp u krijua",
     "failedOnramp": "Dështoi fillimi i onramp",
-    "badgeDiscount": "Mbajtës {{tier}} — {{percent}}% zbritje"
+    "badgeDiscount": "Mbajtës {{tier}} — {{percent}}% zbritje",
+    "otherTokens": "Token të tjerë",
+    "otherTokensDesc": "Blej ETH ose USDC në Base me kartën tënde"
   },
   "agents": {
     "title": "Agjentët AI",

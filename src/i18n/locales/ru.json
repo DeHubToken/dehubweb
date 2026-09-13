@@ -1155,7 +1155,9 @@
     "redirectingOnramp": "Перенаправление...",
     "onrampCreated": "Сессия создана",
     "failedOnramp": "Не удалось начать",
-    "badgeDiscount": "Держатель {{tier}} — скидка {{percent}}%"
+    "badgeDiscount": "Держатель {{tier}} — скидка {{percent}}%",
+    "otherTokens": "Другие токены",
+    "otherTokensDesc": "Купите ETH или USDC в сети Base своей картой"
   },
   "agents": {
     "title": "AI Агенты",

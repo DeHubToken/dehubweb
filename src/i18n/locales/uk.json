@@ -1325,7 +1325,9 @@
     "title": "TV"
   },
   "buyCoins": {
-    "badgeDiscount": "Власник {{tier}} — знижка {{percent}}%"
+    "badgeDiscount": "Власник {{tier}} — знижка {{percent}}%",
+    "otherTokens": "Інші токени",
+    "otherTokensDesc": "Купіть ETH або USDC у мережі Base своєю карткою"
   },
   "agents": {
     "connectorUrl": "URL конектора",
