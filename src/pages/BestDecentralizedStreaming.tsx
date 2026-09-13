@@ -16,7 +16,7 @@ import { SEOHead } from '@/components/SEOHead';
 const platforms = [
   {
     name: 'DeHub',
-    network: 'Base + BNB (multi-chain)',
+    network: 'Base, BNB, Robinhood Chain + Solana',
     launched: '2021',
     model: 'User-owned media platform — video, live, audio, posts',
     monetization: 'Real-time tips, pay-per-view, subscriptions, token gating, 20% affiliate share',

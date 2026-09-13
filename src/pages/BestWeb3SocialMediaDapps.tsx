@@ -9,7 +9,7 @@ import { SEOHead } from '@/components/SEOHead';
 const dapps = [
   {
     name: 'DeHub',
-    chain: 'Base + BNB (multi-chain)',
+    chain: 'Base, BNB, Robinhood Chain + Solana',
     launched: '2021',
     ux: 'Web + iOS + Android, gasless smart accounts, email / social login',
     monetization: 'Tips, PPV, staking, 20% affiliate revenue share',
