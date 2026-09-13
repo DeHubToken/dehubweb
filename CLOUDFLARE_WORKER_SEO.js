@@ -1627,7 +1627,17 @@ function replacePostTitle(html, oldTitle, newTitle) {
   const oldJson = escJsonText(oldTitle);
   const newJson = escJsonText(newTitle);
   out = out.split(`"headline":"${oldJson}"`).join(`"headline":"${newJson}"`);
-  if (oldJson) out = out.split(`"name":"${oldJson}"`).join(`"name":"${newJson}"`);
+  if (oldJson) {
+    // `"name"` is the VideoObject's title, and also the Person's name in the
+    // author node. A post titled with its author's own name — seven posts are
+    // called `DeHub` — would otherwise get its author renamed to the branded
+    // title. Skip the one that follows a Person type.
+    const needle = `"name":"${oldJson}"`;
+    out = out
+      .split(needle)
+      .reduce((acc, part, i) =>
+        i === 0 ? part : `${acc}${acc.endsWith('"@type":"Person",') ? needle : `"name":"${newJson}"`}${part}`);
+  }
   return out;
 }
 
@@ -2449,11 +2459,46 @@ function stripInlineStyles(html) {
     .join('');
 }
 
+/**
+ * The head boilerplate every crawler page needs, applied at the one point
+ * they all pass through.
+ *
+ * The proxied post and profile pages arrive with a viewport meta and titles
+ * already clamped by normalizeProxiedMeta. The pages built at the edge —
+ * guides, docs, blog, marketing, stores, stages, bounties — return before that
+ * runs and carried neither: the 2026-09-13 crawl found 177 of 178 static pages
+ * with no viewport, so mobile-first indexing lays them out at desktop width,
+ * and 65 titles of 71–110 characters, all on the pages written to rank, which
+ * Google cuts off. One place, both fixed. Idempotent for the pages that
+ * already had them: a present viewport is left alone and a title inside the
+ * limit is byte-identical on the way out.
+ */
+const VIEWPORT_META = '<meta name="viewport" content="width=device-width, initial-scale=1">';
+const HTML_ENTITIES = { '&amp;': '&', '&quot;': '"', '&lt;': '<', '&gt;': '>', '&#39;': "'" };
+function clampEscapedTitle(escaped, max) {
+  const plain = String(escaped).replace(/&(?:amp|quot|lt|gt|#39);/g, (e) => HTML_ENTITIES[e]);
+  if (plain.length <= max) return escaped;
+  return escHtml(truncate(plain, max));
+}
+function normalizePrerenderedHead(html) {
+  let out = html;
+  if (!/<meta[^>]+name="viewport"/i.test(out)) {
+    const withCharset = out.replace(/(<meta charset="[^"]*">)/i, `$1\n${VIEWPORT_META}`);
+    out = withCharset !== out ? withCharset : out.replace('<head>', `<head>\n${VIEWPORT_META}`);
+  }
+  return out
+    .replace(/(<title>)([^<]*)(<\/title>)/i, (m, a, v, b) => `${a}${clampEscapedTitle(v, TITLE_MAX)}${b}`)
+    .replace(
+      /(<meta (?:property|name)="(?:og:title|twitter:title|og:image:alt|twitter:image:alt)" content=")([^"]*)(">)/g,
+      (m, a, v, b) => `${a}${clampEscapedTitle(v, TITLE_MAX)}${b}`,
+    );
+}
+
 export function stylePrerendered(html) {
   if (typeof html !== 'string') return html;
   if (!html.includes('</head>') || !html.includes('</body>')) return html;
   if (html.includes('class="dh-main"')) return html;
-  return stripInlineStyles(html.replace('</head>', `${PRERENDER_STYLE}</head>`))
+  return stripInlineStyles(normalizePrerenderedHead(html).replace('</head>', `${PRERENDER_STYLE}</head>`))
     .replace(/<body[^>]*>/i, `<body>${PRERENDER_HEADER}`)
     .replace('</body>', `${PRERENDER_FOOTER}</body>`);
 }
