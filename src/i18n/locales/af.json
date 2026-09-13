@@ -375,8 +375,6 @@
     "smsRemoveNumber": "Verwyder hierdie nommer",
     "smsNumberRemoved": "Nommer verwyder",
     "smsCountryBlocked": "Ons kan nog nie tekste na daardie land toe stuur nie.",
-    "security": "Sekuriteit",
-    "about": "Oor",
     "badgeDelegation": "Badge-delegering",
     "badgeDelegationLoading": "Delegerings word gelaai…",
     "badgeDelegationAccept": "Laat ander my hul badge leen",
@@ -387,8 +385,9 @@
     "badgeDelegationAcceptFailed": "Kon daardie instelling nie stoor nie",
     "badgeDelegationSlots_one": "Jou {{tier}} badge dra {{count}} gleuf, {{free}} vry.",
     "badgeDelegationSlots_other": "Jou {{tier}} badge dra {{count}} gleuwe, {{free}} vry.",
-    "badgeDelegationLends": "Elkeen leen 'n ander rekening jou eie {{tier}} badge — hulle dra wat jy dra.",
-    "badgeDelegationRaisesOnly": "Jy kan slegs aan iemand leen wie se eie badge laer is as joune.",
+    "badgeDelegationLendsAny": "Elkeen leen 'n ander rekening enige kenteken wat jy ontsluit het, tot by jou eie {{tier}}. 'N Kleiner badge gebruik nog steeds 'n hele gleuf.",
+    "badgeDelegationRaisesOnlyTier": "Die wapen wat jy leen, moet hoër wees as die een wat hulle reeds verdien.",
+    "badgeDelegationPickTier": "Badge om te leen",
     "badgeDelegationTakeBack": "Neem dit terug wanneer jy wil — die gleuf word 'n dag later vrygestel.",
     "badgeDelegationNoBadge": "Delegerings-gleuwe kom met 'n staking-badge. Stake DHB om een te verdien.",
     "badgeDelegationPlaceholder": "Gebruikersnaam of beursadres",
@@ -401,7 +400,9 @@
     "badgeDelegationHandBack": "Gee dit terug",
     "badgeDelegationEnd": "Beëindig delegering met {{address}}",
     "badgeDelegationGranted": "{{to}} dra nou jou {{tier}} badge",
-    "badgeDelegationEnded": "Delegering beëindig"
+    "badgeDelegationEnded": "Delegering beëindig",
+    "security": "Sekuriteit",
+    "about": "Oor"
   },
   "common": {
     "save": "Stoor",
