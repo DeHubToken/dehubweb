@@ -1124,7 +1124,9 @@
     "redirectingOnramp": "Рампага багытталууда...",
     "onrampCreated": "Рампа сессиясы түзүлдү",
     "failedOnramp": "Рампаны баштоо ишке ашкан жок",
-    "badgeDiscount": "{{tier}} ээси — {{percent}}% арзандатуу"
+    "badgeDiscount": "{{tier}} ээси — {{percent}}% арзандатуу",
+    "otherTokens": "Башка токендер",
+    "otherTokensDesc": "Картаңыз менен Base тармагында ETH же USDC сатып алыңыз"
   },
   "agents": {
     "title": "AI Агенттер",

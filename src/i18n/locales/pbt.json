@@ -1103,7 +1103,9 @@
     "redirectingOnramp": "آنریمپ ته لیږدول کیږي...",
     "onrampCreated": "آنریمپ ناسته جوړه شوه",
     "failedOnramp": "آنریمپ نشي پیل کیدلی",
-    "badgeDiscount": "{{tier}} لرونکی — {{percent}}٪ تخفیف"
+    "badgeDiscount": "{{tier}} لرونکی — {{percent}}٪ تخفیف",
+    "otherTokens": "نور ټوکنونه",
+    "otherTokensDesc": "په خپل کارت سره په Base کې ETH یا USDC واخلئ"
   },
   "agents": {
     "title": "AI ایجنټونه",

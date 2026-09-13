@@ -1173,7 +1173,9 @@
     "redirectingOnramp": "অনর‍্যাম্পত পাডানো অইতাছে...",
     "onrampCreated": "অনর‍্যাম্প সেশন বানানো অইয়ে",
     "failedOnramp": "অনর‍্যাম্প শুরু গরা ন গেইয়ে",
-    "badgeDiscount": "{{tier}} ধারক — {{percent}}% ছাড়"
+    "badgeDiscount": "{{tier}} ধারক — {{percent}}% ছাড়",
+    "otherTokens": "অন্য টোকেন",
+    "otherTokensDesc": "তুঁয়ার কার্ড দি Base-ত ETH বা USDC কিনো"
   },
   "agents": {
     "title": "AI এজেন্ট",

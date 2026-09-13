@@ -1134,7 +1134,9 @@
     "redirectingOnramp": "Ohjataan ramppiin...",
     "onrampCreated": "Ramppi-istunto luotu",
     "failedOnramp": "Rampin aloitus epäonnistui",
-    "badgeDiscount": "{{tier}}-haltija — {{percent}} % alennus"
+    "badgeDiscount": "{{tier}}-haltija — {{percent}} % alennus",
+    "otherTokens": "Muut tokenit",
+    "otherTokensDesc": "Osta ETH tai USDC Basessa kortillasi"
   },
   "agents": {
     "title": "Tekoälyagentit",

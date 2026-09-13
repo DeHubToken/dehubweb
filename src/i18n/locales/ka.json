@@ -1140,7 +1140,9 @@
     "redirectingOnramp": "გადამისამართება ონრემპზე...",
     "onrampCreated": "ონრემპი სესია შექმნილია",
     "failedOnramp": "ონრემპის დაწყება ვერ მოხერხდა",
-    "badgeDiscount": "{{tier}} მფლობელი — {{percent}}% ფასდაკლება"
+    "badgeDiscount": "{{tier}} მფლობელი — {{percent}}% ფასდაკლება",
+    "otherTokens": "სხვა ტოკენები",
+    "otherTokensDesc": "იყიდეთ ETH ან USDC Base-ზე თქვენი ბარათით"
   },
   "agents": {
     "title": "AI აგენტი",

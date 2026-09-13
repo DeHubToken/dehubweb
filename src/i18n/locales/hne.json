@@ -1111,7 +1111,9 @@
     "redirectingOnramp": "ऑनरैम्प बर रिडायरेक्ट होवत हे...",
     "onrampCreated": "ऑनरैम्प सत्र बने गे",
     "failedOnramp": "ऑनरैम्प शुरू नइ होइस",
-    "badgeDiscount": "{{tier}} धारक — {{percent}}% छूट"
+    "badgeDiscount": "{{tier}} धारक — {{percent}}% छूट",
+    "otherTokens": "दूसर टोकन",
+    "otherTokensDesc": "अपन कार्ड ले Base म ETH या USDC बिसाहव"
   },
   "agents": {
     "title": "AI एजेंट",

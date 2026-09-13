@@ -1124,7 +1124,9 @@
     "redirectingOnramp": "Ana tura zuwa hanyar...",
     "onrampCreated": "An ƙirƙiri zaman hanyar",
     "failedOnramp": "Ba a iya fara hanyar ba",
-    "badgeDiscount": "Mai riƙe da {{tier}} — rangwamen {{percent}}%"
+    "badgeDiscount": "Mai riƙe da {{tier}} — rangwamen {{percent}}%",
+    "otherTokens": "Sauran tokens",
+    "otherTokensDesc": "Sayi ETH ko USDC a Base da katinka"
   },
   "agents": {
     "title": "Wakilan AI",

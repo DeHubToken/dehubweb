@@ -1110,7 +1110,9 @@
     "redirectingOnramp": "Bɔ kɛ...",
     "onrampCreated": "Kɔrɔbɔ",
     "failedOnramp": "Kɔrɔbɔ bɔ",
-    "badgeDiscount": "{{tier}} minɛbaga — {{percent}}% dɔgɔyalen"
+    "badgeDiscount": "{{tier}} minɛbaga — {{percent}}% dɔgɔyalen",
+    "otherTokens": "Token wɛrɛw",
+    "otherTokensDesc": "I ka karti ye ETH walima USDC san Base kan"
   },
   "agents": {
     "title": "AI Kɔrɔbɔ",

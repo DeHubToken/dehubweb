@@ -1141,7 +1141,9 @@
     "redirectingOnramp": "در حال هدایت به درگاه...",
     "onrampCreated": "جلسه درگاه ایجاد شد",
     "failedOnramp": "شروع درگاه ناموفق بود",
-    "badgeDiscount": "دارنده {{tier}} — {{percent}}٪ تخفیف"
+    "badgeDiscount": "دارنده {{tier}} — {{percent}}٪ تخفیف",
+    "otherTokens": "توکن‌های دیگر",
+    "otherTokensDesc": "با کارت خود ETH یا USDC را روی Base بخرید"
   },
   "agents": {
     "title": "عوامل هوش مصنوعی",

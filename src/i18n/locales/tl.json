@@ -1154,7 +1154,9 @@
     "sessionCreated": "Session created",
     "redirectingOnramp": "Redirecting to onramp...",
     "onrampCreated": "Onramp session created",
-    "badgeDiscount": "May hawak na {{tier}} — {{percent}}% na diskuwento"
+    "badgeDiscount": "May hawak na {{tier}} — {{percent}}% na diskuwento",
+    "otherTokens": "Ibang token",
+    "otherTokensDesc": "Bumili ng ETH o USDC sa Base gamit ang iyong card"
   },
   "agents": {
     "title": "AI Agents",

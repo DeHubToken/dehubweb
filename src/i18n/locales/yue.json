@@ -1122,7 +1122,9 @@
     "redirectingOnramp": "跳轉到入金緊...",
     "onrampCreated": "入金會話已建立",
     "failedOnramp": "建立入金失敗",
-    "badgeDiscount": "{{tier}} 持有者 — {{percent}}% 折扣"
+    "badgeDiscount": "{{tier}} 持有者 — {{percent}}% 折扣",
+    "otherTokens": "其他代幣",
+    "otherTokensDesc": "用你張卡喺 Base 上面買 ETH 或者 USDC"
   },
   "agents": {
     "title": "AI代理",

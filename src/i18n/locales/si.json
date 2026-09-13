@@ -1135,7 +1135,9 @@
     "redirectingOnramp": "Onramp වෙත යොමු කරමින්...",
     "onrampCreated": "Onramp සැසිය සාදන ලදී",
     "failedOnramp": "Onramp ආරම්භ කිරීමට අසමත් විය",
-    "badgeDiscount": "{{tier}} හිමිකරු — {{percent}}% වට්ටමක්"
+    "badgeDiscount": "{{tier}} හිමිකරු — {{percent}}% වට්ටමක්",
+    "otherTokens": "වෙනත් ටෝකන",
+    "otherTokensDesc": "ඔබේ කාඩ්පතින් Base මත ETH හෝ USDC මිලදී ගන්න"
   },
   "agents": {
     "title": "AI නියෝජිත",

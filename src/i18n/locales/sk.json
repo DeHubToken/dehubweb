@@ -1212,7 +1212,9 @@
     "redirectingOnramp": "Presmerovanie na onramp...",
     "onrampCreated": "Onramp relácia vytvorená",
     "failedOnramp": "Nepodarilo sa spustiť onramp",
-    "badgeDiscount": "Držiteľ {{tier}} — zľava {{percent}} %"
+    "badgeDiscount": "Držiteľ {{tier}} — zľava {{percent}} %",
+    "otherTokens": "Ďalšie tokeny",
+    "otherTokensDesc": "Kúpte ETH alebo USDC v sieti Base svojou kartou"
   },
   "agents": {
     "title": "AI agenti",

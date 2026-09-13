@@ -1115,7 +1115,9 @@
     "redirectingOnramp": "ری ڈائریکٹ ہو رہا ہے...",
     "onrampCreated": "سیشن بن گیا",
     "failedOnramp": "شروع کرنے میں ناکامی",
-    "badgeDiscount": "{{tier}} رکھنے والا — {{percent}}% رعایت"
+    "badgeDiscount": "{{tier}} رکھنے والا — {{percent}}% رعایت",
+    "otherTokens": "دیگر ٹوکن",
+    "otherTokensDesc": "اپنے کارڈ سے Base پر ETH یا USDC خریدیں"
   },
   "agents": {
     "title": "AI ایجنٹس",

@@ -995,7 +995,9 @@
     "title": "TV"
   },
   "buyCoins": {
-    "badgeDiscount": "ผู้ถือ {{tier}} — ลด {{percent}}%"
+    "badgeDiscount": "ผู้ถือ {{tier}} — ลด {{percent}}%",
+    "otherTokens": "โทเคนอื่น ๆ",
+    "otherTokensDesc": "ซื้อ ETH หรือ USDC บน Base ด้วยบัตรของคุณ"
   },
   "agents": {
     "connectorUrl": "URL ตัวเชื่อม",

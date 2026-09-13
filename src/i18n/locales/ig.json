@@ -1118,7 +1118,9 @@
     "redirectingOnramp": "Ọ na-ebugharị na onramp...",
     "onrampCreated": "Emepụtala oge onramp",
     "failedOnramp": "Enweghị ike ịmalite onramp",
-    "badgeDiscount": "Onye ji {{tier}} — {{percent}}% mbelata"
+    "badgeDiscount": "Onye ji {{tier}} — {{percent}}% mbelata",
+    "otherTokens": "Token ndị ọzọ",
+    "otherTokensDesc": "Jiri kaadị gị zụta ETH ma ọ bụ USDC na Base"
   },
   "agents": {
     "title": "Ndị Ọrụ AI",

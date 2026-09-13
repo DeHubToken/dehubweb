@@ -1354,7 +1354,9 @@
     "redirectingOnramp": "Doorsturen naar onramp...",
     "onrampCreated": "Onramp-sessie aangemaakt",
     "failedOnramp": "Onramp starten mislukt",
-    "badgeDiscount": "{{tier}}-houder — {{percent}}% korting"
+    "badgeDiscount": "{{tier}}-houder — {{percent}}% korting",
+    "otherTokens": "Andere tokens",
+    "otherTokensDesc": "Koop ETH of USDC op Base met je kaart"
   },
   "agents": {
     "title": "AI Agenten",

@@ -1083,7 +1083,9 @@
     "redirectingOnramp": "يحولك للشراء...",
     "onrampCreated": "جلسة الشراء انشأت",
     "failedOnramp": "فشل بدء الشراء",
-    "badgeDiscount": "صاحب شارة {{tier}} — خصم {{percent}}%"
+    "badgeDiscount": "صاحب شارة {{tier}} — خصم {{percent}}%",
+    "otherTokens": "عملات ثانية",
+    "otherTokensDesc": "اشتري ETH أو USDC على Base بالبطاقة حقك"
   },
   "agents": {
     "title": "وكلاء الذكاء الاصطناعي",

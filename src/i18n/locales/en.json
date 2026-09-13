@@ -1158,7 +1158,9 @@
     "redirectingOnramp": "Redirecting to onramp...",
     "onrampCreated": "Onramp session created",
     "failedOnramp": "Failed to start onramp",
-    "badgeDiscount": "{{tier}} holder — {{percent}}% off"
+    "badgeDiscount": "{{tier}} holder — {{percent}}% off",
+    "otherTokens": "Other tokens",
+    "otherTokensDesc": "Buy ETH or USDC on Base with your card"
   },
   "agents": {
     "title": "AI Agents",
