@@ -1194,7 +1194,15 @@ export function PostMediaPreview({
           drive the slide — a transformed ancestor becomes the containing block
           for `position: fixed`, so rendering this in place pinned "fullscreen"
           to the drawer's box instead of the viewport. Same reason it sits above
-          z-[100]: that is the drawer's own layer. */}
+          z-[100]: that is the drawer's own layer.
+
+          `pointer-events-auto` is not decoration. A modal drawer is a Radix
+          dialog underneath, and Radix pins `pointer-events: none` on the body
+          while it is open, re-enabling it only on its own content. Anything
+          portalled straight to the body therefore inherits the lock: the
+          viewer painted fullscreen but swallowed nothing, so every click on it
+          — the close button included — fell through to the composer behind and
+          the page read as frozen. */}
       {createPortal(
       <AnimatePresence>
         {fullscreenPreview && (
@@ -1203,7 +1211,7 @@ export function PostMediaPreview({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center"
+            className="pointer-events-auto fixed inset-0 z-[200] flex items-center justify-center"
             onClick={() => setFullscreenPreview(null)}
           >
             {/* Blurred backdrop */}

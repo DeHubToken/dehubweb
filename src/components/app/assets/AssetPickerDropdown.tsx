@@ -49,10 +49,14 @@ export function AssetPickerDropdown({
   if (!isOpen) return null;
   if (!loading && results.length === 0) return null;
 
+  // `pointer-events-auto`: the composer this drops out of is a drawer, and
+  // Radix pins `pointer-events: none` on the body while one is open. Portalled
+  // to the body, the list would render and then hand every click to whatever
+  // sits under it.
   return createPortal(
     <div
       data-overlay-content
-      className="fixed z-[9999] w-[300px] max-h-[296px] overflow-y-auto rounded-2xl border border-white/[0.08] bg-black/95 shadow-2xl"
+      className="pointer-events-auto fixed z-[9999] w-[300px] max-h-[296px] overflow-y-auto rounded-2xl border border-white/[0.08] bg-black/95 shadow-2xl"
       style={{
         top: position.top,
         left: position.left,
