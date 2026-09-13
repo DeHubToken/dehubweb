@@ -4253,8 +4253,16 @@ async function handleRequest(request, env) {
       proxiedSegments.length === 1 && couldBeProfileSegment(firstSegmentOf(cleanPath), SYSTEM_ROUTES)
         ? ((html.match(/<link rel="canonical" href="https:\/\/dehub\.io\/([^"/?#]+)">/) || [])[1] || proxiedSegments[0])
         : '';
-    if (proxiedPostId && POST_DESCRIPTION_TEMPLATE.test(html)) {
-      html = enrichPostMeta(html, proxiedPostId, await fetchPostRecord(proxiedPostId));
+    if (proxiedPostId) {
+      // Every post, not just a bodyless one: the title work in enrichPostMeta
+      // has to reach the posts that DO have body text, because those are
+      // exactly the ones still carrying whatever the phone named the file.
+      // The record is fetched only where its postType and category list are
+      // read — the description rewrite — so a post that needs nothing but a
+      // title still costs no API call: the author comes off the page's own
+      // JSON-LD and the format off the og:video sniff.
+      const bodyless = POST_DESCRIPTION_TEMPLATE.test(html);
+      html = enrichPostMeta(html, proxiedPostId, bodyless ? await fetchPostRecord(proxiedPostId) : null);
     } else if (proxiedHandle) {
       html = enrichProfileMeta(html, proxiedHandle);
     }
