@@ -3,13 +3,13 @@
  * staking badge tier.
  *
  * The ladder is not a formula any more. It ran 2 (no badge) → 3 (Crab) → … →
- * 15 (Meglodon), one slot per tier, which made the top of the ladder worth
+ * 15 (Megalodon), one slot per tier, which made the top of the ladder worth
  * about as much as the middle. It now opens up sharply at the top and leaves
  * the bottom exactly where it was:
  *
  *   no badge            2      Cobra … Great White Shark   10
  *   Crab                3      Blue Whale                  25
- *   Lobster             4      Meglodon                    50
+ *   Lobster             4      Megalodon                    50
  *   Piranha             5
  *   Tortoise            6
  *
@@ -41,13 +41,13 @@ const PROFILES_BY_TIER: Record<string, number> = {
   Tortoise: 6,
   Cobra: 10,
   Octopus: 10,
-  Crocodite: 10,
+  Crocodile: 10,
   Dolphin: 10,
   'Tiger Shark': 10,
   'Killer Whale': 10,
   'Great White Shark': 10,
   'Blue Whale': 25,
-  Meglodon: 50,
+  Megalodon: 50,
 };
 
 /** Profiles at a tier index, walking down to the nearest tier that names one. */

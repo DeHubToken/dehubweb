@@ -179,13 +179,13 @@ const Dapp = () => {
     { badgeKey: 'badgeTortoise', threshold: "100k+ $DHB", fee: "7.24%", color: "bg-muted", image: badgeImage('Tortoise') },
     { badgeKey: 'badgeCobra', threshold: "250k+ $DHB", fee: "6.55%", color: "bg-muted", image: badgeImage('Cobra') },
     { badgeKey: 'badgeOctopus', threshold: "500k+ $DHB", fee: "5.86%", color: "bg-muted", image: badgeImage('Octopus') },
-    { badgeKey: 'badgeCrocodile', threshold: "1m+ $DHB", fee: "5.17%", color: "bg-muted", image: badgeImage('Crocodite') },
+    { badgeKey: 'badgeCrocodile', threshold: "1m+ $DHB", fee: "5.17%", color: "bg-muted", image: badgeImage('Crocodile') },
     { badgeKey: 'badgeDolphin', threshold: "2m+ $DHB", fee: "4.48%", color: "bg-muted", image: badgeImage('Dolphin') },
     { badgeKey: 'badgeTigerShark', threshold: "3m+ $DHB", fee: "3.79%", color: "bg-muted", image: badgeImage('Tiger Shark') },
     { badgeKey: 'badgeKillerWhale', threshold: "5m+ $DHB", fee: "3.10%", color: "bg-muted", image: badgeImage('Killer Whale') },
     { badgeKey: 'badgeGreatWhiteShark', threshold: "10m+ $DHB", fee: "2.41%", color: "bg-muted", image: badgeImage('Great White Shark') },
     { badgeKey: 'badgeBlueWhale', threshold: "25m+ $DHB", fee: "1.72%", color: "bg-muted", image: badgeImage('Blue Whale') },
-    { badgeKey: 'badgeMegalodon', threshold: "50m+ $DHB", fee: "1.00%", color: "bg-muted", image: badgeImage('Meglodon') },
+    { badgeKey: 'badgeMegalodon', threshold: "50m+ $DHB", fee: "1.00%", color: "bg-muted", image: badgeImage('Megalodon') },
   ];
 
   return <div className="space-y-8">

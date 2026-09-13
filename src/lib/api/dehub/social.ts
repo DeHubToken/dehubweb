@@ -12,7 +12,7 @@ export interface VoteResponse {
   };
   /**
    * What the vote counted for — the voter's badge weight, 1 with no badge up
-   * to 14 at Meglodon. Absent from an older API; treat that as 1.
+   * to 14 at Megalodon. Absent from an older API; treat that as 1.
    */
   weight?: number;
 }
@@ -29,7 +29,7 @@ export interface ReactionResponse {
   previousReaction: PostReaction | null;
   /**
    * What the reaction counted for — the reactor's badge weight, 1 with no badge
-   * up to 14 at Meglodon. It is a multiplier on the one reaction they hold, not
+   * up to 14 at Megalodon. It is a multiplier on the one reaction they hold, not
    * a second reaction. Absent from an older API; treat that as 1.
    */
   weight?: number;

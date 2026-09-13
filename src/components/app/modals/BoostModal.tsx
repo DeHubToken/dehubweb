@@ -183,7 +183,7 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
             <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
           </div>
         ) : isError ? (
-          // A failed request is not the same as no badge. Telling a Meglodon to
+          // A failed request is not the same as no badge. Telling a Megalodon to
           // go and stake because the API blipped is worse than saying nothing.
           <div className="flex flex-col gap-3 py-6 text-center">
             <p className="text-white text-sm">{t('superpowers.loadFailed')}</p>

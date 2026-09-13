@@ -69,13 +69,13 @@ import PiranhaBadge from '@/assets/badges/Piranha.webp';
 import LobsterBadge from '@/assets/badges/Lobster.webp';
 import OctopusBadge from '@/assets/badges/Octopus.webp';
 import CobraBadge from '@/assets/badges/Cobra.webp';
-import CrocoditeBadge from '@/assets/badges/Crocodite.webp';
+import CrocodileBadge from '@/assets/badges/Crocodile.webp';
 import DolphinBadge from '@/assets/badges/Dolphin.webp';
 import TigerSharkBadge from '@/assets/badges/Tiger Shark.webp';
 import GreatWhiteSharkBadge from '@/assets/badges/Great White Shark.webp';
 import KillerWhaleBadge from '@/assets/badges/Killer Whale.webp';
 import BlueWhaleBadge from '@/assets/badges/Blue Whale.webp';
-import MeglodonBadge from '@/assets/badges/Meglodon.webp';
+import MegalodonBadge from '@/assets/badges/Megalodon.webp';
 
 // ── Coin / currency logos (Command Centre wallet) ──
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -109,8 +109,8 @@ const DEFERRED_ICONS = [
   translateGlobeIcon, nailIcon, lock3dIcon,
   medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10,
   TortoiseBadge, CrabBadge, PiranhaBadge, LobsterBadge, OctopusBadge,
-  CobraBadge, CrocoditeBadge, DolphinBadge, TigerSharkBadge,
-  GreatWhiteSharkBadge, KillerWhaleBadge, BlueWhaleBadge, MeglodonBadge,
+  CobraBadge, CrocodileBadge, DolphinBadge, TigerSharkBadge,
+  GreatWhiteSharkBadge, KillerWhaleBadge, BlueWhaleBadge, MegalodonBadge,
 ];
 
 // ── MODULE-LEVEL PRELOAD — only critical icons fire immediately ──

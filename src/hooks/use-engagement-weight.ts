@@ -2,7 +2,7 @@
  * What the signed-in viewer's own view or reaction counts for
  * ===========================================================
  * The badge multiplier for *me* — 1 with no badge, 2 at Crab, up to 14 at
- * Meglodon. Used to move an optimistic count by the right amount instead of by
+ * Megalodon. Used to move an optimistic count by the right amount instead of by
  * one and then snapping when the server's number arrives.
  *
  * Reads the same balance every badge on the site draws from: the account row,

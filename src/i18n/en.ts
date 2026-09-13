@@ -462,7 +462,7 @@ export const en = {
     trendJacker: '4) Trend Jacker',
     trendJackerDesc2: 'Put one of your categories at the top of the trending list. Unlocks at Tortoise. Live now.',
     timelineBomber: '5) Timeline Bomber',
-    timelineBomberDesc2: 'Your followers see your post ahead of anybody else’s boost — a Cobra beats a Meglodon for the people who chose to hear from you. Unlocks at Cobra. Live now.',
+    timelineBomberDesc2: 'Your followers see your post ahead of anybody else’s boost — a Cobra beats a Megalodon for the people who chose to hear from you. Unlocks at Cobra. Live now.',
     precisionStrike: '8) Precision Strike',
     precisionStrikeDesc: 'Reach the people who follow an account you name. Unlocks at Dolphin. Live now.',
     harpoon: '9) Harpoon',
