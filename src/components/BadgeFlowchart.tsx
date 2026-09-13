@@ -24,13 +24,13 @@ const BadgeFlowchart = () => {
     { threshold: "100k", usd: "$100", badge: "Tortoise Badge", color: "bg-muted", image: badgeImage('Tortoise') },
     { threshold: "250k", usd: "$250", badge: "Cobra Badge", color: "bg-muted", image: badgeImage('Cobra') },
     { threshold: "500k", usd: "$500", badge: "Octopus Badge", color: "bg-muted", image: badgeImage('Octopus') },
-    { threshold: "1m", usd: "$1,000", badge: "Crocodile Badge", color: "bg-muted", image: badgeImage('Crocodite') },
+    { threshold: "1m", usd: "$1,000", badge: "Crocodile Badge", color: "bg-muted", image: badgeImage('Crocodile') },
     { threshold: "2m", usd: "$2,000", badge: "Dolphin Badge", color: "bg-muted", image: badgeImage('Dolphin') },
     { threshold: "3m", usd: "$3,000", badge: "Tiger Shark Badge", color: "bg-muted", image: badgeImage('Tiger Shark') },
     { threshold: "5m", usd: "$5,000", badge: "Killer Whale Badge", color: "bg-muted", image: badgeImage('Killer Whale') },
     { threshold: "10m", usd: "$10,000", badge: "Great White Shark Badge", color: "bg-muted", image: badgeImage('Great White Shark') },
     { threshold: "25m", usd: "$25,000", badge: "Blue Whale Badge", color: "bg-muted", image: badgeImage('Blue Whale') },
-    { threshold: "50m", usd: "$50,000", badge: "Megalodon Badge", color: "bg-muted", image: badgeImage('Meglodon') }
+    { threshold: "50m", usd: "$50,000", badge: "Megalodon Badge", color: "bg-muted", image: badgeImage('Megalodon') }
   ];
 
   return (

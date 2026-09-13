@@ -125,7 +125,7 @@ export function BadgeProgress({ balance, username, lock, variant = 'full', class
       </div>
 
       {/* The bar. Fills across the current tier, not across the whole ladder —
-          crawling 2% of the way to Meglodon is not progress anyone can feel. */}
+          crawling 2% of the way to Megalodon is not progress anyone can feel. */}
       <div
         role="progressbar"
         aria-valuenow={percent}

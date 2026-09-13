@@ -2,7 +2,7 @@
  * POVR ads — shared constants & helpers for the ad edge functions.
  * ================================================================
  * Tier names/thresholds MIRROR src/lib/staking-badges.ts (the canonical badge
- * system used across the app — including the "Crocodite"/"Meglodon" spellings).
+ * system used across the app — including the "Crocodile"/"Megalodon" spellings).
  * CPMs are the published linear POVR rates from /docs/advertising.
  */
 
@@ -15,8 +15,8 @@ export interface PovrTier {
 /**
  * Ascending by threshold. Viewers below 10k DHB are tier "none".
  * Crypto-native pricing: CPMs scale with verified holdings (~holdings^0.65),
- * anchored at Crab $100 and Meglodon $25,000. Whale tiers are effectively
- * pay-per-verified-eyeball — a single Meglodon impression is $25 of proven
+ * anchored at Crab $100 and Megalodon $25,000. Whale tiers are effectively
+ * pay-per-verified-eyeball — a single Megalodon impression is $25 of proven
  * on-chain capital seeing the ad, not a web2 spray CPM.
  */
 export const POVR_TIERS: PovrTier[] = [
@@ -26,13 +26,13 @@ export const POVR_TIERS: PovrTier[] = [
   { name: 'Tortoise', min: 100_000, cpmUsd: 450 },
   { name: 'Cobra', min: 250_000, cpmUsd: 800 },
   { name: 'Octopus', min: 500_000, cpmUsd: 1_250 },
-  { name: 'Crocodite', min: 1_000_000, cpmUsd: 2_000 },
+  { name: 'Crocodile', min: 1_000_000, cpmUsd: 2_000 },
   { name: 'Dolphin', min: 2_000_000, cpmUsd: 3_000 },
   { name: 'Tiger Shark', min: 3_000_000, cpmUsd: 4_000 },
   { name: 'Killer Whale', min: 5_000_000, cpmUsd: 5_500 },
   { name: 'Great White Shark', min: 10_000_000, cpmUsd: 8_750 },
   { name: 'Blue Whale', min: 25_000_000, cpmUsd: 16_000 },
-  { name: 'Meglodon', min: 50_000_000, cpmUsd: 25_000 },
+  { name: 'Megalodon', min: 50_000_000, cpmUsd: 25_000 },
 ];
 
 /** CPM for viewers holding <10k DHB (or unknown/logged-out viewers). */

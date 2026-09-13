@@ -2,7 +2,7 @@
  * POVR ads — client-side constants, domain types & helpers.
  * =========================================================
  * Tier names/thresholds mirror src/lib/staking-badges.ts (canonical badge
- * system, including the historical "Crocodite"/"Meglodon" spellings) and the
+ * system, including the historical "Crocodile"/"Megalodon" spellings) and the
  * edge copy in supabase/functions/_shared/povr.ts. CPMs are the published
  * linear POVR rates. Keep the three in sync.
  */
@@ -14,7 +14,7 @@ export interface PovrTierInfo {
 }
 
 // Crypto-native pricing: CPMs scale with verified holdings (~holdings^0.65),
-// anchored at Crab $100 and Meglodon $25,000. Whale tiers are effectively
+// anchored at Crab $100 and Megalodon $25,000. Whale tiers are effectively
 // pay-per-verified-eyeball.
 export const POVR_TIERS: PovrTierInfo[] = [
   { name: 'Crab', min: 10_000, cpmUsd: 100 },
@@ -23,13 +23,13 @@ export const POVR_TIERS: PovrTierInfo[] = [
   { name: 'Tortoise', min: 100_000, cpmUsd: 450 },
   { name: 'Cobra', min: 250_000, cpmUsd: 800 },
   { name: 'Octopus', min: 500_000, cpmUsd: 1_250 },
-  { name: 'Crocodite', min: 1_000_000, cpmUsd: 2_000 },
+  { name: 'Crocodile', min: 1_000_000, cpmUsd: 2_000 },
   { name: 'Dolphin', min: 2_000_000, cpmUsd: 3_000 },
   { name: 'Tiger Shark', min: 3_000_000, cpmUsd: 4_000 },
   { name: 'Killer Whale', min: 5_000_000, cpmUsd: 5_500 },
   { name: 'Great White Shark', min: 10_000_000, cpmUsd: 8_750 },
   { name: 'Blue Whale', min: 25_000_000, cpmUsd: 16_000 },
-  { name: 'Meglodon', min: 50_000_000, cpmUsd: 25_000 },
+  { name: 'Megalodon', min: 50_000_000, cpmUsd: 25_000 },
 ];
 
 /** Users below the 10k DHB badge floor. */

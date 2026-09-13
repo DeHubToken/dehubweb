@@ -17,7 +17,9 @@ import {
   activeBadgeScale,
   badgeScaleForPrice,
   badgeThreshold,
+  badgeImage,
   badgeThresholds,
+  canonicalTierName,
   getBadgeName,
   getBadgeStanding,
   parseBadgeLock,
@@ -96,10 +98,10 @@ describe('badgeThresholds', () => {
     }
   });
 
-  it('quotes the numbers the peg promises — 50M for Meglodon at $0.001', () => {
-    expect(badgeThreshold('Meglodon', badgeScaleForPrice(0.001))).toBe(50_000_000);
-    expect(badgeThreshold('Meglodon', badgeScaleForPrice(0.01))).toBe(5_000_000);
-    expect(badgeThreshold('Meglodon', badgeScaleForPrice(0.1))).toBe(500_000);
+  it('quotes the numbers the peg promises — 50M for Megalodon at $0.001', () => {
+    expect(badgeThreshold('Megalodon', badgeScaleForPrice(0.001))).toBe(50_000_000);
+    expect(badgeThreshold('Megalodon', badgeScaleForPrice(0.01))).toBe(5_000_000);
+    expect(badgeThreshold('Megalodon', badgeScaleForPrice(0.1))).toBe(500_000);
   });
 });
 
@@ -108,43 +110,43 @@ describe('getBadgeName', () => {
     expect(getBadgeName(9_999)).toBeNull();
     expect(getBadgeName(10_000)).toBe('Crab');
     expect(getBadgeName(49_999_999)).toBe('Blue Whale');
-    expect(getBadgeName(50_000_000)).toBe('Meglodon');
+    expect(getBadgeName(50_000_000)).toBe('Megalodon');
   });
 
   it('lets a smaller bag reach a higher tier once the token is worth more', () => {
     const scale = badgeScaleForPrice(0.01);
-    expect(getBadgeName(5_000_000, null, { scale })).toBe('Meglodon');
+    expect(getBadgeName(5_000_000, null, { scale })).toBe('Megalodon');
     expect(getBadgeName(5_000_000)).toBe('Killer Whale');
   });
 
   it('still honours the username override table', () => {
-    expect(getBadgeName(0, 'maldoteth')).toBe('Meglodon');
-    expect(getBadgeName(undefined, '@Mal')).toBe('Meglodon');
+    expect(getBadgeName(0, 'maldoteth')).toBe('Megalodon');
+    expect(getBadgeName(undefined, '@Mal')).toBe('Megalodon');
   });
 
   it('reads the active scale when a caller passes none', () => {
     setActiveBadgeScale(0.1);
     expect(activeBadgeScale()).toBe(0.1);
-    expect(getBadgeName(5_000_000)).toBe('Meglodon');
+    expect(getBadgeName(5_000_000)).toBe('Megalodon');
   });
 });
 
 describe('the grandfather lock', () => {
-  const cheapLadder = badgeScaleForPrice(0.01); // Meglodon costs 5,000,000
+  const cheapLadder = badgeScaleForPrice(0.01); // Megalodon costs 5,000,000
 
   it('keeps a tier when the ladder climbs back over the holder', () => {
     const lock = ratchetBadgeLock(null, 5_000_000, cheapLadder);
-    expect(lock).toEqual({ tier: 'Meglodon', requirement: 5_000_000 });
+    expect(lock).toEqual({ tier: 'Megalodon', requirement: 5_000_000 });
 
-    // Price falls back to the anchor: Meglodon is 50M again, and 5M would
+    // Price falls back to the anchor: Megalodon is 50M again, and 5M would
     // otherwise be a Killer Whale.
     expect(getBadgeName(5_000_000, null, { scale: 1 })).toBe('Killer Whale');
-    expect(getBadgeName(5_000_000, null, { scale: 1, lock })).toBe('Meglodon');
+    expect(getBadgeName(5_000_000, null, { scale: 1, lock })).toBe('Megalodon');
   });
 
   it('drops the tier the moment the holder sells below what it cost them', () => {
-    const lock = { tier: 'Meglodon', requirement: 5_000_000 };
-    expect(getBadgeName(5_000_000, null, { scale: 1, lock })).toBe('Meglodon');
+    const lock = { tier: 'Megalodon', requirement: 5_000_000 };
+    expect(getBadgeName(5_000_000, null, { scale: 1, lock })).toBe('Megalodon');
     // One token under, and they are back on whatever the live ladder says —
     // Tiger Shark, since Killer Whale itself costs 5,000,000 at this scale.
     expect(getBadgeName(4_999_999, null, { scale: 1, lock })).toBe('Tiger Shark');
@@ -152,7 +154,7 @@ describe('the grandfather lock', () => {
 
   it('never demotes someone the live ladder already puts higher', () => {
     const lock = { tier: 'Crab', requirement: 10_000 };
-    expect(getBadgeName(50_000_000, null, { scale: 1, lock })).toBe('Meglodon');
+    expect(getBadgeName(50_000_000, null, { scale: 1, lock })).toBe('Megalodon');
   });
 
   it('ratchets the tier up and the requirement down, never the reverse', () => {
@@ -168,10 +170,10 @@ describe('the grandfather lock', () => {
 
     // A higher tier replaces it outright.
     lock = ratchetBadgeLock(lock, 50_000_000, 1);
-    expect(lock).toEqual({ tier: 'Meglodon', requirement: 50_000_000 });
+    expect(lock).toEqual({ tier: 'Megalodon', requirement: 50_000_000 });
 
     // And a later dip cannot walk the tier back down.
-    expect(ratchetBadgeLock(lock, 10_000, 1)).toEqual({ tier: 'Meglodon', requirement: 50_000_000 });
+    expect(ratchetBadgeLock(lock, 10_000, 1)).toEqual({ tier: 'Megalodon', requirement: 50_000_000 });
   });
 
   it('leaves the lock alone when there is nothing to read', () => {
@@ -212,14 +214,14 @@ describe('getBadgeStanding', () => {
 
   it('is full and has nowhere to go at the top', () => {
     const standing = getBadgeStanding(80_000_000, { scale: 1 });
-    expect(standing.tier).toBe('Meglodon');
+    expect(standing.tier).toBe('Megalodon');
     expect(standing.nextTier).toBeNull();
     expect(standing.remaining).toBe(0);
     expect(standing.progress).toBe(1);
   });
 
   it('flags a tier that is only held on a lock', () => {
-    const lock = { tier: 'Meglodon', requirement: 5_000_000 };
+    const lock = { tier: 'Megalodon', requirement: 5_000_000 };
     expect(getBadgeStanding(5_000_000, { scale: 1, lock }).grandfathered).toBe(true);
     expect(getBadgeStanding(50_000_000, { scale: 1, lock }).grandfathered).toBe(false);
   });
@@ -227,5 +229,51 @@ describe('getBadgeStanding', () => {
   it('treats a missing or negative balance as zero rather than as an error', () => {
     expect(getBadgeStanding(undefined, { scale: 1 }).balance).toBe(0);
     expect(getBadgeStanding(-100, { scale: 1 }).balance).toBe(0);
+  });
+});
+
+/**
+ * Crocodite and Meglodon were misspellings, fixed 2026-09-13. They were also
+ * stored: the API writes a tier name onto `badgeLock`, onto a delegation and
+ * onto a SuperPowers booking, and those rows outlive the deploy that renamed
+ * the constant. Every match on this side fails closed, so an un-normalised old
+ * name costs a holder their grandfathered tier or draws no badge at all.
+ */
+describe('the legacy tier spellings', () => {
+  it('maps the two typos onto the real names', () => {
+    expect(canonicalTierName('Crocodite')).toBe('Crocodile');
+    expect(canonicalTierName('Meglodon')).toBe('Megalodon');
+  });
+
+  it('leaves every current name alone', () => {
+    for (const name of BADGE_ORDER) expect(canonicalTierName(name)).toBe(name);
+  });
+
+  it('passes anything else through, nullish included', () => {
+    expect(canonicalTierName('Kraken')).toBe('Kraken');
+    expect(canonicalTierName(null)).toBeNull();
+    expect(canonicalTierName(undefined)).toBeNull();
+  });
+
+  it('keeps a lock written under the old spelling, at the new name', () => {
+    expect(parseBadgeLock({ tier: 'Meglodon', requirement: 50_000_000 }))
+      .toEqual({ tier: 'Megalodon', requirement: 50_000_000 });
+    expect(parseBadgeLock({ tier: 'Crocodite', requirement: 900_000 }))
+      .toEqual({ tier: 'Crocodile', requirement: 900_000 });
+  });
+
+  it('still drops a lock that is genuinely off the ladder', () => {
+    expect(parseBadgeLock({ tier: 'Kraken', requirement: 1 })).toBeNull();
+  });
+
+  it('still grandfathers a tier locked under the old spelling', () => {
+    const lock = { tier: 'Meglodon', requirement: 5_000_000 };
+    expect(getBadgeName(5_000_000, null, { scale: 1, lock })).toBe('Megalodon');
+  });
+
+  it('draws art for a tier named under either spelling', () => {
+    expect(badgeImage('Meglodon')).toBe(badgeImage('Megalodon'));
+    expect(badgeImage('Crocodite')).toBe(badgeImage('Crocodile'));
+    expect(badgeImage('Megalodon')).toBeTruthy();
   });
 });

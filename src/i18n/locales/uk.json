@@ -4497,7 +4497,7 @@
       "description": "Опис восьминога",
       "badge": "Білий"
     },
-    "crocodite": {
+    "crocodile": {
       "name": "Крокодил",
       "description": "Опис крокодила",
       "badge": "Білий"
@@ -4527,9 +4527,9 @@
       "description": "Опис синього кита",
       "badge": "Білий"
     },
-    "meglodon": {
-      "name": "Меглодон",
-      "description": "Опис меглодона",
+    "megalodon": {
+      "name": "Мегалодон",
+      "description": "Опис мегалодона",
       "badge": "Білий"
     }
   }
