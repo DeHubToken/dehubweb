@@ -1128,7 +1128,9 @@
     "redirectingOnramp": "ഓൺറാമ്പിലേക്ക് റീഡയറക്ട് ചെയ്യുന്നു...",
     "onrampCreated": "ഓൺറാമ്പ് സെഷൻ ഉണ്ടാക്കി",
     "failedOnramp": "ഓൺറാമ്പ് ആരംഭിക്കാൻ കഴിഞ്ഞില്ല",
-    "badgeDiscount": "{{tier}} ഉടമ — {{percent}}% കിഴിവ്"
+    "badgeDiscount": "{{tier}} ഉടമ — {{percent}}% കിഴിവ്",
+    "otherTokens": "മറ്റ് ടോക്കണുകൾ",
+    "otherTokensDesc": "നിങ്ങളുടെ കാർഡ് ഉപയോഗിച്ച് Base-ൽ ETH അല്ലെങ്കിൽ USDC വാങ്ങുക"
   },
   "agents": {
     "title": "AI ഏജന്റുമാർ",

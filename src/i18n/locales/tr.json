@@ -1158,7 +1158,9 @@
     "redirectingOnramp": "Rampa'ya yönlendiriliyor...",
     "onrampCreated": "Rampa oturumu oluşturuldu",
     "failedOnramp": "Rampa başlatılamadı",
-    "badgeDiscount": "{{tier}} sahibi — %{{percent}} indirim"
+    "badgeDiscount": "{{tier}} sahibi — %{{percent}} indirim",
+    "otherTokens": "Diğer tokenlar",
+    "otherTokensDesc": "Kartınızla Base ağında ETH veya USDC satın alın"
   },
   "agents": {
     "title": "AI Ajanları",

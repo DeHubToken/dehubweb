@@ -1140,7 +1140,9 @@
     "redirectingOnramp": "Onrampga yoʻnaltirilmoqda...",
     "onrampCreated": "Onramp seansi yaratildi",
     "failedOnramp": "Onrampni boshlash amalga oshmadi",
-    "badgeDiscount": "{{tier}} egasi — {{percent}}% chegirma"
+    "badgeDiscount": "{{tier}} egasi — {{percent}}% chegirma",
+    "otherTokens": "Boshqa tokenlar",
+    "otherTokensDesc": "Kartangiz bilan Base tarmog'ida ETH yoki USDC sotib oling"
   },
   "agents": {
     "title": "AI Agent",

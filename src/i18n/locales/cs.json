@@ -1133,7 +1133,9 @@
     "redirectingOnramp": "Přesměrování...",
     "onrampCreated": "Relace vytvořena",
     "failedOnramp": "Zahájení selhalo",
-    "badgeDiscount": "Držitel {{tier}} — sleva {{percent}} %"
+    "badgeDiscount": "Držitel {{tier}} — sleva {{percent}} %",
+    "otherTokens": "Další tokeny",
+    "otherTokensDesc": "Kupte ETH nebo USDC na síti Base svou kartou"
   },
   "agents": {
     "title": "AI agenti",

@@ -1122,7 +1122,9 @@
     "redirectingOnramp": "بيحوّلك للأونرامب...",
     "onrampCreated": "جلسة الأونرامب اتعملت",
     "failedOnramp": "فشل بدء الأونرامب",
-    "badgeDiscount": "حامل {{tier}} — خصم {{percent}}%"
+    "badgeDiscount": "حامل {{tier}} — خصم {{percent}}%",
+    "otherTokens": "عملات تانية",
+    "otherTokensDesc": "اشتري ETH أو USDC على Base بالكارت بتاعك"
   },
   "agents": {
     "title": "إيجنتات AI",

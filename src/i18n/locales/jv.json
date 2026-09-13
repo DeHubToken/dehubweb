@@ -1116,7 +1116,9 @@
     "redirectingOnramp": "Ngarahake menyang onramp...",
     "onrampCreated": "Sesi onramp wis digawe",
     "failedOnramp": "Gagal gawe onramp",
-    "badgeDiscount": "Sing nyekel {{tier}} — diskon {{percent}}%"
+    "badgeDiscount": "Sing nyekel {{tier}} — diskon {{percent}}%",
+    "otherTokens": "Token liyane",
+    "otherTokensDesc": "Tuku ETH utawa USDC ing Base nganggo kartumu"
   },
   "agents": {
     "title": "Agen AI",

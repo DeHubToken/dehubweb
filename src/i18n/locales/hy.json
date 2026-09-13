@@ -1135,7 +1135,9 @@
     "redirectingOnramp": "Verapahqvoum e ramp...",
     "onrampCreated": "Ramp hovanavor steghtsvaats",
     "failedOnramp": "Chehaghordagrvats sksel ramp",
-    "badgeDiscount": "{{tier}} կրող — {{percent}}% զեղչ"
+    "badgeDiscount": "{{tier}} կրող — {{percent}}% զեղչ",
+    "otherTokens": "Այլ թոքեններ",
+    "otherTokensDesc": "Գնեք ETH կամ USDC Base-ում ձեր քարտով"
   },
   "agents": {
     "title": "AI Gortsakalner",

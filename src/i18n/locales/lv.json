@@ -1123,7 +1123,9 @@
     "redirectingOnramp": "Pāradresēšana uz rampu...",
     "onrampCreated": "Rampas sesija izveidota",
     "failedOnramp": "Rampas sākšana neizdevās",
-    "badgeDiscount": "{{tier}} īpašniekam — {{percent}}% atlaide"
+    "badgeDiscount": "{{tier}} īpašniekam — {{percent}}% atlaide",
+    "otherTokens": "Citi tokeni",
+    "otherTokensDesc": "Pērciet ETH vai USDC tīklā Base ar savu karti"
   },
   "agents": {
     "title": "MI aģenti",

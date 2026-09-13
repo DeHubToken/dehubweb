@@ -1137,7 +1137,9 @@
     "redirectingOnramp": "पुनर्निर्देशित होत आहे...",
     "onrampCreated": "सत्र तयार केले",
     "failedOnramp": "सुरू करण्यात अयशस्वी",
-    "badgeDiscount": "{{tier}} धारक — {{percent}}% सूट"
+    "badgeDiscount": "{{tier}} धारक — {{percent}}% सूट",
+    "otherTokens": "इतर टोकन",
+    "otherTokensDesc": "तुमच्या कार्डने Base वर ETH किंवा USDC खरेदी करा"
   },
   "agents": {
     "title": "AI एजंट्स",

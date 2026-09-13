@@ -1081,7 +1081,9 @@
     "redirectingOnramp": "بيحوّل للشراء...",
     "onrampCreated": "جلسة الشراء اتعملت",
     "failedOnramp": "فشل بدء الشراء",
-    "badgeDiscount": "حامل {{tier}} — خصم {{percent}}%"
+    "badgeDiscount": "حامل {{tier}} — خصم {{percent}}%",
+    "otherTokens": "عملات تانية",
+    "otherTokensDesc": "اشتري ETH أو USDC على Base بالكرت بتاعك"
   },
   "agents": {
     "title": "وكلاء AI",

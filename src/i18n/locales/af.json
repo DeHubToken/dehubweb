@@ -1134,7 +1134,9 @@
     "sessionCreated": "Session created",
     "redirectingOnramp": "Redirecting to onramp...",
     "onrampCreated": "Onramp session created",
-    "badgeDiscount": "{{tier}}-houer — {{percent}}% afslag"
+    "badgeDiscount": "{{tier}}-houer — {{percent}}% afslag",
+    "otherTokens": "Ander tokens",
+    "otherTokensDesc": "Koop ETH of USDC op Base met jou kaart"
   },
   "agents": {
     "title": "AI Agents",

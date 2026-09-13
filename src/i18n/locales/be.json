@@ -1140,7 +1140,9 @@
     "redirectingOnramp": "Перанакіраванне на анрамп...",
     "onrampCreated": "Сесія анрампа створана",
     "failedOnramp": "Не ўдалося запусціць анрамп",
-    "badgeDiscount": "Уладальнік {{tier}} — зніжка {{percent}}%"
+    "badgeDiscount": "Уладальнік {{tier}} — зніжка {{percent}}%",
+    "otherTokens": "Іншыя токены",
+    "otherTokensDesc": "Купіце ETH ці USDC у сетцы Base сваёй картай"
   },
   "agents": {
     "title": "AI-агенты",

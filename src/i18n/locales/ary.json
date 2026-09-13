@@ -1122,7 +1122,9 @@
     "redirectingOnramp": "كيتحول للأونرامب...",
     "onrampCreated": "جلسة الأونرامب تخلقت",
     "failedOnramp": "ما قدرش يبدأ الأونرامب",
-    "badgeDiscount": "حامل {{tier}} — تخفيض {{percent}}%"
+    "badgeDiscount": "حامل {{tier}} — تخفيض {{percent}}%",
+    "otherTokens": "عملات أخرى",
+    "otherTokensDesc": "شري ETH ولا USDC على Base بالكارط ديالك"
   },
   "agents": {
     "title": "وكلاء AI",

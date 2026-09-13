@@ -1121,7 +1121,9 @@
     "redirectingOnramp": "آنريمپ ڏانهن ريڊائريڪٽ ٿي رهيو آهي...",
     "onrampCreated": "آنريمپ سيشن ٺاهيو ويو",
     "failedOnramp": "آنريمپ شروع نه ٿي سگهيو",
-    "badgeDiscount": "{{tier}} رکندڙ — {{percent}}% رعايت"
+    "badgeDiscount": "{{tier}} رکندڙ — {{percent}}% رعايت",
+    "otherTokens": "ٻيا ٽوڪن",
+    "otherTokensDesc": "پنھنجي ڪارڊ سان Base تي ETH يا USDC خريد ڪريو"
   },
   "agents": {
     "title": "AI ايجنٽ",

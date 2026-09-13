@@ -1410,7 +1410,9 @@
     "redirectingOnramp": "Redirecting to onramp...",
     "onrampCreated": "Onramp session created",
     "failedOnramp": "Gagal memulakan onramp",
-    "badgeDiscount": "Pemegang {{tier}} — diskaun {{percent}}%"
+    "badgeDiscount": "Pemegang {{tier}} — diskaun {{percent}}%",
+    "otherTokens": "Token lain",
+    "otherTokensDesc": "Beli ETH atau USDC di Base dengan kad anda"
   },
   "agents": {
     "title": "AI Agents",

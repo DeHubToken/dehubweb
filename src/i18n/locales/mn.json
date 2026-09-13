@@ -1120,7 +1120,9 @@
     "redirectingOnramp": "Онрамп руу чиглүүлж байна...",
     "onrampCreated": "Онрамп сессия үүсгэгдлээ",
     "failedOnramp": "Онрамп эхлүүлэхэд алдаа гарлаа",
-    "badgeDiscount": "{{tier}} эзэмшигч — {{percent}}% хямдрал"
+    "badgeDiscount": "{{tier}} эзэмшигч — {{percent}}% хямдрал",
+    "otherTokens": "Бусад токен",
+    "otherTokensDesc": "Картаараа Base дээр ETH эсвэл USDC худалдаж авах"
   },
   "agents": {
     "title": "AI агентууд",

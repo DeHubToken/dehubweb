@@ -1121,7 +1121,9 @@
     "redirectingOnramp": "Whakawhiti ana ki te rampa...",
     "onrampCreated": "Kua hangaia te hōtaka rampa",
     "failedOnramp": "Kāore i taea te tīmata rampa",
-    "badgeDiscount": "Kaipupuri {{tier}} — {{percent}}% te whakahekenga"
+    "badgeDiscount": "Kaipupuri {{tier}} — {{percent}}% te whakahekenga",
+    "otherTokens": "Ētahi atu tohu",
+    "otherTokensDesc": "Hokona he ETH, he USDC rānei i Base ki tō kāri"
   },
   "agents": {
     "title": "Kaihautū MI",
