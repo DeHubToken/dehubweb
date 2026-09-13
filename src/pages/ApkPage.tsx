@@ -285,8 +285,16 @@ export default function ApkPage() {
           {metaLine}
         </p>
         <p className="mt-1.5 max-w-[40ch] text-[11px] leading-relaxed text-white/35 sm:text-xs">
-          Allow installs from your browser when Android asks.
+          Allow installs from your browser when Android asks. Updating? Install
+          over your existing app without uninstalling.
         </p>
+
+        <Link
+          to="/app"
+          className="mt-3 text-xs text-white/60 underline underline-offset-4 transition-colors hover:text-white"
+        >
+          Use DeHub in your browser
+        </Link>
 
         <a
           href={PLAY_URL}
