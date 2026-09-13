@@ -49,9 +49,26 @@ export function tierForBalance(balance: number | null | undefined): string {
   return current;
 }
 
+/**
+ * Tier names as they were spelled before 2026-09-13, mapped to the real ones.
+ *
+ * An advertiser's stored `targeting.tiers` can still hold either spelling, and
+ * an edge function does not ride the deploy — so this file is routinely a
+ * different age from the rows it matches against.
+ */
+const LEGACY_TIER_NAMES: Record<string, string> = {
+  Crocodite: 'Crocodile',
+  Meglodon: 'Megalodon',
+};
+
+/** The current spelling of a tier name, whatever spelling it arrived in. */
+export function canonicalTierName(tier: string): string {
+  return LEGACY_TIER_NAMES[tier] ?? tier;
+}
+
 /** USD price of ONE impression for a given tier. */
 export function impressionPriceUsd(tier: string): number {
-  const t = POVR_TIERS.find((x) => x.name === tier);
+  const t = POVR_TIERS.find((x) => x.name === canonicalTierName(tier));
   const cpm = t ? t.cpmUsd : NO_BADGE_CPM_USD;
   return cpm / 1000;
 }
