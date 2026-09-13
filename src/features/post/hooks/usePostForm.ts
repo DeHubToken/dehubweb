@@ -14,6 +14,7 @@ import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, keepPo
 import { isSmartWalletSession } from '@/lib/connection-source';
 import { applyEditsToImageFile } from '@/lib/filters';
 import { MEDIA_LIMITS } from '@/constants/post.constants';
+import { splitTitleFromText } from '@/features/post/lib/title-split';
 import { getPostImageLimitForBadge } from '@/lib/post-image-allowance';
 // NOTE: mint/bounty helpers reach wallet/contract code (wagmi + web3auth).
 // usePostForm is reachable from eager UI (PostModal is used by the sidebar /
@@ -628,12 +629,14 @@ export function usePostForm(
 
     const preview = URL.createObjectURL(file);
 
-    // Move existing text to title field when adding video
+    // Move existing text to title field when adding video. Whatever does not
+    // fit the title cap stays behind as the description rather than being lost.
     if (text.trim() && !titleText.trim()) {
-      setTitleText(text.trim().slice(0, 140));
-      setText('');
+      const { title, description } = splitTitleFromText(text);
+      setTitleText(title);
+      setText(description);
       if (editorRef.current) {
-        editorRef.current.innerText = '';
+        editorRef.current.innerText = description;
       }
     }
     
@@ -740,12 +743,14 @@ export function usePostForm(
     }
     const url = URL.createObjectURL(file);
 
-    // Move existing text to title field when adding audio
+    // Move existing text to title field when adding audio. Whatever does not
+    // fit the title cap stays behind as the description rather than being lost.
     if (text.trim() && !titleText.trim()) {
-      setTitleText(text.trim().slice(0, 140));
-      setText('');
+      const { title, description } = splitTitleFromText(text);
+      setTitleText(title);
+      setText(description);
       if (editorRef.current) {
-        editorRef.current.innerText = '';
+        editorRef.current.innerText = description;
       }
     }
     
@@ -1495,9 +1500,11 @@ export function usePostForm(
           postTitle = titleText.trim().slice(0, 140);
           postDescription = text.trim();
         } else {
-          // No title provided — use description text as title, leave description empty
-          postTitle = text.trim().slice(0, 140) || ' ';
-          postDescription = '';
+          // No title provided — the front of the text becomes the title and
+          // the rest carries on into the description instead of being dropped.
+          const borrowed = splitTitleFromText(text);
+          postTitle = borrowed.title || ' ';
+          postDescription = borrowed.description;
         }
       } else if (showTitle && titleText.trim()) {
         // Text/Image posts with explicit title
