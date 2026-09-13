@@ -16,10 +16,14 @@ const CHUNK_SIZE = 50000;
 // coming close to firing.
 const FEED_PAGE_SIZE = 100;
 
-// A 429 or a 5xx from the feed is answered by backing off and asking again
-// (see fetchFeedPage) rather than by pacing every request: a full enumeration
-// is ~33 requests and the edge holds the result for an hour, so the run should
-// be quick when the API is healthy and slow only when it is not.
+// api.dehub.io rate-limits per IP and publishes the budget on every response
+// (X-RateLimit-*-short is the tight one: 20 requests per 10s). A full
+// enumeration is ~33 requests from a single Supabase colo, so it does not fit
+// in one window and a naive run is throttled partway through every time. We
+// read the headers and wait out the window rather than guessing a fixed delay:
+// no slower than the API requires, and no faster than it allows.
+const RATE_LIMIT_HEADROOM = 1; // start waiting with this many requests to spare
+const MAX_WAIT_SECONDS = 30; // never trust an absurd Reset value
 const FEED_RETRIES = 4;
 
 const corsHeaders = {
@@ -35,6 +39,25 @@ interface FeedPost {
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /**
+ * Seconds to wait before the next request, read from the response's own
+ * rate-limit budget. Zero when there is headroom left.
+ *
+ * The API answers with `X-RateLimit-{Limit,Remaining,Reset}-{short,medium,long}`
+ * and enforces all three. Whichever bucket is closest to empty decides.
+ */
+function rateLimitWaitSeconds(headers: Headers): number {
+  let wait = 0;
+  for (const bucket of ["short", "medium", "long"]) {
+    const remaining = Number(headers.get(`x-ratelimit-remaining-${bucket}`));
+    const reset = Number(headers.get(`x-ratelimit-reset-${bucket}`));
+    if (!Number.isFinite(remaining) || !Number.isFinite(reset)) continue;
+    if (remaining > RATE_LIMIT_HEADROOM) continue;
+    wait = Math.max(wait, Math.min(reset, MAX_WAIT_SECONDS));
+  }
+  return wait;
+}
+
+/**
  * One page of the feed, retried through transient failures.
  *
  * Returns null only once the retries are spent. The caller must treat that as
@@ -42,7 +65,6 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
  */
 async function fetchFeedPage(page: number): Promise<Record<string, unknown> | null> {
   for (let attempt = 0; attempt < FEED_RETRIES; attempt++) {
-    if (attempt > 0) await sleep(1000 * 2 ** (attempt - 1));
     try {
       const res = await fetch(
         `${DEHUB_API_BASE}/api/feed?limit=${FEED_PAGE_SIZE}&page=${page}` +
@@ -54,13 +76,34 @@ async function fetchFeedPage(page: number): Promise<Record<string, unknown> | nu
           `&sortBy=createdAt&sortOrder=desc&status=minted`,
         { signal: AbortSignal.timeout(15000) },
       );
+
       // A 429 or a 502 is "ask again", not "there are no more posts". The old
       // code broke out of the loop here, which published however many URLs it
       // had managed to collect as a complete, cacheable sitemap.
-      if (!res.ok) continue;
-      return await res.json();
+      if (!res.ok) {
+        await res.body?.cancel();
+        const retryAfter = Number(res.headers.get("retry-after"));
+        const wait = Math.max(
+          rateLimitWaitSeconds(res.headers),
+          Number.isFinite(retryAfter) ? Math.min(retryAfter, MAX_WAIT_SECONDS) : 0,
+          // A 5xx carries no budget to read, so fall back to plain backoff.
+          2 ** attempt,
+        );
+        console.error(`sitemap-posts feed page ${page}: ${res.status}, waiting ${wait}s`);
+        await sleep(wait * 1000);
+        continue;
+      }
+
+      const json = await res.json();
+      // Spend the remaining budget before it runs out rather than after: being
+      // throttled costs a full window, waiting for one costs the seconds left
+      // in it. On a healthy run with headroom this is a no-op.
+      const wait = rateLimitWaitSeconds(res.headers);
+      if (wait > 0) await sleep(wait * 1000);
+      return json;
     } catch (e) {
       console.error(`sitemap-posts feed page ${page} attempt ${attempt + 1}:`, e);
+      await sleep(1000 * 2 ** attempt);
     }
   }
   return null;
