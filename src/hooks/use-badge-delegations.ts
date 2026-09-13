@@ -12,9 +12,11 @@ import {
   fetchMyDelegations,
   grantDelegation,
   revokeDelegation,
+  setDelegationAcceptance,
   type BadgeDelegationSummary,
 } from '@/lib/api/dehub/badges';
 import { useAuth } from '@/contexts/AuthContext';
+import { t } from 'i18next';
 
 export const BADGE_DELEGATIONS_KEY = ['badge-delegations'] as const;
 
@@ -44,12 +46,41 @@ export function useGrantDelegation() {
   return useMutation({
     mutationFn: (to: string) => grantDelegation(to),
     onSuccess: (result, to) => {
-      toast.success(`${to} is now wearing your ${result.tier} badge`);
+      toast.success(t('settings.badgeDelegationGranted', { to, tier: result.tier }));
       queryClient.invalidateQueries({ queryKey: BADGE_DELEGATIONS_KEY });
       queryClient.invalidateQueries({ queryKey: ['badge-balance'] });
     },
     onError: (error: Error) => {
       toast.error(error.message);
+    },
+  });
+}
+
+/**
+ * Accept lent badges, or stop accepting them.
+ *
+ * Invalidates the badge caches as well as the summary: switching it off ends
+ * the loan being worn, so the account's own badge has to be redrawn wherever
+ * the lent one was showing.
+ */
+export function useSetDelegationAcceptance() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (accepts: boolean) => setDelegationAcceptance(accepts),
+    onSuccess: (result) => {
+      toast.success(
+        result.accepts
+          ? t('settings.badgeDelegationAcceptOn')
+          : result.endedWith
+            ? t('settings.badgeDelegationAcceptOffEnded')
+            : t('settings.badgeDelegationAcceptOff'),
+      );
+      queryClient.invalidateQueries({ queryKey: BADGE_DELEGATIONS_KEY });
+      queryClient.invalidateQueries({ queryKey: ['badge-balance'] });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || t('settings.badgeDelegationAcceptFailed'));
     },
   });
 }
@@ -60,7 +91,7 @@ export function useRevokeDelegation() {
   return useMutation({
     mutationFn: (counterparty: string) => revokeDelegation(counterparty),
     onSuccess: () => {
-      toast.success('Delegation ended');
+      toast.success(t('settings.badgeDelegationEnded'));
       queryClient.invalidateQueries({ queryKey: BADGE_DELEGATIONS_KEY });
       queryClient.invalidateQueries({ queryKey: ['badge-balance'] });
     },
