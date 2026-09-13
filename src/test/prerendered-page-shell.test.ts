@@ -56,8 +56,12 @@ const text = (html: string) =>
 describe('stylePrerendered keeps everything a crawler came for', () => {
   for (const [name, page] of [['ssr-seo page', FN_PAGE], ['worker-built page', WORKER_PAGE]] as const) {
     it(`keeps every meta tag on the ${name}`, () => {
-      const before = count(page, /<meta [^>]*>/g);
-      expect(count(stylePrerendered(page), /<meta [^>]*>/g)).toBe(before);
+      // Every tag that came in goes out; the one addition allowed is the
+      // viewport, which neither fixture declares (prerender-head.test.ts).
+      const out = stylePrerendered(page);
+      for (const tag of page.match(/<meta [^>]*>/g) ?? []) expect(out).toContain(tag);
+      expect(count(out, /<meta [^>]*>/g)).toBe(count(page, /<meta [^>]*>/g) + 1);
+      expect(count(out, /name="viewport"/g)).toBe(1);
     });
 
     it(`keeps the copy on the ${name}`, () => {
