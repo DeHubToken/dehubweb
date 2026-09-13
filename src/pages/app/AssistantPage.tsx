@@ -2243,7 +2243,7 @@ export default function AssistantPage() {
                     }}
                     onTrainVoice={() => {
                       const badgeName = getBadgeName(user?.badgeBalance, user?.username);
-                      const allowed = badgeName === 'Meglodon' || badgeName === 'Blue Whale';
+                      const allowed = badgeName === 'Megalodon' || badgeName === 'Blue Whale';
 
                       setSettingsSheetOpen(false);
 
@@ -2298,7 +2298,7 @@ export default function AssistantPage() {
         }}
         customApiKey={(() => {
           const badgeName = getBadgeName(user?.badgeBalance, user?.username);
-          const isWhale = badgeName === 'Meglodon' || badgeName === 'Blue Whale';
+          const isWhale = badgeName === 'Megalodon' || badgeName === 'Blue Whale';
           return isWhale ? undefined : customElevenLabsKey || undefined;
         })()}
       />

@@ -127,7 +127,7 @@ export default function SuperPowersPage() {
             )}
           </>
         ) : isError ? (
-          // A failed request is not the same as no badge. Telling a Meglodon
+          // A failed request is not the same as no badge. Telling a Megalodon
           // to go and stake because the API blipped is worse than saying
           // nothing — and the ladder below still renders from the public
           // endpoint, so the page is not empty.

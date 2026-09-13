@@ -37,13 +37,13 @@ const CampaignCreator = () => {
     'Tortoise': badgeImage('Tortoise'),
     'Cobra': badgeImage('Cobra'),
     'Octopus': badgeImage('Octopus'),
-    'Crocodite': badgeImage('Crocodite'),
+    'Crocodile': badgeImage('Crocodile'),
     'Dolphin': badgeImage('Dolphin'),
     'Tiger Shark': badgeImage('Tiger Shark'),
     'Killer Whale': badgeImage('Killer Whale'),
     'Great White Shark': badgeImage('Great White Shark'),
     'Blue Whale': badgeImage('Blue Whale'),
-    'Meglodon': badgeImage('Meglodon')
+    'Megalodon': badgeImage('Megalodon')
   };
 
   // Country names are the selected values, not display copy — they stay in English.

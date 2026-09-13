@@ -14,7 +14,7 @@
  * **The slot rotates; it is not a pin.** A fortnight is 20,160 minutes and the
  * ladder hands out more than that as soon as a few thousand badges exist. When
  * several boosts are live the viewer is dealt one weighted by the booster's
- * tier, so a Meglodon's turns up fourteen times as often as a Crab's. The
+ * tier, so a Megalodon's turns up fourteen times as often as a Crab's. The
  * promise is "thirty minutes at the top", which holds; what varies is share of
  * voice. Never write copy that promises sole possession of the slot.
  *

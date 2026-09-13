@@ -1,11 +1,11 @@
 /**
  * Staking badges — a ladder priced in dollars, held in DHB
  * ========================================================
- * Thirteen tiers, from Crab to Meglodon, drawn next to a name from
+ * Thirteen tiers, from Crab to Megalodon, drawn next to a name from
  * `Account.badgeBalance` (DHB held plus DHB staked, on BSC and Base).
  *
  * The thresholds were written as flat DHB amounts against a $0.001 token, so
- * Meglodon meant 50,000,000 DHB and, at that price, $50,000. Flat amounts do
+ * Megalodon meant 50,000,000 DHB and, at that price, $50,000. Flat amounts do
  * not survive the token appreciating: at $0.01 the same 50,000,000 DHB is
  * half a million dollars, and the top tier quietly stops being reachable by
  * anyone who was not already there. The ladder is meant to sort holders, not
@@ -14,7 +14,7 @@
  * So the ladder is pegged in **dollars**, not in DHB. `BADGE_LEVELS` stays as
  * the reference — the numbers as written, at the anchor price — and the DHB
  * requirement at any other price is that reference scaled by
- * `BADGE_PRICE_ANCHOR / price`. Meglodon costs about $50,000 whatever DHB is
+ * `BADGE_PRICE_ANCHOR / price`. Megalodon costs about $50,000 whatever DHB is
  * worth; what changes is how many tokens that is.
  *
  * Two deliberate limits on that:
@@ -64,13 +64,13 @@ const BADGE_LEVELS: BadgeDef[] = [
   { name: "Tortoise", min: 100000 },
   { name: "Cobra", min: 250000 },
   { name: "Octopus", min: 500000 },
-  { name: "Crocodite", min: 1000000 },
+  { name: "Crocodile", min: 1000000 },
   { name: "Dolphin", min: 2000000 },
   { name: "Tiger Shark", min: 3000000 },
   { name: "Killer Whale", min: 5000000 },
   { name: "Great White Shark", min: 10000000 },
   { name: "Blue Whale", min: 25000000 },
-  { name: "Meglodon", min: 50000000 },
+  { name: "Megalodon", min: 50000000 },
 ];
 
 /**
@@ -90,7 +90,7 @@ export const BADGE_PRICE_ANCHOR = 0.001;
 export const MAX_BADGE_SCALE = 1;
 
 /**
- * Floor on the scale, at a $1 token: Crab 10 DHB, Meglodon 50,000 DHB. Past
+ * Floor on the scale, at a $1 token: Crab 10 DHB, Megalodon 50,000 DHB. Past
  * this the ladder stops meaning anything in whole tokens.
  */
 export const MIN_BADGE_SCALE = 0.001;
@@ -100,6 +100,33 @@ export const MIN_BADGE_SCALE = 0.001;
  */
 export const BADGE_ORDER: string[] = BADGE_LEVELS.map((b) => b.name);
 
+/**
+ * Tier names as they were spelled before 2026-09-13, mapped to the real ones.
+ *
+ * Both were misspellings, and the names are not only labels: the API stores
+ * them on rows that outlive the deploy that wrote them (`badgeLock.tier`, a
+ * delegation's granted tier, a SuperPowers booking's frozen tier). Everything
+ * on this side that matches a name fails CLOSED — `parseBadgeLock` returns
+ * null, `badgeImage` returns null — so a payload written under the old
+ * spelling would quietly cost a holder their grandfathered tier, or draw no
+ * badge at all.
+ *
+ * Reads normalise; nothing writes the old spelling. Deletable once the API's
+ * `scripts/rename-badge-tiers.ts` has run and no old payload can reach us.
+ */
+const LEGACY_TIER_NAMES: Record<string, string> = {
+  Crocodite: "Crocodile",
+  Meglodon: "Megalodon",
+};
+
+/** The current spelling of a tier name, whatever spelling it arrived in. */
+export function canonicalTierName(name: string): string;
+export function canonicalTierName(name: string | null | undefined): string | null;
+export function canonicalTierName(name: string | null | undefined): string | null {
+  if (typeof name !== "string") return null;
+  return LEGACY_TIER_NAMES[name] ?? name;
+}
+
 /** What each tier costs, in USD. The invariant the peg preserves. */
 export const BADGE_USD_TARGETS: Record<string, number> = Object.fromEntries(
   BADGE_LEVELS.map((b) => [b.name, b.min * BADGE_PRICE_ANCHOR]),
@@ -107,9 +134,9 @@ export const BADGE_USD_TARGETS: Record<string, number> = Object.fromEntries(
 
 /** Username-based badge overrides (always get this badge regardless of balance) */
 const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
-  "maldoteth": "Meglodon",
-  "mal": "Meglodon",
-  "aaron": "Meglodon",
+  "maldoteth": "Megalodon",
+  "mal": "Megalodon",
+  "aaron": "Megalodon",
 };
 
 // Import all badge images
@@ -119,13 +146,13 @@ import PiranhaBadge from '@/assets/badges/Piranha.webp';
 import LobsterBadge from '@/assets/badges/Lobster.webp';
 import OctopusBadge from '@/assets/badges/Octopus.webp';
 import CobraBadge from '@/assets/badges/Cobra.webp';
-import CrocoditeBadge from '@/assets/badges/Crocodite.webp';
+import CrocodileBadge from '@/assets/badges/Crocodile.webp';
 import DolphinBadge from '@/assets/badges/Dolphin.webp';
 import TigerSharkBadge from '@/assets/badges/Tiger Shark.webp';
 import GreatWhiteSharkBadge from '@/assets/badges/Great White Shark.webp';
 import KillerWhaleBadge from '@/assets/badges/Killer Whale.webp';
 import BlueWhaleBadge from '@/assets/badges/Blue Whale.webp';
-import MeglodonBadge from '@/assets/badges/Meglodon.webp';
+import MegalodonBadge from '@/assets/badges/Megalodon.webp';
 
 const BADGE_IMAGES: Record<string, string> = {
   "Tortoise": TortoiseBadge,
@@ -134,13 +161,13 @@ const BADGE_IMAGES: Record<string, string> = {
   "Lobster": LobsterBadge,
   "Octopus": OctopusBadge,
   "Cobra": CobraBadge,
-  "Crocodite": CrocoditeBadge,
+  "Crocodile": CrocodileBadge,
   "Dolphin": DolphinBadge,
   "Tiger Shark": TigerSharkBadge,
   "Great White Shark": GreatWhiteSharkBadge,
   "Killer Whale": KillerWhaleBadge,
   "Blue Whale": BlueWhaleBadge,
-  "Meglodon": MeglodonBadge,
+  "Megalodon": MegalodonBadge,
 };
 
 /**
@@ -266,7 +293,7 @@ export interface BadgeContext {
 
 /** Position in the ladder, -1 for "no badge". */
 function tierIndex(name: string | null | undefined): number {
-  return name ? BADGE_ORDER.indexOf(name) : -1;
+  return name ? BADGE_ORDER.indexOf(canonicalTierName(name) as string) : -1;
 }
 
 /** Normalise whatever a payload calls a balance into a number. */
@@ -298,7 +325,8 @@ export function parseBadgeLock(raw: unknown): BadgeLock | null {
   if (typeof tier !== 'string' || tierIndex(tier) < 0) return null;
   const amount = typeof requirement === 'string' ? parseFloat(requirement) : requirement;
   if (typeof amount !== 'number' || !Number.isFinite(amount) || amount <= 0) return null;
-  return { tier, requirement: amount };
+  // Store the current spelling, so everything downstream compares one name.
+  return { tier: canonicalTierName(tier), requirement: amount };
 }
 
 /**
@@ -391,7 +419,8 @@ export function getBadgeUrl(
 
 /** The badge art for a tier name, for surfaces that already know the tier. */
 export function badgeImage(tier: string | null | undefined): string | null {
-  return tier ? BADGE_IMAGES[tier] ?? null : null;
+  const name = canonicalTierName(tier);
+  return name ? BADGE_IMAGES[name] ?? null : null;
 }
 
 /**
@@ -431,9 +460,9 @@ export interface BadgeStanding {
   balance: number;
   /** DHB the current tier costs today, or the entry rung when there is none. */
   currentThreshold: number;
-  /** The next tier up, or null at Meglodon. */
+  /** The next tier up, or null at Megalodon. */
   nextTier: string | null;
-  /** DHB the next tier costs, or null at Meglodon. */
+  /** DHB the next tier costs, or null at Megalodon. */
   nextThreshold: number | null;
   /** DHB still to buy for the next tier, 0 at the top. */
   remaining: number;

@@ -23,12 +23,12 @@ const LADDER: { key: SuperPowerKey; tier: string | null }[] = [
   { key: 'trend_jacker', tier: 'Tortoise' },
   { key: 'timeline_bomber', tier: 'Cobra' },
   { key: 'signal_flare', tier: 'Octopus' },
-  { key: 'flak_jacket', tier: 'Crocodite' },
+  { key: 'flak_jacket', tier: 'Crocodile' },
   { key: 'precision_strike', tier: 'Dolphin' },
   { key: 'harpoon', tier: 'Tiger Shark' },
   { key: 'team_up', tier: null },
   { key: 'front_row', tier: 'Blue Whale' },
-  { key: 'deep_current', tier: 'Meglodon' },
+  { key: 'deep_current', tier: 'Megalodon' },
 ];
 
 function status(overrides: Partial<SuperPowerStatus> = {}): SuperPowerStatus {

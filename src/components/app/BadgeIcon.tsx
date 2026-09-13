@@ -44,13 +44,13 @@ const BADGE_OPTICS: Record<string, { scale: number; bottomInset: number }> = {
   Tortoise: { scale: 1, bottomInset: 10 },
   Cobra: { scale: 1, bottomInset: 4 },
   Octopus: { scale: 1.02, bottomInset: 4 },
-  Crocodite: { scale: 1, bottomInset: 10 },
+  Crocodile: { scale: 1, bottomInset: 10 },
   Dolphin: { scale: 1.03, bottomInset: 4 },
   'Tiger Shark': { scale: 1.03, bottomInset: 5 },
   'Killer Whale': { scale: 1.04, bottomInset: 6 },
   'Great White Shark': { scale: 1.04, bottomInset: 4 },
   'Blue Whale': { scale: 1.1, bottomInset: 11 },
-  Meglodon: { scale: 1.08, bottomInset: 4 },
+  Megalodon: { scale: 1.08, bottomInset: 4 },
 };
 
 // At compact sizes the source artwork's narrowest transparent edge is less

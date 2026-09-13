@@ -18,18 +18,18 @@ const BADGE_LEVELS: { name: string; min: number }[] = [
   { name: "Tortoise", min: 100000 },
   { name: "Cobra", min: 250000 },
   { name: "Octopus", min: 500000 },
-  { name: "Crocodite", min: 1000000 },
+  { name: "Crocodile", min: 1000000 },
   { name: "Dolphin", min: 2000000 },
   { name: "Tiger Shark", min: 3000000 },
   { name: "Killer Whale", min: 5000000 },
   { name: "Great White Shark", min: 10000000 },
   { name: "Blue Whale", min: 25000000 },
-  { name: "Meglodon", min: 50000000 },
+  { name: "Megalodon", min: 50000000 },
 ];
 const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
-  "maldoteth": "Meglodon",
-  "mal": "Meglodon",
-  "aaron": "Meglodon",
+  "maldoteth": "Megalodon",
+  "mal": "Megalodon",
+  "aaron": "Megalodon",
 };
 function resolveBadge(badgeBalance: number | null, username: string | null): { name: string; dataUri: string } | null {
   if (username) {

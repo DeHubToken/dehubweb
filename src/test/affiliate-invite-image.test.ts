@@ -20,7 +20,7 @@ describe('affiliate invitation layout', () => {
   });
 
   it('aligns canonical badge artwork to the display-name baseline', () => {
-    const svg = buildInviteSvg({ ...base, badgeDataUri: 'data:image/png;base64,abc', badgeName: 'Meglodon' });
+    const svg = buildInviteSvg({ ...base, badgeDataUri: 'data:image/png;base64,abc', badgeName: 'Megalodon' });
     expect(svg).toContain('width="62.64" height="62.64"');
     expect(svg).toContain('preserveAspectRatio="xMidYMid meet"');
   });

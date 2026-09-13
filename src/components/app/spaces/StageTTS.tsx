@@ -195,7 +195,7 @@ export function StageTTS() {
 
   const handleTrainVoice = () => {
     const badgeName = getBadgeName(user?.badgeBalance, user?.username);
-    const allowed = badgeName === 'Meglodon' || badgeName === 'Blue Whale';
+    const allowed = badgeName === 'Megalodon' || badgeName === 'Blue Whale';
     if (!allowed) {
       if (customElevenLabsKey) {
         setVoiceTrainingOpen(true);
@@ -209,7 +209,7 @@ export function StageTTS() {
   };
 
   const badgeName = getBadgeName(user?.badgeBalance, user?.username);
-  const isWhale = badgeName === 'Meglodon' || badgeName === 'Blue Whale';
+  const isWhale = badgeName === 'Megalodon' || badgeName === 'Blue Whale';
 
   return (
     <>

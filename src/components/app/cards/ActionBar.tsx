@@ -131,7 +131,7 @@ interface ActionBarProps {
    *
    * Omitted on a post: the viewer's own badge weight is used, because that is
    * what the server will apply (1 with no badge, 2 at Crab, up to 14 at
-   * Meglodon). Governance passes its own weight — a different ladder, on a
+   * Megalodon). Governance passes its own weight — a different ladder, on a
    * different table — and keeps overriding this.
    */
   voteWeight?: number;

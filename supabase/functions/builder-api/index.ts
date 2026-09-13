@@ -37,13 +37,13 @@ function resolveModel(key: string | undefined): string {
 // ---------------------------------------------------------------------------
 
 const BUILDS_BY_BADGE: Array<{ name: string; min: number; builds: number }> = [
-  { name: "Meglodon", min: 50_000_000, builds: 120 },
+  { name: "Megalodon", min: 50_000_000, builds: 120 },
   { name: "Blue Whale", min: 25_000_000, builds: 90 },
   { name: "Great White Shark", min: 10_000_000, builds: 75 },
   { name: "Killer Whale", min: 5_000_000, builds: 60 },
   { name: "Tiger Shark", min: 3_000_000, builds: 50 },
   { name: "Dolphin", min: 2_000_000, builds: 40 },
-  { name: "Crocodite", min: 1_000_000, builds: 30 },
+  { name: "Crocodile", min: 1_000_000, builds: 30 },
   { name: "Octopus", min: 500_000, builds: 25 },
   { name: "Cobra", min: 250_000, builds: 20 },
   { name: "Tortoise", min: 100_000, builds: 15 },

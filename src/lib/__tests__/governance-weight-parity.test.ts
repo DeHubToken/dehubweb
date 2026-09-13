@@ -11,7 +11,7 @@
  * panel tells someone their vote counts eleven times, the server records nine,
  * and nothing errors. So the copy is checked against the original rather than
  * trusted, along with the rule that makes the ladder a ladder — one step per
- * tier, Crab at 1 through Meglodon at 13.
+ * tier, Crab at 1 through Megalodon at 13.
  */
 
 import { readFileSync } from 'node:fs';

@@ -27,7 +27,7 @@ describe('engagementWeightForBadge', () => {
   });
 
   it('tops out at fourteen', () => {
-    expect(engagementWeightForBadge('Meglodon')).toBe(14);
+    expect(engagementWeightForBadge('Megalodon')).toBe(14);
     expect(MAX_ENGAGEMENT_WEIGHT).toBe(14);
   });
 

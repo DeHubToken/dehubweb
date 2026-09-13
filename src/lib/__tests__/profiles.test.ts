@@ -466,7 +466,7 @@ describe('badge-tier profile allowance', () => {
 
     const allowance = profileAllowance();
     expect(allowance.maxProfiles).toBe(50);
-    expect(allowance.tierName).toBe('Meglodon');
+    expect(allowance.tierName).toBe('Megalodon');
     expect(allowance.nextTierName).toBeNull();
   });
 

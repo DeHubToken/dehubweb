@@ -6,7 +6,7 @@ describe('getPostImageLimitForBadge', () => {
     expect(getPostImageLimitForBadge(0)).toBe(4);
   });
 
-  it('scales steadily through the badge ladder and caps Meglodon at 20', () => {
+  it('scales steadily through the badge ladder and caps Megalodon at 20', () => {
     expect(getPostImageLimitForBadge(10_000)).toBe(5);
     expect(getPostImageLimitForBadge(5_000_000)).toBe(14);
     expect(getPostImageLimitForBadge(25_000_000)).toBe(18);
@@ -15,7 +15,7 @@ describe('getPostImageLimitForBadge', () => {
 
   it('honours a still-valid earned badge lock', () => {
     expect(getPostImageLimitForBadge(10_000, undefined, {
-      tier: 'Meglodon',
+      tier: 'Megalodon',
       requirement: 10_000,
     })).toBe(20);
   });

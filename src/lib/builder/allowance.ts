@@ -7,13 +7,13 @@ import { getBadgeName } from "@/lib/staking-badges";
 
 /** Ordered from highest to lowest tier. First match wins from top. */
 const BUILDS_BY_BADGE: Array<{ name: string; builds: number }> = [
-  { name: "Meglodon", builds: 120 },
+  { name: "Megalodon", builds: 120 },
   { name: "Blue Whale", builds: 90 },
   { name: "Great White Shark", builds: 75 },
   { name: "Killer Whale", builds: 60 },
   { name: "Tiger Shark", builds: 50 },
   { name: "Dolphin", builds: 40 },
-  { name: "Crocodite", builds: 30 },
+  { name: "Crocodile", builds: 30 },
   { name: "Octopus", builds: 25 },
   { name: "Cobra", builds: 20 },
   { name: "Tortoise", builds: 15 },

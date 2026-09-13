@@ -9,13 +9,13 @@ const MB = 1024 * 1024;
 
 /** Ordered from lowest to highest tier. First match wins from top. */
 const QUOTA_BY_BADGE: Array<{ name: string; bytes: number }> = [
-  { name: "Meglodon", bytes: 5 * 1024 * GB },
+  { name: "Megalodon", bytes: 5 * 1024 * GB },
   { name: "Blue Whale", bytes: 1536 * GB },
   { name: "Great White Shark", bytes: 750 * GB },
   { name: "Killer Whale", bytes: 400 * GB },
   { name: "Tiger Shark", bytes: 200 * GB },
   { name: "Dolphin", bytes: 100 * GB },
-  { name: "Crocodite", bytes: 50 * GB },
+  { name: "Crocodile", bytes: 50 * GB },
   { name: "Octopus", bytes: 25 * GB },
   { name: "Cobra", bytes: 15 * GB },
   { name: "Tortoise", bytes: 8 * GB },

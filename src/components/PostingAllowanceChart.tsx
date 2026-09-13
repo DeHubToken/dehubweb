@@ -41,13 +41,13 @@ const TIERS: AllowanceTier[] = [
   { name: 'Tortoise', threshold: '100k+', postsPerDay: 14, gbPerDay: 1.4, dhbPerTextPost: 89, dhbPerGb: 1780, image: badgeImage('Tortoise') },
   { name: 'Cobra', threshold: '250k+', postsPerDay: 15, gbPerDay: 1.5, dhbPerTextPost: 87, dhbPerGb: 1740, image: badgeImage('Cobra') },
   { name: 'Octopus', threshold: '500k+', postsPerDay: 16, gbPerDay: 1.6, dhbPerTextPost: 85, dhbPerGb: 1700, image: badgeImage('Octopus') },
-  { name: 'Crocodile', threshold: '1m+', postsPerDay: 17, gbPerDay: 1.7, dhbPerTextPost: 83, dhbPerGb: 1660, image: badgeImage('Crocodite') },
+  { name: 'Crocodile', threshold: '1m+', postsPerDay: 17, gbPerDay: 1.7, dhbPerTextPost: 83, dhbPerGb: 1660, image: badgeImage('Crocodile') },
   { name: 'Dolphin', threshold: '2m+', postsPerDay: 18, gbPerDay: 1.8, dhbPerTextPost: 81, dhbPerGb: 1620, image: badgeImage('Dolphin') },
   { name: 'Tiger Shark', threshold: '3m+', postsPerDay: 19, gbPerDay: 1.9, dhbPerTextPost: 79, dhbPerGb: 1580, image: badgeImage('Tiger Shark') },
   { name: 'Killer Whale', threshold: '5m+', postsPerDay: 20, gbPerDay: 2, dhbPerTextPost: 77, dhbPerGb: 1540, image: badgeImage('Killer Whale') },
   { name: 'Great White Shark', threshold: '10m+', postsPerDay: 25, gbPerDay: 2.5, dhbPerTextPost: 75, dhbPerGb: 1500, image: badgeImage('Great White Shark') },
   { name: 'Blue Whale', threshold: '25m+', postsPerDay: 50, gbPerDay: 5, dhbPerTextPost: 73, dhbPerGb: 1460, image: badgeImage('Blue Whale') },
-  { name: 'Megalodon', threshold: '50m+', postsPerDay: 100, gbPerDay: 10, dhbPerTextPost: 70, dhbPerGb: 1400, image: badgeImage('Meglodon') },
+  { name: 'Megalodon', threshold: '50m+', postsPerDay: 100, gbPerDay: 10, dhbPerTextPost: 70, dhbPerGb: 1400, image: badgeImage('Megalodon') },
 ];
 
 const MAX_GB = TIERS[TIERS.length - 1].gbPerDay;
