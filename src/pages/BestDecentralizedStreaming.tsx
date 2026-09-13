@@ -142,6 +142,24 @@ const FAQ_ITEMS: { q: string; a: string }[] = [
   },
 ];
 
+/**
+ * Section figure. Rendered from the banner kit at 1200x630, so the intrinsic
+ * size is stated to keep the heading below it from jumping on load.
+ */
+function Figure({ src, alt }: { src: string; alt: string }) {
+  return (
+    <img
+      src={`/guides/${src}.jpg`}
+      alt={alt}
+      width={1200}
+      height={630}
+      loading="lazy"
+      decoding="async"
+      className="w-full h-auto rounded-2xl border border-white/10 mb-12"
+    />
+  );
+}
+
 export default function BestDecentralizedStreaming() {
   const url = 'https://dehub.io/guides/best-decentralized-streaming-apps';
   const jsonLd = {
@@ -225,6 +243,11 @@ export default function BestDecentralizedStreaming() {
             </p>
           </section>
 
+          <Figure
+            src="fig-streaming-rails-not-apps"
+            alt="Theta and Livepeer are delivery rails, not streaming apps with a front door"
+          />
+
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-6">The 6 best decentralized streaming apps</h2>
             <ol className="space-y-8">
@@ -281,6 +304,11 @@ export default function BestDecentralizedStreaming() {
             </ul>
           </section>
 
+          <Figure
+            src="fig-streaming-production-gap"
+            alt="Voice changers, sound effects and camera looks built into the browser, with no plugin stack"
+          />
+
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-3">The production gap</h2>
             <p className="text-zinc-300 leading-relaxed mb-4">
@@ -301,6 +329,11 @@ export default function BestDecentralizedStreaming() {
               None of the other five platforms on this list ship any of it.
             </p>
           </section>
+
+          <Figure
+            src="fig-streaming-paid-as-it-lands"
+            alt="Tips settle on-chain as they are sent, with no payout cycle"
+          />
 
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-3">What "decentralized" buys a streamer</h2>
