@@ -393,14 +393,16 @@ describe('wiring', () => {
    * was still never called for one. Live, every filename title survived a
    * green CI run and a clean deploy.
    */
-  it('calls enrichPostMeta for every post, and reads the record only for a bodyless one', () => {
+  it('calls enrichPostMeta for every post, with the record — its comments are the page', () => {
     const call = WORKER.slice(
       WORKER.indexOf('const proxiedPostId = '),
       WORKER.indexOf('} else if (proxiedHandle) {'),
     );
     expect(call).toContain('if (proxiedPostId) {');
     expect(call).not.toMatch(/if \(proxiedPostId && POST_DESCRIPTION_TEMPLATE\.test\(html\)\)/);
-    expect(call).toContain('bodyless ? await fetchPostRecord(proxiedPostId) : null');
+    expect(call).toContain('const record = await fetchPostRecord(proxiedPostId);');
+    expect(call).toContain('enrichPostMeta(html, proxiedPostId, record)');
+    expect(call).toContain('commentsHtml(record)');
   });
 
   it('does not reinstate the early return that made the title work unreachable', () => {

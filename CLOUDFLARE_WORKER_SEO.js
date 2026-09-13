@@ -726,21 +726,33 @@ const SECTION_PAGES = {
 <li><a href="${APP_URL}/shorts">Shorts</a> — a vertical, swipeable short-form feed.</li>
 <li><a href="${APP_URL}/music">Music</a> — tracks and audio from DeHub artists.</li>
 <li><a href="${APP_URL}/tv">DeHub TV</a> — lean-back, continuous video.</li>
-</ul>`,
+<li><a href="${APP_URL}/stages">Stages</a> — live audio rooms, with recordings kept afterwards.</li>
+<li><a href="${APP_URL}/communities">Communities</a> — public groups around a topic, each with its own feed.</li>
+</ul>
+<h2>How the feed works</h2>
+<p>Explore is the whole network in one place: every public post, in the order it was made, with no ranking layer deciding what you see. Filter it by format — video, shorts, images, audio, text — or by the hashtag a post was filed under, and follow the creators whose work you want in your own home feed.</p>
+<p>Posts can be minted on-chain when they are published, which gives the creator a permanent, portable record of the work and lets it be sold, tipped or collected in DHB. Minting is optional; a post that is not minted is still a normal post. Reactions, comments, reposts and tips all count toward a creator's standing on the network, and that standing is what unlocks badges and their perks.</p>
+<p>You can read all of it signed out. Signing in — with an email, a social account, a passkey or a wallet — gives you a wallet of your own with gas sponsored, so following, reacting and tipping cost nothing to start.</p>`,
   },
   videos: {
     title: 'Video Feed — Watch On-Chain Videos on DeHub',
     heading: 'DeHub Video Feed',
     description: 'Watch the latest on-chain videos from creators on DeHub: long-form uploads with pay-per-view, token-gated content and ad-revenue sharing on the user-owned video platform.',
     intro: 'Watch the newest videos from DeHub creators — long-form uploads minted on-chain, with pay-per-view, token-gated posts and ad-revenue sharing built in. No platform owns your reach; you do.',
-    bodyHtml: `<p>DeHub’s video feed is chronological and creator-owned. Sign in with email or a social account, get a sponsored-gas wallet automatically, and start watching or uploading in minutes.</p>`,
+    bodyHtml: `<p>DeHub’s video feed is chronological and creator-owned. Sign in with email or a social account, get a sponsored-gas wallet automatically, and start watching or uploading in minutes.</p>
+<h2>What you can do with a video here</h2>
+<p>Upload once and choose how it earns. A video can be free to everyone, pay-per-view in DHB, or unlocked only for the holders of a badge or a subscription plan — and the same upload can be tipped by anyone who watches it. Views, reactions and comments are counted on the post itself, and the creator keeps the record whatever happens to the platform.</p>
+<p>Videos are transcoded for playback on the web and in the Android and iOS apps, with captions and a transcript generated for the ones that have speech. Clips under a minute also appear in <a href="${APP_URL}/shorts">Shorts</a>; longer ones can be watched in picture-in-picture while you keep scrolling, or on <a href="${APP_URL}/tv">DeHub TV</a> as a continuous lean-back channel.</p>`,
   },
   shorts: {
     title: 'Shorts — Short-Form Videos on DeHub',
     heading: 'DeHub Shorts',
     description: 'Scroll the latest short-form videos on DeHub: a vertical, swipeable shorts feed on the open-source, user-owned social platform where creators own their content.',
     intro: 'Scroll a vertical feed of short-form videos from DeHub creators — quick, swipeable clips on the user-owned social platform. Every short is minted on-chain, so creators keep ownership and earn natively.',
-    bodyHtml: `<p>Shorts sit alongside the full <a href="${APP_URL}/videos">video feed</a> and <a href="${APP_URL}/music">music</a> on DeHub — one open, censorship-resistant home for every format.</p>`,
+    bodyHtml: `<p>Shorts sit alongside the full <a href="${APP_URL}/videos">video feed</a> and <a href="${APP_URL}/music">music</a> on DeHub — one open, censorship-resistant home for every format.</p>
+<h2>What counts as a short</h2>
+<p>A short is any video under a minute. There is no separate upload path and no separate account: a clip posted to the video feed that runs under sixty seconds is a short, and it appears in both places. That keeps a creator's catalogue in one profile whatever the length of the work.</p>
+<p>The lane plays full-screen and vertical, one clip at a time, and swiping moves to the next. Tap to pause, hold to scrub, and react, comment or tip without leaving the player. Shorts earn the same way every post on DeHub does — tips, pay-per-view and badge-gated access are all available to a sixty-second clip — and every view and reaction is counted on the post itself rather than in a feed that can be switched off.</p>`,
   },
 };
 
@@ -868,6 +880,9 @@ const MARKETING_PAGES = {
     description: 'Discover DeHub communities: join public groups, follow the topics you care about and build your own community on the decentralized, user-owned social platform.',
     heading: 'DeHub Communities',
     bodyHtml: `<p>Communities are public groups on DeHub — join the ones that match your interests, follow their feeds, or create your own and grow it with posts, events and stages.</p>
+<h2>How a community works</h2>
+<p>Every community has a feed of its own, a member list, and a page at its own address that anyone can read without an account. Members post into it the same way they post anywhere on DeHub — video, shorts, images, audio or text — and the community's feed is those posts in the order they were made. Joining one adds its posts to your home feed; leaving removes them. Nothing is hidden behind an algorithm.</p>
+<p>A community can host live audio <a href="${APP_URL}/stages">Stages</a> and schedule events, and the people who run it can pin posts, set rules and moderate what appears. Creating one takes a name, a description and a picture; anyone with an account can do it, and there is no cap on how many you can join or run.</p>
 <p><a href="${APP_URL}/communities">Browse communities on DeHub</a>.</p>`,
   },
   'stages': {
@@ -875,6 +890,9 @@ const MARKETING_PAGES = {
     description: 'Join live audio Stages, listen back to recorded conversations, and go live with your own room on DeHub — the decentralized, open source social platform.',
     heading: 'DeHub Stages',
     bodyHtml: `<p>Stages are live audio rooms on DeHub: join a conversation as a listener, come up on stage to speak, or host your own room. Finished stages stay available as recordings.</p>
+<h2>Live, then kept</h2>
+<p>A Stage has a host, speakers and an audience. Listeners can raise a hand to be brought up to speak, the host can share a screen or play audio into the room, and anyone can tip a speaker in DHB while they talk. Rooms can be scheduled ahead of time with a reminder and a short link to share, or opened on the spot.</p>
+<p>When a Stage ends its recording is kept at the same address, seekable, with live captions carried over as a transcript that can be read or searched. So a Stage is a conversation while it happens and a page afterwards — one that a search engine, a link preview and a listener who missed it all get the same way.</p>
 <p><a href="${APP_URL}/stages">See live and recorded Stages</a>.</p>`,
   },
   // The Arcade. Titles and descriptions mirror the SPA's SEOHead strings so
@@ -940,6 +958,9 @@ const MARKETING_PAGES = {
     description: 'A visual walkthrough of DeHub: feeds, messaging, wallet, staking, governance and more. See every screen and learn how the decentralized social platform works.',
     heading: 'DeHub Guide',
     bodyHtml: `<p>A screen-by-screen walkthrough of the DeHub app: the home feed, video and shorts, messaging, the wallet, staking, governance and the creator tools.</p>
+<h2>What the guide covers</h2>
+<p>It starts where a new account starts: signing in with an email, a social account, a passkey or a wallet, and the wallet DeHub creates for you with gas sponsored so the first follow, reaction and tip cost nothing. From there it walks the home feed and its filters, the video, shorts and music lanes, and the post composer — including what minting a post on-chain does and why it is optional.</p>
+<p>The second half is the parts people ask about: direct messages and group chats, live audio Stages, the wallet and how DHB moves in and out of it, staking for a badge and what each badge unlocks, and the governance page where token holders vote on what gets built. Each screen is shown as it looks in the app, with the controls labelled.</p>
 <p><a href="${APP_URL}/guide">Open the full visual guide</a> or start with the <a href="${APP_URL}/docs">documentation</a>.</p>`,
   },
   // Direct APK download. The file itself is a GitHub release asset (~205 MB,
@@ -1117,13 +1138,20 @@ const MARKETING_PAGES = {
     title: 'Music — Listen & Discover on DeHub',
     description: 'Stream music, discover new artists, listen to live radio and watch music videos on DeHub — the decentralized open source media platform.',
     heading: 'DeHub Music',
-    bodyHtml: `<p>DeHub Music hosts songs from independent Web3 artists — stream them free, tip in DHB, or collect a token-gated release. Build playlists, watch music videos, or tune into a 24/7 community radio station. Every play, tip and follow is recorded on-chain.</p>`,
+    bodyHtml: `<p>DeHub Music hosts songs from independent Web3 artists — stream them free, tip in DHB, or collect a token-gated release. Build playlists, watch music videos, or tune into a 24/7 community radio station. Every play, tip and follow is recorded on-chain.</p>
+<h2>For listeners</h2>
+<p>Tracks play in a persistent player that keeps going while you browse the rest of DeHub, with a visualiser and a queue. Follow an artist to get their releases in your home feed, tip a track you like straight from the player, and add it to a playlist of your own. The radio channel plays continuously from the catalogue.</p>
+<h2>For artists</h2>
+<p>An audio post is a normal DeHub post: upload the track, add artwork and a description, and decide whether it is free, tipped, pay-per-play, or unlocked for badge holders and subscribers. Minting it on-chain gives you a permanent record of the release that you own wherever the platform goes. Plays, reactions and comments count on the post and toward your badge standing, like every other format here.</p>`,
   },
   'tv': {
     title: 'Live TV — Free Channels From Around the World',
     description: 'Watch free live TV channels from around the world on DeHub. News, sports, entertainment and more — streamed in the browser, no subscription needed.',
     heading: 'DeHub TV',
-    bodyHtml: `<p>DeHub TV streams free live channels from around the world — news, sports and entertainment — alongside creator streams and curated shows. Picture-in-picture keeps playback going while you scroll, and you can tip in DHB straight from the player.</p>`,
+    bodyHtml: `<p>DeHub TV streams free live channels from around the world — news, sports and entertainment — alongside creator streams and curated shows. Picture-in-picture keeps playback going while you scroll, and you can tip in DHB straight from the player.</p>
+<h2>What is on</h2>
+<p>The guide is grouped by country and by genre — news, sport, film, music, kids, documentary — and every channel is a free, publicly available stream that plays in the browser with no account and no subscription. Creators who go live on DeHub appear alongside them, so a live stream from someone you follow sits in the same guide as a national broadcaster.</p>
+<p>Playback works on the web and in the apps, with the player able to detach into a corner while you read the feed. A live creator stream can be tipped in DHB from the player, and it is kept afterwards as a normal video post on the creator's profile, with the chat that ran beside it.</p>`,
   },
   // Title and description are copied verbatim from CinemaPage's SEOHead — see
   // the note above MARKETING_PAGES about the two UA variants never diverging.
@@ -1193,7 +1221,10 @@ const MARKETING_PAGES = {
     description: 'Join the team building the future of decentralized media. Explore open positions at DeHub and help shape Web3 social.',
     heading: 'Careers at DeHub',
     bodyHtml: `<p>DeHub is a small, distributed team building a decentralized creator network. Open roles span engineering, design, growth, community and moderation. If you care about Web3 and creator tools, we want to hear from you.</p>
-<p>Looking for paid work rather than a role? See <a href="${APP_URL}/work">DeHub bounties</a>.</p>`,
+<h2>How we work</h2>
+<p>The whole product is open source, and the team works in the open too: changes ship through public pull requests, the roadmap is voted on by token holders through <a href="${APP_URL}/governance">governance</a>, and feature requests come from the people using the app. We are remote by default, across time zones, and we hire for people who can own a problem end to end rather than for a job title.</p>
+<p>Engineering roles cover the web app, the Android and iOS apps, the API and the on-chain contracts. Design, growth and community roles work directly with creators on the network. Every role is paid, and part of the compensation can be taken in DHB for those who want it.</p>
+<p>Looking for paid work rather than a role? See <a href="${APP_URL}/work">DeHub bounties</a> — scoped tasks with a budget attached, open to anyone, paid on delivery.</p>`,
   },
 
   // --- app surfaces that had no crawler copy at all --------------------------
@@ -1736,6 +1767,122 @@ function enrichProfileMeta(html, username) {
 /** The post record behind /app/post/<tokenId>, for the two fields the fn's
  *  HTML does not carry (format, topics). Null on any failure — the rewrite
  *  still runs on what the HTML holds. */
+/**
+ * Content for the crawler pages, read from the same public API the app uses.
+ *
+ * The 2026-09-13 Googlebot crawl found every profile, post and bounty page
+ * under 200 words — 3,683 of 3,861 sitemap URLs, median 66 — and the six
+ * category pages at 73–99. A crawler page was the title, the caption and the
+ * nav; nothing else on it existed for Google to read. These put the page's
+ * own substance into the HTML: the latest posts on a feed page, a creator's
+ * recent posts on their profile, the comments and the author's other work on
+ * a post. Every fetch is bounded and fails to an empty string, so a slow API
+ * costs the section, never the page. Pure string functions below the fetch,
+ * tested in src/test/crawler-page-content.test.ts.
+ */
+const DEHUB_API = 'https://api.dehub.io/api';
+async function fetchFeedRows(query, limit = 12) {
+  try {
+    const res = await fetch(
+      `${DEHUB_API}/feed?limit=${limit}&status=minted&sortBy=createdAt&sortOrder=desc&${query}`,
+      { signal: AbortSignal.timeout(6000) },
+    );
+    if (!res.ok) return [];
+    const json = await res.json();
+    return Array.isArray(json?.result) ? json.result : [];
+  } catch {
+    return [];
+  }
+}
+
+/** What a feed row is called in a list: its title, or its id when the title says nothing. */
+function postLabel(row) {
+  const name = String(row.name || '').replace(/\s+/g, ' ').trim();
+  return titleSaysNothing(name) ? `Post #${Number(row.tokenId)}` : truncate(name, 90);
+}
+
+function postListHtml(heading, rows, { author = true } = {}) {
+  const items = (Array.isArray(rows) ? rows : [])
+    .filter((r) => r && Number.isFinite(Number(r.tokenId)))
+    .map((r) => {
+      const who = author ? String(r.displayName || r.username || '').replace(/\s+/g, ' ').trim() : '';
+      const views = Number(r.totalViews) || 0;
+      const tail = [who && `by ${escHtml(who)}`, views > 0 && `${views.toLocaleString('en-US')} views`]
+        .filter(Boolean)
+        .join(' · ');
+      return `<li><a href="${APP_URL}/app/post/${Number(r.tokenId)}">${escHtml(postLabel(r))}</a>${tail ? ` — ${tail}` : ''}</li>`;
+    });
+  if (!items.length) return '';
+  return `<section class="dh-list"><h2>${escHtml(heading)}</h2><ul>${items.join('')}</ul></section>`;
+}
+
+/** The shorts lane is a duration cut on videos, not a post type — same rule as the SPA. */
+function shortsOf(rows, max = 12) {
+  return (Array.isArray(rows) ? rows : [])
+    .filter((r) => {
+      const d = Number(r && r.videoDuration);
+      return d > 0 && d <= 60;
+    })
+    .slice(0, max);
+}
+
+async function sectionLiveHtml(key) {
+  if (key === 'videos') return postListHtml('Latest videos', await fetchFeedRows('postType=video'));
+  if (key === 'shorts') return postListHtml('Latest shorts', shortsOf(await fetchFeedRows('postType=video', 100)));
+  if (key === 'explore') return postListHtml('Latest on DeHub', await fetchFeedRows(''));
+  if (key === 'music') return postListHtml('Latest tracks', await fetchFeedRows('postType=feed-audio'));
+  return '';
+}
+
+function commentsHtml(record) {
+  const list = Array.isArray(record && record.comments) ? record.comments : [];
+  const items = list
+    .filter((c) => c && String(c.content || '').trim())
+    .slice(0, 20)
+    .map((c) => {
+      const who = String(
+        (c.user && (c.user.displayName || c.user.username)) || (c.writor && c.writor.username) || '',
+      ).replace(/\s+/g, ' ').trim();
+      return `<li>${who ? `<strong>${escHtml(who)}</strong>: ` : ''}${escHtml(truncate(c.content, 300))}</li>`;
+    });
+  if (!items.length) return '';
+  const n = Number(record.commentCount) || list.length;
+  const heading = n === 1 ? '1 comment' : `${n.toLocaleString('en-US')} comments`;
+  return `<section class="dh-list"><h2>${heading}</h2><ul>${items.join('')}</ul></section>`;
+}
+
+function postFactsHtml(record) {
+  if (!record) return '';
+  const facts = [];
+  const views = Number(record.totalViews) || 0;
+  const likes = Number(record.reactionCounts && record.reactionCounts.like) || (typeof record.like === 'number' ? record.like : 0);
+  const seconds = Number(record.videoDuration) || 0;
+  if (views) facts.push(`${views.toLocaleString('en-US')} views`);
+  if (likes) facts.push(`${likes.toLocaleString('en-US')} likes`);
+  if (seconds > 0) facts.push(`${Math.floor(seconds / 60)}:${String(Math.round(seconds % 60)).padStart(2, '0')}`);
+  const topics = (Array.isArray(record.category) ? record.category : [])
+    .map((c) => String(c || '').replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .slice(0, 6);
+  const line = facts.length ? `<p>${escHtml(facts.join(' · '))}</p>` : '';
+  const tags = topics.length ? `<p>Topics: ${topics.map((t) => escHtml(t)).join(', ')}</p>` : '';
+  return line + tags;
+}
+
+/** Puts crawler content ahead of a page's "Open on DeHub" call to action, or at the end of the body. */
+function injectBeforeCta(html, sectionHtml) {
+  if (!sectionHtml) return html;
+  const cta = html.search(/<p[^>]*><a class="dh-cta"/);
+  if (cta > -1) return `${html.slice(0, cta)}${sectionHtml}\n    ${html.slice(cta)}`;
+  return html.replace('</body>', `${sectionHtml}</body>`);
+}
+
+/** The wallet a proxied profile page belongs to, read off its own avatar URL. */
+function profileAddressOf(html) {
+  const m = String(html).match(/\/avatars\/(0x[0-9a-fA-F]{40})\b/);
+  return m ? m[1].toLowerCase() : '';
+}
+
 async function fetchPostRecord(tokenId) {
   try {
     const res = await fetch(`https://api.dehub.io/api/nft_info/${encodeURIComponent(tokenId)}`, {
@@ -3882,7 +4029,14 @@ async function handleRequest(request, env) {
   // twin too and canonicalize both to the bare path so they index as one.
   const sectionKey = cleanPath.replace(/^\/app\//, '/').replace(/^\/+|\/+$/g, '').toLowerCase();
   if (Object.hasOwn(SECTION_PAGES, sectionKey)) {
-    return guard(new Response(buildSectionHtml(sectionKey, SECTION_PAGES[sectionKey]), {
+    // The feed page lists what is actually in the feed. Same rows the app
+    // shows, one bounded API read, held by the edge for an hour; a miss
+    // costs the list, never the page (see sectionLiveHtml).
+    const html = injectBeforeCta(
+      buildSectionHtml(sectionKey, SECTION_PAGES[sectionKey]),
+      await sectionLiveHtml(sectionKey),
+    );
+    return guard(new Response(html, {
       status: 200,
       headers: blogHeaders,
     }));
@@ -3970,6 +4124,11 @@ async function handleRequest(request, env) {
         const items = rows.map((j) => `<li style="margin:6px 0"><a href="${APP_URL}/bounty/${j.job_number}">${escHtml(truncate(j.title || `Bounty #${j.job_number}`, 90))}</a> — ${escHtml(Number(j.total_budget).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(j.currency || '')}</li>`).join('');
         html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left"><h2 style="font-size:16px">Open bounties</h2><ul style="list-style:none;padding:0">${items}</ul></section></body>`);
       }
+    }
+    // Same for the music page: the latest tracks, from the same feed the
+    // app's music lane reads.
+    if (sectionKey === 'music') {
+      html = injectBeforeCta(html, await sectionLiveHtml('music'));
     }
     return guard(new Response(html, {
       status: 200,
@@ -4313,10 +4472,34 @@ async function handleRequest(request, env) {
       // read — the description rewrite — so a post that needs nothing but a
       // title still costs no API call: the author comes off the page's own
       // JSON-LD and the format off the og:video sniff.
-      const bodyless = POST_DESCRIPTION_TEMPLATE.test(html);
-      html = enrichPostMeta(html, proxiedPostId, bodyless ? await fetchPostRecord(proxiedPostId) : null);
+      // The record is read for every post now, not only a bodyless one: the
+      // comments ride on it, and the comments are the page's content. A post
+      // page was 66 words — the caption and the nav — with its whole
+      // conversation left on the API. One bounded read, five-second cap, and
+      // a miss costs the sections, not the page.
+      const record = await fetchPostRecord(proxiedPostId);
+      html = enrichPostMeta(html, proxiedPostId, record);
+      const minter = String((record && record.minter) || '').toLowerCase();
+      const byAuthor = minter ? await fetchFeedRows(`minter=${minter}`, 7) : [];
+      const others = byAuthor.filter((r) => String(r.tokenId) !== String(proxiedPostId)).slice(0, 6);
+      const who = String((record && (record.displayName || record.username)) || '').replace(/\s+/g, ' ').trim();
+      html = injectBeforeCta(
+        html,
+        postFactsHtml(record) +
+          commentsHtml(record) +
+          postListHtml(who ? `More from ${who}` : 'More from this creator', others, { author: false }),
+      );
     } else if (proxiedHandle) {
       html = enrichProfileMeta(html, proxiedHandle);
+      // A profile page carried the bio and nothing the account had posted; the
+      // avatar URL names the wallet, and the feed lists its posts.
+      const address = profileAddressOf(html);
+      if (address) {
+        html = injectBeforeCta(
+          html,
+          postListHtml('Recent posts', await fetchFeedRows(`minter=${address}`), { author: false }),
+        );
+      }
     }
     // Share images the fn points at that 403, carry no content type, or
     // redirect to the logo (see repairProxiedImages).
