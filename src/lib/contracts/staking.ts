@@ -5,7 +5,7 @@
  */
 
 import { Interface } from 'ethers';
-import { readContract, readContractAll, rpcRequest, writeContractAA, switchChain, type AAWriteResult } from './aa-utils';
+import { readContract, readContractAll, writeContractAA, switchChain, type AAWriteResult } from './aa-utils';
 import { CHAIN_CONFIGS, BNB_CHAIN_ID, BASE_CHAIN_ID } from './dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
 
@@ -36,13 +36,6 @@ const legacyStakingInterface = new Interface([
   'function userInfos(address) view returns (uint256 totalAmount, uint256 unlockAt, uint256 lastTierIndex, uint256 lastRewardIndex, uint256 harvestTotal, uint256 harvestClaimed, uint256 lastStakeAt)',
   'function pool() view returns (uint256 stakingStartAt, uint256 rewardPeriod, uint256 lastRewardIndex, uint256 forceUnstakeFee, uint256 minPeriod)',
 ]);
-
-// keccak256("Transfer(address,address,uint256)")
-const TRANSFER_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
-
-function toTopicAddress(address: string): string {
-  return '0x000000000000000000000000' + address.toLowerCase().replace(/^0x/, '');
-}
 
 /**
  * Get total DHB staked on a given chain by reading balanceOf on the DHB token
@@ -90,63 +83,6 @@ export async function getUserEarnedBNB(userAddress: string): Promise<bigint> {
   } catch (err) {
     console.error('[Staking] Failed to read earned rewards:', err);
     return BigInt(0);
-  }
-}
-
-export interface StakingTransferSums {
-  /** DHB the user has sent INTO the staking wallet(s) on this chain */
-  inbound: bigint;
-  /** DHB the staking wallet(s) have sent BACK to the user (unstake payouts) */
-  outbound: bigint;
-}
-
-/** Sum the `value` of all Transfer logs matching from→to on a token */
-async function sumTransferLogs(
-  tokenAddress: string,
-  fromTopic: string | string[],
-  toTopic: string | string[],
-  chainId: ChainId
-): Promise<bigint> {
-  const logs = await rpcRequest<Array<{ data: string }>>('eth_getLogs', [{
-    address: tokenAddress,
-    fromBlock: '0x0',
-    toBlock: 'latest',
-    topics: [TRANSFER_TOPIC, fromTopic, toTopic],
-  }], chainId);
-
-  if (!Array.isArray(logs)) throw new Error('eth_getLogs returned a non-array');
-  return logs.reduce((acc, log) => acc + BigInt(log.data), BigInt(0));
-}
-
-/**
- * Compute a user's transfer-based staking sums on a chain by scanning DHB
- * Transfer events between the user and the staking wallet(s).
- * Returns null when the RPC can't serve the log scan (caller should fall
- * back to DB records).
- */
-export async function getUserStakingTransfers(
-  userAddress: string,
-  chainId: ChainId
-): Promise<StakingTransferSums | null> {
-  const config = CHAIN_CONFIGS[chainId];
-  if (!config?.dhbToken) return { inbound: BigInt(0), outbound: BigInt(0) };
-
-  // On Base the legacy address was also transfer-based; on BNB the legacy
-  // contract is read via userInfos(), so only the unified wallet counts here.
-  const stakingTopics = chainId === BASE_CHAIN_ID
-    ? [toTopicAddress(STAKING_ADDRESS), toTopicAddress(BASE_STAKING_ADDRESS)]
-    : [toTopicAddress(STAKING_ADDRESS)];
-  const userTopic = toTopicAddress(userAddress);
-
-  try {
-    const [inbound, outbound] = await Promise.all([
-      sumTransferLogs(config.dhbToken, userTopic, stakingTopics, chainId),
-      sumTransferLogs(config.dhbToken, stakingTopics, userTopic, chainId),
-    ]);
-    return { inbound, outbound };
-  } catch (err) {
-    console.error(`[Staking] Transfer scan failed on chain ${chainId}:`, err);
-    return null;
   }
 }
 

@@ -3,8 +3,10 @@
  */
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
-import { fetchStakingStats, getUserLegacyStake, getUserEarnedBNB, getStakingAllowance, getUserStakingTransfers } from '@/lib/contracts/staking';
+import { fetchStakingStats, getUserLegacyStake, getUserEarnedBNB, getStakingAllowance } from '@/lib/contracts/staking';
 import { useTokenPrices } from './use-token-prices';
+import { stakedFromBalanceData } from './use-dhb-holdings';
+import { getAccountInfo } from '@/lib/api/dehub';
 import { supabase } from '@/integrations/supabase/client';
 import { fromWei, CHAIN_CONFIGS, BNB_CHAIN_ID, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { readContract } from '@/lib/contracts/aa-utils';
@@ -171,8 +173,7 @@ export function useUserStakingData() {
         bnbEarnedRaw,
         bnbAllowance,
         legacyPositions,
-        bnbTransfers,
-        baseTransfers,
+        account,
         { data: stakingRecords },
       ] = await Promise.all([
         getUserDHBBalance(walletAddress, BNB_CHAIN_ID),
@@ -180,16 +181,18 @@ export function useUserStakingData() {
         getUserEarnedBNB(walletAddress),
         getStakingAllowance(walletAddress),
         Promise.all(legacyAddresses.map(address => getUserLegacyStake(address))),
-        getUserStakingTransfers(walletAddress, BNB_CHAIN_ID),
-        getUserStakingTransfers(walletAddress, BASE_CHAIN_ID),
+        getAccountInfo(walletAddress).catch((err) => {
+          console.error('[Staking] account read failed:', err);
+          return null;
+        }),
         supabase
           .from('staking_records')
           .select('amount, action, tx_hash')
           .eq('wallet_address', addr),
       ]);
 
-      // DB sums: fallback when the log scan is unavailable, and the source
-      // of the pending unstake queue (unstake requests await manual payout).
+      // DB sums: a last-resort staked figure, and the source of the pending
+      // unstake queue (unstake requests await manual payout).
       let dbStaked = 0;
       let dbUnstakeTotal = 0;
       if (stakingRecords) {
@@ -214,18 +217,22 @@ export function useUserStakingData() {
 
       let totalStakedNum: number;
       let unstakeQueuedNum: number;
-      if (bnbTransfers && baseTransfers) {
-        // On-chain truth: DHB the user transferred into the staking wallets
-        // minus what came back. A queued unstake has no outbound transfer yet,
-        // so subtract max(paid out on-chain, requested in DB) — once a payout
-        // lands, the on-chain outbound covers it and the DB row isn't
-        // double-counted.
-        const inboundNum = parseFloat(fromWei(bnbTransfers.inbound + baseTransfers.inbound));
-        const outboundNum = parseFloat(fromWei(bnbTransfers.outbound + baseTransfers.outbound));
-        totalStakedNum = Math.max(0, legacyStakedNum + inboundNum - Math.max(outboundNum, dbUnstakeTotal));
-        unstakeQueuedNum = Math.max(0, dbUnstakeTotal - outboundNum);
+      if (account) {
+        // The backend's figure: the legacy contract plus the transfer-pool
+        // ledger, which it derives from the DHB transfer log. Same source as
+        // the badge ladder, the leaderboard and the wallet page — see
+        // use-dhb-holdings for why this is not re-derived in the browser.
+        //
+        // It used to be, and the subtraction it made was wrong: a queued
+        // unstake is settled by hand from a treasury address, so the pool's
+        // own outbound log never shows one and the browser deducted DHB that
+        // had never moved. The queue below is what is still owed, not
+        // something to take off the position.
+        const serverStaked = stakedFromBalanceData(account.balanceData);
+        totalStakedNum = Math.max(serverStaked, legacyStakedNum);
+        unstakeQueuedNum = dbUnstakeTotal;
       } else {
-        // RPC log scan failed — fall back to DB-derived accounting
+        // The API is unreachable — fall back to DB-derived accounting
         totalStakedNum = dbStaked + legacyStakedNum;
         unstakeQueuedNum = dbUnstakeTotal;
       }
@@ -262,8 +269,7 @@ export function useUserStakingData() {
     enabled: !!walletAddress && isAuthenticated,
     // StakingPage/FullWalletPage stay mounted for the whole session
     // (PersistentPageCache), so a bare interval here runs forever once either
-    // page is visited — and each tick is 8 parallel ops including FOUR
-    // full-range eth_getLogs scans across BNB+Base. Route-gate the interval:
+    // page is visited, and each tick is six parallel reads. Route-gate it:
     // poll only while the user is actually LOOKING at stake/wallet; elsewhere
     // it stops entirely. Returning to the page refetches immediately
     // (staleTime 15s) and the interval restarts via the reactive pathname.
