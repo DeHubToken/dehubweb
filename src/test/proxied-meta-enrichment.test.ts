@@ -132,7 +132,7 @@ const VIDEO: Nft = {
 };
 
 describe('post description enrichment', () => {
-  it('leaves a post with its own body text and a distinctive title exactly as it was', () => {
+  it('leaves a post whose title already has its own em-dash clause exactly as it was', () => {
     const html = postPage(
       '2008',
       'Last Chad Standing — built by fighters and gamers',
@@ -281,6 +281,14 @@ describe('short post titles that collide', () => {
     const value = valueOf(out, 'title');
     expect(value).toBe(attr(`${title} — Bartholomew on DeHub`));
     expect(value.length).toBeLessThanOrEqual(70);
+  });
+
+  it('leaves a greeting alone as a title but still names the author', () => {
+    const out = enrichPostMeta(postPage('16', 'Hello', 'body', true, 'davyJones'), '16', {
+      postType: 'video',
+      displayName: 'davyJones',
+    });
+    expect(valueOf(out, 'title')).toBe(attr('Hello — a video by davyJones on DeHub'));
   });
 
   it('leaves a title long enough that no suffix fits', () => {

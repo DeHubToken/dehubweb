@@ -1549,7 +1549,10 @@ const UNTITLED_POST_TITLES = new Set(['', 'untitled']);
  * replaced outright.
  */
 const FILENAME_TITLE = /(?:\.(?:mp4|mov|m4v|avi|webm|mkv|jpe?g|png|gif|heic|webp|mp3|wav|m4a)$)|^(?:vid|img|pxl|trim|dsc|gopr|screenshot|whatsapp|snapchat)[-_. ]?\d/i;
-const PLACEHOLDER_TITLE = /^(?:test|testing|asdf|a+|untitled|new post|post|hello|hi|abc|123|\.+)$/i;
+// Only strings that express no intent at all. `Hello` and `Hi` are greetings
+// somebody chose to type — they collide, but the suffix path disambiguates
+// them without throwing away what was written.
+const PLACEHOLDER_TITLE = /^(?:test|testing|asdf|a+|untitled|new post|post|abc|123|\.+)$/i;
 function titleSaysNothing(title) {
   const t = String(title || '').trim();
   if (UNTITLED_POST_TITLES.has(t.toLowerCase())) return true;
@@ -1658,7 +1661,11 @@ function enrichPostMeta(html, postId, nft) {
     const suffixed = [`${title} — ${article} by ${author} on DeHub`, `${title} — ${author} on DeHub`].find(
       (candidate) => candidate.length <= TITLE_MAX,
     );
-    if (suffixed && !/\bon DeHub\b/i.test(title)) out = replacePostTitle(out, title, suffixed);
+    // A title that already carries the brand needs no branding, and one that
+    // already has an em-dash clause reads badly with a second one bolted on
+    // (`A — B — davyJones on DeHub`). Both are distinctive enough as they are.
+    const alreadyShaped = /\bon DeHub\b/i.test(title) || title.includes(' — ');
+    if (suffixed && !alreadyShaped) out = replacePostTitle(out, title, suffixed);
   }
 
   // The description rewrite below only has something to rewrite when the fn
