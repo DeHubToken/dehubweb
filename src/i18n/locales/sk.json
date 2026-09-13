@@ -2456,6 +2456,18 @@
     "signalFlare": "{{name}} odoslal signálny svetlicu",
     "newMessage": "{{name}} vám poslal správu"
   },
+  "audioPost": {
+    "popOut": "Vyskočte von - počas prehliadania počúvajte ďalej",
+    "closeCornerPlayer": "Zatvorte rohového prehrávača",
+    "cornerPlayer": "Prehrávanie audio príspevku",
+    "stopAndClose": "Zastavte a zatvorte prehrávač",
+    "untitled": "Audio príspevok",
+    "creator": "Tvorca programu DeHub",
+    "play": "Prehrať",
+    "pause": "Pozastaviť",
+    "listens_one": "{{count}} počúvajte",
+    "listens_other": "{{count}} počúva"
+  },
   "post": {
     "like": "Páči sa mi",
     "comment": "Komentár",

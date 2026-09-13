@@ -1006,6 +1006,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked || isSubGated || matureGate.isGated;
 
 
+  // The corner player took an audio post's track, or gave it back with this
+  // play state. While it holds the track this card is not the player: it drops
+  // its own play state, and with it its media session claim, so the two never
+  // fight over the OS controls.
+  const handleAudioPopOutChange = useCallback((poppedOut: boolean, playing: boolean) => {
+    const next = poppedOut ? false : playing;
+    isPlayingRef.current = next;
+    setIsPlaying(next);
+  }, []);
+
   const handlePlayClick = useCallback(() => {
     // Audio posts use AudioVisualizer which handles its own playback
     if (video.isAudio) {
@@ -1825,6 +1835,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                          rather than iOS's system player. */
                       onFullscreen={handleFullscreen}
                       isFullscreen={isFullscreen}
+                      popoutTrack={{
+                        tokenId: video.id,
+                        audioUrl: video.audioUrl,
+                        title: video.title || '',
+                        artist: video.channel || '',
+                        artworkUrl: video.channelAvatar || null,
+                      }}
+                      onPopOutChange={handleAudioPopOutChange}
                     />
                   </Suspense>
                 </div>

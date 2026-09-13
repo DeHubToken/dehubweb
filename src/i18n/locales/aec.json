@@ -2267,6 +2267,18 @@
     "signalFlare": "{{name}} بعتلك Signal Flare",
     "newMessage": "{{name}} بعتلك رسالة"
   },
+  "audioPost": {
+    "popOut": "اطلع برا — استمع وأنت تتصفح",
+    "closeCornerPlayer": "اقفل الشغل في الزاوية",
+    "cornerPlayer": "تشغيل البوست الصوتي",
+    "stopAndClose": "وقف واقفل الشغل",
+    "untitled": "بوست صوتي",
+    "creator": "منشئ ديهب",
+    "play": "شغل",
+    "pause": "وقف",
+    "listens_one": "{{count}} استمع",
+    "listens_other": "{{count}} يستمع"
+  },
   "post": {
     "like": "إعجاب",
     "comment": "تعليق",

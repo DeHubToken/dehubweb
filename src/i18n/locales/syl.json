@@ -1236,12 +1236,12 @@
     "onrampCreated": "Onramp session created",
     "failedOnramp": "Failed to start onramp",
     "badgeDiscount": "{{tier}} ধারক — {{percent}}% ছাড়",
+    "otherTokens": "আর টোকেন",
+    "otherTokensDesc": "তুাইনর কার্ড দি Base-ও ETH বা USDC কিনউক্কা",
     "amount": "পরিমাণ",
     "price": "দাম",
     "success": "কেনা অইসে!",
-    "failed": "কেনা ব্যর্থ",
-    "otherTokens": "আর টোকেন",
-    "otherTokensDesc": "তুাইনর কার্ড দি Base-ও ETH বা USDC কিনউক্কা"
+    "failed": "কেনা ব্যর্থ"
   },
   "agents": {
     "title": "AI এজেন্ট",
@@ -2430,6 +2430,18 @@
     "followAccepted": "{{name}} আপনার ফলো রিকোয়েস্ট গ্রহণ করেছে",
     "signalFlare": "{{name}} একটি সিগন্যাল ফ্লেয়ার পাঠিয়েছে",
     "newMessage": "{{name}} আপনাকে একটি বার্তা পাঠিয়েছে"
+  },
+  "audioPost": {
+    "popOut": "পপ আউট — ব্রাউজ করার সময় শুনতে থাকুন",
+    "closeCornerPlayer": "কোণার প্লেয়ার বন্ধ করুন",
+    "cornerPlayer": "অডিও পোস্ট প্লেব্যাক",
+    "stopAndClose": "প্লেয়ার বন্ধ করুন এবং বন্ধ করুন",
+    "untitled": "অডিও পোস্ট",
+    "creator": "DeHub ক্রিয়েটর",
+    "play": "চালু করুন",
+    "pause": "পজ করুন",
+    "listens_one": "{{count}} শুনুন",
+    "listens_other": "{{count}} শোনে"
   },
   "post": {
     "like": "ভালা লাগসে",
