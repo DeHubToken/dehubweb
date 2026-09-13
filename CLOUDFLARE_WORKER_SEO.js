@@ -256,7 +256,7 @@ const GUIDE_PAGES = {
 <li><strong>Web2-grade UX</strong> — social/email sign-in, sponsored gas, no seed-phrase wall in front of the first post.</li>
 <li><strong>Media depth</strong> — long-form video, live streaming and audio, not just microblogging.</li>
 </ul>
-<p><strong>DeHub</strong> scores across all four: uploads mint on-chain across Base and BNB Chain, creators monetize natively through tips, pay-per-view and token-gated posts, and sign-up works with plain email or socials. The full guide compares DeHub with <strong>Farcaster, Lens, Friend.tech and Hive</strong> on monetization, censorship resistance and UX.</p>
+<p><strong>DeHub</strong> scores across all four: uploads mint on-chain across Base, BNB, Robinhood Chain and Solana, creators monetize natively through tips, pay-per-view and token-gated posts, and sign-up works with plain email or socials. The full guide compares DeHub with <strong>Farcaster, Lens, Friend.tech and Hive</strong> on monetization, censorship resistance and UX.</p>
 <p><a href="${APP_URL}/guides/best-web3-social-media-dapps">Read the full ranked comparison</a> or <a href="${APP_URL}/">explore DeHub</a>.</p>`,
   },
   'best-decentralized-streaming-apps': {
@@ -265,7 +265,7 @@ const GUIDE_PAGES = {
     bodyHtml: `<p>Most "decentralized streaming" lists open with Theta and Livepeer. Neither is a streaming app — they are decentralized delivery and transcoding networks that sit underneath other products, and you cannot open either one and watch anything. Most of those lists also still feature DLive, which <strong>shut down in April 2026</strong>. This guide covers six apps that have a front door, an audience and a pulse.</p>
 <h2>The six</h2>
 <ul>
-<li><strong>DeHub</strong> — user-owned media platform on Base and BNB Chain. Live video, uploads, audio and shorts in one app, with voice changers, a sound-effects board, camera looks and screen share built into the browser broadcaster. Tips settle on-chain as they are sent: no follower threshold, no payout cycle, spendable immediately.</li>
+<li><strong>DeHub</strong> — user-owned media platform on Base, BNB, Robinhood Chain and Solana. Live video, uploads, audio and shorts in one app, with voice changers, a sound-effects board, camera looks and screen share built into the browser broadcaster. Tips settle on-chain as they are sent: no follower threshold, no payout cycle, spendable immediately.</li>
 <li><strong>Streamplace</strong> — open-source live video for the AT Protocol, so your Bluesky handle is your streaming identity. Very early, and no creator payments yet.</li>
 <li><strong>Odysee</strong> — the largest audience here, built on the LBRY protocol. Video-first, with livestreaming as a supplement to uploads.</li>
 <li><strong>3Speak</strong> — video and live on the Hive blockchain, where creator rewards are paid by the chain rather than by advertisers.</li>
