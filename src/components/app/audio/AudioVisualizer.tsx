@@ -1,6 +1,14 @@
 import * as React from 'react';
 import { useRef, useEffect, useState, useCallback, useMemo, useId } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import {
+  popOutAudioPost,
+  takeBackAudioPost,
+  toggleAudioPost,
+  useAudioPostPlayback,
+  type AudioPostTrack,
+} from '@/lib/audio-post-playback';
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
@@ -69,6 +77,17 @@ interface AudioVisualizerProps {
    * two things in one corner is worse than no volume control.
    */
   showVolume?: boolean;
+  /**
+   * What the corner player shows for this post. When given, a pop-out control
+   * is drawn beside fullscreen; without it there is nothing to pop out to.
+   */
+  popoutTrack?: AudioPostTrack;
+  /**
+   * The corner player took the track (`poppedOut` true) or gave it back with
+   * this play state. The card owning `isPlaying` uses it to step aside while
+   * the track is out, so two players never claim the media session at once.
+   */
+  onPopOutChange?: (poppedOut: boolean, playing: boolean) => void;
 }
 
 const STYLES: { value: VisualizerStyle; label: string }[] = [
@@ -113,7 +132,7 @@ const clamp01 = (n: number) => (Number.isFinite(n) ? Math.max(0, Math.min(1, n))
 
 export function AudioVisualizer({
   audioUrl,
-  isPlaying,
+  isPlaying: isPlayingProp,
   onPlayPause,
   className = '',
   showStylePicker = true,
@@ -124,7 +143,23 @@ export function AudioVisualizer({
   onFullscreen,
   isFullscreen = false,
   showVolume = true,
+  popoutTrack,
+  onPopOutChange,
 }: AudioVisualizerProps) {
+  const { t } = useTranslation();
+  /* ─── The corner player ──────────────────────────────────────────────
+     While this post is popped out the track lives in lib/audio-post-playback
+     and this component is a view onto it: the play state comes from there,
+     play/pause is forwarded, and the element it handed over is not touched
+     on unmount. The element and the analyser chain stay where they are — the
+     card keeps animating off the same graph while it is on screen. */
+  const shared = useAudioPostPlayback();
+  const isPoppedOut = !!popoutTrack && shared.tokenId === popoutTrack.tokenId;
+  const isPoppedOutRef = useRef(isPoppedOut);
+  isPoppedOutRef.current = isPoppedOut;
+  /** True from hand-over until the element comes back or the engine drops it. */
+  const handedOverRef = useRef(false);
+  const isPlaying = isPoppedOut ? shared.isPlaying : isPlayingProp;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -209,8 +244,10 @@ export function AudioVisualizer({
   // same near-viewport gate.
   useEffect(() => {
     if (!decodeEnabled && !isPlaying) return;
+    // The corner player has this track: a second element buys nothing.
+    if (isPoppedOut) return;
     ensureAudioElement();
-  }, [decodeEnabled, isPlaying, ensureAudioElement]);
+  }, [decodeEnabled, isPlaying, isPoppedOut, ensureAudioElement]);
 
   // Keep the scrubber in step with the element, however it got there.
   useEffect(() => {
@@ -227,6 +264,7 @@ export function AudioVisualizer({
       }
     };
     const onEnded = () => {
+      if (isPoppedOutRef.current) return; // the corner player rests at the end
       el.currentTime = 0;
       setCurrentTime(0);
       onPlayPauseRef.current();
@@ -447,22 +485,88 @@ export function AudioVisualizer({
   // land in the same call-stack as the click, which is what the autoplay policy
   // checks.
   const handlePlayPause = useCallback(() => {
+    if (isPoppedOutRef.current) {
+      toggleAudioPost();
+      return;
+    }
     if (!isPlayingRef.current && !isConnectedRef.current) {
       setupAudio();
     }
     onPlayPauseRef.current();
   }, [setupAudio]);
 
+  /**
+   * Pop out — or dock back. Popping out hands the element and its analyser
+   * chain over as they are (nothing reloads, nothing goes quiet), starts the
+   * track if it was idle, and leaves fullscreen: a corner player you cannot
+   * browse past is no corner player. Docking takes the same element back.
+   */
+  const handlePopOut = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (!popoutTrack) return;
+      if (isPoppedOutRef.current) {
+        const graph = takeBackAudioPost(popoutTrack.tokenId);
+        if (!graph) return;
+        audioRef.current = graph.el;
+        sourceRef.current = graph.source;
+        analyserRef.current = graph.analyser;
+        audioContextRef.current = graph.source ? sharedVisualizerContext : null;
+        isConnectedRef.current = !!graph.source;
+        handedOverRef.current = false;
+        setAudioElVersion((v) => v + 1);
+        onPopOutChange?.(false, !graph.el.paused);
+        return;
+      }
+      if (isFullscreen && onFullscreen) onFullscreen(e);
+      const el = audioRef.current;
+      const wasPlaying = isPlayingRef.current;
+      handedOverRef.current = !!el;
+      const startAt = pendingSeekRef.current ?? (duration > 0 ? currentTime / duration : null);
+      pendingSeekRef.current = null;
+      popOutAudioPost({
+        track: {
+          ...popoutTrack,
+          title: popoutTrack.title || t('audioPost.untitled'),
+          artist: popoutTrack.artist || t('audioPost.creator'),
+        },
+        graph: el ? { el, source: sourceRef.current, analyser: analyserRef.current } : null,
+        startAt: el ? null : startAt,
+      });
+      onPopOutChange?.(true, wasPlaying);
+    },
+    [popoutTrack, isFullscreen, onFullscreen, onPopOutChange, duration, currentTime, t],
+  );
+
+  // The corner player closed on this track — its X, or something else took
+  // the session — without handing the element back. Let go of it: the engine
+  // has already paused it and dropped its source. The next play builds a fresh
+  // element at the position the scrubber is showing.
+  useEffect(() => {
+    if (isPoppedOut || !handedOverRef.current) return;
+    handedOverRef.current = false;
+    const at = duration > 0 ? clamp01(currentTime / duration) : null;
+    audioRef.current = null;
+    sourceRef.current = null;
+    analyserRef.current = null;
+    audioContextRef.current = null;
+    isConnectedRef.current = false;
+    pendingSeekRef.current = at !== null && at < 0.999 ? at : null;
+    setAudioElVersion((v) => v + 1);
+    // Keyed on the hand-back alone: the position is read once, at that moment.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPoppedOut]);
+
   // Separate effect for playback control — runs AFTER state update from parent
   useEffect(() => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || isPoppedOut) return;
 
     if (isPlaying) {
       audioRef.current.play().catch(console.error);
     } else {
       audioRef.current.pause();
     }
-  }, [isPlaying, audioElVersion]);
+  }, [isPlaying, isPoppedOut, audioElVersion]);
 
   // Sync muted + volume. The caller's `muted` and the visualizer's own control
   // are OR'd rather than one overwriting the other: VideoCard mutes for its own
@@ -561,16 +665,20 @@ export function AudioVisualizer({
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.removeAttribute('src');
-        audioRef.current = null;
+      // A handed-over element and its nodes belong to the corner player now;
+      // it carries on after this card is gone and tears them down itself.
+      if (!handedOverRef.current) {
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current.removeAttribute('src');
+        }
+        // Detach this card's nodes from the SHARED context (never close it —
+        // other visualizers may be using it).
+        sourceRef.current?.disconnect();
+        analyserRef.current?.disconnect();
       }
-      // Detach this card's nodes from the SHARED context (never close it —
-      // other visualizers may be using it).
-      sourceRef.current?.disconnect();
+      audioRef.current = null;
       sourceRef.current = null;
-      analyserRef.current?.disconnect();
       analyserRef.current = null;
       audioContextRef.current = null;
       isConnectedRef.current = false;
@@ -660,6 +768,28 @@ export function AudioVisualizer({
             />
           </div>
         </div>
+        )}
+
+        {popoutTrack && (
+          <button
+            type="button"
+            aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')}
+            title={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')}
+            aria-pressed={isPoppedOut}
+            onClick={handlePopOut}
+            onPointerDown={stopBubble}
+            className={cn(
+              'pointer-events-auto shrink-0 w-7 flex items-center justify-center transition-colors',
+              CONTROL_H,
+              GLASS_PILL,
+              glassShadow,
+              isPoppedOut
+                ? 'from-white/45 via-white/35 to-white/25'
+                : 'hover:from-white/35 hover:via-white/25 hover:to-white/15',
+            )}
+          >
+            <PictureInPicture2 className="w-3.5 h-3.5 text-white" />
+          </button>
         )}
 
         {onFullscreen && (

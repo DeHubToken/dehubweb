@@ -2100,5 +2100,14 @@
     },
     "mediaSource": "Choose media source",
     "photoLibrary": "Photo library"
+  },
+  "audioPost": {
+    "cornerPlayer": "Audio post playback",
+    "untitled": "Audio post",
+    "creator": "DeHub creator",
+    "play": "Play",
+    "pause": "Pause",
+    "listens_one": "{{count}} listen",
+    "listens_other": "{{count}} listens"
   }
 }

@@ -2332,5 +2332,17 @@
     "followAccepted": "{{name}} Төмөнкү өтүнүчүңүздү кабыл алды",
     "signalFlare": "{{name}} Signal Flare жөнөттү",
     "newMessage": "{{name}} сизге билдирүү жөнөттү"
+  },
+  "audioPost": {
+    "popOut": "POP OUT — сен карап жатканда угуу",
+    "closeCornerPlayer": "Бурчтагы ойноткучту жабуу",
+    "cornerPlayer": "Аудио постту ойнотуу",
+    "stopAndClose": "Ойноткучту токтотуу жана жабуу",
+    "untitled": "Аудио билдирүү",
+    "creator": "DeHub жаратуучусу",
+    "play": "Ойнотуу",
+    "pause": "Пауза",
+    "listens_one": "{{count}} угуу",
+    "listens_other": "{{count}} listens"
   }
 }

@@ -1202,12 +1202,12 @@
     "onrampCreated": "Onramp session created",
     "failedOnramp": "Failed to start onramp",
     "badgeDiscount": "{{tier}} ধারক — {{percent}}% ছাড়",
+    "otherTokens": "আর টোকেন",
+    "otherTokensDesc": "তোমার কার্ড দিয়া Base-ত ETH বা USDC কিনেন",
     "amount": "পরিমাণ",
     "price": "দাম",
     "success": "কেনা হইছে!",
-    "failed": "কেনা ব্যর্থ",
-    "otherTokens": "আর টোকেন",
-    "otherTokensDesc": "তোমার কার্ড দিয়া Base-ত ETH বা USDC কিনেন"
+    "failed": "কেনা ব্যর্থ"
   },
   "agents": {
     "title": "AI এজেন্ট",
@@ -2101,6 +2101,18 @@
     "photoLibrary": "ছবির লাইব্রেরি",
     "videoFiles": "ফাইল থেকে ভিডিও",
     "fileError": "এই ভিডিওটি খোলা যায়নি। অনুগ্রহ করে অন্য একটি ফাইল চেষ্টা করুন।"
+  },
+  "audioPost": {
+    "popOut": "পপ আউট — ব্রাউজ করার সময় শুনতে থাকুন",
+    "closeCornerPlayer": "কোণার প্লেয়ার বন্ধ করুন",
+    "cornerPlayer": "অডিও পোস্ট প্লেব্যাক",
+    "stopAndClose": "প্লেয়ার বন্ধ করুন এবং বন্ধ করুন",
+    "untitled": "অডিও পোস্ট",
+    "creator": "ডিহাব ক্রিয়েটর",
+    "play": "চালান",
+    "pause": "বিরাম",
+    "listens_one": "{{count}} শুনুন",
+    "listens_other": "{{count}} শোনে"
   },
   "post": {
     "like": "ভালো লাগছে",

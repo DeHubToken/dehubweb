@@ -4479,6 +4479,18 @@
     "signalFlare": "{{name}} stuur 'n sein flare",
     "newMessage": "{{name}} stuur vir jou 'n boodskap"
   },
+  "audioPost": {
+    "popOut": "Pop uit — hou luister terwyl jy blaai",
+    "closeCornerPlayer": "Sluit die hoekspeler",
+    "cornerPlayer": "Oudio-pos terugspeel",
+    "stopAndClose": "Stop en sluit die speler",
+    "untitled": "Oudio-pos",
+    "creator": "DeHub-skepper",
+    "play": "Speel",
+    "pause": "Pouseer",
+    "listens_one": "{{count}} luister",
+    "listens_other": "{{count}} luisteraars"
+  },
   "home": {
     "title": "Volhoubare Web3-infrastruktuur",
     "subtitle": "Bou die volgende generasie gedesentraliseerde toepassings.",
