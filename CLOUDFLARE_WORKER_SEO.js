@@ -1633,7 +1633,13 @@ function replacePostTitle(html, oldTitle, newTitle) {
 
 function enrichPostMeta(html, postId, nft) {
   const templated = html.match(POST_DESCRIPTION_TEMPLATE);
-  const author = postAuthor(html, nft, templated) || 'someone';
+  // Two different things. `authorName` is empty when the page genuinely does
+  // not say who wrote it, and a title must never claim otherwise — `Stream —
+  // a post by someone on DeHub` is three identical titles again, with a lie
+  // added. `author` keeps the old wording for the description, where the
+  // template being present guarantees a real name anyway.
+  const authorName = postAuthor(html, nft, templated);
+  const author = authorName || 'someone';
   const titleTag = html.match(/<title>([^<]*)<\/title>/i);
   const title = decodeFnText(titleTag ? titleTag[1] : '').replace(/\s+/g, ' ').trim();
   const [kind, verb] = postKind(nft, html);
@@ -1648,8 +1654,9 @@ function enrichPostMeta(html, postId, nft) {
     // A caption the composer or the phone wrote, not one anybody chose, so
     // three of those from one account are three identical <title>s. The fn's
     // own fallback shape, with the id keeping siblings apart.
-    out = replacePostTitle(out, title, `${kind.charAt(0).toUpperCase()}${kind.slice(1)} #${postId} by ${author} on DeHub`);
-  } else if (author) {
+    const named = `${kind.charAt(0).toUpperCase()}${kind.slice(1)} #${postId}`;
+    out = replacePostTitle(out, title, authorName ? `${named} by ${authorName} on DeHub` : `${named} on DeHub`);
+  } else if (authorName) {
     // A real but short title — `Fun`, `stream`, `DeHub` — is a weak result on
     // its own and collides with everyone else who typed it: `stream` was 30
     // posts, `Promote DeHub` 14. Name the author and the format rather than
@@ -1658,7 +1665,7 @@ function enrichPostMeta(html, postId, nft) {
     // TITLE_MAX: the suffix is only applied when the result still fits, and
     // the shorter form is tried before giving up.
     const article = `a${/^[aeiou]/i.test(kind) ? 'n' : ''} ${kind}`;
-    const suffixed = [`${title} — ${article} by ${author} on DeHub`, `${title} — ${author} on DeHub`].find(
+    const suffixed = [`${title} — ${article} by ${authorName} on DeHub`, `${title} — ${authorName} on DeHub`].find(
       (candidate) => candidate.length <= TITLE_MAX,
     );
     // A title that already carries the brand needs no branding, and one that
