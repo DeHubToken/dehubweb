@@ -360,4 +360,33 @@ describe('wiring', () => {
     expect(descAlign).toBeGreaterThan(titleAlign);
     expect(WORKER.indexOf('escJsonText(HOME_DESCRIPTION)')).toBeGreaterThan(descAlign);
   });
+
+  /**
+   * The gate that shipped #1408 as a no-op. enrichPostMeta had its internal
+   * `if (!templated) return` removed so the title work could reach a post with
+   * body text — but the call site carried the same condition, so the function
+   * was still never called for one. Live, every filename title survived a
+   * green CI run and a clean deploy.
+   */
+  it('calls enrichPostMeta for every post, and reads the record only for a bodyless one', () => {
+    const call = WORKER.slice(
+      WORKER.indexOf('const proxiedPostId = '),
+      WORKER.indexOf('} else if (proxiedHandle) {'),
+    );
+    expect(call).toContain('if (proxiedPostId) {');
+    expect(call).not.toMatch(/if \(proxiedPostId && POST_DESCRIPTION_TEMPLATE\.test\(html\)\)/);
+    expect(call).toContain('bodyless ? await fetchPostRecord(proxiedPostId) : null');
+  });
+
+  it('does not reinstate the early return that made the title work unreachable', () => {
+    const fn = WORKER.slice(
+      WORKER.indexOf('function enrichPostMeta(html, postId, nft) {'),
+      WORKER.indexOf('function enrichProfileMeta(html, username) {'),
+    );
+    // The description half still needs a template; the title half must not.
+    const earlyReturn = fn.indexOf('if (!templated) return out;');
+    const titleWork = fn.indexOf('const untitled = titleSaysNothing(title);');
+    expect(titleWork).toBeGreaterThan(-1);
+    expect(earlyReturn).toBeGreaterThan(titleWork);
+  });
 });
