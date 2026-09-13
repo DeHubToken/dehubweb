@@ -339,7 +339,14 @@
     "smsSendCode": "Text me a code",
     "smsVerify": "Confirm code",
     "smsNumberVerified": "Number verified",
-    "smsNumberRemoved": "Number removed"
+    "smsNumberRemoved": "Number removed",
+    "badgeDelegation": "Badge delegation",
+    "badgeDelegationLoading": "Loading delegations…",
+    "badgeDelegationAccept": "Let others lend me their badge",
+    "badgeDelegationLend": "Lend",
+    "badgeDelegationLentToYou": "Lent to you",
+    "badgeDelegationHandBack": "Hand it back",
+    "badgeDelegationEnded": "Delegation ended"
   },
   "common": {
     "save": "Save Am",
