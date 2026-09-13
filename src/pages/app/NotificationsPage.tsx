@@ -9,7 +9,7 @@ import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Send, Scale, Siren, Briefcase
+import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Send, Scale, Siren, Briefcase, Award
 } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
@@ -294,6 +294,7 @@ const API_BACKED_TYPES = new Set([
   'subscription', 'ppv_purchase',
   'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased',
   'livestream_start', 'signal_flare', 'video_milestone',
+  'badge_delegated', 'badge_delegation_ended', 'badge_delegation_changed',
   'video_removal', 'account_warning', 'system',
 ]);
 
@@ -374,6 +375,12 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
       return <Zap className="w-4 h-4 text-white/70" />;
     case 'signal_flare':
       return <Siren className="w-4 h-4 text-white/70" />;
+    // A lent badge is still a badge — same glyph the tier itself reads as,
+    // whichever direction the loan moved.
+    case 'badge_delegated':
+    case 'badge_delegation_ended':
+    case 'badge_delegation_changed':
+      return <Award className="w-4 h-4 text-white/70" />;
     case 'video_removal':
       return <AlertTriangle className="w-4 h-4 text-white/70" />;
     case 'governance_vote':
@@ -862,6 +869,13 @@ function getNavigationLink(notification: DeHubNotification): string | null {
       return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
     case 'video_removal':
       return '/app/settings';
+    // The delegation panel is the only place a loan can be seen or ended, and
+    // `?highlight=` alone opens the right tab — the search index knows which
+    // tab the setting lives in, so the link cannot name the wrong one.
+    case 'badge_delegated':
+    case 'badge_delegation_ended':
+    case 'badge_delegation_changed':
+      return '/app/settings?highlight=badge-delegation';
     default:
       return null;
   }
