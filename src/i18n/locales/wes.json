@@ -334,6 +334,7 @@
     "badgeDelegation": "Badge delegation",
     "badgeDelegationLoading": "Loading delegations…",
     "badgeDelegationAccept": "Let others lend me their badge",
+    "badgeDelegationPickTier": "Badge to lend",
     "badgeDelegationLend": "Lend",
     "badgeDelegationLentToYou": "Lent to you",
     "badgeDelegationHandBack": "Hand it back",

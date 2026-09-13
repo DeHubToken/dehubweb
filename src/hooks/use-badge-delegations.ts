@@ -44,8 +44,8 @@ export function useGrantDelegation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (to: string) => grantDelegation(to),
-    onSuccess: (result, to) => {
+    mutationFn: ({ to, tier }: { to: string; tier?: string | null }) => grantDelegation(to, tier),
+    onSuccess: (result, { to }) => {
       toast.success(t('settings.badgeDelegationGranted', { to, tier: result.tier }));
       queryClient.invalidateQueries({ queryKey: BADGE_DELEGATIONS_KEY });
       queryClient.invalidateQueries({ queryKey: ['badge-balance'] });

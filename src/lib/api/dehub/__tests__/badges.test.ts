@@ -71,6 +71,14 @@ describe('badges.ts', () => {
     expect(JSON.parse(mockFetch.mock.calls[0][1].body)).toEqual({ to: 'someone' });
   });
 
+  it('grantDelegation sends the chosen tier when one is picked', async () => {
+    const { grantDelegation } = await import('../badges');
+    mockOk({ result: { tier: 'Crab', slotsRemaining: 7 } });
+
+    await expect(grantDelegation('someone', 'Crab')).resolves.toEqual({ tier: 'Crab', slotsRemaining: 7 });
+    expect(JSON.parse(mockFetch.mock.calls[0][1].body)).toEqual({ to: 'someone', tier: 'Crab' });
+  });
+
   it('surfaces the server’s own refusal wording rather than a status code', async () => {
     const { grantDelegation } = await import('../badges');
     mockFail(409, { error: 'No free delegation slots', reason: 'no_free_slots' });
