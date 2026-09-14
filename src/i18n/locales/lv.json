@@ -2008,6 +2008,24 @@
       "breakdown": "— tie seko izvēlētajam diapazonam, bet tikai {{max}} dienas atpakaļ, tik ilgi tiek glabāts dienas sadalījums. Garākos diapazonos diagramma aptver vairāk laika nekā valstu saraksts.",
       "startTerm": "Vēsture",
       "start": "— “viss laiks” nozīmē katru dienu, ko Cloudflare vēl saglabā, šodien {{days}} dienas kopš {{date}}, dienas, kad dehub.io pārgāja uz Cloudflare. Agrāku malas datu nav, un vecākas dienas izkrīt, kad Cloudflare tām beidzas glabāšanas termiņš."
+    },
+    "feedback": {
+      "title": "Atsauksmes",
+      "intro": "Jau kādu laiku izmantojat DeHub? Pastāstiet mums, kāda tā ir bijusi. Laba, slikta vai konkrēta — visu mēs lasām. Ja jūs piekrītat, ka mēs varam jūs citēt, atzīmējiet lodziņu, un mēs to varētu izmantot ierakstos, videoklipus vai vietnē.",
+      "placeholder": "Saviem vārdiem…",
+      "timeUsingPlaceholder": "Cik ilgi jūs šeit esat? (neobligāti)",
+      "consentPromo": "Es autorizēju DeHub citēt šīs atsauksmes mārketinga un reklāmas materiālos.",
+      "consentName": "Varat parādīt manu lietotājvārdu līdzās tam. Atstājiet šo neatzīmētu, lai tiktu citēts anonīmi.",
+      "submit": "Sūtīt atsauksmes",
+      "sending": "Sūta…",
+      "signedOut": "Pierakstieties, lai atstātu atsauksmes",
+      "thanks": "Saprasts — paldies. Viss, ko jūs atļāvāt izmantot reklāmas nolūkos, pirms tam tiek pārskatīts cilvēks.",
+      "again": "Atstāt vairāk atsauksmju",
+      "toastSent": "Paldies — jūsu atsauksmes ir pie mums",
+      "toastFailed": "Nevarēja sūtīt, mēģiniet vēlreiz",
+      "wallTitle": "Ko saka cilvēki",
+      "wallNote": "publicēts ar atļauju",
+      "anonymous": "DeHub biedrs"
     }
   },
   "superpowers": {

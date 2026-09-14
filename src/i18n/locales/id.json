@@ -2043,6 +2043,24 @@
       "breakdown": "— ini mengikuti rentang yang Anda pilih, tetapi hanya sampai {{max}} hari ke belakang, sejauh itulah rincian harian disimpan. Pada rentang yang lebih panjang, grafiknya mencakup waktu lebih lama daripada daftar negara.",
       "startTerm": "Riwayat",
       "start": "— \"seluruh waktu\" berarti setiap hari yang masih disimpan Cloudflare, hari ini {{days}} hari mulai {{date}}, hari dehub.io pindah ke Cloudflare. Tidak ada data edge yang lebih lama untuk ditampilkan, dan hari-hari lama hilang seiring Cloudflare mengedaluwarsakannya."
+    },
+    "feedback": {
+      "title": "Umpan Balik",
+      "intro": "Sudah menggunakan DeHub untuk sementara waktu? Beritahu kami seperti apa pengalamannya. Baik, buruk atau spesifik — semuanya kami baca. Jika Anda senang kami mengutip Anda, centang kotak dan kami mungkin menggunakannya di postingan, video atau di situs.",
+      "placeholder": "Dengan kata-kata Anda sendiri…",
+      "timeUsingPlaceholder": "Berapa lama Anda berada di sini? (opsional)",
+      "consentPromo": "Saya mengizinkan DeHub untuk mengutip umpan balik ini dalam materi pemasaran dan promosi.",
+      "consentName": "Anda dapat menampilkan nama pengguna saya di sampingnya. Biarkan ini tidak dicentang untuk dikutip secara anonim.",
+      "submit": "Kirim umpan balik",
+      "sending": "Mengirim…",
+      "signedOut": "Masuk untuk memberikan umpan balik",
+      "thanks": "Baik — terima kasih. Apa pun yang Anda izinkan untuk penggunaan promosi ditinjau oleh seseorang sebelum muncul di mana pun.",
+      "again": "Berikan lebih banyak umpan balik",
+      "toastSent": "Terima kasih — umpan balik Anda sudah sampai ke kami",
+      "toastFailed": "Tidak dapat mengirim itu, coba lagi",
+      "wallTitle": "Apa yang orang katakan",
+      "wallNote": "dipublikasikan dengan izin",
+      "anonymous": "Seorang anggota DeHub"
     }
   },
   "superpowers": {

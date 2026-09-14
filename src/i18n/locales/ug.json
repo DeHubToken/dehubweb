@@ -1985,6 +1985,24 @@
       "breakdown": "— بۇلار تاللىغان دائىرىڭىزگە ئەگىشىدۇ، ئەمما پەقەت {{max}} كۈن كەينىگىچىلا، چۈنكى كۈنلۈك تەھلىل شۇنچىلىك ساقلىنىدۇ. ئۇزۇنراق دائىرىلەردە، دىئاگرامما دۆلەت تىزىملىكىگە قارىغاندا كۆپرەك ۋاقىتنى ئۆز ئىچىگە ئالىدۇ.",
       "startTerm": "تارىخ",
       "start": "— «بارلىق ۋاقىت» Cloudflare تېخى ساقلاۋاتقان ھەر بىر كۈننى بىلدۈرىدۇ، بۈگۈن بۇ {{date}} دىن باشلانغان {{days}} كۈن، يەنى dehub.io Cloudflare غا كۆچكەن كۈن. ئۇنىڭدىن ئىلگىرىكى edge سانلىق مەلۇماتى كۆرسىتىشكە يوق، ۋە كونا كۈنلەر Cloudflare ئۇلارنى قېرىتقان ھامان چۈشۈپ كېتىدۇ."
+    },
+    "feedback": {
+      "title": "Feedback",
+      "intro": "DeHub'ni bir müddət işlitiwatisiz? Bizge nima bolghanliqini ayt. Yaxshi, yaman yaki aniq — hemmisi oqilidu. Eger bizge sizi qutup berish ruxsitini berseniz, qutini belgile va biz uni post, video yaki saytda ishletishimiz mumkin.",
+      "placeholder": "Öz sözliringiz bilen…",
+      "timeUsingPlaceholder": "Shu yerda qancha waqit boldiniz? (ixtiyariy)",
+      "consentPromo": "DeHub'ni bu feedback'ni marketing we reklama materiallarida qutup berish ruxsitini berimen.",
+      "consentName": "Mening foydalanuvchi namimni uning bilen körsitish mumkin. Anonimlik bilen qutilishi uchun bu qutini belgilemedik.",
+      "submit": "Feedback yubur",
+      "sending": "Yuburuluwatidu…",
+      "signedOut": "Feedback qoldurush uchun kirip oling",
+      "thanks": "Tushundim — rahmat. Reklama ishlatish uchun tuzatilgan hemmisi bir kishi torepdin qarap chiqilidu.",
+      "again": "Köp feedback qoldur",
+      "toastSent": "Rahmat — sizning feedback'ingiz bizde",
+      "toastFailed": "Shu nerseni yubura olmidi, qayta urunup kor",
+      "wallTitle": "Millet nima deydu",
+      "wallNote": "ruxsit bilen nashr qilindi",
+      "anonymous": "DeHub a'zosi"
     }
   },
   "superpowers": {

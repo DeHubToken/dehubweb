@@ -2029,6 +2029,24 @@
       "breakdown": "— hizi hufuata kipindi unachochagua, lakini tu hadi siku {{max}} nyuma, ndipo mchanganuo wa kila siku unapohifadhiwa. Katika vipindi virefu chati hufunika muda mrefu kuliko orodha ya nchi.",
       "startTerm": "Historia",
       "start": "— \"muda wote\" maana yake ni kila siku ambayo Cloudflare bado inahifadhi, leo ni siku {{days}} kuanzia {{date}}, siku ambayo dehub.io ilihamia Cloudflare. Hakuna data ya awali ya ukingoni ya kuonyesha, na siku za zamani hupotea Cloudflare inapozizeesha."
+    },
+    "feedback": {
+      "title": "Maoni",
+      "intro": "Umekuwa ukitumia DeHub kwa muda? Tuambie jinsi gani inavyokuwa. Nzuri, mbaya au mahususi — yote yanasome. Ikiwa unafurahi kwa sisi kukuquote, tiki sanduku na tunaweza kuitumia katika machapisho, video au kwenye tovuti.",
+      "placeholder": "Kwa maneno yako mwenyewe…",
+      "timeUsingPlaceholder": "Umekuwa hapa kwa muda gani? (si lazima)",
+      "consentPromo": "Ninakuruhusu DeHub kwa kuquote maoni haya katika nyenzo za uuzaji na matangazo.",
+      "consentName": "Unaweza kuonyesha jina lako la mtumiaji pamoja nayo. Acha hii bila kutikilisha ili kuquote kwa siri.",
+      "submit": "Tuma maoni",
+      "sending": "Inatuma…",
+      "signedOut": "Ingia ili kuacha maoni",
+      "thanks": "Sawa — asante. Kitu chochote ulichoruhusu kwa matumizi ya matangazo kinakaguliwa na mtu kabla haijionekani mahali popote.",
+      "again": "Acha maoni zaidi",
+      "toastSent": "Asante — maoni yako iko nasi",
+      "toastFailed": "Haikuweza kutuma hiyo, jaribu tena",
+      "wallTitle": "Watu wanasema nini",
+      "wallNote": "kuchapishwa kwa ruhusa",
+      "anonymous": "Mwanachama wa DeHub"
     }
   },
   "superpowers": {

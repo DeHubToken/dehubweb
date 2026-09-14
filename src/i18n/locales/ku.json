@@ -1851,6 +1851,24 @@
       "breakdown": "— ev li gorî navbera ku tu hilbijêrî ne, lê tenê heta {{max}} rojên paşve, ji ber ku dabeşkirina rojane tenê heta wê radeyê tê parastin. Li navberên dirêjtir grafîk demeke ji lîsteya welatan zêdetir vedigire.",
       "startTerm": "Dîrok",
       "start": "— \"hemû dem\" tê wateya her rojê ku Cloudflare hê jî diparêze, ku îro {{days}} roj e, ji {{date}} dest pê dike, roja ku dehub.io çû ser Cloudflare. Tu daneyên kêlekê yên berê tune ku werin nîşandan, û rojên kevintir wek Cloudflare temenê wan mezin dike, dadikevin."
+    },
+    "feedback": {
+      "title": "بۆچوون",
+      "intro": "DeHub بۆ مات بەکاردەهێنیت؟ پێیان بدە چۆن بووە. باش، خراپ یان تایبەت — هەموو شتێک خوێندراوە. ئەگەر خۆشحال بیت کە ئێمە نقولت بکەین، قوتابی بکە و ممکن دەتوانین لە پۆستەکان، ڤیدیۆکان یان لە سایتەکەدا بەکاربهێنین.",
+      "placeholder": "بە وشەکانی خۆت…",
+      "timeUsingPlaceholder": "چەند مات لێرە یت؟ (بەختیاری)",
+      "consentPromo": "من DeHub مۆڵەت دەدەم نقولی ئەم بۆچوونە لە ماتریسی مارکێتینگ و بڵاوکردنەوەدا بەکاربهێنێت.",
+      "consentName": "دەتوانیت ناوی بەکارهێنەرم لەگەڵی نیشان بدەیت. ئەم قوتابیە بەتاڵ بهێڵ بۆ ئەوەی بە ناونیشتمان نقول بکرێت.",
+      "submit": "نێرانی بۆچوون",
+      "sending": "ناردن…",
+      "signedOut": "بۆ جێهێشتنی بۆچوون تێکەڵ ببە",
+      "thanks": "باشە — سپاس. هەموو شتێک کە بۆ بەکارهێنانی بڵاوکردنەوە پاکی کردیت لەلایەن کەسێک پێش ئەوەی لە جێیەکدا دەرکەوێت پێراستن دەکرێت.",
+      "again": "بۆچوونی زیاتر بهێڵ",
+      "toastSent": "سپاس — بۆچوونت لەگەڵ ئێمەیە",
+      "toastFailed": "نەتوانی ئەوە بنێرێت، دووبارە هەوڵ بدە",
+      "wallTitle": "ئەو شتانەی کە خەڵکی دەڵێن",
+      "wallNote": "بڵاوکراوە بە مۆڵەت",
+      "anonymous": "ئەندامێکی DeHub"
     }
   },
   "superpowers": {

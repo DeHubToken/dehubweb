@@ -1974,6 +1974,24 @@
       "breakdown": "— die folge de Zytperiode wo du wählsch, aber nume {{max}} Täg zrugg, so wyt wie d'Ufschlüsslig pro Tag ufbhalte wird. By länger Perioden deckt s'Diagramm meh Zyt ab als d'Länderlischte.",
       "startTerm": "Verlauf",
       "start": "— \"all time\" heisst jede Tag wo Cloudflare no ufbhalt, das sind hüt {{days}} Täg ab {{date}}, de Tag wo dehub.io zu Cloudflare gwächslet isch. Es git kei früeneri Edge-Date zum Zeige, und ältere Täg falle raus, sobald Cloudflare si veralte loht."
+    },
+    "feedback": {
+      "title": "Feedback",
+      "intro": "Häsch DeHub scho e Wiile brucht? Säg üs, wie's gsi isch. Guet, schlecht oder spezifisch — alles wird gläse. Wenn du glücklich bisch, dass mir dich zitiere, mach e Häkche und mir chönnted's villicht i Posts, Videos oder uf dr Website bruuche.",
+      "placeholder": "In dine eigene Wort…",
+      "timeUsingPlaceholder": "Wie lang bisch du scho da? (optional)",
+      "consentPromo": "Ich erlaube DeHub, dieses Feedback i Marketing- und Promotionsmaterial z'zitiere.",
+      "consentName": "Du chasch din Username drzue zeige. Lass das unmarkiert, wenn du anonym zitiert wärsch.",
+      "submit": "Feedback schicke",
+      "sending": "Am schicke…",
+      "signedOut": "Meld dich a, um Feedback z'gä",
+      "thanks": "Klar — danke. Alles, wo du für Promotionszwecke freigäbsch, wird vor dr Veröffentlichig vo eme Mönsch überprüeft.",
+      "again": "Meh Feedback gä",
+      "toastSent": "Danke — diin Feedback isch bi üs",
+      "toastFailed": "Das het nid funktioniert, versuchs nomol",
+      "wallTitle": "Was Lüt säge",
+      "wallNote": "veröffentlicht mit Erlaubnis",
+      "anonymous": "E DeHub-Mitglid"
     }
   },
   "superpowers": {

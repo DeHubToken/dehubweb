@@ -2042,6 +2042,24 @@
       "breakdown": "— siguen el rango que elijas, pero solo hasta {{max}} días atrás, que es hasta donde se guarda el desglose diario. En rangos más largos el gráfico cubre más tiempo que la lista de países.",
       "startTerm": "Historial",
       "start": "— «histórico» significa cada día que Cloudflare aún conserva, hoy {{days}} días desde el {{date}}, el día en que dehub.io pasó a Cloudflare. No hay datos de edge anteriores que mostrar, y los días antiguos van desapareciendo según Cloudflare los caduca."
+    },
+    "feedback": {
+      "title": "Comentarios",
+      "intro": "¿Llevas un tiempo usando DeHub? Cuéntanos cómo ha sido. Bueno, malo o específico — todo se lee. Si estás de acuerdo en que te citemos, marca la casilla y es posible que usemos tu comentario en publicaciones, vídeos o en el sitio.",
+      "placeholder": "Con tus propias palabras…",
+      "timeUsingPlaceholder": "¿Cuánto tiempo llevas aquí? (opcional)",
+      "consentPromo": "Autorizo a DeHub a citar este comentario en materiales de marketing y promoción.",
+      "consentName": "Puedes mostrar mi nombre de usuario junto a él. Deja esto sin marcar para ser citado de forma anónima.",
+      "submit": "Enviar comentario",
+      "sending": "Enviando…",
+      "signedOut": "Inicia sesión para dejar un comentario",
+      "thanks": "Entendido — gracias. Cualquier cosa que hayas autorizado para uso promocional será revisada por una persona antes de aparecer en cualquier lugar.",
+      "again": "Dejar más comentarios",
+      "toastSent": "Gracias — tu comentario está con nosotros",
+      "toastFailed": "No se pudo enviar eso, intenta de nuevo",
+      "wallTitle": "Lo que dice la gente",
+      "wallNote": "publicado con permiso",
+      "anonymous": "Un miembro de DeHub"
     }
   },
   "superpowers": {

@@ -2045,6 +2045,24 @@
       "breakdown": "——它们跟随你选择的范围，但最多只能回溯 {{max}} 天，这是按日分布的保留上限。范围更长时，图表覆盖的时间会比国家列表更长。",
       "startTerm": "历史",
       "start": "——\"全部时间\"指 Cloudflare 仍然保留的每一天，目前为自 {{date}}（dehub.io 迁到 Cloudflare 的那天）起的 {{days}} 天。此前没有边缘数据可展示，较早的日期也会随着 Cloudflare 过期而消失。"
+    },
+    "feedback": {
+      "title": "反馈",
+      "intro": "使用DeHub有一段时间了？告诉我们这段时间的体验如何。好的、不好的或具体的——我们会阅读所有内容。如果您同意我们引用您的反馈，请勾选该框，我们可能会在帖子、视频或网站上使用它。",
+      "placeholder": "用您自己的话说…",
+      "timeUsingPlaceholder": "您在这里多久了？（可选）",
+      "consentPromo": "我授权DeHub在营销和宣传材料中引用此反馈。",
+      "consentName": "您可以在其旁边显示我的用户名。不勾选此项将匿名引用。",
+      "submit": "发送反馈",
+      "sending": "发送中…",
+      "signedOut": "登录以留下反馈",
+      "thanks": "明白了——谢谢。任何您允许用于宣传目的的内容都会在发布前由工作人员审核。",
+      "again": "留下更多反馈",
+      "toastSent": "谢谢——我们已收到您的反馈",
+      "toastFailed": "无法发送，请重试",
+      "wallTitle": "人们怎么说",
+      "wallNote": "已获得许可发布",
+      "anonymous": "DeHub成员"
     }
   },
   "superpowers": {

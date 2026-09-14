@@ -1933,6 +1933,24 @@
       "breakdown": "— 只寡照汝拣其范围来，毋过干焦倒转 {{max}} 日，逐日细目干焦留到遮。范围较长其时，图表盖其时间比国家列表较阔。",
       "startTerm": "历史",
       "start": "— 「全部时间」是指 Cloudflare 还留其逐日，今仔日算来是对 {{date}}（dehub.io 搬去 Cloudflare 彼日）算起其 {{days}} 日。较早其边缘数据无通显示，Cloudflare 若共旧其淘汰去，只寡日子就无去啊。"
+    },
+    "feedback": {
+      "title": "反馈",
+      "intro": "使用 DeHub 有一段时间了吗？告诉我们这段时间的体验如何。好的、不好的或具体的——我们都会阅读。如果你愿意让我们引用你的意见，请勾选该框，我们可能会在帖子、视频或网站上使用它。",
+      "placeholder": "用你自己的话说…",
+      "timeUsingPlaceholder": "你在这里多久了？（可选）",
+      "consentPromo": "我授权 DeHub 在营销和宣传材料中引用此反馈。",
+      "consentName": "你可以在旁边显示我的用户名。不勾选此项将匿名引用。",
+      "submit": "发送反馈",
+      "sending": "发送中…",
+      "signedOut": "登录以留下反馈",
+      "thanks": "明白了——谢谢。任何你允许用于宣传用途的内容都会由一个人在发布前进行审查。",
+      "again": "留下更多反馈",
+      "toastSent": "谢谢——我们已收到你的反馈",
+      "toastFailed": "无法发送，请重试",
+      "wallTitle": "人们怎么说",
+      "wallNote": "已获得许可发布",
+      "anonymous": "DeHub 成员"
     }
   },
   "superpowers": {

@@ -5125,6 +5125,45 @@ export type Database = {
         }
         Relationships: []
       }
+      user_testimonials: {
+        Row: {
+          allow_name: boolean
+          allow_promo: boolean
+          body: string
+          created_at: string
+          id: string
+          reviewed_at: string | null
+          status: string
+          time_using: string | null
+          username: string | null
+          wallet_address: string
+        }
+        Insert: {
+          allow_name?: boolean
+          allow_promo?: boolean
+          body: string
+          created_at?: string
+          id?: string
+          reviewed_at?: string | null
+          status?: string
+          time_using?: string | null
+          username?: string | null
+          wallet_address: string
+        }
+        Update: {
+          allow_name?: boolean
+          allow_promo?: boolean
+          body?: string
+          created_at?: string
+          id?: string
+          reviewed_at?: string | null
+          status?: string
+          time_using?: string | null
+          username?: string | null
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       user_feedback_surveys: {
         Row: {
           age_range: string | null
@@ -5901,6 +5940,16 @@ export type Database = {
       }
     }
     Views: {
+      public_testimonials: {
+        Row: {
+          body: string | null
+          created_at: string | null
+          id: string | null
+          time_using: string | null
+          username: string | null
+        }
+        Relationships: []
+      }
       chess_records: {
         Row: {
           draws: number | null

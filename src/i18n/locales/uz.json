@@ -2024,6 +2024,24 @@
       "breakdown": "— ular siz tanlagan oraliqqa ergashadi, lekin faqat {{max}} kun orqaga: kunlik taqsimot shuncha saqlanadi. Uzunroq oraliqlarda diagramma davlatlar ro'yxatidan ko'proq vaqtni qamrab oladi.",
       "startTerm": "Tarix",
       "start": "— «butun davr» Cloudflare hali saqlab turgan har bir kunni bildiradi, bugun dehub.io Cloudflare'ga o'tgan {{date}} dan boshlab {{days}} kun. Undan oldingi chekka ma'lumot yo'q va eski kunlar Cloudflare ularni eskirtirgani sari yo'qoladi."
+    },
+    "feedback": {
+      "title": "Fikr-mulohaza",
+      "intro": "DeHub-dan foydalanib turganmisiz? Uning qanday bo'lganini bizga ayting. Yaxshi, yomon yoki aniq — hammasini o'qiyamiz. Agar biz sizni sitata qilishiga rozi bo'lsangiz, katakni belgilang va biz uni postlarda, videolarda yoki saytda ishlatishimiz mumkin.",
+      "placeholder": "O'z so'zlaringiz bilan…",
+      "timeUsingPlaceholder": "Siz bu yerda qancha vaqt bo'ldingiz? (ixtiyoriy)",
+      "consentPromo": "Men DeHub-ga bu fikr-mulohazani marketing va reklama materiallari uchun sitata qilishiga ruxsat beraman.",
+      "consentName": "Mening foydalanuvchi nomimni uning yonida ko'rsatishingiz mumkin. Bu katakni belgilashni olib tashlang, agar anonimlik bilan sitata qilinishini xohlasangiz.",
+      "submit": "Fikr-mulohazani yuborish",
+      "sending": "Yuborilmoqda…",
+      "signedOut": "Fikr-mulohaza qoldirish uchun tizimga kiring",
+      "thanks": "Tushundim — rahmat. Reklama uchun tasdiqlanganlarning barchasi saytda paydo bo'lishidan oldin odam tomonidan tekshiriladi.",
+      "again": "Yana fikr-mulohaza qoldiring",
+      "toastSent": "Rahmat — sizning fikr-mulohazangiz bizda",
+      "toastFailed": "Buni yuborish mumkin emas, qayta urinib ko'ring",
+      "wallTitle": "Odamlar nima deyishadi",
+      "wallNote": "ruxsat bilan nashr etilgan",
+      "anonymous": "DeHub a'zosi"
     }
   },
   "superpowers": {

@@ -2041,6 +2041,24 @@
       "breakdown": "— seçtiğiniz aralığı izler, ancak yalnızca {{max}} gün geriye kadar; günlük dağılım bu kadar saklanır. Daha uzun aralıklarda grafik, ülke listesinden daha fazla zamanı kapsar.",
       "startTerm": "Geçmiş",
       "start": "— \"tüm zamanlar\", Cloudflare'in hâlâ sakladığı her gün demektir; bugün dehub.io'nun Cloudflare'e geçtiği {{date}} tarihinden itibaren {{days}} gün. Daha eski uç verisi yoktur ve Cloudflare eskittikçe eski günler düşer."
+    },
+    "feedback": {
+      "title": "Geri Bildirim",
+      "intro": "DeHub'ı bir süredir kullanıyor musunuz? Bize nasıl olduğunu anlatın. İyi, kötü veya spesifik — hepsi okunur. Sizi alıntılamaktan mutlu iseniz, kutuyu işaretleyin ve bunu yazılarda, videolarda veya sitede kullanabiliriz.",
+      "placeholder": "Kendi sözcüklerinizle…",
+      "timeUsingPlaceholder": "Burada ne kadar süredir varsınız? (isteğe bağlı)",
+      "consentPromo": "DeHub'ın bu geri bildirimi pazarlama ve promosyon materyallerinde alıntılamasına izin veriyorum.",
+      "consentName": "Kullanıcı adımı yanında gösterebilirsiniz. Anonim olarak alıntılanmak için bunu işaretlemeden bırakın.",
+      "submit": "Geri bildirimi gönder",
+      "sending": "Gönderiliyor…",
+      "signedOut": "Geri bildirim bırakmak için oturum açın",
+      "thanks": "Anlaşıldı — teşekkürler. Promosyon kullanımı için temizlediğiniz herhangi bir şey, herhangi bir yerde görünmeden önce bir kişi tarafından incelenir.",
+      "again": "Daha fazla geri bildirim bırak",
+      "toastSent": "Teşekkürler — geri bildiriminiz bizde",
+      "toastFailed": "Bu gönderilemedi, tekrar deneyin",
+      "wallTitle": "İnsanlar ne diyor",
+      "wallNote": "izinle yayınlandı",
+      "anonymous": "Bir DeHub üyesi"
     }
   },
   "superpowers": {

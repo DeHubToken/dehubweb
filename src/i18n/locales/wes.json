@@ -1879,6 +1879,12 @@
       "breakdown": "— dis dem di follow di range weh yu pick, bot na only bak {{max}} dei dem, weh na so far di per-dei breakdown dei kept. Fo longa range dem, di chart di kova moa taim pas wetin di country list di kova.",
       "startTerm": "History",
       "start": "— “all time” min sei eni dei weh Cloudflare stil di keep-am, weh tudei na {{days}} dei weh start {{date}}, di dei weh dehub.io muv go Cloudflare. No earlier edge data dei for sho, an oda dei dem weh olda dem di komot wen Cloudflare don age dem out."
+    },
+    "feedback": {
+      "title": "Feedback",
+      "submit": "Send feedback",
+      "sending": "Sending…",
+      "anonymous": "A DeHub member"
     }
   },
   "superpowers": {

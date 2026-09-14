@@ -2003,6 +2003,24 @@
       "breakdown": "— de følger området du velger, men bare {{max}} dager bakover, så lenge lagres dagsfordelingen. Ved lengre områder dekker grafen mer tid enn landlisten.",
       "startTerm": "Historikk",
       "start": "— «hele perioden» betyr hver dag Cloudflare fortsatt beholder, i dag {{days}} dager fra {{date}}, dagen dehub.io flyttet til Cloudflare. Det finnes ingen eldre kantdata å vise, og gamle dager faller bort etter hvert som Cloudflare lar dem utløpe."
+    },
+    "feedback": {
+      "title": "Tilbakemelding",
+      "intro": "Har du brukt DeHub en stund? Fortell oss hvordan det har vært. Bra, dårlig eller spesifikt — alt blir lest. Hvis du er glad for at vi siterer deg, huk av boksen og vi kan bruke det i innlegg, videoer eller på nettstedet.",
+      "placeholder": "Med dine egne ord…",
+      "timeUsingPlaceholder": "Hvor lenge har du vært her? (valgfritt)",
+      "consentPromo": "Jeg autoriserer DeHub til å sitere denne tilbakemeldingen i markedsførings- og promoteringsmateriale.",
+      "consentName": "Du kan vise brukernavnet mitt sammen med det. La denne være uhukket for å bli sitert anonymt.",
+      "submit": "Send tilbakemelding",
+      "sending": "Sender…",
+      "signedOut": "Logg inn for å gi tilbakemelding",
+      "thanks": "Skjønner — takk. Alt du har godkjent for promoteringsbruk blir gjennomgått av en person før det vises noe sted.",
+      "again": "Gi mer tilbakemelding",
+      "toastSent": "Takk — tilbakemeldingen din er hos oss",
+      "toastFailed": "Kunne ikke sende det, prøv igjen",
+      "wallTitle": "Hva folk sier",
+      "wallNote": "publisert med tillatelse",
+      "anonymous": "Et DeHub-medlem"
     }
   },
   "superpowers": {

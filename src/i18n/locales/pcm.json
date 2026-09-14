@@ -1876,6 +1876,12 @@
       "breakdown": "— dis one dey follow di range wey you pick, but e only dey go back {{max}} days, na so far di per-day breakdown dey keep am. For longer range, di chart cover more time pass di country list.",
       "startTerm": "History",
       "start": "— \"all time\" mean every day wey Cloudflare still keep, wey today na {{days}} days starting {{date}}, di day wey dehub.io move go Cloudflare. No earlier edge data dey to show, and old days dey drop off as Cloudflare dey age dem out."
+    },
+    "feedback": {
+      "title": "Feedback",
+      "submit": "Send feedback",
+      "sending": "Sending…",
+      "anonymous": "A DeHub member"
     }
   },
   "superpowers": {
