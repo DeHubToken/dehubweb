@@ -7,6 +7,7 @@
  */
 
 import { useState, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -250,7 +251,13 @@ function AudioTrackCard({ track }: { track: AudioTrack }) {
 
 export default function MusicPage() {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<MusicTabValue>('all');
+  const [searchParams] = useSearchParams();
+  // Home's radio carousel links straight to this tab, so honour ?tab= on first
+  // render rather than landing on All and making the reader find radio again.
+  const [activeTab, setActiveTab] = useState<MusicTabValue>(() => {
+    const requested = searchParams.get('tab');
+    return MUSIC_TABS.some((tab) => tab.value === requested) ? (requested as MusicTabValue) : 'all';
+  });
   const musicIsDraggingRef = useRef(false);
   const { layerRef: musicTabLayerRef, setRef: setMusicTabRef, rect: musicTabRect, onScroll: onMusicTabScroll } = useTabIndicator(activeTab, undefined, musicIsDraggingRef);
 

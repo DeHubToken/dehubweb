@@ -1373,7 +1373,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             Radio Stations
             <span className="text-zinc-500 font-normal text-sm">(50K)</span>
           </h3>
-          <button className="text-zinc-400 text-sm hover:text-white flex items-center gap-1">
+          <button
+            onClick={() => navigate('/app/music?tab=radio')}
+            className="text-zinc-400 text-sm hover:text-white flex items-center gap-1"
+          >
             See all <ChevronRight className="w-4 h-4" />
           </button>
         </div>
