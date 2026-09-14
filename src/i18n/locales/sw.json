@@ -1757,7 +1757,8 @@
     "push_blocked_more": "Maelezo zaidi",
     "not_now": "Si sasa",
     "image_too_large_tier": "Picha ni kubwa sana — yako {{tier}} tier huhifadhi picha hadi {{limit}} MB",
-    "image_too_large_untiered": "Picha ni kubwa sana — picha zimehifadhiwa hadi {{limit}} MB"
+    "image_too_large_untiered": "Picha ni kubwa sana — picha zimehifadhiwa hadi {{limit}} MB",
+    "rate_limited": "Umefikia kikomo, punguza kasi"
   },
   "staking": {
     "title": "Uwekaji Amana",

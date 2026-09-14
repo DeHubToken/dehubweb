@@ -1721,7 +1721,8 @@
     "push_blocked_more": "Rincian luwih akeh",
     "not_now": "Ora saiki",
     "image_too_large_tier": "Gambar kakehan — toko {{tier}} tier mu bisa nyimpen gambar nganti {{limit}} MB",
-    "image_too_large_untiered": "Gambar kasebut gedhe banget — gambar disimpen nganti {{limit}} MB"
+    "image_too_large_untiered": "Gambar kasebut gedhe banget — gambar disimpen nganti {{limit}} MB",
+    "rate_limited": "Kesuwen cepet, alon-alon"
   },
   "staking": {
     "title": "Staking",

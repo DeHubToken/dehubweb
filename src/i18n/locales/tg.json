@@ -1728,7 +1728,8 @@
     "push_blocked_more": "Бештар тафсилот",
     "not_now": "Ҳозир не",
     "image_too_large_tier": "Тасвир аз ҳад зиёд калон аст — шумо {{tier}} tier images up to {{limit}} MB",
-    "image_too_large_untiered": "Ang larawan ay masyadong malaki — ang mga larawan ay naka-save upang {{limit}} MB"
+    "image_too_large_untiered": "Ang larawan ay masyadong malaki — ang mga larawan ay naka-save upang {{limit}} MB",
+    "rate_limited": "Маҳдудияти дархост, оҳистатар"
   },
   "staking": {
     "title": "Стейкинг",

@@ -17,6 +17,7 @@ import { useCallback, useSyncExternalStore } from 'react';
 import { toast } from 'sonner';
 import { useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { followUser, unfollowUser } from '@/lib/api/dehub';
+import { isRateLimitError, notifyRateLimited } from '@/lib/error-feedback';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 
 /** Optimistic overrides: lowercased wallet address -> isFollowing */
@@ -77,8 +78,13 @@ export interface ToggleFollowOptions {
   /**
    * Called after rollback on failure. When provided, the built-in error toast
    * is skipped so the caller can surface its own (e.g. reauth handling).
+   *
+   * `info.handled` is true when the failure has already been announced here —
+   * today that means the rate limiter, which gets its own sound and notice.
+   * A caller that shows a toast of its own should skip it when handled, or the
+   * reader gets two for one tap.
    */
-  onError?: (error: unknown) => void;
+  onError?: (error: unknown, info: { handled: boolean }) => void;
   onSuccess?: (isFollowing: boolean) => void;
 }
 
@@ -124,8 +130,13 @@ export async function toggleFollowFor(
     // Roll back the optimistic flip
     revertFollowOverride(address, previous);
     patchProfileCaches(queryClient, address, currentlyFollowing, next ? -1 : 1);
-    if (opts.onError) opts.onError(error);
-    else toast.error(next ? 'Failed to follow' : 'Failed to unfollow');
+    // Clicking faster than the limiter allows is not a failure to explain, it
+    // is a pace to correct — so it gets the sound and "slow down" instead of
+    // whatever generic message the caller would have shown.
+    const handled = isRateLimitError(error);
+    if (handled) notifyRateLimited();
+    if (opts.onError) opts.onError(error, { handled });
+    else if (!handled) toast.error(next ? 'Failed to follow' : 'Failed to unfollow');
     return false;
   } finally {
     const nextPending = new Set(pendingAddresses);

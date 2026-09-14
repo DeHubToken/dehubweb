@@ -1752,7 +1752,8 @@
     "push_blocked_more": "მეტი დეტალი",
     "not_now": "ახლა არა",
     "image_too_large_tier": "Სურათი ძალიან დიდია — თქვენი {{tier}} იარუსი ინახავს სურათებს {{limit}} მბ-მდე",
-    "image_too_large_untiered": "Სურათი ძალიან დიდია — სურათები ინახება {{limit}} მბ-მდე"
+    "image_too_large_untiered": "Სურათი ძალიან დიდია — სურათები ინახება {{limit}} მბ-მდე",
+    "rate_limited": "მოთხოვნების ლიმიტი, შეანელეთ"
   },
   "staking": {
     "title": "სტეიკინგი",

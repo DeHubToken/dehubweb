@@ -1766,7 +1766,8 @@
     "push_blocked_more": "Imininingwane eyengeziwe",
     "not_now": "Hhayi manje",
     "image_too_large_tier": "Isithombe sikhulu kakhulu — i- {{tier}}tier yakho igcina izithombe ezifika ku- {{limit}} MB",
-    "image_too_large_untiered": "Isithombe sikhulu kakhulu — izithombe zigcinwa kuze kufike ku- {{limit}} MB"
+    "image_too_large_untiered": "Isithombe sikhulu kakhulu — izithombe zigcinwa kuze kufike ku- {{limit}} MB",
+    "rate_limited": "Umkhawulo ufinyelelwe, yehlisa ijubane"
   },
   "staking": {
     "title": "Staking",

@@ -1768,7 +1768,8 @@
     "push_blocked_more": "Mehr Details",
     "not_now": "Jetzt nicht",
     "image_too_large_tier": "Das Bild ist zu groß — dein {{tier}} Level speichert Bilder bis zu {{limit}} MB",
-    "image_too_large_untiered": "Bild ist zu groß — Bilder werden bis zu {{limit}} MB gespeichert"
+    "image_too_large_untiered": "Bild ist zu groß — Bilder werden bis zu {{limit}} MB gespeichert",
+    "rate_limited": "Zu viele Anfragen, mach langsamer"
   },
   "staking": {
     "title": "Staking",

@@ -1733,7 +1733,8 @@
     "push_blocked_more": "Mer detaljert",
     "not_now": "Ikke nå",
     "image_too_large_tier": "Bildet er for stort – {{tier}}-nivået ditt lagrer bilder opptil {{limit}} MB",
-    "image_too_large_untiered": "Bildet er for stort – bildene er lagret opptil {{limit}} MB"
+    "image_too_large_untiered": "Bildet er for stort – bildene er lagret opptil {{limit}} MB",
+    "rate_limited": "For mange forespørsler, ro ned"
   },
   "staking": {
     "title": "Staking",

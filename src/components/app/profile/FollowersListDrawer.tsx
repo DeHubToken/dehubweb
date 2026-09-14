@@ -429,7 +429,7 @@ export function FollowersListDrawer({
             setUsers(prev => prev.map(u =>
               u.address === user.address ? { ...u, isPending: false } : u
             ));
-            handleApiError(error, t('follow.updateFailed'));
+            if (!info.handled) handleApiError(error, t('follow.updateFailed'));
           }
         });
       return;
@@ -446,7 +446,7 @@ export function FollowersListDrawer({
     ));
     void toggleFollowFor(queryClient, user.address, wasFollowing, {
       name,
-      onError: (error) => {
+      onError: (error, info) => {
         if (isFollowBack) followBackStreakRef.current = 0;
         if (wasFollowing) followingSetRef.current?.add(user.address.toLowerCase());
         else followingSetRef.current?.delete(user.address.toLowerCase());

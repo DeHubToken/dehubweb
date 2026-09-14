@@ -1750,7 +1750,8 @@
     "push_blocked_more": "Qubee dabaloo",
     "not_now": "Amma miti",
     "image_too_large_tier": "Fakkiin baayyee guddaadha — sadarkaan {{tier}} kee fakkiiwwan hanga {{limit}} MB kuufata",
-    "image_too_large_untiered": "Fakkiin baayyee guddaadha — fakkiiwwan hanga {{limit}} MB tti kuufamaniiru"
+    "image_too_large_untiered": "Fakkiin baayyee guddaadha — fakkiiwwan hanga {{limit}} MB tti kuufamaniiru",
+    "rate_limited": "Saffisi daangeffameera, suuta"
   },
   "staking": {
     "title": "Kuusuu",

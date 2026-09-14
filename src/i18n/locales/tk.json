@@ -1724,7 +1724,8 @@
     "push_blocked_more": "Goý, jikme-jik aýdyň",
     "not_now": "Häzir däl",
     "image_too_large_tier": "Resim gaty uly — {{tier}} tier {{limit}}MB-eçenlisuratlary saklaýar",
-    "image_too_large_untiered": "Resim gaty uly — suratlar {{limit}}MB-de saklanýar"
+    "image_too_large_untiered": "Resim gaty uly — suratlar {{limit}}MB-de saklanýar",
+    "rate_limited": "Haýyş çägi, haýalladyň"
   },
   "staking": {
     "title": "Goýum",
