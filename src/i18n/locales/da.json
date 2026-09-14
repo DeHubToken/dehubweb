@@ -787,6 +787,8 @@
     "title": "Tegnebog",
     "loginRequired": "Log ind for at få adgang til tegnebogen.",
     "addressCopied": "Adresse kopieret",
+    "linkedConnected": "Tegnebog tilsluttet. Den sidste handling kørte ikke — tryk på den igen for at afslutte.",
+    "linkedMismatch": "Denne tegnebog er ikke den, der er knyttet til denne konto — den forventer {{address}}. Skift til den konto i din tegnebog, og prøv igen.",
     "totalWalletValue": "Samlet tegnebogsværdi",
     "receive": "Modtag",
     "send": "Send",

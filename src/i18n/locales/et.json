@@ -776,6 +776,8 @@
     "title": "Rahakott",
     "loginRequired": "Logi sisse rahakotile ligipääsuks.",
     "addressCopied": "Aadress kopeeritud",
+    "linkedConnected": "Rahakott on ühendatud. Viimast toimingut ei tehtud — lõpetamiseks puuduta seda uuesti.",
+    "linkedMismatch": "See rahakott ei ole selle kontoga seotud — see eeldab {{address}}. Mine rahakotis sellele kontole ja proovi uuesti.",
     "totalWalletValue": "Rahakoti koguväärtus",
     "receive": "Võta vastu",
     "send": "Saada",

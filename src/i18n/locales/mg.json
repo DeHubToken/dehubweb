@@ -805,6 +805,8 @@
     "title": "Kitapom-bola",
     "loginRequired": "Midira mba hidirana amin'ny kitapom-bolanao.",
     "addressCopied": "Adiresy voatahiry",
+    "linkedConnected": "Wallet mifandray. Io hetsika farany io dia tsy nihazakazaka — tadiavo indray hamaranana.",
+    "linkedMismatch": "Ny kitapom-batsy dia tsy ny olona mifandray amin'ity kaonty ity — manantena izany {{address}}. Hiditra amin'io kaonty io ao amin'ny kitaponao dia andramo indray.",
     "totalWalletValue": "Vidin'ny kitapom-bola rehetra",
     "receive": "Mandray",
     "send": "Mandefa",

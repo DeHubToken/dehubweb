@@ -777,6 +777,8 @@
     "title": "Kɔrɔbɔ",
     "loginRequired": "Sɔgɔma kɛ",
     "addressCopied": "Kɔrɔbɔ",
+    "linkedConnected": "O la, a tun be se ka kɛ ko a tun ye min kɛ, a tun tɛ se k'o kɛ.",
+    "linkedMismatch": "O wari tɛ wari ye min be sɔrɔ o wari la — a b'a fɛ {{address}}. I ka wari bila i ka wari la ani i ka segi k'a ɲini.",
     "totalWalletValue": "Kɔrɔbɔ",
     "receive": "Kɔrɔbɔ",
     "send": "Kɔrɔbɔ",

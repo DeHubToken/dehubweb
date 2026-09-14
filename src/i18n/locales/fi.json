@@ -777,6 +777,8 @@
     "title": "Lompakko",
     "loginRequired": "Kirjaudu sisään käyttääksesi lompakkoasi.",
     "addressCopied": "Osoite kopioitu",
+    "linkedConnected": "Lompakko yhdistetty. Viimeisintä toimintoa ei suoritettu. Viimeistele napauttamalla sitä uudelleen.",
+    "linkedMismatch": "Tämä lompakko ei ole linkitetty tähän tiliin — se odottaa käyttäjää {{address}}. Vaihda kyseiselle tilille lompakossasi ja yritä uudelleen.",
     "totalWalletValue": "Lompakon kokonaisarvo",
     "receive": "Vastaanota",
     "send": "Lähetä",

@@ -714,6 +714,8 @@
     "title": "Wallet",
     "loginRequired": "Log in for access your wallet.",
     "addressCopied": "Address don copy",
+    "linkedConnected": "Wallet don connect. Dat last action no run — tap am again make you finish.",
+    "linkedMismatch": "Dat wallet no be di one wey link to dis account — e expect {{address}}. Switch to dat account for your wallet and try again.",
     "totalWalletValue": "Total Wallet Value",
     "receive": "Receive",
     "send": "Send",

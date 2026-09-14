@@ -786,6 +786,8 @@
     "title": "Isikhwama",
     "loginRequired": "Ngena ukufinyelela isikhwama sakho.",
     "addressCopied": "Ikheli likopishiwe",
+    "linkedConnected": "Isikhwama semali sixhunyiwe. Leso senzo sokugcina asizange sisebenze — siphinde usithephe ukuze uqedele.",
+    "linkedMismatch": "Leyo wallet akuyona exhunywe kule akhawunti — ilindele i- {{address}}. Shintshela kuleyo akhawunti esikhwameni sakho semali bese uzama futhi.",
     "totalWalletValue": "Inani Eliphelele Lesikhwama",
     "receive": "Yamukela",
     "send": "Thumela",

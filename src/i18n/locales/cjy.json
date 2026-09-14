@@ -747,6 +747,8 @@
     "title": "钱包",
     "loginRequired": "登录来用钱包。",
     "addressCopied": "地址已复制",
+    "linkedConnected": "钱包已连接。上一个操作没有运行——再点一次来完成。",
+    "linkedMismatch": "那个钱包不是与此账户关联的——它需要 {{address}}。在你的钱包中切换到那个账户，然后重试。",
     "totalWalletValue": "钱包总值",
     "receive": "接收",
     "send": "发送",

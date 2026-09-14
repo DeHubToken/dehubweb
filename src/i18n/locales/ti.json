@@ -781,6 +781,8 @@
     "title": "ዋሌት",
     "loginRequired": "ዋሌትካ ንምብጻሕ ብዓል።",
     "addressCopied": "ኣድራሻ ተቐዲሑ",
+    "linkedConnected": "እቲ ናይ መወዳእታ ስጉምቲ ኣይሰርሐን — ንምዝዛም እንደገና ጠውቑ ።",
+    "linkedMismatch": "እዚ ቦርሳ እዚ ምስዚ መለያ ዝተኣሳሰር ኣይኮነን — {{address}} ትጽቢት ይገብር ። ነቲ ሒሳብ ኣብ ቦርሳኻ ቀይር እሞ መሊስካ ፈትኖ ።",
     "totalWalletValue": "ጠቕላላ ዋጋ ዋሌት",
     "receive": "ተቐበል",
     "send": "ስደድ",

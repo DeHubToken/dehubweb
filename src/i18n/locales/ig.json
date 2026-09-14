@@ -785,6 +785,8 @@
     "title": "Obere Akpa",
     "loginRequired": "Banye iji nweta ohere obere akpa gị.",
     "addressCopied": "Edetuola adreesị",
+    "linkedConnected": "Ejikọtara obere akpa. Omume ikpeazụ ahụ agbaghị ọsọ — kpatụ ya ọzọ ka ọ gwụchaa.",
+    "linkedMismatch": "Akpa ahụ abụghị nke ejikọtara na akaụntụ a — ọ na-atụ anya {{address}}. Banye na akaụntụ ahụ n 'ime obere akpa gị wee nwaa ọzọ.",
     "totalWalletValue": "Mkpokọta Uru Obere Akpa",
     "receive": "Nata",
     "send": "Zipu",

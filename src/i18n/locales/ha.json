@@ -787,6 +787,8 @@
     "title": "Walat",
     "loginRequired": "Shiga don samun damar walatinka.",
     "addressCopied": "An kwafi adireshi",
+    "linkedConnected": "Wallet da aka haɗa. Wannan mataki na ƙarshe bai gudu ba — sake buga shi don kammalawa.",
+    "linkedMismatch": "Wannan walat ba shine wanda ke da alaƙa da wannan asusun ba — yana tsammanin {{address}}. Canja zuwa wannan asusun a cikin walat ɗin ku kuma sake gwadawa.",
     "totalWalletValue": "Jimlar Darajar Walat",
     "receive": "Karɓa",
     "send": "Aika",
