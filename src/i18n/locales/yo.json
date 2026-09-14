@@ -1736,7 +1736,8 @@
     "push_blocked_more": "Alaye siwaju sii",
     "not_now": "Kì í ṣe nísinsìnyí",
     "image_too_large_tier": "Àwòrán tóbi jù — rẹ {{tier}}tier máa ń fi àwòrán pamọ́ sí {{limit}} MB",
-    "image_too_large_untiered": "Àwòrán tóbi jù — a máa ń fi àwòrán pamọ́ sí {{limit}} MB"
+    "image_too_large_untiered": "Àwòrán tóbi jù — a máa ń fi àwòrán pamọ́ sí {{limit}} MB",
+    "rate_limited": "Ìdínwọ̀n ìbéèrè, rọra"
   },
   "staking": {
     "title": "Staking",

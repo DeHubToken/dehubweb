@@ -581,13 +581,13 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setFollowedCreators(prev => new Set(prev).add(creatorAddress));
     toggleFollowFor(queryClient, creatorAddress, false, {
       name: currentShort.displayName || currentShort.creatorUsername || currentShort.username,
-      onError: () => {
+      onError: (_error, info) => {
         setFollowedCreators(prev => {
           const next = new Set(prev);
           next.delete(creatorAddress);
           return next;
         });
-        toast.error('Failed to follow user');
+        if (!info.handled) toast.error('Failed to follow user');
       },
     });
   }, [currentShort, isAuthenticated, openLoginModal, isCreatorFollowed, queryClient]);

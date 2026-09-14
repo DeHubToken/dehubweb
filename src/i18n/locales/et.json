@@ -1697,7 +1697,8 @@
     "push_blocked_more": "Rohkem detaile",
     "not_now": "Mitte praegu",
     "image_too_large_tier": "Pilt on liiga suur — teie {{tier}} taseme poed salvestavad pilte kuni {{limit}} MB",
-    "image_too_large_untiered": "Pilt on liiga suur — pilte talletatakse kuni {{limit}} MB"
+    "image_too_large_untiered": "Pilt on liiga suur — pilte talletatakse kuni {{limit}} MB",
+    "rate_limited": "Päringupiirang, aeglusta"
   },
   "staking": {
     "title": "Panustamine",

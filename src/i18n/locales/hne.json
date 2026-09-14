@@ -1715,7 +1715,8 @@
     "push_blocked_more": "अउर बिस्तार",
     "not_now": "अभी नइ",
     "image_too_large_tier": "फोटो बहुत बड़ा हे — your {{tier}} tier Stores images up to {{limit}} MB",
-    "image_too_large_untiered": "फोटो बहुत बडखा हवय — फोटो ल {{limit}} MB तक संग्रहीत करे जात हवय"
+    "image_too_large_untiered": "फोटो बहुत बडखा हवय — फोटो ल {{limit}} MB तक संग्रहीत करे जात हवय",
+    "rate_limited": "रेट लिमिट लग गे, धीरे करव"
   },
   "staking": {
     "title": "स्टेकिंग",

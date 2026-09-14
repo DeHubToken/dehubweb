@@ -1716,7 +1716,8 @@
     "push_blocked_more": "ዝበለጸ ሓበሬታ",
     "not_now": "ሕጂ ኣይኮነን",
     "image_too_large_tier": "ስእሊ ኣዝዩ ዓቢ እዩ — ናትካ {{tier}} tier ምስሊታት ክሳብ {{limit}} MB ይዕቅብ",
-    "image_too_large_untiered": "ስእሊ ኣዝዩ ዓቢ እዩ — ስእልታት ክሳብ {{limit}} MB ይዕቀቡ"
+    "image_too_large_untiered": "ስእሊ ኣዝዩ ዓቢ እዩ — ስእልታት ክሳብ {{limit}} MB ይዕቀቡ",
+    "rate_limited": "ደረት ተወሲኑ፣ ቀስ በሉ"
   },
   "staking": {
     "title": "ምቕማጥ",

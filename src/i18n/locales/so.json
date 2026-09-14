@@ -1736,7 +1736,8 @@
     "push_tab_only_body": "Browser-kani isma diiwaangelin doono ogeysiisyada asalka ah, sidaa darteed waxba kuuma imaan doono inta DeHub xiran yahay.",
     "push_blocked_more": "Faahfaahin dheeraad ah",
     "not_now": "Hadda maya",
-    "image_too_large_untiered": "Sawirka waa mid aad u weyn — sawirada waxaa lagu keydiyaa {{limit}} MB"
+    "image_too_large_untiered": "Sawirka waa mid aad u weyn — sawirada waxaa lagu keydiyaa {{limit}} MB",
+    "rate_limited": "Xadka la gaadhay, hoos u dhig"
   },
   "staking": {
     "title": "Staking",

@@ -1736,7 +1736,8 @@
     "push_blocked_more": "Ƙarin bayani",
     "not_now": "Ba yanzu ba",
     "image_too_large_tier": "Hoto yana da girma sosai — your {{tier}}tier yana adana hotuna har zuwa {{limit}} MB",
-    "image_too_large_untiered": "Hoto yana da girma sosai — ana adana hotuna har zuwa {{limit}} MB"
+    "image_too_large_untiered": "Hoto yana da girma sosai — ana adana hotuna har zuwa {{limit}} MB",
+    "rate_limited": "An iyakance saurin, rage gudu"
   },
   "staking": {
     "title": "Staking",

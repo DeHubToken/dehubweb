@@ -1584,7 +1584,8 @@
     "push_blocked_title": "Обавештења вам не стижу",
     "push_blocked_body": "Vaš sistem blokira obaveštenja za ovaj pregledač, tako da vam ništa ne stiže dok je DeHub zatvoren. Ponovo ih uključite u pregledaču u postavkama sistemskih obavještenja, a zatim isključite i ponovo uključite DeHub obavještenja.",
     "push_blocked_more": "Više detalja",
-    "not_now": "Не сада"
+    "not_now": "Не сада",
+    "rate_limited": "Ограничење захтева, успори"
   },
   "staking": {
     "title": "Стејкинг",

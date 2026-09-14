@@ -1283,7 +1283,8 @@
     "push_blocked_more": "รายละเอียดเพิ่มเติม",
     "not_now": "ไว้ก่อน",
     "image_too_large_tier": "ภาพมีขนาดใหญ่เกินไป — ระดับ {{tier}} ของคุณจัดเก็บภาพได้สูงสุด {{limit}} MB",
-    "image_too_large_untiered": "ภาพมีขนาดใหญ่เกินไป — ภาพจะถูกจัดเก็บไว้สูงสุด {{limit}} MB"
+    "image_too_large_untiered": "ภาพมีขนาดใหญ่เกินไป — ภาพจะถูกจัดเก็บไว้สูงสุด {{limit}} MB",
+    "rate_limited": "ถูกจำกัดอัตรา ช้าลงหน่อย"
   },
   "staking": {
     "title": "การสเตก",

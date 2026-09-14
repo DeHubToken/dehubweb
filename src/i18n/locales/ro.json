@@ -1596,7 +1596,8 @@
     "push_tab_only_body": "Acest browser nu s-ar înregistra pentru notificări de fundal, astfel încât nimic nu ajunge la dvs. în timp ce DeHub este închis.",
     "push_blocked_more": "Mai multe detalii",
     "not_now": "Nu acum",
-    "image_too_large_untiered": "Imaginea este prea mare — imaginile sunt stocate până la {{limit}} MB"
+    "image_too_large_untiered": "Imaginea este prea mare — imaginile sunt stocate până la {{limit}} MB",
+    "rate_limited": "Limită atinsă, mai încet"
   },
   "staking": {
     "title": "Staking",

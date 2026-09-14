@@ -1713,7 +1713,8 @@
     "push_display_failed_body": "O porogaramu ma se ka kunnafoni dɔ yira, o la, u si tɛ se ka se i ma. I ka sisitɛmu labɛncogo tɛ sababu ye — a kɛra komi a kɛra komi a kɛra komi a ma se ka baara kɛ.",
     "push_tab_only_body": "O la, i tɛ se ka foyi sɔrɔ n'i ye DeHub datugu.",
     "not_now": "Sisan tɛ",
-    "image_too_large_untiered": "Jaa ka bon kojugu — jaa ka kan ka mara fɔɔ ka taga se {{limit}} MB"
+    "image_too_large_untiered": "Jaa ka bon kojugu — jaa ka kan ka mara fɔɔ ka taga se {{limit}} MB",
+    "rate_limited": "A ka teli kojugu, i sabali"
   },
   "staking": {
     "title": "Bilali",

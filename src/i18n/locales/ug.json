@@ -1735,7 +1735,8 @@
     "push_blocked_more": "تېخىمۇ تەپسىلىي",
     "not_now": "ھازىر ئەمەس",
     "image_too_large_tier": "سۈرەت بەك چوڭ — سىزنىڭ {{tier}} tier سۈرەتلەرنى ساقلايدۇ {{limit}} MB",
-    "image_too_large_untiered": "سۈرەت بەك چوڭ — سۈرەتلەر {{limit}} MB غا ساقلىنىدۇ"
+    "image_too_large_untiered": "سۈرەت بەك چوڭ — سۈرەتلەر {{limit}} MB غا ساقلىنىدۇ",
+    "rate_limited": "چەكلەندى، ئاستىراق"
   },
   "staking": {
     "title": "ئامانەت",

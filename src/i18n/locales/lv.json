@@ -1736,7 +1736,8 @@
     "push_blocked_more": "Vairāk detaļu",
     "not_now": "Ne tagad",
     "image_too_large_tier": "Attēls ir pārāk liels — jūsu {{tier}} līmenis saglabā attēlus līdz {{limit}} MB",
-    "image_too_large_untiered": "Attēls ir pārāk liels — attēli tiek saglabāti līdz {{limit}} MB"
+    "image_too_large_untiered": "Attēls ir pārāk liels — attēli tiek saglabāti līdz {{limit}} MB",
+    "rate_limited": "Pieprasījumu limits, palēnini"
   },
   "staking": {
     "title": "Steikings",

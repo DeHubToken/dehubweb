@@ -1723,7 +1723,8 @@
     "push_blocked_more": "अधिक तपशील",
     "not_now": "आत्ता नको",
     "image_too_large_tier": "इमेज खूप मोठी आहे — तुमचे {{tier}} स्तर {{limit}} एमबी पर्यंत इमेजेस स्टोअर करते",
-    "image_too_large_untiered": "प्रतिमा खूप मोठी आहे — प्रतिमा {{limit}} MB पर्यंत संग्रहित केल्या जातात"
+    "image_too_large_untiered": "प्रतिमा खूप मोठी आहे — प्रतिमा {{limit}} MB पर्यंत संग्रहित केल्या जातात",
+    "rate_limited": "रेट लिमिट, थोडं सावकाश"
   },
   "staking": {
     "title": "स्टेकिंग",
