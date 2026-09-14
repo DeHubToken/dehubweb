@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input';
 
 import { LoginModal } from '@/components/app/LoginModal';
 import { AuthGate } from '@/components/app/AuthGate';
-import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
+import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImageViewerLazy';
 import { CreatePlanModal, EditPlanModal } from '@/components/app/subscriptions';
 import { TipModal } from '@/components/app/modals/TipModal';
 import { FollowersListDrawer } from '@/components/app/profile';
@@ -732,7 +732,7 @@ export default function ProfilePage() {
       </Drawer>
 
       {/* Fullscreen image viewer */}
-      <FullscreenImageViewer
+      <FullscreenImageViewerLazy
         images={fullscreenImage ? [fullscreenImage] : []}
         initialIndex={0}
         isOpen={!!fullscreenImage}
