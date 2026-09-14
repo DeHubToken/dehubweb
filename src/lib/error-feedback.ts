@@ -86,6 +86,16 @@ export function isRateLimitError(error: unknown): boolean {
   return /\b429\b|too many requests|rate limit/i.test(message);
 }
 
+/**
+ * Announce the failure if — and only if — it is the limiter. Returns whether
+ * it was, so the caller can skip its own message.
+ */
+export function announceIfRateLimited(error: unknown): boolean {
+  if (!isRateLimitError(error)) return false;
+  notifyRateLimited();
+  return true;
+}
+
 /** Announce a rate-limited action: the tone plus a single "slow down" toast. */
 export function notifyRateLimited(): void {
   if (withinRepeatWindow()) return;
