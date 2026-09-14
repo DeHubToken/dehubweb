@@ -17,7 +17,6 @@ import { useCallback, useSyncExternalStore } from 'react';
 import { toast } from 'sonner';
 import { useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { followUser, unfollowUser } from '@/lib/api/dehub';
-import { isRateLimitError, notifyRateLimited } from '@/lib/error-feedback';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 
 /** Optimistic overrides: lowercased wallet address -> isFollowing */
@@ -25,6 +24,17 @@ let overrides = new Map<string, boolean>();
 /** Addresses with an in-flight follow/unfollow call (guards double toggles) */
 let pendingAddresses = new Set<string>();
 const listeners = new Set<() => void>();
+
+/**
+ * Loaded on the failure path only. This module is on the boot path, and the
+ * sound and its toast are four kilobytes nobody downloads to read a feed.
+ */
+async function announceIfRateLimited(error: unknown): Promise<boolean> {
+  const { isRateLimitError, notifyRateLimited } = await import('@/lib/error-feedback');
+  if (!isRateLimitError(error)) return false;
+  notifyRateLimited();
+  return true;
+}
 
 function emit() {
   listeners.forEach(cb => cb());
@@ -133,8 +143,7 @@ export async function toggleFollowFor(
     // Clicking faster than the limiter allows is not a failure to explain, it
     // is a pace to correct — so it gets the sound and "slow down" instead of
     // whatever generic message the caller would have shown.
-    const handled = isRateLimitError(error);
-    if (handled) notifyRateLimited();
+    const handled = await announceIfRateLimited(error);
     if (opts.onError) opts.onError(error, { handled });
     else if (!handled) toast.error(next ? 'Failed to follow' : 'Failed to unfollow');
     return false;
