@@ -1,12 +1,27 @@
 /**
  * Fullscreen Image Viewer Component
  * ==================================
- * Displays images in fullscreen with original dimensions.
- * Supports swipe navigation for multi-image posts.
- * Swipe/drag down to close.
+ * Displays images in fullscreen. Swipe navigation for multi-image posts,
+ * swipe/drag down to close, pinch (or trackpad pinch) to zoom.
+ *
+ * ── Two things this screen owes the viewer ──
+ *
+ * 1. THE ORIGINAL, NOT THE FEED COPY. Everything upstream holds a `cdnImage()`
+ *    URL capped at `DEFAULT_IMAGE_WIDTH` (1080px, quality 80) — the right file
+ *    for a feed slot and the wrong one to zoom into. The active slide unwraps
+ *    that back to the uploaded file and swaps to it once it has decoded, so
+ *    fullscreen opens instantly on the copy the feed already has and then
+ *    sharpens, rather than opening on a blank screen.
+ *
+ * 2. ZOOM HAS TO OWN THE GESTURE. Three other things want the same fingers:
+ *    embla's horizontal drag, this viewer's swipe-down-to-close, and the
+ *    double-tap-to-like ladder on the image itself. While a slide is zoomed,
+ *    `watchDrag` refuses embla the drag and the slide swallows the touch stream
+ *    before the close handlers see it; at 1x all three behave as they always
+ *    did. Double-tap is left alone — it stays a like, as it is on the card.
  */
 
-import { useCallback, useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Languages } from 'lucide-react';
@@ -15,6 +30,7 @@ import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { ActionBar } from './ActionBar';
 import { PostUtilityButtons } from './PostUtilityButtons';
 import { useImageTranslation } from '@/hooks/use-image-translation';
+import { cdnImageSource } from '@/lib/media-url';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
@@ -47,7 +63,7 @@ export interface FullscreenViewerActions {
   onTip?: () => void;
 }
 
-interface FullscreenImageViewerProps {
+export interface FullscreenImageViewerProps {
   images: string[];
   initialIndex: number;
   isOpen: boolean;
@@ -68,10 +84,19 @@ export function FullscreenImageViewer({
   postId,
   actions,
 }: FullscreenImageViewerProps) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    loop: false, 
-    startIndex: initialIndex 
-  });
+  // A zoomed slide owns the drag. `watchDrag` is consulted on every touchstart,
+  // so a ref is enough here — no reInit, and no stale closure either.
+  const zoomedRef = useRef(false);
+  const [zoomed, setZoomed] = useState(false);
+  const handleZoomChange = useCallback((next: boolean) => {
+    zoomedRef.current = next;
+    setZoomed(next);
+  }, []);
+  const emblaOptions = useMemo(
+    () => ({ loop: false, startIndex: initialIndex, watchDrag: () => !zoomedRef.current }),
+    [initialIndex],
+  );
+  const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions);
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [showTranslationSheet, setShowTranslationSheet] = useState(false);
   
@@ -103,8 +128,10 @@ export function FullscreenImageViewer({
       emblaApi.scrollTo(initialIndex, true);
       setCurrentIndex(initialIndex);
       setDragOffset(0);
+      // Slides unmount on close without their effects getting to say so.
+      handleZoomChange(false);
     }
-  }, [isOpen, initialIndex, emblaApi]);
+  }, [isOpen, initialIndex, emblaApi, handleZoomChange]);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -141,15 +168,17 @@ export function FullscreenImageViewer({
     };
   }, [isOpen, onClose, scrollPrev, scrollNext]);
 
-  // Touch handlers for swipe-down-to-close
+  // Touch handlers for swipe-down-to-close. A zoomed slide stops the stream
+  // before it reaches here; these guards cover a gesture that zoomed mid-drag.
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (zoomedRef.current) return;
     isDragging.current = true;
     dragStartY.current = e.touches[0].clientY;
     dragStartX.current = e.touches[0].clientX;
   }, []);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!isDragging.current) return;
+    if (!isDragging.current || zoomedRef.current) return;
     
     const deltaY = e.touches[0].clientY - dragStartY.current;
     const deltaX = Math.abs(e.touches[0].clientX - dragStartX.current);
@@ -170,13 +199,14 @@ export function FullscreenImageViewer({
 
   // Mouse handlers for click-and-drag down
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (zoomedRef.current) return;
     isDragging.current = true;
     dragStartY.current = e.clientY;
     dragStartX.current = e.clientX;
   }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!isDragging.current) return;
+    if (!isDragging.current || zoomedRef.current) return;
     
     const deltaY = e.clientY - dragStartY.current;
     const deltaX = Math.abs(e.clientX - dragStartX.current);
@@ -194,8 +224,10 @@ export function FullscreenImageViewer({
     isDragging.current = false;
   }, [dragOffset, onClose]);
 
-  // Wheel handler for two-finger scroll down (trackpad)
+  // Wheel handler for two-finger scroll down (trackpad). The slide takes the
+  // wheel over to zooming while it is zoomed in, and stops it reaching here.
   const handleWheel = useCallback((e: React.WheelEvent) => {
+    if (zoomedRef.current) return;
     // Positive deltaY = scrolling down
     if (e.deltaY > SWIPE_DOWN_THRESHOLD && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
       onClose();
@@ -293,13 +325,21 @@ export function FullscreenImageViewer({
           >
             <div className="flex h-full">
               {images.map((img, idx) => (
-                <FullscreenSlide key={idx} img={img} onClose={onClose} postId={postId} />
+                <FullscreenSlide
+                  key={idx}
+                  img={img}
+                  onClose={onClose}
+                  postId={postId}
+                  isActive={idx === currentIndex}
+                  onZoomChange={handleZoomChange}
+                />
               ))}
             </div>
           </motion.div>
 
-          {/* Navigation arrows – hidden on mobile/tablet, swipe to navigate instead */}
-          {hasMultiple && (
+          {/* Navigation arrows – hidden on mobile/tablet, swipe to navigate
+              instead, and out of the way entirely while a slide is zoomed. */}
+          {hasMultiple && !zoomed && (
             <>
               {currentIndex > 0 && (
                 <button
@@ -331,7 +371,7 @@ export function FullscreenImageViewer({
           )}
 
           {/* Dot indicators — lifted above the action bar when it is present */}
-          {hasMultiple && (
+          {hasMultiple && !zoomed && (
             <div className={`absolute ${showActionBar ? 'bottom-20' : 'bottom-6'} left-1/2 -translate-x-1/2 flex gap-2`}>
               {images.map((_, idx) => (
                 <button
@@ -401,18 +441,45 @@ export function FullscreenImageViewer({
   );
 }
 
+/** Zoom ceiling. Past 4x even an original is mush on a phone photo. */
+const MAX_ZOOM = 4;
+/** Released below this, the gesture counts as a return to 1x, not a tiny zoom. */
+const ZOOM_FLOOR = 1.02;
+
+interface ZoomState {
+  scale: number;
+  /** Screen px, applied before the scale, measured from the frame's centre. */
+  x: number;
+  y: number;
+}
+
+const NO_ZOOM: ZoomState = { scale: 1, x: 0, y: 0 };
+
+function touchDistance(a: React.Touch, b: React.Touch): number {
+  return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+}
+
 /**
  * Single fullscreen slide — image sits inside a padded container.
  * Double-tapping the image likes the post; single tap on empty area closes.
+ *
+ * Pinch (two fingers), or a trackpad pinch / ctrl-scroll, zooms up to 4x about
+ * whatever is under the fingers; one finger or the mouse then pans, clamped so
+ * the picture can never be dragged off its own frame. Releasing under 1.02x
+ * snaps back to 1x, which is also what hands the carousel its gestures back.
  */
 function FullscreenSlide({
   img,
   onClose,
   postId,
+  isActive,
+  onZoomChange,
 }: {
   img: string;
   onClose: () => void;
   postId?: string;
+  isActive: boolean;
+  onZoomChange: (zoomed: boolean) => void;
 }) {
   const tapGestures = useTapGestures({
     postId,
@@ -421,17 +488,284 @@ function FullscreenSlide({
          surrounding padded area). */
     },
   });
+
+  const frameRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const [zoom, setZoom] = useState<ZoomState>(NO_ZOOM);
+  const zoomRef = useRef(NO_ZOOM);
+  const [gesturing, setGesturing] = useState(false);
+  /** A pan that moved is not a click, so the release must not close the viewer. */
+  const movedRef = useRef(false);
+
+  const applyZoom = useCallback((next: ZoomState) => {
+    const scale = Math.min(MAX_ZOOM, Math.max(1, next.scale));
+    const frame = frameRef.current;
+    const image = imageRef.current;
+    // Layout size, which a transform does not affect — so this stays the
+    // image's real box however far it is currently scaled.
+    const maxX = frame && image
+      ? Math.max(0, (image.clientWidth * scale - frame.clientWidth) / 2)
+      : 0;
+    const maxY = frame && image
+      ? Math.max(0, (image.clientHeight * scale - frame.clientHeight) / 2)
+      : 0;
+    const clamped: ZoomState = scale <= 1
+      ? NO_ZOOM
+      : {
+          scale,
+          x: Math.min(maxX, Math.max(-maxX, next.x)),
+          y: Math.min(maxY, Math.max(-maxY, next.y)),
+        };
+    zoomRef.current = clamped;
+    setZoom(clamped);
+  }, []);
+
+  /** Scale to `scale`, keeping whatever sits under (clientX, clientY) put. */
+  const zoomAbout = useCallback((scale: number, clientX: number, clientY: number) => {
+    const frame = frameRef.current;
+    if (!frame) return;
+    const rect = frame.getBoundingClientRect();
+    const focalX = clientX - (rect.left + rect.width / 2);
+    const focalY = clientY - (rect.top + rect.height / 2);
+    const current = zoomRef.current;
+    const next = Math.min(MAX_ZOOM, Math.max(1, scale));
+    const ratio = next / current.scale;
+    applyZoom({
+      scale: next,
+      x: focalX + (current.x - focalX) * ratio,
+      y: focalY + (current.y - focalY) * ratio,
+    });
+  }, [applyZoom]);
+
+  // ── Touch: two fingers zoom, one finger pans once zoomed ──
+  const gesture = useRef<{
+    kind: 'pinch' | 'pan';
+    startScale: number;
+    startX: number;
+    startY: number;
+    originX: number;
+    originY: number;
+    distance: number;
+  } | null>(null);
+
+  const beginPan = useCallback((clientX: number, clientY: number) => {
+    gesture.current = {
+      kind: 'pan',
+      startScale: zoomRef.current.scale,
+      startX: zoomRef.current.x,
+      startY: zoomRef.current.y,
+      originX: clientX,
+      originY: clientY,
+      distance: 0,
+    };
+  }, []);
+
+  const beginPinch = useCallback((a: React.Touch, b: React.Touch) => {
+    const current = zoomRef.current;
+    gesture.current = {
+      kind: 'pinch',
+      startScale: current.scale,
+      startX: current.x,
+      startY: current.y,
+      originX: (a.clientX + b.clientX) / 2,
+      originY: (a.clientY + b.clientY) / 2,
+      distance: Math.max(1, touchDistance(a, b)),
+    };
+    setGesturing(true);
+  }, []);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    movedRef.current = false;
+    if (e.touches.length >= 2) {
+      // Embla ends its own drag the moment a second finger lands, so the pinch
+      // never has to fight it — see `move()` in embla's drag handler.
+      e.stopPropagation();
+      beginPinch(e.touches[0], e.touches[1]);
+      return;
+    }
+    if (zoomRef.current.scale > 1) {
+      e.stopPropagation();
+      beginPan(e.touches[0].clientX, e.touches[0].clientY);
+      setGesturing(true);
+    }
+  }, [beginPan, beginPinch]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    const active = gesture.current;
+    if (!active) return;
+    e.stopPropagation();
+    movedRef.current = true;
+    if (active.kind === 'pinch' && e.touches.length >= 2) {
+      const a = e.touches[0];
+      const b = e.touches[1];
+      const frame = frameRef.current;
+      if (!frame) return;
+      const scale = Math.min(
+        MAX_ZOOM,
+        Math.max(1, (active.startScale * touchDistance(a, b)) / active.distance),
+      );
+      const rect = frame.getBoundingClientRect();
+      const focalX = active.originX - (rect.left + rect.width / 2);
+      const focalY = active.originY - (rect.top + rect.height / 2);
+      const ratio = scale / active.startScale;
+      // The centroid is allowed to travel, so a pinch that drifts also pans.
+      const driftX = (a.clientX + b.clientX) / 2 - active.originX;
+      const driftY = (a.clientY + b.clientY) / 2 - active.originY;
+      applyZoom({
+        scale,
+        x: focalX + (active.startX - focalX) * ratio + driftX,
+        y: focalY + (active.startY - focalY) * ratio + driftY,
+      });
+      return;
+    }
+    if (active.kind === 'pan') {
+      const touch = e.touches[0];
+      applyZoom({
+        scale: zoomRef.current.scale,
+        x: active.startX + (touch.clientX - active.originX),
+        y: active.startY + (touch.clientY - active.originY),
+      });
+    }
+  }, [applyZoom]);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!gesture.current) return;
+    e.stopPropagation();
+    if (e.touches.length >= 2) {
+      beginPinch(e.touches[0], e.touches[1]);
+      return;
+    }
+    if (e.touches.length === 1 && zoomRef.current.scale > 1) {
+      // A finger lifted out of a pinch — the one left over carries on panning.
+      beginPan(e.touches[0].clientX, e.touches[0].clientY);
+      return;
+    }
+    gesture.current = null;
+    setGesturing(false);
+    if (zoomRef.current.scale < ZOOM_FLOOR) applyZoom(NO_ZOOM);
+  }, [applyZoom, beginPan, beginPinch]);
+
+  // ── Mouse: drag to pan once zoomed ──
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    movedRef.current = false;
+    if (zoomRef.current.scale <= 1 || e.button !== 0) return;
+    e.stopPropagation();
+    e.preventDefault();
+    const startX = zoomRef.current.x;
+    const startY = zoomRef.current.y;
+    const originX = e.clientX;
+    const originY = e.clientY;
+    setGesturing(true);
+    const onMove = (move: MouseEvent) => {
+      movedRef.current = true;
+      applyZoom({
+        scale: zoomRef.current.scale,
+        x: startX + (move.clientX - originX),
+        y: startY + (move.clientY - originY),
+      });
+    };
+    const onUp = () => {
+      setGesturing(false);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  }, [applyZoom]);
+
+  // ── Wheel: trackpad pinch (ctrl+wheel), and plain wheel once zoomed ──
+  //
+  // A native listener because React registers `wheel` passively at the root,
+  // where `preventDefault()` is ignored — and without it the browser zooms the
+  // whole page instead. Stopping propagation here is also what keeps the
+  // viewer's close-on-scroll from firing while the image is zoomed in.
+  useEffect(() => {
+    const node = frameRef.current;
+    if (!node) return;
+    const onWheel = (e: WheelEvent) => {
+      const zoomedIn = zoomRef.current.scale > 1;
+      if (!e.ctrlKey && !zoomedIn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const step = Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.002));
+      zoomAbout(zoomRef.current.scale * step, e.clientX, e.clientY);
+    };
+    // iOS Safari keeps its own pinch on top of `touch-action`, and it wins
+    // unless the move is cancelled — which React's passive touchmove cannot do.
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.cancelable && (gesture.current || zoomRef.current.scale > 1)) e.preventDefault();
+    };
+    node.addEventListener('wheel', onWheel, { passive: false });
+    node.addEventListener('touchmove', onTouchMove, { passive: false });
+    return () => {
+      node.removeEventListener('wheel', onWheel);
+      node.removeEventListener('touchmove', onTouchMove);
+    };
+  }, [zoomAbout]);
+
+  // Swiping on to another image leaves this one at 1x, so coming back to it is
+  // not a surprise — and so the carousel is never left holding a zoomed slide.
+  useEffect(() => {
+    if (!isActive && zoomRef.current.scale !== 1) {
+      gesture.current = null;
+      applyZoom(NO_ZOOM);
+    }
+  }, [isActive, applyZoom]);
+
+  useEffect(() => {
+    onZoomChange(isActive && zoom.scale > 1);
+  }, [isActive, zoom.scale, onZoomChange]);
+
+  // ── The original, swapped in once it has arrived ──
+  const source = useMemo(() => cdnImageSource(img), [img]);
+  const [fullResReady, setFullResReady] = useState(false);
+  useEffect(() => {
+    if (!isActive || source === img) {
+      setFullResReady(source === img);
+      return;
+    }
+    setFullResReady(false);
+    const probe = new window.Image();
+    probe.onload = () => setFullResReady(true);
+    probe.src = source;
+    return () => {
+      probe.onload = null;
+    };
+  }, [isActive, source, img]);
+
   return (
     <div
-      className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
-      onClick={onClose}
+      ref={frameRef}
+      className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center overflow-hidden p-4"
+      // `none` rather than leaving it to the browser: the two-finger stream has
+      // to reach these handlers instead of becoming a page zoom. Embla does its
+      // own preventDefault, so its horizontal drag is unaffected.
+      style={{ touchAction: 'none', cursor: zoom.scale > 1 ? 'grab' : undefined }}
+      onClick={(e) => {
+        if (zoom.scale > 1 || movedRef.current) {
+          e.stopPropagation();
+          return;
+        }
+        onClose();
+      }}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
+      onMouseDown={handleMouseDown}
     >
       <TapReactionBurst postId={postId} />
       <img
-        src={img}
+        ref={imageRef}
+        src={fullResReady ? source : img}
         alt=""
         className="max-w-full max-h-full object-contain select-none"
         draggable={false}
+        style={{
+          transform: `translate3d(${zoom.x}px, ${zoom.y}px, 0) scale(${zoom.scale})`,
+          transition: gesturing ? 'none' : 'transform 180ms ease-out',
+          willChange: zoom.scale > 1 ? 'transform' : undefined,
+        }}
         onClick={(e) => e.stopPropagation()}
         {...tapGestures}
         onError={(e) => {

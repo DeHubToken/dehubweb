@@ -32,7 +32,7 @@ import { BadgedName } from '@/components/app/BadgedName';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { formatAttachmentSize, getAttachmentLabel, isAllowedAttachment } from '@/lib/attachments';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
-import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
+import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImageViewerLazy';
 import { AppState } from '@/components/app/AppState';
 import { DmTipDialog } from './DmTipDialog';
 import { DmFeeInfoBanner } from './DmFeeInfoBanner';
@@ -2135,7 +2135,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
           </div>
         </div>
       )}
-      <FullscreenImageViewer
+      <FullscreenImageViewerLazy
         images={fullscreenImage ? [fullscreenImage] : []}
         initialIndex={0}
         isOpen={!!fullscreenImage}

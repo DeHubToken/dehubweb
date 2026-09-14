@@ -72,7 +72,7 @@ import { useCommentTips } from '@/hooks/use-comment-tips';
 import { useAuthorThread } from '@/hooks/use-author-thread';
 import { TipModal } from '@/components/app/modals/TipModal';
 import { CommentLikersDrawer } from './CommentLikersDrawer';
-import { FullscreenImageViewer } from './FullscreenImageViewer';
+import { FullscreenImageViewerLazy } from './FullscreenImageViewerLazy';
 import { toast } from 'sonner';
 import { emitCommentCreated } from '@/lib/comment-count-events';
 import { useMention } from '@/hooks/use-mention';
@@ -498,7 +498,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
                     portals to the body, so it covers the whole page even from
                     inside the comments drawer, and closing it returns to the
                     thread instead of a tab showing a bare image URL. */}
-                <FullscreenImageViewer
+                <FullscreenImageViewerLazy
                   images={[comment.imageUrl]}
                   initialIndex={0}
                   isOpen={imageFullscreen}

@@ -120,6 +120,28 @@ export function cdnImage(
 }
 
 /**
+ * The source URL behind a `cdnImage()` wrapper — the file as it was uploaded,
+ * before any width or quality transform. Anything that is not one of our own
+ * transform URLs (a raw CDN URL, a blob: preview, a third-party host) comes
+ * back untouched, so a caller can pass whatever it happens to hold.
+ *
+ * The fullscreen viewer is why this exists. Feed image URLs are built once, at
+ * `DEFAULT_IMAGE_WIDTH`, and handed on to everything downstream — so opening a
+ * photo fullscreen and zooming into it was zooming into a 1080px, quality-80
+ * re-encode rather than into the picture that was uploaded.
+ */
+export function cdnImageSource(url: string): string;
+export function cdnImageSource(url: string | undefined): string | undefined;
+export function cdnImageSource(url: string | undefined): string | undefined {
+  if (!url) return url;
+  const prefix = `${IMAGE_TRANSFORM_ORIGIN}/cdn-cgi/image/`;
+  if (!url.startsWith(prefix)) return url;
+  const rest = url.slice(prefix.length);
+  const slash = rest.indexOf('/');
+  return slash === -1 ? url : rest.slice(slash + 1);
+}
+
+/**
  * The same image at several widths, as a `srcset` value — so the browser picks
  * one that fits the slot it actually renders into, instead of the single width
  * the caller guessed. Accepts either a raw CDN URL or one `cdnImage()` has
