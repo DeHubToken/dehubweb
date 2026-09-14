@@ -157,12 +157,18 @@ export async function getOrInitWeb3Auth(): Promise<CompatSession> {
         const { data } = await supabase.auth.getUser();
         const u = data?.user;
         if (!u) return {};
-        // Phone-login accounts get a synthetic @phone.dehub.internal email so
-        // they can sign in via password (see verify-phone-otp) — never real.
+        // Phone and Telegram accounts get a synthetic *.dehub.internal email so
+        // they can sign in via password (verify-phone-otp, telegram-auth) —
+        // never real. Same rule as getSupabaseAuthMeta in AuthProvider.
+        const md = (u.user_metadata ?? {}) as Record<string, unknown>;
         return {
-          email: u.email?.endsWith('@phone.dehub.internal') ? undefined : u.email,
-          name: (u.user_metadata?.full_name as string) ?? (u.user_metadata?.name as string) ?? undefined,
-          typeOfLogin: u.app_metadata?.provider ?? 'email',
+          email: u.email?.endsWith('.dehub.internal') ? undefined : u.email,
+          name: (md.full_name as string) ?? (md.name as string) ?? undefined,
+          typeOfLogin:
+            (md.provider as string | undefined) ??
+            (u.email?.endsWith('@phone.dehub.internal') ? 'phone' : undefined) ??
+            u.app_metadata?.provider ??
+            'email',
           verifierId: u.id,
         };
       } catch {
