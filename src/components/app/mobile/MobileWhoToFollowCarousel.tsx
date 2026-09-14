@@ -19,6 +19,7 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { UserPlus, Loader2, ChevronRight, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';
+import { BadgedName } from '@/components/app/BadgedName';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { getSuggestedAccounts, getCachedSuggestedProfiles, type SuggestedAccount } from '@/lib/api/dehub';
@@ -218,9 +219,14 @@ export function MobileWhoToFollowCarousel() {
                 </AvatarFallback>
               </Avatar>
               <div className="flex items-center justify-center w-full mb-2">
-                <span className="font-semibold text-white text-xs truncate">
+                <BadgedName
+                  badgeBalance={user.hideBadgeAndBalance ? 0 : user.badgeBalance}
+                  username={user.username}
+                  className="font-semibold text-white text-xs truncate"
+                  wrapperClassName="justify-center"
+                >
                   {getDisplayName(user)}
-                </span>
+                </BadgedName>
               </div>
               <Button
                 size="sm"

@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { AppState } from '@/components/app/AppState';
+import { BadgedName } from '@/components/app/BadgedName';
 
 interface FollowRequestsDrawerProps {
   open: boolean;
@@ -217,7 +218,15 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
                       onClick={() => handleNavigateToProfile(request)}
                       className="text-left"
                     >
-                      <p className="text-white font-medium text-sm truncate">{displayName}</p>
+                      {/* A request row carries no balance, so the badge is looked up by
+                          name — the same path stage hosts and community owners use. */}
+                      <BadgedName
+                        lookupId={request.username || request.address}
+                        username={request.username}
+                        className="text-white font-medium text-sm truncate"
+                      >
+                        {displayName}
+                      </BadgedName>
                       {request.username && (
                         <p className="text-zinc-500 text-xs">@{request.username.replace('@', '')}</p>
                       )}

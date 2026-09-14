@@ -3,6 +3,7 @@ import { AppState } from '@/components/app/AppState';
 import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect, memo, startTransition, type CSSProperties } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { SEOHead } from '@/components/SEOHead';
+import { BadgedName } from '@/components/app/BadgedName';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { WhatsHappening } from '@/components/app/WhatsHappening';
 import { NewMembersBento } from '@/components/app/NewMembersBento';
@@ -318,7 +319,14 @@ const UserResultCard = ({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             <p className="text-white font-medium flex items-center gap-1.5 truncate">
-              <span className="truncate">{user.name}</span>
+              <BadgedName
+                badgeBalance={user.badgeBalance}
+                badgeLock={user.badgeLock}
+                username={user.badgeUsername}
+                className="truncate"
+              >
+                {user.name}
+              </BadgedName>
               {user.verified && <VerifiedBadge className="w-3.5 h-3.5 flex-shrink-0" />}
             </p>
             <span className="text-zinc-500 font-normal text-sm truncate">

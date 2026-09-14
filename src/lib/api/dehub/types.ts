@@ -348,6 +348,10 @@ export interface SearchAccount {
   address: string;
   username: string;
   displayName?: string;
+  /** Staked DHB, the grandfathered tier, and the opt-out — for the badge. */
+  badgeBalance?: number;
+  badgeLock?: { tier: string; requirement: number } | null;
+  hideBadgeAndBalance?: boolean;
   bio?: string;
   avatarUrl?: string;
   avatarImageUrl?: string;

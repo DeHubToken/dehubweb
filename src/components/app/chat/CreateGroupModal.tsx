@@ -16,6 +16,7 @@ import { AppState } from '@/components/app/AppState';
 import { createGroup, type DeHubUser, type DeHubConversation, getAuthToken, DEHUB_CDN_BASE } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { toast } from 'sonner';
+import { BadgedName } from '@/components/app/BadgedName';
 import { VerifiedBadge } from '../VerifiedBadge';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -57,7 +58,14 @@ function UserSelectItem({
       
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
-          <span className="font-semibold text-white truncate">{displayName}</span>
+          <BadgedName
+            badgeBalance={user.hideBadgeAndBalance ? 0 : user.badgeBalance}
+            lookupId={user.hideBadgeAndBalance ? null : (user.username || user.address)}
+            username={user.username}
+            className="font-semibold text-white truncate"
+          >
+            {displayName}
+          </BadgedName>
           {isVerified && <VerifiedBadge className="w-3.5 h-3.5" />}
         </div>
         {user.username && (

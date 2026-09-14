@@ -26,6 +26,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getCommentLikers, type CommentLiker } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
+import { BadgedName } from '@/components/app/BadgedName';
 import { AppState } from '@/components/app/AppState';
 
 const PAGE_SIZE = 50;
@@ -118,9 +119,14 @@ export function CommentLikersDrawer({ open, onOpenChange, commentId }: CommentLi
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <span className="font-semibold text-white text-sm truncate block">
+                      <BadgedName
+                        badgeBalance={person.badgeBalance}
+                        username={person.username}
+                        className="font-semibold text-white text-sm"
+                        wrapperClassName="flex w-full"
+                      >
                         {displayName}
-                      </span>
+                      </BadgedName>
                       {person.username && (
                         <span className="text-zinc-500 text-xs truncate block">
                           @{person.username.replace('@', '')}
