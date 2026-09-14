@@ -163,7 +163,7 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
                 )}
               >
                 {badgeUrl ? (
-                  <img src={badgeUrl} alt={tier.label} className="w-5 h-5 object-contain shrink-0" />
+                  <img src={badgeUrl} alt={tier.label} className="w-5 h-5 object-contain shrink-0 art-rim" />
                 ) : (
                   <span className="w-5 h-5 rounded-full bg-foreground/15 shrink-0" />
                 )}

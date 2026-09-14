@@ -158,15 +158,17 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
             {/* Rank */}
             <div className="w-7 flex-shrink-0 flex items-center justify-center">
               {rank <= 10 ? (
-                <div className={`medal-shine-container ${rank <= 3 ? 'w-10 h-10' : 'w-6 h-6'}`}>
-                  <img 
-                    src={MEDALS[rank - 1]} 
-                    alt={`Rank ${rank}`} 
-                    className={`${rank <= 3 ? 'w-10 h-10' : 'w-6 h-6'} object-contain`}
+                <div
+                  className={`medal-shine-container ${rank <= 3 ? 'w-10 h-10' : 'w-6 h-6'}`}
+                  style={{ '--medal-mask': `url(${MEDALS[rank - 1]})` } as React.CSSProperties}
+                >
+                  <img
+                    src={MEDALS[rank - 1]}
+                    alt={`Rank ${rank}`}
+                    className={`${rank <= 3 ? 'w-10 h-10' : 'w-6 h-6'} object-contain relative`}
                   />
-                  <div 
+                  <div
                     className="medal-shine-overlay"
-                    style={{ '--medal-mask': `url(${MEDALS[rank - 1]})` } as React.CSSProperties}
                   />
                 </div>
               ) : (

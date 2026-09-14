@@ -85,7 +85,7 @@ export function LendBadgeRows({ address, handle, onBack, onDone }: LendBadgeRows
               {revoke.isPending ? (
                 <Loader2 className="w-4 h-4 text-red-400 animate-spin" />
               ) : (
-                <img src={badgeImage(lentToThem.tier) ?? undefined} alt="" className="w-4 h-4" />
+                <img src={badgeImage(lentToThem.tier) ?? undefined} alt="" className="w-4 h-4 art-rim" />
               )}
             </div>
             <span className="text-red-400 font-medium">{t('settings.badgeDelegationHandBack')}</span>
@@ -157,7 +157,7 @@ export function LendBadgeRows({ address, handle, onBack, onDone }: LendBadgeRows
                 {grant.isPending ? (
                   <Loader2 className="w-4 h-4 text-white animate-spin" />
                 ) : (
-                  <img src={badgeImage(tier ?? '') ?? undefined} alt="" className="w-4 h-4" />
+                  <img src={badgeImage(tier ?? '') ?? undefined} alt="" className="w-4 h-4 art-rim" />
                 )}
               </div>
               <span className="text-white font-medium">
