@@ -20,6 +20,7 @@
 import { useState, useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
 import { isQuietNow } from '@/lib/quiet-hours';
 import {
+  getWebPushFailureReason,
   getWebPushState,
   probeNotificationDisplay,
   subscribeToWebPush,
@@ -111,6 +112,16 @@ export function useStoredEnabled(): boolean {
  */
 export function useWebPushState(): WebPushState {
   return useSyncExternalStore(subscribeWebPushState, getWebPushState, () => 'unknown' as const);
+}
+
+/**
+ * The browser's own words for why it could not display a notification.
+ *
+ * Rides the same event as the state because it is set in the same breath —
+ * there is no path that changes one without the other.
+ */
+export function useWebPushFailureReason(): string | null {
+  return useSyncExternalStore(subscribeWebPushState, getWebPushFailureReason, () => null);
 }
 
 export function getLastSeenTimestamp(): number {

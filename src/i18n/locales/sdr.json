@@ -134,6 +134,9 @@
     "browserNotificationsTest": "ایک جانچ خبر بھیجو",
     "browserNotificationsTestSent": "جانچ خبر بھیجل گیل",
     "browserNotificationsTestBody": "DeHub کے خبر ایسن دیکھائی۔",
+    "browserNotificationsDisplayFailedTitle": "एह ब्राउजर एक नोटिफिकेशन डिसप्ले नहीं कर सकत",
+    "browserNotificationsDisplayFailedDesc": "ऑन है, पर एह ब्राउजर उन्हें डिसप्ले नहीं कर सकत",
+    "browserNotificationsDisplayFailedHint": "तुमार सिस्टम नोटिफिकेशन की अनुमति दे रहा है और सबस्क्रिप्शन लाइव है — ब्राउजर खुद एक दिखाने में विफल रहा, और यह विफल होते रहेगा जब तक कि वह साफ न हो जाए। DeHub या तुमार सिस्टम नोटिफिकेशन सेटिंग्स में कुछ भी इसे बदलेगा नहीं।",
     "activity": "سرگرمی",
     "likes": "پسند",
     "likesDesc": "جب کوئی تمہاری پوسٹ پسند کرے",
@@ -1643,6 +1646,8 @@
     "turn_on_desktop_notifications": "ئاگادارکردنەوەکانی دێسکتۆپ بکرێنەوە؟",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "دیکە تابێکدا بیت، لە وەڵام و بەخشش و نامەکان ئاگادار بە.",
     "turn_on": "بیکەوە",
+    "push_display_failed_body": "ई ब्राउजर एक नोटिफिकेशन डिस्प्ले नहीं कर सकल, तो कोनो भी तुमा तक नहीं पहुंच रहल। तुमार सिस्टम सेटिंग्स कारण नहीं हे — ब्राउजर आपे ही फेलियर रिपोर्ट करल।",
+    "push_tab_only_body": "ई ब्राउजर बैकग्राउंड नोटिफिकेशन के लिए रजिस्टर नहीं होत, तो DeHub बंद रहत समय कुछु नहीं पहुंचत।",
     "not_now": "ئێستا نا",
     "image_too_large_tier": "तस्वीर बहुत बड़ी है — तुम्हारे {{tier}} स्तर की दुकानें {{limit}} MB तक की तस्वीरें रखती हैं",
     "image_too_large_untiered": "तस्वीर बहुत बड़ी है — तस्वीरें {{limit}} MB तक संग्रहीत की जाती हैं"

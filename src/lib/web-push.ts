@@ -28,12 +28,13 @@ import { getDeviceId } from '@/lib/device-id';
  * None of that is visible to the reader, so the switch sits on over a channel
  * that cannot deliver. This is what lets a surface say so instead.
  *
- *   'unknown'     - not resolved yet this page load
- *   'unsupported' - no service worker, or no PushManager
- *   'off'         - no permission, or deliberately unsubscribed
- *   'subscribed'  - a live subscription the server knows about
- *   'unavailable' - we asked, and the browser or the deployment said no
- *   'blocked'     - subscribed fine, but the OS refuses to display anything
+ *   'unknown'        - not resolved yet this page load
+ *   'unsupported'    - no service worker, or no PushManager
+ *   'off'            - no permission, or deliberately unsubscribed
+ *   'subscribed'     - a live subscription the server knows about
+ *   'unavailable'    - we asked, and the browser or the deployment said no
+ *   'blocked'        - subscribed fine, but the OS refuses to display anything
+ *   'display-failed' - the browser itself failed to display one, and said why
  */
 export type WebPushState =
   | 'unknown'
@@ -41,11 +42,15 @@ export type WebPushState =
   | 'off'
   | 'subscribed'
   | 'unavailable'
-  | 'blocked';
+  | 'blocked'
+  | 'display-failed';
 
 const STATE_EVENT = 'dehub:web-push-state-changed';
 
 let state: WebPushState = 'unknown';
+
+/** The browser's own words for the last display failure, if it gave any. */
+let failureReason: string | null = null;
 
 function setState(next: WebPushState): void {
   if (state === next) return;
@@ -57,6 +62,16 @@ function setState(next: WebPushState): void {
 
 export function getWebPushState(): WebPushState {
   return state;
+}
+
+/**
+ * What the browser said when it last refused to display a notification.
+ *
+ * Worth surfacing verbatim rather than paraphrasing: it is the only part of
+ * this that names a cause, and the cause is not one we can enumerate.
+ */
+export function getWebPushFailureReason(): string | null {
+  return failureReason;
 }
 
 export function subscribeWebPushState(onChange: () => void): () => void {
@@ -193,6 +208,24 @@ async function registerSubscription(subscription: PushSubscription): Promise<voi
 
 /** Unsubscribe this browser and drop the row server-side. */
 /**
+ * Pull a readable reason out of whatever showNotification() rejected with.
+ *
+ * The emptiness is the signal, not an inconvenience. An OS refusing to post
+ * for the browser rejects with literally `undefined` - no name, no message,
+ * nothing to serialise - and that is the signature we matched on. A rejection
+ * that arrives carrying a message is therefore a *different* fault wearing
+ * the same shape, and the message is the only thing that distinguishes them.
+ */
+function rejectionMessage(error: unknown): string {
+  if (typeof error === 'string') return error.trim();
+  if (error && typeof error === 'object') {
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === 'string') return message.trim();
+  }
+  return '';
+}
+
+/**
  * Ask the service worker to display one, and report whether it could.
  *
  * This is the only honest capability check, and the old one was not it.
@@ -200,9 +233,17 @@ async function registerSubscription(subscription: PushSubscription): Promise<voi
  * whose OS is blocking the browser's notifications - observed directly, not
  * theorised - so the enable-time test passed while nothing was ever
  * displayed, and no surface could tell. `registration.showNotification()` is
- * the path a real push takes, and it rejects (with an empty reason, so there
- * is nothing to log) when the OS refuses. Anything gating on "can we
- * deliver" has to go through here.
+ * the path a real push takes, so anything gating on "can we deliver" has to
+ * go through here.
+ *
+ * What it must NOT do is decide it knows why. This used to read every
+ * rejection as the OS blocking the browser, on the strength of the one
+ * machine where that was true. It then met a machine where the OS was
+ * allowing notifications perfectly well and Chrome's own notification store
+ * had lost its LevelDB pointer: every call rejected with "Notification data
+ * could not be persisted", and the reader was sent to an OS setting that was
+ * already correct - so they turned a working switch off and on and nothing
+ * changed. The reason was sitting in the rejection the whole time.
  */
 export async function probeNotificationDisplay(title: string, body: string): Promise<boolean> {
   if (!isWebPushSupported()) return false;
@@ -215,11 +256,22 @@ export async function probeNotificationDisplay(title: string, body: string): Pro
       tag: 'dehub-test-notification',
       data: { url: '/app/notifications' },
     });
+    failureReason = null;
+    // A display that works clears a display fault, or the warning outlives the
+    // problem until the next reload — and the button that re-runs this probe
+    // is exactly what someone clicks to find out whether they have fixed it.
+    if (state === 'blocked' || state === 'display-failed') {
+      const live = await registration.pushManager.getSubscription().catch(() => null);
+      setState(live ? 'subscribed' : 'off');
+    }
     return true;
-  } catch {
-    // The subscription may be perfectly healthy; the operating system is
-    // simply refusing to post it. Different fault, different advice.
-    setState('blocked');
+  } catch (error) {
+    const reason = rejectionMessage(error);
+    failureReason = reason || null;
+    // Only the empty rejection gets blamed on the operating system, because
+    // that is the only one observed to be the operating system. Everything
+    // else says what it is and lets the reader read it.
+    setState(reason ? 'display-failed' : 'blocked');
     return false;
   }
 }
