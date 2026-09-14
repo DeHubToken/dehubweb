@@ -94,10 +94,10 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
     display: 'inline-block',
     top: `calc(${artworkBaselineOffset}em + ${ARTWORK_GUTTER_PX}px)`,
   };
-  // The plate is masked by the artwork itself, so it aligns with the image's
-  // content box rather than the gutter the wrapper adds around it.
+  // The plate is masked by the artwork itself and sits on the wrapper's padding
+  // box, one gutter pixel larger than the image on every side: that pixel is the rim.
   const plateStyle = {
-    inset: `${ARTWORK_GUTTER_PX}px`,
+    inset: 0,
     '--art-mask': cssUrl(url ?? ''),
   } as CSSProperties;
 
