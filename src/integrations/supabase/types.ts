@@ -6377,6 +6377,7 @@ export type Database = {
         }[]
       }
       get_request_wallet_address: { Args: never; Returns: string }
+      get_user_id_by_email: { Args: { p_email: string }; Returns: string }
       get_user_id_by_phone: { Args: { p_phone: string }; Returns: string }
       increment_category_count: { Args: { p_name: string }; Returns: undefined }
       increment_stage_listens: {
