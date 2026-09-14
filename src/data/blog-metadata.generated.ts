@@ -8,6 +8,31 @@ import type { BlogPost } from '@/types/blog';
 // getPublishedPosts() corpus: overrides applied, published only, newest first.
 export const blogPostsMetadata: BlogPost[] = [
   {
+    "id": "ready-to-debate-your-side-bring-it-to-dehub",
+    "slug": "ready-to-debate-your-side-bring-it-to-dehub",
+    "title": "Ready to Debate Your Side? Bring It to DeHub.",
+    "excerpt": "Israel and Palestine. Abortion. Gun rights. Immigration. Religion. AI. Free speech. Climate. Pick the issue people actually disagree about, then make your case with tools built for argument instead of outrage.",
+    "content": "",
+    "bannerImage": "/media/debate-your-side-banner.jpg",
+    "bannerImageAlt": "Ready to debate your side? Bring it to DeHub.",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-09-14T10:00:00.000Z",
+    "tags": [
+      "Free Speech",
+      "Debate",
+      "Stages",
+      "Community",
+      "Decentralised Social"
+    ],
+    "readingTime": 7,
+    "featured": true,
+    "status": "published",
+    "seoTitle": "Ready to Debate Your Side? Bring It to DeHub | Free Speech Debate Platform",
+    "seoDescription": "A decentralised social platform built for real debate: live audio Stages, long-form posts, threaded rebuttals, polls and community-run venues — with rewards that pay for the persuasive version, not the outrage."
+  },
+  {
     "id": "how-monetization-works-on-social-media-apps",
     "slug": "how-monetization-works-on-social-media-apps",
     "title": "How monetization works on social media apps",
@@ -864,7 +889,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2025-04-03T00:00:00.000Z",
+    "publishedAt": "2025-04-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1266,7 +1291,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2024-07-02T00:00:00.000Z",
+    "publishedAt": "2024-07-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1291,7 +1316,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2024-07-01T00:00:00.000Z",
+    "publishedAt": "2024-06-30T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1316,7 +1341,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2024-04-04T00:00:00.000Z",
+    "publishedAt": "2024-04-03T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1341,7 +1366,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2024-04-03T00:00:00.000Z",
+    "publishedAt": "2024-04-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1366,7 +1391,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2024-04-02T00:00:00.000Z",
+    "publishedAt": "2024-04-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1391,7 +1416,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2024-04-01T00:00:00.000Z",
+    "publishedAt": "2024-03-31T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1541,7 +1566,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-10-04T00:00:00.000Z",
+    "publishedAt": "2023-10-03T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1566,7 +1591,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-10-03T00:00:00.000Z",
+    "publishedAt": "2023-10-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1591,7 +1616,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-10-02T00:00:00.000Z",
+    "publishedAt": "2023-10-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1616,7 +1641,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-10-01T00:00:00.000Z",
+    "publishedAt": "2023-09-30T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1663,7 +1688,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-07-04T00:00:00.000Z",
+    "publishedAt": "2023-07-03T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1688,7 +1713,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-07-03T00:00:00.000Z",
+    "publishedAt": "2023-07-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1713,7 +1738,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-07-02T00:00:00.000Z",
+    "publishedAt": "2023-07-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1738,7 +1763,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-04-03T00:00:00.000Z",
+    "publishedAt": "2023-04-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1763,7 +1788,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-04-02T00:00:00.000Z",
+    "publishedAt": "2023-04-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1788,7 +1813,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-04-01T00:00:00.000Z",
+    "publishedAt": "2023-03-31T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1935,7 +1960,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-10-03T00:00:00.000Z",
+    "publishedAt": "2022-10-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1960,7 +1985,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-10-02T00:00:00.000Z",
+    "publishedAt": "2022-10-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1985,7 +2010,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-10-01T00:00:00.000Z",
+    "publishedAt": "2022-09-30T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2010,7 +2035,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-07-05T00:00:00.000Z",
+    "publishedAt": "2022-07-04T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2035,7 +2060,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-07-04T00:00:00.000Z",
+    "publishedAt": "2022-07-03T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2060,7 +2085,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-07-03T00:00:00.000Z",
+    "publishedAt": "2022-07-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2085,7 +2110,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-07-02T00:00:00.000Z",
+    "publishedAt": "2022-07-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2110,7 +2135,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-04-06T00:00:00.000Z",
+    "publishedAt": "2022-04-05T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2135,7 +2160,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-04-05T00:00:00.000Z",
+    "publishedAt": "2022-04-04T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2160,7 +2185,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-04-04T00:00:00.000Z",
+    "publishedAt": "2022-04-03T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2185,7 +2210,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-04-03T00:00:00.000Z",
+    "publishedAt": "2022-04-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2210,7 +2235,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-04-02T00:00:00.000Z",
+    "publishedAt": "2022-04-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2235,7 +2260,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-04-01T00:00:00.000Z",
+    "publishedAt": "2022-03-31T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2385,7 +2410,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-10-05T00:00:00.000Z",
+    "publishedAt": "2021-10-04T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2410,7 +2435,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-10-04T00:00:00.000Z",
+    "publishedAt": "2021-10-03T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2435,7 +2460,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-10-03T00:00:00.000Z",
+    "publishedAt": "2021-10-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2460,7 +2485,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-10-02T00:00:00.000Z",
+    "publishedAt": "2021-10-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2485,7 +2510,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-10-01T00:00:00.000Z",
+    "publishedAt": "2021-09-30T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2510,7 +2535,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-07-05T00:00:00.000Z",
+    "publishedAt": "2021-07-04T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2535,7 +2560,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-07-04T00:00:00.000Z",
+    "publishedAt": "2021-07-03T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2560,7 +2585,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-07-03T00:00:00.000Z",
+    "publishedAt": "2021-07-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2585,7 +2610,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-07-02T00:00:00.000Z",
+    "publishedAt": "2021-07-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2610,7 +2635,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-07-01T00:00:00.000Z",
+    "publishedAt": "2021-06-30T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -3365,33 +3390,29 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "how-monetization-works-on-social-media-apps",
-  "slug": "how-monetization-works-on-social-media-apps",
-  "title": "How monetization works on social media apps",
-  "excerpt": "Follower minimums, activity tests, invitation walls and payout floors for Instagram, TikTok, YouTube, Facebook, X, Snap and Twitch, with the 2026 and 2027 rule changes that reset the numbers.",
+  "id": "ready-to-debate-your-side-bring-it-to-dehub",
+  "slug": "ready-to-debate-your-side-bring-it-to-dehub",
+  "title": "Ready to Debate Your Side? Bring It to DeHub.",
+  "excerpt": "Israel and Palestine. Abortion. Gun rights. Immigration. Religion. AI. Free speech. Climate. Pick the issue people actually disagree about, then make your case with tools built for argument instead of outrage.",
   "content": "",
-  "bannerImage": "/media/social-media-monetization-2026-banner.jpg",
-  "bannerImageAlt": "Who pays and when: creator monetization rules across seven social platforms in 2026",
+  "bannerImage": "/media/debate-your-side-banner.jpg",
+  "bannerImageAlt": "Ready to debate your side? Bring it to DeHub.",
   "author": {
     "name": "DeHub Team"
   },
-  "publishedAt": "2026-09-03T09:00:00.000Z",
+  "publishedAt": "2026-09-14T10:00:00.000Z",
   "tags": [
-    "Creator Economy",
-    "Monetization",
-    "Instagram",
-    "TikTok",
-    "YouTube",
-    "Facebook",
-    "X",
-    "Snap",
-    "Twitch"
+    "Free Speech",
+    "Debate",
+    "Stages",
+    "Community",
+    "Decentralised Social"
   ],
-  "readingTime": 13,
+  "readingTime": 7,
   "featured": true,
   "status": "published",
-  "seoTitle": "How Monetization Works on Social Media Apps: 2026 Rules for Every Platform | DeHub",
-  "seoDescription": "Follower minimums, activity tests, invite walls and payout floors on Instagram, TikTok, YouTube, Facebook, X, Snap and Twitch, plus the 2026 and 2027 changes that reset the numbers."
+  "seoTitle": "Ready to Debate Your Side? Bring It to DeHub | Free Speech Debate Platform",
+  "seoDescription": "A decentralised social platform built for real debate: live audio Stages, long-form posts, threaded rebuttals, polls and community-run venues — with rewards that pay for the persuasive version, not the outrage."
 };
 
 export const excludedTitles: string[] = [
