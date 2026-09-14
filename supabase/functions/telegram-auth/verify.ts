@@ -101,6 +101,34 @@ export function decodeTgAuthResult(raw: string): Record<string, unknown> | null 
 }
 
 /**
+ * A BotFather token: digits, a colon, then url-safe characters.
+ *
+ * Anchored nowhere on purpose. BotFather hands the token over inside a
+ * paragraph of congratulations, and the whole paragraph is exactly what ends
+ * up pasted into the secret — which is not a hypothetical, it is what happened
+ * the first time this was configured. Pulling the token out of whatever it
+ * arrived in costs one regex; the alternative is a bot id of
+ * "Done! Congratulations on your new bot…" being published to every visitor
+ * and every login failing at Telegram.
+ */
+const BOT_TOKEN = /(\d{5,}):([A-Za-z0-9_-]{20,})/;
+
+/**
+ * Read TELEGRAM_LOGIN_BOT_TOKEN into something usable, or null.
+ *
+ * Null is the important half. Before this existed, any non-empty value made
+ * the function report `enabled: true`, which puts the Telegram button on the
+ * login sheet — so a mis-set secret did not disable the feature, it shipped a
+ * button that could only ever fail. Failing closed keeps a bad value
+ * indistinguishable from no value, which is the safe direction.
+ */
+export function parseBotToken(raw: string | null | undefined): { token: string; botId: string } | null {
+  const found = String(raw ?? "").match(BOT_TOKEN);
+  if (!found) return null;
+  return { token: `${found[1]}:${found[2]}`, botId: found[1] };
+}
+
+/**
  * Whether a payload is recent enough to act on.
  *
  * Telegram signs `auth_date` but has no notion of single use, so an old
