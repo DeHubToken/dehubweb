@@ -903,6 +903,8 @@
     "andOthersLikedCommentPreview": "{{first}} و {{others}} عجبهم تعليقك: \"{{preview}}\"",
     "badgeLent": "{{name}} أعطاك شارة {{tier}}",
     "badgeTierUp": "مبروك! هسه صرت {{tier}} 🎉",
+    "badgeTierDown": "انتبه: شارتك هسه {{tier}}",
+    "badgeTierLost": "انتبه: ما عدت عندك شارة",
     "badgeTakenBack": "{{name}} توقف عن إعطاؤك شارة {{tier}}",
     "badgeHandedBack": "{{name}} رجع الشارة {{tier}} اللي أعطيتهم إياها",
     "badgeLoanLapsed": "{{name}} ما يقدر يعطيك شارة {{tier}} بعد هسع",

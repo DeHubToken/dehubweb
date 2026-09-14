@@ -18,7 +18,7 @@ function translate(lng = 'en', resources: any = { en: { translation: en } }) {
   return instance.t.bind(instance);
 }
 
-describe('badge tier-up notification', () => {
+describe('badge tier change notifications', () => {
   it('reads as a congratulation naming the tier, with no actor anywhere', () => {
     const value = localizedNotificationContent(
       { type: 'badge_tier_up', metadata: { tier: 'Blue Whale', previousTier: 'Great White Shark' } },
@@ -37,6 +37,24 @@ describe('badge tier-up notification', () => {
     expect(value).not.toContain('undefined');
   });
 
+  it('says something different when the badge steps down, and again when it goes', () => {
+    const t = translate();
+    const stepped = localizedNotificationContent(
+      { type: 'badge_tier_down', metadata: { tier: 'Cobra', previousTier: 'Dolphin' } },
+      t,
+    );
+    const gone = localizedNotificationContent(
+      { type: 'badge_tier_down', metadata: { previousTier: 'Crab' } },
+      t,
+    );
+    expect(stepped).toContain('Cobra');
+    // Not the same sentence with a hole in it: losing the last rung reads as
+    // its own thing, and names no tier because there is none to name.
+    expect(gone).not.toEqual(stepped);
+    expect(gone).not.toContain('undefined');
+    expect(gone).toBeTruthy();
+  });
+
   it('is translated in every locale, not only the ones that render English', () => {
     const dir = path.resolve(__dirname, '../../i18n/locales');
     const missing = fs
@@ -44,7 +62,8 @@ describe('badge tier-up notification', () => {
       .filter(file => file.endsWith('.json'))
       .filter(file => {
         const json = JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8'));
-        return !json?.notifications?.badgeTierUp;
+        const n = json?.notifications;
+        return !n?.badgeTierUp || !n?.badgeTierDown || !n?.badgeTierLost;
       });
     expect(missing).toEqual([]);
   });
@@ -56,7 +75,12 @@ describe('badge tier-up notification', () => {
       .filter(file => file.endsWith('.json'))
       .filter(file => {
         const json = JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8'));
-        return !String(json.notifications.badgeTierUp).includes('{{tier}}');
+        const n = json.notifications;
+        return (
+          !String(n.badgeTierUp).includes('{{tier}}') ||
+          !String(n.badgeTierDown).includes('{{tier}}') ||
+          String(n.badgeTierLost).includes('{{tier}}')
+        );
       });
     expect(broken).toEqual([]);
   });
