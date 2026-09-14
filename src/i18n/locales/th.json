@@ -1079,6 +1079,8 @@
   },
   "creators": {},
   "loginModal": {
+    "continueApple": "ดำเนินการต่อด้วย Apple",
+    "continueTelegram": "ดำเนินการต่อด้วย Telegram",
     "unlockBiometricContinue": "ปลดล็อกกระเป๋าตังค์ด้วยลายนิ้วมือหรือใบหน้าของคุณเพื่อดำเนินการต่อ",
     "unlockBiometricSignIn": "ปลดล็อกกระเป๋าตังค์ด้วยลายนิ้วมือหรือใบหน้าเพื่อลงชื่อเข้าใช้",
     "unlockPasswordContinue": "ป้อนรหัสผ่านกระเป๋าเงินของคุณเพื่อดำเนินการต่อ",

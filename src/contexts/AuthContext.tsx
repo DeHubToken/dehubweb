@@ -48,6 +48,15 @@ export interface AuthContextType {
   verifyEmailOtp: (email: string, code: string) => Promise<void>;
   connectWithSMS: (phone: string) => Promise<void>;
   verifyPhoneOtp: (phone: string, code: string) => Promise<void>;
+  /**
+   * Telegram login. Telegram is not a Supabase Auth provider, so this does not
+   * go through connectWithProvider — it redirects to oauth.telegram.org and
+   * comes back through /auth/telegram, where AuthProvider picks the signed
+   * payload up and exchanges it for a session. Resolves `true` once the
+   * redirect is under way, `false` when Telegram login is unavailable or
+   * could not be started.
+   */
+  connectWithTelegram: () => Promise<boolean>;
   connectWithWallet: (wallet: WalletProvider) => Promise<boolean>;
   /**
    * Final step of the smart-wallet login: called by the login modal once the
