@@ -239,7 +239,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   Prompt: ['ai', 'generate', 'ai image', 'ai video', 'image generator', 'text to image', 'art', 'create with ai', 'credits'],
   // Nobody types "converter" looking for this — they type the platform
   // they're bringing content over from, or what they're trying to do with it.
-  Converter: ['youtube', 'yt', 'yt-dlp', 'import youtube', 'import video', 'migrate', 'migrate all', 'download', 'convert'],
+  Converter: ['youtube', 'yt', 'yt-dlp', 'import youtube', 'import video', 'migrate', 'migrate all', 'download', 'convert', 'tiktok', 'instagram', 'reel', 'reels', 'twitter', 'x', 'facebook', 'twitch', 'clip', 'kick', 'rumble', 'vimeo', 'dailymotion', 'reddit', 'bluesky', 'odysee', 'streamable', 'loom', 'tumblr', 'pinterest', 'snapchat', 'vk', 'rutube', 'bilibili'],
   Notifications: ['alerts', 'activity', 'mentions', 'replies', 'likes', 'bell'],
   Messages: ['dm', 'dms', 'direct messages', 'chat', 'inbox', 'conversations', 'pm'],
   Communities: ['groups', 'community', 'rooms', 'servers', 'clubs'],

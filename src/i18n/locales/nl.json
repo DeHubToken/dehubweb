@@ -45,7 +45,8 @@
     "pricing": "Prijzen",
     "creators": "Creators",
     "getTheApp": "Download de app",
-    "connectAi": "AI verbinden"
+    "connectAi": "AI verbinden",
+    "converter": "Omvormer"
   },
   "feed": {
     "viewProfile": "Bekijk het profiel van {{name}}",
@@ -4987,5 +4988,48 @@
         "definition": "Een collectieve virtuele gedeelde ruimte, gecreëerd door de convergentie van virtueel verbeterde fysieke realiteit en fysiek persistente virtuele ruimte, inclusief de som van alle virtuele werelden, augmented reality en het internet."
       }
     }
+  },
+  "converter": {
+    "seoTitle": "Converter — importeer een video naar DeHub",
+    "seoDescription": "Plak een link van YouTube, TikTok, Instagram, X en meer, en publiceer het als een DeHub-bericht.",
+    "title": "Video importeren",
+    "subtitle": "Plak een link naar een video die je al bezit en we publiceren het als een bericht op je profiel. Zet zoveel in de wachtrij als je wilt — ze worden één voor één op de achtergrond uitgevoerd.",
+    "migrateAll": "Alles migreren",
+    "placeholder": "Plak een videolink",
+    "paste": "Plakken",
+    "ownership": "Ik ben eigenaar van deze inhoud, of ik heb toestemming van de rechthebbende om het op DeHub te publiceren.",
+    "import": "Importeren",
+    "addToQueue": "Toevoegen aan wachtrij",
+    "signInToImport": "Meld je aan om te importeren",
+    "queueHeading": "Je imports",
+    "queueRunning": "{{n}} in de wachtrij — je kunt dit tabblad veilig sluiten, ze gaan door.",
+    "queueIdle": "Niets wordt uitgevoerd.",
+    "untitled": "Video",
+    "thatSource": "dat platform",
+    "dismiss": "Sluiten",
+    "viewPost": "Bericht weergeven",
+    "tryAgain": "Opnieuw proberen",
+    "statusImported": "Geïmporteerd",
+    "statusAlreadyHere": "Al hier",
+    "statusFailed": "Mislukt",
+    "statusRateLimited": "Snelheidsbeperking",
+    "statusProcessing": "Verwerking",
+    "statusPublishing": "Publiceren",
+    "statusDownloading": "Downloaden",
+    "statusDownloadingPercent": "Downloaden {{percent}}%",
+    "statusQueued": "In wachtrij",
+    "detailFailed": "Kon die video niet importeren.",
+    "detailRateLimited": "{{source}} beperkt ons. Dit wordt automatisch opnieuw uitgevoerd — je hoeft niets opnieuw in te plakken.",
+    "detailDuplicate": "Die video stond al op je profiel.",
+    "detailWaiting": "Wacht op zijn beurt.",
+    "toastQueued": "In de wachtrij — het wordt op je profiel gepubliceerd wanneer het klaar is.",
+    "toastRateLimited": "Snelheidsbeperkt, je upload staat in de wachtrij en wordt zo snel mogelijk verwerkt, je hoeft dezelfde link niet opnieuw te proberen maar je kunt gerust meer in de wachtrij plaatsen als je wilt",
+    "toastImported": "Geïmporteerd van {{source}}!",
+    "toastDuplicate": "Die video was al geïmporteerd.",
+    "toastFailed": "Die import is mislukt.",
+    "errorUnsupported": "We kunnen niet van die link importeren. Probeer een van: {{sources}}",
+    "errorNeedRights": "Bevestig alstublieft dat je de rechten op deze inhoud hebt",
+    "errorClipboard": "Kon het klembord niet lezen — plak in plaats daarvan handmatig",
+    "errorQueueFailed": "Kon die import niet in de wachtrij plaatsen"
   }
 }
