@@ -34,6 +34,7 @@ import { getAccountInfo, type DeHubUser, type DeHubConversation } from '@/lib/ap
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { parseDehubLink, dehubLinkLabel } from '@/lib/dehub-links';
 import { AppState } from '@/components/app/AppState';
+import { BadgedName } from '@/components/app/BadgedName';
 
 interface ShareToDmModalProps {
   open: boolean;
@@ -249,6 +250,8 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
                   avatarUrl={avatarUrl}
                   name={name}
                   username={u?.username ?? undefined}
+                  badgeBalance={u?.hideBadgeAndBalance ? 0 : (u as { badgeBalance?: number } | undefined)?.badgeBalance}
+                  badgeLookupId={u?.hideBadgeAndBalance ? null : (u?.username || u?.address)}
                   verified={u?.isVerified || u?.is_verified}
                   fee={fee}
                   status={status}
@@ -275,6 +278,8 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
                   avatarUrl={avatarUrl}
                   name={name}
                   username={user.username ?? undefined}
+                  badgeBalance={user.hideBadgeAndBalance ? 0 : user.badgeBalance}
+                  badgeLookupId={user.hideBadgeAndBalance ? null : (user.username || user.address)}
                   verified={user.isVerified || user.is_verified}
                   fee={perMessageFeeOf(user)}
                   status={status}
@@ -304,6 +309,8 @@ function RecipientRow({
   avatarUrl,
   name,
   username,
+  badgeBalance,
+  badgeLookupId,
   verified,
   fee,
   status,
@@ -312,6 +319,9 @@ function RecipientRow({
   avatarUrl?: string;
   name: string;
   username?: string;
+  /** Staked DHB when the row carries it; otherwise the badge is looked up. */
+  badgeBalance?: number;
+  badgeLookupId?: string | null;
   verified?: boolean;
   fee: number;
   status: RowStatus;
@@ -327,7 +337,14 @@ function RecipientRow({
       </Avatar>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
-          <span className="font-semibold text-white truncate">{name}</span>
+          <BadgedName
+            badgeBalance={badgeBalance}
+            lookupId={badgeLookupId}
+            username={username}
+            className="font-semibold text-white truncate"
+          >
+            {name}
+          </BadgedName>
           {verified && <VerifiedBadge className="w-3.5 h-3.5" />}
         </div>
         {username && <p className="text-xs text-zinc-500 truncate">@{username}</p>}

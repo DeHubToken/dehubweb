@@ -17,6 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useConversations } from '@/hooks/use-messages';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { AppState } from '@/components/app/AppState';
+import { BadgedName } from '@/components/app/BadgedName';
 import type { DeHubConversation } from '@/lib/api/dehub';
 
 interface ForwardMessageDialogProps {
@@ -120,9 +121,22 @@ export function ForwardMessageDialog({
                       {(name.startsWith('0x') ? name.charAt(2) : name.charAt(0)).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="flex-1 min-w-0 truncate text-sm font-medium text-white">
-                    {name}
-                  </span>
+                  {/* A group has no single holder, so only a one-to-one row wears a badge. */}
+                  {conv.isGroup || conv.groupInfo ? (
+                    <span className="flex-1 min-w-0 truncate text-sm font-medium text-white">
+                      {name}
+                    </span>
+                  ) : (
+                    <BadgedName
+                      badgeBalance={(other as { badgeBalance?: number } | undefined)?.badgeBalance}
+                      lookupId={other?.username || other?.address}
+                      username={other?.username}
+                      className="truncate text-sm font-medium text-white"
+                      wrapperClassName="flex-1 min-w-0"
+                    >
+                      {name}
+                    </BadgedName>
+                  )}
                   <CornerUpRight className="w-4 h-4 text-zinc-500 flex-shrink-0" />
                 </button>
               );

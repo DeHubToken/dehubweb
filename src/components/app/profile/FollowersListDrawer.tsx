@@ -23,6 +23,7 @@ import { useFollowGroups, MAX_GROUPS, MAX_GROUP_NAME } from '@/hooks/use-follow-
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { AppState } from '@/components/app/AppState';
+import { BadgedName } from '@/components/app/BadgedName';
 
 const MAX_PAGES = 3;
 const PAGE_SIZE = 30;
@@ -62,6 +63,8 @@ interface UserListItem {
   followsYou?: boolean;
   isPrivate?: boolean;
   isPending?: boolean;
+  /** Staked DHB for the badge — already zeroed when the holder opted out. */
+  badgeBalance?: number | string | null;
 }
 
 interface FollowersListDrawerProps {
@@ -85,6 +88,7 @@ function mapFollowListItem(item: FollowListItem & { isPrivate?: boolean }): User
     isFollowing: item.isFollowing,
     followsYou: item.followsYou,
     isPrivate: item.isPrivate,
+    badgeBalance: item.hideBadgeAndBalance ? 0 : item.badgeBalance,
   };
 }
 
@@ -736,9 +740,13 @@ export function FollowersListDrawer({
                       make room for a badge. */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start gap-1.5">
-                      <span className="font-semibold text-white break-words line-clamp-2">
+                      <BadgedName
+                        badgeBalance={user.badgeBalance}
+                        username={user.username}
+                        className="font-semibold text-white break-words line-clamp-2"
+                      >
                         {user.displayName || user.username || truncateAddress(user.address)}
-                      </span>
+                      </BadgedName>
                       {user.isVerified && <VerifiedBadge className="w-4 h-4 shrink-0 mt-1" />}
                     </div>
                     {user.username ? (
