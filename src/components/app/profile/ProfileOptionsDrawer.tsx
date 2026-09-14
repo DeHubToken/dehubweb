@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Copy, AtSign, Wallet, MessageCircle, Gift, Bell, Handshake, UserMinus, Ban, LayoutDashboard, Loader2, ShieldCheck, Flag } from 'lucide-react';
+import { Copy, AtSign, Wallet, MessageCircle, Gift, Bell, Handshake, UserMinus, Ban, LayoutDashboard, Loader2, ShieldCheck, Flag, Award } from 'lucide-react';
 import { ReportModal } from '@/components/app/modals/ReportModal';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { DISPLAY_WALLET_OVERRIDES } from './ProfileConstants';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
 import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
+import { LendBadgeRows } from './LendBadgeRows';
 
 interface ProfileOptionsDrawerProps {
   profile: ProfileData;
@@ -38,6 +39,7 @@ export function ProfileOptionsContent({
   const navigate = useNavigate();
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [pickingNetwork, setPickingNetwork] = useState(false);
+  const [lendingBadge, setLendingBadge] = useState(false);
   const { hasChoice } = useWalletAddresses();
 
   /**
@@ -82,6 +84,19 @@ export function ProfileOptionsContent({
     }
     setShareSheetOpen(false);
   };
+
+  // Swapped in place over the whole menu rather than nested under it: this is a
+  // two-step action with its own back row, not one more option in the list.
+  if (lendingBadge && profile.walletAddress) {
+    return (
+      <LendBadgeRows
+        address={profile.walletAddress}
+        handle={profile.handle}
+        onBack={() => setLendingBadge(false)}
+        onDone={() => { setLendingBadge(false); setShareSheetOpen(false); }}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col gap-1">
@@ -178,6 +193,17 @@ export function ProfileOptionsContent({
                 </div>
                 <span className="text-white font-medium">{t('profileOptions.makeOffer')}</span>
               </button>
+              {profile.walletAddress && (
+                <button
+                  onClick={() => setLendingBadge(true)}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 active:scale-[0.98] transition-[background-color,transform] text-left"
+                >
+                  <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                    <Award className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-white font-medium">{t('settings.badgeDelegation')}</span>
+                </button>
+              )}
               <div className="my-1.5 h-px bg-white/10" />
               {isFollowing && (
                 <button
