@@ -29,6 +29,7 @@ import { bestDecentralisedSocialPlatformsPost } from './posts/bestDecentralisedS
 import { web3LiveStreamingPost } from './posts/web3LiveStreamingPost';
 import { playToEarnUkPost } from './posts/playToEarnUkPost';
 import { socialMediaMonetizationPost } from './posts/socialMediaMonetizationPost';
+import { debateOnDehubPost } from './posts/debateOnDehubPost';
 
 /**
  * Per-post banner for the milestone archive.
@@ -281,6 +282,7 @@ const createPost = (
 };
 
 export const blogPosts: BlogPost[] = [
+  debateOnDehubPost,
   socialMediaMonetizationPost,
   creatorVsHiggsfieldPost,
   whatIsDehubPost,
