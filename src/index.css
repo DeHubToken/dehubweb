@@ -2499,14 +2499,18 @@ html[data-theme="light"] [role="button"].bg-zinc-600 svg {
    arrows). Keep their text and icons white, same reasoning as the zinc chips
    above. The svg rule also rescues icon-only buttons whose muted text-white/NN
    class sits on the button element itself. */
-html[data-theme="light"] button[class*="bg-black\/"],
-html[data-theme="light"] button[class*="bg-black\/"] *,
-html[data-theme="light"] [role="button"][class*="bg-black\/"],
-html[data-theme="light"] [role="button"][class*="bg-black\/"] * {
+/* Only the genuinely dark scrims. bg-black/5, /10 and /20 are tints — a
+   5%-black button is light, so forcing white on it erases the label; the two
+   advertising CTAs in docs were invisible this way. Token match, not
+   substring: [class*="bg-black/5"] would also catch bg-black/50. */
+html[data-theme="light"] button[class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]),
+html[data-theme="light"] button[class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]) *,
+html[data-theme="light"] [role="button"][class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]),
+html[data-theme="light"] [role="button"][class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]) * {
   color: #ffffff !important;
 }
-html[data-theme="light"] button[class*="bg-black\/"] svg,
-html[data-theme="light"] [role="button"][class*="bg-black\/"] svg {
+html[data-theme="light"] button[class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]) svg,
+html[data-theme="light"] [role="button"][class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]) svg {
   color: #ffffff !important;
 }
 
