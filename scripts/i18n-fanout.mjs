@@ -254,6 +254,77 @@ function proseOf(text) {
   return text.replace(PLACEHOLDER, ' ').replace(/\s+/g, ' ').trim();
 }
 
+/**
+ * Unicode blocks, for the wrong-script guard below.
+ *
+ * Only the blocks that actually appear among the bundled locales, plus the
+ * ones the translator reaches for when it goes wrong (CJK, Kana, Hangul).
+ */
+const SCRIPT_BLOCKS = [
+  ['Latin', /[A-Za-z]/], ['Cyrillic', /[Ѐ-ӿ]/], ['Greek', /[Ͱ-Ͽ]/],
+  ['Armenian', /[԰-֏]/], ['Hebrew', /[֐-׿]/],
+  ['Arabic', /[؀-ۿݐ-ݿ]/], ['Ethiopic', /[ሀ-፿]/],
+  ['Devanagari', /[ऀ-ॿ]/], ['Bengali', /[ঀ-৿]/],
+  ['Gurmukhi', /[਀-੿]/], ['Gujarati', /[઀-૿]/],
+  ['Oriya', /[଀-୿]/], ['Tamil', /[஀-௿]/],
+  ['Telugu', /[ఀ-౿]/], ['Kannada', /[ಀ-೿]/],
+  ['Malayalam', /[ഀ-ൿ]/], ['Sinhala', /[඀-෿]/],
+  ['Thai', /[฀-๿]/], ['Lao', /[຀-໿]/], ['Tibetan', /[ༀ-࿿]/],
+  ['Myanmar', /[က-႟]/], ['Khmer', /[ក-៿]/], ['Georgian', /[Ⴀ-ჿ]/],
+  ['Hangul', /[가-힯ᄀ-ᇿ]/], ['CJK', /[一-鿿㐀-䶿]/],
+  ['Kana', /[぀-ヿ]/],
+];
+
+const scriptsIn = text => new Set(SCRIPT_BLOCKS.filter(([, re]) => re.test(text)).map(([n]) => n));
+
+/**
+ * Which scripts this locale legitimately writes in, learnt from the 2000+
+ * values it already carries rather than from a hand-kept table.
+ *
+ * A block present in under 1% of existing values is a stray brand name, not
+ * part of the language — `DeHub` and `DHB` put Latin in every bundle, and
+ * counting that as native would make the guard useless for the Latin case.
+ * Cached because it walks the whole locale.
+ */
+const nativeScriptCache = new Map();
+function nativeScripts(locale, raw) {
+  if (nativeScriptCache.has(locale)) return nativeScriptCache.get(locale);
+  const values = [...flatten(raw).values()].filter(v => typeof v === 'string');
+  const counts = new Map();
+  for (const v of values) for (const b of scriptsIn(v)) counts.set(b, (counts.get(b) || 0) + 1);
+  // Too small a corpus to learn from — fall back to allowing everything
+  // rather than dropping every value in a nearly-empty bundle.
+  const native = values.length < 200
+    ? null
+    : new Set([...counts].filter(([, n]) => n / values.length >= 0.01).map(([b]) => b));
+  nativeScriptCache.set(locale, native);
+  return native;
+}
+
+/**
+ * True when the translation came back written in an alphabet this locale does
+ * not use.
+ *
+ * The placeholder and English-verbatim guards do not look at the script, and
+ * the translator gets it wrong often enough to matter: measured on one 41-key
+ * batch across 110 locales, 8.5% of values in the affected bundles came back
+ * contaminated against a 0.15% baseline in the same files. Two shapes, both
+ * of which render as visible nonsense:
+ *
+ *   - the whole value in another language's script — `Փոխակերպիչ` (Armenian)
+ *     returned for `am` (Amharic), which is a plain locale-code mix-up;
+ *   - a correct sentence with a foreign fragment spliced in — `ቪዲዮ 导入`,
+ *     `Վիդեո导入ել`, `ວາງリンク໋`, `Fi 링크 lati YouTube`.
+ *
+ * Dropping these leaves the key in English, which is the same trade the other
+ * guards make and is unambiguously better than shipping the above.
+ */
+function wrongScript(candidate, locale, raw) {
+  const native = nativeScripts(locale, raw);
+  if (!native) return false;
+  return [...scriptsIn(candidate)].some(block => !native.has(block));
+}
+
 function isUntranslatedProse(source, candidate, locale) {
   const script = SCRIPT_OF[locale];
   // A script check needs no word threshold: two Latin words in a Cyrillic
@@ -436,7 +507,8 @@ for (const locale of targets) {
         candidate == null ||
         looksUnfinished(candidate, sources[j]) ||
         isUntranslatedProse(sources[j], candidate, locale) ||
-        !placeholdersMatch(sources[j], candidate)
+        !placeholdersMatch(sources[j], candidate) ||
+        wrongScript(candidate, locale, raw)
       ) {
         dropped++;
         return;

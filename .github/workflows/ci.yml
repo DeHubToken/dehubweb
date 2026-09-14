@@ -37,6 +37,11 @@ jobs:
       # into two or three junk characters. The JSON still parses and the diff
       # looks like ordinary copy, so nothing else here would catch it.
       - run: node scripts/mojibake-check.mjs
+      # The sibling failure: valid UTF-8, wrong alphabet. The translator
+      # answers `am` (Amharic) in Armenian, or splices `导入` into a Ge'ez
+      # sentence. Placeholders survive and the coverage count goes UP, so the
+      # existing gates read it as a success.
+      - run: node scripts/i18n-script-check.mjs
 
   # A request header missing from a function's Access-Control-Allow-Headers
   # makes the BROWSER drop the request — no network row, no function log, and a
