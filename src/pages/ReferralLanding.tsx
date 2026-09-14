@@ -6,7 +6,7 @@ import { Copy, ArrowRight, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { isValidAffiliateCode, setAffiliateRef } from "@/lib/affiliateRef";
+import { isValidAffiliateCode, setAffiliateRef, recordAffiliateClick } from "@/lib/affiliateRef";
 import { resolveDeepLinkTarget } from "@/lib/affiliateDeepLink";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 import { DEFAULT_AFFILIATE_LANDING, type AffiliateLandingCustomization } from "@/lib/affiliate";
@@ -97,29 +97,7 @@ export default function ReferralLanding() {
 
   useEffect(() => {
     if (!valid) return;
-    try {
-      const key = "dehub-affiliate-visitor";
-      let visitorId = window.localStorage.getItem(key);
-      if (!visitorId) {
-        visitorId = typeof crypto.randomUUID === "function"
-          ? crypto.randomUUID()
-          : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-        window.localStorage.setItem(key, visitorId);
-      }
-      let source: string | null = null;
-      if (document.referrer) {
-        try { source = new URL(document.referrer).hostname; } catch { /* ignore malformed referrer */ }
-      }
-      // @ts-ignore - RPC is introduced by the affiliate customization migration
-      // PostgREST builders are lazy: consume the promise to send the visit.
-      void Promise.resolve(supabase.rpc("record_affiliate_page_view" as never, {
-        p_code: code,
-        p_visitor_id: visitorId,
-        p_source: source,
-      } as never)).then(({ error }) => {
-        if (error) console.warn("Affiliate view could not be recorded", error.code);
-      }).catch(() => { /* analytics must never block the invite */ });
-    } catch { /* analytics must never block the invite */ }
+    recordAffiliateClick(code);
   }, [code, valid]);
 
   // Preload the share image immediately — its URL only depends on the code,
