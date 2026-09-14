@@ -2449,6 +2449,11 @@
     "toastDuplicate": "ያ ቪዲዮ ቀድሞ ተስተካክሏል።",
     "toastFailed": "ያ ስተካከል ወድቋል።",
     "errorNeedRights": "እባክዎ ለዚህ ይዘት መብቶች እንዳሉዎት ያረጋግጡ",
-    "errorQueueFailed": "ያ ስተካከል ወረፈ ውስጥ ማስገባት አልተቻለም"
+    "errorQueueFailed": "ያ ስተካከል ወረፈ ውስጥ ማስገባት አልተቻለም",
+    "publishAs": "እንደ ያትሙ",
+    "kindVideo": "፟ቪዲዮ",
+    "kindAudio": "ኦዲዮ",
+    "kindImage": "ሙዚቃ",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

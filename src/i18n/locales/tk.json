@@ -887,9 +887,6 @@
     "loginDescription": "Ýatda saklanan bellikleriňizi görmek we dolandyrmak üçin giriň."
   },
   "notifications": {
-      "badgeTierUp": "Gutlaýarys! Indi siz {{tier}} 🎉",
-      "badgeTierDown": "Üns beriň: nyşanyňyz indi {{tier}}",
-      "badgeTierLost": "Üns beriň: indi nyşanyňyz ýok",
     "title": "Bildirişler",
     "markAllRead": "Ählisini okaldy diýip bellemek",
     "settings": "Bildiriş sazlamalary",
@@ -942,6 +939,9 @@
     "likedCommentPreview": "{{name}} teswiryňizi halady: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} we {{others}} teswiryňizi haladylar",
     "andOthersLikedCommentPreview": "{{first}} we {{others}} teswiryňizi haladylar: \"{{preview}}\"",
+    "badgeTierUp": "Gutlaýarys! Indi siz {{tier}} 🎉",
+    "badgeTierDown": "Üns beriň: nyşanyňyz indi {{tier}}",
+    "badgeTierLost": "Üns beriň: indi nyşanyňyz ýok",
     "badgeLoanDropped": "Siz indi {{tier}}badge-iňizi {{name}} üçin bermäge mümkinçiligiňiz ýok",
     "badgeGenericTier": "unit-format",
     "postRemoved": "Ýazgyňyz pozuldy",
@@ -2410,6 +2410,11 @@
     "errorUnsupported": "Biz şol baglanyşykdan import edip bilmeris. Synap gör: {{sources}}",
     "errorNeedRights": "Lütfen bu mazmunyň hukukyna eýe diliňizi tassyklaň",
     "errorClipboard": "Clipboard-y okalyp bilmedik — el bilen goýuň",
-    "errorQueueFailed": "Şol importy kueuede goşup bilmedik"
+    "errorQueueFailed": "Şol importy kueuede goşup bilmedik",
+    "publishAs": "Öňki ýaly çap ediň",
+    "kindVideo": "Video",
+    "kindAudio": "Ses",
+    "kindImage": "Suratlar",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

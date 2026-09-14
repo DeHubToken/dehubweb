@@ -2444,6 +2444,11 @@
     "statusDownloadingPercent": "تنزيل {{percent}}%",
     "statusQueued": "في قائمة الانتظار",
     "detailFailed": "تعذر استيراد هذا الفيديو.",
-    "detailRateLimited": "{{source}} يحد من معدل الطلبات. سيتم تشغيل هذا تلقائياً — لا حاجة لإعادة لصق أي شيء."
+    "detailRateLimited": "{{source}} يحد من معدل الطلبات. سيتم تشغيل هذا تلقائياً — لا حاجة لإعادة لصق أي شيء.",
+    "publishAs": "نشر كـ",
+    "kindVideo": "فيديو",
+    "kindAudio": "الصوت",
+    "kindImage": "الصور",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

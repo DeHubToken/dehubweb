@@ -2454,6 +2454,11 @@
     "errorUnsupported": "Ba za mu iya shigo daga wannan haɗin gida ba. Gwada ɗaya daga: {{sources}}",
     "errorNeedRights": "Da fatan za ka tabbatar da cewa kana da haƙƙin wannan abin.",
     "errorClipboard": "Ba za a iya karanta clipboard ba — jajjaga da hannu a maimakon haka",
-    "errorQueueFailed": "Ba za a iya tsara wannan shigo ba"
+    "errorQueueFailed": "Ba za a iya tsara wannan shigo ba",
+    "publishAs": "Buga kamar",
+    "kindVideo": "Bidiyo",
+    "kindAudio": "Sauti",
+    "kindImage": "QShortcut",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

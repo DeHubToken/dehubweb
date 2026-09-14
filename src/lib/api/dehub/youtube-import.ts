@@ -3,6 +3,10 @@ import { apiCall } from './core';
 export interface YoutubeImportParams {
   url: string;
   ownershipConfirmed: boolean;
+  /** Publish as a video post, an audio one, or a picture post. Omitted means
+   * the source's own default, which is what every client sent before the
+   * choice existed. */
+  mediaKind?: 'video' | 'audio' | 'image';
   name?: string;
   description?: string;
   chainId?: number;
@@ -30,6 +34,8 @@ export interface YoutubeImportStatusResponse {
   url?: string;
   /** Which of the supported sources it came from — `youtube`, `tiktok`, … */
   sourceId?: string;
+  /** What this job publishes as. */
+  mediaKind?: 'video' | 'audio' | 'image';
   /** How that source names itself, for a sentence. The server is the one
    * place this list lives, so the tile renders what it is told rather than
    * looking the id up in a client-side table. */

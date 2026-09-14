@@ -2407,26 +2407,6 @@
     "listens_one": "{{count}} ស្តាប់",
     "listens_other": "{{count}} ស្តាប់"
   },
-  "spaces": {
-    "title": "ស្ពេស",
-    "live": "ផ្សាយផ្ទាល់",
-    "upcoming": "នាពេលខាងមុខ",
-    "past": "កន្លងមក",
-    "create": "បង្កើតស្ពេស",
-    "join": "ចូលរួម",
-    "listeners": "អ្នកស្តាប់",
-    "speakers": "អ្នកនិយាយ",
-    "host": "ម្ចាស់ផ្ទះ",
-    "noSpaces": "មិនទាន់មានស្ពេស",
-    "loginDescription": "ចូលដើម្បីបង្កើត និងចូលរួមស្ពេសអូឌីយ៉ូ។"
-  },
-  "blog": {
-    "title": "ប្លក់",
-    "readMore": "អានបន្ថែម",
-    "backToBlog": "ត្រឡប់ទៅប្លក់",
-    "sharePost": "ចែករំលែកការបង្ហោះ",
-    "relatedPosts": "ការបង្ហោះពាក់ព័ន្ធ"
-  },
   "converter": {
     "seoTitle": "Converter — នាំចូលវីដេអូទៅ DeHub",
     "title": "នាំចូលវីដេអូ",
@@ -2464,6 +2444,31 @@
     "errorUnsupported": "យើងមិនអាចនាំចូលពីលើងក់នោះបានទេ។ សាកល្បង៖ {{sources}}",
     "errorNeedRights": "សូមបញ្ជាក់ថាអ្នកមានសិទ្ធិលើខ្លឹមសារនេះ",
     "errorClipboard": "មិនអាចអានក្តារលាប់ — បិទភ្ជាប់ដោយដៃជំនួសវិញ",
-    "errorQueueFailed": "មិនអាចដាក់ក្នុងលំដាប់នូវការនាំចូលនោះបានទេ"
+    "errorQueueFailed": "មិនអាចដាក់ក្នុងលំដាប់នូវការនាំចូលនោះបានទេ",
+    "publishAs": "បោះពុម្ពផ្សាយជា",
+    "kindVideo": "វីដេអូ",
+    "kindAudio": "សំឡេង",
+    "kindImage": "រូបភាព",
+    "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "spaces": {
+    "title": "ស្ពេស",
+    "live": "ផ្សាយផ្ទាល់",
+    "upcoming": "នាពេលខាងមុខ",
+    "past": "កន្លងមក",
+    "create": "បង្កើតស្ពេស",
+    "join": "ចូលរួម",
+    "listeners": "អ្នកស្តាប់",
+    "speakers": "អ្នកនិយាយ",
+    "host": "ម្ចាស់ផ្ទះ",
+    "noSpaces": "មិនទាន់មានស្ពេស",
+    "loginDescription": "ចូលដើម្បីបង្កើត និងចូលរួមស្ពេសអូឌីយ៉ូ។"
+  },
+  "blog": {
+    "title": "ប្លក់",
+    "readMore": "អានបន្ថែម",
+    "backToBlog": "ត្រឡប់ទៅប្លក់",
+    "sharePost": "ចែករំលែកការបង្ហោះ",
+    "relatedPosts": "ការបង្ហោះពាក់ព័ន្ធ"
   }
 }

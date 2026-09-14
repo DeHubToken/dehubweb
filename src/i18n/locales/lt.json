@@ -2454,6 +2454,11 @@
     "errorUnsupported": "Negalime importuoti iš tos nuorodos. Pabandykite vieną iš: {{sources}}",
     "errorNeedRights": "Prašome patvirtinti, kad turite teises į šį turinį",
     "errorClipboard": "Nepavyko perskaityti iš mainų atminties — vietoj to įklijuokite rankiniu būdu",
-    "errorQueueFailed": "Nepavyko pastatyti to importavimo eilėje"
+    "errorQueueFailed": "Nepavyko pastatyti to importavimo eilėje",
+    "publishAs": "Skelbti kaip",
+    "kindVideo": "Vaizdo įrašas",
+    "kindAudio": "Garso įrašas",
+    "kindImage": "Nuotraukos",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

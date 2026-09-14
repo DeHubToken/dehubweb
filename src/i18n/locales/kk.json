@@ -903,9 +903,6 @@
     "loginDescription": "Log in to view and manage your saved bookmarks."
   },
   "notifications": {
-      "badgeTierUp": "Құттықтаймыз! Енді сіз {{tier}} 🎉",
-      "badgeTierDown": "Назар аударыңыз: белгіңіз енді {{tier}}",
-      "badgeTierLost": "Назар аударыңыз: сізде енді белгі жоқ",
     "title": "Хабарландырулар",
     "markAllRead": "Барлығын оқылды деп белгілеу",
     "settings": "Хабарландыру параметрлері",
@@ -958,6 +955,9 @@
     "likedCommentPreview": "{{name}} пікіріңізді ұнатты: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} және {{others}} пікіріңізді ұнатты",
     "andOthersLikedCommentPreview": "{{first}} және {{others}} пікіріңізді ұнатты: \"{{preview}}\"",
+    "badgeTierUp": "Құттықтаймыз! Енді сіз {{tier}} 🎉",
+    "badgeTierDown": "Назар аударыңыз: белгіңіз енді {{tier}}",
+    "badgeTierLost": "Назар аударыңыз: сізде енді белгі жоқ",
     "badgeTakenBack": "{{name}} Сізге несие беруді тоқтатты {{tier}} badge",
     "badgeHandedBack": "{{name}} {{tier}} белгісін қайтарып, оларды қарызға бердіңіз",
     "badgeLoanLapsed": "{{name}} бұдан былай сізге олардың {{tier}} белгісін бере алмайды",
@@ -2412,32 +2412,6 @@
     "pause": "Пауза",
     "listens_one": "{{count}} тыңдаңыз"
   },
-  "spaces": {
-    "title": "Кеңістіктер",
-    "live": "Тікелей",
-    "upcoming": "Алдағы",
-    "past": "Өткен",
-    "create": "Кеңістік жасау",
-    "join": "Қосылу",
-    "listeners": "Тыңдаушылар",
-    "speakers": "Сөйлеушілер",
-    "host": "Жүргізуші",
-    "endSpace": "Кеңістікті аяқтау",
-    "raiseHand": "Қол көтеру",
-    "lowerHand": "Қолды түсіру",
-    "mute": "Дыбысты өшіру",
-    "unmute": "Дыбысты қосу",
-    "leave": "Кеңістіктен шығу",
-    "noSpaces": "Әлі кеңістіктер жоқ",
-    "loginDescription": "Аудио кеңістіктер жасау және қосылу үшін кіріңіз."
-  },
-  "blog": {
-    "title": "Блог",
-    "readMore": "Көбірек оқу",
-    "backToBlog": "Блогқа қайту",
-    "sharePost": "Жазбаны бөлісу",
-    "relatedPosts": "Байланысты жазбалар"
-  },
   "converter": {
     "seoTitle": "Конвертер — видеоны DeHub-қа импорттау",
     "seoDescription": "YouTube, TikTok, Instagram, X және т.б. сайттардан сілтемені қойып, оны DeHub постысы ретінде жариялаңыз.",
@@ -2479,6 +2453,37 @@
     "errorUnsupported": "Біз сол сілтемеден импорта ала алмаймыз. Мынаның бірін сынап көріңіз: {{sources}}",
     "errorNeedRights": "Осы мазмұнға құқығыңыз бар екенін растаңыз",
     "errorClipboard": "Буферді оқи алмады — орнына қолмен құйындырыңыз",
-    "errorQueueFailed": "Сол импортты құйындыра алмады"
+    "errorQueueFailed": "Сол импортты құйындыра алмады",
+    "publishAs": "Жариялау ретінде",
+    "kindVideo": "В_идео",
+    "kindAudio": "Аудио",
+    "kindImage": "QShortcut",
+    "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "spaces": {
+    "title": "Кеңістіктер",
+    "live": "Тікелей",
+    "upcoming": "Алдағы",
+    "past": "Өткен",
+    "create": "Кеңістік жасау",
+    "join": "Қосылу",
+    "listeners": "Тыңдаушылар",
+    "speakers": "Сөйлеушілер",
+    "host": "Жүргізуші",
+    "endSpace": "Кеңістікті аяқтау",
+    "raiseHand": "Қол көтеру",
+    "lowerHand": "Қолды түсіру",
+    "mute": "Дыбысты өшіру",
+    "unmute": "Дыбысты қосу",
+    "leave": "Кеңістіктен шығу",
+    "noSpaces": "Әлі кеңістіктер жоқ",
+    "loginDescription": "Аудио кеңістіктер жасау және қосылу үшін кіріңіз."
+  },
+  "blog": {
+    "title": "Блог",
+    "readMore": "Көбірек оқу",
+    "backToBlog": "Блогқа қайту",
+    "sharePost": "Жазбаны бөлісу",
+    "relatedPosts": "Байланысты жазбалар"
   }
 }

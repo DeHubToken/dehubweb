@@ -4702,6 +4702,11 @@
     "errorUnsupported": "Nem tudjuk importálni erről a linkről. Próbáld meg az egyiket: {{sources}}",
     "errorNeedRights": "Kérjük, erősítsd meg, hogy jogod van ehhez a tartalomhoz",
     "errorClipboard": "Nem sikerült beolvasni a vágólapot — helyette illessz be manuálisan",
-    "errorQueueFailed": "Nem sikerült sorbaállítani az importálást"
+    "errorQueueFailed": "Nem sikerült sorbaállítani az importálást",
+    "publishAs": "Közzététel",
+    "kindVideo": "Videó",
+    "kindAudio": "Audió",
+    "kindImage": "Képek",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

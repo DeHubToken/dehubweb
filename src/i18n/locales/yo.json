@@ -2444,6 +2444,11 @@
     "errorUnsupported": "A ko le gbe lati ọna yẹn. Gbiyanju ọkan ninu: {{sources}}",
     "errorNeedRights": "Jọwọ ṣe idaniloju pe o ni ẹtọ fun akoonu yii",
     "errorClipboard": "Ko ṣe agbara lati ka clipboard — fi sinu ọwọ dipo",
-    "errorQueueFailed": "Ko ṣe agbara lati tẹ yẹn sinu ila"
+    "errorQueueFailed": "Ko ṣe agbara lati tẹ yẹn sinu ila",
+    "publishAs": "Tẹjade bi",
+    "kindVideo": "Fídíò",
+    "kindAudio": "Ohùn",
+    "kindImage": "Àwọn àwòrán",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

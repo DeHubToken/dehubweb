@@ -2426,6 +2426,11 @@
     "errorUnsupported": "આપણે તે લિંક માંથી આયાત કરી શકતા નથી. આમાંથી એક પ્રયાસ કરો: {{sources}}",
     "errorNeedRights": "કૃપા કરીને પુષ્ટિ કરો કે તમારી પાસે આ સામગ્રીના અધિકાર છે",
     "errorClipboard": "ક્લિપબોર્ડ વાંચી શક્યા નથી — તેના બદલે મેન્યુઅલી પેસ્ટ કરો",
-    "errorQueueFailed": "તે આયાત કતારમાં મૂકી શક્યા નથી"
+    "errorQueueFailed": "તે આયાત કતારમાં મૂકી શક્યા નથી",
+    "publishAs": "આ રીતે પ્રકાશિત કરો",
+    "kindVideo": "વીડિયો",
+    "kindAudio": "ધ્વનિ",
+    "kindImage": "ચિત્રો",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

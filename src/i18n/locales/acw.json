@@ -2383,6 +2383,11 @@
     "errorUnsupported": "ما نقدر نستورد من هالرابط. جرب واحد من: {{sources}}",
     "errorNeedRights": "الرجاء تأكيد إنك عندك الحقوق لهالمحتوى",
     "errorClipboard": "ما قدرنا نقرأ من الحافظة — الصق يدوي بدل كده",
-    "errorQueueFailed": "ما قدرنا نضيف الاستيراد للطابور"
+    "errorQueueFailed": "ما قدرنا نضيف الاستيراد للطابور",
+    "kindVideo": "فيديو",
+    "kindAudio": "صوت",
+    "kindImage": "صور",
+    "publishAs": "Publish as",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

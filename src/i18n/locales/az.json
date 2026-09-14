@@ -877,9 +877,6 @@
     "loginDescription": "Saxlanmış əlfəcinlərinizə baxmaq və idarə etmək üçün daxil olun."
   },
   "notifications": {
-      "badgeTierUp": "Təbriklər! İndi siz {{tier}}-siniz 🎉",
-      "badgeTierDown": "Diqqət: nişanınız artıq {{tier}}",
-      "badgeTierLost": "Diqqət: artıq nişanınız yoxdur",
     "title": "Bildirişlər",
     "markAllRead": "Hamısını oxunmuş et",
     "settings": "Bildiriş Parametrləri",
@@ -932,6 +929,9 @@
     "likedCommentPreview": "{{name}} şərhinizi bəyəndi: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} və {{others}} şərhinizi bəyəndi",
     "andOthersLikedCommentPreview": "{{first}} və {{others}} şərhinizi bəyəndi: \"{{preview}}\"",
+    "badgeTierUp": "Təbriklər! İndi siz {{tier}}-siniz 🎉",
+    "badgeTierDown": "Diqqət: nişanınız artıq {{tier}}",
+    "badgeTierLost": "Diqqət: artıq nişanınız yoxdur",
     "badgeTakenBack": "{{name}} sizə öz {{tier}} nişanlarını borc verməyi dayandırdı",
     "badgeHandedBack": "{{name}} onları lentə aldığınız {{tier}} nişanını geri qaytardı",
     "badgeLoanLapsed": "{{name}} artıq sizə {{tier}} nişanlarını borc verə bilməz",
@@ -4661,6 +4661,11 @@
     "errorUnsupported": "Biz bu linkdən idxal edə bilərik. Bunlardan birini sınayın: {{sources}}",
     "errorNeedRights": "Lütfən bu məzmunun hüquqlarına malik olduğunuzu təsdiq edin",
     "errorClipboard": "Bufer oxuna bilmədi — əvəzində əl ilə yapışdırın",
-    "errorQueueFailed": "Bu idxalı sıraya almaq olmadı"
+    "errorQueueFailed": "Bu idxalı sıraya almaq olmadı",
+    "publishAs": "Bu cür dərc edin:",
+    "kindVideo": "Video",
+    "kindAudio": "Audio",
+    "kindImage": "Şəkillər",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

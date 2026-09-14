@@ -768,9 +768,6 @@
     "loginDescription": "Пријавите се за преглед и управљање обележивачима."
   },
   "notifications": {
-      "badgeTierUp": "Честитамо! Сада си {{tier}} 🎉",
-      "badgeTierDown": "Напомена: твоја значка је сада {{tier}}",
-      "badgeTierLost": "Напомена: више немаш значку",
     "title": "Обавештења",
     "markAllRead": "Означи све као прочитано",
     "settings": "Подешавања обавештења",
@@ -823,6 +820,9 @@
     "likedCommentPreview": "{{name}} свидео се ваш коментар: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} и {{others}} свидео се ваш коментар",
     "andOthersLikedCommentPreview": "{{first}} и {{others}} свидео се ваш коментар: \"{{preview}}\"",
+    "badgeTierUp": "Честитамо! Сада си {{tier}} 🎉",
+    "badgeTierDown": "Напомена: твоја значка је сада {{tier}}",
+    "badgeTierLost": "Напомена: више немаш значку",
     "postRemoved": "Ваша објава је уклоњена",
     "newNotification": "Ново обавештење",
     "oneOther": "1 други",
@@ -2178,5 +2178,12 @@
     "followAccepted": "{{name}} је прихватио твој захтев за праћење",
     "signalFlare": "{{name}} је послао Светлосни сигнал",
     "newMessage": "{{name}} ти је послао поруку"
+  },
+  "converter": {
+    "kindAudio": "Аудио",
+    "kindImage": "Слике",
+    "publishAs": "Objavi kao",
+    "kindVideo": "Video",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

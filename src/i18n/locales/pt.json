@@ -4838,6 +4838,11 @@
     "errorUnsupported": "Não conseguimos importar desse link. Tente um destes: {{sources}}",
     "errorNeedRights": "Por favor, confirme que você tem direitos sobre este conteúdo",
     "errorClipboard": "Não foi possível ler a área de transferência — cole manualmente",
-    "errorQueueFailed": "Não foi possível colocar essa importação na fila"
+    "errorQueueFailed": "Não foi possível colocar essa importação na fila",
+    "publishAs": "Publicar como…",
+    "kindVideo": "Vídeo",
+    "kindAudio": "Áudio",
+    "kindImage": "Pinturas",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

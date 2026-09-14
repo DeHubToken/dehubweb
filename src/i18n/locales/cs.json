@@ -4703,6 +4703,11 @@
     "errorUnsupported": "Nemůžeme importovat z tohoto odkazu. Zkuste jeden z: {{sources}}",
     "errorNeedRights": "Prosím potvrďte, že máte práva k tomuto obsahu",
     "errorClipboard": "Nepodařilo se přečíst schránku — vložte ručně místo toho",
-    "errorQueueFailed": "Nepodařilo se zařadit tento import"
+    "errorQueueFailed": "Nepodařilo se zařadit tento import",
+    "publishAs": "Zveřejnit jako",
+    "kindVideo": "Videozáznam",
+    "kindAudio": "Zvuk",
+    "kindImage": "Obrázky",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

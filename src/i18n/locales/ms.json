@@ -5024,6 +5024,11 @@
     "errorUnsupported": "Kami tidak dapat mengimport dari pautan itu. Cuba salah satu: {{sources}}",
     "errorNeedRights": "Sila sahkan anda mempunyai hak untuk kandungan ini",
     "errorClipboard": "Tidak dapat membaca papan klip — tampal secara manual sebaliknya",
-    "errorQueueFailed": "Tidak dapat mengantri import itu"
+    "errorQueueFailed": "Tidak dapat mengantri import itu",
+    "publishAs": "Siarkan sebagai",
+    "kindVideo": "Video",
+    "kindAudio": "Audio",
+    "kindImage": "Gambar",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }
