@@ -235,6 +235,7 @@ function ThreadEntry({
           >
             <BadgedName
               badgeBalance={entry.badgeBalance}
+              badgeLock={entry.badgeLock}
               username={entry.username}
               className="font-semibold text-white text-sm max-w-[160px] leading-tight"
             >

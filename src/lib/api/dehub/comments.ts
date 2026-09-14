@@ -38,6 +38,13 @@ export interface ApiCommentResponse {
     avatarUrl?: string;
     badgeBalance?: number;
   };
+  /**
+   * The author's full account row. Unlike `writor` — which carries only a name
+   * and an avatar — this is where the API puts the staking balance, the
+   * grandfathered tier and the hide-badge preference, so it is what the badge
+   * beside a comment author's name is resolved from.
+   */
+  user?: DeHubUser;
 }
 
 interface CommentsApiResponse {

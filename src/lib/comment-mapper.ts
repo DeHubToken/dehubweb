@@ -8,6 +8,7 @@
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
+import { parseBadgeLock, type BadgeLock } from '@/lib/staking-badges';
 import type { ApiCommentResponse } from '@/lib/api/dehub';
 import {
   asReaction,
@@ -54,6 +55,8 @@ export interface Comment {
   replyToId?: string;
   address?: string;
   badgeBalance?: number;
+  /** The tier this author grandfathered, when the account row carries one. */
+  badgeLock?: BadgeLock | null;
 }
 
 /** Map an API comment row to the UI shape. */
@@ -68,6 +71,9 @@ export function mapApiComment(apiComment: ApiCommentResponse): Comment {
     : undefined;
 
   // Parse createdAt for sorting - fallback to current time if parsing fails
+  // Opting out hides the badge everywhere else, so it has to hide it here too.
+  const hideBadge = apiComment.user?.hideBadgeAndBalance === true;
+
   const createdAt = apiComment.createdAt ? new Date(apiComment.createdAt) : new Date();
 
   const voiceNote = (apiComment as any).audioUrl ? {
@@ -121,6 +127,13 @@ export function mapApiComment(apiComment: ApiCommentResponse): Comment {
     replyToId: apiComment.parentId ? String(apiComment.parentId) : undefined,
     address,
     voiceNote,
-    badgeBalance: apiComment.writor?.badgeBalance,
+    // The balance lives on the full account row, not on `writor` — that only ever
+    // carries a name and an avatar, so reading it there left every comment and
+    // reply on the platform badgeless. Kept as a fallback in case the API ever
+    // starts sending it there too.
+    badgeBalance: hideBadge ? 0 : (apiComment.user?.badgeBalance ?? apiComment.writor?.badgeBalance),
+    // Without the lock a holder whose tier the ladder has since priced out of
+    // reach draws the badge below the one they earned.
+    badgeLock: hideBadge ? null : parseBadgeLock(apiComment.user?.badgeLock),
   };
 }
