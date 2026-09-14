@@ -6,7 +6,7 @@
  * @module pages/app/MusicPage
  */
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
@@ -258,6 +258,16 @@ export default function MusicPage() {
     const requested = searchParams.get('tab');
     return MUSIC_TABS.some((tab) => tab.value === requested) ? (requested as MusicTabValue) : 'all';
   });
+  // The initializer above only runs on the page's FIRST mount. This page lives
+  // in PersistentPageCache, which keeps it mounted (visibility: hidden) once
+  // visited, so a later arrival at /app/music?tab=radio -- Home's Radio
+  // "See all" -- would otherwise land on whatever tab was open last time.
+  useEffect(() => {
+    const requested = searchParams.get('tab');
+    if (requested && MUSIC_TABS.some((tab) => tab.value === requested)) {
+      setActiveTab(requested as MusicTabValue);
+    }
+  }, [searchParams]);
   const musicIsDraggingRef = useRef(false);
   const { layerRef: musicTabLayerRef, setRef: setMusicTabRef, rect: musicTabRect, onScroll: onMusicTabScroll } = useTabIndicator(activeTab, undefined, musicIsDraggingRef);
 
