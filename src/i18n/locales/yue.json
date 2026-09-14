@@ -1693,7 +1693,9 @@
     "push_blocked_title": "通知未送達你",
     "push_blocked_body": "你嘅系統封鎖緊呢個瀏覽器嘅通知，所以喺 DeHub 閂咗嗰陣冇嘢可以聯絡到你。喺系統通知設定入面為瀏覽器重新開啟佢哋，然後閂同重新開啟 DeHub 通知。",
     "push_blocked_more": "更多詳情",
-    "not_now": "而家唔使"
+    "not_now": "而家唔使",
+    "image_too_large_tier": "圖片太大 — 你嘅 {{tier}} 層儲存最多 {{limit}} MB 嘅圖片",
+    "image_too_large_untiered": "圖片太大 — 圖片最多會儲存到 {{limit}} MB"
   },
   "staking": {
     "title": "質押",

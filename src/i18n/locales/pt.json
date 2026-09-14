@@ -1732,7 +1732,9 @@
     "push_blocked_title": "Notificações não estão chegando para você",
     "push_blocked_body": "O seu sistema está a bloquear notificações para este navegador, por isso nada chega até si enquanto o DeHub estiver fechado. Ative-as novamente para o seu navegador nas configurações de notificação do sistema e, em seguida, desative e ative novamente as notificações do DeHub.",
     "push_blocked_more": "Mais detalhes",
-    "not_now": "Agora não"
+    "not_now": "Agora não",
+    "image_too_large_tier": "A imagem é muito grande — a sua modalidade {{tier}} armazena imagens de até {{limit}} MB",
+    "image_too_large_untiered": "A imagem é muito grande — as imagens são armazenadas até {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

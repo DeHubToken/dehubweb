@@ -1694,7 +1694,9 @@
     "push_blocked_title": "Njoftimet nuk po ju arrijnë",
     "push_blocked_body": "Sistemi yt po bllokon njoftimet për këtë shfletues, kështu që asgjë nuk të arrin ndërsa DeHub është i mbyllur. Aktivizoji ato përsëri për shfletuesin tënd në cilësimet e njoftimeve të sistemit, pastaj çaktivizoji dhe ndiz përsëri njoftimet e DeHub.",
     "push_blocked_more": "Më shumë detaje",
-    "not_now": "Jo tani"
+    "not_now": "Jo tani",
+    "image_too_large_tier": "Imazhi është shumë i madh — juaji {{tier}} ruan imazhe deri në {{limit}} MB",
+    "image_too_large_untiered": "Imazhi është shumë i madh — imazhet ruhen deri në {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

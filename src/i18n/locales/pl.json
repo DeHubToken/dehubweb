@@ -1728,7 +1728,9 @@
     "push_blocked_title": "Powiadomienia do Ciebie nie docierają",
     "push_blocked_body": "Twój system blokuje powiadomienia dla tej przeglądarki, więc nic nie dociera do Ciebie, gdy DeHub jest zamknięty. Włącz je ponownie w przeglądarce w ustawieniach powiadomień systemowych, a następnie wyłącz i włącz powiadomienia DeHub.",
     "push_blocked_more": "Więcej szczegółów",
-    "not_now": "Nie teraz"
+    "not_now": "Nie teraz",
+    "image_too_large_tier": "Obraz jest zbyt duży — Twój {{tier}} poziom przechowuje obrazy do {{limit}} MB",
+    "image_too_large_untiered": "Obraz jest zbyt duży — obrazy są przechowywane do {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

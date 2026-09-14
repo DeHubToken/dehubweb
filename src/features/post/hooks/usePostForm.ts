@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
@@ -15,7 +16,7 @@ import { isSmartWalletSession } from '@/lib/connection-source';
 import { applyEditsToImageFile } from '@/lib/filters';
 import { MEDIA_LIMITS } from '@/constants/post.constants';
 import { splitTitleFromText } from '@/features/post/lib/title-split';
-import { getPostImageLimitForBadge } from '@/lib/post-image-allowance';
+import { getPostImageBytesForBadge, getPostImageLimitForBadge } from '@/lib/post-image-allowance';
 // NOTE: mint/bounty helpers reach wallet/contract code (wagmi + web3auth).
 // usePostForm is reachable from eager UI (PostModal is used by the sidebar /
 // bottom nav / feed), so those helpers are dynamically imported inside
@@ -261,6 +262,7 @@ export function usePostForm(
   onLiveStreamReady?: (stream: LiveStreamHandoff) => void,
 ): UsePostFormReturn {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { addOptimisticPost } = useOptimisticPosts();
   const { user, connectionSource, refreshSession, openLoginModal, requestWalletUnlock } = useAuth();
   // The creator's own plans are what a subscriber-gated post is gated on.
@@ -582,13 +584,23 @@ export function usePostForm(
     }
 
     const imageFiles = files.filter(f => f.type.startsWith('image/'));
-    const oversized = imageFiles.filter(f => f.size > MEDIA_LIMITS.MAX_FILE_SIZE);
+    // The badge decides how much of a picture survives upload, so this is the
+    // size the API will STORE rather than a transfer limit — which is why it
+    // refuses the file instead of quietly sending one that will be crushed.
+    const imageByteLimit = postQuota?.imageBytes
+      ?? getPostImageBytesForBadge(user?.badgeBalance, user?.username, user?.badgeLock);
+    const imageLimitMb = Math.round(imageByteLimit / (1024 * 1024));
+    const oversized = imageFiles.filter(f => f.size > imageByteLimit);
     if (oversized.length > 0) {
       // Without this check an oversized file uploaded for minutes and died at
       // the XHR timeout with a generic failure.
-      toast.error(`${oversized[0].name} is too large — images are capped at ${Math.round(MEDIA_LIMITS.MAX_FILE_SIZE / (1024 * 1024))}MB`);
+      toast.error(
+        postQuota?.tier
+          ? t('toasts.image_too_large_tier', { limit: imageLimitMb, tier: postQuota.tier })
+          : t('toasts.image_too_large_untiered', { limit: imageLimitMb }),
+      );
     }
-    const filesToAdd = imageFiles.filter(f => f.size <= MEDIA_LIMITS.MAX_FILE_SIZE).slice(0, availableSlots);
+    const filesToAdd = imageFiles.filter(f => f.size <= imageByteLimit).slice(0, availableSlots);
 
     if (files.length > availableSlots) {
       toast.info(`Only ${availableSlots} image${availableSlots > 1 ? 's' : ''} added (max ${imageLimit})`);
@@ -598,7 +610,7 @@ export function usePostForm(
       const preview = URL.createObjectURL(file);
       setMedia(prev => [...prev, { file, preview, type: 'image' }]);
     });
-  }, [hasVideo, media, user?.badgeBalance, user?.badgeLock, user?.username]);
+  }, [hasVideo, media, user?.badgeBalance, user?.badgeLock, user?.username, postQuota?.imageBytes, postQuota?.tier, t]);
     
   const handleVideoSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;

@@ -1653,7 +1653,9 @@
     "push_blocked_title": "Bildirişlər sizə çatdırılmır",
     "push_blocked_body": "Sisteminiz bu brauzer üçün bildirişləri bloklayır, buna görə də DeHub bağlanarkən sizə heç nə çatmır. Sistem bildirişi parametrlərinizdə onları brauzeriniz üçün yenidən işə salın, sonra DeHub bildirişlərini deaktiv edin və yenidən işə salın.",
     "push_blocked_more": "Daha ətraflı",
-    "not_now": "İndi yox"
+    "not_now": "İndi yox",
+    "image_too_large_tier": "Təsvir çox böyükdür — {{tier}} Səviyyəli mağaza şəkilləriniz {{limit}} MB-a qədər",
+    "image_too_large_untiered": "Təsvir çox böyükdür — təsvirlər {{limit}} MB-a qədər saxlanılır"
   },
   "staking": {
     "title": "Staking",

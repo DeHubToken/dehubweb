@@ -1691,7 +1691,9 @@
     "push_blocked_title": "Varsler når ikke frem til deg",
     "push_blocked_body": "Systemet ditt blokkerer varsler for denne nettleseren, så ingenting når deg mens DeHub er lukket. Slå dem på igjen for nettleseren din i systemvarslingsinnstillingene, og slå deretter DeHub-varsler av og på igjen.",
     "push_blocked_more": "Mer detaljert",
-    "not_now": "Ikke nå"
+    "not_now": "Ikke nå",
+    "image_too_large_tier": "Bildet er for stort – {{tier}}-nivået ditt lagrer bilder opptil {{limit}} MB",
+    "image_too_large_untiered": "Bildet er for stort – bildene er lagret opptil {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

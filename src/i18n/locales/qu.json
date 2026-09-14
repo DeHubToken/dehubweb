@@ -1726,7 +1726,9 @@
     "push_blocked_title": "Notificaciones mana chayachkankichu",
     "push_blocked_body": "Kay sistema qanpa browser-nita hark'an notificaciones, chayrayku mana imapas chayamusqayki DeHub wañusqa kachkaptin. Kichariyta yapayniy browser-niykiman sistema notificaciones-niykipi, chaymanta yapayta hap'iy chaymanta kichariy DeHub notificaciones.",
     "push_blocked_more": "Añay",
-    "not_now": "Manaraq"
+    "not_now": "Manaraq",
+    "image_too_large_tier": "Siqiqa ancha hatunmi — {{tier}} pataykiqa siq&#39;ikunata {{limit}} MB nisqakama waqaychan",
+    "image_too_large_untiered": "Siqiqa ancha hatunmi — siq&#39;ikunaqa {{limit}} MB nisqakamam waqaychasqa kachkan"
   },
   "staking": {
     "title": "Staking",

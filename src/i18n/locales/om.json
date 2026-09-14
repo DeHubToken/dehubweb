@@ -1708,7 +1708,9 @@
     "push_blocked_title": "Ibsi si hin geenye",
     "push_blocked_body": "Sirni kee beeksisa biraawzari kanaaf ugguraa waan jiruuf yeroo DeHub cufame wanti si bira gahu hin jiru. Sajoo beeksisa sirna keessanii keessatti biraawzari keessaniif deebi&#39;aa ibsi, sana booda beeksisa DeHub cufaatii irra deebi&#39;aa ibsi.",
     "push_blocked_more": "Qubee dabaloo",
-    "not_now": "Amma miti"
+    "not_now": "Amma miti",
+    "image_too_large_tier": "Fakkiin baayyee guddaadha — sadarkaan {{tier}} kee fakkiiwwan hanga {{limit}} MB kuufata",
+    "image_too_large_untiered": "Fakkiin baayyee guddaadha — fakkiiwwan hanga {{limit}} MB tti kuufamaniiru"
   },
   "staking": {
     "title": "Kuusuu",

@@ -1726,7 +1726,9 @@
     "push_blocked_title": "Benachrichtigungen erreichen Sie nicht",
     "push_blocked_body": "Ihr System blockiert Benachrichtigungen für diesen Browser, sodass Sie während des Schließens von DeHub nicht erreicht werden. Schalten Sie sie in Ihren Systembenachrichtigungseinstellungen für Ihren Browser wieder ein und schalten Sie dann die DeHub-Benachrichtigungen aus und wieder ein.",
     "push_blocked_more": "Mehr Details",
-    "not_now": "Jetzt nicht"
+    "not_now": "Jetzt nicht",
+    "image_too_large_tier": "Das Bild ist zu groß — dein {{tier}} Level speichert Bilder bis zu {{limit}} MB",
+    "image_too_large_untiered": "Bild ist zu groß — Bilder werden bis zu {{limit}} MB gespeichert"
   },
   "staking": {
     "title": "Staking",
