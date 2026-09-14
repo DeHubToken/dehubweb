@@ -3356,6 +3356,36 @@ export type Database = {
         }
         Relationships: []
       }
+      page_view_events: {
+        Row: {
+          address: string | null
+          created_at: string
+          ext_referrer_host: string | null
+          id: number
+          path: string
+          prev_path: string | null
+          viewer_id: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          ext_referrer_host?: string | null
+          id?: never
+          path: string
+          prev_path?: string | null
+          viewer_id: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          ext_referrer_host?: string | null
+          id?: never
+          path?: string
+          prev_path?: string | null
+          viewer_id?: string
+        }
+        Relationships: []
+      }
       phone_otp_codes: {
         Row: {
           attempts: number
@@ -6018,6 +6048,38 @@ export type Database = {
       }
     }
     Functions: {
+      admin_page_view_daily: {
+        Args: { p_paths: string[]; p_since: string }
+        Returns: {
+          day: string
+          visitors: number
+          visits: number
+        }[]
+      }
+      admin_page_view_paths: {
+        Args: { p_limit?: number; p_since: string }
+        Returns: {
+          path: string
+          visitors: number
+          visits: number
+        }[]
+      }
+      admin_page_view_sources: {
+        Args: { p_limit?: number; p_paths: string[]; p_since: string }
+        Returns: {
+          kind: string
+          source: string
+          visits: number
+        }[]
+      }
+      admin_page_view_totals: {
+        Args: { p_since: string }
+        Returns: {
+          signed_in_visits: number
+          visitors: number
+          visits: number
+        }[]
+      }
       ads_estimate_audience: { Args: { p_targeting: Json }; Returns: Json }
       ads_topup_credit: {
         Args: {
@@ -6448,6 +6510,10 @@ export type Database = {
       }
       record_anonymous_views: {
         Args: { p_token_ids: string[]; p_viewer_hash: string }
+        Returns: number
+      }
+      record_page_views: {
+        Args: { p_address?: string; p_events: Json; p_viewer_id: string }
         Returns: number
       }
       release_fraction_listing: {
