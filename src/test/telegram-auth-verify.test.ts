@@ -3,6 +3,7 @@ import {
   authDateIsFresh,
   buildDataCheckString,
   decodeTgAuthResult,
+  parseBotToken,
   signDataCheckString,
   verifyTelegramPayload,
 } from '../../supabase/functions/telegram-auth/verify';
@@ -78,6 +79,59 @@ describe('telegram-auth signature check', () => {
     const signed = await sign(FULL);
     const upper = { ...signed, hash: String(signed.hash).toUpperCase() };
     await expect(verifyTelegramPayload(upper, BOT_TOKEN)).resolves.toBe(true);
+  });
+});
+
+describe('telegram-auth bot token parsing', () => {
+  it('reads a clean token', () => {
+    expect(parseBotToken('8123456789:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw')).toEqual({
+      token: '8123456789:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw',
+      botId: '8123456789',
+    });
+  });
+
+  /**
+   * What actually happens when somebody configures this: BotFather delivers
+   * the token inside a paragraph, and the paragraph is what gets pasted. The
+   * old code took everything before the first colon as the bot id, so the
+   * public config endpoint served "Done! Congratulations on your new bot…"
+   * as a bot id and every login died at Telegram.
+   */
+  it('pulls the token out of the whole BotFather message', () => {
+    const blob = [
+      'Done! Congratulations on your new bot. You will find it at t.me/DeHub_Signup_Bot.',
+      'You can now add a description, about section and profile picture for your bot, see /help.',
+      '',
+      'Use this token to access the HTTP API:',
+      '8123456789:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw',
+      'Keep your token secure and store it safely, it can be used by anyone to control your bot.',
+    ].join('\n');
+    expect(parseBotToken(blob)).toEqual({
+      token: '8123456789:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw',
+      botId: '8123456789',
+    });
+  });
+
+  it('tolerates surrounding whitespace and quotes', () => {
+    expect(parseBotToken('  "8123456789:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw"  ')?.botId).toBe('8123456789');
+  });
+
+  // Null is what keeps the button off the sheet. Anything that is not a token
+  // has to read as "not configured", never as "configured badly".
+  it('returns null for anything that is not a token', () => {
+    for (const raw of [
+      undefined,
+      null,
+      '',
+      '   ',
+      'not-a-token',
+      'DeHub_Signup_Bot',
+      'https://t.me/DeHub_Signup_Bot',
+      '123:short',
+      'abc:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw',
+    ]) {
+      expect(parseBotToken(raw)).toBeNull();
+    }
   });
 });
 
