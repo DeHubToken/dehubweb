@@ -887,6 +887,7 @@
     "loginDescription": "Ýatda saklanan bellikleriňizi görmek we dolandyrmak üçin giriň."
   },
   "notifications": {
+      "badgeTierUp": "Gutlaýarys! Indi siz {{tier}} 🎉",
     "title": "Bildirişler",
     "markAllRead": "Ählisini okaldy diýip bellemek",
     "settings": "Bildiriş sazlamalary",

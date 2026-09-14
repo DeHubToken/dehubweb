@@ -33,6 +33,7 @@ export type NotificationType =
   | 'badge_delegated'
   | 'badge_delegation_ended'
   | 'badge_delegation_changed'
+  | 'badge_tier_up'
   | 'video_removal'
   | 'account_warning'
   | 'system';
