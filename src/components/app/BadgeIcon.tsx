@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import type { CSSProperties } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useBadgeVisual } from '@/hooks/use-badge-balance';
-import type { BadgeLock } from '@/lib/staking-badges';
+import { getBadgePlateUrl, type BadgeLock } from '@/lib/staking-badges';
 
 interface BadgeIconProps {
   /** Pass badgeBalance to resolve badge from balance */
@@ -96,6 +96,14 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
     display: 'inline-block',
     top: `calc(${artworkBaselineOffset}em + ${ARTWORK_GUTTER_PX}px)`,
   };
+  const plateUrl = getBadgePlateUrl(visualName);
+  const backingBox: CSSProperties = {
+    top: `${ARTWORK_GUTTER_PX}px`,
+    left: `${ARTWORK_GUTTER_PX}px`,
+    width: `calc(100% - ${ARTWORK_GUTTER_PX * 2}px)`,
+    height: `calc(100% - ${ARTWORK_GUTTER_PX * 2}px)`,
+  };
+
   if (!url) return null;
 
   return (
@@ -115,7 +123,14 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
               light strokes on transparency and dissolve against a light theme's
               background; the halo gives them a dark ground to sit on. On the
               dark themes it is a dark blur on a dark page — invisible. */}
-          <img aria-hidden alt="" src={url} className="art-halo" style={{ inset: `${ARTWORK_GUTTER_PX}px` }} />
+          {/* Under the halo, an opaque plate in the badge's solid silhouette (see
+              `.art-plate`): the halo is a copy of the image, so on its own it
+              inherits every transparent gap inside the outline and the page
+              shows through beside the check mark. Both layers are sized to the
+              content box explicitly — an absolutely positioned <img> with auto
+              width ignores `right`/`bottom` and would land a gutter off-centre. */}
+          {plateUrl && <span aria-hidden className="art-plate" style={{ ...backingBox, '--art-mask': `url("${plateUrl}")` } as CSSProperties} />}
+          <img aria-hidden alt="" src={url} className="art-halo" style={backingBox} />
           <img
             data-badge-icon
             src={url}
