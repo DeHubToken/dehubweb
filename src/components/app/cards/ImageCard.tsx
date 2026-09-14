@@ -57,7 +57,7 @@ import { SwipeableCarousel } from '../SwipeableCarousel';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
-import { FullscreenImageViewer } from './FullscreenImageViewer';
+import { FullscreenImageViewerLazy } from './FullscreenImageViewerLazy';
 import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { useImageTranslation } from '@/hooks/use-image-translation';
@@ -1261,7 +1261,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       />
 
       {/* Fullscreen Image Viewer */}
-      <FullscreenImageViewer
+      <FullscreenImageViewerLazy
         images={images}
         initialIndex={fullscreenIndex}
         isOpen={fullscreenOpen}

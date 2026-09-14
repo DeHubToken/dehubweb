@@ -63,7 +63,7 @@ export interface FullscreenViewerActions {
   onTip?: () => void;
 }
 
-interface FullscreenImageViewerProps {
+export interface FullscreenImageViewerProps {
   images: string[];
   initialIndex: number;
   isOpen: boolean;
