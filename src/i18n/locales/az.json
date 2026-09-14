@@ -4665,7 +4665,7 @@
     "publishAs": "Bu cür dərc edin:",
     "kindVideo": "Video",
     "kindAudio": "Audio",
-    "kindImage": "Şəkillər ( birinci şəkil saytın əsas səhifəsində yayımlanacaq )",
+    "kindImage": "Şəkillər",
     "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

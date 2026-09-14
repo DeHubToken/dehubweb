@@ -4576,7 +4576,7 @@
     "errorQueueFailed": "Hindi ma-queue ang import na iyon",
     "publishAs": "I - publish bilang",
     "kindVideo": "Video",
-    "kindAudio": "ay maaaring maging sa anyo ng",
+    "kindAudio": "Audio",
     "kindImage": "Mga Larawan",
     "tileSourceKind": "{{source}} · {{kind}}"
   },

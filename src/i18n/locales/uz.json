@@ -2484,7 +2484,7 @@
     "publishAs": "Nashr qilish",
     "kindVideo": "Video",
     "kindAudio": "Audio",
-    "kindImage": "& OÊ»ng",
+    "kindImage": "Pictures",
     "tileSourceKind": "{{source}} · {{kind}}"
   },
   "spaces": {
