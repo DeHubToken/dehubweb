@@ -338,6 +338,52 @@ export async function getEmailLinkStatus(): Promise<EmailLinkStatusResponse> {
 }
 
 /**
+ * The same question as `getEmailLinkStatus`, asked in a way that also repairs
+ * the answer.
+ *
+ * A Google or email signup proves an address to Supabase and nothing ever
+ * wrote it onto the DeHub account, so `notifyEmail` came back null for almost
+ * everyone — and the email notifications row told people to go and add the
+ * address they had just signed in with. Logins record it now, but that only
+ * helps the next time someone signs in, which is no help at all to a person
+ * already sitting on the settings page.
+ *
+ * So the current Supabase session is handed over with the question. The server
+ * verifies it, and writes the address only when the session belongs to the
+ * identity this account is already linked to. An account with no Supabase
+ * session, or one that already holds an address, is answered unchanged.
+ *
+ * Sent in the body: `x-supabase-authorization` is not in the API's CORS
+ * allowlist, so the browser would never get the preflight through.
+ *
+ * Falls back to the plain status call, because web deploys minutes after a
+ * merge and the API deploys by hand — there is a window where this route is
+ * not there yet, and a 404 must not blank out a row that would otherwise work.
+ */
+export async function syncEmailLinkStatus(): Promise<EmailLinkStatusResponse> {
+  const { apiCall } = await import('./core');
+
+  let supabaseAccessToken: string | null = null;
+  try {
+    const { supabase } = await import('@/integrations/supabase/client');
+    const { data } = await supabase.auth.getSession();
+    supabaseAccessToken = data?.session?.access_token ?? null;
+  } catch {
+    // No Supabase session to offer — the status call below still answers.
+  }
+
+  try {
+    return await apiCall<EmailLinkStatusResponse>('/api/account/email-link/sync', {
+      method: 'POST',
+      body: supabaseAccessToken ? { supabaseAccessToken } : {},
+      requiresAuth: true,
+    });
+  } catch {
+    return getEmailLinkStatus();
+  }
+}
+
+/**
  * Mail a 6-digit code that, once confirmed, lets this account sign in with
  * that email — no wallet signature needed on future logins.
  *
