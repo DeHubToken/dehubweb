@@ -4404,10 +4404,15 @@ specificity animation declarations above.
 
    This paints the artwork's own silhouette behind it, masked by the same image,
    so the plate is never a disc or a box: it hugs whatever shape the art is. The
-   two stacked drop-shadows push that silhouette a pixel past the artwork's edge,
-   which is what the eye reads as an outline. Filling behind as well as ringing
-   matters for the feathered edges — a soft alpha ramp over the plate resolves to
-   a solid edge instead of fading into the page.
+   plate's box is one pixel larger than the image on every side, so the masked
+   silhouette lands a pixel past the artwork's edge, which is what the eye reads
+   as an outline. Filling behind as well as ringing matters for the feathered
+   edges — a soft alpha ramp over the plate resolves to a solid edge instead of
+   fading into the page.
+
+   The rim is made by growing the box, NOT by a drop-shadow filter. Chrome drops
+   the mask entirely on an element that also carries a filter, and the plate then
+   paints as a solid dark rectangle behind every medal and badge.
 
    The mask is the artwork URL, set per element. `--artwork-plate` is the plate
    colour: dark by default, which is a no-op on the dark themes (a dark rim
@@ -4425,8 +4430,6 @@ specificity animation declarations above.
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
   mask-position: center;
-  filter: drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)))
-          drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)));
 }
 .art-plate {
   -webkit-mask-image: var(--art-mask);
@@ -4440,6 +4443,9 @@ specificity animation declarations above.
    cover the artwork instead of backing it. */
 .medal-shine-container::before {
   content: '';
+  inset: -1px;
+  -webkit-mask-image: var(--medal-mask);
+  mask-image: var(--medal-mask);
 }
 
 /* The same rescue for badge artwork drawn as a bare <img>, where there is no
