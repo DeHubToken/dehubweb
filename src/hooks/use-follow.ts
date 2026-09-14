@@ -25,6 +25,15 @@ let overrides = new Map<string, boolean>();
 let pendingAddresses = new Set<string>();
 const listeners = new Set<() => void>();
 
+/**
+ * Loaded on the failure path only. This module is on the boot path, and the
+ * sound and its toast are four kilobytes nobody downloads to read a feed.
+ */
+async function announceRateLimit(error: unknown): Promise<boolean> {
+  const { announceIfRateLimited } = await import('@/lib/error-feedback');
+  return announceIfRateLimited(error);
+}
+
 function emit() {
   listeners.forEach(cb => cb());
 }
@@ -77,8 +86,13 @@ export interface ToggleFollowOptions {
   /**
    * Called after rollback on failure. When provided, the built-in error toast
    * is skipped so the caller can surface its own (e.g. reauth handling).
+   *
+   * `info.handled` is true when the failure has already been announced here —
+   * today that means the rate limiter, which gets its own sound and notice.
+   * A caller that shows a toast of its own should skip it when handled, or the
+   * reader gets two for one tap.
    */
-  onError?: (error: unknown) => void;
+  onError?: (error: unknown, info: { handled: boolean }) => void;
   onSuccess?: (isFollowing: boolean) => void;
 }
 
@@ -124,8 +138,12 @@ export async function toggleFollowFor(
     // Roll back the optimistic flip
     revertFollowOverride(address, previous);
     patchProfileCaches(queryClient, address, currentlyFollowing, next ? -1 : 1);
-    if (opts.onError) opts.onError(error);
-    else toast.error(next ? 'Failed to follow' : 'Failed to unfollow');
+    // Clicking faster than the limiter allows is not a failure to explain, it
+    // is a pace to correct — so it gets the sound and "slow down" instead of
+    // whatever generic message the caller would have shown.
+    const handled = await announceRateLimit(error);
+    if (opts.onError) opts.onError(error, { handled });
+    else if (!handled) toast.error(next ? 'Failed to follow' : 'Failed to unfollow');
     return false;
   } finally {
     const nextPending = new Set(pendingAddresses);

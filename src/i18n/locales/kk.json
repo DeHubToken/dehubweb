@@ -1751,7 +1751,8 @@
     "push_blocked_more": "Көбірек мәлімет",
     "not_now": "Қазір емес",
     "image_too_large_tier": "Кескін тым үлкен — {{tier}} tier кескіндерді {{limit}} MB дейін сақтайды",
-    "image_too_large_untiered": "Кескін тым үлкен — кескіндер {{limit}} MB дейін сақталады"
+    "image_too_large_untiered": "Кескін тым үлкен — кескіндер {{limit}} MB дейін сақталады",
+    "rate_limited": "Сұраныс шегі, баяулатыңыз"
   },
   "staking": {
     "title": "Салым",

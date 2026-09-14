@@ -99,7 +99,9 @@ export function NewMembersList({ listClassName }: NewMembersListProps) {
 
     toggleFollowFor(queryClient, member.address, false, {
       name: member.displayName,
-      onError: (err) => handleApiError(err, 'Failed to follow user'),
+      onError: (err, info) => {
+        if (!info.handled) handleApiError(err, 'Failed to follow user');
+      },
     });
   }, [handleApiError, isAuthenticated, isFollowed, openLoginModal, queryClient]);
 

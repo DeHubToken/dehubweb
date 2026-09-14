@@ -1762,7 +1762,8 @@
     "push_blocked_more": "ተጨማሪ ዝርዝር",
     "not_now": "አሁን አይደለም",
     "image_too_large_tier": "ምስሉ በጣም ትልቅ ነው — የእርስዎ {{tier}} tier እስከ {{limit}} MB ድረስ ምስሎችን ያከማቻል",
-    "image_too_large_untiered": "ምስሉ በጣም ትልቅ ነው — ምስሎች እስከ {{limit}} MB ድረስ ይቀመጣሉ"
+    "image_too_large_untiered": "ምስሉ በጣም ትልቅ ነው — ምስሎች እስከ {{limit}} MB ድረስ ይቀመጣሉ",
+    "rate_limited": "ፍጥነት ተገድቧል፣ ቀስ ይበሉ"
   },
   "staking": {
     "title": "ተቀማጭ ማድረግ",

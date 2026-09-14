@@ -1565,7 +1565,8 @@
     "push_blocked_title": "Notifications mee ku pahonch rahin hain",
     "push_blocked_body": "Meeru browser ki notifications block chestunnaru, anduke DeHub bandh cheste emi raadu. Mee system notification settings lo browser ki malli on cheyandi, taruvata DeHub notifications off chesi malli on cheyandi.",
     "push_blocked_more": "Ziyada maloomat",
-    "not_now": "ابھی نکو"
+    "not_now": "ابھی نکو",
+    "rate_limited": "ریٹ لمٹ ہو گیا، آہستہ کریں"
   },
   "staking": {
     "title": "جمع",

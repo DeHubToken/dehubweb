@@ -1617,7 +1617,8 @@
     "push_blocked_more": "Meer besonderhede",
     "not_now": "Nie nou nie",
     "image_too_large_tier": "Beeld is te groot — jou {{tier}} vlak stoor beelde tot {{limit}} MB",
-    "image_too_large_untiered": "Beeld is te groot — beelde word gestoor tot {{limit}} MB"
+    "image_too_large_untiered": "Beeld is te groot — beelde word gestoor tot {{limit}} MB",
+    "rate_limited": "Tempo beperk, gaan stadiger"
   },
   "staking": {
     "title": "Staking",

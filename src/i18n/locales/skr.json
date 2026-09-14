@@ -1680,7 +1680,8 @@
     "push_blocked_more": "ودھیرے تفصیل",
     "not_now": "ہݨ نہیں",
     "image_too_large_tier": "تصویر بہت وڈی اے — تہاڈا {{tier}} ٹیئر {{limit}} MB تک دی تصویراں محفوظ کردا اے",
-    "image_too_large_untiered": "تصویر بہت وڈی اے — تصویراں {{limit}} MB تک محفوظ کیتیاں جاندیاں نیں"
+    "image_too_large_untiered": "تصویر بہت وڈی اے — تصویراں {{limit}} MB تک محفوظ کیتیاں جاندیاں نیں",
+    "rate_limited": "ریٹ لمٹ تھی ڳئی، ہولے کرو"
   },
   "staking": {
     "title": "سٹیکنگ",

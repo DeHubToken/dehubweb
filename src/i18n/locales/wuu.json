@@ -1685,7 +1685,8 @@
     "push_blocked_more": "更多細節",
     "not_now": "暂勿要",
     "image_too_large_tier": "图像太大——你的 {{tier}} 层级商店最多可以存储 {{limit}} MB 的图像",
-    "image_too_large_untiered": "图像太大——图像存储最多 {{limit}} MB"
+    "image_too_large_untiered": "图像太大——图像存储最多 {{limit}} MB",
+    "rate_limited": "请求忒快哉，慢点"
   },
   "staking": {
     "title": "质押",

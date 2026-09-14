@@ -429,7 +429,11 @@ export function FollowersListDrawer({
             setUsers(prev => prev.map(u =>
               u.address === user.address ? { ...u, isPending: false } : u
             ));
-            handleApiError(error, t('follow.updateFailed'));
+            // Not routed through toggleFollowFor, so the rate-limit notice is
+            // raised here rather than handed down as `handled`.
+            void import('@/lib/error-feedback').then(({ announceIfRateLimited }) => {
+              if (!announceIfRateLimited(error)) handleApiError(error, t('follow.updateFailed'));
+            });
           }
         });
       return;
@@ -446,14 +450,14 @@ export function FollowersListDrawer({
     ));
     void toggleFollowFor(queryClient, user.address, wasFollowing, {
       name,
-      onError: (error) => {
+      onError: (error, info) => {
         if (isFollowBack) followBackStreakRef.current = 0;
         if (wasFollowing) followingSetRef.current?.add(user.address.toLowerCase());
         else followingSetRef.current?.delete(user.address.toLowerCase());
         setUsers(prev => prev.map(u =>
           u.address === user.address ? { ...u, isFollowing: wasFollowing } : u
         ));
-        handleApiError(error, t('follow.updateFailed'));
+        if (!info.handled) handleApiError(error, t('follow.updateFailed'));
       },
       onSuccess: () => {
         if (isFollowBack) recordFollowBack();

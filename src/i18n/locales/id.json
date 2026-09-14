@@ -1771,7 +1771,8 @@
     "push_blocked_more": "Lebih detail",
     "not_now": "Nanti saja",
     "image_too_large_tier": "Gambar terlalu besar — tingkatan {{tier}} Anda menyimpan gambar hingga {{limit}} MB",
-    "image_too_large_untiered": "Gambar terlalu besar — gambar disimpan hingga {{limit}} MB"
+    "image_too_large_untiered": "Gambar terlalu besar — gambar disimpan hingga {{limit}} MB",
+    "rate_limited": "Terlalu sering, pelan-pelan"
   },
   "staking": {
     "title": "Staking",

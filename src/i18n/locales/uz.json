@@ -1753,7 +1753,8 @@
     "push_blocked_more": "Qo'shimcha ma'lumot",
     "not_now": "Hozir emas",
     "image_too_large_tier": "Rasm juda katta — sizning {{tier}} darajangiz {{limit}} MB gacha bo&#39;lgan rasmlarni saqlaydi",
-    "image_too_large_untiered": "Rasm juda katta — rasmlar {{limit}} MB gacha saqlanadi"
+    "image_too_large_untiered": "Rasm juda katta — rasmlar {{limit}} MB gacha saqlanadi",
+    "rate_limited": "So'rov chegarasi, sekinroq"
   },
   "staking": {
     "title": "Steyking",
