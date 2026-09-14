@@ -170,6 +170,8 @@ export const apd = {
     topUpDesc: 'عندنا عملتنا الخاصة في التطبيق، زي Vbucks في Fortnite أو عملات TikTok، بتاعتنا اسمها توكنات DeHub أو DHB.',
     directTitle: 'مباشر',
     dpayDesc: 'شراء مباشر مع Stripe',
+    topUpCardTitle: 'كارت، وليس DHB بس',
+    topUpCardDesc: 'صفحة الشراء تاخد كارت من خلال MoonPay، وما بتاع DHB بس دلوقتي: ممكن تشتري ETH و USDC بنفس الطريقة، على الـ chain اللي انت فيهو بالفعل، والفلوس تروح مباشرة في المحفظة اللي التطبيق سجلك فيها. الأسعار وكود الدفع بتتحل حسب كل chain، فالسعر اللي بتتقدم عليهو هو بالظبط اللي بيوصلك.',
     dehubTokenTitle: 'توكن DeHub',
     dehubTokenDesc: 'التوكنات بتستخدم للاشتراك بالمبدعين وإكرامية الستريمرز أو فتح المحتوى.',
     instantPayments: 'مدفوعات فورية',

@@ -170,6 +170,8 @@ export const gsw = {
     topUpDesc: "Mir händ üsi eigeni In-App-Währig, ähnlich wie Vbucks uf Fortnite oder TikTok-Münze, üsi heissed DeHub Token oder DHB. Sie gsehnd die als Goldmünze in dr App. Sie bruuched DHB-Token zum Transagiere in dr App und zum Nutze vo Dienst wie Trinkgälder, Abos und meh.",
     directTitle: 'Diräkt',
     dpayDesc: 'Diräktchauf mit Stripe',
+    topUpCardTitle: 'Charte, und nid nur DHB',
+    topUpCardDesc: 'D Buysyte nimmt e Charte über MoonPay, und es isch nümme nur DHB: ETH und USDC chönd uf d gliich Art chauft wärde, uf de Chain wo du scho druf bisch, und landet direkt im Wallet wo d App di ine signiert het. Pryys und de Payout-Code wärde pro Chain aufglöst, also das wo dir zitiert wird, chunnt au a.',
     dehubTokenTitle: 'DeHub-Token',
     dehubTokenDesc: "Token wärde für Abonnemänts bi Kreative, Trinkgälder a Streamer oder zum Freischalte vo Inhalt bruucht. Je meh Si halted, desto niedriger sind Ihri Gebühre und desto meh Superkräft schaltend Si frei.",
     instantPayments: 'Sofortigi Zahlinge',
