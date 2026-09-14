@@ -1719,7 +1719,9 @@
     "push_blocked_title": "Notifikationer når dig ikke",
     "push_blocked_body": "Dit system blokerer meddelelser for denne browser, så intet når dig, mens DeHub er lukket. Slå dem til igen for din browser i dine systemmeddelelsesindstillinger, og slå derefter DeHub-meddelelser fra og til igen.",
     "push_blocked_more": "Mere detalje",
-    "not_now": "Ikke nu"
+    "not_now": "Ikke nu",
+    "image_too_large_tier": "Billedet er for stort — dit {{tier}}-niveau gemmer billeder på op til {{limit}}MB",
+    "image_too_large_untiered": "Billedet er for stort — billeder gemmes op til {{limit}}MB"
   },
   "staking": {
     "title": "Staking",

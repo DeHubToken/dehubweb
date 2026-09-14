@@ -1981,7 +1981,9 @@
     "push_blocked_title": "Notifikasi tidak sampai kepada anda",
     "push_blocked_body": "Sistem anda menyekat pemberitahuan untuk penyemak imbas ini, jadi tiada apa-apa yang sampai kepada anda semasa DeHub ditutup. Hidupkannya semula untuk penyemak imbas anda dalam tetapan pemberitahuan sistem anda, kemudian matikan dan hidupkan semula pemberitahuan DeHub.",
     "push_blocked_more": "Lebih terperinci",
-    "not_now": "Bukan sekarang"
+    "not_now": "Bukan sekarang",
+    "image_too_large_tier": "Imej terlalu besar — peringkat {{tier}} anda menyimpan imej sehingga {{limit}} MB",
+    "image_too_large_untiered": "Imej terlalu besar — imej disimpan sehingga {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

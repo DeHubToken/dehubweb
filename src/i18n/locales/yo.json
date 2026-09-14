@@ -1694,7 +1694,9 @@
     "push_blocked_title": "Awọn iwifunni ko de ọ",
     "push_blocked_body": "Ẹ̀rọ-ayárabíàsá rẹ ń dí ìkìlọ̀ fún aṣàwákiri yìí, nítorí náà kò sí ohun tí ó dé ọ̀dọ̀ rẹ nígbà tí DeHub ti di títì. Yí wọn padà fún aṣàwákiri rẹ nínú ètò ìkéde ètò rẹ, lẹ́yìn náà yí àwọn ìkéde DeHub padà lẹ́ẹ̀kan sí i.",
     "push_blocked_more": "Alaye siwaju sii",
-    "not_now": "Kì í ṣe nísinsìnyí"
+    "not_now": "Kì í ṣe nísinsìnyí",
+    "image_too_large_tier": "Àwòrán tóbi jù — rẹ {{tier}}tier máa ń fi àwòrán pamọ́ sí {{limit}} MB",
+    "image_too_large_untiered": "Àwòrán tóbi jù — a máa ń fi àwòrán pamọ́ sí {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

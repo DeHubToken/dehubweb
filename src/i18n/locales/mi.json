@@ -1690,7 +1690,9 @@
     "push_blocked_title": "Kāore ngā whakamōhiotanga e tae atu ki a koe",
     "push_blocked_body": "Kei te aukati to punaha i nga panui mo tenei kaitirotiro, no reira kaore he mea e tae atu ki a koe i te wa e kati ana a DeHub. Tahuri ratou hoki mo to koutou pūtirotiro i roto i to koutou tautuhinga whakamōhio pūnaha, ka huri DeHub whakamōhio atu, me te ano.",
     "push_blocked_more": "He taipitopito atu",
-    "not_now": "Kaua i tēnei wā"
+    "not_now": "Kaua i tēnei wā",
+    "image_too_large_tier": "He nui rawa te whakaahua — to {{tier}} tier toa whakaahua tae atu ki {{limit}} MB",
+    "image_too_large_untiered": "He nui rawa te whakaahua — kei te rokiroki nga whakaahua ki te {{limit}} MB"
   },
   "staking": {
     "title": "Tāpui Moni",

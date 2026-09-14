@@ -1655,7 +1655,9 @@
     "push_blocked_title": "Teateid ei jõua sinuni",
     "push_blocked_body": "Sinu süsteem blokeerib selle brauseri teavitused, nii et kui DeHub on suletud, ei jõua miski sinuni. Lülita need oma brauseris süsteemi teavitusseadetes uuesti sisse, seejärel lülita DeHubi teavitused välja ja uuesti sisse.",
     "push_blocked_more": "Rohkem detaile",
-    "not_now": "Mitte praegu"
+    "not_now": "Mitte praegu",
+    "image_too_large_tier": "Pilt on liiga suur — teie {{tier}} taseme poed salvestavad pilte kuni {{limit}} MB",
+    "image_too_large_untiered": "Pilt on liiga suur — pilte talletatakse kuni {{limit}} MB"
   },
   "staking": {
     "title": "Panustamine",

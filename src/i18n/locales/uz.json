@@ -1711,7 +1711,9 @@
     "push_blocked_title": "Bildirishnomalar sizga yetib bormayapti",
     "push_blocked_body": "Tizimingiz ushbu brauzer uchun bildirishnomalarni bloklamoqda, shuning uchun DeHub yopiq bo&#39;lganida sizga hech narsa yetib bormaydi. Tizim bildirishnoma sozlamalarida brauzeringiz uchun ularni qayta yoqing, so&#39;ngra DeHub bildirishnomalarini o&#39;chirib yoqing.",
     "push_blocked_more": "Qo'shimcha ma'lumot",
-    "not_now": "Hozir emas"
+    "not_now": "Hozir emas",
+    "image_too_large_tier": "Rasm juda katta — sizning {{tier}} darajangiz {{limit}} MB gacha bo&#39;lgan rasmlarni saqlaydi",
+    "image_too_large_untiered": "Rasm juda katta — rasmlar {{limit}} MB gacha saqlanadi"
   },
   "staking": {
     "title": "Steyking",

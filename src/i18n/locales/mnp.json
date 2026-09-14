@@ -1644,7 +1644,9 @@
     "push_blocked_title": "通知無到汝",
     "push_blocked_body": "汝个系统挡住此浏览器个通知，所以DeHub关脱时，汝啥物也收不到。拉汝个系统通知设置里重新开启汝浏览器个通知，然后拉DeHub通知里关脱再开一次。",
     "push_blocked_more": "更详细",
-    "not_now": "暂且莫"
+    "not_now": "暂且莫",
+    "image_too_large_tier": "圖像太大——你的 {{tier}} 層級商店最多可以存儲 {{limit}} MB 的圖像",
+    "image_too_large_untiered": "圖像過大——圖像儲存上限為 {{limit}} MB"
   },
   "staking": {
     "title": "存款",

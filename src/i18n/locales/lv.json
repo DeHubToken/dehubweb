@@ -1694,7 +1694,9 @@
     "push_blocked_title": "Paziņojumi jūs nesasniedz",
     "push_blocked_body": "Jūsu sistēma bloķē paziņojumus šai pārlūkprogrammai, tāpēc nekas ar jums nesasniedz, kamēr DeHub ir slēgts. Sistēmas paziņojumu iestatījumos atkal ieslēdziet tos savai pārlūkprogrammai, pēc tam izslēdziet un atkal ieslēdziet DeHub paziņojumus.",
     "push_blocked_more": "Vairāk detaļu",
-    "not_now": "Ne tagad"
+    "not_now": "Ne tagad",
+    "image_too_large_tier": "Attēls ir pārāk liels — jūsu {{tier}} līmenis saglabā attēlus līdz {{limit}} MB",
+    "image_too_large_untiered": "Attēls ir pārāk liels — attēli tiek saglabāti līdz {{limit}} MB"
   },
   "staking": {
     "title": "Steikings",

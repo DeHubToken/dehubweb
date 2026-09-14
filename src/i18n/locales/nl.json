@@ -1925,7 +1925,9 @@
     "push_blocked_title": "Meldingen bereiken je niet",
     "push_blocked_body": "Uw systeem blokkeert meldingen voor deze browser, dus niets bereikt u terwijl DeHub is gesloten. Schakel ze weer in voor je browser in je systeemmeldingsinstellingen en schakel vervolgens DeHub-meldingen uit en weer in.",
     "push_blocked_more": "Meer details",
-    "not_now": "Niet nu"
+    "not_now": "Niet nu",
+    "image_too_large_tier": "Afbeelding is te groot — uw {{tier}} -laag slaat afbeeldingen op tot {{limit}} MB",
+    "image_too_large_untiered": "Afbeelding is te groot — afbeeldingen worden opgeslagen tot {{limit}} MB"
   },
   "staking": {
     "title": "Staking",
