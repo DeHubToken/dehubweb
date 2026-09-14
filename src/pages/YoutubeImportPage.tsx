@@ -36,7 +36,13 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAuthPrompt } from '@/components/app/AuthPrompt';
-import { CONVERTER_SOURCES, converterSourceList, detectConverterSource } from '@/lib/converter-sources';
+import {
+  CONVERTER_SOURCES,
+  converterSourceList,
+  defaultMediaKind,
+  detectConverterSource,
+  type MediaKind,
+} from '@/lib/converter-sources';
 import {
   importFromYoutube,
   listYoutubeImports,
@@ -119,6 +125,21 @@ export default function YoutubeImportPage() {
   const { requireAuth } = useAuthPrompt();
   const [url, setUrl] = useState('');
   const [ownershipConfirmed, setOwnershipConfirmed] = useState(false);
+  /** What the creator picked, or null while they have not. Null means "follow
+   * the link" — a SoundCloud paste should not need a click to say audio, and a
+   * Pinterest one should not need a click to say pictures. */
+  const [pickedKind, setPickedKind] = useState<MediaKind | null>(null);
+
+  /** The source of whatever is currently in the box, if it is one we take. */
+  const pastedSource = detectConverterSource(url);
+  /** What this paste will publish as. The creator's pick wins, but only while
+   * the pasted link can actually do it — pasting a SoundCloud link after
+   * choosing Pictures must not silently queue something the server refuses. */
+  const mediaKind: MediaKind = (() => {
+    if (!pastedSource) return pickedKind ?? 'video';
+    if (pickedKind && pastedSource.media.includes(pickedKind)) return pickedKind;
+    return defaultMediaKind(pastedSource);
+  })();
   const [submitting, setSubmitting] = useState(false);
   const [imports, setImports] = useState<YoutubeImportStatusResponse[]>([]);
   const [dismissed, setDismissed] = useState<Set<string>>(readDismissed);
@@ -243,11 +264,14 @@ export default function YoutubeImportPage() {
    * path gates on the checkbox below, and "Try again" re-runs a link whose
    * attestation was made when it was first queued. */
   const queueImport = useCallback(
-    (rawUrl: string) => {
+    (rawUrl: string, kind?: MediaKind) => {
       requireAuth(async () => {
         setSubmitting(true);
         try {
-          await importFromYoutube({ url: rawUrl, ownershipConfirmed: true });
+          // Omitted rather than guessed when re-running a failed tile: the
+          // server falls back to the source's own default, which is what that
+          // job was queued as in the first place.
+          await importFromYoutube({ url: rawUrl, ownershipConfirmed: true, mediaKind: kind });
           setUrl('');
           toast.message(t('converter.toastQueued'));
           await refresh();
@@ -273,7 +297,7 @@ export default function YoutubeImportPage() {
       toast.error(t('converter.errorNeedRights'));
       return;
     }
-    queueImport(url.trim());
+    queueImport(url.trim(), mediaKind);
   };
 
   const handleDismiss = (jobId: string) => {
@@ -339,6 +363,41 @@ export default function YoutubeImportPage() {
               {t('converter.paste')}
             </button>
           </div>
+
+          {/* What this link becomes. Only rendered once the box holds a link
+              we recognise: before that there is nothing to choose between, and
+              three buttons over an empty field is a question nobody asked yet.
+
+              A source only offers what it can actually do — SoundCloud shows
+              Audio alone, Pinterest leads with Pictures — so the control never
+              presents an option the server would refuse. Single-option sources
+              still render it, because "Audio" sitting there on its own is what
+              tells someone the paste was understood. */}
+          {pastedSource && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-zinc-500 shrink-0">{t('converter.publishAs')}</span>
+              <div className="flex flex-wrap gap-1.5">
+                {pastedSource.media.map(kind => {
+                  const active = kind === mediaKind;
+                  return (
+                    <button
+                      key={kind}
+                      type="button"
+                      onClick={() => setPickedKind(kind)}
+                      aria-pressed={active}
+                      disabled={submitting}
+                      className={cn(
+                        'rounded-lg px-2.5 py-1 text-xs font-medium transition-colors disabled:opacity-50',
+                        active ? 'bg-white text-black' : 'bg-white/5 text-zinc-300 hover:bg-white/10',
+                      )}
+                    >
+                      {t(`converter.kind${kind[0].toUpperCase()}${kind.slice(1)}`)}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* The list of sources, spelled out rather than described.
               "Paste a link from a supported platform" makes a creator guess
@@ -482,7 +541,16 @@ export default function YoutubeImportPage() {
                             job.state !== 'failed' && 'bottom-3',
                           )}
                         >
-                          {source}
+                          {/* Source alone stopped being enough once one link
+                              could become three different posts — the same
+                              TikTok URL is a video, a sound or a slideshow
+                              depending on what was picked. */}
+                          {job.mediaKind && job.mediaKind !== 'video'
+                            ? t('converter.tileSourceKind', {
+                                source,
+                                kind: t(`converter.kind${job.mediaKind[0].toUpperCase()}${job.mediaKind.slice(1)}`),
+                              })
+                            : source}
                         </span>
                       )}
 
@@ -533,7 +601,7 @@ export default function YoutubeImportPage() {
                           {job.state === 'failed' && job.url && (
                             <button
                               type="button"
-                              onClick={() => queueImport(job.url!)}
+                              onClick={() => queueImport(job.url!, job.mediaKind)}
                               className="text-xs text-white underline"
                             >
                               {t('converter.tryAgain')}

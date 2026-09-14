@@ -4616,6 +4616,11 @@
     "errorUnsupported": "మేము ఆ లింక్ నుండి దిగుమతి చేయలేము. ఇవి ఒకటి ప్రయత్నించండి: {{sources}}",
     "errorNeedRights": "దయచేసి ఈ కంటెంట్‌కు మీకు హక్కులు ఉన్నట్లు నిర్ధారించండి",
     "errorClipboard": "క్లిప్‌బోర్డ్‌ను చదవలేకపోయాను — బదులుగా మాన్యువల్‌గా పేస్ట్ చేయండి",
-    "errorQueueFailed": "ఆ దిగుమతిని క్యూ చేయలేకపోయాను"
+    "errorQueueFailed": "ఆ దిగుమతిని క్యూ చేయలేకపోయాను",
+    "publishAs": "ఇలా ప్రచురించండి",
+    "kindVideo": "వీడియో",
+    "kindAudio": "ఆడియో",
+    "kindImage": "నొక్కుQShortcut",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

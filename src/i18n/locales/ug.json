@@ -888,9 +888,6 @@
     "loginDescription": "ساقلانغان خەتكۈچلىرىڭىزنى كۆرۈش ۋە باشقۇرۇش ئۈچۈن كىرىڭ."
   },
   "notifications": {
-      "badgeTierUp": "قۇتلۇق بولسۇن! ھازىر سىز {{tier}} 🎉",
-      "badgeTierDown": "دىققەت: بەلگىڭىز ھازىر {{tier}}",
-      "badgeTierLost": "دىققەت: ئەمدى بەلگىڭىز يوق",
     "title": "ئۇقتۇرۇشلار",
     "markAllRead": "ھەممىنى ئوقۇلدى دەپ بەلگىلەش",
     "settings": "ئۇقتۇرۇش تەڭشەكلىرى",
@@ -943,6 +940,9 @@
     "likedCommentPreview": "{{name}} ئىنكاسىڭىزنى ياقتۇردى: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} ۋە {{others}} ئىنكاسىڭىزنى ياقتۇردى",
     "andOthersLikedCommentPreview": "{{first}} ۋە {{others}} ئىنكاسىڭىزنى ياقتۇردى: \"{{preview}}\"",
+    "badgeTierUp": "قۇتلۇق بولسۇن! ھازىر سىز {{tier}} 🎉",
+    "badgeTierDown": "دىققەت: بەلگىڭىز ھازىر {{tier}}",
+    "badgeTierLost": "دىققەت: ئەمدى بەلگىڭىز يوق",
     "badgeTakenBack": "{{name}} سىزگە قەرز بېرىشنى توختاتتى {{tier}} badge",
     "badgeLoanLapsed": "{{name}} ئەمدى سىزگە قەرز بېرەلمەيدۇ {{tier}} badge",
     "badgeLoanDropped": "سىز ئەمدى {{tier}}badgeنى{{name}} غا قەرز قىلالمايسىز",
@@ -2429,6 +2429,11 @@
     "errorUnsupported": "بىز شۇ ئۇلانمىدىن ئىمپورت قىلالمايمىز. بۇلاردىن بىرنى سىناپ كۆرۈڭ: {{sources}}",
     "errorNeedRights": "سىز بۇ مەزمۇننىڭ ھوقۇقىغا ئىگە ئىكەنلىكىنى تاستىقلاڭ",
     "errorClipboard": "چاپلاش تاختىسىنى ئوقۇيالمىدى — قولدا چاپلاڭ",
-    "errorQueueFailed": "شۇ ئىمپورتنى قائىدىلەيالمىدى"
+    "errorQueueFailed": "شۇ ئىمپورتنى قائىدىلەيالمىدى",
+    "publishAs": "تۆۋەندىكىدەك نەشر قىل",
+    "kindVideo": "Video",
+    "kindAudio": "ئاۋاز",
+    "kindImage": "سۈرەتلەر",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

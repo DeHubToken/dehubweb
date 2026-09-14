@@ -2390,6 +2390,11 @@
     "errorUnsupported": "เราไม่สามารถนำเข้าจากลิงก์นั้นได้ ลองใช้อย่างใดอย่างหนึ่ง: {{sources}}",
     "errorNeedRights": "โปรดยืนยันว่าคุณมีสิทธิ์ในเนื้อหานี้",
     "errorClipboard": "ไม่สามารถอ่านคลิปบอร์ด — วางด้วยตนเองแทน",
-    "errorQueueFailed": "ไม่สามารถเพิ่มการนำเข้านั้นในคิว"
+    "errorQueueFailed": "ไม่สามารถเพิ่มการนำเข้านั้นในคิว",
+    "publishAs": "Publish as",
+    "kindVideo": "Video",
+    "kindAudio": "เสียง",
+    "kindImage": "รูปภาพ",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

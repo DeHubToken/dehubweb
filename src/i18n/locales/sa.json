@@ -880,9 +880,6 @@
     "loginDescription": "स्वरक्षितपुस्तकचिह्नानि द्रष्टुं प्रबन्धयितुं च प्रविशतु।"
   },
   "notifications": {
-      "badgeTierUp": "अभिनन्दनम्! अधुना भवान् {{tier}} अस्ति 🎉",
-      "badgeTierDown": "ध्यानं ददातु: अधुना भवतः चिह्नं {{tier}} अस्ति",
-      "badgeTierLost": "ध्यानं ददातु: अधुना भवतः चिह्नं नास्ति",
     "title": "सूचनाः",
     "markAllRead": "सर्वाः पठिताः इति चिह्नयतु",
     "settings": "सूचनाविन्यासः",
@@ -935,6 +932,9 @@
     "likedCommentPreview": "{{name}} भवतः टिप्पणीं रोचयत्: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} तथा {{others}} भवतः टिप्पणीं रोचयन्",
     "andOthersLikedCommentPreview": "{{first}} तथा {{others}} भवतः टिप्पणीं रोचयन्: \"{{preview}}\"",
+    "badgeTierUp": "अभिनन्दनम्! अधुना भवान् {{tier}} अस्ति 🎉",
+    "badgeTierDown": "ध्यानं ददातु: अधुना भवतः चिह्नं {{tier}} अस्ति",
+    "badgeTierLost": "ध्यानं ददातु: अधुना भवतः चिह्नं नास्ति",
     "badgeGenericTier": "व्याजम्",
     "postRemoved": "भवतः प्रकाशनम् अपसारितम्",
     "newNotification": "नवसूचना",
@@ -2367,6 +2367,11 @@
     "errorUnsupported": "आयं सन्धिः आयातितुं न शक्यते। एतेषु एकं प्रयतस्व: {{sources}}",
     "errorNeedRights": "कृपया पुष्टि कुरु यत् त्वं अस्य विषयस्य अधिकारान् धारयसि।",
     "errorClipboard": "क्लिपबोर्डं पठितुं न शक्यते — स्वयं पेस्ट कुरु।",
-    "errorQueueFailed": "तत् आयातनं पंक्तिबद्धं कर्तुं न शक्यते।"
+    "errorQueueFailed": "तत् आयातनं पंक्तिबद्धं कर्तुं न शक्यते।",
+    "publishAs": "प्रकाशितं यथा",
+    "kindVideo": "दृश्यम्",
+    "kindAudio": "ध्वनिः",
+    "kindImage": "चित्राणि",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

@@ -811,9 +811,6 @@
     "loginDescription": "Log in for see and manage your saved bookmarks."
   },
   "notifications": {
-      "badgeTierUp": "Congrats! Yu don be {{tier}} now 🎉",
-      "badgeTierDown": "Take note: yu badge don be {{tier}} now",
-      "badgeTierLost": "Take note: yu no get badge again",
     "title": "Notifications",
     "markAllRead": "Mark all read",
     "settings": "Notification Settings",
@@ -866,6 +863,9 @@
     "likedCommentPreview": "{{name}} like your comment: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} and {{others}} like your comment",
     "andOthersLikedCommentPreview": "{{first}} and {{others}} like your comment: \"{{preview}}\"",
+    "badgeTierUp": "Congrats! Yu don be {{tier}} now 🎉",
+    "badgeTierDown": "Take note: yu badge don be {{tier}} now",
+    "badgeTierLost": "Take note: yu no get badge again",
     "badgeGenericTier": "badge",
     "postRemoved": "Your post don remove",
     "newNotification": "New notification",
@@ -2251,6 +2251,11 @@
     "errorUnsupported": "We no fit import from dat link. Try one of: {{sources}}",
     "errorNeedRights": "Please confirm say you get right for dis content.",
     "errorClipboard": "No fit read di clipboard — paste am by hand instead.",
-    "errorQueueFailed": "No fit queue dat import."
+    "errorQueueFailed": "No fit queue dat import.",
+    "publishAs": "Publish as",
+    "kindVideo": "Video",
+    "kindAudio": "Audio",
+    "kindImage": "Picha",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

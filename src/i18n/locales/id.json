@@ -4833,6 +4833,11 @@
     "errorUnsupported": "Kami tidak dapat mengimpor dari tautan itu. Coba salah satu: {{sources}}",
     "errorNeedRights": "Harap konfirmasi bahwa Anda memiliki hak atas konten ini",
     "errorClipboard": "Tidak dapat membaca clipboard — tempel secara manual",
-    "errorQueueFailed": "Tidak dapat mengantrikan impor itu"
+    "errorQueueFailed": "Tidak dapat mengantrikan impor itu",
+    "publishAs": "Publikasikan sebagai",
+    "kindVideo": "Video",
+    "kindAudio": "Audio",
+    "kindImage": "Gambar",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

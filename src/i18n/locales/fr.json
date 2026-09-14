@@ -4832,6 +4832,11 @@
     "errorUnsupported": "Nous ne pouvons pas importer depuis ce lien. Essayez l'un de ceux-ci : {{sources}}",
     "errorNeedRights": "Veuillez confirmer que vous avez les droits sur ce contenu",
     "errorClipboard": "Impossible de lire le presse-papiers — collez manuellement à la place",
-    "errorQueueFailed": "Impossible de mettre en file d'attente cet import"
+    "errorQueueFailed": "Impossible de mettre en file d'attente cet import",
+    "publishAs": "Publier en tant que",
+    "kindVideo": "Vidéo",
+    "kindAudio": "Audio",
+    "kindImage": "Images",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

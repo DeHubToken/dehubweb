@@ -4699,6 +4699,11 @@
     "errorUnsupported": "Ne možemo uvesti sa tog linka. Pokušajte s jednim od: {{sources}}",
     "errorNeedRights": "Molimo potvrdite da imate prava na ovaj sadržaj",
     "errorClipboard": "Nije moguće pročitati međuspremnik — zalijepite ručno umjesto toga",
-    "errorQueueFailed": "Nije moguće staviti taj uvoz u red čekanja"
+    "errorQueueFailed": "Nije moguće staviti taj uvoz u red čekanja",
+    "publishAs": "Objavi kao",
+    "kindVideo": "Video",
+    "kindAudio": "Zvuk",
+    "kindImage": "Slike",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

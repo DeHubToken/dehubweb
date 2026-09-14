@@ -880,9 +880,6 @@
     "loginDescription": "ዝተዓቀቡ ዕልባታትካ ንምርኣይን ንምምሕዳርን ብዓል።"
   },
   "notifications": {
-      "badgeTierUp": "እንኳዕ ሓጎሰካ! ሕጂ {{tier}} ኢኻ 🎉",
-      "badgeTierDown": "መዘኻኸሪ፦ ሕጂ ባጅካ {{tier}} እዩ",
-      "badgeTierLost": "መዘኻኸሪ፦ ደጊም ባጅ የብልካን",
     "title": "ምልክታታት",
     "markAllRead": "ኩሉ ከም ዝተነበ ምልክት ግበር",
     "settings": "ቅጥዕታት ምልክታ",
@@ -935,6 +932,9 @@
     "likedCommentPreview": "{{name}} ርእይቶኻ ፈትዩ: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}}ን {{others}}ን ርእይቶኻ ፈትዮም",
     "andOthersLikedCommentPreview": "{{first}}ን {{others}}ን ርእይቶኻ ፈትዮም: \"{{preview}}\"",
+    "badgeTierUp": "እንኳዕ ሓጎሰካ! ሕጂ {{tier}} ኢኻ 🎉",
+    "badgeTierDown": "መዘኻኸሪ፦ ሕጂ ባጅካ {{tier}} እዩ",
+    "badgeTierLost": "መዘኻኸሪ፦ ደጊም ባጅ የብልካን",
     "badgeLoanDropped": "ነቲ {{tier}} ባጅ ናብ {{name}}ክትበድሎ ኣይትኽእልን ኢኻ ።",
     "badgeGenericTier": "ባጅ",
     "postRemoved": "ጽሑፍካ ተኣልዩ",
@@ -2399,6 +2399,11 @@
     "errorUnsupported": "ካብ ሊንክ ሙሉእ ክንወስድ ኣይንኽእል። ሓደ ካብ ዚሓትት ሞክር: {{sources}}",
     "errorNeedRights": "ሕጋዊ መሰል ናይ ሓበሬታ ሙሉእ ኣረጋግጽ",
     "errorClipboard": "ክሊፕቦርድ ክንብል ኣይከኣልን — ብ ሙሉእ ኣስተውዓል",
-    "errorQueueFailed": "ምእላይ ሙሉእ ክንተቐዲም ኣይከኣልን"
+    "errorQueueFailed": "ምእላይ ሙሉእ ክንተቐዲም ኣይከኣልን",
+    "publishAs": "ከም",
+    "kindVideo": "ቪድዮ",
+    "kindAudio": "ድምፂ",
+    "kindImage": "ስእልታት",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

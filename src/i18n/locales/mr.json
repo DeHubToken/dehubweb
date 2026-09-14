@@ -4494,6 +4494,11 @@
     "errorUnsupported": "आम्ही त्या लिंकवरून आयात करू शकत नाही. यापैकी एक प्रयत्न करा: {{sources}}",
     "errorNeedRights": "कृपया पुष्टी करा की तुमच्याकडे या सामग्रीचे अधिकार आहेत",
     "errorClipboard": "क्लिपबोर्ड वाचू शकत नाही — त्याऐवजी व्यक्तिचलितपणे पेस्ट करा",
-    "errorQueueFailed": "तो आयात रांगेत घेता आला नाही"
+    "errorQueueFailed": "तो आयात रांगेत घेता आला नाही",
+    "publishAs": "म्हणून प्रकाशित करा",
+    "kindVideo": "व्हिडिओ",
+    "kindAudio": "ऑडिओ",
+    "kindImage": "चित्रे",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

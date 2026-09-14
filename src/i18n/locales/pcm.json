@@ -815,9 +815,6 @@
     "loginDescription": "Log in make you fit see and manage your saved bookmarks."
   },
   "notifications": {
-      "badgeTierUp": "Congrats! You be {{tier}} now 🎉",
-      "badgeTierDown": "Take note: your badge don turn {{tier}}",
-      "badgeTierLost": "Take note: you no get badge again",
     "title": "Notifications",
     "markAllRead": "Mark all as read",
     "settings": "Notification Settings",
@@ -870,6 +867,9 @@
     "likedCommentPreview": "{{name}} like your comment: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} and {{others}} like your comment",
     "andOthersLikedCommentPreview": "{{first}} and {{others}} like your comment: \"{{preview}}\"",
+    "badgeTierUp": "Congrats! You be {{tier}} now 🎉",
+    "badgeTierDown": "Take note: your badge don turn {{tier}}",
+    "badgeTierLost": "Take note: you no get badge again",
     "badgeGenericTier": "badge",
     "postRemoved": "Your post don remove",
     "newNotification": "New notification",
@@ -2168,6 +2168,11 @@
     "statusDownloading": "Downloading",
     "statusDownloadingPercent": "Downloading {{percent}}%",
     "statusQueued": "Queued",
-    "detailWaiting": "Waiting its turn."
+    "detailWaiting": "Waiting its turn.",
+    "publishAs": "Publish as",
+    "kindVideo": "Video",
+    "kindAudio": "Audio",
+    "kindImage": "Pictures",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

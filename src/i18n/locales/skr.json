@@ -2358,6 +2358,11 @@
     "errorUnsupported": "اسے لنک توں درآمد نئیں کر سکنے۔ ایناں میں توں کوشش کرو: {{sources}}",
     "errorNeedRights": "براہ کرم تصدیق کرو کہ تمہاں نوں اس مواد دے حقوق حاصل نیں",
     "errorClipboard": "کلپ بورڈ نوں پڑھ نئیں سکیا — بجائے اس دے دستی طور تے پیسٹ کرو",
-    "errorQueueFailed": "اوہ درآمد قطار میں نئیں لا سکیا"
+    "errorQueueFailed": "اوہ درآمد قطار میں نئیں لا سکیا",
+    "kindVideo": "ویڈیو",
+    "kindAudio": "آڈیو",
+    "kindImage": "تصویراں",
+    "publishAs": "Publish as",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

@@ -873,9 +873,6 @@
     "loginDescription": "रउआ बुकमार्क देखे आ प्रबंधन करे खातिर लॉगिन करीं।"
   },
   "notifications": {
-      "badgeTierUp": "बधाई होखे! अब रउरा {{tier}} बानी 🎉",
-      "badgeTierDown": "ध्यान दीं: अब रउरा बैज {{tier}} बा",
-      "badgeTierLost": "ध्यान दीं: अब रउरा लगे बैज नइखे",
     "title": "सूचना",
     "markAllRead": "सभे पढ़ल गइल मानीं",
     "settings": "सूचना सेटिंग",
@@ -928,6 +925,9 @@
     "likedCommentPreview": "{{name}} रउआ टिप्पणी लाइक कइलसु: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} आ {{others}} रउआ टिप्पणी लाइक कइलसु",
     "andOthersLikedCommentPreview": "{{first}} आ {{others}} रउआ टिप्पणी लाइक कइलसु: \"{{preview}}\"",
+    "badgeTierUp": "बधाई होखे! अब रउरा {{tier}} बानी 🎉",
+    "badgeTierDown": "ध्यान दीं: अब रउरा बैज {{tier}} बा",
+    "badgeTierLost": "ध्यान दीं: अब रउरा लगे बैज नइखे",
     "badgeGenericTier": "बैंगन, बैंगन,",
     "postRemoved": "रउआ पोस्ट हटा दिहल गइल",
     "newNotification": "नया सूचना",
@@ -2384,6 +2384,11 @@
     "errorUnsupported": "हम उस लिंक से आयात नहीं कर सकते। इनमें से एक का प्रयास करें: {{sources}}",
     "errorNeedRights": "कृपया पुष्टि करें कि आपके पास इस सामग्री के अधिकार हैं",
     "errorClipboard": "क्लिपबोर्ड को नहीं पढ़ सके — इसके बजाय मैन्युअल रूप से पेस्ट करें",
-    "errorQueueFailed": "उस आयात को कतारबद्ध नहीं कर सके"
+    "errorQueueFailed": "उस आयात को कतारबद्ध नहीं कर सके",
+    "publishAs": "के रूप में छापें",
+    "kindVideo": "वीडियो समायोजित करें",
+    "kindAudio": "ऑडियो समायोजित करें",
+    "kindImage": "फोटो खींचल गइल",
+    "tileSourceKind": "(= डिफ़ॉल्ट आउर = delete अनुमति बा, हालांकि, हालाँकि ।"
   }
 }

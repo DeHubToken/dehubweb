@@ -2448,6 +2448,11 @@
     "errorUnsupported": "E kore e taea te kawe mai i tērā hononga. Ngana tētahi o: {{sources}}",
     "errorNeedRights": "Tēnā, whakaritea koe he mana tō ā koe i tēnei ihirangi",
     "errorClipboard": "E kore i taea te pānui i te papatopenga — whakapiri a ringa noa atu",
-    "errorQueueFailed": "E kore i taea te whakatūturu i tērā kawe mai"
+    "errorQueueFailed": "E kore i taea te whakatūturu i tērā kawe mai",
+    "publishAs": "Te whakaputa i te mea",
+    "kindVideo": "ataata",
+    "kindAudio": "Ororongo",
+    "kindImage": "Whakaahua",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

@@ -4530,6 +4530,11 @@
     "errorUnsupported": "ہم اس لنک سے درآمد نہیں کر سکتے۔ ان میں سے کوئی ایک کوشش کریں: {{sources}}",
     "errorNeedRights": "براہ کرم تصدیق کریں کہ آپ کے پاس اس مواد کے حقوق ہیں",
     "errorClipboard": "کلپ بورڈ پڑھ نہیں سکے — بجائے اس کے دستی طور پر پیسٹ کریں",
-    "errorQueueFailed": "اس درآمد کو قطار میں نہیں ڈال سکے"
+    "errorQueueFailed": "اس درآمد کو قطار میں نہیں ڈال سکے",
+    "publishAs": "شائع کریں بطور",
+    "kindVideo": "ویڈیو",
+    "kindAudio": "آڈیو",
+    "kindImage": "تصاویر",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

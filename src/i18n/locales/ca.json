@@ -4699,6 +4699,11 @@
     "errorUnsupported": "No podem importar d'aquell enllaç. Prova un de: {{sources}}",
     "errorNeedRights": "Si us plau, confirma que tens drets sobre aquest contingut",
     "errorClipboard": "No s'ha pogut llegir el porta-retalls — enganxa manualment en lloc d'això",
-    "errorQueueFailed": "No s'ha pogut posar en cua aquella importació"
+    "errorQueueFailed": "No s'ha pogut posar en cua aquella importació",
+    "publishAs": "Publica com a",
+    "kindVideo": "Vídeo",
+    "kindAudio": "Àudio",
+    "kindImage": "Imatges",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

@@ -2484,6 +2484,11 @@
     "errorUnsupported": "Asinakukuthola kusixhumanisi esisho. Zama enye yalezi: {{sources}}",
     "errorNeedRights": "Sicela uqinisekise ukuthi unelungelo lale nokuqukela",
     "errorClipboard": "Akukwazanga ukufunda ibhodi yokukhokha — namathisela ngesandla kunalokho",
-    "errorQueueFailed": "Akukwazanga ukukulindela lokho kuphakamisa"
+    "errorQueueFailed": "Akukwazanga ukukulindela lokho kuphakamisa",
+    "publishAs": "Shicilela ngokuthi",
+    "kindVideo": "I_vidiyo",
+    "kindAudio": "Okwemisindo",
+    "kindImage": "izithombe",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

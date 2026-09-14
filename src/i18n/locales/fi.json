@@ -4700,6 +4700,11 @@
     "errorUnsupported": "Emme voi tuoda tästä linkistä. Kokeile yhtä näistä: {{sources}}",
     "errorNeedRights": "Vahvista, että sinulla on oikeudet tähän sisältöön",
     "errorClipboard": "Leikepöydän lukeminen epäonnistui — liitä manuaalisesti sen sijaan",
-    "errorQueueFailed": "Tuontia ei voitu lisätä jonoon"
+    "errorQueueFailed": "Tuontia ei voitu lisätä jonoon",
+    "publishAs": "Julkaise nimellä",
+    "kindVideo": "Video",
+    "kindAudio": "Ääni",
+    "kindImage": "Kuvat",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

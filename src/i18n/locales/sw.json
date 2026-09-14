@@ -4757,6 +4757,11 @@
     "errorUnsupported": "Hatuwezi kuingiza kutoka kiungo hicho. Jaribu mojawapo ya: {{sources}}",
     "errorNeedRights": "Tafadhali thibitisha kuwa una haki za maudhui haya",
     "errorClipboard": "Haiwezi kusoma clipboard — bandika kwa mikono badala yake",
-    "errorQueueFailed": "Haiwezi kuweka foleni kuingiza hicho"
+    "errorQueueFailed": "Haiwezi kuweka foleni kuingiza hicho",
+    "publishAs": "Chapisha kama",
+    "kindVideo": "Video",
+    "kindAudio": "Sauti",
+    "kindImage": "Taswira",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

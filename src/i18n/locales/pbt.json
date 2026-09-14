@@ -874,9 +874,6 @@
     "loginDescription": "د خپلو خوندي شویو بوکمارکونو لیدو او اداره لپاره ننوتل وکړئ."
   },
   "notifications": {
-      "badgeTierUp": "مبارک شه! اوس تاسو {{tier}} یاست 🎉",
-      "badgeTierDown": "پاملرنه: ستاسو نښان اوس {{tier}} دی",
-      "badgeTierLost": "پاملرنه: تاسو نور نښان نه لرئ",
     "title": "خبرتیاوې",
     "markAllRead": "ټول لوستل شوي نښه کړئ",
     "settings": "د خبرتیا تنظیمات",
@@ -929,6 +926,9 @@
     "likedCommentPreview": "{{name}} ستاسو نظر خوښ کړ: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} او {{others}} ستاسو نظر خوښ کړ",
     "andOthersLikedCommentPreview": "{{first}} او {{others}} ستاسو نظر خوښ کړ: \"{{preview}}\"",
+    "badgeTierUp": "مبارک شه! اوس تاسو {{tier}} یاست 🎉",
+    "badgeTierDown": "پاملرنه: ستاسو نښان اوس {{tier}} دی",
+    "badgeTierLost": "پاملرنه: تاسو نور نښان نه لرئ",
     "badgeGenericTier": "د ټیګونو ارشیف:",
     "postRemoved": "ستاسو پوسټ لرې شو",
     "newNotification": "نوې خبرتیا",
@@ -2381,6 +2381,11 @@
     "errorUnsupported": "موږ د دې لینک څخه درواړ نشو کولی. یو له دې څخه کوشش کړئ: {{sources}}",
     "errorNeedRights": "براہ کرم تصدیق کړئ چې تاسو د دې مواد حقوق لرئ",
     "errorClipboard": "کلپ بورډ نشو لوستلی - په دستي ډول پیسټ کړئ",
-    "errorQueueFailed": "دا درواړول په لیست کې نشو کولی"
+    "errorQueueFailed": "دا درواړول په لیست کې نشو کولی",
+    "publishAs": "خپور شوی لکه څنګه چې",
+    "kindVideo": "ویدیوګانې",
+    "kindAudio": "ویډیوګانې",
+    "kindImage": "په انځورونو کې",
+    "tileSourceKind": "په نه په"
   }
 }

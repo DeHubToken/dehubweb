@@ -2485,6 +2485,11 @@
     "errorUnsupported": "Mana atiyku importachiy chay linkta manta. Prueba huk: {{sources}}",
     "errorNeedRights": "Allinchu rikuchiy kaypi derechoyoq kachkanki chay contenidoman",
     "errorClipboard": "Mana atiyku leyechiy clipboardta — pegachiy kamayoc",
-    "errorQueueFailed": "Mana atiyku colarichiy chay importasqa"
+    "errorQueueFailed": "Mana atiyku colarichiy chay importasqa",
+    "publishAs": "Publicar como",
+    "kindVideo": "Video",
+    "kindAudio": "Audio nisqa",
+    "kindImage": "Siqikuna",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

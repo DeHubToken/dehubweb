@@ -891,9 +891,6 @@
     "loginDescription": "සුරකින ලද පිටු සලකුණු බලන්න හා කළමනාකරණය කිරීමට පිවිසෙන්න."
   },
   "notifications": {
-      "badgeTierUp": "සුබ පැතුම්! දැන් ඔබ {{tier}} කෙනෙක් 🎉",
-      "badgeTierDown": "සැලකිල්ලට: දැන් ඔබේ ලාංඡනය {{tier}}",
-      "badgeTierLost": "සැලකිල්ලට: ඔබට තවදුරටත් ලාංඡනයක් නැත",
     "title": "දැනුම්දීම්",
     "markAllRead": "සියල්ල කියවූ ලෙස සලකුණු කරන්න",
     "settings": "දැනුම්දීම් සැකසුම්",
@@ -946,6 +943,9 @@
     "likedCommentPreview": "{{name}} ඔබේ අදහසට කැමති විය: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} සහ {{others}} ඔබේ අදහසට කැමති විය",
     "andOthersLikedCommentPreview": "{{first}} සහ {{others}} ඔබේ අදහසට කැමති විය: \"{{preview}}\"",
+    "badgeTierUp": "සුබ පැතුම්! දැන් ඔබ {{tier}} කෙනෙක් 🎉",
+    "badgeTierDown": "සැලකිල්ලට: දැන් ඔබේ ලාංඡනය {{tier}}",
+    "badgeTierLost": "සැලකිල්ලට: ඔබට තවදුරටත් ලාංඡනයක් නැත",
     "badgeTakenBack": "{{name}} ඔබට ඔවුන්ගේ {{tier}} බැජ් එක ණයට දීම නැවැත්වීය",
     "badgeHandedBack": "{{name}} {{tier}} badge ඔබ ඔවුන්ව ණයට දුන්නා",
     "badgeLoanLapsed": "{{name}} ඔබට තවදුරටත් ඔවුන්ගේ {{tier}} බැජ් එක ණයට දිය නොහැක",
@@ -4292,26 +4292,6 @@
     "listens_one": "{{count}} ඇහුම්කන් දෙන්න",
     "listens_other": "{{count}} ඇහුම්කන් දීම"
   },
-  "spaces": {
-    "title": "අවකාශ",
-    "live": "සජීවී",
-    "upcoming": "ඉදිරි",
-    "past": "පසුගිය",
-    "create": "අවකාශයක් නිර්මාණය",
-    "join": "එකතු වන්න",
-    "listeners": "සවන්දෙන්නන්",
-    "speakers": "කථිකයන්",
-    "host": "සත්කාරක",
-    "noSpaces": "තවම අවකාශ නැත",
-    "loginDescription": "ශ්‍රව්‍ය අවකාශ නිර්මාණය කිරීමට සහ එකතු වීමට පිවිසෙන්න."
-  },
-  "blog": {
-    "title": "බ්ලොග්",
-    "readMore": "තවත් කියවන්න",
-    "backToBlog": "බ්ලොග් වෙත ආපසු",
-    "sharePost": "පළකිරීම බෙදා ගන්න",
-    "relatedPosts": "සම්බන්ධ පළකිරීම්"
-  },
   "converter": {
     "seoTitle": "Converter — DeHub වලට වීඩියෝ ආයාත කරන්න",
     "seoDescription": "YouTube, TikTok, Instagram, X සහ තවත් බොහෝ ස්ථාන වලින් සබැඳි අලවා DeHub පෝස්ටයක් ලෙස ප්‍රකාශ කරන්න.",
@@ -4351,6 +4331,31 @@
     "errorUnsupported": "අපට එම සබැඳිය වෙතින් ආනයනය කළ නොහැක. මෙයින් එකක් උත්සාහ කරන්න: {{sources}}",
     "errorNeedRights": "කරුණාකර ඔබ මෙම අන්තර්ගතයට අයිතිවාසිකම් ඇති බව තහවුරු කරන්න",
     "errorClipboard": "පසුරු පුවරුව කියවිය නොහැක — ඒ වෙනුවට ස්වයංක්‍රීයව ඇලවන්න",
-    "errorQueueFailed": "එම ආනයනය පෙළගැස්ම කිරීමට නොහැක"
+    "errorQueueFailed": "එම ආනයනය පෙළගැස්ම කිරීමට නොහැක",
+    "publishAs": "ලෙස ප් ‍ රකාශයට පත් කරන්න",
+    "kindVideo": "වීඩියෝව",
+    "kindAudio": "ශබ්ද",
+    "kindImage": "පිංතුර",
+    "tileSourceKind": "{{මූලාශ් ‍ රය}}"
+  },
+  "spaces": {
+    "title": "අවකාශ",
+    "live": "සජීවී",
+    "upcoming": "ඉදිරි",
+    "past": "පසුගිය",
+    "create": "අවකාශයක් නිර්මාණය",
+    "join": "එකතු වන්න",
+    "listeners": "සවන්දෙන්නන්",
+    "speakers": "කථිකයන්",
+    "host": "සත්කාරක",
+    "noSpaces": "තවම අවකාශ නැත",
+    "loginDescription": "ශ්‍රව්‍ය අවකාශ නිර්මාණය කිරීමට සහ එකතු වීමට පිවිසෙන්න."
+  },
+  "blog": {
+    "title": "බ්ලොග්",
+    "readMore": "තවත් කියවන්න",
+    "backToBlog": "බ්ලොග් වෙත ආපසු",
+    "sharePost": "පළකිරීම බෙදා ගන්න",
+    "relatedPosts": "සම්බන්ධ පළකිරීම්"
   }
 }

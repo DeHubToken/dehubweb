@@ -1082,8 +1082,6 @@
   },
   "creators": {},
   "loginModal": {
-    "continueApple": "ดำเนินการต่อด้วย Apple",
-    "continueTelegram": "ดำเนินการต่อด้วย Telegram",
     "unlockBiometricContinue": "ปลดล็อกกระเป๋าตังค์ด้วยลายนิ้วมือหรือใบหน้าของคุณเพื่อดำเนินการต่อ",
     "unlockBiometricSignIn": "ปลดล็อกกระเป๋าตังค์ด้วยลายนิ้วมือหรือใบหน้าเพื่อลงชื่อเข้าใช้",
     "unlockPasswordContinue": "ป้อนรหัสผ่านกระเป๋าเงินของคุณเพื่อดำเนินการต่อ",
@@ -1097,6 +1095,8 @@
     "migrateGoBack": "ย้อนกลับ",
     "migrateContinueAnyway": "สร้างบัญชีใหม่อยู่ดี",
     "addProfileTitle": "เพิ่มโปรไฟล์",
+    "continueApple": "ดำเนินการต่อด้วย Apple",
+    "continueTelegram": "ดำเนินการต่อด้วย Telegram",
     "or": "or",
     "walletConnectedAs": "เชื่อมต่อแล้ว",
     "useDifferentWallet": "ใช้กระเป๋าเงินอื่น"
@@ -3962,16 +3962,6 @@
     "listens_one": "{{count}} ฟัง",
     "listens_other": "{{count}} ฟัง"
   },
-  "glossary": {
-    "title": "อภิธานศัพท์",
-    "description": "คำศัพท์และคำจำกัดความที่ใช้ในระบบ",
-    "badges": {
-      "white": "สีขาว"
-    }
-  },
-  "footer": {
-    "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"
-  },
   "converter": {
     "seoTitle": "Converter — นำเข้าวิดีโอไปยัง DeHub",
     "seoDescription": "วางลิงก์จาก YouTube, TikTok, Instagram, X และอื่นๆ และเผยแพร่เป็นโพสต์ DeHub",
@@ -4013,6 +4003,21 @@
     "errorUnsupported": "เราไม่สามารถนำเข้าจากลิงก์นั้นได้ ลองใช้อย่างใดอย่างหนึ่ง: {{sources}}",
     "errorNeedRights": "โปรดยืนยันว่าคุณมีสิทธิ์ในเนื้อหานี้",
     "errorClipboard": "ไม่สามารถอ่านคลิปบอร์ด — วางด้วยตนเองแทน",
-    "errorQueueFailed": "ไม่สามารถเพิ่มการนำเข้านั้นในคิว"
+    "errorQueueFailed": "ไม่สามารถเพิ่มการนำเข้านั้นในคิว",
+    "publishAs": "เผยแพร่เป็น",
+    "kindVideo": "วิดีโอ",
+    "kindAudio": "เสียง",
+    "kindImage": "รูป",
+    "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "glossary": {
+    "title": "อภิธานศัพท์",
+    "description": "คำศัพท์และคำจำกัดความที่ใช้ในระบบ",
+    "badges": {
+      "white": "สีขาว"
+    }
+  },
+  "footer": {
+    "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"
   }
 }

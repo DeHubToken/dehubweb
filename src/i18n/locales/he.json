@@ -4510,6 +4510,11 @@
     "errorUnsupported": "אנחנו לא יכולים לייבא מהקישור הזה. נסה אחד מ: {{sources}}",
     "errorNeedRights": "אנא אשר שיש לך זכויות לתוכן זה",
     "errorClipboard": "לא הצלחנו לקרוא מהלוח — הדבק ידנית במקום זאת",
-    "errorQueueFailed": "לא הצלחנו לשים בתור את הייבוא הזה"
+    "errorQueueFailed": "לא הצלחנו לשים בתור את הייבוא הזה",
+    "publishAs": "פרסם בתור",
+    "kindVideo": "ווידאו",
+    "kindAudio": "אודיו",
+    "kindImage": "תמונות",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

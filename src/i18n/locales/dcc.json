@@ -761,9 +761,6 @@
     "loginDescription": "اپنے محفوظ بُک مارک دیکھنے اور مینیج کرنے کے لئے لاگ ان کرو۔"
   },
   "notifications": {
-      "badgeTierUp": "مبارک ہو! اب تم {{tier}} ہو 🎉",
-      "badgeTierDown": "دھیان دو: اب تمہارا بیج {{tier}} ہے",
-      "badgeTierLost": "دھیان دو: اب تمہارے پاس بیج نہیں",
     "title": "اطلاع",
     "markAllRead": "سب پڑھا نشان لگاؤ",
     "settings": "اطلاع سیٹنگز",
@@ -816,6 +813,9 @@
     "likedCommentPreview": "{{name}} نے تمہارا تبصرہ لائک کیا: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} اور {{others}} نے تمہارا تبصرہ لائک کیا",
     "andOthersLikedCommentPreview": "{{first}} اور {{others}} نے تمہارا تبصرہ لائک کیا: \"{{preview}}\"",
+    "badgeTierUp": "مبارک ہو! اب تم {{tier}} ہو 🎉",
+    "badgeTierDown": "دھیان دو: اب تمہارا بیج {{tier}} ہے",
+    "badgeTierLost": "دھیان دو: اب تمہارے پاس بیج نہیں",
     "badgeGenericTier": "बैज",
     "postRemoved": "تمہاری پوسٹ ہٹا دی گئی",
     "newNotification": "نئی اطلاع",
@@ -2011,5 +2011,12 @@
     "followAccepted": "{{name}} ने आपके फॉलो अनुरोध को स्वीकार किया",
     "signalFlare": "{{name}} ने एक सिग्नल फ्लेयर भेजा",
     "newMessage": "{{name}} ने आपको एक संदेश भेजा"
+  },
+  "converter": {
+    "kindAudio": "آڈیو",
+    "publishAs": "Publish as",
+    "kindVideo": "Video",
+    "kindImage": "Pictures",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

@@ -2437,32 +2437,6 @@
     "pause": "Gidduutti dhaabuu",
     "listens_other": "{{count}} dhaggeeffata"
   },
-  "spaces": {
-    "title": "Bakkeewwan",
-    "live": "Kallattii",
-    "upcoming": "Dhufaa jiru",
-    "past": "Darbe",
-    "create": "Bakkee Uumi",
-    "join": "Makamsi",
-    "listeners": "Dhaggeeffattoota",
-    "speakers": "Dubbattoota",
-    "host": "Keessummeessaa",
-    "endSpace": "Bakkee Dhaabi",
-    "raiseHand": "Harka Ol Kaasi",
-    "lowerHand": "Harka Gadi Buusi",
-    "mute": "Callisuun",
-    "unmute": "Sagalee Bansi",
-    "leave": "Bakkee Gadi Dhiisi",
-    "noSpaces": "Ammallee bakkeewwan hin jiran",
-    "loginDescription": "Bakkee sagalee uumuuf fi makamsuuf seeni."
-  },
-  "blog": {
-    "title": "Biloogii",
-    "readMore": "Dabalataa dubbisi",
-    "backToBlog": "Biloogiitti deebi'i",
-    "sharePost": "Barreeffama qoodi",
-    "relatedPosts": "Barreeffamoota Walqabatan"
-  },
   "converter": {
     "seoTitle": "Converter — video gara DeHub galchuu",
     "seoDescription": "YouTube, TikTok, Instagram, X fi kkaayyoo biroo irraa linki paste godhaa, akkasumas akka DeHub post ibsi.",
@@ -2503,6 +2477,37 @@
     "errorUnsupported": "Kami itti galchuu hin dandeenyu. Tokko kana galmaa: {{sources}}",
     "errorNeedRights": "Mirga qabeessa kana qabaachuu kee mirkaneessi",
     "errorClipboard": "Clipboard dubbisuu hin dandeenye — harkaa maxxansi",
-    "errorQueueFailed": "Galchuu sana jecha hin dandeenye"
+    "errorQueueFailed": "Galchuu sana jecha hin dandeenye",
+    "publishAs": "Akka maxxansaa",
+    "kindVideo": "Viidiyoo",
+    "kindAudio": "Sagalee",
+    "kindImage": "Suuraalee",
+    "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "spaces": {
+    "title": "Bakkeewwan",
+    "live": "Kallattii",
+    "upcoming": "Dhufaa jiru",
+    "past": "Darbe",
+    "create": "Bakkee Uumi",
+    "join": "Makamsi",
+    "listeners": "Dhaggeeffattoota",
+    "speakers": "Dubbattoota",
+    "host": "Keessummeessaa",
+    "endSpace": "Bakkee Dhaabi",
+    "raiseHand": "Harka Ol Kaasi",
+    "lowerHand": "Harka Gadi Buusi",
+    "mute": "Callisuun",
+    "unmute": "Sagalee Bansi",
+    "leave": "Bakkee Gadi Dhiisi",
+    "noSpaces": "Ammallee bakkeewwan hin jiran",
+    "loginDescription": "Bakkee sagalee uumuuf fi makamsuuf seeni."
+  },
+  "blog": {
+    "title": "Biloogii",
+    "readMore": "Dabalataa dubbisi",
+    "backToBlog": "Biloogiitti deebi'i",
+    "sharePost": "Barreeffama qoodi",
+    "relatedPosts": "Barreeffamoota Walqabatan"
   }
 }

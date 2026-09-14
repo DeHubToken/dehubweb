@@ -2446,6 +2446,11 @@
     "errorUnsupported": "Maanu daatin karno link-kaan. Isku daab mid ka mid ah: {{sources}}",
     "errorNeedRights": "Fadlan xaqiiji inaad haweesho xuquuqda qalabka",
     "errorClipboard": "Maanu akhriin karain clipboard-ka — paste si toos ah",
-    "errorQueueFailed": "Maanu queue-gayn karain daatitaankan"
+    "errorQueueFailed": "Maanu queue-gayn karain daatitaankan",
+    "publishAs": "Daabac sida",
+    "kindVideo": "Waso",
+    "kindAudio": "Cod",
+    "kindImage": "Sawiro",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

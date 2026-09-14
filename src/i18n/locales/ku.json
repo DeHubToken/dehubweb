@@ -773,9 +773,6 @@
     "loginDescription": "Ji bo dîtin û birêvebirina nîşankirinên xwe yên tomarkirî têkevin."
   },
   "notifications": {
-      "badgeTierUp": "Pîroz be! Tu niha {{tier}} î 🎉",
-      "badgeTierDown": "Bal bikişîne: nîşana te niha {{tier}} e",
-      "badgeTierLost": "Bal bikişîne: êdî nîşana te tune",
     "title": "Agahdarî",
     "markAllRead": "Hemûyan wek xwendî nîşan bike",
     "settings": "Mîhengên Agahdariyê",
@@ -828,6 +825,9 @@
     "likedCommentPreview": "{{name}} şîroveya te hez kir: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} û {{others}} şîroveya te hez kirin",
     "andOthersLikedCommentPreview": "{{first}} û {{others}} şîroveya te hez kirin: \"{{preview}}\"",
+    "badgeTierUp": "Pîroz be! Tu niha {{tier}} î 🎉",
+    "badgeTierDown": "Bal bikişîne: nîşana te niha {{tier}} e",
+    "badgeTierLost": "Bal bikişîne: êdî nîşana te tune",
     "badgeGenericTier": "نیشانەیەکە دەدرێ لە بەرۆک - باج",
     "postRemoved": "Şandiya te hate rakirin",
     "newNotification": "Agahdariya nû",
@@ -2200,6 +2200,11 @@
     "errorUnsupported": "ئێمە ناتوانین لە ئەم لینکە هاتبێت. یەکێک لە ئەمانە تاقی بکە: {{sources}}",
     "errorNeedRights": "تکایە تێبگەیت کە مافی ئەم ناوەڕۆکە هەیت",
     "errorClipboard": "نەتوانی کلیپ بۆردی بخوێنم — بە دەستی پێست بکە",
-    "errorQueueFailed": "نەتوانی ئەو هاتنە لە ڕیزدا بکەم"
+    "errorQueueFailed": "نەتوانی ئەو هاتنە لە ڕیزدا بکەم",
+    "publishAs": "Weşandin wek",
+    "kindVideo": "Dîmen",
+    "kindAudio": "Deng",
+    "kindImage": "Wêne",
+    "tileSourceKind": "{{çavkanî}} · {{cure}}"
   }
 }

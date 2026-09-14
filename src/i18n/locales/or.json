@@ -884,9 +884,6 @@
     "loginDescription": "ସଞ୍ଚୟ ବୁକମାର୍କ ଦେଖିବାକୁ ଏବଂ ପରିଚାଳନା କରିବାକୁ ଲଗ ଇନ କରନ୍ତୁ।"
   },
   "notifications": {
-      "badgeTierUp": "ଅଭିନନ୍ଦନ! ଏବେ ଆପଣ {{tier}} 🎉",
-      "badgeTierDown": "ଧ୍ୟାନ ଦିଅନ୍ତୁ: ଏବେ ଆପଣଙ୍କ ବ୍ୟାଜ୍ {{tier}}",
-      "badgeTierLost": "ଧ୍ୟାନ ଦିଅନ୍ତୁ: ଆପଣଙ୍କର ଆଉ ବ୍ୟାଜ୍ ନାହିଁ",
     "title": "ସୂଚନା",
     "markAllRead": "ସବୁ ପଢ଼ା ଭାବେ ଚିହ୍ନିତ କରନ୍ତୁ",
     "settings": "ସୂଚନା ସେଟିଂ",
@@ -939,6 +936,9 @@
     "likedCommentPreview": "{{name}} ଆପଣଙ୍କ ମନ୍ତବ୍ୟ ଲାଇକ କଲେ: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} ଏବଂ {{others}} ଆପଣଙ୍କ ମନ୍ତବ୍ୟ ଲାଇକ କଲେ",
     "andOthersLikedCommentPreview": "{{first}} ଏବଂ {{others}} ଆପଣଙ୍କ ମନ୍ତବ୍ୟ ଲାଇକ କଲେ: \"{{preview}}\"",
+    "badgeTierUp": "ଅଭିନନ୍ଦନ! ଏବେ ଆପଣ {{tier}} 🎉",
+    "badgeTierDown": "ଧ୍ୟାନ ଦିଅନ୍ତୁ: ଏବେ ଆପଣଙ୍କ ବ୍ୟାଜ୍ {{tier}}",
+    "badgeTierLost": "ଧ୍ୟାନ ଦିଅନ୍ତୁ: ଆପଣଙ୍କର ଆଉ ବ୍ୟାଜ୍ ନାହିଁ",
     "badgeGenericTier": "ବ୍ୟାଜ",
     "postRemoved": "ଆପଣଙ୍କ ପୋଷ୍ଟ ହଟାଗଲା",
     "newNotification": "ନୂଆ ସୂଚନା",
@@ -2404,6 +2404,11 @@
     "errorUnsupported": "ଆମେ ସେହି ଲିଙ୍କ ରୁ ଆମଦାନୀ କରିପାରିବୁ ନାହିଁ। ଏଗୁଡିକ ମଧ୍ୟରୁ ଗୋଟିଏ ଚେଷ୍ଟା କରନ୍ତୁ: {{sources}}",
     "errorNeedRights": "ଦୟାକରି ନିଶ୍ଚିତ କରନ୍ତୁ ଯେ ଆପଣଙ୍କ ଏହି ବିଷୟବସ୍ତୁର ଅଧିକାର ଅଛି",
     "errorClipboard": "କ୍ଲିପବୋର୍ଡ ପଢିପାରିଲା ନାହିଁ — ଏହା ବଦଳରେ ମାନୁଆଲ ଭାବେ ଯୋଡନ୍ତୁ",
-    "errorQueueFailed": "ସେହି ଆମଦାନୀ ଧାଡିରେ ରଖିପାରିଲା ନାହିଁ"
+    "errorQueueFailed": "ସେହି ଆମଦାନୀ ଧାଡିରେ ରଖିପାରିଲା ନାହିଁ",
+    "publishAs": "ଏହି ପରି ପ୍ରକାଶ କରନ୍ତୁ",
+    "kindVideo": "ଭିଡ଼ିଓ",
+    "kindAudio": "ଧ୍ୱନି",
+    "kindImage": "ଛବିଗୁଡ଼ିକ",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

@@ -878,9 +878,6 @@
     "loginDescription": "Sɔgɔma kɛ"
   },
   "notifications": {
-      "badgeTierUp": "I ni ce! Sisan i ye {{tier}} ye 🎉",
-      "badgeTierDown": "Kɔlɔsili: i ka taamasyɛn ye {{tier}} ye sisan",
-      "badgeTierLost": "Kɔlɔsili: i tɛ taamasyɛn sɔrɔ tugun",
     "title": "Kɔrɔbɔ",
     "markAllRead": "Kɔrɔbɔ",
     "settings": "Sɔrɔw",
@@ -933,6 +930,9 @@
     "likedCommentPreview": "{{name}} i bɛɛ kɔrɔbɔ: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} ni {{others}} i bɛɛ kɔrɔbɔ",
     "andOthersLikedCommentPreview": "{{first}} ni {{others}} i bɛɛ kɔrɔbɔ: \"{{preview}}\"",
+    "badgeTierUp": "I ni ce! Sisan i ye {{tier}} ye 🎉",
+    "badgeTierDown": "Kɔlɔsili: i ka taamasyɛn ye {{tier}} ye sisan",
+    "badgeTierLost": "Kɔlɔsili: i tɛ taamasyɛn sɔrɔ tugun",
     "badgeHandedBack": "{{name}} returned the {{tier}} badge ye lent them",
     "badgeLoanLapsed": "{{name}} can't add u {{tier}} badge",
     "badgeGenericTier": "fanga be mɔgɔ minw na, olu ka kan",
@@ -2402,6 +2402,11 @@
     "toastFailed": "O kɔrɔ ko, a tun be se ka kɛ ko a tun ye",
     "errorNeedRights": "N'i b'a fɛ ka koo dɔ kɛ min be se k'i bali ka koo dɔ kɛ min be se k'i bali ka koo dɔ",
     "errorClipboard": "Ne tɛ se ka n ka gafew kalan - n' tɛ se ka n ka gafew kalan",
-    "errorQueueFailed": "Ne tɛ se ka o fɔ"
+    "errorQueueFailed": "Ne tɛ se ka o fɔ",
+    "publishAs": "A fɔra yen ko:",
+    "kindVideo": "O video ye min ye",
+    "kindAudio": "Aw ye mɛnni kɛ",
+    "kindImage": "O ye ɲɛyirali ɲuman ye",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

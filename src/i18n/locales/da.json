@@ -4730,6 +4730,11 @@
     "errorUnsupported": "Vi kan ikke importere fra det link. Prøv et af: {{sources}}",
     "errorNeedRights": "Bekræft venligst at du har rettighederne til dette indhold",
     "errorClipboard": "Kunne ikke læse udklipsholderen — indsæt manuelt i stedet",
-    "errorQueueFailed": "Kunne ikke sætte det import i kø"
+    "errorQueueFailed": "Kunne ikke sætte det import i kø",
+    "publishAs": "Offentliggør som",
+    "kindVideo": "Video",
+    "kindAudio": "Lyd",
+    "kindImage": "Billeder",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }
