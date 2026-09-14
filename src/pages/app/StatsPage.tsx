@@ -51,6 +51,7 @@ import {
   type SiteStatsResponse,
   type SiteStatsUnavailable,
 } from '@/hooks/use-site-stats';
+import { FeedbackSection } from '@/components/app/stats/FeedbackSection';
 import { USER_STATS_ENDPOINT, useUserStats } from '@/hooks/use-user-stats';
 import { cn } from '@/lib/utils';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
@@ -1061,6 +1062,11 @@ export default function StatsPage() {
             charts above with it, and there is no reason for it to take the
             community numbers too. */}
         <CommunitySection range={range} />
+
+        {/* Same reasoning as CommunitySection: a Cloudflare outage empties the
+            charts, and there is no reason for it to take the feedback form with
+            them. It is the one thing on this page a reader can act on. */}
+        <FeedbackSection />
 
         {stats && view && (
           <>

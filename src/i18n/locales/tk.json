@@ -1974,6 +1974,24 @@
       "breakdown": "— bular saýlan aralygyňyza görä üýtgeýär, ýöne diňe soňky {{max}} güne çenli, sebäbi gün-günlük bölünişik şonça wagt saklanýar. Uzyn aralyklarda diagramma ýurt sanawyndan has köp wagty öz içine alýar.",
       "startTerm": "Taryh",
       "start": "— “ähli döwür” Cloudflare-yň heniz saklaýan her bir gününi aňladýar, bu bolsa şu gün {{date}} güninden başlap {{days}} gün, ýagny dehub.io Cloudflare-a geçen gün. Ondan öňki ýerli maglumat ýok, we köne günler Cloudflare olary könelişdiren badyna aýrylýar."
+    },
+    "feedback": {
+      "title": "Jikme-jik",
+      "intro": "Birnäçe wagtdan bäri DeHub ulanýarmyň? Diýmek, bize muny nädip edip biljekdigimizi aýt! Ýagşy, erbet ýa-da belli - bularyň bary okalýar. Eger siz biziň size aýtmagymyza begenýän bolsaňyz, onda gapyny basyň we biz ony ýerlerde, videolarda ýa-da web-saytda ulanyp bileris.",
+      "placeholder": "Sözleriň manysy...",
+      "timeUsingPlaceholder": "Sen näçe wagtdan bäri bu ýerde?",
+      "consentPromo": "Men DeHub-a bu pikirleri marketing we reklama materiallarynda aýtmaga rugsat berýärin.",
+      "consentName": "Siz onuň ýanynda meniň ulanýan adymy görkezip bilersiňiz. Bu sözüň manysyna görä, bu sözüň manysy belli däl.",
+      "submit": "Komentary iber",
+      "sending": "Ýolbaşçylyk maslahaty...",
+      "signedOut": "Öz pikirleriňizi goýuň",
+      "thanks": "Sag boluň Eger siz reklama üçin arassalaýan zadyňyzy hiç ýere görünmezden öň, bir adam barlap barýar.",
+      "again": "Gowy pikirler goýuň",
+      "toastSent": "Biz bilen bolan pikirleriňiz üçin minnetdar.",
+      "toastFailed": "Men ony tapyp bilmedim, ýene synanyň",
+      "wallTitle": "Adamlar näme diýýärler",
+      "wallNote": "6. rugsat bilen çap edilýär",
+      "anonymous": "DeHub üýşümi"
     }
   },
   "superpowers": {
