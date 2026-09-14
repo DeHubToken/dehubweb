@@ -25,6 +25,55 @@ const readCookie = (): string | null => {
   } catch { return null; }
 };
 
+const VISITOR_KEY = "dehub-affiliate-visitor";
+
+/**
+ * A stable-but-anonymous id for this browser, so repeat visits collapse into one
+ * unique visitor. Random per browser, never derived from anything about the
+ * person, and never leaves localStorage except as this opaque value.
+ */
+const getVisitorId = (): string => {
+  const existing = window.localStorage.getItem(VISITOR_KEY);
+  if (existing) return existing;
+  const fresh = typeof crypto.randomUUID === "function"
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  window.localStorage.setItem(VISITOR_KEY, fresh);
+  return fresh;
+};
+
+/**
+ * Record one arrival on an affiliate link.
+ *
+ * Called for BOTH link shapes. /r/CODE has always recorded; `?ref=CODE` never
+ * did, so an affiliate sharing a deep link saw zero traffic no matter how it
+ * performed, and could not tell a dead campaign from an unconverted one.
+ *
+ * Uniqueness comes from visitor_id, so the same browser collapses into one
+ * unique visitor across however many arrivals it makes.
+ *
+ * Supabase is imported dynamically on purpose: this module is reached from
+ * App.tsx at boot, and a static import would drag the client onto the boot
+ * path.
+ */
+export const recordAffiliateClick = (code: string) => {
+  try {
+    const visitorId = getVisitorId();
+    let source: string | null = null;
+    if (document.referrer) {
+      try { source = new URL(document.referrer).hostname; } catch { /* malformed referrer */ }
+    }
+    void import("@/integrations/supabase/client").then(({ supabase }) =>
+      // @ts-ignore - RPC introduced by the affiliate customization migration
+      Promise.resolve(supabase.rpc("record_affiliate_page_view" as never, {
+        p_code: code,
+        p_visitor_id: visitorId,
+        p_source: source,
+      } as never)),
+    ).catch(() => { /* analytics must never block a landing */ });
+  } catch { /* analytics must never block a landing */ }
+};
+
 export const getAffiliateRef = (): string | null => readCookie();
 
 export const captureAffiliateRefFromUrl = () => {
@@ -36,6 +85,10 @@ export const captureAffiliateRefFromUrl = () => {
     if (!VALID.test(code)) return;
     if (readCookie()) return; // first-touch wins
     setCookie(code);
+    // Count the arrival only on first touch. /r/CODE records its own view and
+    // then sends people on to /app?ref=CODE, so recording unconditionally here
+    // would bill that one visitor twice.
+    recordAffiliateClick(code);
   } catch { /* ignore */ }
 };
 
