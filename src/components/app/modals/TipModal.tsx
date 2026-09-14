@@ -220,7 +220,10 @@ export function TipModal({
         <div className="flex flex-col gap-4">
           {recipientPrivate ? (
             <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300">
-              This account has private balance mode on, so DeHub cannot send tokens or tips to it.
+              {t(
+                'tip.privateBalanceNotice',
+                'This account has private balance mode on, so DeHub cannot send tokens or tips to it.',
+              )}
             </div>
           ) : null}
           <div>
