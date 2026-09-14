@@ -901,6 +901,7 @@
     "andOthersLikedComment": "{{first}} และ {{others}} มักความเห็นของเจ้า",
     "andOthersLikedCommentPreview": "{{first}} และ {{others}} มักความเห็นของเจ้า: \"{{preview}}\"",
     "badgeLent": "{{name}} ยืมให้เธอเครื่องหมาย {{tier}} ของเขา",
+    "badgeTierUp": "ยินดีนำเด้อ! ตอนนี้เจ้าเป็น {{tier}} แล้ว 🎉",
     "badgeTakenBack": "{{name}} หยุดยืมเครื่องหมาย {{tier}} ของเขาให้เธอแล้ว",
     "badgeHandedBack": "{{name}} คืนเครื่องหมาย {{tier}} ที่เธอยืมให้เขา",
     "badgeLoanLapsed": "{{name}} ไม่สามารถยืมเครื่องหมาย {{tier}} ของเขาให้เธอได้อีกต่อไป",

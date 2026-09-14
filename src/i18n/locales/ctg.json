@@ -955,6 +955,7 @@
     "andOthersLikedComment": "{{first}} আর {{others}} তোঁয়ার মন্তব্য পছন্দ গইজ্জে",
     "andOthersLikedCommentPreview": "{{first}} আর {{others}} তোঁয়ার মন্তব্য পছন্দ গইজ্জে: \"{{preview}}\"",
     "badgeLent": "{{name}} তোমাকে তাদের {{tier}} ব্যাজ ধার দিছে",
+    "badgeTierUp": "মোবারক! অন তুঁই এগগুয়া {{tier}} 🎉",
     "badgeTakenBack": "{{name}} তোমাকে তাদের {{tier}} ব্যাজ ধার দেওয়া বন্ধ করছে",
     "badgeHandedBack": "{{name}} তোমাকে ধার দেওয়া {{tier}} ব্যাজ ফেরত দিছে",
     "badgeLoanLapsed": "{{name}} আর তোমাকে তাদের {{tier}} ব্যাজ ধার দিতে পারবে না",

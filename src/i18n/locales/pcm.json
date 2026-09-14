@@ -815,6 +815,7 @@
     "loginDescription": "Log in make you fit see and manage your saved bookmarks."
   },
   "notifications": {
+      "badgeTierUp": "Congrats! You be {{tier}} now 🎉",
     "title": "Notifications",
     "markAllRead": "Mark all as read",
     "settings": "Notification Settings",

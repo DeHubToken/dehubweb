@@ -877,6 +877,7 @@
     "loginDescription": "Saxlanmış əlfəcinlərinizə baxmaq və idarə etmək üçün daxil olun."
   },
   "notifications": {
+      "badgeTierUp": "Təbriklər! İndi siz {{tier}}-siniz 🎉",
     "title": "Bildirişlər",
     "markAllRead": "Hamısını oxunmuş et",
     "settings": "Bildiriş Parametrləri",

@@ -880,6 +880,7 @@
     "loginDescription": "ዝተዓቀቡ ዕልባታትካ ንምርኣይን ንምምሕዳርን ብዓል።"
   },
   "notifications": {
+      "badgeTierUp": "እንኳዕ ሓጎሰካ! ሕጂ {{tier}} ኢኻ 🎉",
     "title": "ምልክታታት",
     "markAllRead": "ኩሉ ከም ዝተነበ ምልክት ግበር",
     "settings": "ቅጥዕታት ምልክታ",

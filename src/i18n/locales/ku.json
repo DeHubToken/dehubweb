@@ -773,6 +773,7 @@
     "loginDescription": "Ji bo dîtin û birêvebirina nîşankirinên xwe yên tomarkirî têkevin."
   },
   "notifications": {
+      "badgeTierUp": "Pîroz be! Tu niha {{tier}} î 🎉",
     "title": "Agahdarî",
     "markAllRead": "Hemûyan wek xwendî nîşan bike",
     "settings": "Mîhengên Agahdariyê",

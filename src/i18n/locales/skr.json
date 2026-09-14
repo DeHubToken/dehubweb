@@ -892,6 +892,7 @@
     "andOthersLikedComment": "{{first}} تے {{others}} کوں تہاڈا تبصرہ پسند آیا",
     "andOthersLikedCommentPreview": "{{first}} تے {{others}} کوں تہاڈا تبصرہ پسند آیا: \"{{preview}}\"",
     "badgeLent": "{{name}} تہاڈے کو انہاں دا {{tier}} بيج دتا",
+    "badgeTierUp": "مبارک ہووے! ہُݨ تُساں {{tier}} ہو 🎉",
     "badgeTakenBack": "{{name}} تہاڈے کو انہاں دا {{tier}} بيج دينا بند کر ديا",
     "badgeHandedBack": "{{name}} تہاڈے کو دتا ہويا {{tier}} بيج واپس کر ديا",
     "badgeLoanLapsed": "{{name}} اب تہاڈے کو انہاں دا {{tier}} بيج نئيں دے سڳدا",

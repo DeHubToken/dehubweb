@@ -903,6 +903,7 @@
     "loginDescription": "Log in to view and manage your saved bookmarks."
   },
   "notifications": {
+      "badgeTierUp": "Құттықтаймыз! Енді сіз {{tier}} 🎉",
     "title": "Хабарландырулар",
     "markAllRead": "Барлығын оқылды деп белгілеу",
     "settings": "Хабарландыру параметрлері",

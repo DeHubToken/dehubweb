@@ -878,6 +878,7 @@
     "loginDescription": "Sɔgɔma kɛ"
   },
   "notifications": {
+      "badgeTierUp": "I ni ce! Sisan i ye {{tier}} ye 🎉",
     "title": "Kɔrɔbɔ",
     "markAllRead": "Kɔrɔbɔ",
     "settings": "Sɔrɔw",
