@@ -21,6 +21,7 @@ import { clearWagmiStorage } from '@/lib/wagmi';
 import { WagmiScope } from '@/components/app/WagmiScope';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
 import { requestAccountPicker } from '@/lib/wallet-accounts';
+import { fetchTelegramLoginConfig } from '@/lib/telegram-login';
 import { LoginSavedProfiles } from './LoginSavedProfiles';
 import type { LoginStep } from './steps';
 import type { DiscoveredWallet, WalletId } from './LoginWalletsStep';
@@ -54,6 +55,14 @@ const GoogleIcon = () => (
   </svg>
 );
 
+// Telegram's mark, single-path so it tints with whatever colour the row uses
+// rather than carrying its own blue into a monochrome sheet.
+const TelegramIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" className="fill-white">
+    <path d="M21.94 4.6 18.63 20.2c-.25 1.1-.9 1.38-1.83.86l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L6.01 13.67l-4.98-1.56c-1.08-.34-1.1-1.08.23-1.6l19.47-7.5c.9-.33 1.69.2 1.4 1.6z" />
+  </svg>
+);
+
 const AppleIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" className="fill-white">
     <path d="M17.05 12.536c-.03-2.087 1.706-3.087 1.783-3.14-.972-1.42-2.484-1.615-3.025-1.638-1.372-.14-2.635.797-3.318.797-.699 0-1.767-.777-2.9-.757-1.49.023-2.865.866-3.626 2.2-1.548 2.685-.397 6.86.98 9.11.677 1.106 1.487 2.346 2.55 2.3.994-.038 1.386-.647 2.6-.647 1.21 0 1.567.647 2.62.63 1.08-.018 1.766-.976 2.44-2.083.775-1.253 1.09-2.487 1.109-2.552-.024-.01-2.19-.844-2.213-3.22zM14.85 5.865c.564-.68.945-1.63.842-2.573-.812.033-1.798.542-2.383 1.222-.522.6-.98 1.567-.857 2.492.902.07 1.827-.457 2.398-1.14z"/>
@@ -83,7 +92,7 @@ export function LoginModalBody(props: LoginModalBodyProps) {
 function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   const {
     connectWithProvider, connectWithEmail, cancelEmailMagicLink, verifyEmailOtp, connectWithSMS, verifyPhoneOtp,
-    connectWithWallet, completeSmartWalletLogin, setWagmiAuthIntent, isConnecting,
+    connectWithTelegram, connectWithWallet, completeSmartWalletLogin, setWagmiAuthIntent, isConnecting,
     supabaseUserId, disconnect, isAuthenticated, switchToProfile,
   } = useAuth();
   const {
@@ -155,6 +164,16 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   const [phoneCode, setPhoneCode] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
+  /**
+   * Whether the Telegram row belongs on the sheet at all.
+   *
+   * The bot lives in the telegram-auth edge function's env, which deploys on
+   * its own track — so the button asks the function rather than a build-time
+   * flag, and stays off until a bot is actually configured. Starts false and
+   * only ever turns on, so an unconfigured project shows no row at all rather
+   * than one that fails when tapped.
+   */
+  const [telegramEnabled, setTelegramEnabled] = useState(false);
 
   // Clear what was typed once the sheet is shut. The step itself is reset by
   // the shell; this is the other half of the old handleClose, and doing it on
@@ -168,6 +187,17 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
     setPhoneCode('');
     setPhoneError('');
     setActiveProvider(null);
+  }, [open]);
+
+  // Asked once the sheet is actually open, and cached for the tab by
+  // lib/telegram-login — reopening the sheet costs nothing.
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    void fetchTelegramLoginConfig().then(config => {
+      if (!cancelled && config.enabled) setTelegramEnabled(true);
+    });
+    return () => { cancelled = true; };
   }, [open]);
 
   // Once the connector has agreed, the wallet list is done: what happens next
@@ -221,6 +251,19 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
       console.error(`${provider} login failed:`, error);
       setActiveProvider(null);
     }
+  };
+
+  // Resolves `true` once the redirect is under way, and the spinner stays up
+  // over it — the browser is leaving, and a row that snaps back to its idle
+  // label in that gap reads as a click that did nothing.
+  const handleTelegramLogin = async () => {
+    setActiveProvider('telegram');
+    try {
+      if (await connectWithTelegram()) return;
+    } catch (error) {
+      console.error('Telegram login failed:', error);
+    }
+    setActiveProvider(null);
   };
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
@@ -457,6 +500,21 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
           )}
           <span>{t('loginModal.continueApple', 'Continue with Apple')}</span>
         </Button>
+
+        {telegramEnabled && (
+          <Button
+            onClick={handleTelegramLogin}
+            disabled={isConnecting}
+            className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
+          >
+            {activeProvider === 'telegram' ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <TelegramIcon />
+            )}
+            <span>{t('loginModal.continueTelegram', 'Continue with Telegram')}</span>
+          </Button>
+        )}
       </div>
 
       <div className="flex items-center gap-3 py-2">

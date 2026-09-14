@@ -1233,6 +1233,8 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "continueApple": "Continuă cu Apple",
+    "continueTelegram": "Continuă cu Telegram",
     "unlockBiometricContinue": "Deblochează-ți portofelul cu amprenta sau fața pentru a continua.",
     "unlockBiometricSignIn": "Deblochează-ți portofelul cu amprenta digitală sau cu fața pentru a te conecta.",
     "unlockPasswordContinue": "Introdu parola portofelului pentru a continua.",
