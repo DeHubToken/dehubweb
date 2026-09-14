@@ -66,7 +66,12 @@ const DialogContent = React.forwardRef<
         "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
         // Desktop: centered modal
         "sm:inset-auto sm:left-[50%] sm:top-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%]",
-        "sm:max-w-lg sm:rounded-2xl sm:max-h-none",
+        // No sm:max-h-none here. It is the CSS initial value, so it caps
+        // nothing -- its only effect was to out-rank a caller's own
+        // sm:max-h-[...] in the cascade, which left the community manage
+        // sheet 1966px tall on a 748px viewport with its header, tabs and
+        // pending-approval list stranded above the top of the screen.
+        "sm:max-w-lg sm:rounded-2xl",
         "sm:data-[state=closed]:slide-out-to-left-1/2 sm:data-[state=closed]:slide-out-to-top-[48%]",
         "sm:data-[state=open]:slide-in-from-left-1/2 sm:data-[state=open]:slide-in-from-top-[48%]",
         "focus:outline-none focus-visible:outline-none",
