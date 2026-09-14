@@ -886,6 +886,7 @@
     "loginDescription": "Banye iji hụ ma jikwaa akara mpịnye gị echekwara."
   },
   "notifications": {
+      "badgeTierUp": "Ekele! Ugbu a ị bụ {{tier}} 🎉",
     "title": "Ọkwa",
     "markAllRead": "Mee ka niile ka a gụrụ",
     "settings": "Ntọala Ọkwa",

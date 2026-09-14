@@ -873,6 +873,7 @@
     "loginDescription": "रउआ बुकमार्क देखे आ प्रबंधन करे खातिर लॉगिन करीं।"
   },
   "notifications": {
+      "badgeTierUp": "बधाई होखे! अब रउरा {{tier}} बानी 🎉",
     "title": "सूचना",
     "markAllRead": "सभे पढ़ल गइल मानीं",
     "settings": "सूचना सेटिंग",

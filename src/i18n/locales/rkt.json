@@ -903,6 +903,7 @@
     "addBookmark": "বুকমার্ক দাও"
   },
   "notifications": {
+      "badgeTierUp": "শুভেচ্ছা! এলা তুই {{tier}} 🎉",
     "title": "খবর",
     "markAllRead": "সব পড়া মার্ক করো",
     "settings": "খবরের সেটিংস",
