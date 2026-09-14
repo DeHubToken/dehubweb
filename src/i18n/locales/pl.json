@@ -1770,7 +1770,8 @@
     "push_blocked_more": "Więcej szczegółów",
     "not_now": "Nie teraz",
     "image_too_large_tier": "Obraz jest zbyt duży — Twój {{tier}} poziom przechowuje obrazy do {{limit}} MB",
-    "image_too_large_untiered": "Obraz jest zbyt duży — obrazy są przechowywane do {{limit}} MB"
+    "image_too_large_untiered": "Obraz jest zbyt duży — obrazy są przechowywane do {{limit}} MB",
+    "rate_limited": "Limit żądań, zwolnij"
   },
   "staking": {
     "title": "Staking",

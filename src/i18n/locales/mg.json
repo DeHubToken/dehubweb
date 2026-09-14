@@ -1753,7 +1753,8 @@
     "push_blocked_more": "Mba hazava kokoa",
     "not_now": "Tsy izao",
     "image_too_large_tier": "Lehibe loatra ny sary — ny {{tier}} tier mitahiry sary hatramin'ny {{limit}} MB",
-    "image_too_large_untiered": "Lehibe loatra ny sary — voatahiry hatramin'ny {{limit}} MB ny sary"
+    "image_too_large_untiered": "Lehibe loatra ny sary — voatahiry hatramin'ny {{limit}} MB ny sary",
+    "rate_limited": "Voafetra ny hafainganana, mihenà"
   },
   "staking": {
     "title": "Staking",

@@ -1689,7 +1689,8 @@
     "push_blocked_more": "ละเอียดกว่านี้",
     "not_now": "บ่เอาตอนนี้",
     "image_too_large_tier": "รูปภาพใหญ่เกินไป — {{tier}} ระดับของคุณเก็บรูปภาพได้ถึง {{limit}} MB",
-    "image_too_large_untiered": "รูปภาพใหญ่เกินไป — รูปภาพถูกเก็บไว้ได้สูงสุด {{limit}} MB"
+    "image_too_large_untiered": "รูปภาพใหญ่เกินไป — รูปภาพถูกเก็บไว้ได้สูงสุด {{limit}} MB",
+    "rate_limited": "ถูกจำกัดอัตรา ซ้าลงแหน่"
   },
   "staking": {
     "title": "การฝาก",

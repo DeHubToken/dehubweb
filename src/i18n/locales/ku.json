@@ -1586,7 +1586,8 @@
     "push_blocked_title": "ئاگادارکردنەوەکانت پێناگەن",
     "push_blocked_body": "Sîstema te agahdariyên ji bo vê gerokê asteng dike, ji ber vê yekê dema ku DeHub girtî be tiştek nagihîje te. Wan ji bo geroka xwe di mîhengên agahdariyên sîstema xwe de ji nû ve vekin, dûv re agahdariyên DeHub vemirînin û dîsa vekin.",
     "push_blocked_more": "زیاتر وردەکاری",
-    "not_now": "Niha na"
+    "not_now": "Niha na",
+    "rate_limited": "سنووری داواکاری، هێواشتر"
   },
   "staking": {
     "title": "Staking",

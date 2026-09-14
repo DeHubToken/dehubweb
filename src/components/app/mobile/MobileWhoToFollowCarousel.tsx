@@ -147,9 +147,9 @@ export function MobileWhoToFollowCarousel() {
     markFollowed(user.address);
     toggleFollowFor(queryClient, user.address, false, {
       name: getDisplayName(user),
-      onError: (error) => {
+      onError: (error, info) => {
         unmarkFollowed(user.address);
-        handleApiError(error, 'Failed to follow user');
+        if (!info.handled) handleApiError(error, 'Failed to follow user');
       },
     });
   };

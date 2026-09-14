@@ -1748,7 +1748,8 @@
     "push_blocked_more": "ព័ត៌មានលម្អិតបន្ថែម",
     "not_now": "មិនទាន់ទេ",
     "image_too_large_tier": "រូបភាពធំពេក — របស់អ្នក {{tier}} ថ្នាក់ផ្ទុករូបភាពរហូតដល់ {{limit}} MB",
-    "image_too_large_untiered": "រូបភាពធំពេក — រូបភាពត្រូវបានរក្សាទុករហូតដល់ {{limit}} MB"
+    "image_too_large_untiered": "រូបភាពធំពេក — រូបភាពត្រូវបានរក្សាទុករហូតដល់ {{limit}} MB",
+    "rate_limited": "កំណត់អត្រា សូមបន្ថយល្បឿន"
   },
   "staking": {
     "title": "ការដាក់ប្រាក់",

@@ -1698,7 +1698,8 @@
     "push_blocked_more": "Více podrobností",
     "not_now": "Teď ne",
     "image_too_large_tier": "Obrázek je příliš velký — vaše úroveň {{tier}} ukládá obrázky do {{limit}} MB",
-    "image_too_large_untiered": "Obrázek je příliš velký — obrázky jsou uloženy do {{limit}} MB"
+    "image_too_large_untiered": "Obrázek je příliš velký — obrázky jsou uloženy do {{limit}} MB",
+    "rate_limited": "Limit požadavků, zpomalte"
   },
   "staking": {
     "title": "Staking",
