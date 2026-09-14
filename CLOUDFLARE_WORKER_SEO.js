@@ -3645,6 +3645,11 @@ async function handleRequest(request, env) {
     '/app/radio': '/music',
     '/mcp': '/connect',
     '/app/mcp': '/connect',
+    // The sidebar calls the board 'Requests'; the SPA redirects both to the
+    // board (dehubweb#1427) and 'requests' is a reserved username, but without
+    // this crawlers still read it as a username and served Not Found.
+    '/requests': '/features',
+    '/app/requests': '/features',
   };
   const spaTarget = SPA_REDIRECTS[trimmedPath.toLowerCase()];
   if (spaTarget) return redirect301(`${APP_URL}${spaTarget}`);
