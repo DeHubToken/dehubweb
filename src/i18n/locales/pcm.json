@@ -45,7 +45,8 @@
     "pricing": "Price",
     "creators": "Creators",
     "getTheApp": "Get di App",
-    "connectAi": "Connect AI"
+    "connectAi": "Connect AI",
+    "converter": "Converter"
   },
   "feed": {
     "viewProfile": "View {{name}}'s profile",
@@ -2138,5 +2139,30 @@
     "pause": "Pause",
     "listens_one": "{{count}} listen",
     "listens_other": "{{count}} listens"
+  },
+  "converter": {
+    "title": "Import a video",
+    "migrateAll": "Migrate all",
+    "paste": "Paste",
+    "import": "Import",
+    "addToQueue": "Add to queue",
+    "signInToImport": "Sign in to import",
+    "queueHeading": "Your imports",
+    "queueIdle": "Nothing running.",
+    "untitled": "Video",
+    "thatSource": "that platform",
+    "dismiss": "Dismiss",
+    "viewPost": "View post",
+    "tryAgain": "Try again",
+    "statusImported": "Imported",
+    "statusAlreadyHere": "Already here",
+    "statusFailed": "Failed",
+    "statusRateLimited": "Rate limited",
+    "statusProcessing": "Processing",
+    "statusPublishing": "Publishing",
+    "statusDownloading": "Downloading",
+    "statusDownloadingPercent": "Downloading {{percent}}%",
+    "statusQueued": "Queued",
+    "detailWaiting": "Waiting its turn."
   }
 }

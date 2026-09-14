@@ -45,7 +45,8 @@
     "pricing": "Price dem",
     "creators": "Creator dem",
     "getTheApp": "Get di App",
-    "connectAi": "Connect AI"
+    "connectAi": "Connect AI",
+    "converter": "Converter"
   },
   "feed": {
     "viewProfile": "Luk {{name}} profil",
@@ -2212,5 +2213,39 @@
     "pause": "Pause",
     "listens_one": "{{count}} listen",
     "listens_other": "{{count}} listens"
+  },
+  "converter": {
+    "title": "Import a video",
+    "migrateAll": "Migrate all",
+    "paste": "Paste",
+    "import": "Import",
+    "addToQueue": "Add to queue",
+    "signInToImport": "Sign in to import",
+    "queueHeading": "Your imports",
+    "queueIdle": "Nothing running.",
+    "untitled": "Video",
+    "thatSource": "that platform",
+    "dismiss": "Dismiss",
+    "viewPost": "View post",
+    "tryAgain": "Try again",
+    "statusImported": "Imported",
+    "statusAlreadyHere": "Already here",
+    "statusFailed": "Failed",
+    "statusRateLimited": "Rate limited",
+    "statusProcessing": "Processing",
+    "statusPublishing": "Publishing",
+    "statusDownloading": "Downloading",
+    "statusDownloadingPercent": "Downloading {{percent}}%",
+    "statusQueued": "Queued",
+    "detailDuplicate": "Dat video don already stay for your profile.",
+    "detailWaiting": "Waiting its turn.",
+    "toastQueued": "Queued — e go publish to your profile when e finish.",
+    "toastRateLimited": "Rate limited, your upload don queue and go process quick quick, you no need try dat same link again but you free queue more if you want.",
+    "toastDuplicate": "Dat video don already import.",
+    "toastFailed": "Dat import fail.",
+    "errorUnsupported": "We no fit import from dat link. Try one of: {{sources}}",
+    "errorNeedRights": "Please confirm say you get right for dis content.",
+    "errorClipboard": "No fit read di clipboard — paste am by hand instead.",
+    "errorQueueFailed": "No fit queue dat import."
   }
 }

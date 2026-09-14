@@ -28,9 +28,19 @@ export interface YoutubeImportStatusResponse {
   state: 'waiting' | 'active' | 'completed' | 'failed' | 'delayed' | 'paused';
   /** The link that was pasted. */
   url?: string;
-  /** Present whenever the URL held one — enough on its own to draw the
+  /** Which of the supported sources it came from — `youtube`, `tiktok`, … */
+  sourceId?: string;
+  /** How that source names itself, for a sentence. The server is the one
+   * place this list lives, so the tile renders what it is told rather than
+   * looking the id up in a client-side table. */
+  sourceLabel?: string;
+  /** YouTube only, and null everywhere else — enough on its own to draw the
    * thumbnail, since `i.ytimg.com/vi/<id>/mqdefault.jpg` needs no API call. */
   youtubeVideoId?: string | null;
+  /** The source's own still, for the twenty sources with no thumbnail
+   * derivable from the URL. Arrives with the metadata, part-way through, so a
+   * tile is blank until the download starts. */
+  thumbnailUrl?: string;
   /** Arrives once yt-dlp has read the metadata, part-way through. */
   title?: string;
   phase?: 'queued' | 'downloading' | 'processing' | 'publishing';

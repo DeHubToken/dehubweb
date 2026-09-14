@@ -45,7 +45,8 @@
     "pricing": "Bảng giá",
     "creators": "Nhà sáng tạo",
     "getTheApp": "Tải ứng dụng",
-    "connectAi": "Kết nối AI"
+    "connectAi": "Kết nối AI",
+    "converter": "Bộ chuyển đổi"
   },
   "feed": {
     "viewProfile": "Xem hồ sơ của {{name}}",
@@ -4532,5 +4533,48 @@
         }
       ]
     }
+  },
+  "converter": {
+    "seoTitle": "Converter — nhập video vào DeHub",
+    "seoDescription": "Dán một liên kết từ YouTube, TikTok, Instagram, X và nhiều nền tảng khác, và xuất bản nó dưới dạng bài đăng DeHub.",
+    "title": "Nhập video",
+    "subtitle": "Dán liên kết đến video bạn đã sở hữu và chúng tôi sẽ xuất bản nó dưới dạng bài đăng trên hồ sơ của bạn. Xếp hàng bao nhiêu tùy thích — chúng sẽ chạy lần lượt trong nền.",
+    "migrateAll": "Di chuyển tất cả",
+    "placeholder": "Dán liên kết video",
+    "paste": "Dán",
+    "ownership": "Tôi sở hữu nội dung này hoặc có sự cho phép của chủ sở hữu quyền để xuất bản nó trên DeHub.",
+    "import": "Nhập",
+    "addToQueue": "Thêm vào hàng đợi",
+    "signInToImport": "Đăng nhập để nhập",
+    "queueHeading": "Các lần nhập của bạn",
+    "queueRunning": "{{n}} trong hàng đợi — an toàn để đóng tab này, chúng tiếp tục chạy.",
+    "queueIdle": "Không có gì đang chạy.",
+    "untitled": "Video",
+    "thatSource": "nền tảng đó",
+    "dismiss": "Bỏ qua",
+    "viewPost": "Xem bài đăng",
+    "tryAgain": "Thử lại",
+    "statusImported": "Đã nhập",
+    "statusAlreadyHere": "Đã có ở đây",
+    "statusFailed": "Thất bại",
+    "statusRateLimited": "Giới hạn tốc độ",
+    "statusProcessing": "Đang xử lý",
+    "statusPublishing": "Đang xuất bản",
+    "statusDownloading": "Đang tải xuống",
+    "statusDownloadingPercent": "Đang tải xuống {{percent}}%",
+    "statusQueued": "Đã xếp hàng",
+    "detailFailed": "Không thể nhập video đó.",
+    "detailRateLimited": "{{source}} đang giới hạn tốc độ cho chúng tôi. Điều này sẽ chạy lại tự động — không cần phải dán lại.",
+    "detailDuplicate": "Video đó đã có trên hồ sơ của bạn.",
+    "detailWaiting": "Đang chờ lượt.",
+    "toastQueued": "Đã xếp hàng — nó sẽ được công bố trên hồ sơ của bạn khi hoàn thành.",
+    "toastRateLimited": "Bị giới hạn tốc độ, tải lên của bạn đã được xếp hàng và sẽ được xử lý sớm nhất có thể, bạn không cần phải thử lại cùng một liên kết nhưng có thể tự do xếp hàng thêm nếu muốn",
+    "toastImported": "Nhập từ {{source}}!",
+    "toastDuplicate": "Video đó đã được nhập.",
+    "toastFailed": "Nhập đó không thành công.",
+    "errorUnsupported": "Chúng tôi không thể nhập từ liên kết đó. Hãy thử một trong những: {{sources}}",
+    "errorNeedRights": "Vui lòng xác nhận bạn có quyền đối với nội dung này",
+    "errorClipboard": "Không thể đọc bảng tạm — dán thủ công thay vào đó",
+    "errorQueueFailed": "Không thể xếp hàng nhập đó"
   }
 }

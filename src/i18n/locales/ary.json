@@ -45,7 +45,8 @@
     "pricing": "الأثمنة",
     "creators": "المبدعين",
     "getTheApp": "حمّل التطبيق",
-    "connectAi": "ربط الذكاء الاصطناعي"
+    "connectAi": "ربط الذكاء الاصطناعي",
+    "converter": "المحول"
   },
   "feed": {
     "viewProfile": "عرض ملف {{name}} الشخصي",
@@ -2407,5 +2408,37 @@
     "pause": "إيقاف مؤقت",
     "listens_one": "{{count}} استمع",
     "listens_other": "{{count}} يستمع"
+  },
+  "converter": {
+    "seoTitle": "Converter — استيراد فيديو إلى DeHub",
+    "seoDescription": "الصق رابط من YouTube أو TikTok أو Instagram أو X وغيرها، ونشره كمنشور DeHub.",
+    "title": "استيراد فيديو",
+    "subtitle": "الصق رابط فيديو تملكه بالفعل وسننشره كمنشور على ملفك الشخصي. أضف عدد ما تشاء — يتم تشغيلها واحد تلو الآخر في الخلفية.",
+    "migrateAll": "ترحيل الكل",
+    "placeholder": "الصق رابط فيديو",
+    "paste": "الصق",
+    "ownership": "أملك هذا المحتوى أو لدي إذن من صاحب الحقوق لنشره على DeHub.",
+    "import": "استيراد",
+    "addToQueue": "أضف إلى قائمة الانتظار",
+    "signInToImport": "سجل الدخول للاستيراد",
+    "queueHeading": "استيراداتك",
+    "queueRunning": "{{n}} في قائمة الانتظار — آمن إغلاق هذه التبويبة، ستستمر.",
+    "queueIdle": "لا شيء قيد التشغيل.",
+    "untitled": "فيديو",
+    "thatSource": "تلك المنصة",
+    "dismiss": "إغلاق",
+    "viewPost": "عرض المنشور",
+    "tryAgain": "حاول مرة أخرى",
+    "statusImported": "تم استيراده",
+    "statusAlreadyHere": "موجود بالفعل",
+    "statusFailed": "فشل",
+    "statusRateLimited": "تحديد معدل",
+    "statusProcessing": "قيد المعالجة",
+    "statusPublishing": "النشر",
+    "statusDownloading": "التنزيل",
+    "statusDownloadingPercent": "تنزيل {{percent}}%",
+    "statusQueued": "في قائمة الانتظار",
+    "detailFailed": "تعذر استيراد هذا الفيديو.",
+    "detailRateLimited": "{{source}} يحد من معدل الطلبات. سيتم تشغيل هذا تلقائياً — لا حاجة لإعادة لصق أي شيء."
   }
 }

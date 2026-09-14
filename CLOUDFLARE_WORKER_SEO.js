@@ -1245,10 +1245,12 @@ const MARKETING_PAGES = {
 <p>Powers unlock one per tier across the thirteen badges, and higher rungs both hold more boosts and hold them for longer. See <a href="${APP_URL}/stake">staking</a> for how a badge is earned.</p>`,
   },
   'converter': {
-    title: 'Import from YouTube — DeHub',
-    description: 'Paste a YouTube link and publish it as a DeHub post. The video is fetched, transcoded and posted to your feed with its title, description and thumbnail.',
-    heading: 'Import from YouTube',
-    bodyHtml: `<p>Paste a YouTube URL and DeHub fetches the video, transcodes it and publishes it as a post on your profile — title, description and thumbnail carried across.</p>
+    title: 'Converter — import a video to DeHub',
+    description: 'Paste a link from YouTube, TikTok, Instagram, X, Twitch, Vimeo and more, and publish it as a DeHub post. The video is fetched, transcoded and posted to your feed with its title and thumbnail.',
+    heading: 'Import a video',
+    bodyHtml: `<p>Paste a link and DeHub fetches the video, transcodes it and publishes it as a post on your profile — title and thumbnail carried across.</p>
+<h2>Twenty-one places to import from</h2>
+<p>YouTube, TikTok, Instagram, X, Facebook, Twitch, Kick, Rumble, Vimeo, Dailymotion, Reddit, Bluesky, Odysee, Streamable, Loom, Tumblr, Pinterest, Snapchat, VK, Rutube and Bilibili.</p>
 <h2>Your back catalogue, in one place</h2>
 <p>Imports run in a queue, so a batch can be started and left alone. Each finished import becomes an ordinary DeHub post: it can be minted, tipped, fractionalised and monetised like anything else you upload.</p>
 <p>Importing needs a DeHub account and applies to videos you have the right to publish.</p>`,
