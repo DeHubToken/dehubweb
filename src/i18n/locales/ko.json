@@ -799,6 +799,8 @@
     "title": "지갑",
     "loginRequired": "지갑에 접근하려면 로그인하세요.",
     "addressCopied": "주소가 복사되었습니다",
+    "linkedConnected": "지갑이 연결되었습니다. 마지막 작업이 실행되지 않았습니다. 다시 탭하여 완료하세요.",
+    "linkedMismatch": "해당 지갑은 이 계정에 연결된 지갑이 아니며 {{address}} 이 (가) 필요합니다. 지갑에서 해당 계정으로 전환하고 다시 시도하세요.",
     "totalWalletValue": "지갑 총 가치",
     "receive": "받기",
     "send": "보내기",

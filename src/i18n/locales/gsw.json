@@ -747,6 +747,8 @@
     "title": "Portmoneé",
     "loginRequired": "Mäld di aa zum uf dis Portmoneé zuezgriiffe.",
     "addressCopied": "Adrässe kopiert",
+    "linkedConnected": "Wallet verbunde. Die letschti Akziun isch nid gloffe — tipp druf, zum z'fertig z'bringe.",
+    "linkedMismatch": "Das isch nid d'Wallet, wo mit dem Konto verbunde isch — es erwartet {{address}}. Wechsel zu dem Konto i dinere Wallet und versuchs nomol.",
     "totalWalletValue": "Totale Wallet-Wärt",
     "receive": "Empfange",
     "send": "Schicke",

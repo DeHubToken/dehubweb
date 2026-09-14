@@ -801,6 +801,8 @@
     "title": "Dompet",
     "loginRequired": "Masuk untuk mengakses dompet Anda.",
     "addressCopied": "Alamat disalin",
+    "linkedConnected": "Dompet terhubung. Tindakan terakhir itu tidak berjalan — ketuk lagi untuk menyelesaikannya.",
+    "linkedMismatch": "Dompet itu bukan yang tertaut ke akun ini — akun ini mengharapkan {{address}}. Beralih ke akun itu di dompet Anda dan coba lagi.",
     "totalWalletValue": "Total nilai dompet",
     "receive": "Terima",
     "send": "Kirim",

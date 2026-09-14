@@ -776,6 +776,8 @@
     "title": "Cüzdan",
     "loginRequired": "Cüzdanınıza daxil olmaq üçün giriş edin.",
     "addressCopied": "Ünvan kopyalandı",
+    "linkedConnected": "Pul kisəsi qoşulub. Son əməliyyat icra edilməyib — yekunlaşdırmaq üçün yenidən basın.",
+    "linkedMismatch": "Həmin pul kisəsi bu hesabla əlaqəli deyil — {{address}} gözləyir. Pul kisənizdəki hesaba keçin və yenidən cəhd edin.",
     "totalWalletValue": "Ümumi Cüzdan Dəyəri",
     "receive": "Qəbul Et",
     "send": "Göndər",

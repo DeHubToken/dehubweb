@@ -787,6 +787,8 @@
     "title": "Baallama",
     "loginRequired": "Baallamaatti seeninuuf seeni.",
     "addressCopied": "Teessoon waraabbame",
+    "linkedConnected": "Wallet walitti hidhame. Tarkaanfiin dhumaa sun hin fiigne — xumuruuf ammas tuqi.",
+    "linkedMismatch": "Boorsaan sun isa akkaawuntii kanaan walqabatee jiru miti — {{address}} eega. Gara akkaawuntii boorsaa keessan keessa jiru sanaatti jijjiiraa irra deebi&#39;aa yaalaa.",
     "totalWalletValue": "Gatii Waliigala Baallama",
     "receive": "Fuudhu",
     "send": "Ergi",

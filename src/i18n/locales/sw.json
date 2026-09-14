@@ -787,6 +787,8 @@
     "title": "Pochi",
     "loginRequired": "Ingia ili kufikia pochi yako.",
     "addressCopied": "Anwani imenakiliwa",
+    "linkedConnected": "Wallet imeunganishwa. Hatua hiyo ya mwisho haikuendeshwa — bofya tena ili ukamilishe.",
+    "linkedMismatch": "Mkoba huo si ule uliounganishwa na akaunti hii — unatarajia {{address}}. Badilisha utumie akaunti hiyo kwenye pochi yako kisha ujaribu tena.",
     "totalWalletValue": "Jumla ya Thamani ya Pochi",
     "receive": "Pokea",
     "send": "Tuma",

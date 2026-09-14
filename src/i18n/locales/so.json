@@ -787,6 +787,8 @@
     "title": "Jeebka",
     "loginRequired": "Soo gal si aad u hesho jeebkaaga.",
     "addressCopied": "Cinwaanka waa la nuqulay",
+    "linkedConnected": "Wallet ku xiran. ficilkaas ugu dambeeyay ma ordi — mar kale taabo si aad u dhammaystirto.",
+    "linkedMismatch": "Taasi ma aha mid la xidhiidha koontadan — waxay rajeyneysaa {{address}}. Ku beddel koontadaas boorsadaada oo isku day mar kale.",
     "totalWalletValue": "Qiimaha Guud ee Jeebka",
     "receive": "Qaado",
     "send": "Dir",

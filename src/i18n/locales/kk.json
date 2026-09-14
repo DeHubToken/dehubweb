@@ -785,6 +785,8 @@
     "title": "Әмиян",
     "loginRequired": "Log in to access your wallet.",
     "addressCopied": "Address copied",
+    "linkedConnected": "Әмиян қосылды. Соңғы әрекет орындалмады — аяқтау үшін оны қайта басыңыз.",
+    "linkedMismatch": "Бұл әмиян осы тіркелгіге байланысты емес — ол {{address}} деп күтеді. Әмияндағы сол шотқа ауысып, қайталап көріңіз.",
     "totalWalletValue": "Total Wallet Value",
     "receive": "Қабылдау",
     "send": "Жіберу",

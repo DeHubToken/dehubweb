@@ -798,6 +798,8 @@
     "title": "Geldbörse",
     "loginRequired": "Melde dich an, um auf deine Geldbörse zuzugreifen.",
     "addressCopied": "Adresse kopiert",
+    "linkedConnected": "Geldbörse verbunden. Diese letzte Aktion wurde nicht ausgeführt — tippen Sie erneut darauf, um sie abzuschließen.",
+    "linkedMismatch": "Dieses Wallet ist nicht mit diesem Konto verknüpft — es erwartet {{address}}. Wechseln Sie zu diesem Konto in Ihrem Wallet und versuchen Sie es erneut.",
     "totalWalletValue": "Gesamtwert der Geldbörse",
     "receive": "Empfangen",
     "send": "Senden",

@@ -786,6 +786,8 @@
     "title": "Gapjyk",
     "loginRequired": "Gapjygyňyza girmek üçin hasaba giriň.",
     "addressCopied": "Salgy göçürildi",
+    "linkedConnected": "Pulçany bagla. Soňky hereket dowam etmedi — soňuna çenli gaýtalap basyň.",
+    "linkedMismatch": "Bu hasabat bilen baglanyşykly däl — ol {{address}}garaşýar. Şoňa görä-de, siz ýene-de synap görüň.",
     "totalWalletValue": "Gapjygyň umumy bahasy",
     "receive": "Almak",
     "send": "Ibermek",

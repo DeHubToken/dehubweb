@@ -785,6 +785,8 @@
     "title": "Hamyon",
     "loginRequired": "Log in to access your wallet.",
     "addressCopied": "Address copied",
+    "linkedConnected": "Hamyon ulandi. Oxirgi amal bajarilmadi — tugatish uchun yana bosing.",
+    "linkedMismatch": "Bu hamyon ushbu hisobga bog&#39;langan hamyon emas — u {{address}} ni kutadi. Hamyoningizdagi o&#39;sha hisobga o&#39;ting va qaytadan urinib ko&#39;ring.",
     "totalWalletValue": "Total Wallet Value",
     "receive": "Qabul qilish",
     "send": "Yuborish",

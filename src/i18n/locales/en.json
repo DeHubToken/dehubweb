@@ -801,6 +801,8 @@
     "title": "Wallet",
     "loginRequired": "Log in to access your wallet.",
     "addressCopied": "Address copied",
+    "linkedConnected": "Wallet connected. That last action didn’t run — tap it again to finish.",
+    "linkedMismatch": "That wallet isn’t the one linked to this account — it expects {{address}}. Switch to that account in your wallet and try again.",
     "totalWalletValue": "Total Wallet Value",
     "receive": "Receive",
     "send": "Send",

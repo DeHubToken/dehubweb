@@ -784,6 +784,8 @@
     "title": "Ҳамён",
     "loginRequired": "Барои дастрасӣ ба ҳамёнатон ворид шавед.",
     "addressCopied": "Суроға нусхабардорӣ шуд",
+    "linkedConnected": "Ҳамён пайваст шуд. Амали охирин иҷро нашуд — барои ба итмом расондан дубора пахш кунед.",
+    "linkedMismatch": "Ang wallet ay hindi isang naka-link sa account na ito — ito ay naghintay na {{address}}. Ilipat sa account na iyong wallet at subukan muli.",
     "totalWalletValue": "Арзиши умумии ҳамён",
     "receive": "Қабул",
     "send": "Фиристодан",

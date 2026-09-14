@@ -776,6 +776,8 @@
     "title": "Peněženka",
     "loginRequired": "Přihlaste se pro přístup k peněžence.",
     "addressCopied": "Adresa zkopírována",
+    "linkedConnected": "Peněženka připojena. Poslední akce se neprovedla — dokončete ji dalším klepnutím.",
+    "linkedMismatch": "Tato peněženka není propojena s tímto účtem — očekává se {{address}}. Přepni na účet v peněžence a zkus to znova.",
     "totalWalletValue": "Celková hodnota peněženky",
     "receive": "Přijmout",
     "send": "Odeslat",

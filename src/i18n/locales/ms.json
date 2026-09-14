@@ -1053,6 +1053,8 @@
     "title": "Dompet",
     "loginRequired": "Log masuk untuk mengakses dompet anda.",
     "addressCopied": "Alamat disalin",
+    "linkedConnected": "Dompet disambungkan. Tindakan terakhir itu tidak berjalan — ketik sekali lagi untuk menyelesaikannya.",
+    "linkedMismatch": "Dompet itu bukan yang dipautkan ke akaun ini — ia menjangkakan {{address}}. Tukar ke akaun tersebut dalam dompet anda dan cuba lagi.",
     "totalWalletValue": "Jumlah Nilai Dompet",
     "receive": "Terima",
     "send": "Hantar",

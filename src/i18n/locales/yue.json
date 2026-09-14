@@ -786,6 +786,8 @@
     "title": "錢包",
     "loginRequired": "登入嚟使用錢包。",
     "addressCopied": "地址已複製",
+    "linkedConnected": "銀包連接咗。最後一個動作冇執行 — 再撳一次就可以完成。",
+    "linkedMismatch": "嗰個銀包唔係同呢個帳戶連結嘅銀包 — 佢預計係 {{address}} 。切換去你銀包入面嗰個帳戶，然後試多一次。",
     "totalWalletValue": "錢包總值",
     "receive": "收款",
     "send": "傳送",

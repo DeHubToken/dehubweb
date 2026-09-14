@@ -799,6 +799,8 @@
     "title": "Portefeuille",
     "loginRequired": "Connectez-vous pour accéder à votre portefeuille.",
     "addressCopied": "Adresse copiée",
+    "linkedConnected": "Portefeuille connecté. Cette dernière action n'a pas été exécutée. Appuyez à nouveau pour terminer.",
+    "linkedMismatch": "Ce portefeuille n'est pas celui lié à ce compte — il attend {{address}}. Passez à ce compte dans votre portefeuille et réessayez.",
     "totalWalletValue": "Valeur totale du portefeuille",
     "receive": "Recevoir",
     "send": "Envoyer",

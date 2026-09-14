@@ -719,6 +719,8 @@
     "title": "Ví",
     "loginRequired": "Đăng nhập để truy cập ví của bạn.",
     "addressCopied": "Đã sao chép địa chỉ",
+    "linkedConnected": "Ví đã được kết nối. Thao tác cuối cùng không chạy — nhấn lại lần nữa để hoàn tất.",
+    "linkedMismatch": "Ví đó không phải là ví được liên kết với tài khoản này — dự kiến là {{address}}. Chuyển sang tài khoản đó trong ví của bạn và thử lại.",
     "totalWalletValue": "Tổng giá trị ví",
     "receive": "Nhận",
     "send": "Gửi",
