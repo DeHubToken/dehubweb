@@ -962,6 +962,31 @@ export default function FeaturesPage() {
   );
   const features = useMemo(() => withoutFocused(allFeatures), [allFeatures, withoutFocused]);
 
+  // Shipped and Shipping arrive as whole arrays rather than a paged query, so
+  // the search box and category chips have to filter them here. Wiring the term
+  // into those queries instead would buy nothing -- the rows are already in
+  // memory -- and leaving it unwired is why the search box did nothing on
+  // every tab but Requests. normalizeRows() has already folded the legacy
+  // category aliases, so a plain equality check is enough.
+  const matchesFilters = useCallback(
+    (row: FeatureRequest) => {
+      if (category !== 'all' && row.category !== category) return false;
+      const q = search.trim().toLowerCase();
+      if (!q) return true;
+      return row.title.toLowerCase().includes(q) || row.description.toLowerCase().includes(q);
+    },
+    [category, search],
+  );
+  const isFiltering = search.trim().length > 0 || category !== 'all';
+  const visibleInProgress = useMemo(
+    () => withoutFocused(inProgressFeatures).filter(matchesFilters),
+    [inProgressFeatures, withoutFocused, matchesFilters],
+  );
+  const visibleShipped = useMemo(
+    () => withoutFocused(shippedFeatures).filter(matchesFilters),
+    [shippedFeatures, withoutFocused, matchesFilters],
+  );
+
   // Bring the pinned card into view once it has actually rendered. Scrolling on
   // the id alone would fire before the row exists on a cold load.
   useEffect(() => {
@@ -1121,9 +1146,11 @@ export default function FeaturesPage() {
         </div>
 
 
-        {/* Filters (only shown on requests tab) */}
-        {activeTab === 'requests' && (
-          <>
+        {/* Category chips filter every tab. Shipped holds most of the board, so
+            hiding them there left ~136 rows with no way to narrow them at all.
+            Sort stays Requests-only: Shipping and Shipped are ordered by ship
+            date, which is the order people expect on a changelog. */}
+        <>
             {/* Category Pills */}
             <div className="relative mb-3">
               <div ref={featuresCatLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
@@ -1154,6 +1181,7 @@ export default function FeaturesPage() {
             </div>
 
             {/* Sort Tabs */}
+            {activeTab === 'requests' && (
             <div ref={featuresSortLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
               <GlassIndicator rect={featuresSortRect} borderRadius="0.5rem" />
               <div className="relative z-20 flex gap-1.5 overflow-x-auto scrollbar-invisible" onScroll={onFeaturesSortScroll}>
@@ -1175,8 +1203,8 @@ export default function FeaturesPage() {
                 })}
               </div>
             </div>
-          </>
-        )}
+            )}
+        </>
         </div>
       </div>
 
@@ -1258,9 +1286,9 @@ export default function FeaturesPage() {
         <>
           {isLoadingInProgress ? (
             <FeatureSkeletons />
-          ) : inProgressFeatures && inProgressFeatures.length > 0 ? (
+          ) : visibleInProgress.length > 0 ? (
             <div className="space-y-3">
-              {withoutFocused(inProgressFeatures).map((feature) => (
+              {visibleInProgress.map((feature) => (
                 <SharedTranslationProvider key={feature.id}>
                   <FeatureCard
                     feature={feature}
@@ -1274,8 +1302,12 @@ export default function FeaturesPage() {
           ) : (
             <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
               <ThemedIcon icon="features" alt="" className="w-16 h-16 object-contain mx-auto mb-4 opacity-65" />
-              <h3 className="text-white font-semibold mb-1">{t('features.noShippingYet', 'Nothing in progress')}</h3>
-              <p className="text-zinc-500 text-sm">{t('features.shippingAppearHere', 'Requests being built will appear here.')}</p>
+              <h3 className="text-white font-semibold mb-1">
+                {isFiltering
+                  ? (search.trim() ? t('follow.noMatches', { query: search.trim() }) : t('filters.noMatches'))
+                  : t('features.noShippingYet', 'Nothing in progress')}
+              </h3>
+              {!isFiltering && <p className="text-zinc-500 text-sm">{t('features.shippingAppearHere', 'Requests being built will appear here.')}</p>}
             </div>
           )}
         </>
@@ -1287,9 +1319,9 @@ export default function FeaturesPage() {
         <>
           {isLoadingShipped ? (
             <FeatureSkeletons />
-          ) : shippedFeatures && shippedFeatures.length > 0 ? (
+          ) : visibleShipped.length > 0 ? (
             <div className="space-y-3">
-              {withoutFocused(shippedFeatures).map((feature) => (
+              {visibleShipped.map((feature) => (
                 <SharedTranslationProvider key={feature.id}>
                   <FeatureCard
                     feature={feature}
@@ -1303,8 +1335,12 @@ export default function FeaturesPage() {
           ) : (
             <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
               <ThemedIcon icon="features" alt="" className="w-16 h-16 object-contain mx-auto mb-4 opacity-65" />
-              <h3 className="text-white font-semibold mb-1">{t('features.noShippedYet')}</h3>
-              <p className="text-zinc-500 text-sm">{t('features.shippedAppearHere')}</p>
+              <h3 className="text-white font-semibold mb-1">
+                {isFiltering
+                  ? (search.trim() ? t('follow.noMatches', { query: search.trim() }) : t('filters.noMatches'))
+                  : t('features.noShippedYet')}
+              </h3>
+              {!isFiltering && <p className="text-zinc-500 text-sm">{t('features.shippedAppearHere')}</p>}
             </div>
           )}
         </>

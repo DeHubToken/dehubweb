@@ -45,7 +45,7 @@ export const ROUTE_SEGMENTS = [
   'governance', 'dao', 'guide', 'guides', 'jobs', 'launchpad', 'leaderboard',
   'mcp', 'mobile-preview', 'music', 'newpost', 'posts', 'premium', 'pricing',
   'prompt', 'r',
-  'radio', 'raffle', 'shorts', 'stage', 'stages', 'stake', 'stats', 'top-100',
+  'radio', 'raffle', 'requests', 'shorts', 'stage', 'stages', 'stake', 'stats', 'top-100',
   'tv',
   'accounts', 'usernames', 'videos', 'work', 'yt-dlp',
 
