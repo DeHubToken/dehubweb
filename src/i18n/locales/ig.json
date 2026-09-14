@@ -886,9 +886,6 @@
     "loginDescription": "Banye iji hụ ma jikwaa akara mpịnye gị echekwara."
   },
   "notifications": {
-      "badgeTierUp": "Ekele! Ugbu a ị bụ {{tier}} 🎉",
-      "badgeTierDown": "Riba ama: baajị gị ugbu a bụ {{tier}}",
-      "badgeTierLost": "Riba ama: i nweghizi baajị",
     "title": "Ọkwa",
     "markAllRead": "Mee ka niile ka a gụrụ",
     "settings": "Ntọala Ọkwa",
@@ -941,6 +938,9 @@
     "likedCommentPreview": "{{name}} masịrị okwu gị: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} na {{others}} masịrị okwu gị",
     "andOthersLikedCommentPreview": "{{first}} na {{others}} masịrị okwu gị: \"{{preview}}\"",
+    "badgeTierUp": "Ekele! Ugbu a ị bụ {{tier}} 🎉",
+    "badgeTierDown": "Riba ama: baajị gị ugbu a bụ {{tier}}",
+    "badgeTierLost": "Riba ama: i nweghizi baajị",
     "badgeTakenBack": "{{name}} kwụsị ịgbazinye gị ha {{tier}} baajị",
     "badgeLoanDropped": "I nweghi ike ibinye {{tier}} baajị gị {{name}}",
     "badgeLoanRetiered": "{{name}} ugbu a na-agbazinye gị a {{tier}} baajị",
@@ -2414,6 +2414,11 @@
     "errorUnsupported": "Enweghi ike ibudata site na njikọ ahụ. Gbalịa otu n'ime ndị a: {{sources}}",
     "errorNeedRights": "Biko kọwaa na ị nwere ikike maka ọdịnaya a",
     "errorClipboard": "Enweghị ike ịgụ clipboard — tinye aka n'ụkwụ kama",
-    "errorQueueFailed": "Enweghị ike ịtinye mbuze ahụ na queue"
+    "errorQueueFailed": "Enweghị ike ịtinye mbuze ahụ na queue",
+    "publishAs": "Bipute dị ka",
+    "kindVideo": "Video",
+    "kindAudio": "Odu",
+    "kindImage": "Foto",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

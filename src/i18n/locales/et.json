@@ -4702,6 +4702,11 @@
     "errorUnsupported": "Me ei saa sellelt lingilt importida. Proovige ühte järgmistest: {{sources}}",
     "errorNeedRights": "Palun kinnitage, et teil on õigus sellele sisule",
     "errorClipboard": "Lõikelauda ei saanud lugeda — kleepige käsitsi",
-    "errorQueueFailed": "Seda importi ei saanud järjekorda panna"
+    "errorQueueFailed": "Seda importi ei saanud järjekorda panna",
+    "publishAs": "Avalda kui",
+    "kindVideo": "Video",
+    "kindAudio": "Heli",
+    "kindImage": "Pildid",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

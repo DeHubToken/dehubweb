@@ -876,9 +876,6 @@
     "loginDescription": "अपना सेव कईल बुकमार्क देखे आ मैनेज करे खातिर लॉग इन करो।"
   },
   "notifications": {
-      "badgeTierUp": "बधाई हो! अब अपने {{tier}} हथिन 🎉",
-      "badgeTierDown": "ध्यान देईं: अब अपने के बैज {{tier}} हइ",
-      "badgeTierLost": "ध्यान देईं: अब अपने के बैज नञ् हइ",
     "title": "सूचना",
     "markAllRead": "सब पढ़ल चिह्नित करो",
     "settings": "सूचना सेटिंग",
@@ -931,6 +928,9 @@
     "likedCommentPreview": "{{name}} तोहर टिप्पणी लाइक कइलक: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} आ {{others}} तोहर टिप्पणी लाइक कइलक",
     "andOthersLikedCommentPreview": "{{first}} आ {{others}} तोहर टिप्पणी लाइक कइलक: \"{{preview}}\"",
+    "badgeTierUp": "बधाई हो! अब अपने {{tier}} हथिन 🎉",
+    "badgeTierDown": "ध्यान देईं: अब अपने के बैज {{tier}} हइ",
+    "badgeTierLost": "ध्यान देईं: अब अपने के बैज नञ् हइ",
     "badgeGenericTier": "हल्दी, हल्दी, बैग",
     "postRemoved": "तोहर पोस्ट हटावल गेल",
     "newNotification": "नया सूचना",
@@ -2411,6 +2411,11 @@
     "errorUnsupported": "हम उस लिंक से आयात नहीं कर सकते। इनमें से एक कोशिश करें: {{sources}}",
     "errorNeedRights": "कृपया पुष्टि करें कि आपके पास इस सामग्री के अधिकार हैं",
     "errorClipboard": "क्लिपबोर्ड नहीं पढ़ सके — इसके बजाय मैन्युअल रूप से पेस्ट करें",
-    "errorQueueFailed": "वह आयात कतार में नहीं डाल सके"
+    "errorQueueFailed": "वह आयात कतार में नहीं डाल सके",
+    "publishAs": "छाप के रूप में प्रकाशित करे",
+    "kindVideo": "इ औ सेकसी वीडियो",
+    "kindAudio": "ऑडियो कैलक्यूलेटर",
+    "kindImage": "इ औ सेकसी फोटो",
+    "tileSourceKind": "{{MONTHNAME}} से मिलई छई"
   }
 }

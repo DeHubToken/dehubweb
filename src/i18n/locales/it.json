@@ -4816,6 +4816,11 @@
     "errorUnsupported": "Non possiamo importare da quel link. Prova uno di questi: {{sources}}",
     "errorNeedRights": "Conferma di avere i diritti su questo contenuto",
     "errorClipboard": "Impossibile leggere gli appunti — incolla manualmente invece",
-    "errorQueueFailed": "Impossibile mettere in coda quell'importazione"
+    "errorQueueFailed": "Impossibile mettere in coda quell'importazione",
+    "publishAs": "Pubblica come",
+    "kindVideo": "Video",
+    "kindAudio": "Audio",
+    "kindImage": "Quadri",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

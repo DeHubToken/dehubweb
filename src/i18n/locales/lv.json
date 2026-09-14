@@ -2454,6 +2454,11 @@
     "errorUnsupported": "Mēs nevaram importēt no šīs saites. Mēģiniet vienu no: {{sources}}",
     "errorNeedRights": "Lūdzu, apstipriniet, ka jums ir tiesības uz šo saturu",
     "errorClipboard": "Nevarēja nolasīt starpliktuvi — ielīmējiet manuāli",
-    "errorQueueFailed": "Nevarēja rindā pievienot šo importu"
+    "errorQueueFailed": "Nevarēja rindā pievienot šo importu",
+    "publishAs": "Publicēt kā",
+    "kindVideo": "Video",
+    "kindAudio": "Audio",
+    "kindImage": "Fotogrāfiju",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

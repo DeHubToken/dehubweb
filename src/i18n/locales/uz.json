@@ -2439,32 +2439,6 @@
     "pause": "Pausekeyboard label",
     "listens_other": "{{count}} tinglaydi"
   },
-  "spaces": {
-    "title": "Boʻlimlar",
-    "live": "Jonli",
-    "upcoming": "Kelgusi",
-    "past": "Oʻtgan",
-    "create": "Boʻlim yaratish",
-    "join": "Qoʻshilish",
-    "listeners": "Tinglovchilar",
-    "speakers": "Nutqchilar",
-    "host": "Boshlovchi",
-    "endSpace": "Boʻlimni tugatish",
-    "raiseHand": "Qoʻl koʻtarish",
-    "lowerHand": "Qoʻlni tushirish",
-    "mute": "Ovozni oʻchirish",
-    "unmute": "Ovozni yoqish",
-    "leave": "Boʻlimni tark etish",
-    "noSpaces": "Hali boʻlimlar yoʻq",
-    "loginDescription": "Audio boʻlimlar yaratish va qoʻshilish uchun kiring."
-  },
-  "blog": {
-    "title": "Blog",
-    "readMore": "Koʻproq oʻqish",
-    "backToBlog": "Blogga qaytish",
-    "sharePost": "Postni ulashish",
-    "relatedPosts": "Bogʻliq postlar"
-  },
   "converter": {
     "seoTitle": "Konvertor — DeHub-ga video import qiling",
     "seoDescription": "YouTube, TikTok, Instagram, X va boshqalardan havola qo'ying va uni DeHub postasi sifatida nashr qiling.",
@@ -2506,6 +2480,37 @@
     "errorUnsupported": "Biz shu havoladan import qila olmaymiz. Quyidagilardan birini sinab ko'ring: {{sources}}",
     "errorNeedRights": "Iltimos, siz ushbu kontentga huquqingiz borligini tasdiqlang",
     "errorClipboard": "Buferdan o'qib bo'lmadi — o'rniga qo'lda joylashtiring",
-    "errorQueueFailed": "Shu importni navbatga qo'yib bo'lmadi"
+    "errorQueueFailed": "Shu importni navbatga qo'yib bo'lmadi",
+    "publishAs": "Nashr qilish",
+    "kindVideo": "Video",
+    "kindAudio": "Audio",
+    "kindImage": "& OÊ»ng",
+    "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "spaces": {
+    "title": "Boʻlimlar",
+    "live": "Jonli",
+    "upcoming": "Kelgusi",
+    "past": "Oʻtgan",
+    "create": "Boʻlim yaratish",
+    "join": "Qoʻshilish",
+    "listeners": "Tinglovchilar",
+    "speakers": "Nutqchilar",
+    "host": "Boshlovchi",
+    "endSpace": "Boʻlimni tugatish",
+    "raiseHand": "Qoʻl koʻtarish",
+    "lowerHand": "Qoʻlni tushirish",
+    "mute": "Ovozni oʻchirish",
+    "unmute": "Ovozni yoqish",
+    "leave": "Boʻlimni tark etish",
+    "noSpaces": "Hali boʻlimlar yoʻq",
+    "loginDescription": "Audio boʻlimlar yaratish va qoʻshilish uchun kiring."
+  },
+  "blog": {
+    "title": "Blog",
+    "readMore": "Koʻproq oʻqish",
+    "backToBlog": "Blogga qaytish",
+    "sharePost": "Postni ulashish",
+    "relatedPosts": "Bogʻliq postlar"
   }
 }

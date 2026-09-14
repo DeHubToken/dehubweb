@@ -2439,6 +2439,11 @@
     "errorUnsupported": "Ora bisa ngimpor saka link kasebut. Coba salah siji saka: {{sources}}",
     "errorNeedRights": "Mangga konfirmasi yen sampeyan duwe hak kanggo konten iki",
     "errorClipboard": "Ora bisa maca clipboard — tempel kanthi manual",
-    "errorQueueFailed": "Ora bisa antri impor kasebut"
+    "errorQueueFailed": "Ora bisa antri impor kasebut",
+    "publishAs": "Publish as",
+    "kindVideo": "Video",
+    "kindAudio": "Audio",
+    "kindImage": "Gambar",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

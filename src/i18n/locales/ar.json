@@ -4840,6 +4840,11 @@
     "errorUnsupported": "لا يمكننا الاستيراد من هذا الرابط. جرب أحد هذه: {{sources}}",
     "errorNeedRights": "يرجى تأكيد أن لديك الحقوق لهذا المحتوى",
     "errorClipboard": "تعذر قراءة الحافظة — الصق يدويًا بدلاً من ذلك",
-    "errorQueueFailed": "تعذر إضافة هذا الاستيراد إلى قائمة الانتظار"
+    "errorQueueFailed": "تعذر إضافة هذا الاستيراد إلى قائمة الانتظار",
+    "publishAs": "نشر كـ",
+    "kindVideo": "فيديو",
+    "kindAudio": "الصوت",
+    "kindImage": "الصور",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

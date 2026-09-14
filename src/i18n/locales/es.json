@@ -4838,6 +4838,11 @@
     "errorUnsupported": "No podemos importar desde ese enlace. Intenta uno de estos: {{sources}}",
     "errorNeedRights": "Por favor confirma que tienes derechos sobre este contenido",
     "errorClipboard": "No se pudo leer el portapapeles — pega manualmente en su lugar",
-    "errorQueueFailed": "No se pudo poner en cola esa importación"
+    "errorQueueFailed": "No se pudo poner en cola esa importación",
+    "publishAs": "Publicar como",
+    "kindVideo": "Video",
+    "kindAudio": "Sonido",
+    "kindImage": "imágenes",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

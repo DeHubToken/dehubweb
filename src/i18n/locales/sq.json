@@ -2454,6 +2454,11 @@
     "errorUnsupported": "Ne nuk mund të importojmë nga ajo lidhje. Provoni njërën nga: {{sources}}",
     "errorNeedRights": "Ju lutemi konfirmoni se keni të drejtat për këtë përmbajtje",
     "errorClipboard": "Nuk mund të lexohej clipboard — ngjiteni manualisht në vend të kësaj",
-    "errorQueueFailed": "Nuk mund të radhitej ai import"
+    "errorQueueFailed": "Nuk mund të radhitej ai import",
+    "publishAs": "Publiko si",
+    "kindVideo": "Video",
+    "kindAudio": "Audio",
+    "kindImage": "Piktura",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

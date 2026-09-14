@@ -2432,6 +2432,11 @@
     "errorUnsupported": "ਅਸੀਂ ਉਸ ਲਿੰਕ ਤੋਂ ਆਯਾਤ ਨਹੀਂ ਕਰ ਸਕਦੇ। ਇਨ੍ਹਾਂ ਵਿੱਚੋਂ ਕੋਈ ਕੋਸ਼ਿਸ਼ ਕਰੋ: {{sources}}",
     "errorNeedRights": "ਕਿਰਪਾ ਕਰਕੇ ਪੁਸ਼ਟੀ ਕਰੋ ਕਿ ਤੁਹਾਡੇ ਕੋਲ ਇਸ ਸਮੱਗਰੀ ਦੇ ਅਧਿਕਾਰ ਹਨ",
     "errorClipboard": "ਕਲਿੱਪਬੋਰਡ ਨੂੰ ਪੜ੍ਹ ਨਹੀਂ ਸਕੇ — ਇਸ ਦੀ ਬਜਾਏ ਹੱਥੀਂ ਪੇਸਟ ਕਰੋ",
-    "errorQueueFailed": "ਉਸ ਆਯਾਤ ਨੂੰ ਕਤਾਰ ਵਿੱਚ ਨਹੀਂ ਲਾ ਸਕੇ"
+    "errorQueueFailed": "ਉਸ ਆਯਾਤ ਨੂੰ ਕਤਾਰ ਵਿੱਚ ਨਹੀਂ ਲਾ ਸਕੇ",
+    "publishAs": "ਇਸ ਤਰਾਂ ਪ੍ਰਕਾਸ਼ਿਤ ਕਰੋ",
+    "kindVideo": "ਵੀਡਿਓ",
+    "kindAudio": "ਆਡੀਓ",
+    "kindImage": "ਤਸਵੀਰ",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

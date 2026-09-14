@@ -2420,6 +2420,11 @@
     "errorUnsupported": "Wir können nicht von diesem Link importieren. Versuche einen davon: {{sources}}",
     "errorNeedRights": "Bitte bestätige, dass du die Rechte für diesen Inhalt hast",
     "errorClipboard": "Konnte die Zwischenablage nicht lesen — füge stattdessen manuell ein",
-    "errorQueueFailed": "Konnte diesen Import nicht in die Warteschlange einreihen"
+    "errorQueueFailed": "Konnte diesen Import nicht in die Warteschlange einreihen",
+    "publishAs": "Publish as",
+    "kindVideo": "Video",
+    "kindAudio": "Audio",
+    "kindImage": "Bilder",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

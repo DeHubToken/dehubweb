@@ -2451,6 +2451,11 @@
     "errorUnsupported": "我哋無法從嗰個連結匯入。試試呢啲其中一個：{{sources}}",
     "errorNeedRights": "請確認你有呢個內容嘅權利",
     "errorClipboard": "無法讀取剪貼簿 — 手動貼上代替",
-    "errorQueueFailed": "無法排隊嗰個匯入"
+    "errorQueueFailed": "無法排隊嗰個匯入",
+    "publishAs": "發佈為",
+    "kindVideo": "影片",
+    "kindAudio": "音頻",
+    "kindImage": "圖片",
+    "tileSourceKind": "{{ 來源 } } · {{ 種類 } }"
   }
 }

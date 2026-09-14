@@ -2452,6 +2452,11 @@
     "errorUnsupported": "ما نقدرش نستورد من الرابط ده. جرب واحد من: {{sources}}",
     "errorNeedRights": "من فضلك أكد إنك عندك الحقوق للمحتوى ده",
     "errorClipboard": "ما قدرتش أقرا الحافظة — الصق يدوي بدل كده",
-    "errorQueueFailed": "ما قدرتش أضيف الاستيراد للطابور"
+    "errorQueueFailed": "ما قدرتش أضيف الاستيراد للطابور",
+    "publishAs": "نشر كـ",
+    "kindVideo": "فيديو",
+    "kindAudio": "الصوت",
+    "kindImage": "الصور",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }

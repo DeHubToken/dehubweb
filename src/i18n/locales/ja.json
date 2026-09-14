@@ -4813,6 +4813,11 @@
     "errorUnsupported": "そのリンクからインポートできません。以下のいずれかを試してください：{{sources}}",
     "errorNeedRights": "このコンテンツの権利があることを確認してください",
     "errorClipboard": "クリップボードを読み取ることができませんでした — 代わりに手動で貼り付けてください",
-    "errorQueueFailed": "そのインポートをキューに入れることができませんでした"
+    "errorQueueFailed": "そのインポートをキューに入れることができませんでした",
+    "publishAs": "設定して公開...",
+    "kindVideo": "動画",
+    "kindAudio": "オーディオ",
+    "kindImage": "絵画",
+    "tileSourceKind": "{{source}}・{{kind}}"
   }
 }

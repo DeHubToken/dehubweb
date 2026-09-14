@@ -1236,8 +1236,6 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
-    "continueApple": "Continuă cu Apple",
-    "continueTelegram": "Continuă cu Telegram",
     "unlockBiometricContinue": "Deblochează-ți portofelul cu amprenta sau fața pentru a continua.",
     "unlockBiometricSignIn": "Deblochează-ți portofelul cu amprenta digitală sau cu fața pentru a te conecta.",
     "unlockPasswordContinue": "Introdu parola portofelului pentru a continua.",
@@ -1252,6 +1250,8 @@
     "migrateContinueAnyway": "Creează un cont nou oricum",
     "title": "Log in",
     "addProfileTitle": "Adaugă un profil",
+    "continueApple": "Continuă cu Apple",
+    "continueTelegram": "Continuă cu Telegram",
     "continueX": "Continue with X",
     "connectWallet": "Connect Wallet",
     "sendingLink": "Sending code...",
@@ -4546,20 +4546,6 @@
     "listens_one": "{{count}} ascultă",
     "listens_other": "{{count}} ascultări"
   },
-  "footer": {
-    "about": "Despre noi",
-    "contact": "Contact",
-    "privacy": "Politica de confidențialitate",
-    "terms": "Termeni și condiții"
-  },
-  "glossary": {
-    "title": "Glosar",
-    "description": "Termeni și definiții pentru a înțelege mai bine platforma.",
-    "badge": {
-      "white": "Alb",
-      "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
-    }
-  },
   "converter": {
     "seoTitle": "Converter — importă un videoclip în DeHub",
     "seoDescription": "Lipește un link de pe YouTube, TikTok, Instagram, X și altele, și publică-l ca postare DeHub.",
@@ -4601,6 +4587,25 @@
     "errorUnsupported": "Nu putem importa din acel link. Încearcă una din: {{sources}}",
     "errorNeedRights": "Te rog confirmă că ai drepturile asupra acestui conținut",
     "errorClipboard": "Nu s-a putut citi clipboard-ul — lipește manual în schimb",
-    "errorQueueFailed": "Nu s-a putut adăuga acea importare în coadă"
+    "errorQueueFailed": "Nu s-a putut adăuga acea importare în coadă",
+    "publishAs": "Publică ca…",
+    "kindVideo": "Video",
+    "kindAudio": "Audio",
+    "kindImage": "Imagini",
+    "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "footer": {
+    "about": "Despre noi",
+    "contact": "Contact",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
+  },
+  "glossary": {
+    "title": "Glosar",
+    "description": "Termeni și definiții pentru a înțelege mai bine platforma.",
+    "badge": {
+      "white": "Alb",
+      "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
+    }
   }
 }

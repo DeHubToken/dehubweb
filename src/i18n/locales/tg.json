@@ -885,9 +885,6 @@
     "loginDescription": "Барои дидан ва идоракунии хатчӯбҳои сабтшуда ворид шавед."
   },
   "notifications": {
-      "badgeTierUp": "Табрик! Акнун шумо {{tier}} ҳастед 🎉",
-      "badgeTierDown": "Диққат: акнун нишони шумо {{tier}} аст",
-      "badgeTierLost": "Диққат: дигар нишон надоред",
     "title": "Огоҳиҳо",
     "markAllRead": "Ҳамаро хондашуда қайд кардан",
     "settings": "Танзимоти огоҳиҳо",
@@ -940,6 +937,9 @@
     "likedCommentPreview": "{{name}} шарҳи шуморо писанд кард: \"{{preview}}\"",
     "andOthersLikedComment": "{{first}} ва {{others}} шарҳи шуморо писанд карданд",
     "andOthersLikedCommentPreview": "{{first}} ва {{others}} шарҳи шуморо писанд карданд: \"{{preview}}\"",
+    "badgeTierUp": "Табрик! Акнун шумо {{tier}} ҳастед 🎉",
+    "badgeTierDown": "Диққат: акнун нишони шумо {{tier}} аст",
+    "badgeTierLost": "Диққат: дигар нишон надоред",
     "badgeLoanDropped": "{{tier}} badge to {{name}}",
     "badgeGenericTier": "нишона",
     "postRemoved": "Нашри шумо нест карда шуд",
@@ -2439,6 +2439,11 @@
     "errorUnsupported": "Мо наметавонем аз он пайванд ворид кунем. Яке аз инҳоро кӯшиш кунед: {{sources}}",
     "errorNeedRights": "Лутфан, тасдиқ кунед, ки шумо ҳуқуқи ин мундариҷа доред",
     "errorClipboard": "Буферро хонда натавонист — ба ҷои он дастӣ чапон кунед",
-    "errorQueueFailed": "Он ворид қайд карда натавонист"
+    "errorQueueFailed": "Он ворид қайд карда натавонист",
+    "publishAs": "I-publish bilang",
+    "kindVideo": "Видео",
+    "kindAudio": "Аудио",
+    "kindImage": "Тасвирҳо",
+    "tileSourceKind": "{{source}} · {{kind}}"
   }
 }
