@@ -170,6 +170,8 @@ export const dcc = {
     topUpDesc: 'हमारी अपनी इन-ऐप करेंसी हैगा, Fortnite के Vbucks या TikTok कॉइन जैसी, हमारी DeHub Tokens या DHB कहलाती हैगा। ऐप में ये गोल्ड कॉइन दिखेंगे। DHB टोकन ऐप में ट्रांज़ैक्ट करने और सर्विसेज़ जैसे टिप्स, सब्स वगैरह इस्तेमाल करने के लिए चाहिए। नीचे 2 क्लिक में टॉप अप कर लो।',
     directTitle: 'डायरेक्ट',
     dpayDesc: 'Stripe से डायरेक्ट खरीदारी',
+    topUpCardTitle: 'Card, aur sirf DHB hi nahi',
+    topUpCardDesc: 'Buy page ek card ko MoonPay ke through leta hai, aur ab yeh DHB-only nahi raha: ETH aur USDC bhi same tarike se kharide ja sakte hain, us chain par jo tum pehle se ho, aur seedha wallet mein land karte hain jo app ne tumhe sign kiya hai. Prices aur payout code har chain ke liye resolve hote hain, toh jo tumhe quote diya jata hai woh hi arrive hota hai.',
     dehubTokenTitle: 'DeHub टोकन',
     dehubTokenDesc: 'टोकन क्रिएटर्स को सब्सक्राइब करने, स्ट्रीमर्स को टिप देने या कंटेंट अनलॉक करने के लिए इस्तेमाल होते हैं। जितने ज़्यादा होल्ड करोगे, उतनी कम फ़ीस और उतनी ज़्यादा सुपरपावर जैसे टाइमलाइन ट्रेंड बूस्ट और वेरिफ़िकेशन बैज अनलॉक होंगे।',
     instantPayments: 'इंस्टैंट पेमेंट',
