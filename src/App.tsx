@@ -511,6 +511,10 @@ function AppContent() {
           <Route path="/connect/chatgpt" element={<Suspense fallback={<PageLoader />}><ConnectChatGPTPage /></Suspense>} />
           <Route path="/connect/claude" element={<Suspense fallback={<PageLoader />}><ConnectClaudePage /></Suspense>} />
           <Route path="/mcp" element={<Navigate to="/connect" replace />} />
+          {/* The sidebar calls this board "Requests" but it has always lived at
+              /features, so the URL people actually type went to the username
+              catch-all and bounced them to the homepage. */}
+          <Route path="/requests" element={<Navigate to="/features" replace />} />
           {/* Renamed to /converter — kept as a redirect for anyone with the old link. */}
           <Route path="/yt-dlp" element={<Navigate to="/converter" replace />} />
 
@@ -598,6 +602,7 @@ function AppContent() {
               <Route path="agents" element={null} />
               <Route path="tv" element={null} />
               <Route path="features" element={null} />
+              <Route path="requests" element={<Navigate to="/app/features" replace />} />
               <Route path="governance" element={null} />
               <Route path="dao" element={null} />
               <Route path="governance/:proposalId" element={<Suspense fallback={<PageLoader />}><GovernanceProposalPage /></Suspense>} />
