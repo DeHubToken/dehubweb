@@ -45,7 +45,8 @@
     "pricing": "Prețuri",
     "creators": "Creatori",
     "getTheApp": "Descarcă aplicația",
-    "connectAi": "Conectează AI"
+    "connectAi": "Conectează AI",
+    "converter": "Convertor"
   },
   "feed": {
     "viewProfile": "Afișează profilul lui {{name}}",
@@ -4553,5 +4554,48 @@
       "white": "Alb",
       "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
     }
+  },
+  "converter": {
+    "seoTitle": "Converter — importă un videoclip în DeHub",
+    "seoDescription": "Lipește un link de pe YouTube, TikTok, Instagram, X și altele, și publică-l ca postare DeHub.",
+    "title": "Importă un videoclip",
+    "subtitle": "Lipește un link la un videoclip pe care îl deții deja și îl vom publica ca postare pe profilul tău. Pune în coadă cât de multe dorești — se execută una după alta în fundal.",
+    "migrateAll": "Migrează tot",
+    "placeholder": "Lipește linkul videoclipului",
+    "paste": "Lipește",
+    "ownership": "Dețin acest conținut sau am permisiunea deținătorului drepturilor să-l public pe DeHub.",
+    "import": "Importă",
+    "addToQueue": "Adaugă în coadă",
+    "signInToImport": "Conectează-te pentru a importa",
+    "queueHeading": "Importurile tale",
+    "queueRunning": "{{n}} în coadă — sigur să închizi această filă, ele continuă.",
+    "queueIdle": "Nimic în execuție.",
+    "untitled": "Videoclip",
+    "thatSource": "acea platformă",
+    "dismiss": "Închide",
+    "viewPost": "Vizualizează postarea",
+    "tryAgain": "Încearcă din nou",
+    "statusImported": "Importat",
+    "statusAlreadyHere": "Deja aici",
+    "statusFailed": "Eșuat",
+    "statusRateLimited": "Limitat de rată",
+    "statusProcessing": "Se procesează",
+    "statusPublishing": "Se publică",
+    "statusDownloading": "Se descarcă",
+    "statusDownloadingPercent": "Se descarcă {{percent}}%",
+    "statusQueued": "În coadă",
+    "detailFailed": "Nu am putut importa acel videoclip.",
+    "detailRateLimited": "{{source}} ne limitează rata. Aceasta se execută din nou automat — nu trebuie să repui nimic.",
+    "detailDuplicate": "Acel videoclip era deja pe profilul tău.",
+    "detailWaiting": "Așteptând rândul său.",
+    "toastQueued": "În coadă — se publică pe profilul tău când se termină.",
+    "toastRateLimited": "Limitat de rată, încărcarea ta este în coadă și va fi procesată cât mai curând posibil, nu trebuie să încerci din nou același link, dar ești liber să adaugi mai multe în coadă dacă dorești.",
+    "toastImported": "Importat din {{source}}!",
+    "toastDuplicate": "Acel videoclip era deja importat.",
+    "toastFailed": "Acea importare a eșuat.",
+    "errorUnsupported": "Nu putem importa din acel link. Încearcă una din: {{sources}}",
+    "errorNeedRights": "Te rog confirmă că ai drepturile asupra acestui conținut",
+    "errorClipboard": "Nu s-a putut citi clipboard-ul — lipește manual în schimb",
+    "errorQueueFailed": "Nu s-a putut adăuga acea importare în coadă"
   }
 }

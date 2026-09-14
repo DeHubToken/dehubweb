@@ -45,7 +45,8 @@
     "pricing": "Cennik",
     "creators": "Twórcy",
     "getTheApp": "Pobierz aplikację",
-    "connectAi": "Podłącz AI"
+    "connectAi": "Podłącz AI",
+    "converter": "Przetwornik"
   },
   "feed": {
     "viewProfile": "Wyświetl profil użytkownika {{name}}",
@@ -4795,5 +4796,48 @@
         }
       ]
     }
+  },
+  "converter": {
+    "seoTitle": "Konwerter — importuj wideo do DeHub",
+    "seoDescription": "Wklej link z YouTube, TikTok, Instagram, X i innych, a my opublikujemy go jako post DeHub.",
+    "title": "Importuj wideo",
+    "subtitle": "Wklej link do wideo, które już posiadasz, a my opublikujemy je jako post na Twoim profilu. Dodaj do kolejki tyle, ile chcesz — będą uruchamiane jeden po drugim w tle.",
+    "migrateAll": "Migruj wszystko",
+    "placeholder": "Wklej link do wideo",
+    "paste": "Wklej",
+    "ownership": "Posiadam tę zawartość lub mam pozwolenie od właściciela praw do opublikowania jej na DeHub.",
+    "import": "Importuj",
+    "addToQueue": "Dodaj do kolejki",
+    "signInToImport": "Zaloguj się, aby importować",
+    "queueHeading": "Twoje importy",
+    "queueRunning": "{{n}} w kolejce — bezpiecznie zamknąć tę kartę, będą działać dalej.",
+    "queueIdle": "Nic się nie uruchamia.",
+    "untitled": "Wideo",
+    "thatSource": "ta platforma",
+    "dismiss": "Odrzuć",
+    "viewPost": "Wyświetl post",
+    "tryAgain": "Spróbuj ponownie",
+    "statusImported": "Zaimportowano",
+    "statusAlreadyHere": "Już tutaj",
+    "statusFailed": "Nie powiodło się",
+    "statusRateLimited": "Ograniczenie szybkości",
+    "statusProcessing": "Przetwarzanie",
+    "statusPublishing": "Publikowanie",
+    "statusDownloading": "Pobieranie",
+    "statusDownloadingPercent": "Pobieranie {{percent}}%",
+    "statusQueued": "W kolejce",
+    "detailFailed": "Nie można było zaimportować tego wideo.",
+    "detailRateLimited": "{{source}} nas ogranicza. To uruchomi się automatycznie — nie ma potrzeby ponownego wklejania.",
+    "detailDuplicate": "Ten film był już na Twoim profilu.",
+    "detailWaiting": "Czeka na swoją kolej.",
+    "toastQueued": "W kolejce — zostanie opublikowany na Twoim profilu po zakończeniu.",
+    "toastRateLimited": "Ograniczenie szybkości, Twoje przesłanie jest w kolejce i będzie przetwarzane jak najszybciej, nie musisz próbować tego samego linku ponownie, ale możesz dodać więcej do kolejki, jeśli chcesz",
+    "toastImported": "Zaimportowano z {{source}}!",
+    "toastDuplicate": "Ten film został już zaimportowany.",
+    "toastFailed": "Ten import się nie powiódł.",
+    "errorUnsupported": "Nie możemy importować z tego linku. Spróbuj jednego z: {{sources}}",
+    "errorNeedRights": "Proszę potwierdź, że masz prawa do tej zawartości",
+    "errorClipboard": "Nie można odczytać schowka — wklej ręcznie",
+    "errorQueueFailed": "Nie można dodać tego importu do kolejki"
   }
 }

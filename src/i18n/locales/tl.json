@@ -45,7 +45,8 @@
     "pricing": "Presyo",
     "creators": "Mga creator",
     "getTheApp": "Kunin ang app",
-    "connectAi": "Ikonekta ang AI"
+    "connectAi": "Ikonekta ang AI",
+    "converter": "wala"
   },
   "feed": {
     "viewProfile": "Tingnan ang profile ni {{name}}",
@@ -4659,5 +4660,48 @@
   "notification": {
     "noNotifications": "Walang mga abiso",
     "loadMore": "Mag-load ng higit pa"
+  },
+  "converter": {
+    "seoTitle": "Converter — mag-import ng video sa DeHub",
+    "seoDescription": "Mag-paste ng link mula sa YouTube, TikTok, Instagram, X at marami pang iba, at i-publish ito bilang DeHub post.",
+    "title": "Mag-import ng video",
+    "subtitle": "Mag-paste ng link sa video na mayroon ka na at kami ay mag-publish nito bilang post sa iyong profile. Mag-queue ng kasing dami ng gusto mo — tatakbo ang isa pagkatapos ng isa sa background.",
+    "migrateAll": "I-migrate lahat",
+    "placeholder": "Mag-paste ng link sa video",
+    "paste": "Mag-paste",
+    "ownership": "Ako ang may-ari ng content na ito, o mayroon akong pahintulot ng rights holder na i-publish ito sa DeHub.",
+    "import": "Mag-import",
+    "addToQueue": "Idagdag sa queue",
+    "signInToImport": "Mag-sign in upang mag-import",
+    "queueHeading": "Ang iyong mga import",
+    "queueRunning": "{{n}} sa queue — ligtas na sarado ang tab na ito, patuloy pa rin sila.",
+    "queueIdle": "Walang tumatakbo.",
+    "untitled": "Video",
+    "thatSource": "ang platform na iyon",
+    "dismiss": "Pagsara",
+    "viewPost": "Tingnan ang post",
+    "tryAgain": "Subukan ulit",
+    "statusImported": "Na-import",
+    "statusAlreadyHere": "Nandito na",
+    "statusFailed": "Nabigo",
+    "statusRateLimited": "Rate limited",
+    "statusProcessing": "Nagpoproseso",
+    "statusPublishing": "Nag-publish",
+    "statusDownloading": "Nagda-download",
+    "statusDownloadingPercent": "Nagda-download {{percent}}%",
+    "statusQueued": "Naka-queue",
+    "detailFailed": "Hindi ma-import ang video na iyon.",
+    "detailRateLimited": "{{source}} ay nag-rate-limit sa amin. Ito ay tatakbo ulit nang sarili — walang kailangang i-paste ulit.",
+    "detailDuplicate": "Ang video na iyon ay nasa iyong profile na.",
+    "detailWaiting": "Naghihintay ng kanyang pagkakataon.",
+    "toastQueued": "Queued — ito ay ilalathala sa iyong profile kapag tapos na.",
+    "toastRateLimited": "Rate limited, ang iyong upload ay queued at ipoproseso asap, hindi mo kailangang subukan ang parehong link ulit ngunit libre kang mag-queue ng iba pa kung gusto mo",
+    "toastImported": "Na - import mula {{source}}!",
+    "toastDuplicate": "Ang video na iyon ay na-import na.",
+    "toastFailed": "Ang import na iyon ay nabigo.",
+    "errorUnsupported": "Hindi kami makakaimport mula sa link na iyon. Subukan ang isa sa: {{sources}}",
+    "errorNeedRights": "Mangyaring kumpirmahin na mayroon kang karapatan sa content na ito",
+    "errorClipboard": "Hindi mabasa ang clipboard — i-paste nang manu-mano sa halip",
+    "errorQueueFailed": "Hindi ma-queue ang import na iyon"
   }
 }

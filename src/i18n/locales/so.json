@@ -45,7 +45,8 @@
     "pricing": "Qiimaha",
     "creators": "Hal-abuurayaal",
     "getTheApp": "Soo deji abka",
-    "connectAi": "Ku xir AI"
+    "connectAi": "Ku xir AI",
+    "converter": "Converter"
   },
   "feed": {
     "viewProfile": "Eeg astaanta {{name}}",
@@ -2406,5 +2407,40 @@
     "pause": "Jooji",
     "listens_one": "{{count}} dhageyso",
     "listens_other": "{{count}} dhagaystayaasha"
+  },
+  "converter": {
+    "title": "Import a video",
+    "migrateAll": "Migrate all",
+    "paste": "Paste",
+    "import": "Import",
+    "addToQueue": "Add to queue",
+    "signInToImport": "Sign in to import",
+    "queueHeading": "Your imports",
+    "queueIdle": "Nothing running.",
+    "untitled": "Video",
+    "thatSource": "that platform",
+    "dismiss": "Dismiss",
+    "viewPost": "View post",
+    "tryAgain": "Try again",
+    "statusImported": "Imported",
+    "statusAlreadyHere": "Already here",
+    "statusFailed": "Failed",
+    "statusRateLimited": "Rate limited",
+    "statusProcessing": "Processing",
+    "statusPublishing": "Publishing",
+    "statusDownloading": "Downloading",
+    "statusDownloadingPercent": "Downloading {{percent}}%",
+    "statusQueued": "Queued",
+    "detailDuplicate": "Fiidiyotan taas waxay jirtay hadii iyo hadii profile-kaaga.",
+    "detailWaiting": "Sugaya turn-keda.",
+    "toastQueued": "Queued — waxay daabacaysaa profile-kaaga markii ay dhammaato.",
+    "toastRateLimited": "Rate limited, upload-kaaga waxaa jira queue-ga oo waxaa la sameynayaa asap, ma baahan tahay inaad isku dabaaldeg link-kii laakiin waxaad xor tahay inaad queue-gaad dheeraad sida aad dooneyso",
+    "toastImported": "Waxaa laga soo daatay {{source}}!",
+    "toastDuplicate": "Fiidiyotan taas waxay hadii iyo hadii laga soo daatay.",
+    "toastFailed": "Daatitaankan wuu fashilmay.",
+    "errorUnsupported": "Maanu daatin karno link-kaan. Isku daab mid ka mid ah: {{sources}}",
+    "errorNeedRights": "Fadlan xaqiiji inaad haweesho xuquuqda qalabka",
+    "errorClipboard": "Maanu akhriin karain clipboard-ka — paste si toos ah",
+    "errorQueueFailed": "Maanu queue-gayn karain daatitaankan"
   }
 }
