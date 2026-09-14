@@ -4394,65 +4394,73 @@ specificity animation declarations above.
   .reply-text-glow { animation: none; }
 }
 
-/* Artwork plate
-   =============
+/* Artwork backing — light themes only
+   ===================================
    The badge and medal artwork is drawn for a dark canvas: the silver and chrome
    tiers carry their outer edge as a near-white stroke on transparency. On a
    light theme that stroke lands on a near-white background and the silhouette
    dissolves — a shark reads as though its back has been cut off, and the silver
-   medals lose their rim entirely.
+   medals lose their rim entirely. On the dark themes the art is right as drawn,
+   so every rule here is scoped to light and the dark themes get nothing behind
+   the artwork at all.
 
-   This paints the artwork's own silhouette behind it, masked by the same image,
-   so the plate is never a disc or a box: it hugs whatever shape the art is. The
-   plate's box is one pixel larger than the image on every side, so the masked
-   silhouette lands a pixel past the artwork's edge, which is what the eye reads
-   as an outline. Filling behind as well as ringing matters for the feathered
-   edges — a soft alpha ramp over the plate resolves to a solid edge instead of
-   fading into the page.
+   Badges get a halo: a second copy of the same image, blacked out, scaled up
+   and blurred, behind the artwork. It is the badge's own shape, so it never
+   reads as a box or a disc, and the blur keeps it soft rather than a hard
+   outline. Blur is in em so it tracks the badge's rendered size.
 
-   The rim is made by growing the box, NOT by a drop-shadow filter. Chrome drops
-   the mask entirely on an element that also carries a filter, and the plate then
-   paints as a solid dark rectangle behind every medal and badge.
-
-   The mask is the artwork URL, set per element. `--artwork-plate` is the plate
-   colour: dark by default, which is a no-op on the dark themes (a dark rim
-   against a dark page) and the whole fix on the light ones. A theme can override
-   it if its surface ever needs a different backing. */
-.art-plate,
-.medal-shine-container::before {
+   Medals keep a masked plate: they already publish their silhouette as
+   `--medal-mask` for the shine sweep, so the plate rides the same value, set on
+   the container and inherited by the overlay that was already reading it. The
+   medal image is given `relative` at each call site — without it the image
+   paints in the inline step, below this positioned pseudo-element, and the
+   plate would cover the artwork instead of backing it. */
+.art-halo {
+  display: none;
   position: absolute;
   inset: 0;
+  width: auto;
+  height: auto;
+  pointer-events: none;
+  object-fit: contain;
+  transform: scale(1.18);
+  filter: brightness(0) blur(0.07em);
+  opacity: 0.85;
+}
+.medal-shine-container::before {
+  content: none;
+  position: absolute;
+  inset: -1px;
   pointer-events: none;
   background: var(--artwork-plate, rgba(9, 11, 16, 0.92));
+  -webkit-mask-image: var(--medal-mask);
+  mask-image: var(--medal-mask);
   -webkit-mask-size: contain;
   mask-size: contain;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
   mask-position: center;
+  filter: drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)))
+          drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)));
 }
-.art-plate {
-  -webkit-mask-image: var(--art-mask);
-  mask-image: var(--art-mask);
-}
-/* The medals already publish their silhouette as `--medal-mask` for the shine
-   sweep. The plate rides the same value, so it is set on the container and
-   inherits down to the overlay that was already reading it. The medal image
-   itself is given `relative` at each call site: without it the image paints in
-   the inline step, below this positioned pseudo-element, and the plate would
-   cover the artwork instead of backing it. */
-.medal-shine-container::before {
-  content: '';
-  inset: -1px;
-  -webkit-mask-image: var(--medal-mask);
-  mask-image: var(--medal-mask);
+html[data-theme="light"] .art-halo { display: block; }
+html[data-theme="light"] .medal-shine-container::before { content: ''; }
+@media (prefers-color-scheme: light) {
+  html[data-theme="system"] .art-halo { display: block; }
+  html[data-theme="system"] .medal-shine-container::before { content: ''; }
 }
 
 /* The same rescue for badge artwork drawn as a bare <img>, where there is no
-   container to hang a plate inside. Tracing the alpha with two stacked shadows
-   gives the identical rim; the fill behind is redundant for these, since the
-   artwork is opaque wherever it is drawn at all. */
-.art-rim {
+   container to hang a halo inside: on light, trace the alpha with two stacked
+   shadows. Nothing on the dark themes. */
+html[data-theme="light"] .art-rim {
   filter: drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)))
           drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)));
+}
+@media (prefers-color-scheme: light) {
+  html[data-theme="system"] .art-rim {
+    filter: drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)))
+            drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)));
+  }
 }

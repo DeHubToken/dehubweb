@@ -170,46 +170,6 @@ const BADGE_IMAGES: Record<string, string> = {
   "Megalodon": MegalodonBadge,
 };
 
-// The plate masks: one solid, slightly dilated silhouette per tier, built by
-// scripts/build-badge-plates.mjs. BadgeIcon paints a dark plate behind the
-// artwork masked by these rather than by the art's own alpha, which has
-// transparent gaps inside the outline that would otherwise show the page
-// through next to the check mark.
-import TortoisePlate from '@/assets/badges/plates/Tortoise.png';
-import CrabPlate from '@/assets/badges/plates/Crab.png';
-import PiranhaPlate from '@/assets/badges/plates/Piranha.png';
-import LobsterPlate from '@/assets/badges/plates/Lobster.png';
-import OctopusPlate from '@/assets/badges/plates/Octopus.png';
-import CobraPlate from '@/assets/badges/plates/Cobra.png';
-import CrocodilePlate from '@/assets/badges/plates/Crocodile.png';
-import DolphinPlate from '@/assets/badges/plates/Dolphin.png';
-import TigerSharkPlate from '@/assets/badges/plates/Tiger Shark.png';
-import GreatWhiteSharkPlate from '@/assets/badges/plates/Great White Shark.png';
-import KillerWhalePlate from '@/assets/badges/plates/Killer Whale.png';
-import BlueWhalePlate from '@/assets/badges/plates/Blue Whale.png';
-import MegalodonPlate from '@/assets/badges/plates/Megalodon.png';
-
-const BADGE_PLATES: Record<string, string> = {
-  "Tortoise": TortoisePlate,
-  "Crab": CrabPlate,
-  "Piranha": PiranhaPlate,
-  "Lobster": LobsterPlate,
-  "Octopus": OctopusPlate,
-  "Cobra": CobraPlate,
-  "Crocodile": CrocodilePlate,
-  "Dolphin": DolphinPlate,
-  "Tiger Shark": TigerSharkPlate,
-  "Great White Shark": GreatWhiteSharkPlate,
-  "Killer Whale": KillerWhalePlate,
-  "Blue Whale": BlueWhalePlate,
-  "Megalodon": MegalodonPlate,
-};
-
-/** The plate mask for a tier, or null for a name the ladder does not know. */
-export function getBadgePlateUrl(name: string | null | undefined): string | null {
-  return (name && BADGE_PLATES[name]) || null;
-}
-
 /**
  * Round to `digits` significant figures.
  *

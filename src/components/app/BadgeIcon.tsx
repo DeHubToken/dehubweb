@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import type { CSSProperties } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useBadgeVisual } from '@/hooks/use-badge-balance';
-import { cssUrl } from '@/lib/css-url';
-import { getBadgePlateUrl, type BadgeLock } from '@/lib/staking-badges';
+import type { BadgeLock } from '@/lib/staking-badges';
 
 interface BadgeIconProps {
   /** Pass badgeBalance to resolve badge from balance */
@@ -97,15 +96,6 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
     display: 'inline-block',
     top: `calc(${artworkBaselineOffset}em + ${ARTWORK_GUTTER_PX}px)`,
   };
-  // The plate sits in the same box as the artwork and takes its shape from
-  // the tier's plate mask — a solid silhouette with the art's interior gaps
-  // filled and a rim already dilated in. A badge the ladder does not know
-  // (an arbitrary profile URL) falls back to the art's own alpha.
-  const plateStyle = {
-    inset: `${ARTWORK_GUTTER_PX}px`,
-    '--art-mask': cssUrl(getBadgePlateUrl(visualName) ?? url ?? ''),
-  } as CSSProperties;
-
   if (!url) return null;
 
   return (
@@ -120,10 +110,12 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
             navigate('/app/glossary#badges');
           }}
         >
-          {/* Behind the artwork, in its exact shape: see `.art-plate`. Silver
-              and chrome tiers are drawn as light strokes on transparency and
-              lose their whole outer edge against a light theme's background. */}
-          <span aria-hidden className="art-plate" style={plateStyle} />
+          {/* A blurred, blacked-out copy of the same image sits behind the
+              artwork as a soft halo. The silver and chrome tiers are drawn as
+              light strokes on transparency and dissolve against a light theme's
+              background; the halo gives them a dark ground to sit on. On the
+              dark themes it is a dark blur on a dark page — invisible. */}
+          <img aria-hidden alt="" src={url} className="art-halo" style={{ inset: `${ARTWORK_GUTTER_PX}px` }} />
           <img
             data-badge-icon
             src={url}
