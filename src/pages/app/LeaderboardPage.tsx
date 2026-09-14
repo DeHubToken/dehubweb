@@ -63,6 +63,8 @@ const timePeriods: { id: LeaderboardPeriod; labelKey: string }[] = [
   { id: 'all', labelKey: 'leaderboard.allTime' },
 ];
 
+const MEDALS = [medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10];
+
 const getRankStyle = (rank: number) => {
   switch (rank) {
     case 1:
@@ -526,16 +528,18 @@ export default function LeaderboardPage() {
                   {/* Rank */}
                   <div className="col-span-2 sm:col-span-1 flex items-center justify-center -ml-[5.5px]">
                     {rank <= 10 ? (
-                      <div className={`medal-shine-container ${rank <= 3 ? 'w-12 h-12' : 'w-8 h-8'}`}>
-                        <img 
-                          src={[medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10][rank - 1]} 
-                          alt={`Rank ${rank}`} 
-                          className={`${rank <= 3 ? 'w-12 h-12' : 'w-8 h-8'} object-contain`}
+                      <div
+                        className={`medal-shine-container ${rank <= 3 ? 'w-12 h-12' : 'w-8 h-8'}`}
+                        style={{ '--medal-mask': `url(${MEDALS[rank - 1]})` } as React.CSSProperties}
+                      >
+                        <img
+                          src={MEDALS[rank - 1]}
+                          alt={`Rank ${rank}`}
+                          className={`${rank <= 3 ? 'w-12 h-12' : 'w-8 h-8'} object-contain relative`}
                         />
-                        <div 
+                        <div
                           key={shimmerKey}
                           className="medal-shine-overlay"
-                          style={{ '--medal-mask': `url(${[medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10][rank - 1]})` } as React.CSSProperties}
                         />
                       </div>
                     ) : (

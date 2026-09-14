@@ -68,11 +68,13 @@ const LeaderboardCard = memo(function LeaderboardCard({
       {/* Rank + Name */}
       <div className="flex items-center gap-2 mb-2">
         {rank <= 10 ? (
-          <div className={`medal-shine-container flex-shrink-0 ${rank <= 3 ? 'w-7 h-7' : 'w-6 h-6'}`}>
-            <img src={MEDALS[rank - 1]} alt={`#${rank}`} className={`${rank <= 3 ? 'w-7 h-7' : 'w-6 h-6'} object-contain`} />
-            <div 
+          <div
+            className={`medal-shine-container flex-shrink-0 ${rank <= 3 ? 'w-7 h-7' : 'w-6 h-6'}`}
+            style={{ '--medal-mask': `url(${MEDALS[rank - 1]})` } as React.CSSProperties}
+          >
+            <img src={MEDALS[rank - 1]} alt={`#${rank}`} className={`${rank <= 3 ? 'w-7 h-7' : 'w-6 h-6'} object-contain relative`} />
+            <div
               className="medal-shine-overlay"
-              style={{ '--medal-mask': `url(${MEDALS[rank - 1]})` } as React.CSSProperties}
             />
           </div>
         ) : (
