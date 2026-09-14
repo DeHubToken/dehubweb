@@ -35,9 +35,15 @@ import {
   showTestNotification,
   useNotificationPermission,
   useStoredEnabled,
+  useWebPushFailureReason,
   useWebPushState,
 } from '@/hooks/use-browser-notifications';
-import { resubscribeWebPush, subscribeToWebPush } from '@/lib/web-push';
+import {
+  getWebPushFailureReason,
+  getWebPushState,
+  resubscribeWebPush,
+  subscribeToWebPush,
+} from '@/lib/web-push';
 
 /** iOS only delivers web notifications to a home-screen install, never a tab. */
 function isIOS(): boolean {
@@ -87,6 +93,7 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
   const permission = useNotificationPermission();
   const stored = useStoredEnabled();
   const pushState = useWebPushState();
+  const failureReason = useWebPushFailureReason();
   const [busy, setBusy] = useState(false);
   // Set when the switch is clicked while the browser is blocking us: the ask
   // stands, it just can't be honoured until they change it in the browser.
@@ -104,6 +111,11 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
   // it. Only the service-worker probe can see this - the page's own
   // Notification constructor succeeds regardless.
   const osBlocked = isOn && pushState === 'blocked';
+  // The browser failed to display one and named a reason of its own, so the
+  // operating system is not the thing to go and change. Chrome's notification
+  // store losing its LevelDB pointer lands here: the OS is allowing
+  // notifications, the subscription is live, and every display still fails.
+  const displayFailed = isOn && pushState === 'display-failed';
 
   // Normally the reconcile in useBrowserNotifications has already resolved this
   // by the time anyone opens Settings. It has not when this is the first mount
@@ -118,6 +130,33 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
     "That's what a DeHub notification looks like.",
   );
 
+  /**
+   * The probe just failed — say which failure it was, not which one is
+   * commonest.
+   *
+   * Reads the module state rather than `pushState`: it was set inside the
+   * await this is returning from, and the render we are in still holds the
+   * value from before it.
+   */
+  const reportProbeFailure = useCallback(() => {
+    if (getWebPushState() === 'display-failed') {
+      toast.error(
+        t(
+          'settings.browserNotificationsDisplayFailedTitle',
+          'This browser could not display a notification',
+        ),
+        { description: getWebPushFailureReason() ?? undefined },
+      );
+      return;
+    }
+    toast.error(
+      t(
+        'settings.browserNotificationsBlockedOsTitle',
+        'Your system is blocking notifications for this browser',
+      ),
+    );
+  }, [t]);
+
   /** Permission is in hand — store the flag and prove delivery works. */
   const finishEnable = useCallback(async () => {
     setStoredEnabled(true);
@@ -125,16 +164,11 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
       toast.success(t('settings.browserNotificationsEnabled', 'Browser notifications enabled'));
       return;
     }
-    // The probe failed, which means the OS refused to display it. The switch
-    // stays on and the row explains: turning it off here would hide the one
-    // message that says what to do, and the fault is not DeHub's to own.
-    toast.error(
-      t(
-        'settings.browserNotificationsBlockedOsTitle',
-        'Your system is blocking notifications for this browser',
-      ),
-    );
-  }, [t, testBody]);
+    // The switch stays on and the row explains: turning it off here would hide
+    // the one message that says what is wrong, and the fault is not DeHub's to
+    // own either way.
+    reportProbeFailure();
+  }, [reportProbeFailure, t, testBody]);
 
   // The payoff for the blocked case: unblocking happens in the browser's own
   // UI, and coming back to the tab is what tells us about it. Honour the click
@@ -200,12 +234,7 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
     if (await showTestNotification('DeHub', testBody)) {
       toast.success(t('settings.browserNotificationsTestSent', 'Test notification sent'));
     } else {
-      toast.error(
-        t(
-          'settings.browserNotificationsBlockedOsTitle',
-          'Your system is blocking notifications for this browser',
-        ),
-      );
+      reportProbeFailure();
     }
   };
 
@@ -241,12 +270,21 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
   // it had, because every other state was already telling the truth.
   const description = osBlocked
     ? t('settings.browserNotificationsBlockedOsDesc', 'On, but your system is blocking them')
-    : tabOnly
-      ? t('settings.browserNotificationsTabOnlyDesc', 'On, but only while DeHub is open in a tab')
-      : baseDescription;
+    : displayFailed
+      ? t(
+          'settings.browserNotificationsDisplayFailedDesc',
+          'On, but this browser cannot display them',
+        )
+      : tabOnly
+        ? t('settings.browserNotificationsTabOnlyDesc', 'On, but only while DeHub is open in a tab')
+        : baseDescription;
 
   const Icon =
-    blocked || unsupported || tabOnly || osBlocked ? BellOff : isOn ? BellRing : Bell;
+    blocked || unsupported || tabOnly || osBlocked || displayFailed
+      ? BellOff
+      : isOn
+        ? BellRing
+        : Bell;
 
   const control = (
     <Switch
@@ -310,6 +348,28 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
               'The subscription itself is fine - your operating system is refusing to display anything from this browser. Turn notifications on for your browser in your system notification settings, then switch this off and on again.',
             )}
           </p>
+        </div>
+      )}
+      {displayFailed && (
+        <div className="mt-2 rounded-xl border border-amber-400/30 bg-amber-400/[0.07] p-3">
+          <p className="text-sm font-medium text-white">
+            {t(
+              'settings.browserNotificationsDisplayFailedTitle',
+              'This browser could not display a notification',
+            )}
+          </p>
+          <p className="mt-1 text-xs text-zinc-400">
+            {t(
+              'settings.browserNotificationsDisplayFailedHint',
+              'Your system is allowing notifications and the subscription is live — the browser itself failed to show one, and it will keep failing until that clears. Nothing in DeHub or your system settings will change it.',
+            )}
+          </p>
+          {/* Verbatim, and deliberately not translated: it is the browser's
+              string, it is what a search or a support thread will match on,
+              and paraphrasing it would lose the only specific detail here. */}
+          {failureReason && (
+            <p className="mt-2 break-words font-mono text-[11px] text-zinc-500">{failureReason}</p>
+          )}
         </div>
       )}
       {(tabOnly || osBlocked) && (

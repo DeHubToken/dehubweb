@@ -185,6 +185,49 @@ describe('web push state', () => {
     expect(mod.getWebPushState()).toBe('blocked');
   });
 
+  it('reports display-failed, not blocked, when the browser names a reason', async () => {
+    // The literal Chrome produced in production on a machine whose OS was
+    // allowing notifications and whose subscription was live: its own
+    // notification store (Platform Notifications, a LevelDB) had lost its
+    // CURRENT pointer, so every showNotification rejected. Reading that as
+    // the OS sent the reader to a setting that was already correct.
+    installBrowser({
+      subscribe: () => fakeSubscription(),
+      showNotification: () => {
+        throw new Error("Failed to execute 'showNotification' on 'ServiceWorkerRegistration': Notification data could not be persisted.");
+      },
+    });
+
+    const mod = await freshModule();
+    await expect(mod.probeNotificationDisplay('DeHub', 'probe')).resolves.toBe(false);
+    expect(mod.getWebPushState()).toBe('display-failed');
+    expect(mod.getWebPushFailureReason()).toContain('could not be persisted');
+  });
+
+  it('clears a display fault once a notification does display', async () => {
+    // Someone clicks "send a test notification" to find out whether the thing
+    // they just changed worked. If a success leaves the warning standing, the
+    // answer they get is the old one.
+    let fail = true;
+    installBrowser({
+      existing: fakeSubscription(),
+      subscribe: () => fakeSubscription(),
+      showNotification: () => {
+        if (fail) throw new Error('Notification data could not be persisted.');
+      },
+    });
+
+    const mod = await freshModule();
+    await mod.probeNotificationDisplay('DeHub', 'probe');
+    expect(mod.getWebPushState()).toBe('display-failed');
+    expect(mod.getWebPushFailureReason()).not.toBeNull();
+
+    fail = false;
+    await expect(mod.probeNotificationDisplay('DeHub', 'probe')).resolves.toBe(true);
+    expect(mod.getWebPushState()).toBe('subscribed');
+    expect(mod.getWebPushFailureReason()).toBeNull();
+  });
+
   it('leaves the state alone when the OS does display it', async () => {
     installBrowser({ subscribe: () => fakeSubscription() });
 

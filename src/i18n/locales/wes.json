@@ -136,6 +136,9 @@
     "browserNotificationsTestBody": "Na so wan DeHub notification di look.",
     "browserNotificationsTabOnlyDesc": "On, but only when DeHub dey open for one tab",
     "browserNotificationsTabOnlyTitle": "Dis browser no go gree for background notifications",
+    "browserNotificationsDisplayFailedTitle": "Dis browser no fit show notification",
+    "browserNotificationsDisplayFailedDesc": "On, but dis browser no fit show dem",
+    "browserNotificationsDisplayFailedHint": "Your system don allow notification and di subscription live — di browser itself fail show one, and e go keep fail until dat clear. Nothing for DeHub or your system notification settings go change am.",
     "browserNotificationsTabOnlyHint": "Notifications fit only reach you when DeHub dey open for one tab: your browser refuse to register for background push. Dat one usually na the operating system block notifications for the browser itself, so find your browser for your system notification settings and switch am off and back on.",
     "activity": "Activity",
     "likes": "Like dem",
@@ -1598,6 +1601,8 @@
     "turn_on_desktop_notifications": "Yu wan turn on desktop notification?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Make yu sabi kwik-kwik fo reply, tip an DM dem wen yu dei fo anoda tab.",
     "turn_on": "Turn am on",
+    "push_display_failed_body": "Dis browser no fit show notification, so none of dem na reach you. Your system settings no be di problem — di browser self report di failure.",
+    "push_tab_only_body": "Dis browser no go register for background notifications, so nothing go reach you while DeHub done close.",
     "not_now": "No bi nau"
   },
   "staking": {

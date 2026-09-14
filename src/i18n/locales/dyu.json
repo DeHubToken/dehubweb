@@ -139,6 +139,9 @@
     "browserNotificationsBlockedOsTitle": "I ka sisitɛmu be kunnafoniw bali ka baara kɛ n'o porogaramu ye",
     "browserNotificationsBlockedOsDesc": "O bɛɛ n'a ta, i ka sisitɛmu b'u bali ka baara kɛ",
     "browserNotificationsBlockedOsHint": "I ka ladɛrɛsi yɛrɛ ka ɲi - i ka baara kɛcogo be ban ka fɛɛn dɔ yira o yɔrɔ la. I ka ladɛrɛsi dɔw bila i ka ladɛrɛsi la, o kɔ, i ka ladɛrɛsi dɔw bila ka bɔ.",
+    "browserNotificationsDisplayFailedTitle": "O la, a tun be se ka kɛ ko a tun ye mɔgɔ dɔ ye min tun be se",
+    "browserNotificationsDisplayFailedDesc": "O la, a ka ɲi ka kɛ komi a ye fɛɛn dɔ ye min be se k'a bali ka baara kɛ",
+    "browserNotificationsDisplayFailedHint": "I ka sisitɛmu be kunnafoniw di ani i ka sɛbɛri be to nii na — a yɛrɛ ma se k'a yira ko i ye mɔgɔ dɔ ye, a bena to ka dɛsɛ fɔɔ ka taga se a ka fɔta ma. DeHub wala i ka sisitɛmu labɛncogo si tɛna o yɛlɛma.",
     "browserNotificationsRetry": "Try tun tun tun",
     "browserNotificationsTabOnlyHint": "I ka kunnafoniw be se ka se i ma tuma min na DeHub be yɛlɛla tab dɔ kɔnɔ: i ka porogaramu banna ka tɔgɔ bila a kan. O ye baara kɛcogo ye min be kunnafoniw bali ka baara kɛ n'i ka porogaramu ye. O kama, i ka porogaramu yɔrɔ ɲini i ka porogaramu kɔnɔ ani k'a bali ka baara kɛ n'a ye.",
     "activity": "Kɔrɔbɔ",
@@ -1672,6 +1675,8 @@
     "turn_on_desktop_notifications": "Ordinatɛri kunnafoniw ka da wa?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Jaabi, sarati ni cikan kunnafoni sɔrɔ k'a to i be onglet wɛrɛ la.",
     "turn_on": "A da",
+    "push_display_failed_body": "O porogaramu ma se ka kunnafoni dɔ yira, o la, u si tɛ se ka se i ma. I ka sisitɛmu labɛncogo tɛ sababu ye — a kɛra komi a kɛra komi a kɛra komi a ma se ka baara kɛ.",
+    "push_tab_only_body": "O la, i tɛ se ka foyi sɔrɔ n'i ye DeHub datugu.",
     "not_now": "Sisan tɛ",
     "image_too_large_untiered": "Jaa ka bon kojugu — jaa ka kan ka mara fɔɔ ka taga se {{limit}} MB"
   },

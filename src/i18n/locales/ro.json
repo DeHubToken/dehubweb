@@ -139,6 +139,9 @@
     "browserNotificationsBlockedOsTitle": "Sistemul dvs. blochează notificările pentru acest browser",
     "browserNotificationsBlockedOsDesc": "Activat, dar sistemul dvs. le blochează",
     "browserNotificationsBlockedOsHint": "Abonamentul în sine este în regulă - sistemul dvs. de operare refuză să afișeze nimic din acest browser. Activați notificările pentru browserul dvs. în setările de notificare ale sistemului, apoi dezactivați și activați din nou.",
+    "browserNotificationsDisplayFailedTitle": "Acest browser nu a putut afișa o notificare",
+    "browserNotificationsDisplayFailedDesc": "Activat, dar acest browser nu le poate afișa",
+    "browserNotificationsDisplayFailedHint": "Sistemul dvs. permite notificări, iar abonamentul este live — browserul în sine nu a reușit să afișeze una și va continua să eșueze până când se șterge. Nimic din DeHub sau din setările de notificare ale sistemului nu o va schimba.",
     "browserNotificationsRetry": "Încercați din nou",
     "browserNotificationsTabOnlyHint": "Notificările pot ajunge la dvs. numai în timp ce DeHub este deschis într-o filă: browserul dvs. a refuzat să se înregistreze pentru împingerea în fundal. Acesta este, de obicei, sistemul de operare care blochează notificările pentru browserul în sine, așa că găsiți browserul în setările de notificare ale sistemului și opriți-l și reporniți-l.",
     "activity": "Activitate",
@@ -1554,6 +1557,8 @@
     "turn_on": "Activează",
     "push_blocked_title": "Notificările nu ajung la tine",
     "push_blocked_body": "Sistemul dvs. blochează notificările pentru acest browser, astfel încât nimic nu ajunge la dvs. în timp ce DeHub este închis. Activează-le din nou pentru browserul tău în setările de notificare ale sistemului, apoi dezactivează și activează din nou notificările DeHub.",
+    "push_display_failed_body": "Acest browser nu a putut afișa o notificare, astfel încât niciunul dintre ei nu vă contactează. Setările dvs. de sistem nu sunt cauza — browserul a raportat defecțiunea în sine.",
+    "push_tab_only_body": "Acest browser nu s-ar înregistra pentru notificări de fundal, astfel încât nimic nu ajunge la dvs. în timp ce DeHub este închis.",
     "push_blocked_more": "Mai multe detalii",
     "not_now": "Nu acum",
     "image_too_large_untiered": "Imaginea este prea mare — imaginile sunt stocate până la {{limit}} MB"

@@ -139,6 +139,9 @@
     "browserNotificationsBlockedOsTitle": "Nidaamkaagu wuxuu xannibayaa ogeysiisyada biraawsarkan",
     "browserNotificationsBlockedOsDesc": "Laakiin nidaamkaagu wuu xannibayaa iyaga.",
     "browserNotificationsBlockedOsHint": "Is-diiwaangelinta laftiisa waa hagaagsan tahay - nidaamkaaga hawlgalka ayaa diidaya inuu wax ka muujiyo biraawsarkaas. U leexo ogeysiisyada biraawsarkaaga goobaha ogeysiiska nidaamkaaga, ka dibna u leexo tan iyo mar kale.",
+    "browserNotificationsDisplayFailedTitle": "Browser-kani ma muujin karo ogeysiis",
+    "browserNotificationsDisplayFailedDesc": "On, laakiin biraawsarkani ma soo bandhigi karo",
+    "browserNotificationsDisplayFailedHint": "Nidaamkaagu wuxuu u oggolaanayaa ogeysiisyada iyo is-diiwaangelinta si toos ah — biraawsarka laftiisa ayaa ku guuldareystay inuu muujiyo mid, waxayna sii wadi doontaa guuldarro ilaa taas ay nadiifiso. Waxba kuma jiraan DeHub ama goobahaaga ogeysiinta nidaamka ayaa beddeli doona.",
     "browserNotificationsRetry": "Mar kale isku day",
     "browserNotificationsTabOnlyHint": "Ogeysiisyada ayaa kaliya ku gaari kara inta DeHub uu ku furan yahay tab: biraawsarkaaga ayaa diiday inuu iska diiwaangeliyo riixitaanka asalka. Taasi waa sida caadiga ah nidaamka qalliinka ee xannibaya ogeysiisyada biraawsarka laftiisa, markaa raadi biraawsarkaaga goobaha ogeysiiska nidaamkaaga oo u beddel.",
     "activity": "Howlgallada",
@@ -1694,6 +1697,8 @@
     "turn_on": "Shid",
     "push_blocked_title": "Ogeysiisyada kuma soo gaadhayaan",
     "push_blocked_body": "Nidaamkaagu wuxuu xannibayaa ogeysiisyada biraawsarkan, sidaa darteed waxba kuuma soo gaadho inta DeHub xiran yahay. Dib ugu laabo biraawsarkaaga goobaha ogeysiiska nidaamkaaga, ka dibna u beddel ogeysiisyada DeHub iyo mar kale.",
+    "push_display_failed_body": "Browser-kani ma muujin karo ogeysiis, sidaa darteed midkoodna kuuma soo gaadhin. Dejinta nidaamkaaga ma aha sababta — biraawsarku wuxuu soo sheegay fashilka laftiisa.",
+    "push_tab_only_body": "Browser-kani isma diiwaangelin doono ogeysiisyada asalka ah, sidaa darteed waxba kuuma imaan doono inta DeHub xiran yahay.",
     "push_blocked_more": "Faahfaahin dheeraad ah",
     "not_now": "Hadda maya",
     "image_too_large_untiered": "Sawirka waa mid aad u weyn — sawirada waxaa lagu keydiyaa {{limit}} MB"
