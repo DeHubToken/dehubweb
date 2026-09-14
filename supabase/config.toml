@@ -10,6 +10,10 @@ project_id = "aigxuutjaqsywioxjefr"
   # Auth is an ADMIN JWT from api.dehub.io in the Authorization header, checked
   # against GET /api/admin/me — not a Supabase JWT, so the platform check would
   # reject every legitimate call.
+  # Same bridge as admin-stages, super admin only: the Traffic page reads
+  # page_view_events, which nothing but the service role can see.
+  [functions.admin-page-views]
+    verify_jwt = false
   [functions.admin-stages]
     verify_jwt = false
   # Same bridge as admin-stages: an admin JWT from api.dehub.io, re-verified
