@@ -1656,7 +1656,9 @@
     "push_blocked_title": "Ilmoituksia ei tule sinulle",
     "push_blocked_body": "Järjestelmäsi estää tämän selaimen ilmoitukset, joten mikään ei tavoita sinua, kun DeHub on suljettu. Kytke ne takaisin päälle selaimessasi järjestelmäilmoitusasetuksissa ja kytke sitten DeHub-ilmoitukset pois päältä ja takaisin päälle.",
     "push_blocked_more": "Lisää yksityiskohtia",
-    "not_now": "Ei nyt"
+    "not_now": "Ei nyt",
+    "image_too_large_tier": "Kuva on liian suuri — {{tier}}-tasosi tallentaa enintään {{limit}} Mt: n kuvia",
+    "image_too_large_untiered": "Kuva on liian suuri — kuvia tallennetaan enintään {{limit}} Mt"
   },
   "staking": {
     "title": "Staking",

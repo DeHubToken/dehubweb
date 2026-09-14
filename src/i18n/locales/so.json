@@ -1695,7 +1695,8 @@
     "push_blocked_title": "Ogeysiisyada kuma soo gaadhayaan",
     "push_blocked_body": "Nidaamkaagu wuxuu xannibayaa ogeysiisyada biraawsarkan, sidaa darteed waxba kuuma soo gaadho inta DeHub xiran yahay. Dib ugu laabo biraawsarkaaga goobaha ogeysiiska nidaamkaaga, ka dibna u beddel ogeysiisyada DeHub iyo mar kale.",
     "push_blocked_more": "Faahfaahin dheeraad ah",
-    "not_now": "Hadda maya"
+    "not_now": "Hadda maya",
+    "image_too_large_untiered": "Sawirka waa mid aad u weyn — sawirada waxaa lagu keydiyaa {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

@@ -1591,7 +1591,9 @@
     "push_blocked_title": "Hindi dumarating sa iyo ang mga notipikasyon",
     "push_blocked_body": "Hinaharang ng iyong system ang mga notipikasyon para sa browser na ito, kaya walang maaabot sa iyo habang sarado ang DeHub. I - on muli ang mga ito para sa iyong browser sa mga setting ng notipikasyon ng iyong system, pagkatapos ay i - off at i - on muli ang mga notipikasyon ng DeHub.",
     "push_blocked_more": "Mas detalyado",
-    "not_now": "Hindi muna"
+    "not_now": "Hindi muna",
+    "image_too_large_tier": "Masyadong malaki ang larawan — ang iyong {{tier}} tier ay nag - iimbak ng mga larawan hanggang {{limit}} MB",
+    "image_too_large_untiered": "Masyadong malaki ang larawan — nakaimbak ang mga larawan hanggang {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

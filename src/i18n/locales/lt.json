@@ -1694,7 +1694,9 @@
     "push_blocked_title": "Pranešimai nepasiekia jūsų",
     "push_blocked_body": "Jūsų sistema blokuoja šios naršyklės pranešimus, todėl niekas su jumis nesusisiekia, kol „DeHub“ yra uždarytas. Sistemos pranešimų nustatymuose vėl įjunkite juos savo naršyklėje, tada išjunkite ir vėl įjunkite „DeHub“ pranešimus.",
     "push_blocked_more": "Daugiau informacijos",
-    "not_now": "Ne dabar"
+    "not_now": "Ne dabar",
+    "image_too_large_tier": "Vaizdas per didelis — jūsų {{tier}} lygyje saugomi vaizdai iki {{limit}} MB",
+    "image_too_large_untiered": "Vaizdas per didelis — vaizdai saugomi iki {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

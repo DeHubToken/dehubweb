@@ -1677,7 +1677,9 @@
     "push_blocked_title": "Benachrichtigige erreiche dich nöd",
     "push_blocked_body": "Dini System blockiert Benachrichtigige für das Browser, drum chunnt nüt bi dir a, wänn DeHub zue isch. Schalts die wider a für din Browser i dine System-Benachrichtigigs-Iistellige, und schalt denn d'DeHub-Benachrichtigige wider us und wider a.",
     "push_blocked_more": "Meh Detail",
-    "not_now": "Jetz nöd"
+    "not_now": "Jetz nöd",
+    "image_too_large_tier": "Bild isch z'gross — dini {{tier}} Tier speicheret Bilder bis {{limit}} MB",
+    "image_too_large_untiered": "Bild isch z'gross — Bilder wärde bis {{limit}} MB gspeicheret"
   },
   "staking": {
     "title": "Staking",

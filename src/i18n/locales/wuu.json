@@ -1644,7 +1644,9 @@
     "push_blocked_title": "通知呒法送达你",
     "push_blocked_body": "侬个系统挡脱了搿只浏览器个通知，所以DeHub关脱个辰光，侬啥通知也收不到。请到侬系统通知设置里向为搿只浏览器重新打开通知，然后把DeHub个通知关脱再重新打开一次。",
     "push_blocked_more": "更多細節",
-    "not_now": "暂勿要"
+    "not_now": "暂勿要",
+    "image_too_large_tier": "图像太大——你的 {{tier}} 层级商店最多可以存储 {{limit}} MB 的图像",
+    "image_too_large_untiered": "图像太大——图像存储最多 {{limit}} MB"
   },
   "staking": {
     "title": "质押",

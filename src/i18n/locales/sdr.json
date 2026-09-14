@@ -1643,7 +1643,9 @@
     "turn_on_desktop_notifications": "ئاگادارکردنەوەکانی دێسکتۆپ بکرێنەوە؟",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "دیکە تابێکدا بیت، لە وەڵام و بەخشش و نامەکان ئاگادار بە.",
     "turn_on": "بیکەوە",
-    "not_now": "ئێستا نا"
+    "not_now": "ئێستا نا",
+    "image_too_large_tier": "तस्वीर बहुत बड़ी है — तुम्हारे {{tier}} स्तर की दुकानें {{limit}} MB तक की तस्वीरें रखती हैं",
+    "image_too_large_untiered": "तस्वीर बहुत बड़ी है — तस्वीरें {{limit}} MB तक संग्रहीत की जाती हैं"
   },
   "staking": {
     "title": "اسٹیکنگ",

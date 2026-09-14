@@ -1686,7 +1686,9 @@
     "push_blocked_title": "Огоҳиномаҳо ба шумо намерасанд",
     "push_blocked_body": "Ang iyong system ay nagbukod ng mga abiso para sa browser na ito, kaya ang walang iyo habang nakaraan ang DeHub. Ilipat ang mga ito para sa iyong browser sa iyong mga setting ng abiso sa system, pagkatapos ang mga abiso sa DeHub at muli.",
     "push_blocked_more": "Бештар тафсилот",
-    "not_now": "Ҳозир не"
+    "not_now": "Ҳозир не",
+    "image_too_large_tier": "Тасвир аз ҳад зиёд калон аст — шумо {{tier}} tier images up to {{limit}} MB",
+    "image_too_large_untiered": "Ang larawan ay masyadong malaki — ang mga larawan ay naka-save upang {{limit}} MB"
   },
   "staking": {
     "title": "Стейкинг",

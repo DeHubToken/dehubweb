@@ -1682,7 +1682,9 @@
     "push_blocked_title": "Bildirişler size gelmeýär",
     "push_blocked_body": "Siziň sistemasyňyz bu brauzer üçin habarlamalary saklaýar, şonuň üçin DeHub ýapylýança hiç zat size ýetmeýär. Olar siziň sistemanyzdaky habar beriş guramalaryňyzda brauzer üçin yzyna öwrülip, DeHub habarlaryny gaýta-gaýta üýtget.",
     "push_blocked_more": "Goý, jikme-jik aýdyň",
-    "not_now": "Häzir däl"
+    "not_now": "Häzir däl",
+    "image_too_large_tier": "Resim gaty uly — {{tier}} tier {{limit}}MB-eçenlisuratlary saklaýar",
+    "image_too_large_untiered": "Resim gaty uly — suratlar {{limit}}MB-de saklanýar"
   },
   "staking": {
     "title": "Goýum",

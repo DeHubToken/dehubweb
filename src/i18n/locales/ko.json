@@ -1729,7 +1729,9 @@
     "push_blocked_title": "알림이 도착하지 않고 있습니다",
     "push_blocked_body": "시스템이 이 브라우저에 대한 알림을 차단하고 있으므로 DeHub가 종료되는 동안 아무 것도 연결되지 않습니다. 시스템 알림 설정에서 브라우저를 다시 켜고 DeHub 알림을 껐다가 다시 켭니다.",
     "push_blocked_more": "더 자세히",
-    "not_now": "나중에"
+    "not_now": "나중에",
+    "image_too_large_tier": "이미지가 너무 큽니다. {{tier}} 등급은 최대 {{limit}} MB의 이미지를 저장합니다.",
+    "image_too_large_untiered": "이미지가 너무 큽니다 — 이미지는 {{limit}} MB까지 저장됩니다"
   },
   "staking": {
     "title": "스테이킹",

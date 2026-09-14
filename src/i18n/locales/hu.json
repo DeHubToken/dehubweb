@@ -1656,7 +1656,9 @@
     "push_blocked_title": "Az értesítések nem érkeznek meg hozzád",
     "push_blocked_body": "A rendszered blokkolja az értesítéseket ehhez a böngészőhöz, így semmi sem jut el hozzád, amíg a DeHub zárva van. Kapcsolja be őket újra a böngészőjében a rendszer értesítési beállításaiban, majd kapcsolja ki, majd újra be a DeHub értesítéseket.",
     "push_blocked_more": "Több részlet",
-    "not_now": "Most nem"
+    "not_now": "Most nem",
+    "image_too_large_tier": "A kép túl nagy — a {{tier}} szinted legfeljebb {{limit}} MB méretű képeket tárol",
+    "image_too_large_untiered": "A kép túl nagy — a képek legfeljebb {{limit}} MB-ig vannak tárolva"
   },
   "staking": {
     "title": "Staking",

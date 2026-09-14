@@ -1686,7 +1686,9 @@
     "push_blocked_title": "Ngwa ngwa anaghị erute gị",
     "push_blocked_body": "Usoro gị na-egbochi ọkwa maka ihe nchọgharị a, ya mere ọ dịghị ihe ruru gị mgbe DeHub mechiri. Gbanyụọ ha maka ihe nchọgharị gị na ntọala ọkwa sistemụ gị, wee gbanyụọ ọkwa DeHub ma gbanye ọzọ.",
     "push_blocked_more": "Ihe ọzọ",
-    "not_now": "Ọ bụghị ugbu a"
+    "not_now": "Ọ bụghị ugbu a",
+    "image_too_large_tier": "Foto buru oke ibu — gị {{tier}} tier na-echekwa onyonyo ruo {{limit}} MB",
+    "image_too_large_untiered": "Inyogo buru ibu — a na-echekwa inyogo ruo {{limit}} MB"
   },
   "staking": {
     "title": "Ntinye Ego",

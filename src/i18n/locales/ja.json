@@ -1728,7 +1728,9 @@
     "push_blocked_title": "通知が届いていません",
     "push_blocked_body": "システムがこのブラウザの通知をブロックしているため、DeHubが閉じられている間は何も届きません。システム通知設定でブラウザの通知を再度オンにしてから、DeHub通知をオフにしたりオンにしたりします。",
     "push_blocked_more": "詳細",
-    "not_now": "後で"
+    "not_now": "後で",
+    "image_too_large_tier": "画像が大きすぎます—あなたの{{tier}}ティアは最大{{limit}} MBまでの画像を保存します",
+    "image_too_large_untiered": "画像が大きすぎます—画像は最大{{limit}} MBまで保存されます"
   },
   "staking": {
     "title": "ステーキング",

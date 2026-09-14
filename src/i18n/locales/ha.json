@@ -1694,7 +1694,9 @@
     "push_blocked_title": "Sanarwa ba ta isar maka",
     "push_blocked_body": "Tsarin ku yana toshe sanarwar wannan burauzar, don haka babu abin da ya kai ku yayin da DeHub ya rufe. Kunna su baya don burauzarku a cikin saitunan sanarwar tsarin ku, sa'an nan kuma canza sanarwar DeHub kashe kuma a sake.",
     "push_blocked_more": "Ƙarin bayani",
-    "not_now": "Ba yanzu ba"
+    "not_now": "Ba yanzu ba",
+    "image_too_large_tier": "Hoto yana da girma sosai — your {{tier}}tier yana adana hotuna har zuwa {{limit}} MB",
+    "image_too_large_untiered": "Hoto yana da girma sosai — ana adana hotuna har zuwa {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

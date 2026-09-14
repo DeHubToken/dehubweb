@@ -1674,7 +1674,9 @@
     "push_blocked_title": "तोर ला नोटिफिकेशन नई मिलत हे",
     "push_blocked_body": "आपके सिस्टम ए ब्राउज़र बर सूचना ल ब्लॉक करत हवय, एखरबर DeHub बंद होए के दौरान कुछु घलो आपके पास नी पहुंचत हवय । अपन सिस्टम सूचना सेटिंग्स म अपन ब्राउज़र बर ओमनला वापस चालू करव, फिर DeHub सूचना ल बार-बार चालू करव ।",
     "push_blocked_more": "अउर बिस्तार",
-    "not_now": "अभी नइ"
+    "not_now": "अभी नइ",
+    "image_too_large_tier": "फोटो बहुत बड़ा हे — your {{tier}} tier Stores images up to {{limit}} MB",
+    "image_too_large_untiered": "फोटो बहुत बडखा हवय — फोटो ल {{limit}} MB तक संग्रहीत करे जात हवय"
   },
   "staking": {
     "title": "स्टेकिंग",

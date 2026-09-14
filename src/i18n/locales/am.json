@@ -1722,7 +1722,9 @@
     "push_blocked_title": "ማሳወቂያዎች አልደረሱዎትም",
     "push_blocked_body": "ስርዓትዎ ለዚህ አሳሽ ማሳወቂያዎችን እያገደ ነው ፣ ስለሆነም DeHub በሚዘጋበት ጊዜ ምንም ነገር አይደርስብዎትም ። በስርዓት ማሳወቂያ ቅንብሮችዎ ውስጥ ለአሳሽዎ እንደገና ያብሩዋቸው ፣ ከዚያ የ DeHub ማሳወቂያዎችን ያጥፉ እና እንደገና ያብሩ ።",
     "push_blocked_more": "ተጨማሪ ዝርዝር",
-    "not_now": "አሁን አይደለም"
+    "not_now": "አሁን አይደለም",
+    "image_too_large_tier": "ምስሉ በጣም ትልቅ ነው — የእርስዎ {{tier}} tier እስከ {{limit}} MB ድረስ ምስሎችን ያከማቻል",
+    "image_too_large_untiered": "ምስሉ በጣም ትልቅ ነው — ምስሎች እስከ {{limit}} MB ድረስ ይቀመጣሉ"
   },
   "staking": {
     "title": "ተቀማጭ ማድረግ",

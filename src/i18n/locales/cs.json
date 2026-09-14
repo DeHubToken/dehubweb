@@ -1656,7 +1656,9 @@
     "push_blocked_title": "Oznámení se k vám nedostávají",
     "push_blocked_body": "Váš systém blokuje oznámení pro tento prohlížeč, takže když je DeHub zavřený, nic se k vám nedostane. V nastavení systémových oznámení je znovu zapněte ve svém prohlížeči a poté vypněte a znovu zapněte oznámení DeHub.",
     "push_blocked_more": "Více podrobností",
-    "not_now": "Teď ne"
+    "not_now": "Teď ne",
+    "image_too_large_tier": "Obrázek je příliš velký — vaše úroveň {{tier}} ukládá obrázky do {{limit}} MB",
+    "image_too_large_untiered": "Obrázek je příliš velký — obrázky jsou uloženy do {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

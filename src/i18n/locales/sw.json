@@ -1715,7 +1715,9 @@
     "push_blocked_title": "Arifa hazikufikii",
     "push_blocked_body": "Mfumo wako unazuia arifa za kivinjari hiki, kwa hivyo hakuna kinachokufikia wakati DeHub imefungwa. Ziwashe tena kwa ajili ya kivinjari chako katika mipangilio ya arifa ya mfumo wako, kisha zima na uwashe tena arifa za DeHub.",
     "push_blocked_more": "Maelezo zaidi",
-    "not_now": "Si sasa"
+    "not_now": "Si sasa",
+    "image_too_large_tier": "Picha ni kubwa sana — yako {{tier}} tier huhifadhi picha hadi {{limit}} MB",
+    "image_too_large_untiered": "Picha ni kubwa sana — picha zimehifadhiwa hadi {{limit}} MB"
   },
   "staking": {
     "title": "Uwekaji Amana",

@@ -1651,7 +1651,9 @@
     "push_blocked_title": "Obavijesti vam ne stižu",
     "push_blocked_body": "Vaš sustav blokira obavijesti za ovaj preglednik, tako da vam ništa ne stiže dok je DeHub zatvoren. Ponovno ih uključite za svoj preglednik u postavkama obavijesti sustava, a zatim isključite i ponovno uključite DeHub obavijesti.",
     "push_blocked_more": "Više detalja",
-    "not_now": "Ne sada"
+    "not_now": "Ne sada",
+    "image_too_large_tier": "Slika je prevelika — razina {{tier}} pohranjuje slike do {{limit}} MB",
+    "image_too_large_untiered": "Slika je prevelika — slike se pohranjuju do {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

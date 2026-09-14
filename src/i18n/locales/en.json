@@ -1729,7 +1729,9 @@
     "push_blocked_title": "Notifications are not reaching you",
     "push_blocked_body": "Your system is blocking notifications for this browser, so nothing reaches you while DeHub is closed. Turn them back on for your browser in your system notification settings, then switch DeHub notifications off and on again.",
     "push_blocked_more": "More detail",
-    "not_now": "Not now"
+    "not_now": "Not now",
+    "image_too_large_tier": "Image is too large — your {{tier}} tier stores images up to {{limit}} MB",
+    "image_too_large_untiered": "Image is too large — images are stored up to {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

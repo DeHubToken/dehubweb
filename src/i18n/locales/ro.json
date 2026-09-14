@@ -1555,7 +1555,8 @@
     "push_blocked_title": "Notificările nu ajung la tine",
     "push_blocked_body": "Sistemul dvs. blochează notificările pentru acest browser, astfel încât nimic nu ajunge la dvs. în timp ce DeHub este închis. Activează-le din nou pentru browserul tău în setările de notificare ale sistemului, apoi dezactivează și activează din nou notificările DeHub.",
     "push_blocked_more": "Mai multe detalii",
-    "not_now": "Nu acum"
+    "not_now": "Nu acum",
+    "image_too_large_untiered": "Imaginea este prea mare — imaginile sunt stocate până la {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

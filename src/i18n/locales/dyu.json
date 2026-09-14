@@ -1672,7 +1672,8 @@
     "turn_on_desktop_notifications": "Ordinatɛri kunnafoniw ka da wa?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Jaabi, sarati ni cikan kunnafoni sɔrɔ k'a to i be onglet wɛrɛ la.",
     "turn_on": "A da",
-    "not_now": "Sisan tɛ"
+    "not_now": "Sisan tɛ",
+    "image_too_large_untiered": "Jaa ka bon kojugu — jaa ka kan ka mara fɔɔ ka taga se {{limit}} MB"
   },
   "staking": {
     "title": "Bilali",

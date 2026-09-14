@@ -1675,7 +1675,9 @@
     "push_blocked_title": "ሓበሬታታት ኣይበጽሓካን",
     "push_blocked_body": "ስርዓትካ ነዚ ብራውዘር እዚ ናይ መጠንቀቕታታት ዕጽዋ ይገብር ኣሎ ፣ ስለዚ DeHub ኣብ ዝዕጸወሉ እዋን ዝኾነ ነገር ኣይበጽሓካን እዩ ። ነቲ ብራውዘርካ ኣብ ናይ ስርዓትካ ናይ ኣፍልጦ ኣቀማምጣታት ኣበራቢርካ ፡ ድሕሪኡ ድማ ናይ DeHub ኣፍልጦታት ኣቋሪጽካዮ ።",
     "push_blocked_more": "ዝበለጸ ሓበሬታ",
-    "not_now": "ሕጂ ኣይኮነን"
+    "not_now": "ሕጂ ኣይኮነን",
+    "image_too_large_tier": "ስእሊ ኣዝዩ ዓቢ እዩ — ናትካ {{tier}} tier ምስሊታት ክሳብ {{limit}} MB ይዕቅብ",
+    "image_too_large_untiered": "ስእሊ ኣዝዩ ዓቢ እዩ — ስእልታት ክሳብ {{limit}} MB ይዕቀቡ"
   },
   "staking": {
     "title": "ምቕማጥ",

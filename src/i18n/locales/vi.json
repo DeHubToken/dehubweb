@@ -1474,7 +1474,9 @@
     "push_blocked_title": "Thông báo không đến được với bạn",
     "push_blocked_body": "Hệ thống của bạn đang chặn thông báo cho trình duyệt này, vì vậy không có gì liên lạc với bạn trong khi DeHub đóng. Bật lại cho trình duyệt của bạn trong cài đặt thông báo hệ thống, sau đó tắt và bật lại thông báo DeHub.",
     "push_blocked_more": "Chi tiết hơn",
-    "not_now": "Để sau"
+    "not_now": "Để sau",
+    "image_too_large_tier": "Hình ảnh quá lớn — cấp độ {{tier}} của bạn lưu trữ hình ảnh lên đến {{limit}} MB",
+    "image_too_large_untiered": "Hình ảnh quá lớn — hình ảnh được lưu trữ lên đến {{limit}} MB"
   },
   "staking": {
     "title": "Staking",

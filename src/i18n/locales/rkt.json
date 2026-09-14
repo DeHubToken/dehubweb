@@ -1780,7 +1780,9 @@
     "push_blocked_title": "सूचनाएं थ्हारे तक नीं पहुँच रीया",
     "push_blocked_body": "Aapra system browser lai notification block kar ryo, islye DeHub band hoy to kuch bhi aapne tak nahi pahunche. Aapra system notification settings mein browser lai notification vapas chalu karo, phir DeHub notification band karke vapas chalu karo.",
     "push_blocked_more": "अउर बिस्तार",
-    "not_now": "এলা নোয়ায়"
+    "not_now": "এলা নোয়ায়",
+    "image_too_large_tier": "ছবি অনেক বড় — আপনার {{tier}} স্তরের দোকান {{limit}} MB পর্যন্ত ছবি সংরক্ষণ করে",
+    "image_too_large_untiered": "ছবি অনেক বড় — ছবি {{limit}} এমবি পর্যন্ত সংরক্ষণ করা হয়"
   },
   "staking": {
     "title": "জমা রাখা",
