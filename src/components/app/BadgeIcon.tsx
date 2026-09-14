@@ -6,7 +6,7 @@ import type { CSSProperties } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useBadgeVisual } from '@/hooks/use-badge-balance';
 import { cssUrl } from '@/lib/css-url';
-import type { BadgeLock } from '@/lib/staking-badges';
+import { getBadgePlateUrl, type BadgeLock } from '@/lib/staking-badges';
 
 interface BadgeIconProps {
   /** Pass badgeBalance to resolve badge from balance */
@@ -39,19 +39,19 @@ interface BadgeIconProps {
  * little more optical size so they do not recede at compact rendering sizes.
  */
 const BADGE_OPTICS: Record<string, { scale: number; bottomInset: number }> = {
-  Crab: { scale: 1, bottomInset: 5 },
-  Lobster: { scale: 1.04, bottomInset: 4 },
-  Piranha: { scale: 1, bottomInset: 7 },
-  Tortoise: { scale: 1, bottomInset: 10 },
-  Cobra: { scale: 1, bottomInset: 4 },
-  Octopus: { scale: 1.02, bottomInset: 4 },
-  Crocodile: { scale: 1, bottomInset: 10 },
-  Dolphin: { scale: 1.03, bottomInset: 4 },
-  'Tiger Shark': { scale: 1.03, bottomInset: 5 },
+  Crab: { scale: 1, bottomInset: 8 },
+  Lobster: { scale: 1.04, bottomInset: 7 },
+  Piranha: { scale: 1, bottomInset: 8 },
+  Tortoise: { scale: 1, bottomInset: 11 },
+  Cobra: { scale: 1, bottomInset: 6 },
+  Octopus: { scale: 1.02, bottomInset: 7 },
+  Crocodile: { scale: 1, bottomInset: 11 },
+  Dolphin: { scale: 1.03, bottomInset: 7 },
+  'Tiger Shark': { scale: 1.03, bottomInset: 6 },
   'Killer Whale': { scale: 1.04, bottomInset: 6 },
-  'Great White Shark': { scale: 1.04, bottomInset: 4 },
-  'Blue Whale': { scale: 1.1, bottomInset: 11 },
-  Megalodon: { scale: 1.08, bottomInset: 4 },
+  'Great White Shark': { scale: 1.04, bottomInset: 8 },
+  'Blue Whale': { scale: 1.1, bottomInset: 6 },
+  Megalodon: { scale: 1.08, bottomInset: 10 },
 };
 
 // At compact sizes the source artwork's narrowest transparent edge is less
@@ -79,8 +79,11 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   // size and measured artwork inset still apply there as everywhere else.
   const visualName = name ?? badgeNameFromAssetUrl(url);
   const optics = visualName ? BADGE_OPTICS[visualName] : undefined;
-  const renderedSize = 1.15 * (optics?.scale ?? 1);
-  // The artwork uses a 128px transparent canvas. Baseline-align the image box,
+  const renderedSize = 1.2 * (optics?.scale ?? 1);
+  // The artwork uses a 128px transparent canvas with a measured transparent
+  // margin of six to eleven pixels on every side. The base size is a touch
+  // larger than the previous edge-tight exports needed, so the visible mark
+  // keeps the same footprint beside a name. Baseline-align the image box,
   // then lower it only by its measured transparent bottom inset so the badge's
   // visible mark — not the canvas edge — finishes exactly on the text baseline.
   const artworkBaselineOffset = ((optics?.bottomInset ?? 0) / 128) * renderedSize;
@@ -94,11 +97,13 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
     display: 'inline-block',
     top: `calc(${artworkBaselineOffset}em + ${ARTWORK_GUTTER_PX}px)`,
   };
-  // The plate is masked by the artwork itself and sits on the wrapper's padding
-  // box, one gutter pixel larger than the image on every side: that pixel is the rim.
+  // The plate sits in the same box as the artwork and takes its shape from
+  // the tier's plate mask — a solid silhouette with the art's interior gaps
+  // filled and a rim already dilated in. A badge the ladder does not know
+  // (an arbitrary profile URL) falls back to the art's own alpha.
   const plateStyle = {
-    inset: 0,
-    '--art-mask': cssUrl(url ?? ''),
+    inset: `${ARTWORK_GUTTER_PX}px`,
+    '--art-mask': cssUrl(getBadgePlateUrl(visualName) ?? url ?? ''),
   } as CSSProperties;
 
   if (!url) return null;
