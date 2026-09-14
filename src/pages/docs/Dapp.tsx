@@ -171,6 +171,51 @@ const Dapp = () => {
     'badgeKillerWhale', 'badgeGreatWhiteShark', 'badgeBlueWhale', 'badgeMegalodon'
   ];
 
+  /**
+   * The twelve SuperPowers, in ladder order, mirroring `GET /superpowers/tiers`.
+   *
+   * `key` is also the artwork's filename (`boost` → `/theme-icons/system/boost.png`)
+   * and `tier` the badge whose art sits beside it, so a thirteenth power added
+   * upstream shows up here as a missing row rather than a wrong one.
+   */
+  const superPowers = [
+    { key: 'boost', nameKey: 'spNameBoost', descKey: 'spDescBoost', tier: 'Crab', tierKey: 'spTierCrab', homeKey: 'spHomePost' },
+    { key: 'second_wind', nameKey: 'spNameSecondWind', descKey: 'spDescSecondWind', tier: 'Lobster', tierKey: 'spTierLobster', homeKey: 'spHomePost' },
+    { key: 'comment_anchor', nameKey: 'spNameCommentAnchor', descKey: 'spDescCommentAnchor', tier: 'Piranha', tierKey: 'spTierPiranha', homeKey: 'spHomeComment' },
+    { key: 'trend_jacker', nameKey: 'spNameTrendJacker', descKey: 'spDescTrendJacker', tier: 'Tortoise', tierKey: 'spTierTortoise', homeKey: 'spHomePage' },
+    { key: 'timeline_bomber', nameKey: 'spNameTimelineBomber', descKey: 'spDescTimelineBomber', tier: 'Cobra', tierKey: 'spTierCobra', homeKey: 'spHomePost' },
+    { key: 'signal_flare', nameKey: 'spNameSignalFlare', descKey: 'spDescSignalFlare', tier: 'Octopus', tierKey: 'spTierOctopus', homeKey: 'spHomePost' },
+    { key: 'flak_jacket', nameKey: 'spNameFlakJacket', descKey: 'spDescFlakJacket', tier: 'Crocodile', tierKey: 'spTierCrocodile', homeKey: 'spHomePost' },
+    { key: 'precision_strike', nameKey: 'spNamePrecisionStrike', descKey: 'spDescPrecisionStrike', tier: 'Dolphin', tierKey: 'spTierDolphin', homeKey: 'spHomePost' },
+    { key: 'harpoon', nameKey: 'spNameHarpoon', descKey: 'spDescHarpoon', tier: 'Tiger Shark', tierKey: 'spTierTigerShark', homeKey: 'spHomePost' },
+    { key: 'team_up', nameKey: 'spNameTeamUp', descKey: 'spDescTeamUp', tier: null, tierKey: null, homeKey: 'spHomePage' },
+    { key: 'front_row', nameKey: 'spNameFrontRow', descKey: 'spDescFrontRow', tier: 'Blue Whale', tierKey: 'spTierBlueWhale', homeKey: 'spHomeStage' },
+    { key: 'deep_current', nameKey: 'spNameDeepCurrent', descKey: 'spDescDeepCurrent', tier: 'Megalodon', tierKey: 'spTierMegalodon', homeKey: 'spHomeGift' },
+  ];
+
+  /**
+   * Boosts per fortnight and minutes per boost, per rung. The four rungs with
+   * no `unlockKey` grant quantity only — that is the ladder, not an omission.
+   * DHB figures are the reference amounts at the badge ladder's anchor price;
+   * the live requirement is pegged in dollars (see the badges section above).
+   */
+  const superPowerLadder = [
+    { tierKey: 'spTierNone', hold: '< 10,000 $DHB', boosts: 0, minutes: 0, image: null, unlockKey: null },
+    { tierKey: 'spTierCrab', hold: '10,000+ $DHB', boosts: 1, minutes: 15, image: badgeImage('Crab'), unlockKey: 'spNameBoost' },
+    { tierKey: 'spTierLobster', hold: '25k+ $DHB', boosts: 1, minutes: 20, image: badgeImage('Lobster'), unlockKey: 'spNameSecondWind' },
+    { tierKey: 'spTierPiranha', hold: '50k+ $DHB', boosts: 1, minutes: 25, image: badgeImage('Piranha'), unlockKey: 'spNameCommentAnchor' },
+    { tierKey: 'spTierTortoise', hold: '100k+ $DHB', boosts: 1, minutes: 30, image: badgeImage('Tortoise'), unlockKey: 'spNameTrendJacker' },
+    { tierKey: 'spTierCobra', hold: '250k+ $DHB', boosts: 2, minutes: 35, image: badgeImage('Cobra'), unlockKey: 'spNameTimelineBomber' },
+    { tierKey: 'spTierOctopus', hold: '500k+ $DHB', boosts: 2, minutes: 40, image: badgeImage('Octopus'), unlockKey: 'spNameSignalFlare' },
+    { tierKey: 'spTierCrocodile', hold: '1m+ $DHB', boosts: 2, minutes: 45, image: badgeImage('Crocodile'), unlockKey: 'spNameFlakJacket' },
+    { tierKey: 'spTierDolphin', hold: '2m+ $DHB', boosts: 3, minutes: 50, image: badgeImage('Dolphin'), unlockKey: 'spNamePrecisionStrike' },
+    { tierKey: 'spTierTigerShark', hold: '3m+ $DHB', boosts: 3, minutes: 60, image: badgeImage('Tiger Shark'), unlockKey: 'spNameHarpoon' },
+    { tierKey: 'spTierKillerWhale', hold: '5m+ $DHB', boosts: 4, minutes: 60, image: badgeImage('Killer Whale'), unlockKey: null },
+    { tierKey: 'spTierGreatWhiteShark', hold: '10m+ $DHB', boosts: 5, minutes: 70, image: badgeImage('Great White Shark'), unlockKey: null },
+    { tierKey: 'spTierBlueWhale', hold: '25m+ $DHB', boosts: 8, minutes: 90, image: badgeImage('Blue Whale'), unlockKey: 'spNameFrontRow' },
+    { tierKey: 'spTierMegalodon', hold: '50m+ $DHB', boosts: 12, minutes: 120, image: badgeImage('Megalodon'), unlockKey: 'spNameDeepCurrent' },
+  ];
+
   const feeReductions = [
     { badgeKey: 'badgeNone', threshold: "< 10,000 $DHB", fee: "10.00%", color: "bg-muted", image: null },
     { badgeKey: 'badgeCrab', threshold: "10,000+ $DHB", fee: "9.31%", color: "bg-muted", image: badgeImage('Crab') },
@@ -317,6 +362,8 @@ const Dapp = () => {
             <li><strong>{t('dapp.labelNFT')}</strong> {t('dapp.uploadNFT')}</li>
             <li><strong>{t('dapp.labelEarn')}</strong> {t('dapp.uploadEarn')}</li>
             <li><strong>{t('dapp.labelSubscribers')}</strong> {t('dapp.uploadSubscribers')}</li>
+            <li><strong>{t('dapp.labelGallery')}</strong> {t('dapp.uploadGallery')}</li>
+            <li><strong>{t('dapp.labelAudio')}</strong> {t('dapp.uploadAudio')}</li>
           </ul>
         </section>
 
@@ -695,6 +742,14 @@ const Dapp = () => {
             </CardContent>
           </Card>
 
+          <div className="docs-glass p-6 mt-6 rounded-lg">
+            <h4 className="font-semibold text-foreground font-exo mb-3 flex items-center gap-2">
+              <CreditCard className="w-5 h-5" />
+              {t('dapp.topUpCardTitle')}
+            </h4>
+            <p className="text-muted-foreground leading-relaxed font-exo">{t('dapp.topUpCardDesc')}</p>
+          </div>
+
           <div className="docs-glass p-6 mt-6 rounded-r-lg">
             <h4 className="font-semibold text-foreground font-exo mb-3 flex items-center gap-2">
               <Shield className="w-5 h-5" />
@@ -755,6 +810,8 @@ const Dapp = () => {
             <li><strong>{t('dapp.badgeDelegationB3')}</strong> {t('dapp.badgeDelegationB3Desc')}</li>
             <li><strong>{t('dapp.badgeDelegationB4')}</strong> {t('dapp.badgeDelegationB4Desc')}</li>
             <li><strong>{t('dapp.badgeDelegationB5')}</strong> {t('dapp.badgeDelegationB5Desc')}</li>
+            <li><strong>{t('dapp.badgeDelegationB6')}</strong> {t('dapp.badgeDelegationB6Desc')}</li>
+            <li><strong>{t('dapp.badgeDelegationB7')}</strong> {t('dapp.badgeDelegationB7Desc')}</li>
           </ul>
         </section>
 
@@ -1433,89 +1490,120 @@ const Dapp = () => {
 
           <section id="superpowers" className="mt-12 scroll-mt-32">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo">{t('dapp.superPowersTitle')}</h2>
-            
+
             <div className="space-y-6">
               <p className="text-lg text-muted-foreground leading-relaxed font-exo">{t('dapp.superPowersDescV2')}</p>
-              
-              {/* The two that are built lead, and say so. The page previously
-                  listed only the four unbuilt targeting powers, numbered 1–4
-                  as though they were the whole ladder and the first rungs of
-                  it — they are rungs 4, 5, 8 and 9 of thirteen. */}
-              <div className="grid gap-6 md:grid-cols-2">
-                <Card className="border-border hover:border-primary/40 transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-foreground font-exo flex items-center gap-2">
-                      <Rocket className="w-5 h-5" />
-                      {t('dapp.boostPower')}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground font-exo">{t('dapp.boostPowerDesc')}</p>
-                  </CardContent>
-                </Card>
 
-                <Card className="border-border hover:border-primary/40 transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-foreground font-exo flex items-center gap-2">
-                      <History className="w-5 h-5" />
-                      {t('dapp.secondWindPower')}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground font-exo">{t('dapp.secondWindPowerDesc')}</p>
-                  </CardContent>
-                </Card>
+              <h3 className="text-xl font-semibold text-foreground font-exo pt-2">{t('dapp.spPowersTitle')}</h3>
+              <p className="text-foreground/80 leading-relaxed font-exo">{t('dapp.spPowersLead')}</p>
 
-                <Card className="border-border hover:border-primary/40 transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-foreground font-exo flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5" />
-                      {t('dapp.trendJacker')}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground font-exo">{t('dapp.trendJackerDesc2')}</p>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-border hover:border-primary/40 transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-foreground font-exo flex items-center gap-2">
-                      <Zap className="w-5 h-5" />
-                      {t('dapp.timelineBomber')}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground font-exo">{t('dapp.timelineBomberDesc2')}</p>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-border hover:border-primary/40 transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-foreground font-exo flex items-center gap-2">
-                      <Eye className="w-5 h-5" />
-                      {t('dapp.precisionStrike')}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground font-exo">{t('dapp.precisionStrikeDesc')}</p>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-border hover:border-primary/40 transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-foreground font-exo flex items-center gap-2">
-                      <Crown className="w-5 h-5" />
-                      {t('dapp.harpoon')}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground font-exo">{t('dapp.harpoonDesc')}</p>
-                  </CardContent>
-                </Card>
+              {/* The app's own artwork, straight from public/theme-icons. The
+                  docs surface has no ThemeProvider, so this uses the `system`
+                  set by path rather than <SuperPowerIcon>, which resolves a
+                  theme it cannot see out here. */}
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {superPowers.map(power => (
+                  <Card key={power.key} className="border-border hover:border-primary/40 transition-colors">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start gap-3">
+                        <img
+                          src={`/theme-icons/system/${power.key.replace(/_/g, '-')}.png`}
+                          alt=""
+                          width={48}
+                          height={48}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-12 h-12 shrink-0 object-contain"
+                        />
+                        <div className="min-w-0">
+                          <CardTitle className="text-foreground font-exo text-base">{t(`dapp.${power.nameKey}`)}</CardTitle>
+                          <div className="flex items-center gap-1.5 mt-2">
+                            {power.tier ? (
+                              <>
+                                <img src={badgeImage(power.tier) ?? undefined} alt="" width={20} height={20} loading="lazy" decoding="async" className="w-5 h-5 object-contain" />
+                                <span className="text-xs text-muted-foreground font-exo">
+                                  {t('dapp.spUnlocksAt')} {t(`dapp.${power.tierKey}`)}
+                                </span>
+                              </>
+                            ) : (
+                              <span className="text-xs text-muted-foreground font-exo">{t('dapp.spOpenToAll')}</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground font-exo leading-relaxed">{t(`dapp.${power.descKey}`)}</p>
+                      <p className="text-xs text-muted-foreground/80 font-exo mt-3">
+                        {t('dapp.spSpentLabel')} {t(`dapp.${power.homeKey}`)}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
 
-              <p className="text-muted-foreground font-exo">{t('dapp.superPowersMoreV2')}</p>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-foreground font-exo flex items-center gap-2">
+                    <Gauge className="w-5 h-5" />
+                    {t('dapp.spLadderTitle')}
+                  </CardTitle>
+                  <CardDescription className="font-exo">{t('dapp.spLadderDesc')}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-2">
+                    {superPowerLadder.map(rung => (
+                      <div key={rung.tierKey} className="flex items-center justify-between gap-3 p-3 rounded-lg border bg-muted/20">
+                        <div className="flex items-center gap-3 min-w-0">
+                          {rung.image
+                            ? <img src={rung.image} alt="" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 shrink-0 object-contain" />
+                            : <div className="w-8 h-8 shrink-0 rounded-full bg-muted border border-border" />}
+                          <div className="flex flex-col min-w-0">
+                            <span className="font-medium font-exo">{t(`dapp.${rung.tierKey}`)}</span>
+                            <span className="text-sm text-muted-foreground font-exo">{rung.hold}</span>
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          {rung.boosts > 0 ? (
+                            <span className="text-lg font-bold text-foreground font-exo">
+                              {rung.boosts} × {rung.minutes} <span className="text-sm font-normal text-muted-foreground">{t('dapp.spMinShort')}</span>
+                            </span>
+                          ) : (
+                            <span className="text-sm text-muted-foreground font-exo">{t('dapp.spNoAllowance')}</span>
+                          )}
+                          <div className="text-xs text-muted-foreground font-exo mt-0.5">
+                            {rung.unlockKey ? t(`dapp.${rung.unlockKey}`) : t('dapp.spQuantityOnly')}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className="grid gap-6 md:grid-cols-3">
+                <div className="docs-glass p-6 rounded-lg">
+                  <h4 className="font-semibold text-foreground font-exo mb-3 flex items-center gap-2">
+                    <Rocket className="w-5 h-5" />
+                    {t('dapp.spRotationTitle')}
+                  </h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed font-exo">{t('dapp.spRotationDesc')}</p>
+                </div>
+                <div className="docs-glass p-6 rounded-lg">
+                  <h4 className="font-semibold text-foreground font-exo mb-3 flex items-center gap-2">
+                    <History className="w-5 h-5" />
+                    {t('dapp.spCycleTitle')}
+                  </h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed font-exo">{t('dapp.spCycleDesc')}</p>
+                </div>
+                <div className="docs-glass p-6 rounded-lg">
+                  <h4 className="font-semibold text-foreground font-exo mb-3 flex items-center gap-2">
+                    <Shield className="w-5 h-5" />
+                    {t('dapp.spSafetyTitle')}
+                  </h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed font-exo">{t('dapp.spSafetyDesc')}</p>
+                </div>
+              </div>
 
               <Link
                 to="/app/superpowers"
@@ -1834,6 +1922,8 @@ const Dapp = () => {
             <li><strong>{t('dapp.notificationsB1')}</strong> {t('dapp.notificationsB1Desc')}</li>
             <li><strong>{t('dapp.notificationsB2')}</strong> {t('dapp.notificationsB2Desc')}</li>
             <li><strong>{t('dapp.notificationsB3')}</strong> {t('dapp.notificationsB3Desc')}</li>
+            <li><strong>{t('dapp.notificationsB4')}</strong> {t('dapp.notificationsB4Desc')}</li>
+            <li><strong>{t('dapp.notificationsB5')}</strong> {t('dapp.notificationsB5Desc')}</li>
           </ul>
         </section>
 

@@ -170,6 +170,8 @@ export const om = {
     topUpDesc: "Sharafa appii keessaa mataa keenya qabna, VBucks Fortnite irratti argattan yookiin coinii TikTok fakkaatu, kan keenya Tookenii DeHub yookiin DHB gabaabsinee jedhu. Tookenii DHB appii keessatti daldaluuf fi tajaajila akka tiippii, sub fi kkf fayyadamuuf si barbaachisa.",
     directTitle: 'Kallattii',
     dpayDesc: 'Bitannoo kallattii Stripe waliin',
+    topUpCardTitle: 'Kaardii, DHB qofa malee',
+    topUpCardDesc: 'Fuula bitaa kaardii MoonPay keessatti fida, akkasumas DHB qofa malee hin jiru: ETH fi USDC haala walfakkaataan bituu ni danda\'ama, sarara ati jirta irratti, fi walakka kaardii app ati seenutti gara jidha. Gatii fi koodii baasii sarara tokkoon tokkoon keessatti furmaata argamu, kanaafuu waan si gaafatamtu waan dhufa.',
     dehubTokenTitle: 'Tookenii DeHub',
     dehubTokenDesc: "Tookeniin uumtootatti subscription gochuuf, istiriimartootaaf tiippii kennuuf yookiin qabiyyee banuuf fayyadamu. Yommuu baay'ee qabattu, kaffaltiin kee xiqqaata fi dandeettii dabalataa baay'ee bantu.",
     instantPayments: 'Kaffaltii Atattamaa',
