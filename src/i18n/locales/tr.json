@@ -799,6 +799,8 @@
     "title": "Cüzdan",
     "loginRequired": "Cüzdanınıza erişmek için giriş yapın.",
     "addressCopied": "Adres kopyalandı",
+    "linkedConnected": "Cüzdan bağlandı. Bu son eylem çalışmadı. Bitirmek için tekrar dokunun.",
+    "linkedMismatch": "Bu hesaba bağlı olan cüzdan değil, {{address}} bekliyor. Cüzdanınızdaki o hesaba geçin ve tekrar deneyin.",
     "totalWalletValue": "Toplam cüzdan değeri",
     "receive": "Al",
     "send": "Gönder",

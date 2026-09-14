@@ -786,6 +786,8 @@
     "title": "Àpò Owó",
     "loginRequired": "Wọlé láti wọlé sí àpò owó rẹ.",
     "addressCopied": "A ti dàkọ àdírẹ́sì",
+    "linkedConnected": "Apamọwọ ti sopọ. Ìgbésẹ̀ tí ó gbẹ̀yìn yẹn kò ṣiṣẹ́ — tẹ̀ ẹ́ lẹ́ẹ̀kan síi láti parí.",
+    "linkedMismatch": "Apamọwọ yẹn kì í ṣe èyí tí ó so mọ́ àkáǹtì yìí — ó ń retí {{address}}. Yípadà sí àkọsílẹ̀ yẹn nínú àpamọ́ rẹ kí o sì gbìyànjú lẹ́ẹ̀kan síi.",
     "totalWalletValue": "Àpapọ̀ Iye Àpò Owó",
     "receive": "Gba",
     "send": "Ránṣẹ́",

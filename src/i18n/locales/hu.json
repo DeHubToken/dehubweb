@@ -776,6 +776,8 @@
     "title": "Pénztárca",
     "loginRequired": "Jelentkezzen be a pénztárca eléréséhez.",
     "addressCopied": "Cím másolva",
+    "linkedConnected": "Pénztárca csatlakoztatva. Az utolsó művelet nem futott le — koppintson rá újra a befejezéshez.",
+    "linkedMismatch": "Ez a pénztárca nem kapcsolódik ehhez a fiókhoz — a várakozások szerint {{address}}. Válts arra a fiókra a pénztárcádban, és próbálkozz újra.",
     "totalWalletValue": "Pénztárca teljes értéke",
     "receive": "Fogadás",
     "send": "Küldés",

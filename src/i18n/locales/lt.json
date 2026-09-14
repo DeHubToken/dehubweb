@@ -786,6 +786,8 @@
     "title": "Piniginė",
     "loginRequired": "Prisijunkite, kad pasiektumėte piniginę.",
     "addressCopied": "Adresas nukopijuotas",
+    "linkedConnected": "Piniginė prijungta. Paskutinis veiksmas nebuvo atliktas — bakstelėkite jį dar kartą, kad užbaigtumėte.",
+    "linkedMismatch": "Ši piniginė nėra susieta su šia paskyra — tikimasi {{address}}. Piniginėje perjunkite tą paskyrą ir bandykite dar kartą.",
     "totalWalletValue": "Bendra piniginės vertė",
     "receive": "Gauti",
     "send": "Siųsti",

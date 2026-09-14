@@ -793,6 +793,8 @@
     "title": "Beursie",
     "loginRequired": "Meld aan om toegang tot jou beursie te kry.",
     "addressCopied": "Adres gekopieer",
+    "linkedConnected": "Beursie gekoppel. Daardie laaste aksie het nie geloop nie — tik dit weer om te voltooi.",
+    "linkedMismatch": "Die beursie is nie die een wat aan hierdie rekening gekoppel is nie — dit verwag {{address}}. Skakel na die rekening in jou beursie en probeer weer.",
     "totalWalletValue": "Totale beursiewaarde",
     "receive": "Ontvang",
     "send": "Stuur",

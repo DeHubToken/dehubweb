@@ -800,6 +800,8 @@
     "title": "Portofel",
     "loginRequired": "Autentifică-te pentru a-ți accesa portofelul.",
     "addressCopied": "Adresă copiată",
+    "linkedConnected": "Portofel conectat. Ultima acțiune nu a fost executată. Apasă din nou pentru a finaliza.",
+    "linkedMismatch": "Acest portofel nu este cel conectat la acest cont. Se așteaptă la {{address}}. Comută la contul din portofel și încearcă din nou.",
     "totalWalletValue": "Valoarea totală a portofelului",
     "receive": "Primește",
     "send": "Trimite",

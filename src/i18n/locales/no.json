@@ -784,6 +784,8 @@
     "title": "Lommebok",
     "loginRequired": "Logg inn for å få tilgang til lommeboken din.",
     "addressCopied": "Adresse kopiert",
+    "linkedConnected": "Lommebok tilkoblet. Den siste handlingen ble ikke utført – trykk på den igjen for å fullføre.",
+    "linkedMismatch": "Den lommeboken er ikke den som er koblet til denne kontoen – den forventer {{address}}. Bytt til den kontoen i lommeboken din og prøv på nytt.",
     "totalWalletValue": "Total lommebokverdi",
     "receive": "Motta",
     "send": "Send",

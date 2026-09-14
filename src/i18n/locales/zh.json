@@ -800,6 +800,8 @@
     "title": "钱包",
     "loginRequired": "登录以访问您的钱包。",
     "addressCopied": "地址已复制",
+    "linkedConnected": "钱包已连接。最后一个操作未运行，请再次轻触以完成。",
+    "linkedMismatch": "该钱包不是链接到此账户的钱包，应为{{address}}。 请在钱包中切换到该账户，然后重试。",
     "totalWalletValue": "钱包总价值",
     "receive": "接收",
     "send": "发送",

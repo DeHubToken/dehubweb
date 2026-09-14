@@ -785,6 +785,8 @@
     "title": "საფულე",
     "loginRequired": "Log in to access your wallet.",
     "addressCopied": "Address copied",
+    "linkedConnected": "Საფულე მიერთებულია. ეს ბოლო მოქმედება არ შესრულებულა — კვლავ შეეხეთ დასასრულებლად.",
+    "linkedMismatch": "Ეს საფულე არ არის ამ ანგარიშთან დაკავშირებული — ის მოელის {{address}}-ს. Გადართეთ ამ ანგარიშზე საფულეში და სცადეთ ხელახლა.",
     "totalWalletValue": "Total Wallet Value",
     "receive": "მიღება",
     "send": "გაგზავნა",

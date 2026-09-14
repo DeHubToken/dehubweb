@@ -785,6 +785,8 @@
     "title": "Plånbok",
     "loginRequired": "Logga in för att komma åt din plånbok.",
     "addressCopied": "Adress kopierad",
+    "linkedConnected": "Plånboken är ansluten. Den senaste åtgärden kördes inte — tryck på den igen för att slutföra.",
+    "linkedMismatch": "Den portföljen är inte den som är länkad till det här kontot — den förväntar sig {{address}}. Byt till det kontot i din plånbok och försök igen.",
     "totalWalletValue": "Totalt plånboksvärde",
     "receive": "Ta emot",
     "send": "Skicka",

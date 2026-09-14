@@ -801,6 +801,8 @@
     "title": "Portafoglio",
     "loginRequired": "Accedi per accedere al tuo portafoglio.",
     "addressCopied": "Indirizzo copiato",
+    "linkedConnected": "Portafoglio connesso. L'ultima azione non è stata eseguita: toccala di nuovo per terminare.",
+    "linkedMismatch": "Quel portafoglio non è quello collegato a questo account: si aspetta {{address}}. Passa a quell' account nel tuo portafoglio e riprova.",
     "totalWalletValue": "Valore totale del portafoglio",
     "receive": "Ricevi",
     "send": "Invia",

@@ -14,6 +14,7 @@
 import { useEffect, useState } from 'react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { LoginWalletsStep, type WalletId } from '../login/LoginWalletsStep';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
 import { clearWagmiStorage, wagmiConfig } from '@/lib/wagmi';
@@ -45,6 +46,7 @@ export function ConnectLinkedWalletBody(props: ConnectLinkedWalletBodyProps) {
 }
 
 function ConnectLinkedWalletBodyInner({ expectedAddress, onConnected }: ConnectLinkedWalletBodyProps) {
+  const { t } = useTranslation();
   const { connectAsync } = useConnect();
   const { disconnectAsync } = useDisconnect();
   const { address: connectedAddress } = useAccount();
@@ -78,18 +80,20 @@ function ConnectLinkedWalletBodyInner({ expectedAddress, onConnected }: ConnectL
       writeConnectionSource('wagmi');
       setActiveProvider(null);
       setError(null);
-      toast.success('Right wallet connected — you’re all set.');
+      // Connecting does NOT resume whatever was interrupted: the modal just
+      // closes (onConnected is setOpen(false)), and the surface that threw was
+      // deliberately told to stay quiet. This toast is therefore the only
+      // feedback the user gets, and the old wording read as confirmation that
+      // the payment they had just authorised had gone through.
+      toast.success(t('wallet.linkedConnected'));
       onConnected();
       return;
     }
     setActiveProvider(null);
-    setError(
-      `That wallet isn’t the one linked to this account — it expects ${shortenAddress(expectedAddress)}. ` +
-        'Switch to that account in your wallet and try again.',
-    );
+    setError(t('wallet.linkedMismatch', { address: shortenAddress(expectedAddress) }));
     clearWagmiStorage();
     disconnectAsync().catch(() => { /* already gone */ });
-  }, [connectedAddress, expectedAddress, onConnected, disconnectAsync]);
+  }, [connectedAddress, expectedAddress, onConnected, disconnectAsync, t]);
 
   const handleWalletConnect = (wallet: WalletId, connect: () => void) => {
     setError(null);

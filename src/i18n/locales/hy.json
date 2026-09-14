@@ -778,6 +778,8 @@
     "title": "Dramer",
     "loginRequired": "Moutq gortsuhr dzer damerayin hashiv hamar.",
     "addressCopied": "Hasce patchervaats e",
+    "linkedConnected": "Դրամապանակը միացված է ։ Վերջին գործողությունը չի կատարվել. հպեք նորից ՝ ավարտելու համար ։",
+    "linkedMismatch": "Այդ դրամապանակը կապված չէ այս հաշվի հետ. այն ակնկալում է {{address}}: Միացրեք այդ հաշիվը դրամապանակում և նորից փորձեք ։",
     "totalWalletValue": "Drami ampoghjakan archekhe",
     "receive": "Stanal",
     "send": "Ougharkuhr",

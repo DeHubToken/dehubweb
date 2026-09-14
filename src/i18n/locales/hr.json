@@ -772,6 +772,8 @@
     "title": "Novčanik",
     "loginRequired": "Prijavite se za pristup novčaniku.",
     "addressCopied": "Adresa kopirana",
+    "linkedConnected": "Novčanik je povezan. Zadnja radnja nije pokrenuta. Ponovno je dodirni za dovršetak.",
+    "linkedMismatch": "Taj novčanik nije povezan s ovim računom — očekuje {{address}}. Prebaci se na taj račun u novčaniku i pokušaj ponovno.",
     "totalWalletValue": "Ukupna vrijednost novčanika",
     "receive": "Primi",
     "send": "Pošalji",
