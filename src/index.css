@@ -2673,6 +2673,22 @@ html[data-theme="light"] .bg-muted {
   color: #ffffff !important;
 }
 
+/* …but not in docs. There .bg-muted is the wash panel nested inside a white
+   bento — a quote block, a code sample, a comparison table — and the chip
+   above turned every one of them into a dark grey slab with ink text sitting
+   on it. The blanket .bg-muted in the selector above was only ever meant to
+   catch avatar fallbacks, which render outside the docs surface. */
+html[data-theme="light"] .docs-root .bg-muted {
+  background-color: hsl(var(--muted)) !important;
+  color: inherit !important;
+}
+
+/* Red on paper is 3.5:1 — fine as a chip fill, thin as body copy. Docs uses it
+   as running text ("2023 Costs:"), so deepen it there. */
+html:not(.dark) .docs-root .text-destructive {
+  color: #b42318;
+}
+
 /* Skeleton pulses: keep the loading wash light on paper instead of the dark
    avatar-fallback remap above. */
 html[data-theme="light"] .animate-pulse.bg-muted {
