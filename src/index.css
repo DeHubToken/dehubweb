@@ -4404,10 +4404,10 @@ specificity animation declarations above.
    so every rule here is scoped to light and the dark themes get nothing behind
    the artwork at all.
 
-   Badges get a halo: a second copy of the same image, blacked out, scaled up
-   and blurred, behind the artwork. It is the badge's own shape, so it never
-   reads as a box or a disc, and the blur keeps it soft rather than a hard
-   outline. Blur is in em so it tracks the badge's rendered size.
+   Badges get an opaque plate in their own solid silhouette (a per-tier mask
+   from scripts/build-badge-plates.mjs, gaps filled, edge grown four percent)
+   with a faint blurred copy of the badge over it to soften the edge. It is the
+   badge's own shape, so it never reads as a box or a disc.
 
    Medals keep a masked plate: they already publish their silhouette as
    `--medal-mask` for the shine sweep, so the plate rides the same value, set on
@@ -4415,17 +4415,32 @@ specificity animation declarations above.
    medal image is given `relative` at each call site — without it the image
    paints in the inline step, below this positioned pseudo-element, and the
    plate would cover the artwork instead of backing it. */
+.art-plate,
 .art-halo {
   display: none;
   position: absolute;
-  inset: 0;
-  width: auto;
-  height: auto;
   pointer-events: none;
+}
+/* Opaque, in the badge's solid silhouette — the plate mask fills every gap
+   inside the outline, so nothing behind the check mark is ever see-through. */
+.art-plate {
+  background: var(--artwork-plate, rgb(11, 13, 18));
+  -webkit-mask-image: var(--art-mask);
+  mask-image: var(--art-mask);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+/* A faint blurred copy of the badge over the plate softens the plate's edge
+   into the page. Blur is in em so it tracks the rendered size. */
+.art-halo {
   object-fit: contain;
-  transform: scale(1.18);
-  filter: brightness(0) blur(0.07em);
-  opacity: 0.85;
+  transform: scale(1.12);
+  filter: brightness(0) blur(0.035em);
+  opacity: 0.45;
 }
 .medal-shine-container::before {
   content: none;
@@ -4444,10 +4459,10 @@ specificity animation declarations above.
   filter: drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)))
           drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)));
 }
-html[data-theme="light"] .art-halo { display: block; }
+html[data-theme="light"] :is(.art-plate, .art-halo) { display: block; }
 html[data-theme="light"] .medal-shine-container::before { content: ''; }
 @media (prefers-color-scheme: light) {
-  html[data-theme="system"] .art-halo { display: block; }
+  html[data-theme="system"] :is(.art-plate, .art-halo) { display: block; }
   html[data-theme="system"] .medal-shine-container::before { content: ''; }
 }
 
