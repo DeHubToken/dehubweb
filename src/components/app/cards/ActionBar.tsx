@@ -185,8 +185,8 @@ interface ActionBarProps {
   hideUtility?: boolean;
   /**
    * Feed-card layout: utility buttons (bookmark / pin / info) are hidden
-   * below lg (the card's three-dot menu carries them at every width, and is
-   * the only place they appear on mobile) and anchored to the LEFT on desktop,
+   * anchored to the LEFT on desktop and to the RIGHT below lg (the card's
+   * three-dot menu still carries them at every width),
    * with the engagement buttons filling the remaining row width evenly.
    * Mutually exclusive with hideUtility/hideUtilityDesktop/centered — those
    * stay on the original contents-based layout used by the fullscreen viewer
@@ -1010,13 +1010,14 @@ export function ActionBar({
     )}>
       {utilityDesktopAnchor ? (
         <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-3">
-          {/* Utility cluster — hidden on mobile/tablet, where the card's
-              three-dot menu is the only place these live. On desktop it's a
-              real flex item of this justify-between row (not a separately-
-              margined sibling), so the gap to the first engagement button
-              matches the gaps between every other button. */}
+          {/* Utility cluster — a real flex item of this justify-between row
+              (not a separately-margined sibling), so the gap to the
+              neighbouring engagement button matches the gaps between every
+              other button. It leads the row on desktop and trails it below lg,
+              which puts bookmark/pin/info at the right-hand end of the bar on
+              phones — the same place the app's card carries them. */}
           {!hideUtility && (
-            <div className="hidden lg:flex items-center gap-4 shrink-0">
+            <div className="flex items-center gap-4 shrink-0 order-last lg:order-none">
               <PostUtilityButtons
                 postId={postId}
                 tokenId={tokenId}
