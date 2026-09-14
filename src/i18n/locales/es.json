@@ -800,6 +800,8 @@
     "title": "Billetera",
     "loginRequired": "Inicia sesión para acceder a tu billetera.",
     "addressCopied": "Dirección copiada",
+    "linkedConnected": "Billetera conectada. La última acción no se ejecutó. Tócala de nuevo para terminar.",
+    "linkedMismatch": "Ese monedero no es el que está vinculado a esta cuenta: espera {{address}}. Cambia a esa cuenta en tu monedero e inténtalo de nuevo.",
     "totalWalletValue": "Valor total de la billetera",
     "receive": "Recibir",
     "send": "Enviar",

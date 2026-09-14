@@ -777,6 +777,8 @@
     "title": "Cartera",
     "loginRequired": "Inicia sessió per accedir a la teva cartera.",
     "addressCopied": "Adreça copiada",
+    "linkedConnected": "La cartera s'ha connectat. L'última acció no s'ha executat. Toca-la de nou per acabar.",
+    "linkedMismatch": "Aquesta cartera no és la que està vinculada a aquest compte: s'espera que sigui {{address}}. Canvia al compte que tens al moneder i torna-ho a provar.",
     "totalWalletValue": "Valor total de la cartera",
     "receive": "Rebre",
     "send": "Enviar",

@@ -786,6 +786,8 @@
     "title": "Portofoli",
     "loginRequired": "Hyni për të aksesuar portofolin tuaj.",
     "addressCopied": "Adresa u kopjua",
+    "linkedConnected": "Portofoli u lidh. Veprimi i fundit nuk u krye. Shtypeni përsëri për të përfunduar.",
+    "linkedMismatch": "Ai portofol nuk është i lidhur me këtë llogari — ai pret {{address}}. Kalo te ajo llogari në portofolin tënd dhe provo përsëri.",
     "totalWalletValue": "Vlera Totale e Portofolit",
     "receive": "Merr",
     "send": "Dërgo",

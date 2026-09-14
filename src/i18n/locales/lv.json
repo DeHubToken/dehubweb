@@ -786,6 +786,8 @@
     "title": "Maks",
     "loginRequired": "Piesakieties, lai piekļūtu makam.",
     "addressCopied": "Adrese nokopēta",
+    "linkedConnected": "Maka savienojums izveidots. Pēdējā darbība netika izpildīta — pieskarieties tai vēlreiz, lai pabeigtu.",
+    "linkedMismatch": "Šis maks nav saistīts ar šo kontu — tiek gaidīts {{address}}. Pārslēdzieties uz šo kontu makā un mēģiniet vēlreiz.",
     "totalWalletValue": "Kopējā maka vērtība",
     "receive": "Saņemt",
     "send": "Sūtīt",

@@ -779,6 +779,8 @@
     "title": "Dompet",
     "loginRequired": "Mlebu kanggo nggunakake dompet.",
     "addressCopied": "Alamat wis dikopi",
+    "linkedConnected": "Dompet terhubung. Tindakan terakhir ora mlaku — ketik maneh kanggo rampung.",
+    "linkedMismatch": "Dompet iku dudu sing disambung karo akun iki — ngarepake {{address}}. Ganti menyang akun kasebut ing dompetmu lan coba maneh.",
     "totalWalletValue": "Total Nilai Dompet",
     "receive": "Nampa",
     "send": "Kirim",

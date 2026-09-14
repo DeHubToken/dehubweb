@@ -993,6 +993,8 @@
     "title": "Portemonnee",
     "loginRequired": "Log in om je portemonnee te openen.",
     "addressCopied": "Adres gekopieerd",
+    "linkedConnected": "Portemonnee verbonden. Die laatste actie is niet uitgevoerd — tik er opnieuw op om te voltooien.",
+    "linkedMismatch": "Die portemonnee is niet degene die aan dit account is gekoppeld — hij verwacht {{address}}. Schakel over naar dat account in je portemonnee en probeer het opnieuw.",
     "totalWalletValue": "Totale portemonneewaarde",
     "receive": "Ontvangen",
     "send": "Versturen",

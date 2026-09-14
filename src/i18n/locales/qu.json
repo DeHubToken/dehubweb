@@ -788,6 +788,8 @@
     "title": "Qullqi Wasi",
     "loginRequired": "Yaykuy qullqi wasiykiman yaykumunaykipaq.",
     "addressCopied": "Churana copiasqa",
+    "linkedConnected": "Wallet tinkisqa. Chay qhipa ruwayqa mana kallparqachu — yapamanta ñit’iy tukunaykipaq.",
+    "linkedMismatch": "Chay billetera mana kay yupaywan tinkisqachu — {{address}} suyan. Chay yupayman tikray billeteraykipi chaymanta wakmanta kallpachakuy.",
     "totalWalletValue": "Tukuy qullqi wasi chanin",
     "receive": "Chaskiy",
     "send": "Apachiy",

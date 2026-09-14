@@ -800,6 +800,8 @@
     "title": "Carteira",
     "loginRequired": "Faça login para acessar sua carteira.",
     "addressCopied": "Endereço copiado",
+    "linkedConnected": "Carteira conectada. A última ação não foi executada. Toque novamente para concluir.",
+    "linkedMismatch": "Essa carteira não está vinculada a esta conta — ela espera {{address}}. Mude para essa conta na sua carteira e tente novamente.",
     "totalWalletValue": "Valor total da carteira",
     "receive": "Receber",
     "send": "Enviar",

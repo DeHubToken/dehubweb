@@ -800,6 +800,8 @@
     "title": "Portfel",
     "loginRequired": "Zaloguj się, aby uzyskać dostęp do portfela.",
     "addressCopied": "Adres skopiowany",
+    "linkedConnected": "Portfel połączony. Ta ostatnia akcja nie została wykonana — dotknij go ponownie, aby zakończyć.",
+    "linkedMismatch": "Ten portfel nie jest powiązany z tym kontem — oczekuje {{address}}. Przełącz się na to konto w swoim portfelu i spróbuj ponownie.",
     "totalWalletValue": "Łączna wartość portfela",
     "receive": "Odbierz",
     "send": "Wyślij",

@@ -832,6 +832,8 @@
     "title": "Wallet",
     "loginRequired": "Mag-log in para ma-access ang iyong wallet.",
     "addressCopied": "Nakopya ang address",
+    "linkedConnected": "Nakakonekta ang wallet. Hindi tumakbo ang huling pagkilos na iyon — i — tap ito muli upang matapos.",
+    "linkedMismatch": "Ang wallet na iyon ay hindi ang naka — link sa account na ito - inaasahan nito {{address}}. Lumipat sa account na iyon sa iyong wallet at subukang muli.",
     "totalWalletValue": "Kabuuang Halaga ng Wallet",
     "receive": "Tumanggap",
     "send": "Ipadala",
