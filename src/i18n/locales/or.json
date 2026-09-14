@@ -885,6 +885,8 @@
   },
   "notifications": {
       "badgeTierUp": "ଅଭିନନ୍ଦନ! ଏବେ ଆପଣ {{tier}} 🎉",
+      "badgeTierDown": "ଧ୍ୟାନ ଦିଅନ୍ତୁ: ଏବେ ଆପଣଙ୍କ ବ୍ୟାଜ୍ {{tier}}",
+      "badgeTierLost": "ଧ୍ୟାନ ଦିଅନ୍ତୁ: ଆପଣଙ୍କର ଆଉ ବ୍ୟାଜ୍ ନାହିଁ",
     "title": "ସୂଚନା",
     "markAllRead": "ସବୁ ପଢ଼ା ଭାବେ ଚିହ୍ନିତ କରନ୍ତୁ",
     "settings": "ସୂଚନା ସେଟିଂ",

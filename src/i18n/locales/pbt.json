@@ -875,6 +875,8 @@
   },
   "notifications": {
       "badgeTierUp": "مبارک شه! اوس تاسو {{tier}} یاست 🎉",
+      "badgeTierDown": "پاملرنه: ستاسو نښان اوس {{tier}} دی",
+      "badgeTierLost": "پاملرنه: تاسو نور نښان نه لرئ",
     "title": "خبرتیاوې",
     "markAllRead": "ټول لوستل شوي نښه کړئ",
     "settings": "د خبرتیا تنظیمات",

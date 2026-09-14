@@ -889,6 +889,8 @@
   },
   "notifications": {
       "badgeTierUp": "قۇتلۇق بولسۇن! ھازىر سىز {{tier}} 🎉",
+      "badgeTierDown": "دىققەت: بەلگىڭىز ھازىر {{tier}}",
+      "badgeTierLost": "دىققەت: ئەمدى بەلگىڭىز يوق",
     "title": "ئۇقتۇرۇشلار",
     "markAllRead": "ھەممىنى ئوقۇلدى دەپ بەلگىلەش",
     "settings": "ئۇقتۇرۇش تەڭشەكلىرى",

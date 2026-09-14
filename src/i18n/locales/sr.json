@@ -769,6 +769,8 @@
   },
   "notifications": {
       "badgeTierUp": "Честитамо! Сада си {{tier}} 🎉",
+      "badgeTierDown": "Напомена: твоја значка је сада {{tier}}",
+      "badgeTierLost": "Напомена: више немаш значку",
     "title": "Обавештења",
     "markAllRead": "Означи све као прочитано",
     "settings": "Подешавања обавештења",

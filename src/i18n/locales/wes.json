@@ -812,6 +812,8 @@
   },
   "notifications": {
       "badgeTierUp": "Congrats! Yu don be {{tier}} now 🎉",
+      "badgeTierDown": "Take note: yu badge don be {{tier}} now",
+      "badgeTierLost": "Take note: yu no get badge again",
     "title": "Notifications",
     "markAllRead": "Mark all read",
     "settings": "Notification Settings",

@@ -886,6 +886,8 @@
   },
   "notifications": {
       "badgeTierUp": "Табрик! Акнун шумо {{tier}} ҳастед 🎉",
+      "badgeTierDown": "Диққат: акнун нишони шумо {{tier}} аст",
+      "badgeTierLost": "Диққат: дигар нишон надоред",
     "title": "Огоҳиҳо",
     "markAllRead": "Ҳамаро хондашуда қайд кардан",
     "settings": "Танзимоти огоҳиҳо",

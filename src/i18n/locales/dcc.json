@@ -762,6 +762,8 @@
   },
   "notifications": {
       "badgeTierUp": "مبارک ہو! اب تم {{tier}} ہو 🎉",
+      "badgeTierDown": "دھیان دو: اب تمہارا بیج {{tier}} ہے",
+      "badgeTierLost": "دھیان دو: اب تمہارے پاس بیج نہیں",
     "title": "اطلاع",
     "markAllRead": "سب پڑھا نشان لگاؤ",
     "settings": "اطلاع سیٹنگز",
