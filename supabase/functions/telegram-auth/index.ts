@@ -33,7 +33,7 @@ import {
   callerIp,
   checkRateLimit,
 } from "../_shared/auth.ts";
-import { authDateIsFresh, decodeTgAuthResult, verifyTelegramPayload } from "./verify.ts";
+import { authDateIsFresh, decodeTgAuthResult, parseBotToken, verifyTelegramPayload } from "./verify.ts";
 
 // Same shape as the phone pair: supabase-js only surfaces a body on 2xx, so
 // every failure is a 200 carrying { error } rather than a status the client
@@ -44,28 +44,34 @@ function errorResponse(message: string): Response {
 
 const PER_IP_LIMIT = { limit: 20, windowMs: 10 * 60 * 1000 };
 
-function botToken(): string | null {
-  const token = Deno.env.get("TELEGRAM_LOGIN_BOT_TOKEN")?.trim();
-  return token || null;
-}
-
-/** The numeric half of "<bot_id>:<secret>" — public, and what the widget needs. */
-function botId(token: string): string {
-  return token.split(":")[0] || "";
+/**
+ * The configured bot, or null when the secret is absent or not a bot token.
+ *
+ * The warning matters as much as the parse: a secret that is set but wrong
+ * otherwise produces a feature that looks configured and fails for everyone,
+ * with nothing anywhere saying why.
+ */
+function bot(): { token: string; botId: string } | null {
+  const raw = Deno.env.get("TELEGRAM_LOGIN_BOT_TOKEN");
+  const parsed = parseBotToken(raw);
+  if (!parsed && raw?.trim()) {
+    console.error("telegram-auth: TELEGRAM_LOGIN_BOT_TOKEN is set but is not a bot token — expected <bot_id>:<secret>");
+  }
+  return parsed;
 }
 
 serve(async (req) => {
   const preflight = handleCorsPreflight(req);
   if (preflight) return preflight;
 
-  const token = botToken();
+  const configured = bot();
 
   // Public config. Answers even when unconfigured — `enabled: false` is what
   // keeps the button off the login sheet, rather than a build-time flag.
   if (req.method === "GET") {
     return jsonResponse({
-      enabled: !!token,
-      botId: token ? botId(token) : null,
+      enabled: !!configured,
+      botId: configured?.botId ?? null,
       botUsername: Deno.env.get("TELEGRAM_LOGIN_BOT_USERNAME")?.trim().replace(/^@/, "") || null,
     });
   }
@@ -74,10 +80,10 @@ serve(async (req) => {
     return errorResponse("Method not allowed");
   }
 
-  if (!token) {
-    console.error("telegram-auth: TELEGRAM_LOGIN_BOT_TOKEN not set");
+  if (!configured) {
     return errorResponse("Telegram login is not available right now.");
   }
+  const token = configured.token;
 
   let payload: Record<string, unknown> | null;
   try {
