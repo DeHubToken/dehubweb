@@ -294,7 +294,7 @@ const API_BACKED_TYPES = new Set([
   'subscription', 'ppv_purchase',
   'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased',
   'livestream_start', 'signal_flare', 'video_milestone',
-  'badge_delegated', 'badge_delegation_ended', 'badge_delegation_changed', 'badge_tier_up',
+  'badge_delegated', 'badge_delegation_ended', 'badge_delegation_changed', 'badge_tier_up', 'badge_tier_down',
   'video_removal', 'account_warning', 'system',
 ]);
 
@@ -381,6 +381,7 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     case 'badge_delegation_ended':
     case 'badge_delegation_changed':
     case 'badge_tier_up':
+    case 'badge_tier_down':
       return <Award className="w-4 h-4 text-white/70" />;
     case 'video_removal':
       return <AlertTriangle className="w-4 h-4 text-white/70" />;
@@ -880,6 +881,7 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     // A tier you climbed to has a page a loan does not: the ladder, with the
     // next rung and what it costs already on it.
     case 'badge_tier_up':
+    case 'badge_tier_down':
       return '/app/stake';
     default:
       return null;

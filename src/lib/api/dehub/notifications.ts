@@ -34,6 +34,7 @@ export type NotificationType =
   | 'badge_delegation_ended'
   | 'badge_delegation_changed'
   | 'badge_tier_up'
+  | 'badge_tier_down'
   | 'video_removal'
   | 'account_warning'
   | 'system';

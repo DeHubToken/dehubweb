@@ -904,6 +904,8 @@
   },
   "notifications": {
       "badgeTierUp": "শুভেচ্ছা! এলা তুই {{tier}} 🎉",
+      "badgeTierDown": "খেয়াল করেন: এলা তোমার ব্যাজ {{tier}}",
+      "badgeTierLost": "খেয়াল করেন: তোমার আর ব্যাজ নাই",
     "title": "খবর",
     "markAllRead": "সব পড়া মার্ক করো",
     "settings": "খবরের সেটিংস",
