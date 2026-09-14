@@ -17,7 +17,7 @@ import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync"
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { useNotificationClickRouting } from "@/hooks/use-notification-click-routing";
-import { usePageViewTracking } from "@/hooks/use-page-view-tracking";
+import { usePageViewAddress, PageViewTracker } from "@/hooks/use-page-view-tracking";
 import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
 import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
 import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-gate";
@@ -341,9 +341,9 @@ function AppContent() {
   const { isLoginModalOpen, closeLoginModal, user, walletAddress, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
   const queryClient = useQueryClient();
   usePreloadIcons();
-  // Nothing recorded a navigation anywhere before this; see
-  // src/lib/page-view-tracker.ts.
-  usePageViewTracking(walletAddress);
+  // Views are recorded by <PageViewTracker /> above <Routes>; this only
+  // attaches the signed-in address to them.
+  usePageViewAddress(walletAddress);
   // A pushed notification focuses this tab and posts where it wanted to go.
   useNotificationClickRouting();
 
@@ -859,6 +859,9 @@ const App = () => (
            * from `/` to `/app` happens inside AppContent's <Routes>.
            */}
           <RouteErrorBoundary>
+          {/* Above <Routes>: /r/:code never reaches AppContent, and it is a
+              new visitor's first touch. */}
+          <PageViewTracker />
           <Routes>
             {/*
              * Referral lander — a new user's first touch of DeHub. Mounted
