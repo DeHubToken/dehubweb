@@ -9,10 +9,16 @@
  * Two things it has to say that a plain toggle cannot:
  *
  *  - **There has to be an address.** Notifications are mailed to the address
- *    the account signs in with, and most accounts here are wallet-first and
- *    have none. Flipping this on for one of those would be a switch that sits
- *    on over a channel that can never deliver, so the row disables itself and
- *    points at the place the address is added instead.
+ *    the account signs in with, and a wallet-first account has none. Flipping
+ *    this on for one of those would be a switch that sits on over a channel
+ *    that can never deliver, so the row disables itself and points at the
+ *    place the address is added instead.
+ *
+ *    The status call is the *syncing* one, which is what makes this correct
+ *    for a Google or email login. Those accounts always had an address — with
+ *    Supabase, never on the account document the mailer reads — so this row
+ *    disabled itself and told them to add the email they had signed in with.
+ *    Asking through `syncEmailLinkStatus` lets the server write it down first.
  *  - **Which address.** Anyone who linked an email months ago has no idea
  *    which one it was, so the row names it (masked, as the API returns it)
  *    rather than making them go and look.
@@ -54,7 +60,7 @@ export function EmailNotificationsSetting({ variant = 'row' }: EmailNotification
 
   const { data: emailStatus, isLoading: statusLoading } = useQuery({
     queryKey: ['email-link-status', walletAddress?.toLowerCase() ?? null],
-    queryFn: () => import('@/lib/api/dehub').then(m => m.getEmailLinkStatus()),
+    queryFn: () => import('@/lib/api/dehub').then(m => m.syncEmailLinkStatus()),
     enabled: isAuthenticated && !!walletAddress,
     staleTime: 5 * 60_000,
   });
