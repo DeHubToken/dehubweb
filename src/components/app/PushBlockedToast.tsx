@@ -10,6 +10,7 @@ import {
   useWebPushState,
 } from '@/hooks/use-browser-notifications';
 import { BUTTON_CLASSES } from '@/components/ui/toast-classes';
+import type { WebPushState } from '@/lib/web-push';
 
 /**
  * Tells a reader whose notifications are silently dead that they are dead.
@@ -51,7 +52,35 @@ function snooze(): void {
   } catch {}
 }
 
-function show(goToSettings: () => void): void {
+/**
+ * Which fault this is, in the reader's words.
+ *
+ * One body for all three was the bug. A reader whose browser would not
+ * register for push, and a reader whose browser cannot display anything, were
+ * both told their operating system was blocking notifications — so the one
+ * whose OS was fine went and toggled a correct setting, twice, and concluded
+ * the message was noise. Name the fault you actually detected.
+ */
+function bodyFor(pushState: WebPushState): string {
+  if (pushState === 'display-failed') {
+    return i18n.t(
+      'toasts.push_display_failed_body',
+      'This browser could not display a notification, so none of them are reaching you. Your system settings are not the cause — the browser reported the failure itself.',
+    );
+  }
+  if (pushState === 'unavailable') {
+    return i18n.t(
+      'toasts.push_tab_only_body',
+      'This browser would not register for background notifications, so nothing reaches you while DeHub is closed.',
+    );
+  }
+  return i18n.t(
+    'toasts.push_blocked_body',
+    'Your system is blocking notifications for this browser, so nothing reaches you while DeHub is closed. Turn them back on for your browser in your system notification settings, then switch DeHub notifications off and on again.',
+  );
+}
+
+function show(goToSettings: () => void, pushState: WebPushState): void {
   const id = toast.message(i18n.t('toasts.push_blocked_title', 'Notifications are not reaching you'), {
     duration: Infinity,
     closeButton: true,
@@ -60,12 +89,7 @@ function show(goToSettings: () => void): void {
     onDismiss: () => snooze(),
     description: (
       <span className="flex flex-col gap-3">
-        <span>
-          {i18n.t(
-            'toasts.push_blocked_body',
-            'Your system is blocking notifications for this browser, so nothing reaches you while DeHub is closed. Turn them back on for your browser in your system notification settings, then switch DeHub notifications off and on again.',
-          )}
-        </span>
+        <span>{bodyFor(pushState)}</span>
         <span className="flex flex-row gap-2">
           <button
             type="button"
@@ -119,13 +143,16 @@ export function PushBlockedToast() {
     // Only once the state has actually resolved to a failure. 'unknown' is
     // the normal state for the first second of a load.
     //
-    // Both failures belong here and they are not the same thing:
-    // 'unavailable' is a subscription that could not be created, 'blocked'
-    // is one that exists while the OS refuses to display anything from the
-    // browser. The second is the one nothing used to detect, because the
-    // enable-time test used the page's Notification constructor, which
-    // succeeds on a blocked machine.
-    if (pushState !== 'unavailable' && pushState !== 'blocked') return;
+    // Three failures belong here and none of them is the same thing:
+    // 'unavailable' is a subscription that could not be created, 'blocked' is
+    // one that exists while the OS refuses to display anything from the
+    // browser, and 'display-failed' is the browser itself failing to display
+    // with a reason of its own. The last two are invisible to the page's
+    // Notification constructor, which succeeds on a machine displaying
+    // nothing — which is how one reader sat blind for seven months.
+    if (pushState !== 'unavailable' && pushState !== 'blocked' && pushState !== 'display-failed') {
+      return;
+    }
     if (Date.now() < snoozedUntil()) return;
 
     const startedAt = Date.now();
@@ -139,7 +166,7 @@ export function PushBlockedToast() {
       if (!getStoredEnabled() || Date.now() < snoozedUntil()) return;
       firedRef.current = true;
       window.clearInterval(timer);
-      show(() => navigate('/settings'));
+      show(() => navigate('/settings'), pushState);
     }, 5_000);
 
     return () => window.clearInterval(timer);
