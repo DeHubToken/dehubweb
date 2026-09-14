@@ -1963,6 +1963,24 @@
       "breakdown": "— ninnu bɛ tugu waati sugandilen kɔ, nka kɔsegin {{max}} tile dɔrɔn, min ye jatebɔ tile kelen-kelen ka dan ye. Waati janw na, jateben bɛ waati caman lamini ka tɛmɛ jamana lisi kan.",
       "startTerm": "Tariku",
       "start": "— \"waati bɛɛ\" kɔrɔ ye tile bɛɛ Cloudflare mara hali bi, o ye bi {{days}} tile ye ka daminɛ {{date}} la, tile min na dehub.io taara Cloudflare kan. Kunnafoni kɔrɔ si tɛ yen ka jira nin ɲɛ, tile kɔrɔw fana bɛ bɔ tuma min na Cloudflare b'u kɔrɔya."
+    },
+    "feedback": {
+      "title": "Feedback",
+      "intro": "DeHub la a kɔrɔ kɔ? I ka kɔ kɔnɔ kɔ. Ɲɛ, ɲɛ-ɲɛ walima kɔ-kɔrɔ — kɔ kɔ dɔ a ka kɔ. A ye nafa kɔ n'a ka kɔ, kɔ jɔ kɔ, a ka kɔ kɔ, video walima site la.",
+      "placeholder": "I ka kɔ kɔnɔ…",
+      "timeUsingPlaceholder": "I kɔ kɔ kɔ? (kɔ-kɔrɔ)",
+      "consentPromo": "N'a ye DeHub ka kɔ kɔ kɔ walima kɔ kɔ la.",
+      "consentName": "A ka kɔ kɔ kɔ kɔ. Kɔ kɔ kɔ kɔ kɔ.",
+      "submit": "Kɔ kɔ",
+      "sending": "Kɔ kɔ…",
+      "signedOut": "Kɔ kɔ kɔ kɔ",
+      "thanks": "Kɔ kɔ — a ni i ni. Kɔ kɔ kɔ kɔ kɔ kɔ kɔ kɔ kɔ kɔ.",
+      "again": "Kɔ kɔ kɔ",
+      "toastSent": "A ni i ni — kɔ kɔ kɔ kɔ",
+      "toastFailed": "Kɔ kɔ kɔ, kɔ kɔ",
+      "wallTitle": "Kɔ kɔ kɔ",
+      "wallNote": "kɔ kɔ kɔ",
+      "anonymous": "DeHub kɔ"
     }
   },
   "superpowers": {
