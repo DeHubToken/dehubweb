@@ -402,6 +402,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
                 balance promoted a badge the comment payload didn't carry. */}
             <BadgedName
               badgeBalance={comment.badgeBalance}
+              badgeLock={comment.badgeLock}
               username={comment.username}
               className="font-semibold text-white text-base max-w-[140px] leading-5"
             >
