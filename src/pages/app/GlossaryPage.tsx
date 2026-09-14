@@ -222,7 +222,7 @@ export default function GlossaryPage() {
         ...badgeLadder.map((b, i) => {
           const fee = i === badgeLadder.length - 1 ? 1 : parseFloat((10 - i * 0.69).toFixed(2));
           return {
-            icon: <img src={badgeImage(b.name) || ''} alt={b.name} className="w-6 h-6 object-contain" />,
+            icon: <img src={badgeImage(b.name) || ''} alt={b.name} className="w-6 h-6 object-contain art-rim" />,
             title: b.name,
             description: `Requires ${b.min.toLocaleString()} DHB · ${fee}% platform fee`,
           };
@@ -230,7 +230,14 @@ export default function GlossaryPage() {
         { icon: <Trophy size={iconSize} />, title: t('glossary.leaderboardRanking', 'Leaderboard Ranking'), description: t('glossary.leaderboardRankingDesc', 'Users are ranked by total DHB balance (wallet + staked across all chains). Rankings update periodically and track 1-day and 1-week changes. You can also sort by tips sent, tips received, followers, likes, or subscribers.') },
         { icon: <TrendingUp size={iconSize} />, title: t('glossary.delta', 'Ranking Delta (▲▼)'), description: t('glossary.deltaDesc', 'The green or red arrow next to a leaderboard entry shows how much a user\'s balance changed over the selected time period (1 day, 1 week, etc.).') },
         ...MEDALS.map((medal, i) => ({
-          icon: <img src={medal} alt={`Rank ${i + 1}`} className="w-6 h-6 object-contain" />,
+          icon: (
+            <span
+              className="medal-shine-container w-6 h-6"
+              style={{ '--medal-mask': `url(${medal})` } as React.CSSProperties}
+            >
+              <img src={medal} alt={`Rank ${i + 1}`} className="w-6 h-6 object-contain relative" />
+            </span>
+          ),
           title: `#${i + 1} Trophy`,
           description: `Awarded to the #${i + 1} ranked user on the leaderboard. Displayed next to their avatar.`,
         })),

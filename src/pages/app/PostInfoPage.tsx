@@ -637,15 +637,17 @@ export default function PostInfoPage() {
                   return (
                     <div key={holder.address} className="flex items-center gap-3">
                       {rank <= 3 ? (
-                        <div className="medal-shine-container w-10 h-10 shrink-0">
-                          <img 
-                            src={rank === 1 ? medal1 : rank === 2 ? medal2 : medal3} 
-                            alt={`Rank ${rank}`} 
-                            className="w-10 h-10 object-contain"
+                        <div
+                          className="medal-shine-container w-10 h-10 shrink-0"
+                          style={{ '--medal-mask': `url(${rank === 1 ? medal1 : rank === 2 ? medal2 : medal3})` } as React.CSSProperties}
+                        >
+                          <img
+                            src={rank === 1 ? medal1 : rank === 2 ? medal2 : medal3}
+                            alt={`Rank ${rank}`}
+                            className="w-10 h-10 object-contain relative"
                           />
-                          <div 
+                          <div
                             className="medal-shine-overlay"
-                            style={{ '--medal-mask': `url(${rank === 1 ? medal1 : rank === 2 ? medal2 : medal3})` } as React.CSSProperties}
                           />
                         </div>
                       ) : (

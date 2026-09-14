@@ -1520,7 +1520,7 @@ const Dapp = () => {
                           <div className="flex items-center gap-1.5 mt-2">
                             {power.tier ? (
                               <>
-                                <img src={badgeImage(power.tier) ?? undefined} alt="" width={20} height={20} loading="lazy" decoding="async" className="w-5 h-5 object-contain" />
+                                <img src={badgeImage(power.tier) ?? undefined} alt="" width={20} height={20} loading="lazy" decoding="async" className="w-5 h-5 object-contain art-rim" />
                                 <span className="text-xs text-muted-foreground font-exo">
                                   {t('dapp.spUnlocksAt')} {t(`dapp.${power.tierKey}`)}
                                 </span>

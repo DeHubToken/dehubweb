@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import type { CSSProperties } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useBadgeVisual } from '@/hooks/use-badge-balance';
+import { cssUrl } from '@/lib/css-url';
 import type { BadgeLock } from '@/lib/staking-badges';
 
 interface BadgeIconProps {
@@ -90,30 +91,45 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
     boxSizing: 'border-box',
     marginInlineStart: '0.125em',
     position: 'relative',
+    display: 'inline-block',
     top: `calc(${artworkBaselineOffset}em + ${ARTWORK_GUTTER_PX}px)`,
   };
+  // The plate is masked by the artwork itself, so it aligns with the image's
+  // content box rather than the gutter the wrapper adds around it.
+  const plateStyle = {
+    inset: `${ARTWORK_GUTTER_PX}px`,
+    '--art-mask': cssUrl(url ?? ''),
+  } as CSSProperties;
 
   if (!url) return null;
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <img
-          data-badge-icon
-          src={url}
-          alt={visualName || 'Badge'}
-          width={16}
-          height={16}
-          loading="lazy"
-          decoding="async"
+        <span
           style={opticalStyle}
-          className={`shrink-0 self-baseline align-baseline rounded-none bg-transparent object-contain cursor-pointer hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.8)] transition-all ${className}`}
+          className={`shrink-0 self-baseline align-baseline cursor-pointer ${className}`}
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
             navigate('/app/glossary#badges');
           }}
-        />
+        >
+          {/* Behind the artwork, in its exact shape: see `.art-plate`. Silver
+              and chrome tiers are drawn as light strokes on transparency and
+              lose their whole outer edge against a light theme's background. */}
+          <span aria-hidden className="art-plate" style={plateStyle} />
+          <img
+            data-badge-icon
+            src={url}
+            alt={visualName || 'Badge'}
+            width={16}
+            height={16}
+            loading="lazy"
+            decoding="async"
+            className="relative block w-full h-full rounded-none bg-transparent object-contain hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.8)] transition-all"
+          />
+        </span>
       </TooltipTrigger>
       <TooltipContent side="top" className="text-xs capitalize">
         {visualName || 'Badge'}

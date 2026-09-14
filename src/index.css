@@ -4393,3 +4393,60 @@ specificity animation declarations above.
 @media (prefers-reduced-motion: reduce) {
   .reply-text-glow { animation: none; }
 }
+
+/* Artwork plate
+   =============
+   The badge and medal artwork is drawn for a dark canvas: the silver and chrome
+   tiers carry their outer edge as a near-white stroke on transparency. On a
+   light theme that stroke lands on a near-white background and the silhouette
+   dissolves — a shark reads as though its back has been cut off, and the silver
+   medals lose their rim entirely.
+
+   This paints the artwork's own silhouette behind it, masked by the same image,
+   so the plate is never a disc or a box: it hugs whatever shape the art is. The
+   two stacked drop-shadows push that silhouette a pixel past the artwork's edge,
+   which is what the eye reads as an outline. Filling behind as well as ringing
+   matters for the feathered edges — a soft alpha ramp over the plate resolves to
+   a solid edge instead of fading into the page.
+
+   The mask is the artwork URL, set per element. `--artwork-plate` is the plate
+   colour: dark by default, which is a no-op on the dark themes (a dark rim
+   against a dark page) and the whole fix on the light ones. A theme can override
+   it if its surface ever needs a different backing. */
+.art-plate,
+.medal-shine-container::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--artwork-plate, rgba(9, 11, 16, 0.92));
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  filter: drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)))
+          drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)));
+}
+.art-plate {
+  -webkit-mask-image: var(--art-mask);
+  mask-image: var(--art-mask);
+}
+/* The medals already publish their silhouette as `--medal-mask` for the shine
+   sweep. The plate rides the same value, so it is set on the container and
+   inherits down to the overlay that was already reading it. The medal image
+   itself is given `relative` at each call site: without it the image paints in
+   the inline step, below this positioned pseudo-element, and the plate would
+   cover the artwork instead of backing it. */
+.medal-shine-container::before {
+  content: '';
+}
+
+/* The same rescue for badge artwork drawn as a bare <img>, where there is no
+   container to hang a plate inside. Tracing the alpha with two stacked shadows
+   gives the identical rim; the fill behind is redundant for these, since the
+   artwork is opaque wherever it is drawn at all. */
+.art-rim {
+  filter: drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)))
+          drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)));
+}
