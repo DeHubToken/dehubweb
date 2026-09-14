@@ -687,7 +687,12 @@ function FullscreenSlide({
       if (!e.ctrlKey && !zoomedIn) return;
       e.preventDefault();
       e.stopPropagation();
-      const step = Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.002));
+      // A trackpad pinch arrives as a stream of small deltas, a mouse wheel as
+      // one ±120 notch — and 120 through the same curve is a 3.3x jump per
+      // click. Clamping the delta leaves the trackpad untouched and caps the
+      // mouse at about 1.5x a notch.
+      const delta = Math.max(-40, Math.min(40, e.deltaY));
+      const step = Math.exp(-delta * (e.ctrlKey ? 0.01 : 0.002));
       zoomAbout(zoomRef.current.scale * step, e.clientX, e.clientY);
     };
     // iOS Safari keeps its own pinch on top of `touch-action`, and it wins
