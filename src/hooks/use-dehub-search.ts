@@ -26,6 +26,15 @@ export interface SearchCreator {
   id: string;
   name: string;
   handle: string;
+  /**
+   * Staked DHB and the tier the holder has grandfathered — the badge beside
+   * the name. A result row is an account row like any other, so it wears the
+   * same badge the leaderboard next to it draws.
+   */
+  badgeBalance?: number;
+  badgeLock?: { tier: string; requirement: number } | null;
+  /** Canonical handle for the badge override table. */
+  badgeUsername?: string;
   avatar?: string;
   verified: boolean;
   bio?: string;
@@ -112,6 +121,9 @@ export function mapAccountToCreator(account: SearchAccount): SearchCreator {
     avatar: rawAvatarPath 
       ? buildAvatarUrl(account.address, rawAvatarPath) 
       : undefined,
+    badgeBalance: account.hideBadgeAndBalance ? 0 : account.badgeBalance,
+    badgeLock: account.hideBadgeAndBalance ? null : account.badgeLock,
+    badgeUsername: account.username,
     verified: account.verified || false,
     bio: account.bio,
     followerCount: account.followerCount,
@@ -143,6 +155,9 @@ export function extractUniqueCreators(nfts: DeHubNFT[]): SearchCreator[] {
       name: nft.minterDisplayName || username || 'User',
       handle: `@${username || minterId.slice(0, 8)}`,
       avatar: buildAvatarUrl(minterId, extractAvatarPath(nft)),
+      badgeBalance: nft.minterUser?.hideBadgeAndBalance ? 0 : nft.minterUser?.badgeBalance,
+      badgeLock: nft.minterUser?.hideBadgeAndBalance ? null : nft.minterUser?.badgeLock,
+      badgeUsername: username,
       verified: false, // API doesn't return verification on NFT objects
       bio: undefined,
     });

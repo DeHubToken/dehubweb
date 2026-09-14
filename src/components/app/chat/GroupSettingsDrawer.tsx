@@ -31,6 +31,7 @@ import { toast } from 'sonner';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { ButtonLoader } from '@/components/app/DeHubLoader';
 import { usePendingAction } from '@/hooks/use-pending-action';
+import { BadgedName } from '@/components/app/BadgedName';
 
 interface GroupSettingsDrawerProps {
   open: boolean;
@@ -362,10 +363,15 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <span className="text-sm text-white font-medium truncate block">
+                          <BadgedName
+                            badgeBalance={member.hideBadgeAndBalance ? 0 : member.badgeBalance}
+                            lookupId={member.hideBadgeAndBalance ? null : (member.username || addr)}
+                            username={member.username}
+                            className="text-sm text-white font-medium truncate"
+                          >
                             {displayName}
                             {isSelf && <span className="text-zinc-500 ml-1">(you)</span>}
-                          </span>
+                          </BadgedName>
                           {member.username && (
                             <span className="text-xs text-zinc-500">@{member.username}</span>
                           )}

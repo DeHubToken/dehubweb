@@ -16,6 +16,7 @@ import { Search, Loader2, AtSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppState } from '@/components/app/AppState';
+import { BadgedName } from '@/components/app/BadgedName';
 
 export interface MentionUser {
   id: string;
@@ -23,6 +24,9 @@ export interface MentionUser {
   displayName: string | null;
   avatarUrl: string | null;
   isVerified: boolean;
+  /** Staked DHB and grandfathered tier — the badge beside the name. */
+  badgeBalance?: number;
+  badgeLock?: { tier: string; requirement: number } | null;
   followerCount?: number;
   followingCount?: number;
   isFollowing?: boolean;
@@ -102,6 +106,9 @@ export function UserMentionDropdown({
           isFollowing?: boolean;
           followsYou?: boolean;
           isVerified?: boolean;
+          badgeBalance?: number;
+          badgeLock?: { tier: string; requirement: number } | null;
+          hideBadgeAndBalance?: boolean;
           followers?: number;
           followings?: number;
           followerCount?: number;
@@ -124,6 +131,8 @@ export function UserMentionDropdown({
             ? ASSISTANT_AVATAR
             : buildAvatarUrl(u.address || '', u.avatarImageUrl) || null,
           isVerified: u.isVerified ?? false,
+          badgeBalance: u.hideBadgeAndBalance ? 0 : u.badgeBalance,
+          badgeLock: u.hideBadgeAndBalance ? null : u.badgeLock,
           followerCount: typeof u.followerCount === 'number' ? u.followerCount : (typeof u.followers === 'number' ? u.followers : undefined),
           followingCount: typeof u.followingCount === 'number' ? u.followingCount : (typeof u.followings === 'number' ? u.followings : undefined),
           isFollowing: u.isFollowing,
@@ -302,9 +311,14 @@ export function UserMentionDropdown({
 
                 <div className="flex-1 min-w-0 flex flex-col gap-0.5">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[17px] font-medium text-white truncate">
+                    <BadgedName
+                      badgeBalance={user.badgeBalance}
+                      badgeLock={user.badgeLock}
+                      username={user.username}
+                      className="text-[17px] font-medium text-white truncate"
+                    >
                       {user.displayName || user.username}
-                    </span>
+                    </BadgedName>
                     {user.isVerified && <VerifiedBadge className="w-3.5 h-3.5 flex-shrink-0" />}
                     {user.isAssistant && (
                       <span className="px-1.5 py-0.5 rounded-md bg-white/[0.12] border border-white/[0.12] text-[10px] font-semibold text-white/75 leading-none flex-shrink-0">
