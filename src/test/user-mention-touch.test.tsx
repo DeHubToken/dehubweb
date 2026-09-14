@@ -1,5 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { UserMentionDropdown } from '@/components/app/mentions/UserMentionDropdown';
 
 const { apiCallMock } = vi.hoisted(() => ({ apiCallMock: vi.fn() }));
@@ -37,16 +39,23 @@ describe('user mention touch selection', () => {
 
   it('selects at touch-start before a keyboard resize can move the row', async () => {
     const onSelect = vi.fn();
+    // The row now carries a badge: it links to the glossary and resolves
+    // through a cached query, so the dropdown needs router and query context
+    // the way every other list that draws one does.
     render(
-      <UserMentionDropdown
-        query="ali"
-        isOpen
-        position={{ top: 0, left: 0 }}
-        selectedIndex={0}
-        onSelectedIndexChange={vi.fn()}
-        onSelect={onSelect}
-        onClose={vi.fn()}
-      />,
+      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+        <MemoryRouter>
+          <UserMentionDropdown
+            query="ali"
+            isOpen
+            position={{ top: 0, left: 0 }}
+            selectedIndex={0}
+            onSelectedIndexChange={vi.fn()}
+            onSelect={onSelect}
+            onClose={vi.fn()}
+          />
+        </MemoryRouter>
+      </QueryClientProvider>,
     );
 
     await act(async () => {
