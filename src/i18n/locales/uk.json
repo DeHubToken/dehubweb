@@ -1409,6 +1409,8 @@
   },
   "creators": {},
   "loginModal": {
+    "continueApple": "Продовжити з Apple",
+    "continueTelegram": "Продовжити з Telegram",
     "unlockBiometricContinue": "Щоб продовжити, розблокуйте гаманець за допомогою відбитка пальця або обличчя.",
     "unlockBiometricSignIn": "Розблокуйте гаманець за допомогою відбитка пальця або обличчя, щоб увійти.",
     "unlockPasswordContinue": "Введіть пароль гаманця, щоб продовжити.",

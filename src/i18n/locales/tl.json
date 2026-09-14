@@ -1268,6 +1268,8 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "continueApple": "Magpatuloy gamit ang Apple",
+    "continueTelegram": "Magpatuloy gamit ang Telegram",
     "unlockBiometricContinue": "I - unlock ang iyong wallet gamit ang iyong fingerprint o mukha para magpatuloy.",
     "unlockBiometricSignIn": "I - unlock ang iyong wallet gamit ang iyong fingerprint o mukha para mag - sign in.",
     "unlockPasswordContinue": "Ilagay ang password ng iyong wallet para magpatuloy.",

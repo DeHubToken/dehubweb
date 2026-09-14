@@ -145,6 +145,7 @@ function ThemedBackgrounds({ preview = false }: { preview?: boolean }) {
 // Pages — lazy loaded
 const DeleteAccount = React.lazy(() => import("./pages/DeleteAccount"));
 const AuthConfirm = React.lazy(() => import("./pages/AuthConfirm"));
+const TelegramAuth = React.lazy(() => import("./pages/TelegramAuth"));
 const CreatorsPage = React.lazy(() => import("./pages/app/CreatorsPage"));
 const SkillPage = React.lazy(() => import("./pages/SkillPage"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
@@ -482,6 +483,10 @@ function AppContent() {
 
           <Route path="/delete-account" element={<DeleteAccount />} />
           <Route path="/auth/confirm" element={<Suspense fallback={<PageLoader />}><AuthConfirm /></Suspense>} />
+          {/* Where oauth.telegram.org is allowed to send people back to. Must
+              stay on this exact path — it is registered against the bot, and
+              the mobile app builds the same URL with ?app=1. */}
+          <Route path="/auth/telegram" element={<Suspense fallback={<PageLoader />}><TelegramAuth /></Suspense>} />
 
           {/*
             /admin used to live here — a second admin frontend on the public

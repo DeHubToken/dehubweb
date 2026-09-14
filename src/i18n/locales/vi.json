@@ -1152,6 +1152,8 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "continueApple": "Tiếp tục với Apple",
+    "continueTelegram": "Tiếp tục với Telegram",
     "unlockBiometricContinue": "Mở khóa ví bằng dấu vân tay hoặc khuôn mặt để tiếp tục.",
     "unlockBiometricSignIn": "Mở khóa ví bằng dấu vân tay hoặc mặt để đăng nhập.",
     "unlockPasswordContinue": "Nhập mật khẩu ví của bạn để tiếp tục.",

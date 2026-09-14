@@ -1250,6 +1250,8 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "continueApple": "Gaan voort met Apple",
+    "continueTelegram": "Gaan voort met Telegram",
     "unlockBiometricContinue": "Ontsluit jou beursie met jou vingerafdruk of gesig om voort te gaan.",
     "unlockBiometricSignIn": "Ontsluit jou beursie met jou vingerafdruk of gesig om aan te meld.",
     "unlockPasswordContinue": "Voer jou beursie wagwoord in om voort te gaan.",
