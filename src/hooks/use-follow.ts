@@ -29,11 +29,9 @@ const listeners = new Set<() => void>();
  * Loaded on the failure path only. This module is on the boot path, and the
  * sound and its toast are four kilobytes nobody downloads to read a feed.
  */
-async function announceIfRateLimited(error: unknown): Promise<boolean> {
-  const { isRateLimitError, notifyRateLimited } = await import('@/lib/error-feedback');
-  if (!isRateLimitError(error)) return false;
-  notifyRateLimited();
-  return true;
+async function announceRateLimit(error: unknown): Promise<boolean> {
+  const { announceIfRateLimited } = await import('@/lib/error-feedback');
+  return announceIfRateLimited(error);
 }
 
 function emit() {
@@ -143,7 +141,7 @@ export async function toggleFollowFor(
     // Clicking faster than the limiter allows is not a failure to explain, it
     // is a pace to correct — so it gets the sound and "slow down" instead of
     // whatever generic message the caller would have shown.
-    const handled = await announceIfRateLimited(error);
+    const handled = await announceRateLimit(error);
     if (opts.onError) opts.onError(error, { handled });
     else if (!handled) toast.error(next ? 'Failed to follow' : 'Failed to unfollow');
     return false;
