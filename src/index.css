@@ -4201,7 +4201,8 @@ html:not(.dark) .docs-root .border-gray-200 {
  * palette and geometry:
  *
  *   1. "Square everything off" (~L3311) strips every border-radius. That is
- *      the app's look under light/minimal; docs is a reading surface built
+ *      the app's look under light and minimal alike - each ships its own
+ *      copy of the rule - and docs is a reading surface built
  *      out of rounded bentos, and squaring it made every card, chip and pill
  *      read as a crude block. Dark docs stays rounded, so light docs did not
  *      match its own dark counterpart either.
@@ -4213,24 +4214,30 @@ html:not(.dark) .docs-root .border-gray-200 {
  * a Level 4 :not() with a descendant, which older Safari drops entirely,
  * taking the app's square look with it.
  * ========================================================================== */
-html[data-theme="light"] .docs-root .rounded-sm { border-radius: 0.125rem !important; }
-html[data-theme="light"] .docs-root .rounded { border-radius: 0.25rem !important; }
-html[data-theme="light"] .docs-root .rounded-md { border-radius: 0.375rem !important; }
-html[data-theme="light"] .docs-root .rounded-lg { border-radius: 0.5rem !important; }
-html[data-theme="light"] .docs-root .rounded-r-lg {
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-sm { border-radius: 0.125rem !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded { border-radius: 0.25rem !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-md { border-radius: 0.375rem !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-lg { border-radius: 0.5rem !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-r-lg {
   border-top-right-radius: 0.5rem !important;
   border-bottom-right-radius: 0.5rem !important;
 }
-html[data-theme="light"] .docs-root .rounded-xl { border-radius: 0.75rem !important; }
-html[data-theme="light"] .docs-root .rounded-2xl { border-radius: 1rem !important; }
-html[data-theme="light"] .docs-root .rounded-full { border-radius: 9999px !important; }
-html[data-theme="light"] .docs-root .rounded-[inherit] { border-radius: inherit !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-xl { border-radius: 0.75rem !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-2xl { border-radius: 1rem !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-full { border-radius: 9999px !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-\[inherit\] { border-radius: inherit !important; }
 
 html[data-theme="light"] .docs-root .bg-white:not([data-keep-white]) {
   background-color: hsl(var(--card)) !important;
 }
 
 /* Typography plugin (prose-slate) → ink scale */
+/* Blog bylines carry text-royal-blue/50, which in docs light resolves to ink
+   at 50% - 3.2:1, under AA at text-xs. Lift the alpha, not the hue. */
+html:not(.dark) .docs-root .text-royal-blue\/50 {
+  color: hsl(var(--docs-royal) / 0.78);
+}
+
 html:not(.dark) .docs-root .prose {
   --tw-prose-body: #2e2e2e;
   --tw-prose-headings: #1a1a1a;
