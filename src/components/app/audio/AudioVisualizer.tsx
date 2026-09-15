@@ -12,6 +12,7 @@ import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } 
 import { motion } from 'framer-motion';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
+import { registerOffDocumentMedia } from '@/lib/pause-media-in';
 import { Slider } from '@/components/ui/slider';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import {
@@ -166,6 +167,24 @@ export function AudioVisualizer({
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
+  /**
+   * The <audio> element is never put in the document — the canvas is what goes
+   * on screen, the element only makes the sound. PersistentPageCache pauses a
+   * page's media by walking its subtree, so it could not see this one at all:
+   * a track started in the feed kept playing through every later navigation.
+   * Registering it against the canvas is what puts it back on that page's books.
+   */
+  const unregisterMediaRef = useRef<(() => void) | null>(null);
+  const releaseOffDocument = useCallback(() => {
+    unregisterMediaRef.current?.();
+    unregisterMediaRef.current = null;
+  }, []);
+  /** Take an element on as this card's, and as this page's. */
+  const adoptAudioElement = useCallback((el: HTMLAudioElement) => {
+    releaseOffDocument();
+    unregisterMediaRef.current = registerOffDocumentMedia(el, () => canvasRef.current);
+    audioRef.current = el;
+  }, [releaseOffDocument]);
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
   const animationRef = useRef<number | null>(null);
@@ -236,10 +255,10 @@ export function AudioVisualizer({
     el.preload = 'metadata';
     el.muted = mutedRef.current;
     el.src = audioUrl;
-    audioRef.current = el;
+    adoptAudioElement(el);
     setAudioElVersion((v) => v + 1);
     return el;
-  }, [audioUrl]);
+  }, [audioUrl, adoptAudioElement]);
 
   // Metadata is cheap; the full-file decode next door is not, so both ride the
   // same near-viewport gate.
@@ -511,7 +530,7 @@ export function AudioVisualizer({
       if (isPoppedOutRef.current) {
         const graph = takeBackAudioPost(popoutTrack.tokenId);
         if (!graph) return;
-        audioRef.current = graph.el;
+        adoptAudioElement(graph.el);
         sourceRef.current = graph.source;
         analyserRef.current = graph.analyser;
         audioContextRef.current = graph.source ? sharedVisualizerContext : null;
@@ -525,6 +544,9 @@ export function AudioVisualizer({
       const el = audioRef.current;
       const wasPlaying = isPlayingRef.current;
       handedOverRef.current = !!el;
+      // The corner player survives navigation on purpose — hand the page's
+      // claim over with the element, or the next route change would pause it.
+      releaseOffDocument();
       const startAt = pendingSeekRef.current ?? (duration > 0 ? currentTime / duration : null);
       pendingSeekRef.current = null;
       popOutAudioPost({
@@ -538,7 +560,10 @@ export function AudioVisualizer({
       });
       onPopOutChange?.(true, wasPlaying);
     },
-    [popoutTrack, isFullscreen, onFullscreen, onPopOutChange, duration, currentTime, t],
+    [
+      popoutTrack, isFullscreen, onFullscreen, onPopOutChange, duration, currentTime, t,
+      adoptAudioElement, releaseOffDocument,
+    ],
   );
 
   // The corner player closed on this track — its X, or something else took
@@ -549,6 +574,7 @@ export function AudioVisualizer({
     if (isPoppedOut || !handedOverRef.current) return;
     handedOverRef.current = false;
     const at = duration > 0 ? clamp01(currentTime / duration) : null;
+    releaseOffDocument();
     audioRef.current = null;
     sourceRef.current = null;
     analyserRef.current = null;
@@ -668,6 +694,8 @@ export function AudioVisualizer({
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
+      unregisterMediaRef.current?.();
+      unregisterMediaRef.current = null;
       // A handed-over element and its nodes belong to the corner player now;
       // it carries on after this card is gone and tears them down itself.
       if (!handedOverRef.current) {

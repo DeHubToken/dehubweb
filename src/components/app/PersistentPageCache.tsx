@@ -18,7 +18,7 @@ import { preloadPriorityPages } from '@/lib/preload-priority-pages';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import HomePage from '@/pages/app/HomePage';
-import { pauseMediaIn, resumeMedia } from '@/lib/pause-media-in';
+import { pauseMediaIn, pauseOffDocumentMediaIn, resumeMedia } from '@/lib/pause-media-in';
 import {
   FeedSkeleton,
   ExploreSkeleton,
@@ -175,6 +175,15 @@ const CachedPage = memo(function CachedPage({
   // on the way out catches every page at once; gating each media component on
   // the route would have to be repeated for every surface added later.
   //
+  // The overlay is the awkward middle case. Home stays VISIBLE under an open
+  // post, so the first test alone let an audio post carry on playing in the feed
+  // behind it — the loudest version of this bug, because the post the user is
+  // looking at is the very track they cannot pause. It cannot simply pause
+  // everything either: opening a video hands the `<video>` element itself up to
+  // the post page (lib/video-handoff), and stopping it here would kill the clip
+  // the user just opened. Off-document players have no hand-off, so they are
+  // exactly the set that has to stop.
+  //
   // Scoped to this subtree by design: the radio and stage-recording mini players
   // are mounted in AppLayout, OUTSIDE the cache, precisely so they DO survive
   // navigation — see lib/media-session.ts. They are untouched by this.
@@ -183,13 +192,17 @@ const CachedPage = memo(function CachedPage({
   useEffect(() => {
     const root = pageRef.current;
     if (!root) return;
-    if (!shouldStayVisible) {
-      resumeRef.current = pauseMediaIn(root);
-    } else if (resumeRef.current.length) {
+    if (shouldStayVisible && isActive) {
       resumeMedia(resumeRef.current);
       resumeRef.current = [];
+      return;
     }
-  }, [shouldStayVisible]);
+    // Accumulated, not replaced: home → post → another page pauses in two
+    // steps, and the second sweep skips what the first already stopped. Only a
+    // return to the page settles the debt.
+    const stopped = shouldStayVisible ? pauseOffDocumentMediaIn(root) : pauseMediaIn(root);
+    if (stopped.length) resumeRef.current = [...new Set([...resumeRef.current, ...stopped])];
+  }, [isActive, shouldStayVisible]);
 
   return (
     <div

@@ -64,7 +64,17 @@ const PostModal = React.lazy(() =>
 import { RadioMiniPlayer } from '@/components/app/radio/RadioMiniPlayer';
 import { StageMiniPlayer } from '@/components/app/spaces/StageMiniPlayer';
 import { StageRecordingMiniPlayer } from '@/components/app/stages/StageRecordingMiniPlayer';
-import { AudioPostMiniPlayer } from '@/components/app/audio/AudioPostMiniPlayer';
+import { useAudioPostPoppedOut } from '@/lib/audio-post-popout';
+
+// Mounted app-wide so a popped-out track survives navigation, but it renders
+// nothing until somebody pops one out — and until then its panel and waveform
+// were being parsed before first paint. Same treatment as the radio player's
+// fullscreen visualiser: reached only once there is a track to show.
+const AudioPostMiniPlayer = React.lazy(() =>
+  import('@/components/app/audio/AudioPostMiniPlayer').then((m) => ({
+    default: m.AudioPostMiniPlayer,
+  })),
+);
 import { AudioSpacesModal } from '@/components/app/spaces/AudioSpacesModal';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 
@@ -154,6 +164,8 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const { isCollapsed } = useSidebarCollapse();
   const location = useLocation();
   const mainRef = useRef<HTMLElement | null>(null);
+  // Gate for the corner player's chunk — see its lazy import above.
+  const hasPoppedOutAudio = useAudioPostPoppedOut();
 
   // "A stage you set a reminder for is starting soon / just started" — announced
   // wherever you are in the app, so it mounts with the shell rather than on the
@@ -456,7 +468,11 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       <RadioMiniPlayer />
       <StageMiniPlayer />
       <StageRecordingMiniPlayer />
-      <AudioPostMiniPlayer />
+      {hasPoppedOutAudio && (
+        <Suspense fallback={null}>
+          <AudioPostMiniPlayer />
+        </Suspense>
+      )}
       <AudioSpacesModal />
       <MinimizedAIChats />
       

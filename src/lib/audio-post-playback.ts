@@ -24,6 +24,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { setAudioPostPoppedOut } from '@/lib/audio-post-popout';
 import {
   claimMediaSession,
   releaseMediaSession,
@@ -94,6 +95,9 @@ function publish(patch: Partial<AudioPostPlaybackState>) {
   }
   if (!changed) return;
   state = next;
+  // The app shell gates the corner player's chunk on this, without having to
+  // load this module to find out — see lib/audio-post-popout.
+  setAudioPostPoppedOut(!!state.tokenId);
   for (const notify of subscribers) notify(state);
 }
 
