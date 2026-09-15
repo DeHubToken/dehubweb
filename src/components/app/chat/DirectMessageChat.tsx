@@ -4,7 +4,7 @@
  * Full-screen 1:1 direct message chat view.
  */
 
-import { useState, useRef, useEffect, useCallback, useMemo, useReducer, memo } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, useReducer, memo, type ReactNode } from 'react';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
@@ -88,6 +88,14 @@ interface DirectMessageChatProps {
   onBack: () => void;
   /** Pre-fill the composer (shared-post text for fee-gated chats). */
   initialComposerText?: string;
+  /**
+   * Rendered inside a floating dock panel rather than as the page. Drops the
+   * back arrow and the search toggle — there is no list to go back to, and the
+   * window controls need the room at 380px wide.
+   */
+  dock?: boolean;
+  /** Window controls (minimise/close) for dock mode, pinned to the header end. */
+  headerActions?: ReactNode;
 }
 
 function VoiceMessagePlayer({
@@ -783,7 +791,7 @@ function useDmPin(conversationId: string, address: string | undefined, conversat
   return { pinnedMessageId, pinMessage, unpinMessage };
 }
 
-export function DirectMessageChat({ conversation, onBack, initialComposerText }: DirectMessageChatProps) {
+export function DirectMessageChat({ conversation, onBack, initialComposerText, dock = false, headerActions }: DirectMessageChatProps) {
   const { user, walletAddress, openLoginModal } = useAuth();
   const { setCallMessageHandler } = useCall();
   const queryClient = useQueryClient();
@@ -1716,27 +1724,29 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
     <div data-page-bento data-bento-flat className="h-full flex flex-col overflow-hidden relative">
       {/* Header. The shell carries no fill now, so the bar is separated by a
           hairline instead of sitting on its own slightly-lighter slab. */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.07]">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onBack}
-            className="text-white hover:bg-zinc-800"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
+      <div className={`flex items-center justify-between border-b border-white/[0.07] ${dock ? 'px-3 py-2' : 'px-4 py-3'}`}>
+        <div className={`flex items-center min-w-0 ${dock ? 'gap-2' : 'gap-3'}`}>
+          {!dock && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onBack}
+              className="text-white hover:bg-zinc-800"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+          )}
 
-          <Link to={profileLink} className="flex items-center gap-3">
-            <Avatar className="w-10 h-10">
+          <Link to={profileLink} className={`flex items-center min-w-0 ${dock ? 'gap-2' : 'gap-3'}`}>
+            <Avatar className={dock ? 'w-8 h-8 shrink-0' : 'w-10 h-10'}>
               {avatarUrl && <AvatarImage src={avatarUrl} />}
               <AvatarFallback className="bg-zinc-700 text-white font-medium">
                 {(displayName.startsWith('0x') ? displayName.charAt(2) : displayName.charAt(0)).toUpperCase()}
               </AvatarFallback>
             </Avatar>
 
-            <div>
-              <h2 className="font-semibold text-white flex items-center gap-1.5">
+            <div className="min-w-0">
+              <h2 className={`font-semibold text-white flex items-center gap-1.5 truncate ${dock ? 'text-sm' : ''}`}>
                 <BadgedName
                   badgeBalance={(otherUser as any)?.badgeBalance}
                   username={otherUser?.username}
@@ -1752,40 +1762,42 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
           </Link>
         </div>
 
-        <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-zinc-400 hover:text-white hover:bg-zinc-800"
-            onClick={() => {
-              setShowSearchBar(prev => !prev);
-              if (!showSearchBar) {
-                setTimeout(() => searchInputRef.current?.focus(), 100);
-              } else {
-                setSearchQuery('');
-              }
-            }}
-          >
-            <Search className="w-5 h-5" />
-          </Button>
+        <div className="flex items-center gap-1 shrink-0">
+          {!dock && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-zinc-400 hover:text-white hover:bg-zinc-800"
+              onClick={() => {
+                setShowSearchBar(prev => !prev);
+                if (!showSearchBar) {
+                  setTimeout(() => searchInputRef.current?.focus(), 100);
+                } else {
+                  setSearchQuery('');
+                }
+              }}
+            >
+              <Search className="w-5 h-5" />
+            </Button>
+          )}
 
           {!isGroupChat && otherUser?.address && (
             <>
               <DmVoiceCallButton
                 recipientAddress={otherUser.address}
-                className="text-zinc-400 hover:text-white hover:bg-zinc-800"
+                className={`text-zinc-400 hover:text-white hover:bg-zinc-800 ${dock ? 'h-8 w-8' : ''}`}
               />
               <DmVideoCallButton
                 recipientAddress={otherUser.address}
-                className="text-zinc-400 hover:text-white hover:bg-zinc-800"
+                className={`text-zinc-400 hover:text-white hover:bg-zinc-800 ${dock ? 'h-8 w-8' : ''}`}
               />
             </>
           )}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-zinc-800">
-              <MoreVertical className="w-5 h-5" />
+            <Button variant="ghost" size="icon" className={`text-zinc-400 hover:text-white hover:bg-zinc-800 ${dock ? 'h-8 w-8' : ''}`}>
+              <MoreVertical className={dock ? 'w-4 h-4' : 'w-5 h-5'} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
@@ -1828,6 +1840,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        {headerActions}
         </div>
       </div>
 

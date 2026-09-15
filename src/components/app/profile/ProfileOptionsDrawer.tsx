@@ -3,6 +3,7 @@ import { Copy, AtSign, Wallet, MessageCircle, Gift, Bell, Handshake, UserMinus, 
 import { ReportModal } from '@/components/app/modals/ReportModal';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { openDmDock } from '@/hooks/use-dm-dock';
 import { useTranslation } from 'react-i18next';
 import { DISPLAY_WALLET_OVERRIDES } from './ProfileConstants';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
@@ -155,7 +156,7 @@ export function ProfileOptionsContent({
               <button
                 onClick={() => {
                   setShareSheetOpen(false);
-                  navigate('/app/messages', { state: { openDmWith: profile.walletAddress, username: profile.handle?.replace('@', '') } });
+                  openDmDock({ address: profile.walletAddress, username: profile.handle?.replace('@', '') });
                 }}
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 active:scale-[0.98] transition-[background-color,transform] text-left"
               >
