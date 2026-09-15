@@ -1533,6 +1533,7 @@
     "failed_to_send_tip": "টিপ পাঠানো যায়নি",
     "failed_to_create_post": "পোস্ট তৈরি করা যায়নি",
     "notification_settings_updated": "বিজ্ঞপ্তির সেটিংস হালনাগাদ হয়েছে",
+    "reported_for_moderation": "ব্যাজ হোল্ডারদের দ্বারা বিকেন্দ্রীকৃত সংযমের জন্য রিপোর্ট করা হয়েছে",
     "failed_to_report": "রিপোর্ট করা যায়নি",
     "crosschain_deposit_completed": "ক্রস-চেইন জমা সম্পন্ন!",
     "failed_to_submit_proposal": "প্রস্তাব জমা দেওয়া যায়নি",

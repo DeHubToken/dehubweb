@@ -1686,6 +1686,7 @@
     "failed_to_create_post": "Kunne ikke oprette opslag",
     "notification_settings_updated": "Notifikationsindstillinger opdateret",
     "report_submitted": "Rapport indsendt",
+    "reported_for_moderation": "Indberettet til decentral moderering af badgeindehavere",
     "failed_to_report": "Kunne ikke anmelde",
     "crosschain_deposit_completed": "Cross-chain-indbetaling gennemført!",
     "proposal_submitted": "Forslag indsendt!",

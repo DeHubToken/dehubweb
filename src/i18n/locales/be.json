@@ -1612,6 +1612,7 @@
     "failed_to_send_tip": "Не ўдалося адправіць чаявыя",
     "failed_to_create_post": "Не ўдалося стварыць пост",
     "notification_settings_updated": "Налады апавяшчэнняў абноўлены",
+    "reported_for_moderation": "Паведамляецца пра дэцэнтралізаваную мадэрацыю трымальнікамі значкоў",
     "failed_to_report": "Не ўдалося паскардзіцца",
     "crosschain_deposit_completed": "Кросчэйн-дэпазіт завершаны!",
     "failed_to_submit_proposal": "Не ўдалося адправіць прапанову",

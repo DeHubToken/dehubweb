@@ -6,6 +6,7 @@ import {
   TOAST_CLASSES,
   TOAST_FIT_CLASSES,
   TOASTER_COLUMN_CLASSES,
+  TOASTER_DESKTOP_WIDTH,
   TITLE_CLASSES,
   CONTENT_CLASSES,
   DESCRIPTION_CLASSES,
@@ -25,9 +26,11 @@ type ToasterProps = React.ComponentProps<typeof Sonner>;
  * than in that file: the surface is this toaster's, while the layout and the
  * type are the contract any toast body is written against.
  *
- * The two desktop-only entries hang off the same `isMobile` that picks the
- * corner, rather than a `md:` variant, so the width and the anchor can never
- * disagree with `position` on the frame the hook resolves.
+ * The desktop-only entries hang off the same `isMobile` that picks the corner,
+ * rather than a `md:` variant, so the width and the anchor can never disagree
+ * with `position` on the frame the hook resolves. `--width` is one of them: it
+ * sizes the rail the toast is measured against, and sonner's 356px default was
+ * wrapping a one-sentence toast onto two lines on a screen with room to spare.
  */
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme();
@@ -38,6 +41,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       theme={theme as ToasterProps["theme"]}
       className={["toaster group", isMobile ? "" : TOASTER_COLUMN_CLASSES].join(" ")}
       position={isMobile ? "top-right" : "top-center"}
+      style={isMobile ? undefined : ({ "--width": TOASTER_DESKTOP_WIDTH } as React.CSSProperties)}
       duration={3000}
       visibleToasts={3}
       expand

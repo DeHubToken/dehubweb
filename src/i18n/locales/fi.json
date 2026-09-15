@@ -1624,6 +1624,7 @@
     "failed_to_create_post": "Julkaisun luonti epäonnistui",
     "notification_settings_updated": "Ilmoitusasetukset päivitetty",
     "report_submitted": "Report submitted",
+    "reported_for_moderation": "Raportoitu merkin haltijoiden hajautettua moderointia varten",
     "failed_to_report": "Raportointi epäonnistui",
     "crosschain_deposit_completed": "Ketjujen välinen talletus valmis!",
     "proposal_submitted": "Proposal submitted!",
