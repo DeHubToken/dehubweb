@@ -85,7 +85,20 @@ export function streamAgentLoop(opts: AgentOptions): ReadableStream<Uint8Array> 
       let fullText = '';
 
       try {
-        const catalog = await fetchToolCatalog(surface, adminToken);
+        // The catalog fetch is the first thing this loop does, and for a long
+        // time it was also inside the outer try — so a tool API that was down,
+        // misconfigured or simply slow replaced the entire answer with an
+        // apology, including for the many questions that needed no tool at
+        // all. Degrade instead: keep web_search, lose the DeHub tools, and let
+        // the model answer from the platform knowledge in its prompt. The
+        // tool-use rules tell it to say when it could not look something up,
+        // which is a far better failure than "something went wrong".
+        let catalog: Awaited<ReturnType<typeof fetchToolCatalog>> = [];
+        try {
+          catalog = await fetchToolCatalog(surface, adminToken);
+        } catch (err) {
+          console.error('[Agent stream] tool catalog unavailable, answering without tools:', err);
+        }
         const toolSchemas = [...catalog, WEB_SEARCH_TOOL].map((t) => ({
           type: 'function' as const,
           function: { name: t.name, description: t.description, parameters: t.parameters },
