@@ -2184,5 +2184,8 @@
     "kindAudio": "Audio",
     "kindImage": "Pictures",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "reason": "Reason: {{reason}}"
   }
 }

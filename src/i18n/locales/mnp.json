@@ -2385,11 +2385,18 @@
     "errorNeedRights": "请确认你有这个内容的权利",
     "errorClipboard": "无法读取剪贴板 — 改为手动粘贴",
     "errorQueueFailed": "无法排队那个导入",
-    "kindImage": "圖片",
     "publishAs": "Publish as",
     "kindVideo": "Video",
     "kindAudio": "Audio",
+    "kindImage": "圖片",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "你个账户被禁用了",
+    "body": "你还是能够登录、读你个feed、打开你个消息，看你账户里个所有东西。你不能发帖、评论、反应、关注或者发消息。",
+    "line": "你个账户被禁用了，所以你不能发帖、评论或者发消息。",
+    "reason": "原因：{{reason}}",
+    "deleteAccount": "删除你个账户和数据"
   },
   "post": {
     "like": "赞",

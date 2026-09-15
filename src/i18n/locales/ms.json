@@ -5052,5 +5052,12 @@
     "kindAudio": "Audio",
     "kindImage": "Gambar",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "Akaun anda telah diharamkan",
+    "body": "Anda masih boleh log masuk, membaca suapan anda, membuka mesej anda dan melihat segala-galanya pada akaun anda. Anda tidak boleh menyiarkan, mengulas, bertindak balas, mengikuti atau menghantar mesej.",
+    "line": "Akaun anda telah diharamkan, jadi anda tidak boleh menyiarkan, memberi komen atau menghantar mesej.",
+    "reason": "Sebab: {{reason}}",
+    "deleteAccount": "Hapuskan akaun dan data anda"
   }
 }

@@ -2430,5 +2430,11 @@
     "kindAudio": "Aw ye mɛnni kɛ",
     "kindImage": "O ye ɲɛyirali ɲuman ye",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "I ka wari man kan ka kɛ",
+    "body": "I be se ka don, ka dumuni kalan, ka i ka lɛtɛrɛw yɛlɛ ani ka koo bɛɛ ye i ka ɔriganisasiyɔn ka ɔriganisasiyɔn ka ɔriganisasiyɔn kɔnɔ. U dɔw tɛna se ka kuma, wala lasɔmini ci aw ma, wala k'a filɛ u ye min sɛbɛ.",
+    "line": "U dɔw tɛna se ka kuma, wala lasɔmini ci aw ma, wala k'a filɛ u ye min sɛbɛ.",
+    "deleteAccount": "Ka kunnafoniw ni kunnafoniw bɔ"
   }
 }

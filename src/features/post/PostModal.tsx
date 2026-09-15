@@ -12,6 +12,8 @@ import { SoundPicker } from './components/SoundPicker';
 import { cn } from '@/lib/utils';
 import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
 import { useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
+import { BannedAccountNotice } from '@/components/app/BannedAccountNotice';
+import { useBannedAccount } from '@/hooks/use-banned-account';
 
 const CreatePlanModal = lazy(() =>
   import('@/components/app/subscriptions/CreatePlanModal').then((module) => ({
@@ -31,6 +33,7 @@ interface PostModalProps {
 
 export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll }: PostModalProps) {
   const { style: keyboardStyle } = useKeyboardSafeSheet(isOpen);
+  const { isBanned } = useBannedAccount();
   // Where a live post goes once its mint has provisioned the stream. Held here
   // rather than in the action bar so it survives the bar's own re-renders, and
   // cleared on close so reopening the composer never reopens a dead broadcast.
@@ -100,7 +103,14 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
     onClose();
   };
 
-  const modalContent = (
+  // A banned account can read every post on DeHub and write none of them.
+  // The API refuses the mint either way; showing the composer first would
+  // only mean losing whatever was typed into it.
+  const modalContent = isBanned ? (
+    <div className="px-4 py-8">
+      <BannedAccountNotice />
+    </div>
+  ) : (
     <>
 
       <PostContentArea

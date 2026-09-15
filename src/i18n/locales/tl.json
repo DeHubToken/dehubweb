@@ -4602,6 +4602,13 @@
     "kindImage": "Mga Larawan",
     "tileSourceKind": "{{source}} · {{kind}}"
   },
+  "banned": {
+    "title": "Ipinagbabawal ang iyong account",
+    "body": "Maaari ka pa ring mag - sign in, basahin ang iyong feed, buksan ang iyong mga mensahe at makita ang lahat sa iyong account. Hindi ka maaaring mag - post, magkomento, tumugon, sumunod o magpadala ng mga mensahe.",
+    "line": "Ipinagbabawal ang iyong account, kaya hindi ka maaaring mag - post, magkomento o magpadala ng mga mensahe.",
+    "reason": "Dahilan:{{reason}}",
+    "deleteAccount": "Tanggalin ang iyong account at data"
+  },
   "walletSelector": {
     "title": "Piliin ang Wallet",
     "description": "Piliin ang wallet na gusto mong ikonekta sa app na ito."

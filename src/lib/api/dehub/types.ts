@@ -83,6 +83,15 @@ export interface DeHubUser {
    * its profile instead.
    */
   isBanned?: boolean;
+  /**
+   * On the caller's OWN account, the ban's reason and when it landed. A ban is
+   * read-only rather than locked-out — the account keeps its sign-in, its
+   * conversations and its data, and loses posting, commenting, voting,
+   * following and messaging — so the client has to be able to say so. Never
+   * present for anyone else's profile.
+   */
+  bannedReason?: string | null;
+  bannedAt?: string | null;
   /** This viewer asked to be served mature posts in the public feeds. */
   showMatureContent?: boolean;
   youBlocked?: boolean;
