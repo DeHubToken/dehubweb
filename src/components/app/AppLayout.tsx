@@ -366,7 +366,10 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
             })()}
 
             {/* Persistent page cache — all visited pages stay mounted */}
-            <PersistentPageCache keepHomeVisible={showHomePagePersisted} />
+            <PersistentPageCache
+              keepHomeVisible={showHomePagePersisted}
+              overlayKey={overlayPostId}
+            />
           </GlobalFeedNavProvider>
           
           {/* Post overlay — renders on top when viewing a post from home. The

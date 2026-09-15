@@ -13,6 +13,16 @@ import { motion } from 'framer-motion';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { registerOffDocumentMedia } from '@/lib/pause-media-in';
+import {
+  claimHandoffAudio,
+  getHandoffAudio,
+  detachHandoffAudio,
+  isHandoffAudioActive,
+  releaseHandoffAudio,
+  setHandoffAudio,
+  subscribeHandoffAudio,
+  type AudioHandoffGraph,
+} from '@/lib/audio-handoff';
 import { Slider } from '@/components/ui/slider';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import {
@@ -90,6 +100,21 @@ interface AudioVisualizerProps {
    * the track is out, so two players never claim the media session at once.
    */
   onPopOutChange?: (poppedOut: boolean, playing: boolean) => void;
+  /**
+   * Post id. Cards showing the same post share one player through
+   * lib/audio-handoff, so opening a post from the feed picks the track up
+   * mid-track instead of restarting it. Without a key the card owns its
+   * player outright — right for the composer preview and voice notes, which
+   * exist in one place only.
+   */
+  handoffKey?: string;
+  /**
+   * This card has taken the shared player over and it is (or is not) already
+   * playing. The card owning `isPlaying` uses it to fall into step — the post
+   * page opens on a track that is already running, and going back to a feed
+   * whose track was paused on the post page must not show it as playing.
+   */
+  onPlaybackAdopted?: (playing: boolean) => void;
 }
 
 const STYLES: { value: VisualizerStyle; label: string }[] = [
@@ -147,6 +172,8 @@ export function AudioVisualizer({
   showVolume = true,
   popoutTrack,
   onPopOutChange,
+  handoffKey,
+  onPlaybackAdopted,
 }: AudioVisualizerProps) {
   const { t } = useTranslation();
   /* ─── The corner player ──────────────────────────────────────────────
@@ -185,6 +212,29 @@ export function AudioVisualizer({
     unregisterMediaRef.current = registerOffDocumentMedia(el, () => canvasRef.current);
     audioRef.current = el;
   }, [releaseOffDocument]);
+
+  /* ─── The shared player ──────────────────────────────────────────────
+     Every card showing this post claims the same <audio> element and the
+     Web Audio chain around it (lib/audio-handoff), innermost claim wins. So
+     opening a post from the feed does not restart the track: the post page's
+     card takes the running player over, and closing it hands the player
+     straight back down to the feed card, which never unmounted.
+
+     A card that does not hold the claim still SHOWS the track — its scrubber
+     and waveform read the shared element — but may not write to it. Two cards
+     both forwarding play/pause and both setting `muted` is the whole reason
+     the claim exists. */
+  const claimRef = useRef<object | null>(null);
+  const handoffKeyRef = useRef(handoffKey);
+  handoffKeyRef.current = handoffKey;
+  // Bumped whenever the player changes hands, so everything below re-reads it.
+  const [claimVersion, setClaimVersion] = useState(0);
+  const isActiveClaim = !handoffKey || isHandoffAudioActive(handoffKey, claimRef.current);
+  const isActiveClaimRef = useRef(isActiveClaim);
+  isActiveClaimRef.current = isActiveClaim;
+  const onPlaybackAdoptedRef = useRef(onPlaybackAdopted);
+  onPlaybackAdoptedRef.current = onPlaybackAdopted;
+
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
   const animationRef = useRef<number | null>(null);
@@ -242,23 +292,94 @@ export function AudioVisualizer({
   }, [audioUrl, decodeEnabled, isPlaying]);
 
   /**
+   * Point this card's refs at `graph` — the shared player, arriving from the
+   * pool or back from the corner player. `isConnectedRef` matters: an element
+   * may only be given a MediaElementSource ONCE for the life of the page, and
+   * an element that has one is audible only through it. So a card taking the
+   * player over adopts the chain rather than building a second one.
+   */
+  const adoptGraph = useCallback((graph: AudioHandoffGraph) => {
+    audioRef.current = graph.el;
+    sourceRef.current = graph.source;
+    analyserRef.current = graph.analyser;
+    audioContextRef.current = graph.source ? sharedVisualizerContext : null;
+    isConnectedRef.current = !!graph.source;
+    setAudioElVersion((v) => v + 1);
+  }, []);
+
+  /**
    * The <audio> element on its own, without the Web Audio graph. Split out of
    * `setupAudio` so the scrubber has a duration and a seek target before the
    * first play — the graph still waits for the click, which is what the
    * autoplay policy actually checks.
+   *
+   * Null when this card is keyed into a shared player it does not hold: the
+   * card on top builds it, and building a second element here would download
+   * the track twice and leave an orphan nothing ever tears down.
    */
-  const ensureAudioElement = useCallback(() => {
+  const ensureAudioElement = useCallback((): HTMLAudioElement | null => {
     const existing = audioRef.current;
     if (existing) return existing;
+    if (handoffKey) {
+      const shared = getHandoffAudio(handoffKey, claimRef.current);
+      if (shared) {
+        adoptGraph(shared);
+        return shared.el;
+      }
+      if (!isHandoffAudioActive(handoffKey, claimRef.current)) return null;
+    }
     const el = new Audio();
     el.crossOrigin = 'anonymous';
     el.preload = 'metadata';
     el.muted = mutedRef.current;
     el.src = audioUrl;
-    adoptAudioElement(el);
+    if (handoffKey) {
+      // The pool owns the element from here, registration included, so its
+      // page changes with the claim rather than with a React render.
+      audioRef.current = el;
+      setHandoffAudio(handoffKey, claimRef.current, { el, source: null, analyser: null });
+    } else {
+      adoptAudioElement(el);
+    }
     setAudioElVersion((v) => v + 1);
     return el;
-  }, [audioUrl, adoptAudioElement]);
+  }, [audioUrl, adoptAudioElement, adoptGraph, handoffKey]);
+
+  /**
+   * Hold a claim for as long as this card is mounted. The feed card keeps its
+   * claim while the post page is open — that is what the player drops back to
+   * when the overlay closes — so releasing it is the unmount's job, never the
+   * hand-over's.
+   */
+  useEffect(() => {
+    if (!handoffKey) return;
+    claimRef.current = claimHandoffAudio(handoffKey, () => canvasRef.current);
+    const unsubscribe = subscribeHandoffAudio(handoffKey, () => setClaimVersion((v) => v + 1));
+    setClaimVersion((v) => v + 1);
+    return () => {
+      unsubscribe();
+      const token = claimRef.current;
+      claimRef.current = null;
+      audioRef.current = null;
+      sourceRef.current = null;
+      analyserRef.current = null;
+      isConnectedRef.current = false;
+      if (token) releaseHandoffAudio(handoffKey, token);
+    };
+  }, [handoffKey]);
+
+  // Taking the player over: pick the chain up, and tell the card that owns
+  // `isPlaying` what it actually walked into.
+  useEffect(() => {
+    if (!handoffKey || !isActiveClaim || isPoppedOut) return;
+    const graph = getHandoffAudio(handoffKey, claimRef.current);
+    if (!graph) return;
+    if (audioRef.current !== graph.el || sourceRef.current !== graph.source) adoptGraph(graph);
+    const playing = !graph.el.paused;
+    if (playing !== isPlayingRef.current) onPlaybackAdoptedRef.current?.(playing);
+    // Read once, at the moment the player changes hands.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [claimVersion, isActiveClaim, isPoppedOut, handoffKey]);
 
   // Metadata is cheap; the full-file decode next door is not, so both ride the
   // same near-viewport gate.
@@ -285,6 +406,7 @@ export function AudioVisualizer({
     };
     const onEnded = () => {
       if (isPoppedOutRef.current) return; // the corner player rests at the end
+      if (!isActiveClaimRef.current) return; // the card holding the player owns the end
       el.currentTime = 0;
       setCurrentTime(0);
       onPlayPauseRef.current();
@@ -313,6 +435,7 @@ export function AudioVisualizer({
 
     try {
       const el = ensureAudioElement();
+      if (!el) return;
 
       // ONE AudioContext shared by every visualizer instance: Chrome caps ~6
       // live contexts per page, and feed cards live forever in persistent
@@ -339,10 +462,19 @@ export function AudioVisualizer({
       analyserRef.current.connect(ctx.destination);
 
       isConnectedRef.current = true;
+      // Hand the chain to the pool with the element: the card that takes the
+      // player over must adopt this source, never build a second one.
+      if (handoffKey) {
+        setHandoffAudio(handoffKey, claimRef.current, {
+          el,
+          source: sourceRef.current,
+          analyser: analyserRef.current,
+        });
+      }
     } catch (err) {
       console.error('Failed to setup audio:', err);
     }
-  }, [ensureAudioElement]);
+  }, [ensureAudioElement, handoffKey]);
 
   /* ─── Canvas sizing ───────────────────────────────────────────────────────
      The backing store used to be a fixed 320×160 stretched by CSS to whatever
@@ -530,7 +662,12 @@ export function AudioVisualizer({
       if (isPoppedOutRef.current) {
         const graph = takeBackAudioPost(popoutTrack.tokenId);
         if (!graph) return;
-        adoptAudioElement(graph.el);
+        if (handoffKey) {
+          audioRef.current = graph.el;
+          setHandoffAudio(handoffKey, claimRef.current, graph);
+        } else {
+          adoptAudioElement(graph.el);
+        }
         sourceRef.current = graph.source;
         analyserRef.current = graph.analyser;
         audioContextRef.current = graph.source ? sharedVisualizerContext : null;
@@ -546,7 +683,9 @@ export function AudioVisualizer({
       handedOverRef.current = !!el;
       // The corner player survives navigation on purpose — hand the page's
       // claim over with the element, or the next route change would pause it.
-      releaseOffDocument();
+      // Same for the shared player: the pool must let go, not tear down.
+      if (handoffKey) detachHandoffAudio(handoffKey);
+      else releaseOffDocument();
       const startAt = pendingSeekRef.current ?? (duration > 0 ? currentTime / duration : null);
       pendingSeekRef.current = null;
       popOutAudioPost({
@@ -562,7 +701,7 @@ export function AudioVisualizer({
     },
     [
       popoutTrack, isFullscreen, onFullscreen, onPopOutChange, duration, currentTime, t,
-      adoptAudioElement, releaseOffDocument,
+      adoptAudioElement, releaseOffDocument, handoffKey,
     ],
   );
 
@@ -588,14 +727,14 @@ export function AudioVisualizer({
 
   // Separate effect for playback control — runs AFTER state update from parent
   useEffect(() => {
-    if (!audioRef.current || isPoppedOut) return;
+    if (!audioRef.current || isPoppedOut || !isActiveClaim) return;
 
     if (isPlaying) {
       audioRef.current.play().catch(console.error);
     } else {
       audioRef.current.pause();
     }
-  }, [isPlaying, isPoppedOut, audioElVersion]);
+  }, [isPlaying, isPoppedOut, isActiveClaim, audioElVersion]);
 
   // Sync muted + volume. The caller's `muted` and the visualizer's own control
   // are OR'd rather than one overwriting the other: VideoCard mutes for its own
@@ -603,10 +742,10 @@ export function AudioVisualizer({
   // unrelated re-render from the card.
   useEffect(() => {
     const el = audioRef.current;
-    if (!el) return;
+    if (!el || !isActiveClaim) return;
     el.muted = muted || selfMuted;
     el.volume = volume;
-  }, [muted, selfMuted, volume, audioElVersion]);
+  }, [muted, selfMuted, volume, isActiveClaim, audioElVersion]);
 
   /* ─── Seeking ─────────────────────────────────────────────────────────────
      Two surfaces share it: the slim bar under the controls, and the canvas
@@ -619,6 +758,7 @@ export function AudioVisualizer({
   const seekTo = useCallback((ratio: number) => {
     const clamped = clamp01(ratio);
     const el = ensureAudioElement();
+    if (!el) return;
     const total = Number.isFinite(el.duration) && el.duration > 0 ? el.duration : 0;
     if (!total) {
       // Metadata has not landed yet — the loadedmetadata handler applies this.
@@ -698,7 +838,11 @@ export function AudioVisualizer({
       unregisterMediaRef.current = null;
       // A handed-over element and its nodes belong to the corner player now;
       // it carries on after this card is gone and tears them down itself.
-      if (!handedOverRef.current) {
+      // A pooled one is the same story with a different owner: the claim
+      // effect above released it, and lib/audio-handoff hands it back down to
+      // the feed card or parks it. Tearing it down here would stop the track
+      // the moment you closed the post you opened it from.
+      if (!handedOverRef.current && !handoffKeyRef.current) {
         if (audioRef.current) {
           audioRef.current.pause();
           audioRef.current.removeAttribute('src');
