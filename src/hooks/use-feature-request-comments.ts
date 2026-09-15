@@ -16,6 +16,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { getAccountInfo, getAccountByUsername, getAccountSummariesByUsernames } from '@/lib/api/dehub';
+import { ensureFreshToken } from '@/lib/api/dehub/core';
+import { dehubAuthHeaders } from '@/lib/ai-invoke';
 import { extractAvatarPath } from '@/lib/media-url';
 import {
   isPositiveReaction,
@@ -228,6 +230,33 @@ async function notifyMentions(params: {
   }
 }
 
+/**
+ * The assistant's trigger on this board, word-bounded.
+ *
+ * `@dehub` is deliberately not a trigger: it is a real user's handle, and the
+ * chat bot's original regex matched it — so every "@dehub" answered on that
+ * person's behalf. The same expression guards the server side; this copy only
+ * decides whether the call is worth making at all.
+ */
+const ASSISTANT_MENTION_RE = /(^|[^a-zA-Z0-9_])@assistant(?![a-zA-Z0-9_])/i;
+
+/**
+ * Ask the assistant to answer a comment that tagged it.
+ *
+ * The reply is written server-side as a real comment owned by the assistant
+ * account, so there is nothing to render here — only a refetch once it lands.
+ * The board has no realtime channel, which is why this waits on the call
+ * rather than hoping an invalidation catches it.
+ */
+async function requestAssistantReply(commentId: string): Promise<void> {
+  await ensureFreshToken();
+  const { error } = await supabase.functions.invoke('feature-request-assistant', {
+    body: { commentId },
+    headers: dehubAuthHeaders(),
+  });
+  if (error) throw error;
+}
+
 /** The avatar to stamp on a new comment: auth context, then two lookups. */
 async function resolveAvatar(
   walletAddress: string,
@@ -310,8 +339,28 @@ export function useSubmitComment() {
 
       return data;
     },
-    onSuccess: (_data, variables) => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['feature-request-comments', variables.featureRequestId] });
+
+      // Tagging @assistant here gets an answer from the assistant itself, in
+      // DeHub's own voice. This board is where the people who reported things
+      // come back to ask whether the fix landed, and a question that sits
+      // unanswered until somebody scrolls past is the whole problem. Fire and
+      // forget: the comment is already saved, so a failed reply must not toast
+      // an error over it.
+      const newCommentId = (data as { id?: string } | null)?.id;
+      if (newCommentId && ASSISTANT_MENTION_RE.test(variables.content)) {
+        void requestAssistantReply(newCommentId)
+          .then(() => {
+            queryClient.invalidateQueries({
+              queryKey: ['feature-request-comments', variables.featureRequestId],
+            });
+          })
+          .catch(() => {
+            // No reply this time. The thread is unchanged and still theirs.
+          });
+      }
+
       // Optimistically bump comment count without refetching the list (avoids reordering)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueriesData({ queryKey: ['feature-requests'] }, (old: any) => {
