@@ -27,14 +27,36 @@ const TAU = Math.PI * 2;
  */
 const COLOUR_L = (l: number) => (30 + l * 0.42).toFixed(1);
 
+/**
+ * Every painter here is written against a dark plate: `l` climbs towards 100
+ * for the strokes that should read brightest. On a paper canvas that is
+ * white-on-white, so light mode flips the scale instead of darkening the plate
+ * — a solid black slab in a paper feed is worse than the problem it fixes.
+ *
+ * A module flag rather than an eleventh argument: `l` is consumed in one
+ * place, every painter reaches it through `palette()`, and threading a param
+ * through nine draw signatures and their call sites buys nothing. The theme is
+ * global, and AudioVisualizer sets this on every frame it paints.
+ */
+let invertInk = false;
+
+export function setVisualizerInk(invert: boolean) {
+  invertInk = invert;
+}
+
 function palette(hue: number) {
   const mono = hue === 0;
   const h = mono ? 0 : hue;
+  // Mono has only lightness to carry contrast, so it flips end for end. The
+  // coloured path is already compressed into a 30-72 band by COLOUR_L; feeding
+  // it the flipped `l` walks it down that same band instead of up it, which
+  // keeps the hue readable rather than desaturating towards the paper.
+  const ink = (l: number) => (invertInk ? 100 - l : l);
   const c = (l: number, a: number) =>
-    mono ? `hsla(0, 0%, ${l}%, ${a})` : `hsla(${h}, 82%, ${COLOUR_L(l)}%, ${a})`;
+    mono ? `hsla(0, 0%, ${ink(l)}%, ${a})` : `hsla(${h}, 82%, ${COLOUR_L(ink(l))}%, ${a})`;
   /** The same, for a hue rotated off the base — a no-op in monochrome. */
   const shift = (deg: number, l: number, a: number) =>
-    mono ? c(l, a) : `hsla(${(hue + deg) % 360}, 82%, ${COLOUR_L(l)}%, ${a})`;
+    mono ? c(l, a) : `hsla(${(hue + deg) % 360}, 82%, ${COLOUR_L(ink(l))}%, ${a})`;
   return { mono, h, c, shift };
 }
 
