@@ -703,7 +703,7 @@ export function AudioVisualizer({
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
 
   return (
-    <div data-no-swipe className={`relative ${className}`}>
+    <div data-no-swipe data-audio-player className={`relative ${className}`}>
       <canvas
         ref={canvasRef}
         width={canvasSize.w}
