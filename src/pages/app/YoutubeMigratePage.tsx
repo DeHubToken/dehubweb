@@ -143,13 +143,13 @@ const CHANNEL_URL_KEY = 'dehub:migrate:profile-url';
  * three states and a real-sounding failure reason — the point is to show
  * that failures are surfaced per video and can be retried, not to fill
  * space. Titles are generic so it never looks like someone else's channel. */
-const SAMPLE_RESULTS: { title: string; status: 'imported' | 'failed' | 'pending'; reason?: string }[] = [
-  { title: 'Profile trailer', status: 'imported' },
-  { title: 'Behind the scenes', status: 'imported' },
-  { title: 'Q&A — episode 4', status: 'imported' },
-  { title: 'Studio tour', status: 'pending' },
-  { title: 'Live replay', status: 'failed', reason: 'That video is age-restricted, so it cannot be imported.' },
-  { title: 'Old vlog', status: 'imported' },
+const SAMPLE_RESULTS: { key: string; status: 'imported' | 'failed' | 'pending'; reasonKey?: string }[] = [
+  { key: 'migrate.sampleTrailer', status: 'imported' },
+  { key: 'migrate.sampleBehindScenes', status: 'imported' },
+  { key: 'migrate.sampleQa', status: 'imported' },
+  { key: 'migrate.sampleStudioTour', status: 'pending' },
+  { key: 'migrate.sampleLiveReplay', status: 'failed', reasonKey: 'migrate.sampleLiveReplayReason' },
+  { key: 'migrate.sampleOldVlog', status: 'imported' },
 ];
 
 /** Per-video state, worn the way a feed card wears its duration: a black pill
@@ -157,6 +157,7 @@ const SAMPLE_RESULTS: { title: string; status: 'imported' | 'failed' | 'pending'
  * black on the themes that repaint dark surfaces — it sits over an image, so
  * it has to stay legible whatever the theme does to the card beneath it. */
 function StatusBadge({ status }: { status: 'imported' | 'failed' | 'pending' }) {
+  const { t } = useTranslation();
   return (
     <span
       data-keep-dark
@@ -165,7 +166,7 @@ function StatusBadge({ status }: { status: 'imported' | 'failed' | 'pending' }) 
       {status === 'pending' && <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-zinc-300" />}
       {status === 'imported' && <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />}
       {status === 'failed' && <XCircle className="h-3.5 w-3.5 shrink-0 text-red-400" />}
-      {status === 'pending' ? 'Importing' : status === 'imported' ? 'Imported' : 'Failed'}
+      {status === 'pending' ? t('migrate.statusImporting') : status === 'imported' ? t('migrate.statusImported') : t('migrate.statusFailed')}
     </span>
   );
 }
@@ -254,6 +255,26 @@ export default function YoutubeMigratePage() {
     [videos],
   );
 
+  /**
+   * What the charge itself remembers about each item, keyed the same way its
+   * results are.
+   *
+   * The channel list above only exists while the picker is on screen; a
+   * resumed batch renders from the charge alone. It carries the link each item
+   * actually lives at and the title the creator typed, so the progress grid
+   * can show a TikTok tile that links to TikTok and reads as the creator
+   * renamed it — neither of which can be derived from a bare id.
+   */
+  const urlByKey = useMemo(
+    () => new Map((charge?.youtubeVideoIds ?? []).map((k, i) => [k, charge?.itemUrls?.[i] || ''])),
+    [charge],
+  );
+
+  const nameByKey = useMemo(
+    () => new Map((charge?.youtubeVideoIds ?? []).map((k, i) => [k, charge?.itemNames?.[i] || ''])),
+    [charge],
+  );
+
   /** Fetches the channel list into state without touching `stage` — used
    * both by the normal picker flow and, silently in the background, when
    * resuming an in-progress or finished batch (so titles resolve in the
@@ -266,11 +287,11 @@ export default function YoutubeMigratePage() {
 
   const handleListChannel = useCallback(async () => {
     if (!channelUrl.trim()) {
-      toast.error('Paste your channel address first');
+      toast.error(t('migrate.errNoUrl'));
       return;
     }
     if (!ownershipConfirmed) {
-      toast.error('Please confirm this is your channel');
+      toast.error(t('migrate.errNoOwnership'));
       return;
     }
     // Listing is an authenticated call, and `apiCall` throws on a dead session
@@ -294,7 +315,7 @@ export default function YoutubeMigratePage() {
         }
         setStage('listing');
       } catch (err) {
-        toast.error(err instanceof Error ? err.message : 'Could not read that channel');
+        toast.error(err instanceof Error ? err.message : t('migrate.errReadChannel'));
         setStage('idle');
       }
     });
@@ -312,8 +333,8 @@ export default function YoutubeMigratePage() {
           const failed = status.results.filter(r => r.status === 'failed').length;
           toast.success(
             failed
-              ? `Migrated ${imported} video${imported === 1 ? '' : 's'} — ${failed} couldn't import and were credited toward your next migration.`
-              : `Migrated ${imported} video${imported === 1 ? '' : 's'}!`,
+              ? t(imported === 1 ? 'migrate.doneWithFailuresOne' : 'migrate.doneWithFailuresMany', { n: imported, failed })
+              : t(imported === 1 ? 'migrate.doneAllOne' : 'migrate.doneAllMany', { n: imported }),
           );
         }
       } catch {
@@ -372,7 +393,7 @@ export default function YoutubeMigratePage() {
       const text = await navigator.clipboard.readText();
       if (text) setChannelUrl(text.trim());
     } catch {
-      toast.error('Could not read the clipboard — paste manually instead');
+      toast.error(t('migrate.errClipboard'));
     }
   };
 
@@ -441,7 +462,7 @@ export default function YoutubeMigratePage() {
 
   const handleGetQuote = async () => {
     if (!selected.size) {
-      toast.error('Select at least one video');
+      toast.error(t('migrate.errSelectOne'));
       return;
     }
     setPayFallback('listing');
@@ -451,7 +472,7 @@ export default function YoutubeMigratePage() {
       const q = await quoteMigration(ids, itemsFor(ids));
       setQuote(q);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Could not price this migration');
+      toast.error(err instanceof Error ? err.message : t('migrate.errPrice'));
       setStage('listing');
     }
   };
@@ -465,7 +486,7 @@ export default function YoutubeMigratePage() {
       const q = await quoteMigration(failedIds, itemsFor(failedIds));
       setQuote(q);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Could not retry the failed videos');
+      toast.error(err instanceof Error ? err.message : t('migrate.errRetry'));
       setStage('done');
     }
   };
@@ -478,9 +499,9 @@ export default function YoutubeMigratePage() {
         // Fully covered by credit — nothing to sign, just settle.
         await settleMigration(q.chargeId, '0x0', 0);
       } else {
-        if (!q.recipient) throw new Error('Payments are not configured right now.');
+        if (!q.recipient) throw new Error(t('migrate.errNoPayments'));
         const { payDhb } = await import('@/lib/dhb-payment');
-        toast.loading(`Paying ${q.amountDhb.toLocaleString()} DHB...`, {
+        toast.loading(t('migrate.paying', { amount: q.amountDhb.toLocaleString() }), {
           id: 'migration-pay',
           duration: Infinity,
         });
@@ -490,10 +511,10 @@ export default function YoutubeMigratePage() {
         // live Pay button and send a second transfer for the same charge.
         const alreadySent = readSentMigrationPayment(q.chargeId);
         const payment = alreadySent ?? await payDhb(q.amountDhb, q.recipient, {
-          context: 'YouTube migration',
+          context: t('migrate.payContext'),
           expectedSigner: user?.address,
           shortfallMessage: (amount, has) =>
-            `This migration costs ${amount.toLocaleString()} DHB and you hold ${has.toLocaleString()}.`,
+            t('migrate.shortfall', { amount: amount.toLocaleString(), has: has.toLocaleString() }),
         });
         if (!alreadySent) rememberSentMigrationPayment(q.chargeId, payment);
         toast.dismiss('migration-pay');
@@ -505,7 +526,7 @@ export default function YoutubeMigratePage() {
       pollCharge(q.chargeId);
     } catch (err) {
       toast.dismiss('migration-pay');
-      toast.error(err instanceof Error ? err.message : 'Payment failed');
+      toast.error(err instanceof Error ? err.message : t('migrate.errPayment'));
       // Back to the quote, not to the stage before it.
       //
       // payFallback is 'listing', and the picker only renders when there is no
@@ -529,9 +550,10 @@ export default function YoutubeMigratePage() {
   return (
     <>
       <SEOHead
-        title="Migrate all — bring a whole profile to DeHub"
-        description="Bulk-import a whole channel or profile to DeHub — YouTube, TikTok, Vimeo, SoundCloud and more."
-        url="https://dehub.io/app/migrate-youtube"
+        title={t('migrate.seoTitle')}
+        description={t('migrate.seoDescription')}
+        url="https://dehub.io/migrate-youtube"
+        image="https://dehub.io/og/migrate-youtube.jpg"
       />
 
       {/* Sticky nav pill — the page's own header bento, pinned below the
@@ -549,14 +571,14 @@ export default function YoutubeMigratePage() {
                 <ArrowDownToLine className="w-5 h-5 text-white" />
               </div>
               <div className="min-w-0">
-                <h1 className="text-lg sm:text-xl font-bold text-white leading-tight">Migrate all</h1>
+                <h1 className="text-lg sm:text-xl font-bold text-white leading-tight">{t('migrate.title')}</h1>
                 <p className="text-sm text-zinc-500">
                   {t('migrate.subtitle')}
                 </p>
               </div>
             </div>
             <Button variant="glass" size="sm" asChild className="shrink-0 self-start sm:self-auto">
-              <Link to="/converter">Just one video?</Link>
+              <Link to="/converter">{t('migrate.justOne')}</Link>
             </Button>
           </div>
         </div>
@@ -573,9 +595,9 @@ export default function YoutubeMigratePage() {
         {(stage === 'idle' || stage === 'fetching') && (
           <section data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 flex flex-col gap-4">
             <div className="flex flex-col gap-0.5">
-              <h2 className="text-sm font-semibold text-white">Your channel</h2>
+              <h2 className="text-sm font-semibold text-white">{t('migrate.yourChannel')}</h2>
               <p className="text-sm text-zinc-400">
-                Paste your channel address — the handle on its own works too.
+                {t('migrate.yourChannelHint')}
               </p>
             </div>
 
@@ -605,7 +627,7 @@ export default function YoutubeMigratePage() {
                 className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-zinc-300 hover:bg-white/10 disabled:opacity-50"
               >
                 <Clipboard className="w-3.5 h-3.5" />
-                Paste
+                {t('migrate.paste')}
               </button>
             </div>
 
@@ -633,7 +655,7 @@ export default function YoutubeMigratePage() {
                 className={cn(CHECKBOX_CLASS, 'pointer-events-none')}
               />
               <span>
-                This is my channel, or I have the rights holder's permission to publish its videos on DeHub.
+                {t('migrate.ownership')}
               </span>
             </div>
 
@@ -645,10 +667,10 @@ export default function YoutubeMigratePage() {
             >
               {stage === 'fetching' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {stage === 'fetching'
-                ? 'Reading your channel…'
+                ? t('migrate.reading')
                 : isAuthenticated
-                  ? 'Show my videos'
-                  : 'Sign in to show my videos'}
+                  ? t('migrate.showMyVideos')
+                  : t('migrate.signInToShow')}
             </Button>
           </section>
         )}
@@ -657,14 +679,16 @@ export default function YoutubeMigratePage() {
           <section data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 flex flex-col gap-4">
             <div className="flex items-center justify-between gap-3">
               <div className="flex flex-col gap-0.5">
-                <h2 className="text-sm font-semibold text-white">Pick what to bring over</h2>
+                <h2 className="text-sm font-semibold text-white">{t('migrate.pickTitle')}</h2>
                 <p className="text-sm text-zinc-400">
-                  {selected.size} of {videos.filter(v => !v.alreadyImported).length} selected. Anything already on
-                  your profile is skipped and never charged twice.
+                  {t('migrate.pickCount', {
+                    selected: selected.size,
+                    total: videos.filter(v => !v.alreadyImported).length,
+                  })}
                 </p>
               </div>
               <Button variant="outline" size="sm" onClick={toggleAll} className="shrink-0">
-                {allSelected ? 'Clear all' : 'Select all'}
+                {allSelected ? t('migrate.clearAll') : t('migrate.selectAll')}
               </Button>
             </div>
             {/* No inner scroller: the page is the scroller, so the grid keeps
@@ -723,7 +747,7 @@ export default function YoutubeMigratePage() {
 
                       {v.alreadyImported && (
                         <span data-keep-dark className="absolute top-2 right-2 rounded bg-black/70 px-2 py-1 text-xs font-medium text-white">
-                          Imported
+                          {t('migrate.importedBadge')}
                         </span>
                       )}
 
@@ -828,28 +852,28 @@ export default function YoutubeMigratePage() {
               className="self-start"
             >
               {stage === 'quoting' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Get price for {selected.size} video{selected.size === 1 ? '' : 's'}
+              {t(selected.size === 1 ? 'migrate.getPriceOne' : 'migrate.getPriceMany', { n: selected.size })}
             </Button>
           </section>
         )}
 
         {stage === 'listing' && videos.length === 0 && (
           <section data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-            <AppState icon="videos" title="No uploads found" description="This channel has no videos available to migrate." size="section" />
+            <AppState icon="videos" title={t('migrate.noUploadsTitle')} description={t('migrate.noUploadsBody')} size="section" />
           </section>
         )}
 
         {quote && (stage === 'quoting' || stage === 'paying') && (
           <section data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 flex flex-col gap-3 items-start">
             <p className="text-sm text-zinc-400">
-              {quote.videoCount} video{quote.videoCount === 1 ? '' : 's'}
+              {t(quote.videoCount === 1 ? 'migrate.videoCountOne' : 'migrate.videoCountMany', { n: quote.videoCount })}
               {quote.creditAppliedDhb > 0 && (
-                <> — <DhbAmount value={quote.creditAppliedDhb} /> credit applied</>
+                <> — <DhbAmount value={quote.creditAppliedDhb} /> {t('migrate.creditApplied')}</>
               )}
             </p>
             <p className="text-lg font-semibold text-white">
               {quote.amountDhb === 0 ? (
-                'Free (covered by credit)'
+                t('migrate.freeCovered')
               ) : (
                 <DhbAmount value={quote.amountDhb} className="gap-1.5" />
               )}
@@ -857,9 +881,9 @@ export default function YoutubeMigratePage() {
             <Button variant="glass" onClick={() => handlePay(quote)} disabled={stage === 'paying'}>
               {stage === 'paying' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {quote.amountDhb === 0 ? (
-                'Start migration'
+                t('migrate.startMigration')
               ) : (
-                <>Pay&nbsp;<DhbAmount value={quote.amountDhb} /></>
+                <>{t('migrate.pay')}&nbsp;<DhbAmount value={quote.amountDhb} /></>
               )}
             </Button>
           </section>
@@ -874,57 +898,79 @@ export default function YoutubeMigratePage() {
           <section data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 flex flex-col gap-4">
             <div className="flex items-center justify-between gap-3">
               <div className="flex flex-col gap-0.5">
-                <h2 className="text-sm font-semibold text-white">Migration progress</h2>
+                <h2 className="text-sm font-semibold text-white">{t('migrate.progressTitle')}</h2>
                 <p className="text-sm text-zinc-400">
                   {stage === 'processing'
-                    ? "Migrating — this runs in the background, safe to close this tab. We'll notify you when it's done."
+                    ? t('migrate.progressRunning')
                     : charge
-                      ? `${imported} imported${failed ? `, ${failed} couldn't import` : ''}.`
-                      : 'Every video in a batch gets its own tile here, so you can see what landed and retry what did not. Nothing running yet — the grid below is an example.'}
+                      ? failed
+                        ? t('migrate.progressDoneWithFailures', { imported, failed })
+                        : t('migrate.progressDone', { imported })
+                      : t('migrate.progressIdle')}
                 </p>
               </div>
               {stage === 'done' && failed > 0 && (
                 <Button variant="outline" size="sm" onClick={handleRetryFailed} className="shrink-0">
-                  Retry {failed} failed
+                  {t('migrate.retryFailed', { n: failed })}
                 </Button>
               )}
             </div>
 
             {charge ? (
               <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                {charge.results.map(r => (
-                  <a
-                    key={r.youtubeVideoId}
-                    href={`https://www.youtube.com/watch?v=${r.youtubeVideoId}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    data-page-bento
-                    className="group flex flex-col bg-zinc-900 rounded-2xl overflow-hidden transition-all hover:ring-2 hover:ring-white/30"
-                  >
-                    <div className="relative aspect-video bg-zinc-800 overflow-hidden">
-                      {/* The channel list carries a thumbnail, but a resumed
-                          batch renders before that background fetch lands —
-                          so fall back to YouTube's own thumbnail URL for the
-                          id, which needs no API call and always exists. */}
-                      <img
-                        src={thumbById.get(r.youtubeVideoId) || `https://i.ytimg.com/vi/${r.youtubeVideoId}/mqdefault.jpg`}
-                        alt=""
-                        loading="lazy"
-                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
-                      <StatusBadge status={r.status} />
-                    </div>
-                    <div className="flex flex-col gap-1 p-3">
-                      <span className="line-clamp-2 text-sm font-medium text-white leading-snug">
-                        {titleById.get(r.youtubeVideoId) || r.youtubeVideoId}
-                      </span>
-                      {r.failedReason && (
-                        <span className="text-xs text-zinc-400 line-clamp-2">{r.failedReason}</span>
+                {charge.results.map(r => {
+                  const key = r.youtubeVideoId;
+                  // A key is a bare YouTube id unless the source prefixed it
+                  // (see `importedItemKey`), so the two YouTube-shaped
+                  // fallbacks below are only reachable for a batch that really
+                  // is YouTube — which is every batch quoted before the
+                  // migration took more than one source.
+                  const bareYoutubeId = !key.includes(':');
+                  const href =
+                    urlByKey.get(key) ||
+                    (bareYoutubeId ? `https://www.youtube.com/watch?v=${key}` : undefined);
+                  const thumb =
+                    thumbById.get(key) ||
+                    (bareYoutubeId ? `https://i.ytimg.com/vi/${key}/mqdefault.jpg` : undefined);
+                  // The creator's own title wins over the source's, so the
+                  // grid reads as what they paid to publish.
+                  const label = nameByKey.get(key) || titleById.get(key) || key;
+                  const Tile = href ? 'a' : 'div';
+                  return (
+                    <Tile
+                      key={key}
+                      {...(href ? { href, target: '_blank', rel: 'noreferrer' } : {})}
+                      data-page-bento
+                      className={cn(
+                        'group flex flex-col bg-zinc-900 rounded-2xl overflow-hidden transition-all',
+                        href && 'hover:ring-2 hover:ring-white/30',
                       )}
-                    </div>
-                  </a>
-                ))}
+                    >
+                      <div className="relative aspect-video bg-zinc-800 overflow-hidden flex items-center justify-center">
+                        {thumb ? (
+                          <img
+                            src={thumb}
+                            alt=""
+                            loading="lazy"
+                            className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                        ) : (
+                          <ImageIcon className="h-7 w-7 text-zinc-700" />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
+                        <StatusBadge status={r.status} />
+                      </div>
+                      <div className="flex flex-col gap-1 p-3">
+                        <span className="line-clamp-2 text-sm font-medium text-white leading-snug">
+                          {label}
+                        </span>
+                        {r.failedReason && (
+                          <span className="text-xs text-zinc-400 line-clamp-2">{r.failedReason}</span>
+                        )}
+                      </div>
+                    </Tile>
+                  );
+                })}
               </div>
             ) : (
               /* A worked example rather than blank boxes: showing all three
@@ -941,7 +987,7 @@ export default function YoutubeMigratePage() {
               <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-3 opacity-50" aria-hidden="true">
                 {SAMPLE_RESULTS.map(sample => (
                   <div
-                    key={sample.title}
+                    key={sample.key}
                     data-page-bento
                     className="flex flex-col bg-zinc-900 rounded-2xl overflow-hidden"
                   >
@@ -950,8 +996,8 @@ export default function YoutubeMigratePage() {
                       <StatusBadge status={sample.status} />
                     </div>
                     <div className="flex flex-col gap-1 p-3">
-                      <span className="line-clamp-2 text-sm font-medium text-white leading-snug">{sample.title}</span>
-                      {sample.reason && <span className="text-xs text-zinc-400 line-clamp-2">{sample.reason}</span>}
+                      <span className="line-clamp-2 text-sm font-medium text-white leading-snug">{t(sample.key)}</span>
+                      {sample.reasonKey && <span className="text-xs text-zinc-400 line-clamp-2">{t(sample.reasonKey)}</span>}
                     </div>
                   </div>
                 ))}
@@ -962,7 +1008,7 @@ export default function YoutubeMigratePage() {
 
         {stage === 'done' && (
           <Button variant="outline" className="self-start" onClick={() => navigate('/')}>
-            View your feed
+            {t('migrate.viewFeed')}
           </Button>
         )}
 
@@ -972,33 +1018,32 @@ export default function YoutubeMigratePage() {
             question people ask before paying and never again after. */}
         <section className="grid gap-2 sm:gap-3 sm:grid-cols-2">
           <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 flex flex-col gap-3">
-            <h2 className="text-sm font-semibold text-white">How it works</h2>
+            <h2 className="text-sm font-semibold text-white">{t('migrate.howTitle')}</h2>
             <ol className="flex flex-col gap-2.5 text-sm text-zinc-400">
               <li className="flex gap-2.5">
                 <span className="text-zinc-600 tabular-nums">1.</span>
-                <span>Paste your channel address and confirm the videos are yours. Nothing to sign in to &mdash; DeHub reads the channel's public uploads list.</span>
+                <span>{t('migrate.how1')}</span>
               </li>
               <li className="flex gap-2.5">
                 <span className="text-zinc-600 tabular-nums">2.</span>
-                <span>Pick what to bring over and pay once for the whole batch. Anything already imported is skipped and never charged twice.</span>
+                <span>{t('migrate.how2')}</span>
               </li>
               <li className="flex gap-2.5">
                 <span className="text-zinc-600 tabular-nums">3.</span>
-                <span>We download and publish them to your profile in the background. Close the tab — you'll get a notification when it finishes.</span>
+                <span>{t('migrate.how3')}</span>
               </li>
             </ol>
             <p className="text-xs text-zinc-500">
-              Videos publish as normal posts without minting, since a batch can't stop to ask your wallet to sign each one.
+              {t('migrate.howNote')}
             </p>
           </div>
 
           <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 flex flex-col gap-3">
-            <h2 className="text-sm font-semibold text-white">What it costs</h2>
+            <h2 className="text-sm font-semibold text-white">{t('migrate.costsTitle')}</h2>
             {pricing ? (
               <>
                 <p className="text-sm text-zinc-400">
-                  Every video is cheaper than the one before it — the rate drops as the batch grows,
-                  so the price below is what that many videos comes to in total.
+                  {t('migrate.costsIntro')}
                 </p>
                 <ul className="flex flex-col divide-y divide-white/5 text-sm">
                   {/* The allowance comes off the top of the count once, ever,
@@ -1007,9 +1052,9 @@ export default function YoutubeMigratePage() {
                   {pricing.freeAllowance > 0 && (
                     <li className="flex items-center justify-between gap-3 py-2">
                       <span className="text-zinc-400 tabular-nums">
-                        First {pricing.freeAllowance} videos
+                        {t('migrate.firstFree', { n: pricing.freeAllowance })}
                       </span>
-                      <span className="text-white">Free, once</span>
+                      <span className="text-white">{t('migrate.freeOnce')}</span>
                     </li>
                   )}
                   {/* Rows are worked examples off a continuous curve, not
@@ -1026,14 +1071,14 @@ export default function YoutubeMigratePage() {
                       <li key={videos} className="flex items-center justify-between gap-3 py-2">
                         <span className="flex items-baseline gap-2">
                           <span className="text-zinc-400 tabular-nums">
-                            {videos.toLocaleString()} videos
+                            {t('migrate.videosCount', { videos: videos.toLocaleString() })}
                           </span>
                           {saving > 0 && (
                             <span className="text-[11px] text-zinc-500 tabular-nums">−{saving}%</span>
                           )}
                         </span>
                         <span className="text-white tabular-nums">
-                          {tier.priceUsd === 0 ? 'Free' : <DhbAmount value={tier.priceDhb} />}
+                          {tier.priceUsd === 0 ? t('migrate.free') : <DhbAmount value={tier.priceDhb} />}
                         </span>
                       </li>
                     );
@@ -1042,12 +1087,11 @@ export default function YoutubeMigratePage() {
               </>
             ) : (
               <p className="text-sm text-zinc-400">
-                Every video is cheaper than the one before it — the rate drops as the batch grows. The exact price is shown before you pay.
+                {t('migrate.costsIntroShort')}
               </p>
             )}
             <p className="text-xs text-zinc-500">
-              Paid in DHB, once, before the batch starts. Badge holders pay less — your discount is applied to the quote.
-              If a video can't be imported, its share is credited back toward your next migration.
+              {t('migrate.costsNote')}
             </p>
           </div>
         </section>

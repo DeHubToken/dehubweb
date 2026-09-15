@@ -119,6 +119,7 @@ const OG_CARD_ROUTES = new Set([
   // here, so the file has been sitting in public/og unreferenced.
   'superpowers', 'converter', 'launchpad', 'stats',
   'accounts', 'fractions', 'stores', 'events',
+  'migrate-youtube',
 ]);
 
 /** A route's own share card, or the shared one when it has none. */
@@ -1254,6 +1255,19 @@ const MARKETING_PAGES = {
 <h2>Your back catalogue, in one place</h2>
 <p>Imports run in a queue, so a batch can be started and left alone. Each finished import becomes an ordinary DeHub post: it can be minted, tipped, fractionalised and monetised like anything else you upload.</p>
 <p>Importing needs a DeHub account and applies to videos you have the right to publish.</p>`,
+  },
+  'migrate-youtube': {
+    title: 'Migrate all — bring a whole profile to DeHub',
+    description: 'Bulk-import a whole channel or profile to DeHub in one batch — YouTube, TikTok, Vimeo, SoundCloud and more. Pick what to bring, edit the titles, pay once.',
+    heading: 'Bring a whole profile over',
+    bodyHtml: `<p>Paste a channel or profile address and DeHub lists its public uploads. Choose what to bring across, retitle anything you want to read differently, and pay once for the batch — then close the tab while it runs.</p>
+<h2>One payment, not one per video</h2>
+<p>The whole batch is priced before it starts and every video is cheaper than the one before it. Anything already on your profile is skipped and never charged twice, and a video that cannot be imported has its share credited back toward the next migration.</p>
+<h2>Edit before it publishes</h2>
+<p>Each video in the picker carries its own title and description, so a back catalogue does not have to arrive worded the way another platform worded it. What you review is what publishes, hours later, when the job reaches it.</p>
+<h2>Not just YouTube</h2>
+<p>The same batch importer reads TikTok, Vimeo, SoundCloud, Dailymotion, Rumble and the rest of the sources behind the <a href="${APP_URL}/converter">single-video converter</a>.</p>
+<p>Migrating needs a DeHub account and applies to videos you have the right to publish.</p>`,
   },
   'launchpad': {
     // The page ships `noindex` in its own SEOHead; the crawler variant has to
@@ -2780,6 +2794,7 @@ const SSR_STATIC_ROUTES = new Set([
   // Same again: each of these is one page with a top-level route AND an /app
   // twin, both rendered from MARKETING_PAGES.
   'accounts', 'converter', 'events', 'launchpad', 'stats',
+  'migrate-youtube',
   // These three used to be the exception — /app-only pages that named their own
   // `path` in MARKETING_PAGES so the canonical would not point at a URL the
   // router did not have. The router has it now: every /app child answers at the
