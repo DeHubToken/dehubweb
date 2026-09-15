@@ -77,7 +77,7 @@ import type { DeHubCategory } from '@/lib/api/dehub';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
-import { useKidsMode } from '@/hooks/use-kids-mode';
+import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { useHideWatched, useWatchedVideoIds } from '@/hooks/use-watched-videos';
 import { useFollowGroupList } from '@/lib/follow-groups';
 import { AD_INTERVALS, useAdLoad } from '@/lib/ad-load';
@@ -558,7 +558,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // unrated by definition — ads, radio stations, live cards, the follow and
   // leaderboard rails, the stories bar. None of it can be filtered on
   // `forKids`, so in Kids Mode none of it renders.
-  const { isKidsMode } = useKidsMode();
+  const isKidsMode = useKidsModeLock();
   const { storyUsers: allStoryUsers } = useDeHubStoryUsers(10);
   // The stories bar is a row of arbitrary accounts' latest posts. Nothing on it
   // is rated, so it is empty in Kids Mode rather than filtered.

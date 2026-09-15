@@ -77,7 +77,13 @@ export function setKidsModeLocked(locked: boolean): void {
   });
 }
 
-/** Subscribe to lock changes, in this tab and in others. Returns an unsubscribe. */
+/**
+ * Subscribe to lock changes, in this tab and in others. Returns an unsubscribe.
+ *
+ * The callback takes no argument on purpose as far as `useSyncExternalStore` is
+ * concerned — it is called to say "something changed", and the reader then asks
+ * `isKidsModeLocked()`. The boolean is passed anyway for plain callers.
+ */
 export function onKidsModeChange(fn: (locked: boolean) => void): () => void {
   listeners.add(fn);
 

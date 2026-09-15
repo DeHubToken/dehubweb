@@ -5,7 +5,7 @@ import { PenSquare, LogIn, LogOut, Search, X, CornerDownLeft } from 'lucide-reac
 import { useTranslation } from 'react-i18next';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { NAV_ITEMS } from '@/constants/app.constants';
-import { useKidsMode } from '@/hooks/use-kids-mode';
+import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { MobileHeader } from './navigation/MobileHeader';
 import { DesktopSidebar } from './navigation/DesktopSidebar';
 import { SidebarNavItem } from './navigation/SidebarNavItem';
@@ -49,7 +49,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
   // `isKidsMode` is in the deps because `filterNavItems` reads the lock
   // directly rather than taking it as an argument — without it here the sheet
   // keeps its adult destinations until the query or the language changes.
-  const { isKidsMode } = useKidsMode();
+  const isKidsMode = useKidsModeLock();
   const visibleNavItems = useMemo(
     () => filterNavItems(NAV_ITEMS, menuQuery, t),
     [menuQuery, t, isKidsMode],

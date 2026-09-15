@@ -9,7 +9,7 @@ import type { NavItem } from '@/types/app.types';
 import { SidebarNavItem } from './SidebarNavItem';
 import { filterNavItems, exploreSearchHref } from './nav-search';
 import { useSearchHistory } from '@/hooks/use-search-history';
-import { useKidsMode } from '@/hooks/use-kids-mode';
+import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { WarLogo } from '@/components/app/war/WarLogoLazy';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
@@ -300,7 +300,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   // directly rather than taking it as an argument — without it here the rail
   // keeps its adult destinations until the query or the language changes,
   // which is to say until long after the parent armed Kids Mode.
-  const { isKidsMode } = useKidsMode();
+  const isKidsMode = useKidsModeLock();
   const visibleRailItems = useMemo(
     () => filterNavItems(railItems, navQuery, t),
     [railItems, navQuery, t, isKidsMode],

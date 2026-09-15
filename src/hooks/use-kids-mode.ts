@@ -18,12 +18,36 @@
  * @module hooks/use-kids-mode
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { disableKidsMode, enableKidsMode, getKidsMode } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { isKidsModeLocked, onKidsModeChange, setKidsModeLocked } from '@/lib/kids-mode-lock';
+
+/**
+ * Just the answer: is this device in Kids Mode.
+ *
+ * Every surface that only *reads* the switch uses this — the nav, the gate, the
+ * feed rails, the comment composer. It subscribes to the device lock and
+ * nothing else: no query, no auth context, no mutation. That matters beyond
+ * tidiness. `useKidsMode` below needs a QueryClient and an AuthProvider above
+ * it, and reaching for it from a nav component turned a synchronous boolean
+ * into a react-query dependency that broke rendering the sidebar in isolation.
+ *
+ * `useSyncExternalStore` rather than useState + useEffect so the value is
+ * correct on the very first render rather than one commit later — a Kids Mode
+ * session must never paint a frame of the adult nav.
+ */
+export function useKidsModeLock(): boolean {
+  return useSyncExternalStore(
+    onKidsModeChange,
+    isKidsModeLocked,
+    // Server snapshot: nothing is locked during SSR/prerender, and the lock is
+    // a browser-only concept anyway.
+    () => false,
+  );
+}
 
 /** Everything the feeds and the categories depend on, refetched when the switch moves. */
 const KIDS_SENSITIVE_QUERIES = [

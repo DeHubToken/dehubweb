@@ -14,13 +14,18 @@
  * child can reliably do is tap, so a dead end they have to read their way out
  * of is a dead end they are stuck in.
  *
+ * This is also the one place that mounts the FULL `useKidsMode` — it sits
+ * app-wide inside both the QueryClient and the AuthProvider, which is what the
+ * account reconciliation needs. Everywhere else reads `useKidsModeLock`, a
+ * plain subscription with no providers behind it, so a nav component can still
+ * be rendered on its own.
+ *
  * @module components/app/KidsModeGate
  */
 
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isKidsModePath } from '@/constants/app.constants';
-import { isKidsModeLocked } from '@/lib/kids-mode-lock';
 import { useKidsMode } from '@/hooks/use-kids-mode';
 
 export function KidsModeGate({ children }: { children: React.ReactNode }) {
@@ -29,11 +34,7 @@ export function KidsModeGate({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // `isKidsModeLocked()` as well as the hook's value: the lock is
-    // synchronous and correct on the very first render, while the hook's state
-    // settles a tick later. On a cold load straight into a locked route that
-    // tick is a frame of the page being visible.
-    if (!isKidsMode && !isKidsModeLocked()) return;
+    if (!isKidsMode) return;
     if (isKidsModePath(location.pathname)) return;
 
     navigate('/app', { replace: true });

@@ -23,7 +23,7 @@ import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-quer
 import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem , Anchor, Eye, Baby } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation as useI18n } from 'react-i18next';
-import { useKidsMode } from '@/hooks/use-kids-mode';
+import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { cn } from '@/lib/utils';
 import { registerOffDocumentMedia } from '@/lib/pause-media-in';
 import { useFocusComment } from '@/lib/focus-comment';
@@ -778,7 +778,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   // A kids post's thread is open to Kids Mode only. The post's own author is
   // exempt server-side, but they are also the one person who can always reach
   // it, so there is nothing to show them here.
-  const { isKidsMode } = useKidsMode();
+  const isKidsMode = useKidsModeLock();
   const kidsOnlyThread = forKids && !isKidsMode;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
