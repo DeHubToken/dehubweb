@@ -5125,45 +5125,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_testimonials: {
-        Row: {
-          allow_name: boolean
-          allow_promo: boolean
-          body: string
-          created_at: string
-          id: string
-          reviewed_at: string | null
-          status: string
-          time_using: string | null
-          username: string | null
-          wallet_address: string
-        }
-        Insert: {
-          allow_name?: boolean
-          allow_promo?: boolean
-          body: string
-          created_at?: string
-          id?: string
-          reviewed_at?: string | null
-          status?: string
-          time_using?: string | null
-          username?: string | null
-          wallet_address: string
-        }
-        Update: {
-          allow_name?: boolean
-          allow_promo?: boolean
-          body?: string
-          created_at?: string
-          id?: string
-          reviewed_at?: string | null
-          status?: string
-          time_using?: string | null
-          username?: string | null
-          wallet_address?: string
-        }
-        Relationships: []
-      }
       user_feedback_surveys: {
         Row: {
           age_range: string | null
@@ -5284,6 +5245,45 @@ export type Database = {
           trigger_phrases?: string[]
           updated_at?: string
           usage_count?: number
+        }
+        Relationships: []
+      }
+      user_testimonials: {
+        Row: {
+          allow_name: boolean
+          allow_promo: boolean
+          body: string
+          created_at: string
+          id: string
+          reviewed_at: string | null
+          status: string
+          time_using: string | null
+          username: string | null
+          wallet_address: string
+        }
+        Insert: {
+          allow_name?: boolean
+          allow_promo?: boolean
+          body: string
+          created_at?: string
+          id?: string
+          reviewed_at?: string | null
+          status?: string
+          time_using?: string | null
+          username?: string | null
+          wallet_address: string
+        }
+        Update: {
+          allow_name?: boolean
+          allow_promo?: boolean
+          body?: string
+          created_at?: string
+          id?: string
+          reviewed_at?: string | null
+          status?: string
+          time_using?: string | null
+          username?: string | null
+          wallet_address?: string
         }
         Relationships: []
       }
@@ -5940,16 +5940,6 @@ export type Database = {
       }
     }
     Views: {
-      public_testimonials: {
-        Row: {
-          body: string | null
-          created_at: string | null
-          id: string | null
-          time_using: string | null
-          username: string | null
-        }
-        Relationships: []
-      }
       chess_records: {
         Row: {
           draws: number | null
@@ -5969,6 +5959,30 @@ export type Database = {
           seller_address: string | null
           settled_trades: number | null
           total_trades: number | null
+        }
+        Relationships: []
+      }
+      public_testimonials: {
+        Row: {
+          body: string | null
+          created_at: string | null
+          id: string | null
+          time_using: string | null
+          username: string | null
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string | null
+          id?: string | null
+          time_using?: string | null
+          username?: never
+        }
+        Update: {
+          body?: string | null
+          created_at?: string | null
+          id?: string | null
+          time_using?: string | null
+          username?: never
         }
         Relationships: []
       }
