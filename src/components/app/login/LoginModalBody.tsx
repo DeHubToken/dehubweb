@@ -371,7 +371,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
 
   const handleWalletConnect = (wallet: WalletId, _connect: () => void) => {
     setActiveProvider(wallet);
-    setWagmiAuthIntent(true);
+    setWagmiAuthIntent(true, wallet);
 
     // A connection kept alive from a previous session (expired token, still
     // connected) only needs the signature — the wagmiAuthIntentState change
@@ -379,6 +379,9 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
     // DeHub auth. This used to fire for a connection to ANY wallet, so tapping
     // a second wallet re-signed with the first one: the popup the user had just
     // cancelled came straight back, from the wallet they were trying to leave.
+    // Naming the wallet on the intent is the other half of that — the effect
+    // fires on every tap, so it has to be able to tell that the connection it
+    // finds is not the one being asked for.
     if (liveConnectionIsWallet(wallet)) {
       return;
     }
@@ -406,7 +409,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
 
   const handleWalletConnectConnect = (connect: () => void) => {
     setActiveProvider('walletconnect');
-    setWagmiAuthIntent(true);
+    setWagmiAuthIntent(true, 'walletconnect');
     connect();
   };
 

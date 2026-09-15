@@ -12,12 +12,16 @@
  * connection and asked it to sign again — so the wallet the user was trying to
  * leave kept popping up and there was no way to switch.
  */
-export type WalletConnectorKey = 'metamask' | 'phantom' | 'trust';
+export type WalletConnectorKey = 'metamask' | 'phantom' | 'trust' | 'walletconnect';
 
 export const WALLET_CONNECTOR_IDS: Record<WalletConnectorKey, string[]> = {
   metamask: ['metaMaskSDK', 'io.metamask', 'metaMask'],
   phantom: ['app.phantom', 'phantom'],
   trust: ['trust', 'trustWallet'],
+  // The sheet's own id for that row is lowercase; wagmi's connector id is not.
+  // Without this entry the WalletConnect row has no mapping at all, and the
+  // intent check in AuthProvider would never accept the connection it opens.
+  walletconnect: ['walletConnect'],
 };
 
 interface ConnectorLike {
