@@ -12,11 +12,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Loader2, Minus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/contexts/AuthContext';
 import { useConversations, useCreateConversation } from '@/hooks/use-messages';
 import { useMinimizedChats } from '@/hooks/use-minimized-chats';
@@ -267,26 +265,8 @@ function DmDockPanel({ dm }: { dm: DockedDm }) {
 export function DmDock() {
   const { dms } = useDmDock();
   const { isAuthenticated } = useAuth();
-  const isMobile = useIsMobile();
-  const navigate = useNavigate();
 
-  // On a phone the window model does not apply: hand the thread to the
-  // Messages route, which is where the full-screen chat already lives.
-  useEffect(() => {
-    if (!isMobile || dms.length === 0) return;
-    const dm = dms[dms.length - 1];
-    dms.forEach(d => closeDmDock(d.address));
-    navigate('/app/messages', {
-      state: {
-        openDmWith: dm.address,
-        username: dm.username,
-        autoSendBody: dm.autoSendBody,
-        draftBody: dm.draftBody,
-      },
-    });
-  }, [isMobile, dms, navigate]);
-
-  if (!isAuthenticated || isMobile || dms.length === 0) return null;
+  if (!isAuthenticated || dms.length === 0) return null;
 
   return (
     <>
