@@ -122,6 +122,12 @@ export interface MigrationChargeStatus {
   status: 'open' | 'settled' | 'void';
   amountDhb: number;
   youtubeVideoIds: string[];
+  /** Aligned to `youtubeVideoIds`, and absent on a batch quoted before the
+   * migration took more than YouTube. The progress grid links and titles each
+   * tile from these rather than rebuilding a watch URL, which would send a
+   * TikTok import to a YouTube video that does not exist. */
+  itemUrls?: string[];
+  itemNames?: string[];
   results: {
     youtubeVideoId: string;
     status: 'pending' | 'imported' | 'failed';
