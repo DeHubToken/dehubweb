@@ -2333,6 +2333,9 @@
     "foldersNoItems": "Waxba kuma jiraan galkan weli",
     "foldersNoItemsHint": "Fur natiijo oo dooro \"Ku dar galka\" si aad halkan ugu kaydiso."
   },
+  "videoPlayer": {
+    "volume": "Codka"
+  },
   "dub": {
     "audio": "Cod",
     "original": "Maqalka asalka ah",

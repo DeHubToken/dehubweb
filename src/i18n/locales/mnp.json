@@ -2242,6 +2242,9 @@
     "foldersNoItems": "此文件夹中尚无内容",
     "foldersNoItemsHint": "打开一个结果并选择“添加到文件夹”以在此处归档。"
   },
+  "videoPlayer": {
+    "volume": "音量"
+  },
   "dub": {
     "audio": "Audio",
     "original": "原聲",

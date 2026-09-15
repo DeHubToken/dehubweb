@@ -2364,6 +2364,9 @@
     "foldersNoItems": "Akukho lutho kufolda eli okwamanje",
     "foldersNoItemsHint": "Vula umphumela futhi khetha \"Engeza kufolda\" ukuze ulungisele lapha."
   },
+  "videoPlayer": {
+    "volume": "Umsindo"
+  },
   "dub": {
     "audio": "Okwemisindo",
     "original": "Umsindo wasekuqaleni",

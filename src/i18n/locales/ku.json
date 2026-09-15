@@ -2148,6 +2148,9 @@
     "foldersNoItems": "هێشتا هیچ شتێک لەم فۆڵدەرەدا نییە",
     "foldersNoItemsHint": "ئەنجامێک بکەرەوە و \"زیادکردن بۆ فۆڵدەر\" هەڵبژێرە بۆ ئەوەی لێرە دایبنێیت."
   },
+  "videoPlayer": {
+    "volume": "Bilindahiya deng"
+  },
   "dub": {
     "audio": "Deng",
     "original": "Dengê orîjînal",

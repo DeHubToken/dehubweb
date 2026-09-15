@@ -4582,6 +4582,9 @@
     "foldersNoItems": "Ebben a mappában még nincs semmi",
     "foldersNoItemsHint": "Nyiss meg egy eredményt, és válaszd a \"Hozzáadás a mappához\" lehetőséget a mentéshez."
   },
+  "videoPlayer": {
+    "volume": "Hangerő"
+  },
   "dub": {
     "audio": "Audió",
     "original": "Eredeti hang",

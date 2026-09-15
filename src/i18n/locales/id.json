@@ -4661,6 +4661,9 @@
     "foldersNoItems": "Belum ada apa pun di folder ini",
     "foldersNoItemsHint": "Buka hasil dan pilih \"Tambahkan ke folder\" untuk menyimpannya di sini."
   },
+  "videoPlayer": {
+    "volume": "Volume"
+  },
   "dub": {
     "audio": "Audio",
     "original": "Audio asli",

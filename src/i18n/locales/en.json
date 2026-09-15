@@ -4666,6 +4666,9 @@
     "foldersNoItems": "Nothing in this folder yet",
     "foldersNoItemsHint": "Open a result and choose \"Add to folder\" to file it here."
   },
+  "videoPlayer": {
+    "volume": "Volume"
+  },
   "dub": {
     "audio": "Audio",
     "original": "Original audio",

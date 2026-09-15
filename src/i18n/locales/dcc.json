@@ -1992,6 +1992,9 @@
     "foldersDeleteConfirm": "\"{{name}}\" फोल्डर हटवायचा? त्यातले जनरेशन्स तुमच्या लायब्ररीत राहतील.",
     "foldersInFolder_other": "{{count}} फोल्डरांमध्ये"
   },
+  "videoPlayer": {
+    "volume": "آواز"
+  },
   "dub": {
     "audio": "آڈیو",
     "original": "Original audio",

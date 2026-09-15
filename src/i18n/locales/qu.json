@@ -2365,6 +2365,9 @@
     "foldersNoItems": "Kay k'itipim mana imapas kanchu",
     "foldersNoItemsHint": "Huk kaqta kichariy chaymanta \"K'itiman yapay\" nisqata akllariy kaypi waqaychanaykipaq."
   },
+  "videoPlayer": {
+    "volume": "Uyariy"
+  },
   "dub": {
     "audio": "Audio nisqa",
     "original": "Original uyarinapaq",

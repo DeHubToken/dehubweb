@@ -4480,6 +4480,9 @@
     "foldersNoItems": "Niks in hierdie gids nog nie",
     "foldersNoItemsHint": "Maak 'n resultaat oop en kies \"Voeg by die gids\" om dit hier in te dien."
   },
+  "videoPlayer": {
+    "volume": "Volume"
+  },
   "dub": {
     "audio": "Klank",
     "original": "Oorspronklike klank",

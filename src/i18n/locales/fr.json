@@ -4660,6 +4660,9 @@
     "foldersNoItems": "Rien dans ce dossier pour l'instant",
     "foldersNoItemsHint": "Ouvrez un résultat et choisissez « Ajouter au dossier » pour le classer ici."
   },
+  "videoPlayer": {
+    "volume": "Volume"
+  },
   "dub": {
     "audio": "Audio",
     "original": "Audio original",

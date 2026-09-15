@@ -4580,6 +4580,9 @@
     "foldersNoItems": "Tässä kansiossa ei ole vielä mitään",
     "foldersNoItemsHint": "Avaa tulos ja valitse \"Lisää kansioon\" tallentaaksesi sen tänne."
   },
+  "videoPlayer": {
+    "volume": "Äänenvoimakkuus"
+  },
   "dub": {
     "audio": "Ääni",
     "original": "Alkuperäinen ääni",

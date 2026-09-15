@@ -2242,6 +2242,9 @@
     "foldersInFolder_one": "In {{count}} folder",
     "foldersInFolder_other": "In {{count}} folders"
   },
+  "videoPlayer": {
+    "volume": "دەنگ"
+  },
   "dub": {
     "audio": "آڈیو",
     "original": "Original audio",
