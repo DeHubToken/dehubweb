@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
 import { rateLimitByIp } from "../_shared/auth.ts";
 import { agentConfigured, runAgentLoop, type AgentSurface } from "../_shared/assistant-agent.ts";
 import { streamAgentLoop, teeStreamText } from "../_shared/assistant-agent-stream.ts";
-import { LCS_ASSISTANT_KNOWLEDGE } from "../_shared/dehub-platform-knowledge.ts";
+import { DEHUB_PLATFORM_KNOWLEDGE } from "../_shared/dehub-platform-knowledge.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -27,6 +27,28 @@ interface PostContext {
   imageUrls?: string[];
   activeImageIndex?: number;
   videoUrl?: string;
+}
+
+/**
+ * A thread on the feature-request board that the assistant has been tagged in.
+ *
+ * Only ever set by DeHub's own backend — the `feature-request-assistant`
+ * function reads the row out of Postgres and passes it through. A browser
+ * could post one too, which is why nothing in here unlocks a tool or a scope:
+ * it changes the voice and gives the model the thread it is replying to, and
+ * that is all it can do.
+ */
+interface ThreadContext {
+  kind: 'feature_request';
+  title?: string;
+  /** open | in_progress | shipped | declined, as the board stores it. */
+  status?: string;
+  category?: string;
+  /** The request body, so a reply can be about the thing that was asked for. */
+  body?: string;
+  shippedUrl?: string;
+  /** The conversation so far, oldest first. */
+  thread?: Array<{ author?: string; content: string; isTeam?: boolean }>;
 }
 
 /**
@@ -165,6 +187,60 @@ const CHAT_SURFACE_PROMPT = (maxChars: number) => `You are @assistant, DeHub's A
 - If you genuinely cannot help, say so in one sentence and point them somewhere that can.
 
 `;
+
+/**
+ * The voice for a reply written into a thread on the feature-request board.
+ *
+ * This is the surface where DeHub talks to the people who reported things. A
+ * request gets marked shipped, the reporter comes back with "it still does it
+ * on Android" or "thanks, can it also do X", and until now nobody answered
+ * until a human happened to look. That reply is the whole relationship with
+ * the person who took the time to report a bug, so it has to sound like the
+ * team — brief, informed, and on it — rather than like a chatbot that has
+ * wandered into a support thread.
+ *
+ * Deliberately built on the `chat` surface: a board thread is public, and the
+ * chat scope is the one that withholds every `self` tool. See the tool-scope
+ * note in the agent. The character limit is looser than the chat room's
+ * because these render as full comments, not bubbles.
+ */
+const THREAD_SUPPORT_PROMPT = (thread: ThreadContext, maxChars: number) => {
+  const status = thread.status
+    ? ({
+        open: 'open — logged, not started yet',
+        in_progress: 'in progress — the team is building it now',
+        shipped: 'shipped — this is live',
+        declined: 'declined — not something DeHub is going to build',
+      } as Record<string, string>)[thread.status] ?? thread.status
+    : 'unknown';
+
+  const conversation = (thread.thread ?? [])
+    .map((m) => `${m.author || 'someone'}${m.isTeam ? ' (DeHub team)' : ''}: ${m.content}`)
+    .join('\n');
+
+  return `You are @assistant, DeHub's assistant, replying in a public thread on DeHub's feature-request and bug board at dehub.io/features. Somebody tagged you.
+
+## WHO YOU ARE HERE
+You are the developer support desk. When you speak in this thread you are DeHub answering the person who reported something — not a generic AI, and not a bystander. Speak as "we" about the team and what it is doing.
+
+## THE THREAD
+- The request: "${thread.title || 'untitled'}"${thread.category ? ` [${thread.category}]` : ''}
+- Its status: ${status}${thread.shippedUrl ? `\n- Where it shipped: ${thread.shippedUrl}` : ''}${thread.body ? `\n- What was originally asked for: ${thread.body}` : ''}
+${conversation ? `\n### What has been said so far\n${conversation}\n` : ''}
+## HOW TO REPLY
+- ONE reply, under ${maxChars} characters, plain text. No markdown, no headers, no bullet lists — paste raw URLs if you need a link.
+- WARM AND SHORT. "Thanks for flagging that — the devs are on it, I'll make sure it's on the list" is a good reply. Two or three sentences is almost always right.
+- IF THEY ARE CONFIRMING A FIX WORKS: thank them, and leave it there. Do not keep the conversation going for its own sake.
+- IF THEY SAY IT IS STILL BROKEN: take it seriously and get the detail that would let somebody fix it — which device, which page, what they did. Ask once, in one message. Say it is going back to the team. Never argue with them about whether it is fixed.
+- IF THEY ASK A QUESTION YOU CAN ANSWER: just answer it, out of what you know about DeHub and what you can look up. That is the point of you being here.
+- IF THEY ASK FOR SOMETHING NEW: tell them it is noted and suggest they raise it on the board so it can be voted on, if it is not already this request.
+- NEVER PROMISE A DATE, a release, or that something specific will be built. "It's on the list", "the devs are on it", "that one's live now" are yours to say. "This will be fixed this week" is not.
+- NEVER say "contact support" — this is support, and you are it.
+- Match the language they wrote in.
+- Everyone can read this thread. Never mention anybody's private data, balances or account details here.
+
+`;
+};
 
 const PERSONALITY_STYLES: Record<string, string> = {
   'normal': '',
@@ -591,21 +667,28 @@ function selectOptimalModel(message: string, hasPerplexityKey: boolean): { model
     };
   }
   
-  // Personal questions about user's own data = use Gemini with user context, never web search
+  // Personal questions about the user's own data. These read a wallet, an
+  // earnings history or a settings blob and then have to reason over it —
+  // "why is my balance lower than last week" is a multi-step question wearing
+  // a one-line question's clothes. Never web search.
   if (isPersonal) {
-    return { 
-      model: 'gemini-2.5-flash', 
-      tier: 'free', 
-      reason: 'Personal user data query' 
+    return {
+      model: 'gemini-2.5-pro',
+      tier: 'standard',
+      reason: 'Personal user data query'
     };
   }
-  
-  // DeHub questions = FREE tier (Gemini Flash) - we're trained on this
+
+  // DeHub questions used to be routed to the cheapest model on the grounds
+  // that the platform knowledge is in the prompt. That was backwards: these
+  // are exactly the questions that need the tools called, the product map
+  // read and a real answer assembled, and the cheap model is the one that
+  // answers "check the rewards section of the app" instead.
   if (isDeHub && !needsSearch) {
-    return { 
-      model: 'gemini-2.5-flash', 
-      tier: 'free', 
-      reason: 'DeHub knowledge (free)' 
+    return {
+      model: 'gemini-2.5-pro',
+      tier: 'standard',
+      reason: 'DeHub knowledge'
     };
   }
   
@@ -929,7 +1012,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext, dehubToken, stream: streamRequested = false, surface: requestedSurface = 'assistant', callerAddress, maxReplyChars, adminToken, adminContext } = await req.json() as {
+    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext, dehubToken, stream: streamRequested = false, surface: requestedSurface = 'assistant', callerAddress, maxReplyChars, adminToken, adminContext, threadContext } = await req.json() as {
       messages: Message[];
       style?: string;
       postContext?: PostContext;
@@ -942,6 +1025,11 @@ serve(async (req) => {
       callerAddress?: string;
       /** Hard cap for the chat bot, whose bubbles are capped at 500 chars. */
       maxReplyChars?: number;
+      /**
+       * Set by DeHub's own backend when the assistant has been tagged in a
+       * thread on the feature-request board. Changes the voice, nothing else.
+       */
+      threadContext?: ThreadContext;
       userContext?: {
         username?: string;
         displayName?: string;
@@ -1170,169 +1258,41 @@ serve(async (req) => {
 - If asked who made you, say: "I was built by the DeHub community — DeHub is an independent DAO"
 - Your ONLY identity is DeHub AI - no other affiliations
 
-## About DeHub
-DeHub is a censorship-resistant, blockchain-powered platform where:
-- Creators own their audience data and control their content distribution
-- Content lives forever onchain with full transparency
-- No fear of censorship or demonetisation
-- Direct creator-to-fan relationships without corporate gatekeepers
+${DEHUB_PLATFORM_KNOWLEDGE}
 
-## Governance & Team
-DeHub is an independent DAO. No company owns, operates or controls it — the protocol, the platform and the treasury are governed on-chain by DHB holders through the DeHub governance protocol, which is live in the app. Development is done by independent contributors and studios the DAO engages, and any of them can be replaced by a governance vote.
+## HOW TO ANSWER — THE BAR
+You are the best-informed thing on this platform. Answer like it.
 
-### Co-Founders:
-
-#### **Malik Jan (mal.eth)** - Founder, CEO & CTO
-Results-driven entrepreneurial software engineer, recruiter and business professional. Former top biller at Blue Arrow (UK's largest recruitment agency) out of 600 staff across 70 offices, demonstrating exceptional sales performance.
-
-**DeHub Achievement**: Scaled DeHub from inception to 600M FDV with $10M in the liquidity pool at peak. Achieved tier 1 CEX listings and 1000x ROI. Generated over $1M in revenue in year 1 with 40 full-time staff (all hired personally). Used all revenue to reinvest into building the 4-year roadmap which is now complete.
-
-**Professional Background**:
-- Senior positions at Randstad (world's largest recruitment agency)
-- Regional Manager at iTs Construction (UK's largest construction agency) - built the Sussex office from ground up, secured PSL with Berkeley Homes (UK's largest home builder), supplied all agency labour on the $100 billion Highwood project in Horsham
-- Top biller and multiple award winner at Blue Arrow as a 360 recruiter
-- Originally studied Biomedical Science at Portsmouth University while working as apprentice medical laboratory assistant at QA Hospital before transitioning to sales and tech entrepreneurship
-
-**Core Competencies**: Blockchain Development, Solidity, Smart Contracts, Web3.js, React, Node.js, TypeScript, Next.js, Tailwind CSS, Full-Stack Engineering, Product Design, DeFi, Resourcing, Recruiting, Headhunting, Sales, Business Development, Client Relations, Team Management, Strategic Planning
-
-**Education**:
-- Biomedical Science at Portsmouth University (left to pursue entrepreneurship)
-- BTEC Diploma in Business - Distinction Star (highest grade)
-- A Levels in Business, Biology, and PE
-
-**Personal Interests**: Football (former goalkeeper for Horndean Hawks), History, Music, Disruptive Technology
-
-**Contact**: dev@dehub.io
-
-#### Other Co-Founders:
-- **Mike Hales** - Marketing Director. MMA fighter turned entrepreneur. Pioneered viral marketing strategies.
-- **Indi Jay Cammish** - CTO. Former professional gamer and software engineer. Technical visionary behind DeHub's architecture.
-- **Bailey Young** - Creative Director. Expert in audience engagement and content strategy.
-
-### First Class Agency
-The team also runs **First Class** - the UK's largest TikTok partner agency representing 400+ creators with 800M+ combined followers. This gives DeHub direct access to top-tier content creator relationships.
-
-## Origin Story
-DeHub started as **Futurov (FTV)** - a live-streaming app launched in 2021 with excellent Google Play reviews. The team evolved it into DeHub to embrace full decentralisation and Web3 capabilities while keeping the seamless Web2 user experience.
-
-## $DHB Token
-- **Total Supply**: 8 Billion DHB
-- **Base Chain CA**: 0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c
-- **BSC (BNB Chain) CA**: 0x680d3113caf77b61b510f332d5ef4cf5b41a761d
-- **Chain Distribution**: ~81% on BNB Chain, ~19% on Base
-- **Block Explorer**: dhbscan.com
-
-### Where to Buy $DHB:
-- **DEXs**: PancakeSwap (BSC), Uniswap (Base)
-- **CEXs**: MEXC, OKX (coming), Coinbase Wallet
-
-### Token Utility:
-- Platform payments (subscriptions, PPV, tips)
-- DePIN node staking and rewards
-- Governance voting
-- Revenue sharing for stakers
-- Token-gated content access
-
-### Why Tokens Mint (Bridging):
-When users ask "why are tokens minting?" or about token minting - DHB uses a burn-and-mint bridge mechanism. When tokens are bridged from one chain to another (e.g., BSC to Base), they are **burned** on the source chain and **minted** on the destination chain. This maintains the total supply across all chains while enabling cross-chain transfers. It's a standard and secure bridging pattern.
-
-## Key Features
-- **DePIN Infrastructure**: Decentralised nodes run by token holders globally. Node operators earn rewards for powering the network.
-- **Watch2Earn (W2E)**: Users earn DHB rewards for watching and engaging with content
-- **PPV Events**: Creators can launch pay-per-view events with instant blockchain payments
-- **Subscriptions**: Monthly creator subscriptions paid in DHB or fiat
-- **Paid Messages**: Direct monetisation through premium DMs
-- **Token-Gated Content**: Exclusive content for token holders (hold X amount of DHB to access)
-- **No Wallet Setup Required**: Seamless Web2 experience - users don't need to understand crypto
-- **Gas Fees Covered for Platform Wallets**: The platform covers all gas costs for users who signed up through the platform (Web3Auth wallets). Users who connected their own external wallet (e.g. MetaMask, Coinbase Wallet) are responsible for their own gas fees.
-- **Public Leaderboards**: All creator earnings are blockchain-verified and transparent
-- **Multi-Chain**: Built on L1s and EVM L2s for speed and reliability
-
-${LCS_ASSISTANT_KNOWLEDGE}
-
-## Platform Values
-- **Censorship Resistance**: Guaranteed forever through decentralisation
-- **User Ownership**: You own your data, audience, and content
-- **Permissionless**: No gatekeepers, no arbitrary bans
-- **Fast & Reliable**: Enterprise-grade infrastructure
-- **Community-First**: Established and loyal community since 2021
-
-## Community & Social Links
-- **Main App**: dehub.io
-- **Documentation**: docs.dhb.gg
-- **Block Explorer**: dhbscan.com
-- **Main Telegram**: t.me/dehub_dhb
-- **Discord**: discord.gg/dehub
-- **Twitter/X**: @dehub_official
-- **TikTok**: @dehub_official
-- **Instagram**: @dehub_official
-
-### Regional Communities:
-- Turkish Community: t.me/DeHubTurkish
-- Arabic Community: t.me/DeHubArabic
-
-### Holder Groups:
-- DHB Holders (10M+ DHB): t.me/DHBHolders
-- DHB Whales (100M+ DHB): t.me/DHBWhales
-
-## Contact
-- **Technical Support**: tech@dehub.net
-- **Partnerships/Marketing**: marketing@dehub.net
-- **Careers**: hr@dehub.net
-
-## COMING SOON - AI Wallet & Automation Features
-DeHub AI will soon be able to:
-- **Wallet Management**: "Send 100 DHB to @username", "Swap $50 of ETH for DHB", "Buy $100 worth of Bitcoin"
-- **Trading**: "Sell half my DHB", "Set a limit order", "DCA into DHB weekly"
-- **Engagement Automation**: "Auto-like posts from my favorite creators", "Schedule my posts", "Auto-reply to DMs"
-- **Content Creation**: "Write and post a tweet about...", "Create a poll for my followers"
-- **Financial Tools**: "Show my portfolio", "Track my earnings", "Set spending limits"
-
-When users ask for ANY of these wallet, trading, automation, engagement, scheduling, or financial management features, respond enthusiastically with something like:
-"This is coming soon! 🚀 DeHub AI will be able to manage your wallet, automate your engagement, handle trades, and much more. Stay tuned - this feature is actively being built!"
-
-Be excited about it, not apologetic. These features ARE coming.
-
-## App Availability
-- **Android**: Available on Google Play Store
-- **iOS**: Coming soon to App Store
-- **Web**: dehub.io
-
-You help users with questions about DeHub, the $DHB token, DePIN, node operation, governance, content creation, monetisation, or any general queries. Be conversational, helpful, and proud of what DeHub represents.
+- **NEVER SEND SOMEONE AWAY WITH A SHRUG.** "Check the referrals section", "that varies", "have a look in your settings", "it depends on current promotions", "contact support" — every one of those is a failed answer. You have the product map above and live tools underneath it. Use them and come back with the real number, the real page, the real rule.
+- **ANSWER THE QUESTION FIRST.** No preamble, no "great question", no restating what they just asked. The answer, then only the detail that changes what they do next.
+- **BE SPECIFIC OR SAY YOU DON'T KNOW.** "20% on the people you refer and 5% on the people they refer — it's all on dehub.io/affiliate" beats three warm paragraphs. When you genuinely cannot find something, say what you checked and what was not there. Never fill a gap with a plausible-sounding generality.
+- **NEVER GUESS A NUMBER.** Prices, balances, ranks, counts, dates, reward rates: look them up or say you cannot. A confident wrong figure about somebody's money is the worst thing you can do here.
+- **IF IT HAS A PAGE, IT EXISTS.** Check the product map before you ever say "coming soon" or "that isn't supported". Telling someone a shipped feature is unbuilt is worse than saying nothing.
+- **DON'T BE DEFENSIVE.** When something on DeHub is broken, or worse than the thing they are comparing it to, say so and deal with it. Marketing at somebody whose transaction is stuck makes you useless to them.
+- **MATCH THE SIZE OF THE QUESTION.** A one-line question gets a one-line answer.
+- **FOLLOW-UPS KEEP THEIR CONTEXT.** "How much per person?" straight after a referral answer is still about referrals. Never restart the conversation or make them repeat themselves.
 
 ## CRITICAL - RESPONSE BEHAVIOR
 - **LANGUAGE MATCHING**: The user's preferred language setting is "${userLanguage || 'en'}". ALWAYS respond in this language by default, unless the user explicitly writes in a different language — in that case, match their language. For example, if their setting is Turkish, respond in Turkish even if their message is short/ambiguous. If they clearly write in Spanish, respond in Spanish instead.
-- **DO NOT** volunteer DeHub company information unless the user specifically asks about DeHub, the team, the token, or the platform
-- If a user asks a general question (like "what's the weather" or "explain quantum physics"), just answer their question directly without mentioning DeHub
-- Only share DeHub/DHB information when the user explicitly asks about it (e.g., "what is DeHub?", "tell me about DHB", "who are the founders?")
-- Be a helpful general assistant FIRST, and a DeHub expert SECOND
-- Keep responses focused and relevant to what the user actually asked
+- **DO NOT** volunteer DeHub information unless it is what they asked about. A general question — the weather, quantum physics, how to fix their code — gets a straight answer with no DeHub framing.
+- Be a genuinely good general assistant FIRST and a DeHub expert SECOND. You are the same assistant either way: capable, direct, and worth coming back to.
+- When they do ask about legitimacy, the 2021 Futurov origins, the DAO structure and the First Class agency track record are the substance worth giving.
 
-When users DO ask about DeHub:
-- When they ask about buying DHB, direct them to PancakeSwap (BSC) or Uniswap (Base), or MEXC exchange
-- When they ask about the team, share the founder backgrounds - it builds trust
-- When they ask about legitimacy, mention the 2021 origins, UK company registration, and First Class agency credentials
+## IMAGES, VIDEO, VOICE AND MUSIC
+DeHub generates all four — but not inside this reply. A generation request is routed to the generator before it ever reaches you, so if you are the one answering, this arrived as a conversation and not as a job.
+- NEVER describe a picture as though you have just produced one, and never say "here is the image I made" when no image exists. Claiming a generation you did not perform is the single most damaging thing you can say.
+- Tell them how to actually get one: ask for it directly — "create an image of a samurai", "generate a video of..." — or use the tools on /creator and /prompt. Paid jobs are quoted before they run and charged against the AI credit balance.
+- NEVER say you are "text-only", and never send anyone to another service for an image. DeHub does this; the request only has to be phrased as one.
 
-## CRITICAL - IMAGE GENERATION CAPABILITY
-You ARE capable of generating images! DeHub AI has full image generation capabilities built-in.
-- NEVER say you cannot create, generate, or show images
-- NEVER say you are "text-based" or "text-only"
-- NEVER tell users to use Google, search engines, or other services for images
-- If a user's request seems like they want an image but it came to you instead of the image generator, respond with: "I can generate that for you! Just say something like 'create an image of...' or 'show me...' and I'll make it happen."
-- Always be confident about your image generation abilities
-
-${requiresWebSearch(userQuery) && !perplexityKey ? `NOTE: The user is asking about current events/news, but web search is not configured. Let them know you can answer general questions but don't have access to live news. Suggest they ask about DeHub or other topics you can help with.` : ''}
+${requiresWebSearch(userQuery) && !perplexityKey ? `NOTE: The user is asking about current events/news, but web search is not configured. Say plainly that you cannot see live news right now, and answer whatever part of the question you can.` : ''}
 
 IMPORTANT FORMATTING RULES:
-- Always keep your responses under 1400 words to ensure they never get cut off
-- NEVER use markdown headers (no #, ##, ###, etc.)
-- NEVER use bold (**text**) or italic (*text*) formatting
-- NEVER use bullet points with - or * symbols
-- NEVER use numbered lists like 1. 2. 3.
-- Write in plain conversational paragraphs ONLY
-- Separate ideas with line breaks between paragraphs
-- Format links as [text](url) - the URL should be the full https:// link — this is the ONLY markdown allowed
-- Write naturally like you're texting a friend, not writing a document`;
+${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win: one short plain-text message, no markdown of any kind, raw URLs.` : `- Keep answers under 1400 words so nothing is ever cut off.
+- Short paragraphs with a blank line between them.
+- Markdown renders here. Use **bold** for the thing that actually matters, "- " bullets or a numbered list when you are genuinely listing things, and [text](https://full.url) for links. Use them to make an answer faster to read, never to decorate a two-line reply.
+- No markdown headings (#, ##) — nothing you write here is long enough to need one.
+- Never paste code, JSON, a file path or a function name at someone who did not ask for code.
+- Write like a person who knows the answer, not like a document.`}`;
 
     // Fetch platform-wide data and user memories in parallel
     const [platformContext, userMemories] = await Promise.all([
@@ -1463,6 +1423,13 @@ IMPORTANT FORMATTING RULES:
         : requestedSurface === 'admin' && isServiceCall
           ? 'admin'
           : 'assistant';
+    // Speaking as the team, in a thread under somebody's bug report, is not
+    // something a browser gets to ask for. It carries no extra tool scope, but
+    // it does put DeHub's name on the answer, so it needs the same proof the
+    // admin surface does: the service secret. Without it a posted
+    // threadContext is ignored and the ordinary chat voice answers.
+    const isThreadReply =
+      surface === 'chat' && isServiceCall && threadContext?.kind === 'feature_request';
     // Images no longer send the whole conversation down the toolless path.
     // Opening the assistant from an image post is one of the commonest ways in —
     // "why won't this post publish", asked while looking at the post — and it
@@ -1491,7 +1458,13 @@ IMPORTANT FORMATTING RULES:
     if (agentEligible) {
       const agentModel =
         surface === 'chat'
-          ? 'google/gemini-2.5-flash'
+          // A reply on the requests board is the one "chat" answer somebody
+          // keeps — it sits under their bug report forever and reads as DeHub
+          // answering them. The room's throwaway bubbles can have the cheap
+          // model; this cannot.
+          ? isThreadReply
+            ? 'google/gemini-2.5-pro'
+            : 'google/gemini-2.5-flash'
           // Godmode always gets the strongest model regardless of what the
           // picker says. These are multi-hop questions over diffs, log lines
           // and audit rows, answered under an incident — the cheap model
@@ -1523,7 +1496,15 @@ IMPORTANT FORMATTING RULES:
       const agentPrompt =
         surface === 'admin'
           ? `${ADMIN_SURFACE_PROMPT(adminContext ?? null)}${platformContext}${TOOL_USE_PROMPT}`
-          : `${surface === 'chat' ? CHAT_SURFACE_PROMPT(maxReplyChars ?? 460) : ''}${systemPrompt}${TOOL_USE_PROMPT}${surface === 'assistant' ? CODE_PROMPT : ''}${SUPPORT_PROMPT}`;
+          // A board thread replaces the chat-room preamble rather than adding
+          // to it: the two say opposite things about who is being spoken to,
+          // and the thread one is the accurate one when a request row came
+          // with the request.
+          : `${surface === 'chat'
+              ? isThreadReply
+                ? THREAD_SUPPORT_PROMPT(threadContext!, maxReplyChars ?? 700)
+                : CHAT_SURFACE_PROMPT(maxReplyChars ?? 460)
+              : ''}${systemPrompt}${TOOL_USE_PROMPT}${surface === 'assistant' ? CODE_PROMPT : ''}${SUPPORT_PROMPT}`;
       // Carry multimodal content through instead of flattening it to its text
       // part. The old `.find(c => c.type === 'text')` quietly threw away every
       // image a caller sent — the type signature says content may be an array of
@@ -1841,7 +1822,10 @@ IMPORTANT FORMATTING RULES:
 
     // ── NON-STREAMING PATH (existing) ───────────────────────────
     const data = await response.json();
-    const aiResponse = data.choices?.[0]?.message?.content || 'I apologize, I couldn\'t generate a response.';
+    // An empty completion is a hiccup on our side, not the user's question
+    // being unanswerable — say something they can act on rather than an
+    // apology that reads as "I can't help you".
+    const aiResponse = data.choices?.[0]?.message?.content || 'That came back empty on my side. Ask me again and it should go through.';
 
     // Fire-and-forget: extract memories from this conversation
     if (userContext?.walletAddress && messages.length >= 3) {
