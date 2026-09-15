@@ -446,7 +446,8 @@
     "translating": "Traduction...",
     "close": "Fermer",
     "loadingMore": "Chargement...",
-    "loadMore": "Charger plus"
+    "loadMore": "Charger plus",
+    "continue": "Continuer"
   },
   "tip": {
     "title": "Envoyer un pourboire",

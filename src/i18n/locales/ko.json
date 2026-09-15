@@ -444,7 +444,8 @@
     "translating": "번역 중...",
     "close": "닫기",
     "loadingMore": "더 불러오는 중...",
-    "loadMore": "더 보기"
+    "loadMore": "더 보기",
+    "continue": "계속하기"
   },
   "tip": {
     "title": "팁 보내기",

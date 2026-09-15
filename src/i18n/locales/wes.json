@@ -370,7 +370,8 @@
     "translating": "E dey translate...",
     "close": "Close",
     "loadingMore": "E dey load more...",
-    "loadMore": "Bring more"
+    "loadMore": "Bring more",
+    "continue": "Continue"
   },
   "tip": {
     "title": "Send Tip",

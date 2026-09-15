@@ -366,7 +366,8 @@
     "translating": "E dey translate...",
     "close": "Close Am",
     "loadingMore": "Dey load more...",
-    "loadMore": "Bring more"
+    "loadMore": "Bring more",
+    "continue": "Continue"
   },
   "tip": {
     "title": "Send Tip",

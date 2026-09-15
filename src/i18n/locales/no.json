@@ -429,7 +429,8 @@
     "translating": "Oversetter...",
     "close": "Lukk",
     "loadingMore": "Laster mer...",
-    "loadMore": "Last mer"
+    "loadMore": "Last mer",
+    "continue": "Fortsett"
   },
   "tip": {
     "title": "Send tips",

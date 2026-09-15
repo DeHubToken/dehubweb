@@ -446,7 +446,8 @@
     "translating": "Käännetään...",
     "close": "Sulje",
     "loadingMore": "Ladataan lisää...",
-    "loadMore": "Lataa lisää"
+    "loadMore": "Lataa lisää",
+    "continue": "Jatka"
   },
   "tip": {
     "title": "Lähetä tippi",

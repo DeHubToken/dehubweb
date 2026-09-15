@@ -446,7 +446,8 @@
     "translating": "Translating...",
     "close": "Close",
     "loadingMore": "Loading more...",
-    "loadMore": "Load more"
+    "loadMore": "Load more",
+    "continue": "Continue"
   },
   "tip": {
     "title": "Send Tip",

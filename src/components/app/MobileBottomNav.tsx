@@ -24,6 +24,7 @@ import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { useTranslation } from 'react-i18next';
 import { isKidsModePath } from '@/constants/app.constants';
 import { isKidsModeLocked } from '@/lib/kids-mode-lock';
+import { useKidsMode } from '@/hooks/use-kids-mode';
 
 // Every link in this bar is an icon and nothing else, so without a name each
 // one reads to a screen reader as "link" — 25 of them on the 2026-09-02
@@ -122,6 +123,10 @@ export function MobileBottomNav() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { t } = useTranslation();
+  // Subscribed, not just read: `kidsNav` below calls `isKidsModeLocked()`
+  // directly, and without a hook holding that value this bar would keep its
+  // adult destinations until something else happened to re-render it.
+  useKidsMode();
   const navLabel = (label: string) => t(NAV_LABEL_KEYS[label] ?? label);
   const navIcon = (
     item: MobileNavItem,

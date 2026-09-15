@@ -392,7 +392,8 @@
     "translating": "กำลังแปล...",
     "close": "ปิด",
     "loadingMore": "กำลังโหลดเพิ่ม...",
-    "loadMore": "โหลดเพิ่ม"
+    "loadMore": "โหลดเพิ่ม",
+    "continue": "ต่อไป"
   },
   "tip": {
     "title": "ส่งทิป",
