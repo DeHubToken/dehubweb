@@ -81,6 +81,7 @@ import { dismissKeyboard } from '@/hooks/use-keyboard-open';
 import { formatUnreadCount } from '@/lib/unread-count';
 import { isDmCallNotice } from '@/lib/dm-call-notice';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { registerOffDocumentMedia } from '@/lib/pause-media-in';
 import { QUICK_CHAT_REACTIONS } from './reaction-options';
 
 interface DirectMessageChatProps {
@@ -109,12 +110,22 @@ function VoiceMessagePlayer({
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  /**
+   * The element is never put in the document — the button is the only part of
+   * this player on screen, so PersistentPageCache's subtree walk could not see
+   * it and a voice message played here carried on through every later
+   * navigation. The button is what puts it on the page's books.
+   */
+  const unregisterMediaRef = useRef<(() => void) | null>(null);
 
   const togglePlay = () => {
     if (!audioUrl) return;
     if (!audioRef.current) {
-      audioRef.current = new Audio(audioUrl);
-      audioRef.current.onended = () => setIsPlaying(false);
+      const el = new Audio(audioUrl);
+      el.onended = () => setIsPlaying(false);
+      unregisterMediaRef.current = registerOffDocumentMedia(el, () => buttonRef.current);
+      audioRef.current = el;
     }
     if (isPlaying) {
       audioRef.current.pause();
@@ -127,6 +138,8 @@ function VoiceMessagePlayer({
   };
 
   useEffect(() => () => {
+    unregisterMediaRef.current?.();
+    unregisterMediaRef.current = null;
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
@@ -145,6 +158,7 @@ function VoiceMessagePlayer({
   return (
     <div className="flex items-center gap-2 min-w-[120px]">
       <button
+        ref={buttonRef}
         type="button"
         onClick={togglePlay}
         className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-700/50 hover:bg-zinc-600/50 transition-colors text-sm"

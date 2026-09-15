@@ -24,6 +24,7 @@ import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';
+import { registerOffDocumentMedia } from '@/lib/pause-media-in';
 import { useFocusComment } from '@/lib/focus-comment';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
@@ -228,11 +229,22 @@ interface VoiceNotePlayerProps {
 function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  /**
+   * The element is never put in the document — the button is the only part of
+   * this player on screen. PersistentPageCache pauses a page's media by walking
+   * its subtree, so it could not see this one at all: a voice note started here
+   * played on through every later navigation. Registering it against the button
+   * is what puts it on that page's books.
+   */
+  const unregisterMediaRef = useRef<(() => void) | null>(null);
 
   const togglePlay = () => {
     if (!audioRef.current) {
-      audioRef.current = new Audio(voiceNote.url);
-      audioRef.current.onended = () => setIsPlaying(false);
+      const el = new Audio(voiceNote.url);
+      el.onended = () => setIsPlaying(false);
+      unregisterMediaRef.current = registerOffDocumentMedia(el, () => buttonRef.current);
+      audioRef.current = el;
     }
 
     if (isPlaying) {
@@ -247,6 +259,8 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
 
   useEffect(() => {
     return () => {
+      unregisterMediaRef.current?.();
+      unregisterMediaRef.current = null;
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
@@ -256,6 +270,7 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
 
   return (
     <button
+      ref={buttonRef}
       onClick={togglePlay}
       className="flex items-center gap-1.5 bg-zinc-700/50 px-2 py-1 rounded-full text-xs text-zinc-300 hover:bg-zinc-700 transition-colors"
     >
@@ -864,6 +879,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const recordingTimeRef = useRef(0);
   const playbackAudioRef = useRef<HTMLAudioElement | null>(null);
+  /** The preview's claim on this page — see {@link VoiceNotePlayer} above. */
+  const unregisterPreviewRef = useRef<(() => void) | null>(null);
   const [isPlayingPreview, setIsPlayingPreview] = useState(false);
   const [commentImage, setCommentImage] = useState<File | null>(null);
   const [commentImagePreview, setCommentImagePreview] = useState<string | null>(null);
@@ -1198,6 +1215,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
+      unregisterPreviewRef.current?.();
+      unregisterPreviewRef.current = null;
       if (playbackAudioRef.current) {
         playbackAudioRef.current.pause();
         playbackAudioRef.current = null;
@@ -1324,8 +1343,13 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     if (!voiceNote) return;
 
     if (!playbackAudioRef.current) {
-      playbackAudioRef.current = new Audio(voiceNote.url);
-      playbackAudioRef.current.onended = () => setIsPlayingPreview(false);
+      const el = new Audio(voiceNote.url);
+      el.onended = () => setIsPlayingPreview(false);
+      // Anchored on the section root rather than a button: the composer's own
+      // preview outlives every row in the list, because an unsent draft keeps
+      // it alive across a tab switch.
+      unregisterPreviewRef.current = registerOffDocumentMedia(el, () => sectionRef.current);
+      playbackAudioRef.current = el;
     }
 
     if (isPlayingPreview) {

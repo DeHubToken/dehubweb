@@ -3,6 +3,7 @@ import { Download, Loader2, Pause, Play, Share } from 'lucide-react';
 import { decodeAudioWaveform } from '@/components/app/audio/visualizer-styles';
 import { formatTime } from '@/lib/audio-waveform';
 import { cn } from '@/lib/utils';
+import { registerOffDocumentMedia } from '@/lib/pause-media-in';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 
 interface GeneratedAudioPlayerProps {
@@ -14,6 +15,8 @@ const WAVEFORM_BAR_COUNT = 64;
 
 export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  /** The panel below — the only part of this player that is in the document. */
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -33,11 +36,17 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
     decodeAudioWaveform(audioUrl, WAVEFORM_BAR_COUNT, setWaveformPeaks);
   }, [audioUrl]);
 
+  // The element never enters the document — the waveform and its buttons are
+  // what go on screen. PersistentPageCache pauses a page's media by walking its
+  // subtree, so it could not see this one and a generated track played here
+  // carried on through every later navigation. The panel is what tells the
+  // cache whose page the sound belongs to.
   useEffect(() => {
     const audio = new Audio(audioUrl);
     audio.preload = 'auto';
     audio.crossOrigin = 'anonymous';
     audioRef.current = audio;
+    const unregisterMedia = registerOffDocumentMedia(audio, () => containerRef.current);
 
     const syncDuration = () => setDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
     const syncCurrentTime = () => setCurrentTime(audio.currentTime || 0);
@@ -53,6 +62,7 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
     audio.addEventListener('ended', handleEnded);
 
     return () => {
+      unregisterMedia();
       audio.pause();
       audio.removeEventListener('loadedmetadata', syncDuration);
       audio.removeEventListener('durationchange', syncDuration);
@@ -93,6 +103,7 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
 
   return (
     <div
+      ref={containerRef}
       className={cn(
         'w-full rounded-xl border border-white/10 bg-black/60 backdrop-blur-[24px] p-3',
         className,
