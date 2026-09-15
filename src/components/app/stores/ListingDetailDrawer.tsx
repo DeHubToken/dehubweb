@@ -27,6 +27,7 @@ import { dehubLinkFor } from '@/lib/dehub-links';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProductCheckout, type ProductQuote } from '@/hooks/use-product-checkout';
 import { useNavigate } from 'react-router-dom';
+import { openDmDock } from '@/hooks/use-dm-dock';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { ReviewSection } from './ReviewSection';
 
@@ -272,10 +273,9 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
                 {soldOut ? t('stores.soldOutButton') : buy.isPending ? t('stores.confirmingPayment') : t('stores.buyNow')}
               </Button>
             )}
-            {/* '/app/messages' has no child route — the peer is handed over in
-                navigation state, the same way every other "message this user"
-                entry point does it. A path segment here 404s. */}
-            <Button variant="outline" onClick={() => { onClose(); navigate('/app/messages', { state: { openDmWith: sellerAddress } }); }} className="flex-1">
+            {/* Docks the thread bottom-right instead of navigating — the buyer
+                keeps the listing they were reading open behind it. */}
+            <Button variant="outline" onClick={() => { onClose(); openDmDock({ address: sellerAddress }); }} className="flex-1">
               <MessageSquare className="w-4 h-4 mr-2" />
               {t('stores.messageSeller')}
             </Button>

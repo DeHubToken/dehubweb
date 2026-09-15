@@ -109,6 +109,10 @@ function notifyOpenConversationsChanged() {
   openConversationListeners.forEach(fn => { try { fn(); } catch { /* noop */ } });
 }
 
+export function isConversationOpen(conversationId: string | null | undefined): boolean {
+  return !!conversationId && openConversationIds.has(conversationId);
+}
+
 export function registerOpenConversation(conversationId: string | null | undefined): () => void {
   if (!conversationId) return () => {};
   openConversationIds.add(conversationId);
@@ -367,7 +371,10 @@ export function useMessages(conversationId: string | null) {
     // forward, so v5 would evict the NEWEST page — where incoming messages
     // land — when trimming.)
     refetchInterval: (q) => {
-      if (!isMessagesRouteActive) return false;
+      // Off the route the thread can still be on screen: the DM dock floats a
+      // conversation over whatever page the reader is on. Poll for a thread
+      // that is actually rendered, wherever it is rendered.
+      if (!isMessagesRouteActive && !isConversationOpen(conversationId)) return false;
       const pageCount = q.state.data?.pages?.length ?? 0;
       return pageCount > 4 ? 15_000 : 5000;
     },

@@ -40,6 +40,7 @@ import { toast } from 'sonner';
 import { DISPLAY_WALLET_OVERRIDES, getDefaultBanner, type TabValue } from './ProfileConstants';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { useNavigate } from 'react-router-dom';
+import { openDmDock } from '@/hooks/use-dm-dock';
 
 interface ProfileHeaderProps {
   profile: ProfileData;
@@ -150,8 +151,11 @@ export function ProfileHeader({
     }
     const address = apiProfile?.walletAddress ?? profile.walletAddress;
     if (!address) return;
-    navigate('/app/messages', {
-      state: { openDmWith: address, username: profile.handle },
+    openDmDock({
+      address,
+      username: profile.handle?.replace('@', ''),
+      displayName: profile.name,
+      avatarUrl: profile.avatarUrl,
     });
   };
   const [showUnfollowConfirm, setShowUnfollowConfirm] = useState(false);

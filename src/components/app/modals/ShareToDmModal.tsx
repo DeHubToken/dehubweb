@@ -18,7 +18,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
-import { useNavigate } from 'react-router-dom';
+import { openDmDock } from '@/hooks/use-dm-dock';
 import { Search, Send, Check, Loader2, X, Gem } from 'lucide-react';
 import { toast } from 'sonner';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -58,7 +58,6 @@ function perMessageFeeOf(user: DeHubUser | undefined): number {
 type RowStatus = 'idle' | 'sending' | 'sent';
 
 export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps) {
-  const navigate = useNavigate();
   const [caption, setCaption] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const search = useDebouncedValue(searchInput, 300);
@@ -115,9 +114,7 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
 
   /** Route fee-gated recipients into the chat where the payment flow lives. */
   const routeToChat = (address: string, username: string | undefined) => {
-    navigate('/app/messages', {
-      state: { openDmWith: address, username: username?.replace('@', ''), autoSendBody: buildContent() },
-    });
+    openDmDock({ address, username: username?.replace('@', ''), autoSendBody: buildContent() });
     onOpenChange(false);
   };
 

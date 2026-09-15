@@ -77,6 +77,7 @@ const AudioPostMiniPlayer = React.lazy(() =>
 );
 import { AudioSpacesModal } from '@/components/app/spaces/AudioSpacesModal';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
+import { DmDockMount } from '@/components/app/chat/DmDockMount';
 
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -475,6 +476,9 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       )}
       <AudioSpacesModal />
       <MinimizedAIChats />
+      {/* DMs opened from a profile, a listing or a share sheet dock here
+          instead of navigating the reader off the page. */}
+      <DmDockMount />
       
       {postModalMounted && (
         <Suspense fallback={null}>
