@@ -53,8 +53,10 @@ export const TOAST_CLASSES = [
  * enter, exit and swipe animations through and which would fight anything set
  * there.
  *
- * `max-w-full` is the old 356px, kept as a ceiling rather than a fixed size:
- * past it the text wraps exactly where it always did.
+ * `max-w-full` is the rail's width, kept as a ceiling rather than a fixed size:
+ * past it the text wraps. That rail is TOASTER_DESKTOP_WIDTH rather than
+ * sonner's own 356px, because at 356px a single-sentence toast wrapped onto a
+ * second line on a 1440px screen with most of the row still empty.
  *
  * Desktop only because sonner's own `max-width: 600px` block takes the toast
  * edge to edge with real specificity, which is already right on a phone.
@@ -82,6 +84,24 @@ export const TOAST_FIT_CLASSES = [
  * `translateX(-50%)` it pairs with still does the work of pulling the stack
  * back over that point.
  */
+/**
+ * Desktop only: how wide the toast is allowed to get before its text wraps.
+ *
+ * Sonner sizes both the toaster rail and every toast in it from `--width`, and
+ * defaults that to 356px. With TOAST_FIT_CLASSES shrinking each card to its own
+ * copy, that default stopped being a width and became a wrap point — a toast of
+ * one ordinary sentence broke onto two lines however much room the screen had.
+ *
+ * 30rem is the wider ceiling. It is a `min()` against the viewport so the rail
+ * can never be wider than the window on a small laptop or a half-width browser;
+ * below 600px sonner's own media query takes the rail edge to edge anyway, and
+ * mobile does not get this at all.
+ *
+ * Only the ceiling moves. Short toasts still shrink-wrap, so "Copied!" is
+ * unchanged.
+ */
+export const TOASTER_DESKTOP_WIDTH = 'min(30rem, calc(100vw - 2rem))';
+
 export const TOASTER_COLUMN_CLASSES =
   'data-[x-position=center]:left-[var(--app-main-center-x,50%)]';
 

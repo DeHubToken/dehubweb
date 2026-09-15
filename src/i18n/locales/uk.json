@@ -1546,6 +1546,7 @@
     "failed_to_send_tip": "Не вдалося надіслати чайові",
     "failed_to_create_post": "Не вдалося створити допис",
     "notification_settings_updated": "Налаштування сповіщень оновлено",
+    "reported_for_moderation": "Повідомлено про децентралізовану модерацію власниками значків",
     "failed_to_report": "Не вдалося поскаржитися",
     "crosschain_deposit_completed": "Крослацюговий депозит завершено!",
     "failed_to_submit_proposal": "Не вдалося надіслати пропозицію",

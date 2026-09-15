@@ -1641,6 +1641,7 @@
     "failed_to_create_post": "Не удалось создать пост",
     "notification_settings_updated": "Настройки уведомлений обновлены",
     "report_submitted": "Report submitted",
+    "reported_for_moderation": "Сообщено о децентрализованной модерации держателями значков",
     "failed_to_report": "Не удалось отправить жалобу",
     "crosschain_deposit_completed": "Кросс-чейн депозит завершён!",
     "proposal_submitted": "Proposal submitted!",

@@ -1555,6 +1555,7 @@
     "failed_to_send_tip": "Бакшишът не можа да бъде изпратен",
     "failed_to_create_post": "Публикацията не можа да бъде създадена",
     "notification_settings_updated": "Настройките за известия са актуализирани",
+    "reported_for_moderation": "Докладвано за децентрализирано модериране от притежателите на значки",
     "failed_to_report": "Докладването не бе успешно",
     "crosschain_deposit_completed": "Крос-чейн депозитът е завършен!",
     "failed_to_submit_proposal": "Предложението не можа да бъде изпратено",
