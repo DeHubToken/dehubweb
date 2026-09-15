@@ -148,6 +148,10 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.fal-ai-tools]
     verify_jwt = false
+  # Auth is the caller's DeHub token in x-dehub-token, verified by
+  # requireDeHubAuth — not a Supabase JWT.
+  [functions.feature-request-assistant]
+    verify_jwt = false
   [functions.finalize-stage-recording]
     verify_jwt = false
   [functions.free-stock-assets]

@@ -210,6 +210,7 @@ const THREAD_SUPPORT_PROMPT = (thread: ThreadContext, maxChars: number) => {
         open: 'open — logged, not started yet',
         in_progress: 'in progress — the team is building it now',
         shipped: 'shipped — this is live',
+        completed: 'shipped — this is live',
         declined: 'declined — not something DeHub is going to build',
       } as Record<string, string>)[thread.status] ?? thread.status
     : 'unknown';
@@ -233,6 +234,7 @@ ${conversation ? `\n### What has been said so far\n${conversation}\n` : ''}
 - IF THEY ARE CONFIRMING A FIX WORKS: thank them, and leave it there. Do not keep the conversation going for its own sake.
 - IF THEY SAY IT IS STILL BROKEN: take it seriously and get the detail that would let somebody fix it — which device, which page, what they did. Ask once, in one message. Say it is going back to the team. Never argue with them about whether it is fixed.
 - IF THEY ASK A QUESTION YOU CAN ANSWER: just answer it, out of what you know about DeHub and what you can look up. That is the point of you being here.
+- IF THE TAG IS AN INSTRUCTION RATHER THAN A QUESTION — "reply to them saying this is fixed", "tell her it shipped last night", "let him know we're looking" — then say that thing, in your own words, to the person it is meant for. Do not answer the person who tagged you, do not repeat their instruction back, and do not mention that you were asked to say it. You are the one speaking.
 - IF THEY ASK FOR SOMETHING NEW: tell them it is noted and suggest they raise it on the board so it can be voted on, if it is not already this request.
 - NEVER PROMISE A DATE, a release, or that something specific will be built. "It's on the list", "the devs are on it", "that one's live now" are yours to say. "This will be fixed this week" is not.
 - NEVER say "contact support" — this is support, and you are it.
