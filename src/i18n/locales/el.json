@@ -1530,6 +1530,7 @@
     "failed_to_send_tip": "Αποτυχία αποστολής φιλοδωρήματος",
     "failed_to_create_post": "Αποτυχία δημιουργίας ανάρτησης",
     "notification_settings_updated": "Οι ρυθμίσεις ειδοποιήσεων ενημερώθηκαν",
+    "reported_for_moderation": "Αναφέρεται για αποκεντρωμένη εποπτεία από κατόχους διακριτικού σήματος",
     "failed_to_report": "Αποτυχία αναφοράς",
     "crosschain_deposit_completed": "Η κατάθεση cross-chain ολοκληρώθηκε!",
     "failed_to_submit_proposal": "Αποτυχία υποβολής πρότασης",

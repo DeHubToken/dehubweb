@@ -1698,6 +1698,7 @@
     "failed_to_create_post": "Échec de la création du post",
     "notification_settings_updated": "Paramètres de notification mis à jour",
     "report_submitted": "Signalement envoyé",
+    "reported_for_moderation": "Signalé pour modération décentralisée par les détenteurs de badges",
     "failed_to_report": "Échec du signalement",
     "crosschain_deposit_completed": "Dépôt cross-chain terminé !",
     "proposal_submitted": "Proposition soumise !",
