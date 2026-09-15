@@ -3917,6 +3917,7 @@
     "screenShareCancelled": "Ang screen sharing ay kinansela.",
     "shopItemsNotAttached_one": "{{count}} shop item could not be attached — idagdag ito mula sa shop panel.",
     "shopItemsNotAttached_other": "{{count}} shop items could not be attached — idagdag ang mga ito mula sa shop panel.",
+    "publishing": "Pag - publish sa desentralisadong database...",
     "youAreGoingLive": "Live ka na!",
     "streamIsReady": "Handa na ang live stream!",
     "web3AuthSlow": "Ang Web3Auth service ay mabagal o nag-time out. Mangyaring suriin ang iyong internet o subukan ang pag-refresh.",

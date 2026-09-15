@@ -2086,6 +2086,9 @@
   "work": {
     "budgetExhausted": "Nafolo nin ka wari bɛɛ dilala ka ban."
   },
+  "stages": {
+    "title": "Fangaw"
+  },
   "videoLooks": {
     "button": "Kamera cogoya",
     "title": "Cogoya",
@@ -2105,6 +2108,40 @@
     "neon": "Neon",
     "blur": "Dibi",
     "pixelate": "Piksɛli"
+  },
+  "goLive": {
+    "goLive": "Go Live",
+    "youAreLive": "You're Live",
+    "streamReady": "Stream Ready",
+    "sourceCamera": "Camera",
+    "sourceScreen": "Screen",
+    "sourceEncoder": "OBS / Encoder",
+    "sourceEncoderHint": "Get RTMP details",
+    "streamTitle": "Stream Title *",
+    "description": "Description",
+    "coverImage": "Cover image",
+    "remove": "Remove",
+    "optional": "Optional",
+    "addCover": "Add a cover",
+    "streamIsReady": "Live stream don ye!",
+    "web3AuthSlow": "Web3Auth service in ye slow walima o timeout ye. Internet ni check walima refresh ye.",
+    "signingFailed": "Blockchain signing failed ye. Wallet ni check walima page refresh ye.",
+    "createStreamFailed": "Stream create fail ye",
+    "copied": "Clipboard la copy ye",
+    "copyFailed": "Copy fail ye",
+    "streamKey": "Stream Key",
+    "ingestUrl": "Ingest URL",
+    "quickSetupGuide": "Quick Setup Guide:",
+    "obsStep1": "OBS open → Settings → Stream",
+    "obsStep2": "\"Custom\" Service select ye",
+    "obsStep3": "Ingest URL & Stream Key paste ye",
+    "obsStep4": "\"Start Streaming\" click ye",
+    "endStream": "Stream End ye",
+    "viewStream": "Stream View ye",
+    "broadcasterFailed": "Broadcaster load fail ye, hali kuma capture ye - kono stream already create ye. End ye below, page refresh ye walima live ye.",
+    "endStreamConfirmTitle": "Stream end ye sure o?",
+    "endStreamConfirmBody": "Broadcast stop ye everyone la watch ye walima resume ye kan.",
+    "keepStreaming": "Streaming keep ye"
   },
   "creatorFlow": {
     "title": "Creator Flow",

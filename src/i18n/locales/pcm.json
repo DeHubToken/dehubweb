@@ -1941,6 +1941,9 @@
   "work": {
     "budgetExhausted": "Dis bounty money don finish patch."
   },
+  "stages": {
+    "title": "Stages"
+  },
   "videoLooks": {
     "button": "Camera looks",
     "title": "Look",
@@ -1960,6 +1963,33 @@
     "neon": "Neon",
     "blur": "Blur",
     "pixelate": "Pixelate"
+  },
+  "goLive": {
+    "goLive": "Go Live",
+    "youAreLive": "You're Live",
+    "streamReady": "Stream Ready",
+    "sourceCamera": "Camera",
+    "sourceScreen": "Screen",
+    "sourceEncoder": "OBS / Encoder",
+    "sourceEncoderHint": "Get RTMP details",
+    "streamTitle": "Stream Title *",
+    "description": "Description",
+    "coverImage": "Cover image",
+    "remove": "Remove",
+    "optional": "Optional",
+    "addCover": "Add a cover",
+    "copied": "Copied to clipboard",
+    "copyFailed": "Failed to copy",
+    "streamKey": "Stream Key",
+    "ingestUrl": "Ingest URL",
+    "quickSetupGuide": "Quick Setup Guide:",
+    "obsStep1": "Open OBS → Settings → Stream",
+    "obsStep2": "Select \"Custom\" Service",
+    "obsStep3": "Paste Ingest URL & Stream Key",
+    "obsStep4": "Click \"Start Streaming\"",
+    "endStream": "End Stream",
+    "viewStream": "View Stream",
+    "keepStreaming": "Keep streaming"
   },
   "creatorFlow": {
     "title": "Creator Flow",
