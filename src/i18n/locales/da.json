@@ -4758,7 +4758,16 @@
     "kindVideo": "Video",
     "kindAudio": "Lyd",
     "kindImage": "Billeder",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Gennemgå før opslag",
+    "reviewSubtitle": "Fra {{source}}, som {{kind}}. Rediger alt, hvad du vil — lad titlen være tom for at beholde originalen.",
+    "reviewName": "Titel",
+    "reviewNamePlaceholder": "Lad være tomt for at beholde den oprindelige titel",
+    "reviewDescription": "Beskrivelse",
+    "reviewDescriptionPlaceholder": "Sig noget om dette opslag (valgfrit)",
+    "reviewLiveWarning": "Linket er en livestream. Vent, indtil den slutter, og importer optagelsen i stedet.",
+    "reviewCancel": "Annuller",
+    "reviewConfirm": "Importer"
   },
   "banned": {
     "title": "Din konto er spærret",
@@ -4766,5 +4775,16 @@
     "line": "Din konto er spærret, så du kan ikke skrive, kommentere eller sende beskeder.",
     "reason": "Årsag:{{reason}}",
     "deleteAccount": "Slet din konto og dine data"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@dig, tiktok.com/@dig, vimeo.com/you...",
+    "watchOnSource": "Åbn originalen",
+    "editThis": "Rediger titel og beskrivelse",
+    "editTitle": "Titel",
+    "editDescription": "Beskrivelse",
+    "editDescriptionPlaceholder": "Beskrivelse (valgfrit)",
+    "editDone": "Færdig",
+    "edited": "Redigeret",
+    "subtitle": "Indsæt en kanal eller profil, rediger, hvad du vil, betal én gang."
   }
 }

@@ -4644,7 +4644,16 @@
     "kindVideo": "వీడియో",
     "kindAudio": "ఆడియో",
     "kindImage": "నొక్కుQShortcut",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "పోస్ట్ చేయడానికి ముందు సమీక్షించండి",
+    "reviewSubtitle": "{{source}}, {{kind}} నుండి. మీకు నచ్చినదాన్ని సవరించండి — ఒరిజినల్ ‌ ను ఉంచడానికి టైటిల్ ‌ ను ఖాళీగా ఉంచండి.",
+    "reviewName": "శీర్షిక",
+    "reviewNamePlaceholder": "అసలు శీర్షికను ఉంచడానికి ఖాళీగా ఉంచండి",
+    "reviewDescription": "వివరణ",
+    "reviewDescriptionPlaceholder": "ఈ పోస్ట్ గురించి ఏదైనా చెప్పండి (ఐచ్ఛికం)",
+    "reviewLiveWarning": "ఆ లింక్ ఒక ప్రత్యక్ష ప్రసారం. అది ముగిసే వరకు వేచి ఉండి, బదులుగా రికార్డింగ్ ‌ ను ఇంపోర్ట్ చేయండి.",
+    "reviewCancel": "రద్దు చేయండి",
+    "reviewConfirm": "దిగుమతి చేయండి"
   },
   "banned": {
     "title": "మీ ఖాతాను నిషేధించారు",
@@ -4652,5 +4661,16 @@
     "line": "మీ ఖాతా నిషేధించబడింది, కాబట్టి మీరు పోస్ట్ చేయలేరు, వ్యాఖ్యానించలేరు లేదా సందేశాలను పంపలేరు.",
     "reason": "కారణం: {{reason}}",
     "deleteAccount": "మీ ఖాతా మరియు డేటాను తొలగించండి"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "ఒరిజినల్ ‌ ని తెరవండి",
+    "editThis": "శీర్షిక మరియు వివరణను సవరించండి",
+    "editTitle": "శీర్షిక",
+    "editDescription": "వివరణ",
+    "editDescriptionPlaceholder": "వివరణ (ఐచ్ఛికం)",
+    "editDone": "పూర్తయింది",
+    "edited": "సవరించబడింది",
+    "subtitle": "ఛానెల్ లేదా ప్రొఫైల్ ‌ ను అతికించండి, మీకు నచ్చిన వాటిని సవరించండి, ఒకసారి చెల్లించండి."
   }
 }

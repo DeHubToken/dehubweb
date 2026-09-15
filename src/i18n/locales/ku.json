@@ -2227,6 +2227,26 @@
     "kindVideo": "Dîmen",
     "kindAudio": "Deng",
     "kindImage": "Wêne",
-    "tileSourceKind": "{{çavkanî}} · {{cure}}"
+    "tileSourceKind": "{{çavkanî}} · {{cure}}",
+    "reviewName": "سەردێڕ",
+    "reviewTitle": "Berî şandinê binirxîne",
+    "reviewSubtitle": "Ji {{source}}, wek {{kind}}. Her tiştê ku hûn dixwazin biguherînin - sernavê vala bihêlin da ku orîjînal bimîne.",
+    "reviewNamePlaceholder": "Ji bo parastina sernavê orîjînal, vala bihêlin",
+    "reviewDescription": "Daxuyanî",
+    "reviewDescriptionPlaceholder": "Tiştekî li ser vê postê bêje (vebijarkî)",
+    "reviewLiveWarning": "Ew lînk weşana zindî ye. Li bendê bin heta ku biqede û li şûna wê tomarê import bikin.",
+    "reviewCancel": "Betal bike",
+    "reviewConfirm": "Anîn"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "ResenName",
+    "editThis": "Sernav û danasînê biguherîne",
+    "editTitle": "سەردێڕ",
+    "editDescription": "Daxuyanî",
+    "editDescriptionPlaceholder": "Danasîn (vebijarkî)",
+    "editDone": "Biqedîne",
+    "edited": "Guherandin",
+    "subtitle": "Kanalek an profîlek bipêçe, tiştê ku hûn jê hez dikin biguherîne, carekê bide."
   }
 }

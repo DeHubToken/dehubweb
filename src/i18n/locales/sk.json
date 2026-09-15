@@ -2605,7 +2605,16 @@
     "kindVideo": "Obraz",
     "kindAudio": "Zvuk",
     "kindImage": "Obrázky",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Skontrolovať pred zverejnením",
+    "reviewSubtitle": "Od {{source}}, ako {{kind}}. Upravte všetko, čo sa vám páči — ak chcete zachovať originál, ponechajte názov prázdny.",
+    "reviewName": "Názov",
+    "reviewNamePlaceholder": "Ak chcete ponechať pôvodný názov, ponechajte ho prázdny",
+    "reviewDescription": "Popis",
+    "reviewDescriptionPlaceholder": "Povedzte niečo o tomto príspevku (nepovinné)",
+    "reviewLiveWarning": "Tento odkaz je živý prenos. Počkajte, kým sa to neskončí, a namiesto toho importujte záznam.",
+    "reviewCancel": "Zrušiť",
+    "reviewConfirm": "Import"
   },
   "banned": {
     "title": "Váš účet je zablokovaný",
@@ -2613,6 +2622,17 @@
     "line": "Váš účet je zablokovaný, takže nemôžete uverejňovať, komentovať ani odosielať správy.",
     "reason": "Dôvod: {{reason}}",
     "deleteAccount": "Odstráňte svoj účet a údaje"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@vy, tiktok.com/@vy, vimeo.com/you...",
+    "watchOnSource": "Otvoriť originál",
+    "editThis": "Upraviť názov a popis",
+    "editTitle": "Názov",
+    "editDescription": "Popis",
+    "editDescriptionPlaceholder": "Popis (nepovinné)",
+    "editDone": "Hotovo",
+    "edited": "Upravené",
+    "subtitle": "Prilepte kanál alebo profil, upravte, čo sa vám páči, a zaplaťte raz."
   },
   "post": {
     "like": "Páči sa mi",

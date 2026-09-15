@@ -4866,7 +4866,16 @@
     "kindVideo": "Video",
     "kindAudio": "Audio",
     "kindImage": "Pictures",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Review before posting",
+    "reviewSubtitle": "From {{source}}, as {{kind}}. Edit anything you like — leave the title empty to keep the original.",
+    "reviewName": "Title",
+    "reviewNamePlaceholder": "Leave empty to keep the original title",
+    "reviewDescription": "Description",
+    "reviewDescriptionPlaceholder": "Say something about this post (optional)",
+    "reviewLiveWarning": "That link is a live stream. Wait until it ends and import the recording instead.",
+    "reviewCancel": "Cancel",
+    "reviewConfirm": "Import"
   },
   "banned": {
     "title": "Your account is banned",
@@ -4874,5 +4883,16 @@
     "line": "Your account is banned, so you cannot post, comment or send messages.",
     "reason": "Reason: {{reason}}",
     "deleteAccount": "Delete your account and data"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Open the original",
+    "editThis": "Edit title and description",
+    "editTitle": "Title",
+    "editDescription": "Description",
+    "editDescriptionPlaceholder": "Description (optional)",
+    "editDone": "Done",
+    "edited": "Edited",
+    "subtitle": "Paste a channel or profile, edit what you like, pay once."
   }
 }

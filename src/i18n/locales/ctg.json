@@ -2454,7 +2454,16 @@
     "kindVideo": "ভিডিও",
     "kindAudio": "Audio",
     "kindImage": "ছবি",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "পোস্ট করার আগে রিভিউ করুন",
+    "reviewSubtitle": "{{source}} থেকে, {{kind}} হিসেবে। যেকোনো কিছু এডিট করুন — শিরোনাম খালি রাখুন মূল শিরোনাম রাখতে।",
+    "reviewName": "শিরোনাম",
+    "reviewNamePlaceholder": "মূল শিরোনাম রাখতে খালি রাখুন",
+    "reviewDescription": "বর্ণনা",
+    "reviewDescriptionPlaceholder": "এই পোস্ট সম্পর্কে কিছু বলুন (ঐচ্ছিক)",
+    "reviewLiveWarning": "সেই লিংকটা লাইভ স্ট্রিম। এটা শেষ না হওয়া পর্যন্ত অপেক্ষা করুন এবং তারপর রেকর্ডিং ইম্পোর্ট করুন।",
+    "reviewCancel": "বাতিল",
+    "reviewConfirm": "ইম্পোর্ট"
   },
   "banned": {
     "title": "আপনার অ্যাকাউন্ট ব্যান করা হইছে",
@@ -2462,6 +2471,17 @@
     "line": "আপনার অ্যাকাউন্ট ব্যান করা হইছে, তাই আপনি পোস্ট করতে পারবেন না, কমেন্ট করতে পারবেন না বা মেসেজ পাঠাতে পারবেন না।",
     "reason": "কারণ: {{reason}}",
     "deleteAccount": "আপনার অ্যাকাউন্ট আর ডেটা ডিলিট করুন"
+  },
+  "migrate": {
+    "watchOnSource": "মূল খুলো",
+    "editThis": "শিরোনাম এবং বর্ণনা সম্পাদনা করো",
+    "editTitle": "শিরোনাম",
+    "editDescription": "বর্ণনা",
+    "editDescriptionPlaceholder": "বর্ণনা (ঐচ্ছিক)",
+    "editDone": "সম্পন্ন",
+    "edited": "সম্পাদিত",
+    "subtitle": "একটি চ্যানেল বা প্রোফাইল পেস্ট করো, যা পছন্দ করো তা সম্পাদনা করো, একবার অর্থ প্রদান করো।",
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…"
   },
   "post": {
     "like": "পছন্দ",

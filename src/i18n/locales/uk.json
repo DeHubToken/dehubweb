@@ -4564,7 +4564,16 @@
     "kindVideo": "Відео",
     "kindAudio": "Аудіо",
     "kindImage": "Картини",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Переглянути перед публікацією",
+    "reviewSubtitle": "Від {{source}}, як {{kind}}. Редагуйте все, що вам подобається — залиште заголовок порожнім, щоб зберегти оригінал.",
+    "reviewName": "Заголовок",
+    "reviewNamePlaceholder": "Залиште порожнім, щоб зберегти оригінальну назву",
+    "reviewDescription": "Опис",
+    "reviewDescriptionPlaceholder": "Скажіть щось про цей допис (необов 'язково)",
+    "reviewLiveWarning": "Це посилання - пряма трансляція. Зачекайте, поки він закінчиться, і натомість імпортуйте запис.",
+    "reviewCancel": "Скасувати",
+    "reviewConfirm": "Імпортувати"
   },
   "banned": {
     "title": "Ваш акаунт заблоковано",
@@ -4572,6 +4581,17 @@
     "line": "Ваш обліковий запис заблоковано, тому ви не можете публікувати, коментувати або надсилати повідомлення.",
     "reason": "Причина: {{reason}}",
     "deleteAccount": "Видалення акаунта та даних"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@ви, tiktok.com/@ви, vimeo.com/you…",
+    "watchOnSource": "Відкрити оригінал",
+    "editThis": "Редагувати назву та опис",
+    "editTitle": "Назва",
+    "editDescription": "Опис",
+    "editDescriptionPlaceholder": "Опис (необов 'язково)",
+    "editDone": "Готово",
+    "edited": "Відредаговано",
+    "subtitle": "Вставте канал або профіль, змініть те, що вам подобається, сплатіть один раз."
   },
   "pages": {
     "home": {

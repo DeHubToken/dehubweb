@@ -4847,7 +4847,16 @@
     "kindVideo": "Video",
     "kindAudio": "Audio",
     "kindImage": "Bilder",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Vor dem Posten überprüfen",
+    "reviewSubtitle": "Von {{source}}, als {{kind}}. Bearbeiten Sie alles, was Sie möchten — lassen Sie den Titel leer, um das Original zu behalten.",
+    "reviewName": "Titel",
+    "reviewNamePlaceholder": "Leer lassen, um den Originaltitel beizubehalten",
+    "reviewDescription": "Beschreibung",
+    "reviewDescriptionPlaceholder": "Sagen Sie etwas über diesen Beitrag (optional)",
+    "reviewLiveWarning": "Dieser Link ist ein Live-Stream. Warten Sie, bis es endet, und importieren Sie stattdessen die Aufnahme.",
+    "reviewCancel": "Abbrechen",
+    "reviewConfirm": "Import"
   },
   "banned": {
     "title": "Dein Konto ist gesperrt",
@@ -4855,5 +4864,16 @@
     "line": "Ihr Konto ist gesperrt, sodass Sie keine Nachrichten posten, kommentieren oder senden können.",
     "reason": "Grund: {{reason}}",
     "deleteAccount": "Löschen Sie Ihr Konto und Ihre Daten"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Öffnen Sie das Original",
+    "editThis": "Titel und Beschreibung bearbeiten",
+    "editTitle": "Titel",
+    "editDescription": "Beschreibung",
+    "editDescriptionPlaceholder": "Beschreibung (optional)",
+    "editDone": "Fertig",
+    "edited": "Bearbeitet",
+    "subtitle": "Fügen Sie einen Kanal oder ein Profil ein, bearbeiten Sie, was Ihnen gefällt, und zahlen Sie einmal."
   }
 }

@@ -2427,7 +2427,16 @@
     "kindVideo": "ቪድዮ",
     "kindAudio": "ድምፂ",
     "kindImage": "ስእልታት",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "ቅድሚ ምእታዉ ገምግም",
+    "reviewName": "ኣርእስቲ",
+    "reviewNamePlaceholder": "ነቲ ናይ መጀመርታ ኣርእስቲ ንምሕላው ባዶ ግበር",
+    "reviewDescription": "መግለጺ",
+    "reviewDescriptionPlaceholder": "ብዛዕባ እዚ ጽሑፍ እዚ ገለ ነገር ንገሮ (ምምራጽ)",
+    "reviewLiveWarning": "እዚ ርክብ እዚ ህያው ፍሰት እዩ ። ክሳዕ ዚዛዘም ተጸበዩ ፡ ኣብ ክንዳኡስ ፡ ነቲ መዝገብ ኣምጽኡ ።",
+    "reviewCancel": "ሰርዝ",
+    "reviewConfirm": "ኣምጽእ",
+    "reviewSubtitle": "ካብ {{source}} ፡ ከም {{kind}}} ። ነቲ ኦሪጅናል ንምዕቃብ ፡ ነቲ ኣርእስቲ ባዶ ግበር ።"
   },
   "banned": {
     "title": "ሕሳብካ ክልኩል እዩ",
@@ -2435,5 +2444,16 @@
     "line": "መለያኻ ክልኩል እዩ ፣ ስለዚ መልእኽቲ ክትልእኽ ፣ ክትገልጽ ወይ ክትልእኽ ኣይትኽእልን ኢኻ ።",
     "reason": "ምኽንያት ፦ {{reason}}",
     "deleteAccount": "መለያኻን ዳታኻን ሰርዝ"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you...",
+    "watchOnSource": "ነቲ ኦሪጅናል ክፉት",
+    "editThis": "ኣርእስቲን መግለጺን ኣርትዕ",
+    "editTitle": "ኣርእስቲ",
+    "editDescription": "መግለጺ",
+    "editDescriptionPlaceholder": "መግለጺ (ምምራጽ)",
+    "editDone": "ተፈጺሙ",
+    "edited": "እተዳለወ",
+    "subtitle": "ቻነል ወይ መገለጺ ጠውቑ ፡ ዝደለኻዮ ኣርትዕ ፡ ሓደ ግዜ ይኽፈል ።"
   }
 }

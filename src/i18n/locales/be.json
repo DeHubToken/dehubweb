@@ -4622,7 +4622,16 @@
     "kindVideo": "Відэа",
     "kindAudio": "Аудыа",
     "kindImage": "Малюнкі",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Перагледзець перад публікацыяй",
+    "reviewSubtitle": "Ад {{source}}, як {{kind}}. Рэдагаваць усё, што вам падабаецца — пакіньце назву пустой, каб захаваць арыгінал.",
+    "reviewName": "Назва",
+    "reviewNamePlaceholder": "Пакінуць пустым, каб захаваць першапачатковы загаловак",
+    "reviewDescription": "Апісанне",
+    "reviewDescriptionPlaceholder": "Скажыце што-небудзь пра гэты пост (неабавязкова)",
+    "reviewLiveWarning": "Гэтая спасылка з 'яўляецца жывым патокам. Пачакайце, пакуль ён скончыцца, і замест гэтага імпартуйце запіс.",
+    "reviewCancel": "Скасаваць",
+    "reviewConfirm": "Імпартаваць"
   },
   "banned": {
     "title": "Ваш уліковы запіс забаронены",
@@ -4630,6 +4639,17 @@
     "line": "Ваш уліковы запіс забаронены, таму вы не можаце размяшчаць, каментаваць або адпраўляць паведамленні.",
     "reason": "Прычына: {{reason}}",
     "deleteAccount": "Выдаліць уліковы запіс і дадзеныя"
+  },
+  "migrate": {
+    "watchOnSource": "Адкрыць арыгінал",
+    "editThis": "Рэдагаваць загаловак і апісанне",
+    "editTitle": "Назва",
+    "editDescription": "Апісанне",
+    "editDescriptionPlaceholder": "Апісанне (неабавязкова)",
+    "editDone": "Гатова",
+    "edited": "Адрэдагавана",
+    "subtitle": "Устаўце канал або профіль, рэдагуйце тое, што вам падабаецца, плаціце адзін раз.",
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…"
   },
   "spaces": {
     "title": "Прасторы",

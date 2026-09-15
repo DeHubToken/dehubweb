@@ -4860,7 +4860,16 @@
     "kindVideo": "Vidéo",
     "kindAudio": "Audio",
     "kindImage": "Images",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Vérifier avant de publier",
+    "reviewSubtitle": "De {{source}}, comme {{kind}}. Modifiez ce que vous voulez — laissez le titre vide pour conserver l'original.",
+    "reviewName": "Titre",
+    "reviewNamePlaceholder": "Laissez vide pour conserver le titre original",
+    "reviewDescription": "Description",
+    "reviewDescriptionPlaceholder": "Dites quelque chose à propos de cet article (facultatif)",
+    "reviewLiveWarning": "Ce lien est un flux en direct. Attendez qu'il se termine et importez l'enregistrement à la place.",
+    "reviewCancel": "Annuler",
+    "reviewConfirm": "Importer"
   },
   "banned": {
     "title": "Votre compte est banni",
@@ -4868,5 +4877,16 @@
     "line": "Votre compte est banni, vous ne pouvez donc pas publier, commenter ou envoyer de messages.",
     "reason": "Motif : {{reason}}",
     "deleteAccount": "Supprimer votre compte et vos données"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@vous, tiktok.com/@vous, vimeo.com/you…",
+    "watchOnSource": "Ouvrez l'original",
+    "editThis": "Modifier le titre et la description",
+    "editTitle": "Titre",
+    "editDescription": "Description",
+    "editDescriptionPlaceholder": "Description (facultatif)",
+    "editDone": "Terminé",
+    "edited": "Modifié",
+    "subtitle": "Collez une chaîne ou un profil, modifiez ce que vous aimez, payez une fois."
   }
 }

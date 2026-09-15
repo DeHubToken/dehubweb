@@ -2415,7 +2415,16 @@
     "kindVideo": "Video",
     "kindAudio": "صوت",
     "kindImage": "صور",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "اتفرج قبل ما تنشر",
+    "reviewSubtitle": "من {{source}}، بصفتك {{kind}}. عدّل اللي انت عايزه — اترك العنوان فاضي عشان تحافظ على العنوان الأصلي.",
+    "reviewName": "العنوان",
+    "reviewNamePlaceholder": "اترك فاضي عشان تحافظ على العنوان الأصلي",
+    "reviewDescription": "الوصف",
+    "reviewDescriptionPlaceholder": "قول حاجة عن البوست دا (اختياري)",
+    "reviewLiveWarning": "الرابط دا بث مباشر. استنى لما ينتهي وبعدين استورد التسجيل بدل كدا.",
+    "reviewCancel": "إلغاء",
+    "reviewConfirm": "استورد"
   },
   "banned": {
     "title": "الحساب بتاعك محظور",
@@ -2423,6 +2432,17 @@
     "line": "الحساب بتاعك محظور، فانت ما تقدرش تنشر، تعلق أو تبعت رسايل.",
     "reason": "السبب: {{reason}}",
     "deleteAccount": "احذف الحساب والبيانات بتاعك"
+  },
+  "migrate": {
+    "watchOnSource": "افتح الأصلي",
+    "editThis": "عدّل العنوان والوصف",
+    "editTitle": "العنوان",
+    "editDescription": "الوصف",
+    "editDescriptionPlaceholder": "الوصف (اختياري)",
+    "editDone": "خلصنا",
+    "edited": "اتعدّل",
+    "subtitle": "الصق قناة أو بروفايل، عدّل اللي تحبه، ادفع مرة واحدة.",
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…"
   },
   "post": {
     "like": "إعجاب",

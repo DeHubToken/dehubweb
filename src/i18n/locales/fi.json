@@ -4728,7 +4728,16 @@
     "kindVideo": "Video",
     "kindAudio": "Ääni",
     "kindImage": "Kuvat",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Tarkista ennen julkaisemista",
+    "reviewSubtitle": "Alkaen {{source}}, nimellä {{kind}}. Muokkaa mitä haluat — jätä otsikko tyhjäksi, jotta alkuperäinen säilyy.",
+    "reviewName": "Otsikko",
+    "reviewNamePlaceholder": "Jätä tyhjäksi säilyttääksesi alkuperäisen otsikon",
+    "reviewDescription": "Kuvaus",
+    "reviewDescriptionPlaceholder": "Sano jotain tästä julkaisusta (valinnainen)",
+    "reviewLiveWarning": "Tämä linkki on live-suoratoisto. Odota, kunnes se päättyy, ja tuo sen sijaan tallenne.",
+    "reviewCancel": "Peruuta",
+    "reviewConfirm": "Tuo"
   },
   "banned": {
     "title": "Tilisi on estetty",
@@ -4736,5 +4745,16 @@
     "line": "Tilisi on estetty, joten et voi julkaista, kommentoida tai lähettää viestejä.",
     "reason": "Syy: {{reason}}",
     "deleteAccount": "Poista tilisi ja tietosi"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Avaa alkuperäinen",
+    "editThis": "Muokkaa otsikkoa ja kuvausta",
+    "editTitle": "Otsikko",
+    "editDescription": "Kuvaus",
+    "editDescriptionPlaceholder": "Kuvaus (valinnainen)",
+    "editDone": "Valmis",
+    "edited": "Muokattu",
+    "subtitle": "Liitä kanava tai profiili, muokkaa haluamaasi ja maksa kerran."
   }
 }

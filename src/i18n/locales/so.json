@@ -2473,7 +2473,16 @@
     "kindVideo": "Waso",
     "kindAudio": "Cod",
     "kindImage": "Sawiro",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Dib u eeg ka hor inta aan la dhajin",
+    "reviewSubtitle": "Laga soo bilaabo {{source}}, sida {{kind}}. Wax kasta oo aad jeceshahay hagaaji — ka tag cinwaanka madhan si aad u ilaaliso asalka.",
+    "reviewName": "Cinwaanka",
+    "reviewNamePlaceholder": "Ka tag madhan si aad u ilaaliso cinwaanka asalka ah",
+    "reviewDescription": "Sharaxaad",
+    "reviewDescriptionPlaceholder": "Wax ka sheeg qoraalkan (optional)",
+    "reviewLiveWarning": "Xidhiidhkaas waa durdur nool. Sug ilaa ay dhammaato oo soo dejiso duubista halkii.",
+    "reviewCancel": "Jooji",
+    "reviewConfirm": "Soo dejiso"
   },
   "banned": {
     "title": "Koontadaada waa la mamnuucay",
@@ -2481,5 +2490,16 @@
     "line": "Koontadaada waa la mamnuucay, sidaa darteed ma dhajin kartid, faallo ama farriin ma diri kartid.",
     "reason": "Sababta: {{reason}}",
     "deleteAccount": "Tirtir koontadaada iyo xogtaada"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Fur asalka asalka ah",
+    "editThis": "Tafatirka cinwaanka iyo sharraxaadda",
+    "editTitle": "Cinwaanka",
+    "editDescription": "Sharaxaad",
+    "editDescriptionPlaceholder": "Sharaxaad (ikhtiyaar)",
+    "editDone": "Waxaa la sameeyay",
+    "edited": "Wax laga bedelay",
+    "subtitle": "Ku dheji kanaal ama astaan, wax ka beddel waxa aad jeceshahay, bixin hal mar."
   }
 }

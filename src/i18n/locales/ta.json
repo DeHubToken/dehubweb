@@ -4402,7 +4402,16 @@
     "kindVideo": "வீடியோ",
     "kindAudio": "Audio",
     "kindImage": "படங்கள்",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "இடுகையிடுவதற்கு முன் மதிப்பாய்வு செய்யவும்",
+    "reviewSubtitle": "{{source}}, {{kind}}. நீங்கள் விரும்பும் எதையும் திருத்தவும் — அசலை வைத்திருக்க தலைப்பை காலியாக விடவும்.",
+    "reviewName": "தலைப்பு",
+    "reviewNamePlaceholder": "அசல் தலைப்பை வைத்திருக்க காலியாக விடவும்",
+    "reviewDescription": "விளக்கம்",
+    "reviewDescriptionPlaceholder": "இந்த இடுகையைப் பற்றி ஏதாவது கூறுங்கள் (விரும்பினால்)",
+    "reviewLiveWarning": "அந்த இணைப்பு ஒரு நேரடி ஸ்ட்ரீம். அது முடியும் வரை காத்திருந்து பதிவை இறக்குமதி செய்யவும்.",
+    "reviewCancel": "ரத்துசெய்",
+    "reviewConfirm": "இறக்குமதி"
   },
   "banned": {
     "title": "உங்கள் கணக்கு தடைசெய்யப்பட்டுள்ளது",
@@ -4410,5 +4419,16 @@
     "line": "உங்கள் கணக்கு தடைசெய்யப்பட்டுள்ளது, எனவே நீங்கள் இடுகையிடவோ, கருத்து தெரிவிக்கவோ அல்லது செய்திகளை அனுப்பவோ முடியாது.",
     "reason": "காரணம்: {{reason}}",
     "deleteAccount": "உங்கள் கணக்கு மற்றும் தரவை நீக்கவும்"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "அசலைத் திறக்கவும்",
+    "editThis": "தலைப்பு மற்றும் விளக்கத்தைத் திருத்தவும்",
+    "editTitle": "தலைப்பு",
+    "editDescription": "விளக்கம்",
+    "editDescriptionPlaceholder": "விளக்கம் (விரும்பினால்)",
+    "editDone": "முடிந்தது",
+    "edited": "திருத்தப்பட்டது",
+    "subtitle": "சேனல் அல்லது சுயவிவரத்தை ஒட்டவும், நீங்கள் விரும்புவதைத் திருத்தவும், ஒரு முறை செலுத்தவும்."
   }
 }

@@ -4615,7 +4615,16 @@
     "kindVideo": "Video",
     "kindAudio": "Audio",
     "kindImage": "Imagini",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Verifică înainte de a posta",
+    "reviewSubtitle": "De la {{source}}, ca {{kind}}. Editați tot ce vă place — lăsați titlul gol pentru a păstra originalul.",
+    "reviewName": "Titlu",
+    "reviewNamePlaceholder": "Lăsați necompletat pentru a păstra titlul original",
+    "reviewDescription": "Descriere",
+    "reviewDescriptionPlaceholder": "Spune ceva despre această postare (opțional)",
+    "reviewLiveWarning": "Acel link este un flux live. Așteptați până se termină și importați înregistrarea în schimb.",
+    "reviewCancel": "Anulează",
+    "reviewConfirm": "Import"
   },
   "banned": {
     "title": "Contul tău este interzis",
@@ -4623,6 +4632,17 @@
     "line": "Contul tău este interzis, deci nu poți posta, comenta sau trimite mesaje.",
     "reason": "Motiv: {{reason}}",
     "deleteAccount": "Ștergeți contul și datele"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Deschide originalul",
+    "editThis": "Editează titlul și descrierea",
+    "editTitle": "Titlu",
+    "editDescription": "Descriere",
+    "editDescriptionPlaceholder": "Descriere (opțional)",
+    "editDone": "Gata",
+    "edited": "Editat",
+    "subtitle": "Inserați un canal sau un profil, editați ceea ce vă place, plătiți o singură dată."
   },
   "footer": {
     "about": "Despre noi",

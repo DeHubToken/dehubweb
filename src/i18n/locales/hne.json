@@ -2418,7 +2418,16 @@
     "kindVideo": "वीडियो",
     "kindAudio": "आडियो",
     "kindImage": "फोटू",
-    "tileSourceKind": "{{Portal: अक्सिटानिया}}"
+    "tileSourceKind": "{{Portal: अक्सिटानिया}}",
+    "reviewTitle": "प्रकाशित करे से पहिली समीक्षा",
+    "reviewSubtitle": "{{source}}, {{kind}} के रूप म । जो भी आप चाहें, संपादित करव — मूल ल बनाए रखे बर शीर्षक ल खाली छोड़ दें ।",
+    "reviewName": "सीर्सक",
+    "reviewNamePlaceholder": "मूल सीर्सक बनाए रखे बर खाली छोड़व",
+    "reviewDescription": "वर्नन",
+    "reviewDescriptionPlaceholder": "1) पहिली, App Find करे (ये Step TV बर हे)",
+    "reviewLiveWarning": "ए लिंक एक लाइव स्ट्रीम हवय । समाप्त होए तक प्रतीक्षा करे अउ एखर बजाय रिकॉर्डिंग आयात करे ।",
+    "reviewCancel": "खारिज करव",
+    "reviewConfirm": "आयात"
   },
   "banned": {
     "title": "अपन खाता बंद करे गे हे",
@@ -2426,6 +2435,17 @@
     "line": "कुछु ओमन ल कभी भी संदेश या चेतावनी भेजने के अधिकार नी होही, या जांच करे के अधिकार नी होही कि ओमन का भेजिन!",
     "reason": "कारण: {{reason}} action: inmenu",
     "deleteAccount": "अपन खाता अउ डेटा ल हटा दे"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you...",
+    "watchOnSource": "मूल ल खोलव",
+    "editThis": "सीर्सक अउ वर्नन संपादित करव",
+    "editTitle": "सीर्सक",
+    "editDescription": "वर्नन",
+    "editDescriptionPlaceholder": "विवरण (वैकल्पिक)",
+    "editDone": "पूरा",
+    "edited": "संपादित",
+    "subtitle": "एक चैनल या प्रोफाइल पेस्ट करे, जो आप चाहें, एक बार भुगतान करे ।"
   },
   "post": {
     "like": "पसंद",

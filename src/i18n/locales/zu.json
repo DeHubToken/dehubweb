@@ -2512,7 +2512,16 @@
     "kindVideo": "I_vidiyo",
     "kindAudio": "Okwemisindo",
     "kindImage": "izithombe",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Buyekeza ngaphambi kokuphosta",
+    "reviewSubtitle": "Kusuka ku-{{source}}, njenge- {{kind}}. Hlela noma yini oyithandayo — shiya isihloko singenalutho ukuze ugcine okokuqala.",
+    "reviewName": "Isihloko",
+    "reviewNamePlaceholder": "Shiya ungenalutho ukuze ugcine isihloko sokuqala",
+    "reviewDescription": "Incazelo",
+    "reviewDescriptionPlaceholder": "Yisho okuthile ngale phosti (akuphoqelekile)",
+    "reviewLiveWarning": "Leyo linki ingukusakaza bukhoma. Linda kuze kube yilapho kuphela bese ungenisa irekhodi.",
+    "reviewCancel": "Khansela",
+    "reviewConfirm": "Ngenisa"
   },
   "banned": {
     "title": "I-akhawunti yakho ivinjelwe",
@@ -2520,5 +2529,16 @@
     "line": "I-akhawunti yakho ivinjelwe, ngakho-ke awukwazi ukuphosta, ukuphawula noma ukuthumela imiyalezo.",
     "reason": "Isizathu: {{reason}}",
     "deleteAccount": "Susa i-akhawunti nedatha yakho"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Vula eyokuqala",
+    "editThis": "Hlela isihloko nencazelo",
+    "editTitle": "Isihloko",
+    "editDescription": "Incazelo",
+    "editDescriptionPlaceholder": "Incazelo (akuphoqelekile)",
+    "editDone": "Iqedile",
+    "edited": "Kuhleliwe",
+    "subtitle": "Namathisela ishaneli noma iphrofayili, hlela okuthandayo, khokha kanye."
   }
 }

@@ -4730,7 +4730,16 @@
     "kindVideo": "Video",
     "kindAudio": "Heli",
     "kindImage": "Pildid",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Vaata enne postitamist üle",
+    "reviewSubtitle": "Alates {{source}}, kui {{kind}}. Muuda kõike, mis sulle meeldib — originaali säilitamiseks jäta pealkiri tühjaks.",
+    "reviewName": "Pealkiri",
+    "reviewNamePlaceholder": "Originaalpealkirja säilitamiseks jäta tühjaks",
+    "reviewDescription": "Kirjeldus",
+    "reviewDescriptionPlaceholder": "Ütle midagi selle postituse kohta (valikuline)",
+    "reviewLiveWarning": "See link on otseülekanne. Oodake, kuni see lõpeb, ja importige selle asemel salvestis.",
+    "reviewCancel": "Tühista",
+    "reviewConfirm": "Impordi"
   },
   "banned": {
     "title": "Sinu konto on keelatud",
@@ -4738,5 +4747,16 @@
     "line": "Sinu konto on keelatud, nii et sa ei saa postitada, kommenteerida ega sõnumeid saata.",
     "reason": "Põhjus: {{reason}}",
     "deleteAccount": "Kustuta oma konto ja andmed"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Ava originaal",
+    "editThis": "Muuda pealkirja ja kirjeldust",
+    "editTitle": "Pealkiri",
+    "editDescription": "Kirjeldus",
+    "editDescriptionPlaceholder": "Kirjeldus (valikuline)",
+    "editDone": "Valmis",
+    "edited": "Muudetud",
+    "subtitle": "Kleebi kanal või profiil, muuda, mida soovid, maksa üks kord."
   }
 }

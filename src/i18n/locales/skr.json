@@ -2385,7 +2385,16 @@
     "kindVideo": "ویڈیو",
     "kindAudio": "آڈیو",
     "kindImage": "تصویراں",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "پوسٹ کرݨ توں پہلے جانچ کریں",
+    "reviewSubtitle": "{{source}} توں، {{kind}} جیکر۔ جو کجھ وی چاہو ترمیم کریں — عنوان خالی رکھو اصل نوں برقرار رکھݨ لئی۔",
+    "reviewName": "عنوان",
+    "reviewNamePlaceholder": "اصل عنوان برقرار رکھݨ لئی خالی رکھو",
+    "reviewDescription": "تفصیل",
+    "reviewDescriptionPlaceholder": "اس پوسٹ بارے کجھ کہو (اختیاری)",
+    "reviewLiveWarning": "اے لنک لائیو سٹریم اے۔ اس دے ختم ہوݨ تک انتظار کریں تے ریکارڈنگ درآمد کریں۔",
+    "reviewCancel": "منسوخ کریں",
+    "reviewConfirm": "درآمد کریں"
   },
   "banned": {
     "title": "تہاڈو اکاؤنٹ بند ہے",
@@ -2393,5 +2402,16 @@
     "line": "تہاڈو اکاؤنٹ بند ہے، اس لیے تسیں پوسٹ، کمنٹ یا پیغام نہیں بھیج سکو۔",
     "reason": "وجہ: {{reason}}",
     "deleteAccount": "اپنو اکاؤنٹ اور ڈیٹا حذف کرو"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "اصل کھول",
+    "editThis": "عنوان تے تفصیل میں ترمیم کریں",
+    "editTitle": "عنوان",
+    "editDescription": "تفصیل",
+    "editDescriptionPlaceholder": "تفصیل (اختیاری)",
+    "editDone": "مکمل",
+    "edited": "ترمیم شدہ",
+    "subtitle": "چینل یا پروفائل پیسٹ کریں، جو پسند ہو اس میں ترمیم کریں، اک وار ادائیگی کریں۔"
   }
 }

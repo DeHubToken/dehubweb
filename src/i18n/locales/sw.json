@@ -4785,7 +4785,16 @@
     "kindVideo": "Video",
     "kindAudio": "Sauti",
     "kindImage": "Taswira",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Tathmini kabla ya kuchapisha",
+    "reviewSubtitle": "Kutoka {{source}}, kama {{kind}}. Hariri chochote unachopenda — acha kichwa tupu ili kuweka asili.",
+    "reviewName": "Kichwa",
+    "reviewNamePlaceholder": "Acha tupu ili kuweka kichwa cha awali",
+    "reviewDescription": "Maelezo",
+    "reviewDescriptionPlaceholder": "Sema kitu kuhusu chapisho hili (hiari)",
+    "reviewLiveWarning": "Kiunganishi hicho ni mkondo wa moja kwa moja. Subiri hadi iishe na uingize rekodi badala yake.",
+    "reviewCancel": "Ghairi",
+    "reviewConfirm": "Ingiza"
   },
   "banned": {
     "title": "Akaunti yako imepigwa marufuku",
@@ -4793,5 +4802,16 @@
     "line": "Akaunti yako imepigwa marufuku, kwa hivyo huwezi kuchapisha, kutoa maoni au kutuma ujumbe.",
     "reason": "Sababu: {{reason}}",
     "deleteAccount": "Futa akaunti na data yako"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Fungua ya awali",
+    "editThis": "Hariri kichwa na maelezo",
+    "editTitle": "Kichwa",
+    "editDescription": "Maelezo",
+    "editDescriptionPlaceholder": "Maelezo (hiari)",
+    "editDone": "Imekamilika",
+    "edited": "Imehaririwa",
+    "subtitle": "Bandika chaneli au wasifu, hariri kile unachopenda, lipa mara moja."
   }
 }

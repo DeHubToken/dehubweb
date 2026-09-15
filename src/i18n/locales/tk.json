@@ -2438,7 +2438,16 @@
     "kindVideo": "Video",
     "kindAudio": "Ses",
     "kindImage": "Suratlar",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Çaplanmazdan öň seret",
+    "reviewSubtitle": "{{source}}, {{kind}} ýaly. Siz islän zadyňyzy düzediş ediň — aslynda saklamak üçin başlygy boş goýuň.",
+    "reviewName": "Başlyk",
+    "reviewNamePlaceholder": "Asl ady saklamak üçin boş goýuň",
+    "reviewDescription": "Açyklama",
+    "reviewDescriptionPlaceholder": "1) Birinjiden, App Find (Bu Step TV üçin)",
+    "reviewLiveWarning": "Bu baglanyşyk direlýän akymy. Bu iş tamamlanýança garaşyň we onuň ýerine ýazgysyny import ediň.",
+    "reviewCancel": "Gaýd Et",
+    "reviewConfirm": "Çyk"
   },
   "banned": {
     "title": "Siziň hasabatyňyz gadagan edilýär",
@@ -2446,5 +2455,16 @@
     "line": "Olaryň käbiri size hiç haçan habar ýa-da duýduryş iberip bilmezler, ýa-da olaryň iberen zatlaryny barlap bilmezler!",
     "reason": "Sebep: {{reason}}",
     "deleteAccount": "Şkaýyňy we maglumatyňy gizle"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you...",
+    "watchOnSource": "Asl nusgalary düşündiriň",
+    "editThis": "Başlygy we beýan edilmegi üýtget",
+    "editTitle": "Başlyk",
+    "editDescription": "Açyklama",
+    "editDescriptionPlaceholder": "Kalkülot (optional)",
+    "editDone": "Ýapyldy",
+    "edited": "Edit",
+    "subtitle": "Kanal ýa-da profily goýuň, islän zadyňyzy düzediş ediň, bir gezek töläň."
   }
 }

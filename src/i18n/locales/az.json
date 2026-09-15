@@ -4689,7 +4689,16 @@
     "kindVideo": "Video",
     "kindAudio": "Audio",
     "kindImage": "Şəkillər",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Göndərməzdən əvvəl nəzərdən keçirin",
+    "reviewName": "Başlıq",
+    "reviewNamePlaceholder": "Orijinal başlığı saxlamaq üçün boş buraxın",
+    "reviewDescription": "Təsvir",
+    "reviewDescriptionPlaceholder": "Bu yazı haqqında nəsə deyin (qeyri-məcburi)",
+    "reviewLiveWarning": "Bu link canlı yayımdır. Bitənə qədər gözləyin və əvəzinə səsyazmanı idxal edin.",
+    "reviewCancel": "Ləğv et",
+    "reviewConfirm": "İdxal et",
+    "reviewSubtitle": "{{kind}} kimi {{source}} mənbəyindən. İstədiyiniz hər şeyi redaktə edin — orijinalı saxlamaq üçün başlığı boş saxlayın."
   },
   "banned": {
     "title": "Hesabınız qadağan edildi",
@@ -4697,5 +4706,16 @@
     "line": "Hesabınız qadağan edilib, odur ki, mesaj yaza, şərh yaza və ya mesaj göndərə bilməzsiniz.",
     "reason": "Səbəb: {{reason}}",
     "deleteAccount": "Hesabınızı və məlumatlarınızı silin"
+  },
+  "migrate": {
+    "watchOnSource": "Orijinalı açın",
+    "editThis": "Başlığı və təsviri redaktə edin",
+    "editTitle": "Başlıq",
+    "editDescription": "Təsvir",
+    "editDescriptionPlaceholder": "Təsvir (qeyri-məcburi)",
+    "editDone": "Hazırdır",
+    "edited": "Redaktə edilib",
+    "subtitle": "Kanal və ya profili yapışdırın, bəyəndiklərinizi redaktə edin, bir dəfə ödəyin.",
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…"
   }
 }

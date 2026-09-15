@@ -4866,7 +4866,16 @@
     "kindVideo": "Vídeo",
     "kindAudio": "Áudio",
     "kindImage": "Pinturas",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Rever antes de publicar",
+    "reviewSubtitle": "De {{source}}, como {{kind}}. Edite o que quiser — deixe o título vazio para manter o original.",
+    "reviewName": "Título",
+    "reviewNamePlaceholder": "Deixe em branco para manter o título original",
+    "reviewDescription": "Descrição",
+    "reviewDescriptionPlaceholder": "Diga algo sobre este post (opcional)",
+    "reviewLiveWarning": "Esse link é uma transmissão ao vivo. Aguarde até que termine e importe a gravação.",
+    "reviewCancel": "Cancelar",
+    "reviewConfirm": "Importar"
   },
   "banned": {
     "title": "A sua conta foi banida",
@@ -4874,5 +4883,16 @@
     "line": "A sua conta está banida, por isso não pode publicar, comentar ou enviar mensagens.",
     "reason": "Motivo: {{reason}}",
     "deleteAccount": "Eliminar a sua conta e dados"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@você, tiktok.com/@você, vimeo.com/you…",
+    "watchOnSource": "Abrir o original",
+    "editThis": "Editar título e descrição",
+    "editTitle": "Título",
+    "editDescription": "Descrição",
+    "editDescriptionPlaceholder": "Descrição (opcional)",
+    "editDone": "Concluído",
+    "edited": "Editado",
+    "subtitle": "Cole um canal ou perfil, edite o que quiser, pague uma vez."
   }
 }

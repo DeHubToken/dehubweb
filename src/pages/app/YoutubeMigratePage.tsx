@@ -1,9 +1,20 @@
 /**
  * /app/migrate-youtube — "Migrate all"
  * =====================================
- * Bulk-import a creator's whole YouTube channel as DeHub posts, one paid
- * batch at a time. Paste the channel address, tick the ownership box, pick
- * what to bring over, pay once in DHB, and the import runs in the background.
+ * Bulk-import a creator's whole channel or profile as DeHub posts, one paid
+ * batch at a time. Paste the address, tick the ownership box, pick what to
+ * bring over, pay once in DHB, and the import runs in the background.
+ *
+ * No longer YouTube-only, despite the route name. The listing walks any source
+ * the converter supports — `listChannelUploads` used to filter on an
+ * 11-character YouTube video id, which silently reported every TikTok, Vimeo
+ * or SoundCloud profile as empty. The route keeps its name because links to it
+ * exist; the page does not pretend the restriction is still there.
+ *
+ * Every card is editable. The title and description a creator types are frozen
+ * onto the charge at quote time, so a batch that runs for hours publishes the
+ * text they reviewed and paid for rather than whatever the source calls it by
+ * then. An empty box means "use the source's own title".
  *
  * This went through a Google OAuth connection until 2026-08-30, where signing
  * in served as both "which channel" and "it's yours". That is gone: the URL
@@ -24,7 +35,18 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Loader2, Youtube, CheckCircle2, XCircle, ExternalLink, Eye, Clipboard } from 'lucide-react';
+import {
+  Loader2,
+  ArrowDownToLine,
+  Image as ImageIcon,
+  CheckCircle2,
+  XCircle,
+  ExternalLink,
+  Eye,
+  Clipboard,
+  Pencil,
+  Link2,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -33,6 +55,8 @@ import { Button } from '@/components/ui/button';
 import { AppState } from '@/components/app/AppState';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAuthPrompt } from '@/components/app/AuthPrompt';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -113,14 +137,14 @@ const CHECKBOX_CLASS =
  * used to be what remembered which channel a creator was migrating, and
  * nothing server-side does now. Per-browser and disposable: losing it costs
  * video IDs instead of titles on a resumed view, nothing more. */
-const CHANNEL_URL_KEY = 'dehub:migrate-youtube:channel-url';
+const CHANNEL_URL_KEY = 'dehub:migrate:profile-url';
 
 /** The example grid shown before a batch exists. Deliberately covers all
  * three states and a real-sounding failure reason — the point is to show
  * that failures are surfaced per video and can be retried, not to fill
  * space. Titles are generic so it never looks like someone else's channel. */
 const SAMPLE_RESULTS: { title: string; status: 'imported' | 'failed' | 'pending'; reason?: string }[] = [
-  { title: 'Channel trailer', status: 'imported' },
+  { title: 'Profile trailer', status: 'imported' },
   { title: 'Behind the scenes', status: 'imported' },
   { title: 'Q&A — episode 4', status: 'imported' },
   { title: 'Studio tour', status: 'pending' },
@@ -188,6 +212,7 @@ function formatPublishedAt(iso?: string): string | null {
 }
 
 export default function YoutubeMigratePage() {
+  const { t } = useTranslation();
   const { user, isAuthenticated } = useAuth();
   const { requireAuth } = useAuthPrompt();
   const navigate = useNavigate();
@@ -196,6 +221,20 @@ export default function YoutubeMigratePage() {
   const [ownershipConfirmed, setOwnershipConfirmed] = useState(false);
   const [videos, setVideos] = useState<ChannelVideo[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  /** Which cards have their editor open. Not persisted: it is a view state,
+   * and a reload that reopened twelve editors would be worse than one that
+   * closed them. */
+  const [editing, setEditing] = useState<Set<string>>(new Set());
+  /**
+   * Title and description the creator typed, per video id.
+   *
+   * Keyed rather than positional so it survives the list being refetched — a
+   * creator can paste a different profile, come back, and their text is still
+   * attached to the right video. Only non-empty values are sent; an empty one
+   * means "use the source's own title", which is what clearing the box asks
+   * for.
+   */
+  const [overrides, setOverrides] = useState<Record<string, { name?: string; description?: string }>>({});
   const [quote, setQuote] = useState<MigrationQuote | null>(null);
   const [charge, setCharge] = useState<MigrationChargeStatus | null>(null);
   const [pricing, setPricing] = useState<MigrationPricing | null>(null);
@@ -346,6 +385,31 @@ export default function YoutubeMigratePage() {
     });
   };
 
+  /** Opening the editor also selects the video. Typing a title for something
+   * you are not bringing over is a dead end, and silently leaving it unselected
+   * is the kind of thing you only notice after paying. */
+  const openEditor = (id: string) => {
+    setEditing(prev => new Set(prev).add(id));
+    setSelected(prev => new Set(prev).add(id));
+  };
+
+  const closeEditor = (id: string) => {
+    setEditing(prev => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  };
+
+  const setOverride = (id: string, field: 'name' | 'description', value: string) => {
+    setOverrides(prev => ({ ...prev, [id]: { ...prev[id], [field]: value } }));
+  };
+
+  const nameFor = (v: ChannelVideo) => overrides[v.youtubeVideoId]?.name ?? '';
+  const descriptionFor = (v: ChannelVideo) => overrides[v.youtubeVideoId]?.description ?? '';
+  const hasOverride = (id: string) =>
+    Boolean(overrides[id]?.name?.trim() || overrides[id]?.description?.trim());
+
   /** Everything not already imported, which is what "select all" means here —
    * imported videos are permanently checked and can't be unpicked. */
   const selectableIds = useMemo(
@@ -356,6 +420,25 @@ export default function YoutubeMigratePage() {
 
   const toggleAll = () => setSelected(allSelected ? new Set() : new Set(selectableIds));
 
+  /**
+   * The three parallel arrays the quote takes, built from one id list.
+   *
+   * Aligned by construction rather than by remembering to keep three
+   * `.map()`s in step — the server refuses a mismatch, and a mismatch that
+   * got through would publish one video's title onto another's post.
+   *
+   * URLs come from the listing rather than being rebuilt, because only
+   * YouTube lives at a guessable watch address.
+   */
+  const itemsFor = (ids: string[]) => {
+    const byId = new Map(videos.map(v => [v.youtubeVideoId, v]));
+    return {
+      urls: ids.map(id => byId.get(id)?.url ?? ''),
+      names: ids.map(id => overrides[id]?.name?.trim() ?? ''),
+      descriptions: ids.map(id => overrides[id]?.description?.trim() ?? ''),
+    };
+  };
+
   const handleGetQuote = async () => {
     if (!selected.size) {
       toast.error('Select at least one video');
@@ -364,7 +447,8 @@ export default function YoutubeMigratePage() {
     setPayFallback('listing');
     setStage('quoting');
     try {
-      const q = await quoteMigration([...selected]);
+      const ids = [...selected];
+      const q = await quoteMigration(ids, itemsFor(ids));
       setQuote(q);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Could not price this migration');
@@ -378,7 +462,7 @@ export default function YoutubeMigratePage() {
     setPayFallback('done');
     setStage('quoting');
     try {
-      const q = await quoteMigration(failedIds);
+      const q = await quoteMigration(failedIds, itemsFor(failedIds));
       setQuote(q);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Could not retry the failed videos');
@@ -445,8 +529,8 @@ export default function YoutubeMigratePage() {
   return (
     <>
       <SEOHead
-        title="Migrate all from YouTube — DeHub"
-        description="Bulk-import your YouTube channel to DeHub."
+        title="Migrate all — bring a whole profile to DeHub"
+        description="Bulk-import a whole channel or profile to DeHub — YouTube, TikTok, Vimeo, SoundCloud and more."
         url="https://dehub.io/app/migrate-youtube"
       />
 
@@ -462,12 +546,12 @@ export default function YoutubeMigratePage() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-11 h-11 shrink-0 rounded-2xl bg-white/5 flex items-center justify-center">
-                <Youtube className="w-5 h-5 text-white" />
+                <ArrowDownToLine className="w-5 h-5 text-white" />
               </div>
               <div className="min-w-0">
-                <h1 className="text-lg sm:text-xl font-bold text-white leading-tight">Migrate all from YouTube</h1>
+                <h1 className="text-lg sm:text-xl font-bold text-white leading-tight">Migrate all</h1>
                 <p className="text-sm text-zinc-500">
-                  Paste your channel, pick what to bring over, pay once.
+                  {t('migrate.subtitle')}
                 </p>
               </div>
             </div>
@@ -500,9 +584,9 @@ export default function YoutubeMigratePage() {
                 scale — a creator moving between the two pages should not
                 meet two different-looking forms. */}
             <div className="relative">
-              <Youtube className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <Input
-                placeholder="youtube.com/@yourchannel"
+                placeholder={t('migrate.placeholder')}
                 value={channelUrl}
                 onChange={(e) => setChannelUrl(e.target.value)}
                 onKeyDown={(e) => {
@@ -621,7 +705,7 @@ export default function YoutubeMigratePage() {
                           className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       ) : (
-                        <Youtube className="absolute inset-0 m-auto h-8 w-8 text-zinc-700" />
+                        <ImageIcon className="absolute inset-0 m-auto h-8 w-8 text-zinc-700" />
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
 
@@ -648,7 +732,7 @@ export default function YoutubeMigratePage() {
                         target="_blank"
                         rel="noreferrer"
                         onClick={e => e.stopPropagation()}
-                        aria-label="Watch on YouTube"
+                        aria-label={t('migrate.watchOnSource')}
                         data-keep-dark
                         className="absolute bottom-2 left-2 rounded bg-black/70 p-1.5 text-white opacity-0 transition-opacity group-hover:opacity-100"
                       >
@@ -657,9 +741,69 @@ export default function YoutubeMigratePage() {
                     </div>
 
                     <div className="flex flex-col gap-1 p-3">
-                      <span className="line-clamp-2 text-sm font-medium text-white leading-snug" title={v.title}>
-                        {v.title}
-                      </span>
+                      {/* Editing lives behind a pencil rather than showing two
+                          text boxes on every card. A channel of 300 videos
+                          would otherwise render 600 inputs, and the common case
+                          is bringing everything over as it already is. Clicking
+                          into the fields must not toggle the card's checkbox,
+                          hence the stopPropagation on the wrapper. */}
+                      {editing.has(v.youtubeVideoId) ? (
+                        <div
+                          className="flex flex-col gap-2"
+                          onClick={e => e.stopPropagation()}
+                          onKeyDown={e => e.stopPropagation()}
+                        >
+                          <Input
+                            value={nameFor(v)}
+                            onChange={e => setOverride(v.youtubeVideoId, 'name', e.target.value)}
+                            placeholder={v.title}
+                            aria-label={t('migrate.editTitle')}
+                            className="h-8 bg-zinc-800 border-0 rounded-lg text-sm text-white placeholder:text-zinc-500 focus-visible:ring-0 focus-visible:ring-offset-0"
+                          />
+                          <Textarea
+                            value={descriptionFor(v)}
+                            onChange={e => setOverride(v.youtubeVideoId, 'description', e.target.value)}
+                            placeholder={t('migrate.editDescriptionPlaceholder')}
+                            aria-label={t('migrate.editDescription')}
+                            rows={3}
+                            className="resize-none bg-zinc-800 border-0 rounded-lg text-xs text-white placeholder:text-zinc-500 focus-visible:ring-0 focus-visible:ring-offset-0"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => closeEditor(v.youtubeVideoId)}
+                            className="self-start text-xs text-white underline"
+                          >
+                            {t('migrate.editDone')}
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-start justify-between gap-2">
+                          <span
+                            className="line-clamp-2 text-sm font-medium text-white leading-snug"
+                            title={nameFor(v) || v.title}
+                          >
+                            {nameFor(v) || v.title}
+                          </span>
+                          {!v.alreadyImported && (
+                            <button
+                              type="button"
+                              onClick={e => {
+                                e.stopPropagation();
+                                openEditor(v.youtubeVideoId);
+                              }}
+                              aria-label={t('migrate.editThis')}
+                              className="shrink-0 rounded p-1 text-zinc-400 opacity-0 transition-opacity hover:text-white group-hover:opacity-100 focus-visible:opacity-100"
+                            >
+                              <Pencil className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      )}
+                      {/* Says the post will not read as the source named it,
+                          without making the creator open the editor to check. */}
+                      {!editing.has(v.youtubeVideoId) && hasOverride(v.youtubeVideoId) && (
+                        <span className="text-[11px] text-zinc-500">{t('migrate.edited')}</span>
+                      )}
                       {(views || published) && (
                         <span className="flex items-center gap-1.5 text-xs text-zinc-400">
                           {views && (
@@ -802,7 +946,7 @@ export default function YoutubeMigratePage() {
                     className="flex flex-col bg-zinc-900 rounded-2xl overflow-hidden"
                   >
                     <div className="relative aspect-video bg-zinc-800 flex items-center justify-center">
-                      <Youtube className="h-7 w-7 text-zinc-700" />
+                      <ImageIcon className="h-7 w-7 text-zinc-700" />
                       <StatusBadge status={sample.status} />
                     </div>
                     <div className="flex flex-col gap-1 p-3">

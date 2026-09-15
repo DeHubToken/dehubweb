@@ -2457,7 +2457,16 @@
     "kindVideo": "Video",
     "kindAudio": "ئاۋاز",
     "kindImage": "سۈرەتلەر",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "يوللاشتىن بۇرۇن تەھلىل قىلىش",
+    "reviewSubtitle": "{{source}} دىن، {{kind}} دىن. خالىغىنىڭىزنى تەھرىرلەڭ — ئەسلى بېتىنى ساقلاش ئۈچۈن بېتىنى بوش قويۇڭ.",
+    "reviewName": "Title",
+    "reviewNamePlaceholder": "ئەسلى بېتىنى ساقلاش ئۈچۈن بوشلۇق قالدۇرۇڭ",
+    "reviewDescription": "تەسۋىر",
+    "reviewDescriptionPlaceholder": "بۇ يازما ھەققىدە بىر نەرسە دېگىن (ئىختىيارىي)",
+    "reviewLiveWarning": "بۇ ئۇلانما ھاياتلىق ئېقىمى. ئاخىرلىشىشىنى كۈتۈپ، ئۇنىڭ ئورنىغا خاتىرە ھۆججىتىنى ئىمپورت قىلىڭ.",
+    "reviewCancel": "ئەمەلدىن قالدۇرۇش",
+    "reviewConfirm": "ئىمپورت"
   },
   "banned": {
     "title": "سىزنىڭ ھېسابى چەكلەنگەن",
@@ -2465,5 +2474,16 @@
     "line": "سىزنىڭ ھېسابى چەكلەنگەن، شۇڭا سىز يوللىمىسى، پىكىر قوشالمايسىز ياكى خەۋەر يوللىيالمايسىز.",
     "reason": "سەۋەبى: {{reason}}",
     "deleteAccount": "ھېسابىڭىز ۋە سانلىق مەلۇماتلىرىنى ئۆچۈرۈڭ"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you...",
+    "watchOnSource": "ئەسلى ھۆججەتنى ئېچىش",
+    "editThis": "باشبەت ۋە چۈشەندۈرۈشنى تەھرىرلەش پروگراممىسى",
+    "editTitle": "Title",
+    "editDescription": "تەسۋىر",
+    "editDescriptionPlaceholder": "تەسۋىر (ئىختىيارسىز)",
+    "editDone": "تاماملاندى",
+    "edited": "تەھرىرلەندى",
+    "subtitle": "قانال ياكى پروفىلنى چاپلاڭ، خالىغانچە تەھرىرلەڭ، بىر قېتىم تۆلەڭ."
   }
 }

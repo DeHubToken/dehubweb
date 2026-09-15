@@ -2461,7 +2461,16 @@
     "kindVideo": "Horonan-tsary",
     "kindAudio": "Raki-peo",
     "kindImage": "Sary",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Avereno jerena alohan'ny hamoahana azy",
+    "reviewSubtitle": "{{source}}, {{kind}}. Hanova na inona na inona tianao — avelao ny anaram-boninahitra foana mba hitandrina ny tany am-boalohany.",
+    "reviewName": "LOHATENY",
+    "reviewNamePlaceholder": "Tsy misy toerana malalaka raha tazonina ny lohateny niandohana",
+    "reviewDescription": "SORITSORITRA",
+    "reviewDescriptionPlaceholder": "Lazao zavatra momba ity lahatsoratra ity (tsy voatery)",
+    "reviewLiveWarning": "Mivantana izany ny serasera. Andraso mandra-pahatapitry ny naoty.",
+    "reviewCancel": "Ajanona",
+    "reviewConfirm": "Hampiditra"
   },
   "banned": {
     "title": "Voarara ny kaontinao",
@@ -2469,6 +2478,17 @@
     "line": "Voaràra ny kaontinao ka tsy afaka mamoaka, fanehoan-kevitra na mandefa hafatra ianao.",
     "reason": "Antony: {{reason}}",
     "deleteAccount": "Fafao ny kaontinao sy ny angona"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Sokafy ny niandohana",
+    "editThis": "Hanova lohateny sy fanoritsoritana",
+    "editTitle": "LOHATENY",
+    "editDescription": "SORITSORITRA",
+    "editDescriptionPlaceholder": "Famaritana (tsy voatery)",
+    "editDone": "DONE",
+    "edited": "Novana",
+    "subtitle": "Mametraha fantsona na profil, manova izay tianao, mandoa indray mandeha."
   },
   "createPost": {
     "title": "Mamorona",

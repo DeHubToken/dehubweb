@@ -4533,7 +4533,16 @@
     "kindVideo": "Video",
     "kindAudio": "Âm thanh",
     "kindImage": "Hình ảnh",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Xem lại trước khi đăng",
+    "reviewSubtitle": "Từ {{source}}, với tên {{kind}}. Chỉnh sửa bất cứ điều gì bạn thích — để trống tiêu đề để giữ nguyên bản gốc.",
+    "reviewName": "Tiêu đề",
+    "reviewNamePlaceholder": "Để trống để giữ tiêu đề ban đầu",
+    "reviewDescription": "Mô tả",
+    "reviewDescriptionPlaceholder": "Nói điều gì đó về bài đăng này (không bắt buộc)",
+    "reviewLiveWarning": "Liên kết đó là một phát trực tuyến. Thay vào đó, hãy đợi cho đến khi kết thúc và nhập bản ghi.",
+    "reviewCancel": "Hủy",
+    "reviewConfirm": "Nhập"
   },
   "banned": {
     "title": "Tài khoản của bạn đã bị cấm",
@@ -4541,6 +4550,17 @@
     "line": "Tài khoản của bạn bị cấm, vì vậy bạn không thể đăng, nhận xét hoặc gửi tin nhắn.",
     "reason": "Lý do: {{reason}}",
     "deleteAccount": "Xóa tài khoản và dữ liệu của bạn"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Mở bản gốc",
+    "editThis": "Chỉnh sửa tiêu đề và mô tả",
+    "editTitle": "Tiêu đề",
+    "editDescription": "Mô tả",
+    "editDescriptionPlaceholder": "Mô tả (không bắt buộc)",
+    "editDone": "Hoàn tất",
+    "edited": "Đã chỉnh sửa",
+    "subtitle": "Dán kênh hoặc hồ sơ, chỉnh sửa những gì bạn thích, thanh toán một lần."
   },
   "glossary": {
     "title": "Bảng thuật ngữ",

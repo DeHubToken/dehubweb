@@ -4866,7 +4866,16 @@
     "kindVideo": "Video",
     "kindAudio": "Sonido",
     "kindImage": "imágenes",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Revisar antes de publicar",
+    "reviewSubtitle": "Desde {{source}}, como {{kind}}. Edita lo que quieras: deja el título vacío para mantener el original.",
+    "reviewName": "Título",
+    "reviewNamePlaceholder": "Dejar en blanco para mantener el título original",
+    "reviewDescription": "Descripción",
+    "reviewDescriptionPlaceholder": "Di algo sobre esta publicación (opcional)",
+    "reviewLiveWarning": "Ese enlace es una transmisión en vivo. Espere hasta que termine e importe la grabación en su lugar.",
+    "reviewCancel": "Cancelar",
+    "reviewConfirm": "Importar"
   },
   "banned": {
     "title": "Tu cuenta está bloqueada",
@@ -4874,5 +4883,16 @@
     "line": "Tu cuenta está bloqueada, por lo que no puedes publicar, comentar ni enviar mensajes.",
     "reason": "Motivo: {{reason}}",
     "deleteAccount": "Elimina tu cuenta y tus datos"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Abrir el original",
+    "editThis": "Editar título y descripción",
+    "editTitle": "Título",
+    "editDescription": "Descripción",
+    "editDescriptionPlaceholder": "Descripción (opcional)",
+    "editDone": "Listo",
+    "edited": "Editado",
+    "subtitle": "Pega un canal o perfil, edita lo que quieras y paga una vez."
   }
 }

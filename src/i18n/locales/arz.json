@@ -2480,7 +2480,16 @@
     "kindVideo": "فيديو",
     "kindAudio": "الصوت",
     "kindImage": "الصور",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "المراجعة قبل النشر",
+    "reviewSubtitle": "من {{source}}، كـ {{kind}}. قم بتعديل أي شيء تريده — اترك العنوان فارغًا للاحتفاظ بالأصل.",
+    "reviewName": "العنوان",
+    "reviewNamePlaceholder": "اتركه فارغًا للاحتفاظ بالعنوان الأصلي",
+    "reviewDescription": "البيان",
+    "reviewDescriptionPlaceholder": "قل شيئًا عن هذا المنشور (اختياري)",
+    "reviewLiveWarning": "هذا الرابط هو بث مباشر. انتظر حتى ينتهي واستورد التسجيل بدلاً من ذلك.",
+    "reviewCancel": "إلغاء",
+    "reviewConfirm": "استيراد"
   },
   "banned": {
     "title": "حسابك محظور",
@@ -2488,5 +2497,16 @@
     "line": "حسابك محظور، لذلك لا يمكنك النشر أو التعليق أو إرسال الرسائل.",
     "reason": "السبب: {{reason}}",
     "deleteAccount": "حذف حسابك وبياناتك"
+  },
+  "migrate": {
+    "watchOnSource": "افتح النسخة الأصلية",
+    "editThis": "تعديل العنوان والوصف",
+    "editTitle": "العنوان",
+    "editDescription": "البيان",
+    "editDescriptionPlaceholder": "الوصف (اختياري)",
+    "editDone": "تم",
+    "edited": "تم التعديل",
+    "subtitle": "الصق قناة أو ملف شخصي، وقم بتعديل ما تريد، وادفع مرة واحدة.",
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…"
   }
 }

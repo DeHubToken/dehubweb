@@ -2482,7 +2482,16 @@
     "kindVideo": "Bidiyo",
     "kindAudio": "Sauti",
     "kindImage": "QShortcut",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Yi bita kafin aikawa",
+    "reviewSubtitle": "Daga {{source}}, kamar {{kind}}. Shirya duk abin da kake so — bar taken ba tare da komai ba don ci gaba da asali.",
+    "reviewName": "Title",
+    "reviewNamePlaceholder": "Bar komai don kiyaye taken asali",
+    "reviewDescription": "Bayani",
+    "reviewDescriptionPlaceholder": "Ka ce wani abu game da wannan post (zaɓi)",
+    "reviewLiveWarning": "Wannan hanyar haɗi shine rafi mai rai. Jira har sai ya ƙare kuma shigo da rikodin maimakon.",
+    "reviewCancel": "Cancel",
+    "reviewConfirm": "Shigo"
   },
   "banned": {
     "title": "An haramta asusunka",
@@ -2490,5 +2499,16 @@
     "line": "An haramta asusunka, don haka ba za ku iya aikawa ba, sharhi ko aika saƙonni.",
     "reason": "Dalili: {{reason}}",
     "deleteAccount": "Share asusunka da bayanan ku"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@kai, tiktok.com/@kai, vimeo.com/you…",
+    "watchOnSource": "Bude asali",
+    "editThis": "Shirya taken da bayanin",
+    "editTitle": "Title",
+    "editDescription": "Bayani",
+    "editDescriptionPlaceholder": "Bayani (zaɓi)",
+    "editDone": "An yi",
+    "edited": "An gyara",
+    "subtitle": "Manna tashar ko bayanin martaba, gyara abin da kake so, biya sau ɗaya."
   }
 }
