@@ -2038,6 +2038,18 @@ html[data-theme="light"] [data-notification-row][data-unread]:not([data-keep-dar
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
 
+/* The comments panel is bg-black/60 + border-white/10 - a dark scrim with a
+   light hairline, correct over a dark card. On paper the blanket wash turns the
+   scrim into a flat grey tint and the hairline stays white, so the reply
+   section reads as a grey box laid over the post instead of part of it. Give it
+   the card surface and a real hairline; the blur has nothing left to sample. */
+html[data-theme="light"] [data-comments-wrapper] {
+  background-color: hsl(var(--card)) !important;
+  border-color: var(--hairline) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
 /* Minimal blackens the search field's zinc bg — restore a hairline outline so the
    input reads as an input on the black canvas. */
 html[data-theme="minimal"] [data-search-bento] input {
