@@ -241,6 +241,10 @@ function DmDockPanel({ dm }: { dm: DockedDm }) {
         exit={{ opacity: 0, y: 40, scale: 0.95 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
         data-overlay-content
+        /* Light mode turns a bare bg-black/60 into a 5% wash and strips the
+           blur, i.e. a see-through window. [data-ai-chat] is the opt-out that
+           repaints a floating chat panel as opaque paper. */
+        data-ai-chat
         className="fixed bottom-4 z-50 flex flex-col bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl rounded-2xl overflow-hidden"
         style={{ right: `${rightOffset}px`, width: `${chatWidth}px`, height: '520px' }}
       >
