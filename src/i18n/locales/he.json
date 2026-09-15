@@ -1655,6 +1655,7 @@
     "failed_to_send_tip": "שליחת הטיפ נכשלה",
     "failed_to_create_post": "יצירת הפוסט נכשלה",
     "notification_settings_updated": "הגדרות ההתראות עודכנו",
+    "reported_for_moderation": "דווח למתינות מבוזרת על ידי מחזיקי תג",
     "failed_to_report": "הדיווח נכשל",
     "crosschain_deposit_completed": "הפקדה חוצת-רשתות הושלמה!",
     "failed_to_submit_proposal": "שליחת ההצעה נכשלה",

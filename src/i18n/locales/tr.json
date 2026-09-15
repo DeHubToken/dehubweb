@@ -1694,6 +1694,7 @@
     "failed_to_create_post": "Gönderi oluşturulamadı",
     "notification_settings_updated": "Bildirim ayarları güncellendi",
     "report_submitted": "Rapor gönderildi",
+    "reported_for_moderation": "Rozet sahipleri tarafından merkezi olmayan denetim için bildirildi",
     "failed_to_report": "Bildirilemedi",
     "crosschain_deposit_completed": "Zincirler arası yatırma tamamlandı!",
     "proposal_submitted": "Öneri gönderildi!",

@@ -21,6 +21,7 @@ import {
 import { reportContent, reportUser, getContentReportReasons, getUserReportReasons, type ReportReason } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Fallback reasons if the reasons API call fails. The ids must come from the
@@ -66,6 +67,7 @@ export function ReportModal({
   reportType = 'content',
   contentType = 'post',
 }: ReportModalProps) {
+  const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const [selectedReason, setSelectedReason] = useState<string>('');
   const [description, setDescription] = useState('');
@@ -126,7 +128,7 @@ export function ReportModal({
         });
       }
 
-      toast.success('Report submitted successfully. Our team will review it.');
+      toast.success(t('toasts.reported_for_moderation'));
       handleClose();
     } catch (error: any) {
       console.error('[ReportModal] Submit error:', error);

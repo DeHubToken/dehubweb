@@ -1216,6 +1216,7 @@
     "failed_to_send_tip": "ส่งทิปไม่สำเร็จ",
     "failed_to_create_post": "สร้างโพสต์ไม่สำเร็จ",
     "notification_settings_updated": "อัปเดตการตั้งค่าการแจ้งเตือนแล้ว",
+    "reported_for_moderation": "รายงานสำหรับการกลั่นกรองแบบกระจายอำนาจโดยผู้ถือป้าย",
     "failed_to_report": "รายงานไม่สำเร็จ",
     "crosschain_deposit_completed": "ฝากข้ามเชนเสร็จสมบูรณ์!",
     "failed_to_submit_proposal": "ส่งข้อเสนอไม่สำเร็จ",

@@ -1693,6 +1693,7 @@
     "failed_to_create_post": "投稿の作成に失敗しました",
     "notification_settings_updated": "通知設定を更新しました",
     "report_submitted": "報告を送信しました",
+    "reported_for_moderation": "バッジ所有者による分散型モデレーションの報告",
     "failed_to_report": "報告に失敗しました",
     "crosschain_deposit_completed": "クロスチェーン入金が完了しました！",
     "proposal_submitted": "提案を提出しました！",
