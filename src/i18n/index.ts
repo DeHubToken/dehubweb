@@ -10,6 +10,7 @@ import { initReactI18next } from 'react-i18next';
 
 import en from './locales/en.json';
 import { humanizeTranslationKey } from './missing-key-fallback';
+import { fillMissingPluralForms } from './plural-fallback';
 
 const STORAGE_KEY = 'user-preferred-language';
 
@@ -316,6 +317,11 @@ export async function loadLanguage(lang: string): Promise<boolean> {
       // Locale JSON loaded fine — missing feature bundles just fall back to en.
       console.warn(`[i18n] Failed to load feature bundles for "${lang}"`, err);
     }
+    // Every plural category this language actually uses, filled from the
+    // strings the locale already carries. Without it Arabic count=2/3/11,
+    // Polish 2/5/22 and every other >2-form language render English. Runs
+    // after the feature bundles so their plural keys are covered too.
+    fillMissingPluralForms(i18n, lang);
     fullyLoadedLocales.add(lang);
     return true;
   } catch (err) {
@@ -333,6 +339,11 @@ i18n.use(initReactI18next).init({
   parseMissingKeyHandler: humanizeTranslationKey,
   interpolation: { escapeValue: false },
 });
+
+// English needs one pass too: governance.proposalCount and postInfo.owner ship
+// only an _other, so t(key, { count: 1 }) resolved to nothing and rendered the
+// humanised key.
+fillMissingPluralForms(i18n, 'en');
 
 // Keep <html dir> in sync so RTL languages (Arabic & dialects, Hebrew,
 // Persian, Urdu, ...) actually lay out right-to-left in the app. The docs'
