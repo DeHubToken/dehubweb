@@ -8,6 +8,7 @@
 
 import { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { Play, Pause } from 'lucide-react';
+import { registerOffDocumentMedia } from '@/lib/pause-media-in';
 
 interface VoiceWaveformPlayerProps {
   src: string;
@@ -120,10 +121,20 @@ export const VoiceWaveformPlayer = memo(function VoiceWaveformPlayer({ src, clas
   }, [src]);
 
   // Setup audio element
+  //
+  // The element never enters the document — the canvas is what goes on screen.
+  // PersistentPageCache pauses a page's media by walking its subtree, so it
+  // walked straight past this one and a voice message played in a DM carried on
+  // through every later navigation. Registering it against the canvas is what
+  // tells the cache whose page the sound belongs to. A chat mounted OUTSIDE the
+  // cache (the sidebar, the DM dock) needs no exemption from that: its canvas
+  // sits in no cached page, so no page's sweep ever claims it, and it follows
+  // the user around exactly as it does today.
   useEffect(() => {
     const audio = new Audio(src);
     audio.preload = 'metadata';
     audioRef.current = audio;
+    const unregisterMedia = registerOffDocumentMedia(audio, () => canvasRef.current);
 
     audio.addEventListener('loadedmetadata', () => {
       if (audio.duration && isFinite(audio.duration)) {
@@ -136,6 +147,7 @@ export const VoiceWaveformPlayer = memo(function VoiceWaveformPlayer({ src, clas
     });
 
     return () => {
+      unregisterMedia();
       audio.pause();
       audio.src = '';
       audioRef.current = null;
