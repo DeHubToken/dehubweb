@@ -7,6 +7,7 @@ export { EmojiGifPicker } from './EmojiGifPicker';
 export { VoiceRecorder } from './VoiceRecorder';
 export { GeneralAIChat } from './GeneralAIChat';
 export { DirectMessageChat } from './DirectMessageChat';
+export { DmDock } from './DmDock';
 export { NewConversationModal } from './NewConversationModal';
 export { NewMessageSelector } from './NewMessageSelector';
 export { CreateGroupModal } from './CreateGroupModal';

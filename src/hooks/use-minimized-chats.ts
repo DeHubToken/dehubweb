@@ -10,8 +10,10 @@ import { useState, useEffect, useCallback } from 'react';
 export interface MinimizedChat {
   id: string;
   title: string;
-  type: 'image' | 'video' | 'live' | 'post';
+  type: 'image' | 'video' | 'live' | 'post' | 'dm';
   author?: string;
+  /** Peer avatar for a docked DM; AI chats fall back to the assistant face. */
+  avatar?: string;
 }
 
 const STORAGE_KEY = 'minimized-ai-chats';
