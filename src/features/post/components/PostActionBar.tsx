@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Paperclip, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare, BarChart2 } from 'lucide-react';
+import { Paperclip, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare, BarChart2, MonitorPlay } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -94,7 +95,15 @@ export function PostActionBar({
   onTogglePoll,
   hasPoll,
 }: PostActionBarProps) {
+  const { t } = useTranslation();
   const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
+  /**
+   * OBS does not want the composer's fields — it wants an ingest URL and a
+   * key. Picking it opens the Go Live sheet on its own setup step instead of
+   * putting the composer into live mode, so nothing is minted until the
+   * creator has actually asked for the credentials.
+   */
+  const [encoderSetup, setEncoderSetup] = useState(false);
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
@@ -123,6 +132,15 @@ export function PostActionBar({
     // Stages used to close this modal and hand over a second create form asking
     // for the same title and description again; the room is now opened by the
     // Go Live button below, off what was typed here.
+  };
+
+  const handleSelectEncoder = () => {
+    // Not a live mode: the composer's fields are for a post, and an encoder
+    // stream is set up in the Go Live sheet, which asks for the title once and
+    // then hands back the ingest URL and key.
+    setLiveMode(null);
+    setLivePopoverOpen(false);
+    setEncoderSetup(true);
   };
 
   const handleSpellCheck = () => {
@@ -216,22 +234,31 @@ export function PostActionBar({
   );
 
   const handleGoLiveModalClose = () => {
+    // The encoder sheet carries its own post and never consumed the composer's
+    // fields, so backing out of it must leave what was typed here alone —
+    // closing the composer would throw away a draft the creator never
+    // submitted. Only the broadcast handover, which published its post before
+    // the camera came on, takes the composer down with it.
+    const wasBroadcast = !!liveStream;
     setLiveMode(null);
-    // Closes the composer behind it too: the broadcast is over, and the post it
-    // was made from was published before the camera ever came on.
-    onCloseModal?.();
+    setEncoderSetup(false);
+    if (wasBroadcast) onCloseModal?.();
   };
 
   const showUploadBar = isPosting && (uploadProgress ?? 0) > 0;
 
   return (
     <>
-      {/* Opened by the arrival of a provisioned stream, never by a button. The
-          setup form it used to carry is gone — the composer above is the form. */}
+      {/* Two ways in, and they land on different steps. A provisioned stream
+          arriving from the composer's own mint opens the broadcast console —
+          the composer above was its setup form. Picking OBS opens the sheet's
+          own setup step instead, because an encoder stream needs a key handed
+          back to it and the composer has no field for that. */}
       <GoLiveModal
-        isOpen={!!liveStream}
+        isOpen={!!liveStream || encoderSetup}
         onClose={handleGoLiveModalClose}
         initialStream={liveStream}
+        {...(encoderSetup && !liveStream ? { initialSource: 'rtmp' as const } : null)}
       />
 
       {/* Upload progress bar — liquid glass bubble style */}
@@ -451,22 +478,35 @@ export function PostActionBar({
               side="top"
               sideOffset={8}
             >
-              <div className="flex flex-col items-center gap-1.5">
+              <div className="flex flex-col gap-0.5 min-w-[11rem]">
                 <button
                   type="button"
                   onClick={() => handleSelectLiveMode('video')}
-                  className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
-                  title="Live Video"
+                  className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-lg text-left hover:bg-white/10 transition-colors"
                 >
-                  <Video className="w-5 h-5 text-white" />
+                  <Video className="w-4 h-4 text-white shrink-0" />
+                  <span className="text-sm text-white">{t('goLive.sourceCamera')}</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => handleSelectLiveMode('townhall')}
-                  className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
-                  title="Stages"
+                  className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-lg text-left hover:bg-white/10 transition-colors"
                 >
-                  <Mic className="w-5 h-5 text-white" />
+                  <Mic className="w-4 h-4 text-white shrink-0" />
+                  <span className="text-sm text-white">{t('stages.title')}</span>
+                </button>
+                {/* The third one. Going live from here meant a camera or a
+                    stage and nothing else, so the encoder path — what a
+                    capture card, a console or a scene collection needs — was
+                    only reachable from a side-panel icon that exists on
+                    desktop, on one tab, and only while nobody is live. */}
+                <button
+                  type="button"
+                  onClick={handleSelectEncoder}
+                  className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-lg text-left hover:bg-white/10 transition-colors"
+                >
+                  <MonitorPlay className="w-4 h-4 text-white shrink-0" />
+                  <span className="text-sm text-white">{t('goLive.sourceEncoder')}</span>
                 </button>
               </div>
             </PopoverContent>

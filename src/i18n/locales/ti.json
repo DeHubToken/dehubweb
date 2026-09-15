@@ -2089,6 +2089,9 @@
   "work": {
     "budgetExhausted": "ናይዚ ሽልማት ባጀት ብምሉኡ ተመዲቡ እዩ።"
   },
+  "stages": {
+    "title": "ደረጃታት"
+  },
   "videoLooks": {
     "button": "ናይ ካሜራ ትርኢታት",
     "title": "ትርኢት",
@@ -2108,6 +2111,30 @@
     "neon": "ኒዮን",
     "blur": "ብዥታ",
     "pixelate": "ፒክሰል"
+  },
+  "goLive": {
+    "sourceCamera": "ካሜራ",
+    "sourceCameraHint": "ካብ'ዚ መሳርሒ'ዚ",
+    "sourceScreen": "ስክሪን",
+    "sourceScreenHint": "ጸወታ ፡ መተግበሪ ወይ ታብ ተካፈሉ",
+    "sourceEncoderHint": "ዝርዝር RTMP ርኸብ",
+    "web3AuthSlow": "Web3Auth ሰርቪስ ሕጂ ዝግበር ወይ ጊዜ ሰሪሑ ይመስል። ኢንተርነት ናትካ ምርመር ወይ ምድሓሳስ ሞክር።",
+    "signingFailed": "ብሎክቼይን ፊርማ ተወሲደ። ዋሌት ናትካ ምርመር ወይ ገጽ ምድሓሳስ ሞክር።",
+    "createStreamFailed": "ስትሪም ምፍጣር ተወሲደ",
+    "copied": "ናብ ክሊፕቦርድ ተቐዲሐ",
+    "copyFailed": "ምቅዳድ ተወሲደ",
+    "streamKey": "ስትሪም ቁልፊ",
+    "quickSetupGuide": "ፍጥነት ዝግጅት መምሪት:",
+    "obsStep1": "OBS ክፈት → Settings → Stream",
+    "obsStep2": "\"Custom\" ሰርቪስ ምረጽ",
+    "obsStep3": "Ingest URL & Stream Key ምጥቃም",
+    "obsStep4": "\"Start Streaming\" ምጥቃም",
+    "endStream": "ስትሪም ምቋረጥ",
+    "viewStream": "ስትሪም ምርኣይ",
+    "broadcasterFailed": "ብሮድካስተር ምጅማር ተወሲደ፣ ስለዚ ምንም ወሲደ ኣይነበረን — ነገር ግን ስትሪም ቀድሞ ተፍጠረ። ታሕቲ ምቋረጥ፣ ድሕሪኡ ገጽ ምድሓሳስ ወ ናብ ላይ ምኻድ።",
+    "endStreamConfirmTitle": "ስትሪም ምቋረጥ ትደሊ ዶ?",
+    "endStreamConfirmBody": "ብሮድካስት ናትካ ንሓንቲ ሰብ ዝርኣዩ ይቋረጥ ወ ምድሓሳስ ኣይከኣል።",
+    "keepStreaming": "ስትሪም ቀጥል"
   },
   "creatorFlow": {
     "title": "ፈጣሪ ፍሰት",

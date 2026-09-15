@@ -2126,6 +2126,9 @@
   "work": {
     "budgetExhausted": "ამ ჯილდოს ბიუჯეტი სრულად გამოყენებულია."
   },
+  "stages": {
+    "title": "ეტაპები"
+  },
   "videoLooks": {
     "button": "კამერის იერსახეები",
     "title": "იერსახე",
@@ -2156,6 +2159,29 @@
     "reactions": "რეაქციები",
     "reply": "პასუხი",
     "loginDescription": "შედით ისტორიების სანახავად და შესაქმნელად."
+  },
+  "goLive": {
+    "youAreLive": "თქვენ Live ხართ",
+    "drawerDescription": "კონფიგურირებული გაქვთ თქვენი livestream პარამეტრები ან მიიღეთ თქვენი RTMP credentials.",
+    "howToStream": "როგორ გსურთ stream?",
+    "sourceCamera": "Კამერა",
+    "sourceCameraHint": "პირდაპირ ამ მოწყობილობიდან",
+    "sourceScreen": "Ეკრანი",
+    "sourceScreenHint": "გაზიარება თამაშის, აპლიკაციის ან ჩანართის",
+    "sourceEncoder": "OBS / ენკოდერი",
+    "sourceEncoderHint": "მიიღეთ RTMP დეტალები",
+    "screenPickHint": "თქვენ აირჩევთ ეკრანს, ფანჯარას ან ჩანართს შემდეგ — შემდეგ ის live გადის თქვენი მიკროფონით და ჩანართის საკუთარი ხმით.",
+    "replayAllowanceUsed": "თქვენ დღეს გამოიყენეთ ატვირთვის ლიმიტი, ამიტომ ეს stream არ შეინახავს replay-ს. ლიმიტი აღდგება შუაღამის UTC-ზე.",
+    "replayFreeTier": "უფასო ანგარიშები ინახავენ stream-ის პირველ {{size}} replay-ს — badges-ის დადება ზღვარს აწევს.",
+    "replayTiered": "ამ stream-ის {{size}} ინახება replay-ს სახით ({{tier}} ყოველდღიური ლიმიტი).",
+    "titlePlaceholder": "რის შესახებ არის თქვენი stream?",
+    "addCover": "დაამატეთ cover",
+    "coverTooLarge": "Cover image უნდა იყოს 8 MB-ზე ნაკლები",
+    "enterTitle": "გთხოვთ შეიყვანოთ stream title",
+    "screenShareCancelled": "Screen sharing გაუქმდა.",
+    "shopItemsNotAttached_one": "{{count}} shop item არ შეიძლება დაერთოს — დაამატეთ ის shop panel-დან.",
+    "shopItemsNotAttached_other": "{{count}} shop items არ შეიძლება დაერთოს — დაამატეთ ისინი shop panel-დან.",
+    "youAreGoingLive": "თქვენ live ხართ!"
   },
   "creatorFlow": {
     "title": "შემქმნელის ნაკადი",

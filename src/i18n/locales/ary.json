@@ -2147,6 +2147,9 @@
   "work": {
     "budgetExhausted": "الميزانية ديال هاد الجائزة تسالات."
   },
+  "stages": {
+    "title": "المراحل"
+  },
   "videoLooks": {
     "button": "مظاهر الكاميرا",
     "title": "المظهر",
@@ -2166,6 +2169,37 @@
     "neon": "نيون",
     "blur": "طمس",
     "pixelate": "بكسلة"
+  },
+  "goLive": {
+    "goLive": "راه لايف",
+    "youAreLive": "أنت لايف",
+    "streamReady": "الستريم جاهز",
+    "drawerDescription": "كونفيغور إعدادات البث ديالك أو حصل على RTMP credentials ديالك.",
+    "howToStream": "كيفاش بغيتي تبث؟",
+    "sourceCamera": "الكاميرا",
+    "sourceCameraHint": "مباشرة من الجهاز ديالك",
+    "sourceScreen": "الشاشة",
+    "sourceScreenHint": "شارك لعبة، تطبيق أو تاب",
+    "sourceEncoderHint": "حصل على RTMP details",
+    "screenPickHint": "غادي تختار الشاشة، النافذة أو التاب جوج - بعدين غادي يطلع لايف مع الميك ديالك والصوت ديال التاب.",
+    "replayAllowanceUsed": "استعملت الحد ديالك ديال التحميل اليوم، فهاد الستريم ما غادي يحتفظ بريبلاي. الحد غادي يتعاود في منتصف الليل UTC.",
+    "replayFreeTier": "الحسابات المجانية تحتفظ بأول {{size}} من الستريم كريبلاي - الرهان على الباجات يرفع الحد.",
+    "replayTiered": "تا {{size}} من هاد الستريم محفوظة كريبلاي ({{tier}} الحد اليومي).",
+    "streamTitle": "عنوان الستريم *",
+    "titlePlaceholder": "شنو الموضوع ديال الستريم ديالك؟",
+    "description": "الوصف",
+    "descriptionPlaceholder": "قول للمشاهدين شنو اللي غادي يتوقعوه...",
+    "coverImage": "صورة الغلاف",
+    "remove": "حذف",
+    "optional": "اختياري",
+    "addCover": "زيد صورة غلاف",
+    "coverTooLarge": "صورة الغلاف خاصها تكون أقل من 8 MB",
+    "enterTitle": "دخل عنوان الستريم",
+    "screenShareCancelled": "مشاركة الشاشة تم إلغاؤها.",
+    "shopItemsNotAttached_one": "{{count}} عنصر من المتجر ما قدرش يتعلق - زيده من لوحة المتجر.",
+    "shopItemsNotAttached_other": "{{count}} عناصر من المتجر ما قدرش يتعلقوا - زيدهم من لوحة المتجر.",
+    "publishing": "تنشر في قاعدة البيانات اللامركزية...",
+    "youAreGoingLive": "أنت غادي تطلع لايف!"
   },
   "creatorFlow": {
     "backToStudio": "الرجوع إلى Creator Studio",

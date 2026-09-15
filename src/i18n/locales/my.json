@@ -2114,6 +2114,9 @@
   "work": {
     "budgetExhausted": "ဤဆုကြေးငွေ၏ ဘတ်ဂျက်အားလုံး သုံးပြီးဖြစ်သည်။"
   },
+  "stages": {
+    "title": "အဆင့်များ"
+  },
   "videoLooks": {
     "button": "ကင်မရာ အသွင်များ",
     "title": "အသွင်",
@@ -2140,6 +2143,47 @@
     "viewStory": "ပုံပြင်ကြည့်ရန်",
     "noStories": "ပုံပြင်များ မရှိသေးပါ",
     "loginDescription": "ပုံပြင်များကြည့်ရှုရန်နှင့် ဖန်တီးရန် ဝင်ရောက်ပါ။"
+  },
+  "goLive": {
+    "youAreLive": "သင်သည် Live ဖြစ်နေသည်",
+    "drawerDescription": "သင်၏ livestream ဆက်တင်များကို ကွန်ဖစ်ဆက်တင်ပြုလုပ်ပါ သို့မဟုတ် သင်၏ RTMP အထောက်အထားများကို ရယူပါ။",
+    "howToStream": "သင်သည် မည်သည့်နည်းလမ်းဖြင့် stream လုပ်လိုပါသနည်း?",
+    "sourceCamera": "ကင်မရာ",
+    "sourceCameraHint": "ဤကိရိယာမှ တိုက်ရိုက်",
+    "sourceScreen": "မျက်နှာပြင်",
+    "sourceScreenHint": "ဂိမ်း၊ app သို့မဟုတ် tab ကို မျှဝေပါ",
+    "sourceEncoderHint": "RTMP အသေးစိတ်များ ရယူပါ",
+    "screenPickHint": "သင်သည် screen၊ window သို့မဟုတ် tab ကို ရွေးချယ်ပါ — ထို့နောက် သင်၏ mic နှင့် tab ၏ကိုယ်ပိုင်အသံဖြင့် live သွားပါ။",
+    "replayAllowanceUsed": "သင်သည် ယနေ့၏ upload allowance ကို အသုံးပြုပြီးပါပြီ၊ ထို့ကြောင့် ဤ stream သည် replay ကို ထိန်းသိမ်းမည်မဟုတ်ပါ။ Allowance သည် UTC အတွင်းည 12 နာရီတွင် ပြန်လည်သတ်မှတ်ပါ။",
+    "replayFreeTier": "Free accounts များသည် stream ၏ ပထမ {{size}} ကို replay အဖြစ် ထိန်းသိမ်းပါ — staking badges များသည် limit ကို မြှင့်တင်ပါ။",
+    "replayTiered": "ဤ stream ၏ အများဆုံး {{size}} ကို replay အဖြစ် ထိန်းသိမ်းထားသည် ({{tier}} နေ့စဉ် allowance)။",
+    "titlePlaceholder": "သင်၏ stream သည် အကြောင်းအရာ မည်သည့်အရာ ဖြစ်သနည်း?",
+    "remove": "ဖယ်ရှားပါ",
+    "addCover": "Cover ထည့်သွင်းပါ",
+    "coverTooLarge": "Cover image သည် 8 MB အောက်ဖြစ်ရမည်",
+    "enterTitle": "Stream title ကို ထည့်သွင်းပါ",
+    "screenShareCancelled": "Screen sharing ကို ပယ်ဖျက်ပြီးပါပြီ။",
+    "shopItemsNotAttached_one": "{{count}} shop item ကို attach မလုပ်နိုင်ပါ — shop panel မှ ထည့်သွင်းပါ။",
+    "shopItemsNotAttached_other": "{{count}} shop items များကို attach မလုပ်နိုင်ပါ — shop panel မှ ထည့်သွင်းပါ။",
+    "publishing": "Decentralized database သို့ ထုတ်ဝေနေသည်...",
+    "youAreGoingLive": "သင်သည် live သွားပါပြီ!",
+    "streamIsReady": "လိုင်း စမ်းချက် အဆင်သင့် ဖြစ်သည်။",
+    "web3AuthSlow": "Web3Auth ဝန်ဆောင်မှု သည် လက်ရှိ နှေးကွေးနေ သို့မဟုတ် အချိန်ကုန်သွားနေသည်။ သင်၏ အင်တာနက် ကို စစ်ဆေးပါ သို့မဟုတ် ပြန်လည် စတင်ပါ။",
+    "signingFailed": "Blockchain လက်မှတ်ခြင်း ပျက်ကွက်သွားသည်။ သင်၏ ပိုက်ဆံအိတ် ကို စစ်ဆေးပါ သို့မဟုတ် စာမျက်နှာ ကို ပြန်လည် စတင်ပါ။",
+    "createStreamFailed": "စမ်းချက် ဖန်တီးခြင်း ပျက်ကွက်သွားသည်",
+    "copied": "ကလစ်ဘုတ်ထဲသို့ ကူးယူထည့်သွင်းပြီးပါပြီ",
+    "copyFailed": "ကူးယူထည့်သွင်းခြင်း ပျက်ကွက်သွားသည်",
+    "quickSetupGuide": "လျင်မြန်သော စည်းမျဉ်းစည်းကမ်း လမ်းညွှန်ချက်:",
+    "obsStep1": "OBS ကို ဖွင့်ပါ → ဆက်တင် → Stream",
+    "obsStep2": "\"Custom\" ဝန်ဆောင်မှု ကို ရွေးချယ်ပါ",
+    "obsStep3": "Ingest URL & Stream Key ကို ကပ်ထည့်ပါ",
+    "obsStep4": "\"Start Streaming\" ကို နှိပ်ပါ",
+    "endStream": "Stream ကို အဆုံးသတ်ပါ",
+    "viewStream": "Stream ကို ကြည့်ရှုပါ",
+    "broadcasterFailed": "ထုတ်လွှင့်သူ ကို ဖွင့်လည်ပွင့်ခြင်း ပျက်ကွက်သွားသည်၊ ထို့ကြောင့် အဘယ်သည်မျှ ကူးယူထည့်သွင်းမထားသော်လည်း စမ်းချက် ကို ဖန်တီးပြီးသည်။ အောက်တွင် အဆုံးသတ်ပါ၊ ထို့နောက် စာမျက်နှာ ကို ပြန်လည် စတင်ပြီး တစ်ဖန် လိုင်း စမ်းချက် ပြုလုပ်ပါ။",
+    "endStreamConfirmTitle": "သင် စမ်းချက် ကို အဆုံးသတ်လိုသည် သေချာပါသလား?",
+    "endStreamConfirmBody": "သင်၏ ထုတ်လွှင့်မှု သည် ကြည့်ရှုနေသူ အားလုံး အတွက် ရပ်တန့်သွားပြီး ပြန်လည် စတင်၍ မရနိုင်ပါ။",
+    "keepStreaming": "စမ်းချက် ကို ဆက်လက်ထားပါ"
   },
   "creatorFlow": {
     "title": "ဖန်တီးသူ၏ စီးဆင်းမှု",

@@ -2111,6 +2111,9 @@
   "work": {
     "budgetExhausted": "ਇਸ ਬਾਊਂਟੀ ਦਾ ਪੂਰਾ ਬਜਟ ਵੰਡਿਆ ਜਾ ਚੁੱਕਾ ਹੈ।"
   },
+  "stages": {
+    "title": "ਪੜਾਅ"
+  },
   "videoLooks": {
     "button": "ਕੈਮਰਾ ਲੁੱਕ",
     "title": "ਲੁੱਕ",
@@ -2130,6 +2133,14 @@
     "neon": "ਨਿਓਨ",
     "blur": "ਧੁੰਦਲਾ",
     "pixelate": "ਪਿਕਸਲ"
+  },
+  "goLive": {
+    "sourceCamera": "ਕੈਮਰਾ",
+    "sourceCameraHint": "ਇਸ ਜੰਤਰ ਤੋਂ ਸਿੱਧਾ",
+    "sourceScreen": "ਸਕਰੀਨ",
+    "sourceScreenHint": "ਇੱਕ ਗੇਮ, ਐਪ ਜਾਂ ਟੈਬ ਸਾਂਝਾ ਕਰੋ",
+    "sourceEncoder": "OBS / ਇਕੋਡਰ",
+    "sourceEncoderHint": "RTMP ਵੇਰਵੇ ਪ੍ਰਾਪਤ ਕਰੋ"
   },
   "creatorFlow": {
     "title": "ਨਿਰਮਾਤਾ ਫਲੋ",

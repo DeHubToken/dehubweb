@@ -2135,6 +2135,9 @@
   "work": {
     "budgetExhausted": "የዚህ ሽልማት በጀት ሙሉ በሙሉ ተይዟል።"
   },
+  "stages": {
+    "title": "ደረጃዎች"
+  },
   "videoLooks": {
     "button": "የካሜራ መልኮች",
     "title": "መልክ",
@@ -2154,6 +2157,14 @@
     "neon": "ኒዮን",
     "blur": "ብዥታ",
     "pixelate": "ፒክሰል"
+  },
+  "goLive": {
+    "sourceCamera": "ካሜራ",
+    "sourceCameraHint": "ከዚህ መሣሪያ በቀጥታ",
+    "sourceScreen": "ማያ ገጽ",
+    "sourceScreenHint": "ጨዋታ, መተግበሪያ ወይም ትር ያጋሩ",
+    "sourceEncoder": "OBS / ኢንኮደር",
+    "sourceEncoderHint": "RTMP ዝርዝሮችን ያግኙ"
   },
   "creatorFlow": {
     "title": "የፈጣሪ ፍሰት",
