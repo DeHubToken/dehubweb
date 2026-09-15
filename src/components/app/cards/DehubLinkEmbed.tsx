@@ -14,13 +14,13 @@
  * that still goes where the link went.
  */
 
-import { lazy, Suspense, useMemo, type ReactNode } from 'react';
+import { lazy, Suspense, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Link2 } from 'lucide-react';
 import { resolveNewPost } from '@/lib/api/dehub';
 import type { DehubLinkMatch } from '@/lib/dehub-links';
-import { dehubLinkLabel, findDehubLinks, stripDehubLinkMatches } from '@/lib/dehub-links';
+import { dehubLinkLabel, MAX_EMBEDS_PER_MESSAGE } from '@/lib/dehub-links';
 import { CommunityLinkEmbed } from '@/components/app/communities/CommunityLinkEmbed';
 import { CommunityInviteEmbed } from '@/components/app/communities/CommunityInviteEmbed';
 import { StoreLinkEmbed } from '@/components/app/stores/StoreLinkEmbed';
@@ -198,7 +198,7 @@ export function DehubLinkEmbed({ link, compact = false, className }: DehubLinkEm
  * of cards: a message that pastes six links gets two cards and keeps the rest
  * as text (the surfaces only strip what they carded — see `strippedForDisplay`).
  */
-export const MAX_EMBEDS_PER_MESSAGE = 2;
+export { MAX_EMBEDS_PER_MESSAGE };
 
 export function DehubLinkEmbeds({
   links,
@@ -218,19 +218,7 @@ export function DehubLinkEmbeds({
 }
 
 /**
- * The one call a surface needs: what to card, and what text to print now that
- * those links are being carded.
- *
- * Returns only the links that will actually be rendered, and text stripped of
- * exactly those — so a body with five links keeps three of them as readable
- * text instead of silently losing them to the cap.
+ * `useDehubLinks` lives in `DehubLinkEmbedsLazy` — it is a regex over a string
+ * and every feed card calls it, so it must not drag this switchboard onto the
+ * boot path with it.
  */
-export function useDehubLinks(text?: string | null): {
-  links: DehubLinkMatch[];
-  displayText: string;
-} {
-  return useMemo(() => {
-    const links = findDehubLinks(text).slice(0, MAX_EMBEDS_PER_MESSAGE);
-    return { links, displayText: stripDehubLinkMatches(text, links) };
-  }, [text]);
-}

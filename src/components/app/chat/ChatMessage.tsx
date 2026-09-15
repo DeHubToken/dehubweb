@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { TranslatableText, renderTextWithLinks } from '../TranslatableText';
 import { ChatLinkPreviews } from './ChatLinkPreviews';
-import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { useTranslation as useTextTranslation } from '../TranslatableText';
 import { useNavigate } from 'react-router-dom';

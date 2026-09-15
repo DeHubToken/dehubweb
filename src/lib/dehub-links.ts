@@ -314,6 +314,12 @@ export function parseDehubLink(input: string): DehubLinkMatch | null {
 // ── Scanning free text ──────────────────────────────────────────────────────
 
 /** Every DeHub entity link in a block of text, in the order they appear. */
+/**
+ * How many links in one block of text get carded. The rest stay as text —
+ * see `useDehubLinks`.
+ */
+export const MAX_EMBEDS_PER_MESSAGE = 2;
+
 export function findDehubLinks(text?: string | null): DehubLinkMatch[] {
   if (!text) return [];
 

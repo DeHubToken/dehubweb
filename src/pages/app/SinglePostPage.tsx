@@ -54,7 +54,7 @@ import { RelatedImagesFeed } from '@/components/app/feeds/RelatedImagesFeed';
 import { RelatedPostsFeed } from '@/components/app/feeds/RelatedPostsFeed';
 import { StreamShopRail } from '@/components/app/live/StreamShop';
 import { StreamShopManager } from '@/components/app/live/StreamShopManager';
-import { PostAIChat } from '@/components/app/cards/PostAIChat';
+import { PostAIChatLazy } from '@/components/app/cards/PostAIChatLazy';
 import { ReportModal } from '@/components/app/modals/ReportModal';
 import { PostUtilityMenuItems } from '@/components/app/cards/PostUtilityMenuItems';
 import { TipModal } from '@/components/app/modals/TipModal';
@@ -1178,7 +1178,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
         )}
 
         {/* Desktop AI Chat */}
-        <PostAIChat
+        <PostAIChatLazy
           isOpen={showDesktopAIChat}
           onClose={() => setShowDesktopAIChat(false)}
           postContext={{
