@@ -534,6 +534,9 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
           exit={{ opacity: 0, y: 40, scale: 0.95 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           data-overlay-content
+          /* Same opt-out the mobile drawer already carries — without it this
+             panel is a see-through wash on paper. */
+          data-ai-chat
           className="fixed bottom-4 z-50 flex flex-col bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl rounded-2xl overflow-hidden"
           style={{
             right: `${rightOffset}px`,
