@@ -26,6 +26,7 @@ import {
   drawTerrain,
   drawOrb,
   drawStatic,
+  setVisualizerInk,
   decodeAudioWaveform,
   seededPeaks,
   idleFrequencyData,
@@ -357,6 +358,8 @@ export function AudioVisualizer({
   const idleTime = useMemo(() => idleTimeData(idleShape, IDLE_BIN_COUNT), [idleShape]);
 
   const drawFrame = useCallback(() => {
+    // Paper flips the painters' lightness scale; see setVisualizerInk.
+    setVisualizerInk(isLightTheme);
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -433,7 +436,7 @@ export function AudioVisualizer({
         drawOrb(ctx, frequencyData, width, height, hue);
         break;
     }
-  }, [style, hue, seed, idleFrequency, idleTime]);
+  }, [style, hue, seed, idleFrequency, idleTime, isLightTheme]);
 
   const drawFrameRef = useRef(drawFrame);
   drawFrameRef.current = drawFrame;
@@ -703,21 +706,12 @@ export function AudioVisualizer({
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
 
   return (
-    <div data-no-swipe data-audio-player className={`relative ${className}`}>
+    <div data-no-swipe className={`relative ${className}`}>
       <canvas
         ref={canvasRef}
         width={canvasSize.w}
         height={canvasSize.h}
-        /* The plate the artwork is painted on, not a UI surface. Every painter in
-           visualizer-styles.ts strokes at 80-100% lightness because it is drawing
-           on black. On paper the theme's blanket bg-black/* wash flattened this to
-           rgba(0,0,0,0.05) and the waveform went near-white on near-white, leaving
-           an empty grey rectangle in the post. bg-black/40 composites to a true
-           dark only over a dark card, so light mode gets an opaque plate instead,
-           and data-keep-dark holds both off the wash. Dark media on paper is what
-           a video frame already does here. */
-        data-keep-dark
-        className={`w-full h-full rounded-xl select-none ${isLightTheme ? 'bg-zinc-900' : 'bg-black/40'}`}
+        className="w-full h-full rounded-xl bg-black/40 select-none"
         style={{ touchAction: 'pan-y' }}
         onPointerDown={(e) => beginScrub(e.currentTarget, e, false)}
         onPointerMove={(e) => moveScrub(e.currentTarget, e)}
