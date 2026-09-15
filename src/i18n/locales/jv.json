@@ -2467,7 +2467,16 @@
     "kindVideo": "Video",
     "kindAudio": "Audio",
     "kindImage": "Gambar",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Deleng maneh sadurunge posting",
+    "reviewSubtitle": "Saka {{source}}, minangka {{kind}}. Sunting apa wae sing sampeyan karepake — tinggalake judhule kosong kanggo tetep judhul asli.",
+    "reviewName": "Judhul",
+    "reviewNamePlaceholder": "Tinggalake kosong kanggo tetep judhul asli",
+    "reviewDescription": "Katrangan",
+    "reviewDescriptionPlaceholder": "Ngomong apa-apa babagan posting iki (opsional)",
+    "reviewLiveWarning": "Pranala iku live stream. Ngenteni nganti rampung banjur impor rekamane.",
+    "reviewCancel": "Batal",
+    "reviewConfirm": "Impor"
   },
   "banned": {
     "title": "Akun sampeyan wis dilarang",
@@ -2475,5 +2484,16 @@
     "line": "Akun sampeyan wis dilarang, mula sampeyan ora bisa ngirim, ngomentari utawa ngirim pesen.",
     "reason": "Alasan: {{reason}}",
     "deleteAccount": "Busak akun lan data sampeyan"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Bukak sing asli",
+    "editThis": "Sunting judul lan deskripsi",
+    "editTitle": "Judul",
+    "editDescription": "Deskripsi",
+    "editDescriptionPlaceholder": "Deskripsi (opsional)",
+    "editDone": "Rampung",
+    "edited": "Disunting",
+    "subtitle": "Tempel saluran utawa profil, sunting apa sing disenengi, mbayar sapisan."
   }
 }

@@ -2476,7 +2476,16 @@
     "kindVideo": "ataata",
     "kindAudio": "Ororongo",
     "kindImage": "Whakaahua",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Arotake i mua i te tuku",
+    "reviewName": "Ingoa",
+    "reviewNamePlaceholder": "Waiho noa ki te pupuri i te taitara taketake",
+    "reviewDescription": "Whakaahuatanga",
+    "reviewDescriptionPlaceholder": "Korero i tetahi mea e pā ana ki tenei pou (kōwhiringa)",
+    "reviewLiveWarning": "Ko tenei hononga he awa ora. Kia tae noa ki te mutunga, me te kawemai i te tuhi i te wahi.",
+    "reviewCancel": "Whakakorea",
+    "reviewConfirm": "Te kawemai",
+    "reviewSubtitle": "Mai i te {{puna}}, rite {{kind}}}. Whakatika i nga mea katoa e hiahia ana koe — waiho te taitara kore ki te pupuri i te taketake."
   },
   "banned": {
     "title": "Kua aukatihia tō pūkete",
@@ -2484,5 +2493,16 @@
     "line": "Kua aukatihia to kaute, na reira kaore e taea e koe te tuku, te korero, te tuku karere ranei.",
     "reason": "Ngā take: {{reason}}",
     "deleteAccount": "Mukua tō pūkete me ngā raraunga"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you...",
+    "watchOnSource": "Whakatuwherahia te taketake",
+    "editThis": "Whakatika te taitara me te whakaahuatanga",
+    "editTitle": "Ingoa",
+    "editDescription": "Whakaahuatanga",
+    "editDescriptionPlaceholder": "Whakaahuatanga (kōwhiringa)",
+    "editDone": "Kua oti te mahi",
+    "edited": "Whakahōu",
+    "subtitle": "Tangohia he hongere, he pūkete ranei, whakatika i te mea e hiahia ana koe, utu kotahi."
   }
 }

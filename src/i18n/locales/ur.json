@@ -4558,7 +4558,16 @@
     "kindVideo": "ویڈیو",
     "kindAudio": "آڈیو",
     "kindImage": "تصاویر",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "پوسٹ کرنے سے پہلے جائزہ لیں",
+    "reviewSubtitle": "منجانب {{source}}، منجانب {{kind}}۔ اپنی پسند کی کسی بھی چیز میں ترمیم کریں — اصل کو برقرار رکھنے کے لیے عنوان کو خالی چھوڑ دیں ۔",
+    "reviewName": "عنوان",
+    "reviewNamePlaceholder": "اصل عنوان رکھنے کے لیے خالی چھوڑیں",
+    "reviewDescription": "تفصیل",
+    "reviewDescriptionPlaceholder": "اس پوسٹ کے بارے میں کچھ کہیں (آپشنل)",
+    "reviewLiveWarning": "وہ لنک ایک لائیو اسٹریم ہے ۔ اس کے ختم ہونے تک انتظار کریں اور اس کے بجائے ریکارڈنگ درآمد کریں ۔",
+    "reviewCancel": "منسوخ کریں",
+    "reviewConfirm": "درآمد کریں"
   },
   "banned": {
     "title": "آپ کا اکاؤنٹ ممنوع ہے",
@@ -4566,5 +4575,16 @@
     "line": "آپ کا اکاؤنٹ ممنوع ہے، لہذا آپ پیغامات پوسٹ، تبصرہ یا بھیج نہیں سکتے ۔",
     "reason": "وجہ: {{reason}}",
     "deleteAccount": "اپنا اکاؤنٹ اور ڈیٹا حذف کریں"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "اصل کھولیں",
+    "editThis": "عنوان اور تفصیل میں ترمیم کریں",
+    "editTitle": "عنوان",
+    "editDescription": "تفصیل",
+    "editDescriptionPlaceholder": "تفصیل (اختیاری)",
+    "editDone": "ہو گیا",
+    "edited": "ترمیم شدہ",
+    "subtitle": "چینل یا پروفائل پیسٹ کریں، اپنی پسند میں ترمیم کریں، ایک بار ادائیگی کریں ۔"
   }
 }

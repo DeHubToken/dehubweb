@@ -5052,7 +5052,16 @@
     "kindVideo": "Video",
     "kindAudio": "Audio",
     "kindImage": "Gambar",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Semak sebelum menyiarkan",
+    "reviewSubtitle": "Daripada {{source}}, sebagai {{kind}}. Edit apa sahaja yang anda suka — biarkan tajuk kosong untuk mengekalkan yang asal.",
+    "reviewName": "Tajuk",
+    "reviewNamePlaceholder": "Biarkan kosong untuk mengekalkan tajuk asal",
+    "reviewDescription": "Keterangan",
+    "reviewDescriptionPlaceholder": "Katakan sesuatu tentang hantaran ini (pilihan)",
+    "reviewLiveWarning": "Pautan itu adalah strim langsung. Tunggu sehingga ia berakhir dan import rakaman.",
+    "reviewCancel": "Batal",
+    "reviewConfirm": "Import"
   },
   "banned": {
     "title": "Akaun anda telah diharamkan",
@@ -5060,5 +5069,16 @@
     "line": "Akaun anda telah diharamkan, jadi anda tidak boleh menyiarkan, memberi komen atau menghantar mesej.",
     "reason": "Sebab: {{reason}}",
     "deleteAccount": "Hapuskan akaun dan data anda"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@anda, tiktok.com/@anda, vimeo.com/you...",
+    "watchOnSource": "Buka yang asal",
+    "editThis": "Edit tajuk dan keterangan",
+    "editTitle": "Tajuk",
+    "editDescription": "Keterangan",
+    "editDescriptionPlaceholder": "Keterangan (pilihan)",
+    "editDone": "Selesai",
+    "edited": "Disunting",
+    "subtitle": "Tampal saluran atau profil, edit apa yang anda suka, bayar sekali."
   }
 }

@@ -2390,7 +2390,16 @@
     "kindVideo": "Video",
     "kindAudio": "Audio",
     "kindImage": "圖片",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "发布前审查",
+    "reviewSubtitle": "从 {{source}}，作为 {{kind}}。编辑你喜欢的任何内容 — 留空标题以保留原始标题。",
+    "reviewName": "标题",
+    "reviewNamePlaceholder": "留空以保留原始标题",
+    "reviewDescription": "描述",
+    "reviewDescriptionPlaceholder": "说一些关于这个帖子的内容（可选）",
+    "reviewLiveWarning": "那个链接是直播。等到它结束后再导入录制。",
+    "reviewCancel": "取消",
+    "reviewConfirm": "导入"
   },
   "banned": {
     "title": "你个账户被禁用了",
@@ -2398,6 +2407,17 @@
     "line": "你个账户被禁用了，所以你不能发帖、评论或者发消息。",
     "reason": "原因：{{reason}}",
     "deleteAccount": "删除你个账户和数据"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "打开原文",
+    "editThis": "编辑标题和描述",
+    "editTitle": "标题",
+    "editDescription": "描述",
+    "editDescriptionPlaceholder": "描述（可选）",
+    "editDone": "完成",
+    "edited": "已编辑",
+    "subtitle": "粘贴频道或个人资料，编辑你喜欢的内容，一次性付款。"
   },
   "post": {
     "like": "赞",

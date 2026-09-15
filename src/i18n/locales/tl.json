@@ -4601,7 +4601,16 @@
     "kindVideo": "Video",
     "kindAudio": "Audio",
     "kindImage": "Mga Larawan",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Suriin bago mag - post",
+    "reviewSubtitle": "Mula {{source}}, bilang {{kind}}. I - edit ang anumang gusto mo — iwanan ang pamagat na walang laman upang panatilihing orihinal.",
+    "reviewName": "Pamagat",
+    "reviewNamePlaceholder": "Iwanan ang walang laman upang panatilihin ang orihinal na pamagat",
+    "reviewDescription": "Paglalarawan",
+    "reviewDescriptionPlaceholder": "Magsabi ng isang bagay tungkol sa post na ito (opsyonal)",
+    "reviewLiveWarning": "Ang link na iyon ay isang live stream. Maghintay hanggang sa matapos ito at sa halip ay i - import ang recording.",
+    "reviewCancel": "Kanselahin",
+    "reviewConfirm": "I-import"
   },
   "banned": {
     "title": "Ipinagbabawal ang iyong account",
@@ -4609,6 +4618,17 @@
     "line": "Ipinagbabawal ang iyong account, kaya hindi ka maaaring mag - post, magkomento o magpadala ng mga mensahe.",
     "reason": "Dahilan:{{reason}}",
     "deleteAccount": "Tanggalin ang iyong account at data"
+  },
+  "migrate": {
+    "placeholder": "instagram.com/tiktok/",
+    "watchOnSource": "Buksan ang orihinal",
+    "editThis": "I - edit ang pamagat at paglalarawan",
+    "editTitle": "Pamagat",
+    "editDescription": "Paglalarawan",
+    "editDescriptionPlaceholder": "Paglalarawan (opsyonal)",
+    "editDone": "Tapos na",
+    "edited": "Na - edit",
+    "subtitle": "I - paste ang isang channel o profile, i - edit kung ano ang gusto mo, magbayad nang isang beses."
   },
   "walletSelector": {
     "title": "Piliin ang Wallet",

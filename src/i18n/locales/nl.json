@@ -4999,7 +4999,16 @@
     "kindVideo": "Video",
     "kindAudio": "Audio",
     "kindImage": "Afbeeldingen",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Recensie voordat u plaatst",
+    "reviewSubtitle": "Vanaf {{source}}, als {{kind}}. Bewerk alles wat je wilt — laat de titel leeg om het origineel te behouden.",
+    "reviewName": "Titel",
+    "reviewNamePlaceholder": "Laat leeg om de oorspronkelijke titel te behouden",
+    "reviewDescription": "Omschrijving",
+    "reviewDescriptionPlaceholder": "Zeg iets over deze post (optioneel)",
+    "reviewLiveWarning": "Die link is een livestream. Wacht tot het eindigt en importeer in plaats daarvan de opname.",
+    "reviewCancel": "Annuleren",
+    "reviewConfirm": "Importeren"
   },
   "banned": {
     "title": "Je account is geblokkeerd",
@@ -5007,6 +5016,17 @@
     "line": "Je account is geblokkeerd, dus je kunt geen berichten plaatsen, reageren of verzenden.",
     "reason": "Reden: {{reason}}",
     "deleteAccount": "Je account en gegevens verwijderen"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@u, tiktok.com/@u, vimeo.com/you…",
+    "watchOnSource": "Open het origineel",
+    "editThis": "Titel en beschrijving aanpassen",
+    "editTitle": "Titel",
+    "editDescription": "Omschrijving",
+    "editDescriptionPlaceholder": "Beschrijving (optioneel)",
+    "editDone": "Klaar",
+    "edited": "Bewerkt",
+    "subtitle": "Plak een kanaal of profiel, bewerk wat je wilt en betaal één keer."
   },
   "home": {
     "title": "Home",

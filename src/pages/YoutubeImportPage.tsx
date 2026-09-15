@@ -28,6 +28,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Loader2, ArrowDownToLine, Link2, Clipboard, CheckCircle2, XCircle, Clock, X } from 'lucide-react';
+import { ImportDetailsDialog } from '@/components/app/converter/ImportDetailsDialog';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
@@ -129,6 +130,8 @@ export default function YoutubeImportPage() {
    * the link" — a SoundCloud paste should not need a click to say audio, and a
    * Pinterest one should not need a click to say pictures. */
   const [pickedKind, setPickedKind] = useState<MediaKind | null>(null);
+  /** The link waiting in the review dialog, or null when nothing is. */
+  const [reviewing, setReviewing] = useState<string | null>(null);
 
   /** The source of whatever is currently in the box, if it is one we take. */
   const pastedSource = detectConverterSource(url);
@@ -264,14 +267,23 @@ export default function YoutubeImportPage() {
    * path gates on the checkbox below, and "Try again" re-runs a link whose
    * attestation was made when it was first queued. */
   const queueImport = useCallback(
-    (rawUrl: string, kind?: MediaKind) => {
+    (rawUrl: string, kind?: MediaKind, details?: { name: string; description: string }) => {
       requireAuth(async () => {
         setSubmitting(true);
         try {
           // Omitted rather than guessed when re-running a failed tile: the
           // server falls back to the source's own default, which is what that
           // job was queued as in the first place.
-          await importFromYoutube({ url: rawUrl, ownershipConfirmed: true, mediaKind: kind });
+          await importFromYoutube({
+            url: rawUrl,
+            ownershipConfirmed: true,
+            mediaKind: kind,
+            // Sent only when someone actually typed something. An empty name
+            // lets the server use the source's own title, which is what
+            // clearing the box asks for.
+            name: details?.name || undefined,
+            description: details?.description || undefined,
+          });
           setUrl('');
           toast.message(t('converter.toastQueued'));
           await refresh();
@@ -297,7 +309,10 @@ export default function YoutubeImportPage() {
       toast.error(t('converter.errorNeedRights'));
       return;
     }
-    queueImport(url.trim(), mediaKind);
+    // One paste gets reviewed before it posts. "Try again" on a failed tile
+    // does not: that link was already reviewed once, and re-opening the dialog
+    // to retype the same thing would be a worse retry than no retry.
+    setReviewing(url.trim());
   };
 
   const handleDismiss = (jobId: string) => {
@@ -617,6 +632,18 @@ export default function YoutubeImportPage() {
           </section>
         )}
       </div>
+
+      <ImportDetailsDialog
+        open={reviewing !== null}
+        url={reviewing}
+        mediaKind={mediaKind}
+        onCancel={() => setReviewing(null)}
+        onConfirm={details => {
+          const target = reviewing;
+          setReviewing(null);
+          if (target) queueImport(target, mediaKind, details);
+        }}
+      />
     </>
   );
 }

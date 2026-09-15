@@ -2479,7 +2479,16 @@
     "kindVideo": "影片",
     "kindAudio": "音頻",
     "kindImage": "圖片",
-    "tileSourceKind": "{{ 來源 } } · {{ 種類 } }"
+    "tileSourceKind": "{{ 來源 } } · {{ 種類 } }",
+    "reviewTitle": "喺發佈之前睇吓",
+    "reviewSubtitle": "由 {{source}} ，作為 {{kind}} 。編輯任何你鍾意嘅內容 — 將標題留空，以保留原始內容。",
+    "reviewName": "標題:",
+    "reviewNamePlaceholder": "留空嚟保留原始標題",
+    "reviewDescription": "描述",
+    "reviewDescriptionPlaceholder": "講啲關於呢個帖子嘅嘢（可選）",
+    "reviewLiveWarning": "嗰個連結係一個直播。等到佢完結，然後轉入錄音。",
+    "reviewCancel": "取消",
+    "reviewConfirm": "進口"
   },
   "banned": {
     "title": "你嘅帳戶已被禁用",
@@ -2487,5 +2496,16 @@
     "line": "你嘅帳戶被禁止，所以你唔可以發佈、留言或者發送訊息。",
     "reason": "原因： {{reason}}",
     "deleteAccount": "刪除你嘅帳戶同數據"
+  },
+  "migrate": {
+    "placeholder": "你，你，你，你，我，你，你，你，你，你，你，你，你，你，你，你，你，你，你，你，你。",
+    "watchOnSource": "打開原始版本",
+    "editThis": "編輯標題同描述",
+    "editTitle": "標題:",
+    "editDescription": "描述",
+    "editDescriptionPlaceholder": "描述（可選）",
+    "editDone": "搞掂",
+    "edited": "編輯咗",
+    "subtitle": "貼上頻道或者個人檔案，編輯你鍾意嘅內容，畀錢一次。"
   }
 }

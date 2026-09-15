@@ -4730,7 +4730,16 @@
     "kindVideo": "Videó",
     "kindAudio": "Audió",
     "kindImage": "Képek",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Áttekintés közzététel előtt",
+    "reviewSubtitle": "{{source}} -tól, {{kind}} -ként. Szerkessz bármit, ami tetszik — hagyd üresen a címet, hogy megtartsd az eredetit.",
+    "reviewName": "Cím",
+    "reviewNamePlaceholder": "Hagyja üresen az eredeti cím megtartásához",
+    "reviewDescription": "Leírás",
+    "reviewDescriptionPlaceholder": "Mondj valamit erről a bejegyzésről (nem kötelező)",
+    "reviewLiveWarning": "Ez a link élő közvetítés. Várja meg, amíg véget ér, és importálja a felvételt.",
+    "reviewCancel": "Mégse",
+    "reviewConfirm": "Importálás"
   },
   "banned": {
     "title": "A fiókodat letiltottuk",
@@ -4738,5 +4747,16 @@
     "line": "A fiókod ki van tiltva, így nem tehetsz közzé, nem kommentelhetsz és nem küldhetsz üzeneteket.",
     "reason": "Ok: {{reason}}",
     "deleteAccount": "Fiókod és adataid törlése"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Nyissa meg az eredetit",
+    "editThis": "Cím és leírás szerkesztése",
+    "editTitle": "Cím",
+    "editDescription": "Leírás",
+    "editDescriptionPlaceholder": "Leírás (nem kötelező)",
+    "editDone": "Kész",
+    "edited": "Szerkesztve",
+    "subtitle": "Illessz be egy csatornát vagy profilt, szerkeszd, amit szeretsz, és fizess egyszer."
   }
 }

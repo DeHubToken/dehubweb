@@ -2481,7 +2481,16 @@
     "kindVideo": "_Видео",
     "kindAudio": "Аудио",
     "kindImage": "Сүрөттөр",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Жарыяланганга чейин карап чыгуу",
+    "reviewSubtitle": "From {{source}}, катары {{kind}}. Түп нускасын сактоо үчүн аталышты бош калтырыңыз.",
+    "reviewName": "Аталышы",
+    "reviewNamePlaceholder": "Түп нускасын сактоо үчүн бош калтыруу",
+    "reviewDescription": "Сыпаттамасы",
+    "reviewDescriptionPlaceholder": "Бул билдирүү жөнүндө бир нерсе айтуу (милдеттүү эмес)",
+    "reviewLiveWarning": "Бул шилтеме түз агым. Ал бүткөнгө чейин күтө туруңуз жана анын ордуна жазууну импорттоңуз.",
+    "reviewCancel": "Жокко чыгаруу",
+    "reviewConfirm": "Импорттоо"
   },
   "banned": {
     "title": "Аккаунтуңузга тыюу салынган",
@@ -2489,5 +2498,16 @@
     "line": "Аккаунтуңузга тыюу салынгандыктан, билдирүүлөрдү, комментарийлерди же билдирүүлөрдү жөнөтө албайсыз.",
     "reason": "Себеп: {{reason}}",
     "deleteAccount": "Аккаунтуңузду жана маалыматыңызды өчүрүү"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@сиз, tiktok.com/@сиз, vimeo.com/you…",
+    "watchOnSource": "Түпнусканы ачуу",
+    "editThis": "Аталышын жана сүрөттөмөсүн өзгөртүү",
+    "editTitle": "Аталышы",
+    "editDescription": "Сыпаттамасы",
+    "editDescriptionPlaceholder": "Сыпаттама (милдеттүү эмес)",
+    "editDone": "Бүттү",
+    "edited": "ӨЗГӨРТҮЛ",
+    "subtitle": "Каналды же профилди чаптаңыз, каалаган нерсеңизди түзөтүңүз, бир жолу төлөңүз."
   }
 }

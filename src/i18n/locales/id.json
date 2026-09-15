@@ -4861,7 +4861,16 @@
     "kindVideo": "Video",
     "kindAudio": "Audio",
     "kindImage": "Gambar",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Tinjau sebelum memposting",
+    "reviewSubtitle": "Mulai {{source}}, sebagai {{kind}}. Edit apa pun yang Anda suka — biarkan judul kosong untuk mempertahankan aslinya.",
+    "reviewName": "Judul",
+    "reviewNamePlaceholder": "Biarkan kosong untuk mempertahankan judul aslinya",
+    "reviewDescription": "Deskripsi",
+    "reviewDescriptionPlaceholder": "Katakan sesuatu tentang postingan ini (opsional)",
+    "reviewLiveWarning": "Tautan itu adalah streaming langsung. Tunggu sampai rekaman berakhir dan impor rekaman sebagai gantinya.",
+    "reviewCancel": "Batalkan",
+    "reviewConfirm": "Impor"
   },
   "banned": {
     "title": "Akun Anda diblokir",
@@ -4869,5 +4878,16 @@
     "line": "Akun Anda diblokir, jadi Anda tidak dapat memposting, berkomentar, atau mengirim pesan.",
     "reason": "Alasan: {{reason}}",
     "deleteAccount": "Hapus akun dan data Anda"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Buka yang asli",
+    "editThis": "Edit judul dan deskripsi",
+    "editTitle": "Judul",
+    "editDescription": "Deskripsi",
+    "editDescriptionPlaceholder": "Deskripsi (opsional)",
+    "editDone": "Selesai",
+    "edited": "Diedit",
+    "subtitle": "Tempel saluran atau profil, edit apa yang Anda suka, bayar satu kali."
   }
 }

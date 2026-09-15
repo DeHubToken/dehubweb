@@ -4628,7 +4628,16 @@
     "kindVideo": "Agterground",
     "kindAudio": "Klank",
     "kindImage": "Prente",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Hersien voor plasing",
+    "reviewSubtitle": "Van {{source}}, as {{kind}}. Wysig alles wat jy wil — laat die titel leeg om die oorspronklike te hou.",
+    "reviewName": "Titel",
+    "reviewNamePlaceholder": "Laat leeg om die oorspronklike titel te behou",
+    "reviewDescription": "Beskrywing",
+    "reviewDescriptionPlaceholder": "Sê iets oor hierdie artikel (opsioneel)",
+    "reviewLiveWarning": "Die verbinding is 'n lewende stroom. Wag totdat dit eindig en voer die opname plaas.",
+    "reviewCancel": "Kanselleer",
+    "reviewConfirm": "Voer in"
   },
   "banned": {
     "title": "Jou rekening is verbode",
@@ -4636,6 +4645,17 @@
     "line": "Jou rekening is verbode, sodat jy nie kan plaas, kommentaar lewer of boodskappe stuur nie.",
     "reason": "Reden: {{reason}}",
     "deleteAccount": "Skrap jou rekening en data"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@jy, tiktok.com/@jy, vimeo.com/you...",
+    "watchOnSource": "Open die oorspronklike",
+    "editThis": "Redigeer titel en beskrywing",
+    "editTitle": "Titel",
+    "editDescription": "Beskrywing",
+    "editDescriptionPlaceholder": "Beskrywing (opsioneel)",
+    "editDone": "Klaar",
+    "edited": "Geredigeer",
+    "subtitle": "Plak 'n kanaal of profiel, wysig wat jy wil, betaal een keer."
   },
   "home": {
     "title": "Volhoubare Web3-infrastruktuur",

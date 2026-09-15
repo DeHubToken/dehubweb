@@ -4731,7 +4731,16 @@
     "kindVideo": "Videozáznam",
     "kindAudio": "Zvuk",
     "kindImage": "Obrázky",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Zkontrolovat před zveřejněním",
+    "reviewSubtitle": "Od {{source}}, jako {{kind}}. Upravte vše, co se vám líbí — ponechte název prázdný, aby byl zachován originál.",
+    "reviewName": "Název",
+    "reviewNamePlaceholder": "Ponechte prázdné pro ponechání původního názvu",
+    "reviewDescription": "Popis",
+    "reviewDescriptionPlaceholder": "Řekni něco o tomto příspěvku (nepovinné)",
+    "reviewLiveWarning": "Tento odkaz je živý přenos. Počkejte, dokud neskončí, a místo toho importujte záznam.",
+    "reviewCancel": "Zrušit",
+    "reviewConfirm": "Import"
   },
   "banned": {
     "title": "Tvůj účet je zablokován",
@@ -4739,5 +4748,16 @@
     "line": "Váš účet je zablokován, takže nemůžete zveřejňovat, komentovat ani odesílat zprávy.",
     "reason": "Důvod: {{reason}}",
     "deleteAccount": "Smazat účet a data"
+  },
+  "migrate": {
+    "watchOnSource": "Otevřít originál",
+    "editThis": "Upravit název a popis",
+    "editTitle": "Název",
+    "editDescription": "Popis",
+    "editDescriptionPlaceholder": "Popis (nepovinné)",
+    "editDone": "Hotovo",
+    "edited": "Upraveno",
+    "subtitle": "Vložte kanál nebo profil, upravte, co se vám líbí, zaplaťte jednou.",
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…"
   }
 }
