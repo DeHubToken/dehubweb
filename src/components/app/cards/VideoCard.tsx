@@ -54,11 +54,11 @@ import { PPVDrawerContent } from './PPVDrawerContent';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { TranslatableText, SharedTranslationProvider, useTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
-import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { useTranslation as useI18n } from 'react-i18next';
-import { PostAIChat } from './PostAIChat';
+import { PostAIChatLazy } from './PostAIChatLazy';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 // Lazy, mounted on demand: both modals were statically imported by every feed
@@ -2477,7 +2477,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       </div>
 
       {/* AI Chat */}
-      <PostAIChat
+      <PostAIChatLazy
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{

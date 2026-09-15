@@ -22,7 +22,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
-import { ImageCard } from '@/components/app/cards';
+import { ImageCard } from '@/components/app/cards/ImageCard';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { useServedAds } from '@/hooks/use-ad-serving';
 import { useAuth } from '@/contexts/AuthContext';

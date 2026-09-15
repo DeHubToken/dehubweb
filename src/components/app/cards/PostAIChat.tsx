@@ -46,7 +46,7 @@ interface PostContext {
   videoUrl?: string;
 }
 
-interface PostAIChatProps {
+export interface PostAIChatProps {
   isOpen: boolean;
   onClose: () => void;
   postContext: PostContext;

@@ -27,11 +27,11 @@ import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { FeedLinkPreviews } from './FeedLinkPreviews';
-import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { TranslatableText, useTranslation, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
-import { PostAIChat } from './PostAIChat';
+import { PostAIChatLazy } from './PostAIChatLazy';
 import { buildPostShareImage } from '@/lib/build-post-share-image';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
@@ -940,7 +940,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
       )}
 
       {/* AI Chat */}
-      <PostAIChat
+      <PostAIChatLazy
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{

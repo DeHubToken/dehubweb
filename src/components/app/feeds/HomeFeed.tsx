@@ -51,14 +51,12 @@ import {
 import { resolveViewCount } from '@/lib/engagement';
 
 // Card components
-import {
-  PostCard,
-  VideoCard,
-  ImageCard,
-  ShortsReel,
-  StoriesBar,
-  LiveCard,
-} from '@/components/app/cards';
+import { PostCard } from '@/components/app/cards/PostCard';
+import { VideoCard } from '@/components/app/cards/VideoCard';
+import { ImageCard } from '@/components/app/cards/ImageCard';
+import { ShortsReel } from '@/components/app/cards/ShortsReel';
+import { StoriesBar } from '@/components/app/cards/StoriesBar';
+import { LiveCard } from '@/components/app/cards/LiveCard';
 import { MasonrySegment } from '@/components/app/feeds/MasonrySegment';
 
 

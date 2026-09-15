@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BadgedName } from '@/components/app/BadgedName';
 import { TranslatableText } from '../TranslatableText';
-import { DehubLinkEmbeds, useDehubLinks } from './DehubLinkEmbed';
+import { DehubLinkEmbeds, useDehubLinks } from './DehubLinkEmbedsLazy';
 import { FeedLinkPreviews } from './FeedLinkPreviews';
 import { reactToComment, deleteComment } from '@/lib/api/dehub';
 import {

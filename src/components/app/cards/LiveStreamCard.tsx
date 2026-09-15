@@ -32,7 +32,7 @@ import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
 import { StreamShopPinnedCard } from '../live/StreamShop';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
-import { PostAIChat } from './PostAIChat';
+import { PostAIChatLazy } from './PostAIChatLazy';
 import { ReportModal } from '../modals/ReportModal';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -1183,7 +1183,7 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
       </Drawer>
 
       {/* AI Chat */}
-      <PostAIChat
+      <PostAIChatLazy
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{

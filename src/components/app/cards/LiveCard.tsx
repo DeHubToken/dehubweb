@@ -24,7 +24,7 @@ import { LiveEndedMedia } from './LiveEndedMedia';
 const LiveFeedPreview = lazy(() => import('./LiveFeedPreview').then(m => ({ default: m.LiveFeedPreview })));
 
 import { GatedMedia } from './GatedMedia';
-import { PostAIChat } from './PostAIChat';
+import { PostAIChatLazy } from './PostAIChatLazy';
 import { ReportModal } from '../modals/ReportModal';
 import {
   DropdownMenu,
@@ -246,7 +246,7 @@ export function LiveCard({ stream }: LiveCardProps) {
       />
 
       {/* AI Chat */}
-      <PostAIChat
+      <PostAIChatLazy
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{
