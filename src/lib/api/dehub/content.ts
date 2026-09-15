@@ -63,6 +63,15 @@ export interface MintPostParams {
    */
   contentRating?: ContentRating;
   /**
+   * Published for children — the Kids Mode allowlist.
+   *
+   * The opposite polarity to the rating above: only ever sent as `true`, and
+   * omitted means NOT for kids, so a post nobody marked is invisible in Kids
+   * Mode rather than defaulting into it. It also keeps the post off the
+   * ordinary discovery feeds, which profiles, search and a shared link ignore.
+   */
+  forKids?: boolean;
+  /**
    * The Shop board — affiliate and shop links shown behind the Shop button.
    *
    * Sent at mint rather than PATCHed afterwards so a live stream is already
@@ -189,6 +198,12 @@ export async function mintPost(
   // and deliberately stores nothing for it.
   if (params.contentRating === 'mature') {
     formData.append('contentRating', 'mature');
+  }
+
+  // Same rule, other direction: absent is what "not kids content" means, so a
+  // false would store a second representation of the same state.
+  if (params.forKids === true) {
+    formData.append('forKids', 'true');
   }
 
   // Only sent when there is a board. An empty array would be a valid "clear
@@ -336,6 +351,14 @@ export interface EditPostParams {
   /** Re-rate a published post. Refused with 403 once a moderator has rated it. */
   contentRating?: ContentRating;
   /**
+   * Mark or unmark a published post as made for children. Refused with 403
+   * once a moderator has ruled on it, same as the rating above.
+   *
+   * Sent as a plain boolean in both directions — taking the mark off is a real
+   * edit, not an absence.
+   */
+  forKids?: boolean;
+  /**
    * Replace the Shop board. `[]` clears it, which is how the toggle is turned
    * off after publishing.
    *
@@ -359,6 +382,7 @@ export interface EditPostResponse {
     description?: string;
     category?: string[];
     contentRating?: ContentRating;
+    forKids?: boolean;
     shopLinks?: ShopLink[];
   };
 }

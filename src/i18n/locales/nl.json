@@ -279,6 +279,19 @@
     "enableContentWarningsDesc": "Waarschuwingen tonen vóór gevoelige inhoud",
     "matureContent": "Content voor volwassenen tonen",
     "matureContentDesc": "Neemt berichten voor volwassenen en expliciete berichten op in je feeds, en haalt de waarschuwing weg bij berichten die je al ziet. Standaard uit.",
+    "kidsMode": "Kindermodus",
+    "kidsModeDesc": "Toont alleen berichten gepubliceerd voor kinderen, overal. Een PIN schakelt het weer uit.",
+    "kidsModeSetPin": "Kies een PINCODE",
+    "kidsModeSetPinHelp": "4 tot 8 cijfers. Je hebt het nodig om de kindermodus weer uit te schakelen.",
+    "kidsModeConfirmPin": "Voer het opnieuw in",
+    "kidsModeConfirmPinHelp": "Zodat je weet dat je het kunt reproduceren.",
+    "kidsModeEnterPin": "Voer je PINCODE IN",
+    "kidsModeEnterPinHelp": "Hiermee wordt de kindermodus uitgeschakeld op dit apparaat.",
+    "kidsModeTurnOn": "Zet de kindermodus aan",
+    "kidsModeTurnOff": "Zet de kindermodus uit",
+    "kidsModePinMismatch": "Die pincodes zijn anders. Begin opnieuw.",
+    "kidsModeFailed": "Dat werkte niet. Probeer het opnieuw.",
+    "kidsModeForgotPin": "Ben je het vergeten? Log in met je portemonnee op een ander apparaat om de kindermodus uit te schakelen.",
     "feedPreferences": "Feedvoorkeuren",
     "showReposts": "Reposts tonen",
     "showRepostsDesc": "Berichten tonen die gedeeld zijn door mensen die je volgt",
@@ -367,6 +380,7 @@
     "smsUnlockPrice": "{{dhb}} DHB (${{usd}}) ontgrendelt sms-berichten en wordt je eerste saldo.",
     "smsUnlockExplainer": "Er verloopt niets. Tegoed wordt één bericht per keer uitgegeven en alleen aan de meldingen die je al hebt ingeschakeld.",
     "smsPricesHeading": "Wat een bericht kost",
+    "smsPricePerMessage": "{{dhb}} DHB (${{usd}})",
     "smsBand": {
       "domestic": "Verenigd Koninkrijk",
       "europe": "Europa",
@@ -433,6 +447,7 @@
     "close": "Sluiten",
     "loadingMore": "Meer laden...",
     "loadMore": "Meer laden",
+    "continue": "Doorgaan",
     "allRightsReserved": "Alle rechten voorbehouden",
     "noData": "Geen gegevens",
     "yes": "Ja",
@@ -741,6 +756,18 @@
     "mustHoldToView": "Je moet tokens bezitten om te bekijken",
     "gatedDescription": "Bezit de vereiste tokens om deze inhoud te bekijken! 🔓",
     "setPpvPrice": "PPV-prijs instellen",
+    "madeForKids": "Gemaakt voor kinderen",
+    "madeForKidsHint": "weergegeven in kindermodus",
+    "madeForKidsConfirmTitle": "Dit voor kinderen publiceren?",
+    "madeForKidsConfirmAudience": "Kinderen die de kindermodus gebruiken, krijgen dit bericht te zien. Niets anders op DeHub bereikt hen.",
+    "madeForKidsConfirmReach": "Het komt ook van de gewone feeds — mensen vinden het nog steeds op je profiel, in zoekopdrachten en via een link die je deelt.",
+    "madeForKidsConfirmComments": "Alleen de kindermodus kan er commentaar op geven. Je kunt ze nog steeds zelf beantwoorden.",
+    "madeForKidsConfirmYes": "Ja, het is voor kinderen",
+    "markMadeForKids": "Markeren als gemaakt voor kinderen",
+    "madeForKidsOnDesc": "Wordt getoond aan kinderen in de kindermodus en buiten de gewone feeds. Alleen de kindermodus kan reageren.",
+    "madeForKidsOffDesc": "Toont dit bericht aan kinderen in de kindermodus en haalt het van de gewone feeds.",
+    "madeForKidsBlockedByMature": "Een bericht dat als volwassen is gemarkeerd, kan niet ook voor kinderen worden gepubliceerd.",
+    "audience": "Publiek",
     "currency": "Valuta",
     "price": "Prijs",
     "ppvDhbInfo": "Betalingen zijn in DHB op de Base-keten",
@@ -1693,7 +1720,8 @@
     "discardTitle": "Reactie verwijderen?",
     "discardBody": "Hij is opgeslagen als concept, dus hij staat hier nog als je terugkomt.",
     "keepWriting": "Verder schrijven",
-    "closeAnyway": "Toch sluiten"
+    "closeAnyway": "Toch sluiten",
+    "kidsOnlyThread": "Dit bericht is voor kinderen. Alleen de kindermodus kan er commentaar op geven."
   },
   "postInfo": {
     "title": "Berichtinfo",
@@ -4001,7 +4029,13 @@
     "signInToBuy": "Inloggen om te kopen",
     "buyHandle": "Koop @{{handle}}",
     "transferGuarantee": "De handle wordt alleen verplaatst nadat DeHub uw DHB-overdracht van de chain heeft teruggelezen. Indien dit niet mogelijk is, wordt de betaling tegen de verkoop geregistreerd zodat de verkoper u kunt terugbetalen.",
-    "shareTitle": "@{{handle}} te koop op DeHub"
+    "shareTitle": "@{{handle}} te koop op DeHub",
+    "askingPriceUsd": "Vraagprijs (USD)",
+    "dollarPriceRange": "Voer $ 1–$ 1.000.000 in, met maximaal twee decimalen.",
+    "fixedDollarPrice": "De prijs van de dollar blijft vast; het tokenbedrag wordt bijgewerkt.",
+    "priceUpdated": "Prijs bijgewerkt. Controleer het bedrag en tik op Opnieuw kopen.",
+    "tokensPaidToSeller": "Rechtstreeks betaald aan de verkoper",
+    "priceUsd": "Prijs (USD)"
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",
@@ -4861,6 +4895,13 @@
     "dubbed": "Gesynchroniseerde audio",
     "preparing": "Voorbereiden van nagesynchroniseerde audio...",
     "unavailable": "Gesynchroniseerde audio is niet beschikbaar voor deze video."
+  },
+  "support": {
+    "title": "Ondersteuning",
+    "subtitle": "Je tickets en hun status. Geen AI, geen kosten.",
+    "newTicket": "Nieuw ticket",
+    "newTicketHint": "Vertel ons wat er is gebeurd en wat je in plaats daarvan had verwacht.",
+    "backToTickets": "Terug naar tickets"
   },
   "digest": {
     "andOthers_one": "{{names}} en {{count}} andere",

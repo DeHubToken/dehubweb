@@ -1,3 +1,5 @@
+import { isKidsModeLocked } from "@/lib/kids-mode-lock";
+
 // DeHub CDN base URL for media assets
 export const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
 
@@ -490,6 +492,18 @@ export async function apiCall<T>(
 
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  // Kids Mode travels on every request, signed in or not.
+  //
+  // The server also reads the flag off the account, and that one is
+  // authoritative — but /api/feed answers an expired token with 200 and an
+  // anonymous item shape rather than a 401, so a lapsed session would be
+  // served the ordinary feed with nothing to say anything had changed. This
+  // header is what survives that, and it is the only source at all for a
+  // signed-out device.
+  if (isKidsModeLocked()) {
+    headers["X-Kids-Mode"] = "1";
   }
 
   const attempt = async (target: string): Promise<Response> => {

@@ -87,6 +87,8 @@ export interface UnifiedFeedItem {
   category?: string[];
   /** Absent means safe — see ContentRating. */
   contentRating?: ContentRating;
+  /** Published for children — see the field on BaseFeedItem. */
+  forKids?: boolean;
   /** Signed-in viewers only — read totalViews via resolveViewCount instead. */
   views: number;
   /** Every viewer, signed in or not. The count to display. */
@@ -315,6 +317,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     isReposted: item.isReposted ?? false,
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
+    forKids: item.forKids,
     isLivePost: item.postType === 'live',
     liveStatus: item.stream?.status,
     liveIsActive: item.stream?.isActive,
@@ -405,6 +408,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     isReposted: item.isReposted ?? false,
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
+    forKids: item.forKids,
     isQuotePost: !!(item as any).isQuotePost,
     quotedPost: (item as any).quotedPost || null,
     totalTips: item.totalTips ?? 0,
@@ -468,6 +472,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     quotedPost: (item as any).quotedPost || null,
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
+    forKids: item.forKids,
     communityAlertPending: (item as any).communityAlertStatus === 'pending',
     isLocked: item.streamInfo?.isLockContent ?? false,
     lockedPrice: item.streamInfo?.lockContentAmount,

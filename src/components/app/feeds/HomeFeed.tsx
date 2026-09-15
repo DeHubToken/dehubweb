@@ -77,6 +77,7 @@ import type { DeHubCategory } from '@/lib/api/dehub';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
+import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { useHideWatched, useWatchedVideoIds } from '@/hooks/use-watched-videos';
 import { useFollowGroupList } from '@/lib/follow-groups';
 import { AD_INTERVALS, useAdLoad } from '@/lib/ad-load';
@@ -553,7 +554,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const { optimisticPosts, clearOptimisticPosts, removeOptimisticPost } = useOptimisticPosts();
 
   // Fetch story users from API
-  const { storyUsers } = useDeHubStoryUsers(10);
+  // Everything on the home page that is not a post from the feed itself is
+  // unrated by definition — ads, radio stations, live cards, the follow and
+  // leaderboard rails, the stories bar. None of it can be filtered on
+  // `forKids`, so in Kids Mode none of it renders.
+  const isKidsMode = useKidsModeLock();
+  const { storyUsers: allStoryUsers } = useDeHubStoryUsers(10);
+  // The stories bar is a row of arbitrary accounts' latest posts. Nothing on it
+  // is rated, so it is empty in Kids Mode rather than filtered.
+  const storyUsers = isKidsMode ? [] : allStoryUsers;
 
   // Same query key as Live tab + prefetch (DEFAULT_DEHUB_LIVE_QUERY_OPTIONS); slice below for carousel width.
   // enabled is stripped from the key inside useDeHubLive, so the shared cache entry is preserved.
@@ -1167,7 +1176,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const { data: servedAds = [] } = useServedAds('home', {
     count: 4,
     categories: selectedCategories,
-    enabled: organicItems.length > 0,
+    // No ads to children — separately from safety, and before the request is
+    // made rather than after: an ad fetched and then not rendered is still an
+    // impression somebody is billed for.
+    enabled: organicItems.length > 0 && !isKidsMode,
   });
   const items = useMemo((): FeedItemType[] => {
     if (servedAds.length === 0 || organicItems.length < adInterval) return organicItems;
@@ -1574,7 +1586,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       // well as in the single-column path: multi-column is what a desktop
       // browser gets, and leaving them out of it is why "who to follow"
       // vanished from the feed on every screen wide enough to split.
-      const fullWidthInserts: ReactNode[] = [
+      const fullWidthInserts: ReactNode[] = isKidsMode ? [] : [
         // Gated here as well as inside the component: an insert that renders
         // nothing still splits the masonry run around it, and a logged-out feed
         // should not be chopped in two for a row it will never show.
@@ -1676,7 +1688,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       }
     };
 
+    // One gate for all seven single-column inserts rather than seven `&&`s on
+    // the call sites: a rail added later gets the same answer without anybody
+    // remembering to ask. Kids Mode drops them all — see the note by
+    // `isKidsMode` above.
     const addFullWidth = (node: ReactNode) => {
+      if (isKidsMode) return;
       flushCards();
       segments.push({ type: 'fullwidth', node });
     };

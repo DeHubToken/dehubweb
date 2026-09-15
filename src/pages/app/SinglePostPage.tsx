@@ -1093,6 +1093,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
       tokenId={String(id)}
       initialTab={pageCommentsInitialTab}
       commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+      forKids={!!(post as { forKids?: boolean }).forKids}
       postAuthorAddress={isTextPost ? post.minter : undefined}
       forceInline
     />
