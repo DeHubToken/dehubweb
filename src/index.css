@@ -2016,6 +2016,28 @@ html[data-theme="minimal"] [data-notification-row][data-unread]:hover {
   background-color: rgba(255, 255, 255, 0.10) !important;
 }
 
+/* Same slabs, same problem on paper, and light never got the treatment above:
+   through the blanket zinc wash both row states collapse to one flat
+   rgba(0,0,0,0.05), so a read row is a grey box for no reason and an unread row
+   is the same grey box. Strip it - read rows sit flat on the paper (the row
+   dividers already separate them), only unread keeps a wash to mark it new.
+
+   The :not() chain is not decoration: the blanket wash for .bg-zinc-900/50
+   carries the same three, so a bare [data-notification-row] loses to it on
+   specificity no matter where it sits in this file. Measured, not assumed. */
+html[data-theme="light"] [data-notification-row]:not([data-keep-dark]):not(button):not([role="button"]) {
+  background-color: transparent !important;
+}
+html[data-theme="light"] [data-notification-row]:not([data-keep-dark]):not(button):not([role="button"]):hover {
+  background-color: var(--hover-wash) !important;
+}
+html[data-theme="light"] [data-notification-row][data-unread]:not([data-keep-dark]):not(button):not([role="button"]) {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme="light"] [data-notification-row][data-unread]:not([data-keep-dark]):not(button):not([role="button"]):hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
 /* Minimal blackens the search field's zinc bg — restore a hairline outline so the
    input reads as an input on the black canvas. */
 html[data-theme="minimal"] [data-search-bento] input {
