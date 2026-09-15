@@ -2142,6 +2142,16 @@ html[data-theme="light"] .dehub-intro [class~="text-white/50"] {
   color: rgba(255, 255, 255, 0.50) !important;
 }
 
+/* The profile banner well is a <button> so you can click to upload, which puts
+   it outside the zinc remap's button exclusion - the exclusion exists to stop
+   dark CTAs washing out, and a banner is neither. With an image it never
+   shows; without one, every profile that has not set a banner renders a
+   near-black slab across the top of a paper page. Media well, so it takes the
+   paper wash. */
+html[data-theme="light"] button[class~="aspect-[3/1]"][class~="bg-zinc-800"] {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
 /* Minimal blackens the search field's zinc bg — restore a hairline outline so the
    input reads as an input on the black canvas. */
 html[data-theme="minimal"] [data-search-bento] input {
