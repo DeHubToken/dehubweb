@@ -2079,6 +2079,40 @@ html[data-theme="light"] [data-glass-indicator] {
   backdrop-filter: none !important;
 }
 
+/* Option tiles inside a page bento are segmented controls, not CTAs. The
+   blanket zinc remap deliberately skips buttons so a genuine dark chip keeps
+   its fill on paper, which left these as black slabs in a white bento - and
+   the selected one, drawn with the liquid-glass recipe, as the only light one
+   in the row. The selection read inverted. Unselected take the paper wash and
+   ink labels, the glass pill takes the ink wash, same as the tab indicator.
+
+   The .text-white pair carries an extra class over the "keep dark chips
+   readable" rule it has to beat, which is (0,3,2) and would otherwise tie and
+   win on order, leaving white labels on a near-white tile. */
+html[data-theme="light"] [data-page-bento] button.bg-zinc-800 {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: var(--hairline) !important;
+}
+html[data-theme="light"] [data-page-bento] button.bg-zinc-800:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-theme="light"] [data-page-bento] button.bg-zinc-800.text-white,
+html[data-theme="light"] [data-page-bento] button.bg-zinc-800 .text-white,
+html[data-theme="light"] [data-page-bento] button.bg-zinc-800 svg {
+  color: #1a1a1a !important;
+}
+html[data-theme="light"] [data-page-bento] [class~="bg-white/10"] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme="light"] [data-page-bento] [class~="border-white/20"] {
+  border-color: var(--hairline-strong) !important;
+}
+html[data-theme="light"] [data-page-bento] [class*="from-white/20"] {
+  background-image: none !important;
+  background-color: rgba(0, 0, 0, 0.06) !important;
+  border-color: var(--hairline-strong) !important;
+}
+
 /* Minimal blackens the search field's zinc bg — restore a hairline outline so the
    input reads as an input on the black canvas. */
 html[data-theme="minimal"] [data-search-bento] input {
