@@ -2050,6 +2050,19 @@ html[data-theme="light"] [data-comments-wrapper] {
   backdrop-filter: none !important;
 }
 
+/* The tab indicator is the same liquid-glass recipe: a white gradient behind a
+   white border, which over paper is a white pill on a white row - the selected
+   tab was marked by nothing but a faint shadow. GlassIndicator already branches
+   on the light theme, but only to soften its shadow, and the fill it cannot
+   reach from there is the part that matters. Ink wash and a real hairline. */
+html[data-theme="light"] [data-glass-indicator] {
+  background-image: none !important;
+  background-color: rgba(0, 0, 0, 0.06) !important;
+  border-color: var(--hairline-strong) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
 /* Minimal blackens the search field's zinc bg — restore a hairline outline so the
    input reads as an input on the black canvas. */
 html[data-theme="minimal"] [data-search-bento] input {
@@ -4420,7 +4433,10 @@ html[data-theme="light"] {
 }
 
 html[data-theme="light"] .smart-reply-rail [class*="bg-white/"] {
-  background-color: rgba(0, 0, 0, 0.06) !important;
+  /* Outline, not fill. A tinted card here is two grey slabs sitting on paper;
+     the hairline plus the notch already say "card", and the rest of the light
+     UI separates surfaces the same way. Hover still washes. */
+  background-color: transparent !important;
 }
 html[data-theme="light"] .smart-reply-rail button[class*="bg-white/"]:hover {
   background-color: rgba(0, 0, 0, 0.09) !important;
