@@ -367,8 +367,8 @@ export function drawSpectrum(
   // Lit edge where new frames arrive — on the visible canvas only, so it never
   // becomes part of the history.
   const edge = ctx.createLinearGradient(width - Math.max(3, step * 2), 0, width, 0);
-  edge.addColorStop(0, mono ? 'hsla(0, 0%, 100%, 0)' : `hsla(${h}, 85%, 65%, 0)`);
-  edge.addColorStop(1, mono ? 'hsla(0, 0%, 100%, 0.55)' : `hsla(${h}, 85%, 65%, 0.55)`);
+  edge.addColorStop(0, mono ? `hsla(0, 0%, ${monoL(100)}%, 0)` : `hsla(${h}, 85%, ${monoL(65)}%, 0)`);
+  edge.addColorStop(1, mono ? `hsla(0, 0%, ${monoL(100)}%, 0.55)` : `hsla(${h}, 85%, ${monoL(65)}%, 0.55)`);
   ctx.fillStyle = edge;
   ctx.fillRect(width - Math.max(3, step * 2), 0, Math.max(3, step * 2), height);
 }
@@ -634,8 +634,8 @@ export function drawTerrain(
   const sky = ctx.createLinearGradient(0, 0, 0, horizon);
   // Barely there in monochrome: a white gradient over a dark card is a grey
   // slab, not a sky. The light in this scene comes from the sun.
-  sky.addColorStop(0, mono ? 'hsla(0, 0%, 100%, 0.015)' : `hsla(${(hue + 180) % 360}, 60%, 22%, 0.42)`);
-  sky.addColorStop(1, mono ? 'hsla(0, 0%, 100%, 0.07)' : `hsla(${hue}, 80%, 48%, 0.3)`);
+  sky.addColorStop(0, mono ? `hsla(0, 0%, ${monoL(100)}%, 0.015)` : `hsla(${(hue + 180) % 360}, 60%, ${monoL(22)}%, 0.42)`);
+  sky.addColorStop(1, mono ? `hsla(0, 0%, ${monoL(100)}%, 0.07)` : `hsla(${hue}, 80%, ${monoL(48)}%, 0.3)`);
   ctx.fillStyle = sky;
   ctx.fillRect(0, 0, width, horizon);
 
