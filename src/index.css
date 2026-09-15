@@ -3813,7 +3813,10 @@ html[data-theme="light"] [data-poll-card] .hover\:bg-white\/20:hover {
    panels, and AI chat panels opted out (the last two get opaque paper
    surfaces below — a translucent wash on a floating panel lets the page
    behind bleed through). */
-html[data-theme="light"] [class*="bg-black\/"]:not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *):not([data-country-block-drawer]):not([data-country-block-drawer] *):not(.login-modal-overlay):not([data-radix-popper-content-wrapper] *):not([data-ai-chat]):not([data-ai-chat] *) {
+/* [data-comments-wrapper] joins the opt-outs: the reply panel is styled as the
+   post card it belongs to, and this wash was repainting it a grey slab on top
+   of that card in the feed. */
+html[data-theme="light"] [class*="bg-black\/"]:not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *):not([data-country-block-drawer]):not([data-country-block-drawer] *):not(.login-modal-overlay):not([data-radix-popper-content-wrapper] *):not([data-comments-wrapper]):not([data-ai-chat]):not([data-ai-chat] *) {
   background-color: rgba(0, 0, 0, 0.05) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
