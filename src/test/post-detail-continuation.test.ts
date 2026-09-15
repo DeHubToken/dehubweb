@@ -18,7 +18,17 @@ describe('dedicated post continuation', () => {
   it('keeps the page-owned comments surface inline on phones and immersive video', () => {
     expect(commentsWrapper).toContain('const immersiveSheet = !forceInline && isTabletOrMobile && immersive');
     expect(commentsWrapper).toContain('const phoneSheet = !forceInline && isPhone && !immersive');
-    expect(commentsWrapper).toContain("'h-[60dvh] min-h-[360px] max-h-[600px] overflow-hidden md:h-[600px] md:max-h-[70dvh]'");
+    expect(commentsWrapper).toContain("'h-[60dvh] min-h-[360px] max-h-[600px] overflow-hidden md:h-auto md:min-h-0 md:max-h-[70dvh] md:overflow-y-auto'");
+  });
+
+  it('lets the desktop comments panel hug its section instead of a fixed height', () => {
+    const inline = commentsWrapper.slice(commentsWrapper.indexOf('const inlineWindowClass'));
+    const forceInlineClass = inline.slice(0, inline.indexOf('\n    :'));
+    expect(forceInlineClass).toContain('md:h-auto');
+    expect(forceInlineClass).not.toContain('md:h-[600px]');
+    // Below md the section is `h-full` around an absolutely positioned list and
+    // still needs a definite height from this wrapper.
+    expect(forceInlineClass).toContain('h-[60dvh]');
   });
 
   it('renders comments before each related feed, whose first slot is an ad', () => {
