@@ -12,6 +12,38 @@ export interface YoutubeImportParams {
   chainId?: number;
 }
 
+/** What a link is, read without downloading it. */
+export interface ImportPreview {
+  title: string;
+  description: string;
+  durationSeconds: number;
+  thumbnailUrl?: string;
+  sourceId: string;
+  sourceLabel: string;
+  /** Which kinds this link offers, best-first. Served by the API so a source
+   * whose capabilities change does not need a client release to match. */
+  media: ('video' | 'audio' | 'image')[];
+  isLive: boolean;
+  /** The preview could not read the link — a rate limit, or a source having a
+   * bad day. The fields are empty and importing still works: the queue retries
+   * on its own schedule and the server falls back to the source's own title. */
+  unavailable?: boolean;
+}
+
+/**
+ * Metadata for a link, so a form can open already filled in.
+ *
+ * No download, no queue, no charge. Callers should treat a rejection as "open
+ * the form empty" rather than as a failure — the import itself is unaffected.
+ */
+export async function previewImport(url: string): Promise<ImportPreview> {
+  return apiCall<ImportPreview>('/api/youtube_import/preview', {
+    method: 'POST',
+    requiresAuth: true,
+    body: { url } as unknown as Record<string, unknown>,
+  });
+}
+
 export interface YoutubeImportQueuedResponse {
   queued: true;
   jobId: string | number;

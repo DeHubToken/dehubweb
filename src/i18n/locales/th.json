@@ -4031,7 +4031,16 @@
     "kindVideo": "วิดีโอ",
     "kindAudio": "เสียง",
     "kindImage": "รูป",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "ตรวจสอบก่อนโพสต์",
+    "reviewSubtitle": "จาก {{source}} เป็น {{kind}} แก้ไขอะไรก็ได้ที่คุณชอบ — ปล่อยให้ชื่อว่างไว้เพื่อเก็บต้นฉบับไว้",
+    "reviewName": "ชื่อ",
+    "reviewNamePlaceholder": "เว้นว่างไว้เพื่อคงชื่อเดิมไว้",
+    "reviewDescription": "คำอธิบาย",
+    "reviewDescriptionPlaceholder": "พูดอะไรบางอย่างเกี่ยวกับโพสต์นี้ (ไม่บังคับ)",
+    "reviewLiveWarning": "ลิงก์นั้นเป็นสตรีมสด รอจนกว่าจะจบและนำเข้าข้อมูลที่บันทึกไว้แทน",
+    "reviewCancel": "ยกเลิก",
+    "reviewConfirm": "นำเข้า"
   },
   "banned": {
     "title": "บัญชีของคุณถูกแบน",
@@ -4039,6 +4048,17 @@
     "line": "บัญชีของคุณถูกแบนดังนั้นคุณจึงไม่สามารถโพสต์แสดงความคิดเห็นหรือส่งข้อความได้",
     "reason": "เหตุผล: {{reason}}",
     "deleteAccount": "ลบบัญชีและข้อมูลของคุณ"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/ @ คุณ tiktok.com/ @ คุณ vimeo.com/you...",
+    "watchOnSource": "เปิดต้นฉบับ",
+    "editThis": "แก้ไขชื่อและคำอธิบาย",
+    "editTitle": "ชื่อ",
+    "editDescription": "คำอธิบาย",
+    "editDescriptionPlaceholder": "คำอธิบาย (ไม่บังคับ)",
+    "editDone": "เรียบร้อย",
+    "edited": "แก้ไขแล้ว",
+    "subtitle": "วางช่องหรือโปรไฟล์แก้ไขสิ่งที่คุณชอบจ่ายครั้งเดียว"
   },
   "glossary": {
     "title": "อภิธานศัพท์",

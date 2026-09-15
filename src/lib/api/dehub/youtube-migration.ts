@@ -76,11 +76,32 @@ export interface MigrationQuote {
   dhbTokens: { chainId: number; tokenAddress: string }[];
 }
 
-export async function quoteMigration(youtubeVideoIds: string[]): Promise<MigrationQuote> {
+/**
+ * Price a batch, and freeze what it will publish as.
+ *
+ * `itemUrls` carries the link each item actually lives at rather than letting
+ * the server rebuild a YouTube watch URL, which is right for exactly one
+ * source. `itemNames` and `itemDescriptions` carry whatever the creator typed
+ * on the picker, so the text they reviewed and paid for is the text that
+ * publishes hours later. All three are aligned to `youtubeVideoIds`, and the
+ * server refuses a batch where they are not.
+ *
+ * An empty string means "no override": the source's own title wins, which is
+ * what clearing the box asks for.
+ */
+export async function quoteMigration(
+  youtubeVideoIds: string[],
+  items?: { urls?: string[]; names?: string[]; descriptions?: string[] },
+): Promise<MigrationQuote> {
   return apiCall<MigrationQuote>('/api/youtube_migration/quote', {
     method: 'POST',
     requiresAuth: true,
-    body: { youtubeVideoIds } as unknown as Record<string, unknown>,
+    body: {
+      youtubeVideoIds,
+      itemUrls: items?.urls,
+      itemNames: items?.names,
+      itemDescriptions: items?.descriptions,
+    } as unknown as Record<string, unknown>,
   });
 }
 

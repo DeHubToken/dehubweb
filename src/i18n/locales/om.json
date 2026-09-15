@@ -2505,7 +2505,16 @@
     "kindVideo": "Viidiyoo",
     "kindAudio": "Sagalee",
     "kindImage": "Suuraalee",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Maxxansuu kee dura irra deebi&#39;ii ilaali",
+    "reviewSubtitle": "{{source}} irraa, akka {{kind}}. Waan jaallattu hunda gulaali — mata duree duwwaa dhiisii ​​jalqabaa akka turuuf.",
+    "reviewName": "Mata-duree",
+    "reviewNamePlaceholder": "Mata duree jalqabaa akka turuuf duwwaa dhiisi",
+    "reviewDescription": "Ibsa",
+    "reviewDescriptionPlaceholder": "Waa&#39;ee barreeffama kanaa waa jedhi (optional) .",
+    "reviewLiveWarning": "Link sun live stream dha. Hanga xumuramutti eegaa bakka isaa waraabbii galchi.",
+    "reviewCancel": "Haquu",
+    "reviewConfirm": "Biyya alaatii galchuu"
   },
   "banned": {
     "title": "Akkaawuntii keessan dhorkameera",
@@ -2513,6 +2522,17 @@
     "line": "Akkaawuntii keessan dhorkamee waan jiruuf maxxansuu, yaada kennuu ykn ergaa erguu hin dandeessan.",
     "reason": "Sababni: {{reason}}",
     "deleteAccount": "Akkaawuntii fi daataa keessan haqi"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@ati, tiktok.com/@ati, vimeo.com/ati...",
+    "watchOnSource": "Orijinaala banaa",
+    "editThis": "Mata duree fi ibsa gulaali",
+    "editTitle": "Mata-duree",
+    "editDescription": "Ibsa",
+    "editDescriptionPlaceholder": "Ibsa (dirqama) .",
+    "editDone": "Raawwatame",
+    "edited": "Gulaalame",
+    "subtitle": "Chaanaalii ykn profile tokko maxxansi, waan jaallattu gulaali, al tokko kaffali."
   },
   "spaces": {
     "title": "Bakkeewwan",

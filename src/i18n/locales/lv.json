@@ -2482,7 +2482,16 @@
     "kindVideo": "Video",
     "kindAudio": "Audio",
     "kindImage": "Fotogrāfiju",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Pārskatīt pirms publicēšanas",
+    "reviewSubtitle": "No {{source}}, kā {{kind}}. Rediģējiet visu, kas jums patīk — atstājiet nosaukumu tukšu, lai saglabātu oriģinālu.",
+    "reviewName": "Nosaukums",
+    "reviewNamePlaceholder": "Atstājiet tukšu, lai saglabātu sākotnējo nosaukumu",
+    "reviewDescription": "Apraksts",
+    "reviewDescriptionPlaceholder": "Pastāsti kaut ko par šo ziņu (neobligāti)",
+    "reviewLiveWarning": "Šī saite ir tiešraide. Uzgaidiet, līdz tas beidzas, un tā vietā importējiet ierakstu.",
+    "reviewCancel": "Atcelt",
+    "reviewConfirm": "Importēt"
   },
   "banned": {
     "title": "Jūsu konts ir bloķēts",
@@ -2490,5 +2499,16 @@
     "line": "Jūsu konts ir bloķēts, tāpēc jūs nevarat publicēt, komentēt vai sūtīt ziņojumus.",
     "reason": "Iemesls: {{reason}}",
     "deleteAccount": "Konta un datu dzēšana"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Atvērt oriģinālu",
+    "editThis": "Rediģēt virsrakstu un aprakstu",
+    "editTitle": "Nosaukums",
+    "editDescription": "Apraksts",
+    "editDescriptionPlaceholder": "Apraksts (neobligāti)",
+    "editDone": "Gatavs",
+    "edited": "Rediģēts",
+    "subtitle": "Ielīmējiet kanālu vai profilu, rediģējiet to, kas jums patīk, maksājiet vienu reizi."
   }
 }

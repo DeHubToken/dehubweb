@@ -2467,7 +2467,16 @@
     "kindVideo": "Видео",
     "kindAudio": "Аудио",
     "kindImage": "Тасвирҳо",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Шарҳи пеш аз фиристодан",
+    "reviewSubtitle": "{{source}}, as {{kind}}. I-edit ang anumang gusto mo — ilagay ang pamagat upang mag-save ng orihinal",
+    "reviewName": "Сарлавҳа",
+    "reviewNamePlaceholder": "Барои нигоҳ доштани сарлавҳаи аслӣ холӣ гузоред",
+    "reviewDescription": "Тавсиф",
+    "reviewDescriptionPlaceholder": "Дар бораи ин пост чизе бигӯед (ихтиёрӣ)",
+    "reviewLiveWarning": "Ang link na ito ay isang live stream. Интизор шавед, то он ба итмом расад ва сабтро ба ҷои он ворид кунед.",
+    "reviewCancel": "Бекор кардан",
+    "reviewConfirm": "Воридот"
   },
   "banned": {
     "title": "Ang iyong account ay hindi maaaring",
@@ -2475,5 +2484,16 @@
     "line": "Ang iyong account ay hindi maaaring maaaring mag-post, komento o ipadala ng mga mensahe.",
     "reason": "Сабаб: {{reason}}",
     "deleteAccount": "Tanggalin ang iyong account at data"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@шумо, tiktok.com/@шумо, vimeo.com/you…",
+    "watchOnSource": "Кушодани аслӣ",
+    "editThis": "I-edit ang pamagat at pagl",
+    "editTitle": "Сарлавҳа",
+    "editDescription": "Тавсиф",
+    "editDescriptionPlaceholder": "Тавсиф (ихтиёрӣ)",
+    "editDone": "Тайёр",
+    "edited": "Таҳриршуда",
+    "subtitle": "Ilagay ang isang channel o profile, i-edit kung anong gusto, magbigay sa isang beses."
   }
 }

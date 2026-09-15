@@ -2418,7 +2418,16 @@
     "kindVideo": "Video",
     "kindAudio": "เสียง",
     "kindImage": "รูปภาพ",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "ตรวจสอบก่อนโพสต์",
+    "reviewSubtitle": "จาก {{source}}, เป็น {{kind}}. แก้ไขสิ่งใดก็ได้ที่คุณต้องการ — ปล่อยให้ชื่อเรื่องว่างเพื่อเก็บชื่อเดิม",
+    "reviewName": "ชื่อเรื่อง",
+    "reviewNamePlaceholder": "ปล่อยให้ว่างเพื่อเก็บชื่อเรื่องเดิม",
+    "reviewDescription": "คำอธิบาย",
+    "reviewDescriptionPlaceholder": "พูดบางอย่างเกี่ยวกับโพสต์นี้ (ไม่บังคับ)",
+    "reviewLiveWarning": "ลิงก์นั้นเป็นการถ่ายทำสดไลฟ์ รอจนกว่าจะสิ้นสุดและนำเข้าการบันทึกแทน",
+    "reviewCancel": "ยกเลิก",
+    "reviewConfirm": "นำเข้า"
   },
   "banned": {
     "title": "บัญชีของคุณถูกแบน",
@@ -2426,5 +2435,16 @@
     "line": "บัญชีของคุณถูกแบน ดังนั้นคุณจึงไม่สามารถโพสต์ แสดงความเห็น หรือส่งข้อความได้",
     "reason": "เหตุผล: {{reason}}",
     "deleteAccount": "ลบบัญชีและข้อมูลของคุณ"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "เปิดต้นฉบับ",
+    "editThis": "แก้ไขชื่อและคำอธิบาย",
+    "editTitle": "ชื่อ",
+    "editDescription": "คำอธิบาย",
+    "editDescriptionPlaceholder": "คำอธิบาย (ไม่บังคับ)",
+    "editDone": "เสร็จสิ้น",
+    "edited": "แก้ไขแล้ว",
+    "subtitle": "วางช่องหรือโปรไฟล์ แก้ไขสิ่งที่คุณชอบ จ่ายเพียงครั้งเดียว"
   }
 }

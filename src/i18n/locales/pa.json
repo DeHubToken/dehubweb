@@ -2460,7 +2460,16 @@
     "kindVideo": "ਵੀਡਿਓ",
     "kindAudio": "ਆਡੀਓ",
     "kindImage": "ਤਸਵੀਰ",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "ਪੋਸਟ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਸਮੀਖਿਆ ਕਰੋ",
+    "reviewSubtitle": "{{source}} ਤੋਂ, {{kind}} ਦੇ ਤੌਰ ਤੇ. ਕਿਸੇ ਵੀ ਚੀਜ਼ ਨੂੰ ਸੰਪਾਦਿਤ ਕਰੋ ਜੋ ਤੁਸੀਂ ਪਸੰਦ ਕਰਦੇ ਹੋ — ਅਸਲੀ ਰੱਖਣ ਲਈ ਸਿਰਲੇਖ ਨੂੰ ਖਾਲੀ ਛੱਡੋ.",
+    "reviewName": "ਟਾਈਟਲ",
+    "reviewNamePlaceholder": "ਅਸਲੀ ਸਿਰਲੇਖ ਰੱਖਣ ਲਈ ਖਾਲੀ ਛੱਡੋ",
+    "reviewDescription": "ਵੇਰਵਾ",
+    "reviewDescriptionPlaceholder": "ਇਸ ਪੋਸਟ ਬਾਰੇ ਕੁਝ ਕਹੋ (ਵਿਕਲਪਿਕ)",
+    "reviewLiveWarning": "ਉਹ ਲਿੰਕ ਇੱਕ ਲਾਈਵ ਸਟ੍ਰੀਮ ਹੈ. ਇੰਤਜ਼ਾਰ ਕਰੋ ਜਦੋਂ ਤੱਕ ਇਹ ਖਤਮ ਨਹੀਂ ਹੁੰਦਾ ਅਤੇ ਇਸ ਦੀ ਬਜਾਏ ਰਿਕਾਰਡਿੰਗ ਨੂੰ ਇੰਪੋਰਟ ਕਰੋ.",
+    "reviewCancel": "ਰੱਦ ਕਰੋ",
+    "reviewConfirm": "ਇੰਪੋਰਟ"
   },
   "banned": {
     "title": "ਤੁਹਾਡੇ ਖਾਤੇ 'ਤੇ ਪਾਬੰਦੀ ਹੈ",
@@ -2468,5 +2477,16 @@
     "line": "ਤੁਹਾਡੇ ਖਾਤੇ 'ਤੇ ਪਾਬੰਦੀ ਹੈ, ਇਸ ਲਈ ਤੁਸੀਂ ਪੋਸਟ, ਟਿੱਪਣੀ ਜਾਂ ਸੰਦੇਸ਼ ਨਹੀਂ ਭੇਜ ਸਕਦੇ.",
     "reason": "ਕਾਰਨਃ {{reason}}",
     "deleteAccount": "ਆਪਣਾ ਖਾਤਾ ਅਤੇ ਡੇਟਾ ਮਿਟਾਓ"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@ਤੁਹਾਨੂੰ, tiktok.com/@ਤੁਹਾਨੂੰ, vimeo.com/you…",
+    "watchOnSource": "ਅਸਲੀ ਖੋਲ੍ਹੋ",
+    "editThis": "ਸਿਰਲੇਖ ਅਤੇ ਵੇਰਵਾ ਸੰਪਾਦਿਤ ਕਰੋ",
+    "editTitle": "ਟਾਈਟਲ",
+    "editDescription": "ਵੇਰਵਾ",
+    "editDescriptionPlaceholder": "ਵੇਰਵਾ (ਵਿਕਲਪਿਕ)",
+    "editDone": "ਹੋ ਗਿਆ",
+    "edited": "ਸੰਪਾਦਿਤ ਕੀਤਾ",
+    "subtitle": "ਇੱਕ ਚੈਨਲ ਜਾਂ ਪ੍ਰੋਫਾਈਲ ਪੇਸਟ ਕਰੋ, ਜੋ ਤੁਸੀਂ ਪਸੰਦ ਕਰਦੇ ਹੋ ਸੰਪਾਦਿਤ ਕਰੋ, ਇੱਕ ਵਾਰ ਭੁਗਤਾਨ ਕਰੋ."
   }
 }

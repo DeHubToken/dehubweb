@@ -2266,9 +2266,29 @@
     "kindVideo": "Video",
     "kindAudio": "Audio",
     "kindImage": "Picha",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Review before posting",
+    "reviewName": "Title",
+    "reviewDescription": "Description",
+    "reviewCancel": "Cancel",
+    "reviewConfirm": "Import",
+    "reviewSubtitle": "From {{source}}, as {{kind}}. Edit anything you like — leave the title empty to keep the original.",
+    "reviewNamePlaceholder": "Leave empty to keep the original title",
+    "reviewDescriptionPlaceholder": "Say something about this post (optional)",
+    "reviewLiveWarning": "That link is a live stream. Wait until it ends and import the recording instead."
   },
   "banned": {
     "reason": "Reason: {{reason}}"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Open the original",
+    "editThis": "Edit title and description",
+    "editTitle": "Title",
+    "editDescription": "Description",
+    "editDescriptionPlaceholder": "Description (optional)",
+    "editDone": "Done",
+    "edited": "Edited",
+    "subtitle": "Paste a channel or profile, edit what you like, pay once."
   }
 }

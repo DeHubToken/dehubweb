@@ -4476,7 +4476,16 @@
     "kindVideo": "Βίντεο",
     "kindAudio": "Ήχος",
     "kindImage": "Εικόνες",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Έλεγχος πριν από την ανάρτηση",
+    "reviewSubtitle": "Από {{source}}, ως {{kind}}. Επεξεργαστείτε ό, τι θέλετε — αφήστε τον τίτλο κενό για να διατηρήσετε το πρωτότυπο.",
+    "reviewName": "Τίτλος",
+    "reviewNamePlaceholder": "Αφήστε κενό για να διατηρήσετε τον αρχικό τίτλο",
+    "reviewDescription": "Περιγραφή",
+    "reviewDescriptionPlaceholder": "Πείτε κάτι για αυτήν την ανάρτηση (προαιρετικά)",
+    "reviewLiveWarning": "Αυτός ο σύνδεσμος είναι μια ζωντανή ροή. Περιμένετε μέχρι να τελειώσει και εισαγάγετε την εγγραφή.",
+    "reviewCancel": "Ακύρωση",
+    "reviewConfirm": "Εισαγωγή"
   },
   "banned": {
     "title": "Ο λογαριασμός σας έχει αποκλειστεί",
@@ -4484,5 +4493,16 @@
     "line": "Ο λογαριασμός σας έχει απαγορευτεί, επομένως δεν μπορείτε να δημοσιεύσετε, να σχολιάσετε ή να στείλετε μηνύματα.",
     "reason": "Αιτία: {{reason}}",
     "deleteAccount": "Διαγράψτε τον λογαριασμό και τα δεδομένα σας"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Ανοίξτε το πρωτότυπο",
+    "editThis": "Επεξεργασία τίτλου και περιγραφής",
+    "editTitle": "Τίτλος",
+    "editDescription": "Περιγραφή",
+    "editDescriptionPlaceholder": "Περιγραφή (προαιρετικά)",
+    "editDone": "Τέλος",
+    "edited": "Επεξεργάστηκε",
+    "subtitle": "Επικολλήστε ένα κανάλι ή προφίλ, επεξεργαστείτε ό, τι θέλετε, πληρώστε μία φορά."
   }
 }

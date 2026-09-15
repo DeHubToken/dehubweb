@@ -4538,7 +4538,16 @@
     "kindVideo": "ווידאו",
     "kindAudio": "אודיו",
     "kindImage": "תמונות",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "בדיקה לפני הפרסום",
+    "reviewSubtitle": "החל מ -{{source}}, בתור {{kind}}. ערכו כל מה שתרצו — השאירו את הכותרת ריקה כדי לשמור על המקור.",
+    "reviewName": "כותרת",
+    "reviewNamePlaceholder": "השאר ריק כדי לשמור על הכותרת המקורית",
+    "reviewDescription": "תיאור",
+    "reviewDescriptionPlaceholder": "אפשר לכתוב משהו על הפוסט הזה (אופציונלי)",
+    "reviewLiveWarning": "הקישור הזה הוא שידור חי. המתן עד שיסתיים וייבא את ההקלטה במקום זאת.",
+    "reviewCancel": "ביטול",
+    "reviewConfirm": "ייבוא"
   },
   "banned": {
     "title": "החשבון שלך נחסם",
@@ -4546,5 +4555,16 @@
     "line": "החשבון שלך חסום, כך שאינך יכול לפרסם, להגיב או לשלוח הודעות.",
     "reason": "סיבה: {{reason}}",
     "deleteAccount": "מחיקת החשבון והנתונים שלכם"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you...",
+    "watchOnSource": "לפתיחת המסמך המקורי",
+    "editThis": "עריכת השם והתיאור",
+    "editTitle": "כותרת",
+    "editDescription": "תיאור",
+    "editDescriptionPlaceholder": "תיאור (אופציונלי)",
+    "editDone": "סיום",
+    "edited": "נערך",
+    "subtitle": "הדבק ערוץ או פרופיל, ערוך את מה שאתה אוהב, שלם פעם אחת."
   }
 }

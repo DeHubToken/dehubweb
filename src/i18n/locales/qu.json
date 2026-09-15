@@ -2513,11 +2513,31 @@
     "kindVideo": "Video",
     "kindAudio": "Audio nisqa",
     "kindImage": "Siqikuna",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Manaraq churachkaspa qhawariy",
+    "reviewSubtitle": "{{source}} nisqamanta, {{kind}} hina. Ima munasqaykitapas llamk&#39;apuy — tituluta ch&#39;usaq saqiy ñawpaq kaqta waqaychanaykipaq.",
+    "reviewName": "Suti",
+    "reviewNamePlaceholder": "Ch’usaqllata saqiy, ñawpaq tituluta waqaychanaykipaq",
+    "reviewDescription": "Ima kasqan",
+    "reviewDescriptionPlaceholder": "Kay qillqasqamanta imatapas niy (munasqa) .",
+    "reviewLiveWarning": "Chay t&#39;inkiqa kawsaq purichiymi. Tukunankama suyay hinaspa chaypa rantinpi grabacionta apamuy.",
+    "reviewCancel": "Sayachiy...",
+    "reviewConfirm": "Yaykuchiy..."
   },
   "banned": {
     "title": "Cuentaykiqa harkasqam kachkan",
     "line": "Yupayniyki hark&#39;asqa kachkan, chayrayku mana qillqayta, rimayta utaq willayta apachiyta atikunkichu.",
     "deleteAccount": "Cuentaykita, datosniykitapas chinkachiy"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@qam, tiktok.com/@qam, vimeo.com/qam...",
+    "watchOnSource": "Originalta kichay",
+    "editThis": "Titulota, sut&#39;inchaytapas llamk&#39;apuy",
+    "editTitle": "Suti",
+    "editDescription": "Ima kasqan",
+    "editDescriptionPlaceholder": "Willakuy (munasqa) .",
+    "editDone": "Ñam",
+    "edited": "Allinchasqa",
+    "subtitle": "Huk canal utaq perfilta k’askachiy, munasqaykita allichay, huk kutilla qullqita quy."
   }
 }

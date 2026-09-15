@@ -2477,7 +2477,16 @@
     "kindVideo": "፟ቪዲዮ",
     "kindAudio": "ኦዲዮ",
     "kindImage": "ሙዚቃ",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "ከመለጠፍዎ በፊት ይገምግሙ",
+    "reviewName": "ርዕስ",
+    "reviewNamePlaceholder": "የመጀመሪያውን ርዕስ ለማቆየት ባዶ ይተው",
+    "reviewDescription": "መግለጫ",
+    "reviewDescriptionPlaceholder": "በዚህ ልጥፍ ላይ አንድ ነገር ይናገሩ (አማራጭ)",
+    "reviewLiveWarning": "ያ አገናኝ የቀጥታ ዥረት ነው ። እስኪጨርስ ድረስ ይጠብቁ እና በምትኩ ቀረጻ ማስመጣት.",
+    "reviewCancel": "ሰርዝ",
+    "reviewConfirm": "አስመጣ",
+    "reviewSubtitle": "ከ {{source}} ፣ እንደ {{kind}}} ። የሚወዱትን ማንኛውንም ነገር ያርትዑ — የመጀመሪያውን ለማቆየት ርዕሱን ባዶ ይተው ።"
   },
   "banned": {
     "title": "መለያዎ ታግዷል",
@@ -2485,5 +2494,16 @@
     "line": "መለያዎ የተከለከለ ነው ፣ ስለሆነም መለጠፍ ፣ አስተያየት መስጠት ወይም መልዕክቶችን መላክ አይችሉም ።",
     "reason": "ምክንያት: {{reason}}",
     "deleteAccount": "መለያዎን እና ውሂብዎን ይሰርዙ"
+  },
+  "migrate": {
+    "watchOnSource": "ኦሪጅናል ይክፈቱ",
+    "editThis": "ርዕስ እና መግለጫ አርትዕ",
+    "editTitle": "ርዕስ",
+    "editDescription": "መግለጫ",
+    "editDescriptionPlaceholder": "መግለጫ (አማራጭ)",
+    "editDone": "ተከናውኗል",
+    "edited": "አርትዖት",
+    "subtitle": "ሰርጥ ወይም መገለጫ ይለጥፉ ፣ የሚፈልጉትን ያርትዑ ፣ አንድ ጊዜ ይክፈሉ ።",
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…"
   }
 }

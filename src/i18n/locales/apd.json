@@ -2407,7 +2407,16 @@
     "kindVideo": "Video",
     "kindAudio": "صوت",
     "kindImage": "صور",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "شوف قبل ما تنشر",
+    "reviewSubtitle": "من {{source}}، بتاع {{kind}}. عدّل أي حاجة تحتاج — اترك العنوان فاضي عشان تحافظ على العنوان الأصلي.",
+    "reviewName": "العنوان",
+    "reviewNamePlaceholder": "اترك فاضي عشان تحافظ على العنوان الأصلي",
+    "reviewDescription": "الوصف",
+    "reviewDescriptionPlaceholder": "قول حاجة عن البوست دي (اختياري)",
+    "reviewLiveWarning": "الرابط دا بث مباشر. استنى لما ينتهي وبعدين استورد التسجيل بدل ما تستورد البث.",
+    "reviewCancel": "إلغاء",
+    "reviewConfirm": "استورد"
   },
   "banned": {
     "title": "حسابك محظور",
@@ -2415,5 +2424,16 @@
     "line": "حسابك محظور، فما تقدر تنشر أو تعلق أو تبعت رسايل.",
     "reason": "السبب: {{reason}}",
     "deleteAccount": "احذف حسابك والبيانات بتاعتك"
+  },
+  "migrate": {
+    "watchOnSource": "افتح الأصلي",
+    "editThis": "عدّل العنوان والوصف",
+    "editTitle": "العنوان",
+    "editDescription": "الوصف",
+    "editDescriptionPlaceholder": "الوصف (اختياري)",
+    "editDone": "تمام",
+    "edited": "تم التعديل",
+    "subtitle": "الصق قناة أو ملف شخصي، عدّل اللي بتحبو، ادفع مرة واحدة.",
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…"
   }
 }

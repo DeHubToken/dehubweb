@@ -2448,7 +2448,16 @@
     "kindVideo": "Video",
     "kindAudio": "Audio",
     "kindImage": "Bilder",
-    "tileSourceKind": "{{source}} · {{kind}}"
+    "tileSourceKind": "{{source}} · {{kind}}",
+    "reviewTitle": "Vor em Poschte überprüfe",
+    "reviewSubtitle": "Vo {{source}}, as {{kind}}. Ändere öppis, wenn du wotsch — la de Titel leer, zum de ursprüngliche z'behalte.",
+    "reviewName": "Titel",
+    "reviewNamePlaceholder": "Laa leer, zum de ursprüngliche Titel z'behalte",
+    "reviewDescription": "Beschriibig",
+    "reviewDescriptionPlaceholder": "Säg öppis über dä Poscht (optional)",
+    "reviewLiveWarning": "De Link isch e Live-Stream. Warte, bis er fertig isch, und importiere de Mitschnitt statt däm.",
+    "reviewCancel": "Abbräche",
+    "reviewConfirm": "Importiere"
   },
   "banned": {
     "title": "Dini Konto isch gsperrt",
@@ -2456,5 +2465,16 @@
     "line": "Dini Konto isch gsperrt, drum chasch du nid poste, kommentiere oder Nachrichte schicke.",
     "reason": "Grund: {{reason}}",
     "deleteAccount": "Lösch dini Konto und Daten"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
+    "watchOnSource": "Original öffne",
+    "editThis": "Titel und Beschreibung bearbeite",
+    "editTitle": "Titel",
+    "editDescription": "Beschreibung",
+    "editDescriptionPlaceholder": "Beschreibung (optional)",
+    "editDone": "Fertig",
+    "edited": "Bearbeitet",
+    "subtitle": "Kanal oder Profil eifüge, bearbeite was dir gefällt, zahle einmal."
   }
 }

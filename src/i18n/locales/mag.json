@@ -2439,12 +2439,32 @@
     "kindVideo": "इ औ सेकसी वीडियो",
     "kindAudio": "ऑडियो कैलक्यूलेटर",
     "kindImage": "इ औ सेकसी फोटो",
-    "tileSourceKind": "{{MONTHNAME}} से मिलई छई"
+    "tileSourceKind": "{{MONTHNAME}} से मिलई छई",
+    "reviewTitle": "पोस्ट करे से पहले Review करे",
+    "reviewName": "Title \"दस्तावेज के समय खतम हो",
+    "reviewNamePlaceholder": "Title \"ई पता पर रोक लगावल गेल अछि \">",
+    "reviewDescription": "विवरण देवे वाला",
+    "reviewDescriptionPlaceholder": "1) सबसे पहले, App Find करे (यह Step TV के लिए है)",
+    "reviewLiveWarning": "ई पन्ना एगो अनुप्रेषण हः वापस अप, बहाल, ठीक, और WhatsApp डाटा हस्तांतरण.",
+    "reviewCancel": "रद्द करे",
+    "reviewConfirm": "आयात कैलक्यूलेटर",
+    "reviewSubtitle": "के रूप में, के रूप में, के रूप में, के रूप में जब तक कोई चाहे, सेवा का उपयोग कर सकता है, लेकिन उपयोगकर्ता द्वारा लागू सीमाओं के भीतर."
   },
   "banned": {
     "title": "आपके अकाउंट के डिलीट हो गेल है ।",
     "body": "आप अभी भी साइन अप कर सकते हैं, अपना फ़ीड पढ़ सकते हैं, अपना मैसेज खोल सकते हैं, और अपने खाते में सब कुछ देख सकते हैं । वापस अप, बहाल, ठीक, और WhatsApp डाटा हस्तांतरण.",
     "line": "आपके अकाउंट पर प्रतिबंध लगाई गई है, इसलिए आप पोस्ट, कमेंट या मैसेज नहीं भेज सकते ।",
     "deleteAccount": "अपना डेटा डिलीट करे और डिलीट करे"
+  },
+  "migrate": {
+    "placeholder": "https :// www.simplykhozo.wikipedia. org/wiki/खासःकड़ियाँ/हलचल/हलचल/हलचल",
+    "watchOnSource": "कलई खोलना",
+    "editThis": "अनुमति के प्रकार और सीमाओं के स्पष्टीकरण",
+    "editTitle": "Title \"दस्तावेज के समय खतम हो",
+    "editDescription": "विवरण देवे वाला",
+    "editDescriptionPlaceholder": "कैलकुलेटर (ऑप्शनल)",
+    "editDone": "क 'देल गेल",
+    "edited": "संपादन करे",
+    "subtitle": "है. क्रीम लगाओ और जितना चाहे अंदर लो और जैसे चाहे चोदो."
   }
 }

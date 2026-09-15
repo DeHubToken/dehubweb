@@ -4841,7 +4841,16 @@
     "kindVideo": "動画",
     "kindAudio": "オーディオ",
     "kindImage": "絵画",
-    "tileSourceKind": "{{source}}・{{kind}}"
+    "tileSourceKind": "{{source}}・{{kind}}",
+    "reviewTitle": "投稿前に確認する",
+    "reviewSubtitle": "{{kind}}として{{source}}から。 好きなものを編集してください。オリジナルを保持するには、タイトルを空のままにしてください。",
+    "reviewName": "タイトル",
+    "reviewNamePlaceholder": "元のタイトルを保持するには空白のままにします",
+    "reviewDescription": "説明",
+    "reviewDescriptionPlaceholder": "この投稿について教えてください（任意）",
+    "reviewLiveWarning": "そのリンクはライブストリームです。 終了するまで待ち、代わりに録画をインポートします。",
+    "reviewCancel": "キャンセル",
+    "reviewConfirm": "インポート"
   },
   "banned": {
     "title": "アカウントが禁止されています",
@@ -4849,5 +4858,16 @@
     "line": "アカウントが禁止されているため、投稿、コメント、メッセージの送信はできません。",
     "reason": "理由：{{reason}}",
     "deleteAccount": "アカウントとデータを削除する"
+  },
+  "migrate": {
+    "placeholder": "youtube.com/ @ you、tiktok.com/ @ you、vimeo.com/you…",
+    "watchOnSource": "オリジナルを開く",
+    "editThis": "タイトルと説明文を編集する",
+    "editTitle": "タイトル",
+    "editDescription": "説明",
+    "editDescriptionPlaceholder": "説明（任意）",
+    "editDone": "閉じる",
+    "edited": "編集済み",
+    "subtitle": "チャンネルやプロフィールを貼り付け、好きなものを編集して、一度支払ってください。"
   }
 }
