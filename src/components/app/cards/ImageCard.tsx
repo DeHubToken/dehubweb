@@ -12,7 +12,7 @@
 import { useState, memo, useCallback, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
 const BountyClaimActions = lazy(() => import('./BountyClaimActions'));
 import { DhbAmount } from '@/components/app/DhbAmount';
-import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { stripDehubLinkMatches } from '@/lib/dehub-links';
@@ -38,7 +38,7 @@ import { PostMetadata } from './PostMetadata';
 import { PPVDrawerContent } from './PPVDrawerContent';
 import { useTranslation, LANGUAGE_NAMES, renderTextWithLinks, splitTranslatedTitleAndBody } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
-import { PostAIChat } from './PostAIChat';
+import { PostAIChatLazy } from './PostAIChatLazy';
 import { ReportModal } from '../modals/ReportModal';
 
 import { DeletePostModal } from '../modals/DeletePostModal';
@@ -1247,7 +1247,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       </div>
 
       {/* AI Chat */}
-      <PostAIChat
+      <PostAIChatLazy
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{

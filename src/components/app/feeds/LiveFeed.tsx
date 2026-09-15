@@ -15,7 +15,7 @@ import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useNavigate } from 'react-router-dom';
 import { LiveFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
-import { LiveCard } from '@/components/app/cards';
+import { LiveCard } from '@/components/app/cards/LiveCard';
 import { useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 // Direct, not through '@/components/app/tv': the barrel re-exports TVChat, which

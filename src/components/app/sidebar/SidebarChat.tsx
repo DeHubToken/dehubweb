@@ -30,7 +30,7 @@ import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 import { ASSISTANT_AVATAR as assistantAvatar, isAssistantAddress } from '@/lib/assistant';
 import { useAssistantReplies, useAssistantReplyEngine, type AssistantReply } from '@/hooks/use-assistant-replies';
 import { Sparkles } from 'lucide-react';
-import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
 import { ChatLinkPreviews } from '../chat/ChatLinkPreviews';
 
 import { QUICK_CHAT_REACTIONS } from '@/components/app/chat/reaction-options';

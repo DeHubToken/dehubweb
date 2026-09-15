@@ -52,7 +52,9 @@ const OFFSCREEN_RESULT_STYLE: CSSProperties = {
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getMediaUrl, getCategories, searchNFTs, type DeHubNFT, type DeHubCategory } from '@/lib/api/dehub';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
-import { VideoCard, ImageCard, PostCard } from '@/components/app/cards';
+import { VideoCard } from '@/components/app/cards/VideoCard';
+import { ImageCard } from '@/components/app/cards/ImageCard';
+import { PostCard } from '@/components/app/cards/PostCard';
 import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
 import { useDexScreenerSearchMulti } from '@/hooks/use-dexscreener';
 import { useContractToTicker } from '@/hooks/use-contract-to-ticker';
