@@ -298,8 +298,16 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
   // Counted, so it nests with the viewer's own lock instead of fighting it.
   const immersiveSheet = !forceInline && isTabletOrMobile && immersive;
   const phoneSheet = !forceInline && isPhone && !immersive;
+  // Below `md` the section lays itself out as `h-full` around an absolutely
+  // positioned list, so it needs a definite height here or the list collapses.
+  // At `md` and up it sizes itself (`min-h-[400px] max-h-[600px]`) and scrolls
+  // internally, so a fixed height on this wrapper is dead space: the panel
+  // stood at 70dvh while the section inside it stopped at 400px, leaving an
+  // empty band under the reply box that grew with the viewport. Hug the
+  // section instead, the way the feed card's own comments already do, and keep
+  // 70dvh as a ceiling for short windows.
   const inlineWindowClass = forceInline
-    ? 'h-[60dvh] min-h-[360px] max-h-[600px] overflow-hidden md:h-[600px] md:max-h-[70dvh]'
+    ? 'h-[60dvh] min-h-[360px] max-h-[600px] overflow-hidden md:h-auto md:min-h-0 md:max-h-[70dvh] md:overflow-y-auto'
     : 'h-[60vh] overflow-hidden md:h-auto md:overflow-y-auto';
   useEffect(() => {
     if (!immersiveSheet || !open) return;
