@@ -4866,5 +4866,12 @@
     "kindAudio": "Audio",
     "kindImage": "Pictures",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "Your account is banned",
+    "body": "You can still sign in, read your feed, open your messages and see everything on your account. You cannot post, comment, react, follow or send messages.",
+    "line": "Your account is banned, so you cannot post, comment or send messages.",
+    "reason": "Reason: {{reason}}",
+    "deleteAccount": "Delete your account and data"
   }
 }

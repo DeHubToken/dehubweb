@@ -2448,5 +2448,12 @@
     "kindAudio": "Audio",
     "kindImage": "Bilder",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "Dini Konto isch gsperrt",
+    "body": "Du chasch di immer no iilogge, dini Feed läse, dini Nachrichte öffne und alles uf dinem Konto gse. Du chasch aber nid poste, kommentiere, reagiere, Lüt folgä oder Nachrichte schicke.",
+    "line": "Dini Konto isch gsperrt, drum chasch du nid poste, kommentiere oder Nachrichte schicke.",
+    "reason": "Grund: {{reason}}",
+    "deleteAccount": "Lösch dini Konto und Daten"
   }
 }

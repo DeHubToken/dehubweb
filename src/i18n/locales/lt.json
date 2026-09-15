@@ -2482,5 +2482,12 @@
     "kindAudio": "Garso įrašas",
     "kindImage": "Nuotraukos",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "Jūsų paskyra užblokuota",
+    "body": "Vis tiek galite prisijungti, skaityti sklaidos kanalą, atidaryti žinutes ir matyti viską savo paskyroje. Negalite skelbti, komentuoti, reaguoti, sekti ar siųsti žinučių.",
+    "line": "Jūsų paskyra užblokuota, todėl negalite skelbti, komentuoti ar siųsti žinučių.",
+    "reason": "Priežastis: {{reason}}",
+    "deleteAccount": "Paskyros ir duomenų ištrynimas"
   }
 }

@@ -5000,6 +5000,13 @@
     "kindImage": "Afbeeldingen",
     "tileSourceKind": "{{source}} · {{kind}}"
   },
+  "banned": {
+    "title": "Je account is geblokkeerd",
+    "body": "Je kunt nog steeds inloggen, je feed lezen, je berichten openen en alles in je account bekijken. U kunt geen berichten plaatsen, reageren, volgen of verzenden.",
+    "line": "Je account is geblokkeerd, dus je kunt geen berichten plaatsen, reageren of verzenden.",
+    "reason": "Reden: {{reason}}",
+    "deleteAccount": "Je account en gegevens verwijderen"
+  },
   "home": {
     "title": "Home",
     "description": "Welkom op de homepagina"

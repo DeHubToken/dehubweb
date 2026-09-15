@@ -573,8 +573,14 @@ export async function apiCall<T>(
     // can, without pattern-matching the message text.
     const apiError = new Error(errorData.message || errorData.error || `API error: ${response.status}`) as Error & {
       httpStatus?: number;
+      errorCode?: string;
     };
     apiError.httpStatus = response.status;
+    // The server's own machine-readable reason, when it sends one.
+    // ACCOUNT_BANNED is the one callers branch on: a banned account reads
+    // everything and writes nothing, so a refused write is a state to explain
+    // rather than a failure to retry.
+    if (typeof errorData?.code === 'string') apiError.errorCode = errorData.code;
     throw apiError;
   }
 

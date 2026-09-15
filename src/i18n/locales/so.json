@@ -2473,5 +2473,12 @@
     "kindAudio": "Cod",
     "kindImage": "Sawiro",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "Koontadaada waa la mamnuucay",
+    "body": "Weli waad iska qori kartaa, akhri quudintaada, fur farriimahaaga oo arag wax walba koontadaada. Ma dhajin kartid, faallo, falcelin, raaci kartid ama farriimo ma diri kartid.",
+    "line": "Koontadaada waa la mamnuucay, sidaa darteed ma dhajin kartid, faallo ama farriin ma diri kartid.",
+    "reason": "Sababta: {{reason}}",
+    "deleteAccount": "Tirtir koontadaada iyo xogtaada"
   }
 }

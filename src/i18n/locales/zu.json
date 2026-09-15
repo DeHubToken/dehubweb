@@ -2512,5 +2512,12 @@
     "kindAudio": "Okwemisindo",
     "kindImage": "izithombe",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "I-akhawunti yakho ivinjelwe",
+    "body": "Usengangena ngemvume, ufunde i-feed yakho, uvule imilayezo yakho futhi ubone konke ku-akhawunti yakho. Awukwazi ukuphosta, ukuphawula, ukuphendula, ukulandela noma ukuthumela imiyalezo.",
+    "line": "I-akhawunti yakho ivinjelwe, ngakho-ke awukwazi ukuphosta, ukuphawula noma ukuthumela imiyalezo.",
+    "reason": "Isizathu: {{reason}}",
+    "deleteAccount": "Susa i-akhawunti nedatha yakho"
   }
 }

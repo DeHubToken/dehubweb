@@ -2473,5 +2473,11 @@
     "kindAudio": "Lyd",
     "kindImage": "Bilder",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "Kontoen din er utestengt",
+    "body": "Du kan fortsatt logge inn, lese feeden din, åpne meldingene dine og se alt på kontoen din. Du kan ikke legge ut innlegg, kommentere, reagere, følge eller sende meldinger.",
+    "line": "Kontoen din er utestengt, så du kan ikke legge ut innlegg, kommentere eller sende meldinger.",
+    "deleteAccount": "Slett hele profilen og alle dataene dine"
   }
 }

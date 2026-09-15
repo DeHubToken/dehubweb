@@ -4528,11 +4528,18 @@
     "errorNeedRights": "Vui lòng xác nhận bạn có quyền đối với nội dung này",
     "errorClipboard": "Không thể đọc bảng tạm — dán thủ công thay vào đó",
     "errorQueueFailed": "Không thể xếp hàng nhập đó",
+    "publishAs": "Xuất bản dưới dạng <canvas>",
     "kindVideo": "Video",
     "kindAudio": "Âm thanh",
     "kindImage": "Hình ảnh",
-    "tileSourceKind": "{{source}} · {{kind}}",
-    "publishAs": "Xuất bản dưới dạng <canvas>"
+    "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "Tài khoản của bạn đã bị cấm",
+    "body": "Bạn vẫn có thể đăng nhập, đọc nguồn cấp dữ liệu, mở tin nhắn và xem mọi thứ trên tài khoản của mình. Bạn không thể đăng, bình luận, phản hồi, theo dõi hoặc gửi tin nhắn.",
+    "line": "Tài khoản của bạn bị cấm, vì vậy bạn không thể đăng, nhận xét hoặc gửi tin nhắn.",
+    "reason": "Lý do: {{reason}}",
+    "deleteAccount": "Xóa tài khoản và dữ liệu của bạn"
   },
   "glossary": {
     "title": "Bảng thuật ngữ",

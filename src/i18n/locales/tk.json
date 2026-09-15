@@ -2438,5 +2438,12 @@
     "kindAudio": "Ses",
     "kindImage": "Suratlar",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "Siziň hasabatyňyz gadagan edilýär",
+    "body": "Siz henizem girip, öz iýmitini okap, habarlaryňyzy açyp, ähli zady öz hasabatyňyzda görüp bilersiňiz. Olaryň käbiri size hiç haçan habar ýa-da duýduryş iberip bilmezler, ýa-da olaryň iberen zatlaryny barlap bilmezler!",
+    "line": "Olaryň käbiri size hiç haçan habar ýa-da duýduryş iberip bilmezler, ýa-da olaryň iberen zatlaryny barlap bilmezler!",
+    "reason": "Sebep: {{reason}}",
+    "deleteAccount": "Şkaýyňy we maglumatyňy gizle"
   }
 }
