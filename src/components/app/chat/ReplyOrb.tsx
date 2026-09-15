@@ -2,8 +2,10 @@
  * The reply orb — a ball of cosmic dust turning on its own axis, sitting under
  * the suggestion cards.
  *
- * Monochrome by design: white motes over near-black, nothing hued, so it takes
- * whatever canvas the active theme paints instead of fighting it.
+ * Monochrome by design: motes over the opposite tone, nothing hued, so it takes
+ * whatever canvas the active theme paints instead of fighting it. "White over
+ * near-black" was literal until the light theme shipped a paper canvas and the
+ * whole orb went invisible; the tone is --orb-ink now, flipped to ink on paper.
  *
  * GEOMETRY IS SHARED WITH MOBILE. dehub-mobile's components/DM/ReplyOrb.tsx is
  * the Reanimated twin of this file — same mote distribution, same durations,
@@ -94,8 +96,8 @@ export function ReplyOrb({ state = 'idle', size = 44, className = '' }: ReplyOrb
           marginTop: -(size * RATIO.haze) / 2,
           borderRadius: '9999px',
           background: busy
-            ? 'radial-gradient(circle, rgba(255,255,255,0.30) 0%, rgba(255,255,255,0) 70%)'
-            : 'radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%)',
+            ? 'radial-gradient(circle, rgba(var(--orb-ink),0.30) 0%, rgba(var(--orb-ink),0) 70%)'
+            : 'radial-gradient(circle, rgba(var(--orb-ink),0.18) 0%, rgba(var(--orb-ink),0) 70%)',
           animationDuration: `${d.haze}ms`,
         }}
       />
@@ -121,10 +123,10 @@ export function ReplyOrb({ state = 'idle', size = 44, className = '' }: ReplyOrb
           marginLeft: -dot / 2,
           marginTop: -dot / 2 + m.y * R,
           background: m.bright
-            ? 'rgba(255,255,255,0.95)'
+            ? 'rgba(var(--orb-ink),0.95)'
             : busy
-            ? 'rgba(255,255,255,0.8)'
-            : 'rgba(255,255,255,0.68)',
+            ? 'rgba(var(--orb-ink),0.8)'
+            : 'rgba(var(--orb-ink),0.68)',
           transform: `translateX(${(m.ringRadius * R * Math.sin(angle)).toFixed(2)}px) scale(${(0.55 + 0.45 * depth).toFixed(3)})`,
           opacity: 0.2 + 0.8 * depth,
           animationDuration: `${d.spin}ms`,
