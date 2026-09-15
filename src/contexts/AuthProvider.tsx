@@ -452,6 +452,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // way and an audience that tapped something recently.
   const resumeOpenedAtBootRef = useRef(isSocialLoginResumeExpected());
   const wagmiAuthIntentRef = useRef(false);
+  /**
+   * Which wallet the live intent is for — the button that was actually tapped.
+   *
+   * An intent used to be a bare boolean, and handleWagmiConnect read it as
+   * "sign in with whatever is attached". Anyone running a second extension
+   * that has this site trusted (Phantom, TronLink, Rabby…) has that wallet
+   * silently reattached by wagmi's reconnect at first paint, with no prompt to
+   * show for it — so tapping MetaMask flipped the intent, re-fired the effect
+   * while the OTHER wallet was still the live connection, and the signature
+   * popup came from Phantom. The MetaMask connect then landed behind an
+   * in-progress latch and never asked for anything.
+   *
+   * Null means "no particular wallet" — the in-app-browser auto-connect, which
+   * has exactly one provider to reach — and keeps the old behaviour.
+   */
+  const wagmiAuthIntentWalletRef = useRef<string | null>(null);
+  /** Dedupes the log line below, which sits in an effect that re-fires. */
+  const wagmiIntentMismatchLoggedRef = useRef<string | null>(null);
   const [wagmiAuthIntentState, setWagmiAuthIntentState] = useState(false);
   const wagmiAuthInProgressRef = useRef(false);
   // When the last wagmi connect approval landed. The signature request must not
@@ -495,7 +513,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     !!getRefreshToken()
   );
 
-  const setWagmiAuthIntent = useCallback((value: boolean) => {
+  const setWagmiAuthIntent = useCallback((value: boolean, wallet?: string | null) => {
     // A fresh attempt always gets to start. The in-progress latch exists to
     // stop ONE gesture being processed twice (the intent toggle re-fires the
     // effect mid-flight), but a signature promise that never settles skips the
@@ -511,6 +529,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       rejectedSignatureAddressRef.current = null;
     }
     wagmiAuthIntentRef.current = value;
+    wagmiAuthIntentWalletRef.current = value ? (wallet ?? null) : null;
+    wagmiIntentMismatchLoggedRef.current = null;
     // Force a genuine state change even when re-setting the same boolean —
     // handleWagmiConnect relies on this update to re-fire (React bails out of
     // same-value setState). The effect only reads wagmiAuthIntentRef.current.
@@ -1268,6 +1288,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (isWagmiConnected && wagmiAddress && !isLoading) {
         if (wagmiAuthInProgressRef.current) {
+          return;
+        }
+
+        /**
+         * A tap is an instruction to sign in with THAT wallet, not with
+         * whatever wagmi happens to be holding when the effect re-fires.
+         *
+         * Setting the intent is itself a dependency of this effect, so the tap
+         * runs it immediately — before connectWithWallet has swapped the
+         * connection over. On a machine with a second extension already
+         * reattached, this block therefore sees the wrong wallet first, and
+         * treating that as the login is how tapping MetaMask produced a
+         * Phantom signature prompt. Wait for the connection the tap asked for;
+         * connectWithWallet is on its way to open it, and it re-fires this.
+         *
+         * A wallet's own in-app browser has one provider that every button
+         * reaches through the generic injected connector, so that counts as a
+         * match — same rule the sheet uses for its connected chip.
+         *
+         * Doing nothing is the whole of the fix: the attempt is not failed,
+         * only deferred, and it is released either by the right connector
+         * landing or by connectWithWallet clearing the intent when its connect
+         * is refused. Falling through instead would hand a mismatched wallet
+         * to CASE B, which reads a wrong address as the extension switching
+         * accounts — an equally wrong answer to a tap.
+         */
+        const intendedWallet = wagmiAuthIntentWalletRef.current;
+        const tapMatchesConnection =
+          !intendedWallet ||
+          connectorMatchesWallet(wagmiConnector, intendedWallet) ||
+          (isWalletInAppBrowser() && wagmiConnector?.id === 'injected');
+
+        if (wagmiAuthIntentRef.current && !tapMatchesConnection) {
+          const seen = `${intendedWallet}|${wagmiConnector?.id ?? 'none'}`;
+          if (wagmiIntentMismatchLoggedRef.current !== seen) {
+            wagmiIntentMismatchLoggedRef.current = seen;
+            authLogger.warn('Ignored a wallet that is not the one that was tapped', {
+              tapped: intendedWallet,
+              liveConnectorId: wagmiConnector?.id,
+              liveConnectorName: wagmiConnector?.name,
+              buildId: getRunningBuildId(),
+            });
+          }
           return;
         }
 
@@ -2753,7 +2816,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const previousSource = readConnectionSource();
 
     setIsConnecting(true);
-    setWagmiAuthIntent(true);
+    // Named, so handleWagmiConnect waits for THIS wallet rather than signing
+    // with whatever another extension has already reattached.
+    setWagmiAuthIntent(true, wallet);
     writeConnectionSource('wagmi');
 
     try {

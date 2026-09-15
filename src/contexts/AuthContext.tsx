@@ -100,7 +100,14 @@ export interface AuthContextType {
    */
   refreshSession: (force?: boolean) => Promise<boolean>;
   setRequiresUsername: (value: boolean) => void;
-  setWagmiAuthIntent: (value: boolean) => void;
+  /**
+   * Arm (or clear) "the next wagmi connection is a login the user asked for".
+   * `wallet` names the button that was tapped — the sheet's wallet id, or a
+   * discovered connector's id — so the signature goes to that wallet and not
+   * to another extension that reattached itself first. Omit it only where
+   * there is a single provider to reach (a wallet's in-app browser).
+   */
+  setWagmiAuthIntent: (value: boolean, wallet?: string | null) => void;
   // Login modal state
   isLoginModalOpen: boolean;
   /**
