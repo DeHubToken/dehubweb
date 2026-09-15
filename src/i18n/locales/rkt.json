@@ -2155,6 +2155,9 @@
     "viewStory": "গল্প দেখো",
     "noStories": "এখনো কোন গল্প নাই"
   },
+  "videoPlayer": {
+    "volume": "ভলিউম"
+  },
   "dub": {
     "audio": "ऑडियो",
     "original": "मूल ऑडियो",

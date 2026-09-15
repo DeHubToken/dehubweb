@@ -4637,6 +4637,9 @@
     "foldersNoItems": "Hakuna chochote kwenye folda hii bado",
     "foldersNoItemsHint": "Fungua matokeo na uchague \"Ongeza kwenye folda\" ili uihifadhi hapa."
   },
+  "videoPlayer": {
+    "volume": "Sauti"
+  },
   "dub": {
     "audio": "Sauti",
     "original": "Sauti ya awali",

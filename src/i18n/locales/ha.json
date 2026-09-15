@@ -2334,6 +2334,9 @@
     "foldersNoItems": "Babu komai a cikin wannan babban fayil tukuna",
     "foldersNoItemsHint": "Bude sakamako kuma zaɓi \"Ƙara zuwa babban fayil\" don adana shi anan."
   },
+  "videoPlayer": {
+    "volume": "Ƙarar sauti"
+  },
   "dub": {
     "audio": "Sauti",
     "original": "Sauti na asali",

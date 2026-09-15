@@ -4583,6 +4583,9 @@
     "foldersNoItems": "V této složce zatím nic není",
     "foldersNoItemsHint": "Otevřete výsledek a zvolte \"Přidat do složky\" pro jeho uložení zde."
   },
+  "videoPlayer": {
+    "volume": "Hlasitost"
+  },
   "dub": {
     "audio": "Zvuk",
     "original": "Originální zvuk",

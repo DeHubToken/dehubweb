@@ -2328,6 +2328,9 @@
     "foldersNoItems": "Kāore anō kia whai mea kei roto i tēnei kōpaki",
     "foldersNoItemsHint": "Whakatuwherahia tētahi hua ka tīpakohia te \"Tāpiri ki te kōpaki\" hei penapena ki konei."
   },
+  "videoPlayer": {
+    "volume": "Rahi oro"
+  },
   "dub": {
     "audio": "Ororongo",
     "original": "Oro taketake",

@@ -2334,6 +2334,9 @@
     "foldersNoItems": "Asgjë në këtë dosje akoma",
     "foldersNoItemsHint": "Hap një rezultat dhe zgjidh \"Shto në dosje\" për ta ruajtur këtu."
   },
+  "videoPlayer": {
+    "volume": "Volumi"
+  },
   "dub": {
     "audio": "Audio",
     "original": "Orgjinali Gjerësia:",

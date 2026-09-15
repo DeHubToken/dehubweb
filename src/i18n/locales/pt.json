@@ -4666,6 +4666,9 @@
     "foldersNoItems": "Nada nesta pasta ainda",
     "foldersNoItemsHint": "Abra um resultado e escolha \"Adicionar à pasta\" para arquivá-lo aqui."
   },
+  "videoPlayer": {
+    "volume": "Volume"
+  },
   "dub": {
     "audio": "Áudio",
     "original": "áudio original",

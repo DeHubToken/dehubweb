@@ -689,6 +689,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [duration, setDuration] = useState(0);
   const [intrinsicAspect, setIntrinsicAspect] = useState<number | null>(null);
   const [volume, setVolume] = useState(() => getVideoPreferences().volume);
+  /**
+   * The control row mounts the subtitle button through this node, so it shares
+   * the row's mount instead of fading in on a timer of its own.
+   */
+  const [ccSlot, setCcSlot] = useState<HTMLDivElement | null>(null);
+  /** The subtitle language menu holds the controls up while it is open. */
+  const [subsMenuOpen, setSubsMenuOpen] = useState(false);
+  /** Hovering the mute button drops a volume slider under it. */
+  const [volumeOpen, setVolumeOpen] = useState(false);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
   // This creator's own rate if they have one, otherwise the global default.
@@ -1122,18 +1131,42 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     }
   }, []);
 
-  const adjustVolume = useCallback((delta: number) => {
-    if (videoRef.current) {
-      const newVolume = Math.max(0, Math.min(1, volume + delta));
-      setVolume(newVolume);
-      vpSetVolume(newVolume);
-      videoRef.current.volume = newVolume;
-      if (newVolume > 0 && isMuted) {
-        setIsMuted(false);
-        videoRef.current.muted = false;
-      }
+  /**
+   * Per-video volume. Dragging off zero also unmutes and claims audio, or the
+   * slider moves and nothing is heard. Dragging to zero mutes, so the icon and
+   * the slider never disagree.
+   */
+  const setVolumeTo = useCallback((next: number) => {
+    const newVolume = Math.max(0, Math.min(1, next));
+    setVolume(newVolume);
+    vpSetVolume(newVolume);
+    if (videoRef.current) videoRef.current.volume = newVolume;
+    const shouldMute = newVolume === 0;
+    if (shouldMute !== isMuted) {
+      setIsMuted(shouldMute);
+      videoPlaybackManager.globalMuted = shouldMute;
+      if (videoRef.current) videoRef.current.muted = shouldMute;
+      if (!shouldMute) videoPlaybackManager.claimAudio(instanceId);
     }
-  }, [volume, isMuted]);
+  }, [isMuted, instanceId]);
+
+  const adjustVolume = useCallback((delta: number) => {
+    setVolumeTo(volume + delta);
+  }, [volume, setVolumeTo]);
+
+  /** Slider position. Muted reads as zero so the icon and the track agree. */
+  const volumePct = Math.round((isMuted ? 0 : volume) * 100);
+
+  // A menu or slider open over the player counts as activity: the row must not
+  // vanish out from under the thing the pointer is already inside.
+  const controlsVisible = showControls || subsMenuOpen || volumeOpen;
+
+  // The saved volume only ever reached the element through an explicit
+  // adjustment, so a viewer who had turned a video down got full volume back on
+  // the next one. Apply it whenever this card owns the shared <video>.
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.volume = volume;
+  }, [volume, isPlaying, mediaAttached]);
 
   const seekBy = useCallback((seconds: number) => {
     if (videoRef.current) {
@@ -1669,6 +1702,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           isHoveringRef.current = false;
           if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
           setShowControls(false);
+          setVolumeOpen(false);
         }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
@@ -1999,7 +2033,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
         {/* Optional CC subtitle overlay */}
         {!isContentGated && video.videoUrl && (
-          <VideoSubtitleOverlay tokenId={video.id} videoRef={videoRef} buttonClassName="absolute top-2 right-[228px] z-20" buttonVisible={showControls} />
+          <VideoSubtitleOverlay
+            tokenId={video.id}
+            videoRef={videoRef}
+            buttonPortalTarget={ccSlot}
+            buttonClassName={ccSlot ? undefined : 'absolute top-2 right-2 z-20'}
+            buttonVisible={showControls}
+            onMenuOpenChange={setSubsMenuOpen}
+          />
         )}
         
         
@@ -2022,8 +2063,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             Never for audio posts: speed, loop, PiP and fullscreen have nothing
             to act on there, and the row appeared on hover over a visualizer
             that already carries its own transport. */}
-        {showControls && !video.isAudio && (
+        {controlsVisible && !video.isAudio && (
           <div data-video-controls className="absolute top-2 right-2 flex items-center gap-2 z-10">
+            {/* Subtitles mount here — display:contents keeps the button a direct
+                flex item, so it sits in the row's gap like everything else. */}
+            <div ref={setCcSlot} className="contents" />
 
             <button
               className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
@@ -2058,12 +2102,57 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 <TooltipContent>Picture in Picture (P)</TooltipContent>
               </Tooltip>
             )}
-            <button 
-              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
-              onClick={toggleMute}
+            {/* Hovering the speaker drops a slider for this video alone —
+                turning a loud clip down should not mean reaching for the system
+                mixer. The wrapper keeps the pointer inside while the cursor
+                travels from the button to the slider. */}
+            <div
+              className="relative"
+              onMouseEnter={() => setVolumeOpen(true)}
+              onMouseLeave={() => setVolumeOpen(false)}
             >
-              {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-            </button>
+              <button
+                className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+                onClick={toggleMute}
+                aria-label={t('videoPlayer.volume')}
+              >
+                {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+              </button>
+              {volumeOpen && (
+                <div className="absolute top-full right-0 pt-1.5" onClick={(e) => e.stopPropagation()}>
+                  <div className="h-[104px] w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded-xl border border-white/10 flex items-center justify-center">
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      step={1}
+                      value={volumePct}
+                      onChange={(e) => setVolumeTo(Number(e.target.value) / 100)}
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label={t('videoPlayer.volume')}
+                      className="h-1 w-[84px] -rotate-90 appearance-none cursor-pointer rounded-full bg-transparent
+                        [&::-webkit-slider-thumb]:appearance-none
+                        [&::-webkit-slider-thumb]:w-3
+                        [&::-webkit-slider-thumb]:h-3
+                        [&::-webkit-slider-thumb]:bg-white
+                        [&::-webkit-slider-thumb]:rounded-full
+                        [&::-webkit-slider-thumb]:shadow-md
+                        [&::-moz-range-thumb]:w-3
+                        [&::-moz-range-thumb]:h-3
+                        [&::-moz-range-thumb]:bg-white
+                        [&::-moz-range-thumb]:rounded-full
+                        [&::-moz-range-thumb]:border-0"
+                      style={{
+                        backgroundImage: 'linear-gradient(to right, white ' + volumePct + '%, rgba(255,255,255,0.3) ' + volumePct + '%)',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: '100% 4px',
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
             <button 
               className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
               onClick={handleFullscreen}
@@ -2084,7 +2173,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             so over a visualizer it painted a black gradient and a second,
             non-functional play button on top of the audio controls — the
             "hovering brings up a play/pause button" complaint. */}
-        {showControls && !video.isAudio && (
+        {controlsVisible && !video.isAudio && (
           <div data-video-controls className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
 
             <div className="flex items-center gap-2">

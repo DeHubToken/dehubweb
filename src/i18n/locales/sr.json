@@ -2097,6 +2097,9 @@
     "foldersNoItems": "Ништа у овом фолдеру још увек",
     "foldersNoItemsHint": "Отворите резултат и изаберите „Додај у фолдер” да бисте га овде сачували."
   },
+  "videoPlayer": {
+    "volume": "Јачина звука"
+  },
   "dub": {
     "audio": "Аудио",
     "original": "Originalni zvuk",

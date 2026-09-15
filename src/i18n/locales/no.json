@@ -2329,6 +2329,9 @@
     "foldersNoItems": "Ingenting i denne mappen ennå",
     "foldersNoItemsHint": "Åpne et resultat og velg \"Legg til i mappe\" for å arkivere det her."
   },
+  "videoPlayer": {
+    "volume": "Lydstyrke"
+  },
   "dub": {
     "audio": "Lyd",
     "original": "Original lyd",

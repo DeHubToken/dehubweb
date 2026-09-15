@@ -2457,6 +2457,9 @@
     "foldersNoItems": "V tomto priečinku zatiaľ nič nie je",
     "foldersNoItemsHint": "Otvorte výsledok a vyberte „Pridať do priečinka“, aby ste ho sem zaradili."
   },
+  "videoPlayer": {
+    "volume": "Hlasitosť"
+  },
   "dub": {
     "audio": "Zvuk",
     "original": "Originálny zvuk",

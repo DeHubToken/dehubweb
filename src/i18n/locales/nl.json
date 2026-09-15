@@ -4851,6 +4851,9 @@
     "foldersNoItems": "Nog niets in deze map",
     "foldersNoItemsHint": "Open een resultaat en kies \"Toevoegen aan map\" om het hier op te slaan."
   },
+  "videoPlayer": {
+    "volume": "Volume"
+  },
   "dub": {
     "audio": "Audio",
     "original": "Origineel geluid",

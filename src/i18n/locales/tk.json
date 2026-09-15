@@ -2300,6 +2300,9 @@
     "foldersNoItems": "Bu gutapçada heniz hiç zat ýok",
     "foldersNoItemsHint": "Netijäni açyň we ony şu ýere ýerleşdirmek üçin \"Gutapçany goş\" saýlaň."
   },
+  "videoPlayer": {
+    "volume": "Ses"
+  },
   "dub": {
     "audio": "Ses",
     "original": "Aslynda ses",

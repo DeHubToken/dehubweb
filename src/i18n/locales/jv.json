@@ -2319,6 +2319,9 @@
     "foldersNoItems": "Durung ana apa-apa ing folder iki",
     "foldersNoItemsHint": "Bukak asil lan pilih \"Tambahake menyang folder\" kanggo nyimpen ing kene."
   },
+  "videoPlayer": {
+    "volume": "Volume"
+  },
   "dub": {
     "audio": "Audio",
     "original": "Swara asli",

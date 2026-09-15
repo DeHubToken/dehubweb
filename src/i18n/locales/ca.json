@@ -4579,6 +4579,9 @@
     "foldersNoItems": "Encara no hi ha res en aquesta carpeta",
     "foldersNoItemsHint": "Obre un resultat i tria \"Afegeix a la carpeta\" per arxivar-lo aquí."
   },
+  "videoPlayer": {
+    "volume": "Volum"
+  },
   "dub": {
     "audio": "Àudio",
     "original": "Àudio original",

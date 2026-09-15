@@ -4655,6 +4655,9 @@
     "foldersNoItems": "Nic w tym folderze",
     "foldersNoItemsHint": "Otwórz wynik i wybierz „Dodaj do folderu”, aby go tutaj umieścić."
   },
+  "videoPlayer": {
+    "volume": "Głośność"
+  },
   "dub": {
     "audio": "Dźwięk",
     "original": "Oryginalny dźwięk",

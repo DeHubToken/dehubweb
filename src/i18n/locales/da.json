@@ -4610,6 +4610,9 @@
     "foldersNoItems": "Intet i denne mappe endnu",
     "foldersNoItemsHint": "Åbn et resultat, og vælg \"Tilføj til mappe\" for at arkivere det her."
   },
+  "videoPlayer": {
+    "volume": "Lydstyrke"
+  },
   "dub": {
     "audio": "Lyd",
     "original": "Original lyd",

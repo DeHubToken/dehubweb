@@ -4583,6 +4583,9 @@
     "foldersNoItems": "Selles kaustas pole veel midagi",
     "foldersNoItemsHint": "Avage tulemus ja valige \"Lisa kausta\", et see siia salvestada."
   },
+  "videoPlayer": {
+    "volume": "Helitugevus"
+  },
   "dub": {
     "audio": "Heli",
     "original": "Originaalheli",

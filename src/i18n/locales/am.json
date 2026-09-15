@@ -2338,6 +2338,9 @@
     "foldersNoItems": "በዚህ ፎልደር ውስጥ ምንም የለም",
     "foldersNoItemsHint": "ውጤት ክፈት እና \"ወደ ፎልደር ጨምር\" ይምረጡ ወደ ここ ለማስገባት።"
   },
+  "videoPlayer": {
+    "volume": "የድምፅ መጠን"
+  },
   "dub": {
     "audio": "ኦዲዮ",
     "original": "ኦሪጅናል ኦዲዮ",

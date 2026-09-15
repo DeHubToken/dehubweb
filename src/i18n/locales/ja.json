@@ -4642,6 +4642,9 @@
     "foldersNoItems": "このフォルダにはまだ何もありません",
     "foldersNoItemsHint": "結果を開き、「フォルダに追加」を選択してここに保存してください。"
   },
+  "videoPlayer": {
+    "volume": "音量"
+  },
   "dub": {
     "audio": "オーディオ",
     "original": "オリジナルの音声",

@@ -4647,6 +4647,9 @@
     "foldersNoItems": "이 폴더에 아무것도 없습니다",
     "foldersNoItemsHint": "결과를 열고 \"폴더에 추가\"를 선택하여 여기에 저장하세요."
   },
+  "videoPlayer": {
+    "volume": "음량"
+  },
   "dub": {
     "audio": "오디오",
     "original": "원본 오디오",

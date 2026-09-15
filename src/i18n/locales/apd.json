@@ -2259,6 +2259,9 @@
     "foldersNoItems": "ما في حاجة في هسع المجلد",
     "foldersNoItemsHint": "افتح النتيجة واختار \"أضف للمجلد\" عشان تحطها هنا."
   },
+  "videoPlayer": {
+    "volume": "مستوى الصوت"
+  },
   "dub": {
     "audio": "صوت",
     "original": "صوت أصلي",

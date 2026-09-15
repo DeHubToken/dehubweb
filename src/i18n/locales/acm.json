@@ -2288,6 +2288,9 @@
     "foldersNoItems": "ما في شي في هالمجلد بعد",
     "foldersNoItemsHint": "افتح نتيجة واختار \"اضف للمجلد\" عشان تحطها هنا."
   },
+  "videoPlayer": {
+    "volume": "مستوى الصوت"
+  },
   "dub": {
     "audio": "صوت",
     "original": "صوت أصلي",

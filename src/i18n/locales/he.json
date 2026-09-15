@@ -4390,6 +4390,9 @@
     "foldersNoItems": "אין עדיין כלום בתיקיה זו",
     "foldersNoItemsHint": "פתח תוצאה ובחר \"הוסף לתיקיה\" כדי לשמור אותה כאן."
   },
+  "videoPlayer": {
+    "volume": "עוצמת קול"
+  },
   "dub": {
     "audio": "אודיו",
     "original": "שמע מקורי",

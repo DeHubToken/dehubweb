@@ -4667,6 +4667,9 @@
     "foldersNoItems": "此文件夹中没有任何内容",
     "foldersNoItemsHint": "打开结果并选择\"添加到文件夹\"以将其归档到此处。"
   },
+  "videoPlayer": {
+    "volume": "音量"
+  },
   "dub": {
     "audio": "音频",
     "original": "原始音频",
