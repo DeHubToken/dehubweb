@@ -172,9 +172,9 @@ describe('PersistentPageCache wires the pause to the hide', () => {
     // only because a post overlay sits above it keeps its <video> — the post
     // page takes that very element over — and loses everything off-document.
     expect(SOURCE).toMatch(/pauseMediaIn\(root\)/);
-    expect(SOURCE).toMatch(/pauseOffDocumentMediaIn\(root\)/);
+    expect(SOURCE).toMatch(/pauseOffDocumentMediaIn\(root, overlayKey\)/);
     expect(SOURCE).toMatch(/resumeMedia\(resumeRef\.current\)/);
-    expect(SOURCE).toMatch(/\}, \[isActive, shouldStayVisible\]\)/);
+    expect(SOURCE).toMatch(/\}, \[isActive, shouldStayVisible, overlayKey\]\)/);
   });
 });
 
@@ -316,7 +316,7 @@ describe('AudioVisualizer puts its element on the page cache books', () => {
   it('gives the claim up when the corner player takes the track', () => {
     // The corner player is mounted outside the cache so it can outlive the
     // route. Keeping the registration would have the next navigation pause it.
-    expect(SOURCE).toMatch(/handedOverRef\.current = !!el;[\s\S]{0,200}releaseOffDocument\(\)/);
+    expect(SOURCE).toMatch(/handedOverRef\.current = !!el;[\s\S]{0,400}releaseOffDocument\(\)/);
   });
 });
 

@@ -137,11 +137,14 @@ const CachedPage = memo(function CachedPage({
   config,
   isActive,
   forceVisible = false,
+  overlayKey,
   resetToken,
 }: {
   config: CachedPageConfig;
   isActive: boolean;
   forceVisible?: boolean;
+  /** Post the overlay above this page is opening, if any. */
+  overlayKey?: string | null;
   /** Route token that resets this page's error boundary on navigation. */
   resetToken?: unknown;
 }) {
@@ -200,9 +203,11 @@ const CachedPage = memo(function CachedPage({
     // Accumulated, not replaced: home → post → another page pauses in two
     // steps, and the second sweep skips what the first already stopped. Only a
     // return to the page settles the debt.
-    const stopped = shouldStayVisible ? pauseOffDocumentMediaIn(root) : pauseMediaIn(root);
+    const stopped = shouldStayVisible
+      ? pauseOffDocumentMediaIn(root, overlayKey)
+      : pauseMediaIn(root);
     if (stopped.length) resumeRef.current = [...new Set([...resumeRef.current, ...stopped])];
-  }, [isActive, shouldStayVisible]);
+  }, [isActive, shouldStayVisible, overlayKey]);
 
   return (
     <div
@@ -242,7 +247,8 @@ const CachedPage = memo(function CachedPage({
   if (
     prev.config !== next.config ||
     prev.isActive !== next.isActive ||
-    prev.forceVisible !== next.forceVisible
+    prev.forceVisible !== next.forceVisible ||
+    prev.overlayKey !== next.overlayKey
   ) {
     return false;
   }
@@ -254,7 +260,14 @@ const CachedPage = memo(function CachedPage({
   return !visible || prev.resetToken === next.resetToken;
 });
 
-export function PersistentPageCache({ keepHomeVisible = false }: { keepHomeVisible?: boolean }) {
+export function PersistentPageCache({
+  keepHomeVisible = false,
+  overlayKey = null,
+}: {
+  keepHomeVisible?: boolean;
+  /** Post id the overlay is opening — its media is handed up, not paused. */
+  overlayKey?: string | null;
+}) {
   const location = useLocation();
   const pathname = location.pathname;
 
@@ -320,6 +333,7 @@ export function PersistentPageCache({ keepHomeVisible = false }: { keepHomeVisib
             config={config}
             isActive={isActive}
             forceVisible={forceVisible}
+            overlayKey={forceVisible ? overlayKey : null}
             resetToken={pathname}
           />
         );
