@@ -4375,6 +4375,20 @@ html:not(.dark) .docs-root [class*="from-white/20"] svg {
   color: hsl(var(--primary-foreground)) !important;
 }
 
+/* .docs-glass is a frosted panel that exists to sample an animated canvas.
+   On paper there is nothing behind it to sample, so the blur only mutes the
+   card - 60% white over a paper texture reads as a washed overlay box rather
+   than a surface, and /docs/dapps alone stacks 120 of them, every one a live
+   backdrop-filter layer. Collapse to the solid card the class already falls
+   back to under prefers-reduced-transparency, with the same shadow the other
+   docs bentos use. Canvas themes pin docs to .dark and keep their glass. */
+html:not(.dark) .docs-root .docs-glass {
+  background: hsl(var(--card));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: 0 1px 2px rgba(40, 34, 20, 0.05), 0 8px 24px -12px rgba(40, 34, 20, 0.14);
+}
+
 /* Typography plugin (prose-slate) → ink scale */
 /* Blog bylines carry text-royal-blue/50, which in docs light resolves to ink
    at 50% - 3.2:1, under AA at text-xs. Lift the alpha, not the hue. */
