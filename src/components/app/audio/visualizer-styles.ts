@@ -44,6 +44,16 @@ export function setVisualizerInk(invert: boolean) {
   invertInk = invert;
 }
 
+/**
+ * Flip a monochrome lightness when the canvas is paper.
+ *
+ * `palette()` covers the eight painters that read lightness through it.
+ * Default (drawStatic) and its chrome ramp do not — they write hsla literals
+ * straight out, which is why inverting palette alone left the style every
+ * untouched post uses still painting near-white on near-white.
+ */
+const monoL = (l: number) => (invertInk ? 100 - l : l);
+
 function palette(hue: number) {
   const mono = hue === 0;
   const h = mono ? 0 : hue;
@@ -890,10 +900,10 @@ function chromeFill(
     gradient.addColorStop(
       at,
       mono
-        ? `hsla(0, 0%, ${l}%, ${alpha})`
+        ? `hsla(0, 0%, ${monoL(l)}%, ${alpha})`
         : // Anodised, not pastel: the ramp keeps its shape but sits low enough
           // in the lightness range that the hue still reads as a colour.
-          `hsla(${hue}, 72%, ${(20 + l * 0.5).toFixed(1)}%, ${alpha})`
+          `hsla(${hue}, 72%, ${(20 + monoL(l) * 0.5).toFixed(1)}%, ${alpha})`
     );
   }
   return gradient;
@@ -986,7 +996,7 @@ export function drawStatic(
     ctx.clip();
 
     ctx.fillStyle = chromeFill(ctx, top, bottom, hue, 1);
-    ctx.shadowColor = hue === 0 ? 'hsla(0, 0%, 100%, 0.3)' : `hsla(${hue}, 80%, 62%, 0.4)`;
+    ctx.shadowColor = hue === 0 ? `hsla(0, 0%, ${monoL(100)}%, 0.3)` : `hsla(${hue}, 80%, ${monoL(62)}%, 0.4)`;
     ctx.shadowBlur = Math.min(10, height * 0.06) * (1 + level);
     ctx.fill(bars);
     ctx.shadowBlur = 0;
@@ -999,8 +1009,8 @@ export function drawStatic(
     const glintW = Math.max(3, width * (0.018 + level * 0.03));
     const glint = ctx.createLinearGradient(progressX - glintW, 0, progressX, 0);
     const glintA = (0.6 + level * 0.4).toFixed(2);
-    glint.addColorStop(0, hue === 0 ? 'hsla(0, 0%, 100%, 0)' : `hsla(${hue}, 85%, 72%, 0)`);
-    glint.addColorStop(1, hue === 0 ? `hsla(0, 0%, 100%, ${glintA})` : `hsla(${hue}, 90%, 82%, ${glintA})`);
+    glint.addColorStop(0, hue === 0 ? `hsla(0, 0%, ${monoL(100)}%, 0)` : `hsla(${hue}, 85%, ${monoL(72)}%, 0)`);
+    glint.addColorStop(1, hue === 0 ? `hsla(0, 0%, ${monoL(100)}%, ${glintA})` : `hsla(${hue}, 90%, ${monoL(82)}%, ${glintA})`);
     ctx.fillStyle = glint;
     ctx.fill(bars);
     ctx.restore();
@@ -1012,8 +1022,8 @@ export function drawStatic(
         const bloomR = maxBarH * (0.3 + bass * 0.55);
         const bloom = ctx.createRadialGradient(progressX, centreY, 0, progressX, centreY, bloomR);
         const bloomA = 0.1 + bass * 0.3;
-        bloom.addColorStop(0, hue === 0 ? `hsla(0, 0%, 100%, ${bloomA})` : `hsla(${hue}, 85%, 78%, ${bloomA})`);
-        bloom.addColorStop(1, hue === 0 ? 'hsla(0, 0%, 100%, 0)' : `hsla(${hue}, 85%, 70%, 0)`);
+        bloom.addColorStop(0, hue === 0 ? `hsla(0, 0%, ${monoL(100)}%, ${bloomA})` : `hsla(${hue}, 85%, ${monoL(78)}%, ${bloomA})`);
+        bloom.addColorStop(1, hue === 0 ? `hsla(0, 0%, ${monoL(100)}%, 0)` : `hsla(${hue}, 85%, ${monoL(70)}%, 0)`);
         ctx.fillStyle = bloom;
         ctx.beginPath();
         ctx.arc(progressX, centreY, bloomR, 0, TAU);
@@ -1024,9 +1034,9 @@ export function drawStatic(
       // the waveform rather than a rule drawn across the card.
       const line = ctx.createLinearGradient(0, top, 0, bottom);
       const lineA = (0.45 + level * 0.4).toFixed(2);
-      line.addColorStop(0, hue === 0 ? 'hsla(0, 0%, 100%, 0)' : `hsla(${hue}, 85%, 78%, 0)`);
-      line.addColorStop(0.5, hue === 0 ? `hsla(0, 0%, 100%, ${lineA})` : `hsla(${hue}, 90%, 84%, ${lineA})`);
-      line.addColorStop(1, hue === 0 ? 'hsla(0, 0%, 100%, 0)' : `hsla(${hue}, 85%, 78%, 0)`);
+      line.addColorStop(0, hue === 0 ? `hsla(0, 0%, ${monoL(100)}%, 0)` : `hsla(${hue}, 85%, ${monoL(78)}%, 0)`);
+      line.addColorStop(0.5, hue === 0 ? `hsla(0, 0%, ${monoL(100)}%, ${lineA})` : `hsla(${hue}, 90%, ${monoL(84)}%, ${lineA})`);
+      line.addColorStop(1, hue === 0 ? `hsla(0, 0%, ${monoL(100)}%, 0)` : `hsla(${hue}, 85%, ${monoL(78)}%, 0)`);
       ctx.fillStyle = line;
       ctx.fillRect(progressX - 0.5, top, 1, maxBarH);
     }
