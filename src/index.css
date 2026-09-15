@@ -2038,6 +2038,20 @@ html[data-theme="light"] [data-notification-row][data-unread]:not([data-keep-dar
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
 
+/* The audio player's controls ride on the visualiser's dark plate in every
+   theme, so they stay white everywhere. The .bg-white -> ink remap (meant for
+   active pills that would otherwise vanish on paper) painted the scrub handle
+   and the volume thumb #1a1a1a - ink on a near-black plate, i.e. gone. The
+   translucent bg-white/NN track and range are not touched by that remap and
+   are already correct, so only the opaque ones are restored here.
+
+   The trailing :not() is a specificity bump, not a filter: the remap is
+   (0,3,1) and sits later in this file, so without it these tie and lose. */
+html[data-theme="light"] [data-audio-player] .bg-white:not([data-keep-dark]),
+html[data-theme="light"] [data-audio-player] [data-slider-thumb]:not([data-keep-dark]) {
+  background-color: #ffffff !important;
+}
+
 /* Minimal blackens the search field's zinc bg — restore a hairline outline so the
    input reads as an input on the black canvas. */
 html[data-theme="minimal"] [data-search-bento] input {
