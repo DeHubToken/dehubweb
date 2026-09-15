@@ -26,7 +26,13 @@
  * The anchor is read lazily because it is a React ref: the element is often
  * built before the node it belongs to has rendered.
  */
-const offDocument = new Map<HTMLMediaElement, () => Node | null>();
+interface OffDocumentPlayer {
+  anchor: () => Node | null;
+  /** Post id, when the player can be handed to another page (lib/audio-handoff). */
+  key?: string;
+}
+
+const offDocument = new Map<HTMLMediaElement, OffDocumentPlayer>();
 
 /**
  * Advertise `el` as belonging to whichever page contains `anchor`. Returns the
@@ -36,18 +42,20 @@ const offDocument = new Map<HTMLMediaElement, () => Node | null>();
 export function registerOffDocumentMedia(
   el: HTMLMediaElement,
   anchor: () => Node | null,
+  key?: string,
 ): () => void {
-  offDocument.set(el, anchor);
+  offDocument.set(el, { anchor, key });
   return () => {
     offDocument.delete(el);
   };
 }
 
-/** The registered elements currently anchored inside `root`. */
-function offDocumentIn(root: Node): HTMLMediaElement[] {
+/** The registered elements currently anchored inside `root`, `spareKey` aside. */
+function offDocumentIn(root: Node, spareKey?: string | null): HTMLMediaElement[] {
   const found: HTMLMediaElement[] = [];
-  offDocument.forEach((anchorOf, el) => {
-    const anchor = anchorOf();
+  offDocument.forEach((player, el) => {
+    if (spareKey && player.key === spareKey) return;
+    const anchor = player.anchor();
     if (anchor && root.contains(anchor)) found.push(el);
   });
   return found;
@@ -85,10 +93,19 @@ export function pauseMediaIn(root: Element): HTMLMediaElement[] {
  * post: a track playing in the feed behind it is as unreachable as on a hidden
  * page, but a `<video>` must not be touched — opening a post hands that element
  * itself up to the post page (lib/video-handoff), and pausing it here would
- * stop the clip the user just opened. Off-document players have no hand-off.
+ * stop the clip the user just opened.
+ *
+ * `spareKey` is the post the overlay is opening, and gets the same protection:
+ * its audio is about to be handed up to the post page too (lib/audio-handoff),
+ * and it is claimed a commit later, behind a lazy chunk. Everything else in
+ * the feed — the track you were listening to while opening someone else's
+ * post — has nowhere to go and stops.
  */
-export function pauseOffDocumentMediaIn(root: Element): HTMLMediaElement[] {
-  return pauseAll(offDocumentIn(root));
+export function pauseOffDocumentMediaIn(
+  root: Element,
+  spareKey?: string | null,
+): HTMLMediaElement[] {
+  return pauseAll(offDocumentIn(root, spareKey));
 }
 
 /**

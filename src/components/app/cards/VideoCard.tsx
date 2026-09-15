@@ -1016,6 +1016,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     setIsPlaying(next);
   }, []);
 
+  // This card has taken the shared audio player over (lib/audio-handoff) and
+  // is reporting what it walked into: a post opened from the feed lands on a
+  // track already running, and a feed returned to after a pause on the post
+  // page must not still show a pause button.
+  const handleAudioPlaybackAdopted = useCallback((playing: boolean) => {
+    isPlayingRef.current = playing;
+    setIsPlaying(playing);
+  }, []);
+
   const handlePlayClick = useCallback(() => {
     // Audio posts use AudioVisualizer which handles its own playback
     if (video.isAudio) {
@@ -1843,6 +1852,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                         artworkUrl: video.channelAvatar || null,
                       }}
                       onPopOutChange={handleAudioPopOutChange}
+                      /* The feed card and the post page's card share one
+                         player for this post, so opening it does not restart
+                         the track — see lib/audio-handoff. */
+                      handoffKey={video.id}
+                      onPlaybackAdopted={handleAudioPlaybackAdopted}
                     />
                   </Suspense>
                 </div>
