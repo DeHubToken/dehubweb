@@ -4357,6 +4357,24 @@ html[data-theme="light"] .docs-root .bg-white:not([data-keep-white]) {
   background-color: hsl(var(--card)) !important;
 }
 
+/* Docs CTAs built from the app's liquid-glass recipe: a white gradient behind
+   a white label, which is a button on a dark canvas and a blank pill on paper.
+   On /docs/featured-in every "Read the article" rendered as an empty white
+   capsule - the label is #fff on a white card. The same recipe backs the
+   Advertising and Currency CTAs.
+
+   Docs has no dark media to sit on, so there is no case here where the glass
+   is correct: make them the docs primary button, ink fill and paper label. */
+html:not(.dark) .docs-root [class*="from-white/20"] {
+  background-image: none !important;
+  background-color: hsl(var(--primary)) !important;
+  border-color: transparent !important;
+}
+html:not(.dark) .docs-root [class*="from-white/20"],
+html:not(.dark) .docs-root [class*="from-white/20"] svg {
+  color: hsl(var(--primary-foreground)) !important;
+}
+
 /* Typography plugin (prose-slate) → ink scale */
 /* Blog bylines carry text-royal-blue/50, which in docs light resolves to ink
    at 50% - 3.2:1, under AA at text-xs. Lift the alpha, not the hue. */
