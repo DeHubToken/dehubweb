@@ -2469,6 +2469,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 tokenId={video.id}
                 initialTab={commentsInitialTab}
                 commentsDisabled={!!(video as { commentsDisabled?: boolean }).commentsDisabled}
+                forKids={!!video.forKids}
                 immersive={isImmersive}
               />
             )}
@@ -2667,6 +2668,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             currentDescription={video.description ?? ''}
             currentCategories={video.categories ?? []}
             currentContentRating={video.contentRating}
+            currentForKids={video.forKids}
             currentShopLinks={video.shopLinks}
             onSuccess={(edited) => {
               applyOptimisticEdit(queryClient, video.id, edited);

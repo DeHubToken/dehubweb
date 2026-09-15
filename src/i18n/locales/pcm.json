@@ -269,6 +269,9 @@
     "enableContentWarningsDesc": "Show warnings before showing sensitive content",
     "matureContent": "Show mature content",
     "matureContentDesc": "Put adult and rough posts for your feed, and comot di warning for di ones wey you don dey see. E dey off by default.",
+    "kidsMode": "Kids Mode",
+    "kidsModeSetPin": "Choose a PIN",
+    "kidsModeConfirmPin": "Enter it again",
     "feedPreferences": "How You Like Your Feed",
     "showReposts": "Show Repost Dem",
     "showRepostsDesc": "Show posts wey people you follow share",
@@ -363,7 +366,8 @@
     "translating": "E dey translate...",
     "close": "Close Am",
     "loadingMore": "Dey load more...",
-    "loadMore": "Bring more"
+    "loadMore": "Bring more",
+    "continue": "Continue"
   },
   "tip": {
     "title": "Send Tip",

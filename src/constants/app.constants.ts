@@ -83,6 +83,48 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: FileText, label: 'Blog', path: '/docs/blog' },
 ];
 
+/**
+ * The only paths reachable in Kids Mode.
+ *
+ * An allowlist, not a denylist. App.tsx carries more than ninety routes and
+ * grows most weeks; a list of what is forbidden is wrong the day somebody adds
+ * the ninety-first, and wrong in the direction that matters. So this names what
+ * is open and everything else redirects.
+ *
+ * Matching is by prefix, so `/post` covers `/post/123` and `/post/123/info`.
+ * Keep the entries specific enough that a prefix cannot swallow a sibling —
+ * `/app` would match the entire product, which is why Home is `/app` exactly
+ * and every other app route is listed with its own segment.
+ *
+ * What is deliberately absent, and why:
+ *
+ *  - Messages, communities, chat, stages, live — direct contact with adults,
+ *    none of it rated, none of it filterable.
+ *  - Explore, search-by-people, profiles, notifications — doors to everything
+ *    an account ever posted.
+ *  - Wallet, staking, stores, fractions, bounties, DAO, buy — a child does not
+ *    spend the parent's wallet.
+ *  - Arcade — third-party content in an opaque-origin iframe.
+ *  - Upload, creator tools — no posting from a Kids Mode session.
+ *  - The assistant — it answers with text nobody rated.
+ *
+ * Settings stays open because it is the way out; the page hides everything on
+ * it except the PIN pad.
+ */
+export const KIDS_MODE_PATHS: readonly string[] = [
+  '/app', // Home. Exact — see the note above about prefixes.
+  '/app/settings',
+  '/post',
+  '/posts',
+  '/video',
+  '/newpost',
+];
+
+/** Whether a path is reachable in Kids Mode. */
+export function isKidsModePath(pathname: string): boolean {
+  return KIDS_MODE_PATHS.some(allowed => pathname === allowed || pathname.startsWith(`${allowed}/`));
+}
+
 export const FEED_TABS: SearchTab[] = [
   { icon: Home, label: 'Home', value: 'home' },
   { icon: Film, label: 'Shorts', value: 'shorts' },

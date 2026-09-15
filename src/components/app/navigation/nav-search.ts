@@ -4,6 +4,8 @@ import {
 } from 'lucide-react';
 import type { NavItem } from '@/types/app.types';
 import { NAV_LABEL_KEYS } from './SidebarNavItem';
+import { isKidsModePath } from '@/constants/app.constants';
+import { isKidsModeLocked } from '@/lib/kids-mode-lock';
 
 /** Just the shape we need from react-i18next's `t`, so no version-pinned type. */
 type TranslateFn = (key: string) => string;
@@ -395,11 +397,29 @@ interface Ranked {
  * render of a surface that is not searching.
  */
 export function filterNavItems(items: NavItem[], query: string, t: TranslateFn): NavItem[] {
+  // Kids Mode first, before the search does anything at all.
+  //
+  // Both sidebars go through here, so this is the one place that has to know
+  // — and doing it before the query is applied means the hidden destinations
+  // below (SEARCH_ONLY_ITEMS) cannot be typed back into view either, which is
+  // exactly the hole a filter applied afterwards would leave.
+  const allowed = isKidsModeLocked() ? items.filter(item => isKidsModePath(item.path)) : items;
+
   const folded = fold(query);
   const tokens = folded.split(' ').filter(Boolean);
-  if (!tokens.length) return items;
+  if (!tokens.length) return allowed;
 
-  const pool: Array<{ item: NavItem; order: number }> = items.map((item, order) => ({ item, order }));
+  if (isKidsModeLocked()) {
+    // Ranked the same way, just without the SEARCH_ONLY_ITEMS pool below —
+    // everything in it is off the allowlist by definition.
+    return allowed
+      .map((item, order) => ({ item, tier: scoreItem(item, tokens, t), order }))
+      .filter(entry => entry.tier !== NO_MATCH)
+      .sort((a, b) => a.tier - b.tier || a.order - b.order)
+      .map(entry => entry.item);
+  }
+
+  const pool: Array<{ item: NavItem; order: number }> = allowed.map((item, order) => ({ item, order }));
 
   // One character is a keystroke on the way to a word, not a decision to go
   // looking for a page that is not on the menu — so the hidden destinations

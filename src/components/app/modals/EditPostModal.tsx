@@ -26,6 +26,7 @@ import { useShopLinkAllowance } from '@/hooks/use-shop-links';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { EditPostImages } from './EditPostImages';
+import { useTranslation } from 'react-i18next';
 
 export interface EditPostResult {
   name: string;
@@ -33,6 +34,7 @@ export interface EditPostResult {
   categories: string[];
   commentsDisabled: boolean;
   contentRating: ContentRating;
+  forKids: boolean;
   shopLinks: ShopLink[];
   shopListingCount: number;
 }
@@ -46,6 +48,8 @@ interface EditPostModalProps {
   currentCategories?: string[];
   currentCommentsDisabled?: boolean;
   currentContentRating?: ContentRating;
+  /** Whether this post is published for children — see models/Token. */
+  currentForKids?: boolean;
   /** The Shop board already on the post. Empty means the toggle is off. */
   currentShopLinks?: ShopLink[];
   /** The post has a video file to swap. False for text and image posts, which have none. */
@@ -62,16 +66,22 @@ export function EditPostModal({
   currentCategories = [],
   currentCommentsDisabled = false,
   currentContentRating,
+  currentForKids,
   currentShopLinks,
   canReplaceVideo = false,
   onSuccess,
 }: EditPostModalProps) {
+  // Only the Kids Mode rows below go through t() — the rest of this modal is
+  // still hardcoded English and wiring it is its own change, but a new string
+  // should not add to that pile.
+  const { t } = useTranslation();
   const [name, setName] = useState(currentTitle);
   const [description, setDescription] = useState(currentDescription);
   const [categoryInput, setCategoryInput] = useState('');
   const [categories, setCategories] = useState<string[]>(currentCategories);
   const [commentsDisabled, setCommentsDisabled] = useState(currentCommentsDisabled);
   const [isMature, setIsMature] = useState(currentContentRating === 'mature');
+  const [isForKids, setIsForKids] = useState(currentForKids === true);
   const [shopLinks, setShopLinks] = useState<ShopLink[]>(currentShopLinks ?? []);
   const [shopSheetOpen, setShopSheetOpen] = useState(false);
   const shopAllowance = useShopLinkAllowance();
@@ -119,9 +129,10 @@ export function EditPostModal({
       setCategories(currentCategories);
       setCommentsDisabled(currentCommentsDisabled);
       setIsMature(currentContentRating === 'mature');
+      setIsForKids(currentForKids === true);
       setCategoryInput('');
     }
-  }, [open, tokenId, currentTitle, currentDescription, currentCategories, currentCommentsDisabled, currentContentRating]);
+  }, [open, tokenId, currentTitle, currentDescription, currentCategories, currentCommentsDisabled, currentContentRating, currentForKids]);
 
   const handleAddCategory = () => {
     const trimmed = categoryInput.trim();
@@ -145,6 +156,9 @@ export function EditPostModal({
     // The API stores nothing for a safe post, so an unrated one arrives as
     // undefined — compare against the rating it means rather than the field.
     if (nextRating !== (currentContentRating ?? 'safe')) params.contentRating = nextRating;
+    // Unlike the rating, this one is sent as a plain boolean in both directions:
+    // taking the mark OFF is a real edit, and the server records who did it.
+    if (isForKids !== (currentForKids === true)) params.forKids = isForKids;
     // Sent whole, including `[]` — that is the only way to clear a board, and
     // the server treats an empty array as exactly that.
     if (JSON.stringify(shopLinks) !== JSON.stringify(currentShopLinks ?? [])) {
@@ -184,7 +198,7 @@ export function EditPostModal({
       const result = await editPost(tokenId, params as any);
       if (result.result) {
         toast.success('Post updated successfully');
-        onSuccess?.({ name: name.trim(), description: description.trim(), categories, commentsDisabled, contentRating: nextRating, shopLinks, shopListingCount: pickedListingIds.length });
+        onSuccess?.({ name: name.trim(), description: description.trim(), categories, commentsDisabled, contentRating: nextRating, forKids: isForKids, shopLinks, shopListingCount: pickedListingIds.length });
         onOpenChange(false);
       } else {
         toast.error('Failed to update post');
@@ -290,6 +304,52 @@ export function EditPostModal({
             )}
           </div>
 
+          {/* Made for kids — under the categories, and three sections clear of
+              the mature switch at the bottom. Same separation as the composer,
+              for the same reason: the two switches are opposites and a mis-tap
+              between them is expensive in both directions. */}
+          <div>
+            <label className="text-zinc-400 text-sm mb-2 block">{t('drawers.audience', 'Audience')}</label>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={isForKids}
+              disabled={isMature}
+              onClick={() => setIsForKids((v) => !v)}
+              className={cn(
+                'w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10 transition-colors text-left',
+                isMature ? 'opacity-40 cursor-not-allowed' : 'hover:bg-white/[0.06]',
+              )}
+            >
+              <span className="min-w-0">
+                <span className="block text-white text-sm font-medium">
+                  {isForKids ? t('drawers.madeForKids', 'Made for kids') : t('drawers.markMadeForKids', 'Mark as made for kids')}
+                </span>
+                <span className="block text-zinc-500 text-xs mt-0.5">
+                  {isMature
+                    ? t('drawers.madeForKidsBlockedByMature', 'A post marked mature cannot also be published for children.')
+                    : isForKids
+                      ? t('drawers.madeForKidsOnDesc', 'Shown to children in Kids Mode, and off the ordinary feeds. Only Kids Mode can comment.')
+                      : t('drawers.madeForKidsOffDesc', 'Shows this post to children using Kids Mode, and takes it off the ordinary feeds.')}
+                </span>
+              </span>
+              <span
+                className={cn(
+                  'relative shrink-0 w-11 h-6 rounded-full transition-colors',
+                  isForKids ? 'bg-emerald-500/80' : 'bg-zinc-700',
+                )}
+              >
+                <span
+                  data-keep-white
+                  className={cn(
+                    'absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform',
+                    isForKids ? 'translate-x-[22px]' : 'translate-x-0.5',
+                  )}
+                />
+              </span>
+            </button>
+          </div>
+
           {/* Comments */}
           <div>
             <label className="text-zinc-400 text-sm mb-2 block">Comments</label>
@@ -359,7 +419,15 @@ export function EditPostModal({
               type="button"
               role="switch"
               aria-checked={isMature}
-              onClick={() => setIsMature((v) => !v)}
+              onClick={() => {
+                // Marking a post mature clears the kids marking, rather than
+                // letting the creator send a contradiction the server refuses
+                // with an error they cannot act on.
+                setIsMature((v) => {
+                  if (!v) setIsForKids(false);
+                  return !v;
+                });
+              }}
               className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-colors text-left"
             >
               <span className="min-w-0">

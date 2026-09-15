@@ -1242,6 +1242,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             tokenId={post.id}
             initialTab={commentsInitialTab}
             commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+            forKids={!!post.forKids}
           />
         )}
       </div>
@@ -1350,6 +1351,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             currentDescription={editDescription}
             currentCategories={post.categories ?? []}
             currentContentRating={post.contentRating}
+            currentForKids={post.forKids}
             currentShopLinks={post.shopLinks}
             onSuccess={(edited) => {
               applyOptimisticEdit(queryClient, post.id, edited);

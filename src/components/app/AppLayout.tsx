@@ -89,6 +89,7 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useStageAlerts } from '@/hooks/use-stage-alerts';
 import { usePublicChatAlerts } from '@/hooks/use-public-chat-alerts';
 import { cn } from '@/lib/utils';
+import { KidsModeGate } from '@/components/app/KidsModeGate';
 // Lazy: only rendered as the post overlay when a post is opened from home —
 // a whole page's worth of code that shouldn't ride in the entry bundle.
 const SinglePostPage = React.lazy(() => import('@/pages/app/SinglePostPage'));
@@ -514,7 +515,14 @@ export function AppLayout({ children }: AppLayoutProps) {
                 <RadioPlayerProvider>
                   <CoinPlacementProvider>
                     <GlobalDropZoneProvider>
-                      <AppLayoutContent>{children}</AppLayoutContent>
+                      {/* Inside the layout rather than around it, so the gate
+                          sits under the router and can read the location — and
+                          so the chrome is already mounted when it redirects,
+                          which keeps the redirect a navigation rather than a
+                          remount of the whole shell. */}
+                      <KidsModeGate>
+                        <AppLayoutContent>{children}</AppLayoutContent>
+                      </KidsModeGate>
                       <FloatingPiPOverlay />
                       <FloatingChartPiPOverlay />
                       <UserFeedbackSurvey />

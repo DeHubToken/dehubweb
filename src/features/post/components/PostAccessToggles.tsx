@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Ticket, Gift, Shield, Eye, EyeOff, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type, Users, Coins, ShoppingBag } from 'lucide-react';
+import { Ticket, Gift, Shield, Eye, EyeOff, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type, Users, Coins, ShoppingBag, Baby } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -63,6 +63,8 @@ interface PostAccessTogglesProps {
   /** Marks the post adult or graphic — see the row's copy for what that costs. */
   isMature: boolean;
   setIsMature: (value: boolean) => void;
+  isForKids: boolean;
+  setIsForKids: (value: boolean) => void;
   /**
    * The Shop board: affiliate and shop links viewers open from the post or the
    * live player. An empty array is the toggle being off — there is no separate
@@ -130,6 +132,8 @@ export function PostAccessToggles({
   setShowTitle,
   isMature,
   setIsMature,
+  isForKids,
+  setIsForKids,
   shopLinks,
   setShopLinks,
   shopListingIds,
@@ -156,6 +160,15 @@ export function PostAccessToggles({
   const [bountyDrawerOpen, setBountyDrawerOpen] = useState(false);
   const [tokenDrawerOpen, setTokenDrawerOpen] = useState(false);
   const [communityDrawerOpen, setCommunityDrawerOpen] = useState(false);
+  // Arming "Made for kids" asks first; disarming does not. The two directions
+  // are not symmetrical — a wrong "on" puts a post in front of a child, a
+  // wrong "off" costs the creator an audience they can get back with one tap.
+  const [forKidsConfirmOpen, setForKidsConfirmOpen] = useState(false);
+  const handleForKidsToggle = (checked: boolean) => {
+    if (checked) setForKidsConfirmOpen(true);
+    else setIsForKids(false);
+  };
+
   const [categoryDrawerOpenLocal, setCategoryDrawerOpenLocal] = useState(false);
   const categoryDrawerOpen = categoryDrawerOpenProp ?? categoryDrawerOpenLocal;
   const setCategoryDrawerOpen = setCategoryDrawerOpenProp ?? setCategoryDrawerOpenLocal;
@@ -517,6 +530,40 @@ export function PostAccessToggles({
           </div>
         )}
 
+        {/* Made for kids — the creator's own declaration, sat under Category
+            because that is what it behaves like: in Kids Mode the category
+            chips are derived from the categories kids posts actually carry, so
+            this is what puts a post behind any of them.
+
+            Five rows above Mature, and that distance is the point. Mature is
+            last because it used to sit second and a mis-tap cost a creator the
+            public feed (see the comment on that row). This switch has the same
+            problem pointing the other way — a mis-tap here puts a post in
+            front of children — so it is nowhere near that one, and unlike that
+            one it confirms before it arms. Turning it back OFF is free. */}
+        <label
+          className="flex items-center justify-between py-0.5 cursor-pointer"
+          onClick={e => {
+            // The row, not just the switch — but never twice for one tap.
+            if ((e.target as HTMLElement).closest('[role="switch"]')) return;
+            e.preventDefault();
+            handleForKidsToggle(!isForKids);
+          }}
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            <Baby className="w-4 h-4 text-white shrink-0" />
+            <span className="text-sm text-white">{t('drawers.madeForKids', 'Made for kids')}</span>
+            {isForKids && (
+              <span className="text-xs text-white/50 truncate">({t('drawers.madeForKidsHint', 'shown in Kids Mode')})</span>
+            )}
+          </div>
+          <Switch
+            checked={isForKids}
+            onCheckedChange={handleForKidsToggle}
+            className="data-[state=checked]:bg-white scale-75"
+          />
+        </label>
+
         {/* Subscribers — EVM only.
             This is NOT token gating: it sends the creator's plan ids on the
             post, and the feed pipeline opens it for whoever holds an active
@@ -651,6 +698,44 @@ export function PostAccessToggles({
         </label>
         </div>
       </div>
+
+      {/* Made for kids — confirm before arming.
+          Short on purpose: the creator needs to know this is not a category,
+          it is who gets shown the post, and that children are the audience it
+          adds. The three lines are the three things they can get wrong. */}
+      <Drawer open={forKidsConfirmOpen} onOpenChange={setForKidsConfirmOpen}>
+        <DrawerContent column glass hideHandle className="max-h-[90vh] max-h-[90dvh]">
+          <DrawerHeader>
+            <DrawerTitle className="flex items-center gap-2">
+              <Baby className="w-4 h-4" />
+              {t('drawers.madeForKidsConfirmTitle', 'Publish this for kids?')}
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="px-4 pb-2 space-y-2 text-sm text-white/70">
+            <p>{t('drawers.madeForKidsConfirmAudience', 'Children using Kids Mode will be shown this post. Nothing else on DeHub reaches them.')}</p>
+            <p>{t('drawers.madeForKidsConfirmReach', 'It also comes off the ordinary feeds — people still find it on your profile, in search and through a link you share.')}</p>
+            <p>{t('drawers.madeForKidsConfirmComments', 'Only Kids Mode can comment on it. You can still reply to them yourself.')}</p>
+          </div>
+          <DrawerFooter className="flex-row gap-2">
+            <Button
+              variant="ghost"
+              className="flex-1"
+              onClick={() => setForKidsConfirmOpen(false)}
+            >
+              {t('drawers.cancel')}
+            </Button>
+            <Button
+              className="flex-1"
+              onClick={() => {
+                setIsForKids(true);
+                setForKidsConfirmOpen(false);
+              }}
+            >
+              {t('drawers.madeForKidsConfirmYes', "Yes, it's for kids")}
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
 
       {/* Category Drawer */}
       <Drawer open={categoryDrawerOpen} onOpenChange={setCategoryDrawerOpen}>

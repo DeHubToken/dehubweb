@@ -776,6 +776,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             tokenId={post.id}
             initialTab={commentsInitialTab}
             commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+            forKids={!!post.forKids}
             postAuthorAddress={threadSlot ? post.author.id : undefined}
           />
         )}
@@ -980,6 +981,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             currentDescription={post.rawDescription ?? post.content ?? ''}
             currentCategories={post.categories ?? []}
             currentContentRating={post.contentRating}
+            currentForKids={post.forKids}
             currentShopLinks={post.shopLinks}
             onSuccess={(edited) => {
               applyOptimisticEdit(queryClient, post.id, edited);

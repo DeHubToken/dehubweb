@@ -193,6 +193,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         setShowTitle={actions.setShowTitle}
         isMature={state.isMature}
         setIsMature={actions.setIsMature}
+        isForKids={state.isForKids}
+        setIsForKids={actions.setIsForKids}
         shopLinks={state.shopLinks}
         setShopLinks={actions.setShopLinks}
         shopListingIds={state.shopListingIds}

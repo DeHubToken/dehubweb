@@ -22,6 +22,9 @@ import { useTotalUnreadCount } from '@/hooks/use-messages';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { useTranslation } from 'react-i18next';
+import { isKidsModePath } from '@/constants/app.constants';
+import { isKidsModeLocked } from '@/lib/kids-mode-lock';
+import { useKidsModeLock } from '@/hooks/use-kids-mode';
 
 // Every link in this bar is an icon and nothing else, so without a name each
 // one reads to a screen reader as "link" — 25 of them on the 2026-09-02
@@ -55,6 +58,20 @@ const NAV_LABEL_KEYS: Record<string, string> = {
   Prompt: 'nav.prompt',
   Communities: 'nav.communities',
 };
+
+/**
+ * Drop everything off the Kids Mode allowlist.
+ *
+ * Applied to all three lists below rather than to a merged one, because the bar
+ * lays them out by position — left half, right half, scroll — and merging them
+ * to filter once would change where the survivors sit.
+ *
+ * A generic so each list keeps its own element type; `SCROLL_NAV_ITEMS` carries
+ * `requiresAuth` and the odd `external` entry that the others do not.
+ */
+function kidsNav<T extends { path: string }>(items: T[]): T[] {
+  return isKidsModeLocked() ? items.filter(item => isKidsModePath(item.path)) : items;
+}
 
 // Left side: Home, Messages
 const LEFT_NAV_ITEMS = [
@@ -106,6 +123,10 @@ export function MobileBottomNav() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { t } = useTranslation();
+  // Subscribed, not just read: `kidsNav` below calls `isKidsModeLocked()`
+  // directly, and without a hook holding that value this bar would keep its
+  // adult destinations until something else happened to re-render it.
+  useKidsModeLock();
   const navLabel = (label: string) => t(NAV_LABEL_KEYS[label] ?? label);
   const navIcon = (
     item: MobileNavItem,
@@ -260,7 +281,7 @@ export function MobileBottomNav() {
           >
             {/* Left side items - Home + Messages */}
             <div className="flex items-center justify-start flex-shrink-0 pl-1" style={{ width: 'calc(50% - 24px)' }}>
-              {LEFT_NAV_ITEMS.map((item, index) => {
+              {kidsNav(LEFT_NAV_ITEMS).map((item, index) => {
                 const isActive = item.path === '/app'
                   ? isHomePath(location.pathname)
                   : location.pathname.startsWith(item.path);
@@ -334,7 +355,7 @@ export function MobileBottomNav() {
 
             {/* Right side items - AI + Profile */}
             <div className="flex items-center justify-end flex-shrink-0 pr-1" style={{ width: 'calc(50% - 24px)' }}>
-              {RIGHT_NAV_ITEMS.map((item) => {
+              {kidsNav(RIGHT_NAV_ITEMS).map((item) => {
                 const isActive = location.pathname.startsWith(item.path);
                 
                 return (
@@ -380,7 +401,7 @@ export function MobileBottomNav() {
             </div>
 
             {/* Additional items - accessible via scroll */}
-            {SCROLL_NAV_ITEMS.map((item) => {
+            {kidsNav(SCROLL_NAV_ITEMS).map((item) => {
               const isActive = !(item as any).external && !(item as any).action && location.pathname.startsWith(item.path);
               
               if ((item as any).external) {

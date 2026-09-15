@@ -42,6 +42,8 @@ interface CommentsWrapperProps {
   immersive?: boolean;
   /** Creator turned replies off — swaps the composer for a notice. */
   commentsDisabled?: boolean;
+  /** The post is published for children — see CommentsSection. */
+  forKids?: boolean;
   /**
    * Post author's wallet address. Forwarded to CommentsSection, which hides the
    * author's straight comments from the list — pass it only when the host page
@@ -280,7 +282,7 @@ function DiscardGuard({ onKeepWriting, onDiscard }: { onKeepWriting: () => void;
   );
 }
 
-export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false, postAuthorAddress, forceInline = false }: CommentsWrapperProps) {
+export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false, forKids = false, postAuthorAddress, forceInline = false }: CommentsWrapperProps) {
   const isTabletOrMobile = useIsTabletOrMobile();
   const isPhone = useIsPhone();
   const adaptiveDrawerHeight = useAdaptiveDrawerHeight(isTabletOrMobile && immersive);
@@ -382,6 +384,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
                 onClose={guard.requestClose}
                 initialTab={initialTab}
                 commentsDisabled={commentsDisabled}
+                forKids={forKids}
                 postAuthorAddress={postAuthorAddress}
                 onDirtyChange={guard.onDirtyChange}
               />
@@ -438,6 +441,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
                 onClose={guard.requestClose}
                 initialTab={initialTab}
                 commentsDisabled={commentsDisabled}
+                forKids={forKids}
                 postAuthorAddress={postAuthorAddress}
                 onDirtyChange={guard.onDirtyChange}
               />
@@ -491,6 +495,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
                 onClose={() => onOpenChange(false)}
                 initialTab={initialTab}
                 commentsDisabled={commentsDisabled}
+                forKids={forKids}
                 postAuthorAddress={postAuthorAddress}
               />
             </Suspense>

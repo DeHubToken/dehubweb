@@ -279,6 +279,19 @@
     "enableContentWarningsDesc": "Tampilkan peringatan sebelum konten sensitif",
     "matureContent": "Tampilkan Konten Dewasa",
     "matureContentDesc": "Menyertakan postingan dewasa dan grafis di feed Anda, dan menghapus peringatan pada yang sudah Anda lihat. Bawaannya nonaktif.",
+    "kidsMode": "Mode Anak",
+    "kidsModeDesc": "Hanya menampilkan postingan yang dipublikasikan untuk anak - anak, di mana saja. PIN mematikannya kembali.",
+    "kidsModeSetPin": "Pilih PIN",
+    "kidsModeSetPinHelp": "4 hingga 8 digit. Kamu membutuhkannya untuk menonaktifkan Mode Anak lagi.",
+    "kidsModeConfirmPin": "Masukkan lagi",
+    "kidsModeConfirmPinHelp": "Jadi Anda tahu Anda bisa mereproduksinya.",
+    "kidsModeEnterPin": "Masukkan PIN ANDA",
+    "kidsModeEnterPinHelp": "Ini mematikan Mode Anak di perangkat ini.",
+    "kidsModeTurnOn": "Aktifkan Mode Anak",
+    "kidsModeTurnOff": "Nonaktifkan Mode Anak",
+    "kidsModePinMismatch": "PIN itu berbeda. Mulai lagi.",
+    "kidsModeFailed": "Itu tidak berhasil. Coba lagi.",
+    "kidsModeForgotPin": "Lupa? Masuk dengan dompet Anda di perangkat lain untuk menonaktifkan Mode Anak.",
     "feedPreferences": "Preferensi Feed",
     "showReposts": "Tampilkan Repost",
     "showRepostsDesc": "Tampilkan postingan yang dibagikan oleh orang yang Anda ikuti",
@@ -433,7 +446,8 @@
     "translating": "Menerjemahkan...",
     "close": "Tutup",
     "loadingMore": "Memuat lebih banyak...",
-    "loadMore": "Muat lebih banyak"
+    "loadMore": "Muat lebih banyak",
+    "continue": "Lanjutkan"
   },
   "tip": {
     "title": "Kirim Tip",
@@ -549,6 +563,18 @@
     "mustHoldToView": "Harus memiliki token untuk melihat",
     "gatedDescription": "Miliki token yang diperlukan untuk melihat konten ini! 🔓",
     "setPpvPrice": "Tetapkan harga PPV",
+    "madeForKids": "Dibuat untuk anak-anak",
+    "madeForKidsHint": "ditampilkan di Mode Anak-anak",
+    "madeForKidsConfirmTitle": "Publikasikan ini untuk anak-anak?",
+    "madeForKidsConfirmAudience": "Anak-anak yang menggunakan Mode Anak-anak akan ditampilkan postingan ini. Tidak ada yang lain di DeHub yang menjangkau mereka.",
+    "madeForKidsConfirmReach": "Ini juga keluar dari feed biasa — orang masih menemukannya di profil Anda, dalam pencarian dan melalui tautan yang Anda bagikan.",
+    "madeForKidsConfirmComments": "Hanya Mode Anak-anak yang dapat mengomentari. Anda masih dapat membalas mereka sendiri.",
+    "madeForKidsConfirmYes": "Ya, ini untuk anak-anak",
+    "markMadeForKids": "Tandai sebagai dibuat untuk anak - anak",
+    "madeForKidsOnDesc": "Ditampilkan kepada anak-anak di Mode Anak-anak, dan keluar dari feed biasa. Hanya Mode Anak-anak yang dapat mengomentari.",
+    "madeForKidsOffDesc": "Menampilkan postingan ini kepada anak-anak yang menggunakan Mode Anak-anak, dan mengeluarkannya dari feed biasa.",
+    "madeForKidsBlockedByMature": "Postingan yang ditandai dewasa tidak dapat juga dipublikasikan untuk anak-anak.",
+    "audience": "Audiens",
     "currency": "Mata uang",
     "price": "Harga",
     "ppvDhbInfo": "Pembayaran dalam DHB di jaringan Base",
@@ -1501,7 +1527,8 @@
     "discardTitle": "Buang komentar kamu?",
     "discardBody": "Sudah tersimpan sebagai draf, jadi akan ada di sini saat kamu kembali.",
     "keepWriting": "Lanjut menulis",
-    "closeAnyway": "Tetap tutup"
+    "closeAnyway": "Tetap tutup",
+    "kidsOnlyThread": "Postingan ini untuk anak - anak. Hanya Mode Anak yang dapat mengomentarinya."
   },
   "postInfo": {
     "title": "Info Postingan",
@@ -3811,7 +3838,13 @@
     "signInToBuy": "Masuk untuk membeli",
     "buyHandle": "Beli @{{handle}}",
     "transferGuarantee": "Handle baru berpindah setelah DeHub membaca transfer DHB Anda dari rantai. Kalau tidak bisa, pembayarannya dicatat pada penjualan itu supaya penjual dapat mengembalikannya.",
-    "shareTitle": "@{{handle}} dijual di DeHub"
+    "shareTitle": "@{{handle}} dijual di DeHub",
+    "askingPriceUsd": "Harga yang diminta (USD)",
+    "dollarPriceRange": "Masukkan $ 1 -$ 1.000.000, dengan hingga dua tempat desimal.",
+    "fixedDollarPrice": "Harga dolar tetap konstan; pembaruan jumlah token.",
+    "priceUpdated": "Harga diperbarui. Tinjau nominalnya dan ketuk Beli lagi.",
+    "tokensPaidToSeller": "Dibayar langsung ke penjual",
+    "priceUsd": "Harga (USD)"
   },
   "accounts": {
     "seoTitle": "Pasar Akun — DeHub",

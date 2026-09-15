@@ -9,6 +9,7 @@ export * from './core';
 export * from './types';
 export * from './auth';
 export * from './users';
+export * from './kids-mode';
 export * from './feed';
 export * from './social';
 export * from './comments';

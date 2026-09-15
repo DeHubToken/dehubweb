@@ -72,6 +72,17 @@ const PostAccessToggles = React.lazy(() =>
 
 const logger = createLogger('GoLiveModal');
 
+/**
+ * A stream cannot be published for children, so the composer's "Made for kids"
+ * switch is wired to a no-op here rather than hidden — the row still reads as
+ * present and off, which is the honest answer to "why can't I mark this".
+ *
+ * Nothing about a broadcast is knowable before it airs and what happens on
+ * camera can change in a second. Same reasoning as `/api/live` returning
+ * nothing at all in Kids Mode.
+ */
+const NO_KIDS_STREAMS = () => undefined;
+
 
 interface GoLiveModalProps {
   isOpen: boolean;
@@ -1317,6 +1328,8 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
                   hasVideoOrAudio
                   isMature={isMature}
                   setIsMature={setIsMature}
+                  isForKids={false}
+                  setIsForKids={NO_KIDS_STREAMS}
                   shopLinks={shopLinks}
                   setShopLinks={setShopLinks}
                   shopListingIds={shopListingIds}
