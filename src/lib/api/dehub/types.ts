@@ -282,6 +282,17 @@ export interface DeHubNFT {
   isDeleted?: boolean;
   /** Absent means safe — the API stores nothing for the default. */
   contentRating?: ContentRating;
+  /**
+   * The creator published this for children — the Kids Mode allowlist.
+   *
+   * The opposite polarity to `contentRating`: absent means NOT for kids, so a
+   * post that predates the field is invisible in Kids Mode rather than
+   * defaulting into it. It also keeps the post off the ordinary discovery
+   * lanes — cards only meet one outside Kids Mode on a profile, the Following
+   * feed, in search, or through a shared link, where the comment box is
+   * read-only.
+   */
+  forKids?: boolean;
   /** Creator turned replies off. Existing comments remain readable; only new
    *  ones are refused, server-side in requestCommentFunc. */
   commentsDisabled?: boolean;

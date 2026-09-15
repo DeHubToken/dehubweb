@@ -20,9 +20,10 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem , Anchor, Eye } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem , Anchor, Eye, Baby } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation as useI18n } from 'react-i18next';
+import { useKidsMode } from '@/hooks/use-kids-mode';
 import { cn } from '@/lib/utils';
 import { registerOffDocumentMedia } from '@/lib/pause-media-in';
 import { useFocusComment } from '@/lib/focus-comment';
@@ -104,6 +105,13 @@ interface CommentsSectionProps {
    *  existing comments stay listed — the server refuses new ones either way
    *  (requestCommentFunc), so this is presentation, not the enforcement. */
   commentsDisabled?: boolean;
+  /**
+   * The post is published for children, so its thread is a Kids Mode room:
+   * only a Kids Mode session may write in it. Presentation only — the server
+   * refuses the write either way (KidsCommentGuard), and the list is filtered
+   * server-side too, so an adult reading here sees the thread as it stands.
+   */
+  forKids?: boolean;
   /**
    * Post author's wallet address. Set ONLY where the host page renders those
    * comments itself as the author thread above the card: straight comments
@@ -766,7 +774,12 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
 // MAIN COMPONENT
 // ============================================================================
 
-export function CommentsSection({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, postAuthorAddress, onDirtyChange }: CommentsSectionProps) {
+export function CommentsSection({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, forKids = false, postAuthorAddress, onDirtyChange }: CommentsSectionProps) {
+  // A kids post's thread is open to Kids Mode only. The post's own author is
+  // exempt server-side, but they are also the one person who can always reach
+  // it, so there is nothing to show them here.
+  const { isKidsMode } = useKidsMode();
+  const kidsOnlyThread = forKids && !isKidsMode;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, isAuthenticated, walletAddress } = useAuth();
@@ -2251,6 +2264,18 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             <div className="flex items-center justify-center gap-2 rounded-xl bg-white/[0.03] border border-white/10 px-4 py-3">
               <MessageSquare className="w-4 h-4 text-zinc-500 shrink-0" />
               <span className="text-sm text-zinc-400">Comments are turned off for this post</span>
+            </div>
+          </div>
+        ) : kidsOnlyThread ? (
+          /* Same shape as the notice above, and for a related reason: the
+             thread is readable and not writable. Says WHY, because "nothing
+             happens when I tap the box" is the alternative. */
+          <div data-comment-composer="kids-only" className={cn("mt-auto", isMobile ? "pt-2 pb-1" : "pt-3")}>
+            <div className="flex items-center justify-center gap-2 rounded-xl bg-white/[0.03] border border-white/10 px-4 py-3">
+              <Baby className="w-4 h-4 text-zinc-500 shrink-0" />
+              <span className="text-sm text-zinc-400 text-center">
+                {t('comments.kidsOnlyThread', 'This post is for kids. Only Kids Mode can comment on it.')}
+              </span>
             </div>
           </div>
         ) : (

@@ -43,6 +43,15 @@ export interface BaseFeedItem {
    * shared link.
    */
   contentRating?: ContentRating;
+  /**
+   * The creator published this for children — the Kids Mode allowlist.
+   *
+   * Absent means NOT for kids, so a post that predates the field is invisible
+   * in Kids Mode rather than defaulting into it. Cards only meet one outside
+   * Kids Mode on a profile, in search or through a shared link — the feeds
+   * drop it — and there the comment box reads as open-to-Kids-Mode-only.
+   */
+  forKids?: boolean;
   /** Backend-computed total DHB tipped on this post — see usePostTipCount,
    *  which uses this as a floor so a client-side recording gap never shows
    *  fewer tips than the backend actually knows about. */

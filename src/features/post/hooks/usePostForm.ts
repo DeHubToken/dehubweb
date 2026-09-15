@@ -75,6 +75,8 @@ interface ActiveDraft {
   showTitle: boolean;
   /** Absent on drafts saved before ratings existed, which read as safe. */
   isMature?: boolean;
+  /** Absent on drafts saved before Kids Mode existed, which read as not-for-kids. */
+  isForKids?: boolean;
   /** The Shop board. Absent on drafts saved before it existed. */
   shopLinks?: ShopLink[];
   /** Store listings picked for the board, by id. */
@@ -218,6 +220,7 @@ interface UsePostFormReturn {
     titleText: string;
     shouldMint: boolean;
     isMature: boolean;
+    isForKids: boolean;
     shopLinks: ShopLink[];
     shopListingIds: string[];
   };
@@ -233,6 +236,7 @@ interface UsePostFormReturn {
     setShowTitle: (show: boolean) => void;
     setShouldMint: (value: boolean) => void;
     setIsMature: (value: boolean) => void;
+    setIsForKids: (value: boolean) => void;
     setShopLinks: (links: ShopLink[]) => void;
     setShopListingIds: (ids: string[]) => void;
     setTitleText: (text: string) => void;
@@ -395,6 +399,26 @@ export function usePostForm(
   const [isMature, setIsMature] = useState(d?.isMature === true);
 
   /**
+   * Published for children — the Kids Mode allowlist.
+   *
+   * Same reasoning as the rating above and pointing the other way: it is reset
+   * after every post rather than remembered, because a flag that stays on is a
+   * flag that eventually marks something nobody meant to put in front of a
+   * child. A creator who posts for kids every time taps it every time.
+   */
+  const [isForKids, setIsForKids] = useState(d?.isForKids === true);
+
+  /**
+   * The two are mutually exclusive, enforced here as well as on the server.
+   * Marking a post mature after marking it for kids is the realistic order —
+   * the mature switch is the last row — and leaving both on would send a
+   * payload the API rejects with an error the creator cannot act on.
+   */
+  useEffect(() => {
+    if (isMature && isForKids) setIsForKids(false);
+  }, [isMature, isForKids]);
+
+  /**
    * The creator's Shop board — affiliate and shop links for this post.
    *
    * Restored from the draft, unlike the mature switch: these are URLs somebody
@@ -492,7 +516,7 @@ export function usePostForm(
   useEffect(() => {
     const persistDraft = () => {
       const draft: ActiveDraft = {
-        text, titleText, showTitle, isMature, shopLinks, shopListingIds,
+        text, titleText, showTitle, isMature, isForKids, shopLinks, shopListingIds,
         selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
         isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
         isTokenGated, tokenContract, tokenSymbol, tokenAmount,
@@ -513,7 +537,7 @@ export function usePostForm(
     // clear the timer here, never persist, or the debounce is defeated. The
     // unmount-only flush lives in the effect below.
     return () => clearTimeout(timer);
-  }, [text, titleText, showTitle, isMature, shopLinks, shopListingIds,
+  }, [text, titleText, showTitle, isMature, isForKids, shopLinks, shopListingIds,
     selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount]);
@@ -1091,6 +1115,7 @@ export function usePostForm(
     // at closely. The file's own note on this switch says a sticky flag is the
     // failure to avoid.
     setIsMature(false);
+    setIsForKids(false);
     // Only persist category if user explicitly saved defaults
     if (!categorySavedRef.current) {
       setSelectedCategory('');
@@ -1720,6 +1745,9 @@ export function usePostForm(
           scheduledAt: scheduledDate ? scheduledDate.toISOString() : undefined,
           idempotencyKey: postAttemptRef.current.key,
           contentRating: isMature ? 'mature' : undefined,
+          // Only ever sent as true — absent is what "not kids content" means, so
+          // a false would store a second representation of the same state.
+          forKids: isForKids ? true : undefined,
           // Sent with the mint rather than PATCHed after it, so a live post is
           // already carrying its board when the stream comes up.
           shopLinks: shopLinks.length ? shopLinks : undefined,
@@ -2372,7 +2400,7 @@ export function usePostForm(
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
     showTitle, titleText, connectionSource, poll, pollIsValid, chainId,
     refreshSession, openLoginModal, requestWalletUnlock,
-    effectiveShouldMint, mintFee, isMature,
+    effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
   ]);
@@ -2422,6 +2450,7 @@ export function usePostForm(
       titleText,
       shouldMint,
       isMature,
+      isForKids,
       shopLinks,
       shopListingIds,
     },
@@ -2476,6 +2505,7 @@ export function usePostForm(
       setShowTitle: handleSetShowTitle,
       setShouldMint: handleSetShouldMint,
       setIsMature,
+      setIsForKids,
       setShopLinks,
       setShopListingIds,
       setTitleText,

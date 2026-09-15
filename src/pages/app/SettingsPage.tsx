@@ -109,6 +109,9 @@ import { buildAvatarUrl, buildCoverUrl, bumpProfileImageVersion, deviceWidth } f
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useMatureContent } from '@/hooks/use-mature-content';
+import { useKidsMode } from '@/hooks/use-kids-mode';
+import { KidsModeDrawer } from '@/components/app/settings/KidsModeDrawer';
+import { Baby } from 'lucide-react';
 import { useHideWatched } from '@/hooks/use-watched-videos';
 import { DataPortability } from '@/components/app/settings/DataPortability';
 import { normaliseAdLoad, useAdLoad, writeAdLoad } from '@/lib/ad-load';
@@ -2590,6 +2593,7 @@ function ContentSettings() {
               "Filter explicit content" and "Content warnings" were the same
               setting worded twice, and are what this one does when it is off. */}
           <MatureContentToggle />
+          <KidsModeToggle />
         </div>
       </div>
 
@@ -2785,6 +2789,53 @@ function MatureContentToggle() {
       onCheckedChange={setShowMatureContent}
       disabled={!isAuthenticated || isSaving}
     />
+  );
+}
+
+/**
+ * Kids Mode: the only setting here that needs a PIN to undo.
+ *
+ * It sits beside the mature switch because both answer "what may this account
+ * be shown", but it is not the same kind of control. Mature widens what one
+ * viewer sees and is theirs to flip back; this narrows the whole product to
+ * posts somebody published for children, and turning it off is the thing being
+ * protected.
+ *
+ * Off is one tap into a pad, then the PIN twice. On is the PIN once. Neither
+ * direction is a bare switch — a switch that silently drops a device out of
+ * Kids Mode is the failure this feature exists to prevent.
+ */
+function KidsModeToggle() {
+  const { t } = useTranslation();
+  const { isAuthenticated } = useAuthContext();
+  const { isKidsMode, enable, disable, isSaving } = useKidsMode();
+  const [padOpen, setPadOpen] = useState(false);
+
+  return (
+    <>
+      <SettingToggle
+        icon={Baby}
+        anchor="kids-mode"
+        title={t('settings.kidsMode', 'Kids Mode')}
+        description={t(
+          'settings.kidsModeDesc',
+          'Shows only posts published for children, everywhere. A PIN turns it back off.',
+        )}
+        // Controlled on this value — SettingToggle passes it as `checked`
+        // whenever a handler is given — so the switch only ever moves once the
+        // PIN pad has succeeded, never on the tap that opens it.
+        defaultChecked={isKidsMode}
+        onCheckedChange={() => setPadOpen(true)}
+        disabled={!isAuthenticated || isSaving}
+      />
+      <KidsModeDrawer
+        open={padOpen}
+        onOpenChange={setPadOpen}
+        mode={isKidsMode ? 'disable' : 'enable'}
+        onSubmit={pin => (isKidsMode ? disable(pin) : enable(pin))}
+        busy={isSaving}
+      />
+    </>
   );
 }
 
