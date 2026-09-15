@@ -2105,6 +2105,9 @@
   "work": {
     "budgetExhausted": "ງົບປະມານຂອງລາງວັນນີ້ຖືກໃຊ້ໝົດແລ້ວ."
   },
+  "stages": {
+    "title": "ດ່ານ"
+  },
   "videoLooks": {
     "button": "ຮູບແບບກ້ອງ",
     "title": "ຮູບແບບ",
@@ -2124,6 +2127,37 @@
     "neon": "ນີອອນ",
     "blur": "ມົວ",
     "pixelate": "ພິກເຊວ"
+  },
+  "goLive": {
+    "goLive": "ໄປສົ່ວນ Live",
+    "youAreLive": "ທ່ານກໍາລັງ Live",
+    "drawerDescription": "ກຳນົດການຕັ້ງຄ່າ livestream ຂອງທ່ານ ຫຼື ຮັບ RTMP credentials ຂອງທ່ານ.",
+    "howToStream": "ທ່ານຕ້ອງການ stream ແນວໃດ?",
+    "sourceCamera": "ກ້ອງ",
+    "sourceCameraHint": "ໂດຍກົງຈາກອຸປະກອນນີ້",
+    "sourceScreen": "ໜ້າຈໍ",
+    "sourceScreenHint": "ແບ່ງປັນເກມ, ແອັບ ຫຼື tab",
+    "sourceEncoder": "OBS / ເຄື່ອງເຂົ້າລະຫັດ",
+    "sourceEncoderHint": "ຮັບລາຍລະອຽດ RTMP",
+    "screenPickHint": "ທ່ານຈະເລືອກໜ້າຈໍ, ປ່ອງຢ້ຽມ ຫຼື tab ຕໍ່ໄປ — ຈາກນັ້ນມັນກໍາລັງ live ກັບ mic ຂອງທ່ານ ແລະ ສຽງຂອງ tab ເອງ.",
+    "replayAllowanceUsed": "ທ່ານໄດ້ໃຊ້ຄວາມອະນຸຍາດໃນການອັບໂຫລດຂອງວັນນີ້, ດັ່ງນັ້ນ stream ນີ້ຈະບໍ່ເກັບ replay. ຄວາມອະນຸຍາດຈະຣີເຊັດໃນເວລາທ່ຽງຄືນ UTC.",
+    "replayFreeTier": "ບັນຊີຟຣີເກັບ {{size}} ທໍາອິດຂອງ stream ເປັນ replay — ການວາງເດີມພັນ badges ຈະເພີ່ມຂີດຈໍາກັດ.",
+    "replayTiered": "ເຖິງ {{size}} ຂອງ stream ນີ້ຖືກເກັບໄວ້ເປັນ replay ({{tier}} ຄວາມອະນຸຍາດປະຈໍາວັນ).",
+    "streamTitle": "ຊື່ Stream *",
+    "titlePlaceholder": "Stream ຂອງທ່ານກ່ຽວກັບຫຍັງ?",
+    "description": "ລາຍລະອຽດ",
+    "descriptionPlaceholder": "ບອກຜູ້ຊົມວ່າຈະຄາດຫວັງຫຍັງ...",
+    "coverImage": "ຮູບພາບປົກ",
+    "remove": "ລຶບ",
+    "optional": "ທາງເລືອກ",
+    "addCover": "ເພີ່ມປົກ",
+    "coverTooLarge": "ຮູບພາບປົກຕ້ອງຕໍ່າກວ່າ 8 MB",
+    "enterTitle": "ກະລຸນາໃສ່ຊື່ stream",
+    "screenShareCancelled": "ການແບ່ງປັນໜ້າຈໍຖືກຍົກເລີກ.",
+    "shopItemsNotAttached_one": "{{count}} ລາຍການຮ້ານຄ້າບໍ່ສາມາດຕິດໄດ້ — ເພີ່ມມັນຈາກແຜງຮ້ານຄ້າ.",
+    "shopItemsNotAttached_other": "{{count}} ລາຍການຮ້ານຄ້າບໍ່ສາມາດຕິດໄດ້ — ເພີ່ມພວກມັນຈາກແຜງຮ້ານຄ້າ.",
+    "publishing": "ເຜີຍແຜ່ໄປຫາຖານຂໍ້ມູນທີ່ບໍ່ເປັນສູນກາງ...",
+    "youAreGoingLive": "ທ່ານກໍາລັງ live!"
   },
   "creatorFlow": {
     "title": "ການໄຫຼຂອງຜູ້ສ້າງ",

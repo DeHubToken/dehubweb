@@ -88,6 +88,12 @@ interface GoLiveModalProps {
   isOpen: boolean;
   onClose: () => void;
   /**
+   * Which source card the setup step opens on. The composer's live menu uses
+   * it to land straight on 'rtmp', so picking OBS there arrives at the RTMP
+   * credentials rather than at a camera the creator does not want.
+   */
+  initialSource?: StreamSource;
+  /**
    * A stream the post composer's mint already provisioned.
    *
    * When present this sheet has no setup step at all: it opens straight onto
@@ -152,12 +158,12 @@ function formatGb(bytes: number): string {
   return `${Math.max(1, Math.round(bytes / (1024 * 1024)))} MB`;
 }
 
-export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps) {
+export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: GoLiveModalProps) {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [step, setStep] = useState<Step>('setup');
   const [confirmEnd, setConfirmEnd] = useState(false);
-  const [source, setSource] = useState<StreamSource>('camera');
+  const [source, setSource] = useState<StreamSource>(initialSource ?? 'camera');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -378,6 +384,16 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
     });
   }, [isOpen, initialStream, step, walletAddress]);
 
+  /**
+   * The sheet is mounted once and reopened, so the state initialiser above
+   * only ever runs for the first open. Reapply the caller's source on every
+   * one of them, or the second visit to "OBS / Encoder" lands on the camera.
+   */
+  useEffect(() => {
+    if (!isOpen || !initialSource || initialStream) return;
+    setSource(initialSource);
+  }, [isOpen, initialSource, initialStream]);
+
   const clearLiveSession = (tokenId: string) => {
     // Before anything else: a beat that fires after the delete would re-upsert
     // the row this call exists to remove, which is the same race the
@@ -546,7 +562,7 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
     // has stopped vouching for it, which is exactly right once the tab is gone.
     stopHeartbeat();
     setStep('setup');
-    setSource('camera');
+    setSource(initialSource ?? 'camera');
     setTitle('');
     setDescription('');
     setSelectedCategory('');
