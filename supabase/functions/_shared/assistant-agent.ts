@@ -235,7 +235,17 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
     timeoutMs = surface === 'chat' ? 20_000 : surface === 'admin' ? 120_000 : 100_000,
   } = opts;
 
-  const catalog = await fetchToolCatalog(surface, adminToken);
+  // A tool API that is down must cost the DeHub lookups, not the answer. The
+  // caller's own catch falls all the way back to the single-shot path, which
+  // answers with no tools and no idea it lost any — running the loop without
+  // the catalog keeps web_search, the platform knowledge and the rules that
+  // say to admit a failed lookup. Same reasoning as the streaming variant.
+  let catalog: Awaited<ReturnType<typeof fetchToolCatalog>> = [];
+  try {
+    catalog = await fetchToolCatalog(surface, adminToken);
+  } catch (err) {
+    console.error('[Agent] tool catalog unavailable, answering without tools:', err);
+  }
   const allTools = [...catalog, WEB_SEARCH_TOOL];
   const toolSchemas = allTools.map((t) => ({
     type: 'function' as const,
