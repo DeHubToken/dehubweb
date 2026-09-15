@@ -59,6 +59,14 @@ describe('DeHub platform knowledge', () => {
     expect(chatFunction).toContain('IF IT HAS A PAGE, IT EXISTS');
   });
 
+  it('forbids inventing a path that is not on the map', () => {
+    // It answered "your scheduled posts are at dehub.io/studio/scheduled" —
+    // a route that has never existed — within an hour of the map shipping.
+    // The map only helps if paths outside it are off limits.
+    const chatFunction = readFileSync(resolve('supabase/functions/general-ai-chat/index.ts'), 'utf8');
+    expect(chatFunction).toContain('NEVER INVENT A URL');
+  });
+
   it('refuses to claim a generation it did not perform', () => {
     expect(DEHUB_PLATFORM_KNOWLEDGE).toContain(
       'Never claim to have done something you have not done',
