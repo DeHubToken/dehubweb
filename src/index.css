@@ -4373,6 +4373,28 @@ Themes are dark bar one: the flash is white on every surface except the paper
 of `light`, where white on near-white would be no flash at all. One variable,
 overridden there, rather than a second animation.
 */
+/* The reply orb's dust, and the suggestion rail it sits in, are drawn in white
+   alphas over near-black. On paper that is white on white - the orb vanished
+   and the two drafting cards were blank space. One variable for the orb (its
+   motes are inline styles, so CSS cannot reach them), and the rail's own glass
+   flipped from white alphas to ink ones. */
+:root {
+  --orb-ink: 255, 255, 255;
+}
+html[data-theme="light"] {
+  --orb-ink: 26, 26, 26;
+}
+
+html[data-theme="light"] .smart-reply-rail [class*="bg-white/"] {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+html[data-theme="light"] .smart-reply-rail button[class*="bg-white/"]:hover {
+  background-color: rgba(0, 0, 0, 0.09) !important;
+}
+html[data-theme="light"] .smart-reply-rail [class*="border-white/"] {
+  border-color: var(--hairline) !important;
+}
+
 :root {
   --settings-reveal-ink: 255, 255, 255;
 }
