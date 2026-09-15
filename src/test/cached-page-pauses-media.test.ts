@@ -1,7 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { pauseMediaIn, resumeMedia } from '@/lib/pause-media-in';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  pauseMediaIn,
+  pauseOffDocumentMediaIn,
+  registerOffDocumentMedia,
+  resumeMedia,
+} from '@/lib/pause-media-in';
 
 /**
  * A page in PersistentPageCache is hidden with CSS, never unmounted. CSS does
@@ -161,13 +166,156 @@ describe('PersistentPageCache wires the pause to the hide', () => {
     'utf8',
   );
 
-  it('drives both helpers off the same flag that hides the page', () => {
-    // `shouldStayVisible` is what writes `visibility: hidden`. Pausing on any
-    // other signal (isActive alone) would stop the home feed while a post
-    // overlay is open above it, which is the one case where a hidden-looking
-    // page is deliberately still visible.
+  it('drives the two sweeps off the flags that hide the page', () => {
+    // `shouldStayVisible` is what writes `visibility: hidden`, so it decides
+    // the full sweep. `isActive` is the narrower one: a page still visible
+    // only because a post overlay sits above it keeps its <video> — the post
+    // page takes that very element over — and loses everything off-document.
     expect(SOURCE).toMatch(/pauseMediaIn\(root\)/);
+    expect(SOURCE).toMatch(/pauseOffDocumentMediaIn\(root\)/);
     expect(SOURCE).toMatch(/resumeMedia\(resumeRef\.current\)/);
-    expect(SOURCE).toMatch(/\}, \[shouldStayVisible\]\)/);
+    expect(SOURCE).toMatch(/\}, \[isActive, shouldStayVisible\]\)/);
+  });
+});
+
+/**
+ * An audio post plays through a bare `new Audio()` that is never put in the
+ * document — the canvas is the thing on screen. `querySelectorAll` cannot see
+ * it, so the sweep above walked straight past a playing track: reproduced on
+ * production, a track started in the feed was still at `paused: false` with its
+ * clock at 56s after clicking through to the post page and then to Explore.
+ */
+describe('off-document players — the sound with nothing in the DOM to find', () => {
+  let root: HTMLDivElement;
+  let anchor: HTMLCanvasElement;
+  const registered: (() => void)[] = [];
+
+  const register = (el: HTMLMediaElement, node: Node | null) => {
+    const off = registerOffDocumentMedia(el, () => node);
+    registered.push(off);
+    return off;
+  };
+
+  beforeEach(() => {
+    document.body.innerHTML = '';
+    root = document.createElement('div');
+    document.body.appendChild(root);
+    anchor = document.createElement('canvas');
+    root.appendChild(anchor);
+  });
+
+  afterEach(() => {
+    registered.splice(0).forEach((off) => off());
+  });
+
+  it('pauses one registered against a node inside the page', () => {
+    const track = fakeMedia('audio', true);
+    register(track, anchor);
+
+    expect(pauseMediaIn(root)).toEqual([track]);
+    expect(track.paused).toBe(true);
+  });
+
+  it('leaves one anchored on a different page alone', () => {
+    const elsewhere = document.createElement('canvas');
+    document.body.appendChild(elsewhere);
+    const track = fakeMedia('audio', true);
+    register(track, elsewhere);
+
+    expect(pauseMediaIn(root)).toEqual([]);
+    expect(track.paused).toBe(false);
+  });
+
+  it('forgets one whose registration has been dropped', () => {
+    // The corner player takes the element over and is meant to keep playing
+    // across navigation, exactly like the radio.
+    const track = fakeMedia('audio', true);
+    const handOver = register(track, anchor);
+    handOver();
+
+    expect(pauseMediaIn(root)).toEqual([]);
+    expect(track.paused).toBe(false);
+  });
+
+  it('ignores one whose anchor has since unmounted', () => {
+    const track = fakeMedia('audio', true);
+    register(track, null);
+
+    expect(pauseMediaIn(root)).toEqual([]);
+  });
+
+  it('resumes one on return, though it is never connected to the document', () => {
+    const track = fakeMedia('audio', true);
+    register(track, anchor);
+
+    resumeMedia(pauseMediaIn(root));
+
+    expect(track.isConnected).toBe(false);
+    expect(track.play).toHaveBeenCalledTimes(1);
+    expect(track.paused).toBe(false);
+  });
+
+  it('does not resume one that was torn down while the page was hidden', () => {
+    const track = fakeMedia('audio', true);
+    const drop = register(track, anchor);
+    const paused = pauseMediaIn(root);
+    drop();
+
+    resumeMedia(paused);
+
+    expect(track.play).not.toHaveBeenCalled();
+  });
+});
+
+describe('pauseOffDocumentMediaIn — the post overlay, where home stays visible', () => {
+  let root: HTMLDivElement;
+  let anchor: HTMLCanvasElement;
+  const registered: (() => void)[] = [];
+
+  beforeEach(() => {
+    document.body.innerHTML = '';
+    root = document.createElement('div');
+    document.body.appendChild(root);
+    anchor = document.createElement('canvas');
+    root.appendChild(anchor);
+  });
+
+  afterEach(() => {
+    registered.splice(0).forEach((off) => off());
+  });
+
+  it('stops an audio post playing in the feed behind the open post', () => {
+    const track = fakeMedia('audio', true);
+    registered.push(registerOffDocumentMedia(track, () => anchor));
+
+    expect(pauseOffDocumentMediaIn(root)).toEqual([track]);
+    expect(track.paused).toBe(true);
+  });
+
+  it('leaves the feed <video> alone, because opening the post takes that element with it', () => {
+    // lib/video-handoff moves the live element up into the post page. Pausing
+    // it here would stop the clip the user just opened.
+    const clip = fakeMedia('video', true);
+    root.appendChild(clip);
+
+    expect(pauseOffDocumentMediaIn(root)).toEqual([]);
+    expect(clip.pause).not.toHaveBeenCalled();
+  });
+});
+
+describe('AudioVisualizer puts its element on the page cache books', () => {
+  const SOURCE = readFileSync(
+    resolve(__dirname, '../components/app/audio/AudioVisualizer.tsx'),
+    'utf8',
+  );
+
+  it('registers the element it builds against the canvas', () => {
+    expect(SOURCE).toMatch(/registerOffDocumentMedia\(el, \(\) => canvasRef\.current\)/);
+  });
+
+  it('gives the claim up when the corner player takes the track', () => {
+    // The corner player is mounted outside the cache so it can outlive the
+    // route. Keeping the registration would have the next navigation pause it.
+    expect(SOURCE).toMatch(/handedOverRef\.current = !!el;[\s\S]{0,200}releaseOffDocument\(\)/);
   });
 });
