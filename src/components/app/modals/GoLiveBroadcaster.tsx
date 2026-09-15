@@ -235,6 +235,27 @@ const AUDIO_CONSTRAINTS: MediaTrackConstraints = {
   autoGainControl: true,
 };
 
+/**
+ * Audio inputs that are not a person talking into a microphone: capture
+ * cards, HDMI/line inputs, loopback devices. The voice processing above is
+ * built for speech — on a console or game feed the noise gate opens and
+ * closes on the music and the gain control pumps, which comes through as
+ * crackle and pops. These inputs get the signal untouched, in stereo, and
+ * skip the voice-effect graph (which is mono by construction).
+ */
+const LINE_LEVEL_INPUT = /capture|cam ?link|elgato|avermedia|magewell|blackmagic|hdmi|usb ?video|line[ -]?in|loopback|stereo mix|what u hear|vb-?audio|cable (output|input)|virtual/i;
+
+const RAW_AUDIO_CONSTRAINTS: MediaTrackConstraints = {
+  echoCancellation: false,
+  noiseSuppression: false,
+  autoGainControl: false,
+  channelCount: { ideal: 2 },
+};
+
+function isLineLevelInput(track: MediaStreamTrack): boolean {
+  return LINE_LEVEL_INPUT.test(track.label ?? '');
+}
+
 function formatElapsed(seconds: number): string {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
@@ -706,8 +727,29 @@ export function GoLiveBroadcaster({
           return null;
         }
       }
-      if (!raw.getAudioTracks().length) return null;
+      const rawTrack = raw.getAudioTracks()[0];
+      if (!rawTrack) return null;
       rawMicStreamRef.current = raw;
+
+      if (isLineLevelInput(rawTrack)) {
+        // Capture card or line input: strip the speech processing the prompt
+        // applied, ask for stereo, and tell the encoder it is music so Opus
+        // does not treat it as a voice call. Published as-is, no effect graph.
+        try {
+          await rawTrack.applyConstraints(RAW_AUDIO_CONSTRAINTS);
+        } catch (error) {
+          logger.warn('Could not switch the capture input to raw audio', error);
+        }
+        try {
+          rawTrack.contentHint = 'music';
+        } catch {
+          /* older engines expose contentHint read-only */
+        }
+        logger.info('Line-level audio input detected; publishing raw stereo', {
+          label: rawTrack.label,
+        });
+        return rawTrack;
+      }
 
       try {
         return await processStream(raw, 'none');

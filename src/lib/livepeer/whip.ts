@@ -141,6 +141,36 @@ export interface PublishOptions {
 const HEALTH_SAMPLE_MS = 3000;
 
 /**
+ * Ask the Opus encoder for in-band forward error correction and stereo. The
+ * publish leg loses packets in bursts on home uplinks, and every missing 20ms
+ * audio frame is an audible click at the viewer; FEC lets the server rebuild
+ * a lost frame from the next packet instead. Stereo is only honoured when the
+ * track actually carries two channels, so a mono mic costs nothing. Applied
+ * to both the offer and the answer: Chrome reads the REMOTE fmtp to decide
+ * whether FEC and stereo are on.
+ */
+export function withOpusFec(sdp: string): string {
+  const pts = new Set<string>();
+  for (const line of sdp.split(/\r?\n/)) {
+    const m = /^a=rtpmap:(\d+) opus\/48000/i.exec(line);
+    if (m) pts.add(m[1]);
+  }
+  if (!pts.size) return sdp;
+  const wanted = ['useinbandfec=1', 'stereo=1', 'sprop-stereo=1', 'maxaveragebitrate=128000'];
+  return sdp
+    .split(/(\r?\n)/)
+    .map((line) => {
+      const m = /^a=fmtp:(\d+) (.*)$/.exec(line);
+      if (!m || !pts.has(m[1])) return line;
+      const params = m[2].split(';').map((p) => p.trim()).filter(Boolean);
+      const keys = new Set(params.map((p) => p.split('=')[0]));
+      for (const w of wanted) if (!keys.has(w.split('=')[0])) params.push(w);
+      return `a=fmtp:${m[1]} ${params.join(';')}`;
+    })
+    .join('');
+}
+
+/**
  * Put H.264 at the front of the video codec list.
  *
  * Livepeer transcodes H.264 natively; a VP8/VP9 ingest costs it an extra
@@ -362,7 +392,7 @@ export async function publishToWhip({
     });
 
     const offer = await pc.createOffer();
-    await pc.setLocalDescription(offer);
+    await pc.setLocalDescription({ type: 'offer', sdp: withOpusFec(offer.sdp ?? '') });
     await waitForIceGathering(pc);
 
     const endpoint =
@@ -410,7 +440,9 @@ export async function publishToWhip({
       logger.warn('WHIP response had no Location header; teardown will rely on ICE timeout');
     }
 
-    await pc.setRemoteDescription({ type: 'answer', sdp: answer });
+    // Chrome only turns FEC and stereo on when the REMOTE fmtp asks for them,
+    // so the answer gets the same parameters.
+    await pc.setRemoteDescription({ type: 'answer', sdp: withOpusFec(answer) });
     logger.info('WHIP negotiation complete', { hasResource: !!resourceUrl });
 
     return { stop, replaceTrack };
