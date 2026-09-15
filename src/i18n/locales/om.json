@@ -2359,6 +2359,9 @@
     "foldersNoItems": "Galmee kana keessa hanga ammaatti homaa hin jiru",
     "foldersNoItemsHint": "Bu&#39;aa tokko baniitii &quot;Add to folder&quot; filadhuutii asitti galmeessi."
   },
+  "videoPlayer": {
+    "volume": "Sagalee"
+  },
   "dub": {
     "audio": "Sagalee",
     "original": "Sagalee jalqabaa",

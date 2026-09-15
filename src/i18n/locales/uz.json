@@ -2361,6 +2361,9 @@
     "foldersNoItems": "Bu papkada hali hech narsa yo&#39;q",
     "foldersNoItemsHint": "Natijani oching va uni shu yerga saqlash uchun &quot;Papkaga qo&#39;shish&quot; ni tanlang."
   },
+  "videoPlayer": {
+    "volume": "Ovoz balandligi"
+  },
   "dub": {
     "audio": "Audio",
     "original": "Asl audio",

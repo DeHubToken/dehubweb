@@ -2261,6 +2261,9 @@
     "foldersNoItems": "इदानीमपि कोऽपि न योजनीयः",
     "foldersNoItemsHint": "\"फलकम्ःAdd to folder\" सम्बद्धानि पृष्ठानि"
   },
+  "videoPlayer": {
+    "volume": "ध्वनिमानम्"
+  },
   "dub": {
     "audio": "ध्वनिः",
     "original": "मूलं श्रुतम्",

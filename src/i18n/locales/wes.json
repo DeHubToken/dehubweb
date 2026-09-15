@@ -2162,6 +2162,9 @@
     "foldersNoItems": "No tin for inside dis folder yet",
     "foldersNoItemsHint": "Open one result and choose \"Add to folder\" for file am for here."
   },
+  "videoPlayer": {
+    "volume": "Volume"
+  },
   "dub": {
     "audio": "Audio",
     "original": "Audio original",

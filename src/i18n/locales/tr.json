@@ -4659,6 +4659,9 @@
     "foldersNoItems": "Bu klasörde henüz bir şey yok",
     "foldersNoItemsHint": "Bir sonucu açın ve buraya kaydetmek için \"Klasöre ekle\" seçeneğini belirleyin."
   },
+  "videoPlayer": {
+    "volume": "Ses düzeyi"
+  },
   "dub": {
     "audio": "Ses",
     "original": "Orijinal ses",

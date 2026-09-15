@@ -4579,6 +4579,9 @@
     "foldersNoItems": "Ovdje još nema ničega",
     "foldersNoItemsHint": "Otvorite rezultat i odaberite \"Dodaj u mapu\" da biste ga ovdje spremili."
   },
+  "videoPlayer": {
+    "volume": "Glasnoća"
+  },
   "dub": {
     "audio": "Zvuk",
     "original": "Izvorni zvuk",

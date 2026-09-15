@@ -4647,6 +4647,9 @@
     "foldersNoItems": "Nichts in diesem Ordner",
     "foldersNoItemsHint": "Öffnen Sie ein Ergebnis und wählen Sie \"Zu Ordner hinzufügen\", um es hier abzulegen."
   },
+  "videoPlayer": {
+    "volume": "Lautstärke"
+  },
   "dub": {
     "audio": "Audio",
     "original": "Original-Audio",

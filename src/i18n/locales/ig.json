@@ -2299,6 +2299,9 @@
     "foldersNoItems": "Enweghị ihe ọ bụla na nchekwa a ugbu a",
     "foldersNoItemsHint": "Meghee nsonaazụ ma họrọ \"Tinye na nchekwa\" iji debanye aha ya ebe a."
   },
+  "videoPlayer": {
+    "volume": "Olu ụda"
+  },
   "dub": {
     "audio": "Odu",
     "original": "Mbụ ọdịyo",

@@ -15,6 +15,7 @@
  *   attempt budget is respected here rather than spinning forever.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Captions, Check, Loader2, Search, Settings2, Minus, Plus } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -56,6 +57,15 @@ interface Props {
   buttonClassName?: string;
   /** When false, the CC button is faded out (captions still render). Defaults true. */
   buttonVisible?: boolean;
+  /**
+   * Render the CC button into this element instead of positioning it against
+   * the video. The player's control row is a flex row: portalling into it puts
+   * this button through the same mount as every other control, so it appears
+   * and disappears on the same frame instead of fading in on its own timer.
+   */
+  buttonPortalTarget?: HTMLElement | null;
+  /** Fires when the language menu opens or closes, so the player can hold its controls up. */
+  onMenuOpenChange?: (open: boolean) => void;
 }
 
 function readEnabled(): boolean {
@@ -77,7 +87,7 @@ function readSize(): SizeKey {
   return 'xs';
 }
 
-export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, buttonVisible = true }: Props) {
+export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, buttonVisible = true, buttonPortalTarget, onMenuOpenChange }: Props) {
   const numericId = useMemo(() => {
     const n = typeof tokenId === 'string' ? parseInt(tokenId, 10) : tokenId ?? 0;
     return Number.isFinite(n) && n > 0 ? Number(n) : 0;
@@ -91,6 +101,8 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [currentText, setCurrentText] = useState('');
+
+  useEffect(() => { onMenuOpenChange?.(open); }, [open, onMenuOpenChange]);
 
   // Only fetch transcript once user has shown intent (open popover, enabled
   // subs, or asked for dubbed audio — a dub is keyed on the transcript too).
@@ -395,6 +407,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
         handleToggle={handleToggle}
         buttonVisible={buttonVisible}
         buttonClassName={buttonClassName}
+        buttonPortalTarget={buttonPortalTarget}
         buttonState={buttonState}
         enabled={enabled}
         setEnabled={setEnabled}
@@ -429,6 +442,7 @@ interface SubtitleMenuProps {
   handleToggle: (e: React.MouseEvent) => void;
   buttonVisible: boolean;
   buttonClassName?: string;
+  buttonPortalTarget?: HTMLElement | null;
   buttonState: 'off' | 'on' | 'working' | 'loading';
   enabled: boolean;
   setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
@@ -457,7 +471,7 @@ interface SubtitleMenuProps {
 
 function SubtitleMenu(props: SubtitleMenuProps) {
   const {
-    open, setOpen, handleToggle, buttonVisible, buttonClassName, buttonState,
+    open, setOpen, handleToggle, buttonVisible, buttonClassName, buttonPortalTarget, buttonState,
     enabled, setEnabled, showSettings, setShowSettings, size, setSize, sizePx,
     isReady, isWorking, isEmpty, isFailed, langLabel, query, setQuery, filteredLangs, lang, setLang,
     dubOn, setDubOn, dubStatus, dubStalled, dubPossible,
@@ -474,6 +488,11 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       ? t('dub.unavailable')
       : t('dub.preparing');
 
+  // Inside the control row the button is a sibling of the speed/loop/PiP/mute
+  // buttons and wears exactly their chrome; standalone it keeps the older
+  // bottom-left placement and its own fade.
+  const inRow = !!buttonPortalTarget;
+
   const triggerButton = (
     <button
       type="button"
@@ -485,12 +504,18 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       }}
       aria-label={enabled ? 'Subtitles on' : 'Subtitles off'}
       className={cn(
-        'z-20 h-8 w-8 rounded-lg bg-black/60 backdrop-blur-[24px] border border-white/10 flex items-center justify-center transition-opacity duration-200',
-        buttonVisible || open ? 'opacity-80 hover:opacity-100' : 'opacity-0 pointer-events-none',
-        buttonState === 'off' && 'text-white/60',
-        buttonState === 'on' && 'text-white',
-        buttonState === 'working' && 'text-white/80',
-        buttonClassName ?? 'absolute bottom-12 left-2',
+        'z-20 h-8 w-8 flex items-center justify-center border border-white/10',
+        inRow
+          ? 'relative rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white'
+          : [
+              'rounded-lg bg-black/60 backdrop-blur-[24px] transition-opacity duration-200',
+              buttonVisible || open ? 'opacity-80 hover:opacity-100' : 'opacity-0 pointer-events-none',
+              buttonState === 'off' && 'text-white/60',
+              buttonState === 'on' && 'text-white',
+              buttonState === 'working' && 'text-white/80',
+            ],
+        inRow && enabled && 'bg-white/20',
+        buttonClassName ?? (inRow ? undefined : 'absolute bottom-12 left-2'),
       )}
     >
       {buttonState === 'working' ? (
@@ -695,8 +720,13 @@ function SubtitleMenu(props: SubtitleMenuProps) {
     </div>
   );
 
+  // The trigger goes wherever the caller asked; the menu itself is portalled
+  // to the body by Radix either way, so moving the root costs nothing.
+  const mount = (node: React.ReactNode) =>
+    buttonPortalTarget ? createPortal(node, buttonPortalTarget) : node;
+
   if (isTouch) {
-    return (
+    return mount(
       <>
         {triggerButton}
         <Drawer open={open} onOpenChange={setOpen}>
@@ -714,7 +744,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
     );
   }
 
-  return (
+  return mount(
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
       <PopoverContent

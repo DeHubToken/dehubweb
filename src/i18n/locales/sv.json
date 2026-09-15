@@ -4584,6 +4584,9 @@
     "foldersNoItems": "Inget i den här mappen ännu",
     "foldersNoItemsHint": "Öppna ett resultat och välj \"Lägg till i mapp\" för att spara det här."
   },
+  "videoPlayer": {
+    "volume": "Volym"
+  },
   "dub": {
     "audio": "Ljud",
     "original": "Originalljud",

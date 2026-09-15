@@ -4541,6 +4541,9 @@
     "foldersNoItems": "Bu qovluqda heç nə yoxdur",
     "foldersNoItemsHint": "Nəticəni açın və \"Qovluğa əlavə et\" seçin, bunu burada saxlamaq üçün."
   },
+  "videoPlayer": {
+    "volume": "Səs səviyyəsi"
+  },
   "dub": {
     "audio": "Audio",
     "original": "Orijinal səs",

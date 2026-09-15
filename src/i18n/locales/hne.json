@@ -2283,6 +2283,9 @@
     "foldersNoItems": "ए फोल्डर म कोनो नइ हे",
     "foldersNoItemsHint": "एक परिणाम खोलो अउ ओला एमा फाइल करे बर \"फोल्डर म जोड़ो\" चुनो।"
   },
+  "videoPlayer": {
+    "volume": "आवाज"
+  },
   "dub": {
     "audio": "आडियो",
     "original": "मूल आडियो",

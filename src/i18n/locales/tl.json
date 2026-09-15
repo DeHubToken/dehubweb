@@ -4453,6 +4453,9 @@
     "foldersNoItems": "Wala pa sa folder na ito",
     "foldersNoItemsHint": "Magbukas ng resulta at piliin ang \"Idagdag sa folder\" upang ilagay ito dito."
   },
+  "videoPlayer": {
+    "volume": "Lakas ng tunog"
+  },
   "dub": {
     "audio": "ay maaaring maging sa anyo ng",
     "original": "Orihinal na audio",

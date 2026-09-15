@@ -2334,6 +2334,9 @@
     "foldersNoItems": "Šajā mapē vēl nav nekā",
     "foldersNoItemsHint": "Atveriet rezultātu un izvēlieties \"Pievienot mapei\", lai to šeit saglabātu."
   },
+  "videoPlayer": {
+    "volume": "Skaļums"
+  },
   "dub": {
     "audio": "Audio",
     "original": "Oriģinālais audio",

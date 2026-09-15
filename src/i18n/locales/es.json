@@ -4666,6 +4666,9 @@
     "foldersNoItems": "Nada en esta carpeta aún",
     "foldersNoItemsHint": "Abre un resultado y elige \"Añadir a carpeta\" para archivarlo aquí."
   },
+  "videoPlayer": {
+    "volume": "Volumen"
+  },
   "dub": {
     "audio": "Sonido",
     "original": "Audio original",

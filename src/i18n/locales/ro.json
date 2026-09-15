@@ -4467,6 +4467,9 @@
     "foldersNoItems": "Nimic în acest dosar încă",
     "foldersNoItemsHint": "Deschide un rezultat și alege „Adaugă în dosar” pentru a-l salva aici."
   },
+  "videoPlayer": {
+    "volume": "Volum"
+  },
   "dub": {
     "audio": "Audio",
     "original": "Sunet original",

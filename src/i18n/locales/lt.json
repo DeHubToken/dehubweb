@@ -2334,6 +2334,9 @@
     "foldersNoItems": "Šiame aplanke dar nieko nėra",
     "foldersNoItemsHint": "Atidarykite rezultatą ir pasirinkite „Pridėti prie aplanko“, kad jį čia įrašytumėte."
   },
+  "videoPlayer": {
+    "volume": "Garsumas"
+  },
   "dub": {
     "audio": "Garso įrašas",
     "original": "Originalus garsas",

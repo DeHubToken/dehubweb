@@ -2300,6 +2300,9 @@
     "foldersNoItems": "Nüt i dim Ordner",
     "foldersNoItemsHint": "Öffne e Resultat und wähle \"Ordner zuefüge\", zum es do ablaage."
   },
+  "videoPlayer": {
+    "volume": "Lutstärchi"
+  },
   "dub": {
     "audio": "Audio",
     "original": "Original Audio",

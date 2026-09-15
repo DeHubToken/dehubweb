@@ -2263,6 +2263,9 @@
     "foldersNoItems": "ما في حاجة في الفولدر هذا لسه",
     "foldersNoItemsHint": "افتح النتيجة واختر \"إضافة إلى مجلد\" لحفظها هنا."
   },
+  "videoPlayer": {
+    "volume": "مستوى الصوت"
+  },
   "dub": {
     "audio": "صوت",
     "original": "الصوت الأصلي",

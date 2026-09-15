@@ -2317,6 +2317,9 @@
     "foldersNoItems": "Tsy misy na inona na inona ato amin'ity laha-tahiry ity hatreto",
     "foldersNoItemsHint": "Sokafy ny vokatra ary safidio ny \"Add to folder\" raha hametraka izany eto."
   },
+  "videoPlayer": {
+    "volume": "Hamafin'ny feo"
+  },
   "dub": {
     "audio": "Raki-peo",
     "original": "Raki-peo tany am-boalohany",
