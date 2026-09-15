@@ -87,19 +87,40 @@ const LINKS: { to: string; label: string }[] = [
      colours and would be the only colour on the plate; greyscaling them just
      makes them look broken rather than deliberate.
 
-   Every item links INTERNALLY to /docs/featured-in, not out to the article.
-   This panel exists to rank the signed-out home page, and four external
-   dofollow links on it would bleed the exact equity it is here to gather —
-   /docs/featured-in already carries the real article links, so a wordmark is
-   one hop from the piece and the crawl stays in-site.
+   Every item links STRAIGHT OUT to the piece it names. These used to point at
+   /docs/featured-in to keep the crawl in-site, but that made a visitor click
+   twice to reach an article they had already picked — a wordmark is a citation
+   and it should open the citation. The links carry rel="nofollow", so no
+   ranking equity leaves the page, and /docs/featured-in is still linked from
+   the bot-facing home HTML in CLOUDFLARE_WORKER_SEO.js.
+
+   Keep the URLs in sync with features[] in src/pages/docs/FeaturedIn.tsx.
 
    `reach` is title-attribute text only. It is on /docs/featured-in already and
    the strip is far too small to carry it visually. */
 const PRESS = [
-  { outlet: 'US Weekly', reach: '50M+ readers' },
-  { outlet: 'Yahoo Finance', reach: "World's largest business news platform" },
-  { outlet: 'Entrepreneur', reach: '20M+ monthly users' },
-  { outlet: 'Investing.com', reach: '46M+ monthly users' },
+  {
+    outlet: 'US Weekly',
+    reach: '50M+ readers',
+    url: 'https://www.usmagazine.com/celebrity-news/news/meet-the-companies-driving-the-blue-ocean-frontier-of-blockchain/',
+  },
+  {
+    outlet: 'Yahoo Finance',
+    reach: "World's largest business news platform",
+    url: 'https://finance.yahoo.com/news/dehub-launching-portal-metaverse-022300594.html',
+  },
+  {
+    /* Entrepreneur pulled the original page, so the Wayback capture is the
+       live citation — same URL FeaturedIn.tsx uses. */
+    outlet: 'Entrepreneur',
+    reach: '20M+ monthly users',
+    url: 'https://web.archive.org/web/20220702152228/https://www.entrepreneur.com/article/420564',
+  },
+  {
+    outlet: 'Investing.com',
+    reach: '46M+ monthly users',
+    url: 'https://www.investing.com/news/cryptocurrency-news/dehubs-portal-to-the-metaverse-set-to-disrupt-the-entertainment-and-lifestyle-industry-2684073',
+  },
 ] as const;
 
 /* --- design tokens, lifted verbatim from kit/compose.mjs ------------------ */
@@ -417,15 +438,17 @@ export function HomeIntroPanel({
                   aria-hidden={copy === 1 ? 'true' : undefined}
                 >
                   {PRESS.map((p) => (
-                    <Link
+                    <a
                       key={p.outlet}
-                      to="/docs/featured-in"
+                      href={p.url}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
                       title={`${p.outlet} — ${p.reach}`}
                       tabIndex={copy === 1 ? -1 : undefined}
                       className="font-exo text-sm font-semibold uppercase tracking-[0.06em] text-white/50 transition-colors hover:text-white/85"
                     >
                       {p.outlet}
-                    </Link>
+                    </a>
                   ))}
                 </div>
               ))}
