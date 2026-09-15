@@ -319,3 +319,150 @@ describe('AudioVisualizer puts its element on the page cache books', () => {
     expect(SOURCE).toMatch(/handedOverRef\.current = !!el;[\s\S]{0,200}releaseOffDocument\(\)/);
   });
 });
+
+/**
+ * Every other player built the same way. `new Audio()` is the whole tell: the
+ * element never enters the document, so the sweep above cannot see it, and the
+ * sound outlives the page it belongs to. These are the rest of them.
+ */
+const OFF_DOCUMENT_PLAYERS = [
+  {
+    what: 'a voice note on a comment',
+    file: '../components/app/cards/CommentsSection.tsx',
+    registers: /registerOffDocumentMedia\(el, \(\) => buttonRef\.current\)/,
+    releases: /unregisterMediaRef\.current\?\.\(\);\s*\n\s*unregisterMediaRef\.current = null;/,
+  },
+  {
+    what: "the comment composer's own preview",
+    file: '../components/app/cards/CommentsSection.tsx',
+    registers: /registerOffDocumentMedia\(el, \(\) => sectionRef\.current\)/,
+    releases: /unregisterPreviewRef\.current\?\.\(\);\s*\n\s*unregisterPreviewRef\.current = null;/,
+  },
+  {
+    what: 'a DM voice message waveform',
+    file: '../components/app/chat/VoiceWaveformPlayer.tsx',
+    registers: /registerOffDocumentMedia\(audio, \(\) => canvasRef\.current\)/,
+    releases: /return \(\) => \{\s*\n\s*unregisterMedia\(\);/,
+  },
+  {
+    what: 'a DM voice message bubble',
+    file: '../components/app/chat/DirectMessageChat.tsx',
+    registers: /registerOffDocumentMedia\(el, \(\) => buttonRef\.current\)/,
+    releases: /unregisterMediaRef\.current\?\.\(\);\s*\n\s*unregisterMediaRef\.current = null;/,
+  },
+  {
+    what: 'a track the assistant generated',
+    file: '../components/app/assistant/GeneratedAudioPlayer.tsx',
+    registers: /registerOffDocumentMedia\(audio, \(\) => containerRef\.current\)/,
+    releases: /return \(\) => \{\s*\n\s*unregisterMedia\(\);/,
+  },
+  {
+    what: 'a track in the assistant history drawer',
+    file: '../components/app/assistant/ConversationHistoryDrawer.tsx',
+    registers: /registerOffDocumentMedia\(el, pageAnchor\)/,
+    releases: /unregisterMediaRef\.current\?\.\(\);\s*\n\s*unregisterMediaRef\.current = null;/,
+  },
+] as const;
+
+describe.each(OFF_DOCUMENT_PLAYERS)('$what', ({ file, registers, releases }) => {
+  const SOURCE = readFileSync(resolve(__dirname, file), 'utf8');
+
+  it('registers its element against a node that is actually rendered', () => {
+    expect(SOURCE).toMatch(registers);
+  });
+
+  it('drops the registration when the player is torn down', () => {
+    // A registration left behind outlives its element: the map would hold the
+    // only reference to it, and a later sweep would resume a dead player.
+    expect(SOURCE).toMatch(releases);
+  });
+});
+
+describe('the assistant history drawer anchors outside its own portal', () => {
+  const SOURCE = readFileSync(
+    resolve(__dirname, '../components/app/assistant/ConversationHistoryDrawer.tsx'),
+    'utf8',
+  );
+
+  it('renders the anchor in the page, next to the Drawer rather than inside it', () => {
+    // Verified against vaul: DrawerContent portals to <body>, so a node inside
+    // it belongs to no page at all and `root.contains` can never match. The
+    // drawer is the one player here that cannot anchor on its own button.
+    expect(SOURCE).toMatch(/<span ref=\{pageAnchorRef\} hidden aria-hidden="true" \/>\s*\n\s*<Drawer/);
+  });
+
+  it('hands the same anchor to every row, so one navigation stops them all', () => {
+    expect(SOURCE).toMatch(/pageAnchor=\{pageAnchor\}/);
+    expect(SOURCE).toMatch(/const pageAnchor = useCallback\(\(\) => pageAnchorRef\.current, \[\]\)/);
+  });
+});
+
+describe('a page with several off-document players on it', () => {
+  let root: HTMLDivElement;
+  let elsewhere: HTMLDivElement;
+  const registered: (() => void)[] = [];
+
+  const register = (el: HTMLMediaElement, node: Node | null) => {
+    registered.push(registerOffDocumentMedia(el, () => node));
+  };
+
+  beforeEach(() => {
+    document.body.innerHTML = '';
+    root = document.createElement('div');
+    elsewhere = document.createElement('div');
+    document.body.append(root, elsewhere);
+  });
+
+  afterEach(() => {
+    registered.splice(0).forEach((off) => off());
+  });
+
+  it('stops all of them on the way out and starts all of them on the way back', () => {
+    // A comment thread can have a voice note per row and one more in the
+    // composer. Stopping only the first would be the same bug with a smaller
+    // blast radius.
+    const anchors = [0, 1, 2].map(() => {
+      const button = document.createElement('button');
+      root.appendChild(button);
+      return button;
+    });
+    const players = anchors.map((anchor) => {
+      const el = fakeMedia('audio', true);
+      register(el, anchor);
+      return el;
+    });
+
+    const paused = pauseMediaIn(root);
+    expect(paused).toHaveLength(3);
+    expect(players.every((el) => el.paused)).toBe(true);
+
+    resumeMedia(paused);
+    expect(players.every((el) => !el.paused)).toBe(true);
+  });
+
+  it('leaves a player mounted outside the cache alone', () => {
+    // SidebarChat and the DM dock render their voice messages from AppLayout,
+    // OUTSIDE PersistentPageCache, precisely so they follow the user between
+    // pages — the same exemption the radio has. Their anchors are in no cached
+    // page, so no page's sweep claims them.
+    const docked = fakeMedia('audio', true);
+    register(docked, elsewhere);
+    const onPage = fakeMedia('audio', true);
+    register(onPage, root);
+
+    expect(pauseMediaIn(root)).toEqual([onPage]);
+    expect(docked.paused).toBe(false);
+  });
+
+  it('counts an anchor nested deep in the page, not just a direct child', () => {
+    // Every real anchor here is buried: a button inside a bubble inside a list.
+    const deep = document.createElement('canvas');
+    const wrapper = document.createElement('div');
+    wrapper.appendChild(deep);
+    root.appendChild(wrapper);
+    const el = fakeMedia('audio', true);
+    register(el, deep);
+
+    expect(pauseOffDocumentMediaIn(root)).toEqual([el]);
+  });
+});

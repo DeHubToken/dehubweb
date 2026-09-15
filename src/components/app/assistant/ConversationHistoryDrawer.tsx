@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatDistanceToNow } from 'date-fns';
 import { AppState } from '@/components/app/AppState';
+import { registerOffDocumentMedia } from '@/lib/pause-media-in';
 
 interface Conversation {
   id: string;
@@ -35,15 +36,30 @@ interface MediaItem {
 }
 
 /** Inline audio-playable thumbnail for the media grid */
-function MediaThumbnail({ item, onSelect }: { item: MediaItem; onSelect: (item: MediaItem) => void }) {
+function MediaThumbnail({ item, onSelect, pageAnchor }: {
+  item: MediaItem;
+  onSelect: (item: MediaItem) => void;
+  /** The node that says which page this row's sound belongs to — see below. */
+  pageAnchor: () => Node | null;
+}) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  /**
+   * The element is never put in the document, so PersistentPageCache's subtree
+   * walk could not see it and a track played here carried on through every
+   * later navigation. It is registered against a node the drawer renders
+   * OUTSIDE its portal, because everything on screen here is portaled to
+   * <body>, where no page can claim it.
+   */
+  const unregisterMediaRef = useRef<(() => void) | null>(null);
 
   const toggleAudio = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     if (!audioRef.current) {
-      audioRef.current = new Audio(item.url);
-      audioRef.current.addEventListener('ended', () => setIsPlaying(false));
+      const el = new Audio(item.url);
+      el.addEventListener('ended', () => setIsPlaying(false));
+      unregisterMediaRef.current = registerOffDocumentMedia(el, pageAnchor);
+      audioRef.current = el;
     }
     if (isPlaying) {
       audioRef.current.pause();
@@ -51,11 +67,13 @@ function MediaThumbnail({ item, onSelect }: { item: MediaItem; onSelect: (item: 
     } else {
       audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
     }
-  }, [isPlaying, item.url]);
+  }, [isPlaying, item.url, pageAnchor]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
+      unregisterMediaRef.current?.();
+      unregisterMediaRef.current = null;
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
@@ -136,6 +154,8 @@ export function ConversationHistoryDrawer({
   onLoadConversation,
   currentConversationId,
 }: ConversationHistoryDrawerProps) {
+  const pageAnchorRef = useRef<HTMLSpanElement>(null);
+  const pageAnchor = useCallback(() => pageAnchorRef.current, []);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
   const [activeTab, setActiveTab] = useState<'chats' | 'media'>('chats');
@@ -414,6 +434,15 @@ export function ConversationHistoryDrawer({
 
   return (
     <>
+      {/*
+        Everything the drawer draws is portaled to <body>, outside the page that
+        opened it, so nothing rendered in there can say which page its sound
+        belongs to. This renders in place, and is what the media rows are
+        anchored against. Without it a track started in here plays on for ever:
+        the drawer's open state lives on a cached page that never unmounts, so
+        leaving the assistant does not tear its rows down either.
+      */}
+      <span ref={pageAnchorRef} hidden aria-hidden="true" />
       <Drawer open={open} onOpenChange={onOpenChange}>
         <DrawerContent column glass hideHandle className="h-[85dvh] overflow-hidden border-t border-white/10">
           <DrawerHeader className="shrink-0 border-b border-white/10">
@@ -555,7 +584,12 @@ export function ConversationHistoryDrawer({
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     {mediaItems.map((item) => (
-                      <MediaThumbnail key={item.id} item={item} onSelect={setSelectedMedia} />
+                      <MediaThumbnail
+                        key={item.id}
+                        item={item}
+                        onSelect={setSelectedMedia}
+                        pageAnchor={pageAnchor}
+                      />
                     ))}
                   </div>
                 </div>
