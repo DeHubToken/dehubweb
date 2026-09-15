@@ -2113,6 +2113,35 @@ html[data-theme="light"] [data-page-bento] [class*="from-white/20"] {
   border-color: var(--hairline-strong) !important;
 }
 
+/* The signed-out intro card is a dark hero: its copy sits over video and a
+   near-black plate in every theme. The light remaps do not know that, so they
+   inked the whole zinc ramp inside it - the lede paragraph went #2e2e2e on
+   near-black, the press row and the CTA labels went mid-grey, and both hero
+   buttons rendered as empty rectangles. This is the first screen a signed-out
+   visitor sees.
+
+   Map the ramp back to the white one it was written against rather than
+   forcing everything to #fff, so the weight hierarchy the section was designed
+   with survives. text-white and text-white/55 are already correct and are left
+   alone. */
+html[data-theme="light"] .dehub-intro button,
+html[data-theme="light"] .dehub-intro button svg,
+html[data-theme="light"] .dehub-intro .text-white {
+  color: #ffffff !important;
+}
+html[data-theme="light"] .dehub-intro [class~="text-zinc-300"] {
+  color: rgba(255, 255, 255, 0.80) !important;
+}
+html[data-theme="light"] .dehub-intro [class~="text-zinc-400"] {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+html[data-theme="light"] .dehub-intro [class~="text-zinc-500"] {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+html[data-theme="light"] .dehub-intro [class~="text-white/50"] {
+  color: rgba(255, 255, 255, 0.50) !important;
+}
+
 /* Minimal blackens the search field's zinc bg — restore a hairline outline so the
    input reads as an input on the black canvas. */
 html[data-theme="minimal"] [data-search-bento] input {
