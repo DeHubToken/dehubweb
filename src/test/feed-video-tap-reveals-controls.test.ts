@@ -61,11 +61,13 @@ describe('feed video — a tap on the media toggles playback, it does not naviga
     // detour. Only the scrubber and timestamps may wait for real metadata.
     // `!video.isAudio` is the one other permitted condition: that bar drives the
     // <video> element, and an audio post has none — it carries the visualizer's
-    // own transport instead.
+    // own transport instead. `controlsVisible` is hover plus whatever menu or
+    // slider the pointer is currently inside, so it only ever holds the bar up
+    // for longer.
     const bar = VIDEO_CARD.match(
-      /\{showControls && !video\.isAudio && \(\n\s*<div data-video-controls className="absolute bottom-0([\s\S]*?)\n {8}\)\}/
+      /\{controlsVisible && !video\.isAudio && \(\n\s*<div data-video-controls className="absolute bottom-0([\s\S]*?)\n {8}\)\}/
     );
-    expect(bar, 'transport bar is not gated on showControls alone').not.toBeNull();
+    expect(bar, 'transport bar is not gated on controls visibility alone').not.toBeNull();
     expect(bar![1]).toContain('handlePlayClick()');
     // The play button comes before the duration gate, so it renders either way.
     expect(bar![1].indexOf('handlePlayClick()')).toBeLessThan(
