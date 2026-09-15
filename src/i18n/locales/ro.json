@@ -4616,6 +4616,13 @@
     "kindImage": "Imagini",
     "tileSourceKind": "{{source}} · {{kind}}"
   },
+  "banned": {
+    "title": "Contul tău este interzis",
+    "body": "Poți să te conectezi în continuare, să citești feed-ul, să deschizi mesajele și să vezi tot ce se află în contul tău. Nu puteți posta, comenta, reacționa, urmări sau trimite mesaje.",
+    "line": "Contul tău este interzis, deci nu poți posta, comenta sau trimite mesaje.",
+    "reason": "Motiv: {{reason}}",
+    "deleteAccount": "Ștergeți contul și datele"
+  },
   "footer": {
     "about": "Despre noi",
     "contact": "Contact",

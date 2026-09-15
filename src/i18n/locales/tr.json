@@ -4859,5 +4859,12 @@
     "kindAudio": "Ses",
     "kindImage": "Resimler",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "Hesabınız yasaklandı",
+    "body": "Yine de oturum açabilir, özet akışınızı okuyabilir, mesajlarınızı açabilir ve hesabınızdaki her şeyi görebilirsiniz. Mesaj gönderemez, yorum yapamaz, tepki veremez, takip edemez veya mesaj gönderemezsiniz.",
+    "line": "Hesabınız yasaklandı, bu nedenle yayınlayamaz, yorum yapamaz veya mesaj gönderemezsiniz.",
+    "reason": "Neden: {{reason}}",
+    "deleteAccount": "Hesabınızı ve verilerinizi silin"
   }
 }

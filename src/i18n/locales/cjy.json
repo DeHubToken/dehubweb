@@ -2412,11 +2412,18 @@
     "errorNeedRights": "请确认你拥有此内容的权利",
     "errorClipboard": "无法读取剪贴板 — 请改为手动粘贴",
     "errorQueueFailed": "无法排队那次导入",
-    "kindAudio": "音频",
     "publishAs": "Publish as",
     "kindVideo": "Video",
+    "kindAudio": "音频",
     "kindImage": "Pictures",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "你的账户被禁用了",
+    "body": "你仍然可以登录、阅读你的信息流、打开你的消息和查看你账户上的所有内容。你不能发帖、评论、点赞、关注或发送消息。",
+    "line": "你的账户被禁用了，所以你不能发帖、评论或发送消息。",
+    "reason": "原因：{{reason}}",
+    "deleteAccount": "删除你的账户和数据"
   },
   "post": {
     "like": "喜欢",

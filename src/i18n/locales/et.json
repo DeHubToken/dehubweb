@@ -4730,5 +4730,12 @@
     "kindAudio": "Heli",
     "kindImage": "Pildid",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "Sinu konto on keelatud",
+    "body": "Saad endiselt sisse logida, oma voogu lugeda, sõnumeid avada ja kõike oma kontol näha. Sa ei saa postitada, kommenteerida, reageerida, jälgida ega sõnumeid saata.",
+    "line": "Sinu konto on keelatud, nii et sa ei saa postitada, kommenteerida ega sõnumeid saata.",
+    "reason": "Põhjus: {{reason}}",
+    "deleteAccount": "Kustuta oma konto ja andmed"
   }
 }

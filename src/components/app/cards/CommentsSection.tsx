@@ -35,6 +35,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { TranslatableText, useTranslation } from '../TranslatableText';
+import { BannedAccountNotice } from '@/components/app/BannedAccountNotice';
+import { useBannedAccount } from '@/hooks/use-banned-account';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
@@ -768,6 +770,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, isAuthenticated, walletAddress } = useAuth();
+  const { isBanned: accountBanned } = useBannedAccount();
   const isMobile = useIsMobile();
   // A soft keyboard's return key is a bare Enter — there is no Shift to hold —
   // so on touch it has to mean "new line", and Post becomes the only way to
@@ -1804,7 +1807,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     }
   }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient, armAssistantReply]);
 
-  const canPost = (newComment.trim() || voiceNote || commentImage || commentGifUrl) && !isSubmitting;
+  // A banned account reads every comment on DeHub and writes none of them.
+  const canPost = !accountBanned && (newComment.trim() || voiceNote || commentImage || commentGifUrl) && !isSubmitting;
 
   // Drag-to-swipe for comments tab indicator (after all hooks)
   type CommentsTab = 'replies' | 'quotes' | 'reposts' | 'search';
@@ -2348,6 +2352,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             className="hidden"
             onChange={handleImageSelect}
           />
+
+          <BannedAccountNotice variant="line" className="mt-2" />
 
           <div className={cn("flex flex-col gap-1.5", isMobile ? "pb-0 mt-1" : "pb-1 mt-[18px]")}>
             {isRecording ? (

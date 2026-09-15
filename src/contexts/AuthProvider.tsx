@@ -218,6 +218,12 @@ function normalizeUser(userData: Partial<DeHubUser> | null | undefined, fallback
     // without one cannot be paid on Solana at all.
     solanaAddress: safe.solanaAddress ?? null,
     solanaAddressVerifiedAt: safe.solanaAddressVerifiedAt ?? null,
+    // A ban no longer ends the session — the account signs in and reads like
+    // any other, and is refused on writes. Dropping these here would leave the
+    // app unable to say why a post will not send.
+    isBanned: safe.isBanned ?? false,
+    bannedReason: safe.bannedReason ?? null,
+    bannedAt: safe.bannedAt ?? null,
   };
 }
 

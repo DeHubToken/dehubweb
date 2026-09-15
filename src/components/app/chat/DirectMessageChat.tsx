@@ -25,6 +25,7 @@ import { useTranslation, renderChatTextWithLinks } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl, peerAddressForConversation } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
+import { useBannedAccount } from '@/hooks/use-banned-account';
 import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, pinDmMessage, unpinDmMessage, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
 import { apiCall, getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -807,6 +808,7 @@ function useDmPin(conversationId: string, address: string | undefined, conversat
 
 export function DirectMessageChat({ conversation, onBack, initialComposerText, dock = false, headerActions }: DirectMessageChatProps) {
   const { user, walletAddress, openLoginModal } = useAuth();
+  const { isBanned: accountBanned } = useBannedAccount();
   const { setCallMessageHandler } = useCall();
   const queryClient = useQueryClient();
   const { t: tr } = useI18n();
@@ -2074,9 +2076,11 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         peerName={displayName}
         onSendMessage={handleSendMessage}
         onTipClick={feeRequired ? undefined : () => setShowTipDialog(true)}
-        sendDisabled={!!feeSendDisabled || (initError && isVirtualConv)}
+        sendDisabled={accountBanned || !!feeSendDisabled || (initError && isVirtualConv)}
         sendDisabledReason={
-          initError && isVirtualConv
+          accountBanned
+            ? tr('banned.line')
+            : initError && isVirtualConv
             ? 'Connection failed — tap Retry above'
             : feeSendDisabled
             ? `Insufficient DHB (need ${activeFee.toLocaleString()})`

@@ -4732,5 +4732,12 @@
     "kindAudio": "Ljud",
     "kindImage": "Bilder",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "Ditt konto är spärrat",
+    "body": "Du kan fortfarande logga in, läsa ditt flöde, öppna dina meddelanden och se allt på ditt konto. Du kan inte publicera, kommentera, reagera, följa eller skicka meddelanden.",
+    "line": "Ditt konto är spärrat, så du kan inte lägga upp, kommentera eller skicka meddelanden.",
+    "reason": "Orsak: {{reason}}",
+    "deleteAccount": "Radera ditt konto och dina data"
   }
 }

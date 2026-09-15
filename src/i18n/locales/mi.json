@@ -2476,5 +2476,12 @@
     "kindAudio": "Ororongo",
     "kindImage": "Whakaahua",
     "tileSourceKind": "{{source}} · {{kind}}"
+  },
+  "banned": {
+    "title": "Kua aukatihia tō pūkete",
+    "body": "Ka taea tonu e koe te takiuru, te pānui i tō kai, te whakatuwhera i ō karere, me te kite i ngā mea katoa i runga i tō pūkete. Kaore e taea e koe te tuku, te korero, te whakautu, te whai, te tuku karere ranei.",
+    "line": "Kua aukatihia to kaute, na reira kaore e taea e koe te tuku, te korero, te tuku karere ranei.",
+    "reason": "Ngā take: {{reason}}",
+    "deleteAccount": "Mukua tō pūkete me ngā raraunga"
   }
 }
