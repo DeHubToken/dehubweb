@@ -649,8 +649,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "best-decentralised-social-media-platforms-2026",
     "title": "Best Decentralised Social Media Platforms 2026: DeHub vs Bluesky, Farcaster, Lens & Mastodon",
     "seoTitle": "Best Decentralized Social Media Platforms 2026 | DeHub",
-    "seoDescription": "The best decentralized social media platforms of 2026 compared: Bluesky, Mastodon, Farcaster, Lens and DeHub. Which decentralised network actually pays creators?",
-    "excerpt": "A clear, honest comparison of the best decentralised social media platforms in 2026 — Bluesky, Mastodon, Farcaster, Lens and DeHub — ranked by what each actually does for creators.",
+    "seoDescription": "The best decentralized social media platforms of 2026 compared: Bluesky, Mastodon, Farcaster, Lens and DeHub. Which network actually pays creators — and who decides what gets taken down?",
+    "excerpt": "An honest comparison of the best decentralised social media platforms in 2026 — Bluesky, Mastodon, Farcaster, Lens and DeHub — judged on two things most guides skip: how a creator actually gets paid, and who decides what comes down.",
     "content": "",
     "bannerImage": "/media/best-decentralised-social-media-platforms-2026-banner.png",
     "bannerImageAlt": "Comparison of the best decentralised social media platforms in 2026 including DeHub, Bluesky, Farcaster, Lens and Mastodon",
@@ -658,17 +658,20 @@ export const blogPostsMetadata: BlogPost[] = [
       "name": "DeHub Team"
     },
     "publishedAt": "2026-03-06T14:50:00.000Z",
-    "updatedAt": "2026-03-06T14:50:00.000Z",
+    "updatedAt": "2026-09-15T10:00:00.000Z",
     "tags": [
       "decentralised social media",
       "web3 social media",
       "best platforms 2026",
       "crypto social media app",
       "creator monetisation",
+      "tradable subscriptions",
+      "paid DMs",
+      "decentralised moderation",
       "DeHub",
       "Bluesky"
     ],
-    "readingTime": 13,
+    "readingTime": 20,
     "featured": false,
     "status": "published"
   },
