@@ -378,7 +378,8 @@ export default function LeaderboardPage() {
             <BrandIcon src={trophyIcon} alt="" className="w-11 h-11 object-contain" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">{t('leaderboard.title')}</h1>
+            <h1 className="sr-only">DeHub Leaderboard — Decentralised Social Media, Censorship Resistant &amp; Freedom of Speech</h1>
+            <p className="text-xl font-bold text-white" aria-hidden="true">{t('leaderboard.title')}</p>
             <p className="text-zinc-500 text-sm">{t('leaderboard.subtitle')}</p>
           </div>
         </div>
