@@ -277,18 +277,41 @@ All colors MUST be HSL.
   body {
     @apply text-foreground;
     background-color: black;
-    /* `hidden` still allows programmatic horizontal scrolling — focusing the
-       chat composer made the browser scroll-into-view sideways when any
-       element overflowed the viewport. `clip` forbids scrolling entirely
-       (older browsers keep the `hidden` fallback). */
+    /* This used to carry an `overflow-x: clip` line after the `hidden` one,
+       because `hidden` still permits PROGRAMMATIC horizontal scrolling and
+       focusing the chat composer once made the browser scroll-into-view
+       sideways. It never took effect — the unlayered
+       `html, body { overflow-x: hidden }` rule further down this file wins on
+       source order — and it has been removed rather than left looking live.
+
+       DO NOT simply reinstate it. `hidden` on one axis forces the other to
+       compute to `auto`, and that is the only reason `body` is this app's
+       scrolling element; `clip` does not, so switching back moves the
+       scroller to the viewport. Measured on the deployed build: with `clip`,
+       `body`'s computed `overflow-y` becomes `visible`,
+       `documentElement.scrollHeight` jumps from 812 to 11289 and
+       `window.scrollY` starts reporting real offsets — which would silently
+       invert every `document.body.scrollTop` call site in the app. Moving to
+       a viewport scroller may well be the right end state, but it is a
+       deliberate migration, not a one-line restore. See `lib/document-scroll`.
+
+       There is also nothing to fix right now: `body.scrollWidth` equals
+       `clientWidth` at both 375px and 1024px, and `body.scrollLeft = 150`
+       stays at 0, so no horizontal overflow exists to be scrolled into. */
     overflow-x: hidden;
-    overflow-x: clip;
     overscroll-behavior-y: none;
     touch-action: manipulation;
   }
 
   #root {
+    /* `vh` on iOS is the LARGE viewport — the height the page would have with
+       Safari's URL bar retracted — so `100vh` is taller than what you can
+       actually see whenever the bar is showing, and every page carries that
+       much phantom scroll before it has any content. `dvh` is the height that
+       is really on screen. Declared second so a browser without `dvh` keeps
+       the `vh` line; the rest of the app already uses `dvh` in 125 places. */
     min-height: 100vh;
+    min-height: 100dvh;
     width: 100%;
     background-color: black;
   }

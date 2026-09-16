@@ -2,11 +2,20 @@
  * Document scroll helpers
  * =======================
  * The app's scrolling element is `document.body`, not `documentElement`:
- * `index.css` gives `html, body { height: 100% }` and `body { overflow-x: clip }`,
- * and a non-visible overflow on one axis forces the other to compute to `auto`.
- * So body becomes a viewport-height scroll container with the page inside it,
- * `html` never overflows, and `window.scrollY` / `window.scrollTo()` are both
- * no-ops — a silent trap that has broken several "scroll to top" call sites.
+ * `index.css` gives `html, body { height: 100% }` and — this is the load-bearing
+ * part — `html, body { overflow-x: hidden }`. `hidden` on one axis forces the
+ * other to compute to `auto`, so body becomes a viewport-height scroll container
+ * with the page inside it, `html` never overflows, and `window.scrollY` /
+ * `window.scrollTo()` are both no-ops — a silent trap that has broken several
+ * "scroll to top" call sites.
+ *
+ * It is `hidden` that does this, NOT the `overflow-x: clip` this comment used to
+ * name. `clip` leaves the other axis `visible`, so believing the `clip` version
+ * leads you to "restore" it and move the scroller to the viewport by accident.
+ *
+ * The same shape catches scroll EVENTS: a scroll on body does not bubble, so
+ * `window.addEventListener('scroll', fn)` never fires. Pass `{ capture: true }`,
+ * or listen on `document` with capture, which sees every element scroller.
  *
  * Always go through these helpers instead of touching one target and hoping.
  */
