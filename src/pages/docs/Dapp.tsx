@@ -168,7 +168,7 @@ const Dapp = () => {
   const badgeKeys = [
     'badgeNone', 'badgeCrab', 'badgeLobster', 'badgePiranha', 'badgeTortoise',
     'badgeCobra', 'badgeOctopus', 'badgeCrocodile', 'badgeDolphin', 'badgeTigerShark',
-    'badgeKillerWhale', 'badgeGreatWhiteShark', 'badgeBlueWhale', 'badgeMegalodon'
+    'badgeGreatWhiteShark', 'badgeKillerWhale', 'badgeBlueWhale', 'badgeMegalodon'
   ];
 
   /**
@@ -210,8 +210,8 @@ const Dapp = () => {
     { tierKey: 'spTierCrocodile', hold: '1m+ $DHB', boosts: 2, minutes: 45, image: badgeImage('Crocodile'), unlockKey: 'spNameFlakJacket' },
     { tierKey: 'spTierDolphin', hold: '2m+ $DHB', boosts: 3, minutes: 50, image: badgeImage('Dolphin'), unlockKey: 'spNamePrecisionStrike' },
     { tierKey: 'spTierTigerShark', hold: '3m+ $DHB', boosts: 3, minutes: 60, image: badgeImage('Tiger Shark'), unlockKey: 'spNameHarpoon' },
-    { tierKey: 'spTierKillerWhale', hold: '5m+ $DHB', boosts: 4, minutes: 60, image: badgeImage('Killer Whale'), unlockKey: null },
-    { tierKey: 'spTierGreatWhiteShark', hold: '10m+ $DHB', boosts: 5, minutes: 70, image: badgeImage('Great White Shark'), unlockKey: null },
+    { tierKey: 'spTierGreatWhiteShark', hold: '5m+ $DHB', boosts: 4, minutes: 60, image: badgeImage('Great White Shark'), unlockKey: null },
+    { tierKey: 'spTierKillerWhale', hold: '10m+ $DHB', boosts: 5, minutes: 70, image: badgeImage('Killer Whale'), unlockKey: null },
     { tierKey: 'spTierBlueWhale', hold: '25m+ $DHB', boosts: 8, minutes: 90, image: badgeImage('Blue Whale'), unlockKey: 'spNameFrontRow' },
     { tierKey: 'spTierMegalodon', hold: '50m+ $DHB', boosts: 12, minutes: 120, image: badgeImage('Megalodon'), unlockKey: 'spNameDeepCurrent' },
   ];
@@ -227,8 +227,8 @@ const Dapp = () => {
     { badgeKey: 'badgeCrocodile', threshold: "1m+ $DHB", fee: "5.17%", color: "bg-muted", image: badgeImage('Crocodile') },
     { badgeKey: 'badgeDolphin', threshold: "2m+ $DHB", fee: "4.48%", color: "bg-muted", image: badgeImage('Dolphin') },
     { badgeKey: 'badgeTigerShark', threshold: "3m+ $DHB", fee: "3.79%", color: "bg-muted", image: badgeImage('Tiger Shark') },
-    { badgeKey: 'badgeKillerWhale', threshold: "5m+ $DHB", fee: "3.10%", color: "bg-muted", image: badgeImage('Killer Whale') },
-    { badgeKey: 'badgeGreatWhiteShark', threshold: "10m+ $DHB", fee: "2.41%", color: "bg-muted", image: badgeImage('Great White Shark') },
+    { badgeKey: 'badgeGreatWhiteShark', threshold: "5m+ $DHB", fee: "3.10%", color: "bg-muted", image: badgeImage('Great White Shark') },
+    { badgeKey: 'badgeKillerWhale', threshold: "10m+ $DHB", fee: "2.41%", color: "bg-muted", image: badgeImage('Killer Whale') },
     { badgeKey: 'badgeBlueWhale', threshold: "25m+ $DHB", fee: "1.72%", color: "bg-muted", image: badgeImage('Blue Whale') },
     { badgeKey: 'badgeMegalodon', threshold: "50m+ $DHB", fee: "1.00%", color: "bg-muted", image: badgeImage('Megalodon') },
   ];
