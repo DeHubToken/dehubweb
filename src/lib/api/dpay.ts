@@ -876,3 +876,59 @@ export async function getCryptoIntentStatus(id: string): Promise<CryptoIntentSta
   if (!response.ok) throw new Error(`Failed to fetch purchase status: ${response.status}`);
   return response.json();
 }
+
+/* ────────────────────────────────────────────────────────────────────────
+ * Direct Base ETH rail
+ *
+ * ETH already on Base has nothing to bridge, so it goes straight to the
+ * gateway wallet and settles by transaction hash — no 1Click hop, no fee on
+ * that hop, and no settlement wait. Every other asset still uses the
+ * intents rail above.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+export interface DirectQuote extends CryptoQuote {
+  depositAddress: string;
+  ethUsd: number;
+}
+
+export async function getDirectQuote(params: { tokensToReceive: number; address?: string }): Promise<DirectQuote> {
+  const response = await fetch(`${DEHUB_API_BASE}/api/dpay/crypto/direct/quote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data?.message || 'Could not price this purchase.');
+  return data;
+}
+
+export async function createDirectIntent(params: {
+  tokensToReceive: number;
+  receiverAddress: string;
+  termsAndServicesAccepted: boolean;
+}): Promise<CryptoIntent> {
+  const token = getAuthToken();
+  if (!token) throw new Error('Authentication required');
+  const response = await fetch(`${DEHUB_API_BASE}/api/dpay/crypto/direct/intent`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(params),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data?.message || 'Could not open this purchase.');
+  return data;
+}
+
+/** Hand the gateway the hash; it verifies the transfer on chain and settles. */
+export async function confirmDirectDeposit(params: { id: string; txHash: string }): Promise<CryptoIntentStatus> {
+  const token = getAuthToken();
+  if (!token) throw new Error('Authentication required');
+  const response = await fetch(`${DEHUB_API_BASE}/api/dpay/crypto/direct/confirm`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(params),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data?.message || 'Could not confirm this purchase.');
+  return data;
+}
