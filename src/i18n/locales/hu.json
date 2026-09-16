@@ -1524,6 +1524,13 @@
     "discardBody": "Piszkozatként elmentettük, szóval itt lesz, ha visszatérsz.",
     "keepWriting": "Írás folytatása",
     "closeAnyway": "Bezárás mégis",
+    "pinnedBadge": "Kitűzve",
+    "pinnedByCreator": "A készítő tűzte ki",
+    "pinAction": "Kitűzés felülre",
+    "unpinAction": "Kitűzés eltávolítása",
+    "pinnedToast": "Kitűzve a bejegyzés tetejére",
+    "unpinnedToast": "Kitűzés eltávolítva",
+    "pinFailed": "Nem sikerült kitűzni ezt a hozzászólást",
     "kidsOnlyThread": "Ez a bejegyzés gyerekeknek szól. Csak Gyermek üzemmódban lehet megjegyzést fűzni hozzá."
   },
   "postInfo": {

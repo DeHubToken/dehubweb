@@ -32,6 +32,19 @@ export interface ApiCommentResponse {
   myReaction?: string | null;
   /** Per-reaction totals — what the tray on the comment's thumb shows. */
   reactionCounts?: Record<string, number> | null;
+  /**
+   * The post's creator pinned this comment to the top of the thread.
+   *
+   * Theirs alone, free, one per post and with no expiry — not the paid Comment
+   * Anchor, which belongs to the comment's own author and lasts fifteen
+   * minutes. The API sorts a pinned comment above an anchored one.
+   */
+  isPinned?: boolean;
+  /**
+   * When a paid Comment Anchor on this comment runs out, ISO. Absent on every
+   * comment that has never been anchored, which is nearly all of them.
+   */
+  anchoredUntil?: string | null;
   writor: {
     username: string;
     displayName?: string;
@@ -114,11 +127,42 @@ export async function getNFTComments(
   limit: number = 20,
   address?: string,
   commentId?: string,
+  topTipped?: string[],
 ): Promise<ApiCommentResponse[]> {
   const response = await apiCall<CommentsApiResponse>(`/api/nft/${tokenId}/comments`, {
-    params: { page, limit, address, ...(commentId ? { commentId } : {}) },
+    params: {
+      page,
+      limit,
+      address,
+      ...(commentId ? { commentId } : {}),
+      // Which comments this post's readers have tipped the most, best first.
+      // The API cannot work this out — a comment tip is a Supabase
+      // `tip_records` row, written by whichever client confirmed the
+      // transaction — so we hand it the ids and it floats them onto page 0.
+      // Without this a heavily tipped comment on page 3 would stay on page 3.
+      ...(topTipped?.length ? { topTipped: topTipped.slice(0, 5).join(',') } : {}),
+    },
   });
   return (response.result?.items || []).filter(item => !item.notFound);
+}
+
+/**
+ * Toggle the creator's pin on a top-level comment.
+ *
+ * The post's creator only — the server refuses everyone else, the comment's
+ * own author included. Pinning a second comment moves the pin off the first.
+ */
+export async function pinComment(commentId: string | number): Promise<{
+  result: boolean;
+  commentId: number;
+  tokenId: number;
+  pinned: boolean;
+}> {
+  return apiCall("/api/pin_comment", {
+    method: "POST",
+    body: { commentId: Number(commentId) },
+    requiresAuth: true,
+  });
 }
 
 export async function postComment(tokenId: string, content: string, replyToId?: string): Promise<PostCommentResponse> {

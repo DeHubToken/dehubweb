@@ -1508,6 +1508,13 @@
     "discardBody": "U qoralama sifatida saqlandi, qaytganingizda shu yerda bo'ladi.",
     "keepWriting": "Yozishda davom eting",
     "closeAnyway": "Baribir yopish",
+    "pinnedBadge": "Mahkamlangan",
+    "pinnedByCreator": "Muallif mahkamlagan",
+    "pinAction": "Yuqoriga mahkamlash",
+    "unpinAction": "Mahkamlashni olib tashlash",
+    "pinnedToast": "Bu postning eng tepasiga mahkamlandi",
+    "unpinnedToast": "Mahkamlash olib tashlandi",
+    "pinFailed": "Bu izohni mahkamlab bo‘lmadi",
     "kidsOnlyThread": "Bu post bolalar uchun. Unga faqat Bolalar rejimi izoh qoldirishi mumkin."
   },
   "postInfo": {

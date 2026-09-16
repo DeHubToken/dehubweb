@@ -57,6 +57,22 @@ export interface Comment {
   badgeBalance?: number;
   /** The tier this author grandfathered, when the account row carries one. */
   badgeLock?: BadgeLock | null;
+  /**
+   * The post's creator pinned this comment to the top of the thread.
+   *
+   * One per post, free, no expiry, and the creator's alone — it outranks both
+   * the paid Comment Anchor and the tipped comments below it.
+   */
+  isPinned?: boolean;
+  /**
+   * When this comment's paid Comment Anchor expires, or undefined.
+   *
+   * The list re-sorts client-side whenever the reader picks Recent / Oldest /
+   * Most Liked, which threw away the order the API had already applied — so an
+   * anchor bought fifteen minutes at the top of a thread and got the middle of
+   * it. The client has to know about the anchor to keep honouring it.
+   */
+  anchoredUntil?: Date;
 }
 
 /** Map an API comment row to the UI shape. */
@@ -135,5 +151,7 @@ export function mapApiComment(apiComment: ApiCommentResponse): Comment {
     // Without the lock a holder whose tier the ladder has since priced out of
     // reach draws the badge below the one they earned.
     badgeLock: hideBadge ? null : parseBadgeLock(apiComment.user?.badgeLock),
+    isPinned: apiComment.isPinned === true,
+    anchoredUntil: apiComment.anchoredUntil ? new Date(apiComment.anchoredUntil) : undefined,
   };
 }

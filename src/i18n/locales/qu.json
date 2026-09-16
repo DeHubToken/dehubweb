@@ -1523,6 +1523,13 @@
     "discardBody": "Borradorpi waqaychasqa kashan, kutimuqtiykiqa kaypim kanqa.",
     "keepWriting": "Qillqayta qatiy",
     "closeAnyway": "Chaypas wichq'ay",
+    "pinnedBadge": "Takyachisqa",
+    "pinnedByCreator": "Ruraqmi takyachirqan",
+    "pinAction": "Hanaqman takyachiy",
+    "unpinAction": "Takyachiyta qichuy",
+    "pinnedToast": "Kay willakuypa hanaqninman takyachisqa",
+    "unpinnedToast": "Takyachiy qichusqa",
+    "pinFailed": "Chay rimariyta mana takyachiyta atinchu",
     "kidsOnlyThread": "Kay qillqasqaqa wawakunapaqmi. Modo Niños nisqalla chaymanta rimayta atin."
   },
   "postInfo": {

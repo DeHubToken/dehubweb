@@ -1491,6 +1491,13 @@
     "discardBody": "A ti fi pamọ́ gẹ́gẹ́ bí àkọsílẹ̀, yóò wà níbí nígbà tí o bá padà.",
     "keepWriting": "Máa bá kíkọ lọ",
     "closeAnyway": "Tì í pa síbẹ̀",
+    "pinnedBadge": "Ti a pin",
+    "pinnedByCreator": "Ẹlẹ́dàá ló pin",
+    "pinAction": "Pin sí òkè",
+    "unpinAction": "Yọ pin kúrò",
+    "pinnedToast": "A ti pin sí òkè ìfìwéránṣẹ́ yìí",
+    "unpinnedToast": "A ti yọ pin kúrò",
+    "pinFailed": "A kò lè pin ọ̀rọ̀ yẹn",
     "kidsOnlyThread": "Iṣẹ́ yìí jẹ́ fún àwọn ọmọdé. Ìlànà Àwọn Ọmọdé nìkan ni ó lè sọ̀rọ̀ lórí rẹ̀."
   },
   "postInfo": {

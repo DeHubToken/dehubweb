@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem , Anchor, Eye, Baby } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem , Anchor, Eye, Baby, Pin, PinOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
@@ -53,7 +53,7 @@ import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
 import { BadgedName } from '@/components/app/BadgedName';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, reactToComment, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo } from '@/lib/api/dehub';
+import { getNFTComments, postComment, reactToComment, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo, pinComment } from '@/lib/api/dehub';
 import {
   applyReactionDelta,
   HAS_NEGATIVE_TRAY,
@@ -224,6 +224,13 @@ interface CommentItemProps {
    */
   onAnchor?: (commentId: string) => void;
   /**
+   * Pin this comment to the top of the thread, or undefined when this viewer
+   * cannot. Set only for the post's own creator, and only on a top-level
+   * comment — the server refuses both cases anyway, and resolving it once in
+   * the section keeps the control off rows where it would only ever fail.
+   */
+  onPin?: (commentId: string) => void;
+  /**
    * Straight comment by the post author on their own post — its permalink is
    * the thread-entry sub-URL (/posts/<tokenId>/b/<id>) rather than ?comment=.
    */
@@ -301,11 +308,12 @@ const PostCreatorContext = createContext<{
   username?: string | null;
 } | null>(null);
 
-function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, highlighted }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
   const [imageFullscreen, setImageFullscreen] = useState(false);
   const avatarUrl = isAssistantAddress(comment.address) ? ASSISTANT_AVATAR : comment.avatar;
+  const i18n = useI18n();
   const translation = useTranslation(comment.text || '');
   const shownName = comment.displayName || comment.username;
 
@@ -437,6 +445,18 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
           {isCreator && (
             <span className="px-1.5 py-0.5 rounded-md bg-white/[0.12] border border-white/[0.12] text-[10px] font-semibold text-white/75 leading-none flex-shrink-0">
               Creator
+            </span>
+          )}
+          {/* Why this comment is at the top. Without it a pinned comment just
+              looks like the newest one, and the creator's choice reads as an
+              accident of ordering. */}
+          {comment.isPinned && (
+            <span
+              title={i18n.t('comments.pinnedByCreator', 'Pinned by the creator')}
+              className="px-1.5 py-0.5 rounded-md bg-white/[0.12] border border-white/[0.12] text-[10px] font-semibold text-white/75 leading-none flex-shrink-0 inline-flex items-center gap-0.5"
+            >
+              <Pin className="w-2.5 h-2.5" />
+              {i18n.t('comments.pinnedBadge', 'Pinned')}
             </span>
           )}
           {/* Same name, different account. Said plainly, and never by hiding
@@ -660,6 +680,32 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
                 <Anchor className="w-4 h-4" />
               </button>
             )}
+            {/*
+              The creator's pin, beside the anchor because they are the two
+              halves of the same idea: this one is free, permanent and the
+              THREAD owner's, the anchor is paid, fifteen minutes and the
+              comment author's. Shown only to the post's creator, and only on a
+              top-level comment — the section resolves both, so the control
+              never appears where the server would refuse it.
+            */}
+            {onPin && !isEditing && (
+              <button
+                onClick={() => onPin(comment.id)}
+                className={cn(
+                  COMMENT_ACTION_HIT,
+                  'transition-colors',
+                  comment.isPinned ? 'text-white' : 'text-white hover:text-zinc-400',
+                )}
+                aria-label={comment.isPinned
+                  ? i18n.t('comments.unpinAction', 'Remove pin')
+                  : i18n.t('comments.pinAction', 'Pin to the top')}
+                title={comment.isPinned
+                  ? i18n.t('comments.unpinAction', 'Remove pin')
+                  : i18n.t('comments.pinAction', 'Pin to the top')}
+              >
+                {comment.isPinned ? <PinOff className="w-4 h-4" /> : <Pin className="w-4 h-4" />}
+              </button>
+            )}
             {isOwnComment && !isEditing && (
               <>
                 <button
@@ -870,6 +916,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   // reverted if the server call fails.
   const [deletedCommentIds, setDeletedCommentIds] = useState<Set<string>>(new Set());
   const [editOverrides, setEditOverrides] = useState<Map<string, string>>(new Map());
+  /**
+   * Which comment the creator just pinned, before the refetch confirms it.
+   *
+   * `null` means "no override, read the server". An empty string means the pin
+   * was just taken off, which is why this cannot simply be `string | null` with
+   * null doing both jobs.
+   */
+  const [pinOverride, setPinOverride] = useState<string | null>(null);
   // Track reaction state overrides for optimistic updates. Every field is
   // optional so a like tap never clobbers a dislike count it didn't touch.
   const [likeOverrides, setLikeOverrides] = useState<
@@ -964,6 +1018,20 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
 
   const MAX_VOICE_DURATION = 30;
 
+  /**
+   * Every comment tip on this post, in one query, plus the five best-tipped
+   * ids. Read before the comments themselves because those ids are part of
+   * what is asked for: the API floats them onto page 0 so a well-tipped
+   * comment deep in a long thread still leads it.
+   *
+   * On a thread with no tipped comments — which is most of them — the id list
+   * is empty, the query parameter is left off entirely, and nothing about the
+   * request changes.
+   */
+  const { data: commentTips } = useCommentTips(tokenId);
+  const topTippedIds = commentTips.topTippedIds;
+  const topTippedKey = topTippedIds.join(',');
+
   // Fetch comments from API. Paged: the single-page version capped every
   // thread at its 20 newest roots with no way to read the rest.
   const COMMENTS_PAGE_SIZE = 20;
@@ -975,7 +1043,12 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['comments', tokenId, walletAddress, focusCommentId ?? null],
+    // topTippedKey is in the key because it changes what the server returns
+    // on page 0. It arrives one tick after the comments on a thread that has
+    // tipped comments — the tip query has to resolve first — so those threads
+    // refetch once and settle. Threads with none (nearly all of them) keep
+    // the empty key they started with and never refetch.
+    queryKey: ['comments', tokenId, walletAddress, focusCommentId ?? null, topTippedKey],
     queryFn: ({ pageParam }) =>
       getNFTComments(
         tokenId,
@@ -986,6 +1059,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         // ancestors, so one request holds the linked row however deep in the
         // thread it sits. Sending it again on page 1 would duplicate it.
         pageParam === 0 ? focusCommentId : undefined,
+        pageParam === 0 ? topTippedIds : undefined,
       ),
     initialPageParam: 0,
     // A short page is the last page — the API exposes no total.
@@ -1071,9 +1145,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         let result = c;
         if (editedText !== undefined) result = { ...result, text: editedText };
         if (override) result = { ...result, ...override };
+        // The pin moves instantly. It is one per post, so the override is a
+        // single id rather than a map — and it has to clear the flag on every
+        // OTHER row, not just set it on this one, or the comment that held
+        // the pin a moment ago keeps its badge until the refetch lands.
+        if (pinOverride !== null) result = { ...result, isPinned: result.id === pinOverride };
         return result;
       });
-  }, [apiComments, optimisticComments, likeOverrides, deletedCommentIds, editOverrides]);
+  }, [apiComments, optimisticComments, likeOverrides, deletedCommentIds, editOverrides, pinOverride]);
 
   // Tagging @assistant produces a real comment, but only once the model has
   // answered — several seconds after the post returns. This keeps a placeholder
@@ -1405,7 +1484,32 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       );
     }
 
+    /**
+     * Three things sit above whatever order the reader picked, and they are
+     * read in this order:
+     *
+     *   0. the creator's pinned comment — theirs, free, one per post;
+     *   1. a paid Comment Anchor, while its window is still open;
+     *   2. the five best-tipped comments, most tipped first.
+     *
+     * Applied on top of Recent / Oldest / Most Liked rather than as another
+     * option beside them: a pin is the creator saying "read this one", and it
+     * has to hold whichever way the reader sorted. The API sorts the same way,
+     * and this list re-sorts client-side on every tab and search — which is
+     * exactly how a bought anchor used to lose the top of the thread the
+     * moment the page it arrived on was rendered.
+     */
+    const now = Date.now();
+    const lift = ({ comment }: CommentThread) => {
+      if (comment.isPinned) return 0;
+      if (comment.anchoredUntil && comment.anchoredUntil.getTime() > now) return 1;
+      const tipped = topTippedIds.indexOf(comment.id);
+      return tipped === -1 ? Number.MAX_SAFE_INTEGER : 2 + tipped;
+    };
+
     return [...filtered].sort((a, b) => {
+      const lifted = lift(a) - lift(b);
+      if (lifted !== 0) return lifted;
       if (sortBy === 'liked') {
         // Sort by likes (most liked first)
         return b.comment.likes - a.comment.likes;
@@ -1417,7 +1521,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       // Default: sort by most recent (newest first)
       return b.comment.createdAt.getTime() - a.comment.createdAt.getTime();
     });
-  }, [groupedComments, searchQuery, sortBy, focusOnlyThread, focusThreadId]);
+  }, [groupedComments, searchQuery, sortBy, focusOnlyThread, focusThreadId, topTippedIds]);
 
   /**
    * Bring the linked comment into view once it has actually rendered.
@@ -1487,6 +1591,32 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         onError: (error: any) => toast.error(error?.message || 'Could not anchor that comment'),
       },
     );
+  };
+
+  /**
+   * Pin a comment to the top of your own thread, or take the pin off.
+   *
+   * The creator's, free, one per post — the opposite side of the anchor above.
+   * The override moves the badge and the row instantly; the refetch behind it
+   * is what makes the change survive a reload, and a refusal puts the list
+   * back exactly as it was.
+   */
+  const handlePinComment = async (commentId: string) => {
+    const wasPinned = allComments.find(c => c.id === commentId)?.isPinned === true;
+    const previous = pinOverride;
+    setPinOverride(wasPinned ? '' : commentId);
+    try {
+      const { pinned } = await pinComment(commentId);
+      toast.success(
+        pinned
+          ? t('comments.pinnedToast', 'Pinned to the top of this post')
+          : t('comments.unpinnedToast', 'Pin removed'),
+      );
+      await queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
+    } catch (err: any) {
+      setPinOverride(previous);
+      toast.error(err?.message || t('comments.pinFailed', 'Could not pin that comment'));
+    }
   };
 
   const handleUserPress = useCallback((username: string) => {
@@ -1640,10 +1770,6 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     const found = allComments.find(c => c.id === commentId);
     if (found) setTipComment(found);
   };
-
-  // One query for every loaded comment's tip total, fanned out per row below.
-  const allCommentIds = useMemo(() => allComments.map(c => c.id), [allComments]);
-  const { data: commentTips } = useCommentTips(tokenId, allCommentIds);
 
   const handleDeleteComment = async (commentId: string) => {
     // Optimistic: hide the row instantly, restore it if the server refuses.
@@ -1869,10 +1995,13 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           onEdit={handleEditComment}
           onDelete={handleDeleteComment}
           onTip={handleTip}
-          tipTotal={commentTips?.[comment.id]}
+          tipTotal={commentTips.totals[comment.id]}
           onUserPress={handleUserPress}
           isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
           onAnchor={canAnchor ? handleAnchor : undefined}
+          // Root comments only — a reply is sorted inside a subtree nothing
+          // re-orders, so pinning one would move nothing.
+          onPin={isOwnThread ? handlePinComment : undefined}
           threadLineBelow={shown.length > 0}
           isThreadEntry={authorThreadIds.has(comment.id)}
           highlighted={comment.id === focusCommentId}
@@ -1891,7 +2020,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             onEdit={handleEditComment}
             onDelete={handleDeleteComment}
             onTip={handleTip}
-            tipTotal={commentTips?.[reply.id]}
+            tipTotal={commentTips.totals[reply.id]}
             onUserPress={handleUserPress}
             isReply
             threadLineAbove

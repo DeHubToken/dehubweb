@@ -1384,6 +1384,13 @@
     "discardBody": "We don keep-am as draft, so e go still dey here when you kam back.",
     "keepWriting": "Continue for write",
     "closeAnyway": "Close-am sef",
+    "pinnedBadge": "Dem don pin am",
+    "pinnedByCreator": "Na di creator pin am",
+    "pinAction": "Pin am for top",
+    "unpinAction": "Comot di pin",
+    "pinnedToast": "Dem don pin am for di top of dis post",
+    "unpinnedToast": "Dem don comot di pin",
+    "pinFailed": "We no fit pin dat comment",
     "kidsOnlyThread": "Dis post na for pikin dem. Only Kids Mode fit comment on am."
   },
   "postInfo": {

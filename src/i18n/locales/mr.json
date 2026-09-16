@@ -1523,6 +1523,13 @@
     "discardBody": "ती मसुदा म्हणून जतन झाली आहे, परत आल्यावर इथेच मिळेल.",
     "keepWriting": "लिहीत राहा",
     "closeAnyway": "तरीही बंद करा",
+    "pinnedBadge": "पिन केलेले",
+    "pinnedByCreator": "निर्मात्याने पिन केले",
+    "pinAction": "वर पिन करा",
+    "unpinAction": "पिन काढा",
+    "pinnedToast": "या पोस्टच्या सर्वात वर पिन केले",
+    "unpinnedToast": "पिन काढले",
+    "pinFailed": "ती टिप्पणी पिन करता आली नाही",
     "kidsOnlyThread": "मुलांसाठी ही पोस्ट. फक्त लहान मुलेच त्यावर भाष्य करू शकतात."
   },
   "postInfo": {

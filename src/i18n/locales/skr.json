@@ -1435,6 +1435,13 @@
     "discardBody": "ایہ مسودے وچ محفوظ ہے، واپس آوݨ تے ایتھاں ہی ملسی۔",
     "keepWriting": "لکھدے رہوو",
     "closeAnyway": "تاں وی بند کرو",
+    "pinnedBadge": "پن تھیل",
+    "pinnedByCreator": "بݨاوݨ آلے پن کیتا",
+    "pinAction": "اُتے پن کرو",
+    "unpinAction": "پن ہٹاؤ",
+    "pinnedToast": "ایں پوسٹ دے سبھ تُوں اُتے پن کر ڈتا گیا",
+    "unpinnedToast": "پن ہٹا ڈتا گیا",
+    "pinFailed": "او تبصرہ پن نہ تھی سگیا",
     "kidsOnlyThread": "ایہ پوسٹ بچیاں لئی اے۔ صرف بچیاں موڈ اس تے تبصرہ کر سکے۔"
   },
   "postInfo": {

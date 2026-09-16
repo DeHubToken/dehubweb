@@ -1532,6 +1532,13 @@
     "discardBody": "Il est enregistré comme brouillon : vous le retrouverez ici à votre retour.",
     "keepWriting": "Continuer à écrire",
     "closeAnyway": "Fermer quand même",
+    "pinnedBadge": "Épinglé",
+    "pinnedByCreator": "Épinglé par le créateur",
+    "pinAction": "Épingler en haut",
+    "unpinAction": "Retirer l'épingle",
+    "pinnedToast": "Épinglé en haut de cette publication",
+    "unpinnedToast": "Épingle retirée",
+    "pinFailed": "Impossible d'épingler ce commentaire",
     "kidsOnlyThread": "Cet article est pour les enfants. Seul le mode enfants peut le commenter."
   },
   "postInfo": {

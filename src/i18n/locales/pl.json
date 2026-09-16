@@ -1528,6 +1528,13 @@
     "discardBody": "Zapisaliśmy go jako szkic, więc będzie tu, gdy wrócisz.",
     "keepWriting": "Pisz dalej",
     "closeAnyway": "Zamknij mimo to",
+    "pinnedBadge": "Przypięty",
+    "pinnedByCreator": "Przypięty przez twórcę",
+    "pinAction": "Przypnij na górze",
+    "unpinAction": "Usuń przypięcie",
+    "pinnedToast": "Przypięto na górze tego posta",
+    "unpinnedToast": "Przypięcie usunięte",
+    "pinFailed": "Nie udało się przypiąć tego komentarza",
     "kidsOnlyThread": "Ten post jest dla dzieci. Tylko tryb dziecięcy może to komentować."
   },
   "postInfo": {

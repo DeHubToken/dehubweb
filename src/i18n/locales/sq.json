@@ -1506,6 +1506,13 @@
     "discardBody": "Është ruajtur si skicë, kështu që do të jetë këtu kur të kthehesh.",
     "keepWriting": "Vazhdo të shkruash",
     "closeAnyway": "Mbylle gjithsesi",
+    "pinnedBadge": "I fiksuar",
+    "pinnedByCreator": "Fiksuar nga krijuesi",
+    "pinAction": "Fikso lart",
+    "unpinAction": "Hiq fiksimin",
+    "pinnedToast": "U fiksua në krye të këtij postimi",
+    "unpinnedToast": "Fiksimi u hoq",
+    "pinFailed": "Ky koment nuk u fiksua dot",
     "kidsOnlyThread": "Ky postim është për fëmijë. Vetëm modaliteti Kids mund ta komentojë atë."
   },
   "postInfo": {
