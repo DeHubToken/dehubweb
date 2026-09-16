@@ -17,6 +17,7 @@ import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync"
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { useNotificationClickRouting } from "@/hooks/use-notification-click-routing";
+import { useNotificationRealtime } from "@/hooks/use-notification-realtime";
 import { usePageViewAddress, PageViewTracker } from "@/hooks/use-page-view-tracking";
 import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
 import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
@@ -346,6 +347,9 @@ function AppContent() {
   usePageViewAddress(walletAddress);
   // A pushed notification focuses this tab and posts where it wanted to go.
   useNotificationClickRouting();
+  // Session-wide, not page-wide: the bell count and the cached notifications
+  // page both go stale while the reader is anywhere else in the app.
+  useNotificationRealtime();
 
   // Warm the sheet's contents so the skeleton inside it stays theoretical —
   // but only once the visitor has touched the page, or after ten quiet

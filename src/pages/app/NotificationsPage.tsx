@@ -63,7 +63,6 @@ import type { FeedItem } from '@/types/feed.types';
 import { reactionMeta, type PostReaction } from '@/lib/reactions';
 import { getNotificationFilterLabel, type NotificationTypeFilter } from '@/lib/notification-filter-labels';
 import { orderNotificationTabKeys } from '@/lib/notification-tab-order';
-import { useNotificationRealtime } from '@/hooks/use-notification-realtime';
 
 // ============================================================================
 // NotificationPostCards — fetches full NFT data and renders real feed cards
@@ -1537,7 +1536,6 @@ export default function NotificationsPage() {
   const { layerRef: notifTabLayerRef, setRef: setNotifTabRef, rect: notifTabRect, onScroll: onNotifTabScroll } = useTabIndicator(activeTab, undefined, isDraggingRef);
   const { isAuthenticated, walletAddress: pageWalletAddress } = useAuth();
   const reduceMotion = useReducedMotion();
-  useNotificationRealtime();
 
   // Swallow the notifications list at the sticky header bento's top edge under
   // the glass themes, exactly like the home feed cuts at its nav pill.
