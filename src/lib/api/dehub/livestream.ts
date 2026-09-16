@@ -174,10 +174,26 @@ export async function getLiveStream(streamId: string): Promise<{ result: LiveStr
   return apiCall<{ result: LiveStream }>(`/api/live/${streamId}`);
 }
 
+/*
+ * The owner-only credential routes answer with the bare object — `{ streamKey }`
+ * and `{ ingestUrl }` — not the `{ result }` envelope most of the API wears.
+ * Reading them through the envelope yields undefined, which the encoder
+ * screen rendered as an empty Server field for every self-hosted stream (a
+ * Livepeer one was rescued by a hardcoded fallback). Both shapes are accepted
+ * so a backend that later adopts the envelope changes nothing here.
+ */
+function unwrap<T extends object>(res: T | { result?: T } | null | undefined): Partial<T> {
+  if (!res || typeof res !== 'object') return {};
+  const enveloped = (res as { result?: T }).result;
+  return enveloped && typeof enveloped === 'object' ? enveloped : (res as T);
+}
+
 export async function getStreamKey(streamId: string): Promise<{ result: StreamKeyInfo }> {
-  return apiCall<{ result: StreamKeyInfo }>(`/api/live/${streamId}/key`, {
+  const res = await apiCall<StreamKeyInfo | { result: StreamKeyInfo }>(`/api/live/${streamId}/key`, {
     requiresAuth: true,
   });
+  const body = unwrap(res);
+  return { result: { streamKey: body.streamKey || '', ingestUrl: body.ingestUrl || '' } };
 }
 
 export async function getStreamActivities(
@@ -202,9 +218,11 @@ export async function getStreamActivities(
 }
 
 export async function getStreamIngestUrl(streamId: string): Promise<{ result: { ingestUrl: string } }> {
-  return apiCall<{ result: { ingestUrl: string } }>(`/api/live/${streamId}/ingesturl`, {
-    requiresAuth: true,
-  });
+  const res = await apiCall<{ ingestUrl: string } | { result: { ingestUrl: string } }>(
+    `/api/live/${streamId}/ingesturl`,
+    { requiresAuth: true }
+  );
+  return { result: { ingestUrl: unwrap(res).ingestUrl || '' } };
 }
 
 export async function updateStreamSettings(

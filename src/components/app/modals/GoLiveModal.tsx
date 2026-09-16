@@ -982,10 +982,16 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
       let ingestUrl = '';
       let playbackUrl = '';
 
-      // Step 5a: Get ingest URL from API
+      // Step 5a: the ingest URL. /user_mint already answered with it beside
+      // the key (Step 4), so a stream that came from the mint response has
+      // nothing left to fetch. Only credentials recovered through the
+      // nft_info fallback need the separate call.
+      ingestUrl = mintResponse.stream?.ingestUrl || '';
       try {
-        const ingestRes = await getStreamIngestUrl(streamId);
-        ingestUrl = ingestRes?.result?.ingestUrl || '';
+        if (!ingestUrl) {
+          const ingestRes = await getStreamIngestUrl(streamId);
+          ingestUrl = ingestRes?.result?.ingestUrl || '';
+        }
         if (ingestUrl) logger.info('Ingest URL obtained', { ingestUrl });
       } catch (e) {
         logger.warn('getStreamIngestUrl failed, trying Edge Function...', e);
