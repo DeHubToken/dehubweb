@@ -29,7 +29,8 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { refreshWalletBalances, readDhbBalance, watchForDhbArrival } from '@/lib/wallet/balance-refresh';
 import { ethers } from 'ethers';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { toast } from 'sonner';
@@ -74,6 +75,7 @@ interface SwapToDHBDrawerProps {
 export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
   const { walletAddress } = useAuth();
   const { allTokens } = useAllChainsTokens();
+  const queryClient = useQueryClient();
 
   const [dhbAmount, setDhbAmount] = useState('');
   const [quote, setQuote] = useState<CryptoQuote | null>(null);
@@ -87,6 +89,8 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
   const [tokenPickerOpen, setTokenPickerOpen] = useState(false);
   const [selectedTokenAddress, setSelectedTokenAddress] = useState<string>('0x0');
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const confirmRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const watchRef = useRef<(() => void) | null>(null);
 
   const debouncedAmount = useDebouncedValue(dhbAmount, 500);
 
@@ -160,9 +164,14 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
     setProgress('');
   }, [open]);
 
-  useEffect(() => () => {
-    if (pollRef.current) clearInterval(pollRef.current);
+  /** Every timer a purchase starts, dropped in one place. */
+  const stopWatchers = useCallback(() => {
+    if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
+    if (confirmRef.current) { clearInterval(confirmRef.current); confirmRef.current = null; }
+    if (watchRef.current) { watchRef.current(); watchRef.current = null; }
   }, []);
+
+  useEffect(() => () => stopWatchers(), [stopWatchers]);
 
   // Price the purchase at the gateway's peg whenever the amount or token moves.
   useEffect(() => {
@@ -225,6 +234,20 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
     setBuying(true);
     setError('');
     setProgress('Opening your purchase...');
+
+    // What the wallet holds before any of this. The delivery watcher compares
+    // against it, so it has to be read before the payment goes out.
+    const baseline = await readDhbBalance(walletAddress, BASE_CHAIN_ID).catch(() => null);
+
+    /** Settle the purchase the moment the DHB is real, wherever that news came from. */
+    const settle = () => {
+      stopWatchers();
+      setBuying(false);
+      setSuccess(true);
+      refreshWalletBalances(queryClient);
+      toast.success(dhbText(`${amt.toLocaleString()} DHB delivered to your wallet`));
+    };
+
     try {
       const intent = isDirectEth
         ? await createDirectIntent({
@@ -252,6 +275,22 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
       });
       setProgress('Payment sent. Waiting for delivery...');
 
+      // The payment has left the wallet — show that straight away rather than
+      // letting the five-minute token cache keep the old number on screen.
+      refreshWalletBalances(queryClient);
+
+      // The DHB exists on chain before the gateway's status row says so, so
+      // watch the token contract as well and take whichever answer lands
+      // first. This is what makes a settled purchase feel settled.
+      if (baseline != null) {
+        watchRef.current = watchForDhbArrival({
+          address: walletAddress,
+          baseline,
+          chainId: BASE_CHAIN_ID,
+          onArrive: settle,
+        });
+      }
+
       if (isDirectEth) {
         // The gateway settles a direct purchase against the chain once it
         // has the hash. It may not be mined on the first ask; the poll below
@@ -259,11 +298,16 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
         setProgress('Payment sent. Waiting for confirmation...');
         const tryConfirm = () => confirmDirectDeposit({ id: intent.id, txHash: sent.hash }).catch(() => null);
         await tryConfirm();
-        const confirmTimer = setInterval(async () => {
+        confirmRef.current = setInterval(async () => {
           const status = await tryConfirm();
-          if (status && status.settlement !== 'DIRECT_PENDING') clearInterval(confirmTimer);
-        }, 4000);
-        setTimeout(() => clearInterval(confirmTimer), 10 * 60 * 1000);
+          if (status && status.settlement !== 'DIRECT_PENDING' && confirmRef.current) {
+            clearInterval(confirmRef.current);
+            confirmRef.current = null;
+          }
+        }, 2000);
+        setTimeout(() => {
+          if (confirmRef.current) { clearInterval(confirmRef.current); confirmRef.current = null; }
+        }, 10 * 60 * 1000);
       }
 
       if (pollRef.current) clearInterval(pollRef.current);
@@ -274,24 +318,23 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
         // queues deliveries behind one another. Give it ten minutes before
         // handing the buyer off to their wallet rather than calling it failed.
         if (ticks > 200) {
-          if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
+          stopWatchers();
           setBuying(false);
           setProgress('');
+          refreshWalletBalances(queryClient);
           toast.info(dhbText('Payment received. Your DHB is still on its way — check your wallet shortly.'));
           return;
         }
         try {
           const status = await getCryptoIntentStatus(intent.id);
           if (status.tokenSendStatus === 'sent') {
-            if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
-            setBuying(false);
-            setSuccess(true);
-            toast.success(dhbText(`${amt.toLocaleString()} DHB delivered to your wallet`));
+            settle();
             return;
           }
           if (status.settlement === 'REFUNDED' || status.settlement === 'FAILED' || status.tokenSendStatus === 'cancelled') {
-            if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
+            stopWatchers();
             setBuying(false);
+            refreshWalletBalances(queryClient);
             setProgress('');
             setError('The payment could not be settled and has been refunded to your wallet.');
             return;
@@ -312,7 +355,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
       setBuying(false);
       toast.error('Purchase failed', { description: msg });
     }
-  }, [walletAddress, quote, originAsset, isDirectEth, dhbAmount, selectedToken]);
+  }, [walletAddress, quote, originAsset, isDirectEth, dhbAmount, selectedToken, queryClient, stopWatchers]);
 
   /**
    * Fill in the most DHB this token can buy.
