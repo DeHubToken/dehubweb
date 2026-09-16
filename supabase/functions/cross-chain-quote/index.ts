@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
 
     if (action === 'quote') {
       const body = await req.json();
-      const { originAsset, destinationAsset, amount, recipient, amountType } = body;
+      const { originAsset, destinationAsset, amount, recipient, amountType, refundTo } = body;
 
       if (!originAsset || !destinationAsset || !amount || !recipient) {
         return new Response(JSON.stringify({ error: 'Missing required fields' }), {
@@ -36,7 +36,10 @@ Deno.serve(async (req) => {
         depositType: 'ORIGIN_CHAIN',
         destinationAsset,
         amount,
-        refundTo: recipient,
+        // A refund settles on the chain the deposit arrived from, so the
+        // recipient's Base address is only the right answer when the origin is
+        // an EVM chain. The client works out whose address belongs here.
+        refundTo: refundTo || recipient,
         refundType: 'ORIGIN_CHAIN',
         recipient,
         recipientType: 'DESTINATION_CHAIN',
@@ -66,7 +69,11 @@ Deno.serve(async (req) => {
         });
       }
 
-      const statusRes = await fetch(`${ONE_CLICK_API}/status/${depositAddress}`);
+      // Query string, not a path segment — /v0/status/<addr> is a 404, so every
+      // poll failed and a completed deposit never moved off the waiting screen.
+      const statusRes = await fetch(
+        `${ONE_CLICK_API}/status?depositAddress=${encodeURIComponent(depositAddress)}`,
+      );
       const statusData = await statusRes.json();
 
       return new Response(JSON.stringify(statusData), {
