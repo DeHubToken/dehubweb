@@ -7,14 +7,31 @@
  * post page — so a live post read as an empty card while it was on air.
  *
  * Deliberately not LiveStreamCard: that card is the full room (WHEP, tips,
- * chat, shop, host controls) and mounting one per feed item would open a
- * WebRTC session for every card on screen. This is the cheap half — muted,
- * inline, HLS only, and only while the card is actually visible.
+ * chat, shop, host controls). This is the cheap half — muted, inline, and only
+ * while the card is actually visible.
+ *
+ * ── Why this plays WebRTC rather than HLS ──
+ *
+ * It used to be HLS-only, and the post page has always preferred WHEP. That
+ * split was the whole bug: the self-hosted ingest is a remuxer, so a broadcast
+ * published over WebRTC keeps its OPUS audio in the HLS ladder
+ * (`CODECS="avc1.42c01e,opus"`). Safari's native HLS does not decode Opus, so
+ * a live card there played nothing and painted decoder garbage over the tile,
+ * while the same stream opened fine on the post page one tap away — which is
+ * exactly what a viewer reported. Same picture, same stream, different
+ * transport.
+ *
+ * So: WHEP first, the way the post page does it, with HLS kept as the fallback
+ * for Livepeer streams and for anywhere WebRTC cannot go. A self-hosted stream
+ * never falls back to NATIVE HLS — that combination is the one that produces
+ * the garbage — it uses hls.js where MSE exists and otherwise shows the poster.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type Hls from 'hls.js';
 import { LiveEndedMedia } from './LiveEndedMedia';
+import { liveSourceFromHlsUrl, whepEndpointFor } from '@/lib/live-ingest';
+import type { WhepSubscription } from '@/lib/livepeer/whep';
 
 interface LiveFeedPreviewProps {
   /** HLS ladder for the stream. First playable URL wins. */
@@ -26,6 +43,20 @@ interface LiveFeedPreviewProps {
   fallbackLabel?: string;
 }
 
+/** A negotiated session that never delivers a frame is the worst case. */
+const WHEP_START_TIMEOUT_MS = 6000;
+
+/**
+ * Concurrent WebRTC sessions this page will hold for feed previews.
+ *
+ * A grid of live cards can have several on screen at once, and the reason the
+ * feed was not already doing this is the cost of one peer connection per card.
+ * Two covers the case that matters — the card someone is looking at, and the
+ * one arriving as they scroll — and anything past it keeps the poster.
+ */
+const MAX_CONCURRENT_WHEP = 2;
+let whepSessionsOpen = 0;
+
 export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'Live ended' }: LiveFeedPreviewProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const hlsRef = useRef<Hls | null>(null);
@@ -34,9 +65,17 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
   const [playing, setPlaying] = useState(false);
 
   const src = urls.find((u): u is string => !!u && u.includes('.m3u8'));
+  const source = useMemo(() => liveSourceFromHlsUrl(src), [src]);
+  const selfHosted = source?.provider === 'mediamtx';
+
+  // One WebRTC attempt per card: the transport only ever moves whep → hls, so
+  // a failure cannot trade the element back and forth with the ladder.
+  const [transport, setTransport] = useState<'whep' | 'hls'>(
+    typeof RTCPeerConnection !== 'undefined' && !!source ? 'whep' : 'hls',
+  );
 
   // Only attach while the card is on screen. A feed can hold dozens of live
-  // cards; each attached HLS instance is a rolling segment download.
+  // cards; each attached session is a rolling download either way.
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
@@ -48,19 +87,86 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
     return () => io.disconnect();
   }, [src]);
 
+  // ── WebRTC ────────────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (transport !== 'whep' || !visible || failed || !source) return;
+    const el = videoRef.current;
+    if (!el) return;
+    if (whepSessionsOpen >= MAX_CONCURRENT_WHEP) {
+      setTransport('hls');
+      return;
+    }
+
+    let cancelled = false;
+    let session: WhepSubscription | null = null;
+    whepSessionsOpen += 1;
+
+    const fallBack = () => {
+      if (cancelled) return;
+      setTransport('hls');
+    };
+
+    // Negotiated but silent: no error to catch and nothing on screen.
+    const timer = setTimeout(() => {
+      if (!cancelled && !el.videoWidth) fallBack();
+    }, WHEP_START_TIMEOUT_MS);
+
+    const start = async () => {
+      try {
+        const { subscribeToWhep } = await import('@/lib/livepeer/whep');
+        if (cancelled) return;
+        session = await subscribeToWhep({
+          playbackId: source.playbackId,
+          endpoint: whepEndpointFor({
+            provider: source.provider,
+            playbackId: source.playbackId,
+          }),
+          onStateChange: (state) => {
+            if (!cancelled && state === 'failed') fallBack();
+          },
+        });
+        if (cancelled) {
+          await session.stop();
+          return;
+        }
+        el.srcObject = session.stream;
+        await el.play().catch(() => undefined);
+      } catch {
+        fallBack();
+      }
+    };
+
+    void start();
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+      whepSessionsOpen = Math.max(0, whepSessionsOpen - 1);
+      void session?.stop();
+      // A dead srcObject left attached stops HLS ever getting a picture onto
+      // this element.
+      if (el.srcObject) el.srcObject = null;
+    };
+  }, [transport, visible, failed, source]);
+
+  // ── HLS ───────────────────────────────────────────────────────────────────
   useEffect(() => {
     const el = videoRef.current;
-    if (!el || !src || !visible || failed) return;
+    if (transport !== 'hls' || !el || !src || !visible || failed) return;
     let cancelled = false;
 
     const attach = async () => {
-      // Safari (and iOS in general) plays HLS natively; hls.js is only pulled
-      // in where it is actually needed, and never on first paint.
-      if (el.canPlayType('application/vnd.apple.mpegurl')) {
+      // Native HLS is Safari's path, and it is the right one for a Livepeer
+      // stream (AAC audio). It is the WRONG one for the self-hosted ingest,
+      // whose ladder carries Opus: Safari cannot decode it and paints garbage
+      // rather than failing, so that combination is never attempted.
+      if (!selfHosted && el.canPlayType('application/vnd.apple.mpegurl')) {
         el.src = src;
       } else {
         const { default: HlsCtor } = await import('hls.js');
         if (cancelled || !HlsCtor.isSupported()) {
+          // No MSE — iOS before Managed Media Source. WebRTC was the only way
+          // in and it did not get there; show the poster, never a broken tile.
           if (!cancelled) setFailed(true);
           return;
         }
@@ -89,7 +195,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
       el.removeAttribute('src');
       el.load();
     };
-  }, [src, visible, failed]);
+  }, [transport, src, visible, failed, selfHosted]);
 
   if (!src || failed) {
     return <LiveEndedMedia thumbnail={thumbnail} label={fallbackLabel} />;
@@ -107,11 +213,12 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
             loading="lazy"
           />
         ) : (
-          /* No cover — the normal case for a self-hosted stream, which renders
-             no thumbnail. Without something here the card is a bare <video>
-             with no poster: an empty box for as long as the ladder takes to
-             open, and permanently when autoplay is refused. The static screen
-             says what the card is instead, and is replaced by the first frame. */
+          /* No cover — the normal case for a stream published from an encoder,
+             which has no browser sending poster frames. Without something here
+             the card is a bare <video> with no poster: an empty box for as long
+             as the connection takes to open, and permanently when autoplay is
+             refused. The static screen says what the card is instead, and is
+             replaced by the first frame. */
           <LiveEndedMedia label={fallbackLabel} />
         ))}
       <video
