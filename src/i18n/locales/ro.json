@@ -4804,20 +4804,6 @@
     "callbackRequest": "Cerere de apel invers",
     "tryAgain": "Încearcă din nou"
   },
-  "footer": {
-    "about": "Despre noi",
-    "contact": "Contact",
-    "privacy": "Politica de confidențialitate",
-    "terms": "Termeni și condiții"
-  },
-  "glossary": {
-    "title": "Glosar",
-    "description": "Termeni și definiții pentru a înțelege mai bine platforma.",
-    "badge": {
-      "white": "Alb",
-      "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
-    }
-  },
   "badgeAscension": {
     "reached": "Ai ajuns la {{tier}}",
     "yourBalance": "Soldul tău · {{amount}} DHB",
@@ -4835,6 +4821,21 @@
       "killerWhale": "Partea de sus a lanțului alimentar și vânați în pachete",
       "blueWhale": "Cel mai mare lucru care a trăit vreodată. Asta ești tu.",
       "megalodon": "Iată coroana dvs. — sunteți redevența aplicației acum"
+    },
+    "continue": "Înapoi la DeHub"
+  },
+  "footer": {
+    "about": "Despre noi",
+    "contact": "Contact",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
+  },
+  "glossary": {
+    "title": "Glosar",
+    "description": "Termeni și definiții pentru a înțelege mai bine platforma.",
+    "badge": {
+      "white": "Alb",
+      "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
     }
   }
 }
