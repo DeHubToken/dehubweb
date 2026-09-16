@@ -525,6 +525,8 @@ export default function ProfilePage() {
           isViewingOwnProfile={data.isViewingOwnProfile}
           isAuthenticated={data.isAuthenticated}
           badgeUrl={data.badgeUrl}
+          badgeTier={data.badgeTier}
+          badgeBalance={data.badgeBalance}
           isFollowing={data.isFollowing}
           isPending={data.isPending}
           isTargetPrivate={data.isTargetPrivate}
