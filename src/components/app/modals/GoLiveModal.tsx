@@ -136,6 +136,39 @@ const canShareScreen =
   typeof navigator !== 'undefined' &&
   typeof navigator.mediaDevices?.getDisplayMedia === 'function';
 
+/**
+ * Splits an ingest URL into the two boxes an encoder actually has.
+ *
+ * OBS offers one Server field and one Stream Key field, and it joins them with
+ * a slash. The self-hosted ingest carries its credentials in the URL's query
+ * string, so handing the whole URL over as the Server puts the stream key
+ * INSIDE the password: the publish gate receives
+ * `user=dehub&pass=<key>/<key>` and refuses it. Verified against the live
+ * gate on 2026-09-16 — the corrupted form and the split form produce exactly
+ * that difference in its log.
+ *
+ * Livepeer's URL has no query and its key is a separate value, so it is left
+ * alone: server `rtmp://rtmp.livepeer.com/live`, key the stream key.
+ */
+export function encoderCredentials(
+  ingestUrl: string,
+  streamKey: string
+): { server: string; key: string } {
+  if (!ingestUrl) return { server: '', key: streamKey };
+  try {
+    const url = new URL(ingestUrl);
+    // No query means nothing is hiding in the URL — the classic two-field shape.
+    if (!url.search) return { server: ingestUrl, key: streamKey };
+    return {
+      server: `${url.protocol}//${url.host}`,
+      key: `${url.pathname.replace(/^\//, '')}${url.search}`,
+    };
+  } catch {
+    // An unparseable URL is still better handed over whole than mangled.
+    return { server: ingestUrl, key: streamKey };
+  }
+}
+
 /** Matches the broadcaster's own screen constraints: 1080p keeps text legible. */
 const SCREEN_CONSTRAINTS: MediaTrackConstraints = {
   width: { ideal: 1920 },
@@ -1388,8 +1421,8 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
                   <div className="space-y-2">
                     <label className="text-sm text-white font-medium">{t('goLive.streamKey')}</label>
                     <div className="flex gap-2">
-                      <Input value={streamData.streamKey} readOnly type="password" className="bg-zinc-800 border-zinc-700 font-mono" />
-                      <Button variant="outline" size="icon" onClick={() => copyToClipboard(streamData.streamKey, 'key')}>
+                      <Input value={encoderCredentials(streamData.ingestUrl, streamData.streamKey).key} readOnly type="password" className="bg-zinc-800 border-zinc-700 font-mono" />
+                      <Button variant="outline" size="icon" onClick={() => copyToClipboard(encoderCredentials(streamData.ingestUrl, streamData.streamKey).key, 'key')}>
                         {copiedField === 'key' ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
                       </Button>
                     </div>
@@ -1398,8 +1431,8 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
                   <div className="space-y-2">
                     <label className="text-sm text-white font-medium">{t('goLive.ingestUrl')}</label>
                     <div className="flex gap-2">
-                      <Input value={streamData.ingestUrl} readOnly className="bg-zinc-800 border-zinc-700 font-mono text-xs" />
-                      <Button variant="outline" size="icon" onClick={() => copyToClipboard(streamData.ingestUrl, 'url')}>
+                      <Input value={encoderCredentials(streamData.ingestUrl, streamData.streamKey).server} readOnly className="bg-zinc-800 border-zinc-700 font-mono text-xs" />
+                      <Button variant="outline" size="icon" onClick={() => copyToClipboard(encoderCredentials(streamData.ingestUrl, streamData.streamKey).server, 'url')}>
                         {copiedField === 'url' ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
                       </Button>
                     </div>
