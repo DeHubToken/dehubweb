@@ -822,7 +822,9 @@
     "depositExpired": "Wpłata wygasła. Spróbuj ponownie.",
     "depositFailedMsg": "Wpłata nie powiodła się.",
     "crossChainCompleted": "Wpłata cross-chain zakończona! {{symbol}} otrzymano na Base.",
-    "tryAgain": "Spróbuj ponownie"
+    "tryAgain": "Spróbuj ponownie",
+    "refundAddress": "Adres zwrotu na {{chain}}",
+    "refundAddressHint": "Jeśli wymiana nie może zostać zakończona, Twoje {{symbol}} zostanie tutaj odesłane."
   },
   "wallet": {
     "title": "Portfel",

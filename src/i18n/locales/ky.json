@@ -805,7 +805,9 @@
     "depositExpired": "Депозиттин мөөнөтү бүттү. Кайра аракет кылыңыз.",
     "depositFailedMsg": "Депозит ишке ашкан жок.",
     "crossChainCompleted": "Кросс-чейн депозити аяктады! {{symbol}} Base тармагында алынды.",
-    "tryAgain": "Кайра аракет"
+    "tryAgain": "Кайра аракет",
+    "refundAddress": "{{chain}} дарегин кайтарып берүү",
+    "refundAddressHint": "Эгерде алмашуу бүтүрүлбөсө, анда {{symbol}} бул жерге кайра жөнөтүлөт."
   },
   "wallet": {
     "title": "Капчык",

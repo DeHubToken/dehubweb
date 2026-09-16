@@ -777,7 +777,9 @@
     "depositExpired": "Η κατάθεση έληξε. Δοκιμάστε ξανά.",
     "depositFailedMsg": "Η κατάθεση απέτυχε.",
     "crossChainCompleted": "Η κατάθεση cross-chain ολοκληρώθηκε! Το {{symbol}} ελήφθη στο Base.",
-    "tryAgain": "Δοκιμάστε Ξανά"
+    "tryAgain": "Δοκιμάστε Ξανά",
+    "refundAddress": "Διεύθυνση επιστροφής χρημάτων στο {{chain}}",
+    "refundAddressHint": "Εάν η ανταλλαγή δεν μπορεί να ολοκληρωθεί, το {{symbol}} σας αποστέλλεται ξανά εδώ."
   },
   "wallet": {
     "title": "Πορτοφόλι",

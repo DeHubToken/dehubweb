@@ -805,7 +805,9 @@
     "depositExpired": "Įnašo laikas baigėsi. Bandykite dar kartą.",
     "depositFailedMsg": "Įnašas nepavyko.",
     "crossChainCompleted": "Tarpgrandininis įnašas baigtas! {{symbol}} gauta Base tinkle.",
-    "tryAgain": "Bandyti dar kartą"
+    "tryAgain": "Bandyti dar kartą",
+    "refundAddress": "Grąžinti pinigus adresu {{chain}}",
+    "refundAddressHint": "Jei sukeitimas negali būti baigtas, jūsų {{symbol}} bus išsiųstas atgal čia."
   },
   "wallet": {
     "title": "Piniginė",

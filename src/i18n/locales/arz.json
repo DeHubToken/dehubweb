@@ -805,7 +805,9 @@
     "depositExpired": "الإيداع انتهت صلاحيته. جرب تاني.",
     "depositFailedMsg": "الإيداع فشل.",
     "crossChainCompleted": "الإيداع عبر الشبكات اكتمل! استلمت {{symbol}} على Base.",
-    "tryAgain": "جرب تاني"
+    "tryAgain": "جرب تاني",
+    "refundAddress": "عنوان رد الأموال في {{chain}}",
+    "refundAddressHint": "إذا تعذر إكمال فائدة التمديد، فسيتم إرسال {{symbol}} مرة أخرى إلى هنا."
   },
   "wallet": {
     "title": "المحفظة",

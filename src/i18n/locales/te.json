@@ -818,7 +818,9 @@
     "depositExpired": "డిపాజిట్ గడువు ముగిసింది. మళ్ళీ ప్రయత్నించండి.",
     "depositFailedMsg": "డిపాజిట్ విఫలమైంది.",
     "crossChainCompleted": "క్రాస్-చైన్ డిపాజిట్ పూర్తయింది! Baseలో {{symbol}} అందింది.",
-    "tryAgain": "మళ్ళీ ప్రయత్నించండి"
+    "tryAgain": "మళ్ళీ ప్రయత్నించండి",
+    "refundAddress": "{{chain}} లో రీఫండ్ చిరునామా",
+    "refundAddressHint": "స్వాప్ పూర్తి చేయలేకపోతే, మీ {{symbol}} ఇక్కడ తిరిగి పంపబడుతుంది."
   },
   "wallet": {
     "title": "వాలెట్",

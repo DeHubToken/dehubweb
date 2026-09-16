@@ -820,7 +820,9 @@
     "depositExpired": "入金の有効期限が切れました。もう一度お試しください。",
     "depositFailedMsg": "入金に失敗しました。",
     "crossChainCompleted": "クロスチェーン入金が完了しました！{{symbol}}がBaseで受け取られました。",
-    "tryAgain": "再試行"
+    "tryAgain": "再試行",
+    "refundAddress": "{{chain}}の返金先住所",
+    "refundAddressHint": "スワップが完了しない場合、{{symbol}}はここに送り返されます。"
   },
   "wallet": {
     "title": "ウォレット",

@@ -816,7 +816,9 @@
     "depositExpired": "Тэрмін дэпазіту скончыўся. Паспрабуйце яшчэ раз.",
     "depositFailedMsg": "Дэпазіт не выкананы.",
     "crossChainCompleted": "Кросчэйн-дэпазіт завершаны! {{symbol}} атрымана ў Base.",
-    "tryAgain": "Паўтарыць"
+    "tryAgain": "Паўтарыць",
+    "refundAddress": "Адрас вяртання на {{chain}}",
+    "refundAddressHint": "Калі своп не можа быць завершаны, ваш {{symbol}} адпраўляецца сюды."
   },
   "wallet": {
     "title": "Кашалёк",

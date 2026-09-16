@@ -818,7 +818,9 @@
     "depositExpired": "El dipòsit ha caducat. Torna-ho a provar.",
     "depositFailedMsg": "El dipòsit ha fallat.",
     "crossChainCompleted": "Dipòsit entre cadenes completat! {{symbol}} rebut a Base.",
-    "tryAgain": "Torna-ho a provar"
+    "tryAgain": "Torna-ho a provar",
+    "refundAddress": "Adreça de reembossament a {{chain}}",
+    "refundAddressHint": "Si l'intercanvi no es pot completar, el teu {{symbol}} s'enviarà de nou aquí."
   },
   "wallet": {
     "title": "Cartera",

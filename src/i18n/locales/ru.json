@@ -821,7 +821,9 @@
     "depositExpired": "Срок пополнения истёк. Попробуйте снова.",
     "depositFailedMsg": "Пополнение не удалось.",
     "crossChainCompleted": "Кроссчейн-пополнение завершено! {{symbol}} получен на Base.",
-    "tryAgain": "Попробовать снова"
+    "tryAgain": "Попробовать снова",
+    "refundAddress": "Адрес возврата: {{chain}}",
+    "refundAddressHint": "Если замена не может быть завершена, ваш {{symbol}} будет отправлен сюда."
   },
   "wallet": {
     "title": "Кошелёк",

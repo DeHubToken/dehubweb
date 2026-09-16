@@ -804,7 +804,9 @@
     "depositExpired": "Kua pau te tāpui. Ngāna anō koa.",
     "depositFailedMsg": "I rahua te tāpui.",
     "crossChainCompleted": "Kua oti te tāpui whakawhiti-mekameka! Kua riro mai te {{symbol}} i runga i Base.",
-    "tryAgain": "Ngāna Anō"
+    "tryAgain": "Ngāna Anō",
+    "refundAddress": "Wāhitau whakahoki i runga i {{chain}}",
+    "refundAddressHint": "Mena kaore e taea e te huringa te whakaoti, ka tukuna ano to {{symbol}} i konei."
   },
   "wallet": {
     "title": "Pūkoro Moni",

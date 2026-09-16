@@ -866,7 +866,9 @@
     "depositExpired": "Nag-expire ang deposit. Subukan ulit.",
     "depositFailedMsg": "Nabigo ang deposit.",
     "crossChainCompleted": "Kumpleto na ang cross-chain deposit! Natanggap ang {{symbol}} sa Base.",
-    "tryAgain": "Subukan ulit"
+    "tryAgain": "Subukan ulit",
+    "refundAddress": "Address ng refund sa {{chain}}",
+    "refundAddressHint": "Kung hindi makumpleto ang pagpapalit, ibabalik rito ang iyong {{symbol}}."
   },
   "wallet": {
     "title": "Wallet",

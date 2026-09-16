@@ -804,7 +804,9 @@
     "depositExpired": "Салым мерзімі өтті. Қайта көріңіз.",
     "depositFailedMsg": "Салым сәтсіз аяқталды.",
     "crossChainCompleted": "Тізбекаралық салым аяқталды! {{symbol}} Base желісінде алынды.",
-    "tryAgain": "Қайта көру"
+    "tryAgain": "Қайта көру",
+    "refundAddress": "{{chain}} бойынша қайтару мекенжайы",
+    "refundAddressHint": "Егер алмасу аяқталмаса, {{symbol}} осында қайта жіберіледі."
   },
   "wallet": {
     "title": "Әмиян",

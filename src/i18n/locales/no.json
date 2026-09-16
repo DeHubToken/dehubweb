@@ -803,7 +803,9 @@
     "depositExpired": "Innskudd utløpt. Prøv igjen.",
     "depositFailedMsg": "Innskudd mislyktes.",
     "crossChainCompleted": "Kryssekjedeinnskudd fullført! {{symbol}} mottatt på Base.",
-    "tryAgain": "Prøv igjen"
+    "tryAgain": "Prøv igjen",
+    "refundAddress": "Refusjonsadresse på {{chain}}",
+    "refundAddressHint": "Hvis byttet ikke kan fullføres, sendes {{symbol}} tilbake hit."
   },
   "wallet": {
     "title": "Lommebok",

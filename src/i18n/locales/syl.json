@@ -836,7 +836,9 @@
     "depositExpired": "ডিপোজিটর মেয়াদ শেষ। আবার চেষ্টা করো।",
     "depositFailedMsg": "ডিপোজিট ফেইল অইছে।",
     "crossChainCompleted": "ক্রস-চেইন ডিপোজিট শেষ অইছে! Base-ও {{symbol}} পাইছো।",
-    "tryAgain": "আবার চেষ্টা করো"
+    "tryAgain": "আবার চেষ্টা করো",
+    "refundAddress": "{{chain}} এ রিফান্ড ঠিকানা",
+    "refundAddressHint": "যদি স্ওয়াপ সম্পন্ন না হয়, আপনার {{symbol}} এখানে ফেরত পাঠানো হয়।"
   },
   "wallet": {
     "title": "ওয়ালেট",

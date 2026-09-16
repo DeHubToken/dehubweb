@@ -795,7 +795,9 @@
     "depositExpired": "الإيداع سالا. عاود حاول.",
     "depositFailedMsg": "الإيداع فشل.",
     "crossChainCompleted": "الإيداع عبر السلاسل تكمّل! توصلتي بـ {{symbol}} على Base.",
-    "tryAgain": "عاود حاول"
+    "tryAgain": "عاود حاول",
+    "refundAddress": "عنوان رد الأموال في {{chain}}",
+    "refundAddressHint": "إذا تعذر إكمال فائدة التمديد، فسيتم إرسال {{symbol}} مرة أخرى إلى هنا."
   },
   "wallet": {
     "title": "المحفظة",

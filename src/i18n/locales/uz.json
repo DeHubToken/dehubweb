@@ -804,7 +804,9 @@
     "depositExpired": "Depozit muddati tugadi. Qaytadan urinib ko'ring.",
     "depositFailedMsg": "Depozit amalga oshmadi.",
     "crossChainCompleted": "Zanjirlararo depozit yakunlandi! {{symbol}} Base tarmog'ida qabul qilindi.",
-    "tryAgain": "Qayta urinish"
+    "tryAgain": "Qayta urinish",
+    "refundAddress": "Qaytarish manzili {{chain}}",
+    "refundAddressHint": "Agar almashtirish tugallanmasa, sizning {{symbol}} bu yerga qaytariladi."
   },
   "wallet": {
     "title": "Hamyon",

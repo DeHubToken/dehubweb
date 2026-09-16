@@ -803,7 +803,9 @@
     "depositExpired": "Мӯҳлати пасандоз гузашт. Лутфан аз нав кӯшиш кунед.",
     "depositFailedMsg": "Пасандоз ноком шуд.",
     "crossChainCompleted": "Пасандози байнизанҷирӣ анҷом ёфт! {{symbol}} дар Base қабул шуд.",
-    "tryAgain": "Аз нав кӯшиш кунед"
+    "tryAgain": "Аз нав кӯшиш кунед",
+    "refundAddress": "Адреси бозгашт дар {{chain}}",
+    "refundAddressHint": "Агар мубодила ба итмом нарасад, {{symbol}} ба ин ҷо фиристода мешавад."
   },
   "wallet": {
     "title": "Ҳамён",

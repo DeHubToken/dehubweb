@@ -822,7 +822,9 @@
     "depositExpired": "Deposito scaduto. Riprova.",
     "depositFailedMsg": "Il deposito è fallito.",
     "crossChainCompleted": "Deposito cross-chain completato! {{symbol}} ricevuto su Base.",
-    "tryAgain": "Riprova"
+    "tryAgain": "Riprova",
+    "refundAddress": "Indirizzo di rimborso il {{chain}}",
+    "refundAddressHint": "Se lo scambio non può essere completato, il tuo {{symbol}} viene rispedito qui."
   },
   "wallet": {
     "title": "Portafoglio",

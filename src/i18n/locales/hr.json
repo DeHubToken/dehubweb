@@ -813,7 +813,9 @@
     "depositExpired": "Depozit je istekao. Pokušajte ponovno.",
     "depositFailedMsg": "Depozit nije uspio.",
     "crossChainCompleted": "Depozit između lanaca dovršen! {{symbol}} primljen na Base.",
-    "tryAgain": "Pokušaj ponovno"
+    "tryAgain": "Pokušaj ponovno",
+    "refundAddress": "Adresa za povrat {{chain}}",
+    "refundAddressHint": "Ako se zamjena ne može dovršiti, vaš {{symbol}} se vraća ovdje."
   },
   "wallet": {
     "title": "Novčanik",

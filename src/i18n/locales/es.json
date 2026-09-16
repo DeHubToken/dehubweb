@@ -822,7 +822,9 @@
     "depositExpired": "Depósito expirado. Inténtalo de nuevo.",
     "depositFailedMsg": "El depósito falló.",
     "crossChainCompleted": "¡Depósito cross-chain completado! {{symbol}} recibido en Base.",
-    "tryAgain": "Reintentar"
+    "tryAgain": "Reintentar",
+    "refundAddress": "Dirección de reembolso en {{chain}}",
+    "refundAddressHint": "Si el intercambio no se puede completar, tu {{symbol}} se enviará de vuelta aquí."
   },
   "wallet": {
     "title": "Billetera",

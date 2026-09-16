@@ -820,7 +820,9 @@
     "depositExpired": "जम्मा म्याद सकियो। कृपया फेरि प्रयास गर्नुहोस्।",
     "depositFailedMsg": "जम्मा असफल भयो।",
     "crossChainCompleted": "क्रस-चेन जम्मा पूरा भयो! {{symbol}} Base मा प्राप्त भयो।",
-    "tryAgain": "पुनः प्रयास"
+    "tryAgain": "पुनः प्रयास",
+    "refundAddress": "{{chain}} मा रिफन्ड ठेगाना",
+    "refundAddressHint": "यदि स्वाप पूरा गर्न सकिएन भने, तपाईंको {{symbol}} यहाँ फिर्ता पठाइन्छ ।"
   },
   "wallet": {
     "title": "वालेट",

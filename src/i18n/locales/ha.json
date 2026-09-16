@@ -805,7 +805,9 @@
     "depositExpired": "Ajiya ta ƙare. Da fatan za a sake gwadawa.",
     "depositFailedMsg": "Ajiya ta gaza.",
     "crossChainCompleted": "An kammala ajiyar cross-chain! An karɓi {{symbol}} a Base.",
-    "tryAgain": "Sake Gwadawa"
+    "tryAgain": "Sake Gwadawa",
+    "refundAddress": "Maimaita adireshin akan {{chain}}",
+    "refundAddressHint": "Idan swap ba zai iya kammalawa ba, an mayar da {{symbol}} a nan."
   },
   "wallet": {
     "title": "Walat",

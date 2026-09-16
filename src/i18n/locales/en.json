@@ -822,7 +822,9 @@
     "depositExpired": "Deposit expired. Please try again.",
     "depositFailedMsg": "Deposit failed.",
     "crossChainCompleted": "Cross-chain deposit completed! {{symbol}} received on Base.",
-    "tryAgain": "Try Again"
+    "tryAgain": "Try Again",
+    "refundAddress": "Refund address on {{chain}}",
+    "refundAddressHint": "If the swap cannot complete, your {{symbol}} is sent back here."
   },
   "wallet": {
     "title": "Wallet",

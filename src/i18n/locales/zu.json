@@ -805,6 +805,8 @@
     "depositFailedMsg": "Idiphozithi ihlulekile.",
     "crossChainCompleted": "Idiphozithi ye-cross-chain iqediwe! I-{{symbol}} yamukelwe ku-Base.",
     "tryAgain": "Zama Futhi",
+    "refundAddress": "Ikheli lokubuyisela imali ku- {{chain}}",
+    "refundAddressHint": "Uma ukushintshwa kungakwazi ukuqedela, i- {{symbol}} yakho izobuyiselwa lapha.",
     "loginDescription": "Ngena ukufinyelela isikhwama sakho nokuphatha izimali zakho."
   },
   "wallet": {

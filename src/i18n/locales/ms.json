@@ -1089,7 +1089,9 @@
     "depositExpired": "Deposit tamat tempoh. Sila cuba lagi.",
     "depositFailedMsg": "Deposit gagal.",
     "crossChainCompleted": "Deposit rentas rantaian selesai! {{symbol}} diterima di Base.",
-    "tryAgain": "Cuba Lagi"
+    "tryAgain": "Cuba Lagi",
+    "refundAddress": "Alamat bayaran balik pada {{chain}}",
+    "refundAddressHint": "Jika pertukaran tidak dapat diselesaikan, {{symbol}} anda dihantar kembali ke sini."
   },
   "wallet": {
     "title": "Dompet",

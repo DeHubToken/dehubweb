@@ -805,7 +805,9 @@
     "depositExpired": "ਜਮ੍ਹਾਂ ਦਾ ਸਮਾਂ ਖਤਮ ਹੋ ਗਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਫਿਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
     "depositFailedMsg": "ਜਮ੍ਹਾਂ ਅਸਫਲ ਹੋਇਆ।",
     "crossChainCompleted": "ਕ੍ਰਾਸ-ਚੇਨ ਜਮ੍ਹਾਂ ਪੂਰਾ ਹੋਇਆ! Base 'ਤੇ {{symbol}} ਮਿਲਿਆ।",
-    "tryAgain": "ਫਿਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ"
+    "tryAgain": "ਫਿਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
+    "refundAddress": "{{chain}} 'ਤੇ ਰਿਫੰਡ ਪਤਾ",
+    "refundAddressHint": "ਜੇ ਸਵੈਪ ਪੂਰਾ ਨਹੀਂ ਹੋ ਸਕਦਾ, ਤਾਂ ਤੁਹਾਡਾ {{symbol}} ਇੱਥੇ ਵਾਪਸ ਭੇਜਿਆ ਜਾਂਦਾ ਹੈ."
   },
   "wallet": {
     "title": "ਵਾਲਿਟ",

@@ -801,7 +801,9 @@
     "depositExpired": "জমার মেয়াদ শেষ। আবার চেষ্টা করুন।",
     "depositFailedMsg": "জমা ব্যর্থ হয়েছে।",
     "crossChainCompleted": "ক্রস-চেইন জমা সম্পন্ন! Base-এ {{symbol}} পাওয়া গেছে।",
-    "tryAgain": "আবার চেষ্টা করুন"
+    "tryAgain": "আবার চেষ্টা করুন",
+    "refundAddress": "{{chain}} -এ ঠিকানা রিফান্ড করুন",
+    "refundAddressHint": "অদলবদল সম্পন্ন না হলে, আপনার {{symbol}} এখানে ফেরত পাঠানো হবে ।"
   },
   "wallet": {
     "title": "ওয়ালেট",

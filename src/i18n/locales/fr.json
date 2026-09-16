@@ -822,7 +822,9 @@
     "depositExpired": "Dépôt expiré. Veuillez réessayer.",
     "depositFailedMsg": "Le dépôt a échoué.",
     "crossChainCompleted": "Dépôt cross-chain terminé ! {{symbol}} reçu sur Base.",
-    "tryAgain": "Réessayer"
+    "tryAgain": "Réessayer",
+    "refundAddress": "Adresse de remboursement le {{chain}}",
+    "refundAddressHint": "Si l'échange ne peut pas se terminer, votre {{symbol}} est renvoyé ici."
   },
   "wallet": {
     "title": "Portefeuille",

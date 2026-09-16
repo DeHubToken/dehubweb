@@ -796,7 +796,8 @@
     "depositExpired": "Bilali waati banna. A lajɛ tuguni.",
     "depositFailedMsg": "Bilali ma se.",
     "crossChainCompleted": "Sirasira tɛmɛnen bilali banna! {{symbol}} sɔrɔla Base kan.",
-    "tryAgain": "A lajɛ tuguni"
+    "tryAgain": "A lajɛ tuguni",
+    "refundAddressHint": "N'i ma se ka o kɛ, i ka {{symbol}} bena segi yan."
   },
   "wallet": {
     "title": "Kɔrɔbɔ",

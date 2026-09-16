@@ -822,7 +822,9 @@
     "depositExpired": "Indbetaling udløbet. Prøv igen.",
     "depositFailedMsg": "Indbetaling mislykkedes.",
     "crossChainCompleted": "Cross-chain indbetaling gennemført! {{symbol}} modtaget på Base.",
-    "tryAgain": "Prøv igen"
+    "tryAgain": "Prøv igen",
+    "refundAddress": "Refusionsadresse på{{chain}}",
+    "refundAddressHint": "Hvis swappen ikke kan gennemføres, sendes din {{symbol}} tilbage hertil."
   },
   "wallet": {
     "title": "Tegnebog",

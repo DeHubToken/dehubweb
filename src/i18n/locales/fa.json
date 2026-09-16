@@ -821,7 +821,9 @@
     "depositExpired": "واریز منقضی شد. لطفاً دوباره تلاش کنید.",
     "depositFailedMsg": "واریز ناموفق بود.",
     "crossChainCompleted": "واریز بین‌زنجیره‌ای کامل شد! {{symbol}} روی Base دریافت شد.",
-    "tryAgain": "تلاش دوباره"
+    "tryAgain": "تلاش دوباره",
+    "refundAddress": "آدرس بازپرداخت در {{chain}}",
+    "refundAddressHint": "اگر عملیات مبادله تکمیل نشود، {{symbol}} شما به اینجا برگردانده می‌شود."
   },
   "wallet": {
     "title": "کیف پول",

@@ -802,7 +802,9 @@
     "depositExpired": "ଜମା ସମୟ ସରିଗଲା। ଦୟାକରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।",
     "depositFailedMsg": "ଜମା ବିଫଳ ହେଲା।",
     "crossChainCompleted": "କ୍ରସ-ଚେନ ଜମା ସମ୍ପୂର୍ଣ୍ଣ ହେଲା! Base ରେ {{symbol}} ମିଳିଲା।",
-    "tryAgain": "ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ"
+    "tryAgain": "ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ",
+    "refundAddress": "{{chain}} ରେ ଫେରସ୍ତ ଠିକଣା",
+    "refundAddressHint": "ଯଦି ସ୍ୱାପ ସମ୍ପୂର୍ଣ୍ଣ କରିବାରେ ଅସମର୍ଥ ହୁଏ, ଆପଣଙ୍କର {{symbol}} ଏଠାରେ ପଠାଯାଇଥାଏ ।"
   },
   "wallet": {
     "title": "ୱାଲେଟ",

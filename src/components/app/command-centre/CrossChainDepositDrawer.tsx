@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { ArrowLeft, Copy, Check, Loader2, Globe, ExternalLink, AlertTriangle, ChevronRight } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { ArrowLeft, Copy, Check, Loader2, Globe, ExternalLink, AlertTriangle, ChevronRight, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ import {
   type QuoteResponse,
   type StatusResponse,
 } from '@/lib/near-intents';
+import { fetchOneClickChains, refundAddressFor, needsManualRefundAddress } from '@/lib/near-intents-tokens';
 
 import ethLogo from '@/assets/eth-logo.png';
 import usdcLogo from '@/assets/usdc-logo.png';
@@ -60,7 +62,7 @@ interface CrossChainDepositDrawerProps {
 type Step = 'chains' | 'amount' | 'deposit' | 'success' | 'error';
 
 export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol }: CrossChainDepositDrawerProps) {
-  const { walletAddress } = useAuth();
+  const { walletAddress, user } = useAuth();
   const { t } = useTranslation();
   const dest = (destinationSymbol && DESTINATION_ASSETS[destinationSymbol]) || DEFAULT_DESTINATION;
   const destLabel = dest.label;
@@ -77,7 +79,47 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
   const [depositStatus, setDepositStatus] = useState<StatusResponse | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
 
+  const [assetQuery, setAssetQuery] = useState('');
+  const [manualRefund, setManualRefund] = useState('');
+
+  const solanaAddress = user?.solanaAddress ?? null;
+  const manualRefundNeeded = !!selectedChain && needsManualRefundAddress(selectedChain.id, solanaAddress);
+  const refundAddress = selectedChain
+    ? (refundAddressFor(selectedChain.id, walletAddress, solanaAddress) || manualRefund.trim() || null)
+    : null;
+
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // The gateway's own catalogue, cached for the session. It only moves when
+  // 1Click adds a route, and the hand-written list stands in if the call fails
+  // so the drawer never opens empty.
+  const { data: liveChains, isLoading: chainsLoading } = useQuery({
+    queryKey: ['one-click-chains'],
+    queryFn: fetchOneClickChains,
+    staleTime: 60 * 60_000,
+    gcTime: 60 * 60_000,
+    retry: 1,
+  });
+
+  const chains = liveChains ?? SUPPORTED_CHAINS;
+
+  /** Flattened chain+token rows, filtered by the search box. */
+  const assetRows = useMemo(() => {
+    const q = assetQuery.trim().toLowerCase();
+    const rows: { chain: ChainInfo; token: TokenInfo }[] = [];
+    for (const chain of chains) {
+      for (const token of chain.tokens) {
+        if (
+          q &&
+          !token.symbol.toLowerCase().includes(q) &&
+          !token.name.toLowerCase().includes(q) &&
+          !chain.name.toLowerCase().includes(q)
+        ) continue;
+        rows.push({ chain, token });
+      }
+    }
+    return rows;
+  }, [chains, assetQuery]);
 
   useEffect(() => {
     if (open) {
@@ -90,6 +132,8 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
       setDepositStatus(null);
       setErrorMsg('');
       setCopied(false);
+      setAssetQuery('');
+      setManualRefund('');
     }
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
@@ -107,6 +151,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
 
   const fetchQuote = useCallback(async () => {
     if (!selectedToken || !amount || !walletAddress || parseFloat(amount) <= 0) return;
+    if (!refundAddress) return;
 
     setQuoteLoading(true);
     setQuoteError('');
@@ -124,7 +169,10 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
             originAsset: selectedToken.assetId,
             destinationAsset: dest.assetId,
             amount: amountInSmallest,
-            recipient: `base:${walletAddress}`,
+            // A plain address, not `base:0x…` — the gateway rejects the
+            // prefixed form as an invalid recipient.
+            recipient: walletAddress,
+            refundTo: refundAddress,
             amountType: 'in',
           }),
         }
@@ -138,7 +186,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
     } finally {
       setQuoteLoading(false);
     }
-  }, [selectedToken, amount, walletAddress]);
+  }, [selectedToken, amount, walletAddress, refundAddress, dest.assetId]);
 
   useEffect(() => {
     if (step !== 'amount' || !amount || parseFloat(amount) <= 0) return;
@@ -147,12 +195,13 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
   }, [amount, step, fetchQuote]);
 
   const handleProceedToDeposit = () => {
-    if (!quote) return;
+    if (!quote?.quote?.depositAddress) return;
     setStep('deposit');
-    startStatusPolling(quote.deposit_address);
+    startStatusPolling(quote.quote.depositAddress);
   };
 
-  const destSymbol = destinationSymbol || 'ETH';
+  // What actually lands, not what the caller asked for — see DESTINATION_ASSETS.
+  const destSymbol = dest.symbol;
 
   const startStatusPolling = (depositAddress: string) => {
     setStatusPolling(true);
@@ -168,12 +217,12 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
         const status: StatusResponse = await res.json();
         setDepositStatus(status);
 
-        if (status.status === 'COMPLETED') {
+        if (status.status === 'SUCCESS') {
           if (pollRef.current) clearInterval(pollRef.current);
           setStatusPolling(false);
           setStep('success');
           toast.success(t('commandCentre.crossChainCompleted', { symbol: destSymbol }));
-        } else if (status.status === 'FAILED' || status.status === 'EXPIRED') {
+        } else if (status.status === 'FAILED' || status.status === 'REFUNDED' || status.status === 'EXPIRED') {
           if (pollRef.current) clearInterval(pollRef.current);
           setStatusPolling(false);
           setErrorMsg(status.status === 'EXPIRED' ? t('commandCentre.depositExpired') : t('commandCentre.depositFailedMsg'));
@@ -185,16 +234,21 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
     }, 5000);
   };
 
+  const depositAddress = quote?.quote?.depositAddress ?? null;
+  const destTxHash = depositStatus?.swapDetails?.destinationChainTxHashes?.[0]?.hash ?? null;
+
   const handleCopyAddress = () => {
-    if (!quote?.deposit_address) return;
-    navigator.clipboard.writeText(quote.deposit_address);
+    if (!depositAddress) return;
+    navigator.clipboard.writeText(depositAddress);
     setCopied(true);
     toast.success(t('toasts.deposit_address_copied'));
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const estimatedOut = quote?.amount_out
-    ? (parseInt(quote.amount_out) / Math.pow(10, dest.decimals)).toLocaleString(undefined, { maximumFractionDigits: dest.decimals <= 8 ? dest.decimals : 6 })
+  // The gateway already formats the output for the destination's decimals, so
+  // there is nothing here to divide and nothing to get wrong.
+  const estimatedOut = quote?.quote?.amountOutFormatted
+    ? parseFloat(quote.quote.amountOutFormatted).toLocaleString(undefined, { maximumFractionDigits: 6 })
     : null;
 
   return (
@@ -231,25 +285,37 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
 
           {/* Step: Chain & Token Selection */}
           {step === 'chains' && (
-            <div className="space-y-1.5">
-              {SUPPORTED_CHAINS.map((chain) => (
-                <div key={chain.id}>
-                  {chain.tokens.map((token) => (
-                    <button
-                      key={token.assetId}
-                      onClick={() => handleSelectToken(chain, token)}
-                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors mb-1.5"
-                    >
-                      <TokenIcon iconKey={token.iconKey} />
-                      <div className="text-left flex-1">
-                        <span className="text-sm font-medium text-white">{token.symbol}</span>
-                        <p className="text-xs text-white/40">{chain.name}</p>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-white/20" />
-                    </button>
-                  ))}
-                </div>
-              ))}
+            <div className="space-y-2">
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 text-white/30 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Input
+                  value={assetQuery}
+                  onChange={(e) => setAssetQuery(e.target.value)}
+                  placeholder={t('common.search')}
+                  className="bg-white/[0.06] border-white/10 text-white backdrop-blur-sm pl-8 h-9 text-sm"
+                />
+              </div>
+              <div className="space-y-1.5 max-h-[52vh] overflow-y-auto">
+                {assetRows.map(({ chain, token }) => (
+                  <button
+                    key={`${chain.id}-${token.assetId}`}
+                    onClick={() => handleSelectToken(chain, token)}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
+                  >
+                    <TokenIcon iconKey={token.iconKey} />
+                    <div className="text-left flex-1 min-w-0">
+                      <span className="text-sm font-medium text-white">{token.symbol}</span>
+                      <p className="text-xs text-white/40 truncate">{chain.name}</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-white/20 shrink-0" />
+                  </button>
+                ))}
+                {assetRows.length === 0 && (
+                  <p className="text-xs text-white/40 text-center py-6">
+                    {chainsLoading ? t('common.loading') : t('explorePage.noResults')}
+                  </p>
+                )}
+              </div>
             </div>
           )}
 
@@ -274,6 +340,24 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
                 />
               </div>
 
+              {/* A refund has to land on the chain the deposit came from, and
+                  for a non-EVM chain we hold no address of theirs to use. */}
+              {manualRefundNeeded && (
+                <div className="space-y-1.5">
+                  <label className="text-sm text-white/50">
+                    {t('commandCentre.refundAddress', { chain: selectedChain.name })}
+                  </label>
+                  <Input
+                    value={manualRefund}
+                    onChange={(e) => setManualRefund(e.target.value)}
+                    className="bg-white/[0.06] border-white/10 text-white backdrop-blur-sm font-mono text-sm"
+                  />
+                  <p className="text-[11px] text-white/30">
+                    {t('commandCentre.refundAddressHint', { symbol: selectedToken.symbol })}
+                  </p>
+                </div>
+              )}
+
               {/* Quote display */}
               <div className="rounded-xl bg-white/[0.04] border border-white/10 p-3 space-y-2">
                 <div className="flex items-center justify-between text-xs">
@@ -296,7 +380,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
               <Button
                 variant="glass"
                 className="w-full rounded-xl"
-                disabled={!quote || quoteLoading}
+                disabled={!quote || quoteLoading || !refundAddress}
                 onClick={handleProceedToDeposit}
               >
                 <Globe className="w-4 h-4 mr-2" />
@@ -313,7 +397,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
                   {t('commandCentre.sendExactlyTo', { amount, symbol: selectedToken.symbol, chain: selectedChain.name })}
                 </p>
                 <div className="bg-white/[0.06] rounded-lg p-3 break-all font-mono text-xs text-white/80 text-center">
-                  {quote.deposit_address}
+                  {depositAddress}
                 </div>
                 <Button
                   variant="glass"
@@ -331,7 +415,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
                   <span className="flex items-center gap-1.5">
                     {statusPolling && <Loader2 className="w-3 h-3 text-white/40 animate-spin" />}
                     <span className="text-white/70">
-                      {depositStatus?.status === 'EXECUTING' ? t('commandCentre.processingDeposit') : t('commandCentre.waitingForDeposit')}
+                      {depositStatus?.status === 'PROCESSING' ? t('commandCentre.processingDeposit') : t('commandCentre.waitingForDeposit')}
                     </span>
                   </span>
                 </div>
@@ -357,9 +441,9 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
               <p className="text-xs text-white/40">
                 {t('commandCentre.depositedToWallet', { amount: estimatedOut, symbol: destSymbol })}
               </p>
-              {depositStatus?.tx_hash && (
+              {destTxHash && (
                 <button
-                  onClick={() => window.open(`https://basescan.org/tx/${depositStatus.tx_hash}`, '_blank')}
+                  onClick={() => window.open(`https://basescan.org/tx/${destTxHash}`, '_blank')}
                   className="text-xs text-white flex items-center gap-1 hover:underline"
                 >
                   {t('commandCentre.viewOnBaseScan')} <ExternalLink className="w-3 h-3" />

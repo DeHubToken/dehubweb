@@ -765,7 +765,9 @@
     "depositExpired": "充值过期咾。再试试。",
     "depositFailedMsg": "充值没成。",
     "crossChainCompleted": "跨链充值弄完咾！{{symbol}} 到账 Base 咾。",
-    "tryAgain": "再试"
+    "tryAgain": "再试",
+    "refundAddress": "退款地址在 {{chain}}",
+    "refundAddressHint": "如果交换无法完成，您的 {{symbol}} 将被发送回此处。"
   },
   "wallet": {
     "title": "钱包",
