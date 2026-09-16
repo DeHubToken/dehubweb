@@ -18,7 +18,7 @@
  * See `lib/badge-motion.ts` for the per-tier numbers and `use-badge-ceremony`
  * for when this is allowed to run.
  */
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -53,6 +53,14 @@ const outBack = (x: number) => {
 };
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
+/**
+ * Where the ceremony stops and waits. Everything up to the end of the name
+ * beat is timed; the trip home is not played until the holder asks for it.
+ */
+const HOLD_AT = BEATS.name[1];
+/** The trip home, once they do. */
+const RETURN_MS = 760;
+
 export function BadgeAscension({ from, to, anchor, balance, onDone }: BadgeAscensionProps) {
   const { t, i18n } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -64,6 +72,35 @@ export function BadgeAscension({ from, to, anchor, balance, onDone }: BadgeAscen
   const motionFrom = useMemo(() => badgeMotion(from), [from]);
   const threshold = useMemo(() => badgeThreshold(to), [to]);
 
+  /**
+   * `intro` while the timed beats play, `hold` once it is waiting on the
+   * holder, `return` while the badge flies home. A ref rather than state
+   * because the animation loop reads it every frame.
+   */
+  const phaseRef = useRef<'intro' | 'hold' | 'return'>('intro');
+  const [holding, setHolding] = useState(false);
+  /** True when nothing is animating, so dismissing just closes. */
+  const staticRef = useRef(false);
+
+  /**
+   * A tap during the ceremony skips to the end of it rather than dismissing:
+   * someone who taps early wants the answer sooner, not to lose it. Only a tap
+   * once it is holding sends the badge home.
+   */
+  const requestReturn = useCallback(() => {
+    if (phaseRef.current === 'intro') {
+      phaseRef.current = 'hold';
+      setHolding(true);
+      return;
+    }
+    if (phaseRef.current === 'hold') {
+      phaseRef.current = 'return';
+      setHolding(false);
+      // Nothing to fly home under reduced motion — just close.
+      if (staticRef.current) doneRef.current();
+    }
+  }, []);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !motionTo) {
@@ -73,11 +110,14 @@ export function BadgeAscension({ from, to, anchor, balance, onDone }: BadgeAscen
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) {
-      // The information, without the journey: the caption simply stands there
-      // for a moment. Nothing flies, the badge never leaves its slot.
+      // The information, without the journey: the caption stands there and
+      // waits to be dismissed like any other. Nothing flies, the badge never
+      // leaves its slot.
       captionRef.current?.style.setProperty('--reveal', '1');
-      const id = window.setTimeout(() => doneRef.current(), 2200);
-      return () => window.clearTimeout(id);
+      staticRef.current = true;
+      phaseRef.current = 'hold';
+      setHolding(true);
+      return;
     }
 
     const ctx = canvas.getContext('2d');
@@ -281,6 +321,7 @@ export function BadgeAscension({ from, to, anchor, balance, onDone }: BadgeAscen
 
     let raf = 0;
     let start = 0;
+    let returnStart = 0;
     let finished = false;
     const total = motionTo.durationMs;
 
@@ -294,7 +335,26 @@ export function BadgeAscension({ from, to, anchor, balance, onDone }: BadgeAscen
 
     const frame = (ts: number) => {
       if (!start) start = ts;
-      const p = clamp01((ts - start) / total);
+
+      // The ceremony runs to the end of the name beat and then waits. Read at
+      // a glance, the last beat used to be gone before anyone finished the
+      // line — a tier is earned once and the holder decides when it is over.
+      let p: number;
+      if (phaseRef.current === 'return') {
+        if (!returnStart) returnStart = ts;
+        p = HOLD_AT + (1 - HOLD_AT) * clamp01((ts - returnStart) / RETURN_MS);
+      } else if (phaseRef.current === 'hold') {
+        // Parked on the last frame of the name beat. A tap during the intro
+        // lands here too, which is why this is a clamp and not a timer.
+        p = HOLD_AT;
+      } else {
+        p = Math.min(HOLD_AT, (ts - start) / total);
+        if (p >= HOLD_AT) {
+          phaseRef.current = 'hold';
+          setHolding(true);
+        }
+      }
+
       ctx.clearRect(0, 0, W, H);
 
       // The inline badge is hidden while the canvas one is in flight, so the
@@ -469,7 +529,8 @@ export function BadgeAscension({ from, to, anchor, balance, onDone }: BadgeAscen
         drawBadge(motionTo.asset, b.x, b.y, b.r, 1, 0.1 * (1 - back));
       }
 
-      // Caption rises on the name beat and clears on the way home.
+      // Caption rises on the name beat, stands through the hold, and clears
+      // on the way home.
       const cap = captionRef.current;
       if (cap) {
         if (p >= BEATS.name[0] && p < BEATS.ret[0]) {
@@ -511,7 +572,7 @@ export function BadgeAscension({ from, to, anchor, balance, onDone }: BadgeAscen
       role="dialog"
       aria-live="polite"
       aria-label={t('badgeAscension.reached', { tier: motionTo.tier })}
-      onClick={onDone}
+      onClick={requestReturn}
     >
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 
@@ -560,6 +621,24 @@ export function BadgeAscension({ from, to, anchor, balance, onDone }: BadgeAscen
             {t('badgeAscension.yourBalance', { amount: balanceText })}
           </span>
         )}
+
+        {/* The way out. It arrives only once the ceremony is waiting, so it
+            never competes with the beats for attention. */}
+        <button
+          type="button"
+          id="badge-ascension-continue"
+          onClick={(e) => {
+            e.stopPropagation();
+            requestReturn();
+          }}
+          className={
+            holding
+              ? 'pointer-events-auto mt-6 rounded-[10px] border border-white/20 bg-white/10 px-6 py-2.5 text-sm font-bold text-white opacity-100 backdrop-blur-xl transition-[opacity,transform,background-color] duration-300 hover:border-white/40 hover:bg-white/20'
+              : 'pointer-events-none mt-6 translate-y-2 rounded-[10px] border border-white/20 bg-white/10 px-6 py-2.5 text-sm font-bold text-white opacity-0 backdrop-blur-xl transition-[opacity,transform,background-color] duration-300'
+          }
+        >
+          {t('badgeAscension.continue')}
+        </button>
       </div>
     </div>,
     document.body,

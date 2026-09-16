@@ -1093,6 +1093,14 @@
     "balanceTooLow": "Zostatok je príliš nízky ({{balance}} DHB)",
     "refreshFailed": "Niečo sa pokazilo",
     "noWalletAddress": "Nenašla sa žiadna adresa peňaženky",
+    "hidden": "Skryté",
+    "noDataForPeriod": "Pre toto obdobie zatiaľ nie sú žiadne údaje",
+    "noDataYet": "Zatiaľ žiadne údaje rebríčka",
+    "seeAll": "Zobraziť všetko",
+    "rankN": "{{rank}}. miesto",
+    "you": "(ty)",
+    "provisional": "predbežné",
+    "loadingBoard": "Načítava sa rebríček…",
     "points": "Body",
     "level": "Úroveň",
     "daily": "Denný",
@@ -1101,15 +1109,7 @@
     "topEarners": "Top zárobky",
     "topTippers": "Top tipujúci",
     "mostFollowed": "Najviac sledovaní",
-    "mostLiked": "Najviac obľúbení",
-    "hidden": "Skryté",
-    "noDataForPeriod": "Pre toto obdobie zatiaľ nie sú žiadne údaje",
-    "noDataYet": "Zatiaľ žiadne údaje rebríčka",
-    "seeAll": "Zobraziť všetko",
-    "rankN": "{{rank}}. miesto",
-    "you": "(ty)",
-    "provisional": "predbežné",
-    "loadingBoard": "Načítava sa rebríček…"
+    "mostLiked": "Najviac obľúbení"
   },
   "explorePage": {
     "searchPlaceholder": "Hľadať ľudí, príspevky alebo obsah...",
@@ -2856,6 +2856,26 @@
     "callbackRequest": "Žiadosť o spätné volanie",
     "tryAgain": "Skúsiť znova"
   },
+  "badgeAscension": {
+    "reached": "Dosiahli ste {{tier}}",
+    "yourBalance": "Váš zostatok · {{amount}} DHB",
+    "lines": {
+      "crab": "Cestujete na miesta",
+      "lobster": "Neprestávajte plávať",
+      "piranha": "Malé, ale štípe",
+      "tortoise": "Pomalý a stabilný vás sem dostal",
+      "cobra": "Ľudia sa teraz sťahujú z cesty",
+      "octopus": "Osem ramien, každý hrniec",
+      "crocodile": "Túto rieku nič neprekročí",
+      "dolphin": "Teraz si veľká ryba",
+      "tigerShark": "Voda sa práve utíšila",
+      "greatWhiteShark": "Každý vie, že plutva",
+      "killerWhale": "Horná časť potravinového reťazca a lovíte v balíčkoch",
+      "blueWhale": "Najväčšia vec, ktorá kedy žila. To si ty.",
+      "megalodon": "Tu je vaša koruna — teraz ste app royalty"
+    },
+    "continue": "Späť na DeHub"
+  },
   "post": {
     "like": "Páči sa mi",
     "comment": "Komentár",
@@ -2906,24 +2926,5 @@
     "inProgress": "V realizácii",
     "completed": "Dokončené",
     "underReview": "V recenzii"
-  },
-  "badgeAscension": {
-    "reached": "Dosiahli ste {{tier}}",
-    "yourBalance": "Váš zostatok · {{amount}} DHB",
-    "lines": {
-      "crab": "Cestujete na miesta",
-      "lobster": "Neprestávajte plávať",
-      "piranha": "Malé, ale štípe",
-      "tortoise": "Pomalý a stabilný vás sem dostal",
-      "cobra": "Ľudia sa teraz sťahujú z cesty",
-      "octopus": "Osem ramien, každý hrniec",
-      "crocodile": "Túto rieku nič neprekročí",
-      "dolphin": "Teraz si veľká ryba",
-      "tigerShark": "Voda sa práve utíšila",
-      "greatWhiteShark": "Každý vie, že plutva",
-      "killerWhale": "Horná časť potravinového reťazca a lovíte v balíčkoch",
-      "blueWhale": "Najväčšia vec, ktorá kedy žila. To si ty.",
-      "megalodon": "Tu je vaša koruna — teraz ste app royalty"
-    }
   }
 }
