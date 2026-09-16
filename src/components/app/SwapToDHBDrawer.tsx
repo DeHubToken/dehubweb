@@ -1,10 +1,12 @@
 /**
- * Swap Any Token → DHB Drawer
- * ============================
- * Lets users convert any in-wallet token to DHB via Uniswap V3 on Base.
+ * Buy DHB Drawer
+ * =============
+ * Buys DHB from the dpay gateway at the fixed peg, paying with any accepted
+ * in-wallet token on Base. This used to swap against the 1% DHB/WETH pool on
+ * Uniswap — the entire market for DHB, and priced well above the peg.
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -12,12 +14,19 @@ import { AppState } from '@/components/app/AppState';
 import { Input } from '@/components/ui/input';
 import { Loader2, ArrowDown, CheckCircle2, AlertCircle, CreditCard, Wallet, Plus, ChevronDown } from 'lucide-react';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
-import { SlippageSettings } from '@/components/app/SlippageSettings';
-import { getSwapQuote, applySlippage, swapTokenForDHB, getNativeBalance } from '@/lib/contracts/uniswap-swap';
+import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
+import {
+  getCryptoPayableAssets,
+  getCryptoQuote,
+  createCryptoIntent,
+  getCryptoIntentStatus,
+  type CryptoPayableAsset,
+  type CryptoQuote,
+} from '@/lib/api/dpay';
 import { useAuth } from '@/contexts/AuthContext';
-import { useTokenPrices } from '@/hooks/use-token-prices';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
+import { useQuery } from '@tanstack/react-query';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
@@ -60,22 +69,41 @@ interface SwapToDHBDrawerProps {
 
 export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
   const { walletAddress } = useAuth();
-  const { data: prices = {} } = useTokenPrices();
   const { allTokens } = useAllChainsTokens();
 
   const [dhbAmount, setDhbAmount] = useState('');
-  const [quoteResult, setQuoteResult] = useState<{ amountIn: bigint; feeTier: number } | null>(null);
+  const [quote, setQuote] = useState<CryptoQuote | null>(null);
   const [quoting, setQuoting] = useState(false);
-  const [swapping, setSwapping] = useState(false);
+  const [buying, setBuying] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [progress, setProgress] = useState('');
   const [buyTokenOpen, setBuyTokenOpen] = useState(false);
   const [crossChainOpen, setCrossChainOpen] = useState(false);
   const [tokenPickerOpen, setTokenPickerOpen] = useState(false);
   const [selectedTokenAddress, setSelectedTokenAddress] = useState<string>('0x0');
-  const [slippageBps, setSlippageBps] = useState(200);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const debouncedAmount = useDebouncedValue(dhbAmount, 500);
+
+  // What the gateway will accept as payment. Everything else in the wallet can
+  // be held but not spent here.
+  const { data: payableAssets = [] } = useQuery({
+    queryKey: ['dpay', 'crypto', 'assets'],
+    queryFn: getCryptoPayableAssets,
+    staleTime: 10 * 60 * 1000,
+  });
+
+  /** Base-chain assets the rail accepts, keyed by their Base contract address. */
+  const assetByAddress = useMemo(() => {
+    const map = new Map<string, CryptoPayableAsset>();
+    for (const asset of payableAssets) {
+      if (asset.blockchain !== 'base') continue;
+      // Native ETH on Base has no contract address in the listing.
+      map.set((asset.contractAddress ?? '0x0').toLowerCase(), asset);
+    }
+    return map;
+  }, [payableAssets]);
 
   // Available pay tokens: Base chain tokens with balance (exclude DHB) + native ETH
   const payTokens: PayToken[] = useMemo(() => {
@@ -114,82 +142,151 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
       || { symbol: 'ETH', address: '0x0', decimals: 18, balance: BigInt(0), formattedBalance: '0', chainId: BASE_CHAIN_ID };
   }, [payTokens, selectedTokenAddress]);
 
+  const originAsset = assetByAddress.get(selectedToken.address.toLowerCase())?.assetId ?? null;
+
   // Reset on open
   useEffect(() => {
     if (!open) return;
     setSuccess(false);
     setError('');
+    setProgress('');
   }, [open]);
 
-  // Fetch quote when amount or selected token changes
+  useEffect(() => () => {
+    if (pollRef.current) clearInterval(pollRef.current);
+  }, []);
+
+  // Price the purchase at the gateway's peg whenever the amount or token moves.
   useEffect(() => {
     const amt = parseFloat(debouncedAmount);
     if (!amt || amt <= 0) {
-      setQuoteResult(null);
+      setQuote(null);
+      setError('');
       return;
     }
+    if (!originAsset) {
+      setQuote(null);
+      setError(`${selectedToken.symbol} isn't accepted as payment yet — pick another token.`);
+      return;
+    }
+    let cancelled = false;
     setQuoting(true);
     setError('');
-    const amountWei = BigInt(Math.floor(amt)) * BigInt(10 ** 18);
-    getSwapQuote(amountWei, selectedToken.address)
-      .then(q => {
-        setQuoteResult(q);
-        if (!q) setError('No liquidity available for this pair/amount');
+    getCryptoQuote({ originAsset, tokensToReceive: Math.floor(amt), refundTo: walletAddress ?? undefined })
+      .then(q => { if (!cancelled) setQuote(q); })
+      .catch(err => {
+        if (cancelled) return;
+        setQuote(null);
+        // The gateway's own message carries the per-route minimum and the
+        // supply and gas refusals, all of which the buyer needs to read.
+        setError(err?.message || 'Could not price this purchase.');
       })
-      .catch(() => {
-        setQuoteResult(null);
-        setError('Failed to get quote');
-      })
-      .finally(() => setQuoting(false));
-  }, [debouncedAmount, selectedToken.address]);
+      .finally(() => { if (!cancelled) setQuoting(false); });
+    return () => { cancelled = true; };
+  }, [debouncedAmount, originAsset, selectedToken.symbol, walletAddress]);
 
-  const amountInWithSlippage = quoteResult ? applySlippage(quoteResult.amountIn, slippageBps) : null;
-  const amountInFormatted = amountInWithSlippage
-    ? (Number(amountInWithSlippage) / 10 ** selectedToken.decimals).toFixed(selectedToken.decimals <= 8 ? selectedToken.decimals : 6)
-    : null;
+  const amountInWei = quote ? BigInt(quote.amountIn) : null;
+  const amountInFormatted = quote ? quote.amountInFormatted : null;
   const balanceFormatted = selectedToken.balance > BigInt(0)
     ? (Number(selectedToken.balance) / 10 ** selectedToken.decimals).toFixed(selectedToken.decimals <= 8 ? selectedToken.decimals : 6)
     : '0';
-  const insufficientBalance = amountInWithSlippage && selectedToken.balance < amountInWithSlippage;
+  const insufficientBalance = amountInWei != null && selectedToken.balance < amountInWei;
+  /** The gateway's own dollar figure for this purchase, not a local estimate. */
+  const dhbUsd = quote ? parseFloat(quote.amountInUsd) : 0;
 
-  const tokenPrice = prices[selectedToken.symbol] ?? 0;
-  const dhbPrice = prices['DHB'] ?? 0;
-  const dhbUsd = dhbPrice && dhbAmount ? (parseFloat(dhbAmount) * dhbPrice) : 0;
-  const payUsd = tokenPrice && amountInFormatted ? (parseFloat(amountInFormatted) * tokenPrice) : 0;
 
-  const handleSwap = useCallback(async () => {
-    if (!walletAddress || !quoteResult || !amountInWithSlippage) return;
-    const amt = parseFloat(dhbAmount);
+  /**
+   * Buy through the gateway.
+   *
+   * Once the deposit transaction is broadcast the purchase belongs to dpay —
+   * it watches the deposit address and delivers from the treasury. So the
+   * send is never reported as a failure on a local error: losing sight of a
+   * transaction is not the same as it not happening, which is exactly how the
+   * old Uniswap path told people a completed swap had failed.
+   */
+  const handleBuy = useCallback(async () => {
+    if (!walletAddress || !quote || !originAsset) return;
+    const amt = Math.floor(parseFloat(dhbAmount));
     if (!amt || amt <= 0) return;
 
-    setSwapping(true);
+    setBuying(true);
     setError('');
+    setProgress('Opening your purchase...');
     try {
-      const amountOutWei = BigInt(Math.floor(amt)) * BigInt(10 ** 18);
-      const receipt = await swapTokenForDHB(
-        amountOutWei,
-        amountInWithSlippage,
-        walletAddress,
-        selectedToken.address,
-        quoteResult.feeTier,
-      );
-      setSuccess(true);
-      toast.success(dhbText(`Swapped for ${Math.floor(amt).toLocaleString()} DHB`), {
-        description: `TX: ${receipt.hash.slice(0, 10)}…`,
+      const intent = await createCryptoIntent({
+        originAsset,
+        tokensToReceive: amt,
+        receiverAddress: walletAddress,
+        // A swap that fails upstream has to have somewhere to go back to, and
+        // the buyer is paying from this wallet on Base.
+        refundTo: walletAddress,
+        termsAndServicesAccepted: true,
       });
+
+      setProgress(`Sending ${intent.amountInFormatted} ${selectedToken.symbol}...`);
+      const isNative = selectedToken.address === '0x0';
+      const sent = isNative
+        ? await sendNativeToken(intent.depositAddress, intent.amountInFormatted, selectedToken.decimals, BASE_CHAIN_ID)
+        : await sendERC20Token(selectedToken.address, intent.depositAddress, intent.amountInFormatted, selectedToken.decimals, BASE_CHAIN_ID);
+
+      toast.success(dhbText(`Payment sent — delivering ${amt.toLocaleString()} DHB`), {
+        description: `TX: ${sent.hash.slice(0, 10)}…`,
+      });
+      setProgress('Payment sent. Waiting for delivery...');
+
+      if (pollRef.current) clearInterval(pollRef.current);
+      let ticks = 0;
+      pollRef.current = setInterval(async () => {
+        ticks++;
+        // Routes from Base settle in well under a minute, but the gateway
+        // queues deliveries behind one another. Give it ten minutes before
+        // handing the buyer off to their wallet rather than calling it failed.
+        if (ticks > 200) {
+          if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
+          setBuying(false);
+          setProgress('');
+          toast.info(dhbText('Payment received. Your DHB is still on its way — check your wallet shortly.'));
+          return;
+        }
+        try {
+          const status = await getCryptoIntentStatus(intent.id);
+          if (status.tokenSendStatus === 'sent') {
+            if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
+            setBuying(false);
+            setSuccess(true);
+            toast.success(dhbText(`${amt.toLocaleString()} DHB delivered to your wallet`));
+            return;
+          }
+          if (status.settlement === 'REFUNDED' || status.settlement === 'FAILED' || status.tokenSendStatus === 'cancelled') {
+            if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
+            setBuying(false);
+            setProgress('');
+            setError('The payment could not be settled and has been refunded to your wallet.');
+            return;
+          }
+          setProgress(
+            status.settlement === 'PENDING_DEPOSIT'
+              ? 'Payment sent. Waiting for confirmation...'
+              : 'Payment confirmed. Delivering your DHB...',
+          );
+        } catch {
+          /* keep polling — a failed status read is not a failed purchase */
+        }
+      }, 3000);
     } catch (err: any) {
-      const msg = err?.shortMessage || err?.message || 'Swap failed';
+      const msg = err?.shortMessage || err?.message || 'Purchase failed';
       setError(msg);
-      toast.error('Swap failed', { description: msg });
-    } finally {
-      setSwapping(false);
+      setProgress('');
+      setBuying(false);
+      toast.error('Purchase failed', { description: msg });
     }
-  }, [walletAddress, quoteResult, amountInWithSlippage, dhbAmount, selectedToken]);
+  }, [walletAddress, quote, originAsset, dhbAmount, selectedToken]);
 
   const handleClose = (v: boolean) => {
     if (!v) {
       setDhbAmount('');
-      setQuoteResult(null);
+      setQuote(null);
+      setProgress('');
       setSuccess(false);
       setError('');
     }
@@ -203,13 +300,13 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
     <Drawer open={open} onOpenChange={handleClose}>
       <DrawerContent column glass hideHandle={false} data-wallet-page>
         <DrawerHeader>
-          <DrawerTitle className="text-white">Swap {selectedToken.symbol} → DHB</DrawerTitle>
+          <DrawerTitle className="text-white">Buy DHB with {selectedToken.symbol}</DrawerTitle>
         </DrawerHeader>
         <div className="px-4 pb-8 space-y-4">
           {success ? (
             <div className="flex flex-col items-center gap-3 py-6">
               <CheckCircle2 className="w-12 h-12 text-emerald-400" />
-              <p className="text-white font-medium">Swap Successful!</p>
+              <p className="text-white font-medium">Purchase complete</p>
               <p className="text-sm text-zinc-400">
                 {Math.floor(parseFloat(dhbAmount)).toLocaleString()} <DhbCoin /> added to your wallet
               </p>
@@ -260,7 +357,6 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
               <div className="bg-white/[0.04] border border-white/10 rounded-xl p-4 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-zinc-400">You pay</span>
-                  <SlippageSettings slippageBps={slippageBps} onSlippageChange={setSlippageBps} />
                 </div>
                 <div className="flex items-center gap-3">
                   {/* Token selector button */}
@@ -312,16 +408,16 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
 
               <Button
                 variant="glass"
-                onClick={handleSwap}
-                disabled={!amountInWithSlippage || !!insufficientBalance || swapping || quoting || !dhbAmount}
+                onClick={handleBuy}
+                disabled={!quote || !!insufficientBalance || buying || quoting || !dhbAmount}
                 className="w-full rounded-xl h-12 text-sm font-semibold"
               >
-                {swapping ? (
-                  <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Swapping…</>
+                {buying ? (
+                  <><Loader2 className="w-4 h-4 animate-spin mr-2" /> {progress || 'Working…'}</>
                 ) : insufficientBalance ? (
                   `Insufficient ${selectedToken.symbol}`
                 ) : (
-                  'Confirm Swap'
+                  'Confirm Purchase'
                 )}
               </Button>
             </>
@@ -347,7 +443,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
                 onClick={() => {
                   setSelectedTokenAddress(token.address);
                   setTokenPickerOpen(false);
-                  setQuoteResult(null); // reset quote for new token
+                  setQuote(null); // reset quote for new token
                 }}
                 className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors ${
                   isSelected
