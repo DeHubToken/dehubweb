@@ -365,7 +365,9 @@ export function SwapToTokenDrawer({
                   {isSelected && <span className="text-[10px] text-emerald-400 ml-2">Selected</span>}
                 </div>
                 <span className={`text-sm ${hasBalance ? 'text-white' : 'text-zinc-600'}`}>
-                  {hasBalance ? parseFloat(token.formattedBalance).toLocaleString('en-US', { maximumFractionDigits: 4 }) : '0'}
+                  {/* From the raw balance, not formattedBalance: the wallet renders a
+                      dust balance as the string '<0.01', and parseFloat of that is NaN. */}
+                  {hasBalance ? (Number(token.balance) / 10 ** token.decimals).toLocaleString('en-US', { maximumFractionDigits: 6 }) : '0'}
                 </span>
               </button>
             );
