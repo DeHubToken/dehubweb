@@ -9,8 +9,8 @@ import { getBadgeName } from "@/lib/staking-badges";
 const BUILDS_BY_BADGE: Array<{ name: string; builds: number }> = [
   { name: "Megalodon", builds: 120 },
   { name: "Blue Whale", builds: 90 },
-  { name: "Great White Shark", builds: 75 },
-  { name: "Killer Whale", builds: 60 },
+  { name: "Killer Whale", builds: 75 },
+  { name: "Great White Shark", builds: 60 },
   { name: "Tiger Shark", builds: 50 },
   { name: "Dolphin", builds: 40 },
   { name: "Crocodile", builds: 30 },

@@ -21,8 +21,8 @@ const BADGE_LEVELS: { name: string; min: number }[] = [
   { name: "Crocodile", min: 1000000 },
   { name: "Dolphin", min: 2000000 },
   { name: "Tiger Shark", min: 3000000 },
-  { name: "Killer Whale", min: 5000000 },
-  { name: "Great White Shark", min: 10000000 },
+  { name: "Great White Shark", min: 5000000 },
+  { name: "Killer Whale", min: 10000000 },
   { name: "Blue Whale", min: 25000000 },
   { name: "Megalodon", min: 50000000 },
 ];

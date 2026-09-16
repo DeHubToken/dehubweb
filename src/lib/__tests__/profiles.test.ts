@@ -471,7 +471,7 @@ describe('badge-tier profile allowance', () => {
   });
 
   it('names the next tier that is actually worth more, not the next one along', () => {
-    // Cobra through Great White Shark all keep ten, so the offer under a
+    // Cobra through Killer Whale all keep ten, so the offer under a
     // Cobra badge is Blue Whale's twenty-five — not "Octopus keeps 10".
     seedAccount(1, 250_000);
     adoptCurrentProfile();

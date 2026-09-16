@@ -74,8 +74,8 @@ const BADGE_VOTE_WEIGHT: Record<string, number> = {
   "Crocodile": 7,
   "Dolphin": 8,
   "Tiger Shark": 9,
-  "Killer Whale": 10,
-  "Great White Shark": 11,
+  "Great White Shark": 10,
+  "Killer Whale": 11,
   "Blue Whale": 12,
   "Megalodon": 13,
 };

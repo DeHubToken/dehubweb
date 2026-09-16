@@ -21,8 +21,8 @@ export const badgeTiers: BadgeTier[] = [
   { name: 'Crocodile', cpm: 2000, audience: 2000, holdings: '1m+' },
   { name: 'Dolphin', cpm: 3000, audience: 1000, holdings: '2m+' },
   { name: 'Tiger Shark', cpm: 4000, audience: 500, holdings: '3m+' },
-  { name: 'Killer Whale', cpm: 5500, audience: 250, holdings: '5m+' },
-  { name: 'Great White Shark', cpm: 8750, audience: 100, holdings: '10m+' },
+  { name: 'Great White Shark', cpm: 5500, audience: 250, holdings: '5m+' },
+  { name: 'Killer Whale', cpm: 8750, audience: 100, holdings: '10m+' },
   { name: 'Blue Whale', cpm: 16000, audience: 50, holdings: '25m+' },
   { name: 'Megalodon', cpm: 25000, audience: 25, holdings: '50m+' }
 ];
