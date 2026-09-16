@@ -17,7 +17,7 @@ import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
 import { parseVisibility } from '@/hooks/use-privacy-settings';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 
-import { getBadgeUrl } from '@/lib/staking-badges';
+import { getBadgeName, getBadgeUrl } from '@/lib/staking-badges';
 import { useSelfBadge, preferLiveBalance } from '@/hooks/use-self-badge-balance';
 import { useStories, useWatchedStories } from '@/hooks/use-stories';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
@@ -243,6 +243,9 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       ? preferLiveBalance(apiProfile?.badgeBalance, selfBadge.balance)
       : apiProfile?.badgeBalance;
   const badgeUrl = getBadgeUrl(badgeBalance, apiProfile?.handle || routeUsername);
+  // The tier by name, for the ascension ceremony: it compares tiers, not URLs,
+  // and the balance is what it prints under the threshold.
+  const badgeTier = getBadgeName(badgeBalance, apiProfile?.handle || routeUsername);
 
   // Content separation
   const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS, ALL_CONTENT } = useMemo(() => {
@@ -492,6 +495,8 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     setFollowStatus,
     // Badge
     badgeUrl,
+    badgeTier,
+    badgeBalance,
     // Content
     PROFILE_POSTS,
     PROFILE_IMAGES,
