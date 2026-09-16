@@ -5000,5 +5000,33 @@
     "watchOnSource": "Open the original",
     "yourChannel": "Your channel",
     "yourChannelHint": "Paste your channel address — the handle on its own works too."
+  },
+  "calls": {
+    "voiceCall": "DeHub voice call",
+    "videoCall": "DeHub video call",
+    "incoming": "Incoming call",
+    "calling": "Calling...",
+    "connecting": "Connecting...",
+    "connected": "Connected",
+    "decline": "Decline",
+    "accept": "Accept",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "muted": "Muted",
+    "speaker": "Loudspeaker",
+    "camera": "Camera",
+    "cameraOff": "Camera off",
+    "flip": "Flip camera",
+    "end": "Hang up",
+    "minimize": "Minimize",
+    "expand": "Expand",
+    "tapToEnableAudio": "Tap to enable audio",
+    "offlineTitle": "User appears to be offline",
+    "failedTitle": "Call failed",
+    "offlineDesc": "{{name}} is not available for calls right now. Send a callback request and they can call you back when they are online.",
+    "failedDesc": "The call could not be completed. Check your connection and try again.",
+    "close": "Close",
+    "callbackRequest": "Callback request",
+    "tryAgain": "Try again"
   }
 }

@@ -2300,5 +2300,9 @@
     "statusImporting": "هێنانەوە",
     "subtitle": "Kanalek an profîlek bipêçe, tiştê ku hûn jê hez dikin biguherîne, carekê bide.",
     "watchOnSource": "ResenName"
+  },
+  "calls": {
+    "calling": "بانگ کردن - کار - پیشە",
+    "tryAgain": "هەوڵێ دوبارە"
   }
 }
