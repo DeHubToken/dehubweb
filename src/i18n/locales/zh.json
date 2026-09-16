@@ -1829,7 +1829,10 @@
     "not_now": "暂不",
     "image_too_large_tier": "图片太大，您的{{tier}}会员等级存储的图片不超过{{limit}} MB",
     "image_too_large_untiered": "图像太大—图像存储大小不超过{{limit}} MB",
-    "rate_limited": "请求过于频繁，慢一点"
+    "rate_limited": "请求过于频繁，慢一点",
+    "waiting_for_wallet": "正在等待您的钱包",
+    "waiting_for_wallet_desc": "打开{{wallet}}并批准签名—请求正在那里等待。",
+    "your_wallet": "您的钱包"
   },
   "staking": {
     "title": "质押",

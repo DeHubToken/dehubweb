@@ -1820,7 +1820,10 @@
     "not_now": "Hhayi manje",
     "image_too_large_tier": "Isithombe sikhulu kakhulu — i- {{tier}}tier yakho igcina izithombe ezifika ku- {{limit}} MB",
     "image_too_large_untiered": "Isithombe sikhulu kakhulu — izithombe zigcinwa kuze kufike ku- {{limit}} MB",
-    "rate_limited": "Umkhawulo ufinyelelwe, yehlisa ijubane"
+    "rate_limited": "Umkhawulo ufinyelelwe, yehlisa ijubane",
+    "waiting_for_wallet": "Ilinde isikhwama sakho semali",
+    "waiting_for_wallet_desc": "Vula {{wallet}} bese ugunyaza isignesha — isicelo silinde lapho.",
+    "your_wallet": "isikhwama sakho semali"
   },
   "staking": {
     "title": "Staking",

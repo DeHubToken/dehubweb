@@ -1827,7 +1827,10 @@
     "not_now": "나중에",
     "image_too_large_tier": "이미지가 너무 큽니다. {{tier}} 등급은 최대 {{limit}} MB의 이미지를 저장합니다.",
     "image_too_large_untiered": "이미지가 너무 큽니다 — 이미지는 {{limit}} MB까지 저장됩니다",
-    "rate_limited": "요청 제한에 걸렸어요. 천천히 해주세요"
+    "rate_limited": "요청 제한에 걸렸어요. 천천히 해주세요",
+    "waiting_for_wallet": "지갑을 기다리는 중",
+    "waiting_for_wallet_desc": "{{wallet}} 을 열고 서명을 승인합니다. 요청이 대기 중입니다.",
+    "your_wallet": "내 지갑"
   },
   "staking": {
     "title": "스테이킹",

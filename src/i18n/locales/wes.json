@@ -1663,7 +1663,8 @@
     "push_display_failed_body": "Dis browser no fit show notification, so none of dem na reach you. Your system settings no be di problem — di browser self report di failure.",
     "push_tab_only_body": "Dis browser no go register for background notifications, so nothing go reach you while DeHub done close.",
     "not_now": "No bi nau",
-    "rate_limited": "You di go too fast, slow down"
+    "rate_limited": "You di go too fast, slow down",
+    "your_wallet": "una wallet"
   },
   "staking": {
     "title": "Staking",

@@ -1608,7 +1608,10 @@
     "not_now": "Để sau",
     "image_too_large_tier": "Hình ảnh quá lớn — cấp độ {{tier}} của bạn lưu trữ hình ảnh lên đến {{limit}} MB",
     "image_too_large_untiered": "Hình ảnh quá lớn — hình ảnh được lưu trữ lên đến {{limit}} MB",
-    "rate_limited": "Bị giới hạn, chậm lại nhé"
+    "rate_limited": "Bị giới hạn, chậm lại nhé",
+    "waiting_for_wallet": "Đang chờ ví của bạn",
+    "waiting_for_wallet_desc": "Mở {{wallet}} và phê duyệt chữ ký — yêu cầu đang chờ ở đó.",
+    "your_wallet": "Ví của bạn"
   },
   "staking": {
     "title": "Staking",

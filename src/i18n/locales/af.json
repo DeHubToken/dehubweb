@@ -1701,7 +1701,10 @@
     "not_now": "Nie nou nie",
     "image_too_large_tier": "Beeld is te groot — jou {{tier}} vlak stoor beelde tot {{limit}} MB",
     "image_too_large_untiered": "Beeld is te groot — beelde word gestoor tot {{limit}} MB",
-    "rate_limited": "Tempo beperk, gaan stadiger"
+    "rate_limited": "Tempo beperk, gaan stadiger",
+    "waiting_for_wallet": "Wag vir jou beursie",
+    "waiting_for_wallet_desc": "Open {{wallet}} en keur die handtekening goed — die versoek wag daar.",
+    "your_wallet": "jou beursie"
   },
   "staking": {
     "title": "Staking",

@@ -1789,7 +1789,10 @@
     "not_now": "Kì í ṣe nísinsìnyí",
     "image_too_large_tier": "Àwòrán tóbi jù — rẹ {{tier}}tier máa ń fi àwòrán pamọ́ sí {{limit}} MB",
     "image_too_large_untiered": "Àwòrán tóbi jù — a máa ń fi àwòrán pamọ́ sí {{limit}} MB",
-    "rate_limited": "Ìdínwọ̀n ìbéèrè, rọra"
+    "rate_limited": "Ìdínwọ̀n ìbéèrè, rọra",
+    "waiting_for_wallet": "Nduro fun apamọwọ rẹ",
+    "waiting_for_wallet_desc": "Ṣí {{wallet}} kí o sì fọwọ́ sí ìforúkọsílẹ̀ náà — ìbéèrè náà ń dúró síbẹ̀.",
+    "your_wallet": "apamọwọ rẹ"
   },
   "staking": {
     "title": "Staking",

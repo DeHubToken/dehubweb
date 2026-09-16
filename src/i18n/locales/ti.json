@@ -1768,7 +1768,10 @@
     "not_now": "ሕጂ ኣይኮነን",
     "image_too_large_tier": "ስእሊ ኣዝዩ ዓቢ እዩ — ናትካ {{tier}} tier ምስሊታት ክሳብ {{limit}} MB ይዕቅብ",
     "image_too_large_untiered": "ስእሊ ኣዝዩ ዓቢ እዩ — ስእልታት ክሳብ {{limit}} MB ይዕቀቡ",
-    "rate_limited": "ደረት ተወሲኑ፣ ቀስ በሉ"
+    "rate_limited": "ደረት ተወሲኑ፣ ቀስ በሉ",
+    "waiting_for_wallet": "ነቲ ቦርሳኻ ትጽበዮ",
+    "waiting_for_wallet_desc": "ክፉት {{wallet}} ነቲ ፊርማ ኣጽዲቕካ — እቲ ሕቶ ኣብኡ ይጽበ ኣሎ ።",
+    "your_wallet": "ቦርሳኻ"
   },
   "staking": {
     "title": "ምቕማጥ",

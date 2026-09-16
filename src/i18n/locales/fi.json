@@ -1774,7 +1774,10 @@
     "not_now": "Ei nyt",
     "image_too_large_tier": "Kuva on liian suuri — {{tier}}-tasosi tallentaa enintään {{limit}} Mt: n kuvia",
     "image_too_large_untiered": "Kuva on liian suuri — kuvia tallennetaan enintään {{limit}} Mt",
-    "rate_limited": "Pyyntöraja täynnä, hidasta"
+    "rate_limited": "Pyyntöraja täynnä, hidasta",
+    "waiting_for_wallet": "Odotetaan lompakkoasi",
+    "waiting_for_wallet_desc": "Avaa {{wallet}} ja hyväksy allekirjoitus — pyyntö odottaa siellä.",
+    "your_wallet": "lompakkosi"
   },
   "staking": {
     "title": "Staking",

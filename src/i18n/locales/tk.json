@@ -1778,7 +1778,10 @@
     "not_now": "Häzir däl",
     "image_too_large_tier": "Resim gaty uly — {{tier}} tier {{limit}}MB-eçenlisuratlary saklaýar",
     "image_too_large_untiered": "Resim gaty uly — suratlar {{limit}}MB-de saklanýar",
-    "rate_limited": "Haýyş çägi, haýalladyň"
+    "rate_limited": "Haýyş çägi, haýalladyň",
+    "waiting_for_wallet": "Men seniň çuwalyňa garaşýaryn",
+    "waiting_for_wallet_desc": "{{wallet}} açyň we gol çekmegi kabul ediň — haýyş şol ýerde garaşýar.",
+    "your_wallet": "pul kagyzy"
   },
   "staking": {
     "title": "Goýum",

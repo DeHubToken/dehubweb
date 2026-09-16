@@ -1790,7 +1790,10 @@
     "push_blocked_more": "Faahfaahin dheeraad ah",
     "not_now": "Hadda maya",
     "image_too_large_untiered": "Sawirka waa mid aad u weyn — sawirada waxaa lagu keydiyaa {{limit}} MB",
-    "rate_limited": "Xadka la gaadhay, hoos u dhig"
+    "rate_limited": "Xadka la gaadhay, hoos u dhig",
+    "waiting_for_wallet": "Sugitaanka boorsadaada",
+    "waiting_for_wallet_desc": "Furan {{wallet}} oo ogolow saxiixa — codsiga ayaa halkaas laga sugayaa.",
+    "your_wallet": "boorsadaada"
   },
   "staking": {
     "title": "Staking",

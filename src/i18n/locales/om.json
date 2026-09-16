@@ -1804,7 +1804,10 @@
     "not_now": "Amma miti",
     "image_too_large_tier": "Fakkiin baayyee guddaadha — sadarkaan {{tier}} kee fakkiiwwan hanga {{limit}} MB kuufata",
     "image_too_large_untiered": "Fakkiin baayyee guddaadha — fakkiiwwan hanga {{limit}} MB tti kuufamaniiru",
-    "rate_limited": "Saffisi daangeffameera, suuta"
+    "rate_limited": "Saffisi daangeffameera, suuta",
+    "waiting_for_wallet": "Borsaa keessan eegaa jirtu",
+    "waiting_for_wallet_desc": "{{wallet}} baniitii mallattoo sana raggaasi — gaaffiin achitti eegaa jira.",
+    "your_wallet": "boorsaa keessan"
   },
   "staking": {
     "title": "Kuusuu",

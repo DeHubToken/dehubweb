@@ -1822,7 +1822,10 @@
     "not_now": "Manaraq",
     "image_too_large_tier": "Siqiqa ancha hatunmi — {{tier}} pataykiqa siq&#39;ikunata {{limit}} MB nisqakama waqaychan",
     "image_too_large_untiered": "Siqiqa ancha hatunmi — siq&#39;ikunaqa {{limit}} MB nisqakamam waqaychasqa kachkan",
-    "rate_limited": "Mañakuy sayay, allillamanta"
+    "rate_limited": "Mañakuy sayay, allillamanta",
+    "waiting_for_wallet": "Billeteraykita suyaspa",
+    "waiting_for_wallet_desc": "{{wallet}} kichay hinaspa firmata aprobay — mañakuyqa chaypi suyachkan.",
+    "your_wallet": "billeteraykipi"
   },
   "staking": {
     "title": "Staking",

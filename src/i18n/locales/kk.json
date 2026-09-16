@@ -1805,7 +1805,10 @@
     "not_now": "Қазір емес",
     "image_too_large_tier": "Кескін тым үлкен — {{tier}} tier кескіндерді {{limit}} MB дейін сақтайды",
     "image_too_large_untiered": "Кескін тым үлкен — кескіндер {{limit}} MB дейін сақталады",
-    "rate_limited": "Сұраныс шегі, баяулатыңыз"
+    "rate_limited": "Сұраныс шегі, баяулатыңыз",
+    "waiting_for_wallet": "Әмияныңызды күтуде",
+    "waiting_for_wallet_desc": "{{wallet}} ашыңыз және қолтаңбаны мақұлдаңыз — сұрау сол жерде күтуде.",
+    "your_wallet": "әмияныңыз"
   },
   "staking": {
     "title": "Салым",

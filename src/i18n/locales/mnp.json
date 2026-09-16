@@ -1738,7 +1738,10 @@
     "not_now": "暂且莫",
     "image_too_large_tier": "圖像太大——你的 {{tier}} 層級商店最多可以存儲 {{limit}} MB 的圖像",
     "image_too_large_untiered": "圖像過大——圖像儲存上限為 {{limit}} MB",
-    "rate_limited": "请求过快，慢兮"
+    "rate_limited": "请求过快，慢兮",
+    "waiting_for_wallet": "等汝钱包",
+    "waiting_for_wallet_desc": "开 {{wallet}} 批准签名 — 请求勒勒等。",
+    "your_wallet": "汝个钱包"
   },
   "staking": {
     "title": "存款",

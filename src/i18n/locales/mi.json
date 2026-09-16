@@ -1785,7 +1785,10 @@
     "not_now": "Kaua i tēnei wā",
     "image_too_large_tier": "He nui rawa te whakaahua — to {{tier}} tier toa whakaahua tae atu ki {{limit}} MB",
     "image_too_large_untiered": "He nui rawa te whakaahua — kei te rokiroki nga whakaahua ki te {{limit}} MB",
-    "rate_limited": "Kua tae ki te tepe, āta haere"
+    "rate_limited": "Kua tae ki te tepe, āta haere",
+    "waiting_for_wallet": "Kei te tatari ahau ki to putea",
+    "waiting_for_wallet_desc": "Whakatuwherahia {{wallet}} me te whakaae ki te hainatanga — kei te tatari te tono ki reira.",
+    "your_wallet": "tou putea"
   },
   "staking": {
     "title": "Tāpui Moni",

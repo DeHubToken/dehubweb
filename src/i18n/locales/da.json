@@ -1831,7 +1831,10 @@
     "not_now": "Ikke nu",
     "image_too_large_tier": "Billedet er for stort — dit {{tier}}-niveau gemmer billeder på op til {{limit}}MB",
     "image_too_large_untiered": "Billedet er for stort — billeder gemmes op til {{limit}}MB",
-    "rate_limited": "Hastighedsgrænse nået, tag det roligt"
+    "rate_limited": "Hastighedsgrænse nået, tag det roligt",
+    "waiting_for_wallet": "Venter på din tegnebog",
+    "waiting_for_wallet_desc": "Åbn {{wallet}}, og godkend signaturen — anmodningen venter der.",
+    "your_wallet": "din tegnebog"
   },
   "staking": {
     "title": "Staking",
