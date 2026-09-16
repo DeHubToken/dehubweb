@@ -2,8 +2,10 @@ import {
   UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check, Ban, MessageSquare
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { BadgeAscension } from '@/components/app/BadgeAscension';
+import { useBadgeCeremony } from '@/hooks/use-badge-ceremony';
 import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
@@ -48,6 +50,10 @@ interface ProfileHeaderProps {
   isViewingOwnProfile: boolean | undefined;
   isAuthenticated: boolean;
   badgeUrl: string | null;
+  /** Tier by name, for the ascension ceremony. */
+  badgeTier?: string | null;
+  /** DHB behind that tier, printed under the threshold during the ceremony. */
+  badgeBalance?: number | string | null;
   // Follow state
   isFollowing: boolean;
   isPending: boolean;
@@ -96,6 +102,8 @@ export function ProfileHeader({
   isViewingOwnProfile,
   isAuthenticated,
   badgeUrl,
+  badgeTier,
+  badgeBalance,
   isFollowing,
   isPending,
   isTargetPrivate,
@@ -158,6 +166,15 @@ export function ProfileHeader({
       avatarUrl: profile.avatarUrl,
     });
   };
+  // Badge ascension — own profile only, and only ever on the way up. The slot
+  // ref is what the ceremony flies out of and returns to.
+  const badgeSlotRef = useRef<HTMLSpanElement>(null);
+  const { ceremony, dismiss } = useBadgeCeremony({
+    enabled: !!isViewingOwnProfile,
+    address: apiProfile?.walletAddress ?? profile.walletAddress,
+    tier: badgeTier,
+  });
+
   const [showUnfollowConfirm, setShowUnfollowConfirm] = useState(false);
   const [avatarFailed, setAvatarFailed] = useState(false);
   const [avatarCdnFailed, setAvatarCdnFailed] = useState(false);
@@ -165,6 +182,15 @@ export function ProfileHeader({
 
   return (
     <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
+      {ceremony && (
+        <BadgeAscension
+          from={ceremony.from}
+          to={ceremony.to}
+          anchor={badgeSlotRef.current}
+          balance={typeof badgeBalance === 'string' ? Number(badgeBalance) : badgeBalance}
+          onDone={dismiss}
+        />
+      )}
       {/* Cover Photo */}
       {isFetchingProfile && !profile.coverUrl ? (
         <Skeleton className="aspect-[3/1] w-full bg-white/[0.06] rounded-none" />
@@ -417,7 +443,11 @@ export function ProfileHeader({
               <div className="flex items-center gap-2">
                 <span className="group inline-flex items-baseline gap-1">
                   <h2 className="text-2xl font-bold leading-8 text-white">{profile.name}</h2>
-                  <BadgeIcon src={badgeUrl} className="w-[1em] h-[1em]" />
+                  {/* The ceremony flies the badge out of this slot and back
+                      into it, so it needs an element to measure. */}
+                  <span ref={badgeSlotRef} className="inline-flex">
+                    <BadgeIcon src={badgeUrl} className="w-[1em] h-[1em]" />
+                  </span>
                   {/* A lent badge draws like any other badge everywhere else
                       on the site. Hovering the name it sits on is the one
                       place that says whose badge it is. */}
