@@ -1040,7 +1040,15 @@
     "addedToLeaderboard": "You've been added! Balance: {{balance}} DHB",
     "balanceTooLow": "Balance too low ({{balance}} DHB)",
     "refreshFailed": "Something went wrong",
-    "noWalletAddress": "No wallet address found"
+    "noWalletAddress": "No wallet address found",
+    "hidden": "Hidden",
+    "noDataForPeriod": "No data available for this period yet",
+    "noDataYet": "No leaderboard data yet",
+    "seeAll": "See all",
+    "rankN": "Rank {{rank}}",
+    "you": "(you)",
+    "provisional": "provisional",
+    "loadingBoard": "Loading leaderboard…"
   },
   "explorePage": {
     "searchPlaceholder": "Search for people, posts, or content...",
@@ -1968,7 +1976,20 @@
     "intro": "A collection of DeHub built and open sourced games, worlds or experiences.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Play games in your browser on DeHub — cinematic 3D chess, a procedurally generated shooter, a rainforest walk, a neon-street brawler and a walkable trading floor. No install, no download.",
-    "alsoIn": "Also in the {{theme}}"
+    "alsoIn": "Also in the {{theme}}",
+    "hpLeft": "{{hp}} HP left",
+    "noHpLeft": "no HP left",
+    "bestOfRuns": "best of {{count}} runs",
+    "firstRun": "first run",
+    "gamesRecord_one": "{{count}} game · {{wins}}W {{losses}}L {{draws}}D",
+    "gamesRecord_other": "{{count}} games · {{wins}}W {{losses}}L {{draws}}D",
+    "anon": "anon",
+    "streetSlayerBoardTitle": "Furthest down the street",
+    "streetSlayerBoardBlurb": "How far you got before the street got you, and how much health you had left when you stopped. Beat your own best to move up.",
+    "streetSlayerBoardEmpty": "Nobody has made it far enough yet. Be the first.",
+    "kingsGambitBoardTitle": "Rating",
+    "kingsGambitBoardBlurb": "Elo across every online match. Everyone starts at 1200; beating a stronger player is worth more than beating a weaker one, so the ladder cannot be farmed with a second wallet.",
+    "kingsGambitBoardEmpty": "No online matches have finished yet. Open a challenge."
   },
   "stats": {
     "community": {

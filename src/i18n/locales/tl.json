@@ -1085,7 +1085,15 @@
       "rank": "Ranggo",
       "address": "Address",
       "volume": "Volume"
-    }
+    },
+    "hidden": "Nakatago",
+    "noDataForPeriod": "Wala pang datos para sa panahong ito",
+    "noDataYet": "Wala pang datos ng leaderboard",
+    "seeAll": "Tingnan lahat",
+    "rankN": "Ranggo {{rank}}",
+    "you": "(ikaw)",
+    "provisional": "pansamantala",
+    "loadingBoard": "Nilo-load ang leaderboard…"
   },
   "explorePage": {
     "filters": "Filters",
@@ -1842,7 +1850,20 @@
     "intro": "Koleksyon ng mga laro, mundo at karanasan na ginawa at ginawang open source ng DeHub.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Maglaro mismo sa browser mo sa DeHub — sinematikong 3D chess, shooter na procedural ang pagkakabuo, lakad sa rainforest, away sa kalyeng neon at trading floor na kayang lakarin. Walang install, walang download.",
-    "alsoIn": "Nasa {{theme}} din"
+    "alsoIn": "Nasa {{theme}} din",
+    "hpLeft": "{{hp}} HP na natitira",
+    "noHpLeft": "walang natitirang HP",
+    "bestOfRuns": "pinakamahusay sa {{count}} takbo",
+    "firstRun": "unang takbo",
+    "gamesRecord_one": "{{count}} laro · {{wins}}P {{losses}}T {{draws}}Ta",
+    "gamesRecord_other": "{{count}} laro · {{wins}}P {{losses}}T {{draws}}Ta",
+    "anon": "anonimo",
+    "streetSlayerBoardTitle": "Pinakamalayo sa kalye",
+    "streetSlayerBoardBlurb": "Gaano ka kalayo nakarating bago ka natalo ng kalye, at gaano karaming buhay ang natira nang huminto ka. Talunin ang sarili mong record para umakyat.",
+    "streetSlayerBoardEmpty": "Wala pang nakakarating nang sapat na malayo. Ikaw ang mauna.",
+    "kingsGambitBoardTitle": "Rating Elo",
+    "kingsGambitBoardBlurb": "Elo sa lahat ng online na laban. Lahat ay nagsisimula sa 1200; mas malaki ang halaga ng panalo sa mas malakas na manlalaro kaysa sa mas mahina, kaya hindi mapapalaki ang ranggo gamit ang pangalawang wallet.",
+    "kingsGambitBoardEmpty": "Wala pang natapos na online na laban. Magbukas ng hamon."
   },
   "stats": {
     "community": {

@@ -14,6 +14,7 @@
  */
 
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
@@ -38,8 +39,10 @@ function BoardRow({
   mine: boolean;
   profile?: DeHubUser;
 }) {
+  const { t } = useTranslation();
   const name = profileName(profile, row.wallet);
   const avatarUrl = profileAvatar(profile, row.wallet);
+  const detail = row.detail.map((part) => t(part.key, part.params)).join(' · ');
 
   return (
     <div
@@ -74,9 +77,9 @@ function BoardRow({
               className="h-[1em] w-[1em]"
             />
           </span>
-          {mine ? <span className="shrink-0 text-[10px] font-normal text-zinc-500">(you)</span> : null}
+          {mine ? <span className="shrink-0 text-[10px] font-normal text-zinc-500">{t('leaderboard.you')}</span> : null}
         </p>
-        <p className="truncate text-[11px] text-zinc-500">{row.detail}</p>
+        <p className="truncate text-[11px] text-zinc-500">{detail}</p>
       </div>
 
       <div className="shrink-0 text-right">
@@ -85,7 +88,7 @@ function BoardRow({
           // Said out loud rather than hidden: a 1400 off three games and a 1400
           // off sixty are not the same claim, and the board should not let the
           // first borrow the second's authority.
-          <p className="text-[10px] text-zinc-600">provisional</p>
+          <p className="text-[10px] text-zinc-600">{t('leaderboard.provisional')}</p>
         ) : null}
       </div>
     </div>
@@ -104,6 +107,7 @@ export function ArcadeLeaderboard({
   limit?: number;
   className?: string;
 }) {
+  const { t } = useTranslation();
   const game = getArcadeGame(slug);
   const board = game?.leaderboard;
 
@@ -130,9 +134,9 @@ export function ArcadeLeaderboard({
     <section className={cn('space-y-2', className)}>
       <div className="flex items-center gap-2">
         <ThemedIcon icon="trophy" alt="" className="h-5 w-5 shrink-0 object-contain opacity-70" />
-        <h3 className="text-sm font-semibold text-white">{board.valueLabel}</h3>
+        <h3 className="text-sm font-semibold text-white">{t(board.valueLabelKey)}</h3>
       </div>
-      <p className="text-[11px] leading-relaxed text-zinc-500">{board.blurb}</p>
+      <p className="text-[11px] leading-relaxed text-zinc-500">{t(board.blurbKey)}</p>
 
       {isLoading ? (
         <div className="space-y-1.5">
@@ -142,7 +146,7 @@ export function ArcadeLeaderboard({
         </div>
       ) : rows.length === 0 ? (
         <p className="rounded-xl bg-zinc-900 px-4 py-6 text-center text-xs text-zinc-500">
-          {board.emptyLine}
+          {t(board.emptyLineKey)}
         </p>
       ) : (
         <div className="space-y-1.5">

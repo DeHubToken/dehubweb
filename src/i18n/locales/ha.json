@@ -1023,7 +1023,15 @@
     "addedToLeaderboard": "An ƙara ka! Ma'auni: {{balance}} DHB",
     "balanceTooLow": "Ma'auni ya yi ƙasa ({{balance}} DHB)",
     "refreshFailed": "Wani abu ya yi kuskure",
-    "noWalletAddress": "Ba a sami adireshin walat ba"
+    "noWalletAddress": "Ba a sami adireshin walat ba",
+    "hidden": "A ɓoye",
+    "noDataForPeriod": "Babu bayanai na wannan lokaci tukuna",
+    "noDataYet": "Babu bayanan jadawalin matsayi tukuna",
+    "seeAll": "Duba duka",
+    "rankN": "Matsayi na {{rank}}",
+    "you": "(kai)",
+    "provisional": "na wucin gadi",
+    "loadingBoard": "Ana ɗora jadawalin matsayi…"
   },
   "explorePage": {
     "searchPlaceholder": "Nemo mutane, rubutu ko abun ciki...",
@@ -1930,7 +1938,20 @@
     "intro": "Tarin wasanni, duniyoyi da abubuwan ji da DeHub ya gina kuma ya buɗe tushensa.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Yi wasa kai tsaye a burauzarka a DeHub — dara 3D mai salon fim, wasan harbi da aka ƙirƙira ta hanyar tsari, yawo cikin dajin ruwan sama, faɗan titi mai fitilun neon da falon ciniki da za ka iya yawo a ciki. Babu shigarwa, babu saukewa.",
-    "alsoIn": "Akwai kuma a cikin {{theme}}"
+    "alsoIn": "Akwai kuma a cikin {{theme}}",
+    "hpLeft": "HP {{hp}} ya rage",
+    "noHpLeft": "babu HP da ya rage",
+    "bestOfRuns": "mafi kyau daga gudu {{count}}",
+    "firstRun": "gudu na farko",
+    "gamesRecord_one": "wasa {{count}} · {{wins}}N {{losses}}R {{draws}}C",
+    "gamesRecord_other": "wasanni {{count}} · {{wins}}N {{losses}}R {{draws}}C",
+    "anon": "ba a san suna ba",
+    "streetSlayerBoardTitle": "Mafi nisa a kan titi",
+    "streetSlayerBoardBlurb": "Nisan da ka kai kafin titi ya kayar da kai, da yawan lafiyar da ta rage lokacin da ka tsaya. Doke mafi kyaun sakamakonka don ka hau.",
+    "streetSlayerBoardEmpty": "Babu wanda ya kai nisa sosai tukuna. Ka zama na farko.",
+    "kingsGambitBoardTitle": "Ƙima",
+    "kingsGambitBoardBlurb": "Elo a kan kowane wasa na kan layi. Kowa yana farawa daga 1200; doke ƙwararren ɗan wasa ya fi darajar doke mai rauni, don haka ba za a iya ƙara matsayi da walat na biyu ba.",
+    "kingsGambitBoardEmpty": "Babu wasan kan layi da ya ƙare tukuna. Buɗe ƙalubale."
   },
   "stats": {
     "community": {

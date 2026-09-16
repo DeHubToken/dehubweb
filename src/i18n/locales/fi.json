@@ -1036,7 +1036,15 @@
     "addedToLeaderboard": "Sinut on lisätty! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo liian pieni ({{balance}} DHB)",
     "refreshFailed": "Jokin meni pieleen",
-    "noWalletAddress": "Lompakko-osoitetta ei löytynyt"
+    "noWalletAddress": "Lompakko-osoitetta ei löytynyt",
+    "hidden": "Piilotettu",
+    "noDataForPeriod": "Tälle ajanjaksolle ei ole vielä tietoja",
+    "noDataYet": "Tulostaulukossa ei ole vielä tietoja",
+    "seeAll": "Näytä kaikki",
+    "rankN": "Sija {{rank}}",
+    "you": "(sinä)",
+    "provisional": "alustava",
+    "loadingBoard": "Ladataan tulostaulukkoa…"
   },
   "explorePage": {
     "searchPlaceholder": "Etsi ihmisiä, julkaisuja tai sisältöä...",
@@ -1915,7 +1923,20 @@
     "intro": "Kokoelma pelejä, maailmoja ja kokemuksia, jotka DeHub on rakentanut ja avannut lähdekoodiltaan.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Pelaa suoraan selaimessa DeHubissa — elokuvamainen 3D-shakki, proseduraalisesti luotu räiskintä, sademetsäkävely, neonvalojen katutappelu ja kävelykelpoinen kaupankäyntisali. Ei asennusta, ei latausta.",
-    "alsoIn": "Löytyy myös teemasta {{theme}}"
+    "alsoIn": "Löytyy myös teemasta {{theme}}",
+    "hpLeft": "{{hp}} HP jäljellä",
+    "noHpLeft": "ei HP:tä jäljellä",
+    "bestOfRuns": "paras {{count}} yrityksestä",
+    "firstRun": "ensimmäinen yritys",
+    "gamesRecord_one": "{{count}} peli · {{wins}}V {{losses}}H {{draws}}T",
+    "gamesRecord_other": "{{count}} peliä · {{wins}}V {{losses}}H {{draws}}T",
+    "anon": "anonyymi",
+    "streetSlayerBoardTitle": "Pisimmälle katua pitkin",
+    "streetSlayerBoardBlurb": "Kuinka pitkälle pääsit ennen kuin katu voitti sinut, ja paljonko elämää oli jäljellä pysähtyessäsi. Riko oma ennätyksesi noustaksesi.",
+    "streetSlayerBoardEmpty": "Kukaan ei ole vielä päässyt tarpeeksi pitkälle. Ole ensimmäinen.",
+    "kingsGambitBoardTitle": "Luokitus",
+    "kingsGambitBoardBlurb": "Elo kaikista verkkopeleistä. Kaikki aloittavat 1200:sta; vahvemman pelaajan voittaminen on arvokkaampaa kuin heikomman, joten tikapuita ei voi nostaa toisella lompakolla.",
+    "kingsGambitBoardEmpty": "Yhtään verkkopeliä ei ole vielä päättynyt. Avaa haaste."
   },
   "stats": {
     "community": {

@@ -1023,7 +1023,15 @@
     "addedToLeaderboard": "Esat pievienots! Atlikums: {{balance}} DHB",
     "balanceTooLow": "Atlikums pārāk zems ({{balance}} DHB)",
     "refreshFailed": "Kaut kas neizdevās",
-    "noWalletAddress": "Maka adrese nav atrasta"
+    "noWalletAddress": "Maka adrese nav atrasta",
+    "hidden": "Slēpts",
+    "noDataForPeriod": "Šim periodam datu vēl nav",
+    "noDataYet": "Līderu tabulas datu vēl nav",
+    "seeAll": "Skatīt visu",
+    "rankN": "{{rank}}. vieta",
+    "you": "(tu)",
+    "provisional": "provizorisks",
+    "loadingBoard": "Ielādē līderu tabulu…"
   },
   "explorePage": {
     "searchPlaceholder": "Meklēt cilvēkus, ierakstus vai saturu...",
@@ -1931,7 +1939,20 @@
     "intro": "Spēļu, pasauļu un pieredžu kolekcija, ko DeHub izveidojis un atvēris kā atklātā koda projektu.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Spēlējiet tieši pārlūkā DeHub vietnē — kinematogrāfisks 3D šahs, procedurāli ģenerēts šāvējs, pastaiga lietus mežā, neona ielas kautiņš un tirdzniecības zāle, pa kuru var staigāt. Bez instalēšanas, bez lejupielādes.",
-    "alsoIn": "Pieejams arī tēmā {{theme}}"
+    "alsoIn": "Pieejams arī tēmā {{theme}}",
+    "hpLeft": "atlicis {{hp}} HP",
+    "noHpLeft": "HP nav atlicis",
+    "bestOfRuns": "labākais no {{count}} mēģinājumiem",
+    "firstRun": "pirmais mēģinājums",
+    "gamesRecord_one": "{{count}} partija · {{wins}}U {{losses}}Z {{draws}}N",
+    "gamesRecord_other": "{{count}} partijas · {{wins}}U {{losses}}Z {{draws}}N",
+    "anon": "anonīms",
+    "streetSlayerBoardTitle": "Vistālāk pa ielu",
+    "streetSlayerBoardBlurb": "Cik tālu tiki, pirms iela tevi pieveica, un cik dzīvības palika, kad apstājies. Pārspēj savu rekordu, lai kāptu augstāk.",
+    "streetSlayerBoardEmpty": "Neviens vēl nav ticis pietiekami tālu. Esi pirmais.",
+    "kingsGambitBoardTitle": "Reitings",
+    "kingsGambitBoardBlurb": "Elo pēc visām tiešsaistes partijām. Visi sāk no 1200; uzvara pār spēcīgāku spēlētāju ir vērtīgāka nekā pār vājāku, tāpēc reitingu nevar uzpumpēt ar otru maku.",
+    "kingsGambitBoardEmpty": "Neviena tiešsaistes partija vēl nav beigusies. Izveido izaicinājumu."
   },
   "stats": {
     "community": {

@@ -18,14 +18,24 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { dehubAuthHeaders } from '@/lib/ai-invoke';
+import i18n from '@/i18n';
+
+/** One translatable fragment of a row's detail line: an i18n key and its values. */
+export interface ArcadeDetailPart {
+  key: string;
+  params?: Record<string, number>;
+}
 
 /** One line on a board, whichever kind of board it is. */
 export interface ArcadeBoardRow {
   wallet: string;
   /** The ranked figure, formatted — "1,412" or "84%". */
   value: string;
-  /** What that figure was made of — "62 games · 41W 18L 3D" or "310 HP left". */
-  detail: string;
+  /**
+   * What that figure was made of — "62 games · 41W 18L 3D" or "310 HP left" —
+   * as i18n fragments the board joins with " · " once it has a `t`.
+   */
+  detail: ArcadeDetailPart[];
   /** Too few games for the rating to mean much yet. Ladders only. */
   provisional?: boolean;
 }
@@ -70,9 +80,9 @@ export async function fetchRunBoard(game: string, limit = 10): Promise<ArcadeBoa
       wallet: row.wallet,
       value: formatProgress(row.detail?.progress),
       detail: [
-        row.detail?.life ? `${row.detail.life} HP left` : 'no HP left',
-        row.runs > 1 ? `best of ${row.runs} runs` : 'first run',
-      ].join(' · '),
+        row.detail?.life ? { key: 'arcade.hpLeft', params: { hp: row.detail.life } } : { key: 'arcade.noHpLeft' },
+        row.runs > 1 ? { key: 'arcade.bestOfRuns', params: { count: row.runs } } : { key: 'arcade.firstRun' },
+      ],
     }));
   } catch {
     return [];
@@ -101,7 +111,9 @@ export async function fetchChessLadder(limit = 10): Promise<ArcadeBoardRow[]> {
     return (data as ChessLadderRow[]).map((row) => ({
       wallet: row.wallet,
       value: String(row.rating),
-      detail: `${row.played} game${row.played === 1 ? '' : 's'} · ${row.wins}W ${row.losses}L ${row.draws}D`,
+      detail: [
+        { key: 'arcade.gamesRecord', params: { count: row.played, wins: row.wins, losses: row.losses, draws: row.draws } },
+      ],
       provisional: row.played < PROVISIONAL_UNDER,
     }));
   } catch {
@@ -168,6 +180,6 @@ export async function submitRun(runId: string, progress: number, life: number): 
 
 /** `0xabcd…1234`, for a player with no username. */
 export function shortWallet(address?: string | null): string {
-  if (!address) return 'anon';
+  if (!address) return i18n.t('arcade.anon');
   return address.length > 12 ? `${address.slice(0, 6)}…${address.slice(-4)}` : address;
 }

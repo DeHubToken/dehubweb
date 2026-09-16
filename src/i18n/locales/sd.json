@@ -1019,7 +1019,15 @@
     "addedToLeaderboard": "شامل ٿيا! بيلنس: {{balance}} DHB",
     "balanceTooLow": "بيلنس تمام گهٽ ({{balance}} DHB)",
     "refreshFailed": "ڪجهه غلط ٿي ويو",
-    "noWalletAddress": "والٽ ايڊريس نه مليو"
+    "noWalletAddress": "والٽ ايڊريس نه مليو",
+    "hidden": "لڪيل",
+    "noDataForPeriod": "هن مدت لاءِ اڃا ڪو ڊيٽا ناهي",
+    "noDataYet": "اڃا ليڊربورڊ جو ڪو ڊيٽا ناهي",
+    "seeAll": "سڀ ڏسو",
+    "rankN": "درجو {{rank}}",
+    "you": "(توهان)",
+    "provisional": "عارضي",
+    "loadingBoard": "ليڊربورڊ لوڊ ٿي رهيو آهي…"
   },
   "explorePage": {
     "searchPlaceholder": "ماڻهو، پوسٽون يا مواد ڳولهيو...",
@@ -1904,7 +1912,20 @@
     "intro": "DeHub جون ٺاهيل ۽ اوپن سورس ڪيل راندين، دنيائن يا تجربن جو مجموعو.",
     "seoTitle": "آرڪيڊ",
     "seoDescription": "DeHub تي پنهنجي براؤزر ۾ راند ڪريو — سنيمائي 3D شطرنج، هڪ پروسيجرلي ٺهيل شوٽر، مينهن واري ٻيلي جي سير، نيون-گلي واري وڙهڪو راند، ۽ گھمي سگهجندڙ ٽريڊنگ فلور. نه ڪا انسٽاليشن، نه ڪا ڊائونلوڊ.",
-    "alsoIn": "{{theme}} ۾ پڻ"
+    "alsoIn": "{{theme}} ۾ پڻ",
+    "hpLeft": "{{hp}} HP باقي",
+    "noHpLeft": "ڪو HP باقي ناهي",
+    "bestOfRuns": "{{count}} ڪوششن ۾ بهترين",
+    "firstRun": "پهرين ڪوشش",
+    "gamesRecord_one": "{{count}} راند · {{wins}}ک {{losses}}ه {{draws}}ب",
+    "gamesRecord_other": "{{count}} رانديون · {{wins}}ک {{losses}}ه {{draws}}ب",
+    "anon": "گمنام",
+    "streetSlayerBoardTitle": "گهٽيءَ ۾ سڀ کان اڳتي",
+    "streetSlayerBoardBlurb": "گهٽيءَ توهان کي ڪيرائڻ کان اڳ توهان ڪيترو پري ويا، ۽ بيهڻ وقت ڪيتري صحت باقي هئي. مٿي وڃڻ لاءِ پنهنجو ئي رڪارڊ ٽوڙيو.",
+    "streetSlayerBoardEmpty": "اڃا ڪو به ايترو پري نه پهتو آهي. پهريون بڻجو.",
+    "kingsGambitBoardTitle": "ريٽنگ",
+    "kingsGambitBoardBlurb": "سڀني آن لائن ميچن جو ايلو. سڀ 1200 کان شروع ڪن ٿا؛ مضبوط رانديگر کي هارائڻ ڪمزور کي هارائڻ کان وڌيڪ قيمتي آهي، تنهنڪري ٻئي والٽ سان درجه بندي وڌائي نٿي سگهجي.",
+    "kingsGambitBoardEmpty": "اڃا ڪو آن لائن ميچ مڪمل ناهي ٿيو. چئلينج کوليو."
   },
   "stats": {
     "community": {

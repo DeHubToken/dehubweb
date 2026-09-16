@@ -975,7 +975,15 @@
     "addedToLeaderboard": "تسیں شامل ہو گئے! بیلنس: {{balance}} DHB",
     "balanceTooLow": "بیلنس بہوں گھٹ ({{balance}} DHB)",
     "refreshFailed": "کجھ غلط ہو گیا",
-    "noWalletAddress": "والیٹ ایڈریس کائنی ملیا"
+    "noWalletAddress": "والیٹ ایڈریس کائنی ملیا",
+    "hidden": "لُکایا ہویا",
+    "noDataForPeriod": "ایں مدت دا ہجے کوئی ڈیٹا کائنی",
+    "noDataYet": "ہجے لیڈر بورڈ دا کوئی ڈیٹا کائنی",
+    "seeAll": "سبھ ݙیکھو",
+    "rankN": "درجہ {{rank}}",
+    "you": "(تُساں)",
+    "provisional": "عارضی",
+    "loadingBoard": "لیڈر بورڈ لوڈ تھیندا پئے…"
   },
   "explorePage": {
     "searchPlaceholder": "لوک، پوسٹاں یا مواد ڳولو...",
@@ -1875,7 +1883,20 @@
     "intro": "DeHub دے بݨائے تے کھلے سورس کھیڈاں، دنیاواں، یا تجربیاں دا مجموعہ۔",
     "seoTitle": "آرکیڈ",
     "seoDescription": "DeHub تے اپݨے براؤزر وچ کھیڈو — سنیمائی 3D شطرنج، پروسیجرلی بݨیا شوٹر، مینہ آلے جنگل دی سیر، نیون-گلی آلی لڑائی، تے گھمن جوڳ ٹریڈنگ فرش۔ کوئی انسٹال کائنی، کوئی ڈاؤن لوڈ کائنی۔",
-    "alsoIn": "{{theme}} وچ وی"
+    "alsoIn": "{{theme}} وچ وی",
+    "hpLeft": "{{hp}} HP باقی",
+    "noHpLeft": "کوئی HP باقی کائنی",
+    "bestOfRuns": "{{count}} کوششاں وچ سبھ توں چنگا",
+    "firstRun": "پہلی کوشش",
+    "gamesRecord_one": "{{count}} گیم · {{wins}}ج {{losses}}ہ {{draws}}ب",
+    "gamesRecord_other": "{{count}} گیماں · {{wins}}ج {{losses}}ہ {{draws}}ب",
+    "anon": "گمنام",
+    "streetSlayerBoardTitle": "گلی وچ سبھ توں اݙے",
+    "streetSlayerBoardBlurb": "گلی تہاکوں ݙیگݨ توں پہلے تُساں کتنا اݙے ڳئے، تے رُکݨ ویلے کتنی صحت باقی ہئی۔ اُتے ونڄݨ کیتے آپݨا ای ریکارڈ ٹوڑو۔",
+    "streetSlayerBoardEmpty": "ہجے کوئی اتنا اݙے کائنی اپڑیا۔ پہلا بݨو۔",
+    "kingsGambitBoardTitle": "ریٹنگ",
+    "kingsGambitBoardBlurb": "سبھ آن لائن میچاں دا ایلو۔ سبھ 1200 توں شروع کریندن؛ مضبوط کھلاڑی کوں ہراوݨ کمزور کوں ہراوݨ توں ودھ قیمتی ہے، ایں کیتے ٻئے والٹ نال درجہ بندی نئیں ودھائی ونڄ سڳدی۔",
+    "kingsGambitBoardEmpty": "ہجے کوئی آن لائن میچ پورا کائنی تھیا۔ چیلنج کھولو۔"
   },
   "stats": {
     "community": {

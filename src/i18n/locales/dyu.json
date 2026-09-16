@@ -1005,7 +1005,15 @@
     "addedToLeaderboard": "I bɛɛ kɔrɔbɔ! Kɔrɔbɔ: {{balance}} DHB",
     "balanceTooLow": "Kɔrɔbɔ ({{balance}} DHB)",
     "refreshFailed": "Kɔrɔbɔ bɔ",
-    "noWalletAddress": "Kɔrɔbɔ bɔ"
+    "noWalletAddress": "Kɔrɔbɔ bɔ",
+    "hidden": "A dogolen",
+    "noDataForPeriod": "Waati nin kunnafoni ma se fɔlɔ",
+    "noDataYet": "Ɲɛmɔgɔya sɛbɛn kunnafoni ma se fɔlɔ",
+    "seeAll": "Bɛɛ lajɛ",
+    "rankN": "Jɔyɔrɔ {{rank}}",
+    "you": "(i)",
+    "provisional": "waati kelen ta",
+    "loadingBoard": "Ɲɛmɔgɔya sɛbɛn bɛ ka don…"
   },
   "explorePage": {
     "searchPlaceholder": "Dɔ, kɔrɔbɔw, fɔlɔw fɛɛrɛ...",
@@ -1886,7 +1894,20 @@
     "intro": "DeHub ka tulon, diɲɛw walima kɛlɛcogo dilannenw jɛlenw, minnu dayɛlɛlen bɛɛ ye.",
     "seoTitle": "Tulonyɔrɔ",
     "seoDescription": "Tulon kɛ i ka bɔrizɛri kɔnɔ DeHub kan — filimu cogo 3D chess, marifa tulon min bɛ don, kungo woloman taama, sira kɛlɛ tulon ni feereyɔrɔ min bɛ se ka taama a kɔnɔ. Foyi tɛ sigi, foyi tɛ jigin.",
-    "alsoIn": "A bɛ {{theme}} kɔnɔ fana"
+    "alsoIn": "A bɛ {{theme}} kɔnɔ fana",
+    "hpLeft": "HP {{hp}} tora",
+    "noHpLeft": "HP si ma to",
+    "bestOfRuns": "boli {{count}} la ɲuman",
+    "firstRun": "boli fɔlɔ",
+    "gamesRecord_one": "tulon {{count}} · {{wins}}S {{losses}}B {{draws}}K",
+    "gamesRecord_other": "tulon {{count}} · {{wins}}S {{losses}}B {{draws}}K",
+    "anon": "tɔgɔntan",
+    "streetSlayerBoardTitle": "Sira kan yɔrɔ jan",
+    "streetSlayerBoardBlurb": "I sera yɔrɔ min na sanni sira ka i bin, ani ni i jɔra, i ka ɲɛnamaya hakɛ min tora. I yɛrɛ ka ɲuman tɛmɛ walisa ka yɛlɛn.",
+    "streetSlayerBoardEmpty": "Mɔgɔ si ma se yɔrɔ jan fɔlɔ. Kɛ fɔlɔ ye.",
+    "kingsGambitBoardTitle": "Jate",
+    "kingsGambitBoardBlurb": "Elo tulon bɛɛ la ɛntɛrinɛti kan. Bɛɛ bɛ daminɛ 1200 la; mɔgɔ barikaman se ka bonya ka tɛmɛ mɔgɔ barikantan se kan, o la, i tɛ se ka i ka jɔyɔrɔ yɛlɛn ni wari-bɔrɔ filanan ye.",
+    "kingsGambitBoardEmpty": "Tulon si ma ban ɛntɛrinɛti kan fɔlɔ. Kɛlɛ dɔ da."
   },
   "stats": {
     "community": {

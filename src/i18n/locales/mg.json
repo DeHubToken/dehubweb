@@ -1041,7 +1041,15 @@
     "addedToLeaderboard": "Voasoratra ianao! Vola: {{balance}} DHB",
     "balanceTooLow": "Vola kely loatra ({{balance}} DHB)",
     "refreshFailed": "Nisy hadisoana",
-    "noWalletAddress": "Tsy nahitana adiresy kitapom-bola"
+    "noWalletAddress": "Tsy nahitana adiresy kitapom-bola",
+    "hidden": "Miafina",
+    "noDataForPeriod": "Mbola tsy misy angona ho an'ity vanim-potoana ity",
+    "noDataYet": "Mbola tsy misy angona lisitry ny tsara indrindra",
+    "seeAll": "Hijery ny rehetra",
+    "rankN": "Laharana {{rank}}",
+    "you": "(ianao)",
+    "provisional": "vonjimaika",
+    "loadingBoard": "Mampiditra ny lisitry ny tsara indrindra…"
   },
   "explorePage": {
     "searchPlaceholder": "Hikaroka olona, lahatsoratra na atiny...",
@@ -1948,7 +1956,20 @@
     "intro": "Fanangonana lalao, tontolo ary traikefa naorin'ny DeHub sy navoakany ho loharano misokatra.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Milalao mivantana ao amin'ny mpitety tranonkalanao ao amin'ny DeHub — echecs 3D toy ny sarimihetsika, lalao mitifitra noforonina ho azy, dia fitsangatsanganana anaty ala mando, ady an-dalambe neon ary efitrano varotra azo diavina. Tsy misy fametrahana, tsy misy fisintonana.",
-    "alsoIn": "Misy ao amin'ny {{theme}} koa"
+    "alsoIn": "Misy ao amin'ny {{theme}} koa",
+    "hpLeft": "HP {{hp}} sisa",
+    "noHpLeft": "tsy misy HP sisa",
+    "bestOfRuns": "tsara indrindra tamin'ny hazakazaka {{count}}",
+    "firstRun": "hazakazaka voalohany",
+    "gamesRecord_one": "lalao {{count}} · {{wins}}R {{losses}}L {{draws}}S",
+    "gamesRecord_other": "lalao {{count}} · {{wins}}R {{losses}}L {{draws}}S",
+    "anon": "tsy fantatra anarana",
+    "streetSlayerBoardTitle": "Lavitra indrindra teny an-dalana",
+    "streetSlayerBoardBlurb": "Hatraiza no nahatongavanao talohan'ny nandresen'ny lalana anao, ary firy ny aina sisa tavela rehefa nijanona ianao. Resao ny firaketanao manokana mba hiakatra.",
+    "streetSlayerBoardEmpty": "Mbola tsy nisy tonga lavitra ampy. Aoka ho voalohany ianao.",
+    "kingsGambitBoardTitle": "Isa",
+    "kingsGambitBoardBlurb": "Elo amin'ny lalao an-tserasera rehetra. Manomboka amin'ny 1200 ny rehetra; sarobidy kokoa ny mandresy mpilalao matanjaka noho ny mandresy malemy, ka tsy azo ampiakarina amin'ny poketra faharoa ny laharana.",
+    "kingsGambitBoardEmpty": "Mbola tsy nisy lalao an-tserasera vita. Manokafa fanamby."
   },
   "stats": {
     "community": {

@@ -1307,7 +1307,15 @@
     "addedToLeaderboard": "Anda telah ditambahkan! Baki: {{balance}} DHB",
     "balanceTooLow": "Balance too low ({{balance}} DHB)",
     "refreshFailed": "Something went wrong",
-    "noWalletAddress": "Alamat dompet tidak ditemukan"
+    "noWalletAddress": "Alamat dompet tidak ditemukan",
+    "hidden": "Tersembunyi",
+    "noDataForPeriod": "Belum ada data untuk tempoh ini",
+    "noDataYet": "Belum ada data papan pendahulu",
+    "seeAll": "Lihat semua",
+    "rankN": "Kedudukan {{rank}}",
+    "you": "(anda)",
+    "provisional": "sementara",
+    "loadingBoard": "Memuatkan papan pendahulu…"
   },
   "explorePage": {
     "searchPlaceholder": "Cari orang, siaran, atau kandungan...",
@@ -2235,7 +2243,20 @@
     "intro": "Koleksi permainan, dunia dan pengalaman yang dibina dan disumber terbuka oleh DeHub.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Main terus dalam pelayar di DeHub — catur 3D sinematik, penembak yang dijana secara prosedural, jalan-jalan di hutan hujan, pergaduhan jalanan neon dan lantai dagangan yang boleh dijelajah. Tiada pemasangan, tiada muat turun.",
-    "alsoIn": "Ada juga dalam {{theme}}"
+    "alsoIn": "Ada juga dalam {{theme}}",
+    "hpLeft": "{{hp}} HP berbaki",
+    "noHpLeft": "tiada HP berbaki",
+    "bestOfRuns": "terbaik daripada {{count}} percubaan",
+    "firstRun": "percubaan pertama",
+    "gamesRecord_one": "{{count}} perlawanan · {{wins}}M {{losses}}K {{draws}}S",
+    "gamesRecord_other": "{{count}} perlawanan · {{wins}}M {{losses}}K {{draws}}S",
+    "anon": "tanpa nama",
+    "streetSlayerBoardTitle": "Paling jauh menyusuri jalan",
+    "streetSlayerBoardBlurb": "Sejauh mana anda sampai sebelum jalan mengalahkan anda, dan berapa nyawa yang tinggal semasa berhenti. Pecahkan rekod sendiri untuk naik.",
+    "streetSlayerBoardEmpty": "Belum ada yang sampai cukup jauh. Jadilah yang pertama.",
+    "kingsGambitBoardTitle": "Penarafan",
+    "kingsGambitBoardBlurb": "Elo merentas semua perlawanan dalam talian. Semua bermula pada 1200; menewaskan pemain lebih kuat bernilai lebih daripada yang lebih lemah, jadi kedudukan tidak boleh dinaikkan dengan dompet kedua.",
+    "kingsGambitBoardEmpty": "Belum ada perlawanan dalam talian yang tamat. Buka cabaran."
   },
   "stats": {
     "community": {

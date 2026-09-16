@@ -1040,7 +1040,15 @@
     "addedToLeaderboard": "Ai fost adăugat! Sold: {{balance}} DHB",
     "balanceTooLow": "Balance too low ({{balance}} DHB)",
     "refreshFailed": "Something went wrong",
-    "noWalletAddress": "Nicio adresă de portofel găsită"
+    "noWalletAddress": "Nicio adresă de portofel găsită",
+    "hidden": "Ascuns",
+    "noDataForPeriod": "Nu există încă date pentru această perioadă",
+    "noDataYet": "Nu există încă date de clasament",
+    "seeAll": "Vezi tot",
+    "rankN": "Locul {{rank}}",
+    "you": "(tu)",
+    "provisional": "provizoriu",
+    "loadingBoard": "Se încarcă clasamentul…"
   },
   "explorePage": {
     "searchPlaceholder": "Caută oameni, postări sau conținut...",
@@ -1798,7 +1806,20 @@
     "intro": "O colecție de jocuri, lumi și experiențe construite de DeHub și publicate open source.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Joacă direct în browser pe DeHub — șah 3D cinematic, un shooter generat procedural, o plimbare prin pădurea tropicală, o bătaie de stradă în neon și un ring de tranzacționare prin care te poți plimba. Fără instalare, fără descărcare.",
-    "alsoIn": "Există și în {{theme}}"
+    "alsoIn": "Există și în {{theme}}",
+    "hpLeft": "{{hp}} HP rămase",
+    "noHpLeft": "niciun HP rămas",
+    "bestOfRuns": "cel mai bun din {{count}} încercări",
+    "firstRun": "prima încercare",
+    "gamesRecord_one": "{{count}} partidă · {{wins}}V {{losses}}Î {{draws}}R",
+    "gamesRecord_other": "{{count}} partide · {{wins}}V {{losses}}Î {{draws}}R",
+    "anon": "anonim",
+    "streetSlayerBoardTitle": "Cel mai departe pe stradă",
+    "streetSlayerBoardBlurb": "Cât de departe ai ajuns înainte ca strada să te învingă și câtă viață ți-a rămas când te-ai oprit. Bate-ți propriul record ca să urci.",
+    "streetSlayerBoardEmpty": "Nimeni nu a ajuns încă destul de departe. Fii primul.",
+    "kingsGambitBoardTitle": "Rating Elo",
+    "kingsGambitBoardBlurb": "Elo pe toate partidele online. Toți pornesc de la 1200; o victorie împotriva unui jucător mai puternic valorează mai mult decât una împotriva unuia mai slab, așa că clasamentul nu poate fi umflat cu un al doilea portofel.",
+    "kingsGambitBoardEmpty": "Nicio partidă online nu s-a încheiat încă. Deschide o provocare."
   },
   "stats": {
     "community": {

@@ -1019,7 +1019,15 @@
     "addedToLeaderboard": "আপনাকে যোগ করা হয়েছে! ব্যালেন্স: {{balance}} DHB",
     "balanceTooLow": "ব্যালেন্স খুব কম ({{balance}} DHB)",
     "refreshFailed": "কিছু ভুল হয়েছে",
-    "noWalletAddress": "কোনো ওয়ালেট ঠিকানা পাওয়া যায়নি"
+    "noWalletAddress": "কোনো ওয়ালেট ঠিকানা পাওয়া যায়নি",
+    "hidden": "লুকানো",
+    "noDataForPeriod": "এই সময়কালের জন্য এখনও কোনো ডেটা নেই",
+    "noDataYet": "এখনও লিডারবোর্ডের কোনো ডেটা নেই",
+    "seeAll": "সব দেখুন",
+    "rankN": "র‍্যাঙ্ক {{rank}}",
+    "you": "(আপনি)",
+    "provisional": "অস্থায়ী",
+    "loadingBoard": "লিডারবোর্ড লোড হচ্ছে…"
   },
   "explorePage": {
     "searchPlaceholder": "মানুষ, পোস্ট বা কন্টেন্ট খুঁজুন...",
@@ -1813,7 +1821,20 @@
     "intro": "DeHub-এর তৈরি ও ওপেন সোর্স করা গেম, জগৎ ও অভিজ্ঞতার সংগ্রহ।",
     "seoTitle": "আর্কেড | DeHub",
     "seoDescription": "DeHub-এ ব্রাউজারেই খেলুন — সিনেমার মতো 3D দাবা, প্রসিডিউরালভাবে তৈরি শুটার, বৃষ্টিবনে হাঁটা, নিয়ন রাস্তার মারামারি আর হেঁটে ঘোরার মতো ট্রেডিং ফ্লোর। ইনস্টল নেই, ডাউনলোড নেই।",
-    "alsoIn": "{{theme}}-এও আছে"
+    "alsoIn": "{{theme}}-এও আছে",
+    "hpLeft": "{{hp}} HP বাকি",
+    "noHpLeft": "কোনো HP বাকি নেই",
+    "bestOfRuns": "{{count}} রানের মধ্যে সেরা",
+    "firstRun": "প্রথম রান",
+    "gamesRecord_one": "{{count}} গেম · {{wins}}জ {{losses}}হা {{draws}}ড্র",
+    "gamesRecord_other": "{{count}} গেম · {{wins}}জ {{losses}}হা {{draws}}ড্র",
+    "anon": "বেনামী",
+    "streetSlayerBoardTitle": "রাস্তায় সবচেয়ে দূরে",
+    "streetSlayerBoardBlurb": "রাস্তা আপনাকে হারানোর আগে আপনি কত দূর গেলেন, আর থামার সময় কত হেলথ বাকি ছিল। উপরে উঠতে নিজের রেকর্ড ভাঙুন।",
+    "streetSlayerBoardEmpty": "এখনও কেউ যথেষ্ট দূর যায়নি। প্রথম হোন।",
+    "kingsGambitBoardTitle": "রেটিং",
+    "kingsGambitBoardBlurb": "সব অনলাইন ম্যাচের Elo। সবাই ১২০০ থেকে শুরু করে; শক্তিশালী খেলোয়াড়কে হারানো দুর্বলকে হারানোর চেয়ে বেশি মূল্যবান, তাই দ্বিতীয় ওয়ালেট দিয়ে র‍্যাঙ্ক বাড়ানো যায় না।",
+    "kingsGambitBoardEmpty": "এখনও কোনো অনলাইন ম্যাচ শেষ হয়নি। একটি চ্যালেঞ্জ খুলুন।"
   },
   "stats": {
     "community": {

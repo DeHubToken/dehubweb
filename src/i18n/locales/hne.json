@@ -1003,7 +1003,15 @@
     "addedToLeaderboard": "तैं जुड़ गे! बैलेंस: {{balance}} DHB",
     "balanceTooLow": "बैलेंस बहुत कम हे ({{balance}} DHB)",
     "refreshFailed": "कुछू गड़बड़ होगे",
-    "noWalletAddress": "वॉलेट पता नइ मिलिस"
+    "noWalletAddress": "वॉलेट पता नइ मिलिस",
+    "hidden": "लुकाय",
+    "noDataForPeriod": "ए अवधि बर अभी कोनो डेटा नइ हे",
+    "noDataYet": "अभी लीडरबोर्ड के कोनो डेटा नइ हे",
+    "seeAll": "जम्मो देखव",
+    "rankN": "रैंक {{rank}}",
+    "you": "(तुमन)",
+    "provisional": "अस्थायी",
+    "loadingBoard": "लीडरबोर्ड लोड होवत हे…"
   },
   "explorePage": {
     "searchPlaceholder": "लोग, पोस्ट या सामग्री खोजव...",
@@ -1909,7 +1917,20 @@
     "intro": "DeHub के बनाय अउ ओपन सोर्स करे खेल, दुनिया या अनुभव मन के संग्रह।",
     "seoTitle": "आर्केड",
     "seoDescription": "DeHub म अपन ब्राउजर म खेल खेलव — सिनेमाई 3D शतरंज, प्रोसीजरली जेनरेट होय शूटर, बरसाती जंगल के सैर, नियॉन-स्ट्रीट भिड़ंत अउ चले जाय वाला ट्रेडिंग फ्लोर। इंस्टॉल के जरूरत नइ, डाउनलोड के जरूरत नइ।",
-    "alsoIn": "{{theme}} म घलो"
+    "alsoIn": "{{theme}} म घलो",
+    "hpLeft": "{{hp}} HP बाँचे हे",
+    "noHpLeft": "कोनो HP नइ बाँचे",
+    "bestOfRuns": "{{count}} रन म सबले बढ़िया",
+    "firstRun": "पहिली रन",
+    "gamesRecord_one": "{{count}} गेम · {{wins}}जी {{losses}}हा {{draws}}ड्रॉ",
+    "gamesRecord_other": "{{count}} गेम · {{wins}}जी {{losses}}हा {{draws}}ड्रॉ",
+    "anon": "गुमनाम",
+    "streetSlayerBoardTitle": "सड़क म सबले आगू",
+    "streetSlayerBoardBlurb": "सड़क ह तुमन ला हराए के पहिली तुमन कतका दूर गेव, अउ रुके बखत कतका हेल्थ बाँचे रिहिस। ऊपर जाए बर अपन रिकॉर्ड तोड़व।",
+    "streetSlayerBoardEmpty": "अभी कोनो अतका दूर नइ पहुँचे। पहिली बनव।",
+    "kingsGambitBoardTitle": "रेटिंग",
+    "kingsGambitBoardBlurb": "जम्मो ऑनलाइन मैच के Elo। सब 1200 ले शुरू करथें; मजबूत खिलाड़ी ला हराना कमजोर ला हराए ले जादा मायने रखथे, एकर सेती दूसर वॉलेट ले रैंक नइ बढ़ाय जा सकय।",
+    "kingsGambitBoardEmpty": "अभी कोनो ऑनलाइन मैच पूरा नइ होइस। चैलेंज खोलव।"
   },
   "stats": {
     "community": {

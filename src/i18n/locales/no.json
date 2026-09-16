@@ -1020,7 +1020,15 @@
     "addedToLeaderboard": "Du er lagt til! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo for lav ({{balance}} DHB)",
     "refreshFailed": "Noe gikk galt",
-    "noWalletAddress": "Ingen lommebokadresse funnet"
+    "noWalletAddress": "Ingen lommebokadresse funnet",
+    "hidden": "Skjult",
+    "noDataForPeriod": "Ingen data for denne perioden ennå",
+    "noDataYet": "Ingen topplistedata ennå",
+    "seeAll": "Se alle",
+    "rankN": "Plass {{rank}}",
+    "you": "(deg)",
+    "provisional": "foreløpig",
+    "loadingBoard": "Laster toppliste…"
   },
   "explorePage": {
     "searchPlaceholder": "Søk etter folk, innlegg eller innhold...",
@@ -1926,7 +1934,20 @@
     "intro": "En samling spill, verdener og opplevelser som DeHub har bygd og gjort til åpen kildekode.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Spill rett i nettleseren på DeHub — filmatisk 3D-sjakk, en prosedyregenerert skytespill, en tur i regnskogen, en neonfarget gateslåsskamp og et handelsgulv du kan gå rundt på. Ingen installasjon, ingen nedlasting.",
-    "alsoIn": "Finnes også i {{theme}}"
+    "alsoIn": "Finnes også i {{theme}}",
+    "hpLeft": "{{hp}} HP igjen",
+    "noHpLeft": "ingen HP igjen",
+    "bestOfRuns": "beste av {{count}} forsøk",
+    "firstRun": "første forsøk",
+    "gamesRecord_one": "{{count}} parti · {{wins}}S {{losses}}T {{draws}}R",
+    "gamesRecord_other": "{{count}} partier · {{wins}}S {{losses}}T {{draws}}R",
+    "anon": "anonym",
+    "streetSlayerBoardTitle": "Lengst nedover gata",
+    "streetSlayerBoardBlurb": "Hvor langt du kom før gata tok deg, og hvor mye liv du hadde igjen da du stoppet. Slå din egen rekord for å klatre.",
+    "streetSlayerBoardEmpty": "Ingen har kommet langt nok ennå. Vær den første.",
+    "kingsGambitBoardTitle": "Ratingtall",
+    "kingsGambitBoardBlurb": "Elo på tvers av alle nettpartier. Alle starter på 1200; å slå en sterkere spiller er verdt mer enn å slå en svakere, så stigen kan ikke pumpes opp med en ekstra lommebok.",
+    "kingsGambitBoardEmpty": "Ingen nettpartier er fullført ennå. Åpne en utfordring."
   },
   "stats": {
     "community": {

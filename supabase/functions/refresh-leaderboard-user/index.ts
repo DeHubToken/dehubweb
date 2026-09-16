@@ -1,10 +1,18 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+// refresh-leaderboard-user
+// ========================
+// Lets a signed-in wallet push its current on-chain DHB balance into the
+// cached holdings/all board without waiting for the nightly refresh.
+//
+// The wallet is the one the DeHub token verifies to — the address query
+// param this used to accept let anyone rewrite anyone's row.
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-request-id, prefer",
-};
+import {
+  checkRateLimit,
+  handleCorsPreflight,
+  jsonResponse,
+  requireDeHubAuth,
+  serviceClient,
+} from "../_shared/auth.ts";
 
 // Contract addresses
 const DHB_BASE = "0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c";
@@ -22,6 +30,10 @@ const BNB_PUBLIC_RPCS = [
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const DISCOVERY_MIN_BALANCE = 10_000;
+
+/** One self-refresh per wallet per ten minutes. */
+const REFRESH_LIMIT = { limit: 1, windowMs: 10 * 60 * 1000 };
+const WRITE_ATTEMPTS = 3;
 
 function encodeCall(selector: string, address: string): string {
   const cleaned = address.replace("0x", "").toLowerCase().padStart(64, "0");
@@ -47,6 +59,7 @@ function hexFirstSlotToNumber(hex: string): number {
   }
 }
 
+/** eth_call at latest. Throws on transport / JSON-RPC failure; "0x0" is a real zero. */
 async function rpcCall(rpcUrl: string, to: string, data: string): Promise<string> {
   const res = await fetch(rpcUrl, {
     method: "POST",
@@ -55,21 +68,29 @@ async function rpcCall(rpcUrl: string, to: string, data: string): Promise<string
       jsonrpc: "2.0", id: 1, method: "eth_call",
       params: [{ to, data }, "latest"],
     }),
+    signal: AbortSignal.timeout(20000),
   });
+  if (!res.ok) throw new Error(`RPC HTTP ${res.status}`);
   const json = await res.json();
-  return json.result || "0x0";
+  if (json?.error) throw new Error(`RPC error: ${json.error?.message ?? json.error}`);
+  if (typeof json?.result !== "string") throw new Error("RPC: empty response");
+  return json.result;
 }
 
 async function bnbRpcCall(alchemyBnbRpc: string, to: string, data: string): Promise<string> {
-  const result = await rpcCall(alchemyBnbRpc, to, data);
-  if (result && result !== "0x0" && result !== "0x") return result;
-  for (const rpc of BNB_PUBLIC_RPCS) {
-    try {
-      const fallback = await rpcCall(rpc, to, data);
-      if (fallback && fallback !== "0x0" && fallback !== "0x") return fallback;
-    } catch { continue; }
+  try {
+    return await rpcCall(alchemyBnbRpc, to, data);
+  } catch (alchemyErr) {
+    let lastErr: unknown = alchemyErr;
+    for (const rpc of BNB_PUBLIC_RPCS) {
+      try {
+        return await rpcCall(rpc, to, data);
+      } catch (err) {
+        lastErr = err;
+      }
+    }
+    throw lastErr;
   }
-  return result;
 }
 
 async function getOnChainBalance(address: string, baseRpc: string, bnbRpc: string): Promise<number> {
@@ -87,7 +108,7 @@ async function getOnChainBalance(address: string, baseRpc: string, bnbRpc: strin
 
 interface LeaderboardEntry {
   account: string;
-  total: number;
+  total: number | null;
   username?: string;
   userDisplayName?: string;
   avatarUrl?: string;
@@ -98,34 +119,31 @@ interface LeaderboardEntry {
   subscribers?: number;
   delta?: number;
   badgeBalance?: number;
+  refreshedAt?: string;
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const preflight = handleCorsPreflight(req);
+  if (preflight) return preflight;
 
   try {
-    const url = new URL(req.url);
-    const address = url.searchParams.get("address")?.toLowerCase();
+    const auth = await requireDeHubAuth(req);
+    if (!auth.ok) return auth.response;
+    const address = auth.wallet;
 
-    if (!address || !address.startsWith("0x") || address.length !== 42) {
-      return new Response(
-        JSON.stringify({ success: false, error: "Invalid wallet address" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    const supabase = serviceClient();
+
+    const rl = await checkRateLimit(supabase, address, "leaderboard-self-refresh", REFRESH_LIMIT);
+    if (!rl.allowed) {
+      return jsonResponse(
+        { success: false, error: `You can refresh once every 10 minutes. Try again after ${rl.resetAt.toISOString()}.` },
+        429,
       );
     }
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const alchemyKey = Deno.env.get("ALCHEMY_API_KEY");
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
     if (!alchemyKey) {
-      return new Response(
-        JSON.stringify({ success: false, error: "RPC not configured" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return jsonResponse({ success: false, error: "RPC not configured" }, 500);
     }
 
     const baseRpc = `https://base-mainnet.g.alchemy.com/v2/${alchemyKey}`;
@@ -134,14 +152,17 @@ Deno.serve(async (req) => {
     console.log(`[refresh-user] Checking balance for ${address}`);
 
     // 1. Get on-chain balance
-    const balance = await getOnChainBalance(address, baseRpc, bnbRpc);
+    let balance: number;
+    try {
+      balance = await getOnChainBalance(address, baseRpc, bnbRpc);
+    } catch (err) {
+      console.error("[refresh-user] Balance lookup failed:", err);
+      return jsonResponse({ success: false, error: "Could not read the on-chain balance right now. Try again shortly." }, 502);
+    }
     console.log(`[refresh-user] Balance: ${balance.toFixed(2)} DHB`);
 
     if (balance < DISCOVERY_MIN_BALANCE) {
-      return new Response(
-        JSON.stringify({ success: true, balance, added: false, reason: "Balance below minimum (10,000 DHB)" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return jsonResponse({ success: true, balance, added: false, reason: "Balance below minimum (10,000 DHB)" });
     }
 
     // 2. Fetch profile from DeHub API
@@ -149,7 +170,7 @@ Deno.serve(async (req) => {
     try {
       const profileRes = await fetch(
         `${DEHUB_API_BASE}/api/account_info/${address}`,
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json" }, signal: AbortSignal.timeout(15000) },
       );
       if (profileRes.ok) {
         const profileData = await profileRes.json();
@@ -174,67 +195,61 @@ Deno.serve(async (req) => {
       sentTips: (profile.sentTips as number) ?? 0,
       receivedTips: (profile.receivedTips as number) ?? 0,
       badgeBalance: balance,
+      refreshedAt: new Date().toISOString(),
     };
 
     console.log(`[refresh-user] Profile resolved: username=${newEntry.username}, displayName=${newEntry.userDisplayName}`);
 
-    // 4. Read current leaderboard cache for holdings/all
-    const { data: cached, error: cacheError } = await supabase
-      .from("leaderboard_cache")
-      .select("id, data")
-      .eq("sort_mode", "holdings")
-      .eq("period", "all")
-      .single();
+    // 4. Merge into holdings/all. The cache row is one JSON blob that the
+    // nightly refresh and every self-refresh rewrite whole, so the write is
+    // conditioned on the updated_at that was read; a concurrent writer makes
+    // it match zero rows and the merge is redone on fresh data.
+    for (let attempt = 1; attempt <= WRITE_ATTEMPTS; attempt++) {
+      const { data: cached, error: cacheError } = await supabase
+        .from("leaderboard_cache")
+        .select("id, data, updated_at")
+        .eq("sort_mode", "holdings")
+        .eq("period", "all")
+        .maybeSingle();
 
-    if (cacheError || !cached) {
-      console.error("[refresh-user] Cache read failed:", cacheError);
-      return new Response(
-        JSON.stringify({ success: false, error: "Leaderboard cache not available" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      if (cacheError || !cached) {
+        console.error("[refresh-user] Cache read failed:", cacheError);
+        return jsonResponse({ success: false, error: "Leaderboard cache not available" }, 500);
+      }
+
+      const cacheData = cached.data as { result?: { byWalletBalance?: LeaderboardEntry[] } };
+      const entries: LeaderboardEntry[] = cacheData?.result?.byWalletBalance || [];
+
+      const filtered = entries.filter((e) => e.account.toLowerCase() !== address);
+      filtered.push(newEntry);
+      filtered.sort((a, b) => (b.total ?? -1) - (a.total ?? -1));
+
+      const updatedData = {
+        ...cacheData,
+        result: { ...cacheData.result, byWalletBalance: filtered },
+      };
+
+      const { data: written, error: updateError } = await supabase
+        .from("leaderboard_cache")
+        .update({ data: updatedData, updated_at: new Date().toISOString() })
+        .eq("id", cached.id)
+        .eq("updated_at", cached.updated_at)
+        .select("id");
+
+      if (updateError) {
+        console.error("[refresh-user] Cache update failed:", updateError);
+        return jsonResponse({ success: false, error: "Failed to update cache" }, 500);
+      }
+      if (written && written.length > 0) {
+        console.log(`[refresh-user] Merged ${address} with ${balance.toFixed(2)} DHB (attempt ${attempt})`);
+        return jsonResponse({ success: true, balance, added: true });
+      }
+      console.warn(`[refresh-user] Cache changed underneath attempt ${attempt}; retrying`);
     }
 
-    // 5. Merge user into cached data
-    const cacheData = cached.data as { result?: { byWalletBalance?: LeaderboardEntry[] } };
-    const entries: LeaderboardEntry[] = cacheData?.result?.byWalletBalance || [];
-
-    // Remove existing entry for this address (if any) and add the new one
-    const filtered = entries.filter(e => e.account.toLowerCase() !== address);
-    filtered.push(newEntry);
-
-    // Sort by total descending
-    filtered.sort((a, b) => b.total - a.total);
-
-    const updatedData = {
-      ...cacheData,
-      result: { ...cacheData.result, byWalletBalance: filtered },
-    };
-
-    // 6. Write back to cache
-    const { error: updateError } = await supabase
-      .from("leaderboard_cache")
-      .update({ data: updatedData, updated_at: new Date().toISOString() })
-      .eq("id", cached.id);
-
-    if (updateError) {
-      console.error("[refresh-user] Cache update failed:", updateError);
-      return new Response(
-        JSON.stringify({ success: false, error: "Failed to update cache" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    console.log(`[refresh-user] Successfully merged ${address} with ${balance.toFixed(2)} DHB`);
-
-    return new Response(
-      JSON.stringify({ success: true, balance, added: true }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return jsonResponse({ success: false, error: "Leaderboard is being refreshed. Try again in a moment." }, 409);
   } catch (err) {
     console.error("[refresh-user] Error:", err);
-    return new Response(
-      JSON.stringify({ success: false, error: "Internal error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return jsonResponse({ success: false, error: "Internal error" }, 500);
   }
 });

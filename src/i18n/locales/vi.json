@@ -983,7 +983,15 @@
     "highestFirst": "Showing highest first",
     "lowestFirst": "Showing lowest first",
     "balanceTooLow": "Balance too low ({{balance}} DHB)",
-    "refreshFailed": "Something went wrong"
+    "refreshFailed": "Something went wrong",
+    "hidden": "Đã ẩn",
+    "noDataForPeriod": "Chưa có dữ liệu cho giai đoạn này",
+    "noDataYet": "Chưa có dữ liệu bảng xếp hạng",
+    "seeAll": "Xem tất cả",
+    "rankN": "Hạng {{rank}}",
+    "you": "(bạn)",
+    "provisional": "tạm thời",
+    "loadingBoard": "Đang tải bảng xếp hạng…"
   },
   "explorePage": {
     "filters": "Filters",
@@ -1741,7 +1749,20 @@
     "intro": "Tuyển tập trò chơi, thế giới và trải nghiệm do DeHub xây dựng và mở mã nguồn.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Chơi ngay trên trình duyệt tại DeHub — cờ vua 3D điện ảnh, game bắn súng sinh theo thuật toán, chuyến dạo rừng mưa, màn ẩu đả đường phố neon và sàn giao dịch có thể đi bộ. Không cài đặt, không tải về.",
-    "alsoIn": "Cũng có trong {{theme}}"
+    "alsoIn": "Cũng có trong {{theme}}",
+    "hpLeft": "còn {{hp}} HP",
+    "noHpLeft": "hết HP",
+    "bestOfRuns": "tốt nhất trong {{count}} lượt",
+    "firstRun": "lượt đầu tiên",
+    "gamesRecord_one": "{{count}} ván · {{wins}}T {{losses}}B {{draws}}H",
+    "gamesRecord_other": "{{count}} ván · {{wins}}T {{losses}}B {{draws}}H",
+    "anon": "ẩn danh",
+    "streetSlayerBoardTitle": "Đi xa nhất trên phố",
+    "streetSlayerBoardBlurb": "Bạn đi được bao xa trước khi con phố hạ gục bạn, và còn bao nhiêu máu khi dừng lại. Phá kỷ lục của chính mình để thăng hạng.",
+    "streetSlayerBoardEmpty": "Chưa ai đi đủ xa. Hãy là người đầu tiên.",
+    "kingsGambitBoardTitle": "Điểm xếp hạng",
+    "kingsGambitBoardBlurb": "Elo trên mọi ván đấu trực tuyến. Ai cũng bắt đầu từ 1200; thắng người mạnh hơn được nhiều điểm hơn thắng người yếu hơn, nên không thể cày hạng bằng ví thứ hai.",
+    "kingsGambitBoardEmpty": "Chưa có ván đấu trực tuyến nào kết thúc. Mở một lời thách đấu."
   },
   "stats": {
     "community": {
