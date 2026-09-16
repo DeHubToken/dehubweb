@@ -264,7 +264,11 @@ All colors MUST be HSL.
     height: 100%;
     width: 100%;
     background-color: black;
-    overscroll-behavior: none;
+    /* Y only. The shorthand also sets overscroll-behavior-x, and the X axis is
+       what Safari and Chrome drive their swipe-to-go-back gesture from — so
+       "stop pull-to-refresh" was quietly costing us back-swipe navigation on
+       every touch device. Nothing here scrolls horizontally anyway (body is
+       overflow-x: clip), so the X axis has nothing of its own to suppress. */
     overscroll-behavior-y: none;
     touch-action: manipulation;
     -webkit-overflow-scrolling: touch;
