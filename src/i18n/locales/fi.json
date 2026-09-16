@@ -1524,6 +1524,13 @@
     "discardBody": "Se on tallennettu luonnokseksi, joten se odottaa täällä, kun palaat.",
     "keepWriting": "Jatka kirjoittamista",
     "closeAnyway": "Sulje silti",
+    "pinnedBadge": "Kiinnitetty",
+    "pinnedByCreator": "Tekijän kiinnittämä",
+    "pinAction": "Kiinnitä ylös",
+    "unpinAction": "Poista kiinnitys",
+    "pinnedToast": "Kiinnitetty tämän julkaisun ylimmäksi",
+    "unpinnedToast": "Kiinnitys poistettu",
+    "pinFailed": "Kommenttia ei voitu kiinnittää",
     "kidsOnlyThread": "Tämä viesti on tarkoitettu lapsille. Vain lapset-tila voi kommentoida sitä."
   },
   "postInfo": {

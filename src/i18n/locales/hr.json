@@ -1519,6 +1519,13 @@
     "discardBody": "Spremljen je kao skica pa će biti ovdje kad se vratiš.",
     "keepWriting": "Nastavi pisati",
     "closeAnyway": "Ipak zatvori",
+    "pinnedBadge": "Prikvačeno",
+    "pinnedByCreator": "Prikvačio autor",
+    "pinAction": "Prikvači na vrh",
+    "unpinAction": "Ukloni prikvačivanje",
+    "pinnedToast": "Prikvačeno na vrh ove objave",
+    "unpinnedToast": "Prikvačivanje uklonjeno",
+    "pinFailed": "Taj komentar nije bilo moguće prikvačiti",
     "kidsOnlyThread": "Ova je objava namijenjena djeci. Samo dječji način rada može komentirati."
   },
   "postInfo": {

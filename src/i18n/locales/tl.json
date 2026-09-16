@@ -1456,6 +1456,13 @@
     "discardBody": "Naka-save ito bilang draft, kaya nandito pa rin ito pagbalik mo.",
     "keepWriting": "Magpatuloy sa pagsulat",
     "closeAnyway": "Isara pa rin",
+    "pinnedBadge": "Naka-pin",
+    "pinnedByCreator": "Naka-pin ng creator",
+    "pinAction": "I-pin sa itaas",
+    "unpinAction": "Alisin ang pin",
+    "pinnedToast": "Naka-pin sa itaas ng post na ito",
+    "unpinnedToast": "Inalis ang pin",
+    "pinFailed": "Hindi ma-pin ang komentong iyon",
     "kidsOnlyThread": "Ang post na ito ay para sa mga bata. Kids Mode lamang ang maaaring magkomento tungkol dito."
   },
   "postInfo": {

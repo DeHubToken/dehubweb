@@ -1524,6 +1524,13 @@
     "discardBody": "Uložili jsme ho jako koncept, takže tu bude, až se vrátíš.",
     "keepWriting": "Psát dál",
     "closeAnyway": "Přesto zavřít",
+    "pinnedBadge": "Připnuto",
+    "pinnedByCreator": "Připnuto tvůrcem",
+    "pinAction": "Připnout nahoru",
+    "unpinAction": "Odepnout",
+    "pinnedToast": "Připnuto na začátek tohoto příspěvku",
+    "unpinnedToast": "Připnutí zrušeno",
+    "pinFailed": "Tento komentář se nepodařilo připnout",
     "kidsOnlyThread": "Tento příspěvek je pro děti. Komentovat to může pouze dětský režim."
   },
   "postInfo": {

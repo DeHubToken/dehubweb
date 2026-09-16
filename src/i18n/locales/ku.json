@@ -1333,7 +1333,14 @@
     "discardTitle": "Şîroveya xwe bavêjî?",
     "discardBody": "Wek reşnivîs hate tomarkirin, dema vegerî wê li vir be.",
     "keepWriting": "Berdewam binivîse",
-    "closeAnyway": "Dîsa jî bigire"
+    "closeAnyway": "Dîsa jî bigire",
+    "pinnedBadge": "Hatiye pêvekirin",
+    "pinnedByCreator": "Ji aliyê afirîner ve hatiye pêvekirin",
+    "pinAction": "Bi jor ve pêve bike",
+    "unpinAction": "Pêvekê rake",
+    "pinnedToast": "Li serê vê şandiyê hate pêvekirin",
+    "unpinnedToast": "Pêvek hate rakirin",
+    "pinFailed": "Ew şîrove nehat pêvekirin"
   },
   "postInfo": {
     "title": "Agahiya postê",

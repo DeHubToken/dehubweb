@@ -1524,6 +1524,13 @@
     "discardBody": "S'ha desat com a esborrany, així que hi serà quan tornis.",
     "keepWriting": "Continua escrivint",
     "closeAnyway": "Tanca igualment",
+    "pinnedBadge": "Fixat",
+    "pinnedByCreator": "Fixat pel creador",
+    "pinAction": "Fixa a dalt",
+    "unpinAction": "Treu la fixació",
+    "pinnedToast": "Fixat a dalt de tot d'aquesta publicació",
+    "unpinnedToast": "Fixació tret",
+    "pinFailed": "No s'ha pogut fixar aquest comentari",
     "kidsOnlyThread": "Aquesta publicació és per a nens. Només el mode nens pot comentar-ho."
   },
   "postInfo": {

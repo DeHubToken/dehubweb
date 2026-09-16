@@ -1490,6 +1490,13 @@
     "discardBody": "已經存咗做草稿，返嚟嗰陣仲喺度。",
     "keepWriting": "繼續寫",
     "closeAnyway": "照樣閂咗佢",
+    "pinnedBadge": "已置頂",
+    "pinnedByCreator": "創作者置咗頂",
+    "pinAction": "置頂",
+    "unpinAction": "取消置頂",
+    "pinnedToast": "已經置頂喺呢個帖子最上面",
+    "unpinnedToast": "已經取消置頂",
+    "pinFailed": "置頂唔到嗰個留言",
     "kidsOnlyThread": "呢個帖子係畀小朋友嘅。只有兒童模式可以對佢作出評論。"
   },
   "postInfo": {

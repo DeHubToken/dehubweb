@@ -1486,6 +1486,13 @@
     "discardBody": "اهو مسودي طور محفوظ آهي، واپس اچڻ تي هتي ئي ملندو.",
     "keepWriting": "لکندا رهو",
     "closeAnyway": "پوءِ به بند ڪريو",
+    "pinnedBadge": "پن ٿيل",
+    "pinnedByCreator": "ٺاهيندڙ پن ڪيو",
+    "pinAction": "مٿي پن ڪريو",
+    "unpinAction": "پن هٽايو",
+    "pinnedToast": "هن پوسٽ جي سڀ کان مٿي پن ڪيو ويو",
+    "unpinnedToast": "پن هٽائي ڇڏيو ويو",
+    "pinFailed": "اهو تبصرو پن نه ٿي سگهيو",
     "kidsOnlyThread": "هي پوسٽ ٻارن لاءِ آهي. صرف ٻارن جو موڊ ان تي تبصرو ڪري سگهي ٿو."
   },
   "postInfo": {
