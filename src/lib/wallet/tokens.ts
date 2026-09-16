@@ -234,3 +234,20 @@ export function removeCustomToken(chainId: WalletChainId, tokenAddress: string) 
     localStorage.setItem(CUSTOM_TOKENS_KEY, JSON.stringify(all));
   } catch { /* ignore */ }
 }
+
+/**
+ * Format a raw balance for a row the user picks from, straight off the bigint.
+ *
+ * `formatBalance` collapses anything under a cent to the literal string
+ * '<0.01' — right for a headline figure, fatal for a caller that parses it
+ * back into a number, because `parseFloat('<0.01')` is NaN. Dust is exactly
+ * what a native-gas row holds, so anything ranking or rendering a balance goes
+ * through this instead of re-parsing display text.
+ */
+export function formatPickerBalance(balance: bigint, decimals: number, maxDecimals = 4): string {
+  const num = parseFloat(formatUnits(balance, decimals ?? 18));
+  if (!Number.isFinite(num) || num === 0) return '0';
+  const floor = 10 ** -maxDecimals;
+  if (num < floor) return `<${floor.toFixed(maxDecimals)}`;
+  return num.toLocaleString('en-US', { maximumFractionDigits: maxDecimals });
+}

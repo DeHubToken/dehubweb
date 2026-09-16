@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Loader2, ArrowDown, CheckCircle2, AlertCircle, CreditCard, Wallet, Plus, ChevronDown } from 'lucide-react';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
 import { getSwapQuote, applySlippage, swapTokens, getNativeBalance } from '@/lib/contracts/uniswap-swap';
+import { formatPickerBalance } from '@/lib/wallet/tokens';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
@@ -365,7 +366,7 @@ export function SwapToTokenDrawer({
                   {isSelected && <span className="text-[10px] text-emerald-400 ml-2">Selected</span>}
                 </div>
                 <span className={`text-sm ${hasBalance ? 'text-white' : 'text-zinc-600'}`}>
-                  {hasBalance ? parseFloat(token.formattedBalance).toLocaleString('en-US', { maximumFractionDigits: 4 }) : '0'}
+                  {formatPickerBalance(token.balance, token.decimals)}
                 </span>
               </button>
             );
