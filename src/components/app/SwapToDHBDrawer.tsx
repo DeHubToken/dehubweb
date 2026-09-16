@@ -30,6 +30,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { useQuery } from '@tanstack/react-query';
+import { ethers } from 'ethers';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
@@ -313,6 +314,45 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
     }
   }, [walletAddress, quote, originAsset, isDirectEth, dhbAmount, selectedToken]);
 
+  /**
+   * Fill in the most DHB this token can buy.
+   *
+   * Prices one reference quote and scales it to the spendable balance rather
+   * than guessing from a spot price: the gateway's figure already carries the
+   * badge discount and, on the intents rail, the route fee. Native ETH keeps a
+   * little back for the transfer's own gas — the deposit is a plain transfer,
+   * which costs next to nothing on Base, but a wallet emptied to zero cannot
+   * send anything at all. A hair under the linear figure covers rounding on
+   * the route; the normal quote that follows is the real check.
+   */
+  const [maxing, setMaxing] = useState(false);
+  const handleMax = useCallback(async () => {
+    if (!originAsset || selectedToken.balance <= BigInt(0)) return;
+    setMaxing(true);
+    setError('');
+    try {
+      const gasHeadroom = isDirectEth ? ethers.parseEther('0.0002') : BigInt(0);
+      const spendable = selectedToken.balance - gasHeadroom;
+      if (spendable <= BigInt(0)) {
+        setError('Not enough ETH left over for the transfer itself.');
+        return;
+      }
+      const REF = 100_000;
+      const ref = isDirectEth
+        ? await getDirectQuote({ tokensToReceive: REF, address: walletAddress ?? undefined })
+        : await getCryptoQuote({ originAsset, tokensToReceive: REF, refundTo: walletAddress ?? undefined });
+      const refIn = BigInt(ref.amountIn);
+      if (refIn <= BigInt(0)) return;
+      // tokens = REF × (spendable / refIn), shaved 1% for route rounding.
+      const max = (BigInt(REF) * spendable * BigInt(99)) / (refIn * BigInt(100));
+      setDhbAmount(max > BigInt(0) ? max.toString() : '');
+    } catch (err: any) {
+      setError(err?.message || 'Could not work out a maximum.');
+    } finally {
+      setMaxing(false);
+    }
+  }, [originAsset, selectedToken.balance, isDirectEth, walletAddress]);
+
   const handleClose = (v: boolean) => {
     if (!v) {
       setDhbAmount('');
@@ -362,6 +402,14 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
                     onChange={e => setDhbAmount(e.target.value)}
                     className="bg-transparent border-none text-white text-xl font-semibold p-0 h-auto focus-visible:ring-0"
                   />
+                  <button
+                    type="button"
+                    onClick={handleMax}
+                    disabled={maxing || buying || selectedToken.balance <= BigInt(0)}
+                    className="shrink-0 text-xs font-semibold px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-white disabled:opacity-40 transition-colors"
+                  >
+                    {maxing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'MAX'}
+                  </button>
                 </div>
                 <div className="grid grid-cols-4 gap-1.5">
                   {PRESETS.map(p => (
@@ -493,8 +541,10 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
                   <span className="text-sm font-medium text-white">{token.symbol}</span>
                   {isSelected && <span className="text-[10px] text-emerald-400 ml-2">Selected</span>}
                 </div>
+                {/* From the raw balance, not formattedBalance: the wallet renders a
+                    dust balance as the string '<0.01', and parseFloat of that is NaN. */}
                 <span className={`text-sm ${hasBalance ? 'text-white' : 'text-zinc-600'}`}>
-                  {hasBalance ? parseFloat(token.formattedBalance).toLocaleString('en-US', { maximumFractionDigits: 4 }) : '0'}
+                  {hasBalance ? (Number(token.balance) / 10 ** token.decimals).toLocaleString('en-US', { maximumFractionDigits: 6 }) : '0'}
                 </span>
               </button>
             );
