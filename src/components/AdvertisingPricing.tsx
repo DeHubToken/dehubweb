@@ -20,8 +20,8 @@ const AdvertisingPricing = () => {
     { threshold: "1,000,000+", badge: "Crocodile Badge", cpm: "$2,000", multiplier: "200x", image: badgeImage('Crocodile'), color: "bg-green-800" },
     { threshold: "2,000,000+", badge: "Dolphin Badge", cpm: "$3,000", multiplier: "300x", image: badgeImage('Dolphin'), color: "bg-cyan-500" },
     { threshold: "3,000,000+", badge: "Tiger Shark Badge", cpm: "$4,000", multiplier: "400x", image: badgeImage('Tiger Shark'), color: "bg-slate-600" },
-    { threshold: "5,000,000+", badge: "Killer Whale Badge", cpm: "$5,500", multiplier: "550x", image: badgeImage('Killer Whale'), color: "bg-gray-900" },
-    { threshold: "10,000,000+", badge: "Great White Shark Badge", cpm: "$8,750", multiplier: "875x", image: badgeImage('Great White Shark'), color: "bg-blue-800" },
+    { threshold: "5,000,000+", badge: "Great White Shark Badge", cpm: "$5,500", multiplier: "550x", image: badgeImage('Great White Shark'), color: "bg-gray-900" },
+    { threshold: "10,000,000+", badge: "Killer Whale Badge", cpm: "$8,750", multiplier: "875x", image: badgeImage('Killer Whale'), color: "bg-blue-800" },
     { threshold: "25,000,000+", badge: "Blue Whale Badge", cpm: "$16,000", multiplier: "1600x", image: badgeImage('Blue Whale'), color: "bg-indigo-700" },
     { threshold: "50,000,000+", badge: "Megalodon Badge", cpm: "$25,000", multiplier: "2500x", image: badgeImage('Megalodon'), color: "bg-purple-800" }
   ];

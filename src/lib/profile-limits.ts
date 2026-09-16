@@ -7,7 +7,7 @@
  * about as much as the middle. It now opens up sharply at the top and leaves
  * the bottom exactly where it was:
  *
- *   no badge            2      Cobra … Great White Shark   10
+ *   no badge            2      Cobra … Killer Whale        10
  *   Crab                3      Blue Whale                  25
  *   Lobster             4      Megalodon                    50
  *   Piranha             5
