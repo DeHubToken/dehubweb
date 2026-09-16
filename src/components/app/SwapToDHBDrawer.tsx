@@ -20,6 +20,9 @@ import {
   getCryptoQuote,
   createCryptoIntent,
   getCryptoIntentStatus,
+  getDirectQuote,
+  createDirectIntent,
+  confirmDirectDeposit,
   type CryptoPayableAsset,
   type CryptoQuote,
 } from '@/lib/api/dpay';
@@ -27,6 +30,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { useQuery } from '@tanstack/react-query';
+import { ethers } from 'ethers';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
@@ -142,7 +146,11 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
       || { symbol: 'ETH', address: '0x0', decimals: 18, balance: BigInt(0), formattedBalance: '0', chainId: BASE_CHAIN_ID };
   }, [payTokens, selectedTokenAddress]);
 
-  const originAsset = assetByAddress.get(selectedToken.address.toLowerCase())?.assetId ?? null;
+  /** Native ETH takes the direct rail and needs no intents asset id. */
+  const isDirectEth = selectedToken.address === '0x0';
+  const originAsset = isDirectEth
+    ? 'direct:base:eth'
+    : assetByAddress.get(selectedToken.address.toLowerCase())?.assetId ?? null;
 
   // Reset on open
   useEffect(() => {
@@ -172,7 +180,12 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
     let cancelled = false;
     setQuoting(true);
     setError('');
-    getCryptoQuote({ originAsset, tokensToReceive: Math.floor(amt), refundTo: walletAddress ?? undefined })
+    // ETH already on Base goes straight to the gateway; everything else
+    // bridges through the intents rail.
+    const priced = isDirectEth
+      ? getDirectQuote({ tokensToReceive: Math.floor(amt), address: walletAddress ?? undefined })
+      : getCryptoQuote({ originAsset: originAsset!, tokensToReceive: Math.floor(amt), refundTo: walletAddress ?? undefined });
+    priced
       .then(q => { if (!cancelled) setQuote(q); })
       .catch(err => {
         if (cancelled) return;
@@ -183,7 +196,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
       })
       .finally(() => { if (!cancelled) setQuoting(false); });
     return () => { cancelled = true; };
-  }, [debouncedAmount, originAsset, selectedToken.symbol, walletAddress]);
+  }, [debouncedAmount, originAsset, isDirectEth, selectedToken.symbol, walletAddress]);
 
   const amountInWei = quote ? BigInt(quote.amountIn) : null;
   const amountInFormatted = quote ? quote.amountInFormatted : null;
@@ -213,19 +226,24 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
     setError('');
     setProgress('Opening your purchase...');
     try {
-      const intent = await createCryptoIntent({
-        originAsset,
-        tokensToReceive: amt,
-        receiverAddress: walletAddress,
-        // A swap that fails upstream has to have somewhere to go back to, and
-        // the buyer is paying from this wallet on Base.
-        refundTo: walletAddress,
-        termsAndServicesAccepted: true,
-      });
+      const intent = isDirectEth
+        ? await createDirectIntent({
+            tokensToReceive: amt,
+            receiverAddress: walletAddress,
+            termsAndServicesAccepted: true,
+          })
+        : await createCryptoIntent({
+            originAsset,
+            tokensToReceive: amt,
+            receiverAddress: walletAddress,
+            // A swap that fails upstream has to have somewhere to go back to, and
+            // the buyer is paying from this wallet on Base.
+            refundTo: walletAddress,
+            termsAndServicesAccepted: true,
+          });
 
       setProgress(`Sending ${intent.amountInFormatted} ${selectedToken.symbol}...`);
-      const isNative = selectedToken.address === '0x0';
-      const sent = isNative
+      const sent = isDirectEth
         ? await sendNativeToken(intent.depositAddress, intent.amountInFormatted, selectedToken.decimals, BASE_CHAIN_ID)
         : await sendERC20Token(selectedToken.address, intent.depositAddress, intent.amountInFormatted, selectedToken.decimals, BASE_CHAIN_ID);
 
@@ -233,6 +251,20 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
         description: `TX: ${sent.hash.slice(0, 10)}…`,
       });
       setProgress('Payment sent. Waiting for delivery...');
+
+      if (isDirectEth) {
+        // The gateway settles a direct purchase against the chain once it
+        // has the hash. It may not be mined on the first ask; the poll below
+        // keeps re-submitting until it is, so a slow block is not a failure.
+        setProgress('Payment sent. Waiting for confirmation...');
+        const tryConfirm = () => confirmDirectDeposit({ id: intent.id, txHash: sent.hash }).catch(() => null);
+        await tryConfirm();
+        const confirmTimer = setInterval(async () => {
+          const status = await tryConfirm();
+          if (status && status.settlement !== 'DIRECT_PENDING') clearInterval(confirmTimer);
+        }, 4000);
+        setTimeout(() => clearInterval(confirmTimer), 10 * 60 * 1000);
+      }
 
       if (pollRef.current) clearInterval(pollRef.current);
       let ticks = 0;
@@ -280,7 +312,46 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
       setBuying(false);
       toast.error('Purchase failed', { description: msg });
     }
-  }, [walletAddress, quote, originAsset, dhbAmount, selectedToken]);
+  }, [walletAddress, quote, originAsset, isDirectEth, dhbAmount, selectedToken]);
+
+  /**
+   * Fill in the most DHB this token can buy.
+   *
+   * Prices one reference quote and scales it to the spendable balance rather
+   * than guessing from a spot price: the gateway's figure already carries the
+   * badge discount and, on the intents rail, the route fee. Native ETH keeps a
+   * little back for the transfer's own gas — the deposit is a plain transfer,
+   * which costs next to nothing on Base, but a wallet emptied to zero cannot
+   * send anything at all. A hair under the linear figure covers rounding on
+   * the route; the normal quote that follows is the real check.
+   */
+  const [maxing, setMaxing] = useState(false);
+  const handleMax = useCallback(async () => {
+    if (!originAsset || selectedToken.balance <= BigInt(0)) return;
+    setMaxing(true);
+    setError('');
+    try {
+      const gasHeadroom = isDirectEth ? ethers.parseEther('0.0002') : BigInt(0);
+      const spendable = selectedToken.balance - gasHeadroom;
+      if (spendable <= BigInt(0)) {
+        setError('Not enough ETH left over for the transfer itself.');
+        return;
+      }
+      const REF = 100_000;
+      const ref = isDirectEth
+        ? await getDirectQuote({ tokensToReceive: REF, address: walletAddress ?? undefined })
+        : await getCryptoQuote({ originAsset, tokensToReceive: REF, refundTo: walletAddress ?? undefined });
+      const refIn = BigInt(ref.amountIn);
+      if (refIn <= BigInt(0)) return;
+      // tokens = REF × (spendable / refIn), shaved 1% for route rounding.
+      const max = (BigInt(REF) * spendable * BigInt(99)) / (refIn * BigInt(100));
+      setDhbAmount(max > BigInt(0) ? max.toString() : '');
+    } catch (err: any) {
+      setError(err?.message || 'Could not work out a maximum.');
+    } finally {
+      setMaxing(false);
+    }
+  }, [originAsset, selectedToken.balance, isDirectEth, walletAddress]);
 
   const handleClose = (v: boolean) => {
     if (!v) {
@@ -331,6 +402,14 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
                     onChange={e => setDhbAmount(e.target.value)}
                     className="bg-transparent border-none text-white text-xl font-semibold p-0 h-auto focus-visible:ring-0"
                   />
+                  <button
+                    type="button"
+                    onClick={handleMax}
+                    disabled={maxing || buying || selectedToken.balance <= BigInt(0)}
+                    className="shrink-0 text-xs font-semibold px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-white disabled:opacity-40 transition-colors"
+                  >
+                    {maxing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'MAX'}
+                  </button>
                 </div>
                 <div className="grid grid-cols-4 gap-1.5">
                   {PRESETS.map(p => (
