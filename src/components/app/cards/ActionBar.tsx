@@ -257,13 +257,24 @@ function formatCount(count?: number): string {
  * right: 6 }}` on the shared button in `components/Home/FeedActionBar.tsx`,
  * with the count inside the Pressable. Only the web was missing it.
  *
+ * WHY `touch-pan-y` AND NOT `touch-none`
+ * `touch-action: none` means a touch that STARTS on the element cannot pan the
+ * page at all, so a thumb landing here and swiping up scrolls nothing. That was
+ * survivable while the target was 20px wide and easy to miss; widening it to
+ * ~46px doubled the dead strip, and the action row is exactly where a thumb
+ * rests. `pan-y` gives the vertical scroll back and keeps everything the tray
+ * needs: a still press runs the 400ms hold timer as before, and a press that
+ * turns into a scroll fires `pointercancel`, which already cancels the hold —
+ * which is what should happen. The horizontal axis stays locked so a sideways
+ * drag on the thumb cannot start a pan the card has no use for.
+ *
  * Note for themes: the count is a plain `<span>` child, and every engaged-state
  * rule reaches the icon through `> :is(svg, [data-engaged-glyph])`, so bringing
  * it inside the button does not drag the number into the reaction glow or the
  * Osaka cycle — the arrangement repost and tip already rely on.
  */
 const THUMB_BUTTON_CLASS =
-  'flex items-center gap-0.5 px-2 -mx-2 transition-colors text-white select-none touch-none';
+  'flex items-center gap-0.5 px-2 -mx-2 transition-colors text-white select-none touch-pan-y';
 
 export function ActionBar({
   postId,
