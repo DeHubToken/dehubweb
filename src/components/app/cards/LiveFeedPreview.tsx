@@ -97,15 +97,23 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
 
   return (
     <div className={className ?? 'absolute inset-0 w-full h-full'}>
-      {thumbnail && !playing && (
-        <img
-          src={thumbnail}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover"
-          loading="lazy"
-        />
-      )}
+      {!playing &&
+        (thumbnail ? (
+          <img
+            src={thumbnail}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          /* No cover — the normal case for a self-hosted stream, which renders
+             no thumbnail. Without something here the card is a bare <video>
+             with no poster: an empty box for as long as the ladder takes to
+             open, and permanently when autoplay is refused. The static screen
+             says what the card is instead, and is replaced by the first frame. */
+          <LiveEndedMedia label={fallbackLabel} />
+        ))}
       <video
         ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover"
