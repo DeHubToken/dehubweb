@@ -6526,6 +6526,14 @@ export type Database = {
         Returns: boolean
       }
       is_stage_host: { Args: { p_space_id: string }; Returns: boolean }
+      leaderboard_rank: {
+        Args: { p_address: string; p_sort?: string }
+        Returns: {
+          entries: number
+          rank: number
+          total: number
+        }[]
+      }
       pg_relpages:
         | {
             Args: { relname: unknown }
