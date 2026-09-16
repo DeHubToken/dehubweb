@@ -1623,6 +1623,13 @@
     "discardBody": "Uložili sme ho ako koncept, takže tu bude, keď sa vrátiš.",
     "keepWriting": "Písať ďalej",
     "closeAnyway": "Aj tak zavrieť",
+    "pinnedBadge": "Pripnuté",
+    "pinnedByCreator": "Pripol tvorca",
+    "pinAction": "Pripnúť navrch",
+    "unpinAction": "Odopnúť",
+    "pinnedToast": "Pripnuté navrch tohto príspevku",
+    "unpinnedToast": "Pripnutie zrušené",
+    "pinFailed": "Tento komentár sa nepodarilo pripnúť",
     "kidsOnlyThread": "Tento príspevok je pre deti. Komentovať ho môže iba detský režim."
   },
   "postInfo": {

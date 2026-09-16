@@ -1528,6 +1528,13 @@
     "discardBody": "Sudah tersimpan sebagai draf, jadi akan ada di sini saat kamu kembali.",
     "keepWriting": "Lanjut menulis",
     "closeAnyway": "Tetap tutup",
+    "pinnedBadge": "Disematkan",
+    "pinnedByCreator": "Disematkan oleh kreator",
+    "pinAction": "Sematkan di atas",
+    "unpinAction": "Hapus sematan",
+    "pinnedToast": "Disematkan di bagian atas postingan ini",
+    "unpinnedToast": "Sematan dihapus",
+    "pinFailed": "Komentar itu tidak bisa disematkan",
     "kidsOnlyThread": "Postingan ini untuk anak - anak. Hanya Mode Anak yang dapat mengomentarinya."
   },
   "postInfo": {

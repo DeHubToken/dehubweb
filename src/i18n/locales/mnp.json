@@ -1439,6 +1439,13 @@
     "discardBody": "已经存做草稿了，转来还会在。",
     "keepWriting": "继续写",
     "closeAnyway": "还是关掉",
+    "pinnedBadge": "已置顶",
+    "pinnedByCreator": "作者置顶其",
+    "pinAction": "置顶",
+    "unpinAction": "取消置顶",
+    "pinnedToast": "已置顶到迄篇帖上底",
+    "unpinnedToast": "已取消置顶",
+    "pinFailed": "无法置顶迄条评论",
     "kidsOnlyThread": "这个帖子是给孩子们的。只有儿童模式才能评论。"
   },
   "postInfo": {

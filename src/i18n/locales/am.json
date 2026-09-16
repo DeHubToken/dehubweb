@@ -1517,6 +1517,13 @@
     "discardBody": "እንደ ረቂቅ ተቀምጧል፣ ስለዚህ ሲመለሱ እዚህ ይኖራል።",
     "keepWriting": "መጻፍ ይቀጥሉ",
     "closeAnyway": "ለማንኛውም ዝጋ",
+    "pinnedBadge": "ተሰክቷል",
+    "pinnedByCreator": "በፈጣሪው ተሰክቷል",
+    "pinAction": "ወደ ላይ ሰካ",
+    "unpinAction": "ሰኩን አስወግድ",
+    "pinnedToast": "በዚህ ልጥፍ ላይ ተሰክቷል",
+    "unpinnedToast": "ሰኩ ተወግዷል",
+    "pinFailed": "ያንን አስተያየት መሰካት አልተቻለም",
     "kidsOnlyThread": "ይህ ልጥፍ ለልጆች ነው ። በዚህ ጉዳይ ላይ አስተያየት መስጠት የሚችሉት የልጆች ሁነታ ብቻ ነው ።"
   },
   "postInfo": {

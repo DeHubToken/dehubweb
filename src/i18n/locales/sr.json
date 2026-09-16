@@ -1321,7 +1321,14 @@
     "discardTitle": "Одбацити коментар?",
     "discardBody": "Сачуван је као нацрт, па ће бити овде када се вратиш.",
     "keepWriting": "Настави да пишеш",
-    "closeAnyway": "Ипак затвори"
+    "closeAnyway": "Ипак затвори",
+    "pinnedBadge": "Закачено",
+    "pinnedByCreator": "Закачио аутор",
+    "pinAction": "Закачи на врх",
+    "unpinAction": "Уклони качење",
+    "pinnedToast": "Закачено на врх ове објаве",
+    "unpinnedToast": "Качење уклоњено",
+    "pinFailed": "Тај коментар није могао да се закачи"
   },
   "postInfo": {
     "title": "Информације о објави",

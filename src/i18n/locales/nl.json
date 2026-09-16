@@ -1721,6 +1721,13 @@
     "discardBody": "Hij is opgeslagen als concept, dus hij staat hier nog als je terugkomt.",
     "keepWriting": "Verder schrijven",
     "closeAnyway": "Toch sluiten",
+    "pinnedBadge": "Vastgezet",
+    "pinnedByCreator": "Vastgezet door de maker",
+    "pinAction": "Bovenaan vastzetten",
+    "unpinAction": "Vastzetten ongedaan maken",
+    "pinnedToast": "Bovenaan dit bericht vastgezet",
+    "unpinnedToast": "Vastzetten ongedaan gemaakt",
+    "pinFailed": "Die reactie kon niet worden vastgezet",
     "kidsOnlyThread": "Dit bericht is voor kinderen. Alleen de kindermodus kan er commentaar op geven."
   },
   "postInfo": {

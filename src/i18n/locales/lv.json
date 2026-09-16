@@ -1491,6 +1491,13 @@
     "discardBody": "Tas ir saglabāts kā melnraksts, tāpēc būs šeit, kad atgriezīsies.",
     "keepWriting": "Turpināt rakstīt",
     "closeAnyway": "Tomēr aizvērt",
+    "pinnedBadge": "Piesprausts",
+    "pinnedByCreator": "Piesprausts veidotājam",
+    "pinAction": "Piespraust augšā",
+    "unpinAction": "Noņemt piespraudumu",
+    "pinnedToast": "Piesprausts šī ieraksta augšpusē",
+    "unpinnedToast": "Piespraudums noņemts",
+    "pinFailed": "Neizdevās piespraust šo komentāru",
     "kidsOnlyThread": "Šī ziņa ir paredzēta bērniem. To var komentēt tikai bērnu režīms."
   },
   "postInfo": {

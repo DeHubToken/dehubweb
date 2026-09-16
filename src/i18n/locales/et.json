@@ -1523,6 +1523,13 @@
     "discardBody": "See on salvestatud mustandina ja ootab siin, kui tagasi tuled.",
     "keepWriting": "Kirjuta edasi",
     "closeAnyway": "Sulge ikkagi",
+    "pinnedBadge": "Kinnitatud",
+    "pinnedByCreator": "Looja kinnitas",
+    "pinAction": "Kinnita üles",
+    "unpinAction": "Eemalda kinnitus",
+    "pinnedToast": "Kinnitatud selle postituse etteotsa",
+    "unpinnedToast": "Kinnitus eemaldatud",
+    "pinFailed": "Seda kommentaari ei õnnestunud kinnitada",
     "kidsOnlyThread": "See postitus on lastele. Ainult laste režiim saab seda kommenteerida."
   },
   "postInfo": {
