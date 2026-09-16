@@ -11,8 +11,8 @@ const MB = 1024 * 1024;
 const QUOTA_BY_BADGE: Array<{ name: string; bytes: number }> = [
   { name: "Megalodon", bytes: 5 * 1024 * GB },
   { name: "Blue Whale", bytes: 1536 * GB },
-  { name: "Great White Shark", bytes: 750 * GB },
-  { name: "Killer Whale", bytes: 400 * GB },
+  { name: "Killer Whale", bytes: 750 * GB },
+  { name: "Great White Shark", bytes: 400 * GB },
   { name: "Tiger Shark", bytes: 200 * GB },
   { name: "Dolphin", bytes: 100 * GB },
   { name: "Crocodile", bytes: 50 * GB },

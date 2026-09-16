@@ -116,7 +116,7 @@ describe('getBadgeName', () => {
   it('lets a smaller bag reach a higher tier once the token is worth more', () => {
     const scale = badgeScaleForPrice(0.01);
     expect(getBadgeName(5_000_000, null, { scale })).toBe('Megalodon');
-    expect(getBadgeName(5_000_000)).toBe('Killer Whale');
+    expect(getBadgeName(5_000_000)).toBe('Great White Shark');
   });
 
   it('still honours the username override table', () => {
@@ -139,8 +139,8 @@ describe('the grandfather lock', () => {
     expect(lock).toEqual({ tier: 'Megalodon', requirement: 5_000_000 });
 
     // Price falls back to the anchor: Megalodon is 50M again, and 5M would
-    // otherwise be a Killer Whale.
-    expect(getBadgeName(5_000_000, null, { scale: 1 })).toBe('Killer Whale');
+    // otherwise be a Great White Shark.
+    expect(getBadgeName(5_000_000, null, { scale: 1 })).toBe('Great White Shark');
     expect(getBadgeName(5_000_000, null, { scale: 1, lock })).toBe('Megalodon');
   });
 
@@ -148,7 +148,7 @@ describe('the grandfather lock', () => {
     const lock = { tier: 'Megalodon', requirement: 5_000_000 };
     expect(getBadgeName(5_000_000, null, { scale: 1, lock })).toBe('Megalodon');
     // One token under, and they are back on whatever the live ladder says —
-    // Tiger Shark, since Killer Whale itself costs 5,000,000 at this scale.
+    // Tiger Shark, since Great White Shark itself costs 5,000,000 at this scale.
     expect(getBadgeName(4_999_999, null, { scale: 1, lock })).toBe('Tiger Shark');
   });
 
@@ -189,7 +189,7 @@ describe('the grandfather lock', () => {
     expect(parseBadgeLock({ tier: 'Crab', requirement: 0 })).toBeNull();
     expect(parseBadgeLock({ tier: 'Crab' })).toBeNull();
     expect(parseBadgeLock({ tier: 'Crab', requirement: '2500' })).toEqual({ tier: 'Crab', requirement: 2500 });
-    expect(getBadgeName(5_000_000, null, { scale: 1, lock: { tier: 'Kraken' } as never })).toBe('Killer Whale');
+    expect(getBadgeName(5_000_000, null, { scale: 1, lock: { tier: 'Kraken' } as never })).toBe('Great White Shark');
   });
 });
 

@@ -11,7 +11,7 @@
  * ladder renders for everyone from the public endpoint, and the allowance
  * panel is the part that needs an account.
  *
- * All twelve powers are listed in unlock order. Killer Whale remains a badge
+ * All twelve powers are listed in unlock order. Great White Shark remains a badge
  * tier with a stronger allowance, but it does not add a separate power.
  */
 
