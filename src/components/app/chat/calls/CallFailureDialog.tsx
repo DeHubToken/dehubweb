@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -7,9 +7,10 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
 } from '@/components/ui/alert-dialog';
-import { Phone, Video, MessageSquare, WifiOff } from 'lucide-react';
-import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
-import { getAccountInfo } from '@/lib/api/dehub/users';
+import { Phone, Video, WifiOff } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
+import { usePeerIdentity } from './CallChrome';
 
 interface CallFailureDialogProps {
   isOpen: boolean;
@@ -28,78 +29,43 @@ const CallFailureDialog: React.FC<CallFailureDialogProps> = ({
   failureReason,
   recipientAddress,
 }) => {
-  const [displayName, setDisplayName] = useState(recipientAddress.slice(0, 6) + '...');
-
-  useEffect(() => {
-    if (recipientAddress) {
-      getAccountInfo(recipientAddress)
-        .then(user => {
-          if (user?.username) setDisplayName(`@${user.username}`);
-          else if (user?.displayName) setDisplayName(user.displayName);
-        })
-        .catch(() => {});
-    }
-  }, [recipientAddress]);
+  const { t } = useTranslation();
+  const peer = usePeerIdentity(recipientAddress);
 
   const isUserOffline = failureReason === 'user_offline';
-
-  const getTitle = () => {
-    if (isUserOffline) return 'User appears to be offline';
-    return 'Call failed';
-  };
-
-  const getDescription = () => {
-    if (isUserOffline) {
-      return `${displayName} is not currently available for ${callType === 'video' ? 'video' : 'voice'} calls. You can send a callback request and they can call you back when online.`;
-    }
-    return 'The call could not be completed. Please check your connection and try again.';
-  };
-
-  const getIcon = () => {
-    if (isUserOffline) {
-      return <WifiOff className="h-12 w-12 text-white/60 mx-auto mb-4" />;
-    }
-    return callType === 'video' ? (
-      <Video className="h-12 w-12 text-red-400 mx-auto mb-4" />
-    ) : (
-      <Phone className="h-12 w-12 text-red-400 mx-auto mb-4" />
-    );
-  };
+  const FailureIcon = isUserOffline ? WifiOff : callType === 'video' ? Video : Phone;
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl [&>button]:text-white/60 [&>button]:hover:text-white">
+      <AlertDialogContent>
         <AlertDialogHeader>
-          <div className="text-center">{getIcon()}</div>
-          <AlertDialogTitle className="text-center text-white">{getTitle()}</AlertDialogTitle>
-          <AlertDialogDescription className="text-center text-white/60">{getDescription()}</AlertDialogDescription>
+          <div className="text-center">
+            <FailureIcon className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+          </div>
+          <AlertDialogTitle className="text-center">
+            {isUserOffline ? t('calls.offlineTitle') : t('calls.failedTitle')}
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-center">
+            {isUserOffline
+              ? t('calls.offlineDesc', { name: peer.name })
+              : t('calls.failedDesc')}
+          </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
-          <LiquidGlassBubble shimmer noBorder className="flex-1 cursor-pointer" onClick={onClose}>
-            <span className="flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-medium">
-              Close
-            </span>
-          </LiquidGlassBubble>
+          <Button variant="secondary" className="flex-1" onClick={onClose}>
+            {t('calls.close')}
+          </Button>
 
-          {isUserOffline && (
-            <LiquidGlassBubble shimmer noBorder className="flex-1 cursor-pointer" onClick={() => {
-              onSendCallbackRequest();
+          <Button
+            className="flex-1"
+            onClick={() => {
+              if (isUserOffline) onSendCallbackRequest();
               onClose();
-            }}>
-              <span className="flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-medium">
-                Callback Request
-              </span>
-            </LiquidGlassBubble>
-          )}
-
-          {!isUserOffline && (
-            <LiquidGlassBubble shimmer noBorder className="flex-1 cursor-pointer" onClick={onClose}>
-              <span className="flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-medium">
-                Try again
-              </span>
-            </LiquidGlassBubble>
-          )}
+            }}
+          >
+            {isUserOffline ? t('calls.callbackRequest') : t('calls.tryAgain')}
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
