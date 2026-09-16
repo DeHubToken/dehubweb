@@ -462,8 +462,10 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
                   <span className="text-sm font-medium text-white">{token.symbol}</span>
                   {isSelected && <span className="text-[10px] text-emerald-400 ml-2">Selected</span>}
                 </div>
+                {/* From the raw balance, not formattedBalance: the wallet renders a
+                    dust balance as the string '<0.01', and parseFloat of that is NaN. */}
                 <span className={`text-sm ${hasBalance ? 'text-white' : 'text-zinc-600'}`}>
-                  {hasBalance ? parseFloat(token.formattedBalance).toLocaleString('en-US', { maximumFractionDigits: 4 }) : '0'}
+                  {hasBalance ? (Number(token.balance) / 10 ** token.decimals).toLocaleString('en-US', { maximumFractionDigits: 6 }) : '0'}
                 </span>
               </button>
             );
