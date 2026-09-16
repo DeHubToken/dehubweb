@@ -844,7 +844,9 @@
     "depositExpired": "การฝากหมดอายุ กรุณาลองใหม่",
     "depositFailedMsg": "การฝากล้มเหลว",
     "crossChainCompleted": "ฝากข้ามเชนเสร็จสมบูรณ์! ได้รับ {{symbol}} บน Base",
-    "tryAgain": "ลองอีกครั้ง"
+    "tryAgain": "ลองอีกครั้ง",
+    "refundAddress": "ที่อยู่ในการคืนเงินในวันที่ {{chain}}",
+    "refundAddressHint": "หากการแลกเปลี่ยนไม่เสร็จสมบูรณ์ {{symbol}} ของคุณจะถูกส่งกลับมาที่นี่"
   },
   "wallet": {
     "title": "กระเป๋าเงิน",

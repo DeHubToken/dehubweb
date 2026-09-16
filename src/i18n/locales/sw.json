@@ -823,6 +823,8 @@
     "depositFailedMsg": "Amana imeshindwa.",
     "crossChainCompleted": "Amana ya kati ya minyororo imekamilika! {{symbol}} imepokelewa kwenye Base.",
     "tryAgain": "Jaribu Tena",
+    "refundAddress": "Anwani ya kurejesha fedha kwenye {{chain}}",
+    "refundAddressHint": "Ikiwa ubadilishaji hauwezi kukamilisha, {{symbol}} yako itatumwa tena hapa.",
     "loginDescription": "Ingia ili kufikia pochi yako na kusimamia fedha zako."
   },
   "wallet": {

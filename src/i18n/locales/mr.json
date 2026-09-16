@@ -818,7 +818,9 @@
     "depositExpired": "डिपॉझिट कालबाह्य झाले. कृपया पुन्हा प्रयत्न करा.",
     "depositFailedMsg": "डिपॉझिट अयशस्वी झाले.",
     "crossChainCompleted": "क्रॉस-चेन डिपॉझिट पूर्ण झाले! {{symbol}} Base वर मिळाले.",
-    "tryAgain": "पुन्हा प्रयत्न करा"
+    "tryAgain": "पुन्हा प्रयत्न करा",
+    "refundAddress": "{{chain}} वर परतावा पत्ता",
+    "refundAddressHint": "स्वॅप पूर्ण करू शकत नसल्यास, आपला {{symbol}} येथे परत पाठविला जाईल."
   },
   "wallet": {
     "title": "वॉलेट",

@@ -806,7 +806,9 @@
     "depositExpired": "Kuufamni darbeera. Irra deebi'ii yaali.",
     "depositFailedMsg": "Kuufamni hin milkoofne.",
     "crossChainCompleted": "Kuufamni cheenii-qaxxaamuraa xumurameera! {{symbol}} Base irratti fudhatameera.",
-    "tryAgain": "Irra Deebi'ii Yaali"
+    "tryAgain": "Irra Deebi'ii Yaali",
+    "refundAddress": "Teessoo deebi&#39;uu {{chain}} irratti.",
+    "refundAddressHint": "Yoo jijjiirraan xumuramuu hin dandeenye, {{symbol}} kee asitti deebi&#39;ee ergama."
   },
   "wallet": {
     "title": "Baallama",

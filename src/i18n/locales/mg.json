@@ -824,7 +824,9 @@
     "depositExpired": "Lany daty ny fametrahana. Andramo indray azafady.",
     "depositFailedMsg": "Tsy nahomby ny fametrahana.",
     "crossChainCompleted": "Vita ny fametrahana cross-chain! Voaray tao amin'ny Base ny {{symbol}}.",
-    "tryAgain": "Andramo indray"
+    "tryAgain": "Andramo indray",
+    "refundAddress": "Adiresy famerenam-bola ao amin'ny {{chain}}",
+    "refundAddressHint": "Raha tsy feno tanteraka ny swap, naverina eto ny {{symbol}} anao."
   },
   "wallet": {
     "title": "Kitapom-bola",

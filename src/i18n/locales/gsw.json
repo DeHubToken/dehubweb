@@ -766,7 +766,9 @@
     "depositExpired": "Ylage abgloffe. Bitte nomol probiere.",
     "depositFailedMsg": "Ylage isch fehlgschlage.",
     "crossChainCompleted": "Chetteübergryfendi Ylage abgschlosse! {{symbol}} uf Base übercho.",
-    "tryAgain": "Nomol probiere"
+    "tryAgain": "Nomol probiere",
+    "refundAddress": "Rückgabeadresse uf {{chain}}",
+    "refundAddressHint": "Wenn de Swap nid chöi fertig gmacht wärde, wird dini {{symbol}} dohäre zruggschickt."
   },
   "wallet": {
     "title": "Portmoneé",

@@ -798,7 +798,9 @@
     "depositExpired": "Setoran kadaluwarsa. Coba maneh.",
     "depositFailedMsg": "Setoran gagal.",
     "crossChainCompleted": "Setoran lintas-chain rampung! {{symbol}} ditampa ing Base.",
-    "tryAgain": "Coba Maneh"
+    "tryAgain": "Coba Maneh",
+    "refundAddress": "Alamat pengembalian dana ing {{chain}}",
+    "refundAddressHint": "Yen swap ora bisa rampung, {{symbol}} mu dikirim bali mrene."
   },
   "wallet": {
     "title": "Dompet",

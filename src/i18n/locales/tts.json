@@ -766,7 +766,9 @@
     "depositExpired": "การฝากหมดอายุแล้ว. ลองใหม่เด้อ.",
     "depositFailedMsg": "การฝากบ่สำเร็จ.",
     "crossChainCompleted": "การฝากข้ามเครือข่ายสำเร็จแล้ว! ฮับ {{symbol}} อยู่ Base.",
-    "tryAgain": "ลองใหม่"
+    "tryAgain": "ลองใหม่",
+    "refundAddress": "ที่อยู่คืนเงินบน {{chain}}",
+    "refundAddressHint": "ถ้าการแลกเปลี่ยนไม่สามารถเสร็จสิ้นได้ {{symbol}} ของคุณจะถูกส่งกลับมาที่นี่"
   },
   "wallet": {
     "title": "กระเป๋าเงิน",

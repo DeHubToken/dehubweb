@@ -805,7 +805,9 @@
     "depositExpired": "Goýumyň möhleti gutardy. Gaýtadan synanyşyň.",
     "depositFailedMsg": "Goýum şowsuz boldy.",
     "crossChainCompleted": "Zynjyrara goýum tamamlandy! {{symbol}} Base-de alyndy.",
-    "tryAgain": "Gaýtadan synanyş"
+    "tryAgain": "Gaýtadan synanyş",
+    "refundAddress": "{{chain}} adresini gaýtar",
+    "refundAddressHint": "Eger üýtgeşik tamamlanmasa, {{symbol}} bu ýere iberilýär."
   },
   "wallet": {
     "title": "Gapjyk",

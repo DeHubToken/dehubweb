@@ -804,7 +804,9 @@
     "depositExpired": "Oge ntinye agwụla. Biko nwaa ọzọ.",
     "depositFailedMsg": "Ntinye adaala.",
     "crossChainCompleted": "Ntinye n'agbụ ọzọ agwụla! {{symbol}} abịarutela na Base.",
-    "tryAgain": "Nwaa Ọzọ"
+    "tryAgain": "Nwaa Ọzọ",
+    "refundAddress": "Adreesị nkwụghachi na {{chain}}",
+    "refundAddressHint": "Ọ bụrụ na ngbanwe ahụ enweghị ike mezue, a ga-ezighachi {{symbol}} gị ebe a."
   },
   "wallet": {
     "title": "Obere Akpa",

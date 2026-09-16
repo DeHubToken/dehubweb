@@ -803,7 +803,9 @@
     "depositExpired": "ડિપોઝિટની મુદત પૂરી થઈ. કૃપા કરીને ફરી પ્રયાસ કરો.",
     "depositFailedMsg": "ડિપોઝિટ નિષ્ફળ.",
     "crossChainCompleted": "ક્રોસ-ચેઇન ડિપોઝિટ પૂર્ણ! {{symbol}} Base પર મળ્યા.",
-    "tryAgain": "ફરી પ્રયાસ કરો"
+    "tryAgain": "ફરી પ્રયાસ કરો",
+    "refundAddress": "{{chain}} પરનું સરનામું રિફંડ કરો",
+    "refundAddressHint": "જો સ્વેપ પૂર્ણ થઈ શકતું નથી, તો તમારું {{symbol}} અહીં પાછું મોકલવામાં આવે છે."
   },
   "wallet": {
     "title": "વૉલેટ",

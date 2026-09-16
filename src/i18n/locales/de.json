@@ -822,7 +822,9 @@
     "depositExpired": "Einzahlung abgelaufen. Bitte versuche es erneut.",
     "depositFailedMsg": "Einzahlung fehlgeschlagen.",
     "crossChainCompleted": "Cross-Chain-Einzahlung abgeschlossen! {{symbol}} auf Base erhalten.",
-    "tryAgain": "Erneut versuchen"
+    "tryAgain": "Erneut versuchen",
+    "refundAddress": "Rückerstattungsadresse auf {{chain}}",
+    "refundAddressHint": "Wenn der Tausch nicht abgeschlossen werden kann, wird Ihr {{symbol}} hierher zurückgeschickt."
   },
   "wallet": {
     "title": "Geldbörse",

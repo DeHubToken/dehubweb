@@ -805,7 +805,9 @@
     "depositExpired": "Depozīta termiņš beidzies. Lūdzu, mēģiniet vēlreiz.",
     "depositFailedMsg": "Depozīts neizdevās.",
     "crossChainCompleted": "Starpķēžu depozīts pabeigts! {{symbol}} saņemts tīklā Base.",
-    "tryAgain": "Mēģināt vēlreiz"
+    "tryAgain": "Mēģināt vēlreiz",
+    "refundAddress": "Atmaksas adrese: {{chain}}",
+    "refundAddressHint": "Ja maiņu nevar pabeigt, jūsu {{symbol}} tiek nosūtīts atpakaļ uz šejieni."
   },
   "wallet": {
     "title": "Maks",

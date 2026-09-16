@@ -757,7 +757,9 @@
     "depositExpired": "ڈپازٹ دی معیاد ختم تھی گئی۔ ولا کوشش کرو۔",
     "depositFailedMsg": "ڈپازٹ ناکام تھی گیا۔",
     "crossChainCompleted": "کراس چین ڈپازٹ مکمل! {{symbol}} Base تے مل گیا۔",
-    "tryAgain": "ولا کوشش کرو"
+    "tryAgain": "ولا کوشش کرو",
+    "refundAddress": "{{chain}} تے واپسی پتہ",
+    "refundAddressHint": "جے سویپ مکمل نئيں ہو سکدا، تہاڈا {{symbol}} ايتھے واپس بھيجيا ويندا اے۔"
   },
   "wallet": {
     "title": "بٹوا",

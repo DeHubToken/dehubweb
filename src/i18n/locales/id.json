@@ -822,7 +822,9 @@
     "depositExpired": "Setoran kedaluwarsa. Silakan coba lagi.",
     "depositFailedMsg": "Setoran gagal.",
     "crossChainCompleted": "Setoran lintas rantai selesai! {{symbol}} diterima di Base.",
-    "tryAgain": "Coba Lagi"
+    "tryAgain": "Coba Lagi",
+    "refundAddress": "Alamat pengembalian uang di {{chain}}",
+    "refundAddressHint": "Jika penukaran tidak dapat diselesaikan, {{symbol}} Anda akan dikirim kembali ke sini."
   },
   "wallet": {
     "title": "Dompet",

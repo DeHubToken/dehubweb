@@ -817,7 +817,9 @@
     "depositExpired": "תוקף ההפקדה פג. אנא נסה שוב.",
     "depositFailedMsg": "ההפקדה נכשלה.",
     "crossChainCompleted": "הפקדה חוצת-רשתות הושלמה! {{symbol}} התקבל ב-Base.",
-    "tryAgain": "נסה שוב"
+    "tryAgain": "נסה שוב",
+    "refundAddress": "כתובת ההחזר הכספי בתאריך {{chain}}",
+    "refundAddressHint": "אם לא ניתן להשלים את ההחלפה, ה -{{symbol}} שלך יישלח חזרה לכאן."
   },
   "wallet": {
     "title": "ארנק",

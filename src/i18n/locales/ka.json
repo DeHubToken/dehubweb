@@ -804,7 +804,9 @@
     "depositExpired": "შენატანის ვადა ამოიწურა. სცადეთ ხელახლა.",
     "depositFailedMsg": "შენატანი ვერ შესრულდა.",
     "crossChainCompleted": "ჯვარედინი ჯაჭვის შენატანი დასრულდა! {{symbol}} მიღებულია Base-ზე.",
-    "tryAgain": "სცადეთ ხელახლა"
+    "tryAgain": "სცადეთ ხელახლა",
+    "refundAddress": "Თანხის დაბრუნების მისამართი: {{chain}}",
+    "refundAddressHint": "Თუ სვოპის დასრულება ვერ მოხერხდა, თქვენი {{symbol}} აქ დაგიბრუნდებათ."
   },
   "wallet": {
     "title": "საფულე",

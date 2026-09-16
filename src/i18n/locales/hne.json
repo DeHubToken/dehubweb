@@ -800,7 +800,9 @@
     "depositExpired": "जमा के समय खतम होगे। किरपा कर के फेर कोसिस करव।",
     "depositFailedMsg": "जमा नइ हो पाइस।",
     "crossChainCompleted": "क्रॉस-चेन जमा पूरा होगे! {{symbol}} Base मा मिलगे।",
-    "tryAgain": "फेर कोसिस करव"
+    "tryAgain": "फेर कोसिस करव",
+    "refundAddress": "रिफंड पता {{chain}}",
+    "refundAddressHint": "यदि स्वैप पूरा नइ हो सकय, त अपन {{symbol}} ल इहां भेज दे जाही ।"
   },
   "wallet": {
     "title": "बटुआ",
