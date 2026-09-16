@@ -112,6 +112,11 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
   const hasThread = !!thread && thread.length > 0;
 
+  // A suggested reply answers an INCOMING message. When the user holds the last
+  // word there is nothing to reply to, so the rail stands down rather than
+  // drafting follow-ups to oneself — and no model call is spent on it either.
+  const awaitingReply = hasThread && thread![thread!.length - 1]?.from === 'them';
+
   const [composerFocused, setComposerFocused] = useState(false);
 
   // Where the rail hangs is the ONLY thing the viewport decides now: below the
@@ -148,8 +153,8 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
    * instead — held back only when the user has already started typing, because
    * then they know what to say.
    *
-   * The drafter handles both directions: an incoming tail gets replies, the
-   * user's own last word gets follow-ups.
+   * Only an incoming tail is drafted against: once the user has replied, the
+   * rail is gone until the other side speaks again.
    */
   // The composer being empty is a dependency, not just a condition.
   //
@@ -163,7 +168,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
   useEffect(() => {
     // Switched off is switched off: no rail, and no model call behind it.
-    if (!hasThread || !composerEmpty || !smartRepliesEnabled) return;
+    if (!hasThread || !awaitingReply || !composerEmpty || !smartRepliesEnabled) return;
     const { smartReplies: sr } = latest.current;
     if (draftedFor.current === sr.tailKey) return;
     draftedFor.current = sr.tailKey;
@@ -171,7 +176,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     // SUCCESSFUL draft goes stale, so a single failure would otherwise leave
     // the rail showing that failure for every message after it.
     if (sr.status === 'idle' || sr.status === 'error') sr.generate();
-  }, [hasThread, composerEmpty, smartRepliesEnabled, smartReplies.tailKey]);
+  }, [hasThread, awaitingReply, composerEmpty, smartRepliesEnabled, smartReplies.tailKey]);
 
   // A new message re-arms the per-message stand-down. It does NOT reopen a
   // rail the user switched off — that is what `smartRepliesEnabled` is for.
@@ -447,13 +452,14 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // The rail is up in EVERY open thread — a thread with nothing to reply to
-  // still gets its quiet one-liner, because an empty band and a broken feature
-  // are indistinguishable at a glance. It stands down while there is typed
-  // text, and on phones while the composer holds focus: the keyboard claims
-  // exactly the band it sits in.
+  // The rail is up in every thread whose last word belongs to the other side —
+  // the only moment a suggested reply means anything. Whether the drafter found
+  // something to say is still a question the rail ANSWERS, with the orb there to
+  // press; that check must never gate the mount. It stands down while there is
+  // typed text, and on phones while the composer holds focus: the keyboard
+  // claims exactly the band it sits in.
   const showRail =
-    hasThread && smartRepliesEnabled && !railDismissed && !message.trim() && (!narrowViewport || !composerFocused);
+    hasThread && awaitingReply && smartRepliesEnabled && !railDismissed && !message.trim() && (!narrowViewport || !composerFocused);
 
   const railProps = {
     status: smartReplies.status,
