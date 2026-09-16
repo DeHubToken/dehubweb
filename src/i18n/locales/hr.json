@@ -1769,7 +1769,10 @@
     "not_now": "Ne sada",
     "image_too_large_tier": "Slika je prevelika — razina {{tier}} pohranjuje slike do {{limit}} MB",
     "image_too_large_untiered": "Slika je prevelika — slike se pohranjuju do {{limit}} MB",
-    "rate_limited": "Ograničenje zahtjeva, uspori"
+    "rate_limited": "Ograničenje zahtjeva, uspori",
+    "waiting_for_wallet": "Čeka se tvoj novčanik",
+    "waiting_for_wallet_desc": "Otvorite {{wallet}} i odobrite potpis — zahtjev čeka tamo.",
+    "your_wallet": "vaš novčanik"
   },
   "staking": {
     "title": "Staking",

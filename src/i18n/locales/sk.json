@@ -1922,7 +1922,10 @@
     "not_now": "Teraz nie",
     "image_too_large_tier": "Obrázok je príliš veľký — vaša úroveň {{tier}} ukladá obrázky do veľkosti {{limit}} MB",
     "image_too_large_untiered": "Obrázok je príliš veľký — obrázky sú uložené do {{limit}} MB",
-    "rate_limited": "Limit požiadaviek, spomaľte"
+    "rate_limited": "Limit požiadaviek, spomaľte",
+    "waiting_for_wallet": "Čaká sa na vašu peňaženku",
+    "waiting_for_wallet_desc": "Otvorte {{wallet}} a potvrďte podpis — žiadosť tam čaká.",
+    "your_wallet": "vaša peňaženka"
   },
   "staking": {
     "title": "Staking",

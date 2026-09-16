@@ -1789,7 +1789,10 @@
     "not_now": "Азыр эмес",
     "image_too_large_tier": "Сүрөт өтө чоң — {{tier}} tier {{limit}} MB чейинки сүрөттөрдү сактайт",
     "image_too_large_untiered": "Сүрөт өтө чоң — сүрөттөр {{limit}} MB чейин сакталат",
-    "rate_limited": "Сурам чеги, жайыраак"
+    "rate_limited": "Сурам чеги, жайыраак",
+    "waiting_for_wallet": "Сиздин капчыгыңызды күтүүдө",
+    "waiting_for_wallet_desc": "{{wallet}} ачып, кол коюуну жактырыңыз — сурам ошол жерде күтүлүүдө.",
+    "your_wallet": "сиздин капчыгыңыз"
   },
   "staking": {
     "title": "Стейкинг",

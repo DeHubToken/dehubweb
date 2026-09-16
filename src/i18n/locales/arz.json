@@ -1789,7 +1789,10 @@
     "not_now": "مش دلوقتي",
     "image_too_large_tier": "الصورة كبيرة جدًا — يخزن المستوى {{tier}} صورًا تصل إلى {{limit}} ميجابايت",
     "image_too_large_untiered": "الصورة كبيرة جدًا — يتم تخزين الصور حتى {{limit}} ميجابايت",
-    "rate_limited": "فيه تقييد للمعدل، بالراحة"
+    "rate_limited": "فيه تقييد للمعدل، بالراحة",
+    "waiting_for_wallet": "في انتظار محفظتك",
+    "waiting_for_wallet_desc": "افتح {{wallet}} ووافق على التوقيع — الطلب في انتظارك هناك.",
+    "your_wallet": "محفظتك"
   },
   "staking": {
     "title": "الستيكينج",

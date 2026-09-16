@@ -1709,7 +1709,10 @@
     "not_now": "Hindi muna",
     "image_too_large_tier": "Masyadong malaki ang larawan — ang iyong {{tier}} tier ay nag - iimbak ng mga larawan hanggang {{limit}} MB",
     "image_too_large_untiered": "Masyadong malaki ang larawan — nakaimbak ang mga larawan hanggang {{limit}} MB",
-    "rate_limited": "Rate limited, dahan-dahan lang"
+    "rate_limited": "Rate limited, dahan-dahan lang",
+    "waiting_for_wallet": "Naghihintay para sa iyong wallet",
+    "waiting_for_wallet_desc": "Buksan ang {{wallet}} at aprubahan ang lagda — naghihintay na ang kahilingan.",
+    "your_wallet": "ang iyong wallet"
   },
   "staking": {
     "title": "Staking",

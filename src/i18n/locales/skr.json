@@ -1734,7 +1734,10 @@
     "not_now": "ہݨ نہیں",
     "image_too_large_tier": "تصویر بہت وڈی اے — تہاڈا {{tier}} ٹیئر {{limit}} MB تک دی تصویراں محفوظ کردا اے",
     "image_too_large_untiered": "تصویر بہت وڈی اے — تصویراں {{limit}} MB تک محفوظ کیتیاں جاندیاں نیں",
-    "rate_limited": "ریٹ لمٹ تھی ڳئی، ہولے کرو"
+    "rate_limited": "ریٹ لمٹ تھی ڳئی، ہولے کرو",
+    "waiting_for_wallet": "تھاری بٹوے جو انتظار ہے",
+    "waiting_for_wallet_desc": "{{wallet}} کھول اور دستخط کو منظور کر — درخواست اتھے انتظار میں ہے۔",
+    "your_wallet": "تہاڈی جیب"
   },
   "staking": {
     "title": "سٹیکنگ",

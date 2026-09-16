@@ -1833,7 +1833,10 @@
     "not_now": "अभी नहीं",
     "image_too_large_tier": "इमेज बहुत बड़ी है — आपका {{tier}} टियर {{limit}} MB तक इमेज स्टोर करता है",
     "image_too_large_untiered": "इमेज बहुत बड़ी है — इमेज {{limit}} MB तक स्टोर की जाती हैं",
-    "rate_limited": "रेट लिमिट लगी है, धीरे करें"
+    "rate_limited": "रेट लिमिट लगी है, धीरे करें",
+    "waiting_for_wallet": "आपके वॉलेट का इंतज़ार है",
+    "waiting_for_wallet_desc": "{{wallet}} खोलें और हस्ताक्षर को मंज़ूर करें — अनुरोध का इंतज़ार है।",
+    "your_wallet": "आपका वॉलेट"
   },
   "staking": {
     "title": "स्टेकिंग",

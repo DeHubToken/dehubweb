@@ -1766,7 +1766,10 @@
     "push_tab_only_body": "O la, i tɛ se ka foyi sɔrɔ n'i ye DeHub datugu.",
     "not_now": "Sisan tɛ",
     "image_too_large_untiered": "Jaa ka bon kojugu — jaa ka kan ka mara fɔɔ ka taga se {{limit}} MB",
-    "rate_limited": "A ka teli kojugu, i sabali"
+    "rate_limited": "A ka teli kojugu, i sabali",
+    "waiting_for_wallet": "I ka wari cɛtigɛyɔrɔ la",
+    "waiting_for_wallet_desc": "Aw ye {{wallet}} dayɛlɛ ka siginidenw labato — aw ka deliliw be yen.",
+    "your_wallet": "i ka wari cɛtigɛyɔrɔ"
   },
   "staking": {
     "title": "Bilali",

@@ -1774,7 +1774,10 @@
     "not_now": "Ara no",
     "image_too_large_tier": "La imatge és massa gran: el teu nivell {{tier}} emmagatzema imatges de fins a {{limit}} MB",
     "image_too_large_untiered": "La imatge és massa gran: les imatges s'emmagatzemen fins a {{limit}} MB",
-    "rate_limited": "Límit de peticions, ves més a poc a poc"
+    "rate_limited": "Límit de peticions, ves més a poc a poc",
+    "waiting_for_wallet": "S'està esperant la teva cartera",
+    "waiting_for_wallet_desc": "Obre {{wallet}} i aprova la signatura: la sol·licitud t'està esperant.",
+    "your_wallet": "la teva cartera"
   },
   "staking": {
     "title": "Staking",

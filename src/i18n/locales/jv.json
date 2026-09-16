@@ -1775,7 +1775,10 @@
     "not_now": "Ora saiki",
     "image_too_large_tier": "Gambar kakehan — toko {{tier}} tier mu bisa nyimpen gambar nganti {{limit}} MB",
     "image_too_large_untiered": "Gambar kasebut gedhe banget — gambar disimpen nganti {{limit}} MB",
-    "rate_limited": "Kesuwen cepet, alon-alon"
+    "rate_limited": "Kesuwen cepet, alon-alon",
+    "waiting_for_wallet": "Ngenteni dompetmu",
+    "waiting_for_wallet_desc": "Buka {{wallet}} lan setujoni tandatangan — panjaluke wis ngenteni ana ing kono.",
+    "your_wallet": "dompetmu"
   },
   "staking": {
     "title": "Staking",

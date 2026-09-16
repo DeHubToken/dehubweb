@@ -1828,7 +1828,10 @@
     "not_now": "Si sasa",
     "image_too_large_tier": "Picha ni kubwa sana — yako {{tier}} tier huhifadhi picha hadi {{limit}} MB",
     "image_too_large_untiered": "Picha ni kubwa sana — picha zimehifadhiwa hadi {{limit}} MB",
-    "rate_limited": "Umefikia kikomo, punguza kasi"
+    "rate_limited": "Umefikia kikomo, punguza kasi",
+    "waiting_for_wallet": "Inasubiri pochi yako",
+    "waiting_for_wallet_desc": "Fungua {{wallet}} na uidhinishe saini — ombi linasubiri hapo.",
+    "your_wallet": "pochi yako"
   },
   "staking": {
     "title": "Uwekaji Amana",

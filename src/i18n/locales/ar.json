@@ -1829,7 +1829,10 @@
     "not_now": "ليس الآن",
     "image_too_large_tier": "الصورة كبيرة جدًا — يخزن المستوى {{tier}} صورًا تصل إلى {{limit}} ميجابايت",
     "image_too_large_untiered": "الصورة كبيرة جدًا — يتم تخزين الصور حتى {{limit}} ميجابايت",
-    "rate_limited": "تم تقييد المعدل، تمهّل"
+    "rate_limited": "تم تقييد المعدل، تمهّل",
+    "waiting_for_wallet": "في انتظار محفظتك",
+    "waiting_for_wallet_desc": "افتح {{wallet}} ووافق على التوقيع — الطلب في انتظارك هناك.",
+    "your_wallet": "محفظتك"
   },
   "staking": {
     "title": "الرهن",

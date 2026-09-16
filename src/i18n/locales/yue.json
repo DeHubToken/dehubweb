@@ -1789,7 +1789,10 @@
     "not_now": "而家唔使",
     "image_too_large_tier": "圖片太大 — 你嘅 {{tier}} 層儲存最多 {{limit}} MB 嘅圖片",
     "image_too_large_untiered": "圖片太大 — 圖片最多會儲存到 {{limit}} MB",
-    "rate_limited": "太頻密喇，慢啲"
+    "rate_limited": "太頻密喇，慢啲",
+    "waiting_for_wallet": "等緊你個銀包",
+    "waiting_for_wallet_desc": "打開 {{wallet}} 同埋核准簽名 — 個要求喺嗰度等緊。",
+    "your_wallet": "你個銀包"
   },
   "staking": {
     "title": "質押",

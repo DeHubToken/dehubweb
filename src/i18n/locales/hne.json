@@ -1769,7 +1769,9 @@
     "not_now": "अभी नइ",
     "image_too_large_tier": "फोटो बहुत बड़ा हे — your {{tier}} tier Stores images up to {{limit}} MB",
     "image_too_large_untiered": "फोटो बहुत बडखा हवय — फोटो ल {{limit}} MB तक संग्रहीत करे जात हवय",
-    "rate_limited": "रेट लिमिट लग गे, धीरे करव"
+    "rate_limited": "रेट लिमिट लग गे, धीरे करव",
+    "waiting_for_wallet": "तोर बटुआ के इंतजार करत हंव",
+    "your_wallet": "तोर बटुआ"
   },
   "staking": {
     "title": "स्टेकिंग",
