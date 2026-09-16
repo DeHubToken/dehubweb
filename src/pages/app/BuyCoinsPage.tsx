@@ -175,13 +175,13 @@ export default function BuyCoinsPage() {
   }, [queryClient]);
 
   // Poll for session status after Stripe checkout
-  const [pollingMessage, setPollingMessage] = useState('Complete payment in the checkout tab...');
+  const [pollingMessage, setPollingMessage] = useState(() => t('buyCoins.statusAwaitingPayment'));
 
 
   const startPolling = useCallback((sessionId: string) => {
     setPurchaseSessionId(sessionId);
     setPurchaseStatus('polling');
-    setPollingMessage('Complete payment in the checkout tab...');
+    setPollingMessage(t('buyCoins.statusAwaitingPayment'));
 
     // Clear any existing polling. A second checkout must not leave the first
     // session's interval running — it would keep writing over this one's state.
@@ -208,8 +208,8 @@ export default function BuyCoinsPage() {
         setPurchaseStatus(stripeConfirmed ? 'success' : 'idle');
         toast.info(
           stripeConfirmed
-            ? 'Payment went through. Tokens are still on their way — check your wallet shortly.'
-            : 'No payment was completed. Nothing has been charged.',
+            ? t('buyCoins.statusStillArriving')
+            : t('buyCoins.statusNotPaid'),
           { id: 'buy-status' },
         );
         refreshWalletBalances();
@@ -232,7 +232,7 @@ export default function BuyCoinsPage() {
         if (delivered) {
           stop();
           setPurchaseStatus('success');
-          toast.success('Tokens delivered to your wallet! 🎉', { id: 'buy-status' });
+          toast.success(t('buyCoins.statusDelivered') + ' 🎉', { id: 'buy-status' });
           refreshWalletBalances();
           return;
         }
@@ -244,8 +244,8 @@ export default function BuyCoinsPage() {
           setPurchaseStatus('failed');
           toast.error(
             paid
-              ? 'Payment taken but delivery failed. We are on it — contact support with your session id.'
-              : 'Payment was not completed. Nothing has been charged.',
+              ? t('buyCoins.statusDeliveryFailed')
+              : t('buyCoins.statusNotPaid'),
             { id: 'buy-status' },
           );
           return;
@@ -256,27 +256,27 @@ export default function BuyCoinsPage() {
         if (!paid) {
           setPollingMessage(
             isEmpty || attempts < 20
-              ? 'Complete payment in the checkout tab...'
-              : 'Waiting for payment to be confirmed...',
+              ? t('buyCoins.statusAwaitingPayment')
+              : t('buyCoins.statusConfirming'),
           );
           return;
         }
 
         if (!stripeConfirmed) {
           stripeConfirmed = true;
-          toast.success('Payment received. Delivering your tokens...', { id: 'buy-status' });
+          toast.success(t('buyCoins.statusPaidToast'), { id: 'buy-status' });
           refreshWalletBalances();
         }
         setPollingMessage(
           deliveryStarted
-            ? 'Payment received. Sending tokens to your wallet...'
-            : 'Payment received. Queued for delivery...',
+            ? t('buyCoins.statusPaidSending')
+            : t('buyCoins.statusPaidQueued'),
         );
       } catch (err) {
         console.warn('[Buy] Polling error:', err);
       }
     }, 1500);
-  }, [refreshWalletBalances]);
+  }, [refreshWalletBalances, t]);
 
   // Cleanup polling on unmount
   useEffect(() => {
@@ -511,6 +511,16 @@ export default function BuyCoinsPage() {
                     {priceData.change24h >= 0 ? '+' : ''}{priceData.change24h.toFixed(2)}%
                   </span>
                 )}
+              </p>
+            )}
+            {/* The figure above is priced off the full amount. Delivery is
+                computed from what Stripe actually settles — the card fee comes
+                off first — and 0.5% is held back as the ETH sent alongside so
+                the buyer can move their tokens. Roughly 4% between the two,
+                which reads as being short-changed unless it is stated. */}
+            {paymentMethod === 'card' && estimatedTokens > 0 && (
+              <p className="text-xs text-zinc-500 mt-1 text-right">
+                {t('buyCoins.feeNote')}
               </p>
             )}
           </div>
