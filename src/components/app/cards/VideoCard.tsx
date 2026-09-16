@@ -1161,6 +1161,22 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // vanish out from under the thing the pointer is already inside.
   const controlsVisible = showControls || subsMenuOpen || volumeOpen;
 
+  // Revealing the controls has to be able to fill in the timeline. A card that
+  // never autoplayed - every video on a profile, and anything in Lite mode -
+  // has preload="none" and therefore duration 0, which used to hide the
+  // scrubber and both timestamps outright: the feed had a seek bar and the
+  // profile had none. Asking for the media as soon as the controls come up
+  // costs one small range request and only for the card being looked at.
+  useEffect(() => {
+    if (!controlsVisible || duration > 0 || video.isAudio || !video.videoUrl) return;
+    setNearViewport(true);
+    const vid = videoRef.current;
+    if (!vid) return;
+    if (!vid.getAttribute('src')) vid.src = video.videoUrl;
+    if (vid.preload === 'none') vid.preload = 'metadata';
+    try { vid.load(); } catch { /* noop */ }
+  }, [controlsVisible, duration, video.isAudio, video.videoUrl]);
+
   // The saved volume only ever reached the element through an explicit
   // adjustment, so a viewer who had turned a video down got full volume back on
   // the next one. Apply it whenever this card owns the shared <video>.
@@ -2168,7 +2184,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             duration stays 0 until something calls play() — gating the whole bar
             on it left the one control that can start the clip unreachable from
             the feed, where a tap now reveals controls instead of opening the
-            post. The scrubber and timestamps still wait for real metadata.
+            post. The scrubber is inert until metadata arrives, and revealing the
+            controls now goes and fetches it.
             Audio posts are excluded: this bar is driven by the <video> element,
             so over a visualizer it painted a black gradient and a second,
             non-functional play button on top of the audio controls — the
@@ -2184,7 +2201,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               >
                 {isPlaying ? <Pause className="h-3 w-3 text-white fill-current" /> : <Play className="h-3 w-3 text-white fill-current ml-0.5" />}
               </button>
-              {duration > 0 && <>
               <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(currentTime)}</span>
               <input
                 type="range"
@@ -2193,6 +2209,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 value={currentTime}
                 onChange={handleSeek}
                 onClick={(e) => e.stopPropagation()}
+                disabled={duration <= 0}
                 aria-label="Video progress"
                 className="flex-1 h-6 bg-transparent rounded-full appearance-none cursor-pointer touch-pan-y
                   [&::-webkit-slider-thumb]:appearance-none 
@@ -2214,7 +2231,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 }}
               />
               <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(duration)}</span>
-              </>}
             </div>
           </div>
         )}

@@ -53,12 +53,14 @@ describe('feed video — a tap on the media toggles playback, it does not naviga
     expect(VIDEO_CARD).toMatch(/data-no-navigate[\s\S]{0,200}?data-media-full/);
   });
 
-  it('keeps the play control reachable before any metadata has loaded', () => {
+  it('renders the whole transport bar before any metadata has loaded', () => {
     // Lite mode preloads nothing and suppresses autoplay, so `duration` sits at
     // 0 until something calls play(). Gating the whole transport bar on it left
     // the only control that can start the clip unrenderable — and now that a tap
     // no longer escapes to the post page, that is a dead end rather than a
-    // detour. Only the scrubber and timestamps may wait for real metadata.
+    // detour. Gating just the scrubber on it was no better: a profile card
+    // that never autoplayed had no timeline at all. The bar is drawn whole and
+    // the slider is disabled until the length is known.
     // `!video.isAudio` is the one other permitted condition: that bar drives the
     // <video> element, and an audio post has none — it carries the visualizer's
     // own transport instead. `controlsVisible` is hover plus whatever menu or
@@ -69,10 +71,10 @@ describe('feed video — a tap on the media toggles playback, it does not naviga
     );
     expect(bar, 'transport bar is not gated on controls visibility alone').not.toBeNull();
     expect(bar![1]).toContain('handlePlayClick()');
-    // The play button comes before the duration gate, so it renders either way.
-    expect(bar![1].indexOf('handlePlayClick()')).toBeLessThan(
-      bar![1].indexOf('{duration > 0 &&')
-    );
+    // Nothing inside the bar waits on the clip's length any more: a profile
+    // card that never autoplayed used to render no timeline at all.
+    expect(bar![1]).not.toContain('{duration > 0 &&');
+    expect(bar![1]).toContain('disabled={duration <= 0}');
   });
 
   it('gives the seek line a touch-sized hit target without thickening its rail', () => {
