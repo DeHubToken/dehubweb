@@ -417,3 +417,77 @@ describe('wiring', () => {
     expect(earlyReturn).toBeGreaterThan(titleWork);
   });
 });
+
+/**
+ * The fn writes its template a third time, as the page's only paragraph, and
+ * the rewrites above are all attribute-scoped or JSON-scoped — so the meta went
+ * out specific while the prose a crawler actually reads stayed identical across
+ * every bodyless post and every bio-less profile. 6 of 20 posts sampled live on
+ * 2026-09-16 still carried it, matching the 32% the description census found,
+ * and those are the same pages sitting in "Crawled - currently not indexed".
+ *
+ * The markup below is the deployed fn's, fetched from it directly rather than
+ * guessed: a bare `<p>` straight after the `<h1>`.
+ */
+describe('the body paragraph, not just the head', () => {
+  const bodyPost = (title: string, description: string, author = 'LiberoArbitro') => `<!DOCTYPE html>
+<html lang="en"><head>
+  <title>${attr(title)}</title>
+  <meta name="description" content="${attr(description)}">
+  <meta property="og:description" content="${attr(description)}">
+</head><body>
+  <h1>${attr(title)}</h1>
+  <p>${attr(description)}</p>
+  <p><a class="dh-cta" href="https://dehub.io/app/post/1?app=1">View on DeHub</a></p>
+</body></html>`;
+
+  const bodyProfile = (handle: string, description: string) => `<!DOCTYPE html>
+<html lang="en"><head>
+  <title>@${handle} on DeHub</title>
+  <meta name="description" content="${attr(description)}">
+</head><body>
+  <h1>@${handle}</h1>
+  <p>${attr(description)}</p>
+</body></html>`;
+
+  const paragraph = (html: string) => html.match(/<p>([^<]*)<\/p>/)![1];
+
+  it('rewrites the post paragraph, leaving nothing of the template on the page', () => {
+    const html = bodyPost('Hop!!!!!!!;', POST_TEMPLATE('LiberoArbitro'));
+    const out = enrichPostMeta(html, '3372', { postType: 'video', category: ['fun'] });
+    expect(out).not.toContain('join the decentralized creator network');
+    expect(paragraph(out)).toBe(valueOf(out, 'og:description'));
+    expect(paragraph(out)).toContain('Hop!!!!!!!;');
+  });
+
+  it('gives two bodyless posts by one author different paragraphs', () => {
+    const one = enrichPostMeta(bodyPost('Sunrise over Kadikoy', POST_TEMPLATE('Araf')), '1', VIDEO);
+    const two = enrichPostMeta(bodyPost('Ferry to the islands', POST_TEMPLATE('Araf')), '2', VIDEO);
+    expect(paragraph(one)).not.toBe(paragraph(two));
+  });
+
+  it('leaves a real body alone — it is better copy than anything built here', () => {
+    const real = 'Bu yoldan dönenler oldu, mum gibi sönenler oldu.';
+    const out = enrichPostMeta(bodyPost('Yorgun Demokrat', real, 'Araf'), '4', VIDEO);
+    expect(paragraph(out)).toBe(attr(real));
+  });
+
+  it('rewrites the bio-less profile paragraph', () => {
+    const out = enrichProfileMeta(bodyProfile('0x000dc', PROFILE_TEMPLATE('0x000dc')), '0x000dc');
+    expect(out).not.toContain('open source alternative to legacy media');
+    expect(paragraph(out)).toContain('@0x000dc');
+  });
+
+  it('leaves a short bio in the body even though the meta pads it', () => {
+    // The meta gets the handle appended so the description is not five
+    // characters long; the page keeps the words the person wrote.
+    const out = enrichProfileMeta(bodyProfile('shubham223', 'DHB ❤'), 'shubham223');
+    expect(paragraph(out)).toBe(attr('DHB ❤'));
+    expect(valueOf(out, 'description')).toContain('@shubham223');
+  });
+
+  it('is a no-op on a page it has already rewritten', () => {
+    const once = enrichPostMeta(bodyPost('Hop!!!!!!!;', POST_TEMPLATE('LiberoArbitro')), '3372', VIDEO);
+    expect(enrichPostMeta(once, '3372', VIDEO)).toBe(once);
+  });
+});

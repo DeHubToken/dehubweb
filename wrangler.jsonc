@@ -10,9 +10,12 @@
   // staging.dehub.io = the pre-release mirror. Same assets as the apex; the
   // worker's host guard stamps every response noindex so staging can never
   // outrank production.
+  // legacy.dehub.io = the pre-2026 app, retired. Needs a proxied placeholder
+  // DNS record on the zone for this route to fire at all.
   "routes": [
     { "pattern": "www.dehub.io/*", "zone_name": "dehub.io" },
     { "pattern": "staging.dehub.io/*", "zone_name": "dehub.io" },
+    { "pattern": "legacy.dehub.io/*", "zone_name": "dehub.io" },
     { "pattern": "dehub.net/*", "zone_name": "dehub.net" },
     { "pattern": "*.dehub.net/*", "zone_name": "dehub.net" }
   ],

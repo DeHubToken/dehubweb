@@ -1752,6 +1752,16 @@ function enrichPostMeta(html, postId, nft) {
     .replace(
       /("description":")Post by .+? on DeHub — join the decentralized creator network\.(")/g,
       (m, a, b) => `${a}${jsonDesc}${b}`,
+    )
+    // The fn writes that same sentence a third time, as the page's only
+    // paragraph, and the two rewrites above are both attribute-scoped — so the
+    // meta was specific while the prose a crawler actually reads stayed
+    // identical across every bodyless post. 6 of 20 sampled posts carried it on
+    // 2026-09-16, which matches the 32% the description census found, and those
+    // are the same pages sitting in "Crawled - currently not indexed".
+    .replace(
+      /(<p>)Post by .+? on DeHub — join the decentralized creator network\.(<\/p>)/g,
+      (m, a, b) => `${a}${attrDesc}${b}`,
     );
 }
 
@@ -1774,8 +1784,18 @@ function enrichProfileMeta(html, username) {
       : `@${handle} on DeHub — posts, videos, music and live streams on the open source, user-owned social network.`;
   }
   const attr = escFnAttr(truncate(description, DESCRIPTION_MAX));
-  return html.replace(
+  const out = html.replace(
     /(<meta (?:property|name)="(?:description|og:description|twitter:description)" content=")[^"]*(">)/g,
+    (m, a, b) => `${a}${attr}${b}`,
+  );
+  // Same attribute-only blind spot as enrichPostMeta: the fn also writes the
+  // template into the body, where it was the whole of the page's prose on every
+  // bio-less profile. Only the template is replaced — a bio someone wrote is
+  // their own words and stays, even when it is short enough for the meta above
+  // to have padded it.
+  if (!templated) return out;
+  return out.replace(
+    /(<p>)Connect with .+? on DeHub, the open source alternative to legacy media\.(<\/p>)/g,
     (m, a, b) => `${a}${attr}${b}`,
   );
 }
@@ -2931,6 +2951,184 @@ export function profileSitemapXml(profiles, systemRoutes) {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`;
 }
 
+/** Post ids are sequential, so a sitemap page is an id range. */
+const POST_SITEMAP_CHUNK_SIZE = 50000;
+/** The API caps `limit` at 100 and silently returns 100 for anything larger. */
+const POST_SITEMAP_FEED_PAGE_SIZE = 100;
+const POST_SITEMAP_RETRIES = 4;
+const POST_SITEMAP_MAX_WAIT_SECONDS = 30;
+/** Start waiting with this many requests still in the budget: waiting out the
+ *  tail of a window costs seconds, being throttled costs a whole one. */
+const POST_SITEMAP_RATE_HEADROOM = 1;
+/** Bounds both the run and the worker's subrequest count if the feed never
+ *  says "no more". 200 pages is 20,000 posts against today's 3,299. */
+const POST_SITEMAP_MAX_FEED_PAGES = 200;
+/**
+ * The quality bar a post clears to be offered to Google.
+ *
+ * Measured against 1,200 live posts on 2026-09-16: 44% carry fewer than 15
+ * characters of letters and digits across their title and body, 10% carry none
+ * at all, and 81% have no comments. Google had already reached its own verdict
+ * on that corpus — 4,441 post URLs sat in "Crawled - currently not indexed" and
+ * another 851 in "Discovered", i.e. it fetched them, read a caption and a view
+ * count, and declined. Submitting the whole set costs crawl budget on pages
+ * that will not be indexed and puts a site-wide thin-content signal on the ones
+ * that would be.
+ *
+ * So: 40 characters of real text (roughly a sentence) in the title or body, or
+ * a real conversation on the page. Comments count because the crawler HTML
+ * carries them — they are the page's substance when the caption is not.
+ *
+ * This removes URLs from the sitemap; it does not deindex anything. A post that
+ * is already indexed stays indexed, and one linked from a profile or feed page
+ * is still reachable. The sitemap is a recommendation, and it is worth more
+ * when every URL in it can carry a result.
+ */
+const POST_SITEMAP_MIN_TEXT = 40;
+const POST_SITEMAP_MIN_COMMENTS = 3;
+
+export function postQualifiesForSitemap(post) {
+  if (!post || post.isHidden || post.isPrivate) return false;
+  // A subscriber-gated post renders a paywall to a signed-out crawler, so the
+  // page Google would index is not the page the URL promises.
+  if (Array.isArray(post.plansDetails) && post.plansDetails.length) return false;
+  // Deliberately no `status` test. The feed's own `status=minted` parameter is
+  // silently ignored — 308 of 1,200 rows came back `signed`, i.e. posted
+  // off-chain, which minting being optional makes routine — and all eight
+  // sampled `signed` posts answer 200 at /app/post/<tokenId>. Rejecting them
+  // would drop a quarter of the corpus for a distinction the page does not
+  // make.
+  const text = `${post.name || ''} ${post.description || ''}`.replace(/[^\p{L}\p{N}]/gu, '').length;
+  if (text >= POST_SITEMAP_MIN_TEXT) return true;
+  return Number(post.commentCount) >= POST_SITEMAP_MIN_COMMENTS;
+}
+
+/**
+ * Qualifying posts as sitemap XML.
+ *
+ * Exported for its tests: the filter above is the whole point of the file and
+ * it is invisible in any single response.
+ */
+export function postSitemapXml(posts) {
+  const seen = new Set();
+  const rows = [];
+  for (const post of posts || []) {
+    const id = Number(post && post.tokenId);
+    if (!Number.isFinite(id) || seen.has(id)) continue;
+    if (!postQualifiesForSitemap(post)) continue;
+    seen.add(id);
+    rows.push({ id, createdAt: post.createdAt });
+  }
+  rows.sort((a, b) => a.id - b.id);
+  const urls = rows.map(({ id, createdAt }) => {
+    // Anything not an ISO date is dropped rather than passed through: a
+    // malformed lastmod invalidates the whole file for some parsers.
+    const day = /^\d{4}-\d{2}-\d{2}/.test(String(createdAt || '')) ? String(createdAt).slice(0, 10) : '';
+    const lastmod = day ? `<lastmod>${day}</lastmod>` : '';
+    return `  <url><loc>${APP_URL}/app/post/${id}</loc>${lastmod}<changefreq>weekly</changefreq><priority>0.6</priority></url>`;
+  });
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`;
+}
+
+const postSitemapSleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Seconds to wait before the next feed request, read from the response's own
+ * budget. api.dehub.io answers with `X-RateLimit-{Limit,Remaining,Reset}-
+ * {short,medium,long}` and enforces all three; whichever is closest to empty
+ * decides. A full enumeration is ~33 requests against a 20-per-10s bucket, so
+ * it does not fit in one window and a naive run is throttled partway through.
+ */
+function postSitemapRateWait(headers) {
+  let wait = 0;
+  for (const bucket of ['short', 'medium', 'long']) {
+    const remaining = Number(headers.get(`x-ratelimit-remaining-${bucket}`));
+    const reset = Number(headers.get(`x-ratelimit-reset-${bucket}`));
+    if (!Number.isFinite(remaining) || !Number.isFinite(reset)) continue;
+    if (remaining > POST_SITEMAP_RATE_HEADROOM) continue;
+    wait = Math.max(wait, Math.min(reset, POST_SITEMAP_MAX_WAIT_SECONDS));
+  }
+  return wait;
+}
+
+/** One page of the feed, retried through transient failures. Null once the
+ *  retries are spent — which the caller must treat as an incomplete run, not
+ *  as the end of the data. */
+async function fetchSitemapFeedPage(page) {
+  for (let attempt = 0; attempt < POST_SITEMAP_RETRIES; attempt++) {
+    try {
+      const res = await fetch(
+        `https://api.dehub.io/api/feed?limit=${POST_SITEMAP_FEED_PAGE_SIZE}&page=${page}`
+          // Without an explicit sort the API's page boundaries shift between
+          // requests, so a post slides across one and is listed twice or not at
+          // all; without status=minted the list carries posts whose /app/post/
+          // page does not resolve, i.e. a sitemap of 404s.
+          + '&sortBy=createdAt&sortOrder=desc&status=minted',
+        { signal: AbortSignal.timeout(15000) },
+      );
+      if (!res.ok) {
+        // A 429 or a 502 is "ask again", not "there are no more posts".
+        const retryAfter = Number(res.headers.get('retry-after'));
+        const wait = Math.max(
+          postSitemapRateWait(res.headers),
+          Number.isFinite(retryAfter) ? Math.min(retryAfter, POST_SITEMAP_MAX_WAIT_SECONDS) : 0,
+          2 ** attempt,
+        );
+        await postSitemapSleep(wait * 1000);
+        continue;
+      }
+      const json = await res.json();
+      const wait = postSitemapRateWait(res.headers);
+      if (wait > 0) await postSitemapSleep(wait * 1000);
+      return json;
+    } catch {
+      await postSitemapSleep(1000 * 2 ** attempt);
+    }
+  }
+  return null;
+}
+
+/**
+ * Every minted post in this sitemap page's id range, or null if the feed could
+ * not be walked to the end.
+ *
+ * Null matters as much as the rows do. A truncated sitemap is a 200 the edge
+ * caches for an hour that tells Google the posts it omits were removed, so the
+ * caller falls back to the Supabase function rather than publishing a partial
+ * file.
+ *
+ * Built here rather than left in that function for the usual reason: the
+ * sitemap-* functions only move on a manual `supabase functions deploy` that
+ * nobody runs, so a filter added there would never reach production. Bounties
+ * and profiles came across for the same reason; this was the last one left.
+ */
+async function dehubPostSitemap(page) {
+  const minId = (page - 1) * POST_SITEMAP_CHUNK_SIZE + 1;
+  const maxId = page * POST_SITEMAP_CHUNK_SIZE;
+  const posts = [];
+  const seen = new Set();
+  for (let feedPage = 1; feedPage <= POST_SITEMAP_MAX_FEED_PAGES; feedPage++) {
+    const json = await fetchSitemapFeedPage(feedPage);
+    if (!json) return null;
+    const rows = Array.isArray(json.result) ? json.result : [];
+    if (rows.length === 0) return posts;
+    let smallest = Infinity;
+    for (const row of rows) {
+      const id = Number(row && row.tokenId);
+      if (!Number.isFinite(id)) continue;
+      smallest = Math.min(smallest, id);
+      if (id < minId || id > maxId || seen.has(id)) continue;
+      seen.add(id);
+      posts.push(row);
+    }
+    // Feed is newest-first, so once the smallest id on a page is below the
+    // range no later page can add one inside it.
+    if (smallest < minId) return posts;
+    if (!(json.pagination && json.pagination.hasMore)) return posts;
+  }
+  return null;
+}
+
 /**
  * Correct the profile entries in a sitemap index built by the Supabase
  * function: give chunk 1 the real newest-profile date, and add the chunks the
@@ -3533,8 +3731,34 @@ async function handleRequest(request, env) {
   // their own origin untouched — this is the one class of alias host on the
   // zone that is not part of the domain move.
   const MAIL_HOSTS = /^(?:\d+|em\d+|url\d+|s\d+\._domainkey)$/;
-
+  // legacy.dehub.io is the pre-2026 app, and its DNS record has been deleted —
+  // the host is NXDOMAIN. Google still holds ~300 of its URLs and now records a
+  // fetch failure against each one; because this is a sc-domain: property they
+  // are counted against dehub.io itself, which is where the 42 "Server error
+  // (5xx)" and all 219 "Duplicate without user-selected canonical" pages in the
+  // 2026-09-16 index report came from. Exactly the dapps/beta-stream/raffle
+  // situation on dehub.net: the mapping is the cheap half, the proxied DNS
+  // record is the other half, and the route cannot fire without it.
+  //
+  // Usernames carried across the rebuild unchanged — all twelve in the indexed
+  // sample resolve as real dehub.io profiles — so the default is the
+  // path-preserving 301 that makes a domain move work, and /stream/<id> has a
+  // live twin too. Only /live/<objectid> has no successor.
+  const LEGACY_IO_PREFIXES = [['/live', '/videos']];
   const aliasHost = url.hostname;
+  if (aliasHost === 'legacy.dehub.io') {
+    const cleanPath = url.pathname.replace(/\/+$/, '') || '/';
+    const p = cleanPath.toLowerCase();
+    const mapped = LEGACY_IO_PREFIXES.find(([from]) => p === from || p.startsWith(`${from}/`));
+    // The query is dropped on purpose. ?tab=user-activity, ?tab=video and
+    // ?type=latest are legacy view state with no meaning on dehub.io, and
+    // carrying them through would mint one duplicate URL per tab out of a
+    // redirect whose whole job is to collapse them onto one page.
+    const target = `https://dehub.io${mapped ? mapped[1] : cleanPath}`;
+    // Raw 301, deliberately not through guard() — see the block below: noindex
+    // on a domain-move redirect risks suppressing the equity transfer.
+    return new Response(null, { status: 301, headers: { Location: target } });
+  }
   if (aliasHost === 'www.dehub.io' || aliasHost === 'dehub.net' || aliasHost.endsWith('.dehub.net')) {
     // Plain 301 WITHOUT guard(): X-Robots-Tag noindex is for mirror hosts
     // serving duplicate content, not for domain-move redirects — mixing
@@ -3858,6 +4082,27 @@ async function handleRequest(request, env) {
       });
     }
     console.error(`[Edge] profile sitemap unavailable for ${pathname}, falling back`);
+  }
+
+  // Posts, enumerated and filtered here. The Supabase function this replaces
+  // offered Google every minted post — 3,299 of them — and Google declined
+  // 4,441 post URLs as not worth indexing. postQualifiesForSitemap explains
+  // the bar. Falls through to that function on an incomplete walk, so a slow
+  // or rate-limited API degrades to the unfiltered sitemap rather than to a
+  // partial one.
+  const postSitemapMatch = pathname.match(/^\/sitemap-posts-(\d+)\.xml$/);
+  if (postSitemapMatch) {
+    const posts = await dehubPostSitemap(Number(postSitemapMatch[1]) || 1);
+    if (posts) {
+      return new Response(postSitemapXml(posts), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/xml; charset=utf-8',
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+        },
+      });
+    }
+    console.error(`[Edge] post sitemap enumeration incomplete for ${pathname}, falling back`);
   }
 
   const sitemapMatch = pathname.match(/^\/sitemap(?:-(posts|profiles)-(\d+))?\.xml$/);
