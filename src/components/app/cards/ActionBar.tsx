@@ -225,6 +225,46 @@ function formatCount(count?: number): string {
   return value.toString();
 }
 
+/**
+ * Like and dislike are the only engagement buttons whose count sits OUTSIDE
+ * them, which left each one a bare 20x20 glyph — a quarter the area of the
+ * share and comment buttons beside it, and under half Apple's 44pt minimum in
+ * both axes. The number next to the thumb is the post's like count, reads as
+ * part of the control, and does nothing when you tap it.
+ *
+ * On a phone that lands as "the like only registers if I hit the exact spot",
+ * and it is worse than the size alone suggests: at 20px a finger that rolls a
+ * few pixels between press and release ends the press on the count instead, so
+ * the click retargets to the wrapper and no vote is cast. Same tap, same
+ * apparent spot, works one time and not the next.
+ *
+ * So the count moves inside the button — tip, share and comment already carry
+ * theirs there — and 8px of side padding takes the target from 20px wide to
+ * ~46-50px. Both padding steps are cancelled by a matching negative margin, so
+ * the OUTER box the flex row distributes on is unchanged: nothing moves by a
+ * pixel and no card changes height.
+ *
+ * WHY THE HEIGHT IS LEFT ALONE
+ * It should be 44px too, and it can't be from here. Measured on the live feed
+ * at 375px, an action row has 8px of clearance above it (the translate button)
+ * and as little as 1.5px below on cards that render the bar above the caption,
+ * where the first hashtag link sits directly under it. Any vertical padding
+ * big enough to matter would swallow the top edge of that link and cast a vote
+ * when someone taps a tag. Giving the row real breathing room is a layout
+ * change, not a hit-target one.
+ *
+ * Mobile has never had this problem — `hitSlop={{ top: 13, bottom: 13, left: 6,
+ * right: 6 }}` on the shared button in `components/Home/FeedActionBar.tsx`,
+ * with the count inside the Pressable. Only the web was missing it.
+ *
+ * Note for themes: the count is a plain `<span>` child, and every engaged-state
+ * rule reaches the icon through `> :is(svg, [data-engaged-glyph])`, so bringing
+ * it inside the button does not drag the number into the reaction glow or the
+ * Osaka cycle — the arrangement repost and tip already rely on.
+ */
+const THUMB_BUTTON_CLASS =
+  'flex items-center gap-0.5 px-2 -mx-2 transition-colors text-white select-none touch-none';
+
 export function ActionBar({
   postId,
   newPostSlug,
@@ -869,7 +909,7 @@ export function ActionBar({
                attribute and themes style one selector. */
             data-engaged={isDisliked ? 'dislike' : undefined}
             {...reactionGlowProps(myNegativeReaction)}
-            className="flex items-center transition-colors text-white select-none touch-none"
+            className={THUMB_BUTTON_CLASS}
             aria-label={negativeThumbLabel(myNegativeReaction)}
             aria-haspopup={reactionsEnabled && HAS_NEGATIVE_TRAY ? 'menu' : undefined}
             aria-expanded={reactionsEnabled && HAS_NEGATIVE_TRAY ? dislikeTray.open : undefined}
@@ -888,8 +928,8 @@ export function ActionBar({
             ) : (
               <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
             )}
+            <span className="text-xs text-zinc-400">{formatCount(localDislikeCount)}</span>
           </motion.button>
-          <span className="text-xs text-zinc-400">{formatCount(localDislikeCount)}</span>
         </span>
       )}
 
@@ -971,7 +1011,7 @@ export function ActionBar({
              the picker you set it from, and a 👍 you cast is not just a filled
              thumb among a row of grey ones. */
           {...reactionGlowProps(myPositiveReaction)}
-          className="flex items-center transition-colors text-white select-none touch-none"
+          className={THUMB_BUTTON_CLASS}
           aria-label={
             myPositiveReaction
               ? `${reactionMeta(myPositiveReaction).label} — hold to change your reaction`
@@ -996,8 +1036,8 @@ export function ActionBar({
           ) : (
             <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
           )}
+          <span className="text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
         </motion.button>
-        <span className="text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
       </span>
     </>
   );
