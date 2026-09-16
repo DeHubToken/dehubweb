@@ -2244,10 +2244,15 @@ export default function NotificationsPage() {
                         >
                           <span className="relative z-10" aria-hidden="true">
                             <tab.icon className={tab.value === 'reposts' ? 'w-[26.5px] h-[26.5px]' : 'w-[22.5px] h-[22.5px]'} />
+                            {/* The selected tab badge sits on top of the glass
+                                indicator, so a flat white/20 wash read as a hole in
+                                the pill rather than a counter. Same liquid-glass
+                                recipe as GlassIndicator: tinted base, white gradient,
+                                hairline border, inset highlights. */}
                             {count > 0 && (
                               <span className={`absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-1 flex items-center justify-center text-[10px] font-bold rounded-full leading-none transition-colors duration-200 ${
                                 activeTab === tab.value
-                                  ? 'bg-white/20 text-white'
+                                  ? 'bg-zinc-900/60 bg-gradient-to-br from-white/25 via-white/15 to-white/10 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_6px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
                                   : 'bg-red-500 text-white'
                               }`}>
                                 {count > 99 ? '99+' : count}
