@@ -8,8 +8,9 @@ import { Mic, MicOff, PhoneOff, Maximize2, Phone, Video } from 'lucide-react';
 import { motion, useDragControls } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useCall } from '@/contexts/CallContext';
-import { useEffect, useRef, useState } from 'react';
-import { getAccountInfo } from '@/lib/api/dehub/users';
+import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { usePeerIdentity } from './CallChrome';
 
 export function CallMiniPlayer() {
   const {
@@ -28,20 +29,13 @@ export function CallMiniPlayer() {
   } = useCall();
 
   const dragControls = useDragControls();
-  const [peerName, setPeerName] = useState<string | null>(null);
+  const { t } = useTranslation();
   const miniVideoContainerRef = useRef<HTMLDivElement>(null);
 
   const peerAddress = currentCall
     ? (isIncoming ? currentCall.caller_address : currentCall.recipient_address)
     : '';
-
-  useEffect(() => {
-    if (!peerAddress) return;
-    setPeerName(null);
-    getAccountInfo(peerAddress).then(u => {
-      if (u?.username) setPeerName(u.username);
-    }).catch(() => {});
-  }, [peerAddress]);
+  const peer = usePeerIdentity(peerAddress);
 
   // Play local video track into mini player container
   useEffect(() => {
@@ -67,9 +61,13 @@ export function CallMiniPlayer() {
 
   if (!isVisible) return null;
 
-  const displayName = peerName ? `@${peerName}` : (peerAddress ? `${peerAddress.slice(0, 6)}...${peerAddress.slice(-4)}` : '');
+  const displayName = peer.name;
   const isVideo = currentCall.call_type === 'video';
-  const statusText = isConnecting ? 'Connecting...' : callDuration !== '00:00' ? callDuration : 'Connected';
+  const statusText = isConnecting
+    ? t('calls.connecting')
+    : callDuration !== '00:00'
+      ? callDuration
+      : t('calls.connected');
 
   if (isVideo) {
     return (
@@ -94,7 +92,7 @@ export function CallMiniPlayer() {
           >
             {isCameraOff && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/60">
-                <Video className="w-6 h-6 text-white/40" />
+                <Video className="w-6 h-6 text-muted-foreground" />
               </div>
             )}
           </div>
@@ -102,13 +100,13 @@ export function CallMiniPlayer() {
           {/* Info bar */}
           <div className="flex items-center gap-2 px-3 py-1.5">
             <span className="relative flex h-2 w-2 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-foreground opacity-60" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-foreground" />
             </span>
-            <span className="text-white text-xs font-medium truncate max-w-[100px]">
+            <span className="text-foreground text-xs font-medium truncate max-w-[100px]">
               {displayName}
             </span>
-            <span className="ml-auto text-[10px] text-white/40">
+            <span className="ml-auto text-[10px] text-muted-foreground">
               {statusText}
             </span>
           </div>
@@ -120,26 +118,26 @@ export function CallMiniPlayer() {
               className={cn(
                 "w-8 h-8 rounded-xl flex items-center justify-center transition-all",
                 isMuted
-                  ? "bg-red-500/80 hover:bg-red-500 text-white"
-                  : "bg-white/10 hover:bg-white/20 text-white"
+                  ? "bg-foreground text-background hover:bg-foreground/90"
+                  : "bg-foreground/10 hover:bg-foreground/20 text-foreground"
               )}
-              title={isMuted ? 'Unmute' : 'Mute'}
+              title={isMuted ? t('calls.unmute') : t('calls.mute')}
             >
               {isMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
             </button>
 
             <button
               onClick={endCall}
-              className="w-8 h-8 rounded-xl bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
-              title="End call"
+              className="w-8 h-8 rounded-xl bg-foreground text-background hover:bg-foreground/90 flex items-center justify-center transition-all"
+              title={t('calls.end')}
             >
               <PhoneOff className="w-4 h-4" />
             </button>
 
             <button
               onClick={maximizeCall}
-              className="absolute right-3 text-white/50 hover:text-white transition-colors"
-              title="Expand"
+              className="absolute right-3 text-muted-foreground hover:text-foreground transition-colors"
+              title={t('calls.expand')}
             >
               <Maximize2 className="w-3.5 h-3.5" />
             </button>
@@ -168,14 +166,14 @@ export function CallMiniPlayer() {
           onPointerDown={(e) => dragControls.start(e)}
         >
           <span className="relative flex h-2 w-2 shrink-0">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-foreground opacity-60" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-foreground" />
           </span>
-          <Phone className="w-3.5 h-3.5 text-white/60 shrink-0" />
-          <span className="text-white text-xs font-medium truncate max-w-[100px]">
+          <Phone className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+          <span className="text-foreground text-xs font-medium truncate max-w-[100px]">
             {displayName}
           </span>
-          <span className="ml-auto text-[10px] text-white/40">
+          <span className="ml-auto text-[10px] text-muted-foreground">
             {statusText}
           </span>
         </div>
@@ -186,26 +184,26 @@ export function CallMiniPlayer() {
             className={cn(
               "w-8 h-8 rounded-xl flex items-center justify-center transition-all",
               isMuted
-                ? "bg-red-500/80 hover:bg-red-500 text-white"
-                : "bg-white/10 hover:bg-white/20 text-white"
+                ? "bg-foreground text-background hover:bg-foreground/90"
+                : "bg-foreground/10 hover:bg-foreground/20 text-foreground"
             )}
-            title={isMuted ? 'Unmute' : 'Mute'}
+            title={isMuted ? t('calls.unmute') : t('calls.mute')}
           >
             {isMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
           </button>
 
           <button
             onClick={endCall}
-            className="w-8 h-8 rounded-xl bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
-            title="End call"
+            className="w-8 h-8 rounded-xl bg-foreground text-background hover:bg-foreground/90 flex items-center justify-center transition-all"
+            title={t('calls.end')}
           >
             <PhoneOff className="w-4 h-4" />
           </button>
 
           <button
             onClick={maximizeCall}
-            className="absolute right-3 text-white/50 hover:text-white transition-colors"
-            title="Expand"
+            className="absolute right-3 text-muted-foreground hover:text-foreground transition-colors"
+            title={t('calls.expand')}
           >
             <Maximize2 className="w-3.5 h-3.5" />
           </button>
