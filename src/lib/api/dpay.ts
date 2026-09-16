@@ -762,3 +762,117 @@ export async function createCheckoutSession(request: {
     throw error;
   }
 }
+
+/* ────────────────────────────────────────────────────────────────────────
+ * Crypto rail
+ *
+ * The gateway sells DHB at the fixed peg for crypto the same way it does for
+ * a card: the buyer sends an origin asset to a per-purchase deposit address,
+ * NEAR Intents settles it to USDC, and the treasury delivers DHB.
+ *
+ * This is not a DEX swap. The wallet used to buy through the 1% DHB/WETH
+ * pool on Base, which is the entire market and prices well above the peg —
+ * 1,000 DHB cost 0.00101 ETH there against 0.00043 ETH here on the same day.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+export interface CryptoPayableAsset {
+  assetId: string;
+  symbol: string;
+  blockchain: string;
+  decimals: number;
+  price?: number;
+  contractAddress?: string;
+}
+
+export interface CryptoQuote {
+  originAsset: string;
+  tokensToReceive: number;
+  /** Origin amount in smallest units. */
+  amountIn: string;
+  amountInFormatted: string;
+  amountInUsd: string;
+  timeEstimateSeconds: number;
+  pegUsd: number;
+}
+
+export interface CryptoIntent extends CryptoQuote {
+  id: string;
+  depositAddress: string;
+  /** Set only on memo chains (Stellar, TON) — never on Base. */
+  depositMemo?: string;
+  expiresAt: number;
+}
+
+export interface CryptoIntentStatus {
+  id: string;
+  depositAddress: string;
+  /** 1Click settlement state, e.g. PENDING_DEPOSIT, PROCESSING, SUCCESS. */
+  settlement: string;
+  settledUsd?: number;
+  settlementTxHash?: string;
+  tokensToReceive?: string;
+  tokenReceived?: string;
+  tokenSendStatus?: string;
+  tokenSendTxnHash?: string;
+  expiresAt?: number;
+}
+
+/** What the gateway accepts as payment. Unauthenticated. */
+export async function getCryptoPayableAssets(): Promise<CryptoPayableAsset[]> {
+  const response = await fetch(`${DEHUB_API_BASE}/api/dpay/crypto/tokens`);
+  if (!response.ok) throw new Error('Crypto payment options are temporarily unavailable.');
+  const data = await response.json();
+  return data?.tokens ?? [];
+}
+
+/**
+ * Price a purchase without committing to it. Unauthenticated, so the drawer
+ * can quote before sign-in. No deposit address is allocated.
+ */
+export async function getCryptoQuote(params: {
+  originAsset: string;
+  tokensToReceive: number;
+  refundTo?: string;
+}): Promise<CryptoQuote> {
+  const response = await fetch(`${DEHUB_API_BASE}/api/dpay/crypto/quote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params),
+  });
+  const data = await response.json().catch(() => ({}));
+  // Per-route minimums surface here ("Amount is too low for bridge, try at
+  // least ...") and the buyer needs to read them, so pass the message through.
+  if (!response.ok) throw new Error(data?.message || 'Could not price this purchase.');
+  return data;
+}
+
+/** Commit: allocate the deposit address. Nothing is owed until funds are sent. */
+export async function createCryptoIntent(params: {
+  originAsset: string;
+  tokensToReceive: number;
+  receiverAddress: string;
+  refundTo: string;
+  termsAndServicesAccepted: boolean;
+}): Promise<CryptoIntent> {
+  const token = getAuthToken();
+  if (!token) throw new Error('Authentication required');
+  const response = await fetch(`${DEHUB_API_BASE}/api/dpay/crypto/intent`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(params),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data?.message || 'Could not open this purchase.');
+  return data;
+}
+
+/** Settlement state, then delivery state. */
+export async function getCryptoIntentStatus(id: string): Promise<CryptoIntentStatus> {
+  const token = getAuthToken();
+  if (!token) throw new Error('Authentication required');
+  const response = await fetch(`${DEHUB_API_BASE}/api/dpay/crypto/intent/${encodeURIComponent(id)}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!response.ok) throw new Error(`Failed to fetch purchase status: ${response.status}`);
+  return response.json();
+}
