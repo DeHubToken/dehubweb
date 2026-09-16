@@ -361,10 +361,15 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
 export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
   const id = String(nft.tokenId || nft.id || nft.token_id);
 
-  const thumbnail = getMediaUrl(nft.imageUrl) ||
+  // The stream's own thumbnail first, and it has to be read at all: a live
+  // post keeps its cover on the nested stream, never on the token, so reading
+  // only the token fields dropped every real cover and fell through to a stock
+  // photo. mapNftToVideo already reads it this way; this path did not.
+  const thumbnail = getMediaUrl((nft as any).stream?.thumbnail) ||
+    getMediaUrl(nft.imageUrl) ||
     getMediaUrl(nft.thumbnail_url) ||
     getMediaUrl(nft.media_url) ||
-    FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
+    '';
 
   const streamer = nft.minterDisplayName ||
     nft.mintername ||
@@ -616,9 +621,15 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
   const playbackId = (stream as any).playbackId;
   const livepeerThumb = liveThumbnailFor(stream as any) ?? null;
   const hlsUrl = hlsUrlFor(stream as any);
+  // Empty, not a stock photo, when a stream has no cover of its own. That is
+  // the common case — the self-hosted ingest renders no thumbnail — and a
+  // random Unsplash desk shot is a worse answer than none: the card claims to
+  // show a frame of a broadcast it has never seen. Every consumer already
+  // branches on a falsy thumbnail and draws LiveEndedMedia's static screen
+  // with the stream's own label, which the stock URL was quietly preventing.
   const thumbnail = rawThumbnail
     ? (rawThumbnail.startsWith('http') ? rawThumbnail : `${DEHUB_CDN_BASE}${rawThumbnail.replace(/^\//, '')}`)
-    : livepeerThumb ?? FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
+    : livepeerThumb ?? '';
 
   const streamerName = rawAccount?.displayName ||
     rawAccount?.username ||

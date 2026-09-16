@@ -197,7 +197,7 @@ export function LiveCard({ stream }: LiveCardProps) {
             <LiveFeedPreview
               urls={[stream.playbackUrl, ...(stream.playbackUrls || [])]}
               thumbnail={stream.thumbnail ? cdnImage(stream.thumbnail, { width: 720 }) : undefined}
-              fallbackLabel="Live"
+              fallbackLabel={t('feed.live')}
             />
           </Suspense>
         ) : stream.isLive && stream.thumbnail ? (
