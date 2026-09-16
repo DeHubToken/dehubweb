@@ -818,7 +818,9 @@
     "depositExpired": "Talletus vanheni. Yritä uudelleen.",
     "depositFailedMsg": "Talletus epäonnistui.",
     "crossChainCompleted": "Ketjujen välinen talletus valmis! {{symbol}} vastaanotettu Base-verkossa.",
-    "tryAgain": "Yritä uudelleen"
+    "tryAgain": "Yritä uudelleen",
+    "refundAddress": "Hyvitysosoite {{chain}}",
+    "refundAddressHint": "Jos vaihto ei onnistu, {{symbol}} lähetetään takaisin tänne."
   },
   "wallet": {
     "title": "Lompakko",

@@ -1015,7 +1015,9 @@
     "depositExpired": "Storting verlopen. Probeer het opnieuw.",
     "depositFailedMsg": "Storting mislukt.",
     "crossChainCompleted": "Cross-chain storting voltooid! {{symbol}} ontvangen op Base.",
-    "tryAgain": "Opnieuw proberen"
+    "tryAgain": "Opnieuw proberen",
+    "refundAddress": "Terugbetalingsadres op {{chain}}",
+    "refundAddressHint": "Als de ruil niet kan worden voltooid, wordt uw {{symbol}} hier teruggestuurd."
   },
   "wallet": {
     "title": "Portemonnee",

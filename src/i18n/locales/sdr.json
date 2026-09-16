@@ -756,7 +756,9 @@
     "depositExpired": "جمع کے وقت ختم ہوئل۔ مہربانی کر کے پھر کوشش کرو۔",
     "depositFailedMsg": "جمع ناکام ہوئل۔",
     "crossChainCompleted": "کراس-چین جمع پورا ہوئل! {{symbol}} Base پر ملل۔",
-    "tryAgain": "پھر کوشش کرو"
+    "tryAgain": "پھر کوشش کرو",
+    "refundAddress": "{{chain}} पर रिफंड एड्रेस",
+    "refundAddressHint": "अगर स्वैप पूरा नहीं हो सकता, तो आपका {{symbol}} यहाँ वापस भेज दिया जाता है।"
   },
   "wallet": {
     "title": "بٹوا",

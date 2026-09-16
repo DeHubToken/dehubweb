@@ -805,6 +805,7 @@
     "depositFailedMsg": "Ìfipamọ́ kùnà.",
     "crossChainCompleted": "Ìfipamọ́ cross-chain ti parí! A ti gba {{symbol}} lórí Base.",
     "tryAgain": "Gbìyànjú Lẹ́ẹ̀kansí",
+    "refundAddress": "Adirẹsi agbapada lori {{chain}}",
     "loginDescription": "Wọlé láti wọlé sí àpò owó rẹ àti ṣàkóso owó rẹ."
   },
   "wallet": {

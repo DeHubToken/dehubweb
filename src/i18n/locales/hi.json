@@ -822,6 +822,8 @@
     "depositFailedMsg": "जमा विफल हुआ।",
     "crossChainCompleted": "क्रॉस-चेन जमा पूर्ण! {{symbol}} Base पर प्राप्त।",
     "tryAgain": "पुनः प्रयास करें",
+    "refundAddress": "{{chain}} पर रिफ़ंड का पता",
+    "refundAddressHint": "अगर स्वैप पूरा नहीं हो पाता है, तो आपका {{symbol}} यहाँ वापस भेज दिया जाता है।",
     "availableBalance": "उपलब्ध शेष",
     "lockedBalance": "लॉक शेष",
     "deposit": "जमा करें",

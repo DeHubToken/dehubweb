@@ -817,7 +817,9 @@
     "depositExpired": "Depozitin müddəti bitdi. Zəhmət olmasa yenidən cəhd edin.",
     "depositFailedMsg": "Depozit alınmadı.",
     "crossChainCompleted": "Zəncirlərarası depozit tamamlandı! {{symbol}} Base-də qəbul edildi.",
-    "tryAgain": "Yenidən cəhd et"
+    "tryAgain": "Yenidən cəhd et",
+    "refundAddress": "Geri ödəniş ünvanı {{chain}}",
+    "refundAddressHint": "Dəyişmə tamamlana bilmirsə, {{symbol}} nömrəniz burada geri göndərilir."
   },
   "wallet": {
     "title": "Cüzdan",

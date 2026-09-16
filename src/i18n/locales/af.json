@@ -825,6 +825,8 @@
     "depositFailedMsg": "Deposito het misluk.",
     "crossChainCompleted": "Kruisketting-deposito voltooi! {{symbol}} ontvang op Base.",
     "tryAgain": "Probeer Weer",
+    "refundAddress": "Terugbetalingsadres op {{chain}}",
+    "refundAddressHint": "As die uitruil nie voltooi kan word nie, word jou {{symbol}} hier teruggestuur.",
     "description": "Beheer jou Dhobaverse-ervaring.",
     "settings": "Instellings",
     "profile": "Profiel",

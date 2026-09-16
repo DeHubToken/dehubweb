@@ -799,7 +799,9 @@
     "depositExpired": "निक्षेपः अवधिं गतः। कृपया पुनः प्रयतताम्।",
     "depositFailedMsg": "निक्षेपः विफलः।",
     "crossChainCompleted": "शृङ्खलान्तर-निक्षेपः सम्पूर्णः! {{symbol}} Base इत्यत्र प्राप्तः।",
-    "tryAgain": "पुनः प्रयतताम्"
+    "tryAgain": "पुनः प्रयतताम्",
+    "refundAddress": "पताः {{chain}}",
+    "refundAddressHint": "यदि स्वैपम् पूर्णं न शक्यत तर्हि भवतः {{symbol}} अत्र प्रेष्यते ।"
   },
   "wallet": {
     "title": "कोषः",

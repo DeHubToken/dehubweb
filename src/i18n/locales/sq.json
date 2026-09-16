@@ -820,7 +820,9 @@
     "depositExpired": "Depozita skadoi. Të lutem provo përsëri.",
     "depositFailedMsg": "Depozita dështoi.",
     "crossChainCompleted": "Depozita ndër-zinxhirore u përfundua! {{symbol}} u pranua në Base.",
-    "tryAgain": "Provo përsëri"
+    "tryAgain": "Provo përsëri",
+    "refundAddress": "Adresa e rimbursimit në {{chain}}",
+    "refundAddressHint": "Nëse shkëmbimi nuk mund të përfundojë, {{symbol}} do të dërgohet përsëri këtu."
   },
   "wallet": {
     "title": "Portofoli",

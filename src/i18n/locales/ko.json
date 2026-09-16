@@ -820,7 +820,9 @@
     "depositExpired": "입금이 만료되었습니다. 다시 시도하세요.",
     "depositFailedMsg": "입금에 실패했습니다.",
     "crossChainCompleted": "크로스체인 입금 완료! {{symbol}}이 Base에서 수령됨.",
-    "tryAgain": "다시 시도"
+    "tryAgain": "다시 시도",
+    "refundAddress": "환불 주소: {{chain}}",
+    "refundAddressHint": "교환을 완료할 수 없는 경우 {{symbol}} 이 (가) 이곳으로 다시 전송됩니다."
   },
   "wallet": {
     "title": "지갑",

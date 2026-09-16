@@ -802,7 +802,9 @@
     "depositExpired": "ተቀማጭ ጊዜው አልፏል። እባክዎ እንደገና ይሞክሩ።",
     "depositFailedMsg": "ተቀማጭ አልተሳካም።",
     "crossChainCompleted": "የተሻገረ ሰንሰለት ተቀማጭ ተጠናቅቋል! {{symbol}} በBase ላይ ተቀብሏል።",
-    "tryAgain": "እንደገና ሞክር"
+    "tryAgain": "እንደገና ሞክር",
+    "refundAddress": "ተመላሽ አድራሻ በ {{chain}}",
+    "refundAddressHint": "ስዋፕ ማጠናቀቅ ካልቻለ የእርስዎ {{symbol}} እዚህ ተመልሷል ።"
   },
   "wallet": {
     "title": "ቦርሳ",

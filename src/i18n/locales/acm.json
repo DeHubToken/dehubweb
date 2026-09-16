@@ -767,7 +767,9 @@
     "depositExpired": "انتهت صلاحية الإيداع. جرّب مرة ثانية.",
     "depositFailedMsg": "الإيداع ما نجح.",
     "crossChainCompleted": "خلص الإيداع عبر السلاسل! وصلك {{symbol}} على Base.",
-    "tryAgain": "جرّب مرة ثانية"
+    "tryAgain": "جرّب مرة ثانية",
+    "refundAddress": "عنوان الاسترجاع على {{chain}}",
+    "refundAddressHint": "اذا ما اكملت المبادلة، {{symbol}} تبعتك ترجع لهسع."
   },
   "wallet": {
     "title": "المحفظة",

@@ -807,6 +807,8 @@
     "depositFailedMsg": "Churay mana atikurqachu.",
     "crossChainCompleted": "Cross-chain churay tukusqa! {{symbol}} Base pi chaskisqa.",
     "tryAgain": "Wakmanta Ruway",
+    "refundAddress": "Kutichipuypa direccionnin {{chain}} nisqapi.",
+    "refundAddressHint": "Sichus intercambio mana tukukunmanchu chayqa, {{symbol}} nisqayki kayman kutichisqa kanqa.",
     "loginDescription": "Yaykuy qullqi wasiykiman yaykumunaykipaq qullqiykikunata kamachiynaykipaq."
   },
   "wallet": {

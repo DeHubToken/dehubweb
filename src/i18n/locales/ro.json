@@ -822,7 +822,9 @@
     "depositExpired": "Depunerea a expirat. Încearcă din nou.",
     "depositFailedMsg": "Depunerea a eșuat.",
     "crossChainCompleted": "Depunere cross-chain finalizată! {{symbol}} primit pe Base.",
-    "tryAgain": "Încearcă din nou"
+    "tryAgain": "Încearcă din nou",
+    "refundAddress": "Adresa de rambursare pe {{chain}}",
+    "refundAddressHint": "Dacă schimbul nu poate fi finalizat, {{symbol}} va fi trimis înapoi aici."
   },
   "wallet": {
     "title": "Portofel",

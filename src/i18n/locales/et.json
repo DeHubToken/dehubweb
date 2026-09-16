@@ -817,7 +817,9 @@
     "depositExpired": "Sissemakse aegus. Palun proovi uuesti.",
     "depositFailedMsg": "Sissemakse ebaõnnestus.",
     "crossChainCompleted": "Ahelateülene sissemakse tehtud! {{symbol}} laekus Base'i võrku.",
-    "tryAgain": "Proovi uuesti"
+    "tryAgain": "Proovi uuesti",
+    "refundAddress": "Tagasimakse aadress {{chain}}",
+    "refundAddressHint": "Kui vahetust ei saa lõpule viia, saadetakse teie {{symbol}} siia tagasi."
   },
   "wallet": {
     "title": "Rahakott",

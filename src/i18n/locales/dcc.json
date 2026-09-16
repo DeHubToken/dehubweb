@@ -679,7 +679,9 @@
     "depositExpired": "جمع کی مدت ختم ہوئی۔ پھر کوشش کرو۔",
     "depositFailedMsg": "جمع ناکام ہوا۔",
     "crossChainCompleted": "زنجیر پار جمع مکمل ہوا! {{symbol}} Base پر ملا۔",
-    "tryAgain": "پھر کوشش کرو"
+    "tryAgain": "پھر کوشش کرو",
+    "refundAddress": "{{chain}} वर परत करण्याचा पत्ता",
+    "refundAddressHint": "जर स्वॅप पूर्ण होऊ शकत नाही, तर तुमचा {{symbol}} येथे परत पाठवला जातो."
   },
   "wallet": {
     "title": "والیٹ",

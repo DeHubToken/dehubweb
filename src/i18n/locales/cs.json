@@ -817,7 +817,9 @@
     "depositExpired": "Vklad vypršel. Zkus to znovu.",
     "depositFailedMsg": "Vklad selhal.",
     "crossChainCompleted": "Cross-chain vklad dokončen! {{symbol}} přijato na Base.",
-    "tryAgain": "Zkusit znovu"
+    "tryAgain": "Zkusit znovu",
+    "refundAddress": "Adresa pro vrácení peněz dne {{chain}}",
+    "refundAddressHint": "Pokud se výměnu nepodaří dokončit, pošleme vám {{symbol}} zpět sem."
   },
   "wallet": {
     "title": "Peněženka",

@@ -806,7 +806,9 @@
     "depositExpired": "Dhigaalku waa dhacay. Fadlan mar kale isku day.",
     "depositFailedMsg": "Dhigaalku wuu fashilmay.",
     "crossChainCompleted": "Dhigaalka silsilad-dhaafka ah waa dhammaystirmay! {{symbol}} ayaa lagu helay Base.",
-    "tryAgain": "Mar kale isku day"
+    "tryAgain": "Mar kale isku day",
+    "refundAddress": "Cinwaanka lacag celinta ee {{chain}}",
+    "refundAddressHint": "Haddii swapku uusan dhammaystiri karin, Your {{symbol}} halkan ayaa dib loogu soo celinayaa."
   },
   "wallet": {
     "title": "Jeebka",

@@ -822,7 +822,9 @@
     "depositExpired": "Insättningen har gått ut. Försök igen.",
     "depositFailedMsg": "Insättningen misslyckades.",
     "crossChainCompleted": "Cross-chain insättning klar! {{symbol}} mottaget på Base.",
-    "tryAgain": "Försök igen"
+    "tryAgain": "Försök igen",
+    "refundAddress": "Återbetalningsadress på {{chain}}",
+    "refundAddressHint": "Om bytet inte kan slutföras skickas din {{symbol}} tillbaka hit."
   },
   "wallet": {
     "title": "Plånbok",

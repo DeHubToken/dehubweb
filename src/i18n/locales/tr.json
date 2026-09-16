@@ -822,7 +822,9 @@
     "depositExpired": "Yatırma süresi doldu. Lütfen tekrar deneyin.",
     "depositFailedMsg": "Yatırma başarısız oldu.",
     "crossChainCompleted": "Çapraz zincir yatırma tamamlandı! {{symbol}} Base'de alındı.",
-    "tryAgain": "Tekrar dene"
+    "tryAgain": "Tekrar dene",
+    "refundAddress": "Para iadesi adresi: {{chain}}",
+    "refundAddressHint": "Değiştirme tamamlanamazsa, {{symbol}} buraya geri gönderilir."
   },
   "wallet": {
     "title": "Cüzdan",

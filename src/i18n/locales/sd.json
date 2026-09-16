@@ -804,7 +804,9 @@
     "depositExpired": "ڊپازٽ جي مدت پوري ٿي وئي. مهرباني ڪري ٻيهر ڪوشش ڪريو.",
     "depositFailedMsg": "ڊپازٽ ناڪام ٿيو.",
     "crossChainCompleted": "ڪراس-چين ڊپازٽ مڪمل ٿيو! {{symbol}} Base تي مليو.",
-    "tryAgain": "ٻيهر ڪوشش ڪريو"
+    "tryAgain": "ٻيهر ڪوشش ڪريو",
+    "refundAddress": "{{chain}} تي واپسي جو پتو",
+    "refundAddressHint": "جيڪڏهن سويپ مڪمل نه ٿي سگهي، توهان جو {{symbol}} هتي واپس موڪليو ويو آهي."
   },
   "wallet": {
     "title": "والٽ",

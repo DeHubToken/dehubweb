@@ -805,7 +805,9 @@
     "depositExpired": "ການຝາກໝົດອາຍຸແລ້ວ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ.",
     "depositFailedMsg": "ການຝາກລົ້ມເຫຼວ.",
     "crossChainCompleted": "ການຝາກຂ້າມເຊນສຳເລັດແລ້ວ! ໄດ້ຮັບ {{symbol}} ໃນ Base.",
-    "tryAgain": "ລອງໃໝ່ອີກຄັ້ງ"
+    "tryAgain": "ລອງໃໝ່ອີກຄັ້ງ",
+    "refundAddress": "ທີ່ຢູ່ການສົ່ງເງິນຄືນທີ່ {{chain}}",
+    "refundAddressHint": "ຖ້າການແລກປ່ຽນບໍ່ສາມາດ ສໍາ ເລັດ, ຂອງທ່ານ {{symbol}} ຖືກສົ່ງກັບມາທີ່ນີ້."
   },
   "wallet": {
     "title": "ກະເປົາເງິນ",

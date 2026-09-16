@@ -799,7 +799,9 @@
     "depositExpired": "ڈپازٹ کی میعاد ختم۔ دوبارہ کوشش کریں۔",
     "depositFailedMsg": "ڈپازٹ ناکام ہو گیا۔",
     "crossChainCompleted": "کراس-چین ڈپازٹ مکمل! Base پر {{symbol}} موصول ہوا۔",
-    "tryAgain": "دوبارہ کوشش کریں"
+    "tryAgain": "دوبارہ کوشش کریں",
+    "refundAddress": "{{chain}} پر ریفنڈ کا پتہ",
+    "refundAddressHint": "اگر سویپ مکمل نہیں ہو سکتا تو آپ کا {{symbol}} یہاں واپس بھیج دیا جاتا ہے ۔"
   },
   "wallet": {
     "title": "والٹ",

@@ -806,7 +806,9 @@
     "depositExpired": "ئامانەت مۆھلىتى ئۆتتى. قايتا سىناڭ.",
     "depositFailedMsg": "ئامانەت مەغلۇپ بولدى.",
     "crossChainCompleted": "زەنجىرلەر ئارا ئامانەت تاماملاندى! {{symbol}} Base دا تاپشۇرۇۋېلىندى.",
-    "tryAgain": "قايتا سىناش"
+    "tryAgain": "قايتا سىناش",
+    "refundAddress": "{{chain}} دە قايتۇرۇش ئادرېسى",
+    "refundAddressHint": "ئەگەر ئالماشتۇرۇش تاماملانمىسا، {{symbol}} بۇ يەرگە قايتۇرۇلىدۇ."
   },
   "wallet": {
     "title": "ھەمياق",

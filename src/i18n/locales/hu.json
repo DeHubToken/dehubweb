@@ -817,7 +817,9 @@
     "depositExpired": "A befizetés lejárt. Kérjük, próbáld újra.",
     "depositFailedMsg": "A befizetés sikertelen.",
     "crossChainCompleted": "Láncok közötti befizetés teljesítve! {{symbol}} megérkezett a Base hálózatra.",
-    "tryAgain": "Próbáld újra"
+    "tryAgain": "Próbáld újra",
+    "refundAddress": "Visszatérítési cím: {{chain}}",
+    "refundAddressHint": "Ha a csere nem hajtható végre, a (z){{symbol}} visszaküldésre kerül ide."
   },
   "wallet": {
     "title": "Pénztárca",

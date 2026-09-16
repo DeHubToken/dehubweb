@@ -800,7 +800,9 @@
     "depositExpired": "ምቕማጥ ግዜኡ ኣኺሉ። በጃኻ እንደገና ፈትን።",
     "depositFailedMsg": "ምቕማጥ ኣይሰለጠን።",
     "crossChainCompleted": "ናይ ሰንሰለት-ሰጋሪ ገንዘብ ምቕማጥ ተዛዚሙ! {{symbol}} ኣብ Base ተቐቢልካ ኣለኻ።",
-    "tryAgain": "እንደገና ፈትን"
+    "tryAgain": "እንደገና ፈትን",
+    "refundAddress": "ናይ ምምላስ ኣድራሻ ኣብ {{chain}}",
+    "refundAddressHint": "እቲ ስዋፕ ክዛዘም እንተዘይክኢሉ ፡ {{symbol}} ኣብዚ ተመሊሱ ኣሎ ።"
   },
   "wallet": {
     "title": "ዋሌት",

@@ -804,7 +804,9 @@
     "depositExpired": "Депозитът изтече. Опитайте отново.",
     "depositFailedMsg": "Депозитът не бе успешен.",
     "crossChainCompleted": "Крос-чейн депозитът е завършен! {{symbol}} е получен в Base.",
-    "tryAgain": "Опитайте отново"
+    "tryAgain": "Опитайте отново",
+    "refundAddress": "Адрес за възстановяване на средства на {{chain}}",
+    "refundAddressHint": "Ако размяната не може да завърши, {{symbol}} се изпраща обратно тук."
   },
   "wallet": {
     "title": "Портфейл",
