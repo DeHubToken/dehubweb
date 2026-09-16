@@ -984,7 +984,15 @@
     "addedToLeaderboard": "Du bisch dezuegfüegt worde! Guthabe: {{balance}} DHB",
     "balanceTooLow": "Guthabe z tüüf ({{balance}} DHB)",
     "refreshFailed": "Öppis isch schief gangä",
-    "noWalletAddress": "Kei Wallet-Adrässe gfunde"
+    "noWalletAddress": "Kei Wallet-Adrässe gfunde",
+    "hidden": "Versteckt",
+    "noDataForPeriod": "Für die Ziitspanne git's no kei Date",
+    "noDataYet": "No kei Ranglischte-Date",
+    "seeAll": "Alli aaluege",
+    "rankN": "Platz {{rank}}",
+    "you": "(du)",
+    "provisional": "vorläufig",
+    "loadingBoard": "Ranglischte wird glade…"
   },
   "explorePage": {
     "searchPlaceholder": "Such nach Lüt, Biträg oder Inhalt...",
@@ -1890,7 +1898,20 @@
     "intro": "E Sammlig vo Spiel, Wälte oder Erläbnis wo DeHub gmacht und als Open Source usbracht het.",
     "seoTitle": "Arcade",
     "seoDescription": "Spiil Spiil i dim Browser uf DeHub — filmreifs 3D-Schach, en prozedural generierte Shooter, e Spaziergang durch e Rägewald, e Neon-Strassechlopfete und es begehbars Trading-Parkett. Nüt z'installiere, nüt z'lade.",
-    "alsoIn": "Ou im {{theme}}"
+    "alsoIn": "Ou im {{theme}}",
+    "hpLeft": "{{hp}} HP übrig",
+    "noHpLeft": "kei HP übrig",
+    "bestOfRuns": "Bescht vo {{count}} Läuf",
+    "firstRun": "erschte Lauf",
+    "gamesRecord_one": "{{count}} Partie · {{wins}}S {{losses}}N {{draws}}U",
+    "gamesRecord_other": "{{count}} Partie · {{wins}}S {{losses}}N {{draws}}U",
+    "anon": "anonym",
+    "streetSlayerBoardTitle": "Am wiitschte d Strass ab",
+    "streetSlayerBoardBlurb": "Wie wiit du cho bisch, bevor d Strass di verwütscht hät, und wie viel Läbe der no blibe isch, wo du ufghört häsch. Schlah din eigete Beschtwert, zum ufstiige.",
+    "streetSlayerBoardEmpty": "No niemert isch wiit gnueg cho. Bis de Erschti.",
+    "kingsGambitBoardTitle": "Wertig",
+    "kingsGambitBoardBlurb": "Elo über alli Online-Partie. Alli fanged bi 1200 aa; en Sieg gäge en stercheren Spiiler zellt meh als eine gäge en schwächere, drum chan me d Ranglischte nöd mit ere zweite Wallet ufblase.",
+    "kingsGambitBoardEmpty": "No kei Online-Partie isch fertig. Mach e Useforderig uf."
   },
   "stats": {
     "community": {

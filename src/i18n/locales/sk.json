@@ -1101,7 +1101,15 @@
     "topEarners": "Top zárobky",
     "topTippers": "Top tipujúci",
     "mostFollowed": "Najviac sledovaní",
-    "mostLiked": "Najviac obľúbení"
+    "mostLiked": "Najviac obľúbení",
+    "hidden": "Skryté",
+    "noDataForPeriod": "Pre toto obdobie zatiaľ nie sú žiadne údaje",
+    "noDataYet": "Zatiaľ žiadne údaje rebríčka",
+    "seeAll": "Zobraziť všetko",
+    "rankN": "{{rank}}. miesto",
+    "you": "(ty)",
+    "provisional": "predbežné",
+    "loadingBoard": "Načítava sa rebríček…"
   },
   "explorePage": {
     "searchPlaceholder": "Hľadať ľudí, príspevky alebo obsah...",
@@ -2056,7 +2064,20 @@
     "intro": "Zbierka hier, svetov a zážitkov, ktoré DeHub postavil a uvoľnil ako open source.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Hraj priamo v prehliadači na DeHube — filmový 3D šach, procedurálne generovaná strieľačka, prechádzka dažďovým pralesom, neónová pouličná bitka a obchodná sála, po ktorej sa dá chodiť. Bez inštalácie, bez sťahovania.",
-    "alsoIn": "Nájdeš aj v {{theme}}"
+    "alsoIn": "Nájdeš aj v {{theme}}",
+    "hpLeft": "zostáva {{hp}} HP",
+    "noHpLeft": "nezostáva žiadne HP",
+    "bestOfRuns": "najlepší z {{count}} pokusov",
+    "firstRun": "prvý pokus",
+    "gamesRecord_one": "{{count}} partia · {{wins}}V {{losses}}P {{draws}}R",
+    "gamesRecord_other": "{{count}} partií · {{wins}}V {{losses}}P {{draws}}R",
+    "anon": "anonym",
+    "streetSlayerBoardTitle": "Najďalej po ulici",
+    "streetSlayerBoardBlurb": "Ako ďaleko si sa dostal, kým ťa ulica dostala, a koľko života ti zostalo, keď si skončil. Prekonaj svoj rekord a posuň sa vyššie.",
+    "streetSlayerBoardEmpty": "Ešte sa nikto nedostal dosť ďaleko. Buď prvý.",
+    "kingsGambitBoardTitle": "Hodnotenie",
+    "kingsGambitBoardBlurb": "Elo zo všetkých online partií. Všetci začínajú na 1200; výhra nad silnejším hráčom má väčšiu hodnotu než nad slabším, takže rebríček sa nedá nahnať druhou peňaženkou.",
+    "kingsGambitBoardEmpty": "Zatiaľ sa neskončila žiadna online partia. Vyzvi niekoho."
   },
   "stats": {
     "community": {

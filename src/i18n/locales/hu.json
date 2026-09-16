@@ -1035,7 +1035,15 @@
     "addedToLeaderboard": "Hozzáadva! Egyenleg: {{balance}} DHB",
     "balanceTooLow": "Egyenleg túl alacsony ({{balance}} DHB)",
     "refreshFailed": "Hiba történt",
-    "noWalletAddress": "Pénztárca cím nem elérhető"
+    "noWalletAddress": "Pénztárca cím nem elérhető",
+    "hidden": "Rejtett",
+    "noDataForPeriod": "Ehhez az időszakhoz még nincs adat",
+    "noDataYet": "Még nincs ranglista-adat",
+    "seeAll": "Összes megtekintése",
+    "rankN": "{{rank}}. hely",
+    "you": "(te)",
+    "provisional": "ideiglenes",
+    "loadingBoard": "Ranglista betöltése…"
   },
   "explorePage": {
     "searchPlaceholder": "Emberek, bejegyzések vagy tartalom keresése...",
@@ -1908,7 +1916,20 @@
     "intro": "DeHub által épített és nyílt forráskódúvá tett játékok, világok és élmények gyűjteménye.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Játssz a böngésződben a DeHubon — filmes 3D sakk, procedurálisan generált lövölde, esőerdei séta, neonos utcai verekedés és bejárható kereskedőterem. Nincs telepítés, nincs letöltés.",
-    "alsoIn": "A(z) {{theme}} témában is"
+    "alsoIn": "A(z) {{theme}} témában is",
+    "hpLeft": "{{hp}} HP maradt",
+    "noHpLeft": "nem maradt HP",
+    "bestOfRuns": "{{count}} próbálkozásból a legjobb",
+    "firstRun": "első próbálkozás",
+    "gamesRecord_one": "{{count}} játszma · {{wins}}Gy {{losses}}V {{draws}}D",
+    "gamesRecord_other": "{{count}} játszma · {{wins}}Gy {{losses}}V {{draws}}D",
+    "anon": "névtelen",
+    "streetSlayerBoardTitle": "Legmesszebb az utcán",
+    "streetSlayerBoardBlurb": "Milyen messzire jutottál, mielőtt az utca legyőzött, és mennyi életed maradt, amikor megálltál. Döntsd meg a saját rekordodat, hogy feljebb kerülj.",
+    "streetSlayerBoardEmpty": "Még senki sem jutott elég messzire. Légy az első.",
+    "kingsGambitBoardTitle": "Értékelés",
+    "kingsGambitBoardBlurb": "Elo minden online játszma alapján. Mindenki 1200-ról indul; egy erősebb játékos legyőzése többet ér, mint egy gyengébbé, így a ranglista nem tolható fel egy második tárcával.",
+    "kingsGambitBoardEmpty": "Még egyetlen online játszma sem ért véget. Nyiss egy kihívást."
   },
   "stats": {
     "community": {

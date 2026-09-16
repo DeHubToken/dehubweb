@@ -1040,7 +1040,15 @@
     "addedToLeaderboard": "Anda telah ditambahkan! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo terlalu rendah ({{balance}} DHB)",
     "refreshFailed": "Terjadi kesalahan",
-    "noWalletAddress": "Alamat dompet tidak ditemukan"
+    "noWalletAddress": "Alamat dompet tidak ditemukan",
+    "hidden": "Disembunyikan",
+    "noDataForPeriod": "Belum ada data untuk periode ini",
+    "noDataYet": "Belum ada data papan peringkat",
+    "seeAll": "Lihat semua",
+    "rankN": "Peringkat {{rank}}",
+    "you": "(kamu)",
+    "provisional": "sementara",
+    "loadingBoard": "Memuat papan peringkat…"
   },
   "explorePage": {
     "searchPlaceholder": "Cari orang, postingan, atau konten...",
@@ -1961,7 +1969,20 @@
     "intro": "Kumpulan game, dunia, dan pengalaman yang dibangun dan dibuka sumbernya oleh DeHub.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Main langsung di browser di DeHub — catur 3D sinematik, penembak yang dihasilkan secara prosedural, jalan-jalan di hutan hujan, perkelahian jalanan neon, dan lantai bursa yang bisa dijelajahi. Tanpa instal, tanpa unduh.",
-    "alsoIn": "Ada juga di {{theme}}"
+    "alsoIn": "Ada juga di {{theme}}",
+    "hpLeft": "{{hp}} HP tersisa",
+    "noHpLeft": "HP habis",
+    "bestOfRuns": "terbaik dari {{count}} percobaan",
+    "firstRun": "percobaan pertama",
+    "gamesRecord_one": "{{count}} permainan · {{wins}}M {{losses}}K {{draws}}S",
+    "gamesRecord_other": "{{count}} permainan · {{wins}}M {{losses}}K {{draws}}S",
+    "anon": "anonim",
+    "streetSlayerBoardTitle": "Terjauh menyusuri jalan",
+    "streetSlayerBoardBlurb": "Seberapa jauh kamu sampai sebelum jalanan mengalahkanmu, dan berapa nyawa yang tersisa saat berhenti. Kalahkan rekor sendiri untuk naik.",
+    "streetSlayerBoardEmpty": "Belum ada yang sampai cukup jauh. Jadilah yang pertama.",
+    "kingsGambitBoardTitle": "Peringkat Elo",
+    "kingsGambitBoardBlurb": "Elo dari semua pertandingan daring. Semua mulai dari 1200; mengalahkan pemain yang lebih kuat bernilai lebih daripada yang lebih lemah, jadi peringkat tidak bisa dikatrol dengan dompet kedua.",
+    "kingsGambitBoardEmpty": "Belum ada pertandingan daring yang selesai. Buka tantangan."
   },
   "stats": {
     "community": {

@@ -980,7 +980,15 @@
     "addedToLeaderboard": "انضفت! الرصيد: {{balance}} DHB",
     "balanceTooLow": "الرصيد قليل ({{balance}} DHB)",
     "refreshFailed": "صار شي غلط",
-    "noWalletAddress": "ما لقينا عنوان محفظة"
+    "noWalletAddress": "ما لقينا عنوان محفظة",
+    "hidden": "مخفي",
+    "noDataForPeriod": "لسا ما في بيانات لهالفترة",
+    "noDataYet": "لسا ما في بيانات للوحة المتصدرين",
+    "seeAll": "شوف الكل",
+    "rankN": "المرتبة {{rank}}",
+    "you": "(إنت)",
+    "provisional": "مؤقت",
+    "loadingBoard": "عم نحمّل لوحة المتصدرين…"
   },
   "explorePage": {
     "searchPlaceholder": "ابحث عن ناس أو منشورات أو محتوى...",
@@ -1851,7 +1859,20 @@
     "intro": "مجموعة ألعاب وعوالم وتجارب عملها DeHub وفتح مصدرها.",
     "seoTitle": "الأركيد",
     "seoDescription": "العب ألعاب بالمتصفح على DeHub — شطرنج ثلاثي الأبعاد سينمائي، شوتر مولّد إجرائياً، مشي بغابة مطيرة، عراك شارع نيون، وأرضية تداول فيك تمشي فيها. بلا تنصيب، بلا تحميل.",
-    "alsoIn": "كمان بـ{{theme}}"
+    "alsoIn": "كمان بـ{{theme}}",
+    "hpLeft": "باقي {{hp}} نقطة صحة",
+    "noHpLeft": "ما في نقاط صحة",
+    "bestOfRuns": "الأحسن من {{count}} محاولات",
+    "firstRun": "أول محاولة",
+    "gamesRecord_one": "{{count}} مباراة · {{wins}}ف {{losses}}خ {{draws}}ت",
+    "gamesRecord_other": "{{count}} مباريات · {{wins}}ف {{losses}}خ {{draws}}ت",
+    "anon": "مجهول",
+    "streetSlayerBoardTitle": "الأبعد بالشارع",
+    "streetSlayerBoardBlurb": "لوين وصلت قبل ما يغلبك الشارع، وقديش ضل معك صحة لما وقفت. اكسر رقمك عشان تطلع.",
+    "streetSlayerBoardEmpty": "لسا ما حدا وصل بعيد كفاية. كون الأول.",
+    "kingsGambitBoardTitle": "التصنيف",
+    "kingsGambitBoardBlurb": "تصنيف إيلو على كل المباريات أونلاين. الكل بيبلش من 1200؛ الفوز على لاعب أقوى بيسوى أكتر من الفوز على أضعف، فما بتقدر تعلّي ترتيبك بمحفظة تانية.",
+    "kingsGambitBoardEmpty": "لسا ما خلصت ولا مباراة أونلاين. افتح تحدي."
   },
   "stats": {
     "community": {

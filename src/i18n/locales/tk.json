@@ -1011,7 +1011,15 @@
     "addedToLeaderboard": "Goşuldyňyz! Balans: {{balance}} DHB",
     "balanceTooLow": "Balans gaty pes ({{balance}} DHB)",
     "refreshFailed": "Ýalňyşlyk ýüze çykdy",
-    "noWalletAddress": "Gapjyk salgysy tapylmady"
+    "noWalletAddress": "Gapjyk salgysy tapylmady",
+    "hidden": "Gizlin",
+    "noDataForPeriod": "Bu döwür üçin entek maglumat ýok",
+    "noDataYet": "Entek reýting maglumaty ýok",
+    "seeAll": "Hemmesini gör",
+    "rankN": "{{rank}}-nji orun",
+    "you": "(siz)",
+    "provisional": "deslapky",
+    "loadingBoard": "Reýting ýüklenýär…"
   },
   "explorePage": {
     "searchPlaceholder": "Adam, ýazgy ýa-da mazmun gözle...",
@@ -1890,7 +1898,20 @@
     "intro": "DeHub-yň gurup, açyk çeşme edip hödürlän oýunlarynyň, dünýäleriniň ýa-da tejribeleriniň ýygyndysy.",
     "seoTitle": "Arkada",
     "seoDescription": "DeHub-da brauzeriňizde oýun oýnaň — kinematik 3D şaşka, algoritm bilen döredilýän atyşyk, tropiki tokaý gezelenji, neon köçe uruşy we aýlanyp bolýan söwda meýdançasy. Gurnamaly zat ýok, ýüklemeli zat ýok.",
-    "alsoIn": "{{theme}} temasynda-da bar"
+    "alsoIn": "{{theme}} temasynda-da bar",
+    "hpLeft": "{{hp}} HP galdy",
+    "noHpLeft": "HP galmady",
+    "bestOfRuns": "{{count}} synanyşygyň iň gowusy",
+    "firstRun": "ilkinji synanyşyk",
+    "gamesRecord_one": "{{count}} oýun · {{wins}}Ý {{losses}}U {{draws}}D",
+    "gamesRecord_other": "{{count}} oýun · {{wins}}Ý {{losses}}U {{draws}}D",
+    "anon": "näbelli",
+    "streetSlayerBoardTitle": "Köçede iň uzaga",
+    "streetSlayerBoardBlurb": "Köçe sizi ýykmazdan öň näçe uzaga gitdiňiz we durnaňyzda näçe saglyk galdy. Ýokary çykmak üçin öz rekordyňyzy täzeläň.",
+    "streetSlayerBoardEmpty": "Entek hiç kim ýeterlik uzaga gitmedi. Ilkinji boluň.",
+    "kingsGambitBoardTitle": "Reýting",
+    "kingsGambitBoardBlurb": "Ähli onlaýn oýunlar boýunça Elo. Hemmeler 1200-den başlaýar; güýçli oýunçyny ýeňmek gowşagy ýeňmekden gymmatly, şonuň üçin reýtingi ikinji gapjyk bilen ýokarlandyryp bolmaýar.",
+    "kingsGambitBoardEmpty": "Entek hiç bir onlaýn oýun tamamlanmady. Çagyryş açyň."
   },
   "stats": {
     "community": {

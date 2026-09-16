@@ -1040,7 +1040,15 @@
     "addedToLeaderboard": "Qoʻshildi! Balans: {{balance}} DHB",
     "balanceTooLow": "Balans juda past ({{balance}} DHB)",
     "refreshFailed": "Nimadir xato ketdi",
-    "noWalletAddress": "Hamyon manzili topilmadi"
+    "noWalletAddress": "Hamyon manzili topilmadi",
+    "hidden": "Yashirin",
+    "noDataForPeriod": "Bu davr uchun hali ma'lumot yo'q",
+    "noDataYet": "Hali reyting ma'lumoti yo'q",
+    "seeAll": "Barchasini ko'rish",
+    "rankN": "{{rank}}-o'rin",
+    "you": "(siz)",
+    "provisional": "dastlabki",
+    "loadingBoard": "Reyting yuklanmoqda…"
   },
   "explorePage": {
     "searchPlaceholder": "Odamlar, postlar yoki kontent qidirish...",
@@ -1940,7 +1948,20 @@
     "intro": "DeHub qurgan va ochiq kod qilib chiqargan o'yinlar, olamlar va tajribalar to'plami.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "DeHub'da to'g'ridan-to'g'ri brauzeringizda o'ynang — kinematografik 3D shaxmat, protsedura asosida yaratilgan otishma, yomg'ir o'rmonida sayr, neonli ko'cha jangi va yurib chiqiladigan savdo zali. O'rnatish shart emas, yuklab olish shart emas.",
-    "alsoIn": "{{theme}} mavzusida ham bor"
+    "alsoIn": "{{theme}} mavzusida ham bor",
+    "hpLeft": "{{hp}} HP qoldi",
+    "noHpLeft": "HP qolmadi",
+    "bestOfRuns": "{{count}} urinishning eng yaxshisi",
+    "firstRun": "birinchi urinish",
+    "gamesRecord_one": "{{count}} o'yin · {{wins}}G' {{losses}}M {{draws}}D",
+    "gamesRecord_other": "{{count}} o'yin · {{wins}}G' {{losses}}M {{draws}}D",
+    "anon": "anonim",
+    "streetSlayerBoardTitle": "Ko'chada eng uzoqqa",
+    "streetSlayerBoardBlurb": "Ko'cha sizni yiqitguncha qanchalik uzoqqa bordingiz va to'xtaganda qancha salomatlik qoldi. Yuqoriga ko'tarilish uchun o'z rekordingizni yangilang.",
+    "streetSlayerBoardEmpty": "Hali hech kim yetarlicha uzoqqa bormadi. Birinchi bo'ling.",
+    "kingsGambitBoardTitle": "Reyting",
+    "kingsGambitBoardBlurb": "Barcha onlayn o'yinlar bo'yicha Elo. Hamma 1200 dan boshlaydi; kuchli o'yinchini yengish kuchsizni yengishdan qimmatroq, shuning uchun reytingni ikkinchi hamyon bilan oshirib bo'lmaydi.",
+    "kingsGambitBoardEmpty": "Hali birorta onlayn o'yin tugamadi. Chaqiriq oching."
   },
   "stats": {
     "community": {

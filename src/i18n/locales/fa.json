@@ -1039,7 +1039,15 @@
     "addedToLeaderboard": "اضافه شدید! موجودی: {{balance}} DHB",
     "balanceTooLow": "موجودی کم است ({{balance}} DHB)",
     "refreshFailed": "مشکلی پیش آمد",
-    "noWalletAddress": "آدرس کیف پول یافت نشد"
+    "noWalletAddress": "آدرس کیف پول یافت نشد",
+    "hidden": "پنهان",
+    "noDataForPeriod": "هنوز داده‌ای برای این بازه موجود نیست",
+    "noDataYet": "هنوز داده‌ای برای جدول امتیازات نیست",
+    "seeAll": "مشاهده همه",
+    "rankN": "رتبه {{rank}}",
+    "you": "(شما)",
+    "provisional": "موقت",
+    "loadingBoard": "در حال بارگذاری جدول امتیازات…"
   },
   "explorePage": {
     "searchPlaceholder": "جستجوی افراد، پست‌ها یا محتوا...",
@@ -1989,7 +1997,20 @@
     "intro": "مجموعه‌ای از بازی‌ها، جهان‌ها و تجربه‌هایی که DeHub ساخته و متن‌باز کرده است.",
     "seoTitle": "آرکید | DeHub",
     "seoDescription": "در مرورگر خود روی DeHub بازی کنید — شطرنج سه‌بعدی سینمایی، یک تیراندازی با ساخت رویه‌ای، قدم‌زدن در جنگل بارانی، دعوای خیابانی نئونی و یک تالار معاملات قابل پیمایش. بدون نصب، بدون دانلود.",
-    "alsoIn": "در {{theme}} هم هست"
+    "alsoIn": "در {{theme}} هم هست",
+    "hpLeft": "{{hp}} جان باقی مانده",
+    "noHpLeft": "جانی باقی نمانده",
+    "bestOfRuns": "بهترین از {{count}} دور",
+    "firstRun": "دور اول",
+    "gamesRecord_one": "{{count}} بازی · {{wins}}ب {{losses}}ش {{draws}}م",
+    "gamesRecord_other": "{{count}} بازی · {{wins}}ب {{losses}}ش {{draws}}م",
+    "anon": "ناشناس",
+    "streetSlayerBoardTitle": "دورترین نقطهٔ خیابان",
+    "streetSlayerBoardBlurb": "تا کجا پیش رفتی پیش از آنکه خیابان تو را از پا درآورد، و وقتی ایستادی چقدر جان داشتی. رکورد خودت را بشکن تا بالا بروی.",
+    "streetSlayerBoardEmpty": "هنوز کسی به اندازهٔ کافی پیش نرفته. اولین نفر باش.",
+    "kingsGambitBoardTitle": "امتیاز",
+    "kingsGambitBoardBlurb": "الو در همهٔ بازی‌های آنلاین. همه از ۱۲۰۰ شروع می‌کنند؛ بردن بازیکن قوی‌تر بیش از بردن بازیکن ضعیف‌تر می‌ارزد، پس نمی‌شود با کیف پول دوم رتبه را بالا برد.",
+    "kingsGambitBoardEmpty": "هنوز هیچ بازی آنلاینی تمام نشده. یک چالش باز کن."
   },
   "stats": {
     "community": {

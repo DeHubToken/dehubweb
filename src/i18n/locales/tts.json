@@ -984,7 +984,15 @@
     "addedToLeaderboard": "เพิ่มเจ้าแล้ว! ยอด: {{balance}} DHB",
     "balanceTooLow": "ยอดต่ำเกินไป ({{balance}} DHB)",
     "refreshFailed": "เกิดข้อผิดพลาด",
-    "noWalletAddress": "บ่พบที่อยู่กระเป๋า"
+    "noWalletAddress": "บ่พบที่อยู่กระเป๋า",
+    "hidden": "ซ่อนไว้",
+    "noDataForPeriod": "ยังบ่มีข้อมูลสำหรับช่วงเวลานี้",
+    "noDataYet": "ยังบ่มีข้อมูลกระดานคะแนน",
+    "seeAll": "เบิ่งทั้งหมด",
+    "rankN": "อันดับ {{rank}}",
+    "you": "(เจ้า)",
+    "provisional": "ชั่วคราว",
+    "loadingBoard": "กำลังโหลดกระดานคะแนน…"
   },
   "explorePage": {
     "searchPlaceholder": "ค้นหาคน โพสต์ หรือเนื้อหา...",
@@ -1860,7 +1868,20 @@
     "intro": "ซุมเกม โลก หรือประสบการณ์ที่ DeHub สร้างและเผยแพร่เป็นโอเพนซอร์ส.",
     "seoTitle": "อาร์เคด",
     "seoDescription": "เล่นเกมอยู่เบราว์เซอร์ของเจ้าอยู่ DeHub — หมากรุก 3D สไตล์ภาพยนตร์, เกมยิงที่สร้างแบบสุ่ม, การเดินป่าฝน, การต่อสู้อยู่ถนนนีออน และตลาดซื้อขายที่เดินได้. บ่ต้องติดตั้ง บ่ต้องดาวน์โหลด.",
-    "alsoIn": "อยู่ใน {{theme}} คือกัน"
+    "alsoIn": "อยู่ใน {{theme}} คือกัน",
+    "hpLeft": "เหลือ {{hp}} HP",
+    "noHpLeft": "บ่เหลือ HP",
+    "bestOfRuns": "ดีที่สุดจาก {{count}} รอบ",
+    "firstRun": "รอบแรก",
+    "gamesRecord_one": "{{count}} เกม · ชนะ {{wins}} แพ้ {{losses}} เสมอ {{draws}}",
+    "gamesRecord_other": "{{count}} เกม · ชนะ {{wins}} แพ้ {{losses}} เสมอ {{draws}}",
+    "anon": "บ่ระบุชื่อ",
+    "streetSlayerBoardTitle": "ไปได้ไกลที่สุดบนถนน",
+    "streetSlayerBoardBlurb": "เจ้าไปได้ไกลส่ำใดก่อนถนนสิเอาชนะเจ้า และเหลือพลังชีวิตส่ำใดตอนหยุด ทำลายสถิติของตัวเองเพื่อขยับขึ้น",
+    "streetSlayerBoardEmpty": "ยังบ่มีไผไปได้ไกลพอ มาเป็นคนแรกเด้อ",
+    "kingsGambitBoardTitle": "เรตติ้ง",
+    "kingsGambitBoardBlurb": "Elo จากทุกแมตช์ออนไลน์ ทุกคนเริ่มที่ 1200 ชนะผู้เล่นที่เก่งกว่าได้คะแนนหลายกว่าชนะผู้เล่นที่อ่อนกว่า จั่งปั่นอันดับด้วยกระเป๋าที่สองบ่ได้",
+    "kingsGambitBoardEmpty": "ยังบ่มีแมตช์ออนไลน์ที่จบลง เปิดคำท้าเลย"
   },
   "stats": {
     "community": {

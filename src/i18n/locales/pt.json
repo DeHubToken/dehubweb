@@ -1040,7 +1040,15 @@
     "addedToLeaderboard": "Você foi adicionado! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo muito baixo ({{balance}} DHB)",
     "refreshFailed": "Algo deu errado",
-    "noWalletAddress": "Endereço não encontrado"
+    "noWalletAddress": "Endereço não encontrado",
+    "hidden": "Oculto",
+    "noDataForPeriod": "Ainda não há dados para este período",
+    "noDataYet": "Ainda não há dados de classificação",
+    "seeAll": "Ver tudo",
+    "rankN": "Posição {{rank}}",
+    "you": "(você)",
+    "provisional": "provisório",
+    "loadingBoard": "Carregando classificação…"
   },
   "explorePage": {
     "searchPlaceholder": "Buscar pessoas, posts ou conteúdo...",
@@ -1965,7 +1973,20 @@
     "intro": "Uma coleção de jogos, mundos e experiências criados e abertos em código aberto pela DeHub.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Jogue no seu navegador na DeHub — xadrez 3D cinematográfico, um shooter gerado proceduralmente, um passeio pela floresta tropical, uma briga de rua em néon e um pregão para percorrer. Sem instalar, sem baixar.",
-    "alsoIn": "Também no {{theme}}"
+    "alsoIn": "Também no {{theme}}",
+    "hpLeft": "{{hp}} HP restantes",
+    "noHpLeft": "sem HP restante",
+    "bestOfRuns": "melhor de {{count}} corridas",
+    "firstRun": "primeira corrida",
+    "gamesRecord_one": "{{count}} partida · {{wins}}V {{losses}}D {{draws}}E",
+    "gamesRecord_other": "{{count}} partidas · {{wins}}V {{losses}}D {{draws}}E",
+    "anon": "anônimo",
+    "streetSlayerBoardTitle": "Mais longe pela rua",
+    "streetSlayerBoardBlurb": "Até onde você chegou antes que a rua te pegasse e quanta vida sobrou quando parou. Supere seu próprio recorde para subir.",
+    "streetSlayerBoardEmpty": "Ninguém chegou longe o bastante ainda. Seja o primeiro.",
+    "kingsGambitBoardTitle": "Pontuação",
+    "kingsGambitBoardBlurb": "Elo em todas as partidas online. Todos começam em 1200; vencer um jogador mais forte vale mais do que vencer um mais fraco, então a classificação não pode ser inflada com uma segunda carteira.",
+    "kingsGambitBoardEmpty": "Nenhuma partida online terminou ainda. Abra um desafio."
   },
   "stats": {
     "community": {

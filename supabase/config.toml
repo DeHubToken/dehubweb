@@ -238,6 +238,9 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.request-phone-otp]
     verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  [functions.santa-score]
+    verify_jwt = false
   [functions.send-admin-invite]
     verify_jwt = false
   # Called by the API when the assistant files a support ticket. Auth is the

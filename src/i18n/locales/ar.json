@@ -1038,7 +1038,15 @@
     "addedToLeaderboard": "تمت إضافتك! الرصيد: {{balance}} DHB",
     "balanceTooLow": "الرصيد منخفض جداً ({{balance}} DHB)",
     "refreshFailed": "حدث خطأ",
-    "noWalletAddress": "لم يتم العثور على عنوان محفظة"
+    "noWalletAddress": "لم يتم العثور على عنوان محفظة",
+    "hidden": "مخفي",
+    "noDataForPeriod": "لا تتوفر بيانات لهذه الفترة بعد",
+    "noDataYet": "لا توجد بيانات للوحة المتصدرين بعد",
+    "seeAll": "عرض الكل",
+    "rankN": "المرتبة {{rank}}",
+    "you": "(أنت)",
+    "provisional": "مؤقت",
+    "loadingBoard": "جارٍ تحميل لوحة المتصدرين…"
   },
   "explorePage": {
     "searchPlaceholder": "ابحث عن أشخاص أو منشورات أو محتوى...",
@@ -1963,7 +1971,20 @@
     "intro": "مجموعة من الألعاب والعوالم والتجارب التي بنتها DeHub وأتاحتها مفتوحة المصدر.",
     "seoTitle": "الأركيد | DeHub",
     "seoDescription": "العب في متصفحك على DeHub — شطرنج ثلاثي الأبعاد سينمائي، ولعبة إطلاق نار مولّدة إجرائيًا، ونزهة في الغابة المطيرة، وقتال شوارع بالنيون، وقاعة تداول يمكن التجول فيها. بلا تثبيت وبلا تنزيل.",
-    "alsoIn": "موجودة أيضًا في {{theme}}"
+    "alsoIn": "موجودة أيضًا في {{theme}}",
+    "hpLeft": "متبقٍ {{hp}} نقطة صحة",
+    "noHpLeft": "لا نقاط صحة متبقية",
+    "bestOfRuns": "الأفضل من {{count}} محاولات",
+    "firstRun": "المحاولة الأولى",
+    "gamesRecord_one": "{{count}} مباراة · {{wins}}ف {{losses}}خ {{draws}}ت",
+    "gamesRecord_other": "{{count}} مباريات · {{wins}}ف {{losses}}خ {{draws}}ت",
+    "anon": "مجهول",
+    "streetSlayerBoardTitle": "الأبعد في الشارع",
+    "streetSlayerBoardBlurb": "إلى أي مدى وصلت قبل أن يهزمك الشارع، وكم بقي لك من الصحة عند التوقف. تخطَّ أفضل نتيجة لك لترتقي.",
+    "streetSlayerBoardEmpty": "لم يصل أحد بعيدًا بما يكفي بعد. كن الأول.",
+    "kingsGambitBoardTitle": "التصنيف",
+    "kingsGambitBoardBlurb": "تصنيف إيلو عبر كل المباريات عبر الإنترنت. يبدأ الجميع من 1200؛ الفوز على لاعب أقوى يساوي أكثر من الفوز على أضعف، لذا لا يمكن تضخيم السلم بمحفظة ثانية.",
+    "kingsGambitBoardEmpty": "لم تنتهِ أي مباراة عبر الإنترنت بعد. افتح تحديًا."
   },
   "stats": {
     "community": {

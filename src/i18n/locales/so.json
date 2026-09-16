@@ -1024,7 +1024,15 @@
     "addedToLeaderboard": "Waa lagu daray! Miisaan: {{balance}} DHB",
     "balanceTooLow": "Miisaanku aad u yar yahay ({{balance}} DHB)",
     "refreshFailed": "Wax baa qaldamay",
-    "noWalletAddress": "Cinwaanka jeebka lama helin"
+    "noWalletAddress": "Cinwaanka jeebka lama helin",
+    "hidden": "Qarsoon",
+    "noDataForPeriod": "Xogta muddadan weli ma jirto",
+    "noDataYet": "Xogta liiska hogaamiyayaasha weli ma jirto",
+    "seeAll": "Dhammaan arag",
+    "rankN": "Kaalinta {{rank}}",
+    "you": "(adiga)",
+    "provisional": "ku-meel-gaar",
+    "loadingBoard": "Liiska hogaamiyayaasha waa la soo dejinayaa…"
   },
   "explorePage": {
     "searchPlaceholder": "Raadi dadka, qoraallada, ama nuxurka...",
@@ -1924,7 +1932,20 @@
     "intro": "Ururin ciyaaro, adduunyo iyo waayo-aragnimo uu DeHub dhisay oo uu ka dhigay il furan.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Ku ciyaar browserkaaga DeHub — chess 3D oo filim u eg, ciyaar rasaas oo si nidaamsan loo abuuray, socod kaynta roobka, dagaal waddo neon ah iyo qol ganacsi oo la mari karo. Wax rakibaad ah ma jiro, wax soo dejin ah ma jiro.",
-    "alsoIn": "Sidoo kale wuxuu ku jiraa {{theme}}"
+    "alsoIn": "Sidoo kale wuxuu ku jiraa {{theme}}",
+    "hpLeft": "{{hp}} HP ayaa haray",
+    "noHpLeft": "HP ma harin",
+    "bestOfRuns": "kan ugu fiican {{count}} isku day",
+    "firstRun": "isku daygii ugu horreeyay",
+    "gamesRecord_one": "{{count}} ciyaar · {{wins}}G {{losses}}L {{draws}}B",
+    "gamesRecord_other": "{{count}} ciyaarood · {{wins}}G {{losses}}L {{draws}}B",
+    "anon": "magac la'aan",
+    "streetSlayerBoardTitle": "Kan ugu fog wadada",
+    "streetSlayerBoardBlurb": "Inta aad gaartay ka hor inta wadadu ku garaacin, iyo inta caafimaad ee kuu hartay markaad joogsatay. Rikoorkaaga jebi si aad kor ugu kacdo.",
+    "streetSlayerBoardEmpty": "Weli qofna ma gaarin meel fog oo ku filan. Noqo kii ugu horreeyay.",
+    "kingsGambitBoardTitle": "Qiimeyn",
+    "kingsGambitBoardBlurb": "Elo dhammaan ciyaaraha internetka. Qof walba wuxuu ka bilaabaa 1200; ka adkaanshaha ciyaaryahan xoog badan wuxuu ka qiimo badan yahay mid tabar yar, sidaas darteed liiska laguma kordhin karo boorso labaad.",
+    "kingsGambitBoardEmpty": "Weli ciyaar internet ah ma dhammaan. Fur tartan."
   },
   "stats": {
     "community": {

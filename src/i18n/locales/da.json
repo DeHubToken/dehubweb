@@ -1040,7 +1040,15 @@
     "addedToLeaderboard": "Tilføjet! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo for lav ({{balance}} DHB)",
     "refreshFailed": "Der opstod en fejl",
-    "noWalletAddress": "Tegnebogsadresse ikke tilgængelig"
+    "noWalletAddress": "Tegnebogsadresse ikke tilgængelig",
+    "hidden": "Skjult",
+    "noDataForPeriod": "Ingen data for denne periode endnu",
+    "noDataYet": "Ingen ranglistedata endnu",
+    "seeAll": "Se alle",
+    "rankN": "Plads {{rank}}",
+    "you": "(dig)",
+    "provisional": "foreløbig",
+    "loadingBoard": "Indlæser rangliste…"
   },
   "explorePage": {
     "searchPlaceholder": "Søg personer, opslag eller indhold...",
@@ -1965,7 +1973,20 @@
     "intro": "En samling spil, verdener og oplevelser, som DeHub har bygget og frigivet som open source.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Spil direkte i browseren på DeHub — filmisk 3D-skak, en proceduralt genereret shooter, en tur i regnskoven, et neonfarvet gadeslagsmål og et handelsgulv, du kan gå rundt på. Ingen installation, ingen download.",
-    "alsoIn": "Findes også i {{theme}}"
+    "alsoIn": "Findes også i {{theme}}",
+    "hpLeft": "{{hp}} HP tilbage",
+    "noHpLeft": "ingen HP tilbage",
+    "bestOfRuns": "bedste af {{count}} forsøg",
+    "firstRun": "første forsøg",
+    "gamesRecord_one": "{{count}} parti · {{wins}}V {{losses}}T {{draws}}U",
+    "gamesRecord_other": "{{count}} partier · {{wins}}V {{losses}}T {{draws}}U",
+    "anon": "anonym",
+    "streetSlayerBoardTitle": "Længst ned ad gaden",
+    "streetSlayerBoardBlurb": "Hvor langt du nåede, før gaden fik dig, og hvor meget liv du havde tilbage, da du stoppede. Slå din egen rekord for at rykke op.",
+    "streetSlayerBoardEmpty": "Ingen er nået langt nok endnu. Vær den første.",
+    "kingsGambitBoardTitle": "Ratingtal",
+    "kingsGambitBoardBlurb": "Elo på tværs af alle online-partier. Alle starter på 1200; at slå en stærkere spiller er mere værd end at slå en svagere, så stigen kan ikke pumpes op med en ekstra wallet.",
+    "kingsGambitBoardEmpty": "Intet online-parti er afsluttet endnu. Åbn en udfordring."
   },
   "stats": {
     "community": {

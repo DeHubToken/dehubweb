@@ -917,7 +917,15 @@
     "addedToLeaderboard": "You don add! Balance: {{balance}} DHB",
     "balanceTooLow": "Balance too low ({{balance}} DHB)",
     "refreshFailed": "Something go wrong",
-    "noWalletAddress": "No wallet address dey"
+    "noWalletAddress": "No wallet address dey",
+    "hidden": "E hide",
+    "noDataForPeriod": "No data dey for dis period yet",
+    "noDataYet": "No leaderboard data dey yet",
+    "seeAll": "See all",
+    "rankN": "Rank {{rank}}",
+    "you": "(you)",
+    "provisional": "e never sure",
+    "loadingBoard": "Leaderboard dey load…"
   },
   "explorePage": {
     "searchPlaceholder": "Find people, post or content...",
@@ -1770,7 +1778,20 @@
     "intro": "Collection of games, worlds or experiences wey DeHub build and open source.",
     "seoTitle": "Arcade",
     "seoDescription": "Play games for your browser on DeHub — cinematic 3D chess, procedurally generated shooter, rainforest walk, neon-street fight game and walkable trading floor. Nothing to install, nothing to download.",
-    "alsoIn": "Also for di {{theme}}"
+    "alsoIn": "Also for di {{theme}}",
+    "hpLeft": "{{hp}} HP remain",
+    "noHpLeft": "no HP remain",
+    "bestOfRuns": "best out of {{count}} runs",
+    "firstRun": "first run",
+    "gamesRecord_one": "{{count}} game · {{wins}}W {{losses}}L {{draws}}D",
+    "gamesRecord_other": "{{count}} games · {{wins}}W {{losses}}L {{draws}}D",
+    "anon": "no name",
+    "streetSlayerBoardTitle": "Wey go far pass for di street",
+    "streetSlayerBoardBlurb": "How far you reach before di street finish you, and how much health remain when you stop. Beat your own best make you climb.",
+    "streetSlayerBoardEmpty": "Nobody don reach far enough yet. Be di first.",
+    "kingsGambitBoardTitle": "Rating",
+    "kingsGambitBoardBlurb": "Elo for every online match. Everybody start from 1200; to beat person wey strong pass you dey worth pass to beat person wey weak, so you no fit pump di ladder with second wallet.",
+    "kingsGambitBoardEmpty": "No online match don finish yet. Open challenge."
   },
   "stats": {
     "community": {

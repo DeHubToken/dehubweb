@@ -1038,7 +1038,15 @@
     "addedToLeaderboard": "Jeni shtuar! Bilanci: {{balance}} DHB",
     "balanceTooLow": "Bilanci shumë i ulët ({{balance}} DHB)",
     "refreshFailed": "Diçka shkoi keq",
-    "noWalletAddress": "Nuk u gjet adresë portofoli"
+    "noWalletAddress": "Nuk u gjet adresë portofoli",
+    "hidden": "E fshehur",
+    "noDataForPeriod": "Ende nuk ka të dhëna për këtë periudhë",
+    "noDataYet": "Ende nuk ka të dhëna renditjeje",
+    "seeAll": "Shiko të gjitha",
+    "rankN": "Vendi {{rank}}",
+    "you": "(ti)",
+    "provisional": "i përkohshëm",
+    "loadingBoard": "Po ngarkohet renditja…"
   },
   "explorePage": {
     "searchPlaceholder": "Kërkoni për njerëz, postime, ose përmbajtje...",
@@ -1939,7 +1947,20 @@
     "intro": "Një koleksion lojërash, botësh dhe përvojash që DeHub i ndërtoi dhe i çeli si burim i hapur.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Luaj drejtpërdrejt në shfletues në DeHub — shah 3D kinematografik, një lojë qitjeje e gjeneruar në mënyrë procedurale, një shëtitje në pyllin tropikal, një përleshje rruge me neon dhe një sallë tregtimi ku mund të ecësh. Pa instalim, pa shkarkim.",
-    "alsoIn": "Gjendet edhe te {{theme}}"
+    "alsoIn": "Gjendet edhe te {{theme}}",
+    "hpLeft": "{{hp}} HP mbetur",
+    "noHpLeft": "asnjë HP i mbetur",
+    "bestOfRuns": "më i miri nga {{count}} përpjekje",
+    "firstRun": "përpjekja e parë",
+    "gamesRecord_one": "{{count}} lojë · {{wins}}F {{losses}}H {{draws}}B",
+    "gamesRecord_other": "{{count}} lojëra · {{wins}}F {{losses}}H {{draws}}B",
+    "anon": "anonim",
+    "streetSlayerBoardTitle": "Më larg në rrugë",
+    "streetSlayerBoardBlurb": "Sa larg arrite para se rruga të të mposhte, dhe sa jetë të mbeti kur ndalove. Thyej rekordin tënd për t'u ngjitur.",
+    "streetSlayerBoardEmpty": "Askush nuk ka arritur ende mjaftueshëm larg. Bëhu i pari.",
+    "kingsGambitBoardTitle": "Vlerësimi",
+    "kingsGambitBoardBlurb": "Elo në çdo ndeshje online. Të gjithë nisin nga 1200; të mundësh një lojtar më të fortë vlen më shumë se të mundësh një më të dobët, kështu që renditja nuk mund të fryhet me një portofol të dytë.",
+    "kingsGambitBoardEmpty": "Asnjë ndeshje online nuk ka përfunduar ende. Hap një sfidë."
   },
   "stats": {
     "community": {

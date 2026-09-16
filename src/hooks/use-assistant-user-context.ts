@@ -89,18 +89,12 @@ export function useAssistantUserContext(): AssistantUserContext | null {
     queryFn: async () => {
       if (!walletAddress) return null;
       try {
-        const { data } = await supabase
-          .from('leaderboard_cache')
-          .select('data')
-          .eq('sort_mode', 'holdings')
-          .eq('period', 'all')
-          .single();
-        if (!data?.data) return null;
-        const parsed = data.data as any;
-        const entries = parsed?.result?.byWalletBalance || [];
-        const idx = entries.findIndex((e: any) => e.account?.toLowerCase() === walletAddress.toLowerCase());
-        if (idx === -1) return null;
-        return { rank: idx + 1, balance: entries[idx].total ?? 0 };
+        // One small row back instead of the whole board: the position is
+        // computed server-side from the same cache row.
+        const { data } = await (supabase as any).rpc('leaderboard_rank', { p_address: walletAddress });
+        const row = Array.isArray(data) ? data[0] : data;
+        if (!row?.rank) return null;
+        return { rank: Number(row.rank), balance: Number(row.total ?? 0) };
       } catch {
         return null;
       }

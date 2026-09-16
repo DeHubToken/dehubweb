@@ -1041,7 +1041,15 @@
     "addedToLeaderboard": "Umeongezwa! Salio: {{balance}} DHB",
     "balanceTooLow": "Salio ni dogo sana ({{balance}} DHB)",
     "refreshFailed": "Kitu kimeharibika",
-    "noWalletAddress": "Hakuna anwani ya pochi iliyopatikana"
+    "noWalletAddress": "Hakuna anwani ya pochi iliyopatikana",
+    "hidden": "Imefichwa",
+    "noDataForPeriod": "Bado hakuna data kwa kipindi hiki",
+    "noDataYet": "Bado hakuna data ya ubao wa viongozi",
+    "seeAll": "Ona zote",
+    "rankN": "Nafasi ya {{rank}}",
+    "you": "(wewe)",
+    "provisional": "ya muda",
+    "loadingBoard": "Inapakia ubao wa viongozi…"
   },
   "explorePage": {
     "searchPlaceholder": "Tafuta watu, machapisho au maudhui...",
@@ -1962,7 +1970,20 @@
     "intro": "Mkusanyiko wa michezo, ulimwengu na matukio yaliyojengwa na DeHub na kufunguliwa kama chanzo huria.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Cheza kwenye kivinjari chako kwenye DeHub — chess ya 3D yenye mvuto wa filamu, mchezo wa kupiga risasi uliotengenezwa kiotomatiki, matembezi msituni, pambano la mtaani la neon na sakafu ya biashara unayoweza kutembea. Hakuna kusakinisha, hakuna kupakua.",
-    "alsoIn": "Ipo pia katika {{theme}}"
+    "alsoIn": "Ipo pia katika {{theme}}",
+    "hpLeft": "HP {{hp}} imebaki",
+    "noHpLeft": "hakuna HP iliyobaki",
+    "bestOfRuns": "bora zaidi kati ya majaribio {{count}}",
+    "firstRun": "jaribio la kwanza",
+    "gamesRecord_one": "mchezo {{count}} · {{wins}}U {{losses}}K {{draws}}S",
+    "gamesRecord_other": "michezo {{count}} · {{wins}}U {{losses}}K {{draws}}S",
+    "anon": "asiyejulikana",
+    "streetSlayerBoardTitle": "Mbali zaidi barabarani",
+    "streetSlayerBoardBlurb": "Umefika mbali kiasi gani kabla barabara haijakushinda, na afya iliyokubakia ulipoacha. Vunja rekodi yako mwenyewe ili upande.",
+    "streetSlayerBoardEmpty": "Bado hakuna aliyefika mbali vya kutosha. Kuwa wa kwanza.",
+    "kingsGambitBoardTitle": "Kiwango",
+    "kingsGambitBoardBlurb": "Elo katika kila mechi ya mtandaoni. Kila mtu huanza kwa 1200; kumshinda mchezaji hodari kuna thamani zaidi kuliko kumshinda dhaifu, kwa hiyo ngazi haiwezi kupandishwa kwa pochi ya pili.",
+    "kingsGambitBoardEmpty": "Bado hakuna mechi ya mtandaoni iliyomalizika. Fungua changamoto."
   },
   "stats": {
     "community": {

@@ -1046,7 +1046,15 @@
     "addedToLeaderboard": "आप जोड़े गए! शेष: {{balance}} DHB",
     "balanceTooLow": "शेष बहुत कम ({{balance}} DHB)",
     "refreshFailed": "कुछ गलत हो गया",
-    "noWalletAddress": "कोई वॉलेट पता नहीं मिला"
+    "noWalletAddress": "कोई वॉलेट पता नहीं मिला",
+    "hidden": "छिपा हुआ",
+    "noDataForPeriod": "इस अवधि के लिए अभी कोई डेटा उपलब्ध नहीं",
+    "noDataYet": "अभी लीडरबोर्ड का कोई डेटा नहीं",
+    "seeAll": "सभी देखें",
+    "rankN": "रैंक {{rank}}",
+    "you": "(आप)",
+    "provisional": "अस्थायी",
+    "loadingBoard": "लीडरबोर्ड लोड हो रहा है…"
   },
   "explorePage": {
     "searchPlaceholder": "लोग, पोस्ट या सामग्री खोजें...",
@@ -1967,7 +1975,20 @@
     "intro": "DeHub द्वारा बनाए और ओपन सोर्स किए गए खेलों, दुनियाओं और अनुभवों का संग्रह।",
     "seoTitle": "आर्केड | DeHub",
     "seoDescription": "DeHub पर ब्राउज़र में ही खेलें — सिनेमैटिक 3D शतरंज, प्रोसीजरल तरीके से बना शूटर, वर्षावन की सैर, नियॉन स्ट्रीट लड़ाई और चलने-फिरने लायक ट्रेडिंग फ़्लोर। न इंस्टॉल, न डाउनलोड।",
-    "alsoIn": "{{theme}} में भी"
+    "alsoIn": "{{theme}} में भी",
+    "hpLeft": "{{hp}} HP बचा",
+    "noHpLeft": "कोई HP नहीं बचा",
+    "bestOfRuns": "{{count}} रन में सर्वश्रेष्ठ",
+    "firstRun": "पहला रन",
+    "gamesRecord_one": "{{count}} गेम · {{wins}}जी {{losses}}हा {{draws}}ड्रॉ",
+    "gamesRecord_other": "{{count}} गेम · {{wins}}जी {{losses}}हा {{draws}}ड्रॉ",
+    "anon": "गुमनाम",
+    "streetSlayerBoardTitle": "सड़क पर सबसे आगे",
+    "streetSlayerBoardBlurb": "सड़क के आपको हराने से पहले आप कितनी दूर गए, और रुकते समय कितनी हेल्थ बची थी। ऊपर जाने के लिए अपना ही रिकॉर्ड तोड़ें।",
+    "streetSlayerBoardEmpty": "अभी कोई इतनी दूर नहीं पहुँचा। पहले बनें।",
+    "kingsGambitBoardTitle": "रेटिंग",
+    "kingsGambitBoardBlurb": "सभी ऑनलाइन मैचों का Elo। सब 1200 से शुरू करते हैं; मज़बूत खिलाड़ी को हराना कमज़ोर को हराने से ज़्यादा मायने रखता है, इसलिए दूसरे वॉलेट से रैंक नहीं बढ़ाई जा सकती।",
+    "kingsGambitBoardEmpty": "अभी कोई ऑनलाइन मैच पूरा नहीं हुआ। चैलेंज खोलें।"
   },
   "stats": {
     "community": {

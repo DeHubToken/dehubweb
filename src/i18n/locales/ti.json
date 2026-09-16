@@ -1003,7 +1003,15 @@
     "addedToLeaderboard": "ተወሲኽካ! ስልቲ: {{balance}} DHB",
     "balanceTooLow": "ስልቲ ኣዝዩ ትሑት ({{balance}} DHB)",
     "refreshFailed": "ገለ ጌጋ ኣጋጢሙ",
-    "noWalletAddress": "ኣድራሻ ዋሌት ኣይተረኽበን"
+    "noWalletAddress": "ኣድራሻ ዋሌት ኣይተረኽበን",
+    "hidden": "ተሓቢኡ",
+    "noDataForPeriod": "ነዚ እዋን ገና ዳታ የለን",
+    "noDataYet": "ገና ዳታ ሰሌዳ ደረጃ የለን",
+    "seeAll": "ኩሉ ርአ",
+    "rankN": "ደረጃ {{rank}}",
+    "you": "(ንስኻ)",
+    "provisional": "ግዝያዊ",
+    "loadingBoard": "ሰሌዳ ደረጃ ይጽዓን ኣሎ…"
   },
   "explorePage": {
     "searchPlaceholder": "ሰባት፣ ጽሑፋት፣ ወይ ትሕዝቶ ድለ...",
@@ -1885,7 +1893,20 @@
     "intro": "ብ DeHub እተሃንጹን ክፉት ምንጪ እተገብሩን ጸወታታት፡ ዓለማትን ተመኩሮታትን ዝሓቖፈ ኣኪባ።",
     "seoTitle": "ኣርኬድ",
     "seoDescription": "ኣብ DeHub ብብራውዘርካ ጸወታታት ጻወት — ሲነማዊ 3D ቻዝ፡ ብኣልጎሪዝም እተፈጥረ ተጻዋታይ ተኳሲ፡ ዙረት ኣብ ጫካ ዝናብ፡ ናይ ኒዮን-ጎደና ቅልስን ክትዘውር እትኽእል ናይ ንግዲ ደርቢን። ተኸላ ኣየድልን፡ ምጽዓን ኣየድልን።",
-    "alsoIn": "ኣብ {{theme}} እውን"
+    "alsoIn": "ኣብ {{theme}} እውን",
+    "hpLeft": "{{hp}} HP ተሪፉ",
+    "noHpLeft": "HP ኣይተረፈን",
+    "bestOfRuns": "ካብ {{count}} ፈተነታት ዝበለጸ",
+    "firstRun": "ቀዳማይ ፈተነ",
+    "gamesRecord_one": "{{count}} ጸወታ · {{wins}}ዓ {{losses}}ስ {{draws}}ማ",
+    "gamesRecord_other": "{{count}} ጸወታታት · {{wins}}ዓ {{losses}}ስ {{draws}}ማ",
+    "anon": "ስም-ኣልቦ",
+    "streetSlayerBoardTitle": "ኣብ ጎደና ዝረሓቐ",
+    "streetSlayerBoardBlurb": "እቲ ጎደና ቅድሚ ምስዓሩኻ ክሳብ ክንደይ ርሒቕካ፣ ምስ ደው በልካ ድማ ክንደይ ጥዕና ተሪፉካ። ንላዕሊ ንምድያብ ናትካ ሪከርድ ስበር።",
+    "streetSlayerBoardEmpty": "ገና ሓደ እኳ እኹል ኣይረሓቐን። እቲ ቀዳማይ ኩን።",
+    "kingsGambitBoardTitle": "ደረጃ ነጥቢ",
+    "kingsGambitBoardBlurb": "ኣብ ኩሉ ናይ መስመር ጸወታታት Elo። ኩሉ ካብ 1200 ይጅምር፤ ንሓያል ተጻዋታይ ምስዓር ካብ ንድኹም ምስዓር ዝያዳ ዋጋ ኣለዎ፣ ስለዚ በቲ ካልኣይ ዋሌት ደረጃ ክብ ክበሃል ኣይክእልን።",
+    "kingsGambitBoardEmpty": "ገና ዝተወድአ ናይ መስመር ጸወታ የለን። ብድሆ ክፈት።"
   },
   "stats": {
     "community": {

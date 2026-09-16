@@ -1019,7 +1019,15 @@
     "addedToLeaderboard": "ઉમેરાયા! બેલેન્સ: {{balance}} DHB",
     "balanceTooLow": "બેલેન્સ ખૂબ ઓછું ({{balance}} DHB)",
     "refreshFailed": "કંઈક ખોટું થયું",
-    "noWalletAddress": "વૉલેટ એડ્રેસ મળ્યું નથી"
+    "noWalletAddress": "વૉલેટ એડ્રેસ મળ્યું નથી",
+    "hidden": "છુપાયેલું",
+    "noDataForPeriod": "આ સમયગાળા માટે હજુ કોઈ ડેટા ઉપલબ્ધ નથી",
+    "noDataYet": "હજુ લીડરબોર્ડનો કોઈ ડેટા નથી",
+    "seeAll": "બધું જુઓ",
+    "rankN": "ક્રમ {{rank}}",
+    "you": "(તમે)",
+    "provisional": "કામચલાઉ",
+    "loadingBoard": "લીડરબોર્ડ લોડ થઈ રહ્યું છે…"
   },
   "explorePage": {
     "searchPlaceholder": "લોકો, પોસ્ટ્સ અથવા સામગ્રી શોધો...",
@@ -1898,7 +1906,20 @@
     "intro": "DeHub દ્વારા બનાવેલી અને ઓપન સોર્સ કરેલી રમતો, દુનિયાઓ કે અનુભવોનો સંગ્રહ.",
     "seoTitle": "આર્કેડ | DeHub",
     "seoDescription": "DeHub પર તમારા બ્રાઉઝરમાં રમતો રમો — સિનેમેટિક 3D ચેસ, પ્રોસિજરલી બનેલું શૂટર, વરસાદી જંગલની સફર, નિયોન-સ્ટ્રીટ બ્રોલર અને ચાલી શકાય તેવો ટ્રેડિંગ ફ્લોર. ઇન્સ્ટોલ નહીં, ડાઉનલોડ નહીં.",
-    "alsoIn": "{{theme}} માં પણ"
+    "alsoIn": "{{theme}} માં પણ",
+    "hpLeft": "{{hp}} HP બાકી",
+    "noHpLeft": "કોઈ HP બાકી નથી",
+    "bestOfRuns": "{{count}} પ્રયાસોમાં શ્રેષ્ઠ",
+    "firstRun": "પહેલો પ્રયાસ",
+    "gamesRecord_one": "{{count}} ગેમ · {{wins}}જી {{losses}}હા {{draws}}ડ્રો",
+    "gamesRecord_other": "{{count}} ગેમ · {{wins}}જી {{losses}}હા {{draws}}ડ્રો",
+    "anon": "અનામી",
+    "streetSlayerBoardTitle": "શેરીમાં સૌથી આગળ",
+    "streetSlayerBoardBlurb": "શેરીએ તમને હરાવ્યા તે પહેલાં તમે કેટલા દૂર ગયા, અને અટક્યા ત્યારે કેટલી હેલ્થ બાકી હતી. ઉપર જવા માટે તમારો પોતાનો રેકોર્ડ તોડો.",
+    "streetSlayerBoardEmpty": "હજુ કોઈ એટલું દૂર પહોંચ્યું નથી. પહેલા બનો.",
+    "kingsGambitBoardTitle": "રેટિંગ",
+    "kingsGambitBoardBlurb": "બધી ઓનલાઇન મેચોનું Elo. બધા 1200થી શરૂ કરે છે; મજબૂત ખેલાડીને હરાવવું નબળાને હરાવવા કરતાં વધુ મૂલ્યવાન છે, તેથી બીજા વૉલેટથી રેન્ક વધારી શકાતો નથી.",
+    "kingsGambitBoardEmpty": "હજુ કોઈ ઓનલાઇન મેચ પૂરી થઈ નથી. ચેલેન્જ ખોલો."
   },
   "stats": {
     "community": {
