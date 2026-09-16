@@ -47,6 +47,15 @@ const BASE_CHAIN_ID = 8453;
 
 type PaymentMethod = 'card';
 
+// Stripe session and delivery states as the dpay backend actually writes them.
+// A delivery that has not been attempted is `not_sent`, never `pending` — the
+// old guard checked for `pending`, matched nothing, and fell through to
+// telling the buyer their payment had been received when it had not.
+const PAID_STRIPE = ['succeeded', 'complete', 'paid'];
+const DEAD_STRIPE = ['failed', 'canceled', 'cancelled', 'expired'];
+const DELIVERED = ['sent', 'completed', 'success'];
+const NOT_STARTED = ['', 'not_sent', 'pending', 'queued'];
+
 export default function BuyCoinsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -168,92 +177,101 @@ export default function BuyCoinsPage() {
   // Poll for session status after Stripe checkout
   const [pollingMessage, setPollingMessage] = useState('Complete payment in the checkout tab...');
 
+
   const startPolling = useCallback((sessionId: string) => {
     setPurchaseSessionId(sessionId);
     setPurchaseStatus('polling');
     setPollingMessage('Complete payment in the checkout tab...');
 
-    // Clear any existing polling
+    // Clear any existing polling. A second checkout must not leave the first
+    // session's interval running — it would keep writing over this one's state.
     if (pollingRef.current) clearInterval(pollingRef.current);
 
     let attempts = 0;
-    const maxAttempts = 120; // 3 minutes at 1.5s intervals
+    // Stripe sessions expire after 30 minutes, and delivery can queue behind
+    // other transfers. Poll for the life of the session rather than giving up
+    // after three minutes with the spinner still on screen.
+    const maxAttempts = 1200; // 30 minutes at 1.5s intervals
     let stripeConfirmed = false;
-    let emptyCount = 0;
+
+    const stop = () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+    };
 
     pollingRef.current = setInterval(async () => {
       attempts++;
       if (attempts > maxAttempts) {
-        clearInterval(pollingRef.current!);
-        pollingRef.current = null;
-        if (stripeConfirmed) {
-          setPurchaseStatus('success');
-          toast.success('Purchase complete! Tokens arriving shortly.', { id: 'buy-status' });
-          refreshWalletBalances();
-        } else {
-          // Auto-dismiss gracefully instead of showing failure
-          setPurchaseStatus('idle');
-          toast.info('Purchase may still be processing. Check your wallet shortly.', { id: 'buy-status' });
-          refreshWalletBalances();
-        }
+        stop();
+        setPurchaseStatus(stripeConfirmed ? 'success' : 'idle');
+        toast.info(
+          stripeConfirmed
+            ? 'Payment went through. Tokens are still on their way — check your wallet shortly.'
+            : 'No payment was completed. Nothing has been charged.',
+          { id: 'buy-status' },
+        );
+        refreshWalletBalances();
         return;
       }
 
       try {
         const status = await getDPaySessionStatus(sessionId);
-        console.log('[Buy] Polling session status:', JSON.stringify(status));
 
-        const isEmpty = !!(status as any)?._empty;
+        const isEmpty = !!(status as { _empty?: boolean })?._empty;
         const sendStatus = (status.tokenSendStatus || '').toLowerCase();
         const stripeStatus = (status.status_stripe || '').toLowerCase();
 
-        // Track empty responses (no transaction record yet)
-        if (isEmpty || (stripeStatus === 'pending' && sendStatus === 'pending')) {
-          emptyCount++;
-          // Update message based on how long we've been waiting
-          if (emptyCount >= 40) {
-            // 60s+ with no data — auto-dismiss
-            clearInterval(pollingRef.current!);
-            pollingRef.current = null;
-            setPurchaseStatus('idle');
-            toast.info('Still waiting for payment. Check your wallet in a minute.', { id: 'buy-status' });
-            refreshWalletBalances();
-            return;
-          } else if (emptyCount >= 20) {
-            setPollingMessage('Still waiting for payment confirmation...');
-          }
-          // Don't process further — just wait for next poll
-          return;
-        }
+        const paid = PAID_STRIPE.includes(stripeStatus);
+        const dead = DEAD_STRIPE.includes(stripeStatus);
+        const delivered = DELIVERED.includes(sendStatus);
+        const deliveryStarted = !NOT_STARTED.includes(sendStatus);
 
-        // We got real data — reset empty count
-        emptyCount = 0;
-        setPollingMessage('Payment received! Delivering tokens to your wallet...');
-
-        // Success: tokens delivered
-        if (sendStatus === 'sent' || sendStatus === 'completed' || sendStatus === 'success') {
-          clearInterval(pollingRef.current!);
-          pollingRef.current = null;
+        // Terminal: the tokens are on chain.
+        if (delivered) {
+          stop();
           setPurchaseStatus('success');
           toast.success('Tokens delivered to your wallet! 🎉', { id: 'buy-status' });
           refreshWalletBalances();
-        } else if (sendStatus === 'failed' || stripeStatus === 'failed' || stripeStatus === 'canceled' || stripeStatus === 'expired') {
-          clearInterval(pollingRef.current!);
-          pollingRef.current = null;
-          setPurchaseStatus('failed');
-          toast.error('Purchase failed. Please try again.', { id: 'buy-status' });
-        } else if (!stripeConfirmed && (stripeStatus === 'succeeded' || stripeStatus === 'complete' || stripeStatus === 'paid')) {
-          stripeConfirmed = true;
-          setPurchaseStatus('success');
-          toast.success('Purchase confirmed! Tokens arriving shortly.', { id: 'buy-status' });
-          refreshWalletBalances();
-          setTimeout(() => {
-            if (pollingRef.current) {
-              clearInterval(pollingRef.current);
-              pollingRef.current = null;
-            }
-          }, 15000);
+          return;
         }
+
+        // Terminal: the payment was declined, cancelled or left to expire, or
+        // the payment landed and the transfer itself failed.
+        if (dead || sendStatus === 'failed' || sendStatus === 'cancelled') {
+          stop();
+          setPurchaseStatus('failed');
+          toast.error(
+            paid
+              ? 'Payment taken but delivery failed. We are on it — contact support with your session id.'
+              : 'Payment was not completed. Nothing has been charged.',
+            { id: 'buy-status' },
+          );
+          return;
+        }
+
+        // Not terminal. Say only what is actually true: until Stripe reports the
+        // session paid, no payment has been received, whatever row exists.
+        if (!paid) {
+          setPollingMessage(
+            isEmpty || attempts < 20
+              ? 'Complete payment in the checkout tab...'
+              : 'Waiting for payment to be confirmed...',
+          );
+          return;
+        }
+
+        if (!stripeConfirmed) {
+          stripeConfirmed = true;
+          toast.success('Payment received. Delivering your tokens...', { id: 'buy-status' });
+          refreshWalletBalances();
+        }
+        setPollingMessage(
+          deliveryStarted
+            ? 'Payment received. Sending tokens to your wallet...'
+            : 'Payment received. Queued for delivery...',
+        );
       } catch (err) {
         console.warn('[Buy] Polling error:', err);
       }
