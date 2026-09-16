@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Loader2, ArrowDown, CheckCircle2, AlertCircle, CreditCard, Wallet, Plus, ChevronDown } from 'lucide-react';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
 import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
+import { formatPickerBalance } from '@/lib/wallet/tokens';
 import {
   getCryptoPayableAssets,
   getCryptoQuote,
@@ -463,7 +464,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
                   {isSelected && <span className="text-[10px] text-emerald-400 ml-2">Selected</span>}
                 </div>
                 <span className={`text-sm ${hasBalance ? 'text-white' : 'text-zinc-600'}`}>
-                  {hasBalance ? parseFloat(token.formattedBalance).toLocaleString('en-US', { maximumFractionDigits: 4 }) : '0'}
+                  {formatPickerBalance(token.balance, token.decimals)}
                 </span>
               </button>
             );
