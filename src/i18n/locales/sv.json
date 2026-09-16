@@ -1040,7 +1040,15 @@
     "addedToLeaderboard": "Tillagd! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldot för lågt ({{balance}} DHB)",
     "refreshFailed": "Ett fel uppstod",
-    "noWalletAddress": "Ingen plånboksadress tillgänglig"
+    "noWalletAddress": "Ingen plånboksadress tillgänglig",
+    "hidden": "Dold",
+    "noDataForPeriod": "Inga data för den här perioden ännu",
+    "noDataYet": "Inga topplistedata ännu",
+    "seeAll": "Visa alla",
+    "rankN": "Plats {{rank}}",
+    "you": "(du)",
+    "provisional": "preliminär",
+    "loadingBoard": "Laddar topplistan…"
   },
   "explorePage": {
     "searchPlaceholder": "Sök personer, inlägg eller innehåll...",
@@ -1919,7 +1927,20 @@
     "intro": "En samling spel, världar och upplevelser som DeHub byggt och öppnat källkoden till.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Spela direkt i webbläsaren på DeHub — filmiskt 3D-schack, en procedurgenererad shooter, en promenad i regnskogen, ett neonfärgat gatuslagsmål och ett handelsgolv du kan gå omkring på. Ingen installation, ingen nedladdning.",
-    "alsoIn": "Finns även i {{theme}}"
+    "alsoIn": "Finns även i {{theme}}",
+    "hpLeft": "{{hp}} HP kvar",
+    "noHpLeft": "ingen HP kvar",
+    "bestOfRuns": "bästa av {{count}} försök",
+    "firstRun": "första försöket",
+    "gamesRecord_one": "{{count}} parti · {{wins}}V {{losses}}F {{draws}}R",
+    "gamesRecord_other": "{{count}} partier · {{wins}}V {{losses}}F {{draws}}R",
+    "anon": "anonym",
+    "streetSlayerBoardTitle": "Längst ner längs gatan",
+    "streetSlayerBoardBlurb": "Hur långt du kom innan gatan tog dig, och hur mycket liv du hade kvar när du stannade. Slå ditt eget rekord för att klättra.",
+    "streetSlayerBoardEmpty": "Ingen har kommit tillräckligt långt än. Bli först.",
+    "kingsGambitBoardTitle": "Ratingtal",
+    "kingsGambitBoardBlurb": "Elo över alla onlinepartier. Alla börjar på 1200; att slå en starkare spelare är värt mer än att slå en svagare, så stegen kan inte pumpas upp med en andra plånbok.",
+    "kingsGambitBoardEmpty": "Inget onlineparti har avslutats än. Öppna en utmaning."
   },
   "stats": {
     "community": {

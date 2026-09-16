@@ -1034,7 +1034,15 @@
     "addedToLeaderboard": "נוסף! יתרה: {{balance}} DHB",
     "balanceTooLow": "יתרה נמוכה מדי ({{balance}} DHB)",
     "refreshFailed": "אירעה שגיאה",
-    "noWalletAddress": "כתובת ארנק לא זמינה"
+    "noWalletAddress": "כתובת ארנק לא זמינה",
+    "hidden": "מוסתר",
+    "noDataForPeriod": "אין עדיין נתונים לתקופה זו",
+    "noDataYet": "אין עדיין נתוני טבלת מובילים",
+    "seeAll": "הצג הכול",
+    "rankN": "מקום {{rank}}",
+    "you": "(אתה)",
+    "provisional": "זמני",
+    "loadingBoard": "טוען טבלת מובילים…"
   },
   "explorePage": {
     "searchPlaceholder": "חפש אנשים, פוסטים או תוכן...",
@@ -1934,7 +1942,20 @@
     "intro": "אוסף משחקים, עולמות וחוויות ש-DeHub בנתה ושחררה בקוד פתוח.",
     "seoTitle": "ארקייד | DeHub",
     "seoDescription": "שחקו בדפדפן ב-DeHub — שחמט תלת־ממדי קולנועי, משחק ירי שנוצר פרוצדורלית, טיול ביער גשם, קרב רחוב בניאון ורצפת מסחר שאפשר להסתובב בה. בלי התקנה, בלי הורדה.",
-    "alsoIn": "קיים גם ב{{theme}}"
+    "alsoIn": "קיים גם ב{{theme}}",
+    "hpLeft": "נותרו {{hp}} נקודות חיים",
+    "noHpLeft": "לא נותרו נקודות חיים",
+    "bestOfRuns": "הטוב מתוך {{count}} ריצות",
+    "firstRun": "ריצה ראשונה",
+    "gamesRecord_one": "{{count}} משחק · {{wins}}נ {{losses}}ה {{draws}}ת",
+    "gamesRecord_other": "{{count}} משחקים · {{wins}}נ {{losses}}ה {{draws}}ת",
+    "anon": "אנונימי",
+    "streetSlayerBoardTitle": "הכי רחוק ברחוב",
+    "streetSlayerBoardBlurb": "כמה רחוק הגעת לפני שהרחוב גבר עליך, וכמה חיים נשארו לך כשעצרת. שבור את השיא שלך כדי לעלות.",
+    "streetSlayerBoardEmpty": "אף אחד עוד לא הגיע מספיק רחוק. היה הראשון.",
+    "kingsGambitBoardTitle": "דירוג",
+    "kingsGambitBoardBlurb": "אלו על פני כל המשחקים המקוונים. כולם מתחילים מ-1200; ניצחון על שחקן חזק שווה יותר מניצחון על חלש, ולכן אי אפשר לנפח את הסולם עם ארנק שני.",
+    "kingsGambitBoardEmpty": "עדיין לא הסתיים אף משחק מקוון. פתח אתגר."
   },
   "stats": {
     "community": {

@@ -1022,7 +1022,15 @@
     "addedToLeaderboard": "你已加入！餘額：{{balance}} DHB",
     "balanceTooLow": "餘額太低（{{balance}} DHB）",
     "refreshFailed": "出錯喇",
-    "noWalletAddress": "搵唔到錢包地址"
+    "noWalletAddress": "搵唔到錢包地址",
+    "hidden": "已隱藏",
+    "noDataForPeriod": "呢個時段暫時未有數據",
+    "noDataYet": "暫時未有排行榜數據",
+    "seeAll": "查看全部",
+    "rankN": "第{{rank}}名",
+    "you": "（你）",
+    "provisional": "暫定",
+    "loadingBoard": "載入緊排行榜…"
   },
   "explorePage": {
     "searchPlaceholder": "搜尋用戶、帖文或內容...",
@@ -1930,7 +1938,20 @@
     "intro": "DeHub 自己開發並開源嘅遊戲、世界同體驗合集。",
     "seoTitle": "街機 | DeHub",
     "seoDescription": "喺 DeHub 用瀏覽器就玩得——電影感 3D 國際象棋、程序生成射擊遊戲、雨林漫步、霓虹街頭格鬥，仲有可以行嚟行去嘅交易大堂。唔使安裝，唔使下載。",
-    "alsoIn": "{{theme}} 都有"
+    "alsoIn": "{{theme}} 都有",
+    "hpLeft": "剩返 {{hp}} HP",
+    "noHpLeft": "冇 HP 剩",
+    "bestOfRuns": "{{count}} 次入面最佳",
+    "firstRun": "第一次",
+    "gamesRecord_one": "{{count}} 局 · {{wins}}勝 {{losses}}負 {{draws}}和",
+    "gamesRecord_other": "{{count}} 局 · {{wins}}勝 {{losses}}負 {{draws}}和",
+    "anon": "匿名",
+    "streetSlayerBoardTitle": "條街行得最遠",
+    "streetSlayerBoardBlurb": "喺俾條街收拾之前你行咗幾遠，停低嗰陣仲剩幾多血。打破自己最佳成績就可以升。",
+    "streetSlayerBoardEmpty": "仲未有人行得夠遠。做第一個啦。",
+    "kingsGambitBoardTitle": "等級分",
+    "kingsGambitBoardBlurb": "所有網上對局嘅 Elo。人人由 1200 開始；贏強手比贏弱手得分多，所以用第二個錢包刷唔到榜。",
+    "kingsGambitBoardEmpty": "仲未有網上對局完成。開個挑戰啦。"
   },
   "stats": {
     "community": {

@@ -1019,7 +1019,15 @@
     "addedToLeaderboard": "ታክለሃል! ሚዛን: {{balance}} DHB",
     "balanceTooLow": "ሚዛን በጣም ዝቅተኛ ({{balance}} DHB)",
     "refreshFailed": "የሆነ ስህተት ተፈጥሯል",
-    "noWalletAddress": "የቦርሳ አድራሻ አልተገኘም"
+    "noWalletAddress": "የቦርሳ አድራሻ አልተገኘም",
+    "hidden": "ተደብቋል",
+    "noDataForPeriod": "ለዚህ ጊዜ እስካሁን መረጃ የለም",
+    "noDataYet": "እስካሁን የደረጃ ሰሌዳ መረጃ የለም",
+    "seeAll": "ሁሉንም ይመልከቱ",
+    "rankN": "ደረጃ {{rank}}",
+    "you": "(እርስዎ)",
+    "provisional": "ጊዜያዊ",
+    "loadingBoard": "የደረጃ ሰሌዳ እየተጫነ ነው…"
   },
   "explorePage": {
     "searchPlaceholder": "ሰዎች፣ ልጥፎች ወይም ይዘት ፈልግ...",
@@ -1935,7 +1943,20 @@
     "intro": "በDeHub የተገነቡ እና ክፍት ምንጭ የተደረጉ ጨዋታዎች፣ ዓለማት ወይም ተሞክሮዎች ስብስብ።",
     "seoTitle": "አርኬድ",
     "seoDescription": "ጨዋታዎችን በአሳሽዎ ላይ በDeHub ላይ ይጫወቱ — ሲኒማዊ 3D ቼዝ፣ በሂደት የሚፈጠር ተኳሽ፣ የዝናብ ደን የእግር ጉዞ፣ የኒዮን-ጎዳና ውጊያ እና የሚራመዱበት የግብይት ወለል። ምንም መጫኛ የለም፣ ምንም ማውረድ የለም።",
-    "alsoIn": "እንዲሁም በ{{theme}}"
+    "alsoIn": "እንዲሁም በ{{theme}}",
+    "hpLeft": "{{hp}} HP ቀርቷል",
+    "noHpLeft": "HP አልቀረም",
+    "bestOfRuns": "ከ{{count}} ሙከራዎች ምርጡ",
+    "firstRun": "የመጀመሪያ ሙከራ",
+    "gamesRecord_one": "{{count}} ጨዋታ · {{wins}}ድ {{losses}}ሽ {{draws}}አ",
+    "gamesRecord_other": "{{count}} ጨዋታዎች · {{wins}}ድ {{losses}}ሽ {{draws}}አ",
+    "anon": "ስም-አልባ",
+    "streetSlayerBoardTitle": "በመንገዱ ላይ እጅግ ርቀት",
+    "streetSlayerBoardBlurb": "መንገዱ ከማሸነፍዎ በፊት ምን ያህል ርቀት እንደሄዱ እና ሲቆሙ ምን ያህል ጤና እንደቀረዎት። ወደ ላይ ለመውጣት የራስዎን ሪከርድ ይስበሩ።",
+    "streetSlayerBoardEmpty": "እስካሁን ማንም በቂ ርቀት አልደረሰም። የመጀመሪያው ይሁኑ።",
+    "kingsGambitBoardTitle": "ደረጃ ነጥብ",
+    "kingsGambitBoardBlurb": "በሁሉም የመስመር ላይ ጨዋታዎች ላይ Elo። ሁሉም ከ1200 ይጀምራሉ፤ ጠንካራ ተጫዋችን ማሸነፍ ደካማን ከማሸነፍ የበለጠ ዋጋ አለው፣ ስለዚህ በሁለተኛ ዋሌት ደረጃውን ማሳደግ አይቻልም።",
+    "kingsGambitBoardEmpty": "እስካሁን ምንም የመስመር ላይ ጨዋታ አልተጠናቀቀም። ፈተና ይክፈቱ።"
   },
   "stats": {
     "community": {

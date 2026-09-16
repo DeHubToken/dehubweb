@@ -1023,7 +1023,15 @@
     "addedToLeaderboard": "Buvote pridėtas! Likutis: {{balance}} DHB",
     "balanceTooLow": "Likutis per mažas ({{balance}} DHB)",
     "refreshFailed": "Kažkas nepavyko",
-    "noWalletAddress": "Piniginės adresas nerastas"
+    "noWalletAddress": "Piniginės adresas nerastas",
+    "hidden": "Paslėpta",
+    "noDataForPeriod": "Šiam laikotarpiui duomenų dar nėra",
+    "noDataYet": "Lyderių lentelės duomenų dar nėra",
+    "seeAll": "Rodyti viską",
+    "rankN": "{{rank}} vieta",
+    "you": "(jūs)",
+    "provisional": "preliminarus",
+    "loadingBoard": "Įkeliama lyderių lentelė…"
   },
   "explorePage": {
     "searchPlaceholder": "Ieškoti žmonių, įrašų ar turinio...",
@@ -1931,7 +1939,20 @@
     "intro": "Žaidimų, pasaulių ir patirčių rinkinys, kurį DeHub sukūrė ir atvėrė kaip atvirąjį kodą.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Žaiskite naršyklėje DeHub svetainėje — kinematografiški 3D šachmatai, procedūriškai generuojamas šaudymo žaidimas, pasivaikščiojimas atogrąžų miške, neoninės gatvės muštynės ir vaikščiojama prekybos salė. Nereikia diegti, nereikia atsisiųsti.",
-    "alsoIn": "Yra ir temoje {{theme}}"
+    "alsoIn": "Yra ir temoje {{theme}}",
+    "hpLeft": "liko {{hp}} HP",
+    "noHpLeft": "HP neliko",
+    "bestOfRuns": "geriausias iš {{count}} bandymų",
+    "firstRun": "pirmas bandymas",
+    "gamesRecord_one": "{{count}} partija · {{wins}}P {{losses}}Pr {{draws}}L",
+    "gamesRecord_other": "{{count}} partijos · {{wins}}P {{losses}}Pr {{draws}}L",
+    "anon": "anonimas",
+    "streetSlayerBoardTitle": "Toliausiai gatve",
+    "streetSlayerBoardBlurb": "Kaip toli nuėjai, kol gatvė tave sustabdė, ir kiek gyvybės liko, kai sustojai. Pagerink savo rekordą, kad pakiltum.",
+    "streetSlayerBoardEmpty": "Niekas dar nenuėjo pakankamai toli. Būk pirmas.",
+    "kingsGambitBoardTitle": "Reitingas",
+    "kingsGambitBoardBlurb": "Elo pagal visas internetines partijas. Visi pradeda nuo 1200; pergalė prieš stipresnį žaidėją verta daugiau nei prieš silpnesnį, tad reitingo nepakelsi antra pinigine.",
+    "kingsGambitBoardEmpty": "Dar nebaigta nė viena internetinė partija. Mesk iššūkį."
   },
   "stats": {
     "community": {

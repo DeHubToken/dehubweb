@@ -1023,7 +1023,15 @@
     "addedToLeaderboard": "A ti ṣàfikún ọ! Ìwọ̀ntúnwọ̀nsí: {{balance}} DHB",
     "balanceTooLow": "Ìwọ̀ntúnwọ̀nsí kéré jù ({{balance}} DHB)",
     "refreshFailed": "Nǹkan kan kò tọ́",
-    "noWalletAddress": "A kò rí àdírẹ́sì àpò owó"
+    "noWalletAddress": "A kò rí àdírẹ́sì àpò owó",
+    "hidden": "Ó farapamọ́",
+    "noDataForPeriod": "Kò tíì sí dátà fún àsìkò yìí",
+    "noDataYet": "Kò tíì sí dátà àtòjọ ìpò",
+    "seeAll": "Wo gbogbo rẹ̀",
+    "rankN": "Ipò {{rank}}",
+    "you": "(ìwọ)",
+    "provisional": "fún ìgbà díẹ̀",
+    "loadingBoard": "Ń gbé àtòjọ ìpò wọlé…"
   },
   "explorePage": {
     "searchPlaceholder": "Wá àwọn ènìyàn, àròkọ tàbí àkóónú...",
@@ -1931,7 +1939,20 @@
     "intro": "Àkójọ àwọn eré, ayé àti ìrírí tí DeHub kọ́ tí ó sì tú kóòdù rẹ̀ sílẹ̀.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Ṣeré tààrà nínú aṣàwákiri rẹ lórí DeHub — chess 3D bí fíìmù, eré ìbọn tí a dá sílẹ̀ ní ọ̀nà ìlànà, ìrìn nínú igbó òjò, ìjà òpópónà neon àti ilẹ̀ ìṣòwò tí o lè rìn kiri. Kò sí fífi sórí ẹ̀rọ, kò sí ìgbàsílẹ̀.",
-    "alsoIn": "Ó tún wà nínú {{theme}}"
+    "alsoIn": "Ó tún wà nínú {{theme}}",
+    "hpLeft": "HP {{hp}} ló kù",
+    "noHpLeft": "kò sí HP tó kù",
+    "bestOfRuns": "èyí tó dára jù nínú ìsáré {{count}}",
+    "firstRun": "ìsáré àkọ́kọ́",
+    "gamesRecord_one": "eré {{count}} · {{wins}}B {{losses}}P {{draws}}D",
+    "gamesRecord_other": "àwọn eré {{count}} · {{wins}}B {{losses}}P {{draws}}D",
+    "anon": "aláìlórúkọ",
+    "streetSlayerBoardTitle": "Ẹni tó lọ jìnnà jù ní òpópónà",
+    "streetSlayerBoardBlurb": "Bí o ṣe lọ jìnnà tó kí òpópónà tó ṣẹ́gun rẹ, àti iye ìlera tó kù nígbà tí o dúró. Borí àkọsílẹ̀ rẹ fúnra rẹ láti gòkè.",
+    "streetSlayerBoardEmpty": "Kò tíì sí ẹni tó lọ jìnnà tó. Jẹ́ ẹni àkọ́kọ́.",
+    "kingsGambitBoardTitle": "Ìdíwọ̀n",
+    "kingsGambitBoardBlurb": "Elo lórí gbogbo ìdíje orí ayélujára. Gbogbo ènìyàn bẹ̀rẹ̀ láti 1200; ṣíṣẹ́gun agbára ju níye lórí ju ṣíṣẹ́gun aláìlágbára lọ, nítorí náà a kò lè fi àpò kejì gbé ipò sókè.",
+    "kingsGambitBoardEmpty": "Kò tíì sí ìdíje orí ayélujára tó parí. Ṣí ìpèníjà kan."
   },
   "stats": {
     "community": {

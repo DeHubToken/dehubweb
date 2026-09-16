@@ -8,15 +8,17 @@ import { memo } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, ChevronRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { getLeaderboard, type LeaderboardEntry } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { AppState } from '@/components/app/AppState';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
+import { applyLeaderboardRules, formatLeaderboardNumber, isHidden } from '@/lib/leaderboard-rules';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
@@ -30,39 +32,34 @@ import medal10 from '@/assets/medal-10.png';
 
 const MEDALS = [medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10];
 
-const formatNumber = (num: number | undefined): string => {
-  if (num === undefined || num === null) return '0';
-  if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(1)}M`;
-  if (num >= 1_000) return `${(num / 1_000).toFixed(1)}K`;
-  return num.toLocaleString();
-};
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50';
 
 const LeaderboardCard = memo(function LeaderboardCard({
   entry,
   rank,
-  onClick,
 }: {
   entry: LeaderboardEntry;
   rank: number;
-  onClick: () => void;
 }) {
+  const { t } = useTranslation();
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
   const avatarUrl = entry.avatarUrl && entry.account
     ? buildAvatarUrl(entry.account, entry.avatarUrl)
     : null;
   const displayName = entry.userDisplayName || entry.username || `${entry.account.slice(0, 6)}...`;
-  const handle = entry.username ? `@${entry.username}` : `${entry.account.slice(0, 6)}...`;
-  const badgeUrl = getBadgeUrl(entry.badgeBalance || entry.total);
+  const hidden = isHidden(entry);
 
   return (
-    <div
-      onClick={onClick}
+    <Link
+      to={`/${entry.username}`}
+      aria-label={`${t('leaderboard.rankN', { rank })} · ${displayName}`}
       className={cn(
-        "flex-shrink-0 w-[160px] rounded-xl p-3 cursor-pointer transition-colors",
+        "flex-shrink-0 w-[160px] rounded-xl p-3 cursor-pointer transition-colors block",
         isLightTheme
           ? "bg-zinc-100 border border-zinc-200 hover:bg-zinc-200"
-          : "bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08]"
+          : "bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08]",
+        FOCUS_RING,
       )}
     >
       {/* Rank + Name */}
@@ -72,7 +69,7 @@ const LeaderboardCard = memo(function LeaderboardCard({
             className={`medal-shine-container flex-shrink-0 ${rank <= 3 ? 'w-7 h-7' : 'w-6 h-6'}`}
             style={{ '--medal-mask': `url(${MEDALS[rank - 1]})` } as React.CSSProperties}
           >
-            <img src={MEDALS[rank - 1]} alt={`#${rank}`} className={`${rank <= 3 ? 'w-7 h-7' : 'w-6 h-6'} object-contain relative`} />
+            <img src={MEDALS[rank - 1]} alt={t('leaderboard.rankN', { rank })} className={`${rank <= 3 ? 'w-7 h-7' : 'w-6 h-6'} object-contain relative`} />
             <div
               className="medal-shine-overlay"
             />
@@ -86,7 +83,9 @@ const LeaderboardCard = memo(function LeaderboardCard({
           <div className="flex items-center gap-0.5">
             <span className="inline-flex items-baseline gap-1 shrink min-w-0">
               <span className="text-sm font-semibold text-white truncate">{displayName}</span>
-              <BadgeIcon badgeBalance={entry.badgeBalance || entry.total} className="w-[1em] h-[1em]" />
+              {!hidden && (
+                <BadgeIcon badgeBalance={entry.badgeBalance || entry.total} username={entry.username} className="w-[1em] h-[1em]" />
+              )}
             </span>
           </div>
         </div>
@@ -100,55 +99,67 @@ const LeaderboardCard = memo(function LeaderboardCard({
           displayName={displayName}
           size="sm"
         />
-        <span className="text-xs text-zinc-500 tabular-nums">{formatNumber(entry.total)} <DhbCoin /></span>
+        <span className="text-xs text-zinc-500 tabular-nums">
+          {hidden ? t('leaderboard.hidden') : <>{formatLeaderboardNumber(entry.total)} <DhbCoin /></>}
+        </span>
       </div>
-    </div>
+    </Link>
   );
 });
 
-export const LeaderboardCarousel = memo(function LeaderboardCarousel() {
-  const navigate = useNavigate();
+const SKELETON_CARDS = 4;
 
-  const { data } = useQuery({
-    queryKey: ['home-leaderboard-carousel', 'holdings', 'all'],
+export const LeaderboardCarousel = memo(function LeaderboardCarousel() {
+  const { t } = useTranslation();
+
+  // Same key as the leaderboard page and the sidebar widget: whichever
+  // surface fetched the all-time holdings row first feeds this one.
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['leaderboard', 'holdings', 'all'],
     queryFn: () => getLeaderboard('holdings', 'all'),
     staleTime: 60 * 60 * 1000,
     gcTime: 2 * 60 * 60 * 1000,
     refetchOnMount: false,
   });
 
-  const entries = (data?.result?.byWalletBalance || [])
-    .filter((e: LeaderboardEntry) => e.username && !['dehubdev1', 'uss', 'support'].includes(e.username.toLowerCase()))
-    .sort((a, b) => (b.total ?? 0) - (a.total ?? 0))
-    .slice(0, 15);
+  const entries = applyLeaderboardRules(data?.result?.byWalletBalance, { sort: 'holdings', period: 'all' }).slice(0, 15);
 
-  if (entries.length === 0) return null;
+  if (!isLoading && !isError && entries.length === 0) return null;
 
   return (
     <div className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/[0.08] rounded-xl p-3">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-white flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-yellow-500" />
-          Leaderboard
+          <Trophy className="w-5 h-5 text-yellow-500" aria-hidden="true" />
+          {t('nav.leaderboard')}
         </h3>
-        <button
-          onClick={() => navigate('/app/leaderboard')}
-          className="text-zinc-400 text-sm hover:text-white flex items-center gap-1"
+        <Link
+          to="/app/leaderboard"
+          className={cn('text-zinc-400 text-sm hover:text-white flex items-center gap-1 rounded', FOCUS_RING)}
         >
-          See all <ChevronRight className="w-4 h-4" />
-        </button>
+          {t('leaderboard.seeAll')} <ChevronRight className="w-4 h-4" aria-hidden="true" />
+        </Link>
       </div>
       <div className="relative">
-        <SwipeableCarousel fadeEdges className="flex gap-2 overflow-x-auto scrollbar-hide pr-8">
-          {entries.map((entry, i) => (
-            <LeaderboardCard
-              key={entry.account}
-              entry={entry}
-              rank={i + 1}
-              onClick={() => entry.username && navigate(`/${entry.username}`)}
-            />
-          ))}
-        </SwipeableCarousel>
+        {isLoading ? (
+          <div className="flex gap-2 overflow-hidden" role="status" aria-label={t('leaderboard.loadingBoard')}>
+            {Array.from({ length: SKELETON_CARDS }, (_, i) => (
+              <div key={i} className="flex-shrink-0 w-[160px] h-[84px] rounded-xl bg-white/[0.04] border border-white/[0.08] animate-pulse" />
+            ))}
+          </div>
+        ) : isError ? (
+          <AppState icon="trophy" title={t('leaderboard.failedToLoad')} size="compact" />
+        ) : (
+          <SwipeableCarousel fadeEdges className="flex gap-2 overflow-x-auto scrollbar-hide pr-8">
+            {entries.map((entry) => (
+              <LeaderboardCard
+                key={entry.account}
+                entry={entry}
+                rank={entry.rank}
+              />
+            ))}
+          </SwipeableCarousel>
+        )}
       </div>
     </div>
   );

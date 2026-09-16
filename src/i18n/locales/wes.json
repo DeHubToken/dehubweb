@@ -930,7 +930,15 @@
     "addedToLeaderboard": "You don enter! Balance: {{balance}} DHB",
     "balanceTooLow": "Balance too low ({{balance}} DHB)",
     "refreshFailed": "Something go wrong",
-    "noWalletAddress": "No wallet address dey"
+    "noWalletAddress": "No wallet address dey",
+    "hidden": "E hide",
+    "noDataForPeriod": "No data dey for dis time yet",
+    "noDataYet": "No leaderboard data dey yet",
+    "seeAll": "See all",
+    "rankN": "Rank {{rank}}",
+    "you": "(you)",
+    "provisional": "e never sure",
+    "loadingBoard": "Leaderboard di load…"
   },
   "explorePage": {
     "searchPlaceholder": "Search for people, posts, or content...",
@@ -1791,7 +1799,20 @@
     "intro": "Wan collection fo game dem, world dem or experience dem weh DeHub build an open source-am.",
     "seoTitle": "Arcade",
     "seoDescription": "Play game dem fo yua browser fo DeHub — cinematic 3D chess, wan shooter weh dem generate-am, wan rainforest waka, wan neon-street fight an wan trading floor weh yu fit waka insaid. Notin for install, notin for download.",
-    "alsoIn": "I dei fo {{theme}} sef"
+    "alsoIn": "I dei fo {{theme}} sef",
+    "hpLeft": "{{hp}} HP remain",
+    "noHpLeft": "no HP remain",
+    "bestOfRuns": "best for {{count}} runs",
+    "firstRun": "first run",
+    "gamesRecord_one": "{{count}} game · {{wins}}W {{losses}}L {{draws}}D",
+    "gamesRecord_other": "{{count}} games · {{wins}}W {{losses}}L {{draws}}D",
+    "anon": "no name",
+    "streetSlayerBoardTitle": "Weh e go far pass for di street",
+    "streetSlayerBoardBlurb": "How far you reach before di street finish you, and how much health remain when you stop. Beat ya own best make you climb.",
+    "streetSlayerBoardEmpty": "No man don reach far enough yet. Be di first.",
+    "kingsGambitBoardTitle": "Rating",
+    "kingsGambitBoardBlurb": "Elo for all online match. All man start for 1200; for beat man weh e strong pass you e worth pass for beat man weh e weak, so you no fit pump di ladder with second wallet.",
+    "kingsGambitBoardEmpty": "No online match don finish yet. Open challenge."
   },
   "stats": {
     "community": {

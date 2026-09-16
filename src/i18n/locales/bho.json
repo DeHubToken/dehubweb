@@ -993,7 +993,15 @@
     "addedToLeaderboard": "रउआ जुड़ गइलीं! बैलेंस: {{balance}} DHB",
     "balanceTooLow": "बैलेंस बहुत कम बा ({{balance}} DHB)",
     "refreshFailed": "गड़बड़ भइल",
-    "noWalletAddress": "बटुआ पता नइखे मिलल"
+    "noWalletAddress": "बटुआ पता नइखे मिलल",
+    "hidden": "छुपावल",
+    "noDataForPeriod": "एह अवधि खातिर अबहीं कवनो डेटा नइखे",
+    "noDataYet": "अबहीं लीडरबोर्ड के कवनो डेटा नइखे",
+    "seeAll": "सब देखीं",
+    "rankN": "रैंक {{rank}}",
+    "you": "(रउआ)",
+    "provisional": "अस्थायी",
+    "loadingBoard": "लीडरबोर्ड लोड हो रहल बा…"
   },
   "explorePage": {
     "searchPlaceholder": "लोग, पोस्ट या सामग्री खोजीं...",
@@ -1872,7 +1880,20 @@
     "intro": "DeHub द्वारा बनावल आ ओपन सोर्स कइल खेल, दुनिया भा अनुभव के संग्रह।",
     "seoTitle": "आर्केड",
     "seoDescription": "DeHub पर आपन ब्राउज़र में खेल खेलीं — सिनेमाई 3D शतरंज, प्रक्रियात्मक रूप से बनल शूटर, बरसाती जंगल के सैर, नियॉन-गली के लड़ाई, आ चले लायक ट्रेडिंग फ्लोर। कवनो इंस्टॉल नइखे, कवनो डाउनलोड नइखे।",
-    "alsoIn": "{{theme}} में भी"
+    "alsoIn": "{{theme}} में भी",
+    "hpLeft": "{{hp}} HP बाचल",
+    "noHpLeft": "कवनो HP ना बाचल",
+    "bestOfRuns": "{{count}} रन में सबसे बढ़िया",
+    "firstRun": "पहिला रन",
+    "gamesRecord_one": "{{count}} गेम · {{wins}}जी {{losses}}हा {{draws}}ड्रॉ",
+    "gamesRecord_other": "{{count}} गेम · {{wins}}जी {{losses}}हा {{draws}}ड्रॉ",
+    "anon": "गुमनाम",
+    "streetSlayerBoardTitle": "सड़क पर सबसे आगे",
+    "streetSlayerBoardBlurb": "सड़क रउआ के हरावे से पहिले रउआ केतना दूर गइनी, आ रुकत घरी केतना हेल्थ बाचल रहे। ऊपर जाए खातिर आपन रिकॉर्ड तोड़ीं।",
+    "streetSlayerBoardEmpty": "अबहीं केहू एतना दूर नइखे पहुँचल। पहिला बनीं।",
+    "kingsGambitBoardTitle": "रेटिंग",
+    "kingsGambitBoardBlurb": "सब ऑनलाइन मैच के Elo। सब 1200 से शुरू करेला; मजबूत खिलाड़ी के हरावल कमजोर के हरावे से बेसी मायने राखेला, एहसे दोसरा वॉलेट से रैंक ना बढ़ावल जा सके।",
+    "kingsGambitBoardEmpty": "अबहीं कवनो ऑनलाइन मैच पूरा नइखे भइल। चैलेंज खोलीं।"
   },
   "stats": {
     "community": {

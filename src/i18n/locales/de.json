@@ -1040,7 +1040,15 @@
     "addedToLeaderboard": "Du wurdest hinzugefügt! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo zu niedrig ({{balance}} DHB)",
     "refreshFailed": "Etwas ist schiefgelaufen",
-    "noWalletAddress": "Keine Wallet-Adresse gefunden"
+    "noWalletAddress": "Keine Wallet-Adresse gefunden",
+    "hidden": "Verborgen",
+    "noDataForPeriod": "Für diesen Zeitraum liegen noch keine Daten vor",
+    "noDataYet": "Noch keine Ranglistendaten",
+    "seeAll": "Alle anzeigen",
+    "rankN": "Platz {{rank}}",
+    "you": "(du)",
+    "provisional": "vorläufig",
+    "loadingBoard": "Rangliste wird geladen…"
   },
   "explorePage": {
     "searchPlaceholder": "Personen, Beiträge oder Inhalte suchen...",
@@ -1968,7 +1976,20 @@
     "intro": "Eine Sammlung von Spielen, Welten und Erlebnissen, die DeHub gebaut und als Open Source veröffentlicht hat.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Spiele im Browser auf DeHub – filmisches 3D-Schach, ein prozedural erzeugter Shooter, ein Regenwaldspaziergang, eine Neon-Straßenprügelei und ein begehbarer Handelssaal. Keine Installation, kein Download.",
-    "alsoIn": "Auch im {{theme}}"
+    "alsoIn": "Auch im {{theme}}",
+    "hpLeft": "{{hp}} HP übrig",
+    "noHpLeft": "keine HP übrig",
+    "bestOfRuns": "Bestwert aus {{count}} Läufen",
+    "firstRun": "erster Lauf",
+    "gamesRecord_one": "{{count}} Partie · {{wins}}S {{losses}}N {{draws}}U",
+    "gamesRecord_other": "{{count}} Partien · {{wins}}S {{losses}}N {{draws}}U",
+    "anon": "anonym",
+    "streetSlayerBoardTitle": "Am weitesten die Straße hinunter",
+    "streetSlayerBoardBlurb": "Wie weit du gekommen bist, bevor die Straße dich erwischt hat, und wie viel Leben dir am Ende blieb. Schlag deinen eigenen Bestwert, um aufzusteigen.",
+    "streetSlayerBoardEmpty": "Noch niemand ist weit genug gekommen. Sei der Erste.",
+    "kingsGambitBoardTitle": "Wertung",
+    "kingsGambitBoardBlurb": "Elo über alle Online-Partien. Alle starten bei 1200; ein Sieg gegen einen stärkeren Spieler zählt mehr als einer gegen einen schwächeren, daher lässt sich die Rangliste nicht mit einer zweiten Wallet hochtreiben.",
+    "kingsGambitBoardEmpty": "Noch keine Online-Partie beendet. Eröffne eine Herausforderung."
   },
   "stats": {
     "community": {

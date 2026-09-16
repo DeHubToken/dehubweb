@@ -1025,7 +1025,15 @@
     "addedToLeaderboard": "Yapasqa! Yupay: {{balance}} DHB",
     "balanceTooLow": "Yupay pisilla ({{balance}} DHB)",
     "refreshFailed": "Huk pantay kachkan",
-    "noWalletAddress": "Mana qullqi wasi churana tarisqachu"
+    "noWalletAddress": "Mana qullqi wasi churana tarisqachu",
+    "hidden": "Pakasqa",
+    "noDataForPeriod": "Kay pachapaq manaraq willakuna kanchu",
+    "noDataYet": "Manaraq ñawpaqkuna willakuna kanchu",
+    "seeAll": "Llapanta qhaway",
+    "rankN": "Ñiqi {{rank}}",
+    "you": "(qam)",
+    "provisional": "ratupaq",
+    "loadingBoard": "Ñawpaqkuna churasqa chaskikuchkan…"
   },
   "explorePage": {
     "searchPlaceholder": "Runata, churasqata icha willakuyta maskay...",
@@ -1963,7 +1971,20 @@
     "intro": "DeHub ruwasqan, kichasqa pukyuwan, pukllaykuna, teqsimuyukuna icha ruraykunapa huñusqan.",
     "seoTitle": "Pukllana",
     "seoDescription": "DeHub ukhupi browser-niykipi pukllaykunata pukllay — sine hina 3D ajedrez, kikinmanta ruwakuq wañuchiy pukllay, sach'a sach'a purina, neón calle maqanakuy, hinaspa purina qatu wasi. Mana ima wakichiyta, mana ima hurquyta munanchu.",
-    "alsoIn": "{{theme}} ukhupipas"
+    "alsoIn": "{{theme}} ukhupipas",
+    "hpLeft": "{{hp}} HP puchun",
+    "noHpLeft": "mana HP puchunchu",
+    "bestOfRuns": "{{count}} phawaykunamanta aswan allin",
+    "firstRun": "ñawpaq phaway",
+    "gamesRecord_one": "{{count}} pukllay · {{wins}}A {{losses}}Q {{draws}}K",
+    "gamesRecord_other": "{{count}} pukllaykuna · {{wins}}A {{losses}}Q {{draws}}K",
+    "anon": "mana sutiyuq",
+    "streetSlayerBoardTitle": "Ñanpi aswan karu",
+    "streetSlayerBoardBlurb": "Ñan qamta atipanan ñawpaqta hayk'a karuta rirqanki, sayaspa hayk'a kawsay puchurqan. Kikiyki aswan allinniykita atipay wichanaykipaq.",
+    "streetSlayerBoardEmpty": "Manaraq pipas allin karuta chayanchu. Ñawpaq kay.",
+    "kingsGambitBoardTitle": "Chaninchay",
+    "kingsGambitBoardBlurb": "Elo llapa kawsay-ñiqpi pukllaykunapi. Llapanku 1200manta qallarinku; kallpasapa pukllaqta atipayqa pisi kallpayuqta atipaymanta aswan chaniyuq, chayrayku iskay kaq qullqi-wayaqawan ñiqita mana wicharichiy atikunchu.",
+    "kingsGambitBoardEmpty": "Manaraq ima kawsay-ñiqpi pukllaypas tukunchu. Huk atipanakuyta kichay."
   },
   "stats": {
     "community": {

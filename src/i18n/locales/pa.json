@@ -1022,7 +1022,15 @@
     "addedToLeaderboard": "ਸ਼ਾਮਲ ਹੋ ਗਏ! ਬੈਲੰਸ: {{balance}} DHB",
     "balanceTooLow": "ਬੈਲੰਸ ਬਹੁਤ ਘੱਟ ({{balance}} DHB)",
     "refreshFailed": "ਗ਼ਲਤੀ ਹੋਈ",
-    "noWalletAddress": "ਵਾਲਿਟ ਐਡਰੈੱਸ ਨਹੀਂ ਮਿਲਿਆ"
+    "noWalletAddress": "ਵਾਲਿਟ ਐਡਰੈੱਸ ਨਹੀਂ ਮਿਲਿਆ",
+    "hidden": "ਲੁਕਿਆ ਹੋਇਆ",
+    "noDataForPeriod": "ਇਸ ਮਿਆਦ ਲਈ ਹਾਲੇ ਕੋਈ ਡਾਟਾ ਉਪਲਬਧ ਨਹੀਂ",
+    "noDataYet": "ਹਾਲੇ ਲੀਡਰ ਬੋਰਡ ਦਾ ਕੋਈ ਡਾਟਾ ਨਹੀਂ",
+    "seeAll": "ਸਭ ਵੇਖੋ",
+    "rankN": "ਰੈਂਕ {{rank}}",
+    "you": "(ਤੁਸੀਂ)",
+    "provisional": "ਆਰਜ਼ੀ",
+    "loadingBoard": "ਲੀਡਰ ਬੋਰਡ ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ…"
   },
   "explorePage": {
     "searchPlaceholder": "ਲੋਕ, ਪੋਸਟਾਂ ਜਾਂ ਸਮੱਗਰੀ ਖੋਜੋ...",
@@ -1911,7 +1919,20 @@
     "intro": "DeHub ਵੱਲੋਂ ਬਣਾਈਆਂ ਅਤੇ ਓਪਨ ਸੋਰਸ ਕੀਤੀਆਂ ਖੇਡਾਂ, ਦੁਨੀਆਵਾਂ ਜਾਂ ਤਜਰਬਿਆਂ ਦਾ ਸੰਗ੍ਰਹਿ।",
     "seoTitle": "ਆਰਕੇਡ",
     "seoDescription": "DeHub 'ਤੇ ਆਪਣੇ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਖੇਡਾਂ ਖੇਡੋ — ਸਿਨੇਮਾਈ 3D ਸ਼ਤਰੰਜ, ਇੱਕ ਪ੍ਰੋਸੀਜਰਲ ਢੰਗ ਨਾਲ ਬਣਿਆ ਸ਼ੂਟਰ, ਬਰਸਾਤੀ ਜੰਗਲ ਦੀ ਸੈਰ, ਇੱਕ ਨੀਓਨ-ਗਲੀ ਲੜਾਈ ਅਤੇ ਤੁਰਨਯੋਗ ਟ੍ਰੇਡਿੰਗ ਫਲੋਰ। ਇੰਸਟਾਲ ਨਹੀਂ, ਡਾਊਨਲੋਡ ਨਹੀਂ।",
-    "alsoIn": "{{theme}} ਵਿੱਚ ਵੀ"
+    "alsoIn": "{{theme}} ਵਿੱਚ ਵੀ",
+    "hpLeft": "{{hp}} HP ਬਾਕੀ",
+    "noHpLeft": "ਕੋਈ HP ਬਾਕੀ ਨਹੀਂ",
+    "bestOfRuns": "{{count}} ਕੋਸ਼ਿਸ਼ਾਂ ਵਿੱਚੋਂ ਸਭ ਤੋਂ ਵਧੀਆ",
+    "firstRun": "ਪਹਿਲੀ ਕੋਸ਼ਿਸ਼",
+    "gamesRecord_one": "{{count}} ਗੇਮ · {{wins}}ਜ {{losses}}ਹ {{draws}}ਬ",
+    "gamesRecord_other": "{{count}} ਗੇਮਾਂ · {{wins}}ਜ {{losses}}ਹ {{draws}}ਬ",
+    "anon": "ਗੁਮਨਾਮ",
+    "streetSlayerBoardTitle": "ਗਲੀ ਵਿੱਚ ਸਭ ਤੋਂ ਅੱਗੇ",
+    "streetSlayerBoardBlurb": "ਗਲੀ ਵੱਲੋਂ ਤੁਹਾਨੂੰ ਹਰਾਉਣ ਤੋਂ ਪਹਿਲਾਂ ਤੁਸੀਂ ਕਿੰਨੀ ਦੂਰ ਗਏ, ਅਤੇ ਰੁਕਣ ਵੇਲੇ ਕਿੰਨੀ ਸਿਹਤ ਬਾਕੀ ਸੀ। ਉੱਪਰ ਜਾਣ ਲਈ ਆਪਣਾ ਹੀ ਰਿਕਾਰਡ ਤੋੜੋ।",
+    "streetSlayerBoardEmpty": "ਹਾਲੇ ਕੋਈ ਇੰਨੀ ਦੂਰ ਨਹੀਂ ਪਹੁੰਚਿਆ। ਪਹਿਲੇ ਬਣੋ।",
+    "kingsGambitBoardTitle": "ਰੇਟਿੰਗ",
+    "kingsGambitBoardBlurb": "ਸਾਰੇ ਆਨਲਾਈਨ ਮੈਚਾਂ ਦਾ Elo। ਸਾਰੇ 1200 ਤੋਂ ਸ਼ੁਰੂ ਕਰਦੇ ਹਨ; ਤਕੜੇ ਖਿਡਾਰੀ ਨੂੰ ਹਰਾਉਣਾ ਕਮਜ਼ੋਰ ਨੂੰ ਹਰਾਉਣ ਨਾਲੋਂ ਵੱਧ ਕੀਮਤੀ ਹੈ, ਇਸ ਲਈ ਦੂਜੇ ਵਾਲਿਟ ਨਾਲ ਰੈਂਕ ਨਹੀਂ ਵਧਾਇਆ ਜਾ ਸਕਦਾ।",
+    "kingsGambitBoardEmpty": "ਹਾਲੇ ਕੋਈ ਆਨਲਾਈਨ ਮੈਚ ਪੂਰਾ ਨਹੀਂ ਹੋਇਆ। ਚੈਲੇਂਜ ਖੋਲ੍ਹੋ।"
   },
   "stats": {
     "community": {

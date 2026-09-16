@@ -1233,7 +1233,15 @@
     "addedToLeaderboard": "Je bent toegevoegd! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo te laag ({{balance}} DHB)",
     "refreshFailed": "Er ging iets mis",
-    "noWalletAddress": "Geen portemonnee-adres gevonden"
+    "noWalletAddress": "Geen portemonnee-adres gevonden",
+    "hidden": "Verborgen",
+    "noDataForPeriod": "Nog geen gegevens voor deze periode",
+    "noDataYet": "Nog geen ranglijstgegevens",
+    "seeAll": "Alles bekijken",
+    "rankN": "Plaats {{rank}}",
+    "you": "(jij)",
+    "provisional": "voorlopig",
+    "loadingBoard": "Ranglijst laden…"
   },
   "explorePage": {
     "searchPlaceholder": "Zoek mensen, berichten of inhoud...",
@@ -2161,7 +2169,20 @@
     "intro": "Een verzameling games, werelden en ervaringen die DeHub heeft gebouwd en opensource heeft gemaakt.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Speel games in je browser op DeHub — filmisch 3D-schaken, een procedureel gegenereerde shooter, een wandeling door het regenwoud, een neonstraatgevecht en een beloopbare handelsvloer. Geen installatie, geen download.",
-    "alsoIn": "Ook in {{theme}}"
+    "alsoIn": "Ook in {{theme}}",
+    "hpLeft": "{{hp}} HP over",
+    "noHpLeft": "geen HP over",
+    "bestOfRuns": "beste van {{count}} pogingen",
+    "firstRun": "eerste poging",
+    "gamesRecord_one": "{{count}} partij · {{wins}}W {{losses}}V {{draws}}R",
+    "gamesRecord_other": "{{count}} partijen · {{wins}}W {{losses}}V {{draws}}R",
+    "anon": "anoniem",
+    "streetSlayerBoardTitle": "Verst door de straat",
+    "streetSlayerBoardBlurb": "Hoe ver je kwam voordat de straat je te pakken kreeg, en hoeveel leven je nog had toen je stopte. Verbeter je eigen record om te stijgen.",
+    "streetSlayerBoardEmpty": "Nog niemand is ver genoeg gekomen. Wees de eerste.",
+    "kingsGambitBoardTitle": "Speelsterkte",
+    "kingsGambitBoardBlurb": "Elo over alle online partijen. Iedereen begint op 1200; winnen van een sterkere speler is meer waard dan winnen van een zwakkere, dus de ladder kan niet met een tweede wallet worden opgekrikt.",
+    "kingsGambitBoardEmpty": "Nog geen online partij afgerond. Open een uitdaging."
   },
   "stats": {
     "community": {

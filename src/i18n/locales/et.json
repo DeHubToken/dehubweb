@@ -1035,7 +1035,15 @@
     "addedToLeaderboard": "Oled lisatud! Jääk: {{balance}} DHB",
     "balanceTooLow": "Jääk liiga madal ({{balance}} DHB)",
     "refreshFailed": "Midagi läks valesti",
-    "noWalletAddress": "Rahakoti aadressi ei leitud"
+    "noWalletAddress": "Rahakoti aadressi ei leitud",
+    "hidden": "Peidetud",
+    "noDataForPeriod": "Selle perioodi kohta pole veel andmeid",
+    "noDataYet": "Edetabeli andmeid pole veel",
+    "seeAll": "Vaata kõiki",
+    "rankN": "Koht {{rank}}",
+    "you": "(sina)",
+    "provisional": "esialgne",
+    "loadingBoard": "Edetabeli laadimine…"
   },
   "explorePage": {
     "searchPlaceholder": "Otsi inimesi, postitusi või sisu...",
@@ -1914,7 +1922,20 @@
     "intro": "Kogumik mänge, maailmu ja elamusi, mille DeHub on ehitanud ja avatud lähtekoodiga välja andnud.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Mängi otse brauseris DeHubis — filmilik 3D-male, protseduuriliselt loodud tulistamismäng, jalutuskäik vihmametsas, neoonvalguses tänavakaklus ja läbikäidav kauplemissaal. Ilma paigalduseta, ilma allalaadimiseta.",
-    "alsoIn": "Olemas ka teemas {{theme}}"
+    "alsoIn": "Olemas ka teemas {{theme}}",
+    "hpLeft": "{{hp}} HP alles",
+    "noHpLeft": "HP-d pole alles",
+    "bestOfRuns": "parim {{count}} katsest",
+    "firstRun": "esimene katse",
+    "gamesRecord_one": "{{count}} partii · {{wins}}V {{losses}}K {{draws}}V",
+    "gamesRecord_other": "{{count}} partiid · {{wins}}V {{losses}}K {{draws}}V",
+    "anon": "anonüümne",
+    "streetSlayerBoardTitle": "Kõige kaugemale mööda tänavat",
+    "streetSlayerBoardBlurb": "Kui kaugele sa jõudsid, enne kui tänav su kätte sai, ja kui palju elu sul peatudes alles oli. Löö oma rekord, et tõusta.",
+    "streetSlayerBoardEmpty": "Keegi pole veel piisavalt kaugele jõudnud. Ole esimene.",
+    "kingsGambitBoardTitle": "Reiting",
+    "kingsGambitBoardBlurb": "Elo kõigi veebipartiide põhjal. Kõik alustavad 1200-lt; tugevama mängija võitmine on väärt rohkem kui nõrgema võitmine, nii et edetabelit ei saa teise rahakotiga üles ajada.",
+    "kingsGambitBoardEmpty": "Ükski veebipartii pole veel lõppenud. Ava väljakutse."
   },
   "stats": {
     "community": {

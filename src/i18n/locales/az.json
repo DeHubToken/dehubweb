@@ -1034,7 +1034,15 @@
     "addedToLeaderboard": "Əlavə edildiniz! Balans: {{balance}} DHB",
     "balanceTooLow": "Balans çox aşağıdır ({{balance}} DHB)",
     "refreshFailed": "Xəta baş verdi",
-    "noWalletAddress": "Cüzdan ünvanı tapılmadı"
+    "noWalletAddress": "Cüzdan ünvanı tapılmadı",
+    "hidden": "Gizli",
+    "noDataForPeriod": "Bu dövr üçün hələ məlumat yoxdur",
+    "noDataYet": "Hələ lider lövhəsi məlumatı yoxdur",
+    "seeAll": "Hamısına bax",
+    "rankN": "{{rank}}-ci yer",
+    "you": "(siz)",
+    "provisional": "müvəqqəti",
+    "loadingBoard": "Lider lövhəsi yüklənir…"
   },
   "explorePage": {
     "searchPlaceholder": "İnsanlar, paylaşımlar və ya məzmun axtar...",
@@ -1912,7 +1920,20 @@
     "intro": "DeHub-ın qurduğu və açıq mənbə etdiyi oyunlar, dünyalar və təcrübələr toplusu.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "DeHub-da birbaşa brauzerinizdə oynayın — kinematik 3D şahmat, prosedurla yaradılan atıcı oyun, yağış meşəsində gəzinti, neon küçə davası və gəzilə bilən ticarət zalı. Quraşdırma yoxdur, endirmə yoxdur.",
-    "alsoIn": "{{theme}} mövzusunda da var"
+    "alsoIn": "{{theme}} mövzusunda da var",
+    "hpLeft": "{{hp}} HP qalıb",
+    "noHpLeft": "HP qalmayıb",
+    "bestOfRuns": "{{count}} cəhdin ən yaxşısı",
+    "firstRun": "ilk cəhd",
+    "gamesRecord_one": "{{count}} oyun · {{wins}}Q {{losses}}M {{draws}}H",
+    "gamesRecord_other": "{{count}} oyun · {{wins}}Q {{losses}}M {{draws}}H",
+    "anon": "anonim",
+    "streetSlayerBoardTitle": "Küçədə ən uzağa gedən",
+    "streetSlayerBoardBlurb": "Küçə sizi yıxmazdan əvvəl nə qədər irəlilədiniz və dayananda nə qədər canınız qaldı. Yuxarı qalxmaq üçün öz rekordunuzu qırın.",
+    "streetSlayerBoardEmpty": "Hələ heç kim kifayət qədər uzağa getməyib. İlk siz olun.",
+    "kingsGambitBoardTitle": "Reytinq",
+    "kingsGambitBoardBlurb": "Bütün onlayn oyunlar üzrə Elo. Hamı 1200-dən başlayır; güclü oyunçunu məğlub etmək zəifi məğlub etməkdən daha dəyərlidir, ona görə də reytinqi ikinci pulqabı ilə şişirtmək olmaz.",
+    "kingsGambitBoardEmpty": "Hələ heç bir onlayn oyun bitməyib. Çağırış açın."
   },
   "stats": {
     "community": {

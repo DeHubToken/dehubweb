@@ -969,7 +969,15 @@
     "addedToLeaderboard": "تم شامل ہو گئے! بیلنس: {{balance}} DHB",
     "balanceTooLow": "بیلنس بہت کم ہے ({{balance}} DHB)",
     "refreshFailed": "کچھ غلط ہو گیا",
-    "noWalletAddress": "والٹ ایڈریس نہیں ملا"
+    "noWalletAddress": "والٹ ایڈریس نہیں ملا",
+    "hidden": "پوشیدہ",
+    "noDataForPeriod": "اس مدت کا ابھی کوئی ڈیٹا نہیں",
+    "noDataYet": "ابھی لیڈر بورڈ کا کوئی ڈیٹا نہیں",
+    "seeAll": "سب دیکھیں",
+    "rankN": "درجہ {{rank}}",
+    "you": "(آپ)",
+    "provisional": "عارضی",
+    "loadingBoard": "لیڈر بورڈ لوڈ ہو رہا ہے…"
   },
   "explorePage": {
     "searchPlaceholder": "لوگ، پوسٹ، یا مواد کھوجو...",
@@ -1856,7 +1864,20 @@
     "intro": "DeHub کے بنائل اور کھلل سورس کھیل، دنیا، یا تجربا کے سنگرہ۔",
     "seoTitle": "آرکیڈ",
     "seoDescription": "DeHub پر اپن براؤزر میں کھیل کھیلو — سنیمائی 3D شطرنج، ایک پروسیجرلی بنل شوٹر، بارش والا جنگل کے سیر، نیون-گلی والا لڑائی کھیل، اور گھمے لائق ٹریڈنگ فرش۔ کوئی انسٹال نہیں، کوئی ڈاؤن لوڈ نہیں۔",
-    "alsoIn": "{{theme}} میں بھی"
+    "alsoIn": "{{theme}} میں بھی",
+    "hpLeft": "{{hp}} HP باقی",
+    "noHpLeft": "کوئی HP باقی نہیں",
+    "bestOfRuns": "{{count}} کوششوں میں بہترین",
+    "firstRun": "پہلی کوشش",
+    "gamesRecord_one": "{{count}} گیم · {{wins}}ج {{losses}}ہ {{draws}}ب",
+    "gamesRecord_other": "{{count}} گیمز · {{wins}}ج {{losses}}ہ {{draws}}ب",
+    "anon": "گمنام",
+    "streetSlayerBoardTitle": "گلی میں سب سے آگے",
+    "streetSlayerBoardBlurb": "گلی نے آپ کو گرانے سے پہلے آپ کتنی دور گئے، اور رکتے وقت کتنی صحت باقی تھی۔ اوپر جانے کے لیے اپنا ریکارڈ توڑیں۔",
+    "streetSlayerBoardEmpty": "ابھی کوئی اتنی دور نہیں پہنچا۔ پہلے بنیں۔",
+    "kingsGambitBoardTitle": "ریٹنگ",
+    "kingsGambitBoardBlurb": "تمام آن لائن میچوں کا ایلو۔ سب 1200 سے شروع کرتے ہیں؛ مضبوط کھلاڑی کو ہرانا کمزور کو ہرانے سے زیادہ قیمتی ہے، اس لیے دوسرے والٹ سے درجہ بندی نہیں بڑھائی جا سکتی۔",
+    "kingsGambitBoardEmpty": "ابھی کوئی آن لائن میچ مکمل نہیں ہوا۔ چیلنج کھولیں۔"
   },
   "stats": {
     "community": {

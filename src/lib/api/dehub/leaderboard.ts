@@ -2,7 +2,10 @@ import { apiCall } from './core';
 
 export interface LeaderboardEntry {
   account: string;
-  total: number;
+  /** DHB balance. `null` when the account has hidden its balance. */
+  total: number | null;
+  /** Set when the account chose to hide its badge and balance. */
+  hideBadgeAndBalance?: boolean;
   username?: string;
   userDisplayName?: string;
   avatarUrl?: string;

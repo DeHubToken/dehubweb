@@ -1016,7 +1016,15 @@
     "addedToLeaderboard": "Kowe wis ditambahake! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo kurang ({{balance}} DHB)",
     "refreshFailed": "Ana kesalahan",
-    "noWalletAddress": "Ora nemokake alamat dompet"
+    "noWalletAddress": "Ora nemokake alamat dompet",
+    "hidden": "Didhelikake",
+    "noDataForPeriod": "Durung ana data kanggo periode iki",
+    "noDataYet": "Durung ana data papan peringkat",
+    "seeAll": "Deleng kabeh",
+    "rankN": "Peringkat {{rank}}",
+    "you": "(sampeyan)",
+    "provisional": "sementara",
+    "loadingBoard": "Ngemot papan peringkat…"
   },
   "explorePage": {
     "searchPlaceholder": "Goleki wong, kiriman, utawa konten...",
@@ -1916,7 +1924,20 @@
     "intro": "Kumpulan game, jagad, lan pengalaman sing digawe lan dibukak sumbere dening DeHub.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Dolanan langsung ing panjelajahmu ing DeHub — catur 3D kaya film, game tembak-tembakan sing digawe kanthi prosedural, mlaku-mlaku ing alas udan, gelut dalanan neon, lan lantai dagang sing bisa dilakoni. Ora perlu instal, ora perlu ngundhuh.",
-    "alsoIn": "Ana uga ing {{theme}}"
+    "alsoIn": "Ana uga ing {{theme}}",
+    "hpLeft": "{{hp}} HP isih ana",
+    "noHpLeft": "HP entek",
+    "bestOfRuns": "paling apik saka {{count}} njajal",
+    "firstRun": "njajal pisanan",
+    "gamesRecord_one": "{{count}} dolanan · {{wins}}M {{losses}}K {{draws}}S",
+    "gamesRecord_other": "{{count}} dolanan · {{wins}}M {{losses}}K {{draws}}S",
+    "anon": "anonim",
+    "streetSlayerBoardTitle": "Paling adoh ing dalan",
+    "streetSlayerBoardBlurb": "Sepira adohe sampeyan sadurunge dalan ngalahake sampeyan, lan pira nyawa sing isih ana pas mandheg. Kalahna rekor dhewe supaya munggah.",
+    "streetSlayerBoardEmpty": "Durung ana sing tekan cukup adoh. Dadia sing pisanan.",
+    "kingsGambitBoardTitle": "Rating Elo",
+    "kingsGambitBoardBlurb": "Elo saka kabeh tandhing online. Kabeh wiwit saka 1200; ngalahake pemain sing luwih kuwat regane luwih akeh tinimbang sing luwih ringkih, dadi peringkat ora bisa dikatrol nganggo dompet kapindho.",
+    "kingsGambitBoardEmpty": "Durung ana tandhing online sing rampung. Bukak tantangan."
   },
   "stats": {
     "community": {

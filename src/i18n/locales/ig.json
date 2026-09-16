@@ -1015,7 +1015,15 @@
     "addedToLeaderboard": "Atịnyela gị! Ego: {{balance}} DHB",
     "balanceTooLow": "Ego dị ala ({{balance}} DHB)",
     "refreshFailed": "Ihe mere njehie",
-    "noWalletAddress": "Achọtaghị adreesị obere akpa"
+    "noWalletAddress": "Achọtaghị adreesị obere akpa",
+    "hidden": "Zoro ezo",
+    "noDataForPeriod": "Enwebeghị data maka oge a",
+    "noDataYet": "Enwebeghị data ndepụta ọkwa",
+    "seeAll": "Lee ha niile",
+    "rankN": "Ọkwa {{rank}}",
+    "you": "(gị)",
+    "provisional": "nwa oge",
+    "loadingBoard": "Na-ebudata ndepụta ọkwa…"
   },
   "explorePage": {
     "searchPlaceholder": "Chọọ ndị mmadụ, ozi ma ọ bụ ọdịnaya...",
@@ -1901,7 +1909,20 @@
     "intro": "Nchịkọta egwuregwu, ụwa ma ọ bụ ahụmahụ DeHub wuru ma mepee isi mmalite ya.",
     "seoTitle": "Arcade",
     "seoDescription": "Gwuo egwuregwu na browser gị na DeHub — chess 3D dị ka fim, egwuregwu agbaghara na-emepụta onwe ya, ije n'ime oke ọhịa, ọgụ n'okporo ámá na-egbu maramara na ebe azụmahịa a na-eji ụkwụ jegharịa. Ọ dịghị nrụnye, ọ dịghị nbudata.",
-    "alsoIn": "Nakwa na {{theme}}"
+    "alsoIn": "Nakwa na {{theme}}",
+    "hpLeft": "HP {{hp}} fọdụrụ",
+    "noHpLeft": "ọ nweghị HP fọdụrụ",
+    "bestOfRuns": "kacha mma n'ime ọsọ {{count}}",
+    "firstRun": "ọsọ mbụ",
+    "gamesRecord_one": "egwuregwu {{count}} · {{wins}}M {{losses}}D {{draws}}N",
+    "gamesRecord_other": "egwuregwu {{count}} · {{wins}}M {{losses}}D {{draws}}N",
+    "anon": "onye amaghị aha",
+    "streetSlayerBoardTitle": "Kacha tee anya n'okporo ụzọ",
+    "streetSlayerBoardBlurb": "Ebe ị ruru tupu okporo ụzọ emerie gị, na ndụ ole fọdụrụ gị mgbe ị kwụsịrị. Merie ihe kacha mma gị iji rigoo.",
+    "streetSlayerBoardEmpty": "Ọ dịbeghị onye ruru ebe dị anya. Bụrụ onye mbụ.",
+    "kingsGambitBoardTitle": "Ọkwa ntụle",
+    "kingsGambitBoardBlurb": "Elo n'egwuregwu ịntanetị niile. Onye ọ bụla na-amalite na 1200; imeri onye ọkpụkpọ siri ike bara uru karịa imeri onye na-adịghị ike, ya mere a pụghị iji akpa ego nke abụọ bulie ọkwa.",
+    "kingsGambitBoardEmpty": "Ọ dịbeghị egwuregwu ịntanetị gwụchara. Mepee ịma aka."
   },
   "stats": {
     "community": {
