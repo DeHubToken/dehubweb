@@ -2299,5 +2299,8 @@
     "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
     "subtitle": "Nalepite kanal ili profil, izmenite šta želite, platite jednom.",
     "watchOnSource": "Онај изворниName"
+  },
+  "badgeAscension": {
+    "continue": "Назад на DeHub"
   }
 }
