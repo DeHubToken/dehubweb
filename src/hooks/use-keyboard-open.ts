@@ -1,4 +1,5 @@
 import { useEffect, useState, type CSSProperties } from 'react';
+import { getDocumentScrollTop, scrollDocumentTo } from '@/lib/document-scroll';
 
 /**
  * True while an editable element (input / textarea / contenteditable) has
@@ -94,18 +95,22 @@ export function useVisualViewportBox(enabled: boolean) {
       // of (or on top of) vv.offsetTop — undo it so offsetTop is the whole
       // story. The chat layout fits inside the visual viewport, so there is
       // nothing legitimate to scroll to while the keyboard is up.
-      if (window.scrollY > 0) window.scrollTo(0, 0);
+      // Read and write the element that actually scrolls: `window.scrollY` is
+      // always 0 here and `window.scrollTo` is a no-op, so this compensation
+      // has never once run on the iOS versions it exists for.
+      if (getDocumentScrollTop() > 0) scrollDocumentTo(0);
       setBox({ height: Math.round(vv.height), offsetTop: Math.round(vv.offsetTop) });
     };
     update();
     vv.addEventListener('resize', update);
     // iOS pans the visual viewport instead of resizing — 'scroll' fires then.
     vv.addEventListener('scroll', update);
-    window.addEventListener('scroll', update);
+    // Capture, because a scroll on body does not bubble to window.
+    document.addEventListener('scroll', update, { capture: true });
     return () => {
       vv.removeEventListener('resize', update);
       vv.removeEventListener('scroll', update);
-      window.removeEventListener('scroll', update);
+      document.removeEventListener('scroll', update, { capture: true });
     };
   }, [enabled]);
 

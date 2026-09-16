@@ -1,6 +1,7 @@
 import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect, memo, startTransition, type CSSProperties } from 'react';
+import { getDocumentScrollTop } from '@/lib/document-scroll';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { SEOHead } from '@/components/SEOHead';
 import { BadgedName } from '@/components/app/BadgedName';
@@ -630,12 +631,18 @@ export default function ExplorePage() {
       return;
     }
 
+    // Both halves of this used to be no-ops, which is why returning to a
+    // search always landed at the top however far you had scrolled.
+    // `window.scrollY` is permanently 0 here — body is the scrolling element —
+    // so the position written was always "0"; and a scroll on body does not
+    // bubble, so the window listener that wrote it never ran either. The
+    // capture listener on document sees the event whatever element scrolled.
     const handleScroll = () => {
-      sessionStorage.setItem('EXPLORE_SCROLL_POSITION', String(window.scrollY));
+      sessionStorage.setItem('EXPLORE_SCROLL_POSITION', String(getDocumentScrollTop()));
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    document.addEventListener('scroll', handleScroll, { passive: true, capture: true });
+    return () => document.removeEventListener('scroll', handleScroll, { capture: true });
   }, [isSearching]);
 
   // API search hook - using new universal search

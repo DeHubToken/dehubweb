@@ -864,8 +864,11 @@ export default function HomePage() {
         sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: activeTab }));
         window.dispatchEvent(new CustomEvent('home-tab-changed'));
       } catch { /* ignore */ }
-      // Scroll to top for the final settled tab
-      window.scrollTo(0, 0);
+      // Scroll to top for the final settled tab. `window.scrollTo` alone does
+      // nothing in this app — body is the scrolling element — so dragging
+      // between tabs kept the outgoing tab's offset while tapping one (which
+      // goes through the helper) did not.
+      scrollDocumentTo(0);
     },
   });
 
