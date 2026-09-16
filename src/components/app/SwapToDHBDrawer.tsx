@@ -20,6 +20,9 @@ import {
   getCryptoQuote,
   createCryptoIntent,
   getCryptoIntentStatus,
+  getDirectQuote,
+  createDirectIntent,
+  confirmDirectDeposit,
   type CryptoPayableAsset,
   type CryptoQuote,
 } from '@/lib/api/dpay';
@@ -142,7 +145,11 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
       || { symbol: 'ETH', address: '0x0', decimals: 18, balance: BigInt(0), formattedBalance: '0', chainId: BASE_CHAIN_ID };
   }, [payTokens, selectedTokenAddress]);
 
-  const originAsset = assetByAddress.get(selectedToken.address.toLowerCase())?.assetId ?? null;
+  /** Native ETH takes the direct rail and needs no intents asset id. */
+  const isDirectEth = selectedToken.address === '0x0';
+  const originAsset = isDirectEth
+    ? 'direct:base:eth'
+    : assetByAddress.get(selectedToken.address.toLowerCase())?.assetId ?? null;
 
   // Reset on open
   useEffect(() => {
@@ -172,7 +179,12 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
     let cancelled = false;
     setQuoting(true);
     setError('');
-    getCryptoQuote({ originAsset, tokensToReceive: Math.floor(amt), refundTo: walletAddress ?? undefined })
+    // ETH already on Base goes straight to the gateway; everything else
+    // bridges through the intents rail.
+    const priced = isDirectEth
+      ? getDirectQuote({ tokensToReceive: Math.floor(amt), address: walletAddress ?? undefined })
+      : getCryptoQuote({ originAsset: originAsset!, tokensToReceive: Math.floor(amt), refundTo: walletAddress ?? undefined });
+    priced
       .then(q => { if (!cancelled) setQuote(q); })
       .catch(err => {
         if (cancelled) return;
@@ -183,7 +195,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
       })
       .finally(() => { if (!cancelled) setQuoting(false); });
     return () => { cancelled = true; };
-  }, [debouncedAmount, originAsset, selectedToken.symbol, walletAddress]);
+  }, [debouncedAmount, originAsset, isDirectEth, selectedToken.symbol, walletAddress]);
 
   const amountInWei = quote ? BigInt(quote.amountIn) : null;
   const amountInFormatted = quote ? quote.amountInFormatted : null;
@@ -213,19 +225,24 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
     setError('');
     setProgress('Opening your purchase...');
     try {
-      const intent = await createCryptoIntent({
-        originAsset,
-        tokensToReceive: amt,
-        receiverAddress: walletAddress,
-        // A swap that fails upstream has to have somewhere to go back to, and
-        // the buyer is paying from this wallet on Base.
-        refundTo: walletAddress,
-        termsAndServicesAccepted: true,
-      });
+      const intent = isDirectEth
+        ? await createDirectIntent({
+            tokensToReceive: amt,
+            receiverAddress: walletAddress,
+            termsAndServicesAccepted: true,
+          })
+        : await createCryptoIntent({
+            originAsset,
+            tokensToReceive: amt,
+            receiverAddress: walletAddress,
+            // A swap that fails upstream has to have somewhere to go back to, and
+            // the buyer is paying from this wallet on Base.
+            refundTo: walletAddress,
+            termsAndServicesAccepted: true,
+          });
 
       setProgress(`Sending ${intent.amountInFormatted} ${selectedToken.symbol}...`);
-      const isNative = selectedToken.address === '0x0';
-      const sent = isNative
+      const sent = isDirectEth
         ? await sendNativeToken(intent.depositAddress, intent.amountInFormatted, selectedToken.decimals, BASE_CHAIN_ID)
         : await sendERC20Token(selectedToken.address, intent.depositAddress, intent.amountInFormatted, selectedToken.decimals, BASE_CHAIN_ID);
 
@@ -233,6 +250,20 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
         description: `TX: ${sent.hash.slice(0, 10)}…`,
       });
       setProgress('Payment sent. Waiting for delivery...');
+
+      if (isDirectEth) {
+        // The gateway settles a direct purchase against the chain once it
+        // has the hash. It may not be mined on the first ask; the poll below
+        // keeps re-submitting until it is, so a slow block is not a failure.
+        setProgress('Payment sent. Waiting for confirmation...');
+        const tryConfirm = () => confirmDirectDeposit({ id: intent.id, txHash: sent.hash }).catch(() => null);
+        await tryConfirm();
+        const confirmTimer = setInterval(async () => {
+          const status = await tryConfirm();
+          if (status && status.settlement !== 'DIRECT_PENDING') clearInterval(confirmTimer);
+        }, 4000);
+        setTimeout(() => clearInterval(confirmTimer), 10 * 60 * 1000);
+      }
 
       if (pollRef.current) clearInterval(pollRef.current);
       let ticks = 0;
@@ -280,7 +311,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
       setBuying(false);
       toast.error('Purchase failed', { description: msg });
     }
-  }, [walletAddress, quote, originAsset, dhbAmount, selectedToken]);
+  }, [walletAddress, quote, originAsset, isDirectEth, dhbAmount, selectedToken]);
 
   const handleClose = (v: boolean) => {
     if (!v) {
