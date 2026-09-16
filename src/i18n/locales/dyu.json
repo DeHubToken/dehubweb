@@ -1472,6 +1472,13 @@
     "discardBody": "A marana i ka sɛbɛnnifɔlɔ la, a bɛna to yan fo i seginna.",
     "keepWriting": "Sɛbɛnni kɛ ka taa",
     "closeAnyway": "A datugu",
+    "pinnedBadge": "A tugura",
+    "pinnedByCreator": "Dilanbaga y'a tugu",
+    "pinAction": "A tugu sanfɛ",
+    "unpinAction": "Tugulan bɔ",
+    "pinnedToast": "A tugura nin bataki sanfɛ",
+    "unpinnedToast": "Tugulan bɔra",
+    "pinFailed": "O kumasen tugu ma se ka kɛ",
     "kidsOnlyThread": "O barokun ye denmisɛnw ka barokun ye. Denmisɛnw dɔrɔn lo be se ka kuma o koo la."
   },
   "postInfo": {

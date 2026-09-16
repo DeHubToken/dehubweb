@@ -1532,6 +1532,13 @@
     "discardBody": "Está guardado como rascunho, por isso estará aqui quando voltar.",
     "keepWriting": "Continuar a escrever",
     "closeAnyway": "Fechar mesmo assim",
+    "pinnedBadge": "Fixado",
+    "pinnedByCreator": "Fixado pelo criador",
+    "pinAction": "Fixar no topo",
+    "unpinAction": "Remover fixação",
+    "pinnedToast": "Fixado no topo desta publicação",
+    "unpinnedToast": "Fixação removida",
+    "pinFailed": "Não foi possível fixar esse comentário",
     "kidsOnlyThread": "Este post é para crianças. Apenas o Modo Infantil pode comentar."
   },
   "postInfo": {

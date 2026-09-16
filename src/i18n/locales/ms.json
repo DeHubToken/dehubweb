@@ -1795,6 +1795,13 @@
     "discardBody": "Ia disimpan sebagai draf, jadi ia akan ada di sini apabila anda kembali.",
     "keepWriting": "Teruskan menulis",
     "closeAnyway": "Tutup juga",
+    "pinnedBadge": "Disematkan",
+    "pinnedByCreator": "Disematkan oleh pencipta",
+    "pinAction": "Sematkan di atas",
+    "unpinAction": "Buang sematan",
+    "pinnedToast": "Disematkan di bahagian atas siaran ini",
+    "unpinnedToast": "Sematan dibuang",
+    "pinFailed": "Komen itu tidak dapat disematkan",
     "kidsOnlyThread": "Siaran ini untuk kanak-kanak. Hanya Mod Kanak-kanak boleh memberi komen mengenainya."
   },
   "postInfo": {

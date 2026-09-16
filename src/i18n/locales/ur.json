@@ -1498,6 +1498,13 @@
     "discardBody": "یہ مسودے کے طور پر محفوظ ہے، واپس آنے پر یہیں ملے گا۔",
     "keepWriting": "لکھتے رہیں",
     "closeAnyway": "پھر بھی بند کریں",
+    "pinnedBadge": "پن کیا گیا",
+    "pinnedByCreator": "تخلیق کار نے پن کیا",
+    "pinAction": "سب سے اوپر پن کریں",
+    "unpinAction": "پن ہٹائیں",
+    "pinnedToast": "اس پوسٹ کے سب سے اوپر پن کر دیا گیا",
+    "unpinnedToast": "پن ہٹا دیا گیا",
+    "pinFailed": "وہ تبصرہ پن نہیں کیا جا سکا",
     "kidsOnlyThread": "یہ پوسٹ بچوں کے لئے ہے ۔ صرف کڈز موڈ ہی اس پر تبصرہ کر سکتا ہے ۔"
   },
   "postInfo": {

@@ -1413,6 +1413,13 @@
     "discardBody": "E salvat ca ciornă, așa că îl găsești aici când revii.",
     "keepWriting": "Continuă să scrii",
     "closeAnyway": "Închide oricum",
+    "pinnedBadge": "Fixat",
+    "pinnedByCreator": "Fixat de creator",
+    "pinAction": "Fixează sus",
+    "unpinAction": "Elimină fixarea",
+    "pinnedToast": "Fixat în partea de sus a acestei postări",
+    "unpinnedToast": "Fixare eliminată",
+    "pinFailed": "Comentariul nu a putut fi fixat",
     "kidsOnlyThread": "Această postare este pentru copii. Numai modul Copii poate comenta acest lucru."
   },
   "postInfo": {

@@ -1528,6 +1528,13 @@
     "discardBody": "È salvato come bozza, lo ritrovi qui quando torni.",
     "keepWriting": "Continua a scrivere",
     "closeAnyway": "Chiudi comunque",
+    "pinnedBadge": "In evidenza",
+    "pinnedByCreator": "Messo in evidenza dal creator",
+    "pinAction": "Metti in alto",
+    "unpinAction": "Togli dall'alto",
+    "pinnedToast": "Messo in cima a questo post",
+    "unpinnedToast": "Rimosso dall'alto",
+    "pinFailed": "Impossibile mettere in evidenza quel commento",
     "kidsOnlyThread": "Questo post è per bambini. Solo la modalità Bambini può commentare."
   },
   "postInfo": {

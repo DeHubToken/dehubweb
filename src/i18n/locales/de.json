@@ -1528,6 +1528,13 @@
     "discardBody": "Er ist als Entwurf gespeichert und wartet hier, wenn du zurückkommst.",
     "keepWriting": "Weiterschreiben",
     "closeAnyway": "Trotzdem schließen",
+    "pinnedBadge": "Angeheftet",
+    "pinnedByCreator": "Vom Creator angeheftet",
+    "pinAction": "Nach oben anheften",
+    "unpinAction": "Anheftung entfernen",
+    "pinnedToast": "Oben an diesem Beitrag angeheftet",
+    "unpinnedToast": "Anheftung entfernt",
+    "pinFailed": "Dieser Kommentar konnte nicht angeheftet werden",
     "kidsOnlyThread": "Dieser Beitrag ist für Kinder. Nur der Kindermodus kann es kommentieren."
   },
   "postInfo": {

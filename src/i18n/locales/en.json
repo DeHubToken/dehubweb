@@ -1528,6 +1528,13 @@
     "discardBody": "It's saved as a draft, so it will be here when you come back.",
     "keepWriting": "Keep writing",
     "closeAnyway": "Close anyway",
+    "pinnedBadge": "Pinned",
+    "pinnedByCreator": "Pinned by the creator",
+    "pinAction": "Pin to the top",
+    "unpinAction": "Remove pin",
+    "pinnedToast": "Pinned to the top of this post",
+    "unpinnedToast": "Pin removed",
+    "pinFailed": "Could not pin that comment",
     "kidsOnlyThread": "This post is for kids. Only Kids Mode can comment on it."
   },
   "postInfo": {

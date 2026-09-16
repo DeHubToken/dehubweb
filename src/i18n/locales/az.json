@@ -1521,6 +1521,13 @@
     "discardBody": "Qaralama kimi saxlanılıb, qayıtdığınızda burada olacaq.",
     "keepWriting": "Yazmağa davam et",
     "closeAnyway": "Yenə də bağla",
+    "pinnedBadge": "Sancaqlanıb",
+    "pinnedByCreator": "Müəllif tərəfindən sancaqlanıb",
+    "pinAction": "Yuxarıya sancaqla",
+    "unpinAction": "Sancağı götür",
+    "pinnedToast": "Bu paylaşımın başına sancaqlandı",
+    "unpinnedToast": "Sancaq götürüldü",
+    "pinFailed": "Həmin şərh sancaqlana bilmədi",
     "kidsOnlyThread": "Bu yazı uşaqlar üçündür. Yalnız Uşaqlar Rejimi bu barədə şərh yaza bilər."
   },
   "postInfo": {
