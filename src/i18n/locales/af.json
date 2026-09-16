@@ -1064,7 +1064,15 @@
       "week": "Week",
       "month": "Maand",
       "year": "Jaar"
-    }
+    },
+    "hidden": "Versteek",
+    "noDataForPeriod": "Nog geen data vir hierdie tydperk nie",
+    "noDataYet": "Nog geen ranglysdata nie",
+    "seeAll": "Sien alles",
+    "rankN": "Plek {{rank}}",
+    "you": "(jy)",
+    "provisional": "voorlopig",
+    "loadingBoard": "Laai ranglys…"
   },
   "explorePage": {
     "searchPlaceholder": "Soek na mense, poste of inhoud...",
@@ -1827,7 +1835,20 @@
     "intro": "'n Versameling speletjies, wêrelde en ervarings wat DeHub gebou en oopbron gemaak het.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Speel reguit in jou blaaier op DeHub — filmiese 3D-skaak, 'n prosedureel gegenereerde skietspel, 'n stap deur die reënwoud, 'n neon-straatbakleiery en 'n handelsvloer waar jy kan rondloop. Geen installasie, geen aflaai nie.",
-    "alsoIn": "Kom ook in {{theme}} voor"
+    "alsoIn": "Kom ook in {{theme}} voor",
+    "hpLeft": "{{hp}} HP oor",
+    "noHpLeft": "geen HP oor nie",
+    "bestOfRuns": "beste van {{count}} pogings",
+    "firstRun": "eerste poging",
+    "gamesRecord_one": "{{count}} spel · {{wins}}W {{losses}}V {{draws}}G",
+    "gamesRecord_other": "{{count}} spelle · {{wins}}W {{losses}}V {{draws}}G",
+    "anon": "anoniem",
+    "streetSlayerBoardTitle": "Verste in die straat af",
+    "streetSlayerBoardBlurb": "Hoe ver jy gekom het voordat die straat jou gevang het, en hoeveel lewe jy oorgehad het toe jy stop. Klop jou eie beste om op te skuif.",
+    "streetSlayerBoardEmpty": "Niemand het nog ver genoeg gekom nie. Wees die eerste.",
+    "kingsGambitBoardTitle": "Gradering",
+    "kingsGambitBoardBlurb": "Elo oor elke aanlyn wedstryd. Almal begin by 1200; om 'n sterker speler te klop tel meer as om 'n swakker een te klop, so die leer kan nie met 'n tweede beursie opgejaag word nie.",
+    "kingsGambitBoardEmpty": "Geen aanlyn wedstryd is nog voltooi nie. Open 'n uitdaging."
   },
   "stats": {
     "community": {

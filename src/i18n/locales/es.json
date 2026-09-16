@@ -1040,7 +1040,15 @@
     "addedToLeaderboard": "¡Has sido añadido! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo muy bajo ({{balance}} DHB)",
     "refreshFailed": "Algo salió mal",
-    "noWalletAddress": "No se encontró dirección de billetera"
+    "noWalletAddress": "No se encontró dirección de billetera",
+    "hidden": "Oculto",
+    "noDataForPeriod": "Aún no hay datos para este período",
+    "noDataYet": "Aún no hay datos de clasificación",
+    "seeAll": "Ver todo",
+    "rankN": "Puesto {{rank}}",
+    "you": "(tú)",
+    "provisional": "preliminar",
+    "loadingBoard": "Cargando clasificación…"
   },
   "explorePage": {
     "searchPlaceholder": "Buscar personas, publicaciones o contenido...",
@@ -1961,7 +1969,20 @@
     "intro": "Una colección de juegos, mundos y experiencias creados y liberados como código abierto por DeHub.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Juega en tu navegador en DeHub: ajedrez 3D cinematográfico, un shooter generado proceduralmente, un paseo por la selva, una pelea callejera de neón y un parqué transitable. Sin instalar, sin descargar.",
-    "alsoIn": "También en {{theme}}"
+    "alsoIn": "También en {{theme}}",
+    "hpLeft": "{{hp}} PS restantes",
+    "noHpLeft": "sin PS restantes",
+    "bestOfRuns": "mejor de {{count}} intentos",
+    "firstRun": "primer intento",
+    "gamesRecord_one": "{{count}} partida · {{wins}}V {{losses}}D {{draws}}E",
+    "gamesRecord_other": "{{count}} partidas · {{wins}}V {{losses}}D {{draws}}E",
+    "anon": "anónimo",
+    "streetSlayerBoardTitle": "Más lejos por la calle",
+    "streetSlayerBoardBlurb": "Hasta dónde llegaste antes de que la calle pudiera contigo y cuánta vida te quedaba al parar. Supera tu propio récord para subir.",
+    "streetSlayerBoardEmpty": "Nadie ha llegado lo bastante lejos todavía. Sé el primero.",
+    "kingsGambitBoardTitle": "Puntuación",
+    "kingsGambitBoardBlurb": "Elo en todas las partidas en línea. Todos empiezan en 1200; ganar a un jugador más fuerte vale más que ganar a uno más débil, así que la clasificación no se puede inflar con una segunda billetera.",
+    "kingsGambitBoardEmpty": "Aún no ha terminado ninguna partida en línea. Lanza un desafío."
   },
   "stats": {
     "community": {

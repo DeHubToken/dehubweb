@@ -980,7 +980,15 @@
     "addedToLeaderboard": "你已加入！余额：{{balance}} DHB",
     "balanceTooLow": "余额太低（{{balance}} DHB）",
     "refreshFailed": "出错了",
-    "noWalletAddress": "找不到钱包地址"
+    "noWalletAddress": "找不到钱包地址",
+    "hidden": "已隐藏",
+    "noDataForPeriod": "这个时段还没数据",
+    "noDataYet": "还没排行榜数据",
+    "seeAll": "看全部",
+    "rankN": "第{{rank}}名",
+    "you": "（你）",
+    "provisional": "暂定",
+    "loadingBoard": "排行榜加载中…"
   },
   "explorePage": {
     "searchPlaceholder": "搜索人、帖子或内容...",
@@ -1850,7 +1858,20 @@
     "intro": "DeHub 家己做共开源其游戏、世界抑是体验其收藏。",
     "seoTitle": "游乐场",
     "seoDescription": "在 DeHub 顶用浏览器就会得耍游戏 — 电影感其 3D 象棋、程序生成其射击游戏、雨林散步、霓虹街头格斗共会得行踏其交易大厅。免装，免下载。",
-    "alsoIn": "也在 {{theme}} 内底"
+    "alsoIn": "也在 {{theme}} 内底",
+    "hpLeft": "剩 {{hp}} HP",
+    "noHpLeft": "HP 没了",
+    "bestOfRuns": "{{count}} 次里最好",
+    "firstRun": "第一次",
+    "gamesRecord_one": "{{count}} 局 · {{wins}}胜 {{losses}}负 {{draws}}平",
+    "gamesRecord_other": "{{count}} 局 · {{wins}}胜 {{losses}}负 {{draws}}平",
+    "anon": "匿名",
+    "streetSlayerBoardTitle": "街上走得最远",
+    "streetSlayerBoardBlurb": "被街收拾之前你走了多远，停下时还剩多少血。打破自己最好成绩就能往上升。",
+    "streetSlayerBoardEmpty": "还没人走得够远。做第一个。",
+    "kingsGambitBoardTitle": "等级分",
+    "kingsGambitBoardBlurb": "所有在线对局的 Elo。人人从 1200 起步；赢强手比赢弱手得分多，所以用第二个钱包刷不了榜。",
+    "kingsGambitBoardEmpty": "还没在线对局结束。开个挑战。"
   },
   "stats": {
     "community": {

@@ -994,7 +994,15 @@
     "addedToLeaderboard": "تاسو اضافه شوئ! بیلانس: {{balance}} DHB",
     "balanceTooLow": "بیلانس ډیر ټیټ دی ({{balance}} DHB)",
     "refreshFailed": "یو څه غلط شول",
-    "noWalletAddress": "د والټ پته ونه موندل شوه"
+    "noWalletAddress": "د والټ پته ونه موندل شوه",
+    "hidden": "پټ",
+    "noDataForPeriod": "د دې مودې لپاره تر اوسه معلومات نشته",
+    "noDataYet": "تر اوسه د لیډربورډ معلومات نشته",
+    "seeAll": "ټول وګورئ",
+    "rankN": "رتبه {{rank}}",
+    "you": "(ته)",
+    "provisional": "لنډمهاله",
+    "loadingBoard": "لیډربورډ لوډېږي…"
   },
   "explorePage": {
     "searchPlaceholder": "خلک، پوسټونه، یا منځپانګه ولټوئ...",
@@ -1867,7 +1875,20 @@
     "intro": "د DeHub لخوا جوړ شوي او خلاص سرچینه شوي لوبې، نړۍګانې یا تجربې راټولونه.",
     "seoTitle": "آرکید",
     "seoDescription": "په DeHub کې په خپل براوزر کې لوبې وکړئ — سینمایي 3D شطرنج، پروسیجرلي جوړ شوی تیرانداز لوبه، د باران ځنګل کې ګرځیدل، د نیون-کوڅې لوبه او د تګ وړ سوداګریز فلور. نصبولو ته اړتیا نشته، ډانلوډولو ته اړتیا نشته.",
-    "alsoIn": "همدارنګه په {{theme}} کې"
+    "alsoIn": "همدارنګه په {{theme}} کې",
+    "hpLeft": "{{hp}} HP پاتې",
+    "noHpLeft": "هېڅ HP نه دي پاتې",
+    "bestOfRuns": "د {{count}} هڅو غوره",
+    "firstRun": "لومړۍ هڅه",
+    "gamesRecord_one": "{{count}} لوبه · {{wins}}ګ {{losses}}ب {{draws}}م",
+    "gamesRecord_other": "{{count}} لوبې · {{wins}}ګ {{losses}}ب {{draws}}م",
+    "anon": "ناپېژندل شوی",
+    "streetSlayerBoardTitle": "په کوڅه کې تر ټولو لرې",
+    "streetSlayerBoardBlurb": "مخکې له دې چې کوڅه دې راوغورځوي څومره لرې ولاړې، او کله چې ودرېدې څومره روغتیا دې پاتې وه. د پورته تګ لپاره خپل ریکارډ مات کړه.",
+    "streetSlayerBoardEmpty": "تر اوسه هېڅوک دومره لرې نه دي رسېدلي. لومړی شه.",
+    "kingsGambitBoardTitle": "ریټنګ",
+    "kingsGambitBoardBlurb": "د ټولو آنلاین لوبو ایلو. ټول له 1200 څخه پیل کوي؛ پر پیاوړي لوبغاړي بریا د کمزوري پر وړاندې له بریا څخه ډېر ارزښت لري، نو رتبه بندي په دویم والټ نه شي لوړېدلی.",
+    "kingsGambitBoardEmpty": "تر اوسه هېڅ آنلاین لوبه نه ده پای ته رسېدلې. یوه ننګونه پرانیزه."
   },
   "stats": {
     "community": {

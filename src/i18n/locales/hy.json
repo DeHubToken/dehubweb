@@ -1037,7 +1037,15 @@
     "addedToLeaderboard": "Douq avelatsvaats eq! Hashvekshir: {{balance}} DHB",
     "balanceTooLow": "Hashvekshire shaht tsatr e ({{balance}} DHB)",
     "refreshFailed": "Inch-vor ban aybn gnatsa",
-    "noWalletAddress": "Drami hasce chen gnvaats"
+    "noWalletAddress": "Drami hasce chen gnvaats",
+    "hidden": "Թաքնված",
+    "noDataForPeriod": "Այս ժամանակահատվածի համար դեռ տվյալներ չկան",
+    "noDataYet": "Դեռ վարկանիշային աղյուսակի տվյալներ չկան",
+    "seeAll": "Տեսնել բոլորը",
+    "rankN": "Տեղ {{rank}}",
+    "you": "(դուք)",
+    "provisional": "նախնական",
+    "loadingBoard": "Վարկանիշային աղյուսակը բեռնվում է…"
   },
   "explorePage": {
     "searchPlaceholder": "Voronel mardkanits, groumerits kam bovalandakoutyunits...",
@@ -1909,7 +1917,20 @@
     "intro": "DeHub-ի կառուցած և բաց կոդով հրապարակած խաղերի, աշխարհների ու փորձառությունների հավաքածու։",
     "seoTitle": "Արկադ | DeHub",
     "seoDescription": "Խաղացեք ուղիղ ձեր դիտարկիչում DeHub-ում — կինեմատոգրաֆիկ 3D շախմատ, ընթացակարգային ձևով ստեղծված հրաձգային խաղ, զբոսանք արևադարձային անտառում, նեոնային փողոցային կռիվ և առևտրային դահլիճ, որով կարելի է քայլել։ Առանց տեղադրման, առանց ներբեռնման։",
-    "alsoIn": "Կա նաև {{theme}} թեմայում"
+    "alsoIn": "Կա նաև {{theme}} թեմայում",
+    "hpLeft": "{{hp}} HP մնացել է",
+    "noHpLeft": "HP չի մնացել",
+    "bestOfRuns": "լավագույնը {{count}} փորձից",
+    "firstRun": "առաջին փորձ",
+    "gamesRecord_one": "{{count}} խաղ · {{wins}}Հ {{losses}}Պ {{draws}}Ո",
+    "gamesRecord_other": "{{count}} խաղ · {{wins}}Հ {{losses}}Պ {{draws}}Ո",
+    "anon": "անանուն",
+    "streetSlayerBoardTitle": "Ամենահեռուն փողոցով",
+    "streetSlayerBoardBlurb": "Որքան հեռու հասաք, մինչև փողոցը ձեզ կանգնեցրեց, և որքան առողջություն մնաց կանգնելիս: Գերազանցեք ձեր ռեկորդը՝ բարձրանալու համար:",
+    "streetSlayerBoardEmpty": "Դեռ ոչ ոք բավական հեռու չի հասել: Եղեք առաջինը:",
+    "kingsGambitBoardTitle": "Վարկանիշ",
+    "kingsGambitBoardBlurb": "Էլո բոլոր առցանց խաղերի հիման վրա: Բոլորը սկսում են 1200-ից. ուժեղ խաղացողին հաղթելն ավելի արժեքավոր է, քան թույլին, ուստի վարկանիշը երկրորդ դրամապանակով բարձրացնել չի ստացվի:",
+    "kingsGambitBoardEmpty": "Դեռ ոչ մի առցանց խաղ չի ավարտվել: Բացեք մարտահրավեր:"
   },
   "stats": {
     "community": {

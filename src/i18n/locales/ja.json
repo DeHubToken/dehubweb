@@ -1037,7 +1037,15 @@
     "addedToLeaderboard": "追加されました！残高：{{balance}} DHB",
     "balanceTooLow": "残高が低すぎます ({{balance}} DHB)",
     "refreshFailed": "エラーが発生しました",
-    "noWalletAddress": "ウォレットアドレスが見つかりません"
+    "noWalletAddress": "ウォレットアドレスが見つかりません",
+    "hidden": "非公開",
+    "noDataForPeriod": "この期間のデータはまだありません",
+    "noDataYet": "ランキングのデータはまだありません",
+    "seeAll": "すべて見る",
+    "rankN": "{{rank}}位",
+    "you": "(あなた)",
+    "provisional": "暫定",
+    "loadingBoard": "ランキングを読み込み中…"
   },
   "explorePage": {
     "searchPlaceholder": "人、投稿、コンテンツを検索...",
@@ -1959,7 +1967,20 @@
     "intro": "DeHub が制作しオープンソース化したゲーム・ワールド・体験のコレクション。",
     "seoTitle": "アーケード | DeHub",
     "seoDescription": "DeHub ならブラウザで遊べます — シネマティックな 3D チェス、プロシージャル生成のシューター、熱帯雨林の散策、ネオン街のストリートファイト、歩き回れるトレーディングフロア。インストールもダウンロードも不要。",
-    "alsoIn": "{{theme}} にもあります"
+    "alsoIn": "{{theme}} にもあります",
+    "hpLeft": "残りHP {{hp}}",
+    "noHpLeft": "残りHPなし",
+    "bestOfRuns": "{{count}}回中のベスト",
+    "firstRun": "初回",
+    "gamesRecord_one": "{{count}}試合 · {{wins}}勝 {{losses}}敗 {{draws}}分",
+    "gamesRecord_other": "{{count}}試合 · {{wins}}勝 {{losses}}敗 {{draws}}分",
+    "anon": "匿名",
+    "streetSlayerBoardTitle": "ストリート最長到達",
+    "streetSlayerBoardBlurb": "ストリートにやられる前にどこまで進んだか、止まった時点で体力がどれだけ残っていたか。自己ベストを更新して順位を上げよう。",
+    "streetSlayerBoardEmpty": "まだ誰も十分に進んでいません。最初の一人になろう。",
+    "kingsGambitBoardTitle": "レーティング",
+    "kingsGambitBoardBlurb": "全オンライン対局のElo。全員1200からスタート。強い相手に勝つほど多く得られるので、別のウォレットで順位を稼ぐことはできません。",
+    "kingsGambitBoardEmpty": "まだオンライン対局が終わっていません。チャレンジを作成しよう。"
   },
   "stats": {
     "community": {

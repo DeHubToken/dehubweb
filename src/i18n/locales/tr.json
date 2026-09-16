@@ -1040,7 +1040,15 @@
     "addedToLeaderboard": "Eklendiniz! Bakiye: {{balance}} DHB",
     "balanceTooLow": "Bakiye çok düşük ({{balance}} DHB)",
     "refreshFailed": "Bir şeyler yanlış gitti",
-    "noWalletAddress": "Cüzdan adresi bulunamadı"
+    "noWalletAddress": "Cüzdan adresi bulunamadı",
+    "hidden": "Gizli",
+    "noDataForPeriod": "Bu dönem için henüz veri yok",
+    "noDataYet": "Henüz sıralama verisi yok",
+    "seeAll": "Tümünü gör",
+    "rankN": "{{rank}}. sıra",
+    "you": "(sen)",
+    "provisional": "geçici",
+    "loadingBoard": "Sıralama yükleniyor…"
   },
   "explorePage": {
     "searchPlaceholder": "Kişi, gönderi veya içerik ara...",
@@ -1961,7 +1969,20 @@
     "intro": "DeHub'ın geliştirip açık kaynak yaptığı oyunlar, dünyalar ve deneyimlerden oluşan bir koleksiyon.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "DeHub'da tarayıcınızda oynayın — sinematik 3D satranç, prosedürel üretilen bir nişancı oyunu, yağmur ormanında yürüyüş, neon sokak dövüşü ve gezilebilir bir borsa salonu. Kurulum yok, indirme yok.",
-    "alsoIn": "{{theme}} temasında da var"
+    "alsoIn": "{{theme}} temasında da var",
+    "hpLeft": "{{hp}} HP kaldı",
+    "noHpLeft": "HP kalmadı",
+    "bestOfRuns": "{{count}} denemenin en iyisi",
+    "firstRun": "ilk deneme",
+    "gamesRecord_one": "{{count}} maç · {{wins}}G {{losses}}M {{draws}}B",
+    "gamesRecord_other": "{{count}} maç · {{wins}}G {{losses}}M {{draws}}B",
+    "anon": "anonim",
+    "streetSlayerBoardTitle": "Sokakta en uzağa giden",
+    "streetSlayerBoardBlurb": "Sokak seni yakalamadan önce ne kadar ilerlediğin ve durduğunda ne kadar canın kaldığı. Yükselmek için kendi rekorunu kır.",
+    "streetSlayerBoardEmpty": "Henüz kimse yeterince ilerleyemedi. İlk sen ol.",
+    "kingsGambitBoardTitle": "Puan",
+    "kingsGambitBoardBlurb": "Tüm çevrimiçi maçlardaki Elo. Herkes 1200'den başlar; güçlü bir oyuncuyu yenmek zayıfını yenmekten daha değerlidir, bu yüzden sıralama ikinci bir cüzdanla şişirilemez.",
+    "kingsGambitBoardEmpty": "Henüz hiçbir çevrimiçi maç bitmedi. Bir meydan okuma başlat."
   },
   "stats": {
     "community": {

@@ -1012,7 +1012,15 @@
     "addedToLeaderboard": "تزدتي! الرصيد: {{balance}} DHB",
     "balanceTooLow": "الرصيد قليل بزاف ({{balance}} DHB)",
     "refreshFailed": "وقع شي مشكل",
-    "noWalletAddress": "ما كاين حتى عنوان محفظة"
+    "noWalletAddress": "ما كاين حتى عنوان محفظة",
+    "hidden": "مخفي",
+    "noDataForPeriod": "مازال ما كاين حتى معطيات لهاد الفترة",
+    "noDataYet": "مازال ما كاين معطيات ديال لوحة المتصدرين",
+    "seeAll": "شوف الكل",
+    "rankN": "الرتبة {{rank}}",
+    "you": "(نتا)",
+    "provisional": "مؤقت",
+    "loadingBoard": "كنحمّلو لوحة المتصدرين…"
   },
   "explorePage": {
     "searchPlaceholder": "قلّب على ناس أو بوستات أو محتوى...",
@@ -1943,7 +1951,20 @@
     "intro": "مجموعة ديال الألعاب والعوالم والتجارب اللي بناتها DeHub وحلات الكود ديالها للجميع.",
     "seoTitle": "الأركيد | DeHub",
     "seoDescription": "لعب فالمتصفح ديالك على DeHub — شطرنج ثلاثي الأبعاد سينمائي، ولعبة ضرب بالنار متولدة إجرائيًا، وتمشاية فالغابة المطيرة، وخناقة زنقة بالنيون، وقاعة تداول تقدر تمشى فيها. بلا تثبيت وبلا تنزيل.",
-    "alsoIn": "كاين حتى فـ {{theme}}"
+    "alsoIn": "كاين حتى فـ {{theme}}",
+    "hpLeft": "باقي {{hp}} نقطة صحة",
+    "noHpLeft": "ما بقات حتى نقطة صحة",
+    "bestOfRuns": "الأحسن من {{count}} محاولات",
+    "firstRun": "أول محاولة",
+    "gamesRecord_one": "{{count}} ماتش · {{wins}}ف {{losses}}خ {{draws}}ت",
+    "gamesRecord_other": "{{count}} ماتشات · {{wins}}ف {{losses}}خ {{draws}}ت",
+    "anon": "مجهول",
+    "streetSlayerBoardTitle": "الأبعد فالزنقة",
+    "streetSlayerBoardBlurb": "فين وصلتي قبل ما تغلبك الزنقة، وشحال بقا ليك من الصحة ملي وقفتي. كسّر رقمك باش تطلع.",
+    "streetSlayerBoardEmpty": "مازال حتى واحد ما وصل بعيد بزاف. كون الأول.",
+    "kingsGambitBoardTitle": "التصنيف",
+    "kingsGambitBoardBlurb": "تصنيف إيلو على كاع الماتشات أونلاين. كولشي كيبدا من 1200؛ الفوز على لاعب قوي كيجيب كتر من الفوز على ضعيف، إذن ما يمكنش تطلع الترتيب بمحفظة تانية.",
+    "kingsGambitBoardEmpty": "مازال حتى ماتش أونلاين ما سالا. حل تحدي."
   },
   "stats": {
     "community": {

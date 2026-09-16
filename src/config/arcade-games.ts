@@ -177,12 +177,12 @@ export interface ArcadeGameBoard {
    * server's own clock — see supabase/functions/arcade-score.
    */
   kind: 'run' | 'ladder';
-  /** Heading, and the name of the figure in the right-hand column. */
-  valueLabel: string;
-  /** One line on what the board measures and how to move up it. */
-  blurb: string;
-  /** What an empty board says. A prompt, not an apology. */
-  emptyLine: string;
+  /** i18n key: heading, and the name of the figure in the right-hand column. */
+  valueLabelKey: string;
+  /** i18n key: one line on what the board measures and how to move up it. */
+  blurbKey: string;
+  /** i18n key: what an empty board says. A prompt, not an apology. */
+  emptyLineKey: string;
   /**
    * `postMessage({ source })` value the frame reports its run under. Run
    * boards only, and the same name as `exitSource` where a game has both —
@@ -435,10 +435,9 @@ export const ARCADE_GAMES: ArcadeGame[] = [
      */
     leaderboard: {
       kind: 'run',
-      valueLabel: 'Furthest down the street',
-      blurb:
-        'How far you got before the street got you, and how much health you had left when you stopped. Beat your own best to move up.',
-      emptyLine: 'Nobody has made it far enough yet. Be the first.',
+      valueLabelKey: 'arcade.streetSlayerBoardTitle',
+      blurbKey: 'arcade.streetSlayerBoardBlurb',
+      emptyLineKey: 'arcade.streetSlayerBoardEmpty',
       runSource: 'street-slayer',
     },
   },
@@ -487,10 +486,9 @@ export const ARCADE_GAMES: ArcadeGame[] = [
      */
     leaderboard: {
       kind: 'ladder',
-      valueLabel: 'Rating',
-      blurb:
-        'Elo across every online match. Everyone starts at 1200; beating a stronger player is worth more than beating a weaker one, so the ladder cannot be farmed with a second wallet.',
-      emptyLine: 'No online matches have finished yet. Open a challenge.',
+      valueLabelKey: 'arcade.kingsGambitBoardTitle',
+      blurbKey: 'arcade.kingsGambitBoardBlurb',
+      emptyLineKey: 'arcade.kingsGambitBoardEmpty',
     },
   },
   {

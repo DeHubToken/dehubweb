@@ -1036,7 +1036,15 @@
     "addedToLeaderboard": "Has estat afegit! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo massa baix ({{balance}} DHB)",
     "refreshFailed": "Alguna cosa ha anat malament",
-    "noWalletAddress": "No s'ha trobat adreça de cartera"
+    "noWalletAddress": "No s'ha trobat adreça de cartera",
+    "hidden": "Ocult",
+    "noDataForPeriod": "Encara no hi ha dades per a aquest període",
+    "noDataYet": "Encara no hi ha dades de classificació",
+    "seeAll": "Veure-ho tot",
+    "rankN": "Posició {{rank}}",
+    "you": "(tu)",
+    "provisional": "provisori",
+    "loadingBoard": "Carregant la classificació…"
   },
   "explorePage": {
     "searchPlaceholder": "Cercar persones, publicacions o contingut...",
@@ -1908,7 +1916,20 @@
     "intro": "Una col·lecció de jocs, mons i experiències que DeHub ha construït i alliberat com a codi obert.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Juga directament al navegador a DeHub: escacs 3D cinematogràfics, un shooter generat proceduralment, un passeig per la selva tropical, una baralla de carrer de neó i un parquet de negociació per on pots caminar. Sense instal·lar, sense descarregar.",
-    "alsoIn": "També hi és a {{theme}}"
+    "alsoIn": "També hi és a {{theme}}",
+    "hpLeft": "{{hp}} PV restants",
+    "noHpLeft": "sense PV restants",
+    "bestOfRuns": "millor de {{count}} intents",
+    "firstRun": "primer intent",
+    "gamesRecord_one": "{{count}} partida · {{wins}}V {{losses}}D {{draws}}E",
+    "gamesRecord_other": "{{count}} partides · {{wins}}V {{losses}}D {{draws}}E",
+    "anon": "anònim",
+    "streetSlayerBoardTitle": "Més lluny carrer avall",
+    "streetSlayerBoardBlurb": "Fins on has arribat abans que el carrer et vencés, i quanta vida et quedava en parar. Supera el teu propi rècord per pujar.",
+    "streetSlayerBoardEmpty": "Encara ningú ha arribat prou lluny. Sigues el primer.",
+    "kingsGambitBoardTitle": "Puntuació",
+    "kingsGambitBoardBlurb": "Elo de totes les partides en línia. Tothom comença a 1200; guanyar un jugador més fort val més que guanyar-ne un de més feble, així que la classificació no es pot inflar amb una segona cartera.",
+    "kingsGambitBoardEmpty": "Encara no ha acabat cap partida en línia. Obre un desafiament."
   },
   "stats": {
     "community": {

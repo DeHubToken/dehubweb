@@ -1035,7 +1035,15 @@
     "addedToLeaderboard": "Přidáno! Zůstatek: {{balance}} DHB",
     "balanceTooLow": "Zůstatek příliš nízký ({{balance}} DHB)",
     "refreshFailed": "Došlo k chybě",
-    "noWalletAddress": "Adresa peněženky není dostupná"
+    "noWalletAddress": "Adresa peněženky není dostupná",
+    "hidden": "Skryto",
+    "noDataForPeriod": "Pro toto období zatím nejsou žádná data",
+    "noDataYet": "Zatím žádná data žebříčku",
+    "seeAll": "Zobrazit vše",
+    "rankN": "{{rank}}. místo",
+    "you": "(ty)",
+    "provisional": "předběžné",
+    "loadingBoard": "Načítání žebříčku…"
   },
   "explorePage": {
     "searchPlaceholder": "Hledat lidi, příspěvky nebo obsah...",
@@ -1907,7 +1915,20 @@
     "intro": "Sbírka her, světů a zážitků, které DeHub postavil a uvolnil jako open source.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Hraj přímo v prohlížeči na DeHubu — filmové 3D šachy, procedurálně generovaná střílečka, procházka deštným pralesem, neonová pouliční rvačka a obchodní parket, po kterém se dá chodit. Bez instalace, bez stahování.",
-    "alsoIn": "Najdeš i v tématu {{theme}}"
+    "alsoIn": "Najdeš i v tématu {{theme}}",
+    "hpLeft": "zbývá {{hp}} HP",
+    "noHpLeft": "žádné HP nezbývá",
+    "bestOfRuns": "nejlepší z {{count}} pokusů",
+    "firstRun": "první pokus",
+    "gamesRecord_one": "{{count}} partie · {{wins}}V {{losses}}P {{draws}}R",
+    "gamesRecord_other": "{{count}} partií · {{wins}}V {{losses}}P {{draws}}R",
+    "anon": "anonym",
+    "streetSlayerBoardTitle": "Nejdál po ulici",
+    "streetSlayerBoardBlurb": "Jak daleko ses dostal, než tě ulice dostala, a kolik ti zbylo života, když jsi skončil. Překonej svůj rekord a posuň se výš.",
+    "streetSlayerBoardEmpty": "Ještě se nikdo nedostal dost daleko. Buď první.",
+    "kingsGambitBoardTitle": "Hodnocení",
+    "kingsGambitBoardBlurb": "Elo ze všech online partií. Všichni začínají na 1200; výhra nad silnějším hráčem má větší hodnotu než nad slabším, takže žebříček nejde nahnat druhou peněženkou.",
+    "kingsGambitBoardEmpty": "Zatím neskončila žádná online partie. Vyzvi někoho."
   },
   "stats": {
     "community": {

@@ -1015,7 +1015,15 @@
     "addedToLeaderboard": "شامل ہو گئے! بیلنس: {{balance}} DHB",
     "balanceTooLow": "بیلنس بہت کم ({{balance}} DHB)",
     "refreshFailed": "خرابی ہوئی",
-    "noWalletAddress": "والٹ ایڈریس نہیں ملا"
+    "noWalletAddress": "والٹ ایڈریس نہیں ملا",
+    "hidden": "پوشیدہ",
+    "noDataForPeriod": "اس مدت کے لیے ابھی کوئی ڈیٹا دستیاب نہیں",
+    "noDataYet": "ابھی لیڈر بورڈ کا کوئی ڈیٹا نہیں",
+    "seeAll": "سب دیکھیں",
+    "rankN": "درجہ {{rank}}",
+    "you": "(آپ)",
+    "provisional": "عارضی",
+    "loadingBoard": "لیڈر بورڈ لوڈ ہو رہا ہے…"
   },
   "explorePage": {
     "searchPlaceholder": "لوگ، پوسٹس یا مواد تلاش کریں...",
@@ -1807,7 +1815,20 @@
     "intro": "DeHub کے بنائے اور اوپن سورس کیے گئے کھیلوں، دنیاؤں اور تجربات کا مجموعہ۔",
     "seoTitle": "آرکیڈ | DeHub",
     "seoDescription": "DeHub پر براؤزر ہی میں کھیلیں — سنیمائی 3D شطرنج، پروسیجرل طریقے سے بنا شوٹر، برساتی جنگل کی سیر، نیون گلی کی لڑائی اور چل پھر کر دیکھنے والا ٹریڈنگ فلور۔ نہ انسٹال، نہ ڈاؤن لوڈ۔",
-    "alsoIn": "{{theme}} میں بھی موجود ہے"
+    "alsoIn": "{{theme}} میں بھی موجود ہے",
+    "hpLeft": "{{hp}} HP باقی",
+    "noHpLeft": "کوئی HP باقی نہیں",
+    "bestOfRuns": "{{count}} کوششوں میں بہترین",
+    "firstRun": "پہلی کوشش",
+    "gamesRecord_one": "{{count}} گیم · {{wins}}ج {{losses}}ہ {{draws}}ب",
+    "gamesRecord_other": "{{count}} گیمز · {{wins}}ج {{losses}}ہ {{draws}}ب",
+    "anon": "گمنام",
+    "streetSlayerBoardTitle": "گلی میں سب سے آگے",
+    "streetSlayerBoardBlurb": "گلی نے آپ کو گرانے سے پہلے آپ کتنی دور گئے، اور رکتے وقت کتنی صحت باقی تھی۔ اوپر جانے کے لیے اپنا ہی ریکارڈ توڑیں۔",
+    "streetSlayerBoardEmpty": "ابھی کوئی اتنی دور نہیں پہنچا۔ پہلے بنیں۔",
+    "kingsGambitBoardTitle": "ریٹنگ",
+    "kingsGambitBoardBlurb": "تمام آن لائن میچوں کا ایلو۔ سب 1200 سے شروع کرتے ہیں؛ مضبوط کھلاڑی کو ہرانا کمزور کو ہرانے سے زیادہ قیمتی ہے، اس لیے دوسرے والٹ سے درجہ بندی نہیں بڑھائی جا سکتی۔",
+    "kingsGambitBoardEmpty": "ابھی کوئی آن لائن میچ مکمل نہیں ہوا۔ چیلنج کھولیں۔"
   },
   "stats": {
     "community": {

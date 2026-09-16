@@ -1037,7 +1037,15 @@
     "addedToLeaderboard": "You've been added! Balance: {{balance}} DHB",
     "balanceTooLow": "Balance too low ({{balance}} DHB)",
     "refreshFailed": "Something went wrong",
-    "noWalletAddress": "No wallet address found"
+    "noWalletAddress": "No wallet address found",
+    "hidden": "Dhokfame",
+    "noDataForPeriod": "Yeroo kanaaf ammatti daataan hin jiru",
+    "noDataYet": "Ammatti daataan sadarkaa hin jiru",
+    "seeAll": "Hunda ilaali",
+    "rankN": "Sadarkaa {{rank}}",
+    "you": "(ati)",
+    "provisional": "yeroo gabaabaaf",
+    "loadingBoard": "Sadarkaan fe'amaa jira…"
   },
   "explorePage": {
     "searchPlaceholder": "Namoota, barreeffamoota yookaan qabiyyee barbaadi...",
@@ -1938,7 +1946,20 @@
     "intro": "Taphoota, addunyaalee fi muuxannoowwan DeHub ijaaree madda banaa godhe walitti qabame.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "DeHub irratti browser kee keessatti taphadhu — chess 3D fiilmii fakkaatu, tapha rasaasaa karaa tartiibaan uumamu, bosona rooba keessa deemuu, lola daandii neon fi galma daldalaa keessa deemamu. Osoo hin fe'in, osoo hin buufatin.",
-    "alsoIn": "{{theme}} keessattis jira"
+    "alsoIn": "{{theme}} keessattis jira",
+    "hpLeft": "HP {{hp}} hafe",
+    "noHpLeft": "HP hin hafne",
+    "bestOfRuns": "yaalii {{count}} keessaa isa hunda caalu",
+    "firstRun": "yaalii jalqabaa",
+    "gamesRecord_one": "taphoota {{count}} · {{wins}}M {{losses}}K {{draws}}W",
+    "gamesRecord_other": "taphoota {{count}} · {{wins}}M {{losses}}K {{draws}}W",
+    "anon": "maqaa hin beekamne",
+    "streetSlayerBoardTitle": "Daandii irratti hunda caalaa fagaate",
+    "streetSlayerBoardBlurb": "Daandiin si kuffisuun dura hangam akka fagaatte, fi yeroo dhaabbatte fayyaan hangam akka hafe. Ol ba'uuf galmee kee mataa kee cabsi.",
+    "streetSlayerBoardEmpty": "Ammatti namni gahaa fagaate hin jiru. Isa jalqabaa ta'i.",
+    "kingsGambitBoardTitle": "Madaallii",
+    "kingsGambitBoardBlurb": "Elo taphoota toora interneetii hunda irratti. Hundi 1200 irraa jalqaba; taphataa cimaa mo'uun isa dadhabaa mo'uu caalaa gatii qaba, kanaaf sadarkaan waaleetii lammaffaan ol guddifamuu hin danda'u.",
+    "kingsGambitBoardEmpty": "Ammatti taphni toora interneetii xumurame hin jiru. Dorgommii bani."
   },
   "stats": {
     "community": {

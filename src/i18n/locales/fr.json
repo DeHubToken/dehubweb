@@ -1040,7 +1040,15 @@
     "addedToLeaderboard": "Vous avez été ajouté ! Solde : {{balance}} DHB",
     "balanceTooLow": "Solde trop bas ({{balance}} DHB)",
     "refreshFailed": "Quelque chose s'est mal passé",
-    "noWalletAddress": "Aucune adresse de portefeuille trouvée"
+    "noWalletAddress": "Aucune adresse de portefeuille trouvée",
+    "hidden": "Masqué",
+    "noDataForPeriod": "Aucune donnée disponible pour cette période pour l'instant",
+    "noDataYet": "Pas encore de données de classement",
+    "seeAll": "Voir tout",
+    "rankN": "Rang {{rank}}",
+    "you": "(vous)",
+    "provisional": "provisoire",
+    "loadingBoard": "Chargement du classement…"
   },
   "explorePage": {
     "searchPlaceholder": "Rechercher des personnes, publications ou contenus...",
@@ -1965,7 +1973,20 @@
     "intro": "Une collection de jeux, mondes et expériences créés et publiés en open source par DeHub.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Jouez dans votre navigateur sur DeHub : échecs 3D cinématiques, un shooter généré procéduralement, une balade en forêt tropicale, une baston de rue néon et une salle des marchés à explorer. Sans installation, sans téléchargement.",
-    "alsoIn": "Aussi dans {{theme}}"
+    "alsoIn": "Aussi dans {{theme}}",
+    "hpLeft": "{{hp}} PV restants",
+    "noHpLeft": "aucun PV restant",
+    "bestOfRuns": "meilleur de {{count}} parties",
+    "firstRun": "première partie",
+    "gamesRecord_one": "{{count}} partie · {{wins}}V {{losses}}D {{draws}}N",
+    "gamesRecord_other": "{{count}} parties · {{wins}}V {{losses}}D {{draws}}N",
+    "anon": "anonyme",
+    "streetSlayerBoardTitle": "Le plus loin dans la rue",
+    "streetSlayerBoardBlurb": "Jusqu'où vous êtes allé avant que la rue ne vous ait, et combien de vie il vous restait à l'arrêt. Battez votre propre record pour monter.",
+    "streetSlayerBoardEmpty": "Personne n'est encore allé assez loin. Soyez le premier.",
+    "kingsGambitBoardTitle": "Classement Elo",
+    "kingsGambitBoardBlurb": "Elo sur toutes les parties en ligne. Tout le monde part de 1200 ; battre un joueur plus fort rapporte plus que battre un plus faible, donc impossible de gonfler le classement avec un second portefeuille.",
+    "kingsGambitBoardEmpty": "Aucune partie en ligne terminée pour l'instant. Lancez un défi."
   },
   "stats": {
     "community": {

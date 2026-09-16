@@ -1040,7 +1040,15 @@
     "addedToLeaderboard": "Zostałeś dodany! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo zbyt niskie ({{balance}} DHB)",
     "refreshFailed": "Coś poszło nie tak",
-    "noWalletAddress": "Nie znaleziono adresu portfela"
+    "noWalletAddress": "Nie znaleziono adresu portfela",
+    "hidden": "Ukryte",
+    "noDataForPeriod": "Brak danych dla tego okresu",
+    "noDataYet": "Brak jeszcze danych rankingu",
+    "seeAll": "Zobacz wszystko",
+    "rankN": "Miejsce {{rank}}",
+    "you": "(ty)",
+    "provisional": "tymczasowy",
+    "loadingBoard": "Ładowanie rankingu…"
   },
   "explorePage": {
     "searchPlaceholder": "Szukaj ludzi, postów lub treści...",
@@ -1961,7 +1969,20 @@
     "intro": "Zbiór gier, światów i doświadczeń zbudowanych i udostępnionych jako open source przez DeHub.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Graj w przeglądarce na DeHub — filmowe szachy 3D, proceduralnie generowana strzelanka, spacer po lesie deszczowym, neonowa bijatyka uliczna i parkiet giełdowy do zwiedzania. Bez instalacji, bez pobierania.",
-    "alsoIn": "Także w {{theme}}"
+    "alsoIn": "Także w {{theme}}",
+    "hpLeft": "{{hp}} HP zostało",
+    "noHpLeft": "brak HP",
+    "bestOfRuns": "najlepszy z {{count}} przebiegów",
+    "firstRun": "pierwszy przebieg",
+    "gamesRecord_one": "{{count}} partia · {{wins}}W {{losses}}P {{draws}}R",
+    "gamesRecord_other": "{{count}} partii · {{wins}}W {{losses}}P {{draws}}R",
+    "anon": "anonim",
+    "streetSlayerBoardTitle": "Najdalej w głąb ulicy",
+    "streetSlayerBoardBlurb": "Jak daleko dotarłeś, zanim ulica cię dopadła, i ile zdrowia ci zostało, gdy się zatrzymałeś. Pobij własny rekord, by awansować.",
+    "streetSlayerBoardEmpty": "Nikt nie dotarł jeszcze wystarczająco daleko. Bądź pierwszy.",
+    "kingsGambitBoardTitle": "Ranking",
+    "kingsGambitBoardBlurb": "Elo ze wszystkich partii online. Każdy zaczyna od 1200; wygrana z silniejszym graczem jest warta więcej niż ze słabszym, więc rankingu nie da się nabić drugim portfelem.",
+    "kingsGambitBoardEmpty": "Żadna partia online jeszcze się nie zakończyła. Rzuć wyzwanie."
   },
   "stats": {
     "community": {

@@ -1018,7 +1018,15 @@
     "addedToLeaderboard": "Kua tāpiritia koe! Toenga: {{balance}} DHB",
     "balanceTooLow": "Toenga iti rawa ({{balance}} DHB)",
     "refreshFailed": "I hapa tētahi mea",
-    "noWalletAddress": "Kāore i kitea te wāhitau pūkoro moni"
+    "noWalletAddress": "Kāore i kitea te wāhitau pūkoro moni",
+    "hidden": "Kua huna",
+    "noDataForPeriod": "Kāore anō he raraunga mō tēnei wā",
+    "noDataYet": "Kāore anō he raraunga rārangi rangatira",
+    "seeAll": "Tirohia katoa",
+    "rankN": "Tūnga {{rank}}",
+    "you": "(koe)",
+    "provisional": "taupua",
+    "loadingBoard": "E uta ana i te rārangi rangatira…"
   },
   "explorePage": {
     "searchPlaceholder": "Rapu tāngata, pānui, ihirangi rānei...",
@@ -1918,7 +1926,20 @@
     "intro": "He kohinga kēmu, ao me ngā wheako i hangaia, i whakapuaretia hoki e DeHub.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Tākarohia i tō pūtirotiro i runga i DeHub — he chess 3D āhua kiriata, he kēmu pūpuhi i hangaia ā-tukanga, he hīkoi i te ngahere ua, he whawhai tiriti neon me tētahi papa hokohoko e taea ana te hīkoi. Kāore he tāuta, kāore he tikiake.",
-    "alsoIn": "Kei roto anō i te {{theme}}"
+    "alsoIn": "Kei roto anō i te {{theme}}",
+    "hpLeft": "{{hp}} HP e toe ana",
+    "noHpLeft": "kāore he HP e toe ana",
+    "bestOfRuns": "te pai rawa o ngā oma {{count}}",
+    "firstRun": "oma tuatahi",
+    "gamesRecord_one": "{{count}} kēmu · {{wins}}W {{losses}}H {{draws}}T",
+    "gamesRecord_other": "{{count}} kēmu · {{wins}}W {{losses}}H {{draws}}T",
+    "anon": "ingoa kore",
+    "streetSlayerBoardTitle": "Te tawhiti rawa i te tiriti",
+    "streetSlayerBoardBlurb": "Pēhea te tawhiti i tae atu ai koe i mua i te hinganga ki te tiriti, me te nui o te ora i toe i tō tūnga. Whakahinga i tō ake tino pai kia piki ake.",
+    "streetSlayerBoardEmpty": "Kāore anō tētahi kia tae ki tawhiti. Ko koe te tuatahi.",
+    "kingsGambitBoardTitle": "Whakatauranga",
+    "kingsGambitBoardBlurb": "Elo puta noa i ngā tukinga tuihono katoa. Ka tīmata te katoa i te 1200; he nui ake te uara o te wikitoria ki tētahi kaitākaro kaha i tētahi ngoikore, nō reira kāore e taea te whakapiki i te arawhata mā tētahi pūkoro tuarua.",
+    "kingsGambitBoardEmpty": "Kāore anō he tukinga tuihono kia oti. Whakatuwheratia he wero."
   },
   "stats": {
     "community": {
