@@ -1673,7 +1673,10 @@
     "not_now": "ابھی نہیں",
     "image_too_large_tier": "تصویر بہت بڑی ہے — آپ کی {{tier}} درجے کی تصاویر {{limit}} MB تک اسٹور کرتی ہیں",
     "image_too_large_untiered": "تصویر بہت بڑی ہے — تصاویر {{limit}} MB تک محفوظ ہیں",
-    "rate_limited": "ریٹ لمٹ ہو گئی، آہستہ کریں"
+    "rate_limited": "ریٹ لمٹ ہو گئی، آہستہ کریں",
+    "waiting_for_wallet": "آپ کے والٹ کا انتظار ہے",
+    "waiting_for_wallet_desc": "{{wallet}} کھولیں اور دستخط منظور کریں — درخواست وہاں منتظر ہے ۔",
+    "your_wallet": "آپ کا والٹ"
   },
   "staking": {
     "title": "اسٹیکنگ",

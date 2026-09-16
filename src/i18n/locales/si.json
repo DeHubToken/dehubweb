@@ -1733,7 +1733,10 @@
     "push_blocked_more": "වැඩි විස්තර",
     "not_now": "දැන් නොවේ",
     "image_too_large_untiered": "පිංතූරය විශාල වැඩියි — පිංතූර {{limit}} MB දක්වා ගබඩා කර ඇත",
-    "rate_limited": "සීමාව පසු කළා, හෙමින් කරන්න"
+    "rate_limited": "සීමාව පසු කළා, හෙමින් කරන්න",
+    "waiting_for_wallet": "ඔබේ පසුම්බිය එනතෙක් බලා සිටී",
+    "waiting_for_wallet_desc": "{{wallet}} විවෘත කර අත්සන් අනුමත කරන්න — ඉල්ලීම එහි රැඳී සිටී.",
+    "your_wallet": "ඔබේ පසුම්බිය"
   },
   "staking": {
     "title": "ස්ටේකින්",

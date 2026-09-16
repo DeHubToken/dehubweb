@@ -1774,7 +1774,10 @@
     "not_now": "Teď ne",
     "image_too_large_tier": "Obrázek je příliš velký — vaše úroveň {{tier}} ukládá obrázky do {{limit}} MB",
     "image_too_large_untiered": "Obrázek je příliš velký — obrázky jsou uloženy do {{limit}} MB",
-    "rate_limited": "Limit požadavků, zpomalte"
+    "rate_limited": "Limit požadavků, zpomalte",
+    "waiting_for_wallet": "Čekání na peněženku",
+    "waiting_for_wallet_desc": "Otevřete {{wallet}} a schválte podpis — žádost tam čeká.",
+    "your_wallet": "Do vaší peněženky"
   },
   "staking": {
     "title": "Staking",

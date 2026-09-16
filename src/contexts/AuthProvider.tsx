@@ -1618,12 +1618,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Time-box the signature. When the request never settles (see the gap
     // wait above — the popup-race case queues it invisibly), no catch and no
     // finally ever runs, which is what used to leave isConnecting latched and
-    // the auth guard closed for the life of the page. Long enough for a
-    // hardware wallet behind MetaMask; a dismissal or rejection settles the
-    // promise and never waits this out.
-    const SIGN_TIMEOUT_MS = 60_000;
+    // the auth guard closed for the life of the page.
+    //
+    // The deadline used to be a flat 60s, and crossing it threw the signature
+    // away. That is the wrong trade for the case it fires on most: an
+    // extension whose popup never surfaced. The person opens the extension by
+    // hand, finds the prompt waiting, signs it — and the tab has already given
+    // up and discarded a perfectly good signature. Hunting down the prompt
+    // costs most of the minute on its own, so the flow refused precisely the
+    // people who did what it asked.
+    //
+    // Nothing about the signature goes stale in that time: the timestamp is
+    // inside the signed text and the API accepts it for 24 hours
+    // (loginSignatureTtlSeconds), so a late signature is worth exactly as much
+    // as a prompt one. The first deadline therefore no longer aborts — it
+    // nudges, and the flow keeps waiting. The hard deadline behind it is what
+    // stops isConnecting latching forever, and sits far enough out that only a
+    // genuinely dead request reaches it.
+    const SIGN_NUDGE_MS = 25_000;
+    const SIGN_TIMEOUT_MS = 5 * 60_000;
     let signature: string;
     let signTimeoutTimer: ReturnType<typeof setTimeout> | undefined;
+    let signNudgeTimer: ReturnType<typeof setTimeout> | undefined;
 
     const requestSignature = (): Promise<string> => {
       const signPromise = signMessageAsync({
@@ -1632,9 +1648,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       // If the timeout wins the race this promise is orphaned, and a
       // dismissal arriving after that must not surface as an unhandled
-      // rejection. (A signature arriving late is dropped the same way — the
-      // flow has already told the user to retry.)
+      // rejection.
       signPromise.catch(() => {});
+      // Drop the nudge the moment the wallet answers either way, so a
+      // signature given at 24s cannot be chased by a toast telling them to go
+      // and sign it.
+      signPromise.finally(() => clearTimeout(signNudgeTimer)).catch(() => {});
+      signNudgeTimer = setTimeout(() => {
+        toast.info(i18n.t('toasts.waiting_for_wallet', 'Waiting for your wallet'), {
+          description: i18n.t(
+            'toasts.waiting_for_wallet_desc',
+            'Open {{wallet}} and approve the signature — the request is waiting there.',
+            { wallet: connectorName || i18n.t('toasts.your_wallet', 'your wallet') },
+          ),
+        });
+      }, SIGN_NUDGE_MS);
       return Promise.race([
         signPromise,
         new Promise<never>((_, reject) => {
@@ -1657,6 +1685,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!isWrongAccountError(firstSignError)) throw firstSignError;
 
         clearTimeout(signTimeoutTimer);
+        clearTimeout(signNudgeTimer);
         authLogger.warn('Wallet refused the connected account — opening its account picker', {
           refusedAddress: authAddress,
           connectorId,

@@ -1774,7 +1774,10 @@
     "not_now": "Most nem",
     "image_too_large_tier": "A kép túl nagy — a {{tier}} szinted legfeljebb {{limit}} MB méretű képeket tárol",
     "image_too_large_untiered": "A kép túl nagy — a képek legfeljebb {{limit}} MB-ig vannak tárolva",
-    "rate_limited": "Kérési korlát, lassíts"
+    "rate_limited": "Kérési korlát, lassíts",
+    "waiting_for_wallet": "Várakozás a pénztárcádra",
+    "waiting_for_wallet_desc": "{{wallet}} megnyitása és az aláírás jóváhagyása — a kérés ott vár.",
+    "your_wallet": "a pénztárcád"
   },
   "staking": {
     "title": "Staking",

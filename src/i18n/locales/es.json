@@ -1827,7 +1827,10 @@
     "not_now": "Ahora no",
     "image_too_large_tier": "La imagen es demasiado grande: tu nivel {{tier}} almacena imágenes de hasta {{limit}} MB",
     "image_too_large_untiered": "La imagen es demasiado grande: las imágenes se almacenan hasta {{limit}} MB",
-    "rate_limited": "Límite de solicitudes, ve más despacio"
+    "rate_limited": "Límite de solicitudes, ve más despacio",
+    "waiting_for_wallet": "A la espera de tu monedero",
+    "waiting_for_wallet_desc": "Abra {{wallet}} y apruebe la firma — la solicitud está esperando allí.",
+    "your_wallet": "Su cartera"
   },
   "staking": {
     "title": "Staking",

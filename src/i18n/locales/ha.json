@@ -1789,7 +1789,10 @@
     "not_now": "Ba yanzu ba",
     "image_too_large_tier": "Hoto yana da girma sosai — your {{tier}}tier yana adana hotuna har zuwa {{limit}} MB",
     "image_too_large_untiered": "Hoto yana da girma sosai — ana adana hotuna har zuwa {{limit}} MB",
-    "rate_limited": "An iyakance saurin, rage gudu"
+    "rate_limited": "An iyakance saurin, rage gudu",
+    "waiting_for_wallet": "Jiran walat ka",
+    "waiting_for_wallet_desc": "Bude {{wallet}} kuma yarda da sa hannu — buƙatar yana jira a can.",
+    "your_wallet": "waliyar ka"
   },
   "staking": {
     "title": "Staking",

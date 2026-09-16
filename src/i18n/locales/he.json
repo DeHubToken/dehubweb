@@ -1793,7 +1793,10 @@
     "not_now": "לא עכשיו",
     "image_too_large_tier": "התמונה גדולה מדי — השכבה {{tier}} מאחסנת תמונות עד {{limit}} MB",
     "image_too_large_untiered": "התמונה גדולה מדי — התמונות מאוחסנות עד {{limit}} MB",
-    "rate_limited": "הגעת למגבלת קצב, האט"
+    "rate_limited": "הגעת למגבלת קצב, האט",
+    "waiting_for_wallet": "בהמתנה לארנק שלכם",
+    "waiting_for_wallet_desc": "יש לפתוח את {{wallet}} ולאשר את החתימה — הבקשה ממתינה שם.",
+    "your_wallet": "הארנק שלכם"
   },
   "staking": {
     "title": "סטייקינג",

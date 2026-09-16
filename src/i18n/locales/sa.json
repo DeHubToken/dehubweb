@@ -1765,7 +1765,9 @@
     "not_now": "न इदानीम्",
     "image_too_large_tier": "चित्रम् अति विशालम् अस्ति — भवतः {{tier}} Tier इमेजम् {{limit}} MB पर्यन्तं संचययति ।",
     "image_too_large_untiered": "चित्रम् अति विशालम् अस्ति — चित्रम् {{limit}} MB इत्येतत् संचयितम् अस्ति ।",
-    "rate_limited": "वेगसीमा प्राप्ता, मन्दं कुरु"
+    "rate_limited": "वेगसीमा प्राप्ता, मन्दं कुरु",
+    "waiting_for_wallet": "प्रतीक्षारत तेरे आँगन को",
+    "your_wallet": "अपना बटुआ"
   },
   "staking": {
     "title": "निक्षेपः (Staking)",

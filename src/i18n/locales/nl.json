@@ -2020,7 +2020,10 @@
     "not_now": "Niet nu",
     "image_too_large_tier": "Afbeelding is te groot — uw {{tier}} -laag slaat afbeeldingen op tot {{limit}} MB",
     "image_too_large_untiered": "Afbeelding is te groot — afbeeldingen worden opgeslagen tot {{limit}} MB",
-    "rate_limited": "Te veel verzoeken, doe rustiger aan"
+    "rate_limited": "Te veel verzoeken, doe rustiger aan",
+    "waiting_for_wallet": "Wachten op je portemonnee",
+    "waiting_for_wallet_desc": "Open {{wallet}} en keur de handtekening goed — het verzoek wacht daar.",
+    "your_wallet": "Je portemonnee?"
   },
   "staking": {
     "title": "Staking",

@@ -1827,7 +1827,10 @@
     "not_now": "Şimdi değil",
     "image_too_large_tier": "Görsel çok büyük; {{tier}} seviyende {{limit}} MB'a kadar görsel depolanabilir",
     "image_too_large_untiered": "Görüntü çok büyük — görüntüler {{limit}} MB'a kadar saklanır",
-    "rate_limited": "İstek sınırı, biraz yavaşla"
+    "rate_limited": "İstek sınırı, biraz yavaşla",
+    "waiting_for_wallet": "Cüzdanınız bekleniyor",
+    "waiting_for_wallet_desc": "{{wallet}} açın ve imzayı onaylayın — istek orada bekliyor.",
+    "your_wallet": "cüzdanınıza aktarıldı"
   },
   "staking": {
     "title": "Staking",

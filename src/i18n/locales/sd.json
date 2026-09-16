@@ -1785,7 +1785,10 @@
     "not_now": "هاڻي نه",
     "image_too_large_tier": "تصوير تمام وڏي آهي — توهان جو {{tier}} ٽائر تصويرون اسٽور ڪري ٿو {{limit}} ايم بي تائين",
     "image_too_large_untiered": "تصوير تمام وڏي آهي — تصويرون {{limit}} MB تائين ذخيرو ٿيل آهن",
-    "rate_limited": "ريٽ لمٽ ٿي وئي، آهستي ڪريو"
+    "rate_limited": "ريٽ لمٽ ٿي وئي، آهستي ڪريو",
+    "waiting_for_wallet": "تُنهنجي پرس جو انتظار",
+    "waiting_for_wallet_desc": "{{wallet}} کوليو ۽ دستخط کي منظور ڪريو — درخواست اتي انتظار ڪري رهي آهي.",
+    "your_wallet": "توھان جو پرس"
   },
   "staking": {
     "title": "اسٽيڪنگ",

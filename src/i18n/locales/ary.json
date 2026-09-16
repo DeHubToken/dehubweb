@@ -1809,7 +1809,10 @@
     "not_now": "ماشي دابا",
     "image_too_large_tier": "الصورة كبيرة جدًا — يخزن المستوى {{tier}} صورًا تصل إلى {{limit}} ميجابايت",
     "image_too_large_untiered": "الصورة كبيرة جدًا — يتم تخزين الصور حتى {{limit}} ميجابايت",
-    "rate_limited": "تحدّد المعدل، بشوية"
+    "rate_limited": "تحدّد المعدل، بشوية",
+    "waiting_for_wallet": "في انتظار محفظتك",
+    "waiting_for_wallet_desc": "افتح {{wallet}} ووافق على التوقيع — الطلب في انتظارك هناك.",
+    "your_wallet": "محفظتك"
   },
   "staking": {
     "title": "الستاكينغ",

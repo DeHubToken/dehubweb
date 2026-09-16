@@ -1782,7 +1782,10 @@
     "not_now": "ਹੁਣ ਨਹੀਂ",
     "image_too_large_tier": "ਚਿੱਤਰ ਬਹੁਤ ਵੱਡਾ ਹੈ — ਤੁਹਾਡਾ {{tier}} ਟੀਅਰ ਚਿੱਤਰਾਂ ਨੂੰ {{limit}} ਐਮ ਬੀ ਤੱਕ ਸਟੋਰ ਕਰਦਾ ਹੈ",
     "image_too_large_untiered": "ਚਿੱਤਰ ਬਹੁਤ ਵੱਡਾ ਹੈ — ਚਿੱਤਰ {{limit}} MB ਤੱਕ ਸਟੋਰ ਕੀਤੇ ਗਏ ਹਨ",
-    "rate_limited": "ਰੇਟ ਲਿਮਿਟ, ਹੌਲੀ ਕਰੋ"
+    "rate_limited": "ਰੇਟ ਲਿਮਿਟ, ਹੌਲੀ ਕਰੋ",
+    "waiting_for_wallet": "ਤੁਹਾਡੇ ਬਟੂਏ ਦੀ ਉਡੀਕ ਕਰ ਰਿਹਾ ਹੈ",
+    "waiting_for_wallet_desc": "{{wallet}} ਖੋਲ੍ਹੋ ਅਤੇ ਦਸਤਖਤ ਨੂੰ ਮਨਜ਼ੂਰੀ ਦਿਓ — ਬੇਨਤੀ ਉਥੇ ਇੰਤਜ਼ਾਰ ਕਰ ਰਹੀ ਹੈ.",
+    "your_wallet": "ਤੁਹਾਡਾ ਬਟੂਆ"
   },
   "staking": {
     "title": "ਸਟੇਕਿੰਗ",

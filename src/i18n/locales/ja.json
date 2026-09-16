@@ -1825,7 +1825,10 @@
     "not_now": "後で",
     "image_too_large_tier": "画像が大きすぎます—あなたの{{tier}}ティアは最大{{limit}} MBまでの画像を保存します",
     "image_too_large_untiered": "画像が大きすぎます—画像は最大{{limit}} MBまで保存されます",
-    "rate_limited": "リクエスト制限中です。少しゆっくり"
+    "rate_limited": "リクエスト制限中です。少しゆっくり",
+    "waiting_for_wallet": "お財布を待っています",
+    "waiting_for_wallet_desc": "{{wallet}}を開き、署名を承認します。リクエストはそこで待っています。",
+    "your_wallet": "私たち２人ともそうなる なのにバンチは捕まらないわ"
   },
   "staking": {
     "title": "ステーキング",

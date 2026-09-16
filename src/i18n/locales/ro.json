@@ -1665,7 +1665,10 @@
     "push_blocked_more": "Mai multe detalii",
     "not_now": "Nu acum",
     "image_too_large_untiered": "Imaginea este prea mare — imaginile sunt stocate până la {{limit}} MB",
-    "rate_limited": "Limită atinsă, mai încet"
+    "rate_limited": "Limită atinsă, mai încet",
+    "waiting_for_wallet": "În așteptarea portofelului",
+    "waiting_for_wallet_desc": "Deschideți {{wallet}} și aprobați semnătura — cererea așteaptă acolo.",
+    "your_wallet": "portofelul tău"
   },
   "staking": {
     "title": "Staking",

@@ -1744,7 +1744,10 @@
     "not_now": "مو هسه",
     "image_too_large_tier": "الصورة كبيرة جداً — متاجرك {{tier}} تخزن الصور لحد {{limit}} ميجابايت",
     "image_too_large_untiered": "الصورة كبيرة جداً — الصور تتخزن لحد {{limit}} ميجابايت",
-    "rate_limited": "محدود بالمعدل، هوّن عليك"
+    "rate_limited": "محدود بالمعدل، هوّن عليك",
+    "waiting_for_wallet": "بتنتظر محفظتك",
+    "waiting_for_wallet_desc": "افتح {{wallet}} وصادق على التوقيع — الطلب بتنتظرك هناك.",
+    "your_wallet": "محفظتك"
   },
   "staking": {
     "title": "الرهن",

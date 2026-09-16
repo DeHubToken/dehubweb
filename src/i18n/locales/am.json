@@ -1810,7 +1810,10 @@
     "not_now": "አሁን አይደለም",
     "image_too_large_tier": "ምስሉ በጣም ትልቅ ነው — የእርስዎ {{tier}} tier እስከ {{limit}} MB ድረስ ምስሎችን ያከማቻል",
     "image_too_large_untiered": "ምስሉ በጣም ትልቅ ነው — ምስሎች እስከ {{limit}} MB ድረስ ይቀመጣሉ",
-    "rate_limited": "ፍጥነት ተገድቧል፣ ቀስ ይበሉ"
+    "rate_limited": "ፍጥነት ተገድቧል፣ ቀስ ይበሉ",
+    "waiting_for_wallet": "የኪስ ቦርሳዎን በመጠባበቅ ላይ",
+    "waiting_for_wallet_desc": "ክፍት {{wallet}} እና ፊርማውን ያፀድቁ — ጥያቄው እዚያ እየጠበቀ ነው ።",
+    "your_wallet": "የእርስዎ የኪስ ቦርሳ"
   },
   "staking": {
     "title": "ተቀማጭ ማድረግ",

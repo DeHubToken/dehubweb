@@ -1807,7 +1807,10 @@
     "not_now": "Hozir emas",
     "image_too_large_tier": "Rasm juda katta — sizning {{tier}} darajangiz {{limit}} MB gacha bo&#39;lgan rasmlarni saqlaydi",
     "image_too_large_untiered": "Rasm juda katta — rasmlar {{limit}} MB gacha saqlanadi",
-    "rate_limited": "So'rov chegarasi, sekinroq"
+    "rate_limited": "So'rov chegarasi, sekinroq",
+    "waiting_for_wallet": "Hamyoningizni kutmoqdaman",
+    "waiting_for_wallet_desc": "{{wallet}} ni oching va imzoni tasdiqlang — so&#39;rov u yerda kutmoqda.",
+    "your_wallet": "hamyoningiz"
   },
   "staking": {
     "title": "Steyking",

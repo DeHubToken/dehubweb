@@ -1827,7 +1827,10 @@
     "not_now": "Jetzt nicht",
     "image_too_large_tier": "Das Bild ist zu groß — dein {{tier}} Level speichert Bilder bis zu {{limit}} MB",
     "image_too_large_untiered": "Bild ist zu groß — Bilder werden bis zu {{limit}} MB gespeichert",
-    "rate_limited": "Zu viele Anfragen, mach langsamer"
+    "rate_limited": "Zu viele Anfragen, mach langsamer",
+    "waiting_for_wallet": "Warten auf Ihr Wallet",
+    "waiting_for_wallet_desc": "Öffnen Sie {{wallet}} und genehmigen Sie die Signatur — die Anfrage wartet dort.",
+    "your_wallet": "Ihre Brieftasche"
   },
   "staking": {
     "title": "Staking",

@@ -1773,7 +1773,10 @@
     "not_now": "Mitte praegu",
     "image_too_large_tier": "Pilt on liiga suur — teie {{tier}} taseme poed salvestavad pilte kuni {{limit}} MB",
     "image_too_large_untiered": "Pilt on liiga suur — pilte talletatakse kuni {{limit}} MB",
-    "rate_limited": "Päringupiirang, aeglusta"
+    "rate_limited": "Päringupiirang, aeglusta",
+    "waiting_for_wallet": "Rahakoti ootamine",
+    "waiting_for_wallet_desc": "Ava {{wallet}} ja kinnita allkiri — taotlus ootab seal.",
+    "your_wallet": "sinu rahakott"
   },
   "staking": {
     "title": "Panustamine",

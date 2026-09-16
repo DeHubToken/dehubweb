@@ -1788,7 +1788,10 @@
     "not_now": "ຍັງກ່ອນ",
     "image_too_large_tier": "ຮູບພາບແມ່ນໃຫຍ່ເກີນໄປ — ຂອງທ່ານ {{tier}} tier ເກັບຮັກສາຮູບພາບສູງເຖິງ {{limit}} MB",
     "image_too_large_untiered": "ຮູບພາບໃຫຍ່ເກີນໄປ — ຮູບພາບຖືກເກັບໄວ້ເຖິງ {{limit}} MB",
-    "rate_limited": "ຈຳກັດອັດຕາ, ຊ້າລົງແດ່"
+    "rate_limited": "ຈຳກັດອັດຕາ, ຊ້າລົງແດ່",
+    "waiting_for_wallet": "ລໍຖ້າກະເປົາເງິນຂອງທ່ານ",
+    "waiting_for_wallet_desc": "ເປີດ {{wallet}} ແລະອະນຸມັດລາຍເຊັນ — ຄໍາ ຮ້ອງຂໍ ກໍາ ລັງລໍຖ້າຢູ່ທີ່ນັ້ນ.",
+    "your_wallet": "​ກະ​ເປົາ​ເງິນຂອງທ່ານ"
   },
   "staking": {
     "title": "ການຝາກ",

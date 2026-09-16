@@ -1827,7 +1827,10 @@
     "not_now": "Nie teraz",
     "image_too_large_tier": "Obraz jest zbyt duży — Twój {{tier}} poziom przechowuje obrazy do {{limit}} MB",
     "image_too_large_untiered": "Obraz jest zbyt duży — obrazy są przechowywane do {{limit}} MB",
-    "rate_limited": "Limit żądań, zwolnij"
+    "rate_limited": "Limit żądań, zwolnij",
+    "waiting_for_wallet": "Czekamy na Twój portfel",
+    "waiting_for_wallet_desc": "Otwórz {{wallet}} i zatwierdź podpis — żądanie tam czeka.",
+    "your_wallet": "Twój portfel"
   },
   "staking": {
     "title": "Staking",

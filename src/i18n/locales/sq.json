@@ -1805,7 +1805,10 @@
     "not_now": "Jo tani",
     "image_too_large_tier": "Imazhi është shumë i madh — juaji {{tier}} ruan imazhe deri në {{limit}} MB",
     "image_too_large_untiered": "Imazhi është shumë i madh — imazhet ruhen deri në {{limit}} MB",
-    "rate_limited": "Kufi kërkesash, ngadalëso"
+    "rate_limited": "Kufi kërkesash, ngadalëso",
+    "waiting_for_wallet": "Në pritje të portofolit tënd",
+    "waiting_for_wallet_desc": "Hapni {{wallet}} dhe miratoni nënshkrimin — kërkesa po pret atje.",
+    "your_wallet": "Më jep para? a ke para?"
   },
   "staking": {
     "title": "Staking",

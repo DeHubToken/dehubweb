@@ -1782,7 +1782,10 @@
     "not_now": "Ҳозир не",
     "image_too_large_tier": "Тасвир аз ҳад зиёд калон аст — шумо {{tier}} tier images up to {{limit}} MB",
     "image_too_large_untiered": "Ang larawan ay masyadong malaki — ang mga larawan ay naka-save upang {{limit}} MB",
-    "rate_limited": "Маҳдудияти дархост, оҳистатар"
+    "rate_limited": "Маҳдудияти дархост, оҳистатар",
+    "waiting_for_wallet": "Интизори ҳамёни шумо",
+    "waiting_for_wallet_desc": "Кушодан {{wallet}}& тасдиқи имзо — дархост дар он ҷо интизор аст.",
+    "your_wallet": "ҳамёни шумо"
   },
   "staking": {
     "title": "Стейкинг",

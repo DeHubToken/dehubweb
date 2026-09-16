@@ -1827,7 +1827,10 @@
     "not_now": "Nanti saja",
     "image_too_large_tier": "Gambar terlalu besar — tingkatan {{tier}} Anda menyimpan gambar hingga {{limit}} MB",
     "image_too_large_untiered": "Gambar terlalu besar — gambar disimpan hingga {{limit}} MB",
-    "rate_limited": "Terlalu sering, pelan-pelan"
+    "rate_limited": "Terlalu sering, pelan-pelan",
+    "waiting_for_wallet": "Menunggu dompet Anda",
+    "waiting_for_wallet_desc": "Buka {{wallet}} dan setujui tanda tangan - permintaan sudah menunggu di sana.",
+    "your_wallet": "dompet Anda"
   },
   "staking": {
     "title": "Staking",

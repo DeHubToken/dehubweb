@@ -1771,7 +1771,10 @@
     "not_now": "İndi yox",
     "image_too_large_tier": "Təsvir çox böyükdür — {{tier}} Səviyyəli mağaza şəkilləriniz {{limit}} MB-a qədər",
     "image_too_large_untiered": "Təsvir çox böyükdür — təsvirlər {{limit}} MB-a qədər saxlanılır",
-    "rate_limited": "Sürət məhdudlaşdırıldı, yavaşlayın"
+    "rate_limited": "Sürət məhdudlaşdırıldı, yavaşlayın",
+    "waiting_for_wallet": "Pul kisəniz gözlənilir",
+    "waiting_for_wallet_desc": "{{wallet}} açın və imzanı təsdiq edin — sorğu orada gözləyir.",
+    "your_wallet": "cüzdanınız"
   },
   "staking": {
     "title": "Staking",

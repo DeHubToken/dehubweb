@@ -1785,7 +1785,10 @@
     "not_now": "હમણાં નહીં",
     "image_too_large_tier": "છબી ખૂબ મોટી છે — તમારી {{tier}} ટાયર {{limit}} MB સુધીની છબીઓ સ્ટોર કરે છે",
     "image_too_large_untiered": "છબી ખૂબ મોટી છે — છબીઓ {{limit}} MB સુધી સંગ્રહિત છે",
-    "rate_limited": "રેટ લિમિટ, ધીમે કરો"
+    "rate_limited": "રેટ લિમિટ, ધીમે કરો",
+    "waiting_for_wallet": "તમારા વૉલેટની રાહ જોવી",
+    "waiting_for_wallet_desc": "{{wallet}} ખોલો અને સહીને મંજૂરી આપો — વિનંતી ત્યાં રાહ જોઈ રહી છે.",
+    "your_wallet": "તમારું વૉલેટ"
   },
   "staking": {
     "title": "સ્ટેકિંગ",

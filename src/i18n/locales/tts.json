@@ -1743,7 +1743,10 @@
     "not_now": "บ่เอาตอนนี้",
     "image_too_large_tier": "รูปภาพใหญ่เกินไป — {{tier}} ระดับของคุณเก็บรูปภาพได้ถึง {{limit}} MB",
     "image_too_large_untiered": "รูปภาพใหญ่เกินไป — รูปภาพถูกเก็บไว้ได้สูงสุด {{limit}} MB",
-    "rate_limited": "ถูกจำกัดอัตรา ซ้าลงแหน่"
+    "rate_limited": "ถูกจำกัดอัตรา ซ้าลงแหน่",
+    "waiting_for_wallet": "รอวอลเล็ตเจ้าอยู่เด้อ",
+    "waiting_for_wallet_desc": "เปิด {{wallet}} แล้วกะอนุมัติตัวลงนามเด้อ คำขอถ่าดุอยู่",
+    "your_wallet": "กระเป๋าตังค์เจ้า"
   },
   "staking": {
     "title": "การฝาก",

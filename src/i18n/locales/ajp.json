@@ -1739,7 +1739,10 @@
     "not_now": "مش هلق",
     "image_too_large_tier": "الصورة كبيرة كتير — متاجرك {{tier}} بتخزّن صور لحتى {{limit}} MB",
     "image_too_large_untiered": "الصورة كبيرة كتير — الصور بتتخزن لحد {{limit}} ميجابايت",
-    "rate_limited": "محدود بالمعدل، على مهلك"
+    "rate_limited": "محدود بالمعدل، على مهلك",
+    "waiting_for_wallet": "بتنتظر محفظتك",
+    "waiting_for_wallet_desc": "افتح {{wallet}} وأوافق على التوقيع — الطلب بتنتظرك هناك.",
+    "your_wallet": "محفظتك"
   },
   "staking": {
     "title": "الإيداع",

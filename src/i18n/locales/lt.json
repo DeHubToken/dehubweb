@@ -1790,7 +1790,10 @@
     "not_now": "Ne dabar",
     "image_too_large_tier": "Vaizdas per didelis — jūsų {{tier}} lygyje saugomi vaizdai iki {{limit}} MB",
     "image_too_large_untiered": "Vaizdas per didelis — vaizdai saugomi iki {{limit}} MB",
-    "rate_limited": "Užklausų limitas, sulėtinkite"
+    "rate_limited": "Užklausų limitas, sulėtinkite",
+    "waiting_for_wallet": "Laukiame jūsų piniginės",
+    "waiting_for_wallet_desc": "Atidarykite {{wallet}} ir patvirtinkite parašą — užklausa laukia ten.",
+    "your_wallet": "jūsų piniginė"
   },
   "staking": {
     "title": "Staking",
