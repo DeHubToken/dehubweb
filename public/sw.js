@@ -207,7 +207,21 @@ self.addEventListener('push', (event) => {
     data: { url: payload.url || '/app/notifications' },
   };
 
-  event.waitUntil(self.registration.showNotification(title, options));
+  // An open tab has its own copy of the notification list, fetched minutes ago
+  // and with nothing on the server that tells it otherwise — the backend has no
+  // socket event for this. Tell every tab a push landed, so the list matches the
+  // tray card the reader just tapped past instead of waiting for the five-minute
+  // poll or a manual refresh.
+  const tell = self.clients
+    .matchAll({ type: 'window', includeUncontrolled: true })
+    .then((clientList) => {
+      for (const client of clientList) {
+        client.postMessage({ type: 'dehub:notification-push' });
+      }
+    })
+    .catch(() => {});
+
+  event.waitUntil(Promise.all([self.registration.showNotification(title, options), tell]));
 });
 
 // Focus an open tab rather than opening a second copy of the app — a reader
