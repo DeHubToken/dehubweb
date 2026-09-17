@@ -130,6 +130,7 @@ import { SmsNotificationsSetting } from '@/components/app/settings/SmsNotificati
 import { EmailSignInSettings } from '@/components/app/settings/EmailSignInSettings';
 import { EnsHandleSettings } from '@/components/app/settings/EnsHandleSettings';
 import { SolanaWalletSettings } from '@/components/app/settings/SolanaWalletSettings';
+import { StreamKeySettings } from '@/components/app/settings/StreamKeySettings';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { ProfilesSection } from '@/components/app/settings/ProfilesSection';
 import { CollapsibleStack } from '@/components/app/settings/CollapsibleStack';
@@ -1166,6 +1167,13 @@ function ProfileSettings() {
         <div data-setting-anchor="ens">
           <h3 className={SETTINGS_HEADING_CLASS}>{t('settings.ensSection', 'ENS')}</h3>
           <EnsHandleSettings />
+        </div>
+
+        {/* Permanent encoder credentials -- set OBS, a capture app or a
+            console up once and never re-key it again. */}
+        <div data-setting-anchor="stream-key">
+          <h3 className={SETTINGS_HEADING_CLASS}>{t('settings.streamKey.section', 'Stream key')}</h3>
+          <StreamKeySettings />
         </div>
 
         {/* Badge delegation — a badge is a profile-facing thing (who holds

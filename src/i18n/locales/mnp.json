@@ -377,7 +377,29 @@
     "badgeDelegationHandBack": "归还它",
     "badgeDelegationEnd": "与 {{address}} 结束委托",
     "badgeDelegationGranted": "{{to}} 现在佩戴您的 {{tier}} 徽章",
-    "badgeDelegationEnded": "委托已结束"
+    "badgeDelegationEnded": "委托已结束",
+    "streamKey": {
+      "section": "直播密鑰",
+      "blurb": "將這些貼到 OBS、你的擷取應用程式或主控台一次。它們永遠不會改變 — 在你的編碼器中按下開始，DeHub 就會為你建立直播貼文。",
+      "server": "伺服器",
+      "key": "直播密鑰",
+      "copyServer": "複製伺服器",
+      "copyKey": "複製直播密鑰",
+      "reveal": "顯示直播密鑰",
+      "hide": "隱藏直播密鑰",
+      "copyFailed": "無法複製",
+      "keyWarning": "持有此密鑰的任何人都可以以你的名義進行直播。切勿在直播中顯示它。",
+      "defaultTitle": "預設直播標題",
+      "defaultTitlePlaceholder": "你的編碼器串流的名稱",
+      "defaultTitleHint": "當你從編碼器直播但未先設定貼文時使用。",
+      "titleSaved": "已儲存",
+      "titleFailed": "無法儲存標題",
+      "rotate": "重設直播密鑰",
+      "rotateConfirm": "要發佈新直播密鑰嗎？所有使用舊密鑰的編碼器將停止運作，直到你貼上新密鑰為止。",
+      "rotated": "已發佈新直播密鑰",
+      "rotateFailed": "無法發佈新密鑰",
+      "unavailable": "你的帳戶目前無法從編碼器進行直播。"
+    }
   },
   "common": {
     "save": "保存",
