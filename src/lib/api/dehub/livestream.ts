@@ -320,3 +320,69 @@ export async function updateStreamThumbnail(
     { timeoutMs: 30_000 },
   );
 }
+
+/**
+ * A creator's PERMANENT encoder credentials.
+ *
+ * Every other stream key on the self-hosted ingest is minted per broadcast and
+ * handed over in the mint response, which is right for the browser and
+ * unusable for OBS, a capture app or a console: those are configured once, by
+ * hand, and re-typing a fresh server and key before every session is the whole
+ * reason people stop streaming from them. This pair never changes, so the
+ * encoder is set up once and the post is created when the broadcast arrives.
+ */
+export interface EncoderCredentials {
+  /** The encoder's "Server" field. */
+  server: string;
+  /** Its "Stream Key" field. Secret — this is the publish credential. */
+  streamKey: string;
+  /** The two joined, for one-line copy. */
+  ingestUrl: string;
+  /** Title a broadcast started from the encoder is posted under. */
+  defaultTitle: string;
+}
+
+const emptyEncoderCredentials: EncoderCredentials = {
+  server: '',
+  streamKey: '',
+  ingestUrl: '',
+  defaultTitle: '',
+};
+
+function toEncoderCredentials(res: unknown): EncoderCredentials {
+  const body = unwrap(res as EncoderCredentials);
+  return {
+    server: body.server || '',
+    streamKey: body.streamKey || '',
+    ingestUrl: body.ingestUrl || '',
+    defaultTitle: body.defaultTitle || '',
+  };
+}
+
+export async function getEncoderCredentials(): Promise<EncoderCredentials> {
+  try {
+    return toEncoderCredentials(await apiCall('/api/live/ingest-key', { requiresAuth: true }));
+  } catch {
+    // An account with no livestreaming feature, or a backend that predates the
+    // route, gets an empty pair and the section renders as unavailable rather
+    // than as an error the creator can do nothing about.
+    return emptyEncoderCredentials;
+  }
+}
+
+/** Issue a new key. The server address is unchanged — only the secret moves. */
+export async function rotateEncoderKey(): Promise<EncoderCredentials> {
+  return toEncoderCredentials(
+    await apiCall('/api/live/ingest-key/rotate', { method: 'POST', requiresAuth: true }),
+  );
+}
+
+export async function setEncoderDefaultTitle(defaultTitle: string): Promise<EncoderCredentials> {
+  return toEncoderCredentials(
+    await apiCall('/api/live/ingest-key', {
+      method: 'PATCH',
+      body: { defaultTitle },
+      requiresAuth: true,
+    }),
+  );
+}
