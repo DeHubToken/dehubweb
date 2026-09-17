@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      arcade_submissions: {
+        Row: {
+          id: string
+          created_at: string
+          status: string
+          title: string
+          contact_email: string
+          playable_url: string
+          source_url: string | null
+          description: string
+          mobile_support: boolean
+          rights_confirmed: boolean
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          status?: string
+          title: string
+          contact_email: string
+          playable_url: string
+          source_url?: string | null
+          description: string
+          mobile_support?: boolean
+          rights_confirmed: boolean
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          status?: string
+          title?: string
+          contact_email?: string
+          playable_url?: string
+          source_url?: string | null
+          description?: string
+          mobile_support?: boolean
+          rights_confirmed?: boolean
+        }
+        Relationships: []
+      }
       ad_accounts: {
         Row: {
           balance_usd: number
