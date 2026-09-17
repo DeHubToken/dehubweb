@@ -213,10 +213,39 @@ export function useBrowserNotifications() {
   // localStorage where a worker cannot reach. So it is reconciled here instead,
   // on the next visit. subscribeToWebPush already reuses a subscription that is
   // still valid, so the usual case is one cheap check and no network write.
+  //
+  // "Once per load" used to mean once per *attempt*, and the flag was set
+  // before the await — so a reconcile that failed never ran again for the life
+  // of the tab. That is not a rare corner: this is a single-page app whose tabs
+  // stay open for days, and the reconcile fires at mount, which can be before
+  // the wallet has produced the bearer token that /api/push/token requires. One
+  // unlucky boot and the browser holds no registration until someone finds the
+  // switch and turns it off and on. So the flag is now set only when the
+  // subscription is actually in place, and a failure is retried when the reader
+  // comes back to the tab — which is both free and the moment they are most
+  // likely to have just signed in.
   useEffect(() => {
     if (!isEnabled || reconciledThisLoad) return;
-    reconciledThisLoad = true;
-    void subscribeToWebPush();
+
+    let cancelled = false;
+    const attempt = async () => {
+      if (cancelled || reconciledThisLoad || document.hidden) return;
+      // Nothing to retry for a browser that cannot do push, or one holding no
+      // permission: both answer locally, change only through an event we
+      // already listen for, and would otherwise retry on every focus forever.
+      const state = getWebPushState();
+      if (state === 'unsupported' || state === 'off') return;
+      if (await subscribeToWebPush()) reconciledThisLoad = true;
+    };
+
+    void attempt();
+    window.addEventListener('focus', attempt);
+    document.addEventListener('visibilitychange', attempt);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('focus', attempt);
+      document.removeEventListener('visibilitychange', attempt);
+    };
   }, [isEnabled]);
 
   /**

@@ -27,6 +27,14 @@ vi.mock('@/lib/api/dehub', () => ({
 
 vi.mock('@/lib/device-id', () => ({ getDeviceId: () => 'device-1' }));
 
+/** The same 65 bytes the module decodes VAPID into, for a matching-key reuse. */
+function vapidBytes(): Uint8Array {
+  const raw = atob(VAPID.replace(/-/g, '+').replace(/_/g, '/'));
+  const out = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+  return out;
+}
+
 function fakeSubscription(endpoint = 'https://push.example/abc') {
   return {
     endpoint,
@@ -247,5 +255,42 @@ describe('web push state', () => {
     // 'unavailable' would put a warning in front of someone who simply has not
     // been asked yet.
     expect(mod.getWebPushState()).toBe('off');
+  });
+
+  it('replaces a subscription the server will not register', async () => {
+    // The 410 orphan. The push service retired the endpoint, the server
+    // deleted the row it 410'd, and the browser still hands back the same
+    // subscription object as if nothing happened — so re-registering it is
+    // re-registering something known dead. Production sat in this state for
+    // two days: switch on, subscription present, no row on the server.
+    const stale = fakeSubscription('https://push.example/stale');
+    stale.options = { applicationServerKey: vapidBytes() };
+    const fresh = fakeSubscription('https://push.example/fresh');
+    installBrowser({ existing: stale, subscribe: () => fresh });
+
+    registerPushToken
+      .mockRejectedValueOnce(new Error('Push registration was rejected'))
+      .mockResolvedValue({ success: true, message: 'registered' });
+
+    const mod = await freshModule();
+    await expect(mod.subscribeToWebPush()).resolves.toBe(true);
+
+    expect(stale.unsubscribe).toHaveBeenCalled();
+    expect(mod.getWebPushState()).toBe('subscribed');
+    expect(registerPushToken).toHaveBeenLastCalledWith(
+      expect.objectContaining({ token: fresh.endpoint }),
+    );
+  });
+
+  it('gives up only after the fresh subscription is refused too', async () => {
+    const stale = fakeSubscription('https://push.example/stale');
+    stale.options = { applicationServerKey: vapidBytes() };
+    installBrowser({ existing: stale, subscribe: () => fakeSubscription('https://push.example/fresh') });
+
+    registerPushToken.mockRejectedValue(new Error('Push registration was rejected'));
+
+    const mod = await freshModule();
+    await expect(mod.subscribeToWebPush()).resolves.toBe(false);
+    expect(mod.getWebPushState()).toBe('unavailable');
   });
 });
