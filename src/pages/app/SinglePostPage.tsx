@@ -465,6 +465,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     replayUrl: extractReplayUrl(streamObj),
     replayTruncated: isReplayTruncated(streamObj),
     startedAt: streamObj?.startedAt || undefined,
+    totalTips: streamObj?.totalTips ?? 0,
     // Access, from the same streamInfo every other post type reads. A live
     // post is minted through /user_mint with the composer's switches on it, so
     // it can be sold per view or gated like anything else.

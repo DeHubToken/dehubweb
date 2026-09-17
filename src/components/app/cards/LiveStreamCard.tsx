@@ -691,13 +691,18 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   useEffect(() => () => releaseMediaSession(videoId), [videoId]);
 
   const toggleMute = useCallback(() => {
-    const video = videoRef.current;
+    // Whichever video is on screen. An ended stream with a recording plays
+    // through `replayRef` and never mounts the live element at all, so this
+    // used to return on the first line and the mute button did nothing at
+    // all on a replay — which is most of what anyone opens after the fact.
+    const video = videoRef.current ?? replayRef.current;
     if (!video) return;
 
     video.muted = !isMuted;
     setIsMuted(!isMuted);
     videoPlaybackManager.globalMuted = !isMuted;
   }, [isMuted]);
+
 
   // Muting the stream mutes the tip readings with it, and cuts one already
   // mid-sentence. They are synthesised locally, so nothing about the player's
@@ -1036,6 +1041,10 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               ref={replayRef}
               className="w-full h-full object-contain"
               src={stream.replayUrl}
+              /* Controlled, like the live element beside it. Without this the
+                 button could flip `isMuted` all day and the recording would
+                 keep playing at whatever it started at. */
+              muted={isMuted}
               poster={stream.thumbnail || undefined}
               /* Full-bleed draws its own scrub line on the floor of the
                  screen, so the native bar would be a second timeline a
@@ -1225,7 +1234,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             isLive={!!stream.isLive && !streamEnded}
             isEnded={streamEnded}
             viewers={livePresence ?? viewersLabel}
-            giftCount={tipCount}
+            giftTotal={stream.totalTips ?? 0}
             startedAt={stream.startedAt ?? null}
             isMuted={isMuted}
             onToggleMute={toggleMute}
