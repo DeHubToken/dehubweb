@@ -18,8 +18,10 @@ import { motion } from 'framer-motion';
 import {
   Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell,
   Play, Volume2, VolumeX, Maximize, Minimize,
-  Heart, Gift, StopCircle, Activity, Loader2, Bookmark, Info
+  Heart, Gift, StopCircle, Activity, Loader2, Bookmark, Info,
+  Gem, Trophy, Star, PartyPopper, ShieldPlus, BellRing, Crown, Flower2
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';
 // Type-only: the hls.js runtime (~400 kB raw) loads dynamically at attach time
@@ -66,7 +68,29 @@ import { useStreamPresence } from '@/hooks/use-stream-presence';
 import { useStreamGifts } from '@/hooks/use-stream-gifts';
 import { useGiftAnimations } from '@/hooks/use-gift-animations';
 import { GiftAnimationOverlay } from '@/components/app/live/GiftAnimationOverlay';
-import { GIFT_TIERS, tierFromAmount } from '@/lib/live/gift-tiers';
+import { GIFT_TIERS, tierFromAmount, type GiftTierKey } from '@/lib/live/gift-tiers';
+
+/**
+ * The picker tile's mark, one per rung of the ladder.
+ *
+ * Deliberately the same lucide icons the app's GiftModal uses, drawn in the
+ * same flat white, so the ladder reads identically in a browser and in the
+ * APK. The tier's `emoji` stays what it always was — the coloured character
+ * that climbs the stage during the celebration — and is not what the picker
+ * shows.
+ */
+const GIFT_TIER_ICONS: Record<GiftTierKey, LucideIcon> = {
+  ultimate: Trophy,
+  gold10: Star,
+  gold3: Star,
+  party: PartyPopper,
+  spartans: ShieldPlus,
+  magicRing: BellRing,
+  crown: Crown,
+  bouquet: Flower2,
+  chocolate: Gift,
+  heart: Heart,
+};
 import { speakTipMessage, warmTipTts, setTipTtsEnabled, MAX_TTS_CHARS } from '@/lib/live/tip-tts';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
@@ -838,7 +862,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const getActivityIcon = (type: string) => {
     switch (type) {
       case 'like': return <Heart className="w-3 h-3 text-red-400" />;
-      case 'gift': return <Gift className="w-3 h-3 text-yellow-400" />;
+      case 'gift': return <Gem className="w-3 h-3 text-zinc-200" />;
       case 'join': return <Activity className="w-3 h-3 text-green-400" />;
       case 'leave': return <Activity className="w-3 h-3 text-zinc-500" />;
       default: return <Activity className="w-3 h-3 text-zinc-400" />;
@@ -878,12 +902,12 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           {!streamEnded && (
             <motion.button
               onClick={() => setShowGiftDrawer(true)}
-              className="text-zinc-400 hover:text-yellow-400 transition-colors"
+              className="text-zinc-400 hover:text-white transition-colors"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               aria-label="Send gift"
             >
-              <Gift className="w-5 h-5" />
+              <Gem className="w-5 h-5" />
             </motion.button>
           )}
           <motion.button
@@ -1326,7 +1350,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         <DrawerContent column glass className="px-4 pb-8">
           <DrawerHeader className="border-b border-white/10 mb-4">
             <DrawerTitle className="text-white flex items-center gap-2">
-              <Gift className="w-5 h-5 text-yellow-400" />
+              <Gem className="w-5 h-5 text-white" />
               Send a Gift
             </DrawerTitle>
           </DrawerHeader>
@@ -1350,9 +1374,10 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               <label className="text-sm text-zinc-400">
                 {t('liveGift.pickTier', 'Pick a celebration')}
               </label>
-              <div className="grid grid-cols-2 gap-2 max-h-52 overflow-y-auto pr-1">
+              <div className="grid grid-cols-2 gap-2 max-h-52 overflow-y-auto overscroll-contain pr-1 [touch-action:pan-y]">
                 {[...GIFT_TIERS].reverse().map((tier) => {
                   const selected = Number(giftAmount) === tier.min;
+                  const TierIcon = GIFT_TIER_ICONS[tier.key];
                   return (
                     <button
                       key={tier.key}
@@ -1362,11 +1387,13 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                       className={cn(
                         'flex items-center gap-2 rounded-xl border p-2 text-left transition-colors',
                         selected
-                          ? 'border-yellow-400 bg-yellow-400/15'
+                          ? 'border-white/60 bg-white/15'
                           : 'border-white/10 bg-white/5 hover:bg-white/10'
                       )}
                     >
-                      <span aria-hidden className="text-xl leading-none">{tier.emoji}</span>
+                      <span aria-hidden className="shrink-0 rounded-xl bg-white/10 p-2">
+                        <TierIcon className="w-4 h-4 text-white" />
+                      </span>
                       <span className="min-w-0">
                         <span className="block truncate text-[11px] font-semibold text-white">
                           {t(tier.labelKey, tier.name)}
@@ -1405,7 +1432,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 Sent on-chain to the streamer's wallet and shown in the stream activity.
               </p>
               {selectedGiftTier && (
-                <p className="text-[11px] text-yellow-400/90">
+                <p className="text-[11px] text-zinc-300">
                   {t('liveGift.plays', 'Plays {{tier}} on the stream', {
                     tier: t(selectedGiftTier.labelKey, selectedGiftTier.name),
                   })}
@@ -1449,12 +1476,12 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             <Button
               onClick={handleSendGift}
               disabled={isSendingGift || !giftAmount}
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-black py-5 font-semibold rounded-xl"
+              className="w-full bg-white hover:bg-zinc-200 text-black py-5 font-semibold rounded-xl"
             >
               {isSendingGift ? (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
               ) : (
-                <Gift className="w-4 h-4 mr-2" />
+                <Gem className="w-4 h-4 mr-2" />
               )}
               Send Gift
             </Button>
