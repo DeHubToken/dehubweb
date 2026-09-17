@@ -1,6 +1,7 @@
 import type { Purchase } from '@/lib/crypto-purchase';
 import { buildDirectSolanaPayment } from '@/lib/api/crypto-purchase';
-import { isSmartWalletSession, getDerivedSolanaAddress, signDerivedSolanaTransaction } from '@/lib/smart-wallet';
+import { getDerivedSolanaAddress, signDerivedSolanaTransaction } from '@/lib/smart-wallet';
+import { isSmartWalletSession } from '@/lib/connection-source';
 import { connectSolanaWallet, getSolanaProvider } from '@/lib/solana/wallet';
 import { solanaRpcUrl } from '@/lib/chains/solana';
 
