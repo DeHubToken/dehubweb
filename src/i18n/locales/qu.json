@@ -438,7 +438,9 @@
       "rotateConfirm": "Musuq kiyta kamachiyta munankichu? Kaykuna maywasiykikunamanta k'uyuchiyta ruwaqqa mana llamk'anqachu chay musuq kiyta churakuykama.",
       "rotated": "Musuq kiy kamachisqa",
       "rotateFailed": "Mana musuq kiyta kamachiyta atirqachu",
-      "unavailable": "Maywasiykikunamanta k'uyuchiyqa manam kunanqa kaqllachu kaqniykimpi."
+      "unavailable": "Maywasiykikunamanta k'uyuchiyqa manam kunanqa kaqllachu kaqniykimpi.",
+      "serverCopied": "Servidor copiasqa",
+      "keyCopied": "Llave de corriente copiasqa"
     }
   },
   "common": {

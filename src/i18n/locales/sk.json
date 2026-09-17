@@ -456,7 +456,9 @@
       "rotateConfirm": "Vydáte nový streamovací kľúč? Každý kódovač používajúci starý prestane fungovať, kým nevložíte nový kľúč.",
       "rotated": "Nový streamovací kľúč vydaný",
       "rotateFailed": "Nepodarilo sa vydať nový kľúč",
-      "unavailable": "Streamovanie z kódovača nie je momentálne na vašom účte dostupné."
+      "unavailable": "Streamovanie z kódovača nie je momentálne na vašom účte dostupné.",
+      "serverCopied": "Server skopírovaný",
+      "keyCopied": "Kľúč streamu bol skopírovaný"
     }
   },
   "common": {

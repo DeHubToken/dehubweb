@@ -452,7 +452,9 @@
       "rotateConfirm": "Issue a new stream key? Every encoder using the old one will stop working until you paste the new key in.",
       "rotated": "New stream key issued",
       "rotateFailed": "Could not issue a new key",
-      "unavailable": "Streaming from an encoder is not available on your account right now."
+      "unavailable": "Streaming from an encoder is not available on your account right now.",
+      "serverCopied": "Server copied",
+      "keyCopied": "Stream key copied"
     }
   },
   "common": {

@@ -436,7 +436,9 @@
       "rotateConfirm": "Oqim kalitini chiqarish kerakmi? Eski kalitdan foydalanadigan har qanday kodlaydigan qurilma yangi kalitni joylashtirmaguningizcha ishlamay qoladi.",
       "rotated": "Yangi oqim kaliti chiqarildi",
       "rotateFailed": "Yangi kalitni chiqarib bo'lmadi",
-      "unavailable": "Kodlaydigan qurilmadan efirga uzatish hozirda hisobingizda mavjud emas."
+      "unavailable": "Kodlaydigan qurilmadan efirga uzatish hozirda hisobingizda mavjud emas.",
+      "serverCopied": "Server nusxalandi",
+      "keyCopied": "Oqim kaliti nusxalandi"
     }
   },
   "common": {

@@ -452,7 +452,9 @@
       "rotateConfirm": "Lëshoni një çelës të ri transmetimi? Çdo kodues që përdor atë të vjetrin do të ndalojë së punuari derisa të vendosni çelësin e ri.",
       "rotated": "Çelësi i ri i transmetimit u lëshua",
       "rotateFailed": "Nuk u lëshua dot çelësi i ri",
-      "unavailable": "Transmetimi nga një kodues nuk është i disponueshëm në llogarinë tuaj tani."
+      "unavailable": "Transmetimi nga një kodues nuk është i disponueshëm në llogarinë tuaj tani.",
+      "serverCopied": "Serveri u kopjua",
+      "keyCopied": "Çelësi i transmetimit u kopjua"
     }
   },
   "common": {

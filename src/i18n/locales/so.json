@@ -438,7 +438,9 @@
       "rotateConfirm": "Ma soo saartaa furaha streemka cusub? Kombiyuutarka kasta ee isticmaalaya kan hore wuu joogsanayaa ilaa aad ku dhejiso furaha cusub.",
       "rotated": "Furaha streemka cusub waa la soo saaray",
       "rotateFailed": "Waan ku guuldareystay inaan soo saaro furaha cusub",
-      "unavailable": "Streemka kombiyuutarka laguma heli karo akoonkaaga hadda."
+      "unavailable": "Streemka kombiyuutarka laguma heli karo akoonkaaga hadda.",
+      "serverCopied": "Server waa la nuqulay",
+      "keyCopied": "Furaha Stream la nuqulay"
     }
   },
   "common": {

@@ -437,7 +437,9 @@
       "rotateConfirm": "要發佈新直播金鑰嗎？所有使用舊金鑰的編碼器將停止運作，直到你貼上新金鑰為止。",
       "rotated": "已發佈新直播金鑰",
       "rotateFailed": "無法發佈新金鑰",
-      "unavailable": "你的帳戶目前無法從編碼器進行直播。"
+      "unavailable": "你的帳戶目前無法從編碼器進行直播。",
+      "serverCopied": "伺服器複製咗",
+      "keyCopied": "串流密鑰複製咗"
     }
   },
   "common": {

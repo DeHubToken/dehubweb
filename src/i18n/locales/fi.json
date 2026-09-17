@@ -452,7 +452,9 @@
       "rotateConfirm": "Haluatko antaa uuden striimiavaimen? Jokainen vanhaa avainta käyttävä kooderi lakkaa toimimasta, kunnes liität uuden avaimen.",
       "rotated": "Uusi striimiavain annettu",
       "rotateFailed": "Uutta avainta ei voitu antaa",
-      "unavailable": "Striimaus kooderista ei ole tällä hetkellä tililläsi käytettävissä."
+      "unavailable": "Striimaus kooderista ei ole tällä hetkellä tililläsi käytettävissä.",
+      "serverCopied": "Palvelin kopioitu",
+      "keyCopied": "Virta-avain kopioitu"
     }
   },
   "common": {

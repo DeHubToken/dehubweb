@@ -452,7 +452,9 @@
       "rotateConfirm": "Vystavit nový streamovací klíč? Každý enkodér používající starý přestane fungovat, dokud do něj nevložíte nový klíč.",
       "rotated": "Nový streamovací klíč vystaven",
       "rotateFailed": "Nelze vystavit nový klíč",
-      "unavailable": "Streamování z enkodéru není na vašem účtu momentálně k dispozici."
+      "unavailable": "Streamování z enkodéru není na vašem účtu momentálně k dispozici.",
+      "serverCopied": "Server zkopírován",
+      "keyCopied": "Klíč streamu zkopírován"
     }
   },
   "common": {

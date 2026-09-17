@@ -436,7 +436,9 @@
       "rotateConfirm": "Nye igodo ntinye ọhụrụ? Ihe ndekọ ọ bụla na-eji nke ochie ga-akwụsị ịrụ ọrụ ruo mgbe ị detoro igodo ọhụrụ ahụ.",
       "rotated": "Igodo ntinye ọhụrụ enyere",
       "rotateFailed": "E nweghị ike inye igodo ọhụrụ",
-      "unavailable": "Ntinye site na ihe ndekọ adịghị maka akaụntụ gị ugbu a."
+      "unavailable": "Ntinye site na ihe ndekọ adịghị maka akaụntụ gị ugbu a.",
+      "serverCopied": "Edebata sava",
+      "keyCopied": "Edebata kíìrìọ́ọ̀ltụ̀"
     }
   },
   "common": {

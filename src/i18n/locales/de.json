@@ -452,7 +452,9 @@
       "rotateConfirm": "Neuen Stream-Schlüssel ausgeben? Jeder Encoder, der den alten verwendet, wird nicht mehr funktionieren, bis Sie den neuen Schlüssel eingefügt haben.",
       "rotated": "Neuer Stream-Schlüssel ausgegeben",
       "rotateFailed": "Neuer Schlüssel konnte nicht ausgegeben werden",
-      "unavailable": "Streaming von einem Encoder ist derzeit nicht für Ihr Konto verfügbar."
+      "unavailable": "Streaming von einem Encoder ist derzeit nicht für Ihr Konto verfügbar.",
+      "serverCopied": "Server kopiert",
+      "keyCopied": "Stream-Schlüssel kopiert"
     }
   },
   "common": {

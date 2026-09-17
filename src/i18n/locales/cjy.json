@@ -397,7 +397,9 @@
       "rotateConfirm": "要发出新的直播密钥吗？使用旧密钥的每个编码器都将停止工作，直到你粘贴新密钥。",
       "rotated": "已发出新的直播密钥",
       "rotateFailed": "无法发出新密钥",
-      "unavailable": "你的帐户目前无法从编码器进行直播。"
+      "unavailable": "你的帐户目前无法从编码器进行直播。",
+      "serverCopied": "服务器已复制",
+      "keyCopied": "流密钥已复制"
     }
   },
   "common": {

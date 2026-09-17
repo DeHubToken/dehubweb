@@ -452,7 +452,9 @@
       "rotateConfirm": "Yeni yayım açarı verilsin? Köhnə açardan istifadə edən hər bir kodlayıcı yeni açarı yapışdırana qədər işləməyi dayandıracaq.",
       "rotated": "Yeni yayım açarı verildi",
       "rotateFailed": "Yeni açar verilə bilmədi",
-      "unavailable": "Hesabınızda hazırda kodlayıcıdan yayımlamaq mümkün deyil."
+      "unavailable": "Hesabınızda hazırda kodlayıcıdan yayımlamaq mümkün deyil.",
+      "serverCopied": "Server kopyalandı",
+      "keyCopied": "Axın açarı kopyalandı"
     }
   },
   "common": {

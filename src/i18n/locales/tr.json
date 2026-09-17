@@ -452,7 +452,9 @@
       "rotateConfirm": "Yeni bir yayın anahtarı mı verilecek? Eski anahtarı kullanan her kodlayıcı, yeni anahtarı yapıştırdığınızda çalışmayı durduracaktır.",
       "rotated": "Yeni yayın anahtarı verildi",
       "rotateFailed": "Yeni anahtar verilemedi",
-      "unavailable": "Hesabınızda şu anda bir kodlayıcıdan yayın yapmak kullanılamıyor."
+      "unavailable": "Hesabınızda şu anda bir kodlayıcıdan yayın yapmak kullanılamıyor.",
+      "serverCopied": "Sunucu kopyalandı",
+      "keyCopied": "Akış anahtarı kopyalandı"
     }
   },
   "common": {

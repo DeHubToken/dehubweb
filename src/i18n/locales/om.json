@@ -438,7 +438,9 @@
       "rotateConfirm": "Guddata yaa dhangalaasaa haaraa baasuufi? Encoder hundii kan duraan itti fayyadama ture kan haaraa san encoder keessaniitti osoo hin galchin hojii irraa ni dhabama.",
       "rotated": "Guddata yaa dhangalaasaa haaraa baafame",
       "rotateFailed": "Guddata yaa dhangalaasaa baasuufi hin dandeenye",
-      "unavailable": "Dhangalaasuun encoder irraa yeroo ammaa kana maamiloota keessaniif hin danda’amu."
+      "unavailable": "Dhangalaasuun encoder irraa yeroo ammaa kana maamiloota keessaniif hin danda’amu.",
+      "serverCopied": "Sarvariin waraabame",
+      "keyCopied": "Furtuun yaa&#39;aa waraabame"
     }
   },
   "common": {

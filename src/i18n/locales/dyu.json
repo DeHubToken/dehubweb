@@ -428,7 +428,9 @@
       "rotateConfirm": "Mun na jɔnjɔn dɔ lo? Mɔgɔ minw be baara kɛ ni kɔrɔman ye, olu bɛɛ bena ban ka baara kɛ fɔɔ aw ka yɛlɛyɔrɔ kura don.",
       "rotated": "Fɛɛn kura min be se ka kɛ sababu ye ka mɔgɔ ka koo ɲɛnabɔ",
       "rotateFailed": "Ne ma se ka n ka konnɛgɛ sɔrɔ",
-      "unavailable": "I ka ladɛrɛsi tɛ sɔrɔ i ka ladɛrɛsi la sisan."
+      "unavailable": "I ka ladɛrɛsi tɛ sɔrɔ i ka ladɛrɛsi la sisan.",
+      "serverCopied": "Kopiw",
+      "keyCopied": "Riviera Maison Key Copy"
     }
   },
   "common": {

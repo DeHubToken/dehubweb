@@ -452,7 +452,9 @@
       "rotateConfirm": "Új stream kulcsot szeretnél kiadni? Minden enkóder, amely a régit használja, leáll, amíg be nem illeszted az újat.",
       "rotated": "Új stream kulcs kiadva",
       "rotateFailed": "Nem sikerült új kulcsot kiadni",
-      "unavailable": "Az enkóderből történő streamelés jelenleg nem elérhető a fiókodban."
+      "unavailable": "Az enkóderből történő streamelés jelenleg nem elérhető a fiókodban.",
+      "serverCopied": "Szerver másolva",
+      "keyCopied": "Adatfolyamkulcs másolva"
     }
   },
   "common": {

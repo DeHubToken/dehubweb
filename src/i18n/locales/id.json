@@ -452,7 +452,9 @@
       "rotateConfirm": "Terbitkan kunci streaming baru? Setiap encoder yang menggunakan yang lama akan berhenti berfungsi sampai Anda menempelkan kunci baru di sana.",
       "rotated": "Kunci streaming baru diterbitkan",
       "rotateFailed": "Tidak dapat menerbitkan kunci baru",
-      "unavailable": "Streaming dari encoder tidak tersedia di akun Anda saat ini."
+      "unavailable": "Streaming dari encoder tidak tersedia di akun Anda saat ini.",
+      "serverCopied": "Server disalin",
+      "keyCopied": "Kunci streaming disalin"
     }
   },
   "common": {

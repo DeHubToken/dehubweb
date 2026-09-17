@@ -436,7 +436,9 @@
       "rotateConfirm": "Tīmata anō i tētahi kī raraunga roma hou? Ka mutu te mahi o ngā kaikōkiri katoa e whakamahi ana i te kī tawhito kia whakapiripiria ra ano te kī hou.",
       "rotated": "Kī raraunga roma hou kua tīmatahia",
       "rotateFailed": "Kāore i taea te tīmata i tētahi kī hou",
-      "unavailable": "Kāore e wātea ana te whakapaoho mai i tētahi kaikōkiri ki tō pūkete i tēnei wā."
+      "unavailable": "Kāore e wātea ana te whakapaoho mai i tētahi kaikōkiri ki tō pūkete i tēnei wā.",
+      "serverCopied": "Ka kape te tūmau",
+      "keyCopied": "Tīpakohia te kī o te kōpae"
     }
   },
   "common": {

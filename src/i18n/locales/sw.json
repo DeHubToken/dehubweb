@@ -452,7 +452,9 @@
       "rotateConfirm": "Toa ufunguo mpya wa matangazo? Kila kiendeshi kinachotumia cha zamani kitaacha kufanya kazi hadi utakapobandika ufunguo mpya.",
       "rotated": "Ufunguo mpya wa matangazo umetolewa",
       "rotateFailed": "Imeshindwa kutoa ufunguo mpya",
-      "unavailable": "Kutangaza kutoka kwa kiendeshi hakupatikani kwenye akaunti yako kwa sasa."
+      "unavailable": "Kutangaza kutoka kwa kiendeshi hakupatikani kwenye akaunti yako kwa sasa.",
+      "serverCopied": "Seva imenakiliwa",
+      "keyCopied": "Ufunguo wa mkondo umenakiliwa"
     }
   },
   "common": {

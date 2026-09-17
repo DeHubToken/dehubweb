@@ -430,7 +430,9 @@
       "rotateConfirm": "Ngetokake tombol siaran anyar? Saben encoder sing nggunakake sing lawas bakal mandheg digunakake nganti kowe nempelake tombol anyar.",
       "rotated": "Tombol siaran anyar wis ditokake",
       "rotateFailed": "Ora bisa ngetokake tombol anyar",
-      "unavailable": "Siaran saka encoder ora kasedhiya ing akunmu saiki."
+      "unavailable": "Siaran saka encoder ora kasedhiya ing akunmu saiki.",
+      "serverCopied": "Server disalin",
+      "keyCopied": "Kunci stream disalin"
     }
   },
   "common": {
