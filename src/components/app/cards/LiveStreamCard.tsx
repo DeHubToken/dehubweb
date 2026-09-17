@@ -36,6 +36,7 @@ import { ReportModal } from '../modals/ReportModal';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,6 +65,7 @@ import { useStreamGifts } from '@/hooks/use-stream-gifts';
 import { useGiftAnimations } from '@/hooks/use-gift-animations';
 import { GiftAnimationOverlay } from '@/components/app/live/GiftAnimationOverlay';
 import { GIFT_TIERS, tierFromAmount } from '@/lib/live/gift-tiers';
+import { speakTipMessage, warmTipTts, setTipTtsEnabled, MAX_TTS_CHARS } from '@/lib/live/tip-tts';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
@@ -146,6 +148,7 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [giftAmount, setGiftAmount] = useState('');
+  const [giftMessage, setGiftMessage] = useState('');
   const [dhbBalance, setDhbBalance] = useState<string | null>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -208,7 +211,21 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
     const me = walletAddress?.toLowerCase();
     if (me && gift.address && gift.address === me) return;
     enqueueGift(gift);
+    // Read the sender's line out over the stream. Every client in the room
+    // synthesises the same sentence off this one broadcast, so the whole
+    // audience hears it at once — and within a second of the tip, rather than
+    // behind the HLS buffer. The sender's own copy is spoken at submit time
+    // below, which is why their echo is dropped above before reaching here.
+    speakTipMessage(gift.message);
   });
+
+  // Pull the ~590 kB synthesiser down while the viewer is watching rather than
+  // when the first gift lands, so the first message of a stream is not read out
+  // several seconds after its celebration has finished playing. Only for a
+  // stream actually live — it must never touch a feed scroll or the boot path.
+  useEffect(() => {
+    if (stream.isLive && !streamEnded) warmTipTts();
+  }, [stream.isLive, streamEnded]);
   const hlsRef = useRef<Hls | null>(null);
   /** One WebRTC attempt per card: once it fails, HLS keeps the element. */
   const whepFailedRef = useRef(false);
@@ -641,6 +658,14 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
     videoPlaybackManager.globalMuted = !isMuted;
   }, [isMuted]);
 
+  // Muting the stream mutes the tip readings with it, and cuts one already
+  // mid-sentence. They are synthesised locally, so nothing about the player's
+  // own volume would otherwise touch them — a viewer who muted a stream in a
+  // quiet room would have had an old man start shouting tip messages at them.
+  useEffect(() => {
+    setTipTtsEnabled(!isMuted);
+  }, [isMuted]);
+
 
   // The on-chain tip path encodes the tokenId with BigInt(), so it must be
   // the numeric NFT tokenId — the livestream-API fallback route can hand this
@@ -660,7 +685,17 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
       if (!apiStreamId || !stream.creatorId) return;
       // Play the celebration the sender paid for straight away, before the
       // record round-trips.
-      enqueueGift({ amount, selectedTier: tierFromAmount(amount).name, username: t('liveGift.you', 'You') });
+      const spokenMessage = giftMessage.trim().slice(0, MAX_TTS_CHARS);
+      enqueueGift({
+        amount,
+        selectedTier: tierFromAmount(amount).name,
+        username: t('liveGift.you', 'You'),
+        message: spokenMessage || undefined,
+      });
+      // The sender hears their own message on the same beat as the celebration
+      // they paid for. Their echo off `streamer.tip` is dropped on the wallet
+      // address, so this is the only place it is spoken for them.
+      speakTipMessage(spokenMessage);
       const payload = {
         transactionHash: txHash,
         tokenId: stream.id,
@@ -672,6 +707,10 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
         // web gift without it was downgraded to the bottom tier on every
         // phone in the room.
         selectedTier: tierFromAmount(amount).name,
+        // The line the room hears read out. The backend already carries it
+        // through to `gift.meta.message` on the `streamer.tip` broadcast, so
+        // filling it in is the whole of the wire work for tip-to-speech.
+        message: spokenMessage || undefined,
         timestamp: Date.now(),
       };
       // The backend accepts gift records only while ITS status is LIVE or
@@ -693,6 +732,7 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
     },
     onSuccess: () => {
       setGiftAmount('');
+      setGiftMessage('');
       setShowGiftDrawer(false);
     },
   });
@@ -1168,6 +1208,40 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
                 </p>
               )}
             </div>
+
+            {/* Tip-to-speech. Optional: a gift with an empty box is exactly the
+                gift it was before, and nothing is spoken. The cap is the
+                synthesiser's, not a style choice — past it a single tip holds
+                the stream's audio for too long. */}
+            <div className="space-y-2">
+              <label
+                htmlFor={`gift-tts-${stream.id}`}
+                className="text-sm text-zinc-400 flex items-center gap-1.5"
+              >
+                <Volume2 className="w-4 h-4" />
+                {t('liveGift.ttsLabel', 'Say something out loud')}
+              </label>
+              <div className="relative">
+                <Textarea
+                  id={`gift-tts-${stream.id}`}
+                  value={giftMessage}
+                  onChange={(e) => setGiftMessage(e.target.value.slice(0, MAX_TTS_CHARS))}
+                  placeholder={t('liveGift.ttsPlaceholder', 'Read out to the stream…')}
+                  rows={2}
+                  className="resize-none bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 pr-14"
+                />
+                <span className="absolute right-3 bottom-2 text-[10px] text-zinc-500 pointer-events-none">
+                  {giftMessage.length}/{MAX_TTS_CHARS}
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-500">
+                {t(
+                  'liveGift.ttsHint',
+                  'Read aloud to everyone watching when your gift lands.',
+                )}
+              </p>
+            </div>
+
             <Button
               onClick={handleSendGift}
               disabled={isSendingGift || !giftAmount}

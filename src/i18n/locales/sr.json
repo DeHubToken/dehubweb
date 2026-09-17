@@ -2302,5 +2302,10 @@
   },
   "badgeAscension": {
     "continue": "Назад на DeHub"
+  },
+  "liveGift": {
+    "ttsLabel": "Recite nešto naglas",
+    "ttsPlaceholder": "Čitajte u strimu…",
+    "ttsHint": "Čitajte naglas svima koji gledaju kada vaš poklon sleti."
   }
 }
