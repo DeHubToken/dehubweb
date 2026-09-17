@@ -10,16 +10,46 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cryptoPurchaseApi } from '@/lib/api/crypto-purchase';
-import { canSendPayment, estimateMinutes, paymentChainName, purchasePhase, validDhbAmount } from '@/lib/crypto-purchase';
+import { canSendPayment, estimateMinutes, formatPaymentAmount, paymentChainName, purchasePhase, validDhbAmount } from '@/lib/crypto-purchase';
 import { useCryptoPurchase } from '@/hooks/use-crypto-purchase';
 import { refreshWalletBalances } from '@/lib/wallet/balance-refresh';
 import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
 import type { Purchase } from '@/lib/crypto-purchase';
 import type { ChainId } from '@/components/app/ChainSelector';
-import { Interface, parseUnits } from 'ethers';
-import { ensureSignerOnChain, getActiveProvider, writeBatchAA } from '@/lib/contracts/aa-utils';
+import { Interface, formatUnits, parseUnits } from 'ethers';
+import { ensureSignerOnChain, getActiveProvider, rpcRequest, writeBatchAA } from '@/lib/contracts/aa-utils';
 import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
+import { ArrowDown } from 'lucide-react';
+import dehubCoin from '@/assets/dehub-coin.png';
+import ethLogo from '@/assets/eth-logo.png';
+import usdcLogo from '@/assets/usdc-logo.png';
+import usdtLogo from '@/assets/usdt-logo.png';
+import btcLogo from '@/assets/btc-logo.png';
+import solLogo from '@/assets/icons/solana-logo.png';
+import bnbLogo from '@/assets/bnb-logo.png';
+
+const tokenLogos: Record<string, string> = { ETH: ethLogo, USDC: usdcLogo, USDT: usdtLogo, BTC: btcLogo, SOL: solLogo, BNB: bnbLogo };
+
+function PaymentPair({ payAmount, paySymbol, payChain, receiveAmount }: { payAmount?: string; paySymbol?: string; payChain?: string; receiveAmount: number }) {
+  const { t } = useTranslation();
+  const payLogo = paySymbol ? tokenLogos[paySymbol] : undefined;
+  return <div className="relative space-y-2" aria-label={t('nearBuy.title')}>
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5">
+      <div className="flex items-center justify-between text-xs text-zinc-400"><span>{t('buyCoins.youPay')}</span><span>{payChain ? paymentChainName(payChain) : ''}</span></div>
+      <div className="mt-2 flex items-center gap-3">
+        {payLogo ? <img src={payLogo} alt="" className="h-9 w-9 shrink-0 rounded-full object-contain" /> : <div className="h-9 w-9 shrink-0 rounded-full bg-white/10" />}
+        <span className="min-w-0 flex-1 truncate text-xl font-semibold tabular-nums text-white">{payAmount ? `≈${formatPaymentAmount(payAmount)}` : '—'}</span>
+        <span className="text-sm font-semibold text-white">{paySymbol || '—'}</span>
+      </div>
+    </div>
+    <div className="relative z-10 -my-4 flex justify-center"><span className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/15 bg-zinc-900 text-white"><ArrowDown className="h-4 w-4" /></span></div>
+    <div className="rounded-2xl border border-white/15 bg-white/[0.07] px-4 py-3.5">
+      <div className="flex items-center justify-between text-xs text-zinc-400"><span>{t('buyCoins.youReceive')}</span><span>Base</span></div>
+      <div className="mt-2 flex items-center gap-3"><img src={dehubCoin} alt="" className="h-9 w-9 shrink-0 rounded-full object-contain" /><span className="min-w-0 flex-1 truncate text-xl font-semibold tabular-nums text-white">{receiveAmount > 0 ? receiveAmount.toLocaleString(undefined, { maximumFractionDigits: 2 }) : '—'}</span><span className="text-sm font-semibold text-white">DHB</span></div>
+    </div>
+  </div>;
+}
 
 export function NearIntentBuy({ tokensToReceive }: { tokensToReceive: number }) {
   const { t } = useTranslation();
@@ -43,6 +73,14 @@ export function NearIntentBuy({ tokensToReceive }: { tokensToReceive: number }) 
     const sender = provider ? (await provider.request({ method: 'eth_accounts' }))?.[0] : getAccount(wagmiConfig).address;
     if (sender?.toLowerCase() !== receipt.refundTo?.toLowerCase()) throw new Error(t('nearBuy.wrongWallet'));
     if (receipt.expiresAt * 1000 <= Date.now()) throw new Error(t('nearBuy.phase_expired'));
+    if (!receipt.paymentTokenAddress || receipt.wrapNativePayment) {
+      const required = parseUnits(receipt.amountInFormatted, receipt.paymentDecimals);
+      const balance = BigInt(await rpcRequest<string>('eth_getBalance', [sender, 'latest'], chain));
+      if (balance < required) {
+        const symbol = receipt.originSymbol || 'native token';
+        throw new Error(`Insufficient ${symbol} on ${paymentChainName(receipt.originBlockchain || '')}. Your wallet has ${formatPaymentAmount(formatUnits(balance, receipt.paymentDecimals))} ${symbol}; this payment needs ${formatPaymentAmount(receipt.amountInFormatted)} ${symbol}. Choose another currency or a smaller amount.`);
+      }
+    }
     if (receipt.wrapNativePayment && receipt.paymentTokenAddress) {
       if (!provider?.smartAccount) return (await sendNativeToken(receipt.depositAddress, receipt.amountInFormatted, receipt.paymentDecimals, chain)).hash;
       const token = new Interface(['function deposit() payable', 'function transfer(address to,uint256 amount) returns (bool)']);
@@ -97,18 +135,14 @@ export function NearIntentBuy({ tokensToReceive }: { tokensToReceive: number }) 
     <div><h2 className="text-white font-semibold">{t('nearBuy.title')}</h2><p className="text-xs text-zinc-400 mt-1">{t('nearBuy.description')}</p></div>
     {flow.historyFailed && <p role="alert" className="text-amber-300 text-sm">{t('nearBuy.historyError')} <button onClick={flow.refresh} className="underline">{t('nearBuy.retry')}</button></p>}
     {purchase ? <div className="space-y-3">
-      <div aria-live="polite" className="rounded-xl border border-white/10 p-3 space-y-2">
-        <h3 className="text-white font-semibold">{t(`nearBuy.phase_${phase}`)}</h3>
-        <p className="text-zinc-300 text-sm">{t(direct && phase === 'awaiting' ? 'nearBuy.reviewPay' : `nearBuy.detail_${phase}`)}</p>
-        {estimate}<p className="text-xs text-zinc-400">{t('nearBuy.saved')}</p>
-      </div>
+      <div aria-live="polite" className="space-y-1"><h3 className="text-white font-semibold">{t(`nearBuy.phase_${phase}`)}</h3><p className="text-zinc-400 text-sm">{t(direct && phase === 'awaiting' ? 'nearBuy.reviewPay' : `nearBuy.detail_${phase}`)}</p></div>
+      <PaymentPair payAmount={purchase.amountInFormatted} paySymbol={purchase.originSymbol} payChain={purchase.originBlockchain} receiveAmount={Number(purchase.tokenReceived || purchase.estimatedTokensToReceive || 0)} />
       {flow.statusFailed && <p role="alert" className="text-amber-300 text-sm">{t('nearBuy.statusError')}</p>}
       {phase === 'awaiting' && !canSendPayment(purchase, flow.now) && <p role="alert" className="text-amber-300 text-sm">{t('nearBuy.statusError')}</p>}
       <Button variant="glass" onClick={flow.refresh}>{t('nearBuy.checkStatus')}</Button>
       {flow.lastChecked && <p className="text-xs text-zinc-500">{t('nearBuy.lastChecked', { time: new Date(flow.lastChecked).toLocaleTimeString() })}</p>}
-      <p className="text-sm text-white">{t(!direct && canSendPayment(purchase, flow.now) ? 'nearBuy.sendExact' : 'nearBuy.paymentSummary', { amount: purchase.amountInFormatted || '', symbol: purchase.originSymbol || '', chain: paymentChainName(purchase.originBlockchain || '') })}</p>
-      <p className="text-sm text-zinc-300">{t('nearBuy.receiveNet', { amount: Number(purchase.tokenReceived || purchase.estimatedTokensToReceive || 0).toLocaleString(undefined, { maximumFractionDigits: 4 }) })}</p>
-      <p className="text-xs text-zinc-400">{t('nearBuy.gasReserve', { amount: (purchase.gasReserveUsd || 0).toFixed(4) })}</p>
+      {!direct && canSendPayment(purchase, flow.now) && <p className="text-xs text-amber-200">{t('nearBuy.sendExact', { amount: purchase.amountInFormatted || '', symbol: purchase.originSymbol || '', chain: paymentChainName(purchase.originBlockchain || '') })}</p>}
+      <div className="space-y-1 text-xs text-zinc-500">{estimate}<p>{t('nearBuy.gasReserve', { amount: (purchase.gasReserveUsd || 0).toFixed(4) })}</p><p>{t('nearBuy.saved')}</p></div>
       <p className="text-xs text-zinc-400">{t('nearBuy.deadline', { date: new Date(purchase.expiresAt * 1000).toLocaleString() })}</p>
       {direct && canSendPayment(purchase, flow.now) && <Button variant="glass" className="w-full" disabled={!!busy} onClick={() => flow.pay(purchase, sendPayment)}>{busy ? t('nearBuy.loading') : t('nearBuy.pay')}</Button>}
       {!direct && <div className="rounded-lg bg-zinc-800 p-3 break-all font-mono text-xs text-white select-all">{purchase.depositAddress}</div>}
@@ -121,13 +155,13 @@ export function NearIntentBuy({ tokensToReceive }: { tokensToReceive: number }) 
       <Button variant="ghost" className="w-full text-white" onClick={() => { flow.setPurchase(null); setAgreed(false); }}>{t('nearBuy.startAnother')}</Button>
     </div> : <>
       <div className="flex flex-wrap gap-2" role="group" aria-label={t('nearBuy.currency')}>
-        {picker.currencies.map(symbol => <button key={symbol} disabled={!!busy} aria-pressed={!picker.other && picker.currency === symbol} onClick={() => { picker.chooseCurrency(symbol); setAgreed(false); }} className={`rounded-xl px-4 py-2 text-sm ${!picker.other && picker.currency === symbol ? 'bg-white/20 text-white' : 'bg-zinc-800 text-zinc-300'}`}>{symbol}</button>)}
+        {picker.currencies.map(symbol => <button key={symbol} disabled={!!busy} aria-pressed={!picker.other && picker.currency === symbol} onClick={() => { picker.chooseCurrency(symbol); setAgreed(false); }} className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-sm ${!picker.other && picker.currency === symbol ? 'border-white/40 bg-white/15 text-white' : 'border-white/10 bg-zinc-800 text-zinc-300'}`}>{tokenLogos[symbol] && <img src={tokenLogos[symbol]} alt="" className="h-6 w-6 rounded-full object-contain" />}{symbol}</button>)}
       </div>
       <p className="text-xs text-zinc-400">{t(picker.loading ? 'nearBuy.checkingBalances' : picker.hasFunds ? 'nearBuy.walletBalances' : 'nearBuy.noWalletFunds')}</p>
       <button className="text-sm text-white underline" onClick={() => { picker.showOther(); setSearch(''); }}>{t('nearBuy.otherCurrencies')}</button>
       {picker.other && <Input value={search} onChange={e => setSearch(e.target.value)} disabled={busy === 'create'} placeholder={t('nearBuy.search')} aria-label={t('nearBuy.search')} className={field} />}
       <div className="max-h-52 overflow-y-auto space-y-1" role="group" aria-label={t('nearBuy.search')}>
-        {rows.map(asset => <button key={asset.assetId} disabled={busy === 'create'} aria-pressed={asset.assetId === flow.assetId} onClick={() => { picker.choose(asset); setAgreed(false); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm ${asset.assetId === flow.assetId ? 'bg-white/20 text-white' : 'bg-zinc-800 text-zinc-300'}`}><strong>{asset.symbol}</strong> · {paymentChainName(asset.blockchain)}<span className="block text-xs text-zinc-400">{t(picker.balances[asset.assetId] == null ? 'nearBuy.balanceUnknown' : 'nearBuy.balanceAmount', { amount: picker.balances[asset.assetId], symbol: asset.symbol })}</span>{picker.other && asset.contractAddress && <span className="block text-[10px] text-zinc-500 break-all">{asset.contractAddress}</span>}</button>)}
+        {rows.map(asset => <button key={asset.assetId} disabled={busy === 'create'} aria-pressed={asset.assetId === flow.assetId} onClick={() => { picker.choose(asset); setAgreed(false); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm ${asset.assetId === flow.assetId ? 'bg-white/20 text-white' : 'bg-zinc-800 text-zinc-300'}`}><span className="flex items-center gap-2">{tokenLogos[asset.symbol] && <img src={tokenLogos[asset.symbol]} alt="" className="h-5 w-5 rounded-full object-contain" />}<strong>{asset.symbol}</strong> · {paymentChainName(asset.blockchain)}</span><span className="block text-xs text-zinc-400">{t(picker.balances[asset.assetId] == null ? 'nearBuy.balanceUnknown' : 'nearBuy.balanceAmount', { amount: picker.balances[asset.assetId], symbol: asset.symbol })}</span>{picker.other && asset.contractAddress && <span className="block text-[10px] text-zinc-500 break-all">{asset.contractAddress}</span>}</button>)}
         {flow.loading && <p className="text-zinc-400 text-sm">{t('nearBuy.loading')}</p>}
         {flow.assetsFailed && <p className="text-amber-300 text-sm">{t('nearBuy.tokensError')} <button className="underline" onClick={flow.refresh}>{t('nearBuy.retry')}</button></p>}
         {!flow.loading && !flow.assetsFailed && rows.length === 0 && <p className="text-zinc-400 text-sm">{t('nearBuy.noMatches')}</p>}
@@ -135,7 +169,8 @@ export function NearIntentBuy({ tokensToReceive }: { tokensToReceive: number }) 
       {selected && (picker.other || selected.symbol === picker.currency) && <>
         {!direct && <><label className="block text-sm text-zinc-300">{t('nearBuy.refundAddress', { chain: paymentChainName(selected.blockchain) })}<Input value={flow.refund} onChange={e => flow.setRefund(e.target.value)} disabled={!!busy} placeholder={t('nearBuy.refundPlaceholder')} className={`mt-1 ${field}`} /></label>
         <p className="text-xs text-zinc-400">{t('nearBuy.refundHint')}</p></>}
-        {quote && <div className="rounded-xl border border-white/10 p-3 space-y-2"><p className="text-white text-sm">{t('nearBuy.quoteSummary', { amount: quote.amountInFormatted, symbol: selected.symbol, chain: paymentChainName(selected.blockchain) })}</p><p className="text-white text-sm">{t('nearBuy.receiveNet', { amount: (quote.estimatedTokensToReceive || 0).toLocaleString(undefined, { maximumFractionDigits: 4 }) })}</p><p className="text-xs text-zinc-400">{t('nearBuy.gasReserve', { amount: (quote.gasReserveUsd || 0).toFixed(4) })}</p>{estimate}<p className="text-xs text-zinc-400">{t('nearBuy.finalQuote')}</p></div>}
+        <PaymentPair payAmount={quote?.amountInFormatted} paySymbol={selected.symbol} payChain={selected.blockchain} receiveAmount={quote?.estimatedTokensToReceive || amount} />
+        {quote && <div className="space-y-1 text-xs text-zinc-500"><p>{t('nearBuy.gasReserve', { amount: (quote.gasReserveUsd || 0).toFixed(4) })}</p>{estimate}</div>}
         {quote && <label className="flex gap-2 text-xs text-zinc-300"><input type="checkbox" checked={agreed} disabled={busy === 'create'} onChange={e => setAgreed(e.target.checked)} /><span>{t('nearBuy.acceptTerms')} <a href="https://docs.dhb.gg/docs/terms-of-service" target="_blank" rel="noreferrer" className="underline">{t('nearBuy.terms')}</a></span></label>}
         {needsSolana && <Button variant="glass" className="w-full" disabled={connectingSolana} onClick={connectSolana}>{t(connectingSolana ? 'nearBuy.loading' : 'nearBuy.connectSolana')}</Button>}
         {!needsSolana && <Button variant="glass" className="w-full" disabled={flow.loading || flow.historyFailed || !!busy || !validDhbAmount(amount) || (!!quote && (!flow.refund.trim() || !agreed))} onClick={begin}>{busy ? t('nearBuy.loading') : quote ? t(direct ? 'nearBuy.pay' : 'nearBuy.paymentAction') : t('nearBuy.getQuote')}</Button>}
