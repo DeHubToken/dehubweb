@@ -42,7 +42,12 @@ export interface GiftTier {
   emoji: string;
   /** How long the celebration holds the screen. */
   durationMs: number;
-  /** Tailwind text colour for the picker tile's icon. */
+  /**
+   * Tailwind text colour for a tier mark. Monochrome on purpose — the ladder
+   * is read by brightness, not by hue, so it matches the app. Nothing reads
+   * this today (the picker draws its icons flat white); keep it chrome if it
+   * ever gets wired up.
+   */
   accent: string;
 }
 
@@ -57,7 +62,7 @@ export const GIFT_TIERS: readonly GiftTier[] = [
     descFallback: 'Every celebration at once — gold, confetti, coins and a trophy.',
     emoji: '🏆',
     durationMs: 12000,
-    accent: 'text-indigo-400',
+    accent: 'text-white',
   },
   {
     key: 'gold10',
@@ -68,7 +73,7 @@ export const GIFT_TIERS: readonly GiftTier[] = [
     descFallback: 'The screen turns gold and coins rain down for 10 seconds.',
     emoji: '🪙',
     durationMs: 10000,
-    accent: 'text-yellow-400',
+    accent: 'text-zinc-100',
   },
   {
     key: 'gold3',
@@ -79,7 +84,7 @@ export const GIFT_TIERS: readonly GiftTier[] = [
     descFallback: 'The screen turns gold and coins rain down for 3 seconds.',
     emoji: '🪙',
     durationMs: 3600,
-    accent: 'text-amber-400',
+    accent: 'text-zinc-200',
   },
   {
     key: 'party',
@@ -90,7 +95,7 @@ export const GIFT_TIERS: readonly GiftTier[] = [
     descFallback: 'Confetti flies and a disco ball drops in.',
     emoji: '🎉',
     durationMs: 5000,
-    accent: 'text-pink-400',
+    accent: 'text-zinc-200',
   },
   {
     key: 'spartans',
@@ -101,7 +106,7 @@ export const GIFT_TIERS: readonly GiftTier[] = [
     descFallback: 'A shield wall marches across the stream.',
     emoji: '🛡️',
     durationMs: 4500,
-    accent: 'text-zinc-200',
+    accent: 'text-zinc-300',
   },
   {
     key: 'magicRing',
@@ -112,7 +117,7 @@ export const GIFT_TIERS: readonly GiftTier[] = [
     descFallback: 'A ring lands in the middle and rings out in sparkles.',
     emoji: '💍',
     durationMs: 3500,
-    accent: 'text-purple-400',
+    accent: 'text-zinc-300',
   },
   {
     key: 'crown',
@@ -123,7 +128,7 @@ export const GIFT_TIERS: readonly GiftTier[] = [
     descFallback: 'A crown rises over the stream and glints.',
     emoji: '👑',
     durationMs: 3200,
-    accent: 'text-yellow-300',
+    accent: 'text-zinc-300',
   },
   {
     key: 'bouquet',
@@ -134,7 +139,7 @@ export const GIFT_TIERS: readonly GiftTier[] = [
     descFallback: 'A bouquet bursts open across the corner.',
     emoji: '💐',
     durationMs: 3000,
-    accent: 'text-rose-400',
+    accent: 'text-zinc-400',
   },
   {
     key: 'chocolate',
@@ -145,7 +150,7 @@ export const GIFT_TIERS: readonly GiftTier[] = [
     descFallback: 'A box of chocolates tumbles up the screen.',
     emoji: '🍫',
     durationMs: 2800,
-    accent: 'text-amber-600',
+    accent: 'text-zinc-400',
   },
   {
     key: 'heart',
@@ -156,7 +161,7 @@ export const GIFT_TIERS: readonly GiftTier[] = [
     descFallback: 'Hearts drift up the corner of the stream.',
     emoji: '❤️',
     durationMs: 2400,
-    accent: 'text-red-400',
+    accent: 'text-zinc-400',
   },
 ] as const;
 
