@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { mapApiLiveStreamToLocal, mapNFTToLiveStream } from '@/hooks/use-dehub-feed';
+import { separateUserContent } from '@/hooks/use-dehub-profile';
 
 /**
  * A live stream usually has no cover of its own: the self-hosted ingest renders
@@ -9,6 +10,25 @@ import { mapApiLiveStreamToLocal, mapNFTToLiveStream } from '@/hooks/use-dehub-f
  * for exactly this case could never run, because a thumbnail appeared to exist.
  */
 describe('live stream covers', () => {
+  it('keeps a profile live post out of the image feed and uses its real replay and cover', () => {
+    const content = separateUserContent([{
+      tokenId: 5771,
+      postType: 'live',
+      imageUrl: 'live/thumbnails/stream.jpg',
+      stream: {
+        thumbnail: 'live/thumbnails/stream.jpg',
+        status: 'ENDED',
+        recording: { status: 'ready', url: 'https://cdn.example/replay.mp4' },
+      },
+    } as never]);
+
+    expect(content.images).toHaveLength(0);
+    expect(content.videos).toHaveLength(0);
+    expect(content.lives).toHaveLength(1);
+    expect(content.lives[0].thumbnail).toContain('live/thumbnails/stream.jpg');
+    expect(content.lives[0].videoUrl).toBe('https://cdn.example/replay.mp4');
+  });
+
   it('leaves the cover empty rather than inventing one', () => {
     const stream = mapApiLiveStreamToLocal(
       { status: 'OFFLINE', provider: 'mediamtx', playbackId: 'abc123' } as never,
