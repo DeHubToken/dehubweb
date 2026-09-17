@@ -171,16 +171,16 @@ interface BundledNotification {
 function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars: Map<string, EnrichedAvatar>): BundledNotification[] {
   if (!notifications.length) return [];
 
-  // Deduplicate: when API sends both 'mention' and 'comment_reply' for the same commentId
-  // from the same actor, keep only the 'mention' (more specific) and discard the 'comment_reply'.
+  // Older replies can have both records. Keep the reply, which points directly
+  // to the parent conversation, and hide the redundant mention.
   const deduped = notifications.filter((n, _idx, arr) => {
-    if (n.type !== 'comment_reply') return true;
+    if (n.type !== 'mention') return true;
     const commentId = (n as any).commentId;
     if (!commentId) return true;
-    // If there's a matching 'mention' notification with the same commentId from the same actor, drop this one
+    // Match the same event, not other mentions from this actor.
     return !arr.some(other =>
       other.id !== n.id &&
-      other.type === 'mention' &&
+      other.type === 'comment_reply' &&
       (other as any).commentId === commentId &&
       other.actorAddress?.toLowerCase() === n.actorAddress?.toLowerCase()
     );
