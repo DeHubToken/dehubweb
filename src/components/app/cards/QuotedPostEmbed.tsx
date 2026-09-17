@@ -56,7 +56,15 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
     quotedPost.mintername ||
     quotedPost.minter?.slice(0, 8);
   const content = quotedPost.description || quotedPost.name || '';
-  const hasVideo = quotedPost.postType === 'video' && quotedPost.videoUrl;
+  // Converter imports use feed-video, and some older posts only carry a video
+  // URL. Treat them like the feed does so a shared import has a playable card.
+  const isAudio = quotedPost.postType === 'audio' || quotedPost.postType === 'feed-audio';
+  const hasVideo = !isAudio && (
+    quotedPost.postType === 'video' ||
+    quotedPost.postType === 'feed-video' ||
+    quotedPost.media_type === 'video' ||
+    !!quotedPost.videoUrl
+  );
   
   // For images: resolve feed-image URLs properly via buildFeedImageUrls
   const resolvedImageUrls = buildFeedImageUrls(quotedPost.imageUrls);
@@ -94,14 +102,16 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
       className={`border border-zinc-700/60 rounded-2xl overflow-hidden cursor-pointer hover:bg-white/[0.03] transition-colors ${className || ''}`}
     >
       {/* Media thumbnail (top, like Twitter) */}
-      {thumbnailUrl && (hasImage || hasVideo) && (
+      {(hasImage || hasVideo) && (
         <div className="relative w-full aspect-video max-h-[200px] sm:max-h-[240px] bg-zinc-900 overflow-hidden">
-          <img
-            src={thumbnailUrl}
-            alt=""
-            className={`w-full h-full object-cover rounded-lg ${gated ? 'blur-2xl scale-110 select-none pointer-events-none' : ''}`}
-            loading="lazy"
-          />
+          {thumbnailUrl && (
+            <img
+              src={thumbnailUrl}
+              alt=""
+              className={`w-full h-full object-cover rounded-lg ${gated ? 'blur-2xl scale-110 select-none pointer-events-none' : ''}`}
+              loading="lazy"
+            />
+          )}
           {gated && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
               <div className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-1.5">
