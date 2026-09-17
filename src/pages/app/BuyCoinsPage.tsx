@@ -31,7 +31,6 @@ import {
   type DPayToken,
   type DPayTransaction,
 } from '@/lib/api/dpay';
-import { MOONPAY_CURRENCIES, createMoonPayBuyUrl } from '@/lib/api/moonpay';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { SEOHead } from '@/components/SEOHead';
@@ -69,9 +68,11 @@ export default function BuyCoinsPage() {
   const [customAmount, setCustomAmount] = useState('');
   const [selectedToken] = useState<DPayToken | null>(null);
   const selectedChainId = BASE_CHAIN_ID;
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
-  /** Which MoonPay currency is mid-handoff, so only that tile spins. */
-  const [moonPayPending, setMoonPayPending] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(() => {
+    try { return localStorage.getItem('dehub.buy.method') === 'crypto' ? 'crypto' : 'card'; }
+    catch { return 'card'; }
+  });
+  useEffect(() => { try { localStorage.setItem('dehub.buy.method', paymentMethod); } catch { /* Storage may be disabled. */ } }, [paymentMethod]);
 
   // Post-purchase state
   const [purchaseStatus, setPurchaseStatus] = useState<'idle' | 'polling' | 'success' | 'failed'>('idle');
@@ -370,32 +371,6 @@ export default function BuyCoinsPage() {
     }
   };
 
-  /**
-   * MoonPay hand-off. dpay only stocks DHB, so anything else on Base goes
-   * through the card rail that delivers the chain's own assets. The wallet is
-   * not sent — the API signs the widget URL for the address on our token.
-   */
-  const handleMoonPayBuy = async (currencyCode: string) => {
-    if (!walletAddress) {
-      toast.error(t('buyCoins.walletNotConnected'));
-      return;
-    }
-    if (effectiveAmount < 5) {
-      toast.error(t('buyCoins.minPurchase'));
-      return;
-    }
-    setMoonPayPending(currencyCode);
-    try {
-      const url = await createMoonPayBuyUrl({ currencyCode, baseCurrencyAmount: effectiveAmount });
-      window.open(url, '_blank');
-      toast.success(t('buyCoins.redirecting'));
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : t('buyCoins.failedPurchase'));
-    } finally {
-      setMoonPayPending(null);
-    }
-  };
-
   if (!isAuthenticated) {
     return <AuthGate description={t('buyCoins.loginDescription')} />;
   }
@@ -487,7 +462,7 @@ export default function BuyCoinsPage() {
         </div>
 
         {/* Price Summary */}
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
+        {paymentMethod === 'card' && <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-zinc-400">{t('buyCoins.youReceive')}</span>
@@ -568,7 +543,7 @@ export default function BuyCoinsPage() {
               </p>
             </div>
           )}
-        </div>
+        </div>}
 
         {/* Payment Methods */}
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
@@ -596,43 +571,13 @@ export default function BuyCoinsPage() {
             className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors ${paymentMethod === 'crypto' ? 'bg-white/10 border border-white/20' : 'bg-zinc-800 hover:bg-zinc-700 border border-transparent'}`}
           >
             <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center"><Wallet className="w-5 h-5 text-white" /></div>
-            <div className="flex-1 text-left"><p className="text-white font-medium">Crypto via NEAR Intents</p><p className="text-xs text-zinc-400">Pay from any supported chain</p></div>
+            <div className="flex-1 text-left"><p className="text-white font-medium">{t('nearBuy.title')}</p><p className="text-xs text-zinc-400">{t('nearBuy.description')}</p></div>
             {paymentMethod === 'crypto' && <Check className="w-5 h-5 text-white" />}
           </button>
 
         </div>
 
         {paymentMethod === 'crypto' && <NearIntentBuy tokensToReceive={estimatedTokens} />}
-
-        {/* Other tokens - the MoonPay rail. dpay only stocks DHB. */}
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
-          <div>
-            <label className="text-sm text-zinc-400 block">{t('buyCoins.otherTokens')}</label>
-            <p className="text-xs text-zinc-500 mt-1">{t('buyCoins.otherTokensDesc')}</p>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            {MOONPAY_CURRENCIES.map(currency => (
-              <button
-                key={currency.code}
-                onClick={() => handleMoonPayBuy(currency.code)}
-                disabled={moonPayPending !== null || effectiveAmount < 5}
-                className="flex items-center gap-3 p-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-transparent transition-colors disabled:opacity-50"
-              >
-                <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-                  {moonPayPending === currency.code ? (
-                    <Loader2 className="w-4 h-4 text-white animate-spin" />
-                  ) : (
-                    <CreditCard className="w-4 h-4 text-white" />
-                  )}
-                </div>
-                <div className="text-left min-w-0">
-                  <p className="text-white font-medium text-sm">{currency.symbol}</p>
-                  <p className="text-xs text-zinc-400 truncate">{currency.name}</p>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
 
         {/* Buy Button */}
         {paymentMethod === 'card' && <div className="relative group">
