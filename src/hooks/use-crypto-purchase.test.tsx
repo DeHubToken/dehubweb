@@ -10,6 +10,21 @@ function api(): PurchaseApi {
 }
 
 describe('payment recovery and request races', () => {
+  it('does not send twice when recording a broadcast payment loses its response', async () => {
+    const service = api();
+    const direct = { ...saved, route: 'direct' as const, settlement: 'DIRECT_PENDING' };
+    service.list = vi.fn().mockResolvedValue([direct]);
+    service.status = vi.fn().mockResolvedValue(direct);
+    service.confirm = vi.fn().mockRejectedValue(new Error('Connection lost'));
+    const send = vi.fn().mockResolvedValue('0xsent');
+    const { result, unmount } = renderHook(() => useCryptoPurchase(service, 'wallet', 50000, true));
+    await waitFor(() => expect(result.current.purchase?.id).toBe(direct.id));
+    await act(async () => { await result.current.pay(direct, send); });
+    expect(result.current.purchase?.paymentTxHash).toBe('0xsent');
+    await act(async () => { await result.current.pay(result.current.purchase!, send); });
+    expect(send).toHaveBeenCalledTimes(1);
+    unmount();
+  });
   it('discards an old quote after the amount changes while the request is in flight', async () => {
     const service = api();
     let resolve!: (quote: PaymentQuote) => void;

@@ -30,7 +30,7 @@ async function confirm(id: string, txHash: string): Promise<Purchase> {
   return receipt;
 }
 export const cryptoPurchaseApi: PurchaseApi = {
-  assets: async () => (await request<{ tokens: PaymentAsset[] }>('tokens')).tokens,
+  assets: async () => (await request<{ tokens: PaymentAsset[] }>('payment-options')).tokens,
   quote: params => request('quote', params),
   create: params => request('intent', params, true),
   list: async () => (await request<{ intents: Purchase[] }>('intents', undefined, true)).intents,
