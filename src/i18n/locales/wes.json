@@ -2444,5 +2444,23 @@
       "megalodon": "Here na yu crown — yu don become app royalty now"
     },
     "continue": "Back to DeHub"
+  },
+  "liveGift": {
+    "pickTier": "Pick a celebration",
+    "you": "You",
+    "sentBy": "{{name}} · {{amount}} DHB",
+    "sentAmount": "{{amount}} DHB",
+    "tier": {
+      "heart": "Love Heart",
+      "chocolate": "Box of Chocolate",
+      "bouquet": "Bouquet of Flowers",
+      "crown": "Crown",
+      "magicRing": "Magic Ring",
+      "spartans": "Spartans Army",
+      "party": "Party Celebration",
+      "gold3": "Golden Screen (3s)",
+      "gold10": "Golden Screen (10s)",
+      "ultimate": "Ultimate Celebration"
+    }
   }
 }

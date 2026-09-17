@@ -60,6 +60,10 @@ import { useBlockAuthor } from '@/hooks/use-block-author';
 import { GatedMedia } from './GatedMedia';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { useStreamPresence } from '@/hooks/use-stream-presence';
+import { useStreamGifts } from '@/hooks/use-stream-gifts';
+import { useGiftAnimations } from '@/hooks/use-gift-animations';
+import { GiftAnimationOverlay } from '@/components/app/live/GiftAnimationOverlay';
+import { GIFT_TIERS, tierFromAmount } from '@/lib/live/gift-tiers';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
@@ -178,6 +182,33 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
     !!stream.isLive && !isOwnStream
   );
   const viewersLabel = livePresence != null ? String(livePresence) : stream.viewers;
+
+  /*
+   * Gift celebrations.
+   *
+   * Two sources feed the same queue. The sender's own gift is enqueued the
+   * moment the tip transaction is submitted, because the round trip through
+   * the backend and back out over the socket takes seconds and a paid-for
+   * celebration should not lag the payment. Everyone else's arrives on the
+   * `streamer.tip` broadcast — which also echoes the sender's own gift back,
+   * so that echo is dropped on the wallet address to avoid playing it twice.
+   */
+  const { items: giftCelebrations, enqueue: enqueueGift } = useGiftAnimations();
+  /**
+   * The tier the amount currently in the box will play — whether it was
+   * picked from a tile or typed. A custom amount is not a lesser gift; it
+   * still lands on a rung, and the drawer says which one so nobody sends
+   * 499,000 DHB expecting a Golden Screen.
+   */
+  const selectedGiftTier = useMemo(() => {
+    const amt = Number(giftAmount);
+    return Number.isFinite(amt) && amt > 0 ? tierFromAmount(amt) : null;
+  }, [giftAmount]);
+  useStreamGifts(stream.streamId, !!stream.isLive, (gift) => {
+    const me = walletAddress?.toLowerCase();
+    if (me && gift.address && gift.address === me) return;
+    enqueueGift(gift);
+  });
   const hlsRef = useRef<Hls | null>(null);
   /** One WebRTC attempt per card: once it fails, HLS keeps the element. */
   const whepFailedRef = useRef(false);
@@ -627,12 +658,20 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
     onSubmitted: (txHash, amount) => {
       queryClient.setQueryData(['post-tip-count', stream.id], (old: number | undefined) => (old || 0) + amount);
       if (!apiStreamId || !stream.creatorId) return;
+      // Play the celebration the sender paid for straight away, before the
+      // record round-trips.
+      enqueueGift({ amount, selectedTier: tierFromAmount(amount).name, username: t('liveGift.you', 'You') });
       const payload = {
         transactionHash: txHash,
         tokenId: stream.id,
         amount,
         recipient: stream.creatorId,
         tokenAddress: DHB_TOKEN.address,
+        // The tier the amount bought, by its English name. Mobile's viewer
+        // reads exactly this field to choose which celebration to play, so a
+        // web gift without it was downgraded to the bottom tier on every
+        // phone in the room.
+        selectedTier: tierFromAmount(amount).name,
         timestamp: Date.now(),
       };
       // The backend accepts gift records only while ITS status is LIVE or
@@ -988,6 +1027,13 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
           </>
         )}
         </GatedMedia>
+
+        {/* Celebrations sit OUTSIDE GatedMedia and inside the fullscreen
+            container: outside so a gift still plays over a paywalled stream
+            the viewer has not unlocked (they can see the room reacting), and
+            inside so the effect follows the player into fullscreen rather than
+            animating behind it. */}
+        <GiftAnimationOverlay items={giftCelebrations} />
       </div>
 
       {/* Info & Actions */}
@@ -1052,6 +1098,51 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
               </div>
             </div>
 
+            {/* The ladder. Tapping a tile fills the amount below rather than
+                sending anything — the gift is still one on-chain DHB tip, and
+                the tier is what that amount buys on screen. Cheapest first:
+                the picker opens on what most viewers will actually send. */}
+            <div className="space-y-2">
+              <label className="text-sm text-zinc-400">
+                {t('liveGift.pickTier', 'Pick a celebration')}
+              </label>
+              <div className="grid grid-cols-2 gap-2 max-h-52 overflow-y-auto pr-1">
+                {[...GIFT_TIERS].reverse().map((tier) => {
+                  const selected = Number(giftAmount) === tier.min;
+                  return (
+                    <button
+                      key={tier.key}
+                      type="button"
+                      onClick={() => setGiftAmount(String(tier.min))}
+                      aria-pressed={selected}
+                      className={cn(
+                        'flex items-center gap-2 rounded-xl border p-2 text-left transition-colors',
+                        selected
+                          ? 'border-yellow-400 bg-yellow-400/15'
+                          : 'border-white/10 bg-white/5 hover:bg-white/10'
+                      )}
+                    >
+                      <span aria-hidden className="text-xl leading-none">{tier.emoji}</span>
+                      <span className="min-w-0">
+                        <span className="block truncate text-[11px] font-semibold text-white">
+                          {t(tier.labelKey, tier.name)}
+                        </span>
+                        <span className="flex items-center gap-1 text-[10px] text-zinc-400">
+                          {tier.min.toLocaleString()}
+                          <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              {selectedGiftTier && (
+                <p className="text-[11px] text-zinc-400">
+                  {t(selectedGiftTier.descKey, selectedGiftTier.descFallback)}
+                </p>
+              )}
+            </div>
+
             <div className="space-y-2">
               <label className="text-sm text-zinc-400 flex items-center gap-1.5">
                 Amount
@@ -1069,6 +1160,13 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
               <p className="text-[11px] text-zinc-500">
                 Sent on-chain to the streamer's wallet and shown in the stream activity.
               </p>
+              {selectedGiftTier && (
+                <p className="text-[11px] text-yellow-400/90">
+                  {t('liveGift.plays', 'Plays {{tier}} on the stream', {
+                    tier: t(selectedGiftTier.labelKey, selectedGiftTier.name),
+                  })}
+                </p>
+              )}
             </div>
             <Button
               onClick={handleSendGift}
