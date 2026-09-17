@@ -16,11 +16,11 @@
  * It is chrome only. Playback, gifts, the chat and the action bar all stay
  * where they were in LiveStreamCard; this draws over them.
  *
- * Styling comes from the shorts viewer's kit — `w-10 h-10 rounded-xl
- * bg-zinc-900/60 backdrop-blur-sm`, white icons, no hue — so a phone viewer
- * opening a short and a phone viewer opening a stream see one app. The mobile
- * app's ViewerChrome was derived from those same numbers, which is why the two
- * platforms land in the same place.
+ * Styling comes from the shorts viewer's kit — rounded squares, white icons,
+ * no hue — so a phone viewer opening a short and a phone viewer opening a
+ * stream see one app. The mobile app's ViewerChrome was derived from the same
+ * numbers, which is why the two platforms land in the same place. The fill is
+ * lighter here and every control on the header row is one height; see CIRCLE.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -54,11 +54,21 @@ const elapsedLabel = (ms: number) => {
 };
 
 /** One circle of chrome. Same size and fill as the shorts viewer's buttons. */
+/**
+ * The same shape and size it always was, with most of the fill taken out.
+ *
+ * At zinc-900/60 every icon sat on its own little slab and the head of the
+ * frame read as a row of cards laid on the broadcast. At black/20 the shape
+ * is still there — it still groups the icon and still says 'control' — but
+ * the picture reads straight through it. The scrim at the top and a drop
+ * shadow carry the contrast the fill used to, which is what the mobile
+ * viewer does with TEXT_SHADOW.
+ */
 const CIRCLE =
-  'w-10 h-10 rounded-xl bg-zinc-900/60 backdrop-blur-sm flex items-center justify-center text-white shrink-0';
+  'w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm flex items-center justify-center text-white shrink-0 drop-shadow-[0_1px_4px_rgba(0,0,0,0.65)]';
 
 const PILL =
-  'h-[26px] shrink-0 rounded-lg bg-zinc-900/60 backdrop-blur-sm px-2.5 flex items-center gap-1.5 text-white';
+  'h-[26px] shrink-0 rounded-lg bg-black/20 backdrop-blur-sm px-2.5 flex items-center gap-1.5 text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.65)]';
 
 export interface ImmersiveLiveChromeProps {
   streamerName: string;
@@ -234,7 +244,7 @@ export function ImmersiveLiveChrome({
                40px, and the follower line was cut in half by the bottom edge.
                48 now, so the numbers are not pressed against the rounded
                corner they sit in. */
-            className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-xl bg-zinc-900/60 py-1.5 pl-1.5 pr-3 backdrop-blur-sm"
+            className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-xl bg-black/20 py-1.5 pl-1.5 pr-3 backdrop-blur-sm drop-shadow-[0_1px_4px_rgba(0,0,0,0.65)]"
           >
             <Avatar className="h-[34px] w-[34px] rounded-lg">
               <AvatarImage src={avatar} alt={streamerName} className="rounded-lg" />
@@ -246,12 +256,16 @@ export function ImmersiveLiveChrome({
               {/* The badge rides the name, as it does on the feed card, in the
                   chat and on the profile. The one surface in the app showing a
                   creator without it was this one. */}
-              <span className="flex min-w-0 items-center gap-1 text-[13px] font-bold leading-tight text-white">
+              {/* `items-baseline` and a 1em badge — the arrangement CardHeader
+                  uses, and the reason the badge sits where the eye expects it.
+                  Centred against a 13px line it hung low enough to read as a
+                  different element. */}
+              <span className="flex min-w-0 items-baseline gap-1 text-[13px] font-bold leading-tight text-white">
                 <span className="truncate">{streamerName}</span>
                 <BadgeIcon
                   badgeBalance={badgeBalance}
                   username={creatorUsername}
-                  className="h-[13px] w-[13px] shrink-0"
+                  className="h-[1em] w-[1em] shrink-0"
                 />
               </span>
               {/* Followers, watching, gifts — the three numbers that say
@@ -286,7 +300,7 @@ export function ImmersiveLiveChrome({
             <button
               type="button"
               onClick={handleFollow}
-              className="flex h-[34px] shrink-0 items-center gap-0.5 rounded-xl bg-white px-3 text-[13px] font-bold text-zinc-950"
+              className="flex h-12 shrink-0 items-center gap-0.5 rounded-xl bg-white px-3.5 text-[13px] font-bold text-zinc-950"
             >
               <Plus className="h-[13px] w-[13px]" strokeWidth={2.5} />
               {t('follow.follow', 'Follow')}
@@ -341,7 +355,7 @@ export function ImmersiveLiveChrome({
         {running && startedMs != null ? (
           <span className={PILL}>
             <Clock className="h-[11px] w-[11px] text-white/75" />
-            <span className="text-[11px] font-semibold text-white/85">
+            <span className="text-[11px] font-semibold text-white/90">
               {elapsedLabel(now - startedMs)}
             </span>
           </span>
