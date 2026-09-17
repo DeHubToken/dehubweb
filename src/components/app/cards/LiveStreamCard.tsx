@@ -125,6 +125,11 @@ const logger = createLogger('LiveStreamCard');
  */
 const WHEP_START_TIMEOUT_MS = 6000;
 
+// Android's HLS path is the one used by the playing feed preview. Keep the
+// post on that path too: WHEP can attach a track without producing a frame.
+const preferAndroidHls = () =>
+  typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
+
 interface LiveStreamCardProps {
   stream: LiveStream;
   /**
@@ -180,7 +185,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   );
   const whepPlaybackId = whepSource?.playbackId ?? null;
   const [transport, setTransport] = useState<'whep' | 'hls'>(
-    typeof RTCPeerConnection !== 'undefined' && !!whepPlaybackId ? 'whep' : 'hls'
+    !preferAndroidHls() && typeof RTCPeerConnection !== 'undefined' && !!whepPlaybackId ? 'whep' : 'hls'
   );
   // If stream.isLive is false, treat as ended immediately — don't try to play a dead HLS URL
   const [streamEnded, setStreamEnded] = useState(!stream.isLive);
@@ -321,7 +326,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   // knows the stream is live, which is usually a beat after mount. Take the
   // fast path when it appears — unless it has already been tried and failed.
   useEffect(() => {
-    if (whepPlaybackId && !whepFailedRef.current) setTransport('whep');
+    if (whepPlaybackId && !preferAndroidHls() && !whepFailedRef.current) setTransport('whep');
   }, [whepPlaybackId]);
 
   // Fetch DHB balance when gift drawer opens
