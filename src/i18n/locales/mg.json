@@ -433,7 +433,9 @@
       "rotateConfirm": "Mamoaka fanalahidin'ny fampitana vaovao? Ny encoder rehetra mampiasa ilay taloha dia hijanona tsy mandeha mandra-pandraisanao ilay fanalahidy vaovao.",
       "rotated": "Nisy fanalahidin'ny fampitana vaovao nivoaka",
       "rotateFailed": "Tsy nahafaka namoaka fanalahidy vaovao",
-      "unavailable": "Tsy azo atao amin'ny kaontinao amin'izao fotoana izao ny fampitana avy amin'ny encoder."
+      "unavailable": "Tsy azo atao amin'ny kaontinao amin'izao fotoana izao ny fampitana avy amin'ny encoder.",
+      "serverCopied": "Nadika avy tamin'ny mpizara",
+      "keyCopied": "KEY FITEHIRY Nadika"
     }
   },
   "common": {

@@ -437,7 +437,9 @@
       "rotateConfirm": "Išleisti naują transliacijos raktą? Kiekviena koduotė, naudojanti senąjį, nustos veikti, kol neįklijuosite naujo rakto.",
       "rotated": "Naujas transliacijos raktas išleistas",
       "rotateFailed": "Nepavyko išleisti naujo rakto",
-      "unavailable": "Transliacija iš koduotės šiuo metu jūsų paskyroje negalima."
+      "unavailable": "Transliacija iš koduotės šiuo metu jūsų paskyroje negalima.",
+      "serverCopied": "Serveris nukopijuotas",
+      "keyCopied": "Srauto raktas nukopijuotas"
     }
   },
   "common": {

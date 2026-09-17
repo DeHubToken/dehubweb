@@ -452,7 +452,9 @@
       "rotateConfirm": "Doriți să emiteți o nouă cheie de streaming? Fiecare codificator care folosește cea veche va înceta să funcționeze până când introduceți noua cheie.",
       "rotated": "Nouă cheie de streaming emisă",
       "rotateFailed": "Nu s-a putut emite o nouă cheie",
-      "unavailable": "Streamingul de la un codificator nu este disponibil în contul dvs. în acest moment."
+      "unavailable": "Streamingul de la un codificator nu este disponibil în contul dvs. în acest moment.",
+      "serverCopied": "Server copiat",
+      "keyCopied": "Cheie flux copiată"
     }
   },
   "common": {

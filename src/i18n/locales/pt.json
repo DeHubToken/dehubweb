@@ -452,7 +452,9 @@
       "rotateConfirm": "Emitir uma nova chave de transmissão? Todos os codificadores que usam a antiga deixarão de funcionar até que cole a nova chave.",
       "rotated": "Nova chave de transmissão emitida",
       "rotateFailed": "Não foi possível emitir uma nova chave",
-      "unavailable": "A transmissão a partir de um codificador não está disponível na sua conta neste momento."
+      "unavailable": "A transmissão a partir de um codificador não está disponível na sua conta neste momento.",
+      "serverCopied": "Servidor copiado",
+      "keyCopied": "Chave de transmissão copiada"
     }
   },
   "common": {

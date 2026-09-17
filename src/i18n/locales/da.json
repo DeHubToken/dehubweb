@@ -452,7 +452,9 @@
       "rotateConfirm": "Udsted en ny stream nøgle? Enhver encoder, der bruger den gamle, vil stoppe med at virke, indtil du indsætter den nye nøgle.",
       "rotated": "Ny stream nøgle udstedt",
       "rotateFailed": "Kunne ikke udstede en ny nøgle",
-      "unavailable": "Streaming fra en encoder er ikke tilgængelig på din konto lige nu."
+      "unavailable": "Streaming fra en encoder er ikke tilgængelig på din konto lige nu.",
+      "serverCopied": "Server kopieret",
+      "keyCopied": "Streamnøgle kopieret"
     }
   },
   "common": {

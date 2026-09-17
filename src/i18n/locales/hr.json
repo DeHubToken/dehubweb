@@ -452,7 +452,9 @@
       "rotateConfirm": "Izdati novi ključ za prijenos uživo? Svako kodiranje koje koristi stari ključ prestat će raditi dok ne zalijepite novi ključ.",
       "rotated": "Novi ključ za prijenos uživo je izdan",
       "rotateFailed": "Nije moguće izdati novi ključ",
-      "unavailable": "Prijenos uživo iz kodiranja trenutno nije dostupan na vašem računu."
+      "unavailable": "Prijenos uživo iz kodiranja trenutno nije dostupan na vašem računu.",
+      "serverCopied": "Poslužitelj je kopiran",
+      "keyCopied": "Tipka za stream je kopirana"
     }
   },
   "common": {

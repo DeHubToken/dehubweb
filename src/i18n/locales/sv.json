@@ -452,7 +452,9 @@
       "rotateConfirm": "Vill du utfärda en ny stream-nyckel? Alla kodare som använder den gamla kommer att sluta fungera tills du klistrar in den nya nyckeln.",
       "rotated": "Ny stream-nyckel utfärdad",
       "rotateFailed": "Kunde inte utfärda en ny nyckel",
-      "unavailable": "Att streama från en kodare är inte tillgängligt på ditt konto just nu."
+      "unavailable": "Att streama från en kodare är inte tillgängligt på ditt konto just nu.",
+      "serverCopied": "Servern kopierades",
+      "keyCopied": "Strömningsnyckel kopierad"
     }
   },
   "common": {

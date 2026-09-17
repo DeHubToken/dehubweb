@@ -452,7 +452,9 @@
       "rotateConfirm": "Kas soovite uue voogedastuse võtme väljastada? Iga kodeerija, mis kasutab vana võtit, lõpetab töötamise, kuni te uue võtme sisestate.",
       "rotated": "Uus voogedastuse võti väljastatud",
       "rotateFailed": "Ei õnnestunud uut võtit väljastada",
-      "unavailable": "Kodeerijast voogedastamine pole teie kontol praegu saadaval."
+      "unavailable": "Kodeerijast voogedastamine pole teie kontol praegu saadaval.",
+      "serverCopied": "Server kopeeritud",
+      "keyCopied": "Voo võti on kopeeritud"
     }
   },
   "common": {

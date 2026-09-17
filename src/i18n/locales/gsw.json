@@ -398,7 +398,9 @@
       "rotateConfirm": "Neuen Stream-Schlüssel usgä? Jeder Encoder wo de alte bruucht, hört uf z'funktioniere, bis du de neue Schlüssel iipäschtesch.",
       "rotated": "Neuer Stream-Schlüssel usgä",
       "rotateFailed": "Konnt de neue Schlüssel nöd usgä",
-      "unavailable": "Vom Encoder us z'strahle isch grad nöd uf dim Konto verfügbar."
+      "unavailable": "Vom Encoder us z'strahle isch grad nöd uf dim Konto verfügbar.",
+      "serverCopied": "Server copied",
+      "keyCopied": "Stream key copied"
     }
   },
   "common": {

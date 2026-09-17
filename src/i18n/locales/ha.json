@@ -437,7 +437,9 @@
       "rotateConfirm": "Fitowa da sabon mabudin watsawa? Duk encoder da ke amfani da tsohon zai daina aiki har sai kun danna sabon mabudin.",
       "rotated": "An fitar da sabon mabudin watsawa",
       "rotateFailed": "An kasa fitar da sabon mabudin",
-      "unavailable": "Watsawa daga encoder ba ta samuwa a asusunka a yanzu."
+      "unavailable": "Watsawa daga encoder ba ta samuwa a asusunka a yanzu.",
+      "serverCopied": "An kwafa Server",
+      "keyCopied": "Stream key kwafe"
     }
   },
   "common": {

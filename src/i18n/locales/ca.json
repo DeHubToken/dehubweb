@@ -452,7 +452,9 @@
       "rotateConfirm": "Vols emetre una nova clau de transmissió? Tots els codificadors que utilitzin l'antiga deixaran de funcionar fins que enganxis la nova clau.",
       "rotated": "Nova clau de transmissió emesa",
       "rotateFailed": "No s'ha pogut emetre una nova clau",
-      "unavailable": "La transmissió des d'un codificador no està disponible al teu compte ara mateix."
+      "unavailable": "La transmissió des d'un codificador no està disponible al teu compte ara mateix.",
+      "serverCopied": "Servidor copiat",
+      "keyCopied": "S'ha copiat la clau del flux"
     }
   },
   "common": {

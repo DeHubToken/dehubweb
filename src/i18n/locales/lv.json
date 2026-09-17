@@ -437,7 +437,9 @@
       "rotateConfirm": "Vai izdot jaunu straumēšanas atslēgu? Katrs kodētājs, kas izmanto veco, pārtrauks darboties, kamēr neievietosiet jauno atslēgu.",
       "rotated": "Jauna straumēšanas atslēga izdota",
       "rotateFailed": "Neizdevās izdot jaunu atslēgu",
-      "unavailable": "Straumēšana no kodētāja pašlaik nav pieejama jūsu kontā."
+      "unavailable": "Straumēšana no kodētāja pašlaik nav pieejama jūsu kontā.",
+      "serverCopied": "Serveris nokopēts",
+      "keyCopied": "Straumes atslēga nokopēta"
     }
   },
   "common": {

@@ -436,7 +436,9 @@
       "rotateConfirm": "Ufuna ukukhipha ushuthu olusha lokusakaza? Wonke ama-encoder asebenzisa okudala azoyeka ukusebenza kuze kube yilapho unamathelisa khona ushuthu olusha.",
       "rotated": "Kukhishwe ushuthu olusha lokusakaza",
       "rotateFailed": "Ayikwazanga ukukhipha ushuthu olusha",
-      "unavailable": "Ukusakaza kusuka ku-encoder akutholakali ku-akhawunti yakho njengamanje."
+      "unavailable": "Ukusakaza kusuka ku-encoder akutholakali ku-akhawunti yakho njengamanje.",
+      "serverCopied": "Iseva ikopishiwe",
+      "keyCopied": "Ukhiye wokusakaza ukopishiwe"
     }
   },
   "common": {

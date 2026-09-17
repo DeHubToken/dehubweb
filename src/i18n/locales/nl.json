@@ -452,7 +452,9 @@
       "rotateConfirm": "Wil je een nieuwe stream sleutel uitgeven? Elke encoder die de oude gebruikt, stopt met werken totdat je de nieuwe sleutel hebt ingevoerd.",
       "rotated": "Nieuwe stream sleutel uitgegeven",
       "rotateFailed": "Kon geen nieuwe sleutel uitgeven",
-      "unavailable": "Streamen vanuit een encoder is momenteel niet beschikbaar op je account."
+      "unavailable": "Streamen vanuit een encoder is momenteel niet beschikbaar op je account.",
+      "serverCopied": "Server gekopieerd",
+      "keyCopied": "Stream-sleutel gekopieerd"
     }
   },
   "common": {

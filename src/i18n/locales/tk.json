@@ -437,7 +437,9 @@
       "rotateConfirm": "Akym açaryny çykarmaly? Köne açary ulanýan islendik kodlaýjy täze açary ýapyşdyrýançaňyz işlemegi bes eder.",
       "rotated": "Täze akym açary berildi",
       "rotateFailed": "Täze açary berip bolmady",
-      "unavailable": "Kodlaýjyda ýaýlyma çykmak şu wagt siziň hasabyňyzda elýeterli däl."
+      "unavailable": "Kodlaýjyda ýaýlyma çykmak şu wagt siziň hasabyňyzda elýeterli däl.",
+      "serverCopied": "Serwer nusgalady",
+      "keyCopied": "Kopyalan akma açary"
     }
   },
   "common": {

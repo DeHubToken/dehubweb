@@ -451,7 +451,9 @@
       "rotateConfirm": "要生成新的推流密钥吗？所有使用旧密钥的编码器将停止工作，直到您粘贴新密钥。",
       "rotated": "已生成新推流密钥",
       "rotateFailed": "无法生成新密钥",
-      "unavailable": "您的帐户目前无法从编码器进行直播。"
+      "unavailable": "您的帐户目前无法从编码器进行直播。",
+      "serverCopied": "服务器已复制",
+      "keyCopied": "流密钥已复制"
     }
   },
   "common": {

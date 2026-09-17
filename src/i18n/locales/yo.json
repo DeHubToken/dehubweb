@@ -436,7 +436,9 @@
       "rotateConfirm": "Ṣe ipinfunni bọtini ṣiṣan tuntun? Gbogbo ẹrọ ṣiṣan ti nlo eyi ti o ti kọja yoo dawọ ṣiṣẹ titi iwọ o fi fi bọtini tuntun sii.",
       "rotated": "Bọtini ṣiṣan tuntun ti a ti pese",
       "rotateFailed": "Ko le pese bọtini tuntun",
-      "unavailable": "Ṣiṣan lati ẹrọ ṣiṣan ko si lori akọọlẹ rẹ lọwọlọwọ."
+      "unavailable": "Ṣiṣan lati ẹrọ ṣiṣan ko si lori akọọlẹ rẹ lọwọlọwọ.",
+      "serverCopied": "A daakọ olupin",
+      "keyCopied": "Ṣàdàkọ bọtini ṣiṣan"
     }
   },
   "common": {

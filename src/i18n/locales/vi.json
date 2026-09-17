@@ -408,7 +408,9 @@
       "rotateConfirm": "Phát hành khóa luồng mới? Mọi bộ mã hóa sử dụng khóa cũ sẽ ngừng hoạt động cho đến khi bạn dán khóa mới vào.",
       "rotated": "Khóa luồng mới đã được phát hành",
       "rotateFailed": "Không thể phát hành khóa mới",
-      "unavailable": "Hiện tại, bạn không thể phát trực tiếp từ bộ mã hóa trên tài khoản của mình."
+      "unavailable": "Hiện tại, bạn không thể phát trực tiếp từ bộ mã hóa trên tài khoản của mình.",
+      "serverCopied": "Đã sao chép máy chủ",
+      "keyCopied": "Đã sao chép khóa phát trực tuyến"
     }
   },
   "common": {

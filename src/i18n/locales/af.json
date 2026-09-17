@@ -452,7 +452,9 @@
       "rotateConfirm": "Uitreik van 'n nuwe stroom sleutel? Elke enkoder wat die ou een gebruik, sal ophou werk totdat jy die nuwe sleutel insit.",
       "rotated": "Nuwe stroom sleutel uitgereik",
       "rotateFailed": "Kon nie 'n nuwe sleutel uitreik nie",
-      "unavailable": "Stroom vanaf 'n enkoder is tans nie op jou rekening beskikbaar nie."
+      "unavailable": "Stroom vanaf 'n enkoder is tans nie op jou rekening beskikbaar nie.",
+      "serverCopied": "Bediener gekopieer",
+      "keyCopied": "Stroom sleutel gekopieer"
     },
     "security": "Sekuriteit",
     "about": "Oor"

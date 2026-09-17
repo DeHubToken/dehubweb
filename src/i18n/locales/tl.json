@@ -452,7 +452,9 @@
       "rotateConfirm": "Mag-isyu ng bagong susi sa stream? Lahat ng encoder na gumagamit ng luma ay hihinto sa paggana hanggang sa i-paste mo ang bagong susi.",
       "rotated": "Bagong susi sa stream ang na-isyu",
       "rotateFailed": "Hindi makapag-isyu ng bagong susi",
-      "unavailable": "Hindi available ang streaming mula sa isang encoder sa iyong account sa ngayon."
+      "unavailable": "Hindi available ang streaming mula sa isang encoder sa iyong account sa ngayon.",
+      "serverCopied": "Kinopya ang server",
+      "keyCopied": "Kinopya ang stream key"
     }
   },
   "common": {

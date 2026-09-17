@@ -452,7 +452,9 @@
       "rotateConfirm": "Keluarkan kunci strim baharu? Setiap pengekod yang menggunakan yang lama akan berhenti berfungsi sehingga anda menampal kunci baharu di sana.",
       "rotated": "Kunci strim baharu dikeluarkan",
       "rotateFailed": "Tidak dapat mengeluarkan kunci baharu",
-      "unavailable": "Strim daripada pengekod tidak tersedia pada akaun anda buat masa ini."
+      "unavailable": "Strim daripada pengekod tidak tersedia pada akaun anda buat masa ini.",
+      "serverCopied": "Pelayan disalin",
+      "keyCopied": "Kunci strim disalin"
     }
   },
   "common": {

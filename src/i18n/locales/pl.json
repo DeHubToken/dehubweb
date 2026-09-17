@@ -452,7 +452,9 @@
       "rotateConfirm": "Wydać nowy klucz strumienia? Każdy enkoder używający starego przestanie działać, dopóki nie wkleisz nowego klucza.",
       "rotated": "Wydano nowy klucz strumienia",
       "rotateFailed": "Nie udało się wydać nowego klucza",
-      "unavailable": "Strumieniowanie z enkodera nie jest obecnie dostępne na Twoim koncie."
+      "unavailable": "Strumieniowanie z enkodera nie jest obecnie dostępne na Twoim koncie.",
+      "serverCopied": "Skopiowano serwer",
+      "keyCopied": "Skopiowano klucz strumienia"
     }
   },
   "common": {

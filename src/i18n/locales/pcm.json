@@ -362,7 +362,9 @@
       "hide": "Hide stream key",
       "defaultTitle": "Default stream title",
       "titleSaved": "Saved",
-      "rotate": "Reset stream key"
+      "rotate": "Reset stream key",
+      "serverCopied": "Server copied",
+      "keyCopied": "Stream key copied"
     }
   },
   "common": {
