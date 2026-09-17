@@ -976,13 +976,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, [instanceId, pauseVideo, video.isPPV, video.isLocked, video.lockedPrice, video.subscriberPlans, video.videoUrl, isVideoNotReady]);
 
   // Show controls briefly after any user interaction, then auto-hide
-  const showControlsBriefly = useCallback(() => {
-    setShowControls(true);
-    if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
-    controlsTimerRef.current = setTimeout(() => {
-      if (!isHoveringRef.current) setShowControls(false);
-    }, CONTROLS_HIDE_MS);
-  }, []);
+    const showControlsBriefly = useCallback(() => {
+      setShowControls(true);
+      if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+      controlsTimerRef.current = setTimeout(() => {
+        setShowControls(false);
+      }, CONTROLS_HIDE_MS);
+    }, []);
 
   // Cleanup controls timer on unmount
   useEffect(() => {
@@ -1472,13 +1472,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     const touch = e.touches[0];
     touchStartRef.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
-    // A touch is not a hover. Tapping a control deliberately skips
-    // preventDefault (see handleTouchEnd) so the button still gets its
-    // synthesized click — but that same compatibility sequence includes a
-    // mouseenter, which latches isHoveringRef on a device that can never send
-    // the mouseleave to clear it. showControlsBriefly() keeps the controls up
-    // while hovering, so a stale `true` here means a later tap reveals them
-    // permanently. Clearing it at the start of every touch keeps that honest.
+      // A touch is not a hover. Tapping a control can synthesize mouseenter
+      // without a matching mouseleave on a phone, so do not let that stale
+      // hover state make later mousemove events keep the controls visible.
     isHoveringRef.current = false;
   }, []);
 
@@ -2137,8 +2133,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 travels from the button to the slider. */}
             <div
               className="relative"
-              onMouseEnter={() => setVolumeOpen(true)}
-              onMouseLeave={() => setVolumeOpen(false)}
+              onPointerEnter={(e) => { if (e.pointerType === 'mouse') setVolumeOpen(true); }}
+              onPointerLeave={() => setVolumeOpen(false)}
+              onTouchStart={() => setVolumeOpen(false)}
             >
               <button
                 className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
