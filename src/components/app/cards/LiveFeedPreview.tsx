@@ -41,6 +41,14 @@ interface LiveFeedPreviewProps {
   className?: string;
   /** Chip shown when there is nothing playable. */
   fallbackLabel?: string;
+  /**
+   * The card's sound switch. The preview autoplays, which the browser only
+   * allows muted, so it starts silent either way — but the element used to be
+   * hard-coded `muted`, which meant the card's own button flipped its icon
+   * and changed nothing. A viewer who pressed Unmute on a live card heard
+   * nothing and had no way to know why.
+   */
+  muted?: boolean;
 }
 
 /** A negotiated session that never delivers a frame is the worst case. */
@@ -57,8 +65,15 @@ const WHEP_START_TIMEOUT_MS = 6000;
 const MAX_CONCURRENT_WHEP = 2;
 let whepSessionsOpen = 0;
 
-export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'Live ended' }: LiveFeedPreviewProps) {
+export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'Live ended', muted = true }: LiveFeedPreviewProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  // Applied imperatively as well as through the prop: React only writes the
+  // `muted` property on mount, and the element is re-attached when the
+  // transport moves from WebRTC to HLS.
+  useEffect(() => {
+    const el = videoRef.current;
+    if (el) el.muted = muted;
+  });
   const hlsRef = useRef<Hls | null>(null);
   const [visible, setVisible] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -224,7 +239,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
       <video
         ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover"
-        muted
+        muted={muted}
         playsInline
         autoPlay
         preload="none"

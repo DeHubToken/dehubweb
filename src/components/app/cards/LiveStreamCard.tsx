@@ -20,7 +20,6 @@ import {
   Play, Volume2, VolumeX, Maximize, Minimize,
   Heart, Gift, StopCircle, Activity, Loader2, Bookmark, Info
 } from 'lucide-react';
-import { ButtonLoader } from '@/components/app/DeHubLoader';
 import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';
 // Type-only: the hls.js runtime (~400 kB raw) loads dynamically at attach time
@@ -142,7 +141,6 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
   const [streamEnded, setStreamEnded] = useState(!stream.isLive);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isLiked, setIsLiked] = useState(false);
   const [giftAmount, setGiftAmount] = useState('');
   const [dhbBalance, setDhbBalance] = useState<string | null>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
@@ -187,7 +185,7 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
 
   const queryClient = useQueryClient();
   const isStreamOwner = isOwnStream;
-  const { like, gift, end, isLiking, isEnding } = useStreamActions();
+  const { gift, end, isEnding } = useStreamActions();
   const { blockAuthor } = useBlockAuthor();
   // Every /api/live/{id}/* interaction route takes the Mongo ObjectId, never
   // the NFT tokenId — a tokenId there is a guaranteed CastError 500.
@@ -612,32 +610,6 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
     videoPlaybackManager.globalMuted = !isMuted;
   }, [isMuted]);
 
-  const handleLike = useCallback(async () => {
-    if (!isAuthenticated) {
-      toast.error('Sign in to like');
-      return;
-    }
-    const streamStatus = (stream as any).status || (stream as any).stream?.status;
-    if (streamStatus && String(streamStatus).toLowerCase() === 'ended') {
-      toast.info('Stream ended, tune in live to engage');
-      return;
-    }
-    if (!apiStreamId) {
-      toast.error('Likes are unavailable for this stream right now');
-      return;
-    }
-    try {
-      // The backend toggles: an already-liked address gets un-liked and the
-      // response says so — reflect that instead of always claiming a like.
-      const res = await like(apiStreamId);
-      const nowLiked = res?.isLiked !== false;
-      setIsLiked(nowLiked);
-      toast.success(nowLiked ? 'Stream liked!' : 'Like removed');
-    } catch (err) {
-      console.error('[LiveStream] Like failed:', err);
-      toast.error('Failed to like stream');
-    }
-  }, [apiStreamId, isAuthenticated, like, stream]);
 
   // The on-chain tip path encodes the tokenId with BigInt(), so it must be
   // the numeric NFT tokenId — the livestream-API fallback route can hand this
@@ -768,23 +740,10 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
           badgeBalance={stream.creatorBadgeBalance}
         />
         <div className="flex items-center gap-2 pr-3">
-          {/* Like button */}
-          {!streamEnded && (
-            <motion.button
-              onClick={handleLike}
-              disabled={isLiking || isLiked}
-              className={`transition-colors ${isLiked ? 'text-red-500' : 'text-zinc-400 hover:text-red-400'}`}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label="Like stream"
-            >
-              {isLiking ? (
-                <ButtonLoader size={20} />
-              ) : (
-                <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
-              )}
-            </motion.button>
-          )}
+          {/* Liking a live post is the same reaction as on any other post —
+              it lives in the ActionBar below with the tray, the counts and the
+              viewer's own state. A stream-only heart here kept a second
+              counter nobody else could see and never showed as pressed. */}
           {/* Gift button */}
           {!streamEnded && (
             <motion.button
@@ -1035,11 +994,16 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
       <div className="pt-3">
         <ActionBar
           postId={stream.id}
+          tokenId={parseInt(stream.id, 10) || undefined}
           utilityDesktopAnchor
           className="p-0 mb-2"
           onComment={() => setShowComments(prev => !prev)}
-          onLike={handleLike}
+          isLiked={stream.isLiked}
+          isDisliked={stream.isDisliked}
+          myReaction={stream.myReaction}
+          reactionCounts={stream.reactionCounts}
           likeCount={stream.likeCount}
+          dislikeCount={stream.dislikeCount}
           commentCount={stream.commentCount}
           tipCount={tipCount}
           onTip={() => setShowGiftDrawer(true)}

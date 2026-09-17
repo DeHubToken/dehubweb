@@ -32,11 +32,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useStreamActions } from '@/hooks/use-livestream';
+import { useStreamPresence } from '@/hooks/use-stream-presence';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useBlockAuthor } from '@/hooks/use-block-author';
-import { toast } from 'sonner';
 import type { LiveStream } from '@/types/feed.types';
 
 interface LiveCardProps {
@@ -48,10 +47,12 @@ export function LiveCard({ stream }: LiveCardProps) {
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
-  const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
-  const { like, isLiking } = useStreamActions();
+  const { openLoginModal, walletAddress } = useAuth();
+  // Who is watching right now, from the stream socket — the same figure the
+  // post page shows. `stream.viewers` is the post's view total, which read
+  // "15 tuned in" on the card while the room said 2.
+  const livePresence = useStreamPresence(stream.streamId, !!stream.isLive);
   // Bookmark state for the three-dot menu. The same action is an icon in the
   // ActionBar's left-anchored utility cluster on desktop; both read this one
   // shared query, so they cannot disagree.
@@ -76,20 +77,6 @@ export function LiveCard({ stream }: LiveCardProps) {
     if (selection && selection.toString().length > 0) return;
     navigate(`/app/post/${stream.id}`, { state: { fromFeed: true } });
   }, [navigate, stream.id]);
-
-  const handleLike = useCallback(async () => {
-    if (!isAuthenticated) {
-      toast.error('Sign in to like');
-      return;
-    }
-    try {
-      await like(stream.id);
-      setIsLiked(true);
-      toast.success('Stream liked!');
-    } catch {
-      toast.error('Failed to like');
-    }
-  }, [stream.id, isAuthenticated, like]);
 
   return (
     <div 
@@ -227,13 +214,19 @@ export function LiveCard({ stream }: LiveCardProps) {
       <div className="pt-3">
         <ActionBar
           postId={stream.id}
+          tokenId={parseInt(stream.id, 10) || undefined}
           utilityDesktopAnchor
           className="p-0 mb-2"
           onComment={() => setShowComments(prev => !prev)}
+          isLiked={stream.isLiked}
+          isDisliked={stream.isDisliked}
+          myReaction={stream.myReaction}
+          reactionCounts={stream.reactionCounts}
           likeCount={stream.likeCount}
+          dislikeCount={stream.dislikeCount}
           commentCount={stream.commentCount}
         />
-        <p className="font-semibold text-white text-sm">{stream.viewers} tuned in</p>
+        <p className="font-semibold text-white text-sm">{livePresence != null ? String(livePresence) : stream.viewers} tuned in</p>
         <h3 className="text-white text-sm mt-1">{stream.title}</h3>
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
       </div>
