@@ -2895,5 +2895,10 @@
     "inProgress": "চলতাসে",
     "completed": "শেষ অইসে",
     "underReview": "পর্যালোচনায়"
+  },
+  "liveGift": {
+    "ttsLabel": "কইতাও কিছু জোরে",
+    "ttsPlaceholder": "Stream-এ পড়ি শুনাইতাও…",
+    "ttsHint": "Tohfa land করনের সময় যারা দেখতাছে সবারে জোরে পড়ি শুনাইতাও।"
   }
 }

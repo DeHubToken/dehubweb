@@ -4867,7 +4867,10 @@
       "gold3": "Nagiging ginto ang screen at umuulan ng mga barya sa loob ng 3 segundo.",
       "gold10": "Nagiging ginto ang screen at umuulan ng mga barya sa loob ng 10 segundo.",
       "ultimate": "Lahat ng pagdiriwang nang sabay-sabay — ginto, confetti, mga barya, at isang tropeo."
-    }
+    },
+    "ttsLabel": "Sabihin nang malakas ang isang bagay",
+    "ttsPlaceholder": "Basahin sa stream...",
+    "ttsHint": "Basahin nang malakas sa lahat ng nanonood kapag nakarating ang iyong regalo."
   },
   "walletSelector": {
     "title": "Piliin ang Wallet",

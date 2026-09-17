@@ -2128,5 +2128,10 @@
     "statusFailed": "अयशस्वी",
     "subtitle": "चॅनेल किंवा प्रोफाइल पेस्ट करा, तुम्हाला आवडते ते संपादित करा, एकदा भुगतान करा।",
     "watchOnSource": "मूळ उघडा"
+  },
+  "liveGift": {
+    "ttsLabel": "Ek goṣṭ bol",
+    "ttsPlaceholder": "Stream la vāchūn dākhav…",
+    "ttsHint": "Tūjh gift land jhālā tar pahāṇāryānnā vāchūn dākhav."
   }
 }
