@@ -15,6 +15,8 @@ import type { Purchase } from '@/lib/crypto-purchase';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { Interface, parseUnits } from 'ethers';
 import { ensureSignerOnChain, getActiveProvider, writeBatchAA } from '@/lib/contracts/aa-utils';
+import { getAccount } from '@wagmi/core';
+import { wagmiConfig } from '@/lib/wagmi';
 
 export function NearIntentBuy({ tokensToReceive }: { tokensToReceive: number }) {
   const { t } = useTranslation();
@@ -30,9 +32,12 @@ export function NearIntentBuy({ tokensToReceive }: { tokensToReceive: number }) 
   const sendPayment = async (receipt: Purchase) => {
     const chain = receipt.paymentChainId as ChainId;
     if (!chain || receipt.paymentDecimals == null) throw new Error(t('nearBuy.statusError'));
+    await ensureSignerOnChain(chain);
+    const { provider } = await getActiveProvider(chain);
+    const sender = provider ? (await provider.request({ method: 'eth_accounts' }))?.[0] : getAccount(wagmiConfig).address;
+    if (sender?.toLowerCase() !== receipt.refundTo?.toLowerCase()) throw new Error(t('nearBuy.wrongWallet'));
+    if (receipt.expiresAt * 1000 <= Date.now()) throw new Error(t('nearBuy.phase_expired'));
     if (receipt.wrapNativePayment && receipt.paymentTokenAddress) {
-      await ensureSignerOnChain(chain);
-      const { provider } = await getActiveProvider(chain);
       if (!provider?.smartAccount) return (await sendNativeToken(receipt.depositAddress, receipt.amountInFormatted, receipt.paymentDecimals, chain)).hash;
       const token = new Interface(['function deposit() payable', 'function transfer(address to,uint256 amount) returns (bool)']);
       const value = parseUnits(receipt.amountInFormatted, receipt.paymentDecimals);
