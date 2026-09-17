@@ -40,7 +40,7 @@ describe('payment recovery and request races', () => {
     await waitFor(() => expect(result.current.assets).toHaveLength(1));
     act(() => result.current.selectAsset(asset));
     await act(async () => { await result.current.price(); });
-    let first!: Promise<void>;
+    let first!: Promise<unknown>;
     act(() => { first = result.current.create(); void result.current.create(); });
     expect(service.create).toHaveBeenCalledTimes(1);
     const firstKey = vi.mocked(service.create).mock.calls[0][0].requestId;
