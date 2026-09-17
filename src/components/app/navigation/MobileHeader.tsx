@@ -245,7 +245,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
           >
             <Bell className="w-[26px] h-[26px]" />
             {totalNotifUnread > 0 && (
-              <span className="absolute -top-1.5 -right-2 min-w-[18px] h-[18px] px-[4px] bg-red-500 text-white text-[10px] font-bold rounded-md flex items-center justify-center leading-none">
+              <span className="absolute -top-1.5 -right-2 min-w-[18px] h-[18px] px-[4px] bg-red-500 text-white text-[10px] font-bold rounded-[6px] flex items-center justify-center leading-none">
                 {totalNotifUnread > 99 ? '99+' : totalNotifUnread}
               </span>
             )}
