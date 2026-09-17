@@ -5085,5 +5085,34 @@
       "megalodon": "İşte tacınız — artık uygulama telif hakkınız"
     },
     "continue": "DeHub'a Geri Dön"
+  },
+  "liveGift": {
+    "pickTier": "Bir kutlama seçin",
+    "plays": "Yayında {{tier}} oynat",
+    "you": "Siz",
+    "tier": {
+      "heart": "Sevgi Kalbi",
+      "chocolate": "Çikolata Kutusu",
+      "bouquet": "Çiçek Buketi",
+      "crown": "Taç",
+      "magicRing": "Sihirli Yüzük",
+      "spartans": "Spartalılar Ordusu",
+      "party": "Parti Kutlaması",
+      "gold3": "Altın Ekran (3s)",
+      "gold10": "Altın Ekran (10s)",
+      "ultimate": "Nihai Kutlama"
+    },
+    "tierDesc": {
+      "heart": "Kalpler yayının köşesinden yukarı doğru süzülür.",
+      "chocolate": "Bir kutu çikolata ekranın yukarısından yuvarlanır.",
+      "bouquet": "Bir buket yayının köşesinde patlar.",
+      "crown": "Bir taç yayının üzerine yükselir ve parıldar.",
+      "magicRing": "Ortaya bir yüzük iner ve parıltılarla çınlar.",
+      "spartans": "Bir kalkan duvarı yayının karşısında ilerler.",
+      "party": "Konfetiler uçar ve bir disko topu iner.",
+      "gold3": "Ekran 3 saniye boyunca altına döner ve paralar yağar.",
+      "gold10": "Ekran 10 saniye boyunca altına döner ve paralar yağar.",
+      "ultimate": "Her kutlama aynı anda — altın, konfetiler, paralar ve bir kupa."
+    }
   }
 }

@@ -4925,5 +4925,34 @@
       "megalodon": "Bu da sizin tacınız — indi tətbiq royalsınız"
     },
     "continue": "DeHub-a qayıt"
+  },
+  "liveGift": {
+    "pickTier": "Bir bayram seçin",
+    "plays": "Stream-də {{tier}} oynayır",
+    "you": "Siz",
+    "tier": {
+      "heart": "Sevgi Ürəyi",
+      "chocolate": "Şokolad Qutusu",
+      "bouquet": "Gül Buketi",
+      "crown": "Tac",
+      "magicRing": "Sehrli Üzük",
+      "spartans": "Spartalılar Ordusu",
+      "party": "Parti Bayramı",
+      "gold3": "Qızıl Ekran (3s)",
+      "gold10": "Qızıl Ekran (10s)",
+      "ultimate": "Son Bayram"
+    },
+    "tierDesc": {
+      "heart": "Ürəklər axının küncündən yuxarı qalxır.",
+      "chocolate": "Bir qutu şokolad axının yuxarısına doğru yuvarlanır.",
+      "bouquet": "Bir gül buketi küncdə partlayır.",
+      "crown": "Bir tac axının üzərində yüksəlir və parıldayır.",
+      "magicRing": "Bir üzük ortaya düşür və parıltılarla səslənir.",
+      "spartans": "Bir qalxan divarı axının qarşısından keçir.",
+      "party": "Konfeti uçur və disko topu düşür.",
+      "gold3": "Ekran qızıl olur və 3 saniyə ərzində pullar yağır.",
+      "gold10": "Ekran qızıl olur və 10 saniyə ərzində pullar yağır.",
+      "ultimate": "Hər bayram eyni anda — qızıl, konfeti, pullar və bir kubok."
+    }
   }
 }
