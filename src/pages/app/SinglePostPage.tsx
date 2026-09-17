@@ -464,6 +464,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     playbackUrls: buildLivePlaybackUrls(nft),
     replayUrl: extractReplayUrl(streamObj),
     replayTruncated: isReplayTruncated(streamObj),
+    startedAt: streamObj?.startedAt || undefined,
     // Access, from the same streamInfo every other post type reads. A live
     // post is minted through /user_mint with the composer's switches on it, so
     // it can be sold per view or gated like anything else.
@@ -486,14 +487,14 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
 /**
  * Live post wrapper: merges Supabase live status when api.dehub.io /start fails
  */
-function LivePostWithStatus({ liveData, post, chatSlot }: { liveData: LiveStream; post: DeHubNFT; chatSlot?: React.ReactNode }) {
+function LivePostWithStatus({ liveData, post, chatSlot, immersive }: { liveData: LiveStream; post: DeHubNFT; chatSlot?: React.ReactNode; immersive?: boolean }) {
   const tokenId = String(post.tokenId ?? (post as any).tokenId ?? liveData.id);
   const { data: isLiveFromSupabase } = useStreamLiveStatus(tokenId);
   const mergedStream: LiveStream = {
     ...liveData,
     isLive: liveData.isLive || !!isLiveFromSupabase,
   };
-  return <LiveStreamCard stream={mergedStream} chatSlot={chatSlot} />;
+  return <LiveStreamCard stream={mergedStream} chatSlot={chatSlot} immersive={immersive} />;
 }
 
 /**
@@ -1060,6 +1061,10 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
           <LivePostWithStatus
             liveData={liveData}
             post={post}
+            /* Phone and tablet get the full-bleed viewer — picture edge to
+               edge with the chrome floating on it, the same layout the app
+               draws. Desktop keeps the card. */
+            immersive={isMobileView}
             chatSlot={
               id ? (
                 <Suspense fallback={null}>
@@ -1071,6 +1076,11 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
                     streamId={(post as any)?.stream?._id || (post as any)?.stream?.streamId || undefined}
                     isOffline={!('isLive' in post ? (post as any).isLive : true)}
                     isHost={!!(walletAddress && post.minter?.toLowerCase() === walletAddress.toLowerCase())}
+                    /* Over the video, not in a slab: no panel, no header of
+                       its own, messages riding the shade at the foot of the
+                       frame. The broadcaster's phone layout has drawn it this
+                       way since the chat moved onto the picture. */
+                    overlay={isMobileView}
                   />
                 </Suspense>
               ) : undefined
@@ -1315,6 +1325,13 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
   const isLivePost = contentType === 'live';
 
   const renderPostContent = () => (
+    isLivePost && isMobileView ? (
+      /* The viewer is `fixed inset-0` and owns the screen: wrapping it in
+         the post bento would draw a card border around nothing, and the
+         poll and shop rails below would sit under a layer they cannot be
+         scrolled to. Everything the stream needs is on the picture. */
+      renderContent()
+    ) : (
     <>
       {/* Header removed — top nav bar provides chrome; no floating back-button bento on any breakpoint */}
       <div className={cn('px-2 sm:px-3', chromeClearance)}>
@@ -1353,6 +1370,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
         </div>
       </div>
     </>
+    )
   );
 
   return (

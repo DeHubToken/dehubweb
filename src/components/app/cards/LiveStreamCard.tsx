@@ -30,6 +30,7 @@ import { ActionBar } from './ActionBar';
 import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
 import { StreamShopPinnedCard } from '../live/StreamShop';
+import { ImmersiveLiveChrome } from '../live/ImmersiveLiveChrome';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { PostAIChatLazy } from './PostAIChatLazy';
 import { ReportModal } from '../modals/ReportModal';
@@ -109,11 +110,22 @@ interface LiveStreamCardProps {
    * platform's chat sitting on somebody's stream.
    */
   chatSlot?: React.ReactNode;
+  /**
+   * Draw the stream full-bleed instead of as a card: the picture is the
+   * screen and everything else floats on it. What the post page switches
+   * on at phone widths, and what the app has always done.
+   *
+   * Chrome only. Every hook, effect and drawer below is shared with the
+   * card — a second component would have been a second copy of the WHEP
+   * ladder, the presence socket and the gift flow.
+   */
+  immersive?: boolean;
 }
 
-export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
+export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStreamCardProps) {
   // The chat is the post's only conversation, so on the page it starts open;
-  // the comment button still folds it away.
+  // the comment button still folds it away. Full-bleed keeps it open either
+  // way — it draws the room itself rather than through this.
   const [showComments, setShowComments] = useState(!!chatSlot);
   const { t } = useI18n();
   const navigate = useNavigate();
@@ -154,6 +166,25 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
   const [dhbBalance, setDhbBalance] = useState<string | null>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  // Full-bleed only. The chevron drops the chrome and leaves the picture;
+  // it means nothing in the card, where the chrome IS the card.
+  const [chromeHidden, setChromeHidden] = useState(false);
+  const toggleChrome = useCallback(() => setChromeHidden((v) => !v), []);
+  /**
+   * The replay timeline, for the scrub line the chrome draws.
+   *
+   * Only a recording has one. A broadcast on air has nothing behind the
+   * live edge to move to, so `replayProgress` stays undefined and the bar
+   * is not rendered at all rather than sitting there refusing taps.
+   */
+  const replayRef = useRef<HTMLVideoElement>(null);
+  const [replayProgress, setReplayProgress] = useState<number | undefined>(undefined);
+  const seekReplay = useCallback((ratio: number) => {
+    const el = replayRef.current;
+    if (!el || !Number.isFinite(el.duration) || el.duration <= 0) return;
+    el.currentTime = ratio * el.duration;
+    setReplayProgress(ratio);
+  }, []);
   const containerRef = useRef<HTMLDivElement>(null);
   const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, containerRef, { escapeAncestors: true });
   // Records the view once the player has been on screen long enough to mean it.
@@ -807,9 +838,19 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
   };
 
   return (
-    <div className="rounded-xl border border-white/[0.08] bg-transparent p-3 isolate">
-      {/* Header with AI and menu buttons */}
-      <div className="flex items-center justify-between">
+    <div
+      className={cn(
+        immersive
+          ? // The picture is the screen. `fixed` rather than a tall block in
+            // the page: the post page still scrolls under it, and a stream
+            // is not a thing you scroll past on a phone.
+            'fixed inset-0 z-[55] bg-black isolate'
+          : 'rounded-xl border border-white/[0.08] bg-transparent p-3 isolate'
+      )}
+    >
+      {/* Header with AI and menu buttons. Full-bleed has its own, drawn
+          over the picture — see ImmersiveLiveChrome below. */}
+      <div className={cn('flex items-center justify-between', immersive && 'hidden')}>
         <CardHeader
           username={stream.streamer}
           handle={stream.creatorUsername}
@@ -925,7 +966,22 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
       </div>
 
       {/* Video Player or Stream Ended State */}
-      <div ref={containerRef} data-media-full className={`bg-black overflow-hidden ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh]' : 'relative aspect-video rounded-lg'}`}>
+      <div
+        ref={containerRef}
+        data-media-full
+        className={cn(
+          'bg-black overflow-hidden',
+          isFullscreen
+            ? 'fixed inset-0 z-[9999] w-screen h-[100dvh]'
+            : immersive
+              ? // Fills the fixed root above rather than holding a 16:9 box:
+                // a portrait broadcast on a phone is the whole frame, and a
+                // landscape one letterboxes inside it as object-contain.
+                'absolute inset-0'
+              : 'relative aspect-video rounded-lg'
+        )}
+      >
+
         {/* The paywall. It wraps the player rather than covering it, so a
             gated stream never mounts the <video> at all — no WHEP subscription
             and no HLS ladder for a broadcast the viewer has not paid for. The
@@ -969,10 +1025,19 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
              player. */
           <>
             <video
+              ref={replayRef}
               className="w-full h-full object-contain"
               src={stream.replayUrl}
               poster={stream.thumbnail || undefined}
-              controls
+              /* Full-bleed draws its own scrub line on the floor of the
+                 screen, so the native bar would be a second timeline a
+                 centimetre above it. */
+              controls={!immersive}
+              onTimeUpdate={immersive ? (e) => {
+                const el = e.currentTarget;
+                if (!Number.isFinite(el.duration) || el.duration <= 0) return;
+                setReplayProgress(el.currentTime / el.duration);
+              } : undefined}
               playsInline
               preload="metadata"
               {...{"webkit-playsinline": ""}}
@@ -1044,7 +1109,10 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
               </button>
             </div>
             
-            <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
+            {/* The card's own control bar. Full-bleed replaces all of it:
+                the state moved to a pill, the audience to the header, and
+                mute to a chrome circle beside it. */}
+            <div className={cn('absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent', immersive && 'hidden')}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span data-live-badge className="px-2 py-0.5 bg-red-500 text-white text-xs font-semibold rounded">
@@ -1093,15 +1161,48 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
             player into fullscreen, where it lands over the chat column rather
             than animating behind it. */}
         <GiftAnimationOverlay items={giftCelebrations} />
+
+        {/* Full-bleed chrome. Inside the media container so it travels with
+            the picture, and after the overlays so nothing is drawn on top
+            of the close button. */}
+        {immersive && (
+          <ImmersiveLiveChrome
+            streamerName={stream.streamer}
+            creatorUsername={stream.creatorUsername}
+            creatorId={stream.creatorId}
+            avatar={stream.avatar}
+            title={stream.title}
+            isLive={!!stream.isLive && !streamEnded}
+            isEnded={streamEnded}
+            viewers={livePresence ?? viewersLabel}
+            startedAt={stream.startedAt ?? null}
+            isMuted={isMuted}
+            onToggleMute={toggleMute}
+            progress={streamEnded && stream.replayUrl ? (replayProgress ?? 0) : undefined}
+            onSeek={streamEnded && stream.replayUrl ? seekReplay : undefined}
+            hidden={chromeHidden}
+            onToggleHidden={toggleChrome}
+          />
+        )}
       </div>
 
-      {/* Info & Actions */}
-      <div className="pt-3">
+      {/* Info & Actions. In full-bleed this is the bottom stack: the action
+          bar in a chrome capsule with the chat under it, both floating on
+          the picture. The title and the audience line are dropped — they are
+          a pill and a header chip up top now, and repeating them here was
+          how the phone layout ended up with three copies of "LIVE". */}
+      <div
+        className={cn(
+          immersive
+            ? 'absolute inset-x-0 bottom-0 z-20 flex max-h-[62%] flex-col justify-end gap-2 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-opacity duration-300'
+            : 'pt-3',
+          immersive && chromeHidden && 'pointer-events-none opacity-0'
+        )}
+      >
         <ActionBar
           postId={stream.id}
           tokenId={parseInt(stream.id, 10) || undefined}
           utilityDesktopAnchor
-          className="p-0 mb-2"
           onComment={() => setShowComments(prev => !prev)}
           isLiked={stream.isLiked}
           isDisliked={stream.isDisliked}
@@ -1112,18 +1213,34 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
           commentCount={stream.commentCount}
           tipCount={tipCount}
           onTip={() => setShowGiftDrawer(true)}
+          /* A capsule over the video, so the icons keep their contrast on a
+             bright frame without a scrim across the whole foot. */
+          className={immersive ? 'p-0 rounded-full bg-zinc-900/60 backdrop-blur-sm px-2' : 'p-0 mb-2'}
         />
-        {!streamEnded && (
+        {!streamEnded && !immersive && (
           <p className="font-semibold text-white text-sm">{viewersLabel} tuned in</p>
         )}
-        <h3 className="text-white text-sm mt-1">{stream.title}</h3>
-        <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
+        {!immersive && <h3 className="text-white text-sm mt-1">{stream.title}</h3>}
+        {!immersive && <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>}
+
+        {/* The room. Open, not behind the message button: a stream on a
+           phone is a conversation you are already in. `overlay` is the
+           caller's to set — see SinglePostPage. */}
+        {immersive && chatSlot ? (
+          <div
+            data-no-navigate
+            onClick={(e) => e.stopPropagation()}
+            className="flex min-h-0 flex-col justify-end"
+          >
+            {chatSlot}
+          </div>
+        ) : null}
       </div>
 
       {/* The chat, or the comments when there is no chat to show — same
           button, same drop-down position under the action bar. */}
       {chatSlot ? (
-        showComments && (
+        !immersive && showComments && (
           <div className="mt-3" data-no-navigate onClick={(e) => e.stopPropagation()}>
             {chatSlot}
           </div>
