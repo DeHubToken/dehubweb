@@ -28,6 +28,7 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import type Hls from 'hls.js';
 import { LiveEndedMedia } from './LiveEndedMedia';
 import { liveSourceFromHlsUrl, whepEndpointFor } from '@/lib/live-ingest';
@@ -66,6 +67,8 @@ const MAX_CONCURRENT_WHEP = 2;
 let whepSessionsOpen = 0;
 
 export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'Live ended', muted = true }: LiveFeedPreviewProps) {
+  const { pathname } = useLocation();
+  const postOpen = /^\/app\/post\//.test(pathname);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   // Applied imperatively as well as through the prop: React only writes the
   // `muted` property on mount, and the element is re-attached when the
@@ -104,7 +107,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
 
   // ── WebRTC ────────────────────────────────────────────────────────────────
   useEffect(() => {
-    if (transport !== 'whep' || !visible || failed || !source) return;
+    if (transport !== 'whep' || !visible || postOpen || failed || !source) return;
     const el = videoRef.current;
     if (!el) return;
     if (whepSessionsOpen >= MAX_CONCURRENT_WHEP) {
@@ -162,12 +165,12 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
       // this element.
       if (el.srcObject) el.srcObject = null;
     };
-  }, [transport, visible, failed, source]);
+  }, [transport, visible, postOpen, failed, source]);
 
   // ── HLS ───────────────────────────────────────────────────────────────────
   useEffect(() => {
     const el = videoRef.current;
-    if (transport !== 'hls' || !el || !src || !visible || failed) return;
+    if (transport !== 'hls' || !el || !src || !visible || postOpen || failed) return;
     let cancelled = false;
 
     const attach = async () => {
@@ -210,7 +213,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
       el.removeAttribute('src');
       el.load();
     };
-  }, [transport, src, visible, failed, selfHosted]);
+  }, [transport, src, visible, postOpen, failed, selfHosted]);
 
   if (!src || failed) {
     return <LiveEndedMedia thumbnail={thumbnail} label={fallbackLabel} />;

@@ -19,6 +19,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import HomePage from '@/pages/app/HomePage';
 import { pauseMediaIn, pauseOffDocumentMediaIn, resumeMedia } from '@/lib/pause-media-in';
+import { handoffVideoFor } from '@/lib/video-handoff';
 import {
   FeedSkeleton,
   ExploreSkeleton,
@@ -204,7 +205,7 @@ const CachedPage = memo(function CachedPage({
     // steps, and the second sweep skips what the first already stopped. Only a
     // return to the page settles the debt.
     const stopped = shouldStayVisible
-      ? pauseOffDocumentMediaIn(root, overlayKey)
+      ? pauseOffDocumentMediaIn(root, overlayKey, handoffVideoFor(overlayKey))
       : pauseMediaIn(root);
     if (stopped.length) resumeRef.current = [...new Set([...resumeRef.current, ...stopped])];
   }, [isActive, shouldStayVisible, overlayKey]);

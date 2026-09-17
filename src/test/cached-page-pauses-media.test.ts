@@ -172,7 +172,7 @@ describe('PersistentPageCache wires the pause to the hide', () => {
     // only because a post overlay sits above it keeps its <video> — the post
     // page takes that very element over — and loses everything off-document.
     expect(SOURCE).toMatch(/pauseMediaIn\(root\)/);
-    expect(SOURCE).toMatch(/pauseOffDocumentMediaIn\(root, overlayKey\)/);
+    expect(SOURCE).toMatch(/pauseOffDocumentMediaIn\(root, overlayKey, handoffVideoFor\(overlayKey\)\)/);
     expect(SOURCE).toMatch(/resumeMedia\(resumeRef\.current\)/);
     expect(SOURCE).toMatch(/\}, \[isActive, shouldStayVisible, overlayKey\]\)/);
   });
@@ -292,14 +292,14 @@ describe('pauseOffDocumentMediaIn — the post overlay, where home stays visible
     expect(track.paused).toBe(true);
   });
 
-  it('leaves the feed <video> alone, because opening the post takes that element with it', () => {
-    // lib/video-handoff moves the live element up into the post page. Pausing
-    // it here would stop the clip the user just opened.
-    const clip = fakeMedia('video', true);
-    root.appendChild(clip);
+  it('stops other feed videos while sparing the element handed to the post', () => {
+    const opened = fakeMedia('video', true) as HTMLVideoElement;
+    const other = fakeMedia('video', true);
+    root.append(opened, other);
 
-    expect(pauseOffDocumentMediaIn(root)).toEqual([]);
-    expect(clip.pause).not.toHaveBeenCalled();
+    expect(pauseOffDocumentMediaIn(root, null, opened)).toEqual([other]);
+    expect(opened.pause).not.toHaveBeenCalled();
+    expect(other.paused).toBe(true);
   });
 });
 

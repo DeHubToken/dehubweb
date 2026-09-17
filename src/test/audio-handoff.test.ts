@@ -224,6 +224,6 @@ describe('the cards are wired to the pool', () => {
   });
 
   it('spares the opening post from the overlay sweep', () => {
-    expect(CACHE).toContain('pauseOffDocumentMediaIn(root, overlayKey)');
+    expect(CACHE).toContain('pauseOffDocumentMediaIn(root, overlayKey, handoffVideoFor(overlayKey))');
   });
 });

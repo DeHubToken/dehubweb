@@ -62,6 +62,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { VideoSlide } from './VideoSlide';
+import { pauseMediaIn, resumeMedia } from '@/lib/pause-media-in';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
 import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
@@ -337,6 +338,11 @@ const CORNER_CONTROL =
 
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore }: ShortsViewerProps) {
   const instanceId = useId();
+  useEffect(() => {
+    const paused = Array.from(document.querySelectorAll<HTMLElement>('[data-cached-page]'))
+      .flatMap((page) => pauseMediaIn(page));
+    return () => resumeMedia(paused);
+  }, []);
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isMuted, setIsMuted] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);

@@ -158,7 +158,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           sold per view, held behind a token or marked mature stands behind the
           same sheet here, so the paywall is met before the click-through
           rather than after it. */}
-      <div className="relative aspect-video bg-black rounded-lg overflow-hidden" data-no-navigate>
+      <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
         <GatedMedia
           gate={{
             tokenId: stream.tokenId || stream.id,
