@@ -2267,7 +2267,8 @@
     "broadcasterFailed": "廣播器無法載入，因此從未擷取任何內容 — 但串流已建立。在下方結束它，然後重新整理頁面並重新直播。",
     "endStreamConfirmTitle": "您確定要結束串流嗎？",
     "endStreamConfirmBody": "您的廣播將停止供所有觀看者使用，無法繼續。",
-    "keepStreaming": "繼續串流"
+    "keepStreaming": "繼續串流",
+    "encoderPermanentHint": "呢個密鑰永遠唔會改變。設定一次你嘅編碼器 — 下次只需要撳嗰度開始， DeHub 就會為你建立帖子。"
   },
   "creatorFlow": {
     "title": "創作者流程",

@@ -4184,7 +4184,8 @@
     "broadcasterFailed": "The broadcaster failed to load, so nothing was ever captured — but the stream was already created. End it below, then refresh the page and go live again.",
     "endStreamConfirmTitle": "Are you sure you want to end the stream?",
     "endStreamConfirmBody": "Your broadcast stops for everyone watching and cannot be resumed.",
-    "keepStreaming": "Keep streaming"
+    "keepStreaming": "Keep streaming",
+    "encoderPermanentHint": "This key never changes. Set your encoder up once — next time just press Start there and DeHub creates the post for you."
   },
   "events": {
     "seoTitle": "Events — Meetups & Community Events on DeHub",

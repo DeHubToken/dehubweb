@@ -2199,7 +2199,8 @@
     "broadcasterFailed": "ብሮድካስተር ምጅማር ተወሲደ፣ ስለዚ ምንም ወሲደ ኣይነበረን — ነገር ግን ስትሪም ቀድሞ ተፍጠረ። ታሕቲ ምቋረጥ፣ ድሕሪኡ ገጽ ምድሓሳስ ወ ናብ ላይ ምኻድ።",
     "endStreamConfirmTitle": "ስትሪም ምቋረጥ ትደሊ ዶ?",
     "endStreamConfirmBody": "ብሮድካስት ናትካ ንሓንቲ ሰብ ዝርኣዩ ይቋረጥ ወ ምድሓሳስ ኣይከኣል።",
-    "keepStreaming": "ስትሪም ቀጥል"
+    "keepStreaming": "ስትሪም ቀጥል",
+    "encoderPermanentHint": "እዚ ቁልፍ እዚ ፈጺሙ ኣይቅየርን እዩ ። ነቲ ኢንኮደርካ ሓደ ግዜ ኣዳሉ — ኣብ እትቕጽል ግዜ ፡ ኣብኡ ምጅማር ጥራይ ጸቕጢ ግበር ፡ DeHub ድማ ነቲ ቦታ ንዓኻ ትፈጥር ።"
   },
   "creatorFlow": {
     "title": "ፈጣሪ ፍሰት",

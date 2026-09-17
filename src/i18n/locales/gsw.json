@@ -2236,7 +2236,8 @@
     "broadcasterFailed": "De Broadcaster konnte nit glade, drum isch nüt erfasst worde — aber de Stream isch scho erstellt worde. Beend in unten, aktualisier d'Siite und go live.",
     "endStreamConfirmTitle": "Bisch du sicher, dass du de Stream beende möchsch?",
     "endStreamConfirmBody": "Di Übertragig stoppt für alli, wo zueluege, und cha nit wiiter gmacht werde.",
-    "keepStreaming": "Wiiter streame"
+    "keepStreaming": "Wiiter streame",
+    "encoderPermanentHint": "Dä Schlüssel verändert sich nie. Stell din Encoder eimal i – nächstes Mal drucksch eifach uf Start und DeHub macht de Post für dich."
   },
   "creatorFlow": {
     "title": "Creator Flow",

@@ -4030,7 +4030,8 @@
     "broadcasterFailed": "Die uitsaaier kon nie laai nie, dus is niks ooit vasgevang nie — maar die stream is reeds geskep. Beëindig dit hieronder, verfris dan die bladsy en gaan weer regstreeks uit.",
     "endStreamConfirmTitle": "Is jy seker jy wil die stream beëindig?",
     "endStreamConfirmBody": "Jou uitsending stop vir almal wat kyk en kan nie hervat word nie.",
-    "keepStreaming": "Hou aan met streaming"
+    "keepStreaming": "Hou aan met streaming",
+    "encoderPermanentHint": "Die sleutel het nie verander nie. Stel jou enkodeerder een keer op — volgende keer druk net Begin daar en DeHub skep die pos vir jou."
   },
   "events": {
     "seoTitle": "Gebeurtenisse — Byeenkomste & Gemeenskapsevenementen op DeHub",

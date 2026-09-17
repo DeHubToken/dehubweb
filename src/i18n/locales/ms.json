@@ -4439,7 +4439,8 @@
     "broadcasterFailed": "Penyiar gagal dimuatkan, jadi tiada apa-apa yang ditangkap — tetapi siaran sudah dibuat. Tamatkannya di bawah, kemudian segarkan halaman dan pergi langsung lagi.",
     "endStreamConfirmTitle": "Adakah anda pasti ingin menamatkan siaran?",
     "endStreamConfirmBody": "Siaran anda berhenti untuk semua orang yang menonton dan tidak boleh disambung semula.",
-    "keepStreaming": "Terus Siaran"
+    "keepStreaming": "Terus Siaran",
+    "encoderPermanentHint": "Kunci ini tidak pernah berubah. Sediakan pengekod anda sekali — lain kali hanya tekan Mula di sana dan DeHub mencipta hantaran untuk anda."
   },
   "events": {
     "seoTitle": "Acara — Pertemuan & Acara Komuniti di DeHub",

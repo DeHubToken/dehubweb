@@ -4180,7 +4180,8 @@
     "broadcasterFailed": "Le diffuseur n'a pas pu se charger, donc rien n'a jamais été capturé — mais le flux a déjà été créé. Terminez-le ci-dessous, puis actualisez la page et allez en direct.",
     "endStreamConfirmTitle": "Êtes-vous sûr de vouloir terminer le flux ?",
     "endStreamConfirmBody": "Votre diffusion s'arrête pour tous les spectateurs et ne peut pas être reprise.",
-    "keepStreaming": "Continuer la diffusion"
+    "keepStreaming": "Continuer la diffusion",
+    "encoderPermanentHint": "Cette touche ne change jamais. Configurez votre encodeur une fois — la prochaine fois, appuyez simplement sur Démarrer là et DeHub crée la publication pour vous."
   },
   "events": {
     "seoTitle": "Événements — Rencontres et événements communautaires sur DeHub",

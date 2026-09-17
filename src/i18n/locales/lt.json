@@ -2270,7 +2270,8 @@
     "broadcasterFailed": "Transliuotojas nepavyko įkelti, todėl niekas nebuvo užfiksuota — bet srauto jau buvo sukurtas. Baigkite jį žemiau, tada atnaujinkite puslapį ir pradėkite transliavimą iš naujo.",
     "endStreamConfirmTitle": "Ar tikrai norite baigti transliavimą?",
     "endStreamConfirmBody": "Jūsų transliavimas sustabdomas visiems žiūrintiems ir negali būti atnaujintas.",
-    "keepStreaming": "Tęsti transliavimą"
+    "keepStreaming": "Tęsti transliavimą",
+    "encoderPermanentHint": "Šis raktas niekada nesikeičia. Nustatykite koduotuvą vieną kartą — kitą kartą tiesiog paspauskite Pradėti ir DeHub sukurs įrašą už jus."
   },
   "creatorFlow": {
     "title": "Kūrėjo srautas",

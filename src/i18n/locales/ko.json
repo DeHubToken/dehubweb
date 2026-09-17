@@ -4177,7 +4177,8 @@
     "broadcasterFailed": "방송 송출자가 로드되지 않아 아무것도 캡처되지 않았습니다 — 하지만 스트림은 이미 생성되었습니다. 아래에서 종료한 후 페이지를 새로고침하고 다시 라이브로 진행하세요.",
     "endStreamConfirmTitle": "스트림을 종료하시겠습니까?",
     "endStreamConfirmBody": "모든 시청자에게 방송이 중단되며 재개할 수 없습니다.",
-    "keepStreaming": "스트리밍 계속하기"
+    "keepStreaming": "스트리밍 계속하기",
+    "encoderPermanentHint": "이 키는 절대 변경되지 않습니다. 인코더를 한 번 설정하십시오. 다음에 시작을 누르면 DeHub가 게시물을 생성합니다."
   },
   "events": {
     "seoTitle": "이벤트 — DeHub의 밋업 및 커뮤니티 이벤트",

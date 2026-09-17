@@ -4186,7 +4186,8 @@
     "broadcasterFailed": "O transmissor falhou ao carregar, então nada foi capturado — mas o stream já foi criado. Encerre-o abaixo, atualize a página e transmita novamente.",
     "endStreamConfirmTitle": "Tem certeza de que deseja encerrar o stream?",
     "endStreamConfirmBody": "Sua transmissão para para todos que estão assistindo e não pode ser retomada.",
-    "keepStreaming": "Continuar transmitindo"
+    "keepStreaming": "Continuar transmitindo",
+    "encoderPermanentHint": "Esta chave nunca muda. Configure o codificador uma vez — da próxima vez, basta pressionar Iniciar e o DeHub cria o post para você."
   },
   "events": {
     "seoTitle": "Eventos — Encontros e Eventos Comunitários no DeHub",

@@ -2269,7 +2269,8 @@
     "broadcasterFailed": "Olùfipamọ́ kùnà láti ṣe ìkópa, nítorí náà ohun kan kò rí ìkópa — ṣùgbọ́n ìfipamọ́ ti ṣẹ́ dá. Páríwo rẹ̀ níbẹ̀ lẹ́yìn, lẹ́yìn náà tún ṣe ìkọ̀kọ̀ ojúewé ati lọ sí ìfipamọ́ dúró.",
     "endStreamConfirmTitle": "Ṣé o dá ní ìmọ̀ràn pé o fẹ́ páríwo ìfipamọ́?",
     "endStreamConfirmBody": "Ìfipamọ́ rẹ dúró fún gbogbo ẹnìkan tó ń wò ó ati kò lè tún bẹ̀rẹ̀.",
-    "keepStreaming": "Tẹ̀síwájú ìfipamọ́"
+    "keepStreaming": "Tẹ̀síwájú ìfipamọ́",
+    "encoderPermanentHint": "Bọtini yìí kò yí padà láéláé. Ṣètò àdàkọ rẹ lẹ́ẹ̀kan — ìgbà mìíràn kàn tẹ Bẹ̀rẹ̀ níbẹ̀ àti DeHub ṣẹ̀dá ìfiránṣẹ́ náà fún ọ."
   },
   "creatorFlow": {
     "title": "Creator Flow",

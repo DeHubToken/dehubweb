@@ -4118,7 +4118,8 @@
     "broadcasterFailed": "Lähettäjä ei latautunut, joten mitään ei koskaan tallennettu — mutta striimi oli jo luotu. Lopeta se alla, päivitä sivu ja mene suoraksi uudelleen.",
     "endStreamConfirmTitle": "Oletko varma, että haluat lopettaa striimin?",
     "endStreamConfirmBody": "Lähetyksesi pysähtyy kaikille katsojille ja sitä ei voi jatkaa.",
-    "keepStreaming": "Jatka striimaamista"
+    "keepStreaming": "Jatka striimaamista",
+    "encoderPermanentHint": "Tämä avain ei koskaan muutu. Aseta kooderi kerran — seuraavalla kerralla vain paina Aloita siellä ja DeHub luo julkaisun sinulle."
   },
   "events": {
     "seoTitle": "Tapahtumat — Tapaamiset ja yhteisötapahtumat DeHubissa",

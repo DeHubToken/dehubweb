@@ -2255,7 +2255,8 @@
     "broadcasterFailed": "Broadcaster gagal dimuat, dadi ora ana sing ditangkep — nanging stream wis digawe. Akhiri ing ngisor, banjur refresh halaman lan live maneh.",
     "endStreamConfirmTitle": "Apa sampeyan yakin pengin mungkasi stream?",
     "endStreamConfirmBody": "Siaran sampeyan mandheg kanggo kabeh sing nonton lan ora bisa diulang.",
-    "keepStreaming": "Terus streaming"
+    "keepStreaming": "Terus streaming",
+    "encoderPermanentHint": "Kunci iki ora bakal owah. Setel encoder-mu sepisan — sabanjure mung pencet Mulai ing kana lan DeHub bakal nggawe kiriman kanggo sampeyan."
   },
   "creatorFlow": {
     "title": "Alur Kreator",

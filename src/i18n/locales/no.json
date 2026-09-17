@@ -2265,7 +2265,8 @@
     "broadcasterFailed": "Kringkasteren kunne ikke lastes inn, så ingenting ble noen gang fanget opp — men strømmen ble allerede opprettet. Avslutt den nedenfor, oppdater siden og gå live igjen.",
     "endStreamConfirmTitle": "Er du sikker på at du vil avslutte strømmen?",
     "endStreamConfirmBody": "Kringkastingen din stopper for alle som ser på og kan ikke gjenopptas.",
-    "keepStreaming": "Fortsett direktesending"
+    "keepStreaming": "Fortsett direktesending",
+    "encoderPermanentHint": "Denne tasten endres aldri. Konfigurer koderen én gang – neste gang trykker du bare på Start der, så oppretter DeHub innlegget for deg."
   },
   "creatorFlow": {
     "title": "Creator Flow",
