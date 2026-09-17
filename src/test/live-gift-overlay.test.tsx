@@ -30,7 +30,7 @@ describe('gift celebration overlay', () => {
     for (const tier of GIFT_TIERS) {
       const { container } = render(<GiftAnimationOverlay items={[celebration(tier.min)]} />);
       const floats = Array.from(container.querySelectorAll('span')).filter(
-        (el) => el.textContent === tier.emoji,
+        (el) => (el as HTMLElement).textContent === tier.emoji,
       );
       // More than one: the corner column, not just the caption's single glyph.
       expect(floats.length, `${tier.key} has no corner float`).toBeGreaterThan(1);
