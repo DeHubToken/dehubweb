@@ -58,10 +58,13 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
   const content = quotedPost.description || quotedPost.name || '';
   // Converter imports use feed-video, and some older posts only carry a video
   // URL. Treat them like the feed does so a shared import has a playable card.
-  const isAudio = quotedPost.postType === 'audio' || quotedPost.postType === 'feed-audio';
+  // The API sends feed-video/feed-audio even though the shared NFT type still
+  // lists only the original post types.
+  const postType = quotedPost.postType as string;
+  const isAudio = postType === 'audio' || postType === 'feed-audio';
   const hasVideo = !isAudio && (
-    quotedPost.postType === 'video' ||
-    quotedPost.postType === 'feed-video' ||
+    postType === 'video' ||
+    postType === 'feed-video' ||
     quotedPost.media_type === 'video' ||
     !!quotedPost.videoUrl
   );
