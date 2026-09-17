@@ -26,7 +26,7 @@ import ethLogo from '@/assets/eth-logo.png';
 import usdcLogo from '@/assets/usdc-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
 import btcLogo from '@/assets/btc-logo.png';
-import solLogo from '@/assets/phantom-logo.png';
+import solLogo from '@/assets/icons/solana-logo.png';
 import bnbLogo from '@/assets/bnb-logo.png';
 
 const tokenLogos: Record<string, string> = { ETH: ethLogo, USDC: usdcLogo, USDT: usdtLogo, BTC: btcLogo, SOL: solLogo, BNB: bnbLogo };

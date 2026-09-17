@@ -1,6 +1,6 @@
 import type { PaymentAsset } from './crypto-purchase';
 
-export const PAYMENT_CURRENCIES = ['SOL', 'ETH', 'USDT', 'USDC', 'BNB'] as const;
+export const PAYMENT_CURRENCIES = ['ETH', 'BNB', 'SOL', 'USDT', 'USDC'] as const;
 const primaryNetworks = new Set(['base', 'eth', 'bsc', 'sol', 'robinhood']);
 export const isPrimaryPayment = (asset: PaymentAsset) => primaryNetworks.has(asset.blockchain) && (PAYMENT_CURRENCIES as readonly string[]).includes(asset.symbol);
 export type PaymentBalances = Record<string, string | null>;
