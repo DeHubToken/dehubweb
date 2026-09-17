@@ -23,10 +23,20 @@ async function request<T>(path: string, body?: unknown, authenticated = false): 
   } finally { clearTimeout(timer); }
 }
 
+async function confirm(id: string, txHash: string): Promise<Purchase> {
+  localStorage.setItem(`dehub.payment.${id}`, txHash);
+  const receipt = await request<Purchase>('direct/confirm', { id, txHash }, true);
+  if (receipt.settlement === 'DIRECT_SETTLED') localStorage.removeItem(`dehub.payment.${id}`);
+  return receipt;
+}
 export const cryptoPurchaseApi: PurchaseApi = {
   assets: async () => (await request<{ tokens: PaymentAsset[] }>('tokens')).tokens,
   quote: params => request('quote', params),
   create: params => request('intent', params, true),
   list: async () => (await request<{ intents: Purchase[] }>('intents', undefined, true)).intents,
-  status: id => request(`intent/${encodeURIComponent(id)}`, undefined, true),
+  confirm,
+  status: async id => {
+    const pending = localStorage.getItem(`dehub.payment.${id}`);
+    return pending ? confirm(id, pending) : request(`intent/${encodeURIComponent(id)}`, undefined, true);
+  },
 };
