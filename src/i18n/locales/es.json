@@ -1267,6 +1267,7 @@
     "amountUsd": "Monto (USD)",
     "customAmount": "Monto personalizado",
     "minPurchase": "La compra mínima es $5",
+    "minDhbPurchase": "La compra mínima de DHB es $0.50",
     "youPay": "Pagas",
     "youReceive": "Recibes (est.)",
     "feeNote": "La tarifa de tarjeta ~3.6% y una reserva de red del 0.5% se deducen de esto. La reserva se te envía como ETH para gas.",

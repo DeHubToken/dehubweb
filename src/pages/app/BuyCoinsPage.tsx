@@ -38,7 +38,8 @@ import { format } from 'date-fns';
 import { invalidateSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
 import { NearIntentBuy } from '@/components/app/NearIntentBuy';
 
-const PRESET_AMOUNTS = [10, 25, 50, 100, 250, 500];
+const PRESET_AMOUNTS = [0.5, 10, 25, 50, 100, 500];
+const MIN_DHB_PURCHASE_USD = 0.5;
 
 // BNB is off the gateway entirely — its float sits at zero, so buying there
 // only 406s. Base is the only chain with real supply and gas, so it's the
@@ -342,8 +343,8 @@ export default function BuyCoinsPage() {
       toast.error(t('buyCoins.walletNotConnected'));
       return;
     }
-    if (effectiveAmount < 5) {
-      toast.error(t('buyCoins.minPurchase'));
+    if (effectiveAmount < MIN_DHB_PURCHASE_USD) {
+      toast.error(t('buyCoins.minDhbPurchase'));
       return;
     }
 
@@ -424,7 +425,7 @@ export default function BuyCoinsPage() {
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
                   )}
-                  <span className="relative z-[2]">${amount}</span>
+                  <span className="relative z-[2]">${amount < 1 ? amount.toFixed(2) : amount}</span>
                 </button>
               );
             })}
@@ -444,10 +445,10 @@ export default function BuyCoinsPage() {
             />
           </div>
 
-          {effectiveAmount < 5 && effectiveAmount > 0 && (
+          {effectiveAmount < MIN_DHB_PURCHASE_USD && effectiveAmount > 0 && (
             <p className="text-amber-400 text-sm flex items-center gap-2">
               <AlertCircle className="w-4 h-4" />
-              {t('buyCoins.minPurchase')}
+              {t('buyCoins.minDhbPurchase')}
             </p>
           )}
           {paymentMethod === 'card' &&
@@ -584,7 +585,7 @@ export default function BuyCoinsPage() {
           <Button
             onClick={handlePurchase}
             disabled={
-              effectiveAmount < 5 ||
+              effectiveAmount < MIN_DHB_PURCHASE_USD ||
               isPending ||
               (paymentMethod === 'card' && estimatedTokens <= 0) ||
               (paymentMethod === 'card' &&
