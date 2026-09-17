@@ -81,8 +81,8 @@ export interface ImmersiveLiveChromeProps {
   isLive: boolean;
   isEnded: boolean;
   viewers: string | number;
-  /** Gifts sent to this stream, all told. */
-  giftCount?: number;
+  /** DHB tipped to this stream, all told. Always drawn, zero included. */
+  giftTotal?: number;
   /** When the broadcast started, for the running clock on the pills. */
   startedAt?: string | number | Date | null;
   isMuted: boolean;
@@ -107,7 +107,7 @@ export function ImmersiveLiveChrome({
   isLive,
   isEnded,
   viewers,
-  giftCount,
+  giftTotal,
   startedAt,
   isMuted,
   onToggleMute,
@@ -224,7 +224,7 @@ export function ImmersiveLiveChrome({
           // status bar, so a flat 16px put the top of the creator capsule
           // behind it and the row read as cut off — which is exactly what it
           // was, just not by anything in the page.
-          'absolute inset-x-0 top-0 z-20 flex items-center gap-2 px-4 pb-4 pt-[max(1rem,env(safe-area-inset-top))] transition-opacity duration-300',
+          'absolute inset-x-0 top-0 z-20 flex items-center gap-1.5 px-3 pb-4 pt-[max(1rem,env(safe-area-inset-top))] transition-opacity duration-300',
           hidden && 'pointer-events-none opacity-0'
         )}
       >
@@ -232,7 +232,7 @@ export function ImmersiveLiveChrome({
             do. Without `flex-1` this shrank to min-content and the name,
             which truncates, rendered at zero width — a capsule with an
             avatar and nothing beside it. */}
-        <div className="flex min-w-0 flex-1 items-center gap-2">
+        <div className="flex min-w-0 flex-1 items-center gap-1.5">
           <button
             type="button"
             onClick={() => creatorUsername && navigate(`/app/profile/${creatorUsername}`)}
@@ -265,7 +265,9 @@ export function ImmersiveLiveChrome({
                 <BadgeIcon
                   badgeBalance={badgeBalance}
                   username={creatorUsername}
-                  className="h-[1em] w-[1em] shrink-0"
+                  /* 11px, with the heart and the eye under it. At 1em it was
+                     the tallest thing on the line and read as a sticker. */
+                  className="h-[11px] w-[11px] shrink-0"
                 />
               </span>
               {/* Followers, watching, gifts — the three numbers that say
@@ -282,12 +284,13 @@ export function ImmersiveLiveChrome({
                   <Eye className="h-[10px] w-[10px]" />
                   {typeof viewers === 'number' ? compact(viewers) : viewers}
                 </span>
-                {giftCount ? (
-                  <span className="flex items-center gap-1">
-                    <img src={dehubCoin} alt="" className="h-[10px] w-[10px]" />
-                    {compact(giftCount)}
-                  </span>
-                ) : null}
+                {/* Always drawn, zero included: a stream with no gifts yet is
+                    a fact about it, and a counter that appears only once it
+                    is non-zero reads as one that is broken. */}
+                <span className="flex items-center gap-1">
+                  <img src={dehubCoin} alt="" className="h-[11px] w-[11px]" />
+                  {compact(giftTotal ?? 0)}
+                </span>
               </span>
 
             </span>
@@ -297,18 +300,23 @@ export function ImmersiveLiveChrome({
               been used — an already-followed creator does not need a button
               parked on their own stream. */}
           {!isSelf && !isFollowing && creatorId ? (
+            /* A square, like the rest of the row. The word cost ~60px on a
+               375px line and the creator capsule paid it — the name came out
+               as "ni…" with the numbers squeezed under it. A filled plus on
+               a creator's own stream is not ambiguous, and the label stays
+               for the screen reader. */
             <button
               type="button"
               onClick={handleFollow}
-              className="flex h-12 shrink-0 items-center gap-0.5 rounded-xl bg-white px-3.5 text-[13px] font-bold text-zinc-950"
+              aria-label={t('follow.follow', 'Follow')}
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-zinc-950"
             >
-              <Plus className="h-[13px] w-[13px]" strokeWidth={2.5} />
-              {t('follow.follow', 'Follow')}
+              <Plus className="h-5 w-5" strokeWidth={2.5} />
             </button>
           ) : null}
         </div>
 
-        <div className="ml-auto flex shrink-0 items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-1.5">
           <button
             type="button"
             onClick={onToggleMute}

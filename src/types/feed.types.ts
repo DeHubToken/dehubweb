@@ -398,6 +398,8 @@ export interface LiveStream extends BaseFeedItem {
    * be days earlier. Drives the running clock on the phone viewer's pills.
    */
   startedAt?: string;
+  /** DHB tipped to this stream, all told — the gift figure on the viewer. */
+  totalTips?: number;
   /** Creator's user ID for navigation */
   creatorId?: string;
   /** Creator's username for URL-based navigation */
