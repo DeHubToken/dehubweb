@@ -179,6 +179,13 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
    */
   const replayRef = useRef<HTMLVideoElement>(null);
   const [replayProgress, setReplayProgress] = useState<number | undefined>(undefined);
+  const [replayPlaying, setReplayPlaying] = useState(false);
+  const toggleReplay = useCallback(() => {
+    const el = replayRef.current;
+    if (!el) return;
+    if (el.paused) void el.play().catch(() => {});
+    else el.pause();
+  }, []);
   const seekReplay = useCallback((ratio: number) => {
     const el = replayRef.current;
     if (!el || !Number.isFinite(el.duration) || el.duration <= 0) return;
@@ -1038,10 +1045,33 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 if (!Number.isFinite(el.duration) || el.duration <= 0) return;
                 setReplayProgress(el.currentTime / el.duration);
               } : undefined}
+              onPlay={() => setReplayPlaying(true)}
+              onPause={() => setReplayPlaying(false)}
               playsInline
               preload="metadata"
               {...{"webkit-playsinline": ""}}
             />
+            {/* Full-bleed took the native control bar away so the scrub
+                line could have the floor to itself — and with it went the
+                only way to start a replay, which left an ended stream as a
+                black rectangle you could not press. The picture is the
+                play/pause target now, with a visible button while it is
+                stopped, exactly as the shorts viewer does it. */}
+            {immersive && (
+              <button
+                type="button"
+                onClick={toggleReplay}
+                aria-label={replayPlaying ? t('audioPost.pause', 'Pause') : t('audioPost.play', 'Play')}
+                className="absolute inset-0 z-[5] flex items-center justify-center"
+              >
+                {!replayPlaying && (
+                  <span className="flex h-16 w-16 items-center justify-center rounded-full bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10">
+                    <Play className="ml-1 h-8 w-8 fill-white text-white" />
+                  </span>
+                )}
+              </button>
+            )}
+
             {/* PARTIAL when the capture was cut to the creator's daily
                 allowance — presenting the opening stretch as the whole
                 broadcast would be a lie viewers notice mid-video. */}
@@ -1195,56 +1225,83 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         )}
       </div>
 
-      {/* Info & Actions. In full-bleed this is the bottom stack: the action
-          bar in a chrome capsule with the chat under it, both floating on
-          the picture. The title and the audience line are dropped — they are
-          a pill and a header chip up top now, and repeating them here was
-          how the phone layout ended up with three copies of "LIVE". */}
-      <div
-        className={cn(
-          immersive
-            ? 'absolute inset-x-0 bottom-0 z-20 flex max-h-[62%] flex-col justify-end gap-2 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-opacity duration-300'
-            : 'pt-3',
-          immersive && chromeHidden && 'pointer-events-none opacity-0'
-        )}
-      >
-        <ActionBar
-          postId={stream.id}
-          tokenId={parseInt(stream.id, 10) || undefined}
-          utilityDesktopAnchor
-          onComment={() => setShowComments(prev => !prev)}
-          isLiked={stream.isLiked}
-          isDisliked={stream.isDisliked}
-          myReaction={stream.myReaction}
-          reactionCounts={stream.reactionCounts}
-          likeCount={stream.likeCount}
-          dislikeCount={stream.dislikeCount}
-          commentCount={stream.commentCount}
-          tipCount={tipCount}
-          onTip={() => setShowGiftDrawer(true)}
-          /* A capsule over the video, so the icons keep their contrast on a
-             bright frame without a scrim across the whole foot. */
-          className={immersive ? 'p-0 rounded-full bg-zinc-900/60 backdrop-blur-sm px-2' : 'p-0 mb-2'}
-        />
-        {!streamEnded && !immersive && (
-          <p className="font-semibold text-white text-sm">{viewersLabel} tuned in</p>
-        )}
-        {!immersive && <h3 className="text-white text-sm mt-1">{stream.title}</h3>}
-        {!immersive && <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>}
+      {/* Info & Actions.
 
-        {/* The room. Open, not behind the message button: a stream on a
-           phone is a conversation you are already in. `overlay` is the
-           caller's to set — see SinglePostPage. */}
-        {immersive && chatSlot ? (
+          Full-bleed has neither. The engagement bar was a strip of seven
+          icons and their counts laid across someone's broadcast; what is
+          left is three controls in the bottom-right corner — gift, share,
+          and the thumb that holds open the reaction tray — with the room
+          along the foot. The title and the audience line are gone too:
+          they are a pill and a header chip now, and repeating them here is
+          how the phone layout ended up with three copies of "LIVE". */}
+      {immersive ? (
+        <>
+          {/* The room, over the picture. No panel and no fill of its own —
+              LivePostChat's overlay mode puts the messages straight on the
+              frame and masks the list out as it climbs. */}
+          {chatSlot ? (
+            <div
+              data-no-navigate
+              onClick={(e) => e.stopPropagation()}
+              className={cn(
+                'absolute inset-x-3 bottom-0 z-20 flex max-h-[45%] flex-col justify-end pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-opacity duration-300',
+                chromeHidden && 'pointer-events-none opacity-0'
+              )}
+            >
+              {chatSlot}
+            </div>
+          ) : null}
+
+          {/* Gift · share · thumb. Above the composer rather than beside it,
+              so the tray opens upward into empty frame and the message box
+              keeps the full width. */}
           <div
-            data-no-navigate
-            onClick={(e) => e.stopPropagation()}
-            className="flex min-h-0 flex-col justify-end"
+            className={cn(
+              'absolute right-3 bottom-[92px] z-30 transition-opacity duration-300',
+              chromeHidden && 'pointer-events-none opacity-0'
+            )}
           >
-            {chatSlot}
+            <ActionBar
+              compact
+              postId={stream.id}
+              tokenId={parseInt(stream.id, 10) || undefined}
+              isLiked={stream.isLiked}
+              isDisliked={stream.isDisliked}
+              myReaction={stream.myReaction}
+              reactionCounts={stream.reactionCounts}
+              likeCount={stream.likeCount}
+              dislikeCount={stream.dislikeCount}
+              commentCount={stream.commentCount}
+              tipCount={tipCount}
+              onTip={() => setShowGiftDrawer(true)}
+            />
           </div>
-        ) : null}
-      </div>
+        </>
+      ) : (
+        <div className="pt-3">
+          <ActionBar
+            postId={stream.id}
+            tokenId={parseInt(stream.id, 10) || undefined}
+            isLiked={stream.isLiked}
+            isDisliked={stream.isDisliked}
+            myReaction={stream.myReaction}
+            reactionCounts={stream.reactionCounts}
+            likeCount={stream.likeCount}
+            dislikeCount={stream.dislikeCount}
+            commentCount={stream.commentCount}
+            tipCount={tipCount}
+            onTip={() => setShowGiftDrawer(true)}
+            utilityDesktopAnchor
+            onComment={() => setShowComments(prev => !prev)}
+            className="p-0 mb-2"
+          />
+          {!streamEnded && (
+            <p className="font-semibold text-white text-sm">{viewersLabel} tuned in</p>
+          )}
+          <h3 className="text-white text-sm mt-1">{stream.title}</h3>
+          <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
+        </div>
+      )}
 
       {/* The chat, or the comments when there is no chat to show — same
           button, same drop-down position under the action bar. */}
