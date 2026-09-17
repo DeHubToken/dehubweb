@@ -5144,6 +5144,7 @@
     "ttsHint": "Lee en voz alta a todos los que estén viendo cuando llegue tu regalo."
   },
   "nearBuy": {
+    "otherCurrencies": "Otras monedas",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
