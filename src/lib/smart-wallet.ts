@@ -327,6 +327,15 @@ export async function ensureWalletUnlocked(): Promise<void> {
   if (!isWalletUnlocked()) throw new Error('Wallet unlock did not complete. Please try again.');
 }
 
+export async function signDerivedSolanaMessage(message: string): Promise<{ address: string; signature: string }> {
+  await ensureWalletUnlocked();
+  const [{ ed25519 }, { deriveSolanaSeed }, { base58Encode }] = await Promise.all([
+    import('@noble/curves/ed25519'), import('@/lib/solana/derive'), import('@/lib/solana/base58'),
+  ]);
+  const seed = deriveSolanaSeed(sessionPrivKey!);
+  return { address: base58Encode(ed25519.getPublicKey(seed)), signature: base58Encode(ed25519.sign(new TextEncoder().encode(message), seed)) };
+}
+
 export async function getDerivedSolanaAddress(): Promise<string> {
   await ensureWalletUnlocked();
   const { deriveSolanaAddress } = await import('@/lib/solana/derive');
