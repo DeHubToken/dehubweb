@@ -92,6 +92,11 @@ function createElement(): HTMLVideoElement {
   return el;
 }
 
+/** The feed element that will move into the open post, if it exists. */
+export function handoffVideoFor(key: string | null | undefined): HTMLVideoElement | null {
+  return key ? pool.get(key)?.el ?? null : null;
+}
+
 function dispose(key: string) {
   const entry = pool.get(key);
   if (!entry) return;
