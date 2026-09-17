@@ -21,12 +21,34 @@ const celebration = (amount: number) => ({
 });
 
 describe('gift celebration overlay', () => {
-  it('renders nothing at all when no gift is playing', () => {
+  it('draws nothing inside the stage when no gift is playing', () => {
+    // The stage element itself stays mounted — a ResizeObserver needs
+    // something to measure before the first gift lands, and the animations are
+    // all written as fractions of that measurement.
     const { container } = render(<GiftAnimationOverlay items={[]} />);
-    expect(container.firstChild).toBeNull();
+    const stage = container.firstChild as HTMLElement;
+    expect(stage).not.toBeNull();
+    expect(stage.className).toContain('pointer-events-none');
+    expect(stage.childElementCount).toBe(0);
   });
 
-  it('floats the tier emoji up the bottom-right corner for every tier', () => {
+  it('plays a distinct effect for every tier, none falling through to nothing', () => {
+    // The bug this guards: a tier whose effect silently returns null looks
+    // exactly like a working one in review. Heart and Chocolate shipped that
+    // way once already.
+    const seen = new Set<string>();
+    for (const tier of GIFT_TIERS) {
+      const { container } = render(<GiftAnimationOverlay items={[celebration(tier.min)]} />);
+      const effect = container.querySelector('.absolute.inset-0.overflow-hidden');
+      expect(effect, `${tier.key} rendered no celebration`).not.toBeNull();
+      const html = effect!.innerHTML;
+      expect(seen.has(html), `${tier.key} draws the same thing as another tier`).toBe(false);
+      seen.add(html);
+      cleanup();
+    }
+  });
+
+  it('floats the tier emoji up the corner stage for every tier', () => {
     for (const tier of GIFT_TIERS) {
       const { container } = render(<GiftAnimationOverlay items={[celebration(tier.min)]} />);
       const floats = Array.from(container.querySelectorAll('span')).filter(
