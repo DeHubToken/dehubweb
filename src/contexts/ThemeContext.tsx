@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { loadThemeCss } from '@/lib/theme-css';
+import { badgeLightArtworkCss } from '@/lib/badge-light-artwork';
 import { THEME_COLOR } from '@/lib/theme-color';
 import { useSyncedPreference } from '@/contexts/UserPreferencesContext';
 
@@ -296,7 +297,7 @@ export function ThemePreviewProvider({ children, initialTheme = 'system' }: { ch
     setBrandColors: () => undefined,
   }), [theme]);
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return <ThemeContext.Provider value={value}><style data-badge-light-artwork>{badgeLightArtworkCss}</style>{children}</ThemeContext.Provider>;
 }
 
 export function useAppTheme() {
