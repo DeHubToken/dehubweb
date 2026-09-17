@@ -428,13 +428,12 @@ const Celebration = memo(({ item }: { item: GiftCelebration }) => {
             <span aria-hidden className="mr-1">{tier.emoji}</span>
             {t(tier.labelKey, tier.name)}
           </p>
+          {/* Assembled from pieces rather than an interpolated sentence: the
+              only words in it are a username the sender chose and a token
+              symbol, and neither is translatable. */}
           <p className="text-[11px] text-white/70">
-            {item.username
-              ? t('liveGift.sentBy', '{{name}} · {{amount}} DHB', {
-                  name: item.username,
-                  amount: item.amount.toLocaleString(),
-                })
-              : t('liveGift.sentAmount', '{{amount}} DHB', { amount: item.amount.toLocaleString() })}
+            {item.username ? `${item.username} · ` : ''}
+            {item.amount.toLocaleString()} DHB
           </p>
           {item.message && <p className="mt-0.5 line-clamp-2 text-[11px] text-white/80">{item.message}</p>}
         </div>
@@ -479,12 +478,8 @@ const ReducedCelebration = memo(({ item }: { item: GiftCelebration }) => {
         {t(item.tier.labelKey, item.tier.name)}
       </p>
       <p className="text-[11px] text-white/70">
-        {item.username
-          ? t('liveGift.sentBy', '{{name}} · {{amount}} DHB', {
-              name: item.username,
-              amount: item.amount.toLocaleString(),
-            })
-          : t('liveGift.sentAmount', '{{amount}} DHB', { amount: item.amount.toLocaleString() })}
+        {item.username ? `${item.username} · ` : ''}
+        {item.amount.toLocaleString()} DHB
       </p>
     </div>
   );

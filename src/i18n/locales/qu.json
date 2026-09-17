@@ -2785,8 +2785,6 @@
     "pickTier": "Apuyaqta akllay",
     "plays": "P'anqapi kachkan {{tier}}",
     "you": "Qan",
-    "sentBy": "{{name}} · {{amount}} DHB",
-    "sentAmount": "{{amount}} DHB",
     "tier": {
       "heart": "Munay Sonqo",
       "chocolate": "Chokolate K'uychi",

@@ -2751,8 +2751,6 @@
     "pickTier": "Tīpakohia tētahi whakanui",
     "plays": "Ka tākaro a {{tier}} ki runga i te roma",
     "you": "Tō",
-    "sentBy": "{{name}} · {{amount}} DHB",
-    "sentAmount": "{{amount}} DHB",
     "tier": {
       "heart": "Aroha Pāhuhu",
       "chocolate": "Pouaka Tiakarete",

@@ -2717,8 +2717,6 @@
     "pickTier": "اختيار احتفال",
     "plays": "تشغيل {{tier}} على البث",
     "you": "أنت",
-    "sentBy": "{{name}} · {{amount}} درهم",
-    "sentAmount": "{{amount}} درهم",
     "tier": {
       "heart": "قلب حب",
       "chocolate": "علبة شوكولاتة",

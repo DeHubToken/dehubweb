@@ -2775,8 +2775,6 @@
     "pickTier": "Bir bayramni tanlang",
     "plays": "Streamda {{tier}} ijro etadi",
     "you": "Siz",
-    "sentBy": "{{name}} · {{amount}} DHB",
-    "sentAmount": "{{amount}} DHB",
     "tier": {
       "heart": "Sevgi yuragi",
       "chocolate": "Shokolad qutisi",
