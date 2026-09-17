@@ -204,7 +204,14 @@ export function TipModal({
       <DrawerContent
         column
         glass
-        className="max-h-[85dvh] overflow-y-auto overscroll-contain px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]"
+        /* `scrollable`, never `overflow-y-auto` on the content itself: vaul
+           ships `[data-vaul-drawer]{touch-action:none}` on exactly this
+           element, so a scroller put here is untouchable on a phone — the
+           sheet clipped at 85dvh with the amount field and Send button below
+           the cut and no way to reach them. A mouse wheel ignores
+           touch-action, which is why it only ever broke on mobile. */
+        scrollable
+        className="max-h-[85dvh] px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]"
       >
         <DrawerHeader className="pb-3">
           <DrawerTitle className="text-white text-lg flex items-center justify-center gap-2">
