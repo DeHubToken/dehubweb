@@ -1329,7 +1329,11 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
             {renderContent()}
             {!isTextPost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
           </div>
-          {pageComments}
+          {/* A live post has one conversation: the chat, open under the player.
+              It used to have comments as well, so what people said during the
+              broadcast and what they said "about the post" were two lists that
+              never met. Old comments were folded into the chat room. */}
+          {!isLivePost && pageComments}
           {/* Shop rail sits between the player and the chat: close enough to the
               stream to read as part of it, above the chat so a busy room does
               not push it off screen. The host sees the manager instead — they
