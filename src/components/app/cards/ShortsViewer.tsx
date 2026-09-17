@@ -1499,7 +1499,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       onSeekStart={() => setIsTimelineSeeking(true)}
                       onSeekEnd={() => setIsTimelineSeeking(false)}
                       showPlayIndicator={isActive ? showPlayIndicator : null}
-                      letterbox={!isMobile || showComments}
+                      letterbox
                       isFullscreen={isFullscreen}
                       // Only the playing short draws a bar over the action
                       // bar's gradient; the neighbours keep theirs in place,
