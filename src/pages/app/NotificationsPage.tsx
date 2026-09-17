@@ -35,7 +35,7 @@ import {
   isCommunityNotificationType,
 } from '@/lib/community-notifications';
 import { formatDistanceToNow } from 'date-fns';
-import { VerifiedBadge } from '@/components/app/VerifiedBadge';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { Link, useNavigate } from 'react-router-dom';
 import dehubMarkWhite from '@/assets/dehub-mark-white.png';
 import { useQueries, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -551,6 +551,15 @@ function resolveActorProfileLink(actor: CanonicalActor, enrichedAvatarsMap?: Map
   const address = (actor.address || enriched?.address || '').toLowerCase();
   return address ? `/${address}` : null;
 }
+function notificationContentWithActorBadge(content: React.ReactNode, notification: DeHubNotification, actorCount: number): React.ReactNode {
+  const actor = notification.actor;
+  if (typeof content !== 'string' || !actor || actor.hideBadgeAndBalance || actorCount > 1) return content;
+  const name = actor.displayName || actor.username || notification.actorUsername;
+  const at = name ? content.indexOf(name) : -1;
+  if (at < 0 || /\w/.test(content.charAt(at - 1)) || /\w/.test(content.charAt(at + name.length))) return content;
+  return <>{content.slice(0, at)}{name}<BadgeIcon badgeBalance={actor.badgeBalance} badgeLock={actor.badgeLock} username={actor.username} />{content.slice(at + name.length)}</>;
+}
+
 function getNotificationContent(
   notification: DeHubNotification,
   bundle?: BundledNotification,
@@ -571,7 +580,7 @@ function getNotificationContent(
   const actorAddressFallback = notification.actorAddress
     ? `${notification.actorAddress.slice(0, 6)}…${notification.actorAddress.slice(-4)}`
     : 'Someone';
-  const actorName = notification.actorUsername || canonicalActors?.[0]?.display || actorAddressFallback;
+  const actorName = notification.actor?.displayName || canonicalActors?.[0]?.display || notification.actorUsername || actorAddressFallback;
   
   // Aggregated web rows retain their interactive list of other actors below.
   if (!(notification.aggregatedCount && notification.aggregatedCount > 1) && !(bundle && bundle.postCount > 1)) {
@@ -1310,7 +1319,11 @@ const NotificationItem = memo(function NotificationItem({
       {/* Content */}
       <div className="flex-1 min-w-0">
         <p className={`text-sm ${(notification.read || isClosing) ? 'text-zinc-400' : 'text-white'}`}>
-          {getNotificationContent(notification, bundle, t, () => setShowActorsDrawer(true), canonicalActors)}
+          {notificationContentWithActorBadge(
+            getNotificationContent(notification, bundle, t, () => setShowActorsDrawer(true), canonicalActors),
+            notification,
+            canonicalActors.length,
+          )}
         </p>
         
         {/* Post preview snippet — for replies/mentions show the comment text, otherwise the post title */}
