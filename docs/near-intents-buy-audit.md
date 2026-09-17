@@ -85,3 +85,13 @@ availability can extend completion. The existing dpay transfer retry process
 runs every five minutes and has a finite retry count. A delivery that exhausts
 retries needs operational recovery; the receipt remains visible and does not
 ask the buyer to repay. The seven-day unpaid-deposit recovery window is finite.
+
+## Wallet payment picker follow-up
+
+The first routing release is live: the production buy page says Pay with crypto, selects Base ETH and no longer contains the other-token card purchase panel. A non-binding Base ETH quote returned a direct payment estimate. Backend release 423 completed successfully. No funded purchase was performed.
+
+Follow-up PRs: backend 426, web 1579 and mobile 995. These add SOL / ETH / USDT / USDC / BNB choices, per-network balances, funded direct-asset preference and an Other currencies search. Balance lookup failures remain unknown rather than zero. Solana payment receipts require a signed payer, matching debit and treasury credit, the correct mint, a valid quote window and a unique claim before dpay's existing Base delivery queue can send DHB. Direct Solana requires the existing server signer configuration and a verified account link.
+
+Identity limitation: Phantom login currently authenticates its EVM address. Connecting Solana does not automatically create a new Base Safe. Checkout delivers to the authenticated Base account; converting external-wallet accounts to smart accounts is not included in these changes. Robinhood options remain conditional on the application's existing network configuration. Mobile direct Solana signing uses the existing local wallet key; external Solana-only mobile onboarding is not implemented.
+
+Verification: 14 backend receipt/routing/recovery tests, 18 web purchase/balance tests, four new mobile balance tests, and web/mobile locale gates passed. Backend TypeScript passed. The full local web typecheck was stopped after running unusually long; CI is the typecheck gate. The mobile local dependency mismatch in legacy-web3auth remains unrelated. Follow-up PR CI and release verification are pending.

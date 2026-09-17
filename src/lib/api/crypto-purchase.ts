@@ -47,3 +47,5 @@ export const cryptoPurchaseApi: PurchaseApi = {
     return pending ? confirm(id, pending) : request(`intent/${encodeURIComponent(id)}`, undefined, true);
   },
 };
+
+export const buildDirectSolanaPayment = (id: string) => request<{ transaction: string }>('direct/transaction', { id }, true);
