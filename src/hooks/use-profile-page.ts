@@ -248,9 +248,9 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   const badgeTier = getBadgeName(badgeBalance, apiProfile?.handle || routeUsername);
 
   // Content separation
-  const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS, ALL_CONTENT } = useMemo(() => {
+  const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS, PROFILE_LIVE, ALL_CONTENT } = useMemo(() => {
     if (!userContentData?.pages) {
-      return { PROFILE_POSTS: [], PROFILE_IMAGES: [], ALL_PROFILE_VIDEOS: [], ALL_CONTENT: [] };
+      return { PROFILE_POSTS: [], PROFILE_IMAGES: [], ALL_PROFILE_VIDEOS: [], PROFILE_LIVE: [], ALL_CONTENT: [] };
     }
     const allNFTs = userContentData.pages.flatMap(page => page.data || []);
     const separated = separateUserContent(allNFTs);
@@ -267,6 +267,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       ...separated.posts.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
       ...separated.images.map(i => ({ type: 'image' as const, data: i, createdAt: i.createdAt || '' })),
       ...separated.videos.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '' })),
+      ...separated.lives.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '' })),
     ];
 
     // A sorted or searched view is a view of what this creator posted, so
@@ -279,6 +280,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
         PROFILE_POSTS: separated.posts,
         PROFILE_IMAGES: separated.images,
         ALL_PROFILE_VIDEOS: separated.videos,
+        PROFILE_LIVE: separated.lives,
         ALL_CONTENT: unified,
       };
     }
@@ -290,6 +292,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
         ...repostItems.posts.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '', isRepost: true, repostedAt: (repostsData as any[]).find(r => String(r.tokenId) === String(p.id?.replace('text-', '')))?.repostedAt || p.createdAt || '' })),
         ...repostItems.images.map(i => ({ type: 'image' as const, data: i, createdAt: i.createdAt || '', isRepost: true, repostedAt: (repostsData as any[]).find(r => String(r.tokenId) === String(i.id?.replace('image-', '')))?.repostedAt || i.createdAt || '' })),
         ...repostItems.videos.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '', isRepost: true, repostedAt: (repostsData as any[]).find(r => String(r.tokenId) === String(v.id?.replace('video-', '')))?.repostedAt || v.createdAt || '' })),
+        ...repostItems.lives.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '', isRepost: true, repostedAt: (repostsData as any[]).find(r => String(r.tokenId) === String(v.id?.replace('video-', '')))?.repostedAt || v.createdAt || '' })),
       ];
       // Use repostedAt for sorting reposts, not original createdAt
       repostUnified.forEach(item => {
@@ -312,6 +315,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       PROFILE_POSTS: separated.posts,
       PROFILE_IMAGES: separated.images,
       ALL_PROFILE_VIDEOS: separated.videos,
+      PROFILE_LIVE: separated.lives,
       ALL_CONTENT: unified,
     };
   }, [userContentData, repostsData, isContentFiltered]);
@@ -347,12 +351,12 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       { icon: Film, label: 'Videos', value: 'videos' as TabValue, count: ALL_PROFILE_VIDEOS.length },
       { icon: Star, label: 'Subs', value: 'subscribers' as TabValue, count: 0 },
       { icon: Play, label: 'Audio', value: 'songs' as TabValue, count: 0 },
-      { icon: Radio, label: 'Live', value: 'live' as TabValue, count: 0 },
+      { icon: Radio, label: 'Live', value: 'live' as TabValue, count: PROFILE_LIVE.length },
       { icon: PieChart, label: 'Fractions', value: 'fractions' as TabValue, count: 0 },
       { icon: Pin, label: 'Pinned', value: 'pinned' as TabValue, count: pinnedCount },
     ].sort((a, b) => b.count - a.count);
     return [homeTab, ...restTabs];
-  }, [contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, commentCount, pinnedCount]);
+  }, [contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, pinnedCount]);
 
   // Subscriptions — deferred slightly so profile + first content page win the
   // wire on the (slow) API; the header Subscribe button pops in right after.
@@ -501,6 +505,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     PROFILE_POSTS,
     PROFILE_IMAGES,
     ALL_PROFILE_VIDEOS,
+    PROFILE_LIVE,
     ALL_CONTENT,
     PROFILE_TABS,
     userContentData,
