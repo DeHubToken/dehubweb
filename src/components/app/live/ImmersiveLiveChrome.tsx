@@ -149,6 +149,17 @@ export function ImmersiveLiveChrome({
     void toggleFollowFor(queryClient, creatorId, false, { name: streamerName });
   }, [creatorId, walletAddress, openLoginModal, queryClient, streamerName]);
 
+  /* A handle is a route of its own — /:username — and an address is a query
+     on the profile page. There is no /app/profile/:handle, so pushing one
+     landed the viewer on the 404 page instead of the creator whose stream
+     they were watching. Same order as CardHeader so both ways into a profile
+     end up at the same URL. */
+  const openCreatorProfile = useCallback(() => {
+    const handle = creatorUsername?.replace('@', '');
+    if (handle) navigate(`/${handle}`);
+    else if (creatorId) navigate(`/app/profile?id=${creatorId}`);
+  }, [creatorUsername, creatorId, navigate]);
+
   const goBack = useCallback(() => {
     if (window.history.length > 1) navigate(-1);
     else navigate('/app');
@@ -235,7 +246,7 @@ export function ImmersiveLiveChrome({
         <div className="flex min-w-0 flex-1 items-center gap-1.5">
           <button
             type="button"
-            onClick={() => creatorUsername && navigate(`/app/profile/${creatorUsername}`)}
+            onClick={openCreatorProfile}
             /* `flex-1` plus a text box that can take the slack: without both,
                the capsule sized to its content and the name — which truncates,
                so it will happily be zero wide — rendered as an avatar with a

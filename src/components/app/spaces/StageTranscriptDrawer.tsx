@@ -197,7 +197,7 @@ function SpeakerHeader({
           </AvatarFallback>
         </Avatar>
         <button
-          onClick={() => navigate(`/app/profile/${overrideUser}`)}
+          onClick={() => navigate(`/${overrideUser.replace('@', '')}`)}
           className="text-xs font-semibold text-white/90 hover:underline truncate max-w-[200px]"
         >
           @{overrideUser}
@@ -231,7 +231,7 @@ function SpeakerHeader({
     return (
       <div className="flex items-center gap-2 mb-2">
         <button
-          onClick={() => handle && navigate(`/app/profile/${handle}`)}
+          onClick={() => handle && navigate(`/${handle.replace('@', '')}`)}
           className="flex items-center gap-2 group min-w-0"
           disabled={!handle}
         >

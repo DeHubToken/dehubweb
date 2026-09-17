@@ -1133,7 +1133,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           /* Past live with nothing recorded: show the stream's cover image if
              there is one, otherwise a staticy TV screen — never an empty
              black frame. */
-          <LiveEndedMedia thumbnail={stream.thumbnail} label="Stream ended" rounded="rounded-none" />
+          <LiveEndedMedia thumbnail={stream.thumbnail} label="Stream ended" rounded="rounded-none" hideBadge={immersive} />
         ) : (
           <>
             <video
