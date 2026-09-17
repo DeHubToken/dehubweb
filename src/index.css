@@ -970,6 +970,30 @@ body > div[style*="position: fixed"][style*="height: 0"] {
   }
 }
 
+/* The full-bleed live viewer — everything the immersive video post clears,
+   plus the bottom nav bar.
+
+   `[data-bottom-nav]` is its own attribute and no rule above touches it, so
+   the tab bar kept its 66px at the foot of the screen and sat across the
+   chat composer. A video post scrolls and can live with the bar; a live
+   viewer is the screen and its message box is the last thing on it, so this
+   is a separate class rather than one more selector on the video rule — a
+   video post should not silently lose its nav because a stream needed to. */
+@media (max-width: 1023px) {
+  body.immersive-live-mode [data-mobile-header],
+  body.immersive-live-mode [data-feed-nav],
+  body.immersive-live-mode [data-home-tabs],
+  body.immersive-live-mode [data-bottom-nav] {
+    display: none !important;
+  }
+}
+
+body.immersive-live-mode main {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+
 body.immersive-video-mode main {
   padding-top: 0 !important;
 }

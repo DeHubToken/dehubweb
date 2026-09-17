@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
 import { useDraft } from '@/hooks/use-draft';
+import { useLiveViewerActions } from '@/components/app/live/live-viewer-actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { replaceLinksWithEmoji, renderTextWithLinks } from '@/components/app/TranslatableText';
 import { useTranslation as useTextTranslation } from '@/components/app/TranslatableText';
@@ -133,6 +134,9 @@ interface LivePostChatProps {
 }
 
 export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = false, isHost = false, overlay = false }: LivePostChatProps) {
+  // Gift, share and the reaction thumb, when a full-bleed viewer is around
+  // this chat. They share the composer's row — see live-viewer-actions.
+  const viewerActions = useLiveViewerActions();
   const streamId = tokenId ? streamChatRoomId(tokenId) : '';
   // The card unmounts every time the post scrolls out of the feed, so without
   // this a line typed under a stream is gone the moment you look away.
@@ -545,7 +549,14 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
 
       {/* Input */}
       <div className={overlay ? '' : 'pt-2'}>
-        <div className="relative">
+        {/* One row at the foot of the screen. Typing hands the whole width
+            to the message box and puts the send button on the end; the
+            moment it is empty again the box gives the width back and the
+            viewer's three buttons return. Nothing is ever on this row
+            that the viewer is not about to use. */}
+        <div className="flex items-end gap-2">
+        <div className="relative flex-1 min-w-0">
+
           <Textarea
             ref={textareaRef}
             value={newMessage}
@@ -559,9 +570,10 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             placeholder={isOffline ? 'Chat is offline' : 'Type a message...'}
             disabled={isOffline || !isAuthenticated}
             className={cn(
-              'max-h-32 resize-none text-white text-sm pr-24',
+              'max-h-32 resize-none text-white text-sm',
+              overlay && !newMessage.trim() ? 'pr-12' : 'pr-24',
               overlay
-                ? 'min-h-[46px] rounded-full border-white/15 bg-black/40 py-3 pl-4 backdrop-blur-md placeholder:text-white/50'
+                ? 'min-h-[46px] rounded-xl border-white/15 bg-black/40 py-3 pl-4 backdrop-blur-md placeholder:text-white/50'
                 : 'min-h-[56px] rounded-xl border-white/10 bg-white/5 placeholder:text-zinc-500'
             )}
             rows={overlay ? 1 : 2}
@@ -580,23 +592,30 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
               onRecordingComplete={handleVoiceRecordingComplete}
               disabled={isOffline || !isAuthenticated}
             />
-            <button
-              onClick={handleSend}
-              disabled={isSending || !newMessage.trim() || isOffline}
-              className={cn(
-                'p-2 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed',
-                overlay ? 'rounded-full bg-white/15 hover:bg-white/25' : 'rounded-xl bg-white/10 hover:bg-white/20'
-              )}
-            >
-              {isSending ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Send className="w-4 h-4" />
-              )}
-            </button>
+            {(!overlay || newMessage.trim().length > 0) && (
+              <button
+                onClick={handleSend}
+                disabled={isSending || !newMessage.trim() || isOffline}
+                className={cn(
+                  'p-2 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed',
+                  overlay ? 'rounded-xl bg-white/15 hover:bg-white/25' : 'rounded-xl bg-white/10 hover:bg-white/20'
+                )}
+              >
+                {isSending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
+              </button>
+            )}
           </div>
         </div>
+        {overlay && viewerActions && newMessage.trim().length === 0 ? (
+          <div className="shrink-0 pb-1">{viewerActions}</div>
+        ) : null}
+        </div>
       </div>
+
     </div>
   );
 }

@@ -1008,17 +1008,16 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
    * they reserve; a full-bleed live post needs exactly the same thing and
    * shipped without asking for it.
    */
-  const wantsImmersiveChrome = isVideoPost || (contentType === 'live' && isMobileView);
+  const isFullBleedLive = contentType === 'live' && isMobileView;
   useEffect(() => {
-    if (wantsImmersiveChrome) {
-      document.body.classList.add('immersive-video-mode');
-    } else {
-      document.body.classList.remove('immersive-video-mode');
-    }
+    const cls = isFullBleedLive ? 'immersive-live-mode' : isVideoPost ? 'immersive-video-mode' : null;
+    if (cls) document.body.classList.add(cls);
     return () => {
       document.body.classList.remove('immersive-video-mode');
+      document.body.classList.remove('immersive-live-mode');
     };
-  }, [wantsImmersiveChrome]);
+  }, [isFullBleedLive, isVideoPost]);
+
 
   // (The `body { pointer-events: none }` guard that used to live here is gone
   // with the sheet: vaul set it even at modal={false}, which blocked taps on the

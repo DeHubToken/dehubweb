@@ -1071,10 +1071,10 @@ export function ActionBar({
 
   if (compact) {
     return (
-      /* Column, bottom-up: gift, share, thumb. The thumb is last so it is
-         nearest the bottom of the screen and its tray opens upward into
-         empty frame rather than over the chat. */
-      <div className={cn('flex flex-col items-center gap-3', className)}>
+      /* One row, sharing the composer's line: gift, share, thumb. The thumb
+         is last — furthest right, where a right-handed thumb already is, and
+         its tray is right-aligned so it opens back across the frame. */
+      <div className={cn('flex items-center gap-4', className)}>
         {engagementButtons}
       </div>
     );
