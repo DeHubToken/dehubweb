@@ -432,7 +432,7 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     // same ActionBar, and without these it showed a thumb that never filled.
     likeCount: resolveLikeCount(nft),
     dislikeCount: resolveDislikeCount(nft),
-    commentCount: nft.commentCount || (nft as any).comment_count || 0,
+    commentCount: Math.max(nft.commentCount ?? (nft as any).comment_count ?? 0, (nft as any).liveChatCount ?? 0),
     isLiked: nft.isLiked ?? false,
     isDisliked: nft.isDisliked ?? false,
     myReaction: resolveMyReaction(nft),
