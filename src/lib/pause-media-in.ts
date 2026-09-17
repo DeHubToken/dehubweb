@@ -61,10 +61,11 @@ function offDocumentIn(root: Node, spareKey?: string | null): HTMLMediaElement[]
   return found;
 }
 
-function pauseAll(els: readonly HTMLMediaElement[]): HTMLMediaElement[] {
+function pauseAll(els: readonly HTMLMediaElement[], spare?: HTMLMediaElement | null): HTMLMediaElement[] {
   const paused: HTMLMediaElement[] = [];
   els.forEach((el) => {
     if (el === document.pictureInPictureElement) return;
+    if (el === spare) return;
     if (el.paused) return;
     paused.push(el);
     el.pause();
@@ -104,8 +105,10 @@ export function pauseMediaIn(root: Element): HTMLMediaElement[] {
 export function pauseOffDocumentMediaIn(
   root: Element,
   spareKey?: string | null,
+  spareVideo?: HTMLVideoElement | null,
 ): HTMLMediaElement[] {
-  return pauseAll(offDocumentIn(root, spareKey));
+  const inDocument = Array.from(root.querySelectorAll<HTMLMediaElement>('video, audio'));
+  return pauseAll([...inDocument, ...offDocumentIn(root, spareKey)], spareVideo);
 }
 
 /**
