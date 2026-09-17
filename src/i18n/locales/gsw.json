@@ -2718,5 +2718,34 @@
       "megalodon": "Da isch dini Chrone — du bisch jetzt App-Royalty"
     },
     "continue": "Zrugg zu DeHub"
+  },
+  "liveGift": {
+    "pickTier": "Wähle es Fäscht",
+    "plays": "Spilet {{tier}} uf em Stream",
+    "you": "Du",
+    "tier": {
+      "heart": "Herz",
+      "chocolate": "Schoggi-Schachtle",
+      "bouquet": "Blume-Bouquet",
+      "crown": "Chrone",
+      "magicRing": "Magische Ring",
+      "spartans": "Spartaner-Armee",
+      "party": "Fäscht-Fäir",
+      "gold3": "Goldige Bildschirm (3s)",
+      "gold10": "Goldige Bildschirm (10s)",
+      "ultimate": "Ultimativs Fäscht"
+    },
+    "tierDesc": {
+      "heart": "Herzli schwippe dur d Eck vom Stream.",
+      "chocolate": "E Schoggi-Schachtle tumpet dur de Bildschirm.",
+      "bouquet": "E Blume-Bouquet platzt dur d Eck.",
+      "crown": "E Chrone steigt über em Stream und glänzt.",
+      "magicRing": "E Ring landet i de Mitti und klinget mit Glitzer.",
+      "spartans": "E Schildu-Mauer marschiert dur de Stream.",
+      "party": "Konfetti fliegt und e Disco-Chugle fallt ine.",
+      "gold3": "De Bildschirm wird goldig und Münzere rägnet 3 Sekunde lang.",
+      "gold10": "De Bildschirm wird goldig und Münzere rägnet 10 Sekunde lang.",
+      "ultimate": "Jedes Fäscht glichzitig — goldig, Konfetti, Münzere und e Trophäe."
+    }
   }
 }

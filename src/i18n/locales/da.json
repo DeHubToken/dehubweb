@@ -4996,5 +4996,34 @@
       "megalodon": "Her er din krone — du er app royalty nu"
     },
     "continue": "Tilbage til DeHub"
+  },
+  "liveGift": {
+    "pickTier": "Vælg en fejring",
+    "plays": "Afspiller {{tier}} på streamen",
+    "you": "Dig",
+    "tier": {
+      "heart": "Kærlighedshjerte",
+      "chocolate": "Chokoladeæske",
+      "bouquet": "Blomsterbuket",
+      "crown": "Krone",
+      "magicRing": "Magisk ring",
+      "spartans": "Spartanernes hær",
+      "party": "Festlig fejring",
+      "gold3": "Gylden skærm (3s)",
+      "gold10": "Gylden skærm (10s)",
+      "ultimate": "Ultimativ fejring"
+    },
+    "tierDesc": {
+      "heart": "Hjerter driver op i hjørnet af streamen.",
+      "chocolate": "En æske chokolade tumler op ad skærmen.",
+      "bouquet": "En buket springer op i hjørnet.",
+      "crown": "En krone stiger op over streamen og glimter.",
+      "magicRing": "En ring lander i midten og ringer ud i gnister.",
+      "spartans": "En skjoldmur marcherer hen over streamen.",
+      "party": "Konfetti flyver, og en diskokugle falder ned.",
+      "gold3": "Skærmen bliver gylden, og mønter regner ned i 3 sekunder.",
+      "gold10": "Skærmen bliver gylden, og mønter regner ned i 10 sekunder.",
+      "ultimate": "Hver fejring på én gang — guld, konfetti, mønter og et trofæ."
+    }
   }
 }

@@ -4969,5 +4969,34 @@
       "megalodon": "Zde je vaše koruna — nyní jste app royalty"
     },
     "continue": "Zpět na DeHub"
+  },
+  "liveGift": {
+    "pickTier": "Vyberte oslavu",
+    "plays": "Přehrává {{tier}} na streamu",
+    "you": "Ty",
+    "tier": {
+      "heart": "Srdce",
+      "chocolate": "Krabička čokolády",
+      "bouquet": "Kytice květin",
+      "crown": "Koruna",
+      "magicRing": "Magický prsten",
+      "spartans": "Spartská armáda",
+      "party": "Oslava",
+      "gold3": "Zlatá obrazovka (3s)",
+      "gold10": "Zlatá obrazovka (10s)",
+      "ultimate": "Ultimátní oslava"
+    },
+    "tierDesc": {
+      "heart": "Srdce stoupají do rohu streamu.",
+      "chocolate": "Krabička čokolády se kutálí po obrazovce nahoru.",
+      "bouquet": "Kytice se rozletí v rohu.",
+      "crown": "Koruna se zvedne nad stream a zableskne se.",
+      "magicRing": "Prsten dopadne doprostřed a zazvoní jiskrami.",
+      "spartans": "Štítová zeď pochoduje přes stream.",
+      "party": "Konfety létají a zrcadlová koule klesá dolů.",
+      "gold3": "Obrazovka zezlátne a mince prší po dobu 3 sekund.",
+      "gold10": "Obrazovka zezlátne a mince prší po dobu 10 sekund.",
+      "ultimate": "Všechny oslavy najednou — zlato, konfety, mince a trofej."
+    }
   }
 }

@@ -2746,5 +2746,34 @@
       "megalodon": "Tenei ko to koutou karauna — e koe App Royalty inaianei"
     },
     "continue": "Hoki ki DeHub"
+  },
+  "liveGift": {
+    "pickTier": "Tīpakohia tētahi whakanui",
+    "plays": "Ka tākaro a {{tier}} ki runga i te roma",
+    "you": "Tō",
+    "tier": {
+      "heart": "Aroha Pāhuhu",
+      "chocolate": "Pouaka Tiakarete",
+      "bouquet": "Puawai Puawai",
+      "crown": "Karauna",
+      "magicRing": "Mowhiti Makutu",
+      "spartans": "Ope Taua a Spartans",
+      "party": "Whakanui Paati",
+      "gold3": "Mata Koura (3s)",
+      "gold10": "Mata Koura (10s)",
+      "ultimate": "Whakanui Whakamutunga"
+    },
+    "tierDesc": {
+      "heart": "Ka rere ngā ngākau ki te kokonga o te roma.",
+      "chocolate": "Ka piki ake tētahi pouaka tiakarete ki te mata.",
+      "bouquet": "Ka pakū ake tētahi puawai ki te kokonga.",
+      "crown": "Ka piki ake tētahi karauna ki runga i te roma, ka wheriko.",
+      "magicRing": "Ka tau mai tētahi mowhiti ki waenganui, ka tangi ki ngā whetū.",
+      "spartans": "Ka hikoi tētahi pakitara whakangungu rakau puta noa i te roma.",
+      "party": "Ka rere te konfeti, ka heke iho tētahi poi kanikani.",
+      "gold3": "Ka kōura te mata, ka ua ngā moni mō te 3 hēkona.",
+      "gold10": "Ka kōura te mata, ka ua ngā moni mō te 10 hēkona.",
+      "ultimate": "Ngā whakanui katoa i te wā kotahi — koura, konfeti, moni me tētahi tohu."
+    }
   }
 }
