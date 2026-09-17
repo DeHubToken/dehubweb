@@ -510,10 +510,12 @@ export function useDeHubUserContent({
  */
 export function separateUserContent(items: UnifiedFeedItem[]): {
   videos: VideoItem[];
+  lives: VideoItem[];
   images: ImagePost[];
   posts: TextPost[];
 } {
   const videos: VideoItem[] = [];
+  const lives: VideoItem[] = [];
   const images: ImagePost[] = [];
   const posts: TextPost[] = [];
 
@@ -521,7 +523,10 @@ export function separateUserContent(items: UnifiedFeedItem[]): {
     // Determine content type - some older posts don't have postType set
     let contentType: 'video' | 'image' | 'text' = 'image'; // default
     
-    if (item.postType === 'video') {
+    if (item.postType === 'live') {
+      lives.push(mapToVideoItem(item, index));
+      return;
+    } else if (item.postType === 'video') {
       contentType = 'video';
     } else if (item.postType === 'audio' || item.postType === 'feed-audio') {
       // Audio posts render as video cards with playback
@@ -547,5 +552,5 @@ export function separateUserContent(items: UnifiedFeedItem[]): {
     }
   });
 
-  return { videos, images, posts };
+  return { videos, lives, images, posts };
 }
