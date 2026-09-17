@@ -5143,6 +5143,7 @@
     "ttsHint": "Read aloud to everyone watching when your gift lands."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
