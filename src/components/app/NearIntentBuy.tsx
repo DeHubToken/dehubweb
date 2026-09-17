@@ -115,7 +115,7 @@ export function NearIntentBuy({ tokensToReceive }: { tokensToReceive: number }) 
         <div className="rounded-lg bg-zinc-800 p-3 break-all font-mono text-xs text-white">{intent.depositAddress}</div>
         <Button variant="glass" className="w-full" onClick={() => copy(intent.depositAddress)}><Copy className="w-4 h-4 mr-2" />Copy payment address</Button>
         {intent.depositMemo && <><p className="text-amber-300">Include this memo with your payment:</p><div className="rounded-lg bg-zinc-800 p-3 break-all font-mono text-white">{intent.depositMemo}</div><Button variant="glass" className="w-full" onClick={() => copy(intent.depositMemo!)}><Copy className="w-4 h-4 mr-2" />Copy memo</Button></>}
-        <p className="text-zinc-400">{status === 'sent' ? <><Check className="inline w-4 h-4 text-emerald-400" /> DHB delivered</> : status === 'SUCCESS' ? 'Crypto settled. Delivering DHB…' : `Status: ${status.replaceAll('_', ' ').toLowerCase()}`}</p>
+        <p className="text-zinc-400">{status === 'sent' ? <><Check className="inline w-4 h-4 text-emerald-400" /> DHB delivered</> : status === 'SUCCESS' ? 'Crypto settled. Delivering DHB…' : `Status: ${status.replace(/_/g, ' ').toLowerCase()}`}</p>
         <p className="text-zinc-500 text-xs">Payment address expires {new Date(intent.expiresAt * 1000).toLocaleString()}.</p>
         <Button variant="ghost" className="w-full text-white" onClick={() => { setIntent(null); setStatus(''); setQuote(null); }}>Start another purchase</Button>
       </div>}
