@@ -289,6 +289,15 @@ function formatCount(count?: number): string {
 const THUMB_BUTTON_CLASS =
   'flex items-center gap-0.5 px-2 -mx-2 transition-colors text-white select-none touch-pan-y';
 
+/**
+ * A compact button, sized and filled to match the live composer it shares a
+ * row with — same 46px height, same radius, same glass. Bare icons beside a
+ * filled input read as three loose glyphs rather than as controls.
+ */
+const COMPACT_BUTTON_CLASS =
+  'h-[46px] w-[46px] shrink-0 justify-center rounded-xl border border-white/15 bg-black/40 backdrop-blur-md hover:bg-black/60';
+
+
 export function ActionBar({
   postId,
   newPostSlug,
@@ -893,11 +902,15 @@ export function ActionBar({
       {onTip ? (
         <button
           onClick={(e) => { e.stopPropagation(); onTip(); }}
-          className="flex items-center gap-0 text-white hover:text-zinc-400 transition-colors"
+          className={cn('flex items-center gap-0 text-white hover:text-zinc-400 transition-colors', compact && COMPACT_BUTTON_CLASS)}
           aria-label="Tips"
         >
            <Gem className="w-[17px] h-[17px] text-white" />
-          <span className="text-xs text-zinc-400 relative z-10" style={{ marginLeft: '2.5px' }}>{formatCount(tipCount)}</span>
+          {/* Counts come off over a video: the icons are the controls, and a
+              tally beside each one is three more numbers on someone's frame. */}
+          {!compact && (
+            <span className="text-xs text-zinc-400 relative z-10" style={{ marginLeft: '2.5px' }}>{formatCount(tipCount)}</span>
+          )}
         </button>
       ) : null}
 
@@ -979,11 +992,11 @@ export function ActionBar({
           }
         }}
         data-engaged={isReposted ? 'repost' : undefined}
-        className="flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors"
+        className={cn('flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors', compact && COMPACT_BUTTON_CLASS)}
         aria-label="Share"
       >
         <Share2 className={isReposted ? "w-[1.5213rem] h-[1.5213rem]" : "w-[1.3965rem] h-[1.3965rem]"} strokeWidth={isReposted ? 2.915 : 2} />
-        <span className="text-xs text-zinc-400">{formatCount(displayShareCount)}</span>
+        {!compact && <span className="text-xs text-zinc-400">{formatCount(displayShareCount)}</span>}
       </button>
 
       {!compact && (
@@ -1038,7 +1051,7 @@ export function ActionBar({
              the picker you set it from, and a 👍 you cast is not just a filled
              thumb among a row of grey ones. */
           {...reactionGlowProps(myPositiveReaction)}
-          className={THUMB_BUTTON_CLASS}
+          className={cn(THUMB_BUTTON_CLASS, compact && COMPACT_BUTTON_CLASS)}
           aria-label={
             myPositiveReaction
               ? `${reactionMeta(myPositiveReaction).label} — hold to change your reaction`
@@ -1063,7 +1076,9 @@ export function ActionBar({
           ) : (
             <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
           )}
-          <span className="text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
+          {!compact && (
+            <span className="text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
+          )}
         </motion.button>
       </span>
     </>
@@ -1074,7 +1089,7 @@ export function ActionBar({
       /* One row, sharing the composer's line: gift, share, thumb. The thumb
          is last — furthest right, where a right-handed thumb already is, and
          its tray is right-aligned so it opens back across the frame. */
-      <div className={cn('flex items-center gap-4', className)}>
+      <div className={cn('flex items-center gap-2', className)}>
         {engagementButtons}
       </div>
     );

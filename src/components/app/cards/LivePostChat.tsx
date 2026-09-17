@@ -571,7 +571,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             disabled={isOffline || !isAuthenticated}
             className={cn(
               'max-h-32 resize-none text-white text-sm',
-              overlay && !newMessage.trim() ? 'pr-12' : 'pr-24',
+              overlay ? (newMessage.trim() ? 'pr-14' : 'pr-4') : 'pr-24',
               overlay
                 ? 'min-h-[46px] rounded-xl border-white/15 bg-black/40 py-3 pl-4 backdrop-blur-md placeholder:text-white/50'
                 : 'min-h-[56px] rounded-xl border-white/10 bg-white/5 placeholder:text-zinc-500'
@@ -588,10 +588,16 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             onClose={mention.handleClose}
           />
           <div className="absolute bottom-2 right-2 flex items-center gap-1">
-            <VoiceRecorder
-              onRecordingComplete={handleVoiceRecordingComplete}
-              disabled={isOffline || !isAuthenticated}
-            />
+            {/* No voice notes over a broadcast. The row is the stream's and
+                it is already three buttons and a message box wide; holding
+                a mic down to talk over someone else talking is not what
+                anyone is doing here. The panel keeps it. */}
+            {!overlay && (
+              <VoiceRecorder
+                onRecordingComplete={handleVoiceRecordingComplete}
+                disabled={isOffline || !isAuthenticated}
+              />
+            )}
             {(!overlay || newMessage.trim().length > 0) && (
               <button
                 onClick={handleSend}
