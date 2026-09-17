@@ -363,7 +363,7 @@ export function ImmersiveLiveChrome({
           off the right edge without pushing anything around. */}
       <div
         className={cn(
-          'absolute inset-x-0 top-[calc(env(safe-area-inset-top,0px)+78px)] z-20 flex gap-1.5 overflow-x-auto px-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden transition-opacity duration-300',
+          'absolute inset-x-0 top-[calc(env(safe-area-inset-top,0px)+68px)] z-20 flex gap-1 overflow-x-auto px-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden transition-opacity duration-300',
           hidden && 'pointer-events-none opacity-0'
         )}
       >
