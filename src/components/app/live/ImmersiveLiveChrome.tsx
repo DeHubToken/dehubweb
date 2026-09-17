@@ -26,6 +26,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { ChevronDown, ChevronUp, Clock, Eye, Heart, Plus, Volume2, VolumeX, X } from 'lucide-react';
+import dehubCoin from '@/assets/dehub-coin.png';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -67,6 +68,8 @@ export interface ImmersiveLiveChromeProps {
   isLive: boolean;
   isEnded: boolean;
   viewers: string | number;
+  /** Gifts sent to this stream, all told. */
+  giftCount?: number;
   /** When the broadcast started, for the running clock on the pills. */
   startedAt?: string | number | Date | null;
   isMuted: boolean;
@@ -90,6 +93,7 @@ export function ImmersiveLiveChrome({
   isLive,
   isEnded,
   viewers,
+  giftCount,
   startedAt,
   isMuted,
   onToggleMute,
@@ -151,12 +155,6 @@ export function ImmersiveLiveChrome({
     const id = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(id);
   }, [running]);
-
-  const statusLabel = isLive
-    ? t('stages.live', 'LIVE')
-    : isEnded
-      ? t('stages.ended', 'ENDED')
-      : t('postInfo.streamOffline', 'Stream Offline').toUpperCase();
 
   const followerCount = profile?.followers ?? 0;
 
@@ -238,10 +236,28 @@ export function ImmersiveLiveChrome({
               <span className="block truncate text-[13px] font-bold leading-tight text-white">
                 {streamerName}
               </span>
-              <span className="flex items-center gap-1 text-[11px] font-semibold leading-tight text-white/70">
-                <Heart className="h-[9px] w-[9px] fill-current" />
-                {compact(followerCount)}
+              {/* Followers, watching, gifts — the three numbers that say
+                  what this stream is, on one line under the name where a
+                  glance already is. They were a heart in the capsule and a
+                  chip out on the pill row, which read as two unrelated
+                  facts about two different things. */}
+              <span className="flex items-center gap-2 text-[11px] font-semibold leading-tight text-white/70">
+                <span className="flex items-center gap-1">
+                  <Heart className="h-[9px] w-[9px] fill-current" />
+                  {compact(followerCount)}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Eye className="h-[10px] w-[10px]" />
+                  {typeof viewers === 'number' ? compact(viewers) : viewers}
+                </span>
+                {giftCount ? (
+                  <span className="flex items-center gap-1">
+                    <img src={dehubCoin} alt="" className="h-[10px] w-[10px]" />
+                    {compact(giftCount)}
+                  </span>
+                ) : null}
               </span>
+
             </span>
           </button>
 
@@ -300,24 +316,9 @@ export function ImmersiveLiveChrome({
           hidden && 'pointer-events-none opacity-0'
         )}
       >
-        <span className={PILL}>
-          <span
-            className={cn('h-1.5 w-1.5 rounded-full bg-white', !isLive && 'bg-white/40')}
-          />
-          <span className="text-[10px] font-extrabold tracking-wider">{statusLabel}</span>
-        </span>
-
-        {/* Audience. A count, not an avatar stack: the presence socket
-            carries a number and inventing faces for it would be a lie at a
-            glance. It sits here rather than in the header because the
-            header had five controls and a follow button fighting over
-            375px, and this is the one of them that is not a control. */}
-        <span className={PILL}>
-          <Eye className="h-[11px] w-[11px] text-white/75" />
-          <span className="text-[11px] font-semibold text-white/85">
-            {typeof viewers === 'number' ? compact(viewers) : viewers}
-          </span>
-        </span>
+        {/* No state pill. Whether a stream is live or over is on the card
+            you pressed to get here, and on the profile before that; saying
+            it a third time over the picture tells nobody anything. */}
 
         {running && startedMs != null ? (
           <span className={PILL}>
