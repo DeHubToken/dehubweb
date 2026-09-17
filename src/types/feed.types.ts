@@ -392,6 +392,12 @@ export interface LiveStream extends BaseFeedItem {
   replayUrl?: string;
   /** True when the replay is only the opening stretch of the broadcast. */
   replayTruncated?: boolean;
+  /**
+   * When the broadcast actually went on air — the stream row's own field,
+   * not the post's createdAt, which for a stream announced in advance can
+   * be days earlier. Drives the running clock on the phone viewer's pills.
+   */
+  startedAt?: string;
   /** Creator's user ID for navigation */
   creatorId?: string;
   /** Creator's username for URL-based navigation */

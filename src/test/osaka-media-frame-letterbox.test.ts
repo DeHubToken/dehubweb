@@ -58,7 +58,12 @@ describe('Osaka media frames do not letterbox narrow images', () => {
   // image wrapper.
   it('keeps every deliberate dark bed carrying its own bg class', () => {
     expect(VIDEO_CARD).toMatch(/data-media-full\s+className=\{`bg-black/);
-    expect(LIVE_CARD).toMatch(/data-media-full className=\{`bg-black overflow-hidden/);
+    // The live frame's className is a cn() call now — it has four arms (card,
+    // browser fullscreen, phone full-bleed, and the 16:9 default) and a
+    // template literal could not carry them. What Osaka's guard reads is the
+    // rendered class list, so what still matters is that a fill of its own is
+    // in there unconditionally, ahead of the arms.
+    expect(LIVE_CARD).toMatch(/data-media-full[\s\S]{0,120}?'bg-black overflow-hidden'/);
     // The Shorts viewer's scrim and its video column, in that order.
     expect(SHORTS).toMatch(/data-media-full[\s\S]{0,160}?isMobile \? "bg-black" :/);
     // The column has three arms now — mobile, windowed desktop, and the
