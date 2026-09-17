@@ -30,6 +30,17 @@ interface LiveEndedMediaProps {
   label?: string;
   className?: string;
   rounded?: string;
+  /**
+   * Drop the top-left badge.
+   *
+   * Full-bleed playback draws its own chrome in that corner — the creator
+   * capsule, with the avatar, the name and the counts. The badge landed
+   * underneath it, so the top of the screen read as two slabs stacked on one
+   * another with the avatar half buried. Nothing is lost by dropping it: a
+   * replay is a still frame with a scrub bar under it, and the chrome
+   * already carries the state.
+   */
+  hideBadge?: boolean;
 }
 
 /** Animated TV-snow screen shown when there's no usable cover image. */
@@ -87,6 +98,7 @@ export function LiveEndedMedia({
   label = 'Live ended',
   className,
   rounded = 'rounded-lg',
+  hideBadge = false,
 }: LiveEndedMediaProps) {
   const [imgFailed, setImgFailed] = useState(false);
   useEffect(() => setImgFailed(false), [thumbnail]);
@@ -114,12 +126,14 @@ export function LiveEndedMedia({
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
           {/* "Live ended" badge — top-left, so a past live is never mistaken
               for a still-live or still-loading card */}
-          <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-black/50 backdrop-blur-md border border-white/15 rounded-lg px-2 py-1">
-            <Radio className="w-3 h-3 text-white/70" />
-            <span className="text-white/80 text-[10px] font-semibold uppercase tracking-wide">
-              {label}
-            </span>
-          </div>
+          {hideBadge ? null : (
+            <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-black/50 backdrop-blur-md border border-white/15 rounded-lg px-2 py-1">
+              <Radio className="w-3 h-3 text-white/70" />
+              <span className="text-white/80 text-[10px] font-semibold uppercase tracking-wide">
+                {label}
+              </span>
+            </div>
+          )}
         </>
       ) : (
         <TvStatic label={label} />
