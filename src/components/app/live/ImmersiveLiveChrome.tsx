@@ -27,6 +27,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { ChevronDown, ChevronUp, Clock, Eye, Heart, Plus, Volume2, VolumeX, X } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -63,6 +64,8 @@ export interface ImmersiveLiveChromeProps {
   streamerName: string;
   creatorUsername?: string;
   creatorId?: string;
+  /** The creator's badge, as every other surface draws it beside a name. */
+  badgeBalance?: number;
   avatar?: string;
   title?: string;
   isLive: boolean;
@@ -88,6 +91,7 @@ export function ImmersiveLiveChrome({
   streamerName,
   creatorUsername,
   creatorId,
+  badgeBalance,
   avatar,
   title,
   isLive,
@@ -233,8 +237,16 @@ export function ImmersiveLiveChrome({
               </AvatarFallback>
             </Avatar>
             <span className="min-w-0 flex-1 text-left">
-              <span className="block truncate text-[13px] font-bold leading-tight text-white">
-                {streamerName}
+              {/* The badge rides the name, as it does on the feed card, in the
+                  chat and on the profile. The one surface in the app showing a
+                  creator without it was this one. */}
+              <span className="flex min-w-0 items-center gap-1 text-[13px] font-bold leading-tight text-white">
+                <span className="truncate">{streamerName}</span>
+                <BadgeIcon
+                  badgeBalance={badgeBalance}
+                  username={creatorUsername}
+                  className="h-[13px] w-[13px] shrink-0"
+                />
               </span>
               {/* Followers, watching, gifts — the three numbers that say
                   what this stream is, on one line under the name where a

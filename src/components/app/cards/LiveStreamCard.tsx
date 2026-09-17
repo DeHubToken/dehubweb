@@ -1219,6 +1219,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             streamerName={stream.streamer}
             creatorUsername={stream.creatorUsername}
             creatorId={stream.creatorId}
+            badgeBalance={stream.creatorBadgeBalance}
             avatar={stream.avatar}
             title={stream.title?.trim() || undefined}
             isLive={!!stream.isLive && !streamEnded}
