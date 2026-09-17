@@ -459,7 +459,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     isDisliked: nft.isDisliked ?? false,
     myReaction: resolveMyReaction(nft),
     reactionCounts: resolveReactionCounts(nft),
-    commentCount: nft.commentCount || nft.comment_count || 0,
+    commentCount: Math.max(nft.commentCount ?? nft.comment_count ?? 0, (nft as any).liveChatCount ?? 0),
     playbackUrl: buildLivePlaybackUrl(nft),
     playbackUrls: buildLivePlaybackUrls(nft),
     replayUrl: extractReplayUrl(streamObj),
