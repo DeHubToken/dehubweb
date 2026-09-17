@@ -1089,6 +1089,44 @@ export function ActionBar({
     </>
   );
 
+  /**
+   * The share sheet, the DM picker and the reaction breakdown.
+   *
+   * Both arms render them. The compact arm used to return its three
+   * buttons and nothing else, so the share button set state that nothing
+   * was listening to — on the live viewer it looked like a dead control.
+   */
+  const overlays = (
+    <>
+      <Drawer open={sheetOpen} onOpenChange={setSheetOpen}>
+        <DrawerContent scrollable column glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()} onPointerDown={(e: React.PointerEvent) => e.stopPropagation()}>
+          <DrawerHeader className="relative">
+            <DrawerTitle className="text-white/90 font-semibold">Share</DrawerTitle>
+          </DrawerHeader>
+          <div className="flex flex-col gap-1 mt-2 relative">
+            <ShareOptions />
+          </div>
+        </DrawerContent>
+      </Drawer>
+
+      {canSendInDm && dmShareOpen && (
+        <Suspense fallback={null}>
+          <ShareToDmModal open={dmShareOpen} onOpenChange={setDmShareOpen} url={newPostSlug != null ? dehubLinkFor.newPost(newPostSlug) : dehubLinkFor.post(tokenId!)} />
+        </Suspense>
+      )}
+
+      {canViewReactionInfo && reactionInfoOpen && (
+        <Suspense fallback={null}>
+          <ReactionInfoDrawer
+            open={reactionInfoOpen}
+            onOpenChange={setReactionInfoOpen}
+            tokenId={reactionInfoTokenId!}
+          />
+        </Suspense>
+      )}
+    </>
+  );
+
   if (compact) {
     return (
       /* One row, sharing the composer's line: gift, share, thumb. The thumb
@@ -1096,6 +1134,7 @@ export function ActionBar({
          its tray is right-aligned so it opens back across the frame. */
       <div className={cn('flex items-center gap-2', className)}>
         {engagementButtons}
+        {overlays}
       </div>
     );
   }
@@ -1159,32 +1198,7 @@ export function ActionBar({
         </div>
       )}
 
-      <Drawer open={sheetOpen} onOpenChange={setSheetOpen}>
-        <DrawerContent scrollable column glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()} onPointerDown={(e: React.PointerEvent) => e.stopPropagation()}>
-          <DrawerHeader className="relative">
-            <DrawerTitle className="text-white/90 font-semibold">Share</DrawerTitle>
-          </DrawerHeader>
-          <div className="flex flex-col gap-1 mt-2 relative">
-            <ShareOptions />
-          </div>
-        </DrawerContent>
-      </Drawer>
-
-      {canSendInDm && dmShareOpen && (
-        <Suspense fallback={null}>
-          <ShareToDmModal open={dmShareOpen} onOpenChange={setDmShareOpen} url={newPostSlug != null ? dehubLinkFor.newPost(newPostSlug) : dehubLinkFor.post(tokenId!)} />
-        </Suspense>
-      )}
-
-      {canViewReactionInfo && reactionInfoOpen && (
-        <Suspense fallback={null}>
-          <ReactionInfoDrawer
-            open={reactionInfoOpen}
-            onOpenChange={setReactionInfoOpen}
-            tokenId={reactionInfoTokenId!}
-          />
-        </Suspense>
-      )}
+      {overlays}
     </div>
   );
 }

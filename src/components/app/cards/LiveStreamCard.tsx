@@ -1065,8 +1065,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 aria-label={replayPlaying ? t('audioPost.pause', 'Pause') : t('audioPost.play', 'Play')}
                 className="absolute inset-0 z-[5] flex items-center justify-center"
               >
+                {/* rounded-xl, not a circle: every other control on this frame
+                    is a 12px-radius square, and a lone disc read as a different
+                    app's play button. */}
                 {!replayPlaying && (
-                  <span className="flex h-16 w-16 items-center justify-center rounded-full bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10">
+                  <span className="flex h-16 w-16 items-center justify-center rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10">
                     <Play className="ml-1 h-8 w-8 fill-white text-white" />
                   </span>
                 )}
@@ -1221,6 +1224,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             isLive={!!stream.isLive && !streamEnded}
             isEnded={streamEnded}
             viewers={livePresence ?? viewersLabel}
+            giftCount={tipCount}
             startedAt={stream.startedAt ?? null}
             isMuted={isMuted}
             onToggleMute={toggleMute}
