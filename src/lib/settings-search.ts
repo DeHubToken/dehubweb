@@ -51,6 +51,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'profile', anchor: 'social-links', label: 'Social Links', labelKey: 'settings.socialLinks', keywords: 'twitter x instagram tiktok youtube discord telegram' },
   { tab: 'profile', anchor: 'sign-in', label: 'Sign-in', labelKey: 'settings.signIn', keywords: 'email login password recovery' },
   { tab: 'profile', anchor: 'ens', label: 'ENS', labelKey: 'settings.ensSection', keywords: 'ens domain eth name verified handle' },
+  { tab: 'profile', anchor: 'stream-key', label: 'Stream key', labelKey: 'settings.streamKey.section', keywords: 'obs encoder rtmp stream key ingest server xbox twitch aircast go live broadcast' },
   { tab: 'profile', anchor: 'badge-delegation', label: 'Badge delegation', keywords: 'badge lend borrow tier delegate' },
   { tab: 'profile', anchor: 'profiles', label: 'Profiles', labelKey: 'settings.profiles', keywords: 'accounts switch add account multiple' },
 

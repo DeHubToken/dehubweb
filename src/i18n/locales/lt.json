@@ -416,7 +416,31 @@
     "badgeDelegationHandBack": "Grąžinti jį",
     "badgeDelegationEnd": "Baigti delegavimą su {{address}}",
     "badgeDelegationGranted": "{{to}} dabar dėvi jūsų {{tier}} ženkliuką",
-    "badgeDelegationEnded": "Delegavimas baigtas"
+    "badgeDelegationEnded": "Delegavimas baigtas",
+    "streamKey": {
+      "section": "Transliacijos raktas",
+      "blurb": "Įklijuokite šiuos duomenis į OBS, savo įrašymo programą arba konsolę vieną kartą. Jie niekada nesikeičia – paspauskite „Pradėti“ savo koduotoje ir „DeHub“ sukurs tiesioginį įrašą už jus.",
+      "server": "Serveris",
+      "key": "Transliacijos raktas",
+      "copyServer": "Kopijuoti serverį",
+      "copyKey": "Kopijuoti transliacijos raktą",
+      "reveal": "Rodyti transliacijos raktą",
+      "hide": "Slėpti transliacijos raktą",
+      "copyFailed": "Nepavyko nukopijuoti",
+      "keyWarning": "Bet kas, turintis šį raktą, gali transliuoti kaip jūs. Niekada nerodykite jo transliacijos metu.",
+      "defaultTitle": "Numatytasis transliacijos pavadinimas",
+      "defaultTitlePlaceholder": "Kaip vadinami jūsų koduotės transliacijos",
+      "defaultTitleHint": "Naudojamas, kai pradedate transliuoti iš koduotės, pirmiausia nenustatę įrašo.",
+      "titleSaved": "Išsaugota",
+      "titleFailed": "Nepavyko išsaugoti pavadinimo",
+      "rotate": "Atstatyti transliacijos raktą",
+      "rotateConfirm": "Išleisti naują transliacijos raktą? Kiekviena koduotė, naudojanti senąjį, nustos veikti, kol neįklijuosite naujo rakto.",
+      "rotated": "Naujas transliacijos raktas išleistas",
+      "rotateFailed": "Nepavyko išleisti naujo rakto",
+      "unavailable": "Transliacija iš koduotės šiuo metu jūsų paskyroje negalima.",
+      "serverCopied": "Serveris nukopijuotas",
+      "keyCopied": "Srauto raktas nukopijuotas"
+    }
   },
   "common": {
     "save": "Saugoti",

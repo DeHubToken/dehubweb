@@ -431,7 +431,31 @@
     "badgeDelegationHandBack": "Geri ver",
     "badgeDelegationEnd": "{{address}} ile delegasyonu sonlandır",
     "badgeDelegationGranted": "{{to}} şimdi senin {{tier}} badge'ini giyiyor",
-    "badgeDelegationEnded": "Delegasyon sona erdi"
+    "badgeDelegationEnded": "Delegasyon sona erdi",
+    "streamKey": {
+      "section": "Yayın anahtarı",
+      "blurb": "Bunları OBS'ye, yakalama uygulamanıza veya konsolunuza bir kez yapıştırın. Asla değişmezler — kodlayıcınızda Başlat'a basın ve DeHub sizin için canlı gönderiyi oluşturur.",
+      "server": "Sunucu",
+      "key": "Yayın anahtarı",
+      "copyServer": "Sunucuyu kopyala",
+      "copyKey": "Yayın anahtarını kopyala",
+      "reveal": "Yayın anahtarını göster",
+      "hide": "Yayın anahtarını gizle",
+      "copyFailed": "Kopyalanamadı",
+      "keyWarning": "Bu anahtara sahip olan herkes sizin adınıza yayın yapabilir. Asla yayında göstermeyin.",
+      "defaultTitle": "Varsayılan yayın başlığı",
+      "defaultTitlePlaceholder": "Kodlayıcınızın yayınlarının adı",
+      "defaultTitleHint": "Önce bir gönderi ayarlamadan bir kodlayıcıdan canlı yayına geçtiğinizde kullanılır.",
+      "titleSaved": "Kaydedildi",
+      "titleFailed": "Başlık kaydedilemedi",
+      "rotate": "Yayın anahtarını sıfırla",
+      "rotateConfirm": "Yeni bir yayın anahtarı mı verilecek? Eski anahtarı kullanan her kodlayıcı, yeni anahtarı yapıştırdığınızda çalışmayı durduracaktır.",
+      "rotated": "Yeni yayın anahtarı verildi",
+      "rotateFailed": "Yeni anahtar verilemedi",
+      "unavailable": "Hesabınızda şu anda bir kodlayıcıdan yayın yapmak kullanılamıyor.",
+      "serverCopied": "Sunucu kopyalandı",
+      "keyCopied": "Akış anahtarı kopyalandı"
+    }
   },
   "common": {
     "save": "Kaydet",

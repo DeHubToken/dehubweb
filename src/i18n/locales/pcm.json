@@ -351,7 +351,21 @@
     "badgeDelegationLend": "Lend",
     "badgeDelegationLentToYou": "Lent to you",
     "badgeDelegationHandBack": "Hand it back",
-    "badgeDelegationEnded": "Delegation ended"
+    "badgeDelegationEnded": "Delegation ended",
+    "streamKey": {
+      "section": "Stream key",
+      "server": "Server",
+      "key": "Stream key",
+      "copyServer": "Copy server",
+      "copyKey": "Copy stream key",
+      "reveal": "Show stream key",
+      "hide": "Hide stream key",
+      "defaultTitle": "Default stream title",
+      "titleSaved": "Saved",
+      "rotate": "Reset stream key",
+      "serverCopied": "Server copied",
+      "keyCopied": "Stream key copied"
+    }
   },
   "common": {
     "save": "Save Am",

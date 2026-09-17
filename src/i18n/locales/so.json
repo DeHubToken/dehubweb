@@ -417,7 +417,31 @@
     "badgeDelegationHandBack": "Soo celi",
     "badgeDelegationEnd": "Delegaadda jooji {{address}} la",
     "badgeDelegationGranted": "{{to}} hadda waxay xirtaa badge-kaaga {{tier}}",
-    "badgeDelegationEnded": "Delegaadda waxaa dhamaatay"
+    "badgeDelegationEnded": "Delegaadda waxaa dhamaatay",
+    "streamKey": {
+      "section": "Furaha streemka",
+      "blurb": "Ku dheji kuwan OBS, abkaaga qabashada ama konsole-kaaga hal mar. Marna ma isbeddelaan — riix Bilow kombiyuutarkaaga waxaana DeHub uu kuu samaynayaa boostada tooska ah.",
+      "server": "Server",
+      "key": "Furaha streemka",
+      "copyServer": "Nuqul ka samee serverka",
+      "copyKey": "Nuqul ka samee furaha streemka",
+      "reveal": "Muuji furaha streemka",
+      "hide": "Qari furaha streemka",
+      "copyFailed": "Waan ku guuldareystay inaan nuqul ka sameeyo",
+      "keyWarning": "Qof kasta oo haysta furahan wuxuu si toos ah kuu soo gudbin karaa. Marna ha u muujin streemka.",
+      "defaultTitle": "Cinwaanka streemka ee caadiga ah",
+      "defaultTitlePlaceholder": "Waa maxay magaca streemka kombiyuutarkaaga",
+      "defaultTitleHint": "Waxaa loo isticmaalaa marka aad toos u tagto kombiyuutarka adigoo marka hore aan dejin boostada.",
+      "titleSaved": "La keydiyay",
+      "titleFailed": "Waan ku guuldareystay inaan keydiyo cinwaanka",
+      "rotate": "Dib u deji furaha streemka",
+      "rotateConfirm": "Ma soo saartaa furaha streemka cusub? Kombiyuutarka kasta ee isticmaalaya kan hore wuu joogsanayaa ilaa aad ku dhejiso furaha cusub.",
+      "rotated": "Furaha streemka cusub waa la soo saaray",
+      "rotateFailed": "Waan ku guuldareystay inaan soo saaro furaha cusub",
+      "unavailable": "Streemka kombiyuutarka laguma heli karo akoonkaaga hadda.",
+      "serverCopied": "Server waa la nuqulay",
+      "keyCopied": "Furaha Stream la nuqulay"
+    }
   },
   "common": {
     "save": "Kaydi",

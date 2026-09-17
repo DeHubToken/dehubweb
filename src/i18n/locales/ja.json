@@ -429,7 +429,31 @@
     "badgeDelegationHandBack": "返却する",
     "badgeDelegationEnd": "{{address}}との委任を終了",
     "badgeDelegationGranted": "{{to}}は現在あなたの{{tier}}バッジを着用しています",
-    "badgeDelegationEnded": "委任が終了しました"
+    "badgeDelegationEnded": "委任が終了しました",
+    "streamKey": {
+      "section": "ストリームキー",
+      "blurb": "これらをOBS、キャプチャアプリ、またはコンソールに一度貼り付けてください。これらは変更されません — エンコーダーで「開始」を押すと、DeHubがライブ投稿を作成します。",
+      "server": "サーバー",
+      "key": "ストリームキー",
+      "copyServer": "サーバーをコピー",
+      "copyKey": "ストリームキーをコピー",
+      "reveal": "ストリームキーを表示",
+      "hide": "ストリームキーを非表示",
+      "copyFailed": "コピーできませんでした",
+      "keyWarning": "このキーを持っている人は誰でもあなたとして配信できます。配信中に決して表示しないでください。",
+      "defaultTitle": "デフォルトのストリームタイトル",
+      "defaultTitlePlaceholder": "エンコーダーでストリームがどのように呼ばれるか",
+      "defaultTitleHint": "エンコーダーから事前に投稿を設定せずにライブ配信する場合に使用します。",
+      "titleSaved": "保存済み",
+      "titleFailed": "タイトルを保存できませんでした",
+      "rotate": "ストリームキーをリセット",
+      "rotateConfirm": "新しいストリームキーを発行しますか？古いキーを使用しているすべてのエンコーダーは、新しいキーを貼り付けるまで動作しなくなります。",
+      "rotated": "新しいストリームキーが発行されました",
+      "rotateFailed": "新しいキーを発行できませんでした",
+      "unavailable": "現在、アカウントではエンコーダーからのストリーミングは利用できません。",
+      "serverCopied": "サーバーがコピーされました",
+      "keyCopied": "ストリームキーがコピーされました"
+    }
   },
   "common": {
     "save": "保存",
