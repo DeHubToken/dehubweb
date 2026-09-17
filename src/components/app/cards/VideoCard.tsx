@@ -1981,6 +1981,18 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   fallbackLabel={t('feed.live')}
                   muted={isMuted}
                 />
+                {/* The card's control bar only shows for a file it is playing
+                    itself — a running stream is played by the preview, so the
+                    bar never appeared and the card had no sound switch at all.
+                    One always-on speaker, in the corner the bar would use. */}
+                <button
+                  type="button"
+                  className="absolute bottom-3 right-3 z-10 h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 hover:bg-black/60 transition-colors"
+                  onClick={toggleMute}
+                  aria-label={isMuted ? t('stages.unmute', 'Unmute') : t('stages.mute', 'Mute')}
+                >
+                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                </button>
               </Suspense>
             ) : (
               /* No playable URL — a past live (or url-less video). Show the
