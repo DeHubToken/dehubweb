@@ -3,7 +3,6 @@ import { DhbCoin } from '@/components/app/DhbAmount';
 import qrcode from 'qrcode-generator';
 import { useQuery } from '@tanstack/react-query';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
-import { SwapToDHBDrawer } from '@/components/app/SwapToDHBDrawer';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart, User, Lock, Minus, CreditCard, Wallet, Globe, ArrowDownUp, Info } from 'lucide-react';
@@ -96,7 +95,6 @@ export default function FullWalletPage() {
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
   const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
-  const [buyDrawerOpen, setBuyDrawerOpen] = useState(false);
   const [crossChainBuyOpen, setCrossChainBuyOpen] = useState(false);
   const [crossChainDestSymbol, setCrossChainDestSymbol] = useState<string>('ETH');
   const [importChainId, setImportChainId] = useState<WalletChainId>(BASE_CHAIN_ID);
@@ -104,7 +102,6 @@ export default function FullWalletPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [actionGrouped, setActionGrouped] = useState<GroupedToken | null>(null);
   const [sendChainPickerGrouped, setSendChainPickerGrouped] = useState<GroupedToken | null>(null);
-  const [swapDHBOpen, setSwapDHBOpen] = useState(false);
   const [showBalanceBreakdown, setShowBalanceBreakdown] = useState(false);
 
   const { allTokens, isLoading } = useAllChainsTokens();
@@ -442,7 +439,7 @@ export default function FullWalletPage() {
           <Send className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.send')}</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => setBuyDrawerOpen(true)}>
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => navigate('/app/buy')}>
           <ShoppingCart className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.buy')}</span>
         </Button>
@@ -509,10 +506,6 @@ export default function FullWalletPage() {
           setActionGrouped(null);
           setCrossChainDestSymbol(symbol);
           setTimeout(() => setCrossChainBuyOpen(true), 200);
-        }}
-        onSwapDHB={() => {
-          setActionGrouped(null);
-          setTimeout(() => setSwapDHBOpen(true), 200);
         }}
         walletAddress={walletAddress}
       />
@@ -629,39 +622,7 @@ export default function FullWalletPage() {
         onImported={() => { setImportDialogOpen(false); }}
       />
 
-      {/* Buy Options Drawer — top-level Buy button (DHB-focused) */}
-      <Drawer open={buyDrawerOpen} onOpenChange={setBuyDrawerOpen}>
-        <DrawerContent column glass hideHandle={false} data-wallet-page>
-          <div className="p-5 pb-8 space-y-2">
-            <h3 className="text-white font-semibold text-base mb-4">{t('wallet.buy')}</h3>
-            <button
-              onClick={() => { setBuyDrawerOpen(false); navigate('/app/buy'); }}
-              className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
-            >
-              <CreditCard className="w-5 h-5 text-white/70" />
-              <div className="text-left">
-                <span className="text-sm font-medium text-white">Buy with Card</span>
-                <p className="text-xs text-white/40">Visa, Mastercard, Apple Pay, Google Pay</p>
-              </div>
-            </button>
-            <button
-              onClick={() => {
-                setBuyDrawerOpen(false);
-                setTimeout(() => setSwapDHBOpen(true), 200);
-              }}
-              className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
-            >
-              <Wallet className="w-5 h-5 text-white/70" />
-              <div className="text-left">
-                <span className="text-sm font-medium text-white">Swap to DHB</span>
-                <p className="text-xs text-white/40">Convert your tokens to DHB</p>
-              </div>
-            </button>
-          </div>
-        </DrawerContent>
-      </Drawer>
       <CrossChainDepositDrawer open={crossChainBuyOpen} onOpenChange={setCrossChainBuyOpen} destinationSymbol={crossChainDestSymbol} />
-      <SwapToDHBDrawer open={swapDHBOpen} onOpenChange={setSwapDHBOpen} />
     </div>
   );
 }
@@ -743,14 +704,13 @@ function AddressQr({ address }: { address: string }) {
   );
 }
 
-function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, onBuyCrypto, onSwapDHB, walletAddress }: {
+function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, onBuyCrypto, walletAddress }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   grouped: GroupedToken | null;
   onSend: () => void;
   onReceive: () => void;
   onBuyCrypto: (symbol: string) => void;
-  onSwapDHB: () => void;
   walletAddress?: string;
 }) {
   const { t } = useTranslation();
@@ -803,7 +763,8 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
             className="flex-col h-auto py-4 gap-2 rounded-xl"
             onClick={() => {
               if (grouped.symbol === 'DHB') {
-                setBuyMethodOpen(true);
+                onOpenChange(false);
+                navigate('/app/buy');
               } else {
                 setBuyMethodOpen(true);
               }
@@ -821,38 +782,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
         <DrawerContent column glass hideHandle={false} data-wallet-page>
           <div className="p-5 pb-8 space-y-2">
             <h3 className="text-white font-semibold text-base mb-4">Buy {grouped?.symbol}</h3>
-            {grouped?.symbol === 'DHB' ? (
-              <>
-                <button
-                  onClick={() => {
-                    setBuyMethodOpen(false);
-                    onOpenChange(false);
-                    navigate('/app/buy');
-                  }}
-                  className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
-                >
-                  <CreditCard className="w-5 h-5 text-white/70" />
-                  <div className="text-left">
-                    <span className="text-sm font-medium text-white">Buy with Card</span>
-                    <p className="text-xs text-white/40">Visa, Mastercard, Apple Pay, Google Pay</p>
-                  </div>
-                </button>
-                <button
-                  onClick={() => {
-                    setBuyMethodOpen(false);
-                    onOpenChange(false);
-                    onSwapDHB();
-                  }}
-                  className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
-                >
-                  <Wallet className="w-5 h-5 text-white/70" />
-                  <div className="text-left">
-                    <span className="text-sm font-medium text-white">Buy with Crypto</span>
-                    <p className="text-xs text-white/40">Convert your ETH to DHB</p>
-                  </div>
-                </button>
-              </>
-            ) : (
+            {grouped?.symbol !== 'DHB' && (
               <>
                 {(['ETH', 'USDT', 'USDC'].includes(grouped?.symbol || '')) && walletAddress ? (
                   <button

@@ -1,7 +1,6 @@
 /**
  * Quick Buy Button — shown on cashtag/ticker cards in search.
- * Opens a Uniswap swap drawer for any Base token, or the DHB-specific
- * buy flow for DHB.
+ * Opens a Uniswap swap drawer for Base tokens, or DPay for DHB.
  */
 
 import { useState } from 'react';
@@ -13,7 +12,6 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
-import { SwapToDHBDrawer } from '@/components/app/SwapToDHBDrawer';
 import { SwapToTokenDrawer } from '@/components/app/SwapToTokenDrawer';
 
 interface QuickBuyButtonProps {
@@ -32,7 +30,6 @@ interface QuickBuyButtonProps {
 export function QuickBuyButton({ symbol, tokenAddress, tokenDecimals, tokenLogo, chainId }: QuickBuyButtonProps) {
   const [open, setOpen] = useState(false);
   const [crossChainOpen, setCrossChainOpen] = useState(false);
-  const [swapDHBOpen, setSwapDHBOpen] = useState(false);
   const [swapTokenOpen, setSwapTokenOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -42,12 +39,12 @@ export function QuickBuyButton({ symbol, tokenAddress, tokenDecimals, tokenLogo,
 
   // Tokens that can be received cross-chain
   const crossChainSymbols = ['ETH', 'USDC', 'USDT', 'BTC', 'BNB'];
-  const hasCrossChain = crossChainSymbols.includes(symbol.toUpperCase()) || isDHB;
+  const hasCrossChain = crossChainSymbols.includes(symbol.toUpperCase());
 
   return (
     <>
       <button
-        onClick={(e) => { e.stopPropagation(); setOpen(true); }}
+        onClick={(e) => { e.stopPropagation(); if (isDHB) navigate('/app/buy'); else setOpen(true); }}
         className="text-zinc-400 hover:text-white transition-colors p-1.5"
         title={`Buy ${symbol}`}
       >
@@ -61,37 +58,7 @@ export function QuickBuyButton({ symbol, tokenAddress, tokenDecimals, tokenLogo,
           <div className="p-5 pb-8 space-y-2">
             <h3 className="text-white font-semibold text-base mb-4">Buy ${symbol}</h3>
 
-            {isDHB ? (
-              <>
-                {/* DHB: Card purchase + Swap from ETH */}
-                <button
-                  onClick={() => {
-                    setOpen(false);
-                    navigate('/app/buy');
-                  }}
-                  className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
-                >
-                  <CreditCard className="w-5 h-5 text-white/70" />
-                  <div className="text-left">
-                    <span className="text-sm font-medium text-white">Buy with Card</span>
-                    <p className="text-xs text-white/40">Visa, Mastercard, Apple Pay, Google Pay</p>
-                  </div>
-                </button>
-                <button
-                  onClick={() => {
-                    setOpen(false);
-                    setTimeout(() => setSwapDHBOpen(true), 200);
-                  }}
-                  className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
-                >
-                  <ArrowRightLeft className="w-5 h-5 text-white/70" />
-                  <div className="text-left">
-                    <span className="text-sm font-medium text-white">Buy with Crypto</span>
-                    <p className="text-xs text-white/40">Convert your ETH to DHB</p>
-                  </div>
-                </button>
-              </>
-            ) : (
+            {!isDHB && (
               <>
                 {/* Instant Swap via Uniswap (Base tokens only) */}
                 {hasSwapSupport && (
@@ -151,9 +118,6 @@ export function QuickBuyButton({ symbol, tokenAddress, tokenDecimals, tokenLogo,
         onOpenChange={setCrossChainOpen}
         destinationSymbol={symbol.toUpperCase()}
       />
-
-      {/* Swap ETH→DHB drawer */}
-      <SwapToDHBDrawer open={swapDHBOpen} onOpenChange={setSwapDHBOpen} />
 
       {/* Generic swap drawer for any Base token */}
       {hasSwapSupport && (
