@@ -996,15 +996,29 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
   // own clip. No-op on opaque-nav themes and when no pill is visible.
   useFeedSwallowClip(postRootRef, '[data-feed-nav]', [inOverlay, isMobileView, contentType]);
 
-  // Hide mobile header for video posts by adding a class to the body
+  /**
+   * Drop the app's own mobile chrome for a post that owns the screen.
+   *
+   * The fixed mobile header is `z-[60]` and the feed nav pill is `z-50`;
+   * a full-bleed viewer sits at `z-[55]` between them. Without this the
+   * header draws straight through the viewer's own header row — creator
+   * capsule, follow, close and all — and the nav pill cuts the chat
+   * composer in half at the bottom. This class is what the immersive
+   * video post has always used to clear both, plus the `main` padding
+   * they reserve; a full-bleed live post needs exactly the same thing and
+   * shipped without asking for it.
+   */
+  const wantsImmersiveChrome = isVideoPost || (contentType === 'live' && isMobileView);
   useEffect(() => {
-    if (isVideoPost) {
+    if (wantsImmersiveChrome) {
       document.body.classList.add('immersive-video-mode');
+    } else {
+      document.body.classList.remove('immersive-video-mode');
     }
     return () => {
       document.body.classList.remove('immersive-video-mode');
     };
-  }, [isVideoPost]);
+  }, [wantsImmersiveChrome]);
 
   // (The `body { pointer-events: none }` guard that used to live here is gone
   // with the sheet: vaul set it even at modal={false}, which blocked taps on the
