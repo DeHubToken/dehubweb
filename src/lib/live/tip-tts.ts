@@ -21,7 +21,7 @@
  *   hour and every one of them would be a paid API call, multiplied by nothing
  *   at all — one synthesis serves one viewer. Synthesising locally is free at
  *   any audience size.
- * - **It is ~590 kB, once.** A neural voice (Piper/VITS) is 20–80 MB of model
+ * - **It is ~660 kB, once.** A neural voice (Piper/VITS) is 20–80 MB of model
  *   per viewer. That is not a thing to hand somebody on mobile data so they can
  *   hear a tip message.
  *
@@ -32,7 +32,10 @@
  * deliberate. A CDN failure degrades to silence, never to a broken player.
  */
 
-/** Wire size of the two fetches below, for anyone judging the cost of this. */
+/**
+ * Where the engine comes from. Three fetches on first use: the module (~307 kB),
+ * the config (~283 kB) and the English voice (~68 kB), all gzipped wire sizes.
+ */
 const CDN = 'https://cdn.jsdelivr.net/npm/mespeak@2.0.2';
 
 /**
@@ -57,9 +60,13 @@ export const MAX_TTS_CHARS = 200;
  */
 const MAX_QUEUE = 5;
 
+/** How long to wait on `loadVoice`'s callback before giving up on it. */
+const VOICE_LOAD_TIMEOUT_MS = 5000;
+
 interface MeSpeak {
   loadConfig: (config: unknown) => void;
   isConfigLoaded: () => boolean;
+  loadVoice: (voice: unknown, cb: (ok: boolean, msg: string) => void) => void;
   speak: (text: string, opts: Record<string, unknown>) => string | undefined;
 }
 
@@ -68,11 +75,17 @@ let enginePromise: Promise<MeSpeak> | null = null;
 /**
  * Fetch and initialise the synthesiser, at most once per tab.
  *
- * `loadVoice` is deliberately not called. The config payload already carries a
- * usable English voice — `loadVoice` reports failure for `en/en-us` because the
- * dictionary file it wants to create is already in the emscripten filesystem,
- * and calling it is both unnecessary and a source of a thrown "Can't overwrite
- * object". Config alone speaks English fine.
+ * **`loadVoice` reports failure and must still be called.** Its callback comes
+ * back `(false, "en/en-us")` because the dictionary file it wants to create is
+ * already in the emscripten filesystem — but the voice IS installed by the time
+ * it says so, and without the call `speak` returns nothing at all. Measured on
+ * the real engine: config alone yields 0 bytes for a sentence that yields 83 kB
+ * once the voice is loaded, and the only other sign is a console warning
+ * ("No voice module loaded, deferring call"). So the callback's verdict is
+ * deliberately ignored.
+ *
+ * It is raced against a timeout because a callback that never fires would
+ * otherwise leave every queued tip waiting on a promise that never settles.
  */
 async function loadEngine(): Promise<MeSpeak> {
   if (!enginePromise) {
@@ -86,6 +99,22 @@ async function loadEngine(): Promise<MeSpeak> {
         });
         engine.loadConfig(config);
       }
+      const voice = await fetch(`${CDN}/voices/en/en-us.json`).then((r) => {
+        if (!r.ok) throw new Error(`tts voice ${r.status}`);
+        return r.json();
+      });
+      await new Promise<void>((done) => {
+        const timer = setTimeout(done, VOICE_LOAD_TIMEOUT_MS);
+        try {
+          engine.loadVoice(voice, () => {
+            clearTimeout(timer);
+            done();
+          });
+        } catch {
+          clearTimeout(timer);
+          done();
+        }
+      });
       return engine;
     })().catch((err) => {
       // Let a later gift retry rather than wedging the feature on one bad
