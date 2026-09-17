@@ -293,7 +293,7 @@ describe('pauseOffDocumentMediaIn — the post overlay, where home stays visible
   });
 
   it('stops other feed videos while sparing the element handed to the post', () => {
-    const opened = fakeMedia('video', true);
+    const opened = fakeMedia('video', true) as HTMLVideoElement;
     const other = fakeMedia('video', true);
     root.append(opened, other);
 
