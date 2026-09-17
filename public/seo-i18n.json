@@ -88,9 +88,49 @@
       "title": "アカウントマーケットプレイス — DeHub",
       "description": "確立されたDeHubアカウントをDHBで売買します。フォロワー数、アップロード数、年齢でアカウントを閲覧してください — ハンドル、投稿、フォロワー、バッジの権利がすべて転送され、支払いは売り手に直接行われます。"
     },
+    "ka": {
+      "title": "ანგარიშების ბაზარი — DeHub",
+      "description": "იყიდეთ და გაყიდეთ დადასტურებული DeHub ანგარიშები DHB-ზე. დაათვალიერეთ ანგარიშები მიმდევრების, ატვირთვების და ასაკის მიხედვით — სახელური, პოსტები, მიმდევრები და სამკერდე ნიშნის უფლებები გადაირიცხება, ხოლო გადახდა პირდაპირ გამყიდველს მიუვა."
+    },
+    "kk": {
+      "title": "Аккаунттар нарығы — DeHub",
+      "description": "DHB үшін дайын DeHub аккаунттарын сатып алыңыз және сатыңыз. Аккаунттарды ізбасарлар, жүктеулер және жас бойынша қараңыз — тұтқа, жазбалар, ізбасарлар және белгі құқықтары бәрі ауысады, ал төлем тікелей сатушыға келеді."
+    },
+    "km": {
+      "title": "ទីផ្សារគណនី — DeHub",
+      "description": "ទិញ និងលក់គណនី DeHub ដែលមានស្រាប់សម្រាប់ DHB។ រកមើលគណនីតាមចំនួនអ្នកតាមដាន ការបង្ហោះ និងអាយុ — ឈ្មោះ ការបង្ហោះ អ្នកតាមដាន និងសិទ្ធិប័ណ្ណទាំងអស់ត្រូវបានផ្ទេរ ហើយការទូទាត់ទៅត្រង់ទៅអ្នកលក់។"
+    },
+    "kn": {
+      "title": "ಖಾತೆ ಮಾರುಕಟ್ಟೆ — DeHub",
+      "description": "DHB ಗಾಗಿ ಸ್ಥಾಪಿತ DeHub ಖಾತೆಗಳನ್ನು ಖರೀದಿಸಿ ಮತ್ತು ಮಾರಾಟ ಮಾಡಿ. ಅನುಯಾಯಿಗಳು, ಅಪ್‌ಲೋಡ್‌ಗಳು ಮತ್ತು ವಯಸ್ಸಿನ ಆಧಾರದ ಮೇಲೆ ಖಾತೆಗಳನ್ನು ಬ್ರೌಸ್ ಮಾಡಿ — ಹ್ಯಾಂಡಲ್, ಪೋಸ್ಟ್‌ಗಳು, ಅನುಯಾಯಿಗಳು ಮತ್ತು ಬ್ಯಾಡ್ಜ್ ಹಕ್ಕುಗಳು ಎಲ್ಲವೂ ವರ್ಗಾವಣೆಯಾಗುತ್ತವೆ, ಮತ್ತು ಪಾವತಿ ನೇರವಾಗಿ ಮಾರಾಟಗಾರರಿಗೆ ಹೋಗುತ್ತದೆ."
+    },
     "ko": {
       "title": "계정 마켓플레이스 — DeHub",
       "description": "DHB로 확립된 DeHub 계정을 사고팔 수 있습니다. 팔로워, 업로드 및 나이별로 계정을 찾아보세요 — 핸들, 게시물, 팔로워 및 배지 자격이 모두 이전되며 결제는 판매자에게 직접 이동합니다."
+    },
+    "ku": {
+      "title": "بازاڕی هەژمار - DeHub",
+      "description": "هەژمارە دامەزراوەکانی DeHub بە DHB بکڕە و بفرۆشە. هەژمارەکان بەپێی شوێنکەوتووان، بارکردن و تەمەن بگەڕێ - ناونیشانەکە، پۆستەکان، شوێنکەوتووان و مافەکانی نیشانە هەموویان دەگوازرێنەوە، و پارەکە ڕاستەوخۆ بۆ فرۆشیارەکە دەڕوات."
+    },
+    "ky": {
+      "title": "Аккаунттар базары — DeHub",
+      "description": "DHB үчүн даяр DeHub аккаунттарын сатып алыңыз жана сатыңыз. Аккаунттарды жолдоочулар, жүктөөлөр жана жаш курагы боюнча карап чыгыңыз — колдонуучу аты, посттор, жолдоочулар жана белги артыкчылыктары баары өтөт, ал эми төлөм түздөн түз сатуучуга кетет."
+    },
+    "lo": {
+      "title": "ຕະຫຼາດບັນຊີ — DeHub",
+      "description": "ຊື້ ແລະຂາຍບັນຊີ DeHub ທີ່ສ້າງຕັ້ງຂຶ້ນສຳລັບ DHB. ຄົ້ນຫາບັນຊີຕາມຜູ້ຕິດຕາມ, ການອັບໂຫຼດ ແລະອາຍຸ — ຊື່ບັນຊີ, ໂພສ, ຜູ້ຕິດຕາມ ແລະສິດທິບັດທັງໝົດຈະຖືກໂອນ, ແລະການຈ່າຍເງິນຈະໄປຫາຜູ້ຂາຍໂດຍກົງ."
+    },
+    "lt": {
+      "title": "Paskyrų prekyvietė – DeHub",
+      "description": "Pirkite ir parduokite sukurtas DeHub paskyras už DHB. Naršykite paskyras pagal sekėjus, įkėlimus ir amžių – vardas, įrašai, sekėjai ir ženklelių teisės visos persikelia, o mokėjimas atitenka tiesiai pardavėjui."
+    },
+    "lv": {
+      "title": "Konta tirgus – DeHub",
+      "description": "Pērc un pārdod esošos DeHub kontus par DHB. Pārlūko kontus pēc sekotājiem, augšupielādēm un vecuma – vārds, ieraksti, sekotāji un emblēmu tiesības tiek pārsūtītas, un maksājums nonāk tieši pie pārdevēja."
+    },
+    "mg": {
+      "title": "Momba ny kaonty ¢ Wondershare",
+      "description": "Mividiana sy mivarotra ny kaonty DeHub napetraka ho an'ny DHB. Browse kaonty amin'ny mpanaraka, Uploads sy ny taona âny tahony, Lahatsoratra, mpanara-dia sy ny badge anaram-boninahitra rehetra famindrana, sy ny fandoavam-bola avy hatrany mankany amin'ny mpivarotra."
     },
     "mr": {
       "title": "खाते मार्केटप्लेस — DeHub",
@@ -580,9 +620,45 @@
       "title": "コミュニティ駆動型メディアインフラストラクチャ| DeHub",
       "description": "DeHub DePinを使用すると、人々はストレージ、帯域幅、コンピューティングを提供して、回復力のあるネットワークを介してメディアのホスト、トランスコード、配信を支援できます。"
     },
+    "ka": {
+      "title": "DePin | საზოგადოების მიერ მართული მედია ინფრასტრუქტურა | DeHub",
+      "description": "DeHub DePin საშუალებას აძლევს ადამიანებს, წვლილი შეიტანონ შენახვის, გამტარუნარიანობის და გამოთვლითი სიმძლავრის სახით, რათა დაეხმარონ მედიის მასპინძლობას, ტრანსკოდირებას და მიწოდებას მდგრადი ქსელის მეშვეობით."
+    },
+    "kk": {
+      "title": "DePin | Қауымдастықпен басқарылатын медиа инфрақұрылымы | DeHub",
+      "description": "DeHub DePin адамдарға сақтау орнын, өткізу қабілетін және есептеу қуатын қосу арқылы төзімді желі арқылы медианы хостинг, транс кодтау және жеткізуге көмектесуге мүмкіндік береді."
+    },
+    "km": {
+      "title": "DePin | ហេដ្ឋារចនាសម្ព័ន្ធប្រព័ន្ធផ្សព្វផ្សាយដែលขับเคลื่อนដោយសហគមន៍ | DeHub",
+      "description": "DeHub DePin អនុញ្ញាតឱ្យមនុស្សរួមចំណែកទំហំផ្ទុក បណ្តាញ និង ការគណនា ដើម្បីជួយបង្ហោះ បំប្លែង និង ផ្តល់មាតិកាប្រព័ន្ធផ្សព្វផ្សាយតាមរយៈបណ្តាញដែលធន់ទ្រាំ។"
+    },
+    "kn": {
+      "title": "DePin | ಸಮುದಾಯ-ಚಾಲಿತ ಮಾಧ್ಯಮ ಮೂಲಸೌಕರ್ಯ | DeHub",
+      "description": "DeHub DePin ಜನರು ಸಂಗ್ರಹಣೆ, ಬ್ಯಾಂಡ್‌ವಿಡ್ತ್ ಮತ್ತು ಕಂಪ್ಯೂಟ್ ಅನ್ನು ಕೊಡುಗೆ ನೀಡಲು ಅನುಮತಿಸುತ್ತದೆ, ಇದು ಸ್ಥಿತಿಸ್ಥಾಪಕ ನೆಟ್‌ವರ್ಕ್ ಮೂಲಕ ಮಾಧ್ಯಮವನ್ನು ಹೋಸ್ಟ್ ಮಾಡಲು, ಟ್ರಾನ್ಸ್‌ಕೋಡ್ ಮಾಡಲು ಮತ್ತು ತಲುಪಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ."
+    },
     "ko": {
       "title": "DePin | 커뮤니티 기반 미디어 인프라 | DeHub",
       "description": "DeHub DePin은 사람들이 탄력적인 네트워크를 통해 미디어를 호스팅, 트랜스코딩 및 전달하는 데 도움이 되는 스토리지, 대역폭 및 컴퓨팅에 기여할 수 있도록 합니다."
+    },
+    "ku": {
+      "title": "DePin | ژێرخانی میدیای بەهێزی کۆمەڵگە | DeHub",
+      "description": "DeHub DePin ڕێگە بە خەڵک دەدات کە ستاوریج، بەندی ناو و هێزی پاشەکەوت بەشداربن بۆ یارمەتیدانی میوانداریکردن، گۆڕینی شێوە و گەیاندنی میدیا لە ڕێگەی تۆڕێکی بەهێزەوە."
+    },
+    "ky": {
+      "title": "DePin | Коомчулук тарабынан колдоого алынган медиа инфраструктурасы | DeHub",
+      "description": "DeHub DePin адамдарга сактоочу жай, өткөрүү жөндөмдүүлүгү жана эсептөө ресурстарын кошуп, туруктуу тармак аркылуу медианы жайгаштырууга, которууга жана жеткирүүгө жардам берүүгө мүмкүндүк берет."
+    },
+    "lt": {
+      "title": "DePin | Bendruomenės valdoma medijos infrastruktūra | DeHub",
+      "description": "DeHub DePin leidžia žmonėms prisidėti saugykla, pralaidumu ir skaičiavimo galia, kad būtų galima talpinti, transkoduoti ir pristatyti mediją per atsparią tinklo sistemą."
+    },
+    "lv": {
+      "title": "DePin | Kopienas virzīta mediju infrastruktūra | DeHub",
+      "description": "DeHub DePin ļauj cilvēkiem nodrošināt krātuvi, joslas platumu un aprēķināšanas jaudu, lai palīdzētu mitināt, transkodēt un piegādāt medijus, izmantojot izturīgu tīklu."
+    },
+    "mg": {
+      "title": "DePin | Ny rafitra haino aman-jerin'ny vondrom-piarahamonina | DeHub",
+      "description": "DeHub DePin dia ahafahan'ny olona manampy ny fitehirizana, ny bandwidth ary ny famolavolana mba hanampiana ny mpampiantrano, ny transcode ary ny fampitam-baovao amin'ny alalan'ny tambajotra marefo."
     },
     "ml": {
       "title": "DePin | കമ്യൂണിറ്റി-പവർഡ് മീഡിയ ഇൻഫ്രാസ്ട്രക്ചർ | DeHub",
@@ -758,9 +834,49 @@
       "title": "イベント — DeHubのミートアップ＆コミュニティイベント",
       "description": "DeHubの今後のコミュニティイベントを閲覧し、ミートアップにRSVPして、分散型ユーザー所有のソーシャルプラットフォームで独自のイベントをホストしてください。"
     },
+    "ka": {
+      "title": "მოვლენები — შეხვედრები და საზოგადოებრივი ღონისძიებები DeHub-ზე",
+      "description": "დაათვალიერეთ DeHub-ის მომავალი საზოგადოებრივი ღონისძიებები, დაადასტურეთ დასწრება შეხვედრებზე და გამართეთ საკუთარი ღონისძიებები დეცენტრალიზებულ, მომხმარებლის საკუთრებაში არსებულ სოციალურ პლატფორმაზე."
+    },
+    "kk": {
+      "title": "Оқиғалар — DeHub-тағы кездесулер және қауымдастық іс-шаралары",
+      "description": "Алдағы DeHub қауымдастық іс-шараларын қараңыз, кездесулерге жауап беріңіз және децентрализацияланған, пайдаланушы иеленетін әлеуметтік платформада өз іс-шараларыңызды өткізіңіз."
+    },
+    "km": {
+      "title": "ព្រឹត្តិការណ៍ ➔ ការជួបជុំ និងព្រឹត្តិការណ៍សហគមន៍នៅលើ DeHub",
+      "description": "រកមើលព្រឹត្តិការណ៍សហគមន៍ DeHub ដែលនឹងមកដល់ ចូលរួមការជួបជុំ និងរៀបចំព្រឹត្តិការណ៍ផ្ទាល់ខ្លួនរបស់អ្នកនៅលើវេទិកាសង្គមដែលវិមជ្ឈការ និងជាកម្មសិទ្ធិរបស់អ្នកប្រើប្រាស់។"
+    },
+    "kn": {
+      "title": "ಈವೆಂಟ್‌ಗಳು - DeHub ನಲ್ಲಿ ಮೀಟಪ್‌ಗಳು ಮತ್ತು ಸಮುದಾಯ ಈವೆಂಟ್‌ಗಳು",
+      "description": "ಮುಂಬರುವ DeHub ಸಮುದಾಯ ಈವೆಂಟ್‌ಗಳನ್ನು ಬ್ರೌಸ್ ಮಾಡಿ, ಮೀಟಪ್‌ಗಳಿಗೆ RSVP ಮಾಡಿ ಮತ್ತು ವಿಕೇಂದ್ರೀಕೃತ, ಬಳಕೆದಾರ-ಮಾಲೀಕತ್ವದ ಸಾಮಾಜಿಕ ವೇದಿಕೆಯಲ್ಲಿ ನಿಮ್ಮದೇ ಆದ ಈವೆಂಟ್‌ಗಳನ್ನು ಆಯೋಜಿಸಿ."
+    },
     "ko": {
       "title": "이벤트 — DeHub의 밋업 및 커뮤니티 이벤트",
       "description": "DeHub 커뮤니티 이벤트를 둘러보고, 밋업에 참석 신청하고, 분산형 사용자 소유 소셜 플랫폼에서 자신의 이벤트를 호스팅하세요."
+    },
+    "ku": {
+      "title": "ڕووداوەکان — کۆبوونەوەکان و ڕووداوەکانی کۆمەڵگا لە DeHub",
+      "description": "ڕووداوەکانی داهاتووی کۆمەڵگای DeHub بگەڕێ، بۆ کۆبوونەوەکان ناونووس بکە و ڕووداوی خۆت لەسەر پلاتفۆرمی کۆمەڵایەتی بڵاوبووەوە، کە خاوەندارێتی بەکارهێنەرە، میوانداری بکە."
+    },
+    "ky": {
+      "title": "Окуялар — DeHubдагы жолугушуулар жана коомдук иш-чаралар",
+      "description": "Жакынкы DeHub коомдук иш-чараларын карап чыгыңыз, жолугушууларга катталыңыз жана өз иш-чараларыңызды бөлүштүрүлгөн, колдонуучуга таандык социалдык платформада өткөрүңүз."
+    },
+    "lo": {
+      "title": "ເຫດການ ─ ການປະຊຸມ & ເຫດການຊຸມຊົນໃນ DeHub",
+      "description": "ເລືອກເບິ່ງເຫດການຊຸມຊົນ DeHub ທີ່ຈະມາເຖິງ, ລົງທະບຽນເຂົ້າຮ່ວມການປະຊຸມ ແລະຈັດເຫດການຂອງທ່ານເອງໃນເວທີສັງຄົມແບບແບ່ງປັນ, ເປັນເຈົ້າຂອງໂດຍຜູ້ໃຊ້."
+    },
+    "lt": {
+      "title": "Renginiai — Susitikimai ir bendruomenės renginiai DeHub",
+      "description": "Naršykite būsimus DeHub bendruomenės renginius, patvirtinkite dalyvavimą susitikimuose ir organizuokite savo renginius decentralizuotoje, vartotojui priklausančioje socialinėje platformoje."
+    },
+    "lv": {
+      "title": "Pasākumi — tikšanās un kopienas pasākumi DeHub",
+      "description": "Apskatiet gaidāmos DeHub kopienas pasākumus, atzīmējiet dalību tikšanās reizēs un rīkojiet savus pasākumus decentralizētajā, lietotāju pārvaldītajā sociālajā platformā."
+    },
+    "mg": {
+      "title": "Fampisehoana Ã¢Â Meetups & Famoriam-bahoaka ao amin'ny DeHub",
+      "description": "Tsidiho ny hetsika ho an'ny fikambanana DeHub atsy ho atsy, RSVP mba hihaonana sy hampiantrano ny hetsika manokana ao amin'ny sehatra sosialy tsy mialonjafy sy an'ny mpampiasa."
     },
     "ml": {
       "title": "ഇവന്റുകൾ — DeHub-ലെ മീറ്റআപ്പുകൾ & കമ്യൂണിറ്റി ഇവന്റുകൾ",
@@ -928,9 +1044,45 @@
       "title": "Fractions | DeHub",
       "description": "DeHubの投稿のフラクションを売買します。すべてのアップロードは1000のオンチェーンフラクション — ビデオ、トラック、または画像のスライスを所有し、DHBで取引します。"
     },
+    "ka": {
+      "title": "წილები | DeHub",
+      "description": "იყიდეთ და გაყიდეთ DeHub პოსტების წილები. ყოველი ატვირთვა არის 1000 წილი ბლოკჩეინზე — გქონდეთ ვიდეოს, ტრეკის ან სურათის ნაწილი და გაყიდეთ იგი DHB-ში."
+    },
+    "kk": {
+      "title": "Бөлшектер | DeHub",
+      "description": "DeHub жазбаларының бөлшектерін сатып алыңыз және сатыңыз. Әр жүктеу 1000 тізбекті бөлшектерді құрайды — бейненің, тректің немесе суреттің бір бөлігіне ие болыңыз және оны DHB-да сатыңыз."
+    },
+    "km": {
+      "title": "ប្រភាគ | DeHub",
+      "description": "ទិញ និងលក់ភាគហ៊ុននៃប្រកាស DeHub។ រាល់ការផ្ទុកឡើងមានភាគហ៊ុន on-chain ចំនួន ១០០០ — ជាកម្មសិទ្ធិរបស់អ្នកលើវីដេអូ បទចម្រៀង ឬរូបភាព ហើយជួញដូរវានៅក្នុង DHB។"
+    },
+    "kn": {
+      "title": "ಭಿನ್ನರಾಶಿಗಳು | DeHub",
+      "description": "DeHub ಪೋಸ್ಟ್‌ಗಳ ಭಾಗಗಳನ್ನು ಖರೀದಿಸಿ ಮತ್ತು ಮಾರಾಟ ಮಾಡಿ. ಪ್ರತಿ ಅಪ್‌ಲೋಡ್ 1000 ಆನ್-ಚೈನ್ ಭಿನ್ನರಾಶಿಗಳನ್ನು ಹೊಂದಿದೆ - ¢ Â Â ವೀಡಿಯೊ, ಟ್ರ್ಯಾಕ್ ಅಥವಾ ಚಿತ್ರದ ಸ್ಲೈಸ್ ಅನ್ನು ಹೊಂದಿದ್ದು, ಅದನ್ನು DHB ನಲ್ಲಿ ವ್ಯಾಪಾರ ಮಾಡಿ."
+    },
     "ko": {
       "title": "Fractions | DeHub",
       "description": "DeHub 게시물의 분수를 사고 팔 수 있습니다. 모든 업로드는 1000개의 온체인 분수입니다 — 비디오, 트랙 또는 이미지의 일부를 소유하고 DHB에서 거래하세요."
+    },
+    "ku": {
+      "title": "پارچەکان | DeHub",
+      "description": "پارچەکانی پۆستەکانی DeHub بکڕە و بفرۆشە. هەموو بارکردنێک ١٠٠٠ پارچەی on-chainە - خاوەنی پارچەیەک ڤیدیۆ، تراک، یان وێنە بیت و لە DHB بازرگانی پێوە بکە."
+    },
+    "ky": {
+      "title": "Бөлүктөр | DeHub",
+      "description": "DeHub постторунун бөлүктөрүн сатып алыңыз жана сатыңыз. Ар бир жүктөө 1000 блокчейнден турган бөлүктөрдү түзөт — видеонун, тректин же сүрөттүн бир бөлүгүнө ээ болуңуз жана аны DHBде сатыңыз."
+    },
+    "lo": {
+      "title": "ສ່ວນ | DeHub",
+      "description": "ຊື້ ແລະ ຂາຍ ສ່ວນ ຂອງໂພສ DeHub. ທຸກໆການອັບໂຫຼດແມ່ນ 1000 ສ່ວນ on-chain — ເປັນເຈົ້າຂອງສ່ວນໜຶ່ງຂອງວິດີໂອ, ເພງ, ຫຼືຮູບພາບ ແລະ ຊື້ຂາຍມັນໃນ DHB."
+    },
+    "lt": {
+      "title": "Sakiniai | DeHub",
+      "description": "Pirkite ir parduokite \"DeHub\" įrašų dalis. Kiekvienas įkėlimas yra 1000 grandininės dalies – valdykite vaizdo įrašo, takelio ar vaizdo įrašo dalį ir prekiaukite ja DHB."
+    },
+    "lv": {
+      "title": "Frakcijas | DeHub",
+      "description": "Pērciet un pārdodiet DeHub ierakstu daļas. Katra augšupielāde ir 1000 ķēdes frakciju — īpašumā iegūstiet video, dziesmas vai attēla daļu un tirgojiet to DHB."
     },
     "ms": {
       "title": "Pecahan | DeHub",
@@ -1074,9 +1226,49 @@
       "title": "DeHubでのキャリア — Web3ソーシャルメディアのオープンロール",
       "description": "DeHubチームに参加してください — ビジネス開発、マーケティングなどのオープンポジション。"
     },
+    "ka": {
+      "title": "კარიერა DeHub-ში — ღია პოზიციები Web3 სოციალურ მედიაში",
+      "description": "შეუერთდით DeHub გუნდს — ღია პოზიციები ბიზნესის განვითარებაში, მარკეტინგში და სხვა."
+    },
+    "kk": {
+      "title": "DeHub-тағы мансаптар – Web3 әлеуметтік медиадағы бос жұмыс орындары",
+      "description": "DeHub командасына қосылыңыз – бизнес даму, маркетинг және т.б. салалардағы бос лауазымдар."
+    },
+    "km": {
+      "title": "អាជីពនៅ DeHub - តួនាទីបើកចំហក្នុងប្រព័ន្ធផ្សព្វផ្សាយសង្គម Web3",
+      "description": "ចូលរួមក្រុម DeHub - តួនាទីបើកចំហក្នុងការអភិវឌ្ឍន៍អាជីវកម្ម ការផ្សាយពាណិជ្ជកម្ម និងច្រើនទៀត។"
+    },
+    "kn": {
+      "title": "DeHub ನಲ್ಲಿ ವೃತ್ತಿಜೀವನ - Web3 ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮದಲ್ಲಿ ತೆರೆದ ಸ್ಥಾನಗಳು",
+      "description": "DeHub ತಂಡವನ್ನು ಸೇರಿ - ವ್ಯಾಪಾರ ಅಭಿವೃದ್ಧಿ, ಮಾರ್ಕೆಟಿಂಗ್ ಮತ್ತು ಹೆಚ್ಚಿನವುಗಳಲ್ಲಿ ತೆರೆದ ಸ್ಥಾನಗಳು."
+    },
     "ko": {
       "title": "DeHub 채용 — 웹3 소셜 미디어 공개 채용공고",
       "description": "DeHub 팀에 합류하세요 — 비즈니스 개발, 마케팅 등의 공개 직책입니다."
+    },
+    "ku": {
+      "title": "کار لە DeHub - پۆستە کراوەکان لە وێب٣ سۆشیال میدیا",
+      "description": "پەیوەندی بکە بە تیمی DeHub - پۆستە کراوەکان لە گەشەی بازرگانی، بازاڕکردن و زیاتر."
+    },
+    "ky": {
+      "title": "DeHubда карьера - Web3 социалдык медиасындагы бош орундар",
+      "description": "DeHub командасына кошулуңуз - бизнес өнүктүрүү, маркетинг жана башка тармактардагы бош орундар."
+    },
+    "lo": {
+      "title": "ອາຊີບທີ່ DeHub – ຕຳແໜ່ງເປີດໃນ Web3 Social Media",
+      "description": "ເຂົ້າຮ່ວມທີມ DeHub – ຕຳແໜ່ງເປີດໃນການພັດທະນາທຸລະກິດ, ການຕະຫຼາດ ແລະອື່ນໆ."
+    },
+    "lt": {
+      "title": "Karjera „DeHub“ – atviros pozicijos „Web3“ socialinėje medijoje",
+      "description": "Prisijunkite prie „DeHub“ komandos – atviros pozicijos verslo plėtros, rinkodaros ir kt. srityse."
+    },
+    "lv": {
+      "title": "Karjera DeHub — Atvērtās vakances Web3 sociālajos medijos",
+      "description": "Pievienojieties DeHub komandai — atvērtās vakances biznesa attīstības, mārketinga un citās jomās."
+    },
+    "mg": {
+      "title": "Ny anjara asan'ny DeHub¢ Open ao amin'ny Web3 Social Media",
+      "description": "Miaraha amin'ny ekipan'ny DeHub¢misokatra amin'ny raharaham-barotra, fivarotana ary bebe kokoa."
     },
     "ml": {
       "title": "DeHub ലെ കരിയറുകൾ — Web3 സോഷ്യൽ മീഡിയയിൽ ഓപ്പൺ റോളുകൾ",
@@ -1244,6 +1436,22 @@
       "title": "런치패드 — DeHub",
       "description": "DeHub 런치패드에서 비즈니스를 토큰화하세요: 라이브 코인을 둘러보거나 직접 만들어보세요."
     },
+    "ky": {
+      "title": "Launchpad — DeHub",
+      "description": "DeHub launchpad'ында бизнести токендештириңиз: жандуу монеталарды карап чыгыңыз же өзүңүздү түзүңүз."
+    },
+    "lt": {
+      "title": "Launchpad – DeHub",
+      "description": "Tokenizuokite verslą „DeHub“ paleidimo aikštelėje: naršykite gyvas monetas arba sukurkite savo."
+    },
+    "lv": {
+      "title": "Launchpad — DeHub",
+      "description": "Tokenizējiet uzņēmumu DeHub palaišanas platformā: pārlūkojiet tiešraides monētas vai izveidojiet savu."
+    },
+    "mg": {
+      "title": "Launchpad ¢Launchpad DeHub",
+      "description": "Tokenise ny raharaham-barotra ao amin'ny DeHub launchpad: mijery velona vola madinika na mamorona anao manokana."
+    },
     "ms": {
       "title": "Launchpad — DeHub",
       "description": "Tokenisasi perniagaan di launchpad DeHub: layari syiling langsung atau cipta milik anda sendiri."
@@ -1402,9 +1610,49 @@
       "title": "DeHub Extra — プレミアムメンバーシップ",
       "description": "広告なし、バックグラウンド再生のロック解除、カスタムテーマ、プロフィールインサイト、その他のAIを利用できます。Extra $4.99/月、Family $11.99/月、Extra Large $50/月（最初の50件は100%トークンキャッシュバック）。"
     },
+    "ka": {
+      "title": "DeHub Extra — პრემიუმ წევრობა",
+      "description": "გამოიყენეთ რეკლამის გარეშე, ჩართეთ ფონური დაკვრა, მორგებული თემები, პროფილის ანალიტიკა და მეტი AI. Extra $4.99/თვეში, Family $11.99/თვეში, Extra Large $50/თვეში 100% ტოკენის ქეშბექით პირველი 50-ისთვის."
+    },
+    "kk": {
+      "title": "DeHub Extra — Премиум мүшелік",
+      "description": "Жарнамасыз, фондық ойнату, теңшелетін тақырыптар, профиль туралы мәліметтер және басқа да AI мүмкіндіктерін алыңыз. Қосымша $4.99/ай, Отбасылық $11.99/ай, Өте үлкен $50/ай, алғашқы 50 адамға 100% токен қайтарымымен."
+    },
+    "km": {
+      "title": "DeHub Extra — សមាជិកភាព​ពិសេស",
+      "description": "គ្មាន​ការ​ផ្សាយ​ពាណិជ្ជកម្ម ដោះសោ​ការ​ចាក់​សារ​ឡើង​វិញ​នៅ​ផ្ទៃ​ខាង​ក្រោយ ธีม​ផ្ទាល់ខ្លួន ការ​វិភាគ​ប្រវត្តិរូប និង AI បន្ថែម​ទៀត។ Extra $4.99/ខែ គ្រួសារ $11.99/ខែ Extra Large $50/ខែ ជាមួយ​នឹង​ការ​ទូទាត់​សង​វិញ​ជា​សញ្ញា​ប័ណ្ណ​ ១០០% សម្រាប់​ ៥០ នាក់​ដំបូង។"
+    },
+    "kn": {
+      "title": "DeHub ಎಕ್ಸ್ಟ್ರಾ - ಪ್ರೀಮಿಯಂ ಸದಸ್ಯತ್ವ",
+      "description": "ಜಾಹೀರಾತುಗಳಿಲ್ಲದೆ, ಹಿನ್ನೆಲೆ ಪ್ಲೇಬ್ಯಾಕ್, ಕಸ್ಟಮ್ ಥೀಮ್‌ಗಳು, ಪ್ರೊಫೈಲ್ ಒಳನೋಟಗಳು ಮತ್ತು ಹೆಚ್ಚಿನ AI ಅನ್‌ಲಾಕ್ ಮಾಡಿ. ಎಕ್ಸ್ಟ್ರಾ $4.99/ತಿಂಗಳು, ಕುಟುಂಬ $11.99/ತಿಂಗಳು, ಎಕ್ಸ್ಟ್ರಾ ಲಾರ್ಜ್ $50/ತಿಂಗಳು ಮೊದಲ 50 ಜನರಿಗೆ 100% ಟೋಕನ್ ಕ್ಯಾಶ್‌ಬ್ಯಾಕ್‌ನೊಂದಿಗೆ."
+    },
     "ko": {
       "title": "DeHub Extra — 프리미엄 멤버십",
       "description": "광고 없음, 백그라운드 재생 잠금 해제, 커스텀 테마, 프로필 인사이트 등을 이용하세요. Extra $4.99/월, Family $11.99/월, Extra Large $50/월 (처음 50명에게 100% 토큰 캐시백 제공)."
+    },
+    "ku": {
+      "title": "DeHub Extra - ئه‌ندامێتی Premium",
+      "description": "بێ ڕیکلام، په‌خشكردنی پشت په‌رده‌، ته‌مای تایبه‌ت، بینینی پروپاگه‌نده‌ی پروپاگه‌نده‌ و زیاتر AI. Extra 4.99$ مانگانه‌، خێزان 11.99$ مانگانه‌، Extra Large 50$ مانگانه‌ له‌گه‌ڵ 100% گه‌ڕانه‌وه‌ی توكن بۆ یه‌كه‌م 50 كه‌س."
+    },
+    "ky": {
+      "title": "DeHub Extra — Премиум мүчөлүк",
+      "description": "Жарнамасыз көрүңүз, фондо ойнотуу, ыңгайлаштырылган темалар, профилдик аналитика жана көбүрөөк AI функцияларын ачыңыз. Extra $4.99/ай, Үй-бүлөлүк $11.99/ай, Extra Large $50/ай, алгачкы 50 үчүн 100% токен кэшбэки менен."
+    },
+    "lo": {
+      "title": "DeHub Extra — ສະມາຊິກພຣີມຽມ",
+      "description": "ບໍ່ມີໂຄສະນາ, ປົດລັອກການຫຼິ້ນພື້ນຫຼັງ, ຮູບແບບທີ່ກຳນົດເອງ, ຂໍ້ມູນเชิงລึกໂປຣໄຟລ໌ ແລະ AI ອື່ນໆ. Extra $4.99/ເດືອນ, Family $11.99/ເດືອນ, Extra Large $50/ເດືອນ ພ້ອມເງິນຄືນ token 100% ສຳລັບ 50 ຄົນທຳອິດ."
+    },
+    "lt": {
+      "title": "DeHub Extra – Premium narystė",
+      "description": "Be reklamų, leiskite foninį atkūrimą, pasirinktines temas, profilio įžvalgas ir daugiau DI. Extra 4,99 USD/mėn., Šeimos 11,99 USD/mėn., Extra Large 50 USD/mėn. su 100 % žetonų grąžinimu pirmiesiems 50."
+    },
+    "lv": {
+      "title": "DeHub Extra – Premium dalība",
+      "description": "Bez reklāmām, atbloķējiet atskaņošanu fonā, pielāgotas tēmas, ieskatus profilā un vairāk AI. Extra 4,99 $/mēnesī, Ģimenei 11,99 $/mēnesī, Extra Large 50 $/mēnesī ar 100% atmaksu žetonos pirmajiem 50."
+    },
+    "mg": {
+      "title": "DeHub Extra ¢Premium mpikambana",
+      "description": "Mandehana ad-free, hamaha ny playback background, lohahevitra mahazatra, fahatakarana ny profil ary bebe kokoa AI. Extra $ 4.99/mo, Family $ 11.99/mo, Extra Large $ 50/mo amin'ny 100% famantarana Cashback voalohany 50."
     },
     "ml": {
       "title": "DeHub Extra — പ്രിമിയം അംഗത്വം",
@@ -1918,9 +2166,49 @@
       "title": "ステージ — DeHubのライブオーディオルーム",
       "description": "ライブオーディオステージに参加し、録音された会話を聞き直し、DeHub上で独自のルームをライブ配信してください — 分散型のオープンソースソーシャルプラットフォーム。"
     },
+    "ka": {
+      "title": "ეტაპები — DeHub-ზე პირდაპირი აუდიო ოთახები",
+      "description": "შეუერთდით პირდაპირ აუდიო ეტაპებს, მოუსმინეთ ჩაწერილ საუბრებს და ჩაერთეთ პირდაპირ ეთერში თქვენი საკუთარი ოთახით DeHub-ზე — დეცენტრალიზებულ, ღია კოდის სოციალურ პლატფორმაზე."
+    },
+    "kk": {
+      "title": "Сахналар — DeHub-тағы тікелей аудио бөлмелер",
+      "description": "DeHub-тағы тікелей аудио сахналарға қосылыңыз, жазылған әңгімелерді тыңдаңыз және өзіңіздің бөлмеңізбен тікелей эфирге шығыңыз — децентрализацияланған, ашық бастапқы әлеуметтік платформа."
+    },
+    "km": {
+      "title": "ឆាក — បន្ទប់សំឡេងផ្សាយផ្ទាល់នៅលើ DeHub",
+      "description": "ចូលរួម Stages សំឡេងផ្សាយផ្ទាល់ ស្តាប់ការសន្ទនាដែលបានថតទុក និងផ្សាយផ្ទាល់ជាមួយបន្ទប់ផ្ទាល់ខ្លួនរបស់អ្នកនៅលើ DeHub — វេទិកាសង្គមដែលបើកចំហ និងប្រភពបើកចំហ។"
+    },
+    "kn": {
+      "title": "ಸ್ಟೇಜ್‌ಗಳು — DeHub ನಲ್ಲಿ ಲೈವ್ ಆಡಿಯೋ ರೂಮ್‌ಗಳು",
+      "description": "DeHub ನಲ್ಲಿ ಲೈವ್ ಆಡಿಯೋ ಸ್ಟೇಜ್‌ಗಳಿಗೆ ಸೇರಿ, ರೆಕಾರ್ಡ್ ಮಾಡಿದ ಸಂಭಾಷಣೆಗಳನ್ನು ಮತ್ತೆ ಕೇಳಿ, ಮತ್ತು ನಿಮ್ಮದೇ ಆದ ರೂಮ್‌ನೊಂದಿಗೆ ಲೈವ್ ಆಗಿ ಹೋಗಿ — ವಿಕೇಂದ್ರೀಕೃತ, ಓಪನ್ ಸೋರ್ಸ್ ಸಾಮಾಜಿಕ ವೇದಿಕೆ."
+    },
     "ko": {
       "title": "스테이지 — DeHub의 라이브 오디오 룸",
       "description": "DeHub에서 라이브 오디오 Stages에 참여하고, 녹음된 대화를 다시 듣고, 자신의 방을 라이브로 진행하세요 — 분산형, 오픈 소스 소셜 플랫폼입니다."
+    },
+    "ku": {
+      "title": "شانۆکان - ژوورە دەنگییە ڕاستەوخۆکانی DeHub",
+      "description": "شانۆ دەنگییە ڕاستەوخۆکان ببینە، گفتوگۆ تۆمارکراوەکان گوێ لێ بگرە، و بە ژووری خۆت لە DeHub - پلاتفۆرمی کۆمەڵایەتی کراوە و بێ ناوەند - ڕاستەوخۆ بگە."
+    },
+    "ky": {
+      "title": "Этаптар — DeHubдагы жандуу аудио бөлмөлөр",
+      "description": "DeHubдагы жандуу аудио этаптарына кошулуңуз, жазылган сүйлөшүүлөрдү угуңуз жана өз бөлмөңүз менен жандуу эфирге чыгыңыз — борборлоштурулбаган, ачык булактуу социалдык платформа."
+    },
+    "lo": {
+      "title": "ເວທີ - ຫ້ອງສຽງສົດໃນ DeHub",
+      "description": "ເຂົ້າຮ່ວມເວທີສຽງສົດ, ຟັງຄືນການສົນທະນາທີ່ບັນທຶກໄວ້, ແລະອອກອາກາດສົດດ້ວຍຫ້ອງຂອງທ່ານເອງໃນ DeHub - ແພລດຟອມສັງຄົມແບບເປີດ, ບໍ່ມີສູນກາງ."
+    },
+    "lt": {
+      "title": "Scenos – tiesioginės garso patalpos DeHub",
+      "description": "Prisijunkite prie tiesioginių garso scenų, pasiklausykite įrašytų pokalbių ir pradėkite savo patalpų transliaciją DeHub – decentralizuotoje, atvirojo kodo socialinėje platformoje."
+    },
+    "lv": {
+      "title": "Skatuves — tiešraides audio istabas DeHub",
+      "description": "Pievienojieties tiešraides audio skatuvēm, klausieties ierakstītas sarunas un sāciet tiešraidi ar savu istabu DeHub — decentralizētā, atvērtā pirmkoda sociālajā platformā."
+    },
+    "mg": {
+      "title": "Stages ¢Live Audio amin'ny DeHub",
+      "description": "Mandraisa anjara amin'ny famoahana mivantana ny rakipeo, henoy ny resaka voarakitra, dia mandehana mipetraka miaraka amin'ny efitranonao ao amin'ny DeHub â Â sehatra sosialy natao ho an'ny daholobe manana loharano misokatra."
     },
     "ml": {
       "title": "സ്റ്റേജുകൾ — DeHub-ലെ തത്സമയ ഓഡിയോ റൂമുകൾ",
@@ -2104,9 +2392,45 @@
       "title": "ライブTV — 世界中の無料チャンネル",
       "description": "世界中の無料ライブTVチャンネルをDeHubで視聴できます。ニュース、スポーツ、エンターテインメントなど — ブラウザでストリーミング、サブスクリプション不要。"
     },
+    "ka": {
+      "title": "Live TV — უფასო არხები მთელი მსოფლიოდან",
+      "description": "უყურეთ უფასო პირდაპირ სატელევიზიო არხებს მთელი მსოფლიოდან DeHub-ზე. ახალი ამბები, სპორტი, გართობა და სხვა — ნაკადი ბრაუზერში, არანაირი გამოწერა არ არის საჭირო."
+    },
+    "kk": {
+      "title": "Тікелей эфирдегі теледидар – әлемнің әр түкпірінен тегін арналар",
+      "description": "DeHub-та әлемнің әр түкпірінен тегін тікелей эфирдегі теледидар арналарын көріңіз. Жаңалықтар, спорт, ойын-сауық және т.б. – браузерде көрсетіледі, жазылудың қажеті жоқ."
+    },
+    "km": {
+      "title": "ទូរទស្សន៍ផ្សាយផ្ទាល់ 📺 — ឆានែលឥតគិតថ្លៃពីជុំវិញពិភពលោក",
+      "description": "ទស្សនាឆានែលទូរទស្សន៍ផ្សាយផ្ទាល់ឥតគិតថ្លៃពីជុំវិញពិភពលោកនៅលើ DeHub។ ព័ត៌មាន កីឡា ការកម្សាន្ត និងច្រើនទៀត — ចាក់ផ្សាយក្នុងកម្មវិធីរុករកតាមអ៊ីនធឺណិត ដោយមិនចាំបាច់ជាវ។"
+    },
+    "kn": {
+      "title": "ಲೈವ್ ಟಿವಿ - ಪ್ರಪಂಚದಾದ್ಯಂತದ ಉಚಿತ ಚಾನಲ್‌ಗಳು",
+      "description": "DeHub ನಲ್ಲಿ ಪ್ರಪಂಚದಾದ್ಯಂತದ ಉಚಿತ ಲೈವ್ ಟಿವಿ ಚಾನಲ್‌ಗಳನ್ನು ವೀಕ್ಷಿಸಿ. ಸುದ್ದಿ, ಕ್ರೀಡೆ, ಮನರಂಜನೆ ಮತ್ತು ಇನ್ನಷ್ಟು - ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಸ್ಟ್ರೀಮ್ ಮಾಡಲಾಗಿದೆ, ಯಾವುದೇ ಚಂದಾದಾರಿಕೆ ಅಗತ್ಯವಿಲ್ಲ."
+    },
     "ko": {
       "title": "라이브 TV — 전 세계의 무료 채널",
       "description": "DeHub에서 전 세계의 무료 라이브 TV 채널을 시청하세요. 뉴스, 스포츠, 엔터테인먼트 등 — 브라우저에서 스트리밍되며 구독이 필요하지 않습니다."
+    },
+    "ku": {
+      "title": "تەلەفزیۆنی ڕاستەوخۆ ـــ کەناڵی بێبەرامبەر لە سەرتاسەری جیهان",
+      "description": "سەیری کەناڵە تەلەفزیۆنییە ڕاستەوخۆ بێبەرامبەرەکان لە سەرتاسەری جیهان بکە لە DeHub. هەواڵ، وەرزش، کات بەسەربردن و زیاتر ـــ لەناو وێبگەڕدا پەخش دەکرێت، پێویستی بە ھیچ بەشدارییەک نییە."
+    },
+    "ky": {
+      "title": "Жандуу ТВ — Дүйнө жүзүндөгү акысыз каналдар",
+      "description": "DeHubдан дүйнө жүзүндөгү акысыз жандуу ТВ каналдарын көрүңүз. Жаңылыктар, спорт, оюн-зоок жана башкалар — браузерде түз ободо, жазылуунун кереги жок."
+    },
+    "lt": {
+      "title": "Tiesioginė televizija – nemokami kanalai iš viso pasaulio",
+      "description": "Žiūrėkite nemokamus tiesioginės televizijos kanalus iš viso pasaulio per DeHub. Naujienos, sportas, pramogos ir kt. – transliuojama naršyklėje, nereikia abonemento."
+    },
+    "lv": {
+      "title": "Tiešraides TV — bezmaksas kanāli no visas pasaules",
+      "description": "Skatieties bezmaksas tiešraides TV kanālus no visas pasaules DeHub. Ziņas, sports, izklaide un daudz kas cits — straumēts pārlūkprogrammā, nav nepieciešama abonēšana."
+    },
+    "mg": {
+      "title": "Fahitalavitra Live ¢avy amin'ny lafivalon'izao tontolo izao",
+      "description": "Jereo ny fahitalavitra maimaim-poana maneran-tany ao amin'ny DeHub. News, fanatanjahan-tena, fialam-boly ary bebe kokoa Â ¢nirohotra tao amin'ny navigateur, tsy misy famandrihana ilaina."
     },
     "ml": {
       "title": "Live TV — ലോകത്തിന്റെ വിവിധ ഭാഗങ്ങളിൽ നിന്നുള്ള സ്വതന്ത്ര ചാനലുകൾ",
@@ -2294,9 +2618,45 @@
       "title": "ユーザー名マーケットプレイス| DeHub",
       "description": "DHBでDeHubユーザー名を売買します。ショート、数字、オリジナルのハンドルを検索して販売するか、独自のハンドルをリストアップしてください。支払いが完了した瞬間に送金がチェーン上で行われます。"
     },
+    "ka": {
+      "title": "Მომხმარებლის სახელი | DeHub",
+      "description": "იყიდეთ და გაყიდეთ DeHub-ის მომხმარებლის სახელები DHB-ით. მოძებნეთ გასაყიდი მოკლე, ციფრული და ორიგინალური სახელურები, ან განათავსეთ თქვენი საკუთარი — გადარიცხვა ხდება ბლოკჩეინზე გადახდის დამტკიცების მომენტში."
+    },
+    "kk": {
+      "title": "Пайдаланушы аты нарығы | DeHub",
+      "description": "DeHub атауларын DHB арқылы сатып алыңыз және сатыңыз. Сатылымдағы қысқа, сандық және түпнұсқа атауларды іздеңіз немесе өз атауыңызды тізімдеңіз — төлем расталған сәтте ауысу блокчейнінде жүзеге асады."
+    },
+    "km": {
+      "title": "ឈ្មោះអ្នកប្រើប្រាស់ ទីផ្សារ | DeHub",
+      "description": "ទិញ និងលក់ឈ្មោះអ្នកប្រើ DeHub ជាមួយ DHB។ ស្វែងរកឈ្មោះខ្លី លេខ និងឈ្មោះដើមសម្រាប់លក់ ឬចុះបញ្ជីឈ្មោះរបស់អ្នកផ្ទាល់ — ការផ្ទេរកើតឡើងនៅលើខ្សែសង្វាក់ភ្លាមៗនៅពេលការទូទាត់ត្រូវបានបញ្ជាក់។"
+    },
+    "kn": {
+      "title": "ಬಳಕೆದಾರರ ಹೆಸರು ಮಾರ್ಕೆಟ್‌ಪ್ಲೇಸ್ | DeHub",
+      "description": "DHB ಯೊಂದಿಗೆ DeHub ಬಳಕೆದಾರಹೆಸರುಗಳನ್ನು ಖರೀದಿಸಿ ಮತ್ತು ಮಾರಾಟ ಮಾಡಿ. ಮಾರಾಟಕ್ಕಾಗಿ ಸಣ್ಣ, ಸಂಖ್ಯಾತ್ಮಕ ಮತ್ತು ಮೂಲ ಹ್ಯಾಂಡಲ್‌ಗಳನ್ನು ಹುಡುಕಿ ಅಥವಾ ಪಾವತಿ ತೆರವುಗೊಂಡ ಕ್ಷಣದಲ್ಲಿ ವರ್ಗಾವಣೆಯು ಸರಪಳಿಯಲ್ಲಿ ನಡೆಯುತ್ತದೆ ಎಂದು ನಿಮ್ಮ ಸ್ವಂತ ¢ Â ಅನ್ನು ಪಟ್ಟಿ ಮಾಡಿ."
+    },
     "ko": {
       "title": "사용자 이름 마켓플레이스 | DeHub",
       "description": "DHB로 DeHub 사용자 이름을 사고 팔 수 있습니다. 판매할 숏 핸들, 숫자 핸들, 오리지널 핸들을 검색하거나 나만의 핸들을 나열하세요. 결제가 완료되는 순간 온체인 방식으로 이체가 이루어집니다."
+    },
+    "ky": {
+      "title": "Колдонуучу аты Marketplace | DeHub",
+      "description": "Сатып алуу жана DHB менен DeHub Usernames сатуу. Сатуу үчүн кыска, сандык жана оригиналдуу туткаларды издеңиз же төлөм тазаланган учурда, өз ¢ 'ыңыздын тизмесин түзүңүз."
+    },
+    "lo": {
+      "title": "ຊື່ຜູ້ໃຊ້ Marketplace | DeHub",
+      "description": "ຊື້ແລະຂາຍຊື່ຜູ້ໃຊ້ DeHub ກັບ DHB. ຄົ້ນຫາຄູ່ມືສັ້ນ, ຕົວເລກແລະຕົ້ນສະບັບສໍາລັບການຂາຍ, ຫຼືບັນຊີລາຍຊື່ຂອງທ່ານເອງ A ¢ ການໂອນເງິນເກີດຂຶ້ນໃນຕ່ອງໂສ້ໃນເວລາທີ່ການຊໍາລະເງິນ clears."
+    },
+    "lt": {
+      "title": "Naudotojo vardo prekyvietė | DeHub",
+      "description": "Pirkite ir parduokite „DeHub“ naudotojų vardus naudodami DHB. Ieškokite parduodamų trumpų, skaitinių ir originalių rankenėlių arba nurodykite savo Ć¢ Â Â pervedimas įvyksta grandinėje, kai tik mokėjimas išvalomas."
+    },
+    "lv": {
+      "title": "Lietotājvārda tirgotava | DeHub",
+      "description": "Pērciet un pārdodiet DeHub lietotājvārdus ar DHB. Pārdošanā meklējiet īsus, skaitliskus un oriģinālus rokturus vai norādiet savu â ÂĀ pārskaitījums notiek ķēdē brīdī, kad maksājums tiek dzēsts."
+    },
+    "mg": {
+      "title": "Tsenan'ny mpampiasa | DeHub",
+      "description": "Mividiana sy mivarotra DeHub usernames amin'ny DHB. Search fohy, numeric sy tany am-boalohany famohana amidy, na mitanisa ny anao manokana â ny famindrana mitranga amin'ny-Chain ny fotoana fandoavam-bola clears."
     },
     "ml": {
       "title": "ഉപയോക്തൃനാമം മാർക്കറ്റ് പ്ലേസ് | DeHub",
