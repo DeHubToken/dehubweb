@@ -5259,7 +5259,10 @@
       "gold3": "Het scherm wordt goud en munten regenen 3 seconden lang neer.",
       "gold10": "Het scherm wordt goud en munten regenen 10 seconden lang neer.",
       "ultimate": "Elke viering tegelijk — goud, confetti, munten en een trofee."
-    }
+    },
+    "ttsLabel": "Zeg iets hardop",
+    "ttsPlaceholder": "Lees uit naar de stream...",
+    "ttsHint": "Lees hardop voor aan iedereen die kijkt wanneer je cadeau binnenkomt."
   },
   "home": {
     "title": "Home",

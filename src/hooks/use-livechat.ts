@@ -188,11 +188,74 @@ function deduplicateMessages(msgs: SupabaseLiveChatMessage[]): SupabaseLiveChatM
  * MAX_LIVECHAT_MESSAGES (input is sorted oldest→newest) plus any pinned ones.
  */
 const MAX_LIVECHAT_MESSAGES = 300;
+
+/**
+ * How long arrivals are pooled before one render. One frame's worth: below
+ * anything a reader can perceive, and enough that a burst lands together.
+ */
+const FLUSH_INTERVAL_MS = 16;
+
+/**
+ * Key an optimistic row by who sent it and what it said.
+ *
+ * Length-prefixed rather than joined on a separator, because any character
+ * picked as a separator is a character somebody can type into chat to make two
+ * different messages collide.
+ */
+function senderContentKey(m: SupabaseLiveChatMessage): string {
+  return `${m.sender_address.length}:${m.sender_address}${m.content}`;
+}
 function capMessages(msgs: SupabaseLiveChatMessage[]): SupabaseLiveChatMessage[] {
   if (msgs.length <= MAX_LIVECHAT_MESSAGES) return msgs;
   const cut = msgs.length - MAX_LIVECHAT_MESSAGES;
   const pinnedOverflow = msgs.slice(0, cut).filter((m) => m.is_pinned);
   return [...pinnedOverflow, ...msgs.slice(cut)];
+}
+
+/**
+ * Fold a batch of freshly-arrived socket messages into the list we already hold.
+ *
+ * The cheap path for the case that is almost always true: messages arrive in
+ * order, newer than everything on screen, and none of them is already there.
+ * `deduplicateMessages` was doing this job and it costs a Map build plus a full
+ * comparator sort of up to 300 rows — per message. A stream taking twenty lines
+ * a second was therefore doing twenty full sorts a second on the main thread,
+ * on top of twenty React renders, which is exactly the load a busy stream puts
+ * on it and exactly when the chat would start dropping frames.
+ *
+ * Correctness is unchanged: ids in the batch still replace their existing rows,
+ * confirmed messages still evict the optimistic row they match, and the result
+ * is still sorted — it just only pays for a sort when the batch actually
+ * arrived out of order, which is the rare case (a reconnect replaying history).
+ */
+export function mergeIncoming(
+  prev: SupabaseLiveChatMessage[],
+  batch: SupabaseLiveChatMessage[],
+): SupabaseLiveChatMessage[] {
+  if (batch.length === 0) return prev;
+
+  const incomingIds = new Set(batch.map((m) => m.id));
+  // An optimistic row is confirmed by content and sender, not by id: the
+  // gateway assigns the real id and never sees ours.
+  const confirmed = new Set(batch.map(senderContentKey));
+
+  const kept = prev.filter((m) => {
+    if (incomingIds.has(m.id)) return false;
+    if (m.id.startsWith('temp-') && confirmed.has(senderContentKey(m))) return false;
+    return true;
+  });
+
+  const merged = [...kept, ...batch];
+
+  // Only pay for a sort if something actually landed out of order.
+  let ordered = true;
+  for (let i = 1; i < merged.length; i += 1) {
+    if (new Date(merged[i - 1].created_at).getTime() > new Date(merged[i].created_at).getTime()) {
+      ordered = false;
+      break;
+    }
+  }
+  return capMessages(ordered ? merged : deduplicateMessages(merged));
 }
 
 /**
@@ -260,6 +323,15 @@ export function useLiveChatMessages(roomId: string | null) {
   const [isBanned, setIsBanned] = useState(false);
   const { isAuthenticated, user, walletAddress } = useAuth();
   const initialLoadDone = useRef(false);
+  /**
+   * The current list, for callbacks that need to read it without being rebuilt
+   * every time it changes. `send` used to depend on `messages` purely to look
+   * up the row being replied to, so on a busy room the callback — and every
+   * component memoised on it — was recreated on every single arrival.
+   */
+  const messagesRef = useRef<SupabaseLiveChatMessage[]>([]);
+  messagesRef.current = messages;
+  const sweepRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fetchMessages = useCallback(async (showLoading = false) => {
     if (!roomId) return;
@@ -286,6 +358,27 @@ export function useLiveChatMessages(roomId: string | null) {
       setIsLoading(false);
     }
   }, [roomId]);
+
+  /**
+   * One reconciliation per burst of sends, not one per send.
+   *
+   * A message the gateway neither broadcast back nor refused leaves an
+   * optimistic row on screen forever. That is worth catching — but it is rare,
+   * so it is checked once things go quiet rather than on a timer attached to
+   * every message. If nothing is still pending by then, no request is made at
+   * all, which is the normal outcome.
+   */
+  const scheduleOptimisticSweep = useCallback(() => {
+    if (sweepRef.current) clearTimeout(sweepRef.current);
+    sweepRef.current = setTimeout(() => {
+      sweepRef.current = null;
+      if (messagesRef.current.some((m) => m.id.startsWith('temp-'))) fetchMessages(false);
+    }, 4000);
+  }, [fetchMessages]);
+
+  useEffect(() => () => {
+    if (sweepRef.current) clearTimeout(sweepRef.current);
+  }, []);
 
   useEffect(() => {
     if (!roomId) {
@@ -328,18 +421,49 @@ export function useLiveChatMessages(roomId: string | null) {
       initialLoadDone.current = true;
     });
 
+    /*
+     * Arrivals are coalesced into one state update per frame's worth of time.
+     *
+     * Every socket message used to be its own setState, so a room doing twenty
+     * lines a second asked React for twenty renders of the whole list in that
+     * second — and on a top streamer's chat, which is the only place the rate
+     * gets interesting, that is where the frames go. Nothing is delayed that a
+     * reader can perceive: 16ms, and the messages still appear in the order
+     * they were sent. What changes is that ten messages landing together cost
+     * one render instead of ten.
+     *
+     * A timer rather than requestAnimationFrame, deliberately: rAF does not run
+     * at all in a hidden tab, so a viewer who switched away from a busy stream
+     * would accumulate an unbounded buffer and take the whole backlog as one
+     * render on returning. A timeout still fires when hidden (throttled to
+     * about a second, which is the right cadence for a tab nobody is looking
+     * at), and the buffer is capped either way.
+     */
+    const pending: SupabaseLiveChatMessage[] = [];
+    let flushHandle: ReturnType<typeof setTimeout> | null = null;
+
+    const flush = () => {
+      flushHandle = null;
+      if (pending.length === 0) return;
+      const batch = pending.splice(0, pending.length);
+      setMessages((prev) => {
+        const next = mergeIncoming(prev, batch);
+        cacheRoomMessages(roomId, next);
+        return next;
+      });
+    };
+
     const unsubMsg = onLiveChatMessage(roomId, (msg) => {
       const local = socketMsgToLocal(msg, roomId);
-      if (local) {
-        setMessages((prev) => {
-          const withoutMatchingTemp = prev.filter(
-            (x) => !(x.id.startsWith('temp-') && x.content === local.content && x.sender_address === local.sender_address)
-          );
-          const next = capMessages(deduplicateMessages([...withoutMatchingTemp.filter((x) => x.id !== local.id), local]));
-          cacheRoomMessages(roomId, next);
-          return next;
-        });
+      if (!local) return;
+      pending.push(local);
+      // The list only ever renders MAX_LIVECHAT_MESSAGES anyway, so holding
+      // more than that buys nothing and costs memory on a tab left open on a
+      // fire-hose room.
+      if (pending.length > MAX_LIVECHAT_MESSAGES) {
+        pending.splice(0, pending.length - MAX_LIVECHAT_MESSAGES);
       }
+      if (flushHandle === null) flushHandle = setTimeout(flush, FLUSH_INTERVAL_MS);
     });
 
     const unsubEdited = onMessageEdited(roomId, (msg) => {
@@ -412,6 +536,8 @@ export function useLiveChatMessages(roomId: string | null) {
     });
 
     return () => {
+      if (flushHandle !== null) clearTimeout(flushHandle);
+      pending.length = 0;
       leaveRoom(roomId);
       unsubJoined();
       unsubMsg();
@@ -448,7 +574,7 @@ export function useLiveChatMessages(roomId: string | null) {
       // Build reply_to data from the original message so sender_name is correct
       let replyToData: SupabaseLiveChatMessage['reply_to'];
       if (replyToId) {
-        const original = messages.find((m) => m.id === replyToId);
+        const original = messagesRef.current.find((m) => m.id === replyToId);
         if (original) {
           replyToData = {
             id: original.id,
@@ -502,7 +628,25 @@ export function useLiveChatMessages(roomId: string | null) {
           replyTo: replyToId
         });
 
-        setTimeout(() => { fetchMessages(false); }, 1500);
+        /*
+         * No refetch here.
+         *
+         * This used to pull the room's last 200 messages over REST 1.5 seconds
+         * after every send — from every sender, on every message. On a quiet
+         * room that is invisible; on a top streamer's chat it is the single
+         * most expensive thing the client does, and it scales with the exact
+         * thing we want to scale with: a room doing 20 messages a second was
+         * asking the API for 4,000 messages a second, and each response
+         * rebuilt and re-sorted the whole list on the main thread.
+         *
+         * It bought nothing the socket does not already do. The gateway
+         * re-broadcasts the message to the sender too, which is what clears
+         * the optimistic row, and a send the gateway REFUSES comes back on the
+         * error channel — where it is already handled and already drops the
+         * row. The only case left is a send that is silently lost, and the
+         * sweep below covers it without a request per message.
+         */
+        scheduleOptimisticSweep();
       } catch (err: any) {
         setMessages((prev) => {
           const next = prev.filter((m) => m.id !== optimisticId);
@@ -516,7 +660,10 @@ export function useLiveChatMessages(roomId: string | null) {
         setIsSending(false);
       }
     },
-    [roomId, isAuthenticated, walletAddress, user, isBanned, fetchMessages, messages]
+    // Deliberately NOT depending on `messages` — it is read through
+    // messagesRef, so this callback stays identical for the life of the room
+    // instead of being rebuilt on every arrival.
+    [roomId, isAuthenticated, walletAddress, user, isBanned, scheduleOptimisticSweep]
   );
 
   /**
@@ -529,7 +676,7 @@ export function useLiveChatMessages(roomId: string | null) {
   const editMessage = useCallback(async (messageId: string, content: string) => {
     const trimmed = content.trim();
     if (!trimmed || !walletAddress) return;
-    const target = messages.find((m) => m.id === messageId);
+    const target = messagesRef.current.find((m) => m.id === messageId);
     if (!target) return;
     if (target.sender_address?.toLowerCase() !== walletAddress.toLowerCase()) {
       toast.error('You can only edit your own messages');
@@ -547,7 +694,7 @@ export function useLiveChatMessages(roomId: string | null) {
       return next;
     });
     emitEditMessage(roomId ?? undefined, messageId, trimmed);
-  }, [messages, walletAddress, roomId]);
+  }, [walletAddress, roomId]);
 
   /** Remove a message — your own, or anyone's if you moderate the room. */
   const deleteMessage = useCallback(async (messageId: string) => {
