@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { estimateMinutes, featuredPaymentAssets, formatPaymentAmount, isPurchaseTerminal, paymentKey, purchasePhase, purchasePollDelay, validDhbAmount, type Purchase } from './crypto-purchase';
+import { defaultRefund, estimateMinutes, featuredPaymentAssets, formatPaymentAmount, isPurchaseTerminal, paymentKey, purchasePhase, purchasePollDelay, validDhbAmount, type Purchase } from './crypto-purchase';
 
 const now = Date.parse('2026-09-17T12:00:00Z');
 const purchase: Purchase = { id: 'purchase', originAsset: 'btc', amountInFormatted: '0.01', depositAddress: 'address', expiresAt: (now - 1000) / 1000 };
@@ -64,5 +64,8 @@ describe('crypto purchase lifecycle', () => {
       { assetId: 'eth-near', symbol: 'ETH', blockchain: 'near', decimals: 18 },
     ];
     expect(featuredPaymentAssets(assets).map(asset => asset.assetId)).toEqual(['eth-base', 'usdc-base']);
+  });
+  it('uses the EVM wallet as the Robinhood refund address', () => {
+    expect(defaultRefund('robinhood', '0xBuyer')).toBe('0xBuyer');
   });
 });
