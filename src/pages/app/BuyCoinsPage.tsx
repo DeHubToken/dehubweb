@@ -69,7 +69,11 @@ export default function BuyCoinsPage() {
   const [customAmount, setCustomAmount] = useState('');
   const [selectedToken] = useState<DPayToken | null>(null);
   const selectedChainId = BASE_CHAIN_ID;
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(() => {
+    try { return localStorage.getItem('dehub.buy.method') === 'crypto' ? 'crypto' : 'card'; }
+    catch { return 'card'; }
+  });
+  useEffect(() => { try { localStorage.setItem('dehub.buy.method', paymentMethod); } catch { /* Storage may be disabled. */ } }, [paymentMethod]);
   /** Which MoonPay currency is mid-handoff, so only that tile spins. */
   const [moonPayPending, setMoonPayPending] = useState<string | null>(null);
 
@@ -487,7 +491,7 @@ export default function BuyCoinsPage() {
         </div>
 
         {/* Price Summary */}
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
+        {paymentMethod === 'card' && <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-zinc-400">{t('buyCoins.youReceive')}</span>
@@ -568,7 +572,7 @@ export default function BuyCoinsPage() {
               </p>
             </div>
           )}
-        </div>
+        </div>}
 
         {/* Payment Methods */}
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
