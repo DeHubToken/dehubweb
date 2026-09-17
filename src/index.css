@@ -965,12 +965,21 @@ body > div[style*="position: fixed"][style*="height: 0"] {
 @media (max-width: 1023px) {
   body.immersive-video-mode [data-mobile-header],
   body.immersive-video-mode [data-feed-nav],
+  body.immersive-video-mode [data-feed-nav-outer],
   body.immersive-video-mode [data-home-tabs] {
     display: none !important;
   }
 }
 
-/* The full-bleed live viewer — everything the immersive video post clears,
+/* Hiding [data-feed-nav] empties the pill but leaves its sticky wrapper —
+   [data-feed-nav-outer], 12px of padding at z-[90], which is above the
+   viewer's own z-[55]. On a phone that band landed across the creator
+   capsule and took the bottom of the avatar and the whole followers /
+   watching / gifts line with it: the top row looked cut in half, and it
+   survived a reload because nothing about it was transient. The wrapper is
+   listed alongside the pill in both rules now.
+
+   The full-bleed live viewer — everything the immersive video post clears,
    plus the bottom nav bar.
 
    `[data-bottom-nav]` is its own attribute and no rule above touches it, so
@@ -982,6 +991,7 @@ body > div[style*="position: fixed"][style*="height: 0"] {
 @media (max-width: 1023px) {
   body.immersive-live-mode [data-mobile-header],
   body.immersive-live-mode [data-feed-nav],
+  body.immersive-live-mode [data-feed-nav-outer],
   body.immersive-live-mode [data-home-tabs],
   body.immersive-live-mode [data-bottom-nav] {
     display: none !important;
