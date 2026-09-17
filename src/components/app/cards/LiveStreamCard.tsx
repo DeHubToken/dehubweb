@@ -343,7 +343,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       .finally(() => {
         if (!cancelled) setBalanceLoading(false);
       });
-    return () => { cancelled = true; };
+
+
+  return () => { cancelled = true; };
   }, [showGiftDrawer, walletAddress]);
 
   /**
@@ -874,6 +876,84 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     }
   };
 
+  const optionsMenu = (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label="Post options" className={immersive ? "flex h-10 w-10 items-center justify-center rounded-xl bg-black/20 text-white backdrop-blur-sm" : "w-8 h-[37.5px] rounded-xl flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"}>
+                <MoreVertical className="w-[23.5px] h-[23.5px]" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+              {/* Bookmark / Post info. Also on the action bar as icons on desktop —
+                  the menu carries them at every width so there is one
+                  reliable place to look. */}
+              <DropdownMenuItem
+                onClick={() => toggleBookmark()}
+                disabled={isBookmarkLoading}
+                className={cn(
+                  "hover:bg-zinc-700 cursor-pointer gap-2",
+                  isBookmarked ? "text-yellow-500" : "text-white"
+                )}
+              >
+                <Bookmark className={cn("w-4 h-4", isBookmarked && "fill-current")} />
+                {isBookmarked ? t("postOptions.removeBookmark", "Remove bookmark") : t("postOptions.bookmark", "Bookmark")}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={openPostInfoPage}
+                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+              >
+                <Info className="w-4 h-4" /> {t("postInfo.title", "Post info")}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setShowActivityLog(true)}
+                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+              >
+                <Activity className="w-4 h-4" /> {t('postOptions.activityLog')}
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Bell className="w-4 h-4" /> {t('postOptions.notifyWhenLive')}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setShowReportModal(true)}
+                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+              >
+                <Flag className="w-4 h-4" /> {t('postOptions.report')}
+              </DropdownMenuItem>
+              {!isStreamOwner && (
+                <DropdownMenuItem
+                  onClick={() => {
+                    if (!walletAddress) { openLoginModal(); return; }
+                    if (!stream.creatorId) return;
+                    blockAuthor(stream.creatorId, stream.streamer || undefined);
+                  }}
+                  className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+                >
+                  <Ban className="w-4 h-4" /> {t('postOptions.blockCreator')}
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <EyeOff className="w-4 h-4" /> {t('postOptions.seeLessLikeThis')}
+              </DropdownMenuItem>
+              {/* End stream - only for the stream creator while live */}
+              {!streamEnded && isAuthenticated && isStreamOwner && (
+                <DropdownMenuItem
+                  onSelect={(e) => {
+                    // Keep the menu's own close from unmounting the dialog it
+                    // opens — Radix closes the content on select by default.
+                    e.preventDefault();
+                    setConfirmEnd(true);
+                  }}
+                  disabled={isEnding}
+                  className="text-red-400 hover:bg-zinc-700 cursor-pointer gap-2"
+                >
+                  {isEnding ? <Loader2 className="w-4 h-4 animate-spin" /> : <StopCircle className="w-4 h-4" />}
+                  {t('postOptions.endStream')}
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+  );
+
   return (
     <div
       className={cn(
@@ -924,81 +1004,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           >
             <Sparkles className="w-[23.5px] h-[23.5px]" />
           </motion.button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label="Post options" className="w-8 h-[37.5px] rounded-xl flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
-                <MoreVertical className="w-[23.5px] h-[23.5px]" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
-              {/* Bookmark / Post info. Also on the action bar as icons on desktop —
-                  the menu carries them at every width so there is one
-                  reliable place to look. */}
-              <DropdownMenuItem
-                onClick={() => toggleBookmark()}
-                disabled={isBookmarkLoading}
-                className={cn(
-                  "hover:bg-zinc-700 cursor-pointer gap-2",
-                  isBookmarked ? "text-yellow-500" : "text-white"
-                )}
-              >
-                <Bookmark className={cn("w-4 h-4", isBookmarked && "fill-current")} />
-                {isBookmarked ? t("postOptions.removeBookmark", "Remove bookmark") : t("postOptions.bookmark", "Bookmark")}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={openPostInfoPage}
-                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
-              >
-                <Info className="w-4 h-4" /> {t("postInfo.title", "Post info")}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setShowActivityLog(true)}
-                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
-              >
-                <Activity className="w-4 h-4" /> {t('postOptions.activityLog')}
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Bell className="w-4 h-4" /> {t('postOptions.notifyWhenLive')}
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => setShowReportModal(true)}
-                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
-              >
-                <Flag className="w-4 h-4" /> {t('postOptions.report')}
-              </DropdownMenuItem>
-              {!isStreamOwner && (
-                <DropdownMenuItem
-                  onClick={() => {
-                    if (!walletAddress) { openLoginModal(); return; }
-                    if (!stream.creatorId) return;
-                    blockAuthor(stream.creatorId, stream.streamer || undefined);
-                  }}
-                  className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
-                >
-                  <Ban className="w-4 h-4" /> {t('postOptions.blockCreator')}
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <EyeOff className="w-4 h-4" /> {t('postOptions.seeLessLikeThis')}
-              </DropdownMenuItem>
-              {/* End stream - only for the stream creator while live */}
-              {!streamEnded && isAuthenticated && isStreamOwner && (
-                <DropdownMenuItem
-                  onSelect={(e) => {
-                    // Keep the menu's own close from unmounting the dialog it
-                    // opens — Radix closes the content on select by default.
-                    e.preventDefault();
-                    setConfirmEnd(true);
-                  }}
-                  disabled={isEnding}
-                  className="text-red-400 hover:bg-zinc-700 cursor-pointer gap-2"
-                >
-                  {isEnding ? <Loader2 className="w-4 h-4 animate-spin" /> : <StopCircle className="w-4 h-4" />}
-                  {t('postOptions.endStream')}
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {optionsMenu}
         </div>
       </div>
 
@@ -1262,6 +1268,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             startedAt={stream.startedAt ?? null}
             isMuted={isMuted}
             onToggleMute={toggleMute}
+            optionsSlot={optionsMenu}
+            likeCount={stream.likeCount}
             progress={streamEnded && stream.replayUrl ? (replayProgress ?? 0) : undefined}
             onSeek={streamEnded && stream.replayUrl ? seekReplay : undefined}
             hidden={chromeHidden}
@@ -1387,7 +1395,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 {[...GIFT_TIERS].reverse().map((tier) => {
                   const selected = Number(giftAmount) === tier.min;
                   const TierIcon = GIFT_TIER_ICONS[tier.key];
-                  return (
+
+
+  return (
                     <button
                       key={tier.key}
                       type="button"
