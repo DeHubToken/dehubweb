@@ -166,11 +166,29 @@ async function attemptSubscribe(): Promise<boolean> {
         existingKey &&
         new Uint8Array(existingKey).toString() === urlBase64ToUint8Array(publicKey).toString();
       if (sameKey) {
-        await registerSubscription(existing);
-        setState('subscribed');
-        return true;
+        // Reuse is right for the ordinary case and wrong for a retired one.
+        // A subscription the push service has already answered 410 Gone for
+        // still comes back from getSubscription() looking perfectly healthy,
+        // while the server has deleted the row it 410'd — so handing it the
+        // same endpoint again re-registers something known to be dead, and the
+        // next send 410s and deletes it again. Seen in production: two days of
+        // a switch reading "on", a live subscription object in the browser, and
+        // no row on the server at all.
+        //
+        // Registration failing is the only signal available from here, so use
+        // it: drop the subscription and build a fresh one below, rather than
+        // reporting a fault whose only cure is turning the switch off and on.
+        try {
+          await registerSubscription(existing);
+          setState('subscribed');
+          return true;
+        } catch (error) {
+          console.warn('[web-push] re-registering the existing subscription failed', error);
+          await existing.unsubscribe().catch(() => {});
+        }
+      } else {
+        await existing.unsubscribe().catch(() => {});
       }
-      await existing.unsubscribe().catch(() => {});
     }
 
     const subscription = await registration.pushManager.subscribe({
