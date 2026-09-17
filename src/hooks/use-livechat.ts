@@ -369,10 +369,22 @@ export function useLiveChatMessages(roomId: string | null) {
     // Edits and deletes are fire-and-forget emits — a refusal only ever
     // arrives here, so without this the row silently snaps back on the next
     // refetch with nothing said.
+    // Every refusal the gateway sends back lands here — a send it turned down
+    // (not signed in, banned, slow mode, stake floor, blocked link) as much as
+    // an edit or delete. The gateway acknowledges nothing on success, so a
+    // refused send used to vanish without a word: the optimistic row stayed
+    // until the 1.5s refetch replaced the list, and the creator saw their
+    // message simply disappear. Say what happened and drop the row that will
+    // never be confirmed.
     const unsubError = onLiveChatError(roomId, (data) => {
-      const message = data?.message || '';
+      const message = data?.message || 'Message was not sent';
+      toast.error(message);
+      setMessages((prev) => {
+        const next = prev.filter((m) => !m.id.startsWith('temp-'));
+        if (roomId) cacheRoomMessages(roomId, next);
+        return next;
+      });
       if (/edit|delete|not authorised|not authorized|own messages/i.test(message)) {
-        toast.error(message);
         fetchMessages(false);
       }
     });
