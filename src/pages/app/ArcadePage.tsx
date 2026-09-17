@@ -15,12 +15,13 @@
  */
 
 import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Play, Swords } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { SEOHead } from '@/components/SEOHead';
 import { ArcadeLeaderboard } from '@/components/app/arcade/ArcadeLeaderboard';
+import { ArcadeSubmissionForm } from '@/components/app/arcade/ArcadeSubmissionForm';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { ARCADE_GAMES, type ArcadeGame } from '@/config/arcade-games';
@@ -88,6 +89,10 @@ function GameCard({ game }: { game: ArcadeGame }) {
 
 export default function ArcadePage() {
   const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const submissionOpen = searchParams.get('submit') === '1';
+  const openSubmission = () => setSearchParams((previous) => { const next = new URLSearchParams(previous); next.set('submit', '1'); return next; });
+  const closeSubmission = () => setSearchParams((previous) => { const next = new URLSearchParams(previous); next.delete('submit'); return next; });
   const { walletAddress } = useAuth();
   const wallet = walletAddress?.toLowerCase() ?? null;
   const [board, setBoard] = useState(RANKED_GAMES[0]?.slug ?? '');
@@ -137,6 +142,9 @@ export default function ArcadePage() {
           <p className="text-xs leading-relaxed text-zinc-400">
             {t('arcade.intro')}
           </p>
+          <button type="button" onClick={openSubmission} className="rounded-lg border border-white/15 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-white/10">
+            Submit a game
+          </button>
         </div>
       </div>
 
@@ -183,6 +191,7 @@ export default function ArcadePage() {
           </section>
         ) : null}
       </div>
+      {submissionOpen && <ArcadeSubmissionForm onClose={closeSubmission} />}
     </div>
   );
 }
