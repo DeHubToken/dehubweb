@@ -1068,11 +1068,12 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
         )}
         </GatedMedia>
 
-        {/* Celebrations sit OUTSIDE GatedMedia and inside the fullscreen
-            container: outside so a gift still plays over a paywalled stream
-            the viewer has not unlocked (they can see the room reacting), and
-            inside so the effect follows the player into fullscreen rather than
-            animating behind it. */}
+        {/* Celebrations play in a box pinned to the bottom-right of the player.
+            Sits OUTSIDE GatedMedia so a gift still plays over a paywalled
+            stream the viewer has not unlocked — they can see the room reacting
+            — and INSIDE the fullscreen container so the effect follows the
+            player into fullscreen, where it lands over the chat column rather
+            than animating behind it. */}
         <GiftAnimationOverlay items={giftCelebrations} />
       </div>
 
