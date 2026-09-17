@@ -31,6 +31,7 @@ import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
 import { StreamShopPinnedCard } from '../live/StreamShop';
 import { ImmersiveLiveChrome } from '../live/ImmersiveLiveChrome';
+import { LiveViewerActionsProvider } from '../live/live-viewer-actions';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { PostAIChatLazy } from './PostAIChatLazy';
 import { ReportModal } from '../modals/ReportModal';
@@ -1076,7 +1077,13 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 allowance — presenting the opening stretch as the whole
                 broadcast would be a lie viewers notice mid-video. */}
             <span
-              className="absolute top-3 left-3 rounded bg-black/70 px-2 py-0.5 text-xs font-semibold text-white"
+              className={cn(
+                'rounded bg-black/70 px-2 py-0.5 text-xs font-semibold text-white',
+                // top-3 left-3 is the creator capsule's corner in full-bleed,
+                // where these two drew straight through each other. The pill
+                // row already says what this stream is; this joins it.
+                immersive ? 'hidden' : 'absolute top-3 left-3'
+              )}
               title={
                 stream.replayTruncated
                   ? 'Only the start of this stream was kept — the replay hit the creator’s daily limit'
@@ -1210,13 +1217,20 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             creatorUsername={stream.creatorUsername}
             creatorId={stream.creatorId}
             avatar={stream.avatar}
-            title={stream.title}
+            title={stream.title?.trim() || undefined}
             isLive={!!stream.isLive && !streamEnded}
             isEnded={streamEnded}
             viewers={livePresence ?? viewersLabel}
             startedAt={stream.startedAt ?? null}
             isMuted={isMuted}
             onToggleMute={toggleMute}
+            replayLabel={
+              streamEnded && stream.replayUrl
+                ? stream.replayTruncated
+                  ? 'PARTIAL REPLAY'
+                  : 'REPLAY'
+                : undefined
+            }
             progress={streamEnded && stream.replayUrl ? (replayProgress ?? 0) : undefined}
             onSeek={streamEnded && stream.replayUrl ? seekReplay : undefined}
             hidden={chromeHidden}
@@ -1235,48 +1249,38 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           they are a pill and a header chip now, and repeating them here is
           how the phone layout ended up with three copies of "LIVE". */}
       {immersive ? (
-        <>
-          {/* The room, over the picture. No panel and no fill of its own —
-              LivePostChat's overlay mode puts the messages straight on the
-              frame and masks the list out as it climbs. */}
-          {chatSlot ? (
-            <div
-              data-no-navigate
-              onClick={(e) => e.stopPropagation()}
-              className={cn(
-                'absolute inset-x-3 bottom-0 z-20 flex max-h-[45%] flex-col justify-end pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-opacity duration-300',
-                chromeHidden && 'pointer-events-none opacity-0'
-              )}
-            >
-              {chatSlot}
-            </div>
-          ) : null}
-
-          {/* Gift · share · thumb. Above the composer rather than beside it,
-              so the tray opens upward into empty frame and the message box
-              keeps the full width. */}
-          <div
-            className={cn(
-              'absolute right-3 bottom-[92px] z-30 transition-opacity duration-300',
-              chromeHidden && 'pointer-events-none opacity-0'
-            )}
+        /* The room, over the picture — no panel and no fill of its own, and
+           the gift/share/thumb buttons ride the composer's own row through
+           the provider rather than floating over the messages. */
+        <div
+          data-no-navigate
+          onClick={(e) => e.stopPropagation()}
+          className={cn(
+            'absolute inset-x-3 bottom-0 z-20 flex max-h-[45%] flex-col justify-end pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-opacity duration-300',
+            chromeHidden && 'pointer-events-none opacity-0'
+          )}
+        >
+          <LiveViewerActionsProvider
+            value={
+              <ActionBar
+                compact
+                postId={stream.id}
+                tokenId={parseInt(stream.id, 10) || undefined}
+                isLiked={stream.isLiked}
+                isDisliked={stream.isDisliked}
+                myReaction={stream.myReaction}
+                reactionCounts={stream.reactionCounts}
+                likeCount={stream.likeCount}
+                dislikeCount={stream.dislikeCount}
+                commentCount={stream.commentCount}
+                tipCount={tipCount}
+                onTip={() => setShowGiftDrawer(true)}
+              />
+            }
           >
-            <ActionBar
-              compact
-              postId={stream.id}
-              tokenId={parseInt(stream.id, 10) || undefined}
-              isLiked={stream.isLiked}
-              isDisliked={stream.isDisliked}
-              myReaction={stream.myReaction}
-              reactionCounts={stream.reactionCounts}
-              likeCount={stream.likeCount}
-              dislikeCount={stream.dislikeCount}
-              commentCount={stream.commentCount}
-              tipCount={tipCount}
-              onTip={() => setShowGiftDrawer(true)}
-            />
-          </div>
-        </>
+            {chatSlot}
+          </LiveViewerActionsProvider>
+        </div>
       ) : (
         <div className="pt-3">
           <ActionBar

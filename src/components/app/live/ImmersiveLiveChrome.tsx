@@ -64,6 +64,8 @@ export interface ImmersiveLiveChromeProps {
   creatorId?: string;
   avatar?: string;
   title?: string;
+  /** REPLAY / PARTIAL REPLAY, as a pill rather than a badge in the corner. */
+  replayLabel?: string;
   isLive: boolean;
   isEnded: boolean;
   viewers: string | number;
@@ -87,6 +89,7 @@ export function ImmersiveLiveChrome({
   creatorId,
   avatar,
   title,
+  replayLabel,
   isLive,
   isEnded,
   viewers,
@@ -212,11 +215,15 @@ export function ImmersiveLiveChrome({
           hidden && 'pointer-events-none opacity-0'
         )}
       >
-        <div className="flex min-w-0 items-center gap-2">
+        {/* Takes the row's spare width and gives it up before the controls
+            do. Without `flex-1` this shrank to min-content and the name,
+            which truncates, rendered at zero width — a capsule with an
+            avatar and nothing beside it. */}
+        <div className="flex min-w-0 flex-1 items-center gap-2">
           <button
             type="button"
             onClick={() => creatorUsername && navigate(`/app/profile/${creatorUsername}`)}
-            className="flex h-10 min-w-0 items-center gap-2 rounded-xl bg-zinc-900/60 pl-[5px] pr-3 backdrop-blur-sm"
+            className="flex h-10 min-w-0 max-w-[150px] items-center gap-2 rounded-xl bg-zinc-900/60 pl-[5px] pr-3 backdrop-blur-sm"
           >
             <Avatar className="h-[30px] w-[30px] rounded-lg">
               <AvatarImage src={avatar} alt={streamerName} className="rounded-lg" />
@@ -250,7 +257,7 @@ export function ImmersiveLiveChrome({
           ) : null}
         </div>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-2">
           {/* Audience. A count, not an avatar stack: the presence socket
               carries a number and inventing faces for it would be a lie at a
               glance. */}
@@ -309,6 +316,13 @@ export function ImmersiveLiveChrome({
             <Clock className="h-[11px] w-[11px] text-white/75" />
             <span className="text-[11px] font-semibold text-white/85">
               {elapsedLabel(now - startedMs)}
+            </span>
+          </span>
+        ) : null}
+        {replayLabel ? (
+          <span className={PILL}>
+            <span className="text-[10px] font-extrabold tracking-wider text-white/85">
+              {replayLabel}
             </span>
           </span>
         ) : null}
