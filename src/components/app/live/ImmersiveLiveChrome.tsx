@@ -65,7 +65,7 @@ const elapsedLabel = (ms: number) => {
  * viewer does with TEXT_SHADOW.
  */
 const CIRCLE =
-  'w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm flex items-center justify-center text-white shrink-0 drop-shadow-[0_1px_4px_rgba(0,0,0,0.65)]';
+  'w-10 h-10 rounded-xl bg-black/20 backdrop-blur-sm flex items-center justify-center text-white shrink-0 drop-shadow-[0_1px_4px_rgba(0,0,0,0.65)]';
 
 const PILL =
   'h-[26px] shrink-0 rounded-lg bg-black/20 backdrop-blur-sm px-2.5 flex items-center gap-1.5 text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.65)]';
@@ -83,6 +83,7 @@ export interface ImmersiveLiveChromeProps {
   viewers: string | number;
   /** DHB tipped to this stream, all told. Always drawn, zero included. */
   giftTotal?: number;
+  likeCount?: number;
   /** When the broadcast started, for the running clock on the pills. */
   startedAt?: string | number | Date | null;
   isMuted: boolean;
@@ -108,6 +109,7 @@ export function ImmersiveLiveChrome({
   isEnded,
   viewers,
   giftTotal,
+  likeCount,
   startedAt,
   isMuted,
   onToggleMute,
@@ -181,7 +183,6 @@ export function ImmersiveLiveChrome({
     return () => window.clearInterval(id);
   }, [running]);
 
-  const followerCount = profile?.followers ?? 0;
 
   /* ── the scrub line ───────────────────────────────────────────────────
      Same bar the shorts viewer draws: 1px at rest, 2px under a finger, a
@@ -235,7 +236,7 @@ export function ImmersiveLiveChrome({
           // status bar, so a flat 16px put the top of the creator capsule
           // behind it and the row read as cut off — which is exactly what it
           // was, just not by anything in the page.
-          'absolute inset-x-0 top-0 z-20 flex items-center gap-1.5 px-3 pb-4 pt-[max(1rem,env(safe-area-inset-top))] transition-opacity duration-300',
+          'absolute inset-x-0 top-0 z-20 flex items-center gap-1 px-2 pb-4 pt-[max(1rem,env(safe-area-inset-top))] transition-opacity duration-300',
           hidden && 'pointer-events-none opacity-0'
         )}
       >
@@ -243,7 +244,7 @@ export function ImmersiveLiveChrome({
             do. Without `flex-1` this shrank to min-content and the name,
             which truncates, rendered at zero width — a capsule with an
             avatar and nothing beside it. */}
-        <div className="flex min-w-0 flex-1 items-center gap-1.5">
+        <div className="flex min-w-0 flex-1 items-center gap-1">
           <button
             type="button"
             onClick={openCreatorProfile}
@@ -289,7 +290,7 @@ export function ImmersiveLiveChrome({
               <span className="flex items-center gap-2 text-[11px] font-semibold leading-tight text-white/70">
                 <span className="flex items-center gap-1">
                   <Heart className="h-[9px] w-[9px] fill-current" />
-                  {compact(followerCount)}
+                  {compact(likeCount ?? 0)}
                 </span>
                 <span className="flex items-center gap-1">
                   <Eye className="h-[10px] w-[10px]" />
@@ -306,6 +307,7 @@ export function ImmersiveLiveChrome({
 
             </span>
           </button>
+          {optionsSlot}
 
           {/* The one filled control on the frame, and it leaves once it has
               been used — an already-followed creator does not need a button
@@ -320,14 +322,14 @@ export function ImmersiveLiveChrome({
               type="button"
               onClick={handleFollow}
               aria-label={t('follow.follow', 'Follow')}
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-zinc-950"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-zinc-950"
             >
               <Plus className="h-5 w-5" strokeWidth={2.5} />
             </button>
           ) : null}
         </div>
 
-        <div className="ml-auto flex shrink-0 items-center gap-1.5">
+        <div className="ml-auto flex shrink-0 items-center gap-1">
           <button
             type="button"
             onClick={onToggleMute}
@@ -336,8 +338,6 @@ export function ImmersiveLiveChrome({
           >
             {isMuted ? <VolumeX className="h-[18px] w-[18px]" /> : <Volume2 className="h-[18px] w-[18px]" />}
           </button>
-
-          {optionsSlot}
 
           <button
             type="button"
