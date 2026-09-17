@@ -12,5 +12,5 @@ function rules(root: string): string {
   }).join('\n');
 }
 
-export const badgeLightArtworkCss = `${rules('html[data-theme="light"]')}
-@media (prefers-color-scheme: light) { ${rules('html[data-theme="system"]')} }`;
+// DeHub's "system" theme is its dark palette, even on a light OS desktop.
+export const badgeLightArtworkCss = rules('html[data-theme="light"]');
