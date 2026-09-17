@@ -210,7 +210,11 @@ export function ImmersiveLiveChrome({
       {/* Header */}
       <div
         className={cn(
-          'absolute inset-x-0 top-0 z-20 flex items-center gap-2 p-4 transition-opacity duration-300',
+          // pt clears the notch. On a phone browser the page starts under the
+          // status bar, so a flat 16px put the top of the creator capsule
+          // behind it and the row read as cut off — which is exactly what it
+          // was, just not by anything in the page.
+          'absolute inset-x-0 top-0 z-20 flex items-center gap-2 px-4 pb-4 pt-[max(1rem,env(safe-area-inset-top))] transition-opacity duration-300',
           hidden && 'pointer-events-none opacity-0'
         )}
       >
@@ -227,10 +231,12 @@ export function ImmersiveLiveChrome({
                so it will happily be zero wide — rendered as an avatar with a
                blank space beside it. And min-h rather than a fixed h-10,
                because two lines of type plus the padding came to more than
-               40px and the follower line was cut in half by the bottom edge. */
-            className="flex min-h-10 min-w-0 flex-1 items-center gap-2 rounded-xl bg-zinc-900/60 py-1 pl-[5px] pr-3 backdrop-blur-sm"
+               40px, and the follower line was cut in half by the bottom edge.
+               48 now, so the numbers are not pressed against the rounded
+               corner they sit in. */
+            className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-xl bg-zinc-900/60 py-1.5 pl-1.5 pr-3 backdrop-blur-sm"
           >
-            <Avatar className="h-[30px] w-[30px] rounded-lg">
+            <Avatar className="h-[34px] w-[34px] rounded-lg">
               <AvatarImage src={avatar} alt={streamerName} className="rounded-lg" />
               <AvatarFallback className="rounded-lg bg-zinc-700 text-[11px] font-medium text-white">
                 {streamerName?.[0]?.toUpperCase() || '?'}
@@ -324,7 +330,7 @@ export function ImmersiveLiveChrome({
           off the right edge without pushing anything around. */}
       <div
         className={cn(
-          'absolute inset-x-0 top-[72px] z-20 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden transition-opacity duration-300',
+          'absolute inset-x-0 top-[calc(env(safe-area-inset-top,0px)+64px)] z-20 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden transition-opacity duration-300',
           hidden && 'pointer-events-none opacity-0'
         )}
       >
