@@ -2207,7 +2207,8 @@
     "broadcasterFailed": "Broadcaster load fail ye, hali kuma capture ye - kono stream already create ye. End ye below, page refresh ye walima live ye.",
     "endStreamConfirmTitle": "Stream end ye sure o?",
     "endStreamConfirmBody": "Broadcast stop ye everyone la watch ye walima resume ye kan.",
-    "keepStreaming": "Streaming keep ye"
+    "keepStreaming": "Streaming keep ye",
+    "encoderPermanentHint": "O la, a tun be se ka kɛ ko a tun be se ka kɛ cogo min na. I ka coder sigi siɲɛ kelen — siɲɛ wɛrɛ, i ka Start kan ani DeHub ka baara kɛ i ye."
   },
   "creatorFlow": {
     "title": "Creator Flow",

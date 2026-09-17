@@ -4185,7 +4185,8 @@
     "broadcasterFailed": "Yayıncı bileşeni yüklenemedi, bu yüzden hiçbir şey kaydedilmedi — ama yayın zaten oluşturulmuştu. Aşağıdan sonlandırın, sayfayı yenileyin ve yeniden yayına girin.",
     "endStreamConfirmTitle": "Yayını bitirmek istediğinizden emin misiniz?",
     "endStreamConfirmBody": "Yayınınız izleyen herkes için durur ve yeniden başlatılamaz.",
-    "keepStreaming": "Yayında kal"
+    "keepStreaming": "Yayında kal",
+    "encoderPermanentHint": "Bu anahtar asla değişmez. Kodlayıcınızı bir kez ayarlayın — bir dahaki sefere buradan Başlat'a basmanız yeterlidir ve DeHub sizin için gönderiyi oluşturur."
   },
   "events": {
     "seoTitle": "Etkinlikler — DeHub'da buluşmalar ve topluluk etkinlikleri",

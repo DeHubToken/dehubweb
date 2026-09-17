@@ -4117,7 +4117,8 @@
     "broadcasterFailed": "Emitent se nije mogao učitati, pa ništa nije zabilježeno — ali je striming već kreiran. Završite ga dolje, zatim osvježite stranicu i ponovno idite uživo.",
     "endStreamConfirmTitle": "Jeste li sigurni da želite završiti striming?",
     "endStreamConfirmBody": "Vaša emisija se zaustavlja za sve koji gledaju i ne može se nastaviti.",
-    "keepStreaming": "Nastavi sa streamingom"
+    "keepStreaming": "Nastavi sa streamingom",
+    "encoderPermanentHint": "Ova tipka se nikada ne mijenja. Postavite svoj koder jednom — sljedeći put samo pritisnite Start there i DeHub kreira objavu za vas."
   },
   "events": {
     "seoTitle": "Događaji — Susreti i događaji zajednice na DeHubu",

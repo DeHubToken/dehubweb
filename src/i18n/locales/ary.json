@@ -2266,7 +2266,8 @@
     "shopItemsNotAttached_one": "{{count}} عنصر من المتجر ما قدرش يتعلق - زيده من لوحة المتجر.",
     "shopItemsNotAttached_other": "{{count}} عناصر من المتجر ما قدرش يتعلقوا - زيدهم من لوحة المتجر.",
     "publishing": "تنشر في قاعدة البيانات اللامركزية...",
-    "youAreGoingLive": "أنت غادي تطلع لايف!"
+    "youAreGoingLive": "أنت غادي تطلع لايف!",
+    "encoderPermanentHint": "هاد المفتاح ما كيتغيرش. وجد الـ encoder ديالك مرة وحدة — المرة الجاية غير ضغط على Start تما و DeHub غادي يصايب لك البوست."
   },
   "creatorFlow": {
     "backToStudio": "الرجوع إلى Creator Studio",

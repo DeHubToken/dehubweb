@@ -2300,7 +2300,8 @@
     "broadcasterFailed": "Umchumbi wahlulekile ukuguqula, ngakho akukho nto eyakuthathwa — kodwa ukusasaza kwakwenele sekwakudalwe. Phela kube ngezansi, bese ubusha ikhasi bese uye okusheshile.",
     "endStreamConfirmTitle": "Ngubani owakuqinisekisa ukuthi ufuna ukuphela ukusasaza?",
     "endStreamConfirmBody": "Ukusasaza kwakho kuyamisa kubo bonke abakubukela futhi akukwazi ukuqalwa kabusha.",
-    "keepStreaming": "Qhubeka nokusasaza"
+    "keepStreaming": "Qhubeka nokusasaza",
+    "encoderPermanentHint": "Lesi sikhiye asishintshi. Setha ikhodi yakho kanye — ngokuzayo vele ucindezele okuthi Qala lapho bese i-DeHub ikusungulela iphosti."
   },
   "creatorFlow": {
     "title": "Umthwalo Womuntu Osenza",

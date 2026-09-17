@@ -2248,7 +2248,8 @@
     "screenShareCancelled": "Screen sharing გაუქმდა.",
     "shopItemsNotAttached_one": "{{count}} shop item არ შეიძლება დაერთოს — დაამატეთ ის shop panel-დან.",
     "shopItemsNotAttached_other": "{{count}} shop items არ შეიძლება დაერთოს — დაამატეთ ისინი shop panel-დან.",
-    "youAreGoingLive": "თქვენ live ხართ!"
+    "youAreGoingLive": "თქვენ live ხართ!",
+    "encoderPermanentHint": "Ეს ღილაკი არასდროს იცვლება. დააყენეთ თქვენი აპარატი ერთხელ — შემდეგ ჯერზე უბრალოდ დააჭირეთ Start-ს და DeHub შექმნის პოსტს თქვენთვის."
   },
   "creatorFlow": {
     "title": "შემქმნელის ნაკადი",

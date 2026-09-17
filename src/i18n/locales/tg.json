@@ -2261,7 +2261,8 @@
     "broadcasterFailed": "Трансляторе ноком шуд, аз ин рӯ ҳеҷ чиз сабт нашуд — аммо ҷараён аллакай сохта шуд. Онро дар поён ба итмом расонед, баъди он саҳифаро нав кунед ва дубора зинда шавед.",
     "endStreamConfirmTitle": "Оё шумо мутмаин ҳастед, ки ҷараён-ро ба итмом расонед?",
     "endStreamConfirmBody": "Трансляцияи шумо барои ҳамаи табассирчиён қатъ мешавад ва наметавонад аз сар шавад.",
-    "keepStreaming": "Трансляцияро идома диҳед"
+    "keepStreaming": "Трансляцияро идома диҳед",
+    "encoderPermanentHint": "Ин калид ҳеҷ гоҳ тағйир намеёбад. I-set ang iyong encoder up ng isang beses — susunod na beses lamang ang Pindutin dito at DeHub lumikha ng post para sa iyo."
   },
   "creatorFlow": {
     "title": "Creator Flow",

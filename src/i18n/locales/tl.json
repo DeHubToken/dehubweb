@@ -4012,7 +4012,8 @@
     "broadcasterFailed": "Ang broadcaster ay nabigo na mag-load, kaya walang nakunan — ngunit ang stream ay nabuo na. Tapusin ito sa ibaba, pagkatapos i-refresh ang page at magpasimula ng live ulit.",
     "endStreamConfirmTitle": "Sigurado ka bang gusto mong tapusin ang stream?",
     "endStreamConfirmBody": "Ang iyong broadcast ay tumitigil para sa lahat ng nanonood at hindi maaaring muling simulan.",
-    "keepStreaming": "Magpatuloy sa streaming"
+    "keepStreaming": "Magpatuloy sa streaming",
+    "encoderPermanentHint": "Ang key na ito ay hindi kailanman nagbabago. Itakda ang iyong encoder up ng isang beses — sa susunod na oras lamang pindutin ang Start doon at DeHub ay lumilikha ng post para sa iyo."
   },
   "events": {
     "seoDescription": "Tuklasin ang mga paparating na DeHub community events, RSVP sa meetups at mag-host ng iyong sariling events sa decentralized, user-owned social platform.",

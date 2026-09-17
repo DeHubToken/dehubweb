@@ -2236,7 +2236,8 @@
     "broadcasterFailed": "Yayıncı yüklenemedi, bu nedenle hiçbir şey yakalanmadı — ancak akış zaten oluşturulmuştu. Aşağıda sonlandırın, sayfayı yenileyin ve canlı yayına başlayın.",
     "endStreamConfirmTitle": "Akışı sonlandırmak istediğinizden emin misiniz?",
     "endStreamConfirmBody": "Yayıninız izleyen herkes için durur ve devam ettirilemez.",
-    "keepStreaming": "Akışa devam et"
+    "keepStreaming": "Akışa devam et",
+    "encoderPermanentHint": "Bu açar hiç haçan üýtgemeýär. Bir gezek kodlaýjyňyzy goýuň — indiki gezek diňe şol ýere basyň we DeHub size post ýaratýar."
   },
   "creatorFlow": {
     "title": "Dörediji akymy",

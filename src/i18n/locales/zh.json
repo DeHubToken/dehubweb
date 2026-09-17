@@ -4186,7 +4186,8 @@
     "broadcasterFailed": "推流组件加载失败，因此什么都没有录到——但直播已经创建。请在下方结束它，然后刷新页面重新开播。",
     "endStreamConfirmTitle": "确定要结束这场直播吗？",
     "endStreamConfirmBody": "所有正在观看的人都会看到直播中断，且无法恢复。",
-    "keepStreaming": "继续直播"
+    "keepStreaming": "继续直播",
+    "encoderPermanentHint": "这个钥匙永远不会改变。设置一次编码器—下次只需按“从那里开始” ， DeHub就会为您创建帖子。"
   },
   "events": {
     "seoTitle": "活动 — DeHub 上的聚会与社区活动",

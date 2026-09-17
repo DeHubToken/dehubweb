@@ -2288,7 +2288,8 @@
     "obsStep4": "Click \"Start Streaming\"",
     "endStream": "End Stream",
     "viewStream": "View Stream",
-    "keepStreaming": "Keep streaming"
+    "keepStreaming": "Keep streaming",
+    "encoderPermanentHint": "Furtuun kun gonkumaa hin jijjiiramu. Encoder kee al tokko saagi — yeroo itti aanutti Start achitti dhiibaa qofa DeHub post sana siif uuma."
   },
   "creatorFlow": {
     "title": "Creator Flow",
