@@ -5023,5 +5023,36 @@
       "megalodon": "Hili ndilo taji lako — wewe ni mrahaba wa programu sasa"
     },
     "continue": "Rudi kwenye DeHub"
+  },
+  "liveGift": {
+    "pickTier": "Chagua sherehe",
+    "plays": "Inacheza {{tier}} kwenye kipindi",
+    "you": "Wewe",
+    "sentBy": "{{name}} · {{amount}} DHB",
+    "sentAmount": "{{amount}} DHB",
+    "tier": {
+      "heart": "Moyo wa Upendo",
+      "chocolate": "Sanduku la Chokoleti",
+      "bouquet": "Bouquet ya Maua",
+      "crown": "Taji",
+      "magicRing": "Pete ya Kichawi",
+      "spartans": "Jeshi la Spartani",
+      "party": "Sherehe ya Kifurushi",
+      "gold3": "Skrini ya Dhahabu (3s)",
+      "gold10": "Skrini ya Dhahabu (10s)",
+      "ultimate": "Sherehe ya Mwisho"
+    },
+    "tierDesc": {
+      "heart": "Mioyo huelea juu ya kona ya kipindi.",
+      "chocolate": "Sanduku la chokoleti huanguka juu ya skrini.",
+      "bouquet": "Bouquet hupasuka kwenye kona.",
+      "crown": "Taji huinuka juu ya kipindi na kung'aa.",
+      "magicRing": "Pete hutua katikati na kupigwa kwa mng'aro.",
+      "spartans": "Ukuta wa ngao huandamana kwenye kipindi.",
+      "party": "Ndege za sherehe huruka na mpira wa disco huanguka ndani.",
+      "gold3": "Skrini hugeuka dhahabu na sarafu hunyesha kwa sekunde 3.",
+      "gold10": "Skrini hugeuka dhahabu na sarafu hunyesha kwa sekunde 10.",
+      "ultimate": "Kila sherehe kwa wakati mmoja — dhahabu, ndege, sarafu na kombe."
+    }
   }
 }

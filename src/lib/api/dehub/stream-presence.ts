@@ -39,6 +39,8 @@ const EVENT = {
   anonJoinStream: 'stream.join.anon',
   anonLeaveStream: 'stream.left.anon',
   viewCountUpdate: 'stream.viewers.update',
+  /** A gift landed. The same event the mobile viewer plays its tiers off. */
+  tipStreamer: 'streamer.tip',
 } as const;
 
 interface StreamConnection {
@@ -239,6 +241,74 @@ export function watchStreamPresence(
       s.off(EVENT.leaveStream, handleCount);
       // No counterpart emit: nothing was counted, and the socket leaves the
       // room on disconnect anyway.
+      releaseStreamSocket(conn);
+    },
+  };
+}
+
+/** What the gateway broadcasts when a gift lands. */
+export interface StreamGiftBroadcast {
+  amount: number;
+  /** The tier the sender picked, by its English name. May be absent. */
+  selectedTier?: string;
+  username?: string;
+  message?: string;
+  /** Sender's wallet, lowercased, so a card can spot its own gift. */
+  address?: string;
+}
+
+/**
+ * Hear every gift sent to a stream, so the celebration plays for the whole
+ * room rather than only for whoever paid.
+ *
+ * Subscribes through `stream.join.room` — the unguarded event that only puts
+ * the socket in the stream's broadcast room. Presence is deliberately NOT
+ * reused here: `joinStreamPresence` adds a viewer row, and the host's own card
+ * needs to see gifts without counting themselves in their own audience.
+ *
+ * The payload is read defensively because two producers write it. The backend
+ * nests the record under `gift.meta`, mobile's optimistic echo puts the same
+ * fields at the top level, and neither is worth a broken celebration.
+ */
+export function watchStreamGifts(
+  streamId: string,
+  onGift: (gift: StreamGiftBroadcast) => void,
+): StreamPresence {
+  if (!streamId) return { leave: () => undefined };
+
+  const conn = acquireStreamSocket();
+  const s = conn.socket;
+  let left = false;
+
+  const join = () => {
+    if (!left) s.emit(EVENT.joinRoom, { streamId });
+  };
+
+  const handleGift = (payload: any) => {
+    if (!isForStream(payload, streamId)) return;
+    const meta = payload?.gift?.meta ?? payload?.meta ?? payload?.gift ?? payload ?? {};
+    const amount = Number(meta.amount ?? payload?.amount ?? 0);
+    if (!Number.isFinite(amount) || amount <= 0) return;
+    const account = payload?.gift?.user ?? payload?.gift?.account ?? payload?.user ?? undefined;
+    onGift({
+      amount,
+      selectedTier: meta.selectedTier || undefined,
+      username: meta.username || meta.displayName || account?.username || undefined,
+      message: meta.message || undefined,
+      address: String(meta.address || payload?.gift?.address || payload?.address || '').toLowerCase() || undefined,
+    });
+  };
+
+  s.on('connect', join);
+  s.on(EVENT.tipStreamer, handleGift);
+  if (s.connected) join();
+
+  return {
+    leave: () => {
+      if (left) return;
+      left = true;
+      s.off('connect', join);
+      s.off(EVENT.tipStreamer, handleGift);
       releaseStreamSocket(conn);
     },
   };

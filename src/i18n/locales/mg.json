@@ -2732,6 +2732,37 @@
     },
     "continue": "Bumalik sa DeHub"
   },
+  "liveGift": {
+    "pickTier": "Misafidiana lanonana",
+    "plays": "Mampiseho ny {{tier}} ao amin'ny stream",
+    "you": "Ianao",
+    "sentBy": "{{name}} · {{amount}} DHB",
+    "sentAmount": "{{amount}} DHB",
+    "tier": {
+      "heart": "Fona",
+      "chocolate": "Boaty Chocolat",
+      "bouquet": "Vongon-tahaka voninkazo",
+      "crown": "Satro-boninahitra",
+      "magicRing": "Peratra majika",
+      "spartans": "Tafiky ny Spartana",
+      "party": "Fankalazana fety",
+      "gold3": "Ekrana volamena (3s)",
+      "gold10": "Ekrana volamena (10s)",
+      "ultimate": "Fankalazana faratampony"
+    },
+    "tierDesc": {
+      "heart": "Mihanika mankany amin'ny zoron'ny stream ny fo.",
+      "chocolate": "Mihazakazaka mankany amin'ny efijery ny boaty chocolates.",
+      "bouquet": "Mibontsina manerana ny zorony ny vongon-tahaka voninkazo.",
+      "crown": "Mihamira eo ambonin'ny stream ny satro-boninahitra ary mamirapiratra.",
+      "magicRing": "Mianjera eo afovoany ny peratra ary maneno amin'ny kintana.",
+      "spartans": "Mandeha manerana ny stream ny rindrin'ny ampinga.",
+      "party": "Mitsambikina ny konfety ary midina ny baolina disco.",
+      "gold3": "Mivadika volamena ny efijery ary milatsaka ny vola mandritra ny 3 segondra.",
+      "gold10": "Mivadika volamena ny efijery ary milatsaka ny vola mandritra ny 10 segondra.",
+      "ultimate": "Ny fankalazana rehetra miaraka - volamena, konfety, vola ary amboara."
+    }
+  },
   "createPost": {
     "title": "Mamorona",
     "whatsOnYourMind": "Inona no ao an-tsainao?",

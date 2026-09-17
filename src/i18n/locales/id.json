@@ -5085,5 +5085,36 @@
       "megalodon": "Ini mahkotamu — kamu royalti aplikasi sekarang"
     },
     "continue": "Kembali ke DeHub"
+  },
+  "liveGift": {
+    "pickTier": "Pilih perayaan",
+    "plays": "Memutar {{tier}} di stream",
+    "you": "Anda",
+    "sentBy": "{{name}} · {{amount}} DHB",
+    "sentAmount": "{{amount}} DHB",
+    "tier": {
+      "heart": "Love Heart",
+      "chocolate": "Box of Chocolate",
+      "bouquet": "Bouquet of Flowers",
+      "crown": "Crown",
+      "magicRing": "Magic Ring",
+      "spartans": "Spartans Army",
+      "party": "Party Celebration",
+      "gold3": "Golden Screen (3s)",
+      "gold10": "Golden Screen (10s)",
+      "ultimate": "Ultimate Celebration"
+    },
+    "tierDesc": {
+      "heart": "Hati melayang ke sudut stream.",
+      "chocolate": "Sekotak cokelat berguling ke atas layar.",
+      "bouquet": "Sebuket bunga meledak terbuka di sudut.",
+      "crown": "Sebuah mahkota naik di atas stream dan berkilauan.",
+      "magicRing": "Sebuah cincin mendarat di tengah dan berdering dalam kilauan.",
+      "spartans": "Dinding perisai berbaris melintasi stream.",
+      "party": "Konfeti beterbangan dan bola disko turun.",
+      "gold3": "Layar berubah menjadi emas dan koin menghujani selama 3 detik.",
+      "gold10": "Layar berubah menjadi emas dan koin menghujani selama 10 detik.",
+      "ultimate": "Setiap perayaan sekaligus — emas, konfeti, koin, dan piala."
+    }
   }
 }
