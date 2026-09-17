@@ -65,7 +65,8 @@ export function PPVDrawerContent({
     <DrawerContent
       column
       glass
-      className="max-h-[85dvh] overflow-y-auto overscroll-contain px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]"
+      scrollable
+      className="max-h-[85dvh] px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]"
     >
       <DrawerHeader className="pb-3 relative">
         <DrawerTitle className="text-white text-lg flex items-center gap-2">
