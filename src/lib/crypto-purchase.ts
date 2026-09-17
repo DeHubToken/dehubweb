@@ -102,7 +102,7 @@ export function paymentKey(wallet: string, asset: string, amount: number, refund
   return JSON.stringify([wallet.toLowerCase(), asset, amount, refund]);
 }
 
-export const EVM_PAYMENT_CHAINS = new Set(['eth', 'base', 'arb', 'bsc', 'pol', 'op', 'avax', 'gnosis', 'scroll', 'monad', 'bera', 'xlayer', 'plasma', 'abs', 'hypercore', 'adi']);
+export const EVM_PAYMENT_CHAINS = new Set(['eth', 'base', 'robinhood', 'arb', 'bsc', 'pol', 'op', 'avax', 'gnosis', 'scroll', 'monad', 'bera', 'xlayer', 'plasma', 'abs', 'hypercore', 'adi']);
 
 const CHAINS: Record<string, string> = { eth: 'Ethereum', robinhood: 'Robinhood', base: 'Base', arb: 'Arbitrum', bsc: 'BNB Chain', pol: 'Polygon', op: 'Optimism', sol: 'Solana', btc: 'Bitcoin', doge: 'Dogecoin', ltc: 'Litecoin', bch: 'Bitcoin Cash', avax: 'Avalanche', near: 'NEAR', tron: 'Tron', xrp: 'XRP Ledger', ton: 'TON', sui: 'Sui', stellar: 'Stellar', zec: 'Zcash', aptos: 'Aptos', cardano: 'Cardano' };
 export const paymentChainName = (chain: string) => CHAINS[chain] || chain.toUpperCase();
