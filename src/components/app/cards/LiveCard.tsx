@@ -18,7 +18,9 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
-import { CommentsWrapper } from './CommentsWrapper';
+const LivePostChat = lazy(() =>
+  import('./LivePostChat').then((m) => ({ default: m.LivePostChat })),
+);
 import { LiveEndedMedia } from './LiveEndedMedia';
 // Lazy: only an on-air stream renders it, so the HLS glue stays off the boot path.
 const LiveFeedPreview = lazy(() => import('./LiveFeedPreview').then(m => ({ default: m.LiveFeedPreview })));
@@ -231,12 +233,15 @@ export function LiveCard({ stream }: LiveCardProps) {
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
       </div>
 
-      {/* Comments */}
-      <CommentsWrapper
-        open={showComments}
-        onOpenChange={setShowComments}
-        tokenId={stream.id}
-      />
+      {/* The stream's chat — the same room the post page and the app join.
+          A live post keeps one conversation; the comment button opens it. */}
+      {showComments && (
+        <div className="mt-3" data-no-navigate onClick={(e) => e.stopPropagation()}>
+          <Suspense fallback={null}>
+            <LivePostChat tokenId={stream.id} streamId={stream.streamId} isOffline={!stream.isLive} />
+          </Suspense>
+        </div>
+      )}
 
       {/* AI Chat */}
       <PostAIChatLazy

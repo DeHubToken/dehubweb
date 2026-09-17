@@ -112,7 +112,9 @@ interface LiveStreamCardProps {
 }
 
 export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
-  const [showComments, setShowComments] = useState(false);
+  // The chat is the post's only conversation, so on the page it starts open;
+  // the comment button still folds it away.
+  const [showComments, setShowComments] = useState(!!chatSlot);
   const { t } = useI18n();
   const navigate = useNavigate();
   // Bookmark state for the three-dot menu. The same action is an icon in the
