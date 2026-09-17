@@ -617,7 +617,9 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
           </div>
         </div>
         {overlay && viewerActions && newMessage.trim().length === 0 ? (
-          <div className="shrink-0 pb-1">{viewerActions}</div>
+          // No padding of its own: the row is `items-end` and the buttons are
+          // the box's height, so anything here lifts them off its baseline.
+          <div className="shrink-0">{viewerActions}</div>
         ) : null}
         </div>
       </div>

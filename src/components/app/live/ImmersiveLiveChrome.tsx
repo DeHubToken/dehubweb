@@ -64,8 +64,6 @@ export interface ImmersiveLiveChromeProps {
   creatorId?: string;
   avatar?: string;
   title?: string;
-  /** REPLAY / PARTIAL REPLAY, as a pill rather than a badge in the corner. */
-  replayLabel?: string;
   isLive: boolean;
   isEnded: boolean;
   viewers: string | number;
@@ -89,7 +87,6 @@ export function ImmersiveLiveChrome({
   creatorId,
   avatar,
   title,
-  replayLabel,
   isLive,
   isEnded,
   viewers,
@@ -223,11 +220,13 @@ export function ImmersiveLiveChrome({
           <button
             type="button"
             onClick={() => creatorUsername && navigate(`/app/profile/${creatorUsername}`)}
-            /* `flex-1` and a text box that can take the slack. Without both,
-               the capsule sized to its content, and the name — which
-               truncates, so it will happily be zero wide — rendered as an
-               avatar with a blank space beside it. */
-            className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded-xl bg-zinc-900/60 pl-[5px] pr-3 backdrop-blur-sm"
+            /* `flex-1` plus a text box that can take the slack: without both,
+               the capsule sized to its content and the name — which truncates,
+               so it will happily be zero wide — rendered as an avatar with a
+               blank space beside it. And min-h rather than a fixed h-10,
+               because two lines of type plus the padding came to more than
+               40px and the follower line was cut in half by the bottom edge. */
+            className="flex min-h-10 min-w-0 flex-1 items-center gap-2 rounded-xl bg-zinc-900/60 py-1 pl-[5px] pr-3 backdrop-blur-sm"
           >
             <Avatar className="h-[30px] w-[30px] rounded-lg">
               <AvatarImage src={avatar} alt={streamerName} className="rounded-lg" />
@@ -325,13 +324,6 @@ export function ImmersiveLiveChrome({
             <Clock className="h-[11px] w-[11px] text-white/75" />
             <span className="text-[11px] font-semibold text-white/85">
               {elapsedLabel(now - startedMs)}
-            </span>
-          </span>
-        ) : null}
-        {replayLabel ? (
-          <span className={PILL}>
-            <span className="text-[10px] font-extrabold tracking-wider text-white/85">
-              {replayLabel}
             </span>
           </span>
         ) : null}

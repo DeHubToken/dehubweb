@@ -1079,9 +1079,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             <span
               className={cn(
                 'rounded bg-black/70 px-2 py-0.5 text-xs font-semibold text-white',
-                // top-3 left-3 is the creator capsule's corner in full-bleed,
-                // where these two drew straight through each other. The pill
-                // row already says what this stream is; this joins it.
+                // Full-bleed drops it: top-3 left-3 is the creator capsule's
+                // corner, and a tag saying a finished stream is a recording is
+                // not worth a line of a phone screen. The card keeps it.
                 immersive ? 'hidden' : 'absolute top-3 left-3'
               )}
               title={
@@ -1224,13 +1224,6 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             startedAt={stream.startedAt ?? null}
             isMuted={isMuted}
             onToggleMute={toggleMute}
-            replayLabel={
-              streamEnded && stream.replayUrl
-                ? stream.replayTruncated
-                  ? 'PARTIAL REPLAY'
-                  : 'REPLAY'
-                : undefined
-            }
             progress={streamEnded && stream.replayUrl ? (replayProgress ?? 0) : undefined}
             onSeek={streamEnded && stream.replayUrl ? seekReplay : undefined}
             hidden={chromeHidden}
