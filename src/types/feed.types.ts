@@ -401,6 +401,12 @@ export interface LiveStream extends BaseFeedItem {
   creatorPaymentsDisabled?: boolean;
   /** Number of likes */
   likeCount?: number;
+  dislikeCount?: number;
+  /** Reaction state, exactly as a video post carries it — the live card renders the same ActionBar. */
+  isLiked?: boolean;
+  isDisliked?: boolean;
+  myReaction?: PostReaction | null;
+  reactionCounts?: ReactionCounts | null;
   /** Number of comments */
   commentCount?: number;
   /** MongoDB ObjectId of the stream (needed for /api/live/{id}/settings API calls) */
