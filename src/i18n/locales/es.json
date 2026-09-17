@@ -4185,7 +4185,8 @@
     "broadcasterFailed": "El emisor no cargó, así que no se capturó nada, pero la retransmisión ya estaba creada. Termínala abajo, recarga la página y vuelve a salir en directo.",
     "endStreamConfirmTitle": "¿Seguro que quieres terminar la retransmisión?",
     "endStreamConfirmBody": "Tu emisión se detiene para todo el que esté viendo y no se puede reanudar.",
-    "keepStreaming": "Seguir emitiendo"
+    "keepStreaming": "Seguir emitiendo",
+    "encoderPermanentHint": "Esta clave nunca cambia. Configure su codificador una vez: la próxima vez solo presione Iniciar allí y DeHub creará la publicación para usted."
   },
   "events": {
     "seoTitle": "Eventos — Quedadas y eventos de la comunidad en DeHub",

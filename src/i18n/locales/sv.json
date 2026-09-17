@@ -4121,7 +4121,8 @@
     "broadcasterFailed": "Sändaren misslyckades att ladda, så ingenting spelades in — men streamen skapades redan. Avsluta den nedan, uppdatera sedan sidan och gå live igen.",
     "endStreamConfirmTitle": "Är du säker på att du vill avsluta streamen?",
     "endStreamConfirmBody": "Din sändning stoppas för alla som tittar och kan inte återupptas.",
-    "keepStreaming": "Fortsätt streama"
+    "keepStreaming": "Fortsätt streama",
+    "encoderPermanentHint": "Den här nyckeln ändras aldrig. Ställ in din kodare en gång — nästa gång trycker du bara på Start där och DeHub skapar inlägget åt dig."
   },
   "events": {
     "seoDescription": "Bläddra bland kommande DeHub-gemenskapsevenemang, RSVP till meetups och arrangera dina egna evenemang på den decentraliserade, användarägda sociala plattformen.",

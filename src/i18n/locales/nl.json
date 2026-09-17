@@ -4376,7 +4376,8 @@
     "broadcasterFailed": "De uitzender kon niet worden geladen, dus er is niets vastgelegd — maar de stream was al gemaakt. Beëindig het hieronder, vernieuw de pagina en ga live.",
     "endStreamConfirmTitle": "Weet je zeker dat je de stream wilt beëindigen?",
     "endStreamConfirmBody": "Uw uitzending stopt voor iedereen die kijkt en kan niet worden hervat.",
-    "keepStreaming": "Doorgaan met streamen"
+    "keepStreaming": "Doorgaan met streamen",
+    "encoderPermanentHint": "Deze toets verandert nooit. Stel uw encoder één keer in — druk de volgende keer gewoon op Start daar en DeHub maakt de post voor u aan."
   },
   "events": {
     "seoTitle": "Events — Meetups & Community Events op DeHub",

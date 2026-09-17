@@ -4117,7 +4117,8 @@
     "broadcasterFailed": "El reproductor de transmissió no s'ha pogut carregar, així que no es va capturar res — però la transmissió ja estava creada. Finalitzeu-la a continuació, actualitzeu la pàgina i aneu en directe de nou.",
     "endStreamConfirmTitle": "Esteu segur que voleu finalitzar la transmissió?",
     "endStreamConfirmBody": "La vostra emissió s'atura per a tothom que està mirant i no es pot reprendre.",
-    "keepStreaming": "Continuar transmissió"
+    "keepStreaming": "Continuar transmissió",
+    "encoderPermanentHint": "Aquesta clau no canvia mai. Configura el codificador una vegada: la propera vegada només has de prémer Comença i DeHub crearà la publicació per a tu."
   },
   "events": {
     "seoTitle": "Esdeveniments — Trobades i esdeveniments comunitaris a DeHub",

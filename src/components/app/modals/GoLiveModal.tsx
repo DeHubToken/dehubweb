@@ -42,7 +42,7 @@ import type { Currency } from '@/features/post/types';
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
 import { getNFTInfo } from '@/lib/api/dehub/feed';
-import { getStreamIngestUrl, startLiveStream, endLiveStream } from '@/lib/api/dehub/livestream';
+import { getStreamIngestUrl, startLiveStream, endLiveStream, getEncoderCredentials, type EncoderCredentials } from '@/lib/api/dehub/livestream';
 import { createLogger } from '@/lib/logger';
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub/core';
@@ -232,6 +232,20 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
   const [isLoading, setIsLoading] = useState(false);
   const [streamData, setStreamData] = useState<{ tokenId: string; streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string; hlsUrl?: string; playbackId?: string; provider?: string } | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  /**
+   * The creator's PERMANENT encoder credentials, if they have any.
+   *
+   * Every stream key this sheet used to hand out was minted with the post, so
+   * an OBS or console user had to re-key their encoder before every session —
+   * and had to create a post first purely to get a key out of it. These never
+   * change, so they are what the encoder screens show, and the per-stream pair
+   * is only the fallback for a stream that landed on Livepeer (which mints its
+   * own key and has no permanent path).
+   *
+   * Fetched when the encoder is actually being set up rather than on open: it
+   * is one request that most people going live never need.
+   */
+  const [encoderKey, setEncoderKey] = useState<EncoderCredentials | null>(null);
   /*
    * Optional cover image.
    *
@@ -1123,6 +1137,26 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
     }
   };
 
+  /*
+   * Load the permanent credentials the moment an encoder is in play — the
+   * creator picking the OBS card, or a stream that has been provisioned and is
+   * waiting for one. Fetched once and kept: they do not change, which is the
+   * entire point of them.
+   */
+  useEffect(() => {
+    if (!isOpen || encoderKey) return;
+    if (source !== 'rtmp' && step !== 'ready') return;
+    let alive = true;
+    getEncoderCredentials()
+      .then(next => {
+        if (alive && next.server && next.streamKey) setEncoderKey(next);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [isOpen, source, step, encoderKey]);
+
   const copyToClipboard = async (text: string, field: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -1240,6 +1274,29 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
                   <p className="text-[11px] text-zinc-500">
                     {t('goLive.screenPickHint')}
                   </p>
+                )}
+                {/*
+                  The encoder's credentials, right here, before anything is
+                  filled in. They never change, so somebody who set OBS or a
+                  console up once does not need this form at all — pressing
+                  Start over there creates the post. Filling the form in first
+                  is still worth it for a title, a cover and monetisation, and
+                  the broadcast binds to that post when it arrives.
+                */}
+                {source === 'rtmp' && encoderKey && (
+                  <div className="space-y-3 rounded-xl border border-white/10 bg-zinc-800/40 p-3">
+                    <p className="text-[11px] text-zinc-400">
+                      {t('goLive.encoderPermanentHint')}
+                    </p>
+                    <EncoderFields
+                      server={encoderKey.server}
+                      streamKey={encoderKey.streamKey}
+                      copiedField={copiedField}
+                      onCopy={copyToClipboard}
+                      keyLabel={t('goLive.streamKey')}
+                      serverLabel={t('goLive.ingestUrl')}
+                    />
+                  </div>
                 )}
                 {replayBudget && (
                   replayBudget.remaining <= 0 ? (
@@ -1424,25 +1481,39 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
               {streamData && (
                 <>
 
-                  <div className="space-y-2">
-                    <label className="text-sm text-white font-medium">{t('goLive.streamKey')}</label>
-                    <div className="flex gap-2">
-                      <Input value={encoderCredentials(streamData.ingestUrl, streamData.streamKey).key} readOnly type="password" className="bg-zinc-800 border-zinc-700 font-mono" />
-                      <Button variant="outline" size="icon" onClick={() => copyToClipboard(encoderCredentials(streamData.ingestUrl, streamData.streamKey).key, 'key')}>
-                        {copiedField === 'key' ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm text-white font-medium">{t('goLive.ingestUrl')}</label>
-                    <div className="flex gap-2">
-                      <Input value={encoderCredentials(streamData.ingestUrl, streamData.streamKey).server} readOnly className="bg-zinc-800 border-zinc-700 font-mono text-xs" />
-                      <Button variant="outline" size="icon" onClick={() => copyToClipboard(encoderCredentials(streamData.ingestUrl, streamData.streamKey).server, 'url')}>
-                        {copiedField === 'url' ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
-                      </Button>
-                    </div>
-                  </div>
+                  {/*
+                    The permanent pair wins wherever the creator has one. It
+                    resolves to whichever stream is waiting — this post, since
+                    it was just provisioned — so pasting it is equivalent to
+                    pasting this broadcast's own key, and it is the one that
+                    will still work next week. The per-stream pair is the
+                    fallback for a stream that landed on Livepeer, which mints
+                    its own key and has no permanent path.
+                  */}
+                  {encoderKey && streamData.provider === 'mediamtx' ? (
+                    <>
+                      <p className="text-[11px] text-zinc-400">
+                        {t('goLive.encoderPermanentHint')}
+                      </p>
+                      <EncoderFields
+                        server={encoderKey.server}
+                        streamKey={encoderKey.streamKey}
+                        copiedField={copiedField}
+                        onCopy={copyToClipboard}
+                        keyLabel={t('goLive.streamKey')}
+                        serverLabel={t('goLive.ingestUrl')}
+                      />
+                    </>
+                  ) : (
+                    <EncoderFields
+                      server={encoderCredentials(streamData.ingestUrl, streamData.streamKey).server}
+                      streamKey={encoderCredentials(streamData.ingestUrl, streamData.streamKey).key}
+                      copiedField={copiedField}
+                      onCopy={copyToClipboard}
+                      keyLabel={t('goLive.streamKey')}
+                      serverLabel={t('goLive.ingestUrl')}
+                    />
+                  )}
 
                   <div className="bg-zinc-800/50 rounded-xl p-4 space-y-2">
                     <p className="text-white font-medium text-xs uppercase tracking-wider">{t('goLive.quickSetupGuide')}</p>
@@ -1539,6 +1610,56 @@ class BroadcasterBoundary extends React.Component<
       </div>
     );
   }
+}
+
+/**
+ * The two boxes an encoder actually has, wherever they are shown.
+ *
+ * Rendered in two places on purpose. On the setup step it sits under the OBS
+ * card, so somebody whose encoder is already configured can see that and press
+ * Start there instead of filling this form in at all. On the ready step it is
+ * the handover after a post has been made. Both show the same permanent pair,
+ * because a creator who sees two different keys in one session has learnt the
+ * wrong thing about which one to paste.
+ */
+function EncoderFields({
+  server,
+  streamKey,
+  copiedField,
+  onCopy,
+  keyLabel,
+  serverLabel,
+}: {
+  server: string;
+  streamKey: string;
+  copiedField: string | null;
+  onCopy: (text: string, field: string) => void;
+  keyLabel: string;
+  serverLabel: string;
+}) {
+  return (
+    <>
+      <div className="space-y-2">
+        <label className="text-sm text-white font-medium">{keyLabel}</label>
+        <div className="flex gap-2">
+          <Input value={streamKey} readOnly type="password" className="bg-zinc-800 border-zinc-700 font-mono" />
+          <Button variant="outline" size="icon" onClick={() => onCopy(streamKey, 'key')}>
+            {copiedField === 'key' ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+          </Button>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm text-white font-medium">{serverLabel}</label>
+        <div className="flex gap-2">
+          <Input value={server} readOnly className="bg-zinc-800 border-zinc-700 font-mono text-xs" />
+          <Button variant="outline" size="icon" onClick={() => onCopy(server, 'url')}>
+            {copiedField === 'url' ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+          </Button>
+        </div>
+      </div>
+    </>
+  );
 }
 
 function SourceOption({

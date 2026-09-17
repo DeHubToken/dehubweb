@@ -4085,7 +4085,8 @@
     "broadcasterFailed": "Yayımçı yüklənə bilmədi, buna görə heç nə tutulmadı — lakin axın artıq yaradılmışdı. Aşağıda onu bitirin, sonra səhifəni yeniləyin və yenidən canlı yayına keçin.",
     "endStreamConfirmTitle": "Axını bitirmək istədiyinizə əminsiniz?",
     "endStreamConfirmBody": "Sizin yayımınız bütün izləyicilər üçün dayandırılır və bərpa edilə bilməz.",
-    "keepStreaming": "Axını davam etdir"
+    "keepStreaming": "Axını davam etdir",
+    "encoderPermanentHint": "Bu açar heç vaxt dəyişmir. Kodlamanızı bir dəfə qurun — növbəti dəfə sadəcə Başla düyməsini basın və DeHub yazını sizin üçün yaradır."
   },
   "events": {
     "seoTitle": "Tədbirlər — DeHub-da Görüşlər və Cəmiyyət Tədbirləri",

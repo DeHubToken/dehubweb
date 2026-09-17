@@ -4179,7 +4179,8 @@
     "broadcasterFailed": "Il broadcaster non è riuscito a caricarsi, quindi non è stato mai acquisito nulla — ma il flusso è già stato creato. Terminalo di seguito, quindi aggiorna la pagina e vai in diretta di nuovo.",
     "endStreamConfirmTitle": "Sei sicuro di voler terminare il flusso?",
     "endStreamConfirmBody": "La tua trasmissione si interrompe per tutti coloro che la stanno guardando e non può essere ripresa.",
-    "keepStreaming": "Continua lo streaming"
+    "keepStreaming": "Continua lo streaming",
+    "encoderPermanentHint": "Questa chiave non cambia mai. Imposta il tuo encoder una volta — la prossima volta premi Avvia lì e DeHub creerà il post per te."
   },
   "events": {
     "seoTitle": "Eventi — Meetup ed eventi della comunità su DeHub",

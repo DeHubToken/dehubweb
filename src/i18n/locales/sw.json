@@ -4176,7 +4176,8 @@
     "broadcasterFailed": "Mtangazaji akashindwa kupakia, kwa hivyo hakuna kilicho kilikamatwa — lakini mtiririko ulikuwa umefanywa tayari. Maliza hapa chini, kisha onyesha upya ukurasa na uende moja kwa moja tena.",
     "endStreamConfirmTitle": "Je, una uhakika kuwa unataka kumaliza mtiririko?",
     "endStreamConfirmBody": "Mtangazo wako unasimama kwa kila mtu anayetazama na hauwezi kuenezwa tena.",
-    "keepStreaming": "Endelea kusambaza"
+    "keepStreaming": "Endelea kusambaza",
+    "encoderPermanentHint": "Ufunguo huu haubadiliki kamwe. Weka kisimbiko chako mara moja — wakati mwingine bonyeza tu Anza hapo na DeHub ikutengenezee chapisho."
   },
   "events": {
     "seoTitle": "Matukio — Mikutano & Matukio ya Jamii kwenye DeHub",

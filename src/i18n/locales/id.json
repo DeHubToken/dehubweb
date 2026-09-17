@@ -4185,7 +4185,8 @@
     "broadcasterFailed": "Komponen penyiar gagal dimuat, jadi tidak ada yang terekam — tetapi siarannya sudah dibuat. Akhiri di bawah, lalu muat ulang halaman dan mulai siaran lagi.",
     "endStreamConfirmTitle": "Yakin ingin mengakhiri siaran?",
     "endStreamConfirmBody": "Siaran Anda berhenti untuk semua yang sedang menonton dan tidak bisa dilanjutkan.",
-    "keepStreaming": "Lanjutkan siaran"
+    "keepStreaming": "Lanjutkan siaran",
+    "encoderPermanentHint": "Kunci ini tidak pernah berubah. Atur enkoder Anda satu kali — lain kali cukup tekan Mulai di sana dan DeHub membuat postingan untuk Anda."
   },
   "events": {
     "seoTitle": "Acara — Meetup dan acara komunitas di DeHub",

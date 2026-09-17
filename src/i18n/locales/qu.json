@@ -2302,7 +2302,8 @@
     "broadcasterFailed": "Broadcaster cargachiy pantachisqa, hinallataq mana imayna kaptin kunan - ichaqa stream ña creachisqachu. Salichiy abajopi, chaymantapas página-ta musuq kachay chaymanta ama hinallachu live ama.",
     "endStreamConfirmTitle": "¿Seguro-chu stream salichiy munankichu?",
     "endStreamConfirmBody": "Broadcast-niyki salichisqa llapaman rikuqkunaman chaymantapas mana musuq kachay kaptinchu.",
-    "keepStreaming": "Stream continuay"
+    "keepStreaming": "Stream continuay",
+    "encoderPermanentHint": "Kay llaveqa manan hayk’aqpas cambianchu. Huk kuti codificadorniyki churay — qhipa kuti chaypi Qallarina ñit&#39;iylla chaymanta DeHub qampaq qillqa ruwan."
   },
   "creatorFlow": {
     "title": "Ruwaypa Tariy",

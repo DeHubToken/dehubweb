@@ -2269,7 +2269,8 @@
     "broadcasterFailed": "Broadcaster ya kasa ɗaga, saboda haka ba a ɗauki komai — amma stream a yanzu a ƙirƙira jiya. Kawo shi a ƙasa, sannan sake ɗaga shafin kuma ka tafi live.",
     "endStreamConfirmTitle": "Tabbas kana so ka kawo stream?",
     "endStreamConfirmBody": "Tallatarwar ka tsaya ga kowa da ke kallo kuma ba za a iya sake dawo ba.",
-    "keepStreaming": "Ci gaba da streaming"
+    "keepStreaming": "Ci gaba da streaming",
+    "encoderPermanentHint": "Wannan maɓallin ba ya canzawa. Saita encoder ɗinku sau ɗaya — lokaci na gaba kawai latsa Fara can kuma DeHub ya ƙirƙiri post ɗin a gare ku."
   },
   "creatorFlow": {
     "title": "Creator Flow",

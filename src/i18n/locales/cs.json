@@ -4122,7 +4122,8 @@
     "broadcasterFailed": "Vysílač se nepodařilo načíst, takže nic nebylo zachyceno — ale stream již byl vytvořen. Ukončete jej níže, pak obnovte stránku a jděte živě.",
     "endStreamConfirmTitle": "Opravdu chcete ukončit stream?",
     "endStreamConfirmBody": "Vaše vysílání se zastaví pro všechny diváky a nelze jej obnovit.",
-    "keepStreaming": "Pokračovat ve vysílání"
+    "keepStreaming": "Pokračovat ve vysílání",
+    "encoderPermanentHint": "Tento klíč se nikdy nemění. Nastavte kodér jednou — příště stačí stisknout Start a DeHub vytvoří příspěvek za vás."
   },
   "events": {
     "seoTitle": "Události — Setkání a komunitní akce na DeHub",

@@ -2268,7 +2268,8 @@
     "broadcasterFailed": "The broadcaster wuu fashilmay in lagu dhamaystiro, sidaas darteed wax lama qabsaday — laakiin stream-ka hadba la abuuray. Dhamaaji hoos, ka dibna isweydaarsi bogga oo mar labaad live noqo.",
     "endStreamConfirmTitle": "Hubinta jirtaa inaad stream-ka dhamaajisid?",
     "endStreamConfirmBody": "Broadcast-kaaga wuu joogsadaa qof kasta oo eegaya oo lama soo celinayo.",
-    "keepStreaming": "Stream-ka sii wad"
+    "keepStreaming": "Stream-ka sii wad",
+    "encoderPermanentHint": "Furahan waligiis isma beddelo. Deji encoder-kaaga hal mar — marka xigta kaliya riix Ka bilow halkaas oo DeHub ayaa kuu abuuraya boostada."
   },
   "creatorFlow": {
     "title": "Qulquladda Abuuraha",

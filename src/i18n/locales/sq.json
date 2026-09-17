@@ -2285,7 +2285,8 @@
     "broadcasterFailed": "Transmetuesi dështoi të ngarkohet, kështu që asgjë nuk u kap kurrë — por stream-i ishte tashmë krijuar. Përfundojeni më poshtë, pastaj rifreskoni faqen dhe shkoni live përsëri.",
     "endStreamConfirmTitle": "A jeni i sigurt se dëshironi të përfundoni stream-in?",
     "endStreamConfirmBody": "Transmetimi juaj ndalet për të gjithë ata që po shikojnë dhe nuk mund të rifillon.",
-    "keepStreaming": "Vazhdoni transmetimin"
+    "keepStreaming": "Vazhdoni transmetimin",
+    "encoderPermanentHint": "Ky çelës nuk ndryshon kurrë. Vendosni koduesin tuaj një herë — herën tjetër vetëm shtypni Start atje dhe DeHub krijon postimin për ju."
   },
   "creatorFlow": {
     "title": "Krijuesi i rrjedhës",

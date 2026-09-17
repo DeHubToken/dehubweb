@@ -2264,7 +2264,8 @@
     "broadcasterFailed": "Kua rahua te kaipāhōhō ki te uta, nō reira kaore i tīkina he mea — engari kua waihangahia anō te rauemi tukutuku. Whakamutu i raro, katahi ka whakamātauria anō te whārangi, ka haere ki te ao hou.",
     "endStreamConfirmTitle": "E hiahia ana koe ki te whakamutu i te rauemi tukutuku?",
     "endStreamConfirmBody": "Ka mutu tō pāhōhō mō te katoa e titiro ana, e kore e taea te tīmata anō.",
-    "keepStreaming": "Whakatau tonu te tukutuku"
+    "keepStreaming": "Whakatau tonu te tukutuku",
+    "encoderPermanentHint": "E kore e huri tenei kī. Whakatuwherahia to waehere kotahi — i te wa e whai ake nei ka pēhi noa i te Tīmata i reira ka hanga e DeHub te pou mo koe."
   },
   "creatorFlow": {
     "title": "Creator Flow",
