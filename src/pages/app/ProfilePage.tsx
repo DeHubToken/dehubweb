@@ -674,6 +674,7 @@ export default function ProfilePage() {
               PROFILE_POSTS={data.PROFILE_POSTS}
               PROFILE_IMAGES={data.PROFILE_IMAGES}
               ALL_PROFILE_VIDEOS={data.ALL_PROFILE_VIDEOS}
+              PROFILE_LIVE={data.PROFILE_LIVE}
               isLoadingContent={data.isLoadingContent}
               userContentData={data.userContentData}
               hasNextContentPage={data.hasNextContentPage}

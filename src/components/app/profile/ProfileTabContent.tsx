@@ -138,6 +138,7 @@ interface ProfileTabContentProps {
   PROFILE_POSTS: TextPost[];
   PROFILE_IMAGES: ImagePost[];
   ALL_PROFILE_VIDEOS: VideoItem[];
+  PROFILE_LIVE: VideoItem[];
   // Loading
   isLoadingContent: boolean;
   userContentData: unknown;
@@ -172,6 +173,7 @@ export function ProfileTabContent({
   PROFILE_POSTS,
   PROFILE_IMAGES,
   ALL_PROFILE_VIDEOS,
+  PROFILE_LIVE,
   isLoadingContent,
   userContentData,
   hasNextContentPage = false,
@@ -333,7 +335,17 @@ export function ProfileTabContent({
 
       {/* LIVE TAB */}
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="live">
-        <ProfileEmptyState iconSrc={live3dIcon} iconAlt="Live" title="No live streams yet" subtitle="Live content will appear here" />
+        {showLoading ? null : PROFILE_LIVE.length === 0 ? (
+          <ProfileEmptyState iconSrc={live3dIcon} iconAlt="Live" title="No live streams yet" subtitle="Live content will appear here" />
+        ) : (
+          <div className="space-y-3">
+            {PROFILE_LIVE.map((stream, index) => (
+              <div key={stream.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" style={offscreenCardStyle('video', index)}>
+                <VideoCard video={stream} aboveFold={index < 3} />
+              </div>
+            ))}
+          </div>
+        )}
       </TabPanel>
 
       {/* FRACTIONS TAB */}
@@ -347,7 +359,7 @@ export function ProfileTabContent({
       </TabPanel>
 
       {/* On-scroll loading for content-backed tabs */}
-      {fetchNextContentPage && ['home', 'posts', 'images', 'videos'].includes(activeTab) && (
+      {fetchNextContentPage && ['home', 'posts', 'images', 'videos', 'live'].includes(activeTab) && (
         <LoadMoreSentinel
           hasNextPage={hasNextContentPage}
           isFetchingNextPage={isFetchingNextContentPage}
