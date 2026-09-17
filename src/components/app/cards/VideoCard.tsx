@@ -1979,6 +1979,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   urls={video.livePlaybackUrls || [video.livePlaybackUrl]}
                   thumbnail={thumbnail}
                   fallbackLabel={t('feed.live')}
+                  muted={isMuted}
                 />
               </Suspense>
             ) : (
