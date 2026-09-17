@@ -1009,6 +1009,22 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
               onPause={() => setIsPlaying(false)}
               onEnded={() => setStreamEnded(true)}
             />
+            {/* Autoplay is only ever allowed muted, and iOS Safari keeps an
+                inline <video> silent until a gesture — a viewer there saw the
+                picture, heard nothing, and only got sound by going fullscreen,
+                where the native player takes over. One visible switch on the
+                picture while it is muted; it disappears once sound is on. */}
+            {isMuted && isPlaying && !streamEnded && (
+              <button
+                type="button"
+                onClick={toggleMute}
+                className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/50 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white text-xs font-medium hover:bg-black/70 transition-colors"
+                aria-label={t('stages.unmute', 'Unmute')}
+              >
+                <VolumeX className="w-4 h-4" />
+                {t('stages.unmute', 'Unmute')}
+              </button>
+            )}
             {/* Reconnecting overlay — shown on top of video while retrying */}
             {error && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/60">
