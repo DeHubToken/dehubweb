@@ -295,7 +295,12 @@ const THUMB_BUTTON_CLASS =
  * filled input read as three loose glyphs rather than as controls.
  */
 const COMPACT_BUTTON_CLASS =
-  'h-[46px] w-[46px] shrink-0 justify-center rounded-xl border border-white/15 bg-black/40 backdrop-blur-md hover:bg-black/60';
+  // `mx-0 px-0` is not decoration: the thumb carries `px-2 -mx-2` from
+  // THUMB_BUTTON_CLASS, which widens its tap target by eating 8px of the
+  // margin on each side. Against a row gap of 8 that cancels exactly, and
+  // the thumb and the share button met with no space between them.
+  'h-[46px] w-[46px] shrink-0 justify-center rounded-xl border border-white/15 bg-black/40 backdrop-blur-md hover:bg-black/60 mx-0 px-0';
+
 
 
 export function ActionBar({
