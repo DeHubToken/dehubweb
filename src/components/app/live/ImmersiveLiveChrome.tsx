@@ -255,7 +255,7 @@ export function ImmersiveLiveChrome({
                40px, and the follower line was cut in half by the bottom edge.
                48 now, so the numbers are not pressed against the rounded
                corner they sit in. */
-            className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-xl bg-black/20 py-1.5 pl-1.5 pr-3 backdrop-blur-sm drop-shadow-[0_1px_4px_rgba(0,0,0,0.65)]"
+            className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-xl bg-black/20 py-1 pl-1 pr-2.5 backdrop-blur-sm drop-shadow-[0_1px_4px_rgba(0,0,0,0.65)]"
           >
             <Avatar className="h-[34px] w-[34px] rounded-lg">
               <AvatarImage src={avatar} alt={streamerName} className="rounded-lg" />
@@ -363,7 +363,7 @@ export function ImmersiveLiveChrome({
           off the right edge without pushing anything around. */}
       <div
         className={cn(
-          'absolute inset-x-0 top-[calc(env(safe-area-inset-top,0px)+64px)] z-20 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden transition-opacity duration-300',
+          'absolute inset-x-0 top-[calc(env(safe-area-inset-top,0px)+78px)] z-20 flex gap-1.5 overflow-x-auto px-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden transition-opacity duration-300',
           hidden && 'pointer-events-none opacity-0'
         )}
       >
