@@ -1,3 +1,6 @@
+import { sendSolanaPurchase, connectPurchaseSolanaWallet } from '@/lib/wallet/solana-purchase';
+import { usePaymentPicker } from '@/hooks/use-payment-picker';
+import { loadPaymentBalances } from '@/lib/wallet/payment-balances';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -20,16 +23,19 @@ import { wagmiConfig } from '@/lib/wagmi';
 
 export function NearIntentBuy({ tokensToReceive }: { tokensToReceive: number }) {
   const { t } = useTranslation();
-  const { walletAddress, user } = useAuth();
+  const { walletAddress, user, refreshUser } = useAuth();
   const location = useLocation();
   const queryClient = useQueryClient();
   const [visible, setVisible] = useState(document.visibilityState === 'visible');
   const [search, setSearch] = useState('');
   const [agreed, setAgreed] = useState(false);
+  const [connectingSolana, setConnectingSolana] = useState(false);
   const amount = Math.floor(tokensToReceive);
   const flow = useCryptoPurchase(cryptoPurchaseApi, walletAddress || '', amount, visible && location.pathname === '/app/buy', user?.solanaAddress || undefined);
-  const { purchase, selected, quote, busy } = flow;
+  const { purchase, quote, selected, busy } = flow;
+  const picker = usePaymentPicker(flow.assets, walletAddress || '', user?.solanaAddress || undefined, visible && location.pathname === '/app/buy', loadPaymentBalances, flow.selectAsset);
   const sendPayment = async (receipt: Purchase) => {
+    if (receipt.paymentChainId === 101) return sendSolanaPurchase(receipt);
     const chain = receipt.paymentChainId as ChainId;
     if (!chain || receipt.paymentDecimals == null) throw new Error(t('nearBuy.statusError'));
     await ensureSignerOnChain(chain);
@@ -51,14 +57,23 @@ export function NearIntentBuy({ tokensToReceive }: { tokensToReceive: number }) 
       : await sendNativeToken(receipt.depositAddress, receipt.amountInFormatted, receipt.paymentDecimals, chain);
     return sent.hash;
   };
+  const connectSolana = async () => {
+    setConnectingSolana(true);
+    try { await connectPurchaseSolanaWallet(walletAddress || ''); await refreshUser(); }
+    catch (error) { toast.error(error instanceof Error ? error.message : t('nearBuy.statusError')); }
+    finally { setConnectingSolana(false); }
+  };
   const begin = async () => {
+    picker.lockSelection();
     if (!quote) return flow.price();
     const saved = await flow.create();
     if (saved?.route === 'direct' && saved.amountInFormatted === quote.amountInFormatted) await flow.pay(saved, sendPayment);
   };
+  useEffect(() => { if (selected?.blockchain === 'sol' && user?.solanaAddress) flow.setRefund(user.solanaAddress); }, [selected?.assetId, user?.solanaAddress]);
+  const needsSolana = selected?.route === 'direct' && selected?.blockchain === 'sol' && (!user?.solanaAddress || !user?.solanaAddressVerifiedAt);
   const phase = purchase ? purchasePhase(purchase, flow.now) : null;
   const minutes = estimateMinutes(purchase?.timeEstimateSeconds ?? quote?.timeEstimateSeconds);
-  const rows = flow.assets.filter(asset => `${asset.symbol} ${paymentChainName(asset.blockchain)} ${asset.contractAddress || ''} ${asset.assetId}`.toLowerCase().includes(search.trim().toLowerCase()));
+  const rows = picker.rows.filter(asset => `${asset.symbol} ${paymentChainName(asset.blockchain)} ${asset.contractAddress || ''} ${asset.assetId}`.toLowerCase().includes((picker.other ? search : '').trim().toLowerCase()));
 
   useEffect(() => {
     const visibility = () => setVisible(document.visibilityState === 'visible');
@@ -105,19 +120,25 @@ export function NearIntentBuy({ tokensToReceive }: { tokensToReceive: number }) 
       <button className="block text-xs text-zinc-400 underline break-all" onClick={() => copy(purchase.id)}>{t('nearBuy.purchaseId', { id: purchase.id })}</button>
       <Button variant="ghost" className="w-full text-white" onClick={() => { flow.setPurchase(null); setAgreed(false); }}>{t('nearBuy.startAnother')}</Button>
     </div> : <>
-      <Input value={search} onChange={e => setSearch(e.target.value)} disabled={busy === 'create'} placeholder={t('nearBuy.search')} aria-label={t('nearBuy.search')} className={field} />
+      <div className="flex flex-wrap gap-2" role="group" aria-label={t('nearBuy.currency')}>
+        {picker.currencies.map(symbol => <button key={symbol} disabled={!!busy} aria-pressed={!picker.other && picker.currency === symbol} onClick={() => { picker.chooseCurrency(symbol); setAgreed(false); }} className={`rounded-xl px-4 py-2 text-sm ${!picker.other && picker.currency === symbol ? 'bg-white/20 text-white' : 'bg-zinc-800 text-zinc-300'}`}>{symbol}</button>)}
+      </div>
+      <p className="text-xs text-zinc-400">{t(picker.loading ? 'nearBuy.checkingBalances' : picker.hasFunds ? 'nearBuy.walletBalances' : 'nearBuy.noWalletFunds')}</p>
+      <button className="text-sm text-white underline" onClick={() => { picker.showOther(); setSearch(''); }}>{t('nearBuy.otherCurrencies')}</button>
+      {picker.other && <Input value={search} onChange={e => setSearch(e.target.value)} disabled={busy === 'create'} placeholder={t('nearBuy.search')} aria-label={t('nearBuy.search')} className={field} />}
       <div className="max-h-52 overflow-y-auto space-y-1" role="group" aria-label={t('nearBuy.search')}>
-        {rows.map(asset => <button key={asset.assetId} disabled={busy === 'create'} aria-pressed={asset.assetId === flow.assetId} onClick={() => { flow.selectAsset(asset); setAgreed(false); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm ${asset.assetId === flow.assetId ? 'bg-white/20 text-white' : 'bg-zinc-800 text-zinc-300'}`}><strong>{asset.symbol}</strong> · {paymentChainName(asset.blockchain)}{asset.contractAddress && <span className="block text-[10px] text-zinc-500 break-all">{asset.contractAddress}</span>}</button>)}
+        {rows.map(asset => <button key={asset.assetId} disabled={busy === 'create'} aria-pressed={asset.assetId === flow.assetId} onClick={() => { picker.choose(asset); setAgreed(false); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm ${asset.assetId === flow.assetId ? 'bg-white/20 text-white' : 'bg-zinc-800 text-zinc-300'}`}><strong>{asset.symbol}</strong> · {paymentChainName(asset.blockchain)}<span className="block text-xs text-zinc-400">{t(picker.balances[asset.assetId] == null ? 'nearBuy.balanceUnknown' : 'nearBuy.balanceAmount', { amount: picker.balances[asset.assetId], symbol: asset.symbol })}</span>{picker.other && asset.contractAddress && <span className="block text-[10px] text-zinc-500 break-all">{asset.contractAddress}</span>}</button>)}
         {flow.loading && <p className="text-zinc-400 text-sm">{t('nearBuy.loading')}</p>}
         {flow.assetsFailed && <p className="text-amber-300 text-sm">{t('nearBuy.tokensError')} <button className="underline" onClick={flow.refresh}>{t('nearBuy.retry')}</button></p>}
         {!flow.loading && !flow.assetsFailed && rows.length === 0 && <p className="text-zinc-400 text-sm">{t('nearBuy.noMatches')}</p>}
       </div>
-      {selected && <>
+      {selected && (picker.other || selected.symbol === picker.currency) && <>
         {!direct && <><label className="block text-sm text-zinc-300">{t('nearBuy.refundAddress', { chain: paymentChainName(selected.blockchain) })}<Input value={flow.refund} onChange={e => flow.setRefund(e.target.value)} disabled={!!busy} placeholder={t('nearBuy.refundPlaceholder')} className={`mt-1 ${field}`} /></label>
         <p className="text-xs text-zinc-400">{t('nearBuy.refundHint')}</p></>}
         {quote && <div className="rounded-xl border border-white/10 p-3 space-y-2"><p className="text-white text-sm">{t('nearBuy.quoteSummary', { amount: quote.amountInFormatted, symbol: selected.symbol, chain: paymentChainName(selected.blockchain) })}</p><p className="text-white text-sm">{t('nearBuy.receiveNet', { amount: (quote.estimatedTokensToReceive || 0).toLocaleString(undefined, { maximumFractionDigits: 4 }) })}</p><p className="text-xs text-zinc-400">{t('nearBuy.gasReserve', { amount: (quote.gasReserveUsd || 0).toFixed(4) })}</p>{estimate}<p className="text-xs text-zinc-400">{t('nearBuy.finalQuote')}</p></div>}
         {quote && <label className="flex gap-2 text-xs text-zinc-300"><input type="checkbox" checked={agreed} disabled={busy === 'create'} onChange={e => setAgreed(e.target.checked)} /><span>{t('nearBuy.acceptTerms')} <a href="https://docs.dhb.gg/docs/terms-of-service" target="_blank" rel="noreferrer" className="underline">{t('nearBuy.terms')}</a></span></label>}
-        <Button variant="glass" className="w-full" disabled={flow.loading || flow.historyFailed || !!busy || !validDhbAmount(amount) || (!!quote && (!flow.refund.trim() || !agreed))} onClick={begin}>{busy ? t('nearBuy.loading') : quote ? t(direct ? 'nearBuy.pay' : 'nearBuy.paymentAction') : t('nearBuy.getQuote')}</Button>
+        {needsSolana && <Button variant="glass" className="w-full" disabled={connectingSolana} onClick={connectSolana}>{t(connectingSolana ? 'nearBuy.loading' : 'nearBuy.connectSolana')}</Button>}
+        {!needsSolana && <Button variant="glass" className="w-full" disabled={flow.loading || flow.historyFailed || !!busy || !validDhbAmount(amount) || (!!quote && (!flow.refund.trim() || !agreed))} onClick={begin}>{busy ? t('nearBuy.loading') : quote ? t(direct ? 'nearBuy.pay' : 'nearBuy.paymentAction') : t('nearBuy.getQuote')}</Button>}
       </>}
     </>}
     {flow.error && <p role="alert" className="text-sm text-red-400">{flow.error}</p>}
