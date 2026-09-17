@@ -4181,7 +4181,8 @@
     "broadcasterFailed": "Odtwarzacz transmisji nie załadował się, więc nic nie zostało przechwycone — ale transmisja została już utworzona. Zakończ ją poniżej, a następnie odśwież stronę i przejdź na żywo ponownie.",
     "endStreamConfirmTitle": "Czy na pewno chcesz zakończyć transmisję?",
     "endStreamConfirmBody": "Twoja transmisja zatrzymuje się dla wszystkich oglądających i nie może być wznowiona.",
-    "keepStreaming": "Kontynuuj transmisję"
+    "keepStreaming": "Kontynuuj transmisję",
+    "encoderPermanentHint": "Ten klucz nigdy się nie zmienia. Skonfiguruj koder raz — następnym razem po prostu naciśnij Start, a DeHub utworzy post dla Ciebie."
   },
   "events": {
     "seoTitle": "Wydarzenia — Spotkania i wydarzenia społeczności na DeHub",

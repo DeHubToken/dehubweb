@@ -2205,7 +2205,8 @@
     "broadcasterFailed": "广播播放器加载失败，因此未捕获任何内容——但直播已创建。在下方结束它，然后刷新页面并重新开始直播。",
     "endStreamConfirmTitle": "您确定要结束直播吗？",
     "endStreamConfirmBody": "您的广播将对所有观看者停止，无法恢复。",
-    "keepStreaming": "继续直播"
+    "keepStreaming": "继续直播",
+    "encoderPermanentHint": "这个密钥永远不会改变。设置好你的编码器一次——下次只需在那里按下“开始”，DeHub 就会为你创建帖子。"
   },
   "creatorFlow": {
     "title": "创意者流程",

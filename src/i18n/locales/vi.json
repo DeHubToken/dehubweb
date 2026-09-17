@@ -3941,7 +3941,8 @@
     "broadcasterFailed": "Trình phát không tải được, vì vậy không có gì được ghi lại — nhưng luồng đã được tạo. Kết thúc nó dưới đây, sau đó làm mới trang và phát trực tiếp lại.",
     "endStreamConfirmTitle": "Bạn có chắc chắn muốn kết thúc luồng không?",
     "endStreamConfirmBody": "Phát sóng của bạn dừng lại đối với mọi người đang xem và không thể tiếp tục.",
-    "keepStreaming": "Tiếp tục phát sóng"
+    "keepStreaming": "Tiếp tục phát sóng",
+    "encoderPermanentHint": "Phím này không bao giờ thay đổi. Thiết lập bộ mã hóa của bạn một lần — lần tới chỉ cần nhấn Bắt đầu ở đó và DeHub sẽ tạo bài đăng cho bạn."
   },
   "events": {
     "seoTitle": "Sự kiện — Các Cuộc Gặp Gỡ & Sự Kiện Cộng Đồng trên DeHub",

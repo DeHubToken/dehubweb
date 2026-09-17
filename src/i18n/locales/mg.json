@@ -2287,7 +2287,8 @@
     "broadcasterFailed": "Ang broadcaster ay nabigo na mag-load, kaya walang nakunan — ngunit ang stream ay nabuo na. Tapusin ito sa ibaba, pagkatapos i-refresh ang pahina at magpasimula ng live ulit.",
     "endStreamConfirmTitle": "Sigurado ka ba na gusto mong tapusin ang stream?",
     "endStreamConfirmBody": "Ang iyong broadcast ay tumitigil para sa lahat ng nanonood at hindi maaaring muling simulan.",
-    "keepStreaming": "Magpatuloy sa streaming"
+    "keepStreaming": "Magpatuloy sa streaming",
+    "encoderPermanentHint": "Ity fanalahidy ity dia tsy miova mihitsy. Amboary indray mandeha ny encoder-nao — amin'ny manaraka dia tsindrio fotsiny ny \"Start\" eo ary ny DeHub no hamorona ny lahatsoratra ho anao."
   },
   "creatorFlow": {
     "title": "Mpamorona Flow",

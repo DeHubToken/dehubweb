@@ -4178,7 +4178,8 @@
     "broadcasterFailed": "Der Broadcaster konnte nicht geladen werden, daher wurde nichts erfasst — aber der Stream wurde bereits erstellt. Beenden Sie ihn unten, aktualisieren Sie dann die Seite und gehen Sie erneut live.",
     "endStreamConfirmTitle": "Sind Sie sicher, dass Sie den Stream beenden möchten?",
     "endStreamConfirmBody": "Ihre Übertragung stoppt für alle Zuschauer und kann nicht fortgesetzt werden.",
-    "keepStreaming": "Streaming fortsetzen"
+    "keepStreaming": "Streaming fortsetzen",
+    "encoderPermanentHint": "Dieser Schlüssel ändert sich nie. Stellen Sie Ihren Encoder einmal ein — drücken Sie das nächste Mal einfach auf Start und DeHub erstellt den Beitrag für Sie."
   },
   "events": {
     "seoTitle": "Events — Meetups & Community Events auf DeHub",

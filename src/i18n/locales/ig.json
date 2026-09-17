@@ -2240,7 +2240,8 @@
     "broadcasterFailed": "Broadcaster adịghị arụ ọrụ, ya mere ihe ọ bụla adịghị agbakwunyere — mana stream ahụ emepụtala na. Mechie ya n'ebe a, wee iweghachi ibe ma gaa live ọzọ.",
     "endStreamConfirmTitle": "Ị na-agụ agụ na ị chọrọ imechi stream?",
     "endStreamConfirmBody": "Mgbasa ozi gị na-akwụsị maka onye ọ bụla na-ekiri ma ọ gaghị enweghachi.",
-    "keepStreaming": "Gụnye na-agbasa ozi"
+    "keepStreaming": "Gụnye na-agbasa ozi",
+    "encoderPermanentHint": "Igodo a anaghị agbanwe agbanwe. Nịm gị encoder elu otu ugboro — oge ọzọ dị nnọọ pịa Malite n 'ebe ahụ na DeHub emepụta post n' ihi na ị."
   },
   "creatorFlow": {
     "title": "Onye Okike Flow",

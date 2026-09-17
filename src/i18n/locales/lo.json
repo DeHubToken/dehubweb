@@ -2224,7 +2224,8 @@
     "shopItemsNotAttached_one": "{{count}} ລາຍການຮ້ານຄ້າບໍ່ສາມາດຕິດໄດ້ — ເພີ່ມມັນຈາກແຜງຮ້ານຄ້າ.",
     "shopItemsNotAttached_other": "{{count}} ລາຍການຮ້ານຄ້າບໍ່ສາມາດຕິດໄດ້ — ເພີ່ມພວກມັນຈາກແຜງຮ້ານຄ້າ.",
     "publishing": "ເຜີຍແຜ່ໄປຫາຖານຂໍ້ມູນທີ່ບໍ່ເປັນສູນກາງ...",
-    "youAreGoingLive": "ທ່ານກໍາລັງ live!"
+    "youAreGoingLive": "ທ່ານກໍາລັງ live!",
+    "encoderPermanentHint": "ປຸ່ມນີ້ບໍ່ເຄີຍປ່ຽນແປງ. ຕັ້ງຄ່າ encoder ຂອງທ່ານຄັ້ງດຽວ — ໃນຄັ້ງຕໍ່ໄປພຽງແຕ່ກົດ Start ຢູ່ທີ່ນັ້ນແລະ DeHub ສ້າງໂພສ ສໍາ ລັບທ່ານ."
   },
   "creatorFlow": {
     "title": "ການໄຫຼຂອງຜູ້ສ້າງ",

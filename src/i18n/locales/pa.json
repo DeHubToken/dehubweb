@@ -2197,7 +2197,8 @@
     "sourceScreen": "ਸਕਰੀਨ",
     "sourceScreenHint": "ਇੱਕ ਗੇਮ, ਐਪ ਜਾਂ ਟੈਬ ਸਾਂਝਾ ਕਰੋ",
     "sourceEncoder": "OBS / ਇਕੋਡਰ",
-    "sourceEncoderHint": "RTMP ਵੇਰਵੇ ਪ੍ਰਾਪਤ ਕਰੋ"
+    "sourceEncoderHint": "RTMP ਵੇਰਵੇ ਪ੍ਰਾਪਤ ਕਰੋ",
+    "encoderPermanentHint": "ਇਹ ਕੁੰਜੀ ਕਦੇ ਨਹੀਂ ਬਦਲਦੀ. ਆਪਣੇ ਏਨਕੋਡਰ ਨੂੰ ਇਕ ਵਾਰ ਸੈਟ ਅਪ ਕਰੋ — ਅਗਲੀ ਵਾਰ ਸਿਰਫ ਉਥੇ ਸਟਾਰਟ ਦਬਾਓ ਅਤੇ ਡੀਹਬ ਤੁਹਾਡੇ ਲਈ ਪੋਸਟ ਬਣਾਉਂਦਾ ਹੈ."
   },
   "creatorFlow": {
     "title": "ਨਿਰਮਾਤਾ ਫਲੋ",

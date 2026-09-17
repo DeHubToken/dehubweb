@@ -4121,7 +4121,8 @@
     "broadcasterFailed": "Striimija ei laaditud, seega midagi ei jäädvustatud — kuid striim oli juba loodud. Lõpetage see allpool, seejärel värskendage lehte ja minge otseülekandesse.",
     "endStreamConfirmTitle": "Kas olete kindel, et soovite striimi lõpetada?",
     "endStreamConfirmBody": "Teie ülekanne peatub kõigile vaatajatele ja seda ei saa jätkata.",
-    "keepStreaming": "Jätka striimimist"
+    "keepStreaming": "Jätka striimimist",
+    "encoderPermanentHint": "See võti ei muutu kunagi. Seadistage oma kodeerija üks kord — järgmine kord vajutage lihtsalt nuppu Start ja DeHub loob teile postituse."
   },
   "events": {
     "seoTitle": "Sündmused — DeHubi kogukonnaüritused ja kohtumised",

@@ -4120,7 +4120,8 @@
     "broadcasterFailed": "A közvetítő nem töltődött be, így semmi sem lett rögzítve — de a stream már létrejött. Fejezze be az alábbi gombbal, majd frissítse az oldalt és kezdjen élő közvetítést újra.",
     "endStreamConfirmTitle": "Biztosan be szeretné fejezni a streamet?",
     "endStreamConfirmBody": "Az Ön közvetítése leáll mindenki számára, aki nézi, és nem folytatható.",
-    "keepStreaming": "Streaming folytatása"
+    "keepStreaming": "Streaming folytatása",
+    "encoderPermanentHint": "Ez a kulcs soha nem változik. Állítsa be egyszer a kódolót — legközelebb csak nyomja meg a Start gombot, és a DeHub létrehozza a bejegyzést az Ön számára."
   },
   "events": {
     "seoTitle": "Események — Találkozók és közösségi események a DeHub-on",

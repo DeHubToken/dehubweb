@@ -3998,7 +3998,8 @@
     "broadcasterFailed": "Difuzorul nu s-a putut încărca, deci nimic nu a fost niciodată capturat — dar transmisiunea a fost deja creată. Încheieți-o mai jos, apoi reîmprospătați pagina și transmiteți din nou.",
     "endStreamConfirmTitle": "Sunteți sigur că doriți să încheieți transmisiunea?",
     "endStreamConfirmBody": "Transmisia dvs. se oprește pentru toți cei care se uită și nu poate fi reluată.",
-    "keepStreaming": "Continuați transmisiunea"
+    "keepStreaming": "Continuați transmisiunea",
+    "encoderPermanentHint": "Această cheie nu se schimbă niciodată. Setați codificatorul o dată — data viitoare trebuie doar să apăsați Start acolo și DeHub creează postarea pentru dvs."
   },
   "events": {
     "seoTitle": "Evenimente — Întâlniri și evenimente comunitare pe DeHub",

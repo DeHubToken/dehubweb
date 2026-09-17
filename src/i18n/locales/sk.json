@@ -2408,7 +2408,8 @@
     "broadcasterFailed": "Vysielač sa nepodarilo načítať, takže nič sa nikdy nezaznamenalo — ale prenos bol už vytvorený. Ukončite ho nižšie, potom obnovte stránku a prejdite do priameho vysielania znova.",
     "endStreamConfirmTitle": "Ste si istí, že chcete ukončiť prenos?",
     "endStreamConfirmBody": "Vaše vysielanie sa zastaví pre všetkých divákov a nemôže sa obnoviť.",
-    "keepStreaming": "Pokračovať v streamovaní"
+    "keepStreaming": "Pokračovať v streamovaní",
+    "encoderPermanentHint": "Tento kľúč sa nikdy nemení. Nastavte svoj kodér raz — nabudúce stačí stlačiť tlačidlo Štart a DeHub vytvorí príspevok za vás."
   },
   "creatorFlow": {
     "title": "Creator Flow",

@@ -2294,7 +2294,8 @@
     "broadcasterFailed": "Translyator yuklanmadi, shuning uchun hech narsa saqlanmadi — lekin oqim allaqachon yaratilgan. Uni quyida tugatib, sahifani qayta yuklang va jonli efirga chiqing.",
     "endStreamConfirmTitle": "Oqimni tugatishni xohlaysizmi?",
     "endStreamConfirmBody": "Sizning translyatsiyangiz barcha tomoshabinlar uchun to'xtaydi va qayta boshlash mumkin emas.",
-    "keepStreaming": "Translyatsiyani davom ettiring"
+    "keepStreaming": "Translyatsiyani davom ettiring",
+    "encoderPermanentHint": "Bu tugma hech qachon o&#39;zgarmaydi. Enkoderingizni bir marta sozlang — keyingi safar shunchaki u yerda &quot;Ishga tushirish&quot; tugmasini bosing va DeHub siz uchun post yaratadi."
   },
   "creatorFlow": {
     "title": "Creator Flow",

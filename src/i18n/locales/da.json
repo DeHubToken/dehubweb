@@ -4167,7 +4167,8 @@
     "broadcasterFailed": "Broadcasteren kunne ikke indlæses, så intet blev nogensinde fanget — men streamen var allerede oprettet. Afslut den nedenfor, opdater siden og gå live igen.",
     "endStreamConfirmTitle": "Er du sikker på, at du vil afslutte streamen?",
     "endStreamConfirmBody": "Dit broadcast stopper for alle, der ser, og kan ikke genoptages.",
-    "keepStreaming": "Fortsæt med streaming"
+    "keepStreaming": "Fortsæt med streaming",
+    "encoderPermanentHint": "Denne nøgle ændres aldrig. Indstil din encoder én gang — næste gang skal du bare trykke på Start der, så opretter DeHub opslaget for dig."
   },
   "events": {
     "seoTitle": "Events — Meetups & Community Events på DeHub",

@@ -2270,7 +2270,8 @@
     "broadcasterFailed": "Apraidītājs neizdevās ielādēt, tāpēc nekas netika uztverti — bet tiešraide jau bija izveidota. Beigiet to zemāk, pēc tam atsvaidziniet lapu un dodieties tiešraidē vēlreiz.",
     "endStreamConfirmTitle": "Vai tiešām vēlaties beigt tiešradi?",
     "endStreamConfirmBody": "Jūsu apraide apstājas visiem skatītājiem un to nevar atsākt.",
-    "keepStreaming": "Turpināt tiešradi"
+    "keepStreaming": "Turpināt tiešradi",
+    "encoderPermanentHint": "Šī atslēga nekad nemainās. Iestatiet kodētāju vienu reizi — nākamreiz vienkārši nospiediet Start (Sākt), un DeHub izveidos jums ziņu."
   },
   "creatorFlow": {
     "title": "Radītāja plūsma",
