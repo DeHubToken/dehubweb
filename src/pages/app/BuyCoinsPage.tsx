@@ -37,6 +37,7 @@ import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { SEOHead } from '@/components/SEOHead';
 import { format } from 'date-fns';
 import { invalidateSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
+import { NearIntentBuy } from '@/components/app/NearIntentBuy';
 
 const PRESET_AMOUNTS = [10, 25, 50, 100, 250, 500];
 
@@ -45,7 +46,7 @@ const PRESET_AMOUNTS = [10, 25, 50, 100, 250, 500];
 // only one offered here rather than a picker with a dead option in it.
 const BASE_CHAIN_ID = 8453;
 
-type PaymentMethod = 'card';
+type PaymentMethod = 'card' | 'crypto';
 
 // Stripe session and delivery states as the dpay backend actually writes them.
 // A delivery that has not been attempted is `not_sent`, never `pending` — the
@@ -590,8 +591,18 @@ export default function BuyCoinsPage() {
             </div>
             {paymentMethod === 'card' && <Check className="w-5 h-5 text-white" />}
           </button>
+          <button
+            onClick={() => setPaymentMethod('crypto')}
+            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors ${paymentMethod === 'crypto' ? 'bg-white/10 border border-white/20' : 'bg-zinc-800 hover:bg-zinc-700 border border-transparent'}`}
+          >
+            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center"><Wallet className="w-5 h-5 text-white" /></div>
+            <div className="flex-1 text-left"><p className="text-white font-medium">Crypto via NEAR Intents</p><p className="text-xs text-zinc-400">Pay from any supported chain</p></div>
+            {paymentMethod === 'crypto' && <Check className="w-5 h-5 text-white" />}
+          </button>
 
         </div>
+
+        {paymentMethod === 'crypto' && <NearIntentBuy tokensToReceive={estimatedTokens} />}
 
         {/* Other tokens - the MoonPay rail. dpay only stocks DHB. */}
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
@@ -624,7 +635,7 @@ export default function BuyCoinsPage() {
         </div>
 
         {/* Buy Button */}
-        <div className="relative group">
+        {paymentMethod === 'card' && <div className="relative group">
           <Button
             onClick={handlePurchase}
             disabled={
@@ -647,7 +658,7 @@ export default function BuyCoinsPage() {
             {isPending ? t('buyCoins.processing') : t('buyCoins.buy', { symbol: selectedToken?.symbol || 'DHB' })}
             <ShimmerHoverEffect />
           </Button>
-        </div>
+        </div>}
 
         {/* Purchase Status Overlay */}
         {purchaseStatus !== 'idle' && (
