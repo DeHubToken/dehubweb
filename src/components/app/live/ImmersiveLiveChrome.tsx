@@ -16,7 +16,7 @@
  * It is chrome only. Playback, gifts, the chat and the action bar all stay
  * where they were in LiveStreamCard; this draws over them.
  *
- * Styling comes from the shorts viewer's kit — `w-10 h-10 rounded-full
+ * Styling comes from the shorts viewer's kit — `w-10 h-10 rounded-xl
  * bg-zinc-900/60 backdrop-blur-sm`, white icons, no hue — so a phone viewer
  * opening a short and a phone viewer opening a stream see one app. The mobile
  * app's ViewerChrome was derived from those same numbers, which is why the two
@@ -53,10 +53,10 @@ const elapsedLabel = (ms: number) => {
 
 /** One circle of chrome. Same size and fill as the shorts viewer's buttons. */
 const CIRCLE =
-  'w-10 h-10 rounded-full bg-zinc-900/60 backdrop-blur-sm flex items-center justify-center text-white shrink-0';
+  'w-10 h-10 rounded-xl bg-zinc-900/60 backdrop-blur-sm flex items-center justify-center text-white shrink-0';
 
 const PILL =
-  'h-[26px] shrink-0 rounded-full bg-zinc-900/60 backdrop-blur-sm px-2.5 flex items-center gap-1.5 text-white';
+  'h-[26px] shrink-0 rounded-lg bg-zinc-900/60 backdrop-blur-sm px-2.5 flex items-center gap-1.5 text-white';
 
 export interface ImmersiveLiveChromeProps {
   streamerName: string;
@@ -216,11 +216,11 @@ export function ImmersiveLiveChrome({
           <button
             type="button"
             onClick={() => creatorUsername && navigate(`/app/profile/${creatorUsername}`)}
-            className="flex h-10 min-w-0 items-center gap-2 rounded-full bg-zinc-900/60 pl-[5px] pr-3 backdrop-blur-sm"
+            className="flex h-10 min-w-0 items-center gap-2 rounded-xl bg-zinc-900/60 pl-[5px] pr-3 backdrop-blur-sm"
           >
-            <Avatar className="h-[30px] w-[30px] rounded-full">
-              <AvatarImage src={avatar} alt={streamerName} className="rounded-full" />
-              <AvatarFallback className="rounded-full bg-zinc-700 text-[11px] font-medium text-white">
+            <Avatar className="h-[30px] w-[30px] rounded-lg">
+              <AvatarImage src={avatar} alt={streamerName} className="rounded-lg" />
+              <AvatarFallback className="rounded-lg bg-zinc-700 text-[11px] font-medium text-white">
                 {streamerName?.[0]?.toUpperCase() || '?'}
               </AvatarFallback>
             </Avatar>
@@ -242,7 +242,7 @@ export function ImmersiveLiveChrome({
             <button
               type="button"
               onClick={handleFollow}
-              className="flex h-[34px] shrink-0 items-center gap-0.5 rounded-full bg-white px-3 text-[13px] font-bold text-zinc-950"
+              className="flex h-[34px] shrink-0 items-center gap-0.5 rounded-xl bg-white px-3 text-[13px] font-bold text-zinc-950"
             >
               <Plus className="h-[13px] w-[13px]" strokeWidth={2.5} />
               {t('follow.follow', 'Follow')}

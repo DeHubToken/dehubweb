@@ -178,6 +178,19 @@ interface ActionBarProps {
    */
   hideUtilityDesktop?: boolean;
   /**
+   * Three controls in a column instead of a row of seven: the gift, the
+   * share, and the thumb with its reaction tray. For chrome over a video,
+   * where a full engagement bar is a strip of icons across someone's
+   * broadcast and the counts are noise.
+   *
+   * A prop rather than a hand-built cluster in the viewer, because the
+   * thumb is not a button — it is the hold gesture, the ten-reaction tray,
+   * the per-reaction glow, the optimistic vote cache and the feed
+   * invalidation behind it. All of that stays here.
+   */
+  compact?: boolean;
+
+  /**
    * Hide the utility buttons (bookmark / pin / info) at ALL breakpoints.
    * Feed cards set this and render PostUtilityButtons in their top-right
    * header cluster next to the AI button instead.
@@ -311,6 +324,7 @@ export function ActionBar({
   quickRepost = false,
   centered = false,
   hideUtilityDesktop = false,
+  compact = false,
   hideUtility = false,
   utilityDesktopAnchor = false,
 }: ActionBarProps) {
@@ -893,7 +907,7 @@ export function ActionBar({
           second negative reaction arrives: `relative` so the tray anchors
           here, and `align="left"` because the dislike sits at the left of the
           row where a right-anchored tray would run off the card. */}
-      {!hideDislike && (
+      {!hideDislike && !compact && (
         <span
           className={cn("relative flex items-center gap-0.5", isVoting && "opacity-50")}
           {...dislikeTray.areaProps}
@@ -972,14 +986,16 @@ export function ActionBar({
         <span className="text-xs text-zinc-400">{formatCount(displayShareCount)}</span>
       </button>
 
-      <button
-        onClick={onComment}
-        className="flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors"
-        aria-label="Comment"
-      >
-        <MessageSquare className="w-5 h-5" />
-        <span className="text-xs text-zinc-400">{formatCount(commentCount)}</span>
-      </button>
+      {!compact && (
+        <button
+          onClick={onComment}
+          className="flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors"
+          aria-label="Comment"
+        >
+          <MessageSquare className="w-5 h-5" />
+          <span className="text-xs text-zinc-400">{formatCount(commentCount)}</span>
+        </button>
+      )}
 
       {/* Reactions — furthest right for easy thumb reach. Tap the thumb to
           like/unlike, hold (or hover on desktop) to pick one of the ten. On
@@ -1052,6 +1068,17 @@ export function ActionBar({
       </span>
     </>
   );
+
+  if (compact) {
+    return (
+      /* Column, bottom-up: gift, share, thumb. The thumb is last so it is
+         nearest the bottom of the screen and its tray opens upward into
+         empty frame rather than over the chat. */
+      <div className={cn('flex flex-col items-center gap-3', className)}>
+        {engagementButtons}
+      </div>
+    );
+  }
 
   return (
     <div className={cn(
