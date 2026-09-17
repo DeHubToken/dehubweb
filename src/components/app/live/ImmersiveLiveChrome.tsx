@@ -223,7 +223,11 @@ export function ImmersiveLiveChrome({
           <button
             type="button"
             onClick={() => creatorUsername && navigate(`/app/profile/${creatorUsername}`)}
-            className="flex h-10 min-w-0 max-w-[150px] items-center gap-2 rounded-xl bg-zinc-900/60 pl-[5px] pr-3 backdrop-blur-sm"
+            /* `flex-1` and a text box that can take the slack. Without both,
+               the capsule sized to its content, and the name — which
+               truncates, so it will happily be zero wide — rendered as an
+               avatar with a blank space beside it. */
+            className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded-xl bg-zinc-900/60 pl-[5px] pr-3 backdrop-blur-sm"
           >
             <Avatar className="h-[30px] w-[30px] rounded-lg">
               <AvatarImage src={avatar} alt={streamerName} className="rounded-lg" />
@@ -231,7 +235,7 @@ export function ImmersiveLiveChrome({
                 {streamerName?.[0]?.toUpperCase() || '?'}
               </AvatarFallback>
             </Avatar>
-            <span className="min-w-0 text-left">
+            <span className="min-w-0 flex-1 text-left">
               <span className="block truncate text-[13px] font-bold leading-tight text-white">
                 {streamerName}
               </span>
@@ -258,14 +262,6 @@ export function ImmersiveLiveChrome({
         </div>
 
         <div className="ml-auto flex shrink-0 items-center gap-2">
-          {/* Audience. A count, not an avatar stack: the presence socket
-              carries a number and inventing faces for it would be a lie at a
-              glance. */}
-          <span className={cn(PILL, 'h-10 px-3 text-xs font-bold')}>
-            <Eye className="h-[13px] w-[13px]" />
-            {typeof viewers === 'number' ? compact(viewers) : viewers}
-          </span>
-
           <button
             type="button"
             onClick={onToggleMute}
@@ -311,6 +307,19 @@ export function ImmersiveLiveChrome({
           />
           <span className="text-[10px] font-extrabold tracking-wider">{statusLabel}</span>
         </span>
+
+        {/* Audience. A count, not an avatar stack: the presence socket
+            carries a number and inventing faces for it would be a lie at a
+            glance. It sits here rather than in the header because the
+            header had five controls and a follow button fighting over
+            375px, and this is the one of them that is not a control. */}
+        <span className={PILL}>
+          <Eye className="h-[11px] w-[11px] text-white/75" />
+          <span className="text-[11px] font-semibold text-white/85">
+            {typeof viewers === 'number' ? compact(viewers) : viewers}
+          </span>
+        </span>
+
         {running && startedMs != null ? (
           <span className={PILL}>
             <Clock className="h-[11px] w-[11px] text-white/75" />
