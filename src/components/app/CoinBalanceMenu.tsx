@@ -17,7 +17,39 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useWalletLocked } from '@/hooks/use-wallet-locked';
 import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
 import { useTokenPrices } from '@/hooks/use-token-prices';
+import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { getDHBBalance } from '@/lib/contracts/stream-controller';
+import { sellLiquidityLink } from '@/lib/wallet/sell-liquidity-link';
 import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
+
+async function openSellPosition(walletAddress: string | null | undefined) {
+  if (!walletAddress) {
+    toast.error('Connect a wallet to sell DHB');
+    return;
+  }
+  // Open on the click so popup blockers do not discard the tab after balance reads.
+  const tab = window.open('', '_blank');
+  if (!tab) {
+    toast.error('Allow popups to open Uniswap');
+    return;
+  }
+  try {
+    const [base, bnb] = await Promise.all([
+      getDHBBalance(walletAddress, BASE_CHAIN_ID),
+      getDHBBalance(walletAddress, BNB_CHAIN_ID),
+    ]);
+    const chainId = base > 0n ? BASE_CHAIN_ID : bnb > 0n ? BNB_CHAIN_ID : null;
+    if (!chainId) {
+      tab.close();
+      toast.info('No liquid DHB found on Base or BNB Chain');
+      return;
+    }
+    tab.location.href = sellLiquidityLink(chainId);
+  } catch {
+    tab.close();
+    toast.error('Could not check DHB balances. Try again.');
+  }
+}
 
 /**
  * Shown at the top of the wallet menu whenever the built-in wallet's key is not
@@ -182,15 +214,13 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         <span className="text-white font-medium">Buy Coins</span>
       </button>
       <button
-        onClick={() => {
-          toast.info('Cash out coming soon!');
-        }}
+        onClick={() => void openSellPosition(walletAddress)}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Minus className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Cash Out</span>
+        <span className="text-white font-medium">Sell</span>
       </button>
       <button
         onClick={() => (hasAddressChoice ? setMenuView('receive') : handleCopyAddress())}
@@ -509,15 +539,13 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
         <span className="text-white font-medium">Buy Coins</span>
       </button>
       <button
-        onClick={() => {
-          toast.info('Cash out coming soon!');
-        }}
+        onClick={() => void openSellPosition(walletAddress)}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Minus className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Cash Out</span>
+        <span className="text-white font-medium">Sell</span>
       </button>
       <button
         onClick={() => (hasAddressChoice ? setMenuView('receive') : handleCopyAddress())}
