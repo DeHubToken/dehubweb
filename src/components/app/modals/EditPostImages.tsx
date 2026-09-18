@@ -36,8 +36,8 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
 
   const replace = async (file: File) => {
     if (busy || disabled) return;
-    if (!/^image\/(jpeg|png|webp|gif|heic|heif|avif)$/i.test(file.type) || file.size > 20 * 1024 * 1024) {
-      toast.error('Choose an image of 20 MB or smaller');
+    if (!/^image\/(jpeg|png|webp|gif|heic|heif|avif)$/i.test(file.type)) {
+      toast.error('Choose an image file');
       return;
     }
     setBusy(true);
@@ -61,8 +61,8 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
       toast.error(`Your badge tier allows up to ${imageLimit} images per post`);
       return;
     }
-    if (files.some(file => !/^image\/(jpeg|png|webp|gif|heic|heif|avif)$/i.test(file.type) || file.size > 20 * 1024 * 1024)) {
-      toast.error('Choose images of 20 MB or smaller');
+    if (files.some(file => !/^image\/(jpeg|png|webp|gif|heic|heif|avif)$/i.test(file.type))) {
+      toast.error('Choose image files');
       return;
     }
     position.current = -1;

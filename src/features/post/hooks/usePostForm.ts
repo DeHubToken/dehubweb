@@ -608,10 +608,8 @@ export function usePostForm(
     }
 
     const imageFiles = files.filter(f => f.type.startsWith('image/'));
-    // The badge decides how much of a picture survives upload, so this is the
-    // size the API will STORE rather than a transfer limit — which is why it
-    // refuses the file instead of quietly sending one that will be crushed.
-    const imageByteLimit = postQuota?.imageBytes
+    // Images share the creator's general media upload ceiling.
+    const imageByteLimit = postQuota?.mediaBytesPerDay
       ?? getPostImageBytesForBadge(user?.badgeBalance, user?.username, user?.badgeLock);
     const imageLimitMb = Math.round(imageByteLimit / (1024 * 1024));
     const oversized = imageFiles.filter(f => f.size > imageByteLimit);
@@ -634,7 +632,7 @@ export function usePostForm(
       const preview = URL.createObjectURL(file);
       setMedia(prev => [...prev, { file, preview, type: 'image' }]);
     });
-  }, [hasVideo, media, user?.badgeBalance, user?.badgeLock, user?.username, postQuota?.imageBytes, postQuota?.tier, t]);
+  }, [hasVideo, media, user?.badgeBalance, user?.badgeLock, user?.username, postQuota?.mediaBytesPerDay, postQuota?.tier, t]);
     
   const handleVideoSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
