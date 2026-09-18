@@ -6,7 +6,11 @@ const mocks = vi.hoisted(() => ({
   unlock: vi.fn(async () => {}),
   base: vi.fn(), chain: vi.fn(),
   account: { address: '0x1111111111111111111111111111111111111111', isConnected: true, chainId: 56 },
-  switch: vi.fn(), send: vi.fn(),
+  switch: vi.fn(), send: vi.fn(), receipt: vi.fn(),
+}));
+vi.mock('viem', async (importOriginal) => ({
+  ...await importOriginal<typeof import('viem')>(),
+  createPublicClient: vi.fn(() => ({ waitForTransactionReceipt: mocks.receipt })),
 }));
 vi.mock('@/lib/connection-source', () => ({ isSmartWalletSession: () => mocks.smart }));
 vi.mock('@/lib/smart-wallet', () => ({ ensureWalletUnlocked: mocks.unlock }));
@@ -77,6 +81,43 @@ describe('chain-aware wallet actions', () => {
     const sends = signer.request.mock.calls.filter(([request]) => request.method === 'eth_sendTransaction');
     expect(sends).toHaveLength(1);
     expect(sends[0][0]).toMatchObject({ params: [{ from: safe, to: recipient, data: abi.encodeFunctionData('transfer', [recipient, 12n]) }] });
+  });
+
+  it('sends through the smart-account bundler without calling the owner gas estimator', async () => {
+    const signer = provider(8453);
+    signer.request.mockImplementation(async ({ method }) => {
+      if (method === 'eth_estimateGas') return new Promise<string>(() => {});
+      if (method === 'eth_chainId') return '0x2105';
+      if (method === 'eth_accounts') return [safe];
+      if (method === 'eth_sendTransaction') return '0xhash';
+    });
+    mocks.base.mockResolvedValue(signer);
+    const result = await writeContractAA(recipient, abi, 'transfer', [recipient, 12n]);
+    expect(result.hash).toBe('0xhash');
+    expect(signer.request.mock.calls.some(([request]) => request.method === 'eth_estimateGas')).toBe(false);
+    expect(mocks.send).not.toHaveBeenCalled();
+  });
+
+  it('confirms a mined smart-wallet approval without reading through its owner RPC', async () => {
+    const signer = { ...provider(8453), publicClient: {
+      waitForTransactionReceipt: vi.fn(async () => ({ status: 'success', transactionHash: '0xhash' })),
+    } };
+    mocks.base.mockResolvedValue(signer);
+    mocks.receipt.mockImplementation(signer.publicClient.waitForTransactionReceipt);
+    const tx = await writeContractAA(recipient, abi, 'transfer', [recipient, 12n]);
+    expect(await tx.wait()).toEqual({ status: 1, hash: '0xhash' });
+    expect(mocks.receipt).toHaveBeenCalledWith({ hash: '0xhash', confirmations: 1, timeout: 60000 });
+    expect(signer.request.mock.calls.some(([request]) => request.method === 'eth_getTransactionReceipt')).toBe(false);
+  });
+
+  it('preserves a reverted receipt and never reports it as success', async () => {
+    const signer = { ...provider(8453), publicClient: {
+      waitForTransactionReceipt: vi.fn(async () => ({ status: 'reverted', transactionHash: '0xhash' })),
+    } };
+    mocks.base.mockResolvedValue(signer);
+    mocks.receipt.mockImplementation(signer.publicClient.waitForTransactionReceipt);
+    const tx = await writeContractAA(recipient, abi, 'transfer', [recipient, 12n]);
+    expect(await tx.wait()).toEqual({ status: 0, hash: '0xhash' });
   });
 
   it('cancellation prevents contract, native and batch sends', async () => {
