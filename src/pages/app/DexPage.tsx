@@ -1,3 +1,4 @@
+import { aggregateCandles, recordCandle, restoreCandles, lowestSellPrice, CANDLE_INTERVALS, CANDLE_STORAGE_KEY, type Candle, type CandleInterval } from '@/lib/dex/live-market';
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { ArrowDownUp, ExternalLink, RefreshCw } from 'lucide-react';
 import { parseUnits } from 'ethers';
@@ -7,7 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { aggregateBook, balanceFraction, formatPrice, formatSize, type BookLevel } from '@/lib/dex/orderbook';
-import { fetchMarketData, type ChartPeriod, type MarketData } from '@/lib/dex/market-data';
+import { fetchMarketData, type MarketData } from '@/lib/dex/market-data';
 import { DEX_CHAINS, dexProvider, type DexChainId, type IndexedPosition, type VerifiedPosition, verifyPosition } from '@/lib/dex/v4';
 import { detectDhbChain, detectUsdcChain, mintSellPosition, quoteSellPosition, recoverMint, withdrawSellPosition, type SellInput, type SellQuote } from '@/lib/dex/sell';
 import { readWithTimeout, type OrderStage } from '@/lib/dex/read-timeout';
@@ -63,10 +64,19 @@ export default function DexPage() {
   const [pending, setPending] = useState<Pending | null>(null);
   const [formError, setFormError] = useState('');
   const [withdrawing, setWithdrawing] = useState<string | null>(null);
-  const [period, setPeriod] = useState<ChartPeriod>('1W');
+  const [period, setPeriod] = useState<CandleInterval>('1m');
+  const [minutes, setMinutes] = useState<Candle[]>([]);
+  const candleHistory = useRef<Candle[]>([]);
+  const [historyReady, setHistoryReady] = useState(false);
+  useEffect(() => {
+    let live = true;
+    Promise.resolve().then(() => localStorage.getItem(CANDLE_STORAGE_KEY))
+      .then((raw) => { if (live) { candleHistory.current = restoreCandles(raw); setMinutes(candleHistory.current); } })
+      .catch(() => {}).finally(() => { if (live) setHistoryReady(true); });
+    return () => { live = false; };
+  }, []);
+  const candles = useMemo(() => aggregateCandles(minutes, period), [minutes, period]);
   const [market, setMarket] = useState<MarketData | null>(null);
-  const [chartError, setChartError] = useState('');
-  const [chartLoading, setChartLoading] = useState(true);
   const [depth, setDepth] = useState(false);
   const [increment, setIncrement] = useState(0.000001);
   const [mobileView, setMobileView] = useState<'chart' | 'book' | 'trade'>('chart');
@@ -123,26 +133,41 @@ export default function DexPage() {
         for (const result of batch) { if (result.status === 'rejected') failed++; else if (result.value) verified.push(result.value); }
       }
       if (failed) { setListError(`${failed} positions could not be refreshed. Showing the last complete snapshot.`); return; }
+      const observationTime = Date.now() / 1000;
+      candleHistory.current = recordCandle(candleHistory.current, lowestSellPrice(verified), observationTime);
+      setMinutes(candleHistory.current);
+      try { localStorage.setItem(CANDLE_STORAGE_KEY, JSON.stringify(candleHistory.current)); } catch { /* Chart stays available without storage. */ }
       setPositions(verified); setUpdated(Date.now()); setListError('');
     } catch { setListError('Market refresh failed. The displayed snapshot may be out of date.'); }
     finally { setLoading(false); loadLock.current = false; }
   }, []);
 
   useEffect(() => {
+    if (!historyReady) return;
     void loadPositions();
-    const timer = setInterval(() => { if (document.visibilityState === 'visible' && !busyRef.current) void loadPositions(); }, 45000);
-    return () => clearInterval(timer);
-  }, [loadPositions]);
+    let lastBlockRefresh = 0;
+    const onBlock = () => {
+      if (document.visibilityState !== 'visible' || busyRef.current || Date.now() - lastBlockRefresh < 4000) return;
+      lastBlockRefresh = Date.now();
+      void loadPositions();
+    };
+    const providers = [dexProvider(BASE_CHAIN_ID), dexProvider(BNB_CHAIN_ID)];
+    providers.forEach((provider) => { void provider.on('block', onBlock).catch(() => {}); });
+    const timer = setInterval(() => { if (document.visibilityState === 'visible' && !busyRef.current) void loadPositions(); }, 10000);
+    const resume = () => { if (document.visibilityState === 'visible') void loadPositions(); };
+    document.addEventListener('visibilitychange', resume);
+    return () => { clearInterval(timer); document.removeEventListener('visibilitychange', resume); providers.forEach((provider) => { void provider.off('block', onBlock).catch(() => {}); }); };
+  }, [loadPositions, historyReady]);
 
   useEffect(() => {
-    let live = true; setChartLoading(true); setChartError(''); setMarket(null);
-    fetchMarketData(period).then((data) => { if (live) setMarket(data); })
-      .catch(() => { if (live) setChartError('Reference chart unavailable. You can still view liquidity and place orders.'); })
-      .finally(() => { if (live) setChartLoading(false); });
+    let live = true; setMarket(null);
+    fetchMarketData('1D').then((data) => { if (live) setMarket(data); })
+      .catch(() => {});
     return () => { live = false; };
-  }, [period, marketRevision]);
+  }, [marketRevision]);
 
   const { bids, asks } = useMemo(() => aggregateBook(positions, increment), [positions, increment]);
+  const bestAsk = lowestSellPrice(positions);
   const shown = useMemo(() => mine ? positions.filter((p) => p.owner.toLowerCase() === walletAddress?.toLowerCase()) : positions, [positions, mine, walletAddress]);
   const visiblePositions = shown.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
   useEffect(() => { setPage((value) => Math.min(value, Math.max(0, Math.ceil(shown.length / PAGE_SIZE) - 1))); }, [shown.length]);
@@ -209,7 +234,7 @@ export default function DexPage() {
   return <div className="dex-terminal">
     <header className="dex-top">
       <div className="dex-pair"><img src="/icons/DHB.png" alt="" /><div><h1>DHB <span className="dex-muted">/</span> USDC</h1><p>Combined market · Base + BNB</p></div></div>
-      <div className="dex-stat"><small>Market reference · USD</small><strong className="dex-reference">{market?.price ? `$${formatPrice(market.price)}` : '—'}</strong></div>
+      <div className="dex-stat"><small>Lowest sell · USDC</small><strong className="dex-reference">{bestAsk != null ? `${formatPrice(bestAsk)} USDC` : '—'}</strong></div>
       <div className="dex-stat"><small>24h reference change</small><strong className={(market?.change || 0) >= 0 ? 'dex-buy' : 'dex-sell'}>{market?.change != null ? `${market.change >= 0 ? '+' : ''}${market.change.toFixed(2)}%` : '—'}</strong></div>
       <div className="dex-stat"><small>Listed DHB</small><strong>{formatSize(totalDhb)}</strong></div>
       <div className="dex-stat"><small>Listed USDC</small><strong>{formatSize(totalUsdc)}</strong></div>
@@ -219,9 +244,9 @@ export default function DexPage() {
     <div className="dex-mobile-tabs" role="tablist" aria-label="Trading panels">{(['chart', 'book', 'trade'] as const).map((view) => <button key={view} role="tab" aria-selected={mobileView === view} onClick={() => setMobileView(view)}>{view === 'chart' ? 'Chart' : view === 'book' ? 'Order book' : 'Buy / Sell'}</button>)}</div>
     <div className="dex-workspace">
       <section className={`dex-panel dex-chart-panel dex-pane ${mobileView === 'chart' ? 'dex-pane-active' : ''}`}>
-        <div className="dex-panel-head"><div className="dex-tabs" role="tablist" aria-label="Chart type"><button role="tab" aria-selected={!depth} onClick={() => setDepth(false)}>Price</button><button role="tab" aria-selected={depth} onClick={() => setDepth(true)}>Depth</button></div>{!depth && <div className="dex-tabs" role="tablist" aria-label="Chart timeframe">{(['1D', '1W', '1M'] as const).map((value) => <button role="tab" key={value} aria-selected={period === value} onClick={() => setPeriod(value)}>{value}</button>)}</div>}</div>
-        {!depth && chartLoading ? <div className="dex-chart-empty" role="status">Loading market history…</div> : !depth && chartError ? <div className="dex-chart-empty"><strong>Chart unavailable</strong><p>{chartError}</p><button onClick={() => setMarketRevision((n) => n + 1)}>Retry</button></div> : <MarketChart points={market?.points || []} bids={bids} asks={asks} depth={depth} />}
-        <p className="dex-chart-note">{depth ? 'Estimated liquidity from verified DHB/USDC range positions on both networks. Each position settles on its own network.' : <>USD reference, weighted by liquidity in the largest DHB pool on each network. This is not an execution quote. {market?.partial && 'Some history has partial network coverage. '}{market?.sources.map((source) => <a key={source.name} href={source.url} target="_blank" rel="noreferrer">{source.name} source </a>)}</>}</p>
+        <div className="dex-panel-head"><div className="dex-tabs" role="tablist" aria-label="Chart type"><button role="tab" aria-selected={!depth} onClick={() => setDepth(false)}>Price</button><button role="tab" aria-selected={depth} onClick={() => setDepth(true)}>Depth</button></div>{!depth && <div className="dex-tabs" role="tablist" aria-label="Chart timeframe">{CANDLE_INTERVALS.map((value) => <button role="tab" key={value} aria-selected={period === value} onClick={() => setPeriod(value)}>{value}</button>)}</div>}</div>
+        {!depth && loading && !updated ? <div className="dex-chart-empty" role="status">Loading sell positions…</div> : <MarketChart candles={candles} bids={bids} asks={asks} depth={depth} />}
+        <p className="dex-chart-note">{depth ? 'Estimated liquidity from verified DHB/USDC range positions on both networks. Each position settles on its own network.' : 'Lowest sell observations · USDC · updates on new blocks, with a 10s fallback. History is saved on this device; gaps are not trades.'}{updated ? ' · ' + new Date(updated).toLocaleTimeString() : ''}</p>
       </section>
       <section className={`dex-panel dex-book-panel dex-pane ${mobileView === 'book' ? 'dex-pane-active' : ''}`}>
         <div className="dex-panel-head"><h2>Order book</h2><select aria-label="Price grouping" className="dex-book-select" value={increment} onChange={(e) => setIncrement(Number(e.target.value))}>{[0.00000001, 0.0000001, 0.000001, 0.00001].map((step) => <option key={step} value={step}>{step.toFixed(8)}</option>)}</select></div>
