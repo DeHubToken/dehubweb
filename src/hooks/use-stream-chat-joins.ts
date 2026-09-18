@@ -5,7 +5,7 @@ import { watchStreamJoins } from '@/lib/api/dehub/stream-presence';
 /** Keep the latest arrival per identified viewer; reconnects are not new people. */
 export function uniqueStreamJoins(joins: StreamActivity[]): StreamActivity[] {
   const seen = new Set<string>();
-  return [...joins].sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp)).filter((join) => {
+  return [...joins].reverse().sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp)).filter((join) => {
     const address = join.address?.toLowerCase();
     if (!address) return true;
     if (seen.has(address)) return false;
