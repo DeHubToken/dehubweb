@@ -1164,25 +1164,13 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               onPause={() => setIsPlaying(false)}
               onEnded={() => setStreamEnded(true)}
             />
-            {/* Autoplay is only ever allowed muted, and iOS Safari keeps an
-                inline <video> silent until a gesture — a viewer there saw the
-                picture, heard nothing, and only got sound by going fullscreen,
-                where the native player takes over. One visible switch on the
-                picture while it is muted; it disappears once sound is on. */}
-            {isMuted && isPlaying && !streamEnded && (
+            {/* Inline cards offer an unmute prompt. The immersive playback
+                screen already has its sound control in the top-right header. */}
+            {!immersive && isMuted && isPlaying && !streamEnded && (
               <button
                 type="button"
                 onClick={toggleMute}
-                className={cn(
-                  'z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/50 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white text-xs font-medium hover:bg-black/70 transition-colors',
-                  immersive
-                    ? // Top-left is the creator capsule's corner in full-bleed.
-                      // Centred under the pills instead: this is the one control
-                      // an iOS viewer has to find to hear anything, so it gets a
-                      // place nothing else is drawn in rather than a tidier one.
-                      'absolute left-1/2 top-[116px] -translate-x-1/2'
-                    : 'absolute top-3 left-3'
-                )}
+                className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/50 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white text-xs font-medium hover:bg-black/70 transition-colors"
                 aria-label={t('stages.unmute', 'Unmute')}
               >
                 <VolumeX className="w-4 h-4" />
