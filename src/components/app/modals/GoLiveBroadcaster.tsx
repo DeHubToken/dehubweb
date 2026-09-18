@@ -63,6 +63,7 @@ import { EndStreamConfirmDialog } from '@/components/app/modals/EndStreamConfirm
 import { getLiveStream, updateStreamThumbnail } from '@/lib/api/dehub/livestream';
 import { useQuery } from '@tanstack/react-query';
 import { useStreamAudience } from '@/hooks/use-stream-audience';
+import { LiveReactionFlow } from '@/components/app/live/LiveReactionFlow';
 import { createLogger } from '@/lib/logger';
 import {
   whipEndpointFor,
@@ -1742,6 +1743,8 @@ export function GoLiveBroadcaster({
             !videoOn && 'opacity-0'
           )}
         />
+
+        <LiveReactionFlow streamId={streamId} enabled={phase === 'live' || phase === 'reconnecting'} bottom={fullBleed ? 100 : 24} />
 
         {!videoOn && phase !== 'error' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-zinc-500">
