@@ -77,6 +77,10 @@ function extractTitle(html: string): string | null {
 
 function resolveUrl(url: string, baseUrl: string): string {
   if (!url) return url;
+  // OG attribute values are HTML-escaped. A query string containing &amp;
+  // otherwise reaches image renderers as parameters named "amp;title" and
+  // "amp;banner", leaving DeHub's blog share card blank.
+  url = url.replace(/&amp;/gi, '&');
   if (url.startsWith('http://') || url.startsWith('https://')) return url;
   if (url.startsWith('//')) return 'https:' + url;
   
