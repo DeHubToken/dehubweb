@@ -31,6 +31,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import type Hls from 'hls.js';
 import { LiveEndedMedia } from './LiveEndedMedia';
+import { ButtonLoader } from '../DeHubLoader';
 import { liveSourceFromHlsUrl, whepEndpointFor } from '@/lib/live-ingest';
 import type { WhepSubscription } from '@/lib/livepeer/whep';
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
@@ -88,6 +89,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
   const [visible, setVisible] = useState(false);
   const [failed, setFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const src = urls.find((u): u is string => !!u && u.includes('.m3u8'));
   const source = useMemo(() => liveSourceFromHlsUrl(src), [src]);
@@ -124,6 +126,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
 
     let cancelled = false;
     let session: WhepSubscription | null = null;
+    setLoading(true);
     whepSessionsOpen += 1;
 
     const fallBack = () => {
@@ -155,7 +158,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
           return;
         }
         el.srcObject = session.stream;
-        await el.play().catch(() => undefined);
+        await el.play().catch(() => { if (!cancelled) setLoading(false); });
       } catch {
         fallBack();
       }
@@ -179,6 +182,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
     const el = videoRef.current;
     if (transport !== 'hls' || !el || !src || !visible || postOpen || failed) return;
     let cancelled = false;
+    setLoading(true);
 
     const attach = async () => {
       // Native HLS is Safari's path, and it is the right one for a Livepeer
@@ -208,10 +212,10 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
         hls.loadSource(src);
         hls.attachMedia(el);
       }
-      el.play().catch(() => {/* autoplay refused — the poster stays up */});
+      el.play().catch(() => { if (!cancelled) setLoading(false); });
     };
 
-    void attach();
+    void attach().catch(() => { if (!cancelled) setFailed(true); });
 
     return () => {
       cancelled = true;
@@ -254,15 +258,24 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
         autoPlay
         preload="none"
         poster={thumbnail}
-        onPlaying={() => { setPlaying(true); setPaused(false); }}
-        onPause={() => setPaused(true)}
+        onPlaying={() => { setPlaying(true); setPaused(false); setLoading(false); }}
+        onWaiting={() => setLoading(true)}
+        onPause={() => { setPaused(true); setLoading(false); }}
       />
+      {visible && !postOpen && loading && (
+        <div role="status" aria-label="Loading" className="absolute inset-0 pointer-events-none flex items-center justify-center">
+          <ButtonLoader size={40} className="!filter-none" />
+        </div>
+      )}
       {(controlsVisible || isFullscreen) && (
         <div data-video-controls className="absolute bottom-0 inset-x-0 z-10 flex items-center gap-2 px-3 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent" onClick={(event) => event.stopPropagation()}>
           <button type="button" aria-label={paused ? 'Play' : 'Pause'} className="h-8 w-8 rounded-xl bg-black/40 border border-white/10 text-white flex items-center justify-center" onClick={() => {
             const el = videoRef.current;
             if (!el) return;
-            if (el.paused) void el.play().catch(() => setPaused(true));
+            if (el.paused) {
+              setLoading(true);
+              void el.play().catch(() => { setPaused(true); setLoading(false); });
+            }
             else el.pause();
           }}>
             {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
