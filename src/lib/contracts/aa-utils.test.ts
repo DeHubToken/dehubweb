@@ -6,7 +6,11 @@ const mocks = vi.hoisted(() => ({
   unlock: vi.fn(async () => {}),
   base: vi.fn(), chain: vi.fn(),
   account: { address: '0x1111111111111111111111111111111111111111', isConnected: true, chainId: 56 },
-  switch: vi.fn(), send: vi.fn(),
+  switch: vi.fn(), send: vi.fn(), receipt: vi.fn(),
+}));
+vi.mock('viem', async (importOriginal) => ({
+  ...await importOriginal<typeof import('viem')>(),
+  createPublicClient: vi.fn(() => ({ waitForTransactionReceipt: mocks.receipt })),
 }));
 vi.mock('@/lib/connection-source', () => ({ isSmartWalletSession: () => mocks.smart }));
 vi.mock('@/lib/smart-wallet', () => ({ ensureWalletUnlocked: mocks.unlock }));
@@ -99,9 +103,10 @@ describe('chain-aware wallet actions', () => {
       waitForTransactionReceipt: vi.fn(async () => ({ status: 'success', transactionHash: '0xhash' })),
     } };
     mocks.base.mockResolvedValue(signer);
+    mocks.receipt.mockImplementation(signer.publicClient.waitForTransactionReceipt);
     const tx = await writeContractAA(recipient, abi, 'transfer', [recipient, 12n]);
     expect(await tx.wait()).toEqual({ status: 1, hash: '0xhash' });
-    expect(signer.publicClient.waitForTransactionReceipt).toHaveBeenCalledWith({ hash: '0xhash', confirmations: 1, timeout: 60000 });
+    expect(mocks.receipt).toHaveBeenCalledWith({ hash: '0xhash', confirmations: 1, timeout: 60000 });
     expect(signer.request.mock.calls.some(([request]) => request.method === 'eth_getTransactionReceipt')).toBe(false);
   });
 
