@@ -26,7 +26,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Loader2 } from 'lucide-react';
+import { Loader2, RotateCw } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -44,6 +44,7 @@ import type { MediaKind } from '@/lib/converter-sources';
 export interface ImportDetails {
   name: string;
   description: string;
+  rotation: 0 | 90 | 180 | 270;
 }
 
 interface Props {
@@ -62,6 +63,7 @@ export function ImportDetailsDialog({ open, url, mediaKind, onCancel, onConfirm 
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [rotation, setRotation] = useState<0 | 90 | 180 | 270>(0);
   const [preview, setPreview] = useState<ImportPreview | null>(null);
 
   // Keyed on the URL rather than on `open`: reopening the dialog for a
@@ -74,6 +76,7 @@ export function ImportDetailsDialog({ open, url, mediaKind, onCancel, onConfirm 
     setPreview(null);
     setName('');
     setDescription('');
+    setRotation(0);
 
     previewImport(url)
       .then(result => {
@@ -144,6 +147,17 @@ export function ImportDetailsDialog({ open, url, mediaKind, onCancel, onConfirm 
             />
           </div>
 
+          {mediaKind === 'video' && (
+            <div className="flex items-center gap-2">
+              <RotateCw className="h-4 w-4 text-zinc-400" aria-hidden="true" />
+              {([0, 90, 180, 270] as const).map(degrees => (
+                <Button key={degrees} type="button" variant={rotation === degrees ? 'glass' : 'ghost'} aria-pressed={rotation === degrees} onClick={() => setRotation(degrees)}>
+                  {degrees}°
+                </Button>
+              ))}
+            </div>
+          )}
+
           {/* Only shown when the preview came back and said so. A live stream
               cannot be imported at all, and finding that out after queueing is
               a wasted trip. */}
@@ -158,7 +172,7 @@ export function ImportDetailsDialog({ open, url, mediaKind, onCancel, onConfirm 
           </Button>
           <Button
             variant="glass"
-            onClick={() => onConfirm({ name: name.trim(), description: description.trim() })}
+            onClick={() => onConfirm({ name: name.trim(), description: description.trim(), rotation: mediaKind === 'video' ? rotation : 0 })}
           >
             {t('converter.reviewConfirm')}
           </Button>

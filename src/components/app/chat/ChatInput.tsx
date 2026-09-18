@@ -486,7 +486,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
        zinc-900 bar would be the only slab left on the page. Carrying no colour
        utility also puts it permanently out of reach of the Osaka/Jungle
        `#app-root` class nets, which outrank any re-declaration here. */}
-    <div className="shrink-0 p-3 lg:pl-4 border-t border-white/[0.07]">
+    <div className="shrink-0 p-3 lg:pl-4 border-t border-white/25">
       {/* Reply preview */}
       {replyTo && (
         <div className="flex items-center gap-2 mb-2 px-2 py-1.5 bg-zinc-800/70 rounded-lg">
@@ -580,7 +580,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           onPaste={handlePaste}
           onFocus={() => setComposerFocused(true)}
           onBlur={() => setComposerFocused(false)}
-          className="min-h-[40px] max-h-32 resize-none bg-transparent border-none text-base md:text-sm text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="min-h-[52px] max-h-32 resize-none bg-transparent border-none text-base md:text-sm text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0"
           rows={1}
         />
 

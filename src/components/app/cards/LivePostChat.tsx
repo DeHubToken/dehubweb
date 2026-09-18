@@ -30,6 +30,8 @@ import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import type { SupabaseLiveChatMessage } from '@/hooks/use-livechat';
 import { useStreamChatJoins } from '@/hooks/use-stream-chat-joins';
+import { useTranslation as useI18n } from 'react-i18next';
+import { LANGUAGE_NAMES } from '@/hooks/use-user-language';
 
 /** Avatar with cascading fallback: primary → CDN → initials */
 function LiveChatAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
@@ -60,6 +62,7 @@ function LiveChatBadge({ badgeBalance, username }: { badgeBalance?: number | nul
 
 /** Translatable text message with inline translate button */
 function TranslatableChatMsg({ content }: { content: string }) {
+  const { t, i18n } = useI18n();
   const {
     isTranslated,
     translatedText,
@@ -80,12 +83,14 @@ function TranslatableChatMsg({ content }: { content: string }) {
           isTranslateLoading ? (
             <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
           ) : isTranslated ? (
-            <button onClick={handleShowOriginal} className="flex items-center text-zinc-500 hover:text-zinc-300 transition-colors">
-              <RotateCcw className="w-2.5 h-2.5" />
+            <button type="button" onClick={handleShowOriginal} className="flex min-h-8 items-center gap-1 text-xs text-zinc-300 hover:text-white transition-colors">
+              <RotateCcw className="w-3 h-3" />
+              {t('common.showOriginal')}
             </button>
           ) : (
-            <button onClick={handleTranslate} className="flex items-center text-zinc-500 hover:text-zinc-300 transition-colors">
+            <button type="button" onClick={handleTranslate} className="flex min-h-8 items-center gap-1 text-xs text-zinc-300 hover:text-white transition-colors">
               <Languages className="w-3 h-3" />
+              {LANGUAGE_NAMES[i18n.language] || i18n.language}
             </button>
           )
         )}
