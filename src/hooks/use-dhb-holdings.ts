@@ -33,6 +33,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { getAccountInfo } from '@/lib/api/dehub';
 import { getGiveawayPrizeFor } from '@/lib/worldCupGiveaway';
+import { tokenAmount } from '@/lib/wallet/token-amount';
 
 export const DHB_STAKED_QUERY_KEY = 'dhb-staked';
 
@@ -68,10 +69,10 @@ export function stakedFromBalanceData(
 }
 
 /** Sum the DHB rows out of a mixed multi-chain token list. */
-function walletDhbFrom(tokens: Array<{ symbol: string; formattedBalance: string }>): number {
+function walletDhbFrom(tokens: Array<{ symbol: string; balance: bigint; decimals: number }>): number {
   return tokens.reduce((sum, token) => {
     if (token.symbol !== 'DHB') return sum;
-    const value = parseFloat(token.formattedBalance);
+    const value = tokenAmount(token);
     return Number.isFinite(value) ? sum + value : sum;
   }, 0);
 }
