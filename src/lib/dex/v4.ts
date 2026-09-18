@@ -39,6 +39,9 @@ const STATE_ABI = [
   'function getLiquidity(bytes32 poolId) view returns (uint128)',
 ];
 const TRANSFER_TOPIC = id('Transfer(address,address,uint256)');
+// Mint receipts are immutable. Keep successful ownership proofs so live refreshes
+// only read the changing onchain position and pool state.
+const verifiedMints = new Set<string>();
 
 const providers = new Map<DexChainId, FallbackProvider>();
 export function dexProvider(chainId: DexChainId) {
@@ -100,23 +103,25 @@ export async function verifyPosition(row: IndexedPosition, blockTag?: number): P
   const provider = dexProvider(chainId);
   const manager = new Contract(cfg.positionManager, POSITION_ABI, provider);
   try {
+    const mintKey = `${chainId}:${row.token_id}:${row.owner_address.toLowerCase()}:${row.mint_tx_hash.toLowerCase()}`;
     const [owner, liquidity, info, receipt] = await Promise.all([
       manager.ownerOf(row.token_id, { blockTag }) as Promise<string>,
       manager.getPositionLiquidity(row.token_id, { blockTag }) as Promise<bigint>,
       manager.getPoolAndPositionInfo(row.token_id, { blockTag }) as Promise<[{
         currency0: string; currency1: string; fee: bigint; tickSpacing: bigint; hooks: string;
       }, bigint]>,
-      dexReceipt(chainId, row.mint_tx_hash),
+      verifiedMints.has(mintKey) ? Promise.resolve(null) : dexReceipt(chainId, row.mint_tx_hash),
     ]);
-    if (!receipt || receipt.status !== 1 || !liquidity || (row.side !== 'buy' && row.side !== 'sell')) return null;
-    const minted = receipt.logs.some((log) =>
+    if (!liquidity || (row.side !== 'buy' && row.side !== 'sell')) return null;
+    const minted = verifiedMints.has(mintKey) || (receipt?.status === 1 && receipt.logs.some((log) =>
       log.address.toLowerCase() === cfg.positionManager.toLowerCase() &&
       log.topics[0] === TRANSFER_TOPIC &&
       log.topics[1] === `0x${'0'.repeat(64)}` &&
       log.topics[2]?.toLowerCase() === `0x${row.owner_address.slice(2).toLowerCase().padStart(64, '0')}` &&
       log.topics[3] === `0x${BigInt(row.token_id).toString(16).padStart(64, '0')}`
-    );
+    ));
     if (!minted) return null;
+    verifiedMints.add(mintKey);
     const [poolKey, positionInfo] = info;
     const currencies = [poolKey.currency0.toLowerCase(), poolKey.currency1.toLowerCase()];
     const poolFee = Number(poolKey.fee);
