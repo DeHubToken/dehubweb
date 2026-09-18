@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, Loader2, Paintbrush, Crop, Scissors, Pencil, Image as ImageIcon } from 'lucide-react';
+import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, Loader2, Paintbrush, Crop, Scissors, Pencil, Grip, Image as ImageIcon } from 'lucide-react';
 import nailIcon from '@/assets/icons/nail-icon.png';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
@@ -19,6 +19,7 @@ import { ImageAnnotator } from './ImageAnnotator';
 interface PostMediaPreviewProps {
   media: MediaFile[];
   onRemove: (index: number) => void;
+  onMove: (from: number, to: number) => void;
   onAddAudio: (index: number, audio: AudioFile) => void;
   onRemoveAudio: (index: number) => void;
   onToggleMusicVideo?: (index: number) => void;
@@ -82,6 +83,7 @@ function generateCropTransform(settings?: CropSettings): string | undefined {
 export function PostMediaPreview({ 
   media, 
   onRemove, 
+  onMove,
   onAddAudio, 
   onRemoveAudio, 
   onToggleMusicVideo,
@@ -110,6 +112,20 @@ export function PostMediaPreview({
   const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
   const replacementInputRef = useRef<HTMLInputElement | null>(null);
   const [replacementIndex, setReplacementIndex] = useState<number | null>(null);
+  const dragIndex = useRef<number | null>(null);
+  const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
+  const [dropIndex, setDropIndex] = useState<number | null>(null);
+
+  const finishDrag = (event: React.PointerEvent, index: number) => {
+    const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-photo-index]');
+    const destination = target?.getAttribute('data-photo-index');
+    if (dragIndex.current !== null && destination !== null && destination !== undefined) {
+      onMove(dragIndex.current, Number(destination));
+    }
+    dragIndex.current = null;
+    setDraggingIndex(null);
+    setDropIndex(null);
+  };
 
   const chooseReplacementImage = useCallback((index: number) => {
     setReplacementIndex(index);
@@ -564,10 +580,19 @@ export function PostMediaPreview({
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
           >
             {media.map((m, index) => (
-              <div key={index} className="relative flex-shrink-0 snap-center">
+              <div key={m.preview} data-photo-index={m.type === 'image' ? index : undefined} className={`relative flex-shrink-0 snap-center ${dropIndex === index && draggingIndex !== index ? 'ring-2 ring-white rounded-2xl' : ''}`}>
                 {m.type === 'image' ? (
                   /* ==================== IMAGE PREVIEW ==================== */
                   <div className="relative h-[160px] sm:h-[200px] md:h-[240px] rounded-2xl overflow-hidden bg-zinc-900">
+                    {media.filter(item => item.type === 'image').length > 1 && (
+                      <button type="button" aria-label={`Drag to reorder photo ${index + 1}`} title="Drag to reorder photos"
+                        className="absolute z-20 bottom-2 left-2 flex items-center gap-1 rounded-lg bg-black/75 px-2 py-1 text-xs text-white touch-none cursor-grab active:cursor-grabbing"
+                        onPointerDown={event => { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); dragIndex.current = index; setDraggingIndex(index); }}
+                        onPointerMove={event => { if (dragIndex.current === null) return; const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-photo-index]'); setDropIndex(target ? Number(target.getAttribute('data-photo-index')) : null); }}
+                        onPointerUp={event => finishDrag(event, index)}
+                        onPointerCancel={() => { dragIndex.current = null; setDraggingIndex(null); setDropIndex(null); }}
+                      ><Grip className="h-4 w-4" />{index + 1}</button>
+                    )}
                     <div className="relative h-full flex items-center justify-center">
                       <img 
                         src={m.preview} 

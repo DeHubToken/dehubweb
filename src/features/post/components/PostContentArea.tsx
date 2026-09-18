@@ -27,6 +27,7 @@ interface PostContentAreaProps {
   editorRef: React.RefObject<HTMLDivElement>;
   media: MediaFile[];
   onRemoveMedia: (index: number) => void;
+  onMoveMedia: (from: number, to: number) => void;
   onAddAudio: (index: number, audio: AudioFile) => void;
   onRemoveAudio: (index: number) => void;
   onToggleMusicVideo: (index: number) => void;
@@ -112,6 +113,7 @@ export function PostContentArea({
   editorRef,
   media,
   onRemoveMedia,
+  onMoveMedia,
   onAddAudio,
   onRemoveAudio,
   onToggleMusicVideo,
@@ -766,6 +768,7 @@ export function PostContentArea({
           <PostMediaPreview 
             media={media} 
             onRemove={onRemoveMedia}
+            onMove={onMoveMedia}
             onAddAudio={onAddAudio}
             onRemoveAudio={onRemoveAudio}
             onToggleMusicVideo={onToggleMusicVideo}
