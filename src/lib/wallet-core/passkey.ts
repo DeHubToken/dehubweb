@@ -199,9 +199,10 @@ export interface PasskeyEnrollment {
  * immediate assertion when the result comes back empty. Enrolment is a
  * one-time cost, and every later unlock is a single prompt either way.
  *
- * `authenticatorAttachment` is deliberately unconstrained so a desktop user can
- * enrol the passkey that lives on their phone (hybrid/QR) — the UI gate is
- * isBiometricUnlockAvailable(), not this call.
+ * Enrolment is explicitly for this device. Without a platform attachment the
+ * browser may create a phone passkey via QR while the UI calls it "Windows PC".
+ * Existing hybrid credentials remain usable for unlock; only new enrolment is
+ * constrained to the local platform authenticator.
  */
 export async function enrollWalletPasskey(opts: {
   userId: string;
@@ -234,6 +235,7 @@ export async function enrollWalletPasskey(opts: {
           { type: "public-key", alg: -257 },
         ],
         authenticatorSelection: {
+          authenticatorAttachment: "platform",
           residentKey: "required",
           requireResidentKey: true,
           // The whole point: no biometric/PIN check, no key material.
