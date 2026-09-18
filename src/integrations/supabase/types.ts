@@ -2257,7 +2257,9 @@ export type Database = {
           token_id: string
           owner_address: string
           mint_tx_hash: string
-          dhb_amount: number
+          dhb_amount: number | null
+          usdc_amount: number | null
+          side: string
           min_usdc_per_dhb: number
           max_usdc_per_dhb: number
           created_at: string
@@ -2267,7 +2269,9 @@ export type Database = {
           token_id: string
           owner_address: string
           mint_tx_hash: string
-          dhb_amount: number
+          dhb_amount?: number | null
+          usdc_amount?: number | null
+          side?: string
           min_usdc_per_dhb: number
           max_usdc_per_dhb: number
           created_at?: string
@@ -2277,7 +2281,9 @@ export type Database = {
           token_id?: string
           owner_address?: string
           mint_tx_hash?: string
-          dhb_amount?: number
+          dhb_amount?: number | null
+          usdc_amount?: number | null
+          side?: string
           min_usdc_per_dhb?: number
           max_usdc_per_dhb?: number
           created_at?: string
