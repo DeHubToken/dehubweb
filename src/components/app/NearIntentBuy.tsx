@@ -1,7 +1,7 @@
 import { sendSolanaPurchase, connectPurchaseSolanaWallet } from '@/lib/wallet/solana-purchase';
 import { usePaymentPicker } from '@/hooks/use-payment-picker';
 import { loadPaymentBalances } from '@/lib/wallet/payment-balances';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
@@ -51,7 +51,7 @@ function PaymentPair({ payAmount, paySymbol, payChain, receiveAmount }: { payAmo
   </div>;
 }
 
-export function NearIntentBuy({ tokensToReceive }: { tokensToReceive: number }) {
+export function NearIntentBuy({ tokensToReceive, active, onDelivered }: { tokensToReceive: number; active?: boolean; onDelivered?: () => void }) {
   const { t } = useTranslation();
   const { walletAddress, user, refreshUser } = useAuth();
   const location = useLocation();
@@ -61,9 +61,10 @@ export function NearIntentBuy({ tokensToReceive }: { tokensToReceive: number }) 
   const [agreed, setAgreed] = useState(false);
   const [connectingSolana, setConnectingSolana] = useState(false);
   const amount = Math.floor(tokensToReceive);
-  const flow = useCryptoPurchase(cryptoPurchaseApi, walletAddress || '', amount, visible && location.pathname === '/app/buy', user?.solanaAddress || undefined);
+  const flow = useCryptoPurchase(cryptoPurchaseApi, walletAddress || '', amount, visible && (active || location.pathname === '/app/buy'), user?.solanaAddress || undefined);
   const { purchase, quote, selected, busy } = flow;
-  const picker = usePaymentPicker(flow.assets, walletAddress || '', user?.solanaAddress || undefined, visible && location.pathname === '/app/buy', loadPaymentBalances, flow.selectAsset);
+  const deliveredRef = useRef<string | null>(null);
+  const picker = usePaymentPicker(flow.assets, walletAddress || '', user?.solanaAddress || undefined, visible && (active || location.pathname === '/app/buy'), loadPaymentBalances, flow.selectAsset);
   const sendPayment = async (receipt: Purchase) => {
     if (receipt.paymentChainId === 101) return sendSolanaPurchase(receipt);
     const chain = receipt.paymentChainId as ChainId;
@@ -121,8 +122,12 @@ export function NearIntentBuy({ tokensToReceive }: { tokensToReceive: number }) 
     return () => { document.removeEventListener('visibilitychange', visibility); window.removeEventListener('online', online); };
   }, [flow.refresh]);
   useEffect(() => {
-    if (purchase?.tokenSendStatus === 'sent') refreshWalletBalances(queryClient);
-  }, [purchase?.id, purchase?.tokenSendStatus, queryClient]);
+    if (purchase?.tokenSendStatus === 'sent' && purchase.id !== deliveredRef.current) {
+      deliveredRef.current = purchase.id;
+      refreshWalletBalances(queryClient);
+      onDelivered?.();
+    }
+  }, [purchase?.id, purchase?.tokenSendStatus, queryClient, onDelivered]);
   const copy = async (value: string) => {
     try { await navigator.clipboard.writeText(value); toast.success(t('nearBuy.copied')); }
     catch { toast.error(t('nearBuy.copyFailed')); }
