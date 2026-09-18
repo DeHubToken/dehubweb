@@ -16,7 +16,7 @@ import { isSmartWalletSession } from '@/lib/connection-source';
 import { applyEditsToImageFile } from '@/lib/filters';
 import { MEDIA_LIMITS } from '@/constants/post.constants';
 import { splitTitleFromText } from '@/features/post/lib/title-split';
-import { getPostImageBytesForBadge, getPostImageLimitForBadge } from '@/lib/post-image-allowance';
+import { getPostImageBytesForBadge, getPostImageLimitForBadge, MAX_IMAGE_UPLOAD_BYTES, MAX_REQUEST_IMAGE_BYTES } from '@/lib/post-image-allowance';
 // NOTE: mint/bounty helpers reach wallet/contract code (wagmi + web3auth).
 // usePostForm is reachable from eager UI (PostModal is used by the sidebar /
 // bottom nav / feed), so those helpers are dynamically imported inside
@@ -609,9 +609,9 @@ export function usePostForm(
 
     const imageFiles = files.filter(f => f.type.startsWith('image/'));
     // Images share the creator's general media upload ceiling.
-    const imageByteLimit = postQuota?.mediaBytesPerDay
-      ?? getPostImageBytesForBadge(user?.badgeBalance, user?.username, user?.badgeLock);
-    const imageLimitMb = Math.round(imageByteLimit / (1024 * 1024));
+    const imageByteLimit = Math.min(MAX_IMAGE_UPLOAD_BYTES, postQuota?.mediaBytesPerDay
+      ?? getPostImageBytesForBadge(user?.badgeBalance, user?.username, user?.badgeLock));
+    const imageLimitMb = imageByteLimit / 1_000_000;
     const oversized = imageFiles.filter(f => f.size > imageByteLimit);
     if (oversized.length > 0) {
       // Without this check an oversized file uploaded for minutes and died at
@@ -622,7 +622,16 @@ export function usePostForm(
           : t('toasts.image_too_large_untiered', { limit: imageLimitMb }),
       );
     }
-    const filesToAdd = imageFiles.filter(f => f.size <= imageByteLimit).slice(0, availableSlots);
+    let requestImageBytes = media.filter(m => m.type === 'image').reduce((total, m) => total + m.file.size, 0);
+    const eligibleFiles = imageFiles.filter(file => file.size <= imageByteLimit).slice(0, availableSlots);
+    const filesToAdd = eligibleFiles.filter(file => {
+      if (requestImageBytes + file.size > MAX_REQUEST_IMAGE_BYTES) return false;
+      requestImageBytes += file.size;
+      return true;
+    });
+    if (filesToAdd.length < eligibleFiles.length) {
+      toast.error('Images in one upload must total 100 MB or less');
+    }
 
     if (files.length > availableSlots) {
       toast.info(`Only ${availableSlots} image${availableSlots > 1 ? 's' : ''} added (max ${imageLimit})`);
