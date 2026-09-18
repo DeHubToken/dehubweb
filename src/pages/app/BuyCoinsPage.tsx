@@ -37,6 +37,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { format } from 'date-fns';
 import { invalidateSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
 import { NearIntentBuy } from '@/components/app/NearIntentBuy';
+import { isBuyRoute } from '@/lib/buy-route';
 
 const PRESET_AMOUNTS = [0.5, 10, 25, 50, 100, 500];
 const MIN_DHB_PURCHASE_USD = 0.5;
@@ -129,7 +130,7 @@ export default function BuyCoinsPage() {
 
   // This page never unmounts (PersistentPageCache) — only poll supply/price
   // while it's the active route.
-  const isBuyRouteActive = useLocation().pathname === '/app/buy';
+  const isBuyRouteActive = isBuyRoute(useLocation().pathname);
 
   // Pre-fetch token supply so we can validate before checkout (prevents 406).
   // Scoped to the selected chain — the gateway holds a separate float on each.
