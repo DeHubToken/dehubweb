@@ -204,17 +204,13 @@ export async function getStreamActivities(
   // { result } envelope — and the documents carry the raw backend shape.
   // Normalize both here so callers keep the typed contract.
   //
-  // KNOWN LIMIT: the controller binds no query params, so page/unit are
-  // ignored and the server always returns the OLDEST 100 activities in
-  // ascending order. Newest-first is restored client-side below, but events
-  // past the first 100 never reach the client until the backend adds
-  // pagination — on a busy stream the log freezes at that point.
+  // Translate the client pagination into the controller's limit/skip contract.
   const res = await apiCall<RawStreamActivity[] | { result: RawStreamActivity[] }>(
     `/api/live/${streamId}/activities`,
-    { params }
+    { params: { limit: params.unit || 100, skip: ((params.page || 1) - 1) * (params.unit || 100), order: 'desc' } }
   );
   const raw = Array.isArray(res) ? res : res?.result || [];
-  return { result: raw.slice().reverse().map(mapRawActivity) };
+  return { result: raw.map(mapRawActivity) };
 }
 
 export async function getStreamIngestUrl(streamId: string): Promise<{ result: { ingestUrl: string } }> {
