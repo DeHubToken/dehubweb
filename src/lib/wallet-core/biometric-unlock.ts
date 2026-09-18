@@ -19,6 +19,9 @@ import {
   getPasskeyAccountLabel,
   type PasskeyWrap,
 } from "./passkey-store";
+import { createLogger } from "@/lib/logger";
+
+const biometricLogger = createLogger("WalletBiometrics");
 
 // Re-exported so UI code has a single import for the whole feature.
 export { isBiometricUnlockAvailable, describeThisDevice, PasskeyCancelledError, PasskeyUnsupportedError } from "./passkey";
@@ -42,6 +45,12 @@ export async function enrollBiometricUnlock(userId: string, secret: string): Pro
     prfSalt: enrollment.prfSalt,
     payload,
     label: enrollment.label,
+    transports: enrollment.transports,
+    backedUp: enrollment.backedUp,
+  });
+  biometricLogger.warn("Biometric enrolment completed", {
+    userId,
+    host: window.location.hostname,
     transports: enrollment.transports,
     backedUp: enrollment.backedUp,
   });
