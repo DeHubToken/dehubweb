@@ -1261,7 +1261,7 @@ export function usePostForm(
     }
   }, []);
 
-  const handlePost = useCallback(async (extra?: { soundtrackTag?: string }) => {
+  const handlePost = useCallback(async (extra?: { soundtrackTag?: string; articleBody?: string }) => {
     if (isPosting) return;
 
     // Validate required fields
@@ -1722,6 +1722,7 @@ export function usePostForm(
         chainId,
         submittedTitle,
         submittedDescription,
+        extra?.articleBody || '',
         media
           .map((m) =>
             [
@@ -1750,6 +1751,7 @@ export function usePostForm(
         {
           name: submittedTitle,
           description: submittedDescription,
+          articleBody: extra?.articleBody,
           postType,
           chainId,
           category: mergedCategories,

@@ -23,6 +23,7 @@ export interface StreamInfo {
 export interface MintPostParams {
   name: string;
   description: string;
+  articleBody?: string;
   postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'feed-audio';
   chainId: number;
   category: string[];
@@ -171,6 +172,7 @@ export async function mintPost(
   const formData = new FormData();
   formData.append('name', params.name);
   formData.append('description', params.description);
+  if (params.articleBody) formData.append('articleBody', params.articleBody);
   formData.append('postType', params.postType);
   formData.append('chainId', String(params.chainId));
   formData.append('category', JSON.stringify(params.category));
@@ -344,6 +346,7 @@ export async function keepPostOffChain(tokenId: number | string): Promise<boolea
 export interface EditPostParams {
   name?: string;
   description?: string;
+  articleBody?: string;
   category?: string[];
   /** true turns replies off. Existing comments are kept and stay readable —
    *  only new ones are refused — so re-enabling restores the thread intact. */
