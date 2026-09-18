@@ -228,7 +228,6 @@ export default function DexPage() {
         <BookRows levels={bids} bid disabled={busy || !!pending} onPrice={(value) => { choosePrice(value, 'buy'); setMobileView('trade'); }} />
         <div className="dex-ratio"><i style={{ width: `${bidTotal + askTotal ? bidTotal / (bidTotal + askTotal) * 100 : 50}%` }} /></div>
         <div className="dex-book-total"><span className="dex-buy">Buy {formatSize(bidTotal)} DHB</span><span className="dex-sell">Sell {formatSize(askTotal)} DHB</span></div>
-        <p className="dex-chart-note">Indicative range liquidity · both networks<br />{updated ? `Updated ${new Date(updated).toLocaleTimeString()}` : loading ? 'Verifying positions…' : 'No snapshot available'}</p>
       </section>
       <section className={`dex-panel dex-ticket-panel dex-pane ${mobileView === 'trade' ? 'dex-pane-active' : ''}`}>
         <div className="dex-panel-head"><h2>Place an order</h2><span className="dex-muted">0% LP fee</span></div>
