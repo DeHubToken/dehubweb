@@ -6189,6 +6189,7 @@ export type Database = {
       }
     }
     Functions: {
+      get_dex_market: { Args: Record<PropertyKey, never>; Returns: Json }
       admin_page_view_daily: {
         Args: { p_paths: string[]; p_since: string }
         Returns: {

@@ -1,4 +1,4 @@
-import { aggregateCandles, recordCandle, restoreCandles, lowestSellPrice, CANDLE_INTERVALS, CANDLE_STORAGE_KEY, type Candle, type CandleInterval } from '@/lib/dex/live-market';
+import { minuteCache, parseSharedMarket, CANDLE_INTERVALS, type SharedMarket, type CandleInterval } from '@/lib/dex/live-market';
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { ArrowDownUp, ExternalLink, RefreshCw } from 'lucide-react';
 import { parseUnits } from 'ethers';
@@ -8,8 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { aggregateBook, balanceFraction, formatPrice, formatSize, type BookLevel } from '@/lib/dex/orderbook';
-import { fetchMarketData, type MarketData } from '@/lib/dex/market-data';
-import { DEX_CHAINS, dexProvider, type DexChainId, type IndexedPosition, type VerifiedPosition, verifyPosition } from '@/lib/dex/v4';
+import { DEX_CHAINS, type DexChainId, type VerifiedPosition } from '@/lib/dex/v4';
 import { detectDhbChain, detectUsdcChain, mintSellPosition, quoteSellPosition, recoverMint, withdrawSellPosition, type SellInput, type SellQuote } from '@/lib/dex/sell';
 import { readWithTimeout, type OrderStage } from '@/lib/dex/read-timeout';
 import { isSmartWalletSession } from '@/lib/connection-source';
@@ -20,6 +19,12 @@ import '@/components/app/dex/exchange.css';
 
 const logger = createLogger('Dex');
 const PAGE_SIZE = 15;
+type CachedPosition = Omit<VerifiedPosition, 'liquidity'> & { liquidity: string };
+const readSharedMarket = minuteCache(async () => {
+  const { data, error } = await readWithTimeout(Promise.resolve(supabase.rpc('get_dex_market')), 'Shared market');
+  if (error) throw error;
+  return parseSharedMarket<CachedPosition>(data);
+});
 const stageText: Record<OrderStage | 'index', string> = {
   quote: 'Reading pool…', wallet: 'Unlock or connect your wallet…', balance: 'Checking token approvals…',
   tokenApproval: 'Confirm token approval in your wallet…', permitApproval: 'Confirm position approval in your wallet…',
@@ -66,24 +71,14 @@ export default function DexPage() {
   const [formError, setFormError] = useState('');
   const [withdrawing, setWithdrawing] = useState<string | null>(null);
   const [period, setPeriod] = useState<CandleInterval>('1m');
-  const [minutes, setMinutes] = useState<Candle[]>([]);
-  const candleHistory = useRef<Candle[]>([]);
-  const [historyReady, setHistoryReady] = useState(false);
-  useEffect(() => {
-    let live = true;
-    Promise.resolve().then(() => localStorage.getItem(CANDLE_STORAGE_KEY))
-      .then((raw) => { if (live) { candleHistory.current = restoreCandles(raw); setMinutes(candleHistory.current); } })
-      .catch(() => {}).finally(() => { if (live) setHistoryReady(true); });
-    return () => { live = false; };
-  }, []);
-  const candles = useMemo(() => aggregateCandles(minutes, period), [minutes, period]);
-  const [market, setMarket] = useState<MarketData | null>(null);
+  const [snapshot, setSnapshot] = useState<SharedMarket<CachedPosition> | null>(null);
+  const snapshotTime = useRef(0);
+  const candles = snapshot?.candles[period] || [];
   const [depth, setDepth] = useState(false);
   const [increment, setIncrement] = useState(0.000001);
   const [mobileView, setMobileView] = useState<'chart' | 'book' | 'trade'>('chart');
   const loadLock = useRef(false);
   const [balanceRevision, setBalanceRevision] = useState(0);
-  const [marketRevision, setMarketRevision] = useState(0);
   const fundingToken = side === 'buy' ? 'USDC' : 'DHB';
 
   useEffect(() => {
@@ -117,58 +112,34 @@ export default function DexPage() {
 
   const loadPositions = useCallback(async () => {
     if (loadLock.current) return;
-    loadLock.current = true; setLoading(true);
+    loadLock.current = true;
     try {
-      const rows: IndexedPosition[] = [];
-      for (let offset = 0; ; offset += 200) {
-        const { data, error } = await readWithTimeout(Promise.resolve(supabase.from('dex_sell_positions').select('*')
-          .order('created_at', { ascending: false }).order('chain_id').order('token_id').range(offset, offset + 199)), 'Listing index');
-        if (error) throw error;
-        rows.push(...(data || [])); if (!data || data.length < 200) break;
+      const next = await readSharedMarket();
+      if (Date.now() / 1000 - next.observedAt > 180) {
+        setListError('Shared market data is delayed. Showing the last verified snapshot.');
+      } else setListError('');
+      if (next.observedAt !== snapshotTime.current) {
+        snapshotTime.current = next.observedAt;
+        setSnapshot(next);
+        setPositions(next.positions.map((position) => ({ ...position, liquidity: BigInt(position.liquidity) })));
+        setUpdated(next.observedAt * 1000);
       }
-      const chains = [...new Set(rows.map((row) => row.chain_id as DexChainId))];
-      const blocks = new Map(await Promise.all(chains.map(async (id) => [id, await readWithTimeout(dexProvider(id).getBlockNumber(), 'Network snapshot')] as const)));
-      const verified: VerifiedPosition[] = []; let failed = 0;
-      for (let offset = 0; offset < rows.length; offset += 8) {
-        const batch = await Promise.allSettled(rows.slice(offset, offset + 8).map((row) => readWithTimeout(verifyPosition(row, blocks.get(row.chain_id as DexChainId)), 'Position verification')));
-        for (const result of batch) { if (result.status === 'rejected') failed++; else if (result.value) verified.push(result.value); }
-      }
-      if (failed) { setListError(`${failed} positions could not be refreshed. Showing the last complete snapshot.`); return; }
-      const observationTime = Date.now() / 1000;
-      candleHistory.current = recordCandle(candleHistory.current, lowestSellPrice(verified), observationTime);
-      setMinutes(candleHistory.current);
-      try { localStorage.setItem(CANDLE_STORAGE_KEY, JSON.stringify(candleHistory.current)); } catch { /* Chart stays available without storage. */ }
-      setPositions(verified); setUpdated(Date.now()); setListError('');
-    } catch { setListError('Market refresh failed. The displayed snapshot may be out of date.'); }
+    } catch { setListError('Shared market data is unavailable. Your current chart and order form are preserved.'); }
     finally { setLoading(false); loadLock.current = false; }
   }, []);
-
   useEffect(() => {
-    if (!historyReady) return;
     void loadPositions();
-    let lastBlockRefresh = 0;
-    const onBlock = () => {
-      if (document.visibilityState !== 'visible' || busyRef.current || Date.now() - lastBlockRefresh < 4000) return;
-      lastBlockRefresh = Date.now();
-      void loadPositions();
-    };
-    const providers = [dexProvider(BASE_CHAIN_ID), dexProvider(BNB_CHAIN_ID)];
-    providers.forEach((provider) => { void provider.on('block', onBlock).catch(() => {}); });
-    const timer = setInterval(() => { if (document.visibilityState === 'visible' && !busyRef.current) void loadPositions(); }, 10000);
+    const timer = setInterval(() => {
+      if (document.visibilityState === 'visible') void loadPositions();
+    }, 60000);
     const resume = () => { if (document.visibilityState === 'visible') void loadPositions(); };
     document.addEventListener('visibilitychange', resume);
-    return () => { clearInterval(timer); document.removeEventListener('visibilitychange', resume); providers.forEach((provider) => { void provider.off('block', onBlock).catch(() => {}); }); };
-  }, [loadPositions, historyReady]);
+    return () => { clearInterval(timer); document.removeEventListener('visibilitychange', resume); };
+  }, [loadPositions]);
 
-  useEffect(() => {
-    let live = true; setMarket(null);
-    fetchMarketData('1D').then((data) => { if (live) setMarket(data); })
-      .catch(() => {});
-    return () => { live = false; };
-  }, [marketRevision]);
 
   const { bids, asks } = useMemo(() => aggregateBook(positions, increment), [positions, increment]);
-  const bestAsk = lowestSellPrice(positions);
+  const bestAsk = snapshot?.price ?? null;
   const shown = useMemo(() => mine ? positions.filter((p) => p.owner.toLowerCase() === walletAddress?.toLowerCase()) : positions, [positions, mine, walletAddress]);
   const visiblePositions = shown.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
   useEffect(() => { setPage((value) => Math.min(value, Math.max(0, Math.ceil(shown.length / PAGE_SIZE) - 1))); }, [shown.length]);
@@ -230,13 +201,13 @@ export default function DexPage() {
     catch (error) { toast.error(error instanceof Error ? error.message : 'Withdrawal failed'); }
     finally { setWithdrawing(null); }
   }
-  const refresh = () => { void loadPositions(); setMarketRevision((n) => n + 1); if (!busy) setBalanceRevision((n) => n + 1); };
+  const refresh = () => { void loadPositions(); if (!busy) setBalanceRevision((n) => n + 1); };
 
   return <div className="dex-terminal">
     <header className="dex-top">
       <div className="dex-pair"><img src={dhbCoinImage} alt="DHB" /><div><h1>DHB <span className="dex-muted">/</span> USDC</h1><p>Combined market · Base + BNB</p></div></div>
       <div className="dex-stat"><small>Lowest sell · USDC</small><strong className="dex-reference">{bestAsk != null ? `${formatPrice(bestAsk)} USDC` : '—'}</strong></div>
-      <div className="dex-stat"><small>24h reference change</small><strong className={(market?.change || 0) >= 0 ? 'dex-buy' : 'dex-sell'}>{market?.change != null ? `${market.change >= 0 ? '+' : ''}${market.change.toFixed(2)}%` : '—'}</strong></div>
+      <div className="dex-stat"><small>24h change</small><strong className={(snapshot?.change24h || 0) >= 0 ? 'dex-buy' : 'dex-sell'}>{snapshot?.change24h != null ? `${snapshot.change24h >= 0 ? '+' : ''}${snapshot.change24h.toFixed(2)}%` : '—'}</strong></div>
       <div className="dex-stat"><small>Listed DHB</small><strong>{formatSize(totalDhb)}</strong></div>
       <div className="dex-stat"><small>Listed USDC</small><strong>{formatSize(totalUsdc)}</strong></div>
       <button className="dex-refresh" type="button" onClick={refresh} disabled={loading || busy} aria-label="Refresh market"><RefreshCw size={14} />{loading ? 'Updating' : 'Refresh'}</button>
@@ -247,7 +218,7 @@ export default function DexPage() {
       <section className={`dex-panel dex-chart-panel dex-pane ${mobileView === 'chart' ? 'dex-pane-active' : ''}`}>
         <div className="dex-panel-head"><div className="dex-tabs" role="tablist" aria-label="Chart type"><button role="tab" aria-selected={!depth} onClick={() => setDepth(false)}>Price</button><button role="tab" aria-selected={depth} onClick={() => setDepth(true)}>Depth</button></div>{!depth && <div className="dex-tabs" role="tablist" aria-label="Chart timeframe">{CANDLE_INTERVALS.map((value) => <button role="tab" key={value} aria-selected={period === value} onClick={() => setPeriod(value)}>{value}</button>)}</div>}</div>
         {!depth && loading && !updated ? <div className="dex-chart-empty" role="status">Loading sell positions…</div> : <MarketChart candles={candles} bids={bids} asks={asks} depth={depth} />}
-        <p className="dex-chart-note">{depth ? 'Estimated liquidity from verified DHB/USDC range positions on both networks. Each position settles on its own network.' : 'Lowest sell observations · USDC · updates on new blocks, with a 10s fallback. History is saved on this device; gaps are not trades.'}{updated ? ' · ' + new Date(updated).toLocaleTimeString() : ''}</p>
+        <p className="dex-chart-note">{depth ? 'Estimated liquidity from verified DHB/USDC range positions on both networks. Each position settles on its own network.' : 'Shared lowest sell price · USDC · sampled once per minute. Everyone sees the same history; unobserved periods remain empty.'}{updated ? ' · ' + new Date(updated).toLocaleTimeString() : ''}</p>
       </section>
       <section className={`dex-panel dex-book-panel dex-pane ${mobileView === 'book' ? 'dex-pane-active' : ''}`}>
         <div className="dex-panel-head"><h2>Order book</h2><select aria-label="Price grouping" className="dex-book-select" value={increment} onChange={(e) => setIncrement(Number(e.target.value))}>{[0.00000001, 0.0000001, 0.000001, 0.00001].map((step) => <option key={step} value={step}>{step.toFixed(8)}</option>)}</select></div>
