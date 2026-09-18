@@ -464,7 +464,7 @@ export default function BuyCoinsPage() {
         </div>
 
         {/* Price Summary */}
-        {paymentMethod === 'card' && <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-zinc-400">{t('buyCoins.youReceive')}</span>
@@ -545,7 +545,7 @@ export default function BuyCoinsPage() {
               </p>
             </div>
           )}
-        </div>}
+        </div>
 
         {/* Payment Methods */}
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
