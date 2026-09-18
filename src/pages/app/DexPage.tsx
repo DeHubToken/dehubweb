@@ -78,6 +78,7 @@ export default function DexPage() {
   const [increment, setIncrement] = useState(0.000001);
   const [mobileView, setMobileView] = useState<'chart' | 'book' | 'trade'>('chart');
   const loadLock = useRef(false);
+  const hasSnapshot = useRef(false);
   const [balanceRevision, setBalanceRevision] = useState(0);
   const fundingToken = side === 'buy' ? 'USDC' : 'DHB';
 
@@ -116,15 +117,16 @@ export default function DexPage() {
     try {
       const next = await readSharedMarket();
       if (Date.now() / 1000 - next.observedAt > 180) {
-        setListError('Shared market data is delayed. Showing the last verified snapshot.');
+        setListError(hasSnapshot.current ? '' : 'Shared market data is delayed. Showing the last verified snapshot.');
       } else setListError('');
       if (next.observedAt !== snapshotTime.current) {
         snapshotTime.current = next.observedAt;
         setSnapshot(next);
         setPositions(next.positions.map((position) => ({ ...position, liquidity: BigInt(position.liquidity) })));
         setUpdated(next.observedAt * 1000);
+        hasSnapshot.current = true;
       }
-    } catch { setListError('Shared market data is unavailable. Your current chart and order form are preserved.'); }
+    } catch { if (!hasSnapshot.current) setListError('Shared market data is unavailable. Retry to load positions.'); }
     finally { setLoading(false); loadLock.current = false; }
   }, []);
   useEffect(() => {
