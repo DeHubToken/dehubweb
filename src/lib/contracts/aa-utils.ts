@@ -9,6 +9,7 @@
 
 import { Interface, parseUnits, formatUnits } from 'ethers';
 import i18n from 'i18next';
+import { createPublicClient, fallback, http } from 'viem';
 import { setupAAProviderForChain, setupAAProvider, getOrInitWeb3Auth } from '@/lib/web3auth';
 import { getAccount } from '@wagmi/core';
 import { sendTransaction, waitForTransactionReceipt, switchChain as wagmiSwitchChain } from '@wagmi/core';
@@ -190,9 +191,9 @@ async function publicRpcCall(rpcUrl: string, method: string, params: unknown[]):
  * Switch the wallet to a different chain
  */
 export async function switchChain(chainId: ChainId): Promise<void> {
-  await initChainRpcUrls();
   const { isWeb3Auth } = await getActiveProvider(chainId);
   if (isWeb3Auth) return;
+  await initChainRpcUrls();
   const account = getAccount(wagmiConfig);
   if (account.chainId === chainId) return;
   await wagmiSwitchChain(wagmiConfig, { chainId: chainId as any });
@@ -475,51 +476,26 @@ export async function writeContractAA(
     ? (await provider.request({ method: 'eth_accounts' }) as string[])[0]
     : getAccount(wagmiConfig).address;
 
-  // Estimate gas
+  // The AA provider estimates the complete user operation in its bundler.
+  // eth_estimateGas falls through to the owner EOA middleware and can stall
+  // on its RPC before the smart-account send is ever reached.
   let gasLimit: Hex | undefined;
   let gasLimitBigInt: bigint | undefined;
-  try {
-    let gasEstimate: string;
-
-    if (isWeb3Auth) {
-      // Web3Auth: use provider directly
-      gasEstimate = await provider.request({
-        method: 'eth_estimateGas',
-        params: [{
-          from: fromAddress,
-          to: contractAddress,
-          data,
-          value: toHex(options?.value ?? 0),
-        }],
-      }) as string;
-    } else {
-      // External wallet: use public RPC for read-only gas estimation
-      const rpcUrl = getRpcUrl(options?.chainId);
-      gasEstimate = await publicRpcCall(rpcUrl, 'eth_estimateGas', [{
-        from: fromAddress,
-        to: contractAddress,
-        data,
-        value: toHex(options?.value ?? 0),
+  if (!isWeb3Auth) {
+    try {
+      const gasEstimate = await publicRpcCall(getRpcUrl(options?.chainId), 'eth_estimateGas', [{
+        from: fromAddress, to: contractAddress, data, value: toHex(options?.value ?? 0),
       }]);
+      gasLimitBigInt = applyGasMargin(BigInt(gasEstimate));
+      gasLimit = toHex(gasLimitBigInt);
+    } catch (estimateError: any) {
+      const message = (estimateError?.message || estimateError?.error?.message || '').toLowerCase();
+      if (message.includes('insufficient funds') || message.includes('insufficient balance') ||
+          message.includes('gas required exceeds allowance')) throw new Error('INSUFFICIENT_GAS_FUNDS');
+      console.warn('[AA] Gas estimation failed, using default:', estimateError);
+      gasLimitBigInt = BigInt(500_000);
+      gasLimit = toHex(gasLimitBigInt);
     }
-
-    const estimateBigInt = BigInt(gasEstimate);
-    gasLimitBigInt = applyGasMargin(estimateBigInt);
-    gasLimit = toHex(gasLimitBigInt);
-  } catch (estimateError: any) {
-    const estimateMsg = (estimateError?.message || estimateError?.error?.message || '').toLowerCase();
-    // For external wallets (EOA), insufficient funds means the user genuinely cannot pay gas.
-    // Throw immediately so the wallet popup never opens and the tx doesn't get stuck.
-    if (!isWeb3Auth && (
-      estimateMsg.includes('insufficient funds') ||
-      estimateMsg.includes('insufficient balance') ||
-      estimateMsg.includes('gas required exceeds allowance')
-    )) {
-      throw new Error('INSUFFICIENT_GAS_FUNDS');
-    }
-    console.warn('[AA] Gas estimation failed, using default:', estimateError);
-    gasLimitBigInt = BigInt(500_000);
-    gasLimit = toHex(gasLimitBigInt);
   }
 
   console.log(`[AA] Sending transaction to ${contractAddress}:`, {
@@ -540,7 +516,6 @@ export async function writeContractAA(
         from: fromAddress,
         to: contractAddress,
         data,
-        gas: gasLimit,
         value: options?.value && BigInt(options.value) > BigInt(0)
           ? toHex(options.value)
           : '0x0',
@@ -587,32 +562,27 @@ export async function writeContractAA(
           }
         }
 
-        // Web3Auth: poll via provider
-        const maxAttempts = 120;
-        const pollInterval = 500;
-
-        for (let i = 0; i < maxAttempts; i++) {
-          try {
-            const receipt = await provider.request({
-              method: 'eth_getTransactionReceipt',
-              params: [txHash],
-            }) as { status: string; transactionHash: string } | null;
-
-            if (receipt) {
-              console.log('[AA] Transaction confirmed:', receipt.transactionHash);
-              return {
-                status: receipt.status === '0x1' ? 1 : 0,
-                hash: receipt.transactionHash,
-              };
-            }
-          } catch {
-            // Receipt not ready yet
-          }
-
-          await new Promise(resolve => setTimeout(resolve, pollInterval));
+        // The AA EIP-1193 fallback forwards receipt reads to the owner provider.
+        // That provider can have a stale/denied RPC even after the bundler mined
+        // the operation. Use independent chain RPCs with failover; public endpoints
+        // can reject older receipts even while their latest-state reads work.
+        try {
+          const chainId = options?.chainId ?? BASE_CHAIN_ID;
+          const urls = chainId === BASE_CHAIN_ID
+            ? ['https://mainnet.base.org', 'https://base-rpc.publicnode.com']
+            : chainId === 56
+              ? ['https://bsc-dataseed.binance.org', 'https://bsc-rpc.publicnode.com']
+              : [getRpcUrl(chainId)];
+          const receiptClient = createPublicClient({
+            transport: fallback(urls.map(url => http(url, { timeout: 10000, retryCount: 0 })), { retryCount: 0 }),
+          });
+          const receipt = await receiptClient.waitForTransactionReceipt({
+            hash: txHash as Hex, confirmations, timeout: 60000,
+          });
+          return { status: receipt.status === 'success' ? 1 : 0, hash: receipt.transactionHash };
+        } catch {
+          throw new Error('Transaction submitted (' + txHash + ') but confirmation is unavailable. Check its status before retrying.');
         }
-
-        throw new Error('Transaction not confirmed within timeout');
       },
     };
   } catch (sendError) {
