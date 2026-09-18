@@ -158,6 +158,7 @@ export interface DeHubNFT {
   name: string;
   title?: string;
   description?: string;
+  articleBody?: string;
   imageUrl: string;
   imageUrls?: string[];
   videoUrl?: string;

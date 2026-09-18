@@ -328,6 +328,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
     content: trimmedDesc || (hasMeaningfulTitle ? '' : trimmedName) || '',
     rawName,
     rawDescription,
+    articleBody: nft.articleBody,
     stats: {
       comments: nft.commentCount || nft.comment_count || 0,
       reposts: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),

@@ -44,6 +44,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
   const [planDrawerOpen, setPlanDrawerOpen] = useState(false);
   const [mediaFullscreenOpen, setMediaFullscreenOpen] = useState(false);
+  const [articleMode, setArticleMode] = useState(false);
+  const [articleBody, setArticleBody] = useState('');
 
   const handleTogglePoll = useCallback(() => {
     if (state.poll) {
@@ -100,6 +102,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
     // composer is opened.
     setLiveStream(null);
     setPlanDrawerOpen(false);
+    setArticleMode(false);
+    setArticleBody('');
     onClose();
   };
 
@@ -112,6 +116,11 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
     </div>
   ) : (
     <>
+      <div className="px-4 pt-4">
+        <button type="button" onClick={() => { setArticleMode(!articleMode); actions.setShowTitle(!articleMode); if (!articleMode) { actions.setIsPPV(false); actions.setIsTokenGated(false); actions.setIsSubscribersOnly(false); } }} className="rounded-full border border-white/20 px-4 py-2 text-sm text-white">
+          {articleMode ? 'Writing an article · switch to post' : 'Write an article'}
+        </button>
+      </div>
 
       <PostContentArea
         text={state.text}
@@ -158,8 +167,17 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onPollChange={actions.setPoll}
         onMediaFullscreenChange={setMediaFullscreenOpen}
       />
+      {articleMode && (
+        <div className="px-4 pb-4 space-y-2">
+          <label htmlFor="article-body" className="block text-sm text-white/80">Article body</label>
+          <textarea id="article-body" value={articleBody} onChange={e => setArticleBody(e.target.value.slice(0, 20000))}
+            placeholder="Write your article here. Use blank lines between paragraphs."
+            className="w-full min-h-64 rounded-xl border border-white/20 bg-white/5 p-4 text-white outline-none focus:border-white/50" />
+          <p className="text-xs text-white/60">{articleBody.length}/20,000 · minimum 100 characters. The post text above is the summary.</p>
+        </div>
+      )}
 
-      <PostAccessToggles
+      {!articleMode && <PostAccessToggles
         isSubscribersOnly={state.isSubscribersOnly}
         setIsSubscribersOnly={actions.setIsSubscribersOnly}
         isPPV={state.isPPV}
@@ -208,7 +226,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         mintFeeLabel={computed.mintFeeLabel}
         mintRequired={computed.mintRequired}
         onCreatePlan={() => setPlanDrawerOpen(true)}
-      />
+      />}
 
       <PostActionBar
         imageInputRef={refs.imageInputRef}
@@ -235,9 +253,9 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
                 return `[soundtrack:${attachedSound.tokenId}:${attachedSound.title}:${attachedSound.creator}:${relPath}]`;
               })()
             : undefined;
-          actions.handlePost(soundtrackTag ? { soundtrackTag } : undefined);
+          actions.handlePost({ ...(soundtrackTag ? { soundtrackTag } : {}), ...(articleMode ? { articleBody: articleBody.trim() } : {}) });
         }}
-        canPost={computed.canPost}
+        canPost={computed.canPost && (!articleMode || (state.titleText.trim().length > 0 && state.text.trim().length > 0 && articleBody.trim().length >= 100 && !computed.hasVideo && !computed.hasImage && !computed.hasAudio))}
         isEnhancing={state.isEnhancing}
         isPosting={state.isPosting}
         uploadProgress={state.uploadProgress}

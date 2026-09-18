@@ -164,6 +164,8 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
         </div>
 
         {/* Text content */}
+        {quotedPost.articleBody && <span className="mb-1 block text-xs font-semibold uppercase tracking-widest text-white/60">Article</span>}
+        {quotedPost.articleBody && quotedPost.name?.trim() && <h3 className="text-lg font-semibold text-white">{quotedPost.name}</h3>}
         {content && (
           <p className="text-[15px] leading-[22px] text-zinc-300 whitespace-pre-wrap">{content}</p>
         )}
