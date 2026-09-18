@@ -183,14 +183,15 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
       </button>
       <button
         onClick={() => {
-          toast.info('Cash out coming soon!');
+          setIsOpen(false);
+          navigate('/dex?create=1');
         }}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Minus className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Cash Out</span>
+        <span className="text-white font-medium">Sell</span>
       </button>
       <button
         onClick={() => (hasAddressChoice ? setMenuView('receive') : handleCopyAddress())}
@@ -510,14 +511,15 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
       </button>
       <button
         onClick={() => {
-          toast.info('Cash out coming soon!');
+          onClose?.();
+          navigate('/dex?create=1');
         }}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Minus className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Cash Out</span>
+        <span className="text-white font-medium">Sell</span>
       </button>
       <button
         onClick={() => (hasAddressChoice ? setMenuView('receive') : handleCopyAddress())}
