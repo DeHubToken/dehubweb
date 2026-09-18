@@ -4,7 +4,7 @@ import { Pool, Position, V4PositionManager } from '@uniswap/v4-sdk';
 import { encodeSqrtRatioX96, TickMath } from '@uniswap/v3-sdk';
 import { getActiveProvider, writeContractAA } from '@/lib/contracts/aa-utils';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { DEX_CHAINS, dexProvider, verifyPosition, type DexChainId, type VerifiedPosition } from './v4';
+import { DEX_CHAINS, dexProvider, dexReceipt, verifyPosition, type DexChainId, type VerifiedPosition } from './v4';
 import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import { readWithTimeout, type OrderStage } from './read-timeout';
@@ -241,7 +241,7 @@ export async function mintSellPosition(input: SellInput, progress: (stage: Order
 
 export async function recoverMint(input: SellInput, hash: string): Promise<{ tokenId: string; txHash: string }> {
   const cfg = DEX_CHAINS[input.chainId];
-  const receipt = await readWithTimeout(dexProvider(input.chainId).getTransactionReceipt(hash), 'Transaction receipt');
+  const receipt = await readWithTimeout(dexReceipt(input.chainId, hash), 'Transaction receipt');
   if (!receipt) throw new Error('Position submitted but its receipt is not available yet');
   if (receipt.status !== 1) throw Object.assign(new Error('The position transaction reverted. No position was created.'), { code: 'DEX_REVERTED' });
   const transferTopic = id('Transfer(address,address,uint256)');
