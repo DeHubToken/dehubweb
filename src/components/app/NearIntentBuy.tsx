@@ -3,6 +3,7 @@ import { usePaymentPicker } from '@/hooks/use-payment-picker';
 import { loadPaymentBalances } from '@/lib/wallet/payment-balances';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { isBuyRoute } from '@/lib/buy-route';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -61,10 +62,11 @@ export function NearIntentBuy({ tokensToReceive, active, onDelivered }: { tokens
   const [agreed, setAgreed] = useState(false);
   const [connectingSolana, setConnectingSolana] = useState(false);
   const amount = Math.floor(tokensToReceive);
-  const flow = useCryptoPurchase(cryptoPurchaseApi, walletAddress || '', amount, visible && (active || location.pathname === '/app/buy'), user?.solanaAddress || undefined);
+  const isActive = visible && (active || isBuyRoute(location.pathname));
+  const flow = useCryptoPurchase(cryptoPurchaseApi, walletAddress || '', amount, isActive, user?.solanaAddress || undefined);
   const { purchase, quote, selected, busy } = flow;
   const deliveredRef = useRef<string | null>(null);
-  const picker = usePaymentPicker(flow.assets, walletAddress || '', user?.solanaAddress || undefined, visible && (active || location.pathname === '/app/buy'), loadPaymentBalances, flow.selectAsset);
+  const picker = usePaymentPicker(flow.assets, walletAddress || '', user?.solanaAddress || undefined, isActive, loadPaymentBalances, flow.selectAsset);
   const sendPayment = async (receipt: Purchase) => {
     if (receipt.paymentChainId === 101) return sendSolanaPurchase(receipt);
     const chain = receipt.paymentChainId as ChainId;
