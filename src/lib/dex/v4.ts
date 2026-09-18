@@ -1,4 +1,6 @@
-import { AbiCoder, Contract, JsonRpcProvider, ZeroAddress, id, keccak256 } from 'ethers';
+import { AbiCoder, Contract, JsonRpcProvider, ZeroAddress, formatUnits, id, keccak256 } from 'ethers';
+import { Token } from '@uniswap/sdk-core';
+import { Pool, Position } from '@uniswap/v4-sdk';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import type { Database } from '@/integrations/supabase/types';
 
@@ -31,7 +33,10 @@ const POSITION_ABI = [
   'function getPositionLiquidity(uint256 tokenId) view returns (uint128)',
   'function getPoolAndPositionInfo(uint256 tokenId) view returns ((address currency0,address currency1,uint24 fee,int24 tickSpacing,address hooks),uint256)',
 ];
-const STATE_ABI = ['function getSlot0(bytes32 poolId) view returns (uint160,int24,uint24,uint24)'];
+const STATE_ABI = [
+  'function getSlot0(bytes32 poolId) view returns (uint160,int24,uint24,uint24)',
+  'function getLiquidity(bytes32 poolId) view returns (uint128)',
+];
 const TRANSFER_TOPIC = id('Transfer(address,address,uint256)');
 
 export function dexProvider(chainId: DexChainId) {
@@ -57,8 +62,13 @@ export interface VerifiedPosition extends IndexedPosition {
   liquidity: bigint;
   tickLower: number;
   tickUpper: number;
+  poolFee: number;
+  tickSpacing: number;
   minPrice: number;
   maxPrice: number;
+  amountDhb: number;
+  amountUsdc: number;
+  side: 'buy' | 'sell';
   status: 'Open' | 'In range' | 'Filled';
 }
 
@@ -77,7 +87,7 @@ export async function verifyPosition(row: IndexedPosition): Promise<VerifiedPosi
       }, bigint]>,
       provider.getTransactionReceipt(row.mint_tx_hash),
     ]);
-    if (!receipt || receipt.status !== 1 || !liquidity) return null;
+    if (!receipt || receipt.status !== 1 || !liquidity || (row.side !== 'buy' && row.side !== 'sell')) return null;
     const minted = receipt.logs.some((log) =>
       log.address.toLowerCase() === cfg.positionManager.toLowerCase() &&
       log.topics[0] === TRANSFER_TOPIC &&
@@ -88,8 +98,12 @@ export async function verifyPosition(row: IndexedPosition): Promise<VerifiedPosi
     if (!minted) return null;
     const [poolKey, positionInfo] = info;
     const currencies = [poolKey.currency0.toLowerCase(), poolKey.currency1.toLowerCase()];
+    const poolFee = Number(poolKey.fee);
+    const tickSpacing = Number(poolKey.tickSpacing);
+    const supportedPool = (poolFee === 0 && tickSpacing === 1) ||
+      (poolFee === 3000 && tickSpacing === 60);
     if (!currencies.includes(cfg.dhb.toLowerCase()) || !currencies.includes(cfg.usdc.toLowerCase()) ||
-        Number(poolKey.fee) !== 3000 || Number(poolKey.tickSpacing) !== 60 ||
+        !supportedPool ||
         poolKey.hooks.toLowerCase() !== ZeroAddress) return null;
     const lower = unpackTick(positionInfo, 8n);
     const upper = unpackTick(positionInfo, 32n);
@@ -102,12 +116,26 @@ export async function verifyPosition(row: IndexedPosition): Promise<VerifiedPosi
       [[poolKey.currency0, poolKey.currency1, poolKey.fee, poolKey.tickSpacing, poolKey.hooks]],
     ));
     const state = new Contract(cfg.stateView, STATE_ABI, provider);
-    const slot0 = await state.getSlot0(poolId) as [bigint, bigint, bigint, bigint];
+    const [slot0, poolLiquidity] = await Promise.all([
+      state.getSlot0(poolId) as Promise<[bigint, bigint, bigint, bigint]>,
+      state.getLiquidity(poolId) as Promise<bigint>,
+    ]);
     const tick = Number(slot0[1]);
-    const status = chainId === BASE_CHAIN_ID
-      ? tick <= lower ? 'Filled' : tick >= upper ? 'Open' : 'In range'
-      : tick >= upper ? 'Filled' : tick <= lower ? 'Open' : 'In range';
-    return { ...row, owner, liquidity, tickLower: lower, tickUpper: upper, minPrice, maxPrice, status };
+    const dhb = new Token(chainId, cfg.dhb, 18, 'DHB');
+    const usdc = new Token(chainId, cfg.usdc, cfg.usdcDecimals, 'USDC');
+    const pool = new Pool(dhb, usdc, poolFee, tickSpacing, ZeroAddress,
+      slot0[0].toString(), poolLiquidity.toString(), tick);
+    const sdkPosition = new Position({ pool, liquidity: liquidity.toString(), tickLower: lower, tickUpper: upper });
+    const amountDhb = Number(formatUnits((chainId === BASE_CHAIN_ID ? sdkPosition.amount1 : sdkPosition.amount0).quotient.toString(), 18));
+    const amountUsdc = Number(formatUnits((chainId === BASE_CHAIN_ID ? sdkPosition.amount0 : sdkPosition.amount1).quotient.toString(), cfg.usdcDecimals));
+    const status = row.side === 'sell'
+      ? chainId === BASE_CHAIN_ID ? tick <= lower ? 'Filled' : tick >= upper ? 'Open' : 'In range'
+        : tick >= upper ? 'Filled' : tick <= lower ? 'Open' : 'In range'
+      : chainId === BASE_CHAIN_ID ? tick >= upper ? 'Filled' : tick <= lower ? 'Open' : 'In range'
+        : tick <= lower ? 'Filled' : tick >= upper ? 'Open' : 'In range';
+    return { ...row, owner, liquidity, tickLower: lower, tickUpper: upper,
+      poolFee, tickSpacing, minPrice, maxPrice, amountDhb, amountUsdc,
+      side: row.side, status };
   } catch {
     return null;
   }
