@@ -1,10 +1,8 @@
 /**
  * Verify & Unlock Button for hold-gated content drawers.
  * =====================================================
- * The gate is "hold N of token X", so this reads the wallet's actual balance of
- * that token on the gate's chain. It used to compare against `badgeBalance` from
- * the cached DeHub profile — a DHB figure, regardless of which token the post is
- * gated on, and stale by however old the profile query was.
+ * DHB gates count wallet balances and stakes across Base and BNB. Other tokens
+ * use their own contract, chain and decimals. Delegated badges are not holdings.
  *
  * Falling short used to end at a line of red text. When the gate is DHB it now
  * turns into the same top-up step PPV uses, so the missing DHB can be bought out
@@ -23,6 +21,7 @@ import { BASE_CHAIN_ID, getChainConfig, fromWei } from '@/lib/contracts/dhb-toke
 import type { ChainId } from '@/components/app/ChainSelector';
 import { PPVTopUpStep } from './PPVTopUpStep';
 import type { PPVShortfall } from '@/hooks/use-ppv-payment';
+import { DHB_HOLDINGS_TOKENS, isDhbHoldingsGate, ownedDhbHoldings } from '@/lib/holdings-gate';
 
 interface VerifyUnlockButtonProps {
   requiredAmount: number;
@@ -72,8 +71,27 @@ export function VerifyUnlockButton({
         return;
       }
 
-      const balanceWei = await getERC20Balance(gateToken, walletAddress, chainId as ChainId);
-      const balance = Number(fromWei(balanceWei, 18));
+      const isDhb = isDhbHoldingsGate(currency, tokenAddress, [chainId]);
+      let balance: number;
+      if (isDhb) {
+        const { getAccountInfo } = await import('@/lib/api/dehub/users');
+        const account = await getAccountInfo(walletAddress);
+        const staked = ownedDhbHoldings((account.balanceData ?? []).map(row => ({ ...row, walletBalance: 0 })));
+        balance = staked;
+        if (balance < requiredAmount) {
+          const liquid = await Promise.all(DHB_HOLDINGS_TOKENS.map(token =>
+            getERC20Balance(token.address, walletAddress, token.chainId as ChainId),
+          ));
+          balance += liquid.reduce((sum, value) => sum + Number(fromWei(value, 18)), 0);
+        }
+      } else {
+        const { getERC20Metadata } = await import('@/lib/wallet/tokens');
+        const [balanceWei, metadata] = await Promise.all([
+          getERC20Balance(gateToken, walletAddress, chainId as ChainId),
+          getERC20Metadata(gateToken, chainId as ChainId),
+        ]);
+        balance = Number(fromWei(balanceWei, metadata.decimals));
+      }
 
       if (balance >= requiredAmount) {
         toast.success('Content unlocked! 🎉');
@@ -83,7 +101,7 @@ export function VerifyUnlockButton({
 
       // Only DHB can be bought from inside the sheet — the swap routes are
       // DHB's. A gate on someone else's token still gets the honest numbers.
-      if (currency === 'DHB' && !tokenAddress) {
+      if (isDhb) {
         setShortfall({
           needDhb: requiredAmount - balance,
           balanceDhb: balance,
