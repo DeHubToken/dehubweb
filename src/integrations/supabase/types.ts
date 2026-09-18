@@ -2251,6 +2251,39 @@ export type Database = {
         }
         Relationships: []
       }
+      dex_sell_positions: {
+        Row: {
+          chain_id: number
+          token_id: string
+          owner_address: string
+          mint_tx_hash: string
+          dhb_amount: number
+          min_usdc_per_dhb: number
+          max_usdc_per_dhb: number
+          created_at: string
+        }
+        Insert: {
+          chain_id: number
+          token_id: string
+          owner_address: string
+          mint_tx_hash: string
+          dhb_amount: number
+          min_usdc_per_dhb: number
+          max_usdc_per_dhb: number
+          created_at?: string
+        }
+        Update: {
+          chain_id?: number
+          token_id?: string
+          owner_address?: string
+          mint_tx_hash?: string
+          dhb_amount?: number
+          min_usdc_per_dhb?: number
+          max_usdc_per_dhb?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
       dhb_payment_claims: {
         Row: {
           chain: string | null

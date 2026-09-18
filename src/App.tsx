@@ -36,6 +36,7 @@ import { DeHubPageLoader } from "@/components/app/DeHubLoader";
 import { ThemePreviewProvider, ThemeProvider, useAppTheme } from "@/contexts/ThemeContext";
 import { UserPreferencesProvider } from "@/contexts/UserPreferencesContext";
 import { lazyWithRetry } from "@/lib/lazy-with-retry";
+const DexPage = React.lazy(() => import("@/pages/app/DexPage"));
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SurfaceTransition } from "@/components/transitions/SurfaceTransition";
 
@@ -589,6 +590,7 @@ function AppContent() {
             {/* dehub.io root IS the home feed — rendered in place, no redirect.
                 Same cached HomePage as /app (see PersistentPageCache home paths). */}
             <Route path="/" element={null} />
+            <Route path="/dex" element={<Suspense fallback={<PageLoader />}><DexPage /></Suspense>} />
 
             {/* App routes — cached pages render null, PersistentPageCache manages them */}
             <Route path="/app">
