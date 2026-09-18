@@ -9,6 +9,7 @@ export interface YoutubeImportParams {
   mediaKind?: 'video' | 'audio' | 'image';
   name?: string;
   description?: string;
+  rotation?: 0 | 90 | 180 | 270;
   chainId?: number;
 }
 

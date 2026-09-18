@@ -267,7 +267,7 @@ export default function YoutubeImportPage() {
    * path gates on the checkbox below, and "Try again" re-runs a link whose
    * attestation was made when it was first queued. */
   const queueImport = useCallback(
-    (rawUrl: string, kind?: MediaKind, details?: { name: string; description: string }) => {
+    (rawUrl: string, kind?: MediaKind, details?: { name: string; description: string; rotation?: 0 | 90 | 180 | 270 }) => {
       requireAuth(async () => {
         setSubmitting(true);
         try {
@@ -283,6 +283,7 @@ export default function YoutubeImportPage() {
             // clearing the box asks for.
             name: details?.name || undefined,
             description: details?.description || undefined,
+            rotation: details?.rotation,
           });
           setUrl('');
           toast.message(t('converter.toastQueued'));
