@@ -10,8 +10,7 @@
  * and shows all of them, and the theme launchers stay exactly as they were — a
  * second, more theatrical way in.
  *
- * The cards carry real captures from the games rather than key art. A card that
- * promises more than the game delivers is worse than no card.
+ * Cards use each game's approved branding when available, otherwise a capture.
  */
 
 import { useRef, useState } from 'react';
@@ -38,19 +37,19 @@ function GameCard({ game }: { game: ArcadeGame }) {
       <Link to={`/arcade/${game.slug}`} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40">
         <div className="relative aspect-video overflow-hidden bg-black">
           <img
-            src={game.art}
-            alt={game.artAlt}
+            src={game.brand ?? game.art}
+            alt={game.brand ? game.title : game.artAlt}
             width={1280}
             height={720}
             // Every card is above the fold on a desktop grid of three, so
             // lazy-loading them only delays the one thing the page is for.
             loading="eager"
             decoding="async"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            className={`h-full w-full ${game.brand ? 'object-contain' : 'object-cover'} transition-transform duration-500 group-hover:scale-[1.03]`}
           />
           {/* Keeps the title legible over whatever the capture happens to be. */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4">
+          {!game.brand && <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />}
+          <div className={game.brand ? 'sr-only' : 'pointer-events-none absolute inset-x-0 bottom-0 p-4'}>
             <h2 className="text-lg font-semibold leading-tight text-white">{game.title}</h2>
           </div>
         </div>
