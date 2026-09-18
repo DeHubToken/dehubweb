@@ -19,11 +19,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { useDhbHoldings } from '@/hooks/use-dhb-holdings';
+import { tokenAmount, sumTokenAmounts } from '@/lib/wallet/token-amount';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
 import { showWeb3AuthCheckout, isWeb3AuthConnected } from '@/lib/web3auth';
 import { getDexBuyLink } from '@/lib/wallet/buy-links';
-import { getERC20Metadata, saveCustomToken, formatBalance, type WalletChainId, type WalletToken } from '@/lib/wallet/tokens';
+import { getERC20Metadata, saveCustomToken, type WalletChainId, type WalletToken } from '@/lib/wallet/tokens';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { SOLANA_MAINNET_CHAIN_ID, isSolanaChainId } from '@/lib/chains/solana';
 import { ROBINHOOD_CHAIN_ID } from '@/lib/chains/robinhood';
@@ -146,7 +147,7 @@ export default function FullWalletPage() {
   const totalUsd = useMemo(() => {
     const walletUsd = allTokens.reduce((sum, token) => {
       const price = prices[token.symbol] ?? 0;
-      const value = parseFloat(token.formattedBalance) * price;
+      const value = tokenAmount(token) * price;
       return sum + (isNaN(value) ? 0 : value);
     }, 0);
     const dhbPrice = prices.DHB ?? 0;
@@ -166,10 +167,8 @@ export default function FullWalletPage() {
       const existing = map.get(token.symbol);
       if (existing) {
         // Sum human-readable balances to avoid decimal mismatch
-        const existingVal = parseFloat(existing.totalFormattedBalance) || 0;
-        const newVal = parseFloat(token.formattedBalance) || 0;
-        const total = existingVal + newVal;
-        existing.totalFormattedBalance = total === 0 ? '0' : total.toFixed(8).replace(/\.?0+$/, '');
+        const total = sumTokenAmounts([...existing.chains, token]);
+        existing.totalFormattedBalance = String(total);
         existing.totalBalance = existing.totalBalance + token.balance; // keep for reference but not used for display
         existing.chains.push(token);
         if (token.isCustom) existing.isCustom = true;
@@ -178,7 +177,7 @@ export default function FullWalletPage() {
           symbol: token.symbol,
           name: token.name,
           totalBalance: token.balance,
-          totalFormattedBalance: token.formattedBalance,
+          totalFormattedBalance: String(tokenAmount(token)),
           decimals: token.decimals,
           logo: token.logo,
           isCustom: token.isCustom,
@@ -368,8 +367,8 @@ export default function FullWalletPage() {
               const dhb = groupedTokens.find(t => t.symbol === 'DHB');
               const baseBal = dhb?.chains.find(c => c.chainId === BASE_CHAIN_ID);
               const bnbBal = dhb?.chains.find(c => c.chainId === BNB_CHAIN_ID);
-              const baseVal = baseBal ? parseFloat(baseBal.formattedBalance) : 0;
-              const bnbVal = bnbBal ? parseFloat(bnbBal.formattedBalance) : 0;
+              const baseVal = baseBal ? tokenAmount(baseBal) : 0;
+              const bnbVal = bnbBal ? tokenAmount(bnbBal) : 0;
               const stakedVal = holdings.staked;
               return (
                 <>
@@ -904,7 +903,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
       toast.error(t('wallet.invalidAmount'));
       return;
     }
-    const maxBal = parseFloat(formatBalance(token.balance, token.decimals, 18));
+    const maxBal = tokenAmount(token);
     if (numAmount > maxBal) {
       toast.error(t('wallet.insufficientBalance', { symbol: token.symbol }));
       return;
@@ -947,9 +946,10 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
     }
   };
 
-  const handleMax = () => {
+  const handleMax = async () => {
     if (!token) return;
-    setAmount(formatBalance(token.balance, token.decimals, 18));
+    const { formatUnits } = await import('ethers');
+    setAmount(formatUnits(token.balance, token.decimals));
   };
 
   return (
