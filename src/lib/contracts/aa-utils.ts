@@ -9,6 +9,7 @@
 
 import { Interface, parseUnits, formatUnits } from 'ethers';
 import i18n from 'i18next';
+import { createPublicClient, fallback, http } from 'viem';
 import { setupAAProviderForChain, setupAAProvider, getOrInitWeb3Auth } from '@/lib/web3auth';
 import { getAccount } from '@wagmi/core';
 import { sendTransaction, waitForTransactionReceipt, switchChain as wagmiSwitchChain } from '@wagmi/core';
@@ -563,9 +564,19 @@ export async function writeContractAA(
 
         // The AA EIP-1193 fallback forwards receipt reads to the owner provider.
         // That provider can have a stale/denied RPC even after the bundler mined
-        // the operation. Read the receipt through the AA chain's public client.
+        // the operation. Use independent chain RPCs with failover; public endpoints
+        // can reject older receipts even while their latest-state reads work.
         try {
-          const receipt = await provider.publicClient.waitForTransactionReceipt({
+          const chainId = options?.chainId ?? BASE_CHAIN_ID;
+          const urls = chainId === BASE_CHAIN_ID
+            ? ['https://mainnet.base.org', 'https://base-rpc.publicnode.com']
+            : chainId === 56
+              ? ['https://bsc-dataseed.binance.org', 'https://bsc-rpc.publicnode.com']
+              : [getRpcUrl(chainId)];
+          const receiptClient = createPublicClient({
+            transport: fallback(urls.map(url => http(url, { timeout: 10000, retryCount: 0 })), { retryCount: 0 }),
+          });
+          const receipt = await receiptClient.waitForTransactionReceipt({
             hash: txHash as Hex, confirmations, timeout: 60000,
           });
           return { status: receipt.status === 'success' ? 1 : 0, hash: receipt.transactionHash };
