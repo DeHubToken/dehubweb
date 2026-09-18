@@ -77,7 +77,7 @@ export default function BuyCoinsPage() {
   useEffect(() => { try { localStorage.setItem('dehub.buy.method', paymentMethod); } catch { /* Storage may be disabled. */ } }, [paymentMethod]);
 
   // Post-purchase state
-  const [purchaseStatus, setPurchaseStatus] = useState<'idle' | 'polling' | 'success' | 'failed'>('idle');
+  const [purchaseStatus, setPurchaseStatus] = useState<'idle' | 'polling' | 'success' | 'failed' | 'expired'>('idle');
   const [purchaseSessionId, setPurchaseSessionId] = useState<string | null>(null);
   const [txSearch, setTxSearch] = useState('');
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -245,7 +245,7 @@ export default function BuyCoinsPage() {
         // the payment landed and the transfer itself failed.
         if (dead || sendStatus === 'failed' || sendStatus === 'cancelled') {
           stop();
-          setPurchaseStatus('failed');
+          setPurchaseStatus(stripeStatus === 'expired' && !paid ? 'expired' : 'failed');
           toast.error(
             paid
               ? t('buyCoins.statusDeliveryFailed')
@@ -666,6 +666,14 @@ export default function BuyCoinsPage() {
                 </Button>
               </>
             )}
+            {purchaseStatus === 'expired' && (
+              <>
+                <XCircle className="w-10 h-10 text-amber-400 mx-auto" />
+                <h3 className="text-white font-semibold text-lg">Checkout Expired</h3>
+                <p className="text-sm text-zinc-400">No payment was completed. Start a new checkout when you are ready.</p>
+                <Button variant="glass" className="mt-2" onClick={() => setPurchaseStatus('idle')}>Try Again</Button>
+              </>
+            )}
           </div>
         )}
 
@@ -729,7 +737,7 @@ export default function BuyCoinsPage() {
             ) : (
                 <div
                   ref={purchaseListRef}
-                  className="space-y-0 max-h-[600px] overflow-y-auto overflow-x-hidden overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-4 -mx-4"
+                  className="space-y-0 max-h-[600px] overflow-y-auto overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-4 -mx-4"
                 onScroll={(e) => {
                   const el = e.currentTarget;
                   if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100 && hasNextPage && !isFetchingNextPage) {
@@ -748,7 +756,7 @@ export default function BuyCoinsPage() {
                   const content = (
                     <div className="min-w-0 flex-1">
                       <div className="text-sm text-zinc-300">
-                        {tx.status === 'completed' ? '✅' : tx.status === 'failed' ? '❌' : '⏳'}{' '}
+                        {tx.status === 'completed' ? '✅' : tx.status === 'failed' ? '❌' : tx.status === 'expired' ? '⌛' : '⏳'}{' '}
                         ${tx.amount} — {tx.approxTokensToReceive ? `~${Number(tx.approxTokensToReceive).toLocaleString()} DHB` : `${tx.tokenSymbol}`}
                         {tx.status === 'failed' && (tx as any).failureReason && (
                           <span className="text-xs text-red-400/70 ml-1 capitalize whitespace-nowrap">({(tx as any).failureReason})</span>

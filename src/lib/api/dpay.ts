@@ -32,7 +32,8 @@ export interface DPayTransaction {
   tokenReceived?: number;
   approxTokensToReceive?: string;
   tokenSymbol: string;
-  status: 'pending' | 'completed' | 'failed';
+  status: 'pending' | 'completed' | 'failed' | 'expired';
+  failureReason?: string;
   createdAt: string;
   txHash?: string;
   chainId?: number;
@@ -47,6 +48,15 @@ export interface DPaySessionStatus {
   tokenSendTxnHash?: string;
   _empty?: boolean;
   [key: string]: unknown;
+}
+
+function isExpiredStripeSession(tx: { status_stripe?: string; stripe_hooks?: unknown }): boolean {
+  return tx.status_stripe === 'expired' || (
+    tx.status_stripe === 'failed' && Array.isArray(tx.stripe_hooks) &&
+    tx.stripe_hooks.some((hook: unknown) =>
+      !!hook && typeof hook === 'object' && 'checkout.session.expired' in hook
+    )
+  );
 }
 
 export interface OnrampSessionRequest {
@@ -488,10 +498,12 @@ export async function getDPaySessionStatus(sessionId: string): Promise<DPaySessi
   }
   
   return {
-    status_stripe: result.status_stripe ?? result.statusStripe ?? result.stripe_status ?? result.status,
+    ...result,
+    status_stripe: isExpiredStripeSession(result)
+      ? 'expired'
+      : result.status_stripe ?? result.statusStripe ?? result.stripe_status ?? result.status,
     tokenSendStatus: result.tokenSendStatus ?? result.token_send_status ?? result.sendStatus,
     tokenSendTxnHash: result.tokenSendTxnHash ?? result.token_send_txn_hash ?? result.txHash,
-    ...result,
   };
 }
 
@@ -579,7 +591,8 @@ export async function getAllDPayTransactions(params: { page?: number; limit?: nu
         .map((tx: any) => {
           const stripeStatus = tx.status_stripe || tx.status || '';
           const isComplete = stripeStatus === 'complete' || stripeStatus === 'completed';
-          const isFailed = stripeStatus === 'failed' || stripeStatus === 'expired';
+          const expired = stripeStatus === 'expired' || isExpiredStripeSession(tx);
+          const isFailed = stripeStatus === 'failed' && !expired;
           // Extract failure reason from stripe_hooks
           let failureReason: string | undefined;
           if (isFailed) {
@@ -599,7 +612,7 @@ export async function getAllDPayTransactions(params: { page?: number; limit?: nu
             tokenReceived: tx.tokenReceived ? parseFloat(tx.tokenReceived) : undefined,
             approxTokensToReceive: tx.approxTokensToReceive ? String(tx.approxTokensToReceive) : undefined,
             tokenSymbol: tx.tokenSymbol || tx.symbol || 'DHB',
-            status: isComplete ? 'completed' as const : isFailed ? 'failed' as const : 'pending' as const,
+            status: isComplete ? 'completed' as const : expired ? 'expired' as const : isFailed ? 'failed' as const : 'pending' as const,
             failureReason,
             createdAt: tx.createdAt || tx.created_at,
             txHash: tx.tokenSendTxnHash || tx.txHash || tx.hash,
