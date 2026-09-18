@@ -1300,7 +1300,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           onClick={(e) => e.stopPropagation()}
           className={cn(
             'absolute inset-x-3 bottom-0 z-20 flex max-h-[45%] flex-col justify-end pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-opacity duration-300',
-            chromeHidden && 'pointer-events-none opacity-0'
+            chromeHidden && 'invisible pointer-events-none opacity-0'
           )}
         >
           <LiveViewerActionsProvider

@@ -240,7 +240,7 @@ export function ImmersiveLiveChrome({
           // behind it and the row read as cut off — which is exactly what it
           // was, just not by anything in the page.
           'absolute inset-x-0 top-0 z-20 flex items-center gap-1 px-2 pb-4 pt-[max(1rem,env(safe-area-inset-top))] transition-opacity duration-300',
-          hidden && 'pointer-events-none opacity-0'
+          hidden && 'invisible pointer-events-none opacity-0'
         )}
       >
         {/* Takes the row's spare width and gives it up before the controls
@@ -367,7 +367,7 @@ export function ImmersiveLiveChrome({
       <div
         className={cn(
           'absolute inset-x-0 top-[calc(env(safe-area-inset-top,0px)+68px)] z-20 flex gap-1 overflow-x-auto px-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden transition-opacity duration-300',
-          hidden && 'pointer-events-none opacity-0'
+          hidden && 'invisible pointer-events-none opacity-0'
         )}
       >
         {/* No state pill. Whether a stream is live or over is on the card
