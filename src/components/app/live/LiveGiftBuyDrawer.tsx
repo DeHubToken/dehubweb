@@ -5,7 +5,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { NearIntentBuy } from '@/components/app/NearIntentBuy';
-import { createCheckoutSession, getDPaySessionStatus } from '@/lib/api/dpay';
+import { createCheckoutSession, getDPayPrice, getDPaySessionStatus } from '@/lib/api/dpay';
 import { getStripe } from '@/lib/stripe';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQueryClient } from '@tanstack/react-query';
@@ -21,13 +21,26 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded }: P
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
   const [method, setMethod] = useState<'card' | 'crypto'>('card');
-  const [amountUsd, setAmountUsd] = useState(() => String(Math.max(0.5, Math.ceil(neededDhb / 900 * 100) / 100)));
+  const [amountUsd, setAmountUsd] = useState('10');
+  const [tokenPrice, setTokenPrice] = useState(0);
   const [cryptoAmount, setCryptoAmount] = useState(() => String(Math.max(1, Math.ceil(neededDhb))));
   const [clientSecret, setClientSecret] = useState('');
   const [sessionId, setSessionId] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [paymentComplete, setPaymentComplete] = useState(false);
+  const estimatedDhb = tokenPrice > 0 ? (Number(amountUsd) / tokenPrice) * 0.9 : 0;
+
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    getDPayPrice().then(({ price }) => {
+      if (!cancelled) setTokenPrice(price);
+    }).catch(() => {
+      if (!cancelled) setError('Could not load the current DHB price.');
+    });
+    return () => { cancelled = true; };
+  }, [open]);
 
   const delivered = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
@@ -58,7 +71,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded }: P
   }, [open, sessionId, delivered]);
 
   const buyWithCard = async () => {
-    if (!walletAddress || !Number.isFinite(Number(amountUsd)) || Number(amountUsd) < 0.5) return;
+    if (!walletAddress || !Number.isFinite(Number(amountUsd)) || Number(amountUsd) < 0.5 || !Number.isFinite(estimatedDhb) || estimatedDhb <= 0) return;
     setBusy(true);
     setError('');
     try {
@@ -67,7 +80,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded }: P
         tokenSymbol: 'DHB',
         walletAddress,
         chainId: 8453,
-        tokensToReceive: Math.floor(Number(amountUsd) * 1000),
+        tokensToReceive: estimatedDhb,
         embedded: true,
         redirect: `${window.location.origin}${window.location.pathname}?gift_payment=return&session_id={CHECKOUT_SESSION_ID}`,
       });
@@ -114,7 +127,8 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded }: P
             <div className="space-y-3">
               <label className="text-sm text-zinc-400 block">Amount (USD)</label>
               <Input type="number" min="0.5" step="0.01" value={amountUsd} onChange={(e) => setAmountUsd(e.target.value)} className="bg-zinc-800 border-zinc-700 text-white" />
-              <Button className="w-full" onClick={buyWithCard} disabled={busy || Number(amountUsd) < 0.5}>
+              {tokenPrice > 0 && <p className="text-xs text-zinc-400">Approximately {estimatedDhb.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB after the card fee</p>}
+              <Button className="w-full" onClick={buyWithCard} disabled={busy || Number(amountUsd) < 0.5 || tokenPrice <= 0}>
                 {busy && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Buy DHB with card
               </Button>
             </div>
