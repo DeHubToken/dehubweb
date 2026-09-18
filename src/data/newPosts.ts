@@ -4,6 +4,7 @@ import { townHallJan2026Post } from './posts/townHallJan2026Post';
 import { devUpdateJan2026Post } from './posts/devUpdateJan2026Post';
 import { pressFeaturedPost } from './posts/pressFeaturedPost';
 import { q3DevelopmentOverviewPost } from './posts/q3DevelopmentOverviewPost';
+import { tokenExchangeListingsUpdatePost } from './posts/tokenExchangeListingsUpdatePost';
 
 const countdownBeginsPost: BlogPostType = {
   id: 'countdown-begins-dehub-app-store-launch',
@@ -1416,6 +1417,7 @@ const bnbPoolUpdatePost: BlogPostType = {
 };
 
 export const newPosts: BlogPostType[] = [
+  tokenExchangeListingsUpdatePost,
   q3DevelopmentOverviewPost,
   devUpdateJan2026Post,
   townHallJan2026Post,
