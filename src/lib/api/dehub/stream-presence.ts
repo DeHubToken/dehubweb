@@ -22,9 +22,11 @@
  */
 import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
+import { liveReactionType, type LiveReactionType } from '@/lib/live/reaction-flow';
 
 /** Matches LivestreamEvents on the backend. These strings are the contract. */
 const EVENT = {
+  reaction: 'stream.reaction',
   /** Subscribes the socket to a stream's broadcasts. Counts nobody. */
   joinRoom: 'stream.join.room',
   joinStream: 'stream.join',
@@ -42,6 +44,44 @@ const EVENT = {
   /** A gift landed. The same event the mobile viewer plays its tiers off. */
   tipStreamer: 'streamer.tip',
 } as const;
+
+export interface StreamReactionBroadcast {
+  reactionType: LiveReactionType;
+  weight: number;
+}
+
+export function watchStreamReactions(streamId: string, onReaction: (event: StreamReactionBroadcast) => void): StreamPresence {
+  const conn = acquireStreamSocket();
+  const socket = conn.socket;
+  let left = false;
+  const join = () => { if (!left) socket.emit(EVENT.joinRoom, { streamId }); };
+  const receive = (data: { streamId?: string; reactionType?: unknown; weight?: number }) => {
+    // One connection can watch several cards. Never leak applause into another room.
+    if (data?.streamId !== streamId) return;
+    const reactionType = liveReactionType(data.reactionType);
+    if (reactionType) onReaction({ reactionType, weight: data.weight ?? 1 });
+  };
+  socket.on('connect', join);
+  socket.on(EVENT.reaction, receive);
+  if (socket.connected) join();
+  return { leave: () => {
+    if (left) return;
+    left = true;
+    socket.off('connect', join);
+    socket.off(EVENT.reaction, receive);
+    releaseStreamSocket(conn);
+  } };
+}
+
+/** The server echo is the single source of animation, including for the sender. */
+export function sendStreamReaction(streamId: string, value: unknown): void {
+  const reactionType = liveReactionType(value);
+  if (!reactionType || !getAuthToken()) return;
+  // Reactions are ephemeral: don't buffer old clicks over a disconnect.
+  if (active?.socket.connected && active.token === getAuthToken()) {
+    active.socket.emit(EVENT.reaction, { streamId, reactionType });
+  }
+}
 
 interface StreamConnection {
   socket: Socket;

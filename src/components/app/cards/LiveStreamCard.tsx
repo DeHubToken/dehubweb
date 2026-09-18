@@ -68,6 +68,8 @@ import { useStreamPresence } from '@/hooks/use-stream-presence';
 import { useStreamGifts } from '@/hooks/use-stream-gifts';
 import { useGiftAnimations } from '@/hooks/use-gift-animations';
 import { GiftAnimationOverlay } from '@/components/app/live/GiftAnimationOverlay';
+import { LiveReactionFlow } from '@/components/app/live/LiveReactionFlow';
+import type { PostReaction } from '@/lib/reactions';
 import { GIFT_TIERS, tierFromAmount } from '@/lib/live/gift-tiers';
 
 const LiveGiftBuyDrawer = lazy(() => import('@/components/app/live/LiveGiftBuyDrawer').then(m => ({ default: m.LiveGiftBuyDrawer })));
@@ -174,6 +176,12 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const playbackRequestedRef = useRef(true);
   // If stream.isLive is false, treat as ended immediately — don't try to play a dead HLS URL
   const [streamEnded, setStreamEnded] = useState(!stream.isLive);
+  const sendLiveReaction = useCallback((reaction: PostReaction) => {
+    if (!stream.streamId || !stream.isLive || streamEnded) return;
+    void import('@/lib/api/dehub/stream-presence').then(({ sendStreamReaction }) => {
+      sendStreamReaction(stream.streamId!, reaction);
+    }).catch(() => undefined);
+  }, [stream.streamId, stream.isLive, streamEnded]);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [giftAmount, setGiftAmount] = useState('');
@@ -1272,6 +1280,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             player into fullscreen, where it lands over the chat column rather
             than animating behind it. */}
         <GiftAnimationOverlay items={giftCelebrations} />
+        <LiveReactionFlow streamId={stream.streamId} enabled={!!stream.isLive && !streamEnded} bottom={immersive ? 100 : 56} />
 
         {/* Full-bleed chrome. Inside the media container so it travels with
             the picture, and after the overlays so nothing is drawn on top
@@ -1326,6 +1335,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             value={
               <ActionBar
                 compact
+                onLiveReaction={sendLiveReaction}
                 postId={stream.id}
                 tokenId={parseInt(stream.id, 10) || undefined}
                 isLiked={stream.isLiked}
@@ -1346,6 +1356,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       ) : (
         <div className="pt-3">
           <ActionBar
+            onLiveReaction={sendLiveReaction}
             postId={stream.id}
             tokenId={parseInt(stream.id, 10) || undefined}
             isLiked={stream.isLiked}
