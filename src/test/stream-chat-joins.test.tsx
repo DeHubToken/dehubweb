@@ -8,14 +8,17 @@ vi.mock('@/lib/api/dehub/stream-presence', () => ({ watchStreamJoins: mock.watch
 afterEach(() => { cleanup(); vi.clearAllMocks(); });
 
 describe('stream chat arrivals', () => {
-  it('keeps history and subsequent joins, including a returning viewer', async () => {
+  it('keeps one current arrival per viewer across history and reconnects', async () => {
     mock.fetch.mockResolvedValue({ result: [{ id: 'old', type: 'join', address: 'a', timestamp: '2026-01-01T00:00:00Z' }] });
     mock.watch.mockReturnValue({ leave: mock.leave });
     const { result, unmount } = renderHook(() => useStreamChatJoins('stream-a'));
     await waitFor(() => expect(result.current).toHaveLength(1));
     act(() => mock.watch.mock.calls[0][1]({ address: 'a', username: 'Alice' }));
-    act(() => mock.watch.mock.calls[0][1]({ address: 'a', username: 'Alice' }));
-    expect(result.current).toHaveLength(3);
+    act(() => mock.watch.mock.calls[0][1]({ address: 'A', username: 'Alice returned' }));
+    expect(result.current).toHaveLength(1);
+    expect(result.current[0].username).toBe('Alice returned');
+    act(() => mock.watch.mock.calls[0][1]({ address: 'b', username: 'Bob' }));
+    expect(result.current).toHaveLength(2);
     unmount();
     expect(mock.leave).toHaveBeenCalledOnce();
   });
