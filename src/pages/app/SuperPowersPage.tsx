@@ -35,6 +35,7 @@ import {
 import { SpendPowerDrawer } from '@/components/app/modals/SpendPowerDrawer';
 import type { SuperPowerInfo } from '@/lib/api/dehub/superpowers';
 import { TeamUpDrawer } from '@/components/app/TeamUpDrawer';
+import { LiveGiftBuyDrawer } from '@/components/app/live/LiveGiftBuyDrawer';
 
 /** Total slot minutes a tier holds per cycle — the number worth comparing. */
 function cycleMinutes(boosts: number, minutes: number): number {
@@ -72,6 +73,7 @@ export default function SuperPowersPage() {
   const [spending, setSpending] = useState<SuperPowerInfo | null>(null);
   const [historyPower, setHistoryPower] = useState<SuperPowerInfo | null>(null);
   const [teamUpOpen, setTeamUpOpen] = useState(false);
+  const [buyOpen, setBuyOpen] = useState(false);
 
   const historyBookings = historyPower
     ? (status?.bookings.filter(booking => booking.power === historyPower.key) ?? [])
@@ -137,12 +139,10 @@ export default function SuperPowersPage() {
         ) : (
           // No badge — the page's real audience. Say what it costs and where.
           <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3">
-            <p className="text-white text-sm">Hold DHB to unlock a badge and its SuperPowers.</p>
+            <p className="text-white text-sm">Buy DHB to unlock a badge and its SuperPowers. Any badge holder gets them — staking is not required.</p>
             <p className="text-[12px] text-zinc-400">Team up is open to every account, even without a badge.</p>
             <BadgeProgress variant="rail" />
-            <Button asChild variant="outline" className="self-start">
-              <Link to="/app/buy">Get DHB</Link>
-            </Button>
+            <Button variant="outline" className="self-start" onClick={() => setBuyOpen(true)}>Buy DHB</Button>
           </section>
         )}
 
@@ -305,6 +305,7 @@ export default function SuperPowersPage() {
           Root still sees it — see the note in ui/drawer.tsx. */}
       <SpendPowerDrawer power={spending} onOpenChange={open => !open && setSpending(null)} />
       <TeamUpDrawer open={teamUpOpen} onOpenChange={setTeamUpOpen} />
+      <LiveGiftBuyDrawer open={buyOpen} onOpenChange={setBuyOpen} neededDhb={1} returnTo="SuperPowers" onFunded={() => { setBuyOpen(false); void refetchStatus(); }} />
 
       <Drawer open={!!historyPower} onOpenChange={open => !open && setHistoryPower(null)}>
         <DrawerContent scrollable column glass className="px-4 pb-6">
