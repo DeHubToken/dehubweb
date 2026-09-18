@@ -911,7 +911,7 @@ const MARKETING_PAGES = {
 <li><a href="${APP_URL}/arcade/claude-of-duty">Claude of Duty</a> — a first-person shooter that generates every mesh, texture and sound on your machine as it loads.</li>
 <li><a href="${APP_URL}/arcade/jungle-trail">Jungle Trail</a> — a walk through a procedurally generated rainforest, with no score and no timer.</li>
 <li><a href="${APP_URL}/arcade/street-slayer">Street Slayer</a> — a side-scrolling beat 'em up down a neon-lit street, built for DeHub rather than found.</li>
-<li><a href="${APP_URL}/arcade/trenchstar">Trenchstar</a> — a trading floor you can walk, built out of forty live market screens.</li>
+<li><a href="${APP_URL}/arcade/trenchstar">Chartopia</a> — a trading floor you can walk, built out of forty live market screens.</li>
 </ul>`,
   },
   'arcade/kings-gambit': {
@@ -947,9 +947,9 @@ const MARKETING_PAGES = {
 <p><a href="${APP_URL}/arcade/street-slayer">Play Street Slayer</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'arcade/trenchstar': {
-    title: 'Trenchstar | DeHub Arcade',
+    title: 'Chartopia | DeHub Arcade',
     description: 'The mother of all arenas. Trade like a time traveller with dozens of screens. Enjoy live feeds from Binance, Dexscreener or any thing you want from videos, to browser tabs and all between.',
-    heading: 'Trenchstar — A Trading Floor Built Out Of Live Markets',
+    heading: 'Chartopia — A Trading Floor Built Out Of Live Markets',
     bodyHtml: `<p>The mother of all arenas. Trade like a time traveller with dozens of screens. Enjoy live feeds from Binance, Dexscreener or any thing you want from videos, to browser tabs and all between.</p>
 <p>Drag any screen to move it, drop it on another to swap them, and put a chart, a heatmap, a live web page or your own tab on any panel. Pick a character and walk the floor, or stay at the desk and fly the camera.</p>
 <p><a href="${APP_URL}/arcade/trenchstar">Take the desk</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,

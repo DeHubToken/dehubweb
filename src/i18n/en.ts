@@ -752,7 +752,7 @@ export const en = {
     studioB4: 'Credits or a plan:',
     studioB4Desc: 'Everyday generation runs on the DHB-denominated AI credits every account accrues. Heavier users can take an Ultra, Team or Scale plan for a monthly credit allowance instead — the plans are listed at dehub.io/pricing.',
     arcadeTitle: 'Arcade',
-    arcadeDesc: 'The Arcade is a shelf of games that run inside DeHub in a browser tab. Nothing to install, nothing to buy, no separate account: open one and play. Five titles ship today — King\'s Gambit, a cinematic 3D chess game with an online Elo ladder; Claude of Duty, a shooter that generates every mesh, texture and sound on your machine as the level loads; Jungle Trail, a first-person walk through a procedurally generated rainforest; Street Slayer, a side-scrolling beat \'em up built for DeHub; and Trenchstar, a trading floor you can walk, with live market feeds on the desk monitors and a VR mode through WebXR.',
+    arcadeDesc: 'The Arcade is a shelf of games that run inside DeHub in a browser tab. Nothing to install, nothing to buy, no separate account: open one and play. Five titles ship today — King\'s Gambit, a cinematic 3D chess game with an online Elo ladder; Claude of Duty, a shooter that generates every mesh, texture and sound on your machine as the level loads; Jungle Trail, a first-person walk through a procedurally generated rainforest; Street Slayer, a side-scrolling beat \'em up built for DeHub; and Chartopia, a trading floor you can walk, with live market feeds on the desk monitors and a VR mode through WebXR.',
     arcadeDesc2: 'Two of them are also hidden inside the appearance themes: set the app to War and Claude of Duty is reachable from the theme itself, and the Jungle theme hides Jungle Trail. King\'s Gambit and Street Slayer keep leaderboards, and every game has its own share card so a link to one unfurls properly wherever you post it.',
     arcadeLink: 'Read the full Games documentation',
     settingsTitle: 'Settings',
@@ -885,7 +885,7 @@ export const en = {
     streetDesc: 'Rid the streets of the greedy banking mafia and save the club at all cost in this '
       + 'side scrolling beat \'em up, commissioned for DeHub and built by Studio Shook Pixel. Pick '
       + 'one of three fighters, then punch, kick and throw your way down the block.',
-    trenchTitle: 'Trenchstar',
+    trenchTitle: 'Chartopia',
     trenchDesc: 'A trading floor you can walk. Dozens of screens curve around the desk carrying '
       + 'live feeds from Binance, Dexscreener, videos, browser tabs — anything you want on the '
       + 'wall. It can be entered in a headset too.',
@@ -1575,7 +1575,7 @@ export const en = {
       'The feed auto-translates into your language without gating on a wallet ✅',
       'Brand poster and banner rendering became free and deterministic on the SM Template 2.0 renderer, and every blog banner and share card was re-rendered in the new style ✅',
       'Three new appearance themes — War, Osaka and Jungle — bringing the platform to ten full skins ✅',
-      'The arcade opened, with King\'s Gambit chess, Jungle Trail, Street Slayer, Claude of Duty and Trenchstar — a walkable trading floor that also runs in a VR headset ✅',
+      'The arcade opened, with King\'s Gambit chess, Jungle Trail, Street Slayer, Claude of Duty and Chartopia — a walkable trading floor that also runs in a VR headset ✅',
       'Sign in with Google, Apple, an emailed code, an SMS code or a wallet, and run several identities from one browser with profile switching in Settings ✅',
       'The badge ladder is priced in dollars rather than a token count, an earned tier can never be taken back by the price, and a badge can be lent to another account one slot per rung climbed ✅',
       'A badge now weights what you do: a view or a reaction counts for more the higher your tier, on the same ladder as governance voting ✅',
@@ -1600,7 +1600,7 @@ export const en = {
       'Account marketplace allowing users to trade accounts securely',
       'Commercial integrations with existing streaming and home entertainment brands',
       'DeHub creator studio for simple generative content generation ',
-      'Trenchstar: VR trading and community hub release',
+      'Chartopia: VR trading and community hub release',
       'V/AR profile hub & consumer data metrics',
       'DePin mining for secure decentralized back up of DeHub content',
       'Username marketplace',
@@ -1953,7 +1953,7 @@ export const en = {
     q6: 'Can I stake DHB tokens?',
     a6: 'Yes, you can stake DHB tokens to earn real yield from protocol revenue buybacks and x-2-earn rewards. Staking also helps secure the network and provides enhanced rights within the ecosystem.',
     q7: 'What games are available on DeHub?',
-    a7: 'Five games run inside DeHub itself, in a browser tab, with nothing to install and nothing to buy: King\'s Gambit (3D chess with an online Elo ladder), Claude of Duty (a shooter that generates all of its own art on your machine), Jungle Trail (a procedurally generated rainforest walk), Street Slayer (a side-scrolling beat \'em up built for DeHub) and Trenchstar (a walkable trading floor that also runs in a VR headset). Last Chad Standing, our flagship MMA battle royale, is in development.',
+    a7: 'Five games run inside DeHub itself, in a browser tab, with nothing to install and nothing to buy: King\'s Gambit (3D chess with an online Elo ladder), Claude of Duty (a shooter that generates all of its own art on your machine), Jungle Trail (a procedurally generated rainforest walk), Street Slayer (a side-scrolling beat \'em up built for DeHub) and Chartopia (a walkable trading floor that also runs in a VR headset). Last Chad Standing, our flagship MMA battle royale, is in development.',
     q8: 'How does the DePIN infrastructure work?',
     a8: "DeHub's DePIN (Decentralized Physical Infrastructure Network) allows users to contribute computing resources and earn rewards while helping to build a decentralized infrastructure network.",
     q9: "What are DeHub's AI Toolkits?",
