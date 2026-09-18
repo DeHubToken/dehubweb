@@ -11,6 +11,7 @@
 
 import React, { Suspense, useState, useEffect, useMemo, useRef, memo } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+import { BUY_PATHS } from '@/lib/buy-route';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
@@ -101,7 +102,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'music', path: ['/app/music', '/music'], component: MusicPage, skeleton: GridSkeleton },
   { key: 'stages', path: ['/app/stages', '/stages'], component: StagesPage, skeleton: GenericPageSkeleton },
   { key: 'tv', path: ['/app/tv', '/tv'], component: TVPage, skeleton: GridSkeleton },
-  { key: 'buy', path: ['/app/buy', '/buy'], component: BuyCoinsPage, skeleton: GenericPageSkeleton },
+  { key: 'buy', path: BUY_PATHS, component: BuyCoinsPage, skeleton: GenericPageSkeleton },
   { key: 'agents', path: ['/app/agents', '/agents'], component: AgentsPage, skeleton: GenericPageSkeleton },
   { key: 'features', path: ['/app/features', '/features'], component: FeaturesPage, skeleton: FeaturesSkeleton },
   { key: 'governance', path: ['/app/governance', '/governance'], component: GovernancePage, skeleton: FeaturesSkeleton },
