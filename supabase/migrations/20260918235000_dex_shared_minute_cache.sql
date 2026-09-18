@@ -38,7 +38,7 @@ BEGIN
   WHILE value > 0 LOOP
     digit := mod(value, 16)::integer;
     result := substr('0123456789abcdef', digit + 1, 1) || result;
-    value := trunc(value / 16);
+    value := div(value, 16);
   END LOOP;
   RETURN lpad(result, 64, '0');
 END $$;
@@ -130,8 +130,8 @@ BEGIN
     fee := dex_private.word(info,2); spacing := dex_private.word(info,3);
     IF NOT ((fee=0 AND spacing=1) OR (fee=3000 AND spacing=60)) OR dex_private.word(info,4) <> 0 THEN CONTINUE; END IF;
     packed := dex_private.word(info,5);
-    lower_tick := mod(trunc(packed / 256),16777216)::integer;
-    upper_tick := mod(trunc(packed / 4294967296),16777216)::integer;
+    lower_tick := mod(div(packed, 256),16777216)::integer;
+    upper_tick := mod(div(packed, 4294967296),16777216)::integer;
     IF lower_tick >= 8388608 THEN lower_tick := lower_tick - 16777216; END IF;
     IF upper_tick >= 8388608 THEN upper_tick := upper_tick - 16777216; END IF;
     IF lower_tick >= upper_tick OR lower_tick < -887272 OR upper_tick > 887272 THEN CONTINUE; END IF;
