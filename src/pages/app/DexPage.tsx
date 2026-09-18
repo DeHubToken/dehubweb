@@ -8,6 +8,15 @@ import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { aggregateBook, type BookLevel } from '@/lib/dex/orderbook';
 import { DEX_CHAINS, type DexChainId, type IndexedPosition, type VerifiedPosition, verifyPosition } from '@/lib/dex/v4';
 import { detectDhbChain, detectUsdcChain, mintSellPosition, quoteSellPosition, withdrawSellPosition, type SellQuote } from '@/lib/dex/sell';
+import { type OrderStage } from '@/lib/dex/read-timeout';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('Dex');
+const stageText: Record<OrderStage, string> = {
+  quote: 'Reading pool…', wallet: 'Unlock or connect your wallet…', balance: 'Checking token approvals…',
+  tokenApproval: 'Confirm token approval in your wallet…', permitApproval: 'Confirm position approval in your wallet…',
+  submit: 'Confirm position in your wallet…', confirm: 'Waiting for confirmation…',
+};
 
 const PAGE_SIZE = 20;
 
@@ -49,6 +58,7 @@ export default function DexPage() {
   const [minPrice, setMinPrice] = useState('0.001');
   const [maxPrice, setMaxPrice] = useState('0.0011');
   const [busy, setBusy] = useState(false);
+  const [stage, setStage] = useState<OrderStage>('quote');
   const [checking, setChecking] = useState(false);
   const [positions, setPositions] = useState<VerifiedPosition[]>([]);
   const [page, setPage] = useState(0);
@@ -60,6 +70,7 @@ export default function DexPage() {
   useEffect(() => {
     if (!walletAddress) { setChainId(null); setBalance('0'); return; }
     let live = true;
+    setChainId(null); setBalance('0'); setReview(null);
     setChecking(true);
     (side === 'sell' ? detectDhbChain : detectUsdcChain)(walletAddress).then((choice) => {
       if (!live) return;
@@ -102,6 +113,7 @@ export default function DexPage() {
   }
 
   async function handleCreate() {
+    if (busy || checking) return;
     if (!walletAddress || !chainId) {
       toast.error(`Connect a wallet holding liquid ${side === 'sell' ? 'DHB' : 'USDC'}`);
       return;
@@ -115,6 +127,7 @@ export default function DexPage() {
       return;
     }
     setBusy(true);
+    setStage('quote');
     try {
       const input = { walletAddress, chainId, side, amount, minPrice, maxPrice };
       if (!review) {
@@ -122,7 +135,7 @@ export default function DexPage() {
         setReview(quoted);
         return;
       }
-      const minted = await mintSellPosition(input);
+      const minted = await mintSellPosition(input, setStage);
       const { error } = await withWalletHeader(supabase.from('dex_sell_positions').insert({
         chain_id: chainId,
         token_id: minted.tokenId,
@@ -142,6 +155,7 @@ export default function DexPage() {
       setMarketChain(chainId);
       await loadPositions();
     } catch (error) {
+      void logger.error('Position creation failed', { chainId, side, path: '/dex', message: error instanceof Error ? error.message : String(error) });
       toast.error(error instanceof Error ? error.message : 'Could not create the position');
     } finally {
       setBusy(false);
@@ -196,7 +210,7 @@ export default function DexPage() {
           </section>
         </div>
 
-      {showCreate && <section className="h-fit rounded-2xl border border-white/10 bg-zinc-900/70 p-5">
+      {showCreate && <fieldset disabled={busy} className="h-fit min-w-0 rounded-2xl border border-white/10 bg-zinc-900/70 p-5">
         <div className="mb-4 flex rounded-xl bg-zinc-950 p-1">
           {(['buy', 'sell'] as const).map((value) => <button key={value} type="button" onClick={() => changeSide(value)} className={`flex-1 rounded-lg py-2 text-sm font-semibold ${side === value ? value === 'buy' ? 'bg-green-500 text-zinc-950' : 'bg-red-500 text-white' : 'text-zinc-400'}`}>{value === 'buy' ? 'Buy DHB' : 'Sell DHB'}</button>)}
         </div>
@@ -221,9 +235,9 @@ export default function DexPage() {
         <p className="mt-4 text-xs leading-5 text-zinc-500">{side === 'buy' ? 'Deposit USDC only. Your maximum bid is the upper price; the position fills as DHB trades down through the range.' : 'Deposit DHB only. Your minimum ask is the lower price; the position fills as DHB trades up through the range.'} Network gas applies.</p>
         {review && <div className="mt-4 rounded-xl border border-white/15 p-4 text-sm text-zinc-200">Review: deposit {Number(amount).toLocaleString()} {side === 'buy' ? 'USDC' : 'DHB'} on {DEX_CHAINS[review.chainId].name} for {minPrice}–{maxPrice} USDC per DHB. {review.willCreatePool ? 'This also initializes the pool. ' : ''}Your wallet will request approvals and create the position.</div>}
         <button type="button" disabled={busy || checking || !chainId} onClick={() => void handleCreate()} className="mt-5 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-zinc-950 disabled:cursor-not-allowed disabled:opacity-40">
-          {busy ? 'Preparing position…' : review ? `Approve and ${side}` : `Review ${side}`}
+          {busy ? stageText[stage] : review ? `Approve and ${side}` : `Review ${side}`}
         </button>
-      </section>}
+      </fieldset>}
       </div>
 
       <section>

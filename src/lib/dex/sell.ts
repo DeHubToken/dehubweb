@@ -6,6 +6,9 @@ import { getDHBBalance } from '@/lib/contracts/stream-controller';
 import { getActiveProvider, writeContractAA } from '@/lib/contracts/aa-utils';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { DEX_CHAINS, dexProvider, type DexChainId, type VerifiedPosition } from './v4';
+import { getAccount } from '@wagmi/core';
+import { wagmiConfig } from '@/lib/wagmi';
+import { readWithTimeout, type OrderStage } from './read-timeout';
 
 const PERMIT2 = '0x000000000022D473030F116dDEE9F6B43aC78BA3';
 const FEE = 0;
@@ -33,8 +36,8 @@ const STATE = new Interface([
 
 export async function detectDhbChain(walletAddress: string): Promise<{ chainId: DexChainId | null; balance: string; base: string; bnb: string }> {
   const [baseRead, bnbRead] = await Promise.allSettled([
-    getDHBBalance(walletAddress, BASE_CHAIN_ID),
-    getDHBBalance(walletAddress, BNB_CHAIN_ID),
+    readWithTimeout(new Contract(DEX_CHAINS[BASE_CHAIN_ID].dhb, ERC20, dexProvider(BASE_CHAIN_ID)).balanceOf(walletAddress) as Promise<bigint>, 'Base balance'),
+    readWithTimeout(new Contract(DEX_CHAINS[BNB_CHAIN_ID].dhb, ERC20, dexProvider(BNB_CHAIN_ID)).balanceOf(walletAddress) as Promise<bigint>, 'BNB balance'),
   ]);
   if (baseRead.status === 'rejected' && bnbRead.status === 'rejected') {
     throw new Error('Could not read DHB balances on Base or BNB Chain');
@@ -53,7 +56,7 @@ export async function detectDhbChain(walletAddress: string): Promise<{ chainId: 
 export async function detectUsdcChain(walletAddress: string): Promise<{ chainId: DexChainId | null; balance: string }> {
   const read = (chainId: DexChainId) => new Contract(DEX_CHAINS[chainId].usdc, ERC20, dexProvider(chainId))
     .balanceOf(walletAddress) as Promise<bigint>;
-  const [baseRead, bnbRead] = await Promise.allSettled([read(BASE_CHAIN_ID), read(BNB_CHAIN_ID)]);
+  const [baseRead, bnbRead] = await Promise.allSettled([readWithTimeout(read(BASE_CHAIN_ID), 'Base balance'), readWithTimeout(read(BNB_CHAIN_ID), 'BNB balance')]);
   if (baseRead.status === 'rejected' && bnbRead.status === 'rejected') {
     throw new Error('Could not read USDC balances on Base or BNB Chain');
   }
@@ -120,10 +123,10 @@ export async function quoteSellPosition(input: SellInput): Promise<SellQuote> {
   const usdc = new Token(input.chainId, cfg.usdc, cfg.usdcDecimals, 'USDC');
   const poolId = Pool.getPoolId(dhb, usdc, FEE, TICK_SPACING, ZeroAddress);
   const state = new Contract(cfg.stateView, STATE, provider);
-  const [slot0, liquidity] = await Promise.all([
+  const [slot0, liquidity] = await readWithTimeout(Promise.all([
     state.getSlot0(poolId) as Promise<[bigint, bigint, bigint, bigint]>,
     state.getLiquidity(poolId) as Promise<bigint>,
-  ]);
+  ]), 'Pool preparation');
   const willCreatePool = slot0[0] === 0n;
   const initialSqrt = willCreatePool ? initialSqrtPrice(input.chainId,
     input.side === 'sell' ? input.minPrice : input.maxPrice) : null;
@@ -169,48 +172,58 @@ export async function quoteSellPosition(input: SellInput): Promise<SellQuote> {
   return { chainId: input.chainId, tickLower, tickUpper, amountIn, willCreatePool, calldata, value };
 }
 
-async function ensureTokenApproval(input: SellInput, amount: bigint) {
+async function ensureTokenApproval(input: SellInput, amount: bigint, progress: (stage: OrderStage) => void) {
   if (amount > MAX_UINT160) throw new Error('Amount exceeds Permit2 limits');
   const cfg = DEX_CHAINS[input.chainId];
   const provider = dexProvider(input.chainId);
   const tokenAddress = input.side === 'sell' ? cfg.dhb : cfg.usdc;
   const symbol = input.side === 'sell' ? 'DHB' : 'USDC';
   const token = new Contract(tokenAddress, ERC20, provider);
-  const balance = await token.balanceOf(input.walletAddress) as bigint;
+  progress('balance');
+  const balance = await readWithTimeout(token.balanceOf(input.walletAddress) as Promise<bigint>, 'Token balance');
   if (balance < amount) throw new Error(`Insufficient ${symbol} on the selected chain`);
-  const allowance = await token.allowance(input.walletAddress, PERMIT2) as bigint;
+  const allowance = await readWithTimeout(token.allowance(input.walletAddress, PERMIT2) as Promise<bigint>, 'Token allowance');
   if (allowance < amount) {
+    progress('tokenApproval');
     const tx = await writeContractAA(tokenAddress, ERC20, 'approve', [PERMIT2, amount],
       { chainId: input.chainId, context: `approve ${symbol} for Permit2` });
     if ((await tx.wait()).status !== 1) throw new Error(`${symbol} approval did not confirm`);
   }
   const permit = new Contract(PERMIT2, PERMIT, provider);
-  const [permitted, expiration] = await permit.allowance(input.walletAddress, tokenAddress, cfg.positionManager) as [bigint, bigint, bigint];
+  const [permitted, expiration] = await readWithTimeout(permit.allowance(input.walletAddress, tokenAddress, cfg.positionManager) as Promise<[bigint, bigint, bigint]>, 'Position allowance');
   if (permitted < amount || expiration <= BigInt(Math.floor(Date.now() / 1000) + 1200)) {
     const expires = Math.floor(Date.now() / 1000) + 86400;
+    progress('permitApproval');
     const tx = await writeContractAA(PERMIT2, PERMIT, 'approve', [tokenAddress, cfg.positionManager, amount, expires],
       { chainId: input.chainId, context: `approve ${symbol} for the position manager` });
     if ((await tx.wait()).status !== 1) throw new Error('Position approval did not confirm');
   }
 }
 
-export async function mintSellPosition(input: SellInput): Promise<{ tokenId: string; txHash: string }> {
-  const { provider: signer } = await getActiveProvider(input.chainId);
+export async function mintSellPosition(input: SellInput, progress: (stage: OrderStage) => void = () => {}): Promise<{ tokenId: string; txHash: string }> {
+  progress('wallet');
+  const { provider: signer } = await readWithTimeout(getActiveProvider(input.chainId), 'Wallet connection', 60000);
   if (signer) {
     const accounts = await signer.request({ method: 'eth_accounts' }) as string[];
     if (!accounts[0] || accounts[0].toLowerCase() !== input.walletAddress.toLowerCase()) {
       throw new Error('The connected signing wallet does not match this DHB address');
     }
   }
+  if (!signer && getAccount(wagmiConfig).address?.toLowerCase() !== input.walletAddress.toLowerCase()) {
+    throw new Error('Connect the wallet holding this balance before creating a position');
+  }
+  progress('quote');
   let quote = await quoteSellPosition(input);
-  await ensureTokenApproval(input, quote.amountIn);
+  await ensureTokenApproval(input, quote.amountIn, progress);
   // Approvals can take time. Recheck pool state and single-sided requirements.
   quote = await quoteSellPosition(input);
   const parsed = POSITION.parseTransaction({ data: quote.calldata });
   if (!parsed) throw new Error('Could not prepare the Uniswap position transaction');
   const cfg = DEX_CHAINS[input.chainId];
+  progress('submit');
   const tx = await writeContractAA(cfg.positionManager, POSITION, parsed.name, Array.from(parsed.args),
-    { chainId: input.chainId, value: quote.value, context: 'create DHB sell position' });
+    { chainId: input.chainId, value: quote.value, context: 'create DHB market position' });
+  progress('confirm');
   const result = await tx.wait();
   if (result.status !== 1) throw new Error('The position transaction reverted');
   const receipt = await dexProvider(input.chainId).getTransactionReceipt(result.hash);
