@@ -11,6 +11,7 @@ import { fetchMarketData, type ChartPeriod, type MarketData } from '@/lib/dex/ma
 import { DEX_CHAINS, dexProvider, type DexChainId, type IndexedPosition, type VerifiedPosition, verifyPosition } from '@/lib/dex/v4';
 import { detectDhbChain, detectUsdcChain, mintSellPosition, quoteSellPosition, recoverMint, withdrawSellPosition, type SellInput, type SellQuote } from '@/lib/dex/sell';
 import { readWithTimeout, type OrderStage } from '@/lib/dex/read-timeout';
+import { isSmartWalletSession } from '@/lib/connection-source';
 import { createLogger } from '@/lib/logger';
 import { MarketChart } from '@/components/app/dex/MarketChart';
 import '@/components/app/dex/exchange.css';
@@ -21,6 +22,10 @@ const stageText: Record<OrderStage | 'index', string> = {
   quote: 'Reading pool…', wallet: 'Unlock or connect your wallet…', balance: 'Checking token approvals…',
   tokenApproval: 'Confirm token approval in your wallet…', permitApproval: 'Confirm position approval in your wallet…',
   submit: 'Confirm position in your wallet…', confirm: 'Waiting for confirmation…', index: 'Registering your position…',
+};
+const smartStageText: Partial<Record<OrderStage | 'index', string>> = {
+  tokenApproval: 'Smart wallet approving tokens…', permitApproval: 'Smart wallet approving position access…',
+  submit: 'Smart wallet creating your position…',
 };
 type Pending = { input: SellInput; txHash: string; tokenId?: string };
 const storageKey = (wallet: string) => `dex-pending:${wallet.toLowerCase()}`;
@@ -243,7 +248,7 @@ export default function DexPage() {
         {review && !pending && <div className="dex-review"><strong>Review your {side}</strong><br />Deposit {amount} {fundingToken} on {DEX_CHAINS[review.chainId].name}.<br />Range: {formatPrice(Number(minPrice))} – {formatPrice(Number(maxPrice))} USDC per DHB.{review.willCreatePool && <><br />This creates and initializes the 0% pool.</>}</div>}
         {pending && <div className="dex-review">Your transaction has been submitted. Resume confirmation or listing registration without another deposit. <a href={`${DEX_CHAINS[pending.input.chainId].explorer}/tx/${pending.txHash}`} target="_blank" rel="noreferrer">View transaction ↗</a></div>}
         {formError && <div role="alert" className="dex-alert dex-error">{formError}</div>}
-        <button type="button" className={`dex-submit ${side === 'sell' ? 'sell' : ''}`} disabled={busy || checking || !!withdrawing || (!!walletAddress && !chainId && !pending)} onClick={() => void handleCreate()}>{busy ? stageText[stage] : !walletAddress ? 'Connect wallet' : pending ? 'Resume listing' : review ? `Confirm ${side}` : `Review ${side}`}</button>
+        <button type="button" className={`dex-submit ${side === 'sell' ? 'sell' : ''}`} disabled={busy || checking || !!withdrawing || (!!walletAddress && !chainId && !pending)} onClick={() => void handleCreate()}>{busy ? (isSmartWalletSession() && smartStageText[stage] || stageText[stage]) : !walletAddress ? 'Connect wallet' : pending ? 'Resume listing' : review ? `Confirm ${side}` : `Review ${side}`}</button>
         <p className="dex-help">Network gas applies. Range orders convert as swaps cross your price range. Converted tokens can change back if price reverses; withdraw to complete your trade.</p>
         </div>
       </section>
