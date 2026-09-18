@@ -17,6 +17,7 @@
 
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { Loader2, Lock, Check, Clock, History, ChevronRight, Users, X, Zap } from 'lucide-react';
 import { SuperPowerIcon } from '@/components/app/SuperPowerIcon';
 import { toast } from 'sonner';
