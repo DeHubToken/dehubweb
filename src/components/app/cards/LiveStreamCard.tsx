@@ -5,7 +5,7 @@
  * Wired to DeHub API for likes, gifts, ending streams, and activity logs.
  */
 
-import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import { lazy, Suspense, useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { AppState } from '@/components/app/AppState';
 import {
@@ -69,6 +69,8 @@ import { useStreamGifts } from '@/hooks/use-stream-gifts';
 import { useGiftAnimations } from '@/hooks/use-gift-animations';
 import { GiftAnimationOverlay } from '@/components/app/live/GiftAnimationOverlay';
 import { GIFT_TIERS, tierFromAmount, type GiftTierKey } from '@/lib/live/gift-tiers';
+
+const LiveGiftBuyDrawer = lazy(() => import('@/components/app/live/LiveGiftBuyDrawer').then(m => ({ default: m.LiveGiftBuyDrawer })));
 
 /**
  * The picker tile's mark, one per rung of the ladder.
@@ -170,6 +172,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const [showReportModal, setShowReportModal] = useState(false);
   const [showActivityLog, setShowActivityLog] = useState(false);
   const [showGiftDrawer, setShowGiftDrawer] = useState(false);
+  const [showBuyDrawer, setShowBuyDrawer] = useState(false);
+  const [giftBalanceVersion, setGiftBalanceVersion] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(videoPlaybackManager.globalMuted);
   const urlsToTry = useMemo(() => [
@@ -351,7 +355,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
 
 
   return () => { cancelled = true; };
-  }, [showGiftDrawer, walletAddress]);
+  }, [showGiftDrawer, walletAddress, giftBalanceVersion]);
 
   /**
    * WebRTC first, HLS second.
@@ -1370,7 +1374,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       )}
 
       {/* Gift Drawer */}
-      <Drawer open={showGiftDrawer} onOpenChange={setShowGiftDrawer}>
+      <Drawer open={showGiftDrawer && !showBuyDrawer} onOpenChange={setShowGiftDrawer}>
         <DrawerContent column glass className="px-4 pb-8">
           <DrawerHeader className="border-b border-white/10 mb-4">
             <DrawerTitle className="text-white flex items-center gap-2">
@@ -1499,21 +1503,36 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               </p>
             </div>
 
-            <Button
-              onClick={handleSendGift}
-              disabled={isSendingGift || !giftAmount}
-              className="w-full bg-white hover:bg-zinc-200 text-black py-5 font-semibold rounded-xl"
-            >
-              {isSendingGift ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <Gem className="w-4 h-4 mr-2" />
-              )}
-              Send Gift
-            </Button>
+            <div className="space-y-2">
+              <Button
+                onClick={handleSendGift}
+                disabled={isSendingGift || !giftAmount}
+                className="w-full bg-white hover:bg-zinc-200 text-black py-5 font-semibold rounded-xl"
+              >
+                {isSendingGift ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Gem className="w-4 h-4 mr-2" />}
+                Send Gift
+              </Button>
+              <Button variant="glass" className="w-full py-5 rounded-xl" onClick={() => setShowBuyDrawer(true)}>
+                Buy tokens
+              </Button>
+              <Button variant="glass" className="w-full py-5 rounded-xl" onClick={() => setShowGiftDrawer(false)}>
+                Cancel
+              </Button>
+            </div>
           </div>
         </DrawerContent>
       </Drawer>
+
+      {showBuyDrawer && (
+        <Suspense fallback={null}>
+          <LiveGiftBuyDrawer
+            open={showBuyDrawer}
+            onOpenChange={setShowBuyDrawer}
+            neededDhb={Math.max(1, Number(giftAmount) - Number((dhbBalance || '0').replace(/,/g, '')))}
+            onFunded={() => { setShowBuyDrawer(false); setGiftBalanceVersion(v => v + 1); }}
+          />
+        </Suspense>
+      )}
 
       {/* Activity Log Drawer */}
       <Drawer open={showActivityLog} onOpenChange={setShowActivityLog}>
