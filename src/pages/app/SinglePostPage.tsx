@@ -41,6 +41,7 @@ import { useStreamLiveStatus } from '@/hooks/use-stream-live-status';
 
 import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
 import { extractReplayUrl, isReplayTruncated } from '@/lib/live-replay';
+import { hasStreamEnded, isStreamLive, streamRefreshInterval } from '@/lib/live-status';
 import { PageHeader } from '@/components/app/PageHeader';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { CardHeader } from '@/components/app/cards/CardHeader';
@@ -401,19 +402,7 @@ function buildLivePlaybackUrls(nft: DeHubNFT): string[] {
  * A stream is live only when Livepeer reports it as active AND it hasn't been ended.
  */
 function deriveIsLive(nft: DeHubNFT): boolean {
-  const explicit = (nft as any).isLive;
-  if (explicit !== undefined) return !!explicit;
-  const stream = (nft as any).stream;
-  if (!stream) return false;
-
-  // Ended: isActive=false or status=ENDED takes priority over everything
-  if (stream.isActive === false) return false;
-  const status = (stream.status || '').toUpperCase();
-  if (status === 'ENDED' || status === 'INACTIVE') return false;
-  // settings.status='ended' means we PATCHed it as ended
-  if (stream.settings?.status === 'ended') return false;
-
-  return status === 'LIVE' || status === 'ACTIVE';
+  return isStreamLive((nft as any).stream, !!((nft as any).isLive ?? nft.is_live));
 }
 
 /**
@@ -493,7 +482,7 @@ function LivePostWithStatus({ liveData, post, chatSlot, immersive }: { liveData:
   const { data: isLiveFromSupabase } = useStreamLiveStatus(tokenId);
   const mergedStream: LiveStream = {
     ...liveData,
-    isLive: liveData.isLive || !!isLiveFromSupabase,
+    isLive: !hasStreamEnded((post as any).stream) && (liveData.isLive || !!isLiveFromSupabase),
   };
   return <LiveStreamCard stream={mergedStream} chatSlot={chatSlot} immersive={immersive} />;
 }
@@ -876,7 +865,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
           title: stream.title,
           description: stream.description,
           postType: 'live',
-          isLive: stream.status === 'live' || (stream.status as string) === 'LIVE' || stream.status === 'active' || !!(stream as any).streamKey,
+          isLive: isStreamLive(stream),
           videoUrl: stream.playbackUrl || hlsUrlFor(stream as any),
           playbackUrl: stream.playbackUrl || hlsUrlFor(stream as any),
           imageUrl: stream.thumbnailUrl || (stream as any).thumbnail,
@@ -893,6 +882,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
     },
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
+    refetchInterval: (query) => streamRefreshInterval((query.state.data as any)?.stream),
     retry: 1,
     // Instant open: if any feed cache already holds THIS post, paint it
     // immediately while the authoritative getNFTInfo fetch runs behind it.

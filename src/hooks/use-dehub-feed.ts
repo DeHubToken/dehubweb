@@ -26,6 +26,7 @@ import { parseSoundtrackTag, getFeedViewer } from '@/hooks/use-unified-feed';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, LiveStream } from '@/types/feed.types';
 import { extractReplayUrl, isReplayTruncated } from '@/lib/live-replay';
+import { isStreamLive } from '@/lib/live-status';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
 import { hlsUrlFor, liveProviderOf, liveThumbnailFor } from '@/lib/live-ingest';
@@ -403,7 +404,7 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     viewers: formatViews(viewCount).replace(' views', ''),
     thumbnail,
     tags: nft.tags || [],
-    isLive: nft.is_live ?? true,
+    isLive: isStreamLive(nft.stream, nft.is_live ?? false),
     creatorId,
     creatorUsername,
     creatorBadgeBalance: nft.minterUser?.hideBadgeAndBalance ? 0 : nft.minterUser?.badgeBalance,
@@ -667,7 +668,7 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
     viewers: formatViews(viewerCount).replace(' views', ''),
     thumbnail,
     tags: [],
-    isLive: stream.status === 'live' || (stream.status as string) === 'LIVE' || (stream.status as string) === 'active' || !!(stream as any).streamKey,
+    isLive: isStreamLive(stream),
     playbackUrl: stream.playbackUrl || hlsUrl,
     // The .com host is Livepeer's deprecated CDN, kept as a second chance for
     // that provider only; a self-hosted stream is served from one host and a

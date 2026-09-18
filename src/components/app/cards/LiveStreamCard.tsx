@@ -304,7 +304,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   // a viewer landing in that window is stuck on "Stream ended" for a stream
   // that is live — with the <video> never mounted, so playback can't recover.
   useEffect(() => {
-    if (stream.isLive) setStreamEnded(false);
+    setStreamEnded(!stream.isLive);
   }, [stream.isLive]);
 
   // Same flip, second consequence: the WebRTC id only exists once the card
