@@ -116,10 +116,12 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
     </div>
   ) : (
     <>
-      <div className="px-4 pt-4">
-        <button type="button" onClick={() => { setArticleMode(!articleMode); actions.setShowTitle(!articleMode); if (!articleMode) { actions.setIsPPV(false); actions.setIsTokenGated(false); actions.setIsSubscribersOnly(false); } }} className="rounded-full border border-white/20 px-4 py-2 text-sm text-white">
-          {articleMode ? 'Writing an article · switch to post' : 'Write an article'}
-        </button>
+      <div className="flex items-center justify-center gap-3 px-4 pt-4 pb-1 text-xs font-medium">
+        <button type="button" aria-pressed={state.liveMode === 'video'} onClick={() => { setArticleMode(false); actions.setLiveMode('video'); }} className={cn('transition-colors', state.liveMode === 'video' ? 'text-white' : 'text-white/55 hover:text-white')}>Livestream</button>
+        <span className="text-white/25" aria-hidden="true">|</span>
+        <button type="button" aria-pressed={state.liveMode === 'townhall'} onClick={() => { setArticleMode(false); actions.setLiveMode('townhall'); }} className={cn('transition-colors', state.liveMode === 'townhall' ? 'text-white' : 'text-white/55 hover:text-white')}>Stages</button>
+        <span className="text-white/25" aria-hidden="true">|</span>
+        <button type="button" aria-pressed={articleMode} onClick={() => { setArticleMode(!articleMode); actions.setShowTitle(!articleMode); actions.setLiveMode(null); if (!articleMode) { actions.setIsPPV(false); actions.setIsTokenGated(false); actions.setIsSubscribersOnly(false); } }} className={cn('transition-colors', articleMode ? 'text-white' : 'text-white/55 hover:text-white')}>Article</button>
       </div>
 
       <PostContentArea
