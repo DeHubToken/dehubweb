@@ -49,6 +49,9 @@ import { PasswordStrengthMeter } from './PasswordStrengthMeter';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { useAuth } from '@/contexts/AuthContext';
 import { requestSessionWalletConnect } from '@/lib/wallet-reconnect';
+import { createLogger } from '@/lib/logger';
+
+const biometricLogger = createLogger('WalletBiometrics');
 
 interface WalletUnlockStepProps {
   userId: string;
@@ -174,7 +177,19 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       }
       await onComplete(derived.ethPrivateKey);
     } catch (err) {
-      if (err instanceof PasskeyCancelledError) return; // dismissed — not a failure
+      biometricLogger.warn('Biometric unlock did not complete', {
+        userId,
+        outcome: err instanceof PasskeyCancelledError ? 'cancelled-timeout-or-unavailable' : 'failed',
+        errorName: err instanceof Error ? err.name : 'unknown',
+        biometricAvailable,
+        storedWrapCount: wraps.length,
+        usableHereBeforeAttempt: hasBiometricUsableHere(userId),
+        host: window.location.hostname,
+      });
+      if (err instanceof PasskeyCancelledError) {
+        setError('Biometric unlock did not complete. If this computer no longer offers your passkey, use your wallet password, then set up biometrics on this device again.');
+        return;
+      }
       const message = err instanceof Error ? err.message : 'Biometric unlock failed';
       // The passkey layer states the failure but not the remedy, because only
       // here do we know whether this wallet has a password to fall back to.
