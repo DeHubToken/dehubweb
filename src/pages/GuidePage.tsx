@@ -435,9 +435,9 @@ const sections: GuideSection[] = [
     intro: "Five games run inside DeHub in a browser tab — nothing to install, nothing to buy.",
     steps: [
       "Open 'Arcade' in the sidebar.",
-      "Pick a game: King's Gambit (3D chess with an online Elo ladder), Claude of Duty (a shooter that generates its own art as it loads), Jungle Trail (a procedural rainforest walk), Street Slayer (a beat 'em up made for DeHub) or Trenchstar (a walkable trading floor).",
+      "Pick a game: King's Gambit (3D chess with an online Elo ladder), Claude of Duty (a shooter that generates its own art as it loads), Jungle Trail (a procedural rainforest walk), Street Slayer (a beat 'em up made for DeHub) or Chartopia (a walkable trading floor).",
       "Play in the tab. King's Gambit and Street Slayer keep leaderboards.",
-      "Trenchstar also runs in a VR headset through WebXR."
+      "Chartopia also runs in a VR headset through WebXR."
     ],
     tips: [
       "Two of them hide inside the appearance themes — set the app to War for Claude of Duty, or Jungle for Jungle Trail.",

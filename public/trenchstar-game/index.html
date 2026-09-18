@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>TRENCHSTAR</title>
+<title>CHARTOPIA</title>
 <meta name="description" content="The trenches, from orbit. A 3D trading lair.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>&#9733;</text></svg>">
 <style>
@@ -1045,7 +1045,7 @@
 </script>
 </head>
 <body>
-<noscript><div id="noscript-warn">TRENCHSTAR needs JavaScript + WebGL.</div></noscript>
+<noscript><div id="noscript-warn">CHARTOPIA needs JavaScript + WebGL.</div></noscript>
 <div id="gl"></div>
 <!-- Live web pages ride here: real iframes, pinned to their screen's projected
      corners every frame. Above the canvas, below the vignette, so the room's
@@ -5474,7 +5474,7 @@ const bootT0=Date.now();
 function paintBrand(s){
   const ctx=s.ctx,w=s.cw,h=s.ch;
   screenBG(ctx,w,h);
-  const t='TRENCHSTAR';
+  const t='CHARTOPIA';
   ctx.textAlign='center';ctx.font='700 30px "Chakra Petch"';
   if(Math.random()<0.22){
     ctx.fillStyle='rgba(56,224,255,0.8)';ctx.fillText(t,w/2+rnd(-3,3),56+rnd(-2,2));
@@ -5978,7 +5978,7 @@ function makeGhost(s){
 const TEMPLATES={
   candles :{label:'CANDLE CHART',    paint:paintCandles, every:24, market:true},
   spark   :{label:'DEX SPARKLINE',   paint:paintSpark,   every:24, market:true},
-  brand   :{label:'TRENCHSTAR',      paint:paintBrand,   every:10},
+  brand   :{label:'CHARTOPIA',      paint:paintBrand,   every:10},
   heat    :{label:'MARKET HEAT',     paint:paintHeatmap, every:40},
   liq     :{label:'LIQUIDATIONS',    paint:paintLiq,     every:18},
   tape    :{label:'WHALE TAPE',      paint:paintTape,    every:14},
@@ -9322,7 +9322,7 @@ function hudTick(){
   $('#guideTab').addEventListener('click',()=>set(false));
 }
 setInterval(()=>{
-  document.title=(markets.BTC.fed&&markets.BTC.price?'BTC '+fmtPrice(markets.BTC.price)+' · ':'')+'TRENCHSTAR';
+  document.title=(markets.BTC.fed&&markets.BTC.price?'BTC '+fmtPrice(markets.BTC.price)+' · ':'')+'CHARTOPIA';
   syncFocusHud();
 },250);
 /* What the focus panel says, as a function and not only as a tick. Flicking

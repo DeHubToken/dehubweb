@@ -297,7 +297,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   Arcade: [
     'games', 'game', 'play', 'gaming', 'play to earn', 'p2e', 'arcade',
     "king's gambit", 'chess', 'claude of duty', 'fps', 'shooter', 'jungle trail',
-    'street slayer', 'beat em up', 'fighting', 'trenchstar', 'trading floor',
+    'street slayer', 'beat em up', 'fighting', 'trenchstar', 'chartopia', 'trading floor',
   ],
   Glossary: ['terms', 'definitions', 'dictionary', 'jargon', 'meaning', 'what is', 'acronyms'],
   Guide: ['getting started', 'how to', 'tutorial', 'onboarding', 'walkthrough', 'learn', 'help', 'new here'],
@@ -327,7 +327,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   'Claude of Duty': ['fps', 'shooter', 'first person', 'war', 'shooting game', 'call of duty'],
   'Jungle Trail': ['walk', 'rainforest', 'jungle', 'exploration', 'first person', 'nature'],
   'Street Slayer': ['beat em up', 'brawler', 'fighting', 'fighter', 'side scroller', 'arcade fighter'],
-  Trenchstar: ['trading floor', 'trading', 'charts', 'markets', 'binance', 'dexscreener', 'trenches', 'vr'],
+  Chartopia: ['trenchstar', 'trading floor', 'trading', 'charts', 'markets', 'binance', 'dexscreener', 'trenches', 'vr'],
 };
 
 // ---------------------------------------------------------------------------
@@ -377,7 +377,7 @@ export const SEARCH_ONLY_ITEMS: readonly NavItem[] = [
   { icon: Gamepad2, label: 'Claude of Duty', path: '/arcade/claude-of-duty' },
   { icon: Gamepad2, label: 'Jungle Trail', path: '/arcade/jungle-trail' },
   { icon: Gamepad2, label: 'Street Slayer', path: '/arcade/street-slayer' },
-  { icon: Gamepad2, label: 'Trenchstar', path: '/arcade/trenchstar' },
+  { icon: Gamepad2, label: 'Chartopia', path: '/arcade/trenchstar' },
 ];
 
 // ---------------------------------------------------------------------------
