@@ -109,6 +109,7 @@ export interface PostFormActions {
   handleAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleFileDrop: (files: FileList) => void;
   removeMedia: (index: number) => void;
+  moveMedia: (from: number, to: number) => void;
   addAudioToMedia: (index: number, audio: AudioFile) => void;
   removeAudioFromMedia: (index: number) => void;
   toggleMusicVideo: (index: number) => void;
