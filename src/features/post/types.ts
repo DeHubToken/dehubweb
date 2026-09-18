@@ -123,7 +123,7 @@ export interface PostFormActions {
   replaceImageFile: (index: number, file: File) => void;
   handleEnhanceWithAI: (mode?: 'spellcheck' | 'grammar' | 'style', style?: string) => Promise<void>;
   insertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
-  handlePost: (extra?: { soundtrackTag?: string }) => void;
+  handlePost: (extra?: { soundtrackTag?: string; articleBody?: string; articleImage?: File; socialImage?: File }) => void;
   /** Give up on the wallet and publish the post off-chain. */
   abandonMint: () => void;
   resetForm: () => void;

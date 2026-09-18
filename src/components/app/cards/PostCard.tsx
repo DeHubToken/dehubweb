@@ -10,6 +10,7 @@
  */
 
 import { useState, memo, useEffect, useCallback, useRef, lazy, Suspense, type ReactNode } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
@@ -673,6 +674,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
         <>
         {/* Title */}
         {post.articleBody && <span className="mb-2 block text-xs font-semibold uppercase tracking-widest text-white/60">Article</span>}
+        {post.articleBody && post.articleImageUrl && <img src={post.articleImageUrl} alt={post.title || 'Article image'} className="mb-3 aspect-video w-full rounded-xl object-cover" />}
         {post.title && (
           <h3 className="text-white text-[15.25px] sm:text-[17px] leading-snug">{renderTextWithLinks(post.title, { flagged: post.communityAlertPending })}</h3>
         )}
@@ -684,7 +686,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
           <TranslatableText text={displayBody} className="text-white/90 text-[15.25px] leading-[22.5px]" as="p" auto={false} flagged={post.communityAlertPending} />
         ) : null}
         {post.articleBody && (/\/app\/post\/|\/newpost\//.test(window.location.pathname) ? (
-          <div className="mt-5 whitespace-pre-wrap text-white/90 text-base leading-7">{post.articleBody}</div>
+          <div className="prose prose-invert mt-5 max-w-none text-white/90 prose-headings:text-white prose-a:text-white"><ReactMarkdown>{post.articleBody}</ReactMarkdown></div>
         ) : (
           <button type="button" onClick={(e) => { e.stopPropagation(); window.location.assign(post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`); }} className="mt-3 text-sm font-semibold text-white underline underline-offset-4">Read article</button>
         ))}
