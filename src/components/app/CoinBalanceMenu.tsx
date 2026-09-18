@@ -191,7 +191,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Minus className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Sell</span>
+        <span className="text-white font-medium">Buy / Sell</span>
       </button>
       <button
         onClick={() => (hasAddressChoice ? setMenuView('receive') : handleCopyAddress())}
@@ -519,7 +519,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Minus className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Sell</span>
+        <span className="text-white font-medium">Buy / Sell</span>
       </button>
       <button
         onClick={() => (hasAddressChoice ? setMenuView('receive') : handleCopyAddress())}
