@@ -5,6 +5,7 @@
  */
 
 import type { ChainId } from '@/components/app/ChainSelector';
+import dhbCoinImage from '@/assets/dehub-coin.png';
 import { supabase } from '@/integrations/supabase/client';
 import {
   ROBINHOOD_CHAIN_ID,
@@ -136,7 +137,7 @@ export const DHB_TOKEN = {
   customAbbreviation: 'dhb',
   chainId: BASE_CHAIN_ID,
   address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c',
-  iconUrl: '/icons/DHB.png',
+  iconUrl: dhbCoinImage,
   mintBlockNumber: 16428469,
   decimals: 18,
   isSubscriptionSupported: true,
