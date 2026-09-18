@@ -110,9 +110,8 @@ describe('stream presence socket', () => {
     sockets[0].deliver('stream.viewers.update', { streamId: 'stream-1', viewerCount: 4 });
     expect(counts).toEqual([4]);
 
-    // The gateway does not always name the stream. Dropping those would throw
-    // away the only number some surfaces ever receive.
+    // An unscoped update could belong to any mounted stream card.
     sockets[0].deliver('stream.viewers.update', { viewerCount: 5 });
-    expect(counts).toEqual([4, 5]);
+    expect(counts).toEqual([4]);
   });
 });

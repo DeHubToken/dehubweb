@@ -109,12 +109,11 @@ function releaseStreamSocket(conn: StreamConnection): void {
  * Is this count update about the stream a presence is watching?
  *
  * One socket carries every stream this tab has open, so a handler hears the
- * other streams' updates too. Permissive when the payload carries no
- * `streamId`: the gateway does not always send one, and dropping those would
- * throw away the only number some surfaces ever get.
+ * other streams' updates too. Only a tagged update can safely change this
+ * stream's count.
  */
 function isForStream(data: { streamId?: string } | undefined, streamId: string): boolean {
-  return !data?.streamId || data.streamId === streamId;
+  return data?.streamId === streamId;
 }
 
 export interface StreamPresence {
