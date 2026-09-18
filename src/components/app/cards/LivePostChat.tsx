@@ -29,7 +29,7 @@ import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import type { SupabaseLiveChatMessage } from '@/hooks/use-livechat';
-import { AppState } from '@/components/app/AppState';
+import { useStreamChatJoins } from '@/hooks/use-stream-chat-joins';
 
 /** Avatar with cascading fallback: primary → CDN → initials */
 function LiveChatAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
@@ -160,7 +160,17 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
     onMentionInsert: (_user, newText) => setNewMessage(newText),
   });
 
-  const { messages, isLoading, isSending, send, editMessage, deleteMessage } = useLiveChatMessages(streamId);
+  const { messages: chatMessages, isLoading, isSending, send, editMessage, deleteMessage } = useLiveChatMessages(streamId);
+  const joins = useStreamChatJoins(liveStreamId, isOffline);
+  const messages: SupabaseLiveChatMessage[] = [
+    ...chatMessages,
+    ...joins.map((join): SupabaseLiveChatMessage => ({
+      id: `system:${join.id}`, room_id: streamId, sender_address: '',
+      sender_username: null, sender_display_name: null, sender_avatar_url: null,
+      content: `${join.username || (join.address ? `${join.address.slice(0, 6)}…${join.address.slice(-4)}` : 'A viewer')} joined`,
+      message_type: 'system', image_url: null, is_pinned: false, created_at: join.timestamp,
+    })),
+  ].sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at));
   // The stream's real audience, shared with the host's broadcast console. This
   // slot used to hold `useLiveChatPresence`, which ignores the room it is given
   // and returns the number of people connected to the ONE global platform chat
@@ -390,20 +400,16 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             : 'h-64 space-y-1 mb-3'
         )}
       >
+        <p className="py-1.5 px-1 text-xs text-zinc-300">Live started</p>
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
           </div>
-        ) : messages.length === 0 ? (
-          <AppState
-            icon="messages"
-            title={isOffline ? 'Chat is no longer active' : 'No messages yet'}
-            description={isOffline ? undefined : 'Be the first to say something.'}
-            size="compact"
-            className="h-full"
-          />
         ) : (
           messages.map((msg) => {
+            if (msg.message_type === 'system') {
+              return <p key={msg.id} className="py-1 px-1 text-xs text-zinc-400">{msg.content}</p>;
+            }
             const avatarUrl = msg.sender_avatar_url
               ? buildAvatarUrl(msg.sender_address, msg.sender_avatar_url)
               : undefined;
