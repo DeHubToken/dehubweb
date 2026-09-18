@@ -18,7 +18,6 @@ import { useWalletLocked } from '@/hooks/use-wallet-locked';
 import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { getDHBBalance } from '@/lib/contracts/stream-controller';
 import { sellLiquidityLink } from '@/lib/wallet/sell-liquidity-link';
 import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
 
@@ -34,6 +33,7 @@ async function openSellPosition(walletAddress: string | null | undefined) {
     return;
   }
   try {
+    const { getDHBBalance } = await import('@/lib/contracts/stream-controller');
     const [base, bnb] = await Promise.all([
       getDHBBalance(walletAddress, BASE_CHAIN_ID),
       getDHBBalance(walletAddress, BNB_CHAIN_ID),
