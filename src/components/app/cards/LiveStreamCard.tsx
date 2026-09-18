@@ -1397,7 +1397,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       )}
 
       {/* Gift Drawer */}
-      <Drawer open={showGiftDrawer && !showBuyDrawer} onOpenChange={setShowGiftDrawer} handleOnly>
+      <Drawer open={showGiftDrawer && !showBuyDrawer} onOpenChange={setShowGiftDrawer}>
         <DrawerContent column glass className="px-4 pb-8 max-h-[85dvh]">
           <DrawerHeader className="border-b border-white/10 mb-4">
             <DrawerTitle className="text-white flex items-center gap-2">
