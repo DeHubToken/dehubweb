@@ -2832,6 +2832,31 @@ export const blogPostsMetadata: BlogPost[] = [
 // arrays at runtime in blogUtils.ts — metadata-only logic, no third copy here.
 export const newPostsMetadata: BlogPost[] = [
   {
+    "id": "dehub-token-exchange-listings-update-2026",
+    "slug": "dehub-token-exchange-listings-update-2026",
+    "title": "DeHub Token and Exchange Listings Update",
+    "excerpt": "An update on the new token, AI credits, planned buybacks for stakers, and the expected timing of official exchange listings.",
+    "content": "",
+    "bannerImage": "/media/dehub-token-exchange-listings-2026.jpg",
+    "bannerImageAlt": "DeHub listing soon announcement banner",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-09-18T19:32:10.000Z",
+    "tags": [
+      "DHB",
+      "Token",
+      "Exchange Listings",
+      "AI Credits",
+      "Staking"
+    ],
+    "readingTime": 3,
+    "featured": true,
+    "status": "published",
+    "seoTitle": "DeHub Token and Exchange Listings Update | DeHub",
+    "seoDescription": "DeHub shares its token utility, AI credit and buyback plans, DEX access, and the estimated timing for official exchange listings."
+  },
+  {
     "id": "q3-development-overview",
     "slug": "q3-development-overview",
     "title": "Q3 Development Overview",
@@ -3393,29 +3418,29 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "ready-to-debate-your-side-bring-it-to-dehub",
-  "slug": "ready-to-debate-your-side-bring-it-to-dehub",
-  "title": "Ready to Debate Your Side? Bring It to DeHub.",
-  "excerpt": "Israel and Palestine. Abortion. Gun rights. Immigration. Religion. AI. Free speech. Climate. Pick the issue people actually disagree about, then make your case with tools built for argument instead of outrage.",
+  "id": "dehub-token-exchange-listings-update-2026",
+  "slug": "dehub-token-exchange-listings-update-2026",
+  "title": "DeHub Token and Exchange Listings Update",
+  "excerpt": "An update on the new token, AI credits, planned buybacks for stakers, and the expected timing of official exchange listings.",
   "content": "",
-  "bannerImage": "/media/debate-your-side-banner.jpg",
-  "bannerImageAlt": "Ready to debate your side? Bring it to DeHub.",
+  "bannerImage": "/media/dehub-token-exchange-listings-2026.jpg",
+  "bannerImageAlt": "DeHub listing soon announcement banner",
   "author": {
     "name": "DeHub Team"
   },
-  "publishedAt": "2026-09-14T10:00:00.000Z",
+  "publishedAt": "2026-09-18T19:32:10.000Z",
   "tags": [
-    "Free Speech",
-    "Debate",
-    "Stages",
-    "Community",
-    "Decentralised Social"
+    "DHB",
+    "Token",
+    "Exchange Listings",
+    "AI Credits",
+    "Staking"
   ],
-  "readingTime": 7,
+  "readingTime": 3,
   "featured": true,
   "status": "published",
-  "seoTitle": "Ready to Debate Your Side? Bring It to DeHub | Free Speech Debate Platform",
-  "seoDescription": "A decentralised social platform built for real debate: live audio Stages, long-form posts, threaded rebuttals, polls and community-run venues — with rewards that pay for the persuasive version, not the outrage."
+  "seoTitle": "DeHub Token and Exchange Listings Update | DeHub",
+  "seoDescription": "DeHub shares its token utility, AI credit and buyback plans, DEX access, and the estimated timing for official exchange listings."
 };
 
 export const excludedTitles: string[] = [
