@@ -122,6 +122,30 @@ export interface StreamPresence {
   leave: () => void;
 }
 
+/** Observe arrivals without registering another viewer. */
+export function watchStreamJoins(
+  streamId: string,
+  onJoin: (user: { address?: string; username?: string; displayName?: string }) => void,
+): StreamPresence {
+  const conn = acquireStreamSocket();
+  const socket = conn.socket;
+  let left = false;
+  const join = () => socket.emit(EVENT.joinRoom, { streamId });
+  const handleJoin = (data: { streamId?: string; user?: { address?: string; username?: string; displayName?: string } }) => {
+    if (data?.streamId === streamId && data.user) onJoin(data.user);
+  };
+  socket.on('connect', join);
+  socket.on(EVENT.joinStream, handleJoin);
+  if (socket.connected) join();
+  return { leave: () => {
+    if (left) return;
+    left = true;
+    socket.off('connect', join);
+    socket.off(EVENT.joinStream, handleJoin);
+    releaseStreamSocket(conn);
+  } };
+}
+
 /**
  * Join a stream as a viewer and report the count back as it changes.
  *
