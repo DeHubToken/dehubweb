@@ -88,7 +88,7 @@ export interface VerifiedPosition extends IndexedPosition {
   status: 'Open' | 'In range' | 'Filled';
 }
 
-export async function verifyPosition(row: IndexedPosition): Promise<VerifiedPosition | null> {
+export async function verifyPosition(row: IndexedPosition, blockTag?: number): Promise<VerifiedPosition | null> {
   if (row.chain_id !== BASE_CHAIN_ID && row.chain_id !== BNB_CHAIN_ID) return null;
   const chainId = row.chain_id;
   const cfg = DEX_CHAINS[chainId];
@@ -96,9 +96,9 @@ export async function verifyPosition(row: IndexedPosition): Promise<VerifiedPosi
   const manager = new Contract(cfg.positionManager, POSITION_ABI, provider);
   try {
     const [owner, liquidity, info, receipt] = await Promise.all([
-      manager.ownerOf(row.token_id) as Promise<string>,
-      manager.getPositionLiquidity(row.token_id) as Promise<bigint>,
-      manager.getPoolAndPositionInfo(row.token_id) as Promise<[{
+      manager.ownerOf(row.token_id, { blockTag }) as Promise<string>,
+      manager.getPositionLiquidity(row.token_id, { blockTag }) as Promise<bigint>,
+      manager.getPoolAndPositionInfo(row.token_id, { blockTag }) as Promise<[{
         currency0: string; currency1: string; fee: bigint; tickSpacing: bigint; hooks: string;
       }, bigint]>,
       provider.getTransactionReceipt(row.mint_tx_hash),
@@ -133,8 +133,8 @@ export async function verifyPosition(row: IndexedPosition): Promise<VerifiedPosi
     ));
     const state = new Contract(cfg.stateView, STATE_ABI, provider);
     const [slot0, poolLiquidity] = await Promise.all([
-      state.getSlot0(poolId) as Promise<[bigint, bigint, bigint, bigint]>,
-      state.getLiquidity(poolId) as Promise<bigint>,
+      state.getSlot0(poolId, { blockTag }) as Promise<[bigint, bigint, bigint, bigint]>,
+      state.getLiquidity(poolId, { blockTag }) as Promise<bigint>,
     ]);
     const tick = Number(slot0[1]);
     const dhb = new Token(chainId, cfg.dhb, 18, 'DHB');
@@ -150,9 +150,11 @@ export async function verifyPosition(row: IndexedPosition): Promise<VerifiedPosi
       : chainId === BASE_CHAIN_ID ? tick >= upper ? 'Filled' : tick <= lower ? 'Open' : 'In range'
         : tick <= lower ? 'Filled' : tick >= upper ? 'Open' : 'In range';
     return { ...row, owner, liquidity, tickLower: lower, tickUpper: upper,
-      poolFee, tickSpacing, minPrice, maxPrice, amountDhb, amountUsdc, marketPrice: usdPerDhbAtTick(tick, chainId),
+      poolFee, tickSpacing, minPrice, maxPrice, amountDhb, amountUsdc,
+      marketPrice: chainId === BASE_CHAIN_ID ? 1e12 / (Number(slot0[0]) / 2 ** 96) ** 2 : (Number(slot0[0]) / 2 ** 96) ** 2,
       side: row.side, status };
-  } catch {
-    return null;
+  } catch (error) {
+    if ((error as { code?: string }).code === 'CALL_EXCEPTION') return null;
+    throw error;
   }
 }
