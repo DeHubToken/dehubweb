@@ -1,3 +1,4 @@
+import { readReceiptFromProviders } from './receipt';
 import { AbiCoder, Contract, FallbackProvider, FetchRequest, JsonRpcProvider, ZeroAddress, formatUnits, id, keccak256 } from 'ethers';
 import { Token } from '@uniswap/sdk-core';
 import { Pool, Position } from '@uniswap/v4-sdk';
@@ -44,8 +45,8 @@ export function dexProvider(chainId: DexChainId) {
   let provider = providers.get(chainId);
   if (!provider) {
     const urls = chainId === BASE_CHAIN_ID
-      ? ['https://base-rpc.publicnode.com', 'https://mainnet.base.org']
-      : ['https://bsc-rpc.publicnode.com', 'https://bsc-dataseed.binance.org'];
+      ? ['https://mainnet.base.org', 'https://base-rpc.publicnode.com']
+      : ['https://bsc-dataseed.binance.org', 'https://bsc-rpc.publicnode.com'];
     provider = new FallbackProvider(urls.map((url, index) => {
       const request = new FetchRequest(url);
       request.timeout = 10000;
@@ -56,6 +57,10 @@ export function dexProvider(chainId: DexChainId) {
     providers.set(chainId, provider);
   }
   return provider;
+}
+
+export function dexReceipt(chainId: DexChainId, hash: string) {
+  return readReceiptFromProviders(dexProvider(chainId).providerConfigs.map(config => config.provider), hash);
 }
 
 function unpackTick(value: bigint, shift: bigint): number {
@@ -101,7 +106,7 @@ export async function verifyPosition(row: IndexedPosition, blockTag?: number): P
       manager.getPoolAndPositionInfo(row.token_id, { blockTag }) as Promise<[{
         currency0: string; currency1: string; fee: bigint; tickSpacing: bigint; hooks: string;
       }, bigint]>,
-      provider.getTransactionReceipt(row.mint_tx_hash),
+      dexReceipt(chainId, row.mint_tx_hash),
     ]);
     if (!receipt || receipt.status !== 1 || !liquidity || (row.side !== 'buy' && row.side !== 'sell')) return null;
     const minted = receipt.logs.some((log) =>
