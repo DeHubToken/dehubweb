@@ -770,6 +770,15 @@ export function usePostForm(
     });
   }, []);
 
+  const moveMedia = useCallback((from: number, to: number) => {
+    setMedia(prev => {
+      if (from === to || from < 0 || to < 0 || from >= prev.length || to >= prev.length) return prev;
+      const next = [...prev];
+      next.splice(to, 0, ...next.splice(from, 1));
+      return next;
+    });
+  }, []);
+
   const processAudioFile = useCallback((file: File) => {
     if (file.size > mediaUploadLimit) {
       toast.error(`Audio is too large — your ${postQuota?.tier || 'base'} tier allows ${mediaUploadLimitLabel}`);
@@ -2474,6 +2483,7 @@ export function usePostForm(
       handleVideoSelect,
       handleFileDrop,
       removeMedia,
+      moveMedia,
       handleAudioSelect,
       addAudioToMedia,
       removeAudioFromMedia,
