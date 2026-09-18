@@ -71,7 +71,7 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
   
   // For images: resolve feed-image URLs properly via buildFeedImageUrls
   const resolvedImageUrls = buildFeedImageUrls(quotedPost.imageUrls);
-  const firstImageUrl = resolvedImageUrls?.[0] || (quotedPost.imageUrl ? buildImageUrl(quotedPost.tokenId, quotedPost.imageUrl) : undefined);
+  const firstImageUrl = (quotedPost.articleImageUrl ? buildFeedImageUrls([quotedPost.articleImageUrl])?.[0] : undefined) || resolvedImageUrls?.[0] || (quotedPost.imageUrl ? buildImageUrl(quotedPost.tokenId, quotedPost.imageUrl) : undefined);
   const hasImage = !hasVideo && (quotedPost.postType === 'image' || !!firstImageUrl);
   const thumbnailUrl = hasVideo
     ? (getMediaUrl(quotedPost.thumbnail_url) || buildImageUrl(quotedPost.tokenId, quotedPost.imageUrl))

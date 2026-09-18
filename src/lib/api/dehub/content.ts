@@ -24,6 +24,8 @@ export interface MintPostParams {
   name: string;
   description: string;
   articleBody?: string;
+  articleImage?: File;
+  socialImage?: File;
   postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'feed-audio';
   chainId: number;
   category: string[];
@@ -173,6 +175,10 @@ export async function mintPost(
   formData.append('name', params.name);
   formData.append('description', params.description);
   if (params.articleBody) formData.append('articleBody', params.articleBody);
+  if (params.articleBody) {
+    formData.append('articleImageIncluded', String(!!params.articleImage));
+    formData.append('socialImageIncluded', String(!!params.socialImage));
+  }
   formData.append('postType', params.postType);
   formData.append('chainId', String(params.chainId));
   formData.append('category', JSON.stringify(params.category));
@@ -237,6 +243,10 @@ export async function mintPost(
 
   if (params.thumbnail) {
     formData.append('file', params.thumbnail, 'thumbnail.jpg');
+  }
+  if (params.articleBody) {
+    if (params.articleImage) formData.append('file', params.articleImage);
+    if (params.socialImage) formData.append('file', params.socialImage);
   }
 
   return authedUpload<MintResponse>('/api/user_mint', formData, {
