@@ -2,10 +2,9 @@ import { Contract, formatUnits, Interface, parseUnits, ZeroAddress, id } from 'e
 import { Percent, Token } from '@uniswap/sdk-core';
 import { Pool, Position, V4PositionManager } from '@uniswap/v4-sdk';
 import { encodeSqrtRatioX96, TickMath } from '@uniswap/v3-sdk';
-import { getDHBBalance } from '@/lib/contracts/stream-controller';
 import { getActiveProvider, writeContractAA } from '@/lib/contracts/aa-utils';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { DEX_CHAINS, dexProvider, type DexChainId, type VerifiedPosition } from './v4';
+import { DEX_CHAINS, dexProvider, verifyPosition, type DexChainId, type VerifiedPosition } from './v4';
 import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import { readWithTimeout, type OrderStage } from './read-timeout';
@@ -33,6 +32,13 @@ const STATE = new Interface([
   'function getSlot0(bytes32) view returns (uint160,int24,uint24,uint24)',
   'function getLiquidity(bytes32) view returns (uint128)',
 ]);
+
+async function assertSigningWallet(chainId: DexChainId, expected: string) {
+  const { provider } = await readWithTimeout(getActiveProvider(chainId), 'Wallet connection', 60000);
+  const actual = provider ? (await readWithTimeout(provider.request({ method: 'eth_accounts' }) as Promise<string[]>, 'Wallet account'))[0]
+    : getAccount(wagmiConfig).address;
+  if (actual?.toLowerCase() !== expected.toLowerCase()) throw new Error('Wallet account changed. Review the order again.');
+}
 
 export async function detectDhbChain(walletAddress: string): Promise<{ chainId: DexChainId | null; balance: string; base: string; bnb: string }> {
   const [baseRead, bnbRead] = await Promise.allSettled([
@@ -185,26 +191,28 @@ async function ensureTokenApproval(input: SellInput, amount: bigint, progress: (
   const allowance = await readWithTimeout(token.allowance(input.walletAddress, PERMIT2) as Promise<bigint>, 'Token allowance');
   if (allowance < amount) {
     progress('tokenApproval');
+    await assertSigningWallet(input.chainId, input.walletAddress);
     const tx = await writeContractAA(tokenAddress, ERC20, 'approve', [PERMIT2, amount],
       { chainId: input.chainId, context: `approve ${symbol} for Permit2` });
-    if ((await tx.wait()).status !== 1) throw new Error(`${symbol} approval did not confirm`);
+    if ((await readWithTimeout(tx.wait(), 'Approval confirmation', 120000)).status !== 1) throw new Error(`${symbol} approval did not confirm`);
   }
   const permit = new Contract(PERMIT2, PERMIT, provider);
   const [permitted, expiration] = await readWithTimeout(permit.allowance(input.walletAddress, tokenAddress, cfg.positionManager) as Promise<[bigint, bigint, bigint]>, 'Position allowance');
   if (permitted < amount || expiration <= BigInt(Math.floor(Date.now() / 1000) + 1200)) {
     const expires = Math.floor(Date.now() / 1000) + 86400;
     progress('permitApproval');
+    await assertSigningWallet(input.chainId, input.walletAddress);
     const tx = await writeContractAA(PERMIT2, PERMIT, 'approve', [tokenAddress, cfg.positionManager, amount, expires],
       { chainId: input.chainId, context: `approve ${symbol} for the position manager` });
-    if ((await tx.wait()).status !== 1) throw new Error('Position approval did not confirm');
+    if ((await readWithTimeout(tx.wait(), 'Approval confirmation', 120000)).status !== 1) throw new Error('Position approval did not confirm');
   }
 }
 
-export async function mintSellPosition(input: SellInput, progress: (stage: OrderStage) => void = () => {}): Promise<{ tokenId: string; txHash: string }> {
+export async function mintSellPosition(input: SellInput, progress: (stage: OrderStage) => void = () => {}, submitted?: (hash: string) => void): Promise<{ tokenId: string; txHash: string }> {
   progress('wallet');
   const { provider: signer } = await readWithTimeout(getActiveProvider(input.chainId), 'Wallet connection', 60000);
   if (signer) {
-    const accounts = await signer.request({ method: 'eth_accounts' }) as string[];
+    const accounts = await readWithTimeout(signer.request({ method: 'eth_accounts' }) as Promise<string[]>, 'Wallet account');
     if (!accounts[0] || accounts[0].toLowerCase() !== input.walletAddress.toLowerCase()) {
       throw new Error('The connected signing wallet does not match this DHB address');
     }
@@ -221,13 +229,21 @@ export async function mintSellPosition(input: SellInput, progress: (stage: Order
   if (!parsed) throw new Error('Could not prepare the Uniswap position transaction');
   const cfg = DEX_CHAINS[input.chainId];
   progress('submit');
+  await assertSigningWallet(input.chainId, input.walletAddress);
   const tx = await writeContractAA(cfg.positionManager, POSITION, parsed.name, Array.from(parsed.args),
     { chainId: input.chainId, value: quote.value, context: 'create DHB market position' });
   progress('confirm');
-  const result = await tx.wait();
-  if (result.status !== 1) throw new Error('The position transaction reverted');
-  const receipt = await dexProvider(input.chainId).getTransactionReceipt(result.hash);
+  submitted?.(tx.hash);
+  const result = await readWithTimeout(tx.wait(), 'Position confirmation; use Resume listing to check this transaction', 120000);
+  if (result.status !== 1) throw Object.assign(new Error('The position transaction reverted. No position was created.'), { code: 'DEX_REVERTED' });
+  return recoverMint(input, result.hash);
+}
+
+export async function recoverMint(input: SellInput, hash: string): Promise<{ tokenId: string; txHash: string }> {
+  const cfg = DEX_CHAINS[input.chainId];
+  const receipt = await readWithTimeout(dexProvider(input.chainId).getTransactionReceipt(hash), 'Transaction receipt');
   if (!receipt) throw new Error('Position submitted but its receipt is not available yet');
+  if (receipt.status !== 1) throw Object.assign(new Error('The position transaction reverted. No position was created.'), { code: 'DEX_REVERTED' });
   const transferTopic = id('Transfer(address,address,uint256)');
   const mintLog = receipt.logs.find((log) =>
     log.address.toLowerCase() === cfg.positionManager.toLowerCase() &&
@@ -240,17 +256,23 @@ export async function mintSellPosition(input: SellInput, progress: (stage: Order
 }
 
 export async function withdrawSellPosition(position: VerifiedPosition, walletAddress: string): Promise<string> {
+  const fresh = await readWithTimeout(verifyPosition(position), 'Position refresh');
+  if (!fresh) throw new Error('This position has already been withdrawn or is unavailable');
+  position = fresh;
   if (position.owner.toLowerCase() !== walletAddress.toLowerCase()) {
     throw new Error('Only the current position owner can withdraw');
   }
   const chainId = position.chain_id as DexChainId;
   const cfg = DEX_CHAINS[chainId];
-  const { provider: signer } = await getActiveProvider(chainId);
+  const { provider: signer } = await readWithTimeout(getActiveProvider(chainId), 'Wallet connection', 60000);
   if (signer) {
-    const accounts = await signer.request({ method: 'eth_accounts' }) as string[];
+    const accounts = await readWithTimeout(signer.request({ method: 'eth_accounts' }) as Promise<string[]>, 'Wallet account');
     if (accounts[0]?.toLowerCase() !== walletAddress.toLowerCase()) {
       throw new Error('Connect the wallet that owns this position');
     }
+  }
+  if (!signer && getAccount(wagmiConfig).address?.toLowerCase() !== walletAddress.toLowerCase()) {
+    throw new Error('Connect the wallet that owns this position');
   }
   const provider = dexProvider(chainId);
   const dhb = new Token(chainId, cfg.dhb, 18, 'DHB');
@@ -268,15 +290,16 @@ export async function withdrawSellPosition(position: VerifiedPosition, walletAdd
   const call = V4PositionManager.removeCallParameters(sdkPosition, {
     tokenId: position.token_id,
     liquidityPercentage: new Percent(1, 1),
-    slippageTolerance: new Percent(5, 100),
+    slippageTolerance: new Percent(5, 1000),
     deadline: Math.floor(Date.now() / 1000) + 1200,
     burnToken: true,
   });
   const parsed = POSITION.parseTransaction({ data: call.calldata });
   if (!parsed) throw new Error('Could not prepare the withdrawal transaction');
+  await assertSigningWallet(chainId, walletAddress);
   const tx = await writeContractAA(cfg.positionManager, POSITION, parsed.name, Array.from(parsed.args),
     { chainId, value: call.value, context: 'withdraw DHB sell position' });
-  const receipt = await tx.wait();
+  const receipt = await readWithTimeout(tx.wait(), 'Withdrawal confirmation; check your wallet transaction before retrying', 120000);
   if (receipt.status !== 1) throw new Error('Withdrawal did not confirm');
   return receipt.hash;
 }
