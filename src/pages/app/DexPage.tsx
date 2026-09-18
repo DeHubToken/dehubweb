@@ -15,6 +15,7 @@ import { readWithTimeout, type OrderStage } from '@/lib/dex/read-timeout';
 import { isSmartWalletSession } from '@/lib/connection-source';
 import { createLogger } from '@/lib/logger';
 import { MarketChart } from '@/components/app/dex/MarketChart';
+import dhbCoinImage from '@/assets/dehub-coin.png';
 import '@/components/app/dex/exchange.css';
 
 const logger = createLogger('Dex');
@@ -233,7 +234,7 @@ export default function DexPage() {
 
   return <div className="dex-terminal">
     <header className="dex-top">
-      <div className="dex-pair"><img src="/icons/DHB.png" alt="" /><div><h1>DHB <span className="dex-muted">/</span> USDC</h1><p>Combined market · Base + BNB</p></div></div>
+      <div className="dex-pair"><img src={dhbCoinImage} alt="DHB" /><div><h1>DHB <span className="dex-muted">/</span> USDC</h1><p>Combined market · Base + BNB</p></div></div>
       <div className="dex-stat"><small>Lowest sell · USDC</small><strong className="dex-reference">{bestAsk != null ? `${formatPrice(bestAsk)} USDC` : '—'}</strong></div>
       <div className="dex-stat"><small>24h reference change</small><strong className={(market?.change || 0) >= 0 ? 'dex-buy' : 'dex-sell'}>{market?.change != null ? `${market.change >= 0 ? '+' : ''}${market.change.toFixed(2)}%` : '—'}</strong></div>
       <div className="dex-stat"><small>Listed DHB</small><strong>{formatSize(totalDhb)}</strong></div>
