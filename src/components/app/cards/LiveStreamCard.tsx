@@ -8,6 +8,7 @@
 import { lazy, Suspense, useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { AppState } from '@/components/app/AppState';
+import { ButtonLoader } from '@/components/app/DeHubLoader';
 import {
   claimMediaSession,
   releaseMediaSession,
@@ -152,6 +153,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const [showBuyDrawer, setShowBuyDrawer] = useState(false);
   const [giftBalanceVersion, setGiftBalanceVersion] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isBuffering, setIsBuffering] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const urlsToTry = useMemo(() => [
     stream.playbackUrl,
@@ -401,6 +403,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       endpointFor: typeof whepEndpointFor,
       iceServers?: RTCIceServer[],
     ) => {
+      setIsBuffering(true);
       armStartTimer();
       try {
         const { subscribeToWhep } = await import('@/lib/livepeer/whep');
@@ -424,7 +427,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           return;
         }
         video.srcObject = session.stream;
-        await video.play().catch(() => undefined);
+        await video.play().catch(() => setIsBuffering(false));
         videoPlaybackManager.register(videoId, () => {
           video.pause();
           setIsPlaying(false);
@@ -656,11 +659,16 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     if (!video) return;
 
     if (isPlaying) {
+      setIsBuffering(false);
       video.pause();
       videoPlaybackManager.stop(videoId);
     } else {
+      setError(null);
+      setIsBuffering(true);
       videoPlaybackManager.play(videoId);
       video.play().catch(() => {
+        setIsBuffering(false);
+        setIsPlaying(false);
         setError('Failed to play stream');
       });
     }
@@ -1137,8 +1145,10 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               {...{"webkit-playsinline": ""}}
               muted={isMuted}
               poster={stream.thumbnail || undefined}
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
+              onPlay={() => { setIsPlaying(true); setIsBuffering(true); }}
+              onPlaying={() => { setIsPlaying(true); setIsBuffering(false); setError(null); }}
+              onWaiting={() => setIsBuffering(true)}
+              onPause={() => { setIsPlaying(false); setIsBuffering(false); }}
               onEnded={() => setStreamEnded(true)}
             />
             {/* Inline cards offer an unmute prompt. The immersive playback
@@ -1154,12 +1164,12 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 {t('stages.unmute', 'Unmute')}
               </button>
             )}
-            {/* Reconnecting overlay — shown on top of video while retrying */}
-            {error && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+            {/* Playback feedback stays visible even when the controls are hidden. */}
+            {(isBuffering || error) && (
+              <div role="status" aria-label={error || t('common.loading', 'Loading')} className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
                 <div className="flex flex-col items-center gap-2 text-center px-4">
-                  <Loader2 className="w-6 h-6 text-white animate-spin" />
-                  <p className="text-white/80 text-sm">{error}</p>
+                  {error !== 'Stream unavailable' && error !== 'Failed to play stream' && <ButtonLoader size={40} className="!filter-none" />}
+                  {error && <p className="text-white/80 text-sm bg-black/60 rounded px-2 py-1">{error}</p>}
                 </div>
               </div>
             )}
