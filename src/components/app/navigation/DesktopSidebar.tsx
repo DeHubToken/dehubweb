@@ -420,6 +420,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     className={cn("h-[40.6px] w-[135px] object-contain relative -top-[3px]", renderCompactLogo && "hidden")}
                     fetchPriority="high"
                     decoding="async"
+                    onError={() => setRenderCompactLogo(true)}
                   />
                 </>
               )}
