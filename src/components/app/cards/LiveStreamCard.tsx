@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell,
-  Play, Volume2, VolumeX, Maximize, Minimize,
+  Play, Pause, Volume2, VolumeX, Maximize, Minimize,
   Heart, Gift, StopCircle, Activity, Loader2, Bookmark, Info,
   Gem, Trophy, Star, PartyPopper, ShieldPlus, BellRing, Crown, Flower2
 } from 'lucide-react';
@@ -175,7 +175,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const [showBuyDrawer, setShowBuyDrawer] = useState(false);
   const [giftBalanceVersion, setGiftBalanceVersion] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(videoPlaybackManager.globalMuted);
+  const [isMuted, setIsMuted] = useState(true);
   const urlsToTry = useMemo(() => [
     stream.playbackUrl,
     ...(stream.playbackUrls || []).filter((u): u is string => !!u && u !== stream.playbackUrl),
@@ -687,7 +687,6 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         setError('Failed to play stream');
       });
     }
-    setIsPlaying(!isPlaying);
   }, [isPlaying, videoId]);
 
   /**
@@ -1156,6 +1155,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             <video
               ref={videoRef}
               className="w-full h-full object-contain"
+              autoPlay
               playsInline
               {...{"webkit-playsinline": ""}}
               muted={isMuted}
@@ -1199,12 +1199,13 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               </div>
             )}
             
-            <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity">
+            <div className={cn('absolute inset-0 flex items-center justify-center bg-black/30 transition-opacity', isPlaying ? 'opacity-0 hover:opacity-100 focus-within:opacity-100' : 'opacity-100')}>
               <button
                 onClick={togglePlay}
+                aria-label={isPlaying ? t('audioPost.pause', 'Pause') : t('audioPost.play', 'Play')}
                 className="w-16 h-16 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 hover:bg-black/60 transition-colors"
               >
-                <Play className="w-8 h-8 text-white fill-white ml-1" />
+                {isPlaying ? <Pause className="w-8 h-8 text-white fill-white" /> : <Play className="w-8 h-8 text-white fill-white ml-1" />}
               </button>
             </div>
             
