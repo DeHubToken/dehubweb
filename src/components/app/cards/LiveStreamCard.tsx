@@ -19,9 +19,8 @@ import {
   Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell,
   Play, Pause, Volume2, VolumeX, Maximize, Minimize,
   Heart, Gift, StopCircle, Activity, Loader2, Bookmark, Info,
-  Gem, Trophy, Star, PartyPopper, ShieldPlus, BellRing, Crown, Flower2
+  Gem
 } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';
 // Type-only: the hls.js runtime (~400 kB raw) loads dynamically at attach time
@@ -68,31 +67,9 @@ import { useStreamPresence } from '@/hooks/use-stream-presence';
 import { useStreamGifts } from '@/hooks/use-stream-gifts';
 import { useGiftAnimations } from '@/hooks/use-gift-animations';
 import { GiftAnimationOverlay } from '@/components/app/live/GiftAnimationOverlay';
-import { GIFT_TIERS, tierFromAmount, type GiftTierKey } from '@/lib/live/gift-tiers';
+import { GIFT_TIERS, tierFromAmount } from '@/lib/live/gift-tiers';
 
 const LiveGiftBuyDrawer = lazy(() => import('@/components/app/live/LiveGiftBuyDrawer').then(m => ({ default: m.LiveGiftBuyDrawer })));
-
-/**
- * The picker tile's mark, one per rung of the ladder.
- *
- * Deliberately the same lucide icons the app's GiftModal uses, drawn in the
- * same flat white, so the ladder reads identically in a browser and in the
- * APK. The tier's `emoji` stays what it always was — the coloured character
- * that climbs the stage during the celebration — and is not what the picker
- * shows.
- */
-const GIFT_TIER_ICONS: Record<GiftTierKey, LucideIcon> = {
-  ultimate: Trophy,
-  gold10: Star,
-  gold3: Star,
-  party: PartyPopper,
-  spartans: ShieldPlus,
-  magicRing: BellRing,
-  crown: Crown,
-  bouquet: Flower2,
-  chocolate: Gift,
-  heart: Heart,
-};
 import { speakTipMessage, warmTipTts, setTipTtsEnabled, MAX_TTS_CHARS } from '@/lib/live/tip-tts';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
@@ -1394,7 +1371,6 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               <div className="grid grid-cols-2 gap-2 max-h-52 overflow-y-auto overscroll-contain pr-1 [touch-action:pan-y]">
                 {[...GIFT_TIERS].reverse().map((tier) => {
                   const selected = Number(giftAmount) === tier.min;
-                  const TierIcon = GIFT_TIER_ICONS[tier.key];
 
 
   return (
@@ -1411,7 +1387,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                       )}
                     >
                       <span aria-hidden className="shrink-0 rounded-xl bg-white/10 p-2">
-                        <TierIcon className="w-4 h-4 text-white" />
+                          <span className="block w-4 h-4 text-base leading-4 text-center">{tier.emoji}</span>
                       </span>
                       <span className="min-w-0">
                         <span className="block truncate text-[11px] font-semibold text-white">

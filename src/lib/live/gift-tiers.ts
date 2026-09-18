@@ -43,10 +43,7 @@ export interface GiftTier {
   /** How long the celebration holds the screen. */
   durationMs: number;
   /**
-   * Tailwind text colour for a tier mark. Monochrome on purpose — the ladder
-   * is read by brightness, not by hue, so it matches the app. Nothing reads
-   * this today (the picker draws its icons flat white); keep it chrome if it
-   * ever gets wired up.
+   * Reserved Tailwind text colour for a tier mark. The picker uses emoji.
    */
   accent: string;
 }
