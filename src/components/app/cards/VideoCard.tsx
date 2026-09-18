@@ -1943,7 +1943,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   </span>
                 </div>
               </div>
-            ) : video.videoUrl ? (
+            ) : video.videoUrl && !(video.isLivePost && video.isLiveNow) ? (
               hasError ? (
                 <img src={thumbnail} alt={video.title} className="w-full h-full object-cover" loading={aboveFold ? 'eager' : 'lazy'} fetchPriority={aboveFold ? 'high' : 'auto'} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
               ) :
@@ -1976,19 +1976,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   thumbnail={thumbnail}
                   fallbackLabel={t('feed.live')}
                   muted={isMuted}
+                  controlsVisible={controlsVisible}
+                  onToggleMute={toggleMute}
                 />
-                {/* The card's control bar only shows for a file it is playing
-                    itself — a running stream is played by the preview, so the
-                    bar never appeared and the card had no sound switch at all.
-                    One always-on speaker, in the corner the bar would use. */}
-                <button
-                  type="button"
-                  className="absolute bottom-3 right-3 z-10 h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 hover:bg-black/60 transition-colors"
-                  onClick={toggleMute}
-                  aria-label={isMuted ? t('stages.unmute', 'Unmute') : t('stages.mute', 'Mute')}
-                >
-                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-                </button>
               </Suspense>
             ) : (
               /* No playable URL — a past live (or url-less video). Show the
@@ -2088,7 +2078,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             Never for audio posts: speed, loop, PiP and fullscreen have nothing
             to act on there, and the row appeared on hover over a visualizer
             that already carries its own transport. */}
-        {controlsVisible && !video.isAudio && (
+        {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
           <div data-video-controls className="absolute top-2 right-2 flex items-center gap-2 z-10">
             {/* Subtitles mount here — display:contents keeps the button a direct
                 flex item, so it sits in the row's gap like everything else. */}
@@ -2200,7 +2190,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             so over a visualizer it painted a black gradient and a second,
             non-functional play button on top of the audio controls — the
             "hovering brings up a play/pause button" complaint. */}
-        {controlsVisible && !video.isAudio && (
+        {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
           <div data-video-controls className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
 
             <div className="flex items-center gap-2">

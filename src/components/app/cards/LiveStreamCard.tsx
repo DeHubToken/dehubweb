@@ -486,8 +486,10 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     // software MSE, and it skips the ~540 kB hls.js download. iOS 17+ added
     // MediaSource, so the old `!('MediaSource' in window)` guard wrongly routed
     // modern iPhones through the hls.js decoder that was overheating them.
-    // Chrome/Firefox/Android return "" here and fall through to hls.js below.
-    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    // Self-hosted ladders may carry Opus audio. A positive native HLS probe
+    // does not establish codec support; use the same MSE path as the feed.
+    const selfHosted = liveSourceFromHlsUrl(currentUrl())?.provider === 'mediamtx';
+    if (!selfHosted && video.canPlayType('application/vnd.apple.mpegurl')) {
       // Native playback has none of hls.js's built-in resilience, so re-create
       // the essentials here: multi-CDN failover through urlsToTry, bounded
       // reconnect attempts for live streams, and the error overlay.

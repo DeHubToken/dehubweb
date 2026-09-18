@@ -33,6 +33,8 @@ import type Hls from 'hls.js';
 import { LiveEndedMedia } from './LiveEndedMedia';
 import { liveSourceFromHlsUrl, whepEndpointFor } from '@/lib/live-ingest';
 import type { WhepSubscription } from '@/lib/livepeer/whep';
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
+import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 
 interface LiveFeedPreviewProps {
   /** HLS ladder for the stream. First playable URL wins. */
@@ -50,6 +52,8 @@ interface LiveFeedPreviewProps {
    * nothing and had no way to know why.
    */
   muted?: boolean;
+  controlsVisible?: boolean;
+  onToggleMute?: (event: React.MouseEvent) => void;
 }
 
 /** A negotiated session that never delivers a frame is the worst case. */
@@ -66,10 +70,13 @@ const WHEP_START_TIMEOUT_MS = 6000;
 const MAX_CONCURRENT_WHEP = 2;
 let whepSessionsOpen = 0;
 
-export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'Live ended', muted = true }: LiveFeedPreviewProps) {
+export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'Live ended', muted = true, controlsVisible = false, onToggleMute }: LiveFeedPreviewProps) {
   const { pathname } = useLocation();
   const postOpen = /^\/app\/post\//.test(pathname);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, containerRef, { escapeAncestors: true });
+  const [paused, setPaused] = useState(true);
   // Applied imperatively as well as through the prop: React only writes the
   // `muted` property on mount, and the element is re-attached when the
   // transport moves from WebRTC to HLS.
@@ -220,7 +227,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
   }
 
   return (
-    <div className={className ?? 'absolute inset-0 w-full h-full'}>
+    <div ref={containerRef} className={isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-screen bg-black' : className ?? 'absolute inset-0 w-full h-full'}>
       {!playing &&
         (thumbnail ? (
           <img
@@ -241,14 +248,39 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
         ))}
       <video
         ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover"
+        className={`absolute inset-0 w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`}
         muted={muted}
         playsInline
         autoPlay
         preload="none"
         poster={thumbnail}
-        onPlaying={() => setPlaying(true)}
+        onPlaying={() => { setPlaying(true); setPaused(false); }}
+        onPause={() => setPaused(true)}
       />
+      {(controlsVisible || isFullscreen) && (
+        <div data-video-controls className="absolute bottom-0 inset-x-0 z-10 flex items-center gap-2 px-3 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent" onClick={(event) => event.stopPropagation()}>
+          <button type="button" aria-label={paused ? 'Play' : 'Pause'} className="h-8 w-8 rounded-xl bg-black/40 border border-white/10 text-white flex items-center justify-center" onClick={() => {
+            const el = videoRef.current;
+            if (!el) return;
+            if (el.paused) void el.play().catch(() => setPaused(true));
+            else el.pause();
+          }}>
+            {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+          </button>
+          <span className="text-xs font-semibold text-white">LIVE</span>
+          <div className="flex-1" />
+          {onToggleMute && <button type="button" aria-label={muted ? 'Unmute' : 'Mute'} onClick={onToggleMute} className="h-8 w-8 rounded-xl bg-black/40 border border-white/10 text-white flex items-center justify-center">
+            {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+          </button>}
+          {document.pictureInPictureEnabled && <button type="button" aria-label="Picture in picture" className="h-8 w-8 rounded-xl bg-black/40 border border-white/10 text-white flex items-center justify-center" onClick={() => {
+            if (document.pictureInPictureElement) void document.exitPictureInPicture().catch(() => undefined);
+            else void videoRef.current?.requestPictureInPicture().catch(() => undefined);
+          }}><PictureInPicture2 className="h-4 w-4" /></button>}
+          <button type="button" aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'} onClick={() => toggleFullscreen()} className="h-8 w-8 rounded-xl bg-black/40 border border-white/10 text-white flex items-center justify-center">
+            {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
