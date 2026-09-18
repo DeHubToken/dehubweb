@@ -5,6 +5,7 @@ import { getNFTInfo, replacePostImage, addPostImages, getPostImageAllowance } fr
 import { buildFeedImageUrls } from '@/lib/media-url';
 import { applyImageReplacement } from '@/lib/optimistic-edit';
 import { toast } from 'sonner';
+import { MAX_IMAGE_UPLOAD_BYTES, MAX_REQUEST_IMAGE_BYTES } from '@/lib/post-image-allowance';
 
 export function EditPostImages({ tokenId, disabled, onBusyChange }: {
   tokenId: number | string; disabled: boolean; onBusyChange: (busy: boolean) => void;
@@ -36,8 +37,8 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
 
   const replace = async (file: File) => {
     if (busy || disabled) return;
-    if (!/^image\/(jpeg|png|webp|gif|heic|heif|avif)$/i.test(file.type)) {
-      toast.error('Choose an image file');
+    if (!/^image\/(jpeg|png|webp|gif|heic|heif|avif)$/i.test(file.type) || file.size > MAX_IMAGE_UPLOAD_BYTES) {
+      toast.error('Choose an image of 42.069 MB or smaller');
       return;
     }
     setBusy(true);
@@ -61,8 +62,12 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
       toast.error(`Your badge tier allows up to ${imageLimit} images per post`);
       return;
     }
-    if (files.some(file => !/^image\/(jpeg|png|webp|gif|heic|heif|avif)$/i.test(file.type))) {
-      toast.error('Choose image files');
+    if (files.some(file => !/^image\/(jpeg|png|webp|gif|heic|heif|avif)$/i.test(file.type) || file.size > MAX_IMAGE_UPLOAD_BYTES)) {
+      toast.error('Choose images of 42.069 MB or smaller');
+      return;
+    }
+    if (files.reduce((total, file) => total + file.size, 0) > MAX_REQUEST_IMAGE_BYTES) {
+      toast.error('Images in one upload must total 100 MB or less');
       return;
     }
     position.current = -1;
