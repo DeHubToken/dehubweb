@@ -126,6 +126,7 @@ export function watchStreamJoins(
   streamId: string,
   onJoin: (user: { address?: string; username?: string; displayName?: string }) => void,
 ): StreamPresence {
+  if (!streamId) return { leave: () => undefined };
   const conn = acquireStreamSocket();
   const socket = conn.socket;
   let left = false;
@@ -133,14 +134,19 @@ export function watchStreamJoins(
   const handleJoin = (data: { streamId?: string; user?: { address?: string; username?: string; displayName?: string } }) => {
     if (data?.streamId === streamId && data.user) onJoin(data.user);
   };
+  const handleAnonJoin = (data: { streamId?: string }) => {
+    if (data?.streamId === streamId) onJoin({ username: 'Visitor' });
+  };
   socket.on('connect', join);
   socket.on(EVENT.joinStream, handleJoin);
+  socket.on(EVENT.anonJoinStream, handleAnonJoin);
   if (socket.connected) join();
   return { leave: () => {
     if (left) return;
     left = true;
     socket.off('connect', join);
     socket.off(EVENT.joinStream, handleJoin);
+    socket.off(EVENT.anonJoinStream, handleAnonJoin);
     releaseStreamSocket(conn);
   } };
 }
