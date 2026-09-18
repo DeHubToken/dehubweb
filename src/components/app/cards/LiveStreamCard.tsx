@@ -1397,15 +1397,15 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       )}
 
       {/* Gift Drawer */}
-      <Drawer open={showGiftDrawer && !showBuyDrawer} onOpenChange={setShowGiftDrawer}>
-        <DrawerContent column glass className="px-4 pb-8">
+      <Drawer open={showGiftDrawer && !showBuyDrawer} onOpenChange={setShowGiftDrawer} handleOnly>
+        <DrawerContent column glass className="px-4 pb-8 max-h-[85dvh]">
           <DrawerHeader className="border-b border-white/10 mb-4">
             <DrawerTitle className="text-white flex items-center gap-2">
               <Gem className="w-5 h-5 text-white" />
               Send a Gift
             </DrawerTitle>
           </DrawerHeader>
-          <div className="space-y-4">
+          <div data-vaul-no-drag className="space-y-4 min-h-0 overflow-y-auto overscroll-contain">
             {/* Balance display — gifts move real DHB, so show the real balance */}
             <div className="flex items-center justify-between bg-white/5 rounded-xl px-3 py-2.5 border border-white/10">
               <span className="text-xs text-zinc-400">Your balance</span>
