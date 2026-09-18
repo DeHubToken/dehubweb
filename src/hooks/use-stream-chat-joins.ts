@@ -2,6 +2,18 @@ import { useEffect, useState } from 'react';
 import { getStreamActivities, type StreamActivity } from '@/lib/api/dehub/livestream';
 import { watchStreamJoins } from '@/lib/api/dehub/stream-presence';
 
+/** Keep the latest arrival per identified viewer; reconnects are not new people. */
+export function uniqueStreamJoins(joins: StreamActivity[]): StreamActivity[] {
+  const seen = new Set<string>();
+  return [...joins].sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp)).filter((join) => {
+    const address = join.address?.toLowerCase();
+    if (!address) return true;
+    if (seen.has(address)) return false;
+    seen.add(address);
+    return true;
+  }).reverse();
+}
+
 /** Seed recorded arrivals, then append every arrival while this chat is open. */
 export function useStreamChatJoins(streamId?: string, offline = false) {
   const [state, setState] = useState<{ streamId?: string; joins: StreamActivity[] }>({ joins: [] });
@@ -20,7 +32,7 @@ export function useStreamChatJoins(streamId?: string, offline = false) {
         timestamp: new Date().toISOString(),
       };
       if (!loaded) pending.push(event);
-      else setState((prev) => ({ streamId, joins: [...prev.joins, event].slice(-300) }));
+      else setState((prev) => ({ streamId, joins: uniqueStreamJoins([...prev.joins, event]).slice(-300) }));
     });
     getStreamActivities(streamId, { unit: 200 }).then(({ result }) => {
       if (cancelled) return;
@@ -29,9 +41,9 @@ export function useStreamChatJoins(streamId?: string, offline = false) {
       const fresh = pending.filter((event) => !history.some((a) =>
         a.address.toLowerCase() === event.address.toLowerCase() &&
         Math.abs(Date.parse(a.timestamp) - Date.parse(event.timestamp)) < 2000));
-      setState({ streamId, joins: [...history, ...fresh] });
+      setState({ streamId, joins: uniqueStreamJoins([...history, ...fresh]) });
     }).catch(() => {
-      if (!cancelled) setState({ streamId, joins: [...pending] });
+      if (!cancelled) setState({ streamId, joins: uniqueStreamJoins(pending) });
     }).finally(() => { loaded = true; });
     return () => { cancelled = true; subscription?.leave(); };
   }, [streamId, offline]);
