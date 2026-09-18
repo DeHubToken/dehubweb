@@ -714,7 +714,8 @@ export async function createCheckoutSession(request: {
   tokensToReceive: number;
   /** Deep link or URL after payment. e.g. "dehub://dpay-result" for mobile */
   redirect?: string;
-}): Promise<{ checkoutUrl: string; sessionId: string }> {
+  embedded?: boolean;
+}): Promise<{ checkoutUrl: string; sessionId: string; clientSecret?: string }> {
   console.log('[DPay API] Creating checkout session...', request);
 
   const token = getAuthToken();
@@ -732,6 +733,7 @@ export async function createCheckoutSession(request: {
     tokenSymbol: request.tokenSymbol,
     currency: (request.currency ?? 'usd').toLowerCase(),
     redirect: request.redirect ?? 'dehub://dpay-result',
+    embedded: request.embedded ?? false,
     termsAndServicesAccepted: true,
   };
 
@@ -756,6 +758,7 @@ export async function createCheckoutSession(request: {
     return {
       checkoutUrl: result.url || result.checkoutUrl,
       sessionId: result.sessionId || result.id,
+      clientSecret: result.clientSecret,
     };
   } catch (error) {
     console.error('[DPay API] Error creating checkout:', error);
