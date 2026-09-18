@@ -16,7 +16,7 @@ import { isSmartWalletSession } from '@/lib/connection-source';
 import { applyEditsToImageFile } from '@/lib/filters';
 import { MEDIA_LIMITS } from '@/constants/post.constants';
 import { splitTitleFromText } from '@/features/post/lib/title-split';
-import { getPostImageBytesForBadge, getPostImageLimitForBadge, MAX_IMAGE_UPLOAD_BYTES } from '@/lib/post-image-allowance';
+import { getPostImageBytesForBadge, getPostImageLimitForBadge, MAX_IMAGE_UPLOAD_BYTES, MAX_REQUEST_IMAGE_BYTES } from '@/lib/post-image-allowance';
 // NOTE: mint/bounty helpers reach wallet/contract code (wagmi + web3auth).
 // usePostForm is reachable from eager UI (PostModal is used by the sidebar /
 // bottom nav / feed), so those helpers are dynamically imported inside
@@ -622,7 +622,16 @@ export function usePostForm(
           : t('toasts.image_too_large_untiered', { limit: imageLimitMb }),
       );
     }
-    const filesToAdd = imageFiles.filter(f => f.size <= imageByteLimit).slice(0, availableSlots);
+    let requestImageBytes = media.filter(m => m.type === 'image').reduce((total, m) => total + m.file.size, 0);
+    const eligibleFiles = imageFiles.filter(file => file.size <= imageByteLimit).slice(0, availableSlots);
+    const filesToAdd = eligibleFiles.filter(file => {
+      if (requestImageBytes + file.size > MAX_REQUEST_IMAGE_BYTES) return false;
+      requestImageBytes += file.size;
+      return true;
+    });
+    if (filesToAdd.length < eligibleFiles.length) {
+      toast.error('Images in one upload must total 100 MB or less');
+    }
 
     if (files.length > availableSlots) {
       toast.info(`Only ${availableSlots} image${availableSlots > 1 ? 's' : ''} added (max ${imageLimit})`);
