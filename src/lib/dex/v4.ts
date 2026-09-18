@@ -1,4 +1,4 @@
-import { AbiCoder, Contract, JsonRpcProvider, ZeroAddress, formatUnits, id, keccak256 } from 'ethers';
+import { AbiCoder, Contract, FallbackProvider, FetchRequest, JsonRpcProvider, ZeroAddress, formatUnits, id, keccak256 } from 'ethers';
 import { Token } from '@uniswap/sdk-core';
 import { Pool, Position } from '@uniswap/v4-sdk';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
@@ -39,8 +39,23 @@ const STATE_ABI = [
 ];
 const TRANSFER_TOPIC = id('Transfer(address,address,uint256)');
 
+const providers = new Map<DexChainId, FallbackProvider>();
 export function dexProvider(chainId: DexChainId) {
-  return new JsonRpcProvider(CHAIN_CONFIGS[chainId].rpcUrl, chainId, { staticNetwork: true });
+  let provider = providers.get(chainId);
+  if (!provider) {
+    const urls = chainId === BASE_CHAIN_ID
+      ? ['https://base-rpc.publicnode.com', 'https://mainnet.base.org']
+      : ['https://bsc-rpc.publicnode.com', 'https://bsc-dataseed.binance.org'];
+    provider = new FallbackProvider(urls.map((url, index) => {
+      const request = new FetchRequest(url);
+      request.timeout = 10000;
+      request.setThrottleParams({ maxAttempts: 1 });
+      return { provider: new JsonRpcProvider(request, chainId, { staticNetwork: true, batchMaxCount: 1 }),
+        priority: index + 1, stallTimeout: 1000, weight: 1 };
+    }), chainId, { quorum: 1 });
+    providers.set(chainId, provider);
+  }
+  return provider;
 }
 
 function unpackTick(value: bigint, shift: bigint): number {
@@ -68,6 +83,7 @@ export interface VerifiedPosition extends IndexedPosition {
   maxPrice: number;
   amountDhb: number;
   amountUsdc: number;
+  marketPrice: number;
   side: 'buy' | 'sell';
   status: 'Open' | 'In range' | 'Filled';
 }
@@ -134,7 +150,7 @@ export async function verifyPosition(row: IndexedPosition): Promise<VerifiedPosi
       : chainId === BASE_CHAIN_ID ? tick >= upper ? 'Filled' : tick <= lower ? 'Open' : 'In range'
         : tick <= lower ? 'Filled' : tick >= upper ? 'Open' : 'In range';
     return { ...row, owner, liquidity, tickLower: lower, tickUpper: upper,
-      poolFee, tickSpacing, minPrice, maxPrice, amountDhb, amountUsdc,
+      poolFee, tickSpacing, minPrice, maxPrice, amountDhb, amountUsdc, marketPrice: usdPerDhbAtTick(tick, chainId),
       side: row.side, status };
   } catch {
     return null;
