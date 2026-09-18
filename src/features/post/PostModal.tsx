@@ -1,4 +1,5 @@
-import { lazy, Suspense, useEffect, useState, useCallback } from 'react';
+import { lazy, Suspense, useEffect, useState, useCallback, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
@@ -46,6 +47,55 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
   const [mediaFullscreenOpen, setMediaFullscreenOpen] = useState(false);
   const [articleMode, setArticleMode] = useState(false);
   const [articleBody, setArticleBody] = useState('');
+  const [articleImage, setArticleImage] = useState<File | null>(null);
+  const [socialImage, setSocialImage] = useState<File | null>(null);
+  const [articleImagePreview, setArticleImagePreview] = useState('');
+  const [socialImagePreview, setSocialImagePreview] = useState('');
+  const articleEditorRef = useRef<HTMLTextAreaElement>(null);
+  const [articlePreview, setArticlePreview] = useState(false);
+  const formatArticle = (before: string, after = '', placeholder = 'text', block = false) => {
+    const editor = articleEditorRef.current;
+    if (!editor) return;
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+    const selected = articleBody.slice(start, end) || placeholder;
+    const prefix = block && start > 0 && articleBody[start - 1] !== '\n' ? '\n' : '';
+    const next = `${articleBody.slice(0, start)}${prefix}${before}${selected}${after}${articleBody.slice(end)}`.slice(0, 20000);
+    setArticleBody(next);
+    requestAnimationFrame(() => {
+      editor.focus();
+      editor.setSelectionRange(start + prefix.length + before.length, start + prefix.length + before.length + selected.length);
+    });
+  };
+  const draftImageData = async (file: File | null): Promise<string | undefined> => {
+    if (!file) return undefined;
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, 1200 / bitmap.width, 1200 / bitmap.height);
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    canvas.getContext('2d')?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+    return canvas.toDataURL('image/jpeg', 0.78);
+  };
+  const restoreDraftImage = async (data: string | undefined, name: string, setter: (file: File | null) => void) => {
+    if (!data?.startsWith('data:image/jpeg;base64,')) { setter(null); return; }
+    const blob = await (await fetch(data)).blob();
+    setter(new File([blob], name, { type: 'image/jpeg' }));
+  };
+
+  useEffect(() => {
+    if (!articleImage) { setArticleImagePreview(''); return; }
+    const url = URL.createObjectURL(articleImage);
+    setArticleImagePreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [articleImage]);
+  useEffect(() => {
+    if (!socialImage) { setSocialImagePreview(''); return; }
+    const url = URL.createObjectURL(socialImage);
+    setSocialImagePreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [socialImage]);
 
   const handleTogglePoll = useCallback(() => {
     if (state.poll) {
@@ -104,6 +154,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
     setPlanDrawerOpen(false);
     setArticleMode(false);
     setArticleBody('');
+    setArticleImage(null);
+    setSocialImage(null);
     onClose();
   };
 
@@ -152,8 +204,23 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         scheduledDate={state.scheduledDate}
         onSchedule={actions.setScheduledDate}
         drafts={state.drafts}
-        onSaveDraft={actions.saveDraft}
-        onLoadDraft={actions.loadDraft}
+        onSaveDraft={() => {
+          if (!articleMode) { actions.saveDraft(); return; }
+          Promise.all([draftImageData(articleImage), draftImageData(socialImage)])
+            .then(([imageData, socialData]) => actions.saveDraft({ body: articleBody, title: state.titleText, imageData, socialData }))
+            .catch(() => actions.saveDraft({ body: articleBody, title: state.titleText }));
+        }}
+        onLoadDraft={draft => {
+          actions.loadDraft(draft);
+          if (draft.articleBody) {
+            setArticleMode(true);
+            setArticleBody(draft.articleBody);
+            actions.setTitleText(draft.articleTitle || '');
+            actions.setShowTitle(true);
+            void restoreDraftImage(draft.articleImageData, 'article-image.jpg', setArticleImage);
+            void restoreDraftImage(draft.socialImageData, 'social-image.jpg', setSocialImage);
+          }
+        }}
         onDeleteDraft={actions.deleteDraft}
         canSaveDraft={computed.hasContent}
         isRecording={state.isRecording}
@@ -172,10 +239,35 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
       {articleMode && (
         <div className="px-4 pb-4 space-y-2">
           <label htmlFor="article-body" className="block text-sm text-white/80">Article body</label>
-          <textarea id="article-body" value={articleBody} onChange={e => setArticleBody(e.target.value.slice(0, 20000))}
+          <div className="flex flex-wrap items-center gap-1 text-xs" aria-label="Article formatting">
+            {([
+              ['Large', '# ', '', 'Heading', true], ['Heading', '## ', '', 'Heading', true],
+              ['Bold', '**', '**', 'bold text', false], ['Italic', '*', '*', 'italic text', false],
+              ['Quote', '> ', '', 'Quote', true], ['Bullets', '- ', '', 'List item', true],
+              ['Numbers', '1. ', '', 'List item', true], ['Link', '[', '](https://example.com)', 'link text', false],
+            ] as const).map(([label, before, after, placeholder, block]) => (
+              <button key={label} type="button" onClick={() => formatArticle(before, after, placeholder, block)} className="rounded-md px-2 py-1 text-white/70 hover:bg-white/10 hover:text-white">{label}</button>
+            ))}
+            <button type="button" aria-pressed={articlePreview} onClick={() => setArticlePreview(!articlePreview)} className="ml-auto rounded-md px-2 py-1 text-white/70 hover:bg-white/10 hover:text-white">{articlePreview ? 'Edit' : 'Preview'}</button>
+          </div>
+          {articlePreview ? <div className="prose prose-invert min-h-64 max-w-none rounded-xl border border-white/20 bg-white/5 p-4 text-white"><ReactMarkdown>{articleBody}</ReactMarkdown></div> : <textarea ref={articleEditorRef} id="article-body" value={articleBody} onChange={e => setArticleBody(e.target.value.slice(0, 20000))}
             placeholder="Write your article here. Use blank lines between paragraphs."
-            className="w-full min-h-64 rounded-xl border border-white/20 bg-white/5 p-4 text-white outline-none focus:border-white/50" />
+            className="w-full min-h-64 rounded-xl border border-white/20 bg-white/5 p-4 text-white outline-none focus:border-white/50" />}
           <p className="text-xs text-white/60">{articleBody.length}/20,000 · minimum 100 characters. The post text above is the summary.</p>
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            {([
+              { label: 'Article image', file: articleImage, preview: articleImagePreview, setFile: setArticleImage },
+              { label: 'Social share image', file: socialImage, preview: socialImagePreview, setFile: setSocialImage },
+            ] as const).map(({ label, file, preview, setFile }) => (
+              <div key={label} className="space-y-2">
+                <label className="block text-xs text-white/70">{label}
+                  <input type="file" accept="image/jpeg,image/png,image/webp" className="mt-2 block w-full text-xs text-white/60 file:mr-2 file:rounded-lg file:border file:border-white/20 file:bg-white/10 file:px-2 file:py-1 file:text-white" onChange={e => setFile(e.target.files?.[0] || null)} />
+                </label>
+                {preview && <img src={preview} alt={`${label} preview`} className="aspect-video w-full rounded-lg object-cover" />}
+                {file && <button type="button" className="text-xs text-white/60 underline" onClick={() => setFile(null)}>Remove</button>}
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -255,7 +347,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
                 return `[soundtrack:${attachedSound.tokenId}:${attachedSound.title}:${attachedSound.creator}:${relPath}]`;
               })()
             : undefined;
-          actions.handlePost({ ...(soundtrackTag ? { soundtrackTag } : {}), ...(articleMode ? { articleBody: articleBody.trim() } : {}) });
+          actions.handlePost({ ...(soundtrackTag ? { soundtrackTag } : {}), ...(articleMode ? { articleBody: articleBody.trim(), articleImage: articleImage || undefined, socialImage: socialImage || undefined } : {}) });
         }}
         canPost={computed.canPost && (!articleMode || (state.titleText.trim().length > 0 && state.text.trim().length > 0 && articleBody.trim().length >= 100 && !computed.hasVideo && !computed.hasImage && !computed.hasAudio))}
         isEnhancing={state.isEnhancing}

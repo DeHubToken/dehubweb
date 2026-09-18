@@ -329,6 +329,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
     rawName,
     rawDescription,
     articleBody: nft.articleBody,
+    articleImageUrl: nft.articleImageUrl ? buildFeedImageUrls([nft.articleImageUrl])?.[0] : undefined,
     stats: {
       comments: nft.commentCount || nft.comment_count || 0,
       reposts: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
@@ -1387,6 +1388,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
       <SEOHead
         title={seoTitle}
         description={seoDesc}
+        image={post?.socialImageUrl ? buildFeedImageUrls([post.socialImageUrl])?.[0] : post?.articleImageUrl ? buildFeedImageUrls([post.articleImageUrl])?.[0] : undefined}
         url={postSeoUrl(location.pathname, id)}
         type="article"
         jsonLd={{

@@ -111,6 +111,8 @@ interface DeHubNFT {
     title?: string;
     description?: string;
     imageUrl?: string;
+    articleImageUrl?: string;
+    socialImageUrl?: string;
     imageUrls?: string[];
     videoUrl?: string;
     audioUrl?: string;
@@ -620,9 +622,16 @@ serve(async (req) => {
         }
 
 
-        // 3. Unified Post Handling (/app/post/{tokenId} for both image and video posts)
-        if (cleanPath.includes("/post/")) {
-            const postId = cleanPath.split("/post/")[1].split("/")[0];
+        // Unified post previews, including off-chain links shared before minting.
+        if (cleanPath.includes("/post/") || cleanPath.includes("/newpost/")) {
+            const isNewPost = cleanPath.includes("/newpost/");
+            const slug = cleanPath.split(isNewPost ? "/newpost/" : "/post/")[1].split("/")[0];
+            let postId = slug;
+            if (isNewPost) {
+                const resolved = await fetch(`${DEHUB_API_BASE}/api/newpost/${slug}`, { signal: AbortSignal.timeout(7000) });
+                if (!resolved.ok) return new Response(build404Html(canonicalUrl, isBot, functionBaseUrl), { status: 404, headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
+                postId = String((await resolved.json()).tokenId || slug);
+            }
 
             const response = await fetch(`${DEHUB_API_BASE}/api/nft_info/${postId}`, {
                 signal: AbortSignal.timeout(7000),
@@ -647,7 +656,7 @@ serve(async (req) => {
                 const rawBody = (nft.description || "").trim();
                 const bodyForDesc = rawBody && rawBody.toLowerCase() !== title.toLowerCase() ? rawBody : "";
                 const description = (bodyForDesc || `Post by ${posterName} on DeHub — join the decentralized creator network.`).slice(0, 280);
-                const postUrl = `${APP_URL}/app/post/${postId}`;
+                const postUrl = isNewPost ? `${APP_URL}/newpost/${slug}` : `${APP_URL}/app/post/${postId}`;
 
                 const isAudio = nft.postType === "feed-audio";
                 const videoUrl = isAudio ? null : buildVideoUrl(nft);
@@ -661,7 +670,15 @@ serve(async (req) => {
                     postImage = ensureAbsoluteUrl(nft.thumbnail_url || nft.imageUrl || "") || DEHUB_LOGO;
                     hasRealImage = !!(nft.thumbnail_url || nft.imageUrl);
                 } else {
-                    const builtImage = buildPostImageUrl(nft);
+                    const builtImage = nft.socialImageUrl
+                        ? ensureAbsoluteUrl(nft.socialImageUrl.startsWith('nfts/images/')
+                            ? `${DEHUB_CDN_BASE}feed-images/${nft.socialImageUrl.split('/').pop()}`
+                            : nft.socialImageUrl)
+                        : nft.articleImageUrl
+                            ? ensureAbsoluteUrl(nft.articleImageUrl.startsWith('nfts/images/')
+                                ? `${DEHUB_CDN_BASE}feed-images/${nft.articleImageUrl.split('/').pop()}`
+                                : nft.articleImageUrl)
+                            : buildPostImageUrl(nft);
                     if (builtImage) {
                         postImage = builtImage;
                         hasRealImage = true;
