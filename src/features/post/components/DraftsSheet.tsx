@@ -14,6 +14,10 @@ export interface Draft {
   hasImage: boolean;
   hasVideo: boolean;
   hasAudio: boolean;
+  articleBody?: string;
+  articleTitle?: string;
+  articleImageData?: string;
+  socialImageData?: string;
 }
 
 interface DraftsSheetProps {
@@ -113,7 +117,7 @@ export function DraftsSheet({
                     <div className="flex items-start gap-3">
                       <div className="flex-1 min-w-0">
                         <p className="text-white text-sm line-clamp-2">
-                          {draft.text || <span className="text-zinc-500 italic">No text</span>}
+                          {draft.articleTitle || draft.text || <span className="text-zinc-500 italic">No text</span>}
                         </p>
                         
                         {/* Media indicators */}

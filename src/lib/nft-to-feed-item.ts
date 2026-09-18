@@ -133,6 +133,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     id,
     type: 'post',
     articleBody: nft.articleBody,
+    articleImageUrl: nft.articleImageUrl ? buildFeedImageUrls([nft.articleImageUrl])?.[0] : undefined,
     contentRating: nft.contentRating,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,

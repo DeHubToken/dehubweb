@@ -162,6 +162,10 @@ const loadDraftsFromDb = async (walletAddress: string): Promise<Draft[]> => {
         hasImage: d.has_image || false,
         hasVideo: d.has_video || false,
         hasAudio: (d.metadata as any)?.hasAudio || false,
+        articleBody: (d.metadata as any)?.articleBody || undefined,
+        articleTitle: (d.metadata as any)?.articleTitle || (d.metadata as any)?.titleText || undefined,
+        articleImageData: (d.metadata as any)?.articleImageData || undefined,
+        socialImageData: (d.metadata as any)?.socialImageData || undefined,
       }));
     }
   } catch (e) {
@@ -181,7 +185,7 @@ const saveDraftToDb = async (walletAddress: string, draft: Draft): Promise<strin
           text: draft.text,
           has_image: draft.hasImage,
           has_video: draft.hasVideo,
-          metadata: { hasAudio: draft.hasAudio },
+          metadata: { hasAudio: draft.hasAudio, articleBody: draft.articleBody, articleTitle: draft.articleTitle, articleImageData: draft.articleImageData, socialImageData: draft.socialImageData },
         })
         .select('id')
         .single(),
@@ -226,7 +230,7 @@ interface UsePostFormReturn {
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
-    saveDraft: () => void;
+    saveDraft: (article?: { body: string; title: string; imageData?: string; socialData?: string }) => void;
     loadDraft: (draft: Draft) => void;
     deleteDraft: (id: string) => void;
     startRecording: () => void;
@@ -1154,7 +1158,7 @@ export function usePostForm(
   }, [user?.address]);
 
   // Drafts actions
-  const saveDraft = useCallback(() => {
+  const saveDraft = useCallback((article?: { body: string; title: string; imageData?: string; socialData?: string }) => {
     const newDraft: Draft = {
       id: Date.now().toString(),
       text,
@@ -1162,6 +1166,10 @@ export function usePostForm(
       hasImage: hasImage,
       hasVideo: hasVideo,
       hasAudio: hasAudio,
+      articleBody: article?.body,
+      articleTitle: article?.title,
+      articleImageData: article?.imageData,
+      socialImageData: article?.socialData,
     };
     const updatedDrafts = [newDraft, ...drafts].slice(0, 10);
     setDrafts(updatedDrafts);
@@ -1261,7 +1269,7 @@ export function usePostForm(
     }
   }, []);
 
-  const handlePost = useCallback(async (extra?: { soundtrackTag?: string; articleBody?: string }) => {
+  const handlePost = useCallback(async (extra?: { soundtrackTag?: string; articleBody?: string; articleImage?: File; socialImage?: File }) => {
     if (isPosting) return;
 
     // Validate required fields
@@ -1723,6 +1731,8 @@ export function usePostForm(
         submittedTitle,
         submittedDescription,
         extra?.articleBody || '',
+        extra?.articleImage ? `${extra.articleImage.name}:${extra.articleImage.size}:${extra.articleImage.lastModified}` : '',
+        extra?.socialImage ? `${extra.socialImage.name}:${extra.socialImage.size}:${extra.socialImage.lastModified}` : '',
         media
           .map((m) =>
             [
@@ -1752,6 +1762,8 @@ export function usePostForm(
           name: submittedTitle,
           description: submittedDescription,
           articleBody: extra?.articleBody,
+          articleImage: extra?.articleImage,
+          socialImage: extra?.socialImage,
           postType,
           chainId,
           category: mergedCategories,
