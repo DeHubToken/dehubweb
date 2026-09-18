@@ -195,6 +195,12 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const replayRef = useRef<HTMLVideoElement>(null);
   const [replayProgress, setReplayProgress] = useState<number | undefined>(undefined);
   const [replayPlaying, setReplayPlaying] = useState(false);
+  const [replayBuffering, setReplayBuffering] = useState(false);
+  useEffect(() => {
+    setReplayBuffering(false);
+    setReplayPlaying(false);
+    setReplayProgress(undefined);
+  }, [stream.replayUrl]);
   const toggleReplay = useCallback(() => {
     const el = replayRef.current;
     if (!el) return;
@@ -1097,12 +1103,25 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 if (!Number.isFinite(el.duration) || el.duration <= 0) return;
                 setReplayProgress(el.currentTime / el.duration);
               } : undefined}
-              onPlay={() => setReplayPlaying(true)}
-              onPause={() => setReplayPlaying(false)}
+              onPlay={(e) => {
+                setReplayPlaying(true);
+                setReplayBuffering(e.currentTarget.readyState < 3);
+              }}
+              onPause={() => { setReplayPlaying(false); setReplayBuffering(false); }}
+              onWaiting={(e) => setReplayBuffering(!e.currentTarget.paused)}
+              onSeeking={(e) => setReplayBuffering(!e.currentTarget.paused)}
+              onPlaying={() => setReplayBuffering(false)}
+              onCanPlay={() => setReplayBuffering(false)}
+              onError={() => setReplayBuffering(false)}
               playsInline
               preload="metadata"
               {...{"webkit-playsinline": ""}}
             />
+            {immersive && replayBuffering && (
+              <div role="status" aria-label={t('common.loading', 'Loading')} className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+                <ButtonLoader size={40} className="!filter-none" />
+              </div>
+            )}
             {/* Full-bleed took the native control bar away so the scrub
                 line could have the floor to itself — and with it went the
                 only way to start a replay, which left an ended stream as a
