@@ -74,6 +74,7 @@ export interface UnifiedFeedItem {
   tokenId: number;
   name: string;
   description?: string;
+  articleBody?: string;
   imageUrl: string;
   imageUrls?: string[];
   videoUrl?: string;
@@ -453,6 +454,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     content: trimmedDesc || (hasMeaningfulTitle ? '' : trimmedName) || '',
     rawName,
     rawDescription,
+    articleBody: item.articleBody,
     createdAt: item.createdAt,
     views: formatViews(resolveViewCount(item)).replace(' views', ''),
     status: item.status,

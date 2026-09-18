@@ -78,6 +78,7 @@ export interface BaseFeedItem {
  * Text post content
  */
 export interface TextPost extends BaseFeedItem {
+  articleBody?: string;
   type: 'post';
   author: User;
   /** Post title (from API `name` field) — may be empty/whitespace for untitled posts */

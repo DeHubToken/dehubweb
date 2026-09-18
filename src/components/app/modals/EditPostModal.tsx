@@ -31,6 +31,7 @@ import { useTranslation } from 'react-i18next';
 export interface EditPostResult {
   name: string;
   description: string;
+  articleBody?: string;
   categories: string[];
   commentsDisabled: boolean;
   contentRating: ContentRating;
@@ -45,6 +46,7 @@ interface EditPostModalProps {
   tokenId: number | string;
   currentTitle?: string;
   currentDescription?: string;
+  currentArticleBody?: string;
   currentCategories?: string[];
   currentCommentsDisabled?: boolean;
   currentContentRating?: ContentRating;
@@ -63,6 +65,7 @@ export function EditPostModal({
   tokenId,
   currentTitle = '',
   currentDescription = '',
+  currentArticleBody,
   currentCategories = [],
   currentCommentsDisabled = false,
   currentContentRating,
@@ -77,6 +80,7 @@ export function EditPostModal({
   const { t } = useTranslation();
   const [name, setName] = useState(currentTitle);
   const [description, setDescription] = useState(currentDescription);
+  const [articleBody, setArticleBody] = useState(currentArticleBody ?? '');
   const [categoryInput, setCategoryInput] = useState('');
   const [categories, setCategories] = useState<string[]>(currentCategories);
   const [commentsDisabled, setCommentsDisabled] = useState(currentCommentsDisabled);
@@ -126,13 +130,14 @@ export function EditPostModal({
       editingTokenRef.current = String(tokenId);
       setName(currentTitle);
       setDescription(currentDescription);
+      setArticleBody(currentArticleBody ?? '');
       setCategories(currentCategories);
       setCommentsDisabled(currentCommentsDisabled);
       setIsMature(currentContentRating === 'mature');
       setIsForKids(currentForKids === true);
       setCategoryInput('');
     }
-  }, [open, tokenId, currentTitle, currentDescription, currentCategories, currentCommentsDisabled, currentContentRating, currentForKids]);
+  }, [open, tokenId, currentTitle, currentDescription, currentArticleBody, currentCategories, currentCommentsDisabled, currentContentRating, currentForKids]);
 
   const handleAddCategory = () => {
     const trimmed = categoryInput.trim();
@@ -150,6 +155,7 @@ export function EditPostModal({
     const params: Record<string, unknown> = {};
     if (name.trim() !== currentTitle) params.name = name.trim();
     if (description.trim() !== currentDescription) params.description = description.trim();
+    if (currentArticleBody !== undefined && articleBody.trim() !== currentArticleBody) params.articleBody = articleBody.trim();
     if (JSON.stringify(categories) !== JSON.stringify(currentCategories)) params.category = categories;
     if (commentsDisabled !== currentCommentsDisabled) params.commentsDisabled = commentsDisabled;
     const nextRating: ContentRating = isMature ? 'mature' : 'safe';
@@ -187,6 +193,10 @@ export function EditPostModal({
       toast.error('Description must be 500 characters or less');
       return;
     }
+    if (currentArticleBody !== undefined && articleBody.trim().length < 100) {
+      toast.error('Article body must be at least 100 characters');
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -198,7 +208,7 @@ export function EditPostModal({
       const result = await editPost(tokenId, params as any);
       if (result.result) {
         toast.success('Post updated successfully');
-        onSuccess?.({ name: name.trim(), description: description.trim(), categories, commentsDisabled, contentRating: nextRating, forKids: isForKids, shopLinks, shopListingCount: pickedListingIds.length });
+        onSuccess?.({ name: name.trim(), description: description.trim(), articleBody: currentArticleBody !== undefined ? articleBody.trim() : undefined, categories, commentsDisabled, contentRating: nextRating, forKids: isForKids, shopLinks, shopListingCount: pickedListingIds.length });
         onOpenChange(false);
       } else {
         toast.error('Failed to update post');
@@ -248,6 +258,12 @@ export function EditPostModal({
           </div>
 
           {/* Description */}
+          {currentArticleBody !== undefined && <div className="space-y-2">
+            <Label htmlFor="edit-article-body">Article body</Label>
+            <Textarea id="edit-article-body" value={articleBody} onChange={e => setArticleBody(e.target.value)}
+              maxLength={20000} className="min-h-64 bg-white/5 border-white/10 text-white" />
+            <p className="text-xs text-zinc-500 text-right">{articleBody.length}/20,000</p>
+          </div>}
           <div className="space-y-2">
             <Label htmlFor="edit-description" className="text-sm font-medium text-zinc-300">
               Description

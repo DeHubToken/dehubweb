@@ -39,6 +39,7 @@ function normalizeEditedPost(edited: EditPostResult) {
     content: trimmedDesc || (hasMeaningfulTitle ? '' : trimmedName) || '',
     rawName: edited.name,
     rawDescription: edited.description,
+    articleBody: edited.articleBody,
     categories: edited.categories,
     // For video/image cards that use `name` and `description` directly
     name: edited.name,
