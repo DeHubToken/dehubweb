@@ -51,12 +51,7 @@
 
   .hud{position:fixed;z-index:5;pointer-events:none}
   #hudTL{top:14px;left:16px}
-  /* the wordmark runs the trading pair: down-red into up-green */
-  /* the trailing letter-space sits inside the box, so indent by the same
-     amount or anything centred under it reads a third of a character left */
-  #logo{font-weight:700;font-size:20px;letter-spacing:.32em;color:var(--down);
-    text-indent:.32em;text-align:center;text-shadow:0 0 18px rgba(255,77,106,.55)}
-  #logo b{color:var(--up);text-shadow:0 0 18px rgba(47,232,140,.6)}
+  #logo{display:block;width:132px;height:88px;object-fit:contain}
   /* DeHub's own mark: Exo Light, all white, mixed case exactly as written.
      Exo is NOT vendored yet — until the woff2 lands beside the other fonts this
      falls back to Chakra Petch at weight 300, which is close but not it. */
@@ -757,7 +752,7 @@
     #prev{bottom:96px;left:12px;right:12px;transform:none;flex-wrap:wrap;
       justify-content:center}
     #prevSym{width:100%;text-align:center;padding:0 0 4px}
-    #logo{font-size:16px}
+    #logo{width:102px;height:68px}
     #pkBox,#csBox{width:calc(100vw - 24px);max-height:82vh;overflow-y:auto}
     /* one card fills a phone; the neighbours peek in at the edges */
     #csRail{margin:0 -18px}
@@ -808,9 +803,7 @@
     animation:bootBreathe 3.4s ease-in-out infinite;will-change:transform,opacity}
   @keyframes bootBreathe{0%,100%{transform:scale(.9);opacity:.5}50%{transform:scale(1.08);opacity:1}}
   #boot>*:not(#bootGlow){position:relative;z-index:1}
-  #bootLogo{font-size:34px;font-weight:700;letter-spacing:.42em;color:var(--down);text-indent:.42em;
-    text-shadow:0 0 30px rgba(255,77,106,.7);animation:pulse 1.6s ease-in-out infinite}
-  #bootLogo b{color:var(--up);text-shadow:0 0 30px rgba(47,232,140,.75)}
+  #bootLogo{display:block;width:min(340px,76vw);height:min(226px,26vh);object-fit:contain;flex-shrink:0}
   @keyframes pulse{50%{opacity:.55}}
   /* Tabular figures: without them every digit change shifts the number's
      width and the whole readout twitches on its way to 100. */
@@ -1054,7 +1047,7 @@
 <div id="vig"></div>
 
 <div class="hud" id="hudTL">
-  <div id="logo">TRENCH<b>STAR</b></div>
+  <img id="logo" src="/arcade/chartopia-brand-v1.webp" alt="Chartopia" width="1536" height="1024">
   <div id="ver">Made By DeHub</div>
 </div>
 
@@ -1327,8 +1320,7 @@
 
 <div id="boot">
   <div id="bootGlow"></div>
-  <div class="dhSpin lg" id="bootSpin"></div>
-  <div id="bootLogo">TRENCH<b>STAR</b></div>
+  <img id="bootLogo" src="/arcade/chartopia-brand-v1.webp" alt="Chartopia" width="1536" height="1024" fetchpriority="high">
   <div id="bootPct" class="mono">0<small>%</small></div>
   <div id="bootBar"><i></i></div>
   <div id="bootStage">INITIALISING</div>
@@ -5471,18 +5463,19 @@ function paintBook(s){
 }
 
 const bootT0=Date.now();
+const chartopiaBrand=document.getElementById('bootLogo');
 function paintBrand(s){
   const ctx=s.ctx,w=s.cw,h=s.ch;
   screenBG(ctx,w,h);
-  const t='CHARTOPIA';
-  ctx.textAlign='center';ctx.font='700 30px "Chakra Petch"';
-  if(Math.random()<0.22){
-    ctx.fillStyle='rgba(56,224,255,0.8)';ctx.fillText(t,w/2+rnd(-3,3),56+rnd(-2,2));
-    ctx.fillStyle='rgba(232,121,249,0.8)';ctx.fillText(t,w/2+rnd(-3,3),56+rnd(-2,2));
+  ctx.textAlign='center';
+  const brandHeight=Math.max(1,h-100);
+  if(chartopiaBrand.complete&&chartopiaBrand.naturalWidth){
+    const scale=Math.min((w-24)/chartopiaBrand.naturalWidth,brandHeight/chartopiaBrand.naturalHeight);
+    const bw=chartopiaBrand.naturalWidth*scale,bh=chartopiaBrand.naturalHeight*scale;
+    ctx.drawImage(chartopiaBrand,(w-bw)/2,10+(brandHeight-bh)/2,bw,bh);
+  }else{
+    ctx.font='700 30px "Chakra Petch"';ctx.fillStyle='#fff';ctx.fillText('CHARTOPIA',w/2,56);
   }
-  ctx.fillStyle='#fff';ctx.fillText(t,w/2,56);
-  ctx.font='600 9px "JetBrains Mono"';ctx.fillStyle=DIM;
-  ctx.fillText('THE TRENCHES, FROM ORBIT',w/2,74);
   const d=new Date();
   ctx.font='700 26px "JetBrains Mono"';ctx.fillStyle=CYAN;
   ctx.fillText(String(d.getUTCHours()).padStart(2,'0')+':'+String(d.getUTCMinutes()).padStart(2,'0')+':'+String(d.getUTCSeconds()).padStart(2,'0'),w/2,h-52);
