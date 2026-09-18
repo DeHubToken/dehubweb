@@ -16,7 +16,7 @@ const MIGRATED_SURFACES = [
   'src/components/app/communities/manage/MembersTab.tsx',
   'src/components/app/chat/DirectMessageChat.tsx',
   'src/components/app/chat/PublicChat.tsx',
-  'src/components/app/cards/LivePostChat.tsx',
+  // LivePostChat always starts with a stream milestone, so it has no empty state.
   'src/components/app/mentions/UserMentionDropdown.tsx',
   'src/features/post/components/DraftsSheet.tsx',
   'src/pages/app/MessagesPage.tsx',
