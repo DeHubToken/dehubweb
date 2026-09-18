@@ -117,7 +117,7 @@ export default function DexPage() {
     try {
       const next = await readSharedMarket();
       if (Date.now() / 1000 - next.observedAt > 180) {
-        if (!hasSnapshot.current) setListError('Shared market data is delayed. Showing the last verified snapshot.');
+        setListError(hasSnapshot.current ? '' : 'Shared market data is delayed. Showing the last verified snapshot.');
       } else setListError('');
       if (next.observedAt !== snapshotTime.current) {
         snapshotTime.current = next.observedAt;
