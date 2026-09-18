@@ -61,13 +61,13 @@ describe('feed video — a tap on the media toggles playback, it does not naviga
     // detour. Gating just the scrubber on it was no better: a profile card
     // that never autoplayed had no timeline at all. The bar is drawn whole and
     // the slider is disabled until the length is known.
-    // `!video.isAudio` is the one other permitted condition: that bar drives the
-    // <video> element, and an audio post has none — it carries the visualizer's
-    // own transport instead. `controlsVisible` is hover plus whatever menu or
+    // Audio and on-air posts have their own player and transport. Recorded
+    // video still exposes its play button before metadata arrives.
+    // `controlsVisible` is hover plus whatever menu or
     // slider the pointer is currently inside, so it only ever holds the bar up
     // for longer.
     const bar = VIDEO_CARD.match(
-      /\{controlsVisible && !video\.isAudio && \(\n\s*<div data-video-controls className="absolute bottom-0([\s\S]*?)\n {8}\)\}/
+      /\{controlsVisible && !video\.isAudio && !\(video\.isLivePost && video\.isLiveNow\) && \(\n\s*<div data-video-controls className="absolute bottom-0([\s\S]*?)\n {8}\)\}/
     );
     expect(bar, 'transport bar is not gated on controls visibility alone').not.toBeNull();
     expect(bar![1]).toContain('handlePlayClick()');

@@ -24,14 +24,14 @@ describe('live feed controls', () => {
     const pause = vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
     const { container } = render(<LiveFeedPreview urls={urls} controlsVisible />);
     const video = container.querySelector('video')!;
-    fireEvent.click(screen.getByRole('button', { name: 'Play', exact: true }));
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }));
     expect(play.mock.instances[0]).toBe(video);
     Object.defineProperty(video, 'paused', { configurable: true, value: false });
     fireEvent.playing(video);
-    fireEvent.click(screen.getByRole('button', { name: 'Pause', exact: true }));
+    fireEvent.click(screen.getByRole('button', { name: 'Pause' }));
     expect(pause.mock.instances[0]).toBe(video);
     fireEvent.pause(video);
-    expect(screen.getByRole('button', { name: 'Play', exact: true })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Play' })).toBeTruthy();
     expect(screen.queryByRole('slider')).toBeNull();
     expect(video.controls).toBe(false);
   });
@@ -47,7 +47,7 @@ describe('live feed controls', () => {
     expect(screen.getAllByRole('button', { name: 'Unmute' })).toHaveLength(1);
     fireEvent.click(screen.getByRole('button', { name: 'Unmute' }));
     expect(video.muted).toBe(false);
-    fireEvent.click(screen.getByRole('button', { name: 'Mute', exact: true }));
+    fireEvent.click(screen.getByRole('button', { name: 'Mute' }));
     expect(video.muted).toBe(true);
     rerender(<Card controlsVisible={false} />);
     expect(screen.queryByRole('button', { name: 'Unmute' })).toBeNull();
