@@ -15,9 +15,10 @@ type Props = {
   onOpenChange: (open: boolean) => void;
   neededDhb: number;
   onFunded: () => void;
+  returnTo?: string;
 };
 
-export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded }: Props) {
+export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, returnTo = 'gift' }: Props) {
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
   const [method, setMethod] = useState<'card' | 'crypto'>('card');
@@ -101,7 +102,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded }: P
           <DrawerTitle className="text-white">Buy tokens</DrawerTitle>
         </DrawerHeader>
         <div className="overflow-y-auto space-y-4 pb-3">
-          <p className="text-sm text-zinc-400">Buy DHB here, then return to your gift. Your amount and message will stay ready.</p>
+          <p className="text-sm text-zinc-400">Buy DHB here, then return to your {returnTo}. Your place will stay ready.</p>
           {!clientSecret && (
             <div className="grid grid-cols-2 gap-2">
               <Button variant="glass" className="w-full" onClick={() => setMethod('card')} aria-pressed={method === 'card'}><CreditCard className="w-4 h-4 mr-2" />Card</Button>
@@ -121,7 +122,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded }: P
                   <EmbeddedCheckout />
                 </EmbeddedCheckoutProvider>
               </div>
-              <p className="text-xs text-zinc-400 text-center">{paymentComplete ? 'Payment complete. Waiting for DHB to reach your wallet…' : 'Complete payment here. Your gift stays open behind this drawer.'}</p>
+              <p className="text-xs text-zinc-400 text-center">{paymentComplete ? 'Payment complete. Waiting for DHB to reach your wallet…' : `Complete payment here. Your ${returnTo} stays open behind this drawer.`}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -134,7 +135,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded }: P
             </div>
           )}
           {error && <p role="alert" className="text-sm text-red-300">{error}</p>}
-          <Button variant="glass" className="w-full" onClick={() => onOpenChange(false)}>Back to gift</Button>
+          <Button variant="glass" className="w-full" onClick={() => onOpenChange(false)}>Back to {returnTo}</Button>
         </div>
       </DrawerContent>
     </Drawer>

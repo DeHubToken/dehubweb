@@ -23,7 +23,6 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { getNFTInfo } from '@/lib/api/dehub';
@@ -49,6 +48,7 @@ import {
 } from '@/hooks/use-superpowers';
 import type { SuperPowerKey } from '@/lib/api/dehub/superpowers';
 import { waitForSignalFlareReceipt } from '@/lib/api/dehub/superpowers';
+import { LiveGiftBuyDrawer } from '@/components/app/live/LiveGiftBuyDrawer';
 
 interface BoostModalProps {
   open: boolean;
@@ -59,7 +59,6 @@ interface BoostModalProps {
 
 export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModalProps) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { walletAddress } = useAuth();
   const { data: status, isLoading, isError } = useSuperpowers(open);
   const { data: ladder } = useSuperpowerLadder();
@@ -68,6 +67,7 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
   const [chosen, setChosen] = useState<SuperPowerKey | null>(null);
   const [targetAccount, setTargetAccount] = useState('');
   const [targetTiers, setTargetTiers] = useState<string[]>([]);
+  const [buyOpen, setBuyOpen] = useState(false);
 
   // The post's real timestamp, fetched rather than taken from the card.
   // `TextPost.createdAt` is already formatted for display ("2h ago") by the
@@ -169,7 +169,8 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
     : null;
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    <>
+    <Drawer open={open && !buyOpen} onOpenChange={onOpenChange}>
       <DrawerContent scrollable column glass className="px-4 pb-6">
         <DrawerHeader className="pb-2">
           <DrawerTitle className="text-white text-lg flex items-center gap-2">
@@ -191,9 +192,9 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
         ) : !status?.tier ? (
           <div className="flex flex-col gap-4 py-4 text-center">
             <ThemedIcon icon="lock" alt="" className="w-12 h-12 mx-auto object-contain opacity-70" />
-            <p className="text-white text-sm">{t('superpowers.needBadge')}</p>
-            <Button variant="outline" onClick={() => { onOpenChange(false); navigate('/app/stake'); }}>
-              {t('superpowers.stakeDhb')}
+            <p className="text-white text-sm">Any badge holder gets SuperPowers. Buy DHB to unlock a badge — staking is not required.</p>
+            <Button variant="outline" onClick={() => setBuyOpen(true)}>
+              Buy DHB
             </Button>
           </div>
         ) : (
@@ -342,6 +343,8 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
         )}
       </DrawerContent>
     </Drawer>
+    <LiveGiftBuyDrawer open={open && buyOpen} onOpenChange={setBuyOpen} neededDhb={1} returnTo="post" onFunded={() => setBuyOpen(false)} />
+    </>
   );
 }
 
