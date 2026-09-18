@@ -817,68 +817,72 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
         queryClient.getQueryData<DeHubNFT>(['single-post', id]) ??
         (findCachedFeedPost(queryClient, id!) as unknown as DeHubNFT | undefined);
 
-      // Try NFT info first (works for minted posts with tokenIds)
-      try {
-        const nft = await getNFTInfo(id!);
-        const normalizedNft = {
-          ...nft,
-          createdAt: nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at || '',
-        };
+      // Stream ObjectIds cannot be parsed by the numeric NFT endpoint.
+      const isStreamId = /^[a-f\d]{24}$/i.test(id!) && !/^\d+$/.test(id!);
+      if (!isStreamId) {
+        try {
+          const nft = await getNFTInfo(id!);
+          const normalizedNft = {
+            ...nft,
+            createdAt: nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at || '',
+          };
 
-        // api.dehub.io answers a request carrying an expired token with 200 and
-        // NO viewer fields rather than 401. Replacing the seed wholesale with
-        // such a response is what flipped a liked post to unliked one second
-        // after opening it. Counts still come from the response; only the
-        // per-viewer flags are carried over.
-        const merged = mergeViewerState(normalizedNft, shown);
+          // api.dehub.io answers a request carrying an expired token with 200 and
+          // NO viewer fields rather than 401. Replacing the seed wholesale with
+          // such a response is what flipped a liked post to unliked one second
+          // after opening it. Counts still come from the response; only the
+          // per-viewer flags are carried over.
+          const merged = mergeViewerState(normalizedNft, shown);
 
-        // Enrich quote post if quotedPost data is missing
-        if (merged.isQuotePost && merged.quotedTokenId && !merged.quotedPost) {
-          try {
-            const quoted = await getNFTInfo(String(merged.quotedTokenId));
-            return { ...merged, quotedPost: quoted };
-          } catch {
-            // If we can't fetch the quoted post, still return the main post
-            return merged;
+          // Enrich quote post if quotedPost data is missing
+          if (merged.isQuotePost && merged.quotedTokenId && !merged.quotedPost) {
+            try {
+              const quoted = await getNFTInfo(String(merged.quotedTokenId));
+              return { ...merged, quotedPost: quoted };
+            } catch {
+              // If we can't fetch the quoted post, still return the main post
+              return merged;
+            }
           }
-        }
 
-        return merged;
-      } catch {
-        // Fallback: try livestream API (stream IDs from /api/live are not NFT tokenIds)
-        const liveRes = await getLiveStream(id!);
-        const stream: any = (liveRes as any)?.result || liveRes;
-        if (!stream) throw new Error('Post not found');
-        
-        // Convert livestream data to DeHubNFT-like shape for unified rendering
-        const account = (stream as any).account;
-        return {
-          // Prefer the stream doc's own numeric NFT tokenId: downstream this
-          // becomes stream.id, which the on-chain gift path BigInt()-encodes
-          // — a hex Mongo _id there throws. The _id stays available for the
-          // /api/live/{id}/* routes via the `stream` passthrough below.
-          tokenId: (stream as any).tokenId ?? ((stream as any)._id || stream.streamId || id),
-          // Carry the raw stream doc so toLiveStream can resolve the Mongo
-          // ObjectId (stream._id) for the /api/live/{id}/* interaction routes.
-          stream,
-          name: stream.title,
-          title: stream.title,
-          description: stream.description,
-          postType: 'live',
-          isLive: isStreamLive(stream),
-          videoUrl: stream.playbackUrl || hlsUrlFor(stream as any),
-          playbackUrl: stream.playbackUrl || hlsUrlFor(stream as any),
-          imageUrl: stream.thumbnailUrl || (stream as any).thumbnail,
-          views: stream.viewerCount || (stream as any).totalViews || 0,
-          totalVotes: { for: stream.likeCount || (stream as any).likes || 0, against: 0 },
-          minter: stream.address || account?.address,
-          minterDisplayName: account?.displayName || account?.username || stream.streamer?.displayName,
-          minterUsername: account?.username || stream.streamer?.username,
-          minterAvatarUrl: account?.avatarImageUrl || account?.avatarUrl || stream.streamer?.avatarImageUrl,
-          category: (stream as any).categories || (stream.category ? [stream.category] : []),
-          creator: account ? { id: account.address, username: account.username, display_name: account.displayName, avatar_url: account.avatarImageUrl || account.avatarUrl } : undefined,
-        } as unknown as DeHubNFT;
+          return merged;
+        } catch {
+          // Older stream links may not have the standard ObjectId shape.
+        }
       }
+      // Resolve stream links directly, or fall back after an NFT lookup fails.
+      const liveRes = await getLiveStream(id!);
+      const stream: any = (liveRes as any)?.result || liveRes;
+      if (!stream) throw new Error('Post not found');
+
+      // Convert livestream data to DeHubNFT-like shape for unified rendering
+      const account = (stream as any).account;
+      return {
+        // Prefer the stream doc's own numeric NFT tokenId: downstream this
+        // becomes stream.id, which the on-chain gift path BigInt()-encodes
+        // — a hex Mongo _id there throws. The _id stays available for the
+        // /api/live/{id}/* routes via the `stream` passthrough below.
+        tokenId: (stream as any).tokenId ?? ((stream as any)._id || stream.streamId || id),
+        // Carry the raw stream doc so toLiveStream can resolve the Mongo
+        // ObjectId (stream._id) for the /api/live/{id}/* interaction routes.
+        stream,
+        name: stream.title,
+        title: stream.title,
+        description: stream.description,
+        postType: 'live',
+        isLive: isStreamLive(stream),
+        videoUrl: stream.playbackUrl || hlsUrlFor(stream as any),
+        playbackUrl: stream.playbackUrl || hlsUrlFor(stream as any),
+        imageUrl: stream.thumbnailUrl || (stream as any).thumbnail,
+        views: stream.viewerCount || (stream as any).totalViews || 0,
+        totalVotes: { for: stream.likeCount || (stream as any).likes || 0, against: 0 },
+        minter: stream.address || account?.address,
+        minterDisplayName: account?.displayName || account?.username || stream.streamer?.displayName,
+        minterUsername: account?.username || stream.streamer?.username,
+        minterAvatarUrl: account?.avatarImageUrl || account?.avatarUrl || stream.streamer?.avatarImageUrl,
+        category: (stream as any).categories || (stream.category ? [stream.category] : []),
+        creator: account ? { id: account.address, username: account.username, display_name: account.displayName, avatar_url: account.avatarImageUrl || account.avatarUrl } : undefined,
+      } as unknown as DeHubNFT;
     },
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
