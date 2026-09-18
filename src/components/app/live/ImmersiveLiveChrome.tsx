@@ -190,6 +190,7 @@ export function ImmersiveLiveChrome({
      caller passes no progress and the bar is not rendered at all. */
   const trackRef = useRef<HTMLDivElement>(null);
   const [seeking, setSeeking] = useState(false);
+  const [seekPreview, setSeekPreview] = useState<number | null>(null);
   const seekable = progress !== undefined && !!onSeek;
 
   const ratioFromEvent = useCallback((clientX: number) => {
@@ -202,18 +203,20 @@ export function ImmersiveLiveChrome({
 
   useEffect(() => {
     if (!seeking) return;
-    const move = (e: PointerEvent) => onSeek?.(ratioFromEvent(e.clientX));
+    const move = (e: PointerEvent) => setSeekPreview(ratioFromEvent(e.clientX));
     const up = (e: PointerEvent) => {
       onSeek?.(ratioFromEvent(e.clientX));
       setSeeking(false);
+      setSeekPreview(null);
     };
+    const cancel = () => { setSeeking(false); setSeekPreview(null); };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
-    window.addEventListener('pointercancel', up);
+    window.addEventListener('pointercancel', cancel);
     return () => {
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
-      window.removeEventListener('pointercancel', up);
+      window.removeEventListener('pointercancel', cancel);
     };
   }, [seeking, onSeek, ratioFromEvent]);
 
@@ -404,10 +407,27 @@ export function ImmersiveLiveChrome({
       {seekable ? (
         <div
           ref={trackRef}
+          role="slider"
+          tabIndex={0}
+          aria-label={title || t('feed.videos')}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round((seekPreview ?? progress ?? 0) * 100)}
+          onKeyDown={(e) => {
+            const current = progress ?? 0;
+            const next = e.key === 'Home' ? 0 : e.key === 'End' ? 1
+              : ['ArrowRight', 'ArrowUp'].includes(e.key) ? Math.min(1, current + 0.05)
+              : ['ArrowLeft', 'ArrowDown'].includes(e.key) ? Math.max(0, current - 0.05)
+              : null;
+            if (next === null) return;
+            e.preventDefault();
+            onSeek?.(next);
+          }}
           onPointerDown={(e) => {
             e.preventDefault();
+            e.currentTarget.focus();
             setSeeking(true);
-            onSeek?.(ratioFromEvent(e.clientX));
+            setSeekPreview(ratioFromEvent(e.clientX));
           }}
           className="absolute inset-x-0 bottom-0 z-30 flex h-6 cursor-pointer touch-none select-none items-end"
         >
@@ -420,7 +440,7 @@ export function ImmersiveLiveChrome({
             <div className="absolute inset-0 bg-white/20" />
             <div
               className="absolute bottom-0 left-0 top-0 bg-white/80"
-              style={{ width: `${Math.min(1, Math.max(0, progress ?? 0)) * 100}%` }}
+              style={{ width: `${Math.min(1, Math.max(0, seekPreview ?? progress ?? 0)) * 100}%` }}
             />
           </div>
         </div>
