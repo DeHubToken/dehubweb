@@ -170,6 +170,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const [transport, setTransport] = useState<'whep' | 'hls'>(
     !preferAndroidHls() && typeof RTCPeerConnection !== 'undefined' && !!whepPlaybackId ? 'whep' : 'hls'
   );
+  // A source swap pauses the element; keep the viewer's intent through fallback.
+  const playbackRequestedRef = useRef(true);
   // If stream.isLive is false, treat as ended immediately — don't try to play a dead HLS URL
   const [streamEnded, setStreamEnded] = useState(!stream.isLive);
   const [confirmEnd, setConfirmEnd] = useState(false);
@@ -403,7 +405,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       endpointFor: typeof whepEndpointFor,
       iceServers?: RTCIceServer[],
     ) => {
-      setIsBuffering(true);
+      setIsBuffering(playbackRequestedRef.current);
       armStartTimer();
       try {
         const { subscribeToWhep } = await import('@/lib/livepeer/whep');
@@ -427,8 +429,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           return;
         }
         video.srcObject = session.stream;
-        await video.play().catch(() => setIsBuffering(false));
+        if (playbackRequestedRef.current) {
+          await video.play().catch(() => setIsBuffering(false));
+        }
         videoPlaybackManager.register(videoId, () => {
+          playbackRequestedRef.current = false;
           video.pause();
           setIsPlaying(false);
         });
@@ -464,6 +469,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       urlsToTry: urlsToTry.length,
       currentUrl: currentUrl(),
     });
+    const resumePlayback = () => {
+      if (!playbackRequestedRef.current) return;
+      setIsBuffering(true);
+      void video.play().catch(() => setIsBuffering(false));
+    };
 
     // Prefer native HLS wherever the browser provides it (Safari + every iOS
     // browser): the hardware media pipeline runs far cooler than hls.js's
@@ -490,6 +500,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       const loadCurrent = () => {
         video.src = urlsToTry[nativeUrlIndex];
         video.load();
+        resumePlayback();
       };
       const onNativeError = () => {
         if (nativeUrlIndex < urlsToTry.length - 1) {
@@ -513,7 +524,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       video.addEventListener('error', onNativeError);
       video.addEventListener('playing', onNativePlaying);
       video.src = urlsToTry[0];
+      resumePlayback();
       videoPlaybackManager.register(videoId, () => {
+        playbackRequestedRef.current = false;
         video.pause();
         setIsPlaying(false);
       });
@@ -555,6 +568,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
 
       tryLoad();
       hls.attachMedia(video);
+      resumePlayback();
 
       hls.on(Hls.Events.ERROR, (_, data) => {
         if (data.fatal) {
@@ -637,6 +651,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     });
 
     videoPlaybackManager.register(videoId, () => {
+      playbackRequestedRef.current = false;
       video.pause();
       setIsPlaying(false);
     });
@@ -658,11 +673,13 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     const video = videoRef.current;
     if (!video) return;
 
-    if (isPlaying) {
+    if (isPlaying || isBuffering) {
+      playbackRequestedRef.current = false;
       setIsBuffering(false);
       video.pause();
       videoPlaybackManager.stop(videoId);
     } else {
+      playbackRequestedRef.current = true;
       setError(null);
       setIsBuffering(true);
       videoPlaybackManager.play(videoId);
@@ -672,7 +689,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         setError('Failed to play stream');
       });
     }
-  }, [isPlaying, videoId]);
+  }, [isPlaying, isBuffering, videoId]);
 
   /**
    * Hold the OS media session while this stream is actually audible.
