@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart, User, Lock, Minus, CreditCard, Wallet, Globe, ArrowDownUp, Info } from 'lucide-react';
+import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart, User, Lock, TrendingDown, CreditCard, Wallet, Globe, ArrowDownUp, Info } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -451,9 +451,9 @@ export default function FullWalletPage() {
           <ArrowDownUp className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap hidden lg:inline">Bridge</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={handleCashOut} disabled={withdrawSubscriptionEarnings.isPending}>
-          {withdrawSubscriptionEarnings.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Minus className="w-5 h-5" />}
-          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.cashOut')}</span>
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => navigate('/dex')}>
+          <TrendingDown className="w-5 h-5" />
+          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('dex.sell')}</span>
         </Button>
       </div>
 
