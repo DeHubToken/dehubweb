@@ -119,6 +119,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         editorRef={refs.editorRef}
         media={state.media}
         onRemoveMedia={actions.removeMedia}
+        onMoveMedia={actions.moveMedia}
         onAddAudio={actions.addAudioToMedia}
         onRemoveAudio={actions.removeAudioFromMedia}
         onToggleMusicVideo={actions.toggleMusicVideo}
