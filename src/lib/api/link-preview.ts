@@ -30,7 +30,9 @@ export async function fetchLinkPreview(url: string): Promise<LinkPreviewData | n
       url: data.url,
       title: data.title,
       description: data.description,
-      image: data.image,
+      // The preview endpoint can return an HTML-escaped OG URL. Its query
+      // parameters must be decoded before the image renderer receives them.
+      image: typeof data.image === 'string' ? data.image.replace(/&amp;/gi, '&') : null,
       siteName: data.siteName,
     };
 
