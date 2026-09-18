@@ -115,6 +115,7 @@ describe('chain-aware wallet actions', () => {
       waitForTransactionReceipt: vi.fn(async () => ({ status: 'reverted', transactionHash: '0xhash' })),
     } };
     mocks.base.mockResolvedValue(signer);
+    mocks.receipt.mockImplementation(signer.publicClient.waitForTransactionReceipt);
     const tx = await writeContractAA(recipient, abi, 'transfer', [recipient, 12n]);
     expect(await tx.wait()).toEqual({ status: 0, hash: '0xhash' });
   });
