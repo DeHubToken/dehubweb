@@ -135,6 +135,8 @@ interface ActionBarProps {
    * different table — and keeps overriding this.
    */
   voteWeight?: number;
+  /** Live applause is repeatable; the persisted post vote still toggles normally. */
+  onLiveReaction?: (reaction: PostReaction) => void;
   /** Tip count to display next to repost */
   tipCount?: number;
   /** Handler for tip action */
@@ -327,6 +329,7 @@ export function ActionBar({
   isReposted: initialIsReposted = false,
   isOptimistic = false,
   voteWeight: voteWeightProp,
+  onLiveReaction,
   tipCount,
   onTip,
   onSeeEngagements,
@@ -480,6 +483,7 @@ export function ActionBar({
    * every time somebody changed their mind.
    */
   const handleReaction = useCallback(async (reaction: PostReaction) => {
+    if (isAuthenticated && !externalDisabled) onLiveReaction?.(reaction);
     if (!postId || isVoting || voteInFlightRef.current || externalDisabled) return;
 
     if (!isAuthenticated) {
@@ -644,7 +648,7 @@ export function ActionBar({
       voteInFlightRef.current = false;
       setIsVoting(false);
     }
-  }, [postId, isVoting, externalDisabled, isLiked, isDisliked, myReaction, localLikeCount, localDislikeCount, localReactionCounts, isAuthenticated, queryClient, onLike, onDislike, voteWeight]);
+  }, [postId, isVoting, externalDisabled, isLiked, isDisliked, myReaction, localLikeCount, localDislikeCount, localReactionCounts, isAuthenticated, queryClient, onLike, onDislike, voteWeight, onLiveReaction]);
 
   /**
    * Tapping the thumbs-up / thumbs-down.
@@ -956,7 +960,7 @@ export function ActionBar({
             aria-label={negativeThumbLabel(myNegativeReaction)}
             aria-haspopup={reactionsEnabled && HAS_NEGATIVE_TRAY ? 'menu' : undefined}
             aria-expanded={reactionsEnabled && HAS_NEGATIVE_TRAY ? dislikeTray.open : undefined}
-            disabled={isVoting}
+            disabled={isVoting && !onLiveReaction}
             animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
@@ -1064,7 +1068,7 @@ export function ActionBar({
           }
           aria-haspopup={reactionsEnabled ? 'menu' : undefined}
           aria-expanded={reactionsEnabled ? likeTray.open : undefined}
-          disabled={isVoting}
+          disabled={isVoting && !onLiveReaction}
           animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
