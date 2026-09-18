@@ -5,7 +5,7 @@ import { getNFTInfo, replacePostImage, addPostImages, getPostImageAllowance } fr
 import { buildFeedImageUrls } from '@/lib/media-url';
 import { applyImageReplacement } from '@/lib/optimistic-edit';
 import { toast } from 'sonner';
-import { MAX_IMAGE_UPLOAD_BYTES } from '@/lib/post-image-allowance';
+import { MAX_IMAGE_UPLOAD_BYTES, MAX_REQUEST_IMAGE_BYTES } from '@/lib/post-image-allowance';
 
 export function EditPostImages({ tokenId, disabled, onBusyChange }: {
   tokenId: number | string; disabled: boolean; onBusyChange: (busy: boolean) => void;
@@ -64,6 +64,10 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
     }
     if (files.some(file => !/^image\/(jpeg|png|webp|gif|heic|heif|avif)$/i.test(file.type) || file.size > MAX_IMAGE_UPLOAD_BYTES)) {
       toast.error('Choose images of 42.069 MB or smaller');
+      return;
+    }
+    if (files.reduce((total, file) => total + file.size, 0) > MAX_REQUEST_IMAGE_BYTES) {
+      toast.error('Images in one upload must total 100 MB or less');
       return;
     }
     position.current = -1;
