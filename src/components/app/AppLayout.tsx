@@ -338,7 +338,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           // second — during the navigation that most needs to feel immediate.
           // `will-change` could not help either, since the property is not
           // compositable. The width now changes on the same frame as the route.
-          maxWidth: isCollapsed && (isHomeFeedRoute(location.pathname) || showHomePagePersisted) ? '100%' : '80rem',
+          maxWidth: location.pathname === '/dex' ? '112rem' : isCollapsed && (isHomeFeedRoute(location.pathname) || showHomePagePersisted) ? '100%' : '80rem',
         }}
       >
         <AppSidebar isOpen={sidebarOpen} onOpenChange={setSidebarOpen} />
@@ -462,7 +462,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           )}
         </main>
 
-        <DesktopRightRail />
+        {location.pathname !== '/dex' && <DesktopRightRail />}
       </div>
       
       <MobileBottomNav />
