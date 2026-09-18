@@ -22,6 +22,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded }: P
   const queryClient = useQueryClient();
   const [method, setMethod] = useState<'card' | 'crypto'>('card');
   const [amountUsd, setAmountUsd] = useState(() => String(Math.max(0.5, Math.ceil(neededDhb / 900 * 100) / 100)));
+  const [cryptoAmount, setCryptoAmount] = useState(() => String(Math.max(1, Math.ceil(neededDhb))));
   const [clientSecret, setClientSecret] = useState('');
   const [sessionId, setSessionId] = useState('');
   const [busy, setBusy] = useState(false);
@@ -95,7 +96,11 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded }: P
             </div>
           )}
           {method === 'crypto' && !clientSecret ? (
-            <NearIntentBuy tokensToReceive={Math.max(neededDhb, 1)} active onDelivered={delivered} />
+            <div className="space-y-3">
+              <label className="text-sm text-zinc-400 block">DHB to buy</label>
+              <Input type="number" min="1" step="1" value={cryptoAmount} onChange={(e) => setCryptoAmount(e.target.value)} className="bg-zinc-800 border-zinc-700 text-white" />
+              <NearIntentBuy tokensToReceive={Math.max(1, Math.floor(Number(cryptoAmount) || 0))} active onDelivered={delivered} />
+            </div>
           ) : clientSecret ? (
             <div className="space-y-3">
               <div className="bg-white rounded-xl overflow-hidden min-h-[400px]">
