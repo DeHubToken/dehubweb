@@ -7,6 +7,7 @@
 
 import { lazy, Suspense, useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
+import { useKeyboardOpen } from '@/hooks/use-keyboard-open';
 import { AppState } from '@/components/app/AppState';
 import { ButtonLoader } from '@/components/app/DeHubLoader';
 import {
@@ -135,6 +136,7 @@ interface LiveStreamCardProps {
 }
 
 export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStreamCardProps) {
+  const keyboardOpen = useKeyboardOpen(immersive);
   // The chat is the post's only conversation, so on the page it starts open;
   // the comment button still folds it away. Full-bleed keeps it open either
   // way — it draws the room itself rather than through this.
@@ -1327,7 +1329,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           data-no-navigate
           onClick={(e) => e.stopPropagation()}
           className={cn(
-            'absolute inset-x-3 bottom-0 z-20 flex max-h-[45%] flex-col justify-end pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-opacity duration-300',
+            'absolute inset-x-3 bottom-0 z-20 flex max-h-[45%] flex-col justify-end transition-opacity duration-300',
+            keyboardOpen ? 'pb-2' : 'pb-[max(0.75rem,env(safe-area-inset-bottom))]',
             chromeHidden && 'invisible pointer-events-none opacity-0'
           )}
         >
