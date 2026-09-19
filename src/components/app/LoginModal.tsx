@@ -26,8 +26,8 @@ import { useTranslation } from 'react-i18next';
 import { ChevronRight } from 'lucide-react';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, warmDeferredSheets } from '@/components/ui/drawer';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
-import { cn } from '@/lib/utils';
 import { type LoginStep, resumingStep } from '@/components/app/login/steps';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import { useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
@@ -198,23 +198,83 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     ? <LoginBodySkeleton />
     : <DeHubPageLoader size={56} minHeight="180px" />;
 
-  // Both mobile and desktop use the same bottom-sheet Drawer. On desktop the
-  // sheet clips to the middle panel's live bounds (--app-main-left /
-  // --app-main-width, measured in AppLayout) so it opens as a drawer in the
-  // gap between the sidebars instead of spanning the full viewport. Falls back
-  // to full-viewport when those vars are unset (e.g. routes without the app
-  // shell/sidebars).
-  //
-  // A 360px viewport-centred cap was tried here and reverted: every overlay
-  // sheet in the app rides this column (PostModal, CommentLikersDrawer,
-  // ReactionInfoDrawer), and a login sheet three times narrower than the rest
-  // reads as a different app, not as a focused overlay.
-  //
-  // POSITIONED WITH left/width, NOT A TRANSFORM. DrawerContent ships
-  // `fixed inset-x-0`; `-translate-x-1/2` would be the obvious way to centre
-  // and is wrong here, because vaul writes `transform: translate3d(...)`
-  // inline to drive the slide-up and the drag, and an inline transform beats a
-  // class — the sheet would jump for the length of every animation.
+  // A wallet password is a focused security interruption, not a page-wide
+  // task. On desktop it therefore lives as a compact panel centred inside the
+  // app's middle column. The mobile flow deliberately remains a bottom sheet,
+  // where that presentation is both expected and keyboard-safe.
+  const usesDesktopUnlockPanel = step === 'wallet-unlock' && !isMobile;
+
+  const sheetBody = (
+    <>
+      <DrawerHeader className="px-6 pt-6 pb-4 shrink-0">
+        <div className="flex items-center justify-center relative">
+          {/* No way back from 'profile' either - the account is already
+              created by the time it shows. */}
+          {step !== 'main' && step !== 'resuming' && step !== 'profile' && !step.startsWith('wallet-') && (
+            <button
+              onClick={() => setStep('main')}
+              className="absolute left-0 p-2 rounded-xl hover:bg-white/10 transition-colors text-white/60 hover:text-white"
+            >
+              <ChevronRight className="w-5 h-5 rotate-180" />
+            </button>
+          )}
+          <img src={dehubLogo} alt="DeHub" className="h-8" />
+        </div>
+        {usesDesktopUnlockPanel ? (
+          <DialogTitle className="text-base font-medium text-white mt-4 text-center">
+            {titleText}
+          </DialogTitle>
+        ) : (
+          <DrawerTitle className="text-base font-medium text-white mt-4 text-center">
+            {titleText}
+          </DrawerTitle>
+        )}
+      </DrawerHeader>
+
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pb-6">
+        <Suspense fallback={fallback}>
+          {/* Kept out of LoginModalBody deliberately: that chunk carries
+              wagmi, and the profile step is reached on a plain session
+              restore (an account saved without a username) where no wallet
+              UI is needed. */}
+          {step === 'profile'
+            ? <LoginProfileStep />
+            : <LoginModalBody open={open} step={step} setStep={setStep} />}
+        </Suspense>
+      </div>
+
+      <div className="shrink-0 px-6 py-4 bg-black/20 border-t border-white/10 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+        <p className="text-xs text-white/40 text-center">
+          By continuing, you agree to our{' '}
+          <a href="https://dehub.io/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors">
+            Terms
+          </a>
+          {' and '}
+          <a href="https://dehub.io/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors">
+            Privacy Policy
+          </a>
+        </p>
+      </div>
+    </>
+  );
+
+  if (usesDesktopUnlockPanel) {
+    return (
+      <Dialog open={open} onOpenChange={handleClose}>
+        <DialogContent
+          data-login-modal
+          style={keyboardStyle ?? undefined}
+          hideCloseButton
+          onEscapeKeyDown={(e) => { if (requiresUsername) e.preventDefault(); }}
+          className="bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 p-0 gap-0 rounded-2xl overflow-hidden z-[2147483646] flex flex-col max-h-[90dvh] sm:left-[calc(var(--app-main-left,0px)+var(--app-main-width,100vw)/2)] sm:w-[min(32rem,calc(var(--app-main-width,100vw)-2rem))] sm:max-w-none"
+          overlayClassName="z-[2147483645] login-modal-overlay bg-black/40 backdrop-blur-xl"
+        >
+          {sheetBody}
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   return (
     <Drawer open={open} onOpenChange={handleClose} warmable walletPrompt dismissible={!requiresUsername} repositionInputs={false}>
       <DrawerContent
@@ -222,63 +282,10 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         style={keyboardStyle ?? undefined}
         hideHandle
         onEscapeKeyDown={(e) => { if (requiresUsername) e.preventDefault(); }}
-        className={cn(
-          "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[2147483646] flex flex-col max-h-[90dvh]",
-          !isMobile && "left-[var(--app-main-left,0px)] right-auto w-[var(--app-main-width,100vw)]",
-        )}
-        overlayClassName={cn(
-          // Unlike the drawer sheet itself (clipped to the middle panel
-          // above), the backdrop spans the full viewport — including both
-          // sidebars — and blurs everything outside the login flow to pull
-          // full attention onto it (mobile keeps its darker bg-black/80
-          // dim from DrawerOverlay's base classes).
-          "z-[2147483645] login-modal-overlay backdrop-blur-xl",
-          !isMobile && "bg-black/40",
-        )}
+        className="bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[2147483646] flex flex-col max-h-[90dvh]"
+        overlayClassName="z-[2147483645] login-modal-overlay backdrop-blur-xl"
       >
-        <DrawerHeader className="px-6 pt-6 pb-4 shrink-0">
-          <div className="flex items-center justify-center relative">
-            {/* No way back from 'profile' either — the account is already
-                created by the time it shows. */}
-            {step !== 'main' && step !== 'resuming' && step !== 'profile' && !step.startsWith('wallet-') && (
-              <button
-                onClick={() => setStep('main')}
-                className="absolute left-0 p-2 rounded-xl hover:bg-white/10 transition-colors text-white/60 hover:text-white"
-              >
-                <ChevronRight className="w-5 h-5 rotate-180" />
-              </button>
-            )}
-            <img src={dehubLogo} alt="DeHub" className="h-8" />
-          </div>
-          <DrawerTitle className="text-base font-medium text-white mt-4 text-center">
-            {titleText}
-          </DrawerTitle>
-        </DrawerHeader>
-
-        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pb-6">
-          <Suspense fallback={fallback}>
-            {/* Kept out of LoginModalBody deliberately: that chunk carries
-                wagmi, and the profile step is reached on a plain session
-                restore (an account saved without a username) where no wallet
-                UI is needed. */}
-            {step === 'profile'
-              ? <LoginProfileStep />
-              : <LoginModalBody open={open} step={step} setStep={setStep} />}
-          </Suspense>
-        </div>
-
-        <div className="shrink-0 px-6 py-4 bg-black/20 border-t border-white/10 pb-[calc(1rem+env(safe-area-inset-bottom))]">
-          <p className="text-xs text-white/40 text-center">
-            By continuing, you agree to our{' '}
-            <a href="https://dehub.io/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors">
-              Terms
-            </a>
-            {' and '}
-            <a href="https://dehub.io/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors">
-              Privacy Policy
-            </a>
-          </p>
-        </div>
+        {sheetBody}
       </DrawerContent>
     </Drawer>
   );
