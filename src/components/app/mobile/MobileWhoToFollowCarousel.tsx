@@ -218,7 +218,9 @@ export function MobileWhoToFollowCarousel() {
                   {getDisplayName(user).charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex items-center justify-center w-full mb-2">
+              {/* Reserve the badge line even when this account has no badge. This
+                  keeps every Follow button on the same baseline in the row. */}
+              <div className="flex h-6 items-end justify-center w-full mb-2">
                 <BadgedName
                   badgeBalance={user.hideBadgeAndBalance ? 0 : user.badgeBalance}
                   username={user.username}
