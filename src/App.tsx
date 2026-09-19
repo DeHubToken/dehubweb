@@ -390,13 +390,16 @@ function AppContent() {
     }
   }, [isLoginModalOpen, isConnecting, isProcessingRedirect, requiresUsername]);
 
+  const wallet = walletAddress ?? (user as { walletAddress?: string | null; address?: string | null } | null)?.walletAddress ?? (user as { address?: string | null } | null)?.address ?? null;
+
   // Capture ?ref=CODE / ?aff=CODE on first load (first-touch wins, 90-day cookie).
+  // Passing the signed-in wallet lets the shared RPC remove an owner's own
+  // test visit from their affiliate analytics.
   useEffect(() => {
-    import("@/lib/affiliateRef").then(m => m.captureAffiliateRefFromUrl());
-  }, []);
+    import("@/lib/affiliateRef").then(m => m.captureAffiliateRefFromUrl(wallet));
+  }, [wallet]);
 
   // When a wallet signs in, self-attribute any pending cookie referral.
-  const wallet = walletAddress ?? (user as { walletAddress?: string | null; address?: string | null } | null)?.walletAddress ?? (user as { address?: string | null } | null)?.address ?? null;
   useEffect(() => {
     if (!wallet) return;
     import("@/lib/affiliate").then(m => m.attributeReferralIfPending(wallet)).catch(() => undefined);
