@@ -18,7 +18,7 @@ import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
 import type { Purchase } from '@/lib/crypto-purchase';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { Interface, formatUnits, parseUnits } from 'ethers';
-import { ensureSignerOnChain, getActiveProvider, rpcRequest, writeBatchAA } from '@/lib/contracts/aa-utils';
+import { ensureSignerOnChain, getActiveProvider, isSelfFundedGasInsufficientError, rpcRequest, writeBatchAA, type AABatchCall } from '@/lib/contracts/aa-utils';
 import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import { ArrowDown } from 'lucide-react';
@@ -84,14 +84,23 @@ export function NearIntentBuy({ tokensToReceive, active, onDelivered }: { tokens
         throw new Error(`Insufficient ${symbol} on ${paymentChainName(receipt.originBlockchain || '')}. Your wallet has ${formatPaymentAmount(formatUnits(balance, receipt.paymentDecimals))} ${symbol}; this payment needs ${formatPaymentAmount(receipt.amountInFormatted)} ${symbol}. Choose another currency or a smaller amount.`);
       }
     }
-    if (receipt.wrapNativePayment && receipt.paymentTokenAddress) {
-      if (!provider?.smartAccount) return (await sendNativeToken(receipt.depositAddress, receipt.amountInFormatted, receipt.paymentDecimals, chain)).hash;
+    if (provider?.smartAccount) {
       const token = new Interface(['function deposit() payable', 'function transfer(address to,uint256 amount) returns (bool)']);
       const value = parseUnits(receipt.amountInFormatted, receipt.paymentDecimals);
-      return (await writeBatchAA([
-        { to: receipt.paymentTokenAddress, data: token.encodeFunctionData('deposit') as `0x${string}`, value },
-        { to: receipt.paymentTokenAddress, data: token.encodeFunctionData('transfer', [receipt.depositAddress, value]) as `0x${string}` },
-      ], { chainId: chain, context: 'crypto purchase', sponsored: false })).hash;
+      const calls: AABatchCall[] = receipt.wrapNativePayment && receipt.paymentTokenAddress
+        ? [
+            { to: receipt.paymentTokenAddress, data: token.encodeFunctionData('deposit') as `0x${string}`, value },
+            { to: receipt.paymentTokenAddress, data: token.encodeFunctionData('transfer', [receipt.depositAddress, value]) as `0x${string}` },
+          ]
+        : receipt.paymentTokenAddress
+          ? [{ to: receipt.paymentTokenAddress, data: token.encodeFunctionData('transfer', [receipt.depositAddress, value]) as `0x${string}` }]
+          : [{ to: receipt.depositAddress, data: '0x', value }];
+      try {
+        return (await writeBatchAA(calls, { chainId: chain, context: 'crypto purchase', sponsored: false })).hash;
+      } catch (error) {
+        if (!isSelfFundedGasInsufficientError(error)) throw error;
+        return (await writeBatchAA(calls, { chainId: chain, context: 'crypto purchase' })).hash;
+      }
     }
     const sent = receipt.paymentTokenAddress
       ? await sendERC20Token(receipt.paymentTokenAddress, receipt.depositAddress, receipt.amountInFormatted, receipt.paymentDecimals, chain)

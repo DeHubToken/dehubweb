@@ -27,7 +27,7 @@ vi.mock('./dhb-token', () => ({
   BASE_CHAIN_ID: 8453, initChainRpcUrls: vi.fn(async () => {}),
   CHAIN_CONFIGS: { 8453: { rpcUrl: 'https://base.invalid' }, 56: { rpcUrl: 'https://bnb.invalid' } },
 }));
-import { getActiveProvider, getWalletAddress, switchChain, writeContractAA, writeBatchAA } from './aa-utils';
+import { getActiveProvider, getWalletAddress, SELF_FUNDED_GAS_INSUFFICIENT, switchChain, writeContractAA, writeBatchAA } from './aa-utils';
 import { sendNativeToken } from '../wallet/send';
 import { WalletActionCancelledError } from '../wallet-unlock-flow';
 
@@ -66,6 +66,17 @@ describe('chain-aware wallet actions', () => {
     await expect(getActiveProvider(1, { sponsored: false })).resolves.toMatchObject({ provider: signer });
     expect(mocks.chain).toHaveBeenCalledWith(1, { sponsored: false });
     expect(mocks.base).not.toHaveBeenCalled();
+  });
+
+  it('marks only a self-funded prefund failure for sponsorship fallback', async () => {
+    const signer = {
+      ...provider(1),
+      smartAccount: {},
+      bundlerClient: { sendUserOperation: vi.fn().mockRejectedValue(new Error("AA21 didn't pay prefund")) },
+    };
+    mocks.chain.mockResolvedValue(signer);
+    const action = writeBatchAA([{ to: recipient, data: '0x' }], { chainId: 1, sponsored: false });
+    await expect(action).rejects.toThrow(SELF_FUNDED_GAS_INSUFFICIENT);
   });
 
   it('never substitutes Base when the requested chain is unavailable or mismatched', async () => {
