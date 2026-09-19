@@ -1,3 +1,4 @@
+import { dexActionError } from '@/lib/dex/action-error';
 import { minuteCache, parseSharedMarket, CANDLE_INTERVALS, type SharedMarket, type CandleInterval } from '@/lib/dex/live-market';
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { ArrowDownUp, ExternalLink, RefreshCw } from 'lucide-react';
@@ -225,7 +226,7 @@ export default function DexPage() {
       await register({ input, ...minted });
     } catch (error) {
       if ((error as { code?: string }).code === 'DEX_REVERTED') { savePending(null); setReview(null); }
-      const message = error instanceof Error ? error.message : 'Could not prepare the position';
+      const message = dexActionError(error, 'Could not prepare the position');
       setFormError(message); void logger.error('Position action failed', { chainId, side, path: '/dex', message });
     } finally { busyRef.current = false; setBusy(false); }
   }
@@ -235,7 +236,7 @@ export default function DexPage() {
     if (!window.confirm(`Withdraw ${formatSize(item.amountDhb)} DHB and ${formatSize(item.amountUsdc)} USDC on ${DEX_CHAINS[item.chain_id as DexChainId].name}? Amounts refresh before signing; price tolerance is 0.5%.`)) return;
     setWithdrawing(`${item.chain_id}:${item.token_id}`);
     try { await withdrawSellPosition(item, walletAddress); toast.success('Position withdrawn'); await loadPositions(); setBalanceRevision((n) => n + 1); }
-    catch (error) { toast.error(error instanceof Error ? error.message : 'Withdrawal failed'); }
+    catch (error) { toast.error(dexActionError(error, 'Withdrawal failed')); }
     finally { setWithdrawing(null); }
   }
   const refresh = () => { void loadPositions(); if (!busy) setBalanceRevision((n) => n + 1); };

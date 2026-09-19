@@ -1,5 +1,7 @@
+import { dexProvider } from './rpc';
+export { dexProvider } from './rpc';
 import { readReceiptFromProviders } from './receipt';
-import { AbiCoder, Contract, FallbackProvider, FetchRequest, JsonRpcProvider, ZeroAddress, formatUnits, id, keccak256 } from 'ethers';
+import { AbiCoder, Contract, ZeroAddress, formatUnits, id, keccak256 } from 'ethers';
 import { Token } from '@uniswap/sdk-core';
 import { Pool, Position } from '@uniswap/v4-sdk';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
@@ -43,27 +45,8 @@ const TRANSFER_TOPIC = id('Transfer(address,address,uint256)');
 // only read the changing onchain position and pool state.
 const verifiedMints = new Set<string>();
 
-const providers = new Map<DexChainId, FallbackProvider>();
-export function dexProvider(chainId: DexChainId) {
-  let provider = providers.get(chainId);
-  if (!provider) {
-    const urls = chainId === BASE_CHAIN_ID
-      ? ['https://mainnet.base.org', 'https://base-rpc.publicnode.com']
-      : ['https://bsc-dataseed.binance.org', 'https://bsc-rpc.publicnode.com'];
-    provider = new FallbackProvider(urls.map((url, index) => {
-      const request = new FetchRequest(url);
-      request.timeout = 10000;
-      request.setThrottleParams({ maxAttempts: 1 });
-      return { provider: new JsonRpcProvider(request, chainId, { staticNetwork: true, batchMaxCount: 1 }),
-        priority: index + 1, stallTimeout: 1000, weight: 1 };
-    }), chainId, { quorum: 1 });
-    providers.set(chainId, provider);
-  }
-  return provider;
-}
-
-export function dexReceipt(chainId: DexChainId, hash: string) {
-  return readReceiptFromProviders(dexProvider(chainId).providerConfigs.map(config => config.provider), hash);
+export async function dexReceipt(chainId: DexChainId, hash: string) {
+  return readReceiptFromProviders((await dexProvider(chainId)).providerConfigs.map(config => config.provider), hash);
 }
 
 function unpackTick(value: bigint, shift: bigint): number {
@@ -100,7 +83,7 @@ export async function verifyPosition(row: IndexedPosition, blockTag?: number): P
   if (row.chain_id !== BASE_CHAIN_ID && row.chain_id !== BNB_CHAIN_ID) return null;
   const chainId = row.chain_id;
   const cfg = DEX_CHAINS[chainId];
-  const provider = dexProvider(chainId);
+  const provider = await dexProvider(chainId);
   const manager = new Contract(cfg.positionManager, POSITION_ABI, provider);
   try {
     const mintKey = `${chainId}:${row.token_id}:${row.owner_address.toLowerCase()}:${row.mint_tx_hash.toLowerCase()}`;
