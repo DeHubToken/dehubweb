@@ -20,7 +20,7 @@ export async function readPaymentBalances(assets: PaymentAsset[], wallet: string
     if (!endpoints.length) throw new Error('Network unavailable');
     let lastError: unknown;
     for (const endpoint of endpoints) {
-      for (let attempt = 0; attempt < 2; attempt += 1) {
+      for (let attempt = 0; attempt < (Array.isArray(urls[chain]) ? 2 : 1); attempt += 1) {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), 8000);
         try {
