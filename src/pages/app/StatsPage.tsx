@@ -461,10 +461,14 @@ function GroupHeading({
   icon: Icon,
   title,
   href,
+  actionHref,
+  actionLabel,
 }: {
   icon: typeof Users;
   title: string;
   href?: string;
+  actionHref?: string;
+  actionLabel?: string;
 }) {
   return (
     // The page stacks its children on a uniform space-y-3. Left alone a heading
@@ -481,6 +485,14 @@ function GroupHeading({
           className="text-[11px] text-zinc-500 hover:text-zinc-300 transition-colors ml-auto shrink-0"
         >
           /api/stats/users
+        </a>
+      )}
+      {actionHref && actionLabel && (
+        <a
+          href={actionHref}
+          className="text-[11px] text-zinc-500 hover:text-zinc-300 transition-colors ml-auto shrink-0"
+        >
+          {actionLabel}
         </a>
       )}
     </div>
@@ -621,7 +633,12 @@ function CommunitySection({ range }: { range: Range }) {
       </div>
 
       {/* New members by period — the same five figures the admin panel shows. */}
-      <GroupHeading icon={UserPlus} title={newMembersLabel} />
+      <GroupHeading
+        icon={UserPlus}
+        title={newMembersLabel}
+        actionHref="/app/explore#new-members"
+        actionLabel={t('stats.community.viewMembers', 'View members')}
+      />
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
         {periods.map((p) => (
           <StatTile key={p.key} label={p.label} value={formatCount(p.value)} />
