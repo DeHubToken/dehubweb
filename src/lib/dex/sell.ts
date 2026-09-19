@@ -42,8 +42,8 @@ async function assertSigningWallet(chainId: DexChainId, expected: string) {
 
 export async function detectDhbChain(walletAddress: string): Promise<{ chainId: DexChainId | null; balance: string; base: string; bnb: string }> {
   const [baseRead, bnbRead] = await Promise.allSettled([
-    readWithTimeout(new Contract(DEX_CHAINS[BASE_CHAIN_ID].dhb, ERC20, dexProvider(BASE_CHAIN_ID)).balanceOf(walletAddress) as Promise<bigint>, 'Base balance'),
-    readWithTimeout(new Contract(DEX_CHAINS[BNB_CHAIN_ID].dhb, ERC20, dexProvider(BNB_CHAIN_ID)).balanceOf(walletAddress) as Promise<bigint>, 'BNB balance'),
+    readWithTimeout(new Contract(DEX_CHAINS[BASE_CHAIN_ID].dhb, ERC20, await dexProvider(BASE_CHAIN_ID)).balanceOf(walletAddress) as Promise<bigint>, 'Base balance'),
+    readWithTimeout(new Contract(DEX_CHAINS[BNB_CHAIN_ID].dhb, ERC20, await dexProvider(BNB_CHAIN_ID)).balanceOf(walletAddress) as Promise<bigint>, 'BNB balance'),
   ]);
   if (baseRead.status === 'rejected' && bnbRead.status === 'rejected') {
     throw new Error('Could not read DHB balances on Base or BNB Chain');
@@ -60,7 +60,7 @@ export async function detectDhbChain(walletAddress: string): Promise<{ chainId: 
 }
 
 export async function detectUsdcChain(walletAddress: string): Promise<{ chainId: DexChainId | null; balance: string }> {
-  const read = (chainId: DexChainId) => new Contract(DEX_CHAINS[chainId].usdc, ERC20, dexProvider(chainId))
+  const read = async (chainId: DexChainId) => new Contract(DEX_CHAINS[chainId].usdc, ERC20, await dexProvider(chainId))
     .balanceOf(walletAddress) as Promise<bigint>;
   const [baseRead, bnbRead] = await Promise.allSettled([readWithTimeout(read(BASE_CHAIN_ID), 'Base balance'), readWithTimeout(read(BNB_CHAIN_ID), 'BNB balance')]);
   if (baseRead.status === 'rejected' && bnbRead.status === 'rejected') {
@@ -124,7 +124,7 @@ export async function quoteSellPosition(input: SellInput): Promise<SellQuote> {
     throw new Error('Enter a valid amount and price range (up to 8 decimal places)');
   }
   const [tickLower, tickUpper] = tickRange(input.chainId, floor, ceiling);
-  const provider = dexProvider(input.chainId);
+  const provider = await dexProvider(input.chainId);
   const dhb = new Token(input.chainId, cfg.dhb, 18, 'DHB');
   const usdc = new Token(input.chainId, cfg.usdc, cfg.usdcDecimals, 'USDC');
   const poolId = Pool.getPoolId(dhb, usdc, FEE, TICK_SPACING, ZeroAddress);
@@ -181,7 +181,7 @@ export async function quoteSellPosition(input: SellInput): Promise<SellQuote> {
 async function ensureTokenApproval(input: SellInput, amount: bigint, progress: (stage: OrderStage) => void) {
   if (amount > MAX_UINT160) throw new Error('Amount exceeds Permit2 limits');
   const cfg = DEX_CHAINS[input.chainId];
-  const provider = dexProvider(input.chainId);
+  const provider = await dexProvider(input.chainId);
   const tokenAddress = input.side === 'sell' ? cfg.dhb : cfg.usdc;
   const symbol = input.side === 'sell' ? 'DHB' : 'USDC';
   const token = new Contract(tokenAddress, ERC20, provider);
@@ -274,7 +274,7 @@ export async function withdrawSellPosition(position: VerifiedPosition, walletAdd
   if (!signer && getAccount(wagmiConfig).address?.toLowerCase() !== walletAddress.toLowerCase()) {
     throw new Error('Connect the wallet that owns this position');
   }
-  const provider = dexProvider(chainId);
+  const provider = await dexProvider(chainId);
   const dhb = new Token(chainId, cfg.dhb, 18, 'DHB');
   const usdc = new Token(chainId, cfg.usdc, cfg.usdcDecimals, 'USDC');
   const poolId = Pool.getPoolId(dhb, usdc, position.poolFee, position.tickSpacing, ZeroAddress);
