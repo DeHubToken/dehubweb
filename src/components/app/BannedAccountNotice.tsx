@@ -59,6 +59,12 @@ export function BannedAccountNotice({ variant = 'panel', className }: BannedAcco
       {bannedReason ? (
         <p className="max-w-sm text-xs text-amber-200/70">{t('banned.reason', { reason: bannedReason })}</p>
       ) : null}
+      <Link
+        to="/dex"
+        className="rounded-lg bg-amber-300 px-3 py-1.5 text-xs font-semibold text-amber-950 transition-colors hover:bg-amber-200"
+      >
+        {t('dex.title')}
+      </Link>
       <Link to="/delete-account" className="text-xs font-medium text-amber-200 underline underline-offset-2">
         {t('banned.deleteAccount')}
       </Link>
