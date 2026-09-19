@@ -53,7 +53,7 @@ const storageKey = (wallet: string) => `dex-pending:${wallet.toLowerCase()}`;
 
 function BookRows({ levels, bid, onPrice, disabled }: { levels: BookLevel[]; bid: boolean; onPrice: (price: number) => void; disabled: boolean }) {
   const total = levels.at(-1)?.cumulativeDhb || 1;
-  if (!levels.length) return <div className="dex-book-empty">{bid ? 'No bid liquidity yet' : 'No ask liquidity yet'}</div>;
+  if (!levels.length) return <div className="dex-book-empty">{bid ? 'No Bids' : 'No ask liquidity yet'}</div>;
   return <div className="dex-book-scroll">{displayBookLevels(levels, bid).map((level) => <button type="button" disabled={disabled} key={level.price}
     className={`dex-book-row ${bid ? 'dex-buy' : 'dex-sell'}`} style={{ '--depth': `${level.cumulativeDhb / total * 100}%` } as CSSProperties}
     aria-label={`Use ${formatPrice(level.price)} as ${bid ? 'buy' : 'sell'} price`} onClick={() => onPrice(level.price)}>
