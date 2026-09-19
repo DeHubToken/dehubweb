@@ -1,6 +1,7 @@
 import { FallbackProvider, FetchRequest, JsonRpcProvider, type PerformActionRequest } from 'ethers';
 import { BASE_CHAIN_ID, CHAIN_CONFIGS, initChainRpcUrls } from '@/lib/contracts/dhb-token';
 import type { DexChainId } from './v4';
+import { readWithTimeout } from './read-timeout';
 
 // With quorum 1, ethers can accept a fast SERVER_ERROR as the result before
 // starting its backup. Retry only reads after transport failure, never writes.
@@ -30,7 +31,7 @@ function isRpcUnavailable(error: unknown): boolean {
 const providers = new Map<string, FallbackProvider>();
 let rpcInitialization: Promise<void> | undefined;
 export async function dexProvider(chainId: DexChainId) {
-  await (rpcInitialization ??= initChainRpcUrls());
+  await (rpcInitialization ??= readWithTimeout(initChainRpcUrls(), 'RPC configuration', 5000).catch(() => {}));
   const urls = [...new Set([CHAIN_CONFIGS[chainId].rpcUrl,
     chainId === BASE_CHAIN_ID ? 'https://base-rpc.publicnode.com' : 'https://bsc-rpc.publicnode.com',
     ...(chainId === BASE_CHAIN_ID ? ['https://base.drpc.org'] : [])])];
