@@ -103,8 +103,11 @@ export async function fetchPasskeyWraps(userId: string): Promise<PasskeyWrap[]> 
 export async function loadPasskeyWraps(userId: string): Promise<PasskeyWrap[]> {
   try {
     return await fetchPasskeyWraps(userId);
-  } catch {
-    return getCachedPasskeyWraps();
+  } catch (error) {
+    const cached = getCachedPasskeyWraps();
+    if (cached.length) return cached;
+    // An unavailable store is not evidence that biometric recovery is absent.
+    throw error;
   }
 }
 
@@ -119,7 +122,7 @@ export async function savePasskeyWrap(
     backedUp?: boolean | null;
   },
 ): Promise<void> {
-  const { error } = await db().from("user_wallet_passkeys").upsert(
+  const { data, error } = await db().from("user_wallet_passkeys").upsert(
     {
       user_id: userId,
       credential_id: wrap.credentialId,
@@ -134,8 +137,15 @@ export async function savePasskeyWrap(
       last_used_at: new Date().toISOString(),
     },
     { onConflict: "user_id,credential_id" },
-  );
+  ).select('user_id, credential_id, encrypted_seed, salt, iv, prf_salt').single();
   if (error) throw new Error(error.message || "Failed to save biometric unlock");
+  if (
+    data?.user_id !== userId || data?.credential_id !== wrap.credentialId ||
+    data?.encrypted_seed !== wrap.payload.ciphertext || data?.salt !== wrap.payload.salt ||
+    data?.iv !== wrap.payload.iv || data?.prf_salt !== wrap.prfSalt
+  ) {
+    throw new Error('Biometric backup could not be verified. Keep this wallet open and try again.');
+  }
   clearPasskeyCache();
 }
 

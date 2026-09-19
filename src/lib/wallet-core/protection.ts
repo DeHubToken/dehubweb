@@ -112,6 +112,8 @@ export async function getWalletProtection(userId: string): Promise<WalletProtect
     canUseBiometrics: biometricAvailable && wraps.length > 0,
     biometricEnrolledElsewhere: !biometricAvailable && wraps.length > 0,
     noWalletOnServer,
-    stateUnknown: !wallet && wraps.length === 0 && !noWalletOnServer,
+    stateUnknown: (!wallet && wraps.length === 0 && !noWalletOnServer) ||
+      (wrapsResult.status === 'rejected' && wraps.length === 0 &&
+       payloadKind !== 'password' && payloadKind !== 'unknown'),
   };
 }
