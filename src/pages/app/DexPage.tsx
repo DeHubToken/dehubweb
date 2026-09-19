@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { aggregateBook, balanceFraction, formatPrice, formatSize, type BookLevel } from '@/lib/dex/orderbook';
+import { aggregateBook, balanceFraction, displayBookLevels, formatPrice, formatSize, type BookLevel } from '@/lib/dex/orderbook';
 import { DEX_CHAINS, type DexChainId, type VerifiedPosition } from '@/lib/dex/v4';
 import { detectDhbChain, detectUsdcChain, mintSellPosition, quoteSellPosition, recoverMint, withdrawSellPosition, type SellInput, type SellQuote } from '@/lib/dex/sell';
 import { readWithTimeout, type OrderStage } from '@/lib/dex/read-timeout';
@@ -52,7 +52,7 @@ const storageKey = (wallet: string) => `dex-pending:${wallet.toLowerCase()}`;
 function BookRows({ levels, bid, onPrice, disabled }: { levels: BookLevel[]; bid: boolean; onPrice: (price: number) => void; disabled: boolean }) {
   const total = levels.at(-1)?.cumulativeDhb || 1;
   if (!levels.length) return <div className="dex-book-empty">{bid ? 'No bid liquidity yet' : 'No ask liquidity yet'}</div>;
-  return <div className="dex-book-scroll">{levels.map((level) => <button type="button" disabled={disabled} key={level.price}
+  return <div className="dex-book-scroll">{displayBookLevels(levels, bid).map((level) => <button type="button" disabled={disabled} key={level.price}
     className={`dex-book-row ${bid ? 'dex-buy' : 'dex-sell'}`} style={{ '--depth': `${level.cumulativeDhb / total * 100}%` } as CSSProperties}
     aria-label={`Use ${formatPrice(level.price)} as ${bid ? 'buy' : 'sell'} price`} onClick={() => onPrice(level.price)}>
     <span>{formatPrice(level.price)}</span><span>{formatSize(level.dhb)}</span><span>{formatSize(level.cumulativeDhb)}</span>
