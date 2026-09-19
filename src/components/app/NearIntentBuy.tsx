@@ -91,7 +91,7 @@ export function NearIntentBuy({ tokensToReceive, active, onDelivered }: { tokens
       return (await writeBatchAA([
         { to: receipt.paymentTokenAddress, data: token.encodeFunctionData('deposit') as `0x${string}`, value },
         { to: receipt.paymentTokenAddress, data: token.encodeFunctionData('transfer', [receipt.depositAddress, value]) as `0x${string}` },
-      ], { chainId: chain, context: 'crypto purchase' })).hash;
+      ], { chainId: chain, context: 'crypto purchase', sponsored: false })).hash;
     }
     const sent = receipt.paymentTokenAddress
       ? await sendERC20Token(receipt.paymentTokenAddress, receipt.depositAddress, receipt.amountInFormatted, receipt.paymentDecimals, chain)
