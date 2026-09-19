@@ -14,6 +14,7 @@ vi.mock('viem', async (importOriginal) => ({
 }));
 vi.mock('@/lib/connection-source', () => ({ isSmartWalletSession: () => mocks.smart }));
 vi.mock('@/lib/smart-wallet', () => ({ ensureWalletUnlocked: mocks.unlock }));
+vi.mock('@/lib/logger', () => ({ createLogger: () => ({ error: vi.fn() }) }));
 vi.mock('@/lib/web3auth', () => ({
   setupAAProvider: mocks.base, setupAAProviderForChain: mocks.chain,
   getAAProvider: vi.fn(), getOrInitWeb3Auth: vi.fn(),
@@ -77,6 +78,15 @@ describe('chain-aware wallet actions', () => {
     mocks.chain.mockResolvedValue(signer);
     const action = writeBatchAA([{ to: recipient, data: '0x' }], { chainId: 1, sponsored: false });
     await expect(action).rejects.toThrow(SELF_FUNDED_GAS_INSUFFICIENT);
+  });
+
+  it('does not retry with sponsorship after an operation was already submitted', async () => {
+    mocks.chain.mockResolvedValue({ ...provider(1), smartAccount: {}, bundlerClient: {
+      sendUserOperation: vi.fn().mockResolvedValue('0xoperation'),
+      waitForUserOperationReceipt: vi.fn().mockRejectedValue(new Error('prefund receipt lookup failed')),
+    } });
+    await expect(writeBatchAA([{ to: recipient, data: '0x' }], { chainId: 1, sponsored: false }))
+      .rejects.not.toThrow(SELF_FUNDED_GAS_INSUFFICIENT);
   });
 
   it('never substitutes Base when the requested chain is unavailable or mismatched', async () => {
