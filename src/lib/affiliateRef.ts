@@ -56,7 +56,7 @@ const getVisitorId = (): string => {
  * App.tsx at boot, and a static import would drag the client onto the boot
  * path.
  */
-export const recordAffiliateClick = (code: string) => {
+export const recordAffiliateClick = (code: string, viewerAddress?: string | null) => {
   try {
     const visitorId = getVisitorId();
     let source: string | null = null;
@@ -69,6 +69,7 @@ export const recordAffiliateClick = (code: string) => {
         p_code: code,
         p_visitor_id: visitorId,
         p_source: source,
+        p_viewer_address: viewerAddress?.toLowerCase() || null,
       } as never)),
     ).catch(() => { /* analytics must never block a landing */ });
   } catch { /* analytics must never block a landing */ }
@@ -76,8 +77,16 @@ export const recordAffiliateClick = (code: string) => {
 
 export const getAffiliateRef = (): string | null => readCookie();
 
-export const captureAffiliateRefFromUrl = () => {
+export const captureAffiliateRefFromUrl = (viewerAddress?: string | null) => {
   try {
+    const existingRef = readCookie();
+    // A page can arrive before the wallet session restores. Once it does, send
+    // the existing first-touch referral again so the RPC can remove a self-view.
+    if (existingRef) {
+      if (viewerAddress) recordAffiliateClick(existingRef, viewerAddress);
+      return;
+    }
+
     const params = new URLSearchParams(window.location.search);
     const raw = params.get("ref") || params.get("aff");
     if (!raw) return;
@@ -88,7 +97,7 @@ export const captureAffiliateRefFromUrl = () => {
     // Count the arrival only on first touch. /r/CODE records its own view and
     // then sends people on to /app?ref=CODE, so recording unconditionally here
     // would bill that one visitor twice.
-    recordAffiliateClick(code);
+    recordAffiliateClick(code, viewerAddress);
   } catch { /* ignore */ }
 };
 

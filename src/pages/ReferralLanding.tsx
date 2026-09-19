@@ -6,6 +6,7 @@ import { Copy, ArrowRight, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { isValidAffiliateCode, setAffiliateRef, recordAffiliateClick } from "@/lib/affiliateRef";
 import { resolveDeepLinkTarget } from "@/lib/affiliateDeepLink";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
@@ -21,6 +22,8 @@ export default function ReferralLanding() {
   const valid = isValidAffiliateCode(code);
   const { search } = useLocation();
   const navigate = useNavigate();
+  const { walletAddress, user } = useAuth();
+  const viewerAddress = walletAddress ?? (user as { walletAddress?: string | null; address?: string | null } | null)?.walletAddress ?? (user as { address?: string | null } | null)?.address ?? null;
   // `/r/<CODE>/docs/whatever` (or `?to=/docs/whatever`) attributes the visit and
   // then hands the visitor straight to that page, so one hyperlink can both earn
   // and land somewhere specific. Everything below only runs when there is no
@@ -97,8 +100,8 @@ export default function ReferralLanding() {
 
   useEffect(() => {
     if (!valid) return;
-    recordAffiliateClick(code);
-  }, [code, valid]);
+    recordAffiliateClick(code, viewerAddress);
+  }, [code, valid, viewerAddress]);
 
   // Preload the share image immediately — its URL only depends on the code,
   // so it downloads in parallel with the inviter lookup instead of after it.
