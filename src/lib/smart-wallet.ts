@@ -114,6 +114,7 @@ let hydrationPromise: Promise<IProvider | null> | null = null; // vault → prov
 let storedAAProvider: AccountAbstractionProvider | null = null;
 let pendingAASetupPromise: Promise<AccountAbstractionProvider | null> | null = null;
 const storedChainAAProviders = new Map<number, AccountAbstractionProvider>();
+const storedSelfFundedChainAAProviders = new Map<number, AccountAbstractionProvider>();
 
 // ── Pimlico config (unchanged from the old web3auth module) ─────────────────
 let cachedPimlicoConfig: { bundlerUrl: string; paymasterUrl: string } | null = null;
@@ -443,6 +444,7 @@ export function lockWallet(): void {
   storedAAProvider = null;
   pendingAASetupPromise = null;
   storedChainAAProviders.clear();
+  storedSelfFundedChainAAProviders.clear();
   try { localStorage.removeItem(UNLOCKED_AT_KEY); } catch { /* ignore */ }
   // Fire-and-forget: the in-memory key is already gone, so the wallet is locked
   // from this instant whether or not the IDB delete lands.
@@ -464,6 +466,7 @@ export function clearAAProvider(): void {
   storedAAProvider = null;
   pendingAASetupPromise = null;
   storedChainAAProviders.clear();
+  storedSelfFundedChainAAProviders.clear();
 }
 
 export function getAAProviderForChain(chainId: number): AccountAbstractionProvider | null {
@@ -529,8 +532,13 @@ async function _doSetupAAProvider(): Promise<AccountAbstractionProvider | null> 
  * Set up an AA provider for a specific chain (e.g. BNB = 56).
  * Derives Pimlico URLs from the cached Base config by replacing the chain ID.
  */
-export async function setupAAProviderForChain(targetChainId: number): Promise<AccountAbstractionProvider | null> {
-  const cached = storedChainAAProviders.get(targetChainId);
+export async function setupAAProviderForChain(
+  targetChainId: number,
+  options?: { sponsored?: boolean },
+): Promise<AccountAbstractionProvider | null> {
+  const sponsored = options?.sponsored !== false;
+  const providerCache = sponsored ? storedChainAAProviders : storedSelfFundedChainAAProviders;
+  const cached = providerCache.get(targetChainId);
   if (cached) return cached;
 
   const chainInfo = AA_CHAIN_CONFIGS[targetChainId];
@@ -556,7 +564,9 @@ export async function setupAAProviderForChain(targetChainId: number): Promise<Ac
   }
 
   const bundlerUrl = derivePimlicoUrlForChain(pimlicoConfig.bundlerUrl, targetChainId);
-  const paymasterUrl = derivePimlicoUrlForChain(pimlicoConfig.paymasterUrl, targetChainId);
+  const paymasterUrl = sponsored
+    ? derivePimlicoUrlForChain(pimlicoConfig.paymasterUrl, targetChainId)
+    : null;
 
   const { EthereumPrivateKeyProvider } = await loadEthProvider();
   const pkProvider = new EthereumPrivateKeyProvider({
@@ -585,11 +595,15 @@ export async function setupAAProviderForChain(targetChainId: number): Promise<Ac
       tickerName: chainInfo.tickerName,
     },
     bundlerConfig: { url: bundlerUrl },
-    paymasterConfig: { url: paymasterUrl },
+    ...(paymasterUrl ? { paymasterConfig: { url: paymasterUrl } } : {}),
   });
 
-  storedChainAAProviders.set(targetChainId, aaProvider);
-  console.log("[SmartWallet] Chain-specific AA provider ready for", chainInfo.displayName, `(${targetChainId})`);
+  providerCache.set(targetChainId, aaProvider);
+  console.log(
+    "[SmartWallet] Chain-specific AA provider ready for",
+    chainInfo.displayName,
+    `(${targetChainId}, ${sponsored ? 'sponsored' : 'self-funded'})`,
+  );
   return aaProvider;
 }
 
