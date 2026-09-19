@@ -81,6 +81,7 @@ export default function DexPage() {
   const hasSnapshot = useRef(false);
   const [balanceRevision, setBalanceRevision] = useState(0);
   const fundingToken = side === 'buy' ? 'USDC' : 'DHB';
+  const transactions = useMemo(() => [...positions].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, 8), [positions]);
 
   useEffect(() => {
     setReview(null); setChainId(null); setBalance('0'); setBalanceError('');
@@ -220,7 +221,7 @@ export default function DexPage() {
       <section className={`dex-panel dex-chart-panel dex-pane ${mobileView === 'chart' ? 'dex-pane-active' : ''}`}>
         <div className="dex-panel-head"><div className="dex-tabs" role="tablist" aria-label="Chart type"><button role="tab" aria-selected={!depth} onClick={() => setDepth(false)}>Price</button><button role="tab" aria-selected={depth} onClick={() => setDepth(true)}>Depth</button></div>{!depth && <div className="dex-tabs" role="tablist" aria-label="Chart timeframe">{CANDLE_INTERVALS.map((value) => <button role="tab" key={value} aria-selected={period === value} onClick={() => setPeriod(value)}>{value}</button>)}</div>}</div>
         {!depth && loading && !updated ? <div className="dex-chart-empty" role="status">Loading sell positions…</div> : <MarketChart candles={candles} bids={bids} asks={asks} depth={depth} />}
-        <p className="dex-chart-note">{depth ? 'Estimated liquidity from verified DHB/USDC range positions on both networks. Each position settles on its own network.' : 'Shared lowest sell price · USDC · sampled once per minute. Everyone sees the same history; unobserved periods remain empty.'}{updated ? ' · ' + new Date(updated).toLocaleTimeString() : ''}</p>
+        <div className="dex-transactions"><div className="dex-transactions-head"><span>Latest transactions</span><span>Time</span></div>{transactions.length ? transactions.map((item) => <a key={`${item.chain_id}:${item.token_id}`} className="dex-transaction" href={`${DEX_CHAINS[item.chain_id as DexChainId].explorer}/tx/${item.mint_tx_hash}`} target="_blank" rel="noreferrer"><span className={item.side === 'buy' ? 'dex-buy' : 'dex-sell'}>{item.side === 'buy' ? 'Buy' : 'Sell'} <b>{formatSize(item.amountDhb)} DHB</b><small>{formatPrice(item.marketPrice)} USDC · {DEX_CHAINS[item.chain_id as DexChainId].name}</small></span><time>{new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</time></a>) : <div className="dex-transactions-empty">No transactions yet.</div>}</div>
       </section>
       <section className={`dex-panel dex-book-panel dex-pane ${mobileView === 'book' ? 'dex-pane-active' : ''}`}>
         <div className="dex-panel-head"><h2>Order book</h2><select aria-label="Price grouping" className="dex-book-select" value={increment} onChange={(e) => setIncrement(Number(e.target.value))}>{[0.00000001, 0.0000001, 0.000001, 0.00001].map((step) => <option key={step} value={step}>{step.toFixed(8)}</option>)}</select></div>
