@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties }
 import { ArrowDownUp, ExternalLink, RefreshCw } from 'lucide-react';
 import { parseUnits } from 'ethers';
 import { toast } from 'sonner';
+import { useWalletLocked } from '@/hooks/use-wallet-locked';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
@@ -60,7 +61,8 @@ function BookRows({ levels, bid, onPrice, disabled }: { levels: BookLevel[]; bid
 }
 
 export default function DexPage() {
-  const { walletAddress, connect } = useAuth();
+  const { walletAddress, connect, requestWalletUnlock } = useAuth();
+  const walletLocked = useWalletLocked();
   const [side, setSide] = useState<'buy' | 'sell'>('sell');
   const [chainId, setChainId] = useState<DexChainId | null>(null);
   const [balance, setBalance] = useState('0');
@@ -218,6 +220,7 @@ export default function DexPage() {
       if (!/^\d+(\.\d+)?$/.test(amount) || parseUnits(amount, decimals) <= 0n || parseUnits(amount, decimals) > parseUnits(balance, decimals)) throw new Error(`Enter an amount within your available ${fundingToken} balance.`);
       const input: SellInput = { walletAddress, chainId: chainId!, side, amount, minPrice, maxPrice };
       if (!review) { setReview(await quoteSellPosition(input)); return; }
+      if (walletLocked) { requestWalletUnlock(); return; }
       const minted = await mintSellPosition(input, setStage, (txHash) => savePending({ input, txHash }));
       await register({ input, ...minted });
     } catch (error) {
@@ -228,6 +231,7 @@ export default function DexPage() {
   }
   async function handleWithdraw(item: VerifiedPosition) {
     if (!walletAddress || busyRef.current || withdrawing) return;
+    if (walletLocked) { requestWalletUnlock(); return; }
     if (!window.confirm(`Withdraw ${formatSize(item.amountDhb)} DHB and ${formatSize(item.amountUsdc)} USDC on ${DEX_CHAINS[item.chain_id as DexChainId].name}? Amounts refresh before signing; price tolerance is 0.5%.`)) return;
     setWithdrawing(`${item.chain_id}:${item.token_id}`);
     try { await withdrawSellPosition(item, walletAddress); toast.success('Position withdrawn'); await loadPositions(); setBalanceRevision((n) => n + 1); }
@@ -293,7 +297,7 @@ export default function DexPage() {
         {review && !pending && <div className="dex-review"><strong>Review your {side}</strong><br />Deposit {amount} {fundingToken} on {DEX_CHAINS[review.chainId].name}.<br />Range: {formatPrice(Number(minPrice))} – {formatPrice(Number(maxPrice))} USDC per DHB.{review.willCreatePool && <><br />This creates and initializes the 0% pool.</>}</div>}
         {pending && <div className="dex-review">Your transaction has been submitted. Resume confirmation or listing registration without another deposit. <a href={`${DEX_CHAINS[pending.input.chainId].explorer}/tx/${pending.txHash}`} target="_blank" rel="noreferrer">View transaction ↗</a></div>}
         {formError && <div role="alert" className="dex-alert dex-error">{formError}</div>}
-        <button type="button" className={`dex-submit ${side === 'sell' ? 'sell' : ''}`} disabled={busy || checking || !!withdrawing || (!!walletAddress && !chainId && !pending)} onClick={() => void handleCreate()}>{busy ? (isSmartWalletSession() && smartStageText[stage] || stageText[stage]) : !walletAddress ? 'Connect wallet' : pending ? 'Resume listing' : review ? `Confirm ${side}` : `Review ${side}`}</button>
+        <button type="button" className={`dex-submit ${side === 'sell' ? 'sell' : ''}`} disabled={busy || checking || !!withdrawing || (!!walletAddress && !chainId && !pending)} onClick={() => void handleCreate()}>{busy ? (isSmartWalletSession() && smartStageText[stage] || stageText[stage]) : !walletAddress ? 'Connect wallet' : pending ? 'Resume listing' : review && walletLocked ? 'Unlock wallet' : review ? `Confirm ${side}` : `Review ${side}`}</button>
         <p className="dex-help">Network gas applies. Range orders convert as swaps cross your price range. Converted tokens can change back if price reverses; withdraw to complete your trade.</p>
         </div>
       </section>
