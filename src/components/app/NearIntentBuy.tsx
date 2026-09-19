@@ -32,7 +32,7 @@ import bnbLogo from '@/assets/bnb-logo.png';
 
 const tokenLogos: Record<string, string> = { ETH: ethLogo, USDC: usdcLogo, USDT: usdtLogo, BTC: btcLogo, SOL: solLogo, BNB: bnbLogo };
 
-function PaymentPair({ payAmount, paySymbol, payChain, receiveAmount }: { payAmount?: string; paySymbol?: string; payChain?: string; receiveAmount: number }) {
+function PaymentPair({ payAmount, paySymbol, payChain, receiveAmount, editable = false, onPayChange, onReceiveChange }: { payAmount?: string; paySymbol?: string; payChain?: string; receiveAmount: number; editable?: boolean; onPayChange?: (value: string) => void; onReceiveChange?: (value: string) => void }) {
   const { t } = useTranslation();
   const payLogo = paySymbol ? tokenLogos[paySymbol] : undefined;
   return <div className="relative space-y-2" aria-label={t('nearBuy.title')}>
@@ -40,14 +40,14 @@ function PaymentPair({ payAmount, paySymbol, payChain, receiveAmount }: { payAmo
       <div className="flex items-center justify-between text-xs text-zinc-400"><span>{t('buyCoins.youPay')}</span><span>{payChain ? paymentChainName(payChain) : ''}</span></div>
       <div className="mt-2 flex items-center gap-3">
         {payLogo ? <img src={payLogo} alt="" className="h-9 w-9 shrink-0 rounded-full object-contain" /> : <div className="h-9 w-9 shrink-0 rounded-full bg-white/10" />}
-        <span className="min-w-0 flex-1 truncate text-xl font-semibold tabular-nums text-white">{payAmount ? `≈${formatPaymentAmount(payAmount)}` : '—'}</span>
+        {editable ? <Input inputMode="decimal" value={payAmount || ''} onChange={e => onPayChange?.(e.target.value)} className="min-w-0 flex-1 border-0 bg-transparent px-0 text-xl font-semibold tabular-nums text-white focus-visible:ring-0" aria-label={t('buyCoins.youPay')} /> : <span className="min-w-0 flex-1 truncate text-xl font-semibold tabular-nums text-white">{payAmount ? `≈${formatPaymentAmount(payAmount)}` : '—'}</span>}
         <span className="text-sm font-semibold text-white">{paySymbol || '—'}</span>
       </div>
     </div>
     <div className="relative z-10 -my-4 flex justify-center"><span className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/15 bg-zinc-900 text-white"><ArrowDown className="h-4 w-4" /></span></div>
     <div className="rounded-2xl border border-white/15 bg-white/[0.07] px-4 py-3.5">
       <div className="flex items-center justify-between text-xs text-zinc-400"><span>{t('buyCoins.youReceive')}</span><span>Base</span></div>
-      <div className="mt-2 flex items-center gap-3"><img src={dehubCoin} alt="" className="h-9 w-9 shrink-0 rounded-full object-contain" /><span className="min-w-0 flex-1 truncate text-xl font-semibold tabular-nums text-white">{receiveAmount > 0 ? receiveAmount.toLocaleString(undefined, { maximumFractionDigits: 2 }) : '—'}</span><span className="text-sm font-semibold text-white">DHB</span></div>
+      <div className="mt-2 flex items-center gap-3"><img src={dehubCoin} alt="" className="h-9 w-9 shrink-0 rounded-full object-contain" />{editable ? <Input inputMode="numeric" value={receiveAmount > 0 ? String(receiveAmount) : ''} onChange={e => onReceiveChange?.(e.target.value)} className="min-w-0 flex-1 border-0 bg-transparent px-0 text-xl font-semibold tabular-nums text-white focus-visible:ring-0" aria-label={t('buyCoins.youReceive')} /> : <span className="min-w-0 flex-1 truncate text-xl font-semibold tabular-nums text-white">{receiveAmount > 0 ? receiveAmount.toLocaleString(undefined, { maximumFractionDigits: 2 }) : '—'}</span>}<span className="text-sm font-semibold text-white">DHB</span></div>
     </div>
   </div>;
 }
@@ -61,12 +61,20 @@ export function NearIntentBuy({ tokensToReceive, active, onDelivered }: { tokens
   const [search, setSearch] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [connectingSolana, setConnectingSolana] = useState(false);
-  const amount = Math.floor(tokensToReceive);
+  const [amountText, setAmountText] = useState(String(Math.max(1, Math.floor(tokensToReceive))));
+  const amount = Math.floor(Number(amountText) || 0);
   const isActive = visible && (active || isBuyRoute(location.pathname));
   const flow = useCryptoPurchase(cryptoPurchaseApi, walletAddress || '', amount, isActive, user?.solanaAddress || undefined);
   const { purchase, quote, selected, busy } = flow;
   const deliveredRef = useRef<string | null>(null);
   const picker = usePaymentPicker(flow.assets, walletAddress || '', user?.solanaAddress || undefined, isActive, loadPaymentBalances, flow.selectAsset);
+  useEffect(() => { setAmountText(String(Math.max(1, Math.floor(tokensToReceive)))); }, [tokensToReceive]);
+  const changeReceiveAmount = (value: string) => setAmountText(value.replace(/[^0-9]/g, ''));
+  const changePayAmount = (value: string) => {
+    if (!quote || !/^(?:\d+\.?\d*|\.\d+)$/.test(value)) return;
+    const rate = Number(quote.estimatedTokensToReceive || amount) / Number(quote.amountInFormatted || 0);
+    if (rate > 0) setAmountText(String(Math.max(1, Math.floor(Number(value) * rate))));
+  };
   const sendPayment = async (receipt: Purchase) => {
     if (receipt.paymentChainId === 101) return sendSolanaPurchase(receipt);
     const chain = receipt.paymentChainId as ChainId;
@@ -185,7 +193,7 @@ export function NearIntentBuy({ tokensToReceive, active, onDelivered }: { tokens
       {selected && (picker.other || selected.symbol === picker.currency) && <>
         {!direct && <><label className="block text-sm text-zinc-300">{t('nearBuy.refundAddress', { chain: paymentChainName(selected.blockchain) })}<Input value={flow.refund} onChange={e => flow.setRefund(e.target.value)} disabled={!!busy} placeholder={t('nearBuy.refundPlaceholder')} className={`mt-1 ${field}`} /></label>
         <p className="text-xs text-zinc-400">{t('nearBuy.refundHint')}</p></>}
-        <PaymentPair payAmount={quote?.amountInFormatted} paySymbol={selected.symbol} payChain={selected.blockchain} receiveAmount={quote?.estimatedTokensToReceive || amount} />
+        <PaymentPair editable onPayChange={changePayAmount} onReceiveChange={changeReceiveAmount} payAmount={quote?.amountInFormatted} paySymbol={selected.symbol} payChain={selected.blockchain} receiveAmount={quote?.estimatedTokensToReceive || amount} />
         {quote && <div className="space-y-1 text-xs text-zinc-500"><p>{t('nearBuy.gasReserve', { amount: (quote.gasReserveUsd || 0).toFixed(4) })}</p>{estimate}</div>}
         {quote && <label className="flex gap-2 text-xs text-zinc-300"><input type="checkbox" checked={agreed} disabled={busy === 'create'} onChange={e => setAgreed(e.target.checked)} /><span>{t('nearBuy.acceptTerms')} <a href="https://docs.dhb.gg/docs/terms-of-service" target="_blank" rel="noreferrer" className="underline">{t('nearBuy.terms')}</a></span></label>}
         {needsSolana && <Button variant="glass" className="w-full" disabled={connectingSolana} onClick={connectSolana}>{t(connectingSolana ? 'nearBuy.loading' : 'nearBuy.connectSolana')}</Button>}
