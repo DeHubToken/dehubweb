@@ -33,6 +33,7 @@ import { getWalletUnlockIntervalMs } from "@/hooks/use-wallet-unlock-interval";
 import { saveVaultSession, readVaultSession, clearVaultSession } from "@/lib/wallet-core/key-vault";
 import { ROBINHOOD_CHAIN_ID, ROBINHOOD_PUBLIC_RPC, ROBINHOOD_EXPLORER_URL } from "@/lib/chains/robinhood";
 import { waitForWalletUnlock } from '@/lib/wallet-unlock-flow';
+import { pimlicoUserOperationFees } from '@/lib/pimlico-fees';
 
 const CHAIN_NAMESPACES = { EIP155: "eip155" } as const;
 
@@ -515,7 +516,7 @@ async function _doSetupAAProvider(): Promise<AccountAbstractionProvider | null> 
         ticker: BASE_CHAIN.ticker,
         tickerName: BASE_CHAIN.tickerName,
       },
-      bundlerConfig: { url: pimlicoConfig.bundlerUrl },
+      bundlerConfig: { url: pimlicoConfig.bundlerUrl, userOperation: pimlicoUserOperationFees },
       paymasterConfig: { url: pimlicoConfig.paymasterUrl },
     });
 
@@ -594,7 +595,7 @@ export async function setupAAProviderForChain(
       ticker: chainInfo.ticker,
       tickerName: chainInfo.tickerName,
     },
-    bundlerConfig: { url: bundlerUrl },
+    bundlerConfig: { url: bundlerUrl, userOperation: pimlicoUserOperationFees },
     ...(paymasterUrl ? { paymasterConfig: { url: paymasterUrl } } : {}),
   });
 
