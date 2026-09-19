@@ -30,12 +30,15 @@ test('zoom returns keyboard focus, leaves settings closed, and arrows switch sil
   dom.window.close();
 });
 
-test('focus view arrows change favourites without stealing keys from fields or wallets',()=>{
+test('focus view opens from its control and arrows do not steal keys from fields or wallets',()=>{
   const dom=new JSDOM('<div id="btnRow"></div><div id="charSel"></div>',{url:'https://staging.dehub.io/trenchstar-game/?view=focus',runScripts:'outside-only'});
   const w=dom.window;w.matchMedia=()=>({matches:false});w.setInterval=()=>0;w.mountIcons=()=>{};
   const connected=fs.readFileSync('public/trenchstar-game/connected.js','utf8').replace(/^\s*import [^\n]+\n/,'').replace('export function mountConnected','function mountConnected');
   w.eval(connected+'\nwindow.mountConnected=mountConnected;');
   w.mountConnected({screens:[],exitWalk(){},setGuide(){},release(){}});
+  assert.equal(w.document.body.classList.contains('ts-focused'),false);
+  w.document.querySelector('#tsNav [data-tab=focus]').click();
+  assert.equal(w.document.body.classList.contains('ts-focused'),true);
   const key=target=>target.dispatchEvent(new w.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}));
   const name=()=>w.document.querySelector('#tsMarketName').textContent;
   key(w.document.body);assert.equal(name(),'ETH / USDT');

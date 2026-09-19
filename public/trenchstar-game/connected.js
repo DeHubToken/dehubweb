@@ -115,7 +115,10 @@ export function mountConnected(T){
   document.addEventListener('visibilitychange',()=>{if(document.hidden)leaveVoice();});window.addEventListener('pagehide',()=>{leaveVoice();clearInterval(roomTimer);});
   $('#tsNav').onclick=e=>{const tab=e.target.dataset.tab;if(tab==='focus'){close();setFocus(!focusView);}else if(tab==='desks')openDesks();else if(tab==='alerts')openAlerts();else if(tab==='paper')openPaper();else if(tab==='room')openRoom();};
   $('#tsRoomPill').onclick=()=>openRoom();
-  setFocus(params.get('view')==='focus'||params.has('symbol')||read('view',null)==='focus'||matchMedia('(max-width:700px)').matches);
+  /* The arena is the arrival experience on every device. A saved desk, a
+     notification symbol, a deep-link parameter, or a narrow viewport must not
+     silently replace it with Focus Desk; that view opens only from its control. */
+  setFocus(false);
   mountIcons();
   if(params.has('room'))openRoom();
 }

@@ -154,7 +154,7 @@ export default function ArcadeGamePage() {
     if(game?.slug!=='trenchstar')return raw;
     const url=new URL(raw,window.location.origin);
     const params=new URLSearchParams(window.location.search);
-    for(const key of ['room','symbol','view'])if(params.has(key))url.searchParams.set(key,params.get(key)!);
+    for(const key of ['room','symbol'])if(params.has(key))url.searchParams.set(key,params.get(key)!);
     return url.href;
   }, [game]);
   useTrenchstarHost(game?.slug==='trenchstar',frameRef);
