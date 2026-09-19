@@ -48,9 +48,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
   const [articleMode, setArticleMode] = useState(false);
   const [articleBody, setArticleBody] = useState('');
   const [articleImage, setArticleImage] = useState<File | null>(null);
-  const [socialImage, setSocialImage] = useState<File | null>(null);
   const [articleImagePreview, setArticleImagePreview] = useState('');
-  const [socialImagePreview, setSocialImagePreview] = useState('');
   const articleEditorRef = useRef<HTMLTextAreaElement>(null);
   const [articlePreview, setArticlePreview] = useState(false);
   const formatArticle = (before: string, after = '', placeholder = 'text', block = false) => {
@@ -90,12 +88,6 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
     setArticleImagePreview(url);
     return () => URL.revokeObjectURL(url);
   }, [articleImage]);
-  useEffect(() => {
-    if (!socialImage) { setSocialImagePreview(''); return; }
-    const url = URL.createObjectURL(socialImage);
-    setSocialImagePreview(url);
-    return () => URL.revokeObjectURL(url);
-  }, [socialImage]);
 
   const handleTogglePoll = useCallback(() => {
     if (state.poll) {
@@ -155,8 +147,27 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
     setArticleMode(false);
     setArticleBody('');
     setArticleImage(null);
-    setSocialImage(null);
     onClose();
+  };
+
+  const selectPostMode = () => {
+    setArticleMode(false);
+    actions.setLiveMode(null);
+    actions.setShowTitle(false);
+  };
+
+  const selectLiveMode = (mode: 'video' | 'townhall') => {
+    setArticleMode(false);
+    actions.setLiveMode(mode);
+  };
+
+  const selectArticleMode = () => {
+    setArticleMode(true);
+    actions.setShowTitle(true);
+    actions.setLiveMode(null);
+    actions.setIsPPV(false);
+    actions.setIsTokenGated(false);
+    actions.setIsSubscribersOnly(false);
   };
 
   // A banned account can read every post on DeHub and write none of them.
@@ -169,11 +180,13 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
   ) : (
     <>
       <div className="flex items-center justify-center gap-3 px-4 pt-4 pb-1 text-xs font-medium">
-        <button type="button" aria-pressed={state.liveMode === 'video'} onClick={() => { setArticleMode(false); actions.setLiveMode('video'); }} className={cn('transition-colors', state.liveMode === 'video' ? 'text-white' : 'text-white/55 hover:text-white')}>Livestream</button>
+        <button type="button" aria-pressed={!articleMode && state.liveMode === null} onClick={selectPostMode} className={cn('transition-colors', !articleMode && state.liveMode === null ? 'text-white' : 'text-white/55 hover:text-white')}>Post</button>
         <span className="text-white/25" aria-hidden="true">|</span>
-        <button type="button" aria-pressed={state.liveMode === 'townhall'} onClick={() => { setArticleMode(false); actions.setLiveMode('townhall'); }} className={cn('transition-colors', state.liveMode === 'townhall' ? 'text-white' : 'text-white/55 hover:text-white')}>Stages</button>
+        <button type="button" aria-pressed={state.liveMode === 'video'} onClick={() => selectLiveMode('video')} className={cn('transition-colors', state.liveMode === 'video' ? 'text-white' : 'text-white/55 hover:text-white')}>Livestream</button>
         <span className="text-white/25" aria-hidden="true">|</span>
-        <button type="button" aria-pressed={articleMode} onClick={() => { setArticleMode(!articleMode); actions.setShowTitle(!articleMode); actions.setLiveMode(null); if (!articleMode) { actions.setIsPPV(false); actions.setIsTokenGated(false); actions.setIsSubscribersOnly(false); } }} className={cn('transition-colors', articleMode ? 'text-white' : 'text-white/55 hover:text-white')}>Article</button>
+        <button type="button" aria-pressed={state.liveMode === 'townhall'} onClick={() => selectLiveMode('townhall')} className={cn('transition-colors', state.liveMode === 'townhall' ? 'text-white' : 'text-white/55 hover:text-white')}>Stages</button>
+        <span className="text-white/25" aria-hidden="true">|</span>
+        <button type="button" aria-pressed={articleMode} onClick={selectArticleMode} className={cn('transition-colors', articleMode ? 'text-white' : 'text-white/55 hover:text-white')}>Article</button>
       </div>
 
       <PostContentArea
@@ -206,8 +219,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         drafts={state.drafts}
         onSaveDraft={() => {
           if (!articleMode) { actions.saveDraft(); return; }
-          Promise.all([draftImageData(articleImage), draftImageData(socialImage)])
-            .then(([imageData, socialData]) => actions.saveDraft({ body: articleBody, title: state.titleText, imageData, socialData }))
+          draftImageData(articleImage)
+            .then(imageData => actions.saveDraft({ body: articleBody, title: state.titleText, imageData, socialData: imageData }))
             .catch(() => actions.saveDraft({ body: articleBody, title: state.titleText }));
         }}
         onLoadDraft={draft => {
@@ -217,8 +230,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
             setArticleBody(draft.articleBody);
             actions.setTitleText(draft.articleTitle || '');
             actions.setShowTitle(true);
-            void restoreDraftImage(draft.articleImageData, 'article-image.jpg', setArticleImage);
-            void restoreDraftImage(draft.socialImageData, 'social-image.jpg', setSocialImage);
+            void restoreDraftImage(draft.socialImageData || draft.articleImageData, 'article-share-image.jpg', setArticleImage);
           }
         }}
         onDeleteDraft={actions.deleteDraft}
@@ -238,6 +250,26 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
       />
       {articleMode && (
         <div className="px-4 pb-4 space-y-2">
+          <div className="space-y-2 pb-2">
+            <label className="block text-sm text-white/80">Social share image</label>
+            <label className="block cursor-pointer overflow-hidden rounded-xl border border-white/20 bg-white/5 transition-colors hover:border-white/40">
+              {articleImagePreview ? (
+                <div>
+                  <img src={articleImagePreview} alt="Social share preview" className="aspect-[1.91/1] w-full object-cover" />
+                  <div className="space-y-1 p-3">
+                    <p className="line-clamp-1 text-sm font-semibold text-white">{state.titleText.trim() || 'Your article title'}</p>
+                    <p className="line-clamp-2 text-xs text-white/60">{state.text.trim() || 'Your article summary will appear here when this is shared.'}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex aspect-[1.91/1] items-center justify-center px-4 text-center text-xs text-white/60">
+                  Add the image shown at the top of your article and in social previews
+                </div>
+              )}
+              <input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={e => setArticleImage(e.target.files?.[0] || null)} />
+            </label>
+            {articleImage && <button type="button" className="text-xs text-white/60 underline" onClick={() => setArticleImage(null)}>Remove image</button>}
+          </div>
           <label htmlFor="article-body" className="block text-sm text-white/80">Article body</label>
           <div className="flex flex-wrap items-center gap-1 text-xs" aria-label="Article formatting">
             {([
@@ -254,20 +286,6 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
             placeholder="Write your article here. Use blank lines between paragraphs."
             className="w-full min-h-64 rounded-xl border border-white/20 bg-white/5 p-4 text-white outline-none focus:border-white/50" />}
           <p className="text-xs text-white/60">{articleBody.length}/20,000 · minimum 100 characters. The post text above is the summary.</p>
-          <div className="grid grid-cols-2 gap-3 pt-2">
-            {([
-              { label: 'Article image', file: articleImage, preview: articleImagePreview, setFile: setArticleImage },
-              { label: 'Social share image', file: socialImage, preview: socialImagePreview, setFile: setSocialImage },
-            ] as const).map(({ label, file, preview, setFile }) => (
-              <div key={label} className="space-y-2">
-                <label className="block text-xs text-white/70">{label}
-                  <input type="file" accept="image/jpeg,image/png,image/webp" className="mt-2 block w-full text-xs text-white/60 file:mr-2 file:rounded-lg file:border file:border-white/20 file:bg-white/10 file:px-2 file:py-1 file:text-white" onChange={e => setFile(e.target.files?.[0] || null)} />
-                </label>
-                {preview && <img src={preview} alt={`${label} preview`} className="aspect-video w-full rounded-lg object-cover" />}
-                {file && <button type="button" className="text-xs text-white/60 underline" onClick={() => setFile(null)}>Remove</button>}
-              </div>
-            ))}
-          </div>
         </div>
       )}
 
@@ -347,7 +365,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
                 return `[soundtrack:${attachedSound.tokenId}:${attachedSound.title}:${attachedSound.creator}:${relPath}]`;
               })()
             : undefined;
-          actions.handlePost({ ...(soundtrackTag ? { soundtrackTag } : {}), ...(articleMode ? { articleBody: articleBody.trim(), articleImage: articleImage || undefined, socialImage: socialImage || undefined } : {}) });
+          actions.handlePost({ ...(soundtrackTag ? { soundtrackTag } : {}), ...(articleMode ? { articleBody: articleBody.trim(), articleImage: articleImage || undefined, socialImage: articleImage || undefined } : {}) });
         }}
         canPost={computed.canPost && (!articleMode || (state.titleText.trim().length > 0 && state.text.trim().length > 0 && articleBody.trim().length >= 100 && !computed.hasVideo && !computed.hasImage && !computed.hasAudio))}
         isEnhancing={state.isEnhancing}
