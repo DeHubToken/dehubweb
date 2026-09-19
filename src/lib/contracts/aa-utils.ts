@@ -18,6 +18,8 @@ import { isSmartWalletSession } from '@/lib/connection-source';
 import { requestSessionWalletConnect } from '@/lib/wallet-reconnect';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { CHAIN_CONFIGS, BASE_CHAIN_ID, initChainRpcUrls } from './dhb-token';
+import { createLogger } from '@/lib/logger';
+import { userOperationErrorDetail, userOperationValidationMessage } from '@/lib/user-operation-error';
 
 // Hex type for AA transactions
 type Hex = `0x${string}`;
@@ -348,6 +350,8 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   }
 
   const lowerError = errorStr.toLowerCase();
+  const validationMessage = userOperationValidationMessage(userOperationErrorDetail(error));
+  if (validationMessage) return validationMessage;
 
   // Before every other branch: a signing prompt is not a failed transaction and
   // must never be worded as one. Callers that check isWalletLockedError skip
@@ -651,6 +655,7 @@ export async function writeBatchAA(
     chainId: options?.chainId,
   });
 
+  let phase = 'submission';
   try {
     // Same shape as the provider's own single-call path; viem's types here are
     // too deep to name, which is why that path casts as well.
@@ -658,6 +663,7 @@ export async function writeBatchAA(
       account: smartAccount,
       calls: calls.map(c => ({ to: c.to, value: c.value ?? BigInt(0), data: c.data })),
     } as any);
+    phase = 'receipt';
 
     // The bundler resolves a userOp hash to a transaction hash only once it is
     // mined, so unlike the EOA path there is no hash to hand back before then.
@@ -676,10 +682,12 @@ export async function writeBatchAA(
       wait: async () => ({ status: 1, hash: txHash }),
     };
   } catch (sendError) {
-    if (options?.sponsored === false) {
-      let raw = sendError instanceof Error ? sendError.message : String(sendError);
-      try { raw += ` ${JSON.stringify(sendError)}`; } catch { /* Best-effort nested error inspection. */ }
-      const lower = raw.toLowerCase();
+    createLogger('AABatch').error('Batched user operation failed', {
+      context, chainId: options?.chainId, sponsored: options?.sponsored !== false,
+      phase, detail: userOperationErrorDetail(sendError),
+    });
+    if (options?.sponsored === false && phase === 'submission') {
+      const lower = userOperationErrorDetail(sendError).toLowerCase();
       if (
         lower.includes('aa21') ||
         lower.includes('prefund') ||
