@@ -897,7 +897,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // An explicit ?post= link always wins. Somebody following a shared link came
   // for that post, and quietly showing them an advert instead would be the
   // worst possible read of the intent.
-  const boostedPostId = boostSlot ? String(boostSlot.tokenId) : undefined;
+  // A disabled React Query observer may still expose data already cached by
+  // the default feed. Gate the read as well as the request so switching to a
+  // filtered feed cannot carry that cached paid slot across the boundary.
+  const boostedPostId = isDefaultHomeView && boostSlot ? String(boostSlot.tokenId) : undefined;
   const featuredPostId = pinnedPostId ?? boostedPostId;
   const isBoosted = !pinnedPostId && !!boostedPostId;
 
