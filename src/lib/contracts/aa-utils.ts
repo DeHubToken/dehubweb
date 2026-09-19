@@ -142,14 +142,19 @@ export function isWalletLockedError(error: unknown): boolean {
  * Get the active EIP-1193 provider - Web3Auth (social login) or wagmi (wallet).
  * For external wallets, provider is null -- callers use wagmi actions or public RPC instead.
  */
-export async function getActiveProvider(chainId: number = BASE_CHAIN_ID): Promise<{ provider: any; isWeb3Auth: boolean }> {
+export async function getActiveProvider(
+  chainId: number = BASE_CHAIN_ID,
+  options?: { sponsored?: boolean },
+): Promise<{ provider: any; isWeb3Auth: boolean }> {
   if (isSmartWalletSession()) {
     const { ensureWalletUnlocked } = await import('@/lib/smart-wallet');
     await ensureWalletUnlocked();
     // Never substitute Base or the owner EOA for the requested Safe signer.
-    const provider = chainId === BASE_CHAIN_ID
+    const provider = chainId === BASE_CHAIN_ID && options?.sponsored !== false
       ? await setupAAProvider()
-      : await setupAAProviderForChain(chainId);
+      : options?.sponsored === false
+        ? await setupAAProviderForChain(chainId, { sponsored: false })
+        : await setupAAProviderForChain(chainId);
     if (!provider) throw new Error(`NO_SIGNER_ON_CHAIN:${chainId}`);
     const actualChain = await provider.request({ method: 'eth_chainId' }) as string;
     if (Number(BigInt(actualChain)) !== chainId) throw new Error(`NO_SIGNER_ON_CHAIN:${chainId}`);
@@ -618,11 +623,13 @@ export interface AABatchCall {
  */
 export async function writeBatchAA(
   calls: AABatchCall[],
-  options?: { context?: string; chainId?: number },
+  options?: { context?: string; chainId?: number; sponsored?: boolean },
 ): Promise<AAWriteResult> {
   const context = options?.context || 'send transaction';
   if (!calls.length) throw new Error('writeBatchAA called with no calls');
-  const { provider: aaProvider } = await getActiveProvider(options?.chainId);
+  const { provider: aaProvider } = await getActiveProvider(options?.chainId, {
+    sponsored: options?.sponsored,
+  });
 
   const bundlerClient = aaProvider?.bundlerClient;
   const smartAccount = aaProvider?.smartAccount;

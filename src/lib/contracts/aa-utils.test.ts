@@ -60,6 +60,14 @@ describe('chain-aware wallet actions', () => {
     expect(mocks.switch).not.toHaveBeenCalled();
   });
 
+  it('can explicitly use a self-funded smart account instead of a paymaster', async () => {
+    const signer = provider(1);
+    mocks.chain.mockResolvedValue(signer);
+    await expect(getActiveProvider(1, { sponsored: false })).resolves.toMatchObject({ provider: signer });
+    expect(mocks.chain).toHaveBeenCalledWith(1, { sponsored: false });
+    expect(mocks.base).not.toHaveBeenCalled();
+  });
+
   it('never substitutes Base when the requested chain is unavailable or mismatched', async () => {
     mocks.chain.mockResolvedValueOnce(null).mockResolvedValueOnce(provider(8453));
     await expect(getActiveProvider(56)).rejects.toThrow('NO_SIGNER_ON_CHAIN:56');
