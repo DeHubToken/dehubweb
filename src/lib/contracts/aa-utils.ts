@@ -603,6 +603,12 @@ export interface AABatchCall {
   value?: bigint;
 }
 
+export const SELF_FUNDED_GAS_INSUFFICIENT = 'SELF_FUNDED_GAS_INSUFFICIENT';
+
+export function isSelfFundedGasInsufficientError(error: unknown): boolean {
+  return error instanceof Error && error.message === SELF_FUNDED_GAS_INSUFFICIENT;
+}
+
 /**
  * Send several calls as ONE sponsored transaction.
  *
@@ -670,6 +676,19 @@ export async function writeBatchAA(
       wait: async () => ({ status: 1, hash: txHash }),
     };
   } catch (sendError) {
+    if (options?.sponsored === false) {
+      let raw = sendError instanceof Error ? sendError.message : String(sendError);
+      try { raw += ` ${JSON.stringify(sendError)}`; } catch { /* Best-effort nested error inspection. */ }
+      const lower = raw.toLowerCase();
+      if (
+        lower.includes('aa21') ||
+        lower.includes('prefund') ||
+        lower.includes('insufficient funds') ||
+        lower.includes('insufficient balance')
+      ) {
+        throw new Error(SELF_FUNDED_GAS_INSUFFICIENT);
+      }
+    }
     console.error('[AA] Batched user operation failed:', sendError);
     throw new Error(parseTxError(sendError, context));
   }
