@@ -19,6 +19,18 @@ import '@/components/app/dex/exchange.css';
 
 const logger = createLogger('Dex');
 const PAGE_SIZE = 15;
+const EXTERNAL_POOLS = [
+  {
+    pair: 'DHB / ETH',
+    venue: 'Base / Uniswap',
+    url: 'https://app.uniswap.org/swap?chain=base&inputCurrency=ETH&outputCurrency=0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c',
+  },
+  {
+    pair: 'DHB / BNB',
+    venue: 'BNB Chain / PancakeSwap',
+    url: 'https://pancakeswap.finance/swap?chain=bsc&inputCurrency=BNB&outputCurrency=0x680D3113caf77B61b510f332D5Ef4cf5b41A761D',
+  },
+] as const;
 type CachedPosition = Omit<VerifiedPosition, 'liquidity'> & { liquidity: string };
 const readSharedMarket = minuteCache(async () => {
   const { data, error } = await readWithTimeout(Promise.resolve(supabase.rpc('get_dex_market')), 'Shared market');
@@ -80,8 +92,26 @@ export default function DexPage() {
   const loadLock = useRef(false);
   const hasSnapshot = useRef(false);
   const [balanceRevision, setBalanceRevision] = useState(0);
+  const [poolMenuOpen, setPoolMenuOpen] = useState(false);
+  const poolMenuRef = useRef<HTMLDivElement>(null);
   const fundingToken = side === 'buy' ? 'USDC' : 'DHB';
   const transactions = useMemo(() => [...positions].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, 8), [positions]);
+
+  useEffect(() => {
+    if (!poolMenuOpen) return;
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      if (!poolMenuRef.current?.contains(event.target as Node)) setPoolMenuOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setPoolMenuOpen(false);
+    };
+    document.addEventListener('mousedown', closeOnOutsideClick);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('mousedown', closeOnOutsideClick);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [poolMenuOpen]);
 
   useEffect(() => {
     setReview(null); setChainId(null); setBalance('0'); setBalanceError('');
@@ -208,7 +238,23 @@ export default function DexPage() {
 
   return <div className="dex-terminal">
     <header className="dex-top">
-      <div className="dex-pair"><img src={dhbCoinImage} alt="DHB" /><div><h1>DHB <span className="dex-muted">/</span> USDC</h1><p>Combined market · Base + BNB</p></div></div>
+      <div className="dex-pair" ref={poolMenuRef}>
+        <img src={dhbCoinImage} alt="DHB" />
+        <div className="dex-pair-picker">
+          <button type="button" className="dex-pair-trigger" aria-expanded={poolMenuOpen} aria-haspopup="menu" onClick={() => setPoolMenuOpen((open) => !open)}>
+            <span>DHB <span className="dex-muted">/</span> USDC</span><span className="dex-pair-chevron" aria-hidden="true">⌄</span>
+          </button>
+          <p>Combined market · Base + BNB</p>
+          {poolMenuOpen && <div className="dex-pool-menu" role="menu" aria-label="DHB pools">
+            <button type="button" role="menuitem" className="dex-pool-option dex-pool-active" onClick={() => setPoolMenuOpen(false)}>
+              <span><strong>DHB / USDC</strong><small>DeHub DEX / Base + BNB</small></span><span>Current</span>
+            </button>
+            {EXTERNAL_POOLS.map((pool) => <a key={pool.pair} role="menuitem" className="dex-pool-option" href={pool.url} target="_blank" rel="noreferrer" onClick={() => setPoolMenuOpen(false)}>
+              <span><strong>{pool.pair}</strong><small>{pool.venue}</small></span><ExternalLink size={14} aria-hidden="true" />
+            </a>)}
+          </div>}
+        </div>
+      </div>
       <div className="dex-stat"><small>Lowest sell · USDC</small><strong className="dex-reference">{bestAsk != null ? `${formatPrice(bestAsk)} USDC` : '—'}</strong></div>
       <div className="dex-stat"><small>24h change</small><strong className={(snapshot?.change24h || 0) >= 0 ? 'dex-buy' : 'dex-sell'}>{snapshot?.change24h != null ? `${snapshot.change24h >= 0 ? '+' : ''}${snapshot.change24h.toFixed(2)}%` : '—'}</strong></div>
       <div className="dex-stat"><small>Listed DHB</small><strong>{formatSize(totalDhb)}</strong></div>
