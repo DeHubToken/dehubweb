@@ -77,15 +77,15 @@ import {
   getAAProvider,
 } from '@/lib/smart-wallet';
 import { fetchWallet, saveWallet, clearWalletCache, getCachedWallet } from '@/lib/wallet-core/store';
-import { unlockWithBiometrics, hasBiometricUsableHere } from '@/lib/wallet-core/biometric-unlock';
+import { hasBiometricUsableHere } from '@/lib/wallet-core/biometric-unlock';
 import {
   WALLET_UNLOCK_INTERVAL_KEY,
   DEFAULT_WALLET_UNLOCK_INTERVAL,
 } from '@/hooks/use-wallet-unlock-interval';
 import { clearPasskeyCache, deleteAllPasskeyWraps } from '@/lib/wallet-core/passkey-store';
 import { deriveFromSecret, generateMnemonic12 } from '@/lib/wallet-core/derive';
-import { assertWalletAddress } from '@/lib/wallet-core/assert-wallet-address';
-import { encryptString, decryptString } from '@/lib/wallet-core/crypto';
+import { exportWalletPrivateKey } from '@/lib/wallet-core/export';
+import { encryptString } from '@/lib/wallet-core/crypto';
 import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { isUserRejection, isRequestAlreadyPending, isRequestTimeout, describeWalletError, WalletRequestTimeoutError } from '@/lib/wallet-errors';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
@@ -2209,15 +2209,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const exportPrivateKey = async (password: string): Promise<string> => {
     if (!supabaseUserId) throw new Error('Not signed in');
-    const wallet = await fetchWallet(supabaseUserId);
-    if (!wallet) throw new Error('No wallet found for this account.');
-    if (!wallet.payload) {
-      throw new Error('This wallet has no password — export it with biometrics instead.');
-    }
-    const secret = await decryptString(wallet.payload, password);
-    const derived = deriveFromSecret(secret);
-    await assertWalletAddress(derived.ethAddress, wallet.ethAddress);
-    return derived.ethPrivateKey;
+    return exportWalletPrivateKey(supabaseUserId, walletAddress ?? '', password);
   };
 
   /**
@@ -2228,12 +2220,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const exportPrivateKeyWithBiometrics = async (): Promise<string> => {
     if (!supabaseUserId) throw new Error('Not signed in');
-    const wallet = await fetchWallet(supabaseUserId);
-    if (!wallet) throw new Error('No wallet found for this account.');
-    const secret = await unlockWithBiometrics(supabaseUserId);
-    const derived = deriveFromSecret(secret);
-    await assertWalletAddress(derived.ethAddress, wallet.ethAddress);
-    return derived.ethPrivateKey;
+    return exportWalletPrivateKey(supabaseUserId, walletAddress ?? '');
   };
 
   /**
