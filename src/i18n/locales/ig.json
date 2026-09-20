@@ -2451,7 +2451,11 @@
     "volume": "Olu ụda",
     "processing": "Na-edozi vidiyo...",
     "processingFailed": "Nhazi vidiyo dara ada",
-    "processingFailedOwner": "O nwere ihe mebiri n 'akụkụ anyị. Hichapụ a post na bulite video ọzọ."
+    "retryHint": "Onweghị ihe ị ga-ebughachi — anyị debere faịlụ gị.",
+    "retry": "Gbalịa ọzọ",
+    "retrying": "Na-agbaliteghachi...",
+    "retryQueued": "Nhazi ọzọ",
+    "retryFailed": "Enwenwughị ike ịnwagharị ọkwa ahụ"
   },
   "dub": {
     "audio": "Odu",

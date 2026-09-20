@@ -9,7 +9,7 @@
 
 import { useRef, useEffect, useState, useCallback, memo } from 'react';
 import { createPortal } from 'react-dom';
-import { Play, Pause, Loader2, AlertTriangle } from 'lucide-react';
+import { Play, Pause, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { ShortVideo } from '@/types/feed.types';
 import { cn } from '@/lib/utils';
@@ -17,6 +17,7 @@ import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { useTranslation } from 'react-i18next';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
+import { TranscodeRetry } from '@/components/app/cards/TranscodeRetry';
 
 interface VideoSlideProps {
   short: ShortVideo;
@@ -422,12 +423,10 @@ export const VideoSlide = memo(function VideoSlide({
               <img src={thumbnail} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50" />
             )}
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
-              <div className="w-11 h-11 rounded-xl bg-black/50 backdrop-blur-md border border-white/15 flex items-center justify-center">
-                <AlertTriangle className="w-5 h-5 text-white/80" />
-              </div>
-              <span className="text-white/80 text-xs font-medium tracking-wide drop-shadow px-4 text-center">
-                {t('videoPlayer.processingFailed')}
-              </span>
+              {/* Retry is offered on the post itself, not here: a slide in the
+                  carousel carries no ownership, and the creator reaching their
+                  own broken short does so through their profile. */}
+              <TranscodeRetry tokenId={short.id} isOwner={false} />
             </div>
           </div>
         ) : short.transcodingStatus === 'pending' || short.transcodingStatus === 'on' ? (

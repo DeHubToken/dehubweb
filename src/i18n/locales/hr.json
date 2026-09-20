@@ -4699,7 +4699,11 @@
     "volume": "Glasnoća",
     "processing": "Obrada videozapisa...",
     "processingFailed": "Obrada videozapisa nije uspjela",
-    "processingFailedOwner": "Došlo je do pogreške s naše strane. Izbriši ovu objavu i ponovno prenesi videozapis."
+    "retryHint": "Nema ništa za ponovno učitavanje — zadržali smo vašu datoteku.",
+    "retry": "Pokušajte ponovno",
+    "retrying": "Pokušaj ponovno...",
+    "retryQueued": "Ponovno se obrađuje",
+    "retryFailed": "Nije moguće ponovno pokušati tu objavu"
   },
   "dub": {
     "audio": "Zvuk",
