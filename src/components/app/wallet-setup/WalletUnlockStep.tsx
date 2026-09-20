@@ -121,6 +121,15 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       setStateUnknown(p.stateUnknown);
       setSeedIsPasskeyWrapped(p.seedIsPasskeyWrapped);
       setProbing(false);
+      if (p.stateUnknown || (p.seedIsPasskeyWrapped && p.wraps.length === 0)) {
+        biometricLogger.warn('unlock:protection-state', {
+          stateUnknown: p.stateUnknown,
+          cloudWalletAddress: p.wallet?.ethAddress,
+          seedIsPasskeyWrapped: p.seedIsPasskeyWrapped,
+          storedWrapCount: p.wraps.length,
+          biometricAvailable: p.biometricAvailable,
+        });
+      }
     });
     return () => { cancelled = true; };
   }, [userId, probeNonce]);
@@ -148,10 +157,13 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
   const handleBiometricUnlock = async () => {
     setBusy(true);
     setError(null);
+    let stage = 'load-wallet';
     try {
       const current = wallet ?? await loadWallet();
       if (!wallet) setWallet(current);
+      stage = 'passkey-decryption';
       const secret = await unlockWithBiometrics(userId, wraps);
+      stage = 'verify-wallet-owner';
       const derived = deriveFromSecret(secret);
       await assertWalletAddress(derived.ethAddress, current.ethAddress);
       // A wallet whose ONLY key is this passkey is one lost handset from being
@@ -175,9 +187,12 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         setPhase('set-password');
         return;
       }
+      stage = 'adopt-session-signer';
       await onComplete(derived.ethPrivateKey);
     } catch (err) {
       biometricLogger.warn('Biometric unlock did not complete', {
+        stage,
+        cloudWalletAddress: wallet?.ethAddress,
         userId,
         outcome: err instanceof PasskeyCancelledError ? 'cancelled-timeout-or-unavailable' : 'failed',
         errorName: err instanceof Error ? err.name : 'unknown',
