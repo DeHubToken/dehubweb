@@ -9,11 +9,16 @@ const arrival = (id: string, address: string, seconds: number): StreamActivity =
 });
 
 describe('stream chat arrivals', () => {
-  it('collapses history, socket echoes and reconnects into the latest arrival', () => {
+  it('collapses history, socket echoes and reconnects into the first arrival', () => {
     expect(uniqueStreamJoins([
       arrival('old', '0xABC', 1), arrival('other', '0xDEF', 2),
       arrival('echo', '0xabc', 1), arrival('reconnected', '0xabc', 80),
-    ]).map(a => a.id)).toEqual(['other', 'reconnected']);
+    ]).map(a => a.id)).toEqual(['old', 'other']);
+  });
+  it('keeps a reconnect above what the viewer did after arriving', () => {
+    const joins = uniqueStreamJoins([arrival('first', '0xabc', 1), arrival('reconnected', '0xabc', 80)]);
+    expect(joins.map(a => a.id)).toEqual(['first']);
+    expect(Date.parse(joins[0].timestamp)).toBeLessThan(40 * 1000);
   });
   it('does not confuse two anonymous viewers', () => {
     expect(uniqueStreamJoins([arrival('one', '', 1), arrival('two', '', 2)])).toHaveLength(2);
