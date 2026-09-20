@@ -27,8 +27,8 @@ describe('live room reaction transport', () => {
     sendStreamReaction('room-a', 'love');
     expect(mock.socket.emit).toHaveBeenCalledWith('stream.reaction', { streamId: 'room-a', reactionType: 'HEART' });
     expect(receiveA).not.toHaveBeenCalled();
-    mock.listeners.get('stream.reaction')!.forEach(fn => fn({ streamId: 'room-a', reactionType: 'HEART', weight: 14 }));
-    expect(receiveA).toHaveBeenCalledExactlyOnceWith({ reactionType: 'HEART', weight: 14 });
+    mock.listeners.get('stream.reaction')!.forEach(fn => fn({ streamId: 'room-a', reactionType: 'HEART', weight: 14, user: { address: '0xABC' } }));
+    expect(receiveA).toHaveBeenCalledExactlyOnceWith({ reactionType: 'HEART', weight: 14, address: '0xabc' });
     expect(receiveB).not.toHaveBeenCalled();
     a.leave(); b.leave();
     expect(mock.listeners.get('stream.reaction')!.size).toBe(0);
@@ -47,6 +47,14 @@ describe('live room reaction transport', () => {
     mock.token = null;
     sendStreamReaction('room-a', 'like');
     expect(mock.socket.emit).not.toHaveBeenCalled();
+    sub.leave();
+  });
+  it('carries the reactor address so a viewer can drop the echo of their own tap', () => {
+    const receive = vi.fn();
+    const sub = watchStreamReactions('room-a', receive);
+    // A gateway that could not resolve the user still animates for the room.
+    mock.listeners.get('stream.reaction')!.forEach(fn => fn({ streamId: 'room-a', reactionType: 'LIKE', weight: 1 }));
+    expect(receive).toHaveBeenCalledExactlyOnceWith({ reactionType: 'LIKE', weight: 1, address: null });
     sub.leave();
   });
 });

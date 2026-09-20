@@ -69,7 +69,8 @@ import { useStreamPresence } from '@/hooks/use-stream-presence';
 import { useStreamGifts } from '@/hooks/use-stream-gifts';
 import { useGiftAnimations } from '@/hooks/use-gift-animations';
 import { GiftAnimationOverlay } from '@/components/app/live/GiftAnimationOverlay';
-import { LiveReactionFlow } from '@/components/app/live/LiveReactionFlow';
+import { LiveReactionFlow, type SelfReaction } from '@/components/app/live/LiveReactionFlow';
+import { useEngagementWeight } from '@/hooks/use-engagement-weight';
 import type { PostReaction } from '@/lib/reactions';
 import { GIFT_TIERS, tierFromAmount } from '@/lib/live/gift-tiers';
 
@@ -178,12 +179,21 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const playbackRequestedRef = useRef(true);
   // If stream.isLive is false, treat as ended immediately — don't try to play a dead HLS URL
   const [streamEnded, setStreamEnded] = useState(!stream.isLive);
+  // The viewer's own thumb, played on tap rather than on the echo — see
+  // LiveReactionFlow's `self`. The room still gets theirs off the broadcast.
+  const [selfReaction, setSelfReaction] = useState<SelfReaction | null>(null);
+  const selfReactionNonce = useRef(0);
+  const liveReactionWeight = useEngagementWeight();
   const sendLiveReaction = useCallback((reaction: PostReaction) => {
-    if (!stream.streamId || !stream.isLive || streamEnded) return;
+    if (!stream.isLive || streamEnded) return;
+    selfReactionNonce.current += 1;
+    setSelfReaction({ type: reaction, weight: liveReactionWeight, nonce: selfReactionNonce.current });
+    // A missing stream id only costs the room its copy, never the sender theirs.
+    if (!stream.streamId) return;
     void import('@/lib/api/dehub/stream-presence').then(({ sendStreamReaction }) => {
       sendStreamReaction(stream.streamId!, reaction);
     }).catch(() => undefined);
-  }, [stream.streamId, stream.isLive, streamEnded]);
+  }, [stream.streamId, stream.isLive, streamEnded, liveReactionWeight]);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [giftAmount, setGiftAmount] = useState('');
@@ -1282,7 +1292,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             player into fullscreen, where it lands over the chat column rather
             than animating behind it. */}
         <GiftAnimationOverlay items={giftCelebrations} />
-        <LiveReactionFlow streamId={stream.streamId} enabled={!!stream.isLive && !streamEnded} bottom={immersive ? 100 : 56} />
+        <LiveReactionFlow streamId={stream.streamId} enabled={!!stream.isLive && !streamEnded} bottom={immersive ? 100 : 56} self={selfReaction} />
 
         {/* Full-bleed chrome. Inside the media container so it travels with
             the picture, and after the overlays so nothing is drawn on top
