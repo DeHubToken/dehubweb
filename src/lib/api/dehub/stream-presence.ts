@@ -48,6 +48,13 @@ const EVENT = {
 export interface StreamReactionBroadcast {
   reactionType: LiveReactionType;
   weight: number;
+  /**
+   * Who reacted, lower-cased, when the gateway resolved them. A viewer plays
+   * their own thumb the moment they tap it — the same beat a tipper gets their
+   * celebration on — so the echo of their own reaction has to be droppable or
+   * they see it twice.
+   */
+  address: string | null;
 }
 
 export function watchStreamReactions(streamId: string, onReaction: (event: StreamReactionBroadcast) => void): StreamPresence {
@@ -55,11 +62,13 @@ export function watchStreamReactions(streamId: string, onReaction: (event: Strea
   const socket = conn.socket;
   let left = false;
   const join = () => { if (!left) socket.emit(EVENT.joinRoom, { streamId }); };
-  const receive = (data: { streamId?: string; reactionType?: unknown; weight?: number }) => {
+  const receive = (data: { streamId?: string; reactionType?: unknown; weight?: number; user?: { address?: unknown } }) => {
     // One connection can watch several cards. Never leak applause into another room.
     if (data?.streamId !== streamId) return;
     const reactionType = liveReactionType(data.reactionType);
-    if (reactionType) onReaction({ reactionType, weight: data.weight ?? 1 });
+    const raw = data.user?.address;
+    const address = typeof raw === 'string' && raw ? raw.toLowerCase() : null;
+    if (reactionType) onReaction({ reactionType, weight: data.weight ?? 1, address });
   };
   socket.on('connect', join);
   socket.on(EVENT.reaction, receive);
