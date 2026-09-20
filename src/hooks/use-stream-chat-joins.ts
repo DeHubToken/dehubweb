@@ -2,16 +2,20 @@ import { useEffect, useState } from 'react';
 import { getStreamActivities, type StreamActivity } from '@/lib/api/dehub/livestream';
 import { watchStreamJoins } from '@/lib/api/dehub/stream-presence';
 
-/** Keep the latest arrival per identified viewer; reconnects are not new people. */
+/**
+ * Keep the FIRST arrival per identified viewer; reconnects are not new people.
+ * The socket re-emits a join on every reconnect, and keeping the latest copy
+ * moved a viewer's arrival below the tip they had already sent.
+ */
 export function uniqueStreamJoins(joins: StreamActivity[]): StreamActivity[] {
   const seen = new Set<string>();
-  return [...joins].reverse().sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp)).filter((join) => {
+  return [...joins].sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp)).filter((join) => {
     const address = join.address?.toLowerCase();
     if (!address) return true;
     if (seen.has(address)) return false;
     seen.add(address);
     return true;
-  }).reverse();
+  });
 }
 
 /** Seed recorded arrivals, then append every arrival while this chat is open. */
