@@ -2484,7 +2484,11 @@
     "volume": "Codka",
     "processing": "Fiidiyowga ka baaraandegida...",
     "processingFailed": "Ka baaraandegista fiidiyowga ayaa fashilantay",
-    "processingFailedOwner": "Waxbaa naga khaldamay. Tirtir qoraalkan oo mar kale ku dheji fiidiyowga."
+    "retryHint": "Wax dib-upload ah — waxaan haynay faylkaaga.",
+    "retry": "Isku day mar kale",
+    "retrying": "Dib u soo noqoshada...",
+    "retryQueued": "Ka baaraandegid mar kale",
+    "retryFailed": "Ma soo celin karo qoraalkaas"
   },
   "dub": {
     "audio": "Cod",

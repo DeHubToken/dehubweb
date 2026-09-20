@@ -2253,7 +2253,10 @@
   "videoPlayer": {
     "volume": "Volume",
     "processing": "Processing video…",
-    "processingFailed": "Video processing failed"
+    "processingFailed": "Video processing failed",
+    "retry": "Try again",
+    "retrying": "Retrying…",
+    "retryQueued": "Processing again"
   },
   "dub": {
     "audio": "Audio",

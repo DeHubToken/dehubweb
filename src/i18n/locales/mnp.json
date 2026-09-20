@@ -2393,7 +2393,9 @@
     "volume": "音量",
     "processing": "處理影片中…",
     "processingFailed": "影片處理失敗",
-    "processingFailedOwner": "我方發生錯誤。請刪除此貼文並重新上傳影片。"
+    "retryHint": "嘸物仔共你共，汝个文件我共汝留。",
+    "retry": "再试一次",
+    "retrying": "重试中…"
   },
   "dub": {
     "audio": "Audio",

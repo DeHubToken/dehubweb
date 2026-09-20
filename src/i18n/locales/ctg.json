@@ -2487,8 +2487,7 @@
   "videoPlayer": {
     "volume": "ভলিউম",
     "processing": "Video process করতাছি…",
-    "processingFailed": "Video process অইনাই",
-    "processingFailedOwner": "আম্মাগো সাইডে কিছু একটা গন্ডগোল অইছে। এই পোস্ট ডিলিট করি আর ভিডিওটা আবার আপলোড করি।"
+    "processingFailed": "Video process অইনাই"
   },
   "dub": {
     "audio": "Audio",

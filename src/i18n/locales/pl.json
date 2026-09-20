@@ -4763,7 +4763,11 @@
     "volume": "Głośność",
     "processing": "Przetwarzanie wideo…",
     "processingFailed": "Przetwarzanie wideo nie powiodło się",
-    "processingFailedOwner": "Coś poszło nie tak po naszej stronie. Usuń ten post i prześlij film ponownie."
+    "retryHint": "Nie ma nic do ponownego przesłania — zachowaliśmy Twój plik.",
+    "retry": "Spróbuj ponownie",
+    "retrying": "Ponawianie próby…",
+    "retryQueued": "Przetwarzanie ponownie",
+    "retryFailed": "Nie można ponowić próby opublikowania tego posta"
   },
   "dub": {
     "audio": "Dźwięk",
