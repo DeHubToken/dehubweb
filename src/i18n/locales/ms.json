@@ -5016,7 +5016,10 @@
     "foldersNoItemsHint": "Buka hasil dan pilih \"Tambah ke folder\" untuk menyimpannya di sini."
   },
   "videoPlayer": {
-    "volume": "Kelantangan"
+    "volume": "Kelantangan",
+    "processing": "Memproses video...",
+    "processingFailed": "Pemprosesan video gagal",
+    "processingFailedOwner": "Ada sesuatu yang tidak kena di pihak kami. Hapuskan hantaran ini dan muat naik video sekali lagi."
   },
   "dub": {
     "audio": "Audio",

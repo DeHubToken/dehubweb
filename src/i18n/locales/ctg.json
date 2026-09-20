@@ -2485,7 +2485,10 @@
     "foldersNoItemsHint": "একটা ফলাফল খোলো আর \"ফোল্ডারে যোগ করো\" বেছাই করে এখানে ফাইল করো।"
   },
   "videoPlayer": {
-    "volume": "ভলিউম"
+    "volume": "ভলিউম",
+    "processing": "Video process করতাছি…",
+    "processingFailed": "Video process অইনাই",
+    "processingFailedOwner": "আম্মাগো সাইডে কিছু একটা গন্ডগোল অইছে। এই পোস্ট ডিলিট করি আর ভিডিওটা আবার আপলোড করি।"
   },
   "dub": {
     "audio": "Audio",

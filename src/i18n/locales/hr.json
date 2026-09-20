@@ -4696,7 +4696,10 @@
     "foldersNoItemsHint": "Otvorite rezultat i odaberite \"Dodaj u mapu\" da biste ga ovdje spremili."
   },
   "videoPlayer": {
-    "volume": "Glasnoća"
+    "volume": "Glasnoća",
+    "processing": "Obrada videozapisa...",
+    "processingFailed": "Obrada videozapisa nije uspjela",
+    "processingFailedOwner": "Došlo je do pogreške s naše strane. Izbriši ovu objavu i ponovno prenesi videozapis."
   },
   "dub": {
     "audio": "Zvuk",

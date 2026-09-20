@@ -4765,7 +4765,10 @@
     "foldersNoItemsHint": "Abra um resultado e escolha \"Adicionar à pasta\" para arquivá-lo aqui."
   },
   "videoPlayer": {
-    "volume": "Volume"
+    "volume": "Volume",
+    "processing": "A processar vídeo...",
+    "processingFailed": "Falha no processamento do vídeo",
+    "processingFailedOwner": "Ocorreu um erro do nosso lado. Exclua este post e envie o vídeo novamente."
   },
   "dub": {
     "audio": "Áudio",

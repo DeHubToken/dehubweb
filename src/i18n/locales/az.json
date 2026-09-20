@@ -4658,7 +4658,10 @@
     "foldersNoItemsHint": "Nəticəni açın və \"Qovluğa əlavə et\" seçin, bunu burada saxlamaq üçün."
   },
   "videoPlayer": {
-    "volume": "Səs səviyyəsi"
+    "volume": "Səs səviyyəsi",
+    "processing": "Video emal edilir...",
+    "processingFailed": "Video emalı uğursuz oldu",
+    "processingFailedOwner": "Tərəfimizdən xəta baş verdi. Bu yazını silin və videonu yenidən yükləyin."
   },
   "dub": {
     "audio": "Audio",

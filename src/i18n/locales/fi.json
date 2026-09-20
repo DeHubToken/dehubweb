@@ -4697,7 +4697,10 @@
     "foldersNoItemsHint": "Avaa tulos ja valitse \"Lisää kansioon\" tallentaaksesi sen tänne."
   },
   "videoPlayer": {
-    "volume": "Äänenvoimakkuus"
+    "volume": "Äänenvoimakkuus",
+    "processing": "Käsitellään videota...",
+    "processingFailed": "Videon käsittely epäonnistui",
+    "processingFailedOwner": "Jokin meni vikaan meidän puolellamme. Poista tämä julkaisu ja lataa video uudelleen."
   },
   "dub": {
     "audio": "Ääni",

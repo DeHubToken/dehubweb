@@ -4605,7 +4605,10 @@
     "foldersNoItemsHint": "Maak 'n resultaat oop en kies \"Voeg by die gids\" om dit hier in te dien."
   },
   "videoPlayer": {
-    "volume": "Volume"
+    "volume": "Volume",
+    "processing": "Verwerking van video...",
+    "processingFailed": "Videoverwerking het misluk",
+    "processingFailedOwner": "Iets het verkeerd gegaan aan ons kant. Verwyder hierdie plasing en laai die video weer op."
   },
   "dub": {
     "audio": "Klank",

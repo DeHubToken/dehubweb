@@ -4757,7 +4757,10 @@
     "foldersNoItemsHint": "Öffnen Sie ein Ergebnis und wählen Sie \"Zu Ordner hinzufügen\", um es hier abzulegen."
   },
   "videoPlayer": {
-    "volume": "Lautstärke"
+    "volume": "Lautstärke",
+    "processing": "Video wird verarbeitet...",
+    "processingFailed": "Videoverarbeitung fehlgeschlagen",
+    "processingFailedOwner": "Auf unserer Seite ist etwas schiefgelaufen. Lösche diesen Beitrag und lade das Video erneut hoch."
   },
   "dub": {
     "audio": "Audio",

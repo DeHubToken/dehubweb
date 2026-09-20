@@ -2498,7 +2498,10 @@
     "foldersNoItemsHint": "Hap një rezultat dhe zgjidh \"Shto në dosje\" për ta ruajtur këtu."
   },
   "videoPlayer": {
-    "volume": "Volumi"
+    "volume": "Volumi",
+    "processing": "Duke përpunuar videon...",
+    "processingFailed": "Përpunimi i videos dështoi",
+    "processingFailedOwner": "Pati një problem nga ana jonë. Fshije këtë postim dhe ngarkoje përsëri videon."
   },
   "dub": {
     "audio": "Audio",

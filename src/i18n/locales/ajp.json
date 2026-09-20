@@ -2392,7 +2392,10 @@
     "foldersNoItemsHint": "افتح النتيجة واختر \"إضافة إلى مجلد\" لحفظها هون."
   },
   "videoPlayer": {
-    "volume": "مستوى الصوت"
+    "volume": "مستوى الصوت",
+    "processing": "عم نجهز الفيديو...",
+    "processingFailed": "فشل تجهيز الفيديو",
+    "processingFailedOwner": "صار شي غلط من عنا. احذف هالبوست ورجع نزّل الفيديو."
   },
   "dub": {
     "audio": "صوت",

@@ -4754,7 +4754,10 @@
     "foldersNoItemsHint": "Fungua matokeo na uchague \"Ongeza kwenye folda\" ili uihifadhi hapa."
   },
   "videoPlayer": {
-    "volume": "Sauti"
+    "volume": "Sauti",
+    "processing": "Inatayarisha video...",
+    "processingFailed": "Uchakataji wa video umes",
+    "processingFailedOwner": "Hitilafu imetokea upande wetu. Futa chapisho hili na upakie video tena."
   },
   "dub": {
     "audio": "Sauti",

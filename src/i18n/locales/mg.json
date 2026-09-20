@@ -2870,7 +2870,10 @@
     "thinking": "Mihevitra¢"
   },
   "videoPlayer": {
-    "volume": "Hamafin'ny feo"
+    "volume": "Hamafin'ny feo",
+    "processing": "Hikirakira ny lahatsary...",
+    "processingFailed": "Tsy nahomby ny fikirakirana sary",
+    "processingFailedOwner": "Nisy zavatra nitranga teo aminao sy izy. Noho izany dia avereno ity lahatsoratra ity ary avereno indray ilay lahatsoratra."
   },
   "dub": {
     "audio": "Raki-peo",

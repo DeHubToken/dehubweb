@@ -4764,7 +4764,10 @@
     "foldersNoItemsHint": "Open a result and choose \"Add to folder\" to file it here."
   },
   "videoPlayer": {
-    "volume": "Volume"
+    "volume": "Volume",
+    "processing": "Processing video…",
+    "processingFailed": "Video processing failed",
+    "processingFailedOwner": "Something went wrong on our side. Delete this post and upload the video again."
   },
   "dub": {
     "audio": "Audio",

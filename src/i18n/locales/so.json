@@ -2481,7 +2481,10 @@
     "foldersNoItemsHint": "Fur natiijo oo dooro \"Ku dar galka\" si aad halkan ugu kaydiso."
   },
   "videoPlayer": {
-    "volume": "Codka"
+    "volume": "Codka",
+    "processing": "Fiidiyowga ka baaraandegida...",
+    "processingFailed": "Ka baaraandegista fiidiyowga ayaa fashilantay",
+    "processingFailedOwner": "Waxbaa naga khaldamay. Tirtir qoraalkan oo mar kale ku dheji fiidiyowga."
   },
   "dub": {
     "audio": "Cod",

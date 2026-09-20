@@ -2955,7 +2955,10 @@
     "foldersNoItemsHint": "Atveriet rezultātu un izvēlieties \"Pievienot mapei\", lai to šeit saglabātu."
   },
   "videoPlayer": {
-    "volume": "Skaļums"
+    "volume": "Skaļums",
+    "processing": "Notiek video apstrāde...",
+    "processingFailed": "Video apstrāde neizdevās",
+    "processingFailedOwner": "Radās problēma. Dzēsiet šo ziņu un augšupielādējiet videoklipu vēlreiz."
   },
   "dub": {
     "audio": "Audio",

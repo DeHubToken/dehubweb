@@ -4764,7 +4764,10 @@
     "foldersNoItemsHint": "Bir sonucu açın ve buraya kaydetmek için \"Klasöre ekle\" seçeneğini belirleyin."
   },
   "videoPlayer": {
-    "volume": "Ses düzeyi"
+    "volume": "Ses düzeyi",
+    "processing": "Video işleniyor...",
+    "processingFailed": "Video işleme başarısız oldu",
+    "processingFailedOwner": "Bizim tarafımızda bir şeyler ters gitti. Bu gönderiyi silin ve videoyu tekrar yükleyin."
   },
   "dub": {
     "audio": "Ses",

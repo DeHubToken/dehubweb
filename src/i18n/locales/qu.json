@@ -2514,7 +2514,10 @@
     "foldersNoItemsHint": "Huk kaqta kichariy chaymanta \"K'itiman yapay\" nisqata akllariy kaypi waqaychanaykipaq."
   },
   "videoPlayer": {
-    "volume": "Uyariy"
+    "volume": "Uyariy",
+    "processing": "Videota ruwaspa...",
+    "processingFailed": "Video ruwayqa manam atikurqachu",
+    "processingFailedOwner": "Ladoykupiqa imapas mana allintam pasarqa. Kay qillqasqata qulluy hinaspa videota yapamanta churay."
   },
   "dub": {
     "audio": "Audio nisqa",

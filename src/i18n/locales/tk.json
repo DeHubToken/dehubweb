@@ -2449,7 +2449,10 @@
     "foldersNoItemsHint": "Netijäni açyň we ony şu ýere ýerleşdirmek üçin \"Gutapçany goş\" saýlaň."
   },
   "videoPlayer": {
-    "volume": "Ses"
+    "volume": "Ses",
+    "processing": "Videolary işlemek...",
+    "processingFailed": "Video işlemesi başarnyksyz",
+    "processingFailedOwner": "Biziň tarapymyzda bir zat nädogry boldy. Bu posty goýup, videony gaýtalap goýuň."
   },
   "dub": {
     "audio": "Ses",

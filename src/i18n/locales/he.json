@@ -4512,7 +4512,10 @@
     "foldersNoItemsHint": "פתח תוצאה ובחר \"הוסף לתיקיה\" כדי לשמור אותה כאן."
   },
   "videoPlayer": {
-    "volume": "עוצמת קול"
+    "volume": "עוצמת קול",
+    "processing": "מעבד וידאו...",
+    "processingFailed": "עיבוד הווידאו נכשל",
+    "processingFailedOwner": "משהו השתבש בצד שלנו. מחק פוסט זה והעלה את הסרטון שוב."
   },
   "dub": {
     "audio": "אודיו",

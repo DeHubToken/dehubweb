@@ -2480,7 +2480,10 @@
     "foldersNoItemsHint": "開啟結果並選擇「新增至資料夾」以將其歸檔於此。"
   },
   "videoPlayer": {
-    "volume": "音量"
+    "volume": "音量",
+    "processing": "處理緊影片 …",
+    "processingFailed": "影片處理失敗",
+    "processingFailedOwner": "我哋嗰邊有啲嘢唔妥。刪除呢個帖子，然後再上載條片。"
   },
   "dub": {
     "audio": "音頻",

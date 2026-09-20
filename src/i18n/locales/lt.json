@@ -2956,7 +2956,10 @@
     "foldersNoItemsHint": "Atidarykite rezultatą ir pasirinkite „Pridėti prie aplanko“, kad jį čia įrašytumėte."
   },
   "videoPlayer": {
-    "volume": "Garsumas"
+    "volume": "Garsumas",
+    "processing": "Apdorojamas vaizdo įrašas...",
+    "processingFailed": "Nepavyko apdoroti vaizdo įrašo",
+    "processingFailedOwner": "Mūsų atveju įvyko klaida. Ištrink šį įrašą ir įkelk vaizdo įrašą dar kartą."
   },
   "dub": {
     "audio": "Garso įrašas",

@@ -1920,11 +1920,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     <AlertTriangle className="w-5 h-5 text-white/80" />
                   </div>
                   <span className="text-white/80 text-xs font-medium tracking-wide drop-shadow px-4 text-center">
-                    Failed to process video
+                    {t('videoPlayer.processingFailed')}
                   </span>
                   {isOwnPost && (
                     <span className="text-white/60 text-[11px] tracking-wide drop-shadow px-6 text-center">
-                      Replace it with a standard MP4 via Edit in the ⋮ menu, top right of the post.
+                      {t('videoPlayer.processingFailedOwner')}
                     </span>
                   )}
                 </div>
@@ -1939,7 +1939,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
                   <Loader2 className="w-7 h-7 text-white animate-spin" />
                   <span className="text-white/80 text-xs font-medium tracking-wide drop-shadow">
-                    Processing video…
+                    {t('videoPlayer.processing')}
                   </span>
                 </div>
               </div>

@@ -2475,7 +2475,10 @@
     "foldersNoItemsHint": "Ṣí àbájáde kan kí o sì yan \"Ṣafikun sí àkájọ ìwé\" láti fi sílẹ̀ níbí."
   },
   "videoPlayer": {
-    "volume": "Ìwọ̀n ohùn"
+    "volume": "Ìwọ̀n ohùn",
+    "processing": "Ṣíṣe fídíò...",
+    "processingFailed": "Ṣíṣe fídíò kùnà",
+    "processingFailedOwner": "Nǹkan kan kò lọ dáadáa ní ẹ̀gbẹ́ wa. Pa àtẹ̀jíṣẹ́ yìí rẹ́ kí o sì gbé fídíò náà sókè lẹ́ẹ̀kan síi."
   },
   "dub": {
     "audio": "Ohùn",

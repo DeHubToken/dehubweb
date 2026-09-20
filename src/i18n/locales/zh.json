@@ -4765,7 +4765,10 @@
     "foldersNoItemsHint": "打开结果并选择\"添加到文件夹\"以将其归档到此处。"
   },
   "videoPlayer": {
-    "volume": "音量"
+    "volume": "音量",
+    "processing": "正在处理视频…",
+    "processingFailed": "视频处理失败",
+    "processingFailedOwner": "我们这边出错了。 删除此帖子，然后重新上传视频。"
   },
   "dub": {
     "audio": "音频",

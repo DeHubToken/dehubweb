@@ -4727,7 +4727,10 @@
     "foldersNoItemsHint": "Åbn et resultat, og vælg \"Tilføj til mappe\" for at arkivere det her."
   },
   "videoPlayer": {
-    "volume": "Lydstyrke"
+    "volume": "Lydstyrke",
+    "processing": "Behandler video...",
+    "processingFailed": "Videobehandling mislykkedes",
+    "processingFailedOwner": "Der gik noget galt fra vores side. Slet dette opslag, og upload videoen igen."
   },
   "dub": {
     "audio": "Lyd",

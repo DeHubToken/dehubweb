@@ -2482,7 +2482,10 @@
     "foldersNoItemsHint": "Bude sakamako kuma zaɓi \"Ƙara zuwa babban fayil\" don adana shi anan."
   },
   "videoPlayer": {
-    "volume": "Ƙarar sauti"
+    "volume": "Ƙarar sauti",
+    "processing": "Bidiyo mai sarrafawa...",
+    "processingFailed": "Bidiyo aiki bai yi nasara ba",
+    "processingFailedOwner": "Wani abu ya tafi ba daidai ba a gefenmu. Share wannan post da kuma upload da video sake."
   },
   "dub": {
     "audio": "Sauti",

@@ -2468,7 +2468,10 @@
     "foldersNoItemsHint": "Bukak asil lan pilih \"Tambahake menyang folder\" kanggo nyimpen ing kene."
   },
   "videoPlayer": {
-    "volume": "Volume"
+    "volume": "Volume",
+    "processing": "Ngolah video…",
+    "processingFailed": "Gagal ngolah video",
+    "processingFailedOwner": "Ana sing salah ing sisih kita. Busaken kiriman iki lan unggah maneh videone."
   },
   "dub": {
     "audio": "Audio",

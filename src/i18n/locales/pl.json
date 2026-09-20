@@ -4760,7 +4760,10 @@
     "foldersNoItemsHint": "Otwórz wynik i wybierz „Dodaj do folderu”, aby go tutaj umieścić."
   },
   "videoPlayer": {
-    "volume": "Głośność"
+    "volume": "Głośność",
+    "processing": "Przetwarzanie wideo…",
+    "processingFailed": "Przetwarzanie wideo nie powiodło się",
+    "processingFailedOwner": "Coś poszło nie tak po naszej stronie. Usuń ten post i prześlij film ponownie."
   },
   "dub": {
     "audio": "Dźwięk",

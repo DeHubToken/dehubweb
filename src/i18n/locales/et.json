@@ -4700,7 +4700,10 @@
     "foldersNoItemsHint": "Avage tulemus ja valige \"Lisa kausta\", et see siia salvestada."
   },
   "videoPlayer": {
-    "volume": "Helitugevus"
+    "volume": "Helitugevus",
+    "processing": "Video töötlemine...",
+    "processingFailed": "Videotöötlus ebaõnnestus",
+    "processingFailedOwner": "Meie poolel läks midagi valesti. Kustuta see postitus ja laadi video uuesti üles."
   },
   "dub": {
     "audio": "Heli",
