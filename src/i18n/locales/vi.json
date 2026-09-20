@@ -4518,7 +4518,10 @@
     "foldersNoItemsHint": "Mở kết quả và chọn \"Thêm vào thư mục\" để gửi kết quả tại đây."
   },
   "videoPlayer": {
-    "volume": "Âm lượng"
+    "volume": "Âm lượng",
+    "processing": "Đang xử lý video…",
+    "processingFailed": "Xử lý video không thành công",
+    "processingFailedOwner": "Đã xảy ra sự cố về phía chúng tôi. Xóa bài đăng này và tải lên lại video."
   },
   "dub": {
     "audio": "Âm thanh",

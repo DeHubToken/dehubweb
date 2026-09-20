@@ -2251,7 +2251,9 @@
     "foldersNoItemsHint": "Open one result and choose \"Add to folder\" for file am for here."
   },
   "videoPlayer": {
-    "volume": "Volume"
+    "volume": "Volume",
+    "processing": "Processing video…",
+    "processingFailed": "Video processing failed"
   },
   "dub": {
     "audio": "Audio",

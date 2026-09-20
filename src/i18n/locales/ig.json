@@ -2448,7 +2448,10 @@
     "foldersNoItemsHint": "Meghee nsonaazụ ma họrọ \"Tinye na nchekwa\" iji debanye aha ya ebe a."
   },
   "videoPlayer": {
-    "volume": "Olu ụda"
+    "volume": "Olu ụda",
+    "processing": "Na-edozi vidiyo...",
+    "processingFailed": "Nhazi vidiyo dara ada",
+    "processingFailedOwner": "O nwere ihe mebiri n 'akụkụ anyị. Hichapụ a post na bulite video ọzọ."
   },
   "dub": {
     "audio": "Odu",

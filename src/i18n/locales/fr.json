@@ -4759,7 +4759,10 @@
     "foldersNoItemsHint": "Ouvrez un résultat et choisissez « Ajouter au dossier » pour le classer ici."
   },
   "videoPlayer": {
-    "volume": "Volume"
+    "volume": "Volume",
+    "processing": "Traitement de la vidéo…",
+    "processingFailed": "Échec du traitement vidéo",
+    "processingFailedOwner": "Un problème est survenu de notre côté. Supprimez cette publication et téléchargez à nouveau la vidéo."
   },
   "dub": {
     "audio": "Audio",

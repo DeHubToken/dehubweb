@@ -2438,7 +2438,10 @@
     "foldersNoItemsHint": "ውጤት ክፈት እና \"ወደ ፎልደር ጨምር\" ይምረጡ ወደ ここ ለማስገባት።"
   },
   "videoPlayer": {
-    "volume": "የድምፅ መጠን"
+    "volume": "የድምፅ መጠን",
+    "processing": "ቪዲዮ ማቀነባበሪያ…",
+    "processingFailed": "የቪዲዮ ማቀነባበሪያ አልተሳካም",
+    "processingFailedOwner": "ከጎናችን የሆነ ነገር ተሳስቷል ። ይህን ልጥፍ ሰርዝ እና ቪዲዮውን እንደገና ይስቀሉ."
   },
   "dub": {
     "audio": "ኦዲዮ",

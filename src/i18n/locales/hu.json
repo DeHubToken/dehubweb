@@ -4699,7 +4699,10 @@
     "foldersNoItemsHint": "Nyiss meg egy eredményt, és válaszd a \"Hozzáadás a mappához\" lehetőséget a mentéshez."
   },
   "videoPlayer": {
-    "volume": "Hangerő"
+    "volume": "Hangerő",
+    "processing": "Videó feldolgozása folyamatban...",
+    "processingFailed": "A videó feldolgozása nem sikerült",
+    "processingFailedOwner": "Valami hiba történt a mi oldalunkon. Töröld ezt a bejegyzést, és töltsd fel újra a videót."
   },
   "dub": {
     "audio": "Audió",

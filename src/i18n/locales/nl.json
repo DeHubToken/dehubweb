@@ -4955,7 +4955,10 @@
     "foldersNoItemsHint": "Open een resultaat en kies \"Toevoegen aan map\" om het hier op te slaan."
   },
   "videoPlayer": {
-    "volume": "Volume"
+    "volume": "Volume",
+    "processing": "Video wordt verwerkt...",
+    "processingFailed": "Videoverwerking mislukt",
+    "processingFailedOwner": "Er is iets misgegaan aan onze kant. Verwijder dit bericht en upload de video opnieuw."
   },
   "dub": {
     "audio": "Audio",

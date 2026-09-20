@@ -2449,7 +2449,10 @@
     "foldersNoItemsHint": "Öffne e Resultat und wähle \"Ordner zuefüge\", zum es do ablaage."
   },
   "videoPlayer": {
-    "volume": "Lutstärchi"
+    "volume": "Lutstärchi",
+    "processing": "Video wird verarbeitet…",
+    "processingFailed": "Video-Verarbeitung fehlgeschlagen",
+    "processingFailedOwner": "Es isch öppis schief gange bi eus. Lösch die Post und lade s Video nomal ufe."
   },
   "dub": {
     "audio": "Audio",

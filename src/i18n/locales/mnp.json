@@ -2390,7 +2390,10 @@
     "foldersNoItemsHint": "打开一个结果并选择“添加到文件夹”以在此处归档。"
   },
   "videoPlayer": {
-    "volume": "音量"
+    "volume": "音量",
+    "processing": "處理影片中…",
+    "processingFailed": "影片處理失敗",
+    "processingFailedOwner": "我方發生錯誤。請刪除此貼文並重新上傳影片。"
   },
   "dub": {
     "audio": "Audio",

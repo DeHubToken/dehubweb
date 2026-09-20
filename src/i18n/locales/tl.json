@@ -4572,7 +4572,10 @@
     "foldersNoItemsHint": "Magbukas ng resulta at piliin ang \"Idagdag sa folder\" upang ilagay ito dito."
   },
   "videoPlayer": {
-    "volume": "Lakas ng tunog"
+    "volume": "Lakas ng tunog",
+    "processing": "Pinoproseso ang video...",
+    "processingFailed": "Nabigo ang pagpoproseso ng video",
+    "processingFailedOwner": "Nagkaproblema sa aming panig. Tanggalin ang post na ito at i - upload muli ang video."
   },
   "dub": {
     "audio": "ay maaaring maging sa anyo ng",
