@@ -182,20 +182,37 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   // Expose the middle panel's live bounds (the gap between the left/right
   // sidebars) as CSS vars so anything mounted outside AppLayout — the login
   // modal, login-flow toasts — can center itself in that zone instead of
-  // the full viewport. ResizeObserver on <main> already catches width
-  // changes from a sidebar collapse toggle, so no extra dependency is
-  // needed. Vars are removed on unmount so they don't go stale on routes
+  // the full viewport. Re-measured on every route and collapse change: the
+  // ResizeObserver alone missed the width change a route like /dex makes to
+  // <main>, so one visit left every sheet at the terminal's width until a
+  // window resize. Vars are removed on unmount so they don't go stale on routes
   // without this layout (those fall back to viewport-wide CSS defaults).
+  //
+  // The trading terminal drops the right rail and widens the shell to 112rem,
+  // so its <main> is most of the screen. Sheets and the login modal must not
+  // follow it — they keep the column every other page has, centred where the
+  // terminal's <main> sits: the 80rem shell minus the left sidebar and the
+  // rail width for the current breakpoint (RightSidebar: w-72 xl:w-80 2xl:w-88).
+  const isWideMainRoute = location.pathname === '/dex';
   useLayoutEffect(() => {
     const mainEl = mainRef.current;
     if (!mainEl || typeof ResizeObserver === 'undefined') return;
 
     const root = document.documentElement.style;
+    const standardColumnWidth = (rect: DOMRect) => {
+      const shell = Math.min(window.innerWidth, 1280);
+      const sidebar = rect.left - (mainEl.parentElement?.getBoundingClientRect().left ?? 0);
+      const w = window.innerWidth;
+      const rail = w >= 1536 ? 352 : w >= 1280 ? 320 : w >= 1024 ? 288 : 0;
+      return Math.max(0, shell - sidebar - rail);
+    };
     const updateBounds = () => {
       const rect = mainEl.getBoundingClientRect();
-      root.setProperty('--app-main-left', `${rect.left}px`);
-      root.setProperty('--app-main-width', `${rect.width}px`);
-      root.setProperty('--app-main-center-x', `${rect.left + rect.width / 2}px`);
+      const width = isWideMainRoute ? Math.min(rect.width, standardColumnWidth(rect)) : rect.width;
+      const left = rect.left + (rect.width - width) / 2;
+      root.setProperty('--app-main-left', `${left}px`);
+      root.setProperty('--app-main-width', `${width}px`);
+      root.setProperty('--app-main-center-x', `${left + width / 2}px`);
     };
 
     updateBounds();
@@ -209,7 +226,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       root.removeProperty('--app-main-width');
       root.removeProperty('--app-main-center-x');
     };
-  }, []);
+  }, [location.pathname, isCollapsed]);
   // Disable browser's automatic scroll restoration globally
   useEffect(() => {
     if ('scrollRestoration' in history) {
@@ -338,7 +355,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           // second — during the navigation that most needs to feel immediate.
           // `will-change` could not help either, since the property is not
           // compositable. The width now changes on the same frame as the route.
-          maxWidth: location.pathname === '/dex' ? '112rem' : isCollapsed && (isHomeFeedRoute(location.pathname) || showHomePagePersisted) ? '100%' : '80rem',
+          maxWidth: isWideMainRoute ? '112rem' : isCollapsed && (isHomeFeedRoute(location.pathname) || showHomePagePersisted) ? '100%' : '80rem',
         }}
       >
         <AppSidebar isOpen={sidebarOpen} onOpenChange={setSidebarOpen} />
@@ -462,7 +479,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           )}
         </main>
 
-        {location.pathname !== '/dex' && <DesktopRightRail />}
+        {!isWideMainRoute && <DesktopRightRail />}
       </div>
       
       <MobileBottomNav />
