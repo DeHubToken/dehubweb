@@ -4768,7 +4768,11 @@
     "volume": "Volumen",
     "processing": "Procesando vídeo...",
     "processingFailed": "Error en el procesamiento de vídeo",
-    "processingFailedOwner": "Algo salió mal de nuestro lado. Elimina esta publicación y vuelve a subir el vídeo."
+    "retryHint": "No hay nada que volver a subir: hemos guardado tu archivo.",
+    "retry": "Inténtalo de nuevo",
+    "retrying": "Volviendo a intentarlo...",
+    "retryQueued": "Procesando de nuevo",
+    "retryFailed": "No se ha podido volver a intentar esa publicación"
   },
   "dub": {
     "audio": "Sonido",

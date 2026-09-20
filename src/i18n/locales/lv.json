@@ -2958,7 +2958,11 @@
     "volume": "Skaļums",
     "processing": "Notiek video apstrāde...",
     "processingFailed": "Video apstrāde neizdevās",
-    "processingFailedOwner": "Radās problēma. Dzēsiet šo ziņu un augšupielādējiet videoklipu vēlreiz."
+    "retryHint": "Nav ko augšupielādēt atkārtoti — jūsu fails ir saglabāts.",
+    "retry": "Mēģināt vēlreiz",
+    "retrying": "Mēģina vēlreiz...",
+    "retryQueued": "Apstrādā vēlreiz",
+    "retryFailed": "Nevarēja mēģināt vēlreiz publicēt šo ziņu"
   },
   "dub": {
     "audio": "Audio",

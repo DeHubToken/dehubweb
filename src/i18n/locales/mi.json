@@ -2480,7 +2480,11 @@
     "volume": "Rahi oro",
     "processing": "He ataata whakamātau...",
     "processingFailed": "Kaore i tutuki te tukatuka ataata",
-    "processingFailedOwner": "I puta tetahi mea i to tatou taha. Tangohia tenei tuhinga me te tuku ano i te ataata."
+    "retryHint": "Kaore he mea hei whakahou — i pupuri matou i to konae.",
+    "retry": "Whakamātauria ano",
+    "retrying": "Ko te hokinga mai...",
+    "retryQueued": "Te tukatuka ano",
+    "retryFailed": "Kaore e taea e au te whakahoki mai i taua pou"
   },
   "dub": {
     "audio": "Ororongo",

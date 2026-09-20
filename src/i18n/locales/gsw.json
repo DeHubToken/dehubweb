@@ -2452,7 +2452,11 @@
     "volume": "Lutstärchi",
     "processing": "Video wird verarbeitet…",
     "processingFailed": "Video-Verarbeitung fehlgeschlagen",
-    "processingFailedOwner": "Es isch öppis schief gange bi eus. Lösch die Post und lade s Video nomal ufe."
+    "retryHint": "Nüt zum Uflade — mir hend Ihri Dateie behalte.",
+    "retry": "Versuechs no einisch",
+    "retrying": "No einisch versuched…",
+    "retryQueued": "Verarbeite no einisch",
+    "retryFailed": "Han das Post nöd chönne no einisch versuched"
   },
   "dub": {
     "audio": "Audio",

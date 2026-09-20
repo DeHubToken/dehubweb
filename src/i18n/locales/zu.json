@@ -2516,7 +2516,11 @@
     "volume": "Umsindo",
     "processing": "Iphrosesa ividiyo...",
     "processingFailed": "Ukuphrosesa ividiyo kwehlulekile",
-    "processingFailedOwner": "Kukhona okungahambanga kahle ohlangothini lwethu. Susa le phosti bese uphinde ufake ividiyo."
+    "retryHint": "Ayikho into ongayilayisha kabusha — siligcinile ifayela lakho.",
+    "retry": "Zama futhi",
+    "retrying": "Iyazama futhi...",
+    "retryQueued": "Iphrosesa futhi",
+    "retryFailed": "Ayikwazanga ukuzama futhi leyo phosti"
   },
   "dub": {
     "audio": "Okwemisindo",

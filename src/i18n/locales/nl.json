@@ -4958,7 +4958,11 @@
     "volume": "Volume",
     "processing": "Video wordt verwerkt...",
     "processingFailed": "Videoverwerking mislukt",
-    "processingFailedOwner": "Er is iets misgegaan aan onze kant. Verwijder dit bericht en upload de video opnieuw."
+    "retryHint": "Niets om opnieuw te uploaden — we hebben je bestand bewaard.",
+    "retry": "Opnieuw proberen",
+    "retrying": "Opnieuw proberen...",
+    "retryQueued": "Opnieuw verwerken",
+    "retryFailed": "Kon dat bericht niet opnieuw proberen"
   },
   "dub": {
     "audio": "Audio",

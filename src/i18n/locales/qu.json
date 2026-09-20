@@ -2517,7 +2517,11 @@
     "volume": "Uyariy",
     "processing": "Videota ruwaspa...",
     "processingFailed": "Video ruwayqa manam atikurqachu",
-    "processingFailedOwner": "Ladoykupiqa imapas mana allintam pasarqa. Kay qillqasqata qulluy hinaspa videota yapamanta churay."
+    "retryHint": "Mana imapas wakmanta yapanapaq — willañiqiykita waqaycharqayku.",
+    "retry": "Hukmanta kallpachakuy",
+    "retrying": "Wakmanta kallpachakuspa...",
+    "retryQueued": "Yapamanta procesamiento",
+    "retryFailed": "Mana chay qillqasqata wakmanta ruwayta atirqanichu"
   },
   "dub": {
     "audio": "Audio nisqa",

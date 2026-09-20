@@ -2419,7 +2419,8 @@
     "deleteNode": "نۆدەکە بسڕەوە"
   },
   "videoPlayer": {
-    "volume": "Bilindahiya deng"
+    "volume": "Bilindahiya deng",
+    "retry": "هەوڵێ دوبارە"
   },
   "dub": {
     "audio": "Deng",

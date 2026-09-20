@@ -492,6 +492,21 @@ export async function replaceVideoFile(
   });
 }
 
+/**
+ * Put a post whose processing failed back through the encoder.
+ *
+ * Sends nothing: the server kept the file the creator uploaded, which is the
+ * only reason this can be a button rather than a second upload. Throws with
+ * the server's own message — a post that failed before the archive existed
+ * has nothing to retry from and says so.
+ */
+export function retryTranscode(tokenId: number | string) {
+  return apiCall<ReplaceVideoResponse>(`/api/nft/${tokenId}/retry-transcode`, {
+    method: "POST",
+    requiresAuth: true,
+  });
+}
+
 export function getPostImageAllowance(tokenId: number | string) {
   return apiCall<{ imageLimit: number }>(`/api/nft/${tokenId}/image-allowance`);
 }
