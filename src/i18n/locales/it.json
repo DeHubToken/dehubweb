@@ -4757,7 +4757,10 @@
     "foldersNoItemsHint": "Apri un risultato e scegli \"Aggiungi alla cartella\" per archiviarlo qui."
   },
   "videoPlayer": {
-    "volume": "Volume"
+    "volume": "Volume",
+    "processing": "Elaborazione video in corso...",
+    "processingFailed": "Elaborazione video non riuscita",
+    "processingFailedOwner": "Qualcosa è andato storto da parte nostra. Elimina questo post e carica di nuovo il video."
   },
   "dub": {
     "audio": "Audio",

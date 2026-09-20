@@ -2621,7 +2621,10 @@
     "foldersNoItemsHint": "Otvorte výsledok a vyberte „Pridať do priečinka“, aby ste ho sem zaradili."
   },
   "videoPlayer": {
-    "volume": "Hlasitosť"
+    "volume": "Hlasitosť",
+    "processing": "Spracováva sa video...",
+    "processingFailed": "Spracovanie videa zlyhalo",
+    "processingFailedOwner": "Z našej strany sa niečo pokazilo. Odstráňte tento príspevok a znova nahrajte video."
   },
   "dub": {
     "audio": "Zvuk",

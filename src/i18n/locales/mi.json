@@ -2477,7 +2477,10 @@
     "foldersNoItemsHint": "Whakatuwherahia tētahi hua ka tīpakohia te \"Tāpiri ki te kōpaki\" hei penapena ki konei."
   },
   "videoPlayer": {
-    "volume": "Rahi oro"
+    "volume": "Rahi oro",
+    "processing": "He ataata whakamātau...",
+    "processingFailed": "Kaore i tutuki te tukatuka ataata",
+    "processingFailedOwner": "I puta tetahi mea i to tatou taha. Tangohia tenei tuhinga me te tuku ano i te ataata."
   },
   "dub": {
     "audio": "Ororongo",

@@ -2513,7 +2513,10 @@
     "foldersNoItemsHint": "Vula umphumela futhi khetha \"Engeza kufolda\" ukuze ulungisele lapha."
   },
   "videoPlayer": {
-    "volume": "Umsindo"
+    "volume": "Umsindo",
+    "processing": "Iphrosesa ividiyo...",
+    "processingFailed": "Ukuphrosesa ividiyo kwehlulekile",
+    "processingFailedOwner": "Kukhona okungahambanga kahle ohlangothini lwethu. Susa le phosti bese uphinde ufake ividiyo."
   },
   "dub": {
     "audio": "Okwemisindo",

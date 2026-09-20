@@ -2409,7 +2409,10 @@
     "foldersNoItemsHint": "\"फलकम्ःAdd to folder\" सम्बद्धानि पृष्ठानि"
   },
   "videoPlayer": {
-    "volume": "ध्वनिमानम्"
+    "volume": "ध्वनिमानम्",
+    "processing": "विडियों प्रक्रियेत...",
+    "processingFailed": "विडिओ प्रशोधन असफल",
+    "processingFailedOwner": "- आम्, आसन्दं तस्य उपरि इच्छति वा? कृपया एतत् पृष्ठं पुनरपि क्लिक् कुर्वन्तु ।"
   },
   "dub": {
     "audio": "ध्वनिः",

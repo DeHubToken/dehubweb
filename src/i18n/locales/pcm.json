@@ -2169,7 +2169,9 @@
     "foldersInFolder_other": "In {{count}} folders"
   },
   "videoPlayer": {
-    "volume": "Volume"
+    "volume": "Volume",
+    "processing": "Processing video…",
+    "processingFailed": "Video processing failed"
   },
   "dub": {
     "audio": "Audio",

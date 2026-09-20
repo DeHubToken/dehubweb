@@ -2478,7 +2478,10 @@
     "foldersNoItemsHint": "Åpne et resultat og velg \"Legg til i mappe\" for å arkivere det her."
   },
   "videoPlayer": {
-    "volume": "Lydstyrke"
+    "volume": "Lydstyrke",
+    "processing": "Behandler video",
+    "processingFailed": "Videobehandlingen mislyktes",
+    "processingFailedOwner": "Noe gikk galt hos oss. Slett dette innlegget og last opp videoen på nytt."
   },
   "dub": {
     "audio": "Lyd",

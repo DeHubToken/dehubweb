@@ -4756,7 +4756,10 @@
     "foldersNoItemsHint": "결과를 열고 \"폴더에 추가\"를 선택하여 여기에 저장하세요."
   },
   "videoPlayer": {
-    "volume": "음량"
+    "volume": "음량",
+    "processing": "동영상 처리 중...",
+    "processingFailed": "동영상 처리 실패",
+    "processingFailedOwner": "저희 쪽에서 문제가 발생했습니다. 이 포스트를 삭제하고 동영상을 다시 업로드하세요."
   },
   "dub": {
     "audio": "오디오",

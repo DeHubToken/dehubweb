@@ -2403,7 +2403,10 @@
     "foldersNoItemsHint": "ውጽኢት ክፈትሕን \"ናብ ፎልደር ኣወፍር\" ክመርጽን ብምግባር ኣብዚ ጽረፎ።"
   },
   "videoPlayer": {
-    "volume": "ድምጺ"
+    "volume": "ድምጺ",
+    "processing": "ቪድዮ ምስራሕ...",
+    "processingFailed": "ቪድዮ ምስራሕ ኣይተዓወተን ።",
+    "processingFailedOwner": "ኣብ ጐድና ገለ ነገር ኣጋጢሙ እዩ ። ነዚ ጽሑፍ እዚ ሰርዝ እሞ ነቲ ቪድዮ መሊስካ ስዓቦ ።"
   },
   "dub": {
     "audio": "ድምፂ",

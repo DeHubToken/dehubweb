@@ -4764,7 +4764,10 @@
     "foldersNoItemsHint": "Buka hasil dan pilih \"Tambahkan ke folder\" untuk menyimpannya di sini."
   },
   "videoPlayer": {
-    "volume": "Volume"
+    "volume": "Volume",
+    "processing": "Memproses video…",
+    "processingFailed": "Pemrosesan video gagal",
+    "processingFailedOwner": "Terjadi kesalahan di pihak kami. Hapus postingan ini dan unggah video lagi."
   },
   "dub": {
     "audio": "Audio",

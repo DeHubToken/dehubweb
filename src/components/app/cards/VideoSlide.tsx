@@ -15,6 +15,7 @@ import type { ShortVideo } from '@/types/feed.types';
 import { cn } from '@/lib/utils';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
+import { useTranslation } from 'react-i18next';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 
 interface VideoSlideProps {
@@ -83,6 +84,7 @@ export const VideoSlide = memo(function VideoSlide({
   isFullscreen = false,
   progressLayer = null,
 }: VideoSlideProps) {
+  const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
   // Native media play requests may settle after React has already advanced the
   // carousel. Keep the latest ownership state available to those callbacks so
@@ -424,7 +426,7 @@ export const VideoSlide = memo(function VideoSlide({
                 <AlertTriangle className="w-5 h-5 text-white/80" />
               </div>
               <span className="text-white/80 text-xs font-medium tracking-wide drop-shadow px-4 text-center">
-                Failed to process video
+                {t('videoPlayer.processingFailed')}
               </span>
             </div>
           </div>
@@ -438,7 +440,7 @@ export const VideoSlide = memo(function VideoSlide({
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
               <Loader2 className="w-7 h-7 text-white animate-spin" />
               <span className="text-white/80 text-xs font-medium tracking-wide drop-shadow">
-                Processing video…
+                {t('videoPlayer.processing')}
               </span>
             </div>
           </div>
