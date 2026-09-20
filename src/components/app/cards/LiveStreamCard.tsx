@@ -288,7 +288,16 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     const amt = Number(giftAmount);
     return Number.isFinite(amt) && amt > 0 ? tierFromAmount(amt) : null;
   }, [giftAmount]);
+  /**
+   * Hashes of the gifts this card itself submitted. The broadcast carries
+   * the tx hash back, and that is the one key that says "mine" whatever
+   * address form the backend stamped on the row — the wallet compare below
+   * misses when the row carries the signer EOA and the session the Safe,
+   * and the miss was a paid-for celebration playing twice.
+   */
+  const ownGiftHashes = useRef<Set<string>>(new Set());
   useStreamGifts(stream.streamId, !!stream.isLive, (gift) => {
+    if (gift.transactionHash && ownGiftHashes.current.has(gift.transactionHash)) return;
     const me = walletAddress?.toLowerCase();
     if (me && gift.address && gift.address === me) return;
     enqueueGift(gift);
@@ -791,6 +800,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     creatorAddress: stream.creatorId,
     tokenId: numericTokenId,
     onSubmitted: (txHash, amount) => {
+      ownGiftHashes.current.add(String(txHash).toLowerCase());
       queryClient.setQueryData(['post-tip-count', stream.id], (old: number | undefined) => (old || 0) + amount);
       if (!apiStreamId || !stream.creatorId) return;
       // Play the celebration the sender paid for straight away, before the
@@ -843,7 +853,6 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     onSuccess: () => {
       setGiftAmount('');
       setGiftMessage('');
-      setShowGiftDrawer(false);
     },
   });
 
@@ -865,9 +874,14 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       toast.error(dhbText(`Minimum gift is ${MIN_TIP_DHB} DHB`));
       return;
     }
-    // Full on-chain flow with its own progress/error toasts; onSuccess above
-    // closes the drawer.
-    sendGiftTip(amount);
+    // The drawer goes away on the tap. The chain work runs behind it with
+    // its own progress and error toasts, and the celebration plays over the
+    // stream the moment the operation is submitted — nobody should sit in a
+    // sheet watching a spinner for a payment that is already on its way. The
+    // amount and message stay in state until it succeeds, so a failed send
+    // reopens with everything still filled in.
+    setShowGiftDrawer(false);
+    void sendGiftTip(amount);
   }, [isAuthenticated, streamEnded, numericTokenId, giftAmount, sendGiftTip]);
 
   const handleEndStream = useCallback(async () => {

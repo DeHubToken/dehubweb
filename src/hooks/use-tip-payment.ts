@@ -8,7 +8,7 @@
  * This ensures users never see "Tip sent!" when the record wasn't saved.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -94,10 +94,16 @@ export function useTipPayment({
   onConfirmed,
 }: UseTipPaymentOptions) {
   const [isTipping, setIsTipping] = useState(false);
+  // State alone does not stop a double tap: two taps in the same frame both
+  // read isTipping=false before React re-renders the disabled button, and
+  // each one submits its own user operation. The ref flips synchronously.
+  const inFlight = useRef(false);
   const { walletAddress, openLoginModal } = useAuth();
 
   const tip = useCallback(
     async (amount: number) => {
+      if (inFlight.current) return;
+
       if (!walletAddress) {
         openLoginModal?.();
         return;
@@ -118,6 +124,7 @@ export function useTipPayment({
         return;
       }
 
+      inFlight.current = true;
       setIsTipping(true);
 
       try {
@@ -192,6 +199,7 @@ export function useTipPayment({
           toast.dismiss('tip-payment');
         }
       } finally {
+        inFlight.current = false;
         setIsTipping(false);
       }
     },

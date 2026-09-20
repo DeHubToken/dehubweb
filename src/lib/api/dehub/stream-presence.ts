@@ -333,6 +333,9 @@ export interface StreamGiftBroadcast {
   message?: string;
   /** Sender's wallet, lowercased, so a card can spot its own gift. */
   address?: string;
+  /** The tip's tx hash, lowercased. The one key that says "this is mine"
+   *  regardless of which address form the backend stamped on the row. */
+  transactionHash?: string;
 }
 
 /**
@@ -374,6 +377,7 @@ export function watchStreamGifts(
       username: meta.username || meta.displayName || account?.username || undefined,
       message: meta.message || undefined,
       address: String(meta.address || payload?.gift?.address || payload?.address || '').toLowerCase() || undefined,
+      transactionHash: String(meta.transactionHash || payload?.transactionHash || '').toLowerCase() || undefined,
     });
   };
 
