@@ -1248,7 +1248,21 @@
     "failedOnramp": "ኦንራምፕ ምጅማር ኣይተዓወተን",
     "badgeDiscount": "ናይ {{tier}} ዋና — {{percent}}% ቅናሽ",
     "otherTokens": "ካልኦት ቶከናት",
-    "otherTokensDesc": "ብካርድኻ ኣብ Base ETH ወይ USDC ግዛእ"
+    "otherTokensDesc": "ብካርድኻ ኣብ Base ETH ወይ USDC ግዛእ",
+    "minDhbPurchase": "ትሑት DHB መግዛእቲ $ 0.50",
+    "feeNote": "ናይ ካርድ ክፍሊት ~3.6% ከምኡ'ውን 0.5% ናይ መርበብ ውሕስነት ካብዚ ይወጽእ ። እቲ መዕቆቢ ከም ETH ንጋዝ ይልኣኽካ ።",
+    "statusAwaitingPayment": "ምሉእ ክፍሊት ኣብ ናይ ቼኮት ታብ...",
+    "shareToFeed": "ኣብ መብልዕተይ ክካፈል እየ",
+    "sharePostTemplate": "{{amount}} $ DHB ኣብ DeHub ኣብ ዝርከብ መደቀሲይ ኣክሊልካ ። ምስ ማሕበረሰብ ተዘራረብ ። #ደሆብ #DHB",
+    "success": {
+      "title": "ምሉእ መግዛእቲ!",
+      "subtitle": "ምልክታት ናብ ቦርሳኻ ተላኢኹ ኣሎ ።",
+      "viewWallet": "ወረቐት ርአ"
+    },
+    "swapSuccess": {
+      "title": "ዕዉት ኩን!",
+      "addedToWallet": "{{amount}}{{symbol}} ኣብ ቦርሳኻ ተወሰኸ"
+    }
   },
   "agents": {
     "title": "AI ኤጀንት",

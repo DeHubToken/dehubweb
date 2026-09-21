@@ -1230,7 +1230,20 @@
     "failedOnramp": "آن ریمپ شروع نہیں ہوا",
     "badgeDiscount": "{{tier}} رکھے والا — {{percent}}% کم",
     "otherTokens": "تۆکنەگەلی تر",
-    "otherTokensDesc": "بە کارتەکەت لەسەر Base ئێتیهەچ یان USDC بکڕە"
+    "otherTokensDesc": "بە کارتەکەت لەسەر Base ئێتیهەچ یان USDC بکڕە",
+    "minDhbPurchase": "د DHB لږ تر لږه پیرود $0.50 دی",
+    "shareToFeed": "خپل فیډ ته شریک کړئ",
+    "sharePostTemplate": "یوازې په DeHub کې زما په سټیک کې {{amount}} $DHB اضافه کړ. له ټولنې سره جوړول. #DeHub #DHB",
+    "success": {
+      "title": "پیرود بشپړ شو!",
+      "subtitle": "توکن ستاسو والټ ته سپارل شوي دي.",
+      "viewWallet": "والټ وګورئ"
+    },
+    "swapSuccess": {
+      "title": "تبادله بریالۍ شوه!",
+      "received": "{{amount}} <coin></coin> ترلاسه کړل",
+      "addedToWallet": "{{amount}} {{symbol}} ستاسو والټ ته اضافه شو"
+    }
   },
   "agents": {
     "title": "AI ایجنٹ",

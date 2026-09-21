@@ -1238,7 +1238,17 @@
     "failedOnramp": "ऑनरैंप बनावे में विफल",
     "badgeDiscount": "{{tier}} धारक — {{percent}}% छूट",
     "otherTokens": "दूसर टोकन",
-    "otherTokensDesc": "आपन कार्ड से Base पर ETH भा USDC खरीदीं"
+    "otherTokensDesc": "आपन कार्ड से Base पर ETH भा USDC खरीदीं",
+    "minDhbPurchase": "$ 1 के ब्लॉक कइल गइल, समाप्ती के अवधि $ 2 $ 3",
+    "shareToFeed": "मेरी खातिर खाना बाँट लें",
+    "success": {
+      "title": "खरीदें सब कुछ!",
+      "subtitle": "टोकन आपन बटुआ में भेज दिहल गइल बा.",
+      "viewWallet": "देखने के बिंदु वॉलेट"
+    },
+    "swapSuccess": {
+      "title": "सफल करे सब काम!"
+    }
   },
   "agents": {
     "title": "AI एजेंट",

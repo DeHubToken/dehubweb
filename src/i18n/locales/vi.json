@@ -1217,7 +1217,19 @@
     "failedOnramp": "Không thể bắt đầu onramp",
     "badgeDiscount": "Chủ sở hữu {{tier}} — giảm {{percent}}%",
     "otherTokens": "Token khác",
-    "otherTokensDesc": "Mua ETH hoặc USDC trên Base bằng thẻ của bạn"
+    "otherTokensDesc": "Mua ETH hoặc USDC trên Base bằng thẻ của bạn",
+    "minDhbPurchase": "Mua DHB tối thiểu là $ 0,50",
+    "shareToFeed": "Chia sẻ với nguồn cấp dữ liệu của tôi",
+    "sharePostTemplate": "Vừa thêm {{amount}} $DHB vào ngăn xếp của tôi trên DeHub. Xây dựng với cộng đồng. #DeHub #DHB",
+    "success": {
+      "title": "Hoàn tất mua hàng!",
+      "subtitle": "Token đã được chuyển đến ví của bạn.",
+      "viewWallet": "Xem Ví"
+    },
+    "swapSuccess": {
+      "title": "Giao dịch hoán đổi thành công!",
+      "received": "Đã nhận được {{amount}} <coin> </coin>"
+    }
   },
   "agents": {
     "title": "AI Agents",

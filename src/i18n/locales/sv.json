@@ -1303,7 +1303,20 @@
     "failedOnramp": "Kunde inte starta",
     "badgeDiscount": "{{tier}}-innehavare — {{percent}} % rabatt",
     "otherTokens": "Andra tokens",
-    "otherTokensDesc": "Köp ETH eller USDC på Base med ditt kort"
+    "otherTokensDesc": "Köp ETH eller USDC på Base med ditt kort",
+    "minDhbPurchase": "Minsta DHB-köp är 0,50 $",
+    "shareToFeed": "Dela till mitt flöde",
+    "sharePostTemplate": "Har precis lagt till {{amount}} $DHB till min stack på DeHub. Bygga med samhället. #DeHub #DHB",
+    "success": {
+      "title": "Inköpet slutfört!",
+      "subtitle": "Tokens har levererats till din plånbok.",
+      "viewWallet": "Visa portfölj"
+    },
+    "swapSuccess": {
+      "title": "Bytet lyckades!",
+      "received": "{{amount}} <coin></coin> fick",
+      "addedToWallet": "{{amount}}{{symbol}} har lagts till i din portfölj"
+    }
   },
   "agents": {
     "title": "AI-agenter",

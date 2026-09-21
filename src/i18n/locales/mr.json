@@ -1295,7 +1295,19 @@
     "failedOnramp": "सुरू करण्यात अयशस्वी",
     "badgeDiscount": "{{tier}} धारक — {{percent}}% सूट",
     "otherTokens": "इतर टोकन",
-    "otherTokensDesc": "तुमच्या कार्डने Base वर ETH किंवा USDC खरेदी करा"
+    "otherTokensDesc": "तुमच्या कार्डने Base वर ETH किंवा USDC खरेदी करा",
+    "minDhbPurchase": "किमान DHB खरेदी $ 0.50 आहे",
+    "feeNote": "कार्ड फी ~ 3.6% आणि 0.5% नेटवर्क रिझर्व्ह हे बंद करा. गॅससाठी ईटीएच म्हणून रिझर्व्ह तुम्हाला पाठवले जाते.",
+    "shareToFeed": "माझ्या फीडमध्ये सामायिक करा",
+    "sharePostTemplate": "फक्त {{amount}} $DHB माझ्या स्टॅकवर जोडले DeHub. कम्युनिटीला जोडलेली पाने #DeHub #DHB",
+    "success": {
+      "title": "खरेदी पूर्ण!",
+      "subtitle": "टोकन तुमच्या वॉलेटमध्ये डिलिव्हर केले गेले आहेत.",
+      "viewWallet": "वॉलेट पहा"
+    },
+    "swapSuccess": {
+      "title": "स्वॅप यशस्वी!"
+    }
   },
   "agents": {
     "title": "AI एजंट्स",

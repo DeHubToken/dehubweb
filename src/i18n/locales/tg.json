@@ -1263,7 +1263,18 @@
     "failedOnramp": "Оғози рампа ноком шуд",
     "badgeDiscount": "Соҳиби {{tier}} — {{percent}}% тахфиф",
     "otherTokens": "Токенҳои дигар",
-    "otherTokensDesc": "Бо корти худ дар Base ETH ё USDC харед"
+    "otherTokensDesc": "Бо корти худ дар Base ETH ё USDC харед",
+    "minDhbPurchase": "Хариди ҳадди ақали DHB $ 0.50 аст",
+    "shareToFeed": "Ibahagi sa aking feed",
+    "sharePostTemplate": "{{amount}} $DHB sa aking stack sa DeHub. Бунёд бо ҷомеа. #DeHub #DHB",
+    "success": {
+      "title": "Kumpleto ng bumili!",
+      "subtitle": "Аломатҳо ба ҳамёни шумо супорида шуданд.",
+      "viewWallet": "Намоиш додани ҳамён"
+    },
+    "swapSuccess": {
+      "title": "Мубодилаи бомуваффақият!"
+    }
   },
   "agents": {
     "title": "Агентҳои зеҳни сунъӣ",

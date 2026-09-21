@@ -1273,7 +1273,20 @@
     "failedOnramp": "ເລີ່ມອອນແຣມບໍ່ສຳເລັດ",
     "badgeDiscount": "ຜູ້ຖື {{tier}} — ຫຼຸດ {{percent}}%",
     "otherTokens": "ໂທເຄນອື່ນ",
-    "otherTokensDesc": "ຊື້ ETH ຫຼື USDC ໃນ Base ດ້ວຍບັດຂອງທ່ານ"
+    "otherTokensDesc": "ຊື້ ETH ຫຼື USDC ໃນ Base ດ້ວຍບັດຂອງທ່ານ",
+    "minDhbPurchase": "ການຊື້ DHB ຕ່ໍາສຸດແມ່ນ $ 0.50",
+    "shareToFeed": "ແບ່ງ ປັນ ກັບ ອາ ຫານ ຂອງ ຂ້າ ພະ ເຈົ້າ",
+    "sharePostTemplate": "ຂ້ອຍພຽງແຕ່ເພີ່ມ {{amount}} $DHB ໃສ່ stack ຂອງຂ້ອຍໃນ DeHub. ການກໍ່ສ້າງກັບຊຸມຊົນ. #DeHub #DHB",
+    "success": {
+      "title": "ການຊື້ສຳເລັດແລ້ວ!",
+      "subtitle": "Tokens ໄດ້ຖືກສົ່ງໄປຫາກະເປົາເງິນຂອງທ່ານ.",
+      "viewWallet": "ເບິ່ງກະເປົາເງິນ"
+    },
+    "swapSuccess": {
+      "title": "ສະຫຼັບສຳເລັດ!",
+      "received": "{{amount}} <coin></coin> ໄດ້ຮັບ",
+      "addedToWallet": "{{amount}}{{symbol}} ເພີ່ມເຂົ້າໃນກະເປົາເງິນຂອງທ່ານ"
+    }
   },
   "agents": {
     "title": "AI Agents",

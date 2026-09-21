@@ -1294,7 +1294,20 @@
     "failedOnramp": "Pokretanje pristupnika nije uspjelo",
     "badgeDiscount": "Vlasnik {{tier}} — {{percent}} % popusta",
     "otherTokens": "Ostali tokeni",
-    "otherTokensDesc": "Kupite ETH ili USDC na Baseu svojom karticom"
+    "otherTokensDesc": "Kupite ETH ili USDC na Baseu svojom karticom",
+    "minDhbPurchase": "Minimalna kupnja DHB-a je 0,50 $",
+    "shareToFeed": "Podijeli na moj feed",
+    "sharePostTemplate": "Upravo sam dodao {{amount}} $DHB na svoj stog na DeHubu. Gradimo zajedno sa zajednicom. #DeHub #DHB",
+    "success": {
+      "title": "Kupnja je dovršena!",
+      "subtitle": "Tokeni su dostavljeni u tvoj novčanik.",
+      "viewWallet": "Prikaži novčanik"
+    },
+    "swapSuccess": {
+      "title": "Zamjena je uspjela!",
+      "received": "{{amount}} <coin></coin> primljen",
+      "addedToWallet": "{{amount}} {{symbol}} dodano u vaš novčanik"
+    }
   },
   "agents": {
     "title": "AI Agenti",

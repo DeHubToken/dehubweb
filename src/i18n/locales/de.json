@@ -1303,7 +1303,20 @@
     "failedOnramp": "Rampe fehlgeschlagen",
     "badgeDiscount": "{{tier}}-Inhaber – {{percent}} % Rabatt",
     "otherTokens": "Andere Token",
-    "otherTokensDesc": "ETH oder USDC auf Base mit deiner Karte kaufen"
+    "otherTokensDesc": "ETH oder USDC auf Base mit deiner Karte kaufen",
+    "minDhbPurchase": "Der Mindestkauf von DHB beträgt 0,50 $",
+    "shareToFeed": "In meinem Feed teilen",
+    "sharePostTemplate": "Habe gerade {{amount}} $DHB zu meinem Stack auf DeHub hinzugefügt. Bauen Sie mit der Gemeinschaft. #DeHub #DHB",
+    "success": {
+      "title": "Kauf abgeschlossen!",
+      "subtitle": "Token wurden in Ihre Brieftasche geliefert.",
+      "viewWallet": "Brieftasche anzeigen"
+    },
+    "swapSuccess": {
+      "title": "Tauschen erfolgreich!",
+      "received": "{{amount}} <coin></coin> erhalten",
+      "addedToWallet": "{{amount}} {{symbol}} wurde deinem Wallet hinzugefügt"
+    }
   },
   "agents": {
     "title": "KI-Agenten",

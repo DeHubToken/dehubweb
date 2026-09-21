@@ -1280,7 +1280,18 @@
     "failedOnramp": "অনর‍্যাম্প শুরু করতে ব্যর্থ",
     "badgeDiscount": "{{tier}} ধারক — {{percent}}% ছাড়",
     "otherTokens": "অন্যান্য টোকেন",
-    "otherTokensDesc": "আপনার কার্ড দিয়ে Base-এ ETH বা USDC কিনুন"
+    "otherTokensDesc": "আপনার কার্ড দিয়ে Base-এ ETH বা USDC কিনুন",
+    "minDhbPurchase": "ন্যূনতম DHB ক্রয় $ 0.50",
+    "shareToFeed": "আমার ফিডে শেয়ার করুন",
+    "sharePostTemplate": "এইমাত্র DeHub-এ আমার স্ট্যাকে {{amount}} $DHB যোগ করা হয়েছে । সম্প্রদায়ের সাথে গড়ে তোলা । #ডিহাব #ডিএইচবি",
+    "success": {
+      "title": "ক্রয় সম্পূর্ণ!",
+      "subtitle": "টোকেনগুলি আপনার ওয়ালেটে ডেলিভারি করা হয়েছে ।",
+      "viewWallet": "ওয়ালেট দেখুন"
+    },
+    "swapSuccess": {
+      "title": "অদলবদল সফল হয়েছে!"
+    }
   },
   "agents": {
     "title": "AI এজেন্ট",

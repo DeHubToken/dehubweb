@@ -1286,7 +1286,20 @@
     "failedOnramp": "Rampas sākšana neizdevās",
     "badgeDiscount": "{{tier}} īpašniekam — {{percent}}% atlaide",
     "otherTokens": "Citi tokeni",
-    "otherTokensDesc": "Pērciet ETH vai USDC tīklā Base ar savu karti"
+    "otherTokensDesc": "Pērciet ETH vai USDC tīklā Base ar savu karti",
+    "minDhbPurchase": "Minimālā DHB pirkuma summa ir 0,50 $",
+    "shareToFeed": "Kopīgot manā plūsmā",
+    "sharePostTemplate": "Tikko pievienoju {{amount}} $DHB savam DeHub salikumam. Veidošana kopā ar kopienu. #DeHub #DHB",
+    "success": {
+      "title": "Pirkums pabeigts!",
+      "subtitle": "Žetoni ir piegādāti uz jūsu maku.",
+      "viewWallet": "Skatīt maku"
+    },
+    "swapSuccess": {
+      "title": "Maiņa veiksmīga!",
+      "received": "{{amount}} <coin></coin> saņemts",
+      "addedToWallet": "{{amount}} {{symbol}} pievienots jūsu makam"
+    }
   },
   "agents": {
     "title": "MI aģenti",

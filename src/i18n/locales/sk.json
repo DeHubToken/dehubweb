@@ -1374,7 +1374,20 @@
     "failedOnramp": "Nepodarilo sa spustiť onramp",
     "badgeDiscount": "Držiteľ {{tier}} — zľava {{percent}} %",
     "otherTokens": "Ďalšie tokeny",
-    "otherTokensDesc": "Kúpte ETH alebo USDC v sieti Base svojou kartou"
+    "otherTokensDesc": "Kúpte ETH alebo USDC v sieti Base svojou kartou",
+    "minDhbPurchase": "Minimálny nákup DHB je 0,50 $",
+    "shareToFeed": "Zdieľať v mojom informačnom kanáli",
+    "sharePostTemplate": "Práve som pridal {{amount}} $DHB do môjho zásobníka na DeHub. Budovanie s komunitou. #DeHub #DHB",
+    "success": {
+      "title": "Nákup dokončený!",
+      "subtitle": "Žetóny boli doručené do vašej peňaženky.",
+      "viewWallet": "Zobraziť peňaženku"
+    },
+    "swapSuccess": {
+      "title": "Výmena bola úspešná!",
+      "received": "Prijaté: {{amount}} <coin> </coin>",
+      "addedToWallet": "Používateľ{{amount}} {{symbol}} bol pridaný do vašej peňaženky"
+    }
   },
   "agents": {
     "title": "AI agenti",
