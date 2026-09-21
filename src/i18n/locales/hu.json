@@ -1400,7 +1400,16 @@
     "walletConnectedAs": "Csatlakoztatva",
     "useDifferentWallet": "Másik tárca használata",
     "walletInfoDesktop": "Csatlakoztassa pénztárcáját a biztonságos bejelentkezéshez",
-    "walletInfoMobile": "A MetaMask, Trust és Phantom saját alkalmazásukban nyílnak meg. A Rabby WalletConnect-et használ."
+    "walletInfoMobile": "A MetaMask, Trust és Phantom saját alkalmazásukban nyílnak meg. A Rabby WalletConnect-et használ.",
+    "continuePasskey": "Folytatás ujjlenyomattal",
+    "passkeyIntro": "Az ujjlenyomatod vagy az arcod a fiókod. Nincs mit megjegyezni, nincs mit beírni.",
+    "passkeySignIn": "Bejelentkezés ujjlenyomattal",
+    "passkeyCreate": "Új fiók létrehozása",
+    "passkeyUnsupported": "Ez az eszköz nem tud bejelentkezni ujjlenyomattal vagy arccal. Használjon másik lehetőséget.",
+    "passkeyNotLinked": "Még nincs fiók társítva ehhez az ujjlenyomathoz. Hozzon létre inkább új fiókot.",
+    "passkeyAlreadyRegistered": "Ehhez az ujjlenyomathoz már tartozik fiók. Használja inkább a Bejelentkezés lehetőséget.",
+    "passkeyFailed": "Az ujjlenyomatos bejelentkezés sikertelen volt. Kérjük, próbálja újra.",
+    "passkeyBackupHint": "A fiókod az eszköz jelszókulcsában él. A legtöbb telefonon szinkronizálódik a Google vagy Apple fiókoddal, és a Beállításokban hozzáadhatsz egy jelszavas biztonsági mentést."
   },
   "careers": {
     "title": "Karrier a DeHub-nál",

@@ -74,8 +74,13 @@ vi.mock('@/lib/wallet-core/store', () => ({
 vi.mock('@/lib/wallet-core/biometric-unlock', () => ({
   isBiometricUnlockAvailable: async () => true,
   enrollBiometricUnlock: async () => {},
+  enrollBiometricUnlockWithEnrollment: async () => {},
   PasskeyCancelledError: class PasskeyCancelledError extends Error {},
   PasskeyUnsupportedError: class PasskeyUnsupportedError extends Error {},
+}));
+
+vi.mock('@/lib/passkey-login', () => ({
+  takePendingPasskeyEnrollment: () => null,
 }));
 
 vi.mock('@/lib/wallet-core/legacy-detect', () => ({

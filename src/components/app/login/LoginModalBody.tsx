@@ -9,7 +9,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAccount, useConnectors, useDisconnect } from 'wagmi';
 import { useTranslation } from 'react-i18next';
-import { Phone, Wallet, Loader2 } from 'lucide-react';
+import { Phone, Wallet, Loader2, Fingerprint } from 'lucide-react';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,7 @@ import { WagmiScope } from '@/components/app/WagmiScope';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
 import { requestAccountPicker } from '@/lib/wallet-accounts';
 import { fetchTelegramLoginConfig } from '@/lib/telegram-login';
+import { isPasskeyLoginAvailable, PasskeyCancelledError, PasskeyLoginError, PasskeyUnsupportedError } from '@/lib/passkey-login';
 import { LoginSavedProfiles } from './LoginSavedProfiles';
 import type { LoginStep } from './steps';
 import type { DiscoveredWallet, WalletId } from './LoginWalletsStep';
@@ -92,7 +93,7 @@ export function LoginModalBody(props: LoginModalBodyProps) {
 function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   const {
     connectWithProvider, connectWithEmail, cancelEmailMagicLink, verifyEmailOtp, connectWithSMS, verifyPhoneOtp,
-    connectWithTelegram, connectWithWallet, completeSmartWalletLogin, setWagmiAuthIntent, isConnecting,
+    connectWithTelegram, connectWithPasskey, connectWithWallet, completeSmartWalletLogin, setWagmiAuthIntent, isConnecting,
     supabaseUserId, disconnect, isAuthenticated, switchToProfile,
   } = useAuth();
   const {
@@ -174,6 +175,16 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
    * than one that fails when tapped.
    */
   const [telegramEnabled, setTelegramEnabled] = useState(false);
+  /**
+   * Whether this browser can do a passkey with a fingerprint / face / device
+   * PIN. Same pre-filter the wallet's biometric unlock uses; a definite "no"
+   * hides the row rather than offering a prompt that cannot appear.
+   */
+  const [passkeyAvailable, setPasskeyAvailable] = useState(false);
+  const [passkeyError, setPasskeyError] = useState('');
+  // Set when a sign-in attempt found a passkey with no account behind it, so
+  // the step can lead with "create one instead".
+  const [passkeyUnknown, setPasskeyUnknown] = useState(false);
 
   // Clear what was typed once the sheet is shut. The step itself is reset by
   // the shell; this is the other half of the old handleClose, and doing it on
@@ -186,7 +197,18 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
     setPhone('');
     setPhoneCode('');
     setPhoneError('');
+    setPasskeyError('');
+    setPasskeyUnknown(false);
     setActiveProvider(null);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    void isPasskeyLoginAvailable().then(available => {
+      if (!cancelled) setPasskeyAvailable(available);
+    });
+    return () => { cancelled = true; };
   }, [open]);
 
   // Asked once the sheet is actually open, and cached for the tab by
@@ -264,6 +286,32 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
       console.error('Telegram login failed:', error);
     }
     setActiveProvider(null);
+  };
+
+  const handlePasskey = async (mode: 'signin' | 'signup') => {
+    setPasskeyError('');
+    setActiveProvider(mode === 'signup' ? 'passkey-signup' : 'passkey-signin');
+    try {
+      await connectWithPasskey(mode);
+    } catch (error) {
+      if (error instanceof PasskeyCancelledError) {
+        // Dismissing the OS sheet isn't a failure — no message.
+      } else if (error instanceof PasskeyUnsupportedError) {
+        setPasskeyError(t('loginModal.passkeyUnsupported', "This device can't sign in with a fingerprint or face. Use another option."));
+      } else if (error instanceof PasskeyLoginError && error.code === 'UNKNOWN_CREDENTIAL') {
+        setPasskeyUnknown(true);
+        setPasskeyError(t('loginModal.passkeyNotLinked', 'No account is linked to that fingerprint yet. Create a new account instead.'));
+      } else if (error instanceof PasskeyLoginError && error.code === 'ALREADY_REGISTERED') {
+        setPasskeyError(t('loginModal.passkeyAlreadyRegistered', 'That fingerprint already has an account. Use Sign in instead.'));
+      } else {
+        console.error('Passkey login failed:', error);
+        setPasskeyError(error instanceof Error && error.message
+          ? error.message
+          : t('loginModal.passkeyFailed', 'Fingerprint sign-in failed. Please try again.'));
+      }
+    } finally {
+      setActiveProvider(null);
+    }
   };
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
@@ -469,6 +517,17 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
           <span>{t('loginModal.continueEmail')}</span>
         </Button>
 
+        {passkeyAvailable && (
+          <Button
+            onClick={() => setStep('passkey')}
+            disabled={isConnecting}
+            className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
+          >
+            <Fingerprint className="w-5 h-5" />
+            <span>{t('loginModal.continuePasskey', 'Continue with fingerprint')}</span>
+          </Button>
+        )}
+
         <Button
           onClick={() => handleSocialLogin('google')}
           disabled={isConnecting}
@@ -536,6 +595,47 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
         <Wallet className="w-5 h-5" />
         <span>{t('loginModal.connectWallet')}</span>
       </Button>
+    </div>
+  );
+
+  const renderPasskeyStep = () => (
+    <div className="space-y-4">
+      <p className="text-white/60 text-sm">
+        {t('loginModal.passkeyIntro', 'Your fingerprint or face is your account. Nothing to remember, nothing to type.')}
+      </p>
+      <Button
+        onClick={() => handlePasskey('signin')}
+        disabled={isConnecting}
+        className="w-full h-12 bg-white text-black hover:bg-white/90 rounded-xl flex items-center justify-center gap-3"
+      >
+        {activeProvider === 'passkey-signin' ? (
+          <Loader2 className="w-5 h-5 animate-spin" />
+        ) : (
+          <Fingerprint className="w-5 h-5" />
+        )}
+        <span>{t('loginModal.passkeySignIn', 'Sign in with fingerprint')}</span>
+      </Button>
+      <Button
+        onClick={() => handlePasskey('signup')}
+        disabled={isConnecting}
+        variant="outline"
+        className={passkeyUnknown
+          ? 'w-full h-12 bg-white text-black hover:bg-white/90 rounded-xl flex items-center justify-center gap-3 border-transparent'
+          : 'w-full h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-center gap-3 border-white/10'}
+      >
+        {activeProvider === 'passkey-signup' ? (
+          <Loader2 className="w-5 h-5 animate-spin" />
+        ) : (
+          <Fingerprint className="w-5 h-5" />
+        )}
+        <span>{t('loginModal.passkeyCreate', 'Create a new account')}</span>
+      </Button>
+      {passkeyError && (
+        <p className="text-red-400 text-sm">{passkeyError}</p>
+      )}
+      <p className="text-white/40 text-xs">
+        {t('loginModal.passkeyBackupHint', "Your account lives in this device's passkey. On most phones it syncs with your Google or Apple account, and you can add a password backup in Settings.")}
+      </p>
     </div>
   );
 
@@ -744,6 +844,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   return (
     <>
       {step === 'main' && renderMainStep()}
+      {step === 'passkey' && renderPasskeyStep()}
       {step === 'email' && renderEmailStep()}
       {step === 'email-waiting' && renderEmailWaitingStep()}
       {step === 'phone' && renderPhoneStep()}

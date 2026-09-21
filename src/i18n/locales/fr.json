@@ -1408,7 +1408,16 @@
     "walletConnectedAs": "Connecté",
     "useDifferentWallet": "Utiliser un autre portefeuille",
     "walletInfoDesktop": "Connectez votre portefeuille pour vous connecter en toute sécurité",
-    "walletInfoMobile": "MetaMask, Trust et Phantom ouvriront leur application directement. Rabby utilisera WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust et Phantom ouvriront leur application directement. Rabby utilisera WalletConnect.",
+    "continuePasskey": "Continuer avec les empreintes digitales",
+    "passkeyIntro": "Votre empreinte digitale ou votre visage est votre compte. Rien à retenir, rien à taper.",
+    "passkeySignIn": "Se connecter avec l'empreinte digitale",
+    "passkeyCreate": "Créer un nouveau compte",
+    "passkeyUnsupported": "Cet appareil ne peut pas se connecter avec une empreinte digitale ou un visage. Utilisez une autre option.",
+    "passkeyNotLinked": "Aucun compte n'est encore associé à cette empreinte digitale. Créez un nouveau compte à la place.",
+    "passkeyAlreadyRegistered": "Cette empreinte digitale a déjà un compte. Utilisez la connexion à la place.",
+    "passkeyFailed": "La connexion par empreinte digitale a échoué. Veuillez réessayer.",
+    "passkeyBackupHint": "Votre compte réside dans la clé d'accès de cet appareil. Sur la plupart des téléphones, elle est synchronisée avec votre compte Google ou Apple, et vous pouvez ajouter une sauvegarde de mot de passe dans les Paramètres."
   },
   "careers": {
     "title": "Carrières chez DeHub",

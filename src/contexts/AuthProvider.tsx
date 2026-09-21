@@ -2729,6 +2729,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
+   * Passkey-only sign-in. The passkey-auth edge function verifies the
+   * WebAuthn response and mints a real session (see lib/passkey-login); from
+   * setSession on this is the phone/Telegram path. A sign-up parks PRF
+   * material for the wallet-create step so the wallet is wrapped under the
+   * same passkey without a second prompt.
+   */
+  const connectWithPasskey = async (mode: 'signin' | 'signup'): Promise<boolean> => {
+    const previousSource = readConnectionSource();
+    setIsConnecting(true);
+    supaLoginHandledRef.current = true;
+    writeConnectionSource('web3auth');
+    try {
+      const { signInWithPasskey, signUpWithPasskey } = await import('@/lib/passkey-login');
+      const result = mode === 'signup' ? await signUpWithPasskey() : await signInWithPasskey();
+      const session = result?.session;
+      if (!session?.access_token || !session?.refresh_token) {
+        throw new Error('Passkey sign-in failed. Please try again.');
+      }
+      const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+        access_token: session.access_token,
+        refresh_token: session.refresh_token,
+      });
+      const uid = sessionData?.session?.user?.id;
+      if (sessionError || !uid) throw new Error(sessionError?.message || 'Passkey sign-in failed. Please try again.');
+      setIsProcessingRedirect(true);
+      try {
+        await proceedToWalletPhase(uid);
+      } finally {
+        setIsProcessingRedirect(false);
+      }
+      return true;
+    } catch (error) {
+      setConnectionSource(previousSource);
+      restoreConnectionSource(previousSource);
+      throw error;
+    } finally {
+      supaLoginHandledRef.current = false;
+      setIsConnecting(false);
+    }
+  };
+
+  /**
    * Telegram login step 1: hand the browser to oauth.telegram.org.
    *
    * Shaped like connectWithProvider rather than connectWithSMS because it is
@@ -3124,6 +3166,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     connectWithSMS,
     verifyPhoneOtp,
     connectWithTelegram,
+    connectWithPasskey,
     connectWithWallet,
     completeSmartWalletLogin,
     exportPrivateKey,

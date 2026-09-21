@@ -1387,7 +1387,16 @@
     "walletConnectedAs": "Prisijungta",
     "useDifferentWallet": "Naudoti kitą piniginę",
     "walletInfoDesktop": "Prijunkite piniginę, kad prisijungtumėte saugiai",
-    "walletInfoMobile": "MetaMask, Trust ir Phantom atidarys savo programėlę tiesiogiai. Rabby naudos WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust ir Phantom atidarys savo programėlę tiesiogiai. Rabby naudos WalletConnect.",
+    "continuePasskey": "Tęskite su pirštų antspaudais",
+    "passkeyIntro": "Jūsų piršto antspaudas arba veidas yra jūsų paskyra. Nereikia nieko atsiminti, nieko rašyti.",
+    "passkeySignIn": "Prisijunkite piršto antspaudu",
+    "passkeyCreate": "Sukurti naują paskyrą",
+    "passkeyUnsupported": "Šis įrenginys negali prisijungti naudojant piršto antspaudą arba veidą. Naudokite kitą parinktį.",
+    "passkeyNotLinked": "Su tuo piršto antspaudu dar nesusijusi jokia paskyra. Vietoj to sukurkite naują paskyrą.",
+    "passkeyAlreadyRegistered": "Tas piršto antspaudas jau turi paskyrą. Vietoj to naudokite „Prisijungti“.",
+    "passkeyFailed": "Nepavyko prisijungti naudojant piršto antspaudą. Pabandykite dar kartą.",
+    "passkeyBackupHint": "Jūsų paskyra saugoma šio įrenginio slaptažodžio rakte. Daugumoje telefonų ji sinchronizuojama su jūsų „Google“ arba „Apple“ paskyra, o atsarginę slaptažodžio kopiją galite pridėti skiltyje „Nustatymai“."
   },
   "careers": {
     "title": "Karjera DeHub",

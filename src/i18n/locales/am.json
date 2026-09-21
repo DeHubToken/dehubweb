@@ -1361,7 +1361,16 @@
     "walletConnectedAs": "ተገናኝቷል",
     "useDifferentWallet": "ሌላ ቦርሳ ተጠቀም",
     "walletInfoDesktop": "በደህንነት ለመግባት ዋሌትዎን ያገናኙ",
-    "walletInfoMobile": "MetaMask፣ Trust እና Phantom መተግበሪያቸውን በቀጥታ ይከፍታሉ። Rabby WalletConnect ይጠቀማል።"
+    "walletInfoMobile": "MetaMask፣ Trust እና Phantom መተግበሪያቸውን በቀጥታ ይከፍታሉ። Rabby WalletConnect ይጠቀማል።",
+    "continuePasskey": "በጣት አሻራ ይቀጥሉ",
+    "passkeyIntro": "የጣት አሻራዎ ወይም ፊትዎ የእርስዎ መለያ ነው። ለማስታወስ ምንም ነገር የለም፣ ለመተየብ ምንም ነገር የለም።",
+    "passkeySignIn": "በጣት አሻራ ይግቡ",
+    "passkeyCreate": "አዲስ መለያ ይፍጠሩ",
+    "passkeyUnsupported": "ይህ መሳሪያ በጣት አሻራ ወይም ፊት መግባት አይችልም። ሌላ አማራጭ ይጠቀሙ።",
+    "passkeyNotLinked": "ያ የጣት አሻራ ገና ምንም መለያ አልተገናኘም። ይልቁንስ አዲስ መለያ ይፍጠሩ።",
+    "passkeyAlreadyRegistered": "ያ የጣት አሻራ ቀድሞውኑ መለያ አለው። ይልቁንስ \"ግባ\" የሚለውን ይጠቀሙ።",
+    "passkeyFailed": "የጣት አሻራ መግባት አልተሳካም። እባክዎ እንደገና ይሞክሩ።",
+    "passkeyBackupHint": "መለያዎ በዚህ መሳሪያ የይለፍ ቁልፍ ውስጥ ይኖራል። በአብዛኛዎቹ ስልኮች ከGoogle ወይም Apple መለያዎ ጋር ይመሳሰላል፣ እና በቅንብሮች ውስጥ የይለፍ ቃል ምትኬ ማከል ይችላሉ።"
   },
   "careers": {
     "title": "በDeHub ሥራ",

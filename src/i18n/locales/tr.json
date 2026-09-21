@@ -1404,7 +1404,16 @@
     "walletConnectedAs": "Bağlandı",
     "useDifferentWallet": "Farklı bir cüzdan kullan",
     "walletInfoDesktop": "Güvenli giriş için cüzdanınızı bağlayın",
-    "walletInfoMobile": "MetaMask, Trust ve Phantom uygulamalarını doğrudan açacaktır. Rabby WalletConnect kullanacaktır."
+    "walletInfoMobile": "MetaMask, Trust ve Phantom uygulamalarını doğrudan açacaktır. Rabby WalletConnect kullanacaktır.",
+    "continuePasskey": "Parmak iziyle devam et",
+    "passkeyIntro": "Parmak iziniz veya yüzünüz hesabınızdır. Hatırlanacak bir şey yok, yazılacak bir şey yok.",
+    "passkeySignIn": "Parmak iziyle oturum aç",
+    "passkeyCreate": "Yeni hesap oluştur",
+    "passkeyUnsupported": "Bu cihaz parmak izi veya yüzle oturum açamaz. Başka bir seçeneği kullanın.",
+    "passkeyNotLinked": "Henüz o parmak izine bağlı bir hesap yok. Bunun yerine yeni bir hesap oluşturun.",
+    "passkeyAlreadyRegistered": "Bu parmak izi zaten bir hesaba sahip. Bunun yerine Oturum Aç'ı kullanın.",
+    "passkeyFailed": "Parmak iziyle oturum açma başarısız oldu. Lütfen tekrar deneyin.",
+    "passkeyBackupHint": "Hesabınız bu cihazın parolası içinde yaşar. Çoğu telefonda Google veya Apple hesabınızla eşitlenir ve Ayarlar'da bir şifre yedeği ekleyebilirsiniz."
   },
   "careers": {
     "title": "DeHub'da Kariyer",

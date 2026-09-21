@@ -281,6 +281,8 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.verify-phone-otp]
     verify_jwt = false
+  [functions.passkey-auth]
+    verify_jwt = false
   [functions.winter-wonderland-draw]
     verify_jwt = false
   # verify_jwt = false because the caller holds a DeHub *admin* bearer token,

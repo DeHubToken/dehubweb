@@ -1413,7 +1413,8 @@
     "walletConnectedAs": "সংযুক্ত",
     "useDifferentWallet": "অন্য ওয়ালেট ব্যবহার গরন",
     "walletInfoDesktop": "নিরাপদে লগইনের জইন্যে ওয়ালেট কানেক্ট গরো",
-    "walletInfoMobile": "MetaMask, Trust আর Phantom সরাসরি অ্যাপ খুলবো। Rabby WalletConnect ব্যবহার গরবো।"
+    "walletInfoMobile": "MetaMask, Trust আর Phantom সরাসরি অ্যাপ খুলবো। Rabby WalletConnect ব্যবহার গরবো।",
+    "continuePasskey": "ফিংগারপ্রিন্ট দিয়ে আগাই"
   },
   "careers": {
     "title": "চাকরি",

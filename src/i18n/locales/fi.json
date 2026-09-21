@@ -1400,7 +1400,16 @@
     "walletConnectedAs": "Yhdistetty",
     "useDifferentWallet": "Käytä toista lompakkoa",
     "walletInfoDesktop": "Yhdistä lompakkosi kirjautuaksesi turvallisesti",
-    "walletInfoMobile": "MetaMask, Trust ja Phantom avaavat sovelluksensa suoraan. Rabby käyttää WalletConnectia."
+    "walletInfoMobile": "MetaMask, Trust ja Phantom avaavat sovelluksensa suoraan. Rabby käyttää WalletConnectia.",
+    "continuePasskey": "Jatka sormenjäljellä",
+    "passkeyIntro": "Sormenjälkesi tai kasvosi ovat tilisi. Ei tarvitse muistaa, ei tarvitse kirjoittaa.",
+    "passkeySignIn": "Kirjaudu sisään sormenjäljellä",
+    "passkeyCreate": "Luo uusi tili",
+    "passkeyUnsupported": "Tämä laite ei voi kirjautua sisään sormenjäljellä tai kasvoilla. Käytä toista vaihtoehtoa.",
+    "passkeyNotLinked": "Tuohon sormenjälkeen ei ole vielä liitetty tiliä. Luo uusi tili sen sijaan.",
+    "passkeyAlreadyRegistered": "Tuossa sormenjäljessä on jo tili. Käytä sen sijaan Kirjaudu sisään -toimintoa.",
+    "passkeyFailed": "Sormenjäljellä kirjautuminen epäonnistui. Yritä uudelleen.",
+    "passkeyBackupHint": "Tilisi sijaitsee tämän laitteen salausavaimessa. Useimmissa puhelimissa se synkronoidaan Google- tai Apple-tilisi kanssa, ja voit lisätä salasanavarmuuskopion Asetuksista."
   },
   "careers": {
     "title": "Urat DeHubissa",

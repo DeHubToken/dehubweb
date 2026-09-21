@@ -1388,7 +1388,16 @@
     "walletConnectedAs": "Ulangan",
     "useDifferentWallet": "Boshqa hamyondan foydalanish",
     "walletInfoDesktop": "Xavfsiz kirish uchun hamyonni ulang",
-    "walletInfoMobile": "MetaMask, Trust va Phantom toʻgʻridan-toʻgʻri ilovani ochadi. Rabby WalletConnect dan foydalanadi."
+    "walletInfoMobile": "MetaMask, Trust va Phantom toʻgʻridan-toʻgʻri ilovani ochadi. Rabby WalletConnect dan foydalanadi.",
+    "continuePasskey": "Barmoq izi bilan davom eting",
+    "passkeyIntro": "Barmoq izingiz yoki yuzingiz sizning hisobingizdir. Yodda saqlashga, yozishga hech narsa yo'q.",
+    "passkeySignIn": "Barmoq izi bilan kirish",
+    "passkeyCreate": "Yangi hisob yaratish",
+    "passkeyUnsupported": "Bu qurilma barmoq izi yoki yuz bilan kira olmaydi. Boshqa variantdan foydalaning.",
+    "passkeyNotLinked": "Hozircha bu barmoq iziga hech qanday hisob bog'lanmagan. Buning o'rniga yangi hisob yarating.",
+    "passkeyAlreadyRegistered": "Bu barmoq izida allaqachon hisob mavjud. Buning o'rniga \"Kirish\"dan foydalaning.",
+    "passkeyFailed": "Barmoq izi bilan kirish amalga oshmadi. Iltimos, qayta urinib ko'ring.",
+    "passkeyBackupHint": "Sizning hisobingiz ushbu qurilmaning parol kalitida saqlanadi. Aksariyat telefonlarda u Google yoki Apple hisobingiz bilan sinxronlanadi va sozlamalarda zaxira parolni qo'shishingiz mumkin."
   },
   "careers": {
     "title": "DeHub da karyera",

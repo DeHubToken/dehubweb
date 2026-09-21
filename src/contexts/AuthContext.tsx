@@ -57,6 +57,14 @@ export interface AuthContextType {
    * could not be started.
    */
   connectWithTelegram: () => Promise<boolean>;
+  /**
+   * Passkey-only sign-in: the fingerprint/face passkey IS the account, with no
+   * email, phone or OAuth identity behind it. 'signin' asserts an existing
+   * DeHub passkey; 'signup' creates one and a new account with it. Rejects
+   * with the message to show; a PasskeyLoginError with code
+   * UNKNOWN_CREDENTIAL means the chosen passkey has no account yet.
+   */
+  connectWithPasskey: (mode: 'signin' | 'signup') => Promise<boolean>;
   connectWithWallet: (wallet: WalletProvider) => Promise<boolean>;
   /**
    * Final step of the smart-wallet login: called by the login modal once the
