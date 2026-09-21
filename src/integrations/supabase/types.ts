@@ -3643,6 +3643,27 @@ export type Database = {
           },
         ]
       }
+      post_discussion_settings: {
+        Row: {
+          common_ground: boolean
+          creator_address: string
+          token_id: number
+          updated_at: string | null
+        }
+        Insert: {
+          common_ground?: boolean
+          creator_address: string
+          token_id: number
+          updated_at?: string | null
+        }
+        Update: {
+          common_ground?: boolean
+          creator_address?: string
+          token_id?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       post_drafts: {
         Row: {
           created_at: string
