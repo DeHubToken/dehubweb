@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import type { Json } from '@/integrations/supabase/types';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
 import { buyTokensLabel, dhbText } from '@/lib/dhb-toast';
@@ -207,7 +208,9 @@ const saveDraftToDb = async (walletAddress: string, draft: Draft): Promise<strin
             titleText: draft.payload?.titleText || '',
             categories: draft.payload?.selectedCategory ? [draft.payload.selectedCategory] : [],
             source: 'web',
-          },
+            // The column is jsonb; the generated Json type won't take an
+            // interface with optional keys without this.
+          } as unknown as Json,
         })
         .select('id')
         .single(),
