@@ -1,8 +1,4 @@
 {
-  "live": {
-    "chatJoined": "शामिल हुए",
-    "chatSentGift": "भेजा"
-  },
   "errors": {
     "sponsorshipUnavailable": "مفت لین دین ہماری طرف سے رکا ہوا ہے، آپ کے والٹ میں کوئی مسئلہ نہیں۔ تھوڑی دیر بعد کوشش کریں۔",
     "gasSponsorshipFailed": "اس لین دین کا خرچ نہیں اٹھایا جا سکا۔ تھوڑی دیر بعد کوشش کریں۔"
@@ -1018,10 +1014,6 @@
     "returnHome": "گھر واپس جاؤ"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "یہ پوسٹ دستیاب نہیں ہے",
-      "commentUnavailable": "یہ تبصرہ اب دستیاب نہیں ہے"
-    },
     "back": "واپس",
     "usernameAvailable": "یوزرنیم دستیاب ہے!",
     "signUpToClaim": "آج سائن اپ کر کے لو",
@@ -1037,7 +1029,11 @@
     "followers": "فالوور",
     "following": "فالو شدہ",
     "joined": "شامل",
-    "loginDescription": "اپنا پروفائل دیکھنے اور مینیج کرنے کے لئے لاگ ان کرو۔"
+    "loginDescription": "اپنا پروفائل دیکھنے اور مینیج کرنے کے لئے لاگ ان کرو۔",
+    "replyThread": {
+      "postUnavailable": "یہ پوسٹ دستیاب نہیں ہے",
+      "commentUnavailable": "یہ تبصرہ اب دستیاب نہیں ہے"
+    }
   },
   "tv": {
     "title": "TV"
@@ -1943,6 +1939,10 @@
     "neon": "نیون",
     "blur": "دھندلا",
     "pixelate": "پکسل"
+  },
+  "live": {
+    "chatJoined": "शामिल हुए",
+    "chatSentGift": "भेजा"
   },
   "creatorFlow": {
     "syncError": "आपल्या खात्यात सेव्ह करू शकलो नाही",

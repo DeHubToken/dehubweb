@@ -411,7 +411,10 @@
       "unavailable": "Hiện tại, bạn không thể phát trực tiếp từ bộ mã hóa trên tài khoản của mình.",
       "serverCopied": "Đã sao chép máy chủ",
       "keyCopied": "Đã sao chép khóa phát trực tuyến"
-    }
+    },
+    "socialFollowers": "Người theo dõi trên {{platform}}",
+    "socialFollowersHint": "Được hiển thị trên hồ sơ của bạn như một phần trong tổng phạm vi tiếp cận của bạn. Tự nhập số điện thoại — chúng tôi không đọc số điện thoại từ nền tảng.",
+    "socialFollowersPlaceholder": "ví dụ: 12500"
   },
   "common": {
     "save": "Lưu",
@@ -1152,7 +1155,13 @@
     "submitOffer": "Submit Offer",
     "followers": "Followers",
     "following": "Following",
-    "joined": "Joined"
+    "joined": "Joined",
+    "reach": {
+      "total": "Tổng phạm vi tiếp cận",
+      "breakdownTitle": "Phạm vi tiếp cận này đến từ đâu",
+      "dehubFollowers": "Người theo dõi DeHub",
+      "selfReported": "Người sáng tạo nhập số lượng người theo dõi trên mạng xã hội."
+    }
   },
   "tv": {
     "seoTitle": "Live TV — Các Kênh Miễn Phí Từ Khắp Nơi Trên Thế Giới",

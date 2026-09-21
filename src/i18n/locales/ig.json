@@ -443,7 +443,10 @@
       "unavailable": "Ntinye site na ihe ndekọ adịghị maka akaụntụ gị ugbu a.",
       "serverCopied": "Edebata sava",
       "keyCopied": "Edebata kíìrìọ́ọ̀ltụ̀"
-    }
+    },
+    "socialFollowers": "Ndị na-eso ụzọ na {{platform}}",
+    "socialFollowersHint": "Gosiri na profaịlụ gị dị ka akụkụ nke gị ngụkọta iru. Tinye nọmba ahụ n 'onwe gị — anyị anaghị agụ ya site n' elu ikpo okwu.",
+    "socialFollowersPlaceholder": "dịka 12500"
   },
   "common": {
     "save": "Chekwaa",
@@ -1217,7 +1220,13 @@
     "followers": "Ndị na-eso",
     "following": "Na-eso",
     "joined": "Joined",
-    "loginDescription": "Banye iji hụ ma jikwaa profaịlụ gị."
+    "loginDescription": "Banye iji hụ ma jikwaa profaịlụ gị.",
+    "reach": {
+      "total": "Total iru",
+      "breakdownTitle": "Ebee ka iru a si abịa",
+      "dehubFollowers": "DeHub na-eso ụzọ",
+      "selfReported": "Onye na-emepụta ihe na-abanye ọnụ ọgụgụ ndị na-eso ụzọ ọha."
+    }
   },
   "tv": {
     "title": "TV"

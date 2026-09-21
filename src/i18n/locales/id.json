@@ -455,7 +455,10 @@
       "unavailable": "Streaming dari encoder tidak tersedia di akun Anda saat ini.",
       "serverCopied": "Server disalin",
       "keyCopied": "Kunci streaming disalin"
-    }
+    },
+    "socialFollowers": "Pengikut di {{platform}}",
+    "socialFollowersHint": "Ditampilkan di profil Anda sebagai bagian dari jangkauan total Anda. Masukkan nomornya sendiri — kami tidak membacanya dari platform.",
+    "socialFollowersPlaceholder": "misalnya 12500"
   },
   "common": {
     "save": "Simpan",
@@ -1238,7 +1241,13 @@
     "followers": "Pengikut",
     "following": "Mengikuti",
     "joined": "Joined",
-    "loginDescription": "Masuk untuk melihat dan mengelola profil Anda."
+    "loginDescription": "Masuk untuk melihat dan mengelola profil Anda.",
+    "reach": {
+      "total": "Total jangkauan",
+      "breakdownTitle": "Dari mana jangkauan ini berasal",
+      "dehubFollowers": "Pengikut DeHub",
+      "selfReported": "Jumlah pengikut sosial dimasukkan oleh kreator."
+    }
   },
   "tv": {
     "seoTitle": "TV Langsung — Kanal gratis dari seluruh dunia",

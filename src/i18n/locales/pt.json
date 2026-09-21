@@ -455,7 +455,10 @@
       "unavailable": "A transmissão a partir de um codificador não está disponível na sua conta neste momento.",
       "serverCopied": "Servidor copiado",
       "keyCopied": "Chave de transmissão copiada"
-    }
+    },
+    "socialFollowers": "Seguidores em {{platform}}",
+    "socialFollowersHint": "Exibido no seu perfil como parte do seu alcance total. Insira o número você mesmo — não o lemos na plataforma.",
+    "socialFollowersPlaceholder": "por exemplo, 12500"
   },
   "common": {
     "save": "Salvar",
@@ -1238,7 +1241,13 @@
     "followers": "Seguidores",
     "following": "Seguindo",
     "joined": "Entrou em",
-    "loginDescription": "Faça login para ver e gerenciar seu perfil."
+    "loginDescription": "Faça login para ver e gerenciar seu perfil.",
+    "reach": {
+      "total": "Alcance total",
+      "breakdownTitle": "De onde vem esse alcance",
+      "dehubFollowers": "Seguidores do DeHub",
+      "selfReported": "As contagens de seguidores nas redes sociais são inseridas pelo criador."
+    }
   },
   "tv": {
     "seoTitle": "TV ao Vivo — Canais Gratuitos de Todo o Mundo",

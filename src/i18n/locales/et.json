@@ -455,7 +455,10 @@
       "unavailable": "Kodeerijast voogedastamine pole teie kontol praegu saadaval.",
       "serverCopied": "Server kopeeritud",
       "keyCopied": "Voo võti on kopeeritud"
-    }
+    },
+    "socialFollowers": "Jälgijad rakenduses {{platform}}",
+    "socialFollowersHint": "Näidatakse Sinu profiilil osana Sinu koguulatusest. Sisesta number ise — me ei loe seda platvormilt.",
+    "socialFollowersPlaceholder": "nt 12500"
   },
   "common": {
     "save": "Salvesta",
@@ -1233,7 +1236,13 @@
     "followers": "Jälgijad",
     "following": "Jälgitavad",
     "joined": "Liitunud",
-    "loginDescription": "Logi sisse, et vaadata ja hallata oma profiili."
+    "loginDescription": "Logi sisse, et vaadata ja hallata oma profiili.",
+    "reach": {
+      "total": "Koguhaare",
+      "breakdownTitle": "Kust see haare pärineb",
+      "dehubFollowers": "DeHubi jälgijad",
+      "selfReported": "Sotsiaalsete jälgijate arvu sisestab looja."
+    }
   },
   "tv": {
     "seoTitle": "Live TV — tasuta kanalid kogu maailmast",

@@ -105,6 +105,9 @@
     "bio": "ປະຫວັດ",
     "bioPlaceholder": "ບອກເລື່ອງຂອງທ່ານ...",
     "socialLinks": "ລິ້ງໂຊຊຽນ",
+    "socialFollowers": "ຜູ້ຕິດຕາມໃນ {{platform}}",
+    "socialFollowersHint": "ສະແດງໃນໂປຣໄຟລ໌ຂອງທ່ານເປັນສ່ວນຫນຶ່ງຂອງການບັນລຸທັງຫມົດຂອງທ່ານ. ໃສ່ເລກຂອງທ່ານເອງ - ພວກເຮົາບໍ່ໄດ້ອ່ານມັນຈາກເວທີ.",
+    "socialFollowersPlaceholder": "ຕົວຢ່າງ 12500",
     "profileUpdated": "ອັບເດດໂປຣໄຟລ໌ສຳເລັດ",
     "failedLoadProfile": "ໂຫຼດຂໍ້ມູນໂປຣໄຟລ໌ບໍ່ສຳເລັດ",
     "imageTooLarge5": "ຮູບຕ້ອງນ້ອຍກວ່າ 5MB",
@@ -1200,10 +1203,6 @@
     "returnHome": "ກັບໜ້າຫຼັກ"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Désolé, ວິດີໂອນີ້ບໍ່ສາມາດໃຊ້ໄດ້",
-      "commentUnavailable": "Désolé, ວິດີໂອນີ້ບໍ່ສາມາດໃຊ້ໄດ້ອີກຕໍ່ໄປ"
-    },
     "back": "ກັບຄືນ",
     "usernameAvailable": "ຊື່ຜູ້ໃຊ້ວ່າງ!",
     "signUpToClaim": "ສະໝັກມື້ນີ້ເພື່ອຈອງ",
@@ -1219,7 +1218,11 @@
     "followers": "ຜູ້ຕິດຕາມ",
     "following": "ກຳລັງຕິດຕາມ",
     "joined": "ເຂົ້າຮ່ວມ",
-    "loginDescription": "ເຂົ້າສູ່ລະບົບເພື່ອເບິ່ງ ແລະ ຈັດການໂປຣໄຟລ໌."
+    "loginDescription": "ເຂົ້າສູ່ລະບົບເພື່ອເບິ່ງ ແລະ ຈັດການໂປຣໄຟລ໌.",
+    "replyThread": {
+      "postUnavailable": "Désolé, ວິດີໂອນີ້ບໍ່ສາມາດໃຊ້ໄດ້",
+      "commentUnavailable": "Désolé, ວິດີໂອນີ້ບໍ່ສາມາດໃຊ້ໄດ້ອີກຕໍ່ໄປ"
+    }
   },
   "tv": {
     "noChannelsAvailable": "ບໍ່ມີຊ່ອງທາງໃຫ້ເລືອກ",
@@ -1241,6 +1244,7 @@
     "amountUsd": "ຈຳນວນ (USD)",
     "customAmount": "ຈຳນວນກຳນົດເອງ",
     "minPurchase": "ຊື້ຂັ້ນຕ່ຳ $5",
+    "minDhbPurchase": "ການຊື້ DHB ຕ່ໍາສຸດແມ່ນ $ 0.50",
     "youPay": "ທ່ານຈ່າຍ",
     "youReceive": "ທ່ານໄດ້ຮັບ (ປະມານ)",
     "feeNote": "ຄ່າບັດ ~3.6% ແລະ 0.5% ສະຫງວນເຄືອຂ່າຍຖືກຫັກອອກຈາກນີ້. ສະຫງວນໄດ້ຖືກສົ່ງໃຫ້ທ່ານເປັນ ETH ສໍາລັບແກັສ.",
@@ -1274,7 +1278,6 @@
     "badgeDiscount": "ຜູ້ຖື {{tier}} — ຫຼຸດ {{percent}}%",
     "otherTokens": "ໂທເຄນອື່ນ",
     "otherTokensDesc": "ຊື້ ETH ຫຼື USDC ໃນ Base ດ້ວຍບັດຂອງທ່ານ",
-    "minDhbPurchase": "ການຊື້ DHB ຕ່ໍາສຸດແມ່ນ $ 0.50",
     "shareToFeed": "ແບ່ງ ປັນ ກັບ ອາ ຫານ ຂອງ ຂ້າ ພະ ເຈົ້າ",
     "sharePostTemplate": "ຂ້ອຍພຽງແຕ່ເພີ່ມ {{amount}} $DHB ໃສ່ stack ຂອງຂ້ອຍໃນ DeHub. ການກໍ່ສ້າງກັບຊຸມຊົນ. #DeHub #DHB",
     "success": {
@@ -2060,13 +2063,13 @@
       "thisYear": "ປີນີ້",
       "allTime": "ຕະຫຼອດເວລາ",
       "newMembers": "ສະມາຊິກໃໝ່",
+      "viewMembers": "ເບິ່ງສະມາຊິກ",
+      "openNewMembers": "ເປີດບັນຊີສະມາຊິກ ໃຫມ່",
       "chartMembers": "ສະມາຊິກຕາມເວລາ",
       "chartActive": "ຄົນທີ່ໃຊ້ງານ",
       "growth": "+{{percent}}% ເດືອນນີ້",
       "growthTerm": "ການເຕີບໂຕ",
-      "recordingSince": "ບັນທຶກຕັ້ງແຕ່ {{date}}",
-      "viewMembers": "ເບິ່ງສະມາຊິກ",
-      "openNewMembers": "ເປີດບັນຊີສະມາຊິກ ໃຫມ່"
+      "recordingSince": "ບັນທຶກຕັ້ງແຕ່ {{date}}"
     },
     "title": "ສະຖິຕິ",
     "subtitle": "ຂໍ້ມູນໂອເພນຊອດແບບເວລາຈິງ",

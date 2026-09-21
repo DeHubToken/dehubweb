@@ -444,7 +444,10 @@
       "unavailable": "البث من مشفر غير متاح في حسابك حاليًا.",
       "serverCopied": "تم نسخ الخادم",
       "keyCopied": "تم نسخ مفتاح الدفق"
-    }
+    },
+    "socialFollowers": "المتابعون على {{platform}}",
+    "socialFollowersHint": "يظهر في ملفك التعريفي كجزء من مدى وصولك الإجمالي. أدخل الرقم بنفسك — نحن لا نقرأه من المنصة.",
+    "socialFollowersPlaceholder": "على سبيل المثال 12500"
   },
   "common": {
     "save": "حفظ",
@@ -1214,7 +1217,13 @@
     "followers": "المتابعين",
     "following": "كيتابع",
     "joined": "Joined",
-    "loginDescription": "دخل باش تشوف وتدبر البروفيل ديالك."
+    "loginDescription": "دخل باش تشوف وتدبر البروفيل ديالك.",
+    "reach": {
+      "total": "الوصول الكلي",
+      "breakdownTitle": "من أين يأتي هذا الوصول",
+      "dehubFollowers": "متابعو DeHub",
+      "selfReported": "يتم إدخال عدد المتابعين الاجتماعيين من قبل المنشئ."
+    }
   },
   "tv": {
     "title": "التلفزة"

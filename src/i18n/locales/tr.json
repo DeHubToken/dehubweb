@@ -455,7 +455,10 @@
       "unavailable": "Hesabınızda şu anda bir kodlayıcıdan yayın yapmak kullanılamıyor.",
       "serverCopied": "Sunucu kopyalandı",
       "keyCopied": "Akış anahtarı kopyalandı"
-    }
+    },
+    "socialFollowers": "Takipçiler {{platform}}",
+    "socialFollowersHint": "Profilinizde toplam erişiminizin bir parçası olarak gösterilir. Sayıyı kendiniz girin — platformdan okumuyoruz.",
+    "socialFollowersPlaceholder": "ör. 12500"
   },
   "common": {
     "save": "Kaydet",
@@ -1238,7 +1241,13 @@
     "followers": "Takipçiler",
     "following": "Takip Edilenler",
     "joined": "Katıldı",
-    "loginDescription": "Profilinizi görüntülemek ve yönetmek için giriş yapın."
+    "loginDescription": "Profilinizi görüntülemek ve yönetmek için giriş yapın.",
+    "reach": {
+      "total": "Toplam erişim",
+      "breakdownTitle": "Bu erişimin nereden geldiği",
+      "dehubFollowers": "DeHub takipçileri",
+      "selfReported": "Sosyal takipçi sayıları yaratıcı tarafından girilir."
+    }
   },
   "tv": {
     "seoTitle": "Canlı TV — Dünyanın dört bir yanından ücretsiz kanallar",

@@ -369,7 +369,9 @@
       "rotate": "Reset stream key",
       "serverCopied": "Server copied",
       "keyCopied": "Stream key copied"
-    }
+    },
+    "socialFollowers": "Followers on {{platform}}",
+    "socialFollowersPlaceholder": "e.g. 12500"
   },
   "common": {
     "save": "Save Am",
@@ -1105,7 +1107,11 @@
     "followers": "Followers",
     "following": "Following",
     "joined": "Joined",
-    "loginDescription": "Log in make you fit see and manage your profile."
+    "loginDescription": "Log in make you fit see and manage your profile.",
+    "reach": {
+      "total": "Total reach",
+      "dehubFollowers": "DeHub followers"
+    }
   },
   "tv": {
     "title": "TV"

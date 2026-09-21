@@ -455,7 +455,10 @@
       "unavailable": "Streaming fra en encoder er ikke tilgængelig på din konto lige nu.",
       "serverCopied": "Server kopieret",
       "keyCopied": "Streamnøgle kopieret"
-    }
+    },
+    "socialFollowers": "Følgere på{{platform}}",
+    "socialFollowersHint": "Vises på din profil som en del af din samlede rækkevidde. Indtast selv nummeret — vi læser det ikke fra platformen.",
+    "socialFollowersPlaceholder": "f.eks. 12500"
   },
   "common": {
     "save": "Gem",
@@ -1238,7 +1241,13 @@
     "followers": "Følgere",
     "following": "Følger",
     "joined": "Tilmeldt",
-    "loginDescription": "Log ind for at se og administrere profil."
+    "loginDescription": "Log ind for at se og administrere profil.",
+    "reach": {
+      "total": "Samlet rækkevidde",
+      "breakdownTitle": "Hvor denne rækkevidde kommer fra",
+      "dehubFollowers": "DeHub-følgere",
+      "selfReported": "Antal følgere på sociale medier indtastes af kreatøren."
+    }
   },
   "tv": {
     "seoTitle": "Live TV — Gratis kanaler fra hele verden",

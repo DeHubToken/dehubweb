@@ -455,7 +455,10 @@
       "unavailable": "Strumieniowanie z enkodera nie jest obecnie dostępne na Twoim koncie.",
       "serverCopied": "Skopiowano serwer",
       "keyCopied": "Skopiowano klucz strumienia"
-    }
+    },
+    "socialFollowers": "Obserwujący na {{platform}}",
+    "socialFollowersHint": "Wyświetlane na Twoim profilu jako część całkowitego zasięgu. Wpisz numer samodzielnie — nie odczytujemy go z platformy.",
+    "socialFollowersPlaceholder": "np. 12500"
   },
   "common": {
     "save": "Zapisz",
@@ -1238,7 +1241,13 @@
     "followers": "Obserwujący",
     "following": "Obserwowani",
     "joined": "Dołączył",
-    "loginDescription": "Zaloguj się, aby zobaczyć i zarządzać swoim profilem."
+    "loginDescription": "Zaloguj się, aby zobaczyć i zarządzać swoim profilem.",
+    "reach": {
+      "total": "Całkowity zasięg",
+      "breakdownTitle": "Skąd się bierze ten zasięg",
+      "dehubFollowers": "Obserwujący DeHub",
+      "selfReported": "Liczby obserwujących społeczności są wprowadzane przez twórcę."
+    }
   },
   "tv": {
     "seoTitle": "Live TV — Bezpłatne kanały z całego świata",

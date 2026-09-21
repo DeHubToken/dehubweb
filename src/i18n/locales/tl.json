@@ -455,7 +455,10 @@
       "unavailable": "Hindi available ang streaming mula sa isang encoder sa iyong account sa ngayon.",
       "serverCopied": "Kinopya ang server",
       "keyCopied": "Kinopya ang stream key"
-    }
+    },
+    "socialFollowers": "Mga tagasunod sa {{platform}}",
+    "socialFollowersHint": "Ipinapakita sa iyong profile bilang bahagi ng iyong kabuuang abot. Ipasok ang numero sa iyong sarili — hindi namin ito binabasa mula sa platform.",
+    "socialFollowersPlaceholder": "hal. 12500"
   },
   "common": {
     "save": "I-save",
@@ -1254,7 +1257,13 @@
     "submitOffer": "Submit Offer",
     "followers": "Followers",
     "following": "Following",
-    "joined": "Joined"
+    "joined": "Joined",
+    "reach": {
+      "total": "Kabuuang maaabot",
+      "breakdownTitle": "Saan nagmumula ang abot na ito",
+      "dehubFollowers": "Mga tagasunod ng DeHub",
+      "selfReported": "Ang mga bilang ng mga social follower ay ipinasok ng tagalikha."
+    }
   },
   "tv": {
     "seoTitle": "Live TV — Libreng Channels Mula sa Buong Mundo",
