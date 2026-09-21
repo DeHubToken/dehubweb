@@ -1506,7 +1506,21 @@
     "minutesAgo": "{{count}} मिनट पहिले",
     "hoursAgo": "{{count}} घंटा पहिले",
     "daysAgo": "{{count}} दिन पहिले",
-    "monthsAgo": "{{count}} महीना पहिले"
+    "monthsAgo": "{{count}} महीना पहिले",
+    "forLabel": "के परिप्रेक्ष्य में,",
+    "againstLabel": "के खिलाफ, के खिलाफ",
+    "discussion": {
+      "title": "बहस हई",
+      "intro": "Leave a Comment on कुछ देर ठहर जा ऐ जिंदगी...",
+      "reply": "हल करो जवाब",
+      "writeReply": "हल लिखना",
+      "edited": "संपादन करे",
+      "deleteDescription": "येही तरह, ई एगो भ्रम है कि ई उह्हे व्यक्ति हई जे आई सुबह कक्षा में गेल रहई ।",
+      "signInToComment": "शामिल हो जाओ, हम में से एक हो, भागीदार बनें!",
+      "empty": "कोई मसला, कोई हल, शुरू कर देना.",
+      "joinOnProposal": "चर्चा में शामिल हो जाओ",
+      "authorChip": "लेखक हल करे"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "शहर के चर्चा",

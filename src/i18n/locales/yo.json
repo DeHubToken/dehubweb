@@ -1537,7 +1537,25 @@
     "minutesAgo": "{{count}}ìṣ sẹ́yìn",
     "hoursAgo": "{{count}}wkt sẹ́yìn",
     "daysAgo": "{{count}}ọj sẹ́yìn",
-    "monthsAgo": "{{count}}oṣ sẹ́yìn"
+    "monthsAgo": "{{count}}oṣ sẹ́yìn",
+    "forLabel": "Fun ...",
+    "againstLabel": "Lodi si",
+    "discussion": {
+      "title": "Ìjíròrò",
+      "intro": "Béèrè àwọn ìbéèrè tó tẹ̀lé e tàbí kí o jíròrò àbá náà kí o tó dìbò.",
+      "reply": "Fesi",
+      "replyingTo": "Fún ìdáhùn sí {{name}}",
+      "writeReply": "Kọ ìdáhùn kan",
+      "edited": "ṣatunkọ",
+      "showMoreReplies": "Fi {{count}} àwọn ìdáhùn síi hàn",
+      "showMoreReplies_one": "Fi {{count}} ìdáhùn síi hàn",
+      "deleteTitle": "Pa àlàyé yìí rẹ́?",
+      "deleteDescription": "Èyí mú àlàyé àti èsì rẹ̀ kúrò fún gbogbo ènìyàn.",
+      "signInToComment": "Wọle lati darapọ mọ ijiroro naa",
+      "empty": "Kò sí ìbéèrè síbẹ̀. Bẹ̀rẹ̀ ìjíròrò náà.",
+      "joinOnProposal": "Darapọ mọ ijiroro naa",
+      "authorChip": "Onkọwe ti a dabaa"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Ọ̀rọ̀ Ìlú",

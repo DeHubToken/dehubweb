@@ -1568,7 +1568,25 @@
     "tabProposals": "Iziphakamiso",
     "tabPassed": "Kudlulile",
     "tabRejected": "Kwenqatshiwe",
-    "weeksAgo": "{{count}}w edlule"
+    "weeksAgo": "{{count}}w edlule",
+    "forLabel": "recurrpage",
+    "againstLabel": "Ngokumelene",
+    "discussion": {
+      "title": "Ingxoxo",
+      "intro": "Buza imibuzo yokulandelela noma uxoxe ngesiphakamiso ngaphambi kokuba uvote.",
+      "reply": "Phendula",
+      "replyingTo": "Iphendula ku- {{name}}",
+      "writeReply": "Bhala impendulo",
+      "edited": "ihlelwe",
+      "showMoreReplies": "Bonisa {{count}} izimpendulo ezengeziwe",
+      "showMoreReplies_one": "Bonisa {{count}} impendulo eyengeziwe",
+      "deleteTitle": "Susa lokhu kuphawula?",
+      "deleteDescription": "Lokhu kususa ukuphawula nezimpendulo zako kuwo wonke umuntu.",
+      "signInToComment": "Ngena ngemvume ukuze ujoyine ingxoxo",
+      "empty": "Ayikho imibuzo okwamanje. Qala ingxoxo.",
+      "joinOnProposal": "Joyina ingxoxo",
+      "authorChip": "Umbhali wesiphakamiso"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Izindaba Zomuzi",

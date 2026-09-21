@@ -1538,7 +1538,25 @@
     "minutesAgo": "{{count}}m da suka wuce",
     "hoursAgo": "{{count}}sa da suka wuce",
     "daysAgo": "{{count}}kw da suka wuce",
-    "monthsAgo": "{{count}}wa da suka wuce"
+    "monthsAgo": "{{count}}wa da suka wuce",
+    "forLabel": "domin",
+    "againstLabel": "A kan",
+    "discussion": {
+      "title": "Tattaunawa",
+      "intro": "Tambayi tambayoyi masu biyowa ko tattauna shawarwarin kafin ka kada kuri'a.",
+      "reply": "Amsa",
+      "replyingTo": "Amsa zuwa {{name}}",
+      "writeReply": "Rubuta amsa",
+      "edited": "gyaran",
+      "showMoreReplies": "Nuna {{count}} karin martani",
+      "showMoreReplies_one": "Nuna {{count}} karin amsa",
+      "deleteTitle": "Share wannan sharhi?",
+      "deleteDescription": "Wannan yana kawar da tsokaci da amsoshinsa ga kowa da kowa.",
+      "signInToComment": "Shiga don shiga tattaunawar",
+      "empty": "Babu tambayoyi har yanzu. Fara tattaunawar.",
+      "joinOnProposal": "Shiga cikin tattaunawar",
+      "authorChip": "Mawallafi mai gabatarwa"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Labarin gari",

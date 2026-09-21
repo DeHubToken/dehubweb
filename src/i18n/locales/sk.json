@@ -1665,13 +1665,30 @@
     "quorum": "Kvórum",
     "timeLeft": "Zostávajúci čas",
     "description": "Popis",
-    "discussion": "Diskusia",
+    "discussion": {
+      "title": "Diskusia",
+      "intro": "Pred hlasovaním sa opýtajte na nadväzujúce otázky alebo prediskutujte návrh.",
+      "reply": "Odpovedať",
+      "replyingTo": "V odpovedi používateľovi {{name}}",
+      "writeReply": "Napíšte odpoveď",
+      "edited": "upravené",
+      "showMoreReplies": "Zobraziť {{count}} viac odpovedí",
+      "showMoreReplies_one": "Zobraziť {{count}} ďalšiu odpoveď",
+      "deleteTitle": "Odstrániť tento komentár?",
+      "deleteDescription": "Tým sa odstráni komentár a jeho odpovede pre všetkých.",
+      "signInToComment": "Ak sa chcete zapojiť do diskusie, prihláste sa",
+      "empty": "Zatiaľ žiadne otázky. Začnite diskusiu.",
+      "joinOnProposal": "Zapojte sa do diskusie",
+      "authorChip": "Autor návrhu"
+    },
     "results": "Výsledky",
     "proposalTitle": "Názov návrhu",
     "proposalDescription": "Popis návrhu",
     "voteFor": "Za",
     "voteAgainst": "Proti",
-    "abstain": "Zdržať sa"
+    "abstain": "Zdržať sa",
+    "forLabel": "Dôvod",
+    "againstLabel": "Hlasy proti:"
   },
   "sidebar": {
     "talkOfTheTown": "Téma dňa",

@@ -142,10 +142,12 @@ vi.mock('@/hooks/use-governance', () => ({
 vi.mock('@/hooks/use-governance-proposal', () => ({
   useGovernanceProposal: () => ({ data: null, isLoading: false }),
 }));
-vi.mock('@/hooks/use-governance-comments', () => ({
-  useGovernanceComments: () => ({ data: [] }),
-  useSubmitGovernanceComment: () => ({ mutateAsync: vi.fn() }),
-  useDeleteGovernanceComment: () => ({ mutateAsync: vi.fn() }),
+vi.mock('@/hooks/use-proposal-discussion', () => ({
+  useProposalDiscussion: () => ({ data: [], isLoading: false }),
+  useSubmitProposalComment: () => ({ mutate: vi.fn(), mutateAsync: vi.fn(), isPending: false }),
+  useEditProposalComment: () => ({ mutate: vi.fn(), isPending: false }),
+  useDeleteProposalComment: () => ({ mutate: vi.fn(), isPending: false }),
+  useReactToProposalComment: () => ({ mutate: vi.fn(), isPending: false }),
 }));
 vi.mock('@/hooks/use-feature-requests', () => ({
   useFeatureRequests: () => ({ features: [], isLoading: false }),

@@ -1486,7 +1486,24 @@
     "minutesAgo": "{{count}}分钟前",
     "hoursAgo": "{{count}}小时前",
     "daysAgo": "{{count}}天前",
-    "monthsAgo": "{{count}}月前"
+    "monthsAgo": "{{count}}月前",
+    "againstLabel": "對抗",
+    "discussion": {
+      "title": "討論",
+      "intro": "投票前請提出後續問題或討論該提案。",
+      "reply": "回覆",
+      "replyingTo": "回覆 {{name}}",
+      "writeReply": "撰寫回覆",
+      "edited": "編輯",
+      "showMoreReplies": "顯示 {{count}} 更多回覆",
+      "showMoreReplies_one": "顯示 {{count}} 更多回覆",
+      "deleteTitle": "刪除此留言？",
+      "deleteDescription": "這將會移除所有人看到的留言及其回覆。",
+      "signInToComment": "登入以加入討論",
+      "empty": "目前沒有問題。開始討論。",
+      "joinOnProposal": "加入討論",
+      "authorChip": "提案作者"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "热门话题",

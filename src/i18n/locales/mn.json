@@ -1534,7 +1534,25 @@
     "minutesAgo": "{{count}}м өмнө",
     "hoursAgo": "{{count}}ц өмнө",
     "daysAgo": "{{count}}ө өмнө",
-    "monthsAgo": "{{count}}с өмнө"
+    "monthsAgo": "{{count}}с өмнө",
+    "forLabel": "...зориулсан",
+    "againstLabel": "Эсрэг",
+    "discussion": {
+      "title": "Хэлэлцүүлэг",
+      "intro": "Санал өгөхөөс өмнө дагаж мөрдөх асуулт асуух эсвэл санал хураах талаар ярилцах.",
+      "reply": "Хариулах",
+      "replyingTo": "{{name}} руу хариулах",
+      "writeReply": "Хариулт бичих",
+      "edited": "зассан",
+      "showMoreReplies": "{{count}} илүү хариултыг харуулах",
+      "showMoreReplies_one": "Харуулах {{count}} илүү хариулт",
+      "deleteTitle": "Энэ сэтгэгдлийг устгах уу?",
+      "deleteDescription": "Энэ нь хариулт, хариултуудыг бүгдэд нь арилгадаг.",
+      "signInToComment": "Хэлэлцүүлэгт элсэхийн тулд нэвтэрнэ үү",
+      "empty": "Одоохондоо асуулт алга.",
+      "joinOnProposal": "Хэлэлцүүлэгт элсээрэй",
+      "authorChip": "Саналын зохиогч"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Хотын яриа",

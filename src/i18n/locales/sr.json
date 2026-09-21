@@ -1336,7 +1336,8 @@
     "minutesAgo": "пре {{count}} минута",
     "hoursAgo": "пре {{count}} сати",
     "daysAgo": "пре {{count}} дана",
-    "monthsAgo": "пре {{count}} месеци"
+    "monthsAgo": "пре {{count}} месеци",
+    "againstLabel": "Против:"
   },
   "sidebar": {
     "talkOfTheTown": "Прича града",

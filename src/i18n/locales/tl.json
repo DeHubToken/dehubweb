@@ -1509,7 +1509,25 @@
     "minutesAgo": "{{count}}m ago",
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
-    "monthsAgo": "{{count}}mo ago"
+    "monthsAgo": "{{count}}mo ago",
+    "forLabel": "Para",
+    "againstLabel": "kinahinatnan",
+    "discussion": {
+      "title": "Talakayan",
+      "intro": "Magtanong ng mga follow - up na tanong o talakayin ang panukala bago ka bumoto.",
+      "reply": "Tumugon",
+      "replyingTo": "Tumutugon kay {{name}}",
+      "writeReply": "Sumulat ng tugon",
+      "edited": "na - edit",
+      "showMoreReplies": "Magpakita ng {{count}} higit pang tugon",
+      "showMoreReplies_one": "Magpakita ng {{count}} pang tugon",
+      "deleteTitle": "Tanggalin ang komentong ito?",
+      "deleteDescription": "Tinatanggal nito ang komento at mga tugon nito para sa lahat.",
+      "signInToComment": "Mag - sign in para sumali sa talakayan",
+      "empty": "Wala pang tanong.Simulan ang talakayan.",
+      "joinOnProposal": "Sumali sa talakayan",
+      "authorChip": "May - akda ng panukala"
+    }
   },
   "sidebar": {
     "nothingTrending": "Wala pang trending",
