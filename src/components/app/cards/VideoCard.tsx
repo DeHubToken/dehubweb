@@ -69,6 +69,9 @@ import { DeletePostModal } from '../modals/DeletePostModal';
 const EditPostModal = lazy(() =>
   import('../modals/EditPostModal').then((m) => ({ default: m.EditPostModal }))
 );
+const LivePostChat = lazy(() =>
+  import('./LivePostChat').then((m) => ({ default: m.LivePostChat }))
+);
 const BoostModal = lazy(() =>
   import('../modals/BoostModal').then((m) => ({ default: m.BoostModal }))
 );
@@ -2469,7 +2472,24 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
             {/* Comments — drawer in immersive mode (video shrinks to make room),
                 inline bento expansion in the feed. */}
-            {!onOpenComments && (
+            {!onOpenComments && video.isLivePost ? (
+              /* A live post keeps one conversation: its chat room, the one the
+                 post page, the feed's live card and the app all join. This
+                 card still opened the comments drawer for a live post, so a
+                 line typed here was filed as a comment that no live surface
+                 ever showed again. */
+              showComments && (
+                <div className="mt-3" data-no-navigate onClick={(e) => e.stopPropagation()}>
+                  <Suspense fallback={null}>
+                    <LivePostChat
+                      tokenId={video.id}
+                      streamId={video.liveStreamId}
+                      isOffline={!video.isLiveNow}
+                    />
+                  </Suspense>
+                </div>
+              )
+            ) : !onOpenComments && (
               <CommentsWrapper
                 open={showComments}
                 onOpenChange={setShowComments}
