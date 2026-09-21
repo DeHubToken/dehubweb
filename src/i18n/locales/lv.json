@@ -105,6 +105,9 @@
     "bio": "Biogrāfija",
     "bioPlaceholder": "Pastāstiet par sevi...",
     "socialLinks": "Sociālās saites",
+    "socialFollowers": "Sekotāji {{platform}}",
+    "socialFollowersHint": "Redzams jūsu profilā kā daļa no jūsu kopējās sasniedzamības. Ievadiet numuru pats — mēs to nenolasām no platformas.",
+    "socialFollowersPlaceholder": "piem., 12500",
     "profileUpdated": "Profils veiksmīgi atjaunināts",
     "failedLoadProfile": "Profila datu ielāde neizdevās",
     "imageTooLarge5": "Attēlam jābūt mazākam par 5MB",
@@ -440,10 +443,7 @@
       "unavailable": "Straumēšana no kodētāja pašlaik nav pieejama jūsu kontā.",
       "serverCopied": "Serveris nokopēts",
       "keyCopied": "Straumes atslēga nokopēta"
-    },
-    "socialFollowers": "Sekotāji {{platform}}",
-    "socialFollowersHint": "Redzams jūsu profilā kā daļa no jūsu kopējās sasniedzamības. Ievadiet numuru pats — mēs to nenolasām no platformas.",
-    "socialFollowersPlaceholder": "piem., 12500"
+    }
   },
   "common": {
     "save": "Saglabāt",
@@ -1220,10 +1220,6 @@
     "returnHome": "Atgriezties sākumā"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Šī ziņa nav pieejama",
-      "commentUnavailable": "Šis komentārs vairs nav pieejams"
-    },
     "back": "Atpakaļ",
     "usernameAvailable": "Lietotājvārds ir pieejams!",
     "signUpToClaim": "Reģistrējieties šodien, lai to iegūtu",
@@ -1239,12 +1235,16 @@
     "followers": "Sekotāji",
     "following": "Sekotie",
     "joined": "Pievienojās",
-    "loginDescription": "Piesakieties, lai skatītu un pārvaldītu savu profilu.",
     "reach": {
       "total": "Kopējā sasniedzamība",
       "breakdownTitle": "No kurienes nāk šī saziņa",
       "dehubFollowers": "DeHub sekotāji",
       "selfReported": "Sociālo sekotāju skaitu ievada veidotājs."
+    },
+    "loginDescription": "Piesakieties, lai skatītu un pārvaldītu savu profilu.",
+    "replyThread": {
+      "postUnavailable": "Šī ziņa nav pieejama",
+      "commentUnavailable": "Šis komentārs vairs nav pieejams"
     },
     "tabs": {
       "playlists": "Repertuāri"
@@ -1281,6 +1281,7 @@
     "amountUsd": "Summa (USD)",
     "customAmount": "Pielāgota summa",
     "minPurchase": "Minimālā pirkuma summa ir $5",
+    "minDhbPurchase": "Minimālā DHB pirkuma summa ir 0,50 $",
     "youPay": "Jūs maksājat",
     "youReceive": "Jūs saņemat (aptuveni)",
     "feeNote": "Kartītes maksa ~3,6% un 0,5% tīkla rezerve tiek noņemta no šejienes. Rezerve tiek nosūtīta jums kā ETH gāzei.",
@@ -1314,7 +1315,6 @@
     "badgeDiscount": "{{tier}} īpašniekam — {{percent}}% atlaide",
     "otherTokens": "Citi tokeni",
     "otherTokensDesc": "Pērciet ETH vai USDC tīklā Base ar savu karti",
-    "minDhbPurchase": "Minimālā DHB pirkuma summa ir 0,50 $",
     "shareToFeed": "Kopīgot manā plūsmā",
     "sharePostTemplate": "Tikko pievienoju {{amount}} $DHB savam DeHub salikumam. Veidošana kopā ar kopienu. #DeHub #DHB",
     "success": {
@@ -1392,14 +1392,6 @@
     "failedSubmit": "Pieteikuma iesniegšana neizdevās. Lūdzu, mēģiniet vēlreiz."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Šajā pieteikumvārdā nav iepriekšēja DeHub konta, tāpēc nav ko pārnest. Tā vietā izveidojiet jaunu kontu.",
-    "migrateInstead": "Tā vietā pievienojiet veco kontu",
-    "setUpNewAccount": "Izveidot jaunu kontu",
-    "createNewInstead": "Tā vietā izveidojiet jaunu kontu",
-    "migrateAccount": "Migrēt kontu",
-    "importExternalWallet": "Importēt ārējo maku",
-    "migrateIntentHint": "Pieraksties, izmantojot jebkuru no tālāk norādītajām opcijām. Ja tas atbilst iepriekšējam DeHub kontam, jums būs savs maks, lietotājvārds un atlikums.",
-    "importIntentHint": "Pierakstieties, izmantojot jebkuru no tālāk norādītajām opcijām, pēc tam ielīmējiet tā maka atkopšanas frāzi vai privāto atslēgu, kuru vēlaties izmantot.",
     "unlockBiometricContinue": "Lai turpinātu, atbloķējiet maku ar pirksta nospiedumu vai seju.",
     "unlockBiometricSignIn": "Atbloķējiet maku ar pirksta nospiedumu vai seju, lai pierakstītos.",
     "unlockPasswordContinue": "Lai turpinātu, ievadiet maka paroli.",
@@ -1412,6 +1404,14 @@
     "migrateUnmatchedDetail": "Šajā maka adresē nav profila. Ja pierakstījāties atkārtoti, atgriezieties un tā vietā izmantojiet pieteikumvārdu, ar kuru reģistrējāties.",
     "migrateGoBack": "Atpakaļ",
     "migrateContinueAnyway": "Tomēr izveidot jaunu kontu",
+    "migrateNoOldAccount": "Šajā pieteikumvārdā nav iepriekšēja DeHub konta, tāpēc nav ko pārnest. Tā vietā izveidojiet jaunu kontu.",
+    "migrateInstead": "Tā vietā pievienojiet veco kontu",
+    "setUpNewAccount": "Izveidot jaunu kontu",
+    "createNewInstead": "Tā vietā izveidojiet jaunu kontu",
+    "migrateAccount": "Migrēt kontu",
+    "importExternalWallet": "Importēt ārējo maku",
+    "migrateIntentHint": "Pieraksties, izmantojot jebkuru no tālāk norādītajām opcijām. Ja tas atbilst iepriekšējam DeHub kontam, jums būs savs maks, lietotājvārds un atlikums.",
+    "importIntentHint": "Pierakstieties, izmantojot jebkuru no tālāk norādītajām opcijām, pēc tam ielīmējiet tā maka atkopšanas frāzi vai privāto atslēgu, kuru vēlaties izmantot.",
     "title": "Pieteikties",
     "addProfileTitle": "Pievienot profilu",
     "continueEmail": "Turpināt ar e-pastu",
@@ -2108,13 +2108,13 @@
       "thisYear": "Šogad",
       "allTime": "Viss laiks",
       "newMembers": "Jauni dalībnieki",
+      "viewMembers": "Skatīt dalībniekus",
+      "openNewMembers": "Atvērt jauno dalībnieku sarakstu",
       "chartMembers": "Dalībnieki laika gaitā",
       "chartActive": "Aktīvi cilvēki",
       "growth": "+{{percent}} % šomēnes",
       "growthTerm": "Izaugsme",
-      "recordingSince": "reģistrēts kopš {{date}}",
-      "viewMembers": "Skatīt dalībniekus",
-      "openNewMembers": "Atvērt jauno dalībnieku sarakstu"
+      "recordingSince": "reģistrēts kopš {{date}}"
     },
     "title": "Statistika",
     "subtitle": "Atklātā koda dati reāllaikā",
@@ -2299,7 +2299,6 @@
     "noStages": "Pašlaik nav aktīvs vai ieplānots neviens tavs Stage.",
     "noFlaresLeft": "Šajā ciklā vairs nav palicis Signal Flares",
     "spentFor": "{{power}} darbojas {{minutes}} minūtes",
-    "goldenHourStarted": "Zelta stunda norit {{minutes}} minūtes — viss, ko tagad publicē, skaitās dubultā",
     "teamUp": {
       "title": "Apvienojieties komandā",
       "subtitle": "Apvienojiet savu maku ar līdz septiņiem citiem. Visi valkā emblēmu, ko atbloķē jūsu kopējais rezultāts.",
@@ -2360,7 +2359,8 @@
       "updated": "Komanda atjaunināta",
       "updateFailed": "Nevarēja atjaunināt šo komandu",
       "openToEveryone": "Team up ir pieejams katram kontam; privātās komandas apstiprina, kas pievienojas."
-    }
+    },
+    "goldenHourStarted": "Zelta stunda norit {{minutes}} minūtes — viss, ko tagad publicē, skaitās dubultā"
   },
   "work": {
     "budgetExhausted": "Šīs atlīdzības budžets ir pilnībā izlietots.",
@@ -5160,7 +5160,26 @@
     "reviewDescriptionPlaceholder": "Pastāsti kaut ko par šo ziņu (neobligāti)",
     "reviewLiveWarning": "Šī saite ir tiešraide. Uzgaidiet, līdz tas beidzas, un tā vietā importējiet ierakstu.",
     "reviewCancel": "Atcelt",
-    "reviewConfirm": "Importēt"
+    "reviewConfirm": "Importēt",
+    "podcast": {
+      "tab": "Aplāde",
+      "feedUrlLabel": "Aplādes RSS plūsmas URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Ieneses plūsma",
+      "fetching": "Notiek plūsmas ielāde...",
+      "showBy": "Autors {{author}}",
+      "episodes": "{{count}} sērijas",
+      "selectAll": "Atlasīt visu",
+      "alreadyImported": "Jau importēts",
+      "ownership": "Man pieder šis saturs vai man ir tiesību īpašnieka atļauja to publicēt DeHub.",
+      "importSelected": "Importēt {{count}} sērijas",
+      "importing": "Notiek importēšana...",
+      "done": "Rindā",
+      "failed": "Neizdevās",
+      "emptyFeed": "Šajā plūsmā mēs nevarējām atrast nevienu sēriju.",
+      "badFeed": "Šī saite neizskatās kā aplādes plūsma.",
+      "tooMany": "Vienlaikus importējiet līdz 20 sērijām."
+    }
   },
   "banned": {
     "title": "Jūsu konts ir bloķēts",

@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "darapọ̀",
-    "chatSentGift": "fi ránṣẹ́",
-    "progress": {
-      "title": "Ipele streamer",
-      "level": "Ipele {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} iṣẹju afiyẹwo diẹ sii lati de ipele {{level}}",
-      "rule": "Awọn ṣiṣan nikan ti o ṣiṣẹ iṣẹju mẹwa tabi ju bẹẹ lọ pẹlu oju-iwoye o kere ju ọkan ni iṣiro fun ipele rẹ.",
-      "streak": "{{count}} ọsẹ itẹlera",
-      "bestStreak": "Itẹlera ti o dara julọ {{count}} ọsẹ",
-      "hours": "{{hours}} wakati afiyẹwo",
-      "minutes": "{{count}} iṣẹju",
-      "viewers": "{{count}} awọn oluwo",
-      "viewCards": "Awọn kaadi iwoye",
-      "cardsTitle": "Awọn kaadi ikojọpọ",
-      "locked": "Ti dina",
-      "earnedOn": "Gba {{date}}",
-      "recentTitle": "Awọn ṣiṣan laipẹ",
-      "notCounted": "Ko ka",
-      "noStreams": "Ṣe afihan lati bẹrẹ si ni XP.",
-      "card": {
-        "first-light": {
-          "name": "Imọlẹ akọkọ",
-          "hint": "Pari ṣiṣan akọkọ rẹ ti o ka."
-        },
-        "marathon": {
-          "name": "Marathon",
-          "hint": "Ṣe ṣiṣan fun wakati meji ni ipade kan."
-        },
-        "night-owl": {
-          "name": "Owibooṣe",
-          "hint": "Pari ṣiṣan laarin ọganjọ oru ati marun ni owurọ."
-        },
-        "regular": {
-          "name": "Deede",
-          "hint": "Ṣe ṣiṣan ni ọsẹ mẹrin ni ọna kan."
-        },
-        "iron-streak": {
-          "name": "Itẹlera irin",
-          "hint": "Ṣe ṣiṣan ni ọsẹ mejila ni ọna kan."
-        },
-        "crowd": {
-          "name": "Ọpọlọpọ eniyan",
-          "hint": "Ni eniyan mẹwa nwo ni akoko kanna."
-        },
-        "century": {
-          "name": "Orilẹ-ede",
-          "hint": "Ṣe awọn wakatii ti o yẹ fun afẹfẹ ọgọrun."
-        },
-        "legend": {
-          "name": "Aṣaaju",
-          "hint": "Kọ ẹkọ ipele mẹwa."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "A ti da awon idunaadura ofe duro ni egbe wa, ki i se ninu apamowo re. Jowo gbiyanju leekansi laipe.",
     "gasSponsorshipFailed": "A ko le san owo idunaadura yii. Jowo gbiyanju leekansi laipe."
@@ -162,6 +105,9 @@
     "bio": "Àkọsílẹ̀ ẹni",
     "bioPlaceholder": "Sọ fún wa nípa ara rẹ...",
     "socialLinks": "Àwọn ìjápọ̀ àwùjọ",
+    "socialFollowers": "Àwọn ọmọ-ẹ̀yìn lórí {{platform}}",
+    "socialFollowersHint": "Ṣàfihàn lórí àkójọpọ̀ rẹ gẹ́gẹ́ bí apá kan ìfikúnsí rẹ pátápátá. Fún ara rẹ ní nọ́mbà náà — a kò kà á láti orí ìtàgé.",
+    "socialFollowersPlaceholder": "e.g. 12500",
     "profileUpdated": "Àkọsílẹ̀ ti ṣe àyípadà dáradára",
     "failedLoadProfile": "Kò le gba dátà àkọsílẹ̀",
     "imageTooLarge5": "Àwòrán gbọdọ̀ kéré ju 5MB",
@@ -496,10 +442,7 @@
       "unavailable": "Ṣiṣan lati ẹrọ ṣiṣan ko si lori akọọlẹ rẹ lọwọlọwọ.",
       "serverCopied": "A daakọ olupin",
       "keyCopied": "Ṣàdàkọ bọtini ṣiṣan"
-    },
-    "socialFollowers": "Àwọn ọmọ-ẹ̀yìn lórí {{platform}}",
-    "socialFollowersHint": "Ṣàfihàn lórí àkójọpọ̀ rẹ gẹ́gẹ́ bí apá kan ìfikúnsí rẹ pátápátá. Fún ara rẹ ní nọ́mbà náà — a kò kà á láti orí ìtàgé.",
-    "socialFollowersPlaceholder": "e.g. 12500"
+    }
   },
   "common": {
     "save": "Fipamọ́",
@@ -1276,10 +1219,6 @@
     "returnHome": "Padà sí Ilé"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Ifiweranṣẹ yii ko si.",
-      "commentUnavailable": "Àlàyé yìí kò sí mọ́."
-    },
     "back": "Padà",
     "usernameAvailable": "Orúkọ oníṣàmúlò wà!",
     "signUpToClaim": "Forúkọsílẹ̀ lónìí láti gba",
@@ -1295,12 +1234,16 @@
     "followers": "Àwọn olùtẹ̀lé",
     "following": "Ń tẹ̀lé",
     "joined": "Joined",
-    "loginDescription": "Wọlé láti rí àti ṣàkóso àkọsílẹ̀ rẹ.",
     "reach": {
       "total": "Lapapọ arọwọto",
       "breakdownTitle": "Nibo ni arọwọto yii ti wa",
       "dehubFollowers": "Àwọn ọmọ-ẹ̀yìn DeHub",
       "selfReported": "Olùṣẹ̀dá ló máa ń tẹ iye àwọn ọmọlẹ́yìn tó ń tẹ̀lé àwùjọ."
+    },
+    "loginDescription": "Wọlé láti rí àti ṣàkóso àkọsílẹ̀ rẹ.",
+    "replyThread": {
+      "postUnavailable": "Ifiweranṣẹ yii ko si.",
+      "commentUnavailable": "Àlàyé yìí kò sí mọ́."
     },
     "tabs": {
       "playlists": "Àwọn àtòjọ orin"
@@ -1317,6 +1260,7 @@
     "amountUsd": "Iye (USD)",
     "customAmount": "Iye àdáni",
     "minPurchase": "Ìrà tó kéré jù jẹ́ $5",
+    "minDhbPurchase": "Ríra DHB tó kéré jù ni $ 0.50",
     "youPay": "O san",
     "youReceive": "O máa gba (àṣírò)",
     "feeNote": "Èrè kaadi ~3.6% ati 0.5% ìtọ́jú nẹ́tiwọ̀ọ̀kì yoo kúrò níbẹ̀. A firanṣẹ́ ìtọ́jú náà sí ọ gẹ́gẹ́ ETH fún gáàsì.",
@@ -1350,7 +1294,6 @@
     "badgeDiscount": "Olùní {{tier}} — ẹ̀dínwó {{percent}}%",
     "otherTokens": "Àwọn tóòkẹ̀nì mìíràn",
     "otherTokensDesc": "Fi káàdì rẹ ra ETH tàbí USDC lórí Base",
-    "minDhbPurchase": "Ríra DHB tó kéré jù ni $ 0.50",
     "shareToFeed": "Pin si ifunni mi",
     "sharePostTemplate": "Kàn fi {{amount}} $DHB kún àkójọpọ̀ mi lórí DeHub. Ilé pẹ̀lú àwùjọ. #DeHub #DHB",
     "success": {
@@ -1427,14 +1370,6 @@
     "failedSubmit": "Kò le fi ìbéèrè ránṣẹ́. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Kò sí àkọsílẹ̀ DeHub tẹ́lẹ̀ lórí ìforúkọsílẹ̀ yìí, nítorí náà kò sí nǹkankan láti mú wá. Ṣètò àkọsílẹ̀ tuntun dípò.",
-    "migrateInstead": "Mú àkántì àtijọ́ wá dípò",
-    "setUpNewAccount": "Ṣètò àkọsílẹ̀ tuntun",
-    "createNewInstead": "Ṣẹ̀dá àkọsílẹ̀ tuntun dípò",
-    "migrateAccount": "Migrate account",
-    "importExternalWallet": "Gbe apamọwọ ita wọle",
-    "migrateIntentHint": "Wọlé pẹ̀lú ohunkóhun tí ó wà nísàlẹ̀. Tí ó bá bá àkáǹtì DeHub tẹ́lẹ̀ mu, wà á mú àpamọ́wọ́ rẹ̀, orúkọ aṣàmúlò rẹ̀ àti ìdúróṣánṣán rẹ̀ wá.",
-    "importIntentHint": "Wọlé pẹ̀lú àṣàyàn èyíkéyìí tó wà nísàlẹ̀, lẹ́yìn náà tẹ gbólóhùn ìmúpadàbọ̀sípò tàbí kọ́kọ́rọ́ ìkọ̀kọ̀ àpò-ìfowópamọ́ tí o fẹ́ lò.",
     "unlockBiometricContinue": "Tú àpò-ìfowópamọ́ rẹ pẹ̀lú àmì ìka rẹ tàbí ojú rẹ láti tẹ̀síwájú.",
     "unlockBiometricSignIn": "Tú àpò-ìfowópamọ́ rẹ pẹ̀lú àmì ìka rẹ tàbí ojú láti wọlé.",
     "unlockPasswordContinue": "Tẹ ọrọ igbaniwọle apamọwọ rẹ lati tẹsiwaju.",
@@ -1447,6 +1382,14 @@
     "migrateUnmatchedDetail": "Kò sí àkọsílẹ̀ kankan ní àdírẹ́sì àpamọ́wọ́ yìí. Tí o bá ń wọlé padà, padà lọ lo ìforúkọsílẹ̀ tí o wọlé sí dípò.",
     "migrateGoBack": "Pada",
     "migrateContinueAnyway": "Ṣẹ̀dá àkọsílẹ̀ tuntun bákan náà",
+    "migrateNoOldAccount": "Kò sí àkọsílẹ̀ DeHub tẹ́lẹ̀ lórí ìforúkọsílẹ̀ yìí, nítorí náà kò sí nǹkankan láti mú wá. Ṣètò àkọsílẹ̀ tuntun dípò.",
+    "migrateInstead": "Mú àkántì àtijọ́ wá dípò",
+    "setUpNewAccount": "Ṣètò àkọsílẹ̀ tuntun",
+    "createNewInstead": "Ṣẹ̀dá àkọsílẹ̀ tuntun dípò",
+    "migrateAccount": "Migrate account",
+    "importExternalWallet": "Gbe apamọwọ ita wọle",
+    "migrateIntentHint": "Wọlé pẹ̀lú ohunkóhun tí ó wà nísàlẹ̀. Tí ó bá bá àkáǹtì DeHub tẹ́lẹ̀ mu, wà á mú àpamọ́wọ́ rẹ̀, orúkọ aṣàmúlò rẹ̀ àti ìdúróṣánṣán rẹ̀ wá.",
+    "importIntentHint": "Wọlé pẹ̀lú àṣàyàn èyíkéyìí tó wà nísàlẹ̀, lẹ́yìn náà tẹ gbólóhùn ìmúpadàbọ̀sípò tàbí kọ́kọ́rọ́ ìkọ̀kọ̀ àpò-ìfowópamọ́ tí o fẹ́ lò.",
     "title": "Wọlé",
     "addProfileTitle": "Fi profáìlì kún",
     "continueEmail": "Tẹ̀síwájú pẹ̀lú Email",
@@ -2334,7 +2277,6 @@
     "noStages": "Ko si Stage tirẹ ti o n ṣiṣẹ tabi ti a ti ṣe iṣeduro fun ni bayi.",
     "noFlaresLeft": "Ko si Signal Flares ti o ku fun iyalẹnu yii",
     "spentFor": "{{power}} n ṣiṣẹ fun {{minutes}} awọn iṣẹju",
-    "goldenHourStarted": "Golden Hour ń ṣiṣẹ́ fún ìṣẹ́jú {{minutes}} — ohun gbogbo tí o bá kọ̀wé báyì yóò wá ní ẹ̀ẹ́ méjì",
     "teamUp": {
       "title": "Ṣe ẹgbẹ́ kan",
       "subtitle": "Dá agbára àwọn àpòwó pọ̀ mọ́ ẹlẹ́gbẹ́ méje mìíràn. Olúkúlùkù yóò wọ̀ àmì ẹ̀yẹ náà, iye tí o bá kó jọ yóò sì farahàn.",
@@ -2395,7 +2337,8 @@
       "updated": "Imudojuiwọn ẹgbẹ",
       "updateFailed": "Kò lè ṣe ìmúdójúìwọ̀n ẹgbẹ́ yẹn",
       "openToEveryone": "Ẹgbẹ soke ṣí sílẹ̀ fún gbogbo àkáǹtì; àwọn ẹgbẹ́ aládàáni fọwọ́ sí ẹni tí ó bá darapọ̀ mọ́."
-    }
+    },
+    "goldenHourStarted": "Golden Hour ń ṣiṣẹ́ fún ìṣẹ́jú {{minutes}} — ohun gbogbo tí o bá kọ̀wé báyì yóò wá ní ẹ̀ẹ́ méjì"
   },
   "work": {
     "budgetExhausted": "Ìsúná ẹ̀bùn yìí ti pin tán."
@@ -2422,6 +2365,63 @@
     "neon": "Neon",
     "blur": "Àìlẹ́sẹ̀",
     "pixelate": "Píksẹ̀lì"
+  },
+  "live": {
+    "chatJoined": "darapọ̀",
+    "chatSentGift": "fi ránṣẹ́",
+    "progress": {
+      "title": "Ipele streamer",
+      "level": "Ipele {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} iṣẹju afiyẹwo diẹ sii lati de ipele {{level}}",
+      "rule": "Awọn ṣiṣan nikan ti o ṣiṣẹ iṣẹju mẹwa tabi ju bẹẹ lọ pẹlu oju-iwoye o kere ju ọkan ni iṣiro fun ipele rẹ.",
+      "streak": "{{count}} ọsẹ itẹlera",
+      "bestStreak": "Itẹlera ti o dara julọ {{count}} ọsẹ",
+      "hours": "{{hours}} wakati afiyẹwo",
+      "minutes": "{{count}} iṣẹju",
+      "viewers": "{{count}} awọn oluwo",
+      "viewCards": "Awọn kaadi iwoye",
+      "cardsTitle": "Awọn kaadi ikojọpọ",
+      "locked": "Ti dina",
+      "earnedOn": "Gba {{date}}",
+      "recentTitle": "Awọn ṣiṣan laipẹ",
+      "notCounted": "Ko ka",
+      "noStreams": "Ṣe afihan lati bẹrẹ si ni XP.",
+      "card": {
+        "first-light": {
+          "name": "Imọlẹ akọkọ",
+          "hint": "Pari ṣiṣan akọkọ rẹ ti o ka."
+        },
+        "marathon": {
+          "name": "Marathon",
+          "hint": "Ṣe ṣiṣan fun wakati meji ni ipade kan."
+        },
+        "night-owl": {
+          "name": "Owibooṣe",
+          "hint": "Pari ṣiṣan laarin ọganjọ oru ati marun ni owurọ."
+        },
+        "regular": {
+          "name": "Deede",
+          "hint": "Ṣe ṣiṣan ni ọsẹ mẹrin ni ọna kan."
+        },
+        "iron-streak": {
+          "name": "Itẹlera irin",
+          "hint": "Ṣe ṣiṣan ni ọsẹ mejila ni ọna kan."
+        },
+        "crowd": {
+          "name": "Ọpọlọpọ eniyan",
+          "hint": "Ni eniyan mẹwa nwo ni akoko kanna."
+        },
+        "century": {
+          "name": "Orilẹ-ede",
+          "hint": "Ṣe awọn wakatii ti o yẹ fun afẹfẹ ọgọrun."
+        },
+        "legend": {
+          "name": "Aṣaaju",
+          "hint": "Kọ ẹkọ ipele mẹwa."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Lọ Gbe",
@@ -2847,7 +2847,26 @@
     "reviewDescriptionPlaceholder": "Sọ ohun kan nípa iṣẹ́ yìí (bí ó bá wù ú)",
     "reviewLiveWarning": "Ìsopọ̀ yẹn jẹ́ àtẹ̀jísẹ́ tí ó wà láàyè. Dúró títí yóò fi parí kí o sì ṣe àmúlò àfihàn náà dípò ìyẹn.",
     "reviewCancel": "Fagilé",
-    "reviewConfirm": "Ṣàgbéwọlé"
+    "reviewConfirm": "Ṣàgbéwọlé",
+    "podcast": {
+      "tab": "Adarọ ese",
+      "feedUrlLabel": "Podcast RSS feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Fetch ifunni",
+      "fetching": "Gbigba ifunni...",
+      "showBy": "Nipasẹ {{author}}",
+      "episodes": "{{count}} awọn iṣẹlẹ",
+      "selectAll": "Yan gbogbo",
+      "alreadyImported": "Tẹlẹ gbe wọle",
+      "ownership": "Mo ní àkóónú yìí, tàbí mo ní ìyọ̀ǹda àwọn tó ní ẹ̀tọ́ láti tẹ̀ ẹ́ jáde lórí DeHub.",
+      "importSelected": "Wọle {{count}} awọn iṣẹlẹ",
+      "importing": "Gbigba wọle...",
+      "done": "Queued",
+      "failed": "Ó kùnà",
+      "emptyFeed": "A kò rí àwọn àyọkà kankan nínú oúnjẹ yẹn.",
+      "badFeed": "Ìsopọ̀ yẹn kò jọ oúnjẹ adarọ-ese.",
+      "tooMany": "Wọlé àwọn eré tó tó ogún lẹ́ẹ̀kan."
+    }
   },
   "banned": {
     "title": "A ti fòfin de àkántì rẹ.",

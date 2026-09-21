@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "ble med",
-    "chatSentGift": "sendte",
-    "progress": {
-      "title": "Strømnivå",
-      "level": "Nivå {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} flere kvalifiserende minutter for å nå nivå {{level}}",
-      "rule": "Kun direktesendinger som varer ti minutter eller lenger med minst én seer teller mot nivået ditt.",
-      "streak": "{{count}} ukes strek",
-      "bestStreak": "Beste strek {{count}} uker",
-      "hours": "{{hours}} kvalifiserende timer",
-      "minutes": "{{count}} minutter",
-      "viewers": "{{count}} seere",
-      "viewCards": "Vis kort",
-      "cardsTitle": "Samlekort",
-      "locked": "Låst",
-      "earnedOn": "Tjent {{date}}",
-      "recentTitle": "Nylige direktesendinger",
-      "notCounted": "Telte ikke",
-      "noStreams": "Gå live for å begynne å tjene XP.",
-      "card": {
-        "first-light": {
-          "name": "Første lys",
-          "hint": "Fullfør din første direktesending som teller."
-        },
-        "marathon": {
-          "name": "Maraton",
-          "hint": "Strøm i to timer i én økt."
-        },
-        "night-owl": {
-          "name": "Natteravn",
-          "hint": "Avslutt en direktesending mellom midnatt og fem om morgenen."
-        },
-        "regular": {
-          "name": "Regelmessig",
-          "hint": "Strøm i fire uker på rad."
-        },
-        "iron-streak": {
-          "name": "Jernstrek",
-          "hint": "Strøm i tolv uker på rad."
-        },
-        "crowd": {
-          "name": "Folkemengde",
-          "hint": "Ha ti personer som ser på samtidig."
-        },
-        "century": {
-          "name": "Århundre",
-          "hint": "Nå hundre kvalifiserende timer på lufta."
-        },
-        "legend": {
-          "name": "Sagn",
-          "hint": "Nå nivå ti."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Gratis transaksjoner er satt på pause hos oss, ikke i lommeboken din. Prøv igjen om litt.",
     "gasSponsorshipFailed": "Denne transaksjonen kunne ikke dekkes. Prøv igjen om et øyeblikk."
@@ -162,6 +105,9 @@
     "bio": "Biografi",
     "bioPlaceholder": "Fortell oss om deg selv...",
     "socialLinks": "Sosiale lenker",
+    "socialFollowers": "Følgere på {{platform}}",
+    "socialFollowersHint": "Vises på profilen din som en del av din totale rekkevidde. Skriv inn tallet selv – vi leser det ikke fra plattformen.",
+    "socialFollowersPlaceholder": "f.eks. 12500",
     "profileUpdated": "Profil oppdatert",
     "failedLoadProfile": "Kunne ikke laste profildata",
     "imageTooLarge5": "Bildet må være under 5 MB",
@@ -495,10 +441,7 @@
       "unavailable": "Strømming fra en koder er ikke tilgjengelig på kontoen din akkurat nå.",
       "serverCopied": "Serveren er kopiert",
       "keyCopied": "Strømnøkkel kopiert"
-    },
-    "socialFollowers": "Følgere på {{platform}}",
-    "socialFollowersHint": "Vises på profilen din som en del av din totale rekkevidde. Skriv inn tallet selv – vi leser det ikke fra plattformen.",
-    "socialFollowersPlaceholder": "f.eks. 12500"
+    }
   },
   "common": {
     "save": "Lagre",
@@ -1274,10 +1217,6 @@
     "returnHome": "Gå tilbake til hjem"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Dette innlegget er ikke tilgjengelig",
-      "commentUnavailable": "Denne kommentaren er ikke lenger tilgjengelig"
-    },
     "back": "Tilbake",
     "usernameAvailable": "Brukernavn tilgjengelig!",
     "signUpToClaim": "Registrer deg i dag for å sikre det",
@@ -1293,12 +1232,16 @@
     "followers": "Følgere",
     "following": "Følger",
     "joined": "Ble med",
-    "loginDescription": "Logg inn for å se og administrere profilen din.",
     "reach": {
       "total": "Total rekkevidde",
       "breakdownTitle": "Hvor denne rekkevidden kommer fra",
       "dehubFollowers": "DeHub-følgere",
       "selfReported": "Antall følgere på sosiale medier legges inn av skaperen."
+    },
+    "loginDescription": "Logg inn for å se og administrere profilen din.",
+    "replyThread": {
+      "postUnavailable": "Dette innlegget er ikke tilgjengelig",
+      "commentUnavailable": "Denne kommentaren er ikke lenger tilgjengelig"
     },
     "tabs": {
       "playlists": "Spillelister"
@@ -1315,6 +1258,7 @@
     "amountUsd": "Beløp (USD)",
     "customAmount": "Tilpasset beløp",
     "minPurchase": "Minimumskjøp er $5",
+    "minDhbPurchase": "Minimumskjøp for DHB er $0,50",
     "youPay": "Du betaler",
     "youReceive": "Du mottar (est.)",
     "feeNote": "Kortgebyr ~3,6% og en 0,5% nettverksreserve trekkes fra dette. Reserven sendes til deg som ETH for gass.",
@@ -1348,7 +1292,6 @@
     "badgeDiscount": "{{tier}}-innehaver — {{percent}} % rabatt",
     "otherTokens": "Andre tokens",
     "otherTokensDesc": "Kjøp ETH eller USDC på Base med kortet ditt",
-    "minDhbPurchase": "Minimumskjøp for DHB er $0,50",
     "shareToFeed": "Del i feeden min",
     "sharePostTemplate": "Har nettopp lagt til {{amount}} $DHB i DeHub-stacken min. Bygger med fellesskapet. #DeHub #DHB",
     "success": {
@@ -1426,14 +1369,6 @@
     "failedSubmit": "Kunne ikke sende søknad. Prøv igjen."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Det finnes ingen tidligere DeHub-konto på denne påloggingen, så det er ingenting å ta med seg. Opprett en ny konto i stedet.",
-    "migrateInstead": "Ta over den gamle kontoen i stedet",
-    "setUpNewAccount": "Opprett en ny konto",
-    "createNewInstead": "Opprett en ny konto i stedet",
-    "migrateAccount": "Migrer konto",
-    "importExternalWallet": "Importer ekstern lommebok",
-    "migrateIntentHint": "Logg inn med et hvilket som helst alternativ nedenfor. Hvis det samsvarer med en tidligere DeHub-konto, vil du ta med deg lommeboken, brukernavnet og saldoen.",
-    "importIntentHint": "Logg inn med et hvilket som helst alternativ nedenfor, og lim deretter inn gjenopprettingsfrasen eller den private nøkkelen til lommeboken du vil bruke.",
     "unlockBiometricContinue": "Lås opp lommeboken med fingeravtrykket eller ansiktet ditt for å fortsette.",
     "unlockBiometricSignIn": "Lås opp lommeboken med fingeravtrykket eller ansiktet ditt for å logge på.",
     "unlockPasswordContinue": "Skriv inn lommebokpassordet ditt for å fortsette.",
@@ -1446,6 +1381,14 @@
     "migrateUnmatchedDetail": "Det finnes ingen profil på denne lommebokadressen. Hvis du logget på igjen, gå tilbake og bruk påloggingsinformasjonen du registrerte deg med i stedet.",
     "migrateGoBack": "Gå tilbake",
     "migrateContinueAnyway": "Opprett en ny konto uansett",
+    "migrateNoOldAccount": "Det finnes ingen tidligere DeHub-konto på denne påloggingen, så det er ingenting å ta med seg. Opprett en ny konto i stedet.",
+    "migrateInstead": "Ta over den gamle kontoen i stedet",
+    "setUpNewAccount": "Opprett en ny konto",
+    "createNewInstead": "Opprett en ny konto i stedet",
+    "migrateAccount": "Migrer konto",
+    "importExternalWallet": "Importer ekstern lommebok",
+    "migrateIntentHint": "Logg inn med et hvilket som helst alternativ nedenfor. Hvis det samsvarer med en tidligere DeHub-konto, vil du ta med deg lommeboken, brukernavnet og saldoen.",
+    "importIntentHint": "Logg inn med et hvilket som helst alternativ nedenfor, og lim deretter inn gjenopprettingsfrasen eller den private nøkkelen til lommeboken du vil bruke.",
     "title": "Logg inn",
     "addProfileTitle": "Legg til profil",
     "continueEmail": "Fortsett med e-post",
@@ -2330,7 +2273,6 @@
     "noStages": "Ingen Stage av deg er live eller planlagt akkurat nå.",
     "noFlaresLeft": "Ingen Signal Flares igjen denne syklusen",
     "spentFor": "{{power}} kjører i {{minutes}} minutter",
-    "goldenHourStarted": "Golden Hour kjører i {{minutes}} minutter — alt du poster teller nå dobbelt",
     "teamUp": {
       "title": "Slå deg sammen",
       "subtitle": "Kombiner lommebokkraft med opptil syv andre. Alle bærer merket ditt, totalen din låses opp.",
@@ -2391,7 +2333,8 @@
       "updated": "Lag oppdatert",
       "updateFailed": "Kunne ikke oppdatere det laget",
       "openToEveryone": "Team up er åpent for alle kontoer; private lag godkjenner hvem som blir med."
-    }
+    },
+    "goldenHourStarted": "Golden Hour kjører i {{minutes}} minutter — alt du poster teller nå dobbelt"
   },
   "work": {
     "budgetExhausted": "Budsjettet for denne dusøren er brukt opp."
@@ -2418,6 +2361,63 @@
     "neon": "Neon",
     "blur": "Uskarphet",
     "pixelate": "Pikseler"
+  },
+  "live": {
+    "chatJoined": "ble med",
+    "chatSentGift": "sendte",
+    "progress": {
+      "title": "Strømnivå",
+      "level": "Nivå {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} flere kvalifiserende minutter for å nå nivå {{level}}",
+      "rule": "Kun direktesendinger som varer ti minutter eller lenger med minst én seer teller mot nivået ditt.",
+      "streak": "{{count}} ukes strek",
+      "bestStreak": "Beste strek {{count}} uker",
+      "hours": "{{hours}} kvalifiserende timer",
+      "minutes": "{{count}} minutter",
+      "viewers": "{{count}} seere",
+      "viewCards": "Vis kort",
+      "cardsTitle": "Samlekort",
+      "locked": "Låst",
+      "earnedOn": "Tjent {{date}}",
+      "recentTitle": "Nylige direktesendinger",
+      "notCounted": "Telte ikke",
+      "noStreams": "Gå live for å begynne å tjene XP.",
+      "card": {
+        "first-light": {
+          "name": "Første lys",
+          "hint": "Fullfør din første direktesending som teller."
+        },
+        "marathon": {
+          "name": "Maraton",
+          "hint": "Strøm i to timer i én økt."
+        },
+        "night-owl": {
+          "name": "Natteravn",
+          "hint": "Avslutt en direktesending mellom midnatt og fem om morgenen."
+        },
+        "regular": {
+          "name": "Regelmessig",
+          "hint": "Strøm i fire uker på rad."
+        },
+        "iron-streak": {
+          "name": "Jernstrek",
+          "hint": "Strøm i tolv uker på rad."
+        },
+        "crowd": {
+          "name": "Folkemengde",
+          "hint": "Ha ti personer som ser på samtidig."
+        },
+        "century": {
+          "name": "Århundre",
+          "hint": "Nå hundre kvalifiserende timer på lufta."
+        },
+        "legend": {
+          "name": "Sagn",
+          "hint": "Nå nivå ti."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Gå Live",
@@ -2847,7 +2847,24 @@
     "reviewDescriptionPlaceholder": "Si noe om dette innlegget (valgfritt)",
     "reviewLiveWarning": "Den lenken er en direktestrømming. Vent til den slutter og importer opptaket i stedet.",
     "reviewCancel": "Avbryt",
-    "reviewConfirm": "Importere"
+    "reviewConfirm": "Importere",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podkast-RSS-strøm",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "& Hent kjelde",
+      "fetching": "Henter feeden …",
+      "selectAll": "Velg alle",
+      "alreadyImported": "Allerede importert",
+      "ownership": "Jeg eier dette innholdet, eller har rettighetshaverens tillatelse til å publisere det på DeHub.",
+      "importSelected": "Importer {{count}} episoder",
+      "importing": "Importerer",
+      "done": "Lagt i kø",
+      "failed": "Mislyktes",
+      "emptyFeed": "Vi fant ingen episoder i den feeden.",
+      "badFeed": "Den lenken ser ikke ut som en podkastfeed.",
+      "tooMany": "Importer opptil 20 episoder om gangen."
+    }
   },
   "banned": {
     "title": "Kontoen din er utestengt",

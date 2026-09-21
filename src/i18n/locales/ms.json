@@ -105,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Ceritakan tentang diri anda...",
     "socialLinks": "Pautan Sosial",
+    "socialFollowers": "Pengikut di {{platform}}",
+    "socialFollowersHint": "Ditunjukkan pada profil anda sebagai sebahagian daripada jumlah capaian anda. Masukkan nombor itu sendiri — kami tidak membacanya dari platform.",
+    "socialFollowersPlaceholder": "cth. 12500",
     "profileUpdated": "Profil berjaya dikemas kini",
     "failedLoadProfile": "Gagal memuatkan data profil",
     "imageTooLarge5": "Imej mesti kurang daripada 5MB",
@@ -455,10 +458,7 @@
       "unavailable": "Strim daripada pengekod tidak tersedia pada akaun anda buat masa ini.",
       "serverCopied": "Pelayan disalin",
       "keyCopied": "Kunci strim disalin"
-    },
-    "socialFollowers": "Pengikut di {{platform}}",
-    "socialFollowersHint": "Ditunjukkan pada profil anda sebagai sebahagian daripada jumlah capaian anda. Masukkan nombor itu sendiri — kami tidak membacanya dari platform.",
-    "socialFollowersPlaceholder": "cth. 12500"
+    }
   },
   "common": {
     "save": "Simpan",
@@ -1504,10 +1504,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Hantaran ini tidak tersedia",
-      "commentUnavailable": "Komen ini tidak lagi tersedia"
-    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Daftar hari ini untuk menuntut",
@@ -1523,12 +1519,16 @@
     "followers": "Followers",
     "following": "Following",
     "joined": "Joined",
-    "loginDescription": "Log masuk untuk melihat dan menguruskan profil anda.",
     "reach": {
       "total": "Jumlah capaian",
       "breakdownTitle": "Dari mana datangnya jangkauan ini",
       "dehubFollowers": "Pengikut DeHub",
       "selfReported": "Kiraan pengikut sosial dimasukkan oleh pengkarya."
+    },
+    "loginDescription": "Log masuk untuk melihat dan menguruskan profil anda.",
+    "replyThread": {
+      "postUnavailable": "Hantaran ini tidak tersedia",
+      "commentUnavailable": "Komen ini tidak lagi tersedia"
     },
     "tabs": {
       "playlists": "Senarai main"
@@ -1565,6 +1565,7 @@
     "amountUsd": "Amount (USD)",
     "customAmount": "Custom amount",
     "minPurchase": "Minimum purchase is $5",
+    "minDhbPurchase": "Pembelian DHB minimum ialah $ 0.50",
     "youPay": "You pay",
     "youReceive": "Anda menerima (anggaran)",
     "feeNote": "Yuran kad ~3.6% dan rizab rangkaian 0.5% ditolak daripada ini. Rizab dihantar kepada anda sebagai ETH untuk gas.",
@@ -1598,7 +1599,6 @@
     "badgeDiscount": "Pemegang {{tier}} — diskaun {{percent}}%",
     "otherTokens": "Token lain",
     "otherTokensDesc": "Beli ETH atau USDC di Base dengan kad anda",
-    "minDhbPurchase": "Pembelian DHB minimum ialah $ 0.50",
     "shareToFeed": "Kongsi ke suapan saya",
     "sharePostTemplate": "Baru sahaja menambah {{amount}} $DHB ke tindanan saya di DeHub. Membina bersama komuniti. #DeHub #DHB",
     "success": {
@@ -1676,14 +1676,6 @@
     "failedSubmit": "Gagal menghantar permohonan. Sila cuba lagi."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Tiada akaun DeHub yang lebih awal pada log masuk ini, jadi tiada apa yang perlu dibawa. Sediakan akaun baharu.",
-    "migrateInstead": "Bawa masuk akaun lama",
-    "setUpNewAccount": "Sediakan akaun baharu",
-    "createNewInstead": "Cipta akaun baharu",
-    "migrateAccount": "Pindahkan akaun",
-    "importExternalWallet": "Import dompet luaran",
-    "migrateIntentHint": "Log masuk dengan mana-mana pilihan di bawah. Jika ia sepadan dengan akaun DeHub terdahulu, anda akan membawa dompet, nama pengguna dan bakinya.",
-    "importIntentHint": "Log masuk dengan mana-mana pilihan di bawah, kemudian tampal frasa pemulihan atau kunci peribadi dompet yang anda ingin gunakan.",
     "unlockBiometricContinue": "Buka kunci dompet anda dengan cap jari atau muka anda untuk meneruskan.",
     "unlockBiometricSignIn": "Buka kunci dompet anda dengan cap jari atau muka anda untuk log masuk.",
     "unlockPasswordContinue": "Masukkan kata laluan dompet anda untuk meneruskan.",
@@ -1696,6 +1688,14 @@
     "migrateUnmatchedDetail": "Tiada profil wujud di alamat dompet ini. Jika anda mendaftar masuk semula, kembali dan gunakan log masuk yang anda daftar.",
     "migrateGoBack": "Kembali",
     "migrateContinueAnyway": "Cipta akaun baharu juga",
+    "migrateNoOldAccount": "Tiada akaun DeHub yang lebih awal pada log masuk ini, jadi tiada apa yang perlu dibawa. Sediakan akaun baharu.",
+    "migrateInstead": "Bawa masuk akaun lama",
+    "setUpNewAccount": "Sediakan akaun baharu",
+    "createNewInstead": "Cipta akaun baharu",
+    "migrateAccount": "Pindahkan akaun",
+    "importExternalWallet": "Import dompet luaran",
+    "migrateIntentHint": "Log masuk dengan mana-mana pilihan di bawah. Jika ia sepadan dengan akaun DeHub terdahulu, anda akan membawa dompet, nama pengguna dan bakinya.",
+    "importIntentHint": "Log masuk dengan mana-mana pilihan di bawah, kemudian tampal frasa pemulihan atau kunci peribadi dompet yang anda ingin gunakan.",
     "title": "Log in",
     "addProfileTitle": "Tambah profil",
     "continueEmail": "Teruskan dengan E-mel",
@@ -2583,7 +2583,6 @@
     "noStages": "Tiada Pentas anda yang sedang berlangsung atau dijadualkan sekarang.",
     "noFlaresLeft": "Tiada Signal Flare berbaki kitaran ini",
     "spentFor": "{{power}} berjalan selama {{minutes}} minit",
-    "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} minit — semua yang anda siarkan kini dikira berganda",
     "teamUp": {
       "title": "Bekerja sama",
       "subtitle": "Gabungkan kuasa dompet dengan sehingga tujuh orang lain. Setiap orang memakai lencana yang jumlah keseluruhan anda akan buka kuncinya.",
@@ -2644,7 +2643,8 @@
       "updated": "Pasukan dikemas kini",
       "updateFailed": "Tidak dapat kemas kini pasukan itu",
       "openToEveryone": "Team up terbuka kepada setiap akaun; pasukan persendirian meluluskan siapa yang menyertai."
-    }
+    },
+    "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} minit — semua yang anda siarkan kini dikira berganda"
   },
   "work": {
     "budgetExhausted": "Bajet ganjaran ini telah digunakan sepenuhnya.",
@@ -5388,7 +5388,26 @@
     "reviewDescriptionPlaceholder": "Katakan sesuatu tentang hantaran ini (pilihan)",
     "reviewLiveWarning": "Pautan itu adalah strim langsung. Tunggu sehingga ia berakhir dan import rakaman.",
     "reviewCancel": "Batal",
-    "reviewConfirm": "Import"
+    "reviewConfirm": "Import",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "URL suapan RSS Podcast",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Mengambil suapan",
+      "fetching": "Mengambil suapan...",
+      "showBy": "Oleh {{author}}",
+      "episodes": "{{count}} episod",
+      "selectAll": "Pilih semua",
+      "alreadyImported": "Sudah diimport",
+      "ownership": "Saya memiliki kandungan ini, atau mempunyai kebenaran pemegang hak untuk menyiarkannya di DeHub.",
+      "importSelected": "Import {{count}} episod",
+      "importing": "Mengimport...",
+      "done": "Dibaris gilir",
+      "failed": "Gagal",
+      "emptyFeed": "Kami tidak dapat menemui sebarang episod dalam suapan itu.",
+      "badFeed": "Pautan itu tidak kelihatan seperti suapan audio siar.",
+      "tooMany": "Import sehingga 20 episod pada satu masa."
+    }
   },
   "banned": {
     "title": "Akaun anda telah diharamkan",

@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "ujoyinile",
-    "chatSentGift": "uthumele",
-    "progress": {
-      "title": "Izinga lomdlali",
-      "level": "Izinga {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} imizuzu eyengeziwe efanelekayo ukuze ufinyelele ileveli {{level}}",
-      "rule": "Imifudlana kuphela ehamba imizuzu eyishumi noma ngaphezulu nombonisi oyedwa okungenani ibalwa ngezinga lakho.",
-      "streak": "{{count}} isonto elilandelanayo",
-      "bestStreak": "Isikhathi esihle kakhulu {{count}} amasonto",
-      "hours": "{{hours}} amahora afanelekayo",
-      "minutes": "{{count}} imizuzu",
-      "viewers": "{{count}} ababukeli",
-      "viewCards": "Amakhadi okubuka",
-      "cardsTitle": "Amakhadi okuqoqwa",
-      "locked": "Avaliwe",
-      "earnedOn": "Kutholwe {{date}}",
-      "recentTitle": "Imifudlana yakamuva",
-      "notCounted": "Ayibalwanga",
-      "noStreams": "Dlala bukhoma ukuze uqale ukuthola i-XP.",
-      "card": {
-        "first-light": {
-          "name": "Ukukhanya kokuqala",
-          "hint": "Qedela umfudlana wakho wokuqala obalwayo."
-        },
-        "marathon": {
-          "name": "I-Marathon",
-          "hint": "Dlala amahora amabili eseshini eyodwa."
-        },
-        "night-owl": {
-          "name": "Ubusuku bonke",
-          "hint": "Qedela umfudlana phakathi kwamabili nohora lesihlanu ekuseni."
-        },
-        "regular": {
-          "name": "Okujwayelekile",
-          "hint": "Dlala emavikini amane alandelanayo."
-        },
-        "iron-streak": {
-          "name": "Isikhathi sokuqala sensimbi",
-          "hint": "Dlala emavikini ayishumi nambili alandelanayo."
-        },
-        "crowd": {
-          "name": "Isixuku",
-          "hint": "Yiba nabantu abayishumi ababukele ngesikhathi esifanayo."
-        },
-        "century": {
-          "name": "Ikhulu",
-          "hint": "Finyelela amahora ayikhulu afanelekayo emoyeni."
-        },
-        "legend": {
-          "name": "Inganekwane",
-          "hint": "Finyelela ileveli eyishumi."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Ukuthengiselana kwamahhala kumisiwe ohlangothini lwethu, hhayi kusikhwama sakho. Sicela uzame futhi maduze.",
     "gasSponsorshipFailed": "Le ntengiselwano ayikwazanga ukukhokhelwa. Sicela uzame futhi ngomzuzwana."
@@ -162,6 +105,9 @@
     "bio": "Mayelana",
     "bioPlaceholder": "Sitshele ngawe...",
     "socialLinks": "Izixhumanisi Zenhlalo",
+    "socialFollowers": "Abalandeli ku- {{platform}}",
+    "socialFollowersHint": "Kuboniswe kuphrofayili yakho njengengxenye yengqikithi yokufinyelela kwakho. Faka inombolo ngokwakho — asiyifundi enkundleni.",
+    "socialFollowersPlaceholder": "isib. 12500",
     "profileUpdated": "Iphrofayela ibuyekezwe ngempumelelo",
     "failedLoadProfile": "Kuhlulekile ukulayisha idatha yephrofayela",
     "imageTooLarge5": "Isithombe kufanele sibe ngaphansi kuka-5MB",
@@ -496,10 +442,7 @@
       "unavailable": "Ukusakaza kusuka ku-encoder akutholakali ku-akhawunti yakho njengamanje.",
       "serverCopied": "Iseva ikopishiwe",
       "keyCopied": "Ukhiye wokusakaza ukopishiwe"
-    },
-    "socialFollowers": "Abalandeli ku- {{platform}}",
-    "socialFollowersHint": "Kuboniswe kuphrofayili yakho njengengxenye yengqikithi yokufinyelela kwakho. Faka inombolo ngokwakho — asiyifundi enkundleni.",
-    "socialFollowersPlaceholder": "isib. 12500"
+    }
   },
   "common": {
     "save": "Gcina",
@@ -1277,10 +1220,6 @@
     "returnHome": "Buyela Ekhaya"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Le phosti ayitholakali",
-      "commentUnavailable": "Lokhu kuphawula akusatholakali"
-    },
     "back": "Emuva",
     "usernameAvailable": "Igama lomsebenzisi liyatholakala!",
     "signUpToClaim": "Bhalisa namhlanje ukufuna",
@@ -1296,12 +1235,16 @@
     "followers": "Abalandeli",
     "following": "Okulandelayo",
     "joined": "Joined",
-    "loginDescription": "Ngena ukubona nokuphatha iphrofayela yakho.",
     "reach": {
       "total": "Ingqikithi yokufinyelela",
       "breakdownTitle": "Loku kufinyelela kuvela kuphi",
       "dehubFollowers": "Abalandeli be-DeHub",
       "selfReported": "Izibalo zabalandeli zomphakathi zifakwa umsunguli."
+    },
+    "loginDescription": "Ngena ukubona nokuphatha iphrofayela yakho.",
+    "replyThread": {
+      "postUnavailable": "Le phosti ayitholakali",
+      "commentUnavailable": "Lokhu kuphawula akusatholakali"
     },
     "tabs": {
       "playlists": "Uhlu lokudlalwayo"
@@ -1318,6 +1261,7 @@
     "amountUsd": "Inani (USD)",
     "customAmount": "Inani elingejwayelekile",
     "minPurchase": "Ukuthenga okuncane kungu-$5",
+    "minDhbPurchase": "Ukuthenga okuncane kwe-DHB kungu- $ 0.50",
     "youPay": "Ukhokha",
     "youReceive": "Uzothola (isilinganiso)",
     "feeNote": "Umlilo wekhadi ~3.6% kanye ne-0.5% network reserve ziyakhipha kulokhu. I-reserve ithumelwa kuwe njengo-ETH for gas.",
@@ -1351,7 +1295,6 @@
     "badgeDiscount": "Umnikazi we-{{tier}} — isaphulelo se-{{percent}}%",
     "otherTokens": "Amanye amathokheni",
     "otherTokensDesc": "Thenga i-ETH noma i-USDC ku-Base ngekhadi lakho",
-    "minDhbPurchase": "Ukuthenga okuncane kwe-DHB kungu- $ 0.50",
     "shareToFeed": "Yabelana ku-feed yami",
     "sharePostTemplate": "Ngisanda kufaka i-{{amount}} $DHB esitaki sami ku-DeHub. Ukwakha nomphakathi. #DeHub #DHB",
     "success": {
@@ -1428,14 +1371,6 @@
     "failedSubmit": "Kuhlulekile ukuthumela isicelo. Sicela uzame futhi."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Akwenzeki ukuba ube ne-akhawunti yakudala ye-DeHub kule nketho yokungena, ngakho-ke akukho lutho ongalulethela lapha. Zisethele i-akhawunti entsha esikhundleni salokho.",
-    "migrateInstead": "Letha i-akhawunti yakudala esikhundleni",
-    "setUpNewAccount": "Zisethele i-akhawunti entsha",
-    "createNewInstead": "Dala i-akhawunti entsha esikhundleni",
-    "migrateAccount": "Hambisa i-akhawunti",
-    "importExternalWallet": "Ngenisa isikhwama sangaphandle",
-    "migrateIntentHint": "Ngena ngalo lonke ukhetho olungezansi. Uma lufana ne-akhawunti yakudala ye-DeHub, uzoluletha isikhwama sayo, igama lomsebenzisi, kanye nebhalansi.",
-    "importIntentHint": "Ngena ngalo lonke ukhetho olungezansi, bese unamathisela umushwana wokubuyisa noma ukhiye oyimfihlo wesikhwama ofuna ukusisebenzisa.",
     "unlockBiometricContinue": "Vula isikhwama sakho semali ngeminwe yakho noma ubuso ukuze uqhubeke.",
     "unlockBiometricSignIn": "Vula isikhwama sakho semali ngeminwe yakho noma ubuso ukuze ungene ngemvume.",
     "unlockPasswordContinue": "Faka iphasiwedi yakho ye-wallet ukuze uqhubeke.",
@@ -1448,6 +1383,14 @@
     "migrateUnmatchedDetail": "Ayikho iphrofayili ekhona kuleli kheli lesikhwama semali. Uma ubuphinde ungene ngemvume, buyela emuva futhi usebenzise ukungena ku-akhawunti okubhalise ngakho esikhundleni salokho.",
     "migrateGoBack": "Buyela emuva",
     "migrateContinueAnyway": "Vula i-akhawunti entsha noma kunjalo",
+    "migrateNoOldAccount": "Akwenzeki ukuba ube ne-akhawunti yakudala ye-DeHub kule nketho yokungena, ngakho-ke akukho lutho ongalulethela lapha. Zisethele i-akhawunti entsha esikhundleni salokho.",
+    "migrateInstead": "Letha i-akhawunti yakudala esikhundleni",
+    "setUpNewAccount": "Zisethele i-akhawunti entsha",
+    "createNewInstead": "Dala i-akhawunti entsha esikhundleni",
+    "migrateAccount": "Hambisa i-akhawunti",
+    "importExternalWallet": "Ngenisa isikhwama sangaphandle",
+    "migrateIntentHint": "Ngena ngalo lonke ukhetho olungezansi. Uma lufana ne-akhawunti yakudala ye-DeHub, uzoluletha isikhwama sayo, igama lomsebenzisi, kanye nebhalansi.",
+    "importIntentHint": "Ngena ngalo lonke ukhetho olungezansi, bese unamathisela umushwana wokubuyisa noma ukhiye oyimfihlo wesikhwama ofuna ukusisebenzisa.",
     "title": "Ngena",
     "addProfileTitle": "Engeza iphrofayela",
     "continueEmail": "Qhubeka nge-Email",
@@ -1627,6 +1570,24 @@
     "hoursAgo": "{{count}}hr edlule",
     "daysAgo": "{{count}}d edlule",
     "monthsAgo": "{{count}}m edlule",
+    "forLabel": "recurrpage",
+    "againstLabel": "Ngokumelene",
+    "discussion": {
+      "title": "Ingxoxo",
+      "intro": "Buza imibuzo yokulandelela noma uxoxe ngesiphakamiso ngaphambi kokuba uvote.",
+      "reply": "Phendula",
+      "replyingTo": "Iphendula ku- {{name}}",
+      "writeReply": "Bhala impendulo",
+      "edited": "ihlelwe",
+      "showMoreReplies": "Bonisa {{count}} izimpendulo ezengeziwe",
+      "showMoreReplies_one": "Bonisa {{count}} impendulo eyengeziwe",
+      "deleteTitle": "Susa lokhu kuphawula?",
+      "deleteDescription": "Lokhu kususa ukuphawula nezimpendulo zako kuwo wonke umuntu.",
+      "signInToComment": "Ngena ngemvume ukuze ujoyine ingxoxo",
+      "empty": "Ayikho imibuzo okwamanje. Qala ingxoxo.",
+      "joinOnProposal": "Joyina ingxoxo",
+      "authorChip": "Umbhali wesiphakamiso"
+    },
     "proposalTitle": "Isihloko sesiphakamiso",
     "proposalTitlePlaceholder": "Ufuna ukuphakamisa ini?",
     "proposalDescription": "Imininingwane",
@@ -1656,25 +1617,7 @@
     "tabProposals": "Iziphakamiso",
     "tabPassed": "Kudlulile",
     "tabRejected": "Kwenqatshiwe",
-    "weeksAgo": "{{count}}w edlule",
-    "forLabel": "recurrpage",
-    "againstLabel": "Ngokumelene",
-    "discussion": {
-      "title": "Ingxoxo",
-      "intro": "Buza imibuzo yokulandelela noma uxoxe ngesiphakamiso ngaphambi kokuba uvote.",
-      "reply": "Phendula",
-      "replyingTo": "Iphendula ku- {{name}}",
-      "writeReply": "Bhala impendulo",
-      "edited": "ihlelwe",
-      "showMoreReplies": "Bonisa {{count}} izimpendulo ezengeziwe",
-      "showMoreReplies_one": "Bonisa {{count}} impendulo eyengeziwe",
-      "deleteTitle": "Susa lokhu kuphawula?",
-      "deleteDescription": "Lokhu kususa ukuphawula nezimpendulo zako kuwo wonke umuntu.",
-      "signInToComment": "Ngena ngemvume ukuze ujoyine ingxoxo",
-      "empty": "Ayikho imibuzo okwamanje. Qala ingxoxo.",
-      "joinOnProposal": "Joyina ingxoxo",
-      "authorChip": "Umbhali wesiphakamiso"
-    }
+    "weeksAgo": "{{count}}w edlule"
   },
   "sidebar": {
     "talkOfTheTown": "Izindaba Zomuzi",
@@ -2365,7 +2308,6 @@
     "noStages": "Akukho Stage yakho esiphilile noma esisethulwe ngalesi sikhathi.",
     "noFlaresLeft": "Akukho i-Signal Flares esele kule cycle",
     "spentFor": "{{power}} ibaleka ngo {{minutes}} amaminithi",
-    "goldenHourStarted": "I-Golden Hour isebenza imizuzu engu-{{minutes}} — konke okuthunyelayo manje kubalwa kabili",
     "teamUp": {
       "title": "Hlangana",
       "subtitle": "Hlanganisa amandla we-wallet nabanye abafika kwabayisikhombisa. Wonke umuntu ugqoka ibheji, isamba sakho siyavuleka.",
@@ -2426,7 +2368,8 @@
       "updated": "Iqembu libuyekeziwe",
       "updateFailed": "Akuphumelelanga ukubuyekeza lelo qembu",
       "openToEveryone": "I-Team up ivulekele yonke i-akhawunti; amaqembu ayimfihlo avumela ukuthi ubani azobamba iqhaza."
-    }
+    },
+    "goldenHourStarted": "I-Golden Hour isebenza imizuzu engu-{{minutes}} — konke okuthunyelayo manje kubalwa kabili"
   },
   "work": {
     "budgetExhausted": "Isabelomali salo mklomelo sisetshenziswe sonke."
@@ -2453,6 +2396,63 @@
     "neon": "Neon",
     "blur": "Ukufiphala",
     "pixelate": "Iphikseli"
+  },
+  "live": {
+    "chatJoined": "ujoyinile",
+    "chatSentGift": "uthumele",
+    "progress": {
+      "title": "Izinga lomdlali",
+      "level": "Izinga {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} imizuzu eyengeziwe efanelekayo ukuze ufinyelele ileveli {{level}}",
+      "rule": "Imifudlana kuphela ehamba imizuzu eyishumi noma ngaphezulu nombonisi oyedwa okungenani ibalwa ngezinga lakho.",
+      "streak": "{{count}} isonto elilandelanayo",
+      "bestStreak": "Isikhathi esihle kakhulu {{count}} amasonto",
+      "hours": "{{hours}} amahora afanelekayo",
+      "minutes": "{{count}} imizuzu",
+      "viewers": "{{count}} ababukeli",
+      "viewCards": "Amakhadi okubuka",
+      "cardsTitle": "Amakhadi okuqoqwa",
+      "locked": "Avaliwe",
+      "earnedOn": "Kutholwe {{date}}",
+      "recentTitle": "Imifudlana yakamuva",
+      "notCounted": "Ayibalwanga",
+      "noStreams": "Dlala bukhoma ukuze uqale ukuthola i-XP.",
+      "card": {
+        "first-light": {
+          "name": "Ukukhanya kokuqala",
+          "hint": "Qedela umfudlana wakho wokuqala obalwayo."
+        },
+        "marathon": {
+          "name": "I-Marathon",
+          "hint": "Dlala amahora amabili eseshini eyodwa."
+        },
+        "night-owl": {
+          "name": "Ubusuku bonke",
+          "hint": "Qedela umfudlana phakathi kwamabili nohora lesihlanu ekuseni."
+        },
+        "regular": {
+          "name": "Okujwayelekile",
+          "hint": "Dlala emavikini amane alandelanayo."
+        },
+        "iron-streak": {
+          "name": "Isikhathi sokuqala sensimbi",
+          "hint": "Dlala emavikini ayishumi nambili alandelanayo."
+        },
+        "crowd": {
+          "name": "Isixuku",
+          "hint": "Yiba nabantu abayishumi ababukele ngesikhathi esifanayo."
+        },
+        "century": {
+          "name": "Ikhulu",
+          "hint": "Finyelela amahora ayikhulu afanelekayo emoyeni."
+        },
+        "legend": {
+          "name": "Inganekwane",
+          "hint": "Finyelela ileveli eyishumi."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Yiya Live",
@@ -2888,7 +2888,26 @@
     "reviewDescriptionPlaceholder": "Yisho okuthile ngale phosti (akuphoqelekile)",
     "reviewLiveWarning": "Leyo linki ingukusakaza bukhoma. Linda kuze kube yilapho kuphela bese ungenisa irekhodi.",
     "reviewCancel": "Khansela",
-    "reviewConfirm": "Ngenisa"
+    "reviewConfirm": "Ngenisa",
+    "podcast": {
+      "tab": "Iphodikhasti",
+      "feedUrlLabel": "I-URL ye-RSS feed yephodikhasti",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Landa okuphakelayo",
+      "fetching": "Ilanda okuphakelayo...",
+      "showBy": "Ngu- {{author}}",
+      "episodes": "{{count}} iziqephu",
+      "selectAll": "Khetha konke",
+      "alreadyImported": "Sekufakiwe kakade",
+      "ownership": "Nginakho lokhu okusunguliwe, noma nginemvume yomnikazi wamalungelo yokuyishicilela ku-DeHub.",
+      "importSelected": "Ngenisa {{count}} iziqephu",
+      "importing": "Iyangenisa...",
+      "done": "Ifolishiwe",
+      "failed": "Yehlulekile",
+      "emptyFeed": "Asikwazanga ukuthola noma yiziphi iziqephu kuleyo feed.",
+      "badFeed": "Leyo linki ayifani ne-feed yephodikhasti.",
+      "tooMany": "Ngenisa iziqephu ezingaba ngu-20 ngesikhathi."
+    }
   },
   "banned": {
     "title": "I-akhawunti yakho ivinjelwe",

@@ -105,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Řekněte něco o sobě...",
     "socialLinks": "Sociální odkazy",
+    "socialFollowers": "Sledující: {{platform}}",
+    "socialFollowersHint": "Zobrazí se na vašem profilu jako součást vašeho celkového dosahu. Číslo zadávejte sami — z platformy ho nečteme.",
+    "socialFollowersPlaceholder": "např. 12500",
     "profileUpdated": "Profil úspěšně aktualizován",
     "failedLoadProfile": "Nepodařilo se načíst data profilu",
     "imageTooLarge5": "Obrázek musí být menší než 5MB",
@@ -455,10 +458,7 @@
       "unavailable": "Streamování z enkodéru není na vašem účtu momentálně k dispozici.",
       "serverCopied": "Server zkopírován",
       "keyCopied": "Klíč streamu zkopírován"
-    },
-    "socialFollowers": "Sledující: {{platform}}",
-    "socialFollowersHint": "Zobrazí se na vašem profilu jako součást vašeho celkového dosahu. Číslo zadávejte sami — z platformy ho nečteme.",
-    "socialFollowersPlaceholder": "např. 12500"
+    }
   },
   "common": {
     "save": "Uložit",
@@ -1232,10 +1232,6 @@
     "returnHome": "Zpět na hlavní stránku"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Tento příspěvek není k dispozici",
-      "commentUnavailable": "Tento komentář již není k dispozici"
-    },
     "back": "Zpět",
     "usernameAvailable": "Uživatelské jméno je dostupné!",
     "signUpToClaim": "Zaregistrujte se a získejte ho",
@@ -1251,12 +1247,16 @@
     "followers": "Sledující",
     "following": "Sledování",
     "joined": "Joined",
-    "loginDescription": "Přihlaste se pro zobrazení a správu profilu.",
     "reach": {
       "total": "Celkový dosah",
       "breakdownTitle": "Odkud tento dosah pochází",
       "dehubFollowers": "Následovníci DeHubu",
       "selfReported": "Počet sledujících na sociálních sítích zadává tvůrce."
+    },
+    "loginDescription": "Přihlaste se pro zobrazení a správu profilu.",
+    "replyThread": {
+      "postUnavailable": "Tento příspěvek není k dispozici",
+      "commentUnavailable": "Tento komentář již není k dispozici"
     },
     "tabs": {
       "playlists": "Playlisty"
@@ -1293,6 +1293,7 @@
     "amountUsd": "Částka (dolary)",
     "customAmount": "Vlastní částka",
     "minPurchase": "Minimální nákup $5",
+    "minDhbPurchase": "Minimální nákup DHB je 0,50 $",
     "youPay": "Platíte",
     "youReceive": "Obdržíte (přibližně)",
     "feeNote": "Poplatek za kartu ~3,6% a 0,5% rezerva sítě se z toho odečítají. Rezerva se vám pošle jako ETH na plyn.",
@@ -1326,7 +1327,6 @@
     "badgeDiscount": "Držitel {{tier}} — sleva {{percent}} %",
     "otherTokens": "Další tokeny",
     "otherTokensDesc": "Kupte ETH nebo USDC na síti Base svou kartou",
-    "minDhbPurchase": "Minimální nákup DHB je 0,50 $",
     "shareToFeed": "Sdílet na mém kanálu",
     "sharePostTemplate": "Právě jsem přidal/a {{amount}} $DHB do svého zásobníku na DeHubu. Budování s komunitou. #DeHub #DHB",
     "success": {
@@ -1405,14 +1405,6 @@
     "email": "E-mail"
   },
   "loginModal": {
-    "migrateNoOldAccount": "Na tomto přihlášení není žádný dřívější účet DeHub, takže není co přinést. Místo toho si založ nový účet.",
-    "migrateInstead": "Přineste místo toho starý účet",
-    "setUpNewAccount": "Založ si nový účet",
-    "createNewInstead": "Místo toho si vytvoř nový účet",
-    "migrateAccount": "Migrovat účet",
-    "importExternalWallet": "Importovat externí peněženku",
-    "migrateIntentHint": "Přihlas se libovolnou možností dole. Pokud se shoduje s dřívějším účtem DeHub, přinesete jeho peněženku, uživatelské jméno a zůstatek.",
-    "importIntentHint": "Přihlaste se pomocí libovolné možnosti níže a vložte frázi pro obnovení nebo soukromý klíč peněženky, kterou chcete použít.",
     "unlockBiometricContinue": "Pokračujte odemknutím peněženky otiskem prstu nebo obličejem.",
     "unlockBiometricSignIn": "Odemkni si peněženku otiskem prstu nebo obličejem a přihlas se.",
     "unlockPasswordContinue": "Pokračujte zadáním hesla do peněženky.",
@@ -1425,6 +1417,14 @@
     "migrateUnmatchedDetail": "Na této adrese peněženky neexistuje žádný profil. Pokud ses znovu přihlašoval/a, vrať se a použij přihlašovací údaje, které jsi použil/a.",
     "migrateGoBack": "Zpět",
     "migrateContinueAnyway": "I tak si vytvořte nový účet",
+    "migrateNoOldAccount": "Na tomto přihlášení není žádný dřívější účet DeHub, takže není co přinést. Místo toho si založ nový účet.",
+    "migrateInstead": "Přineste místo toho starý účet",
+    "setUpNewAccount": "Založ si nový účet",
+    "createNewInstead": "Místo toho si vytvoř nový účet",
+    "migrateAccount": "Migrovat účet",
+    "importExternalWallet": "Importovat externí peněženku",
+    "migrateIntentHint": "Přihlas se libovolnou možností dole. Pokud se shoduje s dřívějším účtem DeHub, přinesete jeho peněženku, uživatelské jméno a zůstatek.",
+    "importIntentHint": "Přihlaste se pomocí libovolné možnosti níže a vložte frázi pro obnovení nebo soukromý klíč peněženky, kterou chcete použít.",
     "title": "Přihlásit se",
     "addProfileTitle": "Přidat profil",
     "continueEmail": "Pokračovat e-mailem",
@@ -2262,7 +2262,6 @@
     "noStages": "Žádná vaše Stage právě není živá ani naplánovaná.",
     "noFlaresLeft": "V tomto cyklu nezbyly žádné signální rakety",
     "spentFor": "{{power}} běží {{minutes}} minut",
-    "goldenHourStarted": "Golden Hour běží {{minutes}} minut — vše, co nyní zveřejníte, se počítá dvakrát",
     "teamUp": {
       "title": "Spojte se",
       "subtitle": "Spojte sílu peněženky až se sedmi dalšími lidmi. Každý nosí odznak, který odemyká váš celkový součet.",
@@ -2323,7 +2322,8 @@
       "updated": "Tým aktualizován",
       "updateFailed": "Nepodařilo se aktualizovat tento tým",
       "openToEveryone": "Team up je otevřený všem účtům; soukromé týmy schvalují, kdo se připojí."
-    }
+    },
+    "goldenHourStarted": "Golden Hour běží {{minutes}} minut — vše, co nyní zveřejníte, se počítá dvakrát"
   },
   "work": {
     "budgetExhausted": "Rozpočet této odměny je zcela vyčerpán.",
@@ -5072,7 +5072,26 @@
     "reviewDescriptionPlaceholder": "Řekni něco o tomto příspěvku (nepovinné)",
     "reviewLiveWarning": "Tento odkaz je živý přenos. Počkejte, dokud neskončí, a místo toho importujte záznam.",
     "reviewCancel": "Zrušit",
-    "reviewConfirm": "Import"
+    "reviewConfirm": "Import",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Adresa URL podcastového RSS kanálu",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Načíst kanál",
+      "fetching": "Načítání zdroje...",
+      "showBy": "Do {{author}}",
+      "episodes": "{{count}} epizody",
+      "selectAll": "Vybrat vše",
+      "alreadyImported": "Již importováno",
+      "ownership": "Tento obsah vlastním nebo mám svolení držitele práv k jeho zveřejnění na DeHubu.",
+      "importSelected": "Importovat epizody {{count}}",
+      "importing": "Probíhá import...",
+      "done": "Ve frontě",
+      "failed": "Selhalo",
+      "emptyFeed": "V tomto kanálu jsme nenašli žádné epizody.",
+      "badFeed": "Tento odkaz nevypadá jako zdroj podcastů.",
+      "tooMany": "Importujte až 20 epizod najednou."
+    }
   },
   "banned": {
     "title": "Tvůj účet je zablokován",

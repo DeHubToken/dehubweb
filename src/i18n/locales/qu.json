@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "yaykurqan",
-    "chatSentGift": "apachirqan",
-    "progress": {
-      "title": "Nivel de streamer",
-      "level": "Nivel {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} minutos calificativos más para alcanzar el nivel {{level}}",
-      "rule": "Solo las transmisiones que duren diez minutos o más con al menos un espectador cuentan para tu nivel.",
-      "streak": "Racha de {{count}} semanas",
-      "bestStreak": "Mejor racha {{count}} semanas",
-      "hours": "{{hours}} horas calificativas",
-      "minutes": "{{count}} minutos",
-      "viewers": "{{count}} espectadores",
-      "viewCards": "Tarjetas de vista",
-      "cardsTitle": "Tarjetas coleccionables",
-      "locked": "Bloqueado",
-      "earnedOn": "Ganado {{date}}",
-      "recentTitle": "Transmisiones recientes",
-      "notCounted": "No contó",
-      "noStreams": "Transmite en vivo para empezar a ganar XP.",
-      "card": {
-        "first-light": {
-          "name": "Primer amanecer",
-          "hint": "Termina tu primera transmisión que cuente."
-        },
-        "marathon": {
-          "name": "Maratón",
-          "hint": "Transmite durante dos horas en una sola sesión."
-        },
-        "night-owl": {
-          "name": "Noctámbulo",
-          "hint": "Termina una transmisión entre la medianoche y las cinco de la mañana."
-        },
-        "regular": {
-          "name": "Regular",
-          "hint": "Transmite durante cuatro semanas seguidas."
-        },
-        "iron-streak": {
-          "name": "Racha de hierro",
-          "hint": "Transmite durante doce semanas seguidas."
-        },
-        "crowd": {
-          "name": "Multitud",
-          "hint": "Ten diez personas mirando al mismo tiempo."
-        },
-        "century": {
-          "name": "Siglo",
-          "hint": "Pachak horas calificativas nisqaman chayay aire nisqapi."
-        },
-        "legend": {
-          "name": "Kawsay",
-          "hint": "Chunka pataman chayay."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Mana qullqiyuq rurayku ñuqaykuq ladunpi sayachisqa, mana qullqi waqaychanaykipichu. Ama hina kaspa, pisi pachamanta yapamanta ruray.",
     "gasSponsorshipFailed": "Kay rurayta mana qullqichayta atirqaykuchu. Ama hina kaspa, pisi pachamanta yapamanta ruray."
@@ -162,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Qammanata willawayku...",
     "socialLinks": "Tinkikuna",
+    "socialFollowers": "Qatiqninkuna {{platform}} nisqapi.",
+    "socialFollowersHint": "Perfilniykipi rikuchisqa tukuy chayayniykimanta huknin hina. Kikiyki yupayta qillqay — manam plataformamantachu ñawiriyku.",
+    "socialFollowersPlaceholder": "p.h. 12500",
     "profileUpdated": "Riqsichiy allinta tikrachisqa",
     "failedLoadProfile": "Mana riqsichiy willaykunata churayta atirqanchu",
     "imageTooLarge5": "Siqi 5MB aswan pisi kanan",
@@ -498,10 +444,7 @@
       "unavailable": "Maywasiykikunamanta k'uyuchiyqa manam kunanqa kaqllachu kaqniykimpi.",
       "serverCopied": "Servidor copiasqa",
       "keyCopied": "Llave de corriente copiasqa"
-    },
-    "socialFollowers": "Qatiqninkuna {{platform}} nisqapi.",
-    "socialFollowersHint": "Perfilniykipi rikuchisqa tukuy chayayniykimanta huknin hina. Kikiyki yupayta qillqay — manam plataformamantachu ñawiriyku.",
-    "socialFollowersPlaceholder": "p.h. 12500"
+    }
   },
   "common": {
     "save": "Waqaychay",
@@ -1279,10 +1222,6 @@
     "returnHome": "Qallariyman kutiy"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Kay qillqasqaqa manam tarikunchu",
-      "commentUnavailable": "Kay rimayqa manañam kanñachu"
-    },
     "back": "Kutiy",
     "usernameAvailable": "Runa suti tarikun!",
     "signUpToClaim": "Kunan qillqakuy chaskimunaykipaq",
@@ -1298,12 +1237,16 @@
     "followers": "Qatiqkuna",
     "following": "Qatisqa",
     "joined": "Joined",
-    "loginDescription": "Yaykuy riqsichiykita qhawanaykipaq kamachiynaykipaq.",
     "reach": {
       "total": "Llapan chayay",
       "breakdownTitle": "Maymantataq kay chayay hamun",
       "dehubFollowers": "DeHub qatiqninkuna",
       "selfReported": "Social qatiq yupaykunataqa kamaqmi yaykuchin."
+    },
+    "loginDescription": "Yaykuy riqsichiykita qhawanaykipaq kamachiynaykipaq.",
+    "replyThread": {
+      "postUnavailable": "Kay qillqasqaqa manam tarikunchu",
+      "commentUnavailable": "Kay rimayqa manañam kanñachu"
     },
     "tabs": {
       "playlists": "Pukllay listakuna"
@@ -1320,6 +1263,7 @@
     "amountUsd": "Yupay (USD)",
     "customAmount": "Sapaq yupay",
     "minPurchase": "Pisilla rantiy $5 kanan",
+    "minDhbPurchase": "Aswan pisi DHB rantiyqa $0.50",
     "youPay": "Qullqinki",
     "youReceive": "Chaskinki (yuyasqa)",
     "feeNote": "Tarjeta arancel ~3.6% nisqapas 0.5% network reserve kaqtinqa chaykunataq qichusqa kayku. Reserve ETH hina qatiqta apasqa kayku gas ñatiqpaq.",
@@ -1353,7 +1297,6 @@
     "badgeDiscount": "{{tier}} hap'iq — {{percent}}% pisiyachisqa",
     "otherTokens": "Huk tokenkuna",
     "otherTokensDesc": "Base nisqapi ETH icha USDC rantiy tarjetaykiwan",
-    "minDhbPurchase": "Aswan pisi DHB rantiyqa $0.50",
     "shareToFeed": "Mikhuyman rakinakuy",
     "sharePostTemplate": "Chayraqmi {{amount}} $DHBta DeHub nisqapi pilayman yapasqa. Ayllu llaqtawan wasichakuy. #DeHub #DHB nisqa",
     "success": {
@@ -1431,14 +1374,6 @@
     "failedSubmit": "Mana mañakuyta apachita atirqanchu. Musuqmanta ruwaway."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Kay yaykuypi mana ñawpaq DeHub yupay kanchu, chayrayku mana imapas apamunapaq kanchu. Chaypa rantinpi musuq yupayta churay.",
-    "migrateInstead": "Chaypa rantinpi ñawpaq cuentata apamuy",
-    "setUpNewAccount": "Musuq yupayta churay",
-    "createNewInstead": "Huk mushuq k'iti kamachiyta ruway",
-    "migrateAccount": "Kamachiyta pusay",
-    "importExternalWallet": "Hawa billetera hawamanta apamuy",
-    "migrateIntentHint": "Uraypi ima akllanawanpas yaykuy. Sichus huk ñawpaq DeHub yupaywan tupan chaymanta billetera, username chaymanta saldo kaqninta apamunki.",
-    "importIntentHint": "Uraypi mayqin akllanawanpas yaykuy, chaymanta kutichiy frase utaq sapalla llave billetera llamk&#39;achiyta munasqaykimanta k&#39;askachiy.",
     "unlockBiometricContinue": "Billeteraykita kichay dedoykiwan utaq uyaykiwan hinalla ruwanaykipaq.",
     "unlockBiometricSignIn": "Dedoykiwan utaq uyaykiwan billeteraykita kichay yaykunaykipaq.",
     "unlockPasswordContinue": "Billetera contraseñaykita qillqay hinalla ruwanaykipaq.",
@@ -1451,6 +1386,14 @@
     "migrateUnmatchedDetail": "Kay billetera direccionpiqa manam ima perfilpas kanchu. Sichus wakmanta yaykuchkarqanki, kutiy chaymanta chaypa rantinpi qillqakusqayki yaykuyta llamk&#39;achiy.",
     "migrateGoBack": "Kutiy",
     "migrateContinueAnyway": "Imayna kaptinpas musuq yupayta ruway",
+    "migrateNoOldAccount": "Kay yaykuypi mana ñawpaq DeHub yupay kanchu, chayrayku mana imapas apamunapaq kanchu. Chaypa rantinpi musuq yupayta churay.",
+    "migrateInstead": "Chaypa rantinpi ñawpaq cuentata apamuy",
+    "setUpNewAccount": "Musuq yupayta churay",
+    "createNewInstead": "Huk mushuq k'iti kamachiyta ruway",
+    "migrateAccount": "Kamachiyta pusay",
+    "importExternalWallet": "Hawa billetera hawamanta apamuy",
+    "migrateIntentHint": "Uraypi ima akllanawanpas yaykuy. Sichus huk ñawpaq DeHub yupaywan tupan chaymanta billetera, username chaymanta saldo kaqninta apamunki.",
+    "importIntentHint": "Uraypi mayqin akllanawanpas yaykuy, chaymanta kutichiy frase utaq sapalla llave billetera llamk&#39;achiyta munasqaykimanta k&#39;askachiy.",
     "title": "Yaykuy",
     "addProfileTitle": "Willakuyta yapay",
     "continueEmail": "Email-wan qatiy",
@@ -1630,6 +1573,24 @@
     "hoursAgo": "{{count}}hora ñawpaq",
     "daysAgo": "{{count}}p'unchay ñawpaq",
     "monthsAgo": "{{count}}killa ñawpaq",
+    "forLabel": "napaq...",
+    "againstLabel": "Contrapi",
+    "discussion": {
+      "title": "Rimanakuy",
+      "intro": "Qatipanapaq tapukuykunata ruway utaq manaraq votachkaspa chay propuestamanta rimanakuy.",
+      "reply": "Kutichiy",
+      "replyingTo": "{{name}} nisqaman kutichispa.",
+      "writeReply": "Kutichiyta qillqay",
+      "edited": "allichasqa",
+      "showMoreReplies": "{{count}} aswan kutichiykunata rikuchiy",
+      "showMoreReplies_one": "{{count}} aswan kutichiyta rikuchiy",
+      "deleteTitle": "¿Kay rimayta chinkachiy?",
+      "deleteDescription": "Kayqa llapa runapaq rimayta, kutichiyninkunata ima hurqun.",
+      "signInToComment": "Rimanakuyman hukllawakunaykipaq yaykuy",
+      "empty": "Manaraqmi tapukuykuna kanchu. Rimanakuyta qallariy.",
+      "joinOnProposal": "Rimanakuyman hukllawakuy",
+      "authorChip": "Propuesta qillqaq"
+    },
     "proposalTitle": "Yuyaychay suti",
     "proposalTitlePlaceholder": "Imatan yuyaychankiman?",
     "proposalDescription": "Sut'inchay",
@@ -1659,25 +1620,7 @@
     "tabProposals": "Yuyaychay",
     "tabPassed": "Pasasqa",
     "tabRejected": "Qhipachisqa",
-    "weeksAgo": "{{count}}simana ñawpaq",
-    "forLabel": "napaq...",
-    "againstLabel": "Contrapi",
-    "discussion": {
-      "title": "Rimanakuy",
-      "intro": "Qatipanapaq tapukuykunata ruway utaq manaraq votachkaspa chay propuestamanta rimanakuy.",
-      "reply": "Kutichiy",
-      "replyingTo": "{{name}} nisqaman kutichispa.",
-      "writeReply": "Kutichiyta qillqay",
-      "edited": "allichasqa",
-      "showMoreReplies": "{{count}} aswan kutichiykunata rikuchiy",
-      "showMoreReplies_one": "{{count}} aswan kutichiyta rikuchiy",
-      "deleteTitle": "¿Kay rimayta chinkachiy?",
-      "deleteDescription": "Kayqa llapa runapaq rimayta, kutichiyninkunata ima hurqun.",
-      "signInToComment": "Rimanakuyman hukllawakunaykipaq yaykuy",
-      "empty": "Manaraqmi tapukuykuna kanchu. Rimanakuyta qallariy.",
-      "joinOnProposal": "Rimanakuyman hukllawakuy",
-      "authorChip": "Propuesta qillqaq"
-    }
+    "weeksAgo": "{{count}}simana ñawpaq"
   },
   "sidebar": {
     "talkOfTheTown": "Llaqtap rimaynin",
@@ -2368,7 +2311,6 @@
     "noStages": "Sapaypa Stage nisqayki live o scheduled imayanachu.",
     "noFlaresLeft": "Signal Flares imayanachu kaypi cycle nisqapi",
     "spentFor": "{{power}} puriykachkaspa {{minutes}} minutukunaman",
-    "goldenHourStarted": "Golden Hourqa {{minutes}} minutokama purichkan — imaymana kaqniyki kunan iskaychayta atikun",
     "teamUp": {
       "title": "Tariqanaku",
       "subtitle": "Tawa pusqayniykiwan llamk'ayta atikunki, sukta pusqayniykama. Tukuykuna qhawachikuyta apaykanki, imaychus tukuykikunata rikuchin.",
@@ -2429,7 +2371,8 @@
       "updated": "Equipo actualizado",
       "updateFailed": "Mana chay equipota musuqyachiyta atirqanchu",
       "openToEveryone": "Team up sapa cuentapaq kichasqa kachkan; equipos privados nisqakunan aprobanku pikunachus huñunakusqankuta."
-    }
+    },
+    "goldenHourStarted": "Golden Hourqa {{minutes}} minutokama purichkan — imaymana kaqniyki kunan iskaychayta atikun"
   },
   "work": {
     "budgetExhausted": "Kay t'inkap qullqin tukuyta rakisqaña."
@@ -2456,6 +2399,63 @@
     "neon": "Neon",
     "blur": "Chiqnisqa",
     "pixelate": "Piksil"
+  },
+  "live": {
+    "chatJoined": "yaykurqan",
+    "chatSentGift": "apachirqan",
+    "progress": {
+      "title": "Nivel de streamer",
+      "level": "Nivel {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} minutos calificativos más para alcanzar el nivel {{level}}",
+      "rule": "Solo las transmisiones que duren diez minutos o más con al menos un espectador cuentan para tu nivel.",
+      "streak": "Racha de {{count}} semanas",
+      "bestStreak": "Mejor racha {{count}} semanas",
+      "hours": "{{hours}} horas calificativas",
+      "minutes": "{{count}} minutos",
+      "viewers": "{{count}} espectadores",
+      "viewCards": "Tarjetas de vista",
+      "cardsTitle": "Tarjetas coleccionables",
+      "locked": "Bloqueado",
+      "earnedOn": "Ganado {{date}}",
+      "recentTitle": "Transmisiones recientes",
+      "notCounted": "No contó",
+      "noStreams": "Transmite en vivo para empezar a ganar XP.",
+      "card": {
+        "first-light": {
+          "name": "Primer amanecer",
+          "hint": "Termina tu primera transmisión que cuente."
+        },
+        "marathon": {
+          "name": "Maratón",
+          "hint": "Transmite durante dos horas en una sola sesión."
+        },
+        "night-owl": {
+          "name": "Noctámbulo",
+          "hint": "Termina una transmisión entre la medianoche y las cinco de la mañana."
+        },
+        "regular": {
+          "name": "Regular",
+          "hint": "Transmite durante cuatro semanas seguidas."
+        },
+        "iron-streak": {
+          "name": "Racha de hierro",
+          "hint": "Transmite durante doce semanas seguidas."
+        },
+        "crowd": {
+          "name": "Multitud",
+          "hint": "Ten diez personas mirando al mismo tiempo."
+        },
+        "century": {
+          "name": "Siglo",
+          "hint": "Pachak horas calificativas nisqaman chayay aire nisqapi."
+        },
+        "legend": {
+          "name": "Kawsay",
+          "hint": "Chunka pataman chayay."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Ama Kawsay",
@@ -2890,7 +2890,26 @@
     "reviewDescriptionPlaceholder": "Kay qillqasqamanta imatapas niy (munasqa) .",
     "reviewLiveWarning": "Chay t&#39;inkiqa kawsaq purichiymi. Tukunankama suyay hinaspa chaypa rantinpi grabacionta apamuy.",
     "reviewCancel": "Sayachiy...",
-    "reviewConfirm": "Yaykuchiy..."
+    "reviewConfirm": "Yaykuchiy...",
+    "podcast": {
+      "tab": "Kuyaychay",
+      "feedUrlLabel": "Podcast RSS mikhuy URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Mikhunata apamuy",
+      "fetching": "Mikhuyta apamuspa...",
+      "showBy": "{{author}} nisqamanta.",
+      "episodes": "{{count}} nisqa t&#39;aqakuna",
+      "selectAll": "Stock label",
+      "alreadyImported": "Ya hawamanta apamusqa",
+      "ownership": "Kay contenidota dueño kani, utaq derechoyuqpa permisonniyuq kani DeHub kaqpi lluqsichinaypaq.",
+      "importSelected": "{{count}} episodiokunata apamuy",
+      "importing": "Importacionmanta...",
+      "done": "Filapi churasqa",
+      "failed": "Pantasqa",
+      "emptyFeed": "Chay mikhuypiqa manan ima episodiotapas tarirqaykuchu.",
+      "badFeed": "Chay t&#39;inkiqa manam podcast mikhuyman rikch&#39;akunchu.",
+      "tooMany": "Huk kutillapi 20 episodiokama hawamanta apamuy."
+    }
   },
   "banned": {
     "title": "Cuentaykiqa harkasqam kachkan",

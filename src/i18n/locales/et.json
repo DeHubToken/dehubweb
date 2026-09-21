@@ -105,6 +105,9 @@
     "bio": "Biograafia",
     "bioPlaceholder": "Räägi endast...",
     "socialLinks": "Sotsiaalsed lingid",
+    "socialFollowers": "Jälgijad rakenduses {{platform}}",
+    "socialFollowersHint": "Näidatakse Sinu profiilil osana Sinu koguulatusest. Sisesta number ise — me ei loe seda platvormilt.",
+    "socialFollowersPlaceholder": "nt 12500",
     "profileUpdated": "Profiil edukalt uuendatud",
     "failedLoadProfile": "Profiili andmete laadimine ebaõnnestus",
     "imageTooLarge5": "Pilt peab olema väiksem kui 5MB",
@@ -455,10 +458,7 @@
       "unavailable": "Kodeerijast voogedastamine pole teie kontol praegu saadaval.",
       "serverCopied": "Server kopeeritud",
       "keyCopied": "Voo võti on kopeeritud"
-    },
-    "socialFollowers": "Jälgijad rakenduses {{platform}}",
-    "socialFollowersHint": "Näidatakse Sinu profiilil osana Sinu koguulatusest. Sisesta number ise — me ei loe seda platvormilt.",
-    "socialFollowersPlaceholder": "nt 12500"
+    }
   },
   "common": {
     "save": "Salvesta",
@@ -1232,10 +1232,6 @@
     "returnHome": "Tagasi avalehele"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "See postitus pole saadaval",
-      "commentUnavailable": "See kommentaar pole enam saadaval"
-    },
     "back": "Tagasi",
     "usernameAvailable": "Kasutajanimi on saadaval!",
     "signUpToClaim": "Registreeru täna, et see endale saada",
@@ -1251,12 +1247,16 @@
     "followers": "Jälgijad",
     "following": "Jälgitavad",
     "joined": "Liitunud",
-    "loginDescription": "Logi sisse, et vaadata ja hallata oma profiili.",
     "reach": {
       "total": "Koguhaare",
       "breakdownTitle": "Kust see haare pärineb",
       "dehubFollowers": "DeHubi jälgijad",
       "selfReported": "Sotsiaalsete jälgijate arvu sisestab looja."
+    },
+    "loginDescription": "Logi sisse, et vaadata ja hallata oma profiili.",
+    "replyThread": {
+      "postUnavailable": "See postitus pole saadaval",
+      "commentUnavailable": "See kommentaar pole enam saadaval"
     },
     "tabs": {
       "playlists": "Esitusloendid"
@@ -1293,6 +1293,7 @@
     "amountUsd": "Summa (USD)",
     "customAmount": "Kohandatud summa",
     "minPurchase": "Minimaalne ostu summa on $5",
+    "minDhbPurchase": "Minimaalne DHB ost on 0,50 $",
     "youPay": "Sa maksad",
     "youReceive": "Sa saad (hinnanguline)",
     "feeNote": "Kaardimaksu ~3,6% ja 0,5% võrgu reserv arvatakse sellest maha. Reserv saadetakse sulle ETH-na gaasi jaoks.",
@@ -1326,7 +1327,6 @@
     "badgeDiscount": "{{tier}} omanik — {{percent}}% soodsam",
     "otherTokens": "Muud tokenid",
     "otherTokensDesc": "Osta ETH või USDC Base'is oma kaardiga",
-    "minDhbPurchase": "Minimaalne DHB ost on 0,50 $",
     "shareToFeed": "Jaga minu voos",
     "sharePostTemplate": "Lisasin just {{amount}} $DHB oma DeHubi pinusse. Ehitamine koos kogukonnaga. #DeHub #DHB",
     "success": {
@@ -1404,14 +1404,6 @@
     "failedSubmit": "Avalduse esitamine ebaõnnestus. Palun proovi uuesti."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Sellel sisselogimisel pole varasemat DeHubi kontot, seega pole midagi kaasa võtta. Loo selle asemel uus konto.",
-    "migrateInstead": "Too selle asemel vana konto",
-    "setUpNewAccount": "Loo uus konto",
-    "createNewInstead": "Loo selle asemel uus konto",
-    "migrateAccount": "Kanna konto üle",
-    "importExternalWallet": "Impordi väline rahakott",
-    "migrateIntentHint": "Logi sisse mis tahes alloleva valikuga. Kui see ühtib varasema DeHubi kontoga, võta kaasa selle rahakott, kasutajanimi ja saldo.",
-    "importIntentHint": "Logi sisse mis tahes alloleva valikuga, seejärel kleebi kasutatava rahakoti taastefraas või privaatvõti.",
     "unlockBiometricContinue": "Jätkamiseks ava oma rahakott sõrmejälje või näoga.",
     "unlockBiometricSignIn": "Sisselogimiseks ava oma rahakott sõrmejälje või näoga.",
     "unlockPasswordContinue": "Jätkamiseks sisesta oma rahakoti parool.",
@@ -1424,6 +1416,14 @@
     "migrateUnmatchedDetail": "Sellel rahakoti aadressil pole profiili. Kui logisid uuesti sisse, mine tagasi ja kasuta selle asemel sisselogimisnime, millega registreerusid.",
     "migrateGoBack": "Mine tagasi",
     "migrateContinueAnyway": "Loo siiski uus konto",
+    "migrateNoOldAccount": "Sellel sisselogimisel pole varasemat DeHubi kontot, seega pole midagi kaasa võtta. Loo selle asemel uus konto.",
+    "migrateInstead": "Too selle asemel vana konto",
+    "setUpNewAccount": "Loo uus konto",
+    "createNewInstead": "Loo selle asemel uus konto",
+    "migrateAccount": "Kanna konto üle",
+    "importExternalWallet": "Impordi väline rahakott",
+    "migrateIntentHint": "Logi sisse mis tahes alloleva valikuga. Kui see ühtib varasema DeHubi kontoga, võta kaasa selle rahakott, kasutajanimi ja saldo.",
+    "importIntentHint": "Logi sisse mis tahes alloleva valikuga, seejärel kleebi kasutatava rahakoti taastefraas või privaatvõti.",
     "title": "Logi sisse",
     "addProfileTitle": "Lisa profiil",
     "continueEmail": "Jätka e-postiga",
@@ -2262,7 +2262,6 @@
     "noStages": "Sinust mitte ükski lava pole praegu otse-eetris ega ajastatud.",
     "noFlaresLeft": "Selleks tsükliks pole enam \"Signaali rakette\" jäänud",
     "spentFor": "{{power}} töötab {{minutes}} minutit",
-    "goldenHourStarted": "Kuldne tund kestab {{minutes}} minutit – kõik, mida praegu postitate, loendatakse kahekordselt",
     "teamUp": {
       "title": "Ühinege",
       "subtitle": "Ühendage oma rahakoti jõud kuni seitsme teise inimesega. Igaüks kannab teie kogusummat näitavat märki.",
@@ -2323,7 +2322,8 @@
       "updated": "Meeskond on värskendatud",
       "updateFailed": "Ei saanud seda meeskonda värskendada",
       "openToEveryone": "Team up on avatud igale kontole; privaatsed meeskonnad kinnitavad, kes liitub."
-    }
+    },
+    "goldenHourStarted": "Kuldne tund kestab {{minutes}} minutit – kõik, mida praegu postitate, loendatakse kahekordselt"
   },
   "work": {
     "budgetExhausted": "Selle preemia eelarve on täielikult kaetud.",
@@ -5071,7 +5071,26 @@
     "reviewDescriptionPlaceholder": "Ütle midagi selle postituse kohta (valikuline)",
     "reviewLiveWarning": "See link on otseülekanne. Oodake, kuni see lõpeb, ja importige selle asemel salvestis.",
     "reviewCancel": "Tühista",
-    "reviewConfirm": "Impordi"
+    "reviewConfirm": "Impordi",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podcasti RSS-kanali URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Too voog",
+      "fetching": "Voo toomine…",
+      "showBy": "Autor:{{author}}",
+      "episodes": "{{count}} episoodi",
+      "selectAll": "Vali kõik",
+      "alreadyImported": "Juba imporditud",
+      "ownership": "See sisu kuulub mulle või mul on õiguste omaniku luba selle avaldamiseks DeHubis.",
+      "importSelected": "Impordi {{count}} episoodi",
+      "importing": "Importimine…",
+      "done": "Järjekorras",
+      "failed": "Ebaõnnestus",
+      "emptyFeed": "Me ei leidnud sellest voost ühtegi episoodi.",
+      "badFeed": "See link ei näe välja nagu netisaadete voog.",
+      "tooMany": "Impordi korraga kuni 20 episoodi."
+    }
   },
   "banned": {
     "title": "Sinu konto on keelatud",

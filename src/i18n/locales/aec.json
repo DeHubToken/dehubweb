@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "دخل",
-    "chatSentGift": "بعت",
-    "progress": {
-      "title": "مستوى الستريمر",
-      "level": "مستوى {{level}}",
-      "xp": "{{xp}} نقاط خبرة",
-      "toNext": "{{minutes}} دقائق مؤهلة إضافية للوصول للمستوى {{level}}",
-      "rule": "الستريمات اللي مدتها عشر دقايق أو أكتر و فيها مشاهد واحد على الأقل بتتحسب لمستواك.",
-      "streak": "{{count}} أسبوع متتالي",
-      "bestStreak": "أطول سلسلة {{count}} أسابيع",
-      "hours": "{{hours}} ساعات مؤهلة",
-      "minutes": "{{count}} دقيقة",
-      "viewers": "{{count}} مشاهد",
-      "viewCards": "كروت المشاهدة",
-      "cardsTitle": "كروت التجميع",
-      "locked": "مقفول",
-      "earnedOn": "تم الحصول على {{date}}",
-      "recentTitle": "آخر الستريمات",
-      "notCounted": "لم يتم احتسابها",
-      "noStreams": "اعمل ستريم عشان تبدأ تجمع نقاط خبرة.",
-      "card": {
-        "first-light": {
-          "name": "أول إضاءة",
-          "hint": "أكمل أول ستريم ليك اللي بيتحسب."
-        },
-        "marathon": {
-          "name": "ماراثون",
-          "hint": "اعمل ستريم لمدة ساعتين في جلسة واحدة."
-        },
-        "night-owl": {
-          "name": "بومة الليل",
-          "hint": "أنهي ستريم بين الساعة 12 بالليل و 5 الصبح."
-        },
-        "regular": {
-          "name": "منتظم",
-          "hint": "اعمل ستريم في أربع أسابيع ورا بعض."
-        },
-        "iron-streak": {
-          "name": "سلسلة حديد",
-          "hint": "اعمل ستريم في 12 أسبوع ورا بعض."
-        },
-        "crowd": {
-          "name": "جمهور",
-          "hint": "خلي عشرة ناس تتفرج في نفس الوقت."
-        },
-        "century": {
-          "name": "قرن",
-          "hint": "وصول لمية ساعة مؤهلة على الهوا."
-        },
-        "legend": {
-          "name": "أسطورة",
-          "hint": "وصول للمستوى العاشر."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "المعاملات المجانية موقوفة عندنا، مش من محفظتك. جرب تاني بعد شوية.",
     "gasSponsorshipFailed": "ما قدرناش نغطي المعاملة دي. جرب تاني بعد شوية."
@@ -161,6 +104,9 @@
     "bio": "نبذة",
     "bioPlaceholder": "قول لنا عن نفسك...",
     "socialLinks": "روابط اجتماعية",
+    "socialFollowers": "متابعين على {{platform}}",
+    "socialFollowersHint": "يظهر على ملفك الشخصي كجزء من إجمالي وصولك. أدخل الرقم بنفسك - نحن لا نقرأه من المنصة.",
+    "socialFollowersPlaceholder": "مثال: 12500",
     "profileUpdated": "الملف الشخصي اتحدّث بنجاح",
     "failedLoadProfile": "فشل تحميل بيانات الملف الشخصي",
     "imageTooLarge5": "الصورة لازم تكون أقل من 5 ميجا",
@@ -457,10 +403,7 @@
       "unavailable": "البث من مشفر غير متاح في حسابك حالياً.",
       "serverCopied": "السيرفر اتنسخ",
       "keyCopied": "الستريم كي اتنسخ"
-    },
-    "socialFollowers": "متابعين على {{platform}}",
-    "socialFollowersHint": "يظهر على ملفك الشخصي كجزء من إجمالي وصولك. أدخل الرقم بنفسك - نحن لا نقرأه من المنصة.",
-    "socialFollowersPlaceholder": "مثال: 12500"
+    }
   },
   "common": {
     "save": "احفظ",
@@ -1234,10 +1177,6 @@
     "returnHome": "ارجع للبيت"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "البوست ده مش موجود",
-      "commentUnavailable": "الكومنت ده مش موجود تاني"
-    },
     "back": "ارجع",
     "usernameAvailable": "اسم المستخدم متاح!",
     "signUpToClaim": "سجّل النهارده علشان تاخده",
@@ -1253,12 +1192,16 @@
     "followers": "متابعين",
     "following": "بيتابع",
     "joined": "انضم",
-    "loginDescription": "سجّل دخول علشان تشوف وتدير ملفك الشخصي.",
     "reach": {
       "total": "إجمالي الوصول",
       "breakdownTitle": "من أين يأتي هذا الوصول",
       "dehubFollowers": "متابعين ديهب",
       "selfReported": "عدد المتابعين الاجتماعيين يدخله المنشئ."
+    },
+    "loginDescription": "سجّل دخول علشان تشوف وتدير ملفك الشخصي.",
+    "replyThread": {
+      "postUnavailable": "البوست ده مش موجود",
+      "commentUnavailable": "الكومنت ده مش موجود تاني"
     },
     "tabs": {
       "playlists": "قوايم تشغيل"
@@ -1275,6 +1218,7 @@
     "amountUsd": "المبلغ (دولار)",
     "customAmount": "مبلغ مخصص",
     "minPurchase": "أقل مبلغ $5",
+    "minDhbPurchase": "الحد الأدنى للشراء من DHB هو 0.50 دولار",
     "youPay": "بتدفع",
     "youReceive": "بتستلم (تقريباً)",
     "feeNote": "رسوم البطاقة ~3.6% وحجز شبكة 0.5% بيتم خصمهم من دي. الحجز بيتم إرساله ليك كـ ETH عشان الغاز.",
@@ -1308,7 +1252,6 @@
     "badgeDiscount": "حامل {{tier}} — خصم {{percent}}%",
     "otherTokens": "عملات تانية",
     "otherTokensDesc": "اشتري ETH أو USDC على Base بالكرت بتاعك",
-    "minDhbPurchase": "الحد الأدنى للشراء من DHB هو 0.50 دولار",
     "shareToFeed": "شارك على صفحتي",
     "sharePostTemplate": "تم إضافة {{amount}} $DHB إلى مجموعتي على DeHub. بناء مع المجتمع. #DeHub #DHB",
     "success": {
@@ -1386,6 +1329,10 @@
     "failedSubmit": "فشل الإرسال. جرّب تاني."
   },
   "loginModal": {
+    "unlockBiometricContinue": "افتح محفظتك ببصمة إصبعك أو وشك عشان تكمل.",
+    "unlockBiometricSignIn": "افتح محفظتك ببصمة إصبعك أو وشك عشان تدخل.",
+    "unlockPasswordContinue": "اكتب كلمة السر بتاعة المحفظة عشان تكمل.",
+    "unlockPasswordSignIn": "اكتب كلمة السر بتاعة المحفظة عشان تفتحها وتدخل.",
     "migrateNoOldAccount": "مفيش حساب DeHub قديم على الدخول ده، عشان كده مفيش حاجة نرجعها. جهّز حساب جديد بدل كده.",
     "migrateInstead": "رجع الحساب القديم بدل كده",
     "setUpNewAccount": "جهّز حساب جديد",
@@ -1394,10 +1341,6 @@
     "importExternalWallet": "استورد محفظة خارجية",
     "migrateIntentHint": "سجل دخولك بأي اختيار تحت. لو مطابق لحساب DeHub قديم هترجع المحفظة واسم المستخدم والرصيد بتاعه.",
     "importIntentHint": "سجل دخولك بأي اختيار تحت، وبعدين الصق عبارة الاسترداد أو المفتاح الخاص للمحفظة اللي عايز تستخدمها.",
-    "unlockBiometricContinue": "افتح محفظتك ببصمة إصبعك أو وشك عشان تكمل.",
-    "unlockBiometricSignIn": "افتح محفظتك ببصمة إصبعك أو وشك عشان تدخل.",
-    "unlockPasswordContinue": "اكتب كلمة السر بتاعة المحفظة عشان تكمل.",
-    "unlockPasswordSignIn": "اكتب كلمة السر بتاعة المحفظة عشان تفتحها وتدخل.",
     "title": "سجّل دخول",
     "addProfileTitle": "ضيف بروفايل",
     "continueEmail": "كمّل بالإيميل",
@@ -2072,13 +2015,13 @@
       "thisYear": "السنة دي",
       "allTime": "كل الوقت",
       "newMembers": "أعضاء جداد",
+      "viewMembers": "شوف الأعضاء",
+      "openNewMembers": "افتح لستة الأعضاء الجديدة",
       "chartMembers": "الأعضاء على مدار الوقت",
       "chartActive": "الناس النشطين",
       "growth": "+{{percent}}% الشهر ده",
       "growthTerm": "النمو",
-      "recordingSince": "مسجّل من {{date}}",
-      "viewMembers": "شوف الأعضاء",
-      "openNewMembers": "افتح لستة الأعضاء الجديدة"
+      "recordingSince": "مسجّل من {{date}}"
     },
     "title": "الإحصائيات",
     "subtitle": "استخبارات مفتوحة المصدر في الوقت الحقيقي",
@@ -2263,7 +2206,6 @@
     "noStages": "مفيش ستيج ليك شغالة أو مجدولة دلوقتي.",
     "noFlaresLeft": "مفيش إشارات استغاثة فاضلة في الدورة دي",
     "spentFor": "{{power}} شغال لـ {{minutes}} دقيقة",
-    "goldenHourStarted": "الساعة الذهبية شغالة لـ {{minutes}} دقيقة — كل حاجة تنشرها دلوقتي بتتضاعف",
     "teamUp": {
       "title": "اتحدوا",
       "subtitle": "اجمعوا قوة المحفظة مع ما يصل إلى سبعة آخرين. كل واحد يرتدي الشارة التي يفتحها إجماليكم.",
@@ -2324,7 +2266,8 @@
       "updated": "تم تحديث الفريق",
       "updateFailed": "تعذر تحديث هذا الفريق",
       "openToEveryone": "فريق التجمع مفتوح لكل حساب؛ الفرق الخاصة توافق على من ينضم."
-    }
+    },
+    "goldenHourStarted": "الساعة الذهبية شغالة لـ {{minutes}} دقيقة — كل حاجة تنشرها دلوقتي بتتضاعف"
   },
   "work": {
     "budgetExhausted": "ميزانية هذي المكافأة كلها متعهد بيها."
@@ -2357,6 +2300,63 @@
     "title": "القصص",
     "viewStory": "شوف القصة",
     "noStories": "مافيش قصص لسه"
+  },
+  "live": {
+    "chatJoined": "دخل",
+    "chatSentGift": "بعت",
+    "progress": {
+      "title": "مستوى الستريمر",
+      "level": "مستوى {{level}}",
+      "xp": "{{xp}} نقاط خبرة",
+      "toNext": "{{minutes}} دقائق مؤهلة إضافية للوصول للمستوى {{level}}",
+      "rule": "الستريمات اللي مدتها عشر دقايق أو أكتر و فيها مشاهد واحد على الأقل بتتحسب لمستواك.",
+      "streak": "{{count}} أسبوع متتالي",
+      "bestStreak": "أطول سلسلة {{count}} أسابيع",
+      "hours": "{{hours}} ساعات مؤهلة",
+      "minutes": "{{count}} دقيقة",
+      "viewers": "{{count}} مشاهد",
+      "viewCards": "كروت المشاهدة",
+      "cardsTitle": "كروت التجميع",
+      "locked": "مقفول",
+      "earnedOn": "تم الحصول على {{date}}",
+      "recentTitle": "آخر الستريمات",
+      "notCounted": "لم يتم احتسابها",
+      "noStreams": "اعمل ستريم عشان تبدأ تجمع نقاط خبرة.",
+      "card": {
+        "first-light": {
+          "name": "أول إضاءة",
+          "hint": "أكمل أول ستريم ليك اللي بيتحسب."
+        },
+        "marathon": {
+          "name": "ماراثون",
+          "hint": "اعمل ستريم لمدة ساعتين في جلسة واحدة."
+        },
+        "night-owl": {
+          "name": "بومة الليل",
+          "hint": "أنهي ستريم بين الساعة 12 بالليل و 5 الصبح."
+        },
+        "regular": {
+          "name": "منتظم",
+          "hint": "اعمل ستريم في أربع أسابيع ورا بعض."
+        },
+        "iron-streak": {
+          "name": "سلسلة حديد",
+          "hint": "اعمل ستريم في 12 أسبوع ورا بعض."
+        },
+        "crowd": {
+          "name": "جمهور",
+          "hint": "خلي عشرة ناس تتفرج في نفس الوقت."
+        },
+        "century": {
+          "name": "قرن",
+          "hint": "وصول لمية ساعة مؤهلة على الهوا."
+        },
+        "legend": {
+          "name": "أسطورة",
+          "hint": "وصول للمستوى العاشر."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "روح مباشر",
@@ -2791,7 +2791,25 @@
     "reviewDescriptionPlaceholder": "قول حاجة عن البوست دا (اختياري)",
     "reviewLiveWarning": "الرابط دا بث مباشر. استنى لما ينتهي وبعدين استورد التسجيل بدل كدا.",
     "reviewCancel": "إلغاء",
-    "reviewConfirm": "استورد"
+    "reviewConfirm": "استورد",
+    "podcast": {
+      "tab": "بودكاست",
+      "feedUrlLabel": "رابط تغذية البودكاست RSS",
+      "fetchFeed": "جلب التغذية",
+      "fetching": "جاري جلب التغذية…",
+      "showBy": "بواسطة {{author}}",
+      "episodes": "{{count}} حلقة",
+      "selectAll": "تحديد الكل",
+      "alreadyImported": "تم استيرادها بالفعل",
+      "ownership": "أنا أملك هذا المحتوى، أو لدي إذن من صاحب الحقوق لنشره على DeHub.",
+      "importSelected": "استيراد {{count}} حلقة",
+      "importing": "جاري الاستيراد…",
+      "done": "في قائمة الانتظار",
+      "failed": "فشل",
+      "emptyFeed": "لم نتمكن من العثور على أي حلقات في هذه التغذية.",
+      "badFeed": "هذا الرابط لا يبدو أنه تغذية بودكاست.",
+      "tooMany": "استيراد ما يصل إلى 20 حلقة في المرة الواحدة."
+    }
   },
   "banned": {
     "title": "الحساب بتاعك محظور",
