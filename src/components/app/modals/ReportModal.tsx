@@ -18,7 +18,15 @@ import {
   DrawerTitle,
   DrawerDescription,
 } from '@/components/ui/drawer';
-import { reportContent, reportUser, getContentReportReasons, getUserReportReasons, type ReportReason } from '@/lib/api/dehub';
+import {
+  reportContent,
+  reportUser,
+  reportComment,
+  getContentReportReasons,
+  getUserReportReasons,
+  getCommentReportReasons,
+  type ReportReason,
+} from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -47,6 +55,33 @@ const FALLBACK_USER_REASONS: ReportReason[] = [
   { id: 'other', label: 'Other' },
 ];
 
+const FALLBACK_COMMENT_REASONS: ReportReason[] = [
+  { id: 'spam', label: 'Spam' },
+  { id: 'harassment', label: 'Harassment' },
+  { id: 'hate_speech', label: 'Hate speech' },
+  { id: 'sexual_content', label: 'Sexual content' },
+  { id: 'violence', label: 'Violence' },
+  { id: 'scam_or_fraud', label: 'Scam or fraud' },
+  { id: 'misinformation', label: 'Misinformation' },
+  { id: 'other', label: 'Other' },
+];
+
+type ReportType = 'content' | 'user' | 'comment';
+
+const fallbackReasonsFor = (reportType: ReportType) =>
+  reportType === 'user'
+    ? FALLBACK_USER_REASONS
+    : reportType === 'comment'
+      ? FALLBACK_COMMENT_REASONS
+      : FALLBACK_CONTENT_REASONS;
+
+const fetchReasonsFor = (reportType: ReportType) =>
+  reportType === 'user'
+    ? getUserReportReasons()
+    : reportType === 'comment'
+      ? getCommentReportReasons()
+      : getContentReportReasons();
+
 interface ReportModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -54,8 +89,10 @@ interface ReportModalProps {
   tokenId?: number | string;
   /** User ID/address for user reports */
   userId?: string;
-  /** Whether this is a content or user report */
-  reportType?: 'content' | 'user';
+  /** Comment id for comment reports */
+  commentId?: number | string;
+  /** Whether this is a content, user or comment report */
+  reportType?: ReportType;
   contentType?: 'post' | 'video' | 'image' | 'audio';
 }
 
@@ -64,6 +101,7 @@ export function ReportModal({
   onOpenChange,
   tokenId,
   userId,
+  commentId,
   reportType = 'content',
   contentType = 'post',
 }: ReportModalProps) {
@@ -82,12 +120,10 @@ export function ReportModal({
     const fetchReasons = async () => {
       setIsLoadingReasons(true);
       try {
-        const result = reportType === 'user'
-          ? await getUserReportReasons()
-          : await getContentReportReasons();
-        setReasons(result.length > 0 ? result : (reportType === 'user' ? FALLBACK_USER_REASONS : FALLBACK_CONTENT_REASONS));
+        const result = await fetchReasonsFor(reportType);
+        setReasons(result.length > 0 ? result : fallbackReasonsFor(reportType));
       } catch {
-        setReasons(reportType === 'user' ? FALLBACK_USER_REASONS : FALLBACK_CONTENT_REASONS);
+        setReasons(fallbackReasonsFor(reportType));
       } finally {
         setIsLoadingReasons(false);
       }
@@ -115,6 +151,16 @@ export function ReportModal({
           reason: selectedReason,
           description: description.trim() || undefined,
         });
+      } else if (reportType === 'comment') {
+        if (commentId === undefined || commentId === null || commentId === '') {
+          toast.error('Invalid comment ID');
+          return;
+        }
+        await reportComment({
+          commentId,
+          reason: selectedReason,
+          description: description.trim() || undefined,
+        });
       } else if (tokenId !== undefined) {
         const numericTokenId = typeof tokenId === 'string' ? parseInt(tokenId, 10) : tokenId;
         if (isNaN(numericTokenId)) {
@@ -133,7 +179,7 @@ export function ReportModal({
     } catch (error: any) {
       console.error('[ReportModal] Submit error:', error);
       if (error.message?.includes('already reported')) {
-        toast.error('You have already reported this');
+        toast.error(reportType === 'comment' ? t('comments.reportCommentAlready') : 'You have already reported this');
       } else if (error.message?.includes('Unauthorized')) {
         toast.error('Please log in to submit a report');
       } else {
@@ -150,7 +196,14 @@ export function ReportModal({
     onOpenChange(false);
   };
 
-  const title = reportType === 'user' ? 'Report User' : `Report ${contentType}`;
+  const title = reportType === 'user'
+    ? 'Report User'
+    : reportType === 'comment'
+      ? t('comments.reportCommentTitle')
+      : `Report ${contentType}`;
+  const subtitle = reportType === 'comment'
+    ? t('comments.reportCommentDescription')
+    : "Help us understand what's wrong";
 
   return (
     <Drawer open={open} onOpenChange={handleClose}>
@@ -161,7 +214,7 @@ export function ReportModal({
             {title}
           </DrawerTitle>
           <DrawerDescription className="text-zinc-400">
-            Help us understand what's wrong
+            {subtitle}
           </DrawerDescription>
         </DrawerHeader>
 
@@ -222,6 +275,7 @@ export function ReportModal({
               onChange={(e) => setDescription(e.target.value)}
               className="bg-white/5 border-white/10 text-white min-h-[100px] rounded-xl resize-none"
               maxLength={500}
+              placeholder={reportType === 'comment' ? t('comments.reportReasonPlaceholder') : undefined}
             />
             <p className="text-xs text-zinc-500 text-right">
               {description.length}/500
@@ -236,7 +290,7 @@ export function ReportModal({
               disabled={isSubmitting}
               className="flex-1 text-zinc-400 hover:text-white hover:bg-white/10"
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               onClick={handleSubmit}

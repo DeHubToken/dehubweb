@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem , Anchor, Eye, Baby, Pin, PinOff } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem , Anchor, Eye, Baby, Pin, PinOff, Flag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
@@ -75,6 +75,7 @@ import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { useCommentTips } from '@/hooks/use-comment-tips';
 import { useAuthorThread } from '@/hooks/use-author-thread';
 import { TipModal } from '@/components/app/modals/TipModal';
+import { ReportModal } from '@/components/app/modals/ReportModal';
 import { CommentLikersDrawer } from './CommentLikersDrawer';
 import { FullscreenImageViewerLazy } from './FullscreenImageViewerLazy';
 import { toast } from 'sonner';
@@ -237,6 +238,12 @@ interface CommentItemProps {
   isThreadEntry?: boolean;
   /** The comment a notification or a shared link pointed at — ringed. */
   highlighted?: boolean;
+  /**
+   * Report this comment to moderation, or undefined when the viewer is not
+   * signed in. Never offered on the viewer's own comment — the server refuses
+   * a self-report, so the row does not show a door that only ever fails.
+   */
+  onReport?: (commentId: string) => void;
 }
 
 interface VoiceNotePlayerProps {
@@ -308,7 +315,7 @@ const PostCreatorContext = createContext<{
   username?: string | null;
 } | null>(null);
 
-function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted, onReport }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
   const [imageFullscreen, setImageFullscreen] = useState(false);
@@ -764,6 +771,15 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
                   <Quote className="w-4 h-4" />
                   Copy Text
                 </DropdownMenuItem>
+                {onReport && !isOwnComment && (
+                  <DropdownMenuItem
+                    onClick={() => onReport(comment.id)}
+                    className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
+                  >
+                    <Flag className="w-4 h-4" />
+                    {i18n.t('comments.reportComment')}
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
             {comment.text && !translation.isTooShort && (
@@ -1581,6 +1597,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     ) &&
     (superpowerStatus?.boostsLeft ?? 0) > 0;
 
+  // Report a comment. The row hides the item on your own comments and when
+  // signed out; this is the one door in for every other comment in the thread.
+  const [reportCommentId, setReportCommentId] = useState<string | null>(null);
+  const handleReportComment = (commentId: string) => {
+    if (!isAuthenticated) return;
+    setReportCommentId(commentId);
+  };
+
   const handleAnchor = (commentId: string) => {
     anchorComment.mutate(
       { tokenId: 0, power: 'comment_anchor', commentId },
@@ -2005,6 +2029,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           threadLineBelow={shown.length > 0}
           isThreadEntry={authorThreadIds.has(comment.id)}
           highlighted={comment.id === focusCommentId}
+          onReport={isAuthenticated ? handleReportComment : undefined}
         />
         {shown.map(({ comment: reply }, i) => (
           <CommentItem
@@ -2029,6 +2054,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             threadLineBelow={i < shown.length - 1 || hiddenCount > 0}
             isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
             highlighted={reply.id === focusCommentId}
+            onReport={isAuthenticated ? handleReportComment : undefined}
           />
         ))}
         {hiddenCount > 0 && (
@@ -2688,6 +2714,16 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           open={!!likersCommentId}
           onOpenChange={(open) => { if (!open) setLikersCommentId(null); }}
           commentId={likersCommentId}
+        />
+
+        {/* Report somebody else's comment. One drawer for the whole section,
+            aimed at whichever comment's Report item was picked. */}
+        <ReportModal
+          open={!!reportCommentId}
+          onOpenChange={(open) => { if (!open) setReportCommentId(null); }}
+          reportType="comment"
+          commentId={reportCommentId ?? undefined}
+          tokenId={tokenId}
         />
     </motion.div>
     </PostCreatorContext.Provider>
