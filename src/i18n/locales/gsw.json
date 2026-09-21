@@ -1324,7 +1324,16 @@
     "walletConnectedAs": "Verbunde",
     "useDifferentWallet": "Es anders Wallet bruuche",
     "walletInfoDesktop": "Verbind dis Wallet zum sicher aamälde",
-    "walletInfoMobile": "MetaMask, Trust & Phantom mached ihri App diräkt uf. Rabby bruucht WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom mached ihri App diräkt uf. Rabby bruucht WalletConnect.",
+    "continuePasskey": "Wiiter mit Fingerabdruck",
+    "passkeyIntro": "Dini Fingerabdruck oder dini Fratz isch din Account. Nüt zum Ih-vergis-se, nüt zum I-tippe.",
+    "passkeySignIn": "Mit Fingerabdruck aamelde",
+    "passkeyCreate": "Neui Account aaläge",
+    "passkeyUnsupported": "Das Gerät cha nöd mit Fingerabdruck oder Fratz aamelde. Nimm e anderi Option.",
+    "passkeyNotLinked": "Keine Account isch scho mit dim Fingerabdruck verchnüpft. Aaläg stattdesse neui Account.",
+    "passkeyAlreadyRegistered": "Der Fingerabdruck hät scho en Account. Nimm stattdesse \"Aamelde\".",
+    "passkeyFailed": "Fingerabdruck-Aameldig fehlgschlage. Bitte probier's no mehrmal.",
+    "passkeyBackupHint": "Dini Account läbt i dem Gerät si Passkey. Bi de meischte Handys synchronisiert's sich mit dim Google oder Apple Account, und du chasch en Passwort-Backup i de Yyschtellige dezue tue."
   },
   "careers": {
     "title": "Stellene bi DeHub",

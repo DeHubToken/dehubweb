@@ -1397,7 +1397,16 @@
     "walletConnectedAs": "Qoşulub",
     "useDifferentWallet": "Başqa pulqabı istifadə et",
     "walletInfoDesktop": "Təhlükəsiz daxil olmaq üçün cüzdanınızı qoşun",
-    "walletInfoMobile": "MetaMask, Trust və Phantom öz tətbiqlərini birbaşa açacaq. Rabby WalletConnect istifadə edəcək."
+    "walletInfoMobile": "MetaMask, Trust və Phantom öz tətbiqlərini birbaşa açacaq. Rabby WalletConnect istifadə edəcək.",
+    "continuePasskey": "Barmaq izi ilə davam et",
+    "passkeyIntro": "Barmağınızın izi və ya üzünüz sizin hesabınızdır. Heç nə yadda saxlamağa, heç nə yazmağa ehtiyac yoxdur.",
+    "passkeySignIn": "Barmaq izi ilə daxil olun",
+    "passkeyCreate": "Yeni hesab yaradın",
+    "passkeyUnsupported": "Bu cihaz barmaq izi və ya üz ilə daxil ola bilmir. Başqa bir seçimi istifadə edin.",
+    "passkeyNotLinked": "Hələlik o barmaq izi ilə heç bir hesab əlaqələndirilməyib. Bunun əvəzinə yeni hesab yaradın.",
+    "passkeyAlreadyRegistered": "Bu barmaq izi artıq bir hesaba malikdir. Bunun əvəzinə \"Daxil ol\" seçimi istifadə edin.",
+    "passkeyFailed": "Barmaq izi ilə daxil olma uğursuz oldu. Zəhmət olmasa yenidən cəhd edin.",
+    "passkeyBackupHint": "Hesabınız bu cihazın parol açarında yaşayır. Əksər telefonlarda bu, Google və ya Apple hesabınızla sinxronlaşdırılır və Ayarlar bölməsində parol ehtiyat nüsxəsi əlavə edə bilərsiniz."
   },
   "careers": {
     "title": "DeHub-da Karyera",

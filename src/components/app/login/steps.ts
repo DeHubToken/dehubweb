@@ -9,6 +9,9 @@ export type LoginStep =
   | 'email-waiting'
   | 'phone'
   | 'phone-code'
+  // Passkey-only: the fingerprint/face passkey is the account. Two choices,
+  // sign in with one that exists or create one, and nothing to type.
+  | 'passkey'
   | 'wallets'
   // The external-wallet equivalent of 'resuming': the connector has agreed and
   // the signature is out with the wallet. The wallet list has nothing left to

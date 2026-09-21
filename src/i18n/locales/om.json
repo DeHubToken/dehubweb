@@ -1385,7 +1385,16 @@
     "walletConnectedAs": "Walqunnameera",
     "useDifferentWallet": "Boorsaa biraa fayyadami",
     "walletInfoDesktop": "Connect your wallet to sign in securely",
-    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect.",
+    "continuePasskey": "Ashaaraa qubaa itti fufaa",
+    "passkeyIntro": "Qubee quba kee ykn fuulli kee maallaqa kee ti. Yaadachuuf wanti hin jiru, barreessuuf wanti hin jiru.",
+    "passkeySignIn": "Qubee quba keetiin seeni",
+    "passkeyCreate": "Maallaqa haarawa uumuu",
+    "passkeyUnsupported": "Meeshaan kun qubee quba ykn fuulaan seenuu hin danda'u. Filannoo biraa fayyadami.",
+    "passkeyNotLinked": "Qubee quba sanaaf maallaqni hin walitti makamu. Kana asemitti maallaqa haarawa uumi.",
+    "passkeyAlreadyRegistered": "Qubee quba sana irratti maallaqni jira. Kana asemitti Seenii jedhu fayyadami.",
+    "passkeyFailed": "Qubee quba seenuun ni fiixate. Galatoomi.",
+    "passkeyBackupHint": "Maallaqni kee qubee quba meeshaa kana keessa jira. Bilisummaa kee irratti, isin Google ykn Apple maallaqa kee wajjin walitti makama, fi isin Settings keessatti deeggarsa jecha darbii tokko dabaluu dandeessu."
   },
   "careers": {
     "title": "Hojii DeHub-tti",

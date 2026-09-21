@@ -25,11 +25,13 @@ import { encryptString } from '@/lib/wallet-core/crypto';
 import { assessPassword, MIN_PASSWORD_LENGTH } from '@/lib/wallet-core/passwordStrength';
 import {
   enrollBiometricUnlock,
+  enrollBiometricUnlockWithEnrollment,
   isBiometricUnlockAvailable,
   PasskeyCancelledError,
   PasskeyUnsupportedError,
 } from '@/lib/wallet-core/biometric-unlock';
 import { fetchWallet, saveWallet } from '@/lib/wallet-core/store';
+import { takePendingPasskeyEnrollment } from '@/lib/passkey-login';
 import { normalisePhoneHint } from '@/lib/wallet-core/phone-hint';
 import { hasLegacyBrowserResidue, checkLegacyAccount, type LegacyAccountHint } from '@/lib/wallet-core/legacy-detect';
 import {
@@ -437,7 +439,19 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     try {
       const derived = deriveFromSecret(secret);
       await assertRecoveredProfileMatches(derived.ethAddress);
-      await enrollBiometricUnlock(userId, derived.secret);
+      // A passkey-only sign-up already holds PRF output from the credential
+      // that became the account: wrap under that rather than asking the
+      // authenticator for a second passkey.
+      const pending = takePendingPasskeyEnrollment();
+      if (pending) {
+        try {
+          await enrollBiometricUnlockWithEnrollment(userId, derived.secret, pending);
+        } finally {
+          pending.keyMaterial.fill(0);
+        }
+      } else {
+        await enrollBiometricUnlock(userId, derived.secret);
+      }
       await assertNotReplacingWallet(derived.ethAddress);
       await saveWallet(userId, derived.ethAddress, null);
       await onComplete(derived.ethPrivateKey);

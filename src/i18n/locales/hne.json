@@ -1350,7 +1350,8 @@
     "walletConnectedAs": "जुड़े गिस",
     "useDifferentWallet": "अलग वॉलेट इस्तेमाल करव",
     "walletInfoDesktop": "सुरक्षित लॉग इन बर वॉलेट जोड़व",
-    "walletInfoMobile": "MetaMask, Trust अउ Phantom सीधा ऐप खोलही। Rabby WalletConnect उपयोग करही।"
+    "walletInfoMobile": "MetaMask, Trust अउ Phantom सीधा ऐप खोलही। Rabby WalletConnect उपयोग करही।",
+    "continuePasskey": "फिंगरप्रिंट के साथ जारी रखो"
   },
   "careers": {
     "title": "DeHub मा नौकरी",

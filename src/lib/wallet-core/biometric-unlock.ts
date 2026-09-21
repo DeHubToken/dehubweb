@@ -9,6 +9,7 @@ import {
   enrollWalletPasskey,
   evaluatePrf,
   PasskeyUnsupportedError,
+  type PasskeyEnrollment,
   type PasskeyRef,
 } from "./passkey";
 import {
@@ -37,6 +38,19 @@ export type { PasskeyWrap } from "./passkey-store";
 export async function enrollBiometricUnlock(userId: string, secret: string): Promise<PasskeyWrap> {
   const accountLabel = await getPasskeyAccountLabel();
   const enrollment = await enrollWalletPasskey({ userId, accountLabel });
+  return enrollBiometricUnlockWithEnrollment(userId, secret, enrollment);
+}
+
+/**
+ * Same as enrollBiometricUnlock, for a passkey the authenticator has ALREADY
+ * produced PRF output for — the passkey-only sign-up, where the credential
+ * that just became the account also wraps the wallet. No second prompt.
+ */
+export async function enrollBiometricUnlockWithEnrollment(
+  userId: string,
+  secret: string,
+  enrollment: PasskeyEnrollment,
+): Promise<PasskeyWrap> {
   const payload = await encryptStringWithKeyMaterial(secret, enrollment.keyMaterial);
   // Drop the PRF bytes as soon as the wrap exists.
   enrollment.keyMaterial.fill(0);

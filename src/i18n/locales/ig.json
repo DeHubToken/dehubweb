@@ -1363,7 +1363,16 @@
     "walletConnectedAs": "Ejikọtara",
     "useDifferentWallet": "Jiri obere akpa ego ọzọ",
     "walletInfoDesktop": "Jikọọ wallet gị iji banye n'ụzọ nchekwa",
-    "walletInfoMobile": "MetaMask, Trust na Phantom ga-emeghe app ha ozugbo. Rabby ga-eji WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust na Phantom ga-emeghe app ha ozugbo. Rabby ga-eji WalletConnect.",
+    "continuePasskey": "Gaa n 'ihu na akara mkpisiaka",
+    "passkeyIntro": "Mkpuaka gị ma ọ bụ ihu gị bụ akaụntụ gị. Ọ dịghị ihe ị ga-echeta, ọ dịghị ihe ị ga-ede.",
+    "passkeySignIn": "Banye na mkpuaka",
+    "passkeyCreate": "Mepụta akaụntụ ọhụrụ",
+    "passkeyUnsupported": "Ngwaọrụ a enweghị ike iji mkpuaka ma ọ bụ ihu banye. Jiri nhọrọ ọzọ.",
+    "passkeyNotLinked": "Ọ dịghị akaụntụ ejikọrọ na mkpuaka ahụ ugbu a. Mepụta akaụntụ ọhụrụ kama.",
+    "passkeyAlreadyRegistered": "Mkpuaka ahụ enweelarị akaụntụ. Jiri Banye kama.",
+    "passkeyFailed": "Ọdịda ịbanye na mkpuaka. Biko nwaa ọzọ.",
+    "passkeyBackupHint": "Akaụntụ gị dị na paswọọdụ ngwaọrụ a. Na ọtụtụ ekwentị, ọ na-ejikọta ya na akaụntụ Google ma ọ bụ Apple gị, ị nwekwara ike itinye nkwado paswọọdụ na Ntọala."
   },
   "careers": {
     "title": "Ọrụ na DeHub",

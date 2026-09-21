@@ -386,3 +386,202 @@ export async function evaluatePrf(refs: PasskeyRef[]): Promise<PrfEvaluation> {
     backedUp,
   };
 }
+
+// ── Passkey as identity ─────────────────────────────────────────────────────
+// The two calls the passkey-auth edge function drives. Unlike everything
+// above, the challenge here comes from the server and the response goes back
+// to it for verification — this IS an authentication factor. Registration
+// still asks for PRF in the same breath, so the passkey that signs the user
+// in can also wrap their wallet seed and one fingerprint does both jobs.
+
+/** Minimal JSON shapes of the WebAuthn options the server hands out. */
+export interface CreationOptionsJSON {
+  rp: { id?: string; name: string };
+  user: { id: string; name: string; displayName: string };
+  challenge: string;
+  pubKeyCredParams: { type: "public-key"; alg: number }[];
+  timeout?: number;
+  excludeCredentials?: { id: string; type?: string; transports?: string[] }[];
+  authenticatorSelection?: AuthenticatorSelectionCriteria;
+  attestation?: AttestationConveyancePreference;
+  extensions?: Record<string, unknown>;
+}
+export interface RequestOptionsJSON {
+  challenge: string;
+  timeout?: number;
+  rpId?: string;
+  allowCredentials?: { id: string; type?: string; transports?: string[] }[];
+  userVerification?: UserVerificationRequirement;
+  extensions?: Record<string, unknown>;
+}
+
+export interface IdentityRegistration {
+  /** What the server verifies — the attestation, serialised for JSON. */
+  response: Record<string, unknown>;
+  credentialId: string;
+  /**
+   * PRF material for wrapping the wallet seed, in the same shape
+   * `enrollWalletPasskey` returns — or null when this authenticator can't do
+   * PRF, in which case the account still works and the wallet takes a password.
+   */
+  enrollment: PasskeyEnrollment | null;
+}
+
+function toCreationOptions(json: CreationOptionsJSON, prfSalt: Uint8Array): PublicKeyCredentialCreationOptions {
+  return {
+    rp: json.rp,
+    user: {
+      id: base64UrlToBytes(json.user.id) as BufferSource,
+      name: json.user.name,
+      displayName: json.user.displayName,
+    },
+    challenge: base64UrlToBytes(json.challenge) as BufferSource,
+    pubKeyCredParams: json.pubKeyCredParams,
+    timeout: json.timeout ?? WEBAUTHN_TIMEOUT_MS,
+    excludeCredentials: (json.excludeCredentials ?? []).map((c) => ({
+      type: "public-key" as const,
+      id: base64UrlToBytes(c.id) as BufferSource,
+      transports: c.transports as AuthenticatorTransport[] | undefined,
+    })),
+    authenticatorSelection: json.authenticatorSelection,
+    attestation: json.attestation ?? "none",
+    extensions: {
+      ...(json.extensions ?? {}),
+      prf: { eval: { first: prfSalt } },
+    } as AuthenticationExtensionsClientInputs & { prf: PrfExtensionInput },
+  };
+}
+
+function toRequestOptions(json: RequestOptionsJSON): PublicKeyCredentialRequestOptions {
+  return {
+    challenge: base64UrlToBytes(json.challenge) as BufferSource,
+    timeout: json.timeout ?? WEBAUTHN_TIMEOUT_MS,
+    rpId: json.rpId,
+    allowCredentials: (json.allowCredentials ?? []).map((c) => ({
+      type: "public-key" as const,
+      id: base64UrlToBytes(c.id) as BufferSource,
+      transports: c.transports as AuthenticatorTransport[] | undefined,
+    })),
+    userVerification: json.userVerification ?? "required",
+    extensions: (json.extensions ?? {}) as AuthenticationExtensionsClientInputs,
+  };
+}
+
+/**
+ * Create the passkey that will be this account's identity.
+ *
+ * `options` come from `passkey-auth` (`register-options`) and carry the
+ * server's challenge; the returned `response` goes straight back to
+ * `register-verify`. PRF is requested alongside so the wallet can be wrapped
+ * under the same credential without a second prompt.
+ */
+export async function registerIdentityPasskey(options: CreationOptionsJSON): Promise<IdentityRegistration> {
+  if (!window.PublicKeyCredential) throw new PasskeyUnsupportedError();
+
+  const prfSalt = crypto.getRandomValues(new Uint8Array(PRF_SALT_BYTES));
+  let credential: PublicKeyCredential | null;
+  try {
+    credential = (await navigator.credentials.create({
+      publicKey: toCreationOptions(options, prfSalt),
+    })) as PublicKeyCredential | null;
+  } catch (err) {
+    throw classifyWebAuthnError(err);
+  }
+  if (!credential) throw new PasskeyCancelledError();
+
+  const credentialId = bufToBase64Url(credential.rawId);
+  const attestation = credential.response as AuthenticatorAttestationResponse & {
+    getTransports?: () => string[];
+    getAuthenticatorData?: () => ArrayBuffer;
+  };
+  let transports: string[] = [];
+  let backedUp: boolean | null = null;
+  try {
+    transports = typeof attestation.getTransports === "function" ? attestation.getTransports() : [];
+    backedUp = readBackupState(
+      typeof attestation.getAuthenticatorData === "function" ? attestation.getAuthenticatorData() : null,
+    );
+  } catch { /* metadata only */ }
+
+  const response = {
+    id: credential.id,
+    rawId: credentialId,
+    type: credential.type,
+    authenticatorAttachment: (credential as PublicKeyCredential & { authenticatorAttachment?: string }).authenticatorAttachment ?? null,
+    clientExtensionResults: {},
+    response: {
+      clientDataJSON: bufToBase64Url(attestation.clientDataJSON),
+      attestationObject: bufToBase64Url(attestation.attestationObject),
+      transports,
+    },
+  };
+
+  // PRF: take it from create() when the authenticator evaluated it there,
+  // otherwise from one immediate assertion — the same dance as
+  // enrollWalletPasskey. A definite "no" leaves the wallet to a password.
+  const prf = readPrfOutput(credential);
+  let enrollment: PasskeyEnrollment | null = null;
+  if (prf?.enabled !== false) {
+    let keyMaterial = firstPrfBytes(prf);
+    if (!keyMaterial) {
+      keyMaterial = await evaluatePrf([{ credentialId, prfSalt: bytesToBase64(prfSalt) }])
+        .then((r) => r.keyMaterial)
+        .catch(() => null);
+    }
+    if (keyMaterial) {
+      enrollment = {
+        credentialId,
+        prfSalt: bytesToBase64(prfSalt),
+        keyMaterial,
+        label: describeThisDevice(),
+        transports,
+        backedUp,
+      };
+    }
+  }
+
+  return { response, credentialId, enrollment };
+}
+
+/**
+ * Sign the server's challenge with whichever DeHub passkey the user picks.
+ *
+ * No `allowCredentials`: the account is not known until the authenticator
+ * answers, which is the whole point of a discoverable credential. The result
+ * goes to `login-verify`.
+ */
+export async function assertIdentityPasskey(options: RequestOptionsJSON): Promise<{
+  response: Record<string, unknown>;
+  credentialId: string;
+}> {
+  if (!window.PublicKeyCredential) throw new PasskeyUnsupportedError();
+
+  let assertion: PublicKeyCredential | null;
+  try {
+    assertion = (await navigator.credentials.get({
+      publicKey: toRequestOptions(options),
+    })) as PublicKeyCredential | null;
+  } catch (err) {
+    throw classifyWebAuthnError(err);
+  }
+  if (!assertion) throw new PasskeyCancelledError();
+
+  const res = assertion.response as AuthenticatorAssertionResponse;
+  const credentialId = bufToBase64Url(assertion.rawId);
+  return {
+    credentialId,
+    response: {
+      id: assertion.id,
+      rawId: credentialId,
+      type: assertion.type,
+      authenticatorAttachment: (assertion as PublicKeyCredential & { authenticatorAttachment?: string }).authenticatorAttachment ?? null,
+      clientExtensionResults: {},
+      response: {
+        clientDataJSON: bufToBase64Url(res.clientDataJSON),
+        authenticatorData: bufToBase64Url(res.authenticatorData),
+        signature: bufToBase64Url(res.signature),
+        userHandle: res.userHandle ? bufToBase64Url(res.userHandle) : null,
+      },
+    },
+  };
+}

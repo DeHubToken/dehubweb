@@ -1405,7 +1405,16 @@
     "walletConnectedAs": "Conectado",
     "useDifferentWallet": "Usar otra cartera",
     "walletInfoDesktop": "Conecta tu billetera para iniciar sesión de forma segura",
-    "walletInfoMobile": "MetaMask, Trust y Phantom abrirán su app directamente. Rabby usará WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust y Phantom abrirán su app directamente. Rabby usará WalletConnect.",
+    "continuePasskey": "Continuar con la huella dactilar",
+    "passkeyIntro": "Tu huella dactilar o tu rostro es tu cuenta. Nada que recordar, nada que escribir.",
+    "passkeySignIn": "Iniciar sesión con huella dactilar",
+    "passkeyCreate": "Crear una cuenta nueva",
+    "passkeyUnsupported": "Este dispositivo no puede iniciar sesión con huella dactilar o rostro. Usa otra opción.",
+    "passkeyNotLinked": "Aún no hay ninguna cuenta vinculada a esa huella dactilar. Crea una cuenta nueva en su lugar.",
+    "passkeyAlreadyRegistered": "Esa huella dactilar ya tiene una cuenta. Usa Iniciar sesión en su lugar.",
+    "passkeyFailed": "Fallo al iniciar sesión con huella dactilar. Inténtalo de nuevo.",
+    "passkeyBackupHint": "Tu cuenta reside en la clave de acceso de este dispositivo. En la mayoría de los teléfonos se sincroniza con tu cuenta de Google o Apple, y puedes añadir una copia de seguridad de contraseña en Configuración."
   },
   "careers": {
     "title": "Carreras en DeHub",
