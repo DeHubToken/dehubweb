@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem , Anchor, Eye, Baby, Pin, PinOff, Flag } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem , Anchor, Eye, Baby, Pin, PinOff, Flag, Sparkles, Handshake } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
@@ -87,6 +87,11 @@ import { UserMentionDropdown } from '@/components/app/mentions';
 import { mapApiComment, type Comment, type VoiceNote } from '@/lib/comment-mapper';
 import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
 import { hasUnresolvedParent } from '@/lib/comment-threading';
+import { usePostDiscussionSettings, useCommonGroundCompletion } from '@/hooks/use-post-discussion-settings';
+import { useConversationCoach, COACH_MIN_CHARS } from '@/hooks/use-conversation-coach';
+import { useCoachEnabled } from '@/hooks/use-coach-enabled';
+import { CoachSuggestions } from './CoachSuggestions';
+import { CommonGroundSheet } from './CommonGroundSheet';
 
 // The comment data shape and its API mapper live in @/lib/comment-mapper so
 // non-component consumers can share them. Re-exported here for the surfaces
@@ -874,6 +879,17 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       username: postInfo?.minterUsername || (postInfo as { mintername?: string } | undefined)?.mintername,
     };
   }, [postInfo, postAuthorAddress]);
+
+  // Common Ground mode: a creator-side switch kept in Supabase and only
+  // honoured when the row's creator is this post's minter (see
+  // lib/discussion-settings). Off while the composer is off — nothing to gate.
+  const { commonGround } = usePostDiscussionSettings(tokenId, postCreator?.address, !commentsDisabled);
+  const { isDone: commonGroundDone, markDone: markCommonGroundDone } = useCommonGroundCompletion(tokenId);
+  const [commonGroundOpen, setCommonGroundOpen] = useState(false);
+  // The tone check on the draft. Destructured because the hook's callbacks
+  // are stable and the object is not.
+  const coachEnabled = useCoachEnabled();
+  const { status: coachStatus, flags: coachFlags, check: coachCheck, dismiss: coachDismiss, reset: coachReset } = useConversationCoach();
 
   // The ids the host page's author-thread block has already rendered above the
   // card. Same query key as <AuthorThread>, so this is its cached answer rather
@@ -1830,9 +1846,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     }
   };
 
-  const handlePostComment = useCallback(async () => {
+  const submitComment = useCallback(async () => {
     if ((!newComment.trim() && !voiceNote && !commentImage && !commentGifUrl) || isSubmitting || submitInFlightRef.current) return;
-    
+
     if (!isAuthenticated || !user) {
       toast.error('Please log in to comment');
       return;
@@ -1878,6 +1894,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     const audioNote = voiceNote;
     const submittedText = newComment;
     clearDraft(tokenId);
+    coachReset();
     setReplyTo(null);
     setNewComment('');
     setVoiceNote(null);
@@ -1968,7 +1985,33 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       setIsSubmitting(false);
       submitInFlightRef.current = false;
     }
-  }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient, armAssistantReply]);
+  }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient, armAssistantReply, coachReset]);
+
+  /**
+   * What every Post control calls. On a Common Ground thread the first reply
+   * of the session goes through the sheet first; the sheet's own Post button
+   * then calls submitComment. The creator is never asked on their own post,
+   * and the same guards as submitComment apply so an empty tap opens nothing.
+   */
+  const handlePostComment = useCallback(async () => {
+    const hasContent = !!(newComment.trim() || voiceNote || commentImage || commentGifUrl);
+    if (!hasContent || isSubmitting || submitInFlightRef.current) return;
+    if (commonGround && !isOwnThread && !commonGroundDone()) {
+      if (!isAuthenticated || !user) {
+        toast.error('Please log in to comment');
+        return;
+      }
+      setCommonGroundOpen(true);
+      return;
+    }
+    await submitComment();
+  }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, commonGround, isOwnThread, commonGroundDone, isAuthenticated, user, submitComment]);
+
+  const handleCommonGroundConfirm = useCallback(() => {
+    markCommonGroundDone();
+    setCommonGroundOpen(false);
+    void submitComment();
+  }, [markCommonGroundDone, submitComment]);
 
   // A banned account reads every comment on DeHub and writes none of them.
   const canPost = !accountBanned && (newComment.trim() || voiceNote || commentImage || commentGifUrl) && !isSubmitting;
@@ -2438,6 +2481,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           "mt-auto",
           isMobile ? "pt-2 pb-1" : "pt-3"
         )}>
+          {/* Common Ground: say up front that the first reply goes through the
+              steps, so the sheet is not a surprise when Post is tapped. */}
+          {commonGround && !isOwnThread && (
+            <div data-common-ground-banner className="mb-2 flex items-start gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
+              <Handshake className="w-4 h-4 mt-0.5 shrink-0 text-zinc-300" />
+              <p className="text-xs text-zinc-300">{t('conversation.commonGround.banner')}</p>
+            </div>
+          )}
           {/* Reply indicator */}
           {replyTo && (
             <div
@@ -2536,6 +2587,15 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           <BannedAccountNotice variant="line" className="mt-2" />
 
           <div className={cn("flex flex-col gap-1.5", isMobile ? "pb-0 mt-1" : "pb-1 mt-[18px]")}>
+            {/* The coach's cards sit above the field. Advice only — Post stays
+                live underneath, and "Post anyway" is the same call. */}
+            <CoachSuggestions
+              status={coachStatus}
+              flags={coachFlags}
+              onDismiss={coachDismiss}
+              onClear={coachReset}
+              onPostAnyway={canPost ? () => { void handlePostComment(); } : undefined}
+            />
             {isRecording ? (
               /* Recording indicator */
               <div data-comment-recording className="flex-1 flex items-center gap-2 bg-red-500/10 rounded-xl px-4 h-10">
@@ -2659,6 +2719,25 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                     triggerClassName="bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-colors"
                     iconClassName="w-4 h-4"
                   />
+                  {/* Offered once there is enough text to review. Icon-only
+                      while the field is a single line, so the row stays put. */}
+                  {coachEnabled && newComment.trim().length >= COACH_MIN_CHARS && (
+                    <button
+                      type="button"
+                      onClick={() => { void coachCheck(newComment); }}
+                      disabled={coachStatus === 'loading'}
+                      data-comment-tool="coach"
+                      aria-label={t('conversation.coach.checkTone')}
+                      title={t('conversation.coach.checkTone')}
+                      className={cn(
+                        "h-8 flex-shrink-0 flex items-center justify-center gap-1.5 bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-60",
+                        isInputExpanded ? "px-2.5 text-xs" : "w-8"
+                      )}
+                    >
+                      <Sparkles className="w-4 h-4" />
+                      {isInputExpanded && <span className="hidden sm:inline whitespace-nowrap">{t('conversation.coach.checkTone')}</span>}
+                    </button>
+                  )}
                   {!voiceNote && (
                     <button
                       onClick={startRecording}
@@ -2696,6 +2775,15 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           </div>
         </div>
         )}
+
+        {/* Common Ground steps, opened by the first Post of the session on a
+            thread that has the mode on. Its own Post button sends the reply. */}
+        <CommonGroundSheet
+          open={commonGroundOpen}
+          onOpenChange={setCommonGroundOpen}
+          draft={newComment}
+          onConfirm={handleCommonGroundConfirm}
+        />
 
         {/* Tip a comment's author. One modal for the whole section, aimed at
             whichever comment's gem was tapped. */}

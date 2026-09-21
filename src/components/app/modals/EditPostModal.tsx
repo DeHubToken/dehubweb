@@ -23,6 +23,8 @@ import type { ContentRating, ShopLink } from '@/lib/api/dehub/types';
 import { ShopSheetLazy, type ShopBoardDraft } from '@/features/post/components/ShopSheetLazy';
 import { useStreamProducts, useStreamProductActions } from '@/hooks/use-stream-shopping';
 import { useShopLinkAllowance } from '@/hooks/use-shop-links';
+import { usePostDiscussionSettings, useSetCommonGround } from '@/hooks/use-post-discussion-settings';
+import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { EditPostImages } from './EditPostImages';
@@ -90,6 +92,18 @@ export function EditPostModal({
   const [shopSheetOpen, setShopSheetOpen] = useState(false);
   const shopAllowance = useShopLinkAllowance();
   /**
+   * Common Ground mode lives in Supabase, not on the token, so it is read and
+   * written beside the post edit rather than through it. Only fetched while
+   * the modal is open — every feed card mounts this component. The row is
+   * validated against the editor's own wallet: whoever opened this modal is
+   * the minter, so that is the address the setting belongs to.
+   */
+  const { walletAddress } = useAuth();
+  const discussion = usePostDiscussionSettings(tokenId, walletAddress, open);
+  const setCommonGroundMutation = useSetCommonGround(tokenId);
+  const [commonGround, setCommonGround] = useState<boolean | null>(null);
+  const commonGroundOn = commonGround ?? discussion.commonGround;
+  /**
    * The post exists here, so its listings are read and written directly rather
    * than deferred the way the composer has to defer them. Only fetched while
    * the modal is open — this component is mounted by every feed card.
@@ -136,6 +150,7 @@ export function EditPostModal({
       setIsMature(currentContentRating === 'mature');
       setIsForKids(currentForKids === true);
       setCategoryInput('');
+      setCommonGround(null);
     }
   }, [open, tokenId, currentTitle, currentDescription, currentArticleBody, currentCategories, currentCommentsDisabled, currentContentRating, currentForKids]);
 
@@ -180,8 +195,26 @@ export function EditPostModal({
       params.shopListingCount = pickedListingIds.length;
     }
 
-    if (Object.keys(params).length === 0) {
+    // Not a field on the post — a Supabase row of its own, saved alongside.
+    const commonGroundChanged = commonGround !== null && commonGround !== discussion.commonGround;
+
+    if (Object.keys(params).length === 0 && !commonGroundChanged) {
       toast.message('No changes to save');
+      return;
+    }
+
+    if (Object.keys(params).length === 0) {
+      setIsSubmitting(true);
+      try {
+        await setCommonGroundMutation.mutateAsync(commonGround === true);
+        toast.success('Post updated successfully');
+        onOpenChange(false);
+      } catch (error: any) {
+        console.error('[EditPostModal] Discussion settings error:', error);
+        toast.error(error?.message || t('conversation.commonGround.saveFailed'));
+      } finally {
+        setIsSubmitting(false);
+      }
       return;
     }
 
@@ -204,6 +237,7 @@ export function EditPostModal({
       // error rather than a count on the token that nothing backs.
       for (const id of toDetach) await detach.mutateAsync(id);
       for (const id of toAttach) await attach.mutateAsync({ listingId: id });
+      if (commonGroundChanged) await setCommonGroundMutation.mutateAsync(commonGround === true);
 
       const result = await editPost(tokenId, params as any);
       if (result.result) {
@@ -399,6 +433,43 @@ export function EditPostModal({
                   className={cn(
                     'absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform',
                     commentsDisabled ? 'translate-x-0.5' : 'translate-x-[22px]'
+                  )}
+                />
+              </span>
+            </button>
+          </div>
+
+          {/* Common Ground mode — readers reflect before their first reply */}
+          <div>
+            <label className="text-zinc-400 text-sm mb-2 block">{t('conversation.commonGround.sectionLabel')}</label>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={commonGroundOn}
+              data-common-ground-toggle
+              disabled={discussion.isLoading}
+              onClick={() => setCommonGround(!commonGroundOn)}
+              className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-colors text-left disabled:opacity-60"
+            >
+              <span className="min-w-0">
+                <span className="block text-white text-sm font-medium">
+                  {t('conversation.commonGround.toggleLabel')}
+                </span>
+                <span className="block text-zinc-500 text-xs mt-0.5">
+                  {t('conversation.commonGround.toggleHint')}
+                </span>
+              </span>
+              <span
+                className={cn(
+                  'relative shrink-0 w-11 h-6 rounded-full transition-colors',
+                  commonGroundOn ? 'bg-emerald-500/80' : 'bg-zinc-700'
+                )}
+              >
+                <span
+                  data-keep-white
+                  className={cn(
+                    'absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform',
+                    commonGroundOn ? 'translate-x-[22px]' : 'translate-x-0.5'
                   )}
                 />
               </span>
