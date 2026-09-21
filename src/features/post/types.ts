@@ -164,3 +164,39 @@ export interface LiveStreamHandoff {
   playbackId?: string;
   provider?: string;
 }
+
+/**
+ * Everything a saved draft carries besides its text and media flags.
+ *
+ * Before this existed a draft was text plus three booleans, so a poll, a
+ * schedule, a price or a category all survived until the moment the draft was
+ * reopened and then quietly weren't there. Every field is optional: drafts
+ * written before a setting existed (and drafts written by mobile) simply fall
+ * back to the composer's default for it.
+ */
+export interface DraftPayload {
+  titleText?: string;
+  showTitle?: boolean;
+  selectedCategory?: string;
+  isMature?: boolean;
+  isForKids?: boolean;
+  isSubscribersOnly?: boolean;
+  isPPV?: boolean;
+  ppvAmount?: string;
+  ppvCurrency?: Currency;
+  isWatch2Earn?: boolean;
+  w2eViews?: string;
+  w2eComments?: string;
+  w2eTotal?: string;
+  w2eCurrency?: Currency;
+  isTokenGated?: boolean;
+  tokenContract?: string;
+  tokenSymbol?: string;
+  tokenAmount?: string;
+  poll?: PollData | null;
+  /** ISO string — a Date does not survive JSON. */
+  scheduledDate?: string | null;
+  chainId?: number;
+  shopLinks?: unknown[];
+  shopListingIds?: string[];
+}
