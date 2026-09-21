@@ -3479,6 +3479,57 @@ export type Database = {
         }
         Relationships: []
       }
+      onboarding_events: {
+        Row: {
+          action: string
+          at: string
+          id: string
+          rating: string | null
+          step_id: string
+          wallet_address: string
+        }
+        Insert: {
+          action: string
+          at?: string
+          id?: string
+          rating?: string | null
+          step_id: string
+          wallet_address: string
+        }
+        Update: {
+          action?: string
+          at?: string
+          id?: string
+          rating?: string | null
+          step_id?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      onboarding_progress: {
+        Row: {
+          completed_at: string | null
+          dismissed_at: string | null
+          started_at: string
+          steps: Json
+          wallet_address: string
+        }
+        Insert: {
+          completed_at?: string | null
+          dismissed_at?: string | null
+          started_at?: string
+          steps?: Json
+          wallet_address: string
+        }
+        Update: {
+          completed_at?: string | null
+          dismissed_at?: string | null
+          started_at?: string
+          steps?: Json
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       page_view_events: {
         Row: {
           address: string | null
@@ -6333,6 +6384,35 @@ export type Database = {
       }
     }
     Functions: {
+      admin_onboarding_dropoff: {
+        Args: { p_since: string }
+        Returns: {
+          last_action: string
+          step_id: string
+          users: number
+        }[]
+      }
+      admin_onboarding_funnel: {
+        Args: { p_since: string }
+        Returns: {
+          completions: number
+          easy_count: number
+          hard_count: number
+          median_seconds: number
+          skips: number
+          step_id: string
+          viewers: number
+        }[]
+      }
+      admin_onboarding_totals: {
+        Args: { p_since: string }
+        Returns: {
+          active: number
+          completed: number
+          dismissed: number
+          started: number
+        }[]
+      }
       admin_page_view_daily: {
         Args: { p_paths: string[]; p_since: string }
         Returns: {
@@ -6798,10 +6878,20 @@ export type Database = {
         Args: { reloid: unknown }
         Returns: Record<string, unknown>
       }
-      record_affiliate_page_view: {
-        Args: { p_code: string; p_source?: string; p_visitor_id: string }
-        Returns: undefined
-      }
+      record_affiliate_page_view:
+        | {
+            Args: { p_code: string; p_source?: string; p_visitor_id: string }
+            Returns: undefined
+          }
+        | {
+            Args: {
+              p_code: string
+              p_source: string
+              p_viewer_address: string
+              p_visitor_id: string
+            }
+            Returns: undefined
+          }
       record_anonymous_views: {
         Args: { p_token_ids: string[]; p_viewer_hash: string }
         Returns: number
