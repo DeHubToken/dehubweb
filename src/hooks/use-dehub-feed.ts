@@ -718,12 +718,3 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
     isOwner: (stream as any).isOwner ?? false,
   };
 }
-
-/**
- * Hook to fetch unique story users from recent content
- * NOTE: Currently returns empty as there are no stories available
- */
-export function useDeHubStoryUsers(_limit: number = 10) {
-  // Return empty - no stories currently available
-  return { storyUsers: [], isLoading: false };
-}

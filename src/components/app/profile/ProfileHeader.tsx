@@ -1,5 +1,5 @@
 import {
-  UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check, Ban, MessageSquare
+  UserPlus, Pencil, Copy, Wallet, Star, Clock, Plus, Loader2, Check, Ban, MessageSquare
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRef, useState } from 'react';
@@ -9,7 +9,6 @@ import { useBadgeCeremony } from '@/hooks/use-badge-ceremony';
 import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
-import { ShimmerBorder } from '@/components/app/stories/ShimmerBorder';
 import { TranslatableText, hasTranslatableText } from '@/components/app/TranslatableText';
 import { BioTranslateButton } from '@/components/app/profile/BioTranslateButton';
 import { ProfileSocialLinks } from '@/components/app/profile/ProfileSocialLinks';
@@ -66,18 +65,9 @@ interface ProfileHeaderProps {
   // Subscriptions
   isSubscribed: boolean;
   hasPlans: boolean;
-  // Stories
-  hasStories: boolean;
-  hasUnwatchedStories: boolean;
-  profileStories: Array<{ id: string }>;
-  markWatched: (id: string) => void;
-  // Avatar overlay
-  showAvatarOverlay: boolean;
-  setShowAvatarOverlay: (v: boolean | ((prev: boolean) => boolean)) => void;
   // Actions
   setFullscreenImage: (url: string | null) => void;
   setActiveTab: (tab: TabValue) => void;
-  setIsStoryViewerOpen: (open: boolean) => void;
   // Share sheet
   shareSheetOpen: boolean;
   setShareSheetOpen: (open: boolean) => void;
@@ -114,15 +104,8 @@ export function ProfileHeader({
   handleUnfollow,
   isSubscribed,
   hasPlans,
-  hasStories,
-  hasUnwatchedStories,
-  profileStories,
-  markWatched,
-  showAvatarOverlay,
-  setShowAvatarOverlay,
   setFullscreenImage,
   setActiveTab,
-  setIsStoryViewerOpen,
   shareSheetOpen,
   setShareSheetOpen,
   setLoginModalOpen,
@@ -214,66 +197,6 @@ export function ProfileHeader({
         {/* Avatar */}
         <div className="relative -mt-12 sm:-mt-14 mb-1.5 flex items-end justify-between">
           <div className="relative">
-            {hasStories ? (
-              <div className="relative">
-                <ShimmerBorder active={hasUnwatchedStories} className="w-24 h-24 sm:w-28 sm:h-28">
-                  <div 
-                    className="w-full h-full rounded-[10px] bg-zinc-900 overflow-hidden relative group"
-                    onClick={() => setShowAvatarOverlay(prev => !prev)}
-                  >
-                    {profile.avatarUrl && !avatarCdnFailed ? (
-                      <img
-                        src={avatarFailed ? cdnFallbackUrl : profile.avatarUrl}
-                        alt={profile.name}
-                        className="w-full h-full rounded-[10px] object-cover aspect-square"
-                        onError={() => avatarFailed ? setAvatarCdnFailed(true) : setAvatarFailed(true)}
-                      />
-                    ) : (
-                      <UserAvatar
-                        name={profile.name}
-                        handle={profile.handle}
-                        size="lg"
-                        className="w-full h-full rounded-[10px]"
-                      />
-                    )}
-                    {/* Liquid glass overlay */}
-                    <div className={cn(
-                      "absolute inset-0 flex overflow-hidden rounded-[10px] transition-all duration-200",
-                      "opacity-0 pointer-events-none",
-                      "md:group-hover:opacity-100 md:group-hover:pointer-events-auto",
-                      showAvatarOverlay && "opacity-100 !pointer-events-auto"
-                    )}>
-                      <button
-                        className="flex-1 flex items-center justify-center bg-black/40 backdrop-blur-md border-r border-white/10"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setShowAvatarOverlay(false);
-                          profileStories.forEach(s => markWatched(s.id));
-                          setIsStoryViewerOpen(true);
-                        }}
-                      >
-                        <Play className="w-5 h-5 text-white drop-shadow-lg" fill="white" />
-                      </button>
-                      <button
-                        className="flex-1 flex items-center justify-center bg-black/40 backdrop-blur-md"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setShowAvatarOverlay(false);
-                          if (profile.avatarUrl) setFullscreenImage(profile.avatarUrl);
-                        }}
-                        disabled={!profile.avatarUrl}
-                      >
-                        <Image className="w-5 h-5 text-white drop-shadow-lg" />
-                      </button>
-                    </div>
-                  </div>
-                </ShimmerBorder>
-                {/* Dismiss overlay on outside tap (mobile) */}
-                {showAvatarOverlay && (
-                  <div className="fixed inset-0 z-[-1] md:hidden" onClick={() => setShowAvatarOverlay(false)} />
-                )}
-              </div>
-            ) : (
               <button 
                 className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-zinc-900 p-1 cursor-pointer disabled:cursor-default"
                 onClick={() => profile.avatarUrl && setFullscreenImage(profile.avatarUrl)}
@@ -295,7 +218,6 @@ export function ProfileHeader({
                   />
                 )}
               </button>
-            )}
           </div>
           <div className="flex items-center gap-2">
               {isViewingOwnProfile ? (
