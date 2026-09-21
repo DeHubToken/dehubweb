@@ -5,8 +5,8 @@
  * for a while nothing a creator could find opened the step it lives on. The
  * composer became the live setup form, and it hands the sheet a stream that is
  * already provisioned — which opens the broadcast console and skips the source
- * cards entirely. The only other callers were a stories bar that is commented
- * out and a right-rail button that is desktop-only, not on the default tab,
+ * cards entirely. The only other callers were a stories bar that has since
+ * been removed and a right-rail button that is desktop-only, not on the default tab,
  * and rendered only while nobody is live.
  *
  * The result was a creator with a capture card filing a request for OBS

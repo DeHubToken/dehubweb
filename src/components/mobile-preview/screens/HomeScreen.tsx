@@ -19,20 +19,6 @@ export function HomeScreen() {
       <MobileStatusBar />
       <MobileTopBar title="DeHub" />
 
-      {/* Stories row */}
-      <div className="flex gap-3 px-4 py-3 overflow-x-auto scrollbar-hide">
-        {['You', 'alice', 'bob', 'sarah', 'whale', 'dev'].map((name, i) => (
-          <div key={name} className="flex flex-col items-center gap-1 flex-shrink-0">
-            {/* rounded-[10px], not rounded-lg: 2px of padding outside an 8px
-                avatar corner, so the ring stays concentric with MockAvatar. */}
-            <div className={`p-[2px] rounded-[10px] ${i === 0 ? 'border border-dashed border-white/30' : 'bg-gradient-to-br from-white/30 to-white/10'}`}>
-              <MockAvatar name={name} size="md" />
-            </div>
-            <span className="text-[10px] text-zinc-400">{name}</span>
-          </div>
-        ))}
-      </div>
-
       {/* Feed tabs */}
       <div className="flex gap-1 px-4 pb-2">
         {TABS.map((tab, i) => (

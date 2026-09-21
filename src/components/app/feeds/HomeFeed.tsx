@@ -55,7 +55,6 @@ import { PostCard } from '@/components/app/cards/PostCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { ShortsReel } from '@/components/app/cards/ShortsReel';
-import { StoriesBar } from '@/components/app/cards/StoriesBar';
 import { LiveCard } from '@/components/app/cards/LiveCard';
 import { MasonrySegment } from '@/components/app/feeds/MasonrySegment';
 
@@ -68,7 +67,7 @@ import {
   mapToTextPost,
   type UnifiedFeedItem,
 } from '@/hooks/use-unified-feed';
-import { useDeHubStoryUsers, useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
+import { useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { scrollDocumentTo } from '@/lib/document-scroll';
 import { usePersistedFeedFilter, usePersistedContentFilters, clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { getMediaUrl, getNFTInfo, getCategories } from '@/lib/api/dehub';
@@ -553,16 +552,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const { watchedIds } = useWatchedVideoIds(hideWatched);
   const { optimisticPosts, clearOptimisticPosts, removeOptimisticPost } = useOptimisticPosts();
 
-  // Fetch story users from API
   // Everything on the home page that is not a post from the feed itself is
   // unrated by definition — ads, radio stations, live cards, the follow and
-  // leaderboard rails, the stories bar. None of it can be filtered on
+  // leaderboard rails. None of it can be filtered on
   // `forKids`, so in Kids Mode none of it renders.
   const isKidsMode = useKidsModeLock();
-  const { storyUsers: allStoryUsers } = useDeHubStoryUsers(10);
-  // The stories bar is a row of arbitrary accounts' latest posts. Nothing on it
-  // is rated, so it is empty in Kids Mode rather than filtered.
-  const storyUsers = isKidsMode ? [] : allStoryUsers;
 
   // Same query key as Live tab + prefetch (DEFAULT_DEHUB_LIVE_QUERY_OPTIONS); slice below for carousel width.
   // enabled is stripped from the key inside useDeHubLive, so the shared cache entry is preserved.
@@ -2065,11 +2059,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         <FeedCardSkeletonList count={6} />
       ) : (
         <>
-          {/* Stories carousel hidden for now */}
-          {/* <div className={cn(isCollapsed && 'mt-1.5')}>
-            <StoriesBar users={storyUsers} isLoading={isLoadingState} shorts={shorts} />
-          </div> */}
-
       {/* Friends on Stage notification */}
       <FriendsOnStageBar />
 

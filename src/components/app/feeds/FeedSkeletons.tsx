@@ -31,31 +31,6 @@ function Skeleton({ className }: SkeletonProps) {
 }
 
 // ============================================================================
-// STORIES SKELETON
-// ============================================================================
-
-export function StoriesBarSkeleton() {
-  return (
-    <div className="p-4 mt-[7px]">
-      <div className="flex gap-4 overflow-hidden">
-        {/* Create button skeleton */}
-        <div className="flex flex-col items-center gap-1 flex-shrink-0">
-          <Skeleton className="w-[72px] h-[72px] rounded-xl" />
-          <Skeleton className="w-12 h-3 rounded" />
-        </div>
-        {/* Story items skeleton */}
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="flex flex-col items-center gap-1 flex-shrink-0">
-            <Skeleton className="w-[68px] h-[68px] rounded-xl" />
-            <Skeleton className="w-14 h-3 rounded" />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ============================================================================
 // VIDEO CARD SKELETON
 // ============================================================================
 
