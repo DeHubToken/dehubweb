@@ -4186,6 +4186,14 @@
     "voiceNoteFailed": "भ्वाइस नोट पठाउन असफल"
   },
   "referral": {
+    "stats": {
+      "pageViews": "पृष्ठ दृश्यहरू",
+      "uniqueVisitors": "अद्वितीय आगन्तुकहरू",
+      "inLast30Days": "{{count}} 30 दिनमा",
+      "percentJoined": "{{pct}}% सामेल भए",
+      "noVisits": "अहिलेसम्म कुनै भेटघाट भएको छैन",
+      "selfVisitsExcluded": "तपाईंको लिङ्कमा तपाईंको आफ्नै भ्रमणहरू गणना गरिएको छैन ।"
+    },
     "seoTitle": "DeHub — विकेन्द्रीकृत निर्माता नेटवर्क",
     "seoTitleInvited": "{{inviter}} ले तपाईंलाई DeHub मा आमन्त्रण गरेको छ — कमाउनुहोस्, पोस्ट गर्नुहोस् र अन-चेइनमा निर्माण गर्नुहोस्",
     "seoDescription": "विकेन्द्रीकृत निर्माता नेटवर्क।",
@@ -5007,27 +5015,8 @@
     "ttsPlaceholder": "स्ट्रिममा पढ्नुहोस्...",
     "ttsHint": "तपाईंको उपहार अवतरण गर्दा हेरिरहेका सबैलाई ठूलो स्वरमा पढ्नुहोस् ।"
   },
-  "spaces": {
-    "title": "स्पेसहरू",
-    "live": "प्रत्यक्ष",
-    "upcoming": "आगामी",
-    "past": "विगत",
-    "create": "स्पेस बनाउनुहोस्",
-    "join": "सामेल हुनुहोस्",
-    "listeners": "श्रोताहरू",
-    "speakers": "वक्ताहरू",
-    "host": "होस्ट",
-    "noSpaces": "अहिलेसम्म स्पेसहरू छैनन्",
-    "loginDescription": "अडियो स्पेसहरू बनाउन र सामेल हुन लगइन गर्नुहोस्।"
-  },
-  "blog": {
-    "title": "ब्लग",
-    "readMore": "थप पढ्नुहोस्",
-    "backToBlog": "ब्लगमा फर्कनुहोस्",
-    "sharePost": "पोस्ट साझा गर्नुहोस्",
-    "relatedPosts": "सम्बन्धित पोस्टहरू"
-  },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5102,9 +5091,28 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "spaces": {
+    "title": "स्पेसहरू",
+    "live": "प्रत्यक्ष",
+    "upcoming": "आगामी",
+    "past": "विगत",
+    "create": "स्पेस बनाउनुहोस्",
+    "join": "सामेल हुनुहोस्",
+    "listeners": "श्रोताहरू",
+    "speakers": "वक्ताहरू",
+    "host": "होस्ट",
+    "noSpaces": "अहिलेसम्म स्पेसहरू छैनन्",
+    "loginDescription": "अडियो स्पेसहरू बनाउन र सामेल हुन लगइन गर्नुहोस्।"
+  },
+  "blog": {
+    "title": "ब्लग",
+    "readMore": "थप पढ्नुहोस्",
+    "backToBlog": "ब्लगमा फर्कनुहोस्",
+    "sharePost": "पोस्ट साझा गर्नुहोस्",
+    "relatedPosts": "सम्बन्धित पोस्टहरू"
   }
 }

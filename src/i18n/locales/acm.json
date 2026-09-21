@@ -2226,6 +2226,16 @@
     "keepStreaming": "استمر في البث",
     "encoderPermanentHint": "هذا المفتاح ما يتغير أبدًا. جهّز جهاز التشفير مالك مرة وحدة — المرة الجاية بس اضغط ستارت هناك و DeHub يسوي لك البوست."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "مشاهدات الصفحة",
+      "uniqueVisitors": "زوار فريدون",
+      "inLast30Days": "{{count}} في 30 يوم",
+      "percentJoined": "{{pct}}% انضموا",
+      "noVisits": "لا توجد زيارات بعد",
+      "selfVisitsExcluded": "زياراتك الخاصة لرابطك لا تُحتسب."
+    }
+  },
   "creatorFlow": {
     "title": "مبدع التدفق",
     "backToStudio": "الرجوع إلى Creator Studio",
@@ -2771,6 +2781,7 @@
     "ttsHint": "اقرأ بصوت عالي لكل اللي يتابعون لما توصل هديتك."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2845,7 +2856,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

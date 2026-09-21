@@ -2268,6 +2268,14 @@
     "keepStreaming": "Fortsett direktesending",
     "encoderPermanentHint": "Denne tasten endres aldri. Konfigurer koderen én gang – neste gang trykker du bare på Start der, så oppretter DeHub innlegget for deg."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "sidevisninger",
+      "uniqueVisitors": "Unike besøkende",
+      "noVisits": "Ingen besøk ennå",
+      "selfVisitsExcluded": "Dine egne besøk på lenken din telles ikke."
+    }
+  },
   "creatorFlow": {
     "title": "Creator Flow",
     "backToStudio": "Tilbake til Creator Studio",
@@ -2805,6 +2813,7 @@
     "ttsHint": "Les høyt for alle som ser på når gaven din lander."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2879,7 +2888,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Share2, Users, Wallet, Sparkles, RefreshCw, ExternalLink, Copy } from "lucide-react";
 import { AppState } from '@/components/app/AppState';
 import { toast } from "sonner";
@@ -30,6 +31,7 @@ function formatMoney(cents: number, currency = "USD") {
 }
 
 export default function AffiliatePage() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const wallet = (user as { walletAddress?: string | null; address?: string | null } | null)
     ?.walletAddress
@@ -196,15 +198,17 @@ export default function AffiliatePage() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             <StatCard
               icon={<ExternalLink className="w-4 h-4" />}
-              label="Page views"
+              label={t('referral.stats.pageViews')}
               value={loading ? null : String(stats?.totalViews ?? 0)}
-              hint={`${stats?.views30d ?? 0} in 30 days`}
+              hint={t('referral.stats.inLast30Days', { count: stats?.views30d ?? 0 })}
             />
             <StatCard
               icon={<Users className="w-4 h-4" />}
-              label="Unique visitors"
+              label={t('referral.stats.uniqueVisitors')}
               value={loading ? null : String(stats?.uniqueVisitors ?? 0)}
-              hint={stats?.uniqueVisitors ? `${((stats.referrals / stats.uniqueVisitors) * 100).toFixed(1)}% joined` : "No visits yet"}
+              hint={stats?.uniqueVisitors
+                ? t('referral.stats.percentJoined', { pct: ((stats.referrals / stats.uniqueVisitors) * 100).toFixed(1) })
+                : t('referral.stats.noVisits')}
             />
             <StatCard
               icon={<Users className="w-4 h-4" />}
@@ -230,6 +234,9 @@ export default function AffiliatePage() {
               value={`${AFFILIATE_L1_COMMISSION_PCT}% + ${AFFILIATE_L2_COMMISSION_PCT}%`}
               hint="residual · perpetual"
             />
+            <p className="col-span-2 md:col-span-3 text-[11px] text-white/40">
+              {t('referral.stats.selfVisitsExcluded')}
+            </p>
           </div>
 
           {/* Who your affiliates are */}

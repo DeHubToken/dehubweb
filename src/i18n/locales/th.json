@@ -3560,6 +3560,14 @@
     "voiceNoteFailed": "ไม่สามารถส่งข้อความเสียง"
   },
   "referral": {
+    "stats": {
+      "pageViews": "ยอดวิวหน้าเว็บ",
+      "uniqueVisitors": "ผู้เข้าชมที่ไม่ซ้ำ",
+      "inLast30Days": "{{count}} ใน 30 วัน",
+      "percentJoined": "เข้าร่วมแล้ว {{pct}}%",
+      "noVisits": "ยังไม่มีการเข้าชม",
+      "selfVisitsExcluded": "การเข้าชมลิงก์ของคุณเองจะไม่ถูกนับ"
+    },
     "seoTitle": "DeHub — เครือข่ายผู้สร้างแบบกระจายอำนาจ",
     "seoTitleInvited": "{{inviter}} เชิญคุณไปยัง DeHub — สร้างรายได้ โพสต์ และสร้างสรรค์บน-chain",
     "seoDescription": "เครือข่ายผู้สร้างสรรค์แบบกระจายอำนาจ",
@@ -4353,17 +4361,8 @@
     "ttsPlaceholder": "อ่านออกอากาศให้ทุกคนฟัง...",
     "ttsHint": "อ่านออกอากาศให้ทุกคนที่กำลังรับชมฟังเมื่อของขวัญของคุณปรากฏขึ้น"
   },
-  "glossary": {
-    "title": "อภิธานศัพท์",
-    "description": "คำศัพท์และคำจำกัดความที่ใช้ในระบบ",
-    "badges": {
-      "white": "สีขาว"
-    }
-  },
-  "footer": {
-    "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"
-  },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -4438,9 +4437,18 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "glossary": {
+    "title": "อภิธานศัพท์",
+    "description": "คำศัพท์และคำจำกัดความที่ใช้ในระบบ",
+    "badges": {
+      "white": "สีขาว"
+    }
+  },
+  "footer": {
+    "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"
   }
 }

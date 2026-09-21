@@ -3897,6 +3897,14 @@
     "voiceNoteFailed": "குரல் குறிப்பை அனுப்ப முடியவில்லை"
   },
   "referral": {
+    "stats": {
+      "pageViews": "பக்கக் காட்சிகள்",
+      "uniqueVisitors": "தனித்துவமான பார்வையாளர்கள்",
+      "inLast30Days": "{{count}} 30 நாட்களில்",
+      "percentJoined": "{{pct}}% சேர்ந்தார்",
+      "noVisits": "இதுவரை வருகைகள் எதுவும் இல்லை",
+      "selfVisitsExcluded": "உங்கள் இணைப்பிற்கான உங்கள் சொந்த வருகைகள் கணக்கிடப்படவில்லை."
+    },
     "seoTitle": "DeHub — விகேந்திரீயமான உருவாக்குனர் நெட்வொர்க்",
     "seoTitleInvited": "{{inviter}} உங்களை DeHub க்கு அழைத்துள்ளார் — சம்பாதிக்கவும், பதிவு செய்யவும் & ஆன்-சேইனில் உருவாக்கவும்",
     "seoDescription": "விகேந்திரீயமான உருவாக்குனர் நெட்வொர்க்.",
@@ -4700,6 +4708,7 @@
     "ttsHint": "உங்கள் பரிசு எப்போது தரையிறங்கும் என்பதைப் பார்க்கும் அனைவருக்கும் சத்தமாகப் படியுங்கள்."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -4774,7 +4783,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

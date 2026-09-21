@@ -2272,6 +2272,16 @@
     "keepStreaming": "Tẹ̀síwájú ìfipamọ́",
     "encoderPermanentHint": "Bọtini yìí kò yí padà láéláé. Ṣètò àdàkọ rẹ lẹ́ẹ̀kan — ìgbà mìíràn kàn tẹ Bẹ̀rẹ̀ níbẹ̀ àti DeHub ṣẹ̀dá ìfiránṣẹ́ náà fún ọ."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "Ojú-ìwé",
+      "uniqueVisitors": "Àwọn àlejò tí ó ṣàrà ọ̀tọ̀",
+      "inLast30Days": "{{count}} ní ọjọ́ 30",
+      "percentJoined": "{{pct}}% darapọ mọ",
+      "noVisits": "Ko si àbẹwò sibẹsibẹ",
+      "selfVisitsExcluded": "Àwọn àbẹ̀wò tìrẹ sí àsopọ̀ rẹ kì í ṣe iye."
+    }
+  },
   "creatorFlow": {
     "title": "Creator Flow",
     "backToStudio": "Padanu si Creator Studio",
@@ -2807,6 +2817,7 @@
     "ttsHint": "Ka sókè sí gbogbo ènìyàn tí ó ń wo ìgbà tí ẹ̀bùn rẹ bá dé."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2881,7 +2892,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

@@ -2231,6 +2231,15 @@
     "keepStreaming": "ଷ୍ଟ୍ରିମିଂ ଜାରି ରଖନ୍ତୁ",
     "encoderPermanentHint": "ଏହି ଚାବି କେବେ ବଦଳିବ ନାହିଁ । ଆପଣଙ୍କର ଏନକୋଡରକୁ ଥରେ ସେଟ କରନ୍ତୁ — ପରବର୍ତୀ ସମୟରେ କେବଳ ସେଠାରେ ଆରମ୍ଭକୁ ଦବାନ୍ତୁ ଏବଂ DeHub ଆପଣଙ୍କ ପାଇଁ ପୋଷ୍ଟ ସୃଷ୍ଟି କରିଥାଏ ।"
   },
+  "referral": {
+    "stats": {
+      "pageViews": "ପୃଷ୍ଠା ଦୃଶ୍ୟ",
+      "uniqueVisitors": "ଅନନ୍ୟ ପରିଦର୍ଶକ",
+      "percentJoined": "{{pct}}% ଯୋଗ ଦେଇଛନ୍ତି",
+      "noVisits": "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ପରିଦର୍ଶନ ନାହିଁ",
+      "selfVisitsExcluded": "ଆପଣଙ୍କ ସଂଯୋଗକୁ ଆପଣଙ୍କର ନିଜର ପରିଦର୍ଶନଗୁଡ଼ିକ ଗଣନା କରାଯାଇନାହିଁ ।"
+    }
+  },
   "creatorFlow": {
     "title": "କ୍ରିଏଟର ଫ୍ଲୋ",
     "backToStudio": "କ୍ରିଏଟର ଷ୍ଟୁଡିଓକୁ ଫେରନ୍ତୁ",
@@ -2764,6 +2773,7 @@
     "ttsHint": "ଯେତେବେଳେ ଆପଣଙ୍କ ଉପହାର ଭୂମିକୁ ଆସିଥାଏ, ସେତେବେଳେ ସମସ୍ତେ ଏହାକୁ ପଢ଼ନ୍ତୁ ।"
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2838,7 +2848,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

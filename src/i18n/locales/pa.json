@@ -2200,6 +2200,16 @@
     "sourceEncoderHint": "RTMP ਵੇਰਵੇ ਪ੍ਰਾਪਤ ਕਰੋ",
     "encoderPermanentHint": "ਇਹ ਕੁੰਜੀ ਕਦੇ ਨਹੀਂ ਬਦਲਦੀ. ਆਪਣੇ ਏਨਕੋਡਰ ਨੂੰ ਇਕ ਵਾਰ ਸੈਟ ਅਪ ਕਰੋ — ਅਗਲੀ ਵਾਰ ਸਿਰਫ ਉਥੇ ਸਟਾਰਟ ਦਬਾਓ ਅਤੇ ਡੀਹਬ ਤੁਹਾਡੇ ਲਈ ਪੋਸਟ ਬਣਾਉਂਦਾ ਹੈ."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "ਪੇਜ ਦ੍ਰਿਸ਼",
+      "uniqueVisitors": "ਵਿਲੱਖਣ ਸੈਲਾਨੀ",
+      "inLast30Days": "{{count}} 30 ਦਿਨਾਂ ਵਿੱਚ",
+      "percentJoined": "{{pct}}% ਸ਼ਾਮਲ ਹੋਏ",
+      "noVisits": "ਅਜੇ ਤੱਕ ਕੋਈ ਮੁਲਾਕਾਤ ਨਹੀਂ",
+      "selfVisitsExcluded": "ਤੁਹਾਡੇ ਲਿੰਕ ਤੇ ਤੁਹਾਡੀਆਂ ਆਪਣੀਆਂ ਮੁਲਾਕਾਤਾਂ ਦੀ ਗਿਣਤੀ ਨਹੀਂ ਕੀਤੀ ਜਾਂਦੀ."
+    }
+  },
   "creatorFlow": {
     "title": "ਨਿਰਮਾਤਾ ਫਲੋ",
     "backToStudio": "ਸਿਰਜਣਹਾਰ ਸਟੂਡੀਓ 'ਤੇ ਵਾਪਸ ਜਾਓ",
@@ -2743,6 +2753,7 @@
     "ttsHint": "ਜਦੋਂ ਤੁਹਾਡਾ ਤੋਹਫ਼ਾ ਉਤਰਦਾ ਹੈ, ਤਾਂ ਹਰ ਕਿਸੇ ਨੂੰ ਉੱਚੀ ਆਵਾਜ਼ ਵਿਚ ਪੜ੍ਹੋ ।"
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2817,7 +2828,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

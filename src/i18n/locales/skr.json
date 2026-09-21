@@ -2205,6 +2205,16 @@
     "keepStreaming": "سٹریمنگ جاری رکھیں",
     "encoderPermanentHint": "اِیہ کُنجی کَدی وی نئیں بَدلدی۔ اَپنا اِینْکوڈَر اِیک واری سیٹ کرو — اگلی واری صِرف اُتھے سٹارٹ دَباؤ تے DeHub تواڈے لِئی پوسٹ بَنا ݙیسی۔"
   },
+  "referral": {
+    "stats": {
+      "pageViews": "صفحہ ویوز",
+      "uniqueVisitors": "منفرد زائرین",
+      "inLast30Days": "30 دن وچ {{count}}",
+      "percentJoined": "{{pct}}% شامل ٿیا",
+      "noVisits": "ہجے کوئی وزٹ نہ",
+      "selfVisitsExcluded": "تہاڈی لنک تے تہاڈے اپنڑے وزٹ گنڑیا کینی ویندے ہن."
+    }
+  },
   "creatorFlow": {
     "syncError": "تھاکرے اکاؤنٹ اچ محفوظ کُوں نی کر سگھیا",
     "savedAgo": "محفوظ کیتا {{when}}",
@@ -2693,6 +2703,7 @@
     "ttsHint": "جدوں تہاڈا تحفہ آوے تے ویکھن والے ساریاں نوں زور نال آکھو۔"
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2767,7 +2778,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

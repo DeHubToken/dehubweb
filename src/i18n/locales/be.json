@@ -4099,6 +4099,14 @@
     "voiceNoteFailed": "Не ўдалося адправіць голасавую нататку"
   },
   "referral": {
+    "stats": {
+      "pageViews": "Прагляды старонак",
+      "uniqueVisitors": "Унікальныя наведвальнікі",
+      "inLast30Days": "{{count}} за 30 дзён",
+      "percentJoined": "{{pct}}% далучыўся",
+      "noVisits": "Візітаў пакуль няма",
+      "selfVisitsExcluded": "Вашы ўласныя наведванні спасылкі не ўлічваюцца."
+    },
     "seoTitle": "DeHub — дэцэнтралізаваная сетка творцаў",
     "seoTitleInvited": "{{inviter}} запрасіў вас у DeHub — зарабляйце, публікуйце і стройце on-chain",
     "seoDescription": "Дэцэнтралізаваная сетка творцаў.",
@@ -4925,27 +4933,8 @@
     "ttsPlaceholder": "Прачытайце да патоку...",
     "ttsHint": "Чытайце ўсім, хто глядзіць, калі ваш падарунак прызямляецца."
   },
-  "spaces": {
-    "title": "Прасторы",
-    "live": "Прамая трансляцыя",
-    "upcoming": "Надыходныя",
-    "past": "Мінулыя",
-    "create": "Стварыць прастору",
-    "join": "Далучыцца",
-    "listeners": "Слухачы",
-    "speakers": "Выступоўцы",
-    "host": "Вядучы",
-    "noSpaces": "Пакуль няма прастораў",
-    "loginDescription": "Увайдзіце, каб ствараць і далучацца да аўдыяпрастораў."
-  },
-  "blog": {
-    "title": "Блог",
-    "readMore": "Чытаць далей",
-    "backToBlog": "Вярнуцца да блога",
-    "sharePost": "Падзяліцца публікацыяй",
-    "relatedPosts": "Звязаныя публікацыі"
-  },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5020,9 +5009,28 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "spaces": {
+    "title": "Прасторы",
+    "live": "Прамая трансляцыя",
+    "upcoming": "Надыходныя",
+    "past": "Мінулыя",
+    "create": "Стварыць прастору",
+    "join": "Далучыцца",
+    "listeners": "Слухачы",
+    "speakers": "Выступоўцы",
+    "host": "Вядучы",
+    "noSpaces": "Пакуль няма прастораў",
+    "loginDescription": "Увайдзіце, каб ствараць і далучацца да аўдыяпрастораў."
+  },
+  "blog": {
+    "title": "Блог",
+    "readMore": "Чытаць далей",
+    "backToBlog": "Вярнуцца да блога",
+    "sharePost": "Падзяліцца публікацыяй",
+    "relatedPosts": "Звязаныя публікацыі"
   }
 }

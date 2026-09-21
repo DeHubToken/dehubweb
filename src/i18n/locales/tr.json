@@ -4263,6 +4263,14 @@
     "voiceNoteFailed": "Sesli not gönderilemedi"
   },
   "referral": {
+    "stats": {
+      "pageViews": "Sayfa görüntüleme sayısı",
+      "uniqueVisitors": "Benzersiz ziyaretçiler",
+      "inLast30Days": "30 gün içinde {{count}}",
+      "percentJoined": "%{{pct}} katıldı",
+      "noVisits": "Henüz ziyaret yok",
+      "selfVisitsExcluded": "Bağlantınıza yaptığınız kendi ziyaretleriniz sayılmaz."
+    },
     "seoTitle": "DeHub — merkeziyetsiz üretici ağı",
     "seoTitleInvited": "{{inviter}} seni DeHub'a davet etti — kazan, paylaş ve zincir üstünde üret",
     "seoDescription": "Merkeziyetsiz üretici ağı.",
@@ -5151,6 +5159,7 @@
     "ttsHint": "Hediyeniz geldiğinde izleyen herkese yüksek sesle okuyun."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5225,7 +5234,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
