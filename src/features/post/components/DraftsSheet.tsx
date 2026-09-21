@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { X, Save, Trash2, Clock, Image, Video, Mic } from 'lucide-react';
+import { X, Save, Trash2, Clock, Image, Video, Mic, BarChart3, CalendarClock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { AppState } from '@/components/app/AppState';
+import type { DraftPayload } from '../types';
 
 export interface Draft {
   id: string;
@@ -18,6 +19,8 @@ export interface Draft {
   articleTitle?: string;
   articleImageData?: string;
   socialImageData?: string;
+  /** Poll, schedule, pricing, category — everything that is neither text nor media. */
+  payload?: DraftPayload;
 }
 
 interface DraftsSheetProps {
@@ -59,6 +62,9 @@ export function DraftsSheet({
   const handleSave = () => {
     onSaveDraft();
     toast.success('Draft saved');
+    // Saving is the end of the composing session, not a checkpoint in it: the
+    // sheet closes here and the composer behind it is cleared by the handler.
+    onClose();
   };
 
   return (
@@ -135,6 +141,16 @@ export function DraftsSheet({
                           {draft.hasAudio && (
                             <span className="flex items-center gap-1 text-xs text-zinc-400">
                               <Mic className="w-3 h-3" /> Audio
+                            </span>
+                          )}
+                          {draft.payload?.poll && (
+                            <span className="flex items-center gap-1 text-xs text-zinc-400">
+                              <BarChart3 className="w-3 h-3" /> Poll
+                            </span>
+                          )}
+                          {draft.payload?.scheduledDate && (
+                            <span className="flex items-center gap-1 text-xs text-zinc-400">
+                              <CalendarClock className="w-3 h-3" /> Scheduled
                             </span>
                           )}
                         </div>
