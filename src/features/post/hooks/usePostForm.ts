@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import type { Json } from '@/integrations/supabase/types';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
 import { buyTokensLabel, dhbText } from '@/lib/dhb-toast';
@@ -96,6 +97,10 @@ interface ActiveDraft {
   tokenContract: string;
   tokenSymbol: string;
   tokenAmount: string;
+  /** Absent on drafts saved before polls were kept. */
+  poll?: PollData | null;
+  /** ISO string; absent on drafts saved before schedules were kept. */
+  scheduledDate?: string | null;
 }
 
 function loadActiveDraft(): ActiveDraft | null {
@@ -166,6 +171,10 @@ const loadDraftsFromDb = async (walletAddress: string): Promise<Draft[]> => {
         articleTitle: (d.metadata as any)?.articleTitle || (d.metadata as any)?.titleText || undefined,
         articleImageData: (d.metadata as any)?.articleImageData || undefined,
         socialImageData: (d.metadata as any)?.socialImageData || undefined,
+        // Mobile writes its settings under metadata.monetization/categories and
+        // has no payload; those drafts restore as text, which is what they were
+        // before this key existed.
+        payload: (d.metadata as any)?.payload || undefined,
       }));
     }
   } catch (e) {
@@ -185,7 +194,23 @@ const saveDraftToDb = async (walletAddress: string, draft: Draft): Promise<strin
           text: draft.text,
           has_image: draft.hasImage,
           has_video: draft.hasVideo,
-          metadata: { hasAudio: draft.hasAudio, articleBody: draft.articleBody, articleTitle: draft.articleTitle, articleImageData: draft.articleImageData, socialImageData: draft.socialImageData },
+          // selected_category is a real column mobile reads — a category-only
+          // web draft opened on a phone came back with no category at all.
+          selected_category: draft.payload?.selectedCategory || '',
+          metadata: {
+            hasAudio: draft.hasAudio,
+            articleBody: draft.articleBody,
+            articleTitle: draft.articleTitle,
+            articleImageData: draft.articleImageData,
+            socialImageData: draft.socialImageData,
+            payload: draft.payload,
+            // Read by mobile, which has no notion of `payload`.
+            titleText: draft.payload?.titleText || '',
+            categories: draft.payload?.selectedCategory ? [draft.payload.selectedCategory] : [],
+            source: 'web',
+            // The column is jsonb; the generated Json type won't take an
+            // interface with optional keys without this.
+          } as unknown as Json,
         })
         .select('id')
         .single(),
@@ -299,7 +324,7 @@ export function usePostForm(
   const [tokenSymbol, setTokenSymbol] = useState(d?.tokenSymbol ?? 'DHB');
   const [tokenAmount, setTokenAmount] = useState(d?.tokenAmount ?? '');
   const [liveMode, setLiveMode] = useState<LiveMode>(null);
-  const [poll, setPoll] = useState<PollData | null>(null);
+  const [poll, setPoll] = useState<PollData | null>(d?.poll ?? null);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -325,7 +350,12 @@ export function usePostForm(
    */
   const postAttemptRef = useRef<{ signature: string; key: string } | null>(null);
   
-  const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
+  const [scheduledDate, setScheduledDate] = useState<Date | null>(() => {
+    if (!d?.scheduledDate) return null;
+    const when = new Date(d.scheduledDate);
+    // A restored schedule in the past would have the post rejected on send.
+    return Number.isNaN(when.getTime()) || when.getTime() <= Date.now() ? null : when;
+  });
   const [drafts, setDrafts] = useState<Draft[]>(loadDraftsLocal);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -524,11 +554,13 @@ export function usePostForm(
         selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
         isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
         isTokenGated, tokenContract, tokenSymbol, tokenAmount,
+        poll,
+        scheduledDate: scheduledDate ? scheduledDate.toISOString() : null,
       };
       // Only save if there's meaningful content
       const hasContent = text.trim() || titleText.trim() ||
         selectedCategory || isPPV || isWatch2Earn || isTokenGated || isSubscribersOnly ||
-        shopLinks.length > 0 || shopListingIds.length > 0;
+        shopLinks.length > 0 || shopListingIds.length > 0 || poll || scheduledDate;
       if (hasContent) {
         saveActiveDraft(draft);
       } else {
@@ -544,7 +576,7 @@ export function usePostForm(
   }, [text, titleText, showTitle, isMature, isForKids, shopLinks, shopListingIds,
     selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
-    isTokenGated, tokenContract, tokenSymbol, tokenAmount]);
+    isTokenGated, tokenContract, tokenSymbol, tokenAmount, poll, scheduledDate]);
 
   // Flush the latest pending draft exactly once, at unmount.
   useEffect(() => () => { persistDraftRef.current?.(); }, []);
@@ -1150,10 +1182,18 @@ export function usePostForm(
   useEffect(() => {
     if (!user?.address) return;
     loadDraftsFromDb(user.address).then((dbDrafts) => {
-      if (dbDrafts.length > 0) {
-        setDrafts(dbDrafts);
-        saveDraftsLocal(dbDrafts); // sync to localStorage as backup
-      }
+      if (dbDrafts.length === 0) return;
+      // Fold the server's drafts in rather than replacing the list. The old
+      // assignment threw away anything saved while signed out or offline — and
+      // then wrote that loss straight into localStorage.
+      setDrafts((local) => {
+        const seen = new Set(dbDrafts.map((d) => d.id));
+        const merged = [...dbDrafts, ...local.filter((d) => !seen.has(d.id))]
+          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+          .slice(0, 10);
+        saveDraftsLocal(merged);
+        return merged;
+      });
     });
   }, [user?.address]);
 
@@ -1170,6 +1210,17 @@ export function usePostForm(
       articleTitle: article?.title,
       articleImageData: article?.imageData,
       socialImageData: article?.socialData,
+      payload: {
+        titleText, showTitle, selectedCategory, isMature, isForKids, isSubscribersOnly,
+        isPPV, ppvAmount, ppvCurrency,
+        isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
+        isTokenGated, tokenContract, tokenSymbol, tokenAmount,
+        poll,
+        scheduledDate: scheduledDate ? scheduledDate.toISOString() : null,
+        chainId,
+        shopLinks,
+        shopListingIds,
+      },
     };
     const updatedDrafts = [newDraft, ...drafts].slice(0, 10);
     setDrafts(updatedDrafts);
@@ -1183,12 +1234,50 @@ export function usePostForm(
         }
       });
     }
-  }, [text, hasImage, hasVideo, hasAudio, drafts, user?.address]);
+  }, [text, hasImage, hasVideo, hasAudio, drafts, user?.address,
+    titleText, showTitle, selectedCategory, isMature, isForKids, isSubscribersOnly,
+    isPPV, ppvAmount, ppvCurrency, isWatch2Earn, w2eViews, w2eComments, w2eTotal,
+    w2eCurrency, isTokenGated, tokenContract, tokenSymbol, tokenAmount, poll,
+    scheduledDate, chainId, shopLinks, shopListingIds]);
 
   const loadDraft = useCallback((draft: Draft) => {
     setText(draft.text);
     if (editorRef.current) {
       editorRef.current.innerText = draft.text;
+    }
+    // Everything else the draft carried. A missing key means the draft predates
+    // that setting (or came from mobile), so the composer's default stands —
+    // but a key that IS present must be applied even when it is false or empty,
+    // or turning a switch off and saving would not stick.
+    const p = draft.payload;
+    if (!p) return;
+    if (p.titleText !== undefined) setTitleText(p.titleText);
+    if (p.showTitle !== undefined) setShowTitle(p.showTitle);
+    if (p.selectedCategory !== undefined) setSelectedCategory(p.selectedCategory);
+    if (p.isMature !== undefined) setIsMature(p.isMature);
+    if (p.isForKids !== undefined) setIsForKids(p.isForKids);
+    if (p.isSubscribersOnly !== undefined) setIsSubscribersOnly(p.isSubscribersOnly);
+    if (p.isPPV !== undefined) setIsPPV(p.isPPV);
+    if (p.ppvAmount !== undefined) setPpvAmount(p.ppvAmount);
+    if (p.ppvCurrency !== undefined) setPpvCurrency(p.ppvCurrency);
+    if (p.isWatch2Earn !== undefined) setIsWatch2Earn(p.isWatch2Earn);
+    if (p.w2eViews !== undefined) setW2eViews(p.w2eViews);
+    if (p.w2eComments !== undefined) setW2eComments(p.w2eComments);
+    if (p.w2eTotal !== undefined) setW2eTotal(p.w2eTotal);
+    if (p.w2eCurrency !== undefined) setW2eCurrency(p.w2eCurrency);
+    if (p.isTokenGated !== undefined) setIsTokenGated(p.isTokenGated);
+    if (p.tokenContract !== undefined) setTokenContract(p.tokenContract);
+    if (p.tokenSymbol !== undefined) setTokenSymbol(p.tokenSymbol);
+    if (p.tokenAmount !== undefined) setTokenAmount(p.tokenAmount);
+    if (p.poll !== undefined) setPoll(p.poll ?? null);
+    if (p.chainId !== undefined) setChainIdState(p.chainId as PostChainId);
+    if (p.shopLinks !== undefined) setShopLinks(p.shopLinks as ShopLink[]);
+    if (p.shopListingIds !== undefined) setShopListingIds(p.shopListingIds);
+    if (p.scheduledDate !== undefined) {
+      // A schedule that has come and gone is not a schedule. Dropping it means
+      // the post goes out now instead of being rejected for a past time.
+      const when = p.scheduledDate ? new Date(p.scheduledDate) : null;
+      setScheduledDate(when && !Number.isNaN(when.getTime()) && when.getTime() > Date.now() ? when : null);
     }
   }, []);
 

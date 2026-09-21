@@ -218,10 +218,17 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onSchedule={actions.setScheduledDate}
         drafts={state.drafts}
         onSaveDraft={() => {
-          if (!articleMode) { actions.saveDraft(); return; }
+          // The draft is the copy of record from here on, so the composer is
+          // emptied and closed behind it. It used to stay open holding the same
+          // content — and because the composer is mounted behind a one-way
+          // latch, that content was still sitting there on the next open,
+          // one Post away from being published or saved twice.
+          const done = () => { actions.resetForm(); handleClose(); };
+          if (!articleMode) { actions.saveDraft(); done(); return; }
           draftImageData(articleImage)
             .then(imageData => actions.saveDraft({ body: articleBody, title: state.titleText, imageData, socialData: imageData }))
-            .catch(() => actions.saveDraft({ body: articleBody, title: state.titleText }));
+            .catch(() => actions.saveDraft({ body: articleBody, title: state.titleText }))
+            .finally(done);
         }}
         onLoadDraft={draft => {
           actions.loadDraft(draft);
@@ -231,6 +238,12 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
             actions.setTitleText(draft.articleTitle || '');
             actions.setShowTitle(true);
             void restoreDraftImage(draft.socialImageData || draft.articleImageData, 'article-share-image.jpg', setArticleImage);
+          } else {
+            // Loading a plain draft while the article editor is open used to
+            // leave the article's body and cover sitting under the new text.
+            setArticleMode(false);
+            setArticleBody('');
+            setArticleImage(null);
           }
         }}
         onDeleteDraft={actions.deleteDraft}
