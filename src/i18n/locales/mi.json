@@ -1525,6 +1525,11 @@
     "searchDehubFor": "Rapua \"{{query}}\" i DeHub"
   },
   "comments": {
+    "reportComment": "Ngā kōrero pūrongo",
+    "reportCommentTitle": "Whakapuaki i tenei korero",
+    "reportCommentDescription": "Korero mai ki a matou he aha te he ki tenei korero, a ka arotakehia e o maatau kaiwhakawhanake.",
+    "reportCommentAlready": "Kua korerotia e koe tenei kōrero.",
+    "reportReasonPlaceholder": "Tāpirihia he taipitopito e āwhina ana i a mātou ki te arotake i a ia (kōwhiringa)",
     "showAll": "Whakaatuhia nga korero katoa",
     "discardTitle": "Whakakorea tō kōrero?",
     "discardBody": "Kua tiakina hei hukihuki, ka noho tonu ki konei ina hoki mai koe.",
@@ -2812,6 +2817,7 @@
     "ttsHint": "Pānuihia te reo nui ki te hunga katoa e titiro ana ki to koutou taonga whenua."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2886,7 +2892,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

@@ -74,3 +74,41 @@ export async function reportUser(params: {
   });
   return { success: response?.success !== false, message: response?.message };
 }
+
+// Comment reports
+
+/**
+ * The server answers `{ result: true, data: [{ value, label }] }`; the modal
+ * reads `{ id, label }`, so map here rather than teach it a second shape.
+ */
+export async function getCommentReportReasons(): Promise<ReportReason[]> {
+  const response = await apiCall<any>('/api/report/reasons/comment');
+  const rows = Array.isArray(response?.data) ? response.data : Array.isArray(response) ? response : [];
+  return rows
+    .map((row: any) => ({ id: String(row?.value ?? row?.id ?? ''), label: String(row?.label ?? row?.value ?? '') }))
+    .filter((row: ReportReason) => row.id);
+}
+
+export async function getCommentReportStatus(commentId: number | string): Promise<{ reported: boolean }> {
+  const response = await apiCall<any>(`/api/report/comment/status/${commentId}`, {
+    requiresAuth: true,
+  });
+  return { reported: response?.data?.hasReported ?? false };
+}
+
+export async function reportComment(params: {
+  commentId: number | string;
+  reason: string;
+  description?: string;
+}): Promise<{ success: boolean; message?: string }> {
+  const response = await apiCall<any>('/api/report/comment', {
+    method: 'POST',
+    body: {
+      commentId: String(params.commentId),
+      reason: params.reason,
+      additionalInfo: params.description || undefined,
+    },
+    requiresAuth: true,
+  });
+  return { success: response?.result !== false, message: response?.message };
+}

@@ -1498,6 +1498,11 @@
     "searchDehubFor": "په DeHub کې \"{{query}}\" ولټوئ"
   },
   "comments": {
+    "reportComment": "د نظر ورکولو راپور",
+    "reportCommentTitle": "په دې اړه رپوټ دلته واورئ",
+    "reportCommentDescription": "موږ ته ووایاست چې د دې نظر سره څه غلط دي او زموږ مدیران به یې بیاکتنه وکړي.",
+    "reportCommentAlready": "تاسو دمخه د دې په اړه راپور ورکړی.",
+    "reportReasonPlaceholder": "هر هغه معلومات اضافه کړئ چې موږ سره د دې بیاکتنې کې مرسته کوي (اختیاري)",
     "showAll": "ټولې تبصرې ښکاره کړئ",
     "discardTitle": "خپله تبصره پرېږدې؟",
     "discardBody": "د مسودې په توګه خوندي شوې، نو کله چې راستون شې دلته به وي.",
@@ -2734,6 +2739,7 @@
     "ttsHint": "د هرچا لپاره لوستل کله چې تاسو خپل کور وپلټئ."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2808,7 +2814,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

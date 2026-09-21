@@ -1569,6 +1569,11 @@
     "searchDehubFor": "在 DeHub 中搜索\"{{query}}\""
   },
   "comments": {
+    "reportComment": "报告评论",
+    "reportCommentTitle": "举报此评论",
+    "reportCommentDescription": "告诉我们此评论有什么问题，我们的主持人将对其进行审核。",
+    "reportCommentAlready": "您已经举报了此评论。",
+    "reportReasonPlaceholder": "添加有助于我们审核的所有详细信息（选填）",
     "showAll": "显示所有评论",
     "discardTitle": "要放弃你的评论吗？",
     "discardBody": "已保存为草稿，回来时还在这里。",
@@ -5152,6 +5157,7 @@
     "ttsHint": "当你的礼物送达时，念给所有观看的人听。"
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5226,7 +5232,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

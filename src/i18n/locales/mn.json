@@ -1526,6 +1526,11 @@
     "searchDehubFor": "DeHub дээр \"{{query}}\"-г хай"
   },
   "comments": {
+    "reportComment": "Тайлан",
+    "reportCommentTitle": "Энэ сэтгэгдлийг мэдээлэх",
+    "reportCommentDescription": "Энэ сэтгэгдлийг юу буруу байгааг бидэнд хэлээд манай зохицуулагчид хянаж үзэх болно.",
+    "reportCommentAlready": "Та энэ сэтгэгдлийг аль хэдийн мэдээлсэн байна.",
+    "reportReasonPlaceholder": "Хяналт хийхэд тус болох аливаа мэдээллийг нэмэх (заавал биш)",
     "showAll": "Бүх Сэтгэгдэл",
     "discardTitle": "Сэтгэгдлээ хаях уу?",
     "discardBody": "Ноорог болгон хадгалсан тул буцаж ирэхэд энд байх болно.",
@@ -2781,6 +2786,7 @@
     "ttsHint": "Бэлэг дурсгалын газраа харсан хүн бүрийг чангаар уншаарай."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2855,7 +2861,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

@@ -1571,6 +1571,11 @@
     "searchDehubFor": "Rechercher « {{query}} » sur DeHub"
   },
   "comments": {
+    "reportComment": "Signaler un commentaire",
+    "reportCommentTitle": "Signaler ce commentaire",
+    "reportCommentDescription": "Dites-nous ce qui ne va pas avec ce commentaire et nos modérateurs l'examineront.",
+    "reportCommentAlready": "Vous avez déjà signalé ce commentaire.",
+    "reportReasonPlaceholder": "Ajoutez tous les détails qui nous aident à l'examiner (facultatif)",
     "showAll": "Afficher tous les commentaires",
     "discardTitle": "Abandonner votre commentaire ?",
     "discardBody": "Il est enregistré comme brouillon : vous le retrouverez ici à votre retour.",
@@ -5146,6 +5151,7 @@
     "ttsHint": "Lisez à haute voix à tous ceux qui regardent quand votre cadeau atterrit."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5220,7 +5226,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

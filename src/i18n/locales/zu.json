@@ -1560,6 +1560,11 @@
     "searchDehubFor": "Sesha \"{{query}}\" ku-DeHub"
   },
   "comments": {
+    "reportComment": "Bika ukuphawula",
+    "reportCommentTitle": "Bika lokhu kuphawula",
+    "reportCommentDescription": "Sitshele ukuthi yini engalungile ngalokhu kuphawula futhi abamenenja bethu bazoyibuyekeza.",
+    "reportCommentAlready": "Usuvele ukubikile lokhu kuphawula.",
+    "reportReasonPlaceholder": "Faka noma yimiphi imininingwane esisiza siyibuyekeze (akuphoqelekile)",
     "showAll": "Bonisa wonke amakhomenti",
     "discardTitle": "Ulahla umbono wakho?",
     "discardBody": "Ulondolozwe njengohlaka, ngakho uzoba lapha uma ubuya.",
@@ -2848,6 +2853,7 @@
     "ttsHint": "Funda ngokuzwakalayo kuwo wonke umuntu obuka lapho isipho sakho sifika."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2922,7 +2928,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

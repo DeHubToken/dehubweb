@@ -1573,6 +1573,11 @@
     "searchDehubFor": "DeHub मा \"{{query}}\" खोज्नुहोस्"
   },
   "comments": {
+    "reportComment": "रिपोर्ट टिप्पणी",
+    "reportCommentTitle": "यो टिप्पणी रिपोर्ट गर्नुहोस्",
+    "reportCommentDescription": "यो टिप्पणीमा के गलत छ हामीलाई बताउनुहोस् र हाम्रा मध्यस्थकर्ताहरूले यसको समीक्षा गर्नेछन्।",
+    "reportCommentAlready": "तपाईंले यो टिप्पणी पहिले नै रिपोर्ट गरिसक्नुभएको छ।",
+    "reportReasonPlaceholder": "हामीलाई समीक्षा गर्न मद्दत गर्ने कुनै पनि विवरण थप्नुहोस् (वैकल्पिक)",
     "showAll": "सबै टिप्पणी:",
     "discardTitle": "आफ्नो टिप्पणी हटाउने?",
     "discardBody": "यो मस्यौदाका रूपमा सुरक्षित छ, फर्केपछि यहीँ भेटिनेछ।",
@@ -5007,27 +5012,8 @@
     "ttsPlaceholder": "स्ट्रिममा पढ्नुहोस्...",
     "ttsHint": "तपाईंको उपहार अवतरण गर्दा हेरिरहेका सबैलाई ठूलो स्वरमा पढ्नुहोस् ।"
   },
-  "spaces": {
-    "title": "स्पेसहरू",
-    "live": "प्रत्यक्ष",
-    "upcoming": "आगामी",
-    "past": "विगत",
-    "create": "स्पेस बनाउनुहोस्",
-    "join": "सामेल हुनुहोस्",
-    "listeners": "श्रोताहरू",
-    "speakers": "वक्ताहरू",
-    "host": "होस्ट",
-    "noSpaces": "अहिलेसम्म स्पेसहरू छैनन्",
-    "loginDescription": "अडियो स्पेसहरू बनाउन र सामेल हुन लगइन गर्नुहोस्।"
-  },
-  "blog": {
-    "title": "ब्लग",
-    "readMore": "थप पढ्नुहोस्",
-    "backToBlog": "ब्लगमा फर्कनुहोस्",
-    "sharePost": "पोस्ट साझा गर्नुहोस्",
-    "relatedPosts": "सम्बन्धित पोस्टहरू"
-  },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5102,9 +5088,28 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "spaces": {
+    "title": "स्पेसहरू",
+    "live": "प्रत्यक्ष",
+    "upcoming": "आगामी",
+    "past": "विगत",
+    "create": "स्पेस बनाउनुहोस्",
+    "join": "सामेल हुनुहोस्",
+    "listeners": "श्रोताहरू",
+    "speakers": "वक्ताहरू",
+    "host": "होस्ट",
+    "noSpaces": "अहिलेसम्म स्पेसहरू छैनन्",
+    "loginDescription": "अडियो स्पेसहरू बनाउन र सामेल हुन लगइन गर्नुहोस्।"
+  },
+  "blog": {
+    "title": "ब्लग",
+    "readMore": "थप पढ्नुहोस्",
+    "backToBlog": "ब्लगमा फर्कनुहोस्",
+    "sharePost": "पोस्ट साझा गर्नुहोस्",
+    "relatedPosts": "सम्बन्धित पोस्टहरू"
   }
 }

@@ -1522,6 +1522,11 @@
     "searchDehubFor": "Дар DeHub \"{{query}}\"-ро ҷустуҷӯ кунед"
   },
   "comments": {
+    "reportComment": "Mag-ulat ng komento",
+    "reportCommentTitle": "I-ulat ang komentong ito",
+    "reportCommentDescription": "Ба мо бигӯед, ки дар ин шарҳ чӣ нодуруст аст ва модераторони мо онро баррасӣ хоҳанд кард.",
+    "reportCommentAlready": "Nag-uulat mo na ang komentong ito.",
+    "reportReasonPlaceholder": "Magdagdag ng anumang mga detalye na tumutulong sa amin ito (ops",
     "showAll": "Ipakita ang lahat ng mga",
     "discardTitle": "Шарҳатонро партоед?",
     "discardBody": "Он ҳамчун сиёҳнавис нигоҳ дошта шуд, ҳангоми баргаштан дар ҳамин ҷо мешавад.",
@@ -2803,6 +2808,7 @@
     "ttsHint": "Хондан баланд ба ҳамаи тамошобинон, вақте ки заминҳои атои шумо."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2877,7 +2883,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

@@ -1564,6 +1564,11 @@
     "searchDehubFor": "DeHubలో \"{{query}}\" వెతకండి"
   },
   "comments": {
+    "reportComment": "వ్యాఖ్యను నివేదించండి",
+    "reportCommentTitle": "ఈ వ్యాఖ్యను నివేదించండి",
+    "reportCommentDescription": "ఈ వ్యాఖ్యలో ఏమి తప్పు ఉందో మాకు చెప్పండి మరియు మా మోడరేటర్లు దీన్ని సమీక్షిస్తారు.",
+    "reportCommentAlready": "మీరు ఇప్పటికే ఈ వ్యాఖ్యను నివేదించారు.",
+    "reportReasonPlaceholder": "దాన్ని సమీక్షించడంలో మాకు సహాయపడే ఏవైనా వివరాలను జోడించండి (ఐచ్ఛికం)",
     "showAll": "అన్ని వ్యాఖ్యలు",
     "discardTitle": "మీ వ్యాఖ్యను వదిలేయాలా?",
     "discardBody": "ఇది డ్రాఫ్ట్‌గా సేవ్ అయింది, మీరు తిరిగి వచ్చినప్పుడు ఇక్కడే ఉంటుంది.",
@@ -4943,6 +4948,7 @@
     "ttsHint": "మీ బహుమతి ఎప్పుడు వస్తుందో చూసే ప్రతి ఒక్కరికీ బిగ్గరగా చదవండి."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5017,7 +5023,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

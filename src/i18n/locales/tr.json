@@ -1567,6 +1567,11 @@
     "searchDehubFor": "DeHub'da \"{{query}}\" ara"
   },
   "comments": {
+    "reportComment": "Yorumu bildir",
+    "reportCommentTitle": "Bu yorumu bildir",
+    "reportCommentDescription": "Bu yorumda neyin yanlış olduğunu bize bildirin, moderatörlerimiz bunu inceleyecektir.",
+    "reportCommentAlready": "Bu yorumu zaten bildirdiniz.",
+    "reportReasonPlaceholder": "İncelememize yardımcı olacak ayrıntıları ekleyin (isteğe bağlı)",
     "showAll": "Tüm Yorumları Göster",
     "discardTitle": "Yorumun silinsin mi?",
     "discardBody": "Taslak olarak kaydedildi, geri döndüğünde burada olacak.",
@@ -5151,6 +5156,7 @@
     "ttsHint": "Hediyeniz geldiğinde izleyen herkese yüksek sesle okuyun."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5225,7 +5231,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

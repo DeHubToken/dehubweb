@@ -1510,6 +1510,11 @@
     "searchDehubFor": "\"{{query}}\" ɲini DeHub kan"
   },
   "comments": {
+    "reportComment": "Kɔrɔbɔli kumaw",
+    "reportCommentTitle": "N'i be to ka kuma dɔ fara a kan",
+    "reportCommentDescription": "An k'a fɔ an ye fɛɛn min man ɲi o kuma na ani an ka ladibagaw bena a sɛgɛsɛgɛ.",
+    "reportCommentAlready": "I y'o fɔ ka ban.",
+    "reportReasonPlaceholder": "N'i b'a fɛ ka kunnafoni wɛrɛw sɔrɔ, i ka kan ka tɛmɛ o kan.",
     "showAll": "Ka kuma dɔw lajɛ",
     "discardTitle": "I b'i ka kumasen bɔ?",
     "discardBody": "A marana i ka sɛbɛnnifɔlɔ la, a bɛna to yan fo i seginna.",
@@ -2747,6 +2752,7 @@
     "ttsHint": "N'i ye fɛɛn dɔ di mɔgɔw ma, i ka kan k'o kalan."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2821,7 +2827,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

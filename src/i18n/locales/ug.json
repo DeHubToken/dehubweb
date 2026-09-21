@@ -1529,6 +1529,11 @@
     "searchDehubFor": "DeHub دا \"{{query}}\" ئىزدەش"
   },
   "comments": {
+    "reportComment": "دوكلاتنى تەھلىل قىلىش",
+    "reportCommentTitle": "بۇ ئىنكاسنى دوكلات قىلىڭ",
+    "reportCommentDescription": "بۇ سۆزنىڭ نېمە خاتالىقى بارلىقىنى بىزگە ئېيتىپ بەرگىن، مۇداپىئەچىلىرىمىز ئۇنى تەكشۈرىدۇ.",
+    "reportCommentAlready": "سىز بۇ ئىنكاسنى ئاللىقاچان خەۋەر قىلدىڭىز.",
+    "reportReasonPlaceholder": "ئۇنى تەكشۈرۈشىمىزگە ياردەم بېرىدىغان ھەرقانداق تەپسىلاتنى قوشۇڭ (ئىختىيارىي)",
     "showAll": "بارلىق ئىنكاسلارنى كۆرسىتىش",
     "discardTitle": "ئىنكاسىڭىزنى تاشلامسىز؟",
     "discardBody": "ئۇ دەسلەپكى نۇسخا سۈپىتىدە ساقلاندى، قايتىپ كەلگىنىڭىزدە مۇشۇ يەردە بولىدۇ.",
@@ -2790,6 +2795,7 @@
     "ttsHint": "سوۋغىڭىز چۈشكەندە ھەممەيلەنگە يۇقىرى ئاۋاز بىلەن ئوقۇپ بېرىڭ."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2864,7 +2870,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

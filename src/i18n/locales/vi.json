@@ -1402,6 +1402,11 @@
     "searchDehubFor": "Tìm \"{{query}}\" trên DeHub"
   },
   "comments": {
+    "reportComment": "Báo cáo bình luận",
+    "reportCommentTitle": "Báo cáo nhận xét này",
+    "reportCommentDescription": "Hãy cho chúng tôi biết nhận xét này có vấn đề gì và người kiểm duyệt của chúng tôi sẽ xem xét.",
+    "reportCommentAlready": "Bạn đã báo cáo nhận xét này.",
+    "reportReasonPlaceholder": "Thêm bất kỳ thông tin nào giúp chúng tôi xem xét (không bắt buộc)",
     "showAll": "Hiển thị tất cả <x id=\"1\"/> bình luận",
     "discardTitle": "Bỏ bình luận của bạn?",
     "discardBody": "Đã lưu thành bản nháp, nên nó vẫn ở đây khi bạn quay lại.",
@@ -4852,82 +4857,8 @@
     "ttsPlaceholder": "Đọc ra luồng…",
     "ttsHint": "Đọc to cho mọi người xem khi món quà của bạn hạ cánh."
   },
-  "glossary": {
-    "title": "Bảng thuật ngữ",
-    "description": "Giải thích các thuật ngữ và khái niệm quan trọng trong ứng dụng.",
-    "badges": {
-      "title": "Huy hiệu",
-      "description": "Huy hiệu được trao dựa trên số lượng token DHB mà người dùng đã stake.",
-      "tiers": [
-        {
-          "name": "Tortoise",
-          "min": 0,
-          "color": "white"
-        },
-        {
-          "name": "Crab",
-          "min": 10000,
-          "color": "white"
-        },
-        {
-          "name": "Lobster",
-          "min": 25000,
-          "color": "white"
-        },
-        {
-          "name": "Piranha",
-          "min": 50000,
-          "color": "white"
-        },
-        {
-          "name": "Cobra",
-          "min": 250000,
-          "color": "white"
-        },
-        {
-          "name": "Octopus",
-          "min": 500000,
-          "color": "white"
-        },
-        {
-          "name": "Crocodile",
-          "min": 1000000,
-          "color": "white"
-        },
-        {
-          "name": "Dolphin",
-          "min": 2000000,
-          "color": "white"
-        },
-        {
-          "name": "Tiger Shark",
-          "min": 3000000,
-          "color": "white"
-        },
-        {
-          "name": "Great White Shark",
-          "min": 5000000,
-          "color": "white"
-        },
-        {
-          "name": "Killer Whale",
-          "min": 10000000,
-          "color": "white"
-        },
-        {
-          "name": "Blue Whale",
-          "min": 25000000,
-          "color": "white"
-        },
-        {
-          "name": "Megalodon",
-          "min": 50000000,
-          "color": "white"
-        }
-      ]
-    }
-  },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5002,9 +4933,83 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "glossary": {
+    "title": "Bảng thuật ngữ",
+    "description": "Giải thích các thuật ngữ và khái niệm quan trọng trong ứng dụng.",
+    "badges": {
+      "title": "Huy hiệu",
+      "description": "Huy hiệu được trao dựa trên số lượng token DHB mà người dùng đã stake.",
+      "tiers": [
+        {
+          "name": "Tortoise",
+          "min": 0,
+          "color": "white"
+        },
+        {
+          "name": "Crab",
+          "min": 10000,
+          "color": "white"
+        },
+        {
+          "name": "Lobster",
+          "min": 25000,
+          "color": "white"
+        },
+        {
+          "name": "Piranha",
+          "min": 50000,
+          "color": "white"
+        },
+        {
+          "name": "Cobra",
+          "min": 250000,
+          "color": "white"
+        },
+        {
+          "name": "Octopus",
+          "min": 500000,
+          "color": "white"
+        },
+        {
+          "name": "Crocodile",
+          "min": 1000000,
+          "color": "white"
+        },
+        {
+          "name": "Dolphin",
+          "min": 2000000,
+          "color": "white"
+        },
+        {
+          "name": "Tiger Shark",
+          "min": 3000000,
+          "color": "white"
+        },
+        {
+          "name": "Great White Shark",
+          "min": 5000000,
+          "color": "white"
+        },
+        {
+          "name": "Killer Whale",
+          "min": 10000000,
+          "color": "white"
+        },
+        {
+          "name": "Blue Whale",
+          "min": 25000000,
+          "color": "white"
+        },
+        {
+          "name": "Megalodon",
+          "min": 50000000,
+          "color": "white"
+        }
+      ]
+    }
   }
 }

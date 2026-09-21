@@ -1508,6 +1508,11 @@
     "searchDehubFor": "ኣብ DeHub \"{{query}}\" ድለ"
   },
   "comments": {
+    "reportComment": "ርእይቶታት ኣቕርብ",
+    "reportCommentTitle": "ነዚ ርእይቶ እዚ ኣመልኪቱ",
+    "reportCommentDescription": "ብዛዕባ እዚ ርእይቶ እዚ እንታይ ጌጋ ኸም ዘሎ ንገረና ፣ ኣማሓደርትና ድማ ነዚ ኺግምግሙ እዮም ።",
+    "reportCommentAlready": "ነዚ ሓሳብ እዚ ቀዲምካ ኣዘኻኺርካዮ ኢኻ ።",
+    "reportReasonPlaceholder": "ነዚ ንምግምጋም ዝሕግዘና ዝኾነ ዝርዝር ሓበሬታ ኣክሎ (ምምራጽ)",
     "showAll": "ንዅሉ ርእይቶታት ኣርኢ",
     "discardTitle": "ርእይቶኻ ክትሓድጎ?",
     "discardBody": "ከም ንድፊ ተዓቂቡ ኣሎ፣ ምስ ተመለስካ ኣብዚ ክህሉ እዩ።",
@@ -2731,6 +2736,7 @@
     "ttsHint": "ነቲ ህያብካ ምስ ዚወድቕ ዚርኢ ዘበለ ዅሉ ብድምጺ ኣንብቦ ።"
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2805,7 +2811,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

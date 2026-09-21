@@ -1563,6 +1563,11 @@
     "searchDehubFor": "„{{query}}” keresése a DeHubon"
   },
   "comments": {
+    "reportComment": "Megjegyzés jelentése",
+    "reportCommentTitle": "Hozzászólás jelentése",
+    "reportCommentDescription": "Mondd el, mi a baj ezzel a hozzászólással, és moderátoraink átnézik.",
+    "reportCommentAlready": "Már jelentetted ezt a hozzászólást.",
+    "reportReasonPlaceholder": "Add meg azokat az adatokat, amelyek segítenek az áttekintésben (nem kötelező)",
     "showAll": "Összes %d hozzászólás",
     "discardTitle": "Elveted a hozzászólásod?",
     "discardBody": "Piszkozatként elmentettük, szóval itt lesz, ha visszatérsz.",
@@ -5034,6 +5039,7 @@
     "ttsHint": "Olvasd fel hangosan, hogy mindenki láthassa, amikor az ajándékod megérkezik."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5108,7 +5114,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

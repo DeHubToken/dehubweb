@@ -1505,6 +1505,11 @@
     "searchDehubFor": "DeHub හි \"{{query}}\" සොයන්න"
   },
   "comments": {
+    "reportComment": "අදහස වාර්තා කරන්න",
+    "reportCommentTitle": "මෙම අදහස වාර්තා කරන්න",
+    "reportCommentDescription": "මෙම ප් රකාශයේ ඇති වැරැද්ද කුමක්දැයි අපට කියන්න, අපගේ උපපරිපාලකයින් එය සමාලෝචනය කරනු ඇත.",
+    "reportCommentAlready": "ඔබ දැනටමත් මෙම ප් ‍ රකාශය වාර්තා කර ඇත.",
+    "reportReasonPlaceholder": "එය සමාලෝචනය කිරීමට අපට උපකාර වන ඕනෑම විස්තරයක් එක් කරන්න (අත් ‍ යවශ් ‍ ය නොවේ)",
     "showAll": "සියලු අදහස් පෙන්වන්න",
     "discardTitle": "ඔබේ අදහස ඉවත දමන්නද?",
     "discardBody": "එය කෙටුම්පතක් ලෙස සුරැකී ඇත, ආපසු එන විට මෙහි ඇත.",
@@ -4639,27 +4644,8 @@
     "ttsPlaceholder": "කියවලාම බලන්නකෝ ප් ‍ රවාහයට...",
     "ttsHint": "ඔබේ තෑග්ග ගොඩබසින විට බලා සිටින සෑම කෙනෙකුටම ශබ්ද නඟා කියවන්න."
   },
-  "spaces": {
-    "title": "අවකාශ",
-    "live": "සජීවී",
-    "upcoming": "ඉදිරි",
-    "past": "පසුගිය",
-    "create": "අවකාශයක් නිර්මාණය",
-    "join": "එකතු වන්න",
-    "listeners": "සවන්දෙන්නන්",
-    "speakers": "කථිකයන්",
-    "host": "සත්කාරක",
-    "noSpaces": "තවම අවකාශ නැත",
-    "loginDescription": "ශ්‍රව්‍ය අවකාශ නිර්මාණය කිරීමට සහ එකතු වීමට පිවිසෙන්න."
-  },
-  "blog": {
-    "title": "බ්ලොග්",
-    "readMore": "තවත් කියවන්න",
-    "backToBlog": "බ්ලොග් වෙත ආපසු",
-    "sharePost": "පළකිරීම බෙදා ගන්න",
-    "relatedPosts": "සම්බන්ධ පළකිරීම්"
-  },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -4734,9 +4720,28 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "spaces": {
+    "title": "අවකාශ",
+    "live": "සජීවී",
+    "upcoming": "ඉදිරි",
+    "past": "පසුගිය",
+    "create": "අවකාශයක් නිර්මාණය",
+    "join": "එකතු වන්න",
+    "listeners": "සවන්දෙන්නන්",
+    "speakers": "කථිකයන්",
+    "host": "සත්කාරක",
+    "noSpaces": "තවම අවකාශ නැත",
+    "loginDescription": "ශ්‍රව්‍ය අවකාශ නිර්මාණය කිරීමට සහ එකතු වීමට පිවිසෙන්න."
+  },
+  "blog": {
+    "title": "බ්ලොග්",
+    "readMore": "තවත් කියවන්න",
+    "backToBlog": "බ්ලොග් වෙත ආපසු",
+    "sharePost": "පළකිරීම බෙදා ගන්න",
+    "relatedPosts": "සම්බන්ධ පළකිරීම්"
   }
 }

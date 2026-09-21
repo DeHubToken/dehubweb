@@ -1560,6 +1560,11 @@
     "searchDehubFor": "DeHub-da «{{query}}» axtar"
   },
   "comments": {
+    "reportComment": "Şərh bildir",
+    "reportCommentTitle": "Bu şərh haqqında məlumat verin",
+    "reportCommentDescription": "Bu şərhin səhv olduğunu bizə bildirin. Moderatorlarımız onu nəzərdən keçirəcək.",
+    "reportCommentAlready": "Bu şərhi artıq bildirmisiniz.",
+    "reportReasonPlaceholder": "Onu nəzərdən keçirməyimizə kömək edən istənilən təfərrüatı əlavə edin (qeyri-məcburi)",
     "showAll": "Bütün şərhləri göstər",
     "discardTitle": "Şərhinizi ləğv edirsiniz?",
     "discardBody": "Qaralama kimi saxlanılıb, qayıtdığınızda burada olacaq.",
@@ -4991,6 +4996,7 @@
     "ttsHint": "Hədiyyəniz yerə endikdə izləyən hər kəsə ucadan oxuyun."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5065,7 +5071,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

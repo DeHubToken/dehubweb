@@ -1529,6 +1529,10 @@
     "searchDehubFor": "Nemi \"{{query}}\" a DeHub"
   },
   "comments": {
+    "reportComment": "Rahoto sharhi",
+    "reportCommentTitle": "Rahoto wannan sharhi",
+    "reportCommentDescription": "Faɗa mana abin da ba daidai ba ne tare da wannan sharhi kuma masu daidaita mu za su sake duba shi.",
+    "reportCommentAlready": "Kun riga kun bayar da rahoton wannan sharhi.",
     "showAll": "Nuna duk sharhi",
     "discardTitle": "Ka jefar da sharhinka?",
     "discardBody": "An ajiye shi a matsayin daftari, zai kasance nan sa'ad da ka dawo.",
@@ -2817,6 +2821,7 @@
     "ttsHint": "Karanta da ƙarfi ga kowa da kowa yana kallo lokacin da kyautarku ta sauka."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2891,7 +2896,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

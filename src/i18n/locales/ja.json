@@ -1565,6 +1565,11 @@
     "searchDehubFor": "DeHub で「{{query}}」を検索"
   },
   "comments": {
+    "reportComment": "コメントを報告",
+    "reportCommentTitle": "このコメントを報告する",
+    "reportCommentDescription": "このコメントのどこに問題があるかを教えてください。モデレーターが確認します。",
+    "reportCommentAlready": "このコメントは既に報告されています。",
+    "reportReasonPlaceholder": "確認に役立つ情報を入力してください（任意）",
     "showAll": "全てのコメントを表示する",
     "discardTitle": "コメントを破棄しますか？",
     "discardBody": "下書きとして保存されているので、戻ればここにあります。",
@@ -5136,6 +5141,7 @@
     "ttsHint": "贈り物が届いたら、視聴者全員に声に出して読んでもらいましょう。"
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5210,7 +5216,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

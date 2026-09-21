@@ -1568,6 +1568,11 @@
     "searchDehubFor": "Tafuta \"{{query}}\" kwenye DeHub"
   },
   "comments": {
+    "reportComment": "Ripoti maoni",
+    "reportCommentTitle": "Ripoti maoni haya",
+    "reportCommentDescription": "Tuambie ni nini kibaya na maoni haya na wasimamizi wetu watayatathmini.",
+    "reportCommentAlready": "Tayari umeripoti maoni haya.",
+    "reportReasonPlaceholder": "Weka maelezo yoyote yanayotusaidia kuitathmini (hiari)",
     "showAll": "Onyesha maoni yote",
     "discardTitle": "Utupe maoni yako?",
     "discardBody": "Yamehifadhiwa kama rasimu, hivyo yatakuwa hapa utakaporudi.",
@@ -5089,6 +5094,7 @@
     "ttsHint": "Soma kwa sauti kwa kila mtu anayetazama zawadi yako inapotua."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5163,7 +5169,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

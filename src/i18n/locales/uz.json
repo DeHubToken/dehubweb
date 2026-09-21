@@ -1547,6 +1547,11 @@
     "searchDehubFor": "DeHub'da «{{query}}» ni qidirish"
   },
   "comments": {
+    "reportComment": "Fikr haqida xabar berish",
+    "reportCommentTitle": "Bu izoh haqida xabar bering",
+    "reportCommentDescription": "Ushbu izohda nima noto&#39;g&#39;ri ekanligini bizga ayting, shunda moderatorlarimiz uni ko&#39;rib chiqadilar.",
+    "reportCommentAlready": "Siz bu izoh haqida allaqachon xabar bergansiz.",
+    "reportReasonPlaceholder": "Uni ko&#39;rib chiqishimizga yordam beradigan har qanday ma&#39;lumotlarni qo&#39;shing (ixtiyoriy)",
     "showAll": "Barcha izohlarni ko&#39;rsatish",
     "discardTitle": "Izohingizni bekor qilasizmi?",
     "discardBody": "U qoralama sifatida saqlandi, qaytganingizda shu yerda bo'ladi.",
@@ -2835,33 +2840,8 @@
     "ttsPlaceholder": "Oqimga o'qing…",
     "ttsHint": "Sovg'angiz qo'lga tushganda, tomosha qilayotgan barchaga ovoz chiqarib o'qing."
   },
-  "spaces": {
-    "title": "Boʻlimlar",
-    "live": "Jonli",
-    "upcoming": "Kelgusi",
-    "past": "Oʻtgan",
-    "create": "Boʻlim yaratish",
-    "join": "Qoʻshilish",
-    "listeners": "Tinglovchilar",
-    "speakers": "Nutqchilar",
-    "host": "Boshlovchi",
-    "endSpace": "Boʻlimni tugatish",
-    "raiseHand": "Qoʻl koʻtarish",
-    "lowerHand": "Qoʻlni tushirish",
-    "mute": "Ovozni oʻchirish",
-    "unmute": "Ovozni yoqish",
-    "leave": "Boʻlimni tark etish",
-    "noSpaces": "Hali boʻlimlar yoʻq",
-    "loginDescription": "Audio boʻlimlar yaratish va qoʻshilish uchun kiring."
-  },
-  "blog": {
-    "title": "Blog",
-    "readMore": "Koʻproq oʻqish",
-    "backToBlog": "Blogga qaytish",
-    "sharePost": "Postni ulashish",
-    "relatedPosts": "Bogʻliq postlar"
-  },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2936,9 +2916,34 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "spaces": {
+    "title": "Boʻlimlar",
+    "live": "Jonli",
+    "upcoming": "Kelgusi",
+    "past": "Oʻtgan",
+    "create": "Boʻlim yaratish",
+    "join": "Qoʻshilish",
+    "listeners": "Tinglovchilar",
+    "speakers": "Nutqchilar",
+    "host": "Boshlovchi",
+    "endSpace": "Boʻlimni tugatish",
+    "raiseHand": "Qoʻl koʻtarish",
+    "lowerHand": "Qoʻlni tushirish",
+    "mute": "Ovozni oʻchirish",
+    "unmute": "Ovozni yoqish",
+    "leave": "Boʻlimni tark etish",
+    "noSpaces": "Hali boʻlimlar yoʻq",
+    "loginDescription": "Audio boʻlimlar yaratish va qoʻshilish uchun kiring."
+  },
+  "blog": {
+    "title": "Blog",
+    "readMore": "Koʻproq oʻqish",
+    "backToBlog": "Blogga qaytish",
+    "sharePost": "Postni ulashish",
+    "relatedPosts": "Bogʻliq postlar"
   }
 }

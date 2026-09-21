@@ -1401,6 +1401,11 @@
     "searchDehubFor": "Search \"{{query}}\" fo DeHub"
   },
   "comments": {
+    "reportComment": "Report comment",
+    "reportCommentTitle": "Report dis comment",
+    "reportCommentDescription": "Tell us wetin dey wrong wit dis comment and our moderators go check am.",
+    "reportCommentAlready": "You don report dis comment already.",
+    "reportReasonPlaceholder": "Add any detail wey go help us check am (optional)",
     "showAll": "Show all de comment dem",
     "discardTitle": "You wan throway ya comment?",
     "discardBody": "We don keep-am as draft, so e go still dey here when you kam back.",
@@ -2484,6 +2489,7 @@
     "ttsHint": "Read am aloud to everybody wey dey watch when your gift land."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2558,7 +2564,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

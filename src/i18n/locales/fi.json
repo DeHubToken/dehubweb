@@ -1563,6 +1563,11 @@
     "searchDehubFor": "Hae DeHubista ”{{query}}”"
   },
   "comments": {
+    "reportComment": "Ilmoita kommentista",
+    "reportCommentTitle": "Ilmoita tästä kommentista",
+    "reportCommentDescription": "Kerro meille, mikä tässä kommentissa on vikana, ja moderaattorimme tarkistavat sen.",
+    "reportCommentAlready": "Olet jo ilmoittanut tästä kommentista.",
+    "reportReasonPlaceholder": "Lisää tiedot, jotka auttavat meitä tarkistamaan sen (valinnainen)",
     "showAll": "Kaikki kommentit",
     "discardTitle": "Hylätäänkö kommenttisi?",
     "discardBody": "Se on tallennettu luonnokseksi, joten se odottaa täällä, kun palaat.",
@@ -5032,6 +5037,7 @@
     "ttsHint": "Lue ääneen kaikille, jotka katsovat, kun lahjasi saapuu."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5106,7 +5112,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

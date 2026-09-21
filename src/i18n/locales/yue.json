@@ -1529,6 +1529,11 @@
     "searchDehubFor": "喺 DeHub 搜尋「{{query}}」"
   },
   "comments": {
+    "reportComment": "舉報留言",
+    "reportCommentTitle": "舉報此留言",
+    "reportCommentDescription": "請告訴我們此留言有何問題，我們的管理員將會審查。",
+    "reportCommentAlready": "您已舉報此留言。",
+    "reportReasonPlaceholder": "請補充任何有助我們審查的詳情（可選）",
     "showAll": "顯示所有留言",
     "discardTitle": "要唔要放棄你嘅留言？",
     "discardBody": "已經存咗做草稿，返嚟嗰陣仲喺度。",
@@ -2815,6 +2820,7 @@
     "ttsHint": "當禮物送達時，請大聲朗讀給所有觀眾。"
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2889,7 +2895,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
