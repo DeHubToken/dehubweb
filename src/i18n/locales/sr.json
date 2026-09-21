@@ -1,7 +1,10 @@
 {
   "live": {
     "chatJoined": "се придружио/ла",
-    "chatSentGift": "послао/ла"
+    "chatSentGift": "послао/ла",
+    "progress": {
+      "xp": "{{xp}} XP"
+    }
   },
   "errors": {
     "sponsorshipUnavailable": "Бесплатне трансакције су паузиране на нашој страни, не у вашем новчанику. Покушајте поново ускоро.",
