@@ -2036,6 +2036,8 @@
       "thisYear": "Kay wata",
       "allTime": "Llapan pacha",
       "newMembers": "Musuq runakuna",
+      "viewMembers": "Miembronkunata qhaway",
+      "openNewMembers": "Musuq miembronkunapa listanta kichay",
       "chartMembers": "Runakuna pacha nisqapi",
       "chartActive": "Kawsaq runakuna",
       "growth": "+{{percent}}% kay killapi",

@@ -2308,6 +2308,8 @@
       "thisYear": "Tahun ini",
       "allTime": "Sepanjang masa",
       "newMembers": "Ahli baharu",
+      "viewMembers": "Lihat ahli",
+      "openNewMembers": "Buka senarai ahli baharu",
       "chartMembers": "Ahli dari masa ke masa",
       "chartActive": "Orang aktif",
       "growth": "+{{percent}}% bulan ini",

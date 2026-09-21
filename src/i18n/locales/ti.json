@@ -1963,6 +1963,8 @@
       "thisYear": "ኣብዚ ዓመት",
       "allTime": "ኩሉ ግዜ",
       "newMembers": "ሓደስቲ ኣባላት",
+      "viewMembers": "ኣባላት ርኣዩ",
+      "openNewMembers": "ነቲ ሓድሽ ዝርዝር ኣባላት ክፉት ግበር",
       "chartMembers": "ኣባላት ብግዜ",
       "chartActive": "ንጡፋት ሰባት",
       "growth": "+{{percent}}% ኣብዚ ወርሒ",

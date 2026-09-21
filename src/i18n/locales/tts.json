@@ -1940,6 +1940,8 @@
       "thisYear": "ปีนี้",
       "allTime": "ตลอดเวลา",
       "newMembers": "สมาซิกไหม่",
+      "viewMembers": "เบิ่งสมาชิก",
+      "openNewMembers": "เปิดรายชื่อสมาชิกใหม่",
       "chartMembers": "สมาซิกตามซ่วงเวลา",
       "chartActive": "คนที่ใซ้งานอยู่",
       "growth": "+{{percent}}% เดือนนี้",

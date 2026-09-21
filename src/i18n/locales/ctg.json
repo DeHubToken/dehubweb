@@ -2041,7 +2041,9 @@
       "chartActive": "সক্রিয় মানুষ",
       "growth": "+{{percent}}% এই মাসত",
       "growthTerm": "বৃদ্ধি",
-      "recordingSince": "{{date}} তুন রেকর্ড অইর"
+      "recordingSince": "{{date}} তুন রেকর্ড অইর",
+      "viewMembers": "সদস্য দেখু",
+      "openNewMembers": "নতুন সদস্যর তালিকা খুল"
     },
     "title": "পরিসংখ্যান",
     "subtitle": "রিয়েল-টাইম ওপেন সোর্স ইন্টেল",

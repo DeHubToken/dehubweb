@@ -2024,7 +2024,9 @@
       "chartActive": "Faol odamlar",
       "growth": "+{{percent}}% bu oy",
       "growthTerm": "O'sish",
-      "recordingSince": "{{date}} dan beri yozib borilmoqda"
+      "recordingSince": "{{date}} dan beri yozib borilmoqda",
+      "viewMembers": "A'zolarni ko'rish",
+      "openNewMembers": "Yangi a&#39;zolar ro&#39;yxatini oching"
     },
     "title": "Statistika",
     "subtitle": "Real vaqtda ochiq manba ma'lumotlari",

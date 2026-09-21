@@ -1988,6 +1988,8 @@
       "thisYear": "Ez az év",
       "allTime": "Teljes időszak",
       "newMembers": "Új tagok",
+      "viewMembers": "Tagok megtekintése",
+      "openNewMembers": "Nyissa meg az új tagok listáját",
       "chartMembers": "Tagok az idő során",
       "chartActive": "Aktív emberek",
       "growth": "+{{percent}}% ebben a hónapban",

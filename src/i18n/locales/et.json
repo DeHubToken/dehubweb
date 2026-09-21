@@ -1987,6 +1987,8 @@
       "thisYear": "Sel aastal",
       "allTime": "Kogu aeg",
       "newMembers": "Uued liikmed",
+      "viewMembers": "Vaata liikmeid",
+      "openNewMembers": "Ava uute liikmete nimekiri",
       "chartMembers": "Liikmed ajas",
       "chartActive": "Aktiivsed inimesed",
       "growth": "+{{percent}}% sel kuul",

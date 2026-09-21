@@ -1826,6 +1826,7 @@
       "thisYear": "This year",
       "allTime": "All time",
       "newMembers": "New members",
+      "viewMembers": "View members",
       "chartMembers": "Members as time dey go",
       "chartActive": "People wey active",
       "growth": "+{{percent}}% this month",

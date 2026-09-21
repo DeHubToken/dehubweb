@@ -2003,6 +2003,8 @@
       "thisYear": "今年",
       "allTime": "全部時間",
       "newMembers": "新成員",
+      "viewMembers": "睇吓成員",
+      "openNewMembers": "打開新成員清單",
       "chartMembers": "成員變化",
       "chartActive": "活躍用戶",
       "growth": "今個月 +{{percent}}%",

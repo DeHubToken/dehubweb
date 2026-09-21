@@ -2019,6 +2019,8 @@
       "thisYear": "Këtë vit",
       "allTime": "Gjithë koha",
       "newMembers": "Anëtarë të rinj",
+      "viewMembers": "Shfaq anëtarët",
+      "openNewMembers": "Hap listën e anëtarëve të rinj",
       "chartMembers": "Anëtarët me kalimin e kohës",
       "chartActive": "Persona aktivë",
       "growth": "+{{percent}}% këtë muaj",

@@ -2238,7 +2238,9 @@
       "chartActive": "Actieve mensen",
       "growth": "+{{percent}}% deze maand",
       "growthTerm": "Groei",
-      "recordingSince": "vastgelegd sinds {{date}}"
+      "recordingSince": "vastgelegd sinds {{date}}",
+      "viewMembers": "Leden bekijken",
+      "openNewMembers": "De lijst met nieuwe leden openen"
     },
     "title": "Statistieken",
     "subtitle": "Realtime opensource-inzicht",

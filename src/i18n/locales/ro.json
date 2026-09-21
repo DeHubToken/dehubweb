@@ -1883,7 +1883,9 @@
       "chartActive": "Persoane active",
       "growth": "+{{percent}}% luna aceasta",
       "growthTerm": "Creștere",
-      "recordingSince": "înregistrat din {{date}}"
+      "recordingSince": "înregistrat din {{date}}",
+      "viewMembers": "Afișează membrii",
+      "openNewMembers": "Deschideți lista de membri noi"
     },
     "title": "Statistici",
     "subtitle": "Informații open source în timp real",

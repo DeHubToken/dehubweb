@@ -1987,6 +1987,8 @@
       "thisYear": "Tento rok",
       "allTime": "Celé období",
       "newMembers": "Noví členové",
+      "viewMembers": "Zobrazit členy",
+      "openNewMembers": "Otevřít seznam nových členů",
       "chartMembers": "Vývoj počtu členů",
       "chartActive": "Aktivní lidé",
       "growth": "+{{percent}} % tento měsíc",

@@ -1960,6 +1960,8 @@
       "thisYear": "अस्मिन् वर्षे",
       "allTime": "सर्वकालः",
       "newMembers": "नूतनसदस्याः",
+      "viewMembers": "दृश्यसदस्यः",
+      "openNewMembers": "नयां सदस्यपृष्ठं उद्घाटयतु",
       "chartMembers": "कालक्रमेण सदस्याः",
       "chartActive": "सक्रियजनाः",
       "growth": "+{{percent}}% अस्मिन् मासे",

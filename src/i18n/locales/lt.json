@@ -2028,7 +2028,9 @@
       "chartActive": "Aktyvūs žmonės",
       "growth": "+{{percent}} % šį mėnesį",
       "growthTerm": "Augimas",
-      "recordingSince": "fiksuojama nuo {{date}}"
+      "recordingSince": "fiksuojama nuo {{date}}",
+      "viewMembers": "Peržiūrėti narius",
+      "openNewMembers": "Atidaryti naujų narių sąrašą"
     },
     "title": "Statistika",
     "subtitle": "Atvirojo kodo duomenys realiu laiku",

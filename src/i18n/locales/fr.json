@@ -2045,6 +2045,8 @@
       "thisYear": "Cette année",
       "allTime": "Toute la période",
       "newMembers": "Nouveaux membres",
+      "viewMembers": "Afficher les membres",
+      "openNewMembers": "Ouvrir la liste des nouveaux membres",
       "chartMembers": "Évolution des membres",
       "chartActive": "Personnes actives",
       "growth": "+{{percent}} % ce mois-ci",

@@ -1992,7 +1992,9 @@
       "chartActive": "တက်ကြွသူများ",
       "growth": "ဤလ +{{percent}}%",
       "growthTerm": "တိုးတက်မှု",
-      "recordingSince": "{{date}} မှစ၍ မှတ်တမ်းတင်သည်"
+      "recordingSince": "{{date}} မှစ၍ မှတ်တမ်းတင်သည်",
+      "viewMembers": "အဖွဲ့ဝင်များကို ကြည့်ရန်",
+      "openNewMembers": "အဖွဲ့ဝင်အသစ်စာရင်းကို ဖွင့်ပါ"
     },
     "title": "စာရင်းအင်း",
     "subtitle": "အချိန်နှင့်တပြေးညီ open source သတင်းအချက်အလက်",

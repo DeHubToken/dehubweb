@@ -2140,7 +2140,9 @@
       "chartActive": "Aktívni ľudia",
       "growth": "+{{percent}} % tento mesiac",
       "growthTerm": "Rast",
-      "recordingSince": "zaznamenávané od {{date}}"
+      "recordingSince": "zaznamenávané od {{date}}",
+      "viewMembers": "Zobraziť členov",
+      "openNewMembers": "Otvoriť zoznam nových členov"
     },
     "title": "Štatistiky",
     "subtitle": "Otvorené dáta v reálnom čase",

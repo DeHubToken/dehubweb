@@ -1989,6 +1989,8 @@
       "thisYear": "Այս տարի",
       "allTime": "Ամբողջ ժամանակը",
       "newMembers": "Նոր անդամներ",
+      "viewMembers": "Դիտել անդամներին",
+      "openNewMembers": "Բացել անդամների նոր ցուցակը",
       "chartMembers": "Անդամները ժամանակի ընթացքում",
       "chartActive": "Ակտիվ մարդիկ",
       "growth": "+{{percent}}% այս ամիս",

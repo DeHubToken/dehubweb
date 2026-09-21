@@ -2045,7 +2045,9 @@
       "chartActive": "Aktywne osoby",
       "growth": "+{{percent}}% w tym miesiącu",
       "growthTerm": "Wzrost",
-      "recordingSince": "rejestrowane od {{date}}"
+      "recordingSince": "rejestrowane od {{date}}",
+      "viewMembers": "Wyświetl członków",
+      "openNewMembers": "Otwórz listę nowych członków"
     },
     "title": "Statystyki",
     "subtitle": "Otwartoźródłowe dane w czasie rzeczywistym",

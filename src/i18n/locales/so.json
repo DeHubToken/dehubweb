@@ -2004,6 +2004,8 @@
       "thisYear": "Sannadkan",
       "allTime": "Waqtiga oo dhan",
       "newMembers": "Xubno cusub",
+      "viewMembers": "Eeg xubnaha",
+      "openNewMembers": "Fur liiska xubnaha cusub",
       "chartMembers": "Xubnaha waqti ka waqti",
       "chartActive": "Dad firfircoon",
       "growth": "+{{percent}}% bishan",

@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 import searchIcon from '@/assets/icons/search-icon.png';
 import search3dIcon from '@/assets/icons/search-3d-icon.png';
 import trendingFireIcon from '@/assets/icons/trending-fire-icon.png';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check, Clock, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -426,6 +426,7 @@ export default function ExplorePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { walletAddress, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const [activeTab, setActiveTab] = useState('all');
   const [enableExploreTransition, setEnableExploreTransition] = useState(false);
@@ -516,6 +517,10 @@ export default function ExplorePage() {
   // Scroll to top on mount unless there's an active search with cached scroll
   // CRITICAL: Use useLayoutEffect to reset scroll BEFORE browser paints (prevents flash of wrong position)
   useLayoutEffect(() => {
+    // A section hash (`#new-members`) names its own scroll target; the effect
+    // further down settles on it once the section exists, so neither restoring
+    // nor resetting the position applies here.
+    if (location.hash) return;
     const urlQuery = searchParams.get('q') || '';
     const cachedScroll = sessionStorage.getItem('EXPLORE_SCROLL_POSITION');
     
@@ -644,6 +649,36 @@ export default function ExplorePage() {
     document.addEventListener('scroll', handleScroll, { passive: true, capture: true });
     return () => document.removeEventListener('scroll', handleScroll, { capture: true });
   }, [isSearching]);
+
+  // `/app/explore#new-members` is where the Live Stats heading sends people.
+  // The browser's own anchor jump never happens here: this page is a cached
+  // instance that does not remount on a client-side navigation, and the bento
+  // only exists once the roster has loaded, so the id is not in the document
+  // when the URL changes. Poll briefly for it, then settle it just under the
+  // sticky search bento; when nobody joined recently it never renders and this
+  // gives up quietly. Keyed on the navigation entry so clearing a search later
+  // does not jump back to it — one navigation, one scroll.
+  const settledHashKey = useRef<string | null>(null);
+  useEffect(() => {
+    if (location.hash !== '#new-members' || !/^\/(app\/)?explore\/?$/.test(location.pathname)) return;
+    if (isSearching || settledHashKey.current === location.key) return;
+    settledHashKey.current = location.key;
+    let attempts = 0;
+    let timer: number | undefined;
+    const settle = () => {
+      const el = document.getElementById('new-members');
+      if (!el) {
+        if (attempts++ < 20) timer = window.setTimeout(settle, 150);
+        return;
+      }
+      const nav = document.querySelector<HTMLElement>('[data-explore-page] [data-feed-nav-outer]');
+      const stuckTop = nav ? parseFloat(getComputedStyle(nav).top) || 0 : 0;
+      el.style.scrollMarginTop = `${nav ? stuckTop + nav.offsetHeight + 8 : 0}px`;
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    settle();
+    return () => window.clearTimeout(timer);
+  }, [location.hash, location.key, location.pathname, isSearching]);
 
   // API search hook - using new universal search
   const {

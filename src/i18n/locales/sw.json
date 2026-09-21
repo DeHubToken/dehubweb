@@ -2042,6 +2042,8 @@
       "thisYear": "Mwaka huu",
       "allTime": "Muda wote",
       "newMembers": "Wanachama wapya",
+      "viewMembers": "Tazama washiriki",
+      "openNewMembers": "Fungua orodha ya wanachama wapya",
       "chartMembers": "Wanachama kwa muda",
       "chartActive": "Watu walio hai",
       "growth": "+{{percent}}% mwezi huu",

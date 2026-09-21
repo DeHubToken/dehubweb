@@ -1996,6 +1996,8 @@
       "thisYear": "Ин сол",
       "allTime": "Тамоми давра",
       "newMembers": "Аъзоёни нав",
+      "viewMembers": "Аътзоёнро бубинед",
+      "openNewMembers": "Рӯйхати аъзоёни навро кушоед",
       "chartMembers": "Аъзоён дар тӯли вақт",
       "chartActive": "Одамони фаъол",
       "growth": "+{{percent}}% ин моҳ",

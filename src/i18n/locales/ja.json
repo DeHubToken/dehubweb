@@ -2039,6 +2039,8 @@
       "thisYear": "今年",
       "allTime": "全期間",
       "newMembers": "新規メンバー",
+      "viewMembers": "メンバーを表示",
+      "openNewMembers": "新しいメンバーリストを開く",
       "chartMembers": "メンバー数の推移",
       "chartActive": "アクティブな人数",
       "growth": "今月 +{{percent}}%",

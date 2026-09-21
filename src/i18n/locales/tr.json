@@ -2041,6 +2041,8 @@
       "thisYear": "Bu yıl",
       "allTime": "Tüm zamanlar",
       "newMembers": "Yeni üyeler",
+      "viewMembers": "Üyeleri görüntüle",
+      "openNewMembers": "Yeni üye listesini aç",
       "chartMembers": "Zaman içinde üyeler",
       "chartActive": "Aktif kişiler",
       "growth": "Bu ay +{{percent}}%",

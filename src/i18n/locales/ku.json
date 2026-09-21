@@ -1847,7 +1847,8 @@
       "chartActive": "Kesên çalak",
       "growth": "+{{percent}}% vê mehê",
       "growthTerm": "Mezinbûn",
-      "recordingSince": "ji {{date}} ve tê tomarkirin"
+      "recordingSince": "ji {{date}} ve tê tomarkirin",
+      "viewMembers": "سه‌ردانی ئه‌ندامان"
     },
     "title": "Statîstîk",
     "subtitle": "Agahiya çavkaniya vekirî ya rast-dem",

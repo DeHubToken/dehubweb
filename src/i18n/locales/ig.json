@@ -1974,6 +1974,8 @@
       "thisYear": "Afọ a",
       "allTime": "Oge Niile",
       "newMembers": "Ndị otu ọhụrụ",
+      "viewMembers": "Ngosi òtù",
+      "openNewMembers": "Mepee ndesịta ndị òtù ọfụụ",
       "chartMembers": "Ndị otu n'oge",
       "chartActive": "Ndị na-arụ ọrụ",
       "growth": "+{{percent}}% n'ọnwa a",

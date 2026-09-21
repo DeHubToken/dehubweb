@@ -1999,6 +1999,8 @@
       "thisYear": "В этом году",
       "allTime": "За всё время",
       "newMembers": "Новые участники",
+      "viewMembers": "Посмотреть участников",
+      "openNewMembers": "Открыть список новых участников",
       "chartMembers": "Участники по времени",
       "chartActive": "Активные люди",
       "growth": "+{{percent}}% за месяц",

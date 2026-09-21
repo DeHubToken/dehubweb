@@ -1931,6 +1931,8 @@
       "thisYear": "هالسنة",
       "allTime": "كل الوقت",
       "newMembers": "أعضاء جدد",
+      "viewMembers": "عرض الأعضاء",
+      "openNewMembers": "افتح قائمة الأعضاء الجدد",
       "chartMembers": "الأعضاء عبر الوقت",
       "chartActive": "الناس النشطين",
       "growth": "+{{percent}}% هالشهر",
