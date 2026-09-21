@@ -949,7 +949,22 @@
     "noTextYet": "እስካሁን የተቀመጡ የጽሑፍ ልጥፎች የሉም",
     "textStartSaving": "የጽሑፍ-ብቻ ልጥፎችን ያስቀምጡ እና እዚህ ይታያሉ።",
     "reachedEnd": "ዕልባቶችህ መጨረሻ ላይ ደርሰሃል",
-    "loginDescription": "የተቀመጡ ዕልባቶችህን ለማየትና ለማስተዳደር ግባ።"
+    "loginDescription": "የተቀመጡ ዕልባቶችህን ለማየትና ለማስተዳደር ግባ።",
+    "playlist": {
+      "makePublic": "የህዝብ ማጫወቻ ዝርዝር",
+      "makePublicHint": "ማንም ሰው ይህንን አቃፊ በመገለጫዎ ላይ ማየት ይችላል ።",
+      "publicBadge": "የህዝብ",
+      "copyLink": "የአጫዋች ዝርዝር አገናኝን ይቅዱ",
+      "linkCopied": "የ Playlist አገናኝ ተገለበጠ",
+      "itemsCount": "{{count}} ልጥፎች",
+      "emptyOwnerHint": "እዚህ ለማሳየት አንድ ዕልባት አቃፊ ይፋ አድርግ.",
+      "emptyVisitor": "ይህ መገለጫ እስካሁን የህዝብ አጫዋች ዝርዝር የለውም ።",
+      "openBookmarks": "የእኔን ዕልባቶች ይክፈቱ",
+      "back": "ሁሉም አጫዋች ዝርዝሮች",
+      "noPosts": "ይህ አጫዋች ዝርዝር እስካሁን ምንም ልጥፎች የሉትም ።",
+      "unavailable": "ይህ አጫዋች ዝርዝር ከአሁን በኋላ አይገኝም ።",
+      "loadMore": "ተጨማሪ ልጥፎችን አሳይ"
+    }
   },
   "notifications": {
     "title": "ማሳወቂያዎች",
@@ -1242,6 +1257,9 @@
       "breakdownTitle": "ይህ ተደራሽነት ከየት እንደመጣ",
       "dehubFollowers": "DeHub ተከታዮች",
       "selfReported": "የማኅበራዊ መከታተያ ቁጥሮች በፈጣሪ ይካተታሉ ።"
+    },
+    "tabs": {
+      "playlists": "አጫዋች ዝርዝሮች"
     }
   },
   "tv": {

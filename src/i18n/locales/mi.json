@@ -992,7 +992,22 @@
     "noTextYet": "Kāore anō he pānui kupu kua tiakina",
     "textStartSaving": "Tohuwāhitia ngā pānui kupu-anake, ka puta ki konei.",
     "reachedEnd": "Kua tae koe ki te mutunga o ō tohuwāhi",
-    "loginDescription": "Takiuru ki te tiro me te whakahaere i ngā tohuwāhi kua tiakina."
+    "loginDescription": "Takiuru ki te tiro me te whakahaere i ngā tohuwāhi kua tiakina.",
+    "playlist": {
+      "makePublic": "Rārangi tākaro tūmatanui",
+      "makePublicHint": "Ka taea e tetahi te kite i tenei kōpaki i runga i to koutou pūkete.",
+      "publicBadge": "Te iwi whānui",
+      "copyLink": "Tārua te hono rārangi tākaro",
+      "linkCopied": "Tārua hono Playlist",
+      "itemsCount": "{{count}} pou",
+      "emptyOwnerHint": "Hanga he kōpaki tohu pukapuka tūmatanui ki te whakaatu i te reira i konei.",
+      "emptyVisitor": "Kāore anō tēnei pūkete i ngā rārangi tākaro tūmatanui.",
+      "openBookmarks": "Whakatuwherahia aku tohu pukapuka",
+      "back": "Ngā rārangi tākaro katoa",
+      "noPosts": "Kāore anō tēnei rārangi tākaro i ngā pou.",
+      "unavailable": "E kore e wātea ana tēnei rārangi tākaro.",
+      "loadMore": "Whakaatuhia etahi atu pou"
+    }
   },
   "notifications": {
     "title": "Whakamōhio",
@@ -1282,6 +1297,9 @@
       "breakdownTitle": "Ko te wahi i puta mai ai tenei whaainga",
       "dehubFollowers": "Ngā kaiwhaiwhai o DeHub",
       "selfReported": "Ko nga kaute whaiwhai pāpori e whakauruhia ana e te kaihanga."
+    },
+    "tabs": {
+      "playlists": "Rārangi purei"
     }
   },
   "tv": {

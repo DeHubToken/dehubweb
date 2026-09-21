@@ -878,7 +878,16 @@
     "noTextYet": "No saved text posts yet",
     "textStartSaving": "Bookmark text-only posts and dem go show here.",
     "reachedEnd": "You don reach di end of your bookmarks",
-    "loginDescription": "Log in make you fit see and manage your saved bookmarks."
+    "loginDescription": "Log in make you fit see and manage your saved bookmarks.",
+    "playlist": {
+      "makePublic": "Public playlist",
+      "publicBadge": "Public",
+      "copyLink": "Copy playlist link",
+      "linkCopied": "Playlist link copied",
+      "itemsCount": "{{count}} posts",
+      "openBookmarks": "Open my bookmarks",
+      "back": "All playlists"
+    }
   },
   "notifications": {
     "title": "Notifications",
@@ -1153,6 +1162,9 @@
     "reach": {
       "total": "Total reach",
       "dehubFollowers": "DeHub followers"
+    },
+    "tabs": {
+      "playlists": "Playlists"
     }
   },
   "tv": {

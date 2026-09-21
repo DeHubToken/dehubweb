@@ -954,7 +954,22 @@
     "noTextYet": "No saved text posts yet",
     "textStartSaving": "Bookmark text-only posts and they'll appear here.",
     "reachedEnd": "You've reached the end of your bookmarks",
-    "loginDescription": "Log in to view and manage your saved bookmarks."
+    "loginDescription": "Log in to view and manage your saved bookmarks.",
+    "playlist": {
+      "makePublic": "Public playlist",
+      "makePublicHint": "Anyone can see this folder on your profile.",
+      "publicBadge": "Public",
+      "copyLink": "Copy playlist link",
+      "linkCopied": "Playlist link copied",
+      "itemsCount": "{{count}} posts",
+      "emptyOwnerHint": "Make a bookmark folder public to show it here.",
+      "emptyVisitor": "This profile has no public playlists yet.",
+      "openBookmarks": "Open my bookmarks",
+      "back": "All playlists",
+      "noPosts": "This playlist has no posts yet.",
+      "unavailable": "This playlist is not available anymore.",
+      "loadMore": "Show more posts"
+    }
   },
   "notifications": {
     "title": "Notifications",
@@ -1247,6 +1262,9 @@
     "replyThread": {
       "postUnavailable": "This post is unavailable",
       "commentUnavailable": "This comment is no longer available"
+    },
+    "tabs": {
+      "playlists": "Playlists"
     }
   },
   "tv": {

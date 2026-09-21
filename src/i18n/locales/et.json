@@ -949,7 +949,22 @@
     "noTextYet": "Salvestatud tekstipostitusi veel pole",
     "textStartSaving": "Lisa ainult tekstiga postitused järjehoidjatesse ja need ilmuvad siia.",
     "reachedEnd": "Oled jõudnud oma järjehoidjate lõppu",
-    "loginDescription": "Logi sisse salvestatud järjehoidjate vaatamiseks ja haldamiseks."
+    "loginDescription": "Logi sisse salvestatud järjehoidjate vaatamiseks ja haldamiseks.",
+    "playlist": {
+      "makePublic": "Avalik esitusloend",
+      "makePublicHint": "Igaüks näeb seda kausta sinu profiilil.",
+      "publicBadge": "Avalik",
+      "copyLink": "Kopeeri esitusloendi link",
+      "linkCopied": "Esitusloendi link on kopeeritud",
+      "itemsCount": "{{count}} postitust",
+      "emptyOwnerHint": "Muuda järjehoidjate kaust avalikuks, et seda siin kuvada.",
+      "emptyVisitor": "Sellel profiilil pole veel avalikke esitusloendeid.",
+      "openBookmarks": "Ava minu järjehoidjad",
+      "back": "Kõik esitusloendid",
+      "noPosts": "Sellel esitusloendil pole veel postitusi.",
+      "unavailable": "See esitusloend pole enam saadaval.",
+      "loadMore": "Kuva rohkem postitusi"
+    }
   },
   "notifications": {
     "title": "Teated",
@@ -1242,6 +1257,9 @@
       "breakdownTitle": "Kust see haare pärineb",
       "dehubFollowers": "DeHubi jälgijad",
       "selfReported": "Sotsiaalsete jälgijate arvu sisestab looja."
+    },
+    "tabs": {
+      "playlists": "Esitusloendid"
     }
   },
   "tv": {

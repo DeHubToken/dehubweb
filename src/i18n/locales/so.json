@@ -995,7 +995,22 @@
     "noTextYet": "Weli qoraallo qoraal-kaliya ah oo la keydiyay ma jiraan",
     "textStartSaving": "Calaamadee qoraallada qoraal-kaliya ah, halkan ayay ka soo muuqan doonaan.",
     "reachedEnd": "Waxaad gaadhay dhamaadka calaamadahaaga",
-    "loginDescription": "Soo gal si aad u aragto oo aad u maamusho calaamadahaaga la keydiyay."
+    "loginDescription": "Soo gal si aad u aragto oo aad u maamusho calaamadahaaga la keydiyay.",
+    "playlist": {
+      "makePublic": "Liiska Ciyaarta Dadweynaha",
+      "makePublicHint": "Qof kastaa wuxuu ku arki karaa faylkan astaantaada.",
+      "publicBadge": "Dadweynaha",
+      "copyLink": "Nuqul Liiska Ciyaarta",
+      "linkCopied": "LINK LIKE Playlist waa la nuqulay",
+      "itemsCount": "{{count}} posts",
+      "emptyOwnerHint": "Samee folder bookmark dadweynaha si aad u muujiso halkan.",
+      "emptyVisitor": "Muuqaalkani weli ma laha liisaska playlists dadweynaha.",
+      "openBookmarks": "Fur calaamadaha buugaagtayda",
+      "back": "Dhamaan Liisaska Ciyaarta",
+      "noPosts": "Liiskan playlist-ka weli ma laha wax qoraal ah.",
+      "unavailable": "Liiskan ciyaarta mar dambe lama heli karo.",
+      "loadMore": "Muuji qoraallo dheeraad ah"
+    }
   },
   "notifications": {
     "title": "Ogeysiisyo",
@@ -1288,6 +1303,9 @@
       "breakdownTitle": "Halka ay gaadiidkani ka yimaadaan",
       "dehubFollowers": "DeHub raacayaasha",
       "selfReported": "Tirooyinka raacayaasha bulshada waxaa soo galaya abuuraha."
+    },
+    "tabs": {
+      "playlists": "Liisaska ciyaarta"
     }
   },
   "tv": {

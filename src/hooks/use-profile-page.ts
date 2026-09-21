@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useRef, useCallback, useState } from 'react';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
-import { Home, MessageSquare, Image, Film, Star, Play, Radio, PieChart, Pin } from 'lucide-react';
+import { Home, MessageSquare, Image, Film, Star, Play, Radio, PieChart, Pin, ListVideo } from 'lucide-react';
 import { useQuery, useInfiniteQuery as useInfiniteQueryTQ, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -22,6 +22,7 @@ import { useSelfBadge, preferLiveBalance } from '@/hooks/use-self-badge-balance'
 import { useStories, useWatchedStories } from '@/hooks/use-stories';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useUserPins } from '@/hooks/use-pins';
+import { usePublicPlaylists } from '@/hooks/use-bookmark-folders';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { getUserComments, blockUser, unblockUser, getUserReposts, getNFTInfo } from '@/lib/api/dehub';
 import { toast } from 'sonner';
@@ -339,6 +340,12 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   const { data: pinsData } = useUserPins(contentUserId || '');
   const pinnedCount = pinsData?.items?.length ?? 0;
 
+  // Public bookmark folders. The same query feeds the Playlists panel, so the
+  // tab's badge and its content can never disagree; the tab only exists while
+  // there is at least one.
+  const { data: publicPlaylists } = usePublicPlaylists(apiProfile?.walletAddress);
+  const playlistCount = publicPlaylists?.length ?? 0;
+
   // True total from the API's pagination metadata — not the number of pages
   // loaded so far. Keeps the "All" badge accurate without downloading everything.
   const contentTotal = (userContentData?.pages?.[0] as { total?: number } | undefined)?.total ?? 0;
@@ -354,9 +361,12 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       { icon: Radio, label: 'Live', value: 'live' as TabValue, count: PROFILE_LIVE.length },
       { icon: PieChart, label: 'Fractions', value: 'fractions' as TabValue, count: 0 },
       { icon: Pin, label: 'Pinned', value: 'pinned' as TabValue, count: pinnedCount },
+      ...(playlistCount > 0
+        ? [{ icon: ListVideo, label: 'Playlists', value: 'playlists' as TabValue, count: playlistCount }]
+        : []),
     ].sort((a, b) => b.count - a.count);
     return [homeTab, ...restTabs];
-  }, [contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, pinnedCount]);
+  }, [contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, pinnedCount, playlistCount]);
 
   // Subscriptions — deferred slightly so profile + first content page win the
   // wire on the (slow) API; the header Subscribe button pops in right after.

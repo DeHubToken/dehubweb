@@ -937,7 +937,22 @@
     "noTextYet": "Vēl nav saglabātu teksta ierakstu",
     "textStartSaving": "Pievienojiet grāmatzīmēm tikai teksta ierakstus, un tie parādīsies šeit.",
     "reachedEnd": "Esat sasniedzis savu grāmatzīmju beigas",
-    "loginDescription": "Piesakieties, lai skatītu un pārvaldītu saglabātās grāmatzīmes."
+    "loginDescription": "Piesakieties, lai skatītu un pārvaldītu saglabātās grāmatzīmes.",
+    "playlist": {
+      "makePublic": "Publisks atskaņošanas saraksts",
+      "makePublicHint": "Šo mapi ikviens var redzēt jūsu profilā.",
+      "publicBadge": "Publisks",
+      "copyLink": "Kopēt atskaņošanas saraksta saiti",
+      "linkCopied": "Atskaņošanas saraksta saite kopēta",
+      "itemsCount": "{{count}} ziņas",
+      "emptyOwnerHint": "Padariet grāmatzīmju mapi publisku, lai tā tiktu rādīta šeit.",
+      "emptyVisitor": "Šajā profilā vēl nav publisku atskaņošanas sarakstu.",
+      "openBookmarks": "Atvērt manas grāmatzīmes",
+      "back": "Visi atskaņošanas saraksti",
+      "noPosts": "Šajā atskaņošanas sarakstā vēl nav ziņu.",
+      "unavailable": "Šis atskaņošanas saraksts vairs nav pieejams.",
+      "loadMore": "Rādīt vairāk ziņu"
+    }
   },
   "notifications": {
     "title": "Paziņojumi",
@@ -1230,6 +1245,9 @@
       "breakdownTitle": "No kurienes nāk šī saziņa",
       "dehubFollowers": "DeHub sekotāji",
       "selfReported": "Sociālo sekotāju skaitu ievada veidotājs."
+    },
+    "tabs": {
+      "playlists": "Repertuāri"
     }
   },
   "tv": {

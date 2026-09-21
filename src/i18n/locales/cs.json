@@ -949,7 +949,22 @@
     "noTextYet": "Zatím žádné uložené textové příspěvky",
     "textStartSaving": "Přidej si do záložek čistě textové příspěvky a objeví se tady.",
     "reachedEnd": "Dosáhli jste konce záložek",
-    "loginDescription": "Přihlaste se pro zobrazení a správu záložek."
+    "loginDescription": "Přihlaste se pro zobrazení a správu záložek.",
+    "playlist": {
+      "makePublic": "Veřejný seznam skladeb",
+      "makePublicHint": "Tuto složku může na vašem profilu vidět kdokoli.",
+      "publicBadge": "Veřejné",
+      "copyLink": "Kopírovat odkaz na seznam videí",
+      "linkCopied": "Odkaz na seznam videí zkopírován",
+      "itemsCount": "Příspěvky: {{count}}",
+      "emptyOwnerHint": "Zveřejněte složku záložek a zobrazte ji zde.",
+      "emptyVisitor": "Tento profil zatím nemá žádné veřejné seznamy videí.",
+      "openBookmarks": "Otevřít záložky",
+      "back": "Všechny seznamy skladeb",
+      "noPosts": "Tento playlist zatím nemá žádné příspěvky.",
+      "unavailable": "Tento seznam videí již není k dispozici.",
+      "loadMore": "Zobrazit další příspěvky"
+    }
   },
   "notifications": {
     "title": "Oznámení",
@@ -1242,6 +1257,9 @@
       "breakdownTitle": "Odkud tento dosah pochází",
       "dehubFollowers": "Následovníci DeHubu",
       "selfReported": "Počet sledujících na sociálních sítích zadává tvůrce."
+    },
+    "tabs": {
+      "playlists": "Playlisty"
     }
   },
   "tv": {

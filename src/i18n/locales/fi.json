@@ -950,7 +950,22 @@
     "noTextYet": "Ei tallennettuja tekstijulkaisuja vielä",
     "textStartSaving": "Lisää pelkkää tekstiä sisältäviä julkaisuja kirjanmerkkeihin, niin ne näkyvät täällä.",
     "reachedEnd": "Olet saavuttanut kirjanmerkkiesi lopun",
-    "loginDescription": "Kirjaudu sisään nähdäksesi ja hallinnoidaksesi tallennettuja kirjanmerkkejäsi."
+    "loginDescription": "Kirjaudu sisään nähdäksesi ja hallinnoidaksesi tallennettuja kirjanmerkkejäsi.",
+    "playlist": {
+      "makePublic": "Julkinen soittolista",
+      "makePublicHint": "Kuka tahansa voi nähdä tämän kansion profiilissasi.",
+      "publicBadge": "Julkinen",
+      "copyLink": "Kopioi soittolistan linkki",
+      "linkCopied": "Soittolistan linkki kopioitu",
+      "itemsCount": "{{count}} julkaisua",
+      "emptyOwnerHint": "Tee kirjanmerkkikansiosta julkinen näyttääksesi sen täällä.",
+      "emptyVisitor": "Tällä profiililla ei ole vielä julkisia soittolistoja.",
+      "openBookmarks": "Avaa kirjanmerkkini",
+      "back": "Kaikki soittolistat",
+      "noPosts": "Tällä soittolistalla ei ole vielä julkaisuja.",
+      "unavailable": "Tämä soittolista ei ole enää saatavilla.",
+      "loadMore": "Näytä lisää julkaisuja"
+    }
   },
   "notifications": {
     "title": "Ilmoitukset",
@@ -1243,6 +1258,9 @@
       "breakdownTitle": "Mistä tämä REACH-järjestelmä on peräisin",
       "dehubFollowers": "DeHub-seuraajat",
       "selfReported": "Tekijä syöttää sosiaalisen seuraajamäärän."
+    },
+    "tabs": {
+      "playlists": "Soittolistat"
     }
   },
   "tv": {

@@ -1221,7 +1221,22 @@
     "noTextYet": "Tiada siaran teks disimpan lagi",
     "textStartSaving": "Tandakan siaran teks sahaja dan ia akan muncul di sini.",
     "reachedEnd": "Anda telah sampai ke penghujung penanda buku anda",
-    "loginDescription": "Log masuk untuk melihat dan mengurus penanda buku yang anda simpan."
+    "loginDescription": "Log masuk untuk melihat dan mengurus penanda buku yang anda simpan.",
+    "playlist": {
+      "makePublic": "Senarai main awam",
+      "makePublicHint": "Sesiapa sahaja boleh melihat folder ini pada profil anda.",
+      "publicBadge": "Awam",
+      "copyLink": "Salin pautan senarai main",
+      "linkCopied": "Pautan senarai main disalin",
+      "itemsCount": "{{count}} hantaran",
+      "emptyOwnerHint": "Jadikan folder penanda halaman umum untuk menunjukkannya di sini.",
+      "emptyVisitor": "Profil ini belum mempunyai senarai main awam.",
+      "openBookmarks": "Buka penanda halaman saya",
+      "back": "Semua senarai main",
+      "noPosts": "Senarai main ini belum mempunyai hantaran.",
+      "unavailable": "Senarai main ini tidak tersedia lagi.",
+      "loadMore": "Tunjukkan lebih banyak hantaran"
+    }
   },
   "notifications": {
     "title": "Pemberitahuan",
@@ -1514,6 +1529,9 @@
       "breakdownTitle": "Dari mana datangnya jangkauan ini",
       "dehubFollowers": "Pengikut DeHub",
       "selfReported": "Kiraan pengikut sosial dimasukkan oleh pengkarya."
+    },
+    "tabs": {
+      "playlists": "Senarai main"
     }
   },
   "tv": {

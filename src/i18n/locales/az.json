@@ -949,7 +949,22 @@
     "noTextYet": "Hələ saxlanmış mətn paylaşımı yoxdur",
     "textStartSaving": "Yalnız mətndən ibarət paylaşımları əlfəcinləyin və onlar burada görünəcək.",
     "reachedEnd": "Əlfəcinlərinizin sonuna çatdınız",
-    "loginDescription": "Saxlanmış əlfəcinlərinizə baxmaq və idarə etmək üçün daxil olun."
+    "loginDescription": "Saxlanmış əlfəcinlərinizə baxmaq və idarə etmək üçün daxil olun.",
+    "playlist": {
+      "makePublic": "İctimai oyun siyahısı",
+      "makePublicHint": "Bu qovluğu profilinizdə hər kəs görə bilər.",
+      "publicBadge": "İctimai",
+      "copyLink": "Səsləndirmə siyahısı linkini kopyal",
+      "linkCopied": "Səsləndirmə siyahısı linki kopyalandı",
+      "itemsCount": "{{count}} ismarıc",
+      "emptyOwnerHint": "Onu burada göstərmək üçün əlfəcin qovluğunu ictimaiyyətə açıq edin.",
+      "emptyVisitor": "Bu profilin hələ ictimai siyahıları yoxdur.",
+      "openBookmarks": "Əlfəcinlərimi aç",
+      "back": "Bütün çalğı siyahıları",
+      "noPosts": "Bu ifa siyahısında hələ heç bir yazı yoxdur.",
+      "unavailable": "Bu pleylist artıq mövcud deyil.",
+      "loadMore": "Daha çox yazı göstər"
+    }
   },
   "notifications": {
     "title": "Bildirişlər",
@@ -1241,6 +1256,9 @@
       "breakdownTitle": "Bu əlaqə haradan gəlir",
       "dehubFollowers": "DeHub izləyiciləri",
       "selfReported": "Sosial izləyici sayları yaradıcı şəxs tərəfindən daxil edilir."
+    },
+    "tabs": {
+      "playlists": "Səsləndirmə siyahıları"
     }
   },
   "tv": {
