@@ -21,9 +21,10 @@ import { clearWagmiStorage } from '@/lib/wagmi';
 import { WagmiScope } from '@/components/app/WagmiScope';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
 import { requestAccountPicker } from '@/lib/wallet-accounts';
-import { fetchTelegramLoginConfig } from '@/lib/telegram-login';
-import { isPasskeyLoginAvailable, PasskeyCancelledError, PasskeyLoginError, PasskeyUnsupportedError } from '@/lib/passkey-login';
+import { PasskeyCancelledError, PasskeyLoginError, PasskeyUnsupportedError } from '@/lib/passkey-login';
+import { loginProbesSnapshot, resolveLoginProbes, type LoginProbes } from '@/lib/login-probes';
 import { LoginSavedProfiles } from './LoginSavedProfiles';
+import { LoginBodySkeleton } from './LoginBodySkeleton';
 import { getWalletSetupIntent, setWalletSetupIntent, type WalletSetupIntent } from '@/lib/wallet-setup-intent';
 import type { LoginStep } from './steps';
 import type { DiscoveredWallet, WalletId } from './LoginWalletsStep';
@@ -43,6 +44,13 @@ const WalletCreateStep = React.lazy(() =>
 const WalletUnlockStep = React.lazy(() =>
   import('@/components/app/wallet-setup/WalletUnlockStep').then(m => ({ default: m.WalletUnlockStep })),
 );
+
+/**
+ * How long the option list will hold for the probes before drawing itself
+ * anyway. Long enough to cover a normal edge-function round trip, short enough
+ * that a stalled one is never the reason someone cannot sign in.
+ */
+const PROBE_WAIT_MS = 700;
 
 /** The wallets that already have a button of their own. */
 const NAMED_WALLETS: WalletId[] = ['metamask', 'phantom', 'trust'];
@@ -182,14 +190,17 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
    * flag, and stays off until a bot is actually configured. Starts false and
    * only ever turns on, so an unconfigured project shows no row at all rather
    * than one that fails when tapped.
+   *
+   * Whether this browser can do a passkey rides along with it (same pre-filter
+   * the wallet's biometric unlock uses; a definite "no" hides the row rather
+   * than offering a prompt that cannot appear). Both are asked as one in
+   * lib/login-probes, and the option list waits for the pair — two separate
+   * answers arriving separately is what made the sheet grow a row, then
+   * another, in front of the person reading it.
    */
-  const [telegramEnabled, setTelegramEnabled] = useState(false);
-  /**
-   * Whether this browser can do a passkey with a fingerprint / face / device
-   * PIN. Same pre-filter the wallet's biometric unlock uses; a definite "no"
-   * hides the row rather than offering a prompt that cannot appear.
-   */
-  const [passkeyAvailable, setPasskeyAvailable] = useState(false);
+  const [probes, setProbes] = useState<LoginProbes | null>(() => loginProbesSnapshot());
+  const telegramEnabled = probes?.telegram ?? false;
+  const passkeyAvailable = probes?.passkey ?? false;
   const [passkeyError, setPasskeyError] = useState('');
   // Set when a sign-in attempt found a passkey with no account behind it, so
   // the step can lead with "create one instead".
@@ -211,25 +222,29 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
     setActiveProvider(null);
   }, [open]);
 
+  /**
+   * Both answers, once, the moment the sheet opens — and normally already in
+   * hand from the hover that preceded the click (see warmLoginSheet). Cached
+   * for the tab by lib/login-probes, so every reopen after the first renders
+   * the finished list on its first frame with no probe at all.
+   *
+   * The cap is the safety valve: on a network slow enough that the Telegram
+   * config has not come back yet, the list stops waiting and draws what it
+   * knows rather than holding a skeleton over a working sign-in sheet. A late
+   * answer still applies — one deferred row on a bad connection beats a
+   * missing way in.
+   */
   useEffect(() => {
-    if (!open) return;
+    if (!open || probes) return;
     let cancelled = false;
-    void isPasskeyLoginAvailable().then(available => {
-      if (!cancelled) setPasskeyAvailable(available);
+    const cap = window.setTimeout(() => {
+      if (!cancelled) setProbes(current => current ?? { passkey: false, telegram: false });
+    }, PROBE_WAIT_MS);
+    void resolveLoginProbes().then(resolved => {
+      if (!cancelled) setProbes(resolved);
     });
-    return () => { cancelled = true; };
-  }, [open]);
-
-  // Asked once the sheet is actually open, and cached for the tab by
-  // lib/telegram-login — reopening the sheet costs nothing.
-  useEffect(() => {
-    if (!open) return;
-    let cancelled = false;
-    void fetchTelegramLoginConfig().then(config => {
-      if (!cancelled && config.enabled) setTelegramEnabled(true);
-    });
-    return () => { cancelled = true; };
-  }, [open]);
+    return () => { cancelled = true; window.clearTimeout(cap); };
+  }, [open, probes]);
 
   // Once the connector has agreed, the wallet list is done: what happens next
   // is a signature request, and everything on that screen either does nothing
@@ -902,7 +917,10 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
 
   return (
     <>
-      {step === 'main' && renderMainStep()}
+      {/* The same placeholder the shell shows while this chunk is in flight,
+          so the wait for the chunk and the wait for the probes read as one
+          beat rather than two — and the options appear once, complete. */}
+      {step === 'main' && (probes ? renderMainStep() : <LoginBodySkeleton />)}
       {step === 'passkey' && renderPasskeyStep()}
       {step === 'email' && renderEmailStep()}
       {step === 'email-waiting' && renderEmailWaitingStep()}

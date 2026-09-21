@@ -25,6 +25,7 @@ import React, { Suspense, useCallback, useEffect, useLayoutEffect, useState } fr
 import { useTranslation } from 'react-i18next';
 import { ChevronRight } from 'lucide-react';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
+import { LoginBodySkeleton } from '@/components/app/login/LoginBodySkeleton';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, warmDeferredSheets } from '@/components/ui/drawer';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
@@ -65,35 +66,15 @@ export function warmLoginSheet(): void {
   // boot path — see lib/wagmi-wallets. On intent, not on idle: pulling them
   // for every visitor at idle would put ~500 KB back on every visit.
   void import('@/lib/wagmi-wallets').catch(() => {});
+  // Which rows the list has depends on two answers — passkey support and the
+  // Telegram bot config. Asked here, they land before the sheet opens, so the
+  // list arrives whole instead of growing a row at a time in front of them.
+  void import('@/lib/login-probes').then(m => m.warmLoginProbes()).catch(() => {});
 }
 
 interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}
-
-/**
- * What the sheet shows in the beat before the body lands: the shape of the
- * sign-in options, not a spinner. The options are four full-width pills and a
- * divider, so the placeholder is too — the swap changes the contents of the
- * rows, never the height of the sheet.
- */
-function LoginBodySkeleton() {
-  return (
-    <div className="space-y-4" aria-hidden>
-      <div className="space-y-3">
-        {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="h-12 rounded-xl bg-white/[0.07] border border-white/10 animate-pulse" />
-        ))}
-      </div>
-      <div className="flex items-center gap-3 py-2">
-        <div className="h-px flex-1 bg-white/10" />
-        <div className="h-3 w-6 rounded bg-white/[0.07]" />
-        <div className="h-px flex-1 bg-white/10" />
-      </div>
-      <div className="h-12 rounded-xl border border-white/10 animate-pulse" />
-    </div>
-  );
 }
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
