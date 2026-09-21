@@ -455,7 +455,10 @@
       "unavailable": "Le streaming depuis un encodeur n'est pas disponible sur votre compte pour le moment.",
       "serverCopied": "Serveur copié",
       "keyCopied": "Clé de flux copiée"
-    }
+    },
+    "socialFollowers": "Abonnés sur {{platform}}",
+    "socialFollowersHint": "Indiqué sur votre profil dans le cadre de votre portée totale. Saisissez le numéro vous-même — nous ne le lisons pas sur la plateforme.",
+    "socialFollowersPlaceholder": "par exemple 12500"
   },
   "common": {
     "save": "Enregistrer",
@@ -1238,7 +1241,13 @@
     "followers": "Abonnés",
     "following": "Abonnements",
     "joined": "Inscrit",
-    "loginDescription": "Connectez-vous pour voir et gérer votre profil."
+    "loginDescription": "Connectez-vous pour voir et gérer votre profil.",
+    "reach": {
+      "total": "Portée totale",
+      "breakdownTitle": "D'où vient cette portée",
+      "dehubFollowers": "Abonnés DeHub",
+      "selfReported": "Les comptes d'abonnés sociaux sont saisis par le créateur."
+    }
   },
   "tv": {
     "seoTitle": "Télévision en direct — Chaînes gratuites du monde entier",

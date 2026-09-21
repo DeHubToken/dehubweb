@@ -387,7 +387,8 @@
     "showFollowers": "ফলোয়ার/ফলোইং দেখাও",
     "hideFollowerCounts": "ফলোয়ার সংখ্যা লুকাও",
     "followersOnly": "শুধু ফলোয়ার",
-    "subscribersOnly": "শুধু সাবস্ক্রাইবার"
+    "subscribersOnly": "শুধু সাবস্ক্রাইবার",
+    "socialFollowersPlaceholder": "जैसे 12500"
   },
   "common": {
     "save": "সেভ করো",

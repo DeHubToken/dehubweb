@@ -133,7 +133,7 @@ export interface UpdateProfileData {
   telegramLink?: string;
   youtubeLink?: string;
   facebookLink?: string;
-  customs?: Record<string, string>;
+  customs?: Record<string, string | number | boolean>;
   dmSettings?: { disables?: string[]; minTipDhb?: number };
   avatarImg?: File;
   coverImg?: File;

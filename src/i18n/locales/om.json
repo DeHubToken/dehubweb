@@ -445,7 +445,10 @@
       "unavailable": "Dhangalaasuun encoder irraa yeroo ammaa kana maamiloota keessaniif hin danda’amu.",
       "serverCopied": "Sarvariin waraabame",
       "keyCopied": "Furtuun yaa&#39;aa waraabame"
-    }
+    },
+    "socialFollowers": "Hordoftoota irratti {{platform}}",
+    "socialFollowersHint": "Gama profayila keetiin akka walii galatti argamuuf. Lakkofsa ofii kee galchi — isaa platform irraa hin dubbisnu.",
+    "socialFollowersPlaceholder": "fknf 12500"
   },
   "common": {
     "save": "Olchi",
@@ -1239,7 +1242,13 @@
     "followers": "Hordoftoonni",
     "following": "Hordofaa",
     "joined": "Joined",
-    "loginDescription": "Piroofaayilii ilaaluuf fi bulchuuf seeni."
+    "loginDescription": "Piroofaayilii ilaaluuf fi bulchuuf seeni.",
+    "reach": {
+      "total": "Waliigala qaqqabummaa",
+      "breakdownTitle": "Eessaa dhaqqabummaan kun dhufa",
+      "dehubFollowers": "Hordoftoota DeHub",
+      "selfReported": "Lakkoofsi hordoftoota hawaasummaa uumaan galcha."
+    }
   },
   "tv": {
     "title": "TV"

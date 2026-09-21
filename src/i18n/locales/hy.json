@@ -455,7 +455,10 @@
       "unavailable": "Encoder-ից հեռարձակումը ներկայումս հասանելի չէ ձեր հաշվում։",
       "serverCopied": "Սերվերը պատճենված է",
       "keyCopied": "Հոսքի բանալին պատճենված է"
-    }
+    },
+    "socialFollowers": "Հետևորդներ {{platform}}-ում",
+    "socialFollowersHint": "Ցուցադրվում է ձեր պրոֆիլում ՝ որպես ընդհանուր հասանելիության մաս ։ Համարը մուտքագրեք ինքներդ. մենք այն հարթակից չենք կարդում ։",
+    "socialFollowersPlaceholder": "օրինակ ՝ 12500"
   },
   "common": {
     "save": "Pahpanel",
@@ -1235,7 +1238,13 @@
     "followers": "Hetevoughner",
     "following": "Hetevoom e",
     "joined": "Miatsav",
-    "loginDescription": "Moutq gortsuhr dzer andznagrouytse teselou ev kargatselou hamar."
+    "loginDescription": "Moutq gortsuhr dzer andznagrouytse teselou ev kargatselou hamar.",
+    "reach": {
+      "total": "Հասանելիության ընդհանուր գումարը",
+      "breakdownTitle": "Որտեղից է գալիս այս հասանելիությունը",
+      "dehubFollowers": "ԴեՀյուբի հետևորդներ",
+      "selfReported": "Սոցիալական հետևորդների թիվը մուտքագրվում է հեղինակի կողմից:"
+    }
   },
   "tv": {
     "seoTitle": "Live TV — Անվճար ալիքներ ամբողջ աշխարհից",

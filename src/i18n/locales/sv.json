@@ -455,7 +455,10 @@
       "unavailable": "Att streama från en kodare är inte tillgängligt på ditt konto just nu.",
       "serverCopied": "Servern kopierades",
       "keyCopied": "Strömningsnyckel kopierad"
-    }
+    },
+    "socialFollowers": "Följare på {{platform}}",
+    "socialFollowersHint": "Visas på din profil som en del av din totala räckvidd. Ange numret själv — vi läser det inte från plattformen.",
+    "socialFollowersPlaceholder": "t.ex. 12500"
   },
   "common": {
     "save": "Spara",
@@ -1238,7 +1241,13 @@
     "followers": "Följare",
     "following": "Följer",
     "joined": "Joined",
-    "loginDescription": "Logga in för att visa och hantera din profil."
+    "loginDescription": "Logga in för att visa och hantera din profil.",
+    "reach": {
+      "total": "Total räckvidd",
+      "breakdownTitle": "Varifrån denna räckvidd kommer",
+      "dehubFollowers": "DeHub-följare",
+      "selfReported": "Antal följare i sociala medier anges av kreatören."
+    }
   },
   "tv": {
     "seoTitle": "Live TV — Gratis kanaler från hela världen",

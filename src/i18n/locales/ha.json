@@ -444,7 +444,10 @@
       "unavailable": "Watsawa daga encoder ba ta samuwa a asusunka a yanzu.",
       "serverCopied": "An kwafa Server",
       "keyCopied": "Stream key kwafe"
-    }
+    },
+    "socialFollowers": "Mabiya akan {{platform}}",
+    "socialFollowersHint": "Shown a kan profile a matsayin wani ɓangare na your total isa. Shigar da lambar da kanka — ba mu karanta shi daga dandamali ba.",
+    "socialFollowersPlaceholder": "misali 12500"
   },
   "common": {
     "save": "Ajiye",
@@ -1225,7 +1228,13 @@
     "followers": "Masu bi",
     "following": "Ana bi",
     "joined": "Joined",
-    "loginDescription": "Shiga don gani da sarrafa bayanan kanka."
+    "loginDescription": "Shiga don gani da sarrafa bayanan kanka.",
+    "reach": {
+      "total": "Jimlar isa",
+      "breakdownTitle": "Inda wannan isa ya fito daga",
+      "dehubFollowers": "DeHub mabiya",
+      "selfReported": "An shigar da ƙididdigar mabiya zamantakewa ta mahalicci."
+    }
   },
   "tv": {
     "title": "Talabijin"

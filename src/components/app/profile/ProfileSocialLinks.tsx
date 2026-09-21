@@ -1,7 +1,7 @@
 import React from 'react';
 import { normalizeSocialUrl } from '@/lib/social-links';
 
-const SOCIAL_CONFIGS = [
+export const SOCIAL_CONFIGS = [
   {
     key: 'twitterLink',
     label: 'X (Twitter)',
