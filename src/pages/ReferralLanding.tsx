@@ -6,7 +6,7 @@ import { Copy, ArrowRight, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { isValidAffiliateCode, setAffiliateRef, recordAffiliateClick } from "@/lib/affiliateRef";
+import { isValidAffiliateCode, setAffiliateRef, recordAffiliateClick, getPersistedViewerAddress } from "@/lib/affiliateRef";
 import { resolveDeepLinkTarget } from "@/lib/affiliateDeepLink";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 import { DEFAULT_AFFILIATE_LANDING, type AffiliateLandingCustomization } from "@/lib/affiliate";
@@ -96,12 +96,14 @@ export default function ReferralLanding() {
   }, [code, valid, deepLink]);
 
   // This page mounts outside WalletProviders (see App.tsx), so there is no
-  // auth context here and no signed-in address to pass. An owner opening
-  // their own link is dropped from analytics once they continue into /app,
-  // where the ?ref cookie is re-sent with their wallet attached.
+  // auth context to ask. The signed-in address is read straight from storage
+  // instead, so an affiliate opening their own link to test it is dropped
+  // from their analytics here and now, not only if they continue into /app
+  // (where the ?ref cookie is re-sent with their wallet attached anyway).
+  // The link itself behaves exactly the same for them.
   useEffect(() => {
     if (!valid) return;
-    recordAffiliateClick(code);
+    recordAffiliateClick(code, getPersistedViewerAddress());
   }, [code, valid]);
 
   // Preload the share image immediately — its URL only depends on the code,

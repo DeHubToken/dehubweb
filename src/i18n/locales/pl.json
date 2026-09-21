@@ -4259,6 +4259,14 @@
     "voiceNoteFailed": "Nie udało się wysłać notatki głosowej"
   },
   "referral": {
+    "stats": {
+      "pageViews": "Wyświetlenia strony",
+      "uniqueVisitors": "Wyjątkowi goście",
+      "inLast30Days": "{{count}} w 30 dni",
+      "percentJoined": "{{pct}}% dołączył",
+      "noVisits": "Nie ma jeszcze wizyt",
+      "selfVisitsExcluded": "Twoje własne wizyty na Twoim linku nie są liczone."
+    },
     "seoTitle": "DeHub — zdecentralizowana sieć twórców",
     "seoTitleInvited": "{{inviter}} zaprosił Cię do DeHub — zarabiaj, publikuj i buduj on-chain",
     "seoDescription": "Zdecentralizowana sieć twórców.",
@@ -5102,75 +5110,8 @@
     "ttsPlaceholder": "Odczytaj strumień…",
     "ttsHint": "Czytaj na głos wszystkim, którzy patrzą, kiedy wyląduje Twój prezent."
   },
-  "glossary": {
-    "title": "Słownik",
-    "description": "Definicje i wyjaśnienia terminów używanych w aplikacji.",
-    "searchPlaceholder": "Szukaj terminów...",
-    "noResults": "Nie znaleziono terminów pasujących do wyszukiwania.",
-    "table": {
-      "term": "Termin",
-      "definition": "Definicja"
-    },
-    "badges": {
-      "title": "Odznaki",
-      "description": "Odznaki stakingowe są białe, aby lepiej pasowały do motywu.",
-      "tiers": [
-        {
-          "name": "Krab",
-          "min": 10000
-        },
-        {
-          "name": "Homar",
-          "min": 25000
-        },
-        {
-          "name": "Pirania",
-          "min": 50000
-        },
-        {
-          "name": "Żółw",
-          "min": 100000
-        },
-        {
-          "name": "Kobra",
-          "min": 250000
-        },
-        {
-          "name": "Ośmiornica",
-          "min": 500000
-        },
-        {
-          "name": "Krokodyl",
-          "min": 1000000
-        },
-        {
-          "name": "Delfin",
-          "min": 2000000
-        },
-        {
-          "name": "Rekin Tygrysi",
-          "min": 3000000
-        },
-        {
-          "name": "Orka",
-          "min": 5000000
-        },
-        {
-          "name": "Rekin Biały",
-          "min": 10000000
-        },
-        {
-          "name": "Płetwal Błękitny",
-          "min": 25000000
-        },
-        {
-          "name": "Megalodon",
-          "min": 50000000
-        }
-      ]
-    }
-  },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5245,9 +5186,76 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "glossary": {
+    "title": "Słownik",
+    "description": "Definicje i wyjaśnienia terminów używanych w aplikacji.",
+    "searchPlaceholder": "Szukaj terminów...",
+    "noResults": "Nie znaleziono terminów pasujących do wyszukiwania.",
+    "table": {
+      "term": "Termin",
+      "definition": "Definicja"
+    },
+    "badges": {
+      "title": "Odznaki",
+      "description": "Odznaki stakingowe są białe, aby lepiej pasowały do motywu.",
+      "tiers": [
+        {
+          "name": "Krab",
+          "min": 10000
+        },
+        {
+          "name": "Homar",
+          "min": 25000
+        },
+        {
+          "name": "Pirania",
+          "min": 50000
+        },
+        {
+          "name": "Żółw",
+          "min": 100000
+        },
+        {
+          "name": "Kobra",
+          "min": 250000
+        },
+        {
+          "name": "Ośmiornica",
+          "min": 500000
+        },
+        {
+          "name": "Krokodyl",
+          "min": 1000000
+        },
+        {
+          "name": "Delfin",
+          "min": 2000000
+        },
+        {
+          "name": "Rekin Tygrysi",
+          "min": 3000000
+        },
+        {
+          "name": "Orka",
+          "min": 5000000
+        },
+        {
+          "name": "Rekin Biały",
+          "min": 10000000
+        },
+        {
+          "name": "Płetwal Błękitny",
+          "min": 25000000
+        },
+        {
+          "name": "Megalodon",
+          "min": 50000000
+        }
+      ]
+    }
   }
 }

@@ -2205,6 +2205,16 @@
     "keepStreaming": "استمر في البث",
     "encoderPermanentHint": "المفتاح ده مبيتغيرش. ظبط الإينكودر بتاعك مرة واحدة — المرة الجاية دوس ستارت بس وهيعمل لك البوست."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "عدد المشاهدات",
+      "uniqueVisitors": "الزوار الفريدون",
+      "inLast30Days": "{{count}} في 30 يوم",
+      "percentJoined": "{{pct}}% انضموا",
+      "noVisits": "لم يتم تسجيل زيارات بعد",
+      "selfVisitsExcluded": "زياراتك الخاصة لرابطك لا تُحتسب."
+    }
+  },
   "creatorFlow": {
     "title": "خالِق فلو",
     "backToStudio": "الرجوع إلى Creator Studio",
@@ -2749,45 +2759,8 @@
     "ttsPlaceholder": "اقرا للبث...",
     "ttsHint": "اقرا بصوت عالي لكل اللي بيتفرجوا لما هديتك توصل."
   },
-  "post": {
-    "like": "إعجاب",
-    "comment": "تعليق",
-    "repost": "إعادة نشر",
-    "share": "مشاركة",
-    "bookmark": "علامة",
-    "tip": "بقشيش",
-    "delete": "امسح",
-    "edit": "عدّل",
-    "report": "بلّغ",
-    "translate": "ترجم",
-    "pinned": "متثبّت",
-    "replying": "بيرد",
-    "reply": "رد",
-    "writeReply": "اكتب رد...",
-    "noComments": "مافيش تعليقات لسه",
-    "viewMore": "شوف أكتر",
-    "postDeleted": "المنشور اتمسح",
-    "likes": "إعجابات",
-    "comments": "تعليقات",
-    "reposts": "إعادة نشر",
-    "shares": "مشاركات"
-  },
-  "create": {
-    "title": "انشر حاجة",
-    "placeholder": "بتفكّر في إيه؟",
-    "post": "انشر",
-    "addImage": "زوّد صورة",
-    "addVideo": "زوّد فيديو",
-    "addGif": "زوّد GIF",
-    "addPoll": "زوّد استطلاع",
-    "addLocation": "زوّد موقع",
-    "visibility": "الظهور",
-    "everyone": "الكل",
-    "followers": "المتابعين",
-    "subscribers": "المشتركين",
-    "mentioned": "اللي اتذكروا"
-  },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2862,9 +2835,46 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "post": {
+    "like": "إعجاب",
+    "comment": "تعليق",
+    "repost": "إعادة نشر",
+    "share": "مشاركة",
+    "bookmark": "علامة",
+    "tip": "بقشيش",
+    "delete": "امسح",
+    "edit": "عدّل",
+    "report": "بلّغ",
+    "translate": "ترجم",
+    "pinned": "متثبّت",
+    "replying": "بيرد",
+    "reply": "رد",
+    "writeReply": "اكتب رد...",
+    "noComments": "مافيش تعليقات لسه",
+    "viewMore": "شوف أكتر",
+    "postDeleted": "المنشور اتمسح",
+    "likes": "إعجابات",
+    "comments": "تعليقات",
+    "reposts": "إعادة نشر",
+    "shares": "مشاركات"
+  },
+  "create": {
+    "title": "انشر حاجة",
+    "placeholder": "بتفكّر في إيه؟",
+    "post": "انشر",
+    "addImage": "زوّد صورة",
+    "addVideo": "زوّد فيديو",
+    "addGif": "زوّد GIF",
+    "addPoll": "زوّد استطلاع",
+    "addLocation": "زوّد موقع",
+    "visibility": "الظهور",
+    "everyone": "الكل",
+    "followers": "المتابعين",
+    "subscribers": "المشتركين",
+    "mentioned": "اللي اتذكروا"
   }
 }

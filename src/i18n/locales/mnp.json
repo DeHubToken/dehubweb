@@ -2180,6 +2180,16 @@
     "endStreamConfirmBody": "您的广播将对所有观看者停止，无法恢复。",
     "keepStreaming": "继续直播"
   },
+  "referral": {
+    "stats": {
+      "pageViews": "页面浏览量",
+      "uniqueVisitors": "独立访客",
+      "inLast30Days": "30天内{{count}}次",
+      "percentJoined": "{{pct}}% 加入",
+      "noVisits": "尚无访问",
+      "selfVisitsExcluded": "您自己对链接的访问不计入。"
+    }
+  },
   "creatorFlow": {
     "title": "创作者流程",
     "backToStudio": "返回创作者工作室",
@@ -2721,45 +2731,8 @@
     "ttsPlaceholder": "唸給直播聽…",
     "ttsHint": "送禮物落地時唸給所有觀眾聽。"
   },
-  "post": {
-    "like": "赞",
-    "comment": "评论",
-    "repost": "转发",
-    "share": "分享",
-    "bookmark": "书签",
-    "tip": "打赏",
-    "delete": "删除",
-    "edit": "编辑",
-    "report": "举报",
-    "translate": "翻译",
-    "pinned": "置顶",
-    "replying": "回复中",
-    "reply": "回复",
-    "writeReply": "写回复...",
-    "noComments": "还无评论",
-    "viewMore": "看更多",
-    "postDeleted": "帖子删除了",
-    "likes": "赞",
-    "comments": "评论",
-    "reposts": "转发",
-    "shares": "分享"
-  },
-  "create": {
-    "title": "创建帖子",
-    "placeholder": "你在想什乇？",
-    "post": "发布",
-    "addImage": "加图片",
-    "addVideo": "加视频",
-    "addGif": "加GIF",
-    "addPoll": "加投票",
-    "addLocation": "加位置",
-    "visibility": "谁看得着",
-    "everyone": "所有人",
-    "followers": "关注者",
-    "subscribers": "订阅者",
-    "mentioned": "提到其人"
-  },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2834,9 +2807,46 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "post": {
+    "like": "赞",
+    "comment": "评论",
+    "repost": "转发",
+    "share": "分享",
+    "bookmark": "书签",
+    "tip": "打赏",
+    "delete": "删除",
+    "edit": "编辑",
+    "report": "举报",
+    "translate": "翻译",
+    "pinned": "置顶",
+    "replying": "回复中",
+    "reply": "回复",
+    "writeReply": "写回复...",
+    "noComments": "还无评论",
+    "viewMore": "看更多",
+    "postDeleted": "帖子删除了",
+    "likes": "赞",
+    "comments": "评论",
+    "reposts": "转发",
+    "shares": "分享"
+  },
+  "create": {
+    "title": "创建帖子",
+    "placeholder": "你在想什乇？",
+    "post": "发布",
+    "addImage": "加图片",
+    "addVideo": "加视频",
+    "addGif": "加GIF",
+    "addPoll": "加投票",
+    "addLocation": "加位置",
+    "visibility": "谁看得着",
+    "everyone": "所有人",
+    "followers": "关注者",
+    "subscribers": "订阅者",
+    "mentioned": "提到其人"
   }
 }

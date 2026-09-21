@@ -2267,6 +2267,16 @@
     "keepStreaming": "Whakatau tonu te tukutuku",
     "encoderPermanentHint": "E kore e huri tenei kī. Whakatuwherahia to waehere kotahi — i te wa e whai ake nei ka pēhi noa i te Tīmata i reira ka hanga e DeHub te pou mo koe."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "Ngā tirohanga o te whārangi",
+      "uniqueVisitors": "Ngā manuhiri motuhake",
+      "inLast30Days": "{{count}} i roto i nga ra 30",
+      "percentJoined": "{{pct}}% hono",
+      "noVisits": "Kaore ano kia tae mai nga haerenga",
+      "selfVisitsExcluded": "Ko to koutou ake haerenga ki to koutou hononga e kore e tatau."
+    }
+  },
   "creatorFlow": {
     "title": "Creator Flow",
     "backToStudio": "Hoki ki te Creator Studio",
@@ -2812,6 +2822,7 @@
     "ttsHint": "Pānuihia te reo nui ki te hunga katoa e titiro ana ki to koutou taonga whenua."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2886,7 +2897,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

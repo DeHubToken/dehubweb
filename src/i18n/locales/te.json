@@ -4112,6 +4112,14 @@
     "voiceNoteFailed": "వాయిస్ నోట్ పంపడం విఫలమైంది"
   },
   "referral": {
+    "stats": {
+      "pageViews": "పేజీ వీక్షణలు",
+      "uniqueVisitors": "ప్రత్యేక సందర్శకులు",
+      "inLast30Days": "{{count}} 30 రోజుల్లో",
+      "percentJoined": "{{pct}}% చేరారు",
+      "noVisits": "ఇంకా సందర్శనలు లేవు",
+      "selfVisitsExcluded": "మీ లింక్ ‌ కు మీ స్వంత సందర్శనలు లెక్కించబడవు."
+    },
     "seoTitle": "DeHub — వికేంద్రీకృత సృష్టికర్త నెట్‌వర్క్",
     "seoTitleInvited": "{{inviter}} మిమ్మల్ని DeHub కు ఆహ్వానించారు — సంపాదించండి, పోస్ట్ చేయండి & ఆన్-చెయిన్‌లో నిర్మించండి",
     "seoDescription": "వికేంద్రీకృత సృష్టికర్త నెట్‌వర్క్.",
@@ -4943,6 +4951,7 @@
     "ttsHint": "మీ బహుమతి ఎప్పుడు వస్తుందో చూసే ప్రతి ఒక్కరికీ బిగ్గరగా చదవండి."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5017,7 +5026,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

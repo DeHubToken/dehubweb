@@ -2305,6 +2305,16 @@
     "keepStreaming": "Stream continuay",
     "encoderPermanentHint": "Kay llaveqa manan hayk’aqpas cambianchu. Huk kuti codificadorniyki churay — qhipa kuti chaypi Qallarina ñit&#39;iylla chaymanta DeHub qampaq qillqa ruwan."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "P’anqa qhaway",
+      "uniqueVisitors": "Sapaq watukuqkuna",
+      "inLast30Days": "{{count}} 30 punchawpi",
+      "percentJoined": "{{pct}}% hukllawakurqa",
+      "noVisits": "Manaraqmi watukuykuna kanchu",
+      "selfVisitsExcluded": "Kikin watukusqaykikuna t&#39;inkiykiman mana yupasqachu."
+    }
+  },
   "creatorFlow": {
     "title": "Ruwaypa Tariy",
     "backToStudio": "Ruwaqpa Kamachiy Wasiman Kutiy",
@@ -2846,6 +2856,7 @@
     "ttsHint": "Regaloyki chayamuqtin llapa qhawaqkunaman kallpawan leey."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2920,7 +2931,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

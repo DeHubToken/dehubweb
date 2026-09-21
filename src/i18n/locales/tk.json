@@ -2239,6 +2239,16 @@
     "keepStreaming": "Akışa devam et",
     "encoderPermanentHint": "Bu açar hiç haçan üýtgemeýär. Bir gezek kodlaýjyňyzy goýuň — indiki gezek diňe şol ýere basyň we DeHub size post ýaratýar."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "Sahypa Görüşleri",
+      "uniqueVisitors": "Gozgalaňçylar",
+      "inLast30Days": "{{count}} 30 günüň içinde",
+      "percentJoined": "{{pct}}% goşuldy",
+      "noVisits": "Hiç bir seretme",
+      "selfVisitsExcluded": "Siziň öz baglanyşygyňyza barmagyňyz hasaplanmaýar."
+    }
+  },
   "creatorFlow": {
     "title": "Dörediji akymy",
     "backToStudio": "Dörediji studiýasyna dolan",
@@ -2774,6 +2784,7 @@
     "ttsHint": "Seniň sowgatyňy görýänleriň ählisine sesli okamagy öwreniň."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2848,7 +2859,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

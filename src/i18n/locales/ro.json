@@ -4076,6 +4076,14 @@
     "voiceNoteFailed": "Trimiterea notei vocale a eșuat"
   },
   "referral": {
+    "stats": {
+      "pageViews": "Vizualizări de pagină",
+      "uniqueVisitors": "Vizitatori unici",
+      "inLast30Days": "{{count}} în 30 de zile",
+      "percentJoined": "{{pct}}% s-au alăturat",
+      "noVisits": "Încă nu există vizite",
+      "selfVisitsExcluded": "Vizitele dvs. la link-ul dvs. nu sunt luate în considerare."
+    },
     "seoTitle": "DeHub — rețeaua descentralizată de creatori",
     "seoTitleInvited": "{{inviter}} te-a invitat la DeHub — câștigă, postează și construiește on-chain",
     "seoDescription": "Rețeaua descentralizată de creatori.",
@@ -4911,21 +4919,8 @@
     "ttsPlaceholder": "Citiți în flux...",
     "ttsHint": "Citește cu voce tare tuturor celor care te privesc atunci când cadoul tău aterizează."
   },
-  "footer": {
-    "about": "Despre noi",
-    "contact": "Contact",
-    "privacy": "Politica de confidențialitate",
-    "terms": "Termeni și condiții"
-  },
-  "glossary": {
-    "title": "Glosar",
-    "description": "Termeni și definiții pentru a înțelege mai bine platforma.",
-    "badge": {
-      "white": "Alb",
-      "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
-    }
-  },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5000,9 +4995,22 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "footer": {
+    "about": "Despre noi",
+    "contact": "Contact",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
+  },
+  "glossary": {
+    "title": "Glosar",
+    "description": "Termeni și definiții pentru a înțelege mai bine platforma.",
+    "badge": {
+      "white": "Alb",
+      "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
+    }
   }
 }

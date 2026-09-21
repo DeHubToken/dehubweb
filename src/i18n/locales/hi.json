@@ -4269,6 +4269,14 @@
     "voiceNoteFailed": "वॉइस नोट भेजने में विफल"
   },
   "referral": {
+    "stats": {
+      "pageViews": "पेज व्यू",
+      "uniqueVisitors": "अनोखे मेहमान",
+      "inLast30Days": "30 दिनों में {{count}}",
+      "percentJoined": "{{pct}}% शामिल हुए",
+      "noVisits": "अभी तक कोई विज़िट नहीं हुई है",
+      "selfVisitsExcluded": "आपके लिंक पर आपकी खुद की विज़िट नहीं गिनी जाती हैं।"
+    },
     "seoTitle": "DeHub — विकेंद्रीकृत क्रिएटर नेटवर्क",
     "seoTitleInvited": "{{inviter}} ने आपको DeHub पर आमंत्रित किया — कमाएँ, पोस्ट करें और ऑन-चेन बनाएँ",
     "seoDescription": "विकेंद्रीकृत क्रिएटर नेटवर्क।",
@@ -5156,6 +5164,7 @@
     "ttsHint": "जब आपका गिफ़्ट लैंड होता है, तो उसे देखने वाले सभी लोगों को ज़ोर से पढ़ें।"
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5230,7 +5239,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

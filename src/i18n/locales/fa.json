@@ -4196,6 +4196,13 @@
     "voiceNoteFailed": "ارسال یادداشت صوتی ناموفق بود"
   },
   "referral": {
+    "stats": {
+      "pageViews": "مشاهده برگه",
+      "uniqueVisitors": "بازدید کنندگان منحصر به فرد",
+      "inLast30Days": "{{count}} در ۳۰ روز",
+      "noVisits": "هنوز بازدیدی انجام نشده است",
+      "selfVisitsExcluded": "بازدیدهای خودتان از لینکتان محاسبه نمی‌شود."
+    },
     "seoTitle": "DeHub — شبکه خالق غیرمتمرکز",
     "seoTitleInvited": "{{inviter}} شما را به DeHub دعوت کرد — درآمد، پست و ساخت در زنجیره",
     "seoDescription": "شبکه خالق غیرمتمرکز.",
@@ -5029,6 +5036,7 @@
     "ttsHint": "وقتی هدیه‌ات به دستت رسید، برای همه کسانی که تماشا می‌کنند با صدای بلند بخوان."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5103,7 +5111,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

@@ -2272,6 +2272,16 @@
     "keepStreaming": "Ci gaba da streaming",
     "encoderPermanentHint": "Wannan maɓallin ba ya canzawa. Saita encoder ɗinku sau ɗaya — lokaci na gaba kawai latsa Fara can kuma DeHub ya ƙirƙiri post ɗin a gare ku."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "Ra'ayoyin shafi",
+      "uniqueVisitors": "Baƙi na musamman",
+      "inLast30Days": "{{count}} a cikin kwanaki 30",
+      "percentJoined": "{{pct}}% shiga",
+      "noVisits": "Babu ziyara tukuna",
+      "selfVisitsExcluded": "Ba a ƙidaya ziyarar ku zuwa hanyar haɗin ku ba."
+    }
+  },
   "creatorFlow": {
     "title": "Creator Flow",
     "backToStudio": "Komawa zuwa Creator Studio",
@@ -2817,6 +2827,7 @@
     "ttsHint": "Karanta da ƙarfi ga kowa da kowa yana kallo lokacin da kyautarku ta sauka."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2891,7 +2902,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

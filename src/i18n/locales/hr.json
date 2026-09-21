@@ -4195,6 +4195,14 @@
     "voiceNoteFailed": "Slanje glasovne poruke nije uspjelo"
   },
   "referral": {
+    "stats": {
+      "pageViews": "Pregledi stranice",
+      "uniqueVisitors": "Jedinstveni posjetitelji",
+      "inLast30Days": "{{count}} u 30 dana",
+      "percentJoined": "{{pct}}% pridružuje se",
+      "noVisits": "Još nema posjeta",
+      "selfVisitsExcluded": "Vaše se posjete poveznici ne računaju."
+    },
     "seoTitle": "DeHub — decentralizirana mreža kreatora",
     "seoTitleInvited": "{{inviter}} te je pozvao/la na DeHub — zarađuj, objavljuj i gradi na-lancu",
     "seoDescription": "Decentralizirana mreža kreatora.",
@@ -5031,6 +5039,7 @@
     "ttsHint": "Čitajte naglas svima koji gledaju kada vaš dar sleti."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5105,7 +5114,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

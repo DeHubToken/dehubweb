@@ -2239,6 +2239,16 @@
     "keepStreaming": "Wiiter streame",
     "encoderPermanentHint": "Dä Schlüssel verändert sich nie. Stell din Encoder eimal i – nächstes Mal drucksch eifach uf Start und DeHub macht de Post für dich."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "Site-Blick",
+      "uniqueVisitors": "Eizigartiigi Bsuecher",
+      "inLast30Days": "{{count}} i 30 Täg",
+      "percentJoined": "{{pct}}% mitgmacht",
+      "noVisits": "No kei Bsuech",
+      "selfVisitsExcluded": "Dini eigete Bsuech uf dim Link wärded nöd mitzählt."
+    }
+  },
   "creatorFlow": {
     "title": "Creator Flow",
     "backToStudio": "Zrugg zum Creator Studio",
@@ -2784,6 +2794,7 @@
     "ttsHint": "Lies em ganzi Chat vor, wänn din Gschänk-Gift landet."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2858,7 +2869,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

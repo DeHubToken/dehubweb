@@ -4264,6 +4264,14 @@
     "voiceNoteFailed": "语音发送失败"
   },
   "referral": {
+    "stats": {
+      "pageViews": "页面浏览量",
+      "uniqueVisitors": "独立访客",
+      "inLast30Days": "30天后{{count}}",
+      "percentJoined": "已加入{{pct}} %",
+      "noVisits": "还没有访问",
+      "selfVisitsExcluded": "您自己访问链接的次数不计算在内。"
+    },
     "seoTitle": "DeHub — 去中心化创作者网络",
     "seoTitleInvited": "{{inviter}} 邀请你加入 DeHub — 在链上赚取、发布与创造",
     "seoDescription": "去中心化的创作者网络。",
@@ -5152,6 +5160,7 @@
     "ttsHint": "当你的礼物送达时，念给所有观看的人听。"
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5226,7 +5235,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
