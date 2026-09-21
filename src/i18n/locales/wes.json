@@ -2048,6 +2048,15 @@
     "viewStream": "View Stream",
     "keepStreaming": "Keep streaming"
   },
+  "referral": {
+    "stats": {
+      "pageViews": "Page views",
+      "uniqueVisitors": "Unique visitors",
+      "inLast30Days": "{{count}} in 30 days",
+      "percentJoined": "{{pct}}% joined",
+      "noVisits": "No visits yet"
+    }
+  },
   "creatorFlow": {
     "title": "Creator Flow",
     "backToStudio": "Go back to Creator Studio",
@@ -2484,6 +2493,7 @@
     "ttsHint": "Read am aloud to everybody wey dey watch when your gift land."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2558,7 +2568,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

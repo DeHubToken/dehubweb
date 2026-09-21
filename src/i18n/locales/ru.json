@@ -4213,6 +4213,14 @@
     "voiceNoteFailed": "Ошибка при отправке голосового сообщения"
   },
   "referral": {
+    "stats": {
+      "pageViews": "Просмотры страницы",
+      "uniqueVisitors": "Уникальные посетители",
+      "inLast30Days": "{{count}} через 30 дней",
+      "percentJoined": "{{pct}}% присоединились",
+      "noVisits": "Пока нет посещений",
+      "selfVisitsExcluded": "Ваши собственные посещения вашей ссылки не учитываются."
+    },
     "seoTitle": "DeHub — децентрализованная сеть создателей контента",
     "seoTitleInvited": "{{inviter}} пригласил вас в DeHub — зарабатывайте, публикуйте и создавайте в блокчейне",
     "seoDescription": "Децентрализованная сеть создателей контента.",
@@ -5098,6 +5106,7 @@
     "ttsHint": "Прочитайте вслух всем, кто смотрит, когда ваш подарок приземлится."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5172,7 +5181,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

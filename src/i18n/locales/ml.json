@@ -4015,6 +4015,14 @@
     "voiceNoteFailed": "വോയ്സ് നോട്ട് അയയ്ക്കാൻ പരാജയപ്പെട്ടു"
   },
   "referral": {
+    "stats": {
+      "pageViews": "പേജ് കാഴ്ചകൾ",
+      "uniqueVisitors": "അതുല്യമായ സന്ദർശകർ",
+      "inLast30Days": "{{count}}30 ദിവസത്തിനുള്ളിൽ",
+      "percentJoined": "{{pct}}% ചേർന്നു",
+      "noVisits": "ഇതുവരെ സന്ദർശനങ്ങളൊന്നുമില്ല",
+      "selfVisitsExcluded": "നിങ്ങളുടെ ലിങ്കിലേക്കുള്ള നിങ്ങളുടെ സ്വന്തം സന്ദർശനങ്ങൾ കണക്കാക്കില്ല."
+    },
     "seoTitle": "DeHub — വികേന്ദ്രീകൃത സൃഷ്ടിയുടെ നെറ്റ്‌വർക്ക്",
     "seoTitleInvited": "{{inviter}} നിങ്ങളെ DeHub-ലേക്ക് ക്ഷണിച്ചു — സമ്പാദിക്കുക, പോസ്റ്റ് ചെയ്യുക & ഓൺ-ചെയിനിൽ നിർമ്മിക്കുക",
     "seoDescription": "വികേന്ദ്രീകൃത സൃഷ്ടിയുടെ നെറ്റ്‌വർക്ക്.",
@@ -4844,6 +4852,7 @@
     "ttsHint": "നിങ്ങളുടെ സമ്മാനം എത്തുമ്പോൾ കാണുന്ന എല്ലാവരോടും ഉറക്കെ വായിക്കുക."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -4918,7 +4927,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

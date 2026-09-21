@@ -4245,6 +4245,14 @@
     "voiceNoteFailed": "Kunne ikke sende stemmebeskeder"
   },
   "referral": {
+    "stats": {
+      "pageViews": "Sidevisninger",
+      "uniqueVisitors": "Unikke besøgende",
+      "inLast30Days": "{{count}} om 30 dage",
+      "percentJoined": "{{pct}} % tilmeldte sig",
+      "noVisits": "Ingen besøg endnu",
+      "selfVisitsExcluded": "Dine egne besøg på dit link tælles ikke med."
+    },
     "seoTitle": "DeHub — det decentraliserede creator-netværk",
     "seoTitleInvited": "{{inviter}} inviterede dig til DeHub — tjene, post og byg on-chain",
     "seoDescription": "Det decentraliserede creator-netværk.",
@@ -5062,6 +5070,7 @@
     "ttsHint": "Læs højt for alle, der ser på, når din gave lander."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5136,7 +5145,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

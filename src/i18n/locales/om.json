@@ -2291,6 +2291,16 @@
     "keepStreaming": "Keep streaming",
     "encoderPermanentHint": "Furtuun kun gonkumaa hin jijjiiramu. Encoder kee al tokko saagi — yeroo itti aanutti Start achitti dhiibaa qofa DeHub post sana siif uuma."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "Ilaalcha fuula",
+      "uniqueVisitors": "Daawwattoota adda ta&#39;an",
+      "inLast30Days": "{{count}} guyyaa 30 keessatti",
+      "percentJoined": "{{pct}}% itti makame",
+      "noVisits": "Hanga ammaatti daawwannaan hin jiru",
+      "selfVisitsExcluded": "Daawwannaan mataa keessanii link keessan irratti gootan hin lakkaa&#39;amu."
+    }
+  },
   "creatorFlow": {
     "title": "Creator Flow",
     "backToStudio": "Creator Studio irratti deebi'i",
@@ -2833,33 +2843,8 @@
     "ttsPlaceholder": "Tamsaasa kallattiif dubbisi...",
     "ttsHint": "Yeroo kennaan kee bu'u nama ilaalu hundaaf sagalee ol kaastee dubbisi."
   },
-  "spaces": {
-    "title": "Bakkeewwan",
-    "live": "Kallattii",
-    "upcoming": "Dhufaa jiru",
-    "past": "Darbe",
-    "create": "Bakkee Uumi",
-    "join": "Makamsi",
-    "listeners": "Dhaggeeffattoota",
-    "speakers": "Dubbattoota",
-    "host": "Keessummeessaa",
-    "endSpace": "Bakkee Dhaabi",
-    "raiseHand": "Harka Ol Kaasi",
-    "lowerHand": "Harka Gadi Buusi",
-    "mute": "Callisuun",
-    "unmute": "Sagalee Bansi",
-    "leave": "Bakkee Gadi Dhiisi",
-    "noSpaces": "Ammallee bakkeewwan hin jiran",
-    "loginDescription": "Bakkee sagalee uumuuf fi makamsuuf seeni."
-  },
-  "blog": {
-    "title": "Biloogii",
-    "readMore": "Dabalataa dubbisi",
-    "backToBlog": "Biloogiitti deebi'i",
-    "sharePost": "Barreeffama qoodi",
-    "relatedPosts": "Barreeffamoota Walqabatan"
-  },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2934,9 +2919,34 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "spaces": {
+    "title": "Bakkeewwan",
+    "live": "Kallattii",
+    "upcoming": "Dhufaa jiru",
+    "past": "Darbe",
+    "create": "Bakkee Uumi",
+    "join": "Makamsi",
+    "listeners": "Dhaggeeffattoota",
+    "speakers": "Dubbattoota",
+    "host": "Keessummeessaa",
+    "endSpace": "Bakkee Dhaabi",
+    "raiseHand": "Harka Ol Kaasi",
+    "lowerHand": "Harka Gadi Buusi",
+    "mute": "Callisuun",
+    "unmute": "Sagalee Bansi",
+    "leave": "Bakkee Gadi Dhiisi",
+    "noSpaces": "Ammallee bakkeewwan hin jiran",
+    "loginDescription": "Bakkee sagalee uumuuf fi makamsuuf seeni."
+  },
+  "blog": {
+    "title": "Biloogii",
+    "readMore": "Dabalataa dubbisi",
+    "backToBlog": "Biloogiitti deebi'i",
+    "sharePost": "Barreeffama qoodi",
+    "relatedPosts": "Barreeffamoota Walqabatan"
   }
 }

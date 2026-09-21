@@ -2252,6 +2252,16 @@
     "keepStreaming": "စမ်းချက် ကို ဆက်လက်ထားပါ",
     "encoderPermanentHint": "ဒီ key ကဘယ်တော့မှမပြောင်းလဲဘူး ။ သင် ၏ encoder ကိုတစ်ကြိမ်တပ်ဆင်ပါ — နောက်တစ်ကြိမ်တွင်အဲဒီမှာ Start ကိုနှိပ်ပြီး DeHub သည်သင်အတွက် post ကိုဖန်တီးသည် ။"
   },
+  "referral": {
+    "stats": {
+      "pageViews": "စာမျက်နှာအမြင်များ",
+      "uniqueVisitors": "ထူးခြားသောဧည့်သည်တော်များ",
+      "inLast30Days": "{{count}} ရက် ၃၀ အတွင်း",
+      "percentJoined": "{{pct}}% ပူးပေါင်းခဲ့သည်",
+      "noVisits": "လည်ပတ်မှုများ မရှိသေးပါ",
+      "selfVisitsExcluded": "သင် ၏ လင့်ခ်သို့သင် ၏ ကိုယ်ပိုင်လည်ပတ်မှုများကိုရေတွက်ခြင်းမရှိပါ ။"
+    }
+  },
   "creatorFlow": {
     "title": "ဖန်တီးသူ၏ စီးဆင်းမှု",
     "backToStudio": "ဖန်တီးသူ စတူဒီယိုသို့ ပြန်သွားပါ",
@@ -2784,27 +2794,8 @@
     "ttsPlaceholder": "စမ်းချောင်းသို့ဖတ်ပါ...",
     "ttsHint": "သင် ၏ လက်ဆောင်မြေပေါ်သို့ရောက်သောအခါကြည့်နေသောလူတိုင်းအားအသံကျယ်ကျယ်ဖြင့်ဖတ်ပါ ။"
   },
-  "spaces": {
-    "title": "အခန်းများ",
-    "live": "တိုက်ရိုက်",
-    "upcoming": "လာမည့်",
-    "past": "ပြီးခဲ့သော",
-    "create": "အခန်းဖန်တီးရန်",
-    "join": "ပါဝင်ရန်",
-    "listeners": "နားထောင်သူများ",
-    "speakers": "ပြောဆိုသူများ",
-    "host": "အိမ်ရှင်",
-    "noSpaces": "အခန်းများ မရှိသေးပါ",
-    "loginDescription": "အသံအခန်းများ ဖန်တီးရန်နှင့် ပါဝင်ရန် ဝင်ရောက်ပါ။"
-  },
-  "blog": {
-    "title": "ဘလော့ဂ်",
-    "readMore": "နောက်ထပ်ဖတ်ရန်",
-    "backToBlog": "ဘလော့ဂ်သို့ပြန်ရန်",
-    "sharePost": "ပို့စ်မျှဝေရန်",
-    "relatedPosts": "ဆက်စပ်ပို့စ်များ"
-  },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2879,9 +2870,28 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "spaces": {
+    "title": "အခန်းများ",
+    "live": "တိုက်ရိုက်",
+    "upcoming": "လာမည့်",
+    "past": "ပြီးခဲ့သော",
+    "create": "အခန်းဖန်တီးရန်",
+    "join": "ပါဝင်ရန်",
+    "listeners": "နားထောင်သူများ",
+    "speakers": "ပြောဆိုသူများ",
+    "host": "အိမ်ရှင်",
+    "noSpaces": "အခန်းများ မရှိသေးပါ",
+    "loginDescription": "အသံအခန်းများ ဖန်တီးရန်နှင့် ပါဝင်ရန် ဝင်ရောက်ပါ။"
+  },
+  "blog": {
+    "title": "ဘလော့ဂ်",
+    "readMore": "နောက်ထပ်ဖတ်ရန်",
+    "backToBlog": "ဘလော့ဂ်သို့ပြန်ရန်",
+    "sharePost": "ပို့စ်မျှဝေရန်",
+    "relatedPosts": "ဆက်စပ်ပို့စ်များ"
   }
 }

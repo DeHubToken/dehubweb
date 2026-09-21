@@ -2243,6 +2243,16 @@
     "keepStreaming": "Gụnye na-agbasa ozi",
     "encoderPermanentHint": "Igodo a anaghị agbanwe agbanwe. Nịm gị encoder elu otu ugboro — oge ọzọ dị nnọọ pịa Malite n 'ebe ahụ na DeHub emepụta post n' ihi na ị."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "Ngosi ihuakwụkwọ",
+      "uniqueVisitors": "Ndị ọbịa pụrụ iche",
+      "inLast30Days": "{{count}} n 'ime ụbọchị 30",
+      "percentJoined": "{{pct}}% sonyere",
+      "noVisits": "Enweghị ọbịbịa ma",
+      "selfVisitsExcluded": "A gụghị ọbịbịa nke gị na njikọ gị."
+    }
+  },
   "creatorFlow": {
     "title": "Onye Okike Flow",
     "backToStudio": "Lagho azụ na Creator Studio",
@@ -2777,6 +2787,7 @@
     "ttsHint": "Gụọ onye ọ bụla na-ekiri mgbe onyinye gị rutere."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2851,7 +2862,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

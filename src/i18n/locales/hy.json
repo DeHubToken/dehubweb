@@ -4192,6 +4192,14 @@
     "voiceNoteFailed": "Չհաջողվեց ձայնային նշումը ուղարկել"
   },
   "referral": {
+    "stats": {
+      "pageViews": "Էջի դիտումներ",
+      "uniqueVisitors": "Յուրահատուկ այցելուներ",
+      "inLast30Days": "{{count}} 30 օրվա ընթացքում",
+      "percentJoined": "{{pct}}% միացել է",
+      "noVisits": "Դեռ այցելություններ չկան",
+      "selfVisitsExcluded": "Ձեր հղման սեփական այցելությունները չեն հաշվարկվում:"
+    },
     "seoTitle": "DeHub — բաժանված ստեղծողների ցանց",
     "seoTitleInvited": "{{inviter}} ձեզ հրավիրել է DeHub — վաստակեք, հրապարակեք և կառուցեք շղթայի վրա",
     "seoDescription": "Բաժանված ստեղծողների ցանց:",
@@ -5024,6 +5032,7 @@
     "ttsHint": "Բարձրաձայն կարդացեք բոլոր նրանց համար, ովքեր հետևում են, թե երբ է ձեր նվերը վայրէջք"
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5098,7 +5107,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

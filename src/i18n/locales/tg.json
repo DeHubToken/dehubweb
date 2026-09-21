@@ -2264,6 +2264,16 @@
     "keepStreaming": "Трансляцияро идома диҳед",
     "encoderPermanentHint": "Ин калид ҳеҷ гоҳ тағйир намеёбад. I-set ang iyong encoder up ng isang beses — susunod na beses lamang ang Pindutin dito at DeHub lumikha ng post para sa iyo."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "Намоиши саҳифа",
+      "uniqueVisitors": "Mga natatanging bisita",
+      "inLast30Days": "{{count}} in 30 days",
+      "percentJoined": "{{pct}}% join",
+      "noVisits": "Walang mga pagbisita pa pa",
+      "selfVisitsExcluded": "Hindi account ang iyong sariling mga pagbisita sa iyong link."
+    }
+  },
   "creatorFlow": {
     "title": "Creator Flow",
     "backToStudio": "Бозгашт ба Creator Studio",
@@ -2803,6 +2813,7 @@
     "ttsHint": "Хондан баланд ба ҳамаи тамошобинон, вақте ки заминҳои атои шумо."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2877,7 +2888,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
