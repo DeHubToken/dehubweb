@@ -4287,6 +4287,8 @@
     "daysLeft_other": "{{count}}d over"
   },
   "live": {
+    "chatJoined": "is erbij gekomen",
+    "chatSentGift": "heeft gestuurd",
     "shop": "Winkel",
     "shopThisStream": "Shop deze stream",
     "streamShop": "Stream winkel",

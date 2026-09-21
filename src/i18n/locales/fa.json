@@ -4033,6 +4033,8 @@
     "inactive": "غیر فعال"
   },
   "live": {
+    "chatJoined": "پیوست",
+    "chatSentGift": "فرستاد",
     "shop": "فروشگاه",
     "shopThisStream": "این استریم را خریداری کنید",
     "streamShop": "فروشگاه استریم",

@@ -4590,6 +4590,8 @@
     "daysLeft_other": "{{count}}d ಎಡ"
   },
   "live": {
+    "chatJoined": "ಸೇರಿದರು",
+    "chatSentGift": "ಕಳುಹಿಸಿದರು",
     "shop": "ಅಂಗಡಿ",
     "shopThisStream": "ಈ ಸ್ಟ್ರೀಮ್ ಅನ್ನು ಶಾಪಿಂಗ್ ಮಾಡಿ",
     "streamShop": "ಸ್ಟ್ರೀಮ್ ಶಾಪ್",

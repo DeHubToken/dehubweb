@@ -4032,6 +4032,8 @@
     "daysLeft_other": "{{count}}d kvar"
   },
   "live": {
+    "chatJoined": "gick med",
+    "chatSentGift": "skickade",
     "shop": "Handla",
     "shopThisStream": "Handla den här strömmen",
     "streamShop": "Strömbutik",

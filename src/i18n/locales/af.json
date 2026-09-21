@@ -3941,6 +3941,8 @@
     "inactive": "Onaktief"
   },
   "live": {
+    "chatJoined": "het aangesluit",
+    "chatSentGift": "het gestuur",
     "shop": "Winkel",
     "shopThisStream": "Winkel hierdie stroom",
     "streamShop": "Stream winkel",

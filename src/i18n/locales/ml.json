@@ -3852,6 +3852,8 @@
     "inactive": "നിഷ്‌ക്രിയം"
   },
   "live": {
+    "chatJoined": "ചേർന്നു",
+    "chatSentGift": "അയച്ചു",
     "shop": "ഷോപ്പ്",
     "shopThisStream": "ഈ സ്ട്രീം ഷോപ്പുചെയ്യുക",
     "streamShop": "സ്ട്രീം ഷോപ്പ്",

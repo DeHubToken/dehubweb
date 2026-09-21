@@ -4032,6 +4032,8 @@
     "daysLeft_other": "{{count}}d jäänud"
   },
   "live": {
+    "chatJoined": "liitus",
+    "chatSentGift": "saatis",
     "shop": "Osta",
     "shopThisStream": "Osta see voog",
     "streamShop": "Striim pood",

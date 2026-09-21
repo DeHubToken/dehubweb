@@ -4087,6 +4087,8 @@
     "daysLeft_other": "{{count}}d iliyobaki"
   },
   "live": {
+    "chatJoined": "amejiunga",
+    "chatSentGift": "ametuma",
     "shop": "Duka",
     "shopThisStream": "Nunua kutoka kwa mtiririko huu",
     "streamShop": "Duka la mtiririko",

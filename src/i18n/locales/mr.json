@@ -3827,6 +3827,8 @@
     "inactive": "निष्क्रिय"
   },
   "live": {
+    "chatJoined": "सामील झाले",
+    "chatSentGift": "पाठवले",
     "shop": "दुकान",
     "shopThisStream": "हा प्रवाह खरेदी करा",
     "streamShop": "स्ट्रीम शॉप",

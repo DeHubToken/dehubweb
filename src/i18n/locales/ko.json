@@ -4088,6 +4088,8 @@
     "daysLeft_other": "{{count}} d 남음"
   },
   "live": {
+    "chatJoined": "님이 참여했습니다",
+    "chatSentGift": "님이 보냈습니다",
     "shop": "상점",
     "shopThisStream": "이 스트림 쇼핑하기",
     "streamShop": "스트림 상점",

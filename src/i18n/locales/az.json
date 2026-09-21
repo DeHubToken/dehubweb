@@ -3996,6 +3996,8 @@
     "inactive": "Qeyri-aktiv"
   },
   "live": {
+    "chatJoined": "qoşuldu",
+    "chatSentGift": "göndərdi",
     "shop": "Mağaza",
     "shopThisStream": "Bu axını al",
     "streamShop": "Stream mağazası",

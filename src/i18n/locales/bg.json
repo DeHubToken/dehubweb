@@ -3894,6 +3894,8 @@
     "daysLeft_other": "Остават: {{count}}@d"
   },
   "live": {
+    "chatJoined": "се присъедини",
+    "chatSentGift": "изпрати",
     "shop": "Магазин",
     "shopThisStream": "Купете този поток",
     "streamShop": "Магазин за поточно предаване",

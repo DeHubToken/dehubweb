@@ -4029,6 +4029,8 @@
     "daysLeft_other": "{{count}}d jäljellä"
   },
   "live": {
+    "chatJoined": "liittyi",
+    "chatSentGift": "lähetti",
     "shop": "Osta",
     "shopThisStream": "Osta tästä suoratoistosta",
     "streamShop": "Suoratoiston kauppa",

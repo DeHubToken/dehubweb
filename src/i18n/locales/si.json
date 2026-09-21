@@ -3655,6 +3655,8 @@
     "inactive": "අක් ‍ රියයි"
   },
   "live": {
+    "chatJoined": "එක් විය",
+    "chatSentGift": "යැව්වා",
     "shop": "සාප්පු සවාරි",
     "shopThisStream": "මෙම ප් ‍ රවාහය සාප්පු සවාරි යන්න",
     "streamShop": "ප් ‍ රවාහ සාප්පුව",

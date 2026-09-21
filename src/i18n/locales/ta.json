@@ -3734,6 +3734,8 @@
     "daysLeft_other": "{{count}}d இடதுபுறம்"
   },
   "live": {
+    "chatJoined": "இணைந்தார்",
+    "chatSentGift": "அனுப்பினார்",
     "shop": "கடை",
     "shopThisStream": "இந்த ஸ்ட்ரீமை வாங்கவும்",
     "streamShop": "ஸ்ட்ரீம் கடை",

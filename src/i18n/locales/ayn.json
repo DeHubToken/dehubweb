@@ -1,4 +1,8 @@
 {
+  "live": {
+    "chatJoined": "دخل",
+    "chatSentGift": "أرسل"
+  },
   "errors": {
     "sponsorshipUnavailable": "المعاملات المجانية متوقفة من عندنا، ليست من محفظتك. حاول مرة أخرى قريبًا.",
     "gasSponsorshipFailed": "تعذّر تغطية هذه المعاملة. حاول بعد قليل."

@@ -4665,6 +4665,8 @@
     "daysLeft_other": "{{count}}d pa kreisi"
   },
   "live": {
+    "chatJoined": "pievienojās",
+    "chatSentGift": "nosūtīja",
     "shop": "Iepirkties",
     "shopThisStream": "Iegādāties šo straumi",
     "streamShop": "Straumes veikals",

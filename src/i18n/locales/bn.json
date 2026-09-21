@@ -3871,6 +3871,8 @@
     "daysLeft_other": "{{count}}d বাকি"
   },
   "live": {
+    "chatJoined": "যোগ দিয়েছেন",
+    "chatSentGift": "পাঠিয়েছেন",
     "shop": "দোকান",
     "shopThisStream": "এই স্ট্রিম কিনুন",
     "streamShop": "স্ট্রিম শপ",

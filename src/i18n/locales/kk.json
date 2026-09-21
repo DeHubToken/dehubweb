@@ -4665,6 +4665,8 @@
     "daysLeft_other": "{{count}}d сол жақта"
   },
   "live": {
+    "chatJoined": "қосылды",
+    "chatSentGift": "жіберді",
     "shop": "Дүкен",
     "shopThisStream": "Осы трансляциядан сатып алу",
     "streamShop": "Трансляция дүкені",

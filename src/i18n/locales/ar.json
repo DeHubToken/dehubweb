@@ -4098,6 +4098,8 @@
     "daysLeft_other": "بقي {{count}} يوم"
   },
   "live": {
+    "chatJoined": "انضم",
+    "chatSentGift": "أرسل",
     "shop": "المتجر",
     "shopThisStream": "تسوّق من هذا البث",
     "streamShop": "متجر البث",

@@ -4028,6 +4028,8 @@
     "daysLeft_other": "{{count}}d lijevo"
   },
   "live": {
+    "chatJoined": "se pridružio/la",
+    "chatSentGift": "poslao/la",
     "shop": "Trgovina",
     "shopThisStream": "Kupujte ovaj stream",
     "streamShop": "Stream shop",

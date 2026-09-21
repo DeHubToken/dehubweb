@@ -4025,6 +4025,8 @@
     "inactive": "Ոչ ակտիվ"
   },
   "live": {
+    "chatJoined": "միացավ",
+    "chatSentGift": "ուղարկեց",
     "shop": "Խանութ",
     "shopThisStream": "Գնել այս հոսքը",
     "streamShop": "Հոսքի խանութ",

@@ -3909,6 +3909,8 @@
     "daysLeft_other": "{{count}}d stânga"
   },
   "live": {
+    "chatJoined": "s-a alăturat",
+    "chatSentGift": "a trimis",
     "shop": "Magazin",
     "shopThisStream": "Cumpărați acest flux",
     "streamShop": "Magazin de streaming",

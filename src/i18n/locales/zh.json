@@ -4097,6 +4097,8 @@
     "daysLeft_other": "剩余 {{count}} 天"
   },
   "live": {
+    "chatJoined": "加入了",
+    "chatSentGift": "送出了",
     "shop": "商品",
     "shopThisStream": "本场直播的商品",
     "streamShop": "直播商品",

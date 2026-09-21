@@ -4089,6 +4089,8 @@
     "daysLeft_other": "{{count}}d übrig"
   },
   "live": {
+    "chatJoined": "ist beigetreten",
+    "chatSentGift": "hat gesendet",
     "shop": "Shop",
     "shopThisStream": "Diesen Stream shoppen",
     "streamShop": "Stream-Shop",

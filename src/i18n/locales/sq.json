@@ -1,4 +1,8 @@
 {
+  "live": {
+    "chatJoined": "u bashkua",
+    "chatSentGift": "dërgoi"
+  },
   "errors": {
     "sponsorshipUnavailable": "Transaksionet falas janë pezulluar nga ana jonë, jo në portofolin tuaj. Ju lutemi provoni sërish së shpejti.",
     "gasSponsorshipFailed": "Ky transaksion nuk mund të mbulohej. Ju lutemi provoni sërish pas pak."

@@ -3884,6 +3884,8 @@
     "daysLeft_other": "נותרו{{count}}ימים"
   },
   "live": {
+    "chatJoined": "הצטרף/ה",
+    "chatSentGift": "שלח/ה",
     "shop": "חנות",
     "shopThisStream": "קנה את הזרם הזה",
     "streamShop": "חנות סטרימינג",

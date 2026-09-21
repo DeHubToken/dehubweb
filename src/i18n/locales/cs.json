@@ -4033,6 +4033,8 @@
     "daysLeft_other": "Zbývá{{count}}d"
   },
   "live": {
+    "chatJoined": "se připojil/a",
+    "chatSentGift": "poslal/a",
     "shop": "Obchod",
     "shopThisStream": "Koupit tento stream",
     "streamShop": "Stream shop",
