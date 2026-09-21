@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "ya shiga",
-    "chatSentGift": "ya aika",
-    "progress": {
-      "title": "Matakin Mai Watsa Shirye-shirye",
-      "level": "Mataki {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} ƙarin mintuna masu cancanta don kaiwa mataki {{level}}",
-      "rule": "Waɗannan kawai shirye-shiryen da suka kai mintuna goma ko fiye da haka tare da aƙalla mai kallo ɗaya ne ke ƙididdigewa don matakin ku.",
-      "streak": "{{count}} mako streak",
-      "bestStreak": "Mafi kyawun streak {{count}} makonni",
-      "hours": "{{hours}} awanni masu cancanta",
-      "minutes": "{{count}} mintuna",
-      "viewers": "{{count}} masu kallo",
-      "viewCards": "Katin Watsa Shirye-shirye",
-      "cardsTitle": "Katin Tarawa",
-      "locked": "An Rufe",
-      "earnedOn": "An Sami {{date}}",
-      "recentTitle": "Shirye-shiryen Kwanan Nan",
-      "notCounted": "Bai Ƙididdige ba",
-      "noStreams": "Watsa kai tsaye don fara samun XP.",
-      "card": {
-        "first-light": {
-          "name": "Farkon Haske",
-          "hint": "Gama farkon watsa shirye-shiryenku da ya cancanta."
-        },
-        "marathon": {
-          "name": "Marathon",
-          "hint": "Watsa shirye-shirye na tsawon awanni biyu a zaman ɗaya."
-        },
-        "night-owl": {
-          "name": "Jigon Dare",
-          "hint": "Ƙare watsa shirye-shirye tsakanin tsakar dare zuwa biyar na safe."
-        },
-        "regular": {
-          "name": "Maimaitawa",
-          "hint": "Watsa shirye-shirye a makonni huɗu a jere."
-        },
-        "iron-streak": {
-          "name": "Tsanin Karfe",
-          "hint": "Watsa shirye-shirye a makonni goma sha biyu a jere."
-        },
-        "crowd": {
-          "name": "Taron Jama'a",
-          "hint": "Samun mutane goma suna kallo a lokaci guda."
-        },
-        "century": {
-          "name": "Karni",
-          "hint": "Samu sa'o'i ɗari masu cancanta a iska."
-        },
-        "legend": {
-          "name": "Alama",
-          "hint": "Samu matsayi na goma."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "An dakatar da hada-hadar kyauta a gefenmu, ba a walat dinka ba. Ka sake gwadawa nan ba da jimawa ba.",
     "gasSponsorshipFailed": "Ba a iya ɗaukar nauyin wannan hada-hada ba. Ka sake gwadawa nan da ɗan lokaci."
@@ -162,6 +105,9 @@
     "bio": "Bayani",
     "bioPlaceholder": "Gaya mana game da kanka...",
     "socialLinks": "Hanyoyin sadarwa",
+    "socialFollowers": "Mabiya akan {{platform}}",
+    "socialFollowersHint": "Shown a kan profile a matsayin wani ɓangare na your total isa. Shigar da lambar da kanka — ba mu karanta shi daga dandamali ba.",
+    "socialFollowersPlaceholder": "misali 12500",
     "profileUpdated": "An sabunta bayanan kai cikin nasara",
     "failedLoadProfile": "Ba a iya ɗora bayanan kai ba",
     "imageTooLarge5": "Hoto dole ya kasance ƙasa da 5MB",
@@ -497,10 +443,7 @@
       "unavailable": "Watsawa daga encoder ba ta samuwa a asusunka a yanzu.",
       "serverCopied": "An kwafa Server",
       "keyCopied": "Stream key kwafe"
-    },
-    "socialFollowers": "Mabiya akan {{platform}}",
-    "socialFollowersHint": "Shown a kan profile a matsayin wani ɓangare na your total isa. Shigar da lambar da kanka — ba mu karanta shi daga dandamali ba.",
-    "socialFollowersPlaceholder": "misali 12500"
+    }
   },
   "common": {
     "save": "Ajiye",
@@ -1277,10 +1220,6 @@
     "returnHome": "Koma Gida"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Wannan post ba shi da samuwa",
-      "commentUnavailable": "Ba a sake samun wannan sharhi ba"
-    },
     "back": "Koma baya",
     "usernameAvailable": "Sunan mai amfani yana samuwa!",
     "signUpToClaim": "Yi rajista yau don ɗauka",
@@ -1296,12 +1235,16 @@
     "followers": "Masu bi",
     "following": "Ana bi",
     "joined": "Joined",
-    "loginDescription": "Shiga don gani da sarrafa bayanan kanka.",
     "reach": {
       "total": "Jimlar isa",
       "breakdownTitle": "Inda wannan isa ya fito daga",
       "dehubFollowers": "DeHub mabiya",
       "selfReported": "An shigar da ƙididdigar mabiya zamantakewa ta mahalicci."
+    },
+    "loginDescription": "Shiga don gani da sarrafa bayanan kanka.",
+    "replyThread": {
+      "postUnavailable": "Wannan post ba shi da samuwa",
+      "commentUnavailable": "Ba a sake samun wannan sharhi ba"
     },
     "tabs": {
       "playlists": "Jerin-bidiyoyi"
@@ -1318,6 +1261,7 @@
     "amountUsd": "Adadi (USD)",
     "customAmount": "Adadi na musamman",
     "minPurchase": "Mafi ƙarancin siye shine $5",
+    "minDhbPurchase": "Mafi qarancin sayan DHB shine $ 0.50",
     "youPay": "Ka biya",
     "youReceive": "Za ka karɓa (ƙiyasi)",
     "feeNote": "Kudin kadi ~3.6% da kuma 0.5% ajiyar hanyar sadarwa suna fita daga wannan. An aika ajiyar maka a matsayin ETH don iskar gas.",
@@ -1351,7 +1295,6 @@
     "badgeDiscount": "Mai riƙe da {{tier}} — rangwamen {{percent}}%",
     "otherTokens": "Sauran tokens",
     "otherTokensDesc": "Sayi ETH ko USDC a Base da katinka",
-    "minDhbPurchase": "Mafi qarancin sayan DHB shine $ 0.50",
     "shareToFeed": "Raba zuwa ciyarwata",
     "sharePostTemplate": "Kawai ƙara {{amount}} $DHB zuwa stack na akan DeHub. Gina tare da al'umma. #DeHub #DHB",
     "success": {
@@ -1429,14 +1372,6 @@
     "failedSubmit": "Ba a iya miƙa nema ba. Da fatan za a sake gwadawa."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Babu wani asusun DeHub na baya akan wannan shiga, don haka babu abin da za a dawo da shi. Kafa sabon asusu a maimakon.",
-    "migrateInstead": "Dawo da tsohon asusu a maimakon",
-    "setUpNewAccount": "Kafa sabon asusu",
-    "createNewInstead": "Ƙirƙiri sabon asusu a maimakon",
-    "migrateAccount": "Canja wurin asusu",
-    "importExternalWallet": "Shigo da walat ɗin waje",
-    "migrateIntentHint": "Shiga tare da kowane zaɓi a ƙasa. Idan ya yi daidai da wani asusun DeHub na baya za ku dawo da walat ɗin sa, sunan mai amfani da kuɗin sa.",
-    "importIntentHint": "Shiga tare da kowane zaɓi a ƙasa, sannan liƙa kalmar sirri ta murmurewa ko maɓalli na sirri na walat ɗin da kake son amfani da shi.",
     "unlockBiometricContinue": "Bude walat ɗinku tare da yatsan yatsa ko fuska don ci gaba.",
     "unlockBiometricSignIn": "Bude walat ɗinku tare da yatsan yatsa ko fuska don shiga.",
     "unlockPasswordContinue": "Shigar da kalmarka ta walat don ci gaba.",
@@ -1448,6 +1383,14 @@
     "migrateUnmatchedDetail": "Babu bayanin martaba a wannan adireshin walat. Idan kun shiga baya, koma kuma ku yi amfani da login da kuka sanya hannu tare da maimakon.",
     "migrateGoBack": "Koma baya",
     "migrateContinueAnyway": "Ƙirƙiri sabon asusu ko ta yaya",
+    "migrateNoOldAccount": "Babu wani asusun DeHub na baya akan wannan shiga, don haka babu abin da za a dawo da shi. Kafa sabon asusu a maimakon.",
+    "migrateInstead": "Dawo da tsohon asusu a maimakon",
+    "setUpNewAccount": "Kafa sabon asusu",
+    "createNewInstead": "Ƙirƙiri sabon asusu a maimakon",
+    "migrateAccount": "Canja wurin asusu",
+    "importExternalWallet": "Shigo da walat ɗin waje",
+    "migrateIntentHint": "Shiga tare da kowane zaɓi a ƙasa. Idan ya yi daidai da wani asusun DeHub na baya za ku dawo da walat ɗin sa, sunan mai amfani da kuɗin sa.",
+    "importIntentHint": "Shiga tare da kowane zaɓi a ƙasa, sannan liƙa kalmar sirri ta murmurewa ko maɓalli na sirri na walat ɗin da kake son amfani da shi.",
     "title": "Shiga",
     "addProfileTitle": "Ƙara bayanan martaba",
     "continueEmail": "Ci gaba da Email",
@@ -2334,7 +2277,6 @@
     "noStages": "Babu Wasan ka da ke gudana ko kuma aka tsara yanzu.",
     "noFlaresLeft": "Babu Signal Flares da suka rage a wannan zagayen",
     "spentFor": "{{power}} yana gudana na tsawon mintuna {{minutes}}",
-    "goldenHourStarted": "Golden Hour yana gudana na tsawon mintuna {{minutes}} — duk abin da ka aika yanzu yana ƙididdigewa sau biyu",
     "teamUp": {
       "title": "Haɗin gwiwa",
       "subtitle": "Haɗa ƙarfin walat ɗinka da wasu har bakwai. Kowa ya sa alamar da jimillar ku ta buɗe.",
@@ -2395,7 +2337,8 @@
       "updated": "An sabunta tawagar",
       "updateFailed": "An kasa sabunta wannan tawagar",
       "openToEveryone": "Haɗin tawaga yana buɗe ga kowane asusu; tawagogi masu zaman kansu suna bada izinin wanda zai shiga."
-    }
+    },
+    "goldenHourStarted": "Golden Hour yana gudana na tsawon mintuna {{minutes}} — duk abin da ka aika yanzu yana ƙididdigewa sau biyu"
   },
   "work": {
     "budgetExhausted": "Kasafin kuɗin wannan lada ya ƙare gaba ɗaya."
@@ -2422,6 +2365,63 @@
     "neon": "Neon",
     "blur": "Rufewa",
     "pixelate": "Pixel"
+  },
+  "live": {
+    "chatJoined": "ya shiga",
+    "chatSentGift": "ya aika",
+    "progress": {
+      "title": "Matakin Mai Watsa Shirye-shirye",
+      "level": "Mataki {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} ƙarin mintuna masu cancanta don kaiwa mataki {{level}}",
+      "rule": "Waɗannan kawai shirye-shiryen da suka kai mintuna goma ko fiye da haka tare da aƙalla mai kallo ɗaya ne ke ƙididdigewa don matakin ku.",
+      "streak": "{{count}} mako streak",
+      "bestStreak": "Mafi kyawun streak {{count}} makonni",
+      "hours": "{{hours}} awanni masu cancanta",
+      "minutes": "{{count}} mintuna",
+      "viewers": "{{count}} masu kallo",
+      "viewCards": "Katin Watsa Shirye-shirye",
+      "cardsTitle": "Katin Tarawa",
+      "locked": "An Rufe",
+      "earnedOn": "An Sami {{date}}",
+      "recentTitle": "Shirye-shiryen Kwanan Nan",
+      "notCounted": "Bai Ƙididdige ba",
+      "noStreams": "Watsa kai tsaye don fara samun XP.",
+      "card": {
+        "first-light": {
+          "name": "Farkon Haske",
+          "hint": "Gama farkon watsa shirye-shiryenku da ya cancanta."
+        },
+        "marathon": {
+          "name": "Marathon",
+          "hint": "Watsa shirye-shirye na tsawon awanni biyu a zaman ɗaya."
+        },
+        "night-owl": {
+          "name": "Jigon Dare",
+          "hint": "Ƙare watsa shirye-shirye tsakanin tsakar dare zuwa biyar na safe."
+        },
+        "regular": {
+          "name": "Maimaitawa",
+          "hint": "Watsa shirye-shirye a makonni huɗu a jere."
+        },
+        "iron-streak": {
+          "name": "Tsanin Karfe",
+          "hint": "Watsa shirye-shirye a makonni goma sha biyu a jere."
+        },
+        "crowd": {
+          "name": "Taron Jama'a",
+          "hint": "Samun mutane goma suna kallo a lokaci guda."
+        },
+        "century": {
+          "name": "Karni",
+          "hint": "Samu sa'o'i ɗari masu cancanta a iska."
+        },
+        "legend": {
+          "name": "Alama",
+          "hint": "Samu matsayi na goma."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Tafi Live",
@@ -2857,7 +2857,26 @@
     "reviewDescriptionPlaceholder": "Ka ce wani abu game da wannan post (zaɓi)",
     "reviewLiveWarning": "Wannan hanyar haɗi shine rafi mai rai. Jira har sai ya ƙare kuma shigo da rikodin maimakon.",
     "reviewCancel": "Cancel",
-    "reviewConfirm": "Shigo"
+    "reviewConfirm": "Shigo",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podcast RSS ciyar URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Abincin Fetch",
+      "fetching": "Fetching abinci...",
+      "showBy": "By {{author}}",
+      "episodes": "{{count}} episodes",
+      "selectAll": "Zaɓi duk",
+      "alreadyImported": "Tuni an shigo da shi",
+      "ownership": "Ina da wannan abun ciki, ko kuma ina da izinin mai haƙƙin don buga shi a kan DeHub.",
+      "importSelected": "Shigo {{count}} episodes",
+      "importing": "Shigo da...",
+      "done": "Queued",
+      "failed": "Ba a yi nasara ba",
+      "emptyFeed": "Ba za mu iya samun wani bangare a cikin wannan abincin ba.",
+      "badFeed": "Wannan mahaɗin ba ya kama da abincin kwasfan fayiloli.",
+      "tooMany": "Shigo har zuwa kashi 20 a lokaci guda."
+    }
   },
   "banned": {
     "title": "An haramta asusunka",

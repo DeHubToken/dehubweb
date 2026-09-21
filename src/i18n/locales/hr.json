@@ -105,6 +105,9 @@
     "bio": "Biografija",
     "bioPlaceholder": "Recite nam nešto o sebi...",
     "socialLinks": "Društvene mreže",
+    "socialFollowers": "Pratitelji na {{platform}}",
+    "socialFollowersHint": "Prikazuje se na tvom profilu kao dio ukupnog dosega. Sami unesite broj — ne čitamo ga s platforme.",
+    "socialFollowersPlaceholder": "npr. 12500",
     "profileUpdated": "Profil uspješno ažuriran",
     "failedLoadProfile": "Učitavanje profila nije uspjelo",
     "imageTooLarge5": "Slika mora biti manja od 5MB",
@@ -455,10 +458,7 @@
       "unavailable": "Prijenos uživo iz kodiranja trenutno nije dostupan na vašem računu.",
       "serverCopied": "Poslužitelj je kopiran",
       "keyCopied": "Tipka za stream je kopirana"
-    },
-    "socialFollowers": "Pratitelji na {{platform}}",
-    "socialFollowersHint": "Prikazuje se na tvom profilu kao dio ukupnog dosega. Sami unesite broj — ne čitamo ga s platforme.",
-    "socialFollowersPlaceholder": "npr. 12500"
+    }
   },
   "common": {
     "save": "Spremi",
@@ -1228,10 +1228,6 @@
     "returnHome": "Povratak na početnu"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Ova objava nije dostupna",
-      "commentUnavailable": "Ovaj komentar više nije dostupan"
-    },
     "back": "Natrag",
     "usernameAvailable": "Korisničko ime dostupno!",
     "signUpToClaim": "Prijavite se danas da biste preuzeli",
@@ -1247,12 +1243,16 @@
     "followers": "Pratitelji",
     "following": "Praćenje",
     "joined": "Joined",
-    "loginDescription": "Prijavite se za pregled i upravljanje profilom.",
     "reach": {
       "total": "Ukupan doseg",
       "breakdownTitle": "Odakle dolazi taj doseg",
       "dehubFollowers": "Pratitelji na DeHubu",
       "selfReported": "Kreator unosi broj pratitelja na društvenim mrežama."
+    },
+    "loginDescription": "Prijavite se za pregled i upravljanje profilom.",
+    "replyThread": {
+      "postUnavailable": "Ova objava nije dostupna",
+      "commentUnavailable": "Ovaj komentar više nije dostupan"
     },
     "tabs": {
       "playlists": "Popisi izvođenja"
@@ -1289,6 +1289,7 @@
     "amountUsd": "Iznos (USD)",
     "customAmount": "Prilagođeni iznos",
     "minPurchase": "Minimalna kupnja je $5",
+    "minDhbPurchase": "Minimalna kupnja DHB-a je 0,50 $",
     "youPay": "Plaćate",
     "youReceive": "Primate (proc.)",
     "feeNote": "Naknada kartice ~3,6% i 0,5% mrežne rezerve se odbijaju od toga. Rezerva se šalje vama kao ETH za plin.",
@@ -1322,7 +1323,6 @@
     "badgeDiscount": "Vlasnik {{tier}} — {{percent}} % popusta",
     "otherTokens": "Ostali tokeni",
     "otherTokensDesc": "Kupite ETH ili USDC na Baseu svojom karticom",
-    "minDhbPurchase": "Minimalna kupnja DHB-a je 0,50 $",
     "shareToFeed": "Podijeli na moj feed",
     "sharePostTemplate": "Upravo sam dodao {{amount}} $DHB na svoj stog na DeHubu. Gradimo zajedno sa zajednicom. #DeHub #DHB",
     "success": {
@@ -1400,14 +1400,6 @@
     "failedSubmit": "Slanje prijave nije uspjelo. Pokušajte ponovo."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Na ovoj prijavi nema ranijeg DeHub računa, tako da nema ništa za prebacivanje. Postavite novi račun umjesto toga.",
-    "migrateInstead": "Prebacite stari račun umjesto toga",
-    "setUpNewAccount": "Postavite novi račun",
-    "createNewInstead": "Stvorite novi račun umjesto toga",
-    "migrateAccount": "Migriraj račun",
-    "importExternalWallet": "Uvezi vanjski novčanik",
-    "migrateIntentHint": "Prijavite se bilo kojom opcijom u nastavku. Ako se podudara s ranijim DeHub računom, prebacit ćete njegov novčanik, korisničko ime i stanje.",
-    "importIntentHint": "Prijavite se bilo kojom opcijom u nastavku, a zatim zalijepite frazu za oporavak ili privatni ključ novčanika koji želite koristiti.",
     "unlockBiometricContinue": "Za nastavak otključaj novčanik otiskom prsta ili licem.",
     "unlockBiometricSignIn": "Otključaj novčanik otiskom prsta ili licem za prijavu.",
     "unlockPasswordContinue": "Za nastavak unesi lozinku novčanika.",
@@ -1420,6 +1412,14 @@
     "migrateUnmatchedDetail": "Na ovoj adresi novčanika ne postoji profil. Ako si se ponovno prijavljivao/la, vrati se i upotrijebi način na koji si se prijavio/la.",
     "migrateGoBack": "Natrag",
     "migrateContinueAnyway": "Svejedno kreirajte novi račun",
+    "migrateNoOldAccount": "Na ovoj prijavi nema ranijeg DeHub računa, tako da nema ništa za prebacivanje. Postavite novi račun umjesto toga.",
+    "migrateInstead": "Prebacite stari račun umjesto toga",
+    "setUpNewAccount": "Postavite novi račun",
+    "createNewInstead": "Stvorite novi račun umjesto toga",
+    "migrateAccount": "Migriraj račun",
+    "importExternalWallet": "Uvezi vanjski novčanik",
+    "migrateIntentHint": "Prijavite se bilo kojom opcijom u nastavku. Ako se podudara s ranijim DeHub računom, prebacit ćete njegov novčanik, korisničko ime i stanje.",
+    "importIntentHint": "Prijavite se bilo kojom opcijom u nastavku, a zatim zalijepite frazu za oporavak ili privatni ključ novčanika koji želite koristiti.",
     "title": "Prijava",
     "addProfileTitle": "Dodaj profil",
     "continueEmail": "Nastavi s e-mailom",
@@ -2258,7 +2258,6 @@
     "noStages": "Nijedna vaša pozornica trenutno nije uživo ili zakazana.",
     "noFlaresLeft": "Nema više signalnih raketa za ovaj ciklus",
     "spentFor": "{{power}} traje {{minutes}} minuta",
-    "goldenHourStarted": "Zlatni sat traje {{minutes}} minuta — sve što sada objavite broji se dvostruko",
     "teamUp": {
       "title": "Udružite se",
       "subtitle": "Ujedinite snagu novčanika s najviše sedam drugih. Svi nose značku koju otključava vaš ukupni iznos.",
@@ -2319,7 +2318,8 @@
       "updated": "Tim ažuriran",
       "updateFailed": "Nije moguće ažurirati taj tim",
       "openToEveryone": "Team up je otvoren za sve račune; privatni timovi odobravaju tko se pridružuje."
-    }
+    },
+    "goldenHourStarted": "Zlatni sat traje {{minutes}} minuta — sve što sada objavite broji se dvostruko"
   },
   "work": {
     "budgetExhausted": "Proračun ove nagrade u cijelosti je raspoređen.",
@@ -5068,7 +5068,26 @@
     "reviewDescriptionPlaceholder": "Recite nešto o ovoj objavi (nije obavezno)",
     "reviewLiveWarning": "Ta je poveznica prijenos uživo. Pričekajte da završi i umjesto toga importirajte snimku.",
     "reviewCancel": "Odustani",
-    "reviewConfirm": "Uvoz"
+    "reviewConfirm": "Uvoz",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "URL RSS feeda podcasta",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Dohvati feed",
+      "fetching": "Dohvaćanje feeda…",
+      "showBy": "Autor:{{author}}",
+      "episodes": "Epizode: {{count}}",
+      "selectAll": "Odaberi sve",
+      "alreadyImported": "Već uvezeno",
+      "ownership": "Posjedujem ovaj sadržaj ili imam dopuštenje nositelja prava da ga objavim na DeHubu.",
+      "importSelected": "Uvezi {{count}} epizoda",
+      "importing": "Uvoz…",
+      "done": "U redu čekanja",
+      "failed": "Nije uspjelo",
+      "emptyFeed": "Nismo mogli pronaći nijednu epizodu u tom feedu.",
+      "badFeed": "Ta poveznica ne izgleda kao feed podcasta.",
+      "tooMany": "Uvezite do 20 epizoda odjednom."
+    }
   },
   "banned": {
     "title": "Tvoj je račun zabranjen",

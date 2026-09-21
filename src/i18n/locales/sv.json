@@ -105,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Berätta om dig själv...",
     "socialLinks": "Sociala länkar",
+    "socialFollowers": "Följare på {{platform}}",
+    "socialFollowersHint": "Visas på din profil som en del av din totala räckvidd. Ange numret själv — vi läser det inte från plattformen.",
+    "socialFollowersPlaceholder": "t.ex. 12500",
     "profileUpdated": "Profilen uppdaterades",
     "failedLoadProfile": "Kunde inte ladda profildata",
     "imageTooLarge5": "Bilden måste vara under 5MB",
@@ -455,10 +458,7 @@
       "unavailable": "Att streama från en kodare är inte tillgängligt på ditt konto just nu.",
       "serverCopied": "Servern kopierades",
       "keyCopied": "Strömningsnyckel kopierad"
-    },
-    "socialFollowers": "Följare på {{platform}}",
-    "socialFollowersHint": "Visas på din profil som en del av din totala räckvidd. Ange numret själv — vi läser det inte från plattformen.",
-    "socialFollowersPlaceholder": "t.ex. 12500"
+    }
   },
   "common": {
     "save": "Spara",
@@ -1237,10 +1237,6 @@
     "returnHome": "Tillbaka till startsidan"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Det här inlägget är inte tillgängligt",
-      "commentUnavailable": "Den här kommentaren är inte längre tillgänglig"
-    },
     "back": "Tillbaka",
     "usernameAvailable": "Användarnamnet är tillgängligt!",
     "signUpToClaim": "Registrera dig för att ta det",
@@ -1256,12 +1252,16 @@
     "followers": "Följare",
     "following": "Följer",
     "joined": "Joined",
-    "loginDescription": "Logga in för att visa och hantera din profil.",
     "reach": {
       "total": "Total räckvidd",
       "breakdownTitle": "Varifrån denna räckvidd kommer",
       "dehubFollowers": "DeHub-följare",
       "selfReported": "Antal följare i sociala medier anges av kreatören."
+    },
+    "loginDescription": "Logga in för att visa och hantera din profil.",
+    "replyThread": {
+      "postUnavailable": "Det här inlägget är inte tillgängligt",
+      "commentUnavailable": "Den här kommentaren är inte längre tillgänglig"
     },
     "tabs": {
       "playlists": "Spellistor"
@@ -1298,6 +1298,7 @@
     "amountUsd": "Belopp (dollar)",
     "customAmount": "Anpassat belopp",
     "minPurchase": "Minimiköp $5",
+    "minDhbPurchase": "Minsta DHB-köp är 0,50 $",
     "youPay": "Du betalar",
     "youReceive": "Du får (ungefär)",
     "feeNote": "Kortavgift ~3,6% och en 0,5% nätverksreserv dras av detta. Reserven skickas till dig som ETH för gas.",
@@ -1331,7 +1332,6 @@
     "badgeDiscount": "{{tier}}-innehavare — {{percent}} % rabatt",
     "otherTokens": "Andra tokens",
     "otherTokensDesc": "Köp ETH eller USDC på Base med ditt kort",
-    "minDhbPurchase": "Minsta DHB-köp är 0,50 $",
     "shareToFeed": "Dela till mitt flöde",
     "sharePostTemplate": "Har precis lagt till {{amount}} $DHB till min stack på DeHub. Bygga med samhället. #DeHub #DHB",
     "success": {
@@ -1412,14 +1412,6 @@
     "email": "E-post"
   },
   "loginModal": {
-    "migrateNoOldAccount": "Det finns inget tidigare DeHub-konto för denna inloggning, så det finns inget att ta med sig. Skapa ett nytt konto istället.",
-    "migrateInstead": "Ta över det gamla kontot istället",
-    "setUpNewAccount": "Skapa ett nytt konto",
-    "createNewInstead": "Skapa ett nytt konto istället",
-    "migrateAccount": "Migrera konto",
-    "importExternalWallet": "Importera extern portfölj",
-    "migrateIntentHint": "Logga in med valfritt alternativ nedan. Om det matchar ett tidigare DeHub-konto kommer du att ta över dess plånbok, användarnamn och saldo.",
-    "importIntentHint": "Logga in med valfritt alternativ nedan och klistra sedan in återställningsfrasen eller den privata nyckeln för den plånbok du vill använda.",
     "unlockBiometricContinue": "Lås upp din plånbok med ditt fingeravtryck eller ansikte för att fortsätta.",
     "unlockBiometricSignIn": "Lås upp din plånbok med ditt fingeravtryck eller ansikte för att logga in.",
     "unlockPasswordContinue": "Ange ditt lösenord för plånboken för att fortsätta.",
@@ -1432,6 +1424,14 @@
     "migrateUnmatchedDetail": "Det finns ingen profil på den här portföljadressen. Om du loggade in igen går du tillbaka och använder inloggningen du registrerade dig med istället.",
     "migrateGoBack": "Gå tillbaka",
     "migrateContinueAnyway": "Skapa ett nytt konto ändå",
+    "migrateNoOldAccount": "Det finns inget tidigare DeHub-konto för denna inloggning, så det finns inget att ta med sig. Skapa ett nytt konto istället.",
+    "migrateInstead": "Ta över det gamla kontot istället",
+    "setUpNewAccount": "Skapa ett nytt konto",
+    "createNewInstead": "Skapa ett nytt konto istället",
+    "migrateAccount": "Migrera konto",
+    "importExternalWallet": "Importera extern portfölj",
+    "migrateIntentHint": "Logga in med valfritt alternativ nedan. Om det matchar ett tidigare DeHub-konto kommer du att ta över dess plånbok, användarnamn och saldo.",
+    "importIntentHint": "Logga in med valfritt alternativ nedan och klistra sedan in återställningsfrasen eller den privata nyckeln för den plånbok du vill använda.",
     "title": "Logga in",
     "addProfileTitle": "Lägg till profil",
     "continueEmail": "Fortsätt med e-post",
@@ -5071,7 +5071,26 @@
     "reviewDescriptionPlaceholder": "Säg något om det här inlägget (valfritt)",
     "reviewLiveWarning": "Den länken är en livestream. Vänta tills det slutar och importera inspelningen istället.",
     "reviewCancel": "Avbryt",
-    "reviewConfirm": "Importera"
+    "reviewConfirm": "Importera",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podcast RSS-feed-URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Hämta flöde",
+      "fetching": "Hämtar flöde...",
+      "showBy": "Av {{author}}",
+      "episodes": "{{count}} episoder",
+      "selectAll": "Välj alla",
+      "alreadyImported": "Redan importerad",
+      "ownership": "Jag äger detta innehåll eller har rättighetsinnehavarens tillstånd att publicera det på DeHub.",
+      "importSelected": "Importera {{count}} -avsnitt",
+      "importing": "Importerar...",
+      "done": "Köad",
+      "failed": "Misslyckades",
+      "emptyFeed": "Vi kunde inte hitta några episoder i det flödet.",
+      "badFeed": "Den länken ser inte ut som ett podcastflöde.",
+      "tooMany": "Importera upp till 20 avsnitt åt gången."
+    }
   },
   "banned": {
     "title": "Ditt konto är spärrat",

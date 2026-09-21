@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "sa pripojil/a",
-    "chatSentGift": "poslal/a",
-    "progress": {
-      "title": "Úroveň streamera",
-      "level": "Úroveň {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} viac kvalifikačných minút na dosiahnutie úrovne {{level}}",
-      "rule": "Do vašej úrovne sa započítavajú iba streamy, ktoré trvajú desať alebo viac minút a majú aspoň jedného diváka.",
-      "streak": "{{count}} týždňová séria",
-      "bestStreak": "Najlepšia séria {{count}} týždňov",
-      "hours": "{{hours}} kvalifikačných hodín",
-      "minutes": "{{count}} minút",
-      "viewers": "{{count}} divákov",
-      "viewCards": "Karty zobrazenia",
-      "cardsTitle": "Zberateľské karty",
-      "locked": "Zamknuté",
-      "earnedOn": "Získané {{date}}",
-      "recentTitle": "Nedávne streamy",
-      "notCounted": "Nezapočítané",
-      "noStreams": "Začnite streamovať a získavať XP.",
-      "card": {
-        "first-light": {
-          "name": "Prvé svetlo",
-          "hint": "Dokončite svoj prvý kvalifikačný stream."
-        },
-        "marathon": {
-          "name": "Maratón",
-          "hint": "Streamujte dve hodiny v jednej relácii."
-        },
-        "night-owl": {
-          "name": "Nočný vták",
-          "hint": "Ukončite stream medzi polnocou a piatou ráno."
-        },
-        "regular": {
-          "name": "Pravidelný",
-          "hint": "Streamujte štyri týždne po sebe."
-        },
-        "iron-streak": {
-          "name": "Železná séria",
-          "hint": "Streamujte dvanásť týždňov po sebe."
-        },
-        "crowd": {
-          "name": "Dav",
-          "hint": "Majte desať divákov súčasne."
-        },
-        "century": {
-          "name": "Storočie",
-          "hint": "Dosiahni sto kvalifikačných hodín vo vysielaní."
-        },
-        "legend": {
-          "name": "Legenda",
-          "hint": "Dosiahni úroveň desať."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Bezplatné transakcie sú pozastavené na našej strane, nie vo vašej peňaženke. Skúste to prosím o chvíľu znova.",
     "gasSponsorshipFailed": "Túto transakciu sa nepodarilo uhradiť. Skúste to prosím o chvíľu znova."
@@ -166,6 +109,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Povedzte nám o sebe...",
     "socialLinks": "Sociálne odkazy",
+    "socialFollowers": "Sledujúci {{platform}}",
+    "socialFollowersHint": "Zobrazí sa vo vašom profile ako súčasť vášho celkového dosahu. Číslo zadávajte sami — z platformy ho nečítame.",
+    "socialFollowersPlaceholder": "napr. 12500",
     "profileUpdated": "Profil úspešne aktualizovaný",
     "failedLoadProfile": "Nepodarilo sa načítať údaje profilu",
     "imageTooLarge5": "Obrázok musí byť menší ako 5MB",
@@ -516,10 +462,7 @@
       "unavailable": "Streamovanie z kódovača nie je momentálne na vašom účte dostupné.",
       "serverCopied": "Server skopírovaný",
       "keyCopied": "Kľúč streamu bol skopírovaný"
-    },
-    "socialFollowers": "Sledujúci {{platform}}",
-    "socialFollowersHint": "Zobrazí sa vo vašom profile ako súčasť vášho celkového dosahu. Číslo zadávajte sami — z platformy ho nečítame.",
-    "socialFollowersPlaceholder": "napr. 12500"
+    }
   },
   "common": {
     "save": "Uložiť",
@@ -1055,9 +998,6 @@
     "textStartSaving": "Uložte si textové príspevky do záložiek a zobrazia sa tu.",
     "reachedEnd": "Dostali ste sa na koniec svojich záložiek",
     "loginDescription": "Prihláste sa na zobrazenie a správu uložených záložiek.",
-    "noBookmarks": "Zatiaľ žiadne záložky",
-    "removeBookmark": "Odstrániť záložku",
-    "addBookmark": "Pridať záložku",
     "playlist": {
       "makePublic": "Verejný zoznam skladieb",
       "makePublicHint": "Tento priečinok môže vo vašom profile vidieť ktokoľvek.",
@@ -1072,7 +1012,10 @@
       "noPosts": "Tento zoznam skladieb zatiaľ nemá žiadne príspevky.",
       "unavailable": "Tento zoznam skladieb už nie je k dispozícii.",
       "loadMore": "Zobraziť viac príspevkov"
-    }
+    },
+    "noBookmarks": "Zatiaľ žiadne záložky",
+    "removeBookmark": "Odstrániť záložku",
+    "addBookmark": "Pridať záložku"
   },
   "notifications": {
     "title": "Upozornenia",
@@ -1363,10 +1306,6 @@
     "returnHome": "Späť na domovskú stránku"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Tento príspevok nie je k dispozícii",
-      "commentUnavailable": "Tento komentár už nie je k dispozícii"
-    },
     "back": "Späť",
     "usernameAvailable": "Používateľské meno je voľné!",
     "signUpToClaim": "Zaregistrujte sa ešte dnes a získajte ho",
@@ -1382,7 +1321,20 @@
     "followers": "Sledovatelia",
     "following": "Sledované",
     "joined": "Pripojený",
+    "reach": {
+      "total": "Celkový dosah",
+      "breakdownTitle": "Odkiaľ pochádza tento dosah",
+      "dehubFollowers": "Sledovatelia DeHubu",
+      "selfReported": "Počet sledovateľov na sociálnych sieťach zadáva tvorca."
+    },
     "loginDescription": "Prihláste sa na zobrazenie a správu svojho profilu.",
+    "replyThread": {
+      "postUnavailable": "Tento príspevok nie je k dispozícii",
+      "commentUnavailable": "Tento komentár už nie je k dispozícii"
+    },
+    "tabs": {
+      "playlists": "Playlisty"
+    },
     "posts": "Príspevky",
     "replies": "Odpovede",
     "media": "Médiá",
@@ -1396,16 +1348,7 @@
     "muteUser": "Stlmiť",
     "subscribe": "Predplatiť",
     "subscribed": "Predplatené",
-    "tip": "Tip",
-    "reach": {
-      "total": "Celkový dosah",
-      "breakdownTitle": "Odkiaľ pochádza tento dosah",
-      "dehubFollowers": "Sledovatelia DeHubu",
-      "selfReported": "Počet sledovateľov na sociálnych sieťach zadáva tvorca."
-    },
-    "tabs": {
-      "playlists": "Playlisty"
-    }
+    "tip": "Tip"
   },
   "tv": {
     "live": "Naživo",
@@ -1422,6 +1365,7 @@
     "amountUsd": "Suma (USD)",
     "customAmount": "Vlastná suma",
     "minPurchase": "Minimálny nákup je 5 $",
+    "minDhbPurchase": "Minimálny nákup DHB je 0,50 $",
     "youPay": "You pay",
     "youReceive": "Dostanete (odhad)",
     "feeNote": "Poplatok za kartu ~3,6% a 0,5% rezerva siete sa z toho odpočítavajú. Rezerva sa vám posiela ako ETH na plyn.",
@@ -1455,7 +1399,6 @@
     "badgeDiscount": "Držiteľ {{tier}} — zľava {{percent}} %",
     "otherTokens": "Ďalšie tokeny",
     "otherTokensDesc": "Kúpte ETH alebo USDC v sieti Base svojou kartou",
-    "minDhbPurchase": "Minimálny nákup DHB je 0,50 $",
     "shareToFeed": "Zdieľať v mojom informačnom kanáli",
     "sharePostTemplate": "Práve som pridal {{amount}} $DHB do môjho zásobníka na DeHub. Budovanie s komunitou. #DeHub #DHB",
     "success": {
@@ -1533,14 +1476,6 @@
     "failedSubmit": "Nepodarilo sa odoslať žiadosť. Skúste to znova."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Na tomto prihlásení nie je žiadny predchádzajúci účet DeHub, takže nie je čo priniesť. Namiesto toho si vytvorte nový účet.",
-    "migrateInstead": "Namiesto toho prineste starý účet",
-    "setUpNewAccount": "Vytvorte si nový účet",
-    "createNewInstead": "Namiesto toho vytvorte nový účet",
-    "migrateAccount": "Migrovať účet",
-    "importExternalWallet": "Importovať externú peňaženku",
-    "migrateIntentHint": "Prihláste sa pomocou ľubovoľnej možnosti nižšie. Ak sa zhoduje so starším účtom DeHub, prinesiete jeho peňaženku, používateľské meno a zostatok.",
-    "importIntentHint": "Prihláste sa pomocou ľubovoľnej možnosti nižšie a potom prilepte frázu na obnovenie alebo súkromný kľúč peňaženky, ktorú chcete použiť.",
     "unlockBiometricContinue": "Ak chceš pokračovať, odomkni si peňaženku odtlačkom prsta alebo tvárou.",
     "unlockBiometricSignIn": "Odomkni peňaženku odtlačkom prsta alebo tvárou a prihlás sa.",
     "unlockPasswordContinue": "Ak chceš pokračovať, zadaj heslo do peňaženky.",
@@ -1553,6 +1488,14 @@
     "migrateUnmatchedDetail": "Na tejto adrese peňaženky neexistuje žiadny profil. Ak ste sa znova prihlasovali, vráťte sa a namiesto toho použite prihlasovacie údaje, pomocou ktorých ste sa zaregistrovali.",
     "migrateGoBack": "Späť",
     "migrateContinueAnyway": "Aj tak si vytvorte nový účet",
+    "migrateNoOldAccount": "Na tomto prihlásení nie je žiadny predchádzajúci účet DeHub, takže nie je čo priniesť. Namiesto toho si vytvorte nový účet.",
+    "migrateInstead": "Namiesto toho prineste starý účet",
+    "setUpNewAccount": "Vytvorte si nový účet",
+    "createNewInstead": "Namiesto toho vytvorte nový účet",
+    "migrateAccount": "Migrovať účet",
+    "importExternalWallet": "Importovať externú peňaženku",
+    "migrateIntentHint": "Prihláste sa pomocou ľubovoľnej možnosti nižšie. Ak sa zhoduje so starším účtom DeHub, prinesiete jeho peňaženku, používateľské meno a zostatok.",
+    "importIntentHint": "Prihláste sa pomocou ľubovoľnej možnosti nižšie a potom prilepte frázu na obnovenie alebo súkromný kľúč peňaženky, ktorú chcete použiť.",
     "title": "Prihlásiť sa",
     "addProfileTitle": "Pridať profil",
     "continueEmail": "Pokračovať s e-mailom",
@@ -1745,14 +1688,8 @@
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
     "monthsAgo": "{{count}}mo ago",
-    "createProposal": "Vytvoriť návrh",
-    "vote": "Hlasovať",
-    "voted": "Hlasované",
-    "active": "Aktívne",
-    "pending": "Čakajúce",
-    "quorum": "Kvórum",
-    "timeLeft": "Zostávajúci čas",
-    "description": "Popis",
+    "forLabel": "Dôvod",
+    "againstLabel": "Hlasy proti:",
     "discussion": {
       "title": "Diskusia",
       "intro": "Pred hlasovaním sa opýtajte na nadväzujúce otázky alebo prediskutujte návrh.",
@@ -1769,14 +1706,20 @@
       "joinOnProposal": "Zapojte sa do diskusie",
       "authorChip": "Autor návrhu"
     },
+    "createProposal": "Vytvoriť návrh",
+    "vote": "Hlasovať",
+    "voted": "Hlasované",
+    "active": "Aktívne",
+    "pending": "Čakajúce",
+    "quorum": "Kvórum",
+    "timeLeft": "Zostávajúci čas",
+    "description": "Popis",
     "results": "Výsledky",
     "proposalTitle": "Názov návrhu",
     "proposalDescription": "Popis návrhu",
     "voteFor": "Za",
     "voteAgainst": "Proti",
-    "abstain": "Zdržať sa",
-    "forLabel": "Dôvod",
-    "againstLabel": "Hlasy proti:"
+    "abstain": "Zdržať sa"
   },
   "sidebar": {
     "talkOfTheTown": "Téma dňa",
@@ -2276,13 +2219,13 @@
       "thisYear": "Tento rok",
       "allTime": "Celé obdobie",
       "newMembers": "Noví členovia",
+      "viewMembers": "Zobraziť členov",
+      "openNewMembers": "Otvoriť zoznam nových členov",
       "chartMembers": "Vývoj počtu členov",
       "chartActive": "Aktívni ľudia",
       "growth": "+{{percent}} % tento mesiac",
       "growthTerm": "Rast",
-      "recordingSince": "zaznamenávané od {{date}}",
-      "viewMembers": "Zobraziť členov",
-      "openNewMembers": "Otvoriť zoznam nových členov"
+      "recordingSince": "zaznamenávané od {{date}}"
     },
     "title": "Štatistiky",
     "subtitle": "Otvorené dáta v reálnom čase",
@@ -2467,7 +2410,6 @@
     "noStages": "Žiadny váš Stage momentálne nie je živý ani naplánovaný.",
     "noFlaresLeft": "V tomto cykle nezostal žiadny signálny plameň",
     "spentFor": "{{power}} beží {{minutes}} minút",
-    "goldenHourStarted": "Golden Hour beží {{minutes}} minút — všetko, čo teraz zverejníte, sa počíta dvojnásobne",
     "teamUp": {
       "title": "Spojte sa",
       "subtitle": "Spojte silu svojich peňaženiek až so siedmimi ďalšími ľuďmi. Každý nosí odznak, ktorý odomkne váš celkový počet.",
@@ -2528,7 +2470,8 @@
       "updated": "Tím aktualizovaný",
       "updateFailed": "Nepodarilo sa aktualizovať tento tím",
       "openToEveryone": "Tímový zápas je otvorený pre každý účet; súkromné tímy schvaľujú, kto sa pripojí."
-    }
+    },
+    "goldenHourStarted": "Golden Hour beží {{minutes}} minút — všetko, čo teraz zverejníte, sa počíta dvojnásobne"
   },
   "work": {
     "budgetExhausted": "Rozpočet tejto odmeny je úplne vyčerpaný."
@@ -2561,6 +2504,63 @@
     "title": "Príbehy",
     "viewStory": "Zobraziť príbeh",
     "noStories": "Zatiaľ žiadne príbehy"
+  },
+  "live": {
+    "chatJoined": "sa pripojil/a",
+    "chatSentGift": "poslal/a",
+    "progress": {
+      "title": "Úroveň streamera",
+      "level": "Úroveň {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} viac kvalifikačných minút na dosiahnutie úrovne {{level}}",
+      "rule": "Do vašej úrovne sa započítavajú iba streamy, ktoré trvajú desať alebo viac minút a majú aspoň jedného diváka.",
+      "streak": "{{count}} týždňová séria",
+      "bestStreak": "Najlepšia séria {{count}} týždňov",
+      "hours": "{{hours}} kvalifikačných hodín",
+      "minutes": "{{count}} minút",
+      "viewers": "{{count}} divákov",
+      "viewCards": "Karty zobrazenia",
+      "cardsTitle": "Zberateľské karty",
+      "locked": "Zamknuté",
+      "earnedOn": "Získané {{date}}",
+      "recentTitle": "Nedávne streamy",
+      "notCounted": "Nezapočítané",
+      "noStreams": "Začnite streamovať a získavať XP.",
+      "card": {
+        "first-light": {
+          "name": "Prvé svetlo",
+          "hint": "Dokončite svoj prvý kvalifikačný stream."
+        },
+        "marathon": {
+          "name": "Maratón",
+          "hint": "Streamujte dve hodiny v jednej relácii."
+        },
+        "night-owl": {
+          "name": "Nočný vták",
+          "hint": "Ukončite stream medzi polnocou a piatou ráno."
+        },
+        "regular": {
+          "name": "Pravidelný",
+          "hint": "Streamujte štyri týždne po sebe."
+        },
+        "iron-streak": {
+          "name": "Železná séria",
+          "hint": "Streamujte dvanásť týždňov po sebe."
+        },
+        "crowd": {
+          "name": "Dav",
+          "hint": "Majte desať divákov súčasne."
+        },
+        "century": {
+          "name": "Storočie",
+          "hint": "Dosiahni sto kvalifikačných hodín vo vysielaní."
+        },
+        "legend": {
+          "name": "Legenda",
+          "hint": "Dosiahni úroveň desať."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Prejsť do priameho vysielania",
@@ -2996,7 +2996,26 @@
     "reviewDescriptionPlaceholder": "Povedzte niečo o tomto príspevku (nepovinné)",
     "reviewLiveWarning": "Tento odkaz je živý prenos. Počkajte, kým sa to neskončí, a namiesto toho importujte záznam.",
     "reviewCancel": "Zrušiť",
-    "reviewConfirm": "Import"
+    "reviewConfirm": "Import",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Adresa URL podcastového RSS kanála",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Načítať informačný kanál",
+      "fetching": "Načítava sa informačný kanál...",
+      "showBy": "Do {{author}}",
+      "episodes": "{{count}} epizódy",
+      "selectAll": "Vybrať všetko",
+      "alreadyImported": "Už importované",
+      "ownership": "Tento obsah vlastním alebo mám povolenie držiteľa práv na jeho zverejnenie v službe DeHub.",
+      "importSelected": "Importovať {{count}} epizódy",
+      "importing": "Importuje sa...",
+      "done": "Vo fronte",
+      "failed": "Neúspešné",
+      "emptyFeed": "V tomto informačnom kanáli sme nenašli žiadne epizódy.",
+      "badFeed": "Tento odkaz nevyzerá ako informačný kanál podcastov.",
+      "tooMany": "Importujte naraz až 20 epizód."
+    }
   },
   "banned": {
     "title": "Váš účet je zablokovaný",

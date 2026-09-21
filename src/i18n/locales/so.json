@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "ayaa ku biiray",
-    "chatSentGift": "ayaa diray",
-    "progress": {
-      "title": "Darajada streamer-ka",
-      "level": "Darajada {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} daqiiqo oo dheeraad ah si aad u gaadho darajada {{level}}",
-      "rule": "Keliya durdurrada socda muddo toban daqiiqo ah oo leh ugu yaraan hal daawade ayaa ku xisaabtamaya darajadaada.",
-      "streak": "{{count}} toddobaad oo isku xigta",
-      "bestStreak": "Guulaha ugu fiican {{count}} toddobaad",
-      "hours": "{{hours}} saacadood oo u qalma",
-      "minutes": "{{count}} daqiiqo",
-      "viewers": "{{count}} daawade",
-      "viewCards": "Kaararka daawashada",
-      "cardsTitle": "Kaararka la uruurin karo",
-      "locked": "La xidhay",
-      "earnedOn": "La helay {{date}}",
-      "recentTitle": "Durdurradii ugu dambeeyay",
-      "notCounted": "Ma xisaabmin",
-      "noStreams": "Noqo mid toos ah si aad u bilowdo inaad kasbato XP.",
-      "card": {
-        "first-light": {
-          "name": "Ifraaxdii ugu horreysay",
-          "hint": "Dhamee durdurkaaga ugu horreeya ee xisaabtamaya."
-        },
-        "marathon": {
-          "name": "Marathon",
-          "hint": "Durdur muddo laba saacadood ah hal fadhi."
-        },
-        "night-owl": {
-          "name": "Qofka habeenkii toosa",
-          "hint": "Dhamee durdurkaaga inta u dhaxaysa saqda dhexe iyo shan subaxnimo."
-        },
-        "regular": {
-          "name": "Caadi",
-          "hint": "Durdur afar toddobaad oo isku xigta."
-        },
-        "iron-streak": {
-          "name": "Durdur bir ah",
-          "hint": "Durdur laba iyo toban toddobaad oo isku xigta."
-        },
-        "crowd": {
-          "name": "Dadweyne",
-          "hint": "Toobad keeno toban qof oo isla markiiba daawanaya."
-        },
-        "century": {
-          "name": "Qarnigii",
-          "hint": "Gaadho boqol saacadood oo u qalma hawada."
-        },
-        "legend": {
-          "name": "Halyeey",
-          "hint": "Darajada 10aad."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Macaamilaadaha bilaashka ah waa la joojiyay dhankeenna, ma aha boorsadaada. Fadlan wax yar ka dib isku day mar kale.",
     "gasSponsorshipFailed": "Kharashka macaamilkan lama bixin karin. Fadlan wax yar ka dib isku day."
@@ -162,6 +105,9 @@
     "bio": "Naftaada",
     "bioPlaceholder": "Noo sheeg naftaada...",
     "socialLinks": "Xiriirrada Bulshada",
+    "socialFollowers": "Raacayaasha {{platform}}",
+    "socialFollowersHint": "Ku shub astaantaada qayb ka mid ah gaaritaankaaga guud. Ku qor lambarka naftaada — ma akhrineyno barxadda.",
+    "socialFollowersPlaceholder": "tusaale ahaan 12500",
     "profileUpdated": "Bogga shaqsigu si guul leh ayaa loo cusbooneysiiyay",
     "failedLoadProfile": "Soo dejinta xogta bogga shaqsigu wuu fashilmay",
     "imageTooLarge5": "Sawirku waa inuu ka yar yahay 5MB",
@@ -498,10 +444,7 @@
       "unavailable": "Streemka kombiyuutarka laguma heli karo akoonkaaga hadda.",
       "serverCopied": "Server waa la nuqulay",
       "keyCopied": "Furaha Stream la nuqulay"
-    },
-    "socialFollowers": "Raacayaasha {{platform}}",
-    "socialFollowersHint": "Ku shub astaantaada qayb ka mid ah gaaritaankaaga guud. Ku qor lambarka naftaada — ma akhrineyno barxadda.",
-    "socialFollowersPlaceholder": "tusaale ahaan 12500"
+    }
   },
   "common": {
     "save": "Kaydi",
@@ -1278,10 +1221,6 @@
     "returnHome": "Ku Noqo Guriga"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Qoraalkani waa mid aan la heli karin.",
-      "commentUnavailable": "Faalladan mar dambe lama heli karo."
-    },
     "back": "Dib",
     "usernameAvailable": "Magaca isticmaalaha waa la heli karaa!",
     "signUpToClaim": "Maanta isdiiwaangeli si aad u hesho",
@@ -1297,12 +1236,16 @@
     "followers": "Raaciyeyaal",
     "following": "Raacidda",
     "joined": "Ku biiray",
-    "loginDescription": "Soo gal si aad u aragto oo aad u maamusho boggaaga shaqsiga.",
     "reach": {
       "total": "Wadarta gaarista",
       "breakdownTitle": "Halka ay gaadiidkani ka yimaadaan",
       "dehubFollowers": "DeHub raacayaasha",
       "selfReported": "Tirooyinka raacayaasha bulshada waxaa soo galaya abuuraha."
+    },
+    "loginDescription": "Soo gal si aad u aragto oo aad u maamusho boggaaga shaqsiga.",
+    "replyThread": {
+      "postUnavailable": "Qoraalkani waa mid aan la heli karin.",
+      "commentUnavailable": "Faalladan mar dambe lama heli karo."
     },
     "tabs": {
       "playlists": "Liisaska ciyaarta"
@@ -1319,6 +1262,7 @@
     "amountUsd": "Qaddar (USD)",
     "customAmount": "Qaddar gaar ah",
     "minPurchase": "Iibsashada ugu yar waa $5",
+    "minDhbPurchase": "Iibsiga ugu yar ee DHB waa $ 0.50",
     "youPay": "Waxaad bixisaa",
     "youReceive": "Waxaad helaysaa (qiyaas)",
     "feeNote": "Bayad kaarti ~3.6% iyo kaydinta shabakada 0.5% waxaa laga jaajiyaa. Kaydinta waxaa lagaa soo diri doonaa sidii ETH oo lagu isticmaalo gaas.",
@@ -1352,7 +1296,6 @@
     "badgeDiscount": "Haystaha {{tier}} — {{percent}}% qiimo dhimis",
     "otherTokens": "Tokenno kale",
     "otherTokensDesc": "Kaarkaaga ku iibso ETH ama USDC Base",
-    "minDhbPurchase": "Iibsiga ugu yar ee DHB waa $ 0.50",
     "shareToFeed": "La wadaag quudintayda",
     "sharePostTemplate": "Just added {{amount}} $DHB in my stack on DeHub. Dhisida bulshada. #DeHub #DHB",
     "success": {
@@ -1430,14 +1373,6 @@
     "failedSubmit": "Diridda codsiga ayaa fashilmay. Fadlan mar kale isku day."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Ma jiro xisaab hore oo DeHub ah oo ku saabsan galitaankan, sidaa darteed ma jiraan wax la soo gudbiyo. Samee akoon cusub halkii.",
-    "migrateInstead": "Ku soo qaado akoonkii hore halkii",
-    "setUpNewAccount": "Samee koonto cusub",
-    "createNewInstead": "Abuur akoon cusub halkii",
-    "migrateAccount": "U haajir koontada",
-    "importExternalWallet": "Soo dejiso boorsada dibadda",
-    "migrateIntentHint": "Ku qor ikhtiyaar kasta oo hoose. Haddii ay la jaanqaaddo koontada hore ee DeHub waxaad ku soo gudbin doontaa boorsadeeda, magaca isticmaalaha iyo dheelitirka.",
-    "importIntentHint": "Gal ikhtiyaar kasta oo hoose, ka dibna ku dheji weedha soo kabashada ama furaha gaarka ah ee boorsada aad rabto inaad isticmaasho.",
     "unlockBiometricContinue": "Ku fur boorsadaada farahaaga ama wejigaaga si aad u sii wadato.",
     "unlockBiometricSignIn": "Ku fur boorsadaada farahaaga ama wejigaaga si aad u gasho.",
     "unlockPasswordContinue": "Gali lambarka sirta ah ee boorsadaada si aad u sii wado.",
@@ -1450,6 +1385,14 @@
     "migrateUnmatchedDetail": "Ma jiro wax astaamo ah oo ku jira cinwaankan boorsada. Haddii aad dib u saxiixday, dib u noqo oo isticmaal gelitaanka aad la saxiixatay halkii.",
     "migrateGoBack": "Dib u noqo",
     "migrateContinueAnyway": "Samee koonto cusub si kastaba ha noqotee",
+    "migrateNoOldAccount": "Ma jiro xisaab hore oo DeHub ah oo ku saabsan galitaankan, sidaa darteed ma jiraan wax la soo gudbiyo. Samee akoon cusub halkii.",
+    "migrateInstead": "Ku soo qaado akoonkii hore halkii",
+    "setUpNewAccount": "Samee koonto cusub",
+    "createNewInstead": "Abuur akoon cusub halkii",
+    "migrateAccount": "U haajir koontada",
+    "importExternalWallet": "Soo dejiso boorsada dibadda",
+    "migrateIntentHint": "Ku qor ikhtiyaar kasta oo hoose. Haddii ay la jaanqaaddo koontada hore ee DeHub waxaad ku soo gudbin doontaa boorsadeeda, magaca isticmaalaha iyo dheelitirka.",
+    "importIntentHint": "Gal ikhtiyaar kasta oo hoose, ka dibna ku dheji weedha soo kabashada ama furaha gaarka ah ee boorsada aad rabto inaad isticmaasho.",
     "title": "Soo gal",
     "addProfileTitle": "Ku dar profile",
     "continueEmail": "Ku Sii Wad Iimeylka",
@@ -2335,7 +2278,6 @@
     "noStages": "Ma jiraan wax Stages ah oo aad leedahay oo hadda nool ama la qorsheeyay.",
     "noFlaresLeft": "Ma jiraan wax Signal Flares ah oo ka hadhay wareeggan",
     "spentFor": "{{power}} oo soconaysa {{minutes}} daqiiqo",
-    "goldenHourStarted": "Saacadda Dahabka ah oo socota {{minutes}} daqiiqo — wax kasta oo aad hadda qorto labanlaab bay u dhigantaa",
     "teamUp": {
       "title": "La shaqeeysi",
       "subtitle": "Ku biir xoogga wallet-kaaga ilaa toddoba kale. Qof kasta wuxuu xirtaa calaamadda, wadartaada ayaa furmaysa.",
@@ -2396,7 +2338,8 @@
       "updated": "Kooxda waa la cusboonaysiiyay",
       "updateFailed": "Ma cusboonaysiin karin kooxdaas",
       "openToEveryone": "Kooxda isku-ururinta waxay u furan tahay koonto kasta; kooxaha gaarka ah waxay ansixiyaan cidda ku biirta."
-    }
+    },
+    "goldenHourStarted": "Saacadda Dahabka ah oo socota {{minutes}} daqiiqo — wax kasta oo aad hadda qorto labanlaab bay u dhigantaa"
   },
   "work": {
     "budgetExhausted": "Miisaaniyadda abaalmarintan gebi ahaanba waa la qoondeeyay."
@@ -2423,6 +2366,63 @@
     "neon": "Neon",
     "blur": "Indho-sarcaad",
     "pixelate": "Piksel"
+  },
+  "live": {
+    "chatJoined": "ayaa ku biiray",
+    "chatSentGift": "ayaa diray",
+    "progress": {
+      "title": "Darajada streamer-ka",
+      "level": "Darajada {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} daqiiqo oo dheeraad ah si aad u gaadho darajada {{level}}",
+      "rule": "Keliya durdurrada socda muddo toban daqiiqo ah oo leh ugu yaraan hal daawade ayaa ku xisaabtamaya darajadaada.",
+      "streak": "{{count}} toddobaad oo isku xigta",
+      "bestStreak": "Guulaha ugu fiican {{count}} toddobaad",
+      "hours": "{{hours}} saacadood oo u qalma",
+      "minutes": "{{count}} daqiiqo",
+      "viewers": "{{count}} daawade",
+      "viewCards": "Kaararka daawashada",
+      "cardsTitle": "Kaararka la uruurin karo",
+      "locked": "La xidhay",
+      "earnedOn": "La helay {{date}}",
+      "recentTitle": "Durdurradii ugu dambeeyay",
+      "notCounted": "Ma xisaabmin",
+      "noStreams": "Noqo mid toos ah si aad u bilowdo inaad kasbato XP.",
+      "card": {
+        "first-light": {
+          "name": "Ifraaxdii ugu horreysay",
+          "hint": "Dhamee durdurkaaga ugu horreeya ee xisaabtamaya."
+        },
+        "marathon": {
+          "name": "Marathon",
+          "hint": "Durdur muddo laba saacadood ah hal fadhi."
+        },
+        "night-owl": {
+          "name": "Qofka habeenkii toosa",
+          "hint": "Dhamee durdurkaaga inta u dhaxaysa saqda dhexe iyo shan subaxnimo."
+        },
+        "regular": {
+          "name": "Caadi",
+          "hint": "Durdur afar toddobaad oo isku xigta."
+        },
+        "iron-streak": {
+          "name": "Durdur bir ah",
+          "hint": "Durdur laba iyo toban toddobaad oo isku xigta."
+        },
+        "crowd": {
+          "name": "Dadweyne",
+          "hint": "Toobad keeno toban qof oo isla markiiba daawanaya."
+        },
+        "century": {
+          "name": "Qarnigii",
+          "hint": "Gaadho boqol saacadood oo u qalma hawada."
+        },
+        "legend": {
+          "name": "Halyeey",
+          "hint": "Darajada 10aad."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Go Live",
@@ -2849,7 +2849,26 @@
     "reviewDescriptionPlaceholder": "Wax ka sheeg qoraalkan (optional)",
     "reviewLiveWarning": "Xidhiidhkaas waa durdur nool. Sug ilaa ay dhammaato oo soo dejiso duubista halkii.",
     "reviewCancel": "Jooji",
-    "reviewConfirm": "Soo dejiso"
+    "reviewConfirm": "Soo dejiso",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "URL quudinta Podcast RSS",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Cuntada Fetch",
+      "fetching": "Cuntada Fetching...",
+      "showBy": "Waxaa qoray {{author}}",
+      "episodes": "{{count}} episodes",
+      "selectAll": "Xulo dhammaan",
+      "alreadyImported": "Hore loo soo dejiyay",
+      "ownership": "Waxaan haystaa nuxurkan, ama waxaan haystaa oggolaanshaha mulkiilaha xuquuqda inuu ku daabaco DeHub.",
+      "importSelected": "Soo dejiso {{count}} episodes",
+      "importing": "Soo dejinta…",
+      "done": "Queued",
+      "failed": "Ku guuldareystay",
+      "emptyFeed": "Ma heli karno qayb ka mid ah cuntadaas.",
+      "badFeed": "Link Tani uma muuqato sida quudinta podcast ah.",
+      "tooMany": "Soo dejiso ilaa 20 qaybood hal mar."
+    }
   },
   "banned": {
     "title": "Koontadaada waa la mamnuucay",

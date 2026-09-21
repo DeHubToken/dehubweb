@@ -105,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Opowiedz o sobie...",
     "socialLinks": "Linki społecznościowe",
+    "socialFollowers": "Obserwujący na {{platform}}",
+    "socialFollowersHint": "Wyświetlane na Twoim profilu jako część całkowitego zasięgu. Wpisz numer samodzielnie — nie odczytujemy go z platformy.",
+    "socialFollowersPlaceholder": "np. 12500",
     "profileUpdated": "Profil zaktualizowany pomyślnie",
     "failedLoadProfile": "Nie udało się załadować danych profilu",
     "imageTooLarge5": "Obraz musi być mniejszy niż 5MB",
@@ -455,10 +458,7 @@
       "unavailable": "Strumieniowanie z enkodera nie jest obecnie dostępne na Twoim koncie.",
       "serverCopied": "Skopiowano serwer",
       "keyCopied": "Skopiowano klucz strumienia"
-    },
-    "socialFollowers": "Obserwujący na {{platform}}",
-    "socialFollowersHint": "Wyświetlane na Twoim profilu jako część całkowitego zasięgu. Wpisz numer samodzielnie — nie odczytujemy go z platformy.",
-    "socialFollowersPlaceholder": "np. 12500"
+    }
   },
   "common": {
     "save": "Zapisz",
@@ -1237,10 +1237,6 @@
     "returnHome": "Wróć na stronę główną"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Ten post jest niedostępny",
-      "commentUnavailable": "Ten komentarz nie jest już dostępny"
-    },
     "back": "Wróć",
     "usernameAvailable": "Nazwa użytkownika dostępna!",
     "signUpToClaim": "Zarejestruj się dzisiaj, aby ją zarezerwować",
@@ -1256,12 +1252,16 @@
     "followers": "Obserwujący",
     "following": "Obserwowani",
     "joined": "Dołączył",
-    "loginDescription": "Zaloguj się, aby zobaczyć i zarządzać swoim profilem.",
     "reach": {
       "total": "Całkowity zasięg",
       "breakdownTitle": "Skąd się bierze ten zasięg",
       "dehubFollowers": "Obserwujący DeHub",
       "selfReported": "Liczby obserwujących społeczności są wprowadzane przez twórcę."
+    },
+    "loginDescription": "Zaloguj się, aby zobaczyć i zarządzać swoim profilem.",
+    "replyThread": {
+      "postUnavailable": "Ten post jest niedostępny",
+      "commentUnavailable": "Ten komentarz nie jest już dostępny"
     },
     "tabs": {
       "playlists": "Playlisty"
@@ -1298,6 +1298,7 @@
     "amountUsd": "Kwota (USD)",
     "customAmount": "Kwota niestandardowa",
     "minPurchase": "Minimalny zakup to 5$",
+    "minDhbPurchase": "Minimalny zakup DHB wynosi 0,50 $",
     "youPay": "Płacisz",
     "youReceive": "Otrzymujesz (szac.)",
     "feeNote": "Opłata kartą ~3,6% i 0,5% rezerwy sieciowej są odliczane. Rezerwa jest wysyłana do Ciebie jako ETH na gaz.",
@@ -1331,7 +1332,6 @@
     "badgeDiscount": "Posiadacz {{tier}} — {{percent}}% taniej",
     "otherTokens": "Inne tokeny",
     "otherTokensDesc": "Kup ETH lub USDC w sieci Base swoją kartą",
-    "minDhbPurchase": "Minimalny zakup DHB wynosi 0,50 $",
     "shareToFeed": "Udostępnij w moim kanale",
     "sharePostTemplate": "Właśnie dodano {{amount}} $DHB do mojego stosu na DeHub. Budowanie ze społecznością. #DeHub #DHB",
     "success": {
@@ -1409,14 +1409,6 @@
     "failedSubmit": "Nie udało się wysłać zgłoszenia. Spróbuj ponownie."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Na tym loginie nie ma wcześniejszego konta DeHub, więc nie ma co przynosić. Zamiast tego skonfiguruj nowe konto.",
-    "migrateInstead": "Przenieś stare konto",
-    "setUpNewAccount": "Załóż nowe konto",
-    "createNewInstead": "Zamiast tego utwórz nowe konto",
-    "migrateAccount": "Przenieś konto",
-    "importExternalWallet": "Importuj portfel zewnętrzny",
-    "migrateIntentHint": "Zaloguj się za pomocą dowolnej z poniższych opcji. Jeśli pasuje do wcześniejszego konta DeHub, przyniesiesz jego portfel, nazwę użytkownika i saldo.",
-    "importIntentHint": "Zaloguj się za pomocą dowolnej z poniższych opcji, a następnie wklej frazę odzyskiwania lub klucz prywatny portfela, którego chcesz użyć.",
     "unlockBiometricContinue": "Aby kontynuować, odblokuj portfel za pomocą odcisku palca lub twarzy.",
     "unlockBiometricSignIn": "Odblokuj portfel odciskiem palca lub twarzą, aby się zalogować.",
     "unlockPasswordContinue": "Wprowadź hasło do portfela, aby kontynuować.",
@@ -1429,6 +1421,14 @@
     "migrateUnmatchedDetail": "Pod tym adresem portfela nie istnieje żaden profil. Jeśli logowałeś się ponownie, wróć i użyj loginu, którego użyłeś.",
     "migrateGoBack": "Wróć",
     "migrateContinueAnyway": "Mimo to utwórz nowe konto",
+    "migrateNoOldAccount": "Na tym loginie nie ma wcześniejszego konta DeHub, więc nie ma co przynosić. Zamiast tego skonfiguruj nowe konto.",
+    "migrateInstead": "Przenieś stare konto",
+    "setUpNewAccount": "Załóż nowe konto",
+    "createNewInstead": "Zamiast tego utwórz nowe konto",
+    "migrateAccount": "Przenieś konto",
+    "importExternalWallet": "Importuj portfel zewnętrzny",
+    "migrateIntentHint": "Zaloguj się za pomocą dowolnej z poniższych opcji. Jeśli pasuje do wcześniejszego konta DeHub, przyniesiesz jego portfel, nazwę użytkownika i saldo.",
+    "importIntentHint": "Zaloguj się za pomocą dowolnej z poniższych opcji, a następnie wklej frazę odzyskiwania lub klucz prywatny portfela, którego chcesz użyć.",
     "title": "Zaloguj się",
     "addProfileTitle": "Dodaj profil",
     "continueEmail": "Kontynuuj przez e-mail",
@@ -2125,13 +2125,13 @@
       "thisYear": "Ten rok",
       "allTime": "Cały okres",
       "newMembers": "Nowi członkowie",
+      "viewMembers": "Wyświetl członków",
+      "openNewMembers": "Otwórz listę nowych członków",
       "chartMembers": "Członkowie w czasie",
       "chartActive": "Aktywne osoby",
       "growth": "+{{percent}}% w tym miesiącu",
       "growthTerm": "Wzrost",
-      "recordingSince": "rejestrowane od {{date}}",
-      "viewMembers": "Wyświetl członków",
-      "openNewMembers": "Otwórz listę nowych członków"
+      "recordingSince": "rejestrowane od {{date}}"
     },
     "title": "Statystyki",
     "subtitle": "Otwartoźródłowe dane w czasie rzeczywistym",
@@ -2316,7 +2316,6 @@
     "noStages": "Żaden Twój Stage nie jest obecnie na żywo ani zaplanowany.",
     "noFlaresLeft": "Nie pozostały żadne Flary Sygnałowe w tym cyklu",
     "spentFor": "{{power}} działa przez {{minutes}} minut",
-    "goldenHourStarted": "Golden Hour trwa {{minutes}} minut — wszystko, co teraz opublikujesz, liczy się podwójnie",
     "teamUp": {
       "title": "Połącz siły",
       "subtitle": "Połącz moc portfela z maksymalnie siedmioma innymi osobami. Każdy nosi odznakę, którą odblokowuje Twój łączny wynik.",
@@ -2377,7 +2376,8 @@
       "updated": "Drużyna zaktualizowana",
       "updateFailed": "Nie można było zaktualizować tej drużyny",
       "openToEveryone": "Team up jest otwarty dla każdego konta; prywatne drużyny zatwierdzają, kto dołącza."
-    }
+    },
+    "goldenHourStarted": "Golden Hour trwa {{minutes}} minut — wszystko, co teraz opublikujesz, liczy się podwójnie"
   },
   "work": {
     "budgetExhausted": "Budżet tej nagrody został w całości rozdysponowany.",
@@ -5140,7 +5140,26 @@
     "reviewDescriptionPlaceholder": "Powiedz coś o tym poście (opcjonalnie)",
     "reviewLiveWarning": "Ten link to transmisja na żywo. Poczekaj, aż się skończy i zaimportuj nagranie.",
     "reviewCancel": "Anuluj",
-    "reviewConfirm": "Import"
+    "reviewConfirm": "Import",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Adres URL kanału RSS podcastu",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Pobierz kanał",
+      "fetching": "Pobieranie kanału…",
+      "showBy": "Przez {{author}}",
+      "episodes": "Liczba odcinków: {{count}}",
+      "selectAll": "Zaznacz wszystko",
+      "alreadyImported": "Już zaimportowano",
+      "ownership": "Jestem właścicielem tych treści lub mam zgodę właściciela praw na ich publikację na DeHub.",
+      "importSelected": "Importuj {{count}} odcinki",
+      "importing": "Importowanie…",
+      "done": "W kolejce",
+      "failed": "Niepowodzenie",
+      "emptyFeed": "Nie mogliśmy znaleźć żadnych odcinków w tym kanale.",
+      "badFeed": "Ten link nie wygląda na kanał podcastu.",
+      "tooMany": "Importuj do 20 odcinków naraz."
+    }
   },
   "banned": {
     "title": "Twoje konto jest zablokowane",

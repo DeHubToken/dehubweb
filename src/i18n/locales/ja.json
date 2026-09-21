@@ -104,6 +104,9 @@
     "bio": "自己紹介",
     "bioPlaceholder": "自己紹介を書いてください...",
     "socialLinks": "ソーシャルリンク",
+    "socialFollowers": "{{platform}}のフォロワー",
+    "socialFollowersHint": "合計リーチの一部としてプロフィールに表示されます。 ご自身で番号を入力してください。プラットフォームから読み取ることはありません。",
+    "socialFollowersPlaceholder": "例） 12500",
     "profileUpdated": "プロフィールが正常に更新されました",
     "failedLoadProfile": "プロフィールデータの読み込みに失敗しました",
     "imageTooLarge5": "画像は5MB未満にしてください",
@@ -453,10 +456,7 @@
       "unavailable": "現在、アカウントではエンコーダーからのストリーミングは利用できません。",
       "serverCopied": "サーバーがコピーされました",
       "keyCopied": "ストリームキーがコピーされました"
-    },
-    "socialFollowers": "{{platform}}のフォロワー",
-    "socialFollowersHint": "合計リーチの一部としてプロフィールに表示されます。 ご自身で番号を入力してください。プラットフォームから読み取ることはありません。",
-    "socialFollowersPlaceholder": "例） 12500"
+    }
   },
   "common": {
     "save": "保存",
@@ -1234,10 +1234,6 @@
     "returnHome": "ホームに戻る"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "この投稿は利用できません",
-      "commentUnavailable": "このコメントはもう利用できません"
-    },
     "back": "戻る",
     "usernameAvailable": "ユーザー名が利用可能です！",
     "signUpToClaim": "登録して取得",
@@ -1253,12 +1249,16 @@
     "followers": "フォロワー",
     "following": "フォロー中",
     "joined": "参加日",
-    "loginDescription": "ログインしてプロフィールを表示・管理。",
     "reach": {
       "total": "トータルリーチ",
       "breakdownTitle": "このリーチがどこから来たのか",
       "dehubFollowers": "DeHubフォロワー",
       "selfReported": "ソーシャルフォロワー数は、クリエイターが入力します。"
+    },
+    "loginDescription": "ログインしてプロフィールを表示・管理。",
+    "replyThread": {
+      "postUnavailable": "この投稿は利用できません",
+      "commentUnavailable": "このコメントはもう利用できません"
     },
     "tabs": {
       "playlists": "プレイリスト"
@@ -1295,6 +1295,7 @@
     "amountUsd": "金額（USD）",
     "customAmount": "カスタム金額",
     "minPurchase": "最低購入額$5",
+    "minDhbPurchase": "DHBの最低購入額は$ 0.50です",
     "youPay": "お支払い",
     "youReceive": "受取（推定）",
     "feeNote": "カード手数料 ~3.6% とネットワーク予約金 0.5% が差し引かれます。予約金は ガス代として ETH であなたに送られます。",
@@ -1327,7 +1328,6 @@
     "badgeDiscount": "{{tier}} 保有者 — {{percent}}% オフ",
     "otherTokens": "その他のトークン",
     "otherTokensDesc": "カードで Base 上の ETH または USDC を購入",
-    "minDhbPurchase": "DHBの最低購入額は$ 0.50です",
     "shareToFeed": "フィードにシェアする",
     "sharePostTemplate": "DeHubのスタックに{{amount}} $ DHBを追加しました。 コミュニティと一緒に構築しましょう。# DeHub # DHB",
     "success": {
@@ -1407,14 +1407,6 @@
     "emailRequired": "メールは必須です"
   },
   "loginModal": {
-    "migrateNoOldAccount": "このログインには以前のDeHubアカウントがないため、引き継ぐものはありません。代わりに新しいアカウントを設定してください。",
-    "migrateInstead": "古いアカウントを引き継ぐ",
-    "setUpNewAccount": "新しいアカウントを設定する",
-    "createNewInstead": "代わりに新しいアカウントを作成する",
-    "migrateAccount": "アカウントを移行する",
-    "importExternalWallet": "外部ウォレットをインポートする",
-    "migrateIntentHint": "以下のいずれかの方法でサインインしてください。以前のDeHubアカウントと一致する場合、そのウォレット、ユーザー名、残高を引き継ぎます。",
-    "importIntentHint": "以下のいずれかの方法でサインインし、使用したいウォレットのリカバリーフレーズまたは秘密鍵を貼り付けてください。",
     "unlockBiometricContinue": "続行するには、指紋または顔でウォレットのロックを解除してください。",
     "unlockBiometricSignIn": "指紋または顔でウォレットのロックを解除してサインインします。",
     "unlockPasswordContinue": "続行するにはウォレットのパスワードを入力してください。",
@@ -1427,6 +1419,14 @@
     "migrateUnmatchedDetail": "このウォレットアドレスにはプロファイルが存在しません。 再度サインインする場合は、戻ってサインアップしたログインを使用してください。",
     "migrateGoBack": "戻る",
     "migrateContinueAnyway": "とにかく新しいアカウントを作成する",
+    "migrateNoOldAccount": "このログインには以前のDeHubアカウントがないため、引き継ぐものはありません。代わりに新しいアカウントを設定してください。",
+    "migrateInstead": "古いアカウントを引き継ぐ",
+    "setUpNewAccount": "新しいアカウントを設定する",
+    "createNewInstead": "代わりに新しいアカウントを作成する",
+    "migrateAccount": "アカウントを移行する",
+    "importExternalWallet": "外部ウォレットをインポートする",
+    "migrateIntentHint": "以下のいずれかの方法でサインインしてください。以前のDeHubアカウントと一致する場合、そのウォレット、ユーザー名、残高を引き継ぎます。",
+    "importIntentHint": "以下のいずれかの方法でサインインし、使用したいウォレットのリカバリーフレーズまたは秘密鍵を貼り付けてください。",
     "title": "ログイン",
     "addProfileTitle": "プロフィールを追加",
     "continueEmail": "メールで続ける",
@@ -2314,7 +2314,6 @@
     "noStages": "現在、あなたのステージはライブまたはスケジュールされていません。",
     "noFlaresLeft": "今サイクルはシグナルフレアが残っていません",
     "spentFor": "{{power}} が {{minutes}} 分間実行中",
-    "goldenHourStarted": "ゴールデンアワーが {{minutes}} 分間実行中 — 今投稿するすべてが2倍になります",
     "teamUp": {
       "title": "チームを組む",
       "subtitle": "最大7人までチームを組んでウォレットの力を合わせましょう。全員がバッジを着用し、合計金額がアンロックされます。",
@@ -2375,7 +2374,8 @@
       "updated": "チームが更新されました",
       "updateFailed": "チームを更新できませんでした",
       "openToEveryone": "チームアップはすべてのアカウントに開かれており、非公開チームが参加者を承認します。"
-    }
+    },
+    "goldenHourStarted": "ゴールデンアワーが {{minutes}} 分間実行中 — 今投稿するすべてが2倍になります"
   },
   "work": {
     "budgetExhausted": "この報奨金の予算はすべて割り当て済みです。",
@@ -5173,7 +5173,25 @@
     "reviewDescriptionPlaceholder": "この投稿について教えてください（任意）",
     "reviewLiveWarning": "そのリンクはライブストリームです。 終了するまで待ち、代わりに録画をインポートします。",
     "reviewCancel": "キャンセル",
-    "reviewConfirm": "インポート"
+    "reviewConfirm": "インポート",
+    "podcast": {
+      "tab": "ポッドキャスト",
+      "feedUrlLabel": "ポッドキャストRSSフィードURL",
+      "fetchFeed": "フィードを取得",
+      "fetching": "フィードを取得しています…",
+      "showBy": "{{author}}による",
+      "episodes": "{{count}}エピソード",
+      "selectAll": "すべて選択",
+      "alreadyImported": "すでにインポートされています",
+      "ownership": "私はこのコンテンツを所有しているか、DeHubに公開する権利者の許可を得ています。",
+      "importSelected": "{{count}}エピソードをインポート",
+      "importing": "インポート中…",
+      "done": "待機中",
+      "failed": "失敗",
+      "emptyFeed": "そのフィードにエピソードが見つかりませんでした。",
+      "badFeed": "そのリンクはポッドキャストフィードのようには見えません。",
+      "tooMany": "一度に最大20エピソードをインポートできます。"
+    }
   },
   "banned": {
     "title": "アカウントが禁止されています",

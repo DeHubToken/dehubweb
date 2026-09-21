@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "qoʻshildi",
-    "chatSentGift": "yubordi",
-    "progress": {
-      "title": "Streamer darajasi",
-      "level": "Daraja {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{level}} darajasiga erishish uchun {{minutes}} daqiqa qoldi",
-      "rule": "Faqat o'n daqiqa yoki undan ko'proq davom etgan va kamida bitta tomoshabinga ega bo'lgan translyatsiyalar darajangizga hisoblanadi.",
-      "streak": "{{count}} haftalik uzluksiz seriya",
-      "bestStreak": "Eng yaxshi seriya {{count}} hafta",
-      "hours": "{{hours}} malakali soat",
-      "minutes": "{{count}} daqiqa",
-      "viewers": "{{count}} tomoshabin",
-      "viewCards": "Kartalarni ko'rish",
-      "cardsTitle": "Kolleksion kartalar",
-      "locked": "Qulflangan",
-      "earnedOn": "Qozonilgan {{date}}",
-      "recentTitle": "So'nggi translyatsiyalar",
-      "notCounted": "Hisoblanmadi",
-      "noStreams": "XP olishni boshlash uchun jonli efirga chiqing.",
-      "card": {
-        "first-light": {
-          "name": "Birinchi nur",
-          "hint": "Hisoblanadigan birinchi translyatsiyangizni yakunlang."
-        },
-        "marathon": {
-          "name": "Maraton",
-          "hint": "Bir sessiyada ikki soat translyatsiya qiling."
-        },
-        "night-owl": {
-          "name": "Tun qushi",
-          "hint": "Tungi yarim tundan tonggi beshlargacha translyatsiyani yakunlang."
-        },
-        "regular": {
-          "name": "Muntazam",
-          "hint": "To'rt hafta ketma-ket translyatsiya qiling."
-        },
-        "iron-streak": {
-          "name": "Temir seriya",
-          "hint": "O'n ikki hafta ketma-ket translyatsiya qiling."
-        },
-        "crowd": {
-          "name": "To'plam",
-          "hint": "Bir vaqtning o'zida o'nta odam tomosha qilsin."
-        },
-        "century": {
-          "name": "Asr",
-          "hint": "Efirda yuz soatlik saralash bosqichiga erishing."
-        },
-        "legend": {
-          "name": "Afsona",
-          "hint": "O&#39;ninchi darajaga yeting."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Bepul tranzaksiyalar bizning tomonimizda toxtatilgan, hamyoningizda emas. Iltimos, birozdan keyin qayta urinib koring.",
     "gasSponsorshipFailed": "Bu tranzaksiya xarajati qoplanmadi. Iltimos, birozdan keyin urinib koring."
@@ -162,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Oʻzingiz haqingizda gapirib bering...",
     "socialLinks": "Ijtimoiy havolalar",
+    "socialFollowers": "{{platform}} dagi obunachilar",
+    "socialFollowersHint": "Profilingizda umumiy qamrovingizning bir qismi sifatida ko&#39;rsatiladi. Raqamni o&#39;zingiz kiriting — biz uni platformadan o&#39;qimaymiz.",
+    "socialFollowersPlaceholder": "masalan, 12500",
     "profileUpdated": "Profil muvaffaqiyatli yangilandi",
     "failedLoadProfile": "Profilni yuklash amalga oshmadi",
     "imageTooLarge5": "Rasm 5MB dan kichik boʻlishi kerak",
@@ -496,10 +442,7 @@
       "unavailable": "Kodlaydigan qurilmadan efirga uzatish hozirda hisobingizda mavjud emas.",
       "serverCopied": "Server nusxalandi",
       "keyCopied": "Oqim kaliti nusxalandi"
-    },
-    "socialFollowers": "{{platform}} dagi obunachilar",
-    "socialFollowersHint": "Profilingizda umumiy qamrovingizning bir qismi sifatida ko&#39;rsatiladi. Raqamni o&#39;zingiz kiriting — biz uni platformadan o&#39;qimaymiz.",
-    "socialFollowersPlaceholder": "masalan, 12500"
+    }
   },
   "common": {
     "save": "Saqlash",
@@ -1293,10 +1236,6 @@
     "returnHome": "Bosh sahifaga qaytish"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Bu post mavjud emas",
-      "commentUnavailable": "Bu izoh endi mavjud emas"
-    },
     "back": "Orqaga",
     "usernameAvailable": "Foydalanuvchi nomi boʻsh!",
     "signUpToClaim": "Olish uchun roʻyxatdan oʻting",
@@ -1312,12 +1251,16 @@
     "followers": "Obunachilar",
     "following": "Obunalar",
     "joined": "Joined",
-    "loginDescription": "Profilingizni koʻrish va boshqarish uchun kiring.",
     "reach": {
       "total": "Umumiy qamrov",
       "breakdownTitle": "Bu imkoniyat qayerdan keladi",
       "dehubFollowers": "DeHub izdoshlari",
       "selfReported": "Ijtimoiy tarmoqlardagi obunachilar soni yaratuvchi tomonidan kiritiladi."
+    },
+    "loginDescription": "Profilingizni koʻrish va boshqarish uchun kiring.",
+    "replyThread": {
+      "postUnavailable": "Bu post mavjud emas",
+      "commentUnavailable": "Bu izoh endi mavjud emas"
     },
     "tabs": {
       "playlists": "Qoʻshiq roʻyxatlari"
@@ -1334,6 +1277,7 @@
     "amountUsd": "Summa (USD)",
     "customAmount": "Maxsus summa",
     "minPurchase": "Minimal xarid $5",
+    "minDhbPurchase": "Minimal DHB xarid miqdori $0.50",
     "youPay": "Siz toʻlaysiz",
     "youReceive": "Siz olasiz (taxminiy)",
     "feeNote": "Karta to'lovi ~3,6% va 0,5% tarmoq zaxirasi bu yerdan olib tashlanadi. Zaxira siz uchun gaz uchun ETH sifatida yuboriladi.",
@@ -1367,7 +1311,6 @@
     "badgeDiscount": "{{tier}} egasi — {{percent}}% chegirma",
     "otherTokens": "Boshqa tokenlar",
     "otherTokensDesc": "Kartangiz bilan Base tarmog'ida ETH yoki USDC sotib oling",
-    "minDhbPurchase": "Minimal DHB xarid miqdori $0.50",
     "shareToFeed": "Mening lentamga ulashing",
     "sharePostTemplate": "Men DeHub'dagi stack'imga {{amount}} $DHB qo'shdim. Hamjamiyat bilan birga qurmoqdamiz. #DeHub #DHB",
     "success": {
@@ -1445,14 +1388,6 @@
     "failedSubmit": "Arizani yuborish amalga oshmadi. Iltimos qayta urinib koʻring."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Bu tizimga kirishda avvalgi DeHub hisobi yo&#39;q, shuning uchun qayta tiklash uchun hech narsa yo&#39;q. Buning o&#39;rniga yangi hisob yarating.",
-    "migrateInstead": "Buning o&#39;rniga eski hisobni olib keling",
-    "setUpNewAccount": "Yangi hisob yaratish",
-    "createNewInstead": "Ro`yxatdan o`tish",
-    "migrateAccount": "Hisobni ko'chirish",
-    "importExternalWallet": "Tashqi hamyonni import qilish",
-    "migrateIntentHint": "Quyidagi istalgan variant bilan tizimga kiring. Agar u avvalgi DeHub hisobiga mos kelsa, siz uning hamyonini, foydalanuvchi nomini va balansini olib kelasiz.",
-    "importIntentHint": "Quyidagi istalgan variant bilan tizimga kiring, so&#39;ngra foydalanmoqchi bo&#39;lgan hamyonning tiklash iborasini yoki shaxsiy kalitini joylashtiring.",
     "unlockBiometricContinue": "Davom etish uchun hamyoningizni barmoq izingiz yoki yuzingiz bilan oching.",
     "unlockBiometricSignIn": "Kirish uchun hamyoningizni barmoq izingiz yoki yuzingiz bilan qulfdan chiqaring.",
     "unlockPasswordContinue": "Davom etish uchun hamyon parolingizni kiriting.",
@@ -1465,6 +1400,14 @@
     "migrateUnmatchedDetail": "Ushbu hamyon manzilida hech qanday profil mavjud emas. Agar siz qayta kirgan bo&#39;lsangiz, orqaga qayting va ro&#39;yxatdan o&#39;tgan loginingizdan foydalaning.",
     "migrateGoBack": "@ info",
     "migrateContinueAnyway": "Ro`yxatdan o`tish",
+    "migrateNoOldAccount": "Bu tizimga kirishda avvalgi DeHub hisobi yo&#39;q, shuning uchun qayta tiklash uchun hech narsa yo&#39;q. Buning o&#39;rniga yangi hisob yarating.",
+    "migrateInstead": "Buning o&#39;rniga eski hisobni olib keling",
+    "setUpNewAccount": "Yangi hisob yaratish",
+    "createNewInstead": "Ro`yxatdan o`tish",
+    "migrateAccount": "Hisobni ko'chirish",
+    "importExternalWallet": "Tashqi hamyonni import qilish",
+    "migrateIntentHint": "Quyidagi istalgan variant bilan tizimga kiring. Agar u avvalgi DeHub hisobiga mos kelsa, siz uning hamyonini, foydalanuvchi nomini va balansini olib kelasiz.",
+    "importIntentHint": "Quyidagi istalgan variant bilan tizimga kiring, so&#39;ngra foydalanmoqchi bo&#39;lgan hamyonning tiklash iborasini yoki shaxsiy kalitini joylashtiring.",
     "title": "Kirish",
     "addProfileTitle": "Profil qo'shish",
     "continueEmail": "Email bilan davom etish",
@@ -2158,13 +2101,13 @@
       "thisYear": "Bu yil",
       "allTime": "Butun davr",
       "newMembers": "Yangi a'zolar",
+      "viewMembers": "A'zolarni ko'rish",
+      "openNewMembers": "Yangi a&#39;zolar ro&#39;yxatini oching",
       "chartMembers": "Vaqt bo'yicha a'zolar",
       "chartActive": "Faol odamlar",
       "growth": "+{{percent}}% bu oy",
       "growthTerm": "O'sish",
-      "recordingSince": "{{date}} dan beri yozib borilmoqda",
-      "viewMembers": "A'zolarni ko'rish",
-      "openNewMembers": "Yangi a&#39;zolar ro&#39;yxatini oching"
+      "recordingSince": "{{date}} dan beri yozib borilmoqda"
     },
     "title": "Statistika",
     "subtitle": "Real vaqtda ochiq manba ma'lumotlari",
@@ -2349,7 +2292,6 @@
     "noStages": "Hozir sizning Stage'ingiz jonli yoki rejalashtirilgan emas.",
     "noFlaresLeft": "Bu siklda Signal Flares qolmadi",
     "spentFor": "{{power}} {{minutes}} daqiqa davomida ishlayapti",
-    "goldenHourStarted": "Golden Hour {{minutes}} daqiqa davom etmoqda — hozirgi har bir postingiz ikki hisoblanadi",
     "teamUp": {
       "title": "Jamoa tuzing",
       "subtitle": "Yettagacha boshqa odamlar bilan hamyon quvvatini birlashtiring. Har kim sizning umumiy yutug'ingizni ochib beradigan nishonni taqib oladi.",
@@ -2410,7 +2352,8 @@
       "updated": "Jamoa yangilandi",
       "updateFailed": "Bu jamoani yangilab bo'lmadi",
       "openToEveryone": "Team up har bir hisob uchun ochiq; maxfiy jamoalar kim qo'shilishini tasdiqlaydi."
-    }
+    },
+    "goldenHourStarted": "Golden Hour {{minutes}} daqiqa davom etmoqda — hozirgi har bir postingiz ikki hisoblanadi"
   },
   "work": {
     "budgetExhausted": "Bu mukofotning byudjeti to'liq taqsimlangan."
@@ -2445,6 +2388,63 @@
     "reactions": "Reaktsiyalar",
     "reply": "Javob berish",
     "loginDescription": "Hikoyalarni koʻrish va yaratish uchun kiring."
+  },
+  "live": {
+    "chatJoined": "qoʻshildi",
+    "chatSentGift": "yubordi",
+    "progress": {
+      "title": "Streamer darajasi",
+      "level": "Daraja {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{level}} darajasiga erishish uchun {{minutes}} daqiqa qoldi",
+      "rule": "Faqat o'n daqiqa yoki undan ko'proq davom etgan va kamida bitta tomoshabinga ega bo'lgan translyatsiyalar darajangizga hisoblanadi.",
+      "streak": "{{count}} haftalik uzluksiz seriya",
+      "bestStreak": "Eng yaxshi seriya {{count}} hafta",
+      "hours": "{{hours}} malakali soat",
+      "minutes": "{{count}} daqiqa",
+      "viewers": "{{count}} tomoshabin",
+      "viewCards": "Kartalarni ko'rish",
+      "cardsTitle": "Kolleksion kartalar",
+      "locked": "Qulflangan",
+      "earnedOn": "Qozonilgan {{date}}",
+      "recentTitle": "So'nggi translyatsiyalar",
+      "notCounted": "Hisoblanmadi",
+      "noStreams": "XP olishni boshlash uchun jonli efirga chiqing.",
+      "card": {
+        "first-light": {
+          "name": "Birinchi nur",
+          "hint": "Hisoblanadigan birinchi translyatsiyangizni yakunlang."
+        },
+        "marathon": {
+          "name": "Maraton",
+          "hint": "Bir sessiyada ikki soat translyatsiya qiling."
+        },
+        "night-owl": {
+          "name": "Tun qushi",
+          "hint": "Tungi yarim tundan tonggi beshlargacha translyatsiyani yakunlang."
+        },
+        "regular": {
+          "name": "Muntazam",
+          "hint": "To'rt hafta ketma-ket translyatsiya qiling."
+        },
+        "iron-streak": {
+          "name": "Temir seriya",
+          "hint": "O'n ikki hafta ketma-ket translyatsiya qiling."
+        },
+        "crowd": {
+          "name": "To'plam",
+          "hint": "Bir vaqtning o'zida o'nta odam tomosha qilsin."
+        },
+        "century": {
+          "name": "Asr",
+          "hint": "Efirda yuz soatlik saralash bosqichiga erishing."
+        },
+        "legend": {
+          "name": "Afsona",
+          "hint": "O&#39;ninchi darajaga yeting."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Go Live",
@@ -2878,7 +2878,26 @@
     "reviewDescriptionPlaceholder": "Bu post haqida biror narsa deng (ixtiyoriy)",
     "reviewLiveWarning": "Bu havola jonli efir. Tugashini kuting va yozuvni import qiling.",
     "reviewCancel": "Bekor qilish",
-    "reviewConfirm": "Import"
+    "reviewConfirm": "Import",
+    "podcast": {
+      "tab": "Podkast",
+      "feedUrlLabel": "Podkast RSS tasmasi URL manzili",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Yangiliklar tasmasini & olish",
+      "fetching": "Tasma olinmoqda…",
+      "showBy": "{{author}} tomonidan",
+      "episodes": "{{count}} epizodlar",
+      "selectAll": "Hammasini tanlang",
+      "alreadyImported": "Import qilingan",
+      "ownership": "Men ushbu kontentga egalik qilaman yoki uni DeHub’da nashr etish uchun huquq egasining ruxsatiga egaman.",
+      "importSelected": "{{count}} epizodlarni import qilish",
+      "importing": "Import qilinmoqda",
+      "done": "Navbat",
+      "failed": "Import qilib boʻlmadidownload status",
+      "emptyFeed": "Biz o&#39;sha tasmada hech qanday epizod topa olmadik.",
+      "badFeed": "Bu havola podkast tasmasi kabi ko&#39;rinmaydi.",
+      "tooMany": "Bir vaqtning o&#39;zida 20 tagacha epizodni import qiling."
+    }
   },
   "banned": {
     "title": "Hisobingiz bloklandi",

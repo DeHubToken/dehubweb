@@ -105,6 +105,9 @@
     "bio": "简介",
     "bioPlaceholder": "介绍一下自己...",
     "socialLinks": "社交链接",
+    "socialFollowers": "{{platform}}的关注者",
+    "socialFollowersHint": "作为总覆盖范围的一部分显示在您的个人资料中。 请自行输入号码，我们不会从平台上读取该号码。",
+    "socialFollowersPlaceholder": "例如： 12500",
     "profileUpdated": "个人资料更新成功",
     "failedLoadProfile": "加载个人资料失败",
     "imageTooLarge5": "图片必须小于5MB",
@@ -454,10 +457,7 @@
       "unavailable": "您的帐户目前无法从编码器进行直播。",
       "serverCopied": "服务器已复制",
       "keyCopied": "流密钥已复制"
-    },
-    "socialFollowers": "{{platform}}的关注者",
-    "socialFollowersHint": "作为总覆盖范围的一部分显示在您的个人资料中。 请自行输入号码，我们不会从平台上读取该号码。",
-    "socialFollowersPlaceholder": "例如： 12500"
+    }
   },
   "common": {
     "save": "保存",
@@ -1235,10 +1235,6 @@
     "returnHome": "返回首页"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "此帖不可用",
-      "commentUnavailable": "此评论不再可用"
-    },
     "back": "返回",
     "usernameAvailable": "用户名可用！",
     "signUpToClaim": "注册以获取",
@@ -1254,12 +1250,16 @@
     "followers": "粉丝",
     "following": "关注中",
     "joined": "加入于",
-    "loginDescription": "登录以查看和管理您的个人资料。",
     "reach": {
       "total": "总覆盖率",
       "breakdownTitle": "这种影响力来自何处",
       "dehubFollowers": "DeHub关注者",
       "selfReported": "社交关注者数量由创作者输入。"
+    },
+    "loginDescription": "登录以查看和管理您的个人资料。",
+    "replyThread": {
+      "postUnavailable": "此帖不可用",
+      "commentUnavailable": "此评论不再可用"
     },
     "tabs": {
       "playlists": "播放列表"
@@ -1296,6 +1296,7 @@
     "amountUsd": "金额 (USD)",
     "customAmount": "自定义金额",
     "minPurchase": "最低购买$5",
+    "minDhbPurchase": "最低DHB购买量为$ 0.50",
     "youPay": "您支付",
     "youReceive": "您收到（估计）",
     "feeNote": "卡费约3.6%，其中0.5%的网络储备金扣除。储备金以ETH形式发送给您用于gas费。",
@@ -1329,7 +1330,6 @@
     "badgeDiscount": "{{tier}} 持有者 — {{percent}}% 折扣",
     "otherTokens": "其他代币",
     "otherTokensDesc": "用你的银行卡在 Base 上购买 ETH 或 USDC",
-    "minDhbPurchase": "最低DHB购买量为$ 0.50",
     "shareToFeed": "分享到我的订阅源",
     "sharePostTemplate": "刚刚在DeHub上向我的堆栈添加了{{amount}} $ DHB。 与社区共同建设。# DeHub # DHB",
     "success": {
@@ -1411,14 +1411,6 @@
     "email": "邮箱"
   },
   "loginModal": {
-    "migrateNoOldAccount": "此登录没有之前的 DeHub 账户，因此没有内容可以迁移。请设置一个新账户。",
-    "migrateInstead": "迁移旧账户",
-    "setUpNewAccount": "设置新账户",
-    "createNewInstead": "创建新账户",
-    "migrateAccount": "迁移账户",
-    "importExternalWallet": "导入外部钱包",
-    "migrateIntentHint": "使用以下任意选项登录。如果匹配到之前的 DeHub 账户，您将迁移其钱包、用户名和余额。",
-    "importIntentHint": "使用以下任意选项登录，然后粘贴您想要使用的钱包的恢复短语或私钥。",
     "unlockBiometricContinue": "使用指纹或面部识别解锁钱包以继续。",
     "unlockBiometricSignIn": "使用指纹或面部识别功能解锁钱包，即可登录。",
     "unlockPasswordContinue": "输入您的钱包密码以继续。",
@@ -1431,6 +1423,14 @@
     "migrateUnmatchedDetail": "此钱包地址不存在配置文件。 如果您要重新登录，请返回并改用您注册时使用的登录信息。",
     "migrateGoBack": "返回",
     "migrateContinueAnyway": "仍然创建新帐户",
+    "migrateNoOldAccount": "此登录没有之前的 DeHub 账户，因此没有内容可以迁移。请设置一个新账户。",
+    "migrateInstead": "迁移旧账户",
+    "setUpNewAccount": "设置新账户",
+    "createNewInstead": "创建新账户",
+    "migrateAccount": "迁移账户",
+    "importExternalWallet": "导入外部钱包",
+    "migrateIntentHint": "使用以下任意选项登录。如果匹配到之前的 DeHub 账户，您将迁移其钱包、用户名和余额。",
+    "importIntentHint": "使用以下任意选项登录，然后粘贴您想要使用的钱包的恢复短语或私钥。",
     "title": "登录",
     "addProfileTitle": "添加档案",
     "continueEmail": "使用邮箱继续",
@@ -2317,7 +2317,6 @@
     "noStages": "你没有正在进行或已安排的舞台。",
     "noFlaresLeft": "本周期没有剩余的信号闪光灯",
     "spentFor": "{{power}} 运行 {{minutes}} 分钟",
-    "goldenHourStarted": "Golden Hour 正在运行 {{minutes}} 分钟 — 你现在发布的任何内容都算双倍",
     "teamUp": {
       "title": "组队",
       "subtitle": "与最多七人组队，汇集钱包力量。每个人都佩戴徽章，您的总额将解锁。",
@@ -2378,7 +2377,8 @@
       "updated": "队伍已更新",
       "updateFailed": "无法更新该队伍",
       "openToEveryone": "队伍组队对所有账号开放；私有队伍会批准谁加入。"
-    }
+    },
+    "goldenHourStarted": "Golden Hour 正在运行 {{minutes}} 分钟 — 你现在发布的任何内容都算双倍"
   },
   "work": {
     "budgetExhausted": "此赏金的预算已全部分配完毕。",
@@ -5189,7 +5189,25 @@
     "reviewDescriptionPlaceholder": "介绍一下这篇帖子（选填）",
     "reviewLiveWarning": "该链接是实时流。等到录制结束，然后导入录制。",
     "reviewCancel": "取消",
-    "reviewConfirm": "进口"
+    "reviewConfirm": "进口",
+    "podcast": {
+      "tab": "播客",
+      "feedUrlLabel": "播客RSS源网址",
+      "fetchFeed": "获取订阅源",
+      "fetching": "正在获取订阅源…",
+      "showBy": "作者： {{author}}",
+      "episodes": "{{count}}集",
+      "selectAll": "全选",
+      "alreadyImported": "已导入",
+      "ownership": "我拥有此内容，或拥有在DeHub上发布此内容的权利持有人的许可。",
+      "importSelected": "导入{{count}}集",
+      "importing": "正在导入…",
+      "done": "已排队",
+      "failed": "失败",
+      "emptyFeed": "我们在该订阅源中找不到任何剧集。",
+      "badFeed": "该链接看起来不像播客源。",
+      "tooMany": "一次最多可导入20集。"
+    }
   },
   "banned": {
     "title": "您的账号已被封禁",

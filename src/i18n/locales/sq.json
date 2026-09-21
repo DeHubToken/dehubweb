@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "u bashkua",
-    "chatSentGift": "dërgoi",
-    "progress": {
-      "title": "Niveli i transmetuesit",
-      "level": "Niveli {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} minuta kualifikuese më shumë për të arritur nivelin {{level}}",
-      "rule": "Vetëm transmetimet që zgjasin dhjetë minuta ose më shumë me të paktën një shikues kontribuojnë në nivelin tuaj.",
-      "streak": "{{count}} javë rresht",
-      "bestStreak": "Rekordi më i mirë {{count}} javë",
-      "hours": "{{hours}} orë kualifikuese",
-      "minutes": "{{count}} minuta",
-      "viewers": "{{count}} shikues",
-      "viewCards": "Kartat e shikimit",
-      "cardsTitle": "Kartat e koleksionueshme",
-      "locked": "E mbyllur",
-      "earnedOn": "Fitoni {{date}}",
-      "recentTitle": "Transmetime të fundit",
-      "notCounted": "Nuk u numërua",
-      "noStreams": "Transmetoni drejtpërdrejt për të filluar fitimin e XP.",
-      "card": {
-        "first-light": {
-          "name": "Drita e parë",
-          "hint": "Përfundoni transmetimin tuaj të parë që numërohet."
-        },
-        "marathon": {
-          "name": "Maratonë",
-          "hint": "Transmetoni për dy orë në një sesion."
-        },
-        "night-owl": {
-          "name": "Buf natë",
-          "hint": "Mbyllni një transmetim midis mesnatës dhe pesës së mëngjesit."
-        },
-        "regular": {
-          "name": "Rregullt",
-          "hint": "Transmetoni katër javë rresht."
-        },
-        "iron-streak": {
-          "name": "Rreku i hekurt",
-          "hint": "Transmetoni dymëmbëdhjetë javë rresht."
-        },
-        "crowd": {
-          "name": "Turmë",
-          "hint": "Keni dhjetë persona që shikojnë në të njëjtën kohë."
-        },
-        "century": {
-          "name": "Shekull",
-          "hint": "Arrijini njëqind orë kualifikuese në transmetim."
-        },
-        "legend": {
-          "name": "Legjenda",
-          "hint": "Arrijeni nivelin dhjetë."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Transaksionet falas janë pezulluar nga ana jonë, jo në portofolin tuaj. Ju lutemi provoni sërish së shpejti.",
     "gasSponsorshipFailed": "Ky transaksion nuk mund të mbulohej. Ju lutemi provoni sërish pas pak."
@@ -162,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Na tregoni për veten...",
     "socialLinks": "Lidhjet Sociale",
+    "socialFollowers": "Ndjekësit në {{platform}}",
+    "socialFollowersHint": "Shfaqet në profilin tënd si pjesë e shtrirjes tënde totale. Vendos numrin vetë — nuk e lexojmë nga platforma.",
+    "socialFollowersPlaceholder": "p.sh. 12500",
     "profileUpdated": "Profili u përditësua me sukses",
     "failedLoadProfile": "Dështoi ngarkimi i të dhënave të profilit",
     "imageTooLarge5": "Imazhi duhet të jetë më i vogël se 5MB",
@@ -512,10 +458,7 @@
       "unavailable": "Transmetimi nga një kodues nuk është i disponueshëm në llogarinë tuaj tani.",
       "serverCopied": "Serveri u kopjua",
       "keyCopied": "Çelësi i transmetimit u kopjua"
-    },
-    "socialFollowers": "Ndjekësit në {{platform}}",
-    "socialFollowersHint": "Shfaqet në profilin tënd si pjesë e shtrirjes tënde totale. Vendos numrin vetë — nuk e lexojmë nga platforma.",
-    "socialFollowersPlaceholder": "p.sh. 12500"
+    }
   },
   "common": {
     "save": "Ruaj",
@@ -1292,10 +1235,6 @@
     "returnHome": "Kthehu në Kryefaqe"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Ky postim është i padisponueshëm",
-      "commentUnavailable": "Ky koment nuk është më i disponueshëm"
-    },
     "back": "Kthehu",
     "usernameAvailable": "Emri i përdoruesit është i disponueshëm!",
     "signUpToClaim": "Regjistrohu sot për ta marrë",
@@ -1311,12 +1250,16 @@
     "followers": "Ndjekës",
     "following": "Ndjekje",
     "joined": "Bashkuar",
-    "loginDescription": "Hyni për të parë dhe menaxhuar profilin tuaj.",
     "reach": {
       "total": "Arritja totale",
       "breakdownTitle": "Nga vjen kjo arritje",
       "dehubFollowers": "Ndjekësit e DeHub",
       "selfReported": "Numrat e ndjekësve socialë futen nga krijuesi."
+    },
+    "loginDescription": "Hyni për të parë dhe menaxhuar profilin tuaj.",
+    "replyThread": {
+      "postUnavailable": "Ky postim është i padisponueshëm",
+      "commentUnavailable": "Ky koment nuk është më i disponueshëm"
     },
     "tabs": {
       "playlists": "Listat e luajtjes"
@@ -1333,6 +1276,7 @@
     "amountUsd": "Shuma (USD)",
     "customAmount": "Shumë e personalizuar",
     "minPurchase": "Blerja minimale është $5",
+    "minDhbPurchase": "Blerja minimale e DHB është 0.50 $",
     "youPay": "Ju paguani",
     "youReceive": "Ju merrni (parashik.)",
     "feeNote": "Tarifa e kartës ~3.6% dhe një rezervë rrjeti 0.5% zbriten nga kjo. Rezerva ju dërgohet si ETH për gaz.",
@@ -1366,7 +1310,6 @@
     "badgeDiscount": "Mbajtës {{tier}} — {{percent}}% zbritje",
     "otherTokens": "Token të tjerë",
     "otherTokensDesc": "Blej ETH ose USDC në Base me kartën tënde",
-    "minDhbPurchase": "Blerja minimale e DHB është 0.50 $",
     "shareToFeed": "Shpërndaje në burimin tim",
     "sharePostTemplate": "Sapo shtova {{amount}} $DHB në rafte në DeHub. Ndërtimi me komunitetin. #DeHub #DHB",
     "success": {
@@ -1444,14 +1387,6 @@
     "failedSubmit": "Dështoi dërgimi i aplikimit. Ju lutem provoni përsëri."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Nuk ka llogari të mëparshme DeHub në këtë hyrje, kështu që nuk ka asgjë për të sjellë. Më mirë krijo një llogari të re.",
-    "migrateInstead": "Sill më mirë llogarinë e vjetër",
-    "setUpNewAccount": "Krijo një llogari të re",
-    "createNewInstead": "Më mirë krijo një llogari të re",
-    "migrateAccount": "Migro llogarinë",
-    "importExternalWallet": "Importo portofolin e jashtëm",
-    "migrateIntentHint": "Hyr me çdo opsion më poshtë. Nëse përputhet me një llogari të mëparshme DeHub, do të marrësh me vete portofolin, emrin e përdoruesit dhe balancën e saj.",
-    "importIntentHint": "Hyr me çdo opsion më poshtë, pastaj ngjit frazën e rimëkëmbjes ose çelësin privat të portofolit që dëshiron të përdorësh.",
     "unlockBiometricContinue": "Zhblloko portofolin me shenjën e gishtit ose fytyrën për të vazhduar.",
     "unlockBiometricSignIn": "Zhblloko portofolin me gjurmët e gishtave ose fytyrën për t 'u identifikuar.",
     "unlockPasswordContinue": "Vendos fjalëkalimin e portofolit për të vazhduar.",
@@ -1464,6 +1399,14 @@
     "migrateUnmatchedDetail": "Nuk ekziston asnjë profil në këtë adresë portofoli. Nëse po regjistroheshe përsëri, kthehu dhe përdor më mirë hyrjen me të cilën je regjistruar.",
     "migrateGoBack": "Kthehu prapa",
     "migrateContinueAnyway": "Krijo një llogari të re gjithsesi",
+    "migrateNoOldAccount": "Nuk ka llogari të mëparshme DeHub në këtë hyrje, kështu që nuk ka asgjë për të sjellë. Më mirë krijo një llogari të re.",
+    "migrateInstead": "Sill më mirë llogarinë e vjetër",
+    "setUpNewAccount": "Krijo një llogari të re",
+    "createNewInstead": "Më mirë krijo një llogari të re",
+    "migrateAccount": "Migro llogarinë",
+    "importExternalWallet": "Importo portofolin e jashtëm",
+    "migrateIntentHint": "Hyr me çdo opsion më poshtë. Nëse përputhet me një llogari të mëparshme DeHub, do të marrësh me vete portofolin, emrin e përdoruesit dhe balancën e saj.",
+    "importIntentHint": "Hyr me çdo opsion më poshtë, pastaj ngjit frazën e rimëkëmbjes ose çelësin privat të portofolit që dëshiron të përdorësh.",
     "title": "Hyr",
     "addProfileTitle": "Shto profil",
     "continueEmail": "Vazhdo me Email",
@@ -2351,7 +2294,6 @@
     "noStages": "Asnjë Stage tuaj nuk është drejtpërdrejt ose i planifikuar tani.",
     "noFlaresLeft": "Asnjë Sinjal Flakë i mbetur këtë cikël",
     "spentFor": "{{power}} duke u drejtuar për {{minutes}} minuta",
-    "goldenHourStarted": "Golden Hour po zgjat {{minutes}} minuta — çdo gjë që postoni tani numërohet dyfish",
     "teamUp": {
       "title": "Bashkohuni në ekip",
       "subtitle": "Kombinoni fuqinë e kuletës me deri në shtatë të tjerë. Të gjithë mbajnë stemën që ju mundëson totali juaj.",
@@ -2412,7 +2354,8 @@
       "updated": "Skuadra u përditësua",
       "updateFailed": "Nuk u bë e mundur përditësimi i asaj skuadre",
       "openToEveryone": "Team up është i hapur për çdo llogari; skuadrat private miratojnë kush bashkohet."
-    }
+    },
+    "goldenHourStarted": "Golden Hour po zgjat {{minutes}} minuta — çdo gjë që postoni tani numërohet dyfish"
   },
   "work": {
     "budgetExhausted": "Buxheti i kësaj shpërblimi është angazhuar plotësisht."
@@ -2439,6 +2382,63 @@
     "neon": "Neon",
     "blur": "Turbullim",
     "pixelate": "Pikselizim"
+  },
+  "live": {
+    "chatJoined": "u bashkua",
+    "chatSentGift": "dërgoi",
+    "progress": {
+      "title": "Niveli i transmetuesit",
+      "level": "Niveli {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} minuta kualifikuese më shumë për të arritur nivelin {{level}}",
+      "rule": "Vetëm transmetimet që zgjasin dhjetë minuta ose më shumë me të paktën një shikues kontribuojnë në nivelin tuaj.",
+      "streak": "{{count}} javë rresht",
+      "bestStreak": "Rekordi më i mirë {{count}} javë",
+      "hours": "{{hours}} orë kualifikuese",
+      "minutes": "{{count}} minuta",
+      "viewers": "{{count}} shikues",
+      "viewCards": "Kartat e shikimit",
+      "cardsTitle": "Kartat e koleksionueshme",
+      "locked": "E mbyllur",
+      "earnedOn": "Fitoni {{date}}",
+      "recentTitle": "Transmetime të fundit",
+      "notCounted": "Nuk u numërua",
+      "noStreams": "Transmetoni drejtpërdrejt për të filluar fitimin e XP.",
+      "card": {
+        "first-light": {
+          "name": "Drita e parë",
+          "hint": "Përfundoni transmetimin tuaj të parë që numërohet."
+        },
+        "marathon": {
+          "name": "Maratonë",
+          "hint": "Transmetoni për dy orë në një sesion."
+        },
+        "night-owl": {
+          "name": "Buf natë",
+          "hint": "Mbyllni një transmetim midis mesnatës dhe pesës së mëngjesit."
+        },
+        "regular": {
+          "name": "Rregullt",
+          "hint": "Transmetoni katër javë rresht."
+        },
+        "iron-streak": {
+          "name": "Rreku i hekurt",
+          "hint": "Transmetoni dymëmbëdhjetë javë rresht."
+        },
+        "crowd": {
+          "name": "Turmë",
+          "hint": "Keni dhjetë persona që shikojnë në të njëjtën kohë."
+        },
+        "century": {
+          "name": "Shekull",
+          "hint": "Arrijini njëqind orë kualifikuese në transmetim."
+        },
+        "legend": {
+          "name": "Legjenda",
+          "hint": "Arrijeni nivelin dhjetë."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Shko Live",
@@ -2874,7 +2874,26 @@
     "reviewDescriptionPlaceholder": "Thuaj diçka për këtë postim (me zgjedhje)",
     "reviewLiveWarning": "Ky link është transmetim i drejtpërdrejtë. Prisni derisa të përfundojë dhe importoni regjistrimin në vend të tij.",
     "reviewCancel": "Anulo",
-    "reviewConfirm": "Importo"
+    "reviewConfirm": "Importo",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "URL-ja e burimit RSS të podkastit",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Merr burimin",
+      "fetching": "Duke marrë burimin...",
+      "showBy": "Nga {{author}}",
+      "episodes": "{{count}} episode",
+      "selectAll": "Zgjidhi të gjitha",
+      "alreadyImported": "Importuar tashmë",
+      "ownership": "Unë e zotëroj këtë përmbajtje, ose kam lejen e mbajtësit të të drejtave për ta publikuar atë në DeHub.",
+      "importSelected": "Importo {{count}} episode",
+      "importing": "Duke importuar...",
+      "done": "Në radhë",
+      "failed": "Dështoi",
+      "emptyFeed": "Nuk gjetëm asnjë episod në atë ushqim.",
+      "badFeed": "Ky link nuk duket si një burim podkastesh.",
+      "tooMany": "Importo deri në 20 episode njëherësh."
+    }
   },
   "banned": {
     "title": "Llogaria jote është e ndaluar",

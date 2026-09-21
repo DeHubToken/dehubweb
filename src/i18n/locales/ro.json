@@ -105,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Spune-ne despre tine...",
     "socialLinks": "Linkuri sociale",
+    "socialFollowers": "Urmăritori pe {{platform}}",
+    "socialFollowersHint": "Afișat în profilul tău ca parte a razei tale totale de acțiune. Introduceți singur numărul — nu îl citim de pe platformă.",
+    "socialFollowersPlaceholder": "de ex. 12500",
     "profileUpdated": "Profil actualizat cu succes",
     "failedLoadProfile": "Nu s-au putut încărca datele profilului",
     "imageTooLarge5": "Imaginea trebuie să aibă sub 5MB",
@@ -455,10 +458,7 @@
       "unavailable": "Streamingul de la un codificator nu este disponibil în contul dvs. în acest moment.",
       "serverCopied": "Server copiat",
       "keyCopied": "Cheie flux copiată"
-    },
-    "socialFollowers": "Urmăritori pe {{platform}}",
-    "socialFollowersHint": "Afișat în profilul tău ca parte a razei tale totale de acțiune. Introduceți singur numărul — nu îl citim de pe platformă.",
-    "socialFollowersPlaceholder": "de ex. 12500"
+    }
   },
   "common": {
     "save": "Salvează",
@@ -1218,10 +1218,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Această postare nu este disponibilă",
-      "commentUnavailable": "Acest comentariu nu mai este disponibil"
-    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUp": "Sign Up",
@@ -1234,6 +1230,10 @@
       "breakdownTitle": "De unde provine această acoperire",
       "dehubFollowers": "Urmăritori DeHub",
       "selfReported": "Numărul de urmăritori sociali este introdus de creator."
+    },
+    "replyThread": {
+      "postUnavailable": "Această postare nu este disponibilă",
+      "commentUnavailable": "Acest comentariu nu mai este disponibil"
     },
     "tabs": {
       "playlists": "Liste de redare"
@@ -1270,6 +1270,7 @@
     "amountUsd": "Amount (USD)",
     "customAmount": "Custom amount",
     "minPurchase": "Minimum purchase is $5",
+    "minDhbPurchase": "Achiziția minimă DHB este de 0,50 $",
     "youPay": "You pay",
     "youReceive": "Primești (est.)",
     "feeNote": "Taxa de card ~3,6% și o rezervă de rețea de 0,5% se scad din aceasta. Rezerva ți se trimite ca ETH pentru gaz.",
@@ -1303,7 +1304,6 @@
     "badgeDiscount": "Deținător {{tier}} — {{percent}}% reducere",
     "otherTokens": "Alte tokenuri",
     "otherTokensDesc": "Cumpără ETH sau USDC pe Base cu cardul tău",
-    "minDhbPurchase": "Achiziția minimă DHB este de 0,50 $",
     "shareToFeed": "Distribuie în fluxul meu",
     "sharePostTemplate": "Tocmai am adăugat {{amount}} $DHB la stiva mea de pe DeHub. Construim împreună cu comunitatea. #DeHub #DHB",
     "success": {
@@ -1363,14 +1363,6 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
-    "migrateNoOldAccount": "Nu există un cont DeHub anterior la această autentificare, așa că nu este nimic de transferat. Configurați un cont nou în schimb.",
-    "migrateInstead": "Transferați contul vechi în schimb",
-    "setUpNewAccount": "Configurați un cont nou",
-    "createNewInstead": "Creați un cont nou în schimb",
-    "migrateAccount": "Migrați contul",
-    "importExternalWallet": "Importați portofel extern",
-    "migrateIntentHint": "Autentificați-vă cu oricare dintre opțiunile de mai jos. Dacă se potrivește cu un cont DeHub anterior, veți transfera portofelul, numele de utilizator și soldul acestuia.",
-    "importIntentHint": "Autentificați-vă cu oricare dintre opțiunile de mai jos, apoi lipiți fraza de recuperare sau cheia privată a portofelului pe care doriți să îl utilizați.",
     "unlockBiometricContinue": "Deblochează-ți portofelul cu amprenta sau fața pentru a continua.",
     "unlockBiometricSignIn": "Deblochează-ți portofelul cu amprenta digitală sau cu fața pentru a te conecta.",
     "unlockPasswordContinue": "Introdu parola portofelului pentru a continua.",
@@ -1383,6 +1375,14 @@
     "migrateUnmatchedDetail": "Nu există profil la această adresă de portofel. Dacă v-ați conectat din nou, reveniți și utilizați în schimb datele de conectare cu care v-ați înscris.",
     "migrateGoBack": "Înapoi",
     "migrateContinueAnyway": "Creează un cont nou oricum",
+    "migrateNoOldAccount": "Nu există un cont DeHub anterior la această autentificare, așa că nu este nimic de transferat. Configurați un cont nou în schimb.",
+    "migrateInstead": "Transferați contul vechi în schimb",
+    "setUpNewAccount": "Configurați un cont nou",
+    "createNewInstead": "Creați un cont nou în schimb",
+    "migrateAccount": "Migrați contul",
+    "importExternalWallet": "Importați portofel extern",
+    "migrateIntentHint": "Autentificați-vă cu oricare dintre opțiunile de mai jos. Dacă se potrivește cu un cont DeHub anterior, veți transfera portofelul, numele de utilizator și soldul acestuia.",
+    "importIntentHint": "Autentificați-vă cu oricare dintre opțiunile de mai jos, apoi lipiți fraza de recuperare sau cheia privată a portofelului pe care doriți să îl utilizați.",
     "title": "Log in",
     "addProfileTitle": "Adaugă un profil",
     "continueApple": "Continuă cu Apple",
@@ -1963,13 +1963,13 @@
       "thisYear": "Anul acesta",
       "allTime": "Toată perioada",
       "newMembers": "Membri noi",
+      "viewMembers": "Afișează membrii",
+      "openNewMembers": "Deschideți lista de membri noi",
       "chartMembers": "Membri în timp",
       "chartActive": "Persoane active",
       "growth": "+{{percent}}% luna aceasta",
       "growthTerm": "Creștere",
-      "recordingSince": "înregistrat din {{date}}",
-      "viewMembers": "Afișează membrii",
-      "openNewMembers": "Deschideți lista de membri noi"
+      "recordingSince": "înregistrat din {{date}}"
     },
     "title": "Statistici",
     "subtitle": "Informații open source în timp real",
@@ -2154,7 +2154,6 @@
     "noStages": "Niciun Stage de-al tău nu este live sau programat acum.",
     "noFlaresLeft": "Nu au mai rămas Semnale de Alarmă în acest ciclu",
     "spentFor": "{{power}} rulează de {{minutes}} minute",
-    "goldenHourStarted": "Golden Hour rulează timp de {{minutes}} minute — tot ce postezi acum contează dublu",
     "teamUp": {
       "title": "Formați o echipă",
       "subtitle": "Combinați puterea portofelului cu până la șapte alte persoane. Toată lumea poartă insigna pe care o deblochează totalul dvs.",
@@ -2215,7 +2214,8 @@
       "updated": "Echipa a fost actualizată",
       "updateFailed": "Nu s-a putut actualiza acea echipă",
       "openToEveryone": "Team up este deschis oricărui cont; echipele private aprobă cine se alătură."
-    }
+    },
+    "goldenHourStarted": "Golden Hour rulează timp de {{minutes}} minute — tot ce postezi acum contează dublu"
   },
   "work": {
     "budgetExhausted": "Bugetul acestei recompense este alocat în întregime.",
@@ -4949,7 +4949,26 @@
     "reviewDescriptionPlaceholder": "Spune ceva despre această postare (opțional)",
     "reviewLiveWarning": "Acel link este un flux live. Așteptați până se termină și importați înregistrarea în schimb.",
     "reviewCancel": "Anulează",
-    "reviewConfirm": "Import"
+    "reviewConfirm": "Import",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Adresa URL a fluxului RSS pentru podcasturi",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Preluare flux",
+      "fetching": "Se preia fluxul...",
+      "showBy": "Până la{{author}}",
+      "episodes": "{{count}} episoade",
+      "selectAll": "Selectează tot",
+      "alreadyImported": "Deja importat",
+      "ownership": "Dețin acest conținut sau am permisiunea deținătorului drepturilor de autor de a-l publica pe DeHub.",
+      "importSelected": "Importă episoade {{count}}",
+      "importing": "Se importă...",
+      "done": "În așteptare",
+      "failed": "Eșuat",
+      "emptyFeed": "Nu am putut găsi episoade în acel flux.",
+      "badFeed": "Acel link nu arată ca un feed de podcast.",
+      "tooMany": "Importați până la 20 de episoade simultan."
+    }
   },
   "banned": {
     "title": "Contul tău este interzis",

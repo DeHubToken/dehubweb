@@ -105,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Vertel iets over jezelf...",
     "socialLinks": "Sociale links",
+    "socialFollowers": "Volgers op {{platform}}",
+    "socialFollowersHint": "Wordt op je profiel weergegeven als onderdeel van je totale bereik. Voer het nummer zelf in — we lezen het niet van het platform.",
+    "socialFollowersPlaceholder": "bijv. 12500",
     "profileUpdated": "Profiel succesvol bijgewerkt",
     "failedLoadProfile": "Profielgegevens laden mislukt",
     "imageTooLarge5": "Afbeelding moet kleiner zijn dan 5MB",
@@ -455,10 +458,7 @@
       "unavailable": "Streamen vanuit een encoder is momenteel niet beschikbaar op je account.",
       "serverCopied": "Server gekopieerd",
       "keyCopied": "Stream-sleutel gekopieerd"
-    },
-    "socialFollowers": "Volgers op {{platform}}",
-    "socialFollowersHint": "Wordt op je profiel weergegeven als onderdeel van je totale bereik. Voer het nummer zelf in — we lezen het niet van het platform.",
-    "socialFollowersPlaceholder": "bijv. 12500"
+    }
   },
   "common": {
     "save": "Opslaan",
@@ -1430,10 +1430,6 @@
     "returnHome": "Terug naar home"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Dit bericht is niet beschikbaar",
-      "commentUnavailable": "Deze reactie is niet meer beschikbaar"
-    },
     "back": "Terug",
     "usernameAvailable": "Gebruikersnaam beschikbaar!",
     "signUpToClaim": "Meld je vandaag aan om te claimen",
@@ -1449,12 +1445,16 @@
     "followers": "Volgers",
     "following": "Volgend",
     "joined": "Lid sinds",
-    "loginDescription": "Log in om je profiel te bekijken en beheren.",
     "reach": {
       "total": "Totaal bereik",
       "breakdownTitle": "Waar dit bereik vandaan komt",
       "dehubFollowers": "DeHub-volgers",
       "selfReported": "Het aantal sociale volgers wordt ingevoerd door de maker."
+    },
+    "loginDescription": "Log in om je profiel te bekijken en beheren.",
+    "replyThread": {
+      "postUnavailable": "Dit bericht is niet beschikbaar",
+      "commentUnavailable": "Deze reactie is niet meer beschikbaar"
     },
     "tabs": {
       "playlists": "Afspeellijsten"
@@ -1491,6 +1491,7 @@
     "amountUsd": "Bedrag (USD)",
     "customAmount": "Aangepast bedrag",
     "minPurchase": "Minimumaankoop is $5",
+    "minDhbPurchase": "Minimale DHB-aankoop is $ 0,50",
     "youPay": "Je betaalt",
     "youReceive": "Je ontvangt (geschat)",
     "feeNote": "Kaartvergoeding ~3,6% en een 0,5% netwerkresserve worden hiervan afgetrokken. De reserve wordt naar je gestuurd als ETH voor gas.",
@@ -1524,7 +1525,6 @@
     "badgeDiscount": "{{tier}}-houder — {{percent}}% korting",
     "otherTokens": "Andere tokens",
     "otherTokensDesc": "Koop ETH of USDC op Base met je kaart",
-    "minDhbPurchase": "Minimale DHB-aankoop is $ 0,50",
     "shareToFeed": "Deel met mijn feed",
     "sharePostTemplate": "Ik heb zojuist {{amount}} $DHB toegevoegd aan mijn stapel op DeHub. Bouwen met de community. #DeHub #DHB",
     "success": {
@@ -1602,14 +1602,6 @@
     "failedSubmit": "Aanvraag indienen mislukt. Probeer het opnieuw."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Er is geen eerdere DeHub-account op deze login, dus er is niets om over te brengen. Maak in plaats daarvan een nieuw account aan.",
-    "migrateInstead": "Breng in plaats daarvan het oude account over",
-    "setUpNewAccount": "Een nieuw account aanmaken",
-    "createNewInstead": "Maak in plaats daarvan een nieuw account aan",
-    "migrateAccount": "Account migreren",
-    "importExternalWallet": "Externe portefeuille importeren",
-    "migrateIntentHint": "Meld je aan met een van de onderstaande opties. Als het overeenkomt met een eerder DeHub-account, breng je de portemonnee, gebruikersnaam en het saldo over.",
-    "importIntentHint": "Meld je aan met een van de onderstaande opties en plak vervolgens de herstelzin of privésleutel van de portefeuille die je wilt gebruiken.",
     "unlockBiometricContinue": "Ontgrendel je portemonnee met je vingerafdruk of gezicht om door te gaan.",
     "unlockBiometricSignIn": "Ontgrendel je portemonnee met je vingerafdruk of gezicht om in te loggen.",
     "unlockPasswordContinue": "Voer het wachtwoord van je portemonnee in om door te",
@@ -1622,6 +1614,14 @@
     "migrateUnmatchedDetail": "Er bestaat geen profiel op dit portefeuilleadres. Als je weer aan het inloggen was, ga dan terug en gebruik in plaats daarvan de login waarmee je je hebt aangemeld.",
     "migrateGoBack": "Ga terug",
     "migrateContinueAnyway": "Maak toch een nieuw account aan",
+    "migrateNoOldAccount": "Er is geen eerdere DeHub-account op deze login, dus er is niets om over te brengen. Maak in plaats daarvan een nieuw account aan.",
+    "migrateInstead": "Breng in plaats daarvan het oude account over",
+    "setUpNewAccount": "Een nieuw account aanmaken",
+    "createNewInstead": "Maak in plaats daarvan een nieuw account aan",
+    "migrateAccount": "Account migreren",
+    "importExternalWallet": "Externe portefeuille importeren",
+    "migrateIntentHint": "Meld je aan met een van de onderstaande opties. Als het overeenkomt met een eerder DeHub-account, breng je de portemonnee, gebruikersnaam en het saldo over.",
+    "importIntentHint": "Meld je aan met een van de onderstaande opties en plak vervolgens de herstelzin of privésleutel van de portefeuille die je wilt gebruiken.",
     "title": "Inloggen",
     "addProfileTitle": "Profiel toevoegen",
     "continueEmail": "Doorgaan met e-mail",
@@ -2318,13 +2318,13 @@
       "thisYear": "Dit jaar",
       "allTime": "Alle tijd",
       "newMembers": "Nieuwe leden",
+      "viewMembers": "Leden bekijken",
+      "openNewMembers": "De lijst met nieuwe leden openen",
       "chartMembers": "Leden in de tijd",
       "chartActive": "Actieve mensen",
       "growth": "+{{percent}}% deze maand",
       "growthTerm": "Groei",
-      "recordingSince": "vastgelegd sinds {{date}}",
-      "viewMembers": "Leden bekijken",
-      "openNewMembers": "De lijst met nieuwe leden openen"
+      "recordingSince": "vastgelegd sinds {{date}}"
     },
     "title": "Statistieken",
     "subtitle": "Realtime opensource-inzicht",
@@ -2509,7 +2509,6 @@
     "noStages": "Geen Stage van jou is live of gepland op dit moment.",
     "noFlaresLeft": "Geen Signal Flares meer deze cyclus",
     "spentFor": "{{power}} loopt voor {{minutes}} minuten",
-    "goldenHourStarted": "Golden Hour loopt voor {{minutes}} minuten — alles wat je nu post telt dubbel",
     "teamUp": {
       "title": "Samenwerken",
       "subtitle": "Combineer de kracht van je portemonnee met maximaal zeven anderen. Iedereen draagt de badge die jouw totaal ontgrendelt.",
@@ -2570,7 +2569,8 @@
       "updated": "Team bijgewerkt",
       "updateFailed": "Kon dat team niet bijwerken",
       "openToEveryone": "Team up staat open voor elk account; privéteams keuren goed wie erbij komt."
-    }
+    },
+    "goldenHourStarted": "Golden Hour loopt voor {{minutes}} minuten — alles wat je nu post telt dubbel"
   },
   "work": {
     "budgetExhausted": "Het budget van deze premie is volledig vergeven.",
@@ -5334,7 +5334,26 @@
     "reviewDescriptionPlaceholder": "Zeg iets over deze post (optioneel)",
     "reviewLiveWarning": "Die link is een livestream. Wacht tot het eindigt en importeer in plaats daarvan de opname.",
     "reviewCancel": "Annuleren",
-    "reviewConfirm": "Importeren"
+    "reviewConfirm": "Importeren",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podcast RSS-feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Feed ophalen",
+      "fetching": "Feed wordt opgehaald...",
+      "showBy": "Door {{author}}",
+      "episodes": "{{count}} afleveringen",
+      "selectAll": "Alles selecteren",
+      "alreadyImported": "Reeds geïmporteerd",
+      "ownership": "Ik ben eigenaar van deze inhoud of heb toestemming van de houder van de rechten om deze op DeHub te publiceren.",
+      "importSelected": "Importeer {{count}} afleveringen",
+      "importing": "Importeren...",
+      "done": "In wachtrij",
+      "failed": "Mislukt",
+      "emptyFeed": "We konden geen afleveringen in die feed vinden.",
+      "badFeed": "Die link ziet er niet uit als een podcastfeed.",
+      "tooMany": "Importeer maximaal 20 afleveringen per keer."
+    }
   },
   "banned": {
     "title": "Je account is geblokkeerd",

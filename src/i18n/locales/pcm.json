@@ -1,50 +1,4 @@
 {
-  "live": {
-    "chatJoined": "don join",
-    "chatSentGift": "don send",
-    "progress": {
-      "title": "Streamer level",
-      "level": "Level {{level}}",
-      "xp": "{{xp}} XP",
-      "streak": "{{count}} week streak",
-      "bestStreak": "Best streak {{count}} weeks",
-      "hours": "{{hours}} qualifying hours",
-      "minutes": "{{count}} minutes",
-      "viewers": "{{count}} viewers",
-      "viewCards": "View cards",
-      "cardsTitle": "Collectible cards",
-      "locked": "Locked",
-      "earnedOn": "Earned {{date}}",
-      "recentTitle": "Recent streams",
-      "card": {
-        "first-light": {
-          "name": "First light"
-        },
-        "marathon": {
-          "name": "Marathon"
-        },
-        "night-owl": {
-          "name": "Night owl"
-        },
-        "regular": {
-          "name": "Regular"
-        },
-        "iron-streak": {
-          "name": "Iron streak"
-        },
-        "crowd": {
-          "name": "Crowd"
-        },
-        "century": {
-          "name": "Century"
-        },
-        "legend": {
-          "name": "Legend",
-          "hint": "Reach level ten."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Free transaction don pause for our side, no be your wallet get problem. Abeg try again small time.",
     "gasSponsorshipFailed": "We no fit pay for dis transaction. Abeg try again small time."
@@ -151,6 +105,8 @@
     "bio": "Bio",
     "bioPlaceholder": "Yarn us small about yourself...",
     "socialLinks": "Social Link Dem",
+    "socialFollowers": "Followers on {{platform}}",
+    "socialFollowersPlaceholder": "e.g. 12500",
     "profileUpdated": "Profile don update well well",
     "failedLoadProfile": "E no fit load profile data",
     "imageTooLarge5": "Image must dey less than 5MB",
@@ -411,9 +367,7 @@
       "rotate": "Reset stream key",
       "serverCopied": "Server copied",
       "keyCopied": "Stream key copied"
-    },
-    "socialFollowers": "Followers on {{platform}}",
-    "socialFollowersPlaceholder": "e.g. 12500"
+    }
   },
   "common": {
     "save": "Save Am",
@@ -1139,10 +1093,6 @@
     "returnHome": "Go back Home"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Dis post no dey available",
-      "commentUnavailable": "Dis comment no dey available again"
-    },
     "back": "Back",
     "usernameAvailable": "Username dey available!",
     "signUpToClaim": "Sign up today make you claim am",
@@ -1158,10 +1108,14 @@
     "followers": "Followers",
     "following": "Following",
     "joined": "Joined",
-    "loginDescription": "Log in make you fit see and manage your profile.",
     "reach": {
       "total": "Total reach",
       "dehubFollowers": "DeHub followers"
+    },
+    "loginDescription": "Log in make you fit see and manage your profile.",
+    "replyThread": {
+      "postUnavailable": "Dis post no dey available",
+      "commentUnavailable": "Dis comment no dey available again"
     },
     "tabs": {
       "playlists": "Playlists"
@@ -1275,6 +1229,8 @@
     "failedSubmit": "E no fit submit application. Try again."
   },
   "loginModal": {
+    "welcomeBackWaiting": "waiting on it",
+    "migrateGoBack": "Go back",
     "migrateNoOldAccount": "There is no earlier DeHub account on this login, so there is nothing to bring over. Set up a new account instead.",
     "migrateInstead": "Bring over the old account instead",
     "setUpNewAccount": "Set up a new account",
@@ -1283,8 +1239,6 @@
     "importExternalWallet": "Import external wallet",
     "migrateIntentHint": "Sign in with any option below. If it matches an earlier DeHub account you will bring over its wallet, username and balance.",
     "importIntentHint": "Sign in with any option below, then paste the recovery phrase or private key of the wallet you want to use.",
-    "welcomeBackWaiting": "waiting on it",
-    "migrateGoBack": "Go back",
     "title": "Log in",
     "addProfileTitle": "Add profile",
     "continueEmail": "Continue with Email",
@@ -2141,6 +2095,52 @@
     "blur": "Blur",
     "pixelate": "Pixelate"
   },
+  "live": {
+    "chatJoined": "don join",
+    "chatSentGift": "don send",
+    "progress": {
+      "title": "Streamer level",
+      "level": "Level {{level}}",
+      "xp": "{{xp}} XP",
+      "streak": "{{count}} week streak",
+      "bestStreak": "Best streak {{count}} weeks",
+      "hours": "{{hours}} qualifying hours",
+      "minutes": "{{count}} minutes",
+      "viewers": "{{count}} viewers",
+      "viewCards": "View cards",
+      "cardsTitle": "Collectible cards",
+      "locked": "Locked",
+      "earnedOn": "Earned {{date}}",
+      "recentTitle": "Recent streams",
+      "card": {
+        "first-light": {
+          "name": "First light"
+        },
+        "marathon": {
+          "name": "Marathon"
+        },
+        "night-owl": {
+          "name": "Night owl"
+        },
+        "regular": {
+          "name": "Regular"
+        },
+        "iron-streak": {
+          "name": "Iron streak"
+        },
+        "crowd": {
+          "name": "Crowd"
+        },
+        "century": {
+          "name": "Century"
+        },
+        "legend": {
+          "name": "Legend",
+          "hint": "Reach level ten."
+        }
+      }
+    }
+  },
   "goLive": {
     "goLive": "Go Live",
     "youAreLive": "You're Live",
@@ -2417,7 +2417,22 @@
     "reviewDescriptionPlaceholder": "Say something about this post (optional)",
     "reviewLiveWarning": "That link is a live stream. Wait until it ends and import the recording instead.",
     "reviewCancel": "Cancel",
-    "reviewConfirm": "Import"
+    "reviewConfirm": "Import",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podcast RSS feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Fetch feed",
+      "fetching": "Fetching feed…",
+      "showBy": "By {{author}}",
+      "episodes": "{{count}} episodes",
+      "selectAll": "Select all",
+      "alreadyImported": "Already imported",
+      "importSelected": "Import {{count}} episodes",
+      "importing": "Importing…",
+      "done": "Queued",
+      "failed": "Failed"
+    }
   },
   "banned": {
     "reason": "Reason: {{reason}}"

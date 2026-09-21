@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "ҳамроҳ шуд",
-    "chatSentGift": "фиристод",
-    "progress": {
-      "title": "Сатҳи стриймер",
-      "level": "Сатҳи {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} дақиқаи дигар барои расидан ба сатҳи {{level}}",
-      "rule": "Танҳо ҷараёнҳое, ки даҳ дақиқа ё бештар давом мекунанд ва ҳадди аққал як тамошобин доранд, ба сатҳи шумо ҳисоб карда мешаванд.",
-      "streak": "{{count}} ҳафтаи пайдарпай",
-      "bestStreak": "Беҳтарин силсила {{count}} ҳафта",
-      "hours": "{{hours}} соати мувофиқ",
-      "minutes": "{{count}} дақиқа",
-      "viewers": "{{count}} тамошобин",
-      "viewCards": "Кортҳои намоишӣ",
-      "cardsTitle": "Кортҳои ҷамъшаванда",
-      "locked": "Қулфшуда",
-      "earnedOn": "Ба даст оварда шудааст {{date}}",
-      "recentTitle": "Ҷараёнҳои охирин",
-      "notCounted": "Ҳисоб нашуд",
-      "noStreams": "Барои оғози ба даст овардани XP, зиндагӣ кунед.",
-      "card": {
-        "first-light": {
-          "name": "Нахустин нур",
-          "hint": "Аввалин ҷараёни худро, ки ҳисоб мешавад, ба итмом расонед."
-        },
-        "marathon": {
-          "name": "Марафон",
-          "hint": "Дар як сессия ду соат ҷараён диҳед."
-        },
-        "night-owl": {
-          "name": "Шабпарак",
-          "hint": "Ҷараёнро дар байни нисфи шаб ва панҷи субҳ ба итмом расонед."
-        },
-        "regular": {
-          "name": "Мунтазам",
-          "hint": "Дар чор ҳафтаи пайдарпай ҷараён диҳед."
-        },
-        "iron-streak": {
-          "name": "Силсилаи оҳанин",
-          "hint": "Дар дувоздаҳ ҳафтаи пайдарпай ҷараён диҳед."
-        },
-        "crowd": {
-          "name": "Издиҳом",
-          "hint": "Ҳамзамон даҳ нафар тамошобинро тамошо кунед."
-        },
-        "century": {
-          "name": "Садсола",
-          "hint": "Ба сад соати мувофиқ дар эфир бирасед."
-        },
-        "legend": {
-          "name": "Афсона",
-          "hint": "Ба даҳум дараҷа бирасед."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Муомилоти ройгон аз ҷониби мо боздошта шудааст, на дар ҳамёни шумо. Лутфан пас аз чанде боз кӯшиш кунед.",
     "gasSponsorshipFailed": "Хароҷоти ин муомиларо пардохт карда натавонистем. Лутфан пас аз чанде кӯшиш кунед."
@@ -162,6 +105,9 @@
     "bio": "Дар бораи ман",
     "bioPlaceholder": "Дар бораи худ нақл кунед...",
     "socialLinks": "Шабакаҳои иҷтимоӣ",
+    "socialFollowers": "Пайравони {{platform}}",
+    "socialFollowersHint": "Ipinapakita sa iyong profile bilang bahagi ng iyong kabuuang pag Рақамро худатон ворид кунед — мо онро аз платформа намехонем.",
+    "socialFollowersPlaceholder": "масалан, 12500",
     "profileUpdated": "Профил бомуваффақият навсозӣ шуд",
     "failedLoadProfile": "Боркунии маълумоти профил ноком шуд",
     "imageTooLarge5": "Тасвир бояд аз 5MB хурдтар бошад",
@@ -495,10 +441,7 @@
       "unavailable": "Ҷараён аз кодер дар айни замон дар суратҳисоби шумо дастрас нест.",
       "serverCopied": "Сервер нусхабардорӣ шудааст",
       "keyCopied": "Калиди ҷараён нусхабардорӣ шудааст"
-    },
-    "socialFollowers": "Пайравони {{platform}}",
-    "socialFollowersHint": "Ipinapakita sa iyong profile bilang bahagi ng iyong kabuuang pag Рақамро худатон ворид кунед — мо онро аз платформа намехонем.",
-    "socialFollowersPlaceholder": "масалан, 12500"
+    }
   },
   "common": {
     "save": "Сабт",
@@ -1270,10 +1213,6 @@
     "returnHome": "Бозгашт ба асосӣ"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Hindi magagamit ang post na ito",
-      "commentUnavailable": "Hindi na magagamit ang komentong ito"
-    },
     "back": "Бозгашт",
     "usernameAvailable": "Номи корбар озод аст!",
     "signUpToClaim": "Сабтином кунед то гиред",
@@ -1289,12 +1228,16 @@
     "followers": "Пайравон",
     "following": "Пайравишаванда",
     "joined": "Ҳамроҳ шуд",
-    "loginDescription": "Барои дидан ва идоракунии профили худ ворид шавед.",
     "reach": {
       "total": "Дастрасии умумӣ",
       "breakdownTitle": "НОҲИЯИ ПАНҶ МЕГӮЯ",
       "dehubFollowers": "Пайравони DeHub",
       "selfReported": "Ang mga sukatan ng Social Follower ay nagpasok ng lumikha."
+    },
+    "loginDescription": "Барои дидан ва идоракунии профили худ ворид шавед.",
+    "replyThread": {
+      "postUnavailable": "Hindi magagamit ang post na ito",
+      "commentUnavailable": "Hindi na magagamit ang komentong ito"
     },
     "tabs": {
       "playlists": "Феҳристҳои пахш"
@@ -1311,6 +1254,7 @@
     "amountUsd": "Маблағ (USD)",
     "customAmount": "Маблағи дилхоҳ",
     "minPurchase": "Ҳадди ақали харид $5",
+    "minDhbPurchase": "Хариди ҳадди ақали DHB $ 0.50 аст",
     "youPay": "Шумо мепардозед",
     "youReceive": "Шумо мегиред (тахминан)",
     "feeNote": "Комиссияи корт ~3.6% ва захирае шабакаи 0.5% аз ин хориҷ мешавад. Захира ба шумо ҳамчун ETH барои газ фиристода мешавад.",
@@ -1344,7 +1288,6 @@
     "badgeDiscount": "Соҳиби {{tier}} — {{percent}}% тахфиф",
     "otherTokens": "Токенҳои дигар",
     "otherTokensDesc": "Бо корти худ дар Base ETH ё USDC харед",
-    "minDhbPurchase": "Хариди ҳадди ақали DHB $ 0.50 аст",
     "shareToFeed": "Ibahagi sa aking feed",
     "sharePostTemplate": "{{amount}} $DHB sa aking stack sa DeHub. Бунёд бо ҷомеа. #DeHub #DHB",
     "success": {
@@ -1420,14 +1363,6 @@
     "failedSubmit": "Фиристодани дархост ноком шуд. Дубора кӯшиш кунед."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Дар ин воридшавӣ ҳисоби қаблии DeHub вуҷуд надорад, аз ин рӯ чизе барои баргардонидан нест. Ба ҷои ин, ҳисоби нав таъсис диҳед.",
-    "migrateInstead": "Ба ҷои ин, ҳисоби кӯҳнаро баргардонед",
-    "setUpNewAccount": "Ҳисоби нав таъсис диҳед",
-    "createNewInstead": "Ба ҷои ин, ҳисоби нав эҷод кунед",
-    "migrateAccount": "Ҳисобро муҳоҷир кунед",
-    "importExternalWallet": "Ҳамёни берунаро ворид кунед",
-    "migrateIntentHint": "Бо яке аз имконоти дар поён овардашуда ворид шавед. Агар он бо ҳисоби қаблии DeHub мувофиқат кунад, шумо ҳамёни он, номи корбарӣ ва ҳисоби онро баргардонида мегиред.",
-    "importIntentHint": "Бо яке аз имконоти дар поён овардашуда ворид шавед, пас калиди барқароркунӣ ё калиди хусусии ҳамёнеро, ки мехоҳед истифода баред, часбонед.",
     "unlockBiometricContinue": "Кушодани ҳамён бо изи ангуштон ё барои идома додан.",
     "unlockBiometricSignIn": "Кушодани ҳамён бо ангуштон ё рӯ ба рӯ барои ворид шудан.",
     "unlockPasswordContinue": "Барои идома додан гузарвожаи ҳамёни худро ворид кунед.",
@@ -1439,6 +1374,14 @@
     "migrateUnmatchedDetail": "Ягон профил дар ин суроғаи ҳамён вуҷуд надорад. Kung naka-sign in ka na, bumalik at gamitin ang pag-login na iyong naka-sign up sa halip.",
     "migrateGoBack": "Бозгашт",
     "migrateContinueAnyway": "Эҷод кардани ҳисоби нав ба ҳар ҳол",
+    "migrateNoOldAccount": "Дар ин воридшавӣ ҳисоби қаблии DeHub вуҷуд надорад, аз ин рӯ чизе барои баргардонидан нест. Ба ҷои ин, ҳисоби нав таъсис диҳед.",
+    "migrateInstead": "Ба ҷои ин, ҳисоби кӯҳнаро баргардонед",
+    "setUpNewAccount": "Ҳисоби нав таъсис диҳед",
+    "createNewInstead": "Ба ҷои ин, ҳисоби нав эҷод кунед",
+    "migrateAccount": "Ҳисобро муҳоҷир кунед",
+    "importExternalWallet": "Ҳамёни берунаро ворид кунед",
+    "migrateIntentHint": "Бо яке аз имконоти дар поён овардашуда ворид шавед. Агар он бо ҳисоби қаблии DeHub мувофиқат кунад, шумо ҳамёни он, номи корбарӣ ва ҳисоби онро баргардонида мегиред.",
+    "importIntentHint": "Бо яке аз имконоти дар поён овардашуда ворид шавед, пас калиди барқароркунӣ ё калиди хусусии ҳамёнеро, ки мехоҳед истифода баред, часбонед.",
     "title": "Ворид шудан",
     "addProfileTitle": "Профил илова кардан",
     "continueEmail": "Идома бо почта",
@@ -2324,7 +2267,6 @@
     "noStages": "Ҳеҷ саҳнаи шумо ҳоло зинда ё дар ҷадвал нест.",
     "noFlaresLeft": "Дар ин давра дигар \"Сигналҳои равшанӣ\" боқӣ намондаанд.",
     "spentFor": "{{power}} давоми {{minutes}} дақиқа",
-    "goldenHourStarted": "Golden Hour барои {{minutes}} дақиқа давом мекунад — ҳама чизе, ки шумо ҳозир мегузоред, ду баробар ҳисоб мешавад",
     "teamUp": {
       "title": "Ҳамроҳ шавед",
       "subtitle": "Қувваи ҳамёни худро бо то ҳафт нафари дигар муттаҳид кунед. Ҳар кас нишони шуморо мепӯшад, ки маҷмӯи шуморо мекушояд.",
@@ -2385,7 +2327,8 @@
       "updated": "Гурӯҳ навсозӣ шуд",
       "updateFailed": "Натавонист ин гурӯҳро навсозӣ кунад",
       "openToEveryone": "Team up ба ҳар як ҳисоб дастрас аст; гурӯҳҳои хусусӣ қабул мекунанд, ки кӣ ҳамроҳ мешавад."
-    }
+    },
+    "goldenHourStarted": "Golden Hour барои {{minutes}} дақиқа давом мекунад — ҳама чизе, ки шумо ҳозир мегузоред, ду баробар ҳисоб мешавад"
   },
   "work": {
     "budgetExhausted": "Буҷаи ин мукофот пурра тақсим шудааст."
@@ -2412,6 +2355,63 @@
     "neon": "Неон",
     "blur": "Хирагӣ",
     "pixelate": "Пиксел"
+  },
+  "live": {
+    "chatJoined": "ҳамроҳ шуд",
+    "chatSentGift": "фиристод",
+    "progress": {
+      "title": "Сатҳи стриймер",
+      "level": "Сатҳи {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} дақиқаи дигар барои расидан ба сатҳи {{level}}",
+      "rule": "Танҳо ҷараёнҳое, ки даҳ дақиқа ё бештар давом мекунанд ва ҳадди аққал як тамошобин доранд, ба сатҳи шумо ҳисоб карда мешаванд.",
+      "streak": "{{count}} ҳафтаи пайдарпай",
+      "bestStreak": "Беҳтарин силсила {{count}} ҳафта",
+      "hours": "{{hours}} соати мувофиқ",
+      "minutes": "{{count}} дақиқа",
+      "viewers": "{{count}} тамошобин",
+      "viewCards": "Кортҳои намоишӣ",
+      "cardsTitle": "Кортҳои ҷамъшаванда",
+      "locked": "Қулфшуда",
+      "earnedOn": "Ба даст оварда шудааст {{date}}",
+      "recentTitle": "Ҷараёнҳои охирин",
+      "notCounted": "Ҳисоб нашуд",
+      "noStreams": "Барои оғози ба даст овардани XP, зиндагӣ кунед.",
+      "card": {
+        "first-light": {
+          "name": "Нахустин нур",
+          "hint": "Аввалин ҷараёни худро, ки ҳисоб мешавад, ба итмом расонед."
+        },
+        "marathon": {
+          "name": "Марафон",
+          "hint": "Дар як сессия ду соат ҷараён диҳед."
+        },
+        "night-owl": {
+          "name": "Шабпарак",
+          "hint": "Ҷараёнро дар байни нисфи шаб ва панҷи субҳ ба итмом расонед."
+        },
+        "regular": {
+          "name": "Мунтазам",
+          "hint": "Дар чор ҳафтаи пайдарпай ҷараён диҳед."
+        },
+        "iron-streak": {
+          "name": "Силсилаи оҳанин",
+          "hint": "Дар дувоздаҳ ҳафтаи пайдарпай ҷараён диҳед."
+        },
+        "crowd": {
+          "name": "Издиҳом",
+          "hint": "Ҳамзамон даҳ нафар тамошобинро тамошо кунед."
+        },
+        "century": {
+          "name": "Садсола",
+          "hint": "Ба сад соати мувофиқ дар эфир бирасед."
+        },
+        "legend": {
+          "name": "Афсона",
+          "hint": "Ба даҳум дараҷа бирасед."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Ба Эфир Рафтан",
@@ -2841,7 +2841,25 @@
     "reviewDescriptionPlaceholder": "Дар бораи ин пост чизе бигӯед (ихтиёрӣ)",
     "reviewLiveWarning": "Ang link na ito ay isang live stream. Интизор шавед, то он ба итмом расад ва сабтро ба ҷои он ворид кунед.",
     "reviewCancel": "Бекор кардан",
-    "reviewConfirm": "Воридот"
+    "reviewConfirm": "Воридот",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podcast RSS feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Fetch feed",
+      "fetching": "Кушодани ахборот...",
+      "showBy": "{{author}}",
+      "episodes": "{{count}} info: whatsthis",
+      "selectAll": "Pumili ng lahat",
+      "alreadyImported": "Hindi nai-import",
+      "ownership": "Nag-aari ako ang nilalaman na ito, o may pahintulot ng may-ari upang i-publish ito sa DeHub.",
+      "importing": "Воридот...",
+      "done": "Дар навбат",
+      "failed": "Хатогӣ",
+      "emptyFeed": "Hindi namin mahanap ang anumang mga episodes sa feed na ito.",
+      "badFeed": "Ang link na ito ay hindi tulad ng feed ng podcast.",
+      "tooMany": "Mag-import ng hanggang 20 na mga episod sa isang oras."
+    }
   },
   "banned": {
     "title": "Ang iyong account ay hindi maaaring",

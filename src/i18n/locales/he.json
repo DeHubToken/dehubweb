@@ -105,6 +105,9 @@
     "bio": "ביוגרפיה",
     "bioPlaceholder": "ספר על עצמך...",
     "socialLinks": "קישורים חברתיים",
+    "socialFollowers": "עוקבים ב -{{platform}}",
+    "socialFollowersHint": "מוצג בפרופיל שלך כחלק מהישג ידך הכולל. הזן את המספר בעצמך — אנחנו לא קוראים אותו מהפלטפורמה.",
+    "socialFollowersPlaceholder": "לדוגמה, 12500",
     "profileUpdated": "הפרופיל עודכן בהצלחה",
     "failedLoadProfile": "טעינת נתוני הפרופיל נכשלה",
     "imageTooLarge5": "התמונה חייבת להיות קטנה מ-5MB",
@@ -453,10 +456,7 @@
       "unavailable": "שידור ממקודד אינו זמין בחשבונך כרגע.",
       "serverCopied": "השרת הועתק",
       "keyCopied": "מפתח הזרם הועתק"
-    },
-    "socialFollowers": "עוקבים ב -{{platform}}",
-    "socialFollowersHint": "מוצג בפרופיל שלך כחלק מהישג ידך הכולל. הזן את המספר בעצמך — אנחנו לא קוראים אותו מהפלטפורמה.",
-    "socialFollowersPlaceholder": "לדוגמה, 12500"
+    }
   },
   "common": {
     "save": "שמור",
@@ -1230,10 +1230,6 @@
     "returnHome": "חזור לדף הבית"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "הפוסט הזה לא זמין",
-      "commentUnavailable": "התגובה הזו כבר לא זמינה"
-    },
     "back": "חזור",
     "usernameAvailable": "שם המשתמש זמין!",
     "signUpToClaim": "הירשם כדי לתפוס",
@@ -1249,12 +1245,16 @@
     "followers": "עוקבים",
     "following": "עוקב",
     "joined": "הצטרף",
-    "loginDescription": "התחבר כדי לצפות ולנהל את הפרופיל שלך.",
     "reach": {
       "total": "טווח הגעה כולל",
       "breakdownTitle": "מאיפה ההגעה הזו מגיעה?",
       "dehubFollowers": "חסידי DeHub",
       "selfReported": "מספר העוקבים החברתיים מוזן על ידי היוצר."
+    },
+    "loginDescription": "התחבר כדי לצפות ולנהל את הפרופיל שלך.",
+    "replyThread": {
+      "postUnavailable": "הפוסט הזה לא זמין",
+      "commentUnavailable": "התגובה הזו כבר לא זמינה"
     },
     "tabs": {
       "playlists": "פלייליסטים"
@@ -1291,6 +1291,7 @@
     "amountUsd": "סכום (דולרים)",
     "customAmount": "סכום מותאם אישית",
     "minPurchase": "רכישה מינימלית $5",
+    "minDhbPurchase": "הרכישה המינימלית של DHB היא 0.50 $",
     "youPay": "אתה משלם",
     "youReceive": "תקבל (בערך)",
     "feeNote": "עמלת כרטיס ~3.6% והשמורה של רשת בגודל 0.5% מנוכים מזה. השמורה נשלחת אליך כ-ETH לגז.",
@@ -1324,7 +1325,6 @@
     "badgeDiscount": "מחזיק {{tier}} — {{percent}}% הנחה",
     "otherTokens": "טוקנים אחרים",
     "otherTokensDesc": "קנה ETH או USDC ב-Base עם הכרטיס שלך",
-    "minDhbPurchase": "הרכישה המינימלית של DHB היא 0.50 $",
     "shareToFeed": "שתף בפיד שלי",
     "sharePostTemplate": "בדיוק הוספתי {{amount}} $DHB לערימה שלי ב - DeHub. בונים יחד עם הקהילה. #DeHub #DHB",
     "success": {
@@ -1406,14 +1406,6 @@
     "email": "אימייל"
   },
   "loginModal": {
-    "migrateNoOldAccount": "אין חשבון DeHub קודם בכניסה זו, לכן אין מה להעביר. הגדר חשבון חדש במקום זאת.",
-    "migrateInstead": "העבר את החשבון הישן במקום זאת",
-    "setUpNewAccount": "הגדר חשבון חדש",
-    "createNewInstead": "צור חשבון חדש במקום זאת",
-    "migrateAccount": "העבר חשבון",
-    "importExternalWallet": "ייבא ארנק חיצוני",
-    "migrateIntentHint": "התחבר עם כל אפשרות למטה. אם היא תואמת לחשבון DeHub קודם, תעביר את הארנק, שם המשתמש והיתרה שלו.",
-    "importIntentHint": "התחבר עם כל אפשרות למטה, ואז הדבק את ביטוי השחזור או המפתח הפרטי של הארנק שברצונך להשתמש בו.",
     "unlockBiometricContinue": "כדי להמשיך, יש לשחרר את נעילת הארנק באמצעות טביעת האצבע או הפנים.",
     "unlockBiometricSignIn": "בטלו את נעילת הארנק באמצעות טביעת האצבע או הפנים שלכם כדי להיכנס.",
     "unlockPasswordContinue": "יש להזין את סיסמת הארנק שלך כדי להמשיך.",
@@ -1426,6 +1418,14 @@
     "migrateUnmatchedDetail": "לא קיים פרופיל בכתובת ארנק זו. אם התחברת שוב, יש לחזור ולהשתמש בהתחברות שאיתה נרשמת במקום זאת.",
     "migrateGoBack": "חזרה",
     "migrateContinueAnyway": "צור חשבון חדש בכל זאת",
+    "migrateNoOldAccount": "אין חשבון DeHub קודם בכניסה זו, לכן אין מה להעביר. הגדר חשבון חדש במקום זאת.",
+    "migrateInstead": "העבר את החשבון הישן במקום זאת",
+    "setUpNewAccount": "הגדר חשבון חדש",
+    "createNewInstead": "צור חשבון חדש במקום זאת",
+    "migrateAccount": "העבר חשבון",
+    "importExternalWallet": "ייבא ארנק חיצוני",
+    "migrateIntentHint": "התחבר עם כל אפשרות למטה. אם היא תואמת לחשבון DeHub קודם, תעביר את הארנק, שם המשתמש והיתרה שלו.",
+    "importIntentHint": "התחבר עם כל אפשרות למטה, ואז הדבק את ביטוי השחזור או המפתח הפרטי של הארנק שברצונך להשתמש בו.",
     "title": "התחבר",
     "addProfileTitle": "הוספת פרופיל",
     "continueEmail": "המשך עם אימייל",
@@ -2280,7 +2280,6 @@
     "noStages": "אין במה פעילה או מתוזמנת שלך כרגע.",
     "noFlaresLeft": "לא נותרו הבזקי איתות במחזור זה",
     "spentFor": "{{power}} רץ במשך {{minutes}} דקות",
-    "goldenHourStarted": "Golden Hour רץ במשך {{minutes}} דקות — כל מה שתפרסם עכשיו נחשב כפול",
     "teamUp": {
       "title": "הצטרפו לקבוצה",
       "subtitle": "שלבו את כוח הארנק עם עד שבעה אנשים נוספים. כולם עונדים את התג, והסכום הכולל שלכם נפתח.",
@@ -2341,7 +2340,8 @@
       "updated": "הצוות עודכן",
       "updateFailed": "לא ניתן היה לעדכן צוות זה",
       "openToEveryone": "Team up פתוח לכל חשבון; צוותים פרטיים מאשרים מי מצטרף."
-    }
+    },
+    "goldenHourStarted": "Golden Hour רץ במשך {{minutes}} דקות — כל מה שתפרסם עכשיו נחשב כפול"
   },
   "work": {
     "budgetExhausted": "התקציב של הפרס הזה נוצל במלואו.",
@@ -4884,7 +4884,25 @@
     "reviewDescriptionPlaceholder": "אפשר לכתוב משהו על הפוסט הזה (אופציונלי)",
     "reviewLiveWarning": "הקישור הזה הוא שידור חי. המתן עד שיסתיים וייבא את ההקלטה במקום זאת.",
     "reviewCancel": "ביטול",
-    "reviewConfirm": "ייבוא"
+    "reviewConfirm": "ייבוא",
+    "podcast": {
+      "tab": "פודקאסט",
+      "feedUrlLabel": "כתובת אתר להזנת RSS של פודקאסט",
+      "fetchFeed": "עדכן את הפיד",
+      "fetching": "מעדכן את הפיד...",
+      "showBy": "מאת {{author}}",
+      "episodes": "{{count}} פרקים",
+      "selectAll": "בחירה בכל הנכסים",
+      "alreadyImported": "כבר יובא",
+      "ownership": "התוכן הזה בבעלותי, או שיש לי אישור מבעל הזכויות לפרסם אותו ב - DeHub.",
+      "importSelected": "ייבוא {{count}} פרקים",
+      "importing": "מייבא…",
+      "done": "בתור",
+      "failed": "נכשל",
+      "emptyFeed": "לא הצלחנו למצוא פרקים בפיד הזה.",
+      "badFeed": "הקישור הזה לא נראה כמו הזנת פודקאסט.",
+      "tooMany": "ייבא עד 20 פרקים בכל פעם."
+    }
   },
   "banned": {
     "title": "החשבון שלך נחסם",

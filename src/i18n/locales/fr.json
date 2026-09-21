@@ -105,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Parlez-nous de vous...",
     "socialLinks": "Réseaux sociaux",
+    "socialFollowers": "Abonnés sur {{platform}}",
+    "socialFollowersHint": "Indiqué sur votre profil dans le cadre de votre portée totale. Saisissez le numéro vous-même — nous ne le lisons pas sur la plateforme.",
+    "socialFollowersPlaceholder": "par exemple 12500",
     "profileUpdated": "Profil mis à jour avec succès",
     "failedLoadProfile": "Échec du chargement du profil",
     "imageTooLarge5": "L'image doit faire moins de 5 Mo",
@@ -455,10 +458,7 @@
       "unavailable": "Le streaming depuis un encodeur n'est pas disponible sur votre compte pour le moment.",
       "serverCopied": "Serveur copié",
       "keyCopied": "Clé de flux copiée"
-    },
-    "socialFollowers": "Abonnés sur {{platform}}",
-    "socialFollowersHint": "Indiqué sur votre profil dans le cadre de votre portée totale. Saisissez le numéro vous-même — nous ne le lisons pas sur la plateforme.",
-    "socialFollowersPlaceholder": "par exemple 12500"
+    }
   },
   "common": {
     "save": "Enregistrer",
@@ -1237,10 +1237,6 @@
     "returnHome": "Retour à l'accueil"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Cet article n'est pas disponible",
-      "commentUnavailable": "Ce commentaire n'est plus disponible"
-    },
     "back": "Retour",
     "usernameAvailable": "Nom d'utilisateur disponible !",
     "signUpToClaim": "Inscrivez-vous pour le réclamer",
@@ -1256,12 +1252,16 @@
     "followers": "Abonnés",
     "following": "Abonnements",
     "joined": "Inscrit",
-    "loginDescription": "Connectez-vous pour voir et gérer votre profil.",
     "reach": {
       "total": "Portée totale",
       "breakdownTitle": "D'où vient cette portée",
       "dehubFollowers": "Abonnés DeHub",
       "selfReported": "Les comptes d'abonnés sociaux sont saisis par le créateur."
+    },
+    "loginDescription": "Connectez-vous pour voir et gérer votre profil.",
+    "replyThread": {
+      "postUnavailable": "Cet article n'est pas disponible",
+      "commentUnavailable": "Ce commentaire n'est plus disponible"
     },
     "tabs": {
       "playlists": "Playlists"
@@ -1298,6 +1298,7 @@
     "amountUsd": "Montant (USD)",
     "customAmount": "Montant personnalisé",
     "minPurchase": "Achat minimum de 5$",
+    "minDhbPurchase": "L'achat minimum de DHB est de 0,50 $",
     "youPay": "Vous payez",
     "youReceive": "Vous recevez (est.)",
     "feeNote": "Les frais de carte ~3,6% et une réserve réseau de 0,5% sont déduits. La réserve vous est envoyée en ETH pour les frais de gaz.",
@@ -1331,7 +1332,6 @@
     "badgeDiscount": "Détenteur {{tier}} — {{percent}} % de réduction",
     "otherTokens": "Autres jetons",
     "otherTokensDesc": "Achetez de l'ETH ou de l'USDC sur Base avec votre carte",
-    "minDhbPurchase": "L'achat minimum de DHB est de 0,50 $",
     "shareToFeed": "Partager sur mon flux",
     "sharePostTemplate": "Je viens d'ajouter {{amount}} $DHB à ma pile sur DeHub. Construire avec la communauté. #DeHub #DHB",
     "success": {
@@ -1413,14 +1413,6 @@
     "email": "Email"
   },
   "loginModal": {
-    "migrateNoOldAccount": "Il n'y a pas de compte DeHub antérieur sur cette connexion, il n'y a donc rien à apporter. Créez plutôt un nouveau compte.",
-    "migrateInstead": "Apportez plutôt l'ancien compte",
-    "setUpNewAccount": "Configurer un nouveau compte",
-    "createNewInstead": "Créez plutôt un nouveau compte",
-    "migrateAccount": "Migrer le compte",
-    "importExternalWallet": "Importer un portefeuille externe",
-    "migrateIntentHint": "Connectez-vous avec l'une des options ci-dessous. S'il correspond à un compte DeHub antérieur, vous apporterez son portefeuille, son nom d'utilisateur et son solde.",
-    "importIntentHint": "Connectez-vous avec l'une des options ci-dessous, puis collez la phrase de récupération ou la clé privée du portefeuille que vous souhaitez utiliser.",
     "unlockBiometricContinue": "Déverrouillez votre portefeuille avec votre empreinte digitale ou votre visage pour continuer.",
     "unlockBiometricSignIn": "Déverrouillez votre portefeuille avec votre empreinte digitale ou votre visage pour vous connecter.",
     "unlockPasswordContinue": "Saisissez le mot de passe de votre portefeuille pour continuer.",
@@ -1433,6 +1425,14 @@
     "migrateUnmatchedDetail": "Aucun profil n'existe à cette adresse de portefeuille. Si vous vous reconnectiez, revenez en arrière et utilisez plutôt la connexion avec laquelle vous vous êtes inscrit.",
     "migrateGoBack": "Revenir en arrière",
     "migrateContinueAnyway": "Créez quand même un nouveau compte",
+    "migrateNoOldAccount": "Il n'y a pas de compte DeHub antérieur sur cette connexion, il n'y a donc rien à apporter. Créez plutôt un nouveau compte.",
+    "migrateInstead": "Apportez plutôt l'ancien compte",
+    "setUpNewAccount": "Configurer un nouveau compte",
+    "createNewInstead": "Créez plutôt un nouveau compte",
+    "migrateAccount": "Migrer le compte",
+    "importExternalWallet": "Importer un portefeuille externe",
+    "migrateIntentHint": "Connectez-vous avec l'une des options ci-dessous. S'il correspond à un compte DeHub antérieur, vous apporterez son portefeuille, son nom d'utilisateur et son solde.",
+    "importIntentHint": "Connectez-vous avec l'une des options ci-dessous, puis collez la phrase de récupération ou la clé privée du portefeuille que vous souhaitez utiliser.",
     "title": "Se connecter",
     "addProfileTitle": "Ajouter un profil",
     "continueEmail": "Continuer avec Email",
@@ -2320,7 +2320,6 @@
     "noStages": "Aucune de vos Scènes n'est en direct ou programmée pour le moment.",
     "noFlaresLeft": "Plus de Feux de signalisation ce cycle-ci",
     "spentFor": "{{power}} en cours pour {{minutes}} minutes",
-    "goldenHourStarted": "Golden Hour en cours depuis {{minutes}} minutes — tout ce que vous publiez compte désormais double",
     "teamUp": {
       "title": "Faire équipe",
       "subtitle": "Combinez la puissance de votre portefeuille avec jusqu'à sept autres personnes. Chacun porte le badge que votre total débloque.",
@@ -2381,7 +2380,8 @@
       "updated": "Équipe mise à jour",
       "updateFailed": "Impossible de mettre à jour cette équipe",
       "openToEveryone": "Team up est ouvert à tous les comptes ; les équipes privées approuvent qui rejoint."
-    }
+    },
+    "goldenHourStarted": "Golden Hour en cours depuis {{minutes}} minutes — tout ce que vous publiez compte désormais double"
   },
   "work": {
     "budgetExhausted": "Le budget de cette prime est entièrement engagé.",
@@ -5183,7 +5183,26 @@
     "reviewDescriptionPlaceholder": "Dites quelque chose à propos de cet article (facultatif)",
     "reviewLiveWarning": "Ce lien est un flux en direct. Attendez qu'il se termine et importez l'enregistrement à la place.",
     "reviewCancel": "Annuler",
-    "reviewConfirm": "Importer"
+    "reviewConfirm": "Importer",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "URL du flux RSS du podcast",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Récupérer le flux",
+      "fetching": "Récupération du flux…",
+      "showBy": "Par {{author}}",
+      "episodes": "{{count}} épisodes",
+      "selectAll": "Tout sélectionner",
+      "alreadyImported": "Déjà importé",
+      "ownership": "Je suis propriétaire de ce contenu ou j'ai la permission du titulaire des droits de le publier sur DeHub.",
+      "importSelected": "Importer {{count}} épisodes",
+      "importing": "Importation en cours…",
+      "done": "En file d'attente",
+      "failed": "Échec",
+      "emptyFeed": "Nous n'avons trouvé aucun épisode dans ce flux.",
+      "badFeed": "Ce lien ne ressemble pas à un flux de podcast.",
+      "tooMany": "Importez jusqu'à 20 épisodes à la fois."
+    }
   },
   "banned": {
     "title": "Votre compte est banni",

@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "ተጸንበረ",
-    "chatSentGift": "ልኢኹ",
-    "progress": {
-      "title": "ደረጃታት ሓደስቲ ጸወቲ",
-      "level": "ደረጃ {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "ንኽትበጽሕ {{level}} ደረጃ {{minutes}} ደቒቕ ብቁዕ ግዜ",
-      "rule": "ነቲ ደረጃኻ ዝቘጸረሉ 10 ደቒቕ ወይ ካብኡ ንላዕሊ ዝቐጸለ  stream ጥራይ እዩ።",
-      "streak": "{{count}} ሰሙን ተኸታታሊ",
-      "bestStreak": "ዝበለጸ ተኸታታሊ {{count}} ሰሙናት",
-      "hours": "{{hours}} ብቁዕ ሰዓታት",
-      "minutes": "{{count}} ደቒቕ",
-      "viewers": "{{count}} ተመልከቲ",
-      "viewCards": "ካርድታት ርአይ",
-      "cardsTitle": "ካርድታት ሰብስቢ",
-      "locked": "ተዓጽዩ",
-      "earnedOn": "ዝረኸብካዮ {{date}}",
-      "recentTitle": "ቅርብቲ ጸወታታት",
-      "notCounted": "ኣይተቘጸረን",
-      "noStreams": "XP ንምርካብ ናይ live ጸወታ ጀምር።",
-      "card": {
-        "first-light": {
-          "name": "ቀዳመይቲ ብርሃን",
-          "hint": "ቀዳመይቲ ብቁዕ ጸወታኻ ዛዝም።"
-        },
-        "marathon": {
-          "name": "ማራቶን",
-          "hint": "ኣብ ሓደ ጸወታ 2 ሰዓት ጸወታ።"
-        },
-        "night-owl": {
-          "name": "መዓልቲ ጸልማት",
-          "hint": "መወዳእታ ጸወታ ኣብ መንጎ 12 ሰዓት ለይቲን 5 ሰዓት ጽባሕን።"
-        },
-        "regular": {
-          "name": "ወትራዊ",
-          "hint": "ኣብ 4 ሰሙናት ተኸታታሊ ጸወታ።"
-        },
-        "iron-streak": {
-          "name": "ብረታዊ ተኸታታሊ",
-          "hint": "ኣብ 12 ሰሙናት ተኸታታሊ ጸወታ።"
-        },
-        "crowd": {
-          "name": "ህዝቢ",
-          "hint": "ኣብ ሓደ እዋን 10 ሰባት ይርእዩ።"
-        },
-        "century": {
-          "name": "ሚእቲ",
-          "hint": "ኣብ ኣየር 100 ሰዓታት ብቕዓት ይረክብ ።"
-        },
-        "legend": {
-          "name": "ታሪኽ",
-          "hint": "ደረጃ 10 ይበጽሕ ።"
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "ናጻ ልውውጣት ብወገንና ጠጠው ኢሎም ኣለዉ፣ ኣብ ዋሌትካ ኣይኮነን። በጃኻ ድሕሪ ቁሩብ እንደገና ፈትን።",
     "gasSponsorshipFailed": "ወጻኢ እዚ ልውውጥ ክኽፈል ኣይተኻእለን። በጃኻ ድሕሪ ቁሩብ ፈትን።"
@@ -162,6 +105,9 @@
     "bio": "ሓጺር ገለጻ",
     "bioPlaceholder": "ብዛዕባ ነብስኻ ንገረና...",
     "socialLinks": "ማሕበራዊ ሊንክታት",
+    "socialFollowers": "ኣብ {{platform}}",
+    "socialFollowersHint": "ከም ኣካል ናይ ምሉእ ትሕዝቶኻ ኣብ መገለጺኻ ተዓጽዩ ። ነቲ ቁጽሪ ብገዛእ ርእስኻ ኣእቲኻ — ካብ መድረኽ ኣይንበብን ኢና ።",
+    "socialFollowersPlaceholder": "ንኣብነት ፡ 12500",
     "profileUpdated": "ፕሮፋይል ብዓወት ተመሓይሹ",
     "failedLoadProfile": "ዳታ ፕሮፋይል ምጽዓን ኣይተዓወተን",
     "imageTooLarge5": "ስእሊ ካብ 5MB ክትንእስ ኣለዋ",
@@ -493,10 +439,7 @@
       "unavailable": "ካብ ኢንኮደር ምምሕላፍ ኣብ ሂሳብኩም ሕጂ ኣይርከብን እዩ።",
       "serverCopied": "ናይ ኣገልጋሊ ቅዳሕ",
       "keyCopied": "ቁልፍ ቅዳሕ"
-    },
-    "socialFollowers": "ኣብ {{platform}}",
-    "socialFollowersHint": "ከም ኣካል ናይ ምሉእ ትሕዝቶኻ ኣብ መገለጺኻ ተዓጽዩ ። ነቲ ቁጽሪ ብገዛእ ርእስኻ ኣእቲኻ — ካብ መድረኽ ኣይንበብን ኢና ።",
-    "socialFollowersPlaceholder": "ንኣብነት ፡ 12500"
+    }
   },
   "common": {
     "save": "ዓቅብ",
@@ -1257,10 +1200,6 @@
     "returnHome": "ናብ ገዛ ተመለስ"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "እዚ ጽሑፍ እዚ ኣይተረኽበን ።",
-      "commentUnavailable": "እዚ ሓሳብ እዚ ሕጂ ኣይተረኽበን ።"
-    },
     "back": "ተመለስ",
     "usernameAvailable": "ስም ተጠቃሚ ኣሎ!",
     "signUpToClaim": "ንምሓዝ ሎሚ ተመዝገብ",
@@ -1276,12 +1215,16 @@
     "followers": "ተኸታተልቲ",
     "following": "ዝስዕብ",
     "joined": "ዝተጸንበረ",
-    "loginDescription": "ፕሮፋይልካ ንምርኣይን ንምምሕዳርን ብዓል።",
     "reach": {
       "total": "ምሉእ ምብጻሕ",
       "breakdownTitle": "እዚ ምብጻሕ እዚ ካበይ እዩ መጺኡ ፧",
       "dehubFollowers": "ተኸታተልቲ DeHub",
       "selfReported": "ማሕበራዊ ተኸታተልቲ ቆጸራታት ብፈጣሪ ይኣትዉ እዮም ።"
+    },
+    "loginDescription": "ፕሮፋይልካ ንምርኣይን ንምምሕዳርን ብዓል።",
+    "replyThread": {
+      "postUnavailable": "እዚ ጽሑፍ እዚ ኣይተረኽበን ።",
+      "commentUnavailable": "እዚ ሓሳብ እዚ ሕጂ ኣይተረኽበን ።"
     },
     "tabs": {
       "playlists": "ዝርዝር መጻወቲ"
@@ -1298,8 +1241,11 @@
     "amountUsd": "መጠን (USD)",
     "customAmount": "ብሕታዊ መጠን",
     "minPurchase": "ዝወሓደ ዕድጊ $5",
+    "minDhbPurchase": "ትሑት DHB መግዛእቲ $ 0.50",
     "youPay": "ትኸፍል",
     "youReceive": "ትቕበል (ግምት)",
+    "feeNote": "ናይ ካርድ ክፍሊት ~3.6% ከምኡ'ውን 0.5% ናይ መርበብ ውሕስነት ካብዚ ይወጽእ ። እቲ መዕቆቢ ከም ETH ንጋዝ ይልኣኽካ ።",
+    "statusAwaitingPayment": "ምሉእ ክፍሊት ኣብ ናይ ቼኮት ታብ...",
     "statusConfirming": "ክፍያ ለማረጋገጥ ይጠብቃል...",
     "statusPaidQueued": "ክፍያ ተቀብሏል። ለመላክ ተደርድሯል...",
     "statusPaidSending": "ክፍያ ተቀብሏል። ቶክንስ ወደ ዋሌትህ ይላካል...",
@@ -1329,9 +1275,6 @@
     "badgeDiscount": "ናይ {{tier}} ዋና — {{percent}}% ቅናሽ",
     "otherTokens": "ካልኦት ቶከናት",
     "otherTokensDesc": "ብካርድኻ ኣብ Base ETH ወይ USDC ግዛእ",
-    "minDhbPurchase": "ትሑት DHB መግዛእቲ $ 0.50",
-    "feeNote": "ናይ ካርድ ክፍሊት ~3.6% ከምኡ'ውን 0.5% ናይ መርበብ ውሕስነት ካብዚ ይወጽእ ። እቲ መዕቆቢ ከም ETH ንጋዝ ይልኣኽካ ።",
-    "statusAwaitingPayment": "ምሉእ ክፍሊት ኣብ ናይ ቼኮት ታብ...",
     "shareToFeed": "ኣብ መብልዕተይ ክካፈል እየ",
     "sharePostTemplate": "{{amount}} $ DHB ኣብ DeHub ኣብ ዝርከብ መደቀሲይ ኣክሊልካ ። ምስ ማሕበረሰብ ተዘራረብ ። #ደሆብ #DHB",
     "success": {
@@ -1408,14 +1351,6 @@
     "failedSubmit": "ምልክታ ምቕራብ ኣይተዓወተን። በጃኻ ዳግማይ ፈትን።"
   },
   "loginModal": {
-    "migrateNoOldAccount": "ኣብዚ መእተዊ እዚ ኣቐዲሙ DeHub መለያ ስለዘየለ ፡ ክመሓላለፍ ዝኽእል ነገር የለን ። ኣብ ክንዳኡስ ፡ ሓድሽ ሕሳብ ኣዳሉ ።",
-    "migrateInstead": "ነቲ ናይ ቀደም ሕሳብ ኣብ ክንዲ",
-    "setUpNewAccount": "ሓድሽ ሕሳብ ኣዳሉ",
-    "createNewInstead": "ኣብ ክንዳኡስ ፡ ሓድሽ ሕሳብ ፍጠር",
-    "migrateAccount": "ሕሳብ ስደድ",
-    "importExternalWallet": "ናይ ወጻኢ ቦርሳ ኣምጽእ",
-    "migrateIntentHint": "ምስ ዝኾነ ይኹን ኣብ ታሕቲ ዘሎ ኣማራጺ ክትኣቱ ትኽእል ኢኻ ። ምስ ናይ ቀደም DeHub መለያ እንተተኣሳሲሩ ፡ ነቲ ቦርሳ ፡ ስምን ሚዛንን ክትመልሶ ኢኻ ።",
-    "importIntentHint": "ምስ ዝኾነ ይኹን ኣብ ታሕቲ ዘሎ ኣማራጺ ኣቲኻ ፡ ነቲ ክትጥቀመሉ እትደሊ ናይ ምትዕርራይ ወይ ናይ ውልቀ-መላኺ ቁልፍ ጠውቕ ።",
     "unlockBiometricContinue": "ነቲ ቦርሳኻ ብኢድካ ወይ ብገጽካ ብምኽፋት ክትቅጽል ትኽእል ኢኻ ።",
     "unlockBiometricSignIn": "ነቲ ቦርሳኻ ብኢድካ ወይ ብኢድካ ክፉት ግበር ።",
     "unlockPasswordContinue": "ንምቕጻል ናይ ቦርሳ ፓስወርድካ ኣእቲኻ ።",
@@ -1428,6 +1363,14 @@
     "migrateUnmatchedDetail": "ኣብዚ ናይ ቦርሳ ኣድራሻ እዚ ዝኾነ መገለጺ የለን ። እንተ ተመሊስካ ፡ ነቲ እተፈረመሉ መእተዊ ተጠቐመሉ ።",
     "migrateGoBack": "ንድሕሪት ተመሊስካ",
     "migrateContinueAnyway": "ይኹን እምበር ፡ ሓድሽ ሕሳብ ፍጠር",
+    "migrateNoOldAccount": "ኣብዚ መእተዊ እዚ ኣቐዲሙ DeHub መለያ ስለዘየለ ፡ ክመሓላለፍ ዝኽእል ነገር የለን ። ኣብ ክንዳኡስ ፡ ሓድሽ ሕሳብ ኣዳሉ ።",
+    "migrateInstead": "ነቲ ናይ ቀደም ሕሳብ ኣብ ክንዲ",
+    "setUpNewAccount": "ሓድሽ ሕሳብ ኣዳሉ",
+    "createNewInstead": "ኣብ ክንዳኡስ ፡ ሓድሽ ሕሳብ ፍጠር",
+    "migrateAccount": "ሕሳብ ስደድ",
+    "importExternalWallet": "ናይ ወጻኢ ቦርሳ ኣምጽእ",
+    "migrateIntentHint": "ምስ ዝኾነ ይኹን ኣብ ታሕቲ ዘሎ ኣማራጺ ክትኣቱ ትኽእል ኢኻ ። ምስ ናይ ቀደም DeHub መለያ እንተተኣሳሲሩ ፡ ነቲ ቦርሳ ፡ ስምን ሚዛንን ክትመልሶ ኢኻ ።",
+    "importIntentHint": "ምስ ዝኾነ ይኹን ኣብ ታሕቲ ዘሎ ኣማራጺ ኣቲኻ ፡ ነቲ ክትጥቀመሉ እትደሊ ናይ ምትዕርራይ ወይ ናይ ውልቀ-መላኺ ቁልፍ ጠውቕ ።",
     "title": "ብዓል",
     "addProfileTitle": "መለለዪ ወስኽ",
     "continueEmail": "ብኢመይል ቀጽል",
@@ -2290,7 +2233,6 @@
     "noComments": "ገና ርእይቶ ኣይሃበን ።",
     "noStages": "ኣብዚ እዋን እዚ ዝኾነ ደረጃኻ ህያው ወይ ዝተመደበ ኣይኮነን ።",
     "noFlaresLeft": "ዝኾነ ምልክት ነፈርቲ ካብ'ዚ ዑደት'ዚ ኣይወጹን",
-    "goldenHourStarted": "Golden Hour ን {{minutes}} ደቓይቕ ይካየድ ኣሎ — እቲ ሎሚ እትጽሕፎ ኩሉ ክልተ እጽርፍ",
     "teamUp": {
       "title": "ተሓባበሩ",
       "subtitle": "ሓይሊ ኪስኩም ብሓደ ካብቶም ሒደት ካልኦት ሰባት ሓዋውሱ። ኩሉ ሰብ ምልክትኩም ይኽደኖ እቲ ድምርኩም ይፈትሕ።",
@@ -2350,7 +2292,8 @@
       "updated": "እተሓደሰ ጕጅለ",
       "updateFailed": "ነዚ ጉጅለ እዚ ክሓድሶ ኣይከኣለን ።",
       "openToEveryone": "እቲ ጉጅለ ንነፍሲ ወከፍ ሕሳብ ክፍትሕ ኢዩ ፤ ናይ ውልቀ-ሰብ ጉጅለታት ንመን ከም ዝቀላቀሉ ይድግፉ ።"
-    }
+    },
+    "goldenHourStarted": "Golden Hour ን {{minutes}} ደቓይቕ ይካየድ ኣሎ — እቲ ሎሚ እትጽሕፎ ኩሉ ክልተ እጽርፍ"
   },
   "work": {
     "budgetExhausted": "ናይዚ ሽልማት ባጀት ብምሉኡ ተመዲቡ እዩ።"
@@ -2377,6 +2320,63 @@
     "neon": "ኒዮን",
     "blur": "ብዥታ",
     "pixelate": "ፒክሰል"
+  },
+  "live": {
+    "chatJoined": "ተጸንበረ",
+    "chatSentGift": "ልኢኹ",
+    "progress": {
+      "title": "ደረጃታት ሓደስቲ ጸወቲ",
+      "level": "ደረጃ {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "ንኽትበጽሕ {{level}} ደረጃ {{minutes}} ደቒቕ ብቁዕ ግዜ",
+      "rule": "ነቲ ደረጃኻ ዝቘጸረሉ 10 ደቒቕ ወይ ካብኡ ንላዕሊ ዝቐጸለ  stream ጥራይ እዩ።",
+      "streak": "{{count}} ሰሙን ተኸታታሊ",
+      "bestStreak": "ዝበለጸ ተኸታታሊ {{count}} ሰሙናት",
+      "hours": "{{hours}} ብቁዕ ሰዓታት",
+      "minutes": "{{count}} ደቒቕ",
+      "viewers": "{{count}} ተመልከቲ",
+      "viewCards": "ካርድታት ርአይ",
+      "cardsTitle": "ካርድታት ሰብስቢ",
+      "locked": "ተዓጽዩ",
+      "earnedOn": "ዝረኸብካዮ {{date}}",
+      "recentTitle": "ቅርብቲ ጸወታታት",
+      "notCounted": "ኣይተቘጸረን",
+      "noStreams": "XP ንምርካብ ናይ live ጸወታ ጀምር።",
+      "card": {
+        "first-light": {
+          "name": "ቀዳመይቲ ብርሃን",
+          "hint": "ቀዳመይቲ ብቁዕ ጸወታኻ ዛዝም።"
+        },
+        "marathon": {
+          "name": "ማራቶን",
+          "hint": "ኣብ ሓደ ጸወታ 2 ሰዓት ጸወታ።"
+        },
+        "night-owl": {
+          "name": "መዓልቲ ጸልማት",
+          "hint": "መወዳእታ ጸወታ ኣብ መንጎ 12 ሰዓት ለይቲን 5 ሰዓት ጽባሕን።"
+        },
+        "regular": {
+          "name": "ወትራዊ",
+          "hint": "ኣብ 4 ሰሙናት ተኸታታሊ ጸወታ።"
+        },
+        "iron-streak": {
+          "name": "ብረታዊ ተኸታታሊ",
+          "hint": "ኣብ 12 ሰሙናት ተኸታታሊ ጸወታ።"
+        },
+        "crowd": {
+          "name": "ህዝቢ",
+          "hint": "ኣብ ሓደ እዋን 10 ሰባት ይርእዩ።"
+        },
+        "century": {
+          "name": "ሚእቲ",
+          "hint": "ኣብ ኣየር 100 ሰዓታት ብቕዓት ይረክብ ።"
+        },
+        "legend": {
+          "name": "ታሪኽ",
+          "hint": "ደረጃ 10 ይበጽሕ ።"
+        }
+      }
+    }
   },
   "goLive": {
     "sourceCamera": "ካሜራ",
@@ -2772,7 +2772,24 @@
     "reviewDescriptionPlaceholder": "ብዛዕባ እዚ ጽሑፍ እዚ ገለ ነገር ንገሮ (ምምራጽ)",
     "reviewLiveWarning": "እዚ ርክብ እዚ ህያው ፍሰት እዩ ። ክሳዕ ዚዛዘም ተጸበዩ ፡ ኣብ ክንዳኡስ ፡ ነቲ መዝገብ ኣምጽኡ ።",
     "reviewCancel": "ሰርዝ",
-    "reviewConfirm": "ኣምጽእ"
+    "reviewConfirm": "ኣምጽእ",
+    "podcast": {
+      "tab": "ፖድካስት",
+      "feedUrlLabel": "ፖድካስት RSS feed URL",
+      "fetchFeed": "መግብን መግብን",
+      "fetching": "መግብን መግብን...",
+      "showBy": "ብ {{author}}",
+      "selectAll": "ንዅሉ ምረጽ",
+      "alreadyImported": "ቀዲሙ ዝተኣተወ",
+      "ownership": "ነዚ ትሕዝቶ እዚ ኣለኒ ፣ ወይ ድማ ነቲ መሰል ዘለዎ ሰብ ኣብ DeHub ክሕተም ፍቓድ ኣለኒ ።",
+      "importSelected": "{{count}}Episodes ኣምጽእ",
+      "importing": "ኣምጽእ...",
+      "done": "ኩዌድ",
+      "failed": "ኣይተዓወተን",
+      "emptyFeed": "ኣብዚ ምግቢ እዚ ገለ ፍጻመታት ክንረክብ ኣይንኽእልን ኢና ።",
+      "badFeed": "ኣብ ፖድካስት መልክዕ እንተተረኽበ ኣይመስለንን ።",
+      "tooMany": "ኣብ ሓደ እዋን ክሳብ 20 ክፋላት ኣእቲኻ ።"
+    }
   },
   "banned": {
     "title": "ሕሳብካ ክልኩል እዩ",

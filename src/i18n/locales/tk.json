@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "goşuldy",
-    "chatSentGift": "iberdi",
-    "progress": {
-      "title": "Streamer derejesi",
-      "level": "Dereje {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{level}} derejäniňize ýetmek üçin {{minutes}} minut goşmaça derejä laýyk minutlar",
-      "rule": "Diňe on minutdan gowrak dowam eden we azyndan bir tomaşaçysy bolan ýaýlymlar derejäňize goşulýar.",
-      "streak": "{{count}} hepde yzly-yzlyna",
-      "bestStreak": "Iň gowy yzly-yzlyna {{count}} hepde",
-      "hours": "{{hours}} derejä laýyk sagat",
-      "minutes": "{{count}} minut",
-      "viewers": "{{count}} tomaşaçy",
-      "viewCards": "Kartlary görkez",
-      "cardsTitle": "Söwda kartlary",
-      "locked": "Ýapyk",
-      "earnedOn": "Gazanylan {{date}}",
-      "recentTitle": "Soňky ýaýlymlar",
-      "notCounted": "Hasaba alynmady",
-      "noStreams": "XP gazanyp başlamak üçin göni ýaýlyma çykyň.",
-      "card": {
-        "first-light": {
-          "name": "Ilkinji ýagtylyk",
-          "hint": "Hasaba alynýan ilkinji ýaýlymyňyzy tamamlaň."
-        },
-        "marathon": {
-          "name": "Maraton",
-          "hint": "Bir sessiýada iki sagat ýaýlym alyp baryň."
-        },
-        "night-owl": {
-          "name": "Gijeki guş",
-          "hint": "Ýary gije bilen ertiriň bäş aralygynda ýaýlymyňyzy tamamlanyň."
-        },
-        "regular": {
-          "name": "Adaty",
-          "hint": "Dört hepde yzly-yzlyna ýaýlym alyp baryň."
-        },
-        "iron-streak": {
-          "name": "Polat yzly-yzlyna",
-          "hint": "On iki hepde yzly-yzlyna ýaýlym alyp baryň."
-        },
-        "crowd": {
-          "name": "Köpsüň",
-          "hint": "Bir wagtyň özünde on adamyň tomaşa etmegini üpjün ediň."
-        },
-        "century": {
-          "name": "Asyr",
-          "hint": "Ýüz sagatlyk hawada."
-        },
-        "legend": {
-          "name": "Asly",
-          "hint": "10. Honto ýönekeý kesildi"
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Mugt amallar biziň tarapymyzda saklandy, siziň gapjygyňyzda däl. Haýyş, biraz wagtdan gaýtadan synanyşyň.",
     "gasSponsorshipFailed": "Bu amalyň çykdajysy tölenip bilinmedi. Haýyş, biraz wagtdan synanyşyň."
@@ -162,6 +105,9 @@
     "bio": "Hakynda",
     "bioPlaceholder": "Özüňiz hakynda gürrüň beriň...",
     "socialLinks": "Jemgyýetçilik torlary",
+    "socialFollowers": "{{platform}}",
+    "socialFollowersHint": "Ýüküňiň bir bölegi hökmünde profilyňda görkezilýär. Bu sany özüňiz ýazyň — biz ony platformdan okamaýarys.",
+    "socialFollowersPlaceholder": "12500 ýyl",
     "profileUpdated": "Profil üstünlikli täzelendi",
     "failedLoadProfile": "Profil maglumatlaryny ýüklemek başa barmady",
     "imageTooLarge5": "Surat 5MB-dan kiçi bolmaly",
@@ -497,10 +443,7 @@
       "unavailable": "Kodlaýjyda ýaýlyma çykmak şu wagt siziň hasabyňyzda elýeterli däl.",
       "serverCopied": "Serwer nusgalady",
       "keyCopied": "Kopyalan akma açary"
-    },
-    "socialFollowers": "{{platform}}",
-    "socialFollowersHint": "Ýüküňiň bir bölegi hökmünde profilyňda görkezilýär. Bu sany özüňiz ýazyň — biz ony platformdan okamaýarys.",
-    "socialFollowersPlaceholder": "12500 ýyl"
+    }
   },
   "common": {
     "save": "Ýatda sakla",
@@ -1265,10 +1208,6 @@
     "returnHome": "Baş sahypa gaýdyp barmak"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Bu makala ýok",
-      "commentUnavailable": "Bu pikir indi ýok"
-    },
     "back": "Yza",
     "usernameAvailable": "Ulanyjy ady boş!",
     "signUpToClaim": "Hasaba duruň we alyň",
@@ -1284,12 +1223,16 @@
     "followers": "Yzarlaýjylar",
     "following": "Yzarlaýanlar",
     "joined": "Goşuldy",
-    "loginDescription": "Profiliňizi görmek we dolandyrmak üçin giriň.",
     "reach": {
       "total": "Ýüklüge ýetmek",
       "breakdownTitle": "Bu çakylyk nireden gelýär?",
       "dehubFollowers": "DeHub diňleýjileri",
       "selfReported": "Işgärleriň sanyna Ýaradyjy girýär."
+    },
+    "loginDescription": "Profiliňizi görmek we dolandyrmak üçin giriň.",
+    "replyThread": {
+      "postUnavailable": "Bu makala ýok",
+      "commentUnavailable": "Bu pikir indi ýok"
     },
     "tabs": {
       "playlists": "Çykyşlar"
@@ -1306,6 +1249,7 @@
     "amountUsd": "Mukdar (USD)",
     "customAmount": "Ýörite mukdar",
     "minPurchase": "Iň az satyn alyş $5",
+    "minDhbPurchase": "DHB-iň iň az satyn alyşy $ 0.50",
     "youPay": "Siz töleýärsiňiz",
     "youReceive": "Siz alýarsyňyz (takmynan)",
     "feeNote": "Kart haky ~3.6% we 0.5% tor saklagy çykyp gidýär. Tor saklagy size gaz üçin ETH hökmünde iberilýär.",
@@ -1339,7 +1283,6 @@
     "badgeDiscount": "{{tier}} eýesi — {{percent}}% arzanladyş",
     "otherTokens": "Beýleki tokenler",
     "otherTokensDesc": "Kartyňyz bilen Base-de ETH ýa-da USDC satyn alyň",
-    "minDhbPurchase": "DHB-iň iň az satyn alyşy $ 0.50",
     "shareToFeed": "Meniň iýmitimi paýlaň",
     "sharePostTemplate": "Men diňe {{amount}} $ DHB-i DeHub-da ýerleşýän ýerime goşdum. Halkara ynsan hukuk jemgyýeti bilen baglanyşykly. #Güýçli #Güýçli",
     "success": {
@@ -1415,14 +1358,6 @@
     "failedSubmit": "Arza ibermek başa barmady. Gaýtadan synanyşyň."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Bu girişde öňki DeHub hasaby ýok, şonuň üçin hiç zat getirilmeýär. Gaýtam, täze bir hasabat açyň.",
-    "migrateInstead": "Gaýtam, köne kagyzy açyň",
-    "setUpNewAccount": "Täze bir hasabat ýarat",
-    "createNewInstead": "Gaýtam, bir hasabat aç",
-    "migrateAccount": "Migrasiýa hasaby",
-    "importExternalWallet": "Daşary pulçany import et",
-    "migrateIntentHint": "Her hili mümkinçiligiň bardygy üçin, aşakda ýazylyň. Eger siz öňki DeHub hasabatyna gabat gelseňiz, siz onuň puluny, ulanýan adyny we balansyny getirersiňiz.",
-    "importIntentHint": "Ýokarda agzalan her bir saýlama bilen girip, soňra ulanmak isleýän pulçanyň gaýtargylama sözüni ýa-da özge açaryny goýuň.",
     "unlockBiometricContinue": "Çuwallaryňyzy barmaklaryňyz bilen ýa-da ýüzüňiz bilen açyň.",
     "unlockBiometricSignIn": "Çuwallaryňyzy barmaklaryňyz bilen ýa-da ýüzüňiz bilen açyň.",
     "unlockPasswordContinue": "Öňki ýaly, siz hem öz paroluny girip bilersiňiz.",
@@ -1435,6 +1370,14 @@
     "migrateUnmatchedDetail": "Bu adresde hiç hili profily ýok. Eger siz ýene-de imza atsaňyz, gaýdyp baryň we onuň ýerine imza atýan imzaňyzy ulanyň.",
     "migrateGoBack": "Git-de, gaýdyp gel",
     "migrateContinueAnyway": "Her halda täze bir hasabat aç",
+    "migrateNoOldAccount": "Bu girişde öňki DeHub hasaby ýok, şonuň üçin hiç zat getirilmeýär. Gaýtam, täze bir hasabat açyň.",
+    "migrateInstead": "Gaýtam, köne kagyzy açyň",
+    "setUpNewAccount": "Täze bir hasabat ýarat",
+    "createNewInstead": "Gaýtam, bir hasabat aç",
+    "migrateAccount": "Migrasiýa hasaby",
+    "importExternalWallet": "Daşary pulçany import et",
+    "migrateIntentHint": "Her hili mümkinçiligiň bardygy üçin, aşakda ýazylyň. Eger siz öňki DeHub hasabatyna gabat gelseňiz, siz onuň puluny, ulanýan adyny we balansyny getirersiňiz.",
+    "importIntentHint": "Ýokarda agzalan her bir saýlama bilen girip, soňra ulanmak isleýän pulçanyň gaýtargylama sözüni ýa-da özge açaryny goýuň.",
     "title": "Girmek",
     "addProfileTitle": "Profil goş",
     "continueEmail": "E-poçta bilen dowam etmek",
@@ -2300,7 +2243,6 @@
     "noStages": "Siziň sahnasyndan hiç biri şu wagt elýeterli ýa-da meýilleşdirilmän.",
     "noFlaresLeft": "Bu siklda Signal Flares galmady",
     "spentFor": "{{power}} {{minutes}} minut üçin işleýär",
-    "goldenHourStarted": "Altyn sagat {{minutes}} minut dowam edýär — indi goýýan her zadyňyz iki esse artar",
     "teamUp": {
       "title": "Topar boluň",
       "subtitle": "Iň ýedi adama çenli jüýtdäki güýji birleşdiriň. Her kim öz nyşanyny geýýär, jemiňiz açylýar.",
@@ -2361,7 +2303,8 @@
       "updated": "Topar täzelendi",
       "updateFailed": "Şol topara täzeläp bolmady",
       "openToEveryone": "Ekip her bir hasabat üçin açyk; özge toparlar kimler goşulýandygyny tassyklaýar."
-    }
+    },
+    "goldenHourStarted": "Altyn sagat {{minutes}} minut dowam edýär — indi goýýan her zadyňyz iki esse artar"
   },
   "work": {
     "budgetExhausted": "Bu sylagyň býujeti doly paýlanyldy."
@@ -2388,6 +2331,63 @@
     "neon": "Neon",
     "blur": "Bulaşyklyk",
     "pixelate": "Piksel"
+  },
+  "live": {
+    "chatJoined": "goşuldy",
+    "chatSentGift": "iberdi",
+    "progress": {
+      "title": "Streamer derejesi",
+      "level": "Dereje {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{level}} derejäniňize ýetmek üçin {{minutes}} minut goşmaça derejä laýyk minutlar",
+      "rule": "Diňe on minutdan gowrak dowam eden we azyndan bir tomaşaçysy bolan ýaýlymlar derejäňize goşulýar.",
+      "streak": "{{count}} hepde yzly-yzlyna",
+      "bestStreak": "Iň gowy yzly-yzlyna {{count}} hepde",
+      "hours": "{{hours}} derejä laýyk sagat",
+      "minutes": "{{count}} minut",
+      "viewers": "{{count}} tomaşaçy",
+      "viewCards": "Kartlary görkez",
+      "cardsTitle": "Söwda kartlary",
+      "locked": "Ýapyk",
+      "earnedOn": "Gazanylan {{date}}",
+      "recentTitle": "Soňky ýaýlymlar",
+      "notCounted": "Hasaba alynmady",
+      "noStreams": "XP gazanyp başlamak üçin göni ýaýlyma çykyň.",
+      "card": {
+        "first-light": {
+          "name": "Ilkinji ýagtylyk",
+          "hint": "Hasaba alynýan ilkinji ýaýlymyňyzy tamamlaň."
+        },
+        "marathon": {
+          "name": "Maraton",
+          "hint": "Bir sessiýada iki sagat ýaýlym alyp baryň."
+        },
+        "night-owl": {
+          "name": "Gijeki guş",
+          "hint": "Ýary gije bilen ertiriň bäş aralygynda ýaýlymyňyzy tamamlanyň."
+        },
+        "regular": {
+          "name": "Adaty",
+          "hint": "Dört hepde yzly-yzlyna ýaýlym alyp baryň."
+        },
+        "iron-streak": {
+          "name": "Polat yzly-yzlyna",
+          "hint": "On iki hepde yzly-yzlyna ýaýlym alyp baryň."
+        },
+        "crowd": {
+          "name": "Köpsüň",
+          "hint": "Bir wagtyň özünde on adamyň tomaşa etmegini üpjün ediň."
+        },
+        "century": {
+          "name": "Asyr",
+          "hint": "Ýüz sagatlyk hawada."
+        },
+        "legend": {
+          "name": "Asly",
+          "hint": "10. Honto ýönekeý kesildi"
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Go Live",
@@ -2813,7 +2813,26 @@
     "reviewDescriptionPlaceholder": "1) Birinjiden, App Find (Bu Step TV üçin)",
     "reviewLiveWarning": "Bu baglanyşyk direlýän akymy. Bu iş tamamlanýança garaşyň we onuň ýerine ýazgysyny import ediň.",
     "reviewCancel": "Gaýd Et",
-    "reviewConfirm": "Çyk"
+    "reviewConfirm": "Çyk",
+    "podcast": {
+      "tab": "Podkastlar",
+      "feedUrlLabel": "Podcast RSS Feed URL-i",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Iýmitlenmek",
+      "fetching": "Öýlenmek üçin...",
+      "showBy": "{{author}}",
+      "episodes": "{{count}} epizodlar",
+      "selectAll": "Ehlisini Saýla",
+      "alreadyImported": "Öňden äkidilen",
+      "ownership": "Men bu maglumaty eýeleýärin ýa-da ony DeHub-da çap etmäge hak eýesiniň rugsaty bar.",
+      "importSelected": "{{count}}bölümleri äkid",
+      "importing": "Çykyş...",
+      "done": "Saýlan",
+      "failed": "Başarısız",
+      "emptyFeed": "Biz şol iýmitde hiç hili bölüm tapyp bilmedik.",
+      "badFeed": "Men muny podcast formatynda barmygyny barlamady.",
+      "tooMany": "Bir gezekde 20 bölümden gowrak import edilýär."
+    }
   },
   "banned": {
     "title": "Siziň hasabatyňyz gadagan edilýär",

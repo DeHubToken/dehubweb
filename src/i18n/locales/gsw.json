@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "isch bitrete",
-    "chatSentGift": "het gschickt",
-    "progress": {
-      "title": "Streamer-Level",
-      "level": "Level {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} meh qualifizierendi Minute zum Level {{level}} erreiche",
-      "rule": "Nur Streams, wo zehn Minute oder meh lang sind und mindestens ein Zueschauer hend, zelle für dini Level.",
-      "streak": "{{count}} Wuche-Serie",
-      "bestStreak": "Bester Serie {{count}} Wuche",
-      "hours": "{{hours}} qualifizierendi Stundä",
-      "minutes": "{{count}} Minute",
-      "viewers": "{{count}} Zueschauer",
-      "viewCards": "Kärtli luege",
-      "cardsTitle": "Sammelchärtli",
-      "locked": "Gschlosse",
-      "earnedOn": "Verdient {{date}}",
-      "recentTitle": "Letscht Streams",
-      "notCounted": "Han nöd gzehlt",
-      "noStreams": "Gang live zum XP verdienä.",
-      "card": {
-        "first-light": {
-          "name": "Ersti Luuchti",
-          "hint": "Mach din erschte Stream, wo zellt."
-        },
-        "marathon": {
-          "name": "Marathon",
-          "hint": "Stream zwei Stundä lang i einere Sitzig."
-        },
-        "night-owl": {
-          "name": "Nachtuul",
-          "hint": "Mach en Stream zwüsche Mitternacht und füüf Uhr morgens."
-        },
-        "regular": {
-          "name": "Regulär",
-          "hint": "Stream vier Wuche hinterenand."
-        },
-        "iron-streak": {
-          "name": "Iiserne Serie",
-          "hint": "Stream zwölfi Wuche hinterenand."
-        },
-        "crowd": {
-          "name": "Grosi Menge",
-          "hint": "Zeh Lüüt glichzitig zuegucke."
-        },
-        "century": {
-          "name": "Jahrhundert",
-          "hint": "Erreich hundert qualifizieriendi Stundä uf em Äir."
-        },
-        "legend": {
-          "name": "Legende",
-          "hint": "Erreich Level zäh."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Gratis Transaktione sind bi üs pausiert, nid bi dinere Wallet. Probier s glii nomol.",
     "gasSponsorshipFailed": "Die Transaktion het nid chöne übernoh werde. Probier s glii nomol."
@@ -162,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Verzell öppis über di...",
     "socialLinks": "Soziali Links",
+    "socialFollowers": "Follower uf {{platform}}",
+    "socialFollowersHint": "Zeigt uf dim Profil a als Teil vo dim ganzä Reichwiite. Gib d Zahl sälber ii – mir läsed si nöd vo dr Plattform.",
+    "socialFollowersPlaceholder": "z.B. 12500",
     "profileUpdated": "Profiu erfolgriich aktualisiert",
     "failedLoadProfile": "Profiu-Date chönd nid glade wärde",
     "imageTooLarge5": "Bild muess chleiner als 5MB sii",
@@ -458,10 +404,7 @@
       "unavailable": "Vom Encoder us z'strahle isch grad nöd uf dim Konto verfügbar.",
       "serverCopied": "Server copied",
       "keyCopied": "Stream key copied"
-    },
-    "socialFollowers": "Follower uf {{platform}}",
-    "socialFollowersHint": "Zeigt uf dim Profil a als Teil vo dim ganzä Reichwiite. Gib d Zahl sälber ii – mir läsed si nöd vo dr Plattform.",
-    "socialFollowersPlaceholder": "z.B. 12500"
+    }
   },
   "common": {
     "save": "Speichere",
@@ -1238,10 +1181,6 @@
     "returnHome": "Zrugg zur Startsyte"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Diesi Post isch nöd verfügbar",
-      "commentUnavailable": "Dies Kommentär isch nöd meh verfügbar"
-    },
     "back": "Zrugg",
     "usernameAvailable": "Benutzername verfüegbar!",
     "signUpToClaim": "Mäld di aa zum",
@@ -1257,12 +1196,16 @@
     "followers": "Follower",
     "following": "Am Folge",
     "joined": "Joined",
-    "loginDescription": "Mäld di aa zum dis Profiu z gsee und z verwaltä.",
     "reach": {
       "total": "Gesamti Reichwiite",
       "breakdownTitle": "Woher die Reichwiite chunt",
       "dehubFollowers": "DeHub Follower",
       "selfReported": "Soziali Follower-Zahle werded vom Creator yygäbe."
+    },
+    "loginDescription": "Mäld di aa zum dis Profiu z gsee und z verwaltä.",
+    "replyThread": {
+      "postUnavailable": "Diesi Post isch nöd verfügbar",
+      "commentUnavailable": "Dies Kommentär isch nöd meh verfügbar"
     },
     "tabs": {
       "playlists": "Playlistä"
@@ -1279,6 +1222,7 @@
     "amountUsd": "Betrag (USD)",
     "customAmount": "Eigene Betrag",
     "minPurchase": "Minimaler Chauf isch $5",
+    "minDhbPurchase": "Minimau DHB-Chauf isch $0.50",
     "youPay": "Du zahlsch",
     "youReceive": "Du bechunnsch (ca.)",
     "feeNote": "Charte-Gebühr ~3.6% und 0.5% Netzwerk-Reserve wärde abzoge. D'Reserve wird dir als ETH für Gas zuegschickt.",
@@ -1312,7 +1256,6 @@
     "badgeDiscount": "{{tier}}-Bsitzer — {{percent}}% Rabatt",
     "otherTokens": "Anderi Token",
     "otherTokensDesc": "Chauf ETH oder USDC uf Base mit dinere Charte",
-    "minDhbPurchase": "Minimau DHB-Chauf isch $0.50",
     "shareToFeed": "Teile uf min Feed",
     "sharePostTemplate": "Grad {{amount}} $DHB zu minere Stäcke uf DeHub dezue tue. Baue mit de Community. #DeHub #DHB",
     "success": {
@@ -1390,6 +1333,10 @@
     "failedSubmit": "Bewärbig iireiche fehlgschlage. Bitte probier s nomol."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Entsperr dini Brieftasche mit dim Fingerabdruck oder dim Gsicht zum Witermaache.",
+    "unlockBiometricSignIn": "Entsperr dini Brieftasche mit dim Fingerabdruck oder dim Gsicht zum Aameelde.",
+    "unlockPasswordContinue": "Gib dini Brieftasche-Passwort ii zum Witermaache.",
+    "unlockPasswordSignIn": "Gib dini Brieftasche-Passwort ii zum Entsperre vo diner Brieftasche und zum Aameelde.",
     "migrateNoOldAccount": "Es git kei früehners DeHub-Konto bi dem Login, drum git's nüt zum zrugghole. Erschaff stattdesse es neues Konto.",
     "migrateInstead": "S'alte Konto zrugghole stattdesse",
     "setUpNewAccount": "Es neues Konto erschaffe",
@@ -1398,10 +1345,6 @@
     "importExternalWallet": "Externi Wallet importiere",
     "migrateIntentHint": "Logg dich mit ere vo de Optionene ume ume. Wenn's zu eme früehnere DeHub-Konto passt, wird dessen Wallet, Username und Saldo übernoh.",
     "importIntentHint": "Logg dich mit ere vo de Optionene ume ume, und füeg denn de Recovery-Phrase oder Private Key vo de Wallet, wo du wetsch bruche, ih.",
-    "unlockBiometricContinue": "Entsperr dini Brieftasche mit dim Fingerabdruck oder dim Gsicht zum Witermaache.",
-    "unlockBiometricSignIn": "Entsperr dini Brieftasche mit dim Fingerabdruck oder dim Gsicht zum Aameelde.",
-    "unlockPasswordContinue": "Gib dini Brieftasche-Passwort ii zum Witermaache.",
-    "unlockPasswordSignIn": "Gib dini Brieftasche-Passwort ii zum Entsperre vo diner Brieftasche und zum Aameelde.",
     "title": "Aamälde",
     "addProfileTitle": "Es Profil dezuefüege",
     "continueEmail": "Wiiter mit E-Mail",
@@ -1581,6 +1524,24 @@
     "hoursAgo": "vor {{count}}Std",
     "daysAgo": "vor {{count}}T",
     "monthsAgo": "vor {{count}}M",
+    "forLabel": "Für",
+    "againstLabel": "Gäge",
+    "discussion": {
+      "title": "Diskussio",
+      "intro": "Stell nöchti Froge oder diskutiere der Vorschlag, bevor du abstimmisch.",
+      "reply": "Antworte",
+      "replyingTo": "Antworte uf {{name}}",
+      "writeReply": "Schrib e Antwort",
+      "edited": "bearbeitet",
+      "showMoreReplies": "Zeig {{count}} meh Antworte",
+      "showMoreReplies_one": "Zeig {{count}} meh Antwort",
+      "deleteTitle": "Dä Kommentar lösche?",
+      "deleteDescription": "Das entfernt dä Kommentar und sini Antworte für alli.",
+      "signInToComment": "Melde dich a, zum bi de Diskussio mitz'mache",
+      "empty": "No kei Froge. Starte d'Diskussio.",
+      "joinOnProposal": "Mach bi de Diskussio mit",
+      "authorChip": "Vorschlag-Autor"
+    },
     "proposalTitle": "Vorschlagstitel",
     "proposalTitlePlaceholder": "Was wottsch vorschlaa?",
     "proposalDescription": "Details",
@@ -1610,25 +1571,7 @@
     "tabProposals": "Vorschläg",
     "tabPassed": "Agnoh",
     "tabRejected": "Abglehnt",
-    "weeksAgo": "vor {{count}}W",
-    "forLabel": "Für",
-    "againstLabel": "Gäge",
-    "discussion": {
-      "title": "Diskussio",
-      "intro": "Stell nöchti Froge oder diskutiere der Vorschlag, bevor du abstimmisch.",
-      "reply": "Antworte",
-      "replyingTo": "Antworte uf {{name}}",
-      "writeReply": "Schrib e Antwort",
-      "edited": "bearbeitet",
-      "showMoreReplies": "Zeig {{count}} meh Antworte",
-      "showMoreReplies_one": "Zeig {{count}} meh Antwort",
-      "deleteTitle": "Dä Kommentar lösche?",
-      "deleteDescription": "Das entfernt dä Kommentar und sini Antworte für alli.",
-      "signInToComment": "Melde dich a, zum bi de Diskussio mitz'mache",
-      "empty": "No kei Froge. Starte d'Diskussio.",
-      "joinOnProposal": "Mach bi de Diskussio mit",
-      "authorChip": "Vorschlag-Autor"
-    }
+    "weeksAgo": "vor {{count}}W"
   },
   "sidebar": {
     "talkOfTheTown": "Stadtgspröch",
@@ -2302,7 +2245,6 @@
     "noStages": "Keine vo dine Stage isch grad live oder plant.",
     "noFlaresLeft": "Keini Signal Flares meh i dem Zyklus",
     "spentFor": "{{power}} lauft für {{minutes}} Minute",
-    "goldenHourStarted": "Golden Hour lauft für {{minutes}} Minute — alles, wo du jetzt postisch, zählt dopplet",
     "teamUp": {
       "title": "Team bilde",
       "subtitle": "Vereinigi dini Wallet-Chraft mit bis zu siebne andere. Jede und jeder träit s'Abzeiche, wo din Total freischaltet.",
@@ -2363,7 +2305,8 @@
       "updated": "Team aktualisiert",
       "updateFailed": "Han das Team nöd chönne aktualisiere",
       "openToEveryone": "Team up isch für jedes Konto offe; private Teams stimmed zue, wer mitmacht."
-    }
+    },
+    "goldenHourStarted": "Golden Hour lauft für {{minutes}} Minute — alles, wo du jetzt postisch, zählt dopplet"
   },
   "work": {
     "budgetExhausted": "S Budget vo dere Prämie isch ganz vergäh."
@@ -2390,6 +2333,63 @@
     "neon": "Neon",
     "blur": "Unschärfi",
     "pixelate": "Pixelig"
+  },
+  "live": {
+    "chatJoined": "isch bitrete",
+    "chatSentGift": "het gschickt",
+    "progress": {
+      "title": "Streamer-Level",
+      "level": "Level {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} meh qualifizierendi Minute zum Level {{level}} erreiche",
+      "rule": "Nur Streams, wo zehn Minute oder meh lang sind und mindestens ein Zueschauer hend, zelle für dini Level.",
+      "streak": "{{count}} Wuche-Serie",
+      "bestStreak": "Bester Serie {{count}} Wuche",
+      "hours": "{{hours}} qualifizierendi Stundä",
+      "minutes": "{{count}} Minute",
+      "viewers": "{{count}} Zueschauer",
+      "viewCards": "Kärtli luege",
+      "cardsTitle": "Sammelchärtli",
+      "locked": "Gschlosse",
+      "earnedOn": "Verdient {{date}}",
+      "recentTitle": "Letscht Streams",
+      "notCounted": "Han nöd gzehlt",
+      "noStreams": "Gang live zum XP verdienä.",
+      "card": {
+        "first-light": {
+          "name": "Ersti Luuchti",
+          "hint": "Mach din erschte Stream, wo zellt."
+        },
+        "marathon": {
+          "name": "Marathon",
+          "hint": "Stream zwei Stundä lang i einere Sitzig."
+        },
+        "night-owl": {
+          "name": "Nachtuul",
+          "hint": "Mach en Stream zwüsche Mitternacht und füüf Uhr morgens."
+        },
+        "regular": {
+          "name": "Regulär",
+          "hint": "Stream vier Wuche hinterenand."
+        },
+        "iron-streak": {
+          "name": "Iiserne Serie",
+          "hint": "Stream zwölfi Wuche hinterenand."
+        },
+        "crowd": {
+          "name": "Grosi Menge",
+          "hint": "Zeh Lüüt glichzitig zuegucke."
+        },
+        "century": {
+          "name": "Jahrhundert",
+          "hint": "Erreich hundert qualifizieriendi Stundä uf em Äir."
+        },
+        "legend": {
+          "name": "Legende",
+          "hint": "Erreich Level zäh."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Go Live",
@@ -2825,7 +2825,26 @@
     "reviewDescriptionPlaceholder": "Säg öppis über dä Poscht (optional)",
     "reviewLiveWarning": "De Link isch e Live-Stream. Warte, bis er fertig isch, und importiere de Mitschnitt statt däm.",
     "reviewCancel": "Abbräche",
-    "reviewConfirm": "Importiere"
+    "reviewConfirm": "Importiere",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podcast RSS-Feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Feed abrufe",
+      "fetching": "Feed wird abgruefet…",
+      "showBy": "Vo {{author}}",
+      "episodes": "{{count}} Episöde",
+      "selectAll": "Alli uswähle",
+      "alreadyImported": "Schu abigleit",
+      "ownership": "Ich bi de Inhaber vo dem Inhaute, oder han d Erlaubnis vom Inhabe, das uf DeHub z'veröffentliche.",
+      "importSelected": "{{count}} Episöde abliifere",
+      "importing": "Wird abglefert…",
+      "done": "In Warteschlang",
+      "failed": "Fehlschlag",
+      "emptyFeed": "Mir hend kei Episöde i dem Feed gfunde.",
+      "badFeed": "Das Link gseht nöd us wie en Podcast-Feed.",
+      "tooMany": "Bis zu 20 Episöde glichziitig abliifere."
+    }
   },
   "banned": {
     "title": "Dini Konto isch gsperrt",

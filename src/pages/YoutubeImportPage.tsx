@@ -29,6 +29,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Loader2, ArrowDownToLine, Link2, Clipboard, CheckCircle2, XCircle, Clock, X } from 'lucide-react';
 import { ImportDetailsDialog } from '@/components/app/converter/ImportDetailsDialog';
+import { PodcastImportSection } from '@/components/app/converter/PodcastImportSection';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
@@ -132,6 +133,7 @@ export default function YoutubeImportPage() {
   const [pickedKind, setPickedKind] = useState<MediaKind | null>(null);
   /** The link waiting in the review dialog, or null when nothing is. */
   const [reviewing, setReviewing] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'link' | 'podcast'>('link');
 
   /** The source of whatever is currently in the box, if it is one we take. */
   const pastedSource = detectConverterSource(url);
@@ -354,6 +356,34 @@ export default function YoutubeImportPage() {
           <p className="text-sm text-zinc-400 max-w-prose">{t('converter.subtitle')}</p>
         </header>
 
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => setActiveTab('link')}
+            aria-pressed={activeTab === 'link'}
+            className={cn(
+              'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
+              activeTab === 'link' ? 'bg-white text-black' : 'bg-white/5 text-zinc-300 hover:bg-white/10',
+            )}
+          >
+            {t('converter.title')}
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('podcast')}
+            aria-pressed={activeTab === 'podcast'}
+            className={cn(
+              'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
+              activeTab === 'podcast' ? 'bg-white text-black' : 'bg-white/5 text-zinc-300 hover:bg-white/10',
+            )}
+          >
+            {t('converter.podcast.tab')}
+          </button>
+        </div>
+
+        {activeTab === 'podcast' ? (
+          <PodcastImportSection />
+        ) : (
         <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-4">
           {/* Same look as the sidebar's search box — bg-zinc-900/rounded-xl/no
               border — so this reads as one of the app's real inputs. */}
@@ -474,6 +504,7 @@ export default function YoutubeImportPage() {
               : t('converter.signInToImport')}
           </Button>
         </section>
+        )}
 
         {/* ── The queue ───────────────────────────────────────────────────
             Directly under the box, because it answers the question pressing
