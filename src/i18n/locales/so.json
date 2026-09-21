@@ -2271,6 +2271,16 @@
     "keepStreaming": "Stream-ka sii wad",
     "encoderPermanentHint": "Furahan waligiis isma beddelo. Deji encoder-kaaga hal mar — marka xigta kaliya riix Ka bilow halkaas oo DeHub ayaa kuu abuuraya boostada."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "Aragtida Bogga",
+      "uniqueVisitors": "Soo-booqdayaasha gaarka ah",
+      "inLast30Days": "{{count}} 30 maalmood gudahood",
+      "percentJoined": "{{pct}}% ku biiray",
+      "noVisits": "Weli ma jiro booqasho",
+      "selfVisitsExcluded": "Booqashooyinkaaga xiriirkaaga lama tirin karo."
+    }
+  },
   "creatorFlow": {
     "title": "Qulquladda Abuuraha",
     "backToStudio": "Ku noqo Xarunta Abuuraha",
@@ -2808,6 +2818,7 @@
     "ttsHint": "Aqri qof walba oo daawanaya marka hadiyaddaadu soo degto."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2882,7 +2893,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

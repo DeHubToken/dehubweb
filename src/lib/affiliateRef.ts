@@ -4,6 +4,8 @@
 // we set a cookie for 90 days and never overwrite it on subsequent visits.
 // Once the user signs in with a wallet we self-attribute via `affiliate_referrals`.
 
+import { readLastSession } from "@/lib/connection-source";
+
 const COOKIE_NAME = "dehub_aff_ref";
 const COOKIE_DAYS = 90;
 const VALID = /^[A-Za-z0-9_-]{3,40}$/;
@@ -40,6 +42,26 @@ const getVisitorId = (): string => {
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   window.localStorage.setItem(VISITOR_KEY, fresh);
   return fresh;
+};
+
+const WALLET_KEY = "dehub_wallet";
+
+/**
+ * The wallet this browser is signed in with, read straight from storage.
+ *
+ * The /r/CODE landing page mounts outside the auth providers, so it has no
+ * session to ask. AuthProvider persists the signed-in address under
+ * `dehub_wallet` (and the last completed login under `dehub_last_session`)
+ * and clears both on sign-out, so a value here means the person on this
+ * browser is logged in as that address. That is exactly what the page-view
+ * RPC needs to drop an affiliate's own test visit from their analytics.
+ */
+export const getPersistedViewerAddress = (): string | null => {
+  try {
+    const stored = window.localStorage.getItem(WALLET_KEY)?.trim();
+    if (stored) return stored.toLowerCase();
+    return readLastSession()?.address ?? null;
+  } catch { return null; }
 };
 
 /**

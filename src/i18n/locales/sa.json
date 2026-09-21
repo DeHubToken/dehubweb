@@ -2229,6 +2229,15 @@
     "keepStreaming": "स्ट्रीमिंग जारी रखें",
     "encoderPermanentHint": "एष कुञ्जी कदापि न परिवर्तते ।."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "पृष्ठदृष्टिः",
+      "uniqueVisitors": "एकमेव आगन्तुकम्",
+      "percentJoined": "{{pct}}% संयुक्त",
+      "noVisits": "अद्यापि न आगतम्",
+      "selfVisitsExcluded": "सम्प्रति भवतः सम्पर्कः अपर्याप्तः अस्ति ।"
+    }
+  },
   "creatorFlow": {
     "title": "सृष्टिकर्ता प्रवाह",
     "backToStudio": "Return to कार्यशाला सम्बन्धि सूचना",
@@ -2726,6 +2735,7 @@
     "ttsHint": "वाचो वाचो वाचो वाचो वाचो वाचो वाचो वाचो वाचो वाचः"
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2800,7 +2810,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

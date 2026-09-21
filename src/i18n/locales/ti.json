@@ -2202,6 +2202,16 @@
     "keepStreaming": "ስትሪም ቀጥል",
     "encoderPermanentHint": "እዚ ቁልፍ እዚ ፈጺሙ ኣይቅየርን እዩ ። ነቲ ኢንኮደርካ ሓደ ግዜ ኣዳሉ — ኣብ እትቕጽል ግዜ ፡ ኣብኡ ምጅማር ጥራይ ጸቕጢ ግበር ፡ DeHub ድማ ነቲ ቦታ ንዓኻ ትፈጥር ።"
   },
+  "referral": {
+    "stats": {
+      "pageViews": "ርእይቶታት ገጽ",
+      "uniqueVisitors": "ፍሉይ ኣጋይሽ",
+      "inLast30Days": "{{count}} ኣብ 30 መዓልታት",
+      "percentJoined": "{{pct}}% ተጸምቢሩ",
+      "noVisits": "ክሳብ ሕጂ ዝኾነ ምብጻሕ የለን ።",
+      "selfVisitsExcluded": "ናይ ገዛእ ርእስኻ ምብጻሕ ናብ ትሕዝቶኻ ኣይቑጸርን እዩ ።"
+    }
+  },
   "creatorFlow": {
     "title": "ፈጣሪ ፍሰት",
     "backToStudio": "ተመሊስ ናብ ፈጣሪ ስቱዲዮ",
@@ -2731,6 +2741,7 @@
     "ttsHint": "ነቲ ህያብካ ምስ ዚወድቕ ዚርኢ ዘበለ ዅሉ ብድምጺ ኣንብቦ ።"
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2805,7 +2816,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

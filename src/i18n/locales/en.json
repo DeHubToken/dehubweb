@@ -4263,6 +4263,14 @@
     "voiceNoteFailed": "Failed to send voice note"
   },
   "referral": {
+    "stats": {
+      "pageViews": "Page views",
+      "uniqueVisitors": "Unique visitors",
+      "inLast30Days": "{{count}} in 30 days",
+      "percentJoined": "{{pct}}% joined",
+      "noVisits": "No visits yet",
+      "selfVisitsExcluded": "Your own visits to your link are not counted."
+    },
     "seoTitle": "DeHub — the decentralised creator network",
     "seoTitleInvited": "{{inviter}} invited you to DeHub — earn, post & build on-chain",
     "seoDescription": "The decentralised creator network.",

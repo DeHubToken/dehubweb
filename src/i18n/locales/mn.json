@@ -2240,6 +2240,16 @@
     "keepStreaming": "Трансляцийг үргэлжлүүлэх",
     "encoderPermanentHint": "Энэ түлхүүр хэзээ ч өөрчлөгдөхгүй. Кодчилогчоо нэг удаа тохируул — дараагийн удаа товшино уу Start дээр дараад DeHub танд зориулж нийтлэл үүсгэдэг."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "Хуудасны үзэлт",
+      "uniqueVisitors": "Дахин давтагдашгүй зочин",
+      "inLast30Days": "{{count}} 30 хоногт",
+      "percentJoined": "{{pct}}% нэгдэв",
+      "noVisits": "Хараахан зочилоогүй байна",
+      "selfVisitsExcluded": "Таны холбоос руу нэвтрэх өөрийн айлчлалыг тоологдохгүй."
+    }
+  },
   "creatorFlow": {
     "title": "Бүтээгчдийн урсгал",
     "backToStudio": "Бүтээгчдийн студи руу буцах",
@@ -2781,6 +2791,7 @@
     "ttsHint": "Бэлэг дурсгалын газраа харсан хүн бүрийг чангаар уншаарай."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2855,7 +2866,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

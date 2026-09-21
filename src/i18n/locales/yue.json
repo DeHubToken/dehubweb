@@ -2270,6 +2270,16 @@
     "keepStreaming": "繼續串流",
     "encoderPermanentHint": "呢個密鑰永遠唔會改變。設定一次你嘅編碼器 — 下次只需要撳嗰度開始， DeHub 就會為你建立帖子。"
   },
+  "referral": {
+    "stats": {
+      "pageViews": "頁面瀏覽量",
+      "uniqueVisitors": "獨特嘅訪客",
+      "inLast30Days": "30 日後 {{count}}",
+      "percentJoined": "{{pct}}% 加入咗",
+      "noVisits": "仲未有探訪",
+      "selfVisitsExcluded": "你自己瀏覽你嘅連結唔會計入去。"
+    }
+  },
   "creatorFlow": {
     "title": "創作者流程",
     "backToStudio": "返回創作者工作室",
@@ -2815,6 +2825,7 @@
     "ttsHint": "當禮物送達時，請大聲朗讀給所有觀眾。"
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2889,7 +2900,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

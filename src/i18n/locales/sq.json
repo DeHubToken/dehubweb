@@ -2288,6 +2288,16 @@
     "keepStreaming": "Vazhdoni transmetimin",
     "encoderPermanentHint": "Ky çelës nuk ndryshon kurrë. Vendosni koduesin tuaj një herë — herën tjetër vetëm shtypni Start atje dhe DeHub krijon postimin për ju."
   },
+  "referral": {
+    "stats": {
+      "pageViews": "Shikimet e faqes",
+      "uniqueVisitors": "Vizitorë unikë",
+      "inLast30Days": "{{count}} në 30 ditë",
+      "percentJoined": "{{pct}}% u bashkua",
+      "noVisits": "Ende nuk ka vizita",
+      "selfVisitsExcluded": "Vizitat e tua në linkun tënd nuk llogariten."
+    }
+  },
   "creatorFlow": {
     "title": "Krijuesi i rrjedhës",
     "backToStudio": "Kthehu te Studioja e Krijuesit",
@@ -2833,6 +2843,7 @@
     "ttsHint": "Lexo me zë të lartë për të gjithë ata që shikojnë se kur do të mbërrijë dhurata jote."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2907,7 +2918,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

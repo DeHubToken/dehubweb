@@ -3819,6 +3819,13 @@
     "voiceNoteFailed": "හඬ සටහන යැවීමට අසමත් විය"
   },
   "referral": {
+    "stats": {
+      "pageViews": "පිටු දර්ශන",
+      "uniqueVisitors": "අද්විතීය අමුත්තන්",
+      "percentJoined": "{{pct}}% එකතු විය",
+      "noVisits": "තවම පැමිණීම් නොමැත",
+      "selfVisitsExcluded": "ඔබේ සබැඳියට ඔබේම සංචාරයන් ගණන් නොගනී."
+    },
     "seoTitle": "DeHub — විමධ්‍යගත නිර්මාතෘ ජාලය",
     "seoTitleInvited": "{{inviter}} DeHub වෙත ඔබට ආරාධනා කළේය — ඔන්-චේන් උපයන්න, පළ කරන්න සහ ගොඩනඟන්න",
     "seoDescription": "විමධ්‍යගත නිර්මාතෘ ජාලය.",
@@ -4639,27 +4646,8 @@
     "ttsPlaceholder": "කියවලාම බලන්නකෝ ප් ‍ රවාහයට...",
     "ttsHint": "ඔබේ තෑග්ග ගොඩබසින විට බලා සිටින සෑම කෙනෙකුටම ශබ්ද නඟා කියවන්න."
   },
-  "spaces": {
-    "title": "අවකාශ",
-    "live": "සජීවී",
-    "upcoming": "ඉදිරි",
-    "past": "පසුගිය",
-    "create": "අවකාශයක් නිර්මාණය",
-    "join": "එකතු වන්න",
-    "listeners": "සවන්දෙන්නන්",
-    "speakers": "කථිකයන්",
-    "host": "සත්කාරක",
-    "noSpaces": "තවම අවකාශ නැත",
-    "loginDescription": "ශ්‍රව්‍ය අවකාශ නිර්මාණය කිරීමට සහ එකතු වීමට පිවිසෙන්න."
-  },
-  "blog": {
-    "title": "බ්ලොග්",
-    "readMore": "තවත් කියවන්න",
-    "backToBlog": "බ්ලොග් වෙත ආපසු",
-    "sharePost": "පළකිරීම බෙදා ගන්න",
-    "relatedPosts": "සම්බන්ධ පළකිරීම්"
-  },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -4734,9 +4722,28 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "spaces": {
+    "title": "අවකාශ",
+    "live": "සජීවී",
+    "upcoming": "ඉදිරි",
+    "past": "පසුගිය",
+    "create": "අවකාශයක් නිර්මාණය",
+    "join": "එකතු වන්න",
+    "listeners": "සවන්දෙන්නන්",
+    "speakers": "කථිකයන්",
+    "host": "සත්කාරක",
+    "noSpaces": "තවම අවකාශ නැත",
+    "loginDescription": "ශ්‍රව්‍ය අවකාශ නිර්මාණය කිරීමට සහ එකතු වීමට පිවිසෙන්න."
+  },
+  "blog": {
+    "title": "බ්ලොග්",
+    "readMore": "තවත් කියවන්න",
+    "backToBlog": "බ්ලොග් වෙත ආපසු",
+    "sharePost": "පළකිරීම බෙදා ගන්න",
+    "relatedPosts": "සම්බන්ධ පළකිරීම්"
   }
 }
