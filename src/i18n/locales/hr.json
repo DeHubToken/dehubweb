@@ -1983,6 +1983,8 @@
       "thisYear": "Ova godina",
       "allTime": "Cijelo razdoblje",
       "newMembers": "Novi članovi",
+      "viewMembers": "Prikaži članove",
+      "openNewMembers": "Otvori popis novih članova",
       "chartMembers": "Članovi kroz vrijeme",
       "chartActive": "Aktivni ljudi",
       "growth": "+{{percent}} % ovaj mjesec",

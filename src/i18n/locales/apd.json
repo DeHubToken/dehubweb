@@ -1933,6 +1933,8 @@
       "thisYear": "السنة دي",
       "allTime": "كل الوقت",
       "newMembers": "أعضاء جداد",
+      "viewMembers": "عرض الأعضاء",
+      "openNewMembers": "افتح قائمة الأعضاء الجدد",
       "chartMembers": "الأعضاء مع مرور الوقت",
       "chartActive": "الناس النشطين",
       "growth": "+{{percent}}% الشهر دا",

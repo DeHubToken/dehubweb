@@ -1998,6 +1998,8 @@
       "thisYear": "Tēnei tau",
       "allTime": "Wā katoa",
       "newMembers": "Ngā mema hou",
+      "viewMembers": "Tirohia ngā mema",
+      "openNewMembers": "Whakatuwherahia te raarangi mema hou",
       "chartMembers": "Ngā mema i roto i te wā",
       "chartActive": "Ngā tāngata hohe",
       "growth": "+{{percent}}% i tēnei marama",

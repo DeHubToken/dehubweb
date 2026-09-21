@@ -2041,6 +2041,8 @@
       "thisYear": "Tahun ini",
       "allTime": "Sepanjang waktu",
       "newMembers": "Anggota baru",
+      "viewMembers": "Lihat anggota",
+      "openNewMembers": "Buka daftar anggota baru",
       "chartMembers": "Anggota dari waktu ke waktu",
       "chartActive": "Orang aktif",
       "growth": "+{{percent}}% bulan ini",

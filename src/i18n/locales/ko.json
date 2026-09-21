@@ -2040,6 +2040,8 @@
       "thisYear": "올해",
       "allTime": "전체 기간",
       "newMembers": "신규 멤버",
+      "viewMembers": "멤버 보기",
+      "openNewMembers": "새 구성원 목록 열기",
       "chartMembers": "기간별 멤버 수",
       "chartActive": "활성 사용자",
       "growth": "이번 달 +{{percent}}%",

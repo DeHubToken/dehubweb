@@ -1992,6 +1992,8 @@
       "thisYear": "I år",
       "allTime": "Hela tiden",
       "newMembers": "Nya medlemmar",
+      "viewMembers": "Visa medlemmar",
+      "openNewMembers": "Öppna listan över nya medlemmar",
       "chartMembers": "Medlemmar över tid",
       "chartActive": "Aktiva personer",
       "growth": "+{{percent}} % denna månad",

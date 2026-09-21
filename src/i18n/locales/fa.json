@@ -2069,6 +2069,8 @@
       "thisYear": "امسال",
       "allTime": "کل دوره",
       "newMembers": "اعضای جدید",
+      "viewMembers": "دیدن اعضا",
+      "openNewMembers": "لیست اعضای جدید را باز کنید",
       "chartMembers": "اعضا در طول زمان",
       "chartActive": "افراد فعال",
       "growth": "+{{percent}}٪ این ماه",

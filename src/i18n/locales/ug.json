@@ -1981,6 +1981,8 @@
       "thisYear": "بۇ يىل",
       "allTime": "بارلىق ۋاقىت",
       "newMembers": "يېڭى ئەزالار",
+      "viewMembers": "ئەزالارنى كۆرۈش",
+      "openNewMembers": "يېڭى ئەزا تىزىملىكىنى ئېچىش",
       "chartMembers": "ۋاقىت بويىچە ئەزالار",
       "chartActive": "ئاكتىپ كىشىلەر",
       "growth": "بۇ ئايدا +{{percent}}%",

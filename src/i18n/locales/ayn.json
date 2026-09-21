@@ -1933,6 +1933,8 @@
       "thisYear": "هالسنة",
       "allTime": "كل الوقت",
       "newMembers": "أعضاء جدد",
+      "viewMembers": "شوف الأعضاء",
+      "openNewMembers": "افتح قائمة الأعضاء الجديدة",
       "chartMembers": "الأعضاء عبر الوقت",
       "chartActive": "الناس النشطين",
       "growth": "+{{percent}}% هالشهر",

@@ -1886,6 +1886,8 @@
       "thisYear": "এই বছর",
       "allTime": "সমগ্র সময়",
       "newMembers": "নতুন সদস্য",
+      "viewMembers": "সদস্যদের দেখুন",
+      "openNewMembers": "নতুন সদস্যদের তালিকা খুলুন",
       "chartMembers": "সময়ের সাথে সদস্য",
       "chartActive": "সক্রিয় ব্যক্তি",
       "growth": "+{{percent}}% এই মাসে",

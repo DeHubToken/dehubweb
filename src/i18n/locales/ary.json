@@ -2023,6 +2023,8 @@
       "thisYear": "هاد العام",
       "allTime": "كل الفترة",
       "newMembers": "أعضاء جداد",
+      "viewMembers": "عرض الأعضاء",
+      "openNewMembers": "فتح قائمة الأعضاء الجدد",
       "chartMembers": "الأعضاء مع الوقت",
       "chartActive": "الناس النشيطين",
       "growth": "+{{percent}}% هاد الشهر",

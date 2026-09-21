@@ -1985,6 +1985,8 @@
       "thisYear": "Bu il",
       "allTime": "Bütün dövr",
       "newMembers": "Yeni üzvlər",
+      "viewMembers": "Üzvlərə bax",
+      "openNewMembers": "Yeni üzvlərin siyahısını açın",
       "chartMembers": "Zaman üzrə üzvlər",
       "chartActive": "Aktiv istifadəçilər",
       "growth": "+{{percent}}% bu ay",

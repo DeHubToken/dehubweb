@@ -1958,6 +1958,8 @@
       "thisYear": "هالسنة",
       "allTime": "كل الوكت",
       "newMembers": "أعضاء جداد",
+      "viewMembers": "شوف الأعضاء",
+      "openNewMembers": "افتح قائمة الأعضاء الجدد",
       "chartMembers": "الأعضاء بمرور الوكت",
       "chartActive": "الناس الناشطين",
       "growth": "+{{percent}}% هالشهر",

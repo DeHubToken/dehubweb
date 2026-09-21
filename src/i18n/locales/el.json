@@ -1868,6 +1868,8 @@
       "thisYear": "Αυτό το έτος",
       "allTime": "Όλο το διάστημα",
       "newMembers": "Νέα μέλη",
+      "viewMembers": "Προβολή μελών",
+      "openNewMembers": "Άνοιγμα της λίστας νέων μελών",
       "chartMembers": "Μέλη με την πάροδο του χρόνου",
       "chartActive": "Ενεργά άτομα",
       "growth": "+{{percent}}% αυτόν τον μήνα",

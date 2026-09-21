@@ -2034,6 +2034,8 @@
       "thisYear": "Lo nyaka",
       "allTime": "Isikhathi sonke",
       "newMembers": "Amalungu amasha",
+      "viewMembers": "Buka amalungu",
+      "openNewMembers": "Vula uhlu lwamalungu amasha",
       "chartMembers": "Amalungu ngokuhamba kwesikhathi",
       "chartActive": "Abantu abasebenzayo",
       "growth": "+{{percent}}% kule nyanga",

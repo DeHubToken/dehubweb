@@ -2047,6 +2047,8 @@
       "thisYear": "इस साल",
       "allTime": "पूरा समय",
       "newMembers": "नए सदस्य",
+      "viewMembers": "सदस्य देखें",
+      "openNewMembers": "नए सदस्यों की सूची खोलें",
       "chartMembers": "समय के साथ सदस्य",
       "chartActive": "सक्रिय लोग",
       "growth": "+{{percent}}% इस महीने",

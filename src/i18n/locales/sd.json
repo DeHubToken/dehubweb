@@ -1977,6 +1977,8 @@
       "thisYear": "هن سال",
       "allTime": "سڄو وقت",
       "newMembers": "نوان ميمبر",
+      "viewMembers": "ميمبر ڏسو",
+      "openNewMembers": "نئين ميمبرن جي لسٽ کوليو",
       "chartMembers": "وقت سان گڏ ميمبر",
       "chartActive": "فعال ماڻهو",
       "growth": "+{{percent}}% هن مهيني",

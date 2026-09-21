@@ -2039,7 +2039,9 @@
       "chartActive": "Olona mavitrika",
       "growth": "+{{percent}}% ity volana ity",
       "growthTerm": "Fitomboana",
-      "recordingSince": "voarakitra hatramin'ny {{date}}"
+      "recordingSince": "voarakitra hatramin'ny {{date}}",
+      "viewMembers": "Hizaha ireo mpikambana",
+      "openNewMembers": "Manokatra ny lisitry ny mpikambana vaovao"
     },
     "title": "Antontan'isa",
     "subtitle": "Vaovao loharano misokatra amin'ny fotoana tena izy",

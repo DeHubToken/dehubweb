@@ -2038,6 +2038,8 @@
       "thisYear": "ఈ సంవత్సరం",
       "allTime": "మొత్తం కాలం",
       "newMembers": "కొత్త సభ్యులు",
+      "viewMembers": "సభ్యులను చూడండి",
+      "openNewMembers": "కొత్త సభ్యుల జాబితాను తెరవండి",
       "chartMembers": "కాలక్రమేణా సభ్యులు",
       "chartActive": "యాక్టివ్ వ్యక్తులు",
       "growth": "+{{percent}}% ఈ నెల",

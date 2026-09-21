@@ -1907,6 +1907,8 @@
       "thisYear": "Тази година",
       "allTime": "Целият период",
       "newMembers": "Нови членове",
+      "viewMembers": "Преглед на членовете",
+      "openNewMembers": "Отваряне на новия списък с членове",
       "chartMembers": "Членове във времето",
       "chartActive": "Активни хора",
       "growth": "+{{percent}}% този месец",

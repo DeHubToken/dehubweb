@@ -2007,6 +2007,8 @@
       "thisYear": "השנה",
       "allTime": "כל הזמן",
       "newMembers": "חברים חדשים",
+      "viewMembers": "הצגת חברים",
+      "openNewMembers": "פתח את רשימת החברים החדשה",
       "chartMembers": "חברים לאורך זמן",
       "chartActive": "אנשים פעילים",
       "growth": "+{{percent}}% החודש",

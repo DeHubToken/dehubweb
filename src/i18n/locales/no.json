@@ -1999,6 +1999,8 @@
       "thisYear": "I år",
       "allTime": "Hele perioden",
       "newMembers": "Nye medlemmer",
+      "viewMembers": "Vis medlemmer",
+      "openNewMembers": "Åpne listen over nye medlemmer",
       "chartMembers": "Medlemmer over tid",
       "chartActive": "Aktive personer",
       "growth": "+{{percent}} % denne måneden",

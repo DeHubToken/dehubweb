@@ -1958,6 +1958,8 @@
       "thisYear": "Nin san",
       "allTime": "Waati bɛɛ",
       "newMembers": "Tɔnden kuraw",
+      "viewMembers": "Ɲɛnabɔla Jɛnkulu ka mɔgɔ dɔw",
+      "openNewMembers": "N'i ye mɔgɔ kuraw ye, i ka kan ka u tɔgɔw sɛbɛn",
       "chartMembers": "Tɔndenw waati kɔnɔ",
       "chartActive": "Mɔgɔ baaradenw",
       "growth": "+{{percent}}% nin kalo",

@@ -1988,6 +1988,8 @@
       "thisYear": "Aquest any",
       "allTime": "Tot el període",
       "newMembers": "Membres nous",
+      "viewMembers": "Mostra els membres",
+      "openNewMembers": "Obre la llista de membres nous",
       "chartMembers": "Evolució de membres",
       "chartActive": "Persones actives",
       "growth": "+{{percent}}% aquest mes",

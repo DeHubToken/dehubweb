@@ -2125,7 +2125,9 @@
       "chartActive": "সক্রিয় মানুষ",
       "growth": "+{{percent}}% ই মাসো",
       "growthTerm": "বাড়ন",
-      "recordingSince": "{{date}} থাকি লেখা অইরো"
+      "recordingSince": "{{date}} থাকি লেখা অইরো",
+      "viewMembers": "সদস্যদের দেখুন",
+      "openNewMembers": "নতুন সদস্যদের তালিকা খুলুন"
     },
     "title": "স্ট্যাটস",
     "subtitle": "রিয়েল-টাইম ওপেন সোর্স তথ্য",

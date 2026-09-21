@@ -1934,7 +1934,9 @@
       "chartActive": "活跃用户",
       "growth": "这个月 +{{percent}}%",
       "growthTerm": "增长",
-      "recordingSince": "自 {{date}} 起记录"
+      "recordingSince": "自 {{date}} 起记录",
+      "viewMembers": "查看成员",
+      "openNewMembers": "打开新成员列表"
     },
     "title": "数据",
     "subtitle": "实时开源情报",

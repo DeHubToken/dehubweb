@@ -2043,6 +2043,8 @@
       "thisYear": "هذا العام",
       "allTime": "كل الفترة",
       "newMembers": "أعضاء جدد",
+      "viewMembers": "عرض الأعضاء",
+      "openNewMembers": "فتح قائمة الأعضاء الجدد",
       "chartMembers": "الأعضاء عبر الزمن",
       "chartActive": "الأشخاص النشطون",
       "growth": "+{{percent}}% هذا الشهر",
