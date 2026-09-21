@@ -1303,7 +1303,20 @@
     "failedOnramp": "Rampa başlatılamadı",
     "badgeDiscount": "{{tier}} sahibi — %{{percent}} indirim",
     "otherTokens": "Diğer tokenlar",
-    "otherTokensDesc": "Kartınızla Base ağında ETH veya USDC satın alın"
+    "otherTokensDesc": "Kartınızla Base ağında ETH veya USDC satın alın",
+    "minDhbPurchase": "Minimum DHB alımı 0,50 $",
+    "shareToFeed": "Akışımda paylaş",
+    "sharePostTemplate": "Az önce DeHub'daki yığınıma {{amount}} $DHB'yi ekledim. Toplulukla birlikte inşa etmek. #DeHub #DHB",
+    "success": {
+      "title": "Satın Alma Tamamlandı!",
+      "subtitle": "Jetonlar cüzdanınıza teslim edildi.",
+      "viewWallet": "Cüzdanı Görüntüle"
+    },
+    "swapSuccess": {
+      "title": "Takas Başarılı!",
+      "received": "{{amount}}<coin></coin> alındı",
+      "addedToWallet": "{{amount}}{{symbol}} cüzdanınıza eklendi"
+    }
   },
   "agents": {
     "title": "AI Ajanları",

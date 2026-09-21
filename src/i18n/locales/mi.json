@@ -1265,7 +1265,20 @@
     "failedOnramp": "Kāore i taea te tīmata rampa",
     "badgeDiscount": "Kaipupuri {{tier}} — {{percent}}% te whakahekenga",
     "otherTokens": "Ētahi atu tohu",
-    "otherTokensDesc": "Hokona he ETH, he USDC rānei i Base ki tō kāri"
+    "otherTokensDesc": "Hokona he ETH, he USDC rānei i Base ki tō kāri",
+    "minDhbPurchase": "Ko te hoko iti rawa o te DHB ko te $ 0.50",
+    "shareToFeed": "Whakauru atu ki taku kai",
+    "sharePostTemplate": "Just tāpiri {{amount}} $DHB ki toku stack i runga i DeHub. Hanga ki te hapori. #DeHub #DHB",
+    "success": {
+      "title": "Hokona katoa!",
+      "subtitle": "Kua tukuna nga tokens ki to putea.",
+      "viewWallet": "Tirohia te Wallet"
+    },
+    "swapSuccess": {
+      "title": "Kia angitu!",
+      "received": "{{amount}} <coin></coin> kua riro mai",
+      "addedToWallet": "{{amount}} {{symbol}} tāpiri ki tou putea"
+    }
   },
   "agents": {
     "title": "Kaihautū MI",

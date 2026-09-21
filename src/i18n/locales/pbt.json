@@ -1239,7 +1239,17 @@
     "failedOnramp": "آنریمپ نشي پیل کیدلی",
     "badgeDiscount": "{{tier}} لرونکی — {{percent}}٪ تخفیف",
     "otherTokens": "نور ټوکنونه",
-    "otherTokensDesc": "په خپل کارت سره په Base کې ETH یا USDC واخلئ"
+    "otherTokensDesc": "په خپل کارت سره په Base کې ETH یا USDC واخلئ",
+    "minDhbPurchase": "د $ 0.50 ډالرو لپاره د DHB لږترلږه پیرود",
+    "shareToFeed": "زما د خوړو سره شریک کړئ",
+    "success": {
+      "title": "په بشپړ ډول وپلورئ!",
+      "subtitle": "توکي ستاسو په جیب کې لیږدول شوي.",
+      "viewWallet": "د بسته بندۍ کڅوړه وګورئ"
+    },
+    "swapSuccess": {
+      "title": "په بریالیتوب سره لوبه وکړئ!"
+    }
   },
   "agents": {
     "title": "AI ایجنټونه",

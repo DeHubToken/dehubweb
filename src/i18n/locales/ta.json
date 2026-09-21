@@ -1290,7 +1290,21 @@
     "failedOnramp": "தொடங்க இயலவில்லை",
     "badgeDiscount": "{{tier}} வைத்திருப்பவர் — {{percent}}% தள்ளுபடி",
     "otherTokens": "மற்ற டோக்கன்கள்",
-    "otherTokensDesc": "உங்கள் அட்டையால் Base-இல் ETH அல்லது USDC வாங்குங்கள்"
+    "otherTokensDesc": "உங்கள் அட்டையால் Base-இல் ETH அல்லது USDC வாங்குங்கள்",
+    "minDhbPurchase": "குறைந்தபட்ச DHB வாங்குதல் $ 0.50",
+    "cardBankDesc": "விசா, மாஸ்டர்கார்டு, ஆப்பிள் பே",
+    "shareToFeed": "எனது ஊட்டத்தில் பகிரவும்",
+    "sharePostTemplate": "DeHub இல் எனது ஸ்டேக்கில் {{amount}} $ DHB ஐச் சேர்த்துள்ளேன். சமூகத்துடன் கட்டியெழுப்புதல். #DeHub #DHB",
+    "success": {
+      "title": "வாங்குதல் முடிந்தது!",
+      "subtitle": "டோக்கன்கள் உங்கள் வாலெட்டில் டெலிவரி செய்யப்பட்டுள்ளன.",
+      "viewWallet": "வாலெட்டைக் காண்க"
+    },
+    "swapSuccess": {
+      "title": "இடமாற்றுதல் வெற்றிகரமாக முடிந்தது!",
+      "received": "{{amount}} <coin></coin> பெறப்பட்டது",
+      "addedToWallet": "{{amount}} {{symbol}} உங்கள் வாலெட்டில் சேர்க்கப்பட்டது"
+    }
   },
   "agents": {
     "title": "AI முகவர்",

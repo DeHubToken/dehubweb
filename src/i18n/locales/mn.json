@@ -1266,7 +1266,19 @@
     "failedOnramp": "Онрамп эхлүүлэхэд алдаа гарлаа",
     "badgeDiscount": "{{tier}} эзэмшигч — {{percent}}% хямдрал",
     "otherTokens": "Бусад токен",
-    "otherTokensDesc": "Картаараа Base дээр ETH эсвэл USDC худалдаж авах"
+    "otherTokensDesc": "Картаараа Base дээр ETH эсвэл USDC худалдаж авах",
+    "minDhbPurchase": "DHB худалдан авалт хамгийн бага нь $ 0.50 байна",
+    "shareToFeed": "Миний хоолонд хуваалцах",
+    "sharePostTemplate": "{{amount}} $ DHB-гDeHub дээрээ стек дээр нэмсэн. Олон нийттэй хамтран ажиллах. #DeHub #DHB",
+    "success": {
+      "title": "Худалдан авалт дууслаа!",
+      "subtitle": "Токенуудыг түрийвч дээрээ хүргүүлэв.",
+      "viewWallet": "Түрийвчийг харах"
+    },
+    "swapSuccess": {
+      "title": "Swap амжилттай!",
+      "addedToWallet": "{{amount}} {{symbol}} таны хэтэвч дээр нэмсэн"
+    }
   },
   "agents": {
     "title": "AI агентууд",

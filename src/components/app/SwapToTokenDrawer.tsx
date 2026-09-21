@@ -6,11 +6,13 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { AppState } from '@/components/app/AppState';
 import { Input } from '@/components/ui/input';
-import { Loader2, ArrowDown, CheckCircle2, AlertCircle, CreditCard, Wallet, Plus, ChevronDown } from 'lucide-react';
+import { Loader2, ArrowDown, CheckCircle2, AlertCircle, CreditCard, Wallet, Plus, ChevronDown, Send } from 'lucide-react';
+import { useOptionalGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
 import { getSwapQuote, applySlippage, swapTokens, getNativeBalance } from '@/lib/contracts/uniswap-swap';
 import { useAuth } from '@/contexts/AuthContext';
@@ -62,6 +64,8 @@ export function SwapToTokenDrawer({
   targetLogo,
 }: SwapToTokenDrawerProps) {
   const { walletAddress } = useAuth();
+  const { t } = useTranslation();
+  const dropZone = useOptionalGlobalDropZone();
   const { data: prices = {} } = useTokenPrices();
   const { allTokens } = useAllChainsTokens();
 
@@ -198,6 +202,20 @@ export function SwapToTokenDrawer({
     onOpenChange(v);
   };
 
+  // Only a DHB buy is a story for the feed; the template names the coin.
+  const canShareToFeed = !!dropZone && targetSymbol.toUpperCase() === 'DHB' && parseFloat(amount) > 0;
+
+  const handleShareToFeed = () => {
+    if (!dropZone) return;
+    const text = t('buyCoins.sharePostTemplate', {
+      amount: new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(parseFloat(amount) || 0),
+    });
+    handleClose(false);
+    // Pre-filled, not published: the composer still asks for the mint. It
+    // opens once the drawer has finished closing, as ShareEntityDrawer does.
+    setTimeout(() => dropZone.openPostModal(text), 250);
+  };
+
   const tokenIcon = selectedToken.logo || TOKEN_ICONS[selectedToken.symbol];
   const outIcon = targetLogo || TOKEN_ICONS[targetSymbol.toUpperCase()];
 
@@ -212,12 +230,21 @@ export function SwapToTokenDrawer({
           {success ? (
             <div className="flex flex-col items-center gap-3 py-6">
               <CheckCircle2 className="w-12 h-12 text-emerald-400" />
-              <p className="text-white font-medium">Swap Successful!</p>
+              <p className="text-white font-medium">{t('buyCoins.swapSuccess.title')}</p>
               <p className="text-sm text-zinc-400">
-                {parseFloat(amount).toLocaleString()} {targetSymbol} added to your wallet
+                {t('buyCoins.swapSuccess.addedToWallet', { amount: parseFloat(amount).toLocaleString(), symbol: targetSymbol })}
               </p>
+              {canShareToFeed && (
+                <Button
+                  className="mt-2 rounded-xl bg-white text-black hover:bg-white/90 border-0"
+                  onClick={handleShareToFeed}
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  {t('buyCoins.shareToFeed')}
+                </Button>
+              )}
               <Button variant="glass" className="mt-2 rounded-xl" onClick={() => handleClose(false)}>
-                Done
+                {t('commandCentre.done')}
               </Button>
             </div>
           ) : (

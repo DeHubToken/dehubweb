@@ -1300,7 +1300,20 @@
     "failedOnramp": "Chehaghordagrvats sksel ramp",
     "badgeDiscount": "{{tier}} կրող — {{percent}}% զեղչ",
     "otherTokens": "Այլ թոքեններ",
-    "otherTokensDesc": "Գնեք ETH կամ USDC Base-ում ձեր քարտով"
+    "otherTokensDesc": "Գնեք ETH կամ USDC Base-ում ձեր քարտով",
+    "minDhbPurchase": "DHB - ի նվազագույն գնումը 0.50 $ է",
+    "shareToFeed": "Կիսվեք իմ լրահոսով",
+    "sharePostTemplate": "Հենց նոր {{amount}} $DHB - ն ավելացվեց DeHub - ի իմ դեղին ։ Կառուցեք համայնքի հետ միասին ։ #DeHub #DHB",
+    "success": {
+      "title": "Գնումն ավարտված է ։",
+      "subtitle": "Նշանակներն ուղարկվել են ձեր դրամապանակին:",
+      "viewWallet": "Դիտել դրամապանակը"
+    },
+    "swapSuccess": {
+      "title": "Փոխանակումը հաջողվեց:",
+      "received": "{{amount}} <coin></coin> ստացված",
+      "addedToWallet": "{{amount}} {{symbol}} ավելացվել է ձեր դրամապանակում"
+    }
   },
   "agents": {
     "title": "AI Gortsakalner",

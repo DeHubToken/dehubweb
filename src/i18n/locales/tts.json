@@ -1231,7 +1231,20 @@
     "failedOnramp": "เริ่มออนแรมป์ล้มเหลว",
     "badgeDiscount": "ผู้ถือ {{tier}} — ลด {{percent}}%",
     "otherTokens": "โทเคนอื่น",
-    "otherTokensDesc": "ซื้อ ETH หรือ USDC เทิง Base นำบัตรของเจ้า"
+    "otherTokensDesc": "ซื้อ ETH หรือ USDC เทิง Base นำบัตรของเจ้า",
+    "minDhbPurchase": "ยอดซื้อขั้นต่ำ DHB คือ $0.50",
+    "shareToFeed": "แชร์ไปยังฟีดของฉัน",
+    "sharePostTemplate": "เพิ่งเพิ่ม {{amount}} $DHB เข้าในสแต็กของฉันบน DeHub สร้างร่วมกับชุมชน #DeHub #DHB",
+    "success": {
+      "title": "การซื้อเสร็จสมบูรณ์!",
+      "subtitle": "โทเค็นถูกส่งไปยังกระเป๋าเงินของคุณแล้ว",
+      "viewWallet": "ดูวอลเล็ต"
+    },
+    "swapSuccess": {
+      "title": "การแลกเปลี่ยนสำเร็จ!",
+      "received": "ได้รับ {{amount}} <coin></coin>",
+      "addedToWallet": "เพิ่ม {{amount}} {{symbol}} ในวอลเล็ตของคุณแล้ว"
+    }
   },
   "agents": {
     "title": "AI Agents",

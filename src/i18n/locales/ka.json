@@ -1301,7 +1301,20 @@
     "failedOnramp": "ონრემპის დაწყება ვერ მოხერხდა",
     "badgeDiscount": "{{tier}} მფლობელი — {{percent}}% ფასდაკლება",
     "otherTokens": "სხვა ტოკენები",
-    "otherTokensDesc": "იყიდეთ ETH ან USDC Base-ზე თქვენი ბარათით"
+    "otherTokensDesc": "იყიდეთ ETH ან USDC Base-ზე თქვენი ბარათით",
+    "minDhbPurchase": "DHB-ის მინიმალური შენაძენი არის 0.50 $",
+    "shareToFeed": "Გაუზიარეთ ჩემს არხებს",
+    "sharePostTemplate": "{{amount}} $DHB დაემატა ჩემს დასტას DeHub-ზე. Შეიმუშავეთ გაერთიანებასთან ერთად. #DeHub #DHB",
+    "success": {
+      "title": "Შეძენა დასრულებულია!",
+      "subtitle": "Კოდები მიტანილია საფულეში.",
+      "viewWallet": "Საფულის ნახვა"
+    },
+    "swapSuccess": {
+      "title": "Გადაცვლა წარმატებულია!",
+      "received": "{{amount}}<coin></coin> მიღებულია",
+      "addedToWallet": "{{amount}} {{symbol}} დაემატა თქვენს საფულეს"
+    }
   },
   "agents": {
     "title": "AI აგენტი",

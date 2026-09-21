@@ -1265,7 +1265,21 @@
     "failedOnramp": "ઓનરેમ્પ શરૂ કરી શકાયું નહીં",
     "badgeDiscount": "{{tier}} ધારક — {{percent}}% છૂટ",
     "otherTokens": "અન્ય ટોકન",
-    "otherTokensDesc": "તમારા કાર્ડથી Base પર ETH અથવા USDC ખરીદો"
+    "otherTokensDesc": "તમારા કાર્ડથી Base પર ETH અથવા USDC ખરીદો",
+    "minDhbPurchase": "ન્યૂનતમ DHB ખરીદી $ 0.50 છે",
+    "feeNote": "કાર્ડ ફી ~ 3.6% અને 0.5% નેટવર્ક રિઝર્વ આમાં આવે છે. અનામત તમને ગેસ માટે ETH તરીકે મોકલવામાં આવે છે.",
+    "shareToFeed": "મારા ફીડ પર શેર કરો",
+    "sharePostTemplate": "હમણાં જ DeHub પર મારા સ્ટેકમાં {{amount}} $DHB ઉમેર્યું. સમુદાય સાથે બિલ્ડિંગ. #DeHub #DHB",
+    "success": {
+      "title": "ખરીદી પૂર્ણ!",
+      "subtitle": "ટોકન્સ તમારા વૉલેટમાં પહોંચાડવામાં આવ્યા છે.",
+      "viewWallet": "વૉલેટ જુઓ"
+    },
+    "swapSuccess": {
+      "title": "સ્વેપ સફળ!",
+      "received": "{{amount}} <coin></coin> પ્રાપ્ત થયા",
+      "addedToWallet": "{{amount}} {{symbol}} તમારા વૉલેટમાં ઉમેરાયેલ છે"
+    }
   },
   "agents": {
     "title": "AI એજન્ટ્સ",

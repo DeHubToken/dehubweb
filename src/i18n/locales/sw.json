@@ -1304,7 +1304,19 @@
     "failedOnramp": "Imeshindwa kuanza njia",
     "badgeDiscount": "Mmiliki wa {{tier}} — punguzo la {{percent}}%",
     "otherTokens": "Tokeni nyingine",
-    "otherTokensDesc": "Nunua ETH au USDC kwenye Base kwa kadi yako"
+    "otherTokensDesc": "Nunua ETH au USDC kwenye Base kwa kadi yako",
+    "minDhbPurchase": "Kima cha chini cha ununuzi wa DHB ni $ 0.50",
+    "shareToFeed": "Shiriki kwenye mpasho wangu",
+    "sharePostTemplate": "Nimeweka {{amount}} $DHB kwenye stakabadhi yangu kwenye DeHub. Kujenga na jumuiya. #DeHub #DHB",
+    "success": {
+      "title": "Ununuzi Umekamilika!",
+      "subtitle": "Tokeni zimefikishwa kwenye pochi yako.",
+      "viewWallet": "Angalia Wallet"
+    },
+    "swapSuccess": {
+      "title": "Kubadilisha kumefanikiwa!",
+      "addedToWallet": "{{amount}} {{symbol}} imewekwa kwenye pochi yako"
+    }
   },
   "agents": {
     "title": "Mawakala wa AI",

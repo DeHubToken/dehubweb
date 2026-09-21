@@ -1309,7 +1309,20 @@
     "failedOnramp": "ऑनरैम्प शुरू करने में विफल",
     "badgeDiscount": "{{tier}} धारक — {{percent}}% छूट",
     "otherTokens": "अन्य टोकन",
-    "otherTokensDesc": "अपने कार्ड से Base पर ETH या USDC खरीदें"
+    "otherTokensDesc": "अपने कार्ड से Base पर ETH या USDC खरीदें",
+    "minDhbPurchase": "न्यूनतम DHB खरीद $ 0.50 है",
+    "shareToFeed": "मेरी फ़ीड में शेयर करें",
+    "sharePostTemplate": "अभी - अभी DeHub पर मेरे स्टैक में {{amount}} $DHB जोड़ा गया है। समुदाय के साथ मिलकर काम करना। #DeHub #DHB",
+    "success": {
+      "title": "खरीदारी पूरी हुई!",
+      "subtitle": "टोकन आपके वॉलेट में डिलीवर कर दिए गए हैं।",
+      "viewWallet": "वॉलेट देखें"
+    },
+    "swapSuccess": {
+      "title": "स्वैप सफल रहा!",
+      "received": "{{amount}}<coin></coin> मिले",
+      "addedToWallet": "{{amount}}{{symbol}} आपके वॉलेट में जोड़े गए"
+    }
   },
   "agents": {
     "title": "AI एजेंट",

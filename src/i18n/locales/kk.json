@@ -1301,7 +1301,20 @@
     "failedOnramp": "Онрампты бастау сәтсіз аяқталды",
     "badgeDiscount": "{{tier}} иесі — {{percent}}% жеңілдік",
     "otherTokens": "Басқа токендер",
-    "otherTokensDesc": "Картаңызбен Base желісінде ETH немесе USDC сатып алыңыз"
+    "otherTokensDesc": "Картаңызбен Base желісінде ETH немесе USDC сатып алыңыз",
+    "minDhbPurchase": "Ең төменгі DHB сатып алу - $ 0.50",
+    "shareToFeed": "Менің арнама бөлісу",
+    "sharePostTemplate": "Жаңа DeHub-дағы жинағыма {{amount}} $DHB қосылды. Қоғаммен байланыс орнату. #DeHub #DHB",
+    "success": {
+      "title": "Сатып алу аяқталды!",
+      "subtitle": "Токендер әмияныңызға жеткізілді.",
+      "viewWallet": "Әмиянды көру"
+    },
+    "swapSuccess": {
+      "title": "Сәтті ауыстырыңыз!",
+      "received": "{{amount}} <coin></coin> қабылданды",
+      "addedToWallet": "{{amount}}{{symbol}} әмияныңызға қосылды"
+    }
   },
   "agents": {
     "title": "AI Агент",

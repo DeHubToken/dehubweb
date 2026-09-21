@@ -1269,7 +1269,20 @@
     "failedOnramp": "رامپىنى باشلاش مەغلۇب بولدى",
     "badgeDiscount": "{{tier}} ئىگىسى — {{percent}}% ئېتىبار",
     "otherTokens": "باشقا توكەنلار",
-    "otherTokensDesc": "كارتىڭىز بىلەن Base دا ETH ياكى USDC سېتىۋېلىڭ"
+    "otherTokensDesc": "كارتىڭىز بىلەن Base دا ETH ياكى USDC سېتىۋېلىڭ",
+    "minDhbPurchase": "ئەڭ تۆۋەن DHB سېتىۋېلىش قىممىتى $ 0.50",
+    "shareToFeed": "مېنىڭ يېمەكلىكىمگە ئورتاقلاش",
+    "sharePostTemplate": "ھازىرلا {{amount}} $ DHB نى DeHub دىكى توپلىمىمغا قوشۇپ قويدۇم. (ئى مۇھەممەد!) سەن ئۇلارنىڭ ئارىسىدىكى مەلۇم كىشىلەر بىلەن (مۇشرىكلارغا ياردەم بەرمەسلىكلىرى ئۈستىدە) مۇن #DeHub #DHB",
+    "success": {
+      "title": "تولۇق سېتىۋېلىڭ!",
+      "subtitle": "يانچۇقىڭىزغا خەتكۈچلەر ئەۋەتىلدى.",
+      "viewWallet": "يانچۇقنى كۆرۈش"
+    },
+    "swapSuccess": {
+      "title": "مۇۋەپپەقىيەتلىك ئالماشتۇرۇش!",
+      "received": "{{amount}} <coin></coin> قوبۇل قىلىندى",
+      "addedToWallet": "{{amount}}{{symbol}} قوشۇلدى"
+    }
   },
   "agents": {
     "title": "سۈنئىي ئەقىل ۋاكالەتچىلىرى",

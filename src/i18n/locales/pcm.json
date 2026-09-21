@@ -1140,7 +1140,16 @@
     "failedOnramp": "E no fit start onramp",
     "badgeDiscount": "{{tier}} holder — {{percent}}% off",
     "otherTokens": "Oda tokens",
-    "otherTokensDesc": "Use yor card buy ETH or USDC for Base"
+    "otherTokensDesc": "Use yor card buy ETH or USDC for Base",
+    "shareToFeed": "Share to my feed",
+    "success": {
+      "title": "Purchase Complete!",
+      "viewWallet": "View Wallet"
+    },
+    "swapSuccess": {
+      "title": "Swap Successful!",
+      "received": "{{amount}} <coin></coin> received"
+    }
   },
   "agents": {
     "title": "AI Agents",

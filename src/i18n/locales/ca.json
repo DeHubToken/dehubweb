@@ -1299,7 +1299,20 @@
     "failedOnramp": "Error en iniciar la rampa",
     "badgeDiscount": "Titular {{tier}} — {{percent}}% de descompte",
     "otherTokens": "Altres tokens",
-    "otherTokensDesc": "Compra ETH o USDC a Base amb la teva targeta"
+    "otherTokensDesc": "Compra ETH o USDC a Base amb la teva targeta",
+    "minDhbPurchase": "La compra mínima de DHB és de $ 0.50",
+    "shareToFeed": "Comparteix al meu canal",
+    "sharePostTemplate": "Acabo d'afegir {{amount}} $DHB a la meva pila a DeHub. Construir amb la comunitat. #DeHub #DHB",
+    "success": {
+      "title": "Compra finalitzada!",
+      "subtitle": "S'han lliurat fitxes al vostre moneder.",
+      "viewWallet": "Mostra la cartera"
+    },
+    "swapSuccess": {
+      "title": "L'intercanvi s'ha realitzat correctament!",
+      "received": "{{amount}} <coin></coin> rebut",
+      "addedToWallet": "S'ha afegit {{amount}} {{symbol}} a la teva cartera"
+    }
   },
   "agents": {
     "title": "Agents IA",

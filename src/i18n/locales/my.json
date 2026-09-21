@@ -1274,7 +1274,21 @@
     "failedOnramp": "Onramp စတင်၍မရပါ",
     "badgeDiscount": "{{tier}} ပိုင်ရှင် — {{percent}}% လျှော့",
     "otherTokens": "အခြားတိုကင်များ",
-    "otherTokensDesc": "သင့်ကတ်ဖြင့် Base ပေါ်တွင် ETH သို့မဟုတ် USDC ဝယ်ပါ"
+    "otherTokensDesc": "သင့်ကတ်ဖြင့် Base ပေါ်တွင် ETH သို့မဟုတ် USDC ဝယ်ပါ",
+    "minDhbPurchase": "နိမ့်ဆုံး DHB ဝယ်ယူမှု $ 0.50",
+    "feeNote": "ကတ်ကြေး ~ 3.6% နှင့် 0.5% ကွန်ရက်ကြိုတင်မှာယူမှုသည်ဤအရာမှလာသည် ။ Ethereum သည်သင့်အား Ethereum ကိုပေးသည် ။",
+    "shareToFeed": "ကျွနု်ပ် ၏ Feed ကိုမျှဝေပါ",
+    "sharePostTemplate": "DeHub တွင်ကျွန်ုပ် ၏ stack သို့ {{amount}} $DHB ကိုသာထည့်သွင်းခဲ့သည် ။ လူမှုအသိုင်းအဝိုင်းနဲ့ ပေါင်းသင်းဆက်ဆံပါ ။ #DeHub #DHB",
+    "success": {
+      "title": "ဝယ်ယူမှု ပြီးပါပြီ!",
+      "subtitle": "တိုကင်များကို သင့်ပိုက်ဆံအိတ်ထဲသို့ ပို့ဆောင်ပြီးပါပြီ ။",
+      "viewWallet": "ပိုက်ဆံအိတ်ကို ကြည့်ရန်"
+    },
+    "swapSuccess": {
+      "title": "ဖလှယ်မှု အောင်မြင်ပါသည်!",
+      "received": "{{amount}} <coin></coin> လက်ခံရရှိခဲ့သည်",
+      "addedToWallet": "{{amount}} {{symbol}} ကိုသင် ၏ ပိုက်ဆံအိတ်ထဲသို့ထည့်သည်"
+    }
   },
   "agents": {
     "title": "AI အေးဂျင့်",

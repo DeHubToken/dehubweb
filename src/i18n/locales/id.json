@@ -1303,7 +1303,20 @@
     "failedOnramp": "Gagal memulai onramp",
     "badgeDiscount": "Pemegang {{tier}} — diskon {{percent}}%",
     "otherTokens": "Token lainnya",
-    "otherTokensDesc": "Beli ETH atau USDC di Base dengan kartu Anda"
+    "otherTokensDesc": "Beli ETH atau USDC di Base dengan kartu Anda",
+    "minDhbPurchase": "Pembelian DHB minimum adalah $ 0,50",
+    "shareToFeed": "Bagikan ke feed saya",
+    "sharePostTemplate": "Baru saja menambahkan {{amount}} $DHB ke tumpukan saya di DeHub. Membangun bersama masyarakat. #DeHub #DHB",
+    "success": {
+      "title": "Pembelian Selesai!",
+      "subtitle": "Token telah dikirimkan ke dompet Anda.",
+      "viewWallet": "Lihat Dompet"
+    },
+    "swapSuccess": {
+      "title": "Swap Berhasil!",
+      "received": "{{amount}}<coin></coin> diterima",
+      "addedToWallet": "{{amount}}{{symbol}} ditambahkan ke dompet Anda"
+    }
   },
   "agents": {
     "title": "Agen AI",

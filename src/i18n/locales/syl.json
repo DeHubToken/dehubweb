@@ -1374,8 +1374,20 @@
     "otherTokensDesc": "তুাইনর কার্ড দি Base-ও ETH বা USDC কিনউক্কা",
     "amount": "পরিমাণ",
     "price": "দাম",
-    "success": "কেনা অইসে!",
-    "failed": "কেনা ব্যর্থ"
+    "failed": "কেনা ব্যর্থ",
+    "minDhbPurchase": "কমপক্ষে DHB কিনুন $0.50",
+    "shareToFeed": "আমার ফিডে শেয়ার করুন",
+    "sharePostTemplate": "এইমাত্র DeHub-এ {{amount}} $DHB আমার স্ট্যাকে যোগ করেছি। কমিউনিটির সাথে তৈরি করছি। #DeHub #DHB",
+    "success": {
+      "title": "ক্রয় সম্পন্ন!",
+      "subtitle": "টোকেন আপনার ওয়ালেটে পৌঁছে গেছে।",
+      "viewWallet": "ওয়ালেট দেখুন"
+    },
+    "swapSuccess": {
+      "title": "সোয়াপ সফল!",
+      "received": "{{amount}} <coin></coin> পাওয়া গেছে",
+      "addedToWallet": "{{amount}} {{symbol}} আপনার ওয়ালেটে যোগ করা হয়েছে"
+    }
   },
   "agents": {
     "title": "AI এজেন্ট",

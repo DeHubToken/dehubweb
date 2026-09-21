@@ -1269,7 +1269,19 @@
     "failedOnramp": "Kò le bẹ̀rẹ̀ ọ̀nà",
     "badgeDiscount": "Olùní {{tier}} — ẹ̀dínwó {{percent}}%",
     "otherTokens": "Àwọn tóòkẹ̀nì mìíràn",
-    "otherTokensDesc": "Fi káàdì rẹ ra ETH tàbí USDC lórí Base"
+    "otherTokensDesc": "Fi káàdì rẹ ra ETH tàbí USDC lórí Base",
+    "minDhbPurchase": "Ríra DHB tó kéré jù ni $ 0.50",
+    "shareToFeed": "Pin si ifunni mi",
+    "sharePostTemplate": "Kàn fi {{amount}} $DHB kún àkójọpọ̀ mi lórí DeHub. Ilé pẹ̀lú àwùjọ. #DeHub #DHB",
+    "success": {
+      "title": "Ra Pípé!",
+      "subtitle": "Wọ́n ti fi àwọn àkóónú ránṣẹ́ sí àpamọ́ rẹ.",
+      "viewWallet": "Wo apamọwọ"
+    },
+    "swapSuccess": {
+      "title": "Ṣàtúnṣe Àṣeyọrí!",
+      "addedToWallet": "{{amount}} {{symbol}} fi kun si apamọwọ rẹ"
+    }
   },
   "agents": {
     "title": "Àwọn Aṣojú AI",

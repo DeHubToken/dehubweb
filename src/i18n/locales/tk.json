@@ -1258,7 +1258,18 @@
     "failedOnramp": "Rampany başlamak başa barmady",
     "badgeDiscount": "{{tier}} eýesi — {{percent}}% arzanladyş",
     "otherTokens": "Beýleki tokenler",
-    "otherTokensDesc": "Kartyňyz bilen Base-de ETH ýa-da USDC satyn alyň"
+    "otherTokensDesc": "Kartyňyz bilen Base-de ETH ýa-da USDC satyn alyň",
+    "minDhbPurchase": "DHB-iň iň az satyn alyşy $ 0.50",
+    "shareToFeed": "Meniň iýmitimi paýlaň",
+    "sharePostTemplate": "Men diňe {{amount}} $ DHB-i DeHub-da ýerleşýän ýerime goşdum. Halkara ynsan hukuk jemgyýeti bilen baglanyşykly. #Güýçli #Güýçli",
+    "success": {
+      "title": "Ähli zat satylýar!",
+      "subtitle": "Siziň çuwallaryňyza toýunlar iberildi.",
+      "viewWallet": "Kalkülýotaryň görünüşi"
+    },
+    "swapSuccess": {
+      "title": "Başarha ýetmek üçin tagalla ediň!"
+    }
   },
   "agents": {
     "title": "Emeli aň agentleri",

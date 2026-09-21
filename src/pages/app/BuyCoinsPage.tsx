@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, CreditCard, Wallet, Loader2, Check, AlertCircle, Zap, CheckCircle2, XCircle, TrendingUp, Activity, Package, Search } from 'lucide-react';
+import { ArrowLeft, CreditCard, Wallet, Loader2, Check, AlertCircle, Zap, CheckCircle2, XCircle, TrendingUp, Activity, Package, Search, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
@@ -38,6 +38,7 @@ import { format } from 'date-fns';
 import { invalidateSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
 import { NearIntentBuy } from '@/components/app/NearIntentBuy';
 import { isBuyRoute } from '@/lib/buy-route';
+import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 
 const PRESET_AMOUNTS = [0.5, 10, 25, 50, 100, 500];
 const MIN_DHB_PURCHASE_USD = 0.5;
@@ -79,7 +80,13 @@ export default function BuyCoinsPage() {
   // Post-purchase state
   const [purchaseStatus, setPurchaseStatus] = useState<'idle' | 'polling' | 'success' | 'failed' | 'expired'>('idle');
   const [purchaseSessionId, setPurchaseSessionId] = useState<string | null>(null);
+  // The amount the gateway holds for this session, read off the session row
+  // while polling. Stripe sends the buyer back here as a fresh document, so by
+  // the time the purchase completes the amount picker is on its default again
+  // and the on-page estimate no longer describes what was bought.
+  const [purchasedTokens, setPurchasedTokens] = useState<number | null>(null);
   const [txSearch, setTxSearch] = useState('');
+  const { openPostModal } = useGlobalDropZone();
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Fetch available tokens
@@ -184,6 +191,7 @@ export default function BuyCoinsPage() {
 
   const startPolling = useCallback((sessionId: string) => {
     setPurchaseSessionId(sessionId);
+    setPurchasedTokens(null);
     setPurchaseStatus('polling');
     setPollingMessage(t('buyCoins.statusAwaitingPayment'));
 
@@ -222,6 +230,11 @@ export default function BuyCoinsPage() {
 
       try {
         const status = await getDPaySessionStatus(sessionId);
+
+        // Captured on every poll, not just the delivered one, so the
+        // "still arriving" outcome below can still name the amount.
+        const tokensOnRow = Number(status.tokenReceived ?? status.approxTokensToReceive);
+        if (Number.isFinite(tokensOnRow) && tokensOnRow > 0) setPurchasedTokens(tokensOnRow);
 
         const isEmpty = !!(status as { _empty?: boolean })?._empty;
         const sendStatus = (status.tokenSendStatus || '').toLowerCase();
@@ -338,6 +351,16 @@ export default function BuyCoinsPage() {
   const tokensWithoutDiscount = listPrice > 0 ? effectiveAmount / listPrice : 0;
   const bonusTokens = estimatedTokens - tokensWithoutDiscount;
   const isPending = checkoutMutation.isPending;
+  // The quote is the fallback for a session whose row was never seen.
+  const shareAmount = purchasedTokens ?? Math.floor(estimatedTokens);
+  const canShare = symbol === 'DHB' && shareAmount > 0;
+
+  const handleShareToFeed = () => {
+    // Pre-filled, not published: the composer still asks for the mint.
+    openPostModal(t('buyCoins.sharePostTemplate', {
+      amount: new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(shareAmount),
+    }));
+  };
 
   const handlePurchase = () => {
     if (!walletAddress) {
@@ -634,10 +657,19 @@ export default function BuyCoinsPage() {
             {purchaseStatus === 'success' && (
               <>
                 <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
-                <h3 className="text-white font-semibold text-lg">Purchase Complete!</h3>
+                <h3 className="text-white font-semibold text-lg">{t('buyCoins.success.title')}</h3>
                 <p className="text-sm text-zinc-400">
-                  Tokens have been delivered to your wallet.
+                  {t('buyCoins.success.subtitle')}
                 </p>
+                {canShare && (
+                  <Button
+                    className="mt-2 bg-white text-black hover:bg-white/90 border-0"
+                    onClick={handleShareToFeed}
+                  >
+                    <Send className="w-4 h-4 mr-2" />
+                    {t('buyCoins.shareToFeed')}
+                  </Button>
+                )}
                 <Button
                   variant="glass"
                   className="mt-2"
@@ -646,7 +678,7 @@ export default function BuyCoinsPage() {
                     navigate('/app/wallet');
                   }}
                 >
-                  View Wallet
+                  {t('buyCoins.success.viewWallet')}
                 </Button>
               </>
             )}

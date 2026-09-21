@@ -1296,7 +1296,20 @@
     "failedOnramp": "ההפעלה נכשלה",
     "badgeDiscount": "מחזיק {{tier}} — {{percent}}% הנחה",
     "otherTokens": "טוקנים אחרים",
-    "otherTokensDesc": "קנה ETH או USDC ב-Base עם הכרטיס שלך"
+    "otherTokensDesc": "קנה ETH או USDC ב-Base עם הכרטיס שלך",
+    "minDhbPurchase": "הרכישה המינימלית של DHB היא 0.50 $",
+    "shareToFeed": "שתף בפיד שלי",
+    "sharePostTemplate": "בדיוק הוספתי {{amount}} $DHB לערימה שלי ב - DeHub. בונים יחד עם הקהילה. #DeHub #DHB",
+    "success": {
+      "title": "הרכישה הושלמה!",
+      "subtitle": "האסימונים נשלחו לארנק שלך.",
+      "viewWallet": "הצג ארנק"
+    },
+    "swapSuccess": {
+      "title": "ההחלפה בוצעה בהצלחה!",
+      "received": "{{amount}}<coin></coin> התקבל",
+      "addedToWallet": "{{amount}} {{symbol}} נוספו לארנק שלכם"
+    }
   },
   "agents": {
     "title": "סוכני AI",

@@ -1267,7 +1267,20 @@
     "failedOnramp": "Kunne ikke starte rampe",
     "badgeDiscount": "{{tier}}-innehaver — {{percent}} % rabatt",
     "otherTokens": "Andre tokens",
-    "otherTokensDesc": "Kjøp ETH eller USDC på Base med kortet ditt"
+    "otherTokensDesc": "Kjøp ETH eller USDC på Base med kortet ditt",
+    "minDhbPurchase": "Minimumskjøp for DHB er $0,50",
+    "shareToFeed": "Del i feeden min",
+    "sharePostTemplate": "Har nettopp lagt til {{amount}} $DHB i DeHub-stacken min. Bygger med fellesskapet. #DeHub #DHB",
+    "success": {
+      "title": "Ferdig <x id=\"1\"/>kjøp",
+      "subtitle": "Tokener er levert til lommeboken din.",
+      "viewWallet": "Vis lommebok"
+    },
+    "swapSuccess": {
+      "title": "Bytte vellykket!",
+      "received": "{{amount}} <coin></coin> mottatt",
+      "addedToWallet": "{{amount}} {{symbol}} lagt til i lommeboken din"
+    }
   },
   "agents": {
     "title": "AI-agenter",

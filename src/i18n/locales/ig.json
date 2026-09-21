@@ -1262,7 +1262,19 @@
     "failedOnramp": "Enweghị ike ịmalite onramp",
     "badgeDiscount": "Onye ji {{tier}} — {{percent}}% mbelata",
     "otherTokens": "Token ndị ọzọ",
-    "otherTokensDesc": "Jiri kaadị gị zụta ETH ma ọ bụ USDC na Base"
+    "otherTokensDesc": "Jiri kaadị gị zụta ETH ma ọ bụ USDC na Base",
+    "minDhbPurchase": "Kacha nta DHB zuo bụ $ 0.50",
+    "shareToFeed": "Kekọrịta na ndepụta m",
+    "sharePostTemplate": "Naanị tinye {{amount}} $DHB na nchịkọta m na DeHub. Iwulite na obodo. #DeHub #DHB",
+    "success": {
+      "title": "Ịzụta Complete!",
+      "subtitle": "E bubatala tokens n 'ime akpa gị.",
+      "viewWallet": "View obere akpa"
+    },
+    "swapSuccess": {
+      "title": "Sụọ ngọngọ ịga nke ọma!",
+      "addedToWallet": "{{amount}}{{symbol}} agbakwunyere na obere akpa gị"
+    }
   },
   "agents": {
     "title": "Ndị Ọrụ AI",

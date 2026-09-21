@@ -1301,7 +1301,20 @@
     "failedOnramp": "شروع درگاه ناموفق بود",
     "badgeDiscount": "دارنده {{tier}} — {{percent}}٪ تخفیف",
     "otherTokens": "توکن‌های دیگر",
-    "otherTokensDesc": "با کارت خود ETH یا USDC را روی Base بخرید"
+    "otherTokensDesc": "با کارت خود ETH یا USDC را روی Base بخرید",
+    "minDhbPurchase": "حداقل خرید DHB 0.50 دلار است",
+    "shareToFeed": "در فید من به اشتراک بگذارید",
+    "sharePostTemplate": "همین الان {{amount}} $DHB رو به استک خودم توی DeHub اضافه کردم. دارم با همکاری جامعه کار می‌کنم. #DeHub #DHB",
+    "success": {
+      "title": "خرید کامل شد",
+      "subtitle": "توکن‌ها به کیف پول شما تحویل داده شدند.",
+      "viewWallet": "مشاهده کیف پول"
+    },
+    "swapSuccess": {
+      "title": "تعویض با موفقیت انجام شد!",
+      "received": "{{amount}} <coin></coin> دریافت شد",
+      "addedToWallet": "{{amount}} {{symbol}} به کیف پول شما اضافه شد"
+    }
   },
   "agents": {
     "title": "عوامل هوش مصنوعی",

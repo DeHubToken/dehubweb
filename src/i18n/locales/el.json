@@ -1245,7 +1245,21 @@
     "failedOnramp": "Αποτυχία έναρξης onramp",
     "badgeDiscount": "Κάτοχος {{tier}} — έκπτωση {{percent}}%",
     "otherTokens": "Άλλα tokens",
-    "otherTokensDesc": "Αγόρασε ETH ή USDC στο Base με την κάρτα σου"
+    "otherTokensDesc": "Αγόρασε ETH ή USDC στο Base με την κάρτα σου",
+    "token": "Διακριτικό",
+    "minDhbPurchase": "Η ελάχιστη αγορά DHB είναι 0,50 $",
+    "shareToFeed": "Κοινοποίηση στη ροή μου",
+    "sharePostTemplate": "Μόλις πρόσθεσα {{amount}} $DHB στη στοίβα μου στο DeHub. Οικοδόμηση με την κοινότητα. #DeHub #DHB",
+    "success": {
+      "title": "Η αγορά ολοκληρώθηκε!",
+      "subtitle": "Τα διακριτικά έχουν παραδοθεί στο πορτοφόλι σας.",
+      "viewWallet": "Προβολή πορτοφολιού"
+    },
+    "swapSuccess": {
+      "title": "Επιτυχής ανταλλαγή!",
+      "received": "{{amount}} <coin></coin> ελήφθη",
+      "addedToWallet": "{{amount}} {{symbol}} προστέθηκε στο πορτοφόλι σας"
+    }
   },
   "agents": {
     "connectToManage": "Συνδεθείτε για Διαχείριση AI Agents",

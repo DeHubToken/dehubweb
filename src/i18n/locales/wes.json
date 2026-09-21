@@ -1153,7 +1153,16 @@
     "failedOnramp": "E no fit start onramp",
     "badgeDiscount": "{{tier}} holder — {{percent}}% off",
     "otherTokens": "Oda tokens",
-    "otherTokensDesc": "Yus yua kad fo bai ETH o USDC fo Base"
+    "otherTokensDesc": "Yus yua kad fo bai ETH o USDC fo Base",
+    "shareToFeed": "Share to my feed",
+    "success": {
+      "title": "Purchase Complete!",
+      "viewWallet": "View Wallet"
+    },
+    "swapSuccess": {
+      "title": "Swap Successful!",
+      "received": "{{amount}} <coin></coin> received"
+    }
   },
   "agents": {
     "title": "AI Agents",

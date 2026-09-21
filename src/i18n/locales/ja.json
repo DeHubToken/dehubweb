@@ -1299,7 +1299,20 @@
     "failedOnramp": "入金失敗",
     "badgeDiscount": "{{tier}} 保有者 — {{percent}}% オフ",
     "otherTokens": "その他のトークン",
-    "otherTokensDesc": "カードで Base 上の ETH または USDC を購入"
+    "otherTokensDesc": "カードで Base 上の ETH または USDC を購入",
+    "minDhbPurchase": "DHBの最低購入額は$ 0.50です",
+    "shareToFeed": "フィードにシェアする",
+    "sharePostTemplate": "DeHubのスタックに{{amount}} $ DHBを追加しました。 コミュニティと一緒に構築しましょう。# DeHub # DHB",
+    "success": {
+      "title": "購入が完了しました！",
+      "subtitle": "トークンがお財布に届きました。",
+      "viewWallet": "ウォレットを表示"
+    },
+    "swapSuccess": {
+      "title": "交換に成功しました！",
+      "received": "{{amount}}<coin></coin>を受け取りました",
+      "addedToWallet": "{{amount}}{{symbol}}がウォレットに追加されました"
+    }
   },
   "agents": {
     "title": "AIエージェント",

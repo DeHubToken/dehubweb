@@ -1224,7 +1224,20 @@
     "failedOnramp": "启动入金失败",
     "badgeDiscount": "{{tier}} 持有人 — 打 {{percent}}% 折",
     "otherTokens": "其他代币",
-    "otherTokensDesc": "用汝其卡佇 Base 買 ETH 抑 USDC"
+    "otherTokensDesc": "用汝其卡佇 Base 買 ETH 抑 USDC",
+    "minDhbPurchase": "DHB 最低購買額為 $0.50",
+    "shareToFeed": "分享到我的動態",
+    "sharePostTemplate": "我剛在 DeHub 上添加了 {{amount}} $DHB 到我的堆疊。與社群一起建構。#DeHub #DHB",
+    "success": {
+      "title": "購買完成！",
+      "subtitle": "代幣已發送到您的錢包。",
+      "viewWallet": "查看錢包"
+    },
+    "swapSuccess": {
+      "title": "兌換成功！",
+      "received": "收到 {{amount}} <coin></coin>",
+      "addedToWallet": "已將 {{amount}} {{symbol}} 添加到您的錢包"
+    }
   },
   "agents": {
     "title": "AI 代理",

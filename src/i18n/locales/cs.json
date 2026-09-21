@@ -1298,7 +1298,20 @@
     "failedOnramp": "Zahájení selhalo",
     "badgeDiscount": "Držitel {{tier}} — sleva {{percent}} %",
     "otherTokens": "Další tokeny",
-    "otherTokensDesc": "Kupte ETH nebo USDC na síti Base svou kartou"
+    "otherTokensDesc": "Kupte ETH nebo USDC na síti Base svou kartou",
+    "minDhbPurchase": "Minimální nákup DHB je 0,50 $",
+    "shareToFeed": "Sdílet na mém kanálu",
+    "sharePostTemplate": "Právě jsem přidal/a {{amount}} $DHB do svého zásobníku na DeHubu. Budování s komunitou. #DeHub #DHB",
+    "success": {
+      "title": "Nákup dokončen!",
+      "subtitle": "Tokeny byly doručeny do vaší peněženky.",
+      "viewWallet": "Zobrazit peněženku"
+    },
+    "swapSuccess": {
+      "title": "Výměna byla úspěšná!",
+      "received": "{{amount}} <coin></coin> obdrženo",
+      "addedToWallet": "{{amount}} {{symbol}} přidáno do vaší peněženky"
+    }
   },
   "agents": {
     "title": "AI agenti",

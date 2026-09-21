@@ -1304,7 +1304,19 @@
     "failedOnramp": "Error al iniciar rampa",
     "badgeDiscount": "Titular {{tier}} — {{percent}}% de descuento",
     "otherTokens": "Otros tokens",
-    "otherTokensDesc": "Compra ETH o USDC en Base con tu tarjeta"
+    "otherTokensDesc": "Compra ETH o USDC en Base con tu tarjeta",
+    "shareToFeed": "Compartir en mi feed",
+    "sharePostTemplate": "Acabo de añadir {{amount}} $DHB a mi pila en DeHub. Construir con la comunidad. #DeHub #DHB",
+    "success": {
+      "title": "¡Compra completada!",
+      "subtitle": "Se han enviado tokens a tu monedero.",
+      "viewWallet": "Ver monedero"
+    },
+    "swapSuccess": {
+      "title": "¡Intercambio realizado correctamente!",
+      "received": "{{amount}} <coin></coin> recibido",
+      "addedToWallet": "{{amount}} {{symbol}} añadido a tu monedero"
+    }
   },
   "agents": {
     "title": "Agentes IA",

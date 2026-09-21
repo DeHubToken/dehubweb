@@ -1502,7 +1502,20 @@
     "failedOnramp": "Не вдалося запустити onramp",
     "badgeDiscount": "Власник {{tier}} — знижка {{percent}}%",
     "otherTokens": "Інші токени",
-    "otherTokensDesc": "Купіть ETH або USDC у мережі Base своєю карткою"
+    "otherTokensDesc": "Купіть ETH або USDC у мережі Base своєю карткою",
+    "minDhbPurchase": "Мінімальна сума покупки DHB становить $ 0,50",
+    "shareToFeed": "Поділитися в моєму каналі",
+    "sharePostTemplate": "Щойно додано {{amount}} $DHB до мого стеку на DeHub. Розбудова спільноти. #DeHub #DHB",
+    "success": {
+      "title": "Придбання завершено!",
+      "subtitle": "Токени надійшли на ваш гаманець.",
+      "viewWallet": "Переглянути гаманець"
+    },
+    "swapSuccess": {
+      "title": "Обмін успішний!",
+      "received": "{{amount}} <coin></coin> отримано",
+      "addedToWallet": "{{amount}} {{symbol}} додано до вашого гаманця"
+    }
   },
   "agents": {
     "connectorUrl": "URL конектора",
