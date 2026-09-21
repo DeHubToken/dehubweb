@@ -455,7 +455,10 @@
       "unavailable": "Streamingul de la un codificator nu este disponibil în contul dvs. în acest moment.",
       "serverCopied": "Server copiat",
       "keyCopied": "Cheie flux copiată"
-    }
+    },
+    "socialFollowers": "Urmăritori pe {{platform}}",
+    "socialFollowersHint": "Afișat în profilul tău ca parte a razei tale totale de acțiune. Introduceți singur numărul — nu îl citim de pe platformă.",
+    "socialFollowersPlaceholder": "de ex. 12500"
   },
   "common": {
     "save": "Salvează",
@@ -1210,7 +1213,13 @@
     "submitOffer": "Submit Offer",
     "followers": "Followers",
     "following": "Following",
-    "joined": "Joined"
+    "joined": "Joined",
+    "reach": {
+      "total": "Acoperire totală",
+      "breakdownTitle": "De unde provine această acoperire",
+      "dehubFollowers": "Urmăritori DeHub",
+      "selfReported": "Numărul de urmăritori sociali este introdus de creator."
+    }
   },
   "tv": {
     "seoTitle": "TV Live — Canale Gratuite Din Întreaga Lume",

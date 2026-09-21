@@ -13,6 +13,7 @@ import { ShimmerBorder } from '@/components/app/stories/ShimmerBorder';
 import { TranslatableText, hasTranslatableText } from '@/components/app/TranslatableText';
 import { BioTranslateButton } from '@/components/app/profile/BioTranslateButton';
 import { ProfileSocialLinks } from '@/components/app/profile/ProfileSocialLinks';
+import { TotalReachPill } from '@/components/app/profile/TotalReachPill';
 import { MutualFollowers } from '@/components/app/profile/MutualFollowers';
 import { PinnedCommunities } from '@/components/app/communities/PinnedCommunities';
 import {
@@ -590,6 +591,9 @@ export function ProfileHeader({
                   )}
                 </div>
               )}
+              {/* DeHub followers plus the creator's own figures for their
+                  linked socials. Absent until a social carries a count. */}
+              <TotalReachPill customs={profile.customs} followers={profile.followers} />
             </div>
           )}
 

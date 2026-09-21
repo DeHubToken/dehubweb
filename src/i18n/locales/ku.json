@@ -104,6 +104,7 @@
     "bio": "Jiyaname",
     "bioPlaceholder": "Derbarê xwe de ji me re bibêjin...",
     "socialLinks": "Girêdanên Civakî",
+    "socialFollowersPlaceholder": "mînak 12500",
     "profileUpdated": "Profîl bi serkeftî hate nûkirin",
     "failedLoadProfile": "Barkirina daneyên profîlê têkçû",
     "imageTooLarge5": "Divê wêne ji 5MB kêmtir be",
@@ -1053,10 +1054,6 @@
     "returnHome": "Vegere Malê"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "ئەم پۆستە بەردەست نییە",
-      "commentUnavailable": "ئەم کۆمێنتە ئیتر بەردەست نییە"
-    },
     "back": "Paş",
     "usernameAvailable": "Navê bikarhêner peyda ye!",
     "signUpToClaim": "Îro qeyd bibin ku bidest bixin",
@@ -1072,7 +1069,11 @@
     "followers": "Şopîner",
     "following": "Şopandin",
     "joined": "Beşdar bû",
-    "loginDescription": "Ji bo dîtin û birêvebirina profîla xwe têkevin."
+    "loginDescription": "Ji bo dîtin û birêvebirina profîla xwe têkevin.",
+    "replyThread": {
+      "postUnavailable": "ئەم پۆستە بەردەست نییە",
+      "commentUnavailable": "ئەم کۆمێنتە ئیتر بەردەست نییە"
+    }
   },
   "tv": {
     "seoTitle": "تەلەفزیۆنی ڕاستەوخۆ ـــ کەناڵی بێبەرامبەر لە سەرتاسەری جیهان",
@@ -1105,8 +1106,19 @@
     "amountUsd": "Mîqdar (USD)",
     "customAmount": "Mîqdara taybet",
     "minPurchase": "Kêmtirîn kirîn 5$ ye",
+    "minDhbPurchase": "کڕینی کەمترین DHB بریتییە لە 0.50$",
     "youPay": "Tu didî",
     "youReceive": "Tu distînî (texmîn)",
+    "feeNote": "بۆینە 3.6% کرێی کارتی بانکی و 0.5% یەدەگی تۆڕ لێدەدرێت. یەدەگەکە وەک ETH بۆ گازی سووتەمەنی بۆت دەنێردرێت.",
+    "statusAwaitingPayment": "تەواوی پارەدان لە ڕێگەی چەک-ئاووتەوە...",
+    "statusConfirming": "چاوەڕوانی پشتڕاستکردنەوەی پارەدان...",
+    "statusPaidQueued": "پارە وەرگیرا. لە نۆرەدان بۆ ناردن...",
+    "statusPaidSending": "پارە وەرگیرا. ناردنی توکنەکان بۆ جانتاکەت...",
+    "statusPaidToast": "پارە وەرگیرا. ناردنی توکنەکانت...",
+    "statusDelivered": "توکنەکان گەیشتنە جانتاکەت!",
+    "statusNotPaid": "پارەدان تەواو نەبوو. هیچ پارەیەک لێوەرنەگیرا.",
+    "statusDeliveryFailed": "پارە وەرگیرا بەڵام ناردنەکە سەرکەوتوو نەبوو. ئێمە لەسەری کاردەکەین — پەیوەندی بە پشتیوانی بکە لەگەڵ ID دانیشتنەکەت.",
+    "statusStillArriving": "پارەدان سەرکەوتوو بوو. توکنەکان هێشتا لە ڕێگاندان — جانتاکەت بەم زووانە ببینە.",
     "paymentMethod": "Rêbaza Dravdanê",
     "cardBank": "Kart / Bank",
     "cardBankDesc": "Visa, Mastercard, Apple Pay, Google Pay",
@@ -1128,17 +1140,6 @@
     "badgeDiscount": "Xwedanê {{tier}} — %{{percent}} daxistin",
     "otherTokens": "Tokenên din",
     "otherTokensDesc": "Bi karta xwe li ser Base ETH an USDC bikire",
-    "minDhbPurchase": "کڕینی کەمترین DHB بریتییە لە 0.50$",
-    "feeNote": "بۆینە 3.6% کرێی کارتی بانکی و 0.5% یەدەگی تۆڕ لێدەدرێت. یەدەگەکە وەک ETH بۆ گازی سووتەمەنی بۆت دەنێردرێت.",
-    "statusAwaitingPayment": "تەواوی پارەدان لە ڕێگەی چەک-ئاووتەوە...",
-    "statusConfirming": "چاوەڕوانی پشتڕاستکردنەوەی پارەدان...",
-    "statusPaidQueued": "پارە وەرگیرا. لە نۆرەدان بۆ ناردن...",
-    "statusPaidSending": "پارە وەرگیرا. ناردنی توکنەکان بۆ جانتاکەت...",
-    "statusPaidToast": "پارە وەرگیرا. ناردنی توکنەکانت...",
-    "statusDelivered": "توکنەکان گەیشتنە جانتاکەت!",
-    "statusNotPaid": "پارەدان تەواو نەبوو. هیچ پارەیەک لێوەرنەگیرا.",
-    "statusDeliveryFailed": "پارە وەرگیرا بەڵام ناردنەکە سەرکەوتوو نەبوو. ئێمە لەسەری کاردەکەین — پەیوەندی بە پشتیوانی بکە لەگەڵ ID دانیشتنەکەت.",
-    "statusStillArriving": "پارەدان سەرکەوتوو بوو. توکنەکان هێشتا لە ڕێگاندان — جانتاکەت بەم زووانە ببینە.",
     "shareToFeed": "هاوبەشی بکە لەگەڵ فیدەکەم",
     "sharePostTemplate": "تازە {{amount}} $DHB بۆ کۆکراوەکەم لە DeHub زیاد کرد. دروستکردن لەگەڵ کۆمەڵگە. #DeHub #DHB",
     "success": {
@@ -1870,12 +1871,12 @@
       "thisYear": "Vê salê",
       "allTime": "Hemû Dem",
       "newMembers": "Endamên nû",
+      "viewMembers": "سه‌ردانی ئه‌ندامان",
       "chartMembers": "Endam bi demê re",
       "chartActive": "Kesên çalak",
       "growth": "+{{percent}}% vê mehê",
       "growthTerm": "Mezinbûn",
-      "recordingSince": "ji {{date}} ve tê tomarkirin",
-      "viewMembers": "سه‌ردانی ئه‌ندامان"
+      "recordingSince": "ji {{date}} ve tê tomarkirin"
     },
     "title": "Statîstîk",
     "subtitle": "Agahiya çavkaniya vekirî ya rast-dem",

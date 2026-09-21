@@ -455,7 +455,10 @@
       "unavailable": "Az enkóderből történő streamelés jelenleg nem elérhető a fiókodban.",
       "serverCopied": "Szerver másolva",
       "keyCopied": "Adatfolyamkulcs másolva"
-    }
+    },
+    "socialFollowers": "Követők a következőn:{{platform}}",
+    "socialFollowersHint": "A teljes elérés részeként jelenik meg a profilodon. Adja meg a számot — nem olvassuk el a platformról.",
+    "socialFollowersPlaceholder": "pl. 12500"
   },
   "common": {
     "save": "Mentés",
@@ -1233,7 +1236,13 @@
     "followers": "Követők",
     "following": "Követés",
     "joined": "Joined",
-    "loginDescription": "Jelentkezzen be profiljának megtekintéséhez és kezeléséhez."
+    "loginDescription": "Jelentkezzen be profiljának megtekintéséhez és kezeléséhez.",
+    "reach": {
+      "total": "Teljes elérés",
+      "breakdownTitle": "Honnan származik ez a hatókör?",
+      "dehubFollowers": "DeHub követők",
+      "selfReported": "A közösségi követők számát az alkotó adja meg."
+    }
   },
   "tv": {
     "seoTitle": "Élő TV — Ingyenes csatornák a világ minden tájáról",

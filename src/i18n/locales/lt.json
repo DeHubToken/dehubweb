@@ -440,7 +440,10 @@
       "unavailable": "Transliacija iš koduotės šiuo metu jūsų paskyroje negalima.",
       "serverCopied": "Serveris nukopijuotas",
       "keyCopied": "Srauto raktas nukopijuotas"
-    }
+    },
+    "socialFollowers": "Sekėjai {{platform}}",
+    "socialFollowersHint": "Rodoma jūsų profilyje kaip bendro pasiekiamumo dalis. Įveskite numerį patys — mes jo nenuskaitome iš platformos.",
+    "socialFollowersPlaceholder": "pvz., 12500"
   },
   "common": {
     "save": "Saugoti",
@@ -1221,7 +1224,13 @@
     "followers": "Sekėjai",
     "following": "Sekiami",
     "joined": "Prisijungė",
-    "loginDescription": "Prisijunkite, kad peržiūrėtumėte ir tvarkytumėte savo profilį."
+    "loginDescription": "Prisijunkite, kad peržiūrėtumėte ir tvarkytumėte savo profilį.",
+    "reach": {
+      "total": "Bendras pasiekiamumas",
+      "breakdownTitle": "Iš kur šis pasiekiamumas",
+      "dehubFollowers": "„DeHub“ sekėjai",
+      "selfReported": "Socialinių sekėjų skaičių įveda kūrėjas."
+    }
   },
   "tv": {
     "seoTitle": "Tiesioginė televizija – nemokami kanalai iš viso pasaulio",

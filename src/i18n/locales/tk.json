@@ -444,7 +444,10 @@
       "unavailable": "Kodlaýjyda ýaýlyma çykmak şu wagt siziň hasabyňyzda elýeterli däl.",
       "serverCopied": "Serwer nusgalady",
       "keyCopied": "Kopyalan akma açary"
-    }
+    },
+    "socialFollowers": "{{platform}}",
+    "socialFollowersHint": "Ýüküňiň bir bölegi hökmünde profilyňda görkezilýär. Bu sany özüňiz ýazyň — biz ony platformdan okamaýarys.",
+    "socialFollowersPlaceholder": "12500 ýyl"
   },
   "common": {
     "save": "Ýatda sakla",
@@ -1213,7 +1216,13 @@
     "followers": "Yzarlaýjylar",
     "following": "Yzarlaýanlar",
     "joined": "Goşuldy",
-    "loginDescription": "Profiliňizi görmek we dolandyrmak üçin giriň."
+    "loginDescription": "Profiliňizi görmek we dolandyrmak üçin giriň.",
+    "reach": {
+      "total": "Ýüklüge ýetmek",
+      "breakdownTitle": "Bu çakylyk nireden gelýär?",
+      "dehubFollowers": "DeHub diňleýjileri",
+      "selfReported": "Işgärleriň sanyna Ýaradyjy girýär."
+    }
   },
   "tv": {
     "title": "TV"

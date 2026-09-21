@@ -418,7 +418,10 @@
     "showFollowers": "ফলোয়ার/ফলোইং দেখাও",
     "hideFollowerCounts": "ফলোয়ার সংখ্যা লুকাও",
     "followersOnly": "শুধু ফলোয়ার",
-    "subscribersOnly": "শুধু সাবস্ক্রাইবার"
+    "subscribersOnly": "শুধু সাবস্ক্রাইবার",
+    "socialFollowers": "{{platform}}-র ফলোয়ার",
+    "socialFollowersHint": "আপনার প্রোফাইলে আপনার মোট রিচের অংশ হিসাবে দেখানো হবে। নিজে সংখ্যাটি লিখুন — আমরা প্ল্যাটফর্ম থেকে এটি পড়ি না।",
+    "socialFollowersPlaceholder": "যেমন: ১২৫০০"
   },
   "common": {
     "save": "সেভ গরো",
@@ -1270,7 +1273,13 @@
     "muteUser": "মিউট গরো",
     "subscribe": "সাবস্ক্রাইব গরো",
     "subscribed": "সাবস্ক্রাইব গরা",
-    "tip": "টিপ"
+    "tip": "টিপ",
+    "reach": {
+      "total": "মোট রিচ",
+      "breakdownTitle": "এই রিচ কোয়ান থাইয়েন আয়ে",
+      "dehubFollowers": "DeHub ফলোয়ার",
+      "selfReported": "সোশ্যাল ফলোয়ার সংখ্যা ক্রিয়েটররা এন্ট্রি করে।"
+    }
   },
   "tv": {
     "live": "লাইভ",

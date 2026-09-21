@@ -445,7 +445,10 @@
       "unavailable": "Maywasiykikunamanta k'uyuchiyqa manam kunanqa kaqllachu kaqniykimpi.",
       "serverCopied": "Servidor copiasqa",
       "keyCopied": "Llave de corriente copiasqa"
-    }
+    },
+    "socialFollowers": "Qatiqninkuna {{platform}} nisqapi.",
+    "socialFollowersHint": "Perfilniykipi rikuchisqa tukuy chayayniykimanta huknin hina. Kikiyki yupayta qillqay — manam plataformamantachu ñawiriyku.",
+    "socialFollowersPlaceholder": "p.h. 12500"
   },
   "common": {
     "save": "Waqaychay",
@@ -1227,7 +1230,13 @@
     "followers": "Qatiqkuna",
     "following": "Qatisqa",
     "joined": "Joined",
-    "loginDescription": "Yaykuy riqsichiykita qhawanaykipaq kamachiynaykipaq."
+    "loginDescription": "Yaykuy riqsichiykita qhawanaykipaq kamachiynaykipaq.",
+    "reach": {
+      "total": "Llapan chayay",
+      "breakdownTitle": "Maymantataq kay chayay hamun",
+      "dehubFollowers": "DeHub qatiqninkuna",
+      "selfReported": "Social qatiq yupaykunataqa kamaqmi yaykuchin."
+    }
   },
   "tv": {
     "title": "TV"

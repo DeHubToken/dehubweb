@@ -440,7 +440,10 @@
       "unavailable": "आपके खाते पर अभी एनकोडर से स्ट्रीमिंग उपलब्ध नहीं है।",
       "serverCopied": "सर्वर नकल",
       "keyCopied": "स्ट्रीम कुंजी नकल"
-    }
+    },
+    "socialFollowers": "फॉलोअर्स {{platform}}",
+    "socialFollowersHint": "अपन पूरा पहुंच के हिस्सा के रूप म अपन प्रोफाइल म दिखाए गए । खुद संख्या दर्ज करव — हमन एला मंच ले नइ पढ़न ।",
+    "socialFollowersPlaceholder": "जी. 12500"
   },
   "common": {
     "save": "बचाव",
@@ -1205,7 +1208,13 @@
     "followers": "फॉलोअर",
     "following": "फॉलो करत हे",
     "joined": "जुड़े",
-    "loginDescription": "अपन प्रोफाइल देखे अउ संभाले बर लॉग इन करव।"
+    "loginDescription": "अपन प्रोफाइल देखे अउ संभाले बर लॉग इन करव।",
+    "reach": {
+      "total": "कुल पहुंच",
+      "breakdownTitle": "ये मनखे कहां ले आय हवंय?",
+      "dehubFollowers": "DeHub फॉलोअर्स",
+      "selfReported": "सामाजिक अनुयायीमन के संख्या रचनाकार द्वारा दर्ज करे जात हवय ।"
+    }
   },
   "tv": {
     "title": "टीवी"

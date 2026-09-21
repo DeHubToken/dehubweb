@@ -455,7 +455,10 @@
       "unavailable": "Streamen vanuit een encoder is momenteel niet beschikbaar op je account.",
       "serverCopied": "Server gekopieerd",
       "keyCopied": "Stream-sleutel gekopieerd"
-    }
+    },
+    "socialFollowers": "Volgers op {{platform}}",
+    "socialFollowersHint": "Wordt op je profiel weergegeven als onderdeel van je totale bereik. Voer het nummer zelf in — we lezen het niet van het platform.",
+    "socialFollowersPlaceholder": "bijv. 12500"
   },
   "common": {
     "save": "Opslaan",
@@ -1431,7 +1434,13 @@
     "followers": "Volgers",
     "following": "Volgend",
     "joined": "Lid sinds",
-    "loginDescription": "Log in om je profiel te bekijken en beheren."
+    "loginDescription": "Log in om je profiel te bekijken en beheren.",
+    "reach": {
+      "total": "Totaal bereik",
+      "breakdownTitle": "Waar dit bereik vandaan komt",
+      "dehubFollowers": "DeHub-volgers",
+      "selfReported": "Het aantal sociale volgers wordt ingevoerd door de maker."
+    }
   },
   "tv": {
     "seoTitle": "Live TV — Gratis kanalen van over de hele wereld",

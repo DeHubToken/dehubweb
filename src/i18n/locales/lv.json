@@ -440,7 +440,10 @@
       "unavailable": "Straumēšana no kodētāja pašlaik nav pieejama jūsu kontā.",
       "serverCopied": "Serveris nokopēts",
       "keyCopied": "Straumes atslēga nokopēta"
-    }
+    },
+    "socialFollowers": "Sekotāji {{platform}}",
+    "socialFollowersHint": "Redzams jūsu profilā kā daļa no jūsu kopējās sasniedzamības. Ievadiet numuru pats — mēs to nenolasām no platformas.",
+    "socialFollowersPlaceholder": "piem., 12500"
   },
   "common": {
     "save": "Saglabāt",
@@ -1221,7 +1224,13 @@
     "followers": "Sekotāji",
     "following": "Sekotie",
     "joined": "Pievienojās",
-    "loginDescription": "Piesakieties, lai skatītu un pārvaldītu savu profilu."
+    "loginDescription": "Piesakieties, lai skatītu un pārvaldītu savu profilu.",
+    "reach": {
+      "total": "Kopējā sasniedzamība",
+      "breakdownTitle": "No kurienes nāk šī saziņa",
+      "dehubFollowers": "DeHub sekotāji",
+      "selfReported": "Sociālo sekotāju skaitu ievada veidotājs."
+    }
   },
   "tv": {
     "seoTitle": "Tiešraides TV — bezmaksas kanāli no visas pasaules",

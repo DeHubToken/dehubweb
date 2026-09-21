@@ -442,7 +442,10 @@
       "unavailable": "Ҷараён аз кодер дар айни замон дар суратҳисоби шумо дастрас нест.",
       "serverCopied": "Сервер нусхабардорӣ шудааст",
       "keyCopied": "Калиди ҷараён нусхабардорӣ шудааст"
-    }
+    },
+    "socialFollowers": "Пайравони {{platform}}",
+    "socialFollowersHint": "Ipinapakita sa iyong profile bilang bahagi ng iyong kabuuang pag Рақамро худатон ворид кунед — мо онро аз платформа намехонем.",
+    "socialFollowersPlaceholder": "масалан, 12500"
   },
   "common": {
     "save": "Сабт",
@@ -1218,7 +1221,13 @@
     "followers": "Пайравон",
     "following": "Пайравишаванда",
     "joined": "Ҳамроҳ шуд",
-    "loginDescription": "Барои дидан ва идоракунии профили худ ворид шавед."
+    "loginDescription": "Барои дидан ва идоракунии профили худ ворид шавед.",
+    "reach": {
+      "total": "Дастрасии умумӣ",
+      "breakdownTitle": "НОҲИЯИ ПАНҶ МЕГӮЯ",
+      "dehubFollowers": "Пайравони DeHub",
+      "selfReported": "Ang mga sukatan ng Social Follower ay nagpasok ng lumikha."
+    }
   },
   "tv": {
     "title": "TV"
