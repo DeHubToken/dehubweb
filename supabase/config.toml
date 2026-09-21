@@ -231,6 +231,9 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.handle-email-events]
     verify_jwt = false
+  # Called by pg_cron with the publishable key; the scan is idempotent and throttled.
+  [functions.dex-position-scan]
+    verify_jwt = false
   [functions.refresh-leaderboard-cache]
     verify_jwt = false
   [functions.refresh-leaderboard-user]
