@@ -455,7 +455,10 @@
       "unavailable": "Streaming von einem Encoder ist derzeit nicht für Ihr Konto verfügbar.",
       "serverCopied": "Server kopiert",
       "keyCopied": "Stream-Schlüssel kopiert"
-    }
+    },
+    "socialFollowers": "Follower auf {{platform}}",
+    "socialFollowersHint": "Wird in deinem Profil als Teil deiner Gesamtreichweite angezeigt. Geben Sie die Nummer selbst ein — wir lesen sie nicht von der Plattform ab.",
+    "socialFollowersPlaceholder": "z.B. 12500"
   },
   "common": {
     "save": "Speichern",
@@ -1238,7 +1241,13 @@
     "followers": "Follower",
     "following": "Folge ich",
     "joined": "Beigetreten",
-    "loginDescription": "Melde dich an, um dein Profil zu sehen und zu verwalten."
+    "loginDescription": "Melde dich an, um dein Profil zu sehen und zu verwalten.",
+    "reach": {
+      "total": "Gesamtreichweite",
+      "breakdownTitle": "Woher diese Reichweite kommt",
+      "dehubFollowers": "DeHub-Follower",
+      "selfReported": "Die Anzahl der sozialen Follower wird vom Ersteller eingegeben."
+    }
   },
   "tv": {
     "seoTitle": "Live TV — Kostenlose Kanäle aus der ganzen Welt",

@@ -445,7 +445,10 @@
       "unavailable": "Streemka kombiyuutarka laguma heli karo akoonkaaga hadda.",
       "serverCopied": "Server waa la nuqulay",
       "keyCopied": "Furaha Stream la nuqulay"
-    }
+    },
+    "socialFollowers": "Raacayaasha {{platform}}",
+    "socialFollowersHint": "Ku shub astaantaada qayb ka mid ah gaaritaankaaga guud. Ku qor lambarka naftaada — ma akhrineyno barxadda.",
+    "socialFollowersPlaceholder": "tusaale ahaan 12500"
   },
   "common": {
     "save": "Kaydi",
@@ -1226,7 +1229,13 @@
     "followers": "Raaciyeyaal",
     "following": "Raacidda",
     "joined": "Ku biiray",
-    "loginDescription": "Soo gal si aad u aragto oo aad u maamusho boggaaga shaqsiga."
+    "loginDescription": "Soo gal si aad u aragto oo aad u maamusho boggaaga shaqsiga.",
+    "reach": {
+      "total": "Wadarta gaarista",
+      "breakdownTitle": "Halka ay gaadiidkani ka yimaadaan",
+      "dehubFollowers": "DeHub raacayaasha",
+      "selfReported": "Tirooyinka raacayaasha bulshada waxaa soo galaya abuuraha."
+    }
   },
   "tv": {
     "title": "TV"

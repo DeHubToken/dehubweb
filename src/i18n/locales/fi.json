@@ -455,7 +455,10 @@
       "unavailable": "Striimaus kooderista ei ole tällä hetkellä tililläsi käytettävissä.",
       "serverCopied": "Palvelin kopioitu",
       "keyCopied": "Virta-avain kopioitu"
-    }
+    },
+    "socialFollowers": "Seuraajat kohteessa {{platform}}",
+    "socialFollowersHint": "Näkyy profiilissasi osana kokonaiskattavuuttasi. Syötä numero itse — emme lue sitä alustalta.",
+    "socialFollowersPlaceholder": "esim. 12500"
   },
   "common": {
     "save": "Tallenna",
@@ -1234,7 +1237,13 @@
     "followers": "Seuraajat",
     "following": "Seurattavat",
     "joined": "Liittynyt",
-    "loginDescription": "Kirjaudu sisään nähdäksesi ja hallinnoidaksesi profiiliasi."
+    "loginDescription": "Kirjaudu sisään nähdäksesi ja hallinnoidaksesi profiiliasi.",
+    "reach": {
+      "total": "Kokonaisulottuvuus",
+      "breakdownTitle": "Mistä tämä REACH-järjestelmä on peräisin",
+      "dehubFollowers": "DeHub-seuraajat",
+      "selfReported": "Tekijä syöttää sosiaalisen seuraajamäärän."
+    }
   },
   "tv": {
     "seoTitle": "Live TV — Ilmaiset kanavat ympäri maailmaa",

@@ -455,7 +455,10 @@
       "unavailable": "Prijenos uživo iz kodiranja trenutno nije dostupan na vašem računu.",
       "serverCopied": "Poslužitelj je kopiran",
       "keyCopied": "Tipka za stream je kopirana"
-    }
+    },
+    "socialFollowers": "Pratitelji na {{platform}}",
+    "socialFollowersHint": "Prikazuje se na tvom profilu kao dio ukupnog dosega. Sami unesite broj — ne čitamo ga s platforme.",
+    "socialFollowersPlaceholder": "npr. 12500"
   },
   "common": {
     "save": "Spremi",
@@ -1229,7 +1232,13 @@
     "followers": "Pratitelji",
     "following": "Praćenje",
     "joined": "Joined",
-    "loginDescription": "Prijavite se za pregled i upravljanje profilom."
+    "loginDescription": "Prijavite se za pregled i upravljanje profilom.",
+    "reach": {
+      "total": "Ukupan doseg",
+      "breakdownTitle": "Odakle dolazi taj doseg",
+      "dehubFollowers": "Pratitelji na DeHubu",
+      "selfReported": "Kreator unosi broj pratitelja na društvenim mrežama."
+    }
   },
   "tv": {
     "seoTitle": "Live TV — Besplatni kanali iz cijelog svijeta",

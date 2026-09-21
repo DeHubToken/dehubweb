@@ -404,7 +404,10 @@
       "unavailable": "你的账户目前无法从编码器进行直播。",
       "serverCopied": "服务器已复制",
       "keyCopied": "直播密钥已复制"
-    }
+    },
+    "socialFollowers": "关注者（在 {{platform}} 上）",
+    "socialFollowersHint": "显示在您个人资料中，作为您总覆盖范围的一部分。请自行输入数字——我们不会从平台读取。",
+    "socialFollowersPlaceholder": "例如：12500"
   },
   "common": {
     "save": "保存",
@@ -1182,7 +1185,13 @@
     "followers": "关注者",
     "following": "关注中",
     "joined": "加入了",
-    "loginDescription": "登录来看搭管理侬个个人档案。"
+    "loginDescription": "登录来看搭管理侬个个人档案。",
+    "reach": {
+      "total": "总触达",
+      "breakdownTitle": "呢个触达从边度嚟",
+      "dehubFollowers": "DeHub 关注者",
+      "selfReported": "社交关注数由创作者输入。"
+    }
   },
   "tv": {
     "title": "电视"

@@ -453,7 +453,10 @@
       "unavailable": "현재 계정에서는 인코더로 스트리밍할 수 없습니다.",
       "serverCopied": "서버 복사 완료",
       "keyCopied": "스트림 키 복사됨"
-    }
+    },
+    "socialFollowers": "{{platform}} 의 팔로워",
+    "socialFollowersHint": "전체 도달 범위의 일부로 프로필에 표시됩니다. 번호를 직접 입력하세요. 플랫폼에서 읽지 않습니다.",
+    "socialFollowersPlaceholder": "예: 12500"
   },
   "common": {
     "save": "저장",
@@ -1235,7 +1238,13 @@
     "followers": "팔로워",
     "following": "팔로우 중",
     "joined": "가입일",
-    "loginDescription": "로그인하여 프로필을 관리하세요."
+    "loginDescription": "로그인하여 프로필을 관리하세요.",
+    "reach": {
+      "total": "총 도달 범위",
+      "breakdownTitle": "도달 범위의 출처",
+      "dehubFollowers": "DeHub 팔로워",
+      "selfReported": "소셜 팔로워 수는 크리에이터가 입력합니다."
+    }
   },
   "tv": {
     "seoTitle": "라이브 TV — 전 세계의 무료 채널",

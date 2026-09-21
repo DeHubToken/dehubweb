@@ -373,7 +373,10 @@
       "rotate": "Reset stream key",
       "serverCopied": "Server copied",
       "keyCopied": "Stream key copied"
-    }
+    },
+    "socialFollowers": "Followers for {{platform}}",
+    "socialFollowersHint": "Dem show for your profile as part of how many pipo you reach. You go enter the number yourself — we no go read am from the platform.",
+    "socialFollowersPlaceholder": "e.g. 12500"
   },
   "common": {
     "save": "Save am",
@@ -1118,7 +1121,11 @@
     "followers": "Followers",
     "following": "Following",
     "joined": "Joined",
-    "loginDescription": "Log in for see and manage your profile."
+    "loginDescription": "Log in for see and manage your profile.",
+    "reach": {
+      "total": "Total reach",
+      "dehubFollowers": "DeHub followers"
+    }
   },
   "tv": {
     "title": "TV"

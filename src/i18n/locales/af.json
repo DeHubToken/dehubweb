@@ -457,7 +457,10 @@
       "keyCopied": "Stroom sleutel gekopieer"
     },
     "security": "Sekuriteit",
-    "about": "Oor"
+    "about": "Oor",
+    "socialFollowers": "Volgers op {{platform}}",
+    "socialFollowersHint": "Wys op jou profiel as deel van jou totale bereik. Voer die nommer self in — ons lees dit nie van die platform af nie.",
+    "socialFollowersPlaceholder": "bv. 12500"
   },
   "common": {
     "save": "Stoor",
@@ -1242,7 +1245,13 @@
     "accountSettings": "Rekeninginstellings",
     "securitySettings": "Sekuriteitinstellings",
     "preferences": "Voorkeure",
-    "logout": "Teken uit"
+    "logout": "Teken uit",
+    "reach": {
+      "total": "Totale bereik",
+      "breakdownTitle": "Waar hierdie reikwydte vandaan kom",
+      "dehubFollowers": "DeHub-volgelinge",
+      "selfReported": "Sosiale volgelinge tel word deur die skepper ingevoer."
+    }
   },
   "tv": {
     "seoTitle": "Live TV — Gratis Kanale Uit Die Hele Wêreld",

@@ -405,7 +405,10 @@
       "unavailable": "Vom Encoder us z'strahle isch grad nöd uf dim Konto verfügbar.",
       "serverCopied": "Server copied",
       "keyCopied": "Stream key copied"
-    }
+    },
+    "socialFollowers": "Follower uf {{platform}}",
+    "socialFollowersHint": "Zeigt uf dim Profil a als Teil vo dim ganzä Reichwiite. Gib d Zahl sälber ii – mir läsed si nöd vo dr Plattform.",
+    "socialFollowersPlaceholder": "z.B. 12500"
   },
   "common": {
     "save": "Speichere",
@@ -1186,7 +1189,13 @@
     "followers": "Follower",
     "following": "Am Folge",
     "joined": "Joined",
-    "loginDescription": "Mäld di aa zum dis Profiu z gsee und z verwaltä."
+    "loginDescription": "Mäld di aa zum dis Profiu z gsee und z verwaltä.",
+    "reach": {
+      "total": "Gesamti Reichwiite",
+      "breakdownTitle": "Woher die Reichwiite chunt",
+      "dehubFollowers": "DeHub Follower",
+      "selfReported": "Soziali Follower-Zahle werded vom Creator yygäbe."
+    }
   },
   "tv": {
     "title": "TV"

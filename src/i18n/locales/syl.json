@@ -422,7 +422,10 @@
     "showFollowers": "ফলোয়ার/ফলোইং দেখাও",
     "hideFollowerCounts": "ফলোয়ার সংখ্যা লুকাও",
     "followersOnly": "শুধু ফলোয়ার",
-    "subscribersOnly": "শুধু সাবস্ক্রাইবার"
+    "subscribersOnly": "শুধু সাবস্ক্রাইবার",
+    "socialFollowers": "ফলোয়ার {{platform}}-এর",
+    "socialFollowersHint": "আপনার প্রোফাইলে আপনার মোট রিচের অংশ হিসাবে দেখানো হবে। সংখ্যাটি নিজে লিখুন — আমরা প্ল্যাটফর্ম থেকে এটি পড়ি না।",
+    "socialFollowersPlaceholder": "যেমন: 12500"
   },
   "common": {
     "save": "সেভ করো",
@@ -1322,7 +1325,13 @@
     "muteUser": "মিউট করো",
     "subscribe": "সাবস্ক্রাইব করো",
     "subscribed": "সাবস্ক্রাইব করা",
-    "tip": "টিপ"
+    "tip": "টিপ",
+    "reach": {
+      "total": "মোট রিচ",
+      "breakdownTitle": "এই রিচ কোথা থেকে আসে",
+      "dehubFollowers": "DeHub ফলোয়ার",
+      "selfReported": "সোশ্যাল ফলোয়ার সংখ্যা ক্রিয়েটর দ্বারা প্রবেশ করানো হয়।"
+    }
   },
   "tv": {
     "live": "লাইভ",

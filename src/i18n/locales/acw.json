@@ -404,7 +404,10 @@
       "unavailable": "البث من مشفر غير متاح في حسابك حاليًا.",
       "serverCopied": "تم نسخ السيرفر",
       "keyCopied": "تم نسخ مفتاح البث"
-    }
+    },
+    "socialFollowers": "المتابعون على {{platform}}",
+    "socialFollowersHint": "تظهر على ملفك الشخصي كجزء من إجمالي وصولك. أدخل الرقم بنفسك - نحن لا نقرأه من المنصة.",
+    "socialFollowersPlaceholder": "مثال: 12500"
   },
   "common": {
     "save": "حفظ",
@@ -1184,7 +1187,13 @@
     "followers": "المتابعين",
     "following": "المتابَعين",
     "joined": "انضم",
-    "loginDescription": "سجّل دخول عشان تشوف وتدير ملفك الشخصي."
+    "loginDescription": "سجّل دخول عشان تشوف وتدير ملفك الشخصي.",
+    "reach": {
+      "total": "إجمالي الوصول",
+      "breakdownTitle": "من وين يجي هذا الوصول",
+      "dehubFollowers": "متابعين ديهاب",
+      "selfReported": "عدد المتابعين الاجتماعيين يدخله المنشئ."
+    }
   },
   "tv": {
     "title": "تلفزيون"

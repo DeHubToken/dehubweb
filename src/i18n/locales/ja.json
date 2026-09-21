@@ -453,7 +453,10 @@
       "unavailable": "現在、アカウントではエンコーダーからのストリーミングは利用できません。",
       "serverCopied": "サーバーがコピーされました",
       "keyCopied": "ストリームキーがコピーされました"
-    }
+    },
+    "socialFollowers": "{{platform}}のフォロワー",
+    "socialFollowersHint": "合計リーチの一部としてプロフィールに表示されます。 ご自身で番号を入力してください。プラットフォームから読み取ることはありません。",
+    "socialFollowersPlaceholder": "例） 12500"
   },
   "common": {
     "save": "保存",
@@ -1235,7 +1238,13 @@
     "followers": "フォロワー",
     "following": "フォロー中",
     "joined": "参加日",
-    "loginDescription": "ログインしてプロフィールを表示・管理。"
+    "loginDescription": "ログインしてプロフィールを表示・管理。",
+    "reach": {
+      "total": "トータルリーチ",
+      "breakdownTitle": "このリーチがどこから来たのか",
+      "dehubFollowers": "DeHubフォロワー",
+      "selfReported": "ソーシャルフォロワー数は、クリエイターが入力します。"
+    }
   },
   "tv": {
     "seoTitle": "ライブTV — 世界中の無料チャンネル",
