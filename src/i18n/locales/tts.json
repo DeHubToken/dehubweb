@@ -1492,7 +1492,25 @@
     "minutesAgo": "{{count}} นาทีก่อน",
     "hoursAgo": "{{count}} ชั่วโมงก่อน",
     "daysAgo": "{{count}} วันก่อน",
-    "monthsAgo": "{{count}} เดือนก่อน"
+    "monthsAgo": "{{count}} เดือนก่อน",
+    "forLabel": "สำหรับ",
+    "againstLabel": "ต่อต้าน",
+    "discussion": {
+      "title": "เสวนา",
+      "intro": "ถามคำถามเพิ่มเติม หรือเสวนาข้อเสนอ ก่อนลงคะแนน",
+      "reply": "ตอบกลับ",
+      "replyingTo": "ตอบกลับ {{name}}",
+      "writeReply": "เขียนคำตอบ",
+      "edited": "แก้ไขแล้ว",
+      "showMoreReplies": "แสดงการตอบกลับ {{count}} เพิ่มเติม",
+      "showMoreReplies_one": "แสดงการตอบกลับ {{count}} เพิ่มเติม",
+      "deleteTitle": "ลบคอมเมนต์นี้?",
+      "deleteDescription": "การดำเนินการนี้จะลบคอมเมนต์และคำตอบทั้งหมดสำหรับทุกคน",
+      "signInToComment": "ลงชื่อเข้าใช้เพื่อเข้าร่วมเสวนา",
+      "empty": "ยังไม่มีคำถาม เริ่มเสวนาได้เลย",
+      "joinOnProposal": "เข้าร่วมเสวนา",
+      "authorChip": "ผู้เขียนข้อเสนอ"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "เรื่องฮ็อต",

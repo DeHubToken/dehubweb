@@ -1569,7 +1569,25 @@
     "minutesAgo": "{{count}} rope aratch",
     "hoursAgo": "{{count}} zham aratch",
     "daysAgo": "{{count}} or aratch",
-    "monthsAgo": "{{count}} amis aratch"
+    "monthsAgo": "{{count}} amis aratch",
+    "forLabel": "կողմ",
+    "againstLabel": "դեմ",
+    "discussion": {
+      "title": "Քննարկում",
+      "intro": "Քվեարկելուց առաջ տվեք հետագա հարցեր կամ քննարկեք առաջարկը:",
+      "reply": "Պատասխանել",
+      "replyingTo": "Պատասխանել {{name}}-ին",
+      "writeReply": "Պատասխան գրել",
+      "edited": "խմբագրված",
+      "showMoreReplies": "Ցույց տալ {{count}} ավելի շատ պատասխաններ",
+      "showMoreReplies_one": "Ցույց տալ {{count}} ավելի շատ պատասխան",
+      "deleteTitle": "Ջնջե ՞ լ այս մեկնաբանությունը",
+      "deleteDescription": "Սա հեռացնում է մեկնաբանությունը և դրա պատասխանները բոլորի համար ։",
+      "signInToComment": "Մուտք գործեք քննարկմանը միանալու համար",
+      "empty": "Հարցեր չկան ։ Սկսեք քննարկումը ։",
+      "joinOnProposal": "Միանալ քննարկմանը",
+      "authorChip": "Առաջարկի հեղինակ"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Kaghaqin khoske",

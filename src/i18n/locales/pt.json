@@ -1576,7 +1576,25 @@
     "minutesAgo": "há {{count}}m",
     "hoursAgo": "há {{count}}h",
     "daysAgo": "há {{count}}d",
-    "monthsAgo": "há {{count}}me"
+    "monthsAgo": "há {{count}}me",
+    "forLabel": "Para",
+    "againstLabel": "Contra",
+    "discussion": {
+      "title": "Discussão",
+      "intro": "Faça perguntas de acompanhamento ou discuta a proposta antes de votar.",
+      "reply": "Responder",
+      "replyingTo": "Responder a {{name}}",
+      "writeReply": "Escreva uma resposta",
+      "edited": "editado",
+      "showMoreReplies": "Mostrar mais {{count}} respostas",
+      "showMoreReplies_one": "Mostrar mais {{count}} resposta",
+      "deleteTitle": "Eliminar este comentário?",
+      "deleteDescription": "Isso remove o comentário e suas respostas para todos.",
+      "signInToComment": "Inicie sessão para participar na discussão",
+      "empty": "Ainda não há perguntas. Comece a discussão.",
+      "joinOnProposal": "Participe da discussão",
+      "authorChip": "Autor da proposta"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Assunto do momento",

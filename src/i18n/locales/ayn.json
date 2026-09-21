@@ -1490,7 +1490,25 @@
     "minutesAgo": "قبل {{count}} دقيقة",
     "hoursAgo": "قبل {{count}} ساعة",
     "daysAgo": "قبل {{count}} يوم",
-    "monthsAgo": "قبل {{count}} شهر"
+    "monthsAgo": "قبل {{count}} شهر",
+    "forLabel": "لأجل",
+    "againstLabel": "ضد",
+    "discussion": {
+      "title": "مناقشة",
+      "intro": "اسأل أسئلة متابعة أو ناقش الاقتراح قبل أن تصوت.",
+      "reply": "رد",
+      "replyingTo": "بالرد على {{name}}",
+      "writeReply": "اكتب ردًا",
+      "edited": "معدل",
+      "showMoreReplies": "عرض {{count}} ردود أخرى",
+      "showMoreReplies_one": "عرض {{count}} رد آخر",
+      "deleteTitle": "حذف هذا التعليق؟",
+      "deleteDescription": "هذا يزيل التعليق وردوده للجميع.",
+      "signInToComment": "تسجيل الدخول للانضمام إلى المناقشة",
+      "empty": "لا توجد أسئلة بعد. ابدأ المناقشة.",
+      "joinOnProposal": "انضم إلى المناقشة",
+      "authorChip": "مؤلف الاقتراح"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "حديث المدينة",

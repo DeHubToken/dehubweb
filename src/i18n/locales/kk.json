@@ -1570,7 +1570,25 @@
     "minutesAgo": "{{count}}m ago",
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
-    "monthsAgo": "{{count}}mo ago"
+    "monthsAgo": "{{count}}mo ago",
+    "forLabel": "Реле сияқты",
+    "againstLabel": "- қарсы -\t:",
+    "discussion": {
+      "title": "Талқылау",
+      "intro": "Дауыс беруден бұрын келесі сұрақтар қойыңыз немесе ұсынысты талқылаңыз.",
+      "reply": "Жауап",
+      "replyingTo": "{{name}} жауап беру",
+      "writeReply": "Жауап жазу",
+      "edited": "өңделді",
+      "showMoreReplies": "{{count}} Қосымша жауаптарды көрсету",
+      "showMoreReplies_one": "{{count}} Толығырақ жауап көрсетіңіз",
+      "deleteTitle": "Бұл түсініктемені өшіру керек пе?",
+      "deleteDescription": "Бұл түсініктемені және оның бәріне жауаптарын жояды.",
+      "signInToComment": "Талқылауға қосылу үшін кіріңіз",
+      "empty": "Әлі сұрақтар жоқ. Талқылауды бастаңыз.",
+      "joinOnProposal": "Талқылауға қосылыңыз",
+      "authorChip": "Ұсыныс авторы"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Қаланың әңгімесі",

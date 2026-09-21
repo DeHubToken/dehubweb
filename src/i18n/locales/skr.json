@@ -1483,7 +1483,24 @@
     "minutesAgo": "{{count}} منٹ پہلے",
     "hoursAgo": "{{count}} گھنٹے پہلے",
     "daysAgo": "{{count}} ݙینہہ پہلے",
-    "monthsAgo": "{{count}} مہینے پہلے"
+    "monthsAgo": "{{count}} مہینے پہلے",
+    "forLabel": "واسطے",
+    "againstLabel": "مخالف",
+    "discussion": {
+      "title": "بحث",
+      "reply": "جواب",
+      "replyingTo": "{{name}} کوں جواب ڈیندے ہوئیں",
+      "writeReply": "جواب لکھیو",
+      "edited": "ترمیم شدہ",
+      "showMoreReplies": "{{count}} وڌيڪ جواب ڏيکاريو",
+      "showMoreReplies_one": "{{count}} وڌيڪ جواب ڏيکاريو",
+      "deleteTitle": "ایں تبصرہ حذف کروں؟",
+      "deleteDescription": "اِیہ تبصرہ تے اَوہدے جواب سَبو کِناں لئی ختم کر سٹدا اے۔",
+      "signInToComment": "بحث وچ شامل تھیون لئی سائن ان تھیوو",
+      "empty": "ہن تائیں کوئی سوال کُونہ اے۔ گَل بات شروع کرو۔",
+      "joinOnProposal": "بحث وچ شامل تھیوو",
+      "authorChip": "پروپوزل لکھنڑ آلا"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "شہر دی گل",

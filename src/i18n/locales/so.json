@@ -1540,7 +1540,25 @@
     "minutesAgo": "{{count}}d ka hor",
     "hoursAgo": "{{count}}s ka hor",
     "daysAgo": "{{count}}m ka hor",
-    "monthsAgo": "{{count}}b ka hor"
+    "monthsAgo": "{{count}}b ka hor",
+    "forLabel": "Wixii ...",
+    "againstLabel": "Ka soo horjeeda",
+    "discussion": {
+      "title": "Wadahadalka",
+      "intro": "Weydii su 'aalaha la socda ama kala hadal soo jeedinta ka hor intaadan codeyn.",
+      "reply": "Jawaab",
+      "replyingTo": "Jawaab u dir{{name}}",
+      "writeReply": "Jawaab u qor",
+      "edited": "wax laga bedelay",
+      "showMoreReplies": "Muuji {{count}} jawaabo dheeraad ah",
+      "showMoreReplies_one": "Muuji {{count}} jawaab dheeraad ah",
+      "deleteTitle": "Tirtir faalladan?",
+      "deleteDescription": "Tani waxay meesha ka saaraysaa faallooyinka iyo jawaabaha qof walba.",
+      "signInToComment": "Saxiix si aad ugu biirto wadahadalka",
+      "empty": "Weli wax su 'aalo ah ma jiraan. Bilow wadahadalka.",
+      "joinOnProposal": "Ku soo biir wadahadalka",
+      "authorChip": "Qoraaga soo jeedinta"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Sheekada Magaalada",
