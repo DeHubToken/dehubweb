@@ -48,6 +48,12 @@ const LOOKUP_LIMIT = 60;
 const FEED_PAGES = 3;
 const FEED_PAGE_SIZE = 50;
 
+/** Already-rostered rows refreshed per discovery run. Each one costs an API call. */
+const REFRESH_LIMIT = 5;
+
+/** How long a discovered member's row may go without a refresh opportunity. */
+const STALE_REFRESH_MS = 24 * 60 * 60 * 1000;
+
 /**
  * Discovery runs allowed per wallet per hour.
  *
@@ -152,9 +158,15 @@ async function feedAuthors(into: Set<string>) {
 /**
  * Look up whoever we have not seen before and add them to the roster.
  *
- * Addresses already rostered are dropped before any lookup: re-reading them
- * costs a request to tell us what we know, and an upsert over an existing row
- * risks resetting the one field its owner controls.
+ * Addresses already rostered are skipped for the *discovery* part — re-adding
+ * them tells us nothing new — but a handful of the stalest known rows are
+ * refreshed instead of just dropped. A row is only ever written by the
+ * member's own login or by whichever stranger's session happened to discover
+ * them first; if that stranger discovers them again next month, the roster
+ * still shows the placeholder name from the day they signed up, and a click
+ * lands on their current, real profile — a name on the card that does not
+ * match the name on the page it opens. Refreshing here is what an idle
+ * account's own next login would have done anyway, just sooner.
  */
 async function discover(supabase: SupabaseClient, caller: Account, self: string): Promise<number> {
   const candidates = new Set<string>();
@@ -167,14 +179,23 @@ async function discover(supabase: SupabaseClient, caller: Account, self: string)
   const all = [...candidates];
   const { data: known } = await supabase
     .from("new_members")
-    .select("wallet_address")
+    .select("wallet_address, updated_at, opted_out")
     .in("wallet_address", all);
 
-  const rostered = new Set((known ?? []).map((r: { wallet_address: string }) => r.wallet_address));
+  const knownRows = known ?? [];
+  const rostered = new Set(knownRows.map((r: { wallet_address: string }) => r.wallet_address));
   const unknown = all.filter((a) => !rostered.has(a)).slice(0, LOOKUP_LIMIT);
-  if (unknown.length === 0) return 0;
 
-  const rows = (await Promise.all(
+  // Known rows this run also happened to touch, oldest-refreshed first,
+  // capped small: this is a courtesy top-up piggybacking on someone else's
+  // login, not the write path, and must not turn into a lookup storm against
+  // api.dehub.io every time a popular account shows up in a feed page.
+  const staleCutoff = Date.now() - STALE_REFRESH_MS;
+  const stale = knownRows
+    .filter((r: { updated_at: string }) => new Date(r.updated_at).getTime() < staleCutoff)
+    .slice(0, REFRESH_LIMIT);
+
+  const newRows = (await Promise.all(
     unknown.map(async (address) => {
       const account = await fetchAccount(address);
       const joinedAt = joinedAtOf(account);
@@ -183,16 +204,39 @@ async function discover(supabase: SupabaseClient, caller: Account, self: string)
     }),
   )).filter((row): row is MemberRow => row !== null);
 
-  if (rows.length === 0) return 0;
+  const refreshRows = (await Promise.all(
+    stale.map(async (r: { wallet_address: string; opted_out: boolean }) => {
+      const account = await fetchAccount(r.wallet_address);
+      const joinedAt = joinedAtOf(account);
+      if (!account || !joinedAt) return null;
+      // Carries its own opted_out through: this row already belongs to
+      // someone, and a refresh must never touch the one field they control.
+      return { ...toRow(r.wallet_address, account, joinedAt), opted_out: r.opted_out };
+    }),
+  )).filter((row): row is MemberRow & { opted_out: boolean } => row !== null);
 
-  // ignoreDuplicates: a member who signed in between the read above and this
-  // write owns their row, including the opt-out this must never overwrite.
-  const { error } = await supabase
-    .from("new_members")
-    .upsert(rows, { onConflict: "wallet_address", ignoreDuplicates: true });
-  if (error) throw new Error(`Discovery upsert failed: ${error.message}`);
+  let written = 0;
 
-  return rows.length;
+  if (newRows.length > 0) {
+    // ignoreDuplicates: a member who signed in between the read above and
+    // this write owns their row, including the opt-out this must never
+    // overwrite.
+    const { error } = await supabase
+      .from("new_members")
+      .upsert(newRows, { onConflict: "wallet_address", ignoreDuplicates: true });
+    if (error) throw new Error(`Discovery upsert failed: ${error.message}`);
+    written += newRows.length;
+  }
+
+  if (refreshRows.length > 0) {
+    const { error } = await supabase
+      .from("new_members")
+      .upsert(refreshRows, { onConflict: "wallet_address" });
+    if (error) throw new Error(`Discovery refresh failed: ${error.message}`);
+    written += refreshRows.length;
+  }
+
+  return written;
 }
 
 Deno.serve(async (req) => {
