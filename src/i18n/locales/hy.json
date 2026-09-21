@@ -105,6 +105,9 @@
     "bio": "Kendanagroutyoun",
     "bioPlaceholder": "Patmeeq dzainor masin...",
     "socialLinks": "Socialakan hghumnaqner",
+    "socialFollowers": "Հետևորդներ {{platform}}-ում",
+    "socialFollowersHint": "Ցուցադրվում է ձեր պրոֆիլում ՝ որպես ընդհանուր հասանելիության մաս ։ Համարը մուտքագրեք ինքներդ. մենք այն հարթակից չենք կարդում ։",
+    "socialFollowersPlaceholder": "օրինակ ՝ 12500",
     "profileUpdated": "Andznagrouytse hagnorvaghits e",
     "failedLoadProfile": "Chehaghordagrvats bernal andznagrouytsi tyvyalere",
     "imageTooLarge5": "Nkare petq e lini 5MB-its phoqr",
@@ -455,10 +458,7 @@
       "unavailable": "Encoder-ից հեռարձակումը ներկայումս հասանելի չէ ձեր հաշվում։",
       "serverCopied": "Սերվերը պատճենված է",
       "keyCopied": "Հոսքի բանալին պատճենված է"
-    },
-    "socialFollowers": "Հետևորդներ {{platform}}-ում",
-    "socialFollowersHint": "Ցուցադրվում է ձեր պրոֆիլում ՝ որպես ընդհանուր հասանելիության մաս ։ Համարը մուտքագրեք ինքներդ. մենք այն հարթակից չենք կարդում ։",
-    "socialFollowersPlaceholder": "օրինակ ՝ 12500"
+    }
   },
   "common": {
     "save": "Pahpanel",
@@ -1234,10 +1234,6 @@
     "returnHome": "Veradardel glkhavaorej"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Այս գրառումն անհասանելի է",
-      "commentUnavailable": "Այս մեկնաբանությունն այլևս հասանելի չէ"
-    },
     "back": "Hed",
     "usernameAvailable": "Ogtvoroghi anouneh hasaneli e!",
     "signUpToClaim": "Grantsvek ayso stahalyalou hamar",
@@ -1253,12 +1249,16 @@
     "followers": "Hetevoughner",
     "following": "Hetevoom e",
     "joined": "Miatsav",
-    "loginDescription": "Moutq gortsuhr dzer andznagrouytse teselou ev kargatselou hamar.",
     "reach": {
       "total": "Հասանելիության ընդհանուր գումարը",
       "breakdownTitle": "Որտեղից է գալիս այս հասանելիությունը",
       "dehubFollowers": "ԴեՀյուբի հետևորդներ",
       "selfReported": "Սոցիալական հետևորդների թիվը մուտքագրվում է հեղինակի կողմից:"
+    },
+    "loginDescription": "Moutq gortsuhr dzer andznagrouytse teselou ev kargatselou hamar.",
+    "replyThread": {
+      "postUnavailable": "Այս գրառումն անհասանելի է",
+      "commentUnavailable": "Այս մեկնաբանությունն այլևս հասանելի չէ"
     },
     "tabs": {
       "playlists": "Երգացանկեր"
@@ -1295,6 +1295,7 @@
     "amountUsd": "Qanak (USD)",
     "customAmount": "Hatouq qanak",
     "minPurchase": "Nvazoum gnouyme $5 e",
+    "minDhbPurchase": "DHB - ի նվազագույն գնումը 0.50 $ է",
     "youPay": "Douq vcharoom eq",
     "youReceive": "Douq stanoom eq (nakahashvartz.)",
     "feeNote": "Քարտի վճար ~3.6% և 0.5% ցանցային պահուստ հանվում են այստեղից: Պահուստը ձեզ ուղարկվում է ETH-ի տեսքով գազի համար:",
@@ -1328,7 +1329,6 @@
     "badgeDiscount": "{{tier}} կրող — {{percent}}% զեղչ",
     "otherTokens": "Այլ թոքեններ",
     "otherTokensDesc": "Գնեք ETH կամ USDC Base-ում ձեր քարտով",
-    "minDhbPurchase": "DHB - ի նվազագույն գնումը 0.50 $ է",
     "shareToFeed": "Կիսվեք իմ լրահոսով",
     "sharePostTemplate": "Հենց նոր {{amount}} $DHB - ն ավելացվեց DeHub - ի իմ դեղին ։ Կառուցեք համայնքի հետ միասին ։ #DeHub #DHB",
     "success": {
@@ -1406,14 +1406,6 @@
     "failedSubmit": "Chehaghordagrvats ougharkuhr haytse. Khndreum enq photsek nor angam."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Այս մուտքի վրա չկա DeHub - ի ավելի վաղ հաշիվ, ուստի ոչինչ չկա փոխանցելու: Փոխարենը ստեղծեք նոր հաշիվ ։",
-    "migrateInstead": "Փոխարենը ՝ փոխանցեք հին հաշիվը",
-    "setUpNewAccount": "Ստեղծել նոր հաշիվ",
-    "createNewInstead": "Փոխարենը ստեղծել նոր հաշիվ",
-    "migrateAccount": "Միգրացիոն հաշիվ",
-    "importExternalWallet": "Ներմուծել արտաքին դրամապանակը",
-    "migrateIntentHint": "Մուտք գործեք ստորև նշված ցանկացած տարբերակով ։ Եթե այն համընկնի DeHub - ի ավելի վաղ հաշվի հետ, դուք կբերեք նրա դրամապանակը, օգտանունը և հաշվեկշիռը:",
-    "importIntentHint": "Մուտք գործեք ստորև նշված ցանկացած տարբերակով, այնուհետև տեղադրեք վերականգնման արտահայտությունը կամ դրամապանակի մասնավոր բանալին, որն ուզում եք օգտագործել:",
     "unlockBiometricContinue": "Շարունակելու համար բացեք դրամապանակը ձեր մատնահետքով կամ դեմքով ։",
     "unlockBiometricSignIn": "Մուտք գործելու համար բացեք դրամապանակը ձեր մատնահետքով կամ դեմքով ։",
     "unlockPasswordContinue": "Շարունակելու համար մուտքագրեք դրամապանակի գաղտնաբառը ։",
@@ -1426,6 +1418,14 @@
     "migrateUnmatchedDetail": "Այս դրամապանակի հասցեում պրոֆիլ գոյություն չունի: Եթե կրկին մուտք եք գործել, վերադարձեք և փոխարենը օգտագործեք այն մուտքը, որով գրանցվել եք:",
     "migrateGoBack": "Հետ գնալ",
     "migrateContinueAnyway": "Ամեն դեպքում ստեղծել նոր հաշիվ",
+    "migrateNoOldAccount": "Այս մուտքի վրա չկա DeHub - ի ավելի վաղ հաշիվ, ուստի ոչինչ չկա փոխանցելու: Փոխարենը ստեղծեք նոր հաշիվ ։",
+    "migrateInstead": "Փոխարենը ՝ փոխանցեք հին հաշիվը",
+    "setUpNewAccount": "Ստեղծել նոր հաշիվ",
+    "createNewInstead": "Փոխարենը ստեղծել նոր հաշիվ",
+    "migrateAccount": "Միգրացիոն հաշիվ",
+    "importExternalWallet": "Ներմուծել արտաքին դրամապանակը",
+    "migrateIntentHint": "Մուտք գործեք ստորև նշված ցանկացած տարբերակով ։ Եթե այն համընկնի DeHub - ի ավելի վաղ հաշվի հետ, դուք կբերեք նրա դրամապանակը, օգտանունը և հաշվեկշիռը:",
+    "importIntentHint": "Մուտք գործեք ստորև նշված ցանկացած տարբերակով, այնուհետև տեղադրեք վերականգնման արտահայտությունը կամ դրամապանակի մասնավոր բանալին, որն ուզում եք օգտագործել:",
     "title": "Mouqtq",
     "addProfileTitle": "Ավելացնել պրոֆիլ",
     "continueEmail": "Sharunakek Email-ov",
@@ -2263,7 +2263,6 @@
     "noStages": "Ձեր Stage-ներից ոչ մեկը ներկայումս ուղիղ եթերում չէ կամ չի նախատեսված։",
     "noFlaresLeft": "Այս ցիկլում Signal Flares-ներ չեն մնացել։",
     "spentFor": "{{power}}-ը վազում է {{minutes}} րոպե",
-    "goldenHourStarted": "Golden Hour-ը գործում է {{minutes}} րոպե — այն ամենը, ինչ դուք հիմա գրառում եք, կրկնակի է հաշվում",
     "teamUp": {
       "title": "Միացեք թիմին",
       "subtitle": "Միավորեք դրամապանակի ուժը մինչև յոթ այլ մարդկանց հետ։ Յուրաքանչյուրը կրում է ձեր ընդհանուր գումարը բացող կրծքանշանը։",
@@ -2324,7 +2323,8 @@
       "updated": "Թիմը թարմացվել է",
       "updateFailed": "Չհաջողվեց թարմացնել այդ թիմը",
       "openToEveryone": "Team up-ը բաց է բոլոր հաշիվների համար. անձնական թիմերը հաստատում են, թե ով է միանում։"
-    }
+    },
+    "goldenHourStarted": "Golden Hour-ը գործում է {{minutes}} րոպե — այն ամենը, ինչ դուք հիմա գրառում եք, կրկնակի է հաշվում"
   },
   "work": {
     "budgetExhausted": "Այս պարգևի ամբողջ բյուջեն հատկացված է։",
@@ -5061,7 +5061,26 @@
     "reviewDescriptionPlaceholder": "Ինչ - որ բան ասեք այս գրառման մասին (ըստ ցանկության)",
     "reviewLiveWarning": "Այս հղումն ուղիղ հեռարձակում է ։ Սպասեք, մինչև այն ավարտվի, և փոխարենը ներմուծեք ձայնագրությունը ։",
     "reviewCancel": "Չեղարկել",
-    "reviewConfirm": "Ներմուծել"
+    "reviewConfirm": "Ներմուծել",
+    "podcast": {
+      "tab": "Փոդքասթ",
+      "feedUrlLabel": "Podcast RSS հոսքի URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Ստանալ լրահոս",
+      "fetching": "Կերերի հավաքում...",
+      "showBy": "Հեղինակ ՝ {{author}}",
+      "episodes": "{{count}} դրվագներ",
+      "selectAll": "Ընտրել բոլորը",
+      "alreadyImported": "Արդեն ներմուծված է",
+      "ownership": "Ես տիրապետում եմ այս բովանդակությանը կամ ունեմ այն DeHub - ում հրապարակելու իրավատիրոջ թույլտվությունը ։",
+      "importSelected": "Ներմուծել {{count}} դրվագներ",
+      "importing": "Ներմուծում…",
+      "done": "Հերթապահություն",
+      "failed": "Չհաջողվեց",
+      "emptyFeed": "Մենք չկարողացանք գտնել որևէ դրվագ այդ լրահոսում ։",
+      "badFeed": "Այդ հղումը նման չէ փոդքասթի լրահոսին ։",
+      "tooMany": "Ներմուծեք մինչև 20 դրվագ միաժամանակ ։"
+    }
   },
   "banned": {
     "title": "Ձեր հաշիվն արգելափակված է",

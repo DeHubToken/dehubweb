@@ -105,6 +105,9 @@
     "bio": "소개",
     "bioPlaceholder": "자기소개를 작성하세요...",
     "socialLinks": "소셜 링크",
+    "socialFollowers": "{{platform}} 의 팔로워",
+    "socialFollowersHint": "전체 도달 범위의 일부로 프로필에 표시됩니다. 번호를 직접 입력하세요. 플랫폼에서 읽지 않습니다.",
+    "socialFollowersPlaceholder": "예: 12500",
     "profileUpdated": "프로필이 성공적으로 업데이트되었습니다",
     "failedLoadProfile": "프로필 데이터 로드 실패",
     "imageTooLarge5": "이미지는 5MB 미만이어야 합니다",
@@ -453,10 +456,7 @@
       "unavailable": "현재 계정에서는 인코더로 스트리밍할 수 없습니다.",
       "serverCopied": "서버 복사 완료",
       "keyCopied": "스트림 키 복사됨"
-    },
-    "socialFollowers": "{{platform}} 의 팔로워",
-    "socialFollowersHint": "전체 도달 범위의 일부로 프로필에 표시됩니다. 번호를 직접 입력하세요. 플랫폼에서 읽지 않습니다.",
-    "socialFollowersPlaceholder": "예: 12500"
+    }
   },
   "common": {
     "save": "저장",
@@ -1234,10 +1234,6 @@
     "returnHome": "홈으로 돌아가기"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "이 포스트는 이용할 수 없습니다.",
-      "commentUnavailable": "이 댓글은 더 이상 사용할 수 없습니다"
-    },
     "back": "뒤로",
     "usernameAvailable": "사용 가능한 사용자명!",
     "signUpToClaim": "가입하여 획득",
@@ -1253,12 +1249,16 @@
     "followers": "팔로워",
     "following": "팔로우 중",
     "joined": "가입일",
-    "loginDescription": "로그인하여 프로필을 관리하세요.",
     "reach": {
       "total": "총 도달 범위",
       "breakdownTitle": "도달 범위의 출처",
       "dehubFollowers": "DeHub 팔로워",
       "selfReported": "소셜 팔로워 수는 크리에이터가 입력합니다."
+    },
+    "loginDescription": "로그인하여 프로필을 관리하세요.",
+    "replyThread": {
+      "postUnavailable": "이 포스트는 이용할 수 없습니다.",
+      "commentUnavailable": "이 댓글은 더 이상 사용할 수 없습니다"
     },
     "tabs": {
       "playlists": "재생 목록"
@@ -1295,6 +1295,7 @@
     "amountUsd": "금액 (USD)",
     "customAmount": "사용자 지정 금액",
     "minPurchase": "최소 구매 $5",
+    "minDhbPurchase": "DHB 최소 구매 금액은 $ 0.50 입니다.",
     "youPay": "결제 금액",
     "youReceive": "수령 (예상)",
     "feeNote": "카드 수수료 ~3.6%와 0.5% 네트워크 리저브가 차감됩니다. 리저브는 가스비로 ETH로 전송됩니다.",
@@ -1327,7 +1328,6 @@
     "badgeDiscount": "{{tier}} 보유자 — {{percent}}% 할인",
     "otherTokens": "기타 토큰",
     "otherTokensDesc": "카드로 Base에서 ETH 또는 USDC 구매",
-    "minDhbPurchase": "DHB 최소 구매 금액은 $ 0.50 입니다.",
     "shareToFeed": "내 피드에 공유",
     "sharePostTemplate": "방금 DeHub의 스택에 {{amount}} $ DHB를 추가했습니다. 커뮤니티와 함께 만들기. # DeHub # DHB",
     "success": {
@@ -1409,14 +1409,6 @@
     "email": "이메일"
   },
   "loginModal": {
-    "migrateNoOldAccount": "이 로그인에는 이전 DeHub 계정이 없으므로 가져올 것이 없습니다. 대신 새 계정을 설정하세요.",
-    "migrateInstead": "이전 계정을 대신 가져오기",
-    "setUpNewAccount": "새 계정 설정",
-    "createNewInstead": "대신 새 계정 만들기",
-    "migrateAccount": "계정 마이그레이션",
-    "importExternalWallet": "외부 지갑 가져오기",
-    "migrateIntentHint": "아래 옵션 중 하나로 로그인하세요. 이전 DeHub 계정과 일치하면 해당 지갑, 사용자 이름 및 잔액을 가져옵니다.",
-    "importIntentHint": "아래 옵션 중 하나로 로그인한 다음 사용하려는 지갑의 복구 문구 또는 개인 키를 붙여넣으세요.",
     "unlockBiometricContinue": "계속하려면 지문이나 얼굴로 지갑을 여세요.",
     "unlockBiometricSignIn": "지문이나 얼굴로 지갑을 잠금 해제하고 로그인하세요.",
     "unlockPasswordContinue": "계속하려면 지갑 비밀번호를 입력하세요.",
@@ -1429,6 +1421,14 @@
     "migrateUnmatchedDetail": "이 지갑 주소에 프로필이 없습니다. 다시 로그인하는 경우, 다시 돌아가서 가입한 로그인 정보를 사용하세요.",
     "migrateGoBack": "뒤로",
     "migrateContinueAnyway": "어쨌든 새 계정 만들기",
+    "migrateNoOldAccount": "이 로그인에는 이전 DeHub 계정이 없으므로 가져올 것이 없습니다. 대신 새 계정을 설정하세요.",
+    "migrateInstead": "이전 계정을 대신 가져오기",
+    "setUpNewAccount": "새 계정 설정",
+    "createNewInstead": "대신 새 계정 만들기",
+    "migrateAccount": "계정 마이그레이션",
+    "importExternalWallet": "외부 지갑 가져오기",
+    "migrateIntentHint": "아래 옵션 중 하나로 로그인하세요. 이전 DeHub 계정과 일치하면 해당 지갑, 사용자 이름 및 잔액을 가져옵니다.",
+    "importIntentHint": "아래 옵션 중 하나로 로그인한 다음 사용하려는 지갑의 복구 문구 또는 개인 키를 붙여넣으세요.",
     "title": "로그인",
     "addProfileTitle": "프로필 추가",
     "continueEmail": "이메일로 계속",
@@ -2314,7 +2314,6 @@
     "noStages": "현재 진행 중이거나 예약된 스테이지가 없습니다.",
     "noFlaresLeft": "이번 주기에 남은 Signal Flare가 없습니다.",
     "spentFor": "{{power}} 분 동안 {{minutes}} 실행 중",
-    "goldenHourStarted": "골든 아워 {{minutes}}분 동안 진행 중 — 지금 게시하는 모든 내용은 두 배로 계산됩니다.",
     "teamUp": {
       "title": "팀 구성",
       "subtitle": "최대 7명까지 함께 지갑 파워를 합쳐보세요. 모두가 당신의 총계를 잠금 해제하는 배지를 착용합니다.",
@@ -2375,7 +2374,8 @@
       "updated": "팀 업데이트됨",
       "updateFailed": "해당 팀을 업데이트할 수 없습니다.",
       "openToEveryone": "팀 업은 모든 계정에 공개됩니다. 비공개 팀은 가입 승인을 합니다."
-    }
+    },
+    "goldenHourStarted": "골든 아워 {{minutes}}분 동안 진행 중 — 지금 게시하는 모든 내용은 두 배로 계산됩니다."
   },
   "work": {
     "budgetExhausted": "이 현상금의 예산이 모두 배정되었습니다.",
@@ -5178,7 +5178,25 @@
     "reviewDescriptionPlaceholder": "이 게시물에 대한 의견 남기기 (선택 사항)",
     "reviewLiveWarning": "이 링크는 라이브 스트림입니다. 녹화가 끝날 때까지 기다렸다가 녹화본을 가져옵니다.",
     "reviewCancel": "취소",
-    "reviewConfirm": "가져오기"
+    "reviewConfirm": "가져오기",
+    "podcast": {
+      "tab": "팟캐스트",
+      "feedUrlLabel": "팟캐스트 RSS 피드 URL",
+      "fetchFeed": "피드 가져오기",
+      "fetching": "피드 가져오는 중...",
+      "showBy": "작성자: {{author}}",
+      "episodes": "{{count}} 에피소드",
+      "selectAll": "모두 선택",
+      "alreadyImported": "이미 가져옴",
+      "ownership": "본인은 이 콘텐츠를 소유하거나 DeHub에 게시할 권한이 있습니다.",
+      "importSelected": "{{count}} 에피소드 가져오기",
+      "importing": "가져오는 중...",
+      "done": "대기 중",
+      "failed": "실패",
+      "emptyFeed": "해당 피드에서 에피소드를 찾을 수 없습니다.",
+      "badFeed": "해당 링크는 팟캐스트 피드처럼 보이지 않습니다.",
+      "tooMany": "한 번에 최대 20개의 에피소드를 가져옵니다."
+    }
   },
   "banned": {
     "title": "계정이 차단되었습니다",

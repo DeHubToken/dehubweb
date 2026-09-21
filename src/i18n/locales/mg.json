@@ -105,6 +105,9 @@
     "bio": "Momba ahy",
     "bioPlaceholder": "Lazao ny momba anao...",
     "socialLinks": "Rohy sosialy",
+    "socialFollowers": "Mpanaraka ao amin'ny {{platform}}",
+    "socialFollowersHint": "Hita ao amin'ny mombamomba anao ho toy ny ampahany amin'ny tontolonao. Tsy Maninona Ka — namaha izany fotsiny.",
+    "socialFollowersPlaceholder": "ohatra 12500",
     "profileUpdated": "Voaova soa aman-tsara ny mombamomba",
     "failedLoadProfile": "Tsy nahomby ny fampidirana ny mombamomba",
     "imageTooLarge5": "Ny sary dia tokony ho latsaky ny 5MB",
@@ -436,10 +439,7 @@
       "unavailable": "Tsy azo atao amin'ny kaontinao amin'izao fotoana izao ny fampitana avy amin'ny encoder.",
       "serverCopied": "Nadika avy tamin'ny mpizara",
       "keyCopied": "KEY FITEHIRY Nadika"
-    },
-    "socialFollowers": "Mpanaraka ao amin'ny {{platform}}",
-    "socialFollowersHint": "Hita ao amin'ny mombamomba anao ho toy ny ampahany amin'ny tontolonao. Tsy Maninona Ka — namaha izany fotsiny.",
-    "socialFollowersPlaceholder": "ohatra 12500"
+    }
   },
   "common": {
     "save": "Tehirizo",
@@ -1238,10 +1238,6 @@
     "returnHome": "Miverina any amin'ny fandraisana"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Ity fahazoan-dàlana ity dia tsy azo ampiasaina",
-      "commentUnavailable": "Io filazana io dia tsy hita intsony"
-    },
     "back": "Miverina",
     "usernameAvailable": "Misy io anaram-pikambana io!",
     "signUpToClaim": "Misorata mba haka azy",
@@ -1257,12 +1253,16 @@
     "followers": "Mpanara-dia",
     "following": "Arahi-maso",
     "joined": "Niditra",
-    "loginDescription": "Midira mba hahitana sy hitantanana ny mombamombanao.",
     "reach": {
       "total": "TONTOLO IREO",
       "breakdownTitle": "Avy aiza no nihavian'izany",
       "dehubFollowers": "Mpanara-dia an'i DeHub",
       "selfReported": "Ny fandrindrana ara-tsosialy dia nampidirina tamin'ny mpamorona."
+    },
+    "loginDescription": "Midira mba hahitana sy hitantanana ny mombamombanao.",
+    "replyThread": {
+      "postUnavailable": "Ity fahazoan-dàlana ity dia tsy azo ampiasaina",
+      "commentUnavailable": "Io filazana io dia tsy hita intsony"
     },
     "tabs": {
       "playlists": "Lisitra filalao"
@@ -1293,6 +1293,7 @@
     "amountUsd": "Vola (USD)",
     "customAmount": "Vola manokana",
     "minPurchase": "Ny fividianana kely indrindra dia $5",
+    "minDhbPurchase": "Ny kely indrindra DHB fividianana dia $ 0.50",
     "youPay": "Mandoa ianao",
     "youReceive": "Mandray ianao (est.)",
     "feeNote": "Ny fiampitsarana amin'ny karata ~3.6% ary ny 0.5% amin'ny reserve network dia avy amin'ity. Ny reserve dia alefa aminao ho ETH ho an'ny gazy.",
@@ -1326,7 +1327,6 @@
     "badgeDiscount": "Tompona {{tier}} — fihenam-bidy {{percent}}%",
     "otherTokens": "Tokena hafa",
     "otherTokensDesc": "Mividiana ETH na USDC ao amin'ny Base amin'ny karatrao",
-    "minDhbPurchase": "Ny kely indrindra DHB fividianana dia $ 0.50",
     "shareToFeed": "Zarao amin'ny fahana aho",
     "sharePostTemplate": "Vao avy nanampy ny {{amount}} $DHB tao amin'ny kitapoko tao amin'ny DeHub. Miditra sy miaraka amin'ny fokonolona. #DeHub #DHB",
     "success": {
@@ -1403,14 +1403,6 @@
     "failedSubmit": "Tsy nahomby ny fandefasana fangatahana. Avereno azafady."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Tsy misy kaonty DeHub taloha tamin'ity fidirana ity, ka tsy misy hamerenana. Mamorona kaonty vaovao fa tsy izany.",
-    "migrateInstead": "Avereno ny kaonty taloha fa tsy izany",
-    "setUpNewAccount": "Mamorona kaonty vaovao",
-    "createNewInstead": "Mamorona kaonty vaovao fa tsy izany",
-    "migrateAccount": "Afindrao ny kaonty",
-    "importExternalWallet": "Ampidiro ny poketra ivelany",
-    "migrateIntentHint": "Midira amin'ny safidy rehetra eto ambany. Raha mifanaraka amin'ny kaonty DeHub taloha izany dia ho averina ny poketran'ny volanao, ny anaranao ary ny fifandanjanao.",
-    "importIntentHint": "Midira amin'ny safidy rehetra eto ambany, avy eo apetaho ny fehezanteny fanarenana na ny lakile manokana amin'ny poketran'ny vola tianao hampiasaina.",
     "unlockBiometricContinue": "Hamaha ny kitaponao amin'ny tondro na ny tavanao hanohy.",
     "unlockBiometricSignIn": "Hamaha ny kitaponao amin'ny tondro na ny tavanao hiditra.",
     "unlockPasswordContinue": "Ampidiro ny tenimiafinao hanohy.",
@@ -1422,6 +1414,14 @@
     "migrateUnmatchedDetail": "Tsy misy profil aty amin'ity adiresy kitapom-batsy ity. Raha toa ianao ka nanao sonia, hiverina ary mampiasa ny fidirana no nanao sonia fa tsy.",
     "migrateGoBack": "Miverena any aoriana",
     "migrateContinueAnyway": "Mamorona kaonty vaovao ihany",
+    "migrateNoOldAccount": "Tsy misy kaonty DeHub taloha tamin'ity fidirana ity, ka tsy misy hamerenana. Mamorona kaonty vaovao fa tsy izany.",
+    "migrateInstead": "Avereno ny kaonty taloha fa tsy izany",
+    "setUpNewAccount": "Mamorona kaonty vaovao",
+    "createNewInstead": "Mamorona kaonty vaovao fa tsy izany",
+    "migrateAccount": "Afindrao ny kaonty",
+    "importExternalWallet": "Ampidiro ny poketra ivelany",
+    "migrateIntentHint": "Midira amin'ny safidy rehetra eto ambany. Raha mifanaraka amin'ny kaonty DeHub taloha izany dia ho averina ny poketran'ny volanao, ny anaranao ary ny fifandanjanao.",
+    "importIntentHint": "Midira amin'ny safidy rehetra eto ambany, avy eo apetaho ny fehezanteny fanarenana na ny lakile manokana amin'ny poketran'ny vola tianao hampiasaina.",
     "title": "Hiditra",
     "addProfileTitle": "Hanampy mombamomba",
     "continueEmail": "Tohizo amin'ny Mailaka",
@@ -2117,13 +2117,13 @@
       "thisYear": "Ity taona ity",
       "allTime": "Fotoana rehetra",
       "newMembers": "Mpikambana vaovao",
+      "viewMembers": "Hizaha ireo mpikambana",
+      "openNewMembers": "Manokatra ny lisitry ny mpikambana vaovao",
       "chartMembers": "Mpikambana araka ny fotoana",
       "chartActive": "Olona mavitrika",
       "growth": "+{{percent}}% ity volana ity",
       "growthTerm": "Fitomboana",
-      "recordingSince": "voarakitra hatramin'ny {{date}}",
-      "viewMembers": "Hizaha ireo mpikambana",
-      "openNewMembers": "Manokatra ny lisitry ny mpikambana vaovao"
+      "recordingSince": "voarakitra hatramin'ny {{date}}"
     },
     "title": "Antontan'isa",
     "subtitle": "Vaovao loharano misokatra amin'ny fotoana tena izy",
@@ -2308,7 +2308,6 @@
     "noStages": "Tsy misy Stage anao mihetsika na voalahatra amin'izao fotoana izao.",
     "noFlaresLeft": "Tsy misy Signal Flare sisa tavela amin'ity tsingerina ity",
     "spentFor": "{{power}} mihazakazaka mandritra ny {{minutes}} minitra",
-    "goldenHourStarted": "Golden Hour mihazakazaka mandritra ny {{minutes}} minitra — izay rehetra alefanao ankehitriny dia ho avo roa heny",
     "teamUp": {
       "title": "Miaraha miasa",
       "subtitle": "Ampifandraiso ny herin'ny poketra miaraka amin'ny olona hatramin'ny fito hafa. Samy manao ny mari-pahaizana izay manokatra ny totalin'ny vondrona ny tsirairay.",
@@ -2369,7 +2368,8 @@
       "updated": "Nohavaozina ny ekipa",
       "updateFailed": "Tsy afaka novaina io ekipa io",
       "openToEveryone": "Ny Team up dia misokatra ho an'ny kaonty rehetra; ny ekipa manokana dia manome alalana izay miditra."
-    }
+    },
+    "goldenHourStarted": "Golden Hour mihazakazaka mandritra ny {{minutes}} minitra — izay rehetra alefanao ankehitriny dia ho avo roa heny"
   },
   "work": {
     "budgetExhausted": "Efa lany daholo ny tetibolan'ity valisoa ity.",
@@ -4838,7 +4838,26 @@
     "reviewDescriptionPlaceholder": "Lazao zavatra momba ity lahatsoratra ity (tsy voatery)",
     "reviewLiveWarning": "Mivantana izany ny serasera. Andraso mandra-pahatapitry ny naoty.",
     "reviewCancel": "Ajanona",
-    "reviewConfirm": "Hampiditra"
+    "reviewConfirm": "Hampiditra",
+    "podcast": {
+      "tab": "Rakipeo",
+      "feedUrlLabel": "Podcast URL fahana RSS",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "RAHARAHAM-PIRENENA",
+      "fetching": "Manome sakafo...",
+      "showBy": "By {{author}}",
+      "episodes": "{{count}} episodes",
+      "selectAll": "Farito izy_rehetra",
+      "alreadyImported": "Efa nohafarana",
+      "ownership": "Manana ity votoaty ity aho, na manana alalana amin'ny tompon'ny zo hamoaka izany ao amin'ny DeHub.",
+      "importSelected": "Fanafarana {{count}} episodes",
+      "importing": "Mamoaka...",
+      "done": "Hiditra",
+      "failed": "Tsy nahomby",
+      "emptyFeed": "Tsy mahita marika fampihorohoroana mihitsy ao anatin'izany",
+      "badFeed": "Ity endrika tatoazy ity dia tsy mitovy amin'ny podcast feed.",
+      "tooMany": "Antoko manodidina ny 20 no handray anjara amin'izany."
+    }
   },
   "banned": {
     "title": "Voarara ny kaontinao",

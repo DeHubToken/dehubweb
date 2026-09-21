@@ -105,6 +105,9 @@
     "bio": "Bemutatkozás",
     "bioPlaceholder": "Mondjon valamit magáról...",
     "socialLinks": "Közösségi linkek",
+    "socialFollowers": "Követők a következőn:{{platform}}",
+    "socialFollowersHint": "A teljes elérés részeként jelenik meg a profilodon. Adja meg a számot — nem olvassuk el a platformról.",
+    "socialFollowersPlaceholder": "pl. 12500",
     "profileUpdated": "Profil sikeresen frissítve",
     "failedLoadProfile": "Profiladatok betöltése sikertelen",
     "imageTooLarge5": "A kép mérete max. 5MB lehet",
@@ -455,10 +458,7 @@
       "unavailable": "Az enkóderből történő streamelés jelenleg nem elérhető a fiókodban.",
       "serverCopied": "Szerver másolva",
       "keyCopied": "Adatfolyamkulcs másolva"
-    },
-    "socialFollowers": "Követők a következőn:{{platform}}",
-    "socialFollowersHint": "A teljes elérés részeként jelenik meg a profilodon. Adja meg a számot — nem olvassuk el a platformról.",
-    "socialFollowersPlaceholder": "pl. 12500"
+    }
   },
   "common": {
     "save": "Mentés",
@@ -1232,10 +1232,6 @@
     "returnHome": "Vissza a kezdőlapra"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Ez a bejegyzés nem érhető el",
-      "commentUnavailable": "Ez a megjegyzés már nem érhető el"
-    },
     "back": "Vissza",
     "usernameAvailable": "Felhasználónév elérhető!",
     "signUpToClaim": "Regisztráljon és foglalja le",
@@ -1251,12 +1247,16 @@
     "followers": "Követők",
     "following": "Követés",
     "joined": "Joined",
-    "loginDescription": "Jelentkezzen be profiljának megtekintéséhez és kezeléséhez.",
     "reach": {
       "total": "Teljes elérés",
       "breakdownTitle": "Honnan származik ez a hatókör?",
       "dehubFollowers": "DeHub követők",
       "selfReported": "A közösségi követők számát az alkotó adja meg."
+    },
+    "loginDescription": "Jelentkezzen be profiljának megtekintéséhez és kezeléséhez.",
+    "replyThread": {
+      "postUnavailable": "Ez a bejegyzés nem érhető el",
+      "commentUnavailable": "Ez a megjegyzés már nem érhető el"
     },
     "tabs": {
       "playlists": "Játéklisták"
@@ -1293,6 +1293,7 @@
     "amountUsd": "Összeg (dollár)",
     "customAmount": "Egyéni összeg",
     "minPurchase": "Minimum vásárlás $5",
+    "minDhbPurchase": "A minimális DHB-vásárlás 0,50 $",
     "youPay": "Ön fizet",
     "youReceive": "Ön kap (kb.)",
     "feeNote": "Kártyagebühr ~3,6% és egy 0,5%-os hálózati tartalék levonódik ebből. A tartalék ETH-ként érkezik meg neked a gázért.",
@@ -1326,7 +1327,6 @@
     "badgeDiscount": "{{tier}} tulajdonos — {{percent}}% kedvezmény",
     "otherTokens": "Egyéb tokenek",
     "otherTokensDesc": "Vásárolj ETH-t vagy USDC-t a Base hálózaton a kártyáddal",
-    "minDhbPurchase": "A minimális DHB-vásárlás 0,50 $",
     "shareToFeed": "Megosztás a feedemben",
     "sharePostTemplate": "Most adtam hozzá {{amount}} $DHB-t a DeHubon lévő stackemhez. Építkezés a közösséggel. #DeHub #DHB",
     "success": {
@@ -1405,14 +1405,6 @@
     "email": "E-mail"
   },
   "loginModal": {
-    "migrateNoOldAccount": "Ehhez a bejelentkezéshez nincs korábbi DeHub-fiók, így nincs mit átvinni. Hozz létre inkább egy új fiókot.",
-    "migrateInstead": "Hozd át inkább a régi fiókot",
-    "setUpNewAccount": "Új fiók létrehozása",
-    "createNewInstead": "Hozz létre inkább egy új fiókot",
-    "migrateAccount": "Fiók áttelepítése",
-    "importExternalWallet": "Külső pénztárca importálása",
-    "migrateIntentHint": "Jelentkezz be az alábbi lehetőségek bármelyikével. Ha egyezik egy korábbi DeHub fiókkal, akkor áthozod a pénztárcáját, a felhasználónevét és az egyenlegét.",
-    "importIntentHint": "Jelentkezzen be az alábbi lehetőségek bármelyikével, majd illessze be a használni kívánt pénztárca helyreállítási kifejezését vagy privát kulcsát.",
     "unlockBiometricContinue": "A folytatáshoz oldja fel pénztárcáját ujjlenyomatával vagy arcával.",
     "unlockBiometricSignIn": "A bejelentkezéshez oldja fel a pénztárcáját az ujjlenyomatával vagy az arcával.",
     "unlockPasswordContinue": "A folytatáshoz adja meg a pénztárca jelszavát.",
@@ -1425,6 +1417,14 @@
     "migrateUnmatchedDetail": "Ezen a pénztárcacímen nincs profil. Ha újra bejelentkezett, térjen vissza, és használja azt a bejelentkezést, amellyel regisztrált.",
     "migrateGoBack": "Vissza",
     "migrateContinueAnyway": "Új fiók létrehozása mindenképpen",
+    "migrateNoOldAccount": "Ehhez a bejelentkezéshez nincs korábbi DeHub-fiók, így nincs mit átvinni. Hozz létre inkább egy új fiókot.",
+    "migrateInstead": "Hozd át inkább a régi fiókot",
+    "setUpNewAccount": "Új fiók létrehozása",
+    "createNewInstead": "Hozz létre inkább egy új fiókot",
+    "migrateAccount": "Fiók áttelepítése",
+    "importExternalWallet": "Külső pénztárca importálása",
+    "migrateIntentHint": "Jelentkezz be az alábbi lehetőségek bármelyikével. Ha egyezik egy korábbi DeHub fiókkal, akkor áthozod a pénztárcáját, a felhasználónevét és az egyenlegét.",
+    "importIntentHint": "Jelentkezzen be az alábbi lehetőségek bármelyikével, majd illessze be a használni kívánt pénztárca helyreállítási kifejezését vagy privát kulcsát.",
     "title": "Bejelentkezés",
     "addProfileTitle": "Profil hozzáadása",
     "continueEmail": "Folytatás e-maillel",
@@ -2263,7 +2263,6 @@
     "noStages": "Egyik Stage-ed sem élő vagy ütemezett jelenleg.",
     "noFlaresLeft": "Nincs több Jelzőrakéta ebben a ciklusban",
     "spentFor": "{{power}} fut {{minutes}} percig",
-    "goldenHourStarted": "Golden Hour futtatása {{minutes}} percig — minden, amit most posztolsz, duplán számít",
     "teamUp": {
       "title": "Csapatba lépés",
       "subtitle": "Kombináld a pénztárca erejét akár hét másik személlyel. Mindenki viseli a jelvényt, amit a teljes összegetek felold.",
@@ -2324,7 +2323,8 @@
       "updated": "Csapat frissítve",
       "updateFailed": "Nem sikerült frissíteni ezt a csapatot",
       "openToEveryone": "A Team Up minden fiók számára nyitott; a privát csapatok jóváhagyják, ki csatlakozik."
-    }
+    },
+    "goldenHourStarted": "Golden Hour futtatása {{minutes}} percig — minden, amit most posztolsz, duplán számít"
   },
   "work": {
     "budgetExhausted": "Ennek a jutalomnak a kerete teljesen le van kötve.",
@@ -5071,7 +5071,26 @@
     "reviewDescriptionPlaceholder": "Mondj valamit erről a bejegyzésről (nem kötelező)",
     "reviewLiveWarning": "Ez a link élő közvetítés. Várja meg, amíg véget ér, és importálja a felvételt.",
     "reviewCancel": "Mégse",
-    "reviewConfirm": "Importálás"
+    "reviewConfirm": "Importálás",
+    "podcast": {
+      "tab": "Podcasting",
+      "feedUrlLabel": "Podcast RSS-hírcsatorna URL-címe",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Hírcsatorna letöltése",
+      "fetching": "Hírcsatorna letöltése…",
+      "showBy": "Szerző:{{author}}",
+      "episodes": "{{count}} epizód",
+      "selectAll": "Összes kijelölése",
+      "alreadyImported": "Már importálva",
+      "ownership": "Én vagyok a tartalom tulajdonosa, vagy rendelkezem a jogtulajdonos engedélyével, hogy közzétegyem a DeHubon.",
+      "importSelected": "{{count}} epizód importálása",
+      "importing": "Importálás…",
+      "done": "Várólistán",
+      "failed": "Sikertelen",
+      "emptyFeed": "Nem találtunk egyetlen epizódot sem a feedben.",
+      "badFeed": "Ez a link nem néz ki podcast-hírcsatornának.",
+      "tooMany": "Egyszerre legfeljebb 20 epizódot importálhat."
+    }
   },
   "banned": {
     "title": "A fiókodat letiltottuk",

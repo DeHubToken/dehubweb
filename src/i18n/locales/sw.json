@@ -105,6 +105,9 @@
     "bio": "Kuhusu",
     "bioPlaceholder": "Tuambie kuhusu wewe...",
     "socialLinks": "Viungo vya Kijamii",
+    "socialFollowers": "Wafuasi kwenye {{platform}}",
+    "socialFollowersHint": "Inaonyeshwa kwenye wasifu wako kama sehemu ya jumla ya ufikiaji wako. Weka nambari mwenyewe — hatuisomi kutoka kwenye tovuti.",
+    "socialFollowersPlaceholder": "mfano 12500",
     "profileUpdated": "Wasifu umesasishwa kwa mafanikio",
     "failedLoadProfile": "Imeshindwa kupakia data ya wasifu",
     "imageTooLarge5": "Picha lazima iwe chini ya 5MB",
@@ -455,10 +458,7 @@
       "unavailable": "Kutangaza kutoka kwa kiendeshi hakupatikani kwenye akaunti yako kwa sasa.",
       "serverCopied": "Seva imenakiliwa",
       "keyCopied": "Ufunguo wa mkondo umenakiliwa"
-    },
-    "socialFollowers": "Wafuasi kwenye {{platform}}",
-    "socialFollowersHint": "Inaonyeshwa kwenye wasifu wako kama sehemu ya jumla ya ufikiaji wako. Weka nambari mwenyewe — hatuisomi kutoka kwenye tovuti.",
-    "socialFollowersPlaceholder": "mfano 12500"
+    }
   },
   "common": {
     "save": "Hifadhi",
@@ -1238,10 +1238,6 @@
     "returnHome": "Rudi Nyumbani"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Chapisho hili halipatikani",
-      "commentUnavailable": "Maoni haya hayapatikani tena"
-    },
     "back": "Rudi",
     "usernameAvailable": "Jina la mtumiaji linapatikana!",
     "signUpToClaim": "Jisajili leo kudai",
@@ -1257,12 +1253,16 @@
     "followers": "Wafuasi",
     "following": "Wanaofuatwa",
     "joined": "Joined",
-    "loginDescription": "Ingia ili kuona na kusimamia wasifu wako.",
     "reach": {
       "total": "Jumla ya ufikiaji",
       "breakdownTitle": "Ufikiaji huu unatoka wapi",
       "dehubFollowers": "Wafuasi wa DeHub",
       "selfReported": "Hesabu za wafuasi wa kijamii zimewekwa na muundaji."
+    },
+    "loginDescription": "Ingia ili kuona na kusimamia wasifu wako.",
+    "replyThread": {
+      "postUnavailable": "Chapisho hili halipatikani",
+      "commentUnavailable": "Maoni haya hayapatikani tena"
     },
     "tabs": {
       "playlists": "Orodha za kucheza"
@@ -1299,6 +1299,7 @@
     "amountUsd": "Kiasi (USD)",
     "customAmount": "Kiasi maalum",
     "minPurchase": "Ununuzi wa chini ni $5",
+    "minDhbPurchase": "Kima cha chini cha ununuzi wa DHB ni $ 0.50",
     "youPay": "Unalipa",
     "youReceive": "Utapokea (makadirio)",
     "feeNote": "Kodi ya kadi ~3.6% na akiba ya mtandao ya 0.5% hukatwa kutoka hapa. Akiba inapokelewa kwako kama ETH kwa gesi.",
@@ -1332,7 +1333,6 @@
     "badgeDiscount": "Mmiliki wa {{tier}} — punguzo la {{percent}}%",
     "otherTokens": "Tokeni nyingine",
     "otherTokensDesc": "Nunua ETH au USDC kwenye Base kwa kadi yako",
-    "minDhbPurchase": "Kima cha chini cha ununuzi wa DHB ni $ 0.50",
     "shareToFeed": "Shiriki kwenye mpasho wangu",
     "sharePostTemplate": "Nimeweka {{amount}} $DHB kwenye stakabadhi yangu kwenye DeHub. Kujenga na jumuiya. #DeHub #DHB",
     "success": {
@@ -1409,14 +1409,6 @@
     "failedSubmit": "Imeshindwa kuwasilisha ombi. Tafadhali jaribu tena."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Hakuna akaunti ya awali ya DeHub kwenye kuingia hii, kwa hivyo hakuna kitu cha kuleta. Fungua akaunti mpya badala yake.",
-    "migrateInstead": "Badala yake leta akaunti ya zamani",
-    "setUpNewAccount": "Fungua akaunti mpya",
-    "createNewInstead": "Fungua akaunti mpya badala yake",
-    "migrateAccount": "Hamisha akaunti",
-    "importExternalWallet": "Ingiza pochi ya nje",
-    "migrateIntentHint": "Ingia ukitumia chaguo lolote hapa chini. Ikiwa inalingana na akaunti ya awali ya DeHub utaleta pochi yake, jina la mtumiaji na salio.",
-    "importIntentHint": "Ingia ukitumia chaguo lolote hapa chini, kisha ubandike kirai cha kurejesha au ufunguo wa faragha wa pochi unayotaka kutumia.",
     "unlockBiometricContinue": "Fungua pochi yako kwa alama yako ya kidole au uso ili uendelee.",
     "unlockBiometricSignIn": "Fungua mkoba wako kwa alama yako ya kidole au uso ili uingie.",
     "unlockPasswordContinue": "Weka nenosiri lako la mkoba ili uendelee.",
@@ -1429,6 +1421,14 @@
     "migrateUnmatchedDetail": "Hakuna wasifu uliopo kwenye anwani hii ya pochi. Ikiwa ulikuwa unaingia tena, rudi na utumie ingia uliyojisajili nayo badala yake.",
     "migrateGoBack": "Rudi nyuma",
     "migrateContinueAnyway": "Fungua akaunti mpya hata hivyo",
+    "migrateNoOldAccount": "Hakuna akaunti ya awali ya DeHub kwenye kuingia hii, kwa hivyo hakuna kitu cha kuleta. Fungua akaunti mpya badala yake.",
+    "migrateInstead": "Badala yake leta akaunti ya zamani",
+    "setUpNewAccount": "Fungua akaunti mpya",
+    "createNewInstead": "Fungua akaunti mpya badala yake",
+    "migrateAccount": "Hamisha akaunti",
+    "importExternalWallet": "Ingiza pochi ya nje",
+    "migrateIntentHint": "Ingia ukitumia chaguo lolote hapa chini. Ikiwa inalingana na akaunti ya awali ya DeHub utaleta pochi yake, jina la mtumiaji na salio.",
+    "importIntentHint": "Ingia ukitumia chaguo lolote hapa chini, kisha ubandike kirai cha kurejesha au ufunguo wa faragha wa pochi unayotaka kutumia.",
     "title": "Ingia",
     "addProfileTitle": "Ongeza wasifu",
     "continueEmail": "Endelea na Email",
@@ -2316,7 +2316,6 @@
     "noStages": "Hakuna Jukwaa lako linaloendelea au limepangwa sasa hivi.",
     "noFlaresLeft": "Hakuna Mishumaa ya Ishara iliyoachwa katika mzunguko huu",
     "spentFor": "{{power}} inakimbia kwa dakika {{minutes}}",
-    "goldenHourStarted": "Saa ya Dhahabu inaendelea kwa dakika {{minutes}} — kila kitu unachochapisha sasa kinahesabiwa mara mbili",
     "teamUp": {
       "title": "Unda timu",
       "subtitle": "Ungana na hadi watu wengine saba. Kila mtu huvaa beji, jumla yenu hufungua.",
@@ -2377,7 +2376,8 @@
       "updated": "Timu imesasishwa",
       "updateFailed": "Imeshindikana kusasisha timu hiyo",
       "openToEveryone": "Timu ya juu inapatikana kwa kila akaunti; timu za kibinafsi zinakubali nani anajiunga."
-    }
+    },
+    "goldenHourStarted": "Saa ya Dhahabu inaendelea kwa dakika {{minutes}} — kila kitu unachochapisha sasa kinahesabiwa mara mbili"
   },
   "work": {
     "budgetExhausted": "Bajeti ya zawadi hii imetumika yote.",
@@ -5125,7 +5125,26 @@
     "reviewDescriptionPlaceholder": "Sema kitu kuhusu chapisho hili (hiari)",
     "reviewLiveWarning": "Kiunganishi hicho ni mkondo wa moja kwa moja. Subiri hadi iishe na uingize rekodi badala yake.",
     "reviewCancel": "Ghairi",
-    "reviewConfirm": "Ingiza"
+    "reviewConfirm": "Ingiza",
+    "podcast": {
+      "tab": "Podikasti",
+      "feedUrlLabel": "URL ya malisho ya RSS ya podcast",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Chukua malisho",
+      "fetching": "Inakusanya malisho...",
+      "showBy": "Na {{author}}",
+      "episodes": "{{count}} vipindi",
+      "selectAll": "Chagua zote",
+      "alreadyImported": "Tayari imeingizwa",
+      "ownership": "Ninamiliki maudhui haya, au nina ruhusa ya mmiliki wa haki ya kuyachapisha kwenye DeHub.",
+      "importSelected": "Ingiza {{count}} vipindi",
+      "importing": "Inaingiza...",
+      "done": "Imepigwa foleni",
+      "failed": "Imeshindwa",
+      "emptyFeed": "Hatukuweza kupata vipindi vyovyote katika malisho hayo.",
+      "badFeed": "Kiunganishi hicho hakionekani kama mpasho wa podikasti.",
+      "tooMany": "Ingiza hadi vipindi 20 kwa wakati mmoja."
+    }
   },
   "banned": {
     "title": "Akaunti yako imepigwa marufuku",

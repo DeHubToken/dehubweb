@@ -105,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Magkuwento tungkol sa iyong sarili...",
     "socialLinks": "Mga Social Link",
+    "socialFollowers": "Mga tagasunod sa {{platform}}",
+    "socialFollowersHint": "Ipinapakita sa iyong profile bilang bahagi ng iyong kabuuang abot. Ipasok ang numero sa iyong sarili — hindi namin ito binabasa mula sa platform.",
+    "socialFollowersPlaceholder": "hal. 12500",
     "profileUpdated": "Matagumpay na na-update ang profile",
     "failedLoadProfile": "Hindi na-load ang data ng profile",
     "imageTooLarge5": "Dapat mas maliit sa 5MB ang larawan",
@@ -455,10 +458,7 @@
       "unavailable": "Hindi available ang streaming mula sa isang encoder sa iyong account sa ngayon.",
       "serverCopied": "Kinopya ang server",
       "keyCopied": "Kinopya ang stream key"
-    },
-    "socialFollowers": "Mga tagasunod sa {{platform}}",
-    "socialFollowersHint": "Ipinapakita sa iyong profile bilang bahagi ng iyong kabuuang abot. Ipasok ang numero sa iyong sarili — hindi namin ito binabasa mula sa platform.",
-    "socialFollowersPlaceholder": "hal. 12500"
+    }
   },
   "common": {
     "save": "I-save",
@@ -1262,10 +1262,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Hindi available ang post na ito",
-      "commentUnavailable": "Hindi na available ang komentong ito"
-    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUp": "Sign Up",
@@ -1278,6 +1274,10 @@
       "breakdownTitle": "Saan nagmumula ang abot na ito",
       "dehubFollowers": "Mga tagasunod ng DeHub",
       "selfReported": "Ang mga bilang ng mga social follower ay ipinasok ng tagalikha."
+    },
+    "replyThread": {
+      "postUnavailable": "Hindi available ang post na ito",
+      "commentUnavailable": "Hindi na available ang komentong ito"
     },
     "tabs": {
       "playlists": "Mga Playlist"
@@ -1313,6 +1313,7 @@
     "amountUsd": "Amount (USD)",
     "customAmount": "Custom amount",
     "minPurchase": "Minimum purchase is $5",
+    "minDhbPurchase": "Minimum DHB pagbili ay $ 0.50",
     "youPay": "You pay",
     "youReceive": "Nakatanggap ka (est.)",
     "feeNote": "Ang card fee ~3.6% at 0.5% network reserve ay aaalis dito. Ipinapadala sa iyo ang reserve bilang ETH para sa gas.",
@@ -1346,7 +1347,6 @@
     "badgeDiscount": "May hawak na {{tier}} — {{percent}}% na diskuwento",
     "otherTokens": "Ibang token",
     "otherTokensDesc": "Bumili ng ETH o USDC sa Base gamit ang iyong card",
-    "minDhbPurchase": "Minimum DHB pagbili ay $ 0.50",
     "shareToFeed": "Ibahagi sa aking feed",
     "sharePostTemplate": "Idinagdag lang ang {{amount}} $DHB sa aking stack sa DeHub. Pagbuo kasama ang komunidad. #DeHub #DHB",
     "success": {
@@ -1406,14 +1406,6 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
-    "migrateNoOldAccount": "Walang naunang DeHub account sa pag-login na ito, kaya walang maililipat. Mag-set up na lang ng bagong account.",
-    "migrateInstead": "Ilipat ang lumang account",
-    "setUpNewAccount": "Mag-set up ng bagong account",
-    "createNewInstead": "Gumawa ng bagong account",
-    "migrateAccount": "I-migrate ang account",
-    "importExternalWallet": "Mag-import ng external wallet",
-    "migrateIntentHint": "Mag-sign in gamit ang alinman sa mga opsyon sa ibaba. Kung tumugma ito sa isang naunang DeHub account, maililipat ang wallet, username, at balanse nito.",
-    "importIntentHint": "Mag-sign in gamit ang alinman sa mga opsyon sa ibaba, pagkatapos ay i-paste ang recovery phrase o private key ng wallet na gusto mong gamitin.",
     "unlockBiometricContinue": "I - unlock ang iyong wallet gamit ang iyong fingerprint o mukha para magpatuloy.",
     "unlockBiometricSignIn": "I - unlock ang iyong wallet gamit ang iyong fingerprint o mukha para mag - sign in.",
     "unlockPasswordContinue": "Ilagay ang password ng iyong wallet para magpatuloy.",
@@ -1426,6 +1418,14 @@
     "migrateUnmatchedDetail": "Walang profile na umiiral sa address ng wallet na ito. Kung nagsa - sign in ka ulit, bumalik at gamitin na lang ang login na na - sign up mo.",
     "migrateGoBack": "Bumalik",
     "migrateContinueAnyway": "Gumawa pa rin ng bagong account",
+    "migrateNoOldAccount": "Walang naunang DeHub account sa pag-login na ito, kaya walang maililipat. Mag-set up na lang ng bagong account.",
+    "migrateInstead": "Ilipat ang lumang account",
+    "setUpNewAccount": "Mag-set up ng bagong account",
+    "createNewInstead": "Gumawa ng bagong account",
+    "migrateAccount": "I-migrate ang account",
+    "importExternalWallet": "Mag-import ng external wallet",
+    "migrateIntentHint": "Mag-sign in gamit ang alinman sa mga opsyon sa ibaba. Kung tumugma ito sa isang naunang DeHub account, maililipat ang wallet, username, at balanse nito.",
+    "importIntentHint": "Mag-sign in gamit ang alinman sa mga opsyon sa ibaba, pagkatapos ay i-paste ang recovery phrase o private key ng wallet na gusto mong gamitin.",
     "title": "Log in",
     "addProfileTitle": "Magdagdag ng profile",
     "continueApple": "Magpatuloy gamit ang Apple",
@@ -2007,13 +2007,13 @@
       "thisYear": "Ngayong taon",
       "allTime": "Buong panahon",
       "newMembers": "Mga bagong miyembro",
+      "viewMembers": "Tingnan ang mga miyembro",
+      "openNewMembers": "Buksan ang listahan ng mga bagong miyembro",
       "chartMembers": "Mga miyembro sa paglipas ng panahon",
       "chartActive": "Mga aktibong tao",
       "growth": "+{{percent}}% ngayong buwan",
       "growthTerm": "Paglago",
-      "recordingSince": "itinatala mula {{date}}",
-      "viewMembers": "Tingnan ang mga miyembro",
-      "openNewMembers": "Buksan ang listahan ng mga bagong miyembro"
+      "recordingSince": "itinatala mula {{date}}"
     },
     "title": "Istatistika",
     "subtitle": "Real-time na open source na impormasyon",
@@ -2198,7 +2198,6 @@
     "noStages": "Walang Stage mo na live o naka-schedule ngayon.",
     "noFlaresLeft": "Walang natitirang Signal Flares ngayong cycle",
     "spentFor": "{{power}} tumatakbo para sa {{minutes}} minuto",
-    "goldenHourStarted": "Golden Hour ay tumatakbo sa {{minutes}} minuto — lahat ng iyong ipo-post ngayon ay doble ang bilang",
     "teamUp": {
       "title": "Makipag-team",
       "subtitle": "Pagsamahin ang lakas ng wallet kasama ang hanggang pitong iba pa. Lahat ay magsusuot ng badge na bubuksan ng iyong kabuuan.",
@@ -2259,7 +2258,8 @@
       "updated": "Na-update ang team",
       "updateFailed": "Hindi ma-update ang team na iyon",
       "openToEveryone": "Ang Team up ay bukas sa bawat account; ang mga pribadong team ay nag-aapruba kung sino ang sasali."
-    }
+    },
+    "goldenHourStarted": "Golden Hour ay tumatakbo sa {{minutes}} minuto — lahat ng iyong ipo-post ngayon ay doble ang bilang"
   },
   "work": {
     "budgetExhausted": "Nagamit na nang buo ang budget ng bounty na ito.",
@@ -4944,7 +4944,26 @@
     "reviewDescriptionPlaceholder": "Magsabi ng isang bagay tungkol sa post na ito (opsyonal)",
     "reviewLiveWarning": "Ang link na iyon ay isang live stream. Maghintay hanggang sa matapos ito at sa halip ay i - import ang recording.",
     "reviewCancel": "Kanselahin",
-    "reviewConfirm": "I-import"
+    "reviewConfirm": "I-import",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "RSS feed URL ng Podcast",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Kunin ang feed",
+      "fetching": "Kinukuha ang feed...",
+      "showBy": "Ni {{author}}",
+      "episodes": "{{count}} mga episode",
+      "selectAll": "Piliin lahat",
+      "alreadyImported": "Na - import na",
+      "ownership": "Pagmamay - ari ko ang nilalamang ito, o mayroon akong pahintulot ng may - ari ng karapatan na i - publish ito sa DeHub.",
+      "importSelected": "Mag - import ng {{count}} episodes",
+      "importing": "Nag - i - import...",
+      "done": "Queue",
+      "failed": "Nabigo",
+      "emptyFeed": "Hindi namin mahanap ang anumang mga episode sa feed na iyon.",
+      "badFeed": "Ang link na iyon ay hindi mukhang isang podcast feed.",
+      "tooMany": "Mag - import ng hanggang 20 episode sa isang pagkakataon."
+    }
   },
   "banned": {
     "title": "Ipinagbabawal ang iyong account",

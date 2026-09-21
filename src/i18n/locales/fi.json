@@ -105,6 +105,9 @@
     "bio": "Kuvaus",
     "bioPlaceholder": "Kerro itsestäsi...",
     "socialLinks": "Sosiaalisen median linkit",
+    "socialFollowers": "Seuraajat kohteessa {{platform}}",
+    "socialFollowersHint": "Näkyy profiilissasi osana kokonaiskattavuuttasi. Syötä numero itse — emme lue sitä alustalta.",
+    "socialFollowersPlaceholder": "esim. 12500",
     "profileUpdated": "Profiili päivitetty onnistuneesti",
     "failedLoadProfile": "Profiilin lataaminen epäonnistui",
     "imageTooLarge5": "Kuvan tulee olla alle 5 Mt",
@@ -455,10 +458,7 @@
       "unavailable": "Striimaus kooderista ei ole tällä hetkellä tililläsi käytettävissä.",
       "serverCopied": "Palvelin kopioitu",
       "keyCopied": "Virta-avain kopioitu"
-    },
-    "socialFollowers": "Seuraajat kohteessa {{platform}}",
-    "socialFollowersHint": "Näkyy profiilissasi osana kokonaiskattavuuttasi. Syötä numero itse — emme lue sitä alustalta.",
-    "socialFollowersPlaceholder": "esim. 12500"
+    }
   },
   "common": {
     "save": "Tallenna",
@@ -1233,10 +1233,6 @@
     "returnHome": "Palaa etusivulle"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Tämä julkaisu ei ole saatavilla",
-      "commentUnavailable": "Tämä kommentti ei ole enää saatavilla"
-    },
     "back": "Takaisin",
     "usernameAvailable": "Käyttäjätunnus on saatavilla!",
     "signUpToClaim": "Rekisteröidy tänään varataksesi",
@@ -1252,12 +1248,16 @@
     "followers": "Seuraajat",
     "following": "Seurattavat",
     "joined": "Liittynyt",
-    "loginDescription": "Kirjaudu sisään nähdäksesi ja hallinnoidaksesi profiiliasi.",
     "reach": {
       "total": "Kokonaisulottuvuus",
       "breakdownTitle": "Mistä tämä REACH-järjestelmä on peräisin",
       "dehubFollowers": "DeHub-seuraajat",
       "selfReported": "Tekijä syöttää sosiaalisen seuraajamäärän."
+    },
+    "loginDescription": "Kirjaudu sisään nähdäksesi ja hallinnoidaksesi profiiliasi.",
+    "replyThread": {
+      "postUnavailable": "Tämä julkaisu ei ole saatavilla",
+      "commentUnavailable": "Tämä kommentti ei ole enää saatavilla"
     },
     "tabs": {
       "playlists": "Soittolistat"
@@ -1294,6 +1294,7 @@
     "amountUsd": "Summa (USD)",
     "customAmount": "Mukautettu summa",
     "minPurchase": "Vähimmäisosto on 5 $",
+    "minDhbPurchase": "DHB-ostoksen vähimmäismäärä on 0,50 $",
     "youPay": "Maksat",
     "youReceive": "Saat (arvio)",
     "feeNote": "Korttimaksu ~3,6 % ja 0,5 % verkon varaus vähennetään tästä. Varaus lähetetään sinulle ETH:nä kaasua varten.",
@@ -1327,7 +1328,6 @@
     "badgeDiscount": "{{tier}}-haltija — {{percent}} % alennus",
     "otherTokens": "Muut tokenit",
     "otherTokensDesc": "Osta ETH tai USDC Basessa kortillasi",
-    "minDhbPurchase": "DHB-ostoksen vähimmäismäärä on 0,50 $",
     "shareToFeed": "Jaa syötteeseeni",
     "sharePostTemplate": "Lisäsin juuri {{amount}} $DHB: n pinooni DeHubissa. Rakennamme yhdessä yhteisön kanssa. #DeHub #DHB",
     "success": {
@@ -1405,14 +1405,6 @@
     "failedSubmit": "Hakemuksen lähetys epäonnistui. Yritä uudelleen."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Tällä kirjautumistunnuksella ei ole aiempaa DeHub-tiliä, joten ei ole mitään tuotavaa. Luo sen sijaan uusi tili.",
-    "migrateInstead": "Tuo sen sijaan vanha tili",
-    "setUpNewAccount": "Luo uusi tili",
-    "createNewInstead": "Luo sen sijaan uusi tili",
-    "migrateAccount": "Siirrä tili",
-    "importExternalWallet": "Tuo ulkoinen lompakko",
-    "migrateIntentHint": "Kirjaudu sisään millä tahansa alla olevalla vaihtoehdolla. Jos se vastaa aiempaa DeHub-tiliä, tuot sen lompakon, käyttäjänimen ja saldon.",
-    "importIntentHint": "Kirjaudu sisään millä tahansa alla olevalla vaihtoehdolla ja liitä sitten haluamasi lompakon palautuslause tai yksityinen avain.",
     "unlockBiometricContinue": "Avaa lompakkosi lukitus sormenjäljelläsi tai kasvoillasi jatkaaksesi.",
     "unlockBiometricSignIn": "Kirjaudu sisään avaamalla lompakkosi lukitus sormenjäljelläsi tai kasvoillasi.",
     "unlockPasswordContinue": "Anna lompakkosi salasana jatkaaksesi.",
@@ -1425,6 +1417,14 @@
     "migrateUnmatchedDetail": "Tässä lompakon osoitteessa ei ole profiilia. Jos kirjauduit takaisin sisään, palaa takaisin ja käytä sen sijaan kirjautumistunnusta, jolla rekisteröidyit.",
     "migrateGoBack": "Palaa edelliseen",
     "migrateContinueAnyway": "Luo kuitenkin uusi tili",
+    "migrateNoOldAccount": "Tällä kirjautumistunnuksella ei ole aiempaa DeHub-tiliä, joten ei ole mitään tuotavaa. Luo sen sijaan uusi tili.",
+    "migrateInstead": "Tuo sen sijaan vanha tili",
+    "setUpNewAccount": "Luo uusi tili",
+    "createNewInstead": "Luo sen sijaan uusi tili",
+    "migrateAccount": "Siirrä tili",
+    "importExternalWallet": "Tuo ulkoinen lompakko",
+    "migrateIntentHint": "Kirjaudu sisään millä tahansa alla olevalla vaihtoehdolla. Jos se vastaa aiempaa DeHub-tiliä, tuot sen lompakon, käyttäjänimen ja saldon.",
+    "importIntentHint": "Kirjaudu sisään millä tahansa alla olevalla vaihtoehdolla ja liitä sitten haluamasi lompakon palautuslause tai yksityinen avain.",
     "title": "Kirjaudu sisään",
     "addProfileTitle": "Lisää profiili",
     "continueEmail": "Jatka sähköpostilla",
@@ -2263,7 +2263,6 @@
     "noStages": "Sinun Stagiasi ei ole tällä hetkellä käynnissä tai ajoitettu.",
     "noFlaresLeft": "Tässä syklissä ei ole enää Signal Flareja jäljellä",
     "spentFor": "{{power}} käynnissä {{minutes}} minuuttia",
-    "goldenHourStarted": "Golden Hour käynnissä {{minutes}} minuuttia – kaikki julkaisemasi lasketaan nyt kaksinkertaisesti",
     "teamUp": {
       "title": "Ryhmäydy",
       "subtitle": "Yhdistä lompakkosi teho jopa seitsemän muun kanssa. Kaikki käyttävät merkkiä, jonka kokonaissummasi avaa.",
@@ -2324,7 +2323,8 @@
       "updated": "Ryhmä päivitetty",
       "updateFailed": "Ei voitu päivittää ryhmää",
       "openToEveryone": "Team up on avoin kaikille tileille; yksityiset ryhmät hyväksyvät jäsenet."
-    }
+    },
+    "goldenHourStarted": "Golden Hour käynnissä {{minutes}} minuuttia – kaikki julkaisemasi lasketaan nyt kaksinkertaisesti"
   },
   "work": {
     "budgetExhausted": "Tämän palkkion budjetti on kokonaan varattu.",
@@ -5069,7 +5069,26 @@
     "reviewDescriptionPlaceholder": "Sano jotain tästä julkaisusta (valinnainen)",
     "reviewLiveWarning": "Tämä linkki on live-suoratoisto. Odota, kunnes se päättyy, ja tuo sen sijaan tallenne.",
     "reviewCancel": "Peruuta",
-    "reviewConfirm": "Tuo"
+    "reviewConfirm": "Tuo",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podcastin RSS-syötteen URL-osoite",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Nouda syöte",
+      "fetching": "Noudetaan syötettä...",
+      "showBy": "Tekijä:{{author}}",
+      "episodes": "{{count}} jaksoa",
+      "selectAll": "Valitse kaikki",
+      "alreadyImported": "Jo tuotu",
+      "ownership": "Omistan tämän sisällön tai minulla on oikeudenhaltijan lupa julkaista se DeHubissa.",
+      "importSelected": "Tuo {{count}} jaksoa",
+      "importing": "Tuodaan…",
+      "done": "Jonossa",
+      "failed": "Epäonnistui",
+      "emptyFeed": "Syötteestä ei löytynyt jaksoja.",
+      "badFeed": "Linkki ei näytä podcast-syötteeltä.",
+      "tooMany": "Tuo enintään 20 jaksoa kerrallaan."
+    }
   },
   "banned": {
     "title": "Tilisi on estetty",

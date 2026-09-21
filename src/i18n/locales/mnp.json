@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "加入了",
-    "chatSentGift": "送了",
-    "progress": {
-      "title": "主播等級",
-      "level": "等級 {{level}}",
-      "xp": "{{xp}} 經驗值",
-      "toNext": "{{minutes}} 分鐘才能達到 {{level}} 等級",
-      "rule": "只有長度達十分鐘且至少有一位觀眾的直播才會計入您的等級。",
-      "streak": "{{count}} 週連勝紀錄",
-      "bestStreak": "最佳連勝紀錄 {{count}} 週",
-      "hours": "{{hours}} 合格時數",
-      "minutes": "{{count}} 分鐘",
-      "viewers": "{{count}} 位觀眾",
-      "viewCards": "觀看卡牌",
-      "cardsTitle": "收藏卡牌",
-      "locked": "已鎖定",
-      "earnedOn": "已獲得 {{date}}",
-      "recentTitle": "近期直播",
-      "notCounted": "未計入",
-      "noStreams": "開始直播以賺取經驗值。",
-      "card": {
-        "first-light": {
-          "name": "初次登場",
-          "hint": "完成您的第一次計入等級的直播。"
-        },
-        "marathon": {
-          "name": "馬拉松",
-          "hint": "單次直播兩小時。"
-        },
-        "night-owl": {
-          "name": "夜貓子",
-          "hint": "在午夜至凌晨五點之間結束直播。"
-        },
-        "regular": {
-          "name": "常客",
-          "hint": "連續四周進行直播。"
-        },
-        "iron-streak": {
-          "name": "鋼鐵連勝紀錄",
-          "hint": "連續十二週進行直播。"
-        },
-        "crowd": {
-          "name": "觀眾",
-          "hint": "同時有十人觀看。"
-        },
-        "century": {
-          "name": "世紀",
-          "hint": "抵達一百小時合格廣播時間。"
-        },
-        "legend": {
-          "name": "傳奇",
-          "hint": "抵達十級。"
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "免費交易佇阮這爿暫停矣，毋是汝个錢包个問題。請小等閣試。",
     "gasSponsorshipFailed": "這筆交易个費用擔袂起。請小等閣試。"
@@ -161,6 +104,9 @@
     "bio": "简介",
     "bioPlaceholder": "介绍一下你自家...",
     "socialLinks": "社交链接",
+    "socialFollowers": "{{platform}} 上的关注者",
+    "socialFollowersHint": "显示在您的个人资料中，作为总覆盖范围的一部分。您自己输入数字——我们不会从平台读取。",
+    "socialFollowersPlaceholder": "例如 12500",
     "profileUpdated": "个人页更新成功",
     "failedLoadProfile": "加载个人页数据失败",
     "imageTooLarge5": "图片须小于5MB",
@@ -458,10 +404,7 @@
       "unavailable": "你的帳戶目前無法從編碼器進行直播。",
       "serverCopied": "伺服器複製",
       "keyCopied": "直播金鑰複製"
-    },
-    "socialFollowers": "{{platform}} 上的关注者",
-    "socialFollowersHint": "显示在您的个人资料中，作为总覆盖范围的一部分。您自己输入数字——我们不会从平台读取。",
-    "socialFollowersPlaceholder": "例如 12500"
+    }
   },
   "common": {
     "save": "保存",
@@ -1231,10 +1174,6 @@
     "returnHome": "回首页"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "此帖无法查看",
-      "commentUnavailable": "此评论已无法查看"
-    },
     "back": "返回",
     "usernameAvailable": "用户名可用！",
     "signUpToClaim": "今天注册来认领",
@@ -1250,12 +1189,16 @@
     "followers": "关注者",
     "following": "关注中",
     "joined": "加入",
-    "loginDescription": "登录来查看和管理你其个人页。",
     "reach": {
       "total": "總觸及",
       "breakdownTitle": "此觸及來自何處",
       "dehubFollowers": "DeHub 追蹤者",
       "selfReported": "社群追蹤者數量由創作者輸入。"
+    },
+    "loginDescription": "登录来查看和管理你其个人页。",
+    "replyThread": {
+      "postUnavailable": "此帖无法查看",
+      "commentUnavailable": "此评论已无法查看"
     },
     "tabs": {
       "playlists": "歌單"
@@ -1272,6 +1215,7 @@
     "amountUsd": "金额 (USD)",
     "customAmount": "自定义金额",
     "minPurchase": "最低购买 $5",
+    "minDhbPurchase": "DHB 最低購買額為 $0.50",
     "youPay": "你付",
     "youReceive": "你收到（预估）",
     "feeNote": "卡费 ~3.6% 和 0.5% 网络储备金会从中扣除。储备金作为 ETH 发送给你用于 gas。",
@@ -1305,7 +1249,6 @@
     "badgeDiscount": "{{tier}} 持有人 — 打 {{percent}}% 折",
     "otherTokens": "其他代币",
     "otherTokensDesc": "用汝其卡佇 Base 買 ETH 抑 USDC",
-    "minDhbPurchase": "DHB 最低購買額為 $0.50",
     "shareToFeed": "分享到我的動態",
     "sharePostTemplate": "我剛在 DeHub 上添加了 {{amount}} $DHB 到我的堆疊。與社群一起建構。#DeHub #DHB",
     "success": {
@@ -1383,6 +1326,12 @@
     "failedSubmit": "提交失败。请再试一下。"
   },
   "loginModal": {
+    "unlockBiometricContinue": "用你的指纹或脸孔来解锁你的钱包以继续。",
+    "unlockBiometricSignIn": "用你的指纹或脸孔来解锁你的钱包并登录。",
+    "unlockPasswordContinue": "输入你的钱包密码以继续。",
+    "unlockPasswordSignIn": "输入你的钱包密码来解锁你的钱包并登录。",
+    "migrateUnmatchedDetail": "该钱包地址不存在个人资料。如果您是重新登录，请返回并使用您注册时使用的登录方式。",
+    "migrateContinueAnyway": "嘸管按怎，再开蜀个新帐号",
     "migrateNoOldAccount": "此登录信息没有更早的 DeHub 账号，因此没有内容可以迁移。请改设新账号。",
     "migrateInstead": "改设旧账号",
     "setUpNewAccount": "设新账号",
@@ -1391,12 +1340,6 @@
     "importExternalWallet": "导入外部钱包",
     "migrateIntentHint": "使用下面的任意选项登录。如果它匹配一个更早的 DeHub 账号，你将迁移其钱包、用户名和余额。",
     "importIntentHint": "使用下面的任意选项登录，然后粘贴你想要使用的钱包的恢复短语或私钥。",
-    "unlockBiometricContinue": "用你的指纹或脸孔来解锁你的钱包以继续。",
-    "unlockBiometricSignIn": "用你的指纹或脸孔来解锁你的钱包并登录。",
-    "unlockPasswordContinue": "输入你的钱包密码以继续。",
-    "unlockPasswordSignIn": "输入你的钱包密码来解锁你的钱包并登录。",
-    "migrateUnmatchedDetail": "该钱包地址不存在个人资料。如果您是重新登录，请返回并使用您注册时使用的登录方式。",
-    "migrateContinueAnyway": "嘸管按怎，再开蜀个新帐号",
     "title": "登录",
     "addProfileTitle": "添蜀个资料",
     "continueEmail": "用邮箱继续",
@@ -2069,13 +2012,13 @@
       "thisYear": "今年",
       "allTime": "全部时间",
       "newMembers": "新成员",
+      "viewMembers": "查看成员",
+      "openNewMembers": "打开新成员列表",
       "chartMembers": "成员变化",
       "chartActive": "活跃用户",
       "growth": "这个月 +{{percent}}%",
       "growthTerm": "增长",
-      "recordingSince": "自 {{date}} 起记录",
-      "viewMembers": "查看成员",
-      "openNewMembers": "打开新成员列表"
+      "recordingSince": "自 {{date}} 起记录"
     },
     "title": "数据",
     "subtitle": "实时开源情报",
@@ -2236,7 +2179,6 @@
     "homeStage": "在您主持的 Stage 中花费。",
     "homePage": "在这里花费，在此页面顶部。",
     "trendJacked": "{{category}} 正在 {{minutes}} 分钟内流行",
-    "goldenHourStarted": "Golden Hour 运行 {{minutes}} 分钟 — 您现在发布的任何内容都算双倍",
     "teamUp": {
       "title": "组队",
       "subtitle": "与最多七人组队。每个人佩戴徽章，您的总数将解锁。",
@@ -2297,7 +2239,8 @@
       "updated": "队伍已更新",
       "updateFailed": "无法更新该队伍",
       "openToEveryone": "Team up 开放给所有账号；私密队伍会批准谁加入。"
-    }
+    },
+    "goldenHourStarted": "Golden Hour 运行 {{minutes}} 分钟 — 您现在发布的任何内容都算双倍"
   },
   "work": {
     "budgetExhausted": "今場賞金其預算已經用完了。"
@@ -2330,6 +2273,63 @@
     "title": "故事",
     "viewStory": "看故事",
     "noStories": "还无故事"
+  },
+  "live": {
+    "chatJoined": "加入了",
+    "chatSentGift": "送了",
+    "progress": {
+      "title": "主播等級",
+      "level": "等級 {{level}}",
+      "xp": "{{xp}} 經驗值",
+      "toNext": "{{minutes}} 分鐘才能達到 {{level}} 等級",
+      "rule": "只有長度達十分鐘且至少有一位觀眾的直播才會計入您的等級。",
+      "streak": "{{count}} 週連勝紀錄",
+      "bestStreak": "最佳連勝紀錄 {{count}} 週",
+      "hours": "{{hours}} 合格時數",
+      "minutes": "{{count}} 分鐘",
+      "viewers": "{{count}} 位觀眾",
+      "viewCards": "觀看卡牌",
+      "cardsTitle": "收藏卡牌",
+      "locked": "已鎖定",
+      "earnedOn": "已獲得 {{date}}",
+      "recentTitle": "近期直播",
+      "notCounted": "未計入",
+      "noStreams": "開始直播以賺取經驗值。",
+      "card": {
+        "first-light": {
+          "name": "初次登場",
+          "hint": "完成您的第一次計入等級的直播。"
+        },
+        "marathon": {
+          "name": "馬拉松",
+          "hint": "單次直播兩小時。"
+        },
+        "night-owl": {
+          "name": "夜貓子",
+          "hint": "在午夜至凌晨五點之間結束直播。"
+        },
+        "regular": {
+          "name": "常客",
+          "hint": "連續四周進行直播。"
+        },
+        "iron-streak": {
+          "name": "鋼鐵連勝紀錄",
+          "hint": "連續十二週進行直播。"
+        },
+        "crowd": {
+          "name": "觀眾",
+          "hint": "同時有十人觀看。"
+        },
+        "century": {
+          "name": "世紀",
+          "hint": "抵達一百小時合格廣播時間。"
+        },
+        "legend": {
+          "name": "傳奇",
+          "hint": "抵達十級。"
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "去直播",
@@ -2762,7 +2762,24 @@
     "reviewDescriptionPlaceholder": "说一些关于这个帖子的内容（可选）",
     "reviewLiveWarning": "那个链接是直播。等到它结束后再导入录制。",
     "reviewCancel": "取消",
-    "reviewConfirm": "导入"
+    "reviewConfirm": "导入",
+    "podcast": {
+      "tab": "播客",
+      "feedUrlLabel": "播客 RSS feed URL",
+      "fetchFeed": "抓取 feed",
+      "fetching": "抓取 feed 中…",
+      "episodes": "{{count}} 集",
+      "selectAll": "全选",
+      "alreadyImported": "已导入",
+      "ownership": "我拥有此内容，或已获得版权所有者的许可在 DeHub 上发布。",
+      "importSelected": "导入 {{count}} 集",
+      "importing": "导入中…",
+      "done": "排队中",
+      "failed": "失败",
+      "emptyFeed": "在该 feed 中未找到任何集。",
+      "badFeed": "该链接看起来不像播客 feed。",
+      "tooMany": "一次最多导入 20 集。"
+    }
   },
   "banned": {
     "title": "你个账户被禁用了",

@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "دخل",
-    "chatSentGift": "صيفط",
-    "progress": {
-      "title": "مستوى ستريمر",
-      "level": "مستوى {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} دقيقة مؤهلة إضافية للوصول للمستوى {{level}}",
-      "rule": "فقط البث المباشر الذي يستمر لعشر دقائق أو أكثر مع مشاهد واحد على الأقل يحتسب لمستواك.",
-      "streak": "{{count}} أسبوع متتالي",
-      "bestStreak": "أفضل سلسلة {{count}} أسابيع",
-      "hours": "{{hours}} ساعات مؤهلة",
-      "minutes": "{{count}} دقيقة",
-      "viewers": "{{count}} مشاهد",
-      "viewCards": "بطاقات عرض",
-      "cardsTitle": "بطاقات قابلة للجمع",
-      "locked": "مقفل",
-      "earnedOn": "تم الكسب {{date}}",
-      "recentTitle": "بثوث حديثة",
-      "notCounted": "لم تحتسب",
-      "noStreams": "ابدأ البث المباشر لكسب XP.",
-      "card": {
-        "first-light": {
-          "name": "الفجر",
-          "hint": "أكمل أول بث مباشر لك يحتسب."
-        },
-        "marathon": {
-          "name": "ماراثون",
-          "hint": "قم ببث مباشر لمدة ساعتين في جلسة واحدة."
-        },
-        "night-owl": {
-          "name": "بومة الليل",
-          "hint": "أنهِ بثًا مباشرًا بين منتصف الليل والخامسة صباحًا."
-        },
-        "regular": {
-          "name": "منتظم",
-          "hint": "قم ببث مباشر في أربعة أسابيع متتالية."
-        },
-        "iron-streak": {
-          "name": "سلسلة حديدية",
-          "hint": "قم ببث مباشر في اثني عشر أسبوعًا متتاليًا."
-        },
-        "crowd": {
-          "name": "جمهور",
-          "hint": "شاهد عشرة أشخاص في نفس الوقت."
-        },
-        "century": {
-          "name": "قرن",
-          "hint": "الوصول إلى مائة ساعة مؤهلة على الهواء."
-        },
-        "legend": {
-          "name": "وسيلة الإيضاح",
-          "hint": "الوصول إلى المستوى العاشر."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "المعاملات المجانية حبسات من عندنا، ماشي من المحفظة ديالك. عاود جرب من بعد شوية.",
     "gasSponsorshipFailed": "ما قدرناش نخلصو هاد المعاملة. عاود جرب من بعد شوية."
@@ -162,6 +105,9 @@
     "bio": "البيو",
     "bioPlaceholder": "قول لينا على راسك...",
     "socialLinks": "روابط السوشل ميديا",
+    "socialFollowers": "المتابعون على {{platform}}",
+    "socialFollowersHint": "يظهر في ملفك التعريفي كجزء من مدى وصولك الإجمالي. أدخل الرقم بنفسك — نحن لا نقرأه من المنصة.",
+    "socialFollowersPlaceholder": "على سبيل المثال 12500",
     "profileUpdated": "البروفيل تبدل بنجاح",
     "failedLoadProfile": "ما قدرش يحمل بيانات البروفيل",
     "imageTooLarge5": "التصويرة خاصها تكون أقل من 5 ميغا",
@@ -497,10 +443,7 @@
       "unavailable": "البث من مشفر غير متاح في حسابك حاليًا.",
       "serverCopied": "تم نسخ الخادم",
       "keyCopied": "تم نسخ مفتاح الدفق"
-    },
-    "socialFollowers": "المتابعون على {{platform}}",
-    "socialFollowersHint": "يظهر في ملفك التعريفي كجزء من مدى وصولك الإجمالي. أدخل الرقم بنفسك — نحن لا نقرأه من المنصة.",
-    "socialFollowersPlaceholder": "على سبيل المثال 12500"
+    }
   },
   "common": {
     "save": "حفظ",
@@ -1266,10 +1209,6 @@
     "returnHome": "رجع للصفحة الرئيسية"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "هذا المنشور غير متاح",
-      "commentUnavailable": "لم يعد هذا التعليق متاحًا"
-    },
     "back": "رجع",
     "usernameAvailable": "اسم المستخدم متاح!",
     "signUpToClaim": "سجل اليوم باش تاخدو",
@@ -1285,12 +1224,16 @@
     "followers": "المتابعين",
     "following": "كيتابع",
     "joined": "Joined",
-    "loginDescription": "دخل باش تشوف وتدبر البروفيل ديالك.",
     "reach": {
       "total": "الوصول الكلي",
       "breakdownTitle": "من أين يأتي هذا الوصول",
       "dehubFollowers": "متابعو DeHub",
       "selfReported": "يتم إدخال عدد المتابعين الاجتماعيين من قبل المنشئ."
+    },
+    "loginDescription": "دخل باش تشوف وتدبر البروفيل ديالك.",
+    "replyThread": {
+      "postUnavailable": "هذا المنشور غير متاح",
+      "commentUnavailable": "لم يعد هذا التعليق متاحًا"
     },
     "tabs": {
       "playlists": "قوائم التشغيل"
@@ -1307,6 +1250,7 @@
     "amountUsd": "المبلغ (USD)",
     "customAmount": "مبلغ مخصص",
     "minPurchase": "الحد الأدنى ديال الشراء هو $5",
+    "minDhbPurchase": "الحد الأدنى لشراء DHB هو 0.50 $",
     "youPay": "كتخلص",
     "youReceive": "كتستقبل (تقدير)",
     "feeNote": "رسوم البطاقة ~3.6% وحجز شبكة 0.5% غادي يتنقصو من هاد الشي. الحجز غادي يتبعتلك كـ ETH باش تخلص الغاز.",
@@ -1340,7 +1284,6 @@
     "badgeDiscount": "حامل {{tier}} — تخفيض {{percent}}%",
     "otherTokens": "عملات أخرى",
     "otherTokensDesc": "شري ETH ولا USDC على Base بالكارط ديالك",
-    "minDhbPurchase": "الحد الأدنى لشراء DHB هو 0.50 $",
     "shareToFeed": "المشاركة على خلاصتي",
     "sharePostTemplate": "لقد أضفت للتو {{amount}} $ إلى مكدسي على. البناء مع المجتمع. #DeHub #DHB",
     "success": {
@@ -1418,14 +1361,6 @@
     "failedSubmit": "ما قدرش يقدم الطلب. عاود."
   },
   "loginModal": {
-    "migrateNoOldAccount": "ما كاينش حساب قديم ديال DeHub فهاد تسجيل الدخول، داكشي علاش ما كاين ما تجيب. دير حساب جديد بلاصتو.",
-    "migrateInstead": "جيب الحساب القديم بلاصتو",
-    "setUpNewAccount": "دير حساب جديد",
-    "createNewInstead": "صاوب حساب جديد بلاصتو",
-    "migrateAccount": "نقل الحساب",
-    "importExternalWallet": "استورد محفظة خارجية",
-    "migrateIntentHint": "تسجل بأي اختيار من الاختيارات اللّي لتحت. إلا كان مطابق لحساب DeHub قديم، غادي تجيب معاه المحفظة ديالك، وسمية المستخدم، والرصيد.",
-    "importIntentHint": "تسجل بأي اختيار من الاختيارات اللّي لتحت، و لصق عبارة الاسترجاع أو المفتاح الخاص ديال المحفظة اللي بغيتي تستعمل.",
     "unlockBiometricContinue": "افتح محفظتك ببصمة إصبعك أو وجهك للمتابعة.",
     "unlockBiometricSignIn": "افتح محفظتك ببصمة إصبعك أو وجهك لتسجيل الدخول.",
     "unlockPasswordContinue": "أدخِل كلمة مرور محفظتك للمتابعة.",
@@ -1438,6 +1373,14 @@
     "migrateUnmatchedDetail": "لا يوجد ملف شخصي في عنوان المحفظة هذا. إذا كنت تقوم بتسجيل الدخول مرة أخرى، فارجع واستخدم تسجيل الدخول الذي اشتركت به بدلاً من ذلك.",
     "migrateGoBack": "العودة",
     "migrateContinueAnyway": "إنشاء حساب جديد على أي حال",
+    "migrateNoOldAccount": "ما كاينش حساب قديم ديال DeHub فهاد تسجيل الدخول، داكشي علاش ما كاين ما تجيب. دير حساب جديد بلاصتو.",
+    "migrateInstead": "جيب الحساب القديم بلاصتو",
+    "setUpNewAccount": "دير حساب جديد",
+    "createNewInstead": "صاوب حساب جديد بلاصتو",
+    "migrateAccount": "نقل الحساب",
+    "importExternalWallet": "استورد محفظة خارجية",
+    "migrateIntentHint": "تسجل بأي اختيار من الاختيارات اللّي لتحت. إلا كان مطابق لحساب DeHub قديم، غادي تجيب معاه المحفظة ديالك، وسمية المستخدم، والرصيد.",
+    "importIntentHint": "تسجل بأي اختيار من الاختيارات اللّي لتحت، و لصق عبارة الاسترجاع أو المفتاح الخاص ديال المحفظة اللي بغيتي تستعمل.",
     "title": "دخول",
     "addProfileTitle": "زيد بروفايل",
     "continueEmail": "كمّل بالإيميل",
@@ -1617,6 +1560,24 @@
     "hoursAgo": "قبل {{count}}س",
     "daysAgo": "قبل {{count}}ي",
     "monthsAgo": "قبل {{count}}ش",
+    "forLabel": "من أجل",
+    "againstLabel": "ضد",
+    "discussion": {
+      "title": "المناقشة",
+      "intro": "اطرح أسئلة متابعة أو ناقش الاقتراح قبل التصويت.",
+      "reply": "رد",
+      "replyingTo": "الرد على {{name}}",
+      "writeReply": "اكتب ردًا",
+      "edited": "تم التعديل",
+      "showMoreReplies": "عرض المزيد من الردود {{count}}",
+      "showMoreReplies_one": "عرض المزيد من الردود {{count}}",
+      "deleteTitle": "هل تريد حذف هذا التعليق ؟",
+      "deleteDescription": "يؤدي هذا إلى إزالة التعليق وردوده للجميع.",
+      "signInToComment": "تسجيل الدخول للانضمام إلى المناقشة",
+      "empty": "لا توجد أسئلة حتى الآن. ابدأ المناقشة.",
+      "joinOnProposal": "انضم إلى المناقشة",
+      "authorChip": "مؤلف الاقتراح"
+    },
     "proposalTitle": "عنوان المقترح",
     "proposalTitlePlaceholder": "شنو بغيتي تقترح؟",
     "proposalDescription": "التفاصيل",
@@ -1646,25 +1607,7 @@
     "tabProposals": "المقترحات",
     "tabPassed": "دازت",
     "tabRejected": "ترفضات",
-    "weeksAgo": "قبل {{count}}أ",
-    "forLabel": "من أجل",
-    "againstLabel": "ضد",
-    "discussion": {
-      "title": "المناقشة",
-      "intro": "اطرح أسئلة متابعة أو ناقش الاقتراح قبل التصويت.",
-      "reply": "رد",
-      "replyingTo": "الرد على {{name}}",
-      "writeReply": "اكتب ردًا",
-      "edited": "تم التعديل",
-      "showMoreReplies": "عرض المزيد من الردود {{count}}",
-      "showMoreReplies_one": "عرض المزيد من الردود {{count}}",
-      "deleteTitle": "هل تريد حذف هذا التعليق ؟",
-      "deleteDescription": "يؤدي هذا إلى إزالة التعليق وردوده للجميع.",
-      "signInToComment": "تسجيل الدخول للانضمام إلى المناقشة",
-      "empty": "لا توجد أسئلة حتى الآن. ابدأ المناقشة.",
-      "joinOnProposal": "انضم إلى المناقشة",
-      "authorChip": "مؤلف الاقتراح"
-    }
+    "weeksAgo": "قبل {{count}}أ"
   },
   "sidebar": {
     "talkOfTheTown": "هضرة الناس",
@@ -2352,7 +2295,6 @@
     "noStages": "لا توجد مرحلة خاصة بك مباشرة أو مجدولة في الوقت الحالي.",
     "noFlaresLeft": "لم يتبق أي مشاعل إشارة في هذه الدورة",
     "spentFor": "{{power}} يعمل لمدة {{minutes}} دقيقة",
-    "goldenHourStarted": "Golden Hour تعمل لمدة {{minutes}} دقائق — كل ما تنشره الآن يحسب مضاعفاً",
     "teamUp": {
       "title": "تجمع",
       "subtitle": "جمع قوة المحفظة مع ما يصل إلى سبعة آخرين. يرتدي الجميع الشارة التي تفتح مجموعك.",
@@ -2413,7 +2355,8 @@
       "updated": "تم تحديث الفريق",
       "updateFailed": "تعذر تحديث هذا الفريق",
       "openToEveryone": "Team up مفتوح لكل حساب؛ الفرق الخاصة توافق على من ينضم."
-    }
+    },
+    "goldenHourStarted": "Golden Hour تعمل لمدة {{minutes}} دقائق — كل ما تنشره الآن يحسب مضاعفاً"
   },
   "work": {
     "budgetExhausted": "الميزانية ديال هاد الجائزة تسالات."
@@ -2440,6 +2383,63 @@
     "neon": "نيون",
     "blur": "طمس",
     "pixelate": "بكسلة"
+  },
+  "live": {
+    "chatJoined": "دخل",
+    "chatSentGift": "صيفط",
+    "progress": {
+      "title": "مستوى ستريمر",
+      "level": "مستوى {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} دقيقة مؤهلة إضافية للوصول للمستوى {{level}}",
+      "rule": "فقط البث المباشر الذي يستمر لعشر دقائق أو أكثر مع مشاهد واحد على الأقل يحتسب لمستواك.",
+      "streak": "{{count}} أسبوع متتالي",
+      "bestStreak": "أفضل سلسلة {{count}} أسابيع",
+      "hours": "{{hours}} ساعات مؤهلة",
+      "minutes": "{{count}} دقيقة",
+      "viewers": "{{count}} مشاهد",
+      "viewCards": "بطاقات عرض",
+      "cardsTitle": "بطاقات قابلة للجمع",
+      "locked": "مقفل",
+      "earnedOn": "تم الكسب {{date}}",
+      "recentTitle": "بثوث حديثة",
+      "notCounted": "لم تحتسب",
+      "noStreams": "ابدأ البث المباشر لكسب XP.",
+      "card": {
+        "first-light": {
+          "name": "الفجر",
+          "hint": "أكمل أول بث مباشر لك يحتسب."
+        },
+        "marathon": {
+          "name": "ماراثون",
+          "hint": "قم ببث مباشر لمدة ساعتين في جلسة واحدة."
+        },
+        "night-owl": {
+          "name": "بومة الليل",
+          "hint": "أنهِ بثًا مباشرًا بين منتصف الليل والخامسة صباحًا."
+        },
+        "regular": {
+          "name": "منتظم",
+          "hint": "قم ببث مباشر في أربعة أسابيع متتالية."
+        },
+        "iron-streak": {
+          "name": "سلسلة حديدية",
+          "hint": "قم ببث مباشر في اثني عشر أسبوعًا متتاليًا."
+        },
+        "crowd": {
+          "name": "جمهور",
+          "hint": "شاهد عشرة أشخاص في نفس الوقت."
+        },
+        "century": {
+          "name": "قرن",
+          "hint": "الوصول إلى مائة ساعة مؤهلة على الهواء."
+        },
+        "legend": {
+          "name": "وسيلة الإيضاح",
+          "hint": "الوصول إلى المستوى العاشر."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "راه لايف",
@@ -2819,7 +2819,25 @@
     "reviewDescriptionPlaceholder": "قل شيئًا عن هذا المنشور (اختياري)",
     "reviewLiveWarning": "هذا الرابط هو بث مباشر. انتظر حتى ينتهي واستورد التسجيل بدلاً من ذلك.",
     "reviewCancel": "إلغاء",
-    "reviewConfirm": "استيراد"
+    "reviewConfirm": "استيراد",
+    "podcast": {
+      "tab": "بودكاست",
+      "feedUrlLabel": "رابط موجز RSS للبودكاست",
+      "fetchFeed": "إحضار الخلاصة",
+      "fetching": "جارٍ جلب الخلاصة...",
+      "showBy": "بواسطة {{author}}",
+      "episodes": "{{count}} حلقة",
+      "selectAll": "تحديد الكل",
+      "alreadyImported": "تم استيراده بالفعل",
+      "ownership": "أملك هذا المحتوى، أو لدي إذن صاحب الحقوق لنشره على DeHub.",
+      "importSelected": "استيراد {{count}} حلقة",
+      "importing": "جارٍ الاستيراد...",
+      "done": "في قائمة الانتظار",
+      "failed": "فشل",
+      "emptyFeed": "لم نتمكن من العثور على أي حلقات في تلك الخلاصة.",
+      "badFeed": "لا يبدو هذا الرابط كملف بودكاست.",
+      "tooMany": "استيراد ما يصل إلى 20 حلقة في وقت واحد."
+    }
   },
   "banned": {
     "title": "حسابك محظور",

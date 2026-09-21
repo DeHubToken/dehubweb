@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "kua uru mai",
-    "chatSentGift": "kua tukuna",
-    "progress": {
-      "title": "Taumata o te kaiwhakatere",
-      "level": "Taumata {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} meneti whai tohu atu hei eke ki te taumata {{level}}",
-      "rule": "Ko ngā rerenga katoa e tekau meneti te roa, ā, kotahi te iti rawa o te kai-titiro, ka tatau ki tō taumata.",
-      "streak": "{{count}} wiki tū",
-      "bestStreak": "Te tū pai rawa {{count}} wiki",
-      "hours": "{{hours}} haora whai tohu",
-      "minutes": "{{count}} meneti",
-      "viewers": "{{count}} kai-titiro",
-      "viewCards": "Ngā kaari tiro",
-      "cardsTitle": "Ngā kaari kohikohi",
-      "locked": "Kua raka",
-      "earnedOn": "Kua riro {{date}}",
-      "recentTitle": "Ngā rerenga tata nei",
-      "notCounted": "Kāore i tatau",
-      "noStreams": "Haere ora ki te tīmata ki te whiwhi XP.",
-      "card": {
-        "first-light": {
-          "name": "Te rama tuatahi",
-          "hint": "Whakaotia tō rerenga tuatahi ka tatau."
-        },
-        "marathon": {
-          "name": "Marathon",
-          "hint": "Rere mō ngā haora e rua i te wā kotahi."
-        },
-        "night-owl": {
-          "name": "Pūngāwhā pō",
-          "hint": "Mutua he rerenga i waenganui i te pōpō me te rima o ngā ata."
-        },
-        "regular": {
-          "name": "Mātau",
-          "hint": "Rere i roto i ngā wiki e whā tū."
-        },
-        "iron-streak": {
-          "name": "Tū hao",
-          "hint": "Rere i roto i ngā wiki kotahi tekau mā rua tū."
-        },
-        "crowd": {
-          "name": "Tāhū",
-          "hint": "Kia tekau ngā tāngata e matakitaki ana i te wā kotahi."
-        },
-        "century": {
-          "name": "Rau tau",
-          "hint": "Kia kotahi rau haora e tika ana i runga i te rangi."
-        },
-        "legend": {
-          "name": "Ngā kōrero",
-          "hint": "Haere ki te taumata 10."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Kua tārewa ngā whakawhitinga kore utu i tō mātou taha, ehara i tō pūkoro. Ngana anō ā tōna wā.",
     "gasSponsorshipFailed": "Kāore i taea te utu i tēnei whakawhitinga. Ngana anō ā tōna wā."
@@ -162,6 +105,9 @@
     "bio": "Korero mōu",
     "bioPlaceholder": "Kōrerotia mōu...",
     "socialLinks": "Hononga pāpāho",
+    "socialFollowers": "Ko nga kaiwhaiwhai i runga i {{platform}}",
+    "socialFollowersHint": "Hokona i runga i to koutou pūkete rite te wahi o to koutou REACH katoa. Whakauru i te tau ki a koe ano — e kore matou e pānui i te reira i te papa.",
+    "socialFollowersPlaceholder": "e ai ki te 12500",
     "profileUpdated": "Kua angitū te whakahou kōtaha",
     "failedLoadProfile": "Kāore i taea te uta raraunga kōtaha",
     "imageTooLarge5": "Me iti ake te whakaahua i te 5MB",
@@ -496,10 +442,7 @@
       "unavailable": "Kāore e wātea ana te whakapaoho mai i tētahi kaikōkiri ki tō pūkete i tēnei wā.",
       "serverCopied": "Ka kape te tūmau",
       "keyCopied": "Tīpakohia te kī o te kōpae"
-    },
-    "socialFollowers": "Ko nga kaiwhaiwhai i runga i {{platform}}",
-    "socialFollowersHint": "Hokona i runga i to koutou pūkete rite te wahi o to koutou REACH katoa. Whakauru i te tau ki a koe ano — e kore matou e pānui i te reira i te papa.",
-    "socialFollowersPlaceholder": "e ai ki te 12500"
+    }
   },
   "common": {
     "save": "Tiaki",
@@ -1272,10 +1215,6 @@
     "returnHome": "Hoki ki te kāinga"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Kāore e wātea ana tēnei pou",
-      "commentUnavailable": "Kāore e wātea ana tēnei kōrero"
-    },
     "back": "Hoki",
     "usernameAvailable": "Kei te wātea te ingoa kaiwhakamahi!",
     "signUpToClaim": "Rēhitatia āianei ki te pupuri",
@@ -1291,12 +1230,16 @@
     "followers": "Kaiaru",
     "following": "E aru ana",
     "joined": "I uru mai",
-    "loginDescription": "Takiuru ki te tiro me te whakahaere i tō kōtaha.",
     "reach": {
       "total": "Te whaainga katoa",
       "breakdownTitle": "Ko te wahi i puta mai ai tenei whaainga",
       "dehubFollowers": "Ngā kaiwhaiwhai o DeHub",
       "selfReported": "Ko nga kaute whaiwhai pāpori e whakauruhia ana e te kaihanga."
+    },
+    "loginDescription": "Takiuru ki te tiro me te whakahaere i tō kōtaha.",
+    "replyThread": {
+      "postUnavailable": "Kāore e wātea ana tēnei pou",
+      "commentUnavailable": "Kāore e wātea ana tēnei kōrero"
     },
     "tabs": {
       "playlists": "Rārangi purei"
@@ -1313,6 +1256,7 @@
     "amountUsd": "Tapeke (USD)",
     "customAmount": "Tapeke ritenga",
     "minPurchase": "Ko te tapeke hoko iti rawa ko $5",
+    "minDhbPurchase": "Ko te hoko iti rawa o te DHB ko te $ 0.50",
     "youPay": "Ka utu koe",
     "youReceive": "Ka whiwhi koe (tata)",
     "feeNote": "Utu kaari ~3.6% me te 0.5% whakatupu whatunga ka tango i konei. Ka tonoa te whakatupu ki a koe hei ETH mo te hau.",
@@ -1346,7 +1290,6 @@
     "badgeDiscount": "Kaipupuri {{tier}} — {{percent}}% te whakahekenga",
     "otherTokens": "Ētahi atu tohu",
     "otherTokensDesc": "Hokona he ETH, he USDC rānei i Base ki tō kāri",
-    "minDhbPurchase": "Ko te hoko iti rawa o te DHB ko te $ 0.50",
     "shareToFeed": "Whakauru atu ki taku kai",
     "sharePostTemplate": "Just tāpiri {{amount}} $DHB ki toku stack i runga i DeHub. Hanga ki te hapori. #DeHub #DHB",
     "success": {
@@ -1424,14 +1367,6 @@
     "failedSubmit": "Kāore i taea te tuku tono. Ngana anō."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Kāore he pūkete DeHub o mua i tēnei takiuru, nō reira kāore he mea hei kawe mai. Whakaritea he pūkete hou hei utu.",
-    "migrateInstead": "Kawea mai te pūkete tawhito hei utu",
-    "setUpNewAccount": "Whakaritea he pūkete hou",
-    "createNewInstead": "Hangaia he pūkete hou hei utu",
-    "migrateAccount": "Nekehia te pūkete",
-    "importExternalWallet": "Kawemai te pēke o waho",
-    "migrateIntentHint": "Takiuru mā te kōwhiri i tētahi o ngā kōwhiringa i raro nei. Ki te rite tēnei ki tētahi pūkete DeHub o mua, ka kawea mai tōna pēke, ingoa kaiwhakamahi, me te toenga.",
-    "importIntentHint": "Takiuru mā te kōwhiri i tētahi o ngā kōwhiringa i raro nei, kātahi ka whakapiri i te rerenga whakaora, i te kī tūmataiti rānei o te pēke e hiahia ana koe ki te whakamahi.",
     "unlockBiometricContinue": "Whakatuwherahia to putea me to tohu maihao, kanohi ranei ki te haere tonu.",
     "unlockBiometricSignIn": "Whakatuwherahia to putea me to tohu maihao, kanohi ranei ki te haina.",
     "unlockPasswordContinue": "Whakauru i to kupuhipa putea ki te haere tonu.",
@@ -1444,6 +1379,14 @@
     "migrateUnmatchedDetail": "Kahore he pūkete i roto i tenei wāhitau putea. Ki te haina koe i roto i, haere hoki, me te whakamahi i te takiuru i haina koe ki te wahi.",
     "migrateGoBack": "Hoki mai",
     "migrateContinueAnyway": "Hangaia he pūkete hou ahakoa",
+    "migrateNoOldAccount": "Kāore he pūkete DeHub o mua i tēnei takiuru, nō reira kāore he mea hei kawe mai. Whakaritea he pūkete hou hei utu.",
+    "migrateInstead": "Kawea mai te pūkete tawhito hei utu",
+    "setUpNewAccount": "Whakaritea he pūkete hou",
+    "createNewInstead": "Hangaia he pūkete hou hei utu",
+    "migrateAccount": "Nekehia te pūkete",
+    "importExternalWallet": "Kawemai te pēke o waho",
+    "migrateIntentHint": "Takiuru mā te kōwhiri i tētahi o ngā kōwhiringa i raro nei. Ki te rite tēnei ki tētahi pūkete DeHub o mua, ka kawea mai tōna pēke, ingoa kaiwhakamahi, me te toenga.",
+    "importIntentHint": "Takiuru mā te kōwhiri i tētahi o ngā kōwhiringa i raro nei, kātahi ka whakapiri i te rerenga whakaora, i te kī tūmataiti rānei o te pēke e hiahia ana koe ki te whakamahi.",
     "title": "Takiuru",
     "addProfileTitle": "Tāpiri kōtaha",
     "continueEmail": "Haere tonu mā te īmēra",
@@ -2330,7 +2273,6 @@
     "noStages": "Kāore he atamira nāu e ora ana, e whakaritea ana rānei i tēnei wā.",
     "noFlaresLeft": "Kāore he rama tohu i toe i tēnei huringa",
     "spentFor": "{{power}} e oma ana mō {{minutes}} meneti",
-    "goldenHourStarted": "Te haere o te haora koura mō {{minutes}} meneti — ka takirua ngā mea katoa e whakairia ana e koe i ēnei wā",
     "teamUp": {
       "title": "Huihui tahi",
       "subtitle": "Whakakotahi i te kaha o te putea ki te whitu atu. Ka mau katoa te tohu ka whakatuwherahia e to katoa.",
@@ -2391,7 +2333,8 @@
       "updated": "Kua whakahoutia te tira",
       "updateFailed": "Kāore i taea te whakahou i tēnā tira",
       "openToEveryone": "Ka tuwhera te Team up ki ia pūkete; ka whakaaetia e ngā tira tūmataiti ko wai ka uru."
-    }
+    },
+    "goldenHourStarted": "Te haere o te haora koura mō {{minutes}} meneti — ka takirua ngā mea katoa e whakairia ana e koe i ēnei wā"
   },
   "work": {
     "budgetExhausted": "Kua oti te pūtea o tēnei utu te tuku katoa."
@@ -2418,6 +2361,63 @@
     "neon": "Neon",
     "blur": "Pōuri",
     "pixelate": "Pika"
+  },
+  "live": {
+    "chatJoined": "kua uru mai",
+    "chatSentGift": "kua tukuna",
+    "progress": {
+      "title": "Taumata o te kaiwhakatere",
+      "level": "Taumata {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} meneti whai tohu atu hei eke ki te taumata {{level}}",
+      "rule": "Ko ngā rerenga katoa e tekau meneti te roa, ā, kotahi te iti rawa o te kai-titiro, ka tatau ki tō taumata.",
+      "streak": "{{count}} wiki tū",
+      "bestStreak": "Te tū pai rawa {{count}} wiki",
+      "hours": "{{hours}} haora whai tohu",
+      "minutes": "{{count}} meneti",
+      "viewers": "{{count}} kai-titiro",
+      "viewCards": "Ngā kaari tiro",
+      "cardsTitle": "Ngā kaari kohikohi",
+      "locked": "Kua raka",
+      "earnedOn": "Kua riro {{date}}",
+      "recentTitle": "Ngā rerenga tata nei",
+      "notCounted": "Kāore i tatau",
+      "noStreams": "Haere ora ki te tīmata ki te whiwhi XP.",
+      "card": {
+        "first-light": {
+          "name": "Te rama tuatahi",
+          "hint": "Whakaotia tō rerenga tuatahi ka tatau."
+        },
+        "marathon": {
+          "name": "Marathon",
+          "hint": "Rere mō ngā haora e rua i te wā kotahi."
+        },
+        "night-owl": {
+          "name": "Pūngāwhā pō",
+          "hint": "Mutua he rerenga i waenganui i te pōpō me te rima o ngā ata."
+        },
+        "regular": {
+          "name": "Mātau",
+          "hint": "Rere i roto i ngā wiki e whā tū."
+        },
+        "iron-streak": {
+          "name": "Tū hao",
+          "hint": "Rere i roto i ngā wiki kotahi tekau mā rua tū."
+        },
+        "crowd": {
+          "name": "Tāhū",
+          "hint": "Kia tekau ngā tāngata e matakitaki ana i te wā kotahi."
+        },
+        "century": {
+          "name": "Rau tau",
+          "hint": "Kia kotahi rau haora e tika ana i runga i te rangi."
+        },
+        "legend": {
+          "name": "Ngā kōrero",
+          "hint": "Haere ki te taumata 10."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Haere Tūtuki",
@@ -2853,7 +2853,26 @@
     "reviewDescriptionPlaceholder": "Korero i tetahi mea e pā ana ki tenei pou (kōwhiringa)",
     "reviewLiveWarning": "Ko tenei hononga he awa ora. Kia tae noa ki te mutunga, me te kawemai i te tuhi i te wahi.",
     "reviewCancel": "Whakakorea",
-    "reviewConfirm": "Te kawemai"
+    "reviewConfirm": "Te kawemai",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podcast RSS whangai URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Whangai whangai",
+      "fetching": "He kai kai...",
+      "showBy": "Na te {{author}}",
+      "episodes": "{{count}} episodes",
+      "selectAll": "Kōwhiri i te katoa",
+      "alreadyImported": "Kua kawemai",
+      "ownership": "Kei a au tenei ihirangi, kei a au ranei te whakaaetanga a te kaipupuri tika ki te whakaputa i runga i DeHub.",
+      "importSelected": "Kawemai {{count}} episodes",
+      "importing": "Ko te kawemai...",
+      "done": "Kohikohinga",
+      "failed": "Kua ngaro",
+      "emptyFeed": "Kaore i kitea e matou tetahi waahanga i roto i taua kai.",
+      "badFeed": "Kaore tenei hononga e rite ki te kai podcast.",
+      "tooMany": "Whakauru atu ki te 20 ngā wāhanga i te wā kotahi."
+    }
   },
   "banned": {
     "title": "Kua aukatihia tō pūkete",

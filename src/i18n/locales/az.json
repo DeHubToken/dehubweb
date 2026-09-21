@@ -105,6 +105,9 @@
     "bio": "Haqqında",
     "bioPlaceholder": "Özünüz haqqında danışın...",
     "socialLinks": "Sosial Keçidlər",
+    "socialFollowers": "İzləyicilər {{platform}}",
+    "socialFollowersHint": "Profilinizdə ümumi çatınızın bir hissəsi görünəcək. Nömrəni özünüz daxil edin — onu platformadan oxumuruq.",
+    "socialFollowersPlaceholder": "məs., 12500",
     "profileUpdated": "Profil uğurla yeniləndi",
     "failedLoadProfile": "Profil məlumatlarını yükləmək uğursuz oldu",
     "imageTooLarge5": "Şəkil 5MB-dan kiçik olmalıdır",
@@ -455,10 +458,7 @@
       "unavailable": "Hesabınızda hazırda kodlayıcıdan yayımlamaq mümkün deyil.",
       "serverCopied": "Server kopyalandı",
       "keyCopied": "Axın açarı kopyalandı"
-    },
-    "socialFollowers": "İzləyicilər {{platform}}",
-    "socialFollowersHint": "Profilinizdə ümumi çatınızın bir hissəsi görünəcək. Nömrəni özünüz daxil edin — onu platformadan oxumuruq.",
-    "socialFollowersPlaceholder": "məs., 12500"
+    }
   },
   "common": {
     "save": "Saxla",
@@ -1231,10 +1231,6 @@
     "returnHome": "Ana Səhifəyə Qayıt"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Bu yazı mövcud deyil",
-      "commentUnavailable": "Bu şərh artıq mövcud deyil"
-    },
     "back": "Geri",
     "usernameAvailable": "İstifadəçi adı mövcuddur!",
     "signUpToClaim": "İddia etmək üçün bu gün qeydiyyatdan keçin",
@@ -1250,12 +1246,16 @@
     "followers": "İzləyicilər",
     "following": "İzlənən",
     "joined": "Qoşuldu",
-    "loginDescription": "Profilinizə baxmaq və idarə etmək üçün daxil olun.",
     "reach": {
       "total": "Ümumi əlaqə",
       "breakdownTitle": "Bu əlaqə haradan gəlir",
       "dehubFollowers": "DeHub izləyiciləri",
       "selfReported": "Sosial izləyici sayları yaradıcı şəxs tərəfindən daxil edilir."
+    },
+    "loginDescription": "Profilinizə baxmaq və idarə etmək üçün daxil olun.",
+    "replyThread": {
+      "postUnavailable": "Bu yazı mövcud deyil",
+      "commentUnavailable": "Bu şərh artıq mövcud deyil"
     },
     "tabs": {
       "playlists": "Səsləndirmə siyahıları"
@@ -1292,6 +1292,7 @@
     "amountUsd": "Məbləğ (USD)",
     "customAmount": "Xüsusi məbləğ",
     "minPurchase": "Minimum satın alma $5-dir",
+    "minDhbPurchase": "DHB alışı minimum 0,50 $ təşkil edir",
     "youPay": "Ödəyirsiniz",
     "youReceive": "Alırsınız (təxmini)",
     "feeNote": "Kart haqqı ~3.6% və 0.5% şəbəkə ehtiyatı buradan çıxarılır. Ehtiyat sizə qaz üçün ETH kimi göndərilir.",
@@ -1325,7 +1326,6 @@
     "badgeDiscount": "{{tier}} sahibi — {{percent}}% endirim",
     "otherTokens": "Digər tokenlər",
     "otherTokensDesc": "Kartınızla Base şəbəkəsində ETH və ya USDC alın",
-    "minDhbPurchase": "DHB alışı minimum 0,50 $ təşkil edir",
     "shareToFeed": "Yemimlə paylaşın",
     "sharePostTemplate": "İndicə {{amount}} $ DHB-ni DeHub-dakı stekimə əlavə etdim. İcma ilə qurmaq. #DeHub #DHB",
     "success": {
@@ -1403,14 +1403,6 @@
     "failedSubmit": "Müraciəti göndərmək uğursuz oldu. Zəhmət olmasa yenidən cəhd edin."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Bu girişdə daha əvvəlki DeHub hesabı yoxdur, buna görə də köçürüləcək bir şey yoxdur. Bunun əvəzinə yeni bir hesab yaradın.",
-    "migrateInstead": "Köhnə hesabı geri qaytarın",
-    "setUpNewAccount": "Yeni hesab yaradın",
-    "createNewInstead": "Bunun əvəzinə yeni hesab yaradın",
-    "migrateAccount": "Hesabı köçürün",
-    "importExternalWallet": "Xarici cüzdanı idxal edin",
-    "migrateIntentHint": "Aşağıdakı variantlardan hər hansı biri ilə daxil olun. Əgər bu, əvvəlki DeHub hesabına uyğun gələrsə, onun cüzdanını, istifadəçi adını və balansını köçürəcəksiniz.",
-    "importIntentHint": "Aşağıdakı variantlardan hər hansı biri ilə daxil olun, sonra istifadə etmək istədiyiniz cüzdanın bərpa frazasını və ya şəxsi açarını yapışdırın.",
     "unlockBiometricContinue": "Davam etmək üçün barmaq iziniz və ya üzünüzlə cüzdanınızı açın.",
     "unlockBiometricSignIn": "Daxil olmaq üçün barmaq iziniz və ya üzünüzlə cüzdanınızı açın.",
     "unlockPasswordContinue": "Davam etmək üçün cüzdan parolunuzu daxil edin.",
@@ -1422,6 +1414,14 @@
     "migrateUnmatchedDetail": "Bu cüzdan ünvanında heç bir profil mövcud deyil. Yenidən daxil olmusunuzsa, geri qayıdın və əvəzində qeydiyyatdan keçdiyiniz girişdən istifadə edin.",
     "migrateGoBack": "Geri qayıt",
     "migrateContinueAnyway": "Hər halda yeni hesab yaradın",
+    "migrateNoOldAccount": "Bu girişdə daha əvvəlki DeHub hesabı yoxdur, buna görə də köçürüləcək bir şey yoxdur. Bunun əvəzinə yeni bir hesab yaradın.",
+    "migrateInstead": "Köhnə hesabı geri qaytarın",
+    "setUpNewAccount": "Yeni hesab yaradın",
+    "createNewInstead": "Bunun əvəzinə yeni hesab yaradın",
+    "migrateAccount": "Hesabı köçürün",
+    "importExternalWallet": "Xarici cüzdanı idxal edin",
+    "migrateIntentHint": "Aşağıdakı variantlardan hər hansı biri ilə daxil olun. Əgər bu, əvvəlki DeHub hesabına uyğun gələrsə, onun cüzdanını, istifadəçi adını və balansını köçürəcəksiniz.",
+    "importIntentHint": "Aşağıdakı variantlardan hər hansı biri ilə daxil olun, sonra istifadə etmək istədiyiniz cüzdanın bərpa frazasını və ya şəxsi açarını yapışdırın.",
     "title": "Daxil ol",
     "addProfileTitle": "Profil əlavə et",
     "continueEmail": "E-poçt ilə Davam Et",
@@ -2260,7 +2260,6 @@
     "noStages": "Hazırda canlı və ya planlaşdırılmış Stage-iniz yoxdur.",
     "noFlaresLeft": "Bu dövr üçün heç bir Signal Flare qalmayıb",
     "spentFor": "{{power}} {{minutes}} dəqiqə ərzində işləyir",
-    "goldenHourStarted": "Golden Hour {{minutes}} dəqiqə davam edir — indi yazdığınız hər şey ikiqat sayılır",
     "teamUp": {
       "title": "Birgə komanda qurun",
       "subtitle": "Cəmi yeddi nəfərə qədər digər şəxslərlə pul kisəsi gücünüzü birləşdirin. Hər kəs sizin ümumi məbləğinizin kilidini açan nişanı taxır.",
@@ -2321,7 +2320,8 @@
       "updated": "Komanda yeniləndi",
       "updateFailed": "Bu komandanı yeniləmək mümkün olmadı",
       "openToEveryone": "Team up hər bir hesaba açıqdır; şəxsi komandalar kimin qoşulacağını təsdiqləyir."
-    }
+    },
+    "goldenHourStarted": "Golden Hour {{minutes}} dəqiqə davam edir — indi yazdığınız hər şey ikiqat sayılır"
   },
   "work": {
     "budgetExhausted": "Bu mükafatın büdcəsi tam olaraq ayrılıb.",
@@ -5029,7 +5029,25 @@
     "reviewDescriptionPlaceholder": "Bu yazı haqqında nəsə deyin (qeyri-məcburi)",
     "reviewLiveWarning": "Bu link canlı yayımdır. Bitənə qədər gözləyin və əvəzinə səsyazmanı idxal edin.",
     "reviewCancel": "Ləğv et",
-    "reviewConfirm": "İdxal et"
+    "reviewConfirm": "İdxal et",
+    "podcast": {
+      "tab": "Podkast",
+      "feedUrlLabel": "Podcast RSS Feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Dəzgah lenti",
+      "fetching": "Yem əldə edilir...",
+      "episodes": "{{count}} epizod",
+      "selectAll": "Hamısını seç",
+      "alreadyImported": "Artıq idxal edilib",
+      "ownership": "Bu məzmuna sahibəm və ya hüquq sahibinin onu DeHub-da dərc etmək icazəsi var.",
+      "importSelected": "{{count}} epizodlarını idxal edin",
+      "importing": "İdxal olunur...",
+      "done": "Növbəli",
+      "failed": "Uğursuz oldu",
+      "emptyFeed": "Bu lentdə heç bir epizod tapa bilmədik.",
+      "badFeed": "Bu link podkast lentinə bənzəmir.",
+      "tooMany": "Bir dəfəyə 20-yə qədər seriya idxal edin."
+    }
   },
   "banned": {
     "title": "Hesabınız qadağan edildi",

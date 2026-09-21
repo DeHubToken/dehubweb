@@ -105,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Vertel ons meer van jouself...",
     "socialLinks": "Sosiale skakels",
+    "socialFollowers": "Volgers op {{platform}}",
+    "socialFollowersHint": "Wys op jou profiel as deel van jou totale bereik. Voer die nommer self in — ons lees dit nie van die platform af nie.",
+    "socialFollowersPlaceholder": "bv. 12500",
     "profileUpdated": "Profiel suksesvol opgedateer",
     "failedLoadProfile": "Kon nie profieldata laai nie",
     "imageTooLarge5": "Prent moet kleiner as 5MB wees",
@@ -457,10 +460,7 @@
       "keyCopied": "Stroom sleutel gekopieer"
     },
     "security": "Sekuriteit",
-    "about": "Oor",
-    "socialFollowers": "Volgers op {{platform}}",
-    "socialFollowersHint": "Wys op jou profiel as deel van jou totale bereik. Voer die nommer self in — ons lees dit nie van die platform af nie.",
-    "socialFollowersPlaceholder": "bv. 12500"
+    "about": "Oor"
   },
   "common": {
     "save": "Stoor",
@@ -1244,10 +1244,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Hierdie pos is nie beskikbaar nie",
-      "commentUnavailable": "Hierdie kommentaar is nie meer beskikbaar nie"
-    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUp": "Sign Up",
@@ -1255,21 +1251,25 @@
     "followers": "Followers",
     "following": "Following",
     "joined": "Joined",
-    "editProfile": "Wysig profiel",
-    "profileSettings": "Profielinstellings",
-    "accountSettings": "Rekeninginstellings",
-    "securitySettings": "Sekuriteitinstellings",
-    "preferences": "Voorkeure",
-    "logout": "Teken uit",
     "reach": {
       "total": "Totale bereik",
       "breakdownTitle": "Waar hierdie reikwydte vandaan kom",
       "dehubFollowers": "DeHub-volgelinge",
       "selfReported": "Sosiale volgelinge tel word deur die skepper ingevoer."
     },
+    "replyThread": {
+      "postUnavailable": "Hierdie pos is nie beskikbaar nie",
+      "commentUnavailable": "Hierdie kommentaar is nie meer beskikbaar nie"
+    },
     "tabs": {
       "playlists": "Speellyste"
-    }
+    },
+    "editProfile": "Wysig profiel",
+    "profileSettings": "Profielinstellings",
+    "accountSettings": "Rekeninginstellings",
+    "securitySettings": "Sekuriteitinstellings",
+    "preferences": "Voorkeure",
+    "logout": "Teken uit"
   },
   "tv": {
     "seoTitle": "Live TV — Gratis Kanale Uit Die Hele Wêreld",
@@ -1302,6 +1302,7 @@
     "amountUsd": "Amount (USD)",
     "customAmount": "Custom amount",
     "minPurchase": "Minimum purchase is $5",
+    "minDhbPurchase": "Minimum DHB aankoop is $ 0.50",
     "youPay": "You pay",
     "youReceive": "Jy ontvang (geskatte.)",
     "feeNote": "Kaartfooi ~3.6% en 'n 0.5% netwerkreserwering word hiervan afgetrek. Die reserwering word na jou as ETH vir gas gestuur.",
@@ -1335,7 +1336,6 @@
     "badgeDiscount": "{{tier}}-houer — {{percent}}% afslag",
     "otherTokens": "Ander tokens",
     "otherTokensDesc": "Koop ETH of USDC op Base met jou kaart",
-    "minDhbPurchase": "Minimum DHB aankoop is $ 0.50",
     "shareToFeed": "Deel met my voer",
     "sharePostTemplate": "Net bygevoeg {{amount}} $DHB na my stapel op DeHub. Bou met die gemeenskap. #DeHub #DHB",
     "success": {
@@ -1394,14 +1394,6 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
-    "migrateNoOldAccount": "Daar is geen vroeëre DeHub-rekening op hierdie aanmelding nie, so daar is niks om oor te bring nie. Stel eerder 'n nuwe rekening op.",
-    "migrateInstead": "Bring die ou rekening oor",
-    "setUpNewAccount": "Stel 'n nuwe rekening op",
-    "createNewInstead": "Skep eerder 'n nuwe rekening",
-    "migrateAccount": "Migreer rekening",
-    "importExternalWallet": "Voer eksterne beursie in",
-    "migrateIntentHint": "Teken hieronder aan met enige opsie. As dit ooreenstem met 'n vroeëre DeHub-rekening, sal jy sy beursie, gebruikersnaam en balans oorbring.",
-    "importIntentHint": "Teken hieronder aan met enige opsie, plak dan die herstel-frase of private sleutel van die beursie wat jy wil gebruik.",
     "unlockBiometricContinue": "Ontsluit jou beursie met jou vingerafdruk of gesig om voort te gaan.",
     "unlockBiometricSignIn": "Ontsluit jou beursie met jou vingerafdruk of gesig om aan te meld.",
     "unlockPasswordContinue": "Voer jou beursie wagwoord in om voort te gaan.",
@@ -1413,6 +1405,14 @@
     "migrateUnmatchedDetail": "Geen profiel bestaan by hierdie beursie adres nie. As jy weer inteken, gaan terug en gebruik die aanmelding waarmee jy ingeteken het.",
     "migrateGoBack": "Gaan terug",
     "migrateContinueAnyway": "Skep in elk geval 'n nuwe rekening",
+    "migrateNoOldAccount": "Daar is geen vroeëre DeHub-rekening op hierdie aanmelding nie, so daar is niks om oor te bring nie. Stel eerder 'n nuwe rekening op.",
+    "migrateInstead": "Bring die ou rekening oor",
+    "setUpNewAccount": "Stel 'n nuwe rekening op",
+    "createNewInstead": "Skep eerder 'n nuwe rekening",
+    "migrateAccount": "Migreer rekening",
+    "importExternalWallet": "Voer eksterne beursie in",
+    "migrateIntentHint": "Teken hieronder aan met enige opsie. As dit ooreenstem met 'n vroeëre DeHub-rekening, sal jy sy beursie, gebruikersnaam en balans oorbring.",
+    "importIntentHint": "Teken hieronder aan met enige opsie, plak dan die herstel-frase of private sleutel van die beursie wat jy wil gebruik.",
     "title": "Log in",
     "addProfileTitle": "Voeg profiel by",
     "continueApple": "Gaan voort met Apple",
@@ -1534,8 +1534,6 @@
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
     "monthsAgo": "{{count}}mo ago",
-    "description": "Neem deel aan die bestuur van Dhobaverse.",
-    "vote": "Stem",
     "forLabel": "vir",
     "againstLabel": "teen",
     "discussion": {
@@ -1553,7 +1551,9 @@
       "empty": "Nog geen vrae nie. Begin die bespreking.",
       "joinOnProposal": "Sluit aan by die bespreking",
       "authorChip": "Voorstel outeur"
-    }
+    },
+    "description": "Neem deel aan die bestuur van Dhobaverse.",
+    "vote": "Stem"
   },
   "sidebar": {
     "nothingTrending": "Nothing trending yet",
@@ -1998,13 +1998,13 @@
       "thisYear": "Hierdie jaar",
       "allTime": "Die hele tyd",
       "newMembers": "Nuwe lede",
+      "viewMembers": "Bekyk lede",
+      "openNewMembers": "Open die nuwe lidmaatelys",
       "chartMembers": "Lede oor tyd",
       "chartActive": "Aktiewe mense",
       "growth": "+{{percent}}% hierdie maand",
       "growthTerm": "Groei",
-      "recordingSince": "opgeteken sedert {{date}}",
-      "viewMembers": "Bekyk lede",
-      "openNewMembers": "Open die nuwe lidmaatelys"
+      "recordingSince": "opgeteken sedert {{date}}"
     },
     "title": "Statistiek",
     "subtitle": "Intydse oopbron-inligting",
@@ -2189,7 +2189,6 @@
     "noStages": "Geen Verhoog van jou is tans regstreeks of geskeduleer nie.",
     "noFlaresLeft": "Geen Sein Vlamme oor hierdie siklus oor nie",
     "spentFor": "{{power}} hardloop vir {{minutes}} minute",
-    "goldenHourStarted": "Golden Hour vir {{minutes}} minute — alles wat jy nou plaas tel dubbel",
     "teamUp": {
       "title": "Span saam",
       "subtitle": "Kombineer beursie krag met tot sewe ander. Almal dra die kenteken wat jou totaal ontsluit.",
@@ -2250,7 +2249,8 @@
       "updated": "Span opgedateer",
       "updateFailed": "Kon nie daardie span opdateer nie",
       "openToEveryone": "Span-opdatering is oop vir elke rekening; privaat spanne keur goed wie aansluit."
-    }
+    },
+    "goldenHourStarted": "Golden Hour vir {{minutes}} minute — alles wat jy nou plaas tel dubbel"
   },
   "work": {
     "budgetExhausted": "Hierdie kopgeld se begroting is heeltemal toegewys.",
@@ -4976,7 +4976,26 @@
     "reviewDescriptionPlaceholder": "Sê iets oor hierdie artikel (opsioneel)",
     "reviewLiveWarning": "Die verbinding is 'n lewende stroom. Wag totdat dit eindig en voer die opname plaas.",
     "reviewCancel": "Kanselleer",
-    "reviewConfirm": "Voer in"
+    "reviewConfirm": "Voer in",
+    "podcast": {
+      "tab": "Podsending",
+      "feedUrlLabel": "Podcast RSS-voer-URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Haal voer",
+      "fetching": "Haal voer...",
+      "showBy": "Deur {{author}}",
+      "episodes": "{{count}} episodes",
+      "selectAll": "Kies almal",
+      "alreadyImported": "Reeds ingevoer",
+      "ownership": "Ek besit hierdie inhoud, of het die regtehouer se toestemming om dit op DeHub te publiseer.",
+      "importSelected": "In voer {{count}} episodes",
+      "importing": "Voer tans in...",
+      "done": "Wagtou",
+      "failed": "Misluk",
+      "emptyFeed": "Ons kon geen episodes in daardie voer vind nie.",
+      "badFeed": "Hierdie skakel lyk nie soos 'n podcast-feed nie.",
+      "tooMany": "Voer tot 20 episodes op 'n slag in."
+    }
   },
   "banned": {
     "title": "Jou rekening is verbode",

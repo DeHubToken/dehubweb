@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "gabung",
-    "chatSentGift": "ngirim",
-    "progress": {
-      "title": "Tingkat streamer",
-      "level": "Tingkat {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} menit maneh sing mumpuni kanggo tekan tingkat {{level}}",
-      "rule": "Mung stream sing mlaku sepuluh menit utawa luwih suwe kanthi paling ora siji penonton sing diitung kanggo tingkat sampeyan.",
-      "streak": "{{count}} minggu berturut-turut",
-      "bestStreak": "Streak paling apik {{count}} minggu",
-      "hours": "{{hours}} jam sing mumpuni",
-      "minutes": "{{count}} menit",
-      "viewers": "{{count}} penonton",
-      "viewCards": "Kartu tampilan",
-      "cardsTitle": "Kartu koleksi",
-      "locked": "Terlindungi",
-      "earnedOn": "Entuk {{date}}",
-      "recentTitle": "Stream paling anyar",
-      "notCounted": "Ora diitung",
-      "noStreams": "Urip kanggo miwiti entuk XP.",
-      "card": {
-        "first-light": {
-          "name": "Cahya pisanan",
-          "hint": "Rampungake stream pisanan sing diitung."
-        },
-        "marathon": {
-          "name": "Maraton",
-          "hint": "Stream nganti rong jam ing siji sesi."
-        },
-        "night-owl": {
-          "name": "Burung hantu wengi",
-          "hint": "Pungkasi stream antarane tengah wengi lan jam lima esuk."
-        },
-        "regular": {
-          "name": "Reguler",
-          "hint": "Stream ing patang minggu berturut-turut."
-        },
-        "iron-streak": {
-          "name": "Streak wesi",
-          "hint": "Stream ing rolas minggu berturut-turut."
-        },
-        "crowd": {
-          "name": "Kerumunan",
-          "hint": "Duwe sepuluh wong nonton ing wektu sing padha."
-        },
-        "century": {
-          "name": "Abad",
-          "hint": "Nganti satus jam siaran sing mumpuni."
-        },
-        "legend": {
-          "name": "Legenda",
-          "hint": "Nganti tingkat sepuluh."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Transaksi gratis lagi dijeda saka pihak kita, dudu ing dompet sampeyan. Coba maneh sedhela maneh.",
     "gasSponsorshipFailed": "Transaksi iki ora bisa disponsori. Coba maneh sedhela."
@@ -162,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Critakna babagan awakmu...",
     "socialLinks": "Pranala Sosial",
+    "socialFollowers": "Pangikut ing {{platform}}",
+    "socialFollowersHint": "Ditampilake ing profil sampeyan minangka bagéan saka jangkauan total sampeyan. Lebokake nomer dhewe - kita ora maca saka platform.",
+    "socialFollowersPlaceholder": "tuladha. 12500",
     "profileUpdated": "Profil kasil dianyari",
     "failedLoadProfile": "Gagal ngemot profil",
     "imageTooLarge5": "Gambar kudu kurang saka 5MB",
@@ -490,10 +436,7 @@
       "unavailable": "Siaran saka encoder ora kasedhiya ing akunmu saiki.",
       "serverCopied": "Server disalin",
       "keyCopied": "Kunci stream disalin"
-    },
-    "socialFollowers": "Pangikut ing {{platform}}",
-    "socialFollowersHint": "Ditampilake ing profil sampeyan minangka bagéan saka jangkauan total sampeyan. Lebokake nomer dhewe - kita ora maca saka platform.",
-    "socialFollowersPlaceholder": "tuladha. 12500"
+    }
   },
   "common": {
     "save": "Simpen",
@@ -1270,10 +1213,6 @@
     "returnHome": "Bali menyang Beranda"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Pos iki ora kasedhiya",
-      "commentUnavailable": "Komentar iki wis ora kasedhiya"
-    },
     "back": "Bali",
     "usernameAvailable": "Jeneng pangguna kasedhiya!",
     "signUpToClaim": "Daftar kanggo njupuk",
@@ -1289,12 +1228,16 @@
     "followers": "Pengikut",
     "following": "Diikuti",
     "joined": "Gabung",
-    "loginDescription": "Mlebu kanggo ndeleng lan ngatur profilmu.",
     "reach": {
       "total": "Jangkauan total",
       "breakdownTitle": "Saka ngendi jangkauan iki",
       "dehubFollowers": "Pengikut DeHub",
       "selfReported": "Jumlah pengikut sosial dilebokake dening kreator."
+    },
+    "loginDescription": "Mlebu kanggo ndeleng lan ngatur profilmu.",
+    "replyThread": {
+      "postUnavailable": "Pos iki ora kasedhiya",
+      "commentUnavailable": "Komentar iki wis ora kasedhiya"
     },
     "tabs": {
       "playlists": "Dhaptar Puter"
@@ -1311,6 +1254,7 @@
     "amountUsd": "Jumlah (USD)",
     "customAmount": "Lebokna jumlah",
     "minPurchase": "Pembelian minimal $5",
+    "minDhbPurchase": "Tuku DHB minimal $0.50",
     "youPay": "Kowe Bayar",
     "youReceive": "Kowe Nampa (perkiraan)",
     "feeNote": "Biaya kartu ~3.6% lan cadangan jaringan 0.5% bakal dikurangi. Cadangan kasebut dikirim menyang sampeyan minangka ETH kanggo gas.",
@@ -1344,7 +1288,6 @@
     "badgeDiscount": "Sing nyekel {{tier}} — diskon {{percent}}%",
     "otherTokens": "Token liyane",
     "otherTokensDesc": "Tuku ETH utawa USDC ing Base nganggo kartumu",
-    "minDhbPurchase": "Tuku DHB minimal $0.50",
     "shareToFeed": "Bagikan menyang feedku",
     "sharePostTemplate": "Nembe nambahake {{amount}} $DHB menyang tumpukan ing DeHub. Mbangun karo komunitas. #DeHub #DHB",
     "success": {
@@ -1422,6 +1365,10 @@
     "failedSubmit": "Gagal ngirim lamaran. Mangga coba maneh."
   },
   "loginModal": {
+    "unlockBiometricContinue": "Mbukak dompetmu nganggo sidik jari utawa pasuryan kanggo nerusake.",
+    "unlockBiometricSignIn": "Mbukak dompetmu nganggo sidik jari utawa pasuryan kanggo mlebu.",
+    "unlockPasswordContinue": "Ketik tembung sandi dompetmu kanggo nerusake.",
+    "unlockPasswordSignIn": "Ketik tembung sandi dompetmu kanggo mbukak dompetmu lan mlebu.",
     "migrateNoOldAccount": "Ora ana akun DeHub sadurunge ing login iki, mula ora ana sing bisa digawa. Gawe akun anyar wae.",
     "migrateInstead": "Nggawa akun lawas wae",
     "setUpNewAccount": "Gawe akun anyar",
@@ -1430,10 +1377,6 @@
     "importExternalWallet": "Impor dompet eksternal",
     "migrateIntentHint": "Mlebet nganggo pilihan apa wae ing ngisor iki. Yen cocog karo akun DeHub sadurunge, panjenengan bakal nggawa dompet, jeneng pangguna, lan imbangan.",
     "importIntentHint": "Mlebet nganggo pilihan apa wae ing ngisor iki, banjur tempel frasa pemulihan utawa kunci pribadi dompet sing pengin digunakake.",
-    "unlockBiometricContinue": "Mbukak dompetmu nganggo sidik jari utawa pasuryan kanggo nerusake.",
-    "unlockBiometricSignIn": "Mbukak dompetmu nganggo sidik jari utawa pasuryan kanggo mlebu.",
-    "unlockPasswordContinue": "Ketik tembung sandi dompetmu kanggo nerusake.",
-    "unlockPasswordSignIn": "Ketik tembung sandi dompetmu kanggo mbukak dompetmu lan mlebu.",
     "title": "Mlebu",
     "addProfileTitle": "Tambah profil",
     "continueEmail": "Lanjut nganggo Email",
@@ -2321,7 +2264,6 @@
     "noStages": "Ora ana Panggungmu sing ditindakake utawa dijadwalake saiki.",
     "noFlaresLeft": "Ora ana Sinyal Suar sing isih ana ing siklus iki",
     "spentFor": "{{power}} mlaku kanggo {{minutes}} menit",
-    "goldenHourStarted": "Golden Hour mlaku {{minutes}} menit — kabeh sing kok-post saiki dianggep tikel",
     "teamUp": {
       "title": "Gabung tim",
       "subtitle": "Gabungake kekuwatan dompet karo nganti pitu liyane. Saben wong nganggo lencana sing bakal mbukak kunci total sampeyan.",
@@ -2382,7 +2324,8 @@
       "updated": "Tim wis dianyari",
       "updateFailed": "Ora bisa nganyari tim kasebut",
       "openToEveryone": "Team up kabuka kanggo saben akun; tim pribadi nyetujoni sapa sing gabung."
-    }
+    },
+    "goldenHourStarted": "Golden Hour mlaku {{minutes}} menit — kabeh sing kok-post saiki dianggep tikel"
   },
   "work": {
     "budgetExhausted": "Anggaran bounty iki wis kepakai kabeh."
@@ -2409,6 +2352,63 @@
     "neon": "Neon",
     "blur": "Burem",
     "pixelate": "Piksel"
+  },
+  "live": {
+    "chatJoined": "gabung",
+    "chatSentGift": "ngirim",
+    "progress": {
+      "title": "Tingkat streamer",
+      "level": "Tingkat {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} menit maneh sing mumpuni kanggo tekan tingkat {{level}}",
+      "rule": "Mung stream sing mlaku sepuluh menit utawa luwih suwe kanthi paling ora siji penonton sing diitung kanggo tingkat sampeyan.",
+      "streak": "{{count}} minggu berturut-turut",
+      "bestStreak": "Streak paling apik {{count}} minggu",
+      "hours": "{{hours}} jam sing mumpuni",
+      "minutes": "{{count}} menit",
+      "viewers": "{{count}} penonton",
+      "viewCards": "Kartu tampilan",
+      "cardsTitle": "Kartu koleksi",
+      "locked": "Terlindungi",
+      "earnedOn": "Entuk {{date}}",
+      "recentTitle": "Stream paling anyar",
+      "notCounted": "Ora diitung",
+      "noStreams": "Urip kanggo miwiti entuk XP.",
+      "card": {
+        "first-light": {
+          "name": "Cahya pisanan",
+          "hint": "Rampungake stream pisanan sing diitung."
+        },
+        "marathon": {
+          "name": "Maraton",
+          "hint": "Stream nganti rong jam ing siji sesi."
+        },
+        "night-owl": {
+          "name": "Burung hantu wengi",
+          "hint": "Pungkasi stream antarane tengah wengi lan jam lima esuk."
+        },
+        "regular": {
+          "name": "Reguler",
+          "hint": "Stream ing patang minggu berturut-turut."
+        },
+        "iron-streak": {
+          "name": "Streak wesi",
+          "hint": "Stream ing rolas minggu berturut-turut."
+        },
+        "crowd": {
+          "name": "Kerumunan",
+          "hint": "Duwe sepuluh wong nonton ing wektu sing padha."
+        },
+        "century": {
+          "name": "Abad",
+          "hint": "Nganti satus jam siaran sing mumpuni."
+        },
+        "legend": {
+          "name": "Legenda",
+          "hint": "Nganti tingkat sepuluh."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Dadi Live",
@@ -2844,7 +2844,26 @@
     "reviewDescriptionPlaceholder": "Ngomong apa-apa babagan posting iki (opsional)",
     "reviewLiveWarning": "Pranala iku live stream. Ngenteni nganti rampung banjur impor rekamane.",
     "reviewCancel": "Batal",
-    "reviewConfirm": "Impor"
+    "reviewConfirm": "Impor",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "URL RSS feed podcast",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Njupuk feed",
+      "fetching": "Njupuk feed…",
+      "showBy": "Kanthi {{author}}",
+      "episodes": "{{count}} episode",
+      "selectAll": "Pilih kabeh",
+      "alreadyImported": "Wis diimpor",
+      "ownership": "Aku duwe konten iki, utawa duwe idin saka sing duwe hak kanggo nerbitake ing DeHub.",
+      "importSelected": "Impor {{count}} episode",
+      "importing": "Ngimpor…",
+      "done": "Antrean",
+      "failed": "Gagal",
+      "emptyFeed": "Kita ora nemokake episode apa wae ing feed kasebut.",
+      "badFeed": "Link kasebut ora katon kaya feed podcast.",
+      "tooMany": "Impor nganti 20 episode saben wektu."
+    }
   },
   "banned": {
     "title": "Akun sampeyan wis dilarang",

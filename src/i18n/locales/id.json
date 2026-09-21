@@ -105,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Ceritakan tentang diri Anda...",
     "socialLinks": "Tautan Sosial",
+    "socialFollowers": "Pengikut di {{platform}}",
+    "socialFollowersHint": "Ditampilkan di profil Anda sebagai bagian dari jangkauan total Anda. Masukkan nomornya sendiri — kami tidak membacanya dari platform.",
+    "socialFollowersPlaceholder": "misalnya 12500",
     "profileUpdated": "Profil berhasil diperbarui",
     "failedLoadProfile": "Gagal memuat data profil",
     "imageTooLarge5": "Gambar harus kurang dari 5MB",
@@ -455,10 +458,7 @@
       "unavailable": "Streaming dari encoder tidak tersedia di akun Anda saat ini.",
       "serverCopied": "Server disalin",
       "keyCopied": "Kunci streaming disalin"
-    },
-    "socialFollowers": "Pengikut di {{platform}}",
-    "socialFollowersHint": "Ditampilkan di profil Anda sebagai bagian dari jangkauan total Anda. Masukkan nomornya sendiri — kami tidak membacanya dari platform.",
-    "socialFollowersPlaceholder": "misalnya 12500"
+    }
   },
   "common": {
     "save": "Simpan",
@@ -1237,10 +1237,6 @@
     "returnHome": "Kembali ke Beranda"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Postingan ini tidak tersedia",
-      "commentUnavailable": "Komentar ini tidak lagi tersedia"
-    },
     "back": "Kembali",
     "usernameAvailable": "Nama pengguna tersedia!",
     "signUpToClaim": "Daftar hari ini untuk mengklaim",
@@ -1256,12 +1252,16 @@
     "followers": "Pengikut",
     "following": "Mengikuti",
     "joined": "Joined",
-    "loginDescription": "Masuk untuk melihat dan mengelola profil Anda.",
     "reach": {
       "total": "Total jangkauan",
       "breakdownTitle": "Dari mana jangkauan ini berasal",
       "dehubFollowers": "Pengikut DeHub",
       "selfReported": "Jumlah pengikut sosial dimasukkan oleh kreator."
+    },
+    "loginDescription": "Masuk untuk melihat dan mengelola profil Anda.",
+    "replyThread": {
+      "postUnavailable": "Postingan ini tidak tersedia",
+      "commentUnavailable": "Komentar ini tidak lagi tersedia"
     },
     "tabs": {
       "playlists": "Daftar Putar"
@@ -1298,6 +1298,7 @@
     "amountUsd": "Jumlah (USD)",
     "customAmount": "Jumlah kustom",
     "minPurchase": "Pembelian minimum $5",
+    "minDhbPurchase": "Pembelian DHB minimum adalah $ 0,50",
     "youPay": "Anda membayar",
     "youReceive": "Anda menerima (est.)",
     "feeNote": "Biaya kartu ~3,6% dan cadangan jaringan 0,5% dipotong dari ini. Cadangan dikirim kepada Anda sebagai ETH untuk gas.",
@@ -1331,7 +1332,6 @@
     "badgeDiscount": "Pemegang {{tier}} — diskon {{percent}}%",
     "otherTokens": "Token lainnya",
     "otherTokensDesc": "Beli ETH atau USDC di Base dengan kartu Anda",
-    "minDhbPurchase": "Pembelian DHB minimum adalah $ 0,50",
     "shareToFeed": "Bagikan ke feed saya",
     "sharePostTemplate": "Baru saja menambahkan {{amount}} $DHB ke tumpukan saya di DeHub. Membangun bersama masyarakat. #DeHub #DHB",
     "success": {
@@ -1409,14 +1409,6 @@
     "failedSubmit": "Gagal mengirim aplikasi. Silakan coba lagi."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Tidak ada akun DeHub sebelumnya pada login ini, jadi tidak ada yang bisa dibawa. Siapkan akun baru saja.",
-    "migrateInstead": "Bawa akun lama saja",
-    "setUpNewAccount": "Siapkan akun baru",
-    "createNewInstead": "Buat akun baru saja",
-    "migrateAccount": "Migrasi akun",
-    "importExternalWallet": "Impor dompet eksternal",
-    "migrateIntentHint": "Masuk dengan opsi apa pun di bawah ini. Jika cocok dengan akun DeHub sebelumnya, Anda akan membawa dompet, nama pengguna, dan saldo Anda.",
-    "importIntentHint": "Masuk dengan opsi apa pun di bawah ini, lalu tempelkan frasa pemulihan atau kunci pribadi dompet yang ingin Anda gunakan.",
     "unlockBiometricContinue": "Buka kunci dompet Anda dengan sidik jari atau wajah Anda untuk melanjutkan.",
     "unlockBiometricSignIn": "Buka dompet Anda dengan sidik jari atau tatap muka untuk masuk.",
     "unlockPasswordContinue": "Masukkan kata sandi dompet Anda untuk melanjutkan.",
@@ -1429,6 +1421,14 @@
     "migrateUnmatchedDetail": "Tidak ada profil di alamat dompet ini. Jika Anda masuk kembali, kembalilah dan gunakan info masuk yang Anda daftarkan.",
     "migrateGoBack": "Kembali",
     "migrateContinueAnyway": "Buat akun baru",
+    "migrateNoOldAccount": "Tidak ada akun DeHub sebelumnya pada login ini, jadi tidak ada yang bisa dibawa. Siapkan akun baru saja.",
+    "migrateInstead": "Bawa akun lama saja",
+    "setUpNewAccount": "Siapkan akun baru",
+    "createNewInstead": "Buat akun baru saja",
+    "migrateAccount": "Migrasi akun",
+    "importExternalWallet": "Impor dompet eksternal",
+    "migrateIntentHint": "Masuk dengan opsi apa pun di bawah ini. Jika cocok dengan akun DeHub sebelumnya, Anda akan membawa dompet, nama pengguna, dan saldo Anda.",
+    "importIntentHint": "Masuk dengan opsi apa pun di bawah ini, lalu tempelkan frasa pemulihan atau kunci pribadi dompet yang ingin Anda gunakan.",
     "title": "Masuk",
     "addProfileTitle": "Tambah profil",
     "continueEmail": "Lanjutkan dengan Email",
@@ -2316,7 +2316,6 @@
     "noStages": "Tidak ada Stage Anda yang sedang tayang atau dijadwalkan saat ini.",
     "noFlaresLeft": "Tidak ada Signal Flare tersisa siklus ini",
     "spentFor": "{{power}} berjalan selama {{minutes}} menit",
-    "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} menit — semua yang Anda posting sekarang dihitung ganda",
     "teamUp": {
       "title": "Bergabunglah",
       "subtitle": "Gabungkan kekuatan dompet dengan hingga tujuh orang lainnya. Setiap orang mengenakan lencana yang akan membuka total Anda.",
@@ -2377,7 +2376,8 @@
       "updated": "Tim diperbarui",
       "updateFailed": "Tidak dapat memperbarui tim itu",
       "openToEveryone": "Team up terbuka untuk setiap akun; tim pribadi menyetujui siapa yang bergabung."
-    }
+    },
+    "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} menit — semua yang Anda posting sekarang dihitung ganda"
   },
   "work": {
     "budgetExhausted": "Anggaran bounty ini sudah terpakai sepenuhnya.",
@@ -5188,7 +5188,26 @@
     "reviewDescriptionPlaceholder": "Katakan sesuatu tentang postingan ini (opsional)",
     "reviewLiveWarning": "Tautan itu adalah streaming langsung. Tunggu sampai rekaman berakhir dan impor rekaman sebagai gantinya.",
     "reviewCancel": "Batalkan",
-    "reviewConfirm": "Impor"
+    "reviewConfirm": "Impor",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "URL umpan RSS podcast",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Ambil umpan",
+      "fetching": "Mengambil umpan…",
+      "showBy": "Oleh {{author}}",
+      "episodes": "{{count}} episode",
+      "selectAll": "Pilih semua",
+      "alreadyImported": "Sudah diimpor",
+      "ownership": "Saya memiliki konten ini, atau memiliki izin pemegang hak untuk memublikasikannya di DeHub.",
+      "importSelected": "Impor {{count}} episode",
+      "importing": "Mengimpor…",
+      "done": "Diantrekan",
+      "failed": "Gagal",
+      "emptyFeed": "Kami tidak dapat menemukan episode apa pun di feed itu.",
+      "badFeed": "Tautan itu tidak terlihat seperti umpan podcast.",
+      "tooMany": "Impor hingga 20 episode sekaligus."
+    }
   },
   "banned": {
     "title": "Akun Anda diblokir",

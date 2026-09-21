@@ -1,61 +1,4 @@
 {
-  "live": {
-    "chatJoined": "sonyere",
-    "chatSentGift": "zigara",
-    "progress": {
-      "title": "Ọkwa onye mgbasa ozi",
-      "level": "Ọkwa {{level}}",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} nkeji ndị ruru eru iji ruo ọkwa {{level}}",
-      "rule": "Naanị mgbasa ozi ndị na-adịru nkeji iri ma ọ bụ karịa na opekata mpe otu onye na-ekiri na-agụ maka ọkwa gị.",
-      "streak": "{{count}} izu ụka",
-      "bestStreak": "Ihe kacha mma {{count}} izu ụka",
-      "hours": "{{hours}} awa ndị ruru eru",
-      "minutes": "{{count}} nkeji",
-      "viewers": "{{count}} ndị na-ekiri",
-      "viewCards": "Kaadị elele",
-      "cardsTitle": "Kaadị nchịkọta",
-      "locked": "Akpọchiri",
-      "earnedOn": "Nweta {{date}}",
-      "recentTitle": "Mgbasa ozi ndị na-adịbeghị anya",
-      "notCounted": "E gụghị ya",
-      "noStreams": "Banye ndụ iji malite inweta XP.",
-      "card": {
-        "first-light": {
-          "name": "Ìhè mbụ",
-          "hint": "Mechaa mgbasa ozi mbụ gị nke ruru eru."
-        },
-        "marathon": {
-          "name": "Marathon",
-          "hint": "Mgbasa ozi maka awa abụọ n'otu oge."
-        },
-        "night-owl": {
-          "name": "Nnụnụ abalị",
-          "hint": "Kwụsị mgbasa ozi n'etiti etiti abalị na ise nke ụtụtụ."
-        },
-        "regular": {
-          "name": "Onye na-achị achị",
-          "hint": "Mgbasa ozi n'ime izu anọ n'usoro."
-        },
-        "iron-streak": {
-          "name": "Ihe ịma aka ígwè",
-          "hint": "Mgbasa ozi n'ime izu iri na abụọ n'usoro."
-        },
-        "crowd": {
-          "name": "Ìgwè mmadụ",
-          "hint": "Nwee mmadụ iri na-ekiri n'otu oge."
-        },
-        "century": {
-          "name": "Nke narị afọ",
-          "hint": "Rute otu narị awa ruru eru na ikuku."
-        },
-        "legend": {
-          "name": "Akụkọ ifo",
-          "hint": "Nzọụkwụ 10."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Azụmahịa n'efu kwụsịtụrụ n'akụkụ anyị, ọ bụghị n'obere akpa gị. Biko nwaa ọzọ n'oge na-adịghị anya.",
     "gasSponsorshipFailed": "Enweghị ike ịkwụ ụgwọ azụmahịa a. Biko nwaa ọzọ obere oge."
@@ -162,6 +105,9 @@
     "bio": "Akụkọ onwe",
     "bioPlaceholder": "Gwa anyị banyere onwe gị...",
     "socialLinks": "Njikọ mmekọrịta",
+    "socialFollowers": "Ndị na-eso ụzọ na {{platform}}",
+    "socialFollowersHint": "Gosiri na profaịlụ gị dị ka akụkụ nke gị ngụkọta iru. Tinye nọmba ahụ n 'onwe gị — anyị anaghị agụ ya site n' elu ikpo okwu.",
+    "socialFollowersPlaceholder": "dịka 12500",
     "profileUpdated": "Emelitela profaịlụ nke ọma",
     "failedLoadProfile": "Enweghị ike ibudata data profaịlụ",
     "imageTooLarge5": "Onyonyo ga-adị obere karịa 5MB",
@@ -496,10 +442,7 @@
       "unavailable": "Ntinye site na ihe ndekọ adịghị maka akaụntụ gị ugbu a.",
       "serverCopied": "Edebata sava",
       "keyCopied": "Edebata kíìrìọ́ọ̀ltụ̀"
-    },
-    "socialFollowers": "Ndị na-eso ụzọ na {{platform}}",
-    "socialFollowersHint": "Gosiri na profaịlụ gị dị ka akụkụ nke gị ngụkọta iru. Tinye nọmba ahụ n 'onwe gị — anyị anaghị agụ ya site n' elu ikpo okwu.",
-    "socialFollowersPlaceholder": "dịka 12500"
+    }
   },
   "common": {
     "save": "Chekwaa",
@@ -1269,10 +1212,6 @@
     "returnHome": "Laghachi Ụlọ"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Nke a post bụ adịghị",
-      "commentUnavailable": "Nkwupụta a adịkwaghị"
-    },
     "back": "Laghachi",
     "usernameAvailable": "Aha onye ọrụ dị!",
     "signUpToClaim": "Debanye aha taa iji nweta",
@@ -1288,12 +1227,16 @@
     "followers": "Ndị na-eso",
     "following": "Na-eso",
     "joined": "Joined",
-    "loginDescription": "Banye iji hụ ma jikwaa profaịlụ gị.",
     "reach": {
       "total": "Total iru",
       "breakdownTitle": "Ebee ka iru a si abịa",
       "dehubFollowers": "DeHub na-eso ụzọ",
       "selfReported": "Onye na-emepụta ihe na-abanye ọnụ ọgụgụ ndị na-eso ụzọ ọha."
+    },
+    "loginDescription": "Banye iji hụ ma jikwaa profaịlụ gị.",
+    "replyThread": {
+      "postUnavailable": "Nke a post bụ adịghị",
+      "commentUnavailable": "Nkwupụta a adịkwaghị"
     },
     "tabs": {
       "playlists": "Ndepụta egwu"
@@ -1310,6 +1253,7 @@
     "amountUsd": "Ego (USD)",
     "customAmount": "Ego onwe",
     "minPurchase": "Ọ kacha nta zụrụ bụ $5",
+    "minDhbPurchase": "Kacha nta DHB zuo bụ $ 0.50",
     "youPay": "Ị na-akwụ",
     "youReceive": "Ị na-anata (atụmatụ)",
     "feeNote": "Ụgwọ kaadị ~3.6% na 0.5% nche netwọkụ na-apụta na nke a. A na-ezigara gị nche ahụ dị ka ETH maka gas.",
@@ -1343,7 +1287,6 @@
     "badgeDiscount": "Onye ji {{tier}} — {{percent}}% mbelata",
     "otherTokens": "Token ndị ọzọ",
     "otherTokensDesc": "Jiri kaadị gị zụta ETH ma ọ bụ USDC na Base",
-    "minDhbPurchase": "Kacha nta DHB zuo bụ $ 0.50",
     "shareToFeed": "Kekọrịta na ndepụta m",
     "sharePostTemplate": "Naanị tinye {{amount}} $DHB na nchịkọta m na DeHub. Iwulite na obodo. #DeHub #DHB",
     "success": {
@@ -1420,14 +1363,6 @@
     "failedSubmit": "Enweghị ike inyefe arịrịọ. Biko nwaa ọzọ."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Enweghị akaụntụ DeHub mbụ na nbanye a, ya mere ọ nweghị ihe ọ ga-eweta. Hazie akaụntụ ọhụrụ kama.",
-    "migrateInstead": "Weta n 'elu ochie akaụntụ kama",
-    "setUpNewAccount": "Hazie akaụntụ ọhụrụ",
-    "createNewInstead": "Kewapụta akaụntụ ọhụrụ kama",
-    "migrateAccount": "Migrate akaụntụ",
-    "importExternalWallet": "Bubata obere akpa mpụga",
-    "migrateIntentHint": "Banye na ihe ọ bụla nhọrọ n 'okpuru. Ọ bụrụ na ọ dabara na akaụntụ DeHub mbụ ị ga-eweta obere akpa ya, aha njirimara na nguzozi.",
-    "importIntentHint": "Banye na ihe ọ bụla nhọrọ n 'okpuru, mgbe ahụ mado mgbake nkebi ahịrịokwu ma ọ bụ onwe igodo nke obere akpa ị chọrọ iji.",
     "unlockBiometricContinue": "Meghee obere akpa gị na mkpịsịaka gị ma ọ bụ ihu gị ka ị gaa n 'ihu.",
     "unlockBiometricSignIn": "Meghee obere akpa gị na mkpịsịaka gị ma ọ bụ ihu iji banye.",
     "unlockPasswordContinue": "Tinye paswọọdụ obere akpa gị ka ị gaa n 'ihu.",
@@ -1440,6 +1375,14 @@
     "migrateUnmatchedDetail": "Enweghị profaịlụ dị na adreesị akpa ego a. Ọ bụrụ na ị na-abanyeghachi, laghachi azụ ma jiri nbanye ị debanyere aha kama.",
     "migrateGoBack": "Laghachi n 'azụ",
     "migrateContinueAnyway": "Mepụta akaụntụ ọhụrụ n 'agbanyeghị",
+    "migrateNoOldAccount": "Enweghị akaụntụ DeHub mbụ na nbanye a, ya mere ọ nweghị ihe ọ ga-eweta. Hazie akaụntụ ọhụrụ kama.",
+    "migrateInstead": "Weta n 'elu ochie akaụntụ kama",
+    "setUpNewAccount": "Hazie akaụntụ ọhụrụ",
+    "createNewInstead": "Kewapụta akaụntụ ọhụrụ kama",
+    "migrateAccount": "Migrate akaụntụ",
+    "importExternalWallet": "Bubata obere akpa mpụga",
+    "migrateIntentHint": "Banye na ihe ọ bụla nhọrọ n 'okpuru. Ọ bụrụ na ọ dabara na akaụntụ DeHub mbụ ị ga-eweta obere akpa ya, aha njirimara na nguzozi.",
+    "importIntentHint": "Banye na ihe ọ bụla nhọrọ n 'okpuru, mgbe ahụ mado mgbake nkebi ahịrịokwu ma ọ bụ onwe igodo nke obere akpa ị chọrọ iji.",
     "title": "Banye",
     "addProfileTitle": "Tinye profaịlụ",
     "continueEmail": "Gaa n'ihu na Email",
@@ -2305,7 +2248,6 @@
     "noStages": "Ọ dịghị Stage gị dị ndụ ma ọ bụ egoro ugbu a.",
     "noFlaresLeft": "Enweghị Signal Flares fọdụrụ n'okirikiri a",
     "spentFor": "{{power}} na-agba ọsọ maka {{minutes}} nkeji",
-    "goldenHourStarted": "Golden Hour na-agba maka {{minutes}} nkeji — ihe niile ị bipụtara ugbu a na-agụ okpukpu abụọ",
     "teamUp": {
       "title": "Jikọọ aka",
       "subtitle": "Jikọta ike akpa ego gị na mmadụ asatọ. Mmadụ niile na-eyi akara ngosi nke ga-eme ka ihe niile dịrị gị.",
@@ -2366,7 +2308,8 @@
       "updated": "E melite otu ahụ",
       "updateFailed": "E nweghị ike imelite otu ahụ",
       "openToEveryone": "Nzukọ otu emegheere akaụntụ ọ bụla; otu onwe na-anabata onye sonye."
-    }
+    },
+    "goldenHourStarted": "Golden Hour na-agba maka {{minutes}} nkeji — ihe niile ị bipụtara ugbu a na-agụ okpukpu abụọ"
   },
   "work": {
     "budgetExhausted": "Ego a kwadoro maka onyinye a ejizuola."
@@ -2393,6 +2336,63 @@
     "neon": "Neon",
     "blur": "Ọchịchịrị",
     "pixelate": "Piksel"
+  },
+  "live": {
+    "chatJoined": "sonyere",
+    "chatSentGift": "zigara",
+    "progress": {
+      "title": "Ọkwa onye mgbasa ozi",
+      "level": "Ọkwa {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} nkeji ndị ruru eru iji ruo ọkwa {{level}}",
+      "rule": "Naanị mgbasa ozi ndị na-adịru nkeji iri ma ọ bụ karịa na opekata mpe otu onye na-ekiri na-agụ maka ọkwa gị.",
+      "streak": "{{count}} izu ụka",
+      "bestStreak": "Ihe kacha mma {{count}} izu ụka",
+      "hours": "{{hours}} awa ndị ruru eru",
+      "minutes": "{{count}} nkeji",
+      "viewers": "{{count}} ndị na-ekiri",
+      "viewCards": "Kaadị elele",
+      "cardsTitle": "Kaadị nchịkọta",
+      "locked": "Akpọchiri",
+      "earnedOn": "Nweta {{date}}",
+      "recentTitle": "Mgbasa ozi ndị na-adịbeghị anya",
+      "notCounted": "E gụghị ya",
+      "noStreams": "Banye ndụ iji malite inweta XP.",
+      "card": {
+        "first-light": {
+          "name": "Ìhè mbụ",
+          "hint": "Mechaa mgbasa ozi mbụ gị nke ruru eru."
+        },
+        "marathon": {
+          "name": "Marathon",
+          "hint": "Mgbasa ozi maka awa abụọ n'otu oge."
+        },
+        "night-owl": {
+          "name": "Nnụnụ abalị",
+          "hint": "Kwụsị mgbasa ozi n'etiti etiti abalị na ise nke ụtụtụ."
+        },
+        "regular": {
+          "name": "Onye na-achị achị",
+          "hint": "Mgbasa ozi n'ime izu anọ n'usoro."
+        },
+        "iron-streak": {
+          "name": "Ihe ịma aka ígwè",
+          "hint": "Mgbasa ozi n'ime izu iri na abụọ n'usoro."
+        },
+        "crowd": {
+          "name": "Ìgwè mmadụ",
+          "hint": "Nwee mmadụ iri na-ekiri n'otu oge."
+        },
+        "century": {
+          "name": "Nke narị afọ",
+          "hint": "Rute otu narị awa ruru eru na ikuku."
+        },
+        "legend": {
+          "name": "Akụkọ ifo",
+          "hint": "Nzọụkwụ 10."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Gaa Live",
@@ -2818,7 +2818,26 @@
     "reviewDescriptionPlaceholder": "Gwa ihe banyere nke a post (nhọrọ)",
     "reviewLiveWarning": "Njikọ ahụ bụ iyi ndụ. Chere ruo mgbe ọ ga-agwụ ma bubata ndekọ ahụ kama.",
     "reviewCancel": "Kagbuo",
-    "reviewConfirm": "Bubata"
+    "reviewConfirm": "Bubata",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podcast RSS ndepụta URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Fetch ndepụta",
+      "fetching": "Na-ewepụta ndepụta...",
+      "showBy": "Site na {{author}}",
+      "episodes": "{{count}} ngosipụta",
+      "selectAll": "Họrọ niile",
+      "alreadyImported": "Mbubataworị",
+      "ownership": "Enwere m ọdịnaya a, ma ọ bụ nwee ikike ikike ibipụta ya na DeHub.",
+      "importSelected": "Mbubata {{count}} Episodes",
+      "importing": "Bubata",
+      "done": "Kwụ n 'ahịrị",
+      "failed": "Ọdịda",
+      "emptyFeed": "Anyị enweghị ike ịchọta ngosipụta ọ bụla na ndepụta ahụ.",
+      "badFeed": "Njikọ ahụ adịghị ka nri Podcast.",
+      "tooMany": "E nwere ihe 30 ihe maka Sporting ihe."
+    }
   },
   "banned": {
     "title": "A machibidoro akaụntụ gị",

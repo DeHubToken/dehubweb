@@ -1,11 +1,4 @@
 {
-  "live": {
-    "chatJoined": "যোগ দিছে",
-    "chatSentGift": "পাঠাইছে",
-    "progress": {
-      "xp": "{{xp}} XP"
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "ফ্রি লেনদেন হামার দিক থাকি বন্ধ আছে, তোমার ওয়ালেটত সমস্যা নাই। অল্প পরে আবার চেষ্টা করেন।",
     "gasSponsorshipFailed": "এই লেনদেনের খরচ দেওয়া গেল না। অল্প পরে আবার চেষ্টা করেন।"
@@ -115,6 +108,7 @@
     "bio": "Bio",
     "bioPlaceholder": "নিজের কথা কিছু কও...",
     "socialLinks": "সোশ্যাল লিংক",
+    "socialFollowersPlaceholder": "जैसे 12500",
     "profileUpdated": "প্রোফাইল ঠিকঠাক আপডেট হইছে",
     "failedLoadProfile": "প্রোফাইলের ডেটা লোড হয় নাই",
     "imageTooLarge5": "ছবি ৫MB-র কম হওয়া নাগবে",
@@ -390,8 +384,7 @@
     "showFollowers": "ফলোয়ার/ফলোইং দেখাও",
     "hideFollowerCounts": "ফলোয়ার সংখ্যা লুকাও",
     "followersOnly": "শুধু ফলোয়ার",
-    "subscribersOnly": "শুধু সাবস্ক্রাইবার",
-    "socialFollowersPlaceholder": "जैसे 12500"
+    "subscribersOnly": "শুধু সাবস্ক্রাইবার"
   },
   "common": {
     "save": "সেভ করো",
@@ -1235,10 +1228,6 @@
     "goHome": "ঘরে যাও"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "এই পোস্টটি উপলভ্য নয়",
-      "commentUnavailable": "এই মন্তব্যটি আর উপলভ্য নয়"
-    },
     "back": "পিছোত",
     "usernameAvailable": "ইউজারনেম ফাঁকা আছে!",
     "signUpToClaim": "নিবার নাগি আইজে সাইন আপ করো",
@@ -1255,6 +1244,10 @@
     "following": "ফলো করতাছে",
     "joined": "জয়েন করছে",
     "loginDescription": "প্রোফাইল দেখির আর সামলাইর লগ ইন করো।",
+    "replyThread": {
+      "postUnavailable": "এই পোস্টটি উপলভ্য নয়",
+      "commentUnavailable": "এই মন্তব্যটি আর উপলভ্য নয়"
+    },
     "posts": "পোস্ট",
     "replies": "জবাব",
     "media": "মিডিয়া",
@@ -1394,6 +1387,10 @@
     "earnings": "আয়"
   },
   "loginModal": {
+    "unlockBiometricContinue": "আপনার ওয়ালেট আনলক করতে আপনার ফিঙ্গারপ্রিন্ট বা ফেস ব্যবহার করুন।",
+    "unlockBiometricSignIn": "আপনার ওয়ালেট আনলক করতে আপনার ফিঙ্গারপ্রিন্ট বা ফেস ব্যবহার করে সাইন ইন করুন।",
+    "unlockPasswordContinue": "আপনার ওয়ালেট পাসওয়ার্ড এন্টার করুন।",
+    "unlockPasswordSignIn": "আপনার ওয়ালেট আনলক করতে এবং সাইন ইন করতে আপনার ওয়ালেট পাসওয়ার্ড এন্টার করুন।",
     "migrateNoOldAccount": "There is no earlier DeHub account on this login, so there is nothing to bring over. Set up a new account instead.",
     "migrateInstead": "Bring over the old account instead",
     "setUpNewAccount": "Set up a new account",
@@ -1402,10 +1399,6 @@
     "importExternalWallet": "Import external wallet",
     "migrateIntentHint": "Sign in with any option below. If it matches an earlier DeHub account you will bring over its wallet, username and balance.",
     "importIntentHint": "Sign in with any option below, then paste the recovery phrase or private key of the wallet you want to use.",
-    "unlockBiometricContinue": "আপনার ওয়ালেট আনলক করতে আপনার ফিঙ্গারপ্রিন্ট বা ফেস ব্যবহার করুন।",
-    "unlockBiometricSignIn": "আপনার ওয়ালেট আনলক করতে আপনার ফিঙ্গারপ্রিন্ট বা ফেস ব্যবহার করে সাইন ইন করুন।",
-    "unlockPasswordContinue": "আপনার ওয়ালেট পাসওয়ার্ড এন্টার করুন।",
-    "unlockPasswordSignIn": "আপনার ওয়ালেট আনলক করতে এবং সাইন ইন করতে আপনার ওয়ালেট পাসওয়ার্ড এন্টার করুন।",
     "title": "লগইন করো",
     "addProfileTitle": "প্রোফাইল যোগ করেন",
     "continueEmail": "ইমেইলে আগাও",
@@ -2241,6 +2234,13 @@
     "title": "গল্প",
     "viewStory": "গল্প দেখো",
     "noStories": "এখনো কোন গল্প নাই"
+  },
+  "live": {
+    "chatJoined": "যোগ দিছে",
+    "chatSentGift": "পাঠাইছে",
+    "progress": {
+      "xp": "{{xp}} XP"
+    }
   },
   "goLive": {
     "goLive": "গো লাইভ",

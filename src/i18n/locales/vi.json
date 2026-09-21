@@ -105,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Tell us about yourself...",
     "socialLinks": "Social Links",
+    "socialFollowers": "Người theo dõi trên {{platform}}",
+    "socialFollowersHint": "Được hiển thị trên hồ sơ của bạn như một phần trong tổng phạm vi tiếp cận của bạn. Tự nhập số điện thoại — chúng tôi không đọc số điện thoại từ nền tảng.",
+    "socialFollowersPlaceholder": "ví dụ: 12500",
     "profileUpdated": "Profile updated successfully",
     "failedLoadProfile": "Không thể tải dữ liệu hồ sơ",
     "imageTooLarge5": "Hình ảnh phải nhỏ hơn 5MB",
@@ -411,10 +414,7 @@
       "unavailable": "Hiện tại, bạn không thể phát trực tiếp từ bộ mã hóa trên tài khoản của mình.",
       "serverCopied": "Đã sao chép máy chủ",
       "keyCopied": "Đã sao chép khóa phát trực tuyến"
-    },
-    "socialFollowers": "Người theo dõi trên {{platform}}",
-    "socialFollowersHint": "Được hiển thị trên hồ sơ của bạn như một phần trong tổng phạm vi tiếp cận của bạn. Tự nhập số điện thoại — chúng tôi không đọc số điện thoại từ nền tảng.",
-    "socialFollowersPlaceholder": "ví dụ: 12500"
+    }
   },
   "common": {
     "save": "Lưu",
@@ -1160,10 +1160,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Bài đăng này không khả dụng",
-      "commentUnavailable": "Bình luận này không còn khả dụng"
-    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUp": "Sign Up",
@@ -1176,6 +1172,10 @@
       "breakdownTitle": "Phạm vi tiếp cận này đến từ đâu",
       "dehubFollowers": "Người theo dõi DeHub",
       "selfReported": "Người sáng tạo nhập số lượng người theo dõi trên mạng xã hội."
+    },
+    "replyThread": {
+      "postUnavailable": "Bài đăng này không khả dụng",
+      "commentUnavailable": "Bình luận này không còn khả dụng"
     },
     "tabs": {
       "playlists": "Danh sách phát"
@@ -1212,6 +1212,7 @@
     "amountUsd": "Amount (USD)",
     "customAmount": "Custom amount",
     "minPurchase": "Minimum purchase is $5",
+    "minDhbPurchase": "Mua DHB tối thiểu là $ 0,50",
     "youPay": "You pay",
     "youReceive": "Bạn nhận được (ước tính)",
     "feeNote": "Phí thẻ ~3,6% và dự trữ mạng 0,5% sẽ được trừ đi. Dự trữ được gửi cho bạn dưới dạng ETH để thanh toán gas.",
@@ -1245,7 +1246,6 @@
     "badgeDiscount": "Chủ sở hữu {{tier}} — giảm {{percent}}%",
     "otherTokens": "Token khác",
     "otherTokensDesc": "Mua ETH hoặc USDC trên Base bằng thẻ của bạn",
-    "minDhbPurchase": "Mua DHB tối thiểu là $ 0,50",
     "shareToFeed": "Chia sẻ với nguồn cấp dữ liệu của tôi",
     "sharePostTemplate": "Vừa thêm {{amount}} $DHB vào ngăn xếp của tôi trên DeHub. Xây dựng với cộng đồng. #DeHub #DHB",
     "success": {
@@ -1304,14 +1304,6 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
-    "migrateNoOldAccount": "Không có tài khoản DeHub nào trước đó trên thông tin đăng nhập này, vì vậy không có gì để chuyển sang. Thay vào đó, hãy thiết lập một tài khoản mới.",
-    "migrateInstead": "Chuyển tài khoản cũ sang",
-    "setUpNewAccount": "Thiết lập tài khoản mới",
-    "createNewInstead": "Tạo tài khoản mới thay thế",
-    "migrateAccount": "Di chuyển tài khoản",
-    "importExternalWallet": "Nhập ví bên ngoài",
-    "migrateIntentHint": "Đăng nhập bằng bất kỳ tùy chọn nào bên dưới. Nếu nó khớp với tài khoản DeHub trước đó, bạn sẽ chuyển ví, tên người dùng và số dư của tài khoản đó.",
-    "importIntentHint": "Đăng nhập bằng bất kỳ tùy chọn nào bên dưới, sau đó dán cụm khôi phục hoặc khóa riêng tư của ví bạn muốn sử dụng.",
     "unlockBiometricContinue": "Mở khóa ví bằng dấu vân tay hoặc khuôn mặt để tiếp tục.",
     "unlockBiometricSignIn": "Mở khóa ví bằng dấu vân tay hoặc mặt để đăng nhập.",
     "unlockPasswordContinue": "Nhập mật khẩu ví của bạn để tiếp tục.",
@@ -1324,6 +1316,14 @@
     "migrateUnmatchedDetail": "Không có hồ sơ nào tồn tại tại địa chỉ ví này. Nếu bạn đăng nhập lại, hãy quay lại và sử dụng thông tin đăng nhập mà bạn đã đăng ký.",
     "migrateGoBack": "Quay lại",
     "migrateContinueAnyway": "Vẫn tạo tài khoản mới",
+    "migrateNoOldAccount": "Không có tài khoản DeHub nào trước đó trên thông tin đăng nhập này, vì vậy không có gì để chuyển sang. Thay vào đó, hãy thiết lập một tài khoản mới.",
+    "migrateInstead": "Chuyển tài khoản cũ sang",
+    "setUpNewAccount": "Thiết lập tài khoản mới",
+    "createNewInstead": "Tạo tài khoản mới thay thế",
+    "migrateAccount": "Di chuyển tài khoản",
+    "importExternalWallet": "Nhập ví bên ngoài",
+    "migrateIntentHint": "Đăng nhập bằng bất kỳ tùy chọn nào bên dưới. Nếu nó khớp với tài khoản DeHub trước đó, bạn sẽ chuyển ví, tên người dùng và số dư của tài khoản đó.",
+    "importIntentHint": "Đăng nhập bằng bất kỳ tùy chọn nào bên dưới, sau đó dán cụm khôi phục hoặc khóa riêng tư của ví bạn muốn sử dụng.",
     "title": "Log in",
     "addProfileTitle": "Thêm hồ sơ",
     "continueApple": "Tiếp tục với Apple",
@@ -1905,13 +1905,13 @@
       "thisYear": "Năm nay",
       "allTime": "Toàn bộ thời gian",
       "newMembers": "Thành viên mới",
+      "viewMembers": "Xem thành viên",
+      "openNewMembers": "Mở danh sách thành viên mới",
       "chartMembers": "Thành viên theo thời gian",
       "chartActive": "Người đang hoạt động",
       "growth": "+{{percent}}% tháng này",
       "growthTerm": "Tăng trưởng",
-      "recordingSince": "ghi nhận từ {{date}}",
-      "viewMembers": "Xem thành viên",
-      "openNewMembers": "Mở danh sách thành viên mới"
+      "recordingSince": "ghi nhận từ {{date}}"
     },
     "title": "Thống kê",
     "subtitle": "Thông tin nguồn mở theo thời gian thực",
@@ -2096,7 +2096,6 @@
     "noStages": "Không có Stage nào của bạn đang phát trực tiếp hoặc được lên lịch ngay bây giờ.",
     "noFlaresLeft": "Không còn Signal Flares nào trong chu kỳ này",
     "spentFor": "{{power}} chạy trong {{minutes}} phút",
-    "goldenHourStarted": "Golden Hour đang chạy trong {{minutes}} phút — mọi thứ bạn đăng bây giờ đều được tính gấp đôi",
     "teamUp": {
       "title": "Hợp tác",
       "subtitle": "Kết hợp sức mạnh ví với tối đa bảy người khác. Mọi người đều đeo huy hiệu mà tổng số của bạn mở khóa.",
@@ -2157,7 +2156,8 @@
       "updated": "Đội đã được cập nhật",
       "updateFailed": "Không thể cập nhật đội đó",
       "openToEveryone": "Team up dành cho mọi tài khoản; các đội riêng tư phê duyệt ai tham gia."
-    }
+    },
+    "goldenHourStarted": "Golden Hour đang chạy trong {{minutes}} phút — mọi thứ bạn đăng bây giờ đều được tính gấp đôi"
   },
   "work": {
     "budgetExhausted": "Ngân sách của tiền thưởng này đã được phân bổ hết.",
@@ -4889,7 +4889,26 @@
     "reviewDescriptionPlaceholder": "Nói điều gì đó về bài đăng này (không bắt buộc)",
     "reviewLiveWarning": "Liên kết đó là một phát trực tuyến. Thay vào đó, hãy đợi cho đến khi kết thúc và nhập bản ghi.",
     "reviewCancel": "Hủy",
-    "reviewConfirm": "Nhập"
+    "reviewConfirm": "Nhập",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "URL nguồn cấp dữ liệu RSS Podcast",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Tìm nạp nguồn cấp dữ liệu",
+      "fetching": "Đang tìm nạp nguồn cấp dữ liệu...",
+      "showBy": "Bởi {{author}}",
+      "episodes": "{{count}} tập",
+      "selectAll": "Chọn tất cả",
+      "alreadyImported": "Đã nhập",
+      "ownership": "Tôi sở hữu nội dung này hoặc có sự cho phép của chủ bản quyền để xuất bản nó trên DeHub.",
+      "importSelected": "Nhập {{count}} tập",
+      "importing": "Đang nhập…",
+      "done": "Đã xếp hàng",
+      "failed": "Không thành công",
+      "emptyFeed": "Chúng tôi không thể tìm thấy bất kỳ tập nào trong nguồn cấp dữ liệu đó.",
+      "badFeed": "Liên kết đó không giống như nguồn cấp dữ liệu podcast.",
+      "tooMany": "Nhập tối đa 20 tập mỗi lần."
+    }
   },
   "banned": {
     "title": "Tài khoản của bạn đã bị cấm",

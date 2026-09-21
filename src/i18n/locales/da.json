@@ -105,6 +105,9 @@
     "bio": "Biografi",
     "bioPlaceholder": "Fortæl lidt om dig selv...",
     "socialLinks": "Sociale links",
+    "socialFollowers": "Følgere på{{platform}}",
+    "socialFollowersHint": "Vises på din profil som en del af din samlede rækkevidde. Indtast selv nummeret — vi læser det ikke fra platformen.",
+    "socialFollowersPlaceholder": "f.eks. 12500",
     "profileUpdated": "Profil opdateret",
     "failedLoadProfile": "Kunne ikke indlæse profil",
     "imageTooLarge5": "Billedet skal være under 5MB",
@@ -455,10 +458,7 @@
       "unavailable": "Streaming fra en encoder er ikke tilgængelig på din konto lige nu.",
       "serverCopied": "Server kopieret",
       "keyCopied": "Streamnøgle kopieret"
-    },
-    "socialFollowers": "Følgere på{{platform}}",
-    "socialFollowersHint": "Vises på din profil som en del af din samlede rækkevidde. Indtast selv nummeret — vi læser det ikke fra platformen.",
-    "socialFollowersPlaceholder": "f.eks. 12500"
+    }
   },
   "common": {
     "save": "Gem",
@@ -1237,10 +1237,6 @@
     "returnHome": "Tilbage til forsiden"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Dette opslag er ikke tilgængeligt",
-      "commentUnavailable": "Denne kommentar er ikke længere tilgængelig"
-    },
     "back": "Tilbage",
     "usernameAvailable": "Brugernavn er ledigt!",
     "signUpToClaim": "Tilmeld dig og gør krav på det",
@@ -1256,12 +1252,16 @@
     "followers": "Følgere",
     "following": "Følger",
     "joined": "Tilmeldt",
-    "loginDescription": "Log ind for at se og administrere profil.",
     "reach": {
       "total": "Samlet rækkevidde",
       "breakdownTitle": "Hvor denne rækkevidde kommer fra",
       "dehubFollowers": "DeHub-følgere",
       "selfReported": "Antal følgere på sociale medier indtastes af kreatøren."
+    },
+    "loginDescription": "Log ind for at se og administrere profil.",
+    "replyThread": {
+      "postUnavailable": "Dette opslag er ikke tilgængeligt",
+      "commentUnavailable": "Denne kommentar er ikke længere tilgængelig"
     },
     "tabs": {
       "playlists": "Spillelister"
@@ -1298,6 +1298,7 @@
     "amountUsd": "Beløb (dollars)",
     "customAmount": "Brugerdefineret beløb",
     "minPurchase": "Minimumskøb $5",
+    "minDhbPurchase": "Minimum DHB-køb er 0,50 $",
     "youPay": "Du betaler",
     "youReceive": "Du modtager (ca.)",
     "feeNote": "Kortgebyr ~3,6% og en 0,5% netværksreserve trækkes fra dette. Reserven sendes til dig som ETH til gas.",
@@ -1331,7 +1332,6 @@
     "badgeDiscount": "{{tier}}-indehaver — {{percent}} % rabat",
     "otherTokens": "Andre tokens",
     "otherTokensDesc": "Køb ETH eller USDC på Base med dit kort",
-    "minDhbPurchase": "Minimum DHB-køb er 0,50 $",
     "shareToFeed": "Del i mit feed",
     "sharePostTemplate": "Har lige føjet {{amount}}$DHB til min stak på DeHub. Bygger sammen med netværket. #DeHub #DHB",
     "success": {
@@ -1413,14 +1413,6 @@
     "email": "E-mail"
   },
   "loginModal": {
-    "migrateNoOldAccount": "Der er ingen tidligere DeHub-konto på dette login, så der er intet at overføre. Opret en ny konto i stedet.",
-    "migrateInstead": "Bring den gamle konto over i stedet",
-    "setUpNewAccount": "Opret en ny konto",
-    "createNewInstead": "Opret en ny konto i stedet",
-    "migrateAccount": "Overfør konto",
-    "importExternalWallet": "Importer ekstern tegnebog",
-    "migrateIntentHint": "Log ind med en hvilken som helst mulighed nedenfor. Hvis den matcher en tidligere DeHub-konto, overfører du dens tegnebog, brugernavn og saldo.",
-    "importIntentHint": "Log ind med en valgmulighed nedenfor, og indsæt derefter gendannelsesfrasen eller den private nøgle for den tegnebog, du vil bruge.",
     "unlockBiometricContinue": "Lås din tegnebog op med dit fingeraftryk eller ansigt for at fortsætte.",
     "unlockBiometricSignIn": "Lås din tegnebog op med dit fingeraftryk eller ansigt for at logge ind.",
     "unlockPasswordContinue": "Indtast adgangskoden til din tegnebog for at fortsætte.",
@@ -1433,6 +1425,14 @@
     "migrateUnmatchedDetail": "Der findes ingen profil på denne tegnebogsadresse. Hvis du loggede ind igen, skal du gå tilbage og bruge det login, du tilmeldte dig med, i stedet.",
     "migrateGoBack": "Gå tilbage",
     "migrateContinueAnyway": "Opret en ny konto alligevel",
+    "migrateNoOldAccount": "Der er ingen tidligere DeHub-konto på dette login, så der er intet at overføre. Opret en ny konto i stedet.",
+    "migrateInstead": "Bring den gamle konto over i stedet",
+    "setUpNewAccount": "Opret en ny konto",
+    "createNewInstead": "Opret en ny konto i stedet",
+    "migrateAccount": "Overfør konto",
+    "importExternalWallet": "Importer ekstern tegnebog",
+    "migrateIntentHint": "Log ind med en hvilken som helst mulighed nedenfor. Hvis den matcher en tidligere DeHub-konto, overfører du dens tegnebog, brugernavn og saldo.",
+    "importIntentHint": "Log ind med en valgmulighed nedenfor, og indsæt derefter gendannelsesfrasen eller den private nøgle for den tegnebog, du vil bruge.",
     "title": "Log ind",
     "addProfileTitle": "Tilføj profil",
     "continueEmail": "Fortsæt med e-mail",
@@ -2320,7 +2320,6 @@
     "noStages": "Ingen af dine Scener er live eller planlagt lige nu.",
     "noFlaresLeft": "Ingen Signal Flares tilbage denne cyklus",
     "spentFor": "{{power}} kører i {{minutes}} minutter",
-    "goldenHourStarted": "Golden Hour kører i {{minutes}} minutter — alt, hvad du poster nu, tæller dobbelt",
     "teamUp": {
       "title": "Gå sammen",
       "subtitle": "Kombiner din pung med op til syv andre. Alle bærer emblemet, din samlede sum låser op for.",
@@ -2381,7 +2380,8 @@
       "updated": "Hold opdateret",
       "updateFailed": "Kunne ikke opdatere det hold",
       "openToEveryone": "Team up er åben for enhver konto; private hold godkender, hvem der tilslutter sig."
-    }
+    },
+    "goldenHourStarted": "Golden Hour kører i {{minutes}} minutter — alt, hvad du poster nu, tæller dobbelt"
   },
   "work": {
     "budgetExhausted": "Denne dusørs budget er fuldt disponeret.",
@@ -5099,7 +5099,26 @@
     "reviewDescriptionPlaceholder": "Sig noget om dette opslag (valgfrit)",
     "reviewLiveWarning": "Linket er en livestream. Vent, indtil den slutter, og importer optagelsen i stedet.",
     "reviewCancel": "Annuller",
-    "reviewConfirm": "Importer"
+    "reviewConfirm": "Importer",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podcast RSS-feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Hent feed",
+      "fetching": "Henter feed...",
+      "showBy": "Af {{author}}",
+      "episodes": "{{count}} episoder",
+      "selectAll": "Vælg alle",
+      "alreadyImported": "Allerede importeret",
+      "ownership": "Jeg ejer dette indhold eller har rettighedshaverens tilladelse til at offentliggøre det på DeHub.",
+      "importSelected": "Importer {{count}}-episoder",
+      "importing": "Importerer...",
+      "done": "I kø",
+      "failed": "Mislykkedes",
+      "emptyFeed": "Vi kunne ikke finde nogen episoder i det feed.",
+      "badFeed": "Dette link ligner ikke et podcast-feed.",
+      "tooMany": "Importer op til 20 episoder ad gangen."
+    }
   },
   "banned": {
     "title": "Din konto er spærret",
