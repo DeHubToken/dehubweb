@@ -184,6 +184,13 @@
     "postVisibility": "Inläggssynlighet",
     "defaultPostVisibility": "Standardsynlighet",
     "defaultPostVisibilityDesc": "Gäller alla nuvarande och framtida inlägg",
+    "aiScraping": {
+      "section": "AI-utbildning",
+      "label": "Tillåt AI-skrapning av mitt innehåll",
+      "hintAllow": "AI-system och sökrobotar som respekterar denna signal kan träna på ditt ljud, konstverk och skrivande.",
+      "hintDeny": "AI-system och sökrobotar som respekterar denna signal ombeds att inte träna på ditt ljud, konstverk och skrivande. Crawlers som ignorerar signalen blockeras inte av den.",
+      "saved": "AI-utbildningspreferens sparad"
+    },
     "defaultProfileTab": "Standardflik på profilen",
     "defaultProfileTabDesc": "Välj vilken flik besökare ser först på din profil",
     "public": "Offentlig",
@@ -1237,6 +1244,10 @@
     "returnHome": "Tillbaka till startsidan"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Denna kreatör tillåter AI-utbildning om detta innehåll.",
+      "denied": "Denna kreatör tillåter inte AI-utbildning om detta innehåll."
+    },
     "back": "Tillbaka",
     "usernameAvailable": "Användarnamnet är tillgängligt!",
     "signUpToClaim": "Registrera dig för att ta det",

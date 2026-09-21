@@ -180,6 +180,10 @@
     "postVisibility": "Who fit see ya post dem",
     "defaultPostVisibility": "Who fit see ya post as default",
     "defaultPostVisibilityDesc": "E dey apply for all current and future posts",
+    "aiScraping": {
+      "section": "AI training",
+      "saved": "AI training preference saved"
+    },
     "defaultProfileTab": "Default profile tab",
     "defaultProfileTabDesc": "Choose wich tab visitor dem go si fes fo yua profile",
     "public": "Public",

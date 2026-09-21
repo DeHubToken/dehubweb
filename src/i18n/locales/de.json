@@ -184,6 +184,13 @@
     "postVisibility": "Beitragssichtbarkeit",
     "defaultPostVisibility": "Standard-Sichtbarkeit",
     "defaultPostVisibilityDesc": "Gilt für alle aktuellen und zukünftigen Beiträge",
+    "aiScraping": {
+      "section": "KI-Training",
+      "label": "KI-Scraping meiner Inhalte zulassen",
+      "hintAllow": "KI-Systeme und Crawler, die dieses Signal respektieren, können Ihre Audio-, Grafik- und Schreibfähigkeiten trainieren.",
+      "hintDeny": "KI-Systeme und Crawler, die dieses Signal respektieren, werden gebeten, nicht mit Ihrem Audio, Ihren Grafiken und Ihrem Schreiben zu trainieren. Crawler, die das Signal ignorieren, werden dadurch nicht blockiert.",
+      "saved": "KI-Schulungspräferenz gespeichert"
+    },
     "defaultProfileTab": "Standard-Profiltab",
     "defaultProfileTabDesc": "Wähle, welchen Tab Besucher auf deinem Profil zuerst sehen",
     "public": "Öffentlich",
@@ -1237,6 +1244,10 @@
     "returnHome": "Zur Startseite"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Dieser Ersteller ermöglicht KI-Schulungen zu diesen Inhalten.",
+      "denied": "Dieser Ersteller erlaubt keine KI-Schulungen zu diesen Inhalten."
+    },
     "back": "Zurück",
     "usernameAvailable": "Benutzername verfügbar!",
     "signUpToClaim": "Registriere dich, um ihn zu beanspruchen",

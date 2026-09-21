@@ -184,6 +184,13 @@
     "postVisibility": "Dukshmëria e Postimeve",
     "defaultPostVisibility": "Dukshmëria e Parazgjedhur e Postimeve",
     "defaultPostVisibilityDesc": "Zbatohet për të gjitha postimet aktuale dhe të ardhshme",
+    "aiScraping": {
+      "section": "Trajnim për GSH",
+      "label": "Lejo skrapimin e përmbajtjes sime nga AI",
+      "hintAllow": "Sistemet AI dhe zvarritësit që respektojnë këtë sinjal mund të trajnohen në audio, vepra arti dhe shkrime.",
+      "hintDeny": "Sistemet AI dhe zvarritësit që respektojnë këtë sinjal u kërkohet të mos trajnohen në audio, vepra arti dhe shkrime. Zvarritësit që injorojnë sinjalin nuk bllokohen prej tij.",
+      "saved": "Preferenca e trajnimit të AI u ruajt"
+    },
     "defaultProfileTab": "Skeda e parazgjedhur e profilit",
     "defaultProfileTabDesc": "Zgjidh cilën skedë shohin të parën vizitorët në profilin tënd",
     "public": "Publik",
@@ -1235,6 +1242,10 @@
     "returnHome": "Kthehu në Kryefaqe"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Ky krijues lejon trajnimin e IA për këtë përmbajtje.",
+      "denied": "Ky krijues nuk lejon trajnimin e IA për këtë përmbajtje."
+    },
     "back": "Kthehu",
     "usernameAvailable": "Emri i përdoruesit është i disponueshëm!",
     "signUpToClaim": "Regjistrohu sot për ta marrë",

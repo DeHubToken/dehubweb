@@ -184,6 +184,13 @@
     "postVisibility": "पोस्ट दिखई",
     "defaultPostVisibility": "डिफॉल्ट पोस्ट दिखई",
     "defaultPostVisibilityDesc": "सब वर्तमान अउ भविष्य के पोस्ट बर लागू होही",
+    "aiScraping": {
+      "section": "एआई प्रशिक्षण",
+      "label": "एआई ल मोर सामग्री ल स्क्रैप करे के अनुमति दे",
+      "hintAllow": "एआई सिस्टम अउ क्रॉलर जेहर ए संकेत के सम्मान करत हंवय, आपके ऑडियो, कलाकृति अउ लेखन म अभ्यास कर सकत हंवय ।",
+      "hintDeny": "एआई सिस्टम अउ क्रॉलर जेहर ए संकेत के सम्मान करत हंवय ओमन ले आपके ऑडियो, कलाकृति अउ लेखन म प्रशिक्षण नी करे बर कहा जात हवय । संकेत ल अनदेखा करे वाले क्रॉलरमन ल एखर ले अवरुद्ध नी करे जात हवय ।",
+      "saved": "एआई प्रशिक्षण प्राथमिकता सहेजिस"
+    },
     "defaultProfileTab": "डिफॉल्ट प्रोफाइल टैब",
     "defaultProfileTabDesc": "चुनव के तोर प्रोफाइल म आगंतुक मन पहिली कोन टैब देखथें",
     "public": "सार्वजनिक",
@@ -1199,6 +1206,10 @@
     "returnHome": "घर वापस जाव"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "ए रचनाकार ए सामग्री म एआई प्रशिक्षण ल अनुमति देत हवय ।",
+      "denied": "ए रचनाकार ए सामग्री म एआई प्रशिक्षण ल अनुमति नी देत हवय ।"
+    },
     "back": "पाछू",
     "usernameAvailable": "यूजरनेम उपलब्ध हे!",
     "signUpToClaim": "दावा करे बर आज साइन अप करव",
@@ -3045,44 +3056,6 @@
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
   },
-  "post": {
-    "like": "पसंद",
-    "comment": "टिप्पणी",
-    "repost": "फेर शेयर करव",
-    "share": "शेयर करव",
-    "bookmark": "बुकमार्क",
-    "tip": "टिप",
-    "delete": "मिटाव",
-    "edit": "संपादन करव",
-    "report": "रिपोर्ट करव",
-    "translate": "अनुवाद करव",
-    "pinned": "पिन करे हे",
-    "replying": "जवाब देत हे",
-    "reply": "जवाब",
-    "writeReply": "जवाब लिखव...",
-    "noComments": "अभी तक कोनो टिप्पणी नइ हे",
-    "viewMore": "अउर देखव",
-    "postDeleted": "पोस्ट मिटा दे गइस",
-    "likes": "पसंद",
-    "comments": "टिप्पणी",
-    "reposts": "रीपोस्ट",
-    "shares": "शेयर"
-  },
-  "create": {
-    "title": "पोस्ट बनाव",
-    "placeholder": "का सोचत हव?",
-    "post": "पोस्ट करव",
-    "addImage": "तसवीर जोड़व",
-    "addVideo": "वीडियो जोड़व",
-    "addGif": "GIF जोड़व",
-    "addPoll": "पोल जोड़व",
-    "addLocation": "जगह जोड़व",
-    "visibility": "दिखई",
-    "everyone": "सब मनखे",
-    "followers": "फॉलोअर",
-    "subscribers": "सब्सक्राइबर",
-    "mentioned": "जेकर नाम लिखे गइस"
-  },
   "conversation": {
     "commonGround": {
       "title": "साझा ज़मीन",
@@ -3183,5 +3156,43 @@
         "body": "पता लगाववव कि सुझाव, बैज अउ सुपरपावर्स आप इहां करत हंवय ल आप कमाए के चीज म कैसे बदल देत हंवय ।"
       }
     }
+  },
+  "post": {
+    "like": "पसंद",
+    "comment": "टिप्पणी",
+    "repost": "फेर शेयर करव",
+    "share": "शेयर करव",
+    "bookmark": "बुकमार्क",
+    "tip": "टिप",
+    "delete": "मिटाव",
+    "edit": "संपादन करव",
+    "report": "रिपोर्ट करव",
+    "translate": "अनुवाद करव",
+    "pinned": "पिन करे हे",
+    "replying": "जवाब देत हे",
+    "reply": "जवाब",
+    "writeReply": "जवाब लिखव...",
+    "noComments": "अभी तक कोनो टिप्पणी नइ हे",
+    "viewMore": "अउर देखव",
+    "postDeleted": "पोस्ट मिटा दे गइस",
+    "likes": "पसंद",
+    "comments": "टिप्पणी",
+    "reposts": "रीपोस्ट",
+    "shares": "शेयर"
+  },
+  "create": {
+    "title": "पोस्ट बनाव",
+    "placeholder": "का सोचत हव?",
+    "post": "पोस्ट करव",
+    "addImage": "तसवीर जोड़व",
+    "addVideo": "वीडियो जोड़व",
+    "addGif": "GIF जोड़व",
+    "addPoll": "पोल जोड़व",
+    "addLocation": "जगह जोड़व",
+    "visibility": "दिखई",
+    "everyone": "सब मनखे",
+    "followers": "फॉलोअर",
+    "subscribers": "सब्सक्राइबर",
+    "mentioned": "जेकर नाम लिखे गइस"
   }
 }

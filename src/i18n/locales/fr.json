@@ -184,6 +184,13 @@
     "postVisibility": "Visibilité des publications",
     "defaultPostVisibility": "Visibilité par défaut",
     "defaultPostVisibilityDesc": "S'applique à toutes les publications actuelles et futures",
+    "aiScraping": {
+      "section": "Formation en IA",
+      "label": "Autoriser le grattage de mon contenu par l'IA",
+      "hintAllow": "Les systèmes d'IA et les robots qui respectent ce signal peuvent s'entraîner sur votre audio, vos illustrations et votre écriture.",
+      "hintDeny": "Les systèmes d'IA et les robots qui respectent ce signal sont priés de ne pas s'entraîner à l'audio, à l'art et à l'écriture. Les chenilles qui ignorent le signal ne sont pas bloquées par celui-ci.",
+      "saved": "Préférence de formation à l'IA enregistrée"
+    },
     "defaultProfileTab": "Onglet de profil par défaut",
     "defaultProfileTabDesc": "Choisissez l'onglet que les visiteurs voient en premier sur votre profil",
     "public": "Public",
@@ -1237,6 +1244,10 @@
     "returnHome": "Retour à l'accueil"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Ce créateur permet la formation à l'IA sur ce contenu.",
+      "denied": "Ce créateur n'autorise pas la formation à l'IA sur ce contenu."
+    },
     "back": "Retour",
     "usernameAvailable": "Nom d'utilisateur disponible !",
     "signUpToClaim": "Inscrivez-vous pour le réclamer",

@@ -183,6 +183,13 @@
     "postVisibility": "投稿の公開範囲",
     "defaultPostVisibility": "デフォルトの公開範囲",
     "defaultPostVisibilityDesc": "すべての現在および将来の投稿に適用",
+    "aiScraping": {
+      "section": "AIトレーニング",
+      "label": "コンテンツのAIスクレイピングを許可する",
+      "hintAllow": "この信号を尊重するAIシステムやクローラーは、オーディオ、アートワーク、ライティングをトレーニングすることがあります。",
+      "hintDeny": "この信号を尊重するAIシステムとクローラーは、オーディオ、アートワーク、ライティングのトレーニングをしないように求められます。 シグナルを無視するクローラは、シグナルによってブロックされません。",
+      "saved": "AIトレーニングの設定が保存されました"
+    },
     "defaultProfileTab": "既定のプロフィールタブ",
     "defaultProfileTabDesc": "訪問者がプロフィールで最初に見るタブを選びます",
     "public": "公開",
@@ -1234,6 +1241,10 @@
     "returnHome": "ホームに戻る"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "このクリエイターは、このコンテンツに関するAIトレーニングを許可しています。",
+      "denied": "このクリエイターは、このコンテンツに関するAIトレーニングを許可していません。"
+    },
     "back": "戻る",
     "usernameAvailable": "ユーザー名が利用可能です！",
     "signUpToClaim": "登録して取得",

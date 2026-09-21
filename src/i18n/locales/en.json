@@ -184,6 +184,13 @@
     "postVisibility": "Post Visibility",
     "defaultPostVisibility": "Default Post Visibility",
     "defaultPostVisibilityDesc": "Applies to all current and future posts",
+    "aiScraping": {
+      "section": "AI training",
+      "label": "Allow AI scraping of my content",
+      "hintAllow": "AI systems and crawlers that respect this signal may train on your audio, artwork and writing.",
+      "hintDeny": "AI systems and crawlers that respect this signal are asked not to train on your audio, artwork and writing. Crawlers that ignore the signal are not blocked by it.",
+      "saved": "AI training preference saved"
+    },
     "defaultProfileTab": "Default profile tab",
     "defaultProfileTabDesc": "Choose which tab visitors see first on your profile",
     "public": "Public",
@@ -1237,6 +1244,10 @@
     "returnHome": "Return Home"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "This creator allows AI training on this content.",
+      "denied": "This creator does not allow AI training on this content."
+    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Sign up today to claim",

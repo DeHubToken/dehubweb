@@ -184,6 +184,13 @@
     "postVisibility": "Groumneri tesaneloutyun",
     "defaultPostVisibility": "Nagradzaynoum tesaneloutyun",
     "defaultPostVisibilityDesc": "Kerpaats e bolor ajnount ev apaghia groumneritsne",
+    "aiScraping": {
+      "section": "ԱԻ դասընթաց",
+      "label": "Թույլ տվեք AI - ին քերել իմ բովանդակությունը",
+      "hintAllow": "Այս ազդանշանը հարգող AI համակարգերը և ոջիլները կարող են վերապատրաստել ձեր աուդիո, արվեստի գործերը և գրելը:",
+      "hintDeny": "Այս ազդանշանը հարգող արհեստական ինտելեկտուալ համակարգերին և ոջիլներին խնդրում ենք չմարզվել ձեր աուդիո, արվեստի գործերի և գրավոր խոսքի վրա: Ազդանշանն անտեսող ոջիլները չեն արգելափակվում:",
+      "saved": "ԱԻ դասընթացների նախապատվությունը պահվել է"
+    },
     "defaultProfileTab": "Պրոֆիլի կանխադրված ներդիր",
     "defaultProfileTabDesc": "Ընտրեք, թե որ ներդիրն են այցելուներն առաջինը տեսնում ձեր պրոֆիլում",
     "public": "Hanrayin",
@@ -1234,6 +1241,10 @@
     "returnHome": "Veradardel glkhavaorej"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Այս ստեղծողը թույլ է տալիս արհեստական ինտելեկտի դասընթացներ անցկացնել այս բովանդակության վերաբերյալ ։",
+      "denied": "Այս ստեղծողը չի թույլատրում արհեստական ինտելեկտի ուսուցում այս բովանդակության վերաբերյալ:"
+    },
     "back": "Hed",
     "usernameAvailable": "Ogtvoroghi anouneh hasaneli e!",
     "signUpToClaim": "Grantsvek ayso stahalyalou hamar",

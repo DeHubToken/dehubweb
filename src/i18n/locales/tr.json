@@ -184,6 +184,13 @@
     "postVisibility": "Gönderi Görünürlüğü",
     "defaultPostVisibility": "Varsayılan Görünürlük",
     "defaultPostVisibilityDesc": "Tüm mevcut ve gelecek gönderilere uygulanır",
+    "aiScraping": {
+      "section": "Yapay zeka eğitimi",
+      "label": "İçeriğimin yapay zeka tarafından kazınmasına izin ver",
+      "hintAllow": "Bu sinyale saygı duyan yapay zeka sistemleri ve tarayıcılar sesiniz, sanat eseriniz ve yazınız üzerinde eğitim alabilir.",
+      "hintDeny": "Bu sinyale saygı duyan yapay zeka sistemleri ve tarayıcılardan ses, sanat eseriniz ve yazınız üzerinde eğitim almamaları istenir. Sinyali görmezden gelen tarayıcılar sinyal tarafından engellenmez.",
+      "saved": "Yapay zeka eğitim tercihi kaydedildi"
+    },
     "defaultProfileTab": "Varsayılan profil sekmesi",
     "defaultProfileTabDesc": "Ziyaretçilerin profilinizde ilk hangi sekmeyi göreceğini seçin",
     "public": "Herkese Açık",
@@ -1237,6 +1244,10 @@
     "returnHome": "Ana Sayfaya Dön"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Bu yaratıcı, bu içerik üzerinde yapay zeka eğitimine izin verir.",
+      "denied": "Bu yaratıcı, bu içerikle ilgili yapay zeka eğitimine izin vermiyor."
+    },
     "back": "Geri",
     "usernameAvailable": "Kullanıcı adı mevcut!",
     "signUpToClaim": "Almak için bugün kaydolun",

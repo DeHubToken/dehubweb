@@ -184,6 +184,13 @@
     "postVisibility": "Bayyanar rubutu",
     "defaultPostVisibility": "Tsohuwar bayyanar rubutu",
     "defaultPostVisibilityDesc": "Ya shafi duk rubutun yanzu da na gaba",
+    "aiScraping": {
+      "section": "AI horo",
+      "label": "Bada AI scraping na abun ciki na",
+      "hintAllow": "AI tsarin da crawlers waɗanda ke girmama wannan siginar na iya horar da sauti, zane-zane da rubutu.",
+      "hintDeny": "AI tsarin da crawlers da ke girmama wannan siginar ana tambayar su kada su horar da sauti, zane-zane da rubutu. Crawlers da suka yi watsi da siginar ba a toshe shi ba.",
+      "saved": "AI horo fifiko ceto"
+    },
     "defaultProfileTab": "Shafin bayanan martaba na asali",
     "defaultProfileTabDesc": "Zaɓi wane shafi baƙi za su fara gani a bayanan martabarka",
     "public": "Jama'a",
@@ -1220,6 +1227,10 @@
     "returnHome": "Koma Gida"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Wannan mahalicci yana ba da damar horar da AI akan wannan abun ciki.",
+      "denied": "Wannan mahalicci ba ya ba da izinin horo na AI akan wannan abun ciki."
+    },
     "back": "Koma baya",
     "usernameAvailable": "Sunan mai amfani yana samuwa!",
     "signUpToClaim": "Yi rajista yau don ɗauka",

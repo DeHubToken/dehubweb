@@ -184,6 +184,13 @@
     "postVisibility": "Churasqa rikuchiy",
     "defaultPostVisibility": "Ñawpaq churasqa rikuchiy",
     "defaultPostVisibilityDesc": "Tukuy kunan churasqakunapaq hamuq churasqakunapaqpas",
+    "aiScraping": {
+      "section": "AI nisqamanta yachachiy",
+      "label": "Permitir AI raspadota contenidoymanta",
+      "hintAllow": "AI sistemakuna chaymanta rastreadores kay señalta respetanku uyarinaykipi, arte ruwasqaykipi chaymanta qillqaykipi entrenankuman.",
+      "hintDeny": "Sistemas AI kaqmanta chaymanta rastreadores kaqmanta kay señalta respetakuq mañasqa kanku ama audioykipi, arte ruwasqaykipi chaymanta qillqaykipi yachachinankupaq. Chay señalta mana uyariq rastreadorkunaqa manam chaywan harkasqachu.",
+      "saved": "AI yachachiy munasqa waqaychasqa"
+    },
     "defaultProfileTab": "Ñawpaq willakuy pestaña",
     "defaultProfileTabDesc": "Willakuyniykipi, watukuqkuna mayqin pestañata ñawpaqta rikunanta akllay",
     "public": "Tukuypaq",
@@ -1222,6 +1229,10 @@
     "returnHome": "Qallariyman kutiy"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Kay kamaqqa kay contenidomanta AI yachachiyta saqin.",
+      "denied": "Kay kamaqqa mana kay contenidomanta AI yachachiyta saqinchu."
+    },
     "back": "Kutiy",
     "usernameAvailable": "Runa suti tarikun!",
     "signUpToClaim": "Kunan qillqakuy chaskimunaykipaq",

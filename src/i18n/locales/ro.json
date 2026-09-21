@@ -184,6 +184,13 @@
     "postVisibility": "Vizibilitatea postărilor",
     "defaultPostVisibility": "Vizibilitatea implicită a postărilor",
     "defaultPostVisibilityDesc": "Se aplică tuturor postărilor actuale și viitoare",
+    "aiScraping": {
+      "section": "Instruire AI",
+      "label": "Permite raclarea AI a conținutului meu",
+      "hintAllow": "Sistemele AI și crawlerele care respectă acest semnal se pot instrui cu privire la audio, grafică și scriere.",
+      "hintDeny": "Sistemele AI și crawlerele care respectă acest semnal sunt rugate să nu se instruiască cu privire la audio, grafică și scriere. Șenilele care ignoră semnalul nu sunt blocate de acesta.",
+      "saved": "Preferința de instruire AI salvată"
+    },
     "defaultProfileTab": "Fila implicită a profilului",
     "defaultProfileTabDesc": "Alege ce filă văd prima vizitatorii pe profilul tău",
     "public": "Public",
@@ -1218,6 +1225,10 @@
     "returnHome": "Return Home"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Acest creator permite instruirea AI cu privire la acest conținut.",
+      "denied": "Acest creator nu permite instruirea IA cu privire la acest conținut."
+    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUp": "Sign Up",
@@ -5220,20 +5231,6 @@
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
   },
-  "footer": {
-    "about": "Despre noi",
-    "contact": "Contact",
-    "privacy": "Politica de confidențialitate",
-    "terms": "Termeni și condiții"
-  },
-  "glossary": {
-    "title": "Glosar",
-    "description": "Termeni și definiții pentru a înțelege mai bine platforma.",
-    "badge": {
-      "white": "Alb",
-      "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
-    }
-  },
   "conversation": {
     "commonGround": {
       "title": "Teren comun",
@@ -5333,6 +5330,20 @@
         "title": "Află cum funcționează câștigurile",
         "body": "Află cum recompensele, insignele și superputerile transformă ceea ce faci aici în ceva din care câștigi bani."
       }
+    }
+  },
+  "footer": {
+    "about": "Despre noi",
+    "contact": "Contact",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
+  },
+  "glossary": {
+    "title": "Glosar",
+    "description": "Termeni și definiții pentru a înțelege mai bine platforma.",
+    "badge": {
+      "white": "Alb",
+      "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
     }
   }
 }
