@@ -1227,6 +1227,10 @@
     "goHome": "ঘরে যাও"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "এই পোস্টটি উপলভ্য নয়",
+      "commentUnavailable": "এই মন্তব্যটি আর উপলভ্য নয়"
+    },
     "back": "পিছোত",
     "usernameAvailable": "ইউজারনেম ফাঁকা আছে!",
     "signUpToClaim": "নিবার নাগি আইজে সাইন আপ করো",

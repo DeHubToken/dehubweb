@@ -239,8 +239,60 @@ export async function searchUsers(params: SearchUsersParams): Promise<PaginatedR
   return response as PaginatedResponse<DeHubUser>;
 }
 
+/**
+ * The account row the comments endpoint nests as `author` (and as the parent
+ * comment's `author`). Same projection the feed uses for a post's minter, so
+ * the name, avatar and badge beside a reply resolve without another call.
+ */
+export interface UserCommentAuthor {
+  address: string;
+  username?: string;
+  displayName?: string;
+  avatarImageUrl?: string;
+  badgeBalance?: number;
+  badgeLock?: { tier: string; requirement: number } | null;
+  hideBadgeAndBalance?: boolean;
+}
+
+/** The comment a reply answers — only present when `isReply` is true and the parent still exists. */
+export interface UserCommentParent {
+  id: number;
+  content?: string;
+  imageUrl?: string | null;
+  gifUrl?: string | null;
+  audioUrl?: string | null;
+  audioDuration?: number;
+  address?: string;
+  createdAt?: string;
+  author?: UserCommentAuthor;
+}
+
+/**
+ * One row of GET /api/users/:address/comments. It is a comment plus the
+ * context the profile tab needs to show it as a thread: who wrote it, the
+ * comment it answers, and a sliver of the post it sits under (the post's
+ * `minter` here is a bare address — the full post comes from getNFTInfo).
+ */
+export interface UserCommentItem extends Omit<ApiCommentResponse, 'writor'> {
+  writor?: ApiCommentResponse['writor'];
+  isReply?: boolean;
+  author?: UserCommentAuthor;
+  parentComment?: UserCommentParent;
+  post?: {
+    tokenId: number;
+    name?: string;
+    imageUrl?: string;
+    postType?: string;
+    minter?: string;
+    status?: string;
+  };
+  gifUrl?: string | null;
+  audioUrl?: string | null;
+  audioDuration?: number;
+}
+
 export interface UserCommentsResponse {
-  data: ApiCommentResponse[];
+  data: UserCommentItem[];
   total: number;
   page: number;
   limit: number;
@@ -255,16 +307,18 @@ export async function getUserComments(
   const response = await apiCall<any>(`/api/users/${encodeURIComponent(address)}/comments`, {
     params: { page, limit },
   });
-  // Normalize: API may return { result: { items, ... } } or { data, ... }
+  // Normalize: API may return { result: { items, pagination } }, an older
+  // { result: { items, totalCount, hasMore } }, or { data, ... }
   if (response?.result?.items) {
-    const items = response.result.items;
-    const total = response.result.totalCount ?? response.result.total ?? response.result.count ?? items.length;
+    const items: UserCommentItem[] = response.result.items;
+    const pagination = response.result.pagination ?? response.result;
+    const total = pagination.totalCount ?? pagination.total ?? pagination.count ?? items.length;
     return {
       data: items,
       total,
       page,
       limit,
-      has_more: response.result.hasMore ?? (items.length >= limit),
+      has_more: pagination.hasMore ?? (items.length >= limit),
     };
   }
   if (Array.isArray(response?.data)) {

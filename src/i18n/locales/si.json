@@ -1196,6 +1196,10 @@
     "returnHome": "මුල් පිටුවට ආපසු"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "මෙම තනතුර නොපවතී",
+      "commentUnavailable": "මෙම අදහස් දැක්වීම තවදුරටත් නොමැත"
+    },
     "back": "ආපසු",
     "usernameAvailable": "පරිශීලක නාමය ලබා ගත හැකිය!",
     "signUpToClaim": "අද ලියාපදිංචි වී මෙම පරිශීලක නාමය ගන්න",

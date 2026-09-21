@@ -1212,6 +1212,10 @@
     "returnHome": "హోమ్‌కు తిరిగి వెళ్ళు"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "ఈ పోస్ట్ అందుబాటులో లేదు",
+      "commentUnavailable": "ఈ వ్యాఖ్య ఇకపై అందుబాటులో లేదు"
+    },
     "back": "వెనక్కి",
     "usernameAvailable": "యూజర్‌నేమ్ అందుబాటులో ఉంది!",
     "signUpToClaim": "పొందడానికి సైన్ అప్ చేయండి",

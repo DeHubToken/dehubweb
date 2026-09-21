@@ -1234,7 +1234,11 @@
     "followers": "Followers",
     "following": "Following",
     "joined": "Joined",
-    "loginDescription": "Log in to view and manage your profile."
+    "loginDescription": "Log in to view and manage your profile.",
+    "replyThread": {
+      "postUnavailable": "This post is unavailable",
+      "commentUnavailable": "This comment is no longer available"
+    }
   },
   "tv": {
     "seoTitle": "Live TV — Free Channels From Around the World",

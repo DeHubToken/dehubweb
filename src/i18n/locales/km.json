@@ -1214,6 +1214,10 @@
     "returnHome": "ត្រឡប់ទៅទំព័រដើម"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "ការបង្ហោះនេះមិនមានទេ",
+      "commentUnavailable": "មតិយោបល់នេះលែងមានទៀតហើយ"
+    },
     "back": "ត្រឡប់ក្រោយ",
     "usernameAvailable": "ឈ្មោះអ្នកប្រើអាចប្រើបាន!",
     "signUpToClaim": "ចុះឈ្មោះថ្ងៃនេះដើម្បីទាមទារ",

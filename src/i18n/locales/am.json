@@ -1198,6 +1198,10 @@
     "returnHome": "ወደ መነሻ ተመለስ"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "ይህ ልጥፍ አይገኝም",
+      "commentUnavailable": "ይህ አስተያየት ከአሁን በኋላ አይገኝም"
+    },
     "back": "ተመለስ",
     "usernameAvailable": "የተጠቃሚ ስም ይገኛል!",
     "signUpToClaim": "ለመያዝ ዛሬ ተመዝገብ",

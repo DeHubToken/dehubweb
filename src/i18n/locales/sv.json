@@ -1219,6 +1219,10 @@
     "returnHome": "Tillbaka till startsidan"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "Det här inlägget är inte tillgängligt",
+      "commentUnavailable": "Den här kommentaren är inte längre tillgänglig"
+    },
     "back": "Tillbaka",
     "usernameAvailable": "Användarnamnet är tillgängligt!",
     "signUpToClaim": "Registrera dig för att ta det",

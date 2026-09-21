@@ -1285,6 +1285,10 @@
     "goHome": "ঘরে যাও"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "এই পোস্টটি পাওয়া যাচ্ছে না",
+      "commentUnavailable": "এই মন্তব্যটি আর পাওয়া যাচ্ছে না"
+    },
     "back": "পিছনে",
     "usernameAvailable": "ইউজারনেম খালি আসে!",
     "signUpToClaim": "দাবি করতে আইজই সাইন আপ করো",

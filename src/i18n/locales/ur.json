@@ -1193,6 +1193,10 @@
     "returnHome": "ہوم پر واپس جائیں"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "یہ پوسٹ دستیاب نہیں ہے",
+      "commentUnavailable": "یہ تبصرہ اب دستیاب نہیں ہے"
+    },
     "back": "واپس",
     "usernameAvailable": "صارف نام دستیاب ہے!",
     "signUpToClaim": "حاصل کرنے کے لیے سائن اپ کریں",
