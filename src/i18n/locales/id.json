@@ -4102,6 +4102,8 @@
     "daysLeft_other": "sisa {{count}} hr"
   },
   "live": {
+    "chatJoined": "bergabung",
+    "chatSentGift": "mengirim",
     "shop": "Toko",
     "shopThisStream": "Belanja dari siaran ini",
     "streamShop": "Toko siaran",

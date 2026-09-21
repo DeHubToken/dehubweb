@@ -4084,6 +4084,8 @@
     "daysLeft_other": "{{count}}d tilbage"
   },
   "live": {
+    "chatJoined": "deltog",
+    "chatSentGift": "sendte",
     "shop": "Shop",
     "shopThisStream": "Køb denne stream",
     "streamShop": "Stream butik",

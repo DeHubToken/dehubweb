@@ -4037,6 +4037,8 @@
     "daysLeft_other": "{{count}}nap van hátra"
   },
   "live": {
+    "chatJoined": "csatlakozott",
+    "chatSentGift": "küldött",
     "shop": "Vásárlás",
     "shopThisStream": "Adatfolyam vásárlása",
     "streamShop": "Stream bolt",

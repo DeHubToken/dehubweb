@@ -4089,6 +4089,8 @@
     "daysLeft_other": "残り{{count}}日"
   },
   "live": {
+    "chatJoined": "が参加しました",
+    "chatSentGift": "が送りました",
     "shop": "ショップ",
     "shopThisStream": "このストリームを購入する",
     "streamShop": "ストリームショップ",

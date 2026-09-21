@@ -3799,6 +3799,8 @@
     "daysLeft_other": "{{count}}d απομένουν"
   },
   "live": {
+    "chatJoined": "μπήκε",
+    "chatSentGift": "έστειλε",
     "shop": "Αγορά",
     "shopThisStream": "Αγοράστε αυτή τη ροή",
     "streamShop": "Κατάστημα ροής",

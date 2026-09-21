@@ -3954,6 +3954,8 @@
     "inactive": "నిష్క్రియ"
   },
   "live": {
+    "chatJoined": "చేరారు",
+    "chatSentGift": "పంపారు",
     "shop": "దుకాణం",
     "shopThisStream": "ఈ స్ట్రీమ్‌ను షాప్ చేయండి",
     "streamShop": "స్ట్రీమ్ షాప్",

@@ -1,4 +1,8 @@
 {
+  "live": {
+    "chatJoined": "ayaa ku biiray",
+    "chatSentGift": "ayaa diray"
+  },
   "errors": {
     "sponsorshipUnavailable": "Macaamilaadaha bilaashka ah waa la joojiyay dhankeenna, ma aha boorsadaada. Fadlan wax yar ka dib isku day mar kale.",
     "gasSponsorshipFailed": "Kharashka macaamilkan lama bixin karin. Fadlan wax yar ka dib isku day."

@@ -4108,6 +4108,8 @@
     "daysLeft_other": "{{count}} दिन शेष"
   },
   "live": {
+    "chatJoined": "शामिल हुए",
+    "chatSentGift": "भेजा",
     "shop": "शॉप",
     "shopThisStream": "इस स्ट्रीम से खरीदें",
     "streamShop": "स्ट्रीम शॉप",

@@ -3781,6 +3781,8 @@
     "daysLeft_other": "ເຫຼືອ {{count}} ມື້"
   },
   "live": {
+    "chatJoined": "ເຂົ້າຮ່ວມແລ້ວ",
+    "chatSentGift": "ສົ່ງແລ້ວ",
     "shop": "ຮ້ານຄ້າ",
     "shopThisStream": "ຊື້ສິນຄ້າໃນສະຕຣີມນີ້",
     "streamShop": "ຮ້ານຄ້າສະຕຣີມ",

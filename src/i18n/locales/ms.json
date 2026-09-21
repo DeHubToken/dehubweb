@@ -4356,6 +4356,8 @@
     "daysLeft_other": "{{count}}d lagi"
   },
   "live": {
+    "chatJoined": "menyertai",
+    "chatSentGift": "menghantar",
     "shop": "Beli",
     "shopThisStream": "Beli strim ini",
     "streamShop": "Kedai strim",

@@ -3399,6 +3399,8 @@
     "expired": "کات بەسەرچوو، خراپ بوو، کۆن بوو، تێک چوو، مرد"
   },
   "live": {
+    "chatJoined": "tevlî bû",
+    "chatSentGift": "şand",
     "streamShop": "کڕینی بازاڕ",
     "buy": "کڕین",
     "buyNow": "کڕین  ئێستا",

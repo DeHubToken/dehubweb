@@ -1,4 +1,8 @@
 {
+  "live": {
+    "chatJoined": "加入了",
+    "chatSentGift": "送了"
+  },
   "errors": {
     "sponsorshipUnavailable": "免費交易佇阮這爿暫停矣，毋是汝个錢包个問題。請小等閣試。",
     "gasSponsorshipFailed": "這筆交易个費用擔袂起。請小等閣試。"

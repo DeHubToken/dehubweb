@@ -4034,6 +4034,8 @@
     "daysLeft_other": "{{count}}d queda"
   },
   "live": {
+    "chatJoined": "s'ha unit",
+    "chatSentGift": "ha enviat",
     "shop": "Botiga",
     "shopThisStream": "Compra aquest flux",
     "streamShop": "Botiga en directe",

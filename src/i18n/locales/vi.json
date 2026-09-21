@@ -3858,6 +3858,8 @@
     "daysLeft_other": "Còn lại {{count}}ngày"
   },
   "live": {
+    "chatJoined": "đã tham gia",
+    "chatSentGift": "đã gửi",
     "shop": "Mua sắm",
     "shopThisStream": "Mua luồng này",
     "streamShop": "Cửa hàng phát trực tuyến",
