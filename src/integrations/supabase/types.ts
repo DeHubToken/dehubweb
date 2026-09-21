@@ -14,45 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      arcade_submissions: {
-        Row: {
-          id: string
-          created_at: string
-          status: string
-          title: string
-          contact_email: string
-          playable_url: string
-          source_url: string | null
-          description: string
-          mobile_support: boolean
-          rights_confirmed: boolean
-        }
-        Insert: {
-          id?: string
-          created_at?: string
-          status?: string
-          title: string
-          contact_email: string
-          playable_url: string
-          source_url?: string | null
-          description: string
-          mobile_support?: boolean
-          rights_confirmed: boolean
-        }
-        Update: {
-          id?: string
-          created_at?: string
-          status?: string
-          title?: string
-          contact_email?: string
-          playable_url?: string
-          source_url?: string | null
-          description?: string
-          mobile_support?: boolean
-          rights_confirmed?: boolean
-        }
-        Relationships: []
-      }
       ad_accounts: {
         Row: {
           balance_usd: number
@@ -993,6 +954,45 @@ export type Database = {
           score?: number
           updated_at?: string
           wallet?: string
+        }
+        Relationships: []
+      }
+      arcade_submissions: {
+        Row: {
+          contact_email: string
+          created_at: string
+          description: string
+          id: string
+          mobile_support: boolean
+          playable_url: string
+          rights_confirmed: boolean
+          source_url: string | null
+          status: string
+          title: string
+        }
+        Insert: {
+          contact_email: string
+          created_at?: string
+          description: string
+          id?: string
+          mobile_support?: boolean
+          playable_url: string
+          rights_confirmed: boolean
+          source_url?: string | null
+          status?: string
+          title: string
+        }
+        Update: {
+          contact_email?: string
+          created_at?: string
+          description?: string
+          id?: string
+          mobile_support?: boolean
+          playable_url?: string
+          rights_confirmed?: boolean
+          source_url?: string | null
+          status?: string
+          title?: string
         }
         Relationships: []
       }
@@ -2254,39 +2254,39 @@ export type Database = {
       dex_sell_positions: {
         Row: {
           chain_id: number
-          token_id: string
-          owner_address: string
-          mint_tx_hash: string
-          dhb_amount: number | null
-          usdc_amount: number | null
-          side: string
-          min_usdc_per_dhb: number
-          max_usdc_per_dhb: number
           created_at: string
+          dhb_amount: number | null
+          max_usdc_per_dhb: number
+          min_usdc_per_dhb: number
+          mint_tx_hash: string
+          owner_address: string
+          side: string
+          token_id: string
+          usdc_amount: number | null
         }
         Insert: {
           chain_id: number
-          token_id: string
-          owner_address: string
-          mint_tx_hash: string
-          dhb_amount?: number | null
-          usdc_amount?: number | null
-          side?: string
-          min_usdc_per_dhb: number
-          max_usdc_per_dhb: number
           created_at?: string
+          dhb_amount?: number | null
+          max_usdc_per_dhb: number
+          min_usdc_per_dhb: number
+          mint_tx_hash: string
+          owner_address: string
+          side?: string
+          token_id: string
+          usdc_amount?: number | null
         }
         Update: {
           chain_id?: number
-          token_id?: string
-          owner_address?: string
-          mint_tx_hash?: string
-          dhb_amount?: number | null
-          usdc_amount?: number | null
-          side?: string
-          min_usdc_per_dhb?: number
-          max_usdc_per_dhb?: number
           created_at?: string
+          dhb_amount?: number | null
+          max_usdc_per_dhb?: number
+          min_usdc_per_dhb?: number
+          mint_tx_hash?: string
+          owner_address?: string
+          side?: string
+          token_id?: string
+          usdc_amount?: number | null
         }
         Relationships: []
       }
@@ -2999,13 +2999,47 @@ export type Database = {
           },
         ]
       }
+      governance_comment_reactions: {
+        Row: {
+          comment_id: string
+          created_at: string
+          id: string
+          reaction: string
+          wallet_address: string
+        }
+        Insert: {
+          comment_id: string
+          created_at?: string
+          id?: string
+          reaction: string
+          wallet_address: string
+        }
+        Update: {
+          comment_id?: string
+          created_at?: string
+          id?: string
+          reaction?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "governance_comment_reactions_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "governance_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       governance_comments: {
         Row: {
           avatar: string | null
           content: string
           created_at: string
           id: string
+          parent_id: string | null
           proposal_id: string
+          updated_at: string | null
           username: string | null
           wallet_address: string
         }
@@ -3014,7 +3048,9 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
+          parent_id?: string | null
           proposal_id: string
+          updated_at?: string | null
           username?: string | null
           wallet_address: string
         }
@@ -3023,11 +3059,20 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          parent_id?: string | null
           proposal_id?: string
+          updated_at?: string | null
           username?: string | null
           wallet_address?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "governance_comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "governance_comments"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "governance_comments_proposal_id_fkey"
             columns: ["proposal_id"]
@@ -3461,6 +3506,84 @@ export type Database = {
           path?: string
           prev_path?: string | null
           viewer_id?: string
+        }
+        Relationships: []
+      }
+      passkey_challenges: {
+        Row: {
+          challenge: string
+          created_at: string
+          expires_at: string
+          purpose: string
+          rp_id: string
+          user_handle: string | null
+          user_id: string | null
+        }
+        Insert: {
+          challenge: string
+          created_at?: string
+          expires_at: string
+          purpose: string
+          rp_id: string
+          user_handle?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          challenge?: string
+          created_at?: string
+          expires_at?: string
+          purpose?: string
+          rp_id?: string
+          user_handle?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      passkey_identities: {
+        Row: {
+          aaguid: string | null
+          backed_up: boolean | null
+          counter: number
+          created_at: string
+          credential_id: string
+          device_label: string | null
+          id: string
+          last_used_at: string | null
+          public_key: string
+          rp_id: string
+          transports: string[] | null
+          user_handle: string
+          user_id: string
+        }
+        Insert: {
+          aaguid?: string | null
+          backed_up?: boolean | null
+          counter?: number
+          created_at?: string
+          credential_id: string
+          device_label?: string | null
+          id?: string
+          last_used_at?: string | null
+          public_key: string
+          rp_id: string
+          transports?: string[] | null
+          user_handle: string
+          user_id: string
+        }
+        Update: {
+          aaguid?: string | null
+          backed_up?: boolean | null
+          counter?: number
+          created_at?: string
+          credential_id?: string
+          device_label?: string | null
+          id?: string
+          last_used_at?: string | null
+          public_key?: string
+          rp_id?: string
+          transports?: string[] | null
+          user_handle?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -6189,7 +6312,6 @@ export type Database = {
       }
     }
     Functions: {
-      get_dex_market: { Args: Record<PropertyKey, never>; Returns: Json }
       admin_page_view_daily: {
         Args: { p_paths: string[]; p_since: string }
         Returns: {
@@ -6553,6 +6675,7 @@ export type Database = {
           video_url: string
         }[]
       }
+      get_dex_market: { Args: never; Returns: Json }
       get_editor_storage_usage: {
         Args: { _wallet: string }
         Returns: {
