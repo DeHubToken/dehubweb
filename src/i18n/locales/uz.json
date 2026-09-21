@@ -1,4 +1,8 @@
 {
+  "live": {
+    "chatJoined": "qoʻshildi",
+    "chatSentGift": "yubordi"
+  },
   "errors": {
     "sponsorshipUnavailable": "Bepul tranzaksiyalar bizning tomonimizda toxtatilgan, hamyoningizda emas. Iltimos, birozdan keyin qayta urinib koring.",
     "gasSponsorshipFailed": "Bu tranzaksiya xarajati qoplanmadi. Iltimos, birozdan keyin urinib koring."

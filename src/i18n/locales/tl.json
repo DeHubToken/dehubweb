@@ -3929,6 +3929,8 @@
     "daysLeft_other": "{{count}}d ang natitira"
   },
   "live": {
+    "chatJoined": "sumali",
+    "chatSentGift": "nagpadala ng",
     "shop": "Magasin",
     "shopThisStream": "Mamili sa stream na ito",
     "streamShop": "Tindahan ng stream",

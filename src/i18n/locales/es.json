@@ -4103,6 +4103,8 @@
     "daysLeft_other": "quedan {{count}} d"
   },
   "live": {
+    "chatJoined": "se unió",
+    "chatSentGift": "envió",
     "shop": "Tienda",
     "shopThisStream": "Compra en esta retransmisión",
     "streamShop": "Tienda de la retransmisión",

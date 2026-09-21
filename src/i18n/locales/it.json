@@ -4096,6 +4096,8 @@
     "daysLeft_other": "{{count}} rimasto"
   },
   "live": {
+    "chatJoined": "si è unito/a",
+    "chatSentGift": "ha inviato",
     "shop": "Negozio",
     "shopThisStream": "Acquista da questo stream",
     "streamShop": "Stream shop",

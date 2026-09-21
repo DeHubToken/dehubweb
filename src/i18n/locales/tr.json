@@ -4102,6 +4102,8 @@
     "daysLeft_other": "{{count}} gün kaldı"
   },
   "live": {
+    "chatJoined": "katıldı",
+    "chatSentGift": "gönderdi",
     "shop": "Mağaza",
     "shopThisStream": "Bu yayından alışveriş",
     "streamShop": "Yayın mağazası",

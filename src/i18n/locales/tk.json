@@ -1,4 +1,8 @@
 {
+  "live": {
+    "chatJoined": "goşuldy",
+    "chatSentGift": "iberdi"
+  },
   "errors": {
     "sponsorshipUnavailable": "Mugt amallar biziň tarapymyzda saklandy, siziň gapjygyňyzda däl. Haýyş, biraz wagtdan gaýtadan synanyşyň.",
     "gasSponsorshipFailed": "Bu amalyň çykdajysy tölenip bilinmedi. Haýyş, biraz wagtdan synanyşyň."

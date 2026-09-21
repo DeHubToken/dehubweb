@@ -4076,6 +4076,8 @@
     "daysLeft_other": "{{count}}d liko"
   },
   "live": {
+    "chatJoined": "prisijungė",
+    "chatSentGift": "išsiuntė",
     "shop": "Parduotuvė",
     "shopThisStream": "Apsipirkti šiame sraute",
     "streamShop": "Srauto parduotuvė",

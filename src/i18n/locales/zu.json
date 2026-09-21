@@ -1,4 +1,8 @@
 {
+  "live": {
+    "chatJoined": "ujoyinile",
+    "chatSentGift": "uthumele"
+  },
   "errors": {
     "sponsorshipUnavailable": "Ukuthengiselana kwamahhala kumisiwe ohlangothini lwethu, hhayi kusikhwama sakho. Sicela uzame futhi maduze.",
     "gasSponsorshipFailed": "Le ntengiselwano ayikwazanga ukukhokhelwa. Sicela uzame futhi ngomzuzwana."

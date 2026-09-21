@@ -4052,6 +4052,8 @@
     "daysLeft_other": "Осталось{{count}}d"
   },
   "live": {
+    "chatJoined": "присоединился",
+    "chatSentGift": "отправил",
     "shop": "Магазин",
     "shopThisStream": "Купить эту трансляцию",
     "streamShop": "Магазин стримов",

@@ -4066,6 +4066,8 @@
     "daysLeft_other": "{{count}}@d сол"
   },
   "live": {
+    "chatJoined": "кошулду",
+    "chatSentGift": "жөнөттү",
     "shop": "Дүкөн",
     "shopThisStream": "Бул агымга дүкөн",
     "streamShop": "Агым дүкөнү",

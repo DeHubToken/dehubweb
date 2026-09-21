@@ -1,4 +1,8 @@
 {
+  "live": {
+    "chatJoined": "isch bitrete",
+    "chatSentGift": "het gschickt"
+  },
   "errors": {
     "sponsorshipUnavailable": "Gratis Transaktione sind bi üs pausiert, nid bi dinere Wallet. Probier s glii nomol.",
     "gasSponsorshipFailed": "Die Transaktion het nid chöne übernoh werde. Probier s glii nomol."

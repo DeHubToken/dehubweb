@@ -3939,6 +3939,8 @@
     "inactive": "Неактыўны"
   },
   "live": {
+    "chatJoined": "далучыўся",
+    "chatSentGift": "адправіў",
     "shop": "Крама",
     "shopThisStream": "Купіць гэты струмень",
     "streamShop": "Крама струменевых перадач",

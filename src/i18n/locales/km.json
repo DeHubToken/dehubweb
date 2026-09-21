@@ -3942,6 +3942,8 @@
     "daysLeft_other": "{{count}}d នៅសល់"
   },
   "live": {
+    "chatJoined": "បានចូលរួម",
+    "chatSentGift": "បានផ្ញើ",
     "shop": "ហាង",
     "shopThisStream": "ទិញស្ទ្រីមនេះ",
     "streamShop": "ហាងផ្សាយផ្ទាល់",

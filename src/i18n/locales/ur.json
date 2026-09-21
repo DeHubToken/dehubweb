@@ -3867,6 +3867,8 @@
     "daysLeft_other": "{{count}}d باقی ہے"
   },
   "live": {
+    "chatJoined": "شامل ہوئے",
+    "chatSentGift": "بھیجا",
     "shop": "دکان",
     "shopThisStream": "اس سٹریم سے خریداری کریں",
     "streamShop": "سٹریم کی دکان",

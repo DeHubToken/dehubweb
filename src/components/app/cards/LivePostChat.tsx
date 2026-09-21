@@ -30,6 +30,7 @@ import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import type { SupabaseLiveChatMessage } from '@/hooks/use-livechat';
 import { useStreamChatJoins } from '@/hooks/use-stream-chat-joins';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
 import { LANGUAGE_NAMES } from '@/hooks/use-user-language';
 
@@ -142,6 +143,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   // Gift, share and the reaction thumb, when a full-bleed viewer is around
   // this chat. They share the composer's row — see live-viewer-actions.
   const viewerActions = useLiveViewerActions();
+  const { t } = useI18n();
   const streamId = tokenId ? streamChatRoomId(tokenId) : '';
   // The card unmounts every time the post scrolls out of the feed, so without
   // this a line typed under a stream is gone the moment you look away.
@@ -166,14 +168,19 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   });
 
   const { messages: chatMessages, isLoading, isSending, send, editMessage, deleteMessage } = useLiveChatMessages(streamId);
-  const joins = useStreamChatJoins(liveStreamId, isOffline);
+  // Joins and gifts, as the app's chat has always drawn them: a row with the
+  // viewer's face and name, then what they did. They used to be a bare grey
+  // line with no avatar, and gifts were not in the chat at all.
+  const moments = useStreamChatJoins(liveStreamId, isOffline);
+  const momentById = new Map(moments.map((m) => [`system:${m.id}`, m]));
   const messages: SupabaseLiveChatMessage[] = [
     ...chatMessages,
-    ...joins.map((join): SupabaseLiveChatMessage => ({
-      id: `system:${join.id}`, room_id: streamId, sender_address: '',
-      sender_username: null, sender_display_name: null, sender_avatar_url: null,
-      content: `${join.username || (join.address ? `${join.address.slice(0, 6)}…${join.address.slice(-4)}` : 'A viewer')} joined`,
-      message_type: 'system', image_url: null, is_pinned: false, created_at: join.timestamp,
+    ...moments.map((moment): SupabaseLiveChatMessage => ({
+      id: `system:${moment.id}`, room_id: streamId, sender_address: moment.address || '',
+      sender_username: moment.username || null, sender_display_name: null,
+      sender_avatar_url: moment.avatarUrl || null,
+      content: moment.type === 'gift' ? (moment.message || '') : t('live.chatJoined'),
+      message_type: 'system', image_url: null, is_pinned: false, created_at: moment.timestamp,
     })),
   ].sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at));
   // The stream's real audience, shared with the host's broadcast console. This
@@ -413,7 +420,31 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
         ) : (
           messages.map((msg) => {
             if (msg.message_type === 'system') {
-              return <p key={msg.id} className="py-1 px-1 text-xs text-zinc-400">{msg.content}</p>;
+              const moment = momentById.get(msg.id);
+              const who = msg.sender_username
+                || (msg.sender_address ? `${msg.sender_address.slice(0, 6)}…${msg.sender_address.slice(-4)}` : 'A viewer');
+              const face = msg.sender_avatar_url ? buildAvatarUrl(msg.sender_address, msg.sender_avatar_url) : undefined;
+              return (
+                <div key={msg.id} className="flex items-start gap-2 py-1 px-1">
+                  <LiveChatAvatar src={face} address={msg.sender_address || undefined} name={who} />
+                  <div className="flex-1 min-w-0 text-xs">
+                    <span className="font-semibold text-white">{who}</span>
+                    {moment?.type === 'gift' ? (
+                      <>
+                        <span className="text-zinc-400 ml-1.5">
+                          {t('live.chatSentGift')}
+                          <DhbAmount amount={moment.giftAmount} currency={moment.giftCurrency} iconClassName="h-3 w-3" />
+                        </span>
+                        {msg.content && (
+                          <p className="text-zinc-300 break-words whitespace-pre-wrap mt-0.5">{msg.content}</p>
+                        )}
+                      </>
+                    ) : (
+                      <span className="text-zinc-400 ml-1.5">{msg.content}</span>
+                    )}
+                  </div>
+                </div>
+              );
             }
             const avatarUrl = msg.sender_avatar_url
               ? buildAvatarUrl(msg.sender_address, msg.sender_avatar_url)

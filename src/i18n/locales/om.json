@@ -1,4 +1,8 @@
 {
+  "live": {
+    "chatJoined": "makaate",
+    "chatSentGift": "erge"
+  },
   "errors": {
     "sponsorshipUnavailable": "Daldalli bilisaa karaa keenyaan dhaabbateera, mit'aa keessan irratti miti. Yeroo gabaabaa booda irra deebi'aa yaalaa.",
     "gasSponsorshipFailed": "Baasii daldala kanaa kaffaluu hin dandeenye. Yeroo gabaabaa booda yaalaa."

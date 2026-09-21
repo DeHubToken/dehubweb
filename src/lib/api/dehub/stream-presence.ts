@@ -170,17 +170,26 @@ export interface StreamPresence {
   leave: () => void;
 }
 
+/** The viewer the gateway names on a join: the account's reference projection. */
+export interface StreamJoinUser {
+  address?: string;
+  username?: string;
+  displayName?: string;
+  /** Stored path (`avatars/<address>.jpg`), resolved by `buildAvatarUrl`. */
+  avatarImageUrl?: string;
+}
+
 /** Observe arrivals without registering another viewer. */
 export function watchStreamJoins(
   streamId: string,
-  onJoin: (user: { address?: string; username?: string; displayName?: string }) => void,
+  onJoin: (user: StreamJoinUser) => void,
 ): StreamPresence {
   if (!streamId) return { leave: () => undefined };
   const conn = acquireStreamSocket();
   const socket = conn.socket;
   let left = false;
   const join = () => socket.emit(EVENT.joinRoom, { streamId });
-  const handleJoin = (data: { streamId?: string; user?: { address?: string; username?: string; displayName?: string } }) => {
+  const handleJoin = (data: { streamId?: string; user?: StreamJoinUser }) => {
     if (data?.streamId === streamId && data.user) onJoin(data.user);
   };
   const handleAnonJoin = (data: { streamId?: string }) => {

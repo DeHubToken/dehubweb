@@ -1,4 +1,8 @@
 {
+  "live": {
+    "chatJoined": "darapọ̀",
+    "chatSentGift": "fi ránṣẹ́"
+  },
   "errors": {
     "sponsorshipUnavailable": "A ti da awon idunaadura ofe duro ni egbe wa, ki i se ninu apamowo re. Jowo gbiyanju leekansi laipe.",
     "gasSponsorshipFailed": "A ko le san owo idunaadura yii. Jowo gbiyanju leekansi laipe."

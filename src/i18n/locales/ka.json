@@ -3932,6 +3932,8 @@
     "daysLeft_other": "{{count}} დარჩა"
   },
   "live": {
+    "chatJoined": "შემოუერთდა",
+    "chatSentGift": "გაგზავნა",
     "shop": "მაღაზია",
     "shopThisStream": "იყიდე ამ სტრიმიდან",
     "streamShop": "სტრიმის მაღაზია",

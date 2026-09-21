@@ -4025,6 +4025,8 @@
     "daysLeft_other": "{{count}}d बाँकी छ"
   },
   "live": {
+    "chatJoined": "सामेल भए",
+    "chatSentGift": "पठाए",
     "shop": "पसल",
     "shopThisStream": "यो स्ट्रिम किनमेल गर्नुहोस्",
     "streamShop": "स्ट्रिम पसल",

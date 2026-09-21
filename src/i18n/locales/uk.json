@@ -3889,6 +3889,8 @@
     "daysLeft_other": "Залишилося{{count}}d"
   },
   "live": {
+    "chatJoined": "приєднався",
+    "chatSentGift": "надіслав",
     "shop": "Магазин",
     "shopThisStream": "Купуйте цей потік",
     "streamShop": "Магазин трансляції",

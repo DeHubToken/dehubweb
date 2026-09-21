@@ -1,4 +1,8 @@
 {
+  "live": {
+    "chatJoined": "ተጸንበረ",
+    "chatSentGift": "ልኢኹ"
+  },
   "errors": {
     "sponsorshipUnavailable": "ናጻ ልውውጣት ብወገንና ጠጠው ኢሎም ኣለዉ፣ ኣብ ዋሌትካ ኣይኮነን። በጃኻ ድሕሪ ቁሩብ እንደገና ፈትን።",
     "gasSponsorshipFailed": "ወጻኢ እዚ ልውውጥ ክኽፈል ኣይተኻእለን። በጃኻ ድሕሪ ቁሩብ ፈትን።"

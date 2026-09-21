@@ -1,4 +1,8 @@
 {
+  "live": {
+    "chatJoined": "kua uru mai",
+    "chatSentGift": "kua tukuna"
+  },
   "errors": {
     "sponsorshipUnavailable": "Kua tārewa ngā whakawhitinga kore utu i tō mātou taha, ehara i tō pūkoro. Ngana anō ā tōna wā.",
     "gasSponsorshipFailed": "Kāore i taea te utu i tēnei whakawhitinga. Ngana anō ā tōna wā."
