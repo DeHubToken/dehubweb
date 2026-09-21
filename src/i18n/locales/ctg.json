@@ -1233,6 +1233,10 @@
     "returnHome": "হোমে ফিরো"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "এই পোস্টটা নাই",
+      "commentUnavailable": "এই কমেন্টটা আর নাই"
+    },
     "back": "পিছে",
     "usernameAvailable": "ইউজারনেম খালি আছে!",
     "signUpToClaim": "লইতো আজিয়াই সাইন আপ গরো",

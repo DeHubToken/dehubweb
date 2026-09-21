@@ -1244,6 +1244,10 @@
     "returnHome": "Return Home"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "Hindi available ang post na ito",
+      "commentUnavailable": "Hindi na available ang komentong ito"
+    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUp": "Sign Up",

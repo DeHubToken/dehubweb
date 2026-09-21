@@ -2,7 +2,7 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Repeat2 } from 'lucide-react';
-import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight, Image, Play, Pencil, Trash2, Pin } from 'lucide-react';
+import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, Image, Pencil, Trash2, Pin } from 'lucide-react';
 import { useInfiniteQuery, useQueries, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -29,7 +29,9 @@ import { isPlanPublished } from '@/lib/api/dehub';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import type { TabValue } from './ProfileConstants';
-import type { ApiCommentResponse } from '@/lib/api/dehub/comments';
+import type { UserCommentItem, UserCommentParent } from '@/lib/api/dehub/users';
+import { mapToTextPost, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
+import { QuotedPostMedia } from '@/components/app/cards/QuotedPostEmbed';
 
 import { ProfileFractionsPanel } from '@/components/app/fractions/ProfileFractionsPanel';
 import live3dIcon from '@/assets/icons/live-3d-icon.png';
@@ -458,7 +460,7 @@ function PostsTabPanel({
   isContentFiltered = false,
 }: {
   PROFILE_POSTS: TextPost[];
-  allComments: ApiCommentResponse[];
+  allComments: UserCommentItem[];
   isLoadingComments: boolean;
   hasNextPage: boolean | undefined;
   isFetchingNextPage: boolean;
@@ -499,8 +501,18 @@ function PostsTabPanel({
     return map;
   }, [uniqueTokenIds, parentPostQueries]);
 
+  // Posts that could not be fetched (deleted, hidden, request failed) — the
+  // card shows "unavailable" for these rather than a skeleton that never ends.
+  const failedParentPosts = React.useMemo(() => {
+    const failed = new Set<string>();
+    uniqueTokenIds.forEach((tokenId, i) => {
+      if (parentPostQueries[i]?.isError) failed.add(tokenId);
+    });
+    return failed;
+  }, [uniqueTokenIds, parentPostQueries]);
+
   const mergedItems = React.useMemo(() => {
-    const items: Array<{ type: 'post' | 'comment'; data: TextPost | ApiCommentResponse; createdAt: string }> = [
+    const items: Array<{ type: 'post' | 'comment'; data: TextPost | UserCommentItem; createdAt: string }> = [
       ...PROFILE_POSTS.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
       ...allComments.map(c => ({ type: 'comment' as const, data: c, createdAt: c.createdAt || '' })),
     ];
@@ -531,13 +543,14 @@ function PostsTabPanel({
             </div>
           );
         }
-        const comment = item.data as ApiCommentResponse;
+        const comment = item.data as UserCommentItem;
         const parentPost = comment.tokenId ? parentPostsMap[String(comment.tokenId)] : undefined;
         return (
           <div key={comment.id} style={cvStyle}>
             <CommentCard
               comment={comment}
               parentPost={parentPost}
+              parentPostFailed={!!comment.tokenId && failedParentPosts.has(String(comment.tokenId))}
               isOwnComment={!!isViewingOwnProfile}
               onClick={() => {
                 if (comment.tokenId) {
@@ -797,38 +810,181 @@ function PinnedPostCard({ pin }: { pin: any }) {
 // ============================================================================
 // Comment Card for profile replies tab
 // ============================================================================
+//
+// A reply is shown as the thread it belongs to, the way the comments section
+// draws one: the post on top, the comment being answered when there is one,
+// then this user's reply, with a line running through the avatars. Every row
+// carries its author's display name, handle and badge — a wallet address is
+// never what ends up on screen.
 
-function CommentCard({ comment, parentPost, isOwnComment, onClick }: { comment: ApiCommentResponse; parentPost?: DeHubNFT; isOwnComment?: boolean; onClick: () => void }) {
+/** The avatar's centre in a CardHeader row: a 36px avatar flush with the left edge. */
+const THREAD_LINE_LEFT = 'left-[18px] -ml-px';
+/** The content column starts after the 36px avatar and its 12px gap. */
+const THREAD_INDENT = 'pl-12';
+
+/**
+ * One row of the thread. The line segments run to the row's own top and
+ * bottom edges so neighbouring rows meet in one continuous line; the opaque
+ * avatar paints over the middle and the line reads as leaving its rim.
+ */
+function ThreadRow({ lineAbove, lineBelow, children }: { lineAbove?: boolean; lineBelow?: boolean; children: React.ReactNode }) {
+  return (
+    <div className="relative">
+      {lineAbove && <span aria-hidden className={`absolute ${THREAD_LINE_LEFT} top-0 h-5 w-px bg-white/20`} />}
+      {lineBelow && <span aria-hidden className={`absolute ${THREAD_LINE_LEFT} top-5 bottom-0 w-px bg-white/20`} />}
+      {children}
+    </div>
+  );
+}
+
+/** A tap on an avatar or a name opens that profile, not the post underneath. */
+function stopIfButton(e: React.MouseEvent) {
+  if ((e.target as HTMLElement).closest('button, a')) e.stopPropagation();
+}
+
+function shortAddress(address?: string): string {
+  if (!address) return '';
+  return `${address.slice(0, 6)}…${address.slice(-4)}`;
+}
+
+function ThreadSkeletonRow() {
+  return (
+    <div className="flex items-center gap-3 pb-4 animate-pulse" aria-hidden>
+      <div className="w-9 h-9 rounded-md bg-white/[0.08] shrink-0" />
+      <div className="flex-1 space-y-2">
+        <div className="h-3 w-28 rounded bg-white/[0.08]" />
+        <div className="h-3 w-44 rounded bg-white/[0.06]" />
+      </div>
+    </div>
+  );
+}
+
+function ThreadUnavailableRow({ text }: { text: string }) {
+  return (
+    <div className="flex items-center gap-3 pb-4">
+      <div className="w-9 h-9 rounded-md bg-white/[0.05] shrink-0 flex items-center justify-center">
+        <MessageSquare className="w-4 h-4 text-zinc-600" />
+      </div>
+      <p className="text-sm text-zinc-500 italic">{text}</p>
+    </div>
+  );
+}
+
+/** The post a comment sits under: its author, its text and its media. */
+function ThreadPostRow({ post }: { post: DeHubNFT }) {
+  const minterUser = post.minterUser;
+  const handle = minterUser?.username || post.minterUsername || post.mintername;
+  const name = minterUser?.displayName || post.minterDisplayName || handle || shortAddress(post.minter);
+  const avatarPath = extractAvatarPath(post) || extractAvatarPath(minterUser);
+  const avatarSeed = buildAvatarUrl(post.minter, avatarPath) || post.minter;
+  const hideBadge = minterUser?.hideBadgeAndBalance === true;
+  // Same title/body split the feed card uses, so the post reads here as it
+  // does there (the API often copies the first line of the body into `name`).
+  const mapped = mapToTextPost(post as unknown as UnifiedFeedItem, 0);
+  return (
+    <>
+      <div onClick={stopIfButton}>
+        <CardHeader
+          username={name}
+          handle={handle}
+          avatarSeed={avatarSeed}
+          contentType="post"
+          creatorId={post.minter}
+          creatorUsername={handle}
+          timestamp={post.createdAt ? formatTimeAgo(post.createdAt) : undefined}
+          badgeBalance={hideBadge ? 0 : minterUser?.badgeBalance}
+          badgeLock={hideBadge ? null : minterUser?.badgeLock}
+        />
+      </div>
+      <div className={`${THREAD_INDENT} pb-4 space-y-2`}>
+        {mapped.title && (
+          <p className="text-white font-semibold text-sm sm:text-base leading-snug break-words">{mapped.title}</p>
+        )}
+        {mapped.content && (
+          <p className="text-white/90 text-sm sm:text-base whitespace-pre-wrap break-words line-clamp-6">
+            {renderTextWithLinks(mapped.content)}
+          </p>
+        )}
+        <QuotedPostMedia post={post} className="rounded-xl" />
+      </div>
+    </>
+  );
+}
+
+/** The comment this reply answers. */
+function ThreadParentCommentRow({ parent }: { parent: UserCommentParent }) {
+  const author = parent.author;
+  const address = author?.address || parent.address || '';
+  const handle = author?.username;
+  const name = author?.displayName || handle || shortAddress(address);
+  const avatarSeed = buildAvatarUrl(address, author?.avatarImageUrl) || address;
+  const hideBadge = author?.hideBadgeAndBalance === true;
+  const image = resolveCommentMediaUrl(parent.imageUrl || parent.gifUrl);
+  return (
+    <>
+      <div onClick={stopIfButton}>
+        <CardHeader
+          username={name}
+          handle={handle}
+          avatarSeed={avatarSeed}
+          contentType="post"
+          creatorId={address || undefined}
+          creatorUsername={handle}
+          timestamp={parent.createdAt ? formatTimeAgo(parent.createdAt) : undefined}
+          badgeBalance={hideBadge ? 0 : author?.badgeBalance}
+          badgeLock={hideBadge ? null : author?.badgeLock}
+        />
+      </div>
+      <div className={`${THREAD_INDENT} pb-4 space-y-2`}>
+        {parent.content && (
+          <p className="text-white/90 text-sm sm:text-base whitespace-pre-wrap break-words line-clamp-6">
+            {renderTextWithLinks(parent.content)}
+          </p>
+        )}
+        {image && <img src={image} alt="" className="max-h-60 rounded-lg object-cover" loading="lazy" />}
+      </div>
+    </>
+  );
+}
+
+/** Comment media arrives as a full URL from newer uploads and a CDN path from older ones. */
+function resolveCommentMediaUrl(url?: string | null): string | undefined {
+  if (!url) return undefined;
+  return /^(https?:)?\/\//.test(url) || url.startsWith('data:') ? url : getMediaUrl(url) || url;
+}
+
+function CommentCard({ comment, parentPost, parentPostFailed, isOwnComment, onClick }: {
+  comment: UserCommentItem;
+  parentPost?: DeHubNFT;
+  /** The post could not be loaded (deleted, hidden, or the request failed). */
+  parentPostFailed?: boolean;
+  isOwnComment?: boolean;
+  onClick: () => void;
+}) {
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.content);
   const [isDeleting, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
 
-  // The user comments API returns an 'author' object with full profile data
-  const author = (comment as any).author;
-  
-  const resolvedName = author?.displayName || author?.username || comment.writor?.username || `${comment.address.slice(0, 6)}...${comment.address.slice(-4)}`;
-  const resolvedHandle = author?.username || comment.writor?.username || comment.address;
-  
-  // Build avatar from author data or writor fallback
+  // The user comments API nests the author's account row as `author`; the
+  // per-post comments shape carries a thinner `writor`. Read both, and never
+  // let the wallet address stand in for a handle — a missing username simply
+  // shows no handle.
+  const author = comment.author;
+  const resolvedHandle = author?.username || comment.writor?.username;
+  const resolvedName = author?.displayName || comment.writor?.displayName || resolvedHandle || shortAddress(comment.address);
   const rawAvatarPath = author?.avatarImageUrl || comment.writor?.avatarUrl;
-  const avatarSeed = rawAvatarPath
-    ? buildAvatarUrl(comment.address, rawAvatarPath) || comment.address
-    : comment.address;
+  const avatarSeed = buildAvatarUrl(comment.address, rawAvatarPath) || comment.address;
+  const hideBadge = author?.hideBadgeAndBalance === true;
+  const badgeBalance = hideBadge ? 0 : (author?.badgeBalance ?? comment.writor?.badgeBalance);
+  const badgeLock = hideBadge ? null : author?.badgeLock;
 
-  // Parent post thumbnail - resolve through CDN helper
-  const feedImageUrls = parentPost ? buildFeedImageUrls(parentPost.imageUrls) : undefined;
-  const firstFeedImage = feedImageUrls?.[0];
-  const rawThumb = parentPost
-    ? (parentPost.thumbnail_url || firstFeedImage || parentPost.imageUrl || (parentPost.videoUrl ? parentPost.imageUrl : null))
-    : null;
-  const parentThumbnail = rawThumb && parentPost
-    ? (rawThumb.startsWith('http') ? rawThumb : buildImageUrl(parentPost.tokenId, rawThumb))
-    : null;
-  const parentTitle = parentPost?.title || parentPost?.name || parentPost?.description?.slice(0, 80);
-  const parentCreator = parentPost?.minterUsername || parentPost?.mintername || parentPost?.minterDisplayName;
-  const parentIsVideo = parentPost?.postType === 'video' || parentPost?.media_type === 'video';
-  const parentIsImage = parentPost?.postType === 'image' || parentPost?.media_type === 'image';
+  const isReply = !!(comment.isReply || comment.parentId);
+  const parentComment = isReply ? comment.parentComment : undefined;
+  // A reply whose parent the API could not resolve any more (deleted, hidden).
+  const parentCommentGone = isReply && !parentComment;
+  const replyImage = resolveCommentMediaUrl(comment.imageUrl || comment.gifUrl);
 
   const handleEdit = async () => {
     if (!editText.trim()) return;
@@ -858,69 +1014,48 @@ function CommentCard({ comment, parentPost, isOwnComment, onClick }: { comment: 
   return (
     <div
       onClick={onClick}
-      className="w-full text-left rounded-xl border border-white/[0.08] bg-transparent hover:bg-white/[0.03] transition-colors cursor-pointer overflow-hidden relative"
+      className="w-full text-left rounded-xl border border-white/[0.08] bg-transparent hover:bg-white/[0.03] transition-colors cursor-pointer overflow-hidden relative p-3"
     >
-      {/* Parent post preview — X-style quoted post */}
-      {parentPost && (
-        <div className="mx-3 mt-3 rounded-lg border border-white/[0.06] bg-white/[0.03] overflow-hidden">
-          <div className="flex gap-3 p-2.5">
-            {/* Thumbnail */}
-            {parentThumbnail && (
-              <div className="relative flex-shrink-0 w-16 h-16 rounded-md overflow-hidden bg-white/[0.05]">
-                <img
-                  src={parentThumbnail}
-                  alt=""
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-                {parentIsVideo && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                    <Play className="w-4 h-4 text-white fill-white" />
-                  </div>
-                )}
-              </div>
-            )}
-            <div className="flex-1 min-w-0">
-              {parentCreator && (
-                <p className="text-xs text-zinc-400 truncate mb-0.5">
-                  @{parentCreator}
-                </p>
-              )}
-              {parentTitle && (
-                <p className="text-sm text-zinc-300 line-clamp-2 leading-snug">
-                  {parentTitle}
-                </p>
-              )}
-              {!parentTitle && !parentThumbnail && (
-                <p className="text-sm text-zinc-500 italic">Post #{parentPost.tokenId}</p>
-              )}
-            </div>
-          </div>
-        </div>
+      {/* The post — the top of every thread. */}
+      {comment.tokenId ? (
+        <ThreadRow lineBelow>
+          {parentPost
+            ? <ThreadPostRow post={parentPost} />
+            : parentPostFailed
+              ? <ThreadUnavailableRow text={t('profile.replyThread.postUnavailable')} />
+              : <ThreadSkeletonRow />}
+        </ThreadRow>
+      ) : null}
+
+      {/* The comment being answered, when this is a reply to one. */}
+      {parentComment && (
+        <ThreadRow lineAbove lineBelow>
+          <ThreadParentCommentRow parent={parentComment} />
+        </ThreadRow>
+      )}
+      {parentCommentGone && (
+        <ThreadRow lineAbove lineBelow>
+          <ThreadUnavailableRow text={t('profile.replyThread.commentUnavailable')} />
+        </ThreadRow>
       )}
 
-      {/* "Replying to" label */}
-      {comment.tokenId && (
-        <div className="flex items-center gap-1.5 text-xs text-zinc-500 mt-2 mb-1 px-3 pl-[56px]">
-          <CornerDownRight className="w-3 h-3 flex-shrink-0" />
-          <span>
-            {comment.parentId ? 'Replied to a comment' : 'Commented on this post'}
-          </span>
+      {/* This user's comment or reply. */}
+      <ThreadRow lineAbove={!!comment.tokenId}>
+        <div onClick={stopIfButton}>
+          <CardHeader
+            username={resolvedName}
+            handle={resolvedHandle}
+            avatarSeed={avatarSeed}
+            contentType="post"
+            creatorId={comment.address}
+            creatorUsername={resolvedHandle}
+            timestamp={formatTimeAgo(comment.createdAt)}
+            badgeBalance={badgeBalance}
+            badgeLock={badgeLock}
+          />
         </div>
-      )}
 
-      <div className="p-3 pt-1">
-        <CardHeader
-          username={resolvedName}
-          handle={resolvedHandle}
-          avatarSeed={avatarSeed}
-          contentType="post"
-          creatorId={comment.address}
-          creatorUsername={resolvedHandle}
-        />
-
-        {/* Content - matches PostCard text style */}
-        <div className="pt-3 space-y-2">
+        <div className={`${THREAD_INDENT} space-y-2`}>
           {isEditing ? (
             <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
               <input
@@ -942,14 +1077,11 @@ function CommentCard({ comment, parentPost, isOwnComment, onClick }: { comment: 
             </p>
           )}
 
-          {comment.imageUrl && (
+          {replyImage && (
             <div className="mt-2 rounded-lg overflow-hidden">
-              <img src={comment.imageUrl} alt="" className="w-full h-auto rounded-lg" loading="lazy" />
+              <img src={replyImage} alt="" className="max-h-80 w-auto rounded-lg" loading="lazy" />
             </div>
           )}
-
-          {/* Metadata: timestamp and view count */}
-          <PostMetadata timestamp={comment.createdAt} />
 
           {/* Action bar - matches PostCard layout */}
           <div className="pt-1 flex items-center justify-between">
@@ -960,7 +1092,7 @@ function CommentCard({ comment, parentPost, isOwnComment, onClick }: { comment: 
               </span>
               <span className="flex items-center gap-1.5 text-zinc-400 text-xs px-2 py-1.5 rounded-xl">
                 <ThumbsDown className="w-4 h-4" />
-                0
+                {comment.dislikeCount ?? 0}
               </span>
               <span className="flex items-center gap-1.5 text-zinc-400 text-xs px-2 py-1.5 rounded-xl">
                 <MessageSquare className="w-4 h-4" />
@@ -996,7 +1128,7 @@ function CommentCard({ comment, parentPost, isOwnComment, onClick }: { comment: 
             </div>
           </div>
         </div>
-      </div>
+      </ThreadRow>
     </div>
   );
 }
