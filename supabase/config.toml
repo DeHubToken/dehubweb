@@ -14,6 +14,10 @@ project_id = "aigxuutjaqsywioxjefr"
   # page_view_events, which nothing but the service role can see.
   [functions.admin-page-views]
     verify_jwt = false
+  # Same bridge again: the onboarding friction map reads onboarding_events,
+  # which has no SELECT policy at all, so only the service role can see it.
+  [functions.admin-onboarding-friction]
+    verify_jwt = false
   [functions.admin-stages]
     verify_jwt = false
   # Same bridge as admin-stages: an admin JWT from api.dehub.io, re-verified
