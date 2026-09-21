@@ -2019,6 +2019,8 @@
       "thisYear": "Këtë vit",
       "allTime": "Gjithë koha",
       "newMembers": "Anëtarë të rinj",
+      "viewMembers": "Shfaq anëtarët",
+      "openNewMembers": "Hap listën e anëtarëve të rinj",
       "chartMembers": "Anëtarët me kalimin e kohës",
       "chartActive": "Persona aktivë",
       "growth": "+{{percent}}% këtë muaj",
@@ -2833,6 +2835,7 @@
     "ttsHint": "Lexo me zë të lartë për të gjithë ata që shikojnë se kur do të mbërrijë dhurata jote."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2907,7 +2910,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

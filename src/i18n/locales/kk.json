@@ -2043,7 +2043,9 @@
       "chartActive": "Белсенді адамдар",
       "growth": "+{{percent}}% осы айда",
       "growthTerm": "Өсу",
-      "recordingSince": "{{date}} бастап жазылуда"
+      "recordingSince": "{{date}} бастап жазылуда",
+      "viewMembers": "Мүшелерді көру",
+      "openNewMembers": "Жаңа мүшелер тізімін ашыңыз"
     },
     "title": "Статистика",
     "subtitle": "Нақты уақыттағы ашық көзді барлау",

@@ -1971,7 +1971,9 @@
       "chartActive": "Актыўныя людзі",
       "growth": "+{{percent}}% за месяц",
       "growthTerm": "Рост",
-      "recordingSince": "запісваецца з {{date}}"
+      "recordingSince": "запісваецца з {{date}}",
+      "viewMembers": "Праглядзець удзельнікаў",
+      "openNewMembers": "Адкрыць спіс новых удзельнікаў"
     },
     "title": "Статыстыка",
     "subtitle": "Адкрытая аналітыка ў рэальным часе",

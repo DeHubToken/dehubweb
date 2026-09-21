@@ -1919,7 +1919,9 @@
       "chartActive": "Aktiewe mense",
       "growth": "+{{percent}}% hierdie maand",
       "growthTerm": "Groei",
-      "recordingSince": "opgeteken sedert {{date}}"
+      "recordingSince": "opgeteken sedert {{date}}",
+      "viewMembers": "Bekyk lede",
+      "openNewMembers": "Open die nuwe lidmaatelys"
     },
     "title": "Statistiek",
     "subtitle": "Intydse oopbron-inligting",

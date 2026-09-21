@@ -1933,7 +1933,9 @@
       "chartActive": "فعال لوگ",
       "growth": "+{{percent}}% اس مہینے",
       "growthTerm": "بڑھوتری",
-      "recordingSince": "{{date}} سے ریکارڈ ہو رہا ہے"
+      "recordingSince": "{{date}} سے ریکارڈ ہو رہا ہے",
+      "viewMembers": "دې ممبرانو ته وګورئ",
+      "openNewMembers": "د نویو غړو لیست پرانیزئ"
     },
     "title": "انگ",
     "subtitle": "حقیقی وقت کے کھلل سورس خبر",

@@ -1953,6 +1953,8 @@
       "thisYear": "今年",
       "allTime": "全部时间",
       "newMembers": "新成员",
+      "viewMembers": "查看成员",
+      "openNewMembers": "打开新成员列表",
       "chartMembers": "成员变化",
       "chartActive": "活跃用户",
       "growth": "搿个月 +{{percent}}%",
@@ -2739,6 +2741,7 @@
     "ttsHint": "当送礼送中嘅时候，读出嚟畀所有睇紧嘅人听。"
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2813,7 +2816,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

@@ -1987,6 +1987,8 @@
       "thisYear": "Sel aastal",
       "allTime": "Kogu aeg",
       "newMembers": "Uued liikmed",
+      "viewMembers": "Vaata liikmeid",
+      "openNewMembers": "Ava uute liikmete nimekiri",
       "chartMembers": "Liikmed ajas",
       "chartActive": "Aktiivsed inimesed",
       "growth": "+{{percent}}% sel kuul",
@@ -5034,6 +5036,7 @@
     "ttsHint": "Loe valjusti kõigile, kes vaatavad, millal su kingitus maandub."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5108,7 +5111,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

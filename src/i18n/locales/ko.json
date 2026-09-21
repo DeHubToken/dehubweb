@@ -2040,6 +2040,8 @@
       "thisYear": "올해",
       "allTime": "전체 기간",
       "newMembers": "신규 멤버",
+      "viewMembers": "멤버 보기",
+      "openNewMembers": "새 구성원 목록 열기",
       "chartMembers": "기간별 멤버 수",
       "chartActive": "활성 사용자",
       "growth": "이번 달 +{{percent}}%",
@@ -5141,6 +5143,7 @@
     "ttsHint": "선물이 도착하면 구경하는 모든 사람에게 큰 소리로 읽어주세요."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5215,7 +5218,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

@@ -1998,6 +1998,8 @@
       "thisYear": "Tēnei tau",
       "allTime": "Wā katoa",
       "newMembers": "Ngā mema hou",
+      "viewMembers": "Tirohia ngā mema",
+      "openNewMembers": "Whakatuwherahia te raarangi mema hou",
       "chartMembers": "Ngā mema i roto i te wā",
       "chartActive": "Ngā tāngata hohe",
       "growth": "+{{percent}}% i tēnei marama",
@@ -2812,6 +2814,7 @@
     "ttsHint": "Pānuihia te reo nui ki te hunga katoa e titiro ana ki to koutou taonga whenua."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2886,7 +2889,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

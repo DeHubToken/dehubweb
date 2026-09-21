@@ -1977,6 +1977,8 @@
       "thisYear": "Энэ жил",
       "allTime": "Бүх цаг",
       "newMembers": "Шинэ гишүүд",
+      "viewMembers": "Гишүүд харах",
+      "openNewMembers": "Шинэ гишүүдийн жагсаалтыг нээх",
       "chartMembers": "Гишүүдийн өөрчлөлт",
       "chartActive": "Идэвхтэй хүмүүс",
       "growth": "+{{percent}}% энэ сард",
@@ -2781,6 +2783,7 @@
     "ttsHint": "Бэлэг дурсгалын газраа харсан хүн бүрийг чангаар уншаарай."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2855,7 +2858,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

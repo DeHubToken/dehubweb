@@ -2018,7 +2018,9 @@
       "chartActive": "ಸಕ್ರಿಯ ಜನರು",
       "growth": "+{{percent}}% ಈ ತಿಂಗಳು",
       "growthTerm": "ಬೆಳವಣಿಗೆ",
-      "recordingSince": "{{date}} ರಿಂದ ದಾಖಲಾಗುತ್ತಿದೆ"
+      "recordingSince": "{{date}} ರಿಂದ ದಾಖಲಾಗುತ್ತಿದೆ",
+      "viewMembers": "ಸದಸ್ಯರನ್ನು ವೀಕ್ಷಿಸಿ",
+      "openNewMembers": "ಹೊಸ ಸದಸ್ಯರ ಪಟ್ಟಿಯನ್ನು ತೆರೆಯಿರಿ"
     },
     "title": "ಅಂಕಿಅಂಶಗಳು",
     "subtitle": "ರಿಯಲ್-ಟೈಮ್ ಮುಕ್ತ ಮೂಲ ಇಂಟೆಲ್",

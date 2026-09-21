@@ -2051,7 +2051,9 @@
       "chartActive": "सक्रिय व्यक्तिहरू",
       "growth": "+{{percent}}% यो महिना",
       "growthTerm": "वृद्धि",
-      "recordingSince": "{{date}} देखि अभिलेख गरिँदै"
+      "recordingSince": "{{date}} देखि अभिलेख गरिँदै",
+      "viewMembers": "सदस्यहरू हेर्नुहोस्",
+      "openNewMembers": "नयाँ सदस्यहरूको सूची खोल्नुहोस्"
     },
     "title": "तथ्याङ्क",
     "subtitle": "वास्तविक-समयको खुला स्रोत जानकारी",

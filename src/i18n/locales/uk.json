@@ -1917,7 +1917,9 @@
       "chartActive": "Активні люди",
       "growth": "+{{percent}}% цього місяця",
       "growthTerm": "Зростання",
-      "recordingSince": "записується з {{date}}"
+      "recordingSince": "записується з {{date}}",
+      "viewMembers": "Переглянути учасників",
+      "openNewMembers": "Відкрити список нових учасників"
     },
     "title": "Статистика",
     "subtitle": "Відкрита аналітика в реальному часі",
