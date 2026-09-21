@@ -1147,7 +1147,22 @@
     "noTextYet": "Nog geen opgeslagen tekstberichten",
     "textStartSaving": "Voeg berichten met alleen tekst toe aan je bladwijzers en ze verschijnen hier.",
     "reachedEnd": "Je hebt het einde van je bladwijzers bereikt",
-    "loginDescription": "Log in om je opgeslagen bladwijzers te bekijken en beheren."
+    "loginDescription": "Log in om je opgeslagen bladwijzers te bekijken en beheren.",
+    "playlist": {
+      "makePublic": "Openbare afspeellijst",
+      "makePublicHint": "Iedereen kan deze map op je profiel zien.",
+      "publicBadge": "Openbaar",
+      "copyLink": "Afspeellijstlink kopiëren",
+      "linkCopied": "Afspeellijstlink gekopieerd",
+      "itemsCount": "{{count}} posts",
+      "emptyOwnerHint": "Maak een bladwijzermap openbaar om deze hier weer te geven.",
+      "emptyVisitor": "Dit profiel heeft nog geen openbare afspeellijsten.",
+      "openBookmarks": "Mijn bladwijzers openen",
+      "back": "Alle afspeellijsten",
+      "noPosts": "Deze afspeellijst heeft nog geen berichten.",
+      "unavailable": "Deze afspeellijst is niet meer beschikbaar.",
+      "loadMore": "Meer berichten weergeven"
+    }
   },
   "notifications": {
     "title": "Meldingen",
@@ -1440,6 +1455,9 @@
       "breakdownTitle": "Waar dit bereik vandaan komt",
       "dehubFollowers": "DeHub-volgers",
       "selfReported": "Het aantal sociale volgers wordt ingevoerd door de maker."
+    },
+    "tabs": {
+      "playlists": "Afspeellijsten"
     }
   },
   "tv": {

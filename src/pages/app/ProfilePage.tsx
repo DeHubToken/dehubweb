@@ -44,7 +44,7 @@ import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
 import { ProfileContentToolbar } from '@/components/app/profile/ProfileContentToolbar';
 import { ProfileSkeleton } from '@/components/app/profile/ProfileSkeleton';
 import { ProfileOptionsContent } from '@/components/app/profile/ProfileOptionsDrawer';
-import { parseDefaultProfileTab, PROFILE_TAB_OPTIONS, type TabValue } from '@/components/app/profile/ProfileConstants';
+import { parseDefaultProfileTab, isProfileTabValue, type TabValue } from '@/components/app/profile/ProfileConstants';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
 
@@ -226,8 +226,8 @@ export default function ProfilePage() {
     // row pointing at plan creation), and landing them on Home instead makes
     // that link a dead end.
     const requestedTab = new URLSearchParams(window.location.search).get('tab');
-    if (requestedTab && PROFILE_TAB_OPTIONS.some((tab) => tab.value === requestedTab)) {
-      setActiveTab(requestedTab as TabValue);
+    if (requestedTab && isProfileTabValue(requestedTab)) {
+      setActiveTab(requestedTab);
       return;
     }
     setActiveTab(parseDefaultProfileTab(

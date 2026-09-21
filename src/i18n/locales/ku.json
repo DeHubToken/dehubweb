@@ -803,7 +803,10 @@
     "noTextYet": "Hîna şandiyên nivîsê yên tomarkirî tune",
     "textStartSaving": "Şandiyên tenê-nivîs nîşan bike û ew ê li vir xuya bibin.",
     "reachedEnd": "We xala dawî ya nîşankirinên xwe gîhand",
-    "loginDescription": "Ji bo dîtin û birêvebirina nîşankirinên xwe yên tomarkirî têkevin."
+    "loginDescription": "Ji bo dîtin û birêvebirina nîşankirinên xwe yên tomarkirî têkevin.",
+    "playlist": {
+      "unavailable": "ئەم پلەیلیستە ئیتر بەردەست نییە."
+    }
   },
   "notifications": {
     "title": "Agahdarî",

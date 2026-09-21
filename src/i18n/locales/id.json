@@ -954,7 +954,22 @@
     "noTextYet": "Belum ada postingan teks tersimpan",
     "textStartSaving": "Markahi postingan khusus teks dan postingan itu akan muncul di sini.",
     "reachedEnd": "Anda telah mencapai akhir markah Anda",
-    "loginDescription": "Masuk untuk melihat dan mengelola markah tersimpan Anda."
+    "loginDescription": "Masuk untuk melihat dan mengelola markah tersimpan Anda.",
+    "playlist": {
+      "makePublic": "Daftar putar publik",
+      "makePublicHint": "Siapa pun dapat melihat folder ini di profil Anda.",
+      "publicBadge": "Publik",
+      "copyLink": "Salin tautan daftar putar",
+      "linkCopied": "Tautan daftar putar disalin",
+      "itemsCount": "{{count}} postingan",
+      "emptyOwnerHint": "Jadikan folder bookmark publik untuk menampilkannya di sini.",
+      "emptyVisitor": "Profil ini belum memiliki daftar putar publik.",
+      "openBookmarks": "Buka bookmark saya",
+      "back": "Semua daftar putar",
+      "noPosts": "Daftar putar ini belum memiliki postingan.",
+      "unavailable": "Daftar putar ini tidak tersedia lagi.",
+      "loadMore": "Tampilkan postingan lainnya"
+    }
   },
   "notifications": {
     "title": "Notifikasi",
@@ -1247,6 +1262,9 @@
       "breakdownTitle": "Dari mana jangkauan ini berasal",
       "dehubFollowers": "Pengikut DeHub",
       "selfReported": "Jumlah pengikut sosial dimasukkan oleh kreator."
+    },
+    "tabs": {
+      "playlists": "Daftar Putar"
     }
   },
   "tv": {

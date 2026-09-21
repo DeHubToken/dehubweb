@@ -900,7 +900,22 @@
     "noTextYet": "Chưa có bài viết văn bản đã lưu",
     "textStartSaving": "Lưu các bài viết chỉ có văn bản và chúng sẽ xuất hiện tại đây.",
     "reachedEnd": "Bạn đã xem hết dấu trang của mình",
-    "loginDescription": "Đăng nhập để xem và quản lý các dấu trang đã lưu."
+    "loginDescription": "Đăng nhập để xem và quản lý các dấu trang đã lưu.",
+    "playlist": {
+      "makePublic": "Danh sách phát công khai",
+      "makePublicHint": "Bất kỳ ai cũng có thể thấy thư mục này trên hồ sơ của bạn.",
+      "publicBadge": "Công khai",
+      "copyLink": "Sao chép liên kết danh sách phát",
+      "linkCopied": "Đã sao chép liên kết danh sách phát",
+      "itemsCount": "{{count}} bài đăng",
+      "emptyOwnerHint": "Đặt thư mục dấu trang ở chế độ công khai để hiển thị ở đây.",
+      "emptyVisitor": "Hồ sơ này chưa có danh sách phát công khai.",
+      "openBookmarks": "Mở dấu trang của tôi",
+      "back": "Tất cả danh sách phát",
+      "noPosts": "Danh sách phát này chưa có bài đăng nào.",
+      "unavailable": "Danh sách phát này không còn khả dụng nữa.",
+      "loadMore": "Hiển thị thêm bài đăng"
+    }
   },
   "notifications": {
     "title": "Thông báo",
@@ -1161,6 +1176,9 @@
       "breakdownTitle": "Phạm vi tiếp cận này đến từ đâu",
       "dehubFollowers": "Người theo dõi DeHub",
       "selfReported": "Người sáng tạo nhập số lượng người theo dõi trên mạng xã hội."
+    },
+    "tabs": {
+      "playlists": "Danh sách phát"
     }
   },
   "tv": {

@@ -998,7 +998,22 @@
     "noTextYet": "Wala pang naka-save na post na teksto",
     "textStartSaving": "I-bookmark ang mga post na puro teksto at lalabas sila rito.",
     "reachedEnd": "Narating mo na ang dulo ng iyong mga bookmark",
-    "loginDescription": "Mag-log in para makita at mapamahalaan ang iyong mga naka-save na bookmark."
+    "loginDescription": "Mag-log in para makita at mapamahalaan ang iyong mga naka-save na bookmark.",
+    "playlist": {
+      "makePublic": "Pampublikong playlist",
+      "makePublicHint": "Kahit sino ay maaaring makita ang folder na ito sa iyong profile.",
+      "publicBadge": "Pampubliko",
+      "copyLink": "Kopyahin ang link ng playlist",
+      "linkCopied": "Kinopya ang link ng playlist",
+      "itemsCount": "{{count}} mga post",
+      "emptyOwnerHint": "Gawing pampubliko ang isang folder ng bookmark upang ipakita ito dito.",
+      "emptyVisitor": "Wala pang pampublikong playlist ang profile na ito.",
+      "openBookmarks": "Buksan ang aking mga bookmark",
+      "back": "Lahat ng mga playlist",
+      "noPosts": "Wala pang mga post ang playlist na ito.",
+      "unavailable": "Hindi na available ang playlist na ito.",
+      "loadMore": "Magpakita ng higit pang mga post"
+    }
   },
   "notifications": {
     "title": "Mga Abiso",
@@ -1263,6 +1278,9 @@
       "breakdownTitle": "Saan nagmumula ang abot na ito",
       "dehubFollowers": "Mga tagasunod ng DeHub",
       "selfReported": "Ang mga bilang ng mga social follower ay ipinasok ng tagalikha."
+    },
+    "tabs": {
+      "playlists": "Mga Playlist"
     }
   },
   "tv": {

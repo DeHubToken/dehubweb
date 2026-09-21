@@ -1,10 +1,10 @@
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Repeat2 } from 'lucide-react';
-import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, Image, Pencil, Trash2, Pin } from 'lucide-react';
+import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, Image, Pencil, Trash2, Pin, ListVideo, ChevronLeft } from 'lucide-react';
 import { useInfiniteQuery, useQueries, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { PostMetadata } from '@/components/app/cards/PostMetadata';
@@ -20,6 +20,8 @@ import { ProfileImageGrid } from '@/components/app/profile/ProfileImageGrid';
 import { getUserComments, getNFTInfo, getMediaUrl, editComment, deleteComment } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import { useUserPins } from '@/hooks/use-pins';
+import { usePublicPlaylists, usePublicPlaylistItems } from '@/hooks/use-bookmark-folders';
+import type { PublicPlaylist } from '@/lib/api/dehub';
 import { buildImageUrl, buildFeedImageUrls, buildAvatarUrl, extractAvatarPath, buildVideoUrl } from '@/lib/media-url';
 import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
@@ -358,6 +360,11 @@ export function ProfileTabContent({
       {/* PINNED TAB (#17) */}
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="pinned">
         <PinnedTabPanel profileAddress={profileAddress} />
+      </TabPanel>
+
+      {/* PLAYLISTS TAB — the profile's public bookmark folders */}
+      <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="playlists">
+        <PlaylistsTabPanel profileAddress={profileAddress} isOwnProfile={!!isViewingOwnProfile} />
       </TabPanel>
 
       {/* On-scroll loading for content-backed tabs */}
@@ -700,6 +707,183 @@ function SubscribersTabPanel({
           />
         ))}
       </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// Playlists Tab Panel — a profile's public bookmark folders
+// ============================================================================
+
+function PlaylistsTabPanel({ profileAddress, isOwnProfile }: { profileAddress: string; isOwnProfile: boolean }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data: playlists = [], isLoading } = usePublicPlaylists(profileAddress);
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  // `?playlist=<id>` is how a copied link lands on one playlist. Read in an
+  // effect rather than a useState initializer: the profile page stays mounted
+  // in the page cache, so a later link would otherwise be ignored.
+  const linkedId = searchParams.get('playlist');
+  useEffect(() => {
+    if (linkedId) setOpenId(linkedId);
+  }, [linkedId]);
+
+  const closePlaylist = () => {
+    setOpenId(null);
+    if (searchParams.has('playlist')) {
+      const next = new URLSearchParams(searchParams);
+      next.delete('playlist');
+      setSearchParams(next, { replace: true });
+    }
+  };
+
+  if (openId) {
+    return (
+      <PlaylistPostsPanel
+        profileAddress={profileAddress}
+        playlistId={openId}
+        summary={playlists.find((p) => p.id === openId) ?? null}
+        onBack={closePlaylist}
+      />
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-10">
+        <Loader2 className="w-6 h-6 text-zinc-400 animate-spin" />
+      </div>
+    );
+  }
+
+  if (playlists.length === 0) {
+    // Visitors never see this tab while it is empty (it is only listed once
+    // there is a playlist); the owner does, as the nudge that populates it.
+    return (
+      <AppState
+        icon="bookmarks"
+        title={t('profile.tabs.playlists')}
+        description={isOwnProfile ? t('bookmarks.playlist.emptyOwnerHint') : t('bookmarks.playlist.emptyVisitor')}
+        size="section"
+        primaryAction={isOwnProfile ? { label: t('bookmarks.playlist.openBookmarks'), onClick: () => navigate('/app/bookmarks') } : undefined}
+      />
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      {playlists.map((playlist) => (
+        <PlaylistCard key={playlist.id} playlist={playlist} onOpen={() => setOpenId(playlist.id)} />
+      ))}
+    </div>
+  );
+}
+
+function PlaylistCard({ playlist, onOpen }: { playlist: PublicPlaylist; onOpen: () => void }) {
+  const { t } = useTranslation();
+  const cover = playlist.coverTokenId != null && playlist.coverImageUrl
+    ? buildImageUrl(playlist.coverTokenId, playlist.coverImageUrl, 480)
+    : '';
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className="flex flex-col overflow-hidden rounded-xl border border-white/[0.12] bg-white/[0.03] text-left transition-colors hover:bg-white/[0.06] active:scale-[0.99]"
+    >
+      <div className="relative aspect-video w-full bg-zinc-800">
+        {cover ? (
+          <img src={cover} alt="" loading="lazy" className="h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <ListVideo className="h-8 w-8 text-zinc-500" />
+          </div>
+        )}
+        <span className="absolute bottom-2 right-2 rounded-md bg-black/70 px-1.5 py-0.5 text-[11px] font-medium text-white">
+          {t('bookmarks.playlist.itemsCount', { count: playlist.itemCount })}
+        </span>
+      </div>
+      <div className="min-w-0 w-full p-3">
+        <p className="truncate text-sm font-semibold text-white">{playlist.name}</p>
+        {playlist.description && (
+          <p className="mt-0.5 line-clamp-2 text-xs text-zinc-400">{playlist.description}</p>
+        )}
+      </div>
+    </button>
+  );
+}
+
+function PlaylistPostsPanel({
+  profileAddress,
+  playlistId,
+  summary,
+  onBack,
+}: {
+  profileAddress: string;
+  playlistId: string;
+  summary: PublicPlaylist | null;
+  onBack: () => void;
+}) {
+  const { t } = useTranslation();
+  const query = usePublicPlaylistItems(profileAddress, playlistId);
+  const firstPage = query.data?.pages[0];
+  const items = query.data?.pages.flatMap((page) => page.result) ?? [];
+  const name = firstPage?.playlist.name ?? summary?.name ?? '';
+  const description = firstPage?.playlist.description ?? summary?.description ?? '';
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onBack}
+          className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10"
+          aria-label={t('bookmarks.playlist.back')}
+          title={t('bookmarks.playlist.back')}
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-semibold text-white">{name}</p>
+          {description && <p className="truncate text-xs text-zinc-500">{description}</p>}
+        </div>
+        {summary && (
+          <span className="shrink-0 text-xs text-zinc-500">
+            {t('bookmarks.playlist.itemsCount', { count: summary.itemCount })}
+          </span>
+        )}
+      </div>
+
+      {query.isLoading ? (
+        <div className="flex items-center justify-center py-10">
+          <Loader2 className="w-6 h-6 text-zinc-400 animate-spin" />
+        </div>
+      ) : query.isError ? (
+        // A 404 here means the owner made it private again after the link was shared.
+        <AppState icon="bookmarks" title={name || t('profile.tabs.playlists')} description={t('bookmarks.playlist.unavailable')} size="section" />
+      ) : items.length === 0 ? (
+        <AppState icon="bookmarks" title={name} description={t('bookmarks.playlist.noPosts')} size="section" />
+      ) : (
+        <div className="space-y-3">
+          {items.map((item) => (
+            <PinnedPostCard key={item._id} pin={item} />
+          ))}
+          {query.hasNextPage && (
+            <div className="flex justify-center pt-1">
+              <Button
+                variant="ghost"
+                onClick={() => query.fetchNextPage()}
+                disabled={query.isFetchingNextPage}
+                className="h-9 rounded-lg bg-white/5 border border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white text-xs"
+              >
+                {query.isFetchingNextPage ? <Loader2 className="w-4 h-4 animate-spin" /> : t('bookmarks.playlist.loadMore')}
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

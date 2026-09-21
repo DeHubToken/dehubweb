@@ -951,7 +951,22 @@
     "noTextYet": "保存したテキスト投稿はまだありません",
     "textStartSaving": "テキストのみの投稿をブックマークすると、ここに表示されます。",
     "reachedEnd": "ブックマークの最後に到達",
-    "loginDescription": "ログインしてブックマークを表示・管理。"
+    "loginDescription": "ログインしてブックマークを表示・管理。",
+    "playlist": {
+      "makePublic": "公開プレイリスト",
+      "makePublicHint": "誰でもあなたのプロフィールでこのフォルダーを見ることができます。",
+      "publicBadge": "公開",
+      "copyLink": "プレイリストのリンクをコピー",
+      "linkCopied": "プレイリストのリンクをコピーしました",
+      "itemsCount": "{{count}}件の投稿",
+      "emptyOwnerHint": "ブックマークフォルダを公開して、ここに表示します。",
+      "emptyVisitor": "このプロフィールには公開プレイリストがありません。",
+      "openBookmarks": "ブックマークを開く",
+      "back": "すべてのプレイリスト",
+      "noPosts": "このプレイリストにはまだ投稿がありません。",
+      "unavailable": "このプレイリストはもう利用できません。",
+      "loadMore": "その他の投稿を表示"
+    }
   },
   "notifications": {
     "title": "通知",
@@ -1244,6 +1259,9 @@
       "breakdownTitle": "このリーチがどこから来たのか",
       "dehubFollowers": "DeHubフォロワー",
       "selfReported": "ソーシャルフォロワー数は、クリエイターが入力します。"
+    },
+    "tabs": {
+      "playlists": "プレイリスト"
     }
   },
   "tv": {

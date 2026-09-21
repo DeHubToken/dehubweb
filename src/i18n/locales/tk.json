@@ -994,7 +994,22 @@
     "noTextYet": "Heniz ýatda saklanan tekst ýazgysy ýok",
     "textStartSaving": "Diňe tekst ýazgylaryny bellik ediň, olar şu ýerde peýda bolar.",
     "reachedEnd": "Bellikleriňiziň soňuna ýetdiňiz",
-    "loginDescription": "Ýatda saklanan bellikleriňizi görmek we dolandyrmak üçin giriň."
+    "loginDescription": "Ýatda saklanan bellikleriňizi görmek we dolandyrmak üçin giriň.",
+    "playlist": {
+      "makePublic": "Halkara oýunlar listasy",
+      "makePublicHint": "Bu faýly siziň profilyňyzda her kes görüp biler.",
+      "publicBadge": "Halk",
+      "copyLink": "Playlist baglaýyşyny nusgala",
+      "linkCopied": "Kopyalan oýun listasy baglaýyşy",
+      "itemsCount": "{{count}} postlar",
+      "emptyOwnerHint": "Bu ýerde görkezmek üçin bir kitapçany açyň.",
+      "emptyVisitor": "Bu profilyň henizem jemagat oýunlary ýok.",
+      "openBookmarks": "Nyşanlarymy aç",
+      "back": "Ähli oýun listeleri",
+      "noPosts": "Häzirki ýaly, bu mekdepde boşadylmagymy öňünden yglan etmedim.",
+      "unavailable": "Désolé, bu CD indi ýok.",
+      "loadMore": "Gowrak postlary görkeziň"
+    }
   },
   "notifications": {
     "title": "Bildirişler",
@@ -1275,6 +1290,9 @@
       "breakdownTitle": "Bu çakylyk nireden gelýär?",
       "dehubFollowers": "DeHub diňleýjileri",
       "selfReported": "Işgärleriň sanyna Ýaradyjy girýär."
+    },
+    "tabs": {
+      "playlists": "Çykyşlar"
     }
   },
   "tv": {

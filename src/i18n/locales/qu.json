@@ -996,7 +996,22 @@
     "noTextYet": "Manaraq waqaychasqa qillqa willakuy kanchu",
     "textStartSaving": "Qillqallayuq willakuykunata waqaychay, kaypi rikhurinqa.",
     "reachedEnd": "Waqaychasqaykikunapa tukukuynin chayarqanki",
-    "loginDescription": "Yaykuy waqaychasqa waqaychasqaykikunata qhawanaykipaq kamachiynaykipaq."
+    "loginDescription": "Yaykuy waqaychasqa waqaychasqaykikunata qhawanaykipaq kamachiynaykipaq.",
+    "playlist": {
+      "makePublic": "Tupanachiykunaq listan",
+      "makePublicHint": "Kay q'atutaqa mayqinkunachus qhawayta atinqachik kikinpi.",
+      "publicBadge": "Tupanachiy",
+      "copyLink": "Tupanachiykunaq linkninta hark'ay",
+      "linkCopied": "Tupanachiykunaq linknin hark'asqa",
+      "itemsCount": "{{count}} kaqkunata",
+      "emptyOwnerHint": "Ruwaykuy huk hark'asqa q'atuta tupanachiykunaq listanpi kachun chayta rikuchinapaq.",
+      "emptyVisitor": "Kay kikinpiqa manan kachkanchu tupanachiykunaq listan.",
+      "openBookmarks": "Hark'asqaykuna kichariy",
+      "back": "Tupanachiykuna tukuy",
+      "noPosts": "Kay tupanachiykunaqa manan kachkanchu.",
+      "unavailable": "Kay tupanachiyqa manañan kachkanchu.",
+      "loadMore": "Astawan kaqkunata rikuchiy"
+    }
   },
   "notifications": {
     "title": "Willay",
@@ -1289,6 +1304,9 @@
       "breakdownTitle": "Maymantataq kay chayay hamun",
       "dehubFollowers": "DeHub qatiqninkuna",
       "selfReported": "Social qatiq yupaykunataqa kamaqmi yaykuchin."
+    },
+    "tabs": {
+      "playlists": "Pukllay listakuna"
     }
   },
   "tv": {

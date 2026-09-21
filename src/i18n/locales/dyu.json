@@ -983,7 +983,22 @@
     "noTextYet": "Sɛbɛn kumasɛbɛnnen maralen si tɛ yen fɔlɔ",
     "textStartSaving": "Kumasɛbɛn dɔrɔn sɛbɛnw mara, u bɛna bɔ yan.",
     "reachedEnd": "I bɛɛ kɔrɔbɔ",
-    "loginDescription": "Sɔgɔma kɛ"
+    "loginDescription": "Sɔgɔma kɛ",
+    "playlist": {
+      "makePublic": "Ɲɛnamaya kɛcogo",
+      "makePublicHint": "Mɔgɔ o mɔgɔ be se k'o sɛbɛ ye i ka sɛbɛ kɔnɔ.",
+      "publicBadge": "Jama ka koo",
+      "copyLink": "Copy Playlist ka ɲɛsin mɔgɔ wɛrɛw ma",
+      "linkCopied": "Kumanbolo ka kan ka kɛ",
+      "itemsCount": "{{count}} posts",
+      "emptyOwnerHint": "I ka taga a yira jama la yan.",
+      "emptyVisitor": "O kunnafoni ma deli ka kɛ jama ka kunnafoniw ye.",
+      "openBookmarks": "N' ka gafew dayɛlɛ",
+      "back": "Dɔnkililabagaw bɛɛ",
+      "noPosts": "O filimu ka CD ma labɛn fɔlɔ.",
+      "unavailable": "N'i ka teli ka mɔgɔ dɔ ɲininga ko: \"I be mun lo miiri o koo la?\"",
+      "loadMore": "Ka kunnafoni wɛrɛw bila sen kan"
+    }
   },
   "notifications": {
     "title": "Kɔrɔbɔ",
@@ -1267,6 +1282,9 @@
       "breakdownTitle": "O koo bɔra min?",
       "dehubFollowers": "DeHub ka kalandenw",
       "selfReported": "Mɔgɔ min ye mɔgɔ bila sira ka tugu a kɔ, ale lo ye mɔgɔ bila sira ka tugu a kɔ."
+    },
+    "tabs": {
+      "playlists": "Dɔnkililabagaw"
     }
   },
   "tv": {
