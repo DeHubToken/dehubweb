@@ -1386,6 +1386,14 @@
     "failedSubmit": "提交失败。再试一下。"
   },
   "loginModal": {
+    "migrateNoOldAccount": "此登录信息没有之前的 DeHub 账号，因此没有内容可以恢复。请改设新账号。",
+    "migrateInstead": "改恢复旧账号",
+    "setUpNewAccount": "设置新账号",
+    "createNewInstead": "改设新账号",
+    "migrateAccount": "迁移账号",
+    "importExternalWallet": "导入外部钱包",
+    "migrateIntentHint": "使用下方的任意选项登录。如果匹配到你之前的 DeHub 账号，你将恢复其钱包、用户名和余额。",
+    "importIntentHint": "使用下方的任意选项登录，然后粘贴你想要使用的钱包的恢复短语或私钥。",
     "unlockBiometricContinue": "用你的指纹或面部解锁你的钱包以继续。",
     "unlockBiometricSignIn": "用你的指纹或面部解锁你的钱包以登录。",
     "unlockPasswordContinue": "输入你的钱包密码以继续。",

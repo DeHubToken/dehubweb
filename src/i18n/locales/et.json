@@ -1404,6 +1404,14 @@
     "failedSubmit": "Avalduse esitamine ebaõnnestus. Palun proovi uuesti."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Sellel sisselogimisel pole varasemat DeHubi kontot, seega pole midagi kaasa võtta. Loo selle asemel uus konto.",
+    "migrateInstead": "Too selle asemel vana konto",
+    "setUpNewAccount": "Loo uus konto",
+    "createNewInstead": "Loo selle asemel uus konto",
+    "migrateAccount": "Kanna konto üle",
+    "importExternalWallet": "Impordi väline rahakott",
+    "migrateIntentHint": "Logi sisse mis tahes alloleva valikuga. Kui see ühtib varasema DeHubi kontoga, võta kaasa selle rahakott, kasutajanimi ja saldo.",
+    "importIntentHint": "Logi sisse mis tahes alloleva valikuga, seejärel kleebi kasutatava rahakoti taastefraas või privaatvõti.",
     "unlockBiometricContinue": "Jätkamiseks ava oma rahakott sõrmejälje või näoga.",
     "unlockBiometricSignIn": "Sisselogimiseks ava oma rahakott sõrmejälje või näoga.",
     "unlockPasswordContinue": "Jätkamiseks sisesta oma rahakoti parool.",

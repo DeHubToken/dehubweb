@@ -1415,6 +1415,14 @@
     "failedSubmit": "Arza ibermek başa barmady. Gaýtadan synanyşyň."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Bu girişde öňki DeHub hasaby ýok, şonuň üçin hiç zat getirilmeýär. Gaýtam, täze bir hasabat açyň.",
+    "migrateInstead": "Gaýtam, köne kagyzy açyň",
+    "setUpNewAccount": "Täze bir hasabat ýarat",
+    "createNewInstead": "Gaýtam, bir hasabat aç",
+    "migrateAccount": "Migrasiýa hasaby",
+    "importExternalWallet": "Daşary pulçany import et",
+    "migrateIntentHint": "Her hili mümkinçiligiň bardygy üçin, aşakda ýazylyň. Eger siz öňki DeHub hasabatyna gabat gelseňiz, siz onuň puluny, ulanýan adyny we balansyny getirersiňiz.",
+    "importIntentHint": "Ýokarda agzalan her bir saýlama bilen girip, soňra ulanmak isleýän pulçanyň gaýtargylama sözüni ýa-da özge açaryny goýuň.",
     "unlockBiometricContinue": "Çuwallaryňyzy barmaklaryňyz bilen ýa-da ýüzüňiz bilen açyň.",
     "unlockBiometricSignIn": "Çuwallaryňyzy barmaklaryňyz bilen ýa-da ýüzüňiz bilen açyň.",
     "unlockPasswordContinue": "Öňki ýaly, siz hem öz paroluny girip bilersiňiz.",

@@ -1394,6 +1394,14 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "migrateNoOldAccount": "Daar is geen vroeëre DeHub-rekening op hierdie aanmelding nie, so daar is niks om oor te bring nie. Stel eerder 'n nuwe rekening op.",
+    "migrateInstead": "Bring die ou rekening oor",
+    "setUpNewAccount": "Stel 'n nuwe rekening op",
+    "createNewInstead": "Skep eerder 'n nuwe rekening",
+    "migrateAccount": "Migreer rekening",
+    "importExternalWallet": "Voer eksterne beursie in",
+    "migrateIntentHint": "Teken hieronder aan met enige opsie. As dit ooreenstem met 'n vroeëre DeHub-rekening, sal jy sy beursie, gebruikersnaam en balans oorbring.",
+    "importIntentHint": "Teken hieronder aan met enige opsie, plak dan die herstel-frase of private sleutel van die beursie wat jy wil gebruik.",
     "unlockBiometricContinue": "Ontsluit jou beursie met jou vingerafdruk of gesig om voort te gaan.",
     "unlockBiometricSignIn": "Ontsluit jou beursie met jou vingerafdruk of gesig om aan te meld.",
     "unlockPasswordContinue": "Voer jou beursie wagwoord in om voort te gaan.",

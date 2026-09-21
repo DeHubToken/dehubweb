@@ -1409,6 +1409,14 @@
     "failedSubmit": "Imeshindwa kuwasilisha ombi. Tafadhali jaribu tena."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Hakuna akaunti ya awali ya DeHub kwenye kuingia hii, kwa hivyo hakuna kitu cha kuleta. Fungua akaunti mpya badala yake.",
+    "migrateInstead": "Badala yake leta akaunti ya zamani",
+    "setUpNewAccount": "Fungua akaunti mpya",
+    "createNewInstead": "Fungua akaunti mpya badala yake",
+    "migrateAccount": "Hamisha akaunti",
+    "importExternalWallet": "Ingiza pochi ya nje",
+    "migrateIntentHint": "Ingia ukitumia chaguo lolote hapa chini. Ikiwa inalingana na akaunti ya awali ya DeHub utaleta pochi yake, jina la mtumiaji na salio.",
+    "importIntentHint": "Ingia ukitumia chaguo lolote hapa chini, kisha ubandike kirai cha kurejesha au ufunguo wa faragha wa pochi unayotaka kutumia.",
     "unlockBiometricContinue": "Fungua pochi yako kwa alama yako ya kidole au uso ili uendelee.",
     "unlockBiometricSignIn": "Fungua mkoba wako kwa alama yako ya kidole au uso ili uingie.",
     "unlockPasswordContinue": "Weka nenosiri lako la mkoba ili uendelee.",

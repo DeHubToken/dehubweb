@@ -1412,6 +1412,14 @@
     "email": "E-post"
   },
   "loginModal": {
+    "migrateNoOldAccount": "Det finns inget tidigare DeHub-konto för denna inloggning, så det finns inget att ta med sig. Skapa ett nytt konto istället.",
+    "migrateInstead": "Ta över det gamla kontot istället",
+    "setUpNewAccount": "Skapa ett nytt konto",
+    "createNewInstead": "Skapa ett nytt konto istället",
+    "migrateAccount": "Migrera konto",
+    "importExternalWallet": "Importera extern portfölj",
+    "migrateIntentHint": "Logga in med valfritt alternativ nedan. Om det matchar ett tidigare DeHub-konto kommer du att ta över dess plånbok, användarnamn och saldo.",
+    "importIntentHint": "Logga in med valfritt alternativ nedan och klistra sedan in återställningsfrasen eller den privata nyckeln för den plånbok du vill använda.",
     "unlockBiometricContinue": "Lås upp din plånbok med ditt fingeravtryck eller ansikte för att fortsätta.",
     "unlockBiometricSignIn": "Lås upp din plånbok med ditt fingeravtryck eller ansikte för att logga in.",
     "unlockPasswordContinue": "Ange ditt lösenord för plånboken för att fortsätta.",

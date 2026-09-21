@@ -1441,6 +1441,14 @@
     "failedSubmit": "Failed to submit application. Please try again."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Seensa kana irratti akkaawuntii DeHub duraanii hin jiru, kanaaf wanti fidu hin jiru. Bakka isaa akkaawuntii haaraa saagi.",
+    "migrateInstead": "Bakka isaa akkaawuntii durii sana fidaa",
+    "setUpNewAccount": "Akkaawuntii haaraa qopheessaa",
+    "createNewInstead": "Bakka isaa akkaawuntii haaraa uumi",
+    "migrateAccount": "Akkaawuntii godaansi",
+    "importExternalWallet": "Boorsaa alaa galchuu",
+    "migrateIntentHint": "Filannoo armaan gadii kamiinuu galmaa&#39;aa. Yoo akkaawuntii DeHub duraanii wajjin walsimu ta&#39;e boorsaa, maqaa fayyadamaa fi madaallii isaa irratti fidda.",
+    "importIntentHint": "Filannoo armaan gadii kamiinuu galmaa&#39;i, sana booda gaalee deebisuu ykn furtuu dhuunfaa boorsaa fayyadamuu barbaaddu maxxansi.",
     "unlockBiometricContinue": "Itti fufuuf ashaaraa qubaa ykn fuula keessaniin boorsaa keessan banaa.",
     "unlockBiometricSignIn": "Boorsaa keessan ashaaraa qubaa ykn fuula keessaniin banaa seenuuf.",
     "unlockPasswordContinue": "Itti fufuuf jecha icciitii boorsaa keessan galchaa.",

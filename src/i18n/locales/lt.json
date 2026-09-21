@@ -1392,6 +1392,14 @@
     "failedSubmit": "Nepavyko pateikti paraiškos. Bandykite dar kartą."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Šiame prisijungime nėra ankstesnės „DeHub“ paskyros, todėl nėra ką perkelti. Vietoj to sukurkite naują paskyrą.",
+    "migrateInstead": "Geriau perkelkite senąją paskyrą",
+    "setUpNewAccount": "Sukurti naują paskyrą",
+    "createNewInstead": "Geriau sukurkite naują paskyrą",
+    "migrateAccount": "Perkelti paskyrą",
+    "importExternalWallet": "Importuoti išorinę piniginę",
+    "migrateIntentHint": "Prisijunkite naudodami bet kurią toliau pateiktą parinktį. Jei jis sutampa su ankstesne „DeHub“ paskyra, atsinešite jo piniginę, naudotojo vardą ir likutį.",
+    "importIntentHint": "Prisijunkite naudodami bet kurią toliau pateiktą parinktį, tada įklijuokite norimos naudoti piniginės atkūrimo frazę arba privatų raktą.",
     "unlockBiometricContinue": "Norėdami tęsti, atrakinkite piniginę piršto atspaudu arba veidu.",
     "unlockBiometricSignIn": "Norėdami prisijungti, atrakinkite piniginę piršto atspaudu arba veidu.",
     "unlockPasswordContinue": "Norėdami tęsti, įveskite piniginės slaptažodį.",

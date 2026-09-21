@@ -1403,6 +1403,14 @@
     "failedSubmit": "Tsy nahomby ny fandefasana fangatahana. Avereno azafady."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Tsy misy kaonty DeHub taloha tamin'ity fidirana ity, ka tsy misy hamerenana. Mamorona kaonty vaovao fa tsy izany.",
+    "migrateInstead": "Avereno ny kaonty taloha fa tsy izany",
+    "setUpNewAccount": "Mamorona kaonty vaovao",
+    "createNewInstead": "Mamorona kaonty vaovao fa tsy izany",
+    "migrateAccount": "Afindrao ny kaonty",
+    "importExternalWallet": "Ampidiro ny poketra ivelany",
+    "migrateIntentHint": "Midira amin'ny safidy rehetra eto ambany. Raha mifanaraka amin'ny kaonty DeHub taloha izany dia ho averina ny poketran'ny volanao, ny anaranao ary ny fifandanjanao.",
+    "importIntentHint": "Midira amin'ny safidy rehetra eto ambany, avy eo apetaho ny fehezanteny fanarenana na ny lakile manokana amin'ny poketran'ny vola tianao hampiasaina.",
     "unlockBiometricContinue": "Hamaha ny kitaponao amin'ny tondro na ny tavanao hanohy.",
     "unlockBiometricSignIn": "Hamaha ny kitaponao amin'ny tondro na ny tavanao hiditra.",
     "unlockPasswordContinue": "Ampidiro ny tenimiafinao hanohy.",

@@ -1422,6 +1422,14 @@
     "failedSubmit": "Gagal ngirim lamaran. Mangga coba maneh."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Ora ana akun DeHub sadurunge ing login iki, mula ora ana sing bisa digawa. Gawe akun anyar wae.",
+    "migrateInstead": "Nggawa akun lawas wae",
+    "setUpNewAccount": "Gawe akun anyar",
+    "createNewInstead": "Gawe akun anyar wae",
+    "migrateAccount": "Migrasi akun",
+    "importExternalWallet": "Impor dompet eksternal",
+    "migrateIntentHint": "Mlebet nganggo pilihan apa wae ing ngisor iki. Yen cocog karo akun DeHub sadurunge, panjenengan bakal nggawa dompet, jeneng pangguna, lan imbangan.",
+    "importIntentHint": "Mlebet nganggo pilihan apa wae ing ngisor iki, banjur tempel frasa pemulihan utawa kunci pribadi dompet sing pengin digunakake.",
     "unlockBiometricContinue": "Mbukak dompetmu nganggo sidik jari utawa pasuryan kanggo nerusake.",
     "unlockBiometricSignIn": "Mbukak dompetmu nganggo sidik jari utawa pasuryan kanggo mlebu.",
     "unlockPasswordContinue": "Ketik tembung sandi dompetmu kanggo nerusake.",

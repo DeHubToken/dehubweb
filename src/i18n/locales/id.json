@@ -1409,6 +1409,14 @@
     "failedSubmit": "Gagal mengirim aplikasi. Silakan coba lagi."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Tidak ada akun DeHub sebelumnya pada login ini, jadi tidak ada yang bisa dibawa. Siapkan akun baru saja.",
+    "migrateInstead": "Bawa akun lama saja",
+    "setUpNewAccount": "Siapkan akun baru",
+    "createNewInstead": "Buat akun baru saja",
+    "migrateAccount": "Migrasi akun",
+    "importExternalWallet": "Impor dompet eksternal",
+    "migrateIntentHint": "Masuk dengan opsi apa pun di bawah ini. Jika cocok dengan akun DeHub sebelumnya, Anda akan membawa dompet, nama pengguna, dan saldo Anda.",
+    "importIntentHint": "Masuk dengan opsi apa pun di bawah ini, lalu tempelkan frasa pemulihan atau kunci pribadi dompet yang ingin Anda gunakan.",
     "unlockBiometricContinue": "Buka kunci dompet Anda dengan sidik jari atau wajah Anda untuk melanjutkan.",
     "unlockBiometricSignIn": "Buka dompet Anda dengan sidik jari atau tatap muka untuk masuk.",
     "unlockPasswordContinue": "Masukkan kata sandi dompet Anda untuk melanjutkan.",

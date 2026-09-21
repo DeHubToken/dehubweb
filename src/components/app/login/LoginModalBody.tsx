@@ -9,7 +9,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAccount, useConnectors, useDisconnect } from 'wagmi';
 import { useTranslation } from 'react-i18next';
-import { Phone, Wallet, Loader2, Fingerprint } from 'lucide-react';
+import { Phone, Wallet, Loader2, Fingerprint, ArrowDownToLine, KeyRound, X } from 'lucide-react';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { Button } from '@/components/ui/button';
@@ -24,6 +24,7 @@ import { requestAccountPicker } from '@/lib/wallet-accounts';
 import { fetchTelegramLoginConfig } from '@/lib/telegram-login';
 import { isPasskeyLoginAvailable, PasskeyCancelledError, PasskeyLoginError, PasskeyUnsupportedError } from '@/lib/passkey-login';
 import { LoginSavedProfiles } from './LoginSavedProfiles';
+import { getWalletSetupIntent, setWalletSetupIntent, type WalletSetupIntent } from '@/lib/wallet-setup-intent';
 import type { LoginStep } from './steps';
 import type { DiscoveredWallet, WalletId } from './LoginWalletsStep';
 
@@ -165,6 +166,14 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   const [phoneCode, setPhoneCode] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
+  // "Migrate account" / "Import external wallet", chosen before signing in.
+  // Mirrored from sessionStorage so it survives an OAuth redirect and reaches
+  // the wallet step once the identity exists (see lib/wallet-setup-intent).
+  const [setupIntent, setSetupIntentState] = useState<WalletSetupIntent | null>(() => getWalletSetupIntent());
+  const chooseSetupIntent = (intent: WalletSetupIntent | null) => {
+    setWalletSetupIntent(intent);
+    setSetupIntentState(intent);
+  };
   /**
    * Whether the Telegram row belongs on the sheet at all.
    *
@@ -247,6 +256,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   // doesn't loop back to unlock) and return to the login options, modal open.
   const handleWalletLogout = async () => {
     await disconnect();
+    chooseSetupIntent(null);
     setStep('main');
     setEmail('');
     setEmailCode('');
@@ -507,6 +517,29 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
       {!isAuthenticated && (
         <LoginSavedProfiles disabled={isConnecting} onSwitch={handleSwitchProfile} />
       )}
+      {/* The chosen intent stays visible while they pick a sign-in method:
+          any of the options below reaches the wallet step, which then opens
+          straight on Migrate or Import instead of a new account. */}
+      {setupIntent && (
+        <div className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
+          {setupIntent === 'migrate'
+            ? <ArrowDownToLine className="w-4 h-4 mt-0.5 shrink-0" />
+            : <KeyRound className="w-4 h-4 mt-0.5 shrink-0" />}
+          <p className="flex-1 min-w-0">
+            {setupIntent === 'migrate'
+              ? t('loginModal.migrateIntentHint', 'Sign in with any option below. If it matches an earlier DeHub account you will bring over its wallet, username and balance.')
+              : t('loginModal.importIntentHint', 'Sign in with any option below, then paste the recovery phrase or private key of the wallet you want to use.')}
+          </p>
+          <button
+            type="button"
+            onClick={() => chooseSetupIntent(null)}
+            aria-label={t('common.cancel', 'Cancel')}
+            className="p-1 -m-1 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
       <div className="space-y-3">
         <Button
           onClick={() => setStep('email')}
@@ -595,6 +628,32 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
         <Wallet className="w-5 h-5" />
         <span>{t('loginModal.connectWallet')}</span>
       </Button>
+
+      {/* Two more ways in, both of which still need a sign-in above first:
+          the wallet is tied to the identity, so the choice is recorded now
+          and acted on at the wallet step. */}
+      {!setupIntent && (
+        <div className="grid grid-cols-2 gap-3">
+          <Button
+            onClick={() => chooseSetupIntent('migrate')}
+            disabled={isConnecting}
+            variant="outline"
+            className="h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-center gap-2 border-white/10 px-2"
+          >
+            <ArrowDownToLine className="w-5 h-5 shrink-0" />
+            <span className="truncate">{t('loginModal.migrateAccount', 'Migrate account')}</span>
+          </Button>
+          <Button
+            onClick={() => chooseSetupIntent('import')}
+            disabled={isConnecting}
+            variant="outline"
+            className="h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-center gap-2 border-white/10 px-2"
+          >
+            <KeyRound className="w-5 h-5 shrink-0" />
+            <span className="truncate">{t('loginModal.importExternalWallet', 'Import external wallet')}</span>
+          </Button>
+        </div>
+      )}
     </div>
   );
 
@@ -868,7 +927,14 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
       )}
       {step === 'wallet-create' && supabaseUserId && (
         <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
-          <WalletCreateStep userId={supabaseUserId} onComplete={completeSmartWalletLogin} />
+          <WalletCreateStep
+            userId={supabaseUserId}
+            intent={setupIntent}
+            onComplete={async (key) => {
+              await completeSmartWalletLogin(key);
+              chooseSetupIntent(null);
+            }}
+          />
         </React.Suspense>
       )}
       {step === 'wallet-unlock' && supabaseUserId && (

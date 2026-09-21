@@ -1445,6 +1445,14 @@
     "failedSubmit": "Arizani yuborish amalga oshmadi. Iltimos qayta urinib koʻring."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Bu tizimga kirishda avvalgi DeHub hisobi yo&#39;q, shuning uchun qayta tiklash uchun hech narsa yo&#39;q. Buning o&#39;rniga yangi hisob yarating.",
+    "migrateInstead": "Buning o&#39;rniga eski hisobni olib keling",
+    "setUpNewAccount": "Yangi hisob yaratish",
+    "createNewInstead": "Ro`yxatdan o`tish",
+    "migrateAccount": "Hisobni ko'chirish",
+    "importExternalWallet": "Tashqi hamyonni import qilish",
+    "migrateIntentHint": "Quyidagi istalgan variant bilan tizimga kiring. Agar u avvalgi DeHub hisobiga mos kelsa, siz uning hamyonini, foydalanuvchi nomini va balansini olib kelasiz.",
+    "importIntentHint": "Quyidagi istalgan variant bilan tizimga kiring, so&#39;ngra foydalanmoqchi bo&#39;lgan hamyonning tiklash iborasini yoki shaxsiy kalitini joylashtiring.",
     "unlockBiometricContinue": "Davom etish uchun hamyoningizni barmoq izingiz yoki yuzingiz bilan oching.",
     "unlockBiometricSignIn": "Kirish uchun hamyoningizni barmoq izingiz yoki yuzingiz bilan qulfdan chiqaring.",
     "unlockPasswordContinue": "Davom etish uchun hamyon parolingizni kiriting.",

@@ -1405,6 +1405,14 @@
     "failedSubmit": "Hakemuksen lähetys epäonnistui. Yritä uudelleen."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Tällä kirjautumistunnuksella ei ole aiempaa DeHub-tiliä, joten ei ole mitään tuotavaa. Luo sen sijaan uusi tili.",
+    "migrateInstead": "Tuo sen sijaan vanha tili",
+    "setUpNewAccount": "Luo uusi tili",
+    "createNewInstead": "Luo sen sijaan uusi tili",
+    "migrateAccount": "Siirrä tili",
+    "importExternalWallet": "Tuo ulkoinen lompakko",
+    "migrateIntentHint": "Kirjaudu sisään millä tahansa alla olevalla vaihtoehdolla. Jos se vastaa aiempaa DeHub-tiliä, tuot sen lompakon, käyttäjänimen ja saldon.",
+    "importIntentHint": "Kirjaudu sisään millä tahansa alla olevalla vaihtoehdolla ja liitä sitten haluamasi lompakon palautuslause tai yksityinen avain.",
     "unlockBiometricContinue": "Avaa lompakkosi lukitus sormenjäljelläsi tai kasvoillasi jatkaaksesi.",
     "unlockBiometricSignIn": "Kirjaudu sisään avaamalla lompakkosi lukitus sormenjäljelläsi tai kasvoillasi.",
     "unlockPasswordContinue": "Anna lompakkosi salasana jatkaaksesi.",

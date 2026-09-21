@@ -1413,6 +1413,14 @@
     "email": "Email"
   },
   "loginModal": {
+    "migrateNoOldAccount": "Il n'y a pas de compte DeHub antérieur sur cette connexion, il n'y a donc rien à apporter. Créez plutôt un nouveau compte.",
+    "migrateInstead": "Apportez plutôt l'ancien compte",
+    "setUpNewAccount": "Configurer un nouveau compte",
+    "createNewInstead": "Créez plutôt un nouveau compte",
+    "migrateAccount": "Migrer le compte",
+    "importExternalWallet": "Importer un portefeuille externe",
+    "migrateIntentHint": "Connectez-vous avec l'une des options ci-dessous. S'il correspond à un compte DeHub antérieur, vous apporterez son portefeuille, son nom d'utilisateur et son solde.",
+    "importIntentHint": "Connectez-vous avec l'une des options ci-dessous, puis collez la phrase de récupération ou la clé privée du portefeuille que vous souhaitez utiliser.",
     "unlockBiometricContinue": "Déverrouillez votre portefeuille avec votre empreinte digitale ou votre visage pour continuer.",
     "unlockBiometricSignIn": "Déverrouillez votre portefeuille avec votre empreinte digitale ou votre visage pour vous connecter.",
     "unlockPasswordContinue": "Saisissez le mot de passe de votre portefeuille pour continuer.",

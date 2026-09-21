@@ -1390,6 +1390,14 @@
     "failedSubmit": "Bewärbig iireiche fehlgschlage. Bitte probier s nomol."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Es git kei früehners DeHub-Konto bi dem Login, drum git's nüt zum zrugghole. Erschaff stattdesse es neues Konto.",
+    "migrateInstead": "S'alte Konto zrugghole stattdesse",
+    "setUpNewAccount": "Es neues Konto erschaffe",
+    "createNewInstead": "Es neues Konto erschaffe stattdesse",
+    "migrateAccount": "Konto überneh",
+    "importExternalWallet": "Externi Wallet importiere",
+    "migrateIntentHint": "Logg dich mit ere vo de Optionene ume ume. Wenn's zu eme früehnere DeHub-Konto passt, wird dessen Wallet, Username und Saldo übernoh.",
+    "importIntentHint": "Logg dich mit ere vo de Optionene ume ume, und füeg denn de Recovery-Phrase oder Private Key vo de Wallet, wo du wetsch bruche, ih.",
     "unlockBiometricContinue": "Entsperr dini Brieftasche mit dim Fingerabdruck oder dim Gsicht zum Witermaache.",
     "unlockBiometricSignIn": "Entsperr dini Brieftasche mit dim Fingerabdruck oder dim Gsicht zum Aameelde.",
     "unlockPasswordContinue": "Gib dini Brieftasche-Passwort ii zum Witermaache.",
