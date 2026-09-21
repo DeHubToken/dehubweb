@@ -320,7 +320,6 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     contentRating: item.contentRating,
     forKids: item.forKids,
     isLivePost: item.postType === 'live',
-    liveStreamId: item.postType === 'live' ? item.stream?._id : undefined,
     liveStatus: item.stream?.status,
     liveIsActive: item.stream?.isActive,
     livePlaybackId: item.stream?.playbackId,
