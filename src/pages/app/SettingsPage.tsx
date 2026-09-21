@@ -135,6 +135,7 @@ import { StreamKeySettings } from '@/components/app/settings/StreamKeySettings';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { ProfilesSection } from '@/components/app/settings/ProfilesSection';
 import { CollapsibleStack } from '@/components/app/settings/CollapsibleStack';
+import { GettingStartedSetting } from '@/components/app/settings/GettingStartedSetting';
 import { BadgeDelegationSection } from '@/components/app/settings/BadgeDelegationSection';
 import {
   emptySocialFollowerInputs,
@@ -2570,6 +2571,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
             description={t('settings.languageDesc')}
             action={<LanguageSelector />}
           />
+          <GettingStartedSetting />
         </div>
       </div>
 
