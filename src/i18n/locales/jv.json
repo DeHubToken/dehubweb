@@ -184,6 +184,13 @@
     "postVisibility": "Visibilitas Kiriman",
     "defaultPostVisibility": "Visibilitas Kiriman Default",
     "defaultPostVisibilityDesc": "Ditrapake kanggo kabeh kiriman saiki lan mangsa ngarep",
+    "aiScraping": {
+      "section": "Lelatihan AI",
+      "label": "Ngidini AI nggosok kontenku",
+      "hintAllow": "Sistem lan crawler AI sing ngurmati sinyal iki bisa nglatih audio, karya seni, lan tulisanmu.",
+      "hintDeny": "Sistem lan crawler AI sing ngurmati sinyal iki dijaluk supaya ora nglatih audio, karya seni, lan tulisanmu. Crawler sing nglirwakake sinyal ora diblokir dening iku.",
+      "saved": "Preferensi latihan AI disimpen"
+    },
     "defaultProfileTab": "Tab profil gawan",
     "defaultProfileTabDesc": "Pilih tab endi sing dideleng dhisik dening tamu ing profilmu",
     "public": "Umum",
@@ -1213,6 +1220,10 @@
     "returnHome": "Bali menyang Beranda"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Pencipta iki ngidini AI dilatih nganggo konten iki.",
+      "denied": "Pencipta iki ora ngidini AI dilatih nganggo konten iki."
+    },
     "back": "Bali",
     "usernameAvailable": "Jeneng pangguna kasedhiya!",
     "signUpToClaim": "Daftar kanggo njupuk",

@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { SEOHead } from '@/components/SEOHead';
+import { getAiScrapingPreference } from '@/lib/ai-scraping';
 import { useTranslation } from 'react-i18next';
 
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -458,6 +459,7 @@ export default function ProfilePage() {
         title={(data.profile?.name || data.profile?.handle) ? `${data.profile?.name || data.profile?.handle} on DeHub — posts, videos & profile` : 'Profile on DeHub'}
         description={data.profile?.bio || `View ${data.profile?.name || data.profile?.handle || 'this profile'} on DeHub`}
         url={`https://dehub.io/${(data.profile?.handle || '').replace(/^@/, '')}`}
+        aiScraping={data.profile ? getAiScrapingPreference(data.profile.customs) : undefined}
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Person',
@@ -465,6 +467,12 @@ export default function ProfilePage() {
           url: `https://dehub.io/${(data.profile?.handle || '').replace(/^@/, '')}`,
           ...(data.profile?.bio && { description: data.profile.bio }),
           ...(data.profile?.avatarUrl && { image: data.profile.avatarUrl }),
+          // Literal machine-readable field, never translated — a JSON-LD
+          // consumer expects a stable token, not a sentence in the viewer's
+          // locale.
+          ...(data.profile && {
+            usageInfo: getAiScrapingPreference(data.profile.customs) === 'allow' ? 'ai-training-allowed' : 'ai-training-prohibited',
+          }),
         }}
       />
       {/* Pull-to-refresh indicator */}

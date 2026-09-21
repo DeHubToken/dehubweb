@@ -184,6 +184,13 @@
     "postVisibility": "Ukubonakala Kokuthunyelwe",
     "defaultPostVisibility": "Ukubonakala Kokuthunyelwe Okuzenzakalelayo",
     "defaultPostVisibilityDesc": "Kusebenza kukho konke okuthunyelwe kwamanje nokwesikhathi esizayo",
+    "aiScraping": {
+      "section": "Ukuqeqeshwa kwe-AI",
+      "label": "Vumela i-AI iklwebhe okusunguliwe kwami",
+      "hintAllow": "Amasistimu we-AI nabakhasa abahlonipha lesi siginali bangaqeqesha kumsindo wakho, emisebenzini yobuciko nasekubhaleni.",
+      "hintDeny": "Amasistimu we-AI nabakhasa abahlonipha lesi siginali bacelwa ukuba bangaqeqeshi umsindo, ubuciko nokubhala kwakho. Ama-crawlers angayinaki isignali awavinjwa yiyo.",
+      "saved": "Okuthandwa ukuqeqeshwa kwe-AI kugciniwe"
+    },
     "defaultProfileTab": "Ithebhu yephrofayela ezenzakalelayo",
     "defaultProfileTabDesc": "Khetha ukuthi iyiphi ithebhu izivakashi ezizoyibona kuqala kuphrofayela yakho",
     "public": "Umphakathi",
@@ -1220,6 +1227,10 @@
     "returnHome": "Buyela Ekhaya"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Lo msunguli uvumela ukuqeqeshwa kwe-AI kulokhu okuqukethwe.",
+      "denied": "Lo msunguli akakuvumeli ukuqeqeshwa kwe-AI kulokhu okusunguliwe."
+    },
     "back": "Emuva",
     "usernameAvailable": "Igama lomsebenzisi liyatholakala!",
     "signUpToClaim": "Bhalisa namhlanje ukufuna",

@@ -183,6 +183,13 @@
     "postVisibility": "ظهور المنشورات",
     "defaultPostVisibility": "ظهور المنشور الافتراضي",
     "defaultPostVisibilityDesc": "بينطبق على كل المنشورات الحالية والمستقبلية",
+    "aiScraping": {
+      "section": "تدريب الذكاء الاصطناعي",
+      "label": "اسمح بكشط المحتوى الخاص بي بواسطة الذكاء الاصطناعي",
+      "hintAllow": "أنظمة الذكاء الاصطناعي والزواحف التي تحترم هذه الإشارة قد تتدرب على صوتك وأعمالك الفنية وكتاباتك.",
+      "hintDeny": "يُطلب من أنظمة الذكاء الاصطناعي والزواحف التي تحترم هذه الإشارة عدم التدرب على صوتك وأعمالك الفنية وكتاباتك. الزواحف التي تتجاهل الإشارة لا يتم حظرها بواسطتها.",
+      "saved": "تم حفظ تفضيل تدريب الذكاء الاصطناعي"
+    },
     "defaultProfileTab": "التاب الافتراضي في البروفايل",
     "defaultProfileTabDesc": "اختار إيه التاب اللي الزوار بيشوفوه الأول في بروفايلك",
     "public": "عام",
@@ -1177,6 +1184,10 @@
     "returnHome": "ارجع للبيت"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "الراجل ده بيسمح للذكاء الاصطناعي يتعلم من المحتوى ده.",
+      "denied": "الراجل ده ما بيسمحش للذكاء الاصطناعي يتعلم من المحتوى ده."
+    },
     "back": "ارجع",
     "usernameAvailable": "اسم المستخدم متاح!",
     "signUpToClaim": "سجّل النهارده علشان تاخده",
@@ -3061,44 +3072,6 @@
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
   },
-  "post": {
-    "like": "إعجاب",
-    "comment": "تعليق",
-    "repost": "إعادة نشر",
-    "share": "مشاركة",
-    "bookmark": "علامة",
-    "tip": "بقشيش",
-    "delete": "امسح",
-    "edit": "عدّل",
-    "report": "بلّغ",
-    "translate": "ترجم",
-    "pinned": "متثبّت",
-    "replying": "بيرد",
-    "reply": "رد",
-    "writeReply": "اكتب رد...",
-    "noComments": "مافيش تعليقات لسه",
-    "viewMore": "شوف أكتر",
-    "postDeleted": "المنشور اتمسح",
-    "likes": "إعجابات",
-    "comments": "تعليقات",
-    "reposts": "إعادة نشر",
-    "shares": "مشاركات"
-  },
-  "create": {
-    "title": "انشر حاجة",
-    "placeholder": "بتفكّر في إيه؟",
-    "post": "انشر",
-    "addImage": "زوّد صورة",
-    "addVideo": "زوّد فيديو",
-    "addGif": "زوّد GIF",
-    "addPoll": "زوّد استطلاع",
-    "addLocation": "زوّد موقع",
-    "visibility": "الظهور",
-    "everyone": "الكل",
-    "followers": "المتابعين",
-    "subscribers": "المشتركين",
-    "mentioned": "اللي اتذكروا"
-  },
   "conversation": {
     "commonGround": {
       "title": "أرضية مشتركة",
@@ -3199,5 +3172,43 @@
         "body": "اعرف إزاي الإكراميات والشارات والقوى الخارقة بتحول اللي بتعمله هنا لحاجة بتكسب منها."
       }
     }
+  },
+  "post": {
+    "like": "إعجاب",
+    "comment": "تعليق",
+    "repost": "إعادة نشر",
+    "share": "مشاركة",
+    "bookmark": "علامة",
+    "tip": "بقشيش",
+    "delete": "امسح",
+    "edit": "عدّل",
+    "report": "بلّغ",
+    "translate": "ترجم",
+    "pinned": "متثبّت",
+    "replying": "بيرد",
+    "reply": "رد",
+    "writeReply": "اكتب رد...",
+    "noComments": "مافيش تعليقات لسه",
+    "viewMore": "شوف أكتر",
+    "postDeleted": "المنشور اتمسح",
+    "likes": "إعجابات",
+    "comments": "تعليقات",
+    "reposts": "إعادة نشر",
+    "shares": "مشاركات"
+  },
+  "create": {
+    "title": "انشر حاجة",
+    "placeholder": "بتفكّر في إيه؟",
+    "post": "انشر",
+    "addImage": "زوّد صورة",
+    "addVideo": "زوّد فيديو",
+    "addGif": "زوّد GIF",
+    "addPoll": "زوّد استطلاع",
+    "addLocation": "زوّد موقع",
+    "visibility": "الظهور",
+    "everyone": "الكل",
+    "followers": "المتابعين",
+    "subscribers": "المشتركين",
+    "mentioned": "اللي اتذكروا"
   }
 }

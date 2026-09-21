@@ -184,6 +184,13 @@
     "postVisibility": "Post Visibility",
     "defaultPostVisibility": "Default Post Visibility",
     "defaultPostVisibilityDesc": "Applies to all current and future posts",
+    "aiScraping": {
+      "section": "ការបណ្តុះបណ្តាល AI",
+      "label": "អនុញ្ញាតឱ្យ AI scraping នៃមាតិការបស់ខ្ញុំ",
+      "hintAllow": "ប្រព័ន្ធ AI និង crawlers ដែល គោរព សញ្ញា នេះ អាច នឹង មាន ការ ហ្វឹកហាត់ លើ សម្លេង សិល្បៈ និង ការ សរសេរ របស់ អ្នក ។",
+      "hintDeny": "ប្រព័ន្ធ AI និង crawlers ដែល គោរព សញ្ញា នេះ ត្រូវ បាន គេ ស្នើ កុំ ឲ្យ ហ្វឹកហាត់ លើ សម្លេង សិល្បៈ និង ការ សរសេរ របស់ អ្នក ។ អ្នក ជិះ ម៉ូតូ ដែល មិន យក ចិត្ត ទុក ដាក់ នឹង សញ្ញា នោះ មិន ត្រូវ បាន គេ រារាំង ដោយ វា ទេ ។",
+      "saved": "បានរក្សាទុកចំណូលចិត្តនៃការបណ្តុះបណ្តាល AI"
+    },
     "defaultProfileTab": "ផ្ទាំងលំនាំដើមនៃប្រវត្តិរូប",
     "defaultProfileTabDesc": "ជ្រើសរើសផ្ទាំងណាមួយដែលភ្ញៀវទស្សនាឃើញមុនគេនៅលើប្រវត្តិរូបរបស់អ្នក",
     "public": "Public",
@@ -1232,6 +1239,10 @@
     "returnHome": "ត្រឡប់ទៅទំព័រដើម"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "អ្នកបង្កើតនេះអនុញ្ញាតឱ្យមានការបណ្តុះបណ្តាល AI លើមាតិកានេះ ។",
+      "denied": "អ្នកបង្កើតនេះមិនអនុញ្ញាតឱ្យមានការបណ្តុះបណ្តាល AI លើមាតិកានេះទេ ។"
+    },
     "back": "ត្រឡប់ក្រោយ",
     "usernameAvailable": "ឈ្មោះអ្នកប្រើអាចប្រើបាន!",
     "signUpToClaim": "ចុះឈ្មោះថ្ងៃនេះដើម្បីទាមទារ",
@@ -5233,26 +5244,6 @@
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
   },
-  "spaces": {
-    "title": "ស្ពេស",
-    "live": "ផ្សាយផ្ទាល់",
-    "upcoming": "នាពេលខាងមុខ",
-    "past": "កន្លងមក",
-    "create": "បង្កើតស្ពេស",
-    "join": "ចូលរួម",
-    "listeners": "អ្នកស្តាប់",
-    "speakers": "អ្នកនិយាយ",
-    "host": "ម្ចាស់ផ្ទះ",
-    "noSpaces": "មិនទាន់មានស្ពេស",
-    "loginDescription": "ចូលដើម្បីបង្កើត និងចូលរួមស្ពេសអូឌីយ៉ូ។"
-  },
-  "blog": {
-    "title": "ប្លក់",
-    "readMore": "អានបន្ថែម",
-    "backToBlog": "ត្រឡប់ទៅប្លក់",
-    "sharePost": "ចែករំលែកការបង្ហោះ",
-    "relatedPosts": "ការបង្ហោះពាក់ព័ន្ធ"
-  },
   "conversation": {
     "commonGround": {
       "title": "មូលដ្ឋានរួម",
@@ -5353,5 +5344,25 @@
         "body": "ស្វែងយល់ពីរបៀបដែលគន្លឹះ ផ្លាកសញ្ញា និងអំណាចជាន់ខ្ពស់ផ្លាស់ប្តូរអ្វីដែលអ្នកធ្វើនៅទីនេះទៅជាអ្វីដែលអ្នករកបានពី ។"
       }
     }
+  },
+  "spaces": {
+    "title": "ស្ពេស",
+    "live": "ផ្សាយផ្ទាល់",
+    "upcoming": "នាពេលខាងមុខ",
+    "past": "កន្លងមក",
+    "create": "បង្កើតស្ពេស",
+    "join": "ចូលរួម",
+    "listeners": "អ្នកស្តាប់",
+    "speakers": "អ្នកនិយាយ",
+    "host": "ម្ចាស់ផ្ទះ",
+    "noSpaces": "មិនទាន់មានស្ពេស",
+    "loginDescription": "ចូលដើម្បីបង្កើត និងចូលរួមស្ពេសអូឌីយ៉ូ។"
+  },
+  "blog": {
+    "title": "ប្លក់",
+    "readMore": "អានបន្ថែម",
+    "backToBlog": "ត្រឡប់ទៅប្លក់",
+    "sharePost": "ចែករំលែកការបង្ហោះ",
+    "relatedPosts": "ការបង្ហោះពាក់ព័ន្ធ"
   }
 }

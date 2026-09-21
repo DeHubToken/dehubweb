@@ -184,6 +184,13 @@
     "postVisibility": "帖文可見度",
     "defaultPostVisibility": "預設帖文可見度",
     "defaultPostVisibilityDesc": "適用於所有現有同未來嘅帖文",
+    "aiScraping": {
+      "section": "人工智能訓練",
+      "label": "畀 AI 刮取我嘅內容",
+      "hintAllow": "尊重呢個訊號嘅人工智能系統同爬蟲程式可能會訓練你嘅音頻、藝術品同寫作。",
+      "hintDeny": "尊重呢個訊號嘅人工智能系統同爬蟲程式被要求唔好訓練你嘅音頻、藝術品同寫作。忽略訊號嘅爬蟲程式唔會被佢阻擋。",
+      "saved": "儲存咗 AI 訓練偏好設定"
+    },
     "defaultProfileTab": "預設檔案分頁",
     "defaultProfileTabDesc": "揀訪客喺你檔案上最先睇到邊個分頁",
     "public": "公開",
@@ -1219,6 +1226,10 @@
     "returnHome": "返回主頁"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "呢個創作者允許人工智能喺呢個內容上面進行訓練。",
+      "denied": "呢個創作者唔允許人工智能喺呢個內容上面進行訓練。"
+    },
     "back": "返回",
     "usernameAvailable": "用戶名可用！",
     "signUpToClaim": "註冊嚟攞",

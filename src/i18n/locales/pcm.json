@@ -173,6 +173,10 @@
     "postVisibility": "Who Fit See Your Post",
     "defaultPostVisibility": "Default for Who Fit See Post",
     "defaultPostVisibilityDesc": "E go apply to all current and future posts",
+    "aiScraping": {
+      "section": "AI training",
+      "saved": "AI training preference saved"
+    },
     "defaultProfileTab": "Default profile tab",
     "defaultProfileTabDesc": "Choose which tab visitors go see first for your profile",
     "public": "Everybody",

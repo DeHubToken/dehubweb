@@ -184,6 +184,13 @@
     "postVisibility": "Vidljivost objava",
     "defaultPostVisibility": "Zadana vidljivost objava",
     "defaultPostVisibilityDesc": "Primjenjuje se na sve trenutne i buduće objave",
+    "aiScraping": {
+      "section": "Trening umjetne inteligencije",
+      "label": "Dopusti AI struganje mog sadržaja",
+      "hintAllow": "Sustavi umjetne inteligencije i alati za indeksiranje koji poštuju ovaj signal mogu vježbati na vašem zvuku, umjetničkim djelima i pisanju.",
+      "hintDeny": "Od sustava umjetne inteligencije i indeksirača koji poštuju ovaj signal traži se da ne vježbaju na vašem zvuku, umjetničkim djelima i pisanju. Alati za indeksiranje koji zanemaruju signal nisu njime blokirani.",
+      "saved": "Postavka umjetne inteligencije za obuku je spremljena"
+    },
     "defaultProfileTab": "Zadana kartica profila",
     "defaultProfileTabDesc": "Odaberite koju karticu posjetitelji prvo vide na vašem profilu",
     "public": "Javno",
@@ -1228,6 +1235,10 @@
     "returnHome": "Povratak na početnu"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Ovaj kreator omogućuje umjetnoj inteligenciji obuku o ovom sadržaju.",
+      "denied": "Ovaj kreator ne dopušta AI obuku o ovom sadržaju."
+    },
     "back": "Natrag",
     "usernameAvailable": "Korisničko ime dostupno!",
     "signUpToClaim": "Prijavite se danas da biste preuzeli",

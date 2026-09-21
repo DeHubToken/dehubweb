@@ -93,6 +93,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'privacy', anchor: 'follow-visibility', label: 'Follow Visibility', labelKey: 'settings.followVisibility', keywords: 'followers following hide counts' },
   { tab: 'privacy', anchor: 'search-indexing', label: 'Search Engine Indexing', labelKey: 'settings.searchEngineIndexing', keywords: 'google seo index' },
   { tab: 'privacy', anchor: 'default-post-visibility', label: 'Default Post Visibility', labelKey: 'settings.defaultPostVisibility', keywords: 'public private posts' },
+  { tab: 'privacy', anchor: 'ai-scraping', label: 'Allow AI training', labelKey: 'settings.aiScraping.label', keywords: 'ai scraping training llm crawler bot noai' },
   { tab: 'privacy', anchor: 'two-factor', label: 'Two-Factor Auth', labelKey: 'settings.twoFactorAuth', keywords: '2fa mfa authenticator security' },
   { tab: 'privacy', anchor: 'wallet-unlock', label: 'Wallet unlock prompt', labelKey: 'settings.walletUnlockInterval', keywords: 'password timeout lock wallet' },
   { tab: 'privacy', anchor: 'biometric-unlock', label: 'Biometric unlock', keywords: 'fingerprint face id passkey' },

@@ -184,6 +184,13 @@
     "postVisibility": "Įrašų matomumas",
     "defaultPostVisibility": "Numatytasis matomumas",
     "defaultPostVisibilityDesc": "Taikoma visiems esamiems ir būsimiems įrašams",
+    "aiScraping": {
+      "section": "Dirbtinio intelekto mokymas",
+      "label": "Leisti DI išgryninti mano turinį",
+      "hintAllow": "Dirbtinio intelekto sistemos ir skaitytuvai, kurie atsižvelgia į šį signalą, gali treniruoti jūsų garsą, meno kūrinius ir rašymą.",
+      "hintDeny": "Dirbtinio intelekto sistemų ir skaitytuvų, kurie atsižvelgia į šį signalą, prašoma nesitreniruoti garso, meno kūrinių ir rašymo srityse. Šliaužiklių, kurie ignoruoja signalą, jis neblokuoja.",
+      "saved": "Dirbtinio intelekto mokymo nuostata išsaugota"
+    },
     "defaultProfileTab": "Numatytoji profilio kortelė",
     "defaultProfileTabDesc": "Pasirinkite, kurią kortelę lankytojai jūsų profilyje mato pirmiausia",
     "public": "Viešas",
@@ -1220,6 +1227,10 @@
     "returnHome": "Grįžti į pradžią"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Šis kūrėjas leidžia DI mokymus apie šį turinį.",
+      "denied": "Šis kūrėjas neleidžia DI mokymų apie šį turinį."
+    },
     "back": "Atgal",
     "usernameAvailable": "Naudotojo vardas laisvas!",
     "signUpToClaim": "Užsiregistruokite šiandien, kad užsitikrintumėte",

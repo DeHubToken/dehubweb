@@ -183,6 +183,13 @@
     "postVisibility": "帖子可见性",
     "defaultPostVisibility": "默认帖子可见性",
     "defaultPostVisibilityDesc": "对所有现有和将来的帖子生效",
+    "aiScraping": {
+      "section": "AI 训练",
+      "label": "允许 AI 抓取我的内容",
+      "hintAllow": "遵守此信号的 AI 系统和爬虫可以训练您的音频、艺术作品和文字。",
+      "hintDeny": "要求遵守此信号的 AI 系统和爬虫不要训练您的音频、艺术作品和文字。忽略此信号的爬虫不会被其阻止。",
+      "saved": "AI 训练偏好已保存"
+    },
     "defaultProfileTab": "默认资料标签",
     "defaultProfileTabDesc": "挑访客一进你嘞资料页头一眼看着嘞标签",
     "public": "公开",
@@ -1177,6 +1184,10 @@
     "returnHome": "回首页"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "此创作者允许在此内容上进行 AI 训练。",
+      "denied": "此创作者不允许在此内容上进行 AI 训练。"
+    },
     "back": "返回",
     "usernameAvailable": "用户名可用！",
     "signUpToClaim": "今天注册来认领",
@@ -3064,44 +3075,6 @@
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
   },
-  "post": {
-    "like": "喜欢",
-    "comment": "评论",
-    "repost": "转发",
-    "share": "分享",
-    "bookmark": "收藏",
-    "tip": "打赏",
-    "delete": "删除",
-    "edit": "编辑",
-    "report": "举报",
-    "translate": "翻译",
-    "pinned": "置顶",
-    "replying": "回复中",
-    "reply": "回复",
-    "writeReply": "写个回复...",
-    "noComments": "还没有评论",
-    "viewMore": "查看更多",
-    "postDeleted": "帖子已删除",
-    "likes": "喜欢",
-    "comments": "评论",
-    "reposts": "转发",
-    "shares": "分享"
-  },
-  "create": {
-    "title": "发帖",
-    "placeholder": "你在想甚？",
-    "post": "发布",
-    "addImage": "加图片",
-    "addVideo": "加视频",
-    "addGif": "加GIF",
-    "addPoll": "加投票",
-    "addLocation": "加位置",
-    "visibility": "可见性",
-    "everyone": "所有人",
-    "followers": "关注者",
-    "subscribers": "订阅者",
-    "mentioned": "被提到的"
-  },
   "conversation": {
     "commonGround": {
       "title": "共同点",
@@ -3202,5 +3175,43 @@
         "body": "了解提示、徽章和超级能力如何将你在 DeHub 上的付出转化为收益。"
       }
     }
+  },
+  "post": {
+    "like": "喜欢",
+    "comment": "评论",
+    "repost": "转发",
+    "share": "分享",
+    "bookmark": "收藏",
+    "tip": "打赏",
+    "delete": "删除",
+    "edit": "编辑",
+    "report": "举报",
+    "translate": "翻译",
+    "pinned": "置顶",
+    "replying": "回复中",
+    "reply": "回复",
+    "writeReply": "写个回复...",
+    "noComments": "还没有评论",
+    "viewMore": "查看更多",
+    "postDeleted": "帖子已删除",
+    "likes": "喜欢",
+    "comments": "评论",
+    "reposts": "转发",
+    "shares": "分享"
+  },
+  "create": {
+    "title": "发帖",
+    "placeholder": "你在想甚？",
+    "post": "发布",
+    "addImage": "加图片",
+    "addVideo": "加视频",
+    "addGif": "加GIF",
+    "addPoll": "加投票",
+    "addLocation": "加位置",
+    "visibility": "可见性",
+    "everyone": "所有人",
+    "followers": "关注者",
+    "subscribers": "订阅者",
+    "mentioned": "被提到的"
   }
 }

@@ -184,6 +184,13 @@
     "postVisibility": "Visibilità post",
     "defaultPostVisibility": "Visibilità predefinita",
     "defaultPostVisibilityDesc": "Si applica a tutti i post attuali e futuri",
+    "aiScraping": {
+      "section": "Formazione AI",
+      "label": "Consenti lo scraping AI dei miei contenuti",
+      "hintAllow": "I sistemi di intelligenza artificiale e i crawler che rispettano questo segnale possono allenarsi sul tuo audio, grafica e scrittura.",
+      "hintDeny": "Ai sistemi di intelligenza artificiale e ai crawler che rispettano questo segnale viene chiesto di non allenarsi su audio, grafica e scrittura. I cingoli che ignorano il segnale non vengono bloccati da esso.",
+      "saved": "Preferenze di addestramento AI salvate"
+    },
     "defaultProfileTab": "Scheda profilo predefinita",
     "defaultProfileTabDesc": "Scegli quale scheda vedono per prima i visitatori sul tuo profilo",
     "public": "Pubblico",
@@ -1237,6 +1244,10 @@
     "returnHome": "Torna alla home"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Questo creator consente la formazione AI su questo contenuto.",
+      "denied": "Questo creator non consente la formazione AI su questo contenuto."
+    },
     "back": "Indietro",
     "usernameAvailable": "Nome utente disponibile!",
     "signUpToClaim": "Registrati oggi per richiederlo",

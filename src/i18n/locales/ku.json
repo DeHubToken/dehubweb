@@ -178,6 +178,9 @@
     "postVisibility": "Dîtina Şandiyê",
     "defaultPostVisibility": "Dîtina Şandiyê ya Pêşnumayî",
     "defaultPostVisibilityDesc": "Ji bo hemû şandiyên niha û yên pêşerojê derbas dibe",
+    "aiScraping": {
+      "hintAllow": "سیستەمەکان و گەڕۆکەکانی زیرەکی دەستکرد کە ئەم نیشانە ڕێز دەگرن، دەتوانن لەسەر دەنگ، هونەر و نووسینەکانی تۆ مەشق بکەن."
+    },
     "defaultProfileTab": "Taba profîla xwerû",
     "defaultProfileTabDesc": "Hilbijêre bê serdanker di profîla te de pêşî kîjan tabê dibînin",
     "public": "Giştî",

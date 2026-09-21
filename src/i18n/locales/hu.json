@@ -184,6 +184,13 @@
     "postVisibility": "Bejegyzés láthatósága",
     "defaultPostVisibility": "Alapértelmezett láthatóság",
     "defaultPostVisibilityDesc": "Minden jelenlegi és jövőbeli bejegyzésre vonatkozik",
+    "aiScraping": {
+      "section": "MI-képzés",
+      "label": "A tartalmaim AI-kaparásának engedélyezése",
+      "hintAllow": "Azok a mesterségesintelligencia-rendszerek és feltérképező robotok, amelyek tiszteletben tartják ezt a jelet, képezhetik az Ön hangját, grafikáját és írását.",
+      "hintDeny": "Azokat az MI-rendszereket és robotokat, amelyek tiszteletben tartják ezt a jelet, arra kérjük, hogy ne gyakoroljanak a hangra, a műalkotásokra és az írásra. Azok a lánctalpasok, amelyek figyelmen kívül hagyják a jelet, nem blokkolják azt.",
+      "saved": "AI képzési preferencia mentve"
+    },
     "defaultProfileTab": "Alapértelmezett profillap",
     "defaultProfileTabDesc": "Válaszd ki, melyik lapot lássák először a látogatók a profilodon",
     "public": "Nyilvános",
@@ -1232,6 +1239,10 @@
     "returnHome": "Vissza a kezdőlapra"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Ez az alkotó engedélyezi a mesterséges intelligencia képzését ezen a tartalomon.",
+      "denied": "Ez az alkotó nem engedélyezi a mesterséges intelligencia képzését ezen a tartalomon."
+    },
     "back": "Vissza",
     "usernameAvailable": "Felhasználónév elérhető!",
     "signUpToClaim": "Regisztráljon és foglalja le",

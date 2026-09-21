@@ -184,6 +184,13 @@
     "postVisibility": "ምርኣይ ጽሑፍ",
     "defaultPostVisibility": "ነባሪ ምርኣይ ጽሑፍ",
     "defaultPostVisibilityDesc": "ንኹሎም ህሉዋትን መጻእትን ጽሑፋት ይምልከት",
+    "aiScraping": {
+      "section": "ስልጠና AI",
+      "label": "ነቲ ትሕዝቶይ ንምጥፋእ ፍቐደለይ",
+      "hintAllow": "ነዚ ምልክታ እዚ ዚኽብር ስርዓታትን ኣሰጋገርትን AI ፡ ኣብ ድምጺኻ ፡ ኣብ ስነጥበባዊ ስራሕን ኣብ ምጽሓፍካን ኪስልጥን ይኽእል እዩ ።",
+      "hintDeny": "ነዚ ምልክታ እዚ ዚኽብር ስርዓታትን ኣሰጋገርትን AI ፡ ኣብ ድምጺኻ ፡ ኣብ ስነጥበባዊ ስራሕን ኣብ ምጽሓፍካን ከይሰልጠኑ ይሓትቱ እዮም ። እቶም ነቲ ምልክታ ዘይሓልፉ ፡ ብኡ ኣይዓግቱን እዮም ።",
+      "saved": "ናይ AI ስልጠና ምርጫ ተድሕን"
+    },
     "defaultProfileTab": "ቀዋሚ ናይ መለለዪ ታብ",
     "defaultProfileTabDesc": "በጻሕቲ ኣብ መለለዪኻ ቀዳማይ እትርእዮም ታብ ምረጽ",
     "public": "ህዝባዊ",
@@ -1200,6 +1207,10 @@
     "returnHome": "ናብ ገዛ ተመለስ"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "እዚ ፈጣሪ እዚ ብዛዕባ እዚ ትሕዝቶ እዚ ናይ AI ስልጠና ይፈቅድ ።",
+      "denied": "እዚ ፈጣሪ እዚ ነዚ ትሕዝቶ እዚ ናይ AI ስልጠና ኣይፈቕድን እዩ ።"
+    },
     "back": "ተመለስ",
     "usernameAvailable": "ስም ተጠቃሚ ኣሎ!",
     "signUpToClaim": "ንምሓዝ ሎሚ ተመዝገብ",

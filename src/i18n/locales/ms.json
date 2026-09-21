@@ -184,6 +184,13 @@
     "postVisibility": "Keterlihatan Hantaran",
     "defaultPostVisibility": "Keterlihatan Hantaran Lalai",
     "defaultPostVisibilityDesc": "Terpakai kepada semua hantaran semasa dan akan datang",
+    "aiScraping": {
+      "section": "Latihan AI",
+      "label": "Benarkan AI mengikis kandungan saya",
+      "hintAllow": "Sistem AI dan perayap yang menghormati isyarat ini boleh melatih audio, karya seni dan tulisan anda.",
+      "hintDeny": "Sistem AI dan perayap yang menghormati isyarat ini diminta untuk tidak melatih audio, karya seni dan tulisan anda. Perayap yang mengabaikan isyarat tidak disekat olehnya.",
+      "saved": "Pilihan latihan AI disimpan"
+    },
     "defaultProfileTab": "Tab profil lalai",
     "defaultProfileTabDesc": "Pilih tab yang pelawat lihat dahulu pada profil anda",
     "public": "Awam",
@@ -1504,6 +1511,10 @@
     "returnHome": "Return Home"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Pengkarya ini membenarkan latihan AI pada kandungan ini.",
+      "denied": "Pengkarya ini tidak membenarkan latihan AI pada kandungan ini."
+    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Daftar hari ini untuk menuntut",
