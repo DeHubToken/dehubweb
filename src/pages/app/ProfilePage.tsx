@@ -18,7 +18,6 @@ import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImag
 import { CreatePlanModal, EditPlanModal } from '@/components/app/subscriptions';
 import { TipModal } from '@/components/app/modals/TipModal';
 import { FollowersListDrawer } from '@/components/app/profile';
-import { StoryViewerModal } from '@/components/app/stories/StoryViewerModal';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
@@ -203,8 +202,6 @@ export default function ProfilePage() {
   const [followListDrawerOpen, setFollowListDrawerOpen] = useState(false);
   const [followListType, setFollowListType] = useState<'followers' | 'following'>('followers');
   const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
-  const [showAvatarOverlay, setShowAvatarOverlay] = useState(false);
   const [editingPlan, setEditingPlan] = useState<SubscriptionPlan | null>(null);
   const [showTipModal, setShowTipModal] = useState(false);
   
@@ -535,15 +532,8 @@ export default function ProfilePage() {
           handleUnfollow={handleUnfollow}
           isSubscribed={data.isSubscribed}
           hasPlans={data.hasPlans}
-          hasStories={data.hasStories}
-          hasUnwatchedStories={data.hasUnwatchedStories}
-          profileStories={data.profileStories}
-          markWatched={data.markWatched}
-          showAvatarOverlay={showAvatarOverlay}
-          setShowAvatarOverlay={setShowAvatarOverlay}
           setFullscreenImage={setFullscreenImage}
           setActiveTab={setActiveTab}
-          setIsStoryViewerOpen={setIsStoryViewerOpen}
           shareSheetOpen={shareSheetOpen}
           setShareSheetOpen={setShareSheetOpen}
           setLoginModalOpen={setLoginModalOpen}
@@ -764,15 +754,6 @@ export default function ProfilePage() {
         title={followListType === 'followers' ? 'Followers' : 'Following'}
       />
       
-      {/* Story Viewer Modal */}
-      <StoryViewerModal
-        isOpen={isStoryViewerOpen}
-        onClose={() => setIsStoryViewerOpen(false)}
-        stories={data.allStories}
-        initialIndex={data.profileStoryStartIndex}
-        onStoryWatched={data.markWatched}
-      />
-
       {/* Login Modal */}
       <LoginModal open={loginModalOpen} onOpenChange={setLoginModalOpen} />
 

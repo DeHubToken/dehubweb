@@ -19,7 +19,6 @@ import { useReauthHandler } from '@/hooks/use-reauth-handler';
 
 import { getBadgeName, getBadgeUrl } from '@/lib/staking-badges';
 import { useSelfBadge, preferLiveBalance } from '@/hooks/use-self-badge-balance';
-import { useStories, useWatchedStories } from '@/hooks/use-stories';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useUserPins } from '@/hooks/use-pins';
 import { usePublicPlaylists } from '@/hooks/use-bookmark-folders';
@@ -396,29 +395,6 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   // Re-auth
   const { handleApiError } = useReauthHandler();
 
-  // Stories — skip the N-account_info avatar-enrichment pass here; the profile
-  // page only needs the story ring + viewer, and stories carry their own avatar.
-  const { stories: allStories } = useStories({ enrichAvatars: false });
-  const { isWatched, markWatched } = useWatchedStories();
-
-  const profileStories = useMemo(() => {
-    if (!profile?.walletAddress || !allStories.length) return [];
-    return allStories.filter(
-      s => s.wallet_address.toLowerCase() === profile.walletAddress.toLowerCase()
-    );
-  }, [allStories, profile?.walletAddress]);
-
-  const hasStories = profileStories.length > 0;
-  const hasUnwatchedStories = hasStories && profileStories.some(s => !isWatched(s.id));
-
-  const profileStoryStartIndex = useMemo(() => {
-    if (!hasStories) return 0;
-    const idx = allStories.findIndex(
-      s => s.wallet_address.toLowerCase() === profile?.walletAddress?.toLowerCase()
-    );
-    return idx >= 0 ? idx : 0;
-  }, [allStories, profile?.walletAddress, hasStories]);
-
   // Follow status
   const isFollowing = apiProfile?.isFollowing ?? false;
   const isPending = apiProfile?.isPending ?? false;
@@ -549,14 +525,6 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     hideFollowerCounts,
     // Re-auth
     handleApiError,
-    // Stories
-    allStories,
-    profileStories,
-    hasStories,
-    hasUnwatchedStories,
-    profileStoryStartIndex,
-    markWatched,
-    isWatched,
     // Follow
     isFollowing,
     isPending,
