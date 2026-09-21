@@ -184,6 +184,13 @@
     "postVisibility": "Julkaisun näkyvyys",
     "defaultPostVisibility": "Oletusnäkyvyys",
     "defaultPostVisibilityDesc": "Koskee kaikkia nykyisiä ja tulevia julkaisuja",
+    "aiScraping": {
+      "section": "Tekoälykoulutus",
+      "label": "Salli sisällön tekoälyn raaputus",
+      "hintAllow": "Tekoälyjärjestelmät ja indeksoijat, jotka kunnioittavat tätä signaalia, voivat harjoitella ääntäsi, taidettasi ja kirjoittamistasi.",
+      "hintDeny": "Tekoälyjärjestelmiä ja indeksoijia, jotka kunnioittavat tätä signaalia, pyydetään olemaan harjoittelematta ääni-, taideteos- ja kirjoitustaidettasi. Ryömijät, jotka jättävät signaalin huomiotta, eivät ole sen estämiä.",
+      "saved": "Tekoälykoulutusasetus tallennettu"
+    },
     "defaultProfileTab": "Profiilin oletusvälilehti",
     "defaultProfileTabDesc": "Valitse, minkä välilehden kävijät näkevät ensin profiilissasi",
     "public": "Julkinen",
@@ -1233,6 +1240,10 @@
     "returnHome": "Palaa etusivulle"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Tämä tekijä sallii tekoälykoulutuksen tässä sisällössä.",
+      "denied": "Tämä tekijä ei salli tekoälykoulutusta tästä sisällöstä."
+    },
     "back": "Takaisin",
     "usernameAvailable": "Käyttäjätunnus on saatavilla!",
     "signUpToClaim": "Rekisteröidy tänään varataksesi",

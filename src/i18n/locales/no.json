@@ -184,6 +184,13 @@
     "postVisibility": "Innleggssynlighet",
     "defaultPostVisibility": "Standard synlighet",
     "defaultPostVisibilityDesc": "Gjelder alle nåværende og fremtidige innlegg",
+    "aiScraping": {
+      "section": "AI-opplæring",
+      "label": "Tillat AI-skraping av innholdet mitt",
+      "hintAllow": "AI-systemer og robotsøkeprogrammer som respekterer dette signalet, kan trene på lyd, grafikk og tekst.",
+      "hintDeny": "AI-systemer og robotsøkere som respekterer dette signalet blir bedt om ikke å trene på lyd, grafikk og tekst. Robotsøkere som ignorerer signalet blokkeres ikke av det.",
+      "saved": "AI-opplæringspreferanser lagret"
+    },
     "defaultProfileTab": "Standardfane på profilen",
     "defaultProfileTabDesc": "Velg hvilken fane besøkende ser først på profilen din",
     "public": "Offentlig",
@@ -1217,6 +1224,10 @@
     "returnHome": "Gå tilbake til hjem"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Denne skaperen tillater AI-trening på dette innholdet.",
+      "denied": "Denne skaperen tillater ikke AI-trening på dette innholdet."
+    },
     "back": "Tilbake",
     "usernameAvailable": "Brukernavn tilgjengelig!",
     "signUpToClaim": "Registrer deg i dag for å sikre det",

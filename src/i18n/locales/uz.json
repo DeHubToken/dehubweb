@@ -184,6 +184,13 @@
     "postVisibility": "Post koʻrinishi",
     "defaultPostVisibility": "Standart post koʻrinishi",
     "defaultPostVisibilityDesc": "Barcha joriy va kelgusi postlarga qoʻllaniladi",
+    "aiScraping": {
+      "section": "Sun&#39;iy intellekt bo&#39;yicha trening",
+      "label": "Kontentimni sun&#39;iy intellekt yordamida qirib tashlashga ruxsat bering",
+      "hintAllow": "Ushbu signalga rioya qiladigan sun&#39;iy intellekt tizimlari va sudraluvchilari sizning audio, badiiy asaringiz va yozuvingizni mashq qilishi mumkin.",
+      "hintDeny": "Ushbu signalga rioya qiladigan sun&#39;iy intellekt tizimlari va qidiruv tizimlaridan sizning audio, badiiy asaringiz va yozuvlaringiz ustida mashq qilmaslik so&#39;raladi. Signalni e&#39;tiborsiz qoldiradigan qidiruv tizimlari u tomonidan bloklanmaydi.",
+      "saved": "Sun&#39;iy intellekt bo&#39;yicha o&#39;qitish afzalligi saqlandi"
+    },
     "defaultProfileTab": "Standart profil varag'i",
     "defaultProfileTabDesc": "Tashrif buyuruvchilar profilingizda birinchi qaysi varaqni ko'rishini tanlang",
     "public": "Ommaviy",
@@ -1236,6 +1243,10 @@
     "returnHome": "Bosh sahifaga qaytish"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Ushbu yaratuvchi ushbu kontent bo&#39;yicha AI mashg&#39;ulotlariga ruxsat beradi.",
+      "denied": "Ushbu yaratuvchi ushbu kontent bo&#39;yicha sun&#39;iy intellekt bo&#39;yicha mashg&#39;ulotlarga ruxsat bermaydi."
+    },
     "back": "Orqaga",
     "usernameAvailable": "Foydalanuvchi nomi boʻsh!",
     "signUpToClaim": "Olish uchun roʻyxatdan oʻting",
@@ -3144,32 +3155,6 @@
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
   },
-  "spaces": {
-    "title": "Boʻlimlar",
-    "live": "Jonli",
-    "upcoming": "Kelgusi",
-    "past": "Oʻtgan",
-    "create": "Boʻlim yaratish",
-    "join": "Qoʻshilish",
-    "listeners": "Tinglovchilar",
-    "speakers": "Nutqchilar",
-    "host": "Boshlovchi",
-    "endSpace": "Boʻlimni tugatish",
-    "raiseHand": "Qoʻl koʻtarish",
-    "lowerHand": "Qoʻlni tushirish",
-    "mute": "Ovozni oʻchirish",
-    "unmute": "Ovozni yoqish",
-    "leave": "Boʻlimni tark etish",
-    "noSpaces": "Hali boʻlimlar yoʻq",
-    "loginDescription": "Audio boʻlimlar yaratish va qoʻshilish uchun kiring."
-  },
-  "blog": {
-    "title": "Blog",
-    "readMore": "Koʻproq oʻqish",
-    "backToBlog": "Blogga qaytish",
-    "sharePost": "Postni ulashish",
-    "relatedPosts": "Bogʻliq postlar"
-  },
   "conversation": {
     "commonGround": {
       "title": "Umumiy zamin",
@@ -3270,5 +3255,31 @@
         "body": "Maslahatlar, nishonlar va Super Kuchlar bu yerda qilayotgan ishlaringizni qanday qilib daromad keltiradigan narsaga aylantirishini bilib oling."
       }
     }
+  },
+  "spaces": {
+    "title": "Boʻlimlar",
+    "live": "Jonli",
+    "upcoming": "Kelgusi",
+    "past": "Oʻtgan",
+    "create": "Boʻlim yaratish",
+    "join": "Qoʻshilish",
+    "listeners": "Tinglovchilar",
+    "speakers": "Nutqchilar",
+    "host": "Boshlovchi",
+    "endSpace": "Boʻlimni tugatish",
+    "raiseHand": "Qoʻl koʻtarish",
+    "lowerHand": "Qoʻlni tushirish",
+    "mute": "Ovozni oʻchirish",
+    "unmute": "Ovozni yoqish",
+    "leave": "Boʻlimni tark etish",
+    "noSpaces": "Hali boʻlimlar yoʻq",
+    "loginDescription": "Audio boʻlimlar yaratish va qoʻshilish uchun kiring."
+  },
+  "blog": {
+    "title": "Blog",
+    "readMore": "Koʻproq oʻqish",
+    "backToBlog": "Blogga qaytish",
+    "sharePost": "Postni ulashish",
+    "relatedPosts": "Bogʻliq postlar"
   }
 }

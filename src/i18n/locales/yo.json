@@ -184,6 +184,13 @@
     "postVisibility": "Ìríran Àròkọ",
     "defaultPostVisibility": "Ìríran Àròkọ Ìpilẹ̀",
     "defaultPostVisibilityDesc": "Ó ṣiṣẹ́ fún gbogbo àwọn àròkọ lọ́wọ́lọ́wọ́ àti tí ọjọ́ iwájú",
+    "aiScraping": {
+      "section": "Ikẹkọ AI",
+      "label": "Gba AI laaye lati yọ akoonu mi kuro.",
+      "hintAllow": "Àwọn ẹ̀rọ-ayárabíàsá àti àwọn aṣàwákiri tí wọ́n bọ̀wọ̀ fún àmì yìí lè kọ́ni lórí ohùn rẹ, iṣẹ́ ọnà àti kíkọ.",
+      "hintDeny": "Wọ́n ní kí àwọn ètò AI àti àwọn aṣàwákiri tí wọ́n bọ̀wọ̀ fún àmì yìí má ṣe kọ́ni lórí ohùn rẹ, iṣẹ́ ọnà àti kíkọ. Àwọn alátakò tí kò gbójú fo àmì náà kò ní dí i lọ́wọ́.",
+      "saved": "Ìfẹ́ ìdálẹ́kọ̀ọ́ AI ti wà ní ìpamọ́"
+    },
     "defaultProfileTab": "Táàbù profáìlì àbùdá",
     "defaultProfileTabDesc": "Yan táàbù tí àwọn àlejò yóò kọ́kọ́ rí lórí profáìlì rẹ",
     "public": "Gbangba",
@@ -1219,6 +1226,10 @@
     "returnHome": "Padà sí Ilé"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Ẹlẹ́dàá yìí gba ìdánilẹ́kọ̀ọ́ AI lórí àkóónú yìí láyè.",
+      "denied": "Ẹlẹ́dàá yìí kò fàyè gba ìdánilẹ́kọ̀ọ́ AI lórí àkóónú yìí."
+    },
     "back": "Padà",
     "usernameAvailable": "Orúkọ oníṣàmúlò wà!",
     "signUpToClaim": "Forúkọsílẹ̀ lónìí láti gba",

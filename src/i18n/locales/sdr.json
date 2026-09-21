@@ -177,6 +177,13 @@
     "postVisibility": "پوسٹ نظارہ",
     "defaultPostVisibility": "ڈیفالٹ پوسٹ نظارہ",
     "defaultPostVisibilityDesc": "سب موجودہ اور آئندہ پوسٹ پر لاگو ہوگا",
+    "aiScraping": {
+      "section": "د AI روزل",
+      "label": "اجازه د AI سکریپټ زما مینځپانګې ته",
+      "hintAllow": "د AI سیسټمونه او کراولرونه چې دا سیګنال درناوی کوي ممکن ستاسو آډیو، هنر او لیکل روزل شي.",
+      "hintDeny": "د AI سیسټمونه او کراولرونه چې دا سیګنال درناوی کوي له روزنې څخه ستاسو آډیو، هنر او لیکل منع دي. کراولرونه چې سیګنال له پامه غورځوي د دې لخوا نه بند شوي دي.",
+      "saved": "د AI روزل غوره توب خوندي شو"
+    },
     "defaultProfileTab": "پہلے سے طے پروفائل ٹیب",
     "defaultProfileTabDesc": "چنو کہ کون ٹیب دیکھے والا سب سے پہلے تہار پروفائل پر دیکھی",
     "public": "عام",
@@ -1166,6 +1173,10 @@
     "returnHome": "گھر واپس جاؤ"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "دې خالق ته د دې مینځپانګې روزنه ورکول کیږي.",
+      "denied": "دې خالق ته د دې مینځپانګې روزنه نه ورکول کیږي."
+    },
     "back": "واپس",
     "usernameAvailable": "یوزرنیم دستیاب ہے!",
     "signUpToClaim": "لینے کے لیے سائن اپ کرو",
@@ -3008,57 +3019,6 @@
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
   },
-  "post": {
-    "like": "پسند",
-    "comment": "تبصرہ",
-    "repost": "دوبارہ شیئر",
-    "share": "شیئر",
-    "bookmark": "نشانی",
-    "tip": "ٹِپ",
-    "delete": "مٹاؤ",
-    "edit": "ایڈٹ",
-    "report": "رپورٹ",
-    "translate": "ترجمہ",
-    "pinned": "پِن کیا",
-    "replying": "جواب دے رہا ہے",
-    "reply": "جواب",
-    "writeReply": "جواب لکھو...",
-    "noComments": "ابھی تک کوئی تبصرہ نہیں",
-    "viewMore": "اور دیکھو",
-    "postDeleted": "پوسٹ مٹ گیا",
-    "likes": "پسند",
-    "comments": "تبصرے",
-    "reposts": "ری پوسٹ",
-    "shares": "شیئر"
-  },
-  "create": {
-    "title": "پوسٹ بناؤ",
-    "placeholder": "کیا سوچ رہے ہو?",
-    "post": "پوسٹ کرو",
-    "addImage": "تصویر ڈالو",
-    "addVideo": "ویڈیو ڈالو",
-    "addGif": "GIF ڈالو",
-    "addPoll": "پول ڈالو",
-    "addLocation": "جگہ ڈالو",
-    "visibility": "نظارہ",
-    "everyone": "سب لوگ",
-    "followers": "فالوئر",
-    "subscribers": "سبسکرائبر",
-    "mentioned": "جنکا نام لیا"
-  },
-  "featureRequests": {
-    "title": "فیچر درخواست",
-    "submit": "درخواست جمع کراؤ",
-    "vote": "ووٹ",
-    "status": "حالت",
-    "category": "زمرہ",
-    "description": "تفصیل",
-    "comments": "تبصرے",
-    "planned": "منصوبہ بند",
-    "inProgress": "جاری ہے",
-    "completed": "مکمل",
-    "underReview": "جائزے میں"
-  },
   "conversation": {
     "commonGround": {
       "title": "دې ته ورته ځمکه",
@@ -3159,5 +3119,56 @@
         "body": "ومومئ چې څنګه ټیپونه، بیجونه او سوپر پاورز هغه څه چې تاسو دلته کوئ په داسې څه بدلوي چې له هغې څخه ګټه ترلاسه کوئ."
       }
     }
+  },
+  "post": {
+    "like": "پسند",
+    "comment": "تبصرہ",
+    "repost": "دوبارہ شیئر",
+    "share": "شیئر",
+    "bookmark": "نشانی",
+    "tip": "ٹِپ",
+    "delete": "مٹاؤ",
+    "edit": "ایڈٹ",
+    "report": "رپورٹ",
+    "translate": "ترجمہ",
+    "pinned": "پِن کیا",
+    "replying": "جواب دے رہا ہے",
+    "reply": "جواب",
+    "writeReply": "جواب لکھو...",
+    "noComments": "ابھی تک کوئی تبصرہ نہیں",
+    "viewMore": "اور دیکھو",
+    "postDeleted": "پوسٹ مٹ گیا",
+    "likes": "پسند",
+    "comments": "تبصرے",
+    "reposts": "ری پوسٹ",
+    "shares": "شیئر"
+  },
+  "create": {
+    "title": "پوسٹ بناؤ",
+    "placeholder": "کیا سوچ رہے ہو?",
+    "post": "پوسٹ کرو",
+    "addImage": "تصویر ڈالو",
+    "addVideo": "ویڈیو ڈالو",
+    "addGif": "GIF ڈالو",
+    "addPoll": "پول ڈالو",
+    "addLocation": "جگہ ڈالو",
+    "visibility": "نظارہ",
+    "everyone": "سب لوگ",
+    "followers": "فالوئر",
+    "subscribers": "سبسکرائبر",
+    "mentioned": "جنکا نام لیا"
+  },
+  "featureRequests": {
+    "title": "فیچر درخواست",
+    "submit": "درخواست جمع کراؤ",
+    "vote": "ووٹ",
+    "status": "حالت",
+    "category": "زمرہ",
+    "description": "تفصیل",
+    "comments": "تبصرے",
+    "planned": "منصوبہ بند",
+    "inProgress": "جاری ہے",
+    "completed": "مکمل",
+    "underReview": "جائزے میں"
   }
 }

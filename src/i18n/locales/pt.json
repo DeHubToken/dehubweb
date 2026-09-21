@@ -184,6 +184,13 @@
     "postVisibility": "Visibilidade de publicações",
     "defaultPostVisibility": "Visibilidade padrão",
     "defaultPostVisibilityDesc": "Aplica-se a todas as publicações atuais e futuras",
+    "aiScraping": {
+      "section": "Formação em IA",
+      "label": "Permitir a extração de IA do meu conteúdo",
+      "hintAllow": "Sistemas de IA e rastreadores que respeitam esse sinal podem treinar em seu áudio, arte e escrita.",
+      "hintDeny": "Os sistemas de IA e rastreadores que respeitam esse sinal são solicitados a não treinar em seu áudio, arte e escrita. Os rastreadores que ignoram o sinal não são bloqueados por ele.",
+      "saved": "Preferência de formação em IA guardada"
+    },
     "defaultProfileTab": "Separador de perfil padrão",
     "defaultProfileTabDesc": "Escolha que separador os visitantes veem primeiro no seu perfil",
     "public": "Público",
@@ -1237,6 +1244,10 @@
     "returnHome": "Voltar ao início"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Este criador permite formação em IA sobre este conteúdo.",
+      "denied": "Este criador não permite formação em IA sobre este conteúdo."
+    },
     "back": "Voltar",
     "usernameAvailable": "Nome disponível!",
     "signUpToClaim": "Cadastre-se para reivindicar",

@@ -184,6 +184,13 @@
     "postVisibility": "Widoczność postów",
     "defaultPostVisibility": "Domyślna widoczność postów",
     "defaultPostVisibilityDesc": "Dotyczy wszystkich obecnych i przyszłych postów",
+    "aiScraping": {
+      "section": "Szkolenie AI",
+      "label": "Zezwalaj na skrobanie moich treści przez sztuczną inteligencję",
+      "hintAllow": "Systemy sztucznej inteligencji i roboty, które respektują ten sygnał, mogą trenować dźwięk, grafikę i pisanie.",
+      "hintDeny": "Systemy sztucznej inteligencji i roboty, które respektują ten sygnał, są proszone o nieszkolenie się w zakresie dźwięku, grafiki i pisania. Nie blokuje on robotów, które ignorują sygnał.",
+      "saved": "Zapisano preferencje treningu sztucznej inteligencji"
+    },
     "defaultProfileTab": "Domyślna zakładka profilu",
     "defaultProfileTabDesc": "Wybierz, którą zakładkę odwiedzający zobaczą najpierw na Twoim profilu",
     "public": "Publiczny",
@@ -1237,6 +1244,10 @@
     "returnHome": "Wróć na stronę główną"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Ten twórca zezwala na szkolenie sztucznej inteligencji w zakresie tych treści.",
+      "denied": "Ten twórca nie zezwala na szkolenie sztucznej inteligencji w zakresie tych treści."
+    },
     "back": "Wróć",
     "usernameAvailable": "Nazwa użytkownika dostępna!",
     "signUpToClaim": "Zarejestruj się dzisiaj, aby ją zarezerwować",
@@ -5411,74 +5422,6 @@
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
   },
-  "glossary": {
-    "title": "Słownik",
-    "description": "Definicje i wyjaśnienia terminów używanych w aplikacji.",
-    "searchPlaceholder": "Szukaj terminów...",
-    "noResults": "Nie znaleziono terminów pasujących do wyszukiwania.",
-    "table": {
-      "term": "Termin",
-      "definition": "Definicja"
-    },
-    "badges": {
-      "title": "Odznaki",
-      "description": "Odznaki stakingowe są białe, aby lepiej pasowały do motywu.",
-      "tiers": [
-        {
-          "name": "Krab",
-          "min": 10000
-        },
-        {
-          "name": "Homar",
-          "min": 25000
-        },
-        {
-          "name": "Pirania",
-          "min": 50000
-        },
-        {
-          "name": "Żółw",
-          "min": 100000
-        },
-        {
-          "name": "Kobra",
-          "min": 250000
-        },
-        {
-          "name": "Ośmiornica",
-          "min": 500000
-        },
-        {
-          "name": "Krokodyl",
-          "min": 1000000
-        },
-        {
-          "name": "Delfin",
-          "min": 2000000
-        },
-        {
-          "name": "Rekin Tygrysi",
-          "min": 3000000
-        },
-        {
-          "name": "Orka",
-          "min": 5000000
-        },
-        {
-          "name": "Rekin Biały",
-          "min": 10000000
-        },
-        {
-          "name": "Płetwal Błękitny",
-          "min": 25000000
-        },
-        {
-          "name": "Megalodon",
-          "min": 50000000
-        }
-      ]
-    }
-  },
   "conversation": {
     "commonGround": {
       "title": "Wspólny grunt",
@@ -5578,6 +5521,74 @@
         "title": "Zobacz, jak zarabiać",
         "body": "Dowiedz się, jak wskazówki, odznaki i supermocarstwa zamieniają to, co tutaj robisz, w coś, na czym zarabiasz."
       }
+    }
+  },
+  "glossary": {
+    "title": "Słownik",
+    "description": "Definicje i wyjaśnienia terminów używanych w aplikacji.",
+    "searchPlaceholder": "Szukaj terminów...",
+    "noResults": "Nie znaleziono terminów pasujących do wyszukiwania.",
+    "table": {
+      "term": "Termin",
+      "definition": "Definicja"
+    },
+    "badges": {
+      "title": "Odznaki",
+      "description": "Odznaki stakingowe są białe, aby lepiej pasowały do motywu.",
+      "tiers": [
+        {
+          "name": "Krab",
+          "min": 10000
+        },
+        {
+          "name": "Homar",
+          "min": 25000
+        },
+        {
+          "name": "Pirania",
+          "min": 50000
+        },
+        {
+          "name": "Żółw",
+          "min": 100000
+        },
+        {
+          "name": "Kobra",
+          "min": 250000
+        },
+        {
+          "name": "Ośmiornica",
+          "min": 500000
+        },
+        {
+          "name": "Krokodyl",
+          "min": 1000000
+        },
+        {
+          "name": "Delfin",
+          "min": 2000000
+        },
+        {
+          "name": "Rekin Tygrysi",
+          "min": 3000000
+        },
+        {
+          "name": "Orka",
+          "min": 5000000
+        },
+        {
+          "name": "Rekin Biały",
+          "min": 10000000
+        },
+        {
+          "name": "Płetwal Błękitny",
+          "min": 25000000
+        },
+        {
+          "name": "Megalodon",
+          "min": 50000000
+        }
+      ]
     }
   }
 }

@@ -25,6 +25,7 @@ import {
   mergeViewerState,
 } from '@/lib/engagement';
 import { SEOHead } from '@/components/SEOHead';
+import { getAiScrapingPreference } from '@/lib/ai-scraping';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef, useCallback, useMemo, Suspense } from 'react';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
@@ -1141,6 +1142,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
           description={videoSeoDesc.slice(0, 155)}
           url={postSeoUrl(location.pathname, id)}
           type="article"
+          aiScraping={getAiScrapingPreference((post as any).minterUser?.customs)}
           jsonLd={{
             '@context': 'https://schema.org',
             '@type': 'VideoObject',
@@ -1150,6 +1152,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
             ...(videoData.thumbnail && { thumbnailUrl: videoData.thumbnail }),
             ...(post.createdAt && { uploadDate: post.createdAt }),
             publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
+            usageInfo: getAiScrapingPreference((post as any).minterUser?.customs) === 'allow' ? 'ai-training-allowed' : 'ai-training-prohibited',
           }}
         />
         {/* Mobile/tablet: a plain page, immersive media first, back button in the
@@ -1391,6 +1394,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
         image={post?.socialImageUrl ? buildFeedImageUrls([post.socialImageUrl])?.[0] : post?.articleImageUrl ? buildFeedImageUrls([post.articleImageUrl])?.[0] : undefined}
         url={postSeoUrl(location.pathname, id)}
         type="article"
+        aiScraping={getAiScrapingPreference((post as any)?.minterUser?.customs)}
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Article',
@@ -1400,6 +1404,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
           ...(post?.minterDisplayName && { author: { '@type': 'Person', name: post.minterDisplayName } }),
           ...(post?.createdAt && { datePublished: post.createdAt }),
           publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
+          usageInfo: getAiScrapingPreference((post as any)?.minterUser?.customs) === 'allow' ? 'ai-training-allowed' : 'ai-training-prohibited',
         }}
       />
       {/* One layout for every breakpoint. `chromeClearance` is padding INSIDE the

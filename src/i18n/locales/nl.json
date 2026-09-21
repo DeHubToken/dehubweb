@@ -184,6 +184,13 @@
     "postVisibility": "Berichtzichtbaarheid",
     "defaultPostVisibility": "Standaard berichtzichtbaarheid",
     "defaultPostVisibilityDesc": "Geldt voor alle huidige en toekomstige berichten",
+    "aiScraping": {
+      "section": "AI-training",
+      "label": "AI-schrapen van mijn inhoud toestaan",
+      "hintAllow": "AI-systemen en crawlers die dit signaal respecteren, kunnen trainen op je audio, artwork en schrijven.",
+      "hintDeny": "AI-systemen en crawlers die dit signaal respecteren, wordt gevraagd om niet te trainen op je audio, artwork en schrijven. Crawlers die het signaal negeren, worden er niet door geblokkeerd.",
+      "saved": "AI-trainingsvoorkeur opgeslagen"
+    },
     "defaultProfileTab": "Standaard profieltabblad",
     "defaultProfileTabDesc": "Kies welk tabblad bezoekers als eerste zien op je profiel",
     "public": "Openbaar",
@@ -1430,6 +1437,10 @@
     "returnHome": "Terug naar home"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Deze maker staat AI-training toe op deze inhoud.",
+      "denied": "Deze maker staat geen AI-training toe voor deze inhoud."
+    },
     "back": "Terug",
     "usernameAvailable": "Gebruikersnaam beschikbaar!",
     "signUpToClaim": "Meld je vandaag aan om te claimen",
@@ -5605,70 +5616,6 @@
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
   },
-  "home": {
-    "title": "Home",
-    "description": "Welkom op de homepagina"
-  },
-  "glossary": {
-    "title": "DHB Woordenlijst",
-    "description": "Een uitgebreide lijst van termen die gebruikt worden in het DHB ecosysteem.",
-    "searchPlaceholder": "Zoek termen...",
-    "noResults": "Geen termen gevonden die overeenkomen met je zoekopdracht.",
-    "table": {
-      "term": "Term",
-      "definition": "Definitie"
-    },
-    "entries": {
-      "dao": {
-        "term": "DAO",
-        "definition": "Een gedecentraliseerde autonome organisatie (DAO) is een entiteit zonder centrale leiding. Beslissingen worden genomen van onderaf, beheerd door een community die georganiseerd is rond een specifieke set regels die zijn vastgelegd in een blockchain."
-      },
-      "dhb": {
-        "term": "DHB",
-        "definition": "De native token van het DHB netwerk, gebruikt voor governance, staking en het belonen van deelnemers."
-      },
-      "defi": {
-        "term": "DeFi",
-        "definition": "Gedecentraliseerde Financiën (DeFi) is een opkomende financiële technologie gebaseerd op veilige gedistribueerde grootboeken. Het doel is om financiële diensten meer open en toegankelijk te maken, en om de noodzaak voor tussenpersonen te minimaliseren."
-      },
-      "nft": {
-        "term": "NFT",
-        "definition": "Een Non-Fungible Token (NFT) is een uniek digitaal item dat eigendom vertegenwoordigt. NFT's kunnen kunst, muziek, in-game items en andere vormen van creatief werk vertegenwoordigen. Ze worden op een blockchain opgeslagen, waardoor ze veilig en transparant zijn."
-      },
-      "staking": {
-        "term": "Staking",
-        "definition": "Het proces van het vasthouden van cryptocurrency om een blockchain netwerk te ondersteunen en beloningen te verdienen. Door DHB te staken, kunnen gebruikers bijdragen aan de veiligheid en efficiëntie van het netwerk."
-      },
-      "yieldFarming": {
-        "term": "Yield Farming",
-        "definition": "Een manier om beloningen te genereren met cryptocurrency holdings. Het houdt in dat je je crypto uitleent of vastzet in gedecentraliseerde financiële (DeFi) protocollen om rente of beloningen te verdienen."
-      },
-      "amm": {
-        "term": "AMM",
-        "definition": "Een Automated Market Maker (AMM) is een type gedecentraliseerde cryptocurrency exchange die geen orderboek gebruikt. In plaats daarvan vertrouwt het op een formule om de prijzen van activa te bepalen."
-      },
-      "smartContract": {
-        "term": "Smart Contract",
-        "definition": "Een zelfuitvoerend contract waarbij de voorwaarden van de overeenkomst direct in code zijn geschreven. Smart contracts automatiseren de uitvoering van een overeenkomst, zodat alle deelnemers direct zeker kunnen zijn van het resultaat, zonder tussenpersonen."
-      },
-      "gas": {
-        "term": "Gas",
-        "definition": "Een eenheid die de hoeveelheid rekenkracht meet die nodig is om een bepaalde operatie op een blockchain netwerk uit te voeren. Gas wordt meestal betaald in de native token van het netwerk."
-      },
-      "oracle": {
-        "term": "Oracle",
-        "definition": "Een dienst die smart contracts voorziet van externe gegevens. Oracles zijn essentieel voor DeFi applicaties die real-world informatie nodig hebben, zoals prijsfeeds."
-      },
-      "web3": {
-        "term": "Web3",
-        "definition": "Web3 is het idee voor een nieuw iteratief internet dat blockchain-technologie, decentralisatie, cryptocurrency en non-fungible tokens (NFT's) omvat."
-      },
-      "metaverse": {
-        "term": "Metaverse",
-        "definition": "Een collectieve virtuele gedeelde ruimte, gecreëerd door de convergentie van virtueel verbeterde fysieke realiteit en fysiek persistente virtuele ruimte, inclusief de som van alle virtuele werelden, augmented reality en het internet."
-      }
-    }
-  },
   "conversation": {
     "commonGround": {
       "title": "Gemeenschappelijke grond",
@@ -5767,6 +5714,70 @@
       "rewards": {
         "title": "Bekijk hoe omzet maken werkt",
         "body": "Ontdek hoe tips, badges en SuperPowers van wat je hier doet, iets maken waar je aan verdient."
+      }
+    }
+  },
+  "home": {
+    "title": "Home",
+    "description": "Welkom op de homepagina"
+  },
+  "glossary": {
+    "title": "DHB Woordenlijst",
+    "description": "Een uitgebreide lijst van termen die gebruikt worden in het DHB ecosysteem.",
+    "searchPlaceholder": "Zoek termen...",
+    "noResults": "Geen termen gevonden die overeenkomen met je zoekopdracht.",
+    "table": {
+      "term": "Term",
+      "definition": "Definitie"
+    },
+    "entries": {
+      "dao": {
+        "term": "DAO",
+        "definition": "Een gedecentraliseerde autonome organisatie (DAO) is een entiteit zonder centrale leiding. Beslissingen worden genomen van onderaf, beheerd door een community die georganiseerd is rond een specifieke set regels die zijn vastgelegd in een blockchain."
+      },
+      "dhb": {
+        "term": "DHB",
+        "definition": "De native token van het DHB netwerk, gebruikt voor governance, staking en het belonen van deelnemers."
+      },
+      "defi": {
+        "term": "DeFi",
+        "definition": "Gedecentraliseerde Financiën (DeFi) is een opkomende financiële technologie gebaseerd op veilige gedistribueerde grootboeken. Het doel is om financiële diensten meer open en toegankelijk te maken, en om de noodzaak voor tussenpersonen te minimaliseren."
+      },
+      "nft": {
+        "term": "NFT",
+        "definition": "Een Non-Fungible Token (NFT) is een uniek digitaal item dat eigendom vertegenwoordigt. NFT's kunnen kunst, muziek, in-game items en andere vormen van creatief werk vertegenwoordigen. Ze worden op een blockchain opgeslagen, waardoor ze veilig en transparant zijn."
+      },
+      "staking": {
+        "term": "Staking",
+        "definition": "Het proces van het vasthouden van cryptocurrency om een blockchain netwerk te ondersteunen en beloningen te verdienen. Door DHB te staken, kunnen gebruikers bijdragen aan de veiligheid en efficiëntie van het netwerk."
+      },
+      "yieldFarming": {
+        "term": "Yield Farming",
+        "definition": "Een manier om beloningen te genereren met cryptocurrency holdings. Het houdt in dat je je crypto uitleent of vastzet in gedecentraliseerde financiële (DeFi) protocollen om rente of beloningen te verdienen."
+      },
+      "amm": {
+        "term": "AMM",
+        "definition": "Een Automated Market Maker (AMM) is een type gedecentraliseerde cryptocurrency exchange die geen orderboek gebruikt. In plaats daarvan vertrouwt het op een formule om de prijzen van activa te bepalen."
+      },
+      "smartContract": {
+        "term": "Smart Contract",
+        "definition": "Een zelfuitvoerend contract waarbij de voorwaarden van de overeenkomst direct in code zijn geschreven. Smart contracts automatiseren de uitvoering van een overeenkomst, zodat alle deelnemers direct zeker kunnen zijn van het resultaat, zonder tussenpersonen."
+      },
+      "gas": {
+        "term": "Gas",
+        "definition": "Een eenheid die de hoeveelheid rekenkracht meet die nodig is om een bepaalde operatie op een blockchain netwerk uit te voeren. Gas wordt meestal betaald in de native token van het netwerk."
+      },
+      "oracle": {
+        "term": "Oracle",
+        "definition": "Een dienst die smart contracts voorziet van externe gegevens. Oracles zijn essentieel voor DeFi applicaties die real-world informatie nodig hebben, zoals prijsfeeds."
+      },
+      "web3": {
+        "term": "Web3",
+        "definition": "Web3 is het idee voor een nieuw iteratief internet dat blockchain-technologie, decentralisatie, cryptocurrency en non-fungible tokens (NFT's) omvat."
+      },
+      "metaverse": {
+        "term": "Metaverse",
+        "definition": "Een collectieve virtuele gedeelde ruimte, gecreëerd door de convergentie van virtueel verbeterde fysieke realiteit en fysiek persistente virtuele ruimte, inclusief de som van alle virtuele werelden, augmented reality en het internet."
       }
     }
   }

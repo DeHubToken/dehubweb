@@ -184,6 +184,13 @@
     "postVisibility": "Viditelnost příspěvků",
     "defaultPostVisibility": "Výchozí viditelnost",
     "defaultPostVisibilityDesc": "Platí pro všechny současné i budoucí příspěvky",
+    "aiScraping": {
+      "section": "Školení AI",
+      "label": "Povolit AI škrábání mého obsahu",
+      "hintAllow": "Systémy umělé inteligence a prohledávače, které tento signál respektují, mohou trénovat váš zvuk, umělecká díla a psaní.",
+      "hintDeny": "Umělá inteligence a prohledávače, které respektují tento signál, jsou žádány, aby netrénovaly na vašem zvuku, uměleckých dílech a psaní. Prohledávače, které ignorují signál, nejsou blokovány.",
+      "saved": "Předvolba školení AI uložena"
+    },
     "defaultProfileTab": "Výchozí karta profilu",
     "defaultProfileTabDesc": "Vyber, kterou kartu uvidí návštěvníci na tvém profilu jako první",
     "public": "Veřejné",
@@ -1232,6 +1239,10 @@
     "returnHome": "Zpět na hlavní stránku"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Tento tvůrce umožňuje školení AI o tomto obsahu.",
+      "denied": "Tento tvůrce nepovoluje školení AI o tomto obsahu."
+    },
     "back": "Zpět",
     "usernameAvailable": "Uživatelské jméno je dostupné!",
     "signUpToClaim": "Zaregistrujte se a získejte ho",

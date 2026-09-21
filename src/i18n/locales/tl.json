@@ -184,6 +184,13 @@
     "postVisibility": "Visibility ng Post",
     "defaultPostVisibility": "Default na Visibility ng Post",
     "defaultPostVisibilityDesc": "Nalalapat sa lahat ng kasalukuyan at susunod na post",
+    "aiScraping": {
+      "section": "Pagsasanay sa AI",
+      "label": "Pahintulutan ang pag - scrape ng AI ng aking nilalaman",
+      "hintAllow": "Ang mga sistema ng AI at mga crawler na iginagalang ang signal na ito ay maaaring magsanay sa iyong audio, likhang sining at pagsulat.",
+      "hintDeny": "Ang mga sistema ng AI at mga crawler na iginagalang ang signal na ito ay hinihiling na huwag sanayin sa iyong audio, likhang sining at pagsulat. Crawlers na huwag pansinin ang signal ay hindi hinarangan ng mga ito.",
+      "saved": "Na - save ang preperensiya sa pagsasanay ng AI"
+    },
     "defaultProfileTab": "Default na tab ng profile",
     "defaultProfileTabDesc": "Piliin kung aling tab ang unang makikita ng mga bisita sa profile mo",
     "public": "Pampubliko",
@@ -1262,6 +1269,10 @@
     "returnHome": "Return Home"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Pinapayagan ng tagalikha na ito ang pagsasanay sa AI sa nilalamang ito.",
+      "denied": "Hindi pinapayagan ng tagalikha na ito ang pagsasanay sa AI sa nilalamang ito."
+    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUp": "Sign Up",
@@ -5213,6 +5224,107 @@
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
   },
+  "conversation": {
+    "commonGround": {
+      "title": "Karaniwang Lupa",
+      "sectionLabel": "Talakayan",
+      "sheetHint": "Maikling paghinto bago ang iyong tugon. Ang iyong mga sagot ay mananatiling pribado.",
+      "toggleLabel": "Mode ng Karaniwang Lupa",
+      "toggleHint": "Bago ang kanilang unang tugon, tinatanong ang mga mambabasa para sa pinakamalakas na punto ng kabilang panig at kung ano ang ibinabahagi ng parehong panig, pagkatapos ay pinaalalahanan na iwasan ang pag-iisip na alinman-o.",
+      "banner": "Binuksan ng creator na ito ang mode ng Karaniwang Lupa. Bago ka tumugon, tatanungin ka para sa pinakamalakas na punto ng kabilang panig at kung ano ang ibinabahagi mo.",
+      "stepOf": "Hakbang {{step}} ng {{total}}",
+      "step1Title": "Sa isang pangungusap, ano ang pinakamalakas na punto sa kabilang panig?",
+      "step1Placeholder": "Ang pinakamahusay na argumento na maaari nilang gawin ay…",
+      "step2Title": "Ano ang napagkasunduan ninyo at nila?",
+      "step2Placeholder": "Pareho naming gusto…",
+      "reminderTitle": "Mag-ingat sa pag-iisip na alinman-o",
+      "reminderBody": "Karamihan sa mga hindi pagkakaunawaan ay hindi pagpipilian sa pagitan ng dalawang sukdulan. Kapag ang isang tanong ay parang alinman-o, karaniwang mayroong pangatlong opsyon sa pagitan.",
+      "example1": "Ang isang kapitbahay na nais ng mas tahimik na kalye at isang kapitbahay na nais ng mas maraming paradahan ay parehong maaaring tama tungkol sa kanilang kailangan.",
+      "example2": "Ang dalawang magulang ay maaaring hindi magkasundo tungkol sa screen time at magkasundo pa rin na ang bata ay dapat matulog nang maayos at maging maayos sa paaralan.",
+      "noShouting": "Ang mga kumplikadong isyu ay hindi kailanman nalulutas sa pamamagitan ng pagsigaw o mga banta. Ang isang mahinahon, tiyak na tugon ay ang binabasa ng mga tao.",
+      "reviewTitle": "Isang huling tingin sa iyong tugon",
+      "privateNote": "Ang iyong mga sagot ay para lamang sa iyo at hindi ipinopost kasama ng iyong tugon.",
+      "continueLabel": "Magpatuloy",
+      "back": "Bumalik",
+      "postReply": "I-post ang aking tugon",
+      "tooShort": "Sumulat ng hindi bababa sa 10 karakter upang mabilang ang pagninilay.",
+      "saveFailed": "Hindi nai-save ang setting ng Karaniwang Lupa. Pakisubukang muli."
+    },
+    "coach": {
+      "title": "Coach ng Pag-uusap",
+      "checkTone": "Suriin ang aking tono",
+      "checking": "Sinusuri ang tono ng iyong tugon…",
+      "allClear": "Walang napansin. Ang iyong tugon ay tila patas at mahinahon.",
+      "postAnyway": "I-post pa rin",
+      "dismiss": "Balewalain ang mungkahing ito",
+      "settingLabel": "Ipakita ang mga mungkahi sa pagtuturo",
+      "settingHint": "Nag-aalok ng mabilis na pagsusuri ng tono sa mas mahahabang komento at itinuturo ang mga karaniwang pagkakamali sa pangangatwiran bago mo i-post. Mga mungkahi lamang, hindi kailanman pagbabawal.",
+      "kind": {
+        "ad_hominem": "Inaatake ang tao",
+        "straw_man": "Maling paglalahad ng kanilang pananaw",
+        "false_dilemma": "Framing na \"alinman-o\"",
+        "overgeneralisation": "Malawakang pahayag",
+        "hostile_tone": "Mapusok na tono"
+      }
+    }
+  },
+  "onboarding": {
+    "optIn": {
+      "title": "Bago ka dito? Gusto mo ng maikling guided tour?",
+      "body": "Maaari ka naming gabayan sa DeHub nang paisa-isa, at itanong kung kumusta ang bawat hakbang para maayos namin ang anumang nakakalito.",
+      "yes": "Oo, ipakita mo sa akin",
+      "no": "Hindi salamat"
+    },
+    "checklist": {
+      "title": "Pagsisimula",
+      "subtitle": "Ilang maikling hakbang para ma-set up ang iyong sarili sa DeHub.",
+      "progress": "{{done}} ng {{total}} tapos na",
+      "go": "Dalhin mo ako doon",
+      "done": "Markahan bilang tapos",
+      "skip": "Laktawan ang hakbang na ito",
+      "dismiss": "Itago ang mga hakbang sa pagsisimula",
+      "reopen": "Buksan ang gabay",
+      "finishedTitle": "Tapos na ang lahat — mahusay na nagawa.",
+      "finishedBody": "Salamat sa pagsasabi sa amin kung kumusta ang bawat hakbang. Ang iyong mga sagot ay direktang napupunta sa mga taong gumagawa nito.",
+      "chip": "Pagsisimula"
+    },
+    "rating": {
+      "question": "Madali ba ito?",
+      "easy": "Oo, madali lang iyon",
+      "hard": "Hindi, mahirap iyon",
+      "thanks": "Salamat, nakakatulong iyan."
+    },
+    "steps": {
+      "profile": {
+        "title": "Itakda ang iyong username at larawan",
+        "body": "Pumili ng pangalan na makikilala ng mga tao at magdagdag ng profile picture, para mukhang galing sa iyo ang iyong mga post."
+      },
+      "wallet": {
+        "title": "Tingnan ang iyong wallet at kung ano ang DHB",
+        "body": "Ang iyong wallet ay umiiral na at naglalaman ng iyong DHB. Silipin kung ano ang laman nito at saan ito nanggaling."
+      },
+      "feed": {
+        "title": "Piliin kung ano ang gusto mong makita",
+        "body": "Sagutin ang ilang mabilis na tanong at ang iyong feed ay magsisimulang magpakita ng mga uri ng post na gusto mo talaga."
+      },
+      "first-post": {
+        "title": "Gumawa ng iyong unang post",
+        "body": "Magbahagi ng isang saloobin, isang larawan, o isang video. Sandali lang ito at ito ang paraan para mahanap ka ng mga tao."
+      },
+      "follow": {
+        "title": "Sundan ang tatlong creator",
+        "body": "Mas gumaganda ang iyong feed kapag sumunod ka sa ilang tao. Mag-browse kung sino ang nandito at pumili ng tatlo para simulan."
+      },
+      "comment": {
+        "title": "Mag-iwan ng komento sa isang post",
+        "body": "Tumugon sa isang bagay na nagustuhan mo sa iyong feed. Ang mga pag - uusap ay kung saan ang karamihan sa DeHub ay talagang nangyayari."
+      },
+      "rewards": {
+        "title": "Tingnan kung paano gumagana ang kita",
+        "body": "Alamin kung paano ginagawa ng mga tip, badge, at SuperPower ang ginagawa mo rito bilang isang bagay na kinikita mo."
+      }
+    }
+  },
   "walletSelector": {
     "title": "Piliin ang Wallet",
     "description": "Piliin ang wallet na gusto mong ikonekta sa app na ito."
@@ -5346,106 +5458,5 @@
   "notification": {
     "noNotifications": "Walang mga abiso",
     "loadMore": "Mag-load ng higit pa"
-  },
-  "conversation": {
-    "commonGround": {
-      "title": "Karaniwang Lupa",
-      "sectionLabel": "Talakayan",
-      "sheetHint": "Maikling paghinto bago ang iyong tugon. Ang iyong mga sagot ay mananatiling pribado.",
-      "toggleLabel": "Mode ng Karaniwang Lupa",
-      "toggleHint": "Bago ang kanilang unang tugon, tinatanong ang mga mambabasa para sa pinakamalakas na punto ng kabilang panig at kung ano ang ibinabahagi ng parehong panig, pagkatapos ay pinaalalahanan na iwasan ang pag-iisip na alinman-o.",
-      "banner": "Binuksan ng creator na ito ang mode ng Karaniwang Lupa. Bago ka tumugon, tatanungin ka para sa pinakamalakas na punto ng kabilang panig at kung ano ang ibinabahagi mo.",
-      "stepOf": "Hakbang {{step}} ng {{total}}",
-      "step1Title": "Sa isang pangungusap, ano ang pinakamalakas na punto sa kabilang panig?",
-      "step1Placeholder": "Ang pinakamahusay na argumento na maaari nilang gawin ay…",
-      "step2Title": "Ano ang napagkasunduan ninyo at nila?",
-      "step2Placeholder": "Pareho naming gusto…",
-      "reminderTitle": "Mag-ingat sa pag-iisip na alinman-o",
-      "reminderBody": "Karamihan sa mga hindi pagkakaunawaan ay hindi pagpipilian sa pagitan ng dalawang sukdulan. Kapag ang isang tanong ay parang alinman-o, karaniwang mayroong pangatlong opsyon sa pagitan.",
-      "example1": "Ang isang kapitbahay na nais ng mas tahimik na kalye at isang kapitbahay na nais ng mas maraming paradahan ay parehong maaaring tama tungkol sa kanilang kailangan.",
-      "example2": "Ang dalawang magulang ay maaaring hindi magkasundo tungkol sa screen time at magkasundo pa rin na ang bata ay dapat matulog nang maayos at maging maayos sa paaralan.",
-      "noShouting": "Ang mga kumplikadong isyu ay hindi kailanman nalulutas sa pamamagitan ng pagsigaw o mga banta. Ang isang mahinahon, tiyak na tugon ay ang binabasa ng mga tao.",
-      "reviewTitle": "Isang huling tingin sa iyong tugon",
-      "privateNote": "Ang iyong mga sagot ay para lamang sa iyo at hindi ipinopost kasama ng iyong tugon.",
-      "continueLabel": "Magpatuloy",
-      "back": "Bumalik",
-      "postReply": "I-post ang aking tugon",
-      "tooShort": "Sumulat ng hindi bababa sa 10 karakter upang mabilang ang pagninilay.",
-      "saveFailed": "Hindi nai-save ang setting ng Karaniwang Lupa. Pakisubukang muli."
-    },
-    "coach": {
-      "title": "Coach ng Pag-uusap",
-      "checkTone": "Suriin ang aking tono",
-      "checking": "Sinusuri ang tono ng iyong tugon…",
-      "allClear": "Walang napansin. Ang iyong tugon ay tila patas at mahinahon.",
-      "postAnyway": "I-post pa rin",
-      "dismiss": "Balewalain ang mungkahing ito",
-      "settingLabel": "Ipakita ang mga mungkahi sa pagtuturo",
-      "settingHint": "Nag-aalok ng mabilis na pagsusuri ng tono sa mas mahahabang komento at itinuturo ang mga karaniwang pagkakamali sa pangangatwiran bago mo i-post. Mga mungkahi lamang, hindi kailanman pagbabawal.",
-      "kind": {
-        "ad_hominem": "Inaatake ang tao",
-        "straw_man": "Maling paglalahad ng kanilang pananaw",
-        "false_dilemma": "Framing na \"alinman-o\"",
-        "overgeneralisation": "Malawakang pahayag",
-        "hostile_tone": "Mapusok na tono"
-      }
-    }
-  },
-  "onboarding": {
-    "optIn": {
-      "title": "Bago ka dito? Gusto mo ng maikling guided tour?",
-      "body": "Maaari ka naming gabayan sa DeHub nang paisa-isa, at itanong kung kumusta ang bawat hakbang para maayos namin ang anumang nakakalito.",
-      "yes": "Oo, ipakita mo sa akin",
-      "no": "Hindi salamat"
-    },
-    "checklist": {
-      "title": "Pagsisimula",
-      "subtitle": "Ilang maikling hakbang para ma-set up ang iyong sarili sa DeHub.",
-      "progress": "{{done}} ng {{total}} tapos na",
-      "go": "Dalhin mo ako doon",
-      "done": "Markahan bilang tapos",
-      "skip": "Laktawan ang hakbang na ito",
-      "dismiss": "Itago ang mga hakbang sa pagsisimula",
-      "reopen": "Buksan ang gabay",
-      "finishedTitle": "Tapos na ang lahat — mahusay na nagawa.",
-      "finishedBody": "Salamat sa pagsasabi sa amin kung kumusta ang bawat hakbang. Ang iyong mga sagot ay direktang napupunta sa mga taong gumagawa nito.",
-      "chip": "Pagsisimula"
-    },
-    "rating": {
-      "question": "Madali ba ito?",
-      "easy": "Oo, madali lang iyon",
-      "hard": "Hindi, mahirap iyon",
-      "thanks": "Salamat, nakakatulong iyan."
-    },
-    "steps": {
-      "profile": {
-        "title": "Itakda ang iyong username at larawan",
-        "body": "Pumili ng pangalan na makikilala ng mga tao at magdagdag ng profile picture, para mukhang galing sa iyo ang iyong mga post."
-      },
-      "wallet": {
-        "title": "Tingnan ang iyong wallet at kung ano ang DHB",
-        "body": "Ang iyong wallet ay umiiral na at naglalaman ng iyong DHB. Silipin kung ano ang laman nito at saan ito nanggaling."
-      },
-      "feed": {
-        "title": "Piliin kung ano ang gusto mong makita",
-        "body": "Sagutin ang ilang mabilis na tanong at ang iyong feed ay magsisimulang magpakita ng mga uri ng post na gusto mo talaga."
-      },
-      "first-post": {
-        "title": "Gumawa ng iyong unang post",
-        "body": "Magbahagi ng isang saloobin, isang larawan, o isang video. Sandali lang ito at ito ang paraan para mahanap ka ng mga tao."
-      },
-      "follow": {
-        "title": "Sundan ang tatlong creator",
-        "body": "Mas gumaganda ang iyong feed kapag sumunod ka sa ilang tao. Mag-browse kung sino ang nandito at pumili ng tatlo para simulan."
-      },
-      "comment": {
-        "title": "Mag-iwan ng komento sa isang post",
-        "body": "Tumugon sa isang bagay na nagustuhan mo sa iyong feed. Ang mga pag - uusap ay kung saan ang karamihan sa DeHub ay talagang nangyayari."
-      },
-      "rewards": {
-        "title": "Tingnan kung paano gumagana ang kita",
-        "body": "Alamin kung paano ginagawa ng mga tip, badge, at SuperPower ang ginagawa mo rito bilang isang bagay na kinikita mo."
-      }
-    }
   }
 }

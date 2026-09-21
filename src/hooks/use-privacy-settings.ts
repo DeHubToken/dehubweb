@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { updateProfile } from '@/lib/api/dehub';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { parseDefaultProfileTab } from '@/components/app/profile/ProfileConstants';
+import { getAiScrapingPreference, mergeAiScrapingPreference, type AiScrapingPreference } from '@/lib/ai-scraping';
 
 /**
  * Follow visibility modes stored in DeHub API customs.followVisibility:
@@ -49,6 +50,7 @@ export function usePrivacySettings() {
   const { showFollowersFollowing, hideFollowerCounts } = parseVisibility(customs?.followVisibility);
   const isPrivate = profile?.isPrivate === true;
   const hideBadgeAndBalance = profile?.hideBadgeAndBalance === true;
+  const aiScraping = getAiScrapingPreference(customs);
 
   const updateMutation = useMutation({
     mutationFn: async (updates: {
@@ -58,6 +60,7 @@ export function usePrivacySettings() {
       default_profile_tab?: string;
       is_private?: boolean;
       hide_badge_and_balance?: boolean;
+      ai_scraping?: AiScrapingPreference;
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
 
@@ -97,9 +100,16 @@ export function usePrivacySettings() {
         customsUpdates.defaultProfileTab = updates.default_profile_tab;
       }
 
+      let mergedCustoms: Record<string, string> | undefined;
       if (Object.keys(customsUpdates).length > 0) {
         const existingCustoms = (customs ?? {}) as Record<string, string>;
-        profileUpdate.customs = { ...existingCustoms, ...customsUpdates };
+        mergedCustoms = { ...existingCustoms, ...customsUpdates };
+      }
+      if (updates.ai_scraping !== undefined) {
+        mergedCustoms = mergeAiScrapingPreference(mergedCustoms ?? (customs as Record<string, string>), updates.ai_scraping);
+      }
+      if (mergedCustoms) {
+        profileUpdate.customs = mergedCustoms;
       }
 
       await updateProfile(profileUpdate);
@@ -121,6 +131,7 @@ export function usePrivacySettings() {
     default_profile_tab?: string;
     is_private?: boolean;
     hide_badge_and_balance?: boolean;
+    ai_scraping?: AiScrapingPreference;
   }) => {
     updateMutation.mutate(updates);
   };
@@ -132,6 +143,7 @@ export function usePrivacySettings() {
     hideFollowerCounts,
     isPrivate,
     hideBadgeAndBalance,
+    aiScraping,
     defaultPostVisibility: (customs?.defaultPostVisibility as 'public' | 'private') ?? 'public',
     defaultProfileTab: parseDefaultProfileTab(customs?.defaultProfileTab),
     updateSettings,
@@ -158,5 +170,6 @@ export function useUserPrivacySettings(walletAddress?: string) {
     showFollowersFollowing,
     hideFollowerCounts,
     defaultPostVisibility: (customs?.defaultPostVisibility as 'public' | 'private') ?? 'public',
+    aiScraping: getAiScrapingPreference(customs),
   };
 }

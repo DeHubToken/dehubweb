@@ -184,6 +184,13 @@
     "postVisibility": "Намоёнии нашр",
     "defaultPostVisibility": "Намоёнии пешфарз",
     "defaultPostVisibilityDesc": "Ба ҳамаи нашрҳои ҷорӣ ва оянда татбиқ мешавад",
+    "aiScraping": {
+      "section": "Омӯзиши AI",
+      "label": "Pahintulutan ang pagkaka-krap ng AI ng aking nilalaman",
+      "hintAllow": "Системаҳои AI ва crawlers, ки ин сигналро эҳтиром мекунанд, метавонанд дар аудио, санъат ва навиштани шумо омӯзанд.",
+      "hintDeny": "Системаҳои AI ва crawlers, ки ин сигналро эҳтиром мекунанд, хоҳиш карда мешаванд, ки дар аудио, санъат ва навиштани шумо таълим надиҳанд. Crawlers, ки сигналро нодида мегиранд, аз тарафи он баста намешаванд.",
+      "saved": "Бартарии омӯзишии AI захира карда шуд"
+    },
     "defaultProfileTab": "Варақи пешфарзи профил",
     "defaultProfileTabDesc": "Интихоб кунед, ки меҳмонон дар профили шумо аввал кадом варақро бинанд",
     "public": "Оммавӣ",
@@ -1213,6 +1220,10 @@
     "returnHome": "Бозгашт ба асосӣ"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Ang creator na ito ay nagbibigay ng pagsasanay sa AI sa n",
+      "denied": "Ang creator na ito ay hindi pinapahintulutan sa AI sa nilalaman na ito"
+    },
     "back": "Бозгашт",
     "usernameAvailable": "Номи корбар озод аст!",
     "signUpToClaim": "Сабтином кунед то гиред",

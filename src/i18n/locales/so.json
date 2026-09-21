@@ -184,6 +184,13 @@
     "postVisibility": "Muuqaalka Qoraalka",
     "defaultPostVisibility": "Muuqaalka Qoraalka ee Caadiga ah",
     "defaultPostVisibilityDesc": "Wuxuu ku dhaqmaa dhammaan qoraallada hadda jira iyo kuwa mustaqbalka",
+    "aiScraping": {
+      "section": "Tababarka AI",
+      "label": "U oggolow AI xoqida nuxurkayga",
+      "hintAllow": "Nidaamyada AI iyo crawlers ixtiraamaya calaamaddan ayaa laga yaabaa inay ku tababaraan maqalkaaga, farshaxankaaga iyo qoraaga.",
+      "hintDeny": "Nidaamyada AI iyo crawlers ixtiraamaya calaamadan waxaa laga codsanayaa inaysan ku tababarin maqalkaaga, farshaxankaaga iyo qoraaga. Crawlers oo iska indho tiraya calaamadda looma xannibo.",
+      "saved": "Doorbididda tababarka AI ee la badbaadiyay"
+    },
     "defaultProfileTab": "Tabka profilka caadiga ah",
     "defaultProfileTabDesc": "Dooro tabka ay booqdayaashu marka hore arkaan profilkaaga",
     "public": "Dadweyne",
@@ -1221,6 +1228,10 @@
     "returnHome": "Ku Noqo Guriga"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Abuurahaani wuxuu u oggolaanayaa tababarka AI ee ku saabsan nuxurkan.",
+      "denied": "Abuurahan ma ogola tababarka AI ee ku saabsan nuxurkan."
+    },
     "back": "Dib",
     "usernameAvailable": "Magaca isticmaalaha waa la heli karaa!",
     "signUpToClaim": "Maanta isdiiwaangeli si aad u hesho",

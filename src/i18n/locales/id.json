@@ -184,6 +184,13 @@
     "postVisibility": "Visibilitas Postingan",
     "defaultPostVisibility": "Visibilitas Default",
     "defaultPostVisibilityDesc": "Berlaku untuk semua postingan saat ini dan yang akan datang",
+    "aiScraping": {
+      "section": "Pelatihan AI",
+      "label": "Izinkan AI mengikis konten saya",
+      "hintAllow": "Sistem AI dan perayap yang menghormati sinyal ini dapat melatih audio, karya seni, dan tulisan Anda.",
+      "hintDeny": "Sistem AI dan perayap yang menghormati sinyal ini diminta untuk tidak melatih audio, karya seni, dan tulisan Anda. Perayap yang mengabaikan sinyal tidak terhalang olehnya.",
+      "saved": "Preferensi pelatihan AI disimpan"
+    },
     "defaultProfileTab": "Tab profil bawaan",
     "defaultProfileTabDesc": "Pilih tab mana yang pertama dilihat pengunjung di profil Anda",
     "public": "Publik",
@@ -1237,6 +1244,10 @@
     "returnHome": "Kembali ke Beranda"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Kreator ini mengizinkan pelatihan AI untuk konten ini.",
+      "denied": "Kreator ini tidak mengizinkan pelatihan AI pada konten ini."
+    },
     "back": "Kembali",
     "usernameAvailable": "Nama pengguna tersedia!",
     "signUpToClaim": "Daftar hari ini untuk mengklaim",
