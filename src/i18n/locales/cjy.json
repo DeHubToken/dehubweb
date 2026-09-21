@@ -1940,7 +1940,9 @@
       "chartActive": "活跃用户",
       "growth": "本月 +{{percent}}%",
       "growthTerm": "增长",
-      "recordingSince": "自 {{date}} 起记录"
+      "recordingSince": "自 {{date}} 起记录",
+      "viewMembers": "查看成员",
+      "openNewMembers": "打开新成员列表"
     },
     "title": "统计",
     "subtitle": "实时嘞开源情报",

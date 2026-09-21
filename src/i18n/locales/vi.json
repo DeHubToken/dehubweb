@@ -1826,7 +1826,9 @@
       "chartActive": "Người đang hoạt động",
       "growth": "+{{percent}}% tháng này",
       "growthTerm": "Tăng trưởng",
-      "recordingSince": "ghi nhận từ {{date}}"
+      "recordingSince": "ghi nhận từ {{date}}",
+      "viewMembers": "Xem thành viên",
+      "openNewMembers": "Mở danh sách thành viên mới"
     },
     "title": "Thống kê",
     "subtitle": "Thông tin nguồn mở theo thời gian thực",

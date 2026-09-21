@@ -2028,7 +2028,9 @@
       "chartActive": "Aktīvi cilvēki",
       "growth": "+{{percent}} % šomēnes",
       "growthTerm": "Izaugsme",
-      "recordingSince": "reģistrēts kopš {{date}}"
+      "recordingSince": "reģistrēts kopš {{date}}",
+      "viewMembers": "Skatīt dalībniekus",
+      "openNewMembers": "Atvērt jauno dalībnieku sarakstu"
     },
     "title": "Statistika",
     "subtitle": "Atklātā koda dati reāllaikā",

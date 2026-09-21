@@ -2022,7 +2022,9 @@
       "chartActive": "Namoota sochii irra jiran",
       "growth": "+{{percent}}% ji'a kana",
       "growthTerm": "Guddina",
-      "recordingSince": "{{date}} irraa kaasee galmaa'aa jira"
+      "recordingSince": "{{date}} irraa kaasee galmaa'aa jira",
+      "viewMembers": "Miseensota ilaali",
+      "openNewMembers": "Tarree miseensota haaraa banaa"
     },
     "title": "Istaatistiksii",
     "subtitle": "Odeeffannoo madda banaa yeroo dhugaa",

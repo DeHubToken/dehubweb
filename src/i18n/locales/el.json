@@ -1868,6 +1868,8 @@
       "thisYear": "Αυτό το έτος",
       "allTime": "Όλο το διάστημα",
       "newMembers": "Νέα μέλη",
+      "viewMembers": "Προβολή μελών",
+      "openNewMembers": "Άνοιγμα της λίστας νέων μελών",
       "chartMembers": "Μέλη με την πάροδο του χρόνου",
       "chartActive": "Ενεργά άτομα",
       "growth": "+{{percent}}% αυτόν τον μήνα",
@@ -4767,6 +4769,7 @@
     "ttsHint": "Διαβάστε δυνατά σε όλους όσους παρακολουθούν την άφιξη του δώρου σας."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -4841,7 +4844,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

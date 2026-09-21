@@ -1927,7 +1927,9 @@
       "chartActive": "Mga aktibong tao",
       "growth": "+{{percent}}% ngayong buwan",
       "growthTerm": "Paglago",
-      "recordingSince": "itinatala mula {{date}}"
+      "recordingSince": "itinatala mula {{date}}",
+      "viewMembers": "Tingnan ang mga miyembro",
+      "openNewMembers": "Buksan ang listahan ng mga bagong miyembro"
     },
     "title": "Istatistika",
     "subtitle": "Real-time na open source na impormasyon",

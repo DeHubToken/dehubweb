@@ -1585,7 +1585,9 @@
       "chartActive": "ผู้ใช้งานที่ใช้งานอยู่",
       "growth": "+{{percent}}% เดือนนี้",
       "growthTerm": "การเติบโต",
-      "recordingSince": "บันทึกตั้งแต่ {{date}}"
+      "recordingSince": "บันทึกตั้งแต่ {{date}}",
+      "viewMembers": "ดูสมาชิก",
+      "openNewMembers": "เปิดรายชื่อสมาชิกใหม่"
     },
     "title": "สถิติ",
     "subtitle": "ข้อมูลโอเพนซอร์สแบบเรียลไทม์",

@@ -2036,6 +2036,8 @@
       "thisYear": "Kay wata",
       "allTime": "Llapan pacha",
       "newMembers": "Musuq runakuna",
+      "viewMembers": "Miembronkunata qhaway",
+      "openNewMembers": "Musuq miembronkunapa listanta kichay",
       "chartMembers": "Runakuna pacha nisqapi",
       "chartActive": "Kawsaq runakuna",
       "growth": "+{{percent}}% kay killapi",
@@ -2846,6 +2848,7 @@
     "ttsHint": "Regaloyki chayamuqtin llapa qhawaqkunaman kallpawan leey."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2920,7 +2923,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

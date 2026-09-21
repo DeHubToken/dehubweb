@@ -1840,6 +1840,7 @@
       "thisYear": "Dis year",
       "allTime": "All time",
       "newMembers": "New member dem",
+      "viewMembers": "View members",
       "chartMembers": "Member dem as time di go",
       "chartActive": "People weh dey active",
       "growth": "+{{percent}}% dis month",
@@ -2484,6 +2485,7 @@
     "ttsHint": "Read am aloud to everybody wey dey watch when your gift land."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -2558,7 +2560,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

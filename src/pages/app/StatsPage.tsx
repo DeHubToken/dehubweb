@@ -17,6 +17,7 @@
 
 import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import {
   Area,
   AreaChart,
@@ -460,12 +461,18 @@ function CommunityTooltip({
 function GroupHeading({
   icon: Icon,
   title,
+  titleHref,
+  titleLabel,
   href,
   actionHref,
   actionLabel,
 }: {
   icon: typeof Users;
   title: string;
+  /** In-app route the words of the heading themselves open. */
+  titleHref?: string;
+  /** Accessible name for that link; the visible words stay `title`. */
+  titleLabel?: string;
   href?: string;
   actionHref?: string;
   actionLabel?: string;
@@ -476,7 +483,20 @@ function GroupHeading({
     // top padding and negative bottom margin pull it into the group it labels.
     <div className="flex items-baseline gap-2 px-1 pt-2 -mb-1">
       <Icon className="w-4 h-4 text-zinc-400 self-center shrink-0" />
-      <span className="text-sm font-semibold text-white">{title}</span>
+      {titleHref ? (
+        // The heading is what people reach for when a group has a page of its
+        // own, so it is a link in its own right and not only the small action
+        // on the right. Same hover treatment as that action.
+        <Link
+          to={titleHref}
+          aria-label={titleLabel}
+          className="text-sm font-semibold text-white hover:text-zinc-300 transition-colors underline-offset-4 hover:underline focus-visible:underline focus-visible:outline-none"
+        >
+          {title}
+        </Link>
+      ) : (
+        <span className="text-sm font-semibold text-white">{title}</span>
+      )}
       {href && (
         <a
           href={href}
@@ -488,12 +508,12 @@ function GroupHeading({
         </a>
       )}
       {actionHref && actionLabel && (
-        <a
-          href={actionHref}
+        <Link
+          to={actionHref}
           className="text-[11px] text-zinc-500 hover:text-zinc-300 transition-colors ml-auto shrink-0"
         >
           {actionLabel}
-        </a>
+        </Link>
       )}
     </div>
   );
@@ -636,6 +656,8 @@ function CommunitySection({ range }: { range: Range }) {
       <GroupHeading
         icon={UserPlus}
         title={newMembersLabel}
+        titleHref="/app/explore#new-members"
+        titleLabel={t('stats.community.openNewMembers', 'Open the new members list')}
         actionHref="/app/explore#new-members"
         actionLabel={t('stats.community.viewMembers', 'View members')}
       />

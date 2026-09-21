@@ -2007,6 +2007,8 @@
       "thisYear": "השנה",
       "allTime": "כל הזמן",
       "newMembers": "חברים חדשים",
+      "viewMembers": "הצגת חברים",
+      "openNewMembers": "פתח את רשימת החברים החדשה",
       "chartMembers": "חברים לאורך זמן",
       "chartActive": "אנשים פעילים",
       "growth": "+{{percent}}% החודש",
@@ -4847,6 +4849,7 @@
     "ttsHint": "קראו בקול רם לכל מי שצופה במתנה שלכם נוחתת."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -4921,7 +4924,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

@@ -1951,7 +1951,9 @@
       "chartActive": "සක්‍රීය පුද්ගලයන්",
       "growth": "මේ මාසයේ +{{percent}}%",
       "growthTerm": "වර්ධනය",
-      "recordingSince": "{{date}} සිට වාර්තා වේ"
+      "recordingSince": "{{date}} සිට වාර්තා වේ",
+      "viewMembers": "සාමාජිකයින් බලන්න",
+      "openNewMembers": "නව සාමාජික ලැයිස්තුව විවෘත කරන්න"
     },
     "title": "සංඛ්‍යාලේඛන",
     "subtitle": "තත්‍ය කාලීන විවෘත මූලාශ්‍ර තොරතුරු",

@@ -1985,7 +1985,9 @@
       "chartActive": "सक्रिय मनखे",
       "growth": "+{{percent}}% ये महीना",
       "growthTerm": "बढ़वार",
-      "recordingSince": "{{date}} ले दरज होवत हे"
+      "recordingSince": "{{date}} ले दरज होवत हे",
+      "viewMembers": "सदस्य मन ल देखव",
+      "openNewMembers": "नवा सदस्य सूची खोलव"
     },
     "title": "आंकड़ा",
     "subtitle": "रीयल-टाइम ओपन सोर्स जानकारी",

@@ -1985,6 +1985,8 @@
       "thisYear": "Bu il",
       "allTime": "Bütün dövr",
       "newMembers": "Yeni üzvlər",
+      "viewMembers": "Üzvlərə bax",
+      "openNewMembers": "Yeni üzvlərin siyahısını açın",
       "chartMembers": "Zaman üzrə üzvlər",
       "chartActive": "Aktiv istifadəçilər",
       "growth": "+{{percent}}% bu ay",
@@ -4991,6 +4993,7 @@
     "ttsHint": "Hədiyyəniz yerə endikdə izləyən hər kəsə ucadan oxuyun."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5065,7 +5068,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"

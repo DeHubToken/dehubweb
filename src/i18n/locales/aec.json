@@ -1935,7 +1935,9 @@
       "chartActive": "الناس النشطين",
       "growth": "+{{percent}}% الشهر ده",
       "growthTerm": "النمو",
-      "recordingSince": "مسجّل من {{date}}"
+      "recordingSince": "مسجّل من {{date}}",
+      "viewMembers": "شوف الأعضاء",
+      "openNewMembers": "افتح لستة الأعضاء الجديدة"
     },
     "title": "الإحصائيات",
     "subtitle": "استخبارات مفتوحة المصدر في الوقت الحقيقي",

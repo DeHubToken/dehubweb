@@ -2015,7 +2015,9 @@
       "chartActive": "ຄົນທີ່ໃຊ້ງານ",
       "growth": "+{{percent}}% ເດືອນນີ້",
       "growthTerm": "ການເຕີບໂຕ",
-      "recordingSince": "ບັນທຶກຕັ້ງແຕ່ {{date}}"
+      "recordingSince": "ບັນທຶກຕັ້ງແຕ່ {{date}}",
+      "viewMembers": "ເບິ່ງສະມາຊິກ",
+      "openNewMembers": "ເປີດບັນຊີສະມາຊິກ ໃຫມ່"
     },
     "title": "ສະຖິຕິ",
     "subtitle": "ຂໍ້ມູນໂອເພນຊອດແບບເວລາຈິງ",

@@ -2027,7 +2027,9 @@
       "chartActive": "Активдүү адамдар",
       "growth": "+{{percent}}% бул айда",
       "growthTerm": "Өсүш",
-      "recordingSince": "{{date}} тартып жазылууда"
+      "recordingSince": "{{date}} тартып жазылууда",
+      "viewMembers": "Мүчөлөрдү көрүү",
+      "openNewMembers": "Жаңы мүчөлөрдүн тизмесин ачуу"
     },
     "title": "Статистика",
     "subtitle": "Реалдуу убакыттагы ачык маалымат",

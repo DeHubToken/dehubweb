@@ -2042,6 +2042,8 @@
       "thisYear": "Mwaka huu",
       "allTime": "Muda wote",
       "newMembers": "Wanachama wapya",
+      "viewMembers": "Tazama washiriki",
+      "openNewMembers": "Fungua orodha ya wanachama wapya",
       "chartMembers": "Wanachama kwa muda",
       "chartActive": "Watu walio hai",
       "growth": "+{{percent}}% mwezi huu",
@@ -5089,6 +5091,7 @@
     "ttsHint": "Soma kwa sauti kwa kila mtu anayetazama zawadi yako inapotua."
   },
   "nearBuy": {
+    "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
     "description": "Choose a token to pay. Receive DHB in your wallet.",
     "dhbAmount": "DHB amount",
@@ -5163,7 +5166,6 @@
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
     "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "otherCurrencies": "Other currencies",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
