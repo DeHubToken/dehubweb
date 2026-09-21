@@ -1304,7 +1304,19 @@
     "failedOnramp": "Failed to start onramp",
     "badgeDiscount": "{{tier}} holder — {{percent}}% off",
     "otherTokens": "Other tokens",
-    "otherTokensDesc": "Buy ETH or USDC on Base with your card"
+    "otherTokensDesc": "Buy ETH or USDC on Base with your card",
+    "shareToFeed": "Share to my feed",
+    "sharePostTemplate": "Just added {{amount}} $DHB to my stack on DeHub. Building with the community. #DeHub #DHB",
+    "success": {
+      "title": "Purchase Complete!",
+      "subtitle": "Tokens have been delivered to your wallet.",
+      "viewWallet": "View Wallet"
+    },
+    "swapSuccess": {
+      "title": "Swap Successful!",
+      "received": "{{amount}} <coin></coin> received",
+      "addedToWallet": "{{amount}} {{symbol}} added to your wallet"
+    }
   },
   "agents": {
     "title": "AI Agents",

@@ -1284,7 +1284,20 @@
     "failedOnramp": "Failed to start onramp",
     "badgeDiscount": "Qabataa {{tier}} — hir'isa {{percent}}%",
     "otherTokens": "Tookeniiwwan biroo",
-    "otherTokensDesc": "Kaardii keetiin Base irratti ETH ykn USDC bitadhu"
+    "otherTokensDesc": "Kaardii keetiin Base irratti ETH ykn USDC bitadhu",
+    "minDhbPurchase": "Bittaa DHB xiqqaan $0.50 dha",
+    "shareToFeed": "Share gochuun feed kootti",
+    "sharePostTemplate": "Reefu {{amount}} $DHB gara tuullaa koo DeHub irratti dabaleera. Hawaasa waliin ijaaruu. #DeHub #DHB",
+    "success": {
+      "title": "Bittaa Guutuu!",
+      "subtitle": "Tookiin gara boorsaa keessanitti geeffameera.",
+      "viewWallet": "Wallet Ilaaluu"
+    },
+    "swapSuccess": {
+      "title": "Jijjiirraa Milkaa&#39;aa!",
+      "received": "{{amount}} <coin></coin> argate",
+      "addedToWallet": "{{amount}} {{symbol}} boorsaa keessanitti dabalameera"
+    }
   },
   "agents": {
     "title": "Eejentii AI",

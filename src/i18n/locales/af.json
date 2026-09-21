@@ -1307,7 +1307,19 @@
     "failedOnramp": "Kon nie onramp begin nie",
     "badgeDiscount": "{{tier}}-houer — {{percent}}% afslag",
     "otherTokens": "Ander tokens",
-    "otherTokensDesc": "Koop ETH of USDC op Base met jou kaart"
+    "otherTokensDesc": "Koop ETH of USDC op Base met jou kaart",
+    "minDhbPurchase": "Minimum DHB aankoop is $ 0.50",
+    "shareToFeed": "Deel met my voer",
+    "sharePostTemplate": "Net bygevoeg {{amount}} $DHB na my stapel op DeHub. Bou met die gemeenskap. #DeHub #DHB",
+    "success": {
+      "title": "Aankoop voltooi!",
+      "subtitle": "Toekennings is gestuur na jou beursie.",
+      "viewWallet": "Besigtig Beursie"
+    },
+    "swapSuccess": {
+      "title": "Ruil suksesvol uit!",
+      "addedToWallet": "{{amount}} {{symbol}} Voeg by jou beursie"
+    }
   },
   "agents": {
     "title": "AI Agents",

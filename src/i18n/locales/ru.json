@@ -1300,7 +1300,20 @@
     "failedOnramp": "Не удалось начать",
     "badgeDiscount": "Держатель {{tier}} — скидка {{percent}}%",
     "otherTokens": "Другие токены",
-    "otherTokensDesc": "Купите ETH или USDC в сети Base своей картой"
+    "otherTokensDesc": "Купите ETH или USDC в сети Base своей картой",
+    "minDhbPurchase": "Минимальная покупка DHB составляет $ 0,50",
+    "shareToFeed": "Поделиться в ленте",
+    "sharePostTemplate": "Только что добавил {{amount}} $DHB в свой стек на DeHub. Построение с сообществом. #DeHub #DHB",
+    "success": {
+      "title": "Покупка завершена!",
+      "subtitle": "Токены были доставлены на ваш кошелек.",
+      "viewWallet": "Посмотреть кошелек"
+    },
+    "swapSuccess": {
+      "title": "Обмен выполнен успешно!",
+      "received": "Получено: {{amount}} <coin></coin>",
+      "addedToWallet": "{{amount}} {{symbol}} добавлено в ваш кошелек"
+    }
   },
   "agents": {
     "title": "AI Агенты",

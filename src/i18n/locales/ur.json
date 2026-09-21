@@ -1275,7 +1275,21 @@
     "failedOnramp": "شروع کرنے میں ناکامی",
     "badgeDiscount": "{{tier}} رکھنے والا — {{percent}}% رعایت",
     "otherTokens": "دیگر ٹوکن",
-    "otherTokensDesc": "اپنے کارڈ سے Base پر ETH یا USDC خریدیں"
+    "otherTokensDesc": "اپنے کارڈ سے Base پر ETH یا USDC خریدیں",
+    "minDhbPurchase": "کم از کم DHB خریداری $ 0.50 ہے",
+    "cardBankDesc": "ویزا، ماسٹر کارڈ، ایپل پے",
+    "shareToFeed": "میری فیڈ میں شیئر کریں",
+    "sharePostTemplate": "ابھی DeHub پر میرے اسٹیک میں {{amount}} $ DHB شامل کیا ہے ۔ کمیونٹی کے ساتھ مل کر کام کرنا ۔ #DeHub #DHB",
+    "success": {
+      "title": "خریداری مکمل ہو گئی!",
+      "subtitle": "ٹوکنز آپ کے والٹ میں ڈیلیور کر دیے گئے ہیں ۔",
+      "viewWallet": "والٹ دیکھیں"
+    },
+    "swapSuccess": {
+      "title": "سویپ کامیاب رہا!",
+      "received": "{{amount}}<coin></coin> موصول ہوئے",
+      "addedToWallet": "{{amount}}{{symbol}} آپ کے والٹ میں شامل ہو گئے"
+    }
   },
   "agents": {
     "title": "AI ایجنٹس",

@@ -1303,7 +1303,20 @@
     "failedOnramp": "Start mislykkedes",
     "badgeDiscount": "{{tier}}-indehaver — {{percent}} % rabat",
     "otherTokens": "Andre tokens",
-    "otherTokensDesc": "Køb ETH eller USDC på Base med dit kort"
+    "otherTokensDesc": "Køb ETH eller USDC på Base med dit kort",
+    "minDhbPurchase": "Minimum DHB-køb er 0,50 $",
+    "shareToFeed": "Del i mit feed",
+    "sharePostTemplate": "Har lige føjet {{amount}}$DHB til min stak på DeHub. Bygger sammen med netværket. #DeHub #DHB",
+    "success": {
+      "title": "Køb gennemført!",
+      "subtitle": "Tokens er blevet leveret til din tegnebog.",
+      "viewWallet": "Se tegnebog"
+    },
+    "swapSuccess": {
+      "title": "Bytte lykkedes!",
+      "received": "{{amount}}<coin></coin> modtog",
+      "addedToWallet": "{{amount}}{{symbol}} føjet til din tegnebog"
+    }
   },
   "agents": {
     "title": "AI-agenter",

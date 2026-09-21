@@ -1271,7 +1271,20 @@
     "failedOnramp": "Bilaawidda onramp-ku wuu fashilmay",
     "badgeDiscount": "Haystaha {{tier}} — {{percent}}% qiimo dhimis",
     "otherTokens": "Tokenno kale",
-    "otherTokensDesc": "Kaarkaaga ku iibso ETH ama USDC Base"
+    "otherTokensDesc": "Kaarkaaga ku iibso ETH ama USDC Base",
+    "minDhbPurchase": "Iibsiga ugu yar ee DHB waa $ 0.50",
+    "shareToFeed": "La wadaag quudintayda",
+    "sharePostTemplate": "Just added {{amount}} $DHB in my stack on DeHub. Dhisida bulshada. #DeHub #DHB",
+    "success": {
+      "title": "Iibso Dhamaystiran!",
+      "subtitle": "Calaamadaha ayaa la gaarsiiyay boorsadaada.",
+      "viewWallet": "Eeg Boorsada"
+    },
+    "swapSuccess": {
+      "title": "Swap Liibaan!",
+      "received": "{{amount}} <coin></coin> helay",
+      "addedToWallet": "{{amount}} {{symbol}} lagu daray boorsadaada"
+    }
   },
   "agents": {
     "title": "Wakiilada AI",

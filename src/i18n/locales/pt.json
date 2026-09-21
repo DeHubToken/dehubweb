@@ -1303,7 +1303,20 @@
     "failedOnramp": "Falha na rampa",
     "badgeDiscount": "Titular {{tier}} — {{percent}}% de desconto",
     "otherTokens": "Outros tokens",
-    "otherTokensDesc": "Compre ETH ou USDC na Base com o seu cartão"
+    "otherTokensDesc": "Compre ETH ou USDC na Base com o seu cartão",
+    "minDhbPurchase": "A compra mínima de DHB é de $ 0,50",
+    "shareToFeed": "Partilhar no meu feed",
+    "sharePostTemplate": "Acabei de adicionar {{amount}} $DHB à minha pilha no DeHub. Construir com a comunidade. #DeHub #DHB",
+    "success": {
+      "title": "Compra concluída!",
+      "subtitle": "Os tokens foram entregues na sua carteira.",
+      "viewWallet": "Ver carteira"
+    },
+    "swapSuccess": {
+      "title": "Troca bem sucedida!",
+      "received": "{{amount}} <coin></coin> recebido",
+      "addedToWallet": "{{amount}} {{symbol}} adicionado à sua carteira"
+    }
   },
   "agents": {
     "title": "Agentes IA",

@@ -1227,7 +1227,20 @@
     "failedOnramp": "创建入金失败",
     "badgeDiscount": "{{tier}} 持有者 — {{percent}}% 折扣",
     "otherTokens": "其他代币",
-    "otherTokensDesc": "拿侬个卡勒 Base 上买 ETH 或者 USDC"
+    "otherTokensDesc": "拿侬个卡勒 Base 上买 ETH 或者 USDC",
+    "minDhbPurchase": "最少要买 $0.50 的 DHB",
+    "shareToFeed": "分享到我的动态",
+    "sharePostTemplate": "我刚在 DeHub 上添加了 {{amount}} $DHB 到我的收藏夹。和社区一起建设。#DeHub #DHB",
+    "success": {
+      "title": "购买成功！",
+      "subtitle": "代币已发送到您的钱包。",
+      "viewWallet": "查看钱包"
+    },
+    "swapSuccess": {
+      "title": "兑换成功！",
+      "received": "收到了 {{amount}} <coin></coin>",
+      "addedToWallet": "已将 {{amount}} {{symbol}} 添加到您的钱包"
+    }
   },
   "agents": {
     "title": "AI代理",

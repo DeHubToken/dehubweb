@@ -1275,7 +1275,20 @@
     "failedOnramp": "Eșec la inițierea onramp",
     "badgeDiscount": "Deținător {{tier}} — {{percent}}% reducere",
     "otherTokens": "Alte tokenuri",
-    "otherTokensDesc": "Cumpără ETH sau USDC pe Base cu cardul tău"
+    "otherTokensDesc": "Cumpără ETH sau USDC pe Base cu cardul tău",
+    "minDhbPurchase": "Achiziția minimă DHB este de 0,50 $",
+    "shareToFeed": "Distribuie în fluxul meu",
+    "sharePostTemplate": "Tocmai am adăugat {{amount}} $DHB la stiva mea de pe DeHub. Construim împreună cu comunitatea. #DeHub #DHB",
+    "success": {
+      "title": "Achiziție finalizată!",
+      "subtitle": "Jetoanele au fost livrate în portofel.",
+      "viewWallet": "Afișează portofelul"
+    },
+    "swapSuccess": {
+      "title": "Schimbare reușită!",
+      "received": "{{amount}} <coin></coin> primite",
+      "addedToWallet": "{{amount}} {{symbol}} adăugat în portofel"
+    }
   },
   "agents": {
     "title": "AI Agents",

@@ -190,3 +190,12 @@ export function useGlobalDropZone() {
   }
   return context;
 }
+
+/**
+ * The same context, or null outside the provider. For a component that can
+ * also mount away from the app shell — a price card in a post, say — and
+ * should just not offer the composer there rather than crash the surface.
+ */
+export function useOptionalGlobalDropZone() {
+  return useContext(GlobalDropZoneContext);
+}

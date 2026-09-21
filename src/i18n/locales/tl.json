@@ -1318,7 +1318,20 @@
     "failedOnramp": "Nabigo ang pagsisimula ng onramp",
     "badgeDiscount": "May hawak na {{tier}} — {{percent}}% na diskuwento",
     "otherTokens": "Ibang token",
-    "otherTokensDesc": "Bumili ng ETH o USDC sa Base gamit ang iyong card"
+    "otherTokensDesc": "Bumili ng ETH o USDC sa Base gamit ang iyong card",
+    "minDhbPurchase": "Minimum DHB pagbili ay $ 0.50",
+    "shareToFeed": "Ibahagi sa aking feed",
+    "sharePostTemplate": "Idinagdag lang ang {{amount}} $DHB sa aking stack sa DeHub. Pagbuo kasama ang komunidad. #DeHub #DHB",
+    "success": {
+      "title": "Kumpleto na ang Pagbili!",
+      "subtitle": "Naihatid na ang mga token sa iyong wallet.",
+      "viewWallet": "Tingnan ang Wallet"
+    },
+    "swapSuccess": {
+      "title": "Matagumpay ang Pag - swap!",
+      "received": "Natanggap ang {{amount}}<coin></coin>",
+      "addedToWallet": "Idinagdag sa iyong wallet ang {{amount}}{{symbol}}"
+    }
   },
   "agents": {
     "title": "AI Agents",

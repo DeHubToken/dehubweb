@@ -1298,7 +1298,19 @@
     "failedOnramp": "Tsy nahomby ny fanombohana onramp",
     "badgeDiscount": "Tompona {{tier}} — fihenam-bidy {{percent}}%",
     "otherTokens": "Tokena hafa",
-    "otherTokensDesc": "Mividiana ETH na USDC ao amin'ny Base amin'ny karatrao"
+    "otherTokensDesc": "Mividiana ETH na USDC ao amin'ny Base amin'ny karatrao",
+    "minDhbPurchase": "Ny kely indrindra DHB fividianana dia $ 0.50",
+    "shareToFeed": "Zarao amin'ny fahana aho",
+    "sharePostTemplate": "Vao avy nanampy ny {{amount}} $DHB tao amin'ny kitapoko tao amin'ny DeHub. Miditra sy miaraka amin'ny fokonolona. #DeHub #DHB",
+    "success": {
+      "title": "Définition malgache!",
+      "subtitle": "Ny karana dia natolotra tao amin'ny kitaponao.",
+      "viewWallet": "Hijery Wallet"
+    },
+    "swapSuccess": {
+      "title": "Nahomby ny swap!",
+      "addedToWallet": "{{amount}} {{symbol}} nanampy ny kitaponao"
+    }
   },
   "agents": {
     "title": "Agent AI",

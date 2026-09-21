@@ -1241,7 +1241,17 @@
     "failedOnramp": "ऑनरैम्प शुरू नइ हो पावल",
     "badgeDiscount": "{{tier}} धारक — {{percent}}% छूट",
     "otherTokens": "दोसर टोकन",
-    "otherTokensDesc": "अपन कार्ड से Base पर ETH या USDC खरीदीं"
+    "otherTokensDesc": "अपन कार्ड से Base पर ETH या USDC खरीदीं",
+    "minDhbPurchase": "हल: (e) तीन से दस हजार डॉलर",
+    "shareToFeed": "हमरा लगी खाना भेज देवे लगी ।",
+    "success": {
+      "title": "तैयार हो जाओ, सेट हो जाओ, कूदो!",
+      "subtitle": "तोहर बटुआ के बटुआ देल गेलउ हे ।",
+      "viewWallet": "View Image कैलोरी कैलकुलेटर"
+    },
+    "swapSuccess": {
+      "title": "हो सकऽ हइ कि सफल हो जइअइ!"
+    }
   },
   "agents": {
     "title": "AI एजेंट",

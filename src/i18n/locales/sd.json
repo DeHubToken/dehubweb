@@ -1266,7 +1266,19 @@
     "failedOnramp": "آنريمپ شروع نه ٿي سگهيو",
     "badgeDiscount": "{{tier}} رکندڙ — {{percent}}% رعايت",
     "otherTokens": "ٻيا ٽوڪن",
-    "otherTokensDesc": "پنھنجي ڪارڊ سان Base تي ETH يا USDC خريد ڪريو"
+    "otherTokensDesc": "پنھنجي ڪارڊ سان Base تي ETH يا USDC خريد ڪريو",
+    "minDhbPurchase": "گھٽ ۾ گھٽ DHB خريداري $ 0.50",
+    "shareToFeed": "منهنجي فيڊ ۾ حصيداري ڪريو",
+    "sharePostTemplate": "بس {{amount}} $ DHB کي DeHub تي منهنجي اسٽيڪ ۾ شامل ڪيو. برادري سان تعاون ڪريو. # DeHub# ڊي ايڇ بي",
+    "success": {
+      "title": "خريداري مڪمل!",
+      "subtitle": "ٽوڪن کي توهان جي پرس ۾ پهچايو ويو آهي.",
+      "viewWallet": "پرس ڏسو"
+    },
+    "swapSuccess": {
+      "title": "ڪاميابي مٽايو!",
+      "addedToWallet": "{{amount}}{{symbol}} توهان جي پرس ۾ شامل ڪيو ويو"
+    }
   },
   "agents": {
     "title": "AI ايجنٽ",

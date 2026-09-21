@@ -1286,7 +1286,21 @@
     "failedOnramp": "ഓൺറാമ്പ് ആരംഭിക്കാൻ കഴിഞ്ഞില്ല",
     "badgeDiscount": "{{tier}} ഉടമ — {{percent}}% കിഴിവ്",
     "otherTokens": "മറ്റ് ടോക്കണുകൾ",
-    "otherTokensDesc": "നിങ്ങളുടെ കാർഡ് ഉപയോഗിച്ച് Base-ൽ ETH അല്ലെങ്കിൽ USDC വാങ്ങുക"
+    "otherTokensDesc": "നിങ്ങളുടെ കാർഡ് ഉപയോഗിച്ച് Base-ൽ ETH അല്ലെങ്കിൽ USDC വാങ്ങുക",
+    "minDhbPurchase": "ഏറ്റവും കുറഞ്ഞ DHB വാങ്ങൽ $ 0.50 ആണ്",
+    "cardBankDesc": "വിസ, മാസ്റ്റർകാർഡ്, ആപ്പിൾ പേ",
+    "shareToFeed": "എന്റെ ഫീഡിലേക്ക് പങ്കിടുക",
+    "sharePostTemplate": "DeHub-ലെ എന്റെ സ്റ്റാക്കിലേക്ക് {{amount}} $DHB ചേർത്തു. സമൂഹത്തോടൊപ്പം കെട്ടിപ്പടുക്കുക. #DeHub #DHB",
+    "success": {
+      "title": "വാങ്ങൽ പൂർത്തിയായി!",
+      "subtitle": "ടോക്കണുകൾ നിങ്ങളുടെ വാലറ്റിലേക്ക് ഡെലിവർ ചെയ്തു.",
+      "viewWallet": "വാലറ്റ് കാണുക"
+    },
+    "swapSuccess": {
+      "title": "സ്വാപ്പ് വിജയകരമായി!",
+      "received": "{{amount}}<coin></coin> ലഭിച്ചത്",
+      "addedToWallet": "{{amount}}{{symbol}} നിങ്ങളുടെ വാലറ്റിൽ ചേർത്തു"
+    }
   },
   "agents": {
     "title": "AI ഏജന്റുമാർ",

@@ -1259,7 +1259,30 @@
     "failedOnramp": "ਸ਼ੁਰੂ ਕਰਨ ਵਿੱਚ ਅਸਫ਼ਲ",
     "badgeDiscount": "{{tier}} ਧਾਰਕ — {{percent}}% ਛੋਟ",
     "otherTokens": "ਹੋਰ ਟੋਕਨ",
-    "otherTokensDesc": "ਆਪਣੇ ਕਾਰਡ ਨਾਲ Base ਉੱਤੇ ETH ਜਾਂ USDC ਖਰੀਦੋ"
+    "otherTokensDesc": "ਆਪਣੇ ਕਾਰਡ ਨਾਲ Base ਉੱਤੇ ETH ਜਾਂ USDC ਖਰੀਦੋ",
+    "minDhbPurchase": "ਘੱਟੋ-ਘੱਟ DHB ਖਰੀਦ $0.50 ਹੈ",
+    "feeNote": "ਕਾਰਡ ਫੀ ~3.6% ਅਤੇ 0.5% ਨੈੱਟਵਰਕ ਰਿਜ਼ਰਵ ਇਸ ਤੋਂ ਘੱਟ ਜਾਂਦੇ ਹਨ। ਰਿਜ਼ਰਵ ਤੁਹਾਨੂੰ ਗੈਸ ਲਈ ETH ਵਜੋਂ ਭੇਜਿਆ ਜਾਂਦਾ ਹੈ।",
+    "statusAwaitingPayment": "ਚੈੱਕਆਊਟ ਟੈਬ ਵਿੱਚ ਭੁਗਤਾਨ ਪੂਰਾ ਕਰੋ...",
+    "statusConfirming": "ਭੁਗਤਾਨ ਦੀ ਪੁਸ਼ਟੀ ਦੀ ਉਡੀਕ ਹੈ...",
+    "statusPaidQueued": "ਭੁਗਤਾਨ ਪ੍ਰਾਪਤ ਹੋਇਆ। ਡਿਲੀਵਰੀ ਲਈ ਕਤਾਰ ਵਿੱਚ ਲੱਗ ਗਿਆ...",
+    "statusPaidSending": "ਭੁਗਤਾਨ ਪ੍ਰਾਪਤ ਹੋਇਆ। ਤੁਹਾਡੇ ਵਾਲਿਟ ਵਿੱਚ ਟੋਕਨ ਭੇਜੇ ਜਾ ਰਹੇ ਹਨ...",
+    "statusPaidToast": "ਭੁਗਤਾਨ ਪ੍ਰਾਪਤ ਹੋਇਆ। ਤੁਹਾਡੇ ਟੋਕਨ ਡਿਲੀਵਰ ਕੀਤੇ ਜਾ ਰਹੇ ਹਨ...",
+    "statusDelivered": "ਟੋਕਨ ਤੁਹਾਡੇ ਵਾਲਿਟ ਵਿੱਚ ਡਿਲੀਵਰ ਹੋ ਗਏ ਹਨ!",
+    "statusNotPaid": "ਭੁਗਤਾਨ ਪੂਰਾ ਨਹੀਂ ਹੋਇਆ। ਕੁਝ ਵੀ ਚਾਰਜ ਨਹੀਂ ਕੀਤਾ ਗਿਆ।",
+    "statusDeliveryFailed": "ਭੁਗਤਾਨ ਲਿਆ ਗਿਆ ਪਰ ਡਿਲੀਵਰੀ ਅਸਫਲ ਰਹੀ। ਅਸੀਂ ਇਸ 'ਤੇ ਕੰਮ ਕਰ ਰਹੇ ਹਾਂ — ਆਪਣੇ ਸੈਸ਼ਨ ਆਈਡੀ ਨਾਲ ਸਪੋਰਟ ਨਾਲ ਸੰਪਰਕ ਕਰੋ।",
+    "statusStillArriving": "ਭੁਗਤਾਨ ਹੋ ਗਿਆ। ਟੋਕਨ ਅਜੇ ਵੀ ਆ ਰਹੇ ਹਨ — ਜਲਦੀ ਹੀ ਆਪਣੇ ਵਾਲਿਟ ਦੀ ਜਾਂਚ ਕਰੋ।",
+    "shareToFeed": "ਮੇਰੀ ਫੀਡ 'ਤੇ ਸਾਂਝਾ ਕਰੋ",
+    "sharePostTemplate": "ਹੁਣੇ ਹੀ DeHub 'ਤੇ ਮੇਰੇ ਸਟੈਕ ਵਿੱਚ {{amount}} $DHB ਜੋੜਿਆ ਹੈ। ਕਮਿਊਨਿਟੀ ਨਾਲ ਬਣਾ ਰਹੇ ਹਾਂ। #DeHub #DHB",
+    "success": {
+      "title": "ਖਰੀਦ ਪੂਰੀ!",
+      "subtitle": "ਟੋਕਨ ਤੁਹਾਡੇ ਵਾਲਿਟ ਵਿੱਚ ਡਿਲੀਵਰ ਕਰ ਦਿੱਤੇ ਗਏ ਹਨ।",
+      "viewWallet": "ਵਾਲਿਟ ਦੇਖੋ"
+    },
+    "swapSuccess": {
+      "title": "ਸਵੈਪ ਸਫਲ!",
+      "received": "{{amount}} <coin></coin> ਪ੍ਰਾਪਤ ਹੋਇਆ",
+      "addedToWallet": "{{amount}} {{symbol}} ਤੁਹਾਡੇ ਵਾਲਿਟ ਵਿੱਚ ਜੋੜਿਆ ਗਿਆ"
+    }
   },
   "agents": {
     "title": "AI ਏਜੰਟ",

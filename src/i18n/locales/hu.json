@@ -1298,7 +1298,20 @@
     "failedOnramp": "Indítás sikertelen",
     "badgeDiscount": "{{tier}} tulajdonos — {{percent}}% kedvezmény",
     "otherTokens": "Egyéb tokenek",
-    "otherTokensDesc": "Vásárolj ETH-t vagy USDC-t a Base hálózaton a kártyáddal"
+    "otherTokensDesc": "Vásárolj ETH-t vagy USDC-t a Base hálózaton a kártyáddal",
+    "minDhbPurchase": "A minimális DHB-vásárlás 0,50 $",
+    "shareToFeed": "Megosztás a feedemben",
+    "sharePostTemplate": "Most adtam hozzá {{amount}} $DHB-t a DeHubon lévő stackemhez. Építkezés a közösséggel. #DeHub #DHB",
+    "success": {
+      "title": "A vásárlás befejeződött!",
+      "subtitle": "A tokeneket elküldtük a pénztárcádba.",
+      "viewWallet": "Pénztárca megtekintése"
+    },
+    "swapSuccess": {
+      "title": "Sikeres csere!",
+      "received": "{{amount}}<coin></coin> érkezett",
+      "addedToWallet": "{{amount}}{{symbol}} hozzáadva a pénztárcádhoz"
+    }
   },
   "agents": {
     "title": "AI ügynökök",

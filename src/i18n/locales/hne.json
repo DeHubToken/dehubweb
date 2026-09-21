@@ -1250,7 +1250,17 @@
     "failedOnramp": "ऑनरैम्प शुरू नइ होइस",
     "badgeDiscount": "{{tier}} धारक — {{percent}}% छूट",
     "otherTokens": "दूसर टोकन",
-    "otherTokensDesc": "अपन कार्ड ले Base म ETH या USDC बिसाहव"
+    "otherTokensDesc": "अपन कार्ड ले Base म ETH या USDC बिसाहव",
+    "minDhbPurchase": "न्यूनतम डीएचबी खरीद $ 0.50 हवय ।",
+    "shareToFeed": "मोर खाजा ल छीन ले",
+    "success": {
+      "title": "खरीदना पूरा हो गिस!",
+      "subtitle": "टोकन ल तोर बटुआ म भेज दे गे हे ।",
+      "viewWallet": "वालेट देखव"
+    },
+    "swapSuccess": {
+      "title": "स्वैप सफल!"
+    }
   },
   "agents": {
     "title": "AI एजेंट",

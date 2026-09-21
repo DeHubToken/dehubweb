@@ -1285,7 +1285,20 @@
     "failedOnramp": "Dështoi fillimi i onramp",
     "badgeDiscount": "Mbajtës {{tier}} — {{percent}}% zbritje",
     "otherTokens": "Token të tjerë",
-    "otherTokensDesc": "Blej ETH ose USDC në Base me kartën tënde"
+    "otherTokensDesc": "Blej ETH ose USDC në Base me kartën tënde",
+    "minDhbPurchase": "Blerja minimale e DHB është 0.50 $",
+    "shareToFeed": "Shpërndaje në burimin tim",
+    "sharePostTemplate": "Sapo shtova {{amount}} $DHB në rafte në DeHub. Ndërtimi me komunitetin. #DeHub #DHB",
+    "success": {
+      "title": "Blerja u krye!",
+      "subtitle": "Shenjat janë dorëzuar në portofolin tënd.",
+      "viewWallet": "Shfaq portofolin"
+    },
+    "swapSuccess": {
+      "title": "Ndërrimi u krye me sukses!",
+      "received": "{{amount}} <coin></coin> marrë",
+      "addedToWallet": "{{amount}} {{symbol}} shtuar në portofolin tuaj"
+    }
   },
   "agents": {
     "title": "Agjentët AI",
