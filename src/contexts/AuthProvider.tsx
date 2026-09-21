@@ -57,7 +57,7 @@ import {
   type ConnectionSource,
 } from '@/lib/connection-source';
 import { isWalletReconnectGuardActive } from '@/lib/wallet-reconnect';
-import { fetchTelegramLoginConfig, redirectToTelegramLogin, takeStoredTelegramResult } from '@/lib/telegram-login';
+import { fetchTelegramLoginConfig, startTelegramLogin, takeStoredTelegramResult, type TelegramUser } from '@/lib/telegram-login';
 import { predictSafeAddress } from '@/lib/smart-account-address';
 import { isMidSessionUnlock } from '@/lib/session-unlock';
 import { authenticateProfileSession } from '@/lib/profile-login';
@@ -2771,15 +2771,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Telegram login step 1: hand the browser to oauth.telegram.org.
+   * Telegram, step 2 of either route: turn Telegram's signed payload into a
+   * DeHub session. The edge function verifies the HMAC and mints the session;
+   * from setSession on this is the phone path. `supaLoginHandledRef` keeps the
+   * SIGNED_IN listener off it — setSession fires that listener, and both paths
+   * calling proceedToWalletPhase would run the wallet lookup twice.
+   */
+  const exchangeTelegramPayload = async (body: { tgAuthResult: string } | { payload: TelegramUser }) => {
+    supaLoginHandledRef.current = true;
+    try {
+      const { data, error } = await supabase.functions.invoke('telegram-auth', { body });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      const session = data?.session;
+      if (!session?.access_token || !session?.refresh_token) {
+        throw new Error(i18n.t('toasts.telegram_signin_failed', 'Telegram sign-in failed. Please try again.'));
+      }
+      const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+        access_token: session.access_token,
+        refresh_token: session.refresh_token,
+      });
+      const uid = sessionData?.session?.user?.id;
+      if (sessionError || !uid) {
+        throw new Error(
+          sessionError?.message || i18n.t('toasts.telegram_signin_failed', 'Telegram sign-in failed. Please try again.'),
+        );
+      }
+      await proceedRef.current(uid);
+    } finally {
+      supaLoginHandledRef.current = false;
+    }
+  };
+
+  /**
+   * Telegram login from the sheet.
    *
-   * Shaped like connectWithProvider rather than connectWithSMS because it is
-   * the same thing — a full-page redirect out to an identity provider and back
-   * — even though Supabase Auth has no Telegram provider to route it through.
-   * The pending flags are what make the return land on "Signing you in…"
-   * instead of a bare feed; /auth/telegram sets them again on the way back,
-   * because a person who takes a minute to confirm in the Telegram app can
-   * easily outlive them.
+   * Runs the whole thing in place where it can (lib/telegram-login: ask
+   * Telegram for an existing authorisation, else a popup that is polled until
+   * the person confirms in the app). Only where a popup is impossible does
+   * it fall back to the full-page redirect and the /auth/telegram bridge,
+   * whose return is picked up by the effect below. The pending flags make
+   * that return land on "Signing you in…" instead of a bare feed.
+   *
+   * Resolves `true` when the login is done or the browser is leaving, `false`
+   * when the sheet should drop back to its idle state.
    */
   const connectWithTelegram = async (): Promise<boolean> => {
     const previousSource = readConnectionSource();
@@ -2788,7 +2824,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const config = await fetchTelegramLoginConfig();
       if (!config.enabled || !config.botId) {
-        toast.error('Telegram login is not available right now. Please use another option.');
+        toast.error(i18n.t('toasts.telegram_unavailable', 'Telegram login is not available right now. Please use another option.'));
         setIsConnecting(false);
         return false;
       }
@@ -2803,12 +2839,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         clearWagmiStorage();
       } catch { /* ignore */ }
 
-      redirectToTelegramLogin(config.botId);
-      // Browser navigates away; the flow resumes in the effect below.
+      const outcome = await startTelegramLogin(config.botId);
+      if (outcome.kind === 'redirected') {
+        // Browser navigates away; the flow resumes in the effect below.
+        return true;
+      }
+      if (outcome.kind === 'cancelled') {
+        localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
+        setConnectionSource(previousSource);
+        restoreConnectionSource(previousSource);
+        setIsConnecting(false);
+        return false;
+      }
+
+      await exchangeTelegramPayload({ payload: outcome.user });
+      setIsConnecting(false);
       return true;
     } catch (error: any) {
       console.error('Telegram login error:', error);
-      toast.error('Failed to connect with Telegram. Please try again.');
+      toast.error(error?.message || i18n.t('toasts.telegram_connect_failed', 'Failed to connect with Telegram. Please try again.'));
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
       setConnectionSource(previousSource);
       restoreConnectionSource(previousSource);
@@ -2818,13 +2867,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Telegram login step 2: exchange the payload /auth/telegram left behind.
-   *
-   * Runs once per page load, before anything reads the session, because the
-   * payload is only valid until someone replays it and sessionStorage is the
-   * only place it exists. `supaLoginHandledRef` keeps the SIGNED_IN listener
-   * off it — setSession fires that listener, and both paths calling
-   * proceedToWalletPhase would run the wallet lookup twice.
+   * Redirect route, on the way back: exchange the payload /auth/telegram left
+   * behind. Runs once per page load, before anything reads the session,
+   * because the payload is only valid until someone replays it and
+   * sessionStorage is the only place it exists.
    */
   const telegramResumeRef = useRef(false);
   useEffect(() => {
@@ -2836,33 +2882,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     (async () => {
       setIsConnecting(true);
       setIsProcessingRedirect(true);
-      supaLoginHandledRef.current = true;
       try {
-        const { data, error } = await supabase.functions.invoke('telegram-auth', {
-          body: { tgAuthResult: raw },
-        });
-        if (error) throw error;
-        if (data?.error) throw new Error(data.error);
-
-        const session = data?.session;
-        if (!session?.access_token || !session?.refresh_token) {
-          throw new Error('Telegram sign-in failed. Please try again.');
-        }
-        const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
-          access_token: session.access_token,
-          refresh_token: session.refresh_token,
-        });
-        const uid = sessionData?.session?.user?.id;
-        if (sessionError || !uid) {
-          throw new Error(sessionError?.message || 'Telegram sign-in failed. Please try again.');
-        }
-        await proceedRef.current(uid);
+        await exchangeTelegramPayload({ tgAuthResult: raw });
       } catch (err: any) {
         console.error('Telegram sign-in error:', err);
         localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
-        toast.error(err?.message || 'Telegram sign-in failed. Please try again.');
+        toast.error(err?.message || i18n.t('toasts.telegram_signin_failed', 'Telegram sign-in failed. Please try again.'));
       } finally {
-        supaLoginHandledRef.current = false;
         setIsProcessingRedirect(false);
         setIsConnecting(false);
       }

@@ -46,6 +46,20 @@ function readTelegramResult(search: URLSearchParams): string | null {
   return null;
 }
 
+/** The base64url JSON Telegram hands back, as the object the sheet expects. */
+function decodeResult(raw: string): Record<string, unknown> | false {
+  try {
+    let data = raw.replace(/-/g, "+").replace(/_/g, "/");
+    const pad = data.length % 4;
+    if (pad > 1) data += "=".repeat(4 - pad);
+    const bytes = Uint8Array.from(atob(data), (c) => c.charCodeAt(0));
+    const parsed = JSON.parse(new TextDecoder().decode(bytes));
+    return parsed && typeof parsed === "object" ? parsed : false;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Telegram's landing page — the only address Telegram is allowed to return to.
  *
@@ -74,6 +88,24 @@ export default function TelegramAuth() {
 
     const result = readTelegramResult(params);
     const next = sameOriginPath(params.get("next"));
+
+    // `?popup=1` — opened by the login sheet as a popup (lib/telegram-login).
+    // The sheet is already polling Telegram for the answer; handing it over
+    // directly just saves a round trip, and closing the window is the cue the
+    // person is waiting for. Only the window that opened us is told anything.
+    if (params.get("popup") === "1" && window.opener) {
+      try {
+        window.opener.postMessage(
+          JSON.stringify({ event: "auth_result", result: result ? decodeResult(result) : false }),
+          window.location.origin,
+        );
+      } catch {
+        /* the sheet still finds out through /auth/get */
+      }
+      window.close();
+      setFailed(true);
+      return;
+    }
 
     if (!result) {
       // Telegram sends people back here empty-handed when they close its
