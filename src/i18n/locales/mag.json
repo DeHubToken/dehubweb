@@ -1396,6 +1396,14 @@
     "failedSubmit": "आवेदन जमा नइ हो पावल। फिर से कोशिश करो।"
   },
   "loginModal": {
+    "migrateNoOldAccount": "ई लॉगिन पर कवनो पुरान DeHub खाता नइखे, तs कुछो वापस लावे के नइखे. एकरा बदला में नया खाता बना लीं.",
+    "migrateInstead": "पुरान खाता वापस ले आईं",
+    "setUpNewAccount": "नया खाता बना लीं",
+    "createNewInstead": "एकरा बदला में नया खाता बनाईं",
+    "migrateAccount": "खाता माइग्रेट करीं",
+    "importExternalWallet": "बाहरी वॉलेट इंपोर्ट करीं",
+    "migrateIntentHint": "नीचे कवनो विकल्प से साइन इन करीं. अगर ई पुरान DeHub खाता से मेल खाइलस तs तोहार वॉलेट, यूजरनेम आउर बैलेंस वापस आ जाई.",
+    "importIntentHint": "नीचे कवनो विकल्प से साइन इन करीं, तब तोहार चाहत के वॉलेट के रिकवरी फ्रेज चाहे प्राइवेट की पेस्ट करीं.",
     "unlockBiometricContinue": "आगे बढ़े के लिए अपने उंगलियों के निशान या चेहरे के निशान के साथ अपना पर्स खोलें ।",
     "unlockBiometricSignIn": "फिंगरप्रिंट (fingerprint) के साथ लॉगिन करे या लॉगिन करे",
     "unlockPasswordContinue": "अपना Password enter करे और Continue पर क्लिक करे ।",

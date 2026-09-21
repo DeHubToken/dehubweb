@@ -1400,6 +1400,14 @@
     "failedSubmit": "Slanje prijave nije uspjelo. Pokušajte ponovo."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Na ovoj prijavi nema ranijeg DeHub računa, tako da nema ništa za prebacivanje. Postavite novi račun umjesto toga.",
+    "migrateInstead": "Prebacite stari račun umjesto toga",
+    "setUpNewAccount": "Postavite novi račun",
+    "createNewInstead": "Stvorite novi račun umjesto toga",
+    "migrateAccount": "Migriraj račun",
+    "importExternalWallet": "Uvezi vanjski novčanik",
+    "migrateIntentHint": "Prijavite se bilo kojom opcijom u nastavku. Ako se podudara s ranijim DeHub računom, prebacit ćete njegov novčanik, korisničko ime i stanje.",
+    "importIntentHint": "Prijavite se bilo kojom opcijom u nastavku, a zatim zalijepite frazu za oporavak ili privatni ključ novčanika koji želite koristiti.",
     "unlockBiometricContinue": "Za nastavak otključaj novčanik otiskom prsta ili licem.",
     "unlockBiometricSignIn": "Otključaj novčanik otiskom prsta ili licem za prijavu.",
     "unlockPasswordContinue": "Za nastavak unesi lozinku novčanika.",

@@ -1408,6 +1408,14 @@
     "failedSubmit": "ምልክታ ምቕራብ ኣይተዓወተን። በጃኻ ዳግማይ ፈትን።"
   },
   "loginModal": {
+    "migrateNoOldAccount": "ኣብዚ መእተዊ እዚ ኣቐዲሙ DeHub መለያ ስለዘየለ ፡ ክመሓላለፍ ዝኽእል ነገር የለን ። ኣብ ክንዳኡስ ፡ ሓድሽ ሕሳብ ኣዳሉ ።",
+    "migrateInstead": "ነቲ ናይ ቀደም ሕሳብ ኣብ ክንዲ",
+    "setUpNewAccount": "ሓድሽ ሕሳብ ኣዳሉ",
+    "createNewInstead": "ኣብ ክንዳኡስ ፡ ሓድሽ ሕሳብ ፍጠር",
+    "migrateAccount": "ሕሳብ ስደድ",
+    "importExternalWallet": "ናይ ወጻኢ ቦርሳ ኣምጽእ",
+    "migrateIntentHint": "ምስ ዝኾነ ይኹን ኣብ ታሕቲ ዘሎ ኣማራጺ ክትኣቱ ትኽእል ኢኻ ። ምስ ናይ ቀደም DeHub መለያ እንተተኣሳሲሩ ፡ ነቲ ቦርሳ ፡ ስምን ሚዛንን ክትመልሶ ኢኻ ።",
+    "importIntentHint": "ምስ ዝኾነ ይኹን ኣብ ታሕቲ ዘሎ ኣማራጺ ኣቲኻ ፡ ነቲ ክትጥቀመሉ እትደሊ ናይ ምትዕርራይ ወይ ናይ ውልቀ-መላኺ ቁልፍ ጠውቕ ።",
     "unlockBiometricContinue": "ነቲ ቦርሳኻ ብኢድካ ወይ ብገጽካ ብምኽፋት ክትቅጽል ትኽእል ኢኻ ።",
     "unlockBiometricSignIn": "ነቲ ቦርሳኻ ብኢድካ ወይ ብኢድካ ክፉት ግበር ።",
     "unlockPasswordContinue": "ንምቕጻል ናይ ቦርሳ ፓስወርድካ ኣእቲኻ ።",

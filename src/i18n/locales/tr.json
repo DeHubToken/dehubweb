@@ -1409,6 +1409,14 @@
     "failedSubmit": "Başvuru gönderilemedi. Lütfen tekrar deneyin."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Bu girişte daha eski bir DeHub hesabı yok, bu yüzden getirilecek bir şey yok. Bunun yerine yeni bir hesap oluşturun.",
+    "migrateInstead": "Bunun yerine eski hesabı getirin",
+    "setUpNewAccount": "Yeni bir hesap oluşturun",
+    "createNewInstead": "Bunun yerine yeni bir hesap oluşturun",
+    "migrateAccount": "Hesabı taşı",
+    "importExternalWallet": "Harici cüzdanı içe aktar",
+    "migrateIntentHint": "Aşağıdaki seçeneklerden herhangi biriyle oturum açın. Daha önceki bir DeHub hesabıyla eşleşirse cüzdanını, kullanıcı adını ve bakiyesini getireceksiniz.",
+    "importIntentHint": "Aşağıdaki herhangi bir seçenekle oturum açın, ardından kullanmak istediğiniz cüzdanın kurtarma ifadesini veya özel anahtarını yapıştırın.",
     "unlockBiometricContinue": "Devam etmek için parmak izinizle veya yüzünüzle cüzdanınızın kilidini açın.",
     "unlockBiometricSignIn": "Oturum açmak için parmak izinizle veya yüzünüzle cüzdanınızın kilidini açın.",
     "unlockPasswordContinue": "Devam etmek için cüzdan şifrenizi girin.",

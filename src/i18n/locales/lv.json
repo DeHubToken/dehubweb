@@ -1392,6 +1392,14 @@
     "failedSubmit": "Pieteikuma iesniegšana neizdevās. Lūdzu, mēģiniet vēlreiz."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Šajā pieteikumvārdā nav iepriekšēja DeHub konta, tāpēc nav ko pārnest. Tā vietā izveidojiet jaunu kontu.",
+    "migrateInstead": "Tā vietā pievienojiet veco kontu",
+    "setUpNewAccount": "Izveidot jaunu kontu",
+    "createNewInstead": "Tā vietā izveidojiet jaunu kontu",
+    "migrateAccount": "Migrēt kontu",
+    "importExternalWallet": "Importēt ārējo maku",
+    "migrateIntentHint": "Pieraksties, izmantojot jebkuru no tālāk norādītajām opcijām. Ja tas atbilst iepriekšējam DeHub kontam, jums būs savs maks, lietotājvārds un atlikums.",
+    "importIntentHint": "Pierakstieties, izmantojot jebkuru no tālāk norādītajām opcijām, pēc tam ielīmējiet tā maka atkopšanas frāzi vai privāto atslēgu, kuru vēlaties izmantot.",
     "unlockBiometricContinue": "Lai turpinātu, atbloķējiet maku ar pirksta nospiedumu vai seju.",
     "unlockBiometricSignIn": "Atbloķējiet maku ar pirksta nospiedumu vai seju, lai pierakstītos.",
     "unlockPasswordContinue": "Lai turpinātu, ievadiet maka paroli.",

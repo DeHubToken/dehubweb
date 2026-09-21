@@ -1430,6 +1430,14 @@
     "failedSubmit": "Diridda codsiga ayaa fashilmay. Fadlan mar kale isku day."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Ma jiro xisaab hore oo DeHub ah oo ku saabsan galitaankan, sidaa darteed ma jiraan wax la soo gudbiyo. Samee akoon cusub halkii.",
+    "migrateInstead": "Ku soo qaado akoonkii hore halkii",
+    "setUpNewAccount": "Samee koonto cusub",
+    "createNewInstead": "Abuur akoon cusub halkii",
+    "migrateAccount": "U haajir koontada",
+    "importExternalWallet": "Soo dejiso boorsada dibadda",
+    "migrateIntentHint": "Ku qor ikhtiyaar kasta oo hoose. Haddii ay la jaanqaaddo koontada hore ee DeHub waxaad ku soo gudbin doontaa boorsadeeda, magaca isticmaalaha iyo dheelitirka.",
+    "importIntentHint": "Gal ikhtiyaar kasta oo hoose, ka dibna ku dheji weedha soo kabashada ama furaha gaarka ah ee boorsada aad rabto inaad isticmaasho.",
     "unlockBiometricContinue": "Ku fur boorsadaada farahaaga ama wejigaaga si aad u sii wadato.",
     "unlockBiometricSignIn": "Ku fur boorsadaada farahaaga ama wejigaaga si aad u gasho.",
     "unlockPasswordContinue": "Gali lambarka sirta ah ee boorsadaada si aad u sii wado.",

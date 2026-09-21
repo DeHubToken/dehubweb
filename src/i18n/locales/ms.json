@@ -1676,6 +1676,14 @@
     "failedSubmit": "Gagal menghantar permohonan. Sila cuba lagi."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Tiada akaun DeHub yang lebih awal pada log masuk ini, jadi tiada apa yang perlu dibawa. Sediakan akaun baharu.",
+    "migrateInstead": "Bawa masuk akaun lama",
+    "setUpNewAccount": "Sediakan akaun baharu",
+    "createNewInstead": "Cipta akaun baharu",
+    "migrateAccount": "Pindahkan akaun",
+    "importExternalWallet": "Import dompet luaran",
+    "migrateIntentHint": "Log masuk dengan mana-mana pilihan di bawah. Jika ia sepadan dengan akaun DeHub terdahulu, anda akan membawa dompet, nama pengguna dan bakinya.",
+    "importIntentHint": "Log masuk dengan mana-mana pilihan di bawah, kemudian tampal frasa pemulihan atau kunci peribadi dompet yang anda ingin gunakan.",
     "unlockBiometricContinue": "Buka kunci dompet anda dengan cap jari atau muka anda untuk meneruskan.",
     "unlockBiometricSignIn": "Buka kunci dompet anda dengan cap jari atau muka anda untuk log masuk.",
     "unlockPasswordContinue": "Masukkan kata laluan dompet anda untuk meneruskan.",

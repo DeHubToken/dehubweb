@@ -1386,6 +1386,14 @@
     "failedSubmit": "فشل الإرسال. جرّب تاني."
   },
   "loginModal": {
+    "migrateNoOldAccount": "مفيش حساب DeHub قديم على الدخول ده، عشان كده مفيش حاجة نرجعها. جهّز حساب جديد بدل كده.",
+    "migrateInstead": "رجع الحساب القديم بدل كده",
+    "setUpNewAccount": "جهّز حساب جديد",
+    "createNewInstead": "اعمل حساب جديد بدل كده",
+    "migrateAccount": "انقل الحساب",
+    "importExternalWallet": "استورد محفظة خارجية",
+    "migrateIntentHint": "سجل دخولك بأي اختيار تحت. لو مطابق لحساب DeHub قديم هترجع المحفظة واسم المستخدم والرصيد بتاعه.",
+    "importIntentHint": "سجل دخولك بأي اختيار تحت، وبعدين الصق عبارة الاسترداد أو المفتاح الخاص للمحفظة اللي عايز تستخدمها.",
     "unlockBiometricContinue": "افتح محفظتك ببصمة إصبعك أو وشك عشان تكمل.",
     "unlockBiometricSignIn": "افتح محفظتك ببصمة إصبعك أو وشك عشان تدخل.",
     "unlockPasswordContinue": "اكتب كلمة السر بتاعة المحفظة عشان تكمل.",

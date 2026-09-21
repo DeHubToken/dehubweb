@@ -1409,6 +1409,14 @@
     "failedSubmit": "Nie udało się wysłać zgłoszenia. Spróbuj ponownie."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Na tym loginie nie ma wcześniejszego konta DeHub, więc nie ma co przynosić. Zamiast tego skonfiguruj nowe konto.",
+    "migrateInstead": "Przenieś stare konto",
+    "setUpNewAccount": "Załóż nowe konto",
+    "createNewInstead": "Zamiast tego utwórz nowe konto",
+    "migrateAccount": "Przenieś konto",
+    "importExternalWallet": "Importuj portfel zewnętrzny",
+    "migrateIntentHint": "Zaloguj się za pomocą dowolnej z poniższych opcji. Jeśli pasuje do wcześniejszego konta DeHub, przyniesiesz jego portfel, nazwę użytkownika i saldo.",
+    "importIntentHint": "Zaloguj się za pomocą dowolnej z poniższych opcji, a następnie wklej frazę odzyskiwania lub klucz prywatny portfela, którego chcesz użyć.",
     "unlockBiometricContinue": "Aby kontynuować, odblokuj portfel za pomocą odcisku palca lub twarzy.",
     "unlockBiometricSignIn": "Odblokuj portfel odciskiem palca lub twarzą, aby się zalogować.",
     "unlockPasswordContinue": "Wprowadź hasło do portfela, aby kontynuować.",

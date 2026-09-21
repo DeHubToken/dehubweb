@@ -1413,6 +1413,14 @@
     "email": "Email"
   },
   "loginModal": {
+    "migrateNoOldAccount": "Não há nenhuma conta DeHub anterior neste login, então não há nada para trazer. Em vez disso, configure uma nova conta.",
+    "migrateInstead": "Em vez disso, traga a conta antiga",
+    "setUpNewAccount": "Configurar uma nova conta",
+    "createNewInstead": "Em vez disso, crie uma nova conta",
+    "migrateAccount": "Migrar conta",
+    "importExternalWallet": "Importar carteira externa",
+    "migrateIntentHint": "Inicie sessão com qualquer opção abaixo. Se corresponder a uma conta DeHub anterior, trará a respetiva carteira, nome de utilizador e saldo.",
+    "importIntentHint": "Entre com qualquer opção abaixo e cole a frase de recuperação ou a chave privada da carteira que deseja usar.",
     "unlockBiometricContinue": "Desbloqueie a sua carteira com a sua impressão digital ou rosto para continuar.",
     "unlockBiometricSignIn": "Desbloqueie a sua carteira com a sua impressão digital ou o seu rosto para iniciar sessão.",
     "unlockPasswordContinue": "Introduza a palavra-passe da sua carteira para continuar.",

@@ -1428,6 +1428,14 @@
     "failedSubmit": "提交申請失敗。請再試過。"
   },
   "loginModal": {
+    "migrateNoOldAccount": "此登入沒有較早的 DeHub 帳戶，因此沒有任何內容可以轉移。請設定一個新帳戶。",
+    "migrateInstead": "將舊帳戶搬過來",
+    "setUpNewAccount": "設定新帳戶",
+    "createNewInstead": "開過個新acc啦",
+    "migrateAccount": "轉移帳戶",
+    "importExternalWallet": "匯入外部錢包",
+    "migrateIntentHint": "用下面任何選項登入。如果佢同早期嘅 DeHub 帳戶相符，你會帶埋佢嘅銀包、用戶名同餘額。",
+    "importIntentHint": "用下面任何選項登入，然後貼上你想用嘅錢包嘅恢復短語或者私人密鑰。",
     "unlockBiometricContinue": "用指紋或者面部解鎖銀包就可以繼續。",
     "unlockBiometricSignIn": "用指紋或者面部解鎖銀包嚟登入。",
     "unlockPasswordContinue": "輸入你嘅錢包密碼就可以繼續。",

@@ -1409,6 +1409,14 @@
     "failedSubmit": "Einreichung fehlgeschlagen. Bitte erneut versuchen."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Es gibt kein früheres DeHub-Konto bei diesem Login, daher gibt es nichts, was Sie mitbringen können. Richten Sie stattdessen ein neues Konto ein.",
+    "migrateInstead": "Bringen Sie stattdessen das alte Konto mit",
+    "setUpNewAccount": "Ein neues Konto einrichten",
+    "createNewInstead": "Stattdessen ein neues Konto erstellen",
+    "migrateAccount": "Konto migrieren",
+    "importExternalWallet": "Externes Wallet importieren",
+    "migrateIntentHint": "Melden Sie sich mit einer der folgenden Optionen an. Wenn es mit einem früheren DeHub-Konto übereinstimmt, bringen Sie dessen Wallet, Benutzernamen und Guthaben mit.",
+    "importIntentHint": "Melden Sie sich mit einer der folgenden Optionen an und fügen Sie dann die Wiederherstellungsphrase oder den privaten Schlüssel der Brieftasche ein, die Sie verwenden möchten.",
     "unlockBiometricContinue": "Entsperren Sie Ihre Brieftasche mit Ihrem Fingerabdruck oder Gesicht, um fortzufahren.",
     "unlockBiometricSignIn": "Entsperren Sie Ihre Brieftasche mit Ihrem Fingerabdruck oder Gesicht, um sich anzumelden.",
     "unlockPasswordContinue": "Geben Sie Ihr Wallet-Passwort ein, um fortzufahren.",

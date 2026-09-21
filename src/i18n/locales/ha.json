@@ -1429,6 +1429,14 @@
     "failedSubmit": "Ba a iya miƙa nema ba. Da fatan za a sake gwadawa."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Babu wani asusun DeHub na baya akan wannan shiga, don haka babu abin da za a dawo da shi. Kafa sabon asusu a maimakon.",
+    "migrateInstead": "Dawo da tsohon asusu a maimakon",
+    "setUpNewAccount": "Kafa sabon asusu",
+    "createNewInstead": "Ƙirƙiri sabon asusu a maimakon",
+    "migrateAccount": "Canja wurin asusu",
+    "importExternalWallet": "Shigo da walat ɗin waje",
+    "migrateIntentHint": "Shiga tare da kowane zaɓi a ƙasa. Idan ya yi daidai da wani asusun DeHub na baya za ku dawo da walat ɗin sa, sunan mai amfani da kuɗin sa.",
+    "importIntentHint": "Shiga tare da kowane zaɓi a ƙasa, sannan liƙa kalmar sirri ta murmurewa ko maɓalli na sirri na walat ɗin da kake son amfani da shi.",
     "unlockBiometricContinue": "Bude walat ɗinku tare da yatsan yatsa ko fuska don ci gaba.",
     "unlockBiometricSignIn": "Bude walat ɗinku tare da yatsan yatsa ko fuska don shiga.",
     "unlockPasswordContinue": "Shigar da kalmarka ta walat don ci gaba.",

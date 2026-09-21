@@ -29,6 +29,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, warmDeferredSheets } 
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { type LoginStep, resumingStep } from '@/components/app/login/steps';
+import { getWalletSetupIntent, setWalletSetupIntent } from '@/lib/wallet-setup-intent';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import { useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
 
@@ -155,6 +156,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     // behind this sheet to go back to, so it does not close. Log out is the
     // other way out, and it clears the flag itself.
     if (requiresUsername) return;
+    // Closing by hand abandons a "Migrate account" / "Import external wallet"
+    // choice too; a completed login clears it itself.
+    setWalletSetupIntent(null);
     setStep('main');
     onOpenChange(false);
   }, [onOpenChange, requiresUsername]);
@@ -186,7 +190,11 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     // first encounter with the wallet, and leading with crypto vocabulary puts
     // off users who came for the app. What the step actually does — make the
     // account only usable by them — is also the more accurate description.
-    : step === 'wallet-create' ? t('loginModal.secureAccount', 'Secure account')
+    : step === 'wallet-create' ? (
+        getWalletSetupIntent() === 'migrate' ? t('loginModal.migrateAccount', 'Migrate account')
+        : getWalletSetupIntent() === 'import' ? t('loginModal.importExternalWallet', 'Import external wallet')
+        : t('loginModal.secureAccount', 'Secure account')
+      )
     : step === 'wallet-unlock' ? t('loginModal.unlockWallet', 'Unlock your wallet')
     : step === 'profile' ? t('settings.profile')
     : step === 'resuming' || step === 'wallet-signing' ? t('loginModal.signingIn', 'Signing you in…')
