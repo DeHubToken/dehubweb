@@ -276,15 +276,21 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     );
   }
 
+  // `column`: on desktop the sheet clips to the middle panel's live bounds, the
+  // same as every other sheet in the app, so it opens in the gap between the
+  // sidebars instead of spanning the whole viewport. The backdrop stays full
+  // width deliberately — it blurs the sidebars too, so nothing outside the
+  // sign-in flow competes with it.
   return (
     <Drawer open={open} onOpenChange={handleClose} warmable walletPrompt dismissible={!requiresUsername} repositionInputs={false}>
       <DrawerContent
         data-login-modal
+        column
         style={keyboardStyle ?? undefined}
         hideHandle
         onEscapeKeyDown={(e) => { if (requiresUsername) e.preventDefault(); }}
         className="bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[2147483646] flex flex-col max-h-[90dvh]"
-        overlayClassName="z-[2147483645] login-modal-overlay backdrop-blur-xl"
+        overlayClassName="z-[2147483645] login-modal-overlay backdrop-blur-xl md:bg-black/40"
       >
         {sheetBody}
       </DrawerContent>
