@@ -42,11 +42,18 @@ import {
 import { predictSafeAddress } from '@/lib/smart-account-address';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PasswordStrengthMeter } from './PasswordStrengthMeter';
+import type { WalletSetupIntent } from '@/lib/wallet-setup-intent';
 
 interface WalletCreateStepProps {
   userId: string;
   /** Called with the derived private key once the wallet is fully persisted. */
   onComplete: (privKeyHex: string) => Promise<void>;
+  /**
+   * Chosen on the login sheet before signing in (see lib/wallet-setup-intent).
+   * An explicit intent wins over detection; without one the step migrates
+   * when the backend recognises the login and otherwise sets up a new account.
+   */
+  intent?: WalletSetupIntent | null;
 }
 
 type Mode = 'new' | 'import' | 'migrate';
@@ -82,9 +89,9 @@ function legacyMigrationInFlight(): boolean {
   }
 }
 
-export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) {
+export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCreateStepProps) {
   const { t } = useTranslation();
-  const [mode, setMode] = useState<Mode>('new');
+  const [mode, setMode] = useState<Mode>(intent ?? 'new');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [importPhrase, setImportPhrase] = useState('');
@@ -120,7 +127,10 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   // themselves (userChoseModeRef) — never fights an explicit choice.
   const [backendHint, setBackendHint] = useState<LegacyAccountHint | null>(null);
   const [residueDetected, setResidueDetected] = useState(false);
-  const userChoseModeRef = useRef(false);
+  // An intent picked on the login sheet counts as an explicit choice: someone
+  // who pressed "Import external wallet" is not moved onto Migrate because the
+  // backend happens to recognise their email.
+  const userChoseModeRef = useRef(intent !== null);
   // A legacy migration has been started or resumed on this mount. A ref, not
   // state: the backend-hint callback closes over its mount-time render, so any
   // state it read would be permanently stale.
@@ -277,8 +287,8 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     // can retrieve and every outcome is a duplicate. Refuse before the popup.
     if (backendHint?.exists === false) {
       setError(t(
-        'loginModal.migrateNothingToRecover',
-        'There is no earlier DeHub account on this login, so there is nothing to bring over. Go back to New account to finish setting this one up.',
+        'loginModal.migrateNoOldAccount',
+        'There is no earlier DeHub account on this login, so there is nothing to bring over. Set up a new account instead.',
       ));
       setMode('new');
       return;
@@ -660,7 +670,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       {!migratedKey && backendHint?.exists == null && residueDetected && (
         <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
           <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-          <p>Looks like this browser has signed in to DeHub before. If that was you, use <span className="font-semibold">Migrate</span> below so you keep your old wallet and balance.</p>
+          <p>Looks like this browser has signed in to DeHub before. If that was you, sign in with your old login below so you keep your old wallet and balance.</p>
         </div>
       )}
 
@@ -674,8 +684,8 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
             <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
             <p>
               {t(
-                'loginModal.migrateNothingToRecover',
-                'There is no earlier DeHub account on this login, so there is nothing to bring over. Go back to New account to finish setting this one up.',
+                'loginModal.migrateNoOldAccount',
+                'There is no earlier DeHub account on this login, so there is nothing to bring over. Set up a new account instead.',
               )}
             </p>
           </div>
@@ -697,28 +707,28 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
         </div>
       )}
 
-      <div className="flex rounded-xl bg-white/5 p-1 gap-1">
-        {([['new', 'New account'], ['import', 'Import'], ['migrate', 'Migrate']] as const).map(([m, label]) => (
-          <button
-            key={m}
-            type="button"
-            onClick={() => { userChoseModeRef.current = true; setMode(m); setError(null); }}
-            className={`flex-1 h-9 rounded-lg text-sm transition-colors ${mode === m ? 'bg-white/15 text-white' : 'text-white/50 hover:text-white'}`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
-      {/* Guarantee the migrate path can't be missed, even when detection is unavailable */}
-      {mode === 'new' && backendHint?.exists !== false && (
+      {/* No New / Import / Migrate picker. The step decides: a recognised old
+          account (or an intent chosen on the login sheet) lands on Migrate,
+          an import intent on Import, and everyone else goes straight to
+          securing a new account. The links below are the only way to
+          overrule that, and each is shown only where overruling makes sense. */}
+      {mode !== 'migrate' && !migratedKey && (backendHint?.exists === true || (backendHint?.exists == null && residueDetected)) && (
         <button
           type="button"
           onClick={() => { userChoseModeRef.current = true; setMode('migrate'); setError(null); }}
           className="w-full text-left text-xs text-white/50 hover:text-white/80 transition-colors"
         >
-          Used DeHub before? <span className="underline">Migrate your old account</span> to keep your wallet and balance →
+          <span className="underline">{t('loginModal.migrateInstead', 'Bring over the old account instead')}</span> →
         </button>
+      )}
+
+      {mode === 'migrate' && !migratedKey && backendHint?.exists === false && (
+        <Button
+          onClick={() => { userChoseModeRef.current = true; setMode('new'); setError(null); }}
+          className="w-full h-11 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+        >
+          {t('loginModal.setUpNewAccount', 'Set up a new account')}
+        </Button>
       )}
 
       {mode === 'import' && (
@@ -729,6 +739,15 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
           placeholder="Recovery phrase (12/24 words) or 0x private key"
           className="bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl"
         />
+      )}
+      {mode === 'import' && (
+        <button
+          type="button"
+          onClick={() => { userChoseModeRef.current = true; setMode('new'); setImportPhrase(''); setError(null); }}
+          className="w-full text-left text-xs text-white/50 hover:text-white/80 transition-colors"
+        >
+          <span className="underline">{t('loginModal.createNewInstead', 'Create a new account instead')}</span> →
+        </button>
       )}
 
       {mode === 'migrate' && !migratedKey && backendHint?.exists !== false && (
@@ -800,6 +819,14 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
               <p className="text-white/40 text-xs">
                 A one-time sign-in retrieves your wallet key securely in this browser — it never touches our servers.
               </p>
+              <button
+                type="button"
+                disabled={!!migrateBusy}
+                onClick={() => { userChoseModeRef.current = true; setMode('new'); setError(null); }}
+                className="w-full text-left text-xs text-white/50 hover:text-white/80 transition-colors disabled:opacity-50"
+              >
+                <span className="underline">{t('loginModal.createNewInstead', 'Create a new account instead')}</span> →
+              </button>
             </>
           )}
         </div>
