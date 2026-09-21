@@ -15,6 +15,7 @@ import { BioTranslateButton } from '@/components/app/profile/BioTranslateButton'
 import { ProfileSocialLinks } from '@/components/app/profile/ProfileSocialLinks';
 import { TotalReachPill } from '@/components/app/profile/TotalReachPill';
 import { MutualFollowers } from '@/components/app/profile/MutualFollowers';
+import { StreamerLevelCard } from '@/components/app/live/StreamerLevelCard';
 import { PinnedCommunities } from '@/components/app/communities/PinnedCommunities';
 import {
   AlertDialog,
@@ -601,6 +602,10 @@ export function ProfileHeader({
           {!isViewingOwnProfile && (
             <MutualFollowers profileAddress={apiProfile?.walletAddress} />
           )}
+
+          {/* The streamer ladder. Renders nothing for a profile that has
+              never ended a stream, so a non-streamer's page is unchanged. */}
+          <StreamerLevelCard address={profile.walletAddress} className="mt-4" />
         </div>
       </div>
 
