@@ -5,6 +5,7 @@ import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { TabbedSidePanel } from './sidebar';
 import { WhatsHappening } from './WhatsHappening';
+import { GettingStartedBento } from './GettingStartedBento';
 import { useSearchHistory } from '@/hooks/use-search-history';
 import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
@@ -63,6 +64,10 @@ export const RightSidebar = memo(function RightSidebar({ showSearch = true }: Ri
         </div>
       )}
       <div className={cn("space-y-4", isCollapsed ? "mt-[8px]" : "mt-[11px]")}>
+        {/* Above the panels rather than below them: it renders nothing at all
+            for everyone except a member who is mid-walkthrough, and when it
+            does render it is the thing that person came back for. */}
+        <GettingStartedBento />
         <TabbedSidePanel />
         <div className="relative -mt-[4.2px]">
           <WhatsHappening />

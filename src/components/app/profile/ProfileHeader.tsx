@@ -38,6 +38,7 @@ import { isBigBadgeUrl } from '@/lib/staking-badges';
 import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
+import { OnboardingCompleteChip } from '@/components/app/OnboardingCompleteChip';
 import { BadgePatronChip } from '@/components/app/BadgePatronChip';
 import { toast } from 'sonner';
 import { DISPLAY_WALLET_OVERRIDES, getDefaultBanner, type TabValue } from './ProfileConstants';
@@ -380,6 +381,10 @@ export function ProfileHeader({
                 {/* Temporary — gone NEW_MEMBER_WINDOW_DAYS after signup, and
                     immediately if they switch it off in Settings › Privacy. */}
                 <NewMemberChip address={profile.walletAddress} />
+                {/* Your own profile only, and only once the walkthrough is
+                    finished — it is derived from your progress row, not from
+                    anything stored on the profile. */}
+                <OnboardingCompleteChip address={profile.walletAddress} />
               </div>
               {profile.customs && (
                 <ProfileSocialLinks customs={profile.customs} />
