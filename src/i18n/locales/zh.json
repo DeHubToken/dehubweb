@@ -184,6 +184,13 @@
     "postVisibility": "帖子可见性",
     "defaultPostVisibility": "默认帖子可见性",
     "defaultPostVisibilityDesc": "适用于所有当前和未来的帖子",
+    "aiScraping": {
+      "section": "人工智能培训",
+      "label": "允许AI抓取我的内容",
+      "hintAllow": "尊重此信号的人工智能系统和爬虫可能会训练您的音频、艺术品和写作。",
+      "hintDeny": "尊重此信号的人工智能系统和爬虫被要求不要训练你的音频、艺术品和写作。 忽略信号的爬虫不会被其拦截。",
+      "saved": "人工智能培训偏好已保存"
+    },
     "defaultProfileTab": "默认档案标签",
     "defaultProfileTabDesc": "选择访客在你的主页上首先看到哪个标签",
     "public": "公开",
@@ -1235,6 +1242,10 @@
     "returnHome": "返回首页"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "此创作者允许对此内容进行人工智能培训。",
+      "denied": "此创作者不允许对此内容进行人工智能培训。"
+    },
     "back": "返回",
     "usernameAvailable": "用户名可用！",
     "signUpToClaim": "注册以获取",

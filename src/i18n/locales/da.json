@@ -184,6 +184,13 @@
     "postVisibility": "Opslagssynlighed",
     "defaultPostVisibility": "Standard opslagssynlighed",
     "defaultPostVisibilityDesc": "Gælder for alle nuværende og fremtidige opslag",
+    "aiScraping": {
+      "section": "AI-træning",
+      "label": "Tillad AI-skrabning af mit indhold",
+      "hintAllow": "AI-systemer og crawlere, der respekterer dette signal, kan træne på din lyd, kunst og skrivning.",
+      "hintDeny": "AI-systemer og crawlere, der respekterer dette signal, bliver bedt om ikke at træne på din lyd, kunst og skrivning. Crawlere, der ignorerer signalet, blokeres ikke af det.",
+      "saved": "AI-træningspræference gemt"
+    },
     "defaultProfileTab": "Standardfane på profilen",
     "defaultProfileTabDesc": "Vælg, hvilken fane besøgende ser først på din profil",
     "public": "Offentlig",
@@ -1237,6 +1244,10 @@
     "returnHome": "Tilbage til forsiden"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Denne kreatør tillader AI-træning i dette indhold.",
+      "denied": "Denne kreatør tillader ikke AI-træning i dette indhold."
+    },
     "back": "Tilbage",
     "usernameAvailable": "Brugernavn er ledigt!",
     "signUpToClaim": "Tilmeld dig og gør krav på det",

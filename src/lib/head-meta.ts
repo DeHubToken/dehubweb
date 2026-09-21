@@ -54,11 +54,32 @@ export function upsertSocialMeta(opts: {
  * hosts, matching the inline script in index.html. Restoring is
  * required because cached pages share one <head>: navigating from a noindexed
  * page to an indexable one must not leave the noindex behind.
+ *
+ * `aiDirectives`, when given, is appended to the same tag — `noai, noimageai`
+ * (a creator's page whose owner denied AI training) or nothing extra (they
+ * allowed it). These are the de-facto directives some AI crawlers already
+ * honour; they say nothing about ordinary search indexing, which is what the
+ * rest of this content decides.
  */
-export function setRobots(noindex: boolean): void {
+export function setRobots(noindex: boolean, aiDirectives?: string): void {
   const isCanonicalHost = CANONICAL_HOSTS.includes(window.location.hostname);
-  const content = noindex || !isCanonicalHost ? 'noindex, nofollow' : 'index, follow';
+  const base = noindex || !isCanonicalHost ? 'noindex, nofollow' : 'index, follow';
+  const content = aiDirectives ? `${base}, ${aiDirectives}` : base;
   upsertMeta('name', 'robots', content);
+}
+
+/**
+ * TDMRep's `tdm-reservation` signal: '1' when the creator has reserved their
+ * content out of text-and-data-mining (i.e. denied AI training), '0' when
+ * they opened it up. Omitted entirely — not written as neutral — when the
+ * page has no single creator to ask (nothing here means nothing to honour).
+ */
+export function setTdmReservation(value: '0' | '1' | null): void {
+  if (value === null) {
+    document.head.querySelector('meta[name="tdm-reservation"]')?.remove();
+    return;
+  }
+  upsertMeta('name', 'tdm-reservation', value);
 }
 
 const JSONLD_ID = 'seo-jsonld';

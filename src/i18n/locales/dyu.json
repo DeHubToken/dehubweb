@@ -184,6 +184,13 @@
     "postVisibility": "Kɔrɔbɔ",
     "defaultPostVisibility": "Kɔrɔbɔ",
     "defaultPostVisibilityDesc": "Kɔrɔbɔ kɛ",
+    "aiScraping": {
+      "section": "Kalan",
+      "label": "Ne ka kan ka n ka kumaw fɔ",
+      "hintAllow": "AI ka sisitɛmuw ni crawlers minw be bonya la o siginɛ kan, olu be se k'i dɛmɛ k'i ka kumakanw, i ka dɔnkiliw ani i ka sɛbɛri kɛ.",
+      "hintDeny": "O la, aw ka kan ka aw ka kumakanw, aw ka dɔnkiliw ani aw ka sɛbɛri kɛcogow degi. Mɔgɔ minw tɛ sɔn ka kuma, olu tɛ se ka kuma.",
+      "saved": "Kalan min ka di mɔgɔ ye"
+    },
     "defaultProfileTab": "Sɛbɛn tabu bɛnnen",
     "defaultProfileTabDesc": "Tabu min ka kan ka jira taalabagaw ɲɛ i ka sɛbɛn kan, o sugandi",
     "public": "Kɔrɔbɔ",
@@ -1201,6 +1208,10 @@
     "returnHome": "Kɛnɛ kɔ"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "O danbaga be se ka mɔgɔ kalan o koo la.",
+      "denied": "O danbaga tɛ sɔn ka mɔgɔ kalan o koo la."
+    },
     "back": "Kɔrɔbɔ",
     "usernameAvailable": "Kɔrɔbɔ",
     "signUpToClaim": "Sɔgɔma kɛ",

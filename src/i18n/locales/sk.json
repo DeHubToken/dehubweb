@@ -188,6 +188,13 @@
     "postVisibility": "Viditeľnosť príspevkov",
     "defaultPostVisibility": "Predvolená viditeľnosť",
     "defaultPostVisibilityDesc": "Platí pre všetky aktuálne a budúce príspevky",
+    "aiScraping": {
+      "section": "Školenie AI",
+      "label": "Povoliť škrabanie môjho obsahu umelou inteligenciou",
+      "hintAllow": "Systémy umelej inteligencie a crawlery, ktoré rešpektujú tento signál, môžu trénovať váš zvuk, umelecké diela a písanie.",
+      "hintDeny": "UI systémy a crawlery, ktoré rešpektujú tento signál, sú požiadané, aby sa netrénovali na vašom audiu, umeleckých dielach a písaní. Crawlery, ktoré ignorujú signál, nie sú blokované.",
+      "saved": "Predvoľba školenia AI uložená"
+    },
     "defaultProfileTab": "Predvolená karta profilu",
     "defaultProfileTabDesc": "Vyber, ktorú kartu uvidia návštevníci na tvojom profile ako prvú",
     "public": "Verejné",
@@ -1306,6 +1313,10 @@
     "returnHome": "Späť na domovskú stránku"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Tento tvorca umožňuje školenie umelej inteligencie o tomto obsahu.",
+      "denied": "Tento tvorca nepovoľuje školenie umelej inteligencie o tomto obsahu."
+    },
     "back": "Späť",
     "usernameAvailable": "Používateľské meno je voľné!",
     "signUpToClaim": "Zaregistrujte sa ešte dnes a získajte ho",
@@ -3267,57 +3278,6 @@
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
   },
-  "post": {
-    "like": "Páči sa mi",
-    "comment": "Komentár",
-    "repost": "Zdieľať",
-    "share": "Zdieľať",
-    "bookmark": "Záložka",
-    "tip": "Tip",
-    "delete": "Vymazať",
-    "edit": "Upraviť",
-    "report": "Nahlásiť",
-    "translate": "Preložiť",
-    "pinned": "Pripnuté",
-    "replying": "Odpovedanie",
-    "reply": "Odpoveď",
-    "writeReply": "Napíšte odpoveď...",
-    "noComments": "Zatiaľ žiadne komentáre",
-    "viewMore": "Zobraziť viac",
-    "postDeleted": "Príspevok bol vymazaný",
-    "likes": "páči sa mi",
-    "comments": "komentáre",
-    "reposts": "zdieľania",
-    "shares": "zdieľania"
-  },
-  "create": {
-    "title": "Vytvoriť príspevok",
-    "placeholder": "Čo máte na mysli?",
-    "post": "Publikovať",
-    "addImage": "Pridať obrázok",
-    "addVideo": "Pridať video",
-    "addGif": "Pridať GIF",
-    "addPoll": "Pridať anketu",
-    "addLocation": "Pridať polohu",
-    "visibility": "Viditeľnosť",
-    "everyone": "Každý",
-    "followers": "Sledovatelia",
-    "subscribers": "Predplatitelia",
-    "mentioned": "Spomenutí"
-  },
-  "featureRequests": {
-    "title": "Požiadavky na funkcie",
-    "submit": "Odoslať požiadavku",
-    "vote": "Hlasovať",
-    "status": "Stav",
-    "category": "Kategória",
-    "description": "Popis",
-    "comments": "Komentáre",
-    "planned": "Plánované",
-    "inProgress": "V realizácii",
-    "completed": "Dokončené",
-    "underReview": "V recenzii"
-  },
   "conversation": {
     "commonGround": {
       "title": "Spoločná reč",
@@ -3418,5 +3378,56 @@
         "body": "Zistite, ako rady, odznaky a SuperPowers premenia to, čo tu robíte, na niečo, z čoho si zarobíte."
       }
     }
+  },
+  "post": {
+    "like": "Páči sa mi",
+    "comment": "Komentár",
+    "repost": "Zdieľať",
+    "share": "Zdieľať",
+    "bookmark": "Záložka",
+    "tip": "Tip",
+    "delete": "Vymazať",
+    "edit": "Upraviť",
+    "report": "Nahlásiť",
+    "translate": "Preložiť",
+    "pinned": "Pripnuté",
+    "replying": "Odpovedanie",
+    "reply": "Odpoveď",
+    "writeReply": "Napíšte odpoveď...",
+    "noComments": "Zatiaľ žiadne komentáre",
+    "viewMore": "Zobraziť viac",
+    "postDeleted": "Príspevok bol vymazaný",
+    "likes": "páči sa mi",
+    "comments": "komentáre",
+    "reposts": "zdieľania",
+    "shares": "zdieľania"
+  },
+  "create": {
+    "title": "Vytvoriť príspevok",
+    "placeholder": "Čo máte na mysli?",
+    "post": "Publikovať",
+    "addImage": "Pridať obrázok",
+    "addVideo": "Pridať video",
+    "addGif": "Pridať GIF",
+    "addPoll": "Pridať anketu",
+    "addLocation": "Pridať polohu",
+    "visibility": "Viditeľnosť",
+    "everyone": "Každý",
+    "followers": "Sledovatelia",
+    "subscribers": "Predplatitelia",
+    "mentioned": "Spomenutí"
+  },
+  "featureRequests": {
+    "title": "Požiadavky na funkcie",
+    "submit": "Odoslať požiadavku",
+    "vote": "Hlasovať",
+    "status": "Stav",
+    "category": "Kategória",
+    "description": "Popis",
+    "comments": "Komentáre",
+    "planned": "Plánované",
+    "inProgress": "V realizácii",
+    "completed": "Dokončené",
+    "underReview": "V recenzii"
   }
 }

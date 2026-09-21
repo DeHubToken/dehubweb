@@ -1649,7 +1649,7 @@ function QuietHoursSection() {
 
 function PrivacySettings() {
   const { t } = useTranslation();
-  const { showFollowersFollowing, hideFollowerCounts, isPrivate, hideBadgeAndBalance, defaultPostVisibility, updateSettings, isUpdating, isLoading } = usePrivacySettings();
+  const { showFollowersFollowing, hideFollowerCounts, isPrivate, hideBadgeAndBalance, defaultPostVisibility, aiScraping, updateSettings, isUpdating, isLoading } = usePrivacySettings();
   const { whoCanMessage, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateDoNotDisturb } = useDmSettings();
   const { option: walletUnlockInterval, setOption: setWalletUnlockInterval } = useWalletUnlockInterval();
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
@@ -1901,6 +1901,22 @@ function PrivacySettings() {
           <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4 text-sm text-zinc-400">
             <p><strong className="text-white">{t('settings.note')}:</strong> {t('settings.postVisibilityNote')}</p>
           </div>
+        </div>
+      </div>
+
+      {/* AI Scraping */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.aiScraping.section', 'AI training')}</h3>
+        <div className="space-y-4">
+          <SettingToggle
+            icon={Bot}
+            anchor="ai-scraping"
+            title={t('settings.aiScraping.label')}
+            description={aiScraping === 'allow' ? t('settings.aiScraping.hintAllow') : t('settings.aiScraping.hintDeny')}
+            defaultChecked={aiScraping === 'allow'}
+            onCheckedChange={(checked) => updateSettings({ ai_scraping: checked ? 'allow' : 'deny' })}
+            disabled={isUpdating || isLoading}
+          />
         </div>
       </div>
 

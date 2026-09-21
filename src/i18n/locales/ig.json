@@ -184,6 +184,13 @@
     "postVisibility": "Ịhụ ozi",
     "defaultPostVisibility": "Ịhụ ozi ndabara",
     "defaultPostVisibilityDesc": "Ọ na-emetụta ozi niile ugbu a na nke ọdịnihu",
+    "aiScraping": {
+      "section": "AI ọzụzụ",
+      "label": "Kwe ka AI scraping nke m ọdịnaya",
+      "hintAllow": "Usoro AI na crawlers ndị na-akwanyere mgbaàmà a ùgwù nwere ike ịzụ na ọdịyo gị, ihe osise na ederede.",
+      "hintDeny": "AI usoro na crawlers na-akwanyere mgbaàmà a na-jụrụ ghara ịzụ na gị audio, artwork na ide. A naghị egbochi ndị na-agbagharị agbagharị na-eleghara ihe mgbaàmà ahụ anya.",
+      "saved": "AI ọzụzụ mmasị echekwara"
+    },
     "defaultProfileTab": "Tab profaịlụ ndabara",
     "defaultProfileTabDesc": "Họrọ tab ndị ọbịa na-ahụ na mbụ na profaịlụ gị",
     "public": "Ọha",
@@ -1212,6 +1219,10 @@
     "returnHome": "Laghachi Ụlọ"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Onye okike a na-enye ohere ọzụzụ AI na ọdịnaya a.",
+      "denied": "Onye mmepụta a anaghị ekwe ka ọzụzụ AI na ọdịnaya a."
+    },
     "back": "Laghachi",
     "usernameAvailable": "Aha onye ọrụ dị!",
     "signUpToClaim": "Debanye aha taa iji nweta",

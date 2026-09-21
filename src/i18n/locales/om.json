@@ -184,6 +184,13 @@
     "postVisibility": "Mul'ata Barreeffamaa",
     "defaultPostVisibility": "Mul'ata Barreeffamaa Durtii",
     "defaultPostVisibilityDesc": "Barreeffamoota ammaa fi gara fuulduraa hundaaf hojiirra oola",
+    "aiScraping": {
+      "section": "Leenjii AI",
+      "label": "Qabiyyee koo AIn akka scraping godhu hayyami",
+      "hintAllow": "Sirnoonni AI fi crawlers mallattoo kana kabajan sagalee, hojii aartii fi barreeffama keessan irratti leenji&#39;uu danda&#39;u.",
+      "hintDeny": "Sirnoonni AI fi crawlers mallattoo kana kabajan sagalee, hojii aartii fi barreeffama keessan irratti akka hin leenjifamne gaafatamna. Crawlers kanneen mallattoo tuffatan ittiin hin ugguraman.",
+      "saved": "Filannoon leenjii AI qusatameera"
+    },
     "defaultProfileTab": "Tab profaayilii durtii",
     "defaultProfileTabDesc": "Daawwattoonni profaayilii kee irratti tab kam jalqaba akka arganu filadhu",
     "public": "Ummataa",
@@ -1234,6 +1241,10 @@
     "returnHome": "Manatti deebi'i"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Uumaan kun qabiyyee kana irratti leenjii AI ni hayyama.",
+      "denied": "Uumaan kun qabiyyee kana irratti leenjii AI hin hayyamu."
+    },
     "back": "Duuba",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Sign up today to claim",
@@ -3144,32 +3155,6 @@
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
   },
-  "spaces": {
-    "title": "Bakkeewwan",
-    "live": "Kallattii",
-    "upcoming": "Dhufaa jiru",
-    "past": "Darbe",
-    "create": "Bakkee Uumi",
-    "join": "Makamsi",
-    "listeners": "Dhaggeeffattoota",
-    "speakers": "Dubbattoota",
-    "host": "Keessummeessaa",
-    "endSpace": "Bakkee Dhaabi",
-    "raiseHand": "Harka Ol Kaasi",
-    "lowerHand": "Harka Gadi Buusi",
-    "mute": "Callisuun",
-    "unmute": "Sagalee Bansi",
-    "leave": "Bakkee Gadi Dhiisi",
-    "noSpaces": "Ammallee bakkeewwan hin jiran",
-    "loginDescription": "Bakkee sagalee uumuuf fi makamsuuf seeni."
-  },
-  "blog": {
-    "title": "Biloogii",
-    "readMore": "Dabalataa dubbisi",
-    "backToBlog": "Biloogiitti deebi'i",
-    "sharePost": "Barreeffama qoodi",
-    "relatedPosts": "Barreeffamoota Walqabatan"
-  },
   "conversation": {
     "commonGround": {
       "title": "Garee Walii",
@@ -3270,5 +3255,31 @@
         "body": "Akkamitti gargaarsi, mallattooleen fi \"SuperPowers\" hojii kee as irratti taasistu gara wantoota irraa argachuu dandeessutti jijjiiruuf gargaaran hubadhu."
       }
     }
+  },
+  "spaces": {
+    "title": "Bakkeewwan",
+    "live": "Kallattii",
+    "upcoming": "Dhufaa jiru",
+    "past": "Darbe",
+    "create": "Bakkee Uumi",
+    "join": "Makamsi",
+    "listeners": "Dhaggeeffattoota",
+    "speakers": "Dubbattoota",
+    "host": "Keessummeessaa",
+    "endSpace": "Bakkee Dhaabi",
+    "raiseHand": "Harka Ol Kaasi",
+    "lowerHand": "Harka Gadi Buusi",
+    "mute": "Callisuun",
+    "unmute": "Sagalee Bansi",
+    "leave": "Bakkee Gadi Dhiisi",
+    "noSpaces": "Ammallee bakkeewwan hin jiran",
+    "loginDescription": "Bakkee sagalee uumuuf fi makamsuuf seeni."
+  },
+  "blog": {
+    "title": "Biloogii",
+    "readMore": "Dabalataa dubbisi",
+    "backToBlog": "Biloogiitti deebi'i",
+    "sharePost": "Barreeffama qoodi",
+    "relatedPosts": "Barreeffamoota Walqabatan"
   }
 }

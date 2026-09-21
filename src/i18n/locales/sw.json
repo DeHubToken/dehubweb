@@ -184,6 +184,13 @@
     "postVisibility": "Kuonekana kwa Machapisho",
     "defaultPostVisibility": "Kuonekana kwa Machapisho kwa Chaguo-msingi",
     "defaultPostVisibilityDesc": "Inatumika kwa machapisho yote ya sasa na ya baadaye",
+    "aiScraping": {
+      "section": "Mafunzo ya AI",
+      "label": "Ruhusu AI kuchakata maudhui yangu",
+      "hintAllow": "Mifumo ya AI na watambaaji wanaoheshimu ishara hii wanaweza kutoa mafunzo kwenye sauti, sanaa na uandishi wako.",
+      "hintDeny": "Mifumo ya AI na watambaaji wanaoheshimu ishara hii wanaombwa kutofundisha juu ya sauti, sanaa na uandishi wako. Matambaa yanayopuuza ishara hayazuiliwi nayo.",
+      "saved": "Upendeleo wa mafunzo ya AI umehifadhiwa"
+    },
     "defaultProfileTab": "Kichupo chaguo-msingi cha wasifu",
     "defaultProfileTabDesc": "Chagua kichupo ambacho wageni huona kwanza kwenye wasifu wako",
     "public": "Umma",
@@ -1238,6 +1245,10 @@
     "returnHome": "Rudi Nyumbani"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Mtengenezaji huyu anaruhusu mafunzo ya AI kuhusu maudhui haya.",
+      "denied": "Mtengenezaji huyu haruhusu mafunzo ya AI kuhusu maudhui haya."
+    },
     "back": "Rudi",
     "usernameAvailable": "Jina la mtumiaji linapatikana!",
     "signUpToClaim": "Jisajili leo kudai",

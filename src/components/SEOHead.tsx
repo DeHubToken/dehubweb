@@ -1,7 +1,8 @@
 import { useContext, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
-import { upsertCanonical, upsertMeta, upsertSocialMeta, setRobots, setJsonLd } from '@/lib/head-meta';
+import { upsertCanonical, upsertMeta, upsertSocialMeta, setRobots, setJsonLd, setTdmReservation } from '@/lib/head-meta';
+import type { AiScrapingPreference } from '@/lib/ai-scraping';
 
 interface SEOHeadProps {
   title?: string;
@@ -14,6 +15,14 @@ interface SEOHeadProps {
    *  and restored to the host-appropriate default when absent so a cached
    *  noindexed page can't leak its robots tag onto the next route. */
   noindex?: boolean;
+  /**
+   * The page's owning creator's AI-scraping preference — pass it on a
+   * profile or a single-post page whose creator has one. Leave undefined on
+   * every page with no single creator to ask (feeds, marketing, etc.); the
+   * absence of a preference is not the same as a denial and must not be
+   * asserted as one.
+   */
+  aiScraping?: AiScrapingPreference;
 }
 
 const defaults = {
@@ -31,6 +40,7 @@ export function SEOHead({
   type = 'website',
   jsonLd,
   noindex = false,
+  aiScraping,
 }: SEOHeadProps) {
   // Hidden cached pages stay mounted; if they kept rendering Helmet, whichever
   // page happened to render last would own the tab title for every route.
@@ -59,9 +69,10 @@ export function SEOHead({
     upsertCanonical(canonicalUrl);
     upsertMeta('name', 'description', description);
     upsertSocialMeta({ title: fullTitle, description, url: canonicalUrl, image, type });
-    setRobots(noindex);
+    setRobots(noindex, aiScraping === 'deny' ? 'noai, noimageai' : undefined);
+    setTdmReservation(aiScraping === undefined ? null : aiScraping === 'deny' ? '1' : '0');
     setJsonLd(jsonLdString);
-  }, [isActivePage, fullTitle, canonicalUrl, description, image, type, noindex, jsonLdString]);
+  }, [isActivePage, fullTitle, canonicalUrl, description, image, type, noindex, jsonLdString, aiScraping]);
 
   if (!isActivePage) return null;
 

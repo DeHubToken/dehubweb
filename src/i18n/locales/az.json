@@ -184,6 +184,13 @@
     "postVisibility": "Paylaşım Görünürlüyü",
     "defaultPostVisibility": "Standart Paylaşım Görünürlüyü",
     "defaultPostVisibilityDesc": "Bütün mövcud və gələcək paylaşımlara tətbiq olunur",
+    "aiScraping": {
+      "section": "AI təlimi",
+      "label": "Məzmununuzun AI ilə qırılmasına icazə verin",
+      "hintAllow": "AI sistemləri və bu siqnala hörmət edən tarayıcılar səs, sənət əsəri və yazı üzərində məşq edə bilər.",
+      "hintDeny": "Bu siqnala hörmət edən AI sistemləri və tarayıcılardan audio, incəsənət və yazı üzərində məşq etməmələri xahiş olunur. Siqnala məhəl qoymayan sürünənlər bununla bloklanmır.",
+      "saved": "AI təlimi tərcihləri yaddaşda saxlanıldı"
+    },
     "defaultProfileTab": "Standart profil vərəqi",
     "defaultProfileTabDesc": "Ziyarətçilərin profilinizdə ilk hansı vərəqi görəcəyini seçin",
     "public": "Açıq",
@@ -1231,6 +1238,10 @@
     "returnHome": "Ana Səhifəyə Qayıt"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Bu yaradıcı AI-nin bu məzmunda təliminə icazə verir.",
+      "denied": "Bu yaradıcı AI-nin bu məzmunda təliminə icazə vermir."
+    },
     "back": "Geri",
     "usernameAvailable": "İstifadəçi adı mövcuddur!",
     "signUpToClaim": "İddia etmək üçün bu gün qeydiyyatdan keçin",

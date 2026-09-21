@@ -184,6 +184,13 @@
     "postVisibility": "Ýazgy görünmegi",
     "defaultPostVisibility": "Deslapky görünme",
     "defaultPostVisibilityDesc": "Ähli häzirki we geljekki ýazgylara degişli",
+    "aiScraping": {
+      "section": "Öwretmek",
+      "label": "Men öz içgimi ýitirip bilerin",
+      "hintAllow": "Bu habary hormatlaýan AI sistemeleri we krawler siziň ses, sanat we ýazma işleriňiziň üstünde tälim berip bilerler.",
+      "hintDeny": "Bu habary berjaý edýän AI sistemasy we krawler ses, sanat we ýazgylaryňyzda tälim bermezligi haýyş edýärler. Sinyaly äsgermezlik edýän krawler ony saklamaýarlar.",
+      "saved": "Öwrenme terjimesi halas boldy"
+    },
     "defaultProfileTab": "Adaty profil bukjasy",
     "defaultProfileTabDesc": "Myhmanlaryň profiliňizde ilki görjek bukjasyny saýlaň",
     "public": "Açyk",
@@ -1208,6 +1215,10 @@
     "returnHome": "Baş sahypa gaýdyp barmak"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Bu ýaradyjy bu mähelläniň üstünde AI-de tälim bermäge mümkinçilik berýär.",
+      "denied": "Bu ýaradyjy bu maglumaty AI-de taýýarlamaga rugsat bermeýär."
+    },
     "back": "Yza",
     "usernameAvailable": "Ulanyjy ady boş!",
     "signUpToClaim": "Hasaba duruň we alyň",

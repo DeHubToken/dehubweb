@@ -184,6 +184,13 @@
     "postVisibility": "Post Visibility",
     "defaultPostVisibility": "Default Post Visibility",
     "defaultPostVisibilityDesc": "Áp dụng cho tất cả các bài viết hiện tại và trong tương lai",
+    "aiScraping": {
+      "section": "Đào tạo AI",
+      "label": "Cho phép AI loại bỏ nội dung của tôi",
+      "hintAllow": "Các hệ thống AI và trình thu thập thông tin tôn trọng tín hiệu này có thể đào tạo về âm thanh, tác phẩm nghệ thuật và văn bản của bạn.",
+      "hintDeny": "Các hệ thống AI và trình thu thập thông tin tôn trọng tín hiệu này được yêu cầu không đào tạo về âm thanh, tác phẩm nghệ thuật và văn bản của bạn. Trình thu thập thông tin bỏ qua tín hiệu không bị chặn bởi nó.",
+      "saved": "Đã lưu tùy chọn đào tạo AI"
+    },
     "defaultProfileTab": "Tab hồ sơ mặc định",
     "defaultProfileTabDesc": "Chọn tab mà khách xem đầu tiên trên hồ sơ của bạn",
     "public": "Public",
@@ -1160,6 +1167,10 @@
     "returnHome": "Return Home"
   },
   "profile": {
+    "aiScraping": {
+      "allowed": "Người sáng tạo này cho phép đào tạo AI về nội dung này.",
+      "denied": "Người sáng tạo này không cho phép đào tạo AI về nội dung này."
+    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUp": "Sign Up",
@@ -5160,81 +5171,6 @@
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
   },
-  "glossary": {
-    "title": "Bảng thuật ngữ",
-    "description": "Giải thích các thuật ngữ và khái niệm quan trọng trong ứng dụng.",
-    "badges": {
-      "title": "Huy hiệu",
-      "description": "Huy hiệu được trao dựa trên số lượng token DHB mà người dùng đã stake.",
-      "tiers": [
-        {
-          "name": "Tortoise",
-          "min": 0,
-          "color": "white"
-        },
-        {
-          "name": "Crab",
-          "min": 10000,
-          "color": "white"
-        },
-        {
-          "name": "Lobster",
-          "min": 25000,
-          "color": "white"
-        },
-        {
-          "name": "Piranha",
-          "min": 50000,
-          "color": "white"
-        },
-        {
-          "name": "Cobra",
-          "min": 250000,
-          "color": "white"
-        },
-        {
-          "name": "Octopus",
-          "min": 500000,
-          "color": "white"
-        },
-        {
-          "name": "Crocodile",
-          "min": 1000000,
-          "color": "white"
-        },
-        {
-          "name": "Dolphin",
-          "min": 2000000,
-          "color": "white"
-        },
-        {
-          "name": "Tiger Shark",
-          "min": 3000000,
-          "color": "white"
-        },
-        {
-          "name": "Great White Shark",
-          "min": 5000000,
-          "color": "white"
-        },
-        {
-          "name": "Killer Whale",
-          "min": 10000000,
-          "color": "white"
-        },
-        {
-          "name": "Blue Whale",
-          "min": 25000000,
-          "color": "white"
-        },
-        {
-          "name": "Megalodon",
-          "min": 50000000,
-          "color": "white"
-        }
-      ]
-    }
-  },
   "conversation": {
     "commonGround": {
       "title": "Điểm chung",
@@ -5334,6 +5270,81 @@
         "title": "Tìm hiểu cách thức hoạt động của thu nhập",
         "body": "Tìm hiểu cách các mẹo, huy hiệu và Siêu năng lực biến những gì bạn làm ở đây thành thứ bạn kiếm được từ đó."
       }
+    }
+  },
+  "glossary": {
+    "title": "Bảng thuật ngữ",
+    "description": "Giải thích các thuật ngữ và khái niệm quan trọng trong ứng dụng.",
+    "badges": {
+      "title": "Huy hiệu",
+      "description": "Huy hiệu được trao dựa trên số lượng token DHB mà người dùng đã stake.",
+      "tiers": [
+        {
+          "name": "Tortoise",
+          "min": 0,
+          "color": "white"
+        },
+        {
+          "name": "Crab",
+          "min": 10000,
+          "color": "white"
+        },
+        {
+          "name": "Lobster",
+          "min": 25000,
+          "color": "white"
+        },
+        {
+          "name": "Piranha",
+          "min": 50000,
+          "color": "white"
+        },
+        {
+          "name": "Cobra",
+          "min": 250000,
+          "color": "white"
+        },
+        {
+          "name": "Octopus",
+          "min": 500000,
+          "color": "white"
+        },
+        {
+          "name": "Crocodile",
+          "min": 1000000,
+          "color": "white"
+        },
+        {
+          "name": "Dolphin",
+          "min": 2000000,
+          "color": "white"
+        },
+        {
+          "name": "Tiger Shark",
+          "min": 3000000,
+          "color": "white"
+        },
+        {
+          "name": "Great White Shark",
+          "min": 5000000,
+          "color": "white"
+        },
+        {
+          "name": "Killer Whale",
+          "min": 10000000,
+          "color": "white"
+        },
+        {
+          "name": "Blue Whale",
+          "min": 25000000,
+          "color": "white"
+        },
+        {
+          "name": "Megalodon",
+          "min": 50000000,
+          "color": "white"
+        }
+      ]
     }
   }
 }
