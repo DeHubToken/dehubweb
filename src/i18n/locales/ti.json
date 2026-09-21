@@ -987,7 +987,22 @@
     "noTextYet": "ገና እተዓቀቡ ናይ ጽሑፍ-ጥራይ ልጥፍታት የለዉን",
     "textStartSaving": "ናይ ጽሑፍ-ጥራይ ልጥፍታት ዓቅብ፡ ኣብዚ ድማ ክረኣዩ እዮም።",
     "reachedEnd": "ናይ ዕልባታትካ መወዳእታ በጺሕካ",
-    "loginDescription": "ዝተዓቀቡ ዕልባታትካ ንምርኣይን ንምምሕዳርን ብዓል።"
+    "loginDescription": "ዝተዓቀቡ ዕልባታትካ ንምርኣይን ንምምሕዳርን ብዓል።",
+    "playlist": {
+      "makePublic": "ሕዝባዊ መዝገብ",
+      "makePublicHint": "እዚ መዝገብ ኣብ መርበብ ሓበሬታኻ ክርኢ ይኽእል።",
+      "publicBadge": "ሕዝባዊ",
+      "copyLink": "መዝገብ መርበብ ሓበሬታ ኣባጻሕ",
+      "linkCopied": "መርበብ ሓበሬታ መዝገብ ተቐሪጹ",
+      "itemsCount": "{{count}} ጽሑፋት",
+      "emptyOwnerHint": "መዝገብ ምልክት ንምርኣይ ሕዝባዊ ግበሮ።",
+      "emptyVisitor": "እዚ መርበብ ሓበሬታ ገና ሕዝባዊ መዝገብ የብሉን።",
+      "openBookmarks": "መዝገባትይ ክፈትሕ",
+      "back": "ኩሉ መዝገብ",
+      "noPosts": "እዚ መዝገብ ገና ጽሑፋት የብሉን።",
+      "unavailable": "እዚ መዝገብ ኣይርከብን።",
+      "loadMore": "ተወሳኺ ጽሑፋት ኣርእዮ"
+    }
   },
   "notifications": {
     "title": "ምልክታታት",
@@ -1267,6 +1282,9 @@
       "breakdownTitle": "እዚ ምብጻሕ እዚ ካበይ እዩ መጺኡ ፧",
       "dehubFollowers": "ተኸታተልቲ DeHub",
       "selfReported": "ማሕበራዊ ተኸታተልቲ ቆጸራታት ብፈጣሪ ይኣትዉ እዮም ።"
+    },
+    "tabs": {
+      "playlists": "ዝርዝር መጻወቲ"
     }
   },
   "tv": {

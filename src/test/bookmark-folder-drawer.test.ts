@@ -32,4 +32,9 @@ describe('bookmark folder drawer regression contract', () => {
     expect(drawer).toContain("setNotice({ message: `Saved to ${created.name}`, tone: 'success' })");
     expect(foldersHook).toContain('if (!suppressToast)');
   });
+
+  it('offers the public-playlist switch when creating a folder', () => {
+    expect(drawer).toContain("t('bookmarks.playlist.makePublic')");
+    expect(drawer).toContain('isPublic: newFolderPublic');
+  });
 });

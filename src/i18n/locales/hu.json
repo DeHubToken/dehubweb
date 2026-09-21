@@ -949,7 +949,22 @@
     "noTextYet": "Még nincsenek mentett szöveges bejegyzések",
     "textStartSaving": "Mentsd könyvjelzőbe a csak szöveges bejegyzéseket, és itt jelennek meg.",
     "reachedEnd": "Elérte a könyvjelzők végét",
-    "loginDescription": "Jelentkezzen be könyvjelzői megtekintéséhez és kezeléséhez."
+    "loginDescription": "Jelentkezzen be könyvjelzői megtekintéséhez és kezeléséhez.",
+    "playlist": {
+      "makePublic": "Nyilvános lejátszási lista",
+      "makePublicHint": "Ezt a mappát bárki láthatja a profilodban.",
+      "publicBadge": "Nyilvános",
+      "copyLink": "Lejátszási lista link másolása",
+      "linkCopied": "Lejátszólista-hivatkozás másolva",
+      "itemsCount": "{{count}} bejegyzés",
+      "emptyOwnerHint": "Tegyél nyilvánossá egy könyvjelzőmappát, ha itt szeretnéd megjeleníteni.",
+      "emptyVisitor": "Ennek a profilnak még nincsenek nyilvános lejátszási listái.",
+      "openBookmarks": "Könyvjelzőim megnyitása",
+      "back": "Összes lejátszási lista",
+      "noPosts": "Ennek a lejátszási listának még nincsenek bejegyzései.",
+      "unavailable": "Ez a lejátszási lista már nem érhető el.",
+      "loadMore": "További bejegyzések megjelenítése"
+    }
   },
   "notifications": {
     "title": "Értesítések",
@@ -1242,6 +1257,9 @@
       "breakdownTitle": "Honnan származik ez a hatókör?",
       "dehubFollowers": "DeHub követők",
       "selfReported": "A közösségi követők számát az alkotó adja meg."
+    },
+    "tabs": {
+      "playlists": "Játéklisták"
     }
   },
   "tv": {

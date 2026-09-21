@@ -951,7 +951,22 @@
     "noTextYet": "还没存嘞文字帖哩",
     "textStartSaving": "存光文字嘞帖子，就会出在这搭。",
     "reachedEnd": "你的书签到底了",
-    "loginDescription": "登录来查看和管理你收藏的书签。"
+    "loginDescription": "登录来查看和管理你收藏的书签。",
+    "playlist": {
+      "makePublic": "公开播放列表",
+      "makePublicHint": "任何人都可以看到您个人资料中的此文件夹。",
+      "publicBadge": "公开",
+      "copyLink": "复制播放列表链接",
+      "linkCopied": "播放列表链接已复制",
+      "itemsCount": "{{count}} 个帖子",
+      "emptyOwnerHint": "公开书签文件夹即可在此处显示。",
+      "emptyVisitor": "此个人资料尚无公开播放列表。",
+      "openBookmarks": "打开我的书签",
+      "back": "所有播放列表",
+      "noPosts": "此播放列表尚无帖子。",
+      "unavailable": "此播放列表不再可用。",
+      "loadMore": "显示更多帖子"
+    }
   },
   "notifications": {
     "title": "通知",
@@ -1244,6 +1259,9 @@
       "breakdownTitle": "触达人数来源",
       "dehubFollowers": "DeHub 关注者",
       "selfReported": "社交关注者数量由创作者输入。"
+    },
+    "tabs": {
+      "playlists": "播放列表"
     }
   },
   "tv": {

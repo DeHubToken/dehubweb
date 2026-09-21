@@ -951,7 +951,22 @@
     "noTextYet": "Պահպանված տեքստային գրառումներ դեռ չկան",
     "textStartSaving": "Էջանշեք միայն տեքստով գրառումները, և դրանք կհայտնվեն այստեղ։",
     "reachedEnd": "Douq hasneatsek dzer ejavoreri verlun",
-    "loginDescription": "Moutq gortsuhr dzer pahpanvaats ejavorere teselou ev kargatselou hamar."
+    "loginDescription": "Moutq gortsuhr dzer pahpanvaats ejavorere teselou ev kargatselou hamar.",
+    "playlist": {
+      "makePublic": "Հանրային երգացանկ",
+      "makePublicHint": "Յուրաքանչյուրը կարող է տեսնել այս թղթապանակը ձեր պրոֆիլում:",
+      "publicBadge": "Հանրային",
+      "copyLink": "Պատճենել երգացանկի հղումը",
+      "linkCopied": "Երգացանկի հղումը պատճենված է",
+      "itemsCount": "{{count}} գրառումներ",
+      "emptyOwnerHint": "Հրապարակեք էջանիշի թղթապանակը ՝ այն այստեղ ցուցադրելու համար:",
+      "emptyVisitor": "Այս պրոֆիլը դեռ չունի հանրային երգացանկեր ։",
+      "openBookmarks": "Բացել իմ էջանիշերը",
+      "back": "Բոլոր երգացանկերը",
+      "noPosts": "Այս երգացանկը դեռ գրառումներ չունի:",
+      "unavailable": "Այս երգացանկն այլևս հասանելի չէ ։",
+      "loadMore": "Ցույց տալ այլ գրառումներ"
+    }
   },
   "notifications": {
     "title": "Tsanoutsagroumner",
@@ -1244,6 +1259,9 @@
       "breakdownTitle": "Որտեղից է գալիս այս հասանելիությունը",
       "dehubFollowers": "ԴեՀյուբի հետևորդներ",
       "selfReported": "Սոցիալական հետևորդների թիվը մուտքագրվում է հեղինակի կողմից:"
+    },
+    "tabs": {
+      "playlists": "Երգացանկեր"
     }
   },
   "tv": {

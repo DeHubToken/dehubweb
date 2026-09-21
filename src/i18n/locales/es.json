@@ -954,7 +954,22 @@
     "noTextYet": "Aún no hay posts de texto guardados",
     "textStartSaving": "Guarda posts de solo texto y aparecerán aquí.",
     "reachedEnd": "Has llegado al final de tus marcadores",
-    "loginDescription": "Inicia sesión para ver y gestionar tus marcadores guardados."
+    "loginDescription": "Inicia sesión para ver y gestionar tus marcadores guardados.",
+    "playlist": {
+      "makePublic": "Lista de reproducción pública",
+      "makePublicHint": "Cualquiera puede ver esta carpeta en tu perfil.",
+      "publicBadge": "Público",
+      "copyLink": "Copiar enlace de lista de reproducción",
+      "linkCopied": "Enlace de la lista de reproducción copiado",
+      "itemsCount": "{{count}} publicaciones",
+      "emptyOwnerHint": "Haz pública una carpeta de marcadores para mostrarla aquí.",
+      "emptyVisitor": "Este perfil aún no tiene listas de reproducción públicas.",
+      "openBookmarks": "Abrir mis marcadores",
+      "back": "Todas las listas de reproducción",
+      "noPosts": "Esta lista de reproducción aún no tiene publicaciones.",
+      "unavailable": "Esta lista de reproducción ya no está disponible.",
+      "loadMore": "Mostrar más publicaciones"
+    }
   },
   "notifications": {
     "title": "Notificaciones",
@@ -1247,6 +1262,9 @@
       "breakdownTitle": "De dónde viene este alcance",
       "dehubFollowers": "Seguidores de DeHub",
       "selfReported": "El creador introduce el número de seguidores en redes sociales."
+    },
+    "tabs": {
+      "playlists": "Listas de reproducción"
     }
   },
   "tv": {

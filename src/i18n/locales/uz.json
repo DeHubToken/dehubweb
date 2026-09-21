@@ -1011,7 +1011,21 @@
     "noTextYet": "Saqlangan matnli postlar hali yo'q",
     "textStartSaving": "Faqat matnli postlarni xatcho'pga qo'shing va ular shu yerda paydo bo'ladi.",
     "reachedEnd": "You've reached the end of your bookmarks",
-    "loginDescription": "Log in to view and manage your saved bookmarks."
+    "loginDescription": "Log in to view and manage your saved bookmarks.",
+    "playlist": {
+      "makePublic": "Ommaviy pleylist",
+      "makePublicHint": "Profilingizdagi ushbu papkani istalgan kishi ko&#39;rishi mumkin.",
+      "publicBadge": "Ommaviy",
+      "copyLink": "Pleylist havolasini nusxalash",
+      "linkCopied": "Pleylist havolasi nusxalandi",
+      "emptyOwnerHint": "Bu yerda ko&#39;rsatish uchun xatcho&#39;plar papkasini hammaga ochiq qiling.",
+      "emptyVisitor": "Bu profilning hali ommaviy pleylisti yo'q.",
+      "openBookmarks": "Mening xatchoʻplarim",
+      "back": "Barcha pleylistlar",
+      "noPosts": "Bu pleylistda hali postlar yo&#39;q.",
+      "unavailable": "Bu pleylist endi mavjud emas.",
+      "loadMore": "Ko'proq postlarni ko'rsatish"
+    }
   },
   "notifications": {
     "title": "Bildirishnomalar",
@@ -1304,6 +1318,9 @@
       "breakdownTitle": "Bu imkoniyat qayerdan keladi",
       "dehubFollowers": "DeHub izdoshlari",
       "selfReported": "Ijtimoiy tarmoqlardagi obunachilar soni yaratuvchi tomonidan kiritiladi."
+    },
+    "tabs": {
+      "playlists": "Qoʻshiq roʻyxatlari"
     }
   },
   "tv": {
