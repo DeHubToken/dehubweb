@@ -89,6 +89,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { SettingDrawerSelect } from '@/components/app/settings/SettingDrawerSelect';
 import { useTipNetwork, type TipNetworkOption } from '@/hooks/use-tip-network';
 import { setSmartRepliesEnabled, useSmartRepliesEnabled } from '@/hooks/use-smart-replies-enabled';
+import { setCoachEnabled, useCoachEnabled } from '@/hooks/use-coach-enabled';
 import {
   SettingsRow,
   SETTINGS_CONTROL_CLASS,
@@ -1436,6 +1437,9 @@ function NotificationSettings() {
             onCheckedChange={handleToggle('comments')}
             disabled={isDisabled}
           />
+          {/* Not a notification, but it is about comments and this is where
+              people look for anything the comment box does. Device-local. */}
+          <CoachSuggestionsToggle />
           <SettingToggle
             icon={Users}
             anchor="notify-new-followers"
@@ -3342,6 +3346,28 @@ function AssetsSettings() {
  * ever meet this setting — so it has to be findable afterwards. Device-local,
  * on the same storage key mobile writes.
  */
+/**
+ * Coaching suggestions in the comment composer — the "Check my tone" button
+ * and the final review step of a Common Ground reply. Device-local, on the
+ * same storage key mobile writes; suggestions only, so switching this off
+ * changes nothing about what can be posted.
+ */
+function CoachSuggestionsToggle() {
+  const { t } = useTranslation();
+  const enabled = useCoachEnabled();
+  return (
+    <SettingsRow
+      as="label"
+      className="cursor-pointer"
+      icon={<Sparkles />}
+      anchor="coach-suggestions"
+      title={t('conversation.coach.settingLabel')}
+      description={t('conversation.coach.settingHint')}
+      action={<Switch checked={enabled} onCheckedChange={setCoachEnabled} />}
+    />
+  );
+}
+
 function SmartRepliesToggle() {
   const { t } = useTranslation();
   const enabled = useSmartRepliesEnabled();
