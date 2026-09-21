@@ -19,9 +19,18 @@
  * Each emoji carries its own total in the corner, so the tray doubles as the
  * public breakdown of a post — a post with 19 👍 and one ❤️ reads as exactly
  * that, where the row's single count only ever said "20 positive".
+ *
+ * WHY IT MEASURES ITSELF AND SCROLLS
+ * Seven emoji plus the author's info button is ~320px of tray, hung off a
+ * button that sits a fifth of the way along a card's action row. On a phone
+ * that ran the last reactions clean off the screen edge with no way to reach
+ * them. So the tray caps itself at the viewport, nudges itself back inside it
+ * once laid out, and scrolls horizontally for whatever still does not fit. On
+ * a desktop card none of that shows: there is nothing to clamp and nothing to
+ * scroll.
  */
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -35,6 +44,12 @@ import {
 // the reaction is yours — see the table's own note on why it isn't in
 // `lib/reactions`.
 import { REACTION_GLOW } from '@/lib/reaction-glow';
+
+/** How close to the edge of the screen the tray is allowed to sit, in px. */
+const EDGE_MARGIN = 8;
+
+/** Travel, in px, past which a press on the tray is a scroll and not a pick. */
+const DRAG_SLOP = 10;
 
 /** Compact tally for the corner of a 36px tray button (1500 → 1.5K). */
 function formatTally(count: number): string {
@@ -88,6 +103,54 @@ export function ReactionPicker({
   const reactions = polarity === 'negative' ? NEGATIVE_REACTION_LIST : POSITIVE_REACTION_LIST;
   const trayRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
+  // How far the tray has been pulled back inside the viewport, in px. Kept on a
+  // ref as well as in state because each measurement has to subtract the nudge
+  // already applied, or every pass would chase the one before it.
+  const nudgeRef = useRef(0);
+  const [nudge, setNudge] = useState(0);
+  // Where a press that started inside the tray began, and whether it has since
+  // travelled far enough to be a scroll rather than a pick. A hold-and-slide
+  // that started on the thumbs-up never sets this, so it still casts on
+  // release — only a drag along the tray itself is swallowed.
+  const dragOriginRef = useRef<{ x: number; y: number } | null>(null);
+  const draggedRef = useRef(false);
+
+  /** Closes out a press on the tray; true when it was a scroll, not a pick. */
+  const endGesture = useCallback(() => {
+    const dragged = draggedRef.current;
+    dragOriginRef.current = null;
+    draggedRef.current = false;
+    return dragged;
+  }, []);
+
+  const clampToViewport = useCallback(() => {
+    const el = trayRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const left = rect.left - nudgeRef.current;
+    const right = rect.right - nudgeRef.current;
+    let next = 0;
+    if (left < EDGE_MARGIN) next = EDGE_MARGIN - left;
+    else if (right > window.innerWidth - EDGE_MARGIN) {
+      next = window.innerWidth - EDGE_MARGIN - right;
+    }
+    if (next === nudgeRef.current) return;
+    nudgeRef.current = next;
+    setNudge(next);
+  }, []);
+
+  // Measured on every opening rather than once: the button this hangs off moves
+  // with the feed. A resize or a rotation invalidates the figure outright.
+  useLayoutEffect(() => {
+    if (!open) {
+      nudgeRef.current = 0;
+      setNudge(0);
+      return;
+    }
+    clampToViewport();
+    window.addEventListener('resize', clampToViewport);
+    return () => window.removeEventListener('resize', clampToViewport);
+  }, [open, clampToViewport]);
 
   // Dismiss on any press outside the tray, on scroll, and on Escape.
   useEffect(() => {
@@ -98,23 +161,49 @@ export function ReactionPicker({
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
     };
+    // The page moving under the tray dismisses it — but the tray scrolling
+    // itself is a scroll event too, and closing on that would shut the row the
+    // moment anyone reached for the reactions that did not fit.
+    const onScroll = (event: Event) => {
+      if (trayRef.current?.contains(event.target as Node)) return;
+      onClose();
+    };
     // Capture phase: a card-level pointerdown handler would otherwise navigate
     // to the post before this ever ran.
     document.addEventListener('pointerdown', onPointerDown, true);
     document.addEventListener('keydown', onKeyDown);
-    window.addEventListener('scroll', onClose, true);
+    window.addEventListener('scroll', onScroll, true);
     return () => {
       document.removeEventListener('pointerdown', onPointerDown, true);
       document.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('scroll', onClose, true);
+      window.removeEventListener('scroll', onScroll, true);
     };
   }, [open, onClose]);
 
   return (
     <AnimatePresence>
       {open && (
-        <motion.div
+        /* The positioned box is a plain div so the nudge that keeps the tray on
+           screen is never fighting the entrance animation's own transform, and
+           so the width cap applies to a box that is not being scaled as it
+           opens. */
+        <div
           ref={trayRef}
+          data-no-navigate
+          className={cn(
+            'absolute bottom-full mb-2 z-50 max-w-[calc(100vw-1rem)]',
+            align === 'right' && 'right-0',
+            align === 'left' && 'left-0',
+            align === 'center' && 'left-1/2',
+          )}
+          style={{
+            transform:
+              align === 'center'
+                ? `translateX(calc(-50% + ${nudge}px))`
+                : `translateX(${nudge}px)`,
+          }}
+        >
+        <motion.div
           role="menu"
           aria-label={polarity === 'negative' ? 'Pick a downvote reaction' : 'Pick a reaction'}
           initial={reduceMotion ? false : { opacity: 0, y: 6, scale: 0.96 }}
@@ -128,15 +217,28 @@ export function ReactionPicker({
              read against whatever post is behind the card. */
           data-reaction-tray
           onClick={(e) => e.stopPropagation()}
-          onPointerDown={(e) => e.stopPropagation()}
+          onPointerDown={(e) => {
+            e.stopPropagation();
+            dragOriginRef.current = { x: e.clientX, y: e.clientY };
+            draggedRef.current = false;
+          }}
+          onPointerMove={(e) => {
+            const origin = dragOriginRef.current;
+            if (!origin || draggedRef.current) return;
+            if (Math.hypot(e.clientX - origin.x, e.clientY - origin.y) > DRAG_SLOP) {
+              draggedRef.current = true;
+            }
+          }}
+          /* `pan-x` so a drag along the tray scrolls it rather than being read
+             as the start of a page scroll, and `contain` so reaching the end of
+             the row does not hand the gesture on to the feed behind it. */
+          style={{ touchAction: 'pan-x', overscrollBehaviorX: 'contain' }}
           className={cn(
-            'absolute bottom-full mb-2 z-50 isolate flex items-center gap-0.5 overflow-hidden px-1.5 py-1.5',
+            'isolate flex items-center gap-0.5 px-1.5 py-1.5',
+            'overflow-x-auto overflow-y-hidden scrollbar-hide',
             'rounded-2xl border border-white/15 bg-zinc-950/80',
             'backdrop-blur-[28px] backdrop-saturate-150',
             'shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_8px_32px_rgba(0,0,0,0.45)]',
-            align === 'right' && 'right-0',
-            align === 'left' && 'left-0',
-            align === 'center' && 'left-1/2 -translate-x-1/2',
           )}
         >
           {reactions.map((reaction) => {
@@ -165,6 +267,7 @@ export function ReactionPicker({
                 // Fires when a hold-and-slide gesture releases over this item.
                 onPointerUp={(e) => {
                   e.stopPropagation();
+                  if (endGesture()) return;
                   onSelect(reaction.key);
                 }}
                 /* No disc behind the emoji on hover. The lift and the 10% grow
@@ -172,7 +275,7 @@ export function ReactionPicker({
                    under one glyph in a row of them was the only chrome in a
                    tray whose whole point is that the emoji are the interface. */
                 className={cn(
-                  'group relative flex h-9 w-9 items-center justify-center rounded-full',
+                  'group relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
                   'text-lg leading-none transition-[transform,box-shadow] duration-150 ease-out',
                   'hover:-translate-y-0.5 hover:scale-110 active:translate-y-0 active:scale-95',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
@@ -236,13 +339,14 @@ export function ReactionPicker({
                 }}
                 onPointerUp={(e) => {
                   e.stopPropagation();
+                  if (endGesture()) return;
                   onShowInfo();
                 }}
                 /* Same as the emoji beside it: lift and brighten, no disc — one
                    circle left on the end of the tray would read as the odd
                    one out. */
                 className={cn(
-                  'group relative flex h-9 w-9 items-center justify-center rounded-full',
+                  'group relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
                   'text-white/50 transition-[transform,color] duration-150 ease-out',
                   'hover:-translate-y-0.5 hover:text-white active:translate-y-0 active:scale-95',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
@@ -253,6 +357,7 @@ export function ReactionPicker({
             </>
           )}
         </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );
