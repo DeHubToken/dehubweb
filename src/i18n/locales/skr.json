@@ -1222,7 +1222,20 @@
     "failedOnramp": "آن ریمپ شروع کائنی ہوئیا",
     "badgeDiscount": "{{tier}} رکھݨ آلا — {{percent}}% گھٹ",
     "otherTokens": "ٻئے ٹوکن",
-    "otherTokensDesc": "اپݨے کارڈ نال Base تے ETH یا USDC خریدو"
+    "otherTokensDesc": "اپݨے کارڈ نال Base تے ETH یا USDC خریدو",
+    "minDhbPurchase": "گھٹ توں گھٹ DHB دی خریداری $0.50 اے",
+    "shareToFeed": "میرے فیڈ تے شیئر کرو",
+    "sharePostTemplate": "میں حال ہی وچ DeHub تے {{amount}} $DHB اپنے سٹیک وچ شامل کیتا اے۔ کمیونٹی دے نال تعمیر کر رہیا ہاں۔ #DeHub #DHB",
+    "success": {
+      "title": "خریداری مکمل!",
+      "subtitle": "ٹکن تواڈے والٹ وچ پہنچا دتے گئے نیں۔",
+      "viewWallet": "والٹ ویکھو"
+    },
+    "swapSuccess": {
+      "title": "سواپ کامیاب!",
+      "received": "{{amount}} <coin></coin> وصول ہوئے",
+      "addedToWallet": "{{amount}} {{symbol}} تواڈے والٹ وچ شامل کیتا گیا"
+    }
   },
   "agents": {
     "title": "AI ایجنٹ",

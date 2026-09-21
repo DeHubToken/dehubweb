@@ -1229,7 +1229,20 @@
     "failedOnramp": "فشل بدء الشراء",
     "badgeDiscount": "حامل {{tier}} — خصم {{percent}}%",
     "otherTokens": "عملات ثانية",
-    "otherTokensDesc": "اشترِ ETH أو USDC على Base ببطاقتك"
+    "otherTokensDesc": "اشترِ ETH أو USDC على Base ببطاقتك",
+    "minDhbPurchase": "الحد الأدنى للشراء من DHB هو 0.50 دولار",
+    "shareToFeed": "شارك على صفحتي",
+    "sharePostTemplate": "تم إضافة {{amount}} $DHB إلى مجموعتي على DeHub. نبني مع المجتمع. #DeHub #DHB",
+    "success": {
+      "title": "تم الشراء بنجاح!",
+      "subtitle": "تم تسليم الرموز إلى محفظتك.",
+      "viewWallet": "عرض المحفظة"
+    },
+    "swapSuccess": {
+      "title": "تم التبديل بنجاح!",
+      "received": "تم استلام {{amount}} <coin></coin>",
+      "addedToWallet": "تمت إضافة {{amount}} {{symbol}} إلى محفظتك"
+    }
   },
   "agents": {
     "title": "وكلاء الذكاء الاصطناعي",

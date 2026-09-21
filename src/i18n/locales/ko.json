@@ -1299,7 +1299,20 @@
     "failedOnramp": "입금 실패",
     "badgeDiscount": "{{tier}} 보유자 — {{percent}}% 할인",
     "otherTokens": "기타 토큰",
-    "otherTokensDesc": "카드로 Base에서 ETH 또는 USDC 구매"
+    "otherTokensDesc": "카드로 Base에서 ETH 또는 USDC 구매",
+    "minDhbPurchase": "DHB 최소 구매 금액은 $ 0.50 입니다.",
+    "shareToFeed": "내 피드에 공유",
+    "sharePostTemplate": "방금 DeHub의 스택에 {{amount}} $ DHB를 추가했습니다. 커뮤니티와 함께 만들기. # DeHub # DHB",
+    "success": {
+      "title": "구매 완료!",
+      "subtitle": "토큰이 지갑으로 전달되었습니다.",
+      "viewWallet": "지갑 보기"
+    },
+    "swapSuccess": {
+      "title": "교체 성공!",
+      "received": "{{amount}} <coin> </coin> 접수됨",
+      "addedToWallet": "{{amount}} {{symbol}} 이 (가) 지갑에 추가되었습니다"
+    }
   },
   "agents": {
     "title": "AI 에이전트",

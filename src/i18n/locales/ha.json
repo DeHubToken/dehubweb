@@ -1270,7 +1270,20 @@
     "failedOnramp": "Ba a iya fara hanyar ba",
     "badgeDiscount": "Mai riƙe da {{tier}} — rangwamen {{percent}}%",
     "otherTokens": "Sauran tokens",
-    "otherTokensDesc": "Sayi ETH ko USDC a Base da katinka"
+    "otherTokensDesc": "Sayi ETH ko USDC a Base da katinka",
+    "minDhbPurchase": "Mafi qarancin sayan DHB shine $ 0.50",
+    "shareToFeed": "Raba zuwa ciyarwata",
+    "sharePostTemplate": "Kawai ƙara {{amount}} $DHB zuwa stack na akan DeHub. Gina tare da al'umma. #DeHub #DHB",
+    "success": {
+      "title": "Sayi Cikakken!",
+      "subtitle": "An kawo alamomi zuwa walat ɗin ku.",
+      "viewWallet": "Duba Wallet"
+    },
+    "swapSuccess": {
+      "title": "Swap Nasarawa!",
+      "received": "{{amount}} <coin></coin> karɓa",
+      "addedToWallet": "{{amount}}{{symbol}} ƙara a cikin walat ɗin ku"
+    }
   },
   "agents": {
     "title": "Wakilan AI",

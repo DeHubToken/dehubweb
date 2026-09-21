@@ -1229,7 +1229,20 @@
     "failedOnramp": "ما قدرنا ننشئ الأونرامب",
     "badgeDiscount": "حامل {{tier}} — خصم {{percent}}%",
     "otherTokens": "عملات تانية",
-    "otherTokensDesc": "اشتري ETH أو USDC على Base بالكرت بتاعك"
+    "otherTokensDesc": "اشتري ETH أو USDC على Base بالكرت بتاعك",
+    "minDhbPurchase": "أقل شراء لـ DHB هو 0.50 دولار",
+    "shareToFeed": "شارك في موجزي",
+    "sharePostTemplate": "تمت إضافة {{amount}} $DHB إلى مجموعتي على DeHub. بناء مع المجتمع. #DeHub #DHB",
+    "success": {
+      "title": "اكتمل الشراء!",
+      "subtitle": "تم تسليم الرموز إلى محفظتك.",
+      "viewWallet": "عرض المحفظة"
+    },
+    "swapSuccess": {
+      "title": "تم التبديل بنجاح!",
+      "received": "تم استلام {{amount}} <coin></coin>",
+      "addedToWallet": "تمت إضافة {{amount}} {{symbol}} إلى محفظتك"
+    }
   },
   "agents": {
     "title": "وكلاء AI",

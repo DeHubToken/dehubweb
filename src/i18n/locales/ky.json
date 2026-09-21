@@ -1285,7 +1285,20 @@
     "failedOnramp": "Рампаны баштоо ишке ашкан жок",
     "badgeDiscount": "{{tier}} ээси — {{percent}}% арзандатуу",
     "otherTokens": "Башка токендер",
-    "otherTokensDesc": "Картаңыз менен Base тармагында ETH же USDC сатып алыңыз"
+    "otherTokensDesc": "Картаңыз менен Base тармагында ETH же USDC сатып алыңыз",
+    "minDhbPurchase": "Минималдуу DHB сатып алуу $ 0.50",
+    "shareToFeed": "Менин тоюмду бөлүшүү",
+    "sharePostTemplate": "Жөн гана кошулду {{amount}} $ DHB DeHub менин стекке. Коомчулук менен түзүү. #DeHub #DHB",
+    "success": {
+      "title": "Сатып алуу Complete!",
+      "subtitle": "Токендер капчыгыңызга жеткирилди.",
+      "viewWallet": "Кароо Wallet"
+    },
+    "swapSuccess": {
+      "title": "Ийгиликтүү алмашуу!",
+      "received": "{{amount}} <coin></coin> кабыл алынды",
+      "addedToWallet": "{{amount}}{{symbol}} Капчыгыңызга кошулду"
+    }
   },
   "agents": {
     "title": "AI Агенттер",

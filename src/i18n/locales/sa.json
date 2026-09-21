@@ -1246,7 +1246,17 @@
     "failedOnramp": "आनरैम्प्-आरम्भयितुं विफलम्",
     "badgeDiscount": "{{tier}} धारकः — {{percent}}% न्यूनम्",
     "otherTokens": "अन्ये टोकनाः",
-    "otherTokensDesc": "भवतः कार्डेन Base इत्यत्र ETH अथवा USDC क्रीणातु"
+    "otherTokensDesc": "भवतः कार्डेन Base इत्यत्र ETH अथवा USDC क्रीणातु",
+    "minDhbPurchase": "न्यूनतम DHB खरीदः $ 0.50",
+    "shareToFeed": "मेरे भोजन के प्रति निवर्त्यता",
+    "success": {
+      "title": "पूर्णतः खरीदें!",
+      "subtitle": "पदे पदे पदे भवतः पदे ।",
+      "viewWallet": "दृश्य बटुआ"
+    },
+    "swapSuccess": {
+      "title": "ॐ यशस्विन्यै नमः!"
+    }
   },
   "agents": {
     "title": "AI एजेण्ट्",

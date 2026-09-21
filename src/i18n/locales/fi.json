@@ -1299,7 +1299,20 @@
     "failedOnramp": "Rampin aloitus epäonnistui",
     "badgeDiscount": "{{tier}}-haltija — {{percent}} % alennus",
     "otherTokens": "Muut tokenit",
-    "otherTokensDesc": "Osta ETH tai USDC Basessa kortillasi"
+    "otherTokensDesc": "Osta ETH tai USDC Basessa kortillasi",
+    "minDhbPurchase": "DHB-ostoksen vähimmäismäärä on 0,50 $",
+    "shareToFeed": "Jaa syötteeseeni",
+    "sharePostTemplate": "Lisäsin juuri {{amount}} $DHB: n pinooni DeHubissa. Rakennamme yhdessä yhteisön kanssa. #DeHub #DHB",
+    "success": {
+      "title": "Osto on valmis!",
+      "subtitle": "Tokenit on toimitettu lompakkoosi.",
+      "viewWallet": "Näytä lompakko"
+    },
+    "swapSuccess": {
+      "title": "Vaihto onnistui!",
+      "received": "{{amount}} <coin></coin> vastaanotettu",
+      "addedToWallet": "{{amount}}{{symbol}} lisätty lompakkoosi"
+    }
   },
   "agents": {
     "title": "Tekoälyagentit",

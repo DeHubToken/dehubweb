@@ -1301,7 +1301,20 @@
     "failedOnramp": "入金失败",
     "badgeDiscount": "{{tier}} 持有者 — {{percent}}% 折扣",
     "otherTokens": "其他代币",
-    "otherTokensDesc": "用你的银行卡在 Base 上购买 ETH 或 USDC"
+    "otherTokensDesc": "用你的银行卡在 Base 上购买 ETH 或 USDC",
+    "minDhbPurchase": "最低DHB购买量为$ 0.50",
+    "shareToFeed": "分享到我的订阅源",
+    "sharePostTemplate": "刚刚在DeHub上向我的堆栈添加了{{amount}} $ DHB。 与社区共同建设。# DeHub # DHB",
+    "success": {
+      "title": "购买完成！",
+      "subtitle": "代币已送达您的钱包。",
+      "viewWallet": "查看钱包"
+    },
+    "swapSuccess": {
+      "title": "交换成功！",
+      "received": "已收到{{amount}} <coin> </coin>",
+      "addedToWallet": "{{amount}} {{symbol}}已添加到您的钱包"
+    }
   },
   "agents": {
     "title": "AI代理",

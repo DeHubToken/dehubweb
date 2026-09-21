@@ -1253,7 +1253,18 @@
     "failedOnramp": "ଅନରାମ୍ପ ଆରମ୍ଭ ହୋଇପାରିଲା ନାହିଁ",
     "badgeDiscount": "{{tier}} ଧାରକ — {{percent}}% ଛାଡ଼",
     "otherTokens": "ଅନ୍ୟ ଟୋକେନ",
-    "otherTokensDesc": "ଆପଣଙ୍କ କାର୍ଡରେ Base ରେ ETH କିମ୍ବା USDC କିଣନ୍ତୁ"
+    "otherTokensDesc": "ଆପଣଙ୍କ କାର୍ଡରେ Base ରେ ETH କିମ୍ବା USDC କିଣନ୍ତୁ",
+    "minDhbPurchase": "ସର୍ବନିମ୍ନ DHB କ୍ରୟ $ 0.50 ଅଟେ",
+    "statusAwaitingPayment": "ଚେକଆଉଟ ଟ୍ୟାବରେ ଦେୟ ସମ୍ପୂର୍ଣ୍ଣ କରନ୍ତୁ...",
+    "shareToFeed": "ମୋ ଫିଡ ରେ ଶେୟାର କରନ୍ତୁ",
+    "success": {
+      "title": "କ୍ରୟ ସମ୍ପୂର୍ଣ୍ଣ!",
+      "subtitle": "ଟୋକନ ଆପଣଙ୍କ ପକେଟକୁ ପଠାଯାଇଛି ।",
+      "viewWallet": "ୱାଲେଟ ଦେଖନ୍ତୁ"
+    },
+    "swapSuccess": {
+      "title": "ସ୍ୱାପ୍ ‌ ସଫଳ!"
+    }
   },
   "agents": {
     "title": "AI ଏଜେଣ୍ଟ",

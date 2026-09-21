@@ -1269,7 +1269,20 @@
     "failedOnramp": "فشل بدء الأونرامب",
     "badgeDiscount": "حامل {{tier}} — خصم {{percent}}%",
     "otherTokens": "عملات تانية",
-    "otherTokensDesc": "اشتري ETH أو USDC على Base بالكارت بتاعك"
+    "otherTokensDesc": "اشتري ETH أو USDC على Base بالكارت بتاعك",
+    "minDhbPurchase": "الحد الأدنى لشراء DHB هو 0.50 $",
+    "shareToFeed": "المشاركة على خلاصتي",
+    "sharePostTemplate": "لقد أضفت للتو {{amount}} $ إلى مكدسي على. البناء مع المجتمع. #DeHub #DHB",
+    "success": {
+      "title": "اكتملت عملية الشراء!",
+      "subtitle": "تم تسليم الرموز إلى محفظتك.",
+      "viewWallet": "عرض المحفظة"
+    },
+    "swapSuccess": {
+      "title": "تم التمديد بنجاح!",
+      "received": "تم استلام {{amount}}<coin></coin>",
+      "addedToWallet": "تمت إضافة {{amount}}{{symbol}} إلى محفظتك"
+    }
   },
   "agents": {
     "title": "إيجنتات AI",

@@ -1286,7 +1286,20 @@
     "failedOnramp": "Nepavyko pradėti rampos",
     "badgeDiscount": "{{tier}} turėtojui — {{percent}} % nuolaida",
     "otherTokens": "Kiti tokenai",
-    "otherTokensDesc": "Pirkite ETH arba USDC „Base“ tinkle savo kortele"
+    "otherTokensDesc": "Pirkite ETH arba USDC „Base“ tinkle savo kortele",
+    "minDhbPurchase": "Minimali DHB pirkimo kaina yra 0,50 $",
+    "shareToFeed": "Dalytis mano sklaidos kanale",
+    "sharePostTemplate": "Ką tik pridėjau {{amount}} $DHB prie mano „DeHub“ rietuvės. Kuriame kartu su bendruomene. #DeHub #DHB",
+    "success": {
+      "title": "Pirkimas baigtas!",
+      "subtitle": "Žetonai buvo pristatyti į jūsų piniginę.",
+      "viewWallet": "Peržiūrėti piniginę"
+    },
+    "swapSuccess": {
+      "title": "Sukeitimas sėkmingas!",
+      "received": "{{amount}} <coin></coin> gauta",
+      "addedToWallet": "{{amount}} {{symbol}} pridėta prie jūsų piniginės"
+    }
   },
   "agents": {
     "title": "DI agentai",

@@ -1272,7 +1272,20 @@
     "failedOnramp": "Mana yaykuna qallayta atirqanchu",
     "badgeDiscount": "{{tier}} hap'iq — {{percent}}% pisiyachisqa",
     "otherTokens": "Huk tokenkuna",
-    "otherTokensDesc": "Base nisqapi ETH icha USDC rantiy tarjetaykiwan"
+    "otherTokensDesc": "Base nisqapi ETH icha USDC rantiy tarjetaykiwan",
+    "minDhbPurchase": "Aswan pisi DHB rantiyqa $0.50",
+    "shareToFeed": "Mikhuyman rakinakuy",
+    "sharePostTemplate": "Chayraqmi {{amount}} $DHBta DeHub nisqapi pilayman yapasqa. Ayllu llaqtawan wasichakuy. #DeHub #DHB nisqa",
+    "success": {
+      "title": "Compra Completo!",
+      "subtitle": "Fichas nisqakunam billeteraykiman chayasqaña.",
+      "viewWallet": "Qhaway Wallet"
+    },
+    "swapSuccess": {
+      "title": "Intercambio ¡Exito!",
+      "received": "{{amount}} <coin></coin> chaskisqa",
+      "addedToWallet": "{{amount}} {{symbol}} billeteraykiman yapasqa"
+    }
   },
   "agents": {
     "title": "AI Wakinkuna",

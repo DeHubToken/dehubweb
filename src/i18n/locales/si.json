@@ -1275,7 +1275,22 @@
     "failedOnramp": "Onramp ආරම්භ කිරීමට අසමත් විය",
     "badgeDiscount": "{{tier}} හිමිකරු — {{percent}}% වට්ටමක්",
     "otherTokens": "වෙනත් ටෝකන",
-    "otherTokensDesc": "ඔබේ කාඩ්පතින් Base මත ETH හෝ USDC මිලදී ගන්න"
+    "otherTokensDesc": "ඔබේ කාඩ්පතින් Base මත ETH හෝ USDC මිලදී ගන්න",
+    "minDhbPurchase": "අවම DHB මිලදී ගැනීම $0.50",
+    "statusDeliveryFailed": "ගෙවීම් ගන්නා ලදී නමුත් භාරදීම අසාර්ථක විය. අපි එය මත සිටිමු — ඔබේ සැසි හැඳුනුම්පත සමඟ සහාය අමතන්න.",
+    "cardBankDesc": "වීසා, මාස්ටර් කාඩ්, Apple Pay",
+    "shareToFeed": "මගේ ෆීඩ් එකට ශෙයා කරන්න",
+    "sharePostTemplate": "මම දැන් DeHub හි මගේ ස්ටැක් එකට {{amount}} $DHB එකතු කර ඇත. ප්‍රජාව සමඟ ගොඩනඟමි. #DeHub #DHB",
+    "success": {
+      "title": "මිලදී ගැනීම සම්පූර්ණයි!",
+      "subtitle": "ටෝකන ඔබේ පසුම්බියට භාර දී ඇත.",
+      "viewWallet": "පසුම්බිය බලන්න"
+    },
+    "swapSuccess": {
+      "title": "ස්වොප් සාර්ථකයි!",
+      "received": "{{amount}} <coin></coin> ලැබුණි",
+      "addedToWallet": "{{amount}} {{symbol}} ඔබේ පසුම්බියට එකතු කරන ලදී"
+    }
   },
   "agents": {
     "title": "AI නියෝජිත",

@@ -1251,7 +1251,18 @@
     "failedOnramp": "Kɔrɔbɔ bɔ",
     "badgeDiscount": "{{tier}} minɛbaga — {{percent}}% dɔgɔyalen",
     "otherTokens": "Token wɛrɛw",
-    "otherTokensDesc": "I ka karti ye ETH walima USDC san Base kan"
+    "otherTokensDesc": "I ka karti ye ETH walima USDC san Base kan",
+    "minDhbPurchase": "DHB ka wari min be se ka san, o ye $ 0.50 ye",
+    "shareToFeed": "Ne ka dumuni di ne ma",
+    "success": {
+      "title": "O ye koo ɲuman ye dɛ!",
+      "subtitle": "O kɔ, a ye wari di a ma.",
+      "viewWallet": "Fɛɛn minw be se ka kɛ"
+    },
+    "swapSuccess": {
+      "title": "Aw ye jija!",
+      "addedToWallet": "{{amount}} {{symbol}}Add to your wallet"
+    }
   },
   "agents": {
     "title": "AI Kɔrɔbɔ",

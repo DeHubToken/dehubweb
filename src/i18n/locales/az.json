@@ -1297,7 +1297,20 @@
     "failedOnramp": "Onramp başlatmaq uğursuz oldu",
     "badgeDiscount": "{{tier}} sahibi — {{percent}}% endirim",
     "otherTokens": "Digər tokenlər",
-    "otherTokensDesc": "Kartınızla Base şəbəkəsində ETH və ya USDC alın"
+    "otherTokensDesc": "Kartınızla Base şəbəkəsində ETH və ya USDC alın",
+    "minDhbPurchase": "DHB alışı minimum 0,50 $ təşkil edir",
+    "shareToFeed": "Yemimlə paylaşın",
+    "sharePostTemplate": "İndicə {{amount}} $ DHB-ni DeHub-dakı stekimə əlavə etdim. İcma ilə qurmaq. #DeHub #DHB",
+    "success": {
+      "title": "Satınalma tamamlandı!",
+      "subtitle": "Toyuqlar cüzdanınıza çatdırıldı.",
+      "viewWallet": "Pul kisəsinə bax"
+    },
+    "swapSuccess": {
+      "title": "Dəyişmək uğurlu oldu!",
+      "received": "{{amount}} <coin></coin> qəbul",
+      "addedToWallet": "{{amount}} {{symbol}} cüzdanınıza əlavə edildi"
+    }
   },
   "agents": {
     "title": "AI Agentləri",

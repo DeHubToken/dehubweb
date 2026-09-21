@@ -1296,7 +1296,20 @@
     "failedOnramp": "ప్రారంభించడం విఫలమైంది",
     "badgeDiscount": "{{tier}} హోల్డర్ — {{percent}}% తగ్గింపు",
     "otherTokens": "ఇతర టోకెన్లు",
-    "otherTokensDesc": "మీ కార్డుతో Base పై ETH లేదా USDC కొనండి"
+    "otherTokensDesc": "మీ కార్డుతో Base పై ETH లేదా USDC కొనండి",
+    "minDhbPurchase": "కనీస DHB కొనుగోలు $ 0.50",
+    "shareToFeed": "నా ఫీడ్ ‌ కు షేర్ చేయండి",
+    "sharePostTemplate": "DeHubలోని నా స్టాక్ ‌ కు {{amount}} $ DHBని ఇప్పుడే జోడించాను. సమాజంతో నిర్మించడం. #DeHub #DHB",
+    "success": {
+      "title": "కొనుగోలు పూర్తయింది!",
+      "subtitle": "టోకెన్ ‌ లు మీ వాలెట్ ‌ కు డెలివరీ చేయబడ్డాయి.",
+      "viewWallet": "వాలెట్ ‌ ను చూడండి"
+    },
+    "swapSuccess": {
+      "title": "మార్పిడి విజయవంతమైంది!",
+      "received": "{{amount}} <coin></coin> అందుకున్నారు",
+      "addedToWallet": "{{amount}} {{symbol}} మీ వాలెట్ ‌ కు జోడించబడింది"
+    }
   },
   "agents": {
     "title": "AI ఏజెంట్లు",

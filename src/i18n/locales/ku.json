@@ -1127,7 +1127,30 @@
     "failedOnramp": "Destpêkirina onramp têkçû",
     "badgeDiscount": "Xwedanê {{tier}} — %{{percent}} daxistin",
     "otherTokens": "Tokenên din",
-    "otherTokensDesc": "Bi karta xwe li ser Base ETH an USDC bikire"
+    "otherTokensDesc": "Bi karta xwe li ser Base ETH an USDC bikire",
+    "minDhbPurchase": "کڕینی کەمترین DHB بریتییە لە 0.50$",
+    "feeNote": "بۆینە 3.6% کرێی کارتی بانکی و 0.5% یەدەگی تۆڕ لێدەدرێت. یەدەگەکە وەک ETH بۆ گازی سووتەمەنی بۆت دەنێردرێت.",
+    "statusAwaitingPayment": "تەواوی پارەدان لە ڕێگەی چەک-ئاووتەوە...",
+    "statusConfirming": "چاوەڕوانی پشتڕاستکردنەوەی پارەدان...",
+    "statusPaidQueued": "پارە وەرگیرا. لە نۆرەدان بۆ ناردن...",
+    "statusPaidSending": "پارە وەرگیرا. ناردنی توکنەکان بۆ جانتاکەت...",
+    "statusPaidToast": "پارە وەرگیرا. ناردنی توکنەکانت...",
+    "statusDelivered": "توکنەکان گەیشتنە جانتاکەت!",
+    "statusNotPaid": "پارەدان تەواو نەبوو. هیچ پارەیەک لێوەرنەگیرا.",
+    "statusDeliveryFailed": "پارە وەرگیرا بەڵام ناردنەکە سەرکەوتوو نەبوو. ئێمە لەسەری کاردەکەین — پەیوەندی بە پشتیوانی بکە لەگەڵ ID دانیشتنەکەت.",
+    "statusStillArriving": "پارەدان سەرکەوتوو بوو. توکنەکان هێشتا لە ڕێگاندان — جانتاکەت بەم زووانە ببینە.",
+    "shareToFeed": "هاوبەشی بکە لەگەڵ فیدەکەم",
+    "sharePostTemplate": "تازە {{amount}} $DHB بۆ کۆکراوەکەم لە DeHub زیاد کرد. دروستکردن لەگەڵ کۆمەڵگە. #DeHub #DHB",
+    "success": {
+      "title": "کڕین تەواو بوو!",
+      "subtitle": "توکنەکان گەیشتنە جانتاکەت.",
+      "viewWallet": "جانتاکەت ببینە"
+    },
+    "swapSuccess": {
+      "title": "گۆڕینەوە سەرکەوتوو بوو!",
+      "received": "وەرگیرا {{amount}} <coin></coin>",
+      "addedToWallet": "زیاد کرا بۆ جانتاکەت {{amount}} {{symbol}}"
+    }
   },
   "agents": {
     "title": "Ajanên AI",

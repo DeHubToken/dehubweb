@@ -1298,7 +1298,20 @@
     "failedOnramp": "Rambi alustamine ebaõnnestus",
     "badgeDiscount": "{{tier}} omanik — {{percent}}% soodsam",
     "otherTokens": "Muud tokenid",
-    "otherTokensDesc": "Osta ETH või USDC Base'is oma kaardiga"
+    "otherTokensDesc": "Osta ETH või USDC Base'is oma kaardiga",
+    "minDhbPurchase": "Minimaalne DHB ost on 0,50 $",
+    "shareToFeed": "Jaga minu voos",
+    "sharePostTemplate": "Lisasin just {{amount}} $DHB oma DeHubi pinusse. Ehitamine koos kogukonnaga. #DeHub #DHB",
+    "success": {
+      "title": "Ost on lõpetatud!",
+      "subtitle": "Tokenid on Sinu rahakotti toimetatud.",
+      "viewWallet": "Vaata rahakotti"
+    },
+    "swapSuccess": {
+      "title": "Vahetamine õnnestus!",
+      "received": "{{amount}} <coin></coin> vastu võetud",
+      "addedToWallet": "{{amount}}{{symbol}} lisati Sinu rahakotti"
+    }
   },
   "agents": {
     "title": "AI agendid",

@@ -1303,7 +1303,20 @@
     "failedOnramp": "Nie udało się uruchomić rampy",
     "badgeDiscount": "Posiadacz {{tier}} — {{percent}}% taniej",
     "otherTokens": "Inne tokeny",
-    "otherTokensDesc": "Kup ETH lub USDC w sieci Base swoją kartą"
+    "otherTokensDesc": "Kup ETH lub USDC w sieci Base swoją kartą",
+    "minDhbPurchase": "Minimalny zakup DHB wynosi 0,50 $",
+    "shareToFeed": "Udostępnij w moim kanale",
+    "sharePostTemplate": "Właśnie dodano {{amount}} $DHB do mojego stosu na DeHub. Budowanie ze społecznością. #DeHub #DHB",
+    "success": {
+      "title": "Zakup zakończony!",
+      "subtitle": "Żetony zostały dostarczone do Twojego portfela.",
+      "viewWallet": "Zobacz portfel"
+    },
+    "swapSuccess": {
+      "title": "Zamiana powiodła się!",
+      "received": "Otrzymano{{amount}}<coin></coin>",
+      "addedToWallet": "{{amount}} {{symbol}} dodano do Twojego portfela"
+    }
   },
   "agents": {
     "title": "Agenci AI",

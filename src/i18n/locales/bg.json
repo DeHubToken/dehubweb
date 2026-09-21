@@ -1280,7 +1280,19 @@
     "failedOnramp": "Стартирането неуспешно",
     "badgeDiscount": "Притежател на {{tier}} — {{percent}}% отстъпка",
     "otherTokens": "Други токени",
-    "otherTokensDesc": "Купете ETH или USDC в Base с вашата карта"
+    "otherTokensDesc": "Купете ETH или USDC в Base с вашата карта",
+    "minDhbPurchase": "Минималната покупка на DHB е 0,50 $",
+    "shareToFeed": "Споделяне в емисията ми",
+    "sharePostTemplate": "Току - що добавих {{amount}} $DHB към моя стак в DeHub. Сътрудничество с общността. #DeHub #DHB",
+    "success": {
+      "title": "Покупката е завършена!",
+      "subtitle": "В портфейла ви са доставени жетони.",
+      "viewWallet": "Преглед на портфейла"
+    },
+    "swapSuccess": {
+      "title": "Размяната е успешна!",
+      "received": "Получено:{{amount}}<coin></coin>"
+    }
   },
   "agents": {
     "title": "AI агенти",

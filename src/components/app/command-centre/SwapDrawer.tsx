@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
-import { ArrowDownUp, Loader2, ExternalLink, AlertTriangle } from 'lucide-react';
+import { ArrowDownUp, Loader2, ExternalLink, AlertTriangle, Send } from 'lucide-react';
+import { useOptionalGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { SlippageSettings } from '@/components/app/SlippageSettings';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -24,6 +26,8 @@ type SwapStep = 'input' | 'confirming' | 'success' | 'error';
 
 export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
   const { walletAddress } = useAuth();
+  const { t } = useTranslation();
+  const dropZone = useOptionalGlobalDropZone();
 
   const [dhbAmount, setDhbAmount] = useState('');
   const [ethBalance, setEthBalance] = useState<bigint | null>(null);
@@ -105,6 +109,17 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
       toast.error('Swap failed');
     }
   }, [walletAddress, quoteEth, maxEthWithSlippage, dhbAmount]);
+
+  const handleShareToFeed = useCallback(() => {
+    if (!dropZone) return;
+    const text = t('buyCoins.sharePostTemplate', {
+      amount: new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(parseFloat(dhbAmount) || 0),
+    });
+    onOpenChange(false);
+    // Pre-filled, not published: the composer still asks for the mint. It
+    // opens once the drawer has finished closing, as ShareEntityDrawer does.
+    setTimeout(() => dropZone.openPostModal(text), 250);
+  }, [dropZone, dhbAmount, onOpenChange, t]);
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
@@ -194,18 +209,33 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
               <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
                 <ArrowDownUp className="w-6 h-6 text-emerald-400" />
               </div>
-              <p className="text-sm text-white font-medium">Swap Successful!</p>
-              <p className="text-xs text-white/40">{dhbAmount} <DhbCoin /> received</p>
+              <p className="text-sm text-white font-medium">{t('buyCoins.swapSuccess.title')}</p>
+              <p className="text-xs text-white/40">
+                <Trans
+                  i18nKey="buyCoins.swapSuccess.received"
+                  values={{ amount: dhbAmount }}
+                  components={{ coin: <DhbCoin /> }}
+                />
+              </p>
               {txHash && (
                 <button
                   onClick={() => window.open(`https://basescan.org/tx/${txHash}`, '_blank')}
                   className="text-xs text-white flex items-center gap-1 hover:underline"
                 >
-                  View on BaseScan <ExternalLink className="w-3 h-3" />
+                  {t('commandCentre.viewOnBaseScan')} <ExternalLink className="w-3 h-3" />
                 </button>
               )}
+              {dropZone && parseFloat(dhbAmount) > 0 && (
+                <Button
+                  className="w-full rounded-xl mt-2 bg-white text-black hover:bg-white/90 border-0"
+                  onClick={handleShareToFeed}
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  {t('buyCoins.shareToFeed')}
+                </Button>
+              )}
               <Button variant="glass" className="w-full rounded-xl mt-2" onClick={() => onOpenChange(false)}>
-                Done
+                {t('commandCentre.done')}
               </Button>
             </div>
           )}

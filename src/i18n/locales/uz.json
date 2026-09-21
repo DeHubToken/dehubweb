@@ -1287,7 +1287,20 @@
     "failedOnramp": "Onrampni boshlash amalga oshmadi",
     "badgeDiscount": "{{tier}} egasi — {{percent}}% chegirma",
     "otherTokens": "Boshqa tokenlar",
-    "otherTokensDesc": "Kartangiz bilan Base tarmog'ida ETH yoki USDC sotib oling"
+    "otherTokensDesc": "Kartangiz bilan Base tarmog'ida ETH yoki USDC sotib oling",
+    "minDhbPurchase": "Minimal DHB xarid miqdori $0.50",
+    "shareToFeed": "Mening lentamga ulashing",
+    "sharePostTemplate": "Men DeHub'dagi stack'imga {{amount}} $DHB qo'shdim. Hamjamiyat bilan birga qurmoqdamiz. #DeHub #DHB",
+    "success": {
+      "title": "Xarid yakunlandi!",
+      "subtitle": "Tokenlar sizning hamyoningizga yetkazib berildi.",
+      "viewWallet": "Hamyonni ko'rish"
+    },
+    "swapSuccess": {
+      "title": "Ayirboshlash muvaffaqiyatli amalga oshdi!",
+      "received": "{{amount}} <coin></coin> olindi",
+      "addedToWallet": "{{amount}} {{symbol}} sizning hamyoningizga qo'shildi"
+    }
   },
   "agents": {
     "title": "AI Agent",

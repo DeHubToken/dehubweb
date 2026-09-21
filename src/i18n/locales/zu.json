@@ -1270,7 +1270,19 @@
     "failedOnramp": "Kuhlulekile ukuqala indlela",
     "badgeDiscount": "Umnikazi we-{{tier}} — isaphulelo se-{{percent}}%",
     "otherTokens": "Amanye amathokheni",
-    "otherTokensDesc": "Thenga i-ETH noma i-USDC ku-Base ngekhadi lakho"
+    "otherTokensDesc": "Thenga i-ETH noma i-USDC ku-Base ngekhadi lakho",
+    "minDhbPurchase": "Ukuthenga okuncane kwe-DHB kungu- $ 0.50",
+    "shareToFeed": "Yabelana ku-feed yami",
+    "sharePostTemplate": "Ngisanda kufaka i-{{amount}} $DHB esitaki sami ku-DeHub. Ukwakha nomphakathi. #DeHub #DHB",
+    "success": {
+      "title": "Ukuthenga Kuqediwe!",
+      "subtitle": "Amathokheni alethwe esikhwameni sakho semali.",
+      "viewWallet": "Buka i-Wallet"
+    },
+    "swapSuccess": {
+      "title": "Ukushintshanisa Kuphumelele!",
+      "addedToWallet": "{{amount}} {{symbol}} ifakwe esikhwameni sakho semali"
+    }
   },
   "agents": {
     "title": "Ejensi ye-AI",

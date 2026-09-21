@@ -1231,7 +1231,20 @@
     "failedOnramp": "Onramp starte fehlgschlage",
     "badgeDiscount": "{{tier}}-Bsitzer — {{percent}}% Rabatt",
     "otherTokens": "Anderi Token",
-    "otherTokensDesc": "Chauf ETH oder USDC uf Base mit dinere Charte"
+    "otherTokensDesc": "Chauf ETH oder USDC uf Base mit dinere Charte",
+    "minDhbPurchase": "Minimau DHB-Chauf isch $0.50",
+    "shareToFeed": "Teile uf min Feed",
+    "sharePostTemplate": "Grad {{amount}} $DHB zu minere Stäcke uf DeHub dezue tue. Baue mit de Community. #DeHub #DHB",
+    "success": {
+      "title": "Chauf abgschlosse!",
+      "subtitle": "Tokens sind i dim Wallet aaliferet worde.",
+      "viewWallet": "Wallet aaluege"
+    },
+    "swapSuccess": {
+      "title": "Tausch erfolgreich!",
+      "received": "{{amount}} <coin></coin> empfange",
+      "addedToWallet": "{{amount}} {{symbol}} zu dim Wallet dezue tue"
+    }
   },
   "agents": {
     "title": "KI-Agente",

@@ -1263,7 +1263,20 @@
     "failedOnramp": "Gagal gawe onramp",
     "badgeDiscount": "Sing nyekel {{tier}} — diskon {{percent}}%",
     "otherTokens": "Token liyane",
-    "otherTokensDesc": "Tuku ETH utawa USDC ing Base nganggo kartumu"
+    "otherTokensDesc": "Tuku ETH utawa USDC ing Base nganggo kartumu",
+    "minDhbPurchase": "Tuku DHB minimal $0.50",
+    "shareToFeed": "Bagikan menyang feedku",
+    "sharePostTemplate": "Nembe nambahake {{amount}} $DHB menyang tumpukan ing DeHub. Mbangun karo komunitas. #DeHub #DHB",
+    "success": {
+      "title": "Tuku Rampung!",
+      "subtitle": "Token wis dikirim menyang dompetmu.",
+      "viewWallet": "Deleng Dompet"
+    },
+    "swapSuccess": {
+      "title": "Tukar Sukses!",
+      "received": "{{amount}} <coin></coin> ditampa",
+      "addedToWallet": "{{amount}} {{symbol}} ditambahake menyang dompetmu"
+    }
   },
   "agents": {
     "title": "Agen AI",
