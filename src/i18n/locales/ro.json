@@ -1363,6 +1363,14 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "migrateNoOldAccount": "Nu există un cont DeHub anterior la această autentificare, așa că nu este nimic de transferat. Configurați un cont nou în schimb.",
+    "migrateInstead": "Transferați contul vechi în schimb",
+    "setUpNewAccount": "Configurați un cont nou",
+    "createNewInstead": "Creați un cont nou în schimb",
+    "migrateAccount": "Migrați contul",
+    "importExternalWallet": "Importați portofel extern",
+    "migrateIntentHint": "Autentificați-vă cu oricare dintre opțiunile de mai jos. Dacă se potrivește cu un cont DeHub anterior, veți transfera portofelul, numele de utilizator și soldul acestuia.",
+    "importIntentHint": "Autentificați-vă cu oricare dintre opțiunile de mai jos, apoi lipiți fraza de recuperare sau cheia privată a portofelului pe care doriți să îl utilizați.",
     "unlockBiometricContinue": "Deblochează-ți portofelul cu amprenta sau fața pentru a continua.",
     "unlockBiometricSignIn": "Deblochează-ți portofelul cu amprenta digitală sau cu fața pentru a te conecta.",
     "unlockPasswordContinue": "Introdu parola portofelului pentru a continua.",

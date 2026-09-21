@@ -1409,6 +1409,14 @@
     "failedSubmit": "Error al enviar solicitud. Inténtalo de nuevo."
   },
   "loginModal": {
+    "migrateNoOldAccount": "No hay una cuenta de DeHub anterior en este inicio de sesión, por lo que no hay nada que transferir. Configura una cuenta nueva en su lugar.",
+    "migrateInstead": "Transferir la cuenta antigua en su lugar",
+    "setUpNewAccount": "Configurar una cuenta nueva",
+    "createNewInstead": "Crear una cuenta nueva en su lugar",
+    "migrateAccount": "Migrar cuenta",
+    "importExternalWallet": "Importar billetera externa",
+    "migrateIntentHint": "Inicia sesión con cualquier opción a continuación. Si coincide con una cuenta de DeHub anterior, transferirás su billetera, nombre de usuario y saldo.",
+    "importIntentHint": "Inicia sesión con cualquier opción a continuación, luego pega la frase de recuperación o la clave privada de la billetera que deseas usar.",
     "unlockBiometricContinue": "Desbloquea tu billetera con tu huella digital o cara para continuar.",
     "unlockBiometricSignIn": "Desbloquea tu billetera con tu huella digital o cara para iniciar sesión.",
     "unlockPasswordContinue": "Introduce la contraseña de tu monedero para continuar.",

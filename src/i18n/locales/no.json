@@ -1426,6 +1426,14 @@
     "failedSubmit": "Kunne ikke sende søknad. Prøv igjen."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Det finnes ingen tidligere DeHub-konto på denne påloggingen, så det er ingenting å ta med seg. Opprett en ny konto i stedet.",
+    "migrateInstead": "Ta over den gamle kontoen i stedet",
+    "setUpNewAccount": "Opprett en ny konto",
+    "createNewInstead": "Opprett en ny konto i stedet",
+    "migrateAccount": "Migrer konto",
+    "importExternalWallet": "Importer ekstern lommebok",
+    "migrateIntentHint": "Logg inn med et hvilket som helst alternativ nedenfor. Hvis det samsvarer med en tidligere DeHub-konto, vil du ta med deg lommeboken, brukernavnet og saldoen.",
+    "importIntentHint": "Logg inn med et hvilket som helst alternativ nedenfor, og lim deretter inn gjenopprettingsfrasen eller den private nøkkelen til lommeboken du vil bruke.",
     "unlockBiometricContinue": "Lås opp lommeboken med fingeravtrykket eller ansiktet ditt for å fortsette.",
     "unlockBiometricSignIn": "Lås opp lommeboken med fingeravtrykket eller ansiktet ditt for å logge på.",
     "unlockPasswordContinue": "Skriv inn lommebokpassordet ditt for å fortsette.",

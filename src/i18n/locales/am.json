@@ -1365,6 +1365,14 @@
     "failedSubmit": "ማመልከቻ ማቅረብ አልተሳካም። እባክህ ደግመህ ሞክር።"
   },
   "loginModal": {
+    "migrateNoOldAccount": "በዚህ መግቢያ ላይ ከዚህ በፊት የ DeHub መለያ የለም ፣ ስለሆነም ለማምጣት ምንም ነገር የለም ። በምትኩ አዲስ መለያ ያዘጋጁ.",
+    "migrateInstead": "ይልቅ አሮጌውን መለያ በላይ አምጡ",
+    "setUpNewAccount": "አዲስ መለያ ያዋቅሩ",
+    "createNewInstead": "በምትኩ አዲስ መለያ ይፍጠሩ",
+    "migrateAccount": "የስደተኞች መለያ",
+    "importExternalWallet": "ውጫዊ የኪስ ቦርሳ ያስመጡ",
+    "migrateIntentHint": "ከዚህ በታች ከማንኛውም አማራጭ ጋር ይግቡ ። ከቀድሞ DeHub መለያ ጋር የሚስማማ ከሆነ የኪስ ቦርሳውን ፣ የተጠቃሚ ስሙን እና ሚዛኑን ያመጣል ።",
+    "importIntentHint": "ከዚህ በታች ከማንኛውም አማራጭ ጋር ይግቡ ፣ ከዚያ መጠቀም የሚፈልጉትን የመልሶ ማግኛ ሐረግ ወይም የግል ቁልፍን ይለጥፉ ።",
     "unlockBiometricContinue": "ለመቀጠል ቦርሳዎን በጣት አሻራዎ ወይም ፊትዎ ይክፈቱ ።",
     "unlockBiometricSignIn": "ለመግባት ቦርሳዎን በጣት አሻራዎ ወይም ፊትዎ ይክፈቱ ።",
     "unlockPasswordContinue": "ለመቀጠል የኪስ ቦርሳዎን የይለፍ ቃል ያስገቡ ።",

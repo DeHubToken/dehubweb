@@ -1428,6 +1428,14 @@
     "failedSubmit": "Kuhlulekile ukuthumela isicelo. Sicela uzame futhi."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Akwenzeki ukuba ube ne-akhawunti yakudala ye-DeHub kule nketho yokungena, ngakho-ke akukho lutho ongalulethela lapha. Zisethele i-akhawunti entsha esikhundleni salokho.",
+    "migrateInstead": "Letha i-akhawunti yakudala esikhundleni",
+    "setUpNewAccount": "Zisethele i-akhawunti entsha",
+    "createNewInstead": "Dala i-akhawunti entsha esikhundleni",
+    "migrateAccount": "Hambisa i-akhawunti",
+    "importExternalWallet": "Ngenisa isikhwama sangaphandle",
+    "migrateIntentHint": "Ngena ngalo lonke ukhetho olungezansi. Uma lufana ne-akhawunti yakudala ye-DeHub, uzoluletha isikhwama sayo, igama lomsebenzisi, kanye nebhalansi.",
+    "importIntentHint": "Ngena ngalo lonke ukhetho olungezansi, bese unamathisela umushwana wokubuyisa noma ukhiye oyimfihlo wesikhwama ofuna ukusisebenzisa.",
     "unlockBiometricContinue": "Vula isikhwama sakho semali ngeminwe yakho noma ubuso ukuze uqhubeke.",
     "unlockBiometricSignIn": "Vula isikhwama sakho semali ngeminwe yakho noma ubuso ukuze ungene ngemvume.",
     "unlockPasswordContinue": "Faka iphasiwedi yakho ye-wallet ukuze uqhubeke.",

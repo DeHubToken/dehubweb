@@ -1420,6 +1420,14 @@
     "failedSubmit": "Enweghị ike inyefe arịrịọ. Biko nwaa ọzọ."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Enweghị akaụntụ DeHub mbụ na nbanye a, ya mere ọ nweghị ihe ọ ga-eweta. Hazie akaụntụ ọhụrụ kama.",
+    "migrateInstead": "Weta n 'elu ochie akaụntụ kama",
+    "setUpNewAccount": "Hazie akaụntụ ọhụrụ",
+    "createNewInstead": "Kewapụta akaụntụ ọhụrụ kama",
+    "migrateAccount": "Migrate akaụntụ",
+    "importExternalWallet": "Bubata obere akpa mpụga",
+    "migrateIntentHint": "Banye na ihe ọ bụla nhọrọ n 'okpuru. Ọ bụrụ na ọ dabara na akaụntụ DeHub mbụ ị ga-eweta obere akpa ya, aha njirimara na nguzozi.",
+    "importIntentHint": "Banye na ihe ọ bụla nhọrọ n 'okpuru, mgbe ahụ mado mgbake nkebi ahịrịokwu ma ọ bụ onwe igodo nke obere akpa ị chọrọ iji.",
     "unlockBiometricContinue": "Meghee obere akpa gị na mkpịsịaka gị ma ọ bụ ihu gị ka ị gaa n 'ihu.",
     "unlockBiometricSignIn": "Meghee obere akpa gị na mkpịsịaka gị ma ọ bụ ihu iji banye.",
     "unlockPasswordContinue": "Tinye paswọọdụ obere akpa gị ka ị gaa n 'ihu.",

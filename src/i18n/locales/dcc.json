@@ -1134,6 +1134,14 @@
     "failedSubmit": "درخواست جمع نئیں ہوئی۔ دوبارہ کوشش کرو۔"
   },
   "loginModal": {
+    "migrateNoOldAccount": "There is no earlier DeHub account on this login, so there is nothing to bring over. Set up a new account instead.",
+    "migrateInstead": "Bring over the old account instead",
+    "setUpNewAccount": "Set up a new account",
+    "createNewInstead": "Create a new account instead",
+    "migrateAccount": "Migrate account",
+    "importExternalWallet": "Import external wallet",
+    "migrateIntentHint": "Sign in with any option below. If it matches an earlier DeHub account you will bring over its wallet, username and balance.",
+    "importIntentHint": "Sign in with any option below, then paste the recovery phrase or private key of the wallet you want to use.",
     "title": "لاگ ان",
     "addProfileTitle": "پروفائل ڈالو",
     "continueEmail": "ای میل سے جاری رکھو",

@@ -1393,6 +1393,14 @@
     "failedSubmit": "आवेदन दर्ज नइखे भइल। कृपया फिर से कोशिश करीं।"
   },
   "loginModal": {
+    "migrateNoOldAccount": "ई लॉगिन पs पहिले के कोई DeHub अकाउंट नइखे, तs कुछ भी वापस लाए के नइखे। एकरा बदले एगो नया अकाउंट बना लीं।",
+    "migrateInstead": "पुराना अकाउंट वापस ले आईं",
+    "setUpNewAccount": "नया अकाउंट बना लीं",
+    "createNewInstead": "एकरा बदले एगो नया अकाउंट बनाईं",
+    "migrateAccount": "अकाउंट माइग्रेट करीं",
+    "importExternalWallet": "बाहरी वॉलेट इम्पोर्ट करीं",
+    "migrateIntentHint": "नीचे कवनो भी ऑप्शन से साइन इन करीं। अगर ई पहिले के DeHub अकाउंट से मेल खाइलस तs तोहार वॉलेट, यूजरनेम आउर बैलेंस वापस आ जाई।",
+    "importIntentHint": "नीचे कवनो भी ऑप्शन से साइन इन करीं, तब उहे रिकवरी फ्रेज या प्राइवेट की पेस्ट करीं जेकरा के तू इस्तेमाल करे के चाहत बाड़s।",
     "unlockBiometricContinue": "आप अपने पोस्ट में Image जरूर Use करें लेकिन याद रहे Image Copyright Free हो.",
     "unlockBiometricSignIn": "आप अपने पोस्ट में Image जरूर Use करें लेकिन याद रहे Image Copyright Free हो.",
     "unlockPasswordContinue": "आपन पासवर्ड दर्ज करीं ताकि आप आगे बढ़ सकीं.",

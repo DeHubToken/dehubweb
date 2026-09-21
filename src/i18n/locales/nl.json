@@ -1602,6 +1602,14 @@
     "failedSubmit": "Aanvraag indienen mislukt. Probeer het opnieuw."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Er is geen eerdere DeHub-account op deze login, dus er is niets om over te brengen. Maak in plaats daarvan een nieuw account aan.",
+    "migrateInstead": "Breng in plaats daarvan het oude account over",
+    "setUpNewAccount": "Een nieuw account aanmaken",
+    "createNewInstead": "Maak in plaats daarvan een nieuw account aan",
+    "migrateAccount": "Account migreren",
+    "importExternalWallet": "Externe portefeuille importeren",
+    "migrateIntentHint": "Meld je aan met een van de onderstaande opties. Als het overeenkomt met een eerder DeHub-account, breng je de portemonnee, gebruikersnaam en het saldo over.",
+    "importIntentHint": "Meld je aan met een van de onderstaande opties en plak vervolgens de herstelzin of privésleutel van de portefeuille die je wilt gebruiken.",
     "unlockBiometricContinue": "Ontgrendel je portemonnee met je vingerafdruk of gezicht om door te gaan.",
     "unlockBiometricSignIn": "Ontgrendel je portemonnee met je vingerafdruk of gezicht om in te loggen.",
     "unlockPasswordContinue": "Voer het wachtwoord van je portemonnee in om door te",

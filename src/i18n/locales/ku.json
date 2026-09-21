@@ -1220,6 +1220,14 @@
     "failedSubmit": "Şandina serlêdanê têkçû. Ji kerema xwe dîsa biceribînin."
   },
   "loginModal": {
+    "migrateNoOldAccount": "There is no earlier DeHub account on this login, so there is nothing to bring over. Set up a new account instead.",
+    "migrateInstead": "هیسابە کۆنەکە بگوازەرەوە لەبری",
+    "setUpNewAccount": "هیسابێکی نوێ دابنێ",
+    "createNewInstead": "هیسابێکی نوێ دروست بکە لەبری",
+    "migrateAccount": "هیساب بگوازەرەوە",
+    "importExternalWallet": "خزێنەی دەرەکی هاوردە بکە",
+    "migrateIntentHint": "Sign in with any option below. If it matches an earlier DeHub account you will bring over its wallet, username and balance.",
+    "importIntentHint": "بە یەکێک لە بژاردەکانی خوارەوە بچووەژوورەوە، پاشان دەستەواژەی چاکبوونەوە یان کلیلە تایبەتەکەی ئەو خزێنەیەی دەتەوێت بەکاریبهێنیت لەقەڵەم بدە.",
     "welcomeBack": "بەخێربێیتەوە — ئەم ژمێریارییە هێشتا هی تۆیە. بە ژمێریاری کۆنەکەت لە خوارەوە بچۆ ژوورەوە بۆ ئەوەی بیگەڕێنیتەوە، لەگەڵ پۆستەکانت، شوێنکەوتووانت و باڵانسەکەت.",
     "welcomeBackWithLogin": "بەخێربێیتەوە — ئەم ژمێریارییە هێشتا هی تۆیە. بە {{login}} کۆنەکەت لە خوارەوە بچۆ ژوورەوە بۆ ئەوەی بیگەڕێنیتەوە، لەگەڵ پۆستەکانت، شوێنکەوتووانت و باڵانسەکەت.",
     "welcomeBackWaiting": "چاوەڕێی دەکەم",

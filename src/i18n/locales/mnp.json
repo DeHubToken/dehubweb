@@ -1383,6 +1383,14 @@
     "failedSubmit": "提交失败。请再试一下。"
   },
   "loginModal": {
+    "migrateNoOldAccount": "此登录信息没有更早的 DeHub 账号，因此没有内容可以迁移。请改设新账号。",
+    "migrateInstead": "改设旧账号",
+    "setUpNewAccount": "设新账号",
+    "createNewInstead": "改设新账号",
+    "migrateAccount": "迁移账号",
+    "importExternalWallet": "导入外部钱包",
+    "migrateIntentHint": "使用下面的任意选项登录。如果它匹配一个更早的 DeHub 账号，你将迁移其钱包、用户名和余额。",
+    "importIntentHint": "使用下面的任意选项登录，然后粘贴你想要使用的钱包的恢复短语或私钥。",
     "unlockBiometricContinue": "用你的指纹或脸孔来解锁你的钱包以继续。",
     "unlockBiometricSignIn": "用你的指纹或脸孔来解锁你的钱包并登录。",
     "unlockPasswordContinue": "输入你的钱包密码以继续。",

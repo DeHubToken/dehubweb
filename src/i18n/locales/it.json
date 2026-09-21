@@ -1409,6 +1409,14 @@
     "failedSubmit": "Invio candidatura fallito. Riprova."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Non c'è un account DeHub precedente su questo accesso, quindi non c'è nulla da trasferire. Crea invece un nuovo account.",
+    "migrateInstead": "Trasferisci il vecchio account",
+    "setUpNewAccount": "Crea un nuovo account",
+    "createNewInstead": "Crea un nuovo account invece",
+    "migrateAccount": "Migra account",
+    "importExternalWallet": "Importa wallet esterno",
+    "migrateIntentHint": "Accedi con una qualsiasi delle opzioni qui sotto. Se corrisponde a un account DeHub precedente, trasferirai il suo wallet, nome utente e saldo.",
+    "importIntentHint": "Accedi con una qualsiasi delle opzioni qui sotto, quindi incolla la frase di recupero o la chiave privata del wallet che desideri utilizzare.",
     "unlockBiometricContinue": "Sblocca il portafoglio con l'impronta digitale o il volto per continuare.",
     "unlockBiometricSignIn": "Sblocca il portafoglio con l'impronta digitale o il volto per accedere.",
     "unlockPasswordContinue": "Inserisci la password del tuo portafoglio per continuare.",

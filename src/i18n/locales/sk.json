@@ -1533,6 +1533,14 @@
     "failedSubmit": "Nepodarilo sa odoslať žiadosť. Skúste to znova."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Na tomto prihlásení nie je žiadny predchádzajúci účet DeHub, takže nie je čo priniesť. Namiesto toho si vytvorte nový účet.",
+    "migrateInstead": "Namiesto toho prineste starý účet",
+    "setUpNewAccount": "Vytvorte si nový účet",
+    "createNewInstead": "Namiesto toho vytvorte nový účet",
+    "migrateAccount": "Migrovať účet",
+    "importExternalWallet": "Importovať externú peňaženku",
+    "migrateIntentHint": "Prihláste sa pomocou ľubovoľnej možnosti nižšie. Ak sa zhoduje so starším účtom DeHub, prinesiete jeho peňaženku, používateľské meno a zostatok.",
+    "importIntentHint": "Prihláste sa pomocou ľubovoľnej možnosti nižšie a potom prilepte frázu na obnovenie alebo súkromný kľúč peňaženky, ktorú chcete použiť.",
     "unlockBiometricContinue": "Ak chceš pokračovať, odomkni si peňaženku odtlačkom prsta alebo tvárou.",
     "unlockBiometricSignIn": "Odomkni peňaženku odtlačkom prsta alebo tvárou a prihlás sa.",
     "unlockPasswordContinue": "Ak chceš pokračovať, zadaj heslo do peňaženky.",

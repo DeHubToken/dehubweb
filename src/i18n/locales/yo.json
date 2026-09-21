@@ -1427,6 +1427,14 @@
     "failedSubmit": "Kò le fi ìbéèrè ránṣẹ́. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Kò sí àkọsílẹ̀ DeHub tẹ́lẹ̀ lórí ìforúkọsílẹ̀ yìí, nítorí náà kò sí nǹkankan láti mú wá. Ṣètò àkọsílẹ̀ tuntun dípò.",
+    "migrateInstead": "Mú àkántì àtijọ́ wá dípò",
+    "setUpNewAccount": "Ṣètò àkọsílẹ̀ tuntun",
+    "createNewInstead": "Ṣẹ̀dá àkọsílẹ̀ tuntun dípò",
+    "migrateAccount": "Migrate account",
+    "importExternalWallet": "Gbe apamọwọ ita wọle",
+    "migrateIntentHint": "Wọlé pẹ̀lú ohunkóhun tí ó wà nísàlẹ̀. Tí ó bá bá àkáǹtì DeHub tẹ́lẹ̀ mu, wà á mú àpamọ́wọ́ rẹ̀, orúkọ aṣàmúlò rẹ̀ àti ìdúróṣánṣán rẹ̀ wá.",
+    "importIntentHint": "Wọlé pẹ̀lú àṣàyàn èyíkéyìí tó wà nísàlẹ̀, lẹ́yìn náà tẹ gbólóhùn ìmúpadàbọ̀sípò tàbí kọ́kọ́rọ́ ìkọ̀kọ̀ àpò-ìfowópamọ́ tí o fẹ́ lò.",
     "unlockBiometricContinue": "Tú àpò-ìfowópamọ́ rẹ pẹ̀lú àmì ìka rẹ tàbí ojú rẹ láti tẹ̀síwájú.",
     "unlockBiometricSignIn": "Tú àpò-ìfowópamọ́ rẹ pẹ̀lú àmì ìka rẹ tàbí ojú láti wọlé.",
     "unlockPasswordContinue": "Tẹ ọrọ igbaniwọle apamọwọ rẹ lati tẹsiwaju.",

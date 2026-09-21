@@ -1444,6 +1444,14 @@
     "failedSubmit": "Dështoi dërgimi i aplikimit. Ju lutem provoni përsëri."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Nuk ka llogari të mëparshme DeHub në këtë hyrje, kështu që nuk ka asgjë për të sjellë. Më mirë krijo një llogari të re.",
+    "migrateInstead": "Sill më mirë llogarinë e vjetër",
+    "setUpNewAccount": "Krijo një llogari të re",
+    "createNewInstead": "Më mirë krijo një llogari të re",
+    "migrateAccount": "Migro llogarinë",
+    "importExternalWallet": "Importo portofolin e jashtëm",
+    "migrateIntentHint": "Hyr me çdo opsion më poshtë. Nëse përputhet me një llogari të mëparshme DeHub, do të marrësh me vete portofolin, emrin e përdoruesit dhe balancën e saj.",
+    "importIntentHint": "Hyr me çdo opsion më poshtë, pastaj ngjit frazën e rimëkëmbjes ose çelësin privat të portofolit që dëshiron të përdorësh.",
     "unlockBiometricContinue": "Zhblloko portofolin me shenjën e gishtit ose fytyrën për të vazhduar.",
     "unlockBiometricSignIn": "Zhblloko portofolin me gjurmët e gishtave ose fytyrën për t 'u identifikuar.",
     "unlockPasswordContinue": "Vendos fjalëkalimin e portofolit për të vazhduar.",

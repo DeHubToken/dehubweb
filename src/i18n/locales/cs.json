@@ -1405,6 +1405,14 @@
     "email": "E-mail"
   },
   "loginModal": {
+    "migrateNoOldAccount": "Na tomto přihlášení není žádný dřívější účet DeHub, takže není co přinést. Místo toho si založ nový účet.",
+    "migrateInstead": "Přineste místo toho starý účet",
+    "setUpNewAccount": "Založ si nový účet",
+    "createNewInstead": "Místo toho si vytvoř nový účet",
+    "migrateAccount": "Migrovat účet",
+    "importExternalWallet": "Importovat externí peněženku",
+    "migrateIntentHint": "Přihlas se libovolnou možností dole. Pokud se shoduje s dřívějším účtem DeHub, přinesete jeho peněženku, uživatelské jméno a zůstatek.",
+    "importIntentHint": "Přihlaste se pomocí libovolné možnosti níže a vložte frázi pro obnovení nebo soukromý klíč peněženky, kterou chcete použít.",
     "unlockBiometricContinue": "Pokračujte odemknutím peněženky otiskem prstu nebo obličejem.",
     "unlockBiometricSignIn": "Odemkni si peněženku otiskem prstu nebo obličejem a přihlas se.",
     "unlockPasswordContinue": "Pokračujte zadáním hesla do peněženky.",
