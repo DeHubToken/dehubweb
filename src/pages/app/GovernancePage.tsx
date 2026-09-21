@@ -17,13 +17,12 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2, ShieldCheck, Info, Languages, RotateCcw } from 'lucide-react';
+import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, ShieldCheck, Info, Languages, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
 import { TranslatableText, SharedTranslationProvider, useSharedTranslationControl } from '@/components/app/TranslatableText';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
-import { UserAvatar } from '@/components/app/UserAvatar';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import { useAuth } from '@/contexts/AuthContext';
@@ -33,8 +32,6 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { SEOHead } from '@/components/SEOHead';
 import { getBadgeName, getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
-import { useMention } from '@/hooks/use-mention';
-import { UserMentionDropdown } from '@/components/app/mentions';
 import { ProposalVerdictLabel, verdictOf, votingTimeLeft, isVotingClosed, type ProposalVerdict } from '@/components/app/governance/ProposalVerdict';
 import {
   useGovernanceProposals,
@@ -48,7 +45,7 @@ import {
   type GovernanceSort,
   type GovernanceProposal,
 } from '@/hooks/use-governance';
-import { useGovernanceComments, useSubmitGovernanceComment, useDeleteGovernanceComment } from '@/hooks/use-governance-comments';
+import { ProposalDiscussion } from '@/components/app/governance/ProposalDiscussion';
 import { z } from 'zod';
 
 type PageTab = 'proposals' | 'passed' | 'rejected';
@@ -89,21 +86,9 @@ function GovernanceCard({
 }) {
   const { t } = useTranslation();
   const [showComments, setShowComments] = useState(false);
-  const [commentText, setCommentText] = useState('');
-  const commentInputRef = useRef<HTMLInputElement>(null);
   const commentSectionRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
-  const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
   const navigate = useNavigate();
-
-  const mention = useMention({
-    inputRef: commentInputRef,
-    onMentionInsert: (_user, newText) => setCommentText(newText.slice(0, 500)),
-  });
-
-  const { data: comments, isLoading: commentsLoading } = useGovernanceComments(showComments ? proposal.id : null);
-  const submitComment = useSubmitGovernanceComment();
-  const deleteComment = useDeleteGovernanceComment();
 
   const cachedAvatar = useProfileAvatar(proposal.author_wallet_address);
   const avatarUrl = proposal.author_avatar
@@ -124,17 +109,6 @@ function GovernanceCard({
   const handleDislike = useCallback(() => {
     onVote(proposal.id, -1, currentVote);
   }, [proposal.id, currentVote, onVote]);
-
-  const handleSubmitComment = (e: React.FormEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!isAuthenticated) { openLoginModal(); return; }
-    if (!commentText.trim()) return;
-    submitComment.mutate(
-      { proposalId: proposal.id, content: commentText },
-      { onSuccess: () => setCommentText('') }
-    );
-  };
 
   // Show user's vote weight — resolved the way the server will resolve it,
   // lock and ladder scale included, so the number on the button is the number
@@ -193,8 +167,8 @@ function GovernanceCard({
           return (
             <div className="space-y-1">
               <div className="flex justify-between text-[10px]">
-                <span className="text-emerald-400 font-medium">{forPct}% {t('governance.forLabel', 'For')}</span>
-                <span className="text-red-400 font-medium">{againstPct}% {t('governance.againstLabel', 'Against')}</span>
+                <span className="text-emerald-400 font-medium">{forPct}% {t('governance.forLabel')}</span>
+                <span className="text-red-400 font-medium">{againstPct}% {t('governance.againstLabel')}</span>
               </div>
               <div className="h-1.5 rounded-full bg-white/5 overflow-hidden flex">
                 {total > 0 ? (
@@ -234,103 +208,20 @@ function GovernanceCard({
         {/* Comments Section */}
         {(() => {
           const commentsContent = (
-            <div className="border-t border-white/5 pt-3 mt-1" onClick={(e) => e.stopPropagation()}>
-              {commentsLoading ? (
-                <div className="flex justify-center py-3">
-                  <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
-                </div>
-              ) : comments && comments.length > 0 ? (
-                <div className="space-y-2.5 mb-3 max-h-60 overflow-y-auto scrollbar-invisible">
-                  {comments.map((comment) => {
-                    const commentAvatar = comment.avatar && comment.wallet_address
-                      ? buildAvatarUrl(comment.wallet_address, comment.avatar)
-                      : null;
-                    const commentName = comment.username
-                      ? `@${comment.username}`
-                      : `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;
-                    const isOwn = walletAddress?.toLowerCase() === comment.wallet_address.toLowerCase();
-                    return (
-                      <div key={comment.id} className="flex gap-2 group">
-                        <UserAvatar
-                          name={comment.username || comment.wallet_address.slice(0, 6)}
-                          handle={comment.username || comment.wallet_address}
-                          avatarUrl={commentAvatar}
-                          size="sm"
-                          className="w-6 h-6 shrink-0 mt-0.5"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-zinc-400 text-[11px] font-medium">{commentName}</span>
-                            <span className="text-zinc-500 text-[10px]">{formatTimeAgo(comment.created_at, t)}</span>
-                            {isOwn && (
-                              <button
-                                type="button"
-                                onClick={() => deleteComment.mutate({ commentId: comment.id, proposalId: proposal.id })}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity ml-auto"
-                              >
-                                <Trash2 className="w-3 h-3 text-zinc-500 hover:text-red-400" />
-                              </button>
-                            )}
-                          </div>
-                          <TranslatableText text={comment.content} className="text-zinc-300 text-xs leading-relaxed" as="p" />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <p className="text-zinc-500 text-xs text-center py-2 mb-2">{t('governance.noCommentsYet')}</p>
-              )}
-
-              <form onSubmit={handleSubmitComment} className="relative flex gap-2">
-                <Input
-                  ref={commentInputRef}
-                  value={commentText}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setCommentText(val);
-                    mention.handleInput(val, e.target.selectionStart ?? val.length);
-                  }}
-                  onKeyDown={(e) => {
-                    if (mention.isOpen) {
-                      const handled = mention.handleKeyDown(e);
-                      if (handled) {
-                        if (e.key === 'Enter' || e.key === 'Tab') {
-                          e.preventDefault();
-                          const liveResults = (window as any).__mentionResults || [];
-                          if (liveResults[mention.selectedIndex]) {
-                            mention.handleSelect(liveResults[mention.selectedIndex]);
-                          }
-                        }
-                        return;
-                      }
-                    }
-                  }}
-                  placeholder={t('governance.addComment')}
-                  maxLength={500}
-                  className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs h-8"
-                />
-                <UserMentionDropdown
-                  query={mention.query}
-                  isOpen={mention.isOpen}
-                  position={mention.position}
-                  selectedIndex={mention.selectedIndex}
-                  onSelectedIndexChange={mention.setSelectedIndex}
-                  onSelect={mention.handleSelect}
-                  onClose={mention.handleClose}
-                />
-                <button
-                  type="submit"
-                  disabled={!commentText.trim() || submitComment.isPending}
-                  className="w-8 h-8 flex items-center justify-center rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white disabled:opacity-30 transition-opacity"
-                >
-                  {submitComment.isPending ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <Send className="w-3.5 h-3.5" />
-                  )}
-                </button>
-              </form>
+            <div className="border-t border-white/5 pt-1 mt-1" onClick={(e) => e.stopPropagation()}>
+              <ProposalDiscussion
+                proposalId={proposal.id}
+                proposalAuthorAddress={proposal.author_wallet_address}
+                compact
+              />
+              <button
+                type="button"
+                onClick={() => navigate(`/app/governance/${proposal.id}`)}
+                className="mt-2 flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                {t('governance.discussion.joinOnProposal')}
+              </button>
             </div>
           );
 
@@ -339,7 +230,7 @@ function GovernanceCard({
               <Drawer open={showComments} onOpenChange={setShowComments}>
                 <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-white/10 px-4 pb-6 max-h-[70dvh]">
                   <DrawerHeader className="px-0 pt-2 pb-0">
-                    <DrawerTitle className="text-white text-sm">{t('governance.comments', 'Comments')}</DrawerTitle>
+                    <DrawerTitle className="text-white text-sm">{t('governance.discussion.title')}</DrawerTitle>
                   </DrawerHeader>
                   {commentsContent}
                 </DrawerContent>

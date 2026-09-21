@@ -1656,7 +1656,25 @@
     "minutesAgo": "{{count}} মিনিট আগে",
     "hoursAgo": "{{count}} ঘণ্টা আগে",
     "daysAgo": "{{count}} দিন আগে",
-    "monthsAgo": "{{count}} মাস আগে"
+    "monthsAgo": "{{count}} মাস আগে",
+    "forLabel": "লাই",
+    "againstLabel": "বিরুদ্ধে",
+    "discussion": {
+      "title": "আলোচনা",
+      "intro": "ভোট দেওয়ার আগে ফলো-আপ প্রশ্ন করুন বা প্রস্তাবটি নিয়ে আলোচনা করুন।",
+      "reply": "উত্তর দিন",
+      "replyingTo": "{{name}} কে উত্তর দেওয়া হচ্ছে",
+      "writeReply": "একটি উত্তর লিখুন",
+      "edited": "সম্পাদিত",
+      "showMoreReplies": "{{count}} এর আরও উত্তর দেখান",
+      "showMoreReplies_one": "{{count}} এর আরও উত্তর দেখান",
+      "deleteTitle": "এই মন্তব্যটি মুছে ফেলবেন?",
+      "deleteDescription": "এটি সবার জন্য মন্তব্য এবং এর উত্তরগুলো মুছে ফেলবে।",
+      "signInToComment": "আলোচনায় যোগ দিতে সাইন ইন করুন",
+      "empty": "এখনও কোনো প্রশ্ন নেই। আলোচনা শুরু করুন।",
+      "joinOnProposal": "আলোচনায় যোগ দিন",
+      "authorChip": "প্রস্তাবের লেখক"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "শহরর কথা",

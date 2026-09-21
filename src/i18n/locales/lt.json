@@ -1555,7 +1555,25 @@
     "minutesAgo": "prieš {{count}} min.",
     "hoursAgo": "prieš {{count}} val.",
     "daysAgo": "prieš {{count}} d.",
-    "monthsAgo": "prieš {{count}} mėn."
+    "monthsAgo": "prieš {{count}} mėn.",
+    "forLabel": "„Durų",
+    "againstLabel": "„Prieš\"_____",
+    "discussion": {
+      "title": "Diskusija",
+      "intro": "Prieš balsuodami užduokite papildomų klausimų arba aptarkite pasiūlymą.",
+      "reply": "Atsakyti",
+      "replyingTo": "Atsakymas {{name}}",
+      "writeReply": "Rašyti atsakymą",
+      "edited": "redaguota",
+      "showMoreReplies": "Rodyti {{count}} daugiau atsakymų",
+      "showMoreReplies_one": "Rodyti {{count}} daugiau atsakymo",
+      "deleteTitle": "Ištrinti šį komentarą?",
+      "deleteDescription": "Tai pašalina komentarą ir jo atsakymus visiems.",
+      "signInToComment": "Prisijunkite, kad prisijungtumėte prie diskusijos",
+      "empty": "Klausimų dar nėra. Pradėkite diskusiją.",
+      "joinOnProposal": "Prisijunkite prie diskusijos",
+      "authorChip": "Pasiūlymo autorius"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Miesto kalba",

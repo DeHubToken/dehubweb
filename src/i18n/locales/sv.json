@@ -1575,7 +1575,25 @@
     "minutesAgo": "{{count}} minuter sedan",
     "hoursAgo": "{{count}} timmar sedan",
     "daysAgo": "{{count}} dagar sedan",
-    "monthsAgo": "{{count}} månader sedan"
+    "monthsAgo": "{{count}} månader sedan",
+    "forLabel": "För",
+    "againstLabel": "Antal röster emot:",
+    "discussion": {
+      "title": "Diskussion",
+      "intro": "Ställ följdfrågor eller diskutera förslaget innan du röstar.",
+      "reply": "Svara",
+      "replyingTo": "Svara {{name}}",
+      "writeReply": "Skriv ett svar",
+      "edited": "redigerad",
+      "showMoreReplies": "Visa {{count}} fler svar",
+      "showMoreReplies_one": "Visa {{count}} till svar",
+      "deleteTitle": "Ta bort den här kommentaren?",
+      "deleteDescription": "Detta tar bort kommentaren och dess svar för alla.",
+      "signInToComment": "Logga in för att delta i diskussionen",
+      "empty": "Inga frågor ännu. Starta diskussionen.",
+      "joinOnProposal": "Gå med i diskussionen",
+      "authorChip": "Förslagsförfattare"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Stadens snackis",

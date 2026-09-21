@@ -1538,7 +1538,25 @@
     "minutesAgo": "{{count}} مىنۇت بۇرۇن",
     "hoursAgo": "{{count}} سائەت بۇرۇن",
     "daysAgo": "{{count}} كۈن بۇرۇن",
-    "monthsAgo": "{{count}} ئاي بۇرۇن"
+    "monthsAgo": "{{count}} ئاي بۇرۇن",
+    "forLabel": "ئۈچۈن",
+    "againstLabel": "قارشىلىق",
+    "discussion": {
+      "title": "تالاش- تارتىش",
+      "intro": "ئاۋاز بېرىشتىن بۇرۇن كېيىنكى سوئاللارنى سوراڭ ياكى تەكلىپنى مۇزاكىرە قىلىڭ.",
+      "reply": "جاۋاب",
+      "replyingTo": "{{name}} غا جاۋاب بېرىش",
+      "writeReply": "جاۋاب يېزىش",
+      "edited": "تەھرىرلەندى",
+      "showMoreReplies": "{{count}} تېخىمۇ كۆپ جاۋابلارنى كۆرسىتىش",
+      "showMoreReplies_one": "{{count}} تېخىمۇ كۆپ ئىنكاسلارنى كۆرسىتىش",
+      "deleteTitle": "بۇ ئىنكاسنى ئۆچۈرگىلى بولامدۇ ؟",
+      "deleteDescription": "بۇنىڭ بىلەن ھەممە كىشىنىڭ ئىنكاسى ۋە جاۋابى ئۆچۈرۈلىدۇ.",
+      "signInToComment": "مۇھاكىمە يىغىنىغا قاتنىشىش ئۈچۈن ئىمزا قويۇڭ",
+      "empty": "تېخى سوئال يوق. سۆھبەتنى باشلاڭ.",
+      "joinOnProposal": "تالاش- تارتىشقا قوشۇلۇش",
+      "authorChip": "تەكلىپ ئاپتورى"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "كۆپ سۆزلەنگەن",

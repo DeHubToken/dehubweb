@@ -1573,7 +1573,25 @@
     "minutesAgo": "{{count}}м назад",
     "hoursAgo": "{{count}}ч назад",
     "daysAgo": "{{count}}д назад",
-    "monthsAgo": "{{count}}мес назад"
+    "monthsAgo": "{{count}}мес назад",
+    "forLabel": "От",
+    "againstLabel": "Против",
+    "discussion": {
+      "title": "Обсуждение",
+      "intro": "Задайте дополнительные вопросы или обсудите предложение перед голосованием.",
+      "reply": "Ответить",
+      "replyingTo": "Ответить на {{name}}",
+      "writeReply": "Написать ответ",
+      "edited": "отредактировано",
+      "showMoreReplies": "Показать ещё{{count}} ответов",
+      "showMoreReplies_one": "Показать ещё {{count}}",
+      "deleteTitle": "Удалить этот комментарий?",
+      "deleteDescription": "Это удалит комментарий и его ответы для всех.",
+      "signInToComment": "Войдите, чтобы присоединиться к обсуждению",
+      "empty": "Пока нет вопросов. Начните обсуждение.",
+      "joinOnProposal": "Присоединиться к обсуждению",
+      "authorChip": "Автор предложения"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Обсуждаемое",

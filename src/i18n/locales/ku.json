@@ -1393,7 +1393,8 @@
     "minutesAgo": "{{count}}d berê",
     "hoursAgo": "{{count}}s berê",
     "daysAgo": "{{count}}r berê",
-    "monthsAgo": "{{count}}m berê"
+    "monthsAgo": "{{count}}m berê",
+    "againstLabel": "دژ - بەرامبەر"
   },
   "sidebar": {
     "talkOfTheTown": "Gotina Bajêr",

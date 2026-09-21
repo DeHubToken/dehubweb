@@ -1529,7 +1529,24 @@
     "minutesAgo": "{{count}} дақ пеш",
     "hoursAgo": "{{count}} с пеш",
     "daysAgo": "{{count}} р пеш",
-    "monthsAgo": "{{count}} м пеш"
+    "monthsAgo": "{{count}} м пеш",
+    "forLabel": "Барои...",
+    "againstLabel": "Бар зидди",
+    "discussion": {
+      "title": "Баҳс",
+      "intro": "Саволҳои пайгириро пурсед ё пеш аз овоздиҳӣ муҳокима кунед.",
+      "reply": "Ҷавоб",
+      "replyingTo": "Ҷавоб додан {{name}}",
+      "writeReply": "Навиштани ҷавоб",
+      "edited": "таҳриршуда",
+      "showMoreReplies": "Намоиши {{count}}info: whatsthis",
+      "showMoreReplies_one": "Намоиши {{count}}info: whatsthis",
+      "deleteTitle": "Tanggalin ang komentong ito?",
+      "deleteDescription": "Ito ay tanggalin ang komento at mga tugon para sa lahat.",
+      "empty": "Ягон савол нест. Оғоз кардани мубоҳиса.",
+      "joinOnProposal": "Ба мубоҳиса ҳамроҳ шавед",
+      "authorChip": "Муаллифи пешниҳод"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Маъмултарин",

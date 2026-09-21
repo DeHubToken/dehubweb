@@ -1407,7 +1407,25 @@
     "minutesAgo": "{{count}}m ago",
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
-    "monthsAgo": "{{count}}mo ago"
+    "monthsAgo": "{{count}}mo ago",
+    "forLabel": "Cho",
+    "againstLabel": "Chống lại",
+    "discussion": {
+      "title": "Thảo luận",
+      "intro": "Đặt câu hỏi tiếp theo hoặc thảo luận về đề xuất trước khi bỏ phiếu.",
+      "reply": "Trả lời",
+      "replyingTo": "Đang trả lời {{name}}",
+      "writeReply": "Viết câu trả lời",
+      "edited": "đã chỉnh sửa",
+      "showMoreReplies": "Hiển thị thêm {{count}} câu trả lời",
+      "showMoreReplies_one": "Hiển thị thêm {{count}} câu trả lời",
+      "deleteTitle": "Xóa bình luận này?",
+      "deleteDescription": "Thao tác này sẽ xóa nhận xét và trả lời cho tất cả mọi người.",
+      "signInToComment": "Đăng nhập để tham gia thảo luận",
+      "empty": "Chưa có câu hỏi nào. Bắt đầu thảo luận.",
+      "joinOnProposal": "Tham gia thảo luận",
+      "authorChip": "Tác giả đề xuất"
+    }
   },
   "sidebar": {
     "nothingTrending": "Chưa có gì xu hướng",

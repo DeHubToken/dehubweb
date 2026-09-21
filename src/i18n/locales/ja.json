@@ -1570,7 +1570,25 @@
     "minutesAgo": "{{count}}分前",
     "hoursAgo": "{{count}}時間前",
     "daysAgo": "{{count}}日前",
-    "monthsAgo": "{{count}}ヶ月前"
+    "monthsAgo": "{{count}}ヶ月前",
+    "forLabel": "のために",
+    "againstLabel": "反する",
+    "discussion": {
+      "title": "ディスカッション",
+      "intro": "投票する前に、フォローアップの質問をしたり、提案について話し合ったりしてください。",
+      "reply": "返信する",
+      "replyingTo": "{{name}}に返信中",
+      "writeReply": "返信する",
+      "edited": "編集済み",
+      "showMoreReplies": "さらに{{count}}件の返信を表示",
+      "showMoreReplies_one": "さらに{{count}}件の返信を表示",
+      "deleteTitle": "このコメントを削除しますか？",
+      "deleteDescription": "これにより、全員に対するコメントとその返信が削除されます。",
+      "signInToComment": "サインインしてディスカッションに参加",
+      "empty": "質問はまだありません。ディスカッションを開始してください。",
+      "joinOnProposal": "ディスカッションに参加する",
+      "authorChip": "提案者"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "話題の中心",

@@ -1572,7 +1572,25 @@
     "minutesAgo": "{{count}}dk önce",
     "hoursAgo": "{{count}}sa önce",
     "daysAgo": "{{count}}g önce",
-    "monthsAgo": "{{count}}ay önce"
+    "monthsAgo": "{{count}}ay önce",
+    "forLabel": "Çift bedenler için",
+    "againstLabel": "Karşı Taraf",
+    "discussion": {
+      "title": "Tartışma",
+      "intro": "Oy vermeden önce takip soruları sorun veya teklifi tartışın.",
+      "reply": "Yanıtla",
+      "replyingTo": "{{name}} adlı kişiye yanıt verme",
+      "writeReply": "Yanıt yazın",
+      "edited": "düzenlendi",
+      "showMoreReplies": "{{count}} yanıt daha göster",
+      "showMoreReplies_one": "{{count}} tane daha yanıt göster",
+      "deleteTitle": "Bu yorum silinsin mi?",
+      "deleteDescription": "Bu, yorumu ve yanıtlarını herkes için kaldırır.",
+      "signInToComment": "Tartışmaya katılmak için oturum açın",
+      "empty": "Henüz soru yok. Tartışmayı başlatın.",
+      "joinOnProposal": "Tartışmaya katıl",
+      "authorChip": "Teklif yazarı"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Gündem",

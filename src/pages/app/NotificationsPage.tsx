@@ -267,7 +267,7 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
   likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
   follows: ['following', 'follow_request', 'follow_request_accepted', 'followRequest', 'follow-request'],
-  comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'governance_comment'],
+  comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'governance_comment', 'governance_reply'],
   reposts: ['repost', 'quote'],
   features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention'],
   communities: ['community_mention', 'community_here', 'community_join'],
@@ -335,6 +335,7 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     case 'feature_request_reply':
     case 'feature_request_mention':
     case 'governance_comment':
+    case 'governance_reply':
       return <MessageSquareText className="w-4 h-4 text-white/70" />;
     // Joins, mentions and @here take their glyph from the shared community
     // module, so the bell and the Communities page mark them the same way. An
@@ -620,6 +621,10 @@ function getNotificationContent(
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return title ? `${actorName} commented on your proposal "${title}"` : `${actorName} commented on your proposal`;
   }
+  if ((notification.type as string) === 'governance_reply') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return title ? `${actorName} replied to you on proposal "${title}"` : `${actorName} replied to your comment on a proposal`;
+  }
   // Joins, @mentions and @here all read the same way here and on the
   // Communities page. Before this, only joins had a sentence: mention and
   // @here rows carry the chat message in `content`, so they fell through the
@@ -808,9 +813,18 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     const jobNumber = customReferenceId(notification);
     return jobNumber ? `/bounty/${jobNumber}` : '/work/history';
   }
-  if ((notification.type as string) === 'governance_vote' || (notification.type as string) === 'governance_comment') {
+  // A comment or reply row lands on the comment it is about — the proposal
+  // page reads the same `?comment=` the features board does.
+  const GOVERNANCE_COMMENT_TYPES = ['governance_comment', 'governance_reply'];
+  if ((notification.type as string) === 'governance_vote' || GOVERNANCE_COMMENT_TYPES.includes(notification.type as string)) {
     const refId = customReferenceId(notification);
-    return refId ? `/app/governance/${refId}` : '/governance';
+    if (!refId) return '/governance';
+    const commentId = GOVERNANCE_COMMENT_TYPES.includes(notification.type as string)
+      ? (notification as DeHubNotification & { _customCommentId?: string })._customCommentId
+      : undefined;
+    return commentId
+      ? `/app/governance/${refId}?comment=${encodeURIComponent(commentId)}`
+      : `/app/governance/${refId}`;
   }
   if ((notification.type as string).startsWith('dao_')) {
     const refId = customReferenceId(notification);
