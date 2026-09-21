@@ -1400,7 +1400,16 @@
     "walletConnectedAs": "Připojeno",
     "useDifferentWallet": "Použít jinou peněženku",
     "walletInfoDesktop": "Připojte peněženku pro bezpečné přihlášení",
-    "walletInfoMobile": "MetaMask a Trust a Phantom se otevírají ve svých aplikacích. Rabby používá WalletConnect."
+    "walletInfoMobile": "MetaMask a Trust a Phantom se otevírají ve svých aplikacích. Rabby používá WalletConnect.",
+    "continuePasskey": "Pokračovat s otiskem prstu",
+    "passkeyIntro": "Váš otisk prstu nebo tvář je váš účet. Není třeba si nic pamatovat ani nic psát.",
+    "passkeySignIn": "Přihlásit se otiskem prstu",
+    "passkeyCreate": "Vytvořit nový účet",
+    "passkeyUnsupported": "Toto zařízení se nemůže přihlásit otiskem prstu nebo tváří. Použijte jinou možnost.",
+    "passkeyNotLinked": "K tomuto otisku prstu zatím není připojen žádný účet. Místo toho vytvořte nový účet.",
+    "passkeyAlreadyRegistered": "Tento otisk prstu již má účet. Místo toho použijte přihlášení.",
+    "passkeyFailed": "Přihlášení otiskem prstu selhalo. Zkuste to znovu.",
+    "passkeyBackupHint": "Váš účet je uložen v přístupovém klíči tohoto zařízení. Na většině telefonů se synchronizuje s vaším účtem Google nebo Apple a v Nastavení můžete přidat zálohu hesla."
   },
   "careers": {
     "title": "Kariéra v DeHub",

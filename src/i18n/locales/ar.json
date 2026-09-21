@@ -1406,7 +1406,16 @@
     "walletConnectedAs": "متصل",
     "useDifferentWallet": "استخدام محفظة أخرى",
     "walletInfoDesktop": "اربط محفظتك لتسجيل الدخول بأمان",
-    "walletInfoMobile": "MetaMask وTrust وPhantom ستفتح تطبيقها مباشرة. Rabby سيستخدم WalletConnect."
+    "walletInfoMobile": "MetaMask وTrust وPhantom ستفتح تطبيقها مباشرة. Rabby سيستخدم WalletConnect.",
+    "continuePasskey": "المتابعة ببصمة الإصبع",
+    "passkeyIntro": "بصمتك أو وجهك هو حسابك. لا شيء لتتذكره، لا شيء لتكتبه.",
+    "passkeySignIn": "تسجيل الدخول بالبصمة",
+    "passkeyCreate": "إنشاء حساب جديد",
+    "passkeyUnsupported": "لا يمكن لهذا الجهاز تسجيل الدخول بالبصمة أو الوجه. استخدم خيارًا آخر.",
+    "passkeyNotLinked": "لم يتم ربط أي حساب بهذه البصمة بعد. قم بإنشاء حساب جديد بدلاً من ذلك.",
+    "passkeyAlreadyRegistered": "هذه البصمة لديها حساب بالفعل. استخدم تسجيل الدخول بدلاً من ذلك.",
+    "passkeyFailed": "فشل تسجيل الدخول بالبصمة. يرجى المحاولة مرة أخرى.",
+    "passkeyBackupHint": "حسابك موجود في مفتاح المرور الخاص بهذا الجهاز. على معظم الهواتف، تتم مزامنته مع حسابك على Google أو Apple، ويمكنك إضافة نسخة احتياطية لكلمة المرور في الإعدادات."
   },
   "careers": {
     "title": "وظائف في DeHub",

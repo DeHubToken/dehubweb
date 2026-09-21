@@ -1400,7 +1400,16 @@
     "walletConnectedAs": "Connectat",
     "useDifferentWallet": "Fes servir una altra cartera",
     "walletInfoDesktop": "Connecta la teva cartera per iniciar sessió de forma segura",
-    "walletInfoMobile": "MetaMask, Trust & Phantom obriran la seva app directament. Rabby utilitzarà WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom obriran la seva app directament. Rabby utilitzarà WalletConnect.",
+    "continuePasskey": "Continua amb l'empremta digital",
+    "passkeyIntro": "La teva empremta digital o cara és el teu compte. No cal recordar res, no cal escriure res.",
+    "passkeySignIn": "Inicia sessió amb empremta digital",
+    "passkeyCreate": "Crea un compte nou",
+    "passkeyUnsupported": "Aquest dispositiu no pot iniciar sessió amb empremta digital o cara. Utilitza una altra opció.",
+    "passkeyNotLinked": "Encara no hi ha cap compte vinculat a aquesta empremta digital. Crea un compte nou en el seu lloc.",
+    "passkeyAlreadyRegistered": "Aquesta empremta digital ja té un compte. Utilitza Inicia sessió en el seu lloc.",
+    "passkeyFailed": "La sessió amb empremta digital ha fallat. Torna a provar-ho.",
+    "passkeyBackupHint": "El teu compte resideix a la clau d'accés d'aquest dispositiu. A la majoria de telèfons es sincronitza amb el teu compte de Google o Apple, i pots afegir una còpia de seguretat de contrasenya a Configuració."
   },
   "careers": {
     "title": "Carreres a DeHub",

@@ -1401,7 +1401,16 @@
     "walletConnectedAs": "Միացված է",
     "useDifferentWallet": "Օգտագործել այլ դրամապանակ",
     "walletInfoDesktop": "Kapaktsrek dzer drameritsne anvtang mouqtq gortselou hamar",
-    "walletInfoMobile": "MetaMask, Trust ev Phantom ouvaghitsoren kibatsen irents havelvaadse. Rabby-n kovgortsi WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust ev Phantom ouvaghitsoren kibatsen irents havelvaadse. Rabby-n kovgortsi WalletConnect.",
+    "continuePasskey": "Շարունակել մատնահետքով",
+    "passkeyIntro": "Ձեր մատնահետքը կամ դեմքը ձեր հաշիվն է։ Ոչինչ հիշելու, ոչինչ մուտքագրելու կարիք չկա։",
+    "passkeySignIn": "Մուտք գործել մատնահետքով",
+    "passkeyCreate": "Ստեղծել նոր հաշիվ",
+    "passkeyUnsupported": "Այս սարքը չի կարող մուտք գործել մատնահետքով կամ դեմքով։ Օգտագործեք մեկ այլ տարբերակ։",
+    "passkeyNotLinked": "Այդ մատնահետքին դեռևս հաշիվ կապված չէ։ Ստեղծեք նոր հաշիվ։",
+    "passkeyAlreadyRegistered": "Այդ մատնահետքն արդեն ունի հաշիվ։ Փոխարենը օգտագործեք «Մուտք գործել»։",
+    "passkeyFailed": "Մատնահետքով մուտք գործելը ձախողվեց։ Խնդրում ենք փորձել նորից։",
+    "passkeyBackupHint": "Ձեր հաշիվը գտնվում է այս սարքի passkey-ում։ Մեծ մասամբ հեռախոսներում այն համաժամանակացվում է ձեր Google-ի կամ Apple-ի հաշվի հետ, և դուք կարող եք ավելացնել գաղտնաբառի պահուստային պատճենը Կարգավորումներում։"
   },
   "careers": {
     "title": "Ashkhatanqner DeHub-oom",

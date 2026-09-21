@@ -1346,7 +1346,15 @@
     "walletConnectedAs": "संबद्धः",
     "useDifferentWallet": "भिन्नं कोशं प्रयुङ्क्ष्व",
     "walletInfoDesktop": "सुरक्षितप्रवेशार्थं स्वकोषं संयोजयतु",
-    "walletInfoMobile": "MetaMask, Trust तथा Phantom स्वानुप्रयोगं प्रत्यक्षम् उद्घाटयिष्यन्ति। Rabby WalletConnect उपयोक्ष्यते।"
+    "walletInfoMobile": "MetaMask, Trust तथा Phantom स्वानुप्रयोगं प्रत्यक्षम् उद्घाटयिष्यन्ति। Rabby WalletConnect उपयोक्ष्यते।",
+    "continuePasskey": "Fingerprint इत्यनेन सह अधो लिखितानां पृष्ठानां परिसन्धि",
+    "passkeyIntro": "तव हस्तमुद्रा वा मुखं तव लेखा इति। स्मर्तव्यं नास्ति, न च टाइपयितव्यम्।",
+    "passkeySignIn": "हस्तमुद्रया प्रवेशं कुरु",
+    "passkeyCreate": "नूतनलेखं सृज",
+    "passkeyUnsupported": "इदं यन्त्रं हस्तमुद्रया वा मुखेन प्रवेशं कर्तुं न शक्नोति। अपरं विकल्पं प्रयोजय।",
+    "passkeyNotLinked": "तादृश्या हस्तमुद्रया सह न कोऽपि लेखः सम्बद्धः। नूतनलेखं सृज।",
+    "passkeyAlreadyRegistered": "तादृशी हस्तमुद्रा पूर्वमेव लेखं धारयति। प्रवेशं प्रयोजय।",
+    "passkeyFailed": "हस्तमुद्रया प्रवेशः असफलः। पुनः प्रयत्नं कुरु।"
   },
   "careers": {
     "title": "DeHub मध्ये वृत्तयः",
