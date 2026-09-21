@@ -1,7 +1,10 @@
 {
   "live": {
     "chatJoined": "যোগ দিছে",
-    "chatSentGift": "পাঠাইছে"
+    "chatSentGift": "পাঠাইছে",
+    "progress": {
+      "xp": "{{xp}} XP"
+    }
   },
   "errors": {
     "sponsorshipUnavailable": "ফ্রি লেনদেন হামার দিক থাকি বন্ধ আছে, তোমার ওয়ালেটত সমস্যা নাই। অল্প পরে আবার চেষ্টা করেন।",

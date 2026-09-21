@@ -1,7 +1,60 @@
 {
   "live": {
     "chatJoined": "ተጸንበረ",
-    "chatSentGift": "ልኢኹ"
+    "chatSentGift": "ልኢኹ",
+    "progress": {
+      "title": "ደረጃታት ሓደስቲ ጸወቲ",
+      "level": "ደረጃ {{level}}",
+      "xp": "{{xp}} XP",
+      "toNext": "ንኽትበጽሕ {{level}} ደረጃ {{minutes}} ደቒቕ ብቁዕ ግዜ",
+      "rule": "ነቲ ደረጃኻ ዝቘጸረሉ 10 ደቒቕ ወይ ካብኡ ንላዕሊ ዝቐጸለ  stream ጥራይ እዩ።",
+      "streak": "{{count}} ሰሙን ተኸታታሊ",
+      "bestStreak": "ዝበለጸ ተኸታታሊ {{count}} ሰሙናት",
+      "hours": "{{hours}} ብቁዕ ሰዓታት",
+      "minutes": "{{count}} ደቒቕ",
+      "viewers": "{{count}} ተመልከቲ",
+      "viewCards": "ካርድታት ርአይ",
+      "cardsTitle": "ካርድታት ሰብስቢ",
+      "locked": "ተዓጽዩ",
+      "earnedOn": "ዝረኸብካዮ {{date}}",
+      "recentTitle": "ቅርብቲ ጸወታታት",
+      "notCounted": "ኣይተቘጸረን",
+      "noStreams": "XP ንምርካብ ናይ live ጸወታ ጀምር።",
+      "card": {
+        "first-light": {
+          "name": "ቀዳመይቲ ብርሃን",
+          "hint": "ቀዳመይቲ ብቁዕ ጸወታኻ ዛዝም።"
+        },
+        "marathon": {
+          "name": "ማራቶን",
+          "hint": "ኣብ ሓደ ጸወታ 2 ሰዓት ጸወታ።"
+        },
+        "night-owl": {
+          "name": "መዓልቲ ጸልማት",
+          "hint": "መወዳእታ ጸወታ ኣብ መንጎ 12 ሰዓት ለይቲን 5 ሰዓት ጽባሕን።"
+        },
+        "regular": {
+          "name": "ወትራዊ",
+          "hint": "ኣብ 4 ሰሙናት ተኸታታሊ ጸወታ።"
+        },
+        "iron-streak": {
+          "name": "ብረታዊ ተኸታታሊ",
+          "hint": "ኣብ 12 ሰሙናት ተኸታታሊ ጸወታ።"
+        },
+        "crowd": {
+          "name": "ህዝቢ",
+          "hint": "ኣብ ሓደ እዋን 10 ሰባት ይርእዩ።"
+        },
+        "century": {
+          "name": "ሚእቲ",
+          "hint": "ኣብ ኣየር 100 ሰዓታት ብቕዓት ይረክብ ።"
+        },
+        "legend": {
+          "name": "ታሪኽ",
+          "hint": "ደረጃ 10 ይበጽሕ ።"
+        }
+      }
+    }
   },
   "errors": {
     "sponsorshipUnavailable": "ናጻ ልውውጣት ብወገንና ጠጠው ኢሎም ኣለዉ፣ ኣብ ዋሌትካ ኣይኮነን። በጃኻ ድሕሪ ቁሩብ እንደገና ፈትን።",

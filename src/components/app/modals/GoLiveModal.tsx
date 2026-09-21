@@ -47,6 +47,7 @@ import { createLogger } from '@/lib/logger';
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub/core';
 import { useAuth } from '@/contexts/AuthContext';
+import { useStreamerProgress } from '@/hooks/use-streamer-progress';
 import { hlsUrlFor } from '@/lib/live-ingest';
 
 // The WebRTC broadcaster pulls in getUserMedia + peer-connection code that
@@ -539,6 +540,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
 
   /** Published plans only — an unpublished plan gates a stream nobody can open. */
   const { planIds: myPlanIds } = useCreatorPlansLite(walletAddress);
+  const { data: streamerProgress } = useStreamerProgress(walletAddress);
 
   // Priced by the server and only for sponsored sessions; a null quote means
   // "could not price it" and is shown as free rather than as a blocker.
@@ -1243,6 +1245,23 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
         >
           {step === 'setup' ? (
             <div className="space-y-4 pb-4">
+              {/* Where this broadcast lands on the streamer ladder, so the
+                  ten-minute / one-viewer rule is in front of the creator
+                  before they press Start rather than after the bar did not
+                  move. */}
+              {streamerProgress && (
+                <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
+                  <p className="text-xs text-white/90">
+                    {t('live.progress.level', { level: streamerProgress.level })}
+                    <span className="text-white/40"> · </span>
+                    {t('live.progress.toNext', {
+                      minutes: Math.max(0, streamerProgress.nextLevelXp - streamerProgress.xp),
+                      level: streamerProgress.level + 1,
+                    })}
+                  </p>
+                  <p className="mt-0.5 text-[11px] text-zinc-500">{t('live.progress.rule')}</p>
+                </div>
+              )}
               <div className="space-y-2">
                 <label className="text-sm text-zinc-400">{t('goLive.howToStream')}</label>
                 <div className={cn('grid gap-2', canShareScreen ? 'grid-cols-3' : 'grid-cols-2')}>
