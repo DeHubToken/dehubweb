@@ -1,11 +1,4 @@
 {
-  "live": {
-    "chatJoined": "се придружио/ла",
-    "chatSentGift": "послао/ла",
-    "progress": {
-      "xp": "{{xp}} XP"
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Бесплатне трансакције су паузиране на нашој страни, не у вашем новчанику. Покушајте поново ускоро.",
     "gasSponsorshipFailed": "Ову трансакцију није било могуће покрити. Покушајте поново за тренутак."
@@ -111,6 +104,7 @@
     "bio": "Биографија",
     "bioPlaceholder": "Реците нешто о себи...",
     "socialLinks": "Друштвени линкови",
+    "socialFollowersPlaceholder": "npr. 12500",
     "profileUpdated": "Профил успешно ажуриран",
     "failedLoadProfile": "Учитавање профила неуспешно",
     "imageTooLarge5": "Слика мора бити мања од 5MB",
@@ -363,8 +357,7 @@
       "unavailable": "Стримовање са кодера тренутно није доступно на вашем налогу.",
       "serverCopied": "Сервер је копиран",
       "keyCopied": "Кључ за стрим је копиран"
-    },
-    "socialFollowersPlaceholder": "npr. 12500"
+    }
   },
   "common": {
     "save": "Сачувај",
@@ -1047,10 +1040,6 @@
     "returnHome": "Назад на почетну"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Ова објава није доступна",
-      "commentUnavailable": "Овај коментар више није доступан"
-    },
     "back": "Назад",
     "usernameAvailable": "Корисничко име је доступно!",
     "signUpToClaim": "Региструјте се и преузмите га",
@@ -1066,7 +1055,11 @@
     "followers": "Пратиоци",
     "following": "Праћење",
     "joined": "Joined",
-    "loginDescription": "Пријавите се за преглед и управљање профилом."
+    "loginDescription": "Пријавите се за преглед и управљање профилом.",
+    "replyThread": {
+      "postUnavailable": "Ова објава није доступна",
+      "commentUnavailable": "Овај коментар више није доступан"
+    }
   },
   "tv": {
     "title": "ТВ"
@@ -2021,6 +2014,13 @@
     "neon": "Неон",
     "blur": "Замућење",
     "pixelate": "Пикселизација"
+  },
+  "live": {
+    "chatJoined": "се придружио/ла",
+    "chatSentGift": "послао/ла",
+    "progress": {
+      "xp": "{{xp}} XP"
+    }
   },
   "goLive": {
     "goLive": "Идите у живо",

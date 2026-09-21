@@ -105,6 +105,9 @@
     "bio": "Biografia",
     "bioPlaceholder": "Explica'ns sobre tu...",
     "socialLinks": "Enllaços socials",
+    "socialFollowers": "Seguidors a {{platform}}",
+    "socialFollowersHint": "Es mostra al teu perfil com a part del teu abast total. Introdueix el número tu mateix: no el llegim des de la plataforma.",
+    "socialFollowersPlaceholder": "p. ex. 12500",
     "profileUpdated": "Perfil actualitzat correctament",
     "failedLoadProfile": "Error en carregar les dades del perfil",
     "imageTooLarge5": "La imatge ha de ser inferior a 5MB",
@@ -455,10 +458,7 @@
       "unavailable": "La transmissió des d'un codificador no està disponible al teu compte ara mateix.",
       "serverCopied": "Servidor copiat",
       "keyCopied": "S'ha copiat la clau del flux"
-    },
-    "socialFollowers": "Seguidors a {{platform}}",
-    "socialFollowersHint": "Es mostra al teu perfil com a part del teu abast total. Introdueix el número tu mateix: no el llegim des de la plataforma.",
-    "socialFollowersPlaceholder": "p. ex. 12500"
+    }
   },
   "common": {
     "save": "Desar",
@@ -1233,10 +1233,6 @@
     "returnHome": "Tornar a l'inici"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Aquesta publicació no està disponible",
-      "commentUnavailable": "Aquest comentari ja no està disponible"
-    },
     "back": "Enrere",
     "usernameAvailable": "Nom d'usuari disponible!",
     "signUpToClaim": "Registra't avui per reclamar",
@@ -1252,12 +1248,16 @@
     "followers": "Seguidors",
     "following": "Seguint",
     "joined": "Unit",
-    "loginDescription": "Inicia sessió per veure i gestionar el teu perfil.",
     "reach": {
       "total": "Abast total",
       "breakdownTitle": "D'on ve aquest abast",
       "dehubFollowers": "Seguidors de DeHub",
       "selfReported": "El creador introdueix els recomptes de seguidors socials."
+    },
+    "loginDescription": "Inicia sessió per veure i gestionar el teu perfil.",
+    "replyThread": {
+      "postUnavailable": "Aquesta publicació no està disponible",
+      "commentUnavailable": "Aquest comentari ja no està disponible"
     },
     "tabs": {
       "playlists": "Llista de reproducció"
@@ -1294,6 +1294,7 @@
     "amountUsd": "Quantitat (USD)",
     "customAmount": "Quantitat personalitzada",
     "minPurchase": "La compra mínima és de $5",
+    "minDhbPurchase": "La compra mínima de DHB és de $ 0.50",
     "youPay": "Tu pagues",
     "youReceive": "Tu reps (est.)",
     "feeNote": "Comissió de targeta ~3,6% i una reserva de xarxa del 0,5% es dedueixen d'això. La reserva se't envia com a ETH per a gas.",
@@ -1327,7 +1328,6 @@
     "badgeDiscount": "Titular {{tier}} — {{percent}}% de descompte",
     "otherTokens": "Altres tokens",
     "otherTokensDesc": "Compra ETH o USDC a Base amb la teva targeta",
-    "minDhbPurchase": "La compra mínima de DHB és de $ 0.50",
     "shareToFeed": "Comparteix al meu canal",
     "sharePostTemplate": "Acabo d'afegir {{amount}} $DHB a la meva pila a DeHub. Construir amb la comunitat. #DeHub #DHB",
     "success": {
@@ -1405,14 +1405,6 @@
     "failedSubmit": "Error en enviar la sol·licitud. Si us plau, torna-ho a provar."
   },
   "loginModal": {
-    "migrateNoOldAccount": "No hi ha cap compte de DeHub anterior en aquest inici de sessió, així que no hi ha res per transferir. Configura un compte nou en el seu lloc.",
-    "migrateInstead": "Transferir el compte antic en el seu lloc",
-    "setUpNewAccount": "Configurar un compte nou",
-    "createNewInstead": "Crear un compte nou en el seu lloc",
-    "migrateAccount": "Migrar compte",
-    "importExternalWallet": "Importar cartera externa",
-    "migrateIntentHint": "Inicia sessió amb qualsevol opció a continuació. Si coincideix amb un compte de DeHub anterior, transferiràs la seva cartera, nom d'usuari i saldo.",
-    "importIntentHint": "Inicia sessió amb qualsevol opció a continuació, després enganxa la frase de recuperació o la clau privada de la cartera que vulguis utilitzar.",
     "unlockBiometricContinue": "Desbloqueja la teva cartera amb l'empremta digital o la cara per continuar.",
     "unlockBiometricSignIn": "Desbloqueja la teva cartera amb la teva empremta digital o cara per iniciar la sessió.",
     "unlockPasswordContinue": "Introdueix la contrasenya de la teva cartera per continuar.",
@@ -1425,6 +1417,14 @@
     "migrateUnmatchedDetail": "No existeix cap perfil en aquesta adreça de moneder. Si has tornat a iniciar la sessió, torna enrere i utilitza l'inici de sessió amb el qual t'has registrat.",
     "migrateGoBack": "Enrere",
     "migrateContinueAnyway": "Crea un compte nou de totes maneres",
+    "migrateNoOldAccount": "No hi ha cap compte de DeHub anterior en aquest inici de sessió, així que no hi ha res per transferir. Configura un compte nou en el seu lloc.",
+    "migrateInstead": "Transferir el compte antic en el seu lloc",
+    "setUpNewAccount": "Configurar un compte nou",
+    "createNewInstead": "Crear un compte nou en el seu lloc",
+    "migrateAccount": "Migrar compte",
+    "importExternalWallet": "Importar cartera externa",
+    "migrateIntentHint": "Inicia sessió amb qualsevol opció a continuació. Si coincideix amb un compte de DeHub anterior, transferiràs la seva cartera, nom d'usuari i saldo.",
+    "importIntentHint": "Inicia sessió amb qualsevol opció a continuació, després enganxa la frase de recuperació o la clau privada de la cartera que vulguis utilitzar.",
     "title": "Iniciar sessió",
     "addProfileTitle": "Afegeix un perfil",
     "continueEmail": "Continuar amb correu",
@@ -2263,7 +2263,6 @@
     "noStages": "Cap Stage teu no està actiu ni programat ara mateix.",
     "noFlaresLeft": "No queden Senyals de Flaix aquest cicle",
     "spentFor": "{{power}} corrent durant {{minutes}} minuts",
-    "goldenHourStarted": "Golden Hour en marxa durant {{minutes}} minuts: tot el que publiquis ara compta el doble",
     "teamUp": {
       "title": "Uneix-te a un equip",
       "subtitle": "Combina el poder de la cartera amb fins a set persones més. Tothom porta la insígnia que el teu total desbloqueja.",
@@ -2324,7 +2323,8 @@
       "updated": "Equip actualitzat",
       "updateFailed": "No s'ha pogut actualitzar aquest equip",
       "openToEveryone": "Team up està obert a tots els comptes; els equips privats aproven qui s'hi uneix."
-    }
+    },
+    "goldenHourStarted": "Golden Hour en marxa durant {{minutes}} minuts: tot el que publiquis ara compta el doble"
   },
   "work": {
     "budgetExhausted": "El pressupost d'aquesta recompensa està compromès del tot.",
@@ -5068,7 +5068,26 @@
     "reviewDescriptionPlaceholder": "Explica alguna cosa sobre aquesta publicació (opcional)",
     "reviewLiveWarning": "Aquest enllaç és una transmissió en directe. Espera fins que acabi i importa l'enregistrament.",
     "reviewCancel": "Cancel·la",
-    "reviewConfirm": "Importar"
+    "reviewConfirm": "Importar",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "URL del canal RSS del podcast",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Obtén el canal d'informació",
+      "fetching": "S'està obtenint el feed...",
+      "showBy": "Per {{author}}",
+      "episodes": "{{count}} episodis",
+      "selectAll": "Selecciona-ho tot",
+      "alreadyImported": "Ja s'ha importat",
+      "ownership": "Tinc aquest contingut o tinc el permís del titular dels drets per publicar-lo a DeHub.",
+      "importSelected": "Importa {{count}} episodis",
+      "importing": "S'està important...",
+      "done": "En cua",
+      "failed": "Ha fallat",
+      "emptyFeed": "No hem pogut trobar cap episodi en aquest canal.",
+      "badFeed": "Aquest enllaç no sembla un canal de podcast.",
+      "tooMany": "Importa fins a 20 episodis a la vegada."
+    }
   },
   "banned": {
     "title": "El teu compte està bloquejat",

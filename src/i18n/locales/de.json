@@ -105,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Erzähle uns von dir...",
     "socialLinks": "Soziale Links",
+    "socialFollowers": "Follower auf {{platform}}",
+    "socialFollowersHint": "Wird in deinem Profil als Teil deiner Gesamtreichweite angezeigt. Geben Sie die Nummer selbst ein — wir lesen sie nicht von der Plattform ab.",
+    "socialFollowersPlaceholder": "z.B. 12500",
     "profileUpdated": "Profil erfolgreich aktualisiert",
     "failedLoadProfile": "Profildaten konnten nicht geladen werden",
     "imageTooLarge5": "Bild muss kleiner als 5 MB sein",
@@ -455,10 +458,7 @@
       "unavailable": "Streaming von einem Encoder ist derzeit nicht für Ihr Konto verfügbar.",
       "serverCopied": "Server kopiert",
       "keyCopied": "Stream-Schlüssel kopiert"
-    },
-    "socialFollowers": "Follower auf {{platform}}",
-    "socialFollowersHint": "Wird in deinem Profil als Teil deiner Gesamtreichweite angezeigt. Geben Sie die Nummer selbst ein — wir lesen sie nicht von der Plattform ab.",
-    "socialFollowersPlaceholder": "z.B. 12500"
+    }
   },
   "common": {
     "save": "Speichern",
@@ -1237,10 +1237,6 @@
     "returnHome": "Zur Startseite"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Dieser Beitrag ist nicht verfügbar",
-      "commentUnavailable": "Dieser Kommentar ist nicht mehr verfügbar"
-    },
     "back": "Zurück",
     "usernameAvailable": "Benutzername verfügbar!",
     "signUpToClaim": "Registriere dich, um ihn zu beanspruchen",
@@ -1256,12 +1252,16 @@
     "followers": "Follower",
     "following": "Folge ich",
     "joined": "Beigetreten",
-    "loginDescription": "Melde dich an, um dein Profil zu sehen und zu verwalten.",
     "reach": {
       "total": "Gesamtreichweite",
       "breakdownTitle": "Woher diese Reichweite kommt",
       "dehubFollowers": "DeHub-Follower",
       "selfReported": "Die Anzahl der sozialen Follower wird vom Ersteller eingegeben."
+    },
+    "loginDescription": "Melde dich an, um dein Profil zu sehen und zu verwalten.",
+    "replyThread": {
+      "postUnavailable": "Dieser Beitrag ist nicht verfügbar",
+      "commentUnavailable": "Dieser Kommentar ist nicht mehr verfügbar"
     },
     "tabs": {
       "playlists": "Playlisten"
@@ -1298,6 +1298,7 @@
     "amountUsd": "Betrag (USD)",
     "customAmount": "Benutzerdefinierter Betrag",
     "minPurchase": "Mindestkauf 5$",
+    "minDhbPurchase": "Der Mindestkauf von DHB beträgt 0,50 $",
     "youPay": "Du zahlst",
     "youReceive": "Du erhältst (ca.)",
     "feeNote": "Kartengebühr ~3,6% und eine 0,5% Netzwerkreserve werden davon abgezogen. Die Reserve wird dir als ETH für Gas gesendet.",
@@ -1331,7 +1332,6 @@
     "badgeDiscount": "{{tier}}-Inhaber – {{percent}} % Rabatt",
     "otherTokens": "Andere Token",
     "otherTokensDesc": "ETH oder USDC auf Base mit deiner Karte kaufen",
-    "minDhbPurchase": "Der Mindestkauf von DHB beträgt 0,50 $",
     "shareToFeed": "In meinem Feed teilen",
     "sharePostTemplate": "Habe gerade {{amount}} $DHB zu meinem Stack auf DeHub hinzugefügt. Bauen Sie mit der Gemeinschaft. #DeHub #DHB",
     "success": {
@@ -1409,14 +1409,6 @@
     "failedSubmit": "Einreichung fehlgeschlagen. Bitte erneut versuchen."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Es gibt kein früheres DeHub-Konto bei diesem Login, daher gibt es nichts, was Sie mitbringen können. Richten Sie stattdessen ein neues Konto ein.",
-    "migrateInstead": "Bringen Sie stattdessen das alte Konto mit",
-    "setUpNewAccount": "Ein neues Konto einrichten",
-    "createNewInstead": "Stattdessen ein neues Konto erstellen",
-    "migrateAccount": "Konto migrieren",
-    "importExternalWallet": "Externes Wallet importieren",
-    "migrateIntentHint": "Melden Sie sich mit einer der folgenden Optionen an. Wenn es mit einem früheren DeHub-Konto übereinstimmt, bringen Sie dessen Wallet, Benutzernamen und Guthaben mit.",
-    "importIntentHint": "Melden Sie sich mit einer der folgenden Optionen an und fügen Sie dann die Wiederherstellungsphrase oder den privaten Schlüssel der Brieftasche ein, die Sie verwenden möchten.",
     "unlockBiometricContinue": "Entsperren Sie Ihre Brieftasche mit Ihrem Fingerabdruck oder Gesicht, um fortzufahren.",
     "unlockBiometricSignIn": "Entsperren Sie Ihre Brieftasche mit Ihrem Fingerabdruck oder Gesicht, um sich anzumelden.",
     "unlockPasswordContinue": "Geben Sie Ihr Wallet-Passwort ein, um fortzufahren.",
@@ -1429,6 +1421,14 @@
     "migrateUnmatchedDetail": "Unter dieser Wallet-Adresse existiert kein Profil. Wenn Sie sich erneut angemeldet haben, gehen Sie zurück und verwenden Sie stattdessen das Login, mit dem Sie sich angemeldet haben.",
     "migrateGoBack": "Zurück",
     "migrateContinueAnyway": "Trotzdem ein neues Konto erstellen",
+    "migrateNoOldAccount": "Es gibt kein früheres DeHub-Konto bei diesem Login, daher gibt es nichts, was Sie mitbringen können. Richten Sie stattdessen ein neues Konto ein.",
+    "migrateInstead": "Bringen Sie stattdessen das alte Konto mit",
+    "setUpNewAccount": "Ein neues Konto einrichten",
+    "createNewInstead": "Stattdessen ein neues Konto erstellen",
+    "migrateAccount": "Konto migrieren",
+    "importExternalWallet": "Externes Wallet importieren",
+    "migrateIntentHint": "Melden Sie sich mit einer der folgenden Optionen an. Wenn es mit einem früheren DeHub-Konto übereinstimmt, bringen Sie dessen Wallet, Benutzernamen und Guthaben mit.",
+    "importIntentHint": "Melden Sie sich mit einer der folgenden Optionen an und fügen Sie dann die Wiederherstellungsphrase oder den privaten Schlüssel der Brieftasche ein, die Sie verwenden möchten.",
     "title": "Anmelden",
     "addProfileTitle": "Profil hinzufügen",
     "continueEmail": "Weiter mit E-Mail",
@@ -2316,7 +2316,6 @@
     "noStages": "Keine deiner Stages ist gerade live oder geplant.",
     "noFlaresLeft": "Keine Signalraketen mehr in diesem Zyklus",
     "spentFor": "{{power}} läuft für {{minutes}} Minuten",
-    "goldenHourStarted": "Golden Hour läuft für {{minutes}} Minuten – alles, was du jetzt postest, zählt doppelt",
     "teamUp": {
       "title": "Zusammenarbeiten",
       "subtitle": "Bündeln Sie die Wallet-Power mit bis zu sieben anderen. Jeder trägt das Abzeichen, das Ihre Gesamtsumme freischaltet.",
@@ -2377,7 +2376,8 @@
       "updated": "Team aktualisiert",
       "updateFailed": "Konnte dieses Team nicht aktualisieren",
       "openToEveryone": "Team up steht jedem Konto offen; private Teams genehmigen, wer beitritt."
-    }
+    },
+    "goldenHourStarted": "Golden Hour läuft für {{minutes}} Minuten – alles, was du jetzt postest, zählt doppelt"
   },
   "work": {
     "budgetExhausted": "Das Budget dieser Prämie ist vollständig vergeben.",
@@ -5181,7 +5181,26 @@
     "reviewDescriptionPlaceholder": "Sagen Sie etwas über diesen Beitrag (optional)",
     "reviewLiveWarning": "Dieser Link ist ein Live-Stream. Warten Sie, bis es endet, und importieren Sie stattdessen die Aufnahme.",
     "reviewCancel": "Abbrechen",
-    "reviewConfirm": "Import"
+    "reviewConfirm": "Import",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podcast-RSS-Feed-URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Feed abrufen",
+      "fetching": "Feed wird abgerufen...",
+      "showBy": "Von {{author}}",
+      "episodes": "{{count}} Episoden",
+      "selectAll": "Alle auswählen",
+      "alreadyImported": "Bereits importiert",
+      "ownership": "Ich besitze diesen Inhalt oder habe die Erlaubnis des Rechteinhabers, ihn auf DeHub zu veröffentlichen.",
+      "importSelected": "{{count}} -Episoden importieren",
+      "importing": "Wird importiert...",
+      "done": "In Warteschlange",
+      "failed": "Fehlgeschlagen",
+      "emptyFeed": "Wir konnten keine Episoden in diesem Feed finden.",
+      "badFeed": "Dieser Link sieht nicht wie ein Podcast-Feed aus.",
+      "tooMany": "Importieren Sie bis zu 20 Episoden gleichzeitig."
+    }
   },
   "banned": {
     "title": "Dein Konto ist gesperrt",

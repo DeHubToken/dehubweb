@@ -1,59 +1,4 @@
 {
-  "live": {
-    "chatJoined": "makaate",
-    "chatSentGift": "erge",
-    "progress": {
-      "title": "Sadarkaa Streamer",
-      "xp": "{{xp}} XP",
-      "toNext": "{{minutes}} daqiiqaawwan ulaagaa dabalataa sadarkaa {{level}}",
-      "rule": "Yoo xiqqaate daawwataa tokko waliin daqiiqaa kudhan fi isaa ol kan fiigan qofti gara sadarkaa keetii lakkaa&#39;ama.",
-      "streak": "{{count}} torbee walitti aansuun",
-      "bestStreak": "Tartiiba gaarii {{count}} torban",
-      "hours": "{{hours}} sa&#39;aatii ulaagaa guutuu",
-      "viewers": "{{count}} daawwattoota",
-      "viewCards": "Kaardii ilaali",
-      "cardsTitle": "Kaardii walitti qabamuu danda’u",
-      "locked": "Cufamee jira",
-      "earnedOn": "{{date}} argate.",
-      "recentTitle": "Dhangala&#39;aa dhiheenya kanaa",
-      "notCounted": "Hin lakkaa&#39;amne",
-      "noStreams": "XP argachuu jalqabuuf live deemaa.",
-      "card": {
-        "first-light": {
-          "name": "Macaafni jalqabaa",
-          "hint": "Dhangala&#39;aa kee isa jalqabaa kan lakkaa&#39;amu xumuri."
-        },
-        "marathon": {
-          "name": "Maraatoonii",
-          "hint": "Kutaa tokko keessatti sa&#39;aatii lamaaf tamsaasu."
-        },
-        "night-owl": {
-          "name": "Owwii halkanii",
-          "hint": "Halkan walakkaa hanga ganama sa’aatii shanii gidduutti sulula tokko xumuri."
-        },
-        "regular": {
-          "name": "Idilee",
-          "hint": "Torban afur walitti aansuun tamsa&#39;aa."
-        },
-        "iron-streak": {
-          "name": "Aduu qola",
-          "hint": "Torban kudha lama walitti aansuun dhangalaasaa."
-        },
-        "crowd": {
-          "name": "Tuuta",
-          "hint": "Warra daawwattoota 10 qabaa isii wajjin."
-        },
-        "century": {
-          "name": "Gooftummaa",
-          "hint": "Sa'aatii qulqullinaa 100 irratti ga'i."
-        },
-        "legend": {
-          "name": "Aduu",
-          "hint": "Lakkofsa 10 gahi."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Daldalli bilisaa karaa keenyaan dhaabbateera, mit'aa keessan irratti miti. Yeroo gabaabaa booda irra deebi'aa yaalaa.",
     "gasSponsorshipFailed": "Baasii daldala kanaa kaffaluu hin dandeenye. Yeroo gabaabaa booda yaalaa."
@@ -160,6 +105,9 @@
     "bio": "Waa'ee",
     "bioPlaceholder": "Waa'ee kee nutti himi...",
     "socialLinks": "Liinkii Hawaasaa",
+    "socialFollowers": "Hordoftoota irratti {{platform}}",
+    "socialFollowersHint": "Gama profayila keetiin akka walii galatti argamuuf. Lakkofsa ofii kee galchi — isaa platform irraa hin dubbisnu.",
+    "socialFollowersPlaceholder": "fknf 12500",
     "profileUpdated": "Piroofaayiliin milkaa'inaan haaromfame",
     "failedLoadProfile": "Piroofaayilii fe'uun hin danda'amne",
     "imageTooLarge5": "Suuraan 5MB gadi ta'uu qaba",
@@ -496,10 +444,7 @@
       "unavailable": "Dhangalaasuun encoder irraa yeroo ammaa kana maamiloota keessaniif hin danda’amu.",
       "serverCopied": "Sarvariin waraabame",
       "keyCopied": "Furtuun yaa&#39;aa waraabame"
-    },
-    "socialFollowers": "Hordoftoota irratti {{platform}}",
-    "socialFollowersHint": "Gama profayila keetiin akka walii galatti argamuuf. Lakkofsa ofii kee galchi — isaa platform irraa hin dubbisnu.",
-    "socialFollowersPlaceholder": "fknf 12500"
+    }
   },
   "common": {
     "save": "Olchi",
@@ -1289,10 +1234,6 @@
     "returnHome": "Manatti deebi'i"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Barreeffamni kun hin argamu",
-      "commentUnavailable": "Yaadni kun kana booda hin jiru"
-    },
     "back": "Duuba",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Sign up today to claim",
@@ -1308,12 +1249,16 @@
     "followers": "Hordoftoonni",
     "following": "Hordofaa",
     "joined": "Joined",
-    "loginDescription": "Piroofaayilii ilaaluuf fi bulchuuf seeni.",
     "reach": {
       "total": "Waliigala qaqqabummaa",
       "breakdownTitle": "Eessaa dhaqqabummaan kun dhufa",
       "dehubFollowers": "Hordoftoota DeHub",
       "selfReported": "Lakkoofsi hordoftoota hawaasummaa uumaan galcha."
+    },
+    "loginDescription": "Piroofaayilii ilaaluuf fi bulchuuf seeni.",
+    "replyThread": {
+      "postUnavailable": "Barreeffamni kun hin argamu",
+      "commentUnavailable": "Yaadni kun kana booda hin jiru"
     },
     "tabs": {
       "playlists": "Tarreewwan tapha"
@@ -1330,6 +1275,7 @@
     "amountUsd": "Amount (USD)",
     "customAmount": "Custom amount",
     "minPurchase": "Minimum purchase is $5",
+    "minDhbPurchase": "Bittaa DHB xiqqaan $0.50 dha",
     "youPay": "You pay",
     "youReceive": "You receive (est.)",
     "feeNote": "Kaffaltiin kaardii ~3.6% fi kuufamni networkii %0.5 kana irraa dhufa. Kuusaan gaaziidhaaf akka ETH tti isiniif ergama.",
@@ -1363,7 +1309,6 @@
     "badgeDiscount": "Qabataa {{tier}} — hir'isa {{percent}}%",
     "otherTokens": "Tookeniiwwan biroo",
     "otherTokensDesc": "Kaardii keetiin Base irratti ETH ykn USDC bitadhu",
-    "minDhbPurchase": "Bittaa DHB xiqqaan $0.50 dha",
     "shareToFeed": "Share gochuun feed kootti",
     "sharePostTemplate": "Reefu {{amount}} $DHB gara tuullaa koo DeHub irratti dabaleera. Hawaasa waliin ijaaruu. #DeHub #DHB",
     "success": {
@@ -1441,14 +1386,6 @@
     "failedSubmit": "Failed to submit application. Please try again."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Seensa kana irratti akkaawuntii DeHub duraanii hin jiru, kanaaf wanti fidu hin jiru. Bakka isaa akkaawuntii haaraa saagi.",
-    "migrateInstead": "Bakka isaa akkaawuntii durii sana fidaa",
-    "setUpNewAccount": "Akkaawuntii haaraa qopheessaa",
-    "createNewInstead": "Bakka isaa akkaawuntii haaraa uumi",
-    "migrateAccount": "Akkaawuntii godaansi",
-    "importExternalWallet": "Boorsaa alaa galchuu",
-    "migrateIntentHint": "Filannoo armaan gadii kamiinuu galmaa&#39;aa. Yoo akkaawuntii DeHub duraanii wajjin walsimu ta&#39;e boorsaa, maqaa fayyadamaa fi madaallii isaa irratti fidda.",
-    "importIntentHint": "Filannoo armaan gadii kamiinuu galmaa&#39;i, sana booda gaalee deebisuu ykn furtuu dhuunfaa boorsaa fayyadamuu barbaaddu maxxansi.",
     "unlockBiometricContinue": "Itti fufuuf ashaaraa qubaa ykn fuula keessaniin boorsaa keessan banaa.",
     "unlockBiometricSignIn": "Boorsaa keessan ashaaraa qubaa ykn fuula keessaniin banaa seenuuf.",
     "unlockPasswordContinue": "Itti fufuuf jecha icciitii boorsaa keessan galchaa.",
@@ -1461,6 +1398,14 @@
     "migrateUnmatchedDetail": "Teessoo boorsaa kana irratti piroofaayilli tokkollee hin jiru. Yoo deebitee galchaa turte ta&#39;e, deebi&#39;ii bakka isaa galmee ittiin galmoofte fayyadami.",
     "migrateGoBack": "Duubatti deebi&#39;i",
     "migrateContinueAnyway": "Akkanumatti akkaawuntii haaraa uumi",
+    "migrateNoOldAccount": "Seensa kana irratti akkaawuntii DeHub duraanii hin jiru, kanaaf wanti fidu hin jiru. Bakka isaa akkaawuntii haaraa saagi.",
+    "migrateInstead": "Bakka isaa akkaawuntii durii sana fidaa",
+    "setUpNewAccount": "Akkaawuntii haaraa qopheessaa",
+    "createNewInstead": "Bakka isaa akkaawuntii haaraa uumi",
+    "migrateAccount": "Akkaawuntii godaansi",
+    "importExternalWallet": "Boorsaa alaa galchuu",
+    "migrateIntentHint": "Filannoo armaan gadii kamiinuu galmaa&#39;aa. Yoo akkaawuntii DeHub duraanii wajjin walsimu ta&#39;e boorsaa, maqaa fayyadamaa fi madaallii isaa irratti fidda.",
+    "importIntentHint": "Filannoo armaan gadii kamiinuu galmaa&#39;i, sana booda gaalee deebisuu ykn furtuu dhuunfaa boorsaa fayyadamuu barbaaddu maxxansi.",
     "title": "Seeni",
     "addProfileTitle": "Profaayilii dabali",
     "continueEmail": "Imeeliin Itti Fufi",
@@ -2157,13 +2102,13 @@
       "thisYear": "Bara kana",
       "allTime": "Yeroo guutuu",
       "newMembers": "Miseensota haaraa",
+      "viewMembers": "Miseensota ilaali",
+      "openNewMembers": "Tarree miseensota haaraa banaa",
       "chartMembers": "Miseensota yeroo keessa",
       "chartActive": "Namoota sochii irra jiran",
       "growth": "+{{percent}}% ji'a kana",
       "growthTerm": "Guddina",
-      "recordingSince": "{{date}} irraa kaasee galmaa'aa jira",
-      "viewMembers": "Miseensota ilaali",
-      "openNewMembers": "Tarree miseensota haaraa banaa"
+      "recordingSince": "{{date}} irraa kaasee galmaa'aa jira"
     },
     "title": "Istaatistiksii",
     "subtitle": "Odeeffannoo madda banaa yeroo dhugaa",
@@ -2348,7 +2293,6 @@
     "noStages": "Stage kee irraa ammaaf hin jiraatu ykn hin qabamne.",
     "noFlaresLeft": "Signal Flare kana irraa hin hafne",
     "spentFor": "{{power}} daqiiqaa {{minutes}}f fiigala",
-    "goldenHourStarted": "Sa'aatii Warqee {{minutes}} daqiiqaa fiigachaa jira — amma wanti hundumaa maxxansituu lama siif ta'a",
     "teamUp": {
       "title": "Garee waliin ta&#39;aa",
       "subtitle": "Humna boorsaa hanga kanneen biroo torbaa waliin walitti makuu. Namni hundi baajii total keessan unlocks uffatee jira.",
@@ -2409,7 +2353,8 @@
       "updated": "Tarsiimoon ni fooyya'e",
       "updateFailed": "Tarsiimoo sana fooyyessuu hin danda'amne",
       "openToEveryone": "Tarsiimoo walitti qabamuun akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu akaakuu aka"
-    }
+    },
+    "goldenHourStarted": "Sa'aatii Warqee {{minutes}} daqiiqaa fiigachaa jira — amma wanti hundumaa maxxansituu lama siif ta'a"
   },
   "work": {
     "budgetExhausted": "Baajata badhaasa kanaa guutummaatti ramadameera."
@@ -2447,6 +2392,61 @@
     "reactions": "Deebii",
     "reply": "Deebisi",
     "loginDescription": "Odeeffannoo ilaaluuf fi uumuuf seeni."
+  },
+  "live": {
+    "chatJoined": "makaate",
+    "chatSentGift": "erge",
+    "progress": {
+      "title": "Sadarkaa Streamer",
+      "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} daqiiqaawwan ulaagaa dabalataa sadarkaa {{level}}",
+      "rule": "Yoo xiqqaate daawwataa tokko waliin daqiiqaa kudhan fi isaa ol kan fiigan qofti gara sadarkaa keetii lakkaa&#39;ama.",
+      "streak": "{{count}} torbee walitti aansuun",
+      "bestStreak": "Tartiiba gaarii {{count}} torban",
+      "hours": "{{hours}} sa&#39;aatii ulaagaa guutuu",
+      "viewers": "{{count}} daawwattoota",
+      "viewCards": "Kaardii ilaali",
+      "cardsTitle": "Kaardii walitti qabamuu danda’u",
+      "locked": "Cufamee jira",
+      "earnedOn": "{{date}} argate.",
+      "recentTitle": "Dhangala&#39;aa dhiheenya kanaa",
+      "notCounted": "Hin lakkaa&#39;amne",
+      "noStreams": "XP argachuu jalqabuuf live deemaa.",
+      "card": {
+        "first-light": {
+          "name": "Macaafni jalqabaa",
+          "hint": "Dhangala&#39;aa kee isa jalqabaa kan lakkaa&#39;amu xumuri."
+        },
+        "marathon": {
+          "name": "Maraatoonii",
+          "hint": "Kutaa tokko keessatti sa&#39;aatii lamaaf tamsaasu."
+        },
+        "night-owl": {
+          "name": "Owwii halkanii",
+          "hint": "Halkan walakkaa hanga ganama sa’aatii shanii gidduutti sulula tokko xumuri."
+        },
+        "regular": {
+          "name": "Idilee",
+          "hint": "Torban afur walitti aansuun tamsa&#39;aa."
+        },
+        "iron-streak": {
+          "name": "Aduu qola",
+          "hint": "Torban kudha lama walitti aansuun dhangalaasaa."
+        },
+        "crowd": {
+          "name": "Tuuta",
+          "hint": "Warra daawwattoota 10 qabaa isii wajjin."
+        },
+        "century": {
+          "name": "Gooftummaa",
+          "hint": "Sa'aatii qulqullinaa 100 irratti ga'i."
+        },
+        "legend": {
+          "name": "Aduu",
+          "hint": "Lakkofsa 10 gahi."
+        }
+      }
+    }
   },
   "goLive": {
     "goLive": "Go Live",
@@ -2873,7 +2873,26 @@
     "reviewDescriptionPlaceholder": "Waa&#39;ee barreeffama kanaa waa jedhi (optional) .",
     "reviewLiveWarning": "Link sun live stream dha. Hanga xumuramutti eegaa bakka isaa waraabbii galchi.",
     "reviewCancel": "Haquu",
-    "reviewConfirm": "Biyya alaatii galchuu"
+    "reviewConfirm": "Biyya alaatii galchuu",
+    "podcast": {
+      "tab": "Poodkaastii",
+      "feedUrlLabel": "URL nyaata RSS podcast",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Nyaata fidi",
+      "fetching": "Nyaata fiduu...",
+      "showBy": "{{author}} tiin.",
+      "episodes": "{{count}} kutaalee",
+      "selectAll": "Hundaa filadhu",
+      "alreadyImported": "Duraanis kan galfame",
+      "ownership": "Qabiyyee kana ani qaba, ykn DeHub irratti maxxansuuf hayyama abbaa mirgaa qaba.",
+      "importSelected": "Kutaalee {{count}} galchi",
+      "importing": "Galchuu...",
+      "done": "Tarree keessa jira",
+      "failed": "Kufe",
+      "emptyFeed": "Feed sana keessaa kutaa tokkollee argachuu hin dandeenye.",
+      "badFeed": "Link sun nyaata podcast hin fakkaatu.",
+      "tooMany": "Yeroo tokkotti hanga kutaalee 20 galchuu."
+    }
   },
   "banned": {
     "title": "Akkaawuntii keessan dhorkameera",

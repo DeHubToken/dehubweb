@@ -5187,7 +5187,26 @@
     "reviewDescriptionPlaceholder": "Say something about this post (optional)",
     "reviewLiveWarning": "That link is a live stream. Wait until it ends and import the recording instead.",
     "reviewCancel": "Cancel",
-    "reviewConfirm": "Import"
+    "reviewConfirm": "Import",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podcast RSS feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Fetch feed",
+      "fetching": "Fetching feed…",
+      "showBy": "By {{author}}",
+      "episodes": "{{count}} episodes",
+      "selectAll": "Select all",
+      "alreadyImported": "Already imported",
+      "ownership": "I own this content, or have the rights holder's permission to publish it on DeHub.",
+      "importSelected": "Import {{count}} episodes",
+      "importing": "Importing…",
+      "done": "Queued",
+      "failed": "Failed",
+      "emptyFeed": "We could not find any episodes in that feed.",
+      "badFeed": "That link does not look like a podcast feed.",
+      "tooMany": "Import up to 20 episodes at a time."
+    }
   },
   "banned": {
     "title": "Your account is banned",

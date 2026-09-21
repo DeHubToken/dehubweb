@@ -1,20 +1,4 @@
 {
-  "live": {
-    "chatJoined": "ተቀላቀለ",
-    "chatSentGift": "ላከ",
-    "progress": {
-      "xp": "{{xp}} XP",
-      "card": {
-        "century": {
-          "hint": "በአየር ላይ አንድ መቶ የብቃት ሰዓቶች ይድረሱ."
-        },
-        "legend": {
-          "name": "አፈ ታሪክ",
-          "hint": "ደረጃ አስር ይድረሱ."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "ነጻ ግብይቶች በእኛ በኩል ቆመዋል፣ በኪስ ቦርሳዎ ላይ አይደለም። እባክዎ በቅርቡ እንደገና ይሞክሩ።",
     "gasSponsorshipFailed": "ይህ ግብይት መደገፍ አልተቻለም። እባክዎ ከጥቂት ጊዜ በኋላ ይሞክሩ።"
@@ -120,6 +104,9 @@
     "bio": "ባዮ",
     "bioPlaceholder": "ስለ ራስህ ንገረን...",
     "socialLinks": "ማህበራዊ ማገናኛዎች",
+    "socialFollowers": "ተከታዮች በ {{platform}}",
+    "socialFollowersHint": "እንደ አጠቃላይ መድረሻዎ አካል በመገለጫዎ ላይ ይንሸራተቱ ። ቁጥሩን እራስዎ ያስገቡ — ከመድረክ አናነበውም ።",
+    "socialFollowersPlaceholder": "ለምሳሌ 12500",
     "profileUpdated": "መገለጫ በተሳካ ሁኔታ ተዘምኗል",
     "failedLoadProfile": "የመገለጫ መረጃ መጫን አልተሳካም",
     "imageTooLarge5": "ምስል ከ5MB ያነሰ መሆን አለበት",
@@ -454,10 +441,7 @@
       "unavailable": "ከኢንኮደር ዥረት በአሁኑ ጊዜ በእርስዎ መለያ ላይ አይገኝም።",
       "serverCopied": "አገልጋይ ተገለበጠ",
       "keyCopied": "ዥረት ቁልፍ ተገለበጠ"
-    },
-    "socialFollowers": "ተከታዮች በ {{platform}}",
-    "socialFollowersHint": "እንደ አጠቃላይ መድረሻዎ አካል በመገለጫዎ ላይ ይንሸራተቱ ። ቁጥሩን እራስዎ ያስገቡ — ከመድረክ አናነበውም ።",
-    "socialFollowersPlaceholder": "ለምሳሌ 12500"
+    }
   },
   "common": {
     "save": "አስቀምጥ",
@@ -1232,10 +1216,6 @@
     "returnHome": "ወደ መነሻ ተመለስ"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "ይህ ልጥፍ አይገኝም",
-      "commentUnavailable": "ይህ አስተያየት ከአሁን በኋላ አይገኝም"
-    },
     "back": "ተመለስ",
     "usernameAvailable": "የተጠቃሚ ስም ይገኛል!",
     "signUpToClaim": "ለመያዝ ዛሬ ተመዝገብ",
@@ -1251,12 +1231,16 @@
     "followers": "ተከታዮች",
     "following": "የሚከተሏቸው",
     "joined": "Joined",
-    "loginDescription": "መገለጫህን ለማየትና ለማስተዳደር ግባ።",
     "reach": {
       "total": "ጠቅላላ ተደራሽነት",
       "breakdownTitle": "ይህ ተደራሽነት ከየት እንደመጣ",
       "dehubFollowers": "DeHub ተከታዮች",
       "selfReported": "የማኅበራዊ መከታተያ ቁጥሮች በፈጣሪ ይካተታሉ ።"
+    },
+    "loginDescription": "መገለጫህን ለማየትና ለማስተዳደር ግባ።",
+    "replyThread": {
+      "postUnavailable": "ይህ ልጥፍ አይገኝም",
+      "commentUnavailable": "ይህ አስተያየት ከአሁን በኋላ አይገኝም"
     },
     "tabs": {
       "playlists": "አጫዋች ዝርዝሮች"
@@ -1365,14 +1349,6 @@
     "failedSubmit": "ማመልከቻ ማቅረብ አልተሳካም። እባክህ ደግመህ ሞክር።"
   },
   "loginModal": {
-    "migrateNoOldAccount": "በዚህ መግቢያ ላይ ከዚህ በፊት የ DeHub መለያ የለም ፣ ስለሆነም ለማምጣት ምንም ነገር የለም ። በምትኩ አዲስ መለያ ያዘጋጁ.",
-    "migrateInstead": "ይልቅ አሮጌውን መለያ በላይ አምጡ",
-    "setUpNewAccount": "አዲስ መለያ ያዋቅሩ",
-    "createNewInstead": "በምትኩ አዲስ መለያ ይፍጠሩ",
-    "migrateAccount": "የስደተኞች መለያ",
-    "importExternalWallet": "ውጫዊ የኪስ ቦርሳ ያስመጡ",
-    "migrateIntentHint": "ከዚህ በታች ከማንኛውም አማራጭ ጋር ይግቡ ። ከቀድሞ DeHub መለያ ጋር የሚስማማ ከሆነ የኪስ ቦርሳውን ፣ የተጠቃሚ ስሙን እና ሚዛኑን ያመጣል ።",
-    "importIntentHint": "ከዚህ በታች ከማንኛውም አማራጭ ጋር ይግቡ ፣ ከዚያ መጠቀም የሚፈልጉትን የመልሶ ማግኛ ሐረግ ወይም የግል ቁልፍን ይለጥፉ ።",
     "unlockBiometricContinue": "ለመቀጠል ቦርሳዎን በጣት አሻራዎ ወይም ፊትዎ ይክፈቱ ።",
     "unlockBiometricSignIn": "ለመግባት ቦርሳዎን በጣት አሻራዎ ወይም ፊትዎ ይክፈቱ ።",
     "unlockPasswordContinue": "ለመቀጠል የኪስ ቦርሳዎን የይለፍ ቃል ያስገቡ ።",
@@ -1385,6 +1361,14 @@
     "migrateUnmatchedDetail": "በዚህ የኪስ ቦርሳ አድራሻ ውስጥ ምንም መገለጫ የለም ። ወደ ኋላ ከተመዘገቡ ወደ ኋላ ተመልሰው በምትኩ ከተመዘገቡት መግቢያ ይጠቀሙ ።",
     "migrateGoBack": "ወደ ኋላ ተመለስ",
     "migrateContinueAnyway": "ለማንኛውም አዲስ መለያ ይፍጠሩ",
+    "migrateNoOldAccount": "በዚህ መግቢያ ላይ ከዚህ በፊት የ DeHub መለያ የለም ፣ ስለሆነም ለማምጣት ምንም ነገር የለም ። በምትኩ አዲስ መለያ ያዘጋጁ.",
+    "migrateInstead": "ይልቅ አሮጌውን መለያ በላይ አምጡ",
+    "setUpNewAccount": "አዲስ መለያ ያዋቅሩ",
+    "createNewInstead": "በምትኩ አዲስ መለያ ይፍጠሩ",
+    "migrateAccount": "የስደተኞች መለያ",
+    "importExternalWallet": "ውጫዊ የኪስ ቦርሳ ያስመጡ",
+    "migrateIntentHint": "ከዚህ በታች ከማንኛውም አማራጭ ጋር ይግቡ ። ከቀድሞ DeHub መለያ ጋር የሚስማማ ከሆነ የኪስ ቦርሳውን ፣ የተጠቃሚ ስሙን እና ሚዛኑን ያመጣል ።",
+    "importIntentHint": "ከዚህ በታች ከማንኛውም አማራጭ ጋር ይግቡ ፣ ከዚያ መጠቀም የሚፈልጉትን የመልሶ ማግኛ ሐረግ ወይም የግል ቁልፍን ይለጥፉ ።",
     "title": "ግባ",
     "addProfileTitle": "መገለጫ ጨምር",
     "continueEmail": "በኢሜል ቀጥል",
@@ -1564,6 +1548,24 @@
     "hoursAgo": "ከ{{count}}ሰ በፊት",
     "daysAgo": "ከ{{count}}ቀ በፊት",
     "monthsAgo": "ከ{{count}}ወ በፊት",
+    "forLabel": "ለ",
+    "againstLabel": "ተቃራኒ",
+    "discussion": {
+      "title": "ውይይት",
+      "intro": "የተከታታይ ጥያቄዎችን ይጠይቁ ወይም ከመምረጥዎ በፊት ሀሳቡን ይወያዩ ።",
+      "reply": "መልስ ይስጡ",
+      "replyingTo": "ለ {{name}} መልስ ይስጡ",
+      "writeReply": "መልስ ይጻፉ",
+      "edited": "አርትዖት",
+      "showMoreReplies": "አሳይ {{count}} ተጨማሪ ምላሾች",
+      "showMoreReplies_one": "አሳይ {{count}} ተጨማሪ መልስ",
+      "deleteTitle": "ይህን አስተያየት ሰርዝ?",
+      "deleteDescription": "ይህ ለሁሉም ሰው አስተያየቱን እና መልሱን ያስወግዳል ።",
+      "signInToComment": "ውይይቱን ለመቀላቀል ይግቡ",
+      "empty": "እስካሁን ምንም ጥያቄዎች የሉም. ውይይቱን ይጀምሩ.",
+      "joinOnProposal": "ውይይቱን ይቀላቀሉ",
+      "authorChip": "ፕሮፖዛል ደራሲ"
+    },
     "proposalTitle": "የሃሳብ ርዕስ",
     "proposalTitlePlaceholder": "ምን ማቅረብ ይፈልጋሉ?",
     "proposalDescription": "ዝርዝሮች",
@@ -1593,25 +1595,7 @@
     "tabProposals": "ሃሳቦች",
     "tabPassed": "አልፈዋል",
     "tabRejected": "ውድቅ ሆነዋል",
-    "weeksAgo": "ከ{{count}}ሳ በፊት",
-    "forLabel": "ለ",
-    "againstLabel": "ተቃራኒ",
-    "discussion": {
-      "title": "ውይይት",
-      "intro": "የተከታታይ ጥያቄዎችን ይጠይቁ ወይም ከመምረጥዎ በፊት ሀሳቡን ይወያዩ ።",
-      "reply": "መልስ ይስጡ",
-      "replyingTo": "ለ {{name}} መልስ ይስጡ",
-      "writeReply": "መልስ ይጻፉ",
-      "edited": "አርትዖት",
-      "showMoreReplies": "አሳይ {{count}} ተጨማሪ ምላሾች",
-      "showMoreReplies_one": "አሳይ {{count}} ተጨማሪ መልስ",
-      "deleteTitle": "ይህን አስተያየት ሰርዝ?",
-      "deleteDescription": "ይህ ለሁሉም ሰው አስተያየቱን እና መልሱን ያስወግዳል ።",
-      "signInToComment": "ውይይቱን ለመቀላቀል ይግቡ",
-      "empty": "እስካሁን ምንም ጥያቄዎች የሉም. ውይይቱን ይጀምሩ.",
-      "joinOnProposal": "ውይይቱን ይቀላቀሉ",
-      "authorChip": "ፕሮፖዛል ደራሲ"
-    }
+    "weeksAgo": "ከ{{count}}ሳ በፊት"
   },
   "sidebar": {
     "talkOfTheTown": "የከተማ ወሬ",
@@ -2280,7 +2264,6 @@
     "noStages": "የአንተ ምንም መድረክ አሁን ላይቭም ሆነ ታቅዶ የለም።",
     "noFlaresLeft": "ምንም የሲግናል ፍላየር በዚህ ዑደት አልቀረም።",
     "spentFor": "{{power}} ለ {{minutes}} ደቂቃዎች እየሮጠ ነው።",
-    "goldenHourStarted": "Golden Hour ለ {{minutes}} ደቂቃዎች እየሮጠ ነው — የምትለጥፈው ሁሉ አሁን በእጥፍ ይቆጠራል",
     "teamUp": {
       "title": "በቡድን ይግቡ",
       "subtitle": "እስከ ሰባት ከሚሆኑ ሌሎች ጋር የኪስ ቦርሳዎን ኃይል ያጣምሩ። ሁሉም ሰው ባጅዎን ይለብሳል፣ ይህም የእርስዎን ጠቅላላ ያሳያል።",
@@ -2341,7 +2324,8 @@
       "updated": "ቡድን ተዘምኗል",
       "updateFailed": "ያንን ቡድን ማዘመን አልተቻለም",
       "openToEveryone": "የቡድን ፅሁፍ ለማንኛውም አካውንት ክፍት ነው፤ የግል ቡድኖች ማን እንደሚቀላቀል ያፀድቃሉ።"
-    }
+    },
+    "goldenHourStarted": "Golden Hour ለ {{minutes}} ደቂቃዎች እየሮጠ ነው — የምትለጥፈው ሁሉ አሁን በእጥፍ ይቆጠራል"
   },
   "work": {
     "budgetExhausted": "የዚህ ሽልማት በጀት ሙሉ በሙሉ ተይዟል።"
@@ -2368,6 +2352,22 @@
     "neon": "ኒዮን",
     "blur": "ብዥታ",
     "pixelate": "ፒክሰል"
+  },
+  "live": {
+    "chatJoined": "ተቀላቀለ",
+    "chatSentGift": "ላከ",
+    "progress": {
+      "xp": "{{xp}} XP",
+      "card": {
+        "century": {
+          "hint": "በአየር ላይ አንድ መቶ የብቃት ሰዓቶች ይድረሱ."
+        },
+        "legend": {
+          "name": "አፈ ታሪክ",
+          "hint": "ደረጃ አስር ይድረሱ."
+        }
+      }
+    }
   },
   "goLive": {
     "sourceCamera": "ካሜራ",
@@ -2751,7 +2751,24 @@
     "reviewDescriptionPlaceholder": "በዚህ ልጥፍ ላይ አንድ ነገር ይናገሩ (አማራጭ)",
     "reviewLiveWarning": "ያ አገናኝ የቀጥታ ዥረት ነው ። እስኪጨርስ ድረስ ይጠብቁ እና በምትኩ ቀረጻ ማስመጣት.",
     "reviewCancel": "ሰርዝ",
-    "reviewConfirm": "አስመጣ"
+    "reviewConfirm": "አስመጣ",
+    "podcast": {
+      "tab": "ፖድካስት",
+      "feedUrlLabel": "ፖድካስት RSS ምግብ ዩአርኤል",
+      "fetchFeed": "Fetch ምግብ",
+      "fetching": "የምግብ አዘገጃጀት...",
+      "showBy": "በ {{author}}",
+      "episodes": "{{count}} ክፍሎች",
+      "selectAll": "ሁሉንም ይምረጡ",
+      "alreadyImported": "ቀድሞውኑ አስመጪ",
+      "ownership": "ይህንን ይዘት ባለቤት ነኝ ፣ ወይም በ DeHub ላይ ለማተም የመብቱ ባለቤት ፈቃድ አለኝ ።",
+      "importSelected": "አስመጣ {{count}} episodes",
+      "importing": "በማስመጣት ላይ...",
+      "failed": "አልተሳካም",
+      "emptyFeed": "በዚያ ምግብ ውስጥ ምንም ክፍሎችን ማግኘት አልቻልንም ።",
+      "badFeed": "ያ አገናኝ የፖድካስት ምግብ አይመስልም ።",
+      "tooMany": "በአንድ ጊዜ እስከ 20 ክፍሎች ያስመጡ ።"
+    }
   },
   "banned": {
     "title": "መለያዎ ታግዷል",

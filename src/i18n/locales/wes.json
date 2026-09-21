@@ -1,50 +1,4 @@
 {
-  "live": {
-    "chatJoined": "don join",
-    "chatSentGift": "don send",
-    "progress": {
-      "title": "Streamer level",
-      "level": "Level {{level}}",
-      "xp": "{{xp}} XP",
-      "streak": "{{count}} week streak",
-      "bestStreak": "Best streak {{count}} weeks",
-      "hours": "{{hours}} qualifying hours",
-      "minutes": "{{count}} minutes",
-      "viewers": "{{count}} viewers",
-      "viewCards": "View cards",
-      "cardsTitle": "Collectible cards",
-      "locked": "Locked",
-      "earnedOn": "Earned {{date}}",
-      "recentTitle": "Recent streams",
-      "card": {
-        "first-light": {
-          "name": "First light"
-        },
-        "marathon": {
-          "name": "Marathon"
-        },
-        "night-owl": {
-          "name": "Night owl"
-        },
-        "regular": {
-          "name": "Regular"
-        },
-        "iron-streak": {
-          "name": "Iron streak"
-        },
-        "crowd": {
-          "name": "Crowd"
-        },
-        "century": {
-          "name": "Century"
-        },
-        "legend": {
-          "name": "Legend",
-          "hint": "Reach level ten."
-        }
-      }
-    }
-  },
   "errors": {
     "sponsorshipUnavailable": "Free transaction dem don stop for we side, no be your wallet. Try again small time.",
     "gasSponsorshipFailed": "We no fit pay for dis transaction. Try again small time."
@@ -151,6 +105,9 @@
     "bio": "Bio",
     "bioPlaceholder": "Tell we about yourself...",
     "socialLinks": "Social Link dem",
+    "socialFollowers": "Followers for {{platform}}",
+    "socialFollowersHint": "Dem show for your profile as part of how many pipo you reach. You go enter the number yourself — we no go read am from the platform.",
+    "socialFollowersPlaceholder": "e.g. 12500",
     "profileUpdated": "Profile don update well well",
     "failedLoadProfile": "E no fit load profile data",
     "imageTooLarge5": "Image no fit pass 5MB",
@@ -415,10 +372,7 @@
       "rotate": "Reset stream key",
       "serverCopied": "Server copied",
       "keyCopied": "Stream key copied"
-    },
-    "socialFollowers": "Followers for {{platform}}",
-    "socialFollowersHint": "Dem show for your profile as part of how many pipo you reach. You go enter the number yourself — we no go read am from the platform.",
-    "socialFollowersPlaceholder": "e.g. 12500"
+    }
   },
   "common": {
     "save": "Save am",
@@ -1158,10 +1112,6 @@
     "returnHome": "Go Back Home"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Dis post no dey available",
-      "commentUnavailable": "Dis comment no dey again"
-    },
     "back": "Back",
     "usernameAvailable": "Username dey available!",
     "signUpToClaim": "Sign up today for claim am",
@@ -1177,10 +1127,14 @@
     "followers": "Followers",
     "following": "Following",
     "joined": "Joined",
-    "loginDescription": "Log in for see and manage your profile.",
     "reach": {
       "total": "Total reach",
       "dehubFollowers": "DeHub followers"
+    },
+    "loginDescription": "Log in for see and manage your profile.",
+    "replyThread": {
+      "postUnavailable": "Dis post no dey available",
+      "commentUnavailable": "Dis comment no dey again"
     },
     "tabs": {
       "playlists": "Playlists"
@@ -2165,6 +2119,52 @@
     "blur": "Blur",
     "pixelate": "Pixelate"
   },
+  "live": {
+    "chatJoined": "don join",
+    "chatSentGift": "don send",
+    "progress": {
+      "title": "Streamer level",
+      "level": "Level {{level}}",
+      "xp": "{{xp}} XP",
+      "streak": "{{count}} week streak",
+      "bestStreak": "Best streak {{count}} weeks",
+      "hours": "{{hours}} qualifying hours",
+      "minutes": "{{count}} minutes",
+      "viewers": "{{count}} viewers",
+      "viewCards": "View cards",
+      "cardsTitle": "Collectible cards",
+      "locked": "Locked",
+      "earnedOn": "Earned {{date}}",
+      "recentTitle": "Recent streams",
+      "card": {
+        "first-light": {
+          "name": "First light"
+        },
+        "marathon": {
+          "name": "Marathon"
+        },
+        "night-owl": {
+          "name": "Night owl"
+        },
+        "regular": {
+          "name": "Regular"
+        },
+        "iron-streak": {
+          "name": "Iron streak"
+        },
+        "crowd": {
+          "name": "Crowd"
+        },
+        "century": {
+          "name": "Century"
+        },
+        "legend": {
+          "name": "Legend",
+          "hint": "Reach level ten."
+        }
+      }
+    }
+  },
   "goLive": {
     "goLive": "Go Live",
     "youAreLive": "You're Live",
@@ -2521,7 +2521,22 @@
     "reviewDescriptionPlaceholder": "Say something about this post (optional)",
     "reviewLiveWarning": "That link is a live stream. Wait until it ends and import the recording instead.",
     "reviewCancel": "Cancel",
-    "reviewConfirm": "Import"
+    "reviewConfirm": "Import",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "Podcast RSS feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Fetch feed",
+      "fetching": "Fetching feed…",
+      "showBy": "By {{author}}",
+      "episodes": "{{count}} episodes",
+      "selectAll": "Select all",
+      "alreadyImported": "Already imported",
+      "importSelected": "Import {{count}} episodes",
+      "importing": "Importing…",
+      "done": "Queued",
+      "failed": "Failed"
+    }
   },
   "banned": {
     "reason": "Reason: {{reason}}"

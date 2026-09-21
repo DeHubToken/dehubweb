@@ -105,6 +105,9 @@
     "bio": "Biografija",
     "bioPlaceholder": "Papasakokite apie save...",
     "socialLinks": "Socialinės nuorodos",
+    "socialFollowers": "Sekėjai {{platform}}",
+    "socialFollowersHint": "Rodoma jūsų profilyje kaip bendro pasiekiamumo dalis. Įveskite numerį patys — mes jo nenuskaitome iš platformos.",
+    "socialFollowersPlaceholder": "pvz., 12500",
     "profileUpdated": "Profilis sėkmingai atnaujintas",
     "failedLoadProfile": "Nepavyko įkelti profilio duomenų",
     "imageTooLarge5": "Nuotrauka turi būti mažesnė nei 5MB",
@@ -440,10 +443,7 @@
       "unavailable": "Transliacija iš koduotės šiuo metu jūsų paskyroje negalima.",
       "serverCopied": "Serveris nukopijuotas",
       "keyCopied": "Srauto raktas nukopijuotas"
-    },
-    "socialFollowers": "Sekėjai {{platform}}",
-    "socialFollowersHint": "Rodoma jūsų profilyje kaip bendro pasiekiamumo dalis. Įveskite numerį patys — mes jo nenuskaitome iš platformos.",
-    "socialFollowersPlaceholder": "pvz., 12500"
+    }
   },
   "common": {
     "save": "Saugoti",
@@ -1220,10 +1220,6 @@
     "returnHome": "Grįžti į pradžią"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Šis įrašas nepasiekiamas",
-      "commentUnavailable": "Šis komentaras nebepasiekiamas"
-    },
     "back": "Atgal",
     "usernameAvailable": "Naudotojo vardas laisvas!",
     "signUpToClaim": "Užsiregistruokite šiandien, kad užsitikrintumėte",
@@ -1239,12 +1235,16 @@
     "followers": "Sekėjai",
     "following": "Sekiami",
     "joined": "Prisijungė",
-    "loginDescription": "Prisijunkite, kad peržiūrėtumėte ir tvarkytumėte savo profilį.",
     "reach": {
       "total": "Bendras pasiekiamumas",
       "breakdownTitle": "Iš kur šis pasiekiamumas",
       "dehubFollowers": "„DeHub“ sekėjai",
       "selfReported": "Socialinių sekėjų skaičių įveda kūrėjas."
+    },
+    "loginDescription": "Prisijunkite, kad peržiūrėtumėte ir tvarkytumėte savo profilį.",
+    "replyThread": {
+      "postUnavailable": "Šis įrašas nepasiekiamas",
+      "commentUnavailable": "Šis komentaras nebepasiekiamas"
     },
     "tabs": {
       "playlists": "Grojaraščiai"
@@ -1281,6 +1281,7 @@
     "amountUsd": "Suma (USD)",
     "customAmount": "Pasirinktinė suma",
     "minPurchase": "Minimali pirkimo suma yra $5",
+    "minDhbPurchase": "Minimali DHB pirkimo kaina yra 0,50 $",
     "youPay": "Jūs mokate",
     "youReceive": "Jūs gaunate (apytikslis)",
     "feeNote": "Kortelės mokestis ~3,6% ir 0,5% tinklo rezerva atskaitomi iš šio. Rezervas jums siunčiamas kaip ETH dujoms.",
@@ -1314,7 +1315,6 @@
     "badgeDiscount": "{{tier}} turėtojui — {{percent}} % nuolaida",
     "otherTokens": "Kiti tokenai",
     "otherTokensDesc": "Pirkite ETH arba USDC „Base“ tinkle savo kortele",
-    "minDhbPurchase": "Minimali DHB pirkimo kaina yra 0,50 $",
     "shareToFeed": "Dalytis mano sklaidos kanale",
     "sharePostTemplate": "Ką tik pridėjau {{amount}} $DHB prie mano „DeHub“ rietuvės. Kuriame kartu su bendruomene. #DeHub #DHB",
     "success": {
@@ -1392,14 +1392,6 @@
     "failedSubmit": "Nepavyko pateikti paraiškos. Bandykite dar kartą."
   },
   "loginModal": {
-    "migrateNoOldAccount": "Šiame prisijungime nėra ankstesnės „DeHub“ paskyros, todėl nėra ką perkelti. Vietoj to sukurkite naują paskyrą.",
-    "migrateInstead": "Geriau perkelkite senąją paskyrą",
-    "setUpNewAccount": "Sukurti naują paskyrą",
-    "createNewInstead": "Geriau sukurkite naują paskyrą",
-    "migrateAccount": "Perkelti paskyrą",
-    "importExternalWallet": "Importuoti išorinę piniginę",
-    "migrateIntentHint": "Prisijunkite naudodami bet kurią toliau pateiktą parinktį. Jei jis sutampa su ankstesne „DeHub“ paskyra, atsinešite jo piniginę, naudotojo vardą ir likutį.",
-    "importIntentHint": "Prisijunkite naudodami bet kurią toliau pateiktą parinktį, tada įklijuokite norimos naudoti piniginės atkūrimo frazę arba privatų raktą.",
     "unlockBiometricContinue": "Norėdami tęsti, atrakinkite piniginę piršto atspaudu arba veidu.",
     "unlockBiometricSignIn": "Norėdami prisijungti, atrakinkite piniginę piršto atspaudu arba veidu.",
     "unlockPasswordContinue": "Norėdami tęsti, įveskite piniginės slaptažodį.",
@@ -1412,6 +1404,14 @@
     "migrateUnmatchedDetail": "Šiuo piniginės adresu profilio nėra. Jei vėl prisijungėte, grįžkite ir naudokite prisijungimo vardą, kuriuo prisiregistravote.",
     "migrateGoBack": "Grįžti",
     "migrateContinueAnyway": "Vis tiek sukurti naują paskyrą",
+    "migrateNoOldAccount": "Šiame prisijungime nėra ankstesnės „DeHub“ paskyros, todėl nėra ką perkelti. Vietoj to sukurkite naują paskyrą.",
+    "migrateInstead": "Geriau perkelkite senąją paskyrą",
+    "setUpNewAccount": "Sukurti naują paskyrą",
+    "createNewInstead": "Geriau sukurkite naują paskyrą",
+    "migrateAccount": "Perkelti paskyrą",
+    "importExternalWallet": "Importuoti išorinę piniginę",
+    "migrateIntentHint": "Prisijunkite naudodami bet kurią toliau pateiktą parinktį. Jei jis sutampa su ankstesne „DeHub“ paskyra, atsinešite jo piniginę, naudotojo vardą ir likutį.",
+    "importIntentHint": "Prisijunkite naudodami bet kurią toliau pateiktą parinktį, tada įklijuokite norimos naudoti piniginės atkūrimo frazę arba privatų raktą.",
     "title": "Prisijungti",
     "addProfileTitle": "Pridėti profilį",
     "continueEmail": "Tęsti su el. paštu",
@@ -2108,13 +2108,13 @@
       "thisYear": "Šiais metais",
       "allTime": "Visas laikas",
       "newMembers": "Nauji nariai",
+      "viewMembers": "Peržiūrėti narius",
+      "openNewMembers": "Atidaryti naujų narių sąrašą",
       "chartMembers": "Narių kaita",
       "chartActive": "Aktyvūs žmonės",
       "growth": "+{{percent}} % šį mėnesį",
       "growthTerm": "Augimas",
-      "recordingSince": "fiksuojama nuo {{date}}",
-      "viewMembers": "Peržiūrėti narius",
-      "openNewMembers": "Atidaryti naujų narių sąrašą"
+      "recordingSince": "fiksuojama nuo {{date}}"
     },
     "title": "Statistika",
     "subtitle": "Atvirojo kodo duomenys realiu laiku",
@@ -2299,7 +2299,6 @@
     "noStages": "Šiuo metu jokia jūsų scena nevyksta ir nėra suplanuota.",
     "noFlaresLeft": "Šiame cikle nebeliko „Signal Flares“.",
     "spentFor": "{{power}} veikia {{minutes}} minutes",
-    "goldenHourStarted": "„Golden Hour“ veikia {{minutes}} minutes – viskas, ką dabar skelbiate, skaičiuojama dvigubai",
     "teamUp": {
       "title": "Suburkite komandą",
       "subtitle": "Sujunkite savo piniginės galią su iki septynių kitų žmonių. Visi dėvi ženklelį, kurį atrakina jūsų bendra suma.",
@@ -2360,7 +2359,8 @@
       "updated": "Komanda atnaujinta",
       "updateFailed": "Nepavyko atnaujinti tos komandos",
       "openToEveryone": "Team up yra atviras kiekvienai paskyrai; privačios komandos tvirtina, kas prisijungia."
-    }
+    },
+    "goldenHourStarted": "„Golden Hour“ veikia {{minutes}} minutes – viskas, ką dabar skelbiate, skaičiuojama dvigubai"
   },
   "work": {
     "budgetExhausted": "Visas šio atlygio biudžetas jau paskirstytas.",
@@ -5161,7 +5161,26 @@
     "reviewDescriptionPlaceholder": "Papasakokite ką nors apie šį įrašą (nebūtina)",
     "reviewLiveWarning": "Ši nuoroda yra tiesioginė transliacija. Palaukite, kol jis baigsis, ir importuokite įrašą.",
     "reviewCancel": "Atšaukti",
-    "reviewConfirm": "Importuoti"
+    "reviewConfirm": "Importuoti",
+    "podcast": {
+      "tab": "Tinklalaidė",
+      "feedUrlLabel": "Tinklalaidės RSS sklaidos kanalo URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Parsiųsti informacijos santrauką",
+      "fetching": "Parsiunčiamas kanalas...",
+      "showBy": "Autorius {{author}}",
+      "episodes": "{{count}} epizodai",
+      "selectAll": "Pasirinkti viską",
+      "alreadyImported": "Jau importuota",
+      "ownership": "Man priklauso šis turinys arba turiu teisių turėtojo leidimą jį paskelbti „DeHub“.",
+      "importSelected": "Importuoti {{count}} epizodus",
+      "importing": "Importuojama...",
+      "done": "Įtraukta į eilę",
+      "failed": "Nepavyko",
+      "emptyFeed": "Tame sklaidos kanale neradome jokių epizodų.",
+      "badFeed": "Ši nuoroda neatrodo kaip tinklalaidės sklaidos kanalas.",
+      "tooMany": "Vienu metu importuokite iki 20 serijų."
+    }
   },
   "banned": {
     "title": "Jūsų paskyra užblokuota",

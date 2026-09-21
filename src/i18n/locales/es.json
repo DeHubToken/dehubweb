@@ -105,6 +105,9 @@
     "bio": "Biografía",
     "bioPlaceholder": "Cuéntanos sobre ti...",
     "socialLinks": "Redes sociales",
+    "socialFollowers": "Seguidores en {{platform}}",
+    "socialFollowersHint": "Se muestra en tu perfil como parte de tu alcance total. Introduce el número tú mismo, no lo leemos desde la plataforma.",
+    "socialFollowersPlaceholder": "por ejemplo, 12500",
     "profileUpdated": "Perfil actualizado correctamente",
     "failedLoadProfile": "Error al cargar datos del perfil",
     "imageTooLarge5": "La imagen debe ser menor de 5MB",
@@ -455,10 +458,7 @@
       "unavailable": "La transmisión desde un codificador no está disponible en tu cuenta en este momento.",
       "serverCopied": "Servidor copiado",
       "keyCopied": "Clave de flujo copiada"
-    },
-    "socialFollowers": "Seguidores en {{platform}}",
-    "socialFollowersHint": "Se muestra en tu perfil como parte de tu alcance total. Introduce el número tú mismo, no lo leemos desde la plataforma.",
-    "socialFollowersPlaceholder": "por ejemplo, 12500"
+    }
   },
   "common": {
     "save": "Guardar",
@@ -1237,10 +1237,6 @@
     "returnHome": "Volver al inicio"
   },
   "profile": {
-    "replyThread": {
-      "postUnavailable": "Esta publicación no está disponible",
-      "commentUnavailable": "Este comentario ya no está disponible"
-    },
     "back": "Volver",
     "usernameAvailable": "¡Nombre de usuario disponible!",
     "signUpToClaim": "Regístrate hoy para reclamar",
@@ -1256,12 +1252,16 @@
     "followers": "Seguidores",
     "following": "Siguiendo",
     "joined": "Se unió",
-    "loginDescription": "Inicia sesión para ver y gestionar tu perfil.",
     "reach": {
       "total": "Alcance total",
       "breakdownTitle": "De dónde viene este alcance",
       "dehubFollowers": "Seguidores de DeHub",
       "selfReported": "El creador introduce el número de seguidores en redes sociales."
+    },
+    "loginDescription": "Inicia sesión para ver y gestionar tu perfil.",
+    "replyThread": {
+      "postUnavailable": "Esta publicación no está disponible",
+      "commentUnavailable": "Este comentario ya no está disponible"
     },
     "tabs": {
       "playlists": "Listas de reproducción"
@@ -1409,14 +1409,6 @@
     "failedSubmit": "Error al enviar solicitud. Inténtalo de nuevo."
   },
   "loginModal": {
-    "migrateNoOldAccount": "No hay una cuenta de DeHub anterior en este inicio de sesión, por lo que no hay nada que transferir. Configura una cuenta nueva en su lugar.",
-    "migrateInstead": "Transferir la cuenta antigua en su lugar",
-    "setUpNewAccount": "Configurar una cuenta nueva",
-    "createNewInstead": "Crear una cuenta nueva en su lugar",
-    "migrateAccount": "Migrar cuenta",
-    "importExternalWallet": "Importar billetera externa",
-    "migrateIntentHint": "Inicia sesión con cualquier opción a continuación. Si coincide con una cuenta de DeHub anterior, transferirás su billetera, nombre de usuario y saldo.",
-    "importIntentHint": "Inicia sesión con cualquier opción a continuación, luego pega la frase de recuperación o la clave privada de la billetera que deseas usar.",
     "unlockBiometricContinue": "Desbloquea tu billetera con tu huella digital o cara para continuar.",
     "unlockBiometricSignIn": "Desbloquea tu billetera con tu huella digital o cara para iniciar sesión.",
     "unlockPasswordContinue": "Introduce la contraseña de tu monedero para continuar.",
@@ -1429,6 +1421,14 @@
     "migrateUnmatchedDetail": "No existe ningún perfil en esta dirección de monedero. Si volvías a iniciar sesión, vuelve atrás y utiliza el inicio de sesión con el que te registraste.",
     "migrateGoBack": "Volver",
     "migrateContinueAnyway": "Crear una nueva cuenta de todos modos",
+    "migrateNoOldAccount": "No hay una cuenta de DeHub anterior en este inicio de sesión, por lo que no hay nada que transferir. Configura una cuenta nueva en su lugar.",
+    "migrateInstead": "Transferir la cuenta antigua en su lugar",
+    "setUpNewAccount": "Configurar una cuenta nueva",
+    "createNewInstead": "Crear una cuenta nueva en su lugar",
+    "migrateAccount": "Migrar cuenta",
+    "importExternalWallet": "Importar billetera externa",
+    "migrateIntentHint": "Inicia sesión con cualquier opción a continuación. Si coincide con una cuenta de DeHub anterior, transferirás su billetera, nombre de usuario y saldo.",
+    "importIntentHint": "Inicia sesión con cualquier opción a continuación, luego pega la frase de recuperación o la clave privada de la billetera que deseas usar.",
     "title": "Iniciar sesión",
     "addProfileTitle": "Añadir un perfil",
     "continueEmail": "Continuar con Email",
@@ -2316,7 +2316,6 @@
     "noStages": "Ningún escenario tuyo está en vivo o programado ahora mismo.",
     "noFlaresLeft": "No quedan Destellos de Señal este ciclo",
     "spentFor": "{{power}} corriendo durante {{minutes}} minutos",
-    "goldenHourStarted": "Golden Hour en curso durante {{minutes}} minutos — todo lo que publiques ahora cuenta el doble",
     "teamUp": {
       "title": "Forma equipo",
       "subtitle": "Combina el poder de tu billetera con hasta siete personas más. Todos llevan la insignia que desbloquea tu total.",
@@ -2377,7 +2376,8 @@
       "updated": "Equipo actualizado",
       "updateFailed": "No se pudo actualizar ese equipo",
       "openToEveryone": "Team up está abierto a todas las cuentas; los equipos privados aprueban quién se une."
-    }
+    },
+    "goldenHourStarted": "Golden Hour en curso durante {{minutes}} minutos — todo lo que publiques ahora cuenta el doble"
   },
   "work": {
     "budgetExhausted": "El presupuesto de esta recompensa está comprometido por completo.",
@@ -5188,7 +5188,26 @@
     "reviewDescriptionPlaceholder": "Di algo sobre esta publicación (opcional)",
     "reviewLiveWarning": "Ese enlace es una transmisión en vivo. Espere hasta que termine e importe la grabación en su lugar.",
     "reviewCancel": "Cancelar",
-    "reviewConfirm": "Importar"
+    "reviewConfirm": "Importar",
+    "podcast": {
+      "tab": "Podcast",
+      "feedUrlLabel": "URL del feed RSS del podcast",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Obtener alimentación",
+      "fetching": "Obteniendo feed...",
+      "showBy": "Por {{author}}",
+      "episodes": "{{count}} episodios",
+      "selectAll": "Seleccionar todo",
+      "alreadyImported": "Ya importado",
+      "ownership": "Soy el propietario de este contenido o tengo el permiso del titular de los derechos para publicarlo en DeHub.",
+      "importSelected": "Importar {{count}} episodios",
+      "importing": "Importando...",
+      "done": "En cola",
+      "failed": "Fallo",
+      "emptyFeed": "No pudimos encontrar ningún episodio en ese feed.",
+      "badFeed": "Ese enlace no parece un feed de podcast.",
+      "tooMany": "Importa hasta 20 episodios a la vez."
+    }
   },
   "banned": {
     "title": "Tu cuenta está bloqueada",
