@@ -47,6 +47,7 @@ import { SidebarCollapseProvider, useSidebarCollapse } from '@/contexts/SidebarC
 import { AutoplayProvider } from '@/contexts/AutoplayContext';
 import { AnimationsProvider } from '@/contexts/AnimationsContext';
 import { ShortsEnabledProvider } from '@/contexts/ShortsEnabledContext';
+import { OnboardingChecklistProvider } from '@/contexts/OnboardingChecklistContext';
 import { PiPProvider } from '@/contexts/PiPContext';
 import { ChartPiPProvider } from '@/contexts/ChartPiPContext';
 import { FloatingPiPOverlay } from '@/components/app/tv/FloatingPiPOverlay';
@@ -532,6 +533,12 @@ export function AppLayout({ children }: AppLayoutProps) {
                 <RadioPlayerProvider>
                   <CoinPlacementProvider>
                     <GlobalDropZoneProvider>
+                     {/* Inside the drop zone provider so the guided checklist's
+                         "make your first post" step can open the composer, and
+                         above the layout content so the rail bento, the
+                         settings row and the profile chip all read one copy of
+                         the progress row. */}
+                     <OnboardingChecklistProvider>
                       {/* Inside the layout rather than around it, so the gate
                           sits under the router and can read the location — and
                           so the chrome is already mounted when it redirects,
@@ -545,6 +552,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                       <UserFeedbackSurvey />
                       <NewMemberRegistrar />
                       <ShippedFeatureNotificationModal />
+                     </OnboardingChecklistProvider>
                     </GlobalDropZoneProvider>
                   </CoinPlacementProvider>
                 </RadioPlayerProvider>

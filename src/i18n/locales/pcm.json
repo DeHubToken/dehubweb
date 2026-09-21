@@ -2638,5 +2638,22 @@
         "hostile_tone": "Hostile tone"
       }
     }
+  },
+  "onboarding": {
+    "optIn": {
+      "yes": "Yes, show me around",
+      "no": "No thanks"
+    },
+    "checklist": {
+      "title": "Getting started",
+      "go": "Take me there",
+      "done": "Mark as done",
+      "chip": "Getting started"
+    },
+    "steps": {
+      "follow": {
+        "title": "Follow three creators"
+      }
+    }
   }
 }
