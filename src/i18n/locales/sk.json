@@ -1288,6 +1288,10 @@
     "returnHome": "Späť na domovskú stránku"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "Tento príspevok nie je k dispozícii",
+      "commentUnavailable": "Tento komentár už nie je k dispozícii"
+    },
     "back": "Späť",
     "usernameAvailable": "Používateľské meno je voľné!",
     "signUpToClaim": "Zaregistrujte sa ešte dnes a získajte ho",

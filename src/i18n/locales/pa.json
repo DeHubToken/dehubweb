@@ -1201,6 +1201,10 @@
     "returnHome": "ਹੋਮ ਤੇ ਵਾਪਸ ਜਾਓ"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "ਇਹ ਪੋਸਟ ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ",
+      "commentUnavailable": "ਇਹ ਟਿੱਪਣੀ ਹੁਣ ਉਪਲਬਧ ਨਹੀਂ ਹੈ"
+    },
     "back": "ਵਾਪਸ",
     "usernameAvailable": "ਯੂਜ਼ਰ ਨਾਮ ਉਪਲਬਧ ਹੈ!",
     "signUpToClaim": "ਹਾਸਲ ਕਰਨ ਲਈ ਸਾਈਨ ਅੱਪ ਕਰੋ",

@@ -1216,6 +1216,10 @@
     "returnHome": "Manatti deebi'i"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "Barreeffamni kun hin argamu",
+      "commentUnavailable": "Yaadni kun kana booda hin jiru"
+    },
     "back": "Duuba",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Sign up today to claim",

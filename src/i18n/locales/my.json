@@ -1207,6 +1207,10 @@
     "returnHome": "ပင်မသို့ပြန်ရန်"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "ဒီ post ကိုမရရှိနိုင်ပါ",
+      "commentUnavailable": "ဤမှတ်ချက်ကို မရနိုင်တော့ပါ"
+    },
     "back": "နောက်သို့",
     "usernameAvailable": "ဤအသုံးပြုသူအမည် ရနိုင်ပါသည်!",
     "signUpToClaim": "ရယူရန် ယနေ့ပင် စာရင်းသွင်းပါ",

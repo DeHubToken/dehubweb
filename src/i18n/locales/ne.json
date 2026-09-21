@@ -1228,6 +1228,10 @@
     "returnHome": "गृहपृष्ठमा फर्कनुहोस्"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "यो पोष्ट उपलब्ध छैन",
+      "commentUnavailable": "यो टिप्पणी अब उपलब्ध छैन"
+    },
     "back": "पछाडि",
     "usernameAvailable": "प्रयोगकर्तानाम उपलब्ध छ!",
     "signUpToClaim": "दाबी गर्न आजै साइन अप गर्नुहोस्",

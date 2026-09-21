@@ -1226,6 +1226,10 @@
     "returnHome": "Return Home"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "Hierdie pos is nie beskikbaar nie",
+      "commentUnavailable": "Hierdie kommentaar is nie meer beskikbaar nie"
+    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUp": "Sign Up",

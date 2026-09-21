@@ -1039,6 +1039,10 @@
     "returnHome": "Назад на почетну"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "Ова објава није доступна",
+      "commentUnavailable": "Овај коментар више није доступан"
+    },
     "back": "Назад",
     "usernameAvailable": "Корисничко име је доступно!",
     "signUpToClaim": "Региструјте се и преузмите га",
