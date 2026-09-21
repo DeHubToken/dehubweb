@@ -145,15 +145,49 @@ export interface TeamUpMember {
   joinedAt: string;
 }
 
+export interface TeamUpJoinRequest {
+  address: string;
+  username: string | null;
+  displayName: string | null;
+  avatarImageUrl: string | null;
+  message: string;
+  requestedAt: string;
+}
+
 export interface TeamUpTeam {
   id: string;
   name: string;
+  /** Who the team is for, in the owner's words. Empty when they wrote nothing. */
+  description: string;
+  /** A private team turns a join into a request the owner approves. */
+  isPrivate: boolean;
   ownerAddress: string;
   memberCount: number;
   maxMembers: number;
   pooledBadgeBalance: number;
   tier: string | null;
   members: TeamUpMember[];
+  /** How many people are waiting on the owner. */
+  pendingCount: number;
+  /** Who is waiting — only present for the owner. */
+  joinRequests?: TeamUpJoinRequest[];
+  /** For a viewer outside the team: whether they have already asked to join. */
+  myRequestPending?: boolean;
+}
+
+export interface TeamUpSettings {
+  description?: string;
+  isPrivate?: boolean;
+}
+
+export interface TeamUpCreateInput extends TeamUpSettings {
+  name: string;
+}
+
+/** What a private team answers a join with: nothing about membership has changed yet. */
+export interface TeamUpJoinRequested {
+  requested: true;
+  team: TeamUpTeam;
 }
 
 export async function fetchMyTeamUp(): Promise<TeamUpTeam | null> {
@@ -169,18 +203,52 @@ export async function fetchTeamUpTeams(query = ''): Promise<TeamUpTeam[]> {
   return response.result ?? [];
 }
 
-export async function createTeamUp(name: string): Promise<TeamUpTeam> {
+export async function createTeamUp(input: TeamUpCreateInput): Promise<TeamUpTeam> {
   const response = await apiCall<{ result: TeamUpTeam }>('/api/superpowers/team-up', {
     method: 'POST',
-    body: { name },
+    body: { ...input },
     requiresAuth: true,
   });
   return response.result;
 }
 
-export async function joinTeamUp(teamId: string): Promise<TeamUpTeam> {
-  const response = await apiCall<{ result: TeamUpTeam }>(
+/** Owner only. Opening a private team up clears its queue: anyone can then join at once. */
+export async function updateTeamUp(settings: TeamUpSettings): Promise<TeamUpTeam> {
+  const response = await apiCall<{ result: TeamUpTeam }>('/api/superpowers/team-up', {
+    method: 'PATCH',
+    body: { ...settings },
+    requiresAuth: true,
+  });
+  return response.result;
+}
+
+/** A public team takes you in at once; a private one answers `{ requested: true }`. */
+export async function joinTeamUp(teamId: string, message?: string): Promise<TeamUpTeam | TeamUpJoinRequested> {
+  const response = await apiCall<{ result: TeamUpTeam | TeamUpJoinRequested }>(
     `/api/superpowers/team-up/${encodeURIComponent(teamId)}/join`,
+    { method: 'POST', body: message?.trim() ? { message: message.trim() } : {}, requiresAuth: true },
+  );
+  return response.result;
+}
+
+export async function cancelTeamUpRequest(teamId: string): Promise<void> {
+  await apiCall(`/api/superpowers/team-up/${encodeURIComponent(teamId)}/join`, {
+    method: 'DELETE',
+    requiresAuth: true,
+  });
+}
+
+export async function approveTeamUpRequest(teamId: string, address: string): Promise<TeamUpTeam> {
+  const response = await apiCall<{ result: TeamUpTeam }>(
+    `/api/superpowers/team-up/${encodeURIComponent(teamId)}/requests/${encodeURIComponent(address)}/approve`,
+    { method: 'POST', requiresAuth: true },
+  );
+  return response.result;
+}
+
+export async function denyTeamUpRequest(teamId: string, address: string): Promise<TeamUpTeam> {
+  const response = await apiCall<{ result: TeamUpTeam }>(
+    `/api/superpowers/team-up/${encodeURIComponent(teamId)}/requests/${encodeURIComponent(address)}/deny`,
     { method: 'POST', requiresAuth: true },
   );
   return response.result;
