@@ -993,7 +993,22 @@
     "noTextYet": "Enweghị post ederede echekwara ma",
     "textStartSaving": "Denye aha post naanị ederede, ha ga-apụta ebe a.",
     "reachedEnd": "Ị ruchapụla njedebe akara mpịnye gị",
-    "loginDescription": "Banye iji hụ ma jikwaa akara mpịnye gị echekwara."
+    "loginDescription": "Banye iji hụ ma jikwaa akara mpịnye gị echekwara.",
+    "playlist": {
+      "makePublic": "Ndesịta egwu ọha",
+      "makePublicHint": "Onye ọbụla nwere ike ịhụ nsomebefaịlụ a na profaịlụ gị.",
+      "publicBadge": "Public",
+      "copyLink": "Debata ụzọ njikọ ndesịta egwu",
+      "linkCopied": "Edebatara njikọ ndesịta egwu",
+      "itemsCount": "{{count}} posts",
+      "emptyOwnerHint": "Mee nsomebefaịlụ ibe edokọbara n 'ihu ọha iji gosi ya ebe a.",
+      "emptyVisitor": "Profaịlụ a enweghị ndepụta ọkpụkpọ ọha ugbua.",
+      "openBookmarks": "Mepee búùkmáàks m",
+      "back": "Ndesịta egwu niile",
+      "noPosts": "Nke a playlist enweghị posts ma.",
+      "unavailable": "Ndesịta egwu a adịkwaghị.",
+      "loadMore": "Gosi ndị ọzọ posts"
+    }
   },
   "notifications": {
     "title": "Ọkwa",
@@ -1279,6 +1294,9 @@
       "breakdownTitle": "Ebee ka iru a si abịa",
       "dehubFollowers": "DeHub na-eso ụzọ",
       "selfReported": "Onye na-emepụta ihe na-abanye ọnụ ọgụgụ ndị na-eso ụzọ ọha."
+    },
+    "tabs": {
+      "playlists": "Ndepụta egwu"
     }
   },
   "tv": {

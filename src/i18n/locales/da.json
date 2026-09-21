@@ -954,7 +954,22 @@
     "noTextYet": "Ingen gemte tekstopslag endnu",
     "textStartSaving": "Bogmærk rene tekstopslag, så vises de her.",
     "reachedEnd": "Du har nået enden af bogmærkerne",
-    "loginDescription": "Log ind for at se og administrere bogmærker."
+    "loginDescription": "Log ind for at se og administrere bogmærker.",
+    "playlist": {
+      "makePublic": "Offentlig afspilningsliste",
+      "makePublicHint": "Alle kan se denne mappe på din profil.",
+      "publicBadge": "Offentlig",
+      "copyLink": "Kopier link til afspilningsliste",
+      "linkCopied": "Afspilningslistelink kopieret",
+      "itemsCount": "{{count}}indlæg",
+      "emptyOwnerHint": "Gør en bogmærkemappe offentlig for at vise den her.",
+      "emptyVisitor": "Denne profil har ingen offentlige afspilningslister endnu.",
+      "openBookmarks": "Åbn mine bogmærker",
+      "back": "Alle afspilningslister",
+      "noPosts": "Denne afspilningsliste har endnu ingen indlæg.",
+      "unavailable": "Denne afspilningsliste er ikke længere tilgængelig.",
+      "loadMore": "Vis flere opslag"
+    }
   },
   "notifications": {
     "title": "Notifikationer",
@@ -1247,6 +1262,9 @@
       "breakdownTitle": "Hvor denne rækkevidde kommer fra",
       "dehubFollowers": "DeHub-følgere",
       "selfReported": "Antal følgere på sociale medier indtastes af kreatøren."
+    },
+    "tabs": {
+      "playlists": "Spillelister"
     }
   },
   "tv": {

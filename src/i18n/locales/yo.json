@@ -993,7 +993,22 @@
     "noTextYet": "Kò sí àtẹ̀jáde ọ̀rọ̀ tí a fi pamọ́ síbẹ̀",
     "textStartSaving": "Fi àmì ìwé sí àwọn àtẹ̀jáde ọ̀rọ̀ nìkan, wọn yóò sì fara hàn níbí.",
     "reachedEnd": "O ti dé òpin àwọn àmì ìwé rẹ",
-    "loginDescription": "Wọlé láti rí àti ṣàkóso àwọn àmì ìwé tí o fipamọ́."
+    "loginDescription": "Wọlé láti rí àti ṣàkóso àwọn àmì ìwé tí o fipamọ́.",
+    "playlist": {
+      "makePublic": "Akojọ orin ti gbogbo eniyan",
+      "makePublicHint": "Ẹnikẹ́ni lè rí àkájọ ìwé yìí lórí fáìlì rẹ.",
+      "publicBadge": "Gbogbo eniyan",
+      "copyLink": "Kọ́ ìjápọ àtòjọ orin",
+      "linkCopied": "Àdàkọ ìjápọ àtòjọ orin",
+      "itemsCount": "{{count}} awọn ifiweranṣẹ",
+      "emptyOwnerHint": "Ṣe àtẹ̀wé ìwé-ìwé fún gbogbo ènìyàn láti fi hàn níbí.",
+      "emptyVisitor": "Àkọsílẹ̀ yìí kò tíì ní àtòjọ orin fún gbogbo ènìyàn.",
+      "openBookmarks": "Ṣí àwọn àmì-ìwé mi",
+      "back": "Gbogbo àtòjọ orin",
+      "noPosts": "Àtòjọ orin yìí kò tí ì ní àwọn ìfìwéránṣẹ́.",
+      "unavailable": "Àtòjọ orin yìí kò sí mọ́.",
+      "loadMore": "Ṣàfihàn àwọn iṣẹ́ púpọ̀ sí i"
+    }
   },
   "notifications": {
     "title": "Ìwífúnni",
@@ -1286,6 +1301,9 @@
       "breakdownTitle": "Nibo ni arọwọto yii ti wa",
       "dehubFollowers": "Àwọn ọmọ-ẹ̀yìn DeHub",
       "selfReported": "Olùṣẹ̀dá ló máa ń tẹ iye àwọn ọmọlẹ́yìn tó ń tẹ̀lé àwùjọ."
+    },
+    "tabs": {
+      "playlists": "Àwọn àtòjọ orin"
     }
   },
   "tv": {

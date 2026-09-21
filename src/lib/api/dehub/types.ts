@@ -438,6 +438,8 @@ export interface BookmarkFolder {
   name: string;
   description?: string;
   isDefault: boolean;
+  /** Shown on the owner's profile as a playlist. */
+  isPublic?: boolean;
   order: number;
   itemCount?: number;
   createdAt: string;
@@ -451,6 +453,36 @@ export interface BookmarkFolderItem {
   address: string;
   createdAt: string;
   post?: DeHubNFT;
+}
+
+// ─── Public Playlists (a profile's public bookmark folders) ─────────────
+
+export interface PublicPlaylist {
+  id: string;
+  name: string;
+  description: string;
+  itemCount: number;
+  updatedAt: string;
+  coverTokenId: number | null;
+  coverImageUrl: string | null;
+}
+
+export interface PublicPlaylistItem {
+  _id: string;
+  folderId: string;
+  tokenId: number;
+  createdAt: string;
+  /** Feed-shaped post, same enrichment as pins. */
+  post: DeHubNFT;
+}
+
+export interface PublicPlaylistPage {
+  status: boolean;
+  address: string;
+  playlist: { id: string; name: string; description: string; updatedAt: string };
+  result: PublicPlaylistItem[];
+  hasMore: boolean;
+  nextCursor: string | null;
 }
 
 // ─── Pins ─────────────────────────────────────────────────────────────

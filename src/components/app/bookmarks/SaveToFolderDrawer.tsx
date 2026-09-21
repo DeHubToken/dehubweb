@@ -12,10 +12,12 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Folder, FolderPlus, Check, CircleAlert, CircleCheck, Loader2, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Folder, FolderPlus, Check, CircleAlert, CircleCheck, Globe, Loader2, X } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import { useBookmarkFolders, useFolderContainment } from '@/hooks/use-bookmark-folders';
 import { AppState } from '@/components/app/AppState';
@@ -32,6 +34,7 @@ interface DrawerNotice {
 }
 
 export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolderDrawerProps) {
+  const { t } = useTranslation();
   const {
     folders,
     isLoading,
@@ -45,6 +48,9 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
   const [newFolderDesc, setNewFolderDesc] = useState('');
+  // A public folder is a playlist on the owner's profile. Off by default: a
+  // folder made from the save button is private until the owner says otherwise.
+  const [newFolderPublic, setNewFolderPublic] = useState(false);
   // Folder IDs whose checkbox has been flipped locally but whose request hasn't
   // settled yet — the row reads from this first so the tick is instant.
   const [pending, setPending] = useState<Record<string, boolean>>({});
@@ -63,6 +69,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
       setShowCreateForm(false);
       setNewFolderName('');
       setNewFolderDesc('');
+      setNewFolderPublic(false);
       setPending({});
       setNotice(null);
     }
@@ -97,6 +104,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
       const res = await createFolderAsync({
         name,
         description: newFolderDesc.trim() || undefined,
+        isPublic: newFolderPublic,
         suppressToast: true,
       });
       const created = res.result;
@@ -104,6 +112,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
 
       setNewFolderName('');
       setNewFolderDesc('');
+      setNewFolderPublic(false);
       setShowCreateForm(false);
 
       // Creating a folder from this drawer implies filing the post into it —
@@ -177,7 +186,14 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
                   >
                     <Folder className="w-5 h-5 text-zinc-300 shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-white text-sm font-semibold truncate">{folder.name}</p>
+                      <p className="flex items-center gap-1.5 text-white text-sm font-semibold">
+                        <span className="truncate">{folder.name}</span>
+                        {folder.isPublic && (
+                          <span className="inline-flex shrink-0" title={t('bookmarks.playlist.publicBadge')}>
+                            <Globe className="size-3.5 text-zinc-400" aria-label={t('bookmarks.playlist.publicBadge')} />
+                          </span>
+                        )}
+                      </p>
                       {folder.description && (
                         <p className="text-zinc-500 text-xs truncate">{folder.description}</p>
                       )}
@@ -223,6 +239,21 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
                   placeholder="What belongs in this folder?"
                   maxLength={200}
                   className="h-12 rounded-xl border-white/10 bg-white/[0.06] text-white placeholder:text-zinc-500 focus-visible:ring-white/30"
+                />
+              </label>
+              <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5">
+                <span className="flex min-w-0 items-center gap-2.5">
+                  <Globe className="size-4 shrink-0 text-zinc-300" />
+                  <span className="min-w-0">
+                    <span className="block text-sm font-semibold text-white">{t('bookmarks.playlist.makePublic')}</span>
+                    <span className="block text-xs text-zinc-500">{t('bookmarks.playlist.makePublicHint')}</span>
+                  </span>
+                </span>
+                <Switch
+                  checked={newFolderPublic}
+                  onCheckedChange={setNewFolderPublic}
+                  aria-label={t('bookmarks.playlist.makePublic')}
+                  className="shrink-0 data-[state=checked]:bg-white"
                 />
               </label>
               <div className="flex gap-2">

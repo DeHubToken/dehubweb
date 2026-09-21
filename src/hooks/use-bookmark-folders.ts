@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getBookmarkFolders,
   createBookmarkFolder,
@@ -8,12 +8,16 @@ import {
   addItemsToFolderBulk,
   removeItemFromFolder,
   getFolderItems,
+  getPublicPlaylists,
+  getPublicPlaylistItems,
 } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import type { BookmarkFolder, BookmarkFolderItem } from '@/lib/api/dehub';
+import type { BookmarkFolder, BookmarkFolderItem, PublicPlaylist } from '@/lib/api/dehub';
 
 const FOLDERS_KEY = ['bookmark-folders'];
+/** Public playlists of a profile — what visitors see. Keyed by owner address. */
+const PUBLIC_PLAYLISTS_KEY = 'public-playlists';
 
 type CreateFolderVariables = Parameters<typeof createBookmarkFolder>[0] & {
   suppressToast?: boolean;
@@ -26,8 +30,16 @@ type FolderItemVariables = {
 };
 
 export function useBookmarkFolders() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
   const queryClient = useQueryClient();
+
+  // Anything that changes a folder can change what the owner's profile shows,
+  // so the public view is refreshed alongside the private one.
+  const invalidateOwnPlaylists = () => {
+    if (walletAddress) {
+      queryClient.invalidateQueries({ queryKey: [PUBLIC_PLAYLISTS_KEY, walletAddress.toLowerCase()] });
+    }
+  };
 
   const foldersQuery = useQuery({
     queryKey: FOLDERS_KEY,
@@ -44,6 +56,7 @@ export function useBookmarkFolders() {
       createBookmarkFolder(params),
     onSuccess: (_data, { suppressToast }) => {
       queryClient.invalidateQueries({ queryKey: FOLDERS_KEY });
+      invalidateOwnPlaylists();
       if (!suppressToast) toast.success('Folder created');
     },
     onError: (_error, { suppressToast }) => {
@@ -52,10 +65,11 @@ export function useBookmarkFolders() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ folderId, ...params }: { folderId: string; name?: string; description?: string; order?: number }) =>
+    mutationFn: ({ folderId, ...params }: { folderId: string; name?: string; description?: string; order?: number; isPublic?: boolean }) =>
       updateBookmarkFolder(folderId, params),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: FOLDERS_KEY });
+      invalidateOwnPlaylists();
       toast.success('Folder updated');
     },
     onError: () => toast.error('Failed to update folder'),
@@ -65,6 +79,7 @@ export function useBookmarkFolders() {
     mutationFn: deleteBookmarkFolder,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: FOLDERS_KEY });
+      invalidateOwnPlaylists();
       toast.success('Folder deleted');
     },
     onError: () => toast.error('Failed to delete folder'),
@@ -77,6 +92,7 @@ export function useBookmarkFolders() {
       queryClient.invalidateQueries({ queryKey: FOLDERS_KEY });
       queryClient.invalidateQueries({ queryKey: ['folder-items'] });
       queryClient.invalidateQueries({ queryKey: ['folder-containment', tokenId] });
+      invalidateOwnPlaylists();
     },
     onError: (_error, { suppressToast }) => {
       if (!suppressToast) toast.error('Failed to add to folder');
@@ -90,6 +106,7 @@ export function useBookmarkFolders() {
       queryClient.invalidateQueries({ queryKey: FOLDERS_KEY });
       queryClient.invalidateQueries({ queryKey: ['folder-items'] });
       queryClient.invalidateQueries({ queryKey: ['folder-containment', tokenId] });
+      invalidateOwnPlaylists();
     },
     onError: (_error, { suppressToast }) => {
       if (!suppressToast) toast.error('Failed to remove from folder');
@@ -183,5 +200,38 @@ export function useBulkAddToFolder() {
       toast.success('Posts added to folder');
     },
     onError: () => toast.error('Failed to add posts'),
+  });
+}
+
+// ─── Public playlists (profile) ────────────────────────────────────────
+
+/**
+ * A profile's public playlists. Unauthenticated; the same query backs both
+ * the tab's count badge and the tab's content, so the two never disagree.
+ */
+export function usePublicPlaylists(address: string | undefined) {
+  const key = (address || '').toLowerCase();
+  return useQuery<PublicPlaylist[]>({
+    queryKey: [PUBLIC_PLAYLISTS_KEY, key],
+    queryFn: async () => {
+      const res = await getPublicPlaylists(key);
+      return res.result || [];
+    },
+    enabled: !!key,
+    staleTime: 2 * 60 * 1000,
+  });
+}
+
+/** One public playlist's posts, newest save first, paged on the server cursor. */
+export function usePublicPlaylistItems(address: string | undefined, playlistId: string | null) {
+  const key = (address || '').toLowerCase();
+  return useInfiniteQuery({
+    queryKey: [PUBLIC_PLAYLISTS_KEY, key, 'items', playlistId],
+    queryFn: ({ pageParam }) => getPublicPlaylistItems(key, playlistId!, { limit: 20, cursor: pageParam }),
+    initialPageParam: null as string | null,
+    getNextPageParam: (last) => (last.hasMore ? last.nextCursor : undefined),
+    enabled: !!key && !!playlistId,
+    staleTime: 60 * 1000,
+    retry: (count, error) => (error as { httpStatus?: number })?.httpStatus === 404 ? false : count < 2,
   });
 }

@@ -955,7 +955,22 @@
     "noTextYet": "No kei gspycherti Text-Byyträg",
     "textStartSaving": "Markier reini Text-Byyträg als Lesezeiche und si erschiine da.",
     "reachedEnd": "Du hesch s Ändi vo dine Lesezeiche erreicht",
-    "loginDescription": "Mäld di aa zum dini gspeicherte Lesezeiche z gsee und z verwaltä."
+    "loginDescription": "Mäld di aa zum dini gspeicherte Lesezeiche z gsee und z verwaltä.",
+    "playlist": {
+      "makePublic": "Öffentlichi Playlist",
+      "makePublicHint": "Jede cha das Ordner uf dim Profil gseh.",
+      "publicBadge": "Öffentli",
+      "copyLink": "Playlist-Link kopiere",
+      "linkCopied": "Playlist-Link kopiert",
+      "itemsCount": "{{count}} Posts",
+      "emptyOwnerHint": "Mach en Lesezeiche-Ordner öffentli zum das do zeige.",
+      "emptyVisitor": "Das Profil hät no kei öffentliche Playlist.",
+      "openBookmarks": "Mini Lesezeiche öffne",
+      "back": "Alli Playlist",
+      "noPosts": "Die Playlist hät no kei Posts.",
+      "unavailable": "Die Playlist isch nümme verfügbar.",
+      "loadMore": "Meh Posts zeige"
+    }
   },
   "notifications": {
     "title": "Nochrichtä",
@@ -1248,6 +1263,9 @@
       "breakdownTitle": "Woher die Reichwiite chunt",
       "dehubFollowers": "DeHub Follower",
       "selfReported": "Soziali Follower-Zahle werded vom Creator yygäbe."
+    },
+    "tabs": {
+      "playlists": "Playlistä"
     }
   },
   "tv": {

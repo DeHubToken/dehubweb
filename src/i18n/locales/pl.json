@@ -954,7 +954,22 @@
     "noTextYet": "Brak zapisanych postów tekstowych",
     "textStartSaving": "Dodaj do zakładek posty tekstowe, a pojawią się tutaj.",
     "reachedEnd": "Dotarłeś do końca swoich zakładek",
-    "loginDescription": "Zaloguj się, aby przeglądać i zarządzać swoimi zakładkami."
+    "loginDescription": "Zaloguj się, aby przeglądać i zarządzać swoimi zakładkami.",
+    "playlist": {
+      "makePublic": "Publiczna lista odtwarzania",
+      "makePublicHint": "Każdy może zobaczyć ten folder w Twoim profilu.",
+      "publicBadge": "Publiczne",
+      "copyLink": "Kopiuj link do playlisty",
+      "linkCopied": "Link do playlisty został skopiowany",
+      "itemsCount": "Posty: {{count}}",
+      "emptyOwnerHint": "Ustaw folder zakładek jako publiczny, aby wyświetlić go tutaj.",
+      "emptyVisitor": "Ten profil nie ma jeszcze publicznych list odtwarzania.",
+      "openBookmarks": "Otwórz moje zakładki",
+      "back": "Wszystkie playlisty",
+      "noPosts": "Ta lista odtwarzania nie ma jeszcze żadnych postów.",
+      "unavailable": "Ta lista odtwarzania nie jest już dostępna.",
+      "loadMore": "Pokaż więcej postów"
+    }
   },
   "notifications": {
     "title": "Powiadomienia",
@@ -1247,6 +1262,9 @@
       "breakdownTitle": "Skąd się bierze ten zasięg",
       "dehubFollowers": "Obserwujący DeHub",
       "selfReported": "Liczby obserwujących społeczności są wprowadzane przez twórcę."
+    },
+    "tabs": {
+      "playlists": "Playlisty"
     }
   },
   "tv": {

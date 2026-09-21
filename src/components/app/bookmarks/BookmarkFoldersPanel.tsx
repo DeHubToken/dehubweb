@@ -13,20 +13,25 @@
  * folder items come back newest-first and that is all it offers, so "oldest
  * first" and "group by channel" are done on the page over the loaded list.
  *
+ * A folder can be flipped public from here: that makes it a playlist on the
+ * owner's profile (Playlists tab), and the copy-link action hands out the
+ * URL that lands a visitor on it.
+ *
  * @module components/app/bookmarks/BookmarkFoldersPanel
  */
 
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ChevronLeft, Folder, FolderOpen, Loader2, Pencil, Trash2, X, Check, ArrowUpDown, FolderInput } from 'lucide-react';
+import { ChevronLeft, Folder, FolderOpen, Globe, Link2, Loader2, Pencil, Trash2, X, Check, ArrowUpDown, FolderInput } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkFolders } from '@/hooks/use-bookmark-folders';
-import { getFolderItems, addItemsToFolderBulk, removeItemFromFolder, type BookmarkFolderItem } from '@/lib/api/dehub';
+import { getFolderItems, addItemsToFolderBulk, removeItemFromFolder, publicPlaylistPath, type BookmarkFolder, type BookmarkFolderItem } from '@/lib/api/dehub';
 import { buildImageUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { AppState } from '@/components/app/AppState';
@@ -54,9 +59,61 @@ function itemThumbnail(item: BookmarkFolderItem): string | undefined {
   return fromImages || buildImageUrl(post.tokenId, post.imageUrl);
 }
 
+/**
+ * The public switch and, once public, the copy-link button. Same two controls
+ * on a folder row and on the open folder's header, so the panel never has two
+ * slightly different ways of doing the one thing.
+ */
+function PublicControls({
+  folder,
+  onToggle,
+  onCopyLink,
+  compact = false,
+}: {
+  folder: BookmarkFolder;
+  onToggle: (folder: BookmarkFolder) => void;
+  onCopyLink: (folder: BookmarkFolder) => void;
+  compact?: boolean;
+}) {
+  const { t } = useTranslation();
+  return (
+    <>
+      {folder.isPublic && (
+        <button
+          type="button"
+          onClick={() => onCopyLink(folder)}
+          className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10"
+          aria-label={t('bookmarks.playlist.copyLink')}
+          title={t('bookmarks.playlist.copyLink')}
+        >
+          <Link2 className="w-4 h-4" />
+        </button>
+      )}
+      <button
+        type="button"
+        role="switch"
+        aria-checked={!!folder.isPublic}
+        onClick={() => onToggle(folder)}
+        className={cn(
+          'flex items-center gap-1.5 rounded-lg p-2 transition-colors',
+          folder.isPublic ? 'text-white bg-white/10 hover:bg-white/15' : 'text-zinc-400 hover:text-white hover:bg-white/10',
+        )}
+        aria-label={t('bookmarks.playlist.makePublic')}
+        title={`${t('bookmarks.playlist.makePublic')} — ${t('bookmarks.playlist.makePublicHint')}`}
+      >
+        <Globe className="w-4 h-4" />
+        {!compact && folder.isPublic && (
+          <span className="text-[11px] font-semibold uppercase tracking-wide">{t('bookmarks.playlist.publicBadge')}</span>
+        )}
+      </button>
+    </>
+  );
+}
+
 export function BookmarkFoldersPanel() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { t } = useTranslation();
+  const { isAuthenticated, user, walletAddress } = useAuth();
   const queryClient = useQueryClient();
   const {
     folders,
@@ -121,6 +178,26 @@ export function BookmarkFoldersPanel() {
   const refreshFolders = () => {
     queryClient.invalidateQueries({ queryKey: ['bookmark-folders'] });
     queryClient.invalidateQueries({ queryKey: ['folder-items'] });
+  };
+
+  const togglePublic = (folder: BookmarkFolder) => {
+    updateFolder({ folderId: folder._id, isPublic: !folder.isPublic });
+  };
+
+  // The profile URL is the username when there is one; the address route
+  // resolves too, so a profile that never picked a name still gets a link.
+  const profileHandle = user?.username || walletAddress || '';
+  const copyPlaylistLink = async (folder: BookmarkFolder) => {
+    if (!profileHandle) return;
+    const url = `${window.location.origin}${publicPlaylistPath(profileHandle, folder._id)}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success(t('bookmarks.playlist.linkCopied'));
+    } catch {
+      // Clipboard access can be refused (no permission, insecure context);
+      // the URL is still usable, so put it where the user can grab it.
+      window.prompt(t('bookmarks.playlist.copyLink'), url);
+    }
   };
 
   const removeSelected = async () => {
@@ -231,7 +308,14 @@ export function BookmarkFoldersPanel() {
                     onClick={() => { setOpenFolderId(folder._id); setSelected(new Set()); }}
                     className="flex-1 min-w-0 text-left"
                   >
-                    <span className="block truncate font-medium text-white">{folder.name}</span>
+                    <span className="flex items-center gap-1.5 font-medium text-white">
+                      <span className="truncate">{folder.name}</span>
+                      {folder.isPublic && (
+                        <span className="inline-flex shrink-0" title={t('bookmarks.playlist.publicBadge')}>
+                          <Globe className="w-3.5 h-3.5 text-zinc-400" aria-label={t('bookmarks.playlist.publicBadge')} />
+                        </span>
+                      )}
+                    </span>
                     <span className="block text-xs text-zinc-500">
                       {folder.itemCount ?? 0} {folder.itemCount === 1 ? 'post' : 'posts'}
                     </span>
@@ -261,6 +345,7 @@ export function BookmarkFoldersPanel() {
                   </>
                 ) : (
                   <>
+                    <PublicControls folder={folder} onToggle={togglePublic} onCopyLink={copyPlaylistLink} compact />
                     <button
                       onClick={() => { setRenamingId(folder._id); setRenameValue(folder.name); }}
                       className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10"
@@ -305,6 +390,7 @@ export function BookmarkFoldersPanel() {
           <p className="truncate font-semibold text-white">{openFolder.name}</p>
           <p className="text-xs text-zinc-500">{items.length} {items.length === 1 ? 'post' : 'posts'}</p>
         </div>
+        <PublicControls folder={openFolder} onToggle={togglePublic} onCopyLink={copyPlaylistLink} />
         <Button
           size="sm"
           variant="ghost"

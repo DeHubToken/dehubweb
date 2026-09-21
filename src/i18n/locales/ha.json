@@ -994,7 +994,22 @@
     "noTextYet": "Babu rubutattun wallafe-wallafen da aka ajiye tukuna",
     "textStartSaving": "Yi alamar shafi a wallafe-wallafen rubutu kawai, za su bayyana a nan.",
     "reachedEnd": "Ka kai ƙarshen alamomin shafinka",
-    "loginDescription": "Shiga don gani da sarrafa alamomin shafinka da aka ajiye."
+    "loginDescription": "Shiga don gani da sarrafa alamomin shafinka da aka ajiye.",
+    "playlist": {
+      "makePublic": "Jerin wasan kwaikwayo na jama'a",
+      "makePublicHint": "Kowane mutum na iya ganin wannan babban fayil a kan bayanan ku.",
+      "publicBadge": "Jama'a",
+      "copyLink": "Kwafi lissafin waža mahada",
+      "linkCopied": "Playlist mahada kwafe",
+      "itemsCount": "{{count}} posts",
+      "emptyOwnerHint": "Make wani bookmark babban fayil jama'a don nuna shi a nan.",
+      "emptyVisitor": "Wannan bayanin martaba ba shi da jerin waƙoƙin jama'a har yanzu.",
+      "openBookmarks": "Bude alamomin littafina",
+      "back": "Duk lissafin waža",
+      "noPosts": "Wannan playlist ba shi da posts tukuna.",
+      "unavailable": "Wannan jerin waƙoƙin ba shi da amfani kuma.",
+      "loadMore": "Nuna ƙarin posts"
+    }
   },
   "notifications": {
     "title": "Sanarwa",
@@ -1287,6 +1302,9 @@
       "breakdownTitle": "Inda wannan isa ya fito daga",
       "dehubFollowers": "DeHub mabiya",
       "selfReported": "An shigar da ƙididdigar mabiya zamantakewa ta mahalicci."
+    },
+    "tabs": {
+      "playlists": "Jerin-bidiyoyi"
     }
   },
   "tv": {

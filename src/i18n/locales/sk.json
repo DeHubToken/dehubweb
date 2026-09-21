@@ -1057,7 +1057,22 @@
     "loginDescription": "Prihláste sa na zobrazenie a správu uložených záložiek.",
     "noBookmarks": "Zatiaľ žiadne záložky",
     "removeBookmark": "Odstrániť záložku",
-    "addBookmark": "Pridať záložku"
+    "addBookmark": "Pridať záložku",
+    "playlist": {
+      "makePublic": "Verejný zoznam skladieb",
+      "makePublicHint": "Tento priečinok môže vo vašom profile vidieť ktokoľvek.",
+      "publicBadge": "Verejné",
+      "copyLink": "Kopírovať odkaz na zoznam videí",
+      "linkCopied": "Odkaz na zoznam videí bol skopírovaný",
+      "itemsCount": "Príspevky ({{count}})",
+      "emptyOwnerHint": "Zverejnite priečinok záložiek a zobrazte ho tu.",
+      "emptyVisitor": "Tento profil zatiaľ nemá žiadne verejné zoznamy videí.",
+      "openBookmarks": "Otvoriť moje záložky",
+      "back": "Všetky zoznamy skladieb",
+      "noPosts": "Tento zoznam skladieb zatiaľ nemá žiadne príspevky.",
+      "unavailable": "Tento zoznam skladieb už nie je k dispozícii.",
+      "loadMore": "Zobraziť viac príspevkov"
+    }
   },
   "notifications": {
     "title": "Upozornenia",
@@ -1387,6 +1402,9 @@
       "breakdownTitle": "Odkiaľ pochádza tento dosah",
       "dehubFollowers": "Sledovatelia DeHubu",
       "selfReported": "Počet sledovateľov na sociálnych sieťach zadáva tvorca."
+    },
+    "tabs": {
+      "playlists": "Playlisty"
     }
   },
   "tv": {

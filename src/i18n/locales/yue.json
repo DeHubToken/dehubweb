@@ -993,7 +993,22 @@
     "noTextYet": "仲未有儲存嘅文字帖子",
     "textStartSaving": "將純文字帖子加入書籤，佢哋就會喺呢度出現。",
     "reachedEnd": "你已經睇晒所有書籤",
-    "loginDescription": "登入嚟睇同管理你嘅書籤。"
+    "loginDescription": "登入嚟睇同管理你嘅書籤。",
+    "playlist": {
+      "makePublic": "公開播放列表",
+      "makePublicHint": "任何人都可以喺你個人檔案入面睇到呢個資料夾。",
+      "publicBadge": "公眾",
+      "copyLink": "複製播放清單連結",
+      "linkCopied": "複製咗播放清單連結",
+      "itemsCount": "{{count}} 帖子",
+      "emptyOwnerHint": "將書籤資料夾設為公開，即可在此顯示。",
+      "emptyVisitor": "呢個個人檔案仲未有公開播放清單。",
+      "openBookmarks": "打開我嘅書籤",
+      "back": "所有播放清單",
+      "noPosts": "呢個播放清單仲未有帖子。",
+      "unavailable": "呢個播放清單唔再有得用。",
+      "loadMore": "顯示更多帖子"
+    }
   },
   "notifications": {
     "title": "通知",
@@ -1286,6 +1301,9 @@
       "breakdownTitle": "呢個觸及範圍嚟自邊度",
       "dehubFollowers": "DeHub 追蹤者",
       "selfReported": "社交追蹤者數目係由創作者輸入。"
+    },
+    "tabs": {
+      "playlists": "播放清單"
     }
   },
   "tv": {
