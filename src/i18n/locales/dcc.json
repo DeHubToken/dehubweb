@@ -1942,7 +1942,19 @@
   },
   "live": {
     "chatJoined": "शामिल हुए",
-    "chatSentGift": "भेजा"
+    "chatSentGift": "भेजा",
+    "progress": {
+      "xp": "{{xp}} XP",
+      "card": {
+        "century": {
+          "hint": "हंड्रेड क्वालिफाइंग अवर्स ऑन एअर."
+        },
+        "legend": {
+          "name": "लीजेंड",
+          "hint": "लेवल टेन."
+        }
+      }
+    }
   },
   "creatorFlow": {
     "syncError": "आपल्या खात्यात सेव्ह करू शकलो नाही",
