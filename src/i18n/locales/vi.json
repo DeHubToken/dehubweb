@@ -1304,6 +1304,14 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "migrateNoOldAccount": "Không có tài khoản DeHub nào trước đó trên thông tin đăng nhập này, vì vậy không có gì để chuyển sang. Thay vào đó, hãy thiết lập một tài khoản mới.",
+    "migrateInstead": "Chuyển tài khoản cũ sang",
+    "setUpNewAccount": "Thiết lập tài khoản mới",
+    "createNewInstead": "Tạo tài khoản mới thay thế",
+    "migrateAccount": "Di chuyển tài khoản",
+    "importExternalWallet": "Nhập ví bên ngoài",
+    "migrateIntentHint": "Đăng nhập bằng bất kỳ tùy chọn nào bên dưới. Nếu nó khớp với tài khoản DeHub trước đó, bạn sẽ chuyển ví, tên người dùng và số dư của tài khoản đó.",
+    "importIntentHint": "Đăng nhập bằng bất kỳ tùy chọn nào bên dưới, sau đó dán cụm khôi phục hoặc khóa riêng tư của ví bạn muốn sử dụng.",
     "unlockBiometricContinue": "Mở khóa ví bằng dấu vân tay hoặc khuôn mặt để tiếp tục.",
     "unlockBiometricSignIn": "Mở khóa ví bằng dấu vân tay hoặc mặt để đăng nhập.",
     "unlockPasswordContinue": "Nhập mật khẩu ví của bạn để tiếp tục.",

@@ -1407,6 +1407,14 @@
     "emailRequired": "メールは必須です"
   },
   "loginModal": {
+    "migrateNoOldAccount": "このログインには以前のDeHubアカウントがないため、引き継ぐものはありません。代わりに新しいアカウントを設定してください。",
+    "migrateInstead": "古いアカウントを引き継ぐ",
+    "setUpNewAccount": "新しいアカウントを設定する",
+    "createNewInstead": "代わりに新しいアカウントを作成する",
+    "migrateAccount": "アカウントを移行する",
+    "importExternalWallet": "外部ウォレットをインポートする",
+    "migrateIntentHint": "以下のいずれかの方法でサインインしてください。以前のDeHubアカウントと一致する場合、そのウォレット、ユーザー名、残高を引き継ぎます。",
+    "importIntentHint": "以下のいずれかの方法でサインインし、使用したいウォレットのリカバリーフレーズまたは秘密鍵を貼り付けてください。",
     "unlockBiometricContinue": "続行するには、指紋または顔でウォレットのロックを解除してください。",
     "unlockBiometricSignIn": "指紋または顔でウォレットのロックを解除してサインインします。",
     "unlockPasswordContinue": "続行するにはウォレットのパスワードを入力してください。",

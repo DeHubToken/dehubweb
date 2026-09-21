@@ -1405,6 +1405,14 @@
     "email": "E-mail"
   },
   "loginModal": {
+    "migrateNoOldAccount": "Ehhez a bejelentkezéshez nincs korábbi DeHub-fiók, így nincs mit átvinni. Hozz létre inkább egy új fiókot.",
+    "migrateInstead": "Hozd át inkább a régi fiókot",
+    "setUpNewAccount": "Új fiók létrehozása",
+    "createNewInstead": "Hozz létre inkább egy új fiókot",
+    "migrateAccount": "Fiók áttelepítése",
+    "importExternalWallet": "Külső pénztárca importálása",
+    "migrateIntentHint": "Jelentkezz be az alábbi lehetőségek bármelyikével. Ha egyezik egy korábbi DeHub fiókkal, akkor áthozod a pénztárcáját, a felhasználónevét és az egyenlegét.",
+    "importIntentHint": "Jelentkezzen be az alábbi lehetőségek bármelyikével, majd illessze be a használni kívánt pénztárca helyreállítási kifejezését vagy privát kulcsát.",
     "unlockBiometricContinue": "A folytatáshoz oldja fel pénztárcáját ujjlenyomatával vagy arcával.",
     "unlockBiometricSignIn": "A bejelentkezéshez oldja fel a pénztárcáját az ujjlenyomatával vagy az arcával.",
     "unlockPasswordContinue": "A folytatáshoz adja meg a pénztárca jelszavát.",

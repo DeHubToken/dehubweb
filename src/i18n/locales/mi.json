@@ -1424,6 +1424,14 @@
     "failedSubmit": "Kāore i taea te tuku tono. Ngana anō."
   },
   "loginModal": {
+    "migrateNoOldAccount": "Kāore he pūkete DeHub o mua i tēnei takiuru, nō reira kāore he mea hei kawe mai. Whakaritea he pūkete hou hei utu.",
+    "migrateInstead": "Kawea mai te pūkete tawhito hei utu",
+    "setUpNewAccount": "Whakaritea he pūkete hou",
+    "createNewInstead": "Hangaia he pūkete hou hei utu",
+    "migrateAccount": "Nekehia te pūkete",
+    "importExternalWallet": "Kawemai te pēke o waho",
+    "migrateIntentHint": "Takiuru mā te kōwhiri i tētahi o ngā kōwhiringa i raro nei. Ki te rite tēnei ki tētahi pūkete DeHub o mua, ka kawea mai tōna pēke, ingoa kaiwhakamahi, me te toenga.",
+    "importIntentHint": "Takiuru mā te kōwhiri i tētahi o ngā kōwhiringa i raro nei, kātahi ka whakapiri i te rerenga whakaora, i te kī tūmataiti rānei o te pēke e hiahia ana koe ki te whakamahi.",
     "unlockBiometricContinue": "Whakatuwherahia to putea me to tohu maihao, kanohi ranei ki te haere tonu.",
     "unlockBiometricSignIn": "Whakatuwherahia to putea me to tohu maihao, kanohi ranei ki te haina.",
     "unlockPasswordContinue": "Whakauru i to kupuhipa putea ki te haere tonu.",

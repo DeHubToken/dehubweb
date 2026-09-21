@@ -1386,6 +1386,14 @@
     "failedSubmit": "提交申请失败。请再试过。"
   },
   "loginModal": {
+    "migrateNoOldAccount": "呢个登录信息上面没得早先个 DeHub 账号，所以没啥好带回来个。改而新建一个账号。",
+    "migrateInstead": "改而带回旧账号",
+    "setUpNewAccount": "新建一个账号",
+    "createNewInstead": "改而新建一个账号",
+    "migrateAccount": "迁移账号",
+    "importExternalWallet": "导入外部钱包",
+    "migrateIntentHint": "用下面任意一个选项登录。如果匹配到早先个 DeHub 账号，就会带回佢个钱包、用户名同余额。",
+    "importIntentHint": "用下面任意一个选项登录，然后粘贴你想用个钱包个恢复短语或者私钥。",
     "unlockBiometricContinue": "用你的指纹或脸部解锁你的钱包来继续。",
     "unlockBiometricSignIn": "用你的指纹或脸部解锁你的钱包来登录。",
     "unlockPasswordContinue": "输入你的钱包密码来继续。",

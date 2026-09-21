@@ -1406,6 +1406,14 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "migrateNoOldAccount": "Walang naunang DeHub account sa pag-login na ito, kaya walang maililipat. Mag-set up na lang ng bagong account.",
+    "migrateInstead": "Ilipat ang lumang account",
+    "setUpNewAccount": "Mag-set up ng bagong account",
+    "createNewInstead": "Gumawa ng bagong account",
+    "migrateAccount": "I-migrate ang account",
+    "importExternalWallet": "Mag-import ng external wallet",
+    "migrateIntentHint": "Mag-sign in gamit ang alinman sa mga opsyon sa ibaba. Kung tumugma ito sa isang naunang DeHub account, maililipat ang wallet, username, at balanse nito.",
+    "importIntentHint": "Mag-sign in gamit ang alinman sa mga opsyon sa ibaba, pagkatapos ay i-paste ang recovery phrase o private key ng wallet na gusto mong gamitin.",
     "unlockBiometricContinue": "I - unlock ang iyong wallet gamit ang iyong fingerprint o mukha para magpatuloy.",
     "unlockBiometricSignIn": "I - unlock ang iyong wallet gamit ang iyong fingerprint o mukha para mag - sign in.",
     "unlockPasswordContinue": "Ilagay ang password ng iyong wallet para magpatuloy.",

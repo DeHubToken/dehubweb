@@ -1411,6 +1411,14 @@
     "email": "邮箱"
   },
   "loginModal": {
+    "migrateNoOldAccount": "此登录没有之前的 DeHub 账户，因此没有内容可以迁移。请设置一个新账户。",
+    "migrateInstead": "迁移旧账户",
+    "setUpNewAccount": "设置新账户",
+    "createNewInstead": "创建新账户",
+    "migrateAccount": "迁移账户",
+    "importExternalWallet": "导入外部钱包",
+    "migrateIntentHint": "使用以下任意选项登录。如果匹配到之前的 DeHub 账户，您将迁移其钱包、用户名和余额。",
+    "importIntentHint": "使用以下任意选项登录，然后粘贴您想要使用的钱包的恢复短语或私钥。",
     "unlockBiometricContinue": "使用指纹或面部识别解锁钱包以继续。",
     "unlockBiometricSignIn": "使用指纹或面部识别功能解锁钱包，即可登录。",
     "unlockPasswordContinue": "输入您的钱包密码以继续。",

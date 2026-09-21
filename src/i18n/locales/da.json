@@ -1413,6 +1413,14 @@
     "email": "E-mail"
   },
   "loginModal": {
+    "migrateNoOldAccount": "Der er ingen tidligere DeHub-konto på dette login, så der er intet at overføre. Opret en ny konto i stedet.",
+    "migrateInstead": "Bring den gamle konto over i stedet",
+    "setUpNewAccount": "Opret en ny konto",
+    "createNewInstead": "Opret en ny konto i stedet",
+    "migrateAccount": "Overfør konto",
+    "importExternalWallet": "Importer ekstern tegnebog",
+    "migrateIntentHint": "Log ind med en hvilken som helst mulighed nedenfor. Hvis den matcher en tidligere DeHub-konto, overfører du dens tegnebog, brugernavn og saldo.",
+    "importIntentHint": "Log ind med en valgmulighed nedenfor, og indsæt derefter gendannelsesfrasen eller den private nøgle for den tegnebog, du vil bruge.",
     "unlockBiometricContinue": "Lås din tegnebog op med dit fingeraftryk eller ansigt for at fortsætte.",
     "unlockBiometricSignIn": "Lås din tegnebog op med dit fingeraftryk eller ansigt for at logge ind.",
     "unlockPasswordContinue": "Indtast adgangskoden til din tegnebog for at fortsætte.",
