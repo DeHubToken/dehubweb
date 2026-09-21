@@ -2251,6 +2251,57 @@ export type Database = {
         }
         Relationships: []
       }
+      dex_pool_positions: {
+        Row: {
+          block_number: number
+          chain_id: number
+          created_at: string
+          mint_tx_hash: string
+          token_id: string
+        }
+        Insert: {
+          block_number: number
+          chain_id: number
+          created_at?: string
+          mint_tx_hash: string
+          token_id: string
+        }
+        Update: {
+          block_number?: number
+          chain_id?: number
+          created_at?: string
+          mint_tx_hash?: string
+          token_id?: string
+        }
+        Relationships: []
+      }
+      dex_pool_scan: {
+        Row: {
+          chain_id: number
+          floor_block: number
+          from_block: number
+          to_block: number
+          updated_at: string
+          window_blocks: number
+        }
+        Insert: {
+          chain_id: number
+          floor_block: number
+          from_block: number
+          to_block: number
+          updated_at?: string
+          window_blocks?: number
+        }
+        Update: {
+          chain_id?: number
+          floor_block?: number
+          from_block?: number
+          to_block?: number
+          updated_at?: string
+          window_blocks?: number
+        }
+        Relationships: []
+      }
       dex_sell_positions: {
         Row: {
           chain_id: number
@@ -6896,6 +6947,7 @@ export type Database = {
         Args: { p_token_ids: string[]; p_viewer_hash: string }
         Returns: number
       }
+      record_dex_pool_positions: { Args: { p_rows: Json }; Returns: undefined }
       record_page_views: {
         Args: { p_address?: string; p_events: Json; p_viewer_id: string }
         Returns: number
