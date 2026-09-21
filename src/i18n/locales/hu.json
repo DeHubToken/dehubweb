@@ -1568,7 +1568,25 @@
     "minutesAgo": "{{count}} perce",
     "hoursAgo": "{{count}} órája",
     "daysAgo": "{{count}} napja",
-    "monthsAgo": "{{count}} hónapja"
+    "monthsAgo": "{{count}} hónapja",
+    "forLabel": "->",
+    "againstLabel": "Ellene",
+    "discussion": {
+      "title": "Megbeszélés",
+      "intro": "Szavazás előtt tegyen fel további kérdéseket, vagy vitassa meg az ajánlatot.",
+      "reply": "Válasz",
+      "replyingTo": "Válasz neki: {{name}}",
+      "writeReply": "Válasz írása",
+      "edited": "szerkesztve",
+      "showMoreReplies": "{{count}} további válasz megjelenítése",
+      "showMoreReplies_one": "{{count}} további válasz megjelenítése",
+      "deleteTitle": "Törlöd ezt a hozzászólást?",
+      "deleteDescription": "Ez eltávolítja a megjegyzést és annak válaszait mindenki számára.",
+      "signInToComment": "Jelentkezz be, hogy csatlakozhass a beszélgetéshez",
+      "empty": "Még nincsenek kérdések. Kezdd el a beszélgetést.",
+      "joinOnProposal": "Csatlakozz a beszélgetéshez",
+      "authorChip": "A javaslat szerzője"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "A város beszéde",

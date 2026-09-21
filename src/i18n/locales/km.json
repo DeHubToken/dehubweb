@@ -1562,7 +1562,25 @@
     "minutesAgo": "{{count}} នាទីមុន",
     "hoursAgo": "{{count}} ម៉ោងមុន",
     "daysAgo": "{{count}} ថ្ងៃមុន",
-    "monthsAgo": "{{count}} ខែមុន"
+    "monthsAgo": "{{count}} ខែមុន",
+    "forLabel": "សម្រាប់",
+    "againstLabel": "ទល់នឹង",
+    "discussion": {
+      "title": "ការពិភាក្សា",
+      "intro": "វា ក៏ ជា ការ ប្រឹក្សា ដែរ ដើម្បី ពិភាក្សា មុន ពេល បោះឆ្នោត ។",
+      "reply": "ឆ្លើយតប",
+      "replyingTo": "ការឆ្លើយតបទៅនឹង {{name}}",
+      "writeReply": "សរសេរការឆ្លើយតប",
+      "edited": "បានកែសម្រួល",
+      "showMoreReplies": "បង្ហាញ {{count}} ការឆ្លើយតបច្រើនទៀត",
+      "showMoreReplies_one": "បង្ហាញ {{count}} ឆ្លើយតបច្រើនទៀត",
+      "deleteTitle": "លុបមតិយោបល់នេះឬ?",
+      "deleteDescription": "វា លុប ចោល ការ សរសេរ និង ការ ឆ្លើយ តប របស់ វា ទៅ កាន់ មនុស្ស គ្រប់ គ្នា ។",
+      "signInToComment": "ចុះឈ្មោះចូលដើម្បីចូលរួមក្នុងការពិភាក្សា",
+      "empty": "មិនទាន់មានសំណួរនៅឡើយទេ ។ ចាប់ផ្តើមការពិភាក្សា ។",
+      "joinOnProposal": "ចូលរួមក្នុងការពិភាក្សា",
+      "authorChip": "អ្នកនិពន្ធសំណើ"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "ការនិយាយរបស់ទីក្រុង",

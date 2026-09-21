@@ -1839,7 +1839,25 @@
     "minutesAgo": "{{count}}m ago",
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
-    "monthsAgo": "{{count}}mo ago"
+    "monthsAgo": "{{count}}mo ago",
+    "forLabel": "Misalnya,",
+    "againstLabel": "Disaster",
+    "discussion": {
+      "title": "Perbincangan",
+      "intro": "Tanya soalan susulan atau bincangkan cadangan sebelum anda mengundi.",
+      "reply": "Balas",
+      "replyingTo": "Membalas kepada {{name}}",
+      "writeReply": "Tulis jawapan",
+      "edited": "diedit",
+      "showMoreReplies": "Tunjukkan {{count}} lagi jawapan",
+      "showMoreReplies_one": "Tunjukkan {{count}} lagi jawapan",
+      "deleteTitle": "Hapuskan komen ini?",
+      "deleteDescription": "Ini membuang komen dan jawapannya untuk semua orang.",
+      "signInToComment": "Log masuk untuk menyertai perbincangan",
+      "empty": "Tiada soalan lagi. Mulakan perbincangan.",
+      "joinOnProposal": "Sertai perbincangan",
+      "authorChip": "Pengarang cadangan"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Pembicaraan Kota",

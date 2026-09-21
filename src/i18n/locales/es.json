@@ -1572,7 +1572,25 @@
     "minutesAgo": "hace {{count}}m",
     "hoursAgo": "hace {{count}}h",
     "daysAgo": "hace {{count}}d",
-    "monthsAgo": "hace {{count}}me"
+    "monthsAgo": "hace {{count}}me",
+    "forLabel": "Por",
+    "againstLabel": "En contra",
+    "discussion": {
+      "title": "Discusión",
+      "intro": "Haga preguntas de seguimiento o discuta la propuesta antes de votar.",
+      "reply": "Responder",
+      "replyingTo": "Respondiendo a {{name}}",
+      "writeReply": "Escribe una respuesta",
+      "edited": "editado",
+      "showMoreReplies": "Mostrar {{count}} respuestas más",
+      "showMoreReplies_one": "Mostrar {{count}} respuesta más",
+      "deleteTitle": "¿Eliminar este comentario?",
+      "deleteDescription": "Esto elimina el comentario y sus respuestas para todos.",
+      "signInToComment": "Inicia sesión para unirte a la discusión",
+      "empty": "Aún no hay preguntas. Comienza la discusión.",
+      "joinOnProposal": "Únete a la discusión",
+      "authorChip": "Autor de la propuesta"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Lo más comentado",

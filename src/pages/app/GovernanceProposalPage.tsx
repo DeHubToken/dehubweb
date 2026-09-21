@@ -3,7 +3,7 @@
  * Route: /app/governance/:proposalId
  */
 
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useGovernanceProposal } from '@/hooks/use-governance-proposal';
 import {
   useGovernanceUserVotes,
@@ -11,26 +11,21 @@ import {
   useSelfVoteWeight,
   type GovernanceProposal,
 } from '@/hooks/use-governance';
-import { useGovernanceComments, useSubmitGovernanceComment, useDeleteGovernanceComment } from '@/hooks/use-governance-comments';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
-import { useCallback, useRef, useState } from 'react';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { ArrowLeft, Loader2, Send, Trash2 } from 'lucide-react';
+import { useCallback, useEffect, useRef } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { TranslatableText } from '@/components/app/TranslatableText';
-import { Input } from '@/components/ui/input';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
-import { UserAvatar } from '@/components/app/UserAvatar';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
-import { useMention } from '@/hooks/use-mention';
-import { UserMentionDropdown } from '@/components/app/mentions';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { ProposalVerdictLabel, verdictOf, votingTimeLeft, isVotingClosed } from '@/components/app/governance/ProposalVerdict';
+import { ProposalDiscussion } from '@/components/app/governance/ProposalDiscussion';
 
 function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -50,9 +45,12 @@ function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string):
 export default function GovernanceProposalPage() {
   const { proposalId } = useParams<{ proposalId: string }>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  // A comment notification lands on the comment it was about — the same
+  // `?comment=` the post page and the features board read.
+  const focusedCommentId = searchParams.get('comment');
   const { t } = useTranslation();
-  const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
-  const isMobile = useIsMobile();
+  const { isAuthenticated, openLoginModal } = useAuth();
 
   const { data: proposal, isLoading } = useGovernanceProposal(proposalId);
   const { data: userVotes } = useGovernanceUserVotes();
@@ -60,17 +58,13 @@ export default function GovernanceProposalPage() {
 
   const { weight: userWeight, badgeName: userBadge } = useSelfVoteWeight();
 
-  // Comments — always visible on detail page
-  const { data: comments, isLoading: commentsLoading } = useGovernanceComments(proposalId ?? null);
-  const submitComment = useSubmitGovernanceComment();
-  const deleteComment = useDeleteGovernanceComment();
-  const [commentText, setCommentText] = useState('');
-  const commentInputRef = useRef<HTMLInputElement>(null);
-
-  const mention = useMention({
-    inputRef: commentInputRef,
-    onMentionInsert: (_user, newText) => setCommentText(newText.slice(0, 500)),
-  });
+  // The discussion panel sits under the card; the comment action and a
+  // comment deep link both bring it into view.
+  const discussionRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!focusedCommentId || !proposal) return;
+    discussionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [focusedCommentId, proposal]);
 
   const currentVote = userVotes?.[proposalId ?? '']?.type;
 
@@ -87,16 +81,6 @@ export default function GovernanceProposalPage() {
     },
     [isAuthenticated, openLoginModal, proposalId, currentVote, voteMutation, userWeight, userBadge, t]
   );
-
-  const handleSubmitComment = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isAuthenticated) { openLoginModal(); return; }
-    if (!commentText.trim() || !proposalId) return;
-    submitComment.mutate(
-      { proposalId, content: commentText },
-      { onSuccess: () => setCommentText('') }
-    );
-  };
 
   if (isLoading) {
     return (
@@ -176,8 +160,8 @@ export default function GovernanceProposalPage() {
         {/* Vote ratio bar */}
         <div className="space-y-1 mb-3">
           <div className="flex justify-between text-[10px]">
-            <span className="text-emerald-400 font-medium">{forPct}% {t('governance.forLabel', 'For')}</span>
-            <span className="text-red-400 font-medium">{againstPct}% {t('governance.againstLabel', 'Against')}</span>
+            <span className="text-emerald-400 font-medium">{forPct}% {t('governance.forLabel')}</span>
+            <span className="text-red-400 font-medium">{againstPct}% {t('governance.againstLabel')}</span>
           </div>
           <div className="h-1.5 rounded-full bg-white/5 overflow-hidden flex">
             {total > 0 ? (
@@ -194,7 +178,7 @@ export default function GovernanceProposalPage() {
         <ActionBar
           postId={proposal.id}
           className="p-0"
-          onComment={() => commentInputRef.current?.focus()}
+          onComment={() => discussionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
           onLike={() => handleVote(1)}
           onDislike={() => handleVote(-1)}
           isLiked={isLiked}
@@ -207,105 +191,15 @@ export default function GovernanceProposalPage() {
         />
       </div>
 
-      {/* Comments — always visible */}
-      <div className="mt-4 rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-4">
-        <h3 className="text-white text-sm font-semibold mb-3">{t('governance.comments', 'Comments')}</h3>
-
-        {commentsLoading ? (
-          <div className="flex justify-center py-4">
-            <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
-          </div>
-        ) : comments && comments.length > 0 ? (
-          <div className="space-y-3 mb-4">
-            {comments.map((comment) => {
-              const commentAvatar = comment.avatar && comment.wallet_address
-                ? buildAvatarUrl(comment.wallet_address, comment.avatar) : null;
-              const commentName = comment.username
-                ? `@${comment.username}`
-                : `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;
-              const isOwn = walletAddress?.toLowerCase() === comment.wallet_address.toLowerCase();
-              return (
-                <div key={comment.id} className="flex gap-2 group">
-                  <UserAvatar
-                    name={comment.username || comment.wallet_address.slice(0, 6)}
-                    handle={comment.username || comment.wallet_address}
-                    avatarUrl={commentAvatar}
-                    size="sm"
-                    className="w-6 h-6 shrink-0 mt-0.5"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-zinc-400 text-[11px] font-medium">{commentName}</span>
-                      <span className="text-zinc-500 text-[10px]">{formatTimeAgo(comment.created_at, t)}</span>
-                      {isOwn && (
-                        <button
-                          type="button"
-                          onClick={() => deleteComment.mutate({ commentId: comment.id, proposalId: proposal.id })}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity ml-auto"
-                        >
-                          <Trash2 className="w-3 h-3 text-zinc-500 hover:text-red-400" />
-                        </button>
-                      )}
-                    </div>
-                    <TranslatableText text={comment.content} className="text-zinc-300 text-xs leading-relaxed" as="p" />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <p className="text-zinc-500 text-xs text-center py-3 mb-3">{t('governance.noCommentsYet')}</p>
-        )}
-
-        <form onSubmit={handleSubmitComment} className="relative flex gap-2">
-          <Input
-            ref={commentInputRef}
-            value={commentText}
-            onChange={(e) => {
-              const val = e.target.value;
-              setCommentText(val);
-              mention.handleInput(val, e.target.selectionStart ?? val.length);
-            }}
-            onKeyDown={(e) => {
-              if (mention.isOpen) {
-                const handled = mention.handleKeyDown(e);
-                if (handled) {
-                  if (e.key === 'Enter' || e.key === 'Tab') {
-                    e.preventDefault();
-                    const liveResults = (window as any).__mentionResults || [];
-                    if (liveResults[mention.selectedIndex]) {
-                      mention.handleSelect(liveResults[mention.selectedIndex]);
-                    }
-                  }
-                  return;
-                }
-              }
-            }}
-            placeholder={t('governance.addComment')}
-            maxLength={500}
-            className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs h-8"
-          />
-          <UserMentionDropdown
-            query={mention.query}
-            isOpen={mention.isOpen}
-            position={mention.position}
-            selectedIndex={mention.selectedIndex}
-            onSelectedIndexChange={mention.setSelectedIndex}
-            onSelect={mention.handleSelect}
-            onClose={mention.handleClose}
-          />
-          <button
-            type="submit"
-            disabled={!commentText.trim() || submitComment.isPending}
-            className="w-8 h-8 flex items-center justify-center rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white disabled:opacity-30 transition-opacity"
-          >
-            {submitComment.isPending ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              <Send className="w-3.5 h-3.5" />
-            )}
-          </button>
-        </form>
+      {/* Discussion — always visible: the place to ask before you vote */}
+      <div ref={discussionRef} className="mt-4 rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-4 scroll-mt-24">
+        <h3 className="text-white text-sm font-semibold">{t('governance.discussion.title')}</h3>
+        <p className="text-zinc-500 text-xs mb-2">{t('governance.discussion.intro')}</p>
+        <ProposalDiscussion
+          proposalId={proposal.id}
+          proposalAuthorAddress={proposal.author_wallet_address}
+          focusCommentId={focusedCommentId}
+        />
       </div>
     </div>
   );

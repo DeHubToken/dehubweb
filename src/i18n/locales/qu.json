@@ -1571,7 +1571,25 @@
     "tabProposals": "Yuyaychay",
     "tabPassed": "Pasasqa",
     "tabRejected": "Qhipachisqa",
-    "weeksAgo": "{{count}}simana ñawpaq"
+    "weeksAgo": "{{count}}simana ñawpaq",
+    "forLabel": "napaq...",
+    "againstLabel": "Contrapi",
+    "discussion": {
+      "title": "Rimanakuy",
+      "intro": "Qatipanapaq tapukuykunata ruway utaq manaraq votachkaspa chay propuestamanta rimanakuy.",
+      "reply": "Kutichiy",
+      "replyingTo": "{{name}} nisqaman kutichispa.",
+      "writeReply": "Kutichiyta qillqay",
+      "edited": "allichasqa",
+      "showMoreReplies": "{{count}} aswan kutichiykunata rikuchiy",
+      "showMoreReplies_one": "{{count}} aswan kutichiyta rikuchiy",
+      "deleteTitle": "¿Kay rimayta chinkachiy?",
+      "deleteDescription": "Kayqa llapa runapaq rimayta, kutichiyninkunata ima hurqun.",
+      "signInToComment": "Rimanakuyman hukllawakunaykipaq yaykuy",
+      "empty": "Manaraqmi tapukuykuna kanchu. Rimanakuyta qallariy.",
+      "joinOnProposal": "Rimanakuyman hukllawakuy",
+      "authorChip": "Propuesta qillqaq"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Llaqtap rimaynin",

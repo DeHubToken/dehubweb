@@ -1534,7 +1534,25 @@
     "minutesAgo": "{{count}} meneti ki muri",
     "hoursAgo": "{{count}} hāora ki muri",
     "daysAgo": "{{count}} rā ki muri",
-    "monthsAgo": "{{count}} marama ki muri"
+    "monthsAgo": "{{count}} marama ki muri",
+    "forLabel": "ataahua te ra",
+    "againstLabel": "Ki te whawhai",
+    "discussion": {
+      "title": "Kōrerorero",
+      "intro": "Pātai i ngā pātai whai muri, kōrero rānei i te kaupapa i mua i te pōti.",
+      "reply": "Whakautu",
+      "replyingTo": "Whakautu ki {{name}}",
+      "writeReply": "Tuhia he whakautu",
+      "edited": "whakarerekētia",
+      "showMoreReplies": "Whakaatu {{count}} atu whakautu",
+      "showMoreReplies_one": "Whakaatu {{count}} atu whakautu",
+      "deleteTitle": "Ka taea e koe te whakakore i tenei korero?",
+      "deleteDescription": "Ka tangohia e tēnei te kōrero me ōna whakautu ki te katoa.",
+      "signInToComment": "Hokona ki te whakauru ki te korerorero",
+      "empty": "Kaore he patai. Tīmata i te korerorero.",
+      "joinOnProposal": "Whakauru atu ki te korerorero",
+      "authorChip": "Kaihanga kaupapa"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Kōrero o te tāone",

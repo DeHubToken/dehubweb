@@ -1524,7 +1524,25 @@
     "minutesAgo": "{{count}}m kepungkur",
     "hoursAgo": "{{count}}j kepungkur",
     "daysAgo": "{{count}}d kepungkur",
-    "monthsAgo": "{{count}}b kepungkur"
+    "monthsAgo": "{{count}}b kepungkur",
+    "forLabel": "Kanggo",
+    "againstLabel": "Nalika",
+    "discussion": {
+      "title": "Dhiskusi",
+      "intro": "Ajokna pitakonan susulan utawa rembugen usulané sadurungé milih.",
+      "reply": "Wangsulan",
+      "replyingTo": "Wangsulan kanggo {{name}}",
+      "writeReply": "Tulis wangsulan",
+      "edited": "disunting",
+      "showMoreReplies": "Tampilna {{count}} wangsulan liyané",
+      "showMoreReplies_one": "Tampilna {{count}} wangsulan liyané",
+      "deleteTitle": "Pupus komentar iki?",
+      "deleteDescription": "Iki bakal mbusak komentar lan wangsulané kanggo kabèh wong.",
+      "signInToComment": "Mlebu kanggo gabung ing dhiskusi",
+      "empty": "Durung ana pitakonan. Wiwiti dhiskusi.",
+      "joinOnProposal": "Gabung ing dhiskusi",
+      "authorChip": "Panulis usulan"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Omongan Kutha",

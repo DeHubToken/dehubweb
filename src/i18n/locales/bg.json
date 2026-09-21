@@ -1543,7 +1543,25 @@
     "minutesAgo": "преди {{count}} минути",
     "hoursAgo": "преди {{count}} часа",
     "daysAgo": "преди {{count}} дни",
-    "monthsAgo": "преди {{count}} месеца"
+    "monthsAgo": "преди {{count}} месеца",
+    "forLabel": "За",
+    "againstLabel": "Против",
+    "discussion": {
+      "title": "Дискусия",
+      "intro": "Задайте допълнителни въпроси или обсъдете предложението, преди да гласувате.",
+      "reply": "Отговор",
+      "replyingTo": "В отговор на {{name}}",
+      "writeReply": "Напишете отговор",
+      "edited": "редактирано",
+      "showMoreReplies": "Показване на още отговори на {{count}}",
+      "showMoreReplies_one": "Показване на още {{count}} отговор",
+      "deleteTitle": "Изтриване на този коментар?",
+      "deleteDescription": "Това премахва коментара и неговите отговори за всички.",
+      "signInToComment": "Влезте, за да се присъедините към дискусията",
+      "empty": "Все още няма въпроси. Започнете дискусията.",
+      "joinOnProposal": "Присъединете се към дискусията",
+      "authorChip": "Автор на предложението"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Градски разговори",

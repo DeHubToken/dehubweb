@@ -1572,7 +1572,25 @@
     "minutesAgo": "{{count}}m lalu",
     "hoursAgo": "{{count}}j lalu",
     "daysAgo": "{{count}}h lalu",
-    "monthsAgo": "{{count}}bl lalu"
+    "monthsAgo": "{{count}}bl lalu",
+    "forLabel": "Sebagai",
+    "againstLabel": "Melawan",
+    "discussion": {
+      "title": "Pembahasan",
+      "intro": "Ajukan pertanyaan lanjutan atau diskusikan proposal sebelum Anda memilih.",
+      "reply": "Balas",
+      "replyingTo": "Membalas ke {{name}}",
+      "writeReply": "Tulis balasan",
+      "edited": "diedit",
+      "showMoreReplies": "Tampilkan {{count}} balasan lainnya",
+      "showMoreReplies_one": "Tampilkan {{count}} balasan lainnya",
+      "deleteTitle": "Hapus komentar ini?",
+      "deleteDescription": "Ini menghapus komentar dan balasannya untuk semua orang.",
+      "signInToComment": "Masuk untuk bergabung dalam diskusi",
+      "empty": "Belum ada pertanyaan. Mulai diskusi.",
+      "joinOnProposal": "Ikuti diskusi",
+      "authorChip": "Penulis proposal"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Yang Dibicarakan",

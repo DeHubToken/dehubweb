@@ -1541,7 +1541,25 @@
     "minutesAgo": "{{count}}মি আগে",
     "hoursAgo": "{{count}}ঘ আগে",
     "daysAgo": "{{count}}দি আগে",
-    "monthsAgo": "{{count}}মা আগে"
+    "monthsAgo": "{{count}}মা আগে",
+    "forLabel": "জন্য",
+    "againstLabel": "সংরক্ষিত।",
+    "discussion": {
+      "title": "আলোচনা",
+      "intro": "ফলো-আপ প্রশ্ন জিজ্ঞাসা করুন বা ভোট দেওয়ার আগে প্রস্তাবটি নিয়ে আলোচনা করুন ।",
+      "reply": "উত্তর",
+      "replyingTo": "{{name}} -এ উত্তর দেওয়া হচ্ছে",
+      "writeReply": "একটি উত্তর লিখুন",
+      "edited": "সম্পাদিত",
+      "showMoreReplies": "{{count}} আরও উত্তর দেখান",
+      "showMoreReplies_one": "{{count}} আরও উত্তর দেখান",
+      "deleteTitle": "এই মন্তব্যটি মুছবেন?",
+      "deleteDescription": "এটি সবার জন্য মন্তব্য এবং এর উত্তরগুলি সরিয়ে দেয় ।",
+      "signInToComment": "আলোচনায় যোগ দিতে সাইন ইন করুন",
+      "empty": "এখনও কোন প্রশ্ন নেই । আলোচনা শুরু করুন ।",
+      "joinOnProposal": "আলোচনায় যোগ দিন",
+      "authorChip": "প্রস্তাব লেখক"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "শহরের আলোচনা",

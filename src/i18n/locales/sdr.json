@@ -1491,7 +1491,24 @@
     "minutesAgo": "{{count}} منٹ پہلے",
     "hoursAgo": "{{count}} گھنٹے پہلے",
     "daysAgo": "{{count}} دن پہلے",
-    "monthsAgo": "{{count}} مہینے پہلے"
+    "monthsAgo": "{{count}} مہینے پہلے",
+    "forLabel": "For",
+    "discussion": {
+      "title": "بحث",
+      "intro": "اطرح أسئلة متابعة أو ناقش الاقتراح قبل التصويت.",
+      "reply": "رد",
+      "replyingTo": "الرد على {{name}}",
+      "writeReply": "اكتب رداً",
+      "edited": "تم التعديل",
+      "showMoreReplies": "عرض المزيد من الردود على {{count}}",
+      "showMoreReplies_one": "عرض المزيد من الردود على {{count}}",
+      "deleteTitle": "حذف هذا التعليق؟",
+      "deleteDescription": "يزيل هذا التعليق وردوده للجميع.",
+      "signInToComment": "تسجيل الدخول للانضمام إلى المناقشة",
+      "empty": "لا توجد أسئلة بعد. ابدأ المناقشة.",
+      "joinOnProposal": "انضم إلى المناقشة",
+      "authorChip": "مؤلف الاقتراح"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "شہر کی چرچا",
