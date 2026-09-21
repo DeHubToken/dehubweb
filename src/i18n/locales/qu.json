@@ -1204,6 +1204,10 @@
     "returnHome": "Qallariyman kutiy"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "Kay qillqasqaqa manam tarikunchu",
+      "commentUnavailable": "Kay rimayqa manañam kanñachu"
+    },
     "back": "Kutiy",
     "usernameAvailable": "Runa suti tarikun!",
     "signUpToClaim": "Kunan qillqakuy chaskimunaykipaq",

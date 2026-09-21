@@ -1217,6 +1217,10 @@
     "returnHome": "Вернуться на главную"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "Эта публикация недоступна",
+      "commentUnavailable": "Этот комментарий больше не доступен"
+    },
     "back": "Назад",
     "usernameAvailable": "Имя доступно!",
     "signUpToClaim": "Зарегистрируйтесь, чтобы получить",

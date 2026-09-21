@@ -1219,6 +1219,10 @@
     "returnHome": "Ana Sayfaya Dön"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "Bu gönderi kullanılamıyor",
+      "commentUnavailable": "Bu yorum artık mevcut değil"
+    },
     "back": "Geri",
     "usernameAvailable": "Kullanıcı adı mevcut!",
     "signUpToClaim": "Almak için bugün kaydolun",

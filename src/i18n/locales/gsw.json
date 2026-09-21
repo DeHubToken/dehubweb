@@ -1163,6 +1163,10 @@
     "returnHome": "Zrugg zur Startsyte"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "Diesi Post isch nöd verfügbar",
+      "commentUnavailable": "Dies Kommentär isch nöd meh verfügbar"
+    },
     "back": "Zrugg",
     "usernameAvailable": "Benutzername verfüegbar!",
     "signUpToClaim": "Mäld di aa zum",

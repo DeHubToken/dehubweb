@@ -21,6 +21,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 
 import type { ContentType } from '@/types/feed.types';
+import type { BadgeLock } from '@/lib/staking-badges';
 
 interface CardHeaderProps {
   /** Display name or username */
@@ -52,6 +53,12 @@ interface CardHeaderProps {
    * carries no balance (governance proposals, feature requests).
    */
   badgeLookupId?: string | null;
+  /**
+   * The holder's grandfathered tier, when the payload carries one. A provided
+   * `badgeBalance` skips the account lookup, so without this the badge falls
+   * back to the live ladder for that balance.
+   */
+  badgeLock?: BadgeLock | null;
 }
 
 /**
@@ -79,6 +86,7 @@ export function CardHeader({
   tokenId,
   badgeBalance,
   badgeLookupId,
+  badgeLock,
 }: CardHeaderProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -161,7 +169,7 @@ export function CardHeader({
         <div className="flex items-center gap-1.5 min-w-0">
           <span className="inline-flex items-baseline gap-1 shrink min-w-0 text-base">
             <span className="font-semibold text-white truncate max-w-[160px] sm:max-w-none leading-5">{username}</span>
-            <BadgeIcon badgeBalance={badgeBalance} lookupId={badgeLookupId} username={handle || username} className="w-[1em] h-[1em]" />
+            <BadgeIcon badgeBalance={badgeBalance} lookupId={badgeLookupId} username={handle || username} badgeLock={badgeLock} className="w-[1em] h-[1em]" />
             <NewMemberChip address={creatorId} className="shrink-0 ml-0.5" />
           </span>
           {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 self-end" />}

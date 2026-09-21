@@ -1214,6 +1214,10 @@
     "returnHome": "Zpět na hlavní stránku"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "Tento příspěvek není k dispozici",
+      "commentUnavailable": "Tento komentář již není k dispozici"
+    },
     "back": "Zpět",
     "usernameAvailable": "Uživatelské jméno je dostupné!",
     "signUpToClaim": "Zaregistrujte se a získejte ho",

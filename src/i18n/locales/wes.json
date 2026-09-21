@@ -1095,6 +1095,10 @@
     "returnHome": "Go Back Home"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "Dis post no dey available",
+      "commentUnavailable": "Dis comment no dey again"
+    },
     "back": "Back",
     "usernameAvailable": "Username dey available!",
     "signUpToClaim": "Sign up today for claim am",

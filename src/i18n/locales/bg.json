@@ -1199,6 +1199,10 @@
     "returnHome": "Обратно към началото"
   },
   "profile": {
+    "replyThread": {
+      "postUnavailable": "Тази публикация не е налична",
+      "commentUnavailable": "Този коментар вече не е наличен"
+    },
     "back": "Назад",
     "usernameAvailable": "Потребителското име е налично!",
     "signUpToClaim": "Регистрирайте се и го заемете",
