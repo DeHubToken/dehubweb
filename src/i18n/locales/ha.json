@@ -3288,5 +3288,13 @@
       "expired": "Ya ƙare"
     },
     "makeOfferAction": "Yi tayi"
+  },
+  "home": {
+    "seoTitle": "DeHub — Kafar sada zumunta ta buɗaɗɗen tushe mallakar masu amfani",
+    "seoDescription": "DeHub wata ka’idar sada zumunta ce ta buɗaɗɗen tushe, mallakar masu amfani da ita kuma mai jure takunkumi, tana ba ka duk fasalolin da manyan dandamali suka ƙi ba ka."
+  },
+  "docs": {
+    "seoTitle": "Takardun DeHub — Jagorori, token, dApps da tambayoyi",
+    "seoDescription": "Takardun hukuma na DeHub: bayanin dandamali, dApps, tattalin arzikin token DHB, staking, wasanni, tsarin gaba, tambayoyin da ake yawan yi da ƙari."
   }
 }

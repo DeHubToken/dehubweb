@@ -5589,5 +5589,13 @@
     "audio": "Audio",
     "poll": "Aptauja",
     "scheduled": "Ieplānots"
+  },
+  "home": {
+    "seoTitle": "DeHub — Atvērtā pirmkoda sociālais tīkls, kas pieder lietotājiem",
+    "seoDescription": "DeHub ir atvērtā pirmkoda, lietotājiem piederošs un cenzūrai izturīgs sociālais protokols ar visām funkcijām, ko lielās platformas atteicās jums dot."
+  },
+  "docs": {
+    "seoTitle": "DeHub dokumentācija — Ceļveži, tokens, dApps un BUJ",
+    "seoDescription": "Oficiālā DeHub dokumentācija: platformas pārskats, dApps, DHB tokena ekonomika, staking, spēles, ceļvedis, bieži uzdotie jautājumi un vairāk."
   }
 }

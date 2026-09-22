@@ -3248,5 +3248,13 @@
       "expired": "Oge agwụla"
     },
     "makeOfferAction": "Nye onyinye ọnụahịa"
+  },
+  "home": {
+    "seoTitle": "DeHub — Mgbasa ozi mmekọrịta nke isi mmalite mepere emepe nke ndị ọrụ nwere",
+    "seoDescription": "DeHub bụ usoro mmekọrịta nke isi mmalite mepere emepe, nke ndị ọrụ ya nwere ma na-eguzogide mmachi, na-enye gị atụmatụ niile nnukwu ikpo okwu jụrụ inye gị."
+  },
+  "docs": {
+    "seoTitle": "Akwụkwọ DeHub — Ntuziaka, token, dApps na ajụjụ",
+    "seoDescription": "Akwụkwọ gọọmentị nke DeHub: nchịkọta ikpo okwu, dApps, akụnụba token DHB, staking, egwuregwu, map okporo ụzọ, ajụjụ ndị a na-ajụkarị na ndị ọzọ."
   }
 }

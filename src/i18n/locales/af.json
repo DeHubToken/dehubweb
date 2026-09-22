@@ -5430,7 +5430,9 @@
     "subscribeError": "Daar was 'n probleem met jou intekening. Probeer asseblief weer.",
     "emailPlaceholder": "Jou e-posadres",
     "emailInvalid": "Voer asseblief 'n geldige e-posadres in.",
-    "emailRequired": "E-posadres is verpligtend."
+    "emailRequired": "E-posadres is verpligtend.",
+    "seoTitle": "DeHub — Oopbron- sosiale media wat aan sy gebruikers behoort",
+    "seoDescription": "DeHub is ’n oopbron-, gebruikersbesitte en sensuurbestande sosiale media-protokol met al die funksies wat groot platforms geweier het om te gee."
   },
   "footer": {
     "company": "Maatskappy",
@@ -5478,7 +5480,9 @@
     "apiReference": "API-verwysing",
     "sdkReference": "SDK-verwysing",
     "tutorials": "Tutoriale",
-    "faq": "Gereelde vrae"
+    "faq": "Gereelde vrae",
+    "seoTitle": "DeHub-dokumentasie — Gidse, token, dApps en vrae",
+    "seoDescription": "Amptelike DeHub-dokumentasie: platformoorsig, dApps, DHB-tokenekonomie, staking, speletjies, padkaart, vrae en meer."
   },
   "roadmap": {
     "title": "Padkaart",

@@ -4427,7 +4427,14 @@ async function handleRequest(request, env, ctx) {
   // canonical) for every /docs URL — 11 sitemap entries presenting as
   // homepage duplicates. Serve real documentation text extracted at build.
   if (cleanPath === '/docs') {
-    return guard(new Response(buildDocsIndexHtml(), { status: 200, headers: blogHeaders }));
+    if (requestedLocale(url) === 'en') return redirect301(`${APP_URL}/docs`);
+    const docsHtml = localizePage(
+      buildDocsIndexHtml(),
+      '/docs',
+      requestedLocale(url),
+      await seoI18nTable(env, request.url),
+    );
+    return guard(new Response(docsHtml, { status: 200, headers: blogHeaders }));
   }
   const docsMatch = cleanPath.match(/^\/docs\/(.+)$/);
   if (docsMatch) {
@@ -5051,6 +5058,17 @@ async function handleRequest(request, env, ctx) {
       } catch (e) {
         console.error('[Edge] latest-posts inject skipped:', e);
       }
+    }
+
+    // The localised homepage when ?hl= names one, otherwise the English page
+    // carrying its hreflang cluster (see localizePage). The homepage ships 110
+    // UI locales and had no cluster at all, so every one of them was a
+    // duplicate of the English page rather than a variant of it. A referral
+    // landing is noindex and gets no cluster — annotating a page we ask Google
+    // to ignore just spends the annotation.
+    if (pathname === '/' && !isReferral) {
+      if (requestedLocale(url) === 'en') return redirect301(`${APP_URL}/`);
+      html = localizePage(html, '/', requestedLocale(url), await seoI18nTable(env, request.url));
     }
 
     return guard(new Response(html, {

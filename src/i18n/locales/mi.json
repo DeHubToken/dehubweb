@@ -3284,5 +3284,13 @@
       "expired": "Kua pau te wā"
     },
     "makeOfferAction": "Tāpae"
+  },
+  "home": {
+    "seoTitle": "DeHub — Pāpāho pāpori puna tuwhera nā ngā kaiwhakamahi",
+    "seoDescription": "He kawa pāpāho pāpori puna tuwhera a DeHub, nā ōna kaiwhakamahi, ā, e ātete ana ki te haukoti kōrero, me ngā āhuatanga katoa i whakakāhoretia e ngā pae nunui."
+  },
+  "docs": {
+    "seoTitle": "Tuhinga DeHub — Aratohu, tohu, dApps me ngā pātai",
+    "seoDescription": "Tuhinga mana o DeHub: tirohanga whānui o te pae, dApps, ōhanga tohu DHB, staking, kēmu, mahere, pātai auau me ētahi atu."
   }
 }

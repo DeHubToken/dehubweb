@@ -5497,5 +5497,13 @@
     "audio": "Àudio",
     "poll": "Enquesta",
     "scheduled": "Programat"
+  },
+  "home": {
+    "seoTitle": "DeHub — Xarxa social de codi obert, propietat dels usuaris",
+    "seoDescription": "DeHub és un protocol social de codi obert, propietat dels seus usuaris i resistent a la censura, amb totes les funcions que les grans plataformes es van negar a donar-te."
+  },
+  "docs": {
+    "seoTitle": "Documentació de DeHub — Guies, token, dApps i PMF",
+    "seoDescription": "Documentació oficial de DeHub: visió general de la plataforma, dApps, economia del token DHB, staking, jocs, full de ruta, preguntes freqüents i més."
   }
 }

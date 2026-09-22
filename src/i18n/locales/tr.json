@@ -5617,5 +5617,13 @@
     "audio": "Ses",
     "poll": "Anket",
     "scheduled": "Planlandı"
+  },
+  "home": {
+    "seoTitle": "DeHub — Açık kaynaklı, kullanıcıların sahibi olduğu sosyal medya",
+    "seoDescription": "DeHub, açık kaynaklı, kullanıcılarına ait ve sansüre dirençli bir sosyal medya protokolüdür; büyük platformların vermediği tüm özellikleri sunar."
+  },
+  "docs": {
+    "seoTitle": "DeHub Dokümantasyonu — Rehberler, token, dApp ve SSS",
+    "seoDescription": "Resmî DeHub dokümantasyonu: platforma genel bakış, dApp’ler, DHB token ekonomisi, staking, oyunlar, yol haritası, SSS ve daha fazlası."
   }
 }

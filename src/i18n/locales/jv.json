@@ -3275,5 +3275,13 @@
       "expired": "Kadaluwarsa"
     },
     "makeOfferAction": "Gawe tawaran"
+  },
+  "home": {
+    "seoTitle": "DeHub — Media sosial sumber terbuka duweke panganggo",
+    "seoDescription": "DeHub yaiku protokol media sosial sumber terbuka, duweke panganggone lan tahan sensor, kanthi kabeh fitur sing ditolak dening platform gedhe."
+  },
+  "docs": {
+    "seoTitle": "Dokumentasi DeHub — Pandhuan, token, dApps lan FAQ",
+    "seoDescription": "Dokumentasi resmi DeHub: gambaran platform, dApps, ekonomi token DHB, staking, game, peta dalan, FAQ lan liya-liyane."
   }
 }

@@ -5605,5 +5605,13 @@
     "audio": "오디오",
     "poll": "설문조사",
     "scheduled": "예약됨"
+  },
+  "home": {
+    "seoTitle": "DeHub — 오픈소스, 사용자가 소유하는 소셜 미디어",
+    "seoDescription": "DeHub는 오픈소스이며 사용자가 소유하고 검열에 강한 소셜 미디어 프로토콜로, 기존 플랫폼이 제공하지 않던 모든 기능을 제공합니다."
+  },
+  "docs": {
+    "seoTitle": "DeHub 문서 — 가이드, 토큰, dApp 및 FAQ",
+    "seoDescription": "DeHub 공식 문서: 플랫폼 개요, dApp, DHB 토큰 이코노미, 스테이킹, 게임, 로드맵, FAQ 등."
   }
 }

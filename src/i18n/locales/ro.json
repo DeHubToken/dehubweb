@@ -5393,5 +5393,13 @@
       "white": "Alb",
       "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
     }
+  },
+  "home": {
+    "seoTitle": "DeHub — Rețea socială open source, deținută de utilizatori",
+    "seoDescription": "DeHub este un protocol social open source, deținut de utilizatorii săi și rezistent la cenzură, cu toate funcțiile pe care marile platforme au refuzat să ți le ofere."
+  },
+  "docs": {
+    "seoTitle": "Documentație DeHub — Ghiduri, token, dApps și întrebări",
+    "seoDescription": "Documentația oficială DeHub: prezentare generală a platformei, dApps, economia tokenului DHB, staking, jocuri, foaie de parcurs, întrebări frecvente și altele."
   }
 }

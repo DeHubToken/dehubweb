@@ -1,4 +1,338 @@
 {
+  "/": {
+    "af": {
+      "title": "DeHub — Oopbron- sosiale media wat aan sy gebruikers behoort",
+      "description": "DeHub is ’n oopbron-, gebruikersbesitte en sensuurbestande sosiale media-protokol met al die funksies wat groot platforms geweier het om te gee."
+    },
+    "am": {
+      "title": "DeHub — ክፍት ምንጭ፣ በተጠቃሚዎች የተያዘ ማኅበራዊ ሚዲያ",
+      "description": "DeHub ክፍት ምንጭ፣ በተጠቃሚዎቹ የተያዘና ሳንሱርን የሚቋቋም ማኅበራዊ ሚዲያ ፕሮቶኮል ሲሆን ትላልቅ መድረኮች ሊሰጡዎት ያልፈለጉትን ሁሉንም ባህሪያት ይሰጣል።"
+    },
+    "ar": {
+      "title": "DeHub — شبكة تواصل اجتماعي مفتوحة المصدر يملكها مستخدموها",
+      "description": "DeHub بروتوكول تواصل اجتماعي مفتوح المصدر يملكه مستخدموه ومقاوم للرقابة، ويمنحك كل المزايا التي رفضت المنصات الكبرى منحها لك."
+    },
+    "az": {
+      "title": "DeHub — Açıq mənbəli, istifadəçilərə məxsus sosial media",
+      "description": "DeHub açıq mənbəli, istifadəçilərinə məxsus və senzuraya davamlı sosial media protokoludur və böyük platformaların vermədiyi bütün imkanları təqdim edir."
+    },
+    "be": {
+      "title": "DeHub — Сацыяльная сетка з адкрытым кодам, якая належыць карыстальнікам",
+      "description": "DeHub — гэта сацыяльны пратакол з адкрытым кодам, які належыць карыстальнікам і ўстойлівы да цэнзуры, з усімі функцыямі, у якіх вам адмовілі буйныя платформы."
+    },
+    "bg": {
+      "title": "DeHub — Социална мрежа с отворен код, собственост на потребителите",
+      "description": "DeHub е социален протокол с отворен код, собственост на потребителите и устойчив на цензура, с всички функции, които големите платформи отказаха да ви дадат."
+    },
+    "bn": {
+      "title": "DeHub — ওপেন সোর্স, ব্যবহারকারীদের মালিকানাধীন সোশ্যাল মিডিয়া",
+      "description": "DeHub একটি ওপেন সোর্স, ব্যবহারকারীদের মালিকানাধীন ও সেন্সরশিপ-প্রতিরোধী সোশ্যাল মিডিয়া প্রোটোকল, যা বড় প্ল্যাটফর্মগুলো যে সুবিধাগুলো দিতে অস্বীকার করেছে সেগুলো সবই দেয়।"
+    },
+    "ca": {
+      "title": "DeHub — Xarxa social de codi obert, propietat dels usuaris",
+      "description": "DeHub és un protocol social de codi obert, propietat dels seus usuaris i resistent a la censura, amb totes les funcions que les grans plataformes es van negar a donar-te."
+    },
+    "cs": {
+      "title": "DeHub — Otevřená sociální síť vlastněná uživateli",
+      "description": "DeHub je otevřený, uživateli vlastněný a cenzuře odolný sociální protokol se všemi funkcemi, které vám velké platformy odepřely."
+    },
+    "da": {
+      "title": "DeHub — Open source-socialt medie ejet af brugerne",
+      "description": "DeHub er en open source, brugerejet og censurresistent social protokol med alle de funktioner, de store platforme nægtede dig."
+    },
+    "de": {
+      "title": "DeHub — Open Source, soziales Netzwerk im Besitz der Nutzer",
+      "description": "DeHub ist ein quelloffenes, nutzereigenes und zensurresistentes Social-Media-Protokoll mit all den Funktionen, die etablierte Plattformen verweigert haben."
+    },
+    "el": {
+      "title": "DeHub — Κοινωνικό δίκτυο ανοιχτού κώδικα που ανήκει στους χρήστες",
+      "description": "Το DeHub είναι ένα πρωτόκολλο κοινωνικής δικτύωσης ανοιχτού κώδικα, που ανήκει στους χρήστες του και αντιστέκεται στη λογοκρισία, με όλες τις δυνατότητες που οι μεγάλες πλατφόρμες αρνήθηκαν να σας δώσουν."
+    },
+    "en": {
+      "title": "DeHub — Open Source, User Owned Social Media",
+      "description": "DeHub is an open source, user owned and censorship resistant social media protocol giving you all the features incumbents refused to."
+    },
+    "es": {
+      "title": "DeHub — Redes sociales de código abierto, propiedad de sus usuarios",
+      "description": "DeHub es un protocolo social de código abierto, propiedad de sus usuarios y resistente a la censura, con todas las funciones que las plataformas tradicionales se negaron a darte."
+    },
+    "et": {
+      "title": "DeHub — Avatud lähtekoodiga, kasutajatele kuuluv suhtlusvõrgustik",
+      "description": "DeHub on avatud lähtekoodiga, kasutajatele kuuluv ja tsensuurikindel suhtlusprotokoll kõigi võimalustega, mida suured platvormid sulle anda ei tahtnud."
+    },
+    "fa": {
+      "title": "DeHub — شبکه اجتماعی متن‌باز و متعلق به کاربران",
+      "description": "DeHub یک پروتکل اجتماعی متن‌باز، متعلق به کاربران و مقاوم در برابر سانسور است و همه امکاناتی را می‌دهد که پلتفرم‌های بزرگ از آن دریغ کردند."
+    },
+    "fi": {
+      "title": "DeHub — Avoimen lähdekoodin, käyttäjien omistama sosiaalinen media",
+      "description": "DeHub on avoimen lähdekoodin, käyttäjiensä omistama ja sensuuria kestävä sosiaalisen median protokolla, jossa on kaikki ominaisuudet, joita suuret alustat eivät suostuneet antamaan."
+    },
+    "fr": {
+      "title": "DeHub — Réseau social open source, détenu par ses utilisateurs",
+      "description": "DeHub est un protocole social open source, détenu par ses utilisateurs et résistant à la censure, offrant toutes les fonctionnalités que les plateformes traditionnelles vous ont refusées."
+    },
+    "gu": {
+      "title": "DeHub — ઓપન સોર્સ, વપરાશકર્તાઓની માલિકીનું સોશિયલ મીડિયા",
+      "description": "DeHub એ ઓપન સોર્સ, વપરાશકર્તાઓની માલિકીનું અને સેન્સરશિપ-પ્રતિરોધક સોશિયલ મીડિયા પ્રોટોકોલ છે, જે મોટા પ્લેટફોર્મે આપવાનો ઇનકાર કર્યો તે બધી સુવિધાઓ આપે છે."
+    },
+    "ha": {
+      "title": "DeHub — Kafar sada zumunta ta buɗaɗɗen tushe mallakar masu amfani",
+      "description": "DeHub wata ka’idar sada zumunta ce ta buɗaɗɗen tushe, mallakar masu amfani da ita kuma mai jure takunkumi, tana ba ka duk fasalolin da manyan dandamali suka ƙi ba ka."
+    },
+    "he": {
+      "title": "DeHub — רשת חברתית בקוד פתוח שבבעלות המשתמשים",
+      "description": "DeHub הוא פרוטוקול חברתי בקוד פתוח, בבעלות המשתמשים ועמיד בפני צנזורה, עם כל היכולות שהפלטפורמות הגדולות סירבו לתת לך."
+    },
+    "hi": {
+      "title": "DeHub — ओपन सोर्स, उपयोगकर्ताओं के स्वामित्व वाला सोशल मीडिया",
+      "description": "DeHub एक ओपन सोर्स, उपयोगकर्ताओं के स्वामित्व वाला और सेंसरशिप-प्रतिरोधी सोशल मीडिया प्रोटोकॉल है, जो वे सभी सुविधाएँ देता है जो बड़े प्लेटफ़ॉर्म ने देने से मना कर दिया।"
+    },
+    "hr": {
+      "title": "DeHub — Društvena mreža otvorenog koda u vlasništvu korisnika",
+      "description": "DeHub je društveni protokol otvorenog koda, u vlasništvu korisnika i otporan na cenzuru, sa svim značajkama koje su vam velike platforme uskratile."
+    },
+    "hu": {
+      "title": "DeHub — Nyílt forráskódú, felhasználók tulajdonában lévő közösségi média",
+      "description": "A DeHub nyílt forráskódú, a felhasználók tulajdonában lévő és cenzúrának ellenálló közösségi protokoll, minden olyan funkcióval, amit a nagy platformok megtagadtak tőled."
+    },
+    "hy": {
+      "title": "DeHub — Բաց կոդով, օգտատերերին պատկանող սոցիալական ցանց",
+      "description": "DeHub-ը բաց կոդով, օգտատերերին պատկանող և գրաքննությանը դիմակայող սոցիալական արձանագրություն է՝ բոլոր հնարավորություններով, որոնք խոշոր հարթակները հրաժարվեցին տալ ձեզ։"
+    },
+    "id": {
+      "title": "DeHub — Media sosial sumber terbuka milik penggunanya",
+      "description": "DeHub adalah protokol media sosial sumber terbuka, dimiliki penggunanya dan tahan sensor, dengan semua fitur yang ditolak oleh platform besar."
+    },
+    "ig": {
+      "title": "DeHub — Mgbasa ozi mmekọrịta nke isi mmalite mepere emepe nke ndị ọrụ nwere",
+      "description": "DeHub bụ usoro mmekọrịta nke isi mmalite mepere emepe, nke ndị ọrụ ya nwere ma na-eguzogide mmachi, na-enye gị atụmatụ niile nnukwu ikpo okwu jụrụ inye gị."
+    },
+    "it": {
+      "title": "DeHub — Social network open source, di proprietà degli utenti",
+      "description": "DeHub è un protocollo social open source, di proprietà degli utenti e resistente alla censura, con tutte le funzioni che le piattaforme tradizionali ti hanno negato."
+    },
+    "ja": {
+      "title": "DeHub — オープンソースでユーザーが所有するソーシャルメディア",
+      "description": "DeHub はオープンソースでユーザーが所有し、検閲に強いソーシャルメディアプロトコルです。既存プラットフォームが提供を拒んだ機能をすべて備えています。"
+    },
+    "jv": {
+      "title": "DeHub — Media sosial sumber terbuka duweke panganggo",
+      "description": "DeHub yaiku protokol media sosial sumber terbuka, duweke panganggone lan tahan sensor, kanthi kabeh fitur sing ditolak dening platform gedhe."
+    },
+    "ka": {
+      "title": "DeHub — ღია კოდის სოციალური ქსელი, რომელიც მომხმარებლებს ეკუთვნის",
+      "description": "DeHub არის ღია კოდის, მომხმარებლების საკუთრებაში არსებული და ცენზურისადმი მდგრადი სოციალური პროტოკოლი ყველა იმ ფუნქციით, რომელსაც დიდი პლატფორმები არ გაძლევდნენ."
+    },
+    "kk": {
+      "title": "DeHub — Ашық бастапқы кодты, пайдаланушыларға тиесілі әлеуметтік желі",
+      "description": "DeHub — ашық бастапқы кодты, пайдаланушыларына тиесілі және цензураға төзімді әлеуметтік хаттама, ірі платформалар бермеген барлық мүмкіндіктермен."
+    },
+    "km": {
+      "title": "DeHub — បណ្ដាញសង្គមប្រភពបើកចំហដែលជាកម្មសិទ្ធិអ្នកប្រើ",
+      "description": "DeHub គឺជាពិធីការបណ្ដាញសង្គមប្រភពបើកចំហ ជាកម្មសិទ្ធិរបស់អ្នកប្រើ និងធន់នឹងការត្រួតពិនិត្យ ដោយផ្ដល់មុខងារទាំងអស់ដែលវេទិកាធំៗបានបដិសេធមិនផ្ដល់ជូនអ្នក។"
+    },
+    "kn": {
+      "title": "DeHub — ಓಪನ್ ಸೋರ್ಸ್, ಬಳಕೆದಾರರ ಒಡೆತನದ ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮ",
+      "description": "DeHub ಎಂಬುದು ಓಪನ್ ಸೋರ್ಸ್, ಬಳಕೆದಾರರ ಒಡೆತನದ ಮತ್ತು ಸೆನ್ಸಾರ್‌ಶಿಪ್ ನಿರೋಧಕ ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮ ಪ್ರೊಟೊಕಾಲ್ ಆಗಿದ್ದು, ದೊಡ್ಡ ವೇದಿಕೆಗಳು ನಿರಾಕರಿಸಿದ ಎಲ್ಲಾ ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ನೀಡುತ್ತದೆ."
+    },
+    "ko": {
+      "title": "DeHub — 오픈소스, 사용자가 소유하는 소셜 미디어",
+      "description": "DeHub는 오픈소스이며 사용자가 소유하고 검열에 강한 소셜 미디어 프로토콜로, 기존 플랫폼이 제공하지 않던 모든 기능을 제공합니다."
+    },
+    "ku": {
+      "title": "DeHub — Medyaya civakî ya çavkaniya vekirî ya xwedîyê bikarhêneran",
+      "description": "DeHub protokolek medyaya civakî ya çavkaniya vekirî ye, ya bikarhênerên xwe ye û li hember sansurê bergirî ye, bi hemû taybetmendiyên ku platformên mezin nedan te."
+    },
+    "ky": {
+      "title": "DeHub — Ачык булактуу, колдонуучуларга таандык социалдык тармак",
+      "description": "DeHub — ачык булактуу, колдонуучуларына таандык жана цензурага туруктуу социалдык протокол, ири платформалар бербеген бардык мүмкүнчүлүктөр менен."
+    },
+    "lo": {
+      "title": "DeHub — ສື່ສັງຄົມແບບໂອເພນຊອດທີ່ຜູ້ໃຊ້ເປັນເຈົ້າຂອງ",
+      "description": "DeHub ແມ່ນໂປຣໂຕຄອນສື່ສັງຄົມແບບໂອເພນຊອດ ທີ່ຜູ້ໃຊ້ເປັນເຈົ້າຂອງ ແລະ ຕ້ານການເຊັນເຊີ ພ້ອມທຸກຄຸນສົມບັດທີ່ແພລດຟອມໃຫຍ່ປະຕິເສດບໍ່ໃຫ້ທ່ານ."
+    },
+    "lt": {
+      "title": "DeHub — Atvirojo kodo socialinis tinklas, priklausantis naudotojams",
+      "description": "DeHub yra atvirojo kodo, naudotojams priklausantis ir cenzūrai atsparus socialinis protokolas su visomis funkcijomis, kurių didžiosios platformos jums nedavė."
+    },
+    "lv": {
+      "title": "DeHub — Atvērtā pirmkoda sociālais tīkls, kas pieder lietotājiem",
+      "description": "DeHub ir atvērtā pirmkoda, lietotājiem piederošs un cenzūrai izturīgs sociālais protokols ar visām funkcijām, ko lielās platformas atteicās jums dot."
+    },
+    "mg": {
+      "title": "DeHub — Media sosialy loharano misokatra an’ny mpampiasa",
+      "description": "DeHub dia protocole media sosialy loharano misokatra, an’ny mpampiasa azy ary manohitra ny sivana, manome ny endri-javatra rehetra nolavin’ny sehatra lehibe."
+    },
+    "mi": {
+      "title": "DeHub — Pāpāho pāpori puna tuwhera nā ngā kaiwhakamahi",
+      "description": "He kawa pāpāho pāpori puna tuwhera a DeHub, nā ōna kaiwhakamahi, ā, e ātete ana ki te haukoti kōrero, me ngā āhuatanga katoa i whakakāhoretia e ngā pae nunui."
+    },
+    "ml": {
+      "title": "DeHub — ഓപ്പൺ സോഴ്‌സ്, ഉപയോക്താക്കളുടെ ഉടമസ്ഥതയിലുള്ള സോഷ്യൽ മീഡിയ",
+      "description": "DeHub ഒരു ഓപ്പൺ സോഴ്‌സ്, ഉപയോക്താക്കളുടെ ഉടമസ്ഥതയിലുള്ള, സെൻസർഷിപ്പിനെ പ്രതിരോധിക്കുന്ന സോഷ്യൽ മീഡിയ പ്രോട്ടോക്കോൾ ആണ്; വലിയ പ്ലാറ്റ്‌ഫോമുകൾ നിഷേധിച്ച എല്ലാ സവിശേഷതകളും ഇത് നൽകുന്നു."
+    },
+    "mn": {
+      "title": "DeHub — Нээлттэй эх, хэрэглэгчдийн эзэмшдэг сошиал сүлжээ",
+      "description": "DeHub бол нээлттэй эх, хэрэглэгчдийнхээ эзэмшдэг, цензурт тэсвэртэй сошиал протокол бөгөөд том платформуудын өгөхөөс татгалзсан бүх боломжийг олгоно."
+    },
+    "mr": {
+      "title": "DeHub — ओपन सोर्स, वापरकर्त्यांच्या मालकीचे सोशल मीडिया",
+      "description": "DeHub हे ओपन सोर्स, वापरकर्त्यांच्या मालकीचे आणि सेन्सॉरशिपला प्रतिकार करणारे सोशल मीडिया प्रोटोकॉल आहे, जे मोठ्या प्लॅटफॉर्मने नाकारलेली सर्व वैशिष्ट्ये देते."
+    },
+    "ms": {
+      "title": "DeHub — Media sosial sumber terbuka milik pengguna",
+      "description": "DeHub ialah protokol media sosial sumber terbuka, dimiliki pengguna dan tahan penapisan, dengan semua ciri yang enggan diberikan oleh platform besar."
+    },
+    "my": {
+      "title": "DeHub — အရင်းအမြစ်ဖွင့် အသုံးပြုသူပိုင် ဆိုရှယ်မီဒီယာ",
+      "description": "DeHub သည် အရင်းအမြစ်ဖွင့်ထားပြီး အသုံးပြုသူများပိုင်ဆိုင်ကာ ဆင်ဆာကို ခံနိုင်ရည်ရှိသော ဆိုရှယ်မီဒီယာ ပရိုတိုကောလ်ဖြစ်ပြီး ပလက်ဖောင်းကြီးများ ပေးရန်ငြင်းဆိုခဲ့သည့် အင်္ဂါရပ်အားလုံးကို ပေးပါသည်။"
+    },
+    "ne": {
+      "title": "DeHub — खुला स्रोत, प्रयोगकर्ताको स्वामित्वको सामाजिक सञ्जाल",
+      "description": "DeHub खुला स्रोत, प्रयोगकर्ताको स्वामित्वमा रहेको र सेन्सरशिप प्रतिरोधी सामाजिक सञ्जाल प्रोटोकल हो, जसले ठूला प्लेटफर्महरूले दिन अस्वीकार गरेका सबै सुविधा दिन्छ।"
+    },
+    "nl": {
+      "title": "DeHub — Opensource sociaal netwerk in handen van gebruikers",
+      "description": "DeHub is een opensource, censuurbestendig sociaal protocol in handen van de gebruikers, met alle functies die de gevestigde platforms weigerden te geven."
+    },
+    "no": {
+      "title": "DeHub — Åpen kildekode, sosialt medium eid av brukerne",
+      "description": "DeHub er en åpen, brukereid og sensurbestandig sosial protokoll med alle funksjonene de store plattformene nektet deg."
+    },
+    "om": {
+      "title": "DeHub — Miidiyaa hawaasaa madda banaa kan fayyadamtoonni qaban",
+      "description": "DeHub protokoolii miidiyaa hawaasaa madda banaa, kan fayyadamtoota isaatiin qabamu fi sensarshiipii dandamatu yoo ta’u, amaloota pilaatifoormiiwwan gurguddaan siif kennuu didan hunda siif kenna."
+    },
+    "or": {
+      "title": "DeHub — ଓପନ ସୋର୍ସ, ବ୍ୟବହାରକାରୀଙ୍କ ମାଲିକାନାର ସାମାଜିକ ମାଧ୍ୟମ",
+      "description": "DeHub ହେଉଛି ଏକ ଓପନ ସୋର୍ସ, ବ୍ୟବହାରକାରୀଙ୍କ ମାଲିକାନାର ଏବଂ ସେନ୍ସରସିପ ପ୍ରତିରୋଧୀ ସାମାଜିକ ମାଧ୍ୟମ ପ୍ରୋଟୋକଲ, ଯାହା ବଡ଼ ପ୍ଲାଟଫର୍ମ ଦେବାକୁ ମନା କରିଥିବା ସମସ୍ତ ସୁବିଧା ଦେଇଥାଏ।"
+    },
+    "pa": {
+      "title": "DeHub — ਓਪਨ ਸੋਰਸ, ਵਰਤੋਂਕਾਰਾਂ ਦੀ ਮਲਕੀਅਤ ਵਾਲਾ ਸੋਸ਼ਲ ਮੀਡੀਆ",
+      "description": "DeHub ਇੱਕ ਓਪਨ ਸੋਰਸ, ਵਰਤੋਂਕਾਰਾਂ ਦੀ ਮਲਕੀਅਤ ਵਾਲਾ ਅਤੇ ਸੈਂਸਰਸ਼ਿਪ-ਰੋਧਕ ਸੋਸ਼ਲ ਮੀਡੀਆ ਪ੍ਰੋਟੋਕੋਲ ਹੈ, ਜੋ ਉਹ ਸਾਰੀਆਂ ਸਹੂਲਤਾਂ ਦਿੰਦਾ ਹੈ ਜੋ ਵੱਡੇ ਪਲੇਟਫਾਰਮਾਂ ਨੇ ਦੇਣ ਤੋਂ ਇਨਕਾਰ ਕੀਤਾ।"
+    },
+    "pl": {
+      "title": "DeHub — Otwartoźródłowe media społecznościowe należące do użytkowników",
+      "description": "DeHub to otwartoźródłowy, odporny na cenzurę protokół społecznościowy należący do użytkowników, z wszystkimi funkcjami, których odmówiły ci duże platformy."
+    },
+    "pt": {
+      "title": "DeHub — Rede social de código aberto, pertencente aos utilizadores",
+      "description": "O DeHub é um protocolo social de código aberto, pertencente aos utilizadores e resistente à censura, com todas as funcionalidades que as plataformas tradicionais recusaram dar-lhe."
+    },
+    "qu": {
+      "title": "DeHub — Kichasqa pukyu, ruraqkunapa kapuqnin willaywasi",
+      "description": "DeHub kichasqa pukyu, ruraqninkunapa kapuqnin, sensurata harkaq willaqmasi protocolom, hatun plataformakuna mana qusqanku llapan ruwaykunata qunsu."
+    },
+    "ro": {
+      "title": "DeHub — Rețea socială open source, deținută de utilizatori",
+      "description": "DeHub este un protocol social open source, deținut de utilizatorii săi și rezistent la cenzură, cu toate funcțiile pe care marile platforme au refuzat să ți le ofere."
+    },
+    "ru": {
+      "title": "DeHub — Социальная сеть с открытым кодом, принадлежащая пользователям",
+      "description": "DeHub — это социальный протокол с открытым кодом, принадлежащий пользователям и устойчивый к цензуре, со всеми возможностями, в которых вам отказали крупные платформы."
+    },
+    "sa": {
+      "title": "DeHub — उन्मुक्तस्रोतम्, उपयोक्तृस्वामित्वं सामाजिकमाध्यमम्",
+      "description": "DeHub इति उन्मुक्तस्रोतम्, उपयोक्तृस्वामित्वं, सेन्सरप्रतिरोधकं च सामाजिकमाध्यमप्रोटोकॉलम् अस्ति, यत् बृहत्मञ्चैः निषिद्धानि सर्वाणि वैशिष्ट्यानि ददाति।"
+    },
+    "sd": {
+      "title": "DeHub — اوپن سورس، صارفين جي ملڪيت وارو سوشل ميڊيا",
+      "description": "DeHub هڪ اوپن سورس، صارفين جي ملڪيت وارو ۽ سينسرشپ کان محفوظ سوشل ميڊيا پروٽوڪول آهي، جيڪو اهي سڀ خاصيتون ڏئي ٿو جيڪي وڏا پليٽ فارم ڏيڻ کان انڪار ڪن ٿا."
+    },
+    "si": {
+      "title": "DeHub — විවෘත මූලාශ්‍ර, පරිශීලකයන් සතු සමාජ මාධ්‍ය",
+      "description": "DeHub යනු විවෘත මූලාශ්‍ර, එහි පරිශීලකයන් සතු සහ වාරණයට ඔරොත්තු දෙන සමාජ මාධ්‍ය ප්‍රොටෝකෝලයකි; විශාල වේදිකා ඔබට දීම ප්‍රතික්ෂේප කළ සියලු විශේෂාංග එය ලබා දෙයි."
+    },
+    "sk": {
+      "title": "DeHub — Sociálna sieť s otvoreným kódom vlastnená používateľmi",
+      "description": "DeHub je sociálny protokol s otvoreným kódom, vlastnený používateľmi a odolný voči cenzúre, so všetkými funkciami, ktoré vám veľké platformy odopreli."
+    },
+    "so": {
+      "title": "DeHub — Baraha bulshada ee il furan ee ay leeyihiin isticmaalayaashu",
+      "description": "DeHub waa boroto koolka warbaahinta bulshada ee il furan, ay leeyihiin isticmaalayaashiisa, kuna adkaysta faafreebka, oo ku siinaya dhammaan sifooyinka ay barxadaha waaweyni diideen inay ku siiyaan."
+    },
+    "sq": {
+      "title": "DeHub — Rrjet social me burim të hapur, në pronësi të përdoruesve",
+      "description": "DeHub është një protokoll social me burim të hapur, në pronësi të përdoruesve dhe rezistent ndaj censurës, me të gjitha veçoritë që platformat e mëdha refuzuan t’ju jepnin."
+    },
+    "sr": {
+      "title": "DeHub — Друштвена мрежа отвореног кода у власништву корисника",
+      "description": "DeHub је друштвени протокол отвореног кода, у власништву корисника и отпоран на цензуру, са свим функцијама које су вам велике платформе ускратиле."
+    },
+    "sv": {
+      "title": "DeHub — Öppen källkod, sociala medier som ägs av användarna",
+      "description": "DeHub är ett öppet, användarägt och censurtåligt socialt protokoll med alla funktioner som de stora plattformarna vägrade ge dig."
+    },
+    "sw": {
+      "title": "DeHub — Mtandao wa kijamii wa chanzo huria unaomilikiwa na watumiaji",
+      "description": "DeHub ni itifaki ya mtandao wa kijamii ya chanzo huria, inayomilikiwa na watumiaji na inayostahimili udhibiti, ikikupa vipengele vyote ambavyo majukwaa makubwa yalikataa kukupa."
+    },
+    "ta": {
+      "title": "DeHub — திறந்த மூல, பயனர்களுக்குச் சொந்தமான சமூக ஊடகம்",
+      "description": "DeHub என்பது திறந்த மூல, பயனர்களுக்குச் சொந்தமான, தணிக்கையை எதிர்க்கும் சமூக ஊடக நெறிமுறை; பெரிய தளங்கள் தர மறுத்த அனைத்து வசதிகளையும் இது வழங்குகிறது."
+    },
+    "te": {
+      "title": "DeHub — ఓపెన్ సోర్స్, వినియోగదారుల యాజమాన్యంలోని సోషల్ మీడియా",
+      "description": "DeHub అనేది ఓపెన్ సోర్స్, వినియోగదారుల యాజమాన్యంలోని మరియు సెన్సార్‌షిప్‌ను తట్టుకునే సోషల్ మీడియా ప్రోటోకాల్; పెద్ద ప్లాట్‌ఫారమ్‌లు ఇవ్వడానికి నిరాకరించిన అన్ని ఫీచర్లను ఇది అందిస్తుంది."
+    },
+    "tg": {
+      "title": "DeHub — Шабакаи иҷтимоии кушодаасос, ки ба корбарон тааллуқ дорад",
+      "description": "DeHub як протоколи иҷтимоии кушодаасос аст, ки ба корбарони худ тааллуқ дорад ва ба сензура тобовар аст, бо ҳамаи имкониятҳое, ки платформаҳои бузург ба шумо надоданд."
+    },
+    "th": {
+      "title": "DeHub — โซเชียลมีเดียโอเพนซอร์สที่ผู้ใช้เป็นเจ้าของ",
+      "description": "DeHub คือโปรโตคอลโซเชียลมีเดียแบบโอเพนซอร์ส ที่ผู้ใช้เป็นเจ้าของและต้านทานการเซ็นเซอร์ พร้อมทุกฟีเจอร์ที่แพลตฟอร์มใหญ่ปฏิเสธที่จะให้คุณ"
+    },
+    "ti": {
+      "title": "DeHub — ክፉት ምንጪ፣ ብተጠቀምቲ ዝውነን ማሕበራዊ መራኸቢ",
+      "description": "DeHub ክፉት ምንጪ፡ ብተጠቀምቱ ዝውነንን ንሳንሱር ዝጻወርን ማሕበራዊ መራኸቢ ፕሮቶኮል ኮይኑ፡ እቶም ዓበይቲ መድረኻት ክህቡኻ ዝኣበዩ ኩሎም ባህርያት ይህበካ።"
+    },
+    "tk": {
+      "title": "DeHub — Açyk çeşmeli, ulanyjylaryň eýeçiligindäki sosial media",
+      "description": "DeHub açyk çeşmeli, ulanyjylarynyň eýeçiligindäki we senzura durnukly sosial media protokolydyr; uly platformalaryň bermekden ýüz öwren ähli mümkinçiliklerini berýär."
+    },
+    "tl": {
+      "title": "DeHub — Open source na social media na pag-aari ng mga user",
+      "description": "Ang DeHub ay isang open source, pag-aari ng mga user at censorship-resistant na social media protocol, na may lahat ng feature na tinanggihang ibigay ng malalaking platform."
+    },
+    "tr": {
+      "title": "DeHub — Açık kaynaklı, kullanıcıların sahibi olduğu sosyal medya",
+      "description": "DeHub, açık kaynaklı, kullanıcılarına ait ve sansüre dirençli bir sosyal medya protokolüdür; büyük platformların vermediği tüm özellikleri sunar."
+    },
+    "ug": {
+      "title": "DeHub — ئوچۇق كودلۇق، ئىشلەتكۈچىلەرگە تەۋە ئىجتىمائىي تاراتقۇ",
+      "description": "DeHub ئوچۇق كودلۇق، ئىشلەتكۈچىلىرىگە تەۋە ۋە تەكشۈرۈشكە چىداملىق ئىجتىمائىي تاراتقۇ كېلىشىمى بولۇپ، چوڭ سۇپىلار بەرمىگەن بارلىق ئىقتىدارلارنى سۇنىدۇ."
+    },
+    "uk": {
+      "title": "DeHub — Соціальна мережа з відкритим кодом, що належить користувачам",
+      "description": "DeHub — це соціальний протокол з відкритим кодом, що належить користувачам і стійкий до цензури, з усіма функціями, у яких вам відмовили великі платформи."
+    },
+    "ur": {
+      "title": "DeHub — اوپن سورس، صارفین کی ملکیت والا سوشل میڈیا",
+      "description": "DeHub ایک اوپن سورس، صارفین کی ملکیت اور سنسرشپ سے محفوظ سوشل میڈیا پروٹوکول ہے جو آپ کو وہ تمام خصوصیات دیتا ہے جو بڑے پلیٹ فارمز نے دینے سے انکار کیا۔"
+    },
+    "uz": {
+      "title": "DeHub — Ochiq kodli, foydalanuvchilarga tegishli ijtimoiy tarmoq",
+      "description": "DeHub ochiq kodli, foydalanuvchilariga tegishli va senzuraga chidamli ijtimoiy tarmoq protokoli boʻlib, yirik platformalar bermagan barcha imkoniyatlarni taqdim etadi."
+    },
+    "vi": {
+      "title": "DeHub — Mạng xã hội mã nguồn mở, thuộc sở hữu người dùng",
+      "description": "DeHub là giao thức mạng xã hội mã nguồn mở, thuộc sở hữu người dùng và chống kiểm duyệt, mang đến mọi tính năng mà các nền tảng lớn từ chối cung cấp."
+    },
+    "yo": {
+      "title": "DeHub — Ìkànnì àjọlò orísun ṣíṣí tí àwọn olùlò ní",
+      "description": "DeHub jẹ́ ìlànà ìkànnì àjọlò orísun ṣíṣí, tí àwọn olùlò rẹ̀ ní, tí ó sì kọ ìfòfindè, tí ó ń fún ọ ní gbogbo ànfàní tí àwọn pẹpẹ ńlá kọ̀ láti fún ọ."
+    },
+    "zh": {
+      "title": "DeHub — 开源、用户所有的社交媒体",
+      "description": "DeHub 是一个开源、由用户拥有且抗审查的社交媒体协议，提供传统平台拒绝给你的全部功能。"
+    },
+    "zu": {
+      "title": "DeHub — Isizinda sezokuxhumana somthombo ovulekile esiphethwe abasebenzisi",
+      "description": "I-DeHub iyiphrothokholi yezokuxhumana yomthombo ovulekile, ephethwe abasebenzisi bayo futhi emelana nokucindezelwa, inikeza zonke izici izinkundla ezinkulu ezenqaba ukukunika zona."
+    }
+  },
   "/accounts": {
     "af": {
       "title": "Rekeningmarktplaas — DeHub",
@@ -527,6 +861,300 @@
       "description": "Dlala ngqo kusiphequluli sakho ku-DeHub — i-chess ye-3D enjengefilimu, umdlalo wokudubula owakhiwe ngokwezinqubo, ukuhamba ehlathini lemvula, ukulwa emgwaqweni kwe-neon nephansi lokuhweba ongahamba kulo. Akukho ukufaka, akukho ukulanda."
     }
   },
+  "/converter": {
+    "af": {
+      "title": "Omskakelaar — voer 'n video in DeHub in",
+      "description": "Plak 'n skakel van YouTube, TikTok, Instagram, X en meer, en publiseer dit as 'n DeHub-pos."
+    },
+    "ar": {
+      "title": "محول — استيراد فيديو إلى DeHub",
+      "description": "الصق رابطًا من YouTube أو TikTok أو Instagram أو X وغيرها، وانشره كمنشور على DeHub."
+    },
+    "az": {
+      "title": "Converter — DeHub-a video idxal edin",
+      "description": "YouTube, TikTok, Instagram, X və daha çoxundan keçid yapışdırın və onu DeHub postu kimi yayımlayın."
+    },
+    "be": {
+      "title": "Канвертар — імпартуйце відэа ў DeHub",
+      "description": "Вставце спасылку з YouTube, TikTok, Instagram, X і іншых, і апублікуйце яе як пост DeHub."
+    },
+    "bg": {
+      "title": "Конвертор — импортирайте видео в DeHub",
+      "description": "Поставете връзка от YouTube, TikTok, Instagram, X и други, и я публикувайте като DeHub пост."
+    },
+    "bn": {
+      "title": "কনভার্টার — DeHub-এ একটি ভিডিও আমদানি করুন",
+      "description": "YouTube, TikTok, Instagram, X এবং আরও অনেক কিছু থেকে একটি লিঙ্ক পেস্ট করুন এবং এটি DeHub পোস্ট হিসাবে প্রকাশ করুন।"
+    },
+    "ca": {
+      "title": "Convertidor — importa un vídeo a DeHub",
+      "description": "Enganxa un enllaç de YouTube, TikTok, Instagram, X i més, i publica'l com a publicació de DeHub."
+    },
+    "cs": {
+      "title": "Konvertor — import videa do DeHub",
+      "description": "Vložte odkaz z YouTube, TikTok, Instagramu, X a dalších a publikujte jej jako příspěvek DeHub."
+    },
+    "da": {
+      "title": "Converter — importer en video til DeHub",
+      "description": "Indsæt et link fra YouTube, TikTok, Instagram, X og mere, og udgiv det som et DeHub-indlæg."
+    },
+    "de": {
+      "title": "Converter — importiere ein Video zu DeHub",
+      "description": "Füge einen Link von YouTube, TikTok, Instagram, X und mehr ein und veröffentliche ihn als DeHub-Post."
+    },
+    "el": {
+      "title": "Μετατροπέας — εισαγωγή βίντεο στο DeHub",
+      "description": "Επικολλήστε έναν σύνδεσμο από το YouTube, TikTok, Instagram, X και άλλα, και δημοσιεύστε το ως ανάρτηση DeHub."
+    },
+    "en": {
+      "title": "Converter — import a video to DeHub",
+      "description": "Paste a link from YouTube, TikTok, Instagram, X and more, and publish it as a DeHub post."
+    },
+    "es": {
+      "title": "Convertidor — importar un video a DeHub",
+      "description": "Pega un enlace de YouTube, TikTok, Instagram, X y más, y publícalo como una publicación de DeHub."
+    },
+    "et": {
+      "title": "Teisendaja — video importimine DeHubi",
+      "description": "Kleebi link YouTube 'ist, TikTokist, Instagramist, X-st ja mujalt ning avalda see DeHubi postitusena."
+    },
+    "fa": {
+      "title": "تبدیل‌کننده — وارد کردن ویدیو به DeHub",
+      "description": "یک لینک از YouTube، TikTok، Instagram، X و غیره را بچسبانید و آن را به عنوان یک پست DeHub منتشر کنید."
+    },
+    "fi": {
+      "title": "Muunnin — tuo video DeHubiin",
+      "description": "Liitä linkki YouTubesta, TikTokista, Instagramista, X:stä ja muista lähteistä, ja julkaise se DeHub-postina."
+    },
+    "fr": {
+      "title": "Convertisseur — importer une vidéo vers DeHub",
+      "description": "Collez un lien de YouTube, TikTok, Instagram, X et bien d'autres, et publiez-le en tant que post DeHub."
+    },
+    "gu": {
+      "title": "કનવર્ટર — DeHub માં વીડિયો આયાત કરો",
+      "description": "YouTube, TikTok, Instagram, X અને વધુમાંથી લિંક પેસ્ટ કરો, અને તેને DeHub પોસ્ટ તરીકે પ્રકાશિત કરો."
+    },
+    "ha": {
+      "title": "Converter — shigo da bidiyo zuwa DeHub",
+      "description": "Jajjada linki daga YouTube, TikTok, Instagram, X da sauransu, sannan buga shi a matsayin jajjadiyar DeHub."
+    },
+    "he": {
+      "title": "ממיר — ייבוא וידאו ל-DeHub",
+      "description": "הדבק קישור מ-YouTube, TikTok, Instagram, X ועוד, והפרסם אותו כפוסט ב-DeHub."
+    },
+    "hi": {
+      "title": "कनवर्टर — DeHub में वीडियो आयात करें",
+      "description": "YouTube, TikTok, Instagram, X और अन्य से लिंक पेस्ट करें, और इसे DeHub पोस्ट के रूप में प्रकाशित करें।"
+    },
+    "hr": {
+      "title": "Konverter — uvezi video u DeHub",
+      "description": "Zalijepi poveznicu s YouTubea, TikToka, Instagrama, X-a i ostalih, te je objavi kao DeHub post."
+    },
+    "hu": {
+      "title": "Konverter — videó importálása a DeHubra",
+      "description": "Illessz be egy linket a YouTube-ról, TikTokról, Instagramról, X-ről és még sok másról, majd tedd közzé DeHub-posztként."
+    },
+    "hy": {
+      "title": "Փոխարկիչ — տեսանյութ ներմուծել DeHub-ում",
+      "description": "Տեղադրեք հղում YouTube-ից, TikTok-ից, Instagram-ից, X-ից և այլ աղբյուրներից, և հրապարակեք այն որպես DeHub գրառում:"
+    },
+    "id": {
+      "title": "Konverter — impor video ke DeHub",
+      "description": "Tempel tautan dari YouTube, TikTok, Instagram, X dan lainnya, dan publikasikan sebagai postingan DeHub."
+    },
+    "ig": {
+      "title": "Converter — webụ vidio na DeHub",
+      "description": "Tinye njikọ sitere YouTube, TikTok, Instagram, X na ọtụtụ ndị ọzọ, wee bipụta ya dị ka DeHub post."
+    },
+    "it": {
+      "title": "Convertitore — importa un video su DeHub",
+      "description": "Incolla un link da YouTube, TikTok, Instagram, X e altri, e pubblicalo come post su DeHub."
+    },
+    "ja": {
+      "title": "コンバーター — DeHubに動画をインポート",
+      "description": "YouTube、TikTok、Instagram、Xなどからリンクを貼り付けて、DeHubの投稿として公開します。"
+    },
+    "jv": {
+      "title": "Converter — impor video menyang DeHub",
+      "description": "Tempel link saka YouTube, TikTok, Instagram, X lan liyane, lan terbitake minangka posting DeHub."
+    },
+    "ka": {
+      "title": "კონვერტერი — ვიდეოს იმპორტი DeHub-ში",
+      "description": "YouTube-დან, TikTok-დან, Instagram-დან, X-დან და სხვა წყაროებიდან ბმულის ჩასმა და მისი DeHub პოსტად გამოქვეყნება."
+    },
+    "kk": {
+      "title": "Конвертер — видеоны DeHub-қа импорттау",
+      "description": "YouTube, TikTok, Instagram, X және т.б. сайттардан сілтемені қойып, оны DeHub постысы ретінде жариялаңыз."
+    },
+    "kn": {
+      "title": "ಕನ್ವರ್ಟರ್ — DeHub ಗೆ ವಿಡಿಯೋ ಆಮದು ಮಾಡಿ",
+      "description": "YouTube, TikTok, Instagram, X ಮತ್ತು ಇತರ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್‌ಗಳಿಂದ ಲಿಂಕ್ ಅನ್ನು ಪೇಸ್ಟ್ ಮಾಡಿ ಮತ್ತು ಅದನ್ನು DeHub ಪೋಸ್ಟ್ ಆಗಿ ಪ್ರಕಟಿಸಿ."
+    },
+    "ko": {
+      "title": "컨버터 — DeHub으로 비디오 가져오기",
+      "description": "YouTube, TikTok, Instagram, X 등에서 링크를 붙여넣고 DeHub 게시물로 게시하세요."
+    },
+    "ky": {
+      "title": "Конвертер — видеону DeHub-га импорттоо",
+      "description": "YouTube, TikTok, Instagram, X жана башка булактардан ссылканы чаптап, аны DeHub постусу катары жарыялаңыз."
+    },
+    "lt": {
+      "title": "Konverteris — importuokite vaizdo įrašą į DeHub",
+      "description": "Įklijuokite nuorodą iš YouTube, TikTok, Instagram, X ir daugiau, ir paskelbkite ją kaip DeHub įrašą."
+    },
+    "lv": {
+      "title": "Konvertors — importējiet video uz DeHub",
+      "description": "Ielīmējiet saiti no YouTube, TikTok, Instagram, X un citiem, un publicējiet to kā DeHub ierakstu."
+    },
+    "mg": {
+      "title": "Converter — mamindra video ao DeHub",
+      "description": "Apidiro ny rohy avy amin'ny YouTube, TikTok, Instagram, X ary marobe hafa, ary alefaso azy ho post DeHub."
+    },
+    "mi": {
+      "title": "Converter — kawekawe he ataata ki DeHub",
+      "description": "Whakapiri he hononga mai i YouTube, TikTok, Instagram, X me ētahi atu, ka whakaputa hei kaupapa DeHub."
+    },
+    "ml": {
+      "title": "കൺവെർട്ടർ — DeHub-ലേക്ക് ഒരു വീഡിയോ ഇമ്പോർട്ട് ചെയ്യുക",
+      "description": "YouTube, TikTok, Instagram, X എന്നിവയിൽ നിന്നും മറ്റും ഒരു ലിങ്ക് പേസ്റ്റ് ചെയ്യുക, കൂടാതെ അത് DeHub പോസ്റ്റായി പ്രസിദ്ധീകരിക്കുക."
+    },
+    "mn": {
+      "title": "Хөрвүүлэгч — DeHub-д видео импортлох",
+      "description": "YouTube, TikTok, Instagram, X болон бусад сайтаас холбоос нийлүүлээд DeHub пост болгон нийтлүүлээрэй."
+    },
+    "mr": {
+      "title": "कनव्हर्टर — DeHub मध्ये व्हिडिओ आयात करा",
+      "description": "YouTube, TikTok, Instagram, X आणि इतरांकडून लिंक पेस्ट करा आणि ते DeHub पोस्ट म्हणून प्रकाशित करा."
+    },
+    "ms": {
+      "title": "Penukar — import video ke DeHub",
+      "description": "Tampal pautan dari YouTube, TikTok, Instagram, X dan banyak lagi, dan terbitkan sebagai siaran DeHub."
+    },
+    "ne": {
+      "title": "कनभर्टर — DeHub मा भिडियो आयात गर्नुहोस्",
+      "description": "YouTube, TikTok, Instagram, X र अन्य स्रोतहरूबाट लिङ्क पेस्ट गर्नुहोस् र यसलाई DeHub पोस्टको रूपमा प्रकाशित गर्नुहोस्।"
+    },
+    "nl": {
+      "title": "Converter — importeer een video naar DeHub",
+      "description": "Plak een link van YouTube, TikTok, Instagram, X en meer, en publiceer het als een DeHub-bericht."
+    },
+    "no": {
+      "title": "Konverter — importer en video til DeHub",
+      "description": "Lim inn en lenke fra YouTube, TikTok, Instagram, X og mer, og publiser den som et DeHub-innlegg."
+    },
+    "om": {
+      "title": "Converter — video gara DeHub galchuu",
+      "description": "YouTube, TikTok, Instagram, X fi kkaayyoo biroo irraa linki paste godhaa, akkasumas akka DeHub post ibsi."
+    },
+    "or": {
+      "title": "ରୂପାନ୍ତରକ — DeHub ରେ ଏକ ଭିଡିଓ ଆମଦାନୀ କରନ୍ତୁ",
+      "description": "YouTube, TikTok, Instagram, X ଏବଂ ଅନ୍ୟାନ୍ୟ ଜାଗାରୁ ଏକ ଲିଙ୍କ ଅନୁସରଣ କରନ୍ତୁ ଏବଂ ଏହାକୁ DeHub ପୋଷ୍ଟ ଭାବରେ ପ୍ରକାଶ କରନ୍ତୁ।"
+    },
+    "pa": {
+      "title": "Converter — DeHub ਵਿੱਚ ਇੱਕ ਵੀਡੀਓ ਆਯਾਤ ਕਰੋ",
+      "description": "YouTube, TikTok, Instagram, X ਅਤੇ ਹੋਰ ਤੋਂ ਇੱਕ ਲਿੰਕ ਪੇਸਟ ਕਰੋ, ਅਤੇ ਇਸਨੂੰ DeHub ਪੋਸਟ ਦੇ ਤੌਰ ਤੇ ਪ੍ਰਕਾਸ਼ਿਤ ਕਰੋ।"
+    },
+    "pl": {
+      "title": "Konwerter — importuj wideo do DeHub",
+      "description": "Wklej link z YouTube, TikTok, Instagram, X i innych, a my opublikujemy go jako post DeHub."
+    },
+    "pt": {
+      "title": "Conversor — importar um vídeo para DeHub",
+      "description": "Cole um link do YouTube, TikTok, Instagram, X e muito mais, e publique-o como um post do DeHub."
+    },
+    "qu": {
+      "title": "Convertidor — ama video DeHub-man apachiy",
+      "description": "YouTube, TikTok, Instagram, X hina plataformamanta ligazo t'inkiy, DeHub post-ña hina publika."
+    },
+    "ro": {
+      "title": "Converter — importă un videoclip în DeHub",
+      "description": "Lipește un link de pe YouTube, TikTok, Instagram, X și altele, și publică-l ca postare DeHub."
+    },
+    "ru": {
+      "title": "Конвертер — импортируйте видео в DeHub",
+      "description": "Вставьте ссылку с YouTube, TikTok, Instagram, X и других платформ и опубликуйте её как пост DeHub."
+    },
+    "sa": {
+      "title": "कनवर्टर — DeHub में वीडियो आयात करें",
+      "description": "YouTube, TikTok, Instagram, X और अन्य से लिंक पेस्ट करें, और इसे DeHub पोस्ट के रूप में प्रकाशित करें।"
+    },
+    "sd": {
+      "title": "Converter — DeHub ۾ ويڊيو درآمد ڪريو",
+      "description": "YouTube، TikTok، Instagram، X ۽ وڌيڪ مان لنڪ پيسٽ ڪريو، ۽ اسے DeHub پوسٽ طور شايع ڪريو۔"
+    },
+    "si": {
+      "title": "Converter — DeHub වලට වීඩියෝ ආයාත කරන්න",
+      "description": "YouTube, TikTok, Instagram, X සහ තවත් බොහෝ ස්ථාන වලින් සබැඳි අලවා DeHub පෝස්ටයක් ලෙස ප්‍රකාශ කරන්න."
+    },
+    "sk": {
+      "title": "Konvertor — importovať video do DeHub",
+      "description": "Vložte odkaz z YouTube, TikTok, Instagram, X a ďalších a publikujte ho ako príspevok DeHub."
+    },
+    "sq": {
+      "title": "Konvertuesi — importo një video në DeHub",
+      "description": "Ngjit një lidhje nga YouTube, TikTok, Instagram, X dhe më shumë, dhe publikoje atë si një postim DeHub."
+    },
+    "sv": {
+      "title": "Konverterare — importera en video till DeHub",
+      "description": "Klistra in en länk från YouTube, TikTok, Instagram, X och mer, och publicera den som ett DeHub-inlägg."
+    },
+    "sw": {
+      "title": "Kibadilishi — ingiza video kwenye DeHub",
+      "description": "Bandika kiungo kutoka YouTube, TikTok, Instagram, X na zaidi, na kichapisha kama chapisho la DeHub."
+    },
+    "ta": {
+      "title": "கன்வர্টர் — DeHub-க்கு வீடியோ இறக்குமதி செய்யவும்",
+      "description": "YouTube, TikTok, Instagram, X மற்றும் பலவற்றிலிருந்து ஒரு இணைப்பை ஒட்டவும், மேலும் அதை DeHub பதிவாக வெளியிடவும்."
+    },
+    "te": {
+      "title": "కన్వర్టర్ — DeHub కు వీడియోను ఇంపోర్ట్ చేయండి",
+      "description": "YouTube, TikTok, Instagram, X మరియు ఇతరాల నుండి లింక్‌ను పేస్ట్ చేయండి మరియు దానిని DeHub పోస్ట్‌గా ప్రచురించండి."
+    },
+    "th": {
+      "title": "Converter — นำเข้าวิดีโอไปยัง DeHub",
+      "description": "วางลิงก์จาก YouTube, TikTok, Instagram, X และอื่นๆ และเผยแพร่เป็นโพสต์ DeHub"
+    },
+    "tk": {
+      "title": "Konwerter — DeHub-a wideo import et",
+      "description": "YouTube, TikTok, Instagram, X we başga ýerlerden link goýup, ony DeHub postu hökmünde neşir et."
+    },
+    "tl": {
+      "title": "Converter — mag-import ng video sa DeHub",
+      "description": "Mag-paste ng link mula sa YouTube, TikTok, Instagram, X at marami pang iba, at i-publish ito bilang DeHub post."
+    },
+    "tr": {
+      "title": "Dönüştürücü — DeHub'a video aktarın",
+      "description": "YouTube, TikTok, Instagram, X ve daha fazlasından bir bağlantı yapıştırın ve bunu DeHub gönderisi olarak yayınlayın."
+    },
+    "ug": {
+      "title": "Converter — DeHub'ga video import qilish",
+      "description": "YouTube, TikTok, Instagram, X we bashqa manbalardin link qoysup, uni DeHub post'i sifatida nashr eting."
+    },
+    "uk": {
+      "title": "Конвертер — імпортуйте відео до DeHub",
+      "description": "Вставте посилання з YouTube, TikTok, Instagram, X та інших платформ і опублікуйте його як пост DeHub."
+    },
+    "ur": {
+      "title": "کنورٹر — DeHub میں ویڈیو درآمد کریں",
+      "description": "YouTube، TikTok، Instagram، X اور مزید سے لنک پیسٹ کریں، اور اسے DeHub پوسٹ کے طور پر شائع کریں۔"
+    },
+    "uz": {
+      "title": "Konvertor — DeHub-ga video import qiling",
+      "description": "YouTube, TikTok, Instagram, X va boshqalardan havola qo'ying va uni DeHub postasi sifatida nashr qiling."
+    },
+    "vi": {
+      "title": "Converter — nhập video vào DeHub",
+      "description": "Dán một liên kết từ YouTube, TikTok, Instagram, X và nhiều nền tảng khác, và xuất bản nó dưới dạng bài đăng DeHub."
+    },
+    "zh": {
+      "title": "转换器 — 将视频导入 DeHub",
+      "description": "粘贴来自 YouTube、TikTok、Instagram、X 等平台的链接，并将其发布为 DeHub 帖子。"
+    },
+    "zu": {
+      "title": "I-Converter — kufaka i-video ku-DeHub",
+      "description": "Nameka i-link evela ku-YouTube, TikTok, Instagram, X nokuningi, bese uyishicilela njenge-DeHub post."
+    }
+  },
   "/depin": {
     "af": {
       "title": "DePin | Community-Powered Media Infrastructure | DeHub",
@@ -735,6 +1363,340 @@
     "zh": {
       "title": "DePin | 社区驱动的媒体基础设施 | DeHub",
       "description": "DeHub DePin 让每个人都能贡献存储、带宽与算力，通过一张有韧性的网络来托管、转码并分发媒体内容。"
+    }
+  },
+  "/docs": {
+    "af": {
+      "title": "DeHub-dokumentasie — Gidse, token, dApps en vrae",
+      "description": "Amptelike DeHub-dokumentasie: platformoorsig, dApps, DHB-tokenekonomie, staking, speletjies, padkaart, vrae en meer."
+    },
+    "am": {
+      "title": "የDeHub ሰነዶች — መመሪያዎች፣ ቶከን፣ dApps እና ጥያቄዎች",
+      "description": "ኦፊሴላዊ የDeHub ሰነዶች፦ የመድረክ አጠቃላይ እይታ፣ dApps፣ የDHB ቶከን ኢኮኖሚ፣ ስቴኪንግ፣ ጨዋታዎች፣ የመንገድ ካርታ፣ ተደጋጋሚ ጥያቄዎች እና ተጨማሪ።"
+    },
+    "ar": {
+      "title": "وثائق DeHub — أدلة والتوكن وتطبيقات لامركزية وأسئلة شائعة",
+      "description": "الوثائق الرسمية لـ DeHub: نظرة عامة على المنصة، التطبيقات اللامركزية، اقتصاد توكن DHB، التخزين، الألعاب، خارطة الطريق، الأسئلة الشائعة والمزيد."
+    },
+    "az": {
+      "title": "DeHub sənədləri — Bələdçilər, token, dApps və FAQ",
+      "description": "Rəsmi DeHub sənədləri: platformaya baxış, dApps, DHB token iqtisadiyyatı, steykinq, oyunlar, yol xəritəsi, FAQ və daha çoxu."
+    },
+    "be": {
+      "title": "Дакументацыя DeHub — Дапаможнікі, токен, dApps і FAQ",
+      "description": "Афіцыйная дакументацыя DeHub: агляд платформы, dApps, эканоміка токена DHB, стэйкінг, гульні, дарожная карта, FAQ і іншае."
+    },
+    "bg": {
+      "title": "Документация на DeHub — Ръководства, токен, dApps и ЧЗВ",
+      "description": "Официална документация на DeHub: преглед на платформата, dApps, икономика на токена DHB, стейкинг, игри, пътна карта, ЧЗВ и още."
+    },
+    "bn": {
+      "title": "DeHub ডকুমেন্টেশন — গাইড, টোকেন, dApps ও সাধারণ প্রশ্ন",
+      "description": "DeHub-এর অফিসিয়াল ডকুমেন্টেশন: প্ল্যাটফর্ম পরিচিতি, dApps, DHB টোকেন অর্থনীতি, স্টেকিং, গেম, রোডম্যাপ, সাধারণ প্রশ্ন ও আরও অনেক কিছু।"
+    },
+    "ca": {
+      "title": "Documentació de DeHub — Guies, token, dApps i PMF",
+      "description": "Documentació oficial de DeHub: visió general de la plataforma, dApps, economia del token DHB, staking, jocs, full de ruta, preguntes freqüents i més."
+    },
+    "cs": {
+      "title": "Dokumentace DeHub — Návody, token, dApps a FAQ",
+      "description": "Oficiální dokumentace DeHub: přehled platformy, dApps, ekonomika tokenu DHB, staking, hry, plán vývoje, FAQ a další."
+    },
+    "da": {
+      "title": "DeHub-dokumentation — Guider, token, dApps og FAQ",
+      "description": "Officiel DeHub-dokumentation: platformsoverblik, dApps, DHB-tokenøkonomi, staking, spil, roadmap, FAQ og mere."
+    },
+    "de": {
+      "title": "DeHub Dokumentation — Anleitungen, Token, dApps & FAQ",
+      "description": "Offizielle DeHub-Dokumentation: Plattformüberblick, dApps, DHB-Tokenökonomie, Staking, Spiele, Roadmap, FAQ und mehr."
+    },
+    "el": {
+      "title": "Τεκμηρίωση DeHub — Οδηγοί, token, dApps και συχνές ερωτήσεις",
+      "description": "Επίσημη τεκμηρίωση DeHub: επισκόπηση πλατφόρμας, dApps, οικονομία του token DHB, staking, παιχνίδια, χάρτης πορείας, συχνές ερωτήσεις και άλλα."
+    },
+    "en": {
+      "title": "DeHub Documentation — Guides, Token, dApps & FAQ",
+      "description": "Official DeHub documentation: platform overview, dApps, DHB token economics, staking, games, roadmap, FAQ and more."
+    },
+    "es": {
+      "title": "Documentación de DeHub — Guías, token, dApps y preguntas frecuentes",
+      "description": "Documentación oficial de DeHub: visión general de la plataforma, dApps, economía del token DHB, staking, juegos, hoja de ruta, preguntas frecuentes y más."
+    },
+    "et": {
+      "title": "DeHubi dokumentatsioon — Juhendid, token, dAppid ja KKK",
+      "description": "DeHubi ametlik dokumentatsioon: platvormi ülevaade, dAppid, DHB tokeni majandus, staking, mängud, teekaart, KKK ja muu."
+    },
+    "fa": {
+      "title": "مستندات DeHub — راهنماها، توکن، dApps و پرسش‌های متداول",
+      "description": "مستندات رسمی DeHub: مرور پلتفرم، dApps، اقتصاد توکن DHB، استیکینگ، بازی‌ها، نقشه راه، پرسش‌های متداول و بیشتر."
+    },
+    "fi": {
+      "title": "DeHub-dokumentaatio — Oppaat, token, dApps ja UKK",
+      "description": "DeHubin virallinen dokumentaatio: alustan yleiskatsaus, dApps, DHB-tokenin talous, staking, pelit, tiekartta, UKK ja muuta."
+    },
+    "fr": {
+      "title": "Documentation DeHub — Guides, token, dApps et FAQ",
+      "description": "Documentation officielle de DeHub : présentation de la plateforme, dApps, économie du token DHB, staking, jeux, feuille de route, FAQ et plus encore."
+    },
+    "gu": {
+      "title": "DeHub દસ્તાવેજીકરણ — માર્ગદર્શિકા, ટોકન, dApps અને પ્રશ્નો",
+      "description": "DeHub નું સત્તાવાર દસ્તાવેજીકરણ: પ્લેટફોર્મ ઝાંખી, dApps, DHB ટોકન અર્થતંત્ર, સ્ટેકિંગ, રમતો, રોડમેપ, સામાન્ય પ્રશ્નો અને વધુ."
+    },
+    "ha": {
+      "title": "Takardun DeHub — Jagorori, token, dApps da tambayoyi",
+      "description": "Takardun hukuma na DeHub: bayanin dandamali, dApps, tattalin arzikin token DHB, staking, wasanni, tsarin gaba, tambayoyin da ake yawan yi da ƙari."
+    },
+    "he": {
+      "title": "תיעוד DeHub — מדריכים, טוקן, dApps ושאלות נפוצות",
+      "description": "התיעוד הרשמי של DeHub: סקירת הפלטפורמה, dApps, כלכלת טוקן DHB, סטייקינג, משחקים, מפת דרכים, שאלות נפוצות ועוד."
+    },
+    "hi": {
+      "title": "DeHub दस्तावेज़ीकरण — गाइड, टोकन, dApps और सामान्य प्रश्न",
+      "description": "आधिकारिक DeHub दस्तावेज़ीकरण: प्लेटफ़ॉर्म अवलोकन, dApps, DHB टोकन अर्थव्यवस्था, स्टेकिंग, गेम्स, रोडमैप, सामान्य प्रश्न और बहुत कुछ।"
+    },
+    "hr": {
+      "title": "DeHub dokumentacija — Vodiči, token, dApps i FAQ",
+      "description": "Službena DeHub dokumentacija: pregled platforme, dApps, ekonomija DHB tokena, staking, igre, plan razvoja, česta pitanja i više."
+    },
+    "hu": {
+      "title": "DeHub dokumentáció — Útmutatók, token, dApp-ok és GYIK",
+      "description": "Hivatalos DeHub dokumentáció: platform áttekintés, dApp-ok, a DHB token gazdaságtana, staking, játékok, ütemterv, GYIK és több."
+    },
+    "hy": {
+      "title": "DeHub փաստաթղթեր — Ուղեցույցներ, թոքեն, dApps և ՀՏՀ",
+      "description": "DeHub-ի պաշտոնական փաստաթղթերը՝ հարթակի ընդհանուր նկարագիր, dApps, DHB թոքենի տնտեսություն, սթեյքինգ, խաղեր, ճանապարհային քարտեզ, ՀՏՀ և ավելին։"
+    },
+    "id": {
+      "title": "Dokumentasi DeHub — Panduan, token, dApps & FAQ",
+      "description": "Dokumentasi resmi DeHub: gambaran platform, dApps, ekonomi token DHB, staking, gim, peta jalan, FAQ, dan lainnya."
+    },
+    "ig": {
+      "title": "Akwụkwọ DeHub — Ntuziaka, token, dApps na ajụjụ",
+      "description": "Akwụkwọ gọọmentị nke DeHub: nchịkọta ikpo okwu, dApps, akụnụba token DHB, staking, egwuregwu, map okporo ụzọ, ajụjụ ndị a na-ajụkarị na ndị ọzọ."
+    },
+    "it": {
+      "title": "Documentazione DeHub — Guide, token, dApp e FAQ",
+      "description": "Documentazione ufficiale di DeHub: panoramica della piattaforma, dApp, economia del token DHB, staking, giochi, roadmap, FAQ e altro."
+    },
+    "ja": {
+      "title": "DeHub ドキュメント — ガイド、トークン、dApps、FAQ",
+      "description": "DeHub 公式ドキュメント：プラットフォーム概要、dApps、DHB トークンエコノミー、ステーキング、ゲーム、ロードマップ、FAQ など。"
+    },
+    "jv": {
+      "title": "Dokumentasi DeHub — Pandhuan, token, dApps lan FAQ",
+      "description": "Dokumentasi resmi DeHub: gambaran platform, dApps, ekonomi token DHB, staking, game, peta dalan, FAQ lan liya-liyane."
+    },
+    "ka": {
+      "title": "DeHub-ის დოკუმენტაცია — სახელმძღვანელოები, ტოკენი, dApps და FAQ",
+      "description": "DeHub-ის ოფიციალური დოკუმენტაცია: პლატფორმის მიმოხილვა, dApps, DHB ტოკენის ეკონომიკა, სტეიკინგი, თამაშები, გზამკვლევი, FAQ და სხვა."
+    },
+    "kk": {
+      "title": "DeHub құжаттамасы — Нұсқаулықтар, токен, dApps және ЖҚС",
+      "description": "DeHub ресми құжаттамасы: платформаға шолу, dApps, DHB токен экономикасы, стейкинг, ойындар, даму жоспары, жиі қойылатын сұрақтар және т.б."
+    },
+    "km": {
+      "title": "ឯកសារ DeHub — មគ្គុទ្ទេសក៍ ថូខិន dApps និងសំណួរ",
+      "description": "ឯកសារផ្លូវការរបស់ DeHub៖ ទិដ្ឋភាពវេទិកា, dApps, សេដ្ឋកិច្ចថូខិន DHB, ស្តេកឃីង, ហ្គេម, ផែនទីផ្លូវ, សំណួរញឹកញាប់ និងច្រើនទៀត។"
+    },
+    "kn": {
+      "title": "DeHub ದಾಖಲಾತಿ — ಮಾರ್ಗದರ್ಶಿಗಳು, ಟೋಕನ್, dApps ಮತ್ತು ಪ್ರಶ್ನೆಗಳು",
+      "description": "DeHub ಅಧಿಕೃತ ದಾಖಲಾತಿ: ವೇದಿಕೆಯ ಅವಲೋಕನ, dApps, DHB ಟೋಕನ್ ಅರ್ಥಶಾಸ್ತ್ರ, ಸ್ಟೇಕಿಂಗ್, ಆಟಗಳು, ಮಾರ್ಗಸೂಚಿ, ಪ್ರಶ್ನೆಗಳು ಮತ್ತು ಇನ್ನಷ್ಟು."
+    },
+    "ko": {
+      "title": "DeHub 문서 — 가이드, 토큰, dApp 및 FAQ",
+      "description": "DeHub 공식 문서: 플랫폼 개요, dApp, DHB 토큰 이코노미, 스테이킹, 게임, 로드맵, FAQ 등."
+    },
+    "ku": {
+      "title": "Belgeyên DeHub — Rênîşander, token, dApps û FAQ",
+      "description": "Belgeyên fermî yên DeHub: nêrîna giştî ya platformê, dApps, aboriya tokena DHB, staking, lîstik, nexşerê, pirsên pir tên kirin û bêtir."
+    },
+    "ky": {
+      "title": "DeHub документациясы — Колдонмолор, токен, dApps жана ТБС",
+      "description": "DeHub расмий документациясы: платформага сереп, dApps, DHB токен экономикасы, стейкинг, оюндар, өнүгүү планы, тез-тез берилүүчү суроолор жана башкалар."
+    },
+    "lo": {
+      "title": "ເອກະສານ DeHub — ຄູ່ມື, ໂທເຄນ, dApps ແລະ ຄຳຖາມ",
+      "description": "ເອກະສານທາງການຂອງ DeHub: ພາບລວມແພລດຟອມ, dApps, ເສດຖະກິດໂທເຄນ DHB, ສະເຕກກິ້ງ, ເກມ, ແຜນທາງ, ຄຳຖາມທີ່ພົບເລື້ອຍ ແລະ ອື່ນໆ."
+    },
+    "lt": {
+      "title": "DeHub dokumentacija — Vadovai, tokenas, dApps ir DUK",
+      "description": "Oficiali DeHub dokumentacija: platformos apžvalga, dApps, DHB tokeno ekonomika, staking, žaidimai, planas, DUK ir daugiau."
+    },
+    "lv": {
+      "title": "DeHub dokumentācija — Ceļveži, tokens, dApps un BUJ",
+      "description": "Oficiālā DeHub dokumentācija: platformas pārskats, dApps, DHB tokena ekonomika, staking, spēles, ceļvedis, bieži uzdotie jautājumi un vairāk."
+    },
+    "mg": {
+      "title": "Antontan-taratasy DeHub — Torolalana, token, dApps sy FAQ",
+      "description": "Antontan-taratasy ofisialin’ny DeHub: topi-maso ny sehatra, dApps, toekarena token DHB, staking, lalao, drafitra, FAQ sy ny maro hafa."
+    },
+    "mi": {
+      "title": "Tuhinga DeHub — Aratohu, tohu, dApps me ngā pātai",
+      "description": "Tuhinga mana o DeHub: tirohanga whānui o te pae, dApps, ōhanga tohu DHB, staking, kēmu, mahere, pātai auau me ētahi atu."
+    },
+    "ml": {
+      "title": "DeHub ഡോക്യുമെന്റേഷൻ — ഗൈഡുകൾ, ടോക്കൺ, dApps, ചോദ്യങ്ങൾ",
+      "description": "DeHub-ന്റെ ഔദ്യോഗിക ഡോക്യുമെന്റേഷൻ: പ്ലാറ്റ്‌ഫോം അവലോകനം, dApps, DHB ടോക്കൺ സാമ്പത്തികശാസ്ത്രം, സ്റ്റേക്കിംഗ്, ഗെയിമുകൾ, റോഡ്‌മാപ്പ്, പതിവ് ചോദ്യങ്ങൾ എന്നിവയും മറ്റും."
+    },
+    "mn": {
+      "title": "DeHub баримт бичиг — Заавар, токен, dApps ба түгээмэл асуулт",
+      "description": "DeHub-ийн албан ёсны баримт бичиг: платформын тойм, dApps, DHB токены эдийн засаг, стейкинг, тоглоом, хөгжлийн төлөвлөгөө, түгээмэл асуултууд болон бусад."
+    },
+    "mr": {
+      "title": "DeHub दस्तऐवजीकरण — मार्गदर्शक, टोकन, dApps आणि प्रश्न",
+      "description": "DeHub चे अधिकृत दस्तऐवजीकरण: प्लॅटफॉर्म आढावा, dApps, DHB टोकन अर्थकारण, स्टेकिंग, खेळ, रोडमॅप, नेहमीचे प्रश्न आणि बरेच काही."
+    },
+    "ms": {
+      "title": "Dokumentasi DeHub — Panduan, token, dApps & Soalan lazim",
+      "description": "Dokumentasi rasmi DeHub: gambaran platform, dApps, ekonomi token DHB, staking, permainan, peta jalan, soalan lazim dan lain-lain."
+    },
+    "my": {
+      "title": "DeHub စာရွက်စာတမ်း — လမ်းညွှန်၊ တိုကင်၊ dApps နှင့် မေးခွန်းများ",
+      "description": "DeHub ၏ တရားဝင်စာရွက်စာတမ်း— ပလက်ဖောင်းအကျဉ်းချုပ်၊ dApps၊ DHB တိုကင်စီးပွားရေး၊ staking၊ ဂိမ်းများ၊ လမ်းပြမြေပုံ၊ မေးလေ့ရှိသောမေးခွန်းများနှင့် အခြားအရာများ။"
+    },
+    "ne": {
+      "title": "DeHub कागजात — गाइड, टोकन, dApps र प्रश्नहरू",
+      "description": "DeHub को आधिकारिक कागजात: प्लेटफर्म अवलोकन, dApps, DHB टोकन अर्थतन्त्र, स्टेकिङ, खेलहरू, रोडम्याप, प्रायः सोधिने प्रश्न र थप।"
+    },
+    "nl": {
+      "title": "DeHub-documentatie — Gidsen, token, dApps en FAQ",
+      "description": "Officiële DeHub-documentatie: overzicht van het platform, dApps, DHB-tokeneconomie, staking, games, roadmap, FAQ en meer."
+    },
+    "no": {
+      "title": "DeHub-dokumentasjon — Guider, token, dApps og FAQ",
+      "description": "Offisiell DeHub-dokumentasjon: plattformoversikt, dApps, DHB-tokenøkonomi, staking, spill, veikart, FAQ og mer."
+    },
+    "om": {
+      "title": "Galmee DeHub — Qajeelfamoota, tookenii, dApps fi gaaffiiwwan",
+      "description": "Galmee ifaa DeHub: ilaalcha waliigalaa pilaatifoormii, dApps, diinagdee tookenii DHB, staking, taphoota, karoora, gaaffiiwwan yeroo baay’ee gaafataman fi kan biroo."
+    },
+    "or": {
+      "title": "DeHub ଡକ୍ୟୁମେଣ୍ଟେସନ — ଗାଇଡ, ଟୋକେନ, dApps ଓ ପ୍ରଶ୍ନ",
+      "description": "DeHub ର ଆଧିକାରିକ ଡକ୍ୟୁମେଣ୍ଟେସନ: ପ୍ଲାଟଫର୍ମ ସମୀକ୍ଷା, dApps, DHB ଟୋକେନ ଅର୍ଥନୀତି, ଷ୍ଟେକିଂ, ଖେଳ, ରୋଡମ୍ୟାପ, ସାଧାରଣ ପ୍ରଶ୍ନ ଏବଂ ଅଧିକ।"
+    },
+    "pa": {
+      "title": "DeHub ਦਸਤਾਵੇਜ਼ — ਗਾਈਡ, ਟੋਕਨ, dApps ਅਤੇ ਸਵਾਲ",
+      "description": "DeHub ਦਾ ਅਧਿਕਾਰਤ ਦਸਤਾਵੇਜ਼: ਪਲੇਟਫਾਰਮ ਝਲਕ, dApps, DHB ਟੋਕਨ ਅਰਥਸ਼ਾਸਤਰ, ਸਟੇਕਿੰਗ, ਖੇਡਾਂ, ਰੋਡਮੈਪ, ਆਮ ਸਵਾਲ ਅਤੇ ਹੋਰ।"
+    },
+    "pl": {
+      "title": "Dokumentacja DeHub — Poradniki, token, dApps i FAQ",
+      "description": "Oficjalna dokumentacja DeHub: przegląd platformy, dApps, ekonomia tokena DHB, staking, gry, plan rozwoju, FAQ i więcej."
+    },
+    "pt": {
+      "title": "Documentação DeHub — Guias, token, dApps e FAQ",
+      "description": "Documentação oficial do DeHub: visão geral da plataforma, dApps, economia do token DHB, staking, jogos, roteiro, FAQ e mais."
+    },
+    "qu": {
+      "title": "DeHub qillqakuna — Yachachikuykuna, token, dApps, tapukuykuna",
+      "description": "DeHub qillqa ofisial: plataforma qhawariy, dApps, DHB token qullqi kamay, staking, pukllaykuna, ñan kamay, tapukuykuna, aswan."
+    },
+    "ro": {
+      "title": "Documentație DeHub — Ghiduri, token, dApps și întrebări",
+      "description": "Documentația oficială DeHub: prezentare generală a platformei, dApps, economia tokenului DHB, staking, jocuri, foaie de parcurs, întrebări frecvente și altele."
+    },
+    "ru": {
+      "title": "Документация DeHub — Руководства, токен, dApps и FAQ",
+      "description": "Официальная документация DeHub: обзор платформы, dApps, экономика токена DHB, стейкинг, игры, дорожная карта, FAQ и другое."
+    },
+    "sa": {
+      "title": "DeHub प्रलेखनम् — निर्देशिकाः, टोकनम्, dApps, प्रश्नाः",
+      "description": "DeHub इत्यस्य आधिकारिकं प्रलेखनम्: मञ्चपरिचयः, dApps, DHB टोकन-अर्थव्यवस्था, स्टेकिङ्ग्, क्रीडाः, मार्गचित्रम्, प्रायःपृष्टप्रश्नाः, अधिकं च।"
+    },
+    "sd": {
+      "title": "DeHub دستاويز — رهنما، ٽوڪن، dApps ۽ سوال",
+      "description": "DeHub جو سرڪاري دستاويز: پليٽ فارم جو جائزو، dApps، DHB ٽوڪن معيشت، اسٽيڪنگ، رانديون، روڊ ميپ، عام سوال ۽ وڌيڪ."
+    },
+    "si": {
+      "title": "DeHub ලේඛන — මාර්ගෝපදේශ, ටෝකන, dApps සහ ප්‍රශ්න",
+      "description": "DeHub හි නිල ලේඛන: වේදිකා දළ විශ්ලේෂණය, dApps, DHB ටෝකන ආර්ථිකය, ස්ටේකිං, ක්‍රීඩා, මාර්ග සිතියම, නිතර අසන ප්‍රශ්න සහ තවත්."
+    },
+    "sk": {
+      "title": "Dokumentácia DeHub — Návody, token, dApps a FAQ",
+      "description": "Oficiálna dokumentácia DeHub: prehľad platformy, dApps, ekonomika tokenu DHB, staking, hry, plán rozvoja, FAQ a ďalšie."
+    },
+    "so": {
+      "title": "Dukumentiga DeHub — Hagayaal, token, dApps iyo su’aalo",
+      "description": "Dukumentiga rasmiga ah ee DeHub: guud ahaan barxadda, dApps, dhaqaalaha token-ka DHB, staking, ciyaaro, qorshaha mustaqbalka, su’aalaha badanaa la weydiiyo iyo wax kale."
+    },
+    "sq": {
+      "title": "Dokumentacioni i DeHub — Udhëzues, token, dApps dhe FAQ",
+      "description": "Dokumentacioni zyrtar i DeHub: përmbledhje e platformës, dApps, ekonomia e tokenit DHB, staking, lojëra, plani i zhvillimit, pyetje të shpeshta dhe më shumë."
+    },
+    "sr": {
+      "title": "DeHub документација — Водичи, токен, dApps и честа питања",
+      "description": "Званична DeHub документација: преглед платформе, dApps, економија DHB токена, стејкинг, игре, план развоја, честа питања и више."
+    },
+    "sv": {
+      "title": "DeHub-dokumentation — Guider, token, dApps och FAQ",
+      "description": "Officiell DeHub-dokumentation: plattformsöversikt, dApps, DHB-tokenekonomi, staking, spel, färdplan, FAQ och mer."
+    },
+    "sw": {
+      "title": "Nyaraka za DeHub — Miongozo, tokeni, dApps na maswali",
+      "description": "Nyaraka rasmi za DeHub: muhtasari wa jukwaa, dApps, uchumi wa tokeni ya DHB, staking, michezo, ramani ya safari, maswali yanayoulizwa mara kwa mara na zaidi."
+    },
+    "ta": {
+      "title": "DeHub ஆவணங்கள் — வழிகாட்டிகள், டோக்கன், dApps மற்றும் கேள்விகள்",
+      "description": "DeHub இன் அதிகாரப்பூர்வ ஆவணங்கள்: தள மேலோட்டம், dApps, DHB டோக்கன் பொருளாதாரம், ஸ்டேக்கிங், விளையாட்டுகள், வழித்திட்டம், அடிக்கடி கேட்கப்படும் கேள்விகள் மற்றும் பல."
+    },
+    "te": {
+      "title": "DeHub డాక్యుమెంటేషన్ — గైడ్‌లు, టోకెన్, dApps మరియు ప్రశ్నలు",
+      "description": "DeHub అధికారిక డాక్యుమెంటేషన్: ప్లాట్‌ఫారమ్ అవలోకనం, dApps, DHB టోకెన్ ఆర్థికవ్యవస్థ, స్టేకింగ్, గేమ్‌లు, రోడ్‌మ్యాప్, తరచుగా అడిగే ప్రశ్నలు మరియు మరిన్ని."
+    },
+    "tg": {
+      "title": "Ҳуҷҷатҳои DeHub — Дастурҳо, токен, dApps ва FAQ",
+      "description": "Ҳуҷҷатҳои расмии DeHub: шарҳи платформа, dApps, иқтисоди токени DHB, стейкинг, бозиҳо, нақшаи роҳ, саволҳои маъмул ва ғайра."
+    },
+    "th": {
+      "title": "เอกสาร DeHub — คู่มือ โทเคน dApps และคำถามที่พบบ่อย",
+      "description": "เอกสารทางการของ DeHub: ภาพรวมแพลตฟอร์ม dApps เศรษฐศาสตร์โทเคน DHB การสเตก เกม โรดแมป คำถามที่พบบ่อย และอื่น ๆ"
+    },
+    "ti": {
+      "title": "ሰነዳት DeHub — መምርሒታት፡ ቶከን፡ dApps ከምኡ’ውን ሕቶታት",
+      "description": "ወግዓዊ ሰነዳት DeHub፦ ሓፈሻዊ ትሕዝቶ መድረኽ፡ dApps፡ ቁጠባ ቶከን DHB፡ ስቴኪንግ፡ ጸወታታት፡ መንገዲ ካርታ፡ ተደጋጋሚ ሕቶታትን ካልእን።"
+    },
+    "tk": {
+      "title": "DeHub resminamalary — Gollanmalar, token, dApps we soraglar",
+      "description": "DeHub-yň resmi resminamalary: platforma synlary, dApps, DHB token ykdysadyýeti, staking, oýunlar, ýol kartasy, ýygy soralýan soraglar we başgalar."
+    },
+    "tl": {
+      "title": "Dokumentasyon ng DeHub — Mga gabay, token, dApps at FAQ",
+      "description": "Opisyal na dokumentasyon ng DeHub: pangkalahatang-ideya ng platform, dApps, ekonomiya ng DHB token, staking, mga laro, roadmap, FAQ at higit pa."
+    },
+    "tr": {
+      "title": "DeHub Dokümantasyonu — Rehberler, token, dApp ve SSS",
+      "description": "Resmî DeHub dokümantasyonu: platforma genel bakış, dApp’ler, DHB token ekonomisi, staking, oyunlar, yol haritası, SSS ve daha fazlası."
+    },
+    "ug": {
+      "title": "DeHub قوللانمىسى — يېتەكچى، توكېن، dApps ۋە سوئاللار",
+      "description": "DeHub نىڭ رەسمىي ھۆججەتلىرى: سۇپا قىسقىچە چۈشەندۈرۈش، dApps، DHB توكېن ئىقتىسادى، staking، ئويۇنلار، يول خەرىتىسى، كۆپ سورىلىدىغان سوئاللار ۋە باشقىلار."
+    },
+    "uk": {
+      "title": "Документація DeHub — Посібники, токен, dApps і FAQ",
+      "description": "Офіційна документація DeHub: огляд платформи, dApps, економіка токена DHB, стейкінг, ігри, дорожня карта, FAQ та інше."
+    },
+    "ur": {
+      "title": "DeHub دستاویزات — رہنما، ٹوکن، dApps اور عمومی سوالات",
+      "description": "DeHub کی سرکاری دستاویزات: پلیٹ فارم کا جائزہ، dApps، DHB ٹوکن اکنامکس، اسٹیکنگ، گیمز، روڈ میپ، عمومی سوالات اور مزید۔"
+    },
+    "uz": {
+      "title": "DeHub hujjatlari — Qoʻllanmalar, token, dApps va savollar",
+      "description": "DeHub rasmiy hujjatlari: platforma sharhi, dApps, DHB token iqtisodiyoti, staking, oʻyinlar, yoʻl xaritasi, koʻp beriladigan savollar va boshqalar."
+    },
+    "vi": {
+      "title": "Tài liệu DeHub — Hướng dẫn, token, dApp và FAQ",
+      "description": "Tài liệu chính thức của DeHub: tổng quan nền tảng, dApp, kinh tế token DHB, staking, trò chơi, lộ trình, FAQ và hơn thế nữa."
+    },
+    "yo": {
+      "title": "Ìwé DeHub — Ìtọ́sọ́nà, tòkénì, dApps àti ìbéèrè",
+      "description": "Ìwé ìṣàkóso DeHub: àkópọ̀ pẹpẹ, dApps, ètò ọrọ̀-ajé tòkénì DHB, staking, eré, àwòrán ọ̀nà, àwọn ìbéèrè tí a sábà béèrè àti bẹ́ẹ̀ bẹ́ẹ̀ lọ."
+    },
+    "zh": {
+      "title": "DeHub 文档 — 指南、代币、dApp 与常见问题",
+      "description": "DeHub 官方文档：平台概览、dApp、DHB 代币经济、质押、游戏、路线图、常见问题等。"
+    },
+    "zu": {
+      "title": "Amadokhumenti e-DeHub — Imihlahlandlela, ithokheni, ama-dApps nemibuzo",
+      "description": "Amadokhumenti asemthethweni e-DeHub: ukubuka konke kwesizinda, ama-dApps, umnotho wethokheni ye-DHB, i-staking, imidlalo, uhlelo lwekusasa, imibuzo evamile nokunye."
     }
   },
   "/events": {
@@ -1507,6 +2469,336 @@
     "zh": {
       "title": "Launchpad — DeHub",
       "description": "在 DeHub Launchpad 上把生意代币化：浏览在线代币，或创建你自己的。"
+    }
+  },
+  "/migrate-youtube": {
+    "af": {
+      "title": "Migreer alles — bring 'n hele profiel na DeHub",
+      "description": "Bulk-voer 'n hele kanaal of profiel in op DeHub — YouTube, TikTok, Vimeo, SoundCloud en meer."
+    },
+    "am": {
+      "title": "ሁሉንም ሚግሬት ያድርጉ — ሙሉ መገለጫ ወደ DeHub ይምጡ",
+      "description": "ሙሉ ሰርጥ ወይም መገለጫ ወደ DeHub ውስጥ በብዛት ማስተካከል — YouTube፣ TikTok፣ Vimeo፣ SoundCloud እና ሌሎችም።"
+    },
+    "ar": {
+      "title": "ترحيل الكل — نقل ملف شخصي كامل إلى DeHub",
+      "description": "استيراد دفعة كاملة من قناة أو ملف شخصي إلى DeHub — YouTube و TikTok و Vimeo و SoundCloud والمزيد."
+    },
+    "az": {
+      "title": "Hamısını miqrasiya et — bütün profili DeHub-a gətir",
+      "description": "Bütün kanalı və ya profili DeHub-a toplu idxal edin — YouTube, TikTok, Vimeo, SoundCloud və daha çoxu."
+    },
+    "be": {
+      "title": "Міграваць усё - перанесіце цэлы профіль на DeHub",
+      "description": "Масавы імпорт цэлага канала або профіля на DeHub - YouTube, TikTok, Vimeo, SoundCloud і іншыя."
+    },
+    "bg": {
+      "title": "Мигрирай всички — пренеси цял профил в DeHub",
+      "description": "Масово импортиране на цял канал или профил в DeHub — YouTube, TikTok, Vimeo, SoundCloud и други."
+    },
+    "bn": {
+      "title": "সব মাইগ্রেট করুন — একটি সম্পূর্ণ প্রোফাইল DeHub-এ নিয়ে আসুন",
+      "description": "একটি সম্পূর্ণ চ্যানেল বা প্রোফাইল DeHub-এ বাল্ক-আমদানি করুন — YouTube, TikTok, Vimeo, SoundCloud এবং আরও অনেক কিছু।"
+    },
+    "ca": {
+      "title": "Migra tot — porta un perfil sencer a DeHub",
+      "description": "Importació en massa d'un canal o perfil sencer a DeHub — YouTube, TikTok, Vimeo, SoundCloud i més."
+    },
+    "cs": {
+      "title": "Migrovat vše — přineste celý profil na DeHub",
+      "description": "Hromadný import celého kanálu nebo profilu na DeHub — YouTube, TikTok, Vimeo, SoundCloud a další."
+    },
+    "da": {
+      "title": "Overfør alt — bring en hel profil til DeHub",
+      "description": "Masseimporter en hel kanal eller profil til DeHub — YouTube, TikTok, Vimeo, SoundCloud og mere."
+    },
+    "de": {
+      "title": "Alles migrieren — bringe ein ganzes Profil zu DeHub",
+      "description": "Importiere einen ganzen Kanal oder ein ganzes Profil in Bulk zu DeHub — YouTube, TikTok, Vimeo, SoundCloud und mehr."
+    },
+    "el": {
+      "title": "Μετανάστευση όλων — φέρτε ένα ολόκληρο προφίλ στο DeHub",
+      "description": "Μαζική εισαγωγή ενός ολόκληρου καναλιού ή προφίλ στο DeHub — YouTube, TikTok, Vimeo, SoundCloud και άλλα."
+    },
+    "en": {
+      "title": "Migrate all — bring a whole profile to DeHub",
+      "description": "Bulk-import a whole channel or profile to DeHub — YouTube, TikTok, Vimeo, SoundCloud and more."
+    },
+    "es": {
+      "title": "Migrar todo — trae un perfil completo a DeHub",
+      "description": "Importación masiva de un canal o perfil completo a DeHub — YouTube, TikTok, Vimeo, SoundCloud y más."
+    },
+    "et": {
+      "title": "Migreerige kõik – tooge terve profiil DeHubisse",
+      "description": "Impordi terve kanal või profiil DeHubisse – YouTube, TikTok, Vimeo, SoundCloud ja palju muud."
+    },
+    "fa": {
+      "title": "انتقال همه — یک پروفایل کامل را به DeHub بیاورید",
+      "description": "انتقال دسته‌ای یک کانال یا پروفایل کامل به DeHub — YouTube، TikTok، Vimeo، SoundCloud و بیشتر."
+    },
+    "fi": {
+      "title": "Siirrä kaikki — tuo koko profiili DeHubiin",
+      "description": "Tuo koko kanava tai profiili DeHubiin kerralla — YouTube, TikTok, Vimeo, SoundCloud ja paljon muuta."
+    },
+    "fr": {
+      "title": "Migrer tout — apportez un profil entier à DeHub",
+      "description": "Importation en masse d'une chaîne ou d'un profil entier vers DeHub — YouTube, TikTok, Vimeo, SoundCloud et plus."
+    },
+    "gu": {
+      "title": "બધું માઇગ્રેટ કરો — સમગ્ર પ્રોફાઇલ DeHub માં લાવો",
+      "description": "સમગ્ર ચેનલ અથવા પ્રોફાઇલને DeHub માં બલ્ક-આયાત કરો — YouTube, TikTok, Vimeo, SoundCloud અને વધુ."
+    },
+    "ha": {
+      "title": "Canja duka — kawo da tsarin gida gaba zuwa DeHub",
+      "description": "Bulk-import tsarin gida ko profile zuwa DeHub — YouTube, TikTok, Vimeo, SoundCloud da sauransu."
+    },
+    "he": {
+      "title": "העבר הכל — הביא פרופיל שלם ל-DeHub",
+      "description": "ייבא בכמויות גדולות של ערוץ שלם או פרופיל ל-DeHub — YouTube, TikTok, Vimeo, SoundCloud ועוד."
+    },
+    "hi": {
+      "title": "सभी को माइग्रेट करें — पूरी प्रोफाइल को DeHub में लाएं",
+      "description": "पूरे चैनल या प्रोफाइल को DeHub में बल्क-आयात करें — YouTube, TikTok, Vimeo, SoundCloud और अन्य।"
+    },
+    "hr": {
+      "title": "Migriraj sve — donesi cijeli profil na DeHub",
+      "description": "Skupno uvezite cijeli kanal ili profil na DeHub — YouTube, TikTok, Vimeo, SoundCloud i više."
+    },
+    "hu": {
+      "title": "Összes migrálása — egy teljes profil átvinni a DeHub-ra",
+      "description": "Egy teljes csatorna vagy profil tömeges importálása a DeHub-ra — YouTube, TikTok, Vimeo, SoundCloud és még sok más."
+    },
+    "hy": {
+      "title": "Միգրացիա բոլորի համար — բերեք ամբողջ պրոֆիլ DeHub-ում",
+      "description": "Մեծ չափով ներմուծել ամբողջ ալիքը կամ պրոֆիլը DeHub-ում — YouTube, TikTok, Vimeo, SoundCloud և այլն:"
+    },
+    "id": {
+      "title": "Migrasikan semua — bawa seluruh profil ke DeHub",
+      "description": "Impor massal seluruh saluran atau profil ke DeHub — YouTube, TikTok, Vimeo, SoundCloud dan lainnya."
+    },
+    "ig": {
+      "title": "Kwaga niile — wetara profaịlụ dum na DeHub",
+      "description": "Bulk-ebubata ọwa ma ọ bụ profaịlụ na DeHub — YouTube, TikTok, Vimeo, SoundCloud na ndị ọzọ."
+    },
+    "it": {
+      "title": "Migra tutto — porta un intero profilo su DeHub",
+      "description": "Importazione in blocco di un intero canale o profilo su DeHub — YouTube, TikTok, Vimeo, SoundCloud e altro."
+    },
+    "ja": {
+      "title": "すべて移行 — プロフィール全体をDeHubに移行",
+      "description": "チャンネル全体またはプロフィール全体をDeHubにバルクインポート — YouTube、TikTok、Vimeo、SoundCloudなど。"
+    },
+    "jv": {
+      "title": "Migrasi kabeh — bawa profil lengkap menyang DeHub",
+      "description": "Migrasi massal sawijining saluran utawa profil lengkap menyang DeHub — YouTube, TikTok, Vimeo, SoundCloud lan liyane."
+    },
+    "ka": {
+      "title": "ყველას მიგრაცია — მთელი პროფილი DeHub-ზე მოიტანეთ",
+      "description": "მთელი არხის ან პროფილის ერთდროულად იმპორტირება DeHub-ზე — YouTube, TikTok, Vimeo, SoundCloud და სხვა."
+    },
+    "kk": {
+      "title": "Барлығын миграциялау — бүтін профильді DeHub-та әкеліңіз",
+      "description": "Бүтін арнайы немесе профильді DeHub-та массалық импортталу — YouTube, TikTok, Vimeo, SoundCloud және т.б."
+    },
+    "km": {
+      "title": "ផ្ទេរទាំងអស់ — នាំយកប្រវត្តិរូបទាំងមូលទៅ DeHub",
+      "description": "ការនាំចូលដ៏ធំៗនូវឆានែល ឬប្រវត្តិរូបទាំងមូលទៅ DeHub — YouTube, TikTok, Vimeo, SoundCloud និងច្រើនទៀត។"
+    },
+    "kn": {
+      "title": "ಎಲ್ಲವನ್ನೂ ಸ್ಥಳಾಂತರಿಸಿ — ಸಂಪೂರ್ಣ ಪ್ರೊಫೈಲ್ ಅನ್ನು DeHub ಗೆ ತರಿ",
+      "description": "ಸಂಪೂರ್ಣ ಚ್ಯಾನೆಲ್ ಅಥವಾ ಪ್ರೊಫೈಲ್ ಅನ್ನು DeHub ಗೆ ಬಲ್ಕ್-ಆಮದು ಮಾಡಿ — YouTube, TikTok, Vimeo, SoundCloud ಮತ್ತು ಹೆಚ್ಚು."
+    },
+    "ko": {
+      "title": "모두 마이그레이션 — 전체 프로필을 DeHub으로 가져오기",
+      "description": "전체 채널 또는 프로필을 DeHub으로 일괄 가져오기 — YouTube, TikTok, Vimeo, SoundCloud 등."
+    },
+    "ku": {
+      "title": "گواستنەوەی هەمووی — هێنانی تێکڕای پڕۆفایل بۆ DeHub",
+      "description": "بەتسێ هێنانی تێکڕای چەناڵ یان پڕۆفایل بۆ DeHub — YouTube، TikTok، Vimeo، SoundCloud و زیاتر."
+    },
+    "ky": {
+      "title": "Бардыгын миграция кылыңыз — бүтүндөй профилди DeHub'га алып келиңиз",
+      "description": "Бүтүндөй каналды же профилди DeHub'га массалык импортировано кылыңыз — YouTube, TikTok, Vimeo, SoundCloud жана башкалар."
+    },
+    "lo": {
+      "title": "ຍ້າຍທັງຫມົດ — ນໍາໂປຣໄຟລ໌ທັງໝົດໄປ DeHub",
+      "description": "ນໍາເຂົ້າກຸ່ມທັງໂປຣໄຟລ໌ຫຼືຊ່ອງທັງໝົດໄປ DeHub — YouTube, TikTok, Vimeo, SoundCloud ແລະອື່ນໆ."
+    },
+    "lt": {
+      "title": "Migruoti viską — perkelti visą profilį į „DeHub\"",
+      "description": "Masinis visos kanalo ar profilio importavimas į „DeHub\" — „YouTube\", „TikTok\", „Vimeo\", „SoundCloud\" ir daugiau."
+    },
+    "lv": {
+      "title": "Migrēt visu — pārnest visu profilu uz DeHub",
+      "description": "Lielapjoma kanāla vai profila migrācija uz DeHub — YouTube, TikTok, Vimeo, SoundCloud un citi."
+    },
+    "mg": {
+      "title": "Fampindramindrana ny rehetra — alaingainao ny profila manontolo amin'ny DeHub",
+      "description": "Ampidirina amin'ny antsasaky ny channel na profila manontolo amin'ny DeHub — YouTube, TikTok, Vimeo, SoundCloud ary marobe hafa."
+    },
+    "mi": {
+      "title": "Whakawhiti katoa — kawe i te tūnui katoa ki DeHub",
+      "description": "Whakawhiti-nui i te tūnui katoa, i te tūnui rānei ki DeHub — YouTube, TikTok, Vimeo, SoundCloud me ēta atu."
+    },
+    "ml": {
+      "title": "എല്ലാം മൈഗ്രേറ്റ് ചെയ്യുക — ഒരു മുഴുവൻ പ്രൊഫൈൽ DeHub-ലേക്ക് കൊണ്ടുവരുക",
+      "description": "ഒരു മുഴുവൻ ചാനൽ അല്ലെങ്കിൽ പ്രൊഫൈൽ DeHub-ലേക്ക് ബൾക്ക്-ഇമ്പോർട്ട് ചെയ്യുക — YouTube, TikTok, Vimeo, SoundCloud എന്നിവയും കൂടുതലും."
+    },
+    "mn": {
+      "title": "Бүгдийг шилжүүлэх — бүхэл профайлыг DeHub дээр авчирна уу",
+      "description": "Бүхэл сувиг эсвэл профайлыг DeHub дээр нэг дор импортлоно уу — YouTube, TikTok, Vimeo, SoundCloud болон бусад."
+    },
+    "mr": {
+      "title": "सर्व स्थानांतरित करा — संपूर्ण प्रोफाइल DeHub मध्ये आणा",
+      "description": "संपूर्ण चॅनल किंवा प्रोफाइल DeHub मध्ये मोठ्या प्रमाणात आयात करा — YouTube, TikTok, Vimeo, SoundCloud आणि बरेच काही."
+    },
+    "ms": {
+      "title": "Migrasikan semua — bawa seluruh profil ke DeHub",
+      "description": "Migrasi pukal seluruh saluran atau profil ke DeHub — YouTube, TikTok, Vimeo, SoundCloud dan banyak lagi."
+    },
+    "my": {
+      "title": "အားလုံးရွှေ့ပြောင်း - DeHub မှတစ်ခုလုံးကိုပရိုဖိုင်းကိုဆောင်ခဲ့",
+      "description": "DeHub သို့ ချန်နယ်တစ်ခုလုံး သို့မဟုတ် ပရိုဖိုင်းတစ်ခုလုံးကို အုပ်စုအလိုက်ကျောင်းသားများ — YouTube၊ TikTok၊ Vimeo၊ SoundCloud နှင့် အခြားများ။"
+    },
+    "ne": {
+      "title": "सबै माइग्रेट गर्नुहोस् — पूरो प्रोफाइल DeHub मा ल्याउनुहोस्",
+      "description": "DeHub मा पूरो च्यानल वा प्रोफाइल बल्क-आयात गर्नुहोस् — YouTube, TikTok, Vimeo, SoundCloud र अन्य।"
+    },
+    "nl": {
+      "title": "Alles migreren — breng een heel profiel naar DeHub",
+      "description": "Bulk-importeer een heel kanaal of profiel naar DeHub — YouTube, TikTok, Vimeo, SoundCloud en meer."
+    },
+    "no": {
+      "title": "Migrer alt — ta en hel profil til DeHub",
+      "description": "Masseimporter en hel kanal eller profil til DeHub — YouTube, TikTok, Vimeo, SoundCloud og mer."
+    },
+    "om": {
+      "title": "Hunda galmaa'i — porofaayilii guutuu DeHub irratti fidi",
+      "description": "Kanaalii guutuu ykn porofaayilii guutuu DeHub irratti galchaa — YouTube, TikTok, Vimeo, SoundCloud fi kan biroo."
+    },
+    "or": {
+      "title": "ସବୁ ସ୍ଥାନାନ୍ତର କରନ୍ତୁ — ସମ୍ପୂର୍ଣ୍ଣ ପ୍ରୋଫାଇଲ DeHub ରେ ଆଣନ୍ତୁ",
+      "description": "ସମ୍ପୂର୍ଣ୍ଣ ଚ୍ୟାନେଲ କିମ୍ବା ପ୍ରୋଫାଇଲ DeHub ରେ ବଲ୍କ-ଆମଦାନୀ କରନ୍ତୁ — YouTube, TikTok, Vimeo, SoundCloud ଏବଂ ଅନ୍ୟାନ୍ୟ।"
+    },
+    "pa": {
+      "title": "ਸਭ ਨੂੰ ਮਾਈਗ੍ਰੇਟ ਕਰੋ — ਪੂਰੀ ਪ੍ਰੋਫਾਈਲ ਨੂੰ DeHub ਵਿੱਚ ਲਿਆਓ",
+      "description": "ਪੂਰੇ ਚੈਨਲ ਜਾਂ ਪ੍ਰੋਫਾਈਲ ਨੂੰ DeHub ਵਿੱਚ ਬਲਕ-ਆਯਾਤ ਕਰੋ — YouTube, TikTok, Vimeo, SoundCloud ਅਤੇ ਹੋਰ।"
+    },
+    "pl": {
+      "title": "Migruj wszystko — przenieś cały profil do DeHub",
+      "description": "Zbiorczo importuj cały kanał lub profil do DeHub — YouTube, TikTok, Vimeo, SoundCloud i wiele innych."
+    },
+    "pt": {
+      "title": "Migrar tudo — trazer um perfil inteiro para o DeHub",
+      "description": "Importação em massa de um canal ou perfil inteiro para o DeHub — YouTube, TikTok, Vimeo, SoundCloud e muito mais."
+    },
+    "qu": {
+      "title": "Tukuy migracion — tukuy profileta DeHub-man apamuy",
+      "description": "Bulk-import tukuy kanalta o profileta DeHub-man — YouTube, TikTok, Vimeo, SoundCloud, etcétera."
+    },
+    "ro": {
+      "title": "Migrează tot — aduce un profil întreg pe DeHub",
+      "description": "Importă în masă un întreg canal sau profil pe DeHub — YouTube, TikTok, Vimeo, SoundCloud și altele."
+    },
+    "ru": {
+      "title": "Перенести все — перенесите весь профиль на DeHub",
+      "description": "Массовый импорт целого канала или профиля на DeHub — YouTube, TikTok, Vimeo, SoundCloud и многое другое."
+    },
+    "sa": {
+      "title": "सर्वं स्थानान्तरु — सम्पूर्णं प्रोफाइलं DeHub इति स्थाने आनयु",
+      "description": "सम्पूर्णं चैनलं अथवा प्रोफाइलं DeHub इति स्थाने समूहेन आयातु — YouTube, TikTok, Vimeo, SoundCloud इत्यादिः।"
+    },
+    "sd": {
+      "title": "سب کو منتقل کریں — پورا پروفائل DeHub میں لائیں",
+      "description": "پورے چینل یا پروفائل کو DeHub میں بیک وقت درآمد کریں — YouTube، TikTok، Vimeo، SoundCloud اور بہت کچھ۔"
+    },
+    "si": {
+      "title": "සියල්ල සම්මතයි කරන්න — සම්පූර්ණ පැතිකඩ DeHub වෙත ගෙන එන්න",
+      "description": "සම්පූර්ණ චැනලයක් හෝ පැතිකඩ DeHub වෙත බෙඩ්-ආයාතිත කරන්න — YouTube, TikTok, Vimeo, SoundCloud සහ තවත් බොහොමයක්."
+    },
+    "sk": {
+      "title": "Migrovať všetko — prinesie celý profil na DeHub",
+      "description": "Hromadný import celého kanála alebo profilu na DeHub — YouTube, TikTok, Vimeo, SoundCloud a ďalšie."
+    },
+    "so": {
+      "title": "Migrate all — keena buuqa oo dhan DeHub-ka",
+      "description": "Bulk-import buuqa oo dhan ama profile DeHub-ka — YouTube, TikTok, Vimeo, SoundCloud iyo kuwo kale."
+    },
+    "sq": {
+      "title": "Migro të gjitha — sjell një profil të tërë në DeHub",
+      "description": "Importo në masë një kanal ose profil të tërë në DeHub — YouTube, TikTok, Vimeo, SoundCloud dhe më shumë."
+    },
+    "sv": {
+      "title": "Migrera allt — ta en hel profil till DeHub",
+      "description": "Massimportera en hel kanal eller profil till DeHub — YouTube, TikTok, Vimeo, SoundCloud och mer."
+    },
+    "sw": {
+      "title": "Hamisha zote — kuleta wasifu mzima kwenye DeHub",
+      "description": "Kuingiza kwa wingi kituo kizima au wasifu kwenye DeHub — YouTube, TikTok, Vimeo, SoundCloud na zaidi."
+    },
+    "ta": {
+      "title": "அனைத்தையும் இடம்பெயர்க்கவும் — முழு சுயவிவரத்தையும் DeHub க்கு கொண்டு வாருங்கள்",
+      "description": "முழு சேனல் அல்லது சுயவிவரத்தை DeHub க்கு பல-இறக்குமதி செய்யவும் — YouTube, TikTok, Vimeo, SoundCloud மற்றும் பலவற்றிலிருந்து."
+    },
+    "te": {
+      "title": "అన్నీ మైగ్రేట్ చేయండి — మొత్తం ప్రొఫైల్‌ను DeHub‌కు తీసుకురండి",
+      "description": "మొత్తం చానెల్ లేదా ప్రొఫైల్‌ను DeHub‌కు బల్క్-దిగుమతి చేయండి — YouTube, TikTok, Vimeo, SoundCloud మరియు మరిన్ని."
+    },
+    "tg": {
+      "title": "Ҳамаро миграция кунед — як профили пурраро ба DeHub оваред",
+      "description": "Як канал ё профили пурраро дар DeHub ворид кунед — YouTube, TikTok, Vimeo, SoundCloud ва ғайра."
+    },
+    "th": {
+      "title": "ย้ายทั้งหมด — นำโปรไฟล์ทั้งหมดไปยัง DeHub",
+      "description": "นำเข้าช่องหรือโปรไฟล์ทั้งหมดเป็นชุดไปยัง DeHub — YouTube, TikTok, Vimeo, SoundCloud และอื่นๆ"
+    },
+    "ti": {
+      "title": "ሙሉእ ምስራር — ሙሉእ ፕሮፋይል ወደ DeHub ምስ ምጽዋት",
+      "description": "ሙሉእ ቻናል ወይ ፕሮፋይል ብሓንቲ ሓደ ወደ DeHub ምስራር - YouTube, TikTok, Vimeo, SoundCloud ወዘተ።"
+    },
+    "tk": {
+      "title": "Hemmesini köçür — bütin profili DeHub-a getir",
+      "description": "Bütin kanaly ýa-da profili DeHub-a toplumdap köçür — YouTube, TikTok, Vimeo, SoundCloud we başgalar."
+    },
+    "tl": {
+      "title": "I-migrate lahat — magdala ng buong profile sa DeHub",
+      "description": "Bulk-import ng buong channel o profile sa DeHub — YouTube, TikTok, Vimeo, SoundCloud at marami pang iba."
+    },
+    "tr": {
+      "title": "Tümünü geçir — tüm bir profili DeHub'a taşı",
+      "description": "Tüm bir kanalı veya profili DeHub'a toplu olarak içe aktar — YouTube, TikTok, Vimeo, SoundCloud ve daha fazlası."
+    },
+    "ug": {
+      "title": "ھەممىسىنى مىگراتسىيا قىلىڭ — پۈتۈن پروفىلنى DeHub-غا ئېلىپ كېلىڭ",
+      "description": "پۈتۈن قانال ياكى پروفىلنى DeHub-غا توپ-ئىمپورت قىلىڭ — YouTube، TikTok، Vimeo، SoundCloud ۋە تېخىمۇ كۆپ."
+    },
+    "uk": {
+      "title": "Перенести все — перенесіть весь профіль на DeHub",
+      "description": "Масовий імпорт цілого каналу або профілю на DeHub — YouTube, TikTok, Vimeo, SoundCloud та інші."
+    },
+    "ur": {
+      "title": "سب کو منتقل کریں — پورا پروفائل DeHub میں لائیں",
+      "description": "پورے چینل یا پروفائل کو DeHub میں بیک وقت درآمد کریں — YouTube، TikTok، Vimeo، SoundCloud اور بہت کچھ۔"
+    },
+    "uz": {
+      "title": "Hammasini ko'chirish — butun profilni DeHub-ga olib kelish",
+      "description": "Butun kanalning yoki profilning ko'p miqdordagi ko'chirishini DeHub-ga — YouTube, TikTok, Vimeo, SoundCloud va boshqalarga."
+    },
+    "vi": {
+      "title": "Di chuyển tất cả — mang toàn bộ hồ sơ sang DeHub",
+      "description": "Nhập hàng loạt toàn bộ kênh hoặc hồ sơ sang DeHub — YouTube, TikTok, Vimeo, SoundCloud và nhiều hơn nữa."
+    },
+    "yo": {
+      "title": "Mú gbogbo wọn lọ — mú gbogbo àkójọpọ̀ wá sí DeHub",
+      "description": "Fi gbogbo ikanni tàbí àkójọpọ̀ sí DeHub - YouTube, TikTok, Vimeo, SoundCloud àti bẹ́ẹ̀ bẹ́ẹ̀ lọ."
+    },
+    "zh": {
+      "title": "迁移全部 — 将整个资料带到 DeHub",
+      "description": "批量导入整个频道或资料到 DeHub — YouTube、TikTok、Vimeo、SoundCloud 等。"
+    },
+    "zu": {
+      "title": "Hambisa konke — letha iprofayili yonke ku-DeHub",
+      "description": "Bulk-import ichanneli yonke noma iprofayili ku-DeHub — YouTube, TikTok, Vimeo, SoundCloud nokuningi."
     }
   },
   "/premium": {

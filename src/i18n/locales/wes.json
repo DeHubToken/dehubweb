@@ -2847,5 +2847,13 @@
       "expired": "I don expair"
     },
     "makeOfferAction": "Mek offa"
+  },
+  "home": {
+    "seoTitle": "DeHub — Open Source, User Owned Social Media",
+    "seoDescription": "DeHub is an open source, user owned and censorship resistant social media protocol giving you all the features incumbents refused to."
+  },
+  "docs": {
+    "seoTitle": "DeHub Documentation — Guides, Token, dApps & FAQ",
+    "seoDescription": "Official DeHub documentation: platform overview, dApps, DHB token economics, staking, games, roadmap, FAQ and more."
   }
 }

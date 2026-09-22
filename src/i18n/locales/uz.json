@@ -3330,5 +3330,13 @@
       "expired": "Muddati tugadi"
     },
     "makeOfferAction": "Taklif berish"
+  },
+  "home": {
+    "seoTitle": "DeHub — Ochiq kodli, foydalanuvchilarga tegishli ijtimoiy tarmoq",
+    "seoDescription": "DeHub ochiq kodli, foydalanuvchilariga tegishli va senzuraga chidamli ijtimoiy tarmoq protokoli boʻlib, yirik platformalar bermagan barcha imkoniyatlarni taqdim etadi."
+  },
+  "docs": {
+    "seoTitle": "DeHub hujjatlari — Qoʻllanmalar, token, dApps va savollar",
+    "seoDescription": "DeHub rasmiy hujjatlari: platforma sharhi, dApps, DHB token iqtisodiyoti, staking, oʻyinlar, yoʻl xaritasi, koʻp beriladigan savollar va boshqalar."
   }
 }

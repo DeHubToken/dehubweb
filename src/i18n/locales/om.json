@@ -3330,5 +3330,13 @@
       "expired": "Yeroon isaa darbeera"
     },
     "makeOfferAction": "Dhiheessa godhi"
+  },
+  "home": {
+    "seoTitle": "DeHub — Miidiyaa hawaasaa madda banaa kan fayyadamtoonni qaban",
+    "seoDescription": "DeHub protokoolii miidiyaa hawaasaa madda banaa, kan fayyadamtoota isaatiin qabamu fi sensarshiipii dandamatu yoo ta’u, amaloota pilaatifoormiiwwan gurguddaan siif kennuu didan hunda siif kenna."
+  },
+  "docs": {
+    "seoTitle": "Galmee DeHub — Qajeelfamoota, tookenii, dApps fi gaaffiiwwan",
+    "seoDescription": "Galmee ifaa DeHub: ilaalcha waliigalaa pilaatifoormii, dApps, diinagdee tookenii DHB, staking, taphoota, karoora, gaaffiiwwan yeroo baay’ee gaafataman fi kan biroo."
   }
 }

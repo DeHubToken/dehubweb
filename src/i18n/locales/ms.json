@@ -5817,5 +5817,13 @@
     "audio": "Audio",
     "poll": "Pengundian",
     "scheduled": "Dijadualkan"
+  },
+  "home": {
+    "seoTitle": "DeHub — Media sosial sumber terbuka milik pengguna",
+    "seoDescription": "DeHub ialah protokol media sosial sumber terbuka, dimiliki pengguna dan tahan penapisan, dengan semua ciri yang enggan diberikan oleh platform besar."
+  },
+  "docs": {
+    "seoTitle": "Dokumentasi DeHub — Panduan, token, dApps & Soalan lazim",
+    "seoDescription": "Dokumentasi rasmi DeHub: gambaran platform, dApps, ekonomi token DHB, staking, permainan, peta jalan, soalan lazim dan lain-lain."
   }
 }
