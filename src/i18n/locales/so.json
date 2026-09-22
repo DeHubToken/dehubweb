@@ -3280,5 +3280,13 @@
       "expired": "Wakhtigii wuu dhacay"
     },
     "makeOfferAction": "Samee dalab"
+  },
+  "home": {
+    "seoTitle": "DeHub — Baraha bulshada ee il furan ee ay leeyihiin isticmaalayaashu",
+    "seoDescription": "DeHub waa boroto koolka warbaahinta bulshada ee il furan, ay leeyihiin isticmaalayaashiisa, kuna adkaysta faafreebka, oo ku siinaya dhammaan sifooyinka ay barxadaha waaweyni diideen inay ku siiyaan."
+  },
+  "docs": {
+    "seoTitle": "Dukumentiga DeHub — Hagayaal, token, dApps iyo su’aalo",
+    "seoDescription": "Dukumentiga rasmiga ah ee DeHub: guud ahaan barxadda, dApps, dhaqaalaha token-ka DHB, staking, ciyaaro, qorshaha mustaqbalka, su’aalaha badanaa la weydiiyo iyo wax kale."
   }
 }

@@ -5500,5 +5500,13 @@
     "audio": "Hang",
     "poll": "Szavazás",
     "scheduled": "Beütemezve"
+  },
+  "home": {
+    "seoTitle": "DeHub — Nyílt forráskódú, felhasználók tulajdonában lévő közösségi média",
+    "seoDescription": "A DeHub nyílt forráskódú, a felhasználók tulajdonában lévő és cenzúrának ellenálló közösségi protokoll, minden olyan funkcióval, amit a nagy platformok megtagadtak tőled."
+  },
+  "docs": {
+    "seoTitle": "DeHub dokumentáció — Útmutatók, token, dApp-ok és GYIK",
+    "seoDescription": "Hivatalos DeHub dokumentáció: platform áttekintés, dApp-ok, a DHB token gazdaságtana, staking, játékok, ütemterv, GYIK és több."
   }
 }

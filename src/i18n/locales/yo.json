@@ -3278,5 +3278,13 @@
       "expired": "Àkókò rẹ̀ ti parí"
     },
     "makeOfferAction": "Ṣe ìfilọ̀"
+  },
+  "home": {
+    "seoTitle": "DeHub — Ìkànnì àjọlò orísun ṣíṣí tí àwọn olùlò ní",
+    "seoDescription": "DeHub jẹ́ ìlànà ìkànnì àjọlò orísun ṣíṣí, tí àwọn olùlò rẹ̀ ní, tí ó sì kọ ìfòfindè, tí ó ń fún ọ ní gbogbo ànfàní tí àwọn pẹpẹ ńlá kọ̀ láti fún ọ."
+  },
+  "docs": {
+    "seoTitle": "Ìwé DeHub — Ìtọ́sọ́nà, tòkénì, dApps àti ìbéèrè",
+    "seoDescription": "Ìwé ìṣàkóso DeHub: àkópọ̀ pẹpẹ, dApps, ètò ọrọ̀-ajé tòkénì DHB, staking, eré, àwòrán ọ̀nà, àwọn ìbéèrè tí a sábà béèrè àti bẹ́ẹ̀ bẹ́ẹ̀ lọ."
   }
 }

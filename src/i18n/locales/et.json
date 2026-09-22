@@ -5500,5 +5500,13 @@
     "audio": "Audio",
     "poll": "Küsitlus",
     "scheduled": "Plaanitud"
+  },
+  "home": {
+    "seoTitle": "DeHub — Avatud lähtekoodiga, kasutajatele kuuluv suhtlusvõrgustik",
+    "seoDescription": "DeHub on avatud lähtekoodiga, kasutajatele kuuluv ja tsensuurikindel suhtlusprotokoll kõigi võimalustega, mida suured platvormid sulle anda ei tahtnud."
+  },
+  "docs": {
+    "seoTitle": "DeHubi dokumentatsioon — Juhendid, token, dAppid ja KKK",
+    "seoDescription": "DeHubi ametlik dokumentatsioon: platvormi ülevaade, dAppid, DHB tokeni majandus, staking, mängud, teekaart, KKK ja muu."
   }
 }

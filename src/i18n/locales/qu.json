@@ -3318,5 +3318,13 @@
       "expired": "Pachan tukusqa"
     },
     "makeOfferAction": "Qukuyta ruway"
+  },
+  "home": {
+    "seoTitle": "DeHub — Kichasqa pukyu, ruraqkunapa kapuqnin willaywasi",
+    "seoDescription": "DeHub kichasqa pukyu, ruraqninkunapa kapuqnin, sensurata harkaq willaqmasi protocolom, hatun plataformakuna mana qusqanku llapan ruwaykunata qunsu."
+  },
+  "docs": {
+    "seoTitle": "DeHub qillqakuna — Yachachikuykuna, token, dApps, tapukuykuna",
+    "seoDescription": "DeHub qillqa ofisial: plataforma qhawariy, dApps, DHB token qullqi kamay, staking, pukllaykuna, ñan kamay, tapukuykuna, aswan."
   }
 }

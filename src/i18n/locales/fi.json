@@ -5498,5 +5498,13 @@
     "audio": "Ääni",
     "poll": "Kysely",
     "scheduled": "Aikataulutettu"
+  },
+  "home": {
+    "seoTitle": "DeHub — Avoimen lähdekoodin, käyttäjien omistama sosiaalinen media",
+    "seoDescription": "DeHub on avoimen lähdekoodin, käyttäjiensä omistama ja sensuuria kestävä sosiaalisen median protokolla, jossa on kaikki ominaisuudet, joita suuret alustat eivät suostuneet antamaan."
+  },
+  "docs": {
+    "seoTitle": "DeHub-dokumentaatio — Oppaat, token, dApps ja UKK",
+    "seoDescription": "DeHubin virallinen dokumentaatio: alustan yleiskatsaus, dApps, DHB-tokenin talous, staking, pelit, tiekartta, UKK ja muuta."
   }
 }

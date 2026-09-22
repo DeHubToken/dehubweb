@@ -3244,5 +3244,13 @@
       "expired": "Möhleti geçdi"
     },
     "makeOfferAction": "Teklip etmek"
+  },
+  "home": {
+    "seoTitle": "DeHub — Açyk çeşmeli, ulanyjylaryň eýeçiligindäki sosial media",
+    "seoDescription": "DeHub açyk çeşmeli, ulanyjylarynyň eýeçiligindäki we senzura durnukly sosial media protokolydyr; uly platformalaryň bermekden ýüz öwren ähli mümkinçiliklerini berýär."
+  },
+  "docs": {
+    "seoTitle": "DeHub resminamalary — Gollanmalar, token, dApps we soraglar",
+    "seoDescription": "DeHub-yň resmi resminamalary: platforma synlary, dApps, DHB token ykdysadyýeti, staking, oýunlar, ýol kartasy, ýygy soralýan soraglar we başgalar."
   }
 }

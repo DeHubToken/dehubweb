@@ -5497,5 +5497,13 @@
     "audio": "Audio",
     "poll": "Anketa",
     "scheduled": "Zakazano"
+  },
+  "home": {
+    "seoTitle": "DeHub — Društvena mreža otvorenog koda u vlasništvu korisnika",
+    "seoDescription": "DeHub je društveni protokol otvorenog koda, u vlasništvu korisnika i otporan na cenzuru, sa svim značajkama koje su vam velike platforme uskratile."
+  },
+  "docs": {
+    "seoTitle": "DeHub dokumentacija — Vodiči, token, dApps i FAQ",
+    "seoDescription": "Službena DeHub dokumentacija: pregled platforme, dApps, ekonomija DHB tokena, staking, igre, plan razvoja, česta pitanja i više."
   }
 }

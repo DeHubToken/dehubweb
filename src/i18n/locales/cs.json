@@ -5501,5 +5501,13 @@
     "audio": "Zvuk",
     "poll": "Anketa",
     "scheduled": "Naplánováno"
+  },
+  "home": {
+    "seoTitle": "DeHub — Otevřená sociální síť vlastněná uživateli",
+    "seoDescription": "DeHub je otevřený, uživateli vlastněný a cenzuře odolný sociální protokol se všemi funkcemi, které vám velké platformy odepřely."
+  },
+  "docs": {
+    "seoTitle": "Dokumentace DeHub — Návody, token, dApps a FAQ",
+    "seoDescription": "Oficiální dokumentace DeHub: přehled platformy, dApps, ekonomika tokenu DHB, staking, hry, plán vývoje, FAQ a další."
   }
 }
