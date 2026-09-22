@@ -5569,5 +5569,20 @@
         "body": "Descubre cómo los consejos, las insignias y los superpoderes convierten lo que haces aquí en algo con lo que ganas."
       }
     }
+  },
+  "drafts": {
+    "title": "Borradores",
+    "saveCurrent": "Guardar actual",
+    "saved": "Borrador guardado",
+    "loaded": "Borrador cargado",
+    "deleted": "Borrador eliminado",
+    "emptyTitle": "Aún no hay borradores",
+    "emptyDescription": "Guarda tu trabajo para continuar más tarde.",
+    "noText": "Sin texto",
+    "image": "Imagen",
+    "video": "Vídeo",
+    "audio": "Audio",
+    "poll": "Encuesta",
+    "scheduled": "Programado"
   }
 }

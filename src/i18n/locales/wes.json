@@ -2797,5 +2797,20 @@
         "title": "Follow three creators"
       }
     }
+  },
+  "drafts": {
+    "title": "Drafts",
+    "saveCurrent": "Save Current",
+    "saved": "Draft saved",
+    "loaded": "Draft loaded",
+    "deleted": "Draft deleted",
+    "emptyTitle": "No drafts yet",
+    "emptyDescription": "Save wetin you don write, so you go fit continue am afta.",
+    "noText": "No text",
+    "image": "Image",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Poll",
+    "scheduled": "Scheduled"
   }
 }

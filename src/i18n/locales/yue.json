@@ -3236,5 +3236,20 @@
         "body": "睇下貼士、徽章同超級力量點樣將你喺呢度做嘅嘢變成你賺錢嘅嘢。"
       }
     }
+  },
+  "drafts": {
+    "title": "草稿",
+    "saveCurrent": "儲存電流",
+    "saved": "草稿儲存咗",
+    "loaded": "草稿已載入",
+    "deleted": "草稿已刪除",
+    "emptyTitle": "仲未有草稿",
+    "emptyDescription": "儲存你的工作以便稍後繼續。",
+    "noText": "冇文字",
+    "image": "形象",
+    "video": "影片",
+    "audio": "音頻",
+    "poll": "投票",
+    "scheduled": "預定咗"
   }
 }

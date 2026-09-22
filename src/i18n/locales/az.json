@@ -5407,5 +5407,20 @@
         "body": "İpucları, nişanlar və Super Güclərin burada etdiklərinizi necə qazandığınız bir şeyə çevirdiyini öyrənin."
       }
     }
+  },
+  "drafts": {
+    "title": "Layihələr",
+    "saveCurrent": "Hazırkını saxla",
+    "saved": "Layihə saxlanıldı",
+    "loaded": "Layihə yükləndi",
+    "deleted": "Layihə silindi",
+    "emptyTitle": "Hələ layihə yoxdur",
+    "emptyDescription": "Daha sonra davam etmək üçün işinizi saxlayın.",
+    "noText": "Mətn yoxdur",
+    "image": "Şəkil",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Səsvermə",
+    "scheduled": "Planlaşdırılmış"
   }
 }

@@ -5562,5 +5562,20 @@
         "body": "Scopri come suggerimenti, badge e Superpoteri trasformano ciò che fai qui in qualcosa da cui guadagni."
       }
     }
+  },
+  "drafts": {
+    "title": "Bozze",
+    "saveCurrent": "Salva corrente",
+    "saved": "Bozza salvata",
+    "loaded": "Bozza caricata",
+    "deleted": "Bozza eliminata",
+    "emptyTitle": "Ancora nessuna bozza",
+    "emptyDescription": "Salva il tuo lavoro per continuare in seguito.",
+    "noText": "Nessun testo",
+    "image": "Immagine",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Sondaggio",
+    "scheduled": "Programmato"
   }
 }

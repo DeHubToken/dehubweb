@@ -5570,5 +5570,20 @@
         "body": "Descubra como gratificações, emblemas e SuperPoderes transformam o que faz aqui em algo com que ganha."
       }
     }
+  },
+  "drafts": {
+    "title": "Rascunhos",
+    "saveCurrent": "Guardar corrente",
+    "saved": "Rascunho guardado",
+    "loaded": "Calado carregado",
+    "deleted": "Rascunho eliminado",
+    "emptyTitle": "Ainda não há rascunhos",
+    "emptyDescription": "Guarde o seu trabalho para continuar mais tarde.",
+    "noText": "Sem texto",
+    "image": "Imagem",
+    "video": "Vídeo",
+    "audio": "Áudio",
+    "poll": "Enquete",
+    "scheduled": "Agendado"
   }
 }

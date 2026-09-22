@@ -3234,5 +3234,20 @@
         "body": "Tirohia me pehea te huri i nga tohutohu, nga tohu me nga SuperPowers i nga mea e mahi ana koe i konei ki tetahi mea e whiwhi ana koe."
       }
     }
+  },
+  "drafts": {
+    "title": "Ngā mahi",
+    "saveCurrent": "Tiaki i tenei wa",
+    "saved": "Whakaora i te tuhinga",
+    "loaded": "Ka utaina te mahi",
+    "deleted": "Tuhinga kua mukua",
+    "emptyTitle": "Kaore ano kia puta he mahere",
+    "emptyDescription": "Whakaorangia to koutou mahi ki te haere tonu i muri.",
+    "noText": "Kaore he tuhinga",
+    "image": "Whakaahua",
+    "video": "Video",
+    "audio": "Whakarongo",
+    "poll": "Pūtea",
+    "scheduled": "Whakaritea"
   }
 }

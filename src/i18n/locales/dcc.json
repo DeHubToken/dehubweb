@@ -2275,5 +2275,20 @@
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
+  },
+  "drafts": {
+    "title": "ڈرافٹ",
+    "saveCurrent": "ابھی محفوظ کرو",
+    "saved": "ڈرافٹ محفوظ ہو گیا",
+    "loaded": "ڈرافٹ کھل گیا",
+    "deleted": "ڈرافٹ مٹ گیا",
+    "emptyTitle": "ابھی کوئی ڈرافٹ نئیں",
+    "emptyDescription": "اپنا کام محفوظ کرو اور بعد میں جاری رکھو۔",
+    "noText": "کوئی متن نئیں",
+    "image": "تصویر",
+    "video": "ویڈیو",
+    "audio": "آڈیو",
+    "poll": "پول",
+    "scheduled": "شیڈول شدہ"
   }
 }

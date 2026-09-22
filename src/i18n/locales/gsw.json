@@ -3206,5 +3206,20 @@
         "body": "Findi us, wie Trinkgeld, Abzeiche und SuperPowers das, wo du do machsch, zu öppis machä, wo du us em verdienst."
       }
     }
+  },
+  "drafts": {
+    "title": "Entwürf",
+    "saveCurrent": "Aktuäl speichere",
+    "saved": "Entwurf gspeicheret",
+    "loaded": "Entwurf glade",
+    "deleted": "Entwurf glöscht",
+    "emptyTitle": "Noch kei Entwërf",
+    "emptyDescription": "Speichere dinä Arbet zum spöter witermaache.",
+    "noText": "Keine Text",
+    "image": "Bild",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Umfrag",
+    "scheduled": "Geplant"
   }
 }

@@ -5557,5 +5557,20 @@
         "body": "팁, 배지, SuperPowers가 여러분이 여기서 하는 일을 수익으로 전환하는 방법을 알아보세요."
       }
     }
+  },
+  "drafts": {
+    "title": "초안",
+    "saveCurrent": "현재 저장",
+    "saved": "임시 저장 완료",
+    "loaded": "초안 로드됨",
+    "deleted": "임시글 삭제됨",
+    "emptyTitle": "아직 초안 없음",
+    "emptyDescription": "나중에 계속하려면 작업을 저장하세요.",
+    "noText": "텍스트 없음",
+    "image": "이미지",
+    "video": "동영상",
+    "audio": "오디오",
+    "poll": "설문조사",
+    "scheduled": "예약됨"
   }
 }

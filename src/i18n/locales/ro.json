@@ -5331,6 +5331,21 @@
       }
     }
   },
+  "drafts": {
+    "title": "Ciorne",
+    "saveCurrent": "Salvează curentul",
+    "saved": "Ciornă salvată",
+    "loaded": "Tiraj încărcat",
+    "deleted": "Ciornă ștearsă",
+    "emptyTitle": "Încă nu există ciorne",
+    "emptyDescription": "Salvează-ți munca pentru a continua mai târziu.",
+    "noText": "Niciun text",
+    "image": "Imagine",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Sondaj",
+    "scheduled": "Programat"
+  },
   "footer": {
     "about": "Despre noi",
     "contact": "Contact",

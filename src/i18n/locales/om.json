@@ -3255,6 +3255,21 @@
       }
     }
   },
+  "drafts": {
+    "title": "Wixineewwan",
+    "saveCurrent": "Baraaruu Ammaa",
+    "saved": "Wixineen qusatameera",
+    "loaded": "Wixineen fe&#39;ameera",
+    "deleted": "Wixineen haqame",
+    "emptyTitle": "Qubee hin qabne",
+    "emptyDescription": "Hojii kee booda itti fufuuf qusadhu.",
+    "noText": "Barreeffama hin qabu",
+    "image": "Bifa",
+    "video": "Viidiyoo",
+    "audio": "Sagalee",
+    "poll": "Awaajii",
+    "scheduled": "Sagantaa qaba"
+  },
   "spaces": {
     "title": "Bakkeewwan",
     "live": "Kallattii",

@@ -3222,5 +3222,20 @@
         "body": "Finn ut hvordan tips, merker og superkrefter gjør det du gjør her til noe du tjener penger på."
       }
     }
+  },
+  "drafts": {
+    "title": "Utkast",
+    "saveCurrent": "Lagre aktiv",
+    "saved": "Utkast lagret",
+    "loaded": "Utkast lastet inn",
+    "deleted": "Utkast slettet",
+    "emptyTitle": "Ingen utkast ennå",
+    "emptyDescription": "Lagre arbeidet ditt for å fortsette senere.",
+    "noText": "Ingen tekst",
+    "image": "Bilde",
+    "video": "Video",
+    "audio": "Lyd",
+    "poll": "Avstemning",
+    "scheduled": "Timebestillinger"
   }
 }

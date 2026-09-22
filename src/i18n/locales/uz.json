@@ -3255,6 +3255,21 @@
       }
     }
   },
+  "drafts": {
+    "title": "Loyihalar",
+    "saveCurrent": "Joriy holatni saqlash",
+    "saved": "Loyiha saqlandi",
+    "loaded": "Loyiha yuklandi",
+    "deleted": "Loyiha o'chirildi",
+    "emptyTitle": "Hozircha loyihalar yo'q",
+    "emptyDescription": "Keyinroq davom etish uchun ishingizni saqlang.",
+    "noText": "Matn yo'q",
+    "image": "Rasm",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "So'rovnoma",
+    "scheduled": "Jadval"
+  },
   "spaces": {
     "title": "Boʻlimlar",
     "live": "Jonli",

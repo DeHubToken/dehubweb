@@ -3225,5 +3225,20 @@
         "body": "Temokake carane tip, lencana, lan SuperPowers ngowahi apa sing sampeyan lakoni ing kene dadi apa sing sampeyan entuk."
       }
     }
+  },
+  "drafts": {
+    "title": "Draf",
+    "saveCurrent": "Simpen Saiki",
+    "saved": "Draf kasimpen",
+    "loaded": "Draf kasimpen",
+    "deleted": "Draf dibusak",
+    "emptyTitle": "Durung ana draf",
+    "emptyDescription": "Simpen pakaryanmu kanggo nerusake mengko.",
+    "noText": "Ora ana teks",
+    "image": "Gambar",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Polling",
+    "scheduled": "Dijadwalake"
   }
 }
