@@ -155,11 +155,12 @@ Deno.serve(async (req) => {
     if (!urls.length) { summary[id] = "no rpc configured"; continue; }
     const rpc = makeRpc(urls);
     try {
-      const head = parseInt(await rpc("eth_blockNumber", []), 16);
+      // The endpoint carries the publishable key, so anyone can call it, and /dex calls it
+      // whenever someone opens the page. Settle the throttle against the cursor alone, before
+      // any RPC: a scan that just ran has nothing to add, and a refused one must cost nothing.
       const { data: cursor } = await supabase.from("dex_pool_scan").select("*").eq("chain_id", chainId).maybeSingle();
-      // The endpoint carries the publishable key, so anyone can call it. A scan
-      // that just ran has nothing to add and would only burn RPC credits.
       if (cursor && Date.now() - Date.parse(cursor.updated_at) < 30_000) { summary[id] = "throttled"; continue; }
+      const head = parseInt(await rpc("eth_blockNumber", []), 16);
 
       let low = cursor?.from_block ?? head;
       let high = cursor?.to_block ?? head - 1;
