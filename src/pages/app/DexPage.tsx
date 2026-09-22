@@ -1,6 +1,7 @@
 import { dexActionError } from '@/lib/dex/action-error';
 import { minuteCache, parseSharedMarket, CANDLE_INTERVALS, type SharedMarket, type CandleInterval } from '@/lib/dex/live-market';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ArrowDownUp, ExternalLink, RefreshCw } from 'lucide-react';
 import { parseUnits } from 'ethers';
 import { toast } from 'sonner';
@@ -9,18 +10,21 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { BOOK_INCREMENTS, DEFAULT_INCREMENT, aggregateBook, balanceFraction, defaultOrderPrice, displayBookLevels, fillFraction, formatBookPrice, formatIncrement, formatPrice, formatSize, spreadPercent, type BookLevel } from '@/lib/dex/orderbook';
+import { BOOK_INCREMENTS, DEFAULT_INCREMENT, aggregateBook, balanceFraction, defaultOrderPrice, displayBookLevels, fillFraction, formatBookPrice, formatIncrement, formatPrice, formatSize, priceDeviation, priceNeedsWarning, seedReference, spreadPercent, type BookLevel } from '@/lib/dex/orderbook';
 import { DEX_CHAINS, type DexChainId, type VerifiedPosition } from '@/lib/dex/v4';
 import { detectDhbChain, detectUsdcChain, mintSellPosition, quoteSellPosition, recoverMint, withdrawSellPosition, type SellInput, type SellQuote } from '@/lib/dex/sell';
 import { readWithTimeout, type OrderStage } from '@/lib/dex/read-timeout';
 import { isSmartWalletSession } from '@/lib/connection-source';
 import { createLogger } from '@/lib/logger';
 import { MarketChart } from '@/components/app/dex/MarketChart';
+import { SEOHead } from '@/components/SEOHead';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import '@/components/app/dex/exchange.css';
 
 const logger = createLogger('Dex');
 const PAGE_SIZE = 15;
+/** Base is the canonical book: it is where every funding route lands, so it opens first. */
+const VENUES: DexChainId[] = [BASE_CHAIN_ID, BNB_CHAIN_ID];
 type CachedPosition = Omit<VerifiedPosition, 'liquidity'> & { liquidity: string };
 const readSharedMarket = minuteCache(async () => {
   const { data, error } = await readWithTimeout(Promise.resolve(supabase.rpc('get_dex_market')), 'Shared market');
@@ -31,15 +35,6 @@ const readSharedMarket = minuteCache(async () => {
  *  scheduled sweep. The endpoint throttles itself, so a burst of these costs nothing, and a
  *  failure is silent: the schedule still runs and the snapshot is what the page actually reads. */
 const primeDiscovery = () => { void Promise.resolve(supabase.functions.invoke('dex-position-scan')).catch(() => {}); };
-const stageText: Record<OrderStage | 'index', string> = {
-  quote: 'Reading pool…', wallet: 'Unlock or connect your wallet…', balance: 'Checking token approvals…',
-  tokenApproval: 'Confirm token approval in your wallet…', permitApproval: 'Confirm position approval in your wallet…',
-  submit: 'Confirm position in your wallet…', confirm: 'Waiting for confirmation…', index: 'Registering your position…',
-};
-const smartStageText: Partial<Record<OrderStage | 'index', string>> = {
-  tokenApproval: 'Smart wallet approving tokens…', permitApproval: 'Smart wallet approving position access…',
-  submit: 'Smart wallet creating your position…',
-};
 type Pending = { input: SellInput; txHash: string; tokenId?: string };
 const storageKey = (wallet: string) => `dex-pending:${wallet.toLowerCase()}`;
 const decimalInput = (value: string) => value.replace(',', '.').trim();
@@ -57,6 +52,7 @@ function formatWhen(iso: string) {
 }
 
 function BookRows({ levels, bid, increment, onPrice, disabled }: { levels: BookLevel[]; bid: boolean; increment: number; onPrice: (price: number) => void; disabled: boolean }) {
+  const { t } = useTranslation();
   const scroller = useRef<HTMLDivElement>(null);
   // Asks list away from the spread, so the best ask sits at the bottom. Keep it in view
   // until the reader scrolls up to inspect farther levels, and stay there across refreshes.
@@ -66,22 +62,26 @@ function BookRows({ levels, bid, increment, onPrice, disabled }: { levels: BookL
     if (element && !bid && pinned.current) element.scrollTop = element.scrollHeight;
   }, [levels, bid, increment]);
   const total = levels.at(-1)?.cumulativeDhb || 1;
-  if (!levels.length) return <div className="dex-book-empty">{bid ? 'No Bids' : 'No ask liquidity yet'}</div>;
+  if (!levels.length) return <div className="dex-book-empty">{t(bid ? 'dex.noBids' : 'dex.noAsks')}</div>;
   return <div className="dex-book-scroll" ref={scroller} onScroll={(event) => {
     if (bid) return;
     const element = event.currentTarget;
     pinned.current = element.scrollHeight - element.scrollTop - element.clientHeight < 4;
   }}>{displayBookLevels(levels, bid).map((level) => <button type="button" disabled={disabled} key={level.price}
     className={`dex-book-row ${bid ? 'dex-buy' : 'dex-sell'}`} style={{ '--depth': `${level.cumulativeDhb / total * 100}%` } as CSSProperties}
-    aria-label={`Use ${formatBookPrice(level.price, increment)} as ${bid ? 'buy' : 'sell'} price`} onClick={() => onPrice(level.price)}>
+    aria-label={t(bid ? 'dex.useBuyPrice' : 'dex.useSellPrice', { price: formatBookPrice(level.price, increment) })} onClick={() => onPrice(level.price)}>
     <span>{formatBookPrice(level.price, increment)}</span><span>{formatSize(level.dhb)}</span><span>{formatSize(level.cumulativeDhb)}</span>
   </button>)}</div>;
 }
 
 export default function DexPage() {
+  const { t } = useTranslation();
   const { walletAddress, connect, requestWalletUnlock } = useAuth();
   const walletLocked = useWalletLocked();
   const [side, setSide] = useState<'buy' | 'sell'>('sell');
+  // Each network runs its own pool and its own book. A Base order can never be filled by a BNB
+  // order, so the page shows one venue at a time rather than a merged book that nobody can trade.
+  const [venue, setVenue] = useState<DexChainId>(BASE_CHAIN_ID);
   const [chainId, setChainId] = useState<DexChainId | null>(null);
   const [balance, setBalance] = useState('0');
   const [amount, setAmount] = useState('');
@@ -114,7 +114,18 @@ export default function DexPage() {
   const hasSnapshot = useRef(false);
   const [balanceRevision, setBalanceRevision] = useState(0);
   const fundingToken = side === 'buy' ? 'USDC' : 'DHB';
-  const ordered = useMemo(() => [...positions].sort(byNewest), [positions]);
+  const venueName = DEX_CHAINS[venue].name;
+  const stageText: Record<OrderStage | 'index', string> = {
+    quote: t('dex.stage.quote'), wallet: t('dex.stage.wallet'), balance: t('dex.stage.balance'),
+    tokenApproval: t('dex.stage.tokenApproval'), permitApproval: t('dex.stage.permitApproval'),
+    submit: t('dex.stage.submit'), confirm: t('dex.stage.confirm'), index: t('dex.stage.index'),
+  };
+  const smartStageText: Partial<Record<OrderStage | 'index', string>> = {
+    tokenApproval: t('dex.automaticStage.tokenApproval'), permitApproval: t('dex.automaticStage.permitApproval'),
+    submit: t('dex.automaticStage.submit'),
+  };
+  const venuePositions = useMemo(() => positions.filter((p) => p.chain_id === venue), [positions, venue]);
+  const ordered = useMemo(() => [...venuePositions].sort(byNewest), [venuePositions]);
   const transactions = useMemo(() => ordered.slice(0, 8), [ordered]);
 
   useEffect(() => {
@@ -122,11 +133,14 @@ export default function DexPage() {
     if (!walletAddress) { setChecking(false); return; }
     let live = true; setChecking(true);
     (side === 'sell' ? detectDhbChain : detectUsdcChain)(walletAddress).then((choice) => {
-      if (live) { setChainId(choice.chainId); setBalance(choice.balance); }
-    }).catch(() => { if (live) setBalanceError('Balance check failed. Retry before placing an order.'); })
+      if (!live) return;
+      // The venue decides the funding network. A balance on the other chain is not spendable here.
+      const held = venue === BASE_CHAIN_ID ? choice.base : choice.bnb;
+      setChainId(Number(held) > 0 ? venue : null); setBalance(held);
+    }).catch(() => { if (live) setBalanceError(t('dex.balanceError')); })
       .finally(() => { if (live) setChecking(false); });
     return () => { live = false; };
-  }, [walletAddress, side, balanceRevision]);
+  }, [walletAddress, side, venue, balanceRevision, t]);
 
   useEffect(() => {
     setPending(null);
@@ -134,7 +148,10 @@ export default function DexPage() {
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey(walletAddress)) || 'null') as Pending | null;
       if (saved && saved.input?.walletAddress?.toLowerCase() === walletAddress.toLowerCase() &&
-          [BASE_CHAIN_ID, BNB_CHAIN_ID].includes(saved.input.chainId) && /^0x[0-9a-f]{64}$/i.test(saved.txHash)) setPending(saved);
+          [BASE_CHAIN_ID, BNB_CHAIN_ID].includes(saved.input.chainId) && /^0x[0-9a-f]{64}$/i.test(saved.txHash)) {
+        setPending(saved);
+        setVenue(saved.input.chainId);
+      }
     } catch { /* A storage failure does not change onchain ownership. */ }
   }, [walletAddress]);
 
@@ -142,8 +159,8 @@ export default function DexPage() {
     setPending(value);
     const owner = value?.input.walletAddress || walletAddress;
     if (!owner) return;
-    try { value ? localStorage.setItem(storageKey(owner), JSON.stringify(value)) : localStorage.removeItem(storageKey(owner)); }
-    catch { toast.error('Keep this page open until your listing is registered. Browser storage is unavailable.'); }
+    try { if (value) localStorage.setItem(storageKey(owner), JSON.stringify(value)); else localStorage.removeItem(storageKey(owner)); }
+    catch { toast.error(t('dex.keepOpen')); }
   };
 
   const loadPositions = useCallback(async () => {
@@ -152,7 +169,7 @@ export default function DexPage() {
     try {
       const next = await readSharedMarket();
       if (Date.now() / 1000 - next.observedAt > 180) {
-        setListError(hasSnapshot.current ? '' : 'Shared market data is delayed. Showing the last verified snapshot.');
+        setListError(hasSnapshot.current ? '' : t('dex.snapshotDelayed'));
       } else setListError('');
       if (next.observedAt !== snapshotTime.current) {
         snapshotTime.current = next.observedAt;
@@ -161,9 +178,9 @@ export default function DexPage() {
         setUpdated(next.observedAt * 1000);
         hasSnapshot.current = true;
       }
-    } catch { if (!hasSnapshot.current) setListError('Shared market data is unavailable. Retry to load positions.'); }
+    } catch { if (!hasSnapshot.current) setListError(t('dex.snapshotUnavailable')); }
     finally { setLoading(false); loadLock.current = false; }
-  }, []);
+  }, [t]);
   useEffect(() => {
     void loadPositions();
     primeDiscovery();
@@ -189,42 +206,34 @@ export default function DexPage() {
   }, [loadPositions]);
 
 
-  const externalAsks = useMemo(() => snapshot?.externalAsks ?? [], [snapshot]);
-  const { bids, asks } = useMemo(() => aggregateBook(positions, increment, externalAsks),
-    [positions, increment, externalAsks]);
+  const { bids, asks } = useMemo(() => aggregateBook(venuePositions, increment), [venuePositions, increment]);
   const bestAsk = snapshot?.price ?? null;
-  // The cheapest DHB in any pool. lpDhb is inventory across every pool; liquidityUsd is the
-  // money side, which is the only thing a seller could actually be paid out of.
+  // Every DHB pool, weighted by its own dollar liquidity — not just this order book.
   const usdPrice = snapshot?.usdPrice ?? null;
   const liquidityUsd = snapshot?.liquidityUsd ?? null;
-  const lpDhb = snapshot?.lpDhb ?? null;
   const shown = useMemo(() => mine ? ordered.filter((p) => p.owner.toLowerCase() === walletAddress?.toLowerCase()) : ordered, [ordered, mine, walletAddress]);
   const visiblePositions = shown.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
   useEffect(() => { setPage((value) => Math.min(value, Math.max(0, Math.ceil(shown.length / PAGE_SIZE) - 1))); }, [shown.length]);
   const bidTotal = bids.at(-1)?.cumulativeDhb || 0, askTotal = asks.at(-1)?.cumulativeDhb || 0;
-  const totalDhb = positions.reduce((sum, p) => sum + p.amountDhb, 0);
+  const totalUsdc = venuePositions.reduce((sum, p) => sum + p.amountUsdc, 0);
+  const totalDhb = venuePositions.reduce((sum, p) => sum + p.amountDhb, 0);
   // Pools can disagree: the 0.3% pool's ask floor sometimes sits under the 0% pool's bid ceiling,
   // so the book overlaps and the gap goes negative. That is not a spread, so the row stays blank.
   const gap = bids.length && asks.length ? asks[0].price - bids[0].price : null;
   const spread = gap != null && gap > 0 ? gap : null;
   const spreadShare = spread != null ? spreadPercent(bids[0].price, asks[0].price) : null;
-  const decimals = side === 'sell' ? 18 : chainId ? DEX_CHAINS[chainId].usdcDecimals : 6;
+  const decimals = side === 'sell' ? 18 : DEX_CHAINS[venue].usdcDecimals;
   const estimate = Number(amount) > 0 && Number(minPrice) > 0 && Number(maxPrice) > Number(minPrice)
     ? side === 'buy' ? Number(amount) / Math.sqrt(Number(minPrice) * Number(maxPrice)) : Number(amount) * Math.sqrt(Number(minPrice) * Number(maxPrice)) : 0;
-  // Each network has its own pool price. A sell must clear the highest, a buy the lowest, on the
-  // funding network once it is known; before that, whichever bound is safe on every network.
   // Only the 0% pool counts: that is the one the ticket mints into, so a 0.3% position's spot
   // price must never seed it.
-  const poolPrices = useMemo(() => {
-    const byChain = new Map<number, number>();
-    for (const p of positions) if (p.poolFee === 0 && Number.isFinite(p.marketPrice) && p.marketPrice > 0) byChain.set(p.chain_id, p.marketPrice);
-    return byChain;
-  }, [positions]);
-  const referencePrice = useCallback((next: 'buy' | 'sell') => {
-    const prices = chainId && poolPrices.has(chainId) ? [poolPrices.get(chainId)!] : [...poolPrices.values()];
-    if (!prices.length) return bestAsk;
-    return next === 'sell' ? Math.max(...prices) : Math.min(...prices);
-  }, [poolPrices, chainId, bestAsk]);
+  const poolPrice = useMemo(() => {
+    const live = venuePositions.find((p) => p.poolFee === 0 && Number.isFinite(p.marketPrice) && p.marketPrice > 0);
+    return live?.marketPrice ?? null;
+  }, [venuePositions]);
+  // The venue's own pool can drift a long way from where DHB trades everywhere else. Anchor
+  // the ticket on whichever of the two is safer for the trader, and never on the pool alone.
+  const referencePrice = useCallback((next: 'buy' | 'sell') => seedReference(next, poolPrice, usdPrice) ?? bestAsk, [poolPrice, usdPrice, bestAsk]);
   const seedPrice = useMemo(() => referencePrice(side), [referencePrice, side]);
   useEffect(() => {
     if (priceTouched.current || review || pending || busyRef.current || amount || seedPrice == null) return;
@@ -232,6 +241,11 @@ export default function DexPage() {
     setMinPrice((side === 'buy' ? value * 0.999 : value).toFixed(8));
     setMaxPrice((side === 'buy' ? value : value * 1.001).toFixed(8));
   }, [seedPrice, side, review, pending, amount]);
+  const ticketPrice = Number(side === 'buy' ? maxPrice : minPrice);
+  const deviation = priceDeviation(ticketPrice, usdPrice);
+  const priceWarning = priceNeedsWarning(side, ticketPrice, usdPrice) && deviation != null
+    ? t(side === 'sell' ? 'dex.sellBelowMarket' : 'dex.buyAboveMarket', { percent: Math.abs(deviation * 100).toFixed(1), price: formatPrice(usdPrice) })
+    : '';
 
   function choosePrice(value: number, next = side) {
     if (busyRef.current) return;
@@ -244,6 +258,10 @@ export default function DexPage() {
     setAmount(''); priceTouched.current = false;
     choosePrice(Number(defaultOrderPrice(next, referencePrice(next))), next);
   }
+  function changeVenue(next: DexChainId) {
+    if (busyRef.current || pending || withdrawing) return;
+    setVenue(next); setAmount(''); setReview(null); setFormError(''); setPage(0); priceTouched.current = false;
+  }
   async function register(saved: Pending) {
     setStage('index');
     const minted = saved.tokenId ? { tokenId: saved.tokenId, txHash: saved.txHash } : await recoverMint(saved.input, saved.txHash);
@@ -254,22 +272,22 @@ export default function DexPage() {
       side: input.side, dhb_amount: input.side === 'sell' ? Number(input.amount) : null, usdc_amount: input.side === 'buy' ? Number(input.amount) : null,
       min_usdc_per_dhb: Number(input.minPrice), max_usdc_per_dhb: Number(input.maxPrice),
     }, { onConflict: 'chain_id,token_id', ignoreDuplicates: true }), input.walletAddress)), 'Listing registration');
-    if (error) throw new Error('Your position is onchain. Retry registration below; this will not deposit again.');
+    if (error) throw new Error(t('dex.registrationFailed'));
     savePending(null); setAmount(''); setReview(null); setMine(true); setPage(0); setBalanceRevision((n) => n + 1);
     priceTouched.current = false;
-    toast.success('Position created'); await loadPositions();
+    toast.success(t('dex.created')); await loadPositions();
   }
   async function handleCreate() {
     if (busyRef.current || checking || withdrawing) return;
     if (!walletAddress) { await connect(); return; }
-    if (!pending && !chainId) { setFormError(`No ${fundingToken} available to deposit.`); return; }
+    if (!pending && !chainId) { setFormError(t('dex.noFunding', { token: fundingToken, chain: venueName })); return; }
     setFormError(''); busyRef.current = true; setBusy(true); setStage('quote');
     try {
       if (pending) { await register(pending); return; }
       // parseUnits throws its own wording for too many decimals; keep one message for every bad amount.
       const toUnits = (value: string) => { try { return parseUnits(value, decimals); } catch { return null; } };
       const amountUnits = /^\d+(\.\d+)?$/.test(amount) ? toUnits(amount) : null;
-      if (amountUnits == null || amountUnits <= 0n || amountUnits > (toUnits(balance) ?? 0n)) throw new Error(`Enter an amount within your available ${fundingToken} balance.`);
+      if (amountUnits == null || amountUnits <= 0n || amountUnits > (toUnits(balance) ?? 0n)) throw new Error(t('dex.checkAmount', { token: fundingToken }));
       const input: SellInput = { walletAddress, chainId: chainId!, side, amount, minPrice, maxPrice };
       if (!review) { setReview(await quoteSellPosition(input)); return; }
       if (walletLocked) { requestWalletUnlock(); return; }
@@ -277,77 +295,88 @@ export default function DexPage() {
       await register({ input, ...minted });
     } catch (error) {
       if ((error as { code?: string }).code === 'DEX_REVERTED') { savePending(null); setReview(null); }
-      const message = dexActionError(error, 'Could not prepare the position');
+      const message = dexActionError(error, t('dex.prepareFailed'));
       setFormError(message); void logger.error('Position action failed', { chainId, side, path: '/dex', message });
     } finally { busyRef.current = false; setBusy(false); }
   }
   async function handleWithdraw(item: VerifiedPosition) {
     if (!walletAddress || busyRef.current || withdrawing) return;
     if (walletLocked) { requestWalletUnlock(); return; }
-    if (!window.confirm(`Withdraw ${formatSize(item.amountDhb)} DHB and ${formatSize(item.amountUsdc)} USDC on ${DEX_CHAINS[item.chain_id as DexChainId].name}? Amounts refresh before signing; price tolerance is 0.5%.`)) return;
+    if (!window.confirm(t('dex.withdrawReview', { dhb: formatSize(item.amountDhb), usdc: formatSize(item.amountUsdc), chain: DEX_CHAINS[item.chain_id as DexChainId].name }))) return;
     setWithdrawing(`${item.chain_id}:${item.token_id}`);
-    try { await withdrawSellPosition(item, walletAddress); toast.success('Position withdrawn'); await loadPositions(); setBalanceRevision((n) => n + 1); }
-    catch (error) { toast.error(dexActionError(error, 'Withdrawal failed')); }
+    try { await withdrawSellPosition(item, walletAddress); toast.success(t('dex.withdrawn')); await loadPositions(); setBalanceRevision((n) => n + 1); }
+    catch (error) { toast.error(dexActionError(error, t('dex.withdrawFailed'))); }
     finally { setWithdrawing(null); }
   }
   const refresh = () => { primeDiscovery(); void loadPositions(); if (!busy) setBalanceRevision((n) => n + 1); };
+  const submitLabel = busy ? (isSmartWalletSession() && smartStageText[stage] || stageText[stage])
+    : !walletAddress ? t('dex.connectWallet')
+    : pending ? t('dex.resume')
+    : review && walletLocked ? t('dex.unlockWallet')
+    : review ? t(side === 'buy' ? 'dex.confirmBuy' : 'dex.confirmSell')
+    : t(side === 'buy' ? 'dex.reviewBuy' : 'dex.reviewSell');
 
   return <div className="dex-terminal">
+    <SEOHead title={t('dex.seoTitle')} description={t('dex.seoDescription')} url="https://dehub.io/dex"
+      jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub DEX', url: 'https://dehub.io/dex',
+        applicationCategory: 'FinanceApplication', operatingSystem: 'Web', description: t('dex.seoDescription') }} />
     <header className="dex-top">
       <div className="dex-pair">
         <img src={dhbCoinImage} alt="DHB" />
         <div className="dex-pair-picker">
           <h1 className="dex-pair-name">DHB <span className="dex-muted">/</span> USD</h1>
-          <p>All pools · Base + BNB</p>
+          <div className="dex-tabs" role="tablist" aria-label={t('dex.venue')}>{VENUES.map((id) => <button type="button" role="tab" key={id} aria-selected={venue === id} disabled={busy || !!pending || !!withdrawing} onClick={() => changeVenue(id)}>{DEX_CHAINS[id].name}</button>)}</div>
         </div>
       </div>
-      <div className="dex-stat"><small>Lowest price · USD</small><strong className="dex-reference">{usdPrice != null ? `$${formatPrice(usdPrice)}` : '—'}</strong></div>
-      <div className="dex-stat"><small>24h change</small><strong className={(snapshot?.change24h || 0) >= 0 ? 'dex-buy' : 'dex-sell'}>{snapshot?.change24h != null ? `${snapshot.change24h >= 0 ? '+' : ''}${snapshot.change24h.toFixed(2)}%` : '—'}</strong></div>
-      <div className="dex-stat"><small>LP · DHB</small><strong>{lpDhb != null ? formatSize(lpDhb) : '—'}</strong></div>
-      <div className="dex-stat"><small>LP · USD</small><strong>{liquidityUsd != null ? `$${formatSize(liquidityUsd)}` : '—'}</strong></div>
-      <div className="dex-stat"><small>Listed DHB</small><strong>{formatSize(totalDhb)}</strong></div>
-      <button className="dex-refresh" type="button" onClick={refresh} disabled={loading || busy} aria-label="Refresh market"><RefreshCw size={14} />{loading ? 'Updating' : 'Refresh'}</button>
+      <div className="dex-stat"><small>{t('dex.marketPrice')}</small><strong className="dex-reference">{usdPrice != null ? `$${formatPrice(usdPrice)}` : '—'}</strong></div>
+      <div className="dex-stat"><small>{t('dex.bookPrice', { chain: venueName })}</small><strong>{poolPrice != null ? `$${formatPrice(poolPrice)}` : '—'}</strong></div>
+      <div className="dex-stat"><small>{t('dex.change24')}</small><strong className={(snapshot?.change24h || 0) >= 0 ? 'dex-buy' : 'dex-sell'}>{snapshot?.change24h != null ? `${snapshot.change24h >= 0 ? '+' : ''}${snapshot.change24h.toFixed(2)}%` : '—'}</strong></div>
+      <div className="dex-stat"><small>{t('dex.totalLiquidity')}</small><strong>{liquidityUsd != null ? `$${formatSize(liquidityUsd)}` : '—'}</strong></div>
+      <div className="dex-stat"><small>{t('dex.listedDhb', { chain: venueName })}</small><strong>{formatSize(totalDhb)}</strong></div>
+      <div className="dex-stat"><small>{t('dex.listedUsd', { chain: venueName })}</small><strong>{formatSize(totalUsdc)}</strong></div>
+      <button className="dex-refresh" type="button" onClick={refresh} disabled={loading || busy} aria-label={t('dex.refreshMarket')}><RefreshCw size={14} />{loading ? t('dex.updating') : t('dex.refresh')}</button>
     </header>
-    {listError && <div role="alert" className="dex-alert">{listError}<button onClick={() => void loadPositions()}>Retry</button></div>}
-    <div className="dex-mobile-tabs" role="tablist" aria-label="Trading panels">{(['chart', 'book', 'trade'] as const).map((view) => <button key={view} role="tab" aria-selected={mobileView === view} onClick={() => setMobileView(view)}>{view === 'chart' ? 'Chart' : view === 'book' ? 'Order book' : 'Buy / Sell'}</button>)}</div>
+    {listError && <div role="alert" className="dex-alert">{listError}<button onClick={() => void loadPositions()}>{t('dex.retry')}</button></div>}
+    <div className="dex-mobile-tabs" role="tablist" aria-label={t('dex.tradingPanels')}>{(['chart', 'book', 'trade'] as const).map((view) => <button key={view} role="tab" aria-selected={mobileView === view} onClick={() => setMobileView(view)}>{t(`dex.tab.${view}`)}</button>)}</div>
     <div className="dex-workspace">
       <section className={`dex-panel dex-chart-panel dex-pane ${mobileView === 'chart' ? 'dex-pane-active' : ''}`}>
-        <div className="dex-panel-head"><div className="dex-tabs" role="tablist" aria-label="Chart type"><button role="tab" aria-selected={!depth} onClick={() => setDepth(false)}>Price</button><button role="tab" aria-selected={depth} onClick={() => setDepth(true)}>Depth</button></div>{!depth && <div className="dex-tabs" role="tablist" aria-label="Chart timeframe">{CANDLE_INTERVALS.map((value) => <button role="tab" key={value} aria-selected={period === value} onClick={() => setPeriod(value)}>{value}</button>)}</div>}</div>
-        {!depth && loading && !updated ? <div className="dex-chart-empty" role="status">Loading market…</div> : <MarketChart candles={candles} bids={bids} asks={asks} depth={depth} />}
-        <div className="dex-transactions"><div className="dex-transactions-head"><span>Latest transactions</span><span>Time</span></div>{transactions.length ? transactions.map((item) => <a key={`${item.chain_id}:${item.token_id}`} className="dex-transaction" href={`${DEX_CHAINS[item.chain_id as DexChainId].explorer}/tx/${item.mint_tx_hash}`} target="_blank" rel="noreferrer"><span className={item.side === 'buy' ? 'dex-buy' : 'dex-sell'}>{item.side === 'buy' ? 'Buy' : 'Sell'} <b>{listingSize(item)}</b><small>${formatPrice(listingPrice(item))} · {DEX_CHAINS[item.chain_id as DexChainId].name}</small></span><time dateTime={item.created_at}>{formatWhen(item.created_at)}</time></a>) : <div className="dex-transactions-empty">No transactions yet.</div>}</div>
+        <div className="dex-panel-head"><div className="dex-tabs" role="tablist" aria-label={t('dex.chartType')}><button role="tab" aria-selected={!depth} onClick={() => setDepth(false)}>{t('dex.price')}</button><button role="tab" aria-selected={depth} onClick={() => setDepth(true)}>{t('dex.depth')}</button></div>{!depth && <div className="dex-tabs" role="tablist" aria-label={t('dex.chartTimeframe')}>{CANDLE_INTERVALS.map((value) => <button role="tab" key={value} aria-selected={period === value} onClick={() => setPeriod(value)}>{value}</button>)}</div>}</div>
+        {!depth && loading && !updated ? <div className="dex-chart-empty" role="status">{t('dex.loadingMarket')}</div> : <MarketChart candles={candles} bids={bids} asks={asks} depth={depth} />}
+        <div className="dex-transactions"><div className="dex-transactions-head"><span>{t('dex.latestTransactions')}</span><span>{t('dex.time')}</span></div>{transactions.length ? transactions.map((item) => <a key={`${item.chain_id}:${item.token_id}`} className="dex-transaction" href={`${DEX_CHAINS[item.chain_id as DexChainId].explorer}/tx/${item.mint_tx_hash}`} target="_blank" rel="noreferrer"><span className={item.side === 'buy' ? 'dex-buy' : 'dex-sell'}>{t(item.side === 'buy' ? 'dex.buyLabel' : 'dex.sellLabel')} <b>{listingSize(item)}</b><small>${formatPrice(listingPrice(item))} · {DEX_CHAINS[item.chain_id as DexChainId].name}</small></span><time dateTime={item.created_at}>{formatWhen(item.created_at)}</time></a>) : <div className="dex-transactions-empty">{t('dex.noTransactions')}</div>}</div>
       </section>
       <section className={`dex-panel dex-book-panel dex-pane ${mobileView === 'book' ? 'dex-pane-active' : ''}`}>
-        <div className="dex-panel-head"><h2>Order book</h2><select aria-label="Price grouping" className="dex-book-select" value={increment} onChange={(e) => setIncrement(Number(e.target.value))}>{BOOK_INCREMENTS.map((step) => <option key={step} value={step}>{formatIncrement(step)}</option>)}</select></div>
-        <div className="dex-book-head"><span>Price (USD)</span><span>Size (DHB)</span><span>Total (DHB)</span></div>
+        <div className="dex-panel-head"><h2>{t('dex.orderBook')}</h2><select aria-label={t('dex.priceGrouping')} className="dex-book-select" value={increment} onChange={(e) => setIncrement(Number(e.target.value))}>{BOOK_INCREMENTS.map((step) => <option key={step} value={step}>{formatIncrement(step)}</option>)}</select></div>
+        <div className="dex-book-head"><span>{t('dex.priceUsd')}</span><span>{t('dex.sizeDhb')}</span><span>{t('dex.totalDhb')}</span></div>
         <BookRows levels={asks} bid={false} increment={increment} disabled={busy || !!pending} onPrice={(value) => { priceTouched.current = true; choosePrice(value, 'sell'); setMobileView('trade'); }} />
-        <div className="dex-spread"><ArrowDownUp size={13} /><b>{spread == null ? '—' : formatBookPrice(spread, increment)}</b><span>Spread · USD{spreadShare != null && ` · ${spreadShare.toFixed(2)}%`}</span></div>
+        <div className="dex-spread"><ArrowDownUp size={13} /><b>{spread == null ? '—' : formatBookPrice(spread, increment)}</b><span>{t('dex.spread')}{spreadShare != null && ` · ${spreadShare.toFixed(2)}%`}</span></div>
         <BookRows levels={bids} bid increment={increment} disabled={busy || !!pending} onPrice={(value) => { priceTouched.current = true; choosePrice(value, 'buy'); setMobileView('trade'); }} />
         <div className="dex-ratio"><i style={{ width: `${bidTotal + askTotal ? bidTotal / (bidTotal + askTotal) * 100 : 50}%` }} /></div>
-        <div className="dex-book-total"><span className="dex-buy">Buy {formatSize(bidTotal)} DHB</span><span className="dex-sell">Sell {formatSize(askTotal)} DHB</span></div>
+        <div className="dex-book-total"><span className="dex-buy">{t('dex.buyTotal', { amount: formatSize(bidTotal) })}</span><span className="dex-sell">{t('dex.sellTotal', { amount: formatSize(askTotal) })}</span></div>
       </section>
       <section className={`dex-panel dex-ticket-panel dex-pane ${mobileView === 'trade' ? 'dex-pane-active' : ''}`}>
-        <div className="dex-panel-head"><h2>Place an order</h2><span className="dex-muted">0% LP fee</span></div>
+        <div className="dex-panel-head"><h2>{t('dex.placeOrder')}</h2><span className="dex-muted">{t('dex.lpFee')}</span></div>
         <div className="dex-ticket"><fieldset disabled={busy || !!pending || !!withdrawing}>
-          <div className="dex-side">{(['buy', 'sell'] as const).map((value) => <button type="button" key={value} className={side === value ? `active-${value}` : ''} onClick={() => changeSide(value)}>{value === 'buy' ? 'Buy DHB' : 'Sell DHB'}</button>)}</div>
-          <label className="dex-field">{side === 'buy' ? 'Maximum buy price' : 'Minimum sell price'}<div className="dex-input"><input aria-label={side === 'buy' ? 'Maximum buy price' : 'Minimum sell price'} inputMode="decimal" value={side === 'buy' ? maxPrice : minPrice} onChange={(e) => { const raw = decimalInput(e.target.value); const value = Number(raw); setReview(null); priceTouched.current = true; if (side === 'buy') { setMaxPrice(raw); if (value > 0) setMinPrice((value * 0.999).toFixed(8)); } else { setMinPrice(raw); if (value > 0) setMaxPrice((value * 1.001).toFixed(8)); } }} /><span>USD</span></div></label>
-          <label className="dex-field">{side === 'buy' ? 'Spend' : 'Sell amount'}<div className="dex-input"><input aria-label={`${fundingToken} amount`} inputMode="decimal" placeholder="0.00" value={amount} onChange={(e) => { setAmount(decimalInput(e.target.value)); setReview(null); }} /><span>{fundingToken}</span></div></label>
-          <div className="dex-available"><span>Available</span><span>{checking ? 'Checking…' : `${formatSize(Number(balance))} ${fundingToken}`}</span></div>
-          <div className="dex-fractions">{[25, 50, 75, 100].map((percent) => <button key={percent} type="button" disabled={checking || !chainId} onClick={() => { setAmount(balanceFraction(balance, percent, decimals)); setReview(null); }}>{percent === 100 ? 'MAX' : `${percent}%`}</button>)}</div>
-          <details className="dex-advanced"><summary>Adjust fill range</summary><p className="dex-help">A narrow range keeps the fill close to your chosen price.</p>{[{ label: 'Lower price', value: minPrice, set: setMinPrice }, { label: 'Upper price', value: maxPrice, set: setMaxPrice }].map((field) => <label className="dex-field" key={field.label}>{field.label}<div className="dex-input"><input aria-label={field.label} inputMode="decimal" value={field.value} onChange={(e) => { field.set(decimalInput(e.target.value)); priceTouched.current = true; setReview(null); }} /><span>USD</span></div></label>)}</details>
-          <dl><dt>Estimated full conversion</dt><dd>{formatSize(estimate)} {side === 'buy' ? 'DHB' : 'USDC'}</dd><dt>Funding network</dt><dd>{chainId ? DEX_CHAINS[chainId].name : 'Automatic'}</dd><dt>LP fee</dt><dd>0%</dd></dl>
+          <div className="dex-side">{(['buy', 'sell'] as const).map((value) => <button type="button" key={value} className={side === value ? `active-${value}` : ''} onClick={() => changeSide(value)}>{t(value === 'buy' ? 'dex.buy' : 'dex.sell')}</button>)}</div>
+          <label className="dex-field">{t(side === 'buy' ? 'dex.maxBuy' : 'dex.minSell')}<div className="dex-input"><input aria-label={t(side === 'buy' ? 'dex.maxBuy' : 'dex.minSell')} inputMode="decimal" value={side === 'buy' ? maxPrice : minPrice} onChange={(e) => { const raw = decimalInput(e.target.value); const value = Number(raw); setReview(null); priceTouched.current = true; if (side === 'buy') { setMaxPrice(raw); if (value > 0) setMinPrice((value * 0.999).toFixed(8)); } else { setMinPrice(raw); if (value > 0) setMaxPrice((value * 1.001).toFixed(8)); } }} /><span>USD</span></div></label>
+          {priceWarning && <div role="status" className="dex-alert dex-warning">{priceWarning}<button type="button" onClick={() => { priceTouched.current = false; if (seedPrice != null) choosePrice(Number(defaultOrderPrice(side, seedPrice))); }}>{t('dex.useMarket')}</button></div>}
+          <label className="dex-field">{t(side === 'buy' ? 'dex.spend' : 'dex.sellAmount')}<div className="dex-input"><input aria-label={t('dex.amountToken', { token: fundingToken })} inputMode="decimal" placeholder="0.00" value={amount} onChange={(e) => { setAmount(decimalInput(e.target.value)); setReview(null); }} /><span>{fundingToken}</span></div></label>
+          <div className="dex-available"><span>{t('dex.available')}</span><span>{checking ? t('dex.checking') : `${formatSize(Number(balance))} ${fundingToken}`}</span></div>
+          <div className="dex-fractions">{[25, 50, 75, 100].map((percent) => <button key={percent} type="button" disabled={checking || !chainId} onClick={() => { setAmount(balanceFraction(balance, percent, decimals)); setReview(null); }}>{percent === 100 ? t('dex.max') : `${percent}%`}</button>)}</div>
+          <details className="dex-advanced"><summary>{t('dex.adjustRange')}</summary><p className="dex-help">{t('dex.rangeHint')}</p>{[{ label: t('dex.lowerPrice'), value: minPrice, set: setMinPrice }, { label: t('dex.upperPrice'), value: maxPrice, set: setMaxPrice }].map((field) => <label className="dex-field" key={field.label}>{field.label}<div className="dex-input"><input aria-label={field.label} inputMode="decimal" value={field.value} onChange={(e) => { field.set(decimalInput(e.target.value)); priceTouched.current = true; setReview(null); }} /><span>USD</span></div></label>)}</details>
+          <dl><dt>{t('dex.estimated')}</dt><dd>{formatSize(estimate)} {side === 'buy' ? 'DHB' : 'USDC'}</dd><dt>{t('dex.network')}</dt><dd>{venueName}</dd><dt>{t('dex.lpFeeLabel')}</dt><dd>0%</dd></dl>
         </fieldset>
-        {balanceError && <div className="dex-alert">{balanceError}<button onClick={() => setBalanceRevision((n) => n + 1)} disabled={busy}>Retry</button></div>}
-        {review && !pending && <div className="dex-review"><strong>Review your {side}</strong><br />Deposit {amount} {fundingToken} on {DEX_CHAINS[review.chainId].name}.<br />Range: {formatPrice(Number(minPrice))} – {formatPrice(Number(maxPrice))} USD per DHB.{review.willCreatePool && <><br />This creates and initializes the 0% pool.</>}</div>}
-        {pending && <div className="dex-review">Your transaction has been submitted. Resume confirmation or listing registration without another deposit. <a href={`${DEX_CHAINS[pending.input.chainId].explorer}/tx/${pending.txHash}`} target="_blank" rel="noreferrer">View transaction ↗</a></div>}
+        {balanceError && <div className="dex-alert">{balanceError}<button onClick={() => setBalanceRevision((n) => n + 1)} disabled={busy}>{t('dex.retry')}</button></div>}
+        {review && !pending && <div className="dex-review"><strong>{t(side === 'buy' ? 'dex.reviewYourBuy' : 'dex.reviewYourSell')}</strong><br />{t('dex.reviewDeposit', { amount, token: fundingToken, chain: DEX_CHAINS[review.chainId].name })}<br />{t('dex.reviewRange', { min: formatPrice(Number(minPrice)), max: formatPrice(Number(maxPrice)) })}{priceWarning && <><br />{priceWarning}</>}{review.willCreatePool && <><br />{t('dex.initializes')}</>}</div>}
+        {pending && <div className="dex-review">{t('dex.pendingNote')} <a href={`${DEX_CHAINS[pending.input.chainId].explorer}/tx/${pending.txHash}`} target="_blank" rel="noreferrer">{t('dex.viewTransaction')} ↗</a></div>}
         {formError && <div role="alert" className="dex-alert dex-error">{formError}</div>}
-        <button type="button" className={`dex-submit ${side === 'sell' ? 'sell' : ''}`} disabled={busy || checking || !!withdrawing || (!!walletAddress && !chainId && !pending)} onClick={() => void handleCreate()}>{busy ? (isSmartWalletSession() && smartStageText[stage] || stageText[stage]) : !walletAddress ? 'Connect wallet' : pending ? 'Resume listing' : review && walletLocked ? 'Unlock wallet' : review ? `Confirm ${side}` : `Review ${side}`}</button>
-        <p className="dex-help">Network gas applies. Range orders convert as swaps cross your price range. Converted tokens can change back if price reverses; withdraw to complete your trade.</p>
+        <button type="button" className={`dex-submit ${side === 'sell' ? 'sell' : ''}`} disabled={busy || checking || !!withdrawing || (!!walletAddress && !chainId && !pending)} onClick={() => void handleCreate()}>{submitLabel}</button>
+        <p className="dex-help">{t('dex.reversalNote')}</p>
         </div>
       </section>
     </div>
-    <section className="dex-positions"><div className="dex-panel-head"><div role="tablist" aria-label="Position ownership" className="dex-tabs"><button role="tab" aria-selected={!mine} onClick={() => { setMine(false); setPage(0); }}>All positions <span className="dex-muted">{positions.length}</span></button><button role="tab" aria-selected={mine} onClick={() => { setMine(true); setPage(0); }}>My positions</button></div><span className="dex-muted">Base + BNB</span></div>
-      {!shown.length ? <div className="dex-empty">{loading ? 'Verifying onchain positions…' : mine ? 'Your positions will appear here after your first order.' : 'No verified positions yet. Be the first to add liquidity.'}</div> : <div className="dex-table-scroll"><table className="dex-table"><thead><tr><th>Position</th><th>Price range · USD</th><th>Current holdings</th><th>State</th><th>Network</th><th /></tr></thead><tbody>{visiblePositions.map((item) => { const fill = fillFraction(item) * 100; return <tr key={`${item.chain_id}:${item.token_id}`}><td className={item.side === 'buy' ? 'dex-buy' : 'dex-sell'}>{item.side === 'buy' ? 'Buy' : 'Sell'} DHB<small>#{item.token_id}</small></td><td>{formatPrice(item.minPrice)} – {formatPrice(item.maxPrice)}<small>{item.poolFee / 10000}% LP fee</small></td><td>{formatSize(item.amountDhb)} DHB<small>{formatSize(item.amountUsdc)} USDC</small></td><td>{item.status === 'Filled' ? 'Ready to withdraw' : item.status === 'In range' ? <>Converting <span className="dex-muted">{fill < 1 ? '<1' : Math.round(fill)}%</span><i className="dex-fill" style={{ '--fill': `${fill}%` } as CSSProperties} /></> : 'Waiting'}<small>{item.owner.slice(0, 6)}…{item.owner.slice(-4)}</small></td><td>{DEX_CHAINS[item.chain_id as DexChainId].name}</td><td>{walletAddress?.toLowerCase() === item.owner.toLowerCase() ? <button disabled={busy || !!withdrawing} onClick={() => void handleWithdraw(item)}>{withdrawing === `${item.chain_id}:${item.token_id}` ? 'Withdrawing…' : 'Withdraw'}</button> : <a href={`${DEX_CHAINS[item.chain_id as DexChainId].explorer}/tx/${item.mint_tx_hash}`} target="_blank" rel="noreferrer" aria-label={`View position ${item.token_id} transaction`}><ExternalLink size={14} /></a>}</td></tr>; })}</tbody></table></div>}
-      {shown.length > PAGE_SIZE && <div className="dex-pagination"><button disabled={!page} onClick={() => setPage((n) => n - 1)}>Previous</button><span>{page + 1} / {Math.ceil(shown.length / PAGE_SIZE)}</span><button disabled={(page + 1) * PAGE_SIZE >= shown.length} onClick={() => setPage((n) => n + 1)}>Next</button></div>}
+    <section className="dex-positions"><div className="dex-panel-head"><div role="tablist" aria-label={t('dex.positionOwnership')} className="dex-tabs"><button role="tab" aria-selected={!mine} onClick={() => { setMine(false); setPage(0); }}>{t('dex.allPositions')} <span className="dex-muted">{venuePositions.length}</span></button><button role="tab" aria-selected={mine} onClick={() => { setMine(true); setPage(0); }}>{t('dex.myPositions')}</button></div><span className="dex-muted">{venueName}</span></div>
+      {!shown.length ? <div className="dex-empty">{loading ? t('dex.verifying') : mine ? t('dex.noMyPositions') : t('dex.noPositions', { chain: venueName })}</div> : <div className="dex-table-scroll"><table className="dex-table"><thead><tr><th>{t('dex.position')}</th><th>{t('dex.priceRange')}</th><th>{t('dex.currentHoldings')}</th><th>{t('dex.state')}</th><th>{t('dex.networkColumn')}</th><th /></tr></thead><tbody>{visiblePositions.map((item) => { const fill = fillFraction(item) * 100; return <tr key={`${item.chain_id}:${item.token_id}`}><td className={item.side === 'buy' ? 'dex-buy' : 'dex-sell'}>{t(item.side === 'buy' ? 'dex.buy' : 'dex.sell')}<small>#{item.token_id}</small></td><td>{formatPrice(item.minPrice)} – {formatPrice(item.maxPrice)}<small>{t('dex.lpFeeValue', { fee: item.poolFee / 10000 })}</small></td><td>{formatSize(item.amountDhb)} DHB<small>{formatSize(item.amountUsdc)} USDC</small></td><td>{item.status === 'Filled' ? t('dex.ready') : item.status === 'In range' ? <>{t('dex.converting')} <span className="dex-muted">{fill < 1 ? '<1' : Math.round(fill)}%</span><i className="dex-fill" style={{ '--fill': `${fill}%` } as CSSProperties} /></> : t('dex.waiting')}<small>{item.owner.slice(0, 6)}…{item.owner.slice(-4)}</small></td><td>{DEX_CHAINS[item.chain_id as DexChainId].name}</td><td>{walletAddress?.toLowerCase() === item.owner.toLowerCase() ? <button disabled={busy || !!withdrawing} onClick={() => void handleWithdraw(item)}>{withdrawing === `${item.chain_id}:${item.token_id}` ? t('dex.withdrawing') : t('dex.withdraw')}</button> : <a href={`${DEX_CHAINS[item.chain_id as DexChainId].explorer}/tx/${item.mint_tx_hash}`} target="_blank" rel="noreferrer" aria-label={t('dex.viewPosition', { id: item.token_id })}><ExternalLink size={14} /></a>}</td></tr>; })}</tbody></table></div>}
+      {shown.length > PAGE_SIZE && <div className="dex-pagination"><button disabled={!page} onClick={() => setPage((n) => n - 1)}>{t('dex.previous')}</button><span>{page + 1} / {Math.ceil(shown.length / PAGE_SIZE)}</span><button disabled={(page + 1) * PAGE_SIZE >= shown.length} onClick={() => setPage((n) => n + 1)}>{t('dex.next')}</button></div>}
     </section>
   </div>;
 }
