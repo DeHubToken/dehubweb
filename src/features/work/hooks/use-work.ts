@@ -293,8 +293,17 @@ export function useUpdateJob() {
       if (!data) throw new Error('You can only edit bounties you posted');
       return data as unknown as WorkJob;
     },
-    onSuccess: (_, v) => {
-      qc.invalidateQueries({ queryKey: ['work-job', v.id] });
+    onSuccess: (job) => {
+      // A bounty is cached under whatever the URL carried: `job_number` for the
+      // canonical /bounty/7 links, the uuid for the older /work/<uuid> ones.
+      // Invalidating by uuid alone therefore missed the entry the page is
+      // actually reading, and the five minute staleTime then suppressed any
+      // refetch on remount — so the edit saved but the detail page repainted
+      // the pre-edit row under a 'Bounty updated' toast. Seed both shapes with
+      // the row the update returned, then sweep the prefix.
+      qc.setQueryData(['work-job', job.id], job);
+      if (job.job_number != null) qc.setQueryData(['work-job', String(job.job_number)], job);
+      qc.invalidateQueries({ queryKey: ['work-job'] });
       qc.invalidateQueries({ queryKey: ['work-jobs-browse'] });
       qc.invalidateQueries({ queryKey: ['work-my-posted'] });
       toast.success('Bounty updated');
@@ -395,7 +404,7 @@ export function useAwardApplicant() {
     },
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-apps', v.job_id] });
-      qc.invalidateQueries({ queryKey: ['work-job', v.job_id] });
+      qc.invalidateQueries({ queryKey: ['work-job'] });
       // Not "funds escrowed": with no contract deployed this awards the work and
       // nothing else. The money moves when the submission is approved and paid.
       toast.success('Awarded — they can start work');
@@ -439,7 +448,7 @@ export function useSubmitProof() {
     },
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-subs', v.job_id] });
-      qc.invalidateQueries({ queryKey: ['work-job', v.job_id] });
+      qc.invalidateQueries({ queryKey: ['work-job'] });
       toast.success('Proof submitted');
     },
     onError: (e: any) => toast.error(e.message || 'Failed to submit proof'),
@@ -621,7 +630,7 @@ export function useApproveSubmission() {
     },
     onSuccess: (result, v) => {
       qc.invalidateQueries({ queryKey: ['work-subs', v.job_id] });
-      qc.invalidateQueries({ queryKey: ['work-job', v.job_id] });
+      qc.invalidateQueries({ queryKey: ['work-job'] });
       qc.invalidateQueries({ queryKey: ['work-my-submissions'] });
       toast.success(result.paid ? 'Approved and paid' : 'Approved — not paid yet');
     },
@@ -672,7 +681,7 @@ export function usePaySubmission() {
     },
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-subs', v.job_id] });
-      qc.invalidateQueries({ queryKey: ['work-job', v.job_id] });
+      qc.invalidateQueries({ queryKey: ['work-job'] });
       qc.invalidateQueries({ queryKey: ['work-my-submissions'] });
       toast.success('Payment sent');
     },
@@ -787,8 +796,8 @@ export function useOpenDispute() {
       );
       if (e2) throw e2;
     },
-    onSuccess: (_, v) => {
-      qc.invalidateQueries({ queryKey: ['work-job', v.job_id] });
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['work-job'] });
       qc.invalidateQueries({ queryKey: ['work-disputes-admin'] });
       toast.success('Dispute opened — admin will review');
     },
@@ -909,8 +918,8 @@ export function useMarkComplete() {
       );
       if (error) throw error;
     },
-    onSuccess: (_, jobId) => {
-      qc.invalidateQueries({ queryKey: ['work-job', jobId] });
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['work-job'] });
       qc.invalidateQueries({ queryKey: ['work-jobs-browse'] });
       toast.success('Job marked complete');
     },
