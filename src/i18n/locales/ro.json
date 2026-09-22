@@ -1225,10 +1225,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Acest creator permite instruirea AI cu privire la acest conținut.",
-      "denied": "Acest creator nu permite instruirea IA cu privire la acest conținut."
-    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUp": "Sign Up",

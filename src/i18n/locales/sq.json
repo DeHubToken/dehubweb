@@ -1242,10 +1242,6 @@
     "returnHome": "Kthehu në Kryefaqe"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Ky krijues lejon trajnimin e IA për këtë përmbajtje.",
-      "denied": "Ky krijues nuk lejon trajnimin e IA për këtë përmbajtje."
-    },
     "back": "Kthehu",
     "usernameAvailable": "Emri i përdoruesit është i disponueshëm!",
     "signUpToClaim": "Regjistrohu sot për ta marrë",

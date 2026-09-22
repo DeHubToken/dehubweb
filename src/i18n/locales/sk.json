@@ -1313,10 +1313,6 @@
     "returnHome": "Späť na domovskú stránku"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Tento tvorca umožňuje školenie umelej inteligencie o tomto obsahu.",
-      "denied": "Tento tvorca nepovoľuje školenie umelej inteligencie o tomto obsahu."
-    },
     "back": "Späť",
     "usernameAvailable": "Používateľské meno je voľné!",
     "signUpToClaim": "Zaregistrujte sa ešte dnes a získajte ho",

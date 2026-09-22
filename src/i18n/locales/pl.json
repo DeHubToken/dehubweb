@@ -1244,10 +1244,6 @@
     "returnHome": "Wróć na stronę główną"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Ten twórca zezwala na szkolenie sztucznej inteligencji w zakresie tych treści.",
-      "denied": "Ten twórca nie zezwala na szkolenie sztucznej inteligencji w zakresie tych treści."
-    },
     "back": "Wróć",
     "usernameAvailable": "Nazwa użytkownika dostępna!",
     "signUpToClaim": "Zarejestruj się dzisiaj, aby ją zarezerwować",

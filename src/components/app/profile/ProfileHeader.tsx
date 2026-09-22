@@ -4,7 +4,6 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAiScrapingPreference } from '@/lib/ai-scraping';
 import { BadgeAscension } from '@/components/app/BadgeAscension';
 import { useBadgeCeremony } from '@/hooks/use-badge-ceremony';
 import { Button } from '@/components/ui/button';
@@ -449,12 +448,6 @@ export function ProfileHeader({
           {profile.bio && (
             <TranslatableText text={translatedBio || profile.bio} className="mt-3 text-white/90 text-base leading-6 block" as="p" />
           )}
-
-          <p className="mt-2 text-xs text-zinc-500">
-            {getAiScrapingPreference(profile.customs) === 'allow'
-              ? t('profile.aiScraping.allowed')
-              : t('profile.aiScraping.denied')}
-          </p>
 
           {/* Pinned Communities */}
           {profile.walletAddress && (

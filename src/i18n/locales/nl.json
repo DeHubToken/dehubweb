@@ -1437,10 +1437,6 @@
     "returnHome": "Terug naar home"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Deze maker staat AI-training toe op deze inhoud.",
-      "denied": "Deze maker staat geen AI-training toe voor deze inhoud."
-    },
     "back": "Terug",
     "usernameAvailable": "Gebruikersnaam beschikbaar!",
     "signUpToClaim": "Meld je vandaag aan om te claimen",

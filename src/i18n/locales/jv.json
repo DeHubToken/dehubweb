@@ -1220,10 +1220,6 @@
     "returnHome": "Bali menyang Beranda"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Pencipta iki ngidini AI dilatih nganggo konten iki.",
-      "denied": "Pencipta iki ora ngidini AI dilatih nganggo konten iki."
-    },
     "back": "Bali",
     "usernameAvailable": "Jeneng pangguna kasedhiya!",
     "signUpToClaim": "Daftar kanggo njupuk",

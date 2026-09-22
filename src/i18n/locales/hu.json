@@ -1239,10 +1239,6 @@
     "returnHome": "Vissza a kezdőlapra"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Ez az alkotó engedélyezi a mesterséges intelligencia képzését ezen a tartalomon.",
-      "denied": "Ez az alkotó nem engedélyezi a mesterséges intelligencia képzését ezen a tartalomon."
-    },
     "back": "Vissza",
     "usernameAvailable": "Felhasználónév elérhető!",
     "signUpToClaim": "Regisztráljon és foglalja le",

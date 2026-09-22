@@ -1220,10 +1220,6 @@
     "returnHome": "Бозгашт ба асосӣ"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Ang creator na ito ay nagbibigay ng pagsasanay sa AI sa n",
-      "denied": "Ang creator na ito ay hindi pinapahintulutan sa AI sa nilalaman na ito"
-    },
     "back": "Бозгашт",
     "usernameAvailable": "Номи корбар озод аст!",
     "signUpToClaim": "Сабтином кунед то гиред",

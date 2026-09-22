@@ -1226,10 +1226,6 @@
     "returnHome": "返回主頁"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "呢個創作者允許人工智能喺呢個內容上面進行訓練。",
-      "denied": "呢個創作者唔允許人工智能喺呢個內容上面進行訓練。"
-    },
     "back": "返回",
     "usernameAvailable": "用戶名可用！",
     "signUpToClaim": "註冊嚟攞",

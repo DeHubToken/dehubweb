@@ -1227,10 +1227,6 @@
     "returnHome": "Atgriezties sākumā"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Šis veidotājs atļauj MI apmācību par šo saturu.",
-      "denied": "Šis veidotājs neatļauj MI apmācību par šo saturu."
-    },
     "back": "Atpakaļ",
     "usernameAvailable": "Lietotājvārds ir pieejams!",
     "signUpToClaim": "Reģistrējieties šodien, lai to iegūtu",

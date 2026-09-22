@@ -1239,10 +1239,6 @@
     "returnHome": "Zpět na hlavní stránku"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Tento tvůrce umožňuje školení AI o tomto obsahu.",
-      "denied": "Tento tvůrce nepovoluje školení AI o tomto obsahu."
-    },
     "back": "Zpět",
     "usernameAvailable": "Uživatelské jméno je dostupné!",
     "signUpToClaim": "Zaregistrujte se a získejte ho",

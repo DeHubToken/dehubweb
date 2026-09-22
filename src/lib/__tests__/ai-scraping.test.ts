@@ -2,14 +2,14 @@ import { describe, expect, it } from 'vitest';
 import { getAiScrapingPreference, mergeAiScrapingPreference } from '@/lib/ai-scraping';
 
 describe('getAiScrapingPreference', () => {
-  it('defaults to deny when customs is absent', () => {
-    expect(getAiScrapingPreference(undefined)).toBe('deny');
-    expect(getAiScrapingPreference(null)).toBe('deny');
+  it('defaults to allow when customs is absent', () => {
+    expect(getAiScrapingPreference(undefined)).toBe('allow');
+    expect(getAiScrapingPreference(null)).toBe('allow');
   });
 
-  it('defaults to deny when the key is missing', () => {
-    expect(getAiScrapingPreference({})).toBe('deny');
-    expect(getAiScrapingPreference({ otherKey: 'x' })).toBe('deny');
+  it('defaults to allow when the key is missing', () => {
+    expect(getAiScrapingPreference({})).toBe('allow');
+    expect(getAiScrapingPreference({ otherKey: 'x' })).toBe('allow');
   });
 
   it('reads an explicit allow', () => {
@@ -20,11 +20,11 @@ describe('getAiScrapingPreference', () => {
     expect(getAiScrapingPreference({ aiScraping: 'deny' })).toBe('deny');
   });
 
-  it('falls back to deny on a malformed value', () => {
-    expect(getAiScrapingPreference({ aiScraping: 'yes' })).toBe('deny');
-    expect(getAiScrapingPreference({ aiScraping: true })).toBe('deny');
-    expect(getAiScrapingPreference({ aiScraping: 1 })).toBe('deny');
-    expect(getAiScrapingPreference({ aiScraping: '' })).toBe('deny');
+  it('falls back to allow on a malformed value', () => {
+    expect(getAiScrapingPreference({ aiScraping: 'no' })).toBe('allow');
+    expect(getAiScrapingPreference({ aiScraping: true })).toBe('allow');
+    expect(getAiScrapingPreference({ aiScraping: 1 })).toBe('allow');
+    expect(getAiScrapingPreference({ aiScraping: '' })).toBe('allow');
   });
 });
 
