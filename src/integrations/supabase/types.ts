@@ -2251,6 +2251,24 @@ export type Database = {
         }
         Relationships: []
       }
+      dex_market_tick: {
+        Row: {
+          id: boolean
+          observed_at: string
+          revision: number
+        }
+        Insert: {
+          id?: boolean
+          observed_at?: string
+          revision?: number
+        }
+        Update: {
+          id?: boolean
+          observed_at?: string
+          revision?: number
+        }
+        Relationships: []
+      }
       dex_pool_positions: {
         Row: {
           block_number: number
