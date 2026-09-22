@@ -1998,6 +1998,10 @@ export default function NotificationsPage() {
     (key, defaultLabel) => t(key, { defaultValue: defaultLabel }),
   );
   const activeTabLabel = translateFilterLabel(activeTab);
+  // The header badge sits next to the active tab's name, so it has to count the
+  // same thing that name does. Showing the all-tabs total beside "Mentions" read
+  // as "42 mentions" when 42 was every unread notification on the account.
+  const headerUnread = getTabCount(activeTab);
 
   return (
     // data-notifications-page scopes the light-mode remaps in index.css; the
@@ -2013,9 +2017,9 @@ export default function NotificationsPage() {
             <div className="flex items-center gap-2">
               <ThemedIcon icon="notifications" alt={activeTabLabel} className="w-9 h-9 object-contain" />
               <h1 className="font-bold text-white text-lg" aria-live="polite">{activeTabLabel}</h1>
-              {totalUnread > 0 && (
+              {headerUnread > 0 && (
                 <span className="px-2 py-0.5 text-xs font-medium bg-red-500 text-white rounded-lg">
-                  {totalUnread > 99 ? '99+' : totalUnread}
+                  {headerUnread > 99 ? '99+' : headerUnread}
                 </span>
               )}
             </div>
