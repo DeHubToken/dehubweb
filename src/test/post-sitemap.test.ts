@@ -124,7 +124,7 @@ describe('the posts sitemap is wired at the edge', () => {
   const handler = WORKER.slice(WORKER.indexOf('const postSitemapMatch'));
 
   it('serves /sitemap-posts-N.xml from the filtered builder', () => {
-    expect(handler).toMatch(/dehubPostSitemap\(Number\(postSitemapMatch\[1\]\)/);
+    expect(handler).toMatch(/dehubPostSitemap\(page\)/);
     expect(handler.slice(0, handler.indexOf('const sitemapMatch'))).toContain('postSitemapXml(posts)');
   });
 
@@ -132,7 +132,10 @@ describe('the posts sitemap is wired at the edge', () => {
     // An incomplete walk returns null. A truncated sitemap is a 200 the edge
     // caches for an hour that tells Google the posts it omits were removed.
     expect(WORKER.indexOf('const postSitemapMatch')).toBeLessThan(WORKER.indexOf('const sitemapMatch'));
-    expect(handler).toMatch(/if \(posts\) \{/);
+    // The builder hands cachedSitemap null on an incomplete walk, which is
+    // what makes the fall-through below reachable.
+    expect(handler).toMatch(/posts \? sitemapResponse\(postSitemapXml\(posts\)\) : null/);
+    expect(handler).toMatch(/if \(cached\) return cached;/);
     expect(WORKER).toMatch(/async function dehubPostSitemap[\s\S]*?return complete \? posts : null;|async function dehubPostSitemap[\s\S]*?return null;\n\}/);
   });
 
