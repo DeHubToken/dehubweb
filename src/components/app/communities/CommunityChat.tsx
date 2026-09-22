@@ -35,6 +35,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { EmojiGifPicker } from '../chat/EmojiGifPicker';
+import { UserMentionDropdown } from '@/components/app/mentions';
+import { useMention } from '@/hooks/use-mention';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
@@ -178,6 +180,15 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { user } = useAuth();
   const { t } = useTranslation();
+
+  // @mention autocomplete. The composer already had handles parsed out of the
+  // sent text for notifications, but nothing offered suggestions while typing,
+  // so a handle only worked if you already knew it letter for letter.
+  const mention = useMention({
+    inputRef: textareaRef,
+    onMentionInsert: (_user, newText) => setNewMessage(newText.slice(0, 500)),
+  });
+
   const profileData = user ? {
     handle: user.username,
     name: user.displayName || user.display_name,
@@ -553,6 +564,19 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
   }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal, startSlowModeCountdown]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (mention.isOpen) {
+      const handled = mention.handleKeyDown(e);
+      if (handled) {
+        if (e.key === 'Enter' || e.key === 'Tab') {
+          e.preventDefault();
+          const liveResults = (window as any).__mentionResults || [];
+          if (liveResults[mention.selectedIndex]) {
+            mention.handleSelect(liveResults[mention.selectedIndex]);
+          }
+        }
+        return;
+      }
+    }
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -1051,6 +1075,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                   const val = e.target.value;
                   if (val.length <= 500) {
                     setNewMessage(val);
+                    mention.handleInput(val, e.target.selectionStart);
                   }
                   const ta = e.target;
                   requestAnimationFrame(() => {
@@ -1063,6 +1088,15 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                 className="min-h-[36px] max-h-32 resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-12 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
                 rows={1}
                 style={{ fieldSizing: 'content' } as React.CSSProperties}
+              />
+              <UserMentionDropdown
+                query={mention.query}
+                isOpen={mention.isOpen}
+                position={mention.position}
+                selectedIndex={mention.selectedIndex}
+                onSelectedIndexChange={mention.setSelectedIndex}
+                onSelect={mention.handleSelect}
+                onClose={mention.handleClose}
               />
             </div>
             <div className="flex items-center justify-end pt-1">
