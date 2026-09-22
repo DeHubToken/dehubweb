@@ -5358,6 +5358,21 @@
       }
     }
   },
+  "drafts": {
+    "title": "Konsepte",
+    "saveCurrent": "Stoor Huidige",
+    "saved": "Konsep gestoor",
+    "loaded": "Rofwerk gelaai",
+    "deleted": "Rofwerk uitgevee",
+    "emptyTitle": "Nog geen konsepte nie",
+    "emptyDescription": "Spaar jou werk om later voort te gaan.",
+    "noText": "Nee teks",
+    "image": "Beeld",
+    "video": "Video",
+    "audio": "Oudio",
+    "poll": "Peiling",
+    "scheduled": "Geskeduleer"
+  },
   "home": {
     "title": "Volhoubare Web3-infrastruktuur",
     "subtitle": "Bou die volgende generasie gedesentraliseerde toepassings.",

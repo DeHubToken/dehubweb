@@ -5220,6 +5220,21 @@
       }
     }
   },
+  "drafts": {
+    "title": "Drafts",
+    "saveCurrent": "Raiketo ity izao",
+    "saved": "Vakiraoka voatahiry",
+    "loaded": "Vakiraoka nampidirina",
+    "deleted": "Vakiraoka voafafa",
+    "emptyTitle": "Tsy mbola misy vakiraoka aloha hatreto.",
+    "emptyDescription": "Tehirizo ny asanao mba hanohizana aty aoriana.",
+    "noText": "Tsy misy soratra",
+    "image": "Sary",
+    "video": "Vidéo",
+    "audio": "Feo",
+    "poll": "Votoatin'ny fitsapan-kevi-bahoaka",
+    "scheduled": "Manomàna"
+  },
   "createPost": {
     "title": "Mamorona",
     "whatsOnYourMind": "Inona no ao an-tsainao?",

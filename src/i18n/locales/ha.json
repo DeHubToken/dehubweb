@@ -3238,5 +3238,20 @@
         "body": "Gano yadda tukwici, badges da SuperPowers ke juya abin da kuke yi a nan zuwa wani abu da kuka samu daga."
       }
     }
+  },
+  "drafts": {
+    "title": "Zane-zane",
+    "saveCurrent": "Ajiye Yanzu",
+    "saved": "Draft ceci",
+    "loaded": "Draft da aka ɗora",
+    "deleted": "Draft share",
+    "emptyTitle": "Babu zane-zane har yanzu",
+    "emptyDescription": "Ajiye aikinku don ci gaba daga baya.",
+    "noText": "Babu rubutu",
+    "image": "Image",
+    "video": "Bidiyo",
+    "audio": "Audio",
+    "poll": "Kuri'a",
+    "scheduled": "Shirye-shiryen"
   }
 }

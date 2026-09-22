@@ -5480,5 +5480,20 @@
         "body": "Find ud af, hvordan tips, badges og superkræfter forvandler det, du gør her, til noget, du tjener penge på."
       }
     }
+  },
+  "drafts": {
+    "title": "Kladder",
+    "saveCurrent": "Gem nuværende",
+    "saved": "Kladde gemt",
+    "loaded": "Udkast indlæst",
+    "deleted": "Kladde slettet",
+    "emptyTitle": "Ingen kladder endnu",
+    "emptyDescription": "Gem dit arbejde for at fortsætte senere.",
+    "noText": "Ingen tekst",
+    "image": "Billede",
+    "video": "Video",
+    "audio": "Lyd",
+    "poll": "Afstemning",
+    "scheduled": "Planlagt"
   }
 }

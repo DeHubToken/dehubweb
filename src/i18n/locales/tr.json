@@ -5569,5 +5569,20 @@
         "body": "İpuçlarının, rozetlerin ve Süper Güçlerin burada yaptıklarını nasıl kazandığın bir şeye dönüştürdüğünü öğren."
       }
     }
+  },
+  "drafts": {
+    "title": "Taslaklar",
+    "saveCurrent": "Akımı Kaydet",
+    "saved": "Taslak kaydedildi",
+    "loaded": "Taslak yüklendi",
+    "deleted": "Taslak silindi",
+    "emptyTitle": "Henüz taslak yok",
+    "emptyDescription": "Daha sonra devam etmek için çalışmanızı kaydedin.",
+    "noText": "Metin yok",
+    "image": "Resim",
+    "video": "Video",
+    "audio": "Ses",
+    "poll": "Anket",
+    "scheduled": "Planlandı"
   }
 }

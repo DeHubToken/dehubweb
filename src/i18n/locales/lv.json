@@ -5541,5 +5541,20 @@
         "body": "Uzziniet, kā padomi, nozīmītes un superspējas pārvērš to, ko šeit darāt, par kaut ko, no kā nopelnāt."
       }
     }
+  },
+  "drafts": {
+    "title": "Melnraksti",
+    "saveCurrent": "Saglabāt pašreizējo",
+    "saved": "Melnraksts saglabāts",
+    "loaded": "Melnraksts ielādēts",
+    "deleted": "Melnraksts dzēsts",
+    "emptyTitle": "Vēl nav melnrakstu",
+    "emptyDescription": "Saglabājiet savu darbu, lai turpinātu vēlāk.",
+    "noText": "Nav teksta",
+    "image": "Attēls",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Aptauja",
+    "scheduled": "Ieplānots"
   }
 }

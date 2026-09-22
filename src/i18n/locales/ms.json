@@ -5769,5 +5769,20 @@
         "body": "Ketahui bagaimana tip, lencana dan SuperPower mengubah apa yang anda lakukan di sini menjadi sesuatu yang anda perolehi."
       }
     }
+  },
+  "drafts": {
+    "title": "Draf",
+    "saveCurrent": "Simpan Semasa",
+    "saved": "Draf disimpan",
+    "loaded": "Draf dimuatkan",
+    "deleted": "Draf dihapuskan",
+    "emptyTitle": "Belum ada draf",
+    "emptyDescription": "Simpan kerja anda untuk meneruskan kemudian.",
+    "noText": "Tiada teks",
+    "image": "Imej",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Pengundian",
+    "scheduled": "Dijadualkan"
   }
 }

@@ -3160,5 +3160,20 @@
         "body": "了解一下小费、徽章和超级能力是怎么把你在上面做的事变成收入的。"
       }
     }
+  },
+  "drafts": {
+    "title": "草稿",
+    "saveCurrent": "保存当前",
+    "saved": "草稿已保存",
+    "loaded": "草稿已加载",
+    "deleted": "草稿已删除",
+    "emptyTitle": "尚无草稿",
+    "emptyDescription": "保存好侬个工作，以后继续。",
+    "noText": "无内容",
+    "image": "图片",
+    "video": "视频",
+    "audio": "音频",
+    "poll": "投票",
+    "scheduled": "已安排"
   }
 }

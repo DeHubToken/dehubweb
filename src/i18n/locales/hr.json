@@ -5449,5 +5449,20 @@
         "body": "Saznajte kako savjeti, značke i SuperPowers pretvaraju ono što ovdje radite u nešto od čega zarađujete."
       }
     }
+  },
+  "drafts": {
+    "title": "Nacrti",
+    "saveCurrent": "Spremi trenutačnu verziju",
+    "saved": "Skica je spremljena",
+    "loaded": "Skica učitana",
+    "deleted": "Skica je izbrisana",
+    "emptyTitle": "Još nema skica",
+    "emptyDescription": "Spremite svoj rad kako biste nastavili kasnije.",
+    "noText": "Nema teksta",
+    "image": "Slika",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Anketa",
+    "scheduled": "Zakazano"
   }
 }

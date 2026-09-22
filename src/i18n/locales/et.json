@@ -5452,5 +5452,20 @@
         "body": "Vaata, kuidas nõuanded, märgid ja SuperPowers muudavad selle, mida sa siin teed, millekski, millega sa teenid."
       }
     }
+  },
+  "drafts": {
+    "title": "Mustandid",
+    "saveCurrent": "Salvesta praegune",
+    "saved": "Mustand on salvestatud",
+    "loaded": "Mustand laaditud",
+    "deleted": "Mustand on kustutatud",
+    "emptyTitle": "Mustandeid pole veel",
+    "emptyDescription": "Hiljem jätkamiseks salvesta oma töö.",
+    "noText": "Tekst puudub",
+    "image": "Pilt",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Küsitlus",
+    "scheduled": "Plaanitud"
   }
 }

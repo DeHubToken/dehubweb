@@ -5453,5 +5453,20 @@
         "body": "Zjistěte, jak spropitné, odznaky a SuperPowers mění to, co zde děláte, na něco, z čeho si vyděláte."
       }
     }
+  },
+  "drafts": {
+    "title": "Koncepty",
+    "saveCurrent": "Uložit aktuální",
+    "saved": "Koncept uložen",
+    "loaded": "Koncept načten",
+    "deleted": "Koncept smazán",
+    "emptyTitle": "Zatím žádné koncepty",
+    "emptyDescription": "Uložte si práci a pokračujte později.",
+    "noText": "Žádný text",
+    "image": "Obrázek",
+    "video": "Video",
+    "audio": "Zvuk",
+    "poll": "Anketa",
+    "scheduled": "Naplánováno"
   }
 }

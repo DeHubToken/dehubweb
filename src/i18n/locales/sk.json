@@ -3378,6 +3378,21 @@
       }
     }
   },
+  "drafts": {
+    "title": "Koncepty",
+    "saveCurrent": "Uložiť aktuálne",
+    "saved": "Koncept uložený",
+    "loaded": "Koncept bol načítaný",
+    "deleted": "Koncept bol odstránený",
+    "emptyTitle": "Zatiaľ žiadne koncepty",
+    "emptyDescription": "Uložte si prácu a pokračujte neskôr.",
+    "noText": "Žiadny text",
+    "image": "Obrázok",
+    "video": "Video",
+    "audio": "Zvuk",
+    "poll": "Anketa",
+    "scheduled": "Naplánované"
+  },
   "post": {
     "like": "Páči sa mi",
     "comment": "Komentár",

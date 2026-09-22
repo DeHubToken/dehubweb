@@ -3268,5 +3268,20 @@
         "body": "Yachay imaynatas consejos, insignias chaymanta SuperPowers kaypi ruwasqaykita imamanta ganasqaykiman tikranku."
       }
     }
+  },
+  "drafts": {
+    "title": "Borradorkuna",
+    "saveCurrent": "Kunan pachata waqaychay",
+    "saved": "Borrador waqaychasqa",
+    "loaded": "Kamachiykuna churakusqa",
+    "deleted": "Borrador borrasqa",
+    "emptyTitle": "Manaraqmi borradorkuna kanchu",
+    "emptyDescription": "Ruwayniykita waqaychay allin kananpaq.",
+    "noText": "Mana qillqasqa",
+    "image": "Rikchay",
+    "video": "Kuyuq rikch'a waqaychana allwiya",
+    "audio": "Audio nisqa",
+    "poll": "Tariy",
+    "scheduled": "Programado nisqa"
   }
 }

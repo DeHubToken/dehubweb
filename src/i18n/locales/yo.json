@@ -3228,5 +3228,20 @@
         "body": "Ṣàwárí bí àwọn ìmọ̀ràn, àmì ẹ̀yẹ àti SuperPowers ṣe yí ohun tí ò ń ṣe níbí padà sí nǹkan tí ò ń rí owó gbà."
       }
     }
+  },
+  "drafts": {
+    "title": "Àwọn àwòrán",
+    "saveCurrent": "Fipamọ Lọwọlọwọ",
+    "saved": "Àdàkọ tí a fi pamọ́",
+    "loaded": "Draft loaded",
+    "deleted": "Àdàkọ tí a pa run",
+    "emptyTitle": "Ko si awọn ero sibẹsibẹ",
+    "emptyDescription": "Fi iṣẹ́ rẹ pamọ́ láti tẹ̀síwájú lẹ́yìn náà.",
+    "noText": "Ko si ọrọ",
+    "image": "Àwòrán",
+    "video": "Fídíò",
+    "audio": "Audio",
+    "poll": "Ìbò",
+    "scheduled": "Ṣètò"
   }
 }

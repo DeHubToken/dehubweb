@@ -5452,5 +5452,20 @@
         "body": "Tudd meg, hogy a borravalók, a jelvények és a szuperképességek hogyan alakítják a munkádat olyanná, amiből pénzt kereshetsz."
       }
     }
+  },
+  "drafts": {
+    "title": "Vázlatok",
+    "saveCurrent": "Jelenlegi mentése",
+    "saved": "Piszkozat ment",
+    "loaded": "Piszkozat betölt",
+    "deleted": "Vázlat törölve",
+    "emptyTitle": "Még nincsenek piszkozatok",
+    "emptyDescription": "Mentsd el a munkádat, hogy később folytathasd.",
+    "noText": "Nincs szöveg",
+    "image": "Kép",
+    "video": "Videó",
+    "audio": "Hang",
+    "poll": "Szavazás",
+    "scheduled": "Beütemezve"
   }
 }

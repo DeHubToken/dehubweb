@@ -3148,5 +3148,20 @@
         "body": "ኣብዚ እትገብሮ ነገራት ናብ እትረኽቦ ነገር ብኸመይ ከም ዚቕይር ፡ ባጅታትን SuperPowersን ርአ ።"
       }
     }
+  },
+  "drafts": {
+    "title": "ንድፊታት",
+    "saveCurrent": "ሕጂ መድሕን",
+    "saved": "ንድፊ ድሒኑ",
+    "loaded": "እተሸከመ",
+    "deleted": "ዝተሰረዘ",
+    "emptyTitle": "ገና ንድፊ የለን ።",
+    "emptyDescription": "ጸኒሕካ ኽትቅጽል ስራሕካ ኣድሕን ።",
+    "noText": "ጽሑፍ የለን",
+    "image": "ስእሊ",
+    "video": "ቪድዮ",
+    "audio": "ድምጺ",
+    "poll": "ድምጺ",
+    "scheduled": "ዝተመደበ"
   }
 }

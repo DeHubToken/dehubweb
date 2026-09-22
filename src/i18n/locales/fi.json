@@ -5450,5 +5450,20 @@
         "body": "Lue, miten vinkit, merkit ja SuperPowerit muuttavat täällä tekemäsi asiat joksikin, josta ansaitset."
       }
     }
+  },
+  "drafts": {
+    "title": "Luonnokset",
+    "saveCurrent": "Tallenna nykyinen",
+    "saved": "Luonnos tallennettu",
+    "loaded": "Luonnos ladattu",
+    "deleted": "Luonnos poistettu",
+    "emptyTitle": "Ei vielä luonnoksia",
+    "emptyDescription": "Tallenna työsi jatkaaksesi myöhemmin.",
+    "noText": "Ei tekstiä",
+    "image": "Kuva",
+    "video": "Video",
+    "audio": "Ääni",
+    "poll": "Kysely",
+    "scheduled": "Aikataulutettu"
   }
 }

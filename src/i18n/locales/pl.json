@@ -5522,6 +5522,21 @@
       }
     }
   },
+  "drafts": {
+    "title": "Wersje robocze",
+    "saveCurrent": "Zapisz bieżący",
+    "saved": "Zapisano wersję roboczą",
+    "loaded": "Załadowano wersję roboczą",
+    "deleted": "Usunięto wersję roboczą",
+    "emptyTitle": "Nie ma jeszcze wersji roboczych",
+    "emptyDescription": "Zapisz swoją pracę, aby kontynuować później.",
+    "noText": "Brak tekstu",
+    "image": "Obraz",
+    "video": "Wideo",
+    "audio": "Dźwięk",
+    "poll": "Ankieta",
+    "scheduled": "Zaplanowano"
+  },
   "glossary": {
     "title": "Słownik",
     "description": "Definicje i wyjaśnienia terminów używanych w aplikacji.",

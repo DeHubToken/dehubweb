@@ -5564,5 +5564,20 @@
         "body": "Découvrez comment les conseils, les badges et les SuperPowers transforment ce que vous faites ici en quelque chose que vous gagnez."
       }
     }
+  },
+  "drafts": {
+    "title": "Brouillons",
+    "saveCurrent": "Enregistrer le courant",
+    "saved": "Brouillon enregistré",
+    "loaded": "Brouillon chargé",
+    "deleted": "Brouillon supprimé",
+    "emptyTitle": "Pas encore de brouillons",
+    "emptyDescription": "Enregistrez votre travail pour continuer plus tard.",
+    "noText": "Aucun texte",
+    "image": "Image",
+    "video": "Vidéo",
+    "audio": "Audio",
+    "poll": "Sondage",
+    "scheduled": "Planifié"
   }
 }

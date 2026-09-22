@@ -3255,5 +3255,20 @@
         "body": "Zbulo se si sugjerimet, distinktivët dhe Superfuqitë e kthejnë atë që bën këtu në diçka nga e cila fiton."
       }
     }
+  },
+  "drafts": {
+    "title": "Draftet",
+    "saveCurrent": "Ruaj aktuale",
+    "saved": "Drafti u ruajt",
+    "loaded": "Drafti u ngarkua",
+    "deleted": "Drafti u fshi",
+    "emptyTitle": "Ende asnjë draft",
+    "emptyDescription": "Ruaje punën tënde për të vazhduar më vonë.",
+    "noText": "Nuk ka tekst",
+    "image": "Imazhi",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Sondazh",
+    "scheduled": "Programuar"
   }
 }

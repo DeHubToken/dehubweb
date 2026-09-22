@@ -3194,5 +3194,20 @@
         "body": "Bu ýerde edýän işleriňizi gazanç edýän zadyňyza öwrüp biljekdigiňizi görüň."
       }
     }
+  },
+  "drafts": {
+    "title": "Drafts",
+    "saveCurrent": "Häzirki Gaýd Et",
+    "saved": "Garawul diňi",
+    "loaded": "Ýüklenen nusga",
+    "deleted": "Dizaý silinýär",
+    "emptyTitle": "Hiç bir nusga tapylmady",
+    "emptyDescription": "Soňra dowam etmek üçin işleriňizi saklaň.",
+    "noText": "Metin ýok",
+    "image": "Resim",
+    "video": "Video",
+    "audio": "Ses",
+    "poll": "Poll",
+    "scheduled": "Planlaşdyryldy"
   }
 }

@@ -3269,5 +3269,20 @@
         "body": "Thola indlela amacebiso, amabheji ne-SuperPower okuguqula ngayo lokho okwenzayo lapha kube yinto oyitholayo."
       }
     }
+  },
+  "drafts": {
+    "title": "Imidwebo",
+    "saveCurrent": "Gcina Okwamanje",
+    "saved": "Idrafti igciniwe",
+    "loaded": "Idrafti ilayishiwe",
+    "deleted": "Idrafti idilithiwe",
+    "emptyTitle": "Awekho amadrafti okwamanje",
+    "emptyDescription": "Gcina umsebenzi wakho ukuze uqhubeke kamuva.",
+    "noText": "Awukho umbhalo",
+    "image": "Isithombe",
+    "video": "Ividiyo",
+    "audio": "Okulalelwayo",
+    "poll": "Inhlolovo",
+    "scheduled": "Kushejuliwe"
   }
 }

@@ -5449,5 +5449,20 @@
         "body": "Descobreix com els consells, les insígnies i els Superpoders converteixen el que fas aquí en una cosa per la qual guanyes diners."
       }
     }
+  },
+  "drafts": {
+    "title": "Esborranys",
+    "saveCurrent": "Desa l'actual",
+    "saved": "Esborrany desat",
+    "loaded": "Esborrany carregat",
+    "deleted": "Esborrany eliminat",
+    "emptyTitle": "Encara no hi ha cap esborrany",
+    "emptyDescription": "Desa la feina per continuar més tard.",
+    "noText": "Sense text",
+    "image": "Imatge",
+    "video": "Vídeo",
+    "audio": "Àudio",
+    "poll": "Enquesta",
+    "scheduled": "Programat"
   }
 }

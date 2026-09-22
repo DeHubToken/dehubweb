@@ -3109,6 +3109,21 @@
       }
     }
   },
+  "drafts": {
+    "title": "草稿",
+    "saveCurrent": "保存当前",
+    "saved": "草稿已保存",
+    "loaded": "草稿已加载",
+    "deleted": "草稿已删除",
+    "emptyTitle": "尚无草稿",
+    "emptyDescription": "保存您的工作，以便稍后继续。",
+    "noText": "无文本",
+    "image": "图片",
+    "video": "视频",
+    "audio": "音频",
+    "poll": "投票",
+    "scheduled": "已安排"
+  },
   "post": {
     "like": "赞",
     "comment": "评论",

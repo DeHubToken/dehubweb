@@ -5562,5 +5562,20 @@
         "body": "Finde heraus, wie Trinkgelder, Abzeichen und Superkräfte das, was du hier tust, in etwas verwandeln, mit dem du dir etwas dazuverdienst."
       }
     }
+  },
+  "drafts": {
+    "title": "Entwürfe",
+    "saveCurrent": "Aktuell speichern",
+    "saved": "Entwurf gespeichert",
+    "loaded": "Entwurf geladen",
+    "deleted": "Entwurf gelöscht",
+    "emptyTitle": "Noch keine Entwürfe",
+    "emptyDescription": "Speichern Sie Ihre Arbeit, um später fortzufahren.",
+    "noText": "Kein Text",
+    "image": "Bild",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Umfrage",
+    "scheduled": "Geplant"
   }
 }

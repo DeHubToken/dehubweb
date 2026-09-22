@@ -5569,5 +5569,20 @@
         "body": "Cari tahu bagaimana tips, lencana, dan SuperPower mengubah apa yang Anda lakukan di sini menjadi sesuatu yang Anda peroleh."
       }
     }
+  },
+  "drafts": {
+    "title": "Draf",
+    "saveCurrent": "Simpan Saat Ini",
+    "saved": "Draf disimpan",
+    "loaded": "Draf dimuat",
+    "deleted": "Draf dihapus",
+    "emptyTitle": "Belum ada draf",
+    "emptyDescription": "Simpan pekerjaan Anda untuk melanjutkan nanti.",
+    "noText": "Tidak ada teks",
+    "image": "Gambar",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Jajak Pendapat",
+    "scheduled": "Terjadwal"
   }
 }
