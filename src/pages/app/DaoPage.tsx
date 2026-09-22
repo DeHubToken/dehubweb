@@ -113,6 +113,7 @@ function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange:
   const [unlockSheetSeen, setUnlockSheetSeen] = useState(false);
   const { mutate: contribute, isPending } = useContributeToDao();
   const walletLocked = useWalletLocked();
+  const sendingRef = useRef(false);
   const { data: held } = useOwnDhbBalance(open && isAuthenticated);
 
   const parsed = Math.floor(Number(amount));
@@ -130,6 +131,11 @@ function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange:
   }, [onOpenChange, requestWalletUnlock]);
 
   const sendContribution = useCallback((value: number) => {
+    // A synchronous latch, not `isPending`: that is React state, so a double
+    // click can run this from a closure that still reads false and sign a
+    // second transfer.
+    if (sendingRef.current) return;
+    sendingRef.current = true;
     contribute(value, {
       onSuccess: (result) => {
         toast.success(t('dao.sentTitle'), {
@@ -141,6 +147,11 @@ function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange:
         });
         setAmount('');
         onOpenChange(false);
+        // The transfer is out. Only a revert is still worth saying, and it
+        // arrives long after the drawer has closed.
+        result.confirmed.then((ok) => {
+          if (!ok) toast.error(t('dao.sendFailed'));
+        });
       },
       onError: (err) => {
         // A stale lock reading can still arrive here if the auto-lock interval
@@ -153,6 +164,9 @@ function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange:
         toastTxError(err, t('dao.sendFailed'), {
           description: err instanceof Error ? err.message : undefined,
         });
+      },
+      onSettled: () => {
+        sendingRef.current = false;
       },
     });
   }, [contribute, onOpenChange, queueAfterUnlock, t]);
