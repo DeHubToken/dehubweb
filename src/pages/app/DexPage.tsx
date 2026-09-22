@@ -206,6 +206,17 @@ export default function DexPage() {
     document.addEventListener('visibilitychange', resume);
     return () => { clearInterval(timer); document.removeEventListener('visibilitychange', resume); };
   }, [loadPositions]);
+  // The server announces each rebuilt snapshot, so the page follows the write instead of the
+  // poll above, which stays as the fallback for a socket that drops.
+  useEffect(() => {
+    const channel = supabase.channel('dex-market-tick')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'dex_market_tick' }, () => {
+        readSharedMarket.invalidate();
+        void loadPositions();
+      })
+      .subscribe();
+    return () => { void supabase.removeChannel(channel); };
+  }, [loadPositions]);
 
 
   const { bids, asks } = useMemo(() => aggregateBook(positions, increment), [positions, increment]);
