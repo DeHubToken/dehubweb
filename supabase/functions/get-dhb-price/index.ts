@@ -43,6 +43,34 @@ async function getDexScreenerPrice(address: string): Promise<number | null> {
   }
 }
 
+/**
+ * DHB in dollars from the shared DEX snapshot: every DHB pool on Base and BNB Chain, weighted by
+ * its own dollar liquidity, rebuilt once a minute. This used to be a hard-coded $0.001 left over
+ * from when trading was paused, which meant the wallet, stores and paywalls priced DHB at a
+ * number the /dex page itself no longer showed. Null when the snapshot has no aggregate yet.
+ */
+async function getSnapshotDhbPrice(): Promise<number | null> {
+  try {
+    const url = Deno.env.get('SUPABASE_URL');
+    const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? Deno.env.get('SUPABASE_ANON_KEY');
+    if (!url || !key) return null;
+    const res = await fetch(`${url}/rest/v1/rpc/get_dex_market`, {
+      method: 'POST',
+      headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: '{}',
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return null;
+    const market = await res.json();
+    const price = Number(market?.usdPrice);
+    // A snapshot older than ten minutes is a stalled sampler, not a market.
+    const fresh = Number(market?.observedAt) > Date.now() / 1000 - 600;
+    return Number.isFinite(price) && price > 0 && fresh ? price : null;
+  } catch {
+    return null;
+  }
+}
+
 async function getCoinGeckoPrices(ids: string[]): Promise<Record<string, number>> {
   if (ids.length === 0) return {};
   try {
@@ -99,8 +127,11 @@ Deno.serve(async (req) => {
       }
     }
 
-    // DHB pinned to $0.001 while trading is paused
-    prices.DHB = 0.001;
+    // The DEX snapshot is the one DHB price the whole app agrees on. DexScreener is the
+    // fallback, and the old pause-era pin is the floor of last resort so nothing divides by zero.
+    const snapshotDhb = await getSnapshotDhbPrice();
+    if (snapshotDhb) prices.DHB = snapshotDhb;
+    else if (!prices.DHB || prices.DHB <= 0) prices.DHB = 0.001;
 
     // CoinGecko fallback for missing core symbols (skip DHB — pinned)
     const coreSymbols = ['ETH', 'BNB', 'USDT', 'USDC', 'BTC'];
@@ -128,7 +159,7 @@ Deno.serve(async (req) => {
     if (!prices.USDT || prices.USDT === 0) prices.USDT = 1;
     if (!prices.USDC || prices.USDC === 0) prices.USDC = 1;
 
-    console.log('Token prices (DexScreener → CoinGecko fallback):', prices);
+    console.log('Token prices (DEX snapshot → DexScreener → CoinGecko fallback):', prices);
 
     return new Response(
       JSON.stringify({ prices, timestamp: new Date().toISOString() }),
