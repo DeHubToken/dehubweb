@@ -1244,10 +1244,6 @@
     "returnHome": "Torna alla home"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Questo creator consente la formazione AI su questo contenuto.",
-      "denied": "Questo creator non consente la formazione AI su questo contenuto."
-    },
     "back": "Indietro",
     "usernameAvailable": "Nome utente disponibile!",
     "signUpToClaim": "Registrati oggi per richiederlo",

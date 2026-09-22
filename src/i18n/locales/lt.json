@@ -1227,10 +1227,6 @@
     "returnHome": "Grįžti į pradžią"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Šis kūrėjas leidžia DI mokymus apie šį turinį.",
-      "denied": "Šis kūrėjas neleidžia DI mokymų apie šį turinį."
-    },
     "back": "Atgal",
     "usernameAvailable": "Naudotojo vardas laisvas!",
     "signUpToClaim": "Užsiregistruokite šiandien, kad užsitikrintumėte",

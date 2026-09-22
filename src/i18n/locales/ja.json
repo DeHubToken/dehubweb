@@ -1241,10 +1241,6 @@
     "returnHome": "ホームに戻る"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "このクリエイターは、このコンテンツに関するAIトレーニングを許可しています。",
-      "denied": "このクリエイターは、このコンテンツに関するAIトレーニングを許可していません。"
-    },
     "back": "戻る",
     "usernameAvailable": "ユーザー名が利用可能です！",
     "signUpToClaim": "登録して取得",

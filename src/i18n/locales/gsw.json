@@ -1188,10 +1188,6 @@
     "returnHome": "Zrugg zur Startsyte"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Dä Creator erlaubt AI-Training uf dem Inhalt.",
-      "denied": "Dä Creator erlaubt kei AI-Training uf dem Inhalt."
-    },
     "back": "Zrugg",
     "usernameAvailable": "Benutzername verfüegbar!",
     "signUpToClaim": "Mäld di aa zum",

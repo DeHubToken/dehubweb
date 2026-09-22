@@ -1167,10 +1167,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Người sáng tạo này cho phép đào tạo AI về nội dung này.",
-      "denied": "Người sáng tạo này không cho phép đào tạo AI về nội dung này."
-    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUp": "Sign Up",

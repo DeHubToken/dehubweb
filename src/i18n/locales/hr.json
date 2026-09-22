@@ -1235,10 +1235,6 @@
     "returnHome": "Povratak na početnu"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Ovaj kreator omogućuje umjetnoj inteligenciji obuku o ovom sadržaju.",
-      "denied": "Ovaj kreator ne dopušta AI obuku o ovom sadržaju."
-    },
     "back": "Natrag",
     "usernameAvailable": "Korisničko ime dostupno!",
     "signUpToClaim": "Prijavite se danas da biste preuzeli",

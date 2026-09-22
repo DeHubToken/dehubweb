@@ -1240,10 +1240,6 @@
     "returnHome": "Palaa etusivulle"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Tämä tekijä sallii tekoälykoulutuksen tässä sisällössä.",
-      "denied": "Tämä tekijä ei salli tekoälykoulutusta tästä sisällöstä."
-    },
     "back": "Takaisin",
     "usernameAvailable": "Käyttäjätunnus on saatavilla!",
     "signUpToClaim": "Rekisteröidy tänään varataksesi",

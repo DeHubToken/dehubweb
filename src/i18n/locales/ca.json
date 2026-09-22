@@ -1240,10 +1240,6 @@
     "returnHome": "Tornar a l'inici"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Aquest creador permet la formació d'IA sobre aquest contingut.",
-      "denied": "Aquest creador no permet la formació d'IA sobre aquest contingut."
-    },
     "back": "Enrere",
     "usernameAvailable": "Nom d'usuari disponible!",
     "signUpToClaim": "Registra't avui per reclamar",

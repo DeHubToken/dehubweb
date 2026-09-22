@@ -1242,10 +1242,6 @@
     "returnHome": "返回首页"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "此创作者允许对此内容进行人工智能培训。",
-      "denied": "此创作者不允许对此内容进行人工智能培训。"
-    },
     "back": "返回",
     "usernameAvailable": "用户名可用！",
     "signUpToClaim": "注册以获取",

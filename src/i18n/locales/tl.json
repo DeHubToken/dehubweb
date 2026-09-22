@@ -1269,10 +1269,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Pinapayagan ng tagalikha na ito ang pagsasanay sa AI sa nilalamang ito.",
-      "denied": "Hindi pinapayagan ng tagalikha na ito ang pagsasanay sa AI sa nilalamang ito."
-    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUp": "Sign Up",

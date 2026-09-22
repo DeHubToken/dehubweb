@@ -1244,10 +1244,6 @@
     "returnHome": "Kembali ke Beranda"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Kreator ini mengizinkan pelatihan AI untuk konten ini.",
-      "denied": "Kreator ini tidak mengizinkan pelatihan AI pada konten ini."
-    },
     "back": "Kembali",
     "usernameAvailable": "Nama pengguna tersedia!",
     "signUpToClaim": "Daftar hari ini untuk mengklaim",

@@ -1224,10 +1224,6 @@
     "returnHome": "Gå tilbake til hjem"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Denne skaperen tillater AI-trening på dette innholdet.",
-      "denied": "Denne skaperen tillater ikke AI-trening på dette innholdet."
-    },
     "back": "Tilbake",
     "usernameAvailable": "Brukernavn tilgjengelig!",
     "signUpToClaim": "Registrer deg i dag for å sikre det",

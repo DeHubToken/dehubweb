@@ -1244,10 +1244,6 @@
     "returnHome": "Ana Sayfaya Dön"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Bu yaratıcı, bu içerik üzerinde yapay zeka eğitimine izin verir.",
-      "denied": "Bu yaratıcı, bu içerikle ilgili yapay zeka eğitimine izin vermiyor."
-    },
     "back": "Geri",
     "usernameAvailable": "Kullanıcı adı mevcut!",
     "signUpToClaim": "Almak için bugün kaydolun",

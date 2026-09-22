@@ -1244,10 +1244,6 @@
     "returnHome": "Tillbaka till startsidan"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Denna kreatör tillåter AI-utbildning om detta innehåll.",
-      "denied": "Denna kreatör tillåter inte AI-utbildning om detta innehåll."
-    },
     "back": "Tillbaka",
     "usernameAvailable": "Användarnamnet är tillgängligt!",
     "signUpToClaim": "Registrera dig för att ta det",

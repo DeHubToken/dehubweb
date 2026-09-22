@@ -1244,10 +1244,6 @@
     "returnHome": "Tilbage til forsiden"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Denne kreatør tillader AI-træning i dette indhold.",
-      "denied": "Denne kreatør tillader ikke AI-træning i dette indhold."
-    },
     "back": "Tilbage",
     "usernameAvailable": "Brugernavn er ledigt!",
     "signUpToClaim": "Tilmeld dig og gør krav på det",

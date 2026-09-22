@@ -1241,10 +1241,6 @@
     "returnHome": "홈으로 돌아가기"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "이 크리에이터는 이 콘텐츠에 대한 AI 교육을 허용합니다.",
-      "denied": "이 크리에이터는 이 콘텐츠에 대한 AI 교육을 허용하지 않습니다."
-    },
     "back": "뒤로",
     "usernameAvailable": "사용 가능한 사용자명!",
     "signUpToClaim": "가입하여 획득",

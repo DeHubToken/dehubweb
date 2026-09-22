@@ -1244,10 +1244,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "This creator allows AI training on this content.",
-      "denied": "This creator does not allow AI training on this content."
-    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Sign up today to claim",

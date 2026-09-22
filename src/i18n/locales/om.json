@@ -1241,10 +1241,6 @@
     "returnHome": "Manatti deebi'i"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Uumaan kun qabiyyee kana irratti leenjii AI ni hayyama.",
-      "denied": "Uumaan kun qabiyyee kana irratti leenjii AI hin hayyamu."
-    },
     "back": "Duuba",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Sign up today to claim",

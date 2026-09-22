@@ -1227,10 +1227,6 @@
     "returnHome": "Koma Gida"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Wannan mahalicci yana ba da damar horar da AI akan wannan abun ciki.",
-      "denied": "Wannan mahalicci ba ya ba da izinin horo na AI akan wannan abun ciki."
-    },
     "back": "Koma baya",
     "usernameAvailable": "Sunan mai amfani yana samuwa!",
     "signUpToClaim": "Yi rajista yau don ɗauka",

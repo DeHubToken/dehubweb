@@ -1238,10 +1238,6 @@
     "returnHome": "Ana Səhifəyə Qayıt"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Bu yaradıcı AI-nin bu məzmunda təliminə icazə verir.",
-      "denied": "Bu yaradıcı AI-nin bu məzmunda təliminə icazə vermir."
-    },
     "back": "Geri",
     "usernameAvailable": "İstifadəçi adı mövcuddur!",
     "signUpToClaim": "İddia etmək üçün bu gün qeydiyyatdan keçin",

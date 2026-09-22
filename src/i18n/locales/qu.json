@@ -1229,10 +1229,6 @@
     "returnHome": "Qallariyman kutiy"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Kay kamaqqa kay contenidomanta AI yachachiyta saqin.",
-      "denied": "Kay kamaqqa mana kay contenidomanta AI yachachiyta saqinchu."
-    },
     "back": "Kutiy",
     "usernameAvailable": "Runa suti tarikun!",
     "signUpToClaim": "Kunan qillqakuy chaskimunaykipaq",

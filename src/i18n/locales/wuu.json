@@ -1184,10 +1184,6 @@
     "returnHome": "返回主页"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "呢个创作者允许AI训练呢段内容。",
-      "denied": "呢个创作者不允许AI训练呢段内容。"
-    },
     "back": "返回",
     "usernameAvailable": "用户名可用！",
     "signUpToClaim": "注册来拿",

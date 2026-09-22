@@ -1219,10 +1219,6 @@
     "returnHome": "Laghachi Ụlọ"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Onye okike a na-enye ohere ọzụzụ AI na ọdịnaya a.",
-      "denied": "Onye mmepụta a anaghị ekwe ka ọzụzụ AI na ọdịnaya a."
-    },
     "back": "Laghachi",
     "usernameAvailable": "Aha onye ọrụ dị!",
     "signUpToClaim": "Debanye aha taa iji nweta",

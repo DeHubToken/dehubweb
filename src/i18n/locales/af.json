@@ -1251,10 +1251,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Hierdie skepper laat AI-opleiding op hierdie inhoud toe.",
-      "denied": "Hierdie skepper laat nie AI-opleiding op hierdie inhoud toe nie."
-    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUp": "Sign Up",
