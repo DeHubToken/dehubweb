@@ -189,16 +189,19 @@ export default function DexPage() {
   }, [loadPositions]);
 
 
-  const { bids, asks } = useMemo(() => aggregateBook(positions, increment), [positions, increment]);
+  const externalAsks = useMemo(() => snapshot?.externalAsks ?? [], [snapshot]);
+  const { bids, asks } = useMemo(() => aggregateBook(positions, increment, externalAsks),
+    [positions, increment, externalAsks]);
   const bestAsk = snapshot?.price ?? null;
-  // Every DHB pool, weighted by its own dollar liquidity — not just this order book.
+  // The cheapest DHB in any pool. lpDhb is inventory across every pool; liquidityUsd is the
+  // money side, which is the only thing a seller could actually be paid out of.
   const usdPrice = snapshot?.usdPrice ?? null;
   const liquidityUsd = snapshot?.liquidityUsd ?? null;
+  const lpDhb = snapshot?.lpDhb ?? null;
   const shown = useMemo(() => mine ? ordered.filter((p) => p.owner.toLowerCase() === walletAddress?.toLowerCase()) : ordered, [ordered, mine, walletAddress]);
   const visiblePositions = shown.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
   useEffect(() => { setPage((value) => Math.min(value, Math.max(0, Math.ceil(shown.length / PAGE_SIZE) - 1))); }, [shown.length]);
   const bidTotal = bids.at(-1)?.cumulativeDhb || 0, askTotal = asks.at(-1)?.cumulativeDhb || 0;
-  const totalUsdc = positions.reduce((sum, p) => sum + p.amountUsdc, 0);
   const totalDhb = positions.reduce((sum, p) => sum + p.amountDhb, 0);
   // Pools can disagree: the 0.3% pool's ask floor sometimes sits under the 0% pool's bid ceiling,
   // so the book overlaps and the gap goes negative. That is not a spread, so the row stays blank.
@@ -298,11 +301,11 @@ export default function DexPage() {
           <p>All pools · Base + BNB</p>
         </div>
       </div>
-      <div className="dex-stat"><small>Price · USD</small><strong className="dex-reference">{usdPrice != null ? `$${formatPrice(usdPrice)}` : '—'}</strong></div>
+      <div className="dex-stat"><small>Lowest price · USD</small><strong className="dex-reference">{usdPrice != null ? `$${formatPrice(usdPrice)}` : '—'}</strong></div>
       <div className="dex-stat"><small>24h change</small><strong className={(snapshot?.change24h || 0) >= 0 ? 'dex-buy' : 'dex-sell'}>{snapshot?.change24h != null ? `${snapshot.change24h >= 0 ? '+' : ''}${snapshot.change24h.toFixed(2)}%` : '—'}</strong></div>
-      <div className="dex-stat"><small>Total liquidity · USD</small><strong>{liquidityUsd != null ? `$${formatSize(liquidityUsd)}` : '—'}</strong></div>
+      <div className="dex-stat"><small>LP · DHB</small><strong>{lpDhb != null ? formatSize(lpDhb) : '—'}</strong></div>
+      <div className="dex-stat"><small>LP · USD</small><strong>{liquidityUsd != null ? `$${formatSize(liquidityUsd)}` : '—'}</strong></div>
       <div className="dex-stat"><small>Listed DHB</small><strong>{formatSize(totalDhb)}</strong></div>
-      <div className="dex-stat"><small>Listed USD</small><strong>{formatSize(totalUsdc)}</strong></div>
       <button className="dex-refresh" type="button" onClick={refresh} disabled={loading || busy} aria-label="Refresh market"><RefreshCw size={14} />{loading ? 'Updating' : 'Refresh'}</button>
     </header>
     {listError && <div role="alert" className="dex-alert">{listError}<button onClick={() => void loadPositions()}>Retry</button></div>}
