@@ -5637,5 +5637,13 @@
         }
       ]
     }
+  },
+  "home": {
+    "seoTitle": "DeHub — Otwartoźródłowe media społecznościowe należące do użytkowników",
+    "seoDescription": "DeHub to otwartoźródłowy, odporny na cenzurę protokół społecznościowy należący do użytkowników, z wszystkimi funkcjami, których odmówiły ci duże platformy."
+  },
+  "docs": {
+    "seoTitle": "Dokumentacja DeHub — Poradniki, token, dApps i FAQ",
+    "seoDescription": "Oficjalna dokumentacja DeHub: przegląd platformy, dApps, ekonomia tokena DHB, staking, gry, plan rozwoju, FAQ i więcej."
   }
 }

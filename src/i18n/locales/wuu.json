@@ -3210,5 +3210,13 @@
       "expired": "已过期"
     },
     "makeOfferAction": "出价"
+  },
+  "home": {
+    "seoTitle": "DeHub — 开源、用户所有的社交媒体",
+    "seoDescription": "DeHub 是一个开源、由用户拥有且抗审查的社交媒体协议，提供传统平台拒绝给你的全部功能。"
+  },
+  "docs": {
+    "seoTitle": "DeHub 文档 — 指南、代币、dApp 与常见问题",
+    "seoDescription": "DeHub 官方文档：平台概览、dApp、DHB 代币经济、质押、游戏、路线图、常见问题等。"
   }
 }

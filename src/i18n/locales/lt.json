@@ -5590,5 +5590,13 @@
     "audio": "Garsas",
     "poll": "Apklausa",
     "scheduled": "Suplanuota"
+  },
+  "home": {
+    "seoTitle": "DeHub — Atvirojo kodo socialinis tinklas, priklausantis naudotojams",
+    "seoDescription": "DeHub yra atvirojo kodo, naudotojams priklausantis ir cenzūrai atsparus socialinis protokolas su visomis funkcijomis, kurių didžiosios platformos jums nedavė."
+  },
+  "docs": {
+    "seoTitle": "DeHub dokumentacija — Vadovai, tokenas, dApps ir DUK",
+    "seoDescription": "Oficiali DeHub dokumentacija: platformos apžvalga, dApps, DHB tokeno ekonomika, staking, žaidimai, planas, DUK ir daugiau."
   }
 }

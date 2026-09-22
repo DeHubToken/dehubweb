@@ -5506,5 +5506,13 @@
   "notification": {
     "noNotifications": "Walang mga abiso",
     "loadMore": "Mag-load ng higit pa"
+  },
+  "home": {
+    "seoTitle": "DeHub — Open source na social media na pag-aari ng mga user",
+    "seoDescription": "Ang DeHub ay isang open source, pag-aari ng mga user at censorship-resistant na social media protocol, na may lahat ng feature na tinanggihang ibigay ng malalaking platform."
+  },
+  "docs": {
+    "seoTitle": "Dokumentasyon ng DeHub — Mga gabay, token, dApps at FAQ",
+    "seoDescription": "Opisyal na dokumentasyon ng DeHub: pangkalahatang-ideya ng platform, dApps, ekonomiya ng DHB token, staking, mga laro, roadmap, FAQ at higit pa."
   }
 }

@@ -3305,5 +3305,13 @@
       "expired": "E skaduar"
     },
     "makeOfferAction": "Bëj një ofertë"
+  },
+  "home": {
+    "seoTitle": "DeHub — Rrjet social me burim të hapur, në pronësi të përdoruesve",
+    "seoDescription": "DeHub është një protokoll social me burim të hapur, në pronësi të përdoruesve dhe rezistent ndaj censurës, me të gjitha veçoritë që platformat e mëdha refuzuan t’ju jepnin."
+  },
+  "docs": {
+    "seoTitle": "Dokumentacioni i DeHub — Udhëzues, token, dApps dhe FAQ",
+    "seoDescription": "Dokumentacioni zyrtar i DeHub: përmbledhje e platformës, dApps, ekonomia e tokenit DHB, staking, lojëra, plani i zhvillimit, pyetje të shpeshta dhe më shumë."
   }
 }

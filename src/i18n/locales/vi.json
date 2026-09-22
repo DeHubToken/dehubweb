@@ -5394,5 +5394,13 @@
         }
       ]
     }
+  },
+  "home": {
+    "seoTitle": "DeHub — Mạng xã hội mã nguồn mở, thuộc sở hữu người dùng",
+    "seoDescription": "DeHub là giao thức mạng xã hội mã nguồn mở, thuộc sở hữu người dùng và chống kiểm duyệt, mang đến mọi tính năng mà các nền tảng lớn từ chối cung cấp."
+  },
+  "docs": {
+    "seoTitle": "Tài liệu DeHub — Hướng dẫn, token, dApp và FAQ",
+    "seoDescription": "Tài liệu chính thức của DeHub: tổng quan nền tảng, dApp, kinh tế token DHB, staking, trò chơi, lộ trình, FAQ và hơn thế nữa."
   }
 }

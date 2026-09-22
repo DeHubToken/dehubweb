@@ -3319,5 +3319,13 @@
       "expired": "Kuphelelwe yisikhathi"
     },
     "makeOfferAction": "Yenza isinikelo"
+  },
+  "home": {
+    "seoTitle": "DeHub — Isizinda sezokuxhumana somthombo ovulekile esiphethwe abasebenzisi",
+    "seoDescription": "I-DeHub iyiphrothokholi yezokuxhumana yomthombo ovulekile, ephethwe abasebenzisi bayo futhi emelana nokucindezelwa, inikeza zonke izici izinkundla ezinkulu ezenqaba ukukunika zona."
+  },
+  "docs": {
+    "seoTitle": "Amadokhumenti e-DeHub — Imihlahlandlela, ithokheni, ama-dApps nemibuzo",
+    "seoDescription": "Amadokhumenti asemthethweni e-DeHub: ukubuka konke kwesizinda, ama-dApps, umnotho wethokheni ye-DHB, i-staking, imidlalo, uhlelo lwekusasa, imibuzo evamile nokunye."
   }
 }

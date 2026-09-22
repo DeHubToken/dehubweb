@@ -3272,5 +3272,13 @@
       "expired": "Utløpt"
     },
     "makeOfferAction": "Gi et bud"
+  },
+  "home": {
+    "seoTitle": "DeHub — Åpen kildekode, sosialt medium eid av brukerne",
+    "seoDescription": "DeHub er en åpen, brukereid og sensurbestandig sosial protokoll med alle funksjonene de store plattformene nektet deg."
+  },
+  "docs": {
+    "seoTitle": "DeHub-dokumentasjon — Guider, token, dApps og FAQ",
+    "seoDescription": "Offisiell DeHub-dokumentasjon: plattformoversikt, dApps, DHB-tokenøkonomi, staking, spill, veikart, FAQ og mer."
   }
 }

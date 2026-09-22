@@ -5455,5 +5455,13 @@
     "audio": "Audio",
     "poll": "Səsvermə",
     "scheduled": "Planlaşdırılmış"
+  },
+  "home": {
+    "seoTitle": "DeHub — Açıq mənbəli, istifadəçilərə məxsus sosial media",
+    "seoDescription": "DeHub açıq mənbəli, istifadəçilərinə məxsus və senzuraya davamlı sosial media protokoludur və böyük platformaların vermədiyi bütün imkanları təqdim edir."
+  },
+  "docs": {
+    "seoTitle": "DeHub sənədləri — Bələdçilər, token, dApps və FAQ",
+    "seoDescription": "Rəsmi DeHub sənədləri: platformaya baxış, dApps, DHB token iqtisadiyyatı, steykinq, oyunlar, yol xəritəsi, FAQ və daha çoxu."
   }
 }

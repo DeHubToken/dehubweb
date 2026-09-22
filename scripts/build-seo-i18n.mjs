@@ -21,12 +21,20 @@ import { fileURLToPath } from 'node:url';
 /** en.json namespace → crawler route. Add a pair here when a page gains SEO keys. */
 export const SEO_I18N_ROUTES = {
   accounts: '/accounts',
+  // The two pages the rest of the site is judged on. Their namespaces exist
+  // only to carry these keys: both pages are rendered by the worker rather
+  // than by a React page with its own SEOHead, so nothing else reads them.
+  home: '/',
+  docs: '/docs',
   arcade: '/arcade',
+  converter: '/converter',
   depin: '/depin',
   events: '/events',
   fractions: '/fractions',
   jobs: '/jobs',
   launchpad: '/launchpad',
+  // The namespace is `migrate`; the page has always lived at /migrate-youtube.
+  migrate: '/migrate-youtube',
   premium: '/premium',
   prompt: '/prompt',
   stages: '/stages',

@@ -5528,5 +5528,13 @@
     "audio": "Lyd",
     "poll": "Afstemning",
     "scheduled": "Planlagt"
+  },
+  "home": {
+    "seoTitle": "DeHub — Open source-socialt medie ejet af brugerne",
+    "seoDescription": "DeHub er en open source, brugerejet og censurresistent social protokol med alle de funktioner, de store platforme nægtede dig."
+  },
+  "docs": {
+    "seoTitle": "DeHub-dokumentation — Guider, token, dApps og FAQ",
+    "seoDescription": "Officiel DeHub-dokumentation: platformsoverblik, dApps, DHB-tokenøkonomi, staking, spil, roadmap, FAQ og mere."
   }
 }

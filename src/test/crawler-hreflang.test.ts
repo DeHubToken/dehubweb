@@ -154,6 +154,27 @@ describe('wiring', () => {
     expect(WORKER).toContain("env.ASSETS.fetch(new URL('/seo-i18n.json', requestUrl)");
   });
 
+  /**
+   * The homepage and the docs index carry the site's hardest keywords and were
+   * the two pages with no cluster at all — every one of the 110 UI locales was
+   * a duplicate of the English page rather than a variant of it. They render
+   * outside the marketing branch, so each needed wiring of its own.
+   */
+  it('runs on the homepage and the docs index too', () => {
+    expect(WORKER).toContain("if (requestedLocale(url) === 'en') return redirect301(`${APP_URL}/`);");
+    expect(WORKER).toContain("html = localizePage(html, '/', requestedLocale(url), await seoI18nTable(env, request.url));");
+    expect(WORKER).toContain("if (requestedLocale(url) === 'en') return redirect301(`${APP_URL}/docs`);");
+    expect(WORKER).toMatch(/localizePage\(\s*buildDocsIndexHtml\(\),\s*'\/docs',/);
+  });
+
+  it('has a translated head to serve for both', () => {
+    const table = JSON.parse(readFileSync(resolve(ROOT, 'public/seo-i18n.json'), 'utf8')) as Table;
+    for (const route of ['/', '/docs']) {
+      expect(Object.keys(table[route] ?? {}).length, route).toBeGreaterThan(50);
+      expect(table[route].es.title).toContain('DeHub');
+    }
+  });
+
   it('the app honours ?hl= on arrival and keeps it', () => {
     expect(I18N_INDEX).toContain("get('hl')");
     expect(I18N_INDEX).toContain('localStorage.setItem(STORAGE_KEY, urlLang)');

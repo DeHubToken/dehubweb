@@ -5610,5 +5610,13 @@
     "audio": "Audio",
     "poll": "Umfrage",
     "scheduled": "Geplant"
+  },
+  "home": {
+    "seoTitle": "DeHub — Open Source, soziales Netzwerk im Besitz der Nutzer",
+    "seoDescription": "DeHub ist ein quelloffenes, nutzereigenes und zensurresistentes Social-Media-Protokoll mit all den Funktionen, die etablierte Plattformen verweigert haben."
+  },
+  "docs": {
+    "seoTitle": "DeHub Dokumentation — Anleitungen, Token, dApps & FAQ",
+    "seoDescription": "Offizielle DeHub-Dokumentation: Plattformüberblick, dApps, DHB-Tokenökonomie, Staking, Spiele, Roadmap, FAQ und mehr."
   }
 }

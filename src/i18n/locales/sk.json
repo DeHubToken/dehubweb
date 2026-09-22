@@ -3478,5 +3478,13 @@
       "expired": "Vypršané"
     },
     "makeOfferAction": "Podať ponuku"
+  },
+  "home": {
+    "seoTitle": "DeHub — Sociálna sieť s otvoreným kódom vlastnená používateľmi",
+    "seoDescription": "DeHub je sociálny protokol s otvoreným kódom, vlastnený používateľmi a odolný voči cenzúre, so všetkými funkciami, ktoré vám veľké platformy odopreli."
+  },
+  "docs": {
+    "seoTitle": "Dokumentácia DeHub — Návody, token, dApps a FAQ",
+    "seoDescription": "Oficiálna dokumentácia DeHub: prehľad platformy, dApps, ekonomika tokenu DHB, staking, hry, plán rozvoja, FAQ a ďalšie."
   }
 }

@@ -5343,5 +5343,13 @@
     "txPpvSale": "Fivarotana PPV — {{amount}} DHB",
     "txTipSent": "Fanomezana ho an'i {{name}} — {{amount}} DHB",
     "txTipReceived": "{{name}} nanome fanomezana anao — {{amount}} DHB"
+  },
+  "home": {
+    "seoTitle": "DeHub — Media sosialy loharano misokatra an’ny mpampiasa",
+    "seoDescription": "DeHub dia protocole media sosialy loharano misokatra, an’ny mpampiasa azy ary manohitra ny sivana, manome ny endri-javatra rehetra nolavin’ny sehatra lehibe."
+  },
+  "docs": {
+    "seoTitle": "Antontan-taratasy DeHub — Torolalana, token, dApps sy FAQ",
+    "seoDescription": "Antontan-taratasy ofisialin’ny DeHub: topi-maso ny sehatra, dApps, toekarena token DHB, staking, lalao, drafitra, FAQ sy ny maro hafa."
   }
 }

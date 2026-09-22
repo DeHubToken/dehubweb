@@ -3179,5 +3179,13 @@
       "expired": "A waati tɛmɛna"
     },
     "makeOfferAction": "Fɛɛrɛ kɛ"
+  },
+  "home": {
+    "seoTitle": "DeHub — Réseau social open source, détenu par ses utilisateurs",
+    "seoDescription": "DeHub est un protocole social open source, détenu par ses utilisateurs et résistant à la censure, offrant toutes les fonctionnalités que les plateformes traditionnelles vous ont refusées."
+  },
+  "docs": {
+    "seoTitle": "Documentation DeHub — Guides, token, dApps et FAQ",
+    "seoDescription": "Documentation officielle de DeHub : présentation de la plateforme, dApps, économie du token DHB, staking, jeux, feuille de route, FAQ et plus encore."
   }
 }

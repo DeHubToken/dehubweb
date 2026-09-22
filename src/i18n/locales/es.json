@@ -5617,5 +5617,13 @@
     "audio": "Audio",
     "poll": "Encuesta",
     "scheduled": "Programado"
+  },
+  "home": {
+    "seoTitle": "DeHub — Redes sociales de código abierto, propiedad de sus usuarios",
+    "seoDescription": "DeHub es un protocolo social de código abierto, propiedad de sus usuarios y resistente a la censura, con todas las funciones que las plataformas tradicionales se negaron a darte."
+  },
+  "docs": {
+    "seoTitle": "Documentación de DeHub — Guías, token, dApps y preguntas frecuentes",
+    "seoDescription": "Documentación oficial de DeHub: visión general de la plataforma, dApps, economía del token DHB, staking, juegos, hoja de ruta, preguntas frecuentes y más."
   }
 }

@@ -5500,5 +5500,13 @@
     "audio": "Ljud",
     "poll": "Omröstning",
     "scheduled": "Schemalagd"
+  },
+  "home": {
+    "seoTitle": "DeHub — Öppen källkod, sociala medier som ägs av användarna",
+    "seoDescription": "DeHub är ett öppet, användarägt och censurtåligt socialt protokoll med alla funktioner som de stora plattformarna vägrade ge dig."
+  },
+  "docs": {
+    "seoTitle": "DeHub-dokumentation — Guider, token, dApps och FAQ",
+    "seoDescription": "Officiell DeHub-dokumentation: plattformsöversikt, dApps, DHB-tokenekonomi, staking, spel, färdplan, FAQ och mer."
   }
 }

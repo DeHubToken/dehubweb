@@ -4578,5 +4578,13 @@
     "audio": "Deng",
     "poll": "Rapirsî",
     "scheduled": "داڕێژراو"
+  },
+  "home": {
+    "seoTitle": "DeHub — Medyaya civakî ya çavkaniya vekirî ya xwedîyê bikarhêneran",
+    "seoDescription": "DeHub protokolek medyaya civakî ya çavkaniya vekirî ye, ya bikarhênerên xwe ye û li hember sansurê bergirî ye, bi hemû taybetmendiyên ku platformên mezin nedan te."
+  },
+  "docs": {
+    "seoTitle": "Belgeyên DeHub — Rênîşander, token, dApps û FAQ",
+    "seoDescription": "Belgeyên fermî yên DeHub: nêrîna giştî ya platformê, dApps, aboriya tokena DHB, staking, lîstik, nexşerê, pirsên pir tên kirin û bêtir."
   }
 }

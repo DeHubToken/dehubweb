@@ -5554,5 +5554,13 @@
     "audio": "Sauti",
     "poll": "Kura",
     "scheduled": "Imeratibiwa"
+  },
+  "home": {
+    "seoTitle": "DeHub — Mtandao wa kijamii wa chanzo huria unaomilikiwa na watumiaji",
+    "seoDescription": "DeHub ni itifaki ya mtandao wa kijamii ya chanzo huria, inayomilikiwa na watumiaji na inayostahimili udhibiti, ikikupa vipengele vyote ambavyo majukwaa makubwa yalikataa kukupa."
+  },
+  "docs": {
+    "seoTitle": "Nyaraka za DeHub — Miongozo, tokeni, dApps na maswali",
+    "seoDescription": "Nyaraka rasmi za DeHub: muhtasari wa jukwaa, dApps, uchumi wa tokeni ya DHB, staking, michezo, ramani ya safari, maswali yanayoulizwa mara kwa mara na zaidi."
   }
 }

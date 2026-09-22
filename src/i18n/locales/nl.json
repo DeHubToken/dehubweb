@@ -5766,7 +5766,9 @@
   },
   "home": {
     "title": "Home",
-    "description": "Welkom op de homepagina"
+    "description": "Welkom op de homepagina",
+    "seoTitle": "DeHub — Opensource sociaal netwerk in handen van gebruikers",
+    "seoDescription": "DeHub is een opensource, censuurbestendig sociaal protocol in handen van de gebruikers, met alle functies die de gevestigde platforms weigerden te geven."
   },
   "glossary": {
     "title": "DHB Woordenlijst",
@@ -5827,5 +5829,9 @@
         "definition": "Een collectieve virtuele gedeelde ruimte, gecreëerd door de convergentie van virtueel verbeterde fysieke realiteit en fysiek persistente virtuele ruimte, inclusief de som van alle virtuele werelden, augmented reality en het internet."
       }
     }
+  },
+  "docs": {
+    "seoTitle": "DeHub-documentatie — Gidsen, token, dApps en FAQ",
+    "seoDescription": "Officiële DeHub-documentatie: overzicht van het platform, dApps, DHB-tokeneconomie, staking, games, roadmap, FAQ en meer."
   }
 }
