@@ -1245,10 +1245,6 @@
     "returnHome": "Miverina any amin'ny fandraisana"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Ity mpamorona ity dia mamela ny fampianarana AI amin'ity votoaty ity.",
-      "denied": "Ny mpamorona azy dia tsy mamela ny fampianarana AI amin'ity votoaty ity."
-    },
     "back": "Miverina",
     "usernameAvailable": "Misy io anaram-pikambana io!",
     "signUpToClaim": "Misorata mba haka azy",

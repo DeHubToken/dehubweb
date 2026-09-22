@@ -1227,10 +1227,6 @@
     "returnHome": "Buyela Ekhaya"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Lo msunguli uvumela ukuqeqeshwa kwe-AI kulokhu okuqukethwe.",
-      "denied": "Lo msunguli akakuvumeli ukuqeqeshwa kwe-AI kulokhu okusunguliwe."
-    },
     "back": "Emuva",
     "usernameAvailable": "Igama lomsebenzisi liyatholakala!",
     "signUpToClaim": "Bhalisa namhlanje ukufuna",

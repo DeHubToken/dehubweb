@@ -1244,10 +1244,6 @@
     "returnHome": "Volver al inicio"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Este creador permite la capacitación de IA sobre este contenido.",
-      "denied": "Este creador no permite la formación de IA sobre este contenido."
-    },
     "back": "Volver",
     "usernameAvailable": "¡Nombre de usuario disponible!",
     "signUpToClaim": "Regístrate hoy para reclamar",

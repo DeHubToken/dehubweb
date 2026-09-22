@@ -1511,10 +1511,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Pengkarya ini membenarkan latihan AI pada kandungan ini.",
-      "denied": "Pengkarya ini tidak membenarkan latihan AI pada kandungan ini."
-    },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Daftar hari ini untuk menuntut",

@@ -1245,10 +1245,6 @@
     "returnHome": "Rudi Nyumbani"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Mtengenezaji huyu anaruhusu mafunzo ya AI kuhusu maudhui haya.",
-      "denied": "Mtengenezaji huyu haruhusu mafunzo ya AI kuhusu maudhui haya."
-    },
     "back": "Rudi",
     "usernameAvailable": "Jina la mtumiaji linapatikana!",
     "signUpToClaim": "Jisajili leo kudai",

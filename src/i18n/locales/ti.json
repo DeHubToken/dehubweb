@@ -1207,10 +1207,6 @@
     "returnHome": "ናብ ገዛ ተመለስ"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "እዚ ፈጣሪ እዚ ብዛዕባ እዚ ትሕዝቶ እዚ ናይ AI ስልጠና ይፈቅድ ።",
-      "denied": "እዚ ፈጣሪ እዚ ነዚ ትሕዝቶ እዚ ናይ AI ስልጠና ኣይፈቕድን እዩ ።"
-    },
     "back": "ተመለስ",
     "usernameAvailable": "ስም ተጠቃሚ ኣሎ!",
     "signUpToClaim": "ንምሓዝ ሎሚ ተመዝገብ",

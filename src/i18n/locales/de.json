@@ -1244,10 +1244,6 @@
     "returnHome": "Zur Startseite"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "Dieser Ersteller ermöglicht KI-Schulungen zu diesen Inhalten.",
-      "denied": "Dieser Ersteller erlaubt keine KI-Schulungen zu diesen Inhalten."
-    },
     "back": "Zurück",
     "usernameAvailable": "Benutzername verfügbar!",
     "signUpToClaim": "Registriere dich, um ihn zu beanspruchen",

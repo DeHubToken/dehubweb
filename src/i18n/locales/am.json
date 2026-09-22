@@ -1223,10 +1223,6 @@
     "returnHome": "ወደ መነሻ ተመለስ"
   },
   "profile": {
-    "aiScraping": {
-      "allowed": "ይህ ፈጣሪ በዚህ ይዘት ላይ የአይአይ ስልጠናዎችን ይፈቅዳል ።",
-      "denied": "ይህ ፈጣሪ በዚህ ይዘት ላይ የአይአይ ሥልጠና አይፈቅድም ።"
-    },
     "back": "ተመለስ",
     "usernameAvailable": "የተጠቃሚ ስም ይገኛል!",
     "signUpToClaim": "ለመያዝ ዛሬ ተመዝገብ",
