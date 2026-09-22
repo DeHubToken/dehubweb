@@ -58,7 +58,9 @@ describe('DHB payment chain preparation', () => {
       ['0xtreasury', 69_420n * ONE_DHB],
       { context: 'DAO contribution', chainId: 56 },
     );
-    expect(result).toEqual({ txHash: '0xtx', chain: 'BNB', chainId: 56 });
+    expect(result).toMatchObject({ txHash: '0xtx', chain: 'BNB', chainId: 56 });
+    // Resolved already: this caller did not ask to confirm in the background.
+    await expect(result.confirmed).resolves.toBe(true);
   });
 
   it('keeps Base as the automatic first choice when both chains can pay', async () => {

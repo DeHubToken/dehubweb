@@ -31,7 +31,13 @@ export function useContributeToDao() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (amount: number) =>
-      payDhb(amount, DAO_TREASURY_ADDRESS, { context: 'DAO contribution' }),
+      // A contribution settles the moment the transfer lands -- there is no
+      // second step here that needs the receipt, so holding the drawer open
+      // on it only gives people a reason to send again.
+      payDhb(amount, DAO_TREASURY_ADDRESS, {
+        context: 'DAO contribution',
+        confirmInBackground: true,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dao-own-dhb-balance'] });
       // The RPC's log index trails the head by a block or two; refetch once

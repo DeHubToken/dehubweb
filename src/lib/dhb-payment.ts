@@ -54,6 +54,15 @@ export interface DhbPaymentResult {
   txHash: string;
   chain: 'Base' | 'BNB';
   chainId: number;
+  /**
+   * Resolves false only when the chain says the transfer REVERTED. Always
+   * already resolved unless the caller asked to confirm in the background.
+   *
+   * A receipt that never arrives resolves true on purpose: the transfer has a
+   * hash, so it is on its way, and the one thing that must never follow is
+   * another transfer.
+   */
+  confirmed: Promise<boolean>;
 }
 
 export interface DhbPaymentOptions {
@@ -63,6 +72,19 @@ export interface DhbPaymentOptions {
   shortfallMessage?: (amount: number, held: number) => string;
   /** Refuse to send unless this wallet is the one signing. */
   expectedSigner?: string | null;
+  /**
+   * Return as soon as the transfer has a hash and report the receipt through
+   * `confirmed` instead of waiting for it.
+   *
+   * Only for payments this client settles on its own, i.e. a transfer to an
+   * address and nothing else. Anything that records the payment server-side
+   * must keep waiting, since it has a second step that needs the receipt.
+   *
+   * It exists because the wait is not free: a caller that holds its sheet
+   * open on a slow or missing receipt has to tell the user something, and
+   * "nothing has been charged" is both wrong and an invitation to pay twice.
+   */
+  confirmInBackground?: boolean;
 }
 
 /**
@@ -131,12 +153,25 @@ export async function payDhb(
       { context: options.context, chainId: payChainId },
     );
     // wait() resolves with status 0 for a REVERTED transaction rather than
-    // throwing, so ignoring the receipt would report a failed transfer as paid.
+    // throwing, so the receipt has to be read either way -- the only question
+    // is whether the caller is made to wait for it.
+    if (options.confirmInBackground && result.hash) {
+      const confirmed = result
+        .wait(1)
+        .then((receipt) => !receipt || receipt.status === 1)
+        .catch(() => true);
+      return { txHash: result.hash, chain, chainId: payChainId, confirmed };
+    }
     const receipt = await result.wait(1);
     if (receipt?.status !== 1) {
       throw new Error('The DHB transfer did not go through. Nothing has been charged.');
     }
-    return { txHash: receipt.hash ?? result.hash, chain, chainId: payChainId };
+    return {
+      txHash: receipt.hash ?? result.hash,
+      chain,
+      chainId: payChainId,
+      confirmed: Promise.resolve(true),
+    };
   } catch (err) {
     throw new Error(parseTxError(err) || 'Payment failed.');
   }
