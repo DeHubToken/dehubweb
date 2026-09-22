@@ -450,7 +450,11 @@
       "unavailable": "Kodlaýjyda ýaýlyma çykmak şu wagt siziň hasabyňyzda elýeterli däl.",
       "serverCopied": "Serwer nusgalady",
       "keyCopied": "Kopyalan akma açary"
-    }
+    },
+    "usernames": "Ulyjalar",
+    "usernamesDesc": "Seniň adyň",
+    "usernamesCount_one": "{{count}} username",
+    "usernamesCount_other": "{{count}} usernames"
   },
   "common": {
     "save": "Ýatda sakla",
@@ -3243,7 +3247,29 @@
       "completed": "Tamamlandy",
       "expired": "Möhleti geçdi"
     },
-    "makeOfferAction": "Teklip etmek"
+    "makeOfferAction": "Teklip etmek",
+    "tabMine": "Meniňki",
+    "sellingWornName": "Bu siziň profiliňiz ulanylýan at. Ony satmak sizi başga bir at bilen çalşar.",
+    "sellingHeldName": "Bu at siziňki, ýöne siz ony ulanmaýarsyňyz. Ony satmak siziň profiliňizi üýtgetmeýär.",
+    "saleFinalWarningHeld": "Satuw gutarnykly we dessine. Öz atňyz we profiliňizdäki ähli zat üýtgeşik galýar - diňe bu at göçýär.",
+    "signInToSeeVault": "Siziň eýe bolan atlaryňyzy görmek üçin giriň.",
+    "vaultExplainer": "Satyn alan atlaryňyz siziňki bolup galýar. Siz birini gezip, satyp ýa-da goýup bilersiňiz.",
+    "vaultExplainerEmpty": "Siziň bir atňyz bar. Başga birini satyn alyň we bu hem siziňki bolar.",
+    "vaultInUse": "Ulanymda",
+    "vaultBought": "Satyn alynan",
+    "vaultKept": "Öňki satyn alnandan saklanan",
+    "vaultFree": "Boş at",
+    "vaultFreeWarning": "Bu at üçin pul tölemeýärsiňiz, şonuň üçin başga bir at bilen çalşyp, ony ýitirersiňiz we islendik adam alyp biler.",
+    "vaultUseThis": "Muny ulanyň",
+    "vaultSell": "Satuw",
+    "vaultEditListing": "Sanawy redaktirlemek",
+    "vaultRelease": "Boşatmak",
+    "vaultListedCannotWear": "Bu aty ulanmazdan ozal sanawy çekip alyň.",
+    "vaultReleaseTitle": "{{handle}}-y boşatmakmy?",
+    "vaultReleaseBody": "Ol ýene-de köpçülige dolanýar we islendik adam alyp biler. Ony yzyna alyp bolmaýar, ony yzyna almak bolsa täze eýesiniň isleýän bahasy bolar.",
+    "oldHandleKept": "Siz @ {{handle}} saklaýarsyňyz — bu siziň ulanýan adlaryňyza geçýär we siz ony ýene-de geýip ýa-da satyp bilersiňiz. Siziň postlaryňyz, yzyna eýerenleriňiz we çuwallaryňyz hiç hili täsir etmeýär.",
+    "postsStayWithYou": "Siziň postlaryňyz, yzyna eýerenleriňiz we çuwallaryňyz hiç hili täsir etmeýär.",
+    "saleFinalWarning": "Satyş soňky we derrew. Siziň işleriňiz, yzyna eýerenleriňiz we pulumyz siziň bilen galar — diňe el hereket edýär. Alyjy hem köne elini saklaýar; ol olaryň ulanýan adlarynyň biri bolýar."
   },
   "home": {
     "seoTitle": "DeHub — Açyk çeşmeli, ulanyjylaryň eýeçiligindäki sosial media",

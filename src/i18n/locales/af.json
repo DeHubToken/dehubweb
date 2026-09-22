@@ -467,7 +467,11 @@
       "keyCopied": "Stroom sleutel gekopieer"
     },
     "security": "Sekuriteit",
-    "about": "Oor"
+    "about": "Oor",
+    "usernames": "Gebruikersname",
+    "usernamesDesc": "Die naam wat jy besit",
+    "usernamesCount_one": "{{count}} gebruikersnaam",
+    "usernamesCount_other": "{{count}} gebruikersname"
   },
   "common": {
     "save": "Stoor",
@@ -3899,7 +3903,7 @@
     "youBecomeHandle": "Jy word @{{handle}} sodra iemand koop. As daardie naam teen daardie tyd reeds geneem is, word 'n genommerde variant gebruik en word jy daarvan in kennis gestel.",
     "pitchOptional": "Toonrede (opsioneel)",
     "pitchPlaceholder": "Oorspronklike 2021-handvatsel, skoon geskiedenis…",
-    "saleFinalWarning": "'n Verkoop is finaal en onmiddellik. Jou plasings, volgers en beursie bly by jou — slegs die handvatsel beweeg, en die koper se ou een word vrygestel.",
+    "saleFinalWarning": "'n Verkoop is finaal en onmiddellik. Jou plasings, volgelinge en beursie bly by jou — net die handvatsel skuif. Die koper behou ook hul ou handvatsel; dit word een van hul gebruikersname.",
     "updateListing": "Opdateer aanbieding",
     "listForSale": "Lys te koop",
     "withdrawListing": "Trek aanbieding terug",
@@ -3911,7 +3915,6 @@
     "askingPrice": "Vraagprys",
     "paidStraightToSeller": "≈ ${{usd}} · direk aan die verkoper betaal, DeHub neem geen deel nie",
     "yourHandleChanges": "Jou handvatsel verander",
-    "oldHandleReleased": "Jou ou handvatsel word vrygestel en enigiemand kan dit neem. Plasings, volgers en jou beursie bly onveranderd.",
     "payingWithDhbOn": "Betaling met DHB op {{chain}}",
     "shortOfDhbPaidOn": "Jy het 'n tekort aan DHB — dit sal op {{chain}} betaal word",
     "yourOwnListing": "Dit is jou aanbieding. Bestuur dit vanaf die Verkoop-oortjie.",
@@ -3949,7 +3952,28 @@
       "completed": "Voltooi",
       "expired": "Verval"
     },
-    "makeOfferAction": "Maak ’n aanbod"
+    "makeOfferAction": "Maak ’n aanbod",
+    "tabMine": "Myne",
+    "sellingWornName": "Dit is die handvatsel wat jou profiel gebruik. Om dit te verkoop, skuif jy na 'n ander naam.",
+    "sellingHeldName": "Jy besit hierdie naam, maar gebruik dit nie. Om dit te verkoop, verander dit nie jou profiel nie.",
+    "saleFinalWarningHeld": "'n Verkoop is finaal en onmiddellik. Jou eie handvatsel en alles op jou profiel bly onaangeraak — net hierdie naam skuif.",
+    "signInToSeeVault": "Meld aan om die gebruikersname te sien wat jy besit.",
+    "vaultExplainer": "Gebruikersname wat jy gekoop het, bly joune. Jy kan een dra, verkoop, of dit laat gaan.",
+    "vaultExplainerEmpty": "Jy besit een gebruikersnaam. Koop nog een en jy behou hierdie een ook.",
+    "vaultInUse": "In gebruik",
+    "vaultBought": "Gekoop",
+    "vaultKept": "Behou van 'n vroeëre aankoop",
+    "vaultFree": "Gratis gebruikersnaam",
+    "vaultFreeWarning": "Jy het nie vir hierdie een betaal nie, so om na 'n ander naam oor te skakel, gee dit prys en enigiemand kan dit neem.",
+    "vaultUseThis": "Gebruik hierdie een",
+    "vaultSell": "Verkoop",
+    "vaultEditListing": "Wysig lys",
+    "vaultRelease": "Vrystel",
+    "vaultListedCannotWear": "Onttrek die lys voordat jy hierdie naam gebruik.",
+    "vaultReleaseTitle": "Vrystel @{{handle}}?",
+    "vaultReleaseBody": "Dit gaan terug in die poel en enigiemand kan dit neem. Daar is geen ongedaanmaak nie, en om dit terug te koop sal kos wat ook al die nuwe eienaar vra.",
+    "oldHandleKept": "Jy behou @{{handle}} — dit skuif na jou gebruikersname, en jy kan dit weer dra of later verkoop. Plasings, volgelinge en jou beursie bly onaangeraak.",
+    "postsStayWithYou": "Plasings, volgelinge en jou beursie bly onaangeraak."
   },
   "accounts": {
     "seoTitle": "Rekeningmarktplaas — DeHub",

@@ -451,7 +451,11 @@
       "unavailable": "Maywasiykikunamanta k'uyuchiyqa manam kunanqa kaqllachu kaqniykimpi.",
       "serverCopied": "Servidor copiasqa",
       "keyCopied": "Llave de corriente copiasqa"
-    }
+    },
+    "usernames": "Ruraqpa sutinkuna",
+    "usernamesDesc": "Sutikuna qampa kapuqniki",
+    "usernamesCount_one": "{{count}} sutiyuq runap sutin",
+    "usernamesCount_other": "{{count}} sutiyuq runap sutinkuna"
   },
   "common": {
     "save": "Waqaychay",
@@ -3317,7 +3321,29 @@
       "completed": "Tukusqa",
       "expired": "Pachan tukusqa"
     },
-    "makeOfferAction": "Qukuyta ruway"
+    "makeOfferAction": "Qukuyta ruway",
+    "tabMine": "Ñuqapa",
+    "sellingWornName": "Kaymi sutiyki profiyluykipi. Kayta rantiyqa huk sutiyuqtaqmi ruwasunki.",
+    "sellingHeldName": "Kay sutiyuq kanki, ichataq mana llamk'achkankichu. Kayta rantiyqa profiyluykipi imapas mana tukuchun.",
+    "saleFinalWarningHeld": "Rantiyqa tukusqañataqmi, chayllaraqmi. Kikin sutiyki profiyluykipas imapas mana imapas tukuchun — kay sutiñataqmi purin.",
+    "signInToSeeVault": "Yaykuy imayna sutiypaqniykita rikuyta.",
+    "vaultExplainer": "Rantiykusqayki sutiypaqkunaqa qampaqmi wañunqachu. Hukta llamk'achkanki, rantiykanki, icha saqeruykanki.",
+    "vaultExplainerEmpty": "Huk sutiyuq kanki. Hukta rantiy chayqa kaytañataqmi hap'inki.",
+    "vaultInUse": "Llamk'achkasqa",
+    "vaultBought": "Rantiykusqa",
+    "vaultKept": "Ñawpaq rantiykusqamanta hap'isqa",
+    "vaultFree": "Mana imapas suti",
+    "vaultFreeWarning": "Mana pagaykuchu kaytaqa, chayraykumi hukta llamk'achkanki chayqa saqeruykanki chaytaqa, mayqanpas hap'iyta atinqa.",
+    "vaultUseThis": "Kayta llamk'achiy",
+    "vaultSell": "Rantiy",
+    "vaultEditListing": "K'itita allinchan",
+    "vaultRelease": "Saqeruy",
+    "vaultListedCannotWear": "Kay sutita llamk'achkanki chayqa manaraqmi k'itita saqeruy.",
+    "vaultReleaseTitle": "{{handle}} saqeruyta?",
+    "vaultReleaseBody": "Chayqa hunt'ayman kutimunqa, mayqanpas hap'iyta atinqa. Mana kutiyta atinchu, chaytañataq rantiykuyqa chay musuq kamachiq munayninmanmi.",
+    "oldHandleKept": "Qanqa {{handle}} hap'inki — payqa sutiynikikunaman haykun, chayta atiknkiñataq kutimuyta llamk'achiyta utaq qhipaman rantikuyta. Qillqasqayki, qatiqniyki, qanpa qolqiykiqa mana imapas t'ikrakunñachu.",
+    "postsStayWithYou": "Qillqasqayki, qatiqniyki, qanpa qolqiykiqa mana imapas t'ikrakunñachu.",
+    "saleFinalWarning": "Rantiyqa tukusqañam, chaylla. Qanpa qillqasqayki, qatiqniyki, qanpa qolqiykiwanmi wañunki — astawanqa sutiyllam t'ikrakun. Rantiqqa qanpañataq hap'isqan sutiyta hap'inmi; paypa sutiyninkunaman haykun."
   },
   "home": {
     "seoTitle": "DeHub — Kichasqa pukyu, ruraqkunapa kapuqnin willaywasi",

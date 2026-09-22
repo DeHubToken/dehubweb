@@ -465,7 +465,11 @@
       "unavailable": "La transmissió des d'un codificador no està disponible al teu compte ara mateix.",
       "serverCopied": "Servidor copiat",
       "keyCopied": "S'ha copiat la clau del flux"
-    }
+    },
+    "usernames": "Nom d'usuari",
+    "usernamesDesc": "Els noms que tens",
+    "usernamesCount_one": "{{count}} nom d'usuari",
+    "usernamesCount_other": "{{count}} noms d'usuari"
   },
   "common": {
     "save": "Desar",
@@ -3983,7 +3987,7 @@
     "youBecomeHandle": "Et converteixes en @{{handle}} en el moment que algú compra. Si aquest nom ja ha estat pres per llavors, s'utilitza una variant numerada i se't notifica quina.",
     "pitchOptional": "Presentació (opcional)",
     "pitchPlaceholder": "Nom d'usuari original de 2021, historial net…",
-    "saleFinalWarning": "Una venda és final i instantània. Els teus posts, seguidors i cartera es queden contigo — només el nom d'usuari es mou, i l'antic de l'comprador es allibera.",
+    "saleFinalWarning": "Una venda és final i instantània. Les teves publicacions, seguidors i cartera es queden amb tu; només el nom d'usuari es mou. El comprador també conserva el seu nom d'usuari antic; es converteix en un dels seus noms d'usuari.",
     "updateListing": "Actualitza l'anunci",
     "listForSale": "Publica a la venda",
     "withdrawListing": "Retira l'anunci",
@@ -3995,7 +3999,6 @@
     "askingPrice": "Preu demanat",
     "paidStraightToSeller": "≈ ${{usd}} · pagat directament al venedor, DeHub no es queda res",
     "yourHandleChanges": "Els teus canvis de nom d'usuari",
-    "oldHandleReleased": "El teu nom d'usuari anterior es allibera i qualsevol pot agafar-lo. Els posts, seguidors i la teva cartera no es toquen.",
     "payingWithDhbOn": "Pagant amb DHB a {{chain}}",
     "shortOfDhbPaidOn": "Te'n falta DHB — això es pagarà a {{chain}}",
     "yourOwnListing": "Aquest és el teu anunci. Gestiona'l des de la pestanya Vendre.",
@@ -4033,7 +4036,28 @@
       "completed": "Completada",
       "expired": "Caducada"
     },
-    "makeOfferAction": "Fes una oferta"
+    "makeOfferAction": "Fes una oferta",
+    "tabMine": "Mines",
+    "sellingWornName": "Aquest és el nom d'usuari que utilitza el teu perfil. Vendre'l et fa canviar a un altre nom.",
+    "sellingHeldName": "Tens aquest nom però no l'estàs utilitzant. Vendre'l no canvia el teu perfil.",
+    "saleFinalWarningHeld": "Una venda és final i instantània. El teu propi nom d'usuari i tot el contingut del teu perfil queden intactes; només aquest nom es mou.",
+    "signInToSeeVault": "Inicia sessió per veure els noms d'usuari que tens.",
+    "vaultExplainer": "Els noms d'usuari que has comprat es queden teus. En pots portar un, vendre'l o deixar-lo anar.",
+    "vaultExplainerEmpty": "Tens un nom d'usuari. Si en compres un altre, et quedes també amb aquest.",
+    "vaultInUse": "En ús",
+    "vaultBought": "Comprat",
+    "vaultKept": "Conservat d'una compra anterior",
+    "vaultFree": "Nom d'usuari gratuït",
+    "vaultFreeWarning": "No has pagat per aquest, així que si canvies a un altre nom, el perdràs i qualsevol persona el podrà agafar.",
+    "vaultUseThis": "Utilitza aquest",
+    "vaultSell": "Vendre",
+    "vaultEditListing": "Edita l'anunci",
+    "vaultRelease": "Allibera",
+    "vaultListedCannotWear": "Retira l'anunci abans d'utilitzar aquest nom.",
+    "vaultReleaseTitle": "Allibera @{{handle}}?",
+    "vaultReleaseBody": "Torna a la borsa i qualsevol persona el podrà agafar. No hi ha marxa enrere, i tornar a comprar-lo costaria el que demani el nou propietari.",
+    "oldHandleKept": "Conserves @{{handle}} — es mou als teus noms d'usuari, i pots tornar-lo a utilitzar o vendre'l més tard. Les publicacions, els seguidors i la teva cartera no es toquen.",
+    "postsStayWithYou": "Les publicacions, els seguidors i la teva cartera no es toquen."
   },
   "accounts": {
     "seoTitle": "Mercat de comptes — DeHub",

@@ -465,7 +465,11 @@
       "unavailable": "Streamingul de la un codificator nu este disponibil în contul dvs. în acest moment.",
       "serverCopied": "Server copiat",
       "keyCopied": "Cheie flux copiată"
-    }
+    },
+    "usernames": "Nume de utilizator",
+    "usernamesDesc": "Numele pe care le deții",
+    "usernamesCount_one": "Nume de utilizator {{count}}",
+    "usernamesCount_other": "Nume de utilizator {{count}}"
   },
   "common": {
     "save": "Salvează",
@@ -3865,7 +3869,7 @@
     "youBecomeHandle": "Devii @{{handle}} în momentul în care cineva cumpără. Dacă acel nume a fost deja luat până atunci, se folosește o variantă numerotată și ți se spune care.",
     "pitchOptional": "Pitch (opțional)",
     "pitchPlaceholder": "Handle original din 2021, istoric curat…",
-    "saleFinalWarning": "O vânzare este finală și instantanee. Postările, urmăritorii și portofelul tău rămân cu tine — doar handle-ul se mută, iar cel vechi al cumpărătorului este eliberat.",
+    "saleFinalWarning": "O vânzare este finală și instantanee. Postările, urmăritorii și portofelul tău rămân cu tine — doar numele de utilizator se mută. Cumpărătorul își păstrează și vechiul nume de utilizator; acesta devine unul dintre numele de utilizator ale acestuia.",
     "updateListing": "Actualizează anunțul",
     "listForSale": "Listează pentru vânzare",
     "withdrawListing": "Retrage anunțul",
@@ -3877,7 +3881,6 @@
     "askingPrice": "Preț cerut",
     "paidStraightToSeller": "≈ ${{usd}} · plătit direct vânzătorului, DeHub nu ia nicio taxă",
     "yourHandleChanges": "Handle-ul tău se schimbă",
-    "oldHandleReleased": "Handleul tău vechi este eliberat și oricine poate să-l ia. Postările, urmăritorii și portofelul tău rămân neschimbate.",
     "payingWithDhbOn": "Plată cu DHB pe {{chain}}",
     "shortOfDhbPaidOn": "Ți lipsește DHB — aceasta va fi plătită pe {{chain}}",
     "yourOwnListing": "Acesta este anunțul tău. Gestionează-l din fila Vinde.",
@@ -3915,7 +3918,28 @@
       "completed": "Finalizată",
       "expired": "Expirată"
     },
-    "makeOfferAction": "Fă o ofertă"
+    "makeOfferAction": "Fă o ofertă",
+    "tabMine": "Mine",
+    "sellingWornName": "Aceasta este denumirea pe care o folosește profilul tău. Vânzarea ei te mută la un alt nume.",
+    "sellingHeldName": "Deții acest nume, dar nu îl folosești. Vânzarea lui nu îți modifică profilul.",
+    "saleFinalWarningHeld": "O vânzare este finală și instantanee. Propria ta denumire și totul de pe profilul tău rămân neschimbate — doar acest nume se mută.",
+    "signInToSeeVault": "Autentifică-te pentru a vedea denumirile pe care le deții.",
+    "vaultExplainer": "Denumirile pe care le-ai cumpărat rămân ale tale. Poți purta una, să o vinzi sau să o renunți.",
+    "vaultExplainerEmpty": "Deții o denumire. Cumpără alta și o păstrezi și pe aceasta.",
+    "vaultInUse": "În uz",
+    "vaultBought": "Cumpărat",
+    "vaultKept": "Păstrat dintr-o achiziție anterioară",
+    "vaultFree": "Denumire gratuită",
+    "vaultFreeWarning": "Nu ai plătit pentru aceasta, așa că trecerea la un alt nume o cedează și oricine o poate prelua.",
+    "vaultUseThis": "Folosește-o pe aceasta",
+    "vaultSell": "Vinde",
+    "vaultEditListing": "Editează listarea",
+    "vaultRelease": "Eliberează",
+    "vaultListedCannotWear": "Retrage listarea înainte de a folosi acest nume.",
+    "vaultReleaseTitle": "Eliberează @{{handle}}?",
+    "vaultReleaseBody": "Se întoarce în pool și oricine o poate prelua. Nu există posibilitatea de anulare, iar răscumpărarea ei ar costa cât cere noul proprietar.",
+    "oldHandleKept": "Tu păstrezi @{{handle}} — acesta se mută în numele tale de utilizator și îl poți folosi din nou sau îl poți vinde mai târziu. Postările, urmăritorii și portofelul tău rămân neschimbate.",
+    "postsStayWithYou": "Postările, urmăritorii și portofelul tău rămân neschimbate."
   },
   "accounts": {
     "seoTitle": "Piața de conturi — DeHub",

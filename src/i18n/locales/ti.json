@@ -446,7 +446,9 @@
       "unavailable": "ካብ ኢንኮደር ምምሕላፍ ኣብ ሂሳብኩም ሕጂ ኣይርከብን እዩ።",
       "serverCopied": "ናይ ኣገልጋሊ ቅዳሕ",
       "keyCopied": "ቁልፍ ቅዳሕ"
-    }
+    },
+    "usernames": "ስም ተጠቃሚ",
+    "usernamesDesc": "ስምካ"
   },
   "common": {
     "save": "ዓቅብ",
@@ -3197,7 +3199,28 @@
       "completed": "ተዛዚሙ",
       "expired": "ግዜኡ ሓሊፉ"
     },
-    "makeOfferAction": "ቅርቡት ኣቕርብ"
+    "makeOfferAction": "ቅርቡት ኣቕርብ",
+    "tabMine": "ናተይ",
+    "sellingWornName": "እዚ ድማ እቲ መገለጺኻ ዚጥቀመሉ መገዲ እዩ ። መሸጣ ናብ ካልእ ስም ይመርሓካ ።",
+    "sellingHeldName": "እዚ ስም እዚ ኣሎካ ፡ ግናኸ ኣይጥቀምን ኢኻ ። መሸጣ መገለጫኻ ኣይቅይርን እዩ ።",
+    "saleFinalWarningHeld": "መሸጣ ናይ መወዳእታን ቅልጡፍን እዩ ። እዚ ስም እዚ ጥራይ እዩ ዚንቀሳቐስ — እዚ ስም እዚ ጥራይ እዩ ዚንቀሳቐስ ።",
+    "signInToSeeVault": "ነቲ ናይ ገዛእ ርእስኻ ናይ ተጠቃሚ ስም ንምርኣይ ሕተቶ ።",
+    "vaultExplainer": "እቲ ዝገዝእካዮ ናይ ተጠቃሚ ስም ናትካ ኮይኑ ይጸንሕ ። ሓደ ክትለብስ ትኽእል ኢኻ ፡ ክትሸጦ ትኽእል ኢኻ ፡ ወይ ከኣ ክትሓድጎ ትኽእል ኢኻ ።",
+    "vaultExplainerEmpty": "ናይ ተጠቃሚ ስም ኣለካ ። ካልእ ክዕድግ ፡ ንስኻ እውን ነዚ ክትዕቅቦ ኢኻ ።",
+    "vaultInUse": "ኣብ ኣጠቓቕማ",
+    "vaultBought": "እተሸጠ",
+    "vaultKept": "ካብ ናይ ቀደም መግዛእቲ ዝተወስደ",
+    "vaultFree": "ነጻ ስም ተጠቃሚ",
+    "vaultFreeWarning": "ነዚ ሓደ ኣይከፈልካን ኢኻ ፣ ስለዚ ናብ ካልእ ስም ምቕያር ይሃብካ ፣ ዝኾነ ሰብ ድማ ክወስዶ ይኽእል እዩ ።",
+    "vaultUseThis": "ነዚ ተጠቐም",
+    "vaultSell": "ሸይጥ",
+    "vaultEditListing": "ዝርዝር ኣዐሪ",
+    "vaultRelease": "ሓራ ኣውጽእ",
+    "vaultListedCannotWear": "ነዚ ስም እዚ ቅድሚ ምጥቃምካ ነቲ ዝርዝር ኣወጽእ ።",
+    "vaultReleaseBody": "ናብ ገንዳ ተመሊሱ ፡ ዝኾነ ሰብ ክወስዶ ይኽእል እዩ ። እቲ ሓድሽ ገዛኢ ዚሓትት ዘበለ ኺዕድግ እዩ ዚኸፍል ።",
+    "oldHandleKept": "{{handle}} — ናብ ስም ተጠቃሚኻ ይንቀሳቐስ ፣ እንደገና ክትለብስ ወይ ጸኒሕካ ክትሸጦ ትኽእል ኢኻ ። ልኡኻት ፡ ሰዓብትን ቦርሳኻን ኣይጠፍኡን እዮም ።",
+    "postsStayWithYou": "ጽሑፋትኩም፡ ተከታተልቲኩምን ኪስኩምን ኣይነ kun ኔሩ።",
+    "saleFinalWarning": "መሸጣ ርግጽን ብቕጽበትን እዩ። ጽሑፋትኩም፡ ተከታተልቲኩምን ኪስኩምን ምስኡ ይቕጽሉ — handle ጥራይ ይግዕዘ። ገዛኢ እውን ካልእ handleኡ ይሕዞ እዩ፡ ንሱ ኸኣ ሓደ ካብቲ usernamesኡ ይኸውን።"
   },
   "home": {
     "seoTitle": "DeHub — ክፉት ምንጪ፣ ብተጠቀምቲ ዝውነን ማሕበራዊ መራኸቢ",

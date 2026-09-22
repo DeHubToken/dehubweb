@@ -469,7 +469,11 @@
       "unavailable": "Streamovanie z kódovača nie je momentálne na vašom účte dostupné.",
       "serverCopied": "Server skopírovaný",
       "keyCopied": "Kľúč streamu bol skopírovaný"
-    }
+    },
+    "usernames": "Používateľské mená",
+    "usernamesDesc": "Mená, ktoré vlastníte",
+    "usernamesCount_one": "Používateľské meno {{count}}",
+    "usernamesCount_other": "Používateľské mená: {{count}}"
   },
   "common": {
     "save": "Uložiť",
@@ -3477,7 +3481,29 @@
       "completed": "Dokončené",
       "expired": "Vypršané"
     },
-    "makeOfferAction": "Podať ponuku"
+    "makeOfferAction": "Podať ponuku",
+    "tabMine": "Moje",
+    "sellingWornName": "Toto je prezývka, ktorú používa váš profil. Jej predaj vás presunie na iné meno.",
+    "sellingHeldName": "Toto meno vlastníte, ale nepoužívate ho. Jeho predaj nezmení váš profil.",
+    "saleFinalWarningHeld": "Predaj je konečný a okamžitý. Vaša vlastná prezývka a všetko na vašom profile zostáva nedotknuté – presúva sa iba toto meno.",
+    "signInToSeeVault": "Prihláste sa, aby ste videli používateľské mená, ktoré vlastníte.",
+    "vaultExplainer": "Používateľské mená, ktoré ste si kúpili, zostávajú vaše. Môžete si jedno nasadiť, predať ho alebo ho nechať tak.",
+    "vaultExplainerEmpty": "Vlastníte jedno používateľské meno. Kúpte si ďalšie a toto si tiež ponecháte.",
+    "vaultInUse": "Používa sa",
+    "vaultBought": "Kúpené",
+    "vaultKept": "Ponechané z predchádzajúceho nákupu",
+    "vaultFree": "Používateľské meno zdarma",
+    "vaultFreeWarning": "Toto ste si nekúpili, takže prepnutím na iné meno oň prídete a môže si ho vziať ktokoľvek.",
+    "vaultUseThis": "Použite toto",
+    "vaultSell": "Predať",
+    "vaultEditListing": "Upraviť ponuku",
+    "vaultRelease": "Uvoľniť",
+    "vaultListedCannotWear": "Stiahnite ponuku pred použitím tohto mena.",
+    "vaultReleaseTitle": "Uvoľniť @{{handle}}?",
+    "vaultReleaseBody": "Vráti sa do fondu a môže si ho vziať ktokoľvek. Nedá sa to vziať späť a jeho spätný odkúpenie by stálo toľko, koľko si vypýta nový majiteľ.",
+    "oldHandleKept": "Zostávate @{{handle}} — presunie sa do vašich používateľských mien a môžete ju nosiť znova alebo ju neskôr predať. Príspevky, sledujúci a vaša peňaženka zostávajú nedotknuté.",
+    "postsStayWithYou": "Príspevky, sledujúci a vaša peňaženka zostávajú nedotknuté.",
+    "saleFinalWarning": "Predaj je konečný a okamžitý. Vaše príspevky, sledujúci a peňaženka zostávajú s vami — pohybuje sa iba prezývka. Kupujúci si tiež ponechá svoju starú prezývku; stane sa jedným z jeho používateľských mien."
   },
   "home": {
     "seoTitle": "DeHub — Sociálna sieť s otvoreným kódom vlastnená používateľmi",

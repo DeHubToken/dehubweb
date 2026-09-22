@@ -465,7 +465,11 @@
       "unavailable": "Striimaus kooderista ei ole tällä hetkellä tililläsi käytettävissä.",
       "serverCopied": "Palvelin kopioitu",
       "keyCopied": "Virta-avain kopioitu"
-    }
+    },
+    "usernames": "Käyttäjänimet",
+    "usernamesDesc": "Omistamasi nimet",
+    "usernamesCount_one": "{{count}} käyttäjänimi",
+    "usernamesCount_other": "{{count}} käyttäjänimeä"
   },
   "common": {
     "save": "Tallenna",
@@ -3984,7 +3988,7 @@
     "youBecomeHandle": "Tulet olemaan @{{handle}} heti kun joku ostaa sen. Jos kyseinen nimi on silloin jo varattu, käytetään numeroitua varianttia ja sinulle kerrotaan mikä.",
     "pitchOptional": "Esittely (valinnainen)",
     "pitchPlaceholder": "Alkuperäinen 2021-käyttäjänimi, puhdas historia…",
-    "saleFinalWarning": "Myynti on lopullinen ja välitön. Viestisi, seuraajasi ja lompakkosi jäävät sinulle — vain käyttäjänimi siirtyy, ja ostajan vanha nimi vapautuu.",
+    "saleFinalWarning": "Myynti on lopullinen ja välitön. Julkaisusi, seuraajasi ja lompakkosi pysyvät sinulla – vain käyttäjänimi siirtyy. Ostaja pitää myös vanhan käyttäjänimensä; siitä tulee yksi hänen käyttäjätunnuksistaan.",
     "updateListing": "Päivitä listaus",
     "listForSale": "Listaa myyntiin",
     "withdrawListing": "Poista listaus",
@@ -3996,7 +4000,6 @@
     "askingPrice": "Pyyntöhinta",
     "paidStraightToSeller": "≈ ${{usd}} · maksettu suoraan myyjälle, DeHub ei ota osuutta",
     "yourHandleChanges": "Käyttäjänimesi muuttuu",
-    "oldHandleReleased": "Vanha käyttäjänimesi vapautuu ja kuka tahansa voi ottaa sen. Viestit, seuraajat ja lompakkosi säilyvät ennallaan.",
     "payingWithDhbOn": "Maksaminen DHB:llä {{chain}} päivänä",
     "shortOfDhbPaidOn": "Sinulla ei ole tarpeeksi DHB:tä — tämä maksetaan {{chain}} päivänä",
     "yourOwnListing": "Tämä on sinun listaus. Hallitse sitä Myy-välilehdestä.",
@@ -4034,7 +4037,28 @@
       "completed": "Valmis",
       "expired": "Vanhentunut"
     },
-    "makeOfferAction": "Tee tarjous"
+    "makeOfferAction": "Tee tarjous",
+    "tabMine": "Oma",
+    "sellingWornName": "Tämä on profiilisi käyttäjätunnus. Sen myyminen siirtää sinut toiseen nimeen.",
+    "sellingHeldName": "Omistat tämän nimen, mutta et käytä sitä. Sen myyminen ei muuta profiiliasi.",
+    "saleFinalWarningHeld": "Myynti on lopullinen ja välitön. Oma käyttäjätunnuksesi ja kaikki profiilissasi pysyvät ennallaan – vain tämä nimi siirtyy.",
+    "signInToSeeVault": "Kirjaudu sisään nähdäksesi omistamasi käyttäjätunnukset.",
+    "vaultExplainer": "Ostamasi käyttäjätunnukset pysyvät sinulla. Voit käyttää yhtä, myydä sen tai antaa sen mennä.",
+    "vaultExplainerEmpty": "Omistat yhden käyttäjätunnuksen. Osta toinen, niin pidät tämänkin.",
+    "vaultInUse": "Käytössä",
+    "vaultBought": "Ostettu",
+    "vaultKept": "Pidätetty aiemmasta ostoksesta",
+    "vaultFree": "Ilmainen käyttäjätunnus",
+    "vaultFreeWarning": "Et ole maksanut tästä, joten sen vaihtaminen toiseen nimeen luopuu siitä ja kuka tahansa voi ottaa sen.",
+    "vaultUseThis": "Käytä tätä",
+    "vaultSell": "Myy",
+    "vaultEditListing": "Muokkaa listaa",
+    "vaultRelease": "Vapauta",
+    "vaultListedCannotWear": "Peruuta listaus ennen tämän nimen käyttöä.",
+    "vaultReleaseTitle": "Vapauta @{{handle}}?",
+    "vaultReleaseBody": "Se palaa jonoon ja kuka tahansa voi ottaa sen. Peruutusta ei ole, ja sen takaisin ostaminen maksaisi mitä tahansa uusi omistaja pyytää.",
+    "oldHandleKept": "Pidät @{{handle}} – se siirtyy käyttäjätunnuksiisi, ja voit käyttää sitä uudelleen tai myydä sen myöhemmin. Julkaisut, seuraajat ja lompakkosi pysyvät koskemattomina.",
+    "postsStayWithYou": "Julkaisut, seuraajat ja lompakkosi pysyvät koskemattomina."
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",
