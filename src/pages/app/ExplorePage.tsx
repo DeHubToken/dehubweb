@@ -18,14 +18,20 @@ import search3dIcon from '@/assets/icons/search-3d-icon.png';
 import trendingFireIcon from '@/assets/icons/trending-fire-icon.png';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check, Clock, Trash2 } from 'lucide-react';
+import { Search, SlidersHorizontal, X, Loader2, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { EXPLORE_TABS } from '@/constants/app.constants';
+import {
+  SearchFilterPanel,
+  DEFAULT_SEARCH_FILTERS,
+  countActiveSearchFilters,
+  type SearchFilterState,
+} from '@/components/app/search/SearchFilterPanel';
+import { applySorting, filterByDate, filterByContentType } from '@/lib/feed-utils';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -68,184 +74,8 @@ import type { VideoItem, ImagePost } from '@/types/feed.types';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 import { scrollDocumentTo } from '@/lib/document-scroll';
 
-const DATE_OPTION_KEYS = ['anyTime', 'today', 'thisWeek', 'thisMonth', 'thisYear'] as const;
-const DATE_OPTIONS_RAW = ['Any time', 'Today', 'This week', 'This month', 'This year'];
-const ENGAGEMENT_OPTIONS = ['Any', '100+', '1K+', '10K+', '100K+', '1M+'];
-const SEARCH_CATEGORY_KEYS = ['all', 'gaming', 'music', 'art', 'programming', 'crypto', 'entertainment'] as const;
-const SEARCH_CATEGORIES_RAW = ['All', 'Gaming', 'Music', 'Art', 'Programming', 'Crypto', 'Entertainment'];
-const COUNTRY_OPTIONS = [
-  'Global',
-  'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan',
-  'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi',
-  'Cambodia', 'Cameroon', 'Canada', 'Cape Verde', 'Central African Republic', 'Chad', 'Chile', 'China', 'Colombia', 'Comoros', 'Congo', 'Costa Rica', 'Croatia', 'Cuba', 'Cyprus', 'Czech Republic',
-  'Democratic Republic of the Congo', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic',
-  'East Timor', 'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Eswatini', 'Ethiopia',
-  'Fiji', 'Finland', 'France',
-  'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Greece', 'Grenada', 'Guatemala', 'Guinea', 'Guinea-Bissau', 'Guyana',
-  'Haiti', 'Honduras', 'Hungary',
-  'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Israel', 'Italy', 'Ivory Coast',
-  'Jamaica', 'Japan', 'Jordan',
-  'Kazakhstan', 'Kenya', 'Kiribati', 'Kosovo', 'Kuwait', 'Kyrgyzstan',
-  'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg',
-  'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Marshall Islands', 'Mauritania', 'Mauritius', 'Mexico', 'Micronesia', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Morocco', 'Mozambique', 'Myanmar',
-  'Namibia', 'Nauru', 'Nepal', 'Netherlands', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'North Korea', 'North Macedonia', 'Norway',
-  'Oman',
-  'Pakistan', 'Palau', 'Palestine', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Poland', 'Portugal',
-  'Qatar',
-  'Romania', 'Russia', 'Rwanda',
-  'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Vincent and the Grenadines', 'Samoa', 'San Marino', 'Sao Tome and Principe', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa', 'South Korea', 'South Sudan', 'Spain', 'Sri Lanka', 'Sudan', 'Suriname', 'Sweden', 'Switzerland', 'Syria',
-  'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', 'Togo', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Tuvalu',
-  'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan',
-  'Vanuatu', 'Vatican City', 'Venezuela', 'Vietnam',
-  'Yemen',
-  'Zambia', 'Zimbabwe',
-];
-
 // Brand-related search terms where @d should be pinned first
 const BRAND_QUERIES = ['d', 'de', 'deh', 'dehu', 'dehub'];
-
-type FilterState = {
-  w2e: boolean;
-  ppv: boolean;
-  gated: boolean;
-  date: string;
-  likes: string;
-  shares: string;
-  comments: string;
-};
-
-const FilterPill = ({ 
-  label, 
-  active, 
-  onClick,
-}: { 
-  label: string; 
-  active: boolean; 
-  onClick: () => void;
-}) => {
-  const { theme } = useAppTheme();
-  const isLightTheme = theme === 'light';
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        'relative px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
-        active
-          ? 'text-white'
-          : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
-      )}
-    >
-      {active ? (
-        <div className={cn(
-          "absolute inset-0 rounded-full bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30",
-          isLightTheme
-            ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]"
-            : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-        )} />
-      ) : null}
-      <span className="relative z-10">{label}</span>
-    </button>
-  );
-};
-
-const FilterDropdown = ({
-  label,
-  value,
-  options,
-  onChange,
-  displayValue,
-}: {
-  label: string;
-  value: string;
-  options: string[];
-  onChange: (value: string) => void;
-  displayValue?: string;
-}) => {
-  const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const filteredOptions = useMemo(
-    () => options.filter(option => option.toLowerCase().includes(searchQuery.toLowerCase())),
-    [options, searchQuery]
-  );
-
-  return (
-    <>
-      <button
-        onClick={() => setOpen(true)}
-        className={cn(
-          'flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
-          value !== options[0]
-            ? 'bg-white text-black'
-            : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
-        )}
-      >
-        <span>{label}: {displayValue || value}</span>
-        <ChevronDown className="w-3 h-3" />
-      </button>
-      
-      <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerContent column glass className="max-h-[70dvh]">
-          <DrawerHeader className="border-b border-white/10">
-            <DrawerTitle className="text-white">{t('explorePage.selectLabel', { label })}</DrawerTitle>
-          </DrawerHeader>
-          
-          {/* Search input */}
-          <div className="p-4 border-b border-white/10">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-              <input
-                type="text"
-                placeholder={t('explorePage.search')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-10 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-zinc-500 hover:text-white transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-          </div>
-          
-          {/* Options list */}
-          <div className="flex-1 overflow-y-auto max-h-[50vh] pb-safe">
-            {filteredOptions.length > 0 ? (
-              filteredOptions.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => {
-                    onChange(option);
-                    setOpen(false);
-                    setSearchQuery('');
-                  }}
-                  className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
-                >
-                  <span className={cn(
-                    'text-sm',
-                    value === option ? 'text-white font-medium' : 'text-zinc-400'
-                  )}>
-                    {option}
-                  </span>
-                  {value === option && (
-                    <Check className="w-4 h-4 text-white" />
-                  )}
-                </button>
-              ))
-            ) : (
-              <div className="px-4 py-8 text-center text-sm text-zinc-500">{t('explorePage.noFilterResults')}</div>
-            )}
-          </div>
-        </DrawerContent>
-      </Drawer>
-    </>
-  );
-};
 
 // User result card
 const UserResultCard = ({ 
@@ -434,18 +264,8 @@ export default function ExplorePage() {
   const { layerRef: exploreTabLayerRef, setRef: setExploreTabRef, rect: exploreTabRect } = useTabIndicator(activeTab, undefined, exploreIsDraggingRef);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('All');
   const [exploreCategoryId, setExploreCategoryId] = useState<string | null>(null);
-  const [filters, setFilters] = useState<FilterState>({
-    w2e: false,
-    ppv: false,
-    gated: false,
-    date: 'Any time',
-    likes: 'Any',
-    shares: 'Any',
-    comments: 'Any',
-  });
-  const [selectedCountry, setSelectedCountry] = useState('Global');
+  const [filters, setFilters] = useState<SearchFilterState>(DEFAULT_SEARCH_FILTERS);
 
   // Fetch categories for the carousel
   const { data: exploreCategories = [] } = useQuery({
@@ -824,35 +644,30 @@ export default function ExplorePage() {
       });
     }
     
-    // Apply content type filters on posts
+    // Narrow and order the posts with the same helpers the feeds use, so a
+    // filter row means the same thing here as it does on Home.
     let filteredPosts = videos.filter(p => p && (p.id || p.tokenId));
-    
-    const hasContentFilter = filters.w2e || filters.ppv || filters.gated;
-    if (hasContentFilter) {
+
+    if (filters.category) {
+      const wanted = filters.category.toLowerCase();
       filteredPosts = filteredPosts.filter(nft => {
-        if (filters.w2e && nft.is_w2e) return true;
-        if (filters.ppv && nft.is_ppv) return true;
-        if (filters.gated && nft.is_locked) return true;
-        return false;
+        const cat = nft.category;
+        if (!cat) return false;
+        const list = Array.isArray(cat) ? cat : [cat];
+        return list.some(c => String(c).toLowerCase() === wanted);
       });
     }
 
-    // Apply date filter
-    if (filters.date !== 'Any time') {
-      const now = new Date();
-      let cutoff: Date;
-      switch (filters.date) {
-        case 'Today': cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate()); break;
-        case 'This week': cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); break;
-        case 'This month': cutoff = new Date(now.getFullYear(), now.getMonth(), 1); break;
-        case 'This year': cutoff = new Date(now.getFullYear(), 0, 1); break;
-        default: cutoff = new Date(0);
-      }
-      filteredPosts = filteredPosts.filter(nft => {
-        const created = nft.createdAt || nft.created_at;
-        return created ? new Date(created) >= cutoff : true;
-      });
-    }
+    filteredPosts = filterByContentType(filteredPosts, {
+      ppv: filters.ppv,
+      w2e: filters.w2e,
+      locked: filters.locked,
+    });
+    filteredPosts = filterByDate(filteredPosts, filters.date);
+
+    // Search comes back in relevance order; the page reads chronologically
+    // unless someone picks another sort.
+    filteredPosts = applySorting(filteredPosts, filters.sort);
 
     return {
       users: peopleResults.filter(u => u && u.id),
@@ -861,28 +676,9 @@ export default function ExplorePage() {
     };
   }, [searchData, allTabAccountData, exactUser, brandUser, isShortSearch, effectiveQuery, filters]);
 
-  const activeFilterCount = [
-    filters.w2e,
-    filters.ppv,
-    filters.gated,
-    filters.date !== 'Any time',
-    filters.likes !== 'Any',
-    filters.shares !== 'Any',
-    filters.comments !== 'Any',
-  ].filter(Boolean).length;
+  const activeFilterCount = countActiveSearchFilters(filters);
 
-  const resetFilters = () => {
-    setFilters({
-      w2e: false,
-      ppv: false,
-      gated: false,
-      date: 'Any time',
-      likes: 'Any',
-      shares: 'Any',
-      comments: 'Any',
-    });
-    setSelectedCategory('All');
-  };
+  const resetFilters = () => setFilters(DEFAULT_SEARCH_FILTERS);
 
   // Infinite scroll ref
   const loadMoreRef = useRef<HTMLDivElement>(null);
@@ -1008,6 +804,27 @@ export default function ExplorePage() {
             </button>
           </div>
           
+          {/* Filter panel — the sliders button's payload. Collapsed by
+              default; it lives inside the sticky bento so the rows stay
+              reachable while the results scroll underneath. */}
+          <AnimatePresence initial={false}>
+            {showFilters && (
+              <motion.div
+                key="search-filters"
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.18 }}
+              >
+                <SearchFilterPanel
+                  filters={filters}
+                  onChange={setFilters}
+                  onReset={resetFilters}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Tabs - toggle bar (flush with search bar above; no horizontal
               overhang so active indicator's drop shadow isn't clipped) */}
           <div className="mt-3">
