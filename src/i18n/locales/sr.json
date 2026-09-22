@@ -1048,7 +1048,7 @@
     "unableToLoad": "Учитавање профила неуспешно. Покушајте касније.",
     "doesNotExist": "Овај корисник не постоји или је потребна пријава.",
     "makeOffer": "Понуди {{handle}}",
-    "enterOfferAmount": "Унесите износ DHB за ово име.",
+    "enterOfferAmount": "Унеси износ у доларима који желиш да понудиш за ово корисничко име.",
     "submitOffer": "Пошаљи понуду",
     "validOfferAmount": "Унесите важећи износ",
     "offerSubmitted": "Понуда од {{amount}} DHB послата за {{handle}}",
@@ -1059,7 +1059,11 @@
     "replyThread": {
       "postUnavailable": "Ова објава није доступна",
       "commentUnavailable": "Овај коментар више није доступан"
-    }
+    },
+    "offerWorthNow": "Око {{amount}} DHB по тренутном курсу",
+    "offerNotePlaceholder": "Додај поруку (опционо)",
+    "offerCommitsNothing": "Давање понуде ништа не кошта и не блокира DHB. Плаћаш само ако власник прихвати.",
+    "offerNeedsHandle": "Овај налог нема корисничко име за које би се могло понудити."
   },
   "tv": {
     "title": "ТВ"
@@ -2569,5 +2573,36 @@
     "audio": "Аудио",
     "poll": "Анкета",
     "scheduled": "Заказано"
+  },
+  "usernames": {
+    "tabOffers": "Понуде",
+    "signInForOffers": "Пријави се да видиш понуде за своје корисничко име.",
+    "offersForYou": "Понуде за твоје корисничко име",
+    "offersYouMade": "Понуде које си дао",
+    "offerHistory": "Раније понуде",
+    "noIncomingOffers": "Нико још није понудио да купи твоје корисничко име.",
+    "noOutgoingOffers": "Још ниси дао ниједну понуду. Отвори нечији профил да је даш.",
+    "offerExpires": "Истиче {{when}}",
+    "payBefore": "Плати {{when}}",
+    "awaitingOwner": "Чека власника",
+    "acceptOffer": "Прихвати",
+    "declineOffer": "Одбиј",
+    "confirmAccept": "Прихвати понуду",
+    "cancel": "Откажи",
+    "withdrawOffer": "Повуци",
+    "withdrawAcceptance": "Повуци прихватање",
+    "payAndClaim": "Плати и преузми",
+    "acceptMovesNothingYet": "Прихватањем се твоје корисничко име резервише за овог купца. Ништа се не помера док не плати, а до тада можеш да одустанеш.",
+    "acceptedAwaitingPayment": "Прихватио си ову понуду. Корисничко име је и даље твоје, а @{{handle}} постајеш тек када плати.",
+    "offerAcceptedPayNow": "Прихваћено. Корисничко име је резервисано за тебе док га не платиш.",
+    "offerStatus": {
+      "pending": "Чека одговор",
+      "accepted": "Прихваћено, чека плаћање",
+      "declined": "Одбијено",
+      "withdrawn": "Повучено",
+      "completed": "Завршено",
+      "expired": "Истекло"
+    },
+    "makeOfferAction": "Дај понуду"
   }
 }

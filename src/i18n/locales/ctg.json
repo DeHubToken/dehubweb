@@ -1251,7 +1251,7 @@
     "unableToLoad": "প্রোফাইল লোড গরা ন গেইয়ে। পরে আবার চেষ্টা গরো।",
     "doesNotExist": "এই ইউজার নাই, নাইলে নিজর প্রোফাইল দেখিতো লগ ইন গরন লাগিবো।",
     "makeOffer": "{{handle}}-র লাই অফার দেও",
-    "enterOfferAmount": "এই ইউজারনেম কিনিতো কত DHB টোকেন অফার গরিতো চাও লেখো।",
+    "enterOfferAmount": "এই ইউজারনেম-অর লাই তুঁই কত ডলার দিবার চাও হেই টিয়ার অংক লেখ।",
     "submitOffer": "অফার জমা দেও",
     "validOfferAmount": "ঠিকমতো অফারর পরিমাণ লেখো",
     "offerSubmitted": "{{handle}}-র লাই {{amount}} DHB-র অফার জমা অইয়ে",
@@ -1282,7 +1282,11 @@
     "muteUser": "মিউট গরো",
     "subscribe": "সাবস্ক্রাইব গরো",
     "subscribed": "সাবস্ক্রাইব গরা",
-    "tip": "টিপ"
+    "tip": "টিপ",
+    "offerWorthNow": "এহনকার দরে আন্দাজ {{amount}} DHB",
+    "offerNotePlaceholder": "এক্কান নোট যোগ গর (ইচ্ছা অইলে)",
+    "offerCommitsNothing": "অফার দিতে কিছু খরচ ন, কোনো DHB-ও আটকায় ন। মালিক মানি লইলে-ই তুঁই দিবা।",
+    "offerNeedsHandle": "এই একাউন্টের এমন কোনো ইউজারনেম ন যেইটার লাই অফার দেওন যায়।"
   },
   "tv": {
     "live": "লাইভ",
@@ -3054,5 +3058,36 @@
     "inProgress": "চলতাছে",
     "completed": "সম্পূর্ণ",
     "underReview": "পর্যালোচনায়"
+  },
+  "usernames": {
+    "tabOffers": "অফার",
+    "signInForOffers": "তোঁয়ার ইউজারনেম-অর লাই আইস্যে অফার চাইতে সাইন ইন গর।",
+    "offersForYou": "তোঁয়ার ইউজারনেম-অর লাই অফার",
+    "offersYouMade": "তুঁই দিয়্যে অফার",
+    "offerHistory": "আগের অফার",
+    "noIncomingOffers": "এহনো কেউ তোঁয়ার ইউজারনেম কিনিবার অফার দেয় ন।",
+    "noOutgoingOffers": "তুঁই এহনো কোনো অফার দেয় ন। অফার দিতে কারো প্রোফাইল খোল।",
+    "offerExpires": "{{when}} শেষ অইব",
+    "payBefore": "{{when}} দিয়া দেও",
+    "awaitingOwner": "মালিকের অপেক্ষাত",
+    "acceptOffer": "মানি লও",
+    "declineOffer": "না গর",
+    "confirmAccept": "অফার মানি লও",
+    "cancel": "বাতিল গর",
+    "withdrawOffer": "ফিরাই লও",
+    "withdrawAcceptance": "মানি লওয়া ফিরাই লও",
+    "payAndClaim": "দিয়া লই লও",
+    "acceptMovesNothingYet": "মানি লইলে তোঁয়ার ইউজারনেম এই কিনিয়্যার লাই রাখি দেওন অয়। হেতে না দেওন পর্যন্ত কিছু বদলাইব ন, আর হের আগে তুঁই পিছাই আইতে পার।",
+    "acceptedAwaitingPayment": "তুঁই এই অফার মানি লইয়্য। ইউজারনেম এহনো তোঁয়ারই, আর হেতে দিলে-ই তুঁই @{{handle}} অইবা।",
+    "offerAcceptedPayNow": "মানি লওয়া অইয়্যে। তুঁই না দেওন পর্যন্ত ইউজারনেম তোঁয়ার লাই রাখা আছে।",
+    "offerStatus": {
+      "pending": "জবাবের অপেক্ষাত",
+      "accepted": "মানি লওয়া, টিয়ার অপেক্ষাত",
+      "declined": "না মানা",
+      "withdrawn": "ফিরাই লওয়া",
+      "completed": "শেষ অইয়্যে",
+      "expired": "সময় শেষ"
+    },
+    "makeOfferAction": "অফার দেও"
   }
 }

@@ -1249,7 +1249,7 @@
     "unableToLoad": "Chehaghordagrvats bernel andznagrouytse. Khndreum enq photsek aveli ousha.",
     "doesNotExist": "Ays ogtvoroughe goyoutyun chouni kam petq e mouqtq gortsuhr dzer andznagrouytse teselou hamar.",
     "makeOffer": "Aratcharkuhr {{handle}}-i hamar",
-    "enterOfferAmount": "Mouqagreeq DHB taoutseri qanake vore douq ouzoum eq aratcharkuhr ays ogtvoroghi anounern dzerk beroum hamar.",
+    "enterOfferAmount": "Մուտքագրիր դոլարային գումարը, որը ուզում ես առաջարկել այս օգտանվան համար։",
     "submitOffer": "Ougharkuhr aratcharkhe",
     "validOfferAmount": "Khndreum enq mouqagreeq tavalar qanak",
     "offerSubmitted": "{{amount}} DHB aratcharkhe ougharkvaats e {{handle}}-i hamar",
@@ -1269,7 +1269,11 @@
     },
     "tabs": {
       "playlists": "Երգացանկեր"
-    }
+    },
+    "offerWorthNow": "Ընթացիկ փոխարժեքով մոտավորապես {{amount}} DHB",
+    "offerNotePlaceholder": "Ավելացրու նշում (ըստ ցանկության)",
+    "offerCommitsNothing": "Առաջարկն ոչինչ չարժե և DHB չի սառեցնում։ Վճարում ես միայն, եթե տերը համաձայնվի։",
+    "offerNeedsHandle": "Այս հաշիվը չունի օգտանուն, որի համար առաջարկ անես։"
   },
   "tv": {
     "seoTitle": "Live TV — Անվճար ալիքներ ամբողջ աշխարհից",
@@ -4000,7 +4004,36 @@
     "signInToBuy": "Մուտք գալ գնելու համար",
     "buyHandle": "Գնել @{{handle}}",
     "transferGuarantee": "Բռնակցը շարժվում է միայն այն բանից հետո, երբ DeHub-ը կարդում է ձեր DHB փոխանցումը շղթայից: Եթե դա չի կարող անել, վճարումը գրանցվում է վաճառքի դեմ, որպեսզի վաճառողը կարող է ձեզ հետ դրամ վերադարձել:",
-    "shareTitle": "@{{handle}} վաճառքի համար է DeHub-ում"
+    "shareTitle": "@{{handle}} վաճառքի համար է DeHub-ում",
+    "tabOffers": "Առաջարկներ",
+    "signInForOffers": "Մուտք գործիր՝ քո օգտանվան համար եկած առաջարկները տեսնելու։",
+    "offersForYou": "Առաջարկներ քո օգտանվան համար",
+    "offersYouMade": "Քո արած առաջարկները",
+    "offerHistory": "Նախորդ առաջարկները",
+    "noIncomingOffers": "Դեռ ոչ ոք չի առաջարկել գնել քո օգտանունը։",
+    "noOutgoingOffers": "Դեռ առաջարկ չես արել։ Բացիր որևէ մեկի էջը՝ առաջարկ անելու։",
+    "offerExpires": "Ավարտվում է {{when}}",
+    "payBefore": "Վճարիր {{when}}",
+    "awaitingOwner": "Սպասում է տիրոջը",
+    "acceptOffer": "Ընդունել",
+    "declineOffer": "Մերժել",
+    "confirmAccept": "Ընդունել առաջարկը",
+    "cancel": "Չեղարկել",
+    "withdrawOffer": "Հետ վերցնել",
+    "withdrawAcceptance": "Հետ վերցնել համաձայնությունը",
+    "payAndClaim": "Վճարել և վերցնել",
+    "acceptMovesNothingYet": "Ընդունելը պահում է քո օգտանունը այս գնորդի համար։ Ոչինչ չի փոխվի, քանի դեռ նա չի վճարել, և մինչ այդ կարող ես հրաժարվել։",
+    "acceptedAwaitingPayment": "Դու ընդունեցիր այս առաջարկը։ Օգտանունը դեռ քոնն է, և @{{handle}} կդառնաս միայն նրա վճարելուց հետո։",
+    "offerAcceptedPayNow": "Ընդունված է։ Օգտանունը պահվում է քեզ համար, մինչև վճարես։",
+    "offerStatus": {
+      "pending": "Սպասում է պատասխանի",
+      "accepted": "Ընդունված է, սպասում է վճարման",
+      "declined": "Մերժված է",
+      "withdrawn": "Հետ է վերցվել",
+      "completed": "Ավարտված է",
+      "expired": "Ժամկետը լրացել է"
+    },
+    "makeOfferAction": "Առաջարկ անել"
   },
   "accounts": {
     "seoTitle": "Հաշվի շուկա — DeHub",
