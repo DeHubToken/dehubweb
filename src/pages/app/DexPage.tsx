@@ -216,8 +216,11 @@ export default function DexPage() {
   const bidTotal = bids.at(-1)?.cumulativeDhb || 0, askTotal = asks.at(-1)?.cumulativeDhb || 0;
   const totalUsdc = positions.reduce((sum, p) => sum + p.amountUsdc, 0);
   const totalDhb = positions.reduce((sum, p) => sum + p.amountDhb, 0);
-  const spread = bids.length && asks.length ? asks[0].price - bids[0].price : null;
-  const spreadShare = bids.length && asks.length ? spreadPercent(bids[0].price, asks[0].price) : null;
+  // Pools can disagree: the 0.3% pool's ask floor sometimes sits under the 0% pool's bid ceiling,
+  // so the book overlaps and the gap goes negative. That is not a spread, so the row stays blank.
+  const gap = bids.length && asks.length ? asks[0].price - bids[0].price : null;
+  const spread = gap != null && gap > 0 ? gap : null;
+  const spreadShare = spread != null ? spreadPercent(bids[0].price, asks[0].price) : null;
   const decimals = side === 'sell' ? 18 : chainId ? DEX_CHAINS[chainId].usdcDecimals : 6;
   const estimate = Number(amount) > 0 && Number(minPrice) > 0 && Number(maxPrice) > Number(minPrice)
     ? side === 'buy' ? Number(amount) / Math.sqrt(Number(minPrice) * Number(maxPrice)) : Number(amount) * Math.sqrt(Number(minPrice) * Number(maxPrice)) : 0;
@@ -339,7 +342,7 @@ export default function DexPage() {
         <div className="dex-panel-head"><h2>Order book</h2><select aria-label="Price grouping" className="dex-book-select" value={increment} onChange={(e) => setIncrement(Number(e.target.value))}>{BOOK_INCREMENTS.map((step) => <option key={step} value={step}>{formatIncrement(step)}</option>)}</select></div>
         <div className="dex-book-head"><span>Price (USDC)</span><span>Size (DHB)</span><span>Total (DHB)</span></div>
         <BookRows levels={asks} bid={false} increment={increment} disabled={busy || !!pending} onPrice={(value) => { priceTouched.current = true; choosePrice(value, 'sell'); setMobileView('trade'); }} />
-        <div className="dex-spread"><ArrowDownUp size={13} /><b>{spread == null ? '—' : formatBookPrice(Math.abs(spread), increment)}</b><span>{spread != null && spread < 0 ? 'Pool price overlap' : 'Spread · USDC'}{spreadShare != null && ` · ${spreadShare.toFixed(2)}%`}</span></div>
+        <div className="dex-spread"><ArrowDownUp size={13} /><b>{spread == null ? '—' : formatBookPrice(spread, increment)}</b><span>Spread · USDC{spreadShare != null && ` · ${spreadShare.toFixed(2)}%`}</span></div>
         <BookRows levels={bids} bid increment={increment} disabled={busy || !!pending} onPrice={(value) => { priceTouched.current = true; choosePrice(value, 'buy'); setMobileView('trade'); }} />
         <div className="dex-ratio"><i style={{ width: `${bidTotal + askTotal ? bidTotal / (bidTotal + askTotal) * 100 : 50}%` }} /></div>
         <div className="dex-book-total"><span className="dex-buy">Buy {formatSize(bidTotal)} DHB</span><span className="dex-sell">Sell {formatSize(askTotal)} DHB</span></div>
