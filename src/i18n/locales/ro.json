@@ -1244,7 +1244,12 @@
     },
     "tabs": {
       "playlists": "Liste de redare"
-    }
+    },
+    "offerWorthNow": "Aproximativ {{amount}} DHB la cursul actual",
+    "offerNotePlaceholder": "Adaugă o notă (opțional)",
+    "offerCommitsNothing": "O ofertă nu costă nimic și nu blochează DHB. Plătești doar dacă proprietarul acceptă.",
+    "offerNeedsHandle": "Acest cont nu are un nume de utilizator pentru care să oferi.",
+    "enterOfferAmount": "Introdu suma în dolari pe care vrei să o oferi pentru acest nume de utilizator."
   },
   "tv": {
     "seoTitle": "TV Live — Canale Gratuite Din Întreaga Lume",
@@ -3881,7 +3886,36 @@
     "signInToBuy": "Conectează-te pentru a cumpăra",
     "buyHandle": "Cumpără @{{handle}}",
     "transferGuarantee": "Mânerul se mișcă doar după ce DeHub citește transferul tău DHB înapoi din lanț. Dacă nu poate, plata este înregistrată împotriva vânzării, astfel încât vânzătorul te poate rambursa.",
-    "shareTitle": "@{{handle}} este de vânzare pe DeHub"
+    "shareTitle": "@{{handle}} este de vânzare pe DeHub",
+    "tabOffers": "Oferte",
+    "signInForOffers": "Conectează-te ca să vezi ofertele pentru numele tău de utilizator.",
+    "offersForYou": "Oferte pentru numele tău de utilizator",
+    "offersYouMade": "Ofertele făcute de tine",
+    "offerHistory": "Oferte anterioare",
+    "noIncomingOffers": "Nimeni nu a oferit încă să îți cumpere numele de utilizator.",
+    "noOutgoingOffers": "Nu ai făcut încă nicio ofertă. Deschide profilul cuiva ca să faci una.",
+    "offerExpires": "Expiră {{when}}",
+    "payBefore": "Plătește {{when}}",
+    "awaitingOwner": "Se așteaptă proprietarul",
+    "acceptOffer": "Acceptă",
+    "declineOffer": "Refuză",
+    "confirmAccept": "Acceptă oferta",
+    "cancel": "Anulează",
+    "withdrawOffer": "Retrage",
+    "withdrawAcceptance": "Retrage acceptarea",
+    "payAndClaim": "Plătește și revendică",
+    "acceptMovesNothingYet": "Acceptarea rezervă numele tău de utilizator pentru acest cumpărător. Nimic nu se mută până nu plătește, iar până atunci te poți retrage.",
+    "acceptedAwaitingPayment": "Ai acceptat această ofertă. Numele de utilizator este încă al tău și vei deveni @{{handle}} abia după ce plătește.",
+    "offerAcceptedPayNow": "Acceptată. Numele de utilizator este rezervat pentru tine până îl plătești.",
+    "offerStatus": {
+      "pending": "Se așteaptă un răspuns",
+      "accepted": "Acceptată, în așteptarea plății",
+      "declined": "Refuzată",
+      "withdrawn": "Retrasă",
+      "completed": "Finalizată",
+      "expired": "Expirată"
+    },
+    "makeOfferAction": "Fă o ofertă"
   },
   "accounts": {
     "seoTitle": "Piața de conturi — DeHub",

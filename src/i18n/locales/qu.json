@@ -1237,7 +1237,7 @@
     "unableToLoad": "Mana riqsichiyta churayta atinchu. Qhipaman musuqmanta ruwaway.",
     "doesNotExist": "Kay runa mana kanchu utaq riqsichiykita qhawanaykipaq yaykunayki tiyan.",
     "makeOffer": "{{handle}} kaqpaq quyta ruway",
-    "enterOfferAmount": "Mashkha DHB token quyta munasqaykita churay kay runa suti chaskimunaykipaq.",
+    "enterOfferAmount": "Kay sutipaq hayk’a dolarta qunayki munasqaykita qillqay.",
     "submitOffer": "Quyta apachiy",
     "validOfferAmount": "Allin quy yupay churay",
     "offerSubmitted": "{{amount}} DHB quy {{handle}} kaqpaq apachisqa",
@@ -1257,7 +1257,11 @@
     },
     "tabs": {
       "playlists": "Pukllay listakuna"
-    }
+    },
+    "offerWorthNow": "Kunan chaninwan yaqa {{amount}} DHB",
+    "offerNotePlaceholder": "Huk willayta yapay (munaspayki)",
+    "offerCommitsNothing": "Qukuy ruwayqa mana imatapas gastanchu nitaq DHB-ta wichq’anchu. Dueñon chaskiptillanmi pagawaq.",
+    "offerNeedsHandle": "Kay cuentaqa mana sutiyuqchu qukuy ruwanapaq."
   },
   "tv": {
     "title": "TV"
@@ -3283,5 +3287,36 @@
     "audio": "Audio nisqa",
     "poll": "Tariy",
     "scheduled": "Programado nisqa"
+  },
+  "usernames": {
+    "tabOffers": "Qukuykuna",
+    "signInForOffers": "Sutiykipaq qukuykunata qhawanaykipaq yaykuy.",
+    "offersForYou": "Sutiykipaq qukuykuna",
+    "offersYouMade": "Qampa ruwasqayki qukuykuna",
+    "offerHistory": "Ñawpaq qukuykuna",
+    "noIncomingOffers": "Manaraq pipas sutiykita rantiyta munasqanta nisqachu.",
+    "noOutgoingOffers": "Manaraq ima qukuytapas ruwarqankichu. Ruwanaykipaq pipa profileninta kichay.",
+    "offerExpires": "{{when}} tukukun",
+    "payBefore": "{{when}} pagay",
+    "awaitingOwner": "Dueñonta suyachkan",
+    "acceptOffer": "Chaskiy",
+    "declineOffer": "Mana munay",
+    "confirmAccept": "Qukuyta chaskiy",
+    "cancel": "Saqiy",
+    "withdrawOffer": "Qichuy",
+    "withdrawAcceptance": "Chaskisqata qichuy",
+    "payAndClaim": "Pagaspa chaskiy",
+    "acceptMovesNothingYet": "Chaskisqaykiqa sutiykita kay rantiqpaq waqaychan. Manaraq pagasqanmanta imapas mana tikranchu, chay ñawpaqtaqa kutiriyta atinki.",
+    "acceptedAwaitingPayment": "Kay qukuyta chaskirqanki. Sutiykiqa qampaqraqmi, @{{handle}} kanki pagasqanmanta qhipallan.",
+    "offerAcceptedPayNow": "Chaskisqa. Manaraq pagasqaykikama sutiqa qampaq waqaychasqa.",
+    "offerStatus": {
+      "pending": "Kutichiyta suyachkan",
+      "accepted": "Chaskisqa, pagayta suyachkan",
+      "declined": "Mana chaskisqa",
+      "withdrawn": "Qichusqa",
+      "completed": "Tukusqa",
+      "expired": "Pachan tukusqa"
+    },
+    "makeOfferAction": "Qukuyta ruway"
   }
 }

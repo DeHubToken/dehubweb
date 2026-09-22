@@ -1249,7 +1249,7 @@
     "unableToLoad": "Piroofaayilii fe'uu hin dandeenye. Booda irra deebi'ii yaali.",
     "doesNotExist": "This user doesn't exist or you need to log in to view your profile.",
     "makeOffer": "Make Offer for {{handle}}",
-    "enterOfferAmount": "Enter the amount of DHB tokens you'd like to offer to acquire this username.",
+    "enterOfferAmount": "Maqaa fayyadamaa kanaaf hanga doolaraan dhiheessuu barbaaddu galchi.",
     "submitOffer": "Submit Offer",
     "validOfferAmount": "Please enter a valid offer amount",
     "offerSubmitted": "Offer of {{amount}} DHB submitted for {{handle}}",
@@ -1269,7 +1269,11 @@
     },
     "tabs": {
       "playlists": "Tarreewwan tapha"
-    }
+    },
+    "offerWorthNow": "Gatii ammaatiin gara {{amount}} DHB",
+    "offerNotePlaceholder": "Yaadannoo dabali (filannoo)",
+    "offerCommitsNothing": "Dhiheessa gochuun homaa hin baasisu, DHB tokko illee hin ugguru. Kan kaffaltu abbaan isaa yoo fudhate qofa.",
+    "offerNeedsHandle": "Herregni kun maqaa fayyadamaa dhiheessi irratti godhamu hin qabu."
   },
   "tv": {
     "title": "TV"
@@ -3295,5 +3299,36 @@
     "backToBlog": "Biloogiitti deebi'i",
     "sharePost": "Barreeffama qoodi",
     "relatedPosts": "Barreeffamoota Walqabatan"
+  },
+  "usernames": {
+    "tabOffers": "Dhiheessiiwwan",
+    "signInForOffers": "Dhiheessiiwwan maqaa fayyadamaa keetiif dhufan ilaaluuf seeni.",
+    "offersForYou": "Dhiheessiiwwan maqaa fayyadamaa keetiif",
+    "offersYouMade": "Dhiheessiiwwan ati goote",
+    "offerHistory": "Dhiheessiiwwan darban",
+    "noIncomingOffers": "Hanga ammaatti namni maqaa fayyadamaa kee bituuf dhiheesse hin jiru.",
+    "noOutgoingOffers": "Hanga ammaatti dhiheessa tokko illee hin goone. Gochuuf profaayilii nama tokkoo bani.",
+    "offerExpires": "{{when}} ni xumurama",
+    "payBefore": "{{when}} kaffali",
+    "awaitingOwner": "Abbaa isaa eegaa jira",
+    "acceptOffer": "Fudhadhu",
+    "declineOffer": "Diddu",
+    "confirmAccept": "Dhiheessa fudhadhu",
+    "cancel": "Haqi",
+    "withdrawOffer": "Deebisi",
+    "withdrawAcceptance": "Fudhannaa deebisi",
+    "payAndClaim": "Kaffaliitii fudhadhu",
+    "acceptMovesNothingYet": "Fudhachuun maqaa fayyadamaa kee bitataa kanaaf ni qabata. Hanga inni kaffalutti wanti jijjiiramu hin jiru, sana duras deebi’uu dandeessa.",
+    "acceptedAwaitingPayment": "Dhiheessa kana fudhatteetta. Maqaan fayyadamaa amma illee kan keeti, @{{handle}} kan taatu yeroo inni kaffalu qofa.",
+    "offerAcceptedPayNow": "Fudhatameera. Hanga ati kaffaltutti maqaan fayyadamaa siif qabameera.",
+    "offerStatus": {
+      "pending": "Deebii eegaa jira",
+      "accepted": "Fudhatameera, kaffaltii eegaa jira",
+      "declined": "Diddameera",
+      "withdrawn": "Deebifameera",
+      "completed": "Xumurameera",
+      "expired": "Yeroon isaa darbeera"
+    },
+    "makeOfferAction": "Dhiheessa godhi"
   }
 }

@@ -9,12 +9,14 @@
  */
 
 import { useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { BrowseTab } from '@/components/app/usernames/BrowseTab';
 import { SellTab } from '@/components/app/usernames/SellTab';
+import { OffersTab } from '@/components/app/usernames/OffersTab';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 const JSON_LD = {
@@ -28,7 +30,13 @@ const JSON_LD = {
 
 export default function UsernamesPage() {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<'browse' | 'sell'>('browse');
+  // Offer notifications link straight here, so the tab is readable off the
+  // URL. Held in state after that rather than written back on every switch:
+  // a tab press is not a navigation worth putting in the back stack.
+  const [params] = useSearchParams();
+  const [tab, setTab] = useState<'browse' | 'sell' | 'offers'>(
+    params.get('tab') === 'offers' ? 'offers' : params.get('tab') === 'sell' ? 'sell' : 'browse',
+  );
 
   // Swallow the content at the sticky header bento's top edge under the glass
   // themes, exactly like the home feed cuts at its nav pill.
@@ -83,6 +91,15 @@ export default function UsernamesPage() {
               active={tab === 'sell'}
               className={tab === 'sell' ? undefined : 'opacity-60'}
             />
+            <LiquidGlassBubble2
+              label={t('usernames.tabOffers')}
+              icon={<ThemedIcon icon="stores" alt="" className="w-4 h-4 object-contain" />}
+              onClick={() => setTab('offers')}
+              width="auto"
+              height="38px"
+              active={tab === 'offers'}
+              className={tab === 'offers' ? undefined : 'opacity-60'}
+            />
           </div>
         </div>
       </div>
@@ -90,7 +107,7 @@ export default function UsernamesPage() {
       <div ref={contentRef} className="w-full px-2 sm:px-3 pt-3 pb-6 space-y-4">
         {/* Browse fills the column; Sell is a form, and a text input stretched
             across a wide desktop column is unreadable, so it keeps a measure. */}
-        {tab === 'browse' ? <BrowseTab /> : (
+        {tab === 'browse' ? <BrowseTab /> : tab === 'offers' ? <OffersTab /> : (
           <div className="max-w-2xl">
             <SellTab />
           </div>

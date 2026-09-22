@@ -1519,7 +1519,7 @@
     "unableToLoad": "Tidak dapat memuat profil. Sila cuba lagi kemudian.",
     "doesNotExist": "Pengguna ini tidak wujud atau anda perlu log masuk untuk melihat profil anda.",
     "makeOffer": "Buat Tawaran untuk {{handle}}",
-    "enterOfferAmount": "Masukkan jumlah token DHB yang ingin anda tawarkan untuk memperoleh nama pengguna ini.",
+    "enterOfferAmount": "Masukkan jumlah dalam dolar AS yang anda mahu tawarkan untuk nama pengguna ini.",
     "submitOffer": "Submit Offer",
     "validOfferAmount": "Sila masukkan jumlah tawaran yang sah",
     "offerSubmitted": "Tawaran {{amount}} DHB dikemukakan untuk {{handle}}",
@@ -1539,7 +1539,11 @@
     },
     "tabs": {
       "playlists": "Senarai main"
-    }
+    },
+    "offerWorthNow": "Kira-kira {{amount}} DHB pada kadar semasa",
+    "offerNotePlaceholder": "Tambah nota (pilihan)",
+    "offerCommitsNothing": "Membuat tawaran tidak memerlukan kos dan tidak mengunci DHB. Anda hanya membayar jika pemilik menerima.",
+    "offerNeedsHandle": "Akaun ini tiada nama pengguna untuk ditawar."
   },
   "tv": {
     "seoTitle": "Live TV — Saluran Percuma Dari Seluruh Dunia",
@@ -4323,7 +4327,36 @@
     "confirmingOnChain": "Mengesahkan on-chain...",
     "signInToBuy": "Daftar masuk untuk membeli",
     "transferGuarantee": "Pemegang bergerak hanya selepas DeHub membaca pemindahan DHB anda kembali dari rantaian. Jika tidak, bayaran direkodkan terhadap jualan supaya penjual boleh membayar balik kepada anda.",
-    "shareTitle": "@{{handle}} dijual di DeHub"
+    "shareTitle": "@{{handle}} dijual di DeHub",
+    "tabOffers": "Tawaran",
+    "signInForOffers": "Log masuk untuk melihat tawaran bagi nama pengguna anda.",
+    "offersForYou": "Tawaran untuk nama pengguna anda",
+    "offersYouMade": "Tawaran yang anda buat",
+    "offerHistory": "Tawaran terdahulu",
+    "noIncomingOffers": "Belum ada sesiapa menawar untuk membeli nama pengguna anda.",
+    "noOutgoingOffers": "Anda belum membuat sebarang tawaran. Buka profil seseorang untuk menawar.",
+    "offerExpires": "Tamat {{when}}",
+    "payBefore": "Bayar {{when}}",
+    "awaitingOwner": "Menunggu pemilik",
+    "acceptOffer": "Terima",
+    "declineOffer": "Tolak",
+    "confirmAccept": "Terima tawaran",
+    "cancel": "Batal",
+    "withdrawOffer": "Tarik balik",
+    "withdrawAcceptance": "Tarik balik penerimaan",
+    "payAndClaim": "Bayar dan tuntut",
+    "acceptMovesNothingYet": "Menerima akan menyimpan nama pengguna anda untuk pembeli ini. Tiada apa berubah sehingga dia membayar, dan sebelum itu anda masih boleh menarik diri.",
+    "acceptedAwaitingPayment": "Anda menerima tawaran ini. Nama pengguna masih milik anda dan anda hanya menjadi @{{handle}} apabila dia membayar.",
+    "offerAcceptedPayNow": "Diterima. Nama pengguna disimpan untuk anda sehingga anda membayarnya.",
+    "offerStatus": {
+      "pending": "Menunggu jawapan",
+      "accepted": "Diterima, menunggu bayaran",
+      "declined": "Ditolak",
+      "withdrawn": "Ditarik balik",
+      "completed": "Selesai",
+      "expired": "Tamat tempoh"
+    },
+    "makeOfferAction": "Buat tawaran"
   },
   "accounts": {
     "seoTitle": "Pasaran Akaun — DeHub",

@@ -9,7 +9,7 @@ import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Send, Scale, Siren, Briefcase, Award
+import { AtSign, Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Send, Scale, Siren, Briefcase, Award
 } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
@@ -271,7 +271,7 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   reposts: ['repost', 'quote'],
   features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention'],
   communities: ['community_mention', 'community_here', 'community_join'],
-  stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased', 'fraction_sold', 'fraction_delivered', 'fraction_settled'],
+  stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased', 'fraction_sold', 'fraction_delivered', 'fraction_settled', 'username_offer', 'username_offer_accepted', 'username_offer_declined'],
   subscriptions: ['subscription', 'ppv_purchase'],
   tips: ['tip', 'bounty_available', 'bounty_claimed', 'work_application', 'work_submission'],
   livestreams: ['livestream_start', 'stage_live', 'stage_reminder'],
@@ -292,6 +292,7 @@ const API_BACKED_TYPES = new Set([
   'tip', 'bounty_available', 'bounty_claimed',
   'subscription', 'ppv_purchase',
   'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased',
+  'username_offer', 'username_offer_accepted', 'username_offer_declined',
   'livestream_start', 'signal_flare', 'video_milestone',
   'badge_delegated', 'badge_delegation_ended', 'badge_delegation_changed', 'badge_tier_up', 'badge_tier_down',
   'video_removal', 'account_warning', 'system',
@@ -403,6 +404,12 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     case 'fraction_offer_rejected':
     case 'fraction_settled':
       return <Store className="w-4 h-4 text-white/70" />;
+    // Its own glyph rather than the marketplace one: what is being bid for
+    // here is the reader's own name, not a thing on a shelf.
+    case 'username_offer':
+    case 'username_offer_accepted':
+    case 'username_offer_declined':
+      return <AtSign className="w-4 h-4 text-white/70" />;
     // The two that carry an obligation get their own glyph: these are the rows
     // with a deadline on them, and they should not read as one more Store note.
     case 'fraction_sold':
@@ -871,6 +878,12 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     case 'fraction_offer_rejected':
     case 'fraction_purchased':
       return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
+    // Answering an offer and paying for an accepted one happen on the same
+    // tab, so all three rows lead to it.
+    case 'username_offer':
+    case 'username_offer_accepted':
+    case 'username_offer_declined':
+      return '/app/usernames?tab=offers';
     case 'following':
     case 'follow_request_accepted':
       return notification.actorAddress

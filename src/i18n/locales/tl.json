@@ -1288,7 +1288,12 @@
     },
     "tabs": {
       "playlists": "Mga Playlist"
-    }
+    },
+    "offerWorthNow": "Mga {{amount}} DHB sa kasalukuyang palitan",
+    "offerNotePlaceholder": "Magdagdag ng paalala (opsyonal)",
+    "offerCommitsNothing": "Walang bayad ang pag-aalok at walang DHB na nakakandado. Magbabayad ka lang kung tatanggapin ng may-ari.",
+    "offerNeedsHandle": "Walang username ang account na ito na puwedeng alukin.",
+    "enterOfferAmount": "Ilagay ang halaga sa US dollar na gusto mong ialok para sa username na ito."
   },
   "tv": {
     "seoTitle": "Live TV — Libreng Channels Mula sa Buong Mundo",
@@ -3899,7 +3904,36 @@
     "signInToBuy": "Mag-sign in upang bumili",
     "buyHandle": "Bumili ng @{{handle}}",
     "transferGuarantee": "Ang handle ay lilipat lamang pagkatapos basahin ng DeHub ang iyong DHB transfer pabalik sa chain. Kung hindi nito makakagawa, ang pagbabayad ay naitala laban sa benta upang ang nagbebenta ay maaaring ibalik sa iyo.",
-    "shareTitle": "@{{handle}} ay para sa benta sa DeHub"
+    "shareTitle": "@{{handle}} ay para sa benta sa DeHub",
+    "tabOffers": "Mga alok",
+    "signInForOffers": "Mag-sign in para makita ang mga alok para sa username mo.",
+    "offersForYou": "Mga alok para sa username mo",
+    "offersYouMade": "Mga alok na ginawa mo",
+    "offerHistory": "Mga nakaraang alok",
+    "noIncomingOffers": "Wala pang nag-aalok na bilhin ang username mo.",
+    "noOutgoingOffers": "Wala ka pang ginagawang alok. Buksan ang profile ng isang tao para mag-alok.",
+    "offerExpires": "Mag-e-expire {{when}}",
+    "payBefore": "Magbayad {{when}}",
+    "awaitingOwner": "Naghihintay sa may-ari",
+    "acceptOffer": "Tanggapin",
+    "declineOffer": "Tanggihan",
+    "confirmAccept": "Tanggapin ang alok",
+    "cancel": "Kanselahin",
+    "withdrawOffer": "Bawiin",
+    "withdrawAcceptance": "Bawiin ang pagtanggap",
+    "payAndClaim": "Bayaran at kunin",
+    "acceptMovesNothingYet": "Sa pagtanggap, itatabi ang username mo para sa bumibiling ito. Walang magbabago hangga’t hindi siya nagbabayad, at bago iyon ay puwede kang umatras.",
+    "acceptedAwaitingPayment": "Tinanggap mo ang alok na ito. Sa iyo pa rin ang username at magiging @{{handle}} ka lang kapag nagbayad na siya.",
+    "offerAcceptedPayNow": "Tinanggap. Nakatabi sa iyo ang username hangga’t hindi mo ito nababayaran.",
+    "offerStatus": {
+      "pending": "Naghihintay ng sagot",
+      "accepted": "Tinanggap, hinihintay ang bayad",
+      "declined": "Tinanggihan",
+      "withdrawn": "Binawi",
+      "completed": "Tapos na",
+      "expired": "Nag-expire"
+    },
+    "makeOfferAction": "Mag-alok"
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",

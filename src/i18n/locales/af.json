@@ -1276,7 +1276,12 @@
     "accountSettings": "Rekeninginstellings",
     "securitySettings": "Sekuriteitinstellings",
     "preferences": "Voorkeure",
-    "logout": "Teken uit"
+    "logout": "Teken uit",
+    "offerWorthNow": "Ongeveer {{amount}} DHB teen die huidige koers",
+    "offerNotePlaceholder": "Voeg ’n nota by (opsioneel)",
+    "offerCommitsNothing": "’n Aanbod maak kos niks en hou geen DHB vas nie. Jy betaal net as die eienaar aanvaar.",
+    "offerNeedsHandle": "Hierdie rekening het geen gebruikersnaam om voor te bie nie.",
+    "enterOfferAmount": "Voer die bedrag in dollar in wat jy vir hierdie gebruikersnaam wil bie."
   },
   "tv": {
     "seoTitle": "Live TV — Gratis Kanale Uit Die Hele Wêreld",
@@ -3915,7 +3920,36 @@
     "signInToBuy": "Teken in om te koop",
     "buyHandle": "Koop @{{handle}}",
     "transferGuarantee": "Die handvat beweeg slegs nadat DeHub jou DHB-oordrag terug van die ketting lees. Indien dit nie kan nie, word die betaling teen die verkoop aangeteken sodat die verkoper jou kan terugbetaal.",
-    "shareTitle": "@{{handle}} is te koop op DeHub"
+    "shareTitle": "@{{handle}} is te koop op DeHub",
+    "tabOffers": "Aanbiedinge",
+    "signInForOffers": "Meld aan om aanbiedinge vir jou gebruikersnaam te sien.",
+    "offersForYou": "Aanbiedinge vir jou gebruikersnaam",
+    "offersYouMade": "Aanbiedinge wat jy gemaak het",
+    "offerHistory": "Vorige aanbiedinge",
+    "noIncomingOffers": "Niemand het nog aangebied om jou gebruikersnaam te koop nie.",
+    "noOutgoingOffers": "Jy het nog geen aanbiedinge gemaak nie. Maak iemand se profiel oop om een te maak.",
+    "offerExpires": "Verval {{when}}",
+    "payBefore": "Betaal {{when}}",
+    "awaitingOwner": "Wag op die eienaar",
+    "acceptOffer": "Aanvaar",
+    "declineOffer": "Weier",
+    "confirmAccept": "Aanvaar aanbod",
+    "cancel": "Kanselleer",
+    "withdrawOffer": "Trek terug",
+    "withdrawAcceptance": "Trek aanvaarding terug",
+    "payAndClaim": "Betaal en eis op",
+    "acceptMovesNothingYet": "Deur te aanvaar word jou gebruikersnaam vir hierdie koper gehou. Niks verander tot hulle betaal nie, en jy kan voor dit terugtrek.",
+    "acceptedAwaitingPayment": "Jy het hierdie aanbod aanvaar. Die gebruikersnaam is steeds joune en jy word eers @{{handle}} sodra hulle betaal.",
+    "offerAcceptedPayNow": "Aanvaar. Die gebruikersnaam word vir jou gehou totdat jy daarvoor betaal.",
+    "offerStatus": {
+      "pending": "Wag vir ’n antwoord",
+      "accepted": "Aanvaar, wag vir betaling",
+      "declined": "Geweier",
+      "withdrawn": "Teruggetrek",
+      "completed": "Voltooi",
+      "expired": "Verval"
+    },
+    "makeOfferAction": "Maak ’n aanbod"
   },
   "accounts": {
     "seoTitle": "Rekeningmarktplaas — DeHub",

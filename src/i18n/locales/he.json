@@ -1245,7 +1245,7 @@
     "unableToLoad": "לא ניתן לטעון את הפרופיל. נסה מאוחר יותר.",
     "doesNotExist": "משתמש זה לא קיים או שנדרשת התחברות.",
     "makeOffer": "הצע ל-{{handle}}",
-    "enterOfferAmount": "הכנס סכום DHB לשם זה.",
+    "enterOfferAmount": "הזן את הסכום בדולרים שברצונך להציע עבור שם המשתמש הזה.",
     "submitOffer": "הגש הצעה",
     "validOfferAmount": "הכנס סכום חוקי",
     "offerSubmitted": "הוגשה הצעת {{amount}} DHB ל-{{handle}}",
@@ -1265,7 +1265,11 @@
     },
     "tabs": {
       "playlists": "פלייליסטים"
-    }
+    },
+    "offerWorthNow": "בערך {{amount}} DHB לפי השער הנוכחי",
+    "offerNotePlaceholder": "הוסף הערה (אופציונלי)",
+    "offerCommitsNothing": "הגשת הצעה לא עולה כלום ולא מקפיאה DHB. תשלם רק אם הבעלים יאשר.",
+    "offerNeedsHandle": "לחשבון הזה אין שם משתמש להציע עליו."
   },
   "tv": {
     "seoTitle": "Live TV — ערוצים חינמיים מסביב לעולם",
@@ -3861,7 +3865,36 @@
     "signInToBuy": "התחבר כדי לקנות",
     "buyHandle": "קנה @{{handle}}",
     "transferGuarantee": "הידית עוברת רק לאחר שDeHub קורא את העברת DHB שלך בחזרה מהשרשרת. אם הוא לא יכול, התשלום מתועד כנגד המכירה כדי שהמוכר יוכל להחזיר לך כסף.",
-    "shareTitle": "@{{handle}} למכירה ב-DeHub"
+    "shareTitle": "@{{handle}} למכירה ב-DeHub",
+    "tabOffers": "הצעות",
+    "signInForOffers": "התחבר כדי לראות הצעות לשם המשתמש שלך.",
+    "offersForYou": "הצעות לשם המשתמש שלך",
+    "offersYouMade": "הצעות שהגשת",
+    "offerHistory": "הצעות קודמות",
+    "noIncomingOffers": "אף אחד עדיין לא הציע לקנות את שם המשתמש שלך.",
+    "noOutgoingOffers": "עדיין לא הגשת הצעות. פתח פרופיל של מישהו כדי להגיש אחת.",
+    "offerExpires": "פג {{when}}",
+    "payBefore": "שלם {{when}}",
+    "awaitingOwner": "ממתין לבעלים",
+    "acceptOffer": "אישור",
+    "declineOffer": "דחייה",
+    "confirmAccept": "אשר הצעה",
+    "cancel": "ביטול",
+    "withdrawOffer": "משיכה",
+    "withdrawAcceptance": "משוך את האישור",
+    "payAndClaim": "שלם וקח",
+    "acceptMovesNothingYet": "אישור שומר את שם המשתמש שלך לקונה הזה. שום דבר לא זז עד שהוא ישלם, ועד אז אפשר לחזור בך.",
+    "acceptedAwaitingPayment": "אישרת את ההצעה הזו. שם המשתמש עדיין שלך, ותהפוך ל-@{{handle}} רק כשהוא ישלם.",
+    "offerAcceptedPayNow": "אושר. שם המשתמש שמור עבורך עד שתשלם עליו.",
+    "offerStatus": {
+      "pending": "ממתין לתשובה",
+      "accepted": "אושר, ממתין לתשלום",
+      "declined": "נדחה",
+      "withdrawn": "נמשך",
+      "completed": "הושלם",
+      "expired": "פג תוקף"
+    },
+    "makeOfferAction": "הגש הצעה"
   },
   "accounts": {
     "seoDescription": "קנה ומכור חשבונות DeHub מבוססים עבור DHB. עיין בחשבונות לפי עוקבים, העלאות וגיל — הידית, הפוסטים, העוקבים וזכויות התג כולם מועברים, והתשלום הולך ישירות למוכר.",

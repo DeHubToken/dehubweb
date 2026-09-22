@@ -1321,7 +1321,7 @@
     "unableToLoad": "Profil sa nepodarilo načítať. Skúste to neskôr.",
     "doesNotExist": "Tento používateľ neexistuje, alebo sa musíte prihlásiť na zobrazenie svojho profilu.",
     "makeOffer": "Ponúknuť za {{handle}}",
-    "enterOfferAmount": "Zadajte množstvo DHB tokenov, ktoré chcete ponúknuť za získanie tohto používateľského mena.",
+    "enterOfferAmount": "Zadaj sumu v dolároch, ktorú chceš za toto používateľské meno ponúknuť.",
     "submitOffer": "Odoslať ponuku",
     "validOfferAmount": "Zadajte platnú výšku ponuky",
     "offerSubmitted": "Ponuka {{amount}} DHB za {{handle}} bola odoslaná",
@@ -1355,7 +1355,11 @@
     "muteUser": "Stlmiť",
     "subscribe": "Predplatiť",
     "subscribed": "Predplatené",
-    "tip": "Tip"
+    "tip": "Tip",
+    "offerWorthNow": "Asi {{amount}} DHB pri súčasnom kurze",
+    "offerNotePlaceholder": "Pridaj poznámku (nepovinné)",
+    "offerCommitsNothing": "Podať ponuku nič nestojí a neblokuje žiadne DHB. Platíš, len ak majiteľ prijme.",
+    "offerNeedsHandle": "Tento účet nemá používateľské meno, na ktoré by sa dalo ponúkať."
   },
   "tv": {
     "live": "Naživo",
@@ -3443,5 +3447,36 @@
     "inProgress": "V realizácii",
     "completed": "Dokončené",
     "underReview": "V recenzii"
+  },
+  "usernames": {
+    "tabOffers": "Ponuky",
+    "signInForOffers": "Prihlás sa, aby si videl ponuky na svoje používateľské meno.",
+    "offersForYou": "Ponuky na tvoje používateľské meno",
+    "offersYouMade": "Ponuky, ktoré si podal",
+    "offerHistory": "Staršie ponuky",
+    "noIncomingOffers": "Zatiaľ nikto neponúkol, že tvoje používateľské meno kúpi.",
+    "noOutgoingOffers": "Zatiaľ si nepodal žiadnu ponuku. Otvor niečí profil a podaj ju.",
+    "offerExpires": "Vyprší {{when}}",
+    "payBefore": "Zaplať {{when}}",
+    "awaitingOwner": "Čaká na majiteľa",
+    "acceptOffer": "Prijať",
+    "declineOffer": "Odmietnuť",
+    "confirmAccept": "Prijať ponuku",
+    "cancel": "Zrušiť",
+    "withdrawOffer": "Stiahnuť",
+    "withdrawAcceptance": "Stiahnuť prijatie",
+    "payAndClaim": "Zaplatiť a prevziať",
+    "acceptMovesNothingYet": "Prijatím sa tvoje používateľské meno rezervuje pre tohto kupujúceho. Nič sa nepresunie, kým nezaplatí, a dovtedy môžeš cúvnuť.",
+    "acceptedAwaitingPayment": "Túto ponuku si prijal. Používateľské meno je stále tvoje a @{{handle}} sa staneš, až keď zaplatí.",
+    "offerAcceptedPayNow": "Prijaté. Používateľské meno je pre teba držané, kým zaň nezaplatíš.",
+    "offerStatus": {
+      "pending": "Čaká na odpoveď",
+      "accepted": "Prijaté, čaká na platbu",
+      "declined": "Odmietnuté",
+      "withdrawn": "Stiahnuté",
+      "completed": "Dokončené",
+      "expired": "Vypršané"
+    },
+    "makeOfferAction": "Podať ponuku"
   }
 }

@@ -1203,7 +1203,7 @@
     "unableToLoad": "پروفایل نشي لوډ کیدلی. مهرباني وکړئ وروسته بیا هڅه وکړئ.",
     "doesNotExist": "دا کاروونکی شتون نلري یا تاسو باید د خپل پروفایل لیدو لپاره ننوتل وکړئ.",
     "makeOffer": "د {{handle}} لپاره وړاندیز وکړئ",
-    "enterOfferAmount": "د دې کارن نوم ترلاسه کولو لپاره د DHB ټوکنونو مقدار ولیکئ.",
+    "enterOfferAmount": "هغه اندازه په ډالرو ولیکه چې د دې کارن‌نوم لپاره یې وړاندیز کول غواړې.",
     "submitOffer": "وړاندیز وسپارئ",
     "validOfferAmount": "مهرباني وکړئ سم مقدار ولیکئ",
     "offerSubmitted": "د {{handle}} لپاره {{amount}} DHB وړاندیز وسپارل شو",
@@ -1223,7 +1223,11 @@
     },
     "tabs": {
       "playlists": "د لوبې لیستونه"
-    }
+    },
+    "offerWorthNow": "په اوسني نرخ نږدې {{amount}} DHB",
+    "offerNotePlaceholder": "یادښت ورزیات کړه (اختیاري)",
+    "offerCommitsNothing": "وړاندیز کول هیڅ نه لګوي او هیڅ DHB نه بندوي. یوازې هغه وخت ورکوې چې مالک یې ومني.",
+    "offerNeedsHandle": "دا حساب داسې کارن‌نوم نه لري چې وړاندیز پرې وشي."
   },
   "tv": {
     "title": "TV"
@@ -3158,5 +3162,36 @@
     "audio": "ویډیوګانې",
     "poll": "په نظرپوښتنه کې",
     "scheduled": "د مهال ویش سره سم"
+  },
+  "usernames": {
+    "tabOffers": "وړاندیزونه",
+    "signInForOffers": "د خپل کارن‌نوم وړاندیزونه لیدو لپاره ننوځه.",
+    "offersForYou": "ستا د کارن‌نوم وړاندیزونه",
+    "offersYouMade": "هغه وړاندیزونه چې تا کړي",
+    "offerHistory": "پخواني وړاندیزونه",
+    "noIncomingOffers": "تر اوسه چا ستا د کارن‌نوم پیرودلو وړاندیز نه دی کړی.",
+    "noOutgoingOffers": "تر اوسه دې هیڅ وړاندیز نه دی کړی. د وړاندیز لپاره د چا پروفایل پرانیزه.",
+    "offerExpires": "{{when}} پای ته رسیږي",
+    "payBefore": "{{when}} ورکړه",
+    "awaitingOwner": "د مالک انتظار",
+    "acceptOffer": "ومنه",
+    "declineOffer": "رد کړه",
+    "confirmAccept": "وړاندیز ومنه",
+    "cancel": "لغوه کړه",
+    "withdrawOffer": "بیرته واخله",
+    "withdrawAcceptance": "منل بیرته واخله",
+    "payAndClaim": "ورکړه او واخله",
+    "acceptMovesNothingYet": "منل ستا کارن‌نوم د دې پیرودونکي لپاره ساتي. تر څو چې هغه پیسې ورنکړي هیڅ نه بدلیږي، او تر هغه وړاندې کولی شې بیرته شې.",
+    "acceptedAwaitingPayment": "تا دا وړاندیز ومانه. کارن‌نوم لا هم ستا دی او @{{handle}} به هغه وخت شې چې هغه پیسې ورکړي.",
+    "offerAcceptedPayNow": "ومنل شو. تر څو چې پیسې ورنکړې کارن‌نوم درته ساتل شوی.",
+    "offerStatus": {
+      "pending": "د ځواب انتظار",
+      "accepted": "ومنل شو، د تادیې انتظار",
+      "declined": "رد شو",
+      "withdrawn": "بیرته واخیستل شو",
+      "completed": "بشپړ شو",
+      "expired": "وخت یې تېر شو"
+    },
+    "makeOfferAction": "وړاندیز وکړه"
   }
 }

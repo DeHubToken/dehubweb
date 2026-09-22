@@ -47,6 +47,8 @@ import { ProfileOptionsContent } from '@/components/app/profile/ProfileOptionsDr
 import { parseDefaultProfileTab, isProfileTabValue, type TabValue } from '@/components/app/profile/ProfileConstants';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
+import { useCreateUsernameOffer } from '@/hooks/use-username-offers';
+import { useUsernameMarketConfig } from '@/hooks/use-username-market';
 
 /** Tabs served by the creator's own /api/feed content query. */
 const CONTENT_BACKED_TABS: TabValue[] = ['home', 'posts', 'images', 'videos'];
@@ -199,10 +201,13 @@ export default function ProfilePage() {
   const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
   const [offerDrawerOpen, setOfferDrawerOpen] = useState(false);
   const [offerAmount, setOfferAmount] = useState('');
+  const [offerMessage, setOfferMessage] = useState('');
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const [followListDrawerOpen, setFollowListDrawerOpen] = useState(false);
   const [followListType, setFollowListType] = useState<'followers' | 'following'>('followers');
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const createOffer = useCreateUsernameOffer();
+  const { data: usernameMarketConfig } = useUsernameMarketConfig();
   const [editingPlan, setEditingPlan] = useState<SubscriptionPlan | null>(null);
   const [showTipModal, setShowTipModal] = useState(false);
   
@@ -362,14 +367,40 @@ export default function ProfilePage() {
     setOfferDrawerOpen(true);
   };
 
+  // What the typed dollar figure is worth in tokens at the moment of typing.
+  // Shown, never sent: the offer is denominated in dollars and converted again
+  // at checkout, exactly as an asking price is.
+  const offerDhb = (() => {
+    const usd = Number(offerAmount);
+    const peg = usernameMarketConfig?.dhbUsdPeg;
+    if (!Number.isFinite(usd) || usd <= 0 || !peg) return null;
+    return Math.ceil(usd / peg);
+  })();
+
   const handleSubmitOffer = () => {
-    if (!offerAmount || parseFloat(offerAmount) <= 0) {
+    const handle = (data.profile?.handle || '').replace(/^@/, '');
+    const priceUsd = Number(offerAmount);
+    if (!handle) {
+      toast.error(t('profile.offerNeedsHandle'));
+      return;
+    }
+    if (!Number.isFinite(priceUsd) || priceUsd <= 0) {
       toast.error(t('profile.validOfferAmount'));
       return;
     }
-    toast.success(t('profile.offerSubmitted', { amount: offerAmount, handle: data.profile?.handle || 'user' }));
-    setOfferDrawerOpen(false);
-    setOfferAmount('');
+    // The drawer closes on success only. A refused offer — a price out of
+    // bounds, an offer on a handle nobody holds — leaves the amount where the
+    // reader typed it, next to the toast saying why.
+    createOffer.mutate(
+      { username: handle, priceUsd, message: offerMessage.trim() || undefined },
+      {
+        onSuccess: () => {
+          setOfferDrawerOpen(false);
+          setOfferAmount('');
+          setOfferMessage('');
+        },
+      },
+    );
   };
 
   // Loading state — show skeleton only if we don't have profile data yet.
@@ -708,22 +739,41 @@ export default function ProfilePage() {
               {t('profile.enterOfferAmount')}
             </p>
             <div className="relative">
-              <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
-              </div>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">$</span>
               <Input
                 type="number"
+                inputMode="decimal"
                 placeholder="0"
                 value={offerAmount}
                 onChange={(e) => setOfferAmount(e.target.value)}
-                className="pl-10 pr-14 bg-zinc-800 border-zinc-700 text-white"
+                className="pl-8 pr-14 bg-zinc-800 border-zinc-700 text-white"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm font-medium">
-                DHB
+                USD
               </span>
             </div>
+            {offerDhb !== null && (
+              <p className="text-[11px] text-zinc-500 flex items-center gap-1.5">
+                <img src={dehubCoin} alt="DHB" className="w-3.5 h-3.5" />
+                {t('profile.offerWorthNow', { amount: offerDhb.toLocaleString(undefined, { maximumFractionDigits: 0 }) })}
+              </p>
+            )}
+            <Input
+              placeholder={t('profile.offerNotePlaceholder')}
+              value={offerMessage}
+              onChange={(e) => setOfferMessage(e.target.value)}
+              maxLength={280}
+              className="bg-zinc-800 border-zinc-700 text-white"
+            />
+            {/* The single most important line in the drawer. Nothing is spent
+                here, and the previous version of this screen said nothing at
+                all — which read as though the money had gone. */}
+            <p className="text-[11px] text-zinc-400 rounded-lg border border-white/10 bg-white/5 p-2">
+              {t('profile.offerCommitsNothing')}
+            </p>
             <Button 
               onClick={handleSubmitOffer}
+              disabled={createOffer.isPending}
               className="w-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white"
             >
               {t('profile.submitOffer')}
