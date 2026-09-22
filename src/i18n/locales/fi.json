@@ -1248,7 +1248,7 @@
     "unableToLoad": "Profiilia ei voitu ladata. Yritä myöhemmin uudelleen.",
     "doesNotExist": "Tätä käyttäjää ei ole tai sinun täytyy kirjautua sisään nähdäksesi profiilisi.",
     "makeOffer": "Tee tarjous {{handle}}:sta",
-    "enterOfferAmount": "Syötä DHB-tokenien määrä jonka haluat tarjota tämän käyttäjätunnuksen hankkimiseksi.",
+    "enterOfferAmount": "Anna dollarimäärä, jonka haluat tarjota tästä käyttäjänimestä.",
     "submitOffer": "Lähetä tarjous",
     "validOfferAmount": "Syötä kelvolinen summa",
     "offerSubmitted": "{{amount}} DHB:n tarjous {{handle}}:sta lähetetty",
@@ -1268,7 +1268,11 @@
     },
     "tabs": {
       "playlists": "Soittolistat"
-    }
+    },
+    "offerWorthNow": "Noin {{amount}} DHB nykykurssilla",
+    "offerNotePlaceholder": "Lisää viesti (valinnainen)",
+    "offerCommitsNothing": "Tarjouksen tekeminen ei maksa mitään eikä sido DHB:tä. Maksat vain, jos omistaja hyväksyy.",
+    "offerNeedsHandle": "Tällä tilillä ei ole käyttäjänimeä, josta tarjota."
   },
   "tv": {
     "seoTitle": "Live TV — Ilmaiset kanavat ympäri maailmaa",
@@ -4001,7 +4005,36 @@
     "signInToBuy": "Kirjaudu sisään ostaaksesi",
     "buyHandle": "Osta @{{handle}}",
     "transferGuarantee": "Kahva siirtyy vasta sen jälkeen, kun DeHub lukee DHB-siirron takaisin lohkoketjusta. Jos se ei onnistu, maksu kirjataan myyntiin niin, että myyjä voi palauttaa sinulle rahaa.",
-    "shareTitle": "@{{handle}} on myytävänä DeHubissa"
+    "shareTitle": "@{{handle}} on myytävänä DeHubissa",
+    "tabOffers": "Tarjoukset",
+    "signInForOffers": "Kirjaudu sisään nähdäksesi käyttäjänimestäsi tehdyt tarjoukset.",
+    "offersForYou": "Tarjoukset käyttäjänimestäsi",
+    "offersYouMade": "Tekemäsi tarjoukset",
+    "offerHistory": "Aiemmat tarjoukset",
+    "noIncomingOffers": "Kukaan ei ole vielä tarjonnut käyttäjänimestäsi.",
+    "noOutgoingOffers": "Et ole vielä tehnyt tarjouksia. Avaa jonkun profiili tehdäksesi tarjouksen.",
+    "offerExpires": "Vanhenee {{when}}",
+    "payBefore": "Maksa {{when}}",
+    "awaitingOwner": "Odottaa omistajaa",
+    "acceptOffer": "Hyväksy",
+    "declineOffer": "Hylkää",
+    "confirmAccept": "Hyväksy tarjous",
+    "cancel": "Peruuta",
+    "withdrawOffer": "Peru tarjous",
+    "withdrawAcceptance": "Peru hyväksyntä",
+    "payAndClaim": "Maksa ja lunasta",
+    "acceptMovesNothingYet": "Hyväksyminen varaa käyttäjänimesi tälle ostajalle. Mikään ei siirry ennen kuin hän maksaa, ja voit perua sitä ennen.",
+    "acceptedAwaitingPayment": "Hyväksyit tämän tarjouksen. Käyttäjänimi on yhä sinun, ja sinusta tulee @{{handle}} vasta kun hän maksaa.",
+    "offerAcceptedPayNow": "Hyväksytty. Käyttäjänimi on varattu sinulle, kunnes maksat siitä.",
+    "offerStatus": {
+      "pending": "Odottaa vastausta",
+      "accepted": "Hyväksytty, odottaa maksua",
+      "declined": "Hylätty",
+      "withdrawn": "Peruttu",
+      "completed": "Valmis",
+      "expired": "Vanhentunut"
+    },
+    "makeOfferAction": "Tee tarjous"
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",

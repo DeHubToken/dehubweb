@@ -1247,7 +1247,7 @@
     "unableToLoad": "Nelze načíst profil. Zkuste to později.",
     "doesNotExist": "Tento uživatel neexistuje nebo je vyžadováno přihlášení.",
     "makeOffer": "Nabídnout {{handle}}",
-    "enterOfferAmount": "Zadejte částku DHB pro toto jméno.",
+    "enterOfferAmount": "Zadej částku v dolarech, kterou chceš za toto uživatelské jméno nabídnout.",
     "submitOffer": "Odeslat nabídku",
     "validOfferAmount": "Zadejte platnou částku",
     "offerSubmitted": "Nabídka {{amount}} DHB odeslána na {{handle}}",
@@ -1267,7 +1267,11 @@
     },
     "tabs": {
       "playlists": "Playlisty"
-    }
+    },
+    "offerWorthNow": "Asi {{amount}} DHB při současném kurzu",
+    "offerNotePlaceholder": "Přidej poznámku (nepovinné)",
+    "offerCommitsNothing": "Podat nabídku nic nestojí a neblokuje žádné DHB. Platíš, jen když majitel přijme.",
+    "offerNeedsHandle": "Tento účet nemá uživatelské jméno, na které by šlo nabízet."
   },
   "tv": {
     "seoTitle": "Live TV — Bezplatné kanály z celého světa",
@@ -4005,7 +4009,36 @@
     "signInToBuy": "Přihlaste se, abyste mohli koupit",
     "buyHandle": "Koupit @{{handle}}",
     "transferGuarantee": "Jméno se přesune pouze poté, co DeHub přečte váš převod DHB zpět z řetězce. Pokud to nebude možné, platba se zaznamená proti prodeji, aby vám prodávající mohl vrátit peníze.",
-    "shareTitle": "@{{handle}} se prodává na DeHub"
+    "shareTitle": "@{{handle}} se prodává na DeHub",
+    "tabOffers": "Nabídky",
+    "signInForOffers": "Přihlas se, abys viděl nabídky na své uživatelské jméno.",
+    "offersForYou": "Nabídky na tvé uživatelské jméno",
+    "offersYouMade": "Nabídky, které jsi podal",
+    "offerHistory": "Dřívější nabídky",
+    "noIncomingOffers": "Zatím nikdo nenabídl, že tvé uživatelské jméno koupí.",
+    "noOutgoingOffers": "Zatím jsi žádnou nabídku nepodal. Otevři něčí profil a podej ji.",
+    "offerExpires": "Vyprší {{when}}",
+    "payBefore": "Zaplať {{when}}",
+    "awaitingOwner": "Čeká na majitele",
+    "acceptOffer": "Přijmout",
+    "declineOffer": "Odmítnout",
+    "confirmAccept": "Přijmout nabídku",
+    "cancel": "Zrušit",
+    "withdrawOffer": "Stáhnout",
+    "withdrawAcceptance": "Stáhnout přijetí",
+    "payAndClaim": "Zaplatit a převzít",
+    "acceptMovesNothingYet": "Přijetím se tvé uživatelské jméno rezervuje pro tohoto kupujícího. Nic se nepřesune, dokud nezaplatí, a do té doby můžeš couvnout.",
+    "acceptedAwaitingPayment": "Tuto nabídku jsi přijal. Uživatelské jméno je stále tvoje a @{{handle}} se staneš, až zaplatí.",
+    "offerAcceptedPayNow": "Přijato. Uživatelské jméno je pro tebe drženo, dokud za něj nezaplatíš.",
+    "offerStatus": {
+      "pending": "Čeká na odpověď",
+      "accepted": "Přijato, čeká na platbu",
+      "declined": "Odmítnuto",
+      "withdrawn": "Staženo",
+      "completed": "Dokončeno",
+      "expired": "Vypršelo"
+    },
+    "makeOfferAction": "Podat nabídku"
   },
   "accounts": {
     "seoTitle": "Tržiště účtů — DeHub",
