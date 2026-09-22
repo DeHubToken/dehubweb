@@ -3631,7 +3631,77 @@ export function canonicalOriginRequest(request) {
   return new Request(target, request);
 }
 
-async function handleRequest(request, env) {
+/**
+ * How long a built sitemap counts as fresh, and the header the build time is
+ * stamped into. `Cache-Control: s-maxage` cannot be read back off a cache hit
+ * as an age, so the stamp is what decides stale.
+ */
+const SITEMAP_FRESH_SECONDS = 3600;
+const SITEMAP_BUILT_HEADER = 'X-Sitemap-Built';
+
+/** A built sitemap, stamped so its age survives a round trip through the cache. */
+function sitemapResponse(xml) {
+  return new Response(xml, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/xml; charset=utf-8',
+      'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+      [SITEMAP_BUILT_HEADER]: String(Date.now()),
+    },
+  });
+}
+
+/**
+ * A sitemap from the edge cache, rebuilt behind the response rather than in
+ * front of it.
+ *
+ * sitemap-posts-1.xml took 21–23 seconds to answer on every request, measured
+ * warm and cold on 2026-09-22. It enumerates ~33 pages of the feed and sleeps
+ * out api.dehub.io's rate-limit windows between them, and `s-maxage` alone
+ * never covered that: a Worker's own subrequests and its generated response
+ * are not zone-cached unless the Worker puts them there itself, so every fetch
+ * paid the full walk. Google abandons slow sitemap fetches, which put all
+ * 1,129 post URLs at risk of never being read.
+ *
+ * So the build result is held in `caches.default` and served from there. Past
+ * SITEMAP_FRESH_SECONDS the stale copy is still answered immediately and the
+ * rebuild runs in `waitUntil` — one request per hour per colo pays the walk,
+ * and it is a request nobody is waiting on. A failed rebuild leaves the stale
+ * copy in place, which is a better sitemap than the unfiltered Supabase
+ * fallback the caller would otherwise reach for.
+ *
+ * Returns null only when there is no cached copy and the build failed, which
+ * is the caller's cue to fall through as before.
+ */
+export async function cachedSitemap(request, ctx, build) {
+  const cache = caches.default;
+  const key = new Request(new URL(request.url).toString(), { method: 'GET' });
+  const hit = await cache.match(key);
+  const builtAt = hit ? Number(hit.headers.get(SITEMAP_BUILT_HEADER)) : NaN;
+  const ageSeconds = Number.isFinite(builtAt) ? (Date.now() - builtAt) / 1000 : Infinity;
+
+  if (hit && ageSeconds < SITEMAP_FRESH_SECONDS) return hit;
+
+  const rebuild = async () => {
+    const fresh = await build();
+    if (fresh) await cache.put(key, fresh.clone());
+    return fresh;
+  };
+
+  // A stale copy answers now; only a cold cache waits for the walk.
+  if (hit && ctx && typeof ctx.waitUntil === 'function') {
+    ctx.waitUntil(rebuild().catch((e) => console.error('[Edge] sitemap refresh failed:', e)));
+    return hit;
+  }
+
+  const fresh = await rebuild().catch((e) => {
+    console.error('[Edge] sitemap build failed:', e);
+    return null;
+  });
+  return fresh || hit || null;
+}
+
+async function handleRequest(request, env, ctx) {
   request = canonicalOriginRequest(request);
   const url = new URL(request.url);
   const pathname = url.pathname;
@@ -4071,16 +4141,12 @@ async function handleRequest(request, env) {
   // degrades to the fifty-URL sitemap rather than to a 503.
   const profileSitemapMatch = pathname.match(/^\/sitemap-profiles-(\d+)\.xml$/);
   if (profileSitemapMatch) {
-    const meta = await dehubProfileSitemap(Number(profileSitemapMatch[1]) || 1, PROFILE_SITEMAP_PAGE_SIZE);
-    if (meta) {
-      return new Response(profileSitemapXml(meta.profiles, SYSTEM_ROUTES), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/xml; charset=utf-8',
-          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
-        },
-      });
-    }
+    const page = Number(profileSitemapMatch[1]) || 1;
+    const cached = await cachedSitemap(request, ctx, async () => {
+      const meta = await dehubProfileSitemap(page, PROFILE_SITEMAP_PAGE_SIZE);
+      return meta ? sitemapResponse(profileSitemapXml(meta.profiles, SYSTEM_ROUTES)) : null;
+    });
+    if (cached) return cached;
     console.error(`[Edge] profile sitemap unavailable for ${pathname}, falling back`);
   }
 
@@ -4092,16 +4158,12 @@ async function handleRequest(request, env) {
   // partial one.
   const postSitemapMatch = pathname.match(/^\/sitemap-posts-(\d+)\.xml$/);
   if (postSitemapMatch) {
-    const posts = await dehubPostSitemap(Number(postSitemapMatch[1]) || 1);
-    if (posts) {
-      return new Response(postSitemapXml(posts), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/xml; charset=utf-8',
-          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
-        },
-      });
-    }
+    const page = Number(postSitemapMatch[1]) || 1;
+    const cached = await cachedSitemap(request, ctx, async () => {
+      const posts = await dehubPostSitemap(page);
+      return posts ? sitemapResponse(postSitemapXml(posts)) : null;
+    });
+    if (cached) return cached;
     console.error(`[Edge] post sitemap enumeration incomplete for ${pathname}, falling back`);
   }
 
