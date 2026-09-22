@@ -150,7 +150,7 @@ function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange:
         // The transfer is out. Only a revert is still worth saying, and it
         // arrives long after the drawer has closed.
         result.confirmed.then((ok) => {
-          if (!ok) toast.error(t('dao.sendFailed'));
+          if (!ok) toastTxError(null, t('dao.sendFailed'));
         });
       },
       onError: (err) => {
