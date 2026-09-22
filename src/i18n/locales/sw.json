@@ -465,7 +465,11 @@
       "unavailable": "Kutangaza kutoka kwa kiendeshi hakupatikani kwenye akaunti yako kwa sasa.",
       "serverCopied": "Seva imenakiliwa",
       "keyCopied": "Ufunguo wa mkondo umenakiliwa"
-    }
+    },
+    "usernames": "Majina ya watumiaji",
+    "usernamesDesc": "Majina unayomiliki",
+    "usernamesCount_one": "{{count}} USERNAME",
+    "usernamesCount_other": "{{count}} majina ya watumiaji"
   },
   "common": {
     "save": "Hifadhi",
@@ -4041,7 +4045,7 @@
     "youBecomeHandle": "Unakuwa @{{handle}} mara tu mtu anakununua. Ikiwa jina hilo limechukuliwa kwa wakati huo, lahaja yenye namba inatumiwa na unajulishwa ni ipi.",
     "pitchOptional": "Pendekezo (la hiari)",
     "pitchPlaceholder": "Jina la 2021 la asili, historia safi…",
-    "saleFinalWarning": "Mauzo ni ya mwisho na ya haraka. Machapisho yako, wafuasi na mkoba wako wanabaki na wewe — jina tu ndilo linalosogea, na la zamani la mnunuzi hulolewa.",
+    "saleFinalWarning": "Uuzaji ni wa mwisho na wa papo hapo. Machapisho yako, wafuasi na pochi hubaki na wewe — ni jina la mtumiaji tu linalohamishwa. Mnunuzi huweka jina lake la zamani pia; linakuwa mojawapo ya majina yake ya watumiaji.",
     "updateListing": "Sasisha orodha",
     "listForSale": "Orodha kwa ajili ya mauzo",
     "withdrawListing": "Ondoa orodha",
@@ -4053,7 +4057,6 @@
     "askingPrice": "Bei inayoombwa",
     "paidStraightToSeller": "≈ ${{usd}} · kulipwa moja kwa moja kwa muuzaji, DeHub hachukui kitu",
     "yourHandleChanges": "Mabadiliko ya jina lako",
-    "oldHandleReleased": "Jina lako la zamani hulolewa na mtu yeyote anaweza kulichukua. Machapisho, wafuasi na mkoba wako hayabadiliki.",
     "payingWithDhbOn": "Kulipa kwa DHB kwenye {{chain}}",
     "shortOfDhbPaidOn": "Unakosa DHB — hii itakulipwa kwenye {{chain}}",
     "yourOwnListing": "Hii ni orodha yako. Idare kutoka kwa kichupo cha Kuuza.",
@@ -4091,7 +4094,28 @@
       "completed": "Imekamilika",
       "expired": "Muda umeisha"
     },
-    "makeOfferAction": "Toa ofa"
+    "makeOfferAction": "Toa ofa",
+    "tabMine": "Mali Yangu",
+    "sellingWornName": "Huu ndio mtumiaji unaotumia kwenye wasifu wako. Kuuza humaanisha unahamia kwa jina lingine.",
+    "sellingHeldName": "Unamiliki jina hili lakini hulisitumii. Kulizuza hakubadilishi wasifu wako.",
+    "saleFinalWarningHeld": "Uuzaji ni wa mwisho na wa papo hapo. Mtumiaji wako mwenyewe na kila kitu kwenye wasifu wako haviguswi — ni jina hili tu linalohamishwa.",
+    "signInToSeeVault": "Ingia ili kuona majina ya watumiaji unayomiliki.",
+    "vaultExplainer": "Majina ya watumiaji uliyonunua yanabaki kuwa yako. Unaweza kuvaa moja, kuuza, au kuachilia.",
+    "vaultExplainerEmpty": "Unamiliki jina moja la mtumiaji. Nunua lingine na utaendelea kumiliki hili pia.",
+    "vaultInUse": "Inatumika",
+    "vaultBought": "Ilinunuliwa",
+    "vaultKept": "Imehifadhiwa kutoka ununuzi wa awali",
+    "vaultFree": "Jina la mtumiaji bila malipo",
+    "vaultFreeWarning": "Hujalipa kwa hili, kwa hivyo kubadili jina lingine kutalifanya liachiliwe na mtu yeyote anaweza kulichukua.",
+    "vaultUseThis": "Tumia hili",
+    "vaultSell": "Uza",
+    "vaultEditListing": "Hariri tangazo",
+    "vaultRelease": "Achilia",
+    "vaultListedCannotWear": "Ondoa tangazo kabla ya kutumia jina hili.",
+    "vaultReleaseTitle": "Achilia @{{handle}}?",
+    "vaultReleaseBody": "Inarudi kwenye mfumo na mtu yeyote anaweza kulichukua. Hakuna kurudi nyuma, na kulirudisha kungegharimu chochote ambacho mmiliki mpya anaomba.",
+    "oldHandleKept": "Unahifadhi @{{handle}} — linaingia kwenye majina yako ya watumiaji, na unaweza kulitumia tena au kuliuza baadaye. Machapisho, wafuasi na pochi yako haviguswi.",
+    "postsStayWithYou": "Machapisho, wafuasi na pochi yako haviguswi."
   },
   "accounts": {
     "seoTitle": "Soko la Akaunti — DeHub",

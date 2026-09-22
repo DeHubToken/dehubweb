@@ -124,19 +124,24 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
               </p>
             </div>
 
-            {/* The swap, said out loud. */}
+            {/* The move, said out loud.
+                Not struck through any more: the old handle is not being given
+                up, it is being kept. Buying used to cost you the name you had,
+                which is exactly the thing people would not buy into, so the one
+                line that used to say "released" now has to say the opposite
+                clearly enough that nobody hesitates over it. */}
             {quote && (
               <div className="rounded-xl bg-white/5 border border-white/10 p-4">
                 <p className="text-xs text-zinc-500 mb-2">{t('usernames.yourHandleChanges')}</p>
                 <div className="flex items-center gap-2 text-sm min-w-0">
-                  <span className="text-zinc-400 line-through break-all">
-                    @{quote.currentUsername || '—'}
-                  </span>
+                  <span className="text-zinc-400 break-all">@{quote.currentUsername || '—'}</span>
                   <ArrowRight className="w-4 h-4 text-zinc-600 shrink-0" />
                   <span className="text-white font-semibold break-all">@{quote.username}</span>
                 </div>
                 <p className="text-[11px] text-zinc-500 mt-2">
-                  {t('usernames.oldHandleReleased')}
+                  {quote.currentUsername
+                    ? t('usernames.oldHandleKept', { handle: quote.currentUsername })
+                    : t('usernames.postsStayWithYou')}
                 </p>
               </div>
             )}

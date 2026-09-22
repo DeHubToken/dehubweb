@@ -463,7 +463,11 @@
       "unavailable": "現在、アカウントではエンコーダーからのストリーミングは利用できません。",
       "serverCopied": "サーバーがコピーされました",
       "keyCopied": "ストリームキーがコピーされました"
-    }
+    },
+    "usernames": "ユーザー名",
+    "usernamesDesc": "所有している名前",
+    "usernamesCount_one": "{{count}}ユーザー名",
+    "usernamesCount_other": "{{count}}ユーザー名"
   },
   "common": {
     "save": "保存",
@@ -4032,7 +4036,7 @@
     "youBecomeHandle": "誰かが購入した瞬間に @{{handle}} になります。その時点でその名前が既に取得されている場合は、番号付きのバリアントが使用され、どれが使用されたかが通知されます。",
     "pitchOptional": "ピッチ（オプション）",
     "pitchPlaceholder": "2021 年のオリジナルハンドル、クリーンな履歴…",
-    "saleFinalWarning": "売却は最終的で即座です。投稿、フォロワー、ウォレットはあなたと一緒に残ります — ハンドルのみが移動し、買い手の古いハンドルは解放されます。",
+    "saleFinalWarning": "セールは最終的かつ即座に行われます。 投稿、フォロワー、ウォレットはあなたの手元に残ります。ハンドルだけが動きます。 買い手も古いハンドルを保持しています。これはユーザー名の1つになります。",
     "updateListing": "リスティングを更新",
     "listForSale": "売却リストに登録",
     "withdrawListing": "リスティングを取り下げ",
@@ -4044,7 +4048,6 @@
     "askingPrice": "希望価格",
     "paidStraightToSeller": "≈ ${{usd}} · 売上は売り手に直接支払われ、DeHubは手数料を取りません",
     "yourHandleChanges": "ハンドルが変更されます",
-    "oldHandleReleased": "古いハンドルはリリースされ、誰でも取得できます。投稿、フォロワー、ウォレットは変わりません。",
     "payingWithDhbOn": "{{chain}}でDHBで支払う",
     "shortOfDhbPaidOn": "DHBが不足しています — これは{{chain}}で支払われます",
     "yourOwnListing": "これはあなたのリスティングです。「売却」タブから管理してください。",
@@ -4088,7 +4091,28 @@
       "completed": "完了",
       "expired": "期限切れ"
     },
-    "makeOfferAction": "オファーを出す"
+    "makeOfferAction": "オファーを出す",
+    "tabMine": "鉱山",
+    "sellingWornName": "これはプロフィールで使用しているハンドルネームです。これを売却すると、別の名前へ移行します。",
+    "sellingHeldName": "この名前はあなたが所有していますが、現在使用していません。これを売却しても、プロフィールは変更されません。",
+    "saleFinalWarningHeld": "売却は即時かつ最終的なものです。あなた自身のハンドルネームとプロフィール上のすべてはそのままですが、この名前のみが移動します。",
+    "signInToSeeVault": "所有しているユーザーネームを表示するにはサインインしてください。",
+    "vaultExplainer": "購入したユーザーネームはあなたのものです。それを装着したり、売却したり、手放したりすることができます。",
+    "vaultExplainerEmpty": "あなたはユーザーネームを1つ所有しています。もう1つ購入しても、このユーザーネームは引き続きあなたのものです。",
+    "vaultInUse": "使用中",
+    "vaultBought": "購入済み",
+    "vaultKept": "以前の購入から保持",
+    "vaultFree": "無料ユーザーネーム",
+    "vaultFreeWarning": "このユーザーネームはまだ購入していないため、別の名前に切り替えるとこのユーザーネームは放棄され、誰でも取得できるようになります。",
+    "vaultUseThis": "これを使用する",
+    "vaultSell": "売却する",
+    "vaultEditListing": "出品を編集する",
+    "vaultRelease": "解放する",
+    "vaultListedCannotWear": "出品を取り下げる前に、この名前を使用してください。",
+    "vaultReleaseTitle": "@{{handle}}? を解放する",
+    "vaultReleaseBody": "プールに戻され、誰でも取得できるようになります。元に戻すことはできず、買い戻すには新しい所有者が要求する価格がかかります。",
+    "oldHandleKept": "@{{handle}}を維持すると、ユーザー名に移動し、再度着用することも、後で販売することもできます。 投稿、フォロワー、ウォレットには何の影響もありません。",
+    "postsStayWithYou": "投稿、フォロワー、ウォレットには何の影響もありません。"
   },
   "accounts": {
     "seoTitle": "アカウントマーケットプレイス — DeHub",

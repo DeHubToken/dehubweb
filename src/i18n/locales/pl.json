@@ -465,7 +465,11 @@
       "unavailable": "Strumieniowanie z enkodera nie jest obecnie dostępne na Twoim koncie.",
       "serverCopied": "Skopiowano serwer",
       "keyCopied": "Skopiowano klucz strumienia"
-    }
+    },
+    "usernames": "Nazwy użytkowników",
+    "usernamesDesc": "Nazwy, które posiadasz",
+    "usernamesCount_one": "Nazwa użytkownika {{count}}",
+    "usernamesCount_other": "{{count}} nazwy użytkownika"
   },
   "common": {
     "save": "Zapisz",
@@ -4041,7 +4045,7 @@
     "youBecomeHandle": "Staniesz się @{{handle}} w momencie, gdy ktoś kupi. Jeśli ta nazwa zostanie zajęta do tego czasu, używana jest wariant numerowany i zostaniesz o tym powiadomiony.",
     "pitchOptional": "Pitch (opcjonalnie)",
     "pitchPlaceholder": "Oryginalny uchwyt z 2021 roku, czysta historia…",
-    "saleFinalWarning": "Sprzedaż jest ostateczna i natychmiastowa. Twoje posty, obserwujący i portfel pozostają z Tobą — tylko uchwyt się zmienia, a stary uchwyt kupującego jest zwolniany.",
+    "saleFinalWarning": "Sprzedaż jest ostateczna i natychmiastowa. Twoje posty, obserwujący i portfel pozostają z Tobą — porusza się tylko uchwyt. Kupujący również zachowuje swój stary uchwyt; staje się on jedną z jego nazw użytkownika.",
     "updateListing": "Zaktualizuj ogłoszenie",
     "listForSale": "Wystawić na sprzedaż",
     "withdrawListing": "Wycofaj ogłoszenie",
@@ -4053,7 +4057,6 @@
     "askingPrice": "Cena wywoławcza",
     "paidStraightToSeller": "≈ ${{usd}} · płacone bezpośrednio sprzedającemu, DeHub nie bierze prowizji",
     "yourHandleChanges": "Twój uchwyt się zmienia",
-    "oldHandleReleased": "Twój stary uchwyt jest zwolniany i każdy może go wziąć. Posty, obserwujący i portfel pozostają niezmienione.",
     "payingWithDhbOn": "Płacenie DHB na {{chain}}",
     "shortOfDhbPaidOn": "Brakuje Ci DHB — będzie to zapłacone na {{chain}}",
     "yourOwnListing": "To jest Twoje ogłoszenie. Zarządzaj nim z karty Sprzedaj.",
@@ -4097,7 +4100,28 @@
       "completed": "Zakończona",
       "expired": "Wygasła"
     },
-    "makeOfferAction": "Złóż ofertę"
+    "makeOfferAction": "Złóż ofertę",
+    "tabMine": "Moje",
+    "sellingWornName": "To jest nazwa użytkownika, której używa Twój profil. Sprzedaż przeniesie Cię na inne imię.",
+    "sellingHeldName": "Posiadasz tę nazwę, ale jej nie używasz. Sprzedaż nie zmieni Twojego profilu.",
+    "saleFinalWarningHeld": "Sprzedaż jest ostateczna i natychmiastowa. Twoja własna nazwa użytkownika i wszystko na Twoim profilu pozostają nietknięte — tylko ta nazwa zostanie przeniesiona.",
+    "signInToSeeVault": "Zaloguj się, aby zobaczyć nazwy użytkowników, które posiadasz.",
+    "vaultExplainer": "Kupione nazwy użytkowników pozostają Twoje. Możesz jej używać, sprzedać lub z niej zrezygnować.",
+    "vaultExplainerEmpty": "Posiadasz jedną nazwę użytkownika. Kup inną, a tę również zachowasz.",
+    "vaultInUse": "W użyciu",
+    "vaultBought": "Kupione",
+    "vaultKept": "Zachowane z wcześniejszego zakupu",
+    "vaultFree": "Darmowa nazwa użytkownika",
+    "vaultFreeWarning": "Nie zapłaciłeś za tę nazwę, więc przejście na inną spowoduje jej utratę i każdy będzie mógł ją przejąć.",
+    "vaultUseThis": "Użyj tej",
+    "vaultSell": "Sprzedaj",
+    "vaultEditListing": "Edytuj ofertę",
+    "vaultRelease": "Zrezygnuj",
+    "vaultListedCannotWear": "Wycofaj ofertę przed użyciem tej nazwy.",
+    "vaultReleaseTitle": "Zrezygnuj z @{{handle}}?",
+    "vaultReleaseBody": "Wraca do puli i każdy może ją przejąć. Nie można tego cofnąć, a ponowny zakup będzie kosztował tyle, ile zażąda nowy właściciel.",
+    "oldHandleKept": "Zachowujesz @ {{handle}} — przenosi się do Twoich nazw użytkowników i możesz go ponownie założyć lub sprzedać później. Posty, obserwujący i Twój portfel są nietknięte.",
+    "postsStayWithYou": "Posty, obserwujący i Twój portfel są nietknięte."
   },
   "accounts": {
     "seoTitle": "Rynek kont — DeHub",

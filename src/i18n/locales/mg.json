@@ -446,7 +446,11 @@
       "unavailable": "Tsy azo atao amin'ny kaontinao amin'izao fotoana izao ny fampitana avy amin'ny encoder.",
       "serverCopied": "Nadika avy tamin'ny mpizara",
       "keyCopied": "KEY FITEHIRY Nadika"
-    }
+    },
+    "usernames": "Usernames",
+    "usernamesDesc": "Ny vadinareo.",
+    "usernamesCount_one": "{{count}} solon'anarana",
+    "usernamesCount_other": "{{count}} usernames"
   },
   "common": {
     "save": "Tehirizo",
@@ -3811,7 +3815,7 @@
     "youBecomeHandle": "Lasa ianao {{handle}} ny fotoana nividianan'ny olona anao. Raha izany anarana izany no naka avy dia, ny voalamina no ampiasaina ary ianao no nilaza izay.",
     "pitchOptional": "Hady kely (tsy voatery)",
     "pitchPlaceholder": "Fitantanam-pitondrana 2021 tany am-boalohany, tantara madio¢~~",
-    "saleFinalWarning": "Amin'ny farany ary amin'ny farany. Ny Lahatsoratra, mpanara-dia sy ny kitapom-batsy hitoetra eo aminareo ¢ ihany ny tahony hetsika, ary ny mpividy iray taloha no afaka.",
+    "saleFinalWarning": "Farany sy vetivety foana ny fivarotana. Mijanona aminao ny lahatsoratrao, ny mpanaraka anao ary ny poketrafidiram-bolanao — ny anarana ihany no mifindra. Mitahiry ny anarana taloha koa ny mpividy; tonga anaran'mpampiasa iray hafa ho azy izany.",
     "updateListing": "Lisitra vaovao",
     "listForSale": "Lisitry ny varotra",
     "withdrawListing": "Sintony ny lisitry",
@@ -3820,7 +3824,6 @@
     "withdrawn": "Manaisotra",
     "askingPrice": "Mangataka ny vidiny",
     "yourHandleChanges": "Fiovan'ny kirakiranao",
-    "oldHandleReleased": "Ny kitapom-bolanao dia avoaka ary na iza na iza dia afaka mandray izany. Tsy voakitika ny lahatsoratra, ny mpanara-dia sy ny kitapom-bolanao.",
     "yourOwnListing": "Ity ny mombamomba anao. Mitantana izany avy amin'ny tsenan'ny fivarotana.",
     "confirmInWallet": "Hamarino ao amin'ny kitapom-bolanao ¢",
     "confirmingOnChain": "«« < < 1 daripada 4 > »¢",
@@ -3854,7 +3857,28 @@
       "completed": "Vita",
       "expired": "Lany daty"
     },
-    "makeOfferAction": "Manaova tolotra"
+    "makeOfferAction": "Manaova tolotra",
+    "tabMine": "Anjarako",
+    "sellingWornName": "Ity no anarana ampiasain'ny mombamomba anao. Ny fivarotana izany dia mamindra anao amin'ny anarana hafa.",
+    "sellingHeldName": "Anao ity anarana ity fa tsy ampiasainao. Ny fivarotana izany dia tsy manova ny mombamomba anao.",
+    "saleFinalWarningHeld": "Ny varotra dia farany ary eo no ho eo. Ny anaranao sy ny zava-drehetra ao amin'ny mombamomba anao dia tsy voakitika — ity anarana ity ihany no mifindra.",
+    "signInToSeeVault": "Midira mba hahitana ny anarana ampiasainao.",
+    "vaultExplainer": "Ny anarana novidinao dia mijanona ho anao. Azonao atao ny manao iray, mivarotra izany, na mamela izany.",
+    "vaultExplainerEmpty": "Manana anarana iray ianao. Mividiana iray hafa ary tazoninao ihany koa ity.",
+    "vaultInUse": "Ampiasaina",
+    "vaultBought": "Novidina",
+    "vaultKept": "Tazomina tamin'ny fividianana teo aloha",
+    "vaultFree": "Anarana maimaim-poana",
+    "vaultFreeWarning": "Tsy nandoa ity ianao, ka ny famindrana amin'ny anarana hafa dia mamela izany ary azon'iza na iza raisina.",
+    "vaultUseThis": "Ampiasao ity",
+    "vaultSell": "Mivarotra",
+    "vaultEditListing": "Ovaina ny lisitra",
+    "vaultRelease": "Avoaka",
+    "vaultListedCannotWear": "Afindrao ny lisitra alohan'ny hampiasana ity anarana ity.",
+    "vaultReleaseTitle": "Avoaka @{{handle}}?",
+    "vaultReleaseBody": "Miverina ao anaty dobo izy ary azon'iza na iza raisina. Tsy misy fanafoanana, ary ny fividianana azy indray dia hitentina izay angatahin'ny tompony vaovao.",
+    "oldHandleKept": "Mitahiry an'i @{{handle}} ianao — mifindra any amin'ny anaran'mpampiasanao izy io, ary azonao ampiasaina indray na amidy any aoriana. Tsy voakitika ny lahatsoratrao, ny mpanaraka ary ny poketrafidiram-bolanao.",
+    "postsStayWithYou": "Tsy voakitika ny lahatsoratrao, ny mpanaraka ary ny poketrafidiram-bolanao."
   },
   "accounts": {
     "seoTitle": "Momba ny kaonty ¢ Wondershare",

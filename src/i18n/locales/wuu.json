@@ -410,7 +410,11 @@
       "unavailable": "你的账户目前无法从编码器进行直播。",
       "serverCopied": "服务器已复制",
       "keyCopied": "直播密钥已复制"
-    }
+    },
+    "usernames": "用户名",
+    "usernamesDesc": "侬个名",
+    "usernamesCount_one": "{{count}} 用户名",
+    "usernamesCount_other": "{{count}} 用户名"
   },
   "common": {
     "save": "保存",
@@ -3209,7 +3213,29 @@
       "completed": "已完成",
       "expired": "已过期"
     },
-    "makeOfferAction": "出价"
+    "makeOfferAction": "出价",
+    "tabMine": "我的",
+    "sellingWornName": "迭个是侬个账号用个名字。卖脱迭个名字，侬就会换一个新名字。",
+    "sellingHeldName": "迭个名字是侬个，倷勿用。卖脱迭个名字，倷个账号勿会变。",
+    "saleFinalWarningHeld": "卖脱是勿可退转个，马上生效。侬个名字搭倷账号里向个所有东西侪勿会动——只有迭个名字会转移。",
+    "signInToSeeVault": "登入来看倷拥有个名字。",
+    "vaultExplainer": "倷买过个名字侪是倷个。倷可以戴一个，卖脱，或者放脱。",
+    "vaultExplainerEmpty": "倷有一个名字。再买一个，倷会保留迭个名字。",
+    "vaultInUse": "正在使用",
+    "vaultBought": "已购买",
+    "vaultKept": "从早先个购买保留下来",
+    "vaultFree": "免费名字",
+    "vaultFreeWarning": "倷勿曾为迭个名字付过钱，所以换成别个名字，迭个名字就会被放掉，任何人侪可以拿脱。",
+    "vaultUseThis": "使用迭个名字",
+    "vaultSell": "出售",
+    "vaultEditListing": "编辑列表",
+    "vaultRelease": "释放",
+    "vaultListedCannotWear": "使用迭个名字之前，请撤销列表。",
+    "vaultReleaseTitle": "释放 @{{handle}}?",
+    "vaultReleaseBody": "迭个名字会回到池子里向，任何人侪可以拿脱。迭个是勿可撤销个，想再买回来，就要付新主人开个价。",
+    "oldHandleKept": "侬保留 @{{handle}}——伊会得进到侬个用户名里向，侬之后可以再用或者再卖。帖子、粉丝搭侬个钱包侪勿动。",
+    "postsStayWithYou": "帖子、粉丝搭侬个钱包侪勿动。",
+    "saleFinalWarning": "卖脱是最终个，马上生效。侬个帖子、粉丝搭钱包侪归侬——只转移名字。买家也保留伊个老名字；伊会得变成伊个用户名之一。"
   },
   "home": {
     "seoTitle": "DeHub — 开源、用户所有的社交媒体",

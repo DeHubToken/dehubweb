@@ -411,7 +411,11 @@
       "unavailable": "Vom Encoder us z'strahle isch grad nöd uf dim Konto verfügbar.",
       "serverCopied": "Server copied",
       "keyCopied": "Stream key copied"
-    }
+    },
+    "usernames": "Benutzername",
+    "usernamesDesc": "Dini Name",
+    "usernamesCount_one": "{{count}} Benutzername",
+    "usernamesCount_other": "{{count}} Benutze."
   },
   "common": {
     "save": "Speichere",
@@ -3255,7 +3259,29 @@
       "completed": "Abgschlosse",
       "expired": "Abglaufe"
     },
-    "makeOfferAction": "Es Aagebot mache"
+    "makeOfferAction": "Es Aagebot mache",
+    "tabMine": "Mine",
+    "sellingWornName": "Das isch de Handle, wo din Profil brucht. Wenn de ihn verkaufsch, wechslet er zu eme andere Name.",
+    "sellingHeldName": "Du bisch de Besitzer vo dem Name, aber du bruchsch ihn nöd. Wenn de ihn verkaufsch, verändert sich din Profil nöd.",
+    "saleFinalWarningHeld": "En Verchauf isch definitiv und sofort. Din eigere Handle und alles uf dinere Profil bliebt unberührt – nur de Name wechselt.",
+    "signInToSeeVault": "Logg dich ii, um die Benutzernamen z'seh, wo du besitzsch.",
+    "vaultExplainer": "Benutzernamen, wo du kauft hesch, bliebe din. Du chasch eine trage, ihn verkaufe oder ihn loslasse.",
+    "vaultExplainerEmpty": "Du besitzsch ein Benutzername. Wenn du en andere chaufsch, behaltsch au de alte.",
+    "vaultInUse": "In Bruuch",
+    "vaultBought": "Kaufe",
+    "vaultKept": "Vo eme frühere Chauf behalte",
+    "vaultFree": "Gratis Benutzername",
+    "vaultFreeWarning": "Du hesch für das nöd bezahlt, also wenn du zu eme andere Name wächslisch, gibsch ihn uf und jeder chan ihn näh.",
+    "vaultUseThis": "Bruuch das",
+    "vaultSell": "Verchauf",
+    "vaultEditListing": "Bearbeite Liste",
+    "vaultRelease": "Loslasse",
+    "vaultListedCannotWear": "Zieh die Liste zrugg, bevor du de Name bruchsch.",
+    "vaultReleaseTitle": "Loslasse @{{handle}}?",
+    "vaultReleaseBody": "Er gaht zrugg i Pool und jeder chan ihn näh. Es git kei Rückgängig, und wenn du ihn zrugg chaufsch, chostet er, was de neue Besitzer verlangt.",
+    "oldHandleKept": "Du behaltsch @{{handle}} – er gaht i din Username, und du chasch ihn wieder trage oder spöter verkaufe. Posts, Follower und din Wallet bliibe unberührt.",
+    "postsStayWithYou": "Posts, Follower und din Wallet bliibe unberührt.",
+    "saleFinalWarning": "En Verchauf isch definitiv und sofort. Din Posts, Follower und Wallet bliebed bi der – nur de Handle bewegt sich. De Chäufer behaltet au sine alte Handle; er wird zu eine vo sine Usernames."
   },
   "home": {
     "seoTitle": "DeHub — Open Source, soziales Netzwerk im Besitz der Nutzer",

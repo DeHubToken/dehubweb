@@ -448,7 +448,11 @@
       "unavailable": "ከኢንኮደር ዥረት በአሁኑ ጊዜ በእርስዎ መለያ ላይ አይገኝም።",
       "serverCopied": "አገልጋይ ተገለበጠ",
       "keyCopied": "ዥረት ቁልፍ ተገለበጠ"
-    }
+    },
+    "usernames": "የተጠቃሚ ስሞች",
+    "usernamesDesc": "የየራሳችሁ ስም",
+    "usernamesCount_one": "{{count}} የተጠቃሚ ስም",
+    "usernamesCount_other": "{{count}} የተጠቃሚ ስሞች"
   },
   "common": {
     "save": "አስቀምጥ",
@@ -3138,7 +3142,29 @@
       "completed": "ተጠናቋል",
       "expired": "ጊዜው አልፏል"
     },
-    "makeOfferAction": "ቅናሽ አቅርብ"
+    "makeOfferAction": "ቅናሽ አቅርብ",
+    "tabMine": "የኔ",
+    "sellingWornName": "መገለጫዎ የሚጠቀምበት እጀታ ይህ ነው ። መሸጥ ወደ ሌላ ስም ያዛውራል ።",
+    "sellingHeldName": "ይህንን ስም ትጠቀማለህ ነገር ግን አትጠቀምበትም ። መሸጥ መገለጫዎን አይለውጥም ።",
+    "saleFinalWarningHeld": "ሽያጭ የመጨረሻ እና ፈጣን ነው ። የራስዎ እጀታ እና በመገለጫዎ ላይ ሁሉም ነገር ያልተነካ ነው — ይህ ስም ብቻ ይንቀሳቀሳል.",
+    "signInToSeeVault": "እርስዎ ባለቤት የሆኑትን የተጠቃሚ ስሞች ለማየት ይግቡ ።",
+    "vaultExplainer": "የገዛሃቸው የተጠቃሚ ስሞች የእርስዎ ይቆዩ. አንዱን መልበስ ፣ መሸጥ ወይም መልቀቅ ይችላሉ ።",
+    "vaultExplainerEmpty": "አንድ የተጠቃሚ ስም አለዎት ። ሌላ ይግዙ እና እርስዎም ይህንን ይይዛሉ ።",
+    "vaultInUse": "ጥቅም ላይ ውሏል",
+    "vaultBought": "የተገዛ",
+    "vaultKept": "ቀደም ሲል ከነበረው ግዢ የተወሰደ",
+    "vaultFree": "ነፃ የተጠቃሚ ስም",
+    "vaultFreeWarning": "ለዚህ ሰው ክፍያ አልከፈላችሁም ፣ ስለዚህ ወደ ሌላ ስም መቀየር ይሰጠዋል እና ማንም ሊወስደው ይችላል ።",
+    "vaultUseThis": "ይህንን ይጠቀሙ",
+    "vaultSell": "ይሽጡ",
+    "vaultEditListing": "ዝርዝር አርትዕ",
+    "vaultRelease": "መልቀቅ",
+    "vaultListedCannotWear": "ይህንን ስም ከመጠቀምዎ በፊት ዝርዝሩን ያስወግዱ ።",
+    "vaultReleaseTitle": "መልቀቅ @{{handle}}?",
+    "vaultReleaseBody": "ወደ ገንዳው ይመለሳል እና ማንም ሊወስደው ይችላል ። ምንም ተቀማጭ ገንዘብ የለም ፣ እና እንደገና መግዛት አዲሱ ባለቤት የሚጠይቀውን ሁሉ ያስከፍላል ።",
+    "oldHandleKept": "{{handle}}ን ይዘው ይቆያሉ — ወደ ተጠቃሚ ስሞችዎ ይገባል፣ እና በኋላ ላይ መልበስ ወይም መሸጥ ይችላሉ። ልጥፎች፣ ተከታዮች እና የኪስ ቦርሳዎ ሳይነኩ ይቀራሉ።",
+    "postsStayWithYou": "ልጥፎች፣ ተከታዮች እና የኪስ ቦርሳዎ ሳይነኩ ይቀራሉ።",
+    "saleFinalWarning": "ሽያጭ የመጨረሻ እና ፈጣን ነው። የእርስዎ ልጥፎች፣ ተከታዮች እና የኪስ ቦርሳዎ ከእርስዎ ጋር ይቆያሉ — መያዣው ብቻ ይንቀሳቀሳል። ገዥው የድሮውን መያዣውንም ይይዛል፤ ከየተጠቃሚ ስሞቹ አንዱ ይሆናል።"
   },
   "home": {
     "seoTitle": "DeHub — ክፍት ምንጭ፣ በተጠቃሚዎች የተያዘ ማኅበራዊ ሚዲያ",

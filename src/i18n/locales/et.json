@@ -465,7 +465,11 @@
       "unavailable": "Kodeerijast voogedastamine pole teie kontol praegu saadaval.",
       "serverCopied": "Server kopeeritud",
       "keyCopied": "Voo võti on kopeeritud"
-    }
+    },
+    "usernames": "Kasutajanimed",
+    "usernamesDesc": "Sulle kuuluvad nimed",
+    "usernamesCount_one": "{{count}} kasutajanimi",
+    "usernamesCount_other": "{{count}} kasutajanime"
   },
   "common": {
     "save": "Salvesta",
@@ -3987,7 +3991,7 @@
     "youBecomeHandle": "Saad kasutajanimeks @{{handle}} niipea kui keegi ostab. Kui see nimi on selleks ajaks juba võetud, kasutatakse nummerdatud varianti ja sind sellest teavitatakse.",
     "pitchOptional": "Kirjeldus (valikuline)",
     "pitchPlaceholder": "Originaalne 2021. aasta käsitsi, puhas ajalugu…",
-    "saleFinalWarning": "Müük on lõplik ja kohene. Sinu postitused, jälgijad ja rahakott jäävad sinule — ainult käsitsi liigub, ja ostja vana käsitsi vabastatakse.",
+    "saleFinalWarning": "Müük on lõplik ja kohene. Sinu postitused, jälgijad ja rahakott jäävad sinuga – ainult kasutajanimi liigub. Ostja säilitab ka oma vana kasutajanime; see muutub üheks tema kasutajanimedest.",
     "updateListing": "Uuenda kuulutust",
     "listForSale": "Pane müüki",
     "withdrawListing": "Eemalda kuulutus",
@@ -3999,7 +4003,6 @@
     "askingPrice": "Nõutav hind",
     "paidStraightToSeller": "≈ ${{usd}} · makstud otse müüjale, DeHub ei võta protsenti",
     "yourHandleChanges": "Sinu käsitsi muutused",
-    "oldHandleReleased": "Sinu vana käsitsi vabastatakse ja keegi võib selle võtta. Postitused, jälgijad ja sinu rahakott jäävad puutumata.",
     "payingWithDhbOn": "DHB-ga maksmine {{chain}} peal",
     "shortOfDhbPaidOn": "Sul pole DHB-d piisavalt — see makstakse {{chain}} peal",
     "yourOwnListing": "See on sinu kuulutus. Halda seda müügi vahekaardilt.",
@@ -4037,7 +4040,28 @@
       "completed": "Lõpetatud",
       "expired": "Aegunud"
     },
-    "makeOfferAction": "Tee pakkumine"
+    "makeOfferAction": "Tee pakkumine",
+    "tabMine": "Mine",
+    "sellingWornName": "See on profiili käepide, mida kasutad. Selle müümine viib sind teise nime juurde.",
+    "sellingHeldName": "Sa omad seda nime, kuid ei kasuta seda. Selle müümine ei muuda sinu profiili.",
+    "saleFinalWarningHeld": "Müük on lõplik ja kohene. Sinu enda käepide ja kõik sinu profiilis on puutumata – liigub ainult see nimi.",
+    "signInToSeeVault": "Logi sisse, et näha kasutajanimesid, mida omad.",
+    "vaultExplainer": "Ostad kasutajanimesid jäävad sinu omaks. Sa võid neid kanda, müüa või lasta minna.",
+    "vaultExplainerEmpty": "Sa omad ühte kasutajanime. Osta teine ja sa hoiad ka selle alles.",
+    "vaultInUse": "Kasutuses",
+    "vaultBought": "Ostetud",
+    "vaultKept": "Varasemast ostust alles hoitud",
+    "vaultFree": "Tasuta kasutajanimi",
+    "vaultFreeWarning": "Sa ei ole selle eest maksnud, seega selle teise nime vastu vahetamine annab selle ära ja igaüks võib selle võtta.",
+    "vaultUseThis": "Kasuta seda",
+    "vaultSell": "Müüge",
+    "vaultEditListing": "Muuda kuulutust",
+    "vaultRelease": "Vabasta",
+    "vaultListedCannotWear": "Võta kuulutus tagasi enne selle nime kasutamist.",
+    "vaultReleaseTitle": "Vabasta @{{handle}}?",
+    "vaultReleaseBody": "See läheb tagasi ringlusse ja igaüks võib selle võtta. Tagasivõtmist ei ole ja selle tagasi ostmine maksaks nii palju, kui uus omanik küsib.",
+    "oldHandleKept": "Sina säilitad @{{handle}} – see liigub sinu kasutajanimede hulka ja sa saad seda uuesti kasutada või hiljem müüa. Postitused, jälgijad ja sinu rahakott jäävad puutumata.",
+    "postsStayWithYou": "Postitused, jälgijad ja sinu rahakott jäävad puutumata."
   },
   "accounts": {
     "seoTitle": "Konto turukoht — DeHub",

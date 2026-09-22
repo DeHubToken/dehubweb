@@ -450,7 +450,11 @@
       "unavailable": "Transliacija iš koduotės šiuo metu jūsų paskyroje negalima.",
       "serverCopied": "Serveris nukopijuotas",
       "keyCopied": "Srauto raktas nukopijuotas"
-    }
+    },
+    "usernames": "Naudotojų vardai",
+    "usernamesDesc": "Jūsų turimi vardai ir pavardės",
+    "usernamesCount_one": "{{count}} vartotojo vardas",
+    "usernamesCount_other": "{{count}} naudotojo vardai"
   },
   "common": {
     "save": "Saugoti",
@@ -4025,7 +4029,7 @@
     "youBecomeHandle": "Jūs tampate @{{handle}} tą akimirką, kai kas nors nusiperka. Jei tas vardas iki tol bus užimtas, bus naudojamas numeruotas variantas ir jums apie tai bus pranešta.",
     "pitchOptional": "Aprašymas (pasirenkama)",
     "pitchPlaceholder": "Originalus 2021 m. vardas, švari istorija…",
-    "saleFinalWarning": "Pardavimas yra galutinis ir momentinis. Jūsų įrašai, sekėjai ir piniginė lieka su jumis – keičiasi tik vardas, o pirkėjo senasis yra atlaisvinamas.",
+    "saleFinalWarning": "Pardavimas yra galutinis ir momentinis. Jūsų įrašai, sekėjai ir piniginė lieka su jumis – keičiasi tik vartotojo vardas. Pirkėjas taip pat pasilieka savo senąjį vartotojo vardą; jis tampa vienu iš jo vartotojo vardų.",
     "updateListing": "Atnaujinti skelbimą",
     "listForSale": "Parduoti",
     "withdrawListing": "Atšaukti skelbimą",
@@ -4037,7 +4041,6 @@
     "askingPrice": "Klausiama kaina",
     "paidStraightToSeller": "≈ ${{usd}} · sumokėta tiesiai pardavėjui, DeHub nenusiskaito jokios dalies",
     "yourHandleChanges": "Jūsų vardas pasikeičia",
-    "oldHandleReleased": "Jūsų senasis vardas atlaisvinamas ir bet kas gali jį pasiimti. Įrašai, sekėjai ir jūsų piniginė lieka nepaliesti.",
     "payingWithDhbOn": "Mokėjimas su DHB per {{chain}}",
     "shortOfDhbPaidOn": "Jums trūksta DHB – tai bus sumokėta per {{chain}}",
     "yourOwnListing": "Tai jūsų skelbimas. Tvarkykite jį skirtuke „Parduoti“.",
@@ -4075,7 +4078,28 @@
       "completed": "Užbaigta",
       "expired": "Nebegalioja"
     },
-    "makeOfferAction": "Pateikti pasiūlymą"
+    "makeOfferAction": "Pateikti pasiūlymą",
+    "tabMine": "Mano",
+    "sellingWornName": "Tai jūsų profilio vartotojo vardas. Jį pardavus, gausite kitą vardą.",
+    "sellingHeldName": "Šis vardas priklauso jums, bet nenaudojate jo. Jį pardavus, jūsų profilis nesikeis.",
+    "saleFinalWarningHeld": "Pardavimas yra galutinis ir momentinis. Jūsų vartotojo vardas ir viskas jūsų profilyje lieka nepakitę – tik šis vardas bus perkeltas.",
+    "signInToSeeVault": "Prisijunkite, kad pamatytumėte savo turimus vartotojo vardus.",
+    "vaultExplainer": "Nusipirkti vartotojo vardai lieka jūsų. Galite jį naudoti, parduoti arba atsisakyti.",
+    "vaultExplainerEmpty": "Turite vieną vartotojo vardą. Nusipirkę dar vieną, pasiliksite ir šį.",
+    "vaultInUse": "Naudojamas",
+    "vaultBought": "Nupirktas",
+    "vaultKept": "Pasiliktas iš ankstesnio pirkinio",
+    "vaultFree": "Nemokamas vartotojo vardas",
+    "vaultFreeWarning": "Jūs nesate už jį sumokėję, todėl persijungus į kitą vardą, šis bus atlaisvintas ir jį galės pasiimti bet kas.",
+    "vaultUseThis": "Naudokite šį",
+    "vaultSell": "Parduoti",
+    "vaultEditListing": "Redaguoti skelbimą",
+    "vaultRelease": "Atlaisvinti",
+    "vaultListedCannotWear": "Atšaukite skelbimą prieš naudodami šį vardą.",
+    "vaultReleaseTitle": "Atlaisvinti @{{handle}}?",
+    "vaultReleaseBody": "Jis grįš į bendrą sąrašą ir jį galės pasiimti bet kas. Atšaukti nebegalima, o norint jį atpirkti, reikės mokėti tiek, kiek paprašys naujasis savininkas.",
+    "oldHandleKept": "Jūs pasiliekate @{{handle}} – jis patenka į jūsų vartotojo vardus, ir jūs galite jį vėl naudoti arba parduoti vėliau. Įrašai, sekėjai ir jūsų piniginė lieka nepaliesti.",
+    "postsStayWithYou": "Įrašai, sekėjai ir jūsų piniginė lieka nepaliesti."
   },
   "accounts": {
     "seoTitle": "Paskyrų prekyvietė – DeHub",

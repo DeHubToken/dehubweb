@@ -465,7 +465,11 @@
       "unavailable": "Streaming von einem Encoder ist derzeit nicht für Ihr Konto verfügbar.",
       "serverCopied": "Server kopiert",
       "keyCopied": "Stream-Schlüssel kopiert"
-    }
+    },
+    "usernames": "Benutzernamen",
+    "usernamesDesc": "Die Namen, die Sie besitzen",
+    "usernamesCount_one": "{{count}} Benutzername",
+    "usernamesCount_other": "{{count}} Benutzernamen"
   },
   "common": {
     "save": "Speichern",
@@ -4038,7 +4042,7 @@
     "youBecomeHandle": "Du wirst @{{handle}} in dem Moment, in dem jemand kauft. Falls dieser Name bis dahin bereits vergeben ist, wird eine nummerierte Variante verwendet und du wirst benachrichtigt, welche.",
     "pitchOptional": "Pitch (optional)",
     "pitchPlaceholder": "Original-Handle von 2021, saubere Verlaufshistorie…",
-    "saleFinalWarning": "Ein Verkauf ist endgültig und sofort. Deine Beiträge, Follower und Geldbörse bleiben bei dir — nur der Handle wechselt, und der alte des Käufers wird freigegeben.",
+    "saleFinalWarning": "Ein Verkauf ist endgültig und sofort. Deine Posts, Follower und dein Wallet bleiben bei dir — nur der Griff bewegt sich. Der Käufer behält auch seinen alten Griff; er wird zu einem seiner Benutzernamen.",
     "updateListing": "Angebot aktualisieren",
     "listForSale": "Zum Verkauf anbieten",
     "withdrawListing": "Angebot zurückziehen",
@@ -4050,7 +4054,6 @@
     "askingPrice": "Gefordeter Preis",
     "paidStraightToSeller": "≈ ${{usd}} · direkt an den Verkäufer gezahlt, DeHub behält nichts ein",
     "yourHandleChanges": "Dein Handle ändert sich",
-    "oldHandleReleased": "Dein altes Handle wird freigegeben und jeder kann es sich nehmen. Beiträge, Follower und dein Wallet bleiben unverändert.",
     "payingWithDhbOn": "Zahlung mit DHB auf {{chain}}",
     "shortOfDhbPaidOn": "Dir fehlt DHB — dies wird auf {{chain}} bezahlt",
     "yourOwnListing": "Dies ist dein Angebot. Verwalte es über den Tab „Verkaufen\".",
@@ -4094,7 +4097,28 @@
       "completed": "Abgeschlossen",
       "expired": "Abgelaufen"
     },
-    "makeOfferAction": "Angebot machen"
+    "makeOfferAction": "Angebot machen",
+    "tabMine": "Mine",
+    "sellingWornName": "Dies ist der Handle, den Ihr Profil verwendet. Wenn Sie ihn verkaufen, wechseln Sie zu einem anderen Namen.",
+    "sellingHeldName": "Sie besitzen diesen Namen, verwenden ihn aber nicht. Der Verkauf ändert Ihr Profil nicht.",
+    "saleFinalWarningHeld": "Ein Verkauf ist endgültig und sofort. Ihr eigener Handle und alles in Ihrem Profil bleiben unberührt – nur dieser Name wird übertragen.",
+    "signInToSeeVault": "Melden Sie sich an, um die von Ihnen besessenen Benutzernamen anzuzeigen.",
+    "vaultExplainer": "Gekaufte Benutzernamen bleiben Ihnen gehören. Sie können einen tragen, verkaufen oder freigeben.",
+    "vaultExplainerEmpty": "Sie besitzen einen Benutzernamen. Kaufen Sie einen weiteren und Sie behalten auch diesen.",
+    "vaultInUse": "In Benutzung",
+    "vaultBought": "Gekauft",
+    "vaultKept": "Von einem früheren Kauf behalten",
+    "vaultFree": "Kostenloser Benutzername",
+    "vaultFreeWarning": "Sie haben diesen nicht bezahlt, daher geben Sie ihn auf, wenn Sie zu einem anderen Namen wechseln, und jeder kann ihn übernehmen.",
+    "vaultUseThis": "Diesen verwenden",
+    "vaultSell": "Verkaufen",
+    "vaultEditListing": "Angebot bearbeiten",
+    "vaultRelease": "Freigeben",
+    "vaultListedCannotWear": "Zurückziehen des Angebots, bevor Sie diesen Namen verwenden.",
+    "vaultReleaseTitle": "Freigeben @{{handle}}?",
+    "vaultReleaseBody": "Er kehrt in den Pool zurück und jeder kann ihn übernehmen. Es gibt kein Zurück, und wenn Sie ihn zurückkaufen, kostet er, was der neue Besitzer verlangt.",
+    "oldHandleKept": "Du behältst @{{handle}} — es wird in deine Benutzernamen verschoben und du kannst es wieder tragen oder später verkaufen. Posts, Follower und dein Wallet bleiben unberührt.",
+    "postsStayWithYou": "Posts, Follower und dein Wallet bleiben unberührt."
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",

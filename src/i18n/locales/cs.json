@@ -465,7 +465,11 @@
       "unavailable": "Streamování z enkodéru není na vašem účtu momentálně k dispozici.",
       "serverCopied": "Server zkopírován",
       "keyCopied": "Klíč streamu zkopírován"
-    }
+    },
+    "usernames": "Uživatelská jména",
+    "usernamesDesc": "Jména, která vlastníte",
+    "usernamesCount_one": "Uživatelské jméno {{count}}",
+    "usernamesCount_other": "Uživatelská jména: {{count}}"
   },
   "common": {
     "save": "Uložit",
@@ -3988,7 +3992,7 @@
     "youBecomeHandle": "Jakmile si jej někdo koupí, stanete se @{{handle}}. Pokud bylo toto jméno do té doby obsazeno, použije se číslovaná varianta a budete informováni, která.",
     "pitchOptional": "Popis (volitelné)",
     "pitchPlaceholder": "Originální handle z roku 2021, čistá historie…",
-    "saleFinalWarning": "Prodej je konečný a okamžitý. Vaše příspěvky, sledující a peněženka zůstávají u vás — pouze handle se přesune a starý handle kupujícího se uvolní.",
+    "saleFinalWarning": "Prodej je konečný a okamžitý. Vaše příspěvky, sledující a peněženka zůstávají s vámi — pohybuje se pouze uživatelské jméno. Kupující si také ponechá své staré uživatelské jméno; stane se jedním z jeho uživatelských jmen.",
     "updateListing": "Aktualizovat inzerát",
     "listForSale": "Seznam k prodeji",
     "withdrawListing": "Stáhnout inzerát",
@@ -4000,7 +4004,6 @@
     "askingPrice": "Požadovaná cena",
     "paidStraightToSeller": "≈ ${{usd}} · zaplaceno přímo prodávajícímu, DeHub si neberou provizi",
     "yourHandleChanges": "Vaše změny jména",
-    "oldHandleReleased": "Vaše staré jméno je uvolněno a kdokoli si jej může vzít. Příspěvky, sledující a vaše peněženka zůstávají nedotčeny.",
     "payingWithDhbOn": "Platba pomocí DHB na {{chain}}",
     "shortOfDhbPaidOn": "Nemáte dostatek DHB — bude zaplaceno na {{chain}}",
     "yourOwnListing": "Toto je váš inzerát. Spravujte jej z karty Prodej.",
@@ -4038,7 +4041,28 @@
       "completed": "Dokončeno",
       "expired": "Vypršelo"
     },
-    "makeOfferAction": "Podat nabídku"
+    "makeOfferAction": "Podat nabídku",
+    "tabMine": "Moje",
+    "sellingWornName": "Toto je přezdívka, kterou váš profil používá. Její prodej vás přesune na jiné jméno.",
+    "sellingHeldName": "Toto jméno vlastníte, ale nepoužíváte ho. Jeho prodej nezmění váš profil.",
+    "saleFinalWarningHeld": "Prodej je konečný a okamžitý. Vaše vlastní přezdívka a vše na vašem profilu zůstávají nedotčené – přesune se pouze toto jméno.",
+    "signInToSeeVault": "Přihlaste se, abyste viděli uživatelská jména, která vlastníte.",
+    "vaultExplainer": "Uživatelská jména, která jste koupili, zůstávají vaše. Můžete si jedno vzít, prodat ho nebo ho nechat jít.",
+    "vaultExplainerEmpty": "Vlastníte jedno uživatelské jméno. Kupte si další a toto si také ponecháte.",
+    "vaultInUse": "Používá se",
+    "vaultBought": "Koupeno",
+    "vaultKept": "Ponecháno z dřívějšího nákupu",
+    "vaultFree": "Uživatelské jméno zdarma",
+    "vaultFreeWarning": "Toto jste si nekoupili, takže jeho přepnutím na jiné jméno o něj přijdete a kdokoli si ho může vzít.",
+    "vaultUseThis": "Použijte toto",
+    "vaultSell": "Prodat",
+    "vaultEditListing": "Upravit nabídku",
+    "vaultRelease": "Uvolnit",
+    "vaultListedCannotWear": "Stáhnout nabídku před použitím tohoto jména.",
+    "vaultReleaseTitle": "Uvolnit @{{handle}}?",
+    "vaultReleaseBody": "Vrátí se do fondu a kdokoli si ho může vzít. Nelze to vzít zpět a jeho zpětný odkup by stál tolik, kolik si nový majitel řekne.",
+    "oldHandleKept": "Ponecháte si @{{handle}} — přesune se do vašich uživatelských jmen a můžete ho znovu použít nebo později prodat. Příspěvky, sledující a vaše peněženka zůstávají nedotčené.",
+    "postsStayWithYou": "Příspěvky, sledující a vaše peněženka zůstávají nedotčené."
   },
   "accounts": {
     "seoTitle": "Tržiště účtů — DeHub",

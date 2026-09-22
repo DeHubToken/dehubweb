@@ -465,7 +465,11 @@
       "unavailable": "Lo streaming da un encoder non è attualmente disponibile sul tuo account.",
       "serverCopied": "Server copiato",
       "keyCopied": "Chiave di flusso copiata"
-    }
+    },
+    "usernames": "Nomi utente",
+    "usernamesDesc": "I nomi che possiedi",
+    "usernamesCount_one": "{{count}} username",
+    "usernamesCount_other": "{{count}} nomiutenti"
   },
   "common": {
     "save": "Salva",
@@ -4041,7 +4045,7 @@
     "youBecomeHandle": "Diventi @{{handle}} nel momento in cui qualcuno compra. Se quel nome è stato preso nel frattempo, viene utilizzata una variante numerata e ti viene comunicata quale.",
     "pitchOptional": "Presentazione (facoltativa)",
     "pitchPlaceholder": "Handle originale del 2021, cronologia pulita…",
-    "saleFinalWarning": "Una vendita è definitiva e istantanea. I tuoi post, i follower e il portafoglio rimangono con te — solo l'handle si sposta, e quello vecchio dell'acquirente viene rilasciato.",
+    "saleFinalWarning": "Una vendita è definitiva e istantanea. I tuoi post, follower e portafoglio rimangono con te: solo la maniglia si muove. Anche l'acquirente mantiene la sua vecchia maniglia; diventa uno dei loro nomi utente.",
     "updateListing": "Aggiorna inserzione",
     "listForSale": "Metti in vendita",
     "withdrawListing": "Ritira inserzione",
@@ -4053,7 +4057,6 @@
     "askingPrice": "Prezzo richiesto",
     "paidStraightToSeller": "≈ ${{usd}} · pagato direttamente al venditore, DeHub non prende nulla",
     "yourHandleChanges": "I tuoi cambiamenti di handle",
-    "oldHandleReleased": "Il tuo vecchio handle è stato rilasciato e chiunque può prenderlo. I post, i follower e il tuo portafoglio rimangono intatti.",
     "payingWithDhbOn": "Pagamento con DHB su {{chain}}",
     "shortOfDhbPaidOn": "Sei a corto di DHB — questo sarà pagato su {{chain}}",
     "yourOwnListing": "Questo è il tuo annuncio. Gestiscilo dalla scheda Vendi.",
@@ -4097,7 +4100,28 @@
       "completed": "Completata",
       "expired": "Scaduta"
     },
-    "makeOfferAction": "Fai un’offerta"
+    "makeOfferAction": "Fai un’offerta",
+    "tabMine": "Miniera",
+    "sellingWornName": "Questo è l'handle che usa il tuo profilo. Venderlo ti sposta su un altro nome.",
+    "sellingHeldName": "Possiedi questo nome ma non lo stai usando. Venderlo non cambia il tuo profilo.",
+    "saleFinalWarningHeld": "Una vendita è definitiva e istantanea. Il tuo handle e tutto ciò che è sul tuo profilo rimangono intatti — solo questo nome si sposta.",
+    "signInToSeeVault": "Accedi per vedere i nomi utente che possiedi.",
+    "vaultExplainer": "I nomi utente che hai acquistato rimangono tuoi. Puoi usarne uno, venderlo o lasciarlo andare.",
+    "vaultExplainerEmpty": "Possiedi un nome utente. Comprane un altro e manterrai anche questo.",
+    "vaultInUse": "In uso",
+    "vaultBought": "Acquistato",
+    "vaultKept": "Mantenuto da un acquisto precedente",
+    "vaultFree": "Nome utente gratuito",
+    "vaultFreeWarning": "Non hai pagato per questo, quindi passare a un altro nome lo cede e chiunque può prenderlo.",
+    "vaultUseThis": "Usa questo",
+    "vaultSell": "Vendi",
+    "vaultEditListing": "Modifica inserzione",
+    "vaultRelease": "Rilascia",
+    "vaultListedCannotWear": "Ritira l'inserzione prima di usare questo nome.",
+    "vaultReleaseTitle": "Rilascia @{{handle}}?",
+    "vaultReleaseBody": "Torna nel pool e chiunque può prenderlo. Non c'è modo di annullare, e ricomprarlo costerebbe quanto chiede il nuovo proprietario.",
+    "oldHandleKept": "Mantieni @ {{handle}}: si sposta nei tuoi nomi utente e puoi indossarlo di nuovo o venderlo in seguito. I post, i follower e il tuo portafoglio sono intatti.",
+    "postsStayWithYou": "I post, i follower e il tuo portafoglio sono intatti."
   },
   "accounts": {
     "seoTitle": "Marketplace Account — DeHub",
