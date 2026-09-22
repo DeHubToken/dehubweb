@@ -39,6 +39,10 @@ const readSharedMarket = minuteCache(async () => {
   if (error) throw error;
   return parseSharedMarket<CachedPosition>(data);
 });
+/** Sweep the pools for positions opened outside the app now, rather than waiting on the next
+ *  scheduled sweep. The endpoint throttles itself, so a burst of these costs nothing, and a
+ *  failure is silent: the schedule still runs and the snapshot is what the page actually reads. */
+const primeDiscovery = () => { void Promise.resolve(supabase.functions.invoke('dex-position-scan')).catch(() => {}); };
 const stageText: Record<OrderStage | 'index', string> = {
   quote: 'Reading pool…', wallet: 'Unlock or connect your wallet…', balance: 'Checking token approvals…',
   tokenApproval: 'Confirm token approval in your wallet…', permitApproval: 'Confirm position approval in your wallet…',
@@ -192,9 +196,12 @@ export default function DexPage() {
   }, []);
   useEffect(() => {
     void loadPositions();
+    primeDiscovery();
+    // The snapshot is rebuilt once a minute and readSharedMarket caches per clock minute, so
+    // polling on a shorter beat picks up each new snapshot sooner without a second fetch for it.
     const timer = setInterval(() => {
       if (document.visibilityState === 'visible') void loadPositions();
-    }, 60000);
+    }, 15000);
     const resume = () => { if (document.visibilityState === 'visible') void loadPositions(); };
     document.addEventListener('visibilitychange', resume);
     return () => { clearInterval(timer); document.removeEventListener('visibilitychange', resume); };
@@ -293,7 +300,7 @@ export default function DexPage() {
     catch (error) { toast.error(dexActionError(error, 'Withdrawal failed')); }
     finally { setWithdrawing(null); }
   }
-  const refresh = () => { void loadPositions(); if (!busy) setBalanceRevision((n) => n + 1); };
+  const refresh = () => { primeDiscovery(); void loadPositions(); if (!busy) setBalanceRevision((n) => n + 1); };
 
   return <div className="dex-terminal">
     <header className="dex-top">
