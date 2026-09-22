@@ -59,7 +59,7 @@ export async function detectDhbChain(walletAddress: string): Promise<{ chainId: 
   };
 }
 
-export async function detectUsdcChain(walletAddress: string): Promise<{ chainId: DexChainId | null; balance: string }> {
+export async function detectUsdcChain(walletAddress: string): Promise<{ chainId: DexChainId | null; balance: string; base: string; bnb: string }> {
   const read = async (chainId: DexChainId) => new Contract(DEX_CHAINS[chainId].usdc, ERC20, await dexProvider(chainId))
     .balanceOf(walletAddress) as Promise<bigint>;
   const [baseRead, bnbRead] = await Promise.allSettled([readWithTimeout(read(BASE_CHAIN_ID), 'Base balance'), readWithTimeout(read(BNB_CHAIN_ID), 'BNB balance')]);
@@ -69,8 +69,12 @@ export async function detectUsdcChain(walletAddress: string): Promise<{ chainId:
   const base = baseRead.status === 'fulfilled' ? baseRead.value : 0n;
   const bnb = bnbRead.status === 'fulfilled' ? bnbRead.value : 0n;
   const chainId = base > 0n ? BASE_CHAIN_ID : bnb > 0n ? BNB_CHAIN_ID : null;
-  return { chainId, balance: formatUnits(chainId === BASE_CHAIN_ID ? base : bnb,
-    chainId ? DEX_CHAINS[chainId].usdcDecimals : 6) };
+  return {
+    chainId,
+    balance: formatUnits(chainId === BASE_CHAIN_ID ? base : bnb, chainId ? DEX_CHAINS[chainId].usdcDecimals : 6),
+    base: formatUnits(base, DEX_CHAINS[BASE_CHAIN_ID].usdcDecimals),
+    bnb: formatUnits(bnb, DEX_CHAINS[BNB_CHAIN_ID].usdcDecimals),
+  };
 }
 
 function tickRange(chainId: DexChainId, floor: number, ceiling: number): [number, number] {
