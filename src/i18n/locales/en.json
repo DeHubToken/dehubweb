@@ -5568,5 +5568,20 @@
         "body": "Find out how tips, badges and SuperPowers turn what you do here into something you earn from."
       }
     }
+  },
+  "drafts": {
+    "title": "Drafts",
+    "saveCurrent": "Save Current",
+    "saved": "Draft saved",
+    "loaded": "Draft loaded",
+    "deleted": "Draft deleted",
+    "emptyTitle": "No drafts yet",
+    "emptyDescription": "Save your work to continue later.",
+    "noText": "No text",
+    "image": "Image",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Poll",
+    "scheduled": "Scheduled"
   }
 }

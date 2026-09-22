@@ -4530,5 +4530,20 @@
         "title": "کۆمێنتێک لەسەر پۆستێک بنووسە"
       }
     }
+  },
+  "drafts": {
+    "title": "یاری دامە، ڕەشنووسەکان",
+    "saveCurrent": "Ya niha tomar bike",
+    "saved": "Reşnivîs hat tomarkirin",
+    "loaded": "Reşnivîs hat vekirin",
+    "deleted": "Reşnivîs hat jêbirin",
+    "emptyTitle": "Hîna tu reşnivîs tune",
+    "emptyDescription": "Karê xwe tomar bike da ku paşê berdewam bikî.",
+    "noText": "Tu nivîs tune",
+    "image": "Wêne",
+    "video": "Vîdyo",
+    "audio": "Deng",
+    "poll": "Rapirsî",
+    "scheduled": "داڕێژراو"
   }
 }

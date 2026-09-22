@@ -5271,6 +5271,21 @@
       }
     }
   },
+  "drafts": {
+    "title": "Bản nháp",
+    "saveCurrent": "Lưu hiện tại",
+    "saved": "Đã lưu bản nháp",
+    "loaded": "Đã tải bản nháp",
+    "deleted": "Đã xóa bản nháp",
+    "emptyTitle": "Chưa có bản nháp nào",
+    "emptyDescription": "Lưu công việc của bạn để tiếp tục sau.",
+    "noText": "Không có văn bản",
+    "image": "Hình ảnh",
+    "video": "Video",
+    "audio": "Âm thanh",
+    "poll": "Thăm dò ý kiến",
+    "scheduled": "Đã lên lịch"
+  },
   "glossary": {
     "title": "Bảng thuật ngữ",
     "description": "Giải thích các thuật ngữ và khái niệm quan trọng trong ứng dụng.",

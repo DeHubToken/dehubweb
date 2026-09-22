@@ -3129,5 +3129,20 @@
         "body": "A filɛ i be min kɛra yan, i be se k'o yɛlɛma cogo min na k'a kɛ i be wari sɔrɔ o la."
       }
     }
+  },
+  "drafts": {
+    "title": "K'a to a ka baara la",
+    "saveCurrent": "K'i ka baara kɛ sisan",
+    "saved": "Fanga min be mɔgɔ kisi",
+    "loaded": "Fanga be mɔgɔ minw na, olu ka kan ka taga",
+    "deleted": "Ka to ka koo dɔ kɛ",
+    "emptyTitle": "PAS EncARA Kɔrɔbɔli",
+    "emptyDescription": "I ka baara to yen walisa i ka to ka baara kɛ Jehova ye.",
+    "noText": "O tɛ se ka kɛ",
+    "image": "O ye ɲɛyirali ye",
+    "video": "O video ye min ye",
+    "audio": "Aw ye mɛnni kɛ",
+    "poll": "Fanga be mɔgɔ minw na,",
+    "scheduled": "Kalandiri"
   }
 }

@@ -5542,5 +5542,20 @@
         "body": "Sužinokite, kaip patarimai, ženkleliai ir supergalios paverčia tai, ką čia darote, tuo, iš ko uždirbate."
       }
     }
+  },
+  "drafts": {
+    "title": "Juodraščiai",
+    "saveCurrent": "Išsaugoti dabartinį",
+    "saved": "Juodraštis išsaugotas",
+    "loaded": "Juodraštis įkeltas",
+    "deleted": "Juodraštis ištrintas",
+    "emptyTitle": "Juodraščių dar nėra",
+    "emptyDescription": "Išsaugokite savo darbą, kad galėtumėte tęsti vėliau.",
+    "noText": "Teksto nėra",
+    "image": "Paveikslėlis",
+    "video": "Vaizdo įrašas",
+    "audio": "Garsas",
+    "poll": "Apklausa",
+    "scheduled": "Suplanuota"
   }
 }

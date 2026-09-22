@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, Save, Trash2, Clock, Image, Video, Mic, BarChart3, CalendarClock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { AppState } from '@/components/app/AppState';
 import type { DraftPayload } from '../types';
@@ -42,26 +42,41 @@ export function DraftsSheet({
   onDeleteDraft,
   canSave 
 }: DraftsSheetProps) {
+  const { t, i18n } = useTranslation();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  /*
+   * The timestamp was formatted with a hardcoded English pattern — "Sep 21,
+   * 2026 • 4:12 PM" in every language, including the ones that do not use a
+   * 12-hour clock or a Latin month name. Intl follows the interface language
+   * and needs no locale data shipped with it.
+   */
+  const formatSavedAt = (date: Date) => {
+    if (Number.isNaN(date?.getTime?.())) return '';
+    return new Intl.DateTimeFormat(i18n.language, {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    }).format(date);
+  };
 
   const handleDelete = (id: string) => {
     setDeletingId(id);
     setTimeout(() => {
       onDeleteDraft(id);
       setDeletingId(null);
-      toast.success('Draft deleted');
+      toast.success(t('drafts.deleted'));
     }, 300);
   };
 
   const handleLoad = (draft: Draft) => {
     onLoadDraft(draft);
     onClose();
-    toast.success('Draft loaded');
+    toast.success(t('drafts.loaded'));
   };
 
   const handleSave = () => {
     onSaveDraft();
-    toast.success('Draft saved');
+    toast.success(t('drafts.saved'));
     // Saving is the end of the composing session, not a checkpoint in it: the
     // sheet closes here and the composer behind it is cleared by the handler.
     onClose();
@@ -81,7 +96,7 @@ export function DraftsSheet({
               <X className="w-5 h-5 text-zinc-400" />
             </button>
             <DrawerTitle className="text-white font-semibold absolute left-1/2 -translate-x-1/2">
-              Drafts
+              {t('drafts.title')}
             </DrawerTitle>
             <button
               onClick={handleSave}
@@ -94,7 +109,7 @@ export function DraftsSheet({
               )}
             >
               <Save className="w-4 h-4" />
-              Save Current
+              {t('drafts.saveCurrent')}
             </button>
           </div>
         </DrawerHeader>
@@ -103,8 +118,8 @@ export function DraftsSheet({
           {drafts.length === 0 ? (
             <AppState
               icon="posts"
-              title="No drafts yet"
-              description="Save your work to continue later."
+              title={t('drafts.emptyTitle')}
+              description={t('drafts.emptyDescription')}
               size="drawer"
             />
           ) : (
@@ -123,41 +138,41 @@ export function DraftsSheet({
                     <div className="flex items-start gap-3">
                       <div className="flex-1 min-w-0">
                         <p className="text-white text-sm line-clamp-2">
-                          {draft.articleTitle || draft.text || <span className="text-zinc-500 italic">No text</span>}
+                          {draft.articleTitle || draft.text || <span className="text-zinc-500 italic">{t('drafts.noText')}</span>}
                         </p>
                         
                         {/* Media indicators */}
                         <div className="flex items-center gap-2 mt-2">
                           {draft.hasImage && (
                             <span className="flex items-center gap-1 text-xs text-zinc-400">
-                              <Image className="w-3 h-3" /> Image
+                              <Image className="w-3 h-3" /> {t('drafts.image')}
                             </span>
                           )}
                           {draft.hasVideo && (
                             <span className="flex items-center gap-1 text-xs text-zinc-400">
-                              <Video className="w-3 h-3" /> Video
+                              <Video className="w-3 h-3" /> {t('drafts.video')}
                             </span>
                           )}
                           {draft.hasAudio && (
                             <span className="flex items-center gap-1 text-xs text-zinc-400">
-                              <Mic className="w-3 h-3" /> Audio
+                              <Mic className="w-3 h-3" /> {t('drafts.audio')}
                             </span>
                           )}
                           {draft.payload?.poll && (
                             <span className="flex items-center gap-1 text-xs text-zinc-400">
-                              <BarChart3 className="w-3 h-3" /> Poll
+                              <BarChart3 className="w-3 h-3" /> {t('drafts.poll')}
                             </span>
                           )}
                           {draft.payload?.scheduledDate && (
                             <span className="flex items-center gap-1 text-xs text-zinc-400">
-                              <CalendarClock className="w-3 h-3" /> Scheduled
+                              <CalendarClock className="w-3 h-3" /> {t('drafts.scheduled')}
                             </span>
                           )}
                         </div>
 
                         <div className="flex items-center gap-1.5 mt-2 text-xs text-zinc-500">
                           <Clock className="w-3 h-3" />
-                          {format(draft.createdAt, 'MMM d, yyyy • h:mm a')}
+                          {formatSavedAt(draft.createdAt)}
                         </div>
                       </div>
 

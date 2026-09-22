@@ -3230,5 +3230,20 @@
         "body": "Ogow sida talooyinka, calaamadaha iyo SuperPowers u beddelaan waxa aad halkan ku samayso wax aad ka kasbato."
       }
     }
+  },
+  "drafts": {
+    "title": "Farshaxan",
+    "saveCurrent": "Keydso Hadda",
+    "saved": "Draft badbaadiyay",
+    "loaded": "QORAALKA LA XIRIIRAY",
+    "deleted": "Tixraac la tirtiray",
+    "emptyTitle": "No drafts badoo",
+    "emptyDescription": "Badbaadi shaqadaada si aad u sii wadato goor dambe.",
+    "noText": "No text ah ah",
+    "image": "Sawirka",
+    "video": "Fiidiyowga",
+    "audio": "Maqal",
+    "poll": "Codbixinta",
+    "scheduled": "Jadwalka"
   }
 }

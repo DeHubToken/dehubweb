@@ -5324,6 +5324,21 @@
       }
     }
   },
+  "drafts": {
+    "title": "Mga Draft",
+    "saveCurrent": "I-save ang Kasalukuyan",
+    "saved": "Na-save ang draft",
+    "loaded": "Na-load ang draft",
+    "deleted": "Nabura ang draft",
+    "emptyTitle": "Wala pang draft",
+    "emptyDescription": "I-save ang iyong gawa para ipagpatuloy mamaya.",
+    "noText": "Walang teksto",
+    "image": "Larawan",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Botohan",
+    "scheduled": "Naka-iskedyul"
+  },
   "walletSelector": {
     "title": "Piliin ang Wallet",
     "description": "Piliin ang wallet na gusto mong ikonekta sa app na ito."

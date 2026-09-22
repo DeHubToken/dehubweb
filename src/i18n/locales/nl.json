@@ -5716,6 +5716,21 @@
       }
     }
   },
+  "drafts": {
+    "title": "Concepten",
+    "saveCurrent": "Huidige opslaan",
+    "saved": "Concept opgeslagen",
+    "loaded": "Concept geladen",
+    "deleted": "Concept verwijderd",
+    "emptyTitle": "Nog geen concepten",
+    "emptyDescription": "Sla je werk op om later verder te gaan.",
+    "noText": "Geen tekst",
+    "image": "Afbeelding",
+    "video": "Video",
+    "audio": "Audio",
+    "poll": "Poll",
+    "scheduled": "Gepland"
+  },
   "home": {
     "title": "Home",
     "description": "Welkom op de homepagina"

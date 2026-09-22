@@ -5452,5 +5452,20 @@
         "body": "Ta reda på hur tips, märken och superkrafter förvandlar det du gör här till något du tjänar på."
       }
     }
+  },
+  "drafts": {
+    "title": "Utkast",
+    "saveCurrent": "Spara aktuell",
+    "saved": "Utkast sparat",
+    "loaded": "Utkast laddat",
+    "deleted": "Utkast raderat",
+    "emptyTitle": "Inga utkast ännu",
+    "emptyDescription": "Spara ditt arbete för att fortsätta senare.",
+    "noText": "Ingen text",
+    "image": "Bild",
+    "video": "Video",
+    "audio": "Ljud",
+    "poll": "Omröstning",
+    "scheduled": "Schemalagd"
   }
 }
