@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en" data-theme="system" data-screen="feed">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=375, initial-scale=1">
+<title>DeHub phone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700&display=swap">
+<style>
+/* ---------------------------------------------------------------------------
+   One phone screen, 375 x 812, themed exactly like dehub.io at phone width.
+   Values below were read off the live site (computed styles) per theme.
+   --------------------------------------------------------------------------- */
+:root{
+  --page:#000; --ink:#fff; --mute:rgb(128,128,137); --icon:#fff; --tab-ink:rgb(161,161,170); --tab-on:#fff;
+  --hdr:#000; --strip:#000;
+  --pill-bg:rgba(9,9,11,.4); --pill-img:none; --pill-sh:inset 0 0 0 1px rgba(255,255,255,.08),0 8px 32px rgba(0,0,0,.3); --pill-r:12px; --pill-blur:blur(20px) saturate(1.6);
+  --on-bg:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.06)); --on-sh:inset 0 0 0 1px rgba(255,255,255,.16),0 2px 8px rgba(0,0,0,.4); --on-r:12px;
+  --card-bg:rgba(255,255,255,.03); --card-img:none; --card-bd:.8px solid rgba(255,255,255,.12); --card-sh:none; --card-r:16px; --card-blur:none;
+  --media-r:16px; --av-r:6px;
+  --chip-bg:rgba(255,255,255,.12); --chip-ink:rgba(255,255,255,.75); --chip-bd:rgba(255,255,255,.12); --chip-r:6px;
+  --title-font:'Exo',system-ui,sans-serif; --title-ls:0; --title-size:15.5px; --count-font:'Exo',system-ui,sans-serif;
+  --bn-bg:rgba(9,9,11,.55); --bn-img:none; --bn-bd:.8px solid rgba(255,255,255,.1); --bn-r:16px; --bn-blur:blur(20px) saturate(1.5); --bn-sh:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);
+  --c-bg:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.07)); --c-bd:rgba(255,255,255,.22); --c-ink:#fff; --c-r:12px; --c-sh:0 2px 10px rgba(0,0,0,.35);
+  --sheet-bg:rgba(12,12,14,.9); --sheet-img:none; --sheet-bd:rgba(255,255,255,.1); --sheet-r:22px; --tile-bg:rgba(255,255,255,.04); --tile-bd:rgba(255,255,255,.08); --tile-r:14px; --tile-on-bg:rgba(255,255,255,.1); --tile-on-bd:rgba(255,255,255,.22);
+  --field-bg:rgba(255,255,255,.06); --field-bd:rgba(255,255,255,.1);
+  --ham:#fff; --logo:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:375px;height:812px;overflow:hidden}
+html{background:var(--page)}
+body{font-family:'Exo',system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;position:relative}
+svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg canvas{display:block}
+.app{position:absolute;inset:0;z-index:1;overflow:hidden}
+
+/* header */
+.hdr{position:absolute;top:0;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:center;background:var(--hdr);z-index:5}
+.hdr .ham{position:absolute;left:12px;top:6px;width:32px;height:32px;display:grid;place-items:center;color:var(--ham);border-radius:8px}
+.hdr .ham svg{width:31px;height:31px}
+.hdr .logo{width:33px;height:28px;color:var(--logo)}
+.hdr .bell{position:absolute;right:14px;top:10px;color:var(--ham);opacity:.9}
+.hdr .bell svg{width:22px;height:22px}
+
+/* feed tabs */
+.tabs-wrap{position:absolute;top:44px;left:0;right:0;padding:4px 8px 12px;z-index:4;background:var(--strip)}
+.tabs{position:relative;display:flex;height:44px;padding:4px;border-radius:var(--pill-r);background:var(--pill-bg);background-image:var(--pill-img);box-shadow:var(--pill-sh);backdrop-filter:var(--pill-blur);-webkit-backdrop-filter:var(--pill-blur)}
+.tab{flex:1;display:grid;place-items:center;color:var(--tab-ink);position:relative;border-radius:var(--on-r)}
+.tab svg{width:20px;height:20px}
+.tab.on{color:var(--tab-on);background:var(--on-bg);box-shadow:var(--on-sh)}
+
+/* feed */
+.feed{position:absolute;top:104px;left:0;right:0;bottom:0;padding:0 8px 120px;display:flex;flex-direction:column;gap:14px;z-index:1}
+.card{position:relative;padding:12px;border-radius:var(--card-r);background:var(--card-bg);background-image:var(--card-img);border:var(--card-bd);box-shadow:var(--card-sh);backdrop-filter:var(--card-blur);-webkit-backdrop-filter:var(--card-blur)}
+.ph{display:flex;align-items:flex-start;gap:12px;padding-bottom:12px}
+.av{width:40px;height:40px;border-radius:var(--av-r);flex:none;object-fit:cover;background:#222}
+.av.letter{display:grid;place-items:center;font-weight:700;font-size:17px;color:#fff;background:linear-gradient(135deg,#3b82f6,#8b5cf6)}
+.who{flex:1;min-width:0}
+.nm{display:flex;align-items:center;gap:6px;font-weight:700;font-size:17px;line-height:1.2;white-space:nowrap}
+.badge{width:18px;height:18px;flex:none}
+.chip{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;font-size:10px;font-weight:600;border-radius:var(--chip-r);background:var(--chip-bg);color:var(--chip-ink);border:.8px solid var(--chip-bd)}
+.chip svg{width:10px;height:10px}
+.hd{font-size:14px;color:var(--mute);margin-top:2px}
+.pa{display:flex;gap:10px;color:var(--icon);padding-top:2px}
+.pa svg{width:22px;height:22px}
+.pa .sp{color:var(--icon)}
+.media{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--media-r);overflow:hidden;background:#000}
+.media img{width:100%;height:100%;object-fit:cover;display:block}
+.media .dur{position:absolute;right:8px;bottom:8px;font:600 11px 'Exo',sans-serif;background:rgba(0,0,0,.65);color:#fff;padding:2px 6px;border-radius:6px}
+.ttl{font-family:var(--title-font);font-size:var(--title-size);letter-spacing:var(--title-ls);line-height:1.45;margin-top:12px}
+.meta{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mute);margin-top:8px}
+.meta svg{width:14px;height:14px}
+.acts{display:flex;justify-content:space-between;align-items:center;margin-top:12px;color:var(--icon)}
+.acts span{display:inline-flex;align-items:center;gap:5px;font-family:var(--count-font);font-size:13px}
+.acts svg{width:21px;height:21px}
+
+/* bottom nav */
+.bn{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;z-index:6}
+.bp{position:relative;display:flex;align-items:center;gap:4px;height:52px;padding:0 8px;border-radius:var(--bn-r);background:var(--bn-bg);background-image:var(--bn-img);border:var(--bn-bd);box-shadow:var(--bn-sh);backdrop-filter:var(--bn-blur);-webkit-backdrop-filter:var(--bn-blur)}
+.bb{width:46px;height:40px;display:grid;place-items:center;color:var(--ink)}
+.bb svg{width:23px;height:23px}
+.bb.c{width:44px;height:38px;margin:0 3px;border-radius:var(--c-r);background:var(--c-bg);border:1px solid var(--c-bd);color:var(--c-ink);box-shadow:var(--c-sh)}
+
+/* menu sheet (the web's hamburger opens a glass bottom sheet, 85% tall) */
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:8;display:none}
+.sheet{position:absolute;left:0;right:0;bottom:0;height:85%;z-index:9;display:none;flex-direction:column;padding:10px 16px 28px;border-radius:var(--sheet-r) var(--sheet-r) 0 0;background:var(--sheet-bg);background-image:var(--sheet-img);border-top:1px solid var(--sheet-bd);backdrop-filter:blur(28px) saturate(1.4);-webkit-backdrop-filter:blur(28px) saturate(1.4);box-shadow:0 -12px 40px rgba(0,0,0,.45)}
+html[data-screen="menu"] .scrim,html[data-screen="menu"] .sheet{display:flex}
+.grab{width:44px;height:5px;border-radius:9px;background:var(--mute);opacity:.5;margin:0 auto 14px}
+.me{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.me .av{width:44px;height:44px}
+.me b{display:block;font-size:17px}
+.me small{font-size:13px;color:var(--mute)}
+.me .bal{margin-left:auto;display:flex;align-items:center;gap:6px;font:600 13px var(--count-font);padding:6px 10px;border-radius:var(--chip-r);background:var(--chip-bg);border:.8px solid var(--chip-bd)}
+.me .bal svg{width:15px;height:15px}
+.field{display:flex;align-items:center;gap:10px;height:42px;padding:0 14px;border-radius:12px;background:var(--field-bg);border:1px solid var(--field-bd);color:var(--mute);font-size:14px;margin-bottom:16px}
+.field svg{width:18px;height:18px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 4px 10px;border-radius:var(--tile-r);background:var(--tile-bg);border:.8px solid var(--tile-bd);font-size:12.5px;font-weight:500;color:var(--ink);position:relative}
+.tile img{width:52px;height:52px;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,.35))}
+.tile .g{width:52px;height:52px;display:grid;place-items:center}
+.tile .g svg{width:28px;height:28px}
+.tile.on{background:var(--tile-on-bg);border-color:var(--tile-on-bd)}
+
+/* ===================== MINIMAL ===================== */
+html[data-theme="minimal"]{
+  --pill-bg:#000; --pill-sh:none; --pill-r:0; --pill-blur:none; --on-bg:#000; --on-sh:inset 0 1px 0 rgba(255,255,255,.69),inset 1px 0 0 rgba(255,255,255,.69),inset -1px 0 0 rgba(255,255,255,.69); --on-r:0;
+  --card-bg:transparent; --card-bd:0; --card-r:0; --media-r:0; --av-r:0; --chip-r:0;
+  --bn-bg:rgba(24,24,27,.1); --bn-r:0; --bn-blur:blur(40px); --c-r:0; --c-bg:rgba(255,255,255,.1); --c-bd:rgba(255,255,255,.3);
+  --sheet-r:0; --tile-r:0; --tile-bg:transparent; --field-bg:#000;
+}
+html[data-theme="minimal"] .tabs,html[data-theme="light"] .tabs{padding:0 0;height:40px;border-bottom:1px solid var(--fold)}
+html[data-theme="minimal"] .tabs-wrap,html[data-theme="light"] .tabs-wrap{padding:4px 0 0}
+html[data-theme="minimal"] .tab.on,html[data-theme="light"] .tab.on{margin-bottom:-1px}
+html[data-theme="minimal"] .tab.on,html[data-theme="light"] .tab.on{flex:0 0 76px}
+html[data-theme="minimal"]{--fold:rgba(255,255,255,.69)}
+html[data-theme="minimal"] .feed,html[data-theme="light"] .feed{top:96px;padding:0 0 120px;gap:0}
+html[data-theme="minimal"] .card,html[data-theme="light"] .card{padding:14px 16px 16px;border-bottom:1px solid var(--div)}
+html[data-theme="minimal"] .media,html[data-theme="light"] .media{width:calc(100% + 32px);margin:0 -16px}
+html[data-theme="minimal"]{--div:rgba(255,255,255,.08)}
+
+/* ===================== LIGHT ===================== */
+html[data-theme="light"]{
+  --page:#f9f8f4; --ink:#1a1a1a; --mute:#5a5a5a; --icon:#1a1a1a; --tab-ink:#8a8a8f; --tab-on:#1a1a1a; --hdr:transparent; --strip:transparent;
+  --pill-bg:transparent; --pill-sh:none; --pill-r:0; --pill-blur:none; --on-bg:#f9f8f4; --on-sh:inset 0 1px 0 rgba(0,0,0,.12),inset 1px 0 0 rgba(0,0,0,.12),inset -1px 0 0 rgba(0,0,0,.12); --on-r:0; --fold:rgba(0,0,0,.12); --div:rgba(0,0,0,.08);
+  --card-bg:transparent; --card-bd:0; --card-r:0; --media-r:0; --av-r:0; --chip-r:0; --chip-bg:rgba(0,0,0,.06); --chip-ink:#3a3a3a; --chip-bd:rgba(0,0,0,.14);
+  --bn-bg:rgba(249,248,244,.8); --bn-bd:.8px solid rgba(0,0,0,.12); --bn-r:0; --bn-blur:blur(20px); --c-r:0; --c-bg:rgba(0,0,0,.05); --c-bd:rgba(0,0,0,.2); --c-ink:#1a1a1a; --c-sh:none;
+  --sheet-bg:rgba(249,248,244,.96); --sheet-bd:rgba(0,0,0,.12); --sheet-r:0; --tile-bg:transparent; --tile-bd:rgba(0,0,0,.1); --tile-r:0; --tile-on-bg:rgba(0,0,0,.05); --tile-on-bd:rgba(0,0,0,.25); --field-bg:rgba(0,0,0,.04); --field-bd:rgba(0,0,0,.12);
+  --ham:#1a1a1a; --logo:#1a1a1a;
+}
+html[data-theme="light"] body{background:#f9f8f4 url(media/paper-texture.png);background-size:256px 256px}
+html[data-theme="light"] .scrim{background:rgba(26,26,26,.25)}
+
+/* ===================== CANVAS GLASS (cosmic / hazy / swarms / lavalamp / winter) ===================== */
+html[data-theme="cosmic"],html[data-theme="hazy"],html[data-theme="swarms"],html[data-theme="lavalamp"],html[data-theme="winter"]{
+  --hdr:transparent; --strip:transparent;
+  --pill-bg:rgba(9,9,11,.82); --pill-blur:none;
+  --card-bg:rgba(9,9,11,.82); --card-img:linear-gradient(160deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,.02) 38%,rgba(255,255,255,.04) 100%); --card-bd:.8px solid transparent; --card-sh:inset 0 0 0 1px rgba(255,255,255,.1),inset 0 1.5px 0 rgba(255,255,255,.08);
+  --bn-bg:rgba(9,9,11,.86); --bn-blur:none;
+  --sheet-bg:rgba(9,9,11,.8); --sheet-img:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02) 38%,rgba(255,255,255,.04));
+}
+html[data-theme="winter"]{background:#05070a radial-gradient(120rem 60rem at 85% -20%,rgba(164,196,228,.10),transparent 55%)}
+
+/* ===================== WAR ===================== */
+html[data-theme="war"]{
+  --page:rgb(6,10,9); --hdr:transparent; --strip:transparent; --mute:rgba(197,186,156,.8); --icon:rgba(214,208,190,.85); --tab-ink:rgb(190,196,194); --tab-on:rgb(79,227,224);
+  --pill-bg:transparent; --pill-sh:none; --pill-r:0; --pill-blur:none;
+  --on-bg:rgba(79,227,224,.12); --on-sh:inset 0 0 0 1px rgba(79,227,224,.55),0 0 14px rgba(79,227,224,.18); --on-r:0;
+  --card-bg:rgba(14,20,18,.8); --card-bd:.8px solid transparent; --card-sh:inset 0 0 0 1px rgba(79,227,224,.32),inset 0 1px 0 rgba(79,227,224,.14); --card-r:0; --media-r:2px; --av-r:0;
+  --chip-bg:rgba(255,255,255,.08); --chip-bd:rgba(79,227,224,.35); --chip-r:0;
+  --title-font:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace; --title-ls:.1em; --title-size:14.5px; --count-font:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --bn-bg:transparent; --bn-bd:0; --bn-r:0; --bn-blur:none; --bn-sh:none;
+  --c-bg:rgba(79,227,224,.14); --c-bd:rgba(79,227,224,.8); --c-ink:rgb(79,227,224); --c-r:0; --c-sh:0 0 14px rgba(79,227,224,.3),inset 0 0 10px rgba(79,227,224,.15);
+  --sheet-bg:rgba(8,13,12,.94); --sheet-bd:rgba(79,227,224,.5); --sheet-r:0; --tile-bg:rgba(14,20,18,.8); --tile-bd:rgba(79,227,224,.28); --tile-r:0; --tile-on-bg:rgba(79,227,224,.12); --tile-on-bd:rgba(79,227,224,.7); --field-bg:rgba(79,227,224,.05); --field-bd:rgba(79,227,224,.35);
+  --ham:rgb(88,230,168); --logo:rgb(214,246,245);
+}
+html[data-theme="war"] .ham{filter:drop-shadow(0 0 6px rgba(88,230,168,.6))}
+html[data-theme="war"] .logo{filter:drop-shadow(0 0 6px rgba(79,227,224,.55))}
+/* cut corners + HUD corner brackets, as war-frame.css / war-nav.css draw them */
+.war-fill,.war-br{position:absolute;inset:0;pointer-events:none;display:none}
+html[data-theme="war"] .war-fill,html[data-theme="war"] .war-br{display:block}
+html[data-theme="war"] .tabs .war-fill{background:rgba(14,20,18,.9);clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px));box-shadow:inset 0 0 0 1px rgba(79,227,224,.3)}
+html[data-theme="war"] .tabs{background:none}
+html[data-theme="war"] .tabs .war-fill::before{content:"";position:absolute;inset:0;clip-path:inherit;border:1px solid rgba(79,227,224,.32)}
+html[data-theme="war"] .war-br{--L:12px;--W:1.5px;--C:rgba(79,227,224,.8);
+  background:
+   linear-gradient(var(--C),var(--C)) top left/var(--L) var(--W) no-repeat,
+   linear-gradient(var(--C),var(--C)) top left/var(--W) var(--L) no-repeat,
+   linear-gradient(var(--C),var(--C)) top right/var(--L) var(--W) no-repeat,
+   linear-gradient(var(--C),var(--C)) top right/var(--W) var(--L) no-repeat,
+   linear-gradient(var(--C),var(--C)) bottom left/var(--L) var(--W) no-repeat,
+   linear-gradient(var(--C),var(--C)) bottom left/var(--W) var(--L) no-repeat,
+   linear-gradient(var(--C),var(--C)) bottom right/var(--L) var(--W) no-repeat,
+   linear-gradient(var(--C),var(--C)) bottom right/var(--W) var(--L) no-repeat;
+  filter:drop-shadow(0 0 3px rgba(79,227,224,.45))}
+html[data-theme="war"] .tabs .war-br{clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px))}
+html[data-theme="war"] .tab.on{clip-path:polygon(0 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%)}
+html[data-theme="war"] .bp .war-fill{background:rgba(14,20,18,.9);clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%,0 10px);box-shadow:0 -6px 22px rgba(0,0,0,.5)}
+html[data-theme="war"] .bp .war-br{clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%,0 10px);--C:rgba(79,227,224,.55)}
+html[data-theme="war"] .bp .war-fill::after{content:"";position:absolute;inset:0;border-top:1px solid rgba(79,227,224,.4)}
+html[data-theme="war"] .bb,html[data-theme="war"] .tab{z-index:1}
+html[data-theme="war"] .card .war-br{--L:10px;--C:rgba(79,227,224,.7)}
+html[data-theme="war"] .sheet .war-br{--L:18px;--C:rgba(79,227,224,.9);inset:6px}
+html[data-theme="war"] .tile .war-br{--L:8px;--W:1px;--C:rgba(79,227,224,.6)}
+html[data-theme="war"] .tile .g{color:rgb(79,227,224);filter:drop-shadow(0 0 6px rgba(79,227,224,.5))}
+html[data-theme="war"] .tile{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase}
+html[data-theme="war"] .nm,html[data-theme="war"] .me b{letter-spacing:.01em}
+html[data-theme="war"] .grab{border-radius:0;background:rgb(79,227,224);opacity:.8;height:3px}
+html[data-theme="war"] .field{border-radius:0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+
+/* ===================== OSAKA ===================== */
+html[data-theme="osaka"]{
+  --page:rgb(10,8,18); --hdr:transparent; --strip:transparent; --ink:rgb(236,233,245); --mute:rgb(176,170,196); --icon:rgb(236,233,245); --tab-ink:rgb(176,170,196); --tab-on:rgb(255,111,181);
+  --osaka-sheen:linear-gradient(178deg,rgba(255,111,181,.13) 0%,rgba(111,227,255,.05) 26%,rgba(17,14,28,0) 58%);
+  --pill-bg:rgba(17,14,28,.84); --pill-img:var(--osaka-sheen); --pill-sh:inset 0 0 0 1px rgba(236,233,245,.1),inset 0 1.5px 0 rgba(236,233,245,.2),inset 0 -1px 0 rgba(255,111,181,.16),0 10px 34px rgba(4,2,10,.5); --pill-r:16px; --pill-blur:none;
+  --on-bg:rgba(255,111,181,.1); --on-sh:inset 0 0 0 1px rgba(255,111,181,.7),0 0 14px rgba(255,111,181,.35),inset 0 0 12px rgba(255,111,181,.12);
+  --card-bg:rgba(17,14,28,.84); --card-img:var(--osaka-sheen); --card-bd:.8px solid transparent; --card-sh:inset 0 0 0 1px rgba(236,233,245,.09),inset 0 1.5px 0 rgba(236,233,245,.16),inset 0 -1px 0 rgba(255,111,181,.14);
+  --chip-ink:rgba(236,233,245,.7); --chip-bd:rgba(236,233,245,.1);
+  --bn-bg:rgba(17,14,28,.88); --bn-img:var(--osaka-sheen); --bn-bd:.8px solid transparent; --bn-blur:none; --bn-sh:inset 0 0 0 1px rgba(236,233,245,.1),inset 0 1.5px 0 rgba(236,233,245,.2),inset 0 -1px 0 rgba(255,111,181,.16),0 10px 34px rgba(4,2,10,.5);
+  --c-bg:rgba(255,111,181,.1); --c-bd:rgba(255,111,181,.75); --c-ink:rgb(255,190,222); --c-sh:0 0 16px rgba(255,111,181,.4),inset 0 0 10px rgba(255,111,181,.15); --c-r:14px;
+  --sheet-bg:rgba(17,14,28,.9); --sheet-img:var(--osaka-sheen); --sheet-bd:rgba(255,111,181,.35); --tile-bg:rgba(236,233,245,.04); --tile-bd:rgba(236,233,245,.1); --tile-on-bg:rgba(255,111,181,.1); --tile-on-bd:rgba(255,111,181,.7); --field-bd:rgba(236,233,245,.12);
+}
+html[data-theme="osaka"] .tab.on svg{filter:drop-shadow(0 0 6px rgba(255,111,181,.8))}
+html[data-theme="osaka"] .tile.on{box-shadow:0 0 16px rgba(255,111,181,.3)}
+
+/* ===================== JUNGLE ===================== */
+html[data-theme="jungle"]{
+  --page:rgb(22,17,12); --ink:rgb(246,240,227); --mute:rgb(198,182,158); --icon:rgb(222,210,188); --tab-ink:rgb(198,182,158); --tab-on:rgb(246,240,227);
+  --fibre:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86 0.012' numOctaves='3' seed='7'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 -0.42'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23f)'/%3E%3C/svg%3E");
+  --fibre-l:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72 0.01' numOctaves='2' seed='19'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 0.96 0 0 0 0 0.88 0 0 0 1 -0.72'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23f)'/%3E%3C/svg%3E");
+  --plank:var(--fibre),var(--fibre-l),linear-gradient(168deg,rgba(255,246,226,.06) 0%,rgba(255,246,226,.01) 38%,rgba(0,0,0,.09) 100%);
+  --hdr:rgba(38,28,19,.92); --strip:transparent;
+  --pill-bg:rgba(38,28,19,.86); --pill-img:var(--plank); --pill-sh:inset 0 1.5px 0 rgba(255,246,226,.2),inset 0 0 0 1px rgba(0,0,0,.6),inset 0 -2px 0 rgba(8,14,10,.5),0 12px 34px rgba(6,10,7,.55); --pill-r:14px; --pill-blur:none;
+  --on-bg:rgba(22,17,12,.75); --on-sh:inset 0 2px 3px rgba(0,0,0,.7),inset 0 -1px 0 rgba(255,246,226,.12),0 1px 0 rgba(255,246,226,.08); --on-r:10px;
+  --card-bg:rgba(38,28,19,.86); --card-img:var(--plank); --card-bd:.8px solid rgba(0,0,0,.48); --card-sh:inset 0 1px 0 rgba(255,246,226,.16),inset 0 0 0 1px rgba(0,0,0,.55),inset 0 -1px 0 rgba(8,14,10,.5); --card-r:11px; --media-r:9px;
+  --chip-bg:rgba(58,43,28,.9); --chip-ink:rgb(246,240,227); --chip-bd:rgba(0,0,0,.48); --chip-r:6px;
+  --bn-bg:rgba(38,28,19,.86); --bn-img:var(--plank); --bn-bd:.8px solid rgba(0,0,0,.48); --bn-blur:none; --bn-sh:inset 0 1.5px 0 rgba(255,246,226,.18),0 10px 24px rgba(0,0,0,.5);
+  --c-bg:rgba(22,17,12,.7); --c-bd:rgba(0,0,0,.6); --c-ink:rgb(246,240,227); --c-sh:inset 0 2px 3px rgba(0,0,0,.7),0 1px 0 rgba(255,246,226,.12); --c-r:10px;
+  --sheet-bg:rgba(38,28,19,.96); --sheet-img:var(--plank); --sheet-bd:rgba(0,0,0,.6); --sheet-r:16px; --tile-bg:rgba(58,43,28,.7); --tile-bd:rgba(0,0,0,.5); --tile-r:11px; --tile-on-bg:rgba(22,17,12,.75); --tile-on-bd:rgba(226,176,96,.6); --field-bg:rgba(22,17,12,.6); --field-bd:rgba(0,0,0,.55);
+  --ham:rgb(246,240,227); --logo:rgb(246,240,227);
+}
+html[data-theme="jungle"] .hdr{background-image:var(--plank);box-shadow:inset 0 -1px 0 rgba(0,0,0,.6),inset 0 -2px 0 rgba(136,116,92,.2),0 4px 14px rgba(0,0,0,.45)}
+html[data-theme="jungle"] .ttl{text-shadow:0 -1px 0 rgba(0,0,0,.72),0 1px 0 rgba(255,246,226,.09)}
+html[data-theme="jungle"] .tab.on{text-shadow:0 1px 0 rgba(0,0,0,.75)}
+html[data-theme="jungle"] .bn{bottom:0;padding:10px 0 14px;background:rgba(38,28,19,.92);background-image:var(--plank);box-shadow:inset 0 1px 0 rgba(255,246,226,.12),0 -6px 18px rgba(0,0,0,.45)}
+html[data-theme="jungle"] .tile.on{box-shadow:inset 0 2px 4px rgba(0,0,0,.6)}
+html[data-theme="jungle"] .me .bal{color:rgb(226,176,96)}
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+<div class="app">
+  <header class="hdr">
+    <span class="ham" data-i="menu"></span>
+    <svg class="logo" viewBox="80 70 352 390" fill="none" stroke="currentColor" stroke-width="52" stroke-linecap="round"><path d="M112 176v116c0 70 39 128 103 150"/><path d="M400 176v116c0 70-39 128-103 150"/><path d="M256 86v213"/></svg>
+    <span class="bell" data-i="bell"></span>
+  </header>
+
+  <div class="tabs-wrap"><div class="tabs">
+    <i class="war-fill"></i><i class="war-br"></i>
+    <span class="tab" data-i="sliders"></span><span class="tab on" data-i="house"></span><span class="tab" data-i="film"></span><span class="tab" data-i="image"></span><span class="tab" data-i="video"></span><span class="tab" data-i="mic"></span><span class="tab" data-i="radio"></span>
+  </div></div>
+
+  <main class="feed">
+    <article class="card"><i class="war-br"></i>
+      <div class="ph">
+        <img class="av" src="media/dehub-icon.png" alt="">
+        <div class="who">
+          <div class="nm">DeHub <svg class="badge" viewBox="0 0 24 24"><defs><linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffcf6b"/><stop offset="1" stop-color="#e0772b"/></linearGradient></defs><path fill="url(#bg1)" d="M12 1.5l2.6 2 3.2-.3 1 3.1 2.8 1.6-.8 3.1 1.4 2.9-2.6 1.9-.4 3.2-3.2.5L14.3 22 12 20.3 9.7 22l-1.7-2.5-3.2-.5-.4-3.2L1.8 14l1.4-2.9-.8-3.1 2.8-1.6 1-3.1 3.2.3z"/><path d="M8 12.2l2.6 2.6L16.2 9" fill="none" stroke="#1a1206" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="hd">@dehub</div>
+        </div>
+        <div class="pa"><span class="sp" data-i="sparkles"></span><span data-i="kebab"></span></div>
+      </div>
+      <div class="media"><img src="media/street-slayer.webp" alt=""><span class="dur">0:42</span></div>
+      <div class="ttl">Street Slayer is live in the Arcade | Top score this week takes the pot</div>
+      <div class="meta"><span>5h</span>·<span data-i="eye"></span><span>2.4K</span>·<span data-i="lang"></span></div>
+      <div class="acts"><span><b data-i="gem"></b>12K</span><span><b data-i="down"></b>0</span><span><b data-i="share"></b>48</span><span><b data-i="msg"></b>126</span><span><b data-i="up"></b>890</span><span data-i="bookmark"></span><span data-i="info"></span></div>
+    </article>
+    <article class="card"><i class="war-br"></i>
+      <div class="ph">
+        <span class="av letter">N</span>
+        <div class="who">
+          <div class="nm">nova.eth <span class="chip"><b data-i="star"></b>New</span></div>
+          <div class="hd">@nova</div>
+        </div>
+        <div class="pa"><span class="sp" data-i="sparkles"></span><span data-i="kebab"></span></div>
+      </div>
+      <div class="media"><img src="media/kings-gambit.webp" alt=""></div>
+      <div class="ttl">Three moves from mate and I still found a way to lose it</div>
+    </article>
+  </main>
+
+  <nav class="bn"><div class="bp">
+    <i class="war-fill"></i><i class="war-br"></i>
+    <span class="bb" data-i="house"></span><span class="bb" data-i="msg"></span><span class="bb c" data-i="plus"></span><span class="bb" data-i="sparkles"></span><span class="bb" data-i="search"></span>
+  </div></nav>
+
+  <div class="scrim"></div>
+  <section class="sheet"><i class="war-br"></i>
+    <div class="grab"></div>
+    <div class="me">
+      <img class="av" src="media/dehub-icon.png" alt="">
+      <div><b>DeHub</b><small>@dehub</small></div>
+      <span class="bal"><b data-i="gem"></b>12,480</span>
+    </div>
+    <div class="field"><span data-i="search"></span>Search DeHub</div>
+    <div class="grid" id="grid"></div>
+  </section>
+</div>
+
+<script src="bg.js"></script>
+<script>
+const P={
+menu:'<line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>',
+bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+sliders:'<path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/>',
+house:'<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+film:'<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/>',
+image:'<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>',
+video:'<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
+mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>',
+radio:'<path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/>',
+msg:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+plus:'<path d="M5 12h14"/><path d="M12 5v14"/>',
+sparkles:'<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>',
+search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+star:'<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
+kebab:'<circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>',
+eye:'<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/>',
+lang:'<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
+bookmark:'<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>',
+info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+gem:'<path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/>',
+down:'<path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/>',
+share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>',
+up:'<path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/>',
+user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+vault:'<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/><path d="m7.9 7.9 2.7 2.7"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/><path d="m13.4 10.6 2.7-2.7"/><circle cx="7.5" cy="16.5" r=".5" fill="currentColor"/><path d="m7.9 16.1 2.7-2.7"/><circle cx="16.5" cy="16.5" r=".5" fill="currentColor"/><path d="m13.4 13.4 2.7 2.7"/><circle cx="12" cy="12" r="2"/>',
+gear:'<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+store:'<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2 2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/>'
+};
+const svg=k=>'<svg class="i" viewBox="0 0 24 24">'+(P[k]||'')+'</svg>';
+document.querySelectorAll('[data-i]').forEach(el=>{el.innerHTML=svg(el.dataset.i)+el.innerHTML});
+
+const [theme,screen]=(location.hash.slice(1)||'system').split(':');
+document.documentElement.dataset.theme=theme;
+document.documentElement.dataset.screen=screen||'feed';
+
+// menu sheet: web's per-theme 3D icon set (public/theme-icons/<theme>); War draws HUD glyphs instead
+const ITEMS=[['home','Home','house'],['videos','Videos','film'],['images','Images','image'],['audio','Audio','mic'],['live','Live','radio'],['messages','Messages','msg'],['notifications','Alerts','bell'],['bookmarks','Saved','bookmark'],['stores','Stores','store'],['staking','Staking','vault'],['profile','Profile','user'],['settings','Settings','gear']];
+document.getElementById('grid').innerHTML=ITEMS.map(([k,l,g],i)=>'<div class="tile'+(i===0?' on':'')+'"><i class="war-br"></i>'+(theme==='war'?'<span class="g">'+svg(g)+'</span>':'<img src="icons/'+theme+'/'+k+'.webp" alt="">')+l+'</div>').join('');
+
+// the real background component from dehubweb, bundled unchanged
+if(window.mountThemeBackground){try{window.mountThemeBackground(document.getElementById('bg'),theme)}catch(e){console.error(e)}}
+</script>
+</body>
+</html>
