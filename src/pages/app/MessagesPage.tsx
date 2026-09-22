@@ -4,7 +4,7 @@ import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Search, Plus, MessageCircle, RefreshCw, Loader2 } from 'lucide-react';
+import { Search, Plus, MessageCircle, RefreshCw, Loader2, Trash2, Ban } from 'lucide-react';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
@@ -13,7 +13,7 @@ import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector
 
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
-import { useConversations, useUserOnlineStatus, useCreateConversation, useUserSearchForDM } from '@/hooks/use-messages';
+import { useConversations, useUserOnlineStatus, useCreateConversation, useUserSearchForDM, useDeleteConversation } from '@/hooks/use-messages';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { getMediaUrl, getAccountInfo, type DeHubConversation, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
@@ -23,6 +23,7 @@ import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useDMRealtime } from '@/hooks/use-dm-realtime';
 import { conversationIdentity } from '@/lib/conversation-identity';
 import { useDraftText } from '@/hooks/use-draft';
+import { SwipeableRow } from '@/components/ui/swipeable-row';
 import { useKeyboardOpen, useVisualViewportBox } from '@/hooks/use-keyboard-open';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
@@ -30,6 +31,8 @@ import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
 import dehubLogo from '@/assets/dehub-logo.png';
 import { SEOHead } from '@/components/SEOHead';
+import { blockUser } from '@/lib/api/dehub/blocks';
+import { toast } from 'sonner';
 
 function ConversationBadge({ user }: { user?: DeHubUser }) {
   if (!user) return null;
@@ -60,14 +63,18 @@ function ConversationsSkeleton() {
   );
 }
 
-function ConversationItem({ 
-  conversation, 
-  onClick, 
+function ConversationItem({
+  conversation,
+  onClick,
   isSelected,
-}: { 
-  conversation: DeHubConversation; 
+  onDelete,
+  onBlock,
+}: {
+  conversation: DeHubConversation;
   onClick: () => void;
   isSelected: boolean;
+  onDelete: (conversation: DeHubConversation) => void;
+  onBlock: (conversation: DeHubConversation) => void;
 }) {
   const { t } = useTranslation();
   const otherUser = conversation.otherUser || conversation.participants?.[0];
@@ -94,6 +101,24 @@ function ConversationItem({
   const draft = useDraftText(conversationIdentity(conversation));
 
   return (
+    <SwipeableRow
+      actions={[
+        {
+          key: 'block',
+          label: t('profileOptions.block'),
+          icon: <Ban className="w-4 h-4" />,
+          className: 'bg-zinc-700',
+          onSelect: () => onBlock(conversation),
+        },
+        {
+          key: 'delete',
+          label: t('common.delete'),
+          icon: <Trash2 className="w-4 h-4" />,
+          className: 'bg-red-600',
+          onSelect: () => onDelete(conversation),
+        },
+      ]}
+    >
     <button
       onClick={onClick}
       className={`w-full flex items-center gap-3 p-4 border-t border-white/[0.07] hover:bg-white/[0.04] transition-colors text-left ${
@@ -159,6 +184,7 @@ function ConversationItem({
         )}
       </div>
     </button>
+    </SwipeableRow>
   );
 }
 
@@ -217,6 +243,31 @@ export default function MessagesPage() {
 
   const createConversation = useCreateConversation();
   const { data: userSearchResults, isLoading: isSearchingUsers } = useUserSearchForDM(debouncedSearchQuery);
+
+  /*
+   * Until now deleting a thread meant opening it first and going through its
+   * menu. The row's left swipe does it from the list, as Mail and Messages do.
+   */
+  const deleteConversationMutation = useDeleteConversation();
+
+  const handleDeleteConversation = useCallback((conv: DeHubConversation) => {
+    deleteConversationMutation.mutate(conv.id, {
+      onSuccess: () => toast.success('Conversation deleted'),
+      onError: () => toast.error('Failed to delete conversation'),
+    });
+    setSelectedConversation(prev => (prev?.id === conv.id ? null : prev));
+  }, [deleteConversationMutation]);
+
+  const handleBlockConversationUser = useCallback(async (conv: DeHubConversation) => {
+    const user = conv.otherUser || conv.participants?.[0];
+    if (!user?.address) return;
+    try {
+      await blockUser(user.address, 'Blocked from message list');
+      toast.success('User blocked');
+    } catch {
+      toast.error('Failed to block user');
+    }
+  }, []);
 
   // Get existing conversation addresses to filter search results
   const existingAddresses = new Set(
@@ -622,6 +673,8 @@ export default function MessagesPage() {
                   setSelectedConversation({ ...conv, unreadCount: 0 });
                 }}
                 isSelected={selectedConversation?.id === conv.id}
+                onDelete={handleDeleteConversation}
+                onBlock={handleBlockConversationUser}
               />
             ))}
 
