@@ -449,7 +449,11 @@
       "unavailable": "Ukusakaza kusuka ku-encoder akutholakali ku-akhawunti yakho njengamanje.",
       "serverCopied": "Iseva ikopishiwe",
       "keyCopied": "Ukhiye wokusakaza ukopishiwe"
-    }
+    },
+    "usernames": "Amagama abasebenzisi",
+    "usernamesDesc": "Amagama onawo",
+    "usernamesCount_one": "{{count}} igama lomsebenzisi",
+    "usernamesCount_other": "{{count}} amagama abasebenzisi"
   },
   "common": {
     "save": "Gcina",
@@ -3318,7 +3322,29 @@
       "completed": "Kuqediwe",
       "expired": "Kuphelelwe yisikhathi"
     },
-    "makeOfferAction": "Yenza isinikelo"
+    "makeOfferAction": "Yenza isinikelo",
+    "tabMine": "Mina",
+    "sellingWornName": "Lena yindlela iphrofayela lakho eliyisebenzisayo. Ukuyithengisa kukwenza uthathe enye igama.",
+    "sellingHeldName": "Ungumnikazi weli gama kodwa awulisebenzisi. Ukulithengisa akushintshi iphrofayela lakho.",
+    "saleFinalWarningHeld": "Ukuthengisa kuyaqina futhi kwenzeke ngokushesha. Indlela yakho kanye nakho konke okukuphrofayela lakho akuthintwa — leli gama lodwa liyasuswa.",
+    "signInToSeeVault": "Ngena ukuze ubone amagama omsebenzisi owanikezayo.",
+    "vaultExplainer": "Amagama omsebenzisi owathengile ahlala eyakho. Ungasebenzisa eyodwa, uyithengise, noma uyiyeke.",
+    "vaultExplainerEmpty": "Ungumnikazi welinye igama lomsebenzisi. Thenga elinye futhi ugcine naleli.",
+    "vaultInUse": "Isetshenziswa",
+    "vaultBought": "Iyathengwa",
+    "vaultKept": "Igcine kusukela ekuthengeni kwangaphambili",
+    "vaultFree": "Igama lomsebenzisi lamahhala",
+    "vaultFreeWarning": "Awuzange uyikhokhele leli, ngakho ukushintshela kwelinye igama kukwenza uyinikezele futhi noma ubani angayithatha.",
+    "vaultUseThis": "Lisebenzise leli",
+    "vaultSell": "Thengisa",
+    "vaultEditListing": "Hlela uhlu",
+    "vaultRelease": "Khipha",
+    "vaultListedCannotWear": "Hoxisa uhlu ngaphambi kokusebenzisa leli gama.",
+    "vaultReleaseTitle": "Khipha @{{handle}}?",
+    "vaultReleaseBody": "Ibuyela echibini futhi noma ubani angayithatha. Akukho ukubuyisa emuva, futhi ukuyithenga futhi kungabiza noma yini umnikazi omusha ayicelayo.",
+    "oldHandleKept": "Uhlala uyi-@{{handle}} — ingena kumagama akho omsebenzisi, futhi ungayigqoka futhi noma uyithengise kamuva. Okuthunyelwe, abalandeli, kanye ne-wallet yakho akuthintwa.",
+    "postsStayWithYou": "Okuthunyelwe, abalandeli, kanye ne-wallet yakho akuthintwa.",
+    "saleFinalWarning": "Ukuthengisa kuyaqedwa futhi kwenzeke ngokushesha. Okuthunyelwe kwakho, abalandeli, kanye ne-wallet yakho kuhlala nawe — isibambo kuphela esihambayo. Umthengi ugcina nesibambo sakhe esidala; siba ngolunye lwamagama akhe omsebenzisi."
   },
   "home": {
     "seoTitle": "DeHub — Isizinda sezokuxhumana somthombo ovulekile esiphethwe abasebenzisi",

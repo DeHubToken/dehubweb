@@ -465,7 +465,11 @@
       "unavailable": "Hindi available ang streaming mula sa isang encoder sa iyong account sa ngayon.",
       "serverCopied": "Kinopya ang server",
       "keyCopied": "Kinopya ang stream key"
-    }
+    },
+    "usernames": "Mga username",
+    "usernamesDesc": "Ang mga pangalan na pagmamay - ari mo",
+    "usernamesCount_one": "{{count}}username",
+    "usernamesCount_other": "{{count}}usernames"
   },
   "common": {
     "save": "I-save",
@@ -3883,7 +3887,7 @@
     "youBecomeHandle": "Magiging @{{handle}} ka sa sandaling bumili ang isang tao. Kung ang pangalang iyon ay nakunan na noon, ginagamit ang numbered variant at ipapaalam sa iyo kung alin.",
     "pitchOptional": "Pitch (opsyonal)",
     "pitchPlaceholder": "Original 2021 handle, malinis na kasaysayan…",
-    "saleFinalWarning": "Ang isang benta ay final at instant. Ang iyong mga post, followers at wallet ay manatili sa iyo — ang handle lamang ang lilipat, at ang lumang handle ng bumili ay ilalabas.",
+    "saleFinalWarning": "Ang benta ay pinal at agad-agad. Ang iyong mga post, tagasubaybay, at wallet ay mananatili sa iyo — tanging ang hawakan lamang ang lilipat. Ang bumibili ay mapapanatili rin ang kanilang lumang hawakan; ito ay magiging isa sa kanilang mga username.",
     "updateListing": "I-update ang listing",
     "listForSale": "Ilista para sa benta",
     "withdrawListing": "Alisin ang listing",
@@ -3895,7 +3899,6 @@
     "askingPrice": "Presyong itinatanong",
     "paidStraightToSeller": "≈ ${{usd}} · direktang binabayaran sa nagbebenta, walang kinukuha ang DeHub",
     "yourHandleChanges": "Ang iyong handle ay nagbabago",
-    "oldHandleReleased": "Ang iyong lumang handle ay ilalabas at sinuman ay maaaring kunin ito. Ang mga post, followers at ang iyong wallet ay hindi nabago.",
     "payingWithDhbOn": "Nagbabayad gamit ang DHB sa {{chain}}",
     "shortOfDhbPaidOn": "Kulang ka ng DHB — ito ay babayaran sa {{chain}}",
     "yourOwnListing": "Ito ang iyong listing. Pamahalaan ito mula sa Sell tab.",
@@ -3933,7 +3936,28 @@
       "completed": "Tapos na",
       "expired": "Nag-expire"
     },
-    "makeOfferAction": "Mag-alok"
+    "makeOfferAction": "Mag-alok",
+    "tabMine": "Akin",
+    "sellingWornName": "Ito ang handle na ginagamit ng iyong profile. Ang pagbebenta nito ay maglilipat sa iyo sa ibang pangalan.",
+    "sellingHeldName": "Pagmamay-ari mo ang pangalang ito ngunit hindi mo ito ginagamit. Ang pagbebenta nito ay hindi magbabago sa iyong profile.",
+    "saleFinalWarningHeld": "Ang benta ay pinal at agarang. Ang iyong sariling handle at lahat ng nasa iyong profile ay hindi nagagalaw — tanging ang pangalang ito ang lilipat.",
+    "signInToSeeVault": "Mag-sign in upang makita ang mga username na pagmamay-ari mo.",
+    "vaultExplainer": "Ang mga username na nabili mo ay mananatiling sa iyo. Maaari mong gamitin ang isa, ibenta ito, o hayaan itong mawala.",
+    "vaultExplainerEmpty": "Pagmamay-ari mo ang isang username. Bumili ng isa pa at mapapanatili mo rin ito.",
+    "vaultInUse": "Ginagamit",
+    "vaultBought": "Nabiling",
+    "vaultKept": "Napanatili mula sa naunang pagbili",
+    "vaultFree": "Libreng username",
+    "vaultFreeWarning": "Hindi mo binayaran ang isang ito, kaya ang paglipat sa ibang pangalan ay magbibigay nito at maaaring kunin ng sinuman.",
+    "vaultUseThis": "Gamitin ito",
+    "vaultSell": "Ibenta",
+    "vaultEditListing": "I-edit ang listahan",
+    "vaultRelease": "Bitawan",
+    "vaultListedCannotWear": "Bawiin ang listahan bago gamitin ang pangalang ito.",
+    "vaultReleaseTitle": "Bitawan @{{handle}}?",
+    "vaultReleaseBody": "Ito ay babalik sa pool at maaaring kunin ng sinuman. Walang undo, at ang pagbili nito pabalik ay magkakahalaga ng anumang hihingin ng bagong may-ari.",
+    "oldHandleKept": "Mapapanatili mo ang @{{handle}} — lilipat ito sa iyong mga username, at maaari mo itong gamitin muli o ibenta sa ibang pagkakataon. Ang mga post, tagasubaybay, at ang iyong wallet ay hindi maaapektuhan.",
+    "postsStayWithYou": "Ang mga post, tagasubaybay, at ang iyong wallet ay hindi maaapektuhan."
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",

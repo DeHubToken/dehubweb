@@ -449,7 +449,11 @@
       "unavailable": "Ṣiṣan lati ẹrọ ṣiṣan ko si lori akọọlẹ rẹ lọwọlọwọ.",
       "serverCopied": "A daakọ olupin",
       "keyCopied": "Ṣàdàkọ bọtini ṣiṣan"
-    }
+    },
+    "usernames": "Orúkọ oníṣe",
+    "usernamesDesc": "Àwọn orúkọ tí o ní",
+    "usernamesCount_one": "{{count}} orukọ olumulo",
+    "usernamesCount_other": "{{count}} usernames"
   },
   "common": {
     "save": "Fipamọ́",
@@ -3277,7 +3281,28 @@
       "completed": "Ó ti parí",
       "expired": "Àkókò rẹ̀ ti parí"
     },
-    "makeOfferAction": "Ṣe ìfilọ̀"
+    "makeOfferAction": "Ṣe ìfilọ̀",
+    "tabMine": "Tà mí",
+    "sellingWornName": "Èyí ni ìtọ́jú tí àkójọpọ̀ rẹ ń lò. Títa rẹ̀ mú ọ lọ sí orúkọ mìíràn.",
+    "sellingHeldName": "O ni orukọ yii ṣugbọn o ko lo. Tita rẹ ko yi profaili rẹ pada.",
+    "saleFinalWarningHeld": "Tita ni ìkẹyìn àti lẹ́sẹ̀kẹsẹ̀. Ọwọ́ ara rẹ àti gbogbo ohun tí ó wà lórí fáìlì rẹ kò fọwọ́ kàn — orúkọ yìí nìkan ni ó ń rìn.",
+    "signInToSeeVault": "Wọlé láti wo àwọn orúkọ oníṣe tí o ní.",
+    "vaultExplainer": "Orúkọ oníṣe tí o ti ra dúró tìrẹ. O lè wọ ọ̀kan, tà á, tàbí jẹ́ kí ó lọ.",
+    "vaultExplainerEmpty": "O ní orúkọ aṣàmúlò kan. Ra òmíràn o sì pa eléyìí mọ́.",
+    "vaultInUse": "Ń lò ó lọ́wọ́",
+    "vaultBought": "Tí a rà",
+    "vaultKept": "Fi pamọ́ kúrò nínú ohun tí wọ́n rà tẹ́lẹ̀",
+    "vaultFree": "Orukọ olumulo ọfẹ",
+    "vaultFreeWarning": "O kò tíì sanwó fún èyí, nítorí náà yípadà sí orúkọ mìíràn fún un àti pé ẹnikẹ́ni lè gbà á.",
+    "vaultUseThis": "Lo èyí",
+    "vaultSell": "Ta",
+    "vaultEditListing": "Ṣàtúnṣe àtòjọ",
+    "vaultRelease": "Fi sílẹ̀",
+    "vaultListedCannotWear": "Yọ àtòjọ náà kúrò kí o tó lo orúkọ yìí.",
+    "vaultReleaseBody": "Ó padà sínú adágún omi àti pé ẹnikẹ́ni lè mú un. Kò sí ohun tí a kò lè ṣe, àti wíwá rà á padà yóò ná ohunkóhun tí onílé tuntun bá béèrè.",
+    "oldHandleKept": "O dúró pẹ̀lú @{{handle}} — ó wọ inú àwọn orúkọ olumúlùmọ̀ rẹ, o sì lè wọ̀ ọ́ tàbí tà á lẹ́yìn náà. Àwọn ìwé ìròyìn, àwọn tó ń tẹ̀lé ọ, àti àpò rẹ kò yí padà.",
+    "postsStayWithYou": "Àwọn ìwé ìròyìn, àwọn tó ń tẹ̀lé ọ, àti àpò rẹ kò yí padà.",
+    "saleFinalWarning": "Títà jẹ́ ìgbà kan àti lẹ́sẹ̀kẹsẹ̀. Àwọn ìwé ìròyìn rẹ, àwọn tó ń tẹ̀lé ọ, àti àpò rẹ dúró pẹ̀lú rẹ — àmì orúkọ náà nìkan ni yóò yí padà. Alàpà náà tún máa pa àmì orúkọ àtijọ́ rẹ̀ mọ́; ó di ọ̀kan nínú àwọn orúkọ olumúlùmọ̀ rẹ̀."
   },
   "home": {
     "seoTitle": "DeHub — Ìkànnì àjọlò orísun ṣíṣí tí àwọn olùlò ní",

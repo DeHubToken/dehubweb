@@ -443,7 +443,11 @@
       "unavailable": "Siaran saka encoder ora kasedhiya ing akunmu saiki.",
       "serverCopied": "Server disalin",
       "keyCopied": "Kunci stream disalin"
-    }
+    },
+    "usernames": "Jeneng panganggo",
+    "usernamesDesc": "Jeneng sing kok duweni",
+    "usernamesCount_one": "{{count}} jeneng panganggo",
+    "usernamesCount_other": "{{count}} jeneng panganggo"
   },
   "common": {
     "save": "Simpen",
@@ -3274,7 +3278,29 @@
       "completed": "Rampung",
       "expired": "Kadaluwarsa"
     },
-    "makeOfferAction": "Gawe tawaran"
+    "makeOfferAction": "Gawe tawaran",
+    "tabMine": "Nduweku",
+    "sellingWornName": "Iki jeneng profilmu. Adol iki bakal ngganti jenengmu.",
+    "sellingHeldName": "Jeneng iki duweke kowe nanging ora kokgunakake. Adol iki ora bakal ngganti profilmu.",
+    "saleFinalWarningHeld": "Adolane final lan cepet. Jenengmu lan isine profilmu tetep padha - mung jeneng iki sing pindhah.",
+    "signInToSeeVault": "Kena menyang akun kanggo ndeleng jeneng sing kokduweni.",
+    "vaultExplainer": "Jeneng sing wis koktuku tetep dadi duweke kowe. Kowe bisa nganggo, ngedol, utawa ngeculake.",
+    "vaultExplainerEmpty": "Kowe duwe siji jeneng. Tuku siji maneh lan jeneng iki tetep dadi duweke kowe.",
+    "vaultInUse": "Digunakake",
+    "vaultBought": "Dituku",
+    "vaultKept": "Dijaga saka tuku sadurunge",
+    "vaultFree": "Jeneng gratis",
+    "vaultFreeWarning": "Kowe durung mbayar kanggo iki, mula ganti jeneng liyane bakal ngeculake iki lan sapa wae bisa njupuk.",
+    "vaultUseThis": "Gunakake iki",
+    "vaultSell": "Adol",
+    "vaultEditListing": "Sunting dhaptar",
+    "vaultRelease": "Lepas",
+    "vaultListedCannotWear": "Tarik dhaptar sadurunge nggunakake jeneng iki.",
+    "vaultReleaseTitle": "Lepas @{{handle}}?",
+    "vaultReleaseBody": "Iki bakal bali menyang kumpulan lan sapa wae bisa njupuk. Ora bisa dibalekake, lan tuku maneh bakal regane kaya sing dijaluk dening pemilik anyar.",
+    "oldHandleKept": "Sampeyan tetep @{{handle}} — iki pindhah menyang jeneng pangguna, lan sampeyan bisa nganggo maneh utawa ngedol mengko. Kiriman, pengikut, lan dompetmu ora keganggu.",
+    "postsStayWithYou": "Kiriman, pengikut, lan dompetmu ora keganggu.",
+    "saleFinalWarning": "Penjualan iku final lan cepet. Kiriman, pengikut, lan dompetmu tetep karo sampeyan — mung gagang sing pindhah. Panuku uga njaga gagang lawase; dadi salah sawijining jeneng pangguna."
   },
   "home": {
     "seoTitle": "DeHub — Media sosial sumber terbuka duweke panganggo",

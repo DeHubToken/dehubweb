@@ -465,7 +465,11 @@
       "unavailable": "Streaming dari encoder tidak tersedia di akun Anda saat ini.",
       "serverCopied": "Server disalin",
       "keyCopied": "Kunci streaming disalin"
-    }
+    },
+    "usernames": "Nama pengguna",
+    "usernamesDesc": "Nama yang Anda miliki",
+    "usernamesCount_one": "{{count}} nama pengguna",
+    "usernamesCount_other": "{{count}} nama pengguna"
   },
   "common": {
     "save": "Simpan",
@@ -4045,7 +4049,7 @@
     "youBecomeHandle": "Anda menjadi @{{handle}} begitu ada yang membeli. Kalau nama itu sudah diambil saat itu, dipakai varian bernomor dan Anda diberi tahu yang mana.",
     "pitchOptional": "Deskripsi jual (opsional)",
     "pitchPlaceholder": "Handle asli 2021, riwayat bersih…",
-    "saleFinalWarning": "Penjualan bersifat final dan langsung. Kiriman, pengikut, dan dompet Anda tetap milik Anda — hanya handle yang berpindah, dan handle lama pembeli dilepaskan.",
+    "saleFinalWarning": "Penjualan bersifat final dan instan. Postingan, pengikut, dan dompet Anda tetap bersama Anda — hanya pegangan yang bergerak. Pembeli juga menyimpan pegangan lama mereka; itu menjadi salah satu nama pengguna mereka.",
     "updateListing": "Perbarui listing",
     "listForSale": "Pasang untuk dijual",
     "withdrawListing": "Tarik listing",
@@ -4057,7 +4061,6 @@
     "askingPrice": "Harga yang diminta",
     "paidStraightToSeller": "≈ ${{usd}} · dibayarkan langsung ke penjual, DeHub tidak memotong apa pun",
     "yourHandleChanges": "Handle Anda berubah",
-    "oldHandleReleased": "Handle lama Anda dilepaskan dan siapa pun bisa mengambilnya. Kiriman, pengikut, dan dompet Anda tidak tersentuh.",
     "payingWithDhbOn": "Membayar dengan DHB di {{chain}}",
     "shortOfDhbPaidOn": "DHB Anda kurang — ini akan dibayar di {{chain}}",
     "yourOwnListing": "Ini listing Anda sendiri. Kelola dari tab Jual.",
@@ -4101,7 +4104,28 @@
       "completed": "Selesai",
       "expired": "Kedaluwarsa"
     },
-    "makeOfferAction": "Buat penawaran"
+    "makeOfferAction": "Buat penawaran",
+    "tabMine": "Milik saya",
+    "sellingWornName": "Ini adalah pegangan yang digunakan profil Anda. Menjualnya akan memindahkan Anda ke nama lain.",
+    "sellingHeldName": "Anda memiliki nama ini tetapi tidak menggunakannya. Menjualnya tidak akan mengubah profil Anda.",
+    "saleFinalWarningHeld": "Penjualan bersifat final dan instan. Pegangan Anda sendiri dan semua yang ada di profil Anda tidak tersentuh — hanya nama ini yang berpindah.",
+    "signInToSeeVault": "Masuk untuk melihat nama pengguna yang Anda miliki.",
+    "vaultExplainer": "Nama pengguna yang Anda beli tetap milik Anda. Anda dapat menggunakannya, menjualnya, atau melepaskannya.",
+    "vaultExplainerEmpty": "Anda memiliki satu nama pengguna. Beli yang lain dan Anda tetap mempertahankan yang ini juga.",
+    "vaultInUse": "Sedang digunakan",
+    "vaultBought": "Dibeli",
+    "vaultKept": "Disimpan dari pembelian sebelumnya",
+    "vaultFree": "Nama pengguna gratis",
+    "vaultFreeWarning": "Anda belum membayar yang ini, jadi beralih ke nama lain akan melepaskannya dan siapa pun dapat mengambilnya.",
+    "vaultUseThis": "Gunakan yang ini",
+    "vaultSell": "Jual",
+    "vaultEditListing": "Edit daftar",
+    "vaultRelease": "Lepaskan",
+    "vaultListedCannotWear": "Tarik daftar sebelum menggunakan nama ini.",
+    "vaultReleaseTitle": "Lepaskan @{{handle}}?",
+    "vaultReleaseBody": "Ini kembali ke kumpulan dan siapa pun dapat mengambilnya. Tidak ada pembatalan, dan membelinya kembali akan memakan biaya berapa pun yang diminta pemilik baru.",
+    "oldHandleKept": "Anda tetap menggunakan @{{handle}} — ini akan berpindah ke nama pengguna Anda, dan Anda bisa memakainya lagi atau menjualnya nanti. Postingan, pengikut, dan dompet Anda tidak tersentuh.",
+    "postsStayWithYou": "Postingan, pengikut, dan dompet Anda tidak tersentuh."
   },
   "accounts": {
     "seoTitle": "Pasar Akun — DeHub",

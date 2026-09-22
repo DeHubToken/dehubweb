@@ -450,7 +450,11 @@
       "unavailable": "Straumēšana no kodētāja pašlaik nav pieejama jūsu kontā.",
       "serverCopied": "Serveris nokopēts",
       "keyCopied": "Straumes atslēga nokopēta"
-    }
+    },
+    "usernames": "Lietotājvārdi",
+    "usernamesDesc": "Nosaukumi, kas jums pieder",
+    "usernamesCount_one": "{{count}} lietotājvārds",
+    "usernamesCount_other": "{{count}} lietotājvārdi"
   },
   "common": {
     "save": "Saglabāt",
@@ -4024,7 +4028,7 @@
     "youBecomeHandle": "Tu kļūsti par @{{handle}} brīdī, kad kāds to iegādājas. Ja šis vārds līdz tam būs aizņemts, tiks izmantota numurēta variācija, un tev par to paziņos.",
     "pitchOptional": "Apraksts (nav obligāts)",
     "pitchPlaceholder": "Oriģinālais 2021. gada vārds, tīra vēsture…",
-    "saleFinalWarning": "Pārdošana ir galīga un tūlītēja. Tavi ieraksti, sekotāji un maciņš paliek pie tevis – mainās tikai vārds, un pircēja vecais vārds tiek atbrīvots.",
+    "saleFinalWarning": "Pārdošana ir galīga un tūlītēja. Jūsu ieraksti, sekotāji un maciņš paliek pie jums — mainās tikai lietotājvārds. Pircējs patur arī savu veco lietotājvārdu; tas kļūst par vienu no viņa lietotājvārdiem.",
     "updateListing": "Atjaunot sludinājumu",
     "listForSale": "Iesludināt pārdošanai",
     "withdrawListing": "Atcelt sludinājumu",
@@ -4036,7 +4040,6 @@
     "askingPrice": "Prasītā cena",
     "paidStraightToSeller": "≈ ${{usd}} · apmaksa tieši pārdevējam, DeHub nesaņem nekādu daļu",
     "yourHandleChanges": "Tava vārda maiņa",
-    "oldHandleReleased": "Tavs vecais vārds tiek atbrīvots un ikviens to var paņemt. Ieraksti, sekotāji un tavs maciņš netiek aizskarti.",
     "payingWithDhbOn": "Maksājot ar DHB vietnē {{chain}}",
     "shortOfDhbPaidOn": "Tev trūkst DHB – tas tiks samaksāts vietnē {{chain}}",
     "yourOwnListing": "Šis ir tavs sludinājums. Pārvaldi to cilnē Pārdošana.",
@@ -4074,7 +4077,28 @@
       "completed": "Pabeigts",
       "expired": "Beidzies"
     },
-    "makeOfferAction": "Izteikt piedāvājumu"
+    "makeOfferAction": "Izteikt piedāvājumu",
+    "tabMine": "Mans",
+    "sellingWornName": "Šis ir jūsu profila lietotājvārds. Tā pārdošana nozīmē, ka jūs pārietat uz citu vārdu.",
+    "sellingHeldName": "Jums pieder šis vārds, bet jūs to nelietojat. Tā pārdošana nemaina jūsu profilu.",
+    "saleFinalWarningHeld": "Pārdošana ir galīga un tūlītēja. Jūsu paša lietotājvārds un viss jūsu profilā paliek nemainīgs — pāriet tikai šis vārds.",
+    "signInToSeeVault": "Pierakstieties, lai redzētu savus lietotājvārdus.",
+    "vaultExplainer": "Jūsu nopirktie lietotājvārdi paliek jums. Jūs varat lietot vienu, pārdot to vai atteikties no tā.",
+    "vaultExplainerEmpty": "Jums pieder viens lietotājvārds. Nopērciet vēl vienu, un jūs paturat arī šo.",
+    "vaultInUse": "Lietošanā",
+    "vaultBought": "Nopirkts",
+    "vaultKept": "Paturēts no iepriekšēja pirkuma",
+    "vaultFree": "Bezmaksas lietotājvārds",
+    "vaultFreeWarning": "Jūs neesat samaksājis par šo, tāpēc, pārslēdzoties uz citu vārdu, jūs to zaudējat, un ikviens to var paņemt.",
+    "vaultUseThis": "Lietot šo",
+    "vaultSell": "Pārdot",
+    "vaultEditListing": "Rediģēt sludinājumu",
+    "vaultRelease": "Atbrīvot",
+    "vaultListedCannotWear": "Izņemt sludinājumu pirms šī vārda lietošanas.",
+    "vaultReleaseTitle": "Atbrīvot @{{handle}}?",
+    "vaultReleaseBody": "Tas atgriežas kopējā pieejamībā, un ikviens to var paņemt. Atcelšanas nav, un, lai to atpirktu, jums būs jāmaksā tik, cik prasīs jaunais īpašnieks.",
+    "oldHandleKept": "Jūs paturat @{{handle}} — tas tiek pievienots jūsu lietotājvārdiem, un jūs varat to izmantot atkal vai pārdot vēlāk. Ieraksti, sekotāji un jūsu maciņš netiek aizskarti.",
+    "postsStayWithYou": "Ieraksti, sekotāji un jūsu maciņš netiek aizskarti."
   },
   "accounts": {
     "seoTitle": "Konta tirgus – DeHub",

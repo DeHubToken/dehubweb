@@ -30,13 +30,16 @@ import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { createLogger } from '@/lib/logger';
 import {
+  activateUsernameHolding,
   browseUsernames,
   cancelUsernameListing,
   claimUsername,
   createUsernameListing,
   getMyUsernameMarket,
+  getUsernameHoldings,
   getUsernameMarketConfig,
   quoteUsername,
+  releaseUsernameHolding,
   updateUsernameListing,
   type BrowseUsernamesResult,
   type UsernameQuote,
@@ -88,6 +91,79 @@ export function useMyUsernameMarket() {
     enabled: isAuthenticated,
     staleTime: 30 * 1000,
     refetchInterval: 30 * 1000,
+  });
+}
+
+/**
+ * Every username this account owns — the one it wears plus the vault.
+ *
+ * Separate from `useMyUsernameMarket` even though that carries `held` too: the
+ * Assets screen wants only this, and pulling a seller's whole trade history to
+ * render a list of names would be a waste on a tab most people open to check one
+ * thing.
+ */
+export function useUsernameHoldings() {
+  const { isAuthenticated } = useAuth();
+  return useQuery({
+    queryKey: ['username-holdings'],
+    queryFn: getUsernameHoldings,
+    enabled: isAuthenticated,
+    staleTime: 30 * 1000,
+  });
+}
+
+/**
+ * Everything that renders the signed-in user's own handle, dropped at once.
+ *
+ * The header, the sidebar and every @mention of yourself come off these caches,
+ * so anything that changes which name this account wears has to clear them or
+ * the app keeps showing a name the profile no longer answers on. Shared by the
+ * buy path and the switch path because both do exactly that.
+ */
+function invalidateOwnUsername(qc: ReturnType<typeof useQueryClient>) {
+  qc.invalidateQueries({ queryKey: ['username-holdings'] });
+  qc.invalidateQueries({ queryKey: ['username-market-browse'] });
+  qc.invalidateQueries({ queryKey: ['username-market-mine'] });
+  qc.invalidateQueries({ queryKey: ['user'] });
+  qc.invalidateQueries({ queryKey: ['profile'] });
+  qc.invalidateQueries({ queryKey: ['account-info'] });
+}
+
+/** Wear one of the names you own. Free, and reversible by switching back. */
+export function useActivateUsernameHolding() {
+  const qc = useQueryClient();
+  const { refreshUser } = useAuth();
+  return useMutation({
+    mutationFn: activateUsernameHolding,
+    onSuccess: async result => {
+      toast.success(`You are now @${result.username}`);
+      // The released case is worth saying out loud: it is the one irreversible
+      // thing about an otherwise reversible action, and it only happens to the
+      // free signup handle.
+      if (result.releasedUsername) {
+        toast.info(`@${result.releasedUsername} was not a username you bought, so it is free again.`, {
+          duration: 10000,
+        });
+      }
+      await refreshUser().catch(() => {});
+      invalidateOwnUsername(qc);
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+}
+
+/** Give a held name back to the pool. There is no undo, so ask first. */
+export function useReleaseUsernameHolding() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: releaseUsernameHolding,
+    onSuccess: (_result, username) => {
+      toast.success(`@${username} released`);
+      qc.invalidateQueries({ queryKey: ['username-holdings'] });
+      qc.invalidateQueries({ queryKey: ['username-market-mine'] });
+      qc.invalidateQueries({ queryKey: ['username-market-browse'] });
+    },
+    onError: (err: Error) => toast.error(err.message),
   });
 }
 

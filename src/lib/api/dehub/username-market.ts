@@ -64,12 +64,40 @@ export interface BrowseUsernamesResult {
   exact: { username: string; state: HandleState } | null;
 }
 
+/**
+ * One username this account owns, whether or not it is wearing it.
+ *
+ * Ownership stopped being the same thing as `account.username` when buying a
+ * handle started keeping the one you had. `active` is the handle the profile
+ * actually answers on; the rest are held, and every one of them can be resold.
+ */
+export interface UsernameHolding {
+  username: string;
+  length: number;
+  isNumeric: boolean;
+  active: boolean;
+  /**
+   * `purchase` — bought here. `retained` — what you were wearing when you
+   * bought another one. `original` — the free name you have never paid for;
+   * rename away from it and it goes back in the pool. There is at most one, and
+   * it is always the active handle.
+   */
+  acquiredVia: 'purchase' | 'retained' | 'original';
+  paidDhb: number | null;
+  acquiredAt: string | null;
+  /** Filled when this name is already on the market. */
+  listing: { id: string; priceUsd: number; priceDhb: number } | null;
+}
+
 export interface MyUsernameListing {
   id: string;
   username: string;
   priceDhb: number;
   priceUsd: number;
-  replacementUsername: string;
+  /** Null on a vault listing — the seller is not moving anywhere. */
+  replacementUsername: string | null;
+  /** True when the seller is selling a held name rather than the one they wear. */
+  fromVault: boolean;
   description: string | null;
   status: 'active' | 'sold' | 'cancelled';
   cancelReason: string | null;
@@ -97,6 +125,8 @@ export interface UsernameSale {
 
 export interface MyUsernameMarket {
   currentUsername: string | null;
+  /** Everything this account owns, active handle first. */
+  held: UsernameHolding[];
   listings: MyUsernameListing[];
   sold: UsernameSale[];
   bought: UsernameSale[];
@@ -121,6 +151,12 @@ export type ClaimResult =
       pending: false;
       username: string;
       previousUsername: string | null;
+      /**
+       * The handle they were wearing, now held rather than gone. Same string as
+       * `previousUsername` — separate so the client can say "you keep @bob"
+       * without having to know the retention rule.
+       */
+      retainedUsername: string | null;
       paidDhb: number;
       txHash: string;
     };
@@ -164,19 +200,62 @@ export async function getMyUsernameMarket(): Promise<MyUsernameMarket> {
   return res.result;
 }
 
+/** Every username this account owns, active handle first. */
+export async function getUsernameHoldings(): Promise<UsernameHolding[]> {
+  const res = await apiCall<Envelope<{ held: UsernameHolding[] }>>('/api/username_market/holdings', {
+    requiresAuth: true,
+  });
+  return res.result.held || [];
+}
+
 /**
- * List the handle this account is currently wearing.
+ * Wear one of the names this account owns.
  *
- * There is no `username` field on purpose: you can only sell what you hold, so
- * the server reads it off the account. `replacementUsername` is where you land
- * when it sells, and it is validated now rather than at the moment of sale.
+ * Free and reversible — the vault is the same size afterwards. The name being
+ * left is kept if it was bought and released if it was the free signup handle,
+ * which the server decides and reports back as `releasedUsername`.
+ */
+export async function activateUsernameHolding(
+  username: string,
+): Promise<{ username: string; previousUsername: string | null; releasedUsername: string | null }> {
+  const res = await apiCall<Envelope<{ username: string; previousUsername: string | null; releasedUsername: string | null }>>(
+    '/api/username_market/holdings/activate',
+    { method: 'POST', body: { username }, requiresAuth: true },
+  );
+  return res.result;
+}
+
+/** Give a held name back to the pool. Irreversible, and never the active one. */
+export async function releaseUsernameHolding(username: string): Promise<void> {
+  await apiCall<Envelope<unknown>>(`/api/username_market/holdings/${encodeURIComponent(username)}`, {
+    method: 'DELETE',
+    requiresAuth: true,
+  });
+}
+
+/**
+ * List a username this account owns.
+ *
+ * `username` defaults to the handle being worn, which is the only thing this
+ * could sell before the vault existed. Naming a held name instead is the resale
+ * path, and it needs no `replacementUsername`: the seller is not living in it,
+ * so a sale never touches their profile. Selling the worn handle still does,
+ * and the replacement is validated now rather than at the moment of sale.
  */
 export async function createUsernameListing(input: {
+  username?: string;
   priceUsd: number;
-  replacementUsername: string;
+  replacementUsername?: string;
   description?: string;
-}): Promise<{ id: string; username: string; priceUsd: number; priceDhb: number; replacementUsername: string }> {
-  const res = await apiCall<Envelope<{ id: string; username: string; priceUsd: number; priceDhb: number; replacementUsername: string }>>(
+}): Promise<{
+  id: string;
+  username: string;
+  priceUsd: number;
+  priceDhb: number;
+  replacementUsername: string | null;
+  fromVault: boolean;
+}> {
+  const res = await apiCall<Envelope<{ id: string; username: string; priceUsd: number; priceDhb: number; replacementUsername: string | null; fromVault: boolean }>>(
     '/api/username_market/listings',
     { method: 'POST', body: { ...input }, requiresAuth: true },
   );

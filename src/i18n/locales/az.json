@@ -465,7 +465,11 @@
       "unavailable": "Hesabınızda hazırda kodlayıcıdan yayımlamaq mümkün deyil.",
       "serverCopied": "Server kopyalandı",
       "keyCopied": "Axın açarı kopyalandı"
-    }
+    },
+    "usernames": "İstifadəçi adları",
+    "usernamesDesc": "Sahib olduğunuz adlar",
+    "usernamesCount_one": "{{count}} istifadəçi adı",
+    "usernamesCount_other": "{{count}} istifadəçi adları"
   },
   "common": {
     "save": "Saxla",
@@ -3954,7 +3958,7 @@
     "youBecomeHandle": "Kimsə satın aldığı anda siz {{handle}} olursunuz. Əgər bu ad o vaxta qədər alınıbsa, nömrəli variant istifadə olunur və sizə hansı olduğu bildirilir.",
     "pitchOptional": "Təklif (isteğe bağlı)",
     "pitchPlaceholder": "Orijinal 2021 adı, təmiz tarix…",
-    "saleFinalWarning": "Satış son və ani olur. Sizin yazılarınız, izləyiciləriniz və cüzdanınız sizinlə qalır — yalnız ad dəyişir və alıcının köhnə adı azad edilir.",
+    "saleFinalWarning": "Satış yekun və ani olur. Sizin yazılarınız, izləyiciləriniz və pul kisəniz sizinlə qalır — yalnız istifadəçi adı dəyişir. Alıcı öz köhnə istifadəçi adını da saxlayır; o, onun istifadəçi adlarından biri olur.",
     "updateListing": "Siyahını yeniləyin",
     "listForSale": "Satışa çıxarın",
     "withdrawListing": "Siyahını geri çəkin",
@@ -3966,7 +3970,6 @@
     "askingPrice": "Tələb olunan qiymət",
     "paidStraightToSeller": "≈ ${{usd}} · birbaşa satıcıya ödənilir, DeHub heç bir komissiya almır",
     "yourHandleChanges": "Sizin adınız dəyişir",
-    "oldHandleReleased": "Sizin köhnə adınız azad edilir və hər kəs onu ala bilər. Yazılar, izləyicilər və cüzdanınız dəyişməz qalır.",
     "payingWithDhbOn": "{{chain}} üzərində DHB ilə ödəniş",
     "shortOfDhbPaidOn": "DHB-dən çatışmırsınız — bu {{chain}} üzərində ödənilməsi olacaq",
     "yourOwnListing": "Bu sizin siyahınızdır. Satış sekmesindən idarə edin.",
@@ -4004,7 +4007,28 @@
       "completed": "Tamamlandı",
       "expired": "Vaxtı bitdi"
     },
-    "makeOfferAction": "Təklif ver"
+    "makeOfferAction": "Təklif ver",
+    "tabMine": "Mənim",
+    "sellingWornName": "Bu, profilinizin istifadə etdiyi istifadəçi adıdır. Onu satmaq sizi başqa bir ada keçirir.",
+    "sellingHeldName": "Bu ada sahibsiniz, lakin istifadə etmirsiniz. Onu satmaq profilinizi dəyişmir.",
+    "saleFinalWarningHeld": "Satış yekun və ani olur. Öz istifadəçi adınız və profilinizdəki hər şey toxunulmaz qalır — yalnız bu ad dəyişir.",
+    "signInToSeeVault": "Sahib olduğunuz istifadəçi adlarını görmək üçün daxil olun.",
+    "vaultExplainer": "Aldığınız istifadəçi adları sizdə qalır. Onlardan birini istifadə edə, sata və ya buraxa bilərsiniz.",
+    "vaultExplainerEmpty": "Bir istifadəçi adına sahibsiniz. Başqa birini alsanız, bu adı da saxlayırsınız.",
+    "vaultInUse": "İstifadədədir",
+    "vaultBought": "Alınıb",
+    "vaultKept": "Daha əvvəlki alışdan saxlanılıb",
+    "vaultFree": "Pulsuz istifadəçi adı",
+    "vaultFreeWarning": "Bunun üçün pul ödəməmisiniz, buna görə də başqa bir ada keçmək onu itirməyinizə səbəb olur və hər kəs onu götürə bilər.",
+    "vaultUseThis": "Bundan istifadə edin",
+    "vaultSell": "Sat",
+    "vaultEditListing": "Elanı redaktə et",
+    "vaultRelease": "Burax",
+    "vaultListedCannotWear": "Bu adı istifadə etməzdən əvvəl elanı geri götürün.",
+    "vaultReleaseTitle": "@{{handle}}? buraxın",
+    "vaultReleaseBody": "Bu, hovuza geri qayıdır və hər kəs onu götürə bilər. Geri qaytarmaq mümkün deyil və onu geri almaq yeni sahibin istədiyi məbləğə başa gələcək.",
+    "oldHandleKept": "Siz @{{handle}} saxlayırsınız — o, sizin istifadəçi adlarınıza daxil olur və siz onu yenidən istifadə edə və ya daha sonra sata bilərsiniz. Yazılar, izləyicilər və pul kisəniz toxunulmaz qalır.",
+    "postsStayWithYou": "Yazılar, izləyicilər və pul kisəniz toxunulmaz qalır."
   },
   "accounts": {
     "seoTitle": "Hesab Bazarı — DeHub",

@@ -1,17 +1,22 @@
 /**
  * Sell Tab
  * ========
- * List the handle you are wearing, and see what you have traded.
+ * List one of the usernames you own, and see what you have traded.
  *
- * Two things this screen has to be blunt about, because both are irreversible
- * and neither is guessable from a price field:
+ * Which one you picked changes what this form even asks for, and that is the
+ * whole shape of the screen:
  *
- * - **You are selling the handle you are currently using.** There is no picker;
- *   the form shows your own name and that is what goes on the market.
- * - **You have to say where you are going.** The replacement handle is chosen
- *   here, while you are sitting in front of it, rather than being invented for
- *   you at the moment somebody pays. It is checked against the same rules
- *   Settings enforces, so a listing can never promise a swap that would fail.
+ * - **Selling the handle you are wearing** means moving out of it, so you have
+ *   to say where you are going. The replacement is chosen here, while you are
+ *   sitting in front of it, rather than being invented for you at the moment
+ *   somebody pays — and it is checked against the same rules Settings enforces,
+ *   so a listing can never promise a swap that would fail.
+ * - **Selling a name you hold** asks none of that. You are not living in it, so
+ *   a sale never touches your profile; the form drops to a price and a pitch.
+ *
+ * The picker only appears once there is something to pick between. An account
+ * that has never bought a handle owns exactly one, and offering it a dropdown
+ * of one thing would be noise.
  */
 
 import { useEffect, useState } from 'react';
@@ -31,7 +36,13 @@ import {
 } from '@/hooks/use-username-market';
 import type { MyUsernameListing, UsernameSale } from '@/lib/api/dehub/username-market';
 
-export function SellTab() {
+interface Props {
+  /** Which owned name to open on. Null means the handle being worn. */
+  username?: string | null;
+  onUsernameChange?: (username: string) => void;
+}
+
+export function SellTab({ username: selectedUsername, onUsernameChange }: Props = {}) {
   const { t } = useTranslation();
   const { isAuthenticated, openLoginModal } = useAuth();
   const { data: config } = useUsernameMarketConfig();
@@ -43,16 +54,26 @@ export function SellTab() {
   const [replacement, setReplacement] = useState('');
   const [description, setDescription] = useState('');
 
-  const active = mine?.listings.find(l => l.status === 'active');
+  // Which of their names is on the form. The caller's choice wins; otherwise
+  // the handle they are wearing, which is what this screen used to assume was
+  // the only possibility.
+  const held = mine?.held || [];
+  const subject =
+    held.find(h => h.username === selectedUsername) || held.find(h => h.active) || null;
+  const sellingUsername = subject?.username || mine?.currentUsername || '';
+  const fromVault = !!subject && !subject.active;
+
+  const active = mine?.listings.find(l => l.status === 'active' && l.username === sellingUsername);
   const history = (mine?.listings || []).filter(l => l.status !== 'active');
 
-  // Seed the form from an existing listing so "list" doubles as "edit".
+  // Seed the form from an existing listing so "list" doubles as "edit", and
+  // clear it when switching to a name that has none — otherwise the previous
+  // name's price sits in the box looking like this one's.
   useEffect(() => {
-    if (!active) return;
-    setPriceUsd(String(active.priceUsd));
-    setReplacement(active.replacementUsername);
-    setDescription(active.description || '');
-  }, [active?.id]);
+    setPriceUsd(active ? String(active.priceUsd) : '');
+    setReplacement(active?.replacementUsername || '');
+    setDescription(active?.description || '');
+  }, [active?.id, sellingUsername]);
 
   if (!isAuthenticated) {
     return (
@@ -83,13 +104,18 @@ export function SellTab() {
     Number.isFinite(priceNumber) && Math.abs(priceNumber * 100 - Math.round(priceNumber * 100)) < 0.000001 &&
     priceNumber >= (config?.minPriceUsd ?? 1) &&
     priceNumber <= (config?.maxPriceUsd ?? Number.MAX_SAFE_INTEGER);
-  const replacementValid = /^[a-z0-9_-]{1,30}$/.test(replacement.trim().toLowerCase());
+  // A replacement is only part of the deal when the seller is moving out of the
+  // name. Requiring one for a vault sale would be asking them to rename
+  // themselves to complete a trade that has nothing to do with their profile.
+  const replacementValid =
+    fromVault || /^[a-z0-9_-]{1,30}$/.test(replacement.trim().toLowerCase());
   const canSubmit = !!config && config.dhbUsdPeg > 0 && priceValid && replacementValid && !createListing.isPending;
 
   const submit = () => {
     createListing.mutate({
+      username: sellingUsername,
       priceUsd: priceNumber,
-      replacementUsername: replacement.trim().toLowerCase(),
+      replacementUsername: fromVault ? undefined : replacement.trim().toLowerCase(),
       description: description.trim() || undefined,
     });
   };
@@ -101,9 +127,33 @@ export function SellTab() {
         <div>
           <p className="text-xs text-zinc-500">{t('usernames.youAreSelling')}</p>
           <p className="text-xl font-bold text-white break-all">
-            <span className="text-zinc-500">@</span>{mine.currentUsername}
+            <span className="text-zinc-500">@</span>{sellingUsername}
+          </p>
+          <p className="text-[11px] text-zinc-500 mt-1">
+            {t(fromVault ? 'usernames.sellingHeldName' : 'usernames.sellingWornName')}
           </p>
         </div>
+
+        {/* Only worth showing once there is a choice. Most accounts own one
+            name and a dropdown of one option is furniture. */}
+        {held.length > 1 && (
+          <div className="flex flex-wrap gap-2">
+            {held.map(holding => (
+              <button
+                key={holding.username}
+                type="button"
+                onClick={() => onUsernameChange?.(holding.username)}
+                className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
+                  holding.username === sellingUsername
+                    ? 'border-white/30 bg-white/15 text-white'
+                    : 'border-white/10 bg-white/5 text-zinc-400 hover:text-white'
+                }`}
+              >
+                @{holding.username}
+              </button>
+            ))}
+          </div>
+        )}
 
         <div className="space-y-1.5">
           <Label className="text-xs text-zinc-400">{t('usernames.askingPriceUsd', 'Asking price (USD)')}</Label>
@@ -125,25 +175,29 @@ export function SellTab() {
           </p>
         </div>
 
-        <div className="space-y-1.5">
-          <Label className="text-xs text-zinc-400">{t('usernames.newHandleWhenSold')}</Label>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">@</span>
-            <Input
-              value={replacement}
-              onChange={e => setReplacement(e.target.value.replace(/[^A-Za-z0-9_-]/g, '').toLowerCase())}
-              spellCheck={false}
-              autoCapitalize="none"
-              maxLength={config?.usernameMaxLength ?? 30}
-              placeholder={`${mine.currentUsername}_2`.slice(0, 30)}
-              className="pl-7 bg-black/60 border-white/10 rounded-xl text-white"
-            />
+        {/* Where the seller lands. Only for the handle they are wearing — a
+            vault sale leaves their profile exactly where it is. */}
+        {!fromVault && (
+          <div className="space-y-1.5">
+            <Label className="text-xs text-zinc-400">{t('usernames.newHandleWhenSold')}</Label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">@</span>
+              <Input
+                value={replacement}
+                onChange={e => setReplacement(e.target.value.replace(/[^A-Za-z0-9_-]/g, '').toLowerCase())}
+                spellCheck={false}
+                autoCapitalize="none"
+                maxLength={config?.usernameMaxLength ?? 30}
+                placeholder={`${mine.currentUsername}_2`.slice(0, 30)}
+                className="pl-7 bg-black/60 border-white/10 rounded-xl text-white"
+              />
+            </div>
+            <p className="text-[11px] text-zinc-500 flex items-start gap-1.5">
+              <ArrowRight className="w-3 h-3 shrink-0 mt-0.5" />
+              {t('usernames.youBecomeHandle', { handle: replacement || '…' })}
+            </p>
           </div>
-          <p className="text-[11px] text-zinc-500 flex items-start gap-1.5">
-            <ArrowRight className="w-3 h-3 shrink-0 mt-0.5" />
-            {t('usernames.youBecomeHandle', { handle: replacement || '…' })}
-          </p>
-        </div>
+        )}
 
         <div className="space-y-1.5">
           <Label className="text-xs text-zinc-400">{t('usernames.pitchOptional')}</Label>
@@ -160,7 +214,7 @@ export function SellTab() {
         <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 flex items-start gap-2">
           <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
           <p className="text-[11px] text-amber-100">
-            {t('usernames.saleFinalWarning')}
+            {t(fromVault ? 'usernames.saleFinalWarningHeld' : 'usernames.saleFinalWarning')}
           </p>
         </div>
 
@@ -183,7 +237,7 @@ export function SellTab() {
         </div>
       </div>
 
-      {active && !active.live && (
+      {active && !active.live && !active.fromVault && (
         <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-100">
           <Trans
             i18nKey="usernames.staleListingWarning"

@@ -448,7 +448,10 @@
       "unavailable": "Strømming fra en koder er ikke tilgjengelig på kontoen din akkurat nå.",
       "serverCopied": "Serveren er kopiert",
       "keyCopied": "Strømnøkkel kopiert"
-    }
+    },
+    "usernames": "Brukernavn",
+    "usernamesDesc": "Navnene du eier",
+    "usernamesCount_other": "{{count}} brukernavn"
   },
   "common": {
     "save": "Lagre",
@@ -3271,7 +3274,29 @@
       "completed": "Fullført",
       "expired": "Utløpt"
     },
-    "makeOfferAction": "Gi et bud"
+    "makeOfferAction": "Gi et bud",
+    "tabMine": "Mine",
+    "sellingWornName": "Dette er brukernavnet profilen din bruker. Å selge det flytter deg til et annet navn.",
+    "sellingHeldName": "Du eier dette navnet, men bruker det ikke. Å selge det endrer ikke profilen din.",
+    "saleFinalWarningHeld": "Et salg er endelig og umiddelbart. Ditt eget brukernavn og alt på profilen din forblir urørt — bare dette navnet flyttes.",
+    "signInToSeeVault": "Logg inn for å se brukernavnene du eier.",
+    "vaultExplainer": "Brukernavn du har kjøpt forblir dine. Du kan bruke ett, selge det, eller la det gå.",
+    "vaultExplainerEmpty": "Du eier ett brukernavn. Kjøp et annet, og du beholder dette også.",
+    "vaultInUse": "I bruk",
+    "vaultBought": "Kjøpt",
+    "vaultKept": "Beholdt fra et tidligere kjøp",
+    "vaultFree": "Gratis brukernavn",
+    "vaultFreeWarning": "Du har ikke betalt for dette, så å bytte til et annet navn gir det fra deg, og hvem som helst kan ta det.",
+    "vaultUseThis": "Bruk dette",
+    "vaultSell": "Selg",
+    "vaultEditListing": "Rediger oppføring",
+    "vaultRelease": "Frigjør",
+    "vaultListedCannotWear": "Trekk tilbake oppføringen før du bruker dette navnet.",
+    "vaultReleaseTitle": "Frigjør @{{handle}}?",
+    "vaultReleaseBody": "Det går tilbake i puljen, og hvem som helst kan ta det. Det er ingen angre, og å kjøpe det tilbake ville koste det den nye eieren ber om.",
+    "oldHandleKept": "Du beholder @{{handle}} — det flyttes inn i brukernavnene dine, og du kan bruke det igjen eller selge det senere. Innlegg, følgere og lommeboken din er urørt.",
+    "postsStayWithYou": "Innlegg, følgere og lommeboken din er urørt.",
+    "saleFinalWarning": "Et salg er endelig og umiddelbart. Innleggene dine, følgerne dine og lommeboken din blir hos deg — bare håndtaket flyttes. Kjøperen beholder også sitt gamle håndtak; det blir et av brukernavnene deres."
   },
   "home": {
     "seoTitle": "DeHub — Åpen kildekode, sosialt medium eid av brukerne",

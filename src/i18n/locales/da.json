@@ -465,7 +465,11 @@
       "unavailable": "Streaming fra en encoder er ikke tilgængelig på din konto lige nu.",
       "serverCopied": "Server kopieret",
       "keyCopied": "Streamnøgle kopieret"
-    }
+    },
+    "usernames": "Brugernavne",
+    "usernamesDesc": "De navne, du ejer",
+    "usernamesCount_one": "{{count}}brugernavn",
+    "usernamesCount_other": "{{count}} brugernavne"
   },
   "common": {
     "save": "Gem",
@@ -4033,7 +4037,7 @@
     "youBecomeHandle": "Du bliver @{{handle}} i det øjeblik, nogen køber det. Hvis det navn er blevet taget inden da, bruges en nummereret variant, og du får besked om hvilken.",
     "pitchOptional": "Pitch (valgfrit)",
     "pitchPlaceholder": "Originalt 2021-håndtag, ren historie…",
-    "saleFinalWarning": "Et salg er endeligt og øjeblikkeligt. Dine indlæg, følgere og tegnebog bliver hos dig — kun håndtaget flyttes, og køberens gamle håndtag frigives.",
+    "saleFinalWarning": "Et salg er endeligt og øjeblikkeligt. Dine opslag, følgere og pung bliver hos dig – kun brugernavnet flyttes. Køberen beholder også sit gamle brugernavn; det bliver et af deres brugernavne.",
     "updateListing": "Opdater annonce",
     "listForSale": "Sæt til salg",
     "withdrawListing": "Fjern annonce",
@@ -4045,7 +4049,6 @@
     "askingPrice": "Prisantydning",
     "paidStraightToSeller": "≈ ${{usd}} · betalt direkte til sælgeren, DeHub tager ingen provision",
     "yourHandleChanges": "Dit håndtag ændres",
-    "oldHandleReleased": "Dit gamle håndtag frigives, og alle kan tage det. Indlæg, følgere og din tegnebog påvirkes ikke.",
     "payingWithDhbOn": "Betaling med DHB på {{chain}}",
     "shortOfDhbPaidOn": "Du mangler DHB — dette betales på {{chain}}",
     "yourOwnListing": "Dette er din annonce. Administrer den fra fanen Sælg.",
@@ -4083,7 +4086,28 @@
       "completed": "Gennemført",
       "expired": "Udløbet"
     },
-    "makeOfferAction": "Giv et bud"
+    "makeOfferAction": "Giv et bud",
+    "tabMine": "Mine",
+    "sellingWornName": "Dette er det brugernavn, din profil bruger. Ved at sælge det skifter du til et andet navn.",
+    "sellingHeldName": "Du ejer dette navn, men bruger det ikke. Ved at sælge det ændres din profil ikke.",
+    "saleFinalWarningHeld": "Et salg er endeligt og øjeblikkeligt. Dit eget brugernavn og alt på din profil forbliver uændret – kun dette navn flyttes.",
+    "signInToSeeVault": "Log ind for at se de brugernavne, du ejer.",
+    "vaultExplainer": "Brugernavne, du har købt, forbliver dine. Du kan bruge et, sælge det eller lade det gå.",
+    "vaultExplainerEmpty": "Du ejer ét brugernavn. Køb et andet, og du beholder også dette.",
+    "vaultInUse": "I brug",
+    "vaultBought": "Købt",
+    "vaultKept": "Beholdt fra et tidligere køb",
+    "vaultFree": "Gratis brugernavn",
+    "vaultFreeWarning": "Du har ikke betalt for dette, så ved at skifte til et andet navn giver du det fra dig, og enhver kan tage det.",
+    "vaultUseThis": "Brug dette",
+    "vaultSell": "Sælg",
+    "vaultEditListing": "Rediger annonce",
+    "vaultRelease": "Frigiv",
+    "vaultListedCannotWear": "Træk annonceringen tilbage, før du bruger dette navn.",
+    "vaultReleaseTitle": "Frigiv @{{handle}}?",
+    "vaultReleaseBody": "Det ryger tilbage i puljen, og enhver kan tage det. Der er ingen fortrydelsesret, og hvis du vil købe det tilbage, vil det koste, hvad den nye ejer beder om.",
+    "oldHandleKept": "Du beholder @{{handle}} – det flyttes til dine brugernavne, og du kan bruge det igen eller sælge det senere. Opslag, følgere og din pung forbliver urørte.",
+    "postsStayWithYou": "Opslag, følgere og din pung forbliver urørte."
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",

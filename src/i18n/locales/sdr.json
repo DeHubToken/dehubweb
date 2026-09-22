@@ -402,7 +402,10 @@
       "unavailable": "ستاسو له حساب څخه د انکوډر څخه خپرونه اوس مهال شتون نلري.",
       "serverCopied": "सर्वर कॉपी भेल",
       "keyCopied": "स्ट्रीम की कॉपी भेल"
-    }
+    },
+    "usernames": "Usernames",
+    "usernamesCount_one": "{{count}} username",
+    "usernamesCount_other": "{{count}} usernames"
   },
   "common": {
     "save": "محفوظ کرو",
@@ -3218,7 +3221,29 @@
       "completed": "تەواوبوو",
       "expired": "بەسەرچووە"
     },
-    "makeOfferAction": "پێشنیار بکە"
+    "makeOfferAction": "پێشنیار بکە",
+    "tabMine": "Mine",
+    "sellingWornName": "हे तुमच्या प्रोफाइलचे हँडल आहे. ते विकल्यास तुम्ही दुसऱ्या नावाने ओळखले जाल.",
+    "sellingHeldName": "हे नाव तुमच्या मालकीचे आहे पण तुम्ही ते वापरत नाही. ते विकल्यास तुमच्या प्रोफाइलमध्ये बदल होणार नाही.",
+    "saleFinalWarningHeld": "विक्री अंतिम आणि त्वरित आहे. तुमचे स्वतःचे हँडल आणि तुमच्या प्रोफाइलवरील सर्वकाही जसे आहे तसे राहील — फक्त हे नाव बदलेल.",
+    "signInToSeeVault": "तुम्ही मालक असलेल्या युझरनेम पाहण्यासाठी साइन इन करा.",
+    "vaultExplainer": "तुम्ही खरेदी केलेले युझरनेम तुमचेच राहतील. तुम्ही ते वापरू शकता, विकू शकता किंवा सोडून देऊ शकता.",
+    "vaultExplainerEmpty": "तुमच्याकडे एक युझरनेम आहे. दुसरे खरेदी करा आणि हे देखील तुमच्याकडे राहील.",
+    "vaultInUse": "वापरात",
+    "vaultBought": "खरेदी केलेले",
+    "vaultKept": "आधीच्या खरेदीतून ठेवलेले",
+    "vaultFree": "मोफत युझरनेम",
+    "vaultFreeWarning": "तुम्ही हे विकत घेतलेले नाही, त्यामुळे दुसरे नाव निवडल्यास हे नाव जाईल आणि कोणीही ते घेऊ शकेल.",
+    "vaultUseThis": "हे वापरा",
+    "vaultSell": "विक्री करा",
+    "vaultEditListing": "लिस्टिंग संपादित करा",
+    "vaultRelease": "सोडून द्या",
+    "vaultListedCannotWear": "हे नाव वापरण्यापूर्वी लिस्टिंग मागे घ्या.",
+    "vaultReleaseTitle": "{{handle}} सोडून देऊ?",
+    "vaultReleaseBody": "ते पूलमध्ये परत जाईल आणि कोणीही ते घेऊ शकेल. याला कोणताही उपाय नाही आणि ते परत विकत घेण्यासाठी नवीन मालकाने विचारलेली किंमत द्यावी लागेल.",
+    "oldHandleKept": "Tum @{{handle}} ko rakhte ho — yeh tumhare usernames mein chala jayega, aur tum ise dobara pehen sakte ho ya baad mein bech sakte ho. Posts, followers aur tumhara wallet untouched rahenge.",
+    "postsStayWithYou": "Posts, followers aur tumhara wallet untouched rahenge.",
+    "saleFinalWarning": "Ek baar bik gaya toh final aur instant. Tumhare posts, followers aur wallet tumhare paas hi rahenge — sirf handle move hoga. Kharidar apna purana handle bhi rakhega; woh unke usernames mein se ek ban jayega."
   },
   "home": {
     "seoTitle": "DeHub — Medyaya civakî ya çavkaniya vekirî ya xwedîyê bikarhêneran",

@@ -465,7 +465,11 @@
       "unavailable": "Streaming from an encoder is not available on your account right now.",
       "serverCopied": "Server copied",
       "keyCopied": "Stream key copied"
-    }
+    },
+    "usernames": "Usernames",
+    "usernamesDesc": "The names you own",
+    "usernamesCount_one": "{{count}} username",
+    "usernamesCount_other": "{{count}} usernames"
   },
   "common": {
     "save": "Save",
@@ -4044,7 +4048,7 @@
     "youBecomeHandle": "You become @{{handle}} the moment somebody buys. If that name has been taken by then, a numbered variant is used and you are told which.",
     "pitchOptional": "Pitch (optional)",
     "pitchPlaceholder": "Original 2021 handle, clean history…",
-    "saleFinalWarning": "A sale is final and instant. Your posts, followers and wallet stay with you — only the handle moves, and the buyer's old one is released.",
+    "saleFinalWarning": "A sale is final and instant. Your posts, followers and wallet stay with you — only the handle moves. The buyer keeps their old handle too; it becomes one of their usernames.",
     "updateListing": "Update listing",
     "listForSale": "List for sale",
     "withdrawListing": "Withdraw listing",
@@ -4056,7 +4060,6 @@
     "askingPrice": "Asking price",
     "paidStraightToSeller": "≈ ${{usd}} · paid straight to the seller, DeHub takes no cut",
     "yourHandleChanges": "Your handle changes",
-    "oldHandleReleased": "Your old handle is released and anyone can take it. Posts, followers and your wallet are untouched.",
     "payingWithDhbOn": "Paying with DHB on {{chain}}",
     "shortOfDhbPaidOn": "You are short of DHB — this will be paid on {{chain}}",
     "yourOwnListing": "This is your listing. Manage it from the Sell tab.",
@@ -4100,7 +4103,28 @@
       "completed": "Completed",
       "expired": "Expired"
     },
-    "makeOfferAction": "Make an offer"
+    "makeOfferAction": "Make an offer",
+    "tabMine": "Mine",
+    "sellingWornName": "This is the handle your profile uses. Selling it moves you to another name.",
+    "sellingHeldName": "You own this name but are not using it. Selling it does not change your profile.",
+    "saleFinalWarningHeld": "A sale is final and instant. Your own handle and everything on your profile are untouched — only this name moves.",
+    "signInToSeeVault": "Sign in to see the usernames you own.",
+    "vaultExplainer": "Usernames you have bought stay yours. You can wear one, sell it, or let it go.",
+    "vaultExplainerEmpty": "You own one username. Buy another and you keep this one too.",
+    "vaultInUse": "In use",
+    "vaultBought": "Bought",
+    "vaultKept": "Kept from an earlier purchase",
+    "vaultFree": "Free username",
+    "vaultFreeWarning": "You have not paid for this one, so switching to another name gives it up and anyone can take it.",
+    "vaultUseThis": "Use this one",
+    "vaultSell": "Sell",
+    "vaultEditListing": "Edit listing",
+    "vaultRelease": "Release",
+    "vaultListedCannotWear": "Withdraw the listing before using this name.",
+    "vaultReleaseTitle": "Release @{{handle}}?",
+    "vaultReleaseBody": "It goes back in the pool and anyone can take it. There is no undo, and buying it back would cost whatever the new owner asks.",
+    "oldHandleKept": "You keep @{{handle}} — it moves into your usernames, and you can wear it again or sell it later. Posts, followers and your wallet are untouched.",
+    "postsStayWithYou": "Posts, followers and your wallet are untouched."
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",

@@ -465,7 +465,11 @@
       "unavailable": "Az enkóderből történő streamelés jelenleg nem elérhető a fiókodban.",
       "serverCopied": "Szerver másolva",
       "keyCopied": "Adatfolyamkulcs másolva"
-    }
+    },
+    "usernames": "Felhasználónév",
+    "usernamesDesc": "A tulajdonodban lévő nevek",
+    "usernamesCount_one": "{{count}} felhasználónév",
+    "usernamesCount_other": "{{count}} felhasználónév"
   },
   "common": {
     "save": "Mentés",
@@ -3986,7 +3990,7 @@
     "youBecomeHandle": "Az Ön @{{handle}} lesz abban a pillanatban, amikor valaki megvásárol. Ha ezt a nevet addigra már valaki foglalta, egy számozott változat kerül használatra, és Ön értesítést kap.",
     "pitchOptional": "Pitch (opcionális)",
     "pitchPlaceholder": "Eredeti 2021-es kezelő, tiszta előzmények…",
-    "saleFinalWarning": "Az eladás végleges és azonnali. A bejegyzések, követők és pénztárca Önnel marad — csak a kezelő változik, és a vevő régi kezelője felszabadul.",
+    "saleFinalWarning": "Az eladás végleges és azonnali. A bejegyzéseid, követőid és a pénztárcád veled maradnak – csak a felhasználónév cserél gazdát. A vevő is megtartja a régi felhasználónevét; az egyik felhasználónevévé válik.",
     "updateListing": "Hirdetés frissítése",
     "listForSale": "Listázás eladásra",
     "withdrawListing": "Hirdetés visszavonása",
@@ -3998,7 +4002,6 @@
     "askingPrice": "Kérési ár",
     "paidStraightToSeller": "≈ ${{usd}} · közvetlenül az eladónak fizetett, a DeHub nem vesz részt",
     "yourHandleChanges": "A kezelő megváltozik",
-    "oldHandleReleased": "Az Ön régi kezelője felszabadul, és bárki átveheti. A bejegyzések, követők és pénztárca érintetlenek maradnak.",
     "payingWithDhbOn": "DHB-vel fizetés {{chain}} napon",
     "shortOfDhbPaidOn": "Nincs elég DHB-je — ezt {{chain}} napon fizetik",
     "yourOwnListing": "Ez az Ön hirdetése. Kezelje az Eladás lapról.",
@@ -4036,7 +4039,28 @@
       "completed": "Befejezve",
       "expired": "Lejárt"
     },
-    "makeOfferAction": "Ajánlat tétele"
+    "makeOfferAction": "Ajánlat tétele",
+    "tabMine": "Saját",
+    "sellingWornName": "Ez a profilodhoz tartozó felhasználónév. Az eladása egy másik névre vált.",
+    "sellingHeldName": "Ez a név a tiéd, de nem használod. Az eladása nem változtatja meg a profilodat.",
+    "saleFinalWarningHeld": "Az eladás végleges és azonnali. A saját felhasználóneved és a profilod minden tartalma érintetlen marad – csak ez a név kerül át.",
+    "signInToSeeVault": "Jelentkezz be, hogy lásd a birtokodban lévő felhasználóneveket.",
+    "vaultExplainer": "A megvásárolt felhasználónevek a tiéid maradnak. Viselhetsz egyet, eladhatod, vagy elengedheted.",
+    "vaultExplainerEmpty": "Egy felhasználónév a tiéd. Ha veszel egy másikat, ezt is megtartod.",
+    "vaultInUse": "Használatban",
+    "vaultBought": "Megvásárolt",
+    "vaultKept": "Korábbi vásárlásból megtartott",
+    "vaultFree": "Ingyenes felhasználónév",
+    "vaultFreeWarning": "Ezt nem fizetted ki, így ha egy másik névre váltasz, ez felszabadul, és bárki elveheti.",
+    "vaultUseThis": "Használd ezt",
+    "vaultSell": "Eladás",
+    "vaultEditListing": "Hirdetés szerkesztése",
+    "vaultRelease": "Visszavonás",
+    "vaultListedCannotWear": "Vond vissza a hirdetést, mielőtt ezt a nevet használnád.",
+    "vaultReleaseTitle": "Visszavonás @{{handle}}?",
+    "vaultReleaseBody": "Visszakerül a kalapba, és bárki elveheti. Nincs visszavonás, és a visszavásárlása annyiba kerülne, amennyit az új tulajdonos kér.",
+    "oldHandleKept": "Megtartod a(z) @{{handle}} nevet – ez bekerül a felhasználóneveid közé, és később újra használhatod vagy eladhatod. A bejegyzések, követők és a pénztárcád érintetlenek maradnak.",
+    "postsStayWithYou": "A bejegyzések, követők és a pénztárcád érintetlenek maradnak."
   },
   "accounts": {
     "seoTitle": "Fiók Piacozás — DeHub",

@@ -376,7 +376,10 @@
       "rotate": "Reset stream key",
       "serverCopied": "Server copied",
       "keyCopied": "Stream key copied"
-    }
+    },
+    "usernames": "Usernames",
+    "usernamesCount_one": "{{count}} username",
+    "usernamesCount_other": "{{count}} usernames"
   },
   "common": {
     "save": "Save am",
@@ -2846,7 +2849,15 @@
       "completed": "I don finish",
       "expired": "I don expair"
     },
-    "makeOfferAction": "Mek offa"
+    "makeOfferAction": "Mek offa",
+    "tabMine": "Mine",
+    "vaultInUse": "In use",
+    "vaultBought": "Bought",
+    "vaultFree": "Free username",
+    "vaultSell": "Sell",
+    "vaultEditListing": "Edit listing",
+    "vaultRelease": "Release",
+    "vaultReleaseTitle": "Release @{{handle}}?"
   },
   "home": {
     "seoTitle": "DeHub — Open Source, User Owned Social Media",

@@ -421,7 +421,11 @@
       "unavailable": "Hiện tại, bạn không thể phát trực tiếp từ bộ mã hóa trên tài khoản của mình.",
       "serverCopied": "Đã sao chép máy chủ",
       "keyCopied": "Đã sao chép khóa phát trực tuyến"
-    }
+    },
+    "usernames": "Tên người dùng",
+    "usernamesDesc": "Tên bạn sở hữu",
+    "usernamesCount_one": "Tên người dùng {{count}}",
+    "usernamesCount_other": "Tên người dùng {{count}}"
   },
   "common": {
     "save": "Lưu",
@@ -3807,7 +3811,7 @@
     "youBecomeHandle": "Bạn trở thành @{{handle}} ngay khi ai đó mua. Nếu tên đó đã được sử dụng vào lúc đó, một biến thể được đánh số sẽ được sử dụng và bạn sẽ được thông báo cái nào.",
     "pitchOptional": "Pitch (tùy chọn)",
     "pitchPlaceholder": "Handle 2021 gốc, lịch sử sạch sẽ…",
-    "saleFinalWarning": "Một lần bán là cuối cùng và tức thì. Các bài viết, người theo dõi và ví của bạn ở lại với bạn — chỉ handle di chuyển, và cái cũ của người mua được phát hành.",
+    "saleFinalWarning": "Giao dịch mua bán là cuối cùng và tức thì. Bài đăng, người theo dõi và ví của bạn vẫn ở lại với bạn — chỉ có tên người dùng là thay đổi. Người mua cũng giữ lại tên người dùng cũ của họ; nó trở thành một trong những tên người dùng của họ.",
     "updateListing": "Cập nhật danh sách",
     "listForSale": "Liệt kê để bán",
     "withdrawListing": "Rút danh sách",
@@ -3819,7 +3823,6 @@
     "askingPrice": "Giá yêu cầu",
     "paidStraightToSeller": "≈ ${{usd}} · thanh toán trực tiếp cho người bán, DeHub không lấy phí",
     "yourHandleChanges": "Tên người dùng của bạn thay đổi",
-    "oldHandleReleased": "Tên người dùng cũ của bạn được phát hành và bất kỳ ai cũng có thể lấy nó. Bài viết, người theo dõi và ví của bạn không bị ảnh hưởng.",
     "payingWithDhbOn": "Thanh toán bằng DHB trên {{chain}}",
     "shortOfDhbPaidOn": "Bạn thiếu DHB — điều này sẽ được thanh toán trên {{chain}}",
     "yourOwnListing": "Đây là danh sách của bạn. Quản lý nó từ tab Bán.",
@@ -3857,7 +3860,28 @@
       "completed": "Đã hoàn tất",
       "expired": "Đã hết hạn"
     },
-    "makeOfferAction": "Gửi đề nghị"
+    "makeOfferAction": "Gửi đề nghị",
+    "tabMine": "Của tôi",
+    "sellingWornName": "Đây là tên người dùng mà hồ sơ của bạn đang sử dụng. Bán nó sẽ chuyển bạn sang một tên khác.",
+    "sellingHeldName": "Bạn sở hữu tên này nhưng không sử dụng nó. Bán nó không làm thay đổi hồ sơ của bạn.",
+    "saleFinalWarningHeld": "Việc bán là cuối cùng và tức thì. Tên người dùng của bạn và mọi thứ trên hồ sơ của bạn đều không bị ảnh hưởng — chỉ tên này được chuyển đi.",
+    "signInToSeeVault": "Đăng nhập để xem tên người dùng bạn sở hữu.",
+    "vaultExplainer": "Tên người dùng bạn đã mua vẫn thuộc về bạn. Bạn có thể sử dụng, bán hoặc bỏ nó.",
+    "vaultExplainerEmpty": "Bạn sở hữu một tên người dùng. Mua thêm một tên nữa và bạn vẫn giữ cái này.",
+    "vaultInUse": "Đang sử dụng",
+    "vaultBought": "Đã mua",
+    "vaultKept": "Giữ từ lần mua trước",
+    "vaultFree": "Tên người dùng miễn phí",
+    "vaultFreeWarning": "Bạn chưa thanh toán cho tên người dùng này, vì vậy chuyển sang tên khác sẽ từ bỏ nó và bất kỳ ai cũng có thể lấy nó.",
+    "vaultUseThis": "Sử dụng cái này",
+    "vaultSell": "Bán",
+    "vaultEditListing": "Chỉnh sửa danh sách",
+    "vaultRelease": "Giải phóng",
+    "vaultListedCannotWear": "Rút danh sách trước khi sử dụng tên này.",
+    "vaultReleaseTitle": "Giải phóng @{{handle}}?",
+    "vaultReleaseBody": "Nó sẽ quay trở lại nhóm và bất kỳ ai cũng có thể lấy nó. Không thể hoàn tác, và việc mua lại nó sẽ tốn chi phí mà chủ sở hữu mới yêu cầu.",
+    "oldHandleKept": "Bạn giữ @{{handle}} — nó sẽ chuyển vào danh sách tên người dùng của bạn, và bạn có thể sử dụng lại hoặc bán nó sau. Bài đăng, người theo dõi và ví của bạn không bị ảnh hưởng.",
+    "postsStayWithYou": "Bài đăng, người theo dõi và ví của bạn không bị ảnh hưởng."
   },
   "accounts": {
     "seoTitle": "Sàn giao dịch tài khoản — DeHub",

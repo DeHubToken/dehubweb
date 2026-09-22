@@ -465,7 +465,11 @@
       "unavailable": "Streamen vanuit een encoder is momenteel niet beschikbaar op je account.",
       "serverCopied": "Server gekopieerd",
       "keyCopied": "Stream-sleutel gekopieerd"
-    }
+    },
+    "usernames": "Gebruikersnamen",
+    "usernamesDesc": "De namen waarvan je de eigenaar bent",
+    "usernamesCount_one": "{{count}} gebruikersnaam",
+    "usernamesCount_other": "{{count}} gebruikersnamen"
   },
   "common": {
     "save": "Opslaan",
@@ -4236,7 +4240,7 @@
     "youBecomeHandle": "Je wordt @{{handle}} zodra iemand het koopt. Als die naam tegen die tijd al is genomen, wordt een genummerde variant gebruikt en krijg je te horen welke.",
     "pitchOptional": "Pitch (optioneel)",
     "pitchPlaceholder": "Originele handle uit 2021, schone geschiedenis…",
-    "saleFinalWarning": "Een verkoop is definitief en onmiddellijk. Je berichten, volgers en portemonnee blijven bij je — alleen de handle verhuist, en de oude van de koper wordt vrijgegeven.",
+    "saleFinalWarning": "Een verkoop is definitief en onmiddellijk. Je berichten, volgers en portemonnee blijven bij je — alleen het handvat beweegt. De koper behoudt ook zijn oude handvat; het wordt een van zijn gebruikersnamen.",
     "updateListing": "Aanbieding bijwerken",
     "listForSale": "Te koop zetten",
     "withdrawListing": "Aanbieding intrekken",
@@ -4248,7 +4252,6 @@
     "askingPrice": "Vraagprijs",
     "paidStraightToSeller": "≈ ${{usd}} · rechtstreeks aan de verkoper betaald, DeHub neemt geen percentage",
     "yourHandleChanges": "Je handle verandert",
-    "oldHandleReleased": "Je oude handle wordt vrijgegeven en iedereen kan het nemen. Berichten, volgers en je portemonnee blijven onveranderd.",
     "payingWithDhbOn": "Betalen met DHB op {{chain}}",
     "shortOfDhbPaidOn": "Je hebt onvoldoende DHB — dit wordt betaald op {{chain}}",
     "yourOwnListing": "Dit is jouw aanbieding. Beheer het via het tabblad Verkopen.",
@@ -4292,7 +4295,28 @@
       "completed": "Voltooid",
       "expired": "Verlopen"
     },
-    "makeOfferAction": "Doe een bod"
+    "makeOfferAction": "Doe een bod",
+    "tabMine": "Mijn",
+    "sellingWornName": "Dit is de gebruikersnaam die je profiel gebruikt. Als je deze verkoopt, krijg je een andere naam.",
+    "sellingHeldName": "Je bent eigenaar van deze naam, maar gebruikt hem niet. Verkopen verandert je profiel niet.",
+    "saleFinalWarningHeld": "Een verkoop is definitief en direct. Je eigen gebruikersnaam en alles op je profiel blijven onaangetast — alleen deze naam wordt overgedragen.",
+    "signInToSeeVault": "Meld je aan om de gebruikersnamen te zien die je bezit.",
+    "vaultExplainer": "Gekochte gebruikersnamen blijven van jou. Je kunt er één dragen, verkopen of laten gaan.",
+    "vaultExplainerEmpty": "Je bezit één gebruikersnaam. Koop er nog een en je behoudt deze ook.",
+    "vaultInUse": "In gebruik",
+    "vaultBought": "Gekocht",
+    "vaultKept": "Behouden van een eerdere aankoop",
+    "vaultFree": "Gratis gebruikersnaam",
+    "vaultFreeWarning": "Je hebt hier niet voor betaald, dus als je overschakelt naar een andere naam, geef je deze op en kan iedereen hem overnemen.",
+    "vaultUseThis": "Gebruik deze",
+    "vaultSell": "Verkopen",
+    "vaultEditListing": "Advertentie bewerken",
+    "vaultRelease": "Vrijgeven",
+    "vaultListedCannotWear": "Intrekken van de advertentie voordat je deze naam gebruikt.",
+    "vaultReleaseTitle": "Vrijgeven @{{handle}}?",
+    "vaultReleaseBody": "Het gaat terug in de pool en iedereen kan het overnemen. Er is geen weg terug, en terugkopen zou je net zoveel kosten als de nieuwe eigenaar vraagt.",
+    "oldHandleKept": "Je behoudt @{{handle}} — het gaat naar je gebruikersnamen en je kunt het opnieuw dragen of later verkopen. Berichten, volgers en je portemonnee zijn onaangeroerd.",
+    "postsStayWithYou": "Berichten, volgers en je portemonnee zijn onaangeroerd."
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",

@@ -17,6 +17,7 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { BrowseTab } from '@/components/app/usernames/BrowseTab';
 import { SellTab } from '@/components/app/usernames/SellTab';
 import { OffersTab } from '@/components/app/usernames/OffersTab';
+import { UsernameVault } from '@/components/app/usernames/UsernameVault';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 const JSON_LD = {
@@ -34,9 +35,21 @@ export default function UsernamesPage() {
   // URL. Held in state after that rather than written back on every switch:
   // a tab press is not a navigation worth putting in the back stack.
   const [params] = useSearchParams();
-  const [tab, setTab] = useState<'browse' | 'sell' | 'offers'>(
-    params.get('tab') === 'offers' ? 'offers' : params.get('tab') === 'sell' ? 'sell' : 'browse',
-  );
+  const [tab, setTab] = useState<'browse' | 'mine' | 'sell' | 'offers'>(() => {
+    const asked = params.get('tab');
+    if (asked === 'offers' || asked === 'sell' || asked === 'mine') return asked;
+    return 'browse';
+  });
+
+  // Which of your names the Sell form should open on. The vault hands it over
+  // when you press "sell" on a row, and the URL carries it when Settings links
+  // in from the other side of the app.
+  const [sellingUsername, setSellingUsername] = useState<string | null>(params.get('username'));
+
+  const sellName = (username: string) => {
+    setSellingUsername(username);
+    setTab('sell');
+  };
 
   // Swallow the content at the sticky header bento's top edge under the glass
   // themes, exactly like the home feed cuts at its nav pill.
@@ -82,6 +95,18 @@ export default function UsernamesPage() {
               active={tab === 'browse'}
               className={tab === 'browse' ? undefined : 'opacity-60'}
             />
+            {/* What you own. Sits next to Browse rather than inside Sell
+                because owning a handle and selling one stopped being the same
+                thing the moment an account could hold more than one. */}
+            <LiquidGlassBubble2
+              label={t('usernames.tabMine')}
+              icon={<ThemedIcon icon="usernames" alt="" className="w-4 h-4 object-contain" />}
+              onClick={() => setTab('mine')}
+              width="auto"
+              height="38px"
+              active={tab === 'mine'}
+              className={tab === 'mine' ? undefined : 'opacity-60'}
+            />
             <LiquidGlassBubble2
               label={t('usernames.tabSell')}
               icon={<ThemedIcon icon="usernames" alt="" className="w-4 h-4 object-contain" />}
@@ -107,9 +132,13 @@ export default function UsernamesPage() {
       <div ref={contentRef} className="w-full px-2 sm:px-3 pt-3 pb-6 space-y-4">
         {/* Browse fills the column; Sell is a form, and a text input stretched
             across a wide desktop column is unreadable, so it keeps a measure. */}
-        {tab === 'browse' ? <BrowseTab /> : tab === 'offers' ? <OffersTab /> : (
+        {tab === 'browse' ? <BrowseTab /> : tab === 'offers' ? <OffersTab /> : tab === 'mine' ? (
           <div className="max-w-2xl">
-            <SellTab />
+            <UsernameVault onSell={sellName} />
+          </div>
+        ) : (
+          <div className="max-w-2xl">
+            <SellTab username={sellingUsername} onUsernameChange={setSellingUsername} />
           </div>
         )}
       </div>

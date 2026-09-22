@@ -451,7 +451,11 @@
       "unavailable": "Dhangalaasuun encoder irraa yeroo ammaa kana maamiloota keessaniif hin danda’amu.",
       "serverCopied": "Sarvariin waraabame",
       "keyCopied": "Furtuun yaa&#39;aa waraabame"
-    }
+    },
+    "usernames": "Maqaa fayyadamtootaa",
+    "usernamesDesc": "Maqaawwan ati qabdu",
+    "usernamesCount_one": "{{count}} maqaa fayyadamaa",
+    "usernamesCount_other": "{{count}} maqaa fayyadamtootaa"
   },
   "common": {
     "save": "Olchi",
@@ -3329,7 +3333,29 @@
       "completed": "Xumurameera",
       "expired": "Yeroon isaa darbeera"
     },
-    "makeOfferAction": "Dhiheessa godhi"
+    "makeOfferAction": "Dhiheessa godhi",
+    "tabMine": "Koo",
+    "sellingWornName": "Kun maqaa profayilii kee ti. Gad lakkisuun gara maqaa biraatti si siqqu.",
+    "sellingHeldName": "Maqaa kana ni qabda garuu hin fayyadamtutti. Gad lakkisuun profayilii kee hin jijjiru.",
+    "saleFinalWarningHeld": "Gurgurtaa fi xumura. Maqaan kee fi wantoonni profayilii kee irratti argaman hundi ni salphatu — maqaan kun qofa si biraa gala.",
+    "signInToSeeVault": "Maqaa ati qabdu argachuuf seeni.",
+    "vaultExplainer": "Maqaa ati bitatte ni keeysan. Isaan tokko uffachuu, gurguruu, ykn immoo gad lakkisuu dandeessa.",
+    "vaultExplainerEmpty": "Maqaa tokko qabda. Birrii bitattee isaa kana ni qabda.",
+    "vaultInUse": "Fayyadama",
+    "vaultBought": "Bitame",
+    "vaultKept": "Bittaa duraa irraa qabame",
+    "vaultFree": "Maqaa bilisaa",
+    "vaultFreeWarning": "Kun isa hin bitanne, kanaaf gara maqaa biraatti jijjiiruun isaa gad lakkifamaa fi namni kamiyyuu fudhachuu danda'a.",
+    "vaultUseThis": "Kun fayyadami",
+    "vaultSell": "Gurguri",
+    "vaultEditListing": "Maddii sirreessu",
+    "vaultRelease": "Gad lakkisi",
+    "vaultListedCannotWear": "Maqaa kana dura maddii kaasi.",
+    "vaultReleaseTitle": "{{handle}} gad lakkisuu?",
+    "vaultReleaseBody": "Bishaanitti deebi'ee namni kamiyyuu fudhachuu danda'a. Deebi'uu hin qabu, fi isaa deebifachuun gatii isa bilchinaan bitatuu barbaaduu siif jira.",
+    "oldHandleKept": "Ati @{{handle}} qabachaa jiraachuu dandeessa — mata duree kee keessa galuu fi yoo fedde deebistee itti fayyadamuu ykn gurguruu dandeessa. Barreessitoonni, hordoftoonni fi saanduqni kee hin tuqaman.",
+    "postsStayWithYou": "Barreessitoonni, hordoftoonni fi saanduqni kee hin tuqaman.",
+    "saleFinalWarning": "Gurgurtaa guutuun fi yeroo tokkoon raawwatama. Barreessitoonni kee, hordoftoonni fi saanduqni kee si waliin turu — mata dureen qofatu jijjirama. Bittaa nama biraa mata duree isaanii duraa ni qabata; isaanis mata duree isaanii keessaa tokko ta'a."
   },
   "home": {
     "seoTitle": "DeHub — Miidiyaa hawaasaa madda banaa kan fayyadamtoonni qaban",

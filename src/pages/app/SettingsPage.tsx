@@ -114,6 +114,8 @@ import { useKidsMode } from '@/hooks/use-kids-mode';
 import { KidsModeDrawer } from '@/components/app/settings/KidsModeDrawer';
 import { Baby } from 'lucide-react';
 import { useHideWatched } from '@/hooks/use-watched-videos';
+import { useUsernameHoldings } from '@/hooks/use-username-market';
+import { UsernameVault } from '@/components/app/usernames/UsernameVault';
 import { DataPortability } from '@/components/app/settings/DataPortability';
 import { normaliseAdLoad, useAdLoad, writeAdLoad } from '@/lib/ad-load';
 import { useSkipSegments, writeSkipSegments } from '@/lib/skip-segments';
@@ -3203,7 +3205,11 @@ function AssetsSettings() {
   const { walletAddress, connectionSource } = useAuthContext();
   const navigate = useNavigate();
   const [walletDrawerOpen, setWalletDrawerOpen] = useState(false);
+  const [usernamesDrawerOpen, setUsernamesDrawerOpen] = useState(false);
   const { option: tipNetwork, setOption: setTipNetwork } = useTipNetwork();
+  // Names are an asset now — bought, held and resellable — so they belong on
+  // this tab next to the wallet rather than buried in the marketplace.
+  const { data: heldUsernames } = useUsernameHoldings();
 
   const isGasSponsored = connectionSource === 'web3auth';
   // Was hardcoded to 0, so this row read "0" for everyone no matter what they
@@ -3253,6 +3259,21 @@ function AssetsSettings() {
           title={balanceLoading && !coinBalance ? '—' : Math.floor(coinBalance).toLocaleString()}
           description={t('settings.dhbBalanceIncludesStaked')}
           onClick={() => setWalletDrawerOpen(true)}
+          action={<span className="text-sm text-zinc-500">{t('settings.manage')}</span>}
+        />
+
+        {/* Usernames */}
+        <SettingsRow
+          as="button"
+          anchor="usernames"
+          icon={<AtSign />}
+          title={t('settings.usernames')}
+          description={
+            heldUsernames?.length
+              ? t('settings.usernamesCount', { count: heldUsernames.length })
+              : t('settings.usernamesDesc')
+          }
+          onClick={() => setUsernamesDrawerOpen(true)}
           action={<span className="text-sm text-zinc-500">{t('settings.manage')}</span>}
         />
 
@@ -3307,6 +3328,18 @@ function AssetsSettings() {
           />}
         />
       </div>
+
+      {/* Usernames Drawer. The vault renders the same here as it does on the
+          marketplace tab — two screens disagreeing about what you own is
+          exactly the bug this feature cannot afford. */}
+      <Drawer open={usernamesDrawerOpen} onOpenChange={setUsernamesDrawerOpen}>
+        <DrawerContent column glass hideHandle={false} className="px-4 pt-1 pb-8">
+          <DrawerHeader className="px-0">
+            <DrawerTitle className="text-left text-base">{t('settings.usernames')}</DrawerTitle>
+          </DrawerHeader>
+          <UsernameVault />
+        </DrawerContent>
+      </Drawer>
 
       {/* Wallet Drawer */}
       <Drawer open={walletDrawerOpen} onOpenChange={setWalletDrawerOpen}>

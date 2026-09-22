@@ -450,7 +450,11 @@
       "unavailable": "Watsawa daga encoder ba ta samuwa a asusunka a yanzu.",
       "serverCopied": "An kwafa Server",
       "keyCopied": "Stream key kwafe"
-    }
+    },
+    "usernames": "Sunan mai amfani",
+    "usernamesDesc": "Sunayen da ka mallaka",
+    "usernamesCount_one": "{{count}} sunan mai amfani",
+    "usernamesCount_other": "{{count}} sunan mai amfani"
   },
   "common": {
     "save": "Ajiye",
@@ -3287,7 +3291,29 @@
       "completed": "An kammala",
       "expired": "Ya ƙare"
     },
-    "makeOfferAction": "Yi tayi"
+    "makeOfferAction": "Yi tayi",
+    "tabMine": "Tawa",
+    "sellingWornName": "Wannan shine sunan da bayanan martabarka ke amfani da shi. Siyar da shi yana motsaka ka zuwa wani suna.",
+    "sellingHeldName": "Kai mallakin wannan suna ne amma ba ka amfani da shi. Siyar da shi ba ta canza bayanan martabarka ba.",
+    "saleFinalWarningHeld": "Siyarwa ta ƙarshe ce kuma nan take. Sunanka da duk abin da ke cikin bayanan martabarka ba su taɓa ba — wannan sunan kawai ke motsawa.",
+    "signInToSeeVault": "Shiga don ganin sunayen masu amfani da mallaka.",
+    "vaultExplainer": "Sunayen masu amfani da ka saya suna kasancewa naka. Zaka iya saka ɗaya, sayar da shi, ko kuma ka sake shi.",
+    "vaultExplainerEmpty": "Kai mallakin sunan mai amfani ɗaya ne. Ka saya ɗaya kuma ka ci gaba da mallakar wannan ma.",
+    "vaultInUse": "Ana amfani da shi",
+    "vaultBought": "An saya",
+    "vaultKept": "An ajiye daga sayan da ya gabata",
+    "vaultFree": "Sunan mai amfani kyauta",
+    "vaultFreeWarning": "Ba ka biya wannan ba, don haka canzawa zuwa wani suna yana sakin shi kuma kowa na iya ɗauka.",
+    "vaultUseThis": "Yi amfani da wannan",
+    "vaultSell": "Siyarwa",
+    "vaultEditListing": "Gyara jeri",
+    "vaultRelease": "Sakin",
+    "vaultListedCannotWear": "Cire jeri kafin amfani da wannan suna.",
+    "vaultReleaseTitle": "Sakin @{{handle}}?",
+    "vaultReleaseBody": "Yana komawa cikin wurin kuma kowa na iya ɗauka. Babu juyawa, kuma siyan shi sake zai kashe kuɗin da sabon mai shi ya buƙata.",
+    "oldHandleKept": "Kuna riƙe da @{{handle}} — yana shiga cikin sunayen masu amfani da ku, kuma zaku iya sake sawa ko siyarwa daga baya. Posts, masu biyan kuɗi da walat ɗinku ba su taɓa ba.",
+    "postsStayWithYou": "Posts, masu biyan kuɗi da walat ɗinku ba su taɓa ba.",
+    "saleFinalWarning": "Siyarwa ta ƙarshe ce kuma nan take. Posts ɗinka, masu biyan kuɗi da walat ɗinka suna tare da kai — kawai hannun zai canza. Mai siye kuma yana riƙe da tsohon hannunsa; ya zama ɗaya daga cikin sunayen masu amfani da shi."
   },
   "home": {
     "seoTitle": "DeHub — Kafar sada zumunta ta buɗaɗɗen tushe mallakar masu amfani",

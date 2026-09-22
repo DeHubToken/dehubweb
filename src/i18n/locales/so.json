@@ -451,7 +451,11 @@
       "unavailable": "Streemka kombiyuutarka laguma heli karo akoonkaaga hadda.",
       "serverCopied": "Server waa la nuqulay",
       "keyCopied": "Furaha Stream la nuqulay"
-    }
+    },
+    "usernames": "Magaca isticmaalaha",
+    "usernamesDesc": "Magacyada aad leedahay",
+    "usernamesCount_one": "{{count}} username",
+    "usernamesCount_other": "{{count}} usernames"
   },
   "common": {
     "save": "Kaydi",
@@ -3279,7 +3283,29 @@
       "completed": "Waa la dhammeeyey",
       "expired": "Wakhtigii wuu dhacay"
     },
-    "makeOfferAction": "Samee dalab"
+    "makeOfferAction": "Samee dalab",
+    "tabMine": "Aniga",
+    "sellingWornName": "Kani waa magaca isticmaalaha ee profile-kaaga. Iibintiisu waxay kuugu beddeleysaa magac kale.",
+    "sellingHeldName": "Adigu waxaad leedahay magacan laakiin ma isticmaalaysid. Iibintiisu ma beddeleyso profile-kaaga.",
+    "saleFinalWarningHeld": "Iibku waa mid kama dambeys ah oo degdeg ah. Magacaaga isticmaalaha iyo wax kasta oo ku jira profile-kaaga lama taabanayo — magacan oo keliya ayaa guura.",
+    "signInToSeeVault": "Geli si aad u aragto magacyada isticmaalaha ee aad leedahay.",
+    "vaultExplainer": "Magacyada isticmaalaha ee aad iibsatay way kaa sii ahaaneysaa. Waxaad xiran kartaa mid, iibin kartaa, ama waad sii dayn kartaa.",
+    "vaultExplainerEmpty": "Waxaad leedahay hal magac isticmaale. Mid kale soo iibso oo kanadana waad sii haysanaysaa.",
+    "vaultInUse": "Waa la isticmaalayaa",
+    "vaultBought": "La iibsaday",
+    "vaultKept": "Laga soo qaatay iibsi hore",
+    "vaultFree": "Magac isticmaale oo bilaash ah",
+    "vaultFreeWarning": "Kuma aadan bixin kan, sidaa darteed u beddelashada magac kale ayaa kaa siineysa oo qof kasta waan qaadan karaa.",
+    "vaultUseThis": "Kan isticmaal",
+    "vaultSell": "Iib",
+    "vaultEditListing": "Tifatir liiska",
+    "vaultRelease": "Siideynta",
+    "vaultListedCannotWear": "Ka noqo liiska ka hor intaadan isticmaalin magacan.",
+    "vaultReleaseTitle": "Siideynta @{{handle}}?",
+    "vaultReleaseBody": "Wuxuu ku noqonayaa barkadda oo qof kasta waan qaadan karaa. Ma jirto wax dib loogu noqdo, iibsashadiisuna waxay ku kici doontaa wax kasta oo milkiilaha cusub uu weydiiyo.",
+    "oldHandleKept": "Waxaad haysataa @{{handle}} — waxay u dhaqaaqdaa magacyada isticmaale ee aad leedahay, waxaadna mar kale xiran kartaa ama iibin kartaa mustaqbalka. Qoraallada, kuwa raacaya iyo jeebkaaga waxba ma saameynayaan.",
+    "postsStayWithYou": "Qoraallada, kuwa raacaya iyo jeebkaaga waxba ma saameynayaan.",
+    "saleFinalWarning": "Iibka waa mid kama dambeys ah oo degdeg ah. Qoraalladaada, kuwa raacaya iyo jeebkaaga ayaa kula jooga — gacanta kaliya ayaa dhaqaaqda. Iibsaduhu wuxuu haystaa gacantiisii hore sidoo kale; waxay noqotaa mid ka mid ah magacyada isticmaale ee uu leeyahay."
   },
   "home": {
     "seoTitle": "DeHub — Baraha bulshada ee il furan ee ay leeyihiin isticmaalayaashu",

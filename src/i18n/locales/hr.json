@@ -465,7 +465,11 @@
       "unavailable": "Prijenos uživo iz kodiranja trenutno nije dostupan na vašem računu.",
       "serverCopied": "Poslužitelj je kopiran",
       "keyCopied": "Tipka za stream je kopirana"
-    }
+    },
+    "usernames": "Korisnička imena",
+    "usernamesDesc": "Imena koja posjedujete",
+    "usernamesCount_one": "{{count}} korisničko ime",
+    "usernamesCount_other": "{{count}} korisnička imena"
   },
   "common": {
     "save": "Spremi",
@@ -3983,7 +3987,7 @@
     "youBecomeHandle": "Postajete @{{handle}} čim netko kupi. Ako je to ime do tada zauzeto, koristi se numerirana varijanta i obavijestit ćete se koja.",
     "pitchOptional": "Pitch (opcionalno)",
     "pitchPlaceholder": "Originalni nadimak iz 2021., čista povijest…",
-    "saleFinalWarning": "Prodaja je konačna i trenutna. Vaši postovi, pratitelji i novčanik ostaju s vama — samo se nadimak premješta, a stari nadimak kupca se oslobađa.",
+    "saleFinalWarning": "Prodaja je konačna i trenutna. Vaši postovi, pratitelji i novčanik ostaju s vama — samo se korisničko ime premješta. Kupac također zadržava svoje staro korisničko ime; ono postaje jedan od njegovih korisničkih nadimaka.",
     "updateListing": "Ažuriraj oglas",
     "listForSale": "Stavi na prodaju",
     "withdrawListing": "Povuci oglas",
@@ -3995,7 +3999,6 @@
     "askingPrice": "Tražena cijena",
     "paidStraightToSeller": "≈ ${{usd}} · plaćeno izravno prodavatelju, DeHub ne uzima nikakvu proviziju",
     "yourHandleChanges": "Vaš nadimak se mijenja",
-    "oldHandleReleased": "Vaš stari nadimak se oslobađa i svatko ga može preuzeti. Postovi, pratitelji i vaš novčanik ostaju netaknuti.",
     "payingWithDhbOn": "Plaćanje s DHB na {{chain}}",
     "shortOfDhbPaidOn": "Nedostaje vam DHB — to će biti plaćeno na {{chain}}",
     "yourOwnListing": "Ovo je vaš oglas. Upravljajte njime iz kartice Prodaj.",
@@ -4033,7 +4036,28 @@
       "completed": "Dovršeno",
       "expired": "Isteklo"
     },
-    "makeOfferAction": "Daj ponudu"
+    "makeOfferAction": "Daj ponudu",
+    "tabMine": "Moje",
+    "sellingWornName": "Ovo je korisničko ime koje vaš profil koristi. Prodajom se prebacujete na drugo ime.",
+    "sellingHeldName": "Vlasnik ste ovog imena, ali ga ne koristite. Prodajom se ne mijenja vaš profil.",
+    "saleFinalWarningHeld": "Prodaja je konačna i trenutna. Vaše korisničko ime i sve na vašem profilu ostaju nepromijenjeni — samo ovo ime se premješta.",
+    "signInToSeeVault": "Prijavite se da biste vidjeli korisnička imena koja posjedujete.",
+    "vaultExplainer": "Korisnička imena koja ste kupili ostaju vaša. Možete ih nositi, prodati ili ih pustiti.",
+    "vaultExplainerEmpty": "Vlasnik ste jednog korisničkog imena. Kupite drugo i zadržite i ovo.",
+    "vaultInUse": "U upotrebi",
+    "vaultBought": "Kupljeno",
+    "vaultKept": "Zadržano iz ranije kupnje",
+    "vaultFree": "Besplatno korisničko ime",
+    "vaultFreeWarning": "Niste platili za ovo, pa ga prebacivanjem na drugo ime gubite i svatko ga može preuzeti.",
+    "vaultUseThis": "Koristite ovo",
+    "vaultSell": "Prodaj",
+    "vaultEditListing": "Uredi popis",
+    "vaultRelease": "Oslobodi",
+    "vaultListedCannotWear": "Povucite popis prije korištenja ovog imena.",
+    "vaultReleaseTitle": "Oslobodi @{{handle}}?",
+    "vaultReleaseBody": "Vraća se u bazu i svatko ga može preuzeti. Nema povratka, a ponovna kupnja bi koštala koliko god novi vlasnik zatraži.",
+    "oldHandleKept": "Zadržavate @{{handle}} — premješta se u vaše korisničke nadimke, a možete ga ponovno koristiti ili prodati kasnije. Postovi, pratitelji i vaš novčanik ostaju netaknuti.",
+    "postsStayWithYou": "Postovi, pratitelji i vaš novčanik ostaju netaknuti."
   },
   "accounts": {
     "seoTitle": "Tržište računa — DeHub",
