@@ -1,10 +1,20 @@
 /**
  * Canvas-based preview compositor. Composites all active clips at the playhead
  * (video frames + images + text overlays) and synchronises audio elements.
+ *
+ * Every visual layer — image, video or text — can be picked on the canvas and
+ * moved, resized and rotated directly, with snapping guides to the page and to
+ * other layers. Drawing goes through lib/editor/render so the preview and every
+ * export stay pixel-identical.
+ *
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Play, Pause, Repeat, Type, RotateCcw, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown, Copy, Trash2, Pencil } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import {
+  Play, Pause, Repeat, Type, RotateCcw, RotateCw, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown,
+  Copy, Trash2, Pencil, FlipHorizontal2, FlipVertical2, Maximize, Minimize, Crosshair, PanelBottomClose, PanelBottomOpen,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -16,12 +26,18 @@ import {
 } from "@/components/ui/context-menu";
 import { cn } from "@/lib/utils";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
+import { useEditorUiStore } from "@/store/editorUiStore";
 import type { Clip, MediaClip, TextClip } from "@/lib/editor/types";
 import { computeRenderOps, type RenderOp } from "@/lib/editor/transitions";
+import { clipBox, drawClip, getTransform, isVisualClip, placementPatch, pointInBox, type ClipBox } from "@/lib/editor/render";
 import { useCloseOnSurfaceSwitch } from "@/hooks/use-surface-switch";
-import { computeClipAnimation } from "@/lib/editor/animationPresets";
+import { useEditorQuota } from "@/hooks/use-editor-quota";
+import { importFiles } from "@/lib/editor/importFiles";
 import { TEXT_DRAG_MIME, type TextPreset } from "@/lib/editor/textPresets";
 
+const MEDIA_DRAG_MIME = "application/x-dehub-media";
+/** Snap distance in screen pixels. */
+const SNAP_PX = 6;
 
 function fmtTime(t: number, fps: number) {
   if (!Number.isFinite(t) || t < 0) t = 0;
@@ -32,7 +48,27 @@ function fmtTime(t: number, fps: number) {
   return `${m}:${s.toString().padStart(2, "0")}.${f.toString().padStart(2, "0")}`;
 }
 
+function sameBox(a: ClipBox | null, b: ClipBox | null) {
+  if (!a || !b) return a === b;
+  return Math.abs(a.cx - b.cx) < 0.5 && Math.abs(a.cy - b.cy) < 0.5 && Math.abs(a.w - b.w) < 0.5
+    && Math.abs(a.h - b.h) < 0.5 && Math.abs(a.rotation - b.rotation) < 0.05;
+}
+
+/** Axis-aligned half extents of a rotated box. */
+function halfExtents(b: ClipBox) {
+  const r = (b.rotation * Math.PI) / 180;
+  const c = Math.abs(Math.cos(r));
+  const s = Math.abs(Math.sin(r));
+  return { hw: (b.w * c + b.h * s) / 2, hh: (b.w * s + b.h * c) / 2 };
+}
+
+type Gesture =
+  | { mode: "move"; id: string; px: number; py: number; box: ClipBox; ax: number; ay: number }
+  | { mode: "scale"; id: string; box: ClipBox; dist: number; scale: number; font: number }
+  | { mode: "rotate"; id: string; box: ClipBox; angle: number; rotation: number };
+
 export function Compositor() {
+  const { t } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const surfaceRef = useRef<HTMLDivElement>(null);
@@ -48,15 +84,21 @@ export function Compositor() {
   const setIsPlaying = useEditorStore((s) => s.setIsPlaying);
   const toggleLoop = useEditorStore((s) => s.toggleLoop);
   const addTextClip = useEditorStore((s) => s.addTextClip);
+  const addClipFromMedia = useEditorStore((s) => s.addClipFromMedia);
   const selectedClipIds = useEditorStore((s) => s.selectedClipIds);
   const selectClip = useEditorStore((s) => s.selectClip);
   const updateTextClip = useEditorStore((s) => s.updateTextClip);
   const duration = useEditorStore(selectTimelineDuration);
+  const timelineOpen = useEditorUiStore((s) => s.timelineOpen);
+  const setTimelineOpen = useEditorUiStore((s) => s.setTimelineOpen);
+  const setCanvasFocus = useEditorUiStore((s) => s.setCanvasFocus);
+  const quota = useEditorQuota();
 
   // ── Element pools ──
   const videoPool = useRef<Map<string, HTMLVideoElement>>(new Map());
   const audioPool = useRef<Map<string, HTMLAudioElement>>(new Map());
   const imagePool = useRef<Map<string, HTMLImageElement>>(new Map());
+  const sources = useMemo(() => ({ videos: videoPool.current, images: imagePool.current }), []);
 
   // Provision elements when media changes.
   useEffect(() => {
@@ -109,35 +151,40 @@ export function Compositor() {
     }
   }, [isPlaying]);
 
+  // Selection box, refreshed from the render loop so it follows animations,
+  // playback and late-decoding media without its own timers.
+  const [selBox, setSelBox] = useState<ClipBox | null>(null);
+  const selBoxRef = useRef<ClipBox | null>(null);
+
   // ── Render loop ──
   useEffect(() => {
     let raf = 0;
     const trackZ = (trackId: string) => {
-      const idx = tracks.findIndex((t) => t.id === trackId);
+      const idx = tracks.findIndex((tr) => tr.id === trackId);
       return idx < 0 ? 0 : idx;
     };
 
     const tick = () => {
       // Advance playhead.
       const state = useEditorStore.getState();
-      let t = state.currentTime;
+      let time = state.currentTime;
       if (state.isPlaying && playStartedRef.current) {
-        t = playStartedRef.current.time + (performance.now() - playStartedRef.current.wall) / 1000;
+        time = playStartedRef.current.time + (performance.now() - playStartedRef.current.wall) / 1000;
         const dur = selectTimelineDuration(state);
-        if (dur > 0 && t >= dur) {
+        if (dur > 0 && time >= dur) {
           if (state.isLooping) {
             playStartedRef.current = { wall: performance.now(), time: 0 };
-            t = 0;
+            time = 0;
           } else {
-            t = dur;
+            time = dur;
             state.setIsPlaying(false);
           }
         }
-        state.setCurrentTime(t);
+        state.setCurrentTime(time);
       }
 
       // Determine active clips (audio still uses simple active set; visuals use render-ops).
-      const active = state.clips.filter((c) => t >= c.start && t < c.start + c.duration);
+      const active = state.clips.filter((c) => time >= c.start && time < c.start + c.duration);
 
       // Compute visual render ops (covers normal + outgoing + incoming-preroll transitions).
       const isVisualTrack = (trackId: string) => {
@@ -147,7 +194,7 @@ export function Compositor() {
       const renderOps: RenderOp[] = computeRenderOps(
         state.clips,
         isVisualTrack,
-        t,
+        time,
         state.settings.width,
       );
 
@@ -164,7 +211,7 @@ export function Compositor() {
         activeVideoMediaIds.add(mc.mediaId);
         const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
         const localT =
-          op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * speed;
+          op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (time - mc.start) * speed;
         if (state.isPlaying) {
           if (v.playbackRate !== speed) v.playbackRate = speed;
           if (Math.abs(v.currentTime - localT) > 0.25) v.currentTime = localT;
@@ -180,7 +227,7 @@ export function Compositor() {
         if (c.kind !== "audio") continue;
         const mc = c as MediaClip;
         const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
-        const localT = mc.trimIn + (t - mc.start) * speed;
+        const localT = mc.trimIn + (time - mc.start) * speed;
         const a = audioPool.current.get(mc.mediaId);
         const track = state.tracks.find((tr) => tr.id === mc.trackId);
         if (!a) continue;
@@ -208,12 +255,14 @@ export function Compositor() {
       // Draw to canvas.
       const canvas = canvasRef.current;
       if (canvas) {
-        if (canvas.width !== state.settings.width) canvas.width = state.settings.width;
-        if (canvas.height !== state.settings.height) canvas.height = state.settings.height;
+        const W = state.settings.width;
+        const H = state.settings.height;
+        if (canvas.width !== W) canvas.width = W;
+        if (canvas.height !== H) canvas.height = H;
         const ctx = canvas.getContext("2d");
         if (ctx) {
           ctx.fillStyle = state.settings.background;
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillRect(0, 0, W, H);
 
           // Sort by track index then preserve op order (so incoming draws over outgoing where alpha overlaps).
           const ordered = renderOps.slice().sort(
@@ -225,12 +274,22 @@ export function Compositor() {
             if (op.translateX) ctx.translate(op.translateX, 0);
             if (op.clipRect) {
               ctx.beginPath();
-              ctx.rect(op.clipRect.x, 0, op.clipRect.w, canvas.height);
+              ctx.rect(op.clipRect.x, 0, op.clipRect.w, H);
               ctx.clip();
             }
             ctx.globalAlpha = op.alpha;
-            drawClip(ctx, canvas, op.clip, t, videoPool.current, imagePool.current);
+            drawClip(ctx, W, H, op.clip, time, sources);
             ctx.restore();
+          }
+
+          // Keep the selection box in step with what was just drawn.
+          const selId = state.selectedClipIds.length === 1 ? state.selectedClipIds[0] : null;
+          const sel = selId ? state.clips.find((c) => c.id === selId) : null;
+          const visible = sel && isVisualClip(sel) && time >= sel.start && time <= sel.start + sel.duration;
+          const next = visible ? clipBox(ctx, sel, W, H, sources) : null;
+          if (!sameBox(next, selBoxRef.current)) {
+            selBoxRef.current = next;
+            setSelBox(next);
           }
         }
       }
@@ -239,7 +298,7 @@ export function Compositor() {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [tracks, clips, settings]);
+  }, [tracks, clips, settings, sources]);
 
   // ── Layout: scale canvas to fit (sync initial measurement + observer) ──
   const [scale, setScale] = useState(0);
@@ -313,59 +372,56 @@ export function Compositor() {
   // reliably wake the ResizeObserver, so re-measure on every switch.
   useCloseOnSurfaceSwitch(measureWhenVisible);
 
-  // ── Canvas interactions: hit-test, click-select, drag, right-click, drop ──
-  const trackZIndex = useCallback(
-    (trackId: string) => {
-      const i = tracks.findIndex((t) => t.id === trackId);
-      return i < 0 ? -1 : i;
-    },
-    [tracks],
-  );
+  // Arrow keys nudge the selection only while the canvas is the last thing
+  // clicked; anywhere else they keep scrubbing the playhead.
+  useEffect(() => {
+    const onDown = (e: PointerEvent) => {
+      const inside = !!surfaceRef.current && surfaceRef.current.contains(e.target as Node);
+      setCanvasFocus(inside);
+    };
+    window.addEventListener("pointerdown", onDown, true);
+    return () => window.removeEventListener("pointerdown", onDown, true);
+  }, [setCanvasFocus]);
 
-  const activeTextClips = useMemo(() => {
-    return clips
-      .filter((c): c is TextClip =>
-        c.kind === "text" && currentTime >= c.start && currentTime <= c.start + c.duration,
-      )
-      .sort((a, b) => trackZIndex(a.trackId) - trackZIndex(b.trackId));
-  }, [clips, currentTime, trackZIndex]);
+  // ── Canvas interactions ──
+  const toCanvas = useCallback((clientX: number, clientY: number) => {
+    const el = surfaceRef.current;
+    if (!el) return { x: 0, y: 0 };
+    const rect = el.getBoundingClientRect();
+    return {
+      x: ((clientX - rect.left) / rect.width) * settings.width,
+      y: ((clientY - rect.top) / rect.height) * settings.height,
+    };
+  }, [settings.width, settings.height]);
 
-  const hitTestText = useCallback(
-    (clientX: number, clientY: number): TextClip | null => {
-      const canvas = canvasRef.current;
-      if (!canvas) return null;
-      const rect = canvas.getBoundingClientRect();
-      const cx = ((clientX - rect.left) / rect.width) * canvas.width;
-      const cy = ((clientY - rect.top) / rect.height) * canvas.height;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return null;
-      // Iterate top-down (last drawn is on top).
-      for (let i = activeTextClips.length - 1; i >= 0; i--) {
-        const text = activeTextClips[i];
-        const size = (text.fontSize / 1080) * canvas.height;
-        ctx.save();
-        ctx.font = `${text.fontWeight} ${size}px ${text.fontFamily}`;
-        const lines = text.text.split(/\n/);
-        const lh = size * 1.2;
-        const widths = lines.map((ln) => ctx.measureText(ln).width);
-        ctx.restore();
-        const pad = text.background ? (text.background.padding / 1080) * canvas.height : size * 0.35;
-        const boxW = Math.max(...widths, 1) + pad * 2;
-        const boxH = lines.length * lh + pad * 2;
-        const x = text.x * canvas.width;
-        const y = text.y * canvas.height;
-        let bx = x - pad;
-        if (text.align === "centre") bx = x - boxW / 2;
-        else if (text.align === "right") bx = x - boxW + pad;
-        const by = y - boxH / 2;
-        if (cx >= bx && cx <= bx + boxW && cy >= by && cy <= by + boxH) {
-          return text;
-        }
-      }
-      return null;
-    },
-    [activeTextClips],
-  );
+  /** Visible layers at the playhead, bottom to top, with their boxes. */
+  const layersAt = useCallback((): { clip: Clip; box: ClipBox }[] => {
+    const ctx = canvasRef.current?.getContext("2d");
+    if (!ctx) return [];
+    const s = useEditorStore.getState();
+    const now = s.currentTime;
+    const hidden = new Set(s.tracks.filter((tr) => tr.hidden).map((tr) => tr.id));
+    const z = (id: string) => s.tracks.findIndex((tr) => tr.id === id);
+    return s.clips
+      .filter((c) => isVisualClip(c) && !hidden.has(c.trackId) && now >= c.start && now <= c.start + c.duration)
+      .sort((a, b) => z(a.trackId) - z(b.trackId))
+      .map((clip) => ({ clip, box: clipBox(ctx, clip, s.settings.width, s.settings.height, sources) }))
+      .filter((l): l is { clip: Clip; box: ClipBox } => !!l.box);
+  }, [sources]);
+
+  const hitTest = useCallback((clientX: number, clientY: number): { clip: Clip; box: ClipBox } | null => {
+    const p = toCanvas(clientX, clientY);
+    const layers = layersAt();
+    // The current selection wins while the pointer is inside it, so a selected
+    // layer can be dragged even when something else sits on top of it.
+    const selId = useEditorStore.getState().selectedClipIds[0];
+    const sel = layers.find((l) => l.clip.id === selId);
+    if (sel && pointInBox(sel.box, p.x, p.y)) return sel;
+    for (let i = layers.length - 1; i >= 0; i--) {
+      if (pointInBox(layers[i].box, p.x, p.y)) return layers[i];
+    }
+    return null;
+  }, [toCanvas, layersAt]);
 
   const [editingTextId, setEditingTextId] = useState<string | null>(null);
   const editingText = useMemo(() => {
@@ -374,92 +430,231 @@ export function Compositor() {
     return c && c.kind === "text" ? (c as TextClip) : null;
   }, [editingTextId, clips]);
 
-  const selectedTextClip = useMemo(() => {
-    const id = selectedClipIds[0];
-    const c = clips.find((x) => x.id === id);
-    return c && c.kind === "text" ? (c as TextClip) : null;
+  const selectedClip = useMemo(() => {
+    if (selectedClipIds.length !== 1) return null;
+    const c = clips.find((x) => x.id === selectedClipIds[0]);
+    return c && isVisualClip(c) ? c : null;
   }, [selectedClipIds, clips]);
 
-  const draggingRef = useRef<{ id: string; dx: number; dy: number } | null>(null);
+  const [guides, setGuides] = useState<{ v: number[]; h: number[] }>({ v: [], h: [] });
+  const gestureRef = useRef<Gesture | null>(null);
+
+  const onGestureMove = useCallback((e: PointerEvent) => {
+    const g = gestureRef.current;
+    if (!g) return;
+    const s = useEditorStore.getState();
+    const clip = s.clips.find((c) => c.id === g.id);
+    if (!clip) return;
+    const W = s.settings.width;
+    const H = s.settings.height;
+    const p = toCanvas(e.clientX, e.clientY);
+
+    if (g.mode === "move") {
+      let cx = g.box.cx + (p.x - g.px);
+      let cy = g.box.cy + (p.y - g.py);
+      const snapDist = SNAP_PX / Math.max(0.01, scale);
+      const { hw, hh } = halfExtents(g.box);
+      const others = layersAt().filter((l) => l.clip.id !== g.id);
+      const xs = [0, W / 2, W];
+      const ys = [0, H / 2, H];
+      for (const o of others) {
+        const e2 = halfExtents(o.box);
+        xs.push(o.box.cx - e2.hw, o.box.cx, o.box.cx + e2.hw);
+        ys.push(o.box.cy - e2.hh, o.box.cy, o.box.cy + e2.hh);
+      }
+      const snap = (centre: number, half: number, lines: number[]) => {
+        let best: { d: number; line: number; shift: number } | null = null;
+        for (const edge of [centre - half, centre, centre + half]) {
+          for (const line of lines) {
+            const d = Math.abs(edge - line);
+            if (d <= snapDist && (!best || d < best.d)) best = { d, line, shift: line - edge };
+          }
+        }
+        return best;
+      };
+      const sx = e.altKey ? null : snap(cx, hw, xs);
+      const sy = e.altKey ? null : snap(cy, hh, ys);
+      if (sx) cx += sx.shift;
+      if (sy) cy += sy.shift;
+      setGuides({ v: sx ? [sx.line] : [], h: sy ? [sy.line] : [] });
+      const dx = (cx - g.box.cx) / W;
+      const dy = (cy - g.box.cy) / H;
+      s.patchClipLive(g.id, placementPatch(clip, { x: g.ax + dx, y: g.ay + dy }));
+      return;
+    }
+
+    if (g.mode === "scale") {
+      const dist = Math.hypot(p.x - g.box.cx, p.y - g.box.cy);
+      const k = dist / Math.max(1, g.dist);
+      if (clip.kind === "text") {
+        s.patchClipLive(g.id, { fontSize: Math.round(Math.max(6, Math.min(800, g.font * k))) });
+      } else {
+        s.patchClipLive(g.id, placementPatch(clip, { scale: Math.max(0.05, Math.min(20, g.scale * k)) }));
+      }
+      return;
+    }
+
+    // rotate
+    const angle = (Math.atan2(p.y - g.box.cy, p.x - g.box.cx) * 180) / Math.PI;
+    let rot = g.rotation + (angle - g.angle);
+    rot = ((rot + 540) % 360) - 180;
+    if (e.shiftKey) rot = Math.round(rot / 15) * 15;
+    else {
+      const nearest = Math.round(rot / 45) * 45;
+      if (Math.abs(rot - nearest) < 4) rot = nearest;
+    }
+    s.patchClipLive(g.id, placementPatch(clip, { rotation: Math.round(rot * 10) / 10 }));
+  }, [toCanvas, layersAt, scale]);
+
+  const onGestureEnd = useCallback(() => {
+    gestureRef.current = null;
+    setGuides({ v: [], h: [] });
+    window.removeEventListener("pointermove", onGestureMove);
+    window.removeEventListener("pointerup", onGestureEnd);
+    window.removeEventListener("pointercancel", onGestureEnd);
+  }, [onGestureMove]);
+
+  const startGesture = useCallback((g: Gesture) => {
+    useEditorStore.getState().beginGesture();
+    gestureRef.current = g;
+    window.addEventListener("pointermove", onGestureMove);
+    window.addEventListener("pointerup", onGestureEnd);
+    window.addEventListener("pointercancel", onGestureEnd);
+  }, [onGestureMove, onGestureEnd]);
+
+  useEffect(() => () => onGestureEnd(), [onGestureEnd]);
+
   const onCanvasPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (editingTextId) return;
     if (e.button !== 0) return;
-    const hit = hitTestText(e.clientX, e.clientY);
+    const hit = hitTest(e.clientX, e.clientY);
     if (!hit) {
       selectClip(null);
       return;
     }
-    if (selectedClipIds[0] !== hit.id) selectClip(hit.id);
-    const rect = (e.currentTarget as HTMLCanvasElement).getBoundingClientRect();
-    const nx = (e.clientX - rect.left) / rect.width;
-    const ny = (e.clientY - rect.top) / rect.height;
-    draggingRef.current = { id: hit.id, dx: nx - hit.x, dy: ny - hit.y };
-    window.addEventListener("pointermove", onWindowMove);
-    window.addEventListener("pointerup", onWindowUp);
+    if (e.shiftKey) { selectClip(hit.clip.id, true); return; }
+    if (selectedClipIds[0] !== hit.clip.id || selectedClipIds.length !== 1) selectClip(hit.clip.id);
+    const p = toCanvas(e.clientX, e.clientY);
+    const tr = getTransform(hit.clip);
+    startGesture({ mode: "move", id: hit.clip.id, px: p.x, py: p.y, box: hit.box, ax: tr.x, ay: tr.y });
   };
-  const onWindowMove = (e: PointerEvent) => {
-    const d = draggingRef.current;
-    const c = canvasRef.current;
-    if (!d || !c) return;
-    const rect = c.getBoundingClientRect();
-    const nx = (e.clientX - rect.left) / rect.width;
-    const ny = (e.clientY - rect.top) / rect.height;
-    updateTextClip(d.id, {
-      x: Math.max(0, Math.min(1, nx - d.dx)),
-      y: Math.max(0, Math.min(1, ny - d.dy)),
-    });
+
+  const onHandleDown = (mode: "scale" | "rotate") => (e: React.PointerEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!selectedClip || !selBox) return;
+    const p = toCanvas(e.clientX, e.clientY);
+    const tr = getTransform(selectedClip);
+    if (mode === "scale") {
+      startGesture({
+        mode, id: selectedClip.id, box: selBox,
+        dist: Math.hypot(p.x - selBox.cx, p.y - selBox.cy),
+        scale: tr.scale,
+        font: selectedClip.kind === "text" ? selectedClip.fontSize : 0,
+      });
+    } else {
+      startGesture({
+        mode, id: selectedClip.id, box: selBox,
+        angle: (Math.atan2(p.y - selBox.cy, p.x - selBox.cx) * 180) / Math.PI,
+        rotation: tr.rotation,
+      });
+    }
   };
-  const onWindowUp = () => {
-    draggingRef.current = null;
-    window.removeEventListener("pointermove", onWindowMove);
-    window.removeEventListener("pointerup", onWindowUp);
-  };
+
   const onCanvasDoubleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const hit = hitTestText(e.clientX, e.clientY);
-    if (hit) {
-      selectClip(hit.id);
-      setEditingTextId(hit.id);
+    const hit = hitTest(e.clientX, e.clientY);
+    if (hit && hit.clip.kind === "text") {
+      selectClip(hit.clip.id);
+      setEditingTextId(hit.clip.id);
+    } else if (hit) {
+      selectClip(hit.clip.id);
+      window.dispatchEvent(new Event("editor:open-inspector"));
     }
   };
   const onCanvasContextMenu = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const hit = hitTestText(e.clientX, e.clientY);
-    if (hit) selectClip(hit.id);
+    const hit = hitTest(e.clientX, e.clientY);
+    if (hit) selectClip(hit.clip.id);
     else selectClip(null);
   };
 
-  // ── Drag-and-drop text presets onto the canvas ──
-  const [isDropTarget, setIsDropTarget] = useState(false);
+  // ── Drop onto the canvas: text presets, library media, files from the computer ──
+  const [dropKind, setDropKind] = useState<"text" | "media" | null>(null);
   const onSurfaceDragOver = (e: React.DragEvent) => {
-    if (e.dataTransfer.types.includes(TEXT_DRAG_MIME)) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "copy";
-      setIsDropTarget(true);
-    }
+    const types = Array.from(e.dataTransfer.types);
+    const kind = types.includes(TEXT_DRAG_MIME)
+      ? "text"
+      : types.includes(MEDIA_DRAG_MIME) || types.includes("Files")
+        ? "media"
+        : null;
+    if (!kind) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+    setDropKind(kind);
   };
   const onSurfaceDragLeave = (e: React.DragEvent) => {
-    if (e.currentTarget === e.target) setIsDropTarget(false);
+    if (e.currentTarget === e.target) setDropKind(null);
   };
+
+  /** Put a freshly added media clip where it was dropped. */
+  const placeAt = (clipId: string | null, nx: number, ny: number) => {
+    if (!clipId) return;
+    const s = useEditorStore.getState();
+    const clip = s.clips.find((c) => c.id === clipId);
+    if (!clip || clip.kind === "audio") return;
+    s.patchClipLive(clipId, placementPatch(clip, { x: nx, y: ny, scale: s.clips.length > 1 ? 0.6 : 1 }));
+  };
+
   const onSurfaceDrop = (e: React.DragEvent) => {
-    const raw = e.dataTransfer.getData(TEXT_DRAG_MIME);
-    setIsDropTarget(false);
-    if (!raw) return;
-    e.preventDefault();
-    let preset: TextPreset | null = null;
-    try { preset = JSON.parse(raw) as TextPreset; } catch { /* noop */ }
+    setDropKind(null);
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
     const nx = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     const ny = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
-    const id = addTextClip();
-    updateTextClip(id, {
-      x: nx,
-      y: ny,
-      ...(preset
-        ? { text: preset.text, fontSize: preset.fontSize, fontWeight: preset.fontWeight }
-        : {}),
-    });
+
+    const textRaw = e.dataTransfer.getData(TEXT_DRAG_MIME);
+    if (textRaw) {
+      e.preventDefault();
+      let preset: TextPreset | null = null;
+      try { preset = JSON.parse(textRaw) as TextPreset; } catch { /* noop */ }
+      const id = addTextClip();
+      updateTextClip(id, {
+        x: nx,
+        y: ny,
+        ...(preset ? { text: preset.text, fontSize: preset.fontSize, fontWeight: preset.fontWeight } : {}),
+      });
+      return;
+    }
+
+    const mediaRaw = e.dataTransfer.getData(MEDIA_DRAG_MIME);
+    if (mediaRaw) {
+      e.preventDefault();
+      try {
+        const parsed = JSON.parse(mediaRaw) as { mediaId?: unknown };
+        if (typeof parsed.mediaId === "string") placeAt(addClipFromMedia(parsed.mediaId), nx, ny);
+      } catch { /* noop */ }
+      return;
+    }
+
+    if (e.dataTransfer.files?.length) {
+      e.preventDefault();
+      const files = Array.from(e.dataTransfer.files);
+      void importFiles(files, { wallet: quota.walletAddress }).then((ids) => {
+        ids.forEach((id, i) => placeAt(addClipFromMedia(id), Math.min(1, nx + i * 0.03), Math.min(1, ny + i * 0.03)));
+      });
+    }
   };
+
+  // Display-space geometry for the selection overlay.
+  const overlay = selBox && selectedClip && !editingTextId && scale > 0
+    ? {
+        left: (selBox.cx - selBox.w / 2) * scale,
+        top: (selBox.cy - selBox.h / 2) * scale,
+        width: selBox.w * scale,
+        height: selBox.h * scale,
+        rotation: selBox.rotation,
+      }
+    : null;
 
   return (
     <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
@@ -480,34 +675,86 @@ export function Compositor() {
             margin: "auto",
           }}
           className={cn(
-            "relative col-start-1 row-start-1 overflow-hidden rounded-lg shadow-2xl ring-1 ring-white/10 transition",
-            isDropTarget && "ring-2 ring-white/70",
+            "relative col-start-1 row-start-1 rounded-lg shadow-2xl ring-1 ring-white/10 transition",
+            dropKind && "ring-2 ring-white/70",
           )}
         >
-          <ContextMenu>
-            <ContextMenuTrigger asChild>
-              <canvas
-                ref={canvasRef}
-                width={settings.width}
-                height={settings.height}
-                onPointerDown={onCanvasPointerDown}
-                onDoubleClick={onCanvasDoubleClick}
-                onContextMenu={onCanvasContextMenu}
-                className={cn(
-                  "h-full w-full touch-none",
-                  editingTextId ? "cursor-text" : selectedTextClip ? "cursor-grab active:cursor-grabbing" : "cursor-default",
-                )}
-              />
-            </ContextMenuTrigger>
-            <CanvasContextMenu
-              textClip={selectedTextClip}
-              onEdit={(id) => setEditingTextId(id)}
-            />
-          </ContextMenu>
-          {isDropTarget && (
+          <div className="absolute inset-0 overflow-hidden rounded-lg">
+            <ContextMenu>
+              <ContextMenuTrigger asChild>
+                <canvas
+                  ref={canvasRef}
+                  width={settings.width}
+                  height={settings.height}
+                  onPointerDown={onCanvasPointerDown}
+                  onDoubleClick={onCanvasDoubleClick}
+                  onContextMenu={onCanvasContextMenu}
+                  className={cn(
+                    "h-full w-full touch-none",
+                    editingTextId ? "cursor-text" : selectedClip ? "cursor-move" : "cursor-default",
+                  )}
+                />
+              </ContextMenuTrigger>
+              <CanvasContextMenu clip={selectedClip} onEdit={(id) => setEditingTextId(id)} />
+            </ContextMenu>
+          </div>
+
+          {/* Snapping guides */}
+          {guides.v.map((x) => (
+            <div key={`v${x}`} className="pointer-events-none absolute top-0 bottom-0 w-px bg-fuchsia-400"
+              style={{ left: x * scale }} />
+          ))}
+          {guides.h.map((y) => (
+            <div key={`h${y}`} className="pointer-events-none absolute left-0 right-0 h-px bg-fuchsia-400"
+              style={{ top: y * scale }} />
+          ))}
+
+          {/* Selection box with resize and rotate handles. It may extend past
+              the page edge, which is why the surface itself does not clip. */}
+          {overlay && (
+            <div
+              className="pointer-events-none absolute"
+              style={{
+                left: overlay.left,
+                top: overlay.top,
+                width: overlay.width,
+                height: overlay.height,
+                transform: `rotate(${overlay.rotation}deg)`,
+              }}
+            >
+              <div className="absolute inset-0 rounded-[2px] ring-2 ring-white shadow-[0_0_0_1px_rgba(0,0,0,0.4)]" />
+              {(["nw", "ne", "sw", "se"] as const).map((corner) => (
+                <button
+                  key={corner}
+                  type="button"
+                  aria-label={t("editor.canvas.resize")}
+                  onPointerDown={onHandleDown("scale")}
+                  className={cn(
+                    "pointer-events-auto absolute h-5 w-5 -translate-x-1/2 -translate-y-1/2 touch-none",
+                    "after:absolute after:left-1/2 after:top-1/2 after:h-3 after:w-3 after:-translate-x-1/2 after:-translate-y-1/2",
+                    "after:rounded-full after:border after:border-black/40 after:bg-white after:shadow",
+                    corner === "nw" && "left-0 top-0 cursor-nwse-resize",
+                    corner === "ne" && "left-full top-0 cursor-nesw-resize",
+                    corner === "sw" && "left-0 top-full cursor-nesw-resize",
+                    corner === "se" && "left-full top-full cursor-nwse-resize",
+                  )}
+                />
+              ))}
+              <button
+                type="button"
+                aria-label={t("editor.canvas.rotate")}
+                onPointerDown={onHandleDown("rotate")}
+                className="pointer-events-auto absolute left-1/2 top-full mt-3 flex h-6 w-6 -translate-x-1/2 touch-none cursor-grab items-center justify-center rounded-full border border-black/40 bg-white text-black shadow active:cursor-grabbing"
+              >
+                <RotateCw className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          )}
+
+          {dropKind && (
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white/[0.03]">
               <div className="rounded-lg border border-dashed border-white/50 px-4 py-2 text-xs font-medium uppercase tracking-wide text-white/90 backdrop-blur-[8px]">
-                Drop to add text
+                {dropKind === "text" ? t("editor.canvas.dropText") : t("editor.canvas.dropMedia")}
               </div>
             </div>
           )}
@@ -532,6 +779,7 @@ export function Compositor() {
                 color: editingText.color,
                 fontFamily: editingText.fontFamily,
                 fontWeight: editingText.fontWeight,
+                fontStyle: editingText.italic ? "italic" : "normal",
                 fontSize: `${(editingText.fontSize / 1080) * settings.height * scale}px`,
                 textAlign: editingText.align === "centre" ? "center" : editingText.align,
                 background: "transparent",
@@ -541,7 +789,7 @@ export function Compositor() {
                 outline: "none",
                 resize: "none",
                 minWidth: 80,
-                lineHeight: 1.2,
+                lineHeight: editingText.lineHeight ?? 1.2,
                 caretColor: "#fff",
               }}
               rows={Math.max(1, editingText.text.split("\n").length)}
@@ -561,7 +809,7 @@ export function Compositor() {
             setIsPlaying(!isPlaying);
           }}
           className="h-8 w-8 rounded-md text-white hover:bg-white/10"
-          aria-label={isPlaying ? "Pause" : "Play"}
+          aria-label={isPlaying ? t("editor.canvas.pause") : t("editor.canvas.play")}
           disabled={duration <= 0}
         >
           {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
@@ -571,7 +819,7 @@ export function Compositor() {
           variant="ghost"
           onClick={() => { setIsPlaying(false); setCurrentTime(0); }}
           className="h-8 w-8 rounded-md text-white/80 hover:bg-white/10"
-          aria-label="Reset to start"
+          aria-label={t("editor.canvas.resetToStart")}
           disabled={duration <= 0}
         >
           <RotateCcw className="h-4 w-4" />
@@ -584,7 +832,7 @@ export function Compositor() {
             "h-8 w-8 rounded-md hover:bg-white/10",
             isLooping ? "text-white" : "text-white/50",
           )}
-          aria-label="Toggle loop"
+          aria-label={t("editor.canvas.toggleLoop")}
         >
           <Repeat className="h-4 w-4" />
         </Button>
@@ -600,200 +848,109 @@ export function Compositor() {
           className="min-w-0 flex-1"
           disabled={duration <= 0}
         />
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={() => setTimelineOpen(!timelineOpen)}
+          className="h-8 w-8 rounded-md text-white/80 hover:bg-white/10"
+          aria-label={timelineOpen ? t("editor.canvas.hideTimeline") : t("editor.canvas.showTimeline")}
+          title={timelineOpen ? t("editor.canvas.hideTimeline") : t("editor.canvas.showTimeline")}
+        >
+          {timelineOpen ? <PanelBottomClose className="h-4 w-4" /> : <PanelBottomOpen className="h-4 w-4" />}
+        </Button>
       </div>
     </section>
   );
 }
 
 function CanvasContextMenu({
-  textClip,
+  clip,
   onEdit,
 }: {
-  textClip: TextClip | null;
+  clip: Clip | null;
   onEdit: (id: string) => void;
 }) {
+  const { t } = useTranslation();
   const moveTrack = useEditorStore((s) => s.moveTrack);
-  const duplicateSelected = useEditorStore((s) => s.duplicateSelected);
+  const duplicateOnCanvas = useEditorStore((s) => s.duplicateOnCanvas);
   const rippleDelete = useEditorStore((s) => s.rippleDelete);
   const addTextClip = useEditorStore((s) => s.addTextClip);
+  const patchClip = useEditorStore((s) => s.patchClip);
   const tracks = useEditorStore((s) => s.tracks);
+  const menuClass = "w-56 border-white/10 bg-black/85 text-white backdrop-blur-[24px]";
 
-  if (!textClip) {
+  if (!clip) {
     return (
-      <ContextMenuContent className="w-52 border-white/10 bg-black/85 text-white backdrop-blur-[24px]">
+      <ContextMenuContent className={menuClass}>
         <ContextMenuItem onSelect={() => addTextClip()}>
-          <Type className="mr-2 h-3.5 w-3.5" /> Add text
+          <Type className="mr-2 h-3.5 w-3.5" /> {t("editor.menu.addText")}
         </ContextMenuItem>
       </ContextMenuContent>
     );
   }
 
-  const idx = tracks.findIndex((t) => t.id === textClip.trackId);
+  const idx = tracks.findIndex((tr) => tr.id === clip.trackId);
   const canForward = idx >= 0 && idx < tracks.length - 1;
   const canBackward = idx > 0;
+  const tr = getTransform(clip);
+  const mediaClip = clip.kind === "image" || clip.kind === "video" ? clip : null;
 
   return (
-    <ContextMenuContent className="w-56 border-white/10 bg-black/85 text-white backdrop-blur-[24px]">
-      <ContextMenuItem onSelect={() => onEdit(textClip.id)}>
-        <Pencil className="mr-2 h-3.5 w-3.5" /> Edit text
+    <ContextMenuContent className={menuClass}>
+      {clip.kind === "text" && (
+        <>
+          <ContextMenuItem onSelect={() => onEdit(clip.id)}>
+            <Pencil className="mr-2 h-3.5 w-3.5" /> {t("editor.menu.editText")}
+          </ContextMenuItem>
+          <ContextMenuSeparator className="bg-white/10" />
+        </>
+      )}
+      {mediaClip && (
+        <>
+          <ContextMenuItem
+            onSelect={() => patchClip(clip.id, { fit: "cover", ...placementPatch(mediaClip, { x: 0.5, y: 0.5, scale: 1, rotation: 0 }) })}
+          >
+            <Maximize className="mr-2 h-3.5 w-3.5" /> {t("editor.menu.fillCanvas")}
+          </ContextMenuItem>
+          <ContextMenuItem
+            onSelect={() => patchClip(clip.id, { fit: "contain", ...placementPatch(mediaClip, { x: 0.5, y: 0.5, scale: 1, rotation: 0 }) })}
+          >
+            <Minimize className="mr-2 h-3.5 w-3.5" /> {t("editor.menu.fitCanvas")}
+          </ContextMenuItem>
+          <ContextMenuItem onSelect={() => patchClip(clip.id, placementPatch(clip, { flipH: !tr.flipH }))}>
+            <FlipHorizontal2 className="mr-2 h-3.5 w-3.5" /> {t("editor.menu.flipH")}
+          </ContextMenuItem>
+          <ContextMenuItem onSelect={() => patchClip(clip.id, placementPatch(clip, { flipV: !tr.flipV }))}>
+            <FlipVertical2 className="mr-2 h-3.5 w-3.5" /> {t("editor.menu.flipV")}
+          </ContextMenuItem>
+        </>
+      )}
+      <ContextMenuItem onSelect={() => patchClip(clip.id, placementPatch(clip, { x: 0.5, y: 0.5 }))}>
+        <Crosshair className="mr-2 h-3.5 w-3.5" /> {t("editor.menu.centre")}
       </ContextMenuItem>
       <ContextMenuSeparator className="bg-white/10" />
-      <ContextMenuItem disabled={!canForward} onSelect={() => moveTrack(textClip.trackId, "front")}>
-        <ChevronsUp className="mr-2 h-3.5 w-3.5" /> Bring to front
+      <ContextMenuItem disabled={!canForward} onSelect={() => moveTrack(clip.trackId, "front")}>
+        <ChevronsUp className="mr-2 h-3.5 w-3.5" /> {t("editor.menu.bringToFront")}
       </ContextMenuItem>
-      <ContextMenuItem disabled={!canForward} onSelect={() => moveTrack(textClip.trackId, "forward")}>
-        <ChevronUp className="mr-2 h-3.5 w-3.5" /> Bring forward
+      <ContextMenuItem disabled={!canForward} onSelect={() => moveTrack(clip.trackId, "forward")}>
+        <ChevronUp className="mr-2 h-3.5 w-3.5" /> {t("editor.menu.bringForward")}
       </ContextMenuItem>
-      <ContextMenuItem disabled={!canBackward} onSelect={() => moveTrack(textClip.trackId, "backward")}>
-        <ChevronDown className="mr-2 h-3.5 w-3.5" /> Send backward
+      <ContextMenuItem disabled={!canBackward} onSelect={() => moveTrack(clip.trackId, "backward")}>
+        <ChevronDown className="mr-2 h-3.5 w-3.5" /> {t("editor.menu.sendBackward")}
       </ContextMenuItem>
-      <ContextMenuItem disabled={!canBackward} onSelect={() => moveTrack(textClip.trackId, "back")}>
-        <ChevronsDown className="mr-2 h-3.5 w-3.5" /> Send to back
+      <ContextMenuItem disabled={!canBackward} onSelect={() => moveTrack(clip.trackId, "back")}>
+        <ChevronsDown className="mr-2 h-3.5 w-3.5" /> {t("editor.menu.sendToBack")}
       </ContextMenuItem>
       <ContextMenuSeparator className="bg-white/10" />
-      <ContextMenuItem onSelect={() => duplicateSelected()}>
-        <Copy className="mr-2 h-3.5 w-3.5" /> Duplicate
+      <ContextMenuItem onSelect={() => duplicateOnCanvas()}>
+        <Copy className="mr-2 h-3.5 w-3.5" /> {t("editor.menu.duplicate")}
       </ContextMenuItem>
       <ContextMenuItem
-        onSelect={() => rippleDelete([textClip.id])}
+        onSelect={() => rippleDelete([clip.id])}
         className="text-red-300 focus:text-red-200"
       >
-        <Trash2 className="mr-2 h-3.5 w-3.5" /> Delete
+        <Trash2 className="mr-2 h-3.5 w-3.5" /> {t("editor.menu.delete")}
       </ContextMenuItem>
     </ContextMenuContent>
   );
 }
-
-function cssFilterFor(clip: Clip, extraBlur = 0): string {
-  const parts: string[] = [];
-  if (clip.kind === "video" || clip.kind === "image") {
-    const e = (clip as MediaClip).effects;
-    if (e) {
-      if (e.brightness !== undefined && e.brightness !== 1) parts.push(`brightness(${e.brightness})`);
-      if (e.contrast !== undefined && e.contrast !== 1) parts.push(`contrast(${e.contrast})`);
-      if (e.saturation !== undefined && e.saturation !== 1) parts.push(`saturate(${e.saturation})`);
-      if (e.grayscale !== undefined && e.grayscale > 0) parts.push(`grayscale(${e.grayscale})`);
-      if (e.sepia !== undefined && e.sepia > 0) parts.push(`sepia(${e.sepia})`);
-      if (e.hueRotate !== undefined && e.hueRotate !== 0) parts.push(`hue-rotate(${e.hueRotate}deg)`);
-      if (e.invert !== undefined && e.invert > 0) parts.push(`invert(${e.invert})`);
-      const totalBlur = (e.blur ?? 0) + extraBlur;
-      if (totalBlur > 0) parts.push(`blur(${totalBlur}px)`);
-    } else if (extraBlur > 0) {
-      parts.push(`blur(${extraBlur}px)`);
-    }
-  } else if (extraBlur > 0) {
-    parts.push(`blur(${extraBlur}px)`);
-  }
-  return parts.length ? parts.join(" ") : "none";
-}
-
-function drawClip(
-  ctx: CanvasRenderingContext2D,
-  canvas: HTMLCanvasElement,
-  clip: Clip,
-  t: number,
-  vPool: Map<string, HTMLVideoElement>,
-  iPool: Map<string, HTMLImageElement>,
-) {
-  const anim = computeClipAnimation(clip, t);
-  const hasCustomAnim = !!clip.animateIn || !!clip.animateOut;
-  const prevFilter = ctx.filter;
-  const prevAlpha = ctx.globalAlpha;
-
-  // Compose animation transforms around canvas centre.
-  ctx.save();
-  const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
-  ctx.translate(cx + anim.dx * canvas.width, cy + anim.dy * canvas.height);
-  if (anim.scale !== 1) ctx.scale(anim.scale, anim.scale);
-  ctx.translate(-cx, -cy);
-  ctx.globalAlpha = prevAlpha * anim.alpha;
-  ctx.filter = cssFilterFor(clip, anim.blurPx);
-
-  if (clip.kind === "video") {
-    const v = vPool.get(clip.mediaId);
-    if (v && v.videoWidth) drawContain(ctx, v, v.videoWidth, v.videoHeight, canvas.width, canvas.height);
-  } else if (clip.kind === "image") {
-    const img = iPool.get(clip.mediaId);
-    if (img && img.naturalWidth) drawContain(ctx, img, img.naturalWidth, img.naturalHeight, canvas.width, canvas.height);
-  } else if (clip.kind === "text") {
-    const text = clip as TextClip;
-    if (!hasCustomAnim) {
-      // Preserve historical soft fade for text clips without an explicit animation.
-      const FADE = 0.3;
-      const into = t - text.start;
-      const outof = text.start + text.duration - t;
-      const fade = Math.max(0, Math.min(1, Math.min(into / FADE, outof / FADE, 1)));
-      ctx.globalAlpha = prevAlpha * fade;
-    }
-    const size = (text.fontSize / 1080) * canvas.height;
-    ctx.font = `${text.fontWeight} ${size}px ${text.fontFamily}`;
-    ctx.textBaseline = "middle";
-    ctx.textAlign = text.align === "centre" ? "center" : text.align;
-    const x = text.x * canvas.width;
-    const y = text.y * canvas.height;
-    const lines = text.text.split(/\n/);
-    const lh = size * 1.2;
-    const startY = y - ((lines.length - 1) * lh) / 2;
-
-    if (text.background && text.background.opacity > 0) {
-      const pad = (text.background.padding / 1080) * canvas.height;
-      const radius = Math.max(0, (text.background.radius / 1080) * canvas.height);
-      const widths = lines.map((ln) => ctx.measureText(ln).width);
-      const boxW = Math.max(...widths, 1) + pad * 2;
-      const boxH = lines.length * lh + pad * 2;
-      let bx = x - pad;
-      if (text.align === "centre") bx = x - boxW / 2;
-      else if (text.align === "right") bx = x - boxW + pad;
-      const by = startY - lh / 2 - pad;
-      const bgAlpha = ctx.globalAlpha;
-      ctx.globalAlpha = bgAlpha * text.background.opacity;
-      ctx.fillStyle = text.background.color;
-      roundRectPath(ctx, bx, by, boxW, boxH, radius);
-      ctx.fill();
-      ctx.globalAlpha = bgAlpha;
-    }
-
-    if (text.stroke && text.stroke.width > 0) {
-      ctx.lineWidth = (text.stroke.width / 1080) * canvas.height;
-      ctx.strokeStyle = text.stroke.color;
-      ctx.lineJoin = "round";
-      lines.forEach((ln, i) => ctx.strokeText(ln, x, startY + i * lh));
-    }
-
-    ctx.fillStyle = text.color;
-    lines.forEach((ln, i) => ctx.fillText(ln, x, startY + i * lh));
-  }
-
-  ctx.restore();
-  ctx.filter = prevFilter;
-  ctx.globalAlpha = prevAlpha;
-}
-
-function roundRectPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
-  const rr = Math.max(0, Math.min(r, w / 2, h / 2));
-  ctx.beginPath();
-  ctx.moveTo(x + rr, y);
-  ctx.arcTo(x + w, y, x + w, y + h, rr);
-  ctx.arcTo(x + w, y + h, x, y + h, rr);
-  ctx.arcTo(x, y + h, x, y, rr);
-  ctx.arcTo(x, y, x + w, y, rr);
-  ctx.closePath();
-}
-
-function drawContain(
-  ctx: CanvasRenderingContext2D,
-  src: CanvasImageSource,
-  sw: number,
-  sh: number,
-  dw: number,
-  dh: number,
-) {
-  const scale = Math.min(dw / sw, dh / sh);
-  const w = sw * scale;
-  const h = sh * scale;
-  const x = (dw - w) / 2;
-  const y = (dh - h) / 2;
-  ctx.drawImage(src, x, y, w, h);
-}
-

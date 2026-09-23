@@ -27,6 +27,7 @@ export default function EditorPage() {
   const inspectorOpen = useEditorUiStore((s) => s.inspectorOpen);
   const setInspectorOpen = useEditorUiStore((s) => s.setInspectorOpen);
   const setPanel = useEditorUiStore((s) => s.setPanel);
+  const timelineOpen = useEditorUiStore((s) => s.timelineOpen);
 
   // The inspector is contextual: it earns a column only once a clip is
   // selected, which leaves the canvas as wide as possible the rest of the time.
@@ -67,9 +68,13 @@ export default function EditorPage() {
             )}
           </div>
 
-          <div className="h-[34vh] min-h-[168px] w-full shrink-0 overflow-hidden border-t border-white/10">
-            <Timeline />
-          </div>
+          {/* Collapsible so a photo or graphic gets the whole height; the
+              toggle sits at the end of the playback bar. */}
+          {timelineOpen && (
+            <div className="h-[34vh] min-h-[168px] w-full shrink-0 overflow-hidden border-t border-white/10">
+              <Timeline />
+            </div>
+          )}
 
           <MobileBottomBar />
         </div>

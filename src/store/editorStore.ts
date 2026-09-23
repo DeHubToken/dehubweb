@@ -80,7 +80,13 @@ interface EditorState extends EditableState {
   moveTrack: (id: string, direction: "front" | "back" | "forward" | "backward") => void;
   reorderTrack: (id: string, toIndex: number) => void;
 
-  addClipFromMedia: (mediaId: string, trackId?: string, start?: number) => string | null;
+  /**
+   * `layer: true` stacks the clip over whatever is at the playhead (a new
+   * layer on the page) instead of appending it on the first video track.
+   */
+  addClipFromMedia: (mediaId: string, trackId?: string, start?: number, opts?: { layer?: boolean }) => string | null;
+  /** Canva-style duplicate: same moment in time, one layer up, nudged on the canvas. */
+  duplicateOnCanvas: () => void;
   addTextClip: (trackId?: string, start?: number) => string;
   moveClip: (id: string, patch: { start?: number; trackId?: string }) => void;
   trimClip: (id: string, edge: "in" | "out", deltaSeconds: number) => void;
@@ -94,6 +100,16 @@ interface EditorState extends EditableState {
   updateMediaClip: (id: string, patch: Partial<MediaClip>) => void;
   setClipTransition: (id: string, transition: Clip["transitionOut"] | null) => void;
   updateSettings: (patch: Partial<ProjectSettings>) => void;
+
+  /**
+   * Canvas gestures (drag, resize, rotate) fire dozens of updates a second.
+   * `beginGesture` records one undo step up front, and `patchClipLive` applies
+   * the in-between states without touching history, so one drag is one undo.
+   */
+  beginGesture: () => void;
+  patchClipLive: (id: string, patch: Partial<MediaClip> | Partial<TextClip>) => void;
+  /** Patch any clip through history, whatever its kind. */
+  patchClip: (id: string, patch: Partial<MediaClip> | Partial<TextClip>) => void;
 }
 
 const MAX_HISTORY = 50;
@@ -307,16 +323,34 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     set({ past, future: [], tracks: arr });
   },
 
-  addClipFromMedia: (mediaId, trackId, start) => {
+  addClipFromMedia: (mediaId, trackId, start, opts) => {
 
     const s = get();
     const media = s.media.find((m) => m.id === mediaId);
     if (!media) return null;
 
     const wantKind: TrackKind = media.kind === "audio" ? "audio" : "video";
+    const clipLength =
+      media.kind === "image"
+        ? 5
+        : Number.isFinite(media.duration) && (media.duration ?? 0) > 0
+        ? (media.duration as number)
+        : 5;
+    const at = start !== undefined ? start : s.currentTime;
+    // In a still design (no video or audio yet) a new picture is another layer
+    // on the same page, like a graphics editor, not the next shot in a
+    // sequence. Pick a video track that is free at the playhead, or open one.
+    const isStillDesign = !s.clips.some((c) => c.kind === "video" || c.kind === "audio");
+    const layer = (opts?.layer ?? (media.kind === "image" && isStillDesign)) && !trackId;
+    const freeTrack = layer
+      ? s.tracks.find((t) => t.kind === "video" && !s.clips.some(
+          (c) => c.trackId === t.id && c.start < at + clipLength && c.start + c.duration > at,
+        ))
+      : undefined;
     let targetTrack =
       (trackId && s.tracks.find((t) => t.id === trackId && t.kind === wantKind)) ||
-      s.tracks.find((t) => t.kind === wantKind);
+      freeTrack ||
+      (layer ? undefined : s.tracks.find((t) => t.kind === wantKind));
 
     let tracks = s.tracks;
     if (!targetTrack) {
@@ -331,15 +365,8 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       tracks = [...s.tracks, targetTrack];
     }
 
-    const duration =
-      media.kind === "image"
-        ? 5
-        : Number.isFinite(media.duration) && (media.duration ?? 0) > 0
-        ? (media.duration as number)
-        : 5;
-
-    const desired = start !== undefined ? start : s.currentTime;
-    const placedStart = findFreeStart(s.clips, targetTrack.id, desired, duration);
+    const duration = clipLength;
+    const placedStart = findFreeStart(s.clips, targetTrack.id, at, duration);
 
     const clip: MediaClip = {
       id: nanoid(10),
@@ -529,6 +556,37 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     set({ past, future: [], clips: workingClips, selectedClipIds: newIds });
   },
 
+  duplicateOnCanvas: () => {
+    const s = get();
+    if (!s.selectedClipIds.length) return;
+    const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
+    let tracks = s.tracks.slice();
+    const additions: Clip[] = [];
+    for (const id of s.selectedClipIds) {
+      const orig = s.clips.find((c) => c.id === id);
+      if (!orig) continue;
+      const src = tracks.find((t) => t.id === orig.trackId);
+      if (!src) continue;
+      const count = tracks.filter((t) => t.kind === src.kind).length + 1;
+      const label = src.kind === "text" ? "Text" : src.kind === "audio" ? "Audio" : "Video";
+      const track: Track = { id: nanoid(8), kind: src.kind, name: `${label} ${count}`, muted: false, hidden: false };
+      tracks.splice(tracks.indexOf(src) + 1, 0, track);
+      const nudge = 0.03;
+      const copy = { ...orig, id: nanoid(10), trackId: track.id } as Clip;
+      if (copy.kind === "text") {
+        copy.x = Math.min(1, copy.x + nudge);
+        copy.y = Math.min(1, copy.y + nudge);
+      } else if (copy.kind !== "audio") {
+        const tf = copy.transform ?? { x: 0.5, y: 0.5, scale: 1, rotation: 0 };
+        copy.transform = { ...tf, x: Math.min(1, tf.x + nudge), y: Math.min(1, tf.y + nudge) };
+      }
+      additions.push(copy);
+    }
+    if (!additions.length) return;
+    tracks = tracks.slice();
+    set({ past, future: [], tracks, clips: [...s.clips, ...additions], selectedClipIds: additions.map((c) => c.id) });
+  },
+
   copySelectedToClipboard: () => {
     const s = get();
     if (!s.selectedClipIds.length) return;
@@ -644,6 +702,20 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const s = get();
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
     set({ past, future: [], settings: { ...s.settings, ...patch } });
+  },
+
+  beginGesture: () => {
+    const s = get();
+    set({ past: [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY), future: [] });
+  },
+
+  patchClipLive: (id, patch) =>
+    set((s) => ({ clips: s.clips.map((c) => (c.id === id ? ({ ...c, ...patch } as Clip) : c)) })),
+
+  patchClip: (id, patch) => {
+    const s = get();
+    const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
+    set({ past, future: [], clips: s.clips.map((c) => (c.id === id ? ({ ...c, ...patch } as Clip) : c)) });
   },
 }));
 
