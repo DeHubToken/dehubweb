@@ -5803,7 +5803,7 @@
     "export": {
       "title": "İndir",
       "stillDescription": "Geçerli kareyi resim olarak kaydet.",
-      "videoDescription": "Zaman çizelgenizi video dosyasına oluşturun.",
+      "videoDescription": "Zaman çizelgenizi video dosyası olarak işleyin.",
       "unsupported": "Tarayıcınız video dışa aktaramıyor. Chrome, Edge, Brave veya Arc'ı deneyin veya bunun yerine bir PNG veya JPG indirin.",
       "format": "Dosya türü",
       "resolution": "Boyut",
@@ -5841,7 +5841,7 @@
       "alignCentre": "Ortaya hizala",
       "alignRight": "Sağa hizala",
       "alignTop": "Yukarı hizala",
-      "alignMiddle": "Ortaya hizala",
+      "alignMiddle": "Dikey ortaya hizala",
       "alignBottom": "Aşağı hizala",
       "size": "Boyut {{value}}%",
       "rotation": "Döndürme {{value}}°",
@@ -5863,7 +5863,7 @@
       "lineSpacing": "Satır aralığı {{value}}",
       "shadow": "Gölge",
       "colour": "Renk",
-      "shadowOpacity": "Güç {{value}}",
+      "shadowOpacity": "Yoğunluk {{value}}%",
       "shadowBlur": "Bulanıklık {{value}}",
       "shadowX": "Ofset X {{value}}",
       "shadowY": "Ofset Y {{value}}"
@@ -5876,10 +5876,10 @@
       "flipH": "Yatay çevir",
       "flipV": "Dikey çevir",
       "centre": "Sayfada ortala",
-      "bringToFront": "Öne getir",
+      "bringToFront": "En öne getir",
       "bringForward": "Öne getir",
       "sendBackward": "Geriye gönder",
-      "sendToBack": "Arkaya gönder",
+      "sendToBack": "En arkaya gönder",
       "duplicate": "Çoğalt",
       "delete": "Sil"
     }

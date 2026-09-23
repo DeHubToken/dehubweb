@@ -5817,12 +5817,12 @@
       "cancel": "Abbrechen",
       "cut": "Schneiden",
       "download": "Herunterladen",
-      "done": "Gespeichert {{filename}}",
+      "done": "{{filename}} gespeichert",
       "empty": "Füge zuerst etwas zu deinem Design hinzu.",
       "failed": "Download fehlgeschlagen",
       "cancelled": "Download abgebrochen",
       "preparing": "Vorbereitung…",
-      "rendering": "Rendering…"
+      "rendering": "Wird gerendert…"
     },
     "inspector": {
       "selectHint": "Wähle eine Ebene auf der Leinwand oder einen Clip in der Zeitleiste aus.",
@@ -5868,7 +5868,7 @@
       "fitCanvas": "An Seite anpassen",
       "flipH": "Horizontal spiegeln",
       "flipV": "Vertikal spiegeln",
-      "centre": "Mitte auf Seite",
+      "centre": "Auf Seite zentrieren",
       "bringToFront": "In den Vordergrund bringen",
       "bringForward": "Nach vorne verschieben",
       "sendBackward": "Nach hinten verschieben",

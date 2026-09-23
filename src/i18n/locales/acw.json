@@ -3443,7 +3443,7 @@
       "alignCentre": "محاذاة للوسط",
       "alignRight": "محاذاة لليمين",
       "alignTop": "محاذاة للأعلى",
-      "alignMiddle": "محاذاة للوسط",
+      "alignMiddle": "محاذاة للمنتصف",
       "alignBottom": "محاذاة للأسفل",
       "size": "الحجم {{value}}%",
       "rotation": "الدوران {{value}}°",
@@ -3466,7 +3466,7 @@
       "shadow": "ظل",
       "colour": "لون",
       "shadowOpacity": "قوة {{value}}%",
-      "shadowBlur": "تعتيم {{value}}",
+      "shadowBlur": "تمويه {{value}}",
       "shadowX": "إزاحة سينية {{value}}",
       "shadowY": "إزاحة صادية {{value}}"
     },
@@ -3478,10 +3478,10 @@
       "flipH": "قلب أفقي",
       "flipV": "قلب رأسي",
       "centre": "توسيط في الصفحة",
-      "bringToFront": "إحضار إلى الأمام",
+      "bringToFront": "إحضار إلى المقدمة",
       "bringForward": "إحضار للأمام",
       "sendBackward": "إرسال للخلف",
-      "sendToBack": "إرسال إلى الخلف",
+      "sendToBack": "إرسال إلى الخلفية",
       "duplicate": "مضاعفة",
       "delete": "حذف"
     }

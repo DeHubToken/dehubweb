@@ -3461,7 +3461,7 @@
       "alignCentre": "محاذاة للوسط",
       "alignRight": "محاذاة لليمين",
       "alignTop": "محاذاة للأعلى",
-      "alignMiddle": "محاذاة للوسط",
+      "alignMiddle": "محاذاة للمنتصف",
       "alignBottom": "محاذاة للأسفل",
       "size": "الحجم {{value}}%",
       "rotation": "الدوران {{value}}°",
@@ -3486,7 +3486,7 @@
       "shadowOpacity": "القوة {{value}}%",
       "shadowBlur": "طمس {{value}}",
       "shadowX": "الإزاحة X {{value}}",
-      "shadowY": "الإزاحة ص {{value}}"
+      "shadowY": "الإزاحة Y {{value}}"
     },
     "menu": {
       "addText": "إضافة نص",

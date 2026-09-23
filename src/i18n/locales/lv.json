@@ -5774,7 +5774,7 @@
     },
     "export": {
       "title": "Lejupielādēt",
-      "stillDescription": "Saglabājiet pašreizējo kadrus kā attēlu.",
+      "stillDescription": "Saglabājiet pašreizējo kadru kā attēlu.",
       "videoDescription": "Renderējiet savu laika joslu video failā.",
       "unsupported": "Jūsu pārlūkprogramma nevar eksportēt video. Mēģiniet Chrome, Edge, Brave vai Arc, vai lejupielādējiet PNG vai JPG vietā.",
       "format": "Faila tips",
@@ -5847,12 +5847,12 @@
       "fitCanvas": "Ietilpināt lapā",
       "flipH": "Apvērst horizontāli",
       "flipV": "Apvērst vertikāli",
-      "centre": "Centrs lappusē",
+      "centre": "Centrēt lapā",
       "bringToFront": "Novietot priekšplānā",
       "bringForward": "Pavirzīt uz priekšu",
       "sendBackward": "Sūtīt atpakaļ",
       "sendToBack": "Nosūtīt uz aizmuguri",
-      "duplicate": "Dublikāts",
+      "duplicate": "Dublēt",
       "delete": "Dzēst"
     }
   }

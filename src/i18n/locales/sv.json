@@ -5685,7 +5685,7 @@
     },
     "export": {
       "title": "Ladda ner",
-      "stillDescription": "Spara den aktuella ramen som en bild.",
+      "stillDescription": "Spara den aktuella bildrutan som en bild.",
       "videoDescription": "Rendera din tidslinje till en videofil.",
       "unsupported": "Din webbläsare kan inte exportera video. Prova Chrome, Edge, Brave eller Arc, eller ladda ner en PNG- eller JPG-fil istället.",
       "format": "Filtyp",
@@ -5747,22 +5747,22 @@
       "shadow": "Skugga",
       "colour": "Färg",
       "shadowOpacity": "Styrka {{value}}%",
-      "shadowBlur": "Sudda ut {{value}}",
+      "shadowBlur": "Oskärpa {{value}}",
       "shadowX": "Förskjutning X {{value}}",
       "shadowY": "Förskjutning Y {{value}}"
     },
     "menu": {
       "addText": "Lägg till text",
       "editText": "Redigera text",
-      "fillCanvas": "Fyllningssida",
+      "fillCanvas": "Fyll sidan",
       "fitCanvas": "Anpassa till sida",
       "flipH": "Vänd horisontellt",
       "flipV": "Vänd vertikalt",
       "centre": "Centrera på sidan",
-      "bringToFront": "Ta till framsidan",
-      "bringForward": "Framåt",
-      "sendBackward": "Skicka bakåt",
-      "sendToBack": "Skicka till baksidan",
+      "bringToFront": "Flytta längst fram",
+      "bringForward": "Flytta framåt",
+      "sendBackward": "Flytta bakåt",
+      "sendToBack": "Flytta längst bak",
       "duplicate": "Duplicera",
       "delete": "Radera"
     }

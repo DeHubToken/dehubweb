@@ -5706,7 +5706,7 @@
       "outputStill": "Výstup: {{width}}×{{height}}",
       "outputVideo": "Výstup: {{width}}×{{height}} při {{fps}} fps",
       "cancel": "Zrušit",
-      "cut": "Vyjmout",
+      "cut": "Střihnout",
       "download": "Stáhnout",
       "done": "Uloženo {{filename}}",
       "empty": "Nejprve přidejte do návrhu něco.",
@@ -5735,8 +5735,8 @@
       "crop": "Oříznout",
       "cropLeft": "Vlevo {{value}} %",
       "cropRight": "Vpravo {{value}} %",
-      "cropTop": "Nahoru {{value}} %",
-      "cropBottom": "Dolů {{value}} %",
+      "cropTop": "Nahoře {{value}} %",
+      "cropBottom": "Dole {{value}} %",
       "cornerRounding": "Zaoblení rohů {{value}}",
       "textStyle": "Styl textu",
       "bold": "Tučné",
@@ -5749,7 +5749,7 @@
       "colour": "Barva",
       "shadowOpacity": "Síla {{value}}%",
       "shadowBlur": "Rozostření {{value}}",
-      "shadowX": "Offset X {{value}}",
+      "shadowX": "Posun X {{value}}",
       "shadowY": "Posun Y {{value}}"
     },
     "menu": {
@@ -5761,9 +5761,9 @@
       "flipV": "Převrátit svisle",
       "centre": "Vycentrovat na stránce",
       "bringToFront": "Přenést do popředí",
-      "bringForward": "Přenést dopředu",
-      "sendBackward": "Odeslat zpět",
-      "sendToBack": "Poslat zpět",
+      "bringForward": "Posunout dopředu",
+      "sendBackward": "Posunout dozadu",
+      "sendToBack": "Přesunout do pozadí",
       "duplicate": "Duplikovat",
       "delete": "Odstranit"
     }

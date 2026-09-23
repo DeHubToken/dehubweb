@@ -5679,7 +5679,7 @@
       "resetToStart": "Nollaa alkuun",
       "resize": "Muuta kokoa",
       "rotate": "Kierrä",
-      "toggleLoop": "Vaihda silmukkaa"
+      "toggleLoop": "Silmukka päälle/pois"
     },
     "export": {
       "title": "Lataa",
@@ -5700,8 +5700,8 @@
       "frameAt": "Kehys kohdassa {{time}}s",
       "duration": "Kesto: {{value}}s",
       "cutPreview": "Leikkaa toistopään kohdalta: {{value}}s",
-      "outputStill": "Tuloste: {{width}}×{{height}}",
-      "outputVideo": "Tuloste: {{width}}×{{height}} {{fps}} fps",
+      "outputStill": "Tulos: {{width}}×{{height}}",
+      "outputVideo": "Tulos: {{width}}×{{height}}, {{fps}} fps",
       "cancel": "Peruuta",
       "cut": "Leikkaa",
       "download": "Lataa",
@@ -5745,22 +5745,22 @@
       "shadow": "Varjo",
       "colour": "Väri",
       "shadowOpacity": "Vahvuus {{value}}%",
-      "shadowBlur": "Sumea {{value}}",
+      "shadowBlur": "Sumennus {{value}}",
       "shadowX": "Siirtymä X {{value}}",
       "shadowY": "Siirtymä Y {{value}}"
     },
     "menu": {
       "addText": "Lisää teksti",
       "editText": "Muokkaa tekstiä",
-      "fillCanvas": "Täyttösivu",
+      "fillCanvas": "Täytä sivu",
       "fitCanvas": "Sovita sivulle",
       "flipH": "Käännä vaakasuunnassa",
       "flipV": "Käännä pystysuunnassa",
       "centre": "Keskitä sivulle",
-      "bringToFront": "Tuo eteen",
+      "bringToFront": "Tuo päällimmäiseksi",
       "bringForward": "Tuo eteenpäin",
-      "sendBackward": "Lähetä taaksepäin",
-      "sendToBack": "Lähetä taakse",
+      "sendBackward": "Siirrä taaksepäin",
+      "sendToBack": "Siirrä taaimmaiseksi",
       "duplicate": "Kopioi",
       "delete": "Poista"
     }

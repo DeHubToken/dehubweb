@@ -5880,10 +5880,10 @@
       "flipH": "आड़ा पलटें",
       "flipV": "लंबवत पलटें",
       "centre": "पेज पर केंद्र में",
-      "bringToFront": "सामने लाएँ",
+      "bringToFront": "सबसे आगे लाएँ",
       "bringForward": "आगे लाएँ",
       "sendBackward": "पीछे भेजें",
-      "sendToBack": "पीछे भेजें",
+      "sendToBack": "सबसे पीछे भेजें",
       "duplicate": "डुप्लीकेट करें",
       "delete": "हटाएँ"
     }

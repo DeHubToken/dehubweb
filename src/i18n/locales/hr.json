@@ -5756,10 +5756,10 @@
       "flipH": "Zrcali vodoravno",
       "flipV": "Okreni okomito",
       "centre": "Centriraj na stranici",
-      "bringToFront": "Postavi na prednju stranu",
+      "bringToFront": "Premjesti na vrh",
       "bringForward": "Pomakni naprijed",
       "sendBackward": "Pošalji unatrag",
-      "sendToBack": "Pošalji na poleđinu",
+      "sendToBack": "Premjesti na dno",
       "duplicate": "Dupliciraj",
       "delete": "Izbriši"
     }

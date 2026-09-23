@@ -5796,7 +5796,7 @@
       "showTimeline": "Mostrar linha do tempo",
       "pause": "Pausar",
       "play": "Reproduzir",
-      "resetToStart": "Reiniciar do início",
+      "resetToStart": "Voltar ao início",
       "resize": "Redimensionar",
       "rotate": "Girar",
       "toggleLoop": "Alternar loop"
@@ -5849,7 +5849,7 @@
       "opacity": "Transparência {{value}}%",
       "resetPosition": "Redefinir posição",
       "matchCanvas": "Tornar a página {{width}}×{{height}}",
-      "crop": "Cortar",
+      "crop": "Recortar",
       "cropLeft": "Esquerda {{value}}%",
       "cropRight": "Direita {{value}}%",
       "cropTop": "Topo {{value}}%",
@@ -5878,9 +5878,9 @@
       "flipV": "Inverter verticalmente",
       "centre": "Centrar na página",
       "bringToFront": "Trazer para a frente",
-      "bringForward": "Trazer para a frente",
-      "sendBackward": "Enviar para trás",
-      "sendToBack": "Enviar para trás",
+      "bringForward": "Avançar",
+      "sendBackward": "Recuar",
+      "sendToBack": "Enviar para o fundo",
       "duplicate": "Duplicar",
       "delete": "Eliminar"
     }

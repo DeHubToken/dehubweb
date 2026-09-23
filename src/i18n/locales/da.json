@@ -5713,7 +5713,7 @@
     },
     "export": {
       "title": "Download",
-      "stillDescription": "Gem det aktuelle billede som et billede.",
+      "stillDescription": "Gem det aktuelle frame som et billede.",
       "videoDescription": "Render din tidslinje til en videofil.",
       "unsupported": "Din browser kan ikke eksportere video. Prøv Chrome, Edge, Brave eller Arc, eller download en PNG eller JPG i stedet.",
       "format": "Filtype",
@@ -5774,10 +5774,10 @@
       "lineSpacing": "Linjeafstand {{value}}",
       "shadow": "Skygge",
       "colour": "Farve",
-      "shadowOpacity": "Styrke{{value}} %",
+      "shadowOpacity": "Styrke {{value}}%",
       "shadowBlur": "Slør {{value}}",
-      "shadowX": "Forskyd X{{value}}",
-      "shadowY": "Forskyd Y{{value}}"
+      "shadowX": "Forskydning X {{value}}",
+      "shadowY": "Forskydning Y {{value}}"
     },
     "menu": {
       "addText": "Tilføj tekst",
@@ -5787,10 +5787,10 @@
       "flipH": "Vend vandret",
       "flipV": "Vend lodret",
       "centre": "Centrer på side",
-      "bringToFront": "Bring foran",
-      "bringForward": "Fremryk",
-      "sendBackward": "Send baglæns",
-      "sendToBack": "Send til bagsiden",
+      "bringToFront": "Placer forrest",
+      "bringForward": "Flyt fremad",
+      "sendBackward": "Flyt bagud",
+      "sendToBack": "Placer bagerst",
       "duplicate": "Dupliker",
       "delete": "Slet"
     }

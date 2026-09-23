@@ -5558,17 +5558,17 @@
       "cropBottom": "নিচ {{value}}%",
       "cornerRounding": "কোণার গোলাকার {{value}}",
       "textStyle": "পাঠ্য শৈলী",
-      "bold": "সাহসী",
+      "bold": "বোল্ড",
       "italic": "তির্যক",
       "underline": "নিম্নরেখাঙ্কন",
       "uppercase": "বড় হাতের অক্ষর",
-      "letterSpacing": "চিঠির ব্যবধান {{value}}",
+      "letterSpacing": "অক্ষরের ব্যবধান {{value}}",
       "lineSpacing": "লাইন ব্যবধান {{value}}",
       "shadow": "ছায়া",
       "colour": "রঙ",
       "shadowOpacity": "শক্তি {{value}}%",
       "shadowBlur": "অস্পষ্ট {{value}}",
-      "shadowX": "অফসেট এক্স {{value}}",
+      "shadowX": "অফসেট X {{value}}",
       "shadowY": "অফসেট Y {{value}}"
     },
     "menu": {
@@ -5578,12 +5578,12 @@
       "fitCanvas": "পৃষ্ঠার সাথে মানানসই",
       "flipH": "অনুভূমিক ফ্লিপ করুন",
       "flipV": "উল্লম্বভাবে উল্টান",
-      "centre": "পৃষ্ঠার কেন্দ্র",
+      "centre": "পৃষ্ঠার মাঝখানে রাখুন",
       "bringToFront": "সামনে আনুন",
       "bringForward": "এগিয়ে আনুন",
       "sendBackward": "পিছনের দিকে পাঠান",
       "sendToBack": "পিছনে পাঠান",
-      "duplicate": "সদৃশ",
+      "duplicate": "ডুপ্লিকেট করুন",
       "delete": "মুছুন"
     }
   }

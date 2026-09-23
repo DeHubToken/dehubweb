@@ -6028,8 +6028,8 @@
       "empty": "Tambahkan sesuatu pada reka bentuk anda dahulu.",
       "failed": "Muat turun gagal",
       "cancelled": "Muat turun dibatalkan",
-      "preparing": "Sedia…",
-      "rendering": "Menyediakan…"
+      "preparing": "Menyediakan…",
+      "rendering": "Memaparkan…"
     },
     "inspector": {
       "selectHint": "Pilih lapisan pada kanvas atau klip pada garis masa.",
@@ -6041,14 +6041,14 @@
       "alignCentre": "Selaras tengah",
       "alignRight": "Selaras kanan",
       "alignTop": "Selaras atas",
-      "alignMiddle": "Selaras tengah",
+      "alignMiddle": "Selaras tengah menegak",
       "alignBottom": "Selaras bawah",
       "size": "Saiz {{value}}%",
       "rotation": "Putaran {{value}}°",
       "opacity": "Ketelusan {{value}}%",
       "resetPosition": "Tetapkan semula kedudukan",
       "matchCanvas": "Jadikan halaman {{width}}×{{height}}",
-      "crop": "Rentas",
+      "crop": "Pangkas",
       "cropLeft": "Kiri {{value}}%",
       "cropRight": "Kanan {{value}}%",
       "cropTop": "Atas {{value}}%",
@@ -6060,10 +6060,10 @@
       "underline": "Garis bawah",
       "uppercase": "Huruf besar",
       "letterSpacing": "Penjarakan huruf {{value}}",
-      "lineSpacing": "Penjarakan talian {{value}}",
+      "lineSpacing": "Penjarakan baris {{value}}",
       "shadow": "Bayang",
       "colour": "Warna",
-      "shadowOpacity": "Strength {{value}}%",
+      "shadowOpacity": "Kekuatan {{value}}%",
       "shadowBlur": "Kabur {{value}}",
       "shadowX": "Ofset X {{value}}",
       "shadowY": "Ofset Y {{value}}"
@@ -6076,10 +6076,10 @@
       "flipH": "Terbalikkan mengufuk",
       "flipV": "Terbalikkan menegak",
       "centre": "Pusatkan pada halaman",
-      "bringToFront": "Bawa ke hadapan",
+      "bringToFront": "Bawa ke paling hadapan",
       "bringForward": "Bawa ke hadapan",
       "sendBackward": "Hantar ke belakang",
-      "sendToBack": "Hantar ke belakang",
+      "sendToBack": "Hantar ke paling belakang",
       "duplicate": "Buat pendua",
       "delete": "Hapus"
     }

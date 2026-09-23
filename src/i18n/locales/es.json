@@ -5866,15 +5866,15 @@
       "shadowOpacity": "Fuerza {{value}}%",
       "shadowBlur": "Desenfoque {{value}}",
       "shadowX": "Desplazamiento X {{value}}",
-      "shadowY": "Offset Y {{value}}"
+      "shadowY": "Desplazamiento Y {{value}}"
     },
     "menu": {
       "addText": "Añadir texto",
       "editText": "Editar texto",
-      "fillCanvas": "Página de relleno",
+      "fillCanvas": "Rellenar página",
       "fitCanvas": "Ajustar a la página",
       "flipH": "Voltear horizontalmente",
-      "flipV": "Voltear vertical",
+      "flipV": "Voltear verticalmente",
       "centre": "Centrar en la página",
       "bringToFront": "Traer al frente",
       "bringForward": "Avanzar",

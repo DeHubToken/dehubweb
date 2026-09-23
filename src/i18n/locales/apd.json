@@ -3422,7 +3422,7 @@
       "cancel": "إلغاء",
       "cut": "قص",
       "download": "تنزيل",
-      "done": "محفوظ {{filename}}",
+      "done": "تم حفظ {{filename}}",
       "empty": "أضف شيئاً لتصميمك أولاً.",
       "failed": "فشل التنزيل",
       "cancelled": "تم إلغاء التنزيل",
@@ -3439,7 +3439,7 @@
       "alignCentre": "محاذاة للوسط",
       "alignRight": "محاذاة لليمين",
       "alignTop": "محاذاة للأعلى",
-      "alignMiddle": "محاذاة للوسط",
+      "alignMiddle": "محاذاة للمنتصف عمودياً",
       "alignBottom": "محاذاة للأسفل",
       "size": "الحجم {{value}}%",
       "rotation": "الدوران {{value}}°",
@@ -3453,8 +3453,8 @@
       "cropBottom": "أسفل {{value}}%",
       "cornerRounding": "تقريب الزوايا {{value}}",
       "textStyle": "نمط النص",
-      "bold": "**عريض**",
-      "italic": "*مائل*",
+      "bold": "عريض",
+      "italic": "مائل",
       "uppercase": "أحرف كبيرة",
       "letterSpacing": "تباعد الأحرف {{value}}",
       "lineSpacing": "تباعد الأسطر {{value}}",
@@ -3464,7 +3464,7 @@
       "shadowBlur": "تمويه {{value}}",
       "shadowX": "إزاحة سينية {{value}}",
       "shadowY": "إزاحة صادية {{value}}",
-      "underline": "تحت الخط"
+      "underline": "تسطير"
     },
     "menu": {
       "addText": "إضافة نص",
@@ -3474,10 +3474,10 @@
       "flipH": "قلب أفقي",
       "flipV": "قلب رأسي",
       "centre": "توسيط في الصفحة",
-      "bringToFront": "إحضار للأمام",
+      "bringToFront": "إحضار إلى المقدمة",
       "bringForward": "إحضار للأمام",
       "sendBackward": "إرسال للخلف",
-      "sendToBack": "إرسال للخلف",
+      "sendToBack": "إرسال إلى الخلفية",
       "duplicate": "مضاعفة",
       "delete": "حذف"
     }

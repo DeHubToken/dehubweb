@@ -5000,7 +5000,7 @@
       "showTimeline": "แสดงไทม์ไลน์",
       "pause": "หยุดชั่วคราว",
       "play": "เล่น",
-      "resetToStart": "รีเซ็ตเป็นค่าเริ่มต้น",
+      "resetToStart": "กลับไปที่จุดเริ่มต้น",
       "resize": "ปรับขนาด",
       "rotate": "หมุน",
       "toggleLoop": "สลับการวนซ้ำ"
@@ -5041,7 +5041,7 @@
       "textHint": "ลากบนผืนผ้าใบเพื่อย้าย ใช้มุมเพื่อปรับขนาด ดับเบิลคลิกเพื่อแก้ไขข้อความ"
     },
     "layer": {
-      "alignToPage": "จัดชิดหน้า",
+      "alignToPage": "จัดแนวกับหน้า",
       "alignLeft": "จัดชิดซ้าย",
       "alignCentre": "จัดกึ่งกลาง",
       "alignRight": "จัดชิดขวา",
@@ -5058,7 +5058,7 @@
       "cropRight": "ขวา {{value}}%",
       "cropTop": "บน {{value}}%",
       "cropBottom": "ล่าง {{value}}%",
-      "cornerRounding": "การปัดเศษมุม {{value}}",
+      "cornerRounding": "ความโค้งมุม {{value}}",
       "textStyle": "รูปแบบข้อความ",
       "bold": "ตัวหนา",
       "italic": "ตัวเอียง",
@@ -5068,7 +5068,7 @@
       "lineSpacing": "ระยะห่างระหว่างบรรทัด {{value}}",
       "shadow": "เงา",
       "colour": "สี",
-      "shadowOpacity": "ความแข็งแรง {{value}}%",
+      "shadowOpacity": "ความเข้ม {{value}}%",
       "shadowBlur": "เบลอ {{value}}",
       "shadowX": "ออฟเซต X {{value}}",
       "shadowY": "ออฟเซต Y {{value}}"
@@ -5081,10 +5081,10 @@
       "flipH": "พลิกแนวนอน",
       "flipV": "พลิกแนวตั้ง",
       "centre": "จัดกึ่งกลางหน้า",
-      "bringToFront": "นำมาไว้ข้างหน้า",
-      "bringForward": "ยอดยกมา",
-      "sendBackward": "ส่งไปข้างหลัง",
-      "sendToBack": "ส่งไปด้านหลัง",
+      "bringToFront": "นำไปไว้หน้าสุด",
+      "bringForward": "เลื่อนไปข้างหน้า",
+      "sendBackward": "เลื่อนไปข้างหลัง",
+      "sendToBack": "ส่งไปไว้หลังสุด",
       "duplicate": "ทำซ้ำ",
       "delete": "ลบ"
     }

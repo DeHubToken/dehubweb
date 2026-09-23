@@ -5565,15 +5565,15 @@
     "menu": {
       "addText": "הוספת טקסט",
       "editText": "עריכת טקסט",
-      "fillCanvas": "דף מילוי",
+      "fillCanvas": "מלא את הדף",
       "fitCanvas": "התאם לדף",
       "flipH": "היפוך אופקי",
       "flipV": "היפוך אנכי",
       "centre": "מרכז בעמוד",
       "bringToFront": "הבא לחזית",
-      "bringForward": "להביא קדימה",
+      "bringForward": "הבא קדימה",
       "sendBackward": "שליחה לאחור",
-      "sendToBack": "שליחה לגב",
+      "sendToBack": "שלח לרקע",
       "duplicate": "שכפל",
       "delete": "מחיקה"
     }

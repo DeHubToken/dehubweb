@@ -5749,10 +5749,10 @@
       "flipH": "فلیپ افقی",
       "flipV": "فلیپ عمودی",
       "centre": "مرکز در صفحه",
-      "bringToFront": "رفتن به جلو -Bring to front",
-      "bringForward": "جلو بروید",
-      "sendBackward": "ارسال به عقب",
-      "sendToBack": "به پشت بردن",
+      "bringToFront": "آوردن به جلوترین",
+      "bringForward": "یک لایه جلوتر",
+      "sendBackward": "یک لایه عقب‌تر",
+      "sendToBack": "بردن به عقب‌ترین",
       "duplicate": "تکثیر",
       "delete": "حذف"
     }

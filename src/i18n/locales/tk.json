@@ -3438,7 +3438,7 @@
       "quality": "Hili",
       "quality_low": "Pes",
       "quality_medium": "Orta",
-      "quality_high": "Beýik",
+      "quality_high": "Ýokary",
       "quality_ultra": "Ultra",
       "png": "PNG suraty",
       "jpg": "JPG suraty",
@@ -3461,7 +3461,7 @@
     },
     "inspector": {
       "selectHint": "Kanwadaky gatlagy ýa-da wagt çyzgysyndaky klipi saýlaň.",
-      "textHint": "Goşmak üçin kanwadaky süýräň, ulutmak üçin burçlary ulanyň. Sözleri redaktirlemek üçin iki gezek basyň."
+      "textHint": "Süýşürmek üçin kanwada süýräň, ölçegini üýtgetmek üçin burçlary ulanyň. Sözleri üýtgetmek üçin iki gezek basyň."
     },
     "layer": {
       "alignToPage": "Sahypa laýykla",
@@ -3483,33 +3483,33 @@
       "cropBottom": "Aşaky {{value}}%",
       "cornerRounding": "Burç aýlawy {{value}}",
       "textStyle": "Tekst stili",
-      "bold": "Batyr",
-      "italic": "Italiýaly",
-      "underline": "Açykla",
-      "uppercase": "UPPERCASE",
-      "letterSpacing": "Hat aralygy {{value}}",
-      "lineSpacing": "Hat aralygy {{value}}",
+      "bold": "Galyň",
+      "italic": "Kursiw",
+      "underline": "Aşagy çyzykly",
+      "uppercase": "Baş harplar",
+      "letterSpacing": "Harp aralygy {{value}}",
+      "lineSpacing": "Setir aralygy {{value}}",
       "shadow": "Gölge",
       "colour": "Renk",
       "shadowOpacity": "Güýç {{value}}%",
-      "shadowBlur": "Blur {{value}}",
-      "shadowX": "X {{value}}",
-      "shadowY": "Y {{value}}"
+      "shadowBlur": "Bulaşyklyk {{value}}",
+      "shadowX": "Süýşme X {{value}}",
+      "shadowY": "Süýşme Y {{value}}"
     },
     "menu": {
-      "addText": "Metini Ekle",
-      "editText": "Metini Editle",
+      "addText": "Tekst goş",
+      "editText": "Teksti üýtget",
       "fillCanvas": "Sahypa doldur",
-      "fitCanvas": "Ol sahypa yzyna öwrülipdi.",
-      "flipH": "Döwşümi uzynlaşdyr",
-      "flipV": "Döwşükli döwüş",
-      "centre": "Sahypa seret",
-      "bringToFront": "Öňki ýaly",
-      "bringForward": "Öňürti",
-      "sendBackward": "Yzyna iber",
-      "sendToBack": "Men yzyna dolandym",
+      "fitCanvas": "Sahypa laýyklaşdyr",
+      "flipH": "Keseligine öwür",
+      "flipV": "Dikligine öwür",
+      "centre": "Sahypanyň ortasyna goý",
+      "bringToFront": "Iň öňe çykar",
+      "bringForward": "Öňe süýşür",
+      "sendBackward": "Yza süýşür",
+      "sendToBack": "Iň yza iber",
       "duplicate": "Duplikat",
-      "delete": "Ewez Et"
+      "delete": "Poz"
     }
   }
 }

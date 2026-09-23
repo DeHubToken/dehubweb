@@ -5779,7 +5779,7 @@
       "showTimeline": "タイムラインを表示",
       "pause": "一時停止",
       "play": "再生",
-      "resetToStart": "最初からリセット",
+      "resetToStart": "最初に戻す",
       "resize": "サイズ変更",
       "rotate": "回転",
       "toggleLoop": "ループ切り替え"
@@ -5820,12 +5820,12 @@
       "textHint": "ドラッグして移動、角をドラッグしてサイズ変更。ダブルクリックでテキストを編集します。"
     },
     "layer": {
-      "alignToPage": "ページに合わせる",
+      "alignToPage": "ページに揃える",
       "alignLeft": "左揃え",
-      "alignCentre": "中央揃え",
+      "alignCentre": "左右中央揃え",
       "alignRight": "右揃え",
       "alignTop": "上揃え",
-      "alignMiddle": "中央揃え",
+      "alignMiddle": "上下中央揃え",
       "alignBottom": "下揃え",
       "size": "サイズ {{value}}%",
       "rotation": "回転 {{value}}°",
@@ -5859,11 +5859,11 @@
       "fitCanvas": "ページに合わせる",
       "flipH": "水平に反転",
       "flipV": "垂直に反転",
-      "centre": "ページの中央",
+      "centre": "ページの中央に配置",
       "bringToFront": "最前面に移動",
       "bringForward": "前面に出す",
-      "sendBackward": "後方に送信",
-      "sendToBack": "背面に移動",
+      "sendBackward": "背面へ移動",
+      "sendToBack": "最背面へ移動",
       "duplicate": "複製",
       "delete": "削除"
     }

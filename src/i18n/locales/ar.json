@@ -5862,22 +5862,22 @@
       "shadow": "الظل",
       "colour": "اللون",
       "shadowOpacity": "القوة {{value}}%",
-      "shadowBlur": "طمس {{value}}",
+      "shadowBlur": "تمويه {{value}}",
       "shadowX": "الإزاحة X {{value}}",
-      "shadowY": "الإزاحة ص {{value}}"
+      "shadowY": "الإزاحة Y {{value}}"
     },
     "menu": {
       "addText": "إضافة نص",
       "editText": "تعديل النص",
       "fillCanvas": "املأ الصفحة",
-      "fitCanvas": "مناسب للصفحة",
+      "fitCanvas": "ملاءمة للصفحة",
       "flipH": "انعكاس أفقي",
       "flipV": "قلب عمودي",
       "centre": "توسيط في الصفحة",
       "bringToFront": "إحضار إلى المقدمة",
       "bringForward": "تقديم",
-      "sendBackward": "إرسال إلى الوراء",
-      "sendToBack": "إرسال إلى الخلف",
+      "sendBackward": "إرسال للخلف",
+      "sendToBack": "إرسال إلى الخلفية",
       "duplicate": "تكرار",
       "delete": "حذف"
     }

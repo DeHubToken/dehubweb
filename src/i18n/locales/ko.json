@@ -5824,7 +5824,7 @@
       "textHint": "캔버스에서 드래그하여 이동하고, 모서리를 사용하여 크기를 조절하세요. 더블 클릭하여 텍스트를 편집하세요."
     },
     "layer": {
-      "alignToPage": "페이지에 맞춤",
+      "alignToPage": "페이지 기준 정렬",
       "alignLeft": "왼쪽 맞춤",
       "alignCentre": "가운데 맞춤",
       "alignRight": "오른쪽 맞춤",
@@ -5851,10 +5851,10 @@
       "lineSpacing": "줄 간격 {{value}}",
       "shadow": "그림자",
       "colour": "색상",
-      "shadowOpacity": "강도 {{value}} %",
+      "shadowOpacity": "강도 {{value}}%",
       "shadowBlur": "흐림 {{value}}",
-      "shadowX": "X {{value}} 오프셋",
-      "shadowY": "Y {{value}} 오프셋"
+      "shadowX": "X 오프셋 {{value}}",
+      "shadowY": "Y 오프셋 {{value}}"
     },
     "menu": {
       "addText": "텍스트 추가",
@@ -5863,7 +5863,7 @@
       "fitCanvas": "페이지에 맞춤",
       "flipH": "수평으로 뒤집기",
       "flipV": "수직 대칭 이동",
-      "centre": "페이지의 가운데",
+      "centre": "페이지 가운데로 정렬",
       "bringToFront": "맨 앞으로 가져오기",
       "bringForward": "앞으로 가져오기",
       "sendBackward": "뒤로 보내기",

@@ -5788,12 +5788,12 @@
       "textHint": "Przeciągnij na płótnie, aby przesunąć, użyj rogów, aby zmienić rozmiar. Kliknij dwukrotnie, aby edytować tekst."
     },
     "layer": {
-      "alignToPage": "Dopasuj do strony",
+      "alignToPage": "Wyrównaj do strony",
       "alignLeft": "Wyrównaj do lewej",
       "alignCentre": "Wyrównaj do środka",
       "alignRight": "Wyrównaj do prawej",
       "alignTop": "Wyrównaj do góry",
-      "alignMiddle": "Wyrównaj do środka",
+      "alignMiddle": "Wyrównaj do środka w pionie",
       "alignBottom": "Wyrównaj do dołu",
       "size": "Rozmiar {{value}}%",
       "rotation": "Obrót {{value}}°",
@@ -5815,7 +5815,7 @@
       "lineSpacing": "Odstępy między wierszami {{value}}",
       "shadow": "Cień",
       "colour": "Kolor",
-      "shadowOpacity": "Wytrzymałość {{value}}%",
+      "shadowOpacity": "Intensywność {{value}}%",
       "shadowBlur": "Rozmycie {{value}}",
       "shadowX": "Przesunięcie X {{value}}",
       "shadowY": "Przesunięcie Y {{value}}"
@@ -5827,10 +5827,10 @@
       "fitCanvas": "Dopasuj do strony",
       "flipH": "Odwróć w poziomie",
       "flipV": "Odwróć w pionie",
-      "centre": "Środek na stronie",
+      "centre": "Wyśrodkuj na stronie",
       "bringToFront": "Przesuń na wierzch",
       "bringForward": "Przesuń do przodu",
-      "sendBackward": "Odeślij do tyłu",
+      "sendBackward": "Przesuń do tyłu",
       "sendToBack": "Przesuń na spód",
       "duplicate": "Duplikuj",
       "delete": "Usuń"

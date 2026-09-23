@@ -3312,7 +3312,7 @@
   },
   "editor": {
     "canvas": {
-      "dropMedia": "ለንድዛይንዎ ለመጨመር ይጣሉ",
+      "dropMedia": "ወደ ንድፍዎ ለመጨመር ይጣሉ",
       "dropText": "ጽሑፍ ለመጨመር ይጣሉ",
       "hideTimeline": "ጊዜ መስመር ደብቅ",
       "showTimeline": "ጊዜ መስመር አሳይ",
@@ -3321,7 +3321,7 @@
       "resetToStart": "ከመጀመሪያው ዳግም አስጀምር",
       "resize": "መጠን ቀይር",
       "rotate": "አሽከርክር",
-      "toggleLoop": "አጫውት ደጋግመው"
+      "toggleLoop": "ድግግሞሽ አብራ/አጥፋ"
     },
     "export": {
       "title": "አውርድ",
@@ -3348,7 +3348,7 @@
       "cut": "ቁረጥ",
       "download": "አውርድ",
       "done": "ተቀምጧል {{filename}}",
-      "empty": "በመጀመሪያ ንድፍዎን የሆነ ነገር ይጨምሩ።",
+      "empty": "በመጀመሪያ በንድፍዎ ላይ የሆነ ነገር ያክሉ።",
       "failed": "ማውረድ አልተሳካም።",
       "cancelled": "ማውረድ ተሰርዟል።",
       "preparing": "በዝግጅት ላይ…",
@@ -3371,7 +3371,7 @@
       "opacity": "ግልጽነት {{value}}%",
       "resetPosition": "አቀማመጥን ዳግም አስጀምር",
       "matchCanvas": "ገጹን {{width}}×{{height}} አድርገው",
-      "crop": "አሳንስ",
+      "crop": "ከርክም",
       "cropLeft": "ግራ {{value}}%",
       "cropRight": "ቀኝ {{value}}%",
       "cropTop": "ላይ {{value}}%",
@@ -3380,9 +3380,9 @@
       "textStyle": "የጽሑፍ ዘይቤ",
       "bold": "ቦልድ",
       "italic": "ኢታሊክ",
-      "underline": "ከመስመር በታች",
-      "uppercase": "ከፍታ",
-      "letterSpacing": "የደብዳቤ ቦታ {{value}}",
+      "underline": "ከስር አስምር",
+      "uppercase": "ትልቅ ፊደላት",
+      "letterSpacing": "የፊደል ክፍተት {{value}}",
       "lineSpacing": "የመስመር ክፍተት {{value}}",
       "shadow": "ጥላ",
       "colour": "ቀለም",
@@ -3396,14 +3396,14 @@
       "editText": "ጽሑፍ አርትዕ",
       "fillCanvas": "ገጽ ይሙሉ",
       "fitCanvas": "ወደ ገጽ ተስማሚ",
-      "flipH": "አግድም ተንሸራታች",
-      "flipV": "ቀጥ ያለ ተንሸራታች",
+      "flipH": "በአግድም ገልብጥ",
+      "flipV": "በቁልቁል ገልብጥ",
       "centre": "በገጽ ላይ ማዕከል",
-      "bringToFront": "ወደ ፊት አምጡ",
-      "bringForward": "ወደ ፊት አምጡ",
-      "sendBackward": "ወደ ኋላ ላክ",
-      "sendToBack": "ወደ ኋላ ላክ",
-      "duplicate": "ድግግሞሽ",
+      "bringToFront": "ወደ ሁሉም ፊት አምጣ",
+      "bringForward": "አንድ ደረጃ ወደ ፊት አምጣ",
+      "sendBackward": "አንድ ደረጃ ወደ ኋላ ላክ",
+      "sendToBack": "ወደ ሁሉም ኋላ ላክ",
+      "duplicate": "አባዛ",
       "delete": "ሰርዝ"
     }
   }

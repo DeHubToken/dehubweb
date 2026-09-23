@@ -5591,10 +5591,10 @@
       "failed": "Descărcare eșuată",
       "cancelled": "Descărcare anulată",
       "preparing": "Se pregătește…",
-      "rendering": "Se redă…"
+      "rendering": "Se randează…"
     },
     "inspector": {
-      "selectHint": "Selectează un strat pe pânză sau o clipă pe cronologie.",
+      "selectHint": "Selectează un strat pe pânză sau un clip pe cronologie.",
       "textHint": "Trage pe pânză pentru a muta, folosește colțurile pentru a redimensiona. Dă dublu clic pentru a edita cuvintele."
     },
     "layer": {
@@ -5625,7 +5625,7 @@
       "lineSpacing": "Spațierea liniilor {{value}}",
       "shadow": "Umbră",
       "colour": "Culoare",
-      "shadowOpacity": "Puncte forte {{value}}%",
+      "shadowOpacity": "Intensitate {{value}}%",
       "shadowBlur": "Estompare {{value}}",
       "shadowX": "Decalaj X {{value}}",
       "shadowY": "Decalaj Y {{value}}"
@@ -5637,11 +5637,11 @@
       "fitCanvas": "Potrivire la pagină",
       "flipH": "Răsturnare pe orizontală",
       "flipV": "Răsturnare pe verticală",
-      "centre": "Centru la pagina",
-      "bringToFront": "Aduceți în față",
-      "bringForward": "Aduceți înainte",
-      "sendBackward": "Trimite înapoi",
-      "sendToBack": "Trimitere înapoi",
+      "centre": "Centrează pe pagină",
+      "bringToFront": "Adu în prim-plan",
+      "bringForward": "Adu în față",
+      "sendBackward": "Trimite în spate",
+      "sendToBack": "Trimite în fundal",
       "duplicate": "Duplicat",
       "delete": "Șterge"
     }

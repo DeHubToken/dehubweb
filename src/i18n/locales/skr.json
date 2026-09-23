@@ -3332,7 +3332,7 @@
       "opacity": "شفافیت {{value}}%",
       "resetPosition": "پوزیشن بحال کریں",
       "matchCanvas": "صفحہ کو {{width}}×{{height}} بنائیں",
-      "crop": "فصل",
+      "crop": "کراپ",
       "cropLeft": "بائیں {{value}}%",
       "cropRight": "دائیں {{value}}%",
       "cropTop": "اوپر {{value}}%",
