@@ -234,6 +234,9 @@ project_id = "aigxuutjaqsywioxjefr"
   # Called by pg_cron with the publishable key; the scan is idempotent and throttled.
   [functions.dex-position-scan]
     verify_jwt = false
+  # Called by pg_cron with the publishable key; skips itself while the last snapshot is fresh.
+  [functions.dex-market-sample]
+    verify_jwt = false
   [functions.refresh-leaderboard-cache]
     verify_jwt = false
   [functions.refresh-leaderboard-user]
