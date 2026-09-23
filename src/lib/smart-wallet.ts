@@ -322,6 +322,20 @@ export async function signDerivedSolanaTransaction(
   return transaction;
 }
 
+/** The same, for the v0 transactions Jupiter builds. */
+export async function signDerivedSolanaVersionedTransaction(
+  transaction: import('@solana/web3.js').VersionedTransaction,
+): Promise<import('@solana/web3.js').VersionedTransaction> {
+  await ensureWalletUnlocked();
+
+  const [{ Keypair }, { deriveSolanaSeed }] = await Promise.all([
+    import('@solana/web3.js'),
+    import('@/lib/solana/derive'),
+  ]);
+  transaction.sign([Keypair.fromSeed(deriveSolanaSeed(sessionPrivKey!))]);
+  return transaction;
+}
+
 export async function ensureWalletUnlocked(): Promise<void> {
   if (isWalletUnlocked()) return;
   if (await restoreWalletSession()) return;

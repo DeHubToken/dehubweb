@@ -3124,7 +3124,20 @@
     "noBaseFunds": "Base-এ কোনো ETH, USDC বা USDT নাই",
     "reviewSwap": "Base-এ {{usdc}} USDC-র লাই {{amountIn}} {{symbol}} বদলি কর। {{symbol}} অব্যবহৃত একই লেনদেনে ফেরত যাইবো।",
     "convertBnbNote": "BNB Chain-ত ট্রেডিং বন্ধ। BNB আছে না? ইয়ারে Base-ত ETH-ত বদলান, তারপর ETH দি পেমেন্ট গরন।",
-    "convertBnb": "BNB বদলান"
+    "convertBnb": "BNB বদলান",
+    "chart": {
+      "bookStarts": "বইখান এত্তুন শুরু অইয়ে",
+      "firstOrder": "লিকুইডিটি যোগ অইন্য প্রথম অর্ডার দেওন লাগিবো।",
+      "waiting": "প্রাইস ডেটার লাইগ্গুন অপেক্ষা করতাছি",
+      "candlesStart": "এই টোকেন ট্রেড অইলে ক্যান্ডেল দেখা যাইবো।",
+      "depthLabel": "USD প্রাইস অনুযায়ী অর্ডার বুকের ডেপথ",
+      "priceLabel": "USD-এ {{symbol}} প্রাইস ক্যান্ডেলস্টিক",
+      "depthHint": "ক্রমযোজিত {{symbol}} · দেখির লাইগ্গুন হোভার কর",
+      "priceHint": "{{symbol}} প্রাইস · USD · দেখির লাইগ্গুন হোভার কর"
+    },
+    "pools": {
+      "feeDhb": "≈ {{amount}} DHB"
+    }
   },
   "editor": {
     "canvas": {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { formatPrice, formatSize, type BookLevel } from '@/lib/dex/orderbook';
 import type { Candle } from '@/lib/dex/live-market';
 
@@ -6,14 +7,15 @@ import type { Candle } from '@/lib/dex/live-market';
 function axisDecimals(minY: number, maxY: number) {
   const step = (maxY - minY) / 4;
   if (!(step > 0) || !Number.isFinite(step)) return 2;
-  return Math.min(8, Math.max(2, Math.ceil(-Math.log10(step)) + 1));
+  return Math.min(12, Math.max(2, Math.ceil(-Math.log10(step)) + 1));
 }
 
-export function MarketChart({ candles, bids, asks, depth }: { candles: Candle[]; bids: BookLevel[]; asks: BookLevel[]; depth: boolean }) {
+export function MarketChart({ candles, bids, asks, depth, symbol = 'DHB' }: { candles: Candle[]; bids: BookLevel[]; asks: BookLevel[]; depth: boolean; symbol?: string }) {
+  const { t } = useTranslation();
   const [hover, setHover] = useState<number | null>(null);
   const data = depth ? [...bids, ...asks].map((level) => ({ x: level.price, y: level.cumulativeDhb }))
     : candles.map((p) => ({ x: p.time, y: p.close }));
-  if (!data.length) return <div className="dex-chart-empty"><span className="dex-empty-icon">↗</span><strong>{depth ? 'The book starts here' : 'Waiting for price observations'}</strong><p>{depth ? 'Place the first range order to add liquidity.' : 'Candles start once the pools have been sampled.'}</p></div>;
+  if (!data.length) return <div className="dex-chart-empty"><span className="dex-empty-icon">↗</span><strong>{depth ? t('dex.chart.bookStarts') : t('dex.chart.waiting')}</strong><p>{depth ? t('dex.chart.firstOrder') : t('dex.chart.candlesStart')}</p></div>;
   const minX = Math.min(...data.map((p) => p.x)), maxX = Math.max(...data.map((p) => p.x));
   const low = depth ? 0 : Math.min(...candles.map((p) => p.low));
   const high = depth ? Math.max(...data.map((p) => p.y)) : Math.max(...candles.map((p) => p.high));
@@ -32,8 +34,8 @@ export function MarketChart({ candles, bids, asks, depth }: { candles: Candle[];
     const path = line(values, true);
     return { path, fill: values.length ? `${path}L${x(values.at(-1)!.x)},270L${x(values[0].x)},270Z` : '' };
   };
-  return <div className="dex-chart" role="img" aria-label={depth ? 'Combined range liquidity by USD price' : 'DHB price candlesticks in USD, across all pools'}>
-    <div className="dex-chart-readout">{cursor ? <><b>{selected ? `O ${formatPrice(selected.open)} H ${formatPrice(selected.high)} L ${formatPrice(selected.low)} C ${formatPrice(selected.close)}` : `${formatSize(cursor.y)} DHB`}</b><span>{depth ? `$${formatPrice(cursor.x)}` : new Date(cursor.x * 1000).toLocaleString()}</span></> : <span>{depth ? 'Cumulative DHB · hover to inspect' : 'DHB price · USD · all pools · hover to inspect'}</span>}</div>
+  return <div className="dex-chart" role="img" aria-label={depth ? t('dex.chart.depthLabel') : t('dex.chart.priceLabel', { symbol })}>
+    <div className="dex-chart-readout">{cursor ? <><b>{selected ? `O ${formatPrice(selected.open)} H ${formatPrice(selected.high)} L ${formatPrice(selected.low)} C ${formatPrice(selected.close)}` : `${formatSize(cursor.y)} ${symbol}`}</b><span>{depth ? `$${formatPrice(cursor.x)}` : new Date(cursor.x * 1000).toLocaleString()}</span></> : <span>{depth ? t('dex.chart.depthHint', { symbol }) : t('dex.chart.priceHint', { symbol })}</span>}</div>
     <svg viewBox="0 0 730 310" onPointerLeave={() => setHover(null)} onPointerMove={(event) => {
       const rect = event.currentTarget.getBoundingClientRect(); setHover((event.clientX - rect.left) / rect.width * 730);
     }}>

@@ -2229,6 +2229,36 @@ function stageHostAvatarUrl(stage) {
   return path.includes('/') ? `${DEHUB_CDN_BASE}${path}` : null;
 }
 
+const DEX_POOL_CHAIN_NAMES = { base: 'Base', ethereum: 'Ethereum', robinhood: 'Robinhood Chain', solana: 'Solana' };
+
+function buildDexPoolHtml(pool) {
+  const chain = DEX_POOL_CHAIN_NAMES[pool.chain] || pool.chain;
+  const canonicalUrl = `${APP_URL}/dex/${pool.chain}/${pool.token_address}`;
+  const pair = `${pool.symbol}/USD`;
+  const title = `${pair} — ${pool.name} on the DeHub DEX`;
+  const description = truncate(`Trade ${pool.name} (${pool.symbol}) on ${chain}: live order book, limit orders and instant buys and sells on the DeHub DEX.`, 200);
+  return entityHtml({
+    canonicalUrl,
+    title,
+    description,
+    image: pool.image_url,
+    heading: `${pair} · ${chain}`,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/dex">DEX</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+<p>Token contract: <code>${escHtml(pool.token_address)}</code></p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: title,
+      description,
+      url: canonicalUrl,
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      ...(pool.image_url ? { image: pool.image_url } : {}),
+    },
+  });
+}
+
 function buildStageHtml(stage) {
   const canonicalUrl = stage.short_id != null
     ? `${APP_URL}/stages/${stage.short_id}`
@@ -4712,6 +4742,17 @@ async function handleRequest(request, env, ctx) {
         'Vary': 'User-Agent',
       },
     }));
+  }
+
+  // A community DEX pool, /dex/<chain>/<token>. The share image is the picture
+  // the pool's creator chose, so a pasted pool link shows its own token.
+  const dexPoolMatch = cleanPath.match(/^\/dex\/(base|ethereum|robinhood|solana)\/(0x[0-9a-fA-F]{40}|[1-9A-HJ-NP-Za-km-z]{32,44})$/);
+  if (dexPoolMatch) {
+    const address = dexPoolMatch[1] === 'solana' ? dexPoolMatch[2] : dexPoolMatch[2].toLowerCase();
+    const pool = await supabaseRow(`dex_pools?chain=eq.${dexPoolMatch[1]}&token_address=eq.${encodeURIComponent(address)}&select=*&limit=1`);
+    if (pool) {
+      return guard(new Response(buildDexPoolHtml(pool), { status: 200, headers: blogHeaders }));
+    }
   }
 
   // A single bounty. /work/<uuid> 301s onto this shape further up, so by the

@@ -194,7 +194,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   // follow it — they keep the column every other page has, centred where the
   // terminal's <main> sits: the 80rem shell minus the left sidebar and the
   // rail width for the current breakpoint (RightSidebar: w-72 xl:w-80 2xl:w-88).
-  const isWideMainRoute = location.pathname === '/dex';
+  const isWideMainRoute = location.pathname === '/dex' || location.pathname.startsWith('/dex/');
   useLayoutEffect(() => {
     const mainEl = mainRef.current;
     if (!mainEl || typeof ResizeObserver === 'undefined') return;

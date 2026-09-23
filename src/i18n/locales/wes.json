@@ -2969,10 +2969,54 @@
     "spendUsd": "Spend (USD)",
     "resumeMint": "Resume order",
     "convertBnbNote": "Trading for BNB Chain don close. You get BNB? Change am for ETH for Base, then pay with ETH.",
-    "convertBnb": "Change BNB"
+    "convertBnb": "Change BNB",
+    "pools": {
+      "title": "Pools",
+      "search": "Search pools",
+      "loading": "Loading pools…",
+      "add": "Add pool",
+      "network": "Network",
+      "contract": "Token contract address",
+      "mintPlaceholder": "Token mint address",
+      "openExisting": "Open it",
+      "feeDhb": "≈ {{amount}} DHB",
+      "uploading": "Uploading image…"
+    },
+    "pool": {
+      "changeImage": "Change image",
+      "imageUpdated": "Pool image updated",
+      "volume24": "24h volume",
+      "size": "Size ({{symbol}})",
+      "total": "Total ({{symbol}})",
+      "buyTotal": "Bids {{amount}} {{symbol}}",
+      "sellTotal": "Asks {{amount}} {{symbol}}",
+      "orderType": "Order type",
+      "limit": "Limit",
+      "instant": "Instant",
+      "instantBuy": "Instant buy",
+      "instantSell": "Instant sell",
+      "confirmInstantBuy": "Confirm instant buy",
+      "confirmInstantSell": "Confirm instant sell",
+      "buyAt": "Buy at price",
+      "sellAt": "Sell at price",
+      "enterPrice": "Enter a price.",
+      "priceImpact": "Price impact",
+      "minimum": "Minimum order",
+      "openOrders": "Open orders",
+      "myOrders": "My orders",
+      "cancel": "Cancel",
+      "cancelled": "Order cancelled",
+      "bought": "Bought {{amount}} {{symbol}}",
+      "sold": "Sold {{amount}} {{symbol}}"
+    },
+    "chart": {
+      "depthLabel": "Order book depth by USD price"
+    }
   },
   "editor": {
     "canvas": {
+      "dropMedia": "Drop-am for add-am for yua design",
+      "dropText": "Drop-am for add text",
       "hideTimeline": "Hide timeline",
       "showTimeline": "Show timeline",
       "pause": "Pause",
@@ -2980,12 +3024,13 @@
       "resetToStart": "Reset to start",
       "resize": "Resize",
       "rotate": "Rotate",
-      "toggleLoop": "Toggle loop",
-      "dropMedia": "Drop-am for add-am for yua design",
-      "dropText": "Drop-am for add text"
+      "toggleLoop": "Toggle loop"
     },
     "export": {
       "title": "Download",
+      "stillDescription": "Save dis frame as picture.",
+      "videoDescription": "Turn yua timeline into video file.",
+      "unsupported": "Yua browser no fit export video. Try Chrome, Edge, Brave or Arc, or download PNG or JPG instead.",
       "format": "File type",
       "resolution": "Size",
       "quality": "Quality",
@@ -2999,21 +3044,22 @@
       "webm": "WebM video (VP9 + Opus)",
       "frameAt": "Frame at {{time}}s",
       "duration": "Duration: {{value}}s",
+      "cutPreview": "Cut for playhead: {{value}}s",
       "outputStill": "Output: {{width}}×{{height}}",
+      "outputVideo": "Output: {{width}}×{{height}} for {{fps}} fps",
       "cancel": "Cancel",
       "cut": "Cut",
       "download": "Download",
       "done": "Saved {{filename}}",
+      "empty": "Put something for yua design first.",
       "failed": "Download failed",
       "cancelled": "Download cancelled",
       "preparing": "Preparing…",
-      "rendering": "Rendering…",
-      "stillDescription": "Save dis frame as picture.",
-      "videoDescription": "Turn yua timeline into video file.",
-      "unsupported": "Yua browser no fit export video. Try Chrome, Edge, Brave or Arc, or download PNG or JPG instead.",
-      "cutPreview": "Cut for playhead: {{value}}s",
-      "outputVideo": "Output: {{width}}×{{height}} for {{fps}} fps",
-      "empty": "Put something for yua design first."
+      "rendering": "Rendering…"
+    },
+    "inspector": {
+      "selectHint": "Choose one layer for di canvas or one clip for di timeline.",
+      "textHint": "Drag for di canvas for move-am, use di corner dem for change size. Double-click for change di words."
     },
     "layer": {
       "alignToPage": "Align to page",
@@ -3027,6 +3073,7 @@
       "rotation": "Rotation {{value}}°",
       "opacity": "Transparency {{value}}%",
       "resetPosition": "Reset position",
+      "matchCanvas": "Mek di page {{width}}×{{height}}",
       "crop": "Crop",
       "cropLeft": "Left {{value}}%",
       "cropRight": "Right {{value}}%",
@@ -3045,8 +3092,7 @@
       "shadowOpacity": "Strength {{value}}%",
       "shadowBlur": "Blur {{value}}",
       "shadowX": "Offset X {{value}}",
-      "shadowY": "Offset Y {{value}}",
-      "matchCanvas": "Mek di page {{width}}×{{height}}"
+      "shadowY": "Offset Y {{value}}"
     },
     "menu": {
       "addText": "Add text",
@@ -3062,10 +3108,6 @@
       "sendToBack": "Send to back",
       "duplicate": "Duplicate",
       "delete": "Delete"
-    },
-    "inspector": {
-      "selectHint": "Choose one layer for di canvas or one clip for di timeline.",
-      "textHint": "Drag for di canvas for move-am, use di corner dem for change size. Double-click for change di words."
     }
   }
 }
