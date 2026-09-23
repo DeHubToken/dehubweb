@@ -5769,12 +5769,22 @@
       "permitApproval": "Confirma la aprobación de la posición en tu billetera…",
       "submit": "Confirma la posición en tu billetera…",
       "confirm": "Esperando confirmación…",
-      "index": "Registrando tu posición…"
+      "index": "Registrando tu posición…",
+      "swap": "Confirma el intercambio en tu monedero...",
+      "swapConfirm": "Esperando a que el intercambio confirme..."
     },
     "automaticStage": {
       "tokenApproval": "Billetera inteligente aprobando tokens…",
       "permitApproval": "Billetera inteligente aprobando acceso a la posición…",
-      "submit": "Billetera inteligente creando tu posición…"
-    }
+      "submit": "Billetera inteligente creando tu posición…",
+      "swap": "Intercambio de monederos inteligentes y creación de su posición..."
+    },
+    "payWith": "Pagar con",
+    "spendUsd": "Gasto (USD)",
+    "noBaseFunds": "Sin ETH, USDC o USDT en la base",
+    "reviewSwap": "Cambia {{amountIn}}{{symbol}} por {{usdc}} USDC en Base First. El {{symbol}} no utilizado se devuelve en la misma transacción.",
+    "pendingSwapNote": "Tu {{symbol}} se ha cambiado por USDC. Reanudar para crear la posición sin volver a intercambiar.",
+    "resumeMint": "Reanudar pedido",
+    "resumeNeedsBalances": "Los saldos de los monederos aún se están cargando. Inténtalo de nuevo en un momento."
   }
 }

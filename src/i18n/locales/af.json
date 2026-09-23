@@ -5587,13 +5587,23 @@
       "permitApproval": "Bevestig posisie-goedkeuring in jou beursie…",
       "submit": "Bevestig posisie in jou beursie…",
       "confirm": "Wag op bevestiging…",
-      "index": "Besig om jou posisie te registreer…"
+      "index": "Besig om jou posisie te registreer…",
+      "swap": "Bevestig die ruil in jou beursie...",
+      "swapConfirm": "Wag vir die swap om te bevestig..."
     },
     "automaticStage": {
       "tokenApproval": "Slim beursie keur tokens goed…",
       "permitApproval": "Slim beursie keur toegang tot posisie goed…",
-      "submit": "Slim beursie skep jou posisie…"
-    }
+      "submit": "Slim beursie skep jou posisie…",
+      "swap": "Slim beursie ruil en die skep van jou posisie..."
+    },
+    "payWith": "Betaal met",
+    "spendUsd": "Spandeer (USD)",
+    "noBaseFunds": "Geen ETH, USDC of USDT op grondvlak nie",
+    "reviewSwap": "Ruil oor {{amountIn}} {{symbol}} vir {{usdc}} USDC eerste op die basis. Ongebruikte {{symbol}} word in dieselfde transaksie teruggestuur.",
+    "pendingSwapNote": "Jou {{symbol}} is omgeruil vir USDC. Hervat om die posisie te skep sonder om weer te ruil.",
+    "resumeMint": "Hervat bestelling",
+    "resumeNeedsBalances": "Portemonnee is nog steeds te laden. Probeer weer in 'n oomblik."
   },
   "footer": {
     "company": "Maatskappy",

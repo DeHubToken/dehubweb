@@ -3472,12 +3472,22 @@
       "permitApproval": "Billeteraykipi posición aprobacionta takyachiy...",
       "submit": "Billeteraykipi posiciónta takyachiy...",
       "confirm": "Suyaspa confirmacionta...",
-      "index": "Cargoykita registraspa..."
+      "index": "Cargoykita registraspa...",
+      "swap": "Chay intercambio nisqa billeteraykipi takyachiy...",
+      "swapConfirm": "Suyaspa chay intercambio takyachinanpaq..."
     },
     "automaticStage": {
       "tokenApproval": "Smart billetera aprobaq fichas...",
       "permitApproval": "Smart billetera aprobaq posiciónman yaykuy...",
-      "submit": "Smart billetera posiciónniyki paqarichispa..."
-    }
+      "submit": "Smart billetera posiciónniyki paqarichispa...",
+      "swap": "Smart billetera intercambio hinaspa posiciónniyki paqarichiy..."
+    },
+    "payWith": "Paywan pagay",
+    "spendUsd": "Gasto (USD) .",
+    "noBaseFunds": "Mana ETH, USDC nitaq USDT Base nisqapichu",
+    "reviewSwap": "{{amountIn}} {{symbol}} nisqamanta {{usdc}} USDC nisqawan Base nisqapi ñawpaqta t&#39;inkinakuy. Mana llamk&#39;achisqa {{symbol}} kikin ruwaypi kutichisqa.",
+    "pendingSwapNote": "{{symbol}} nisqaykiqa USDC nisqawanmi cambiasqa karqan. Mana yapamanta t&#39;inkispa posiciónta paqarichiyta qallariy.",
+    "resumeMint": "Ordenta kaqmanta qallariy",
+    "resumeNeedsBalances": "Saldos de billetera nisqakunaqa cargakuchkallanraqmi. Huk ratullapi hukmanta kallpachakuy."
   }
 }

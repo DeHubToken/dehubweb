@@ -5721,13 +5721,23 @@
       "permitApproval": "Potwierdź zatwierdzenie pozycji w swoim portfelu…",
       "submit": "Potwierdź pozycję w swoim portfelu…",
       "confirm": "Oczekiwanie na potwierdzenie…",
-      "index": "Rejestrowanie Twojej pozycji…"
+      "index": "Rejestrowanie Twojej pozycji…",
+      "swap": "Potwierdź zamianę w swoim portfelu…",
+      "swapConfirm": "Oczekiwanie na potwierdzenie zamiany…"
     },
     "automaticStage": {
       "tokenApproval": "Portfel inteligentny zatwierdza tokeny…",
       "permitApproval": "Portfel inteligentny zatwierdza dostęp do pozycji…",
-      "submit": "Portfel inteligentny tworzy Twoją pozycję…"
-    }
+      "submit": "Portfel inteligentny tworzy Twoją pozycję…",
+      "swap": "Inteligentna wymiana portfeli i tworzenie pozycji…"
+    },
+    "payWith": "Zapłać za pomocą",
+    "spendUsd": "Wydatki (USD)",
+    "noBaseFunds": "Brak ETH, USDC lub USDT w bazie",
+    "reviewSwap": "Zamień najpierw około {{amountIn}}{{symbol}} na {{usdc}} USDC w Base. Nieużywany {{symbol}} jest zwracany w tej samej transakcji.",
+    "pendingSwapNote": "Twoje {{symbol}} zostało zamienione na USDC. Wznów, aby utworzyć pozycję bez ponownej zamiany.",
+    "resumeMint": "Wznów zamówienie",
+    "resumeNeedsBalances": "Salda portfela nadal się ładują. Spróbuj ponownie za chwilę."
   },
   "glossary": {
     "title": "Słownik",

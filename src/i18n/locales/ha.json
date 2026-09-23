@@ -3442,12 +3442,21 @@
       "permitApproval": "Tabbatar da izinin matsayi a cikin walat ɗinka…",
       "submit": "Tabbatar da matsayi a cikin walat ɗinka…",
       "confirm": "Jira don tabbaci…",
-      "index": "Yi rijistar matsayinka…"
+      "index": "Yi rijistar matsayinka…",
+      "swap": "Tabbatar da sauyawa a cikin walat ɗinku…",
+      "swapConfirm": "Ina jiran swap don tabbatar..."
     },
     "automaticStage": {
       "tokenApproval": "Walat mai wayo yana ba da izinin tokens…",
       "permitApproval": "Walat mai wayo yana ba da izinin samun damar matsayi…",
-      "submit": "Walat mai wayo yana ƙirƙirar matsayinka…"
-    }
+      "submit": "Walat mai wayo yana ƙirƙirar matsayinka…",
+      "swap": "Smart walat swapping da kuma haifar da matsayinka…"
+    },
+    "payWith": "Biya tare da",
+    "spendUsd": "Kudin (USD)",
+    "noBaseFunds": "Babu ETH, USDC ko USDT akan Base",
+    "pendingSwapNote": "Your {{symbol}} an canza shi don USDC. Sake farawa don ƙirƙirar matsayi ba tare da sake canzawa ba.",
+    "resumeMint": "Sake farawa oda",
+    "resumeNeedsBalances": "Wallet balance ne har yanzu loading. Ka sake gwadawa a cikin wani lokaci."
   }
 }

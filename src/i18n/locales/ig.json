@@ -3402,12 +3402,22 @@
       "permitApproval": "Kwado nnabata ọnọdụ na akpa gị…",
       "submit": "Kwado ọnọdụ na akpa gị…",
       "confirm": "Na-eche nkwado…",
-      "index": "Na-edebanye aha ọnọdụ gị…"
+      "index": "Na-edebanye aha ọnọdụ gị…",
+      "swap": "Kwenye akụkọ gị...",
+      "swapConfirm": "Na-echere nkwenye mgbanwe..."
     },
     "automaticStage": {
       "tokenApproval": "Akpa smart na-enye token ohere…",
       "permitApproval": "Akpa smart na-enye ohere ọnọdụ…",
-      "submit": "Akpa smart na-emepụta ọnọdụ gị…"
-    }
+      "submit": "Akpa smart na-emepụta ọnọdụ gị…",
+      "swap": "Akụkọ smart na-agbanwe ma na-eke ọnọdụ gị..."
+    },
+    "payWith": "Kwụọ ụgwọ",
+    "spendUsd": "Mee (USD)",
+    "noBaseFunds": "Enweghị ETH, USDC ma ọ bụ USDT na Base",
+    "reviewSwap": "Gbanwee ihe dị ka {{amountIn}} {{symbol}} maka {{usdc}} USDC na Base mbụ. {{symbol}} a na-ejighị eme ihe na-alaghachi na otu azụmahịa ahụ.",
+    "pendingSwapNote": "E jiri {{symbol}} gị gbanwee maka USDC. Nọgide na-eke ọnọdụ ahụ na-enweghị mgbanwe ọzọ.",
+    "resumeMint": "Nọgide na iwu",
+    "resumeNeedsBalances": "Ngwa akụkọ ka na-ebufe. Nwaa ọzọ n'oge na-adịghị anya."
   }
 }

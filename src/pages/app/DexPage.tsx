@@ -2,8 +2,9 @@ import { dexActionError } from '@/lib/dex/action-error';
 import { minuteCache, parseSharedMarket, CANDLE_INTERVALS, type SharedMarket, type CandleInterval } from '@/lib/dex/live-market';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
 import { ArrowDownUp, ExternalLink, RefreshCw } from 'lucide-react';
-import { parseUnits } from 'ethers';
+import { formatUnits, parseUnits } from 'ethers';
 import { toast } from 'sonner';
 import { useWalletLocked } from '@/hooks/use-wallet-locked';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,7 +14,10 @@ import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { BOOK_INCREMENTS, DEFAULT_INCREMENT, aggregateBook, balanceFraction, defaultOrderPrice, displayBookLevels, fillFraction, formatBookPrice, formatIncrement, formatPrice, formatSize, priceDeviation, priceNeedsWarning, seedReference, spreadPercent, type BookLevel } from '@/lib/dex/orderbook';
 import { DEX_CHAINS, type DexChainId, type VerifiedPosition } from '@/lib/dex/v4';
 import { detectDhbChain, detectUsdcChain, mintSellPosition, quoteSellPosition, recoverMint, withdrawSellPosition, type SellInput, type SellQuote } from '@/lib/dex/sell';
-import { readWithTimeout, type OrderStage } from '@/lib/dex/read-timeout';
+import { readWithTimeout } from '@/lib/dex/read-timeout';
+import { FUNDING_CHAIN, defaultFundingAsset, fundAndMint, fundingAssets, quoteFunding, usdcAmountFor, type FundingAsset, type FundingQuote, type FundingStage, type FundingSymbol } from '@/lib/dex/funding';
+import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
+import { useTokenPrices } from '@/hooks/use-token-prices';
 import { isSmartWalletSession } from '@/lib/connection-source';
 import { createLogger } from '@/lib/logger';
 import { MarketChart } from '@/components/app/dex/MarketChart';
@@ -35,7 +39,8 @@ const readSharedMarket = minuteCache(async () => {
  *  scheduled sweep. The endpoint throttles itself, so a burst of these costs nothing, and a
  *  failure is silent: the schedule still runs and the snapshot is what the page actually reads. */
 const primeDiscovery = () => { void Promise.resolve(supabase.functions.invoke('dex-position-scan')).catch(() => {}); };
-type Pending = { input: SellInput; txHash: string; tokenId?: string };
+/** A submitted order. `txHash` is the mint; a funded order may have swapped but not yet minted. */
+type Pending = { input: SellInput; txHash?: string; tokenId?: string; funding?: { symbol: FundingSymbol; swapTxHash?: string } };
 const storageKey = (wallet: string) => `dex-pending:${wallet.toLowerCase()}`;
 const decimalInput = (value: string) => value.replace(',', '.').trim();
 const byNewest = (a: VerifiedPosition, b: VerifiedPosition) => Date.parse(b.created_at) - Date.parse(a.created_at);
@@ -90,7 +95,12 @@ export default function DexPage() {
   const priceTouched = useRef(false);
   const [busy, setBusy] = useState(false);
   const busyRef = useRef(false);
-  const [stage, setStage] = useState<OrderStage | 'index'>('quote');
+  const [stage, setStage] = useState<FundingStage | 'index'>('quote');
+  const [fundingSymbol, setFundingSymbol] = useState<FundingSymbol | null>(null);
+  const [fundingQuote, setFundingQuote] = useState<FundingQuote | null>(null);
+  const queryClient = useQueryClient();
+  const { allTokens } = useAllChainsTokens();
+  const { data: prices = {} } = useTokenPrices();
   const [checking, setChecking] = useState(false);
   const [balanceError, setBalanceError] = useState('');
   const [positions, setPositions] = useState<VerifiedPosition[]>([]);
@@ -115,12 +125,22 @@ export default function DexPage() {
   const [balanceRevision, setBalanceRevision] = useState(0);
   const fundingToken = side === 'buy' ? 'USDC' : 'DHB';
   const venueName = DEX_CHAINS[venue].name;
-  const stageText: Record<OrderStage | 'index', string> = {
+  // A Base buy is priced in dollars and can be paid from any Base asset with a USDC route.
+  // Everything else (sells, and the BNB book) deposits the pool token directly.
+  const funded = side === 'buy' && venue === FUNDING_CHAIN;
+  const assets = useMemo(() => funded ? fundingAssets(allTokens, prices) : [], [funded, allTokens, prices]);
+  const fundingAsset: FundingAsset | null = useMemo(() => {
+    if (!funded) return null;
+    return assets.find((a) => a.symbol === fundingSymbol) ?? defaultFundingAsset(assets, Number(amount) || 0);
+  }, [funded, assets, fundingSymbol, amount]);
+  const stageText: Record<FundingStage | 'index', string> = {
+    swap: t('dex.stage.swap'), swapConfirm: t('dex.stage.swapConfirm'),
     quote: t('dex.stage.quote'), wallet: t('dex.stage.wallet'), balance: t('dex.stage.balance'),
     tokenApproval: t('dex.stage.tokenApproval'), permitApproval: t('dex.stage.permitApproval'),
     submit: t('dex.stage.submit'), confirm: t('dex.stage.confirm'), index: t('dex.stage.index'),
   };
-  const smartStageText: Partial<Record<OrderStage | 'index', string>> = {
+  const smartStageText: Partial<Record<FundingStage | 'index', string>> = {
+    swap: t('dex.automaticStage.swap'),
     tokenApproval: t('dex.automaticStage.tokenApproval'), permitApproval: t('dex.automaticStage.permitApproval'),
     submit: t('dex.automaticStage.submit'),
   };
@@ -132,6 +152,11 @@ export default function DexPage() {
     setReview(null); setChainId(null); setBalance('0'); setBalanceError('');
     if (!walletAddress) { setChecking(false); return; }
     let live = true; setChecking(true);
+    if (funded) {
+      // Balances come from the wallet's own token reads; only the dollar figure is decided here.
+      setChecking(false);
+      return;
+    }
     (side === 'sell' ? detectDhbChain : detectUsdcChain)(walletAddress).then((choice) => {
       if (!live) return;
       // The venue decides the funding network. A balance on the other chain is not spendable here.
@@ -140,7 +165,15 @@ export default function DexPage() {
     }).catch(() => { if (live) setBalanceError(t('dex.balanceError')); })
       .finally(() => { if (live) setChecking(false); });
     return () => { live = false; };
-  }, [walletAddress, side, venue, balanceRevision, t]);
+  }, [walletAddress, side, venue, funded, balanceRevision, t]);
+  useEffect(() => {
+    if (!funded) return;
+    setChainId(fundingAsset && fundingAsset.balance > 0n ? FUNDING_CHAIN : null);
+    setBalance(fundingAsset ? fundingAsset.spendableUsd.toFixed(2) : '0');
+  }, [funded, fundingAsset]);
+  useEffect(() => {
+    if (balanceRevision > 0) void queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
+  }, [balanceRevision, queryClient]);
 
   useEffect(() => {
     setPending(null);
@@ -148,7 +181,8 @@ export default function DexPage() {
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey(walletAddress)) || 'null') as Pending | null;
       if (saved && saved.input?.walletAddress?.toLowerCase() === walletAddress.toLowerCase() &&
-          [BASE_CHAIN_ID, BNB_CHAIN_ID].includes(saved.input.chainId) && /^0x[0-9a-f]{64}$/i.test(saved.txHash)) {
+          [BASE_CHAIN_ID, BNB_CHAIN_ID].includes(saved.input.chainId) &&
+          (/^0x[0-9a-f]{64}$/i.test(saved.txHash ?? '') || /^0x[0-9a-f]{64}$/i.test(saved.funding?.swapTxHash ?? ''))) {
         setPending(saved);
         setVenue(saved.input.chainId);
       }
@@ -223,6 +257,7 @@ export default function DexPage() {
   const spread = gap != null && gap > 0 ? gap : null;
   const spreadShare = spread != null ? spreadPercent(bids[0].price, asks[0].price) : null;
   const decimals = side === 'sell' ? 18 : DEX_CHAINS[venue].usdcDecimals;
+  const fundingLabel = fundingAsset && fundingAsset.symbol !== 'USDC' ? `USD · ${fundingAsset.symbol}` : fundingToken;
   const estimate = Number(amount) > 0 && Number(minPrice) > 0 && Number(maxPrice) > Number(minPrice)
     ? side === 'buy' ? Number(amount) / Math.sqrt(Number(minPrice) * Number(maxPrice)) : Number(amount) * Math.sqrt(Number(minPrice) * Number(maxPrice)) : 0;
   // Only the 0% pool counts: that is the one the ticket mints into, so a 0.3% position's spot
@@ -249,7 +284,7 @@ export default function DexPage() {
 
   function choosePrice(value: number, next = side) {
     if (busyRef.current) return;
-    setSide(next); setReview(null); setFormError('');
+    setSide(next); setReview(null); setFundingQuote(null); setFormError('');
     setMinPrice((next === 'buy' ? value * 0.999 : value).toFixed(8));
     setMaxPrice((next === 'buy' ? value : value * 1.001).toFixed(8));
   }
@@ -260,10 +295,11 @@ export default function DexPage() {
   }
   function changeVenue(next: DexChainId) {
     if (busyRef.current || pending || withdrawing) return;
-    setVenue(next); setAmount(''); setReview(null); setFormError(''); setPage(0); priceTouched.current = false;
+    setVenue(next); setAmount(''); setReview(null); setFundingQuote(null); setFormError(''); setPage(0); priceTouched.current = false;
   }
   async function register(saved: Pending) {
     setStage('index');
+    if (!saved.txHash) throw new Error(t('dex.registrationFailed'));
     const minted = saved.tokenId ? { tokenId: saved.tokenId, txHash: saved.txHash } : await recoverMint(saved.input, saved.txHash);
     const ready = { ...saved, tokenId: minted.tokenId }; savePending(ready);
     const input = saved.input;
@@ -273,7 +309,7 @@ export default function DexPage() {
       min_usdc_per_dhb: Number(input.minPrice), max_usdc_per_dhb: Number(input.maxPrice),
     }, { onConflict: 'chain_id,token_id', ignoreDuplicates: true }), input.walletAddress)), 'Listing registration');
     if (error) throw new Error(t('dex.registrationFailed'));
-    savePending(null); setAmount(''); setReview(null); setMine(true); setPage(0); setBalanceRevision((n) => n + 1);
+    savePending(null); setAmount(''); setReview(null); setFundingQuote(null); setMine(true); setPage(0); setBalanceRevision((n) => n + 1);
     priceTouched.current = false;
     toast.success(t('dex.created')); await loadPositions();
   }
@@ -283,18 +319,53 @@ export default function DexPage() {
     if (!pending && !chainId) { setFormError(t('dex.noFunding', { token: fundingToken, chain: venueName })); return; }
     setFormError(''); busyRef.current = true; setBusy(true); setStage('quote');
     try {
-      if (pending) { await register(pending); return; }
+      if (pending) {
+        // A funded order that swapped but never minted resumes at the mint; a minted one registers.
+        if (pending.funding && !pending.txHash) {
+          const asset = assets.find((a) => a.symbol === pending.funding!.symbol);
+          if (!asset) throw new Error(t('dex.resumeNeedsBalances'));
+          const usdc = usdcAmountFor(pending.input.amount);
+          if (!usdc) throw new Error(t('dex.checkAmount', { token: 'USD' }));
+          const quote = await quoteFunding(asset, usdc.units);
+          if (walletLocked) { requestWalletUnlock(); return; }
+          const minted = await fundAndMint({ input: pending.input, quote }, {
+            progress: setStage, resume: { swapTxHash: pending.funding.swapTxHash },
+            submitted: (txHash) => savePending({ ...pending, txHash }),
+          });
+          await register({ ...pending, ...minted });
+          return;
+        }
+        await register(pending); return;
+      }
       // parseUnits throws its own wording for too many decimals; keep one message for every bad amount.
       const toUnits = (value: string) => { try { return parseUnits(value, decimals); } catch { return null; } };
-      const amountUnits = /^\d+(\.\d+)?$/.test(amount) ? toUnits(amount) : null;
-      if (amountUnits == null || amountUnits <= 0n || amountUnits > (toUnits(balance) ?? 0n)) throw new Error(t('dex.checkAmount', { token: fundingToken }));
+      const amountUnits = /^d+(.d+)?$/.test(amount) ? toUnits(amount) : null;
+      if (amountUnits == null || amountUnits <= 0n || amountUnits > (toUnits(balance) ?? 0n)) throw new Error(t('dex.checkAmount', { token: funded ? 'USD' : fundingToken }));
       const input: SellInput = { walletAddress, chainId: chainId!, side, amount, minPrice, maxPrice };
+      if (funded && fundingAsset) {
+        // Price the swap first: a route that cannot cover the order is a cheaper failure than a pool read.
+        if (!review || !fundingQuote) {
+          const quote = await quoteFunding(fundingAsset, amountUnits);
+          setFundingQuote(quote);
+          setReview(await quoteSellPosition(input));
+          return;
+        }
+        if (walletLocked) { requestWalletUnlock(); return; }
+        const funding = { symbol: fundingAsset.symbol };
+        const minted = await fundAndMint({ input, quote: fundingQuote }, {
+          progress: setStage,
+          swapped: (swapTxHash) => savePending({ input, funding: { ...funding, swapTxHash } }),
+          submitted: (txHash) => savePending({ input, txHash, funding }),
+        });
+        await register({ input, funding, ...minted });
+        return;
+      }
       if (!review) { setReview(await quoteSellPosition(input)); return; }
       if (walletLocked) { requestWalletUnlock(); return; }
       const minted = await mintSellPosition(input, setStage, (txHash) => savePending({ input, txHash }));
       await register({ input, ...minted });
     } catch (error) {
-      if ((error as { code?: string }).code === 'DEX_REVERTED') { savePending(null); setReview(null); }
+      if ((error as { code?: string }).code === 'DEX_REVERTED') { savePending(null); setReview(null); setFundingQuote(null); }
       const message = dexActionError(error, t('dex.prepareFailed'));
       setFormError(message); void logger.error('Position action failed', { chainId, side, path: '/dex', message });
     } finally { busyRef.current = false; setBusy(false); }
@@ -311,7 +382,7 @@ export default function DexPage() {
   const refresh = () => { primeDiscovery(); void loadPositions(); if (!busy) setBalanceRevision((n) => n + 1); };
   const submitLabel = busy ? (isSmartWalletSession() && smartStageText[stage] || stageText[stage])
     : !walletAddress ? t('dex.connectWallet')
-    : pending ? t('dex.resume')
+    : pending ? t(pending.txHash ? 'dex.resume' : 'dex.resumeMint')
     : review && walletLocked ? t('dex.unlockWallet')
     : review ? t(side === 'buy' ? 'dex.confirmBuy' : 'dex.confirmSell')
     : t(side === 'buy' ? 'dex.reviewBuy' : 'dex.reviewSell');
@@ -359,15 +430,16 @@ export default function DexPage() {
           <div className="dex-side">{(['buy', 'sell'] as const).map((value) => <button type="button" key={value} className={side === value ? `active-${value}` : ''} onClick={() => changeSide(value)}>{t(value === 'buy' ? 'dex.buy' : 'dex.sell')}</button>)}</div>
           <label className="dex-field">{t(side === 'buy' ? 'dex.maxBuy' : 'dex.minSell')}<div className="dex-input"><input aria-label={t(side === 'buy' ? 'dex.maxBuy' : 'dex.minSell')} inputMode="decimal" value={side === 'buy' ? maxPrice : minPrice} onChange={(e) => { const raw = decimalInput(e.target.value); const value = Number(raw); setReview(null); priceTouched.current = true; if (side === 'buy') { setMaxPrice(raw); if (value > 0) setMinPrice((value * 0.999).toFixed(8)); } else { setMinPrice(raw); if (value > 0) setMaxPrice((value * 1.001).toFixed(8)); } }} /><span>USD</span></div></label>
           {priceWarning && <div role="status" className="dex-alert dex-warning">{priceWarning}<button type="button" onClick={() => { priceTouched.current = false; if (seedPrice != null) choosePrice(Number(defaultOrderPrice(side, seedPrice))); }}>{t('dex.useMarket')}</button></div>}
-          <label className="dex-field">{t(side === 'buy' ? 'dex.spend' : 'dex.sellAmount')}<div className="dex-input"><input aria-label={t('dex.amountToken', { token: fundingToken })} inputMode="decimal" placeholder="0.00" value={amount} onChange={(e) => { setAmount(decimalInput(e.target.value)); setReview(null); }} /><span>{fundingToken}</span></div></label>
-          <div className="dex-available"><span>{t('dex.available')}</span><span>{checking ? t('dex.checking') : `${formatSize(Number(balance))} ${fundingToken}`}</span></div>
-          <div className="dex-fractions">{[25, 50, 75, 100].map((percent) => <button key={percent} type="button" disabled={checking || !chainId} onClick={() => { setAmount(balanceFraction(balance, percent, decimals)); setReview(null); }}>{percent === 100 ? t('dex.max') : `${percent}%`}</button>)}</div>
+          {funded && <label className="dex-field">{t('dex.payWith')}<div className="dex-input"><select aria-label={t('dex.payWith')} className="dex-pay-select" value={fundingAsset?.symbol ?? ''} onChange={(e) => { setFundingSymbol(e.target.value as FundingSymbol); setReview(null); setFundingQuote(null); }}>{assets.map((asset) => <option key={asset.symbol} value={asset.symbol}>{asset.symbol} · ${asset.usd.toLocaleString('en-US', { maximumFractionDigits: 2 })}</option>)}{!assets.length && <option value="">{t('dex.noBaseFunds')}</option>}</select></div></label>}
+          <label className="dex-field">{t(side === 'buy' ? (funded ? 'dex.spendUsd' : 'dex.spend') : 'dex.sellAmount')}<div className="dex-input"><input aria-label={t('dex.amountToken', { token: funded ? 'USD' : fundingToken })} inputMode="decimal" placeholder="0.00" value={amount} onChange={(e) => { setAmount(decimalInput(e.target.value)); setReview(null); setFundingQuote(null); }} /><span>{fundingLabel}</span></div></label>
+          <div className="dex-available"><span>{t('dex.available')}</span><span>{checking ? t('dex.checking') : funded ? `${formatSize(Number(balance))}${fundingAsset && fundingAsset.symbol !== 'USDC' ? ` · ${fundingAsset.symbol}` : ''}` : `${formatSize(Number(balance))} ${fundingToken}`}</span></div>
+          <div className="dex-fractions">{[25, 50, 75, 100].map((percent) => <button key={percent} type="button" disabled={checking || !chainId} onClick={() => { setAmount(balanceFraction(balance, percent, decimals)); setReview(null); setFundingQuote(null); }}>{percent === 100 ? t('dex.max') : `${percent}%`}</button>)}</div>
           <details className="dex-advanced"><summary>{t('dex.adjustRange')}</summary><p className="dex-help">{t('dex.rangeHint')}</p>{[{ label: t('dex.lowerPrice'), value: minPrice, set: setMinPrice }, { label: t('dex.upperPrice'), value: maxPrice, set: setMaxPrice }].map((field) => <label className="dex-field" key={field.label}>{field.label}<div className="dex-input"><input aria-label={field.label} inputMode="decimal" value={field.value} onChange={(e) => { field.set(decimalInput(e.target.value)); priceTouched.current = true; setReview(null); }} /><span>USD</span></div></label>)}</details>
           <dl><dt>{t('dex.estimated')}</dt><dd>{formatSize(estimate)} {side === 'buy' ? 'DHB' : 'USDC'}</dd><dt>{t('dex.network')}</dt><dd>{venueName}</dd><dt>{t('dex.lpFeeLabel')}</dt><dd>0%</dd></dl>
         </fieldset>
         {balanceError && <div className="dex-alert">{balanceError}<button onClick={() => setBalanceRevision((n) => n + 1)} disabled={busy}>{t('dex.retry')}</button></div>}
-        {review && !pending && <div className="dex-review"><strong>{t(side === 'buy' ? 'dex.reviewYourBuy' : 'dex.reviewYourSell')}</strong><br />{t('dex.reviewDeposit', { amount, token: fundingToken, chain: DEX_CHAINS[review.chainId].name })}<br />{t('dex.reviewRange', { min: formatPrice(Number(minPrice)), max: formatPrice(Number(maxPrice)) })}{priceWarning && <><br />{priceWarning}</>}{review.willCreatePool && <><br />{t('dex.initializes')}</>}</div>}
-        {pending && <div className="dex-review">{t('dex.pendingNote')} <a href={`${DEX_CHAINS[pending.input.chainId].explorer}/tx/${pending.txHash}`} target="_blank" rel="noreferrer">{t('dex.viewTransaction')} ↗</a></div>}
+        {review && !pending && <div className="dex-review"><strong>{t(side === 'buy' ? 'dex.reviewYourBuy' : 'dex.reviewYourSell')}</strong><br />{fundingQuote && fundingQuote.asset.symbol !== 'USDC' ? <>{t('dex.reviewSwap', { amountIn: formatSize(Number(formatUnits(fundingQuote.amountIn, fundingQuote.asset.decimals))), symbol: fundingQuote.asset.symbol, usdc: amount })}<br /></> : null}{t('dex.reviewDeposit', { amount, token: fundingToken, chain: DEX_CHAINS[review.chainId].name })}<br />{t('dex.reviewRange', { min: formatPrice(Number(minPrice)), max: formatPrice(Number(maxPrice)) })}{priceWarning && <><br />{priceWarning}</>}{review.willCreatePool && <><br />{t('dex.initializes')}</>}</div>}
+        {pending && <div className="dex-review">{pending.txHash ? t('dex.pendingNote') : t('dex.pendingSwapNote', { symbol: pending.funding?.symbol ?? '' })} <a href={`${DEX_CHAINS[pending.input.chainId].explorer}/tx/${pending.txHash ?? pending.funding?.swapTxHash}`} target="_blank" rel="noreferrer">{t('dex.viewTransaction')} ↗</a></div>}
         {formError && <div role="alert" className="dex-alert dex-error">{formError}</div>}
         <button type="button" className={`dex-submit ${side === 'sell' ? 'sell' : ''}`} disabled={busy || checking || !!withdrawing || (!!walletAddress && !chainId && !pending)} onClick={() => void handleCreate()}>{submitLabel}</button>
         <p className="dex-help">{t('dex.reversalNote')}</p>
