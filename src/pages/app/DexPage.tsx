@@ -248,7 +248,10 @@ export default function DexPage() {
   const bestAsk = snapshot?.price ?? null;
   // Every DHB pool, weighted by its own dollar liquidity — not just this order book.
   const usdPrice = snapshot?.usdPrice ?? null;
-  const liquidityUsd = snapshot?.liquidityUsd ?? null;
+  // Both sides of every pool: the dollar side plus the DHB side valued at the market price.
+  const liquidityUsd = snapshot?.liquidityUsd != null
+    ? snapshot.liquidityUsd + (snapshot.lpDhb != null && usdPrice != null ? snapshot.lpDhb * usdPrice : 0)
+    : null;
   const shown = useMemo(() => mine ? [...ordered.filter((p) => p.owner.toLowerCase() === walletAddress?.toLowerCase()), ...legacyMine] : ordered, [ordered, mine, walletAddress, legacyMine]);
   const visiblePositions = shown.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
   useEffect(() => { setPage((value) => Math.min(value, Math.max(0, Math.ceil(shown.length / PAGE_SIZE) - 1))); }, [shown.length]);
