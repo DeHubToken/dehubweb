@@ -860,7 +860,9 @@
     "crossChainCompleted": "Кроссчейн-пополнение завершено! {{symbol}} получен на Base.",
     "tryAgain": "Попробовать снова",
     "refundAddress": "Адрес возврата: {{chain}}",
-    "refundAddressHint": "Если замена не может быть завершена, ваш {{symbol}} будет отправлен сюда."
+    "refundAddressHint": "Если замена не может быть завершена, ваш {{symbol}} будет отправлен сюда.",
+    "sendFromWallet": "Отправить {{amount}} {{symbol}} из моего кошелька",
+    "walletSendSubmitted": "Отправлено. ETH поступит в Base через несколько минут."
   },
   "wallet": {
     "title": "Кошелёк",
@@ -5730,7 +5732,9 @@
     "reviewSwap": "Сначала поменяйте {{amountIn}}{{symbol}} на {{usdc}} USDC на Base. Неиспользованный {{symbol}} возвращается в той же транзакции.",
     "pendingSwapNote": "Ваш {{symbol}} был заменен на USDC. Возобновите, чтобы создать позицию без повторной замены.",
     "resumeMint": "Возобновить заказ",
-    "resumeNeedsBalances": "Балансы кошелька все еще загружаются. Повторите попытку позже."
+    "resumeNeedsBalances": "Балансы кошелька все еще загружаются. Повторите попытку позже.",
+    "convertBnbNote": "Торговля в BNB Chain закрыта. Есть BNB? Конвертируйте его в ETH в сети Base, затем оплатите в ETH.",
+    "convertBnb": "Конвертировать BNB"
   },
   "editor": {
     "canvas": {

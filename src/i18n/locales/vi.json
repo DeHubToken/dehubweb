@@ -808,7 +808,9 @@
     "crossChainCompleted": "Nạp xuyên chuỗi hoàn tất! Đã nhận {{symbol}} trên Base.",
     "tryAgain": "Thử lại",
     "refundAddress": "Địa chỉ hoàn tiền vào {{chain}}",
-    "refundAddressHint": "Nếu giao dịch hoán đổi không thể hoàn tất, {{symbol}} của bạn sẽ được gửi lại đây."
+    "refundAddressHint": "Nếu giao dịch hoán đổi không thể hoàn tất, {{symbol}} của bạn sẽ được gửi lại đây.",
+    "sendFromWallet": "Gửi {{amount}} {{symbol}} từ ví của tôi",
+    "walletSendSubmitted": "Đã gửi. ETH của bạn sẽ đến Base trong vài phút."
   },
   "wallet": {
     "title": "Ví",
@@ -5487,7 +5489,9 @@
     "reviewSwap": "Hoán đổi khoảng {{amountIn}}{{symbol}} với {{usdc}} USDC trên Cơ sở trước. {{symbol}} không sử dụng được trả lại trong cùng một giao dịch.",
     "pendingSwapNote": "{{symbol}} của bạn đã được đổi lấy USDC. Tiếp tục để tạo vị thế mà không cần hoán đổi lần nữa.",
     "resumeMint": "Tiếp tục đặt hàng",
-    "resumeNeedsBalances": "Số dư ví vẫn đang tải. Hãy thử lại sau ít phút."
+    "resumeNeedsBalances": "Số dư ví vẫn đang tải. Hãy thử lại sau ít phút.",
+    "convertBnbNote": "Giao dịch trên BNB Chain đã đóng. Bạn có BNB? Hãy đổi sang ETH trên Base, sau đó thanh toán bằng ETH.",
+    "convertBnb": "Đổi BNB"
   },
   "editor": {
     "canvas": {

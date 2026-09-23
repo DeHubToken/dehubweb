@@ -838,7 +838,9 @@
     "crossChainCompleted": "शृङ्खलान्तर-निक्षेपः सम्पूर्णः! {{symbol}} Base इत्यत्र प्राप्तः।",
     "tryAgain": "पुनः प्रयतताम्",
     "refundAddress": "पताः {{chain}}",
-    "refundAddressHint": "यदि स्वैपम् पूर्णं न शक्यत तर्हि भवतः {{symbol}} अत्र प्रेष्यते ।"
+    "refundAddressHint": "यदि स्वैपम् पूर्णं न शक्यत तर्हि भवतः {{symbol}} अत्र प्रेष्यते ।",
+    "sendFromWallet": "मम धनकोशात् {{amount}} {{symbol}} प्रेषयतु",
+    "walletSendSubmitted": "प्रेषितम्। भवतः ETH कतिपयनिमेषेषु Base प्राप्स्यति।"
   },
   "wallet": {
     "title": "कोषः",
@@ -3357,7 +3359,9 @@
     "spendUsd": "व्यय (यूएसडी)",
     "noBaseFunds": "कोई ईटीएच, यूएसडीसी या यूएसडीटी आधार पर",
     "resumeMint": "पुनःपुनः क्रमादेशः",
-    "resumeNeedsBalances": "अद्यापि भारोत्तोलनक्रीडा प्रचलति । एकवारं प्रयत्नं कुर्मः_"
+    "resumeNeedsBalances": "अद्यापि भारोत्तोलनक्रीडा प्रचलति । एकवारं प्रयत्नं कुर्मः_",
+    "convertBnbNote": "BNB Chain इत्यत्र व्यापारः पिहितः। BNB अस्ति वा? तत् Base इत्यत्र ETH रूपेण परिवर्तयतु, ततः ETH द्वारा शुल्कं ददातु।",
+    "convertBnb": "BNB परिवर्तयतु"
   },
   "editor": {
     "canvas": {

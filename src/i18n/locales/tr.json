@@ -862,7 +862,9 @@
     "crossChainCompleted": "Çapraz zincir yatırma tamamlandı! {{symbol}} Base'de alındı.",
     "tryAgain": "Tekrar dene",
     "refundAddress": "Para iadesi adresi: {{chain}}",
-    "refundAddressHint": "Değiştirme tamamlanamazsa, {{symbol}} buraya geri gönderilir."
+    "refundAddressHint": "Değiştirme tamamlanamazsa, {{symbol}} buraya geri gönderilir.",
+    "sendFromWallet": "Cüzdanımdan {{amount}} {{symbol}} gönder",
+    "walletSendSubmitted": "Gönderildi. ETH’niz birkaç dakika içinde Base’e ulaşır."
   },
   "wallet": {
     "title": "Cüzdan",
@@ -5785,7 +5787,9 @@
     "reviewSwap": "Önce Base'de {{amountIn}}{{symbol}} karşılığında {{usdc}} USDC'yi takas edin. Kullanılmayan {{symbol}} aynı işlemde iade edilir.",
     "pendingSwapNote": "{{symbol}} USDC ile değiştirildi. Pozisyonu tekrar değiştirmeden oluşturmak için devam edin.",
     "resumeMint": "Siparişi devam ettir",
-    "resumeNeedsBalances": "Cüzdan bakiyeleri hala yükleniyor. Birazdan tekrar deneyin."
+    "resumeNeedsBalances": "Cüzdan bakiyeleri hala yükleniyor. Birazdan tekrar deneyin.",
+    "convertBnbNote": "BNB Chain üzerinde işlem kapandı. BNB’niz mi var? Base üzerinde ETH’ye dönüştürün, ardından ETH ile ödeyin.",
+    "convertBnb": "BNB dönüştür"
   },
   "editor": {
     "canvas": {

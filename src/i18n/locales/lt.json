@@ -845,7 +845,9 @@
     "crossChainCompleted": "Tarpgrandininis įnašas baigtas! {{symbol}} gauta Base tinkle.",
     "tryAgain": "Bandyti dar kartą",
     "refundAddress": "Grąžinti pinigus adresu {{chain}}",
-    "refundAddressHint": "Jei sukeitimas negali būti baigtas, jūsų {{symbol}} bus išsiųstas atgal čia."
+    "refundAddressHint": "Jei sukeitimas negali būti baigtas, jūsų {{symbol}} bus išsiųstas atgal čia.",
+    "sendFromWallet": "Siųsti {{amount}} {{symbol}} iš mano piniginės",
+    "walletSendSubmitted": "Išsiųsta. Jūsų ETH pasieks Base per kelias minutes."
   },
   "wallet": {
     "title": "Piniginė",
@@ -5757,7 +5759,9 @@
     "noBaseFunds": "Nėra ETH, USDC arba USDT už bazinę kainą",
     "pendingSwapNote": "Jūsų {{symbol}} buvo pakeistas į USDC. Tęskite, kad sukurtumėte poziciją, nekeisdami jos dar kartą.",
     "resumeMint": "Tęsti užsakymą",
-    "resumeNeedsBalances": "Piniginės likučiai vis dar įkeliami. Netrukus bandykite dar kartą."
+    "resumeNeedsBalances": "Piniginės likučiai vis dar įkeliami. Netrukus bandykite dar kartą.",
+    "convertBnbNote": "Prekyba BNB Chain uždaryta. Turite BNB? Konvertuokite jį į ETH Base tinkle, tada mokėkite ETH.",
+    "convertBnb": "Konvertuoti BNB"
   },
   "editor": {
     "canvas": {

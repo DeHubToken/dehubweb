@@ -858,7 +858,9 @@
     "crossChainCompleted": "క్రాస్-చైన్ డిపాజిట్ పూర్తయింది! Baseలో {{symbol}} అందింది.",
     "tryAgain": "మళ్ళీ ప్రయత్నించండి",
     "refundAddress": "{{chain}} లో రీఫండ్ చిరునామా",
-    "refundAddressHint": "స్వాప్ పూర్తి చేయలేకపోతే, మీ {{symbol}} ఇక్కడ తిరిగి పంపబడుతుంది."
+    "refundAddressHint": "స్వాప్ పూర్తి చేయలేకపోతే, మీ {{symbol}} ఇక్కడ తిరిగి పంపబడుతుంది.",
+    "sendFromWallet": "నా వాలెట్ నుండి {{amount}} {{symbol}} పంపండి",
+    "walletSendSubmitted": "పంపబడింది. మీ ETH కొన్ని నిమిషాల్లో Base కు చేరుతుంది."
   },
   "wallet": {
     "title": "వాలెట్",
@@ -5575,7 +5577,9 @@
     "noBaseFunds": "బేస్ ‌ లో ETH, USDC లేదా USDT లేదు",
     "pendingSwapNote": "మీ {{symbol}} USDC కోసం మార్చబడింది. మళ్లీ మార్పిడి చేయకుండా పొజిషన్ ‌ ను సృష్టించడానికి తిరిగి ప్రారంభించండి.",
     "resumeMint": "ఆర్డర్ ‌ ను తిరిగి ప్రారంభించండి",
-    "resumeNeedsBalances": "వాలెట్ బ్యాలెన్స్ ‌ లు ఇంకా లోడ్ అవుతున్నాయి. కాసేపట్లో మళ్లీ ప్రయత్నించండి."
+    "resumeNeedsBalances": "వాలెట్ బ్యాలెన్స్ ‌ లు ఇంకా లోడ్ అవుతున్నాయి. కాసేపట్లో మళ్లీ ప్రయత్నించండి.",
+    "convertBnbNote": "BNB Chain లో ట్రేడింగ్ మూసివేయబడింది. BNB ఉందా? దాన్ని Base లో ETH గా మార్చి, ఆపై ETH తో చెల్లించండి.",
+    "convertBnb": "BNB మార్చండి"
   },
   "editor": {
     "canvas": {

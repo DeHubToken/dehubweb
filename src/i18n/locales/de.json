@@ -862,7 +862,9 @@
     "crossChainCompleted": "Cross-Chain-Einzahlung abgeschlossen! {{symbol}} auf Base erhalten.",
     "tryAgain": "Erneut versuchen",
     "refundAddress": "Rückerstattungsadresse auf {{chain}}",
-    "refundAddressHint": "Wenn der Tausch nicht abgeschlossen werden kann, wird Ihr {{symbol}} hierher zurückgeschickt."
+    "refundAddressHint": "Wenn der Tausch nicht abgeschlossen werden kann, wird Ihr {{symbol}} hierher zurückgeschickt.",
+    "sendFromWallet": "{{amount}} {{symbol}} aus meiner Wallet senden",
+    "walletSendSubmitted": "Gesendet. Dein ETH kommt in wenigen Minuten auf Base an."
   },
   "wallet": {
     "title": "Geldbörse",
@@ -5778,7 +5780,9 @@
     "reviewSwap": "Tausche zuerst über {{amountIn}}{{symbol}} gegen {{usdc}} USDC auf der Basis. Unbenutztes {{symbol}} wird in derselben Transaktion zurückgegeben.",
     "pendingSwapNote": "Ihr {{symbol}} wurde gegen USDC getauscht. Fahren Sie fort, um die Position zu erstellen, ohne sie erneut zu tauschen.",
     "resumeMint": "Bestellung fortsetzen",
-    "resumeNeedsBalances": "Wallet-Guthaben werden noch geladen. Versuchen Sie es gleich noch einmal."
+    "resumeNeedsBalances": "Wallet-Guthaben werden noch geladen. Versuchen Sie es gleich noch einmal.",
+    "convertBnbNote": "Der Handel auf BNB Chain ist geschlossen. Du hast BNB? Tausche es in ETH auf Base und bezahle dann mit ETH.",
+    "convertBnb": "BNB umtauschen"
   },
   "editor": {
     "canvas": {

@@ -844,7 +844,9 @@
     "crossChainCompleted": "Ìfipamọ́ cross-chain ti parí! A ti gba {{symbol}} lórí Base.",
     "tryAgain": "Gbìyànjú Lẹ́ẹ̀kansí",
     "refundAddress": "Adirẹsi agbapada lori {{chain}}",
-    "loginDescription": "Wọlé láti wọlé sí àpò owó rẹ àti ṣàkóso owó rẹ."
+    "loginDescription": "Wọlé láti wọlé sí àpò owó rẹ àti ṣàkóso owó rẹ.",
+    "sendFromWallet": "Fi {{amount}} {{symbol}} ránṣẹ́ láti inú àpamọ́wọ́ mi",
+    "walletSendSubmitted": "A ti fi ránṣẹ́. ETH rẹ yóò dé Base láàrin ìṣẹ́jú díẹ̀."
   },
   "wallet": {
     "title": "Àpò Owó",
@@ -3447,7 +3449,9 @@
     "reviewSwap": "Yipada nipa {{amountIn}} {{symbol}} fun {{usdc}} USDC lori Ipilẹ akọkọ. A kò lo {{symbol}} ni a dá padà nínú ìdúnàádúrà kan náà.",
     "pendingSwapNote": "A pààrọ̀ rẹ {{symbol}} fún USDC. Bẹ̀rẹ̀ láti ṣẹ̀dá ipò náà láì ṣe pàṣípààrọ̀ lẹ́ẹ̀kan síi.",
     "resumeMint": "Bẹ̀rẹ̀ sí í pàṣẹ",
-    "resumeNeedsBalances": "Ìwọ̀n owó àpamọ́wọ́ ṣì ń gbé ẹrù. Gbiyanju lẹẹkansi ni akoko kan."
+    "resumeNeedsBalances": "Ìwọ̀n owó àpamọ́wọ́ ṣì ń gbé ẹrù. Gbiyanju lẹẹkansi ni akoko kan.",
+    "convertBnbNote": "Ìṣòwò lórí BNB Chain ti tì. Ṣé o ní BNB? Yí i padà sí ETH lórí Base, lẹ́yìn náà sanwó pẹ̀lú ETH.",
+    "convertBnb": "Yí BNB padà"
   },
   "editor": {
     "canvas": {

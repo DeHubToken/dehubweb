@@ -828,7 +828,9 @@
     "depositExpired": "जमा के समय खतम भइल। कृपया फेर कोशिश करीं।",
     "depositFailedMsg": "जमा विफल भइल।",
     "crossChainCompleted": "क्रॉस-चेन जमा पूरा भइल! {{symbol}} Base पर मिलल।",
-    "tryAgain": "फेर कोशिश करीं"
+    "tryAgain": "फेर कोशिश करीं",
+    "sendFromWallet": "हमरा वॉलेट से {{amount}} {{symbol}} भेजीं",
+    "walletSendSubmitted": "भेजा गइल। रउआ ETH कुछ मिनट में Base पर पहुँच जाई।"
   },
   "wallet": {
     "title": "बटुआ",
@@ -3353,7 +3355,9 @@
     "spendUsd": "लागत बाटे (यूएसडी)",
     "noBaseFunds": "ईटीएच, ईटीएच, यूएसडी आधार पर नहीं",
     "resumeMint": "फिर से ऑर्डर करे",
-    "resumeNeedsBalances": "सामान सामान फिर भी ढो रहे कृपया उ के सक्षम करीं आ फिर से कोशिश करीं ',"
+    "resumeNeedsBalances": "सामान सामान फिर भी ढो रहे कृपया उ के सक्षम करीं आ फिर से कोशिश करीं ',",
+    "convertBnbNote": "BNB Chain पर ट्रेडिंग बंद हो गइल बा। BNB बा? ओकरा के Base पर ETH में बदलीं, फेर ETH से भुगतान करीं।",
+    "convertBnb": "BNB बदलीं"
   },
   "editor": {
     "canvas": {

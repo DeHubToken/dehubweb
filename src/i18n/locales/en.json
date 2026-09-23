@@ -862,7 +862,9 @@
     "crossChainCompleted": "Cross-chain deposit completed! {{symbol}} received on Base.",
     "tryAgain": "Try Again",
     "refundAddress": "Refund address on {{chain}}",
-    "refundAddressHint": "If the swap cannot complete, your {{symbol}} is sent back here."
+    "refundAddressHint": "If the swap cannot complete, your {{symbol}} is sent back here.",
+    "sendFromWallet": "Send {{amount}} {{symbol}} from my wallet",
+    "walletSendSubmitted": "Sent. Your ETH arrives on Base in a few minutes."
   },
   "wallet": {
     "title": "Wallet",
@@ -5784,7 +5786,9 @@
     "reviewSwap": "Swap about {{amountIn}} {{symbol}} for {{usdc}} USDC on Base first. Unused {{symbol}} is returned in the same transaction.",
     "pendingSwapNote": "Your {{symbol}} was swapped for USDC. Resume to create the position without swapping again.",
     "resumeMint": "Resume order",
-    "resumeNeedsBalances": "Wallet balances are still loading. Try again in a moment."
+    "resumeNeedsBalances": "Wallet balances are still loading. Try again in a moment.",
+    "convertBnbNote": "BNB Chain trading is closed. Have BNB? Convert it to ETH on Base, then pay with ETH.",
+    "convertBnb": "Convert BNB"
   },
   "editor": {
     "canvas": {

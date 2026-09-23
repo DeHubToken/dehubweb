@@ -715,7 +715,9 @@
     "depositExpired": "Danîn qediya. Ji kerema xwe dîsa biceribîne.",
     "depositFailedMsg": "Danîn têk çû.",
     "crossChainCompleted": "Danîna nav-zincîrî temam bû! {{symbol}} li ser Base hat wergirtin.",
-    "tryAgain": "Dîsa Biceribîne"
+    "tryAgain": "Dîsa Biceribîne",
+    "sendFromWallet": "{{amount}} {{symbol}} ji berîka min bişîne",
+    "walletSendSubmitted": "Hat şandin. ETH-ya te di çend deqîqeyan de digihêje Base."
   },
   "wallet": {
     "title": "Berîk",
@@ -4730,7 +4732,9 @@
       "tokenApproval": "وێڵێتی زیرەک ڕەزامەندی توکنەکان دەدات…",
       "permitApproval": "وێڵێتی زیرەک ڕەزامەندی دەستگەیشتنی پۆست دەدات…",
       "submit": "وێڵێتی زیرەک پۆستەکەت دروست دەکات…"
-    }
+    },
+    "convertBnbNote": "Bazirganî li ser BNB Chain girtî ye. BNB-ya te heye? Wê li ser Base veguherîne ETH, paşê bi ETH bide.",
+    "convertBnb": "BNB biguherîne"
   },
   "editor": {
     "canvas": {

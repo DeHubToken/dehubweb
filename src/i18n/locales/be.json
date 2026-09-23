@@ -854,7 +854,9 @@
     "crossChainCompleted": "Кросчэйн-дэпазіт завершаны! {{symbol}} атрымана ў Base.",
     "tryAgain": "Паўтарыць",
     "refundAddress": "Адрас вяртання на {{chain}}",
-    "refundAddressHint": "Калі своп не можа быць завершаны, ваш {{symbol}} адпраўляецца сюды."
+    "refundAddressHint": "Калі своп не можа быць завершаны, ваш {{symbol}} адпраўляецца сюды.",
+    "sendFromWallet": "Адправіць {{amount}} {{symbol}} з майго кашалька",
+    "walletSendSubmitted": "Адпраўлена. ETH паступіць у Base праз некалькі хвілін."
   },
   "wallet": {
     "title": "Кашалёк",
@@ -5557,7 +5559,9 @@
     "reviewSwap": "Спачатку памяняйце {{amountIn}} {{symbol}} на {{usdc}} USDC на базу. Нявыкарыстаны {{symbol}} вяртаецца ў той жа транзакцыі.",
     "pendingSwapNote": "Ваш {{symbol}} быў заменены на USDC. Паўтарыць, каб стварыць пазіцыю без замены зноў.",
     "resumeMint": "Аднавіць парадак",
-    "resumeNeedsBalances": "Балансы кашалькоў па-ранейшаму загружаюцца. Паспрабуйце яшчэ раз праз хвіліну."
+    "resumeNeedsBalances": "Балансы кашалькоў па-ранейшаму загружаюцца. Паспрабуйце яшчэ раз праз хвіліну.",
+    "convertBnbNote": "Гандаль у BNB Chain закрыты. Маеце BNB? Канвертуйце яго ў ETH у Base, а потым плаціце ETH.",
+    "convertBnb": "Канвертаваць BNB"
   },
   "editor": {
     "canvas": {

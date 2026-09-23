@@ -853,7 +853,9 @@
     "crossChainCompleted": "Depozit između lanaca dovršen! {{symbol}} primljen na Base.",
     "tryAgain": "Pokušaj ponovno",
     "refundAddress": "Adresa za povrat {{chain}}",
-    "refundAddressHint": "Ako se zamjena ne može dovršiti, vaš {{symbol}} se vraća ovdje."
+    "refundAddressHint": "Ako se zamjena ne može dovršiti, vaš {{symbol}} se vraća ovdje.",
+    "sendFromWallet": "Pošalji {{amount}} {{symbol}} iz mog novčanika",
+    "walletSendSubmitted": "Poslano. Vaš ETH stiže na Base za nekoliko minuta."
   },
   "wallet": {
     "title": "Novčanik",
@@ -5665,7 +5667,9 @@
     "reviewSwap": "Prvo zamijenite oko {{amountIn}}{{symbol}} za {{usdc}} USDC na bazi. Neiskorišteno {{symbol}} vraća se u istoj transakciji.",
     "pendingSwapNote": "Vaš {{symbol}} je zamijenjen za USDC. Nastavite kako biste stvorili položaj bez ponovne zamjene.",
     "resumeMint": "Nastavi narudžbu",
-    "resumeNeedsBalances": "Saldo novčanika i dalje se učitava. Pokušajte ponovno za nekoliko trenutaka."
+    "resumeNeedsBalances": "Saldo novčanika i dalje se učitava. Pokušajte ponovno za nekoliko trenutaka.",
+    "convertBnbNote": "Trgovanje na BNB Chainu je zatvoreno. Imate BNB? Pretvorite ga u ETH na Baseu, a zatim platite s ETH.",
+    "convertBnb": "Pretvori BNB"
   },
   "editor": {
     "canvas": {

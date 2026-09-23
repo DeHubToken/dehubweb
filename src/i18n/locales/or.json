@@ -841,7 +841,9 @@
     "crossChainCompleted": "କ୍ରସ-ଚେନ ଜମା ସମ୍ପୂର୍ଣ୍ଣ ହେଲା! Base ରେ {{symbol}} ମିଳିଲା।",
     "tryAgain": "ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ",
     "refundAddress": "{{chain}} ରେ ଫେରସ୍ତ ଠିକଣା",
-    "refundAddressHint": "ଯଦି ସ୍ୱାପ ସମ୍ପୂର୍ଣ୍ଣ କରିବାରେ ଅସମର୍ଥ ହୁଏ, ଆପଣଙ୍କର {{symbol}} ଏଠାରେ ପଠାଯାଇଥାଏ ।"
+    "refundAddressHint": "ଯଦି ସ୍ୱାପ ସମ୍ପୂର୍ଣ୍ଣ କରିବାରେ ଅସମର୍ଥ ହୁଏ, ଆପଣଙ୍କର {{symbol}} ଏଠାରେ ପଠାଯାଇଥାଏ ।",
+    "sendFromWallet": "ମୋ ୱାଲେଟରୁ {{amount}} {{symbol}} ପଠାନ୍ତୁ",
+    "walletSendSubmitted": "ପଠାଗଲା। ଆପଣଙ୍କ ETH କିଛି ମିନିଟରେ Base ରେ ପହଞ୍ଚିବ।"
   },
   "wallet": {
     "title": "ୱାଲେଟ",
@@ -3400,7 +3402,9 @@
     "spendUsd": "ବ୍ୟୟ କରନ୍ତୁ (USD)",
     "noBaseFunds": "ଆଧାରରେ କୌଣସି ETH, USDC କିମ୍ବା USDT ନାହିଁ",
     "resumeMint": "କ୍ରମକୁ ପୁନଃ ଆରମ୍ଭ କରନ୍ତୁ",
-    "resumeNeedsBalances": "ୱାଲେଟ ବାଲାନ୍ସ ଏବେ ବି ଲୋଡ ହେଉଛି । କିଛି ସମୟ ପରେ ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ ।"
+    "resumeNeedsBalances": "ୱାଲେଟ ବାଲାନ୍ସ ଏବେ ବି ଲୋଡ ହେଉଛି । କିଛି ସମୟ ପରେ ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ ।",
+    "convertBnbNote": "BNB Chain ରେ ଟ୍ରେଡିଂ ବନ୍ଦ ହୋଇଛି। BNB ଅଛି କି? ଏହାକୁ Base ରେ ETH ରେ ବଦଳାନ୍ତୁ, ତାପରେ ETH ରେ ପେମେଣ୍ଟ କରନ୍ତୁ।",
+    "convertBnb": "BNB ବଦଳାନ୍ତୁ"
   },
   "editor": {
     "canvas": {

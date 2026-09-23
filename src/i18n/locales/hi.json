@@ -868,7 +868,9 @@
     "recentActivity": "हाल की गतिविधि",
     "noRecentActivity": "कोई हाल की गतिविधि नहीं",
     "transactionHistory": "लेनदेन इतिहास",
-    "loginDescription": "अपने वॉलेट तक पहुँचने और अपनी धनराशि प्रबंधित करने के लिए लॉग इन करें।"
+    "loginDescription": "अपने वॉलेट तक पहुँचने और अपनी धनराशि प्रबंधित करने के लिए लॉग इन करें।",
+    "sendFromWallet": "मेरे वॉलेट से {{amount}} {{symbol}} भेजें",
+    "walletSendSubmitted": "भेज दिया। आपका ETH कुछ मिनटों में Base पर पहुँच जाएगा।"
   },
   "wallet": {
     "title": "वॉलेट",
@@ -5789,7 +5791,9 @@
     "reviewSwap": "पहले बेस पर {{amountIn}}{{symbol}} के लिए {{usdc}} USDC के बारे में अदला - बदली करें। इस्तेमाल नहीं किया गया {{symbol}} उसी लेन - देन में वापस आ गया है।",
     "pendingSwapNote": "आपके {{symbol}} को USDC के लिए बदल दिया गया था। फिर से स्वैप किए बिना स्थिति बनाने के लिए फिर से शुरू करें।",
     "resumeMint": "ऑर्डर फिर से शुरू करें",
-    "resumeNeedsBalances": "वॉलेट बैलेंस अभी भी लोड हो रहा है। कुछ देर बाद फिर से कोशिश करें।"
+    "resumeNeedsBalances": "वॉलेट बैलेंस अभी भी लोड हो रहा है। कुछ देर बाद फिर से कोशिश करें।",
+    "convertBnbNote": "BNB Chain पर ट्रेडिंग बंद है। BNB है? इसे Base पर ETH में बदलें, फिर ETH से भुगतान करें।",
+    "convertBnb": "BNB बदलें"
   },
   "editor": {
     "canvas": {

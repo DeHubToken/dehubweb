@@ -844,7 +844,9 @@
     "crossChainCompleted": "Kua oti te tāpui whakawhiti-mekameka! Kua riro mai te {{symbol}} i runga i Base.",
     "tryAgain": "Ngāna Anō",
     "refundAddress": "Wāhitau whakahoki i runga i {{chain}}",
-    "refundAddressHint": "Mena kaore e taea e te huringa te whakaoti, ka tukuna ano to {{symbol}} i konei."
+    "refundAddressHint": "Mena kaore e taea e te huringa te whakaoti, ka tukuna ano to {{symbol}} i konei.",
+    "sendFromWallet": "Tukuna {{amount}} {{symbol}} mai i taku pūkoro",
+    "walletSendSubmitted": "Kua tukuna. Ka tae tō ETH ki Base i roto i ētahi meneti."
   },
   "wallet": {
     "title": "Pūkoro Moni",
@@ -3453,7 +3455,9 @@
     "noBaseFunds": "Kaore he ETH, USDC ranei USDT i runga i te turanga",
     "pendingSwapNote": "Ko to {{symbol}} kua hurihia mo te USDC. Whakamātauria ki te hanga i te tūnga, me te kore e huri ano.",
     "resumeMint": "Whakahokia te ota",
-    "resumeNeedsBalances": "Kei te utaina tonu nga toenga putea. Whakamātauria ano i roto i te wa."
+    "resumeNeedsBalances": "Kei te utaina tonu nga toenga putea. Whakamātauria ano i roto i te wa.",
+    "convertBnbNote": "Kua katia te hokohoko i BNB Chain. He BNB āu? Hurihia hei ETH i Base, kātahi ka utu ki te ETH.",
+    "convertBnb": "Hurihia te BNB"
   },
   "editor": {
     "canvas": {
