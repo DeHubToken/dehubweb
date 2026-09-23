@@ -797,7 +797,9 @@
     "crossChainCompleted": "کراس چین ڈپازٹ مکمل! {{symbol}} Base تے مل گیا۔",
     "tryAgain": "ولا کوشش کرو",
     "refundAddress": "{{chain}} تے واپسی پتہ",
-    "refundAddressHint": "جے سویپ مکمل نئيں ہو سکدا، تہاڈا {{symbol}} ايتھے واپس بھيجيا ويندا اے۔"
+    "refundAddressHint": "جے سویپ مکمل نئيں ہو سکدا، تہاڈا {{symbol}} ايتھے واپس بھيجيا ويندا اے۔",
+    "sendFromWallet": "میڈے والٹ توں {{amount}} {{symbol}} بھیجو",
+    "walletSendSubmitted": "بھیج ڈتا۔ تہاڈا ETH کجھ منٹاں وچ Base تے پہنچ ویسی۔"
   },
   "wallet": {
     "title": "بٹوا",
@@ -3269,7 +3271,9 @@
     "reviewSwap": "پہلے Base تے {{amountIn}} {{symbol}} دے بدلے {{usdc}} USDC تبدیل کرو۔ باقی بچیا ہویا {{symbol}} اِیک ای ٹرانزیکشن وچ واپس کر چھڈیا ویندا اے۔",
     "pendingSwapNote": "تہاڈے {{symbol}} نوں USDC نال تبدیل کر چھڈیا گیا اے۔ دوبارہ تبدیل کرین توں بغیر پوزیشن بناون لئی جاری رکھو۔",
     "resumeMint": "آرڈر جاری رکھو",
-    "resumeNeedsBalances": "والٹ بیلنس ہجے لوڈ تھی رہے نیں۔ تھوڑی دیر بعد فیر کوشش کرو۔"
+    "resumeNeedsBalances": "والٹ بیلنس ہجے لوڈ تھی رہے نیں۔ تھوڑی دیر بعد فیر کوشش کرو۔",
+    "convertBnbNote": "BNB Chain تے ٹریڈنگ بند تھی گئی اے۔ BNB ہے؟ ایں کوں Base تے ETH وچ بدلو، ول ETH نال ادائیگی کرو۔",
+    "convertBnb": "BNB بدلو"
   },
   "editor": {
     "canvas": {

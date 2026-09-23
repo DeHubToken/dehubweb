@@ -864,7 +864,9 @@
     "crossChainCompleted": "Vita ny fametrahana cross-chain! Voaray tao amin'ny Base ny {{symbol}}.",
     "tryAgain": "Andramo indray",
     "refundAddress": "Adiresy famerenam-bola ao amin'ny {{chain}}",
-    "refundAddressHint": "Raha tsy feno tanteraka ny swap, naverina eto ny {{symbol}} anao."
+    "refundAddressHint": "Raha tsy feno tanteraka ny swap, naverina eto ny {{symbol}} anao.",
+    "sendFromWallet": "Alefaso {{amount}} {{symbol}} avy amin’ny kitapoko",
+    "walletSendSubmitted": "Lasa. Ho tonga any Base ao anatin’ny minitra vitsy ny ETH-nao."
   },
   "wallet": {
     "title": "Kitapom-bola",
@@ -5435,7 +5437,9 @@
     "reviewSwap": "Ampifamadiho ny {{amountIn}} {{symbol}} for {{usdc}} USDC voalohany. Naverina amin'ny fifampiraharahana mitovy ny {{symbol}}.",
     "pendingSwapNote": "Ny {{symbol}} anao dia navadika ho USDC. Avereno ny fanovana ny toerana mba tsy hikolokolo indray.",
     "resumeMint": "Alaviro ny filaharana",
-    "resumeNeedsBalances": "Mbola miraikitra ny fifandanjana sandoka. Miverena ao anatin'ny iray minitra."
+    "resumeNeedsBalances": "Mbola miraikitra ny fifandanjana sandoka. Miverena ao anatin'ny iray minitra.",
+    "convertBnbNote": "Mihidy ny varotra amin’ny BNB Chain. Manana BNB ve ianao? Avadiho ho ETH amin’ny Base izy, avy eo mandoava amin’ny ETH.",
+    "convertBnb": "Avadiho ny BNB"
   },
   "editor": {
     "canvas": {

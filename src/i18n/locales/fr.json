@@ -862,7 +862,9 @@
     "crossChainCompleted": "Dépôt cross-chain terminé ! {{symbol}} reçu sur Base.",
     "tryAgain": "Réessayer",
     "refundAddress": "Adresse de remboursement le {{chain}}",
-    "refundAddressHint": "Si l'échange ne peut pas se terminer, votre {{symbol}} est renvoyé ici."
+    "refundAddressHint": "Si l'échange ne peut pas se terminer, votre {{symbol}} est renvoyé ici.",
+    "sendFromWallet": "Envoyer {{amount}} {{symbol}} depuis mon portefeuille",
+    "walletSendSubmitted": "Envoyé. Vos ETH arrivent sur Base dans quelques minutes."
   },
   "wallet": {
     "title": "Portefeuille",
@@ -5780,7 +5782,9 @@
     "reviewSwap": "Échangez d'abord environ {{amountIn}}{{symbol}} contre {{usdc}} USDC sur la base. Le {{symbol}} inutilisé est retourné dans la même transaction.",
     "pendingSwapNote": "Votre {{symbol}} a été échangé contre de l'USDC. Reprenez pour créer le poste sans échanger à nouveau.",
     "resumeMint": "Reprendre la commande",
-    "resumeNeedsBalances": "Les soldes des portefeuilles sont toujours en cours de chargement. Réessayez dans un instant."
+    "resumeNeedsBalances": "Les soldes des portefeuilles sont toujours en cours de chargement. Réessayez dans un instant.",
+    "convertBnbNote": "Le trading sur BNB Chain est fermé. Vous avez des BNB ? Convertissez-les en ETH sur Base, puis payez en ETH.",
+    "convertBnb": "Convertir des BNB"
   },
   "editor": {
     "canvas": {

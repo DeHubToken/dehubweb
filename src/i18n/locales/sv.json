@@ -862,7 +862,9 @@
     "crossChainCompleted": "Cross-chain insättning klar! {{symbol}} mottaget på Base.",
     "tryAgain": "Försök igen",
     "refundAddress": "Återbetalningsadress på {{chain}}",
-    "refundAddressHint": "Om bytet inte kan slutföras skickas din {{symbol}} tillbaka hit."
+    "refundAddressHint": "Om bytet inte kan slutföras skickas din {{symbol}} tillbaka hit.",
+    "sendFromWallet": "Skicka {{amount}} {{symbol}} från min plånbok",
+    "walletSendSubmitted": "Skickat. Din ETH når Base inom några minuter."
   },
   "wallet": {
     "title": "Plånbok",
@@ -5668,7 +5670,9 @@
     "reviewSwap": "Byt ut {{amountIn}} {{symbol}} mot {{usdc}} USDC på Base först. Oanvänd {{symbol}} returneras i samma transaktion.",
     "pendingSwapNote": "Din {{symbol}} byttes ut mot USDC. Fortsätt för att skapa positionen utan att byta igen.",
     "resumeMint": "Återuppta beställning",
-    "resumeNeedsBalances": "Plånbokssaldon laddas fortfarande. Försök igen om en stund."
+    "resumeNeedsBalances": "Plånbokssaldon laddas fortfarande. Försök igen om en stund.",
+    "convertBnbNote": "Handeln på BNB Chain är stängd. Har du BNB? Konvertera det till ETH på Base och betala sedan med ETH.",
+    "convertBnb": "Konvertera BNB"
   },
   "editor": {
     "canvas": {

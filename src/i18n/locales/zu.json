@@ -845,7 +845,9 @@
     "tryAgain": "Zama Futhi",
     "refundAddress": "Ikheli lokubuyisela imali ku- {{chain}}",
     "refundAddressHint": "Uma ukushintshwa kungakwazi ukuqedela, i- {{symbol}} yakho izobuyiselwa lapha.",
-    "loginDescription": "Ngena ukufinyelela isikhwama sakho nokuphatha izimali zakho."
+    "loginDescription": "Ngena ukufinyelela isikhwama sakho nokuphatha izimali zakho.",
+    "sendFromWallet": "Thumela u-{{amount}} {{symbol}} esikhwameni sami",
+    "walletSendSubmitted": "Kuthunyelwe. I-ETH yakho izofika ku-Base emizuzwini embalwa."
   },
   "wallet": {
     "title": "Isikhwama",
@@ -3489,7 +3491,9 @@
     "reviewSwap": "Shintshanisa mayelana {{amountIn}} {{symbol}} for {{usdc}} USDC ku-Base kuqala. I- {{symbol}} engasetshenziswanga ibuyiselwa kuthengiselana okufanayo.",
     "pendingSwapNote": "I- {{symbol}} yakho ishintshelwe i-USDC. Qhubeka ukuze usungule indawo ngaphandle kokushintsha futhi.",
     "resumeMint": "Qhubeka nokuhleleka",
-    "resumeNeedsBalances": "Amabhalansi e-Wallet asalayishwa. Zama futhi ngomzuzwana."
+    "resumeNeedsBalances": "Amabhalansi e-Wallet asalayishwa. Zama futhi ngomzuzwana.",
+    "convertBnbNote": "Ukuhweba ku-BNB Chain kuvaliwe. Une-BNB? Yiguqule ibe yi-ETH ku-Base, bese ukhokha nge-ETH.",
+    "convertBnb": "Guqula i-BNB"
   },
   "editor": {
     "canvas": {

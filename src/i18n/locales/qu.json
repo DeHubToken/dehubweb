@@ -847,7 +847,9 @@
     "tryAgain": "Wakmanta Ruway",
     "refundAddress": "Kutichipuypa direccionnin {{chain}} nisqapi.",
     "refundAddressHint": "Sichus intercambio mana tukukunmanchu chayqa, {{symbol}} nisqayki kayman kutichisqa kanqa.",
-    "loginDescription": "Yaykuy qullqi wasiykiman yaykumunaykipaq qullqiykikunata kamachiynaykipaq."
+    "loginDescription": "Yaykuy qullqi wasiykiman yaykumunaykipaq qullqiykikunata kamachiynaykipaq.",
+    "sendFromWallet": "{{amount}} {{symbol}} kachay qullqi waqaychanaymanta",
+    "walletSendSubmitted": "Kachasqañam. ETH niykiqa huk iskay minutollapim Base man chayanqa."
   },
   "wallet": {
     "title": "Qullqi Wasi",
@@ -3488,7 +3490,9 @@
     "reviewSwap": "{{amountIn}} {{symbol}} nisqamanta {{usdc}} USDC nisqawan Base nisqapi ñawpaqta t&#39;inkinakuy. Mana llamk&#39;achisqa {{symbol}} kikin ruwaypi kutichisqa.",
     "pendingSwapNote": "{{symbol}} nisqaykiqa USDC nisqawanmi cambiasqa karqan. Mana yapamanta t&#39;inkispa posiciónta paqarichiyta qallariy.",
     "resumeMint": "Ordenta kaqmanta qallariy",
-    "resumeNeedsBalances": "Saldos de billetera nisqakunaqa cargakuchkallanraqmi. Huk ratullapi hukmanta kallpachakuy."
+    "resumeNeedsBalances": "Saldos de billetera nisqakunaqa cargakuchkallanraqmi. Huk ratullapi hukmanta kallpachakuy.",
+    "convertBnbNote": "BNB Chain nisqapi rantinakuyqa wichqasqañam. BNB kapusunkichu? Base nisqapi ETH man tikray, chaymanta ETH wan pagay.",
+    "convertBnb": "BNB tikray"
   },
   "editor": {
     "canvas": {

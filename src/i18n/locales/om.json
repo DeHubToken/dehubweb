@@ -846,7 +846,9 @@
     "crossChainCompleted": "Kuufamni cheenii-qaxxaamuraa xumurameera! {{symbol}} Base irratti fudhatameera.",
     "tryAgain": "Irra Deebi'ii Yaali",
     "refundAddress": "Teessoo deebi&#39;uu {{chain}} irratti.",
-    "refundAddressHint": "Yoo jijjiirraan xumuramuu hin dandeenye, {{symbol}} kee asitti deebi&#39;ee ergama."
+    "refundAddressHint": "Yoo jijjiirraan xumuramuu hin dandeenye, {{symbol}} kee asitti deebi&#39;ee ergama.",
+    "sendFromWallet": "{{amount}} {{symbol}} korojoo koo irraa ergi",
+    "walletSendSubmitted": "Ergameera. ETH keessan daqiiqaa muraasa keessatti Base irra ga’a."
   },
   "wallet": {
     "title": "Baallama",
@@ -3474,7 +3476,9 @@
     "reviewSwap": "Dursa waa&#39;ee {{amountIn}} {{symbol}} {{usdc}} USDC Base irratti jijjiiri. {{symbol}} kan hin fayyadamne daldala walfakkaataa keessatti deebi&#39;a.",
     "pendingSwapNote": "{{symbol}} kee USDC tti jijjiirame. Irra deebi&#39;ee osoo hin jijjiiriin bakka uumuuf deebi&#39;i.",
     "resumeMint": "Ajaja irra deebi&#39;ii jalqabuu",
-    "resumeNeedsBalances": "Hafnaan boorsaa ammallee fe&#39;amaa jira. Yeroo muraasa booda irra deebi&#39;ii yaali."
+    "resumeNeedsBalances": "Hafnaan boorsaa ammallee fe&#39;amaa jira. Yeroo muraasa booda irra deebi&#39;ii yaali.",
+    "convertBnbNote": "Daldalli BNB Chain irratti cufameera. BNB qabdaa? Gara ETH Base irratti jijjiiriitii ETH’n kaffalaa.",
+    "convertBnb": "BNB jijjiiri"
   },
   "editor": {
     "canvas": {

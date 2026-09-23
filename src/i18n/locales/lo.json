@@ -843,7 +843,9 @@
     "crossChainCompleted": "ການຝາກຂ້າມເຊນສຳເລັດແລ້ວ! ໄດ້ຮັບ {{symbol}} ໃນ Base.",
     "tryAgain": "ລອງໃໝ່ອີກຄັ້ງ",
     "refundAddress": "ທີ່ຢູ່ການສົ່ງເງິນຄືນທີ່ {{chain}}",
-    "refundAddressHint": "ຖ້າການແລກປ່ຽນບໍ່ສາມາດ ສໍາ ເລັດ, ຂອງທ່ານ {{symbol}} ຖືກສົ່ງກັບມາທີ່ນີ້."
+    "refundAddressHint": "ຖ້າການແລກປ່ຽນບໍ່ສາມາດ ສໍາ ເລັດ, ຂອງທ່ານ {{symbol}} ຖືກສົ່ງກັບມາທີ່ນີ້.",
+    "sendFromWallet": "ສົ່ງ {{amount}} {{symbol}} ຈາກກະເປົາຂອງຂ້ອຍ",
+    "walletSendSubmitted": "ສົ່ງແລ້ວ. ETH ຂອງທ່ານຈະມາຮອດ Base ໃນອີກບໍ່ເທົ່າໃດນາທີ."
   },
   "wallet": {
     "title": "ກະເປົາເງິນ",
@@ -5405,7 +5407,9 @@
     "reviewSwap": "ປ່ຽນປະມານ {{amountIn}}{{symbol}} ສໍາ ລັບ {{usdc}} USDC ໃສ່ Base ກ່ອນ. ບໍ່ໃຊ້ {{symbol}} ຖືກສົ່ງຄືນໃນການເຮັດທຸລະ ກໍາ ດຽວກັນ.",
     "pendingSwapNote": "ຂອງທ່ານ {{symbol}} ໄດ້ຖືກແລກປ່ຽນເປັນ USDC. ໄປທີ່ສະແກນອີກເທື່ອຫນຶ່ງກັບ UniConverter.",
     "resumeMint": "ສືບຕໍ່ສັ່ງຊື້",
-    "resumeNeedsBalances": "ກະເປົາເງິນຍັງຖືກໂຫຼດ. ພະ ຍາ ຍາມ ມັນ ອີກ ເທື່ອ ຫນຶ່ງ."
+    "resumeNeedsBalances": "ກະເປົາເງິນຍັງຖືກໂຫຼດ. ພະ ຍາ ຍາມ ມັນ ອີກ ເທື່ອ ຫນຶ່ງ.",
+    "convertBnbNote": "ການຊື້ຂາຍໃນ BNB Chain ປິດແລ້ວ. ມີ BNB ບໍ? ປ່ຽນເປັນ ETH ໃນ Base ແລ້ວຈ່າຍດ້ວຍ ETH.",
+    "convertBnb": "ປ່ຽນ BNB"
   },
   "editor": {
     "canvas": {

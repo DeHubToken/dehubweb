@@ -833,7 +833,9 @@
     "crossChainCompleted": "الإيداع عبر السلاسل تكمّل! توصلتي بـ {{symbol}} على Base.",
     "tryAgain": "عاود حاول",
     "refundAddress": "عنوان رد الأموال في {{chain}}",
-    "refundAddressHint": "إذا تعذر إكمال فائدة التمديد، فسيتم إرسال {{symbol}} مرة أخرى إلى هنا."
+    "refundAddressHint": "إذا تعذر إكمال فائدة التمديد، فسيتم إرسال {{symbol}} مرة أخرى إلى هنا.",
+    "sendFromWallet": "صيفط {{amount}} {{symbol}} من البزطام ديالي",
+    "walletSendSubmitted": "تصيفط. الـ ETH ديالك غادي يوصل لـ Base فشي دقايق."
   },
   "wallet": {
     "title": "المحفظة",
@@ -3417,7 +3419,9 @@
     "reviewSwap": "قم بالتبديل حول {{amountIn}}{{symbol}} لـ {{usdc}} USDC في القاعدة أولاً. يتم إرجاع {{symbol}} غير المستخدمة في نفس المعاملة.",
     "pendingSwapNote": "تم تبديل {{symbol}} الخاص بك بـ USDC. استأنف لإنشاء المركز دون التبديل مرة أخرى.",
     "resumeMint": "استئناف الطلب",
-    "resumeNeedsBalances": "لا تزال أرصدة المحفظة قيد التحميل. حاول مرة أخرى خلال لحظات."
+    "resumeNeedsBalances": "لا تزال أرصدة المحفظة قيد التحميل. حاول مرة أخرى خلال لحظات.",
+    "convertBnbNote": "التداول على BNB Chain تسد. عندك BNB؟ حوّلو لـ ETH على Base، ومن بعد خلّص بـ ETH.",
+    "convertBnb": "حوّل BNB"
   },
   "editor": {
     "export": {

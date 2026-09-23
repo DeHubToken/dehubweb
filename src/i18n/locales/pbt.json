@@ -828,7 +828,9 @@
     "depositExpired": "زیرمه پای ته ورسیده. مهرباني وکړئ بیا هڅه وکړئ.",
     "depositFailedMsg": "زیرمه ناکامه شوه.",
     "crossChainCompleted": "د زنځیرونو تر منځ زیرمه بشپړه شوه! {{symbol}} په Base کې ترلاسه شو.",
-    "tryAgain": "بیا هڅه وکړئ"
+    "tryAgain": "بیا هڅه وکړئ",
+    "sendFromWallet": "زما له بټوې څخه {{amount}} {{symbol}} ولېږئ",
+    "walletSendSubmitted": "ولېږل شو. ستاسو ETH به په څو دقیقو کې Base ته ورسېږي."
   },
   "wallet": {
     "title": "والټ",
@@ -3327,7 +3329,9 @@
     "spendUsd": "په اترې بيه (USD)",
     "noBaseFunds": "نه ETH، نه USDC او نه هم USDT په بیس بیس کې",
     "resumeMint": "د امر بیا پیل کول",
-    "resumeNeedsBalances": "د بسته بندۍ ماشینونه لاهم د بار وړلو په حال کې دي. په یوه دقیقه کې بیا هڅه وکړئ."
+    "resumeNeedsBalances": "د بسته بندۍ ماشینونه لاهم د بار وړلو په حال کې دي. په یوه دقیقه کې بیا هڅه وکړئ.",
+    "convertBnbNote": "په BNB Chain کې سوداګري بنده شوې. BNB لرئ؟ هغه په Base کې په ETH واړوئ، بیا په ETH تادیه وکړئ.",
+    "convertBnb": "BNB واړوئ"
   },
   "editor": {
     "canvas": {

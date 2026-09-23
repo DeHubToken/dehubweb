@@ -801,7 +801,9 @@
     "crossChainCompleted": "跨链存款完成！{{symbol}} 已经收到在 Base 顶。",
     "tryAgain": "再试",
     "refundAddress": "退款地址在 {{chain}}",
-    "refundAddressHint": "如果交换无法完成，你的 {{symbol}} 会被送回这里。"
+    "refundAddressHint": "如果交换无法完成，你的 {{symbol}} 会被送回这里。",
+    "sendFromWallet": "从我个钱包发 {{amount}} {{symbol}}",
+    "walletSendSubmitted": "发出去了。你个 ETH 几分钟就到 Base。"
   },
   "wallet": {
     "title": "钱包",
@@ -3324,7 +3326,9 @@
     "reviewSwap": "先在 Base 上交換大約 {{amountIn}} {{symbol}} 為 {{usdc}} USDC。剩餘的 {{symbol}} 在同一筆交易中退還。",
     "pendingSwapNote": "你的 {{symbol}} 已換成 USDC。恢復創建倉位，無需再次交換。",
     "resumeMint": "恢復訂單",
-    "resumeNeedsBalances": "錢包餘額仍在加載中。請稍後再試。"
+    "resumeNeedsBalances": "錢包餘額仍在加載中。請稍後再試。",
+    "convertBnbNote": "BNB Chain 上个交易关了。有 BNB 无？把渠换成 Base 上个 ETH，再用 ETH 付钱。",
+    "convertBnb": "换 BNB"
   },
   "editor": {
     "export": {

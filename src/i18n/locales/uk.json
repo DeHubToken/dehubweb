@@ -1217,7 +1217,9 @@
     "crossChainCompleted": "Крослацюговий депозит завершено! {{symbol}} отримано на Base.",
     "tryAgain": "Спробувати ще раз",
     "refundAddress": "Адреса повернення на {{chain}}",
-    "refundAddressHint": "Якщо своп не може бути завершений, ваш {{symbol}} буде відправлений сюди."
+    "refundAddressHint": "Якщо своп не може бути завершений, ваш {{symbol}} буде відправлений сюди.",
+    "sendFromWallet": "Надіслати {{amount}} {{symbol}} з мого гаманця",
+    "walletSendSubmitted": "Надіслано. ETH надійде в Base за кілька хвилин."
   },
   "wallet": {
     "title": "Гаманець",
@@ -5516,7 +5518,9 @@
     "reviewSwap": "Спочатку обміняйте {{amountIn}} {{symbol}} на {{usdc}} USDC на Base. Невикористаний {{symbol}} повертається в тій же транзакції.",
     "pendingSwapNote": "Ваш {{symbol}} замінено на долари США. Продовжте, щоб створити позицію, не змінюючи її знову.",
     "resumeMint": "Відновити замовлення",
-    "resumeNeedsBalances": "Баланси гаманця все ще завантажуються. Повторіть спробу за мить."
+    "resumeNeedsBalances": "Баланси гаманця все ще завантажуються. Повторіть спробу за мить.",
+    "convertBnbNote": "Торгівлю в BNB Chain закрито. Маєте BNB? Конвертуйте його в ETH у мережі Base, а потім сплатіть ETH.",
+    "convertBnb": "Конвертувати BNB"
   },
   "editor": {
     "canvas": {

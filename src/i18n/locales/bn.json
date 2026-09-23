@@ -841,7 +841,9 @@
     "crossChainCompleted": "ক্রস-চেইন জমা সম্পন্ন! Base-এ {{symbol}} পাওয়া গেছে।",
     "tryAgain": "আবার চেষ্টা করুন",
     "refundAddress": "{{chain}} -এ ঠিকানা রিফান্ড করুন",
-    "refundAddressHint": "অদলবদল সম্পন্ন না হলে, আপনার {{symbol}} এখানে ফেরত পাঠানো হবে ।"
+    "refundAddressHint": "অদলবদল সম্পন্ন না হলে, আপনার {{symbol}} এখানে ফেরত পাঠানো হবে ।",
+    "sendFromWallet": "আমার ওয়ালেট থেকে {{amount}} {{symbol}} পাঠান",
+    "walletSendSubmitted": "পাঠানো হয়েছে। আপনার ETH কয়েক মিনিটের মধ্যে Base-এ পৌঁছাবে।"
   },
   "wallet": {
     "title": "ওয়ালেট",
@@ -5488,7 +5490,9 @@
     "noBaseFunds": "বেসে কোনও ETH, USDC বা USDT নেই",
     "pendingSwapNote": "আপনার {{symbol}}USDC-এর জন্য অদলবদল করা হয়েছে । আবার অদলবদল না করে অবস্থান তৈরি করতে পুনরায় শুরু করুন ।",
     "resumeMint": "অর্ডার পুনরায় শুরু করুন",
-    "resumeNeedsBalances": "ওয়ালেটের ব্যালেন্স এখনও লোড হচ্ছে । কিছুক্ষণ পরে আবার চেষ্টা করুন ।"
+    "resumeNeedsBalances": "ওয়ালেটের ব্যালেন্স এখনও লোড হচ্ছে । কিছুক্ষণ পরে আবার চেষ্টা করুন ।",
+    "convertBnbNote": "BNB Chain-এ ট্রেডিং বন্ধ। BNB আছে? এটিকে Base-এ ETH-এ রূপান্তর করুন, তারপর ETH দিয়ে পেমেন্ট করুন।",
+    "convertBnb": "BNB রূপান্তর করুন"
   },
   "editor": {
     "canvas": {

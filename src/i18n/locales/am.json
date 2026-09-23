@@ -842,7 +842,9 @@
     "crossChainCompleted": "የተሻገረ ሰንሰለት ተቀማጭ ተጠናቅቋል! {{symbol}} በBase ላይ ተቀብሏል።",
     "tryAgain": "እንደገና ሞክር",
     "refundAddress": "ተመላሽ አድራሻ በ {{chain}}",
-    "refundAddressHint": "ስዋፕ ማጠናቀቅ ካልቻለ የእርስዎ {{symbol}} እዚህ ተመልሷል ።"
+    "refundAddressHint": "ስዋፕ ማጠናቀቅ ካልቻለ የእርስዎ {{symbol}} እዚህ ተመልሷል ።",
+    "sendFromWallet": "{{amount}} {{symbol}} ከቦርሳዬ ላክ",
+    "walletSendSubmitted": "ተልኳል። ETHዎ በጥቂት ደቂቃዎች ውስጥ Base ላይ ይደርሳል።"
   },
   "wallet": {
     "title": "ቦርሳ",
@@ -3308,7 +3310,9 @@
     "noBaseFunds": "በመሠረቱ ላይ ምንም ETH ፣ USDC ወይም USDT የለም",
     "pendingSwapNote": "የእርስዎ {{symbol}} ለ USDC ተቀይሯል ። እንደገና ሳይቀይሩ ቦታውን መፍጠርዎን ይቀጥሉ ።",
     "resumeMint": "ቅደም ተከተል ያስጀምሩ",
-    "resumeNeedsBalances": "የኪስ ቦርሳ ሚዛን አሁንም እየተጫነ ነው ። በአንድ ደቂቃ ውስጥ እንደገና ሞክር."
+    "resumeNeedsBalances": "የኪስ ቦርሳ ሚዛን አሁንም እየተጫነ ነው ። በአንድ ደቂቃ ውስጥ እንደገና ሞክር.",
+    "convertBnbNote": "በBNB Chain ላይ ግብይት ተዘግቷል። BNB አለዎት? በBase ላይ ወደ ETH ይቀይሩት፣ ከዚያ በETH ይክፈሉ።",
+    "convertBnb": "BNB ቀይር"
   },
   "editor": {
     "canvas": {

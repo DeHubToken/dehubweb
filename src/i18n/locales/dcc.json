@@ -681,7 +681,9 @@
     "crossChainCompleted": "زنجیر پار جمع مکمل ہوا! {{symbol}} Base پر ملا۔",
     "tryAgain": "پھر کوشش کرو",
     "refundAddress": "{{chain}} वर परत करण्याचा पत्ता",
-    "refundAddressHint": "जर स्वॅप पूर्ण होऊ शकत नाही, तर तुमचा {{symbol}} येथे परत पाठवला जातो."
+    "refundAddressHint": "जर स्वॅप पूर्ण होऊ शकत नाही, तर तुमचा {{symbol}} येथे परत पाठवला जातो.",
+    "sendFromWallet": "میرے والٹ سے {{amount}} {{symbol}} بھیجو",
+    "walletSendSubmitted": "بھیج دیا۔ تمہارا ETH چند منٹاں میں Base پر پہنچ جاتا۔"
   },
   "wallet": {
     "title": "والیٹ",
@@ -2431,5 +2433,9 @@
       "duplicate": "ڈپلیکیٹ",
       "delete": "مٹاؤ"
     }
+  },
+  "dex": {
+    "convertBnbNote": "BNB Chain پر ٹریڈنگ بند ہوگئی۔ BNB ہے؟ اس کو Base پر ETH میں بدلو، پھر ETH سے ادا کرو۔",
+    "convertBnb": "BNB بدلو"
   }
 }

@@ -856,7 +856,9 @@
     "crossChainCompleted": "क्रॉस-चेन डिपॉझिट पूर्ण झाले! {{symbol}} Base वर मिळाले.",
     "tryAgain": "पुन्हा प्रयत्न करा",
     "refundAddress": "{{chain}} वर परतावा पत्ता",
-    "refundAddressHint": "स्वॅप पूर्ण करू शकत नसल्यास, आपला {{symbol}} येथे परत पाठविला जाईल."
+    "refundAddressHint": "स्वॅप पूर्ण करू शकत नसल्यास, आपला {{symbol}} येथे परत पाठविला जाईल.",
+    "sendFromWallet": "माझ्या वॉलेटमधून {{amount}} {{symbol}} पाठवा",
+    "walletSendSubmitted": "पाठवले. तुमचे ETH काही मिनिटांत Base वर पोहोचेल."
   },
   "wallet": {
     "title": "वॉलेट",
@@ -5446,7 +5448,9 @@
     "noBaseFunds": "बेस वर ETH, USDC किंवा USDT नाही",
     "pendingSwapNote": "आपला {{symbol}} USDC साठी स्वॅप करण्यात आला होता. पुन्हा स्विच न करता स्थिती तयार करण्यासाठी पुन्हा सुरू करा.",
     "resumeMint": "ऑर्डर पुन्हा सुरू करा",
-    "resumeNeedsBalances": "वॉलेट शिल्लक अजूनही लोड होत आहेत. थोड्या वेळाने पुन्हा प्रयत्न करा."
+    "resumeNeedsBalances": "वॉलेट शिल्लक अजूनही लोड होत आहेत. थोड्या वेळाने पुन्हा प्रयत्न करा.",
+    "convertBnbNote": "BNB Chain वरील ट्रेडिंग बंद झाले आहे. BNB आहे? ते Base वर ETH मध्ये बदला, नंतर ETH ने पैसे द्या.",
+    "convertBnb": "BNB बदला"
   },
   "editor": {
     "canvas": {

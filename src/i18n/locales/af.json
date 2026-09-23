@@ -868,7 +868,9 @@
     "description": "Beheer jou Dhobaverse-ervaring.",
     "settings": "Instellings",
     "profile": "Profiel",
-    "wallet": "Beursie"
+    "wallet": "Beursie",
+    "sendFromWallet": "Stuur {{amount}} {{symbol}} vanaf my beursie",
+    "walletSendSubmitted": "Gestuur. Jou ETH kom oor ’n paar minute op Base aan."
   },
   "wallet": {
     "title": "Beursie",
@@ -5603,7 +5605,9 @@
     "reviewSwap": "Ruil oor {{amountIn}} {{symbol}} vir {{usdc}} USDC eerste op die basis. Ongebruikte {{symbol}} word in dieselfde transaksie teruggestuur.",
     "pendingSwapNote": "Jou {{symbol}} is omgeruil vir USDC. Hervat om die posisie te skep sonder om weer te ruil.",
     "resumeMint": "Hervat bestelling",
-    "resumeNeedsBalances": "Portemonnee is nog steeds te laden. Probeer weer in 'n oomblik."
+    "resumeNeedsBalances": "Portemonnee is nog steeds te laden. Probeer weer in 'n oomblik.",
+    "convertBnbNote": "Handel op BNB Chain is gesluit. Het jy BNB? Skakel dit om na ETH op Base en betaal dan met ETH.",
+    "convertBnb": "Skakel BNB om"
   },
   "editor": {
     "canvas": {

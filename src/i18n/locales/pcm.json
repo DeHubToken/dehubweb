@@ -743,7 +743,9 @@
     "depositFailedMsg": "Deposit no work.",
     "crossChainCompleted": "Cross-chain deposit don complete! {{symbol}} enter for Base.",
     "tryAgain": "Try again",
-    "loginDescription": "Log in make you fit access your wallet and manage your money."
+    "loginDescription": "Log in make you fit access your wallet and manage your money.",
+    "sendFromWallet": "Send {{amount}} {{symbol}} from my wallet",
+    "walletSendSubmitted": "E don go. Your ETH go land for Base in few minutes."
   },
   "wallet": {
     "title": "Wallet",
@@ -2830,7 +2832,9 @@
     },
     "payWith": "Pay with",
     "spendUsd": "Spend (USD)",
-    "resumeMint": "Resume order"
+    "resumeMint": "Resume order",
+    "convertBnbNote": "Trading for BNB Chain don close. You get BNB? Change am to ETH for Base, then pay with ETH.",
+    "convertBnb": "Change BNB"
   },
   "editor": {
     "canvas": {

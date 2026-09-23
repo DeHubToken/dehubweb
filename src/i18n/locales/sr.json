@@ -701,7 +701,9 @@
     "depositExpired": "Депозит је истекао. Покушајте поново.",
     "depositFailedMsg": "Депозит није успео.",
     "crossChainCompleted": "Међуланчани депозит завршен! {{symbol}} примљен на Base.",
-    "tryAgain": "Покушај поново"
+    "tryAgain": "Покушај поново",
+    "sendFromWallet": "Пошаљи {{amount}} {{symbol}} из мог новчаника",
+    "walletSendSubmitted": "Послато. Ваш ETH стиже на Base за неколико минута."
   },
   "wallet": {
     "title": "Новчаник",
@@ -2662,7 +2664,9 @@
       "tokenApproval": "Паметни новчаник одобрава токене…",
       "permitApproval": "Паметни новчаник одобрава приступ позицији…",
       "submit": "Паметни новчаник креира вашу позицију…"
-    }
+    },
+    "convertBnbNote": "Трговање на BNB Chain је затворено. Имате BNB? Конвертујте га у ETH на Base, па платите у ETH.",
+    "convertBnb": "Конвертуј BNB"
   },
   "editor": {
     "export": {

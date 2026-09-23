@@ -842,7 +842,9 @@
     "crossChainCompleted": "Kryssekjedeinnskudd fullført! {{symbol}} mottatt på Base.",
     "tryAgain": "Prøv igjen",
     "refundAddress": "Refusjonsadresse på {{chain}}",
-    "refundAddressHint": "Hvis byttet ikke kan fullføres, sendes {{symbol}} tilbake hit."
+    "refundAddressHint": "Hvis byttet ikke kan fullføres, sendes {{symbol}} tilbake hit.",
+    "sendFromWallet": "Send {{amount}} {{symbol}} fra lommeboken min",
+    "walletSendSubmitted": "Sendt. ETH-en din kommer til Base om noen minutter."
   },
   "wallet": {
     "title": "Lommebok",
@@ -3441,7 +3443,9 @@
     "reviewSwap": "Bytt først omtrent {{amountIn}} {{symbol}} med {{usdc}} USDC på basen. Ubrukte {{symbol}} returneres i samme transaksjon.",
     "pendingSwapNote": "Din {{symbol}} ble byttet mot USDC. Fortsett for å opprette posisjonen uten å bytte igjen.",
     "resumeMint": "Fortsett bestilling:",
-    "resumeNeedsBalances": "Wallet-saldoene lastes fortsatt inn. Prøv igjen om et øyeblikk."
+    "resumeNeedsBalances": "Wallet-saldoene lastes fortsatt inn. Prøv igjen om et øyeblikk.",
+    "convertBnbNote": "Handel på BNB Chain er stengt. Har du BNB? Konverter det til ETH på Base, og betal deretter med ETH.",
+    "convertBnb": "Konverter BNB"
   },
   "editor": {
     "canvas": {

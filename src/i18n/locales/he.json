@@ -857,7 +857,9 @@
     "crossChainCompleted": "הפקדה חוצת-רשתות הושלמה! {{symbol}} התקבל ב-Base.",
     "tryAgain": "נסה שוב",
     "refundAddress": "כתובת ההחזר הכספי בתאריך {{chain}}",
-    "refundAddressHint": "אם לא ניתן להשלים את ההחלפה, ה -{{symbol}} שלך יישלח חזרה לכאן."
+    "refundAddressHint": "אם לא ניתן להשלים את ההחלפה, ה -{{symbol}} שלך יישלח חזרה לכאן.",
+    "sendFromWallet": "שלח {{amount}} {{symbol}} מהארנק שלי",
+    "walletSendSubmitted": "נשלח. ה-ETH שלך יגיע ל-Base בעוד כמה דקות."
   },
   "wallet": {
     "title": "ארנק",
@@ -5479,7 +5481,9 @@
     "noBaseFunds": "אין ETH, USDC או USDT בבסיס",
     "pendingSwapNote": "המסמך {{symbol}} הוחלף ב - USDC. המשך כדי ליצור את המיקום מבלי להחליף שוב.",
     "resumeMint": "המשך הזמנה",
-    "resumeNeedsBalances": "יתרות הארנק עדיין בטעינה. כדאי לנסות שוב בעוד כמה דקות."
+    "resumeNeedsBalances": "יתרות הארנק עדיין בטעינה. כדאי לנסות שוב בעוד כמה דקות.",
+    "convertBnbNote": "המסחר ב-BNB Chain נסגר. יש לך BNB? המר אותו ל-ETH ב-Base ואז שלם ב-ETH.",
+    "convertBnb": "המרת BNB"
   },
   "editor": {
     "canvas": {

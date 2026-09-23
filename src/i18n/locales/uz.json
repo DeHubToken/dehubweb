@@ -843,7 +843,9 @@
     "crossChainCompleted": "Zanjirlararo depozit yakunlandi! {{symbol}} Base tarmog'ida qabul qilindi.",
     "tryAgain": "Qayta urinish",
     "refundAddress": "Qaytarish manzili {{chain}}",
-    "refundAddressHint": "Agar almashtirish tugallanmasa, sizning {{symbol}} bu yerga qaytariladi."
+    "refundAddressHint": "Agar almashtirish tugallanmasa, sizning {{symbol}} bu yerga qaytariladi.",
+    "sendFromWallet": "Hamyonimdan {{amount}} {{symbol}} yuborish",
+    "walletSendSubmitted": "Yuborildi. ETH bir necha daqiqada Base’ga yetib keladi."
   },
   "wallet": {
     "title": "Hamyon",
@@ -3472,7 +3474,9 @@
     "reviewSwap": "Bazada avval {{amountIn}} {{symbol}} ni {{usdc}} USDC ga almashtiring. Ishlatilmagan {{symbol}} xuddi shu tranzaksiyada qaytariladi.",
     "pendingSwapNote": "Sizning {{symbol}} koeffitsiyentingiz USDC ga almashtirildi. Qayta almashtirmasdan pozitsiyani yaratish uchun davom eting.",
     "resumeMint": "Buyurtmani davom ettirish",
-    "resumeNeedsBalances": "Hamyon balanslari hali ham yuklanmoqda. Birozdan keyin qayta urinib ko&#39;ring."
+    "resumeNeedsBalances": "Hamyon balanslari hali ham yuklanmoqda. Birozdan keyin qayta urinib ko&#39;ring.",
+    "convertBnbNote": "BNB Chain’dagi savdo yopildi. BNB bormi? Uni Base’da ETH’ga almashtiring, so‘ng ETH bilan to‘lang.",
+    "convertBnb": "BNB almashtirish"
   },
   "editor": {
     "canvas": {

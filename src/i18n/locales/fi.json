@@ -858,7 +858,9 @@
     "crossChainCompleted": "Ketjujen välinen talletus valmis! {{symbol}} vastaanotettu Base-verkossa.",
     "tryAgain": "Yritä uudelleen",
     "refundAddress": "Hyvitysosoite {{chain}}",
-    "refundAddressHint": "Jos vaihto ei onnistu, {{symbol}} lähetetään takaisin tänne."
+    "refundAddressHint": "Jos vaihto ei onnistu, {{symbol}} lähetetään takaisin tänne.",
+    "sendFromWallet": "Lähetä {{amount}} {{symbol}} lompakostani",
+    "walletSendSubmitted": "Lähetetty. ETH saapuu Baseen muutamassa minuutissa."
   },
   "wallet": {
     "title": "Lompakko",
@@ -5666,7 +5668,9 @@
     "reviewSwap": "Vaihda ensin noin {{amountIn}} {{symbol}} hintaan {{usdc}} USDC. Käyttämätön {{symbol}} palautetaan samassa tapahtumassa.",
     "pendingSwapNote": "Kohteesi {{symbol}} vaihdettiin USDC: hen. Jatka sijainnin luomista vaihtamatta sitä uudelleen.",
     "resumeMint": "Jatka tilausta",
-    "resumeNeedsBalances": "Lompakon saldot latautuvat edelleen. Yritä hetken kuluttua uudelleen."
+    "resumeNeedsBalances": "Lompakon saldot latautuvat edelleen. Yritä hetken kuluttua uudelleen.",
+    "convertBnbNote": "Kaupankäynti BNB Chainissa on suljettu. Onko sinulla BNB:tä? Vaihda se ETH:ksi Basessa ja maksa sitten ETH:lla.",
+    "convertBnb": "Vaihda BNB"
   },
   "editor": {
     "canvas": {

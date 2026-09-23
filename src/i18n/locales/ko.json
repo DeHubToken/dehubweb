@@ -860,7 +860,9 @@
     "crossChainCompleted": "크로스체인 입금 완료! {{symbol}}이 Base에서 수령됨.",
     "tryAgain": "다시 시도",
     "refundAddress": "환불 주소: {{chain}}",
-    "refundAddressHint": "교환을 완료할 수 없는 경우 {{symbol}} 이 (가) 이곳으로 다시 전송됩니다."
+    "refundAddressHint": "교환을 완료할 수 없는 경우 {{symbol}} 이 (가) 이곳으로 다시 전송됩니다.",
+    "sendFromWallet": "내 지갑에서 {{amount}} {{symbol}} 보내기",
+    "walletSendSubmitted": "전송했습니다. ETH가 몇 분 안에 Base에 도착합니다."
   },
   "wallet": {
     "title": "지갑",
@@ -5773,7 +5775,9 @@
     "reviewSwap": "먼저 기지에서 {{amountIn}} {{symbol}} 을 (를) {{usdc}} USDC (으) 로 바꿉니다. 사용하지 않은 {{symbol}} 이 (가) 동일한 거래에서 반환됩니다.",
     "pendingSwapNote": "고객님의 {{symbol}} 이 (가) USDC와 교환되었습니다. 다시 스와핑하지 않고 포지션을 생성하려면 다시 시작하십시오.",
     "resumeMint": "주문 재개",
-    "resumeNeedsBalances": "지갑 잔액이 아직 로드 중입니다. 잠시 후 다시 시도하세요."
+    "resumeNeedsBalances": "지갑 잔액이 아직 로드 중입니다. 잠시 후 다시 시도하세요.",
+    "convertBnbNote": "BNB Chain 거래가 종료되었습니다. BNB가 있으신가요? Base의 ETH로 전환한 뒤 ETH로 결제하세요.",
+    "convertBnb": "BNB 전환"
   },
   "editor": {
     "canvas": {

@@ -846,7 +846,9 @@
     "crossChainCompleted": "Dhigaalka silsilad-dhaafka ah waa dhammaystirmay! {{symbol}} ayaa lagu helay Base.",
     "tryAgain": "Mar kale isku day",
     "refundAddress": "Cinwaanka lacag celinta ee {{chain}}",
-    "refundAddressHint": "Haddii swapku uusan dhammaystiri karin, Your {{symbol}} halkan ayaa dib loogu soo celinayaa."
+    "refundAddressHint": "Haddii swapku uusan dhammaystiri karin, Your {{symbol}} halkan ayaa dib loogu soo celinayaa.",
+    "sendFromWallet": "Ka dir {{amount}} {{symbol}} boorsadayda",
+    "walletSendSubmitted": "Waa la diray. ETH-gaagu wuxuu Base gaari doonaa dhowr daqiiqo gudahood."
   },
   "wallet": {
     "title": "Jeebka",
@@ -3449,7 +3451,9 @@
     "noBaseFunds": "No ETH, USDC ama USDT on Base",
     "pendingSwapNote": "{{symbol}} waa loo beddelay USDC. Dib u bilow inaad abuurto booska adigoon mar kale leexan.",
     "resumeMint": "Dib u bilow amarka",
-    "resumeNeedsBalances": "Miisaaniyada boorsada ayaa weli raraya. Isku day mar kale in daqiiqad ah."
+    "resumeNeedsBalances": "Miisaaniyada boorsada ayaa weli raraya. Isku day mar kale in daqiiqad ah.",
+    "convertBnbNote": "Ganacsiga BNB Chain waa la xiray. BNB ma haysataa? U beddel ETH Base-ka, kadibna ku bixi ETH.",
+    "convertBnb": "Beddel BNB"
   },
   "editor": {
     "canvas": {

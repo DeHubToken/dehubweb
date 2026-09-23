@@ -858,7 +858,9 @@
     "crossChainCompleted": "Dipòsit entre cadenes completat! {{symbol}} rebut a Base.",
     "tryAgain": "Torna-ho a provar",
     "refundAddress": "Adreça de reembossament a {{chain}}",
-    "refundAddressHint": "Si l'intercanvi no es pot completar, el teu {{symbol}} s'enviarà de nou aquí."
+    "refundAddressHint": "Si l'intercanvi no es pot completar, el teu {{symbol}} s'enviarà de nou aquí.",
+    "sendFromWallet": "Envia {{amount}} {{symbol}} des del meu moneder",
+    "walletSendSubmitted": "Enviat. El teu ETH arribarà a Base d’aquí a uns minuts."
   },
   "wallet": {
     "title": "Cartera",
@@ -5665,7 +5667,9 @@
     "reviewSwap": "Canvia {{amountIn}}{{symbol}} per {{usdc}} USDC a Base first. El {{symbol}} no utilitzat es retorna en la mateixa transacció.",
     "pendingSwapNote": "El teu {{symbol}} s'ha intercanviat per USDC. Torna a crear la posició sense tornar a intercanviar-la.",
     "resumeMint": "Reprèn la comanda",
-    "resumeNeedsBalances": "Els saldos de la cartera encara s'estan carregant. Torna-ho a provar en un moment."
+    "resumeNeedsBalances": "Els saldos de la cartera encara s'estan carregant. Torna-ho a provar en un moment.",
+    "convertBnbNote": "El comerç a BNB Chain està tancat. Tens BNB? Converteix-lo a ETH a Base i després paga amb ETH.",
+    "convertBnb": "Converteix BNB"
   },
   "editor": {
     "canvas": {
