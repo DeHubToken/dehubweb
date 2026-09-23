@@ -240,7 +240,10 @@ export default function DexPage() {
   }, [loadPositions]);
 
 
-  const { bids, asks } = useMemo(() => aggregateBook(venuePositions, increment), [venuePositions, increment]);
+  // The outside pools the snapshot prices are all on Base, so they belong in the Base book only.
+  const externalAsks = useMemo(() => venue === BASE_CHAIN_ID ? snapshot?.externalAsks ?? [] : [], [venue, snapshot]);
+  const { bids, asks } = useMemo(() => aggregateBook(venuePositions, increment, externalAsks),
+    [venuePositions, increment, externalAsks]);
   const bestAsk = snapshot?.price ?? null;
   // Every DHB pool, weighted by its own dollar liquidity — not just this order book.
   const usdPrice = snapshot?.usdPrice ?? null;
