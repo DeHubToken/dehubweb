@@ -2193,6 +2193,7 @@
     "reviewConfirm": "Import"
   },
   "migrate": {
+    "title": "सब माइग्रेट करो",
     "editDescription": "वर्णन",
     "editDescriptionPlaceholder": "वर्णन (वैकल्पिक)",
     "editDone": "पूर्ण",
