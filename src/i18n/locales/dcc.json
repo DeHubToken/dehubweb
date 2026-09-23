@@ -2337,6 +2337,13 @@
     "seoTitle": "DeHub दस्तावेज़ीकरण — गाइड, टोकन, dApps और सामान्य प्रश्न",
     "seoDescription": "आधिकारिक DeHub दस्तावेज़ीकरण: प्लेटफ़ॉर्म अवलोकन, dApps, DHB टोकन अर्थव्यवस्था, स्टेकिंग, गेम्स, रोडमैप, सामान्य प्रश्न और बहुत कुछ।"
   },
+  "dex": {
+    "convertBnbNote": "BNB Chain پر ٹریڈنگ بند ہوگئی۔ BNB ہے؟ اس کو Base پر ETH میں بدلو، پھر ETH سے ادا کرو۔",
+    "convertBnb": "BNB بدلو",
+    "pools": {
+      "feeDhb": "≈ {{amount}} DHB"
+    }
+  },
   "editor": {
     "canvas": {
       "dropMedia": "اپنے ڈیزائن میں ڈالنے کو یہاں چھوڑو",
@@ -2433,9 +2440,5 @@
       "duplicate": "ڈپلیکیٹ",
       "delete": "مٹاؤ"
     }
-  },
-  "dex": {
-    "convertBnbNote": "BNB Chain پر ٹریڈنگ بند ہوگئی۔ BNB ہے؟ اس کو Base پر ETH میں بدلو، پھر ETH سے ادا کرو۔",
-    "convertBnb": "BNB بدلو"
   }
 }

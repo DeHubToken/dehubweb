@@ -37,6 +37,7 @@ import { ThemePreviewProvider, ThemeProvider, useAppTheme } from "@/contexts/The
 import { UserPreferencesProvider } from "@/contexts/UserPreferencesContext";
 import { lazyWithRetry } from "@/lib/lazy-with-retry";
 const DexPage = React.lazy(() => import("@/pages/app/DexPage"));
+const DexPoolPage = React.lazy(() => import("@/pages/app/DexPoolPage"));
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SurfaceTransition } from "@/components/transitions/SurfaceTransition";
 
@@ -594,6 +595,7 @@ function AppContent() {
                 Same cached HomePage as /app (see PersistentPageCache home paths). */}
             <Route path="/" element={null} />
             <Route path="/dex" element={<Suspense fallback={<PageLoader />}><DexPage /></Suspense>} />
+            <Route path="/dex/:chain/:address" element={<Suspense fallback={<PageLoader />}><DexPoolPage /></Suspense>} />
 
             {/* App routes — cached pages render null, PersistentPageCache manages them */}
             <Route path="/app">
