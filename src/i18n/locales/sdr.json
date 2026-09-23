@@ -3341,10 +3341,74 @@
     "resumeMint": "استئناف الطلب",
     "resumeNeedsBalances": "أرصدة المحفظة لا تزال قيد التحميل. حاول مرة أخرى بعد لحظة.",
     "convertBnbNote": "BNB Chain پر ٹریڈنگ بند ہو گیا ہے۔ BNB ہے؟ اوکے Base پر ETH میں بدلو، پھر ETH سے پیمنٹ کرو۔",
-    "convertBnb": "BNB بدلو"
+    "convertBnb": "BNB بدلو",
+    "pools": {
+      "title": "Pools",
+      "search": "Search pools",
+      "loading": "Loading pools…",
+      "add": "Add pool",
+      "network": "Network",
+      "contract": "Token contract address",
+      "mintPlaceholder": "Token mint address",
+      "openExisting": "Open it",
+      "feeDhb": "≈ {{amount}} DHB",
+      "uploading": "Uploading image…",
+      "createFailed": "Pool kholal naikhel."
+    },
+    "pool": {
+      "missingTitle": "Pool naikhel milal — DeHub DEX",
+      "missing": "Apan token khatir koi pool naikhel. Apana order book suru kare khatir ek khola.",
+      "seoTitle": "{{symbol}}/USD — {{chain}} pa {{name}} trade kara | DeHub DEX",
+      "seoDescription": "{{chain}} pa {{name}} ({{symbol}}) trade kara: live order book, limit order aur DeHub DEX pa instant kharid aur becha.",
+      "changeImage": "Image badala",
+      "imageUpdated": "Pool image badalal",
+      "imageFailed": "Image badalal naikhel.",
+      "volume24": "24 ghanta volume",
+      "size": "Size ({{symbol}})",
+      "total": "Total ({{symbol}})",
+      "buyTotal": "Bids {{amount}} {{symbol}}",
+      "sellTotal": "Asks {{amount}} {{symbol}}",
+      "orderType": "Order type",
+      "limit": "Limit",
+      "instant": "Instant",
+      "instantBuy": "Instant kharid",
+      "instantSell": "Instant becha",
+      "confirmInstantBuy": "Instant kharid confirm kara",
+      "confirmInstantSell": "Instant becha confirm kara",
+      "placeBuy": "{{symbol}} khatir kharid order lagawa",
+      "placeSell": "{{symbol}} khatir becha order lagawa",
+      "buyAt": "Price pa kharida",
+      "sellAt": "Price pa becha",
+      "enterPrice": "Ek price likha.",
+      "youReceive": "Tohra lagbhag milta",
+      "priceImpact": "Price impact",
+      "minimum": "Minimum order",
+      "instantNote": "Instant trade sabse achha price pa turant pura ho jata hai network ke sabhi exchange par, 1% slippage tak ke saath.",
+      "solanaLimitNote": "Tohra token on-chain order mein rahata hai jab tak ki tohra price pa pura na ho jaye ya tohra cancel na kare.",
+      "evmLimitNote": "Tokens-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-n-i-t-i-a-",
+      "openOrders": "खुला ऑर्डर",
+      "myOrders": "My orders",
+      "noMyOrders": "تۆ هیچ فەرمانێکی کراوەت لەم پۆلەدا نییە.",
+      "cancel": "منسوخ کریں",
+      "cancelled": "سفارش لغو شد",
+      "bought": "خریداری شد {{amount}} {{symbol}}",
+      "sold": "बिक गेल{{amount}} {{symbol}}"
+    },
+    "chart": {
+      "bookStarts": "کتاب له دلته شروع کیږی",
+      "firstOrder": "لومړی امر د مایع اضافه کولو لپاره ځای په ځای کړئ.",
+      "waiting": "د نرخ معلوماتو ته انتظار کول",
+      "candlesStart": "شمعې یوځل چې دا نښه سوداګري وکړي ښکاري.",
+      "depthLabel": "د USD قیمت لخوا د امر کتاب ژوروالی",
+      "priceLabel": "{{symbol}} قیمت شمعې په USD",
+      "depthHint": "تجمعی {{symbol}} · د معاینې لپاره ودرېږئ",
+      "priceHint": "{{symbol}} قیمت · USD · د معاینې لپاره ودرېږئ"
+    }
   },
   "editor": {
     "canvas": {
+      "dropMedia": "اپنا ڈیزائن میں جوڑے کے واسطے چھوڑو",
+      "dropText": "ٹیکسٹ جوڑے کے واسطے چھوڑو",
       "hideTimeline": "ٹائم لائن چھپاؤ",
       "showTimeline": "ٹائم لائن دکھاؤ",
       "pause": "روکو",
@@ -3352,12 +3416,13 @@
       "resetToStart": "شروع میں لوٹاؤ",
       "resize": "سائز بدلو",
       "rotate": "گھماؤ",
-      "toggleLoop": "لوپ چالو/بند کرو",
-      "dropMedia": "اپنا ڈیزائن میں جوڑے کے واسطے چھوڑو",
-      "dropText": "ٹیکسٹ جوڑے کے واسطے چھوڑو"
+      "toggleLoop": "لوپ چالو/بند کرو"
     },
     "export": {
       "title": "ڈاؤن لوڈ",
+      "stillDescription": "ابھی کے فریم کو تصویر بنا کے سیو کرو۔",
+      "videoDescription": "اپنا ٹائم لائن کو ویڈیو فائل میں رینڈر کرو۔",
+      "unsupported": "تہار براؤزر ویڈیو ایکسپورٹ نہیں کر سکے ہے۔ Chrome، Edge، Brave یا Arc آزماؤ، یا اوکر بدلے PNG یا JPG ڈاؤن لوڈ کرو۔",
       "format": "فائل کے قسم",
       "resolution": "سائز",
       "quality": "کوالٹی",
@@ -3371,21 +3436,22 @@
       "webm": "WebM ویڈیو (VP9 + Opus)",
       "frameAt": "{{time}}s پر فریم",
       "duration": "مدت: {{value}}s",
+      "cutPreview": "پلے ہیڈ پر کاٹو: {{value}}s",
       "outputStill": "آؤٹ پٹ: {{width}}×{{height}}",
+      "outputVideo": "آؤٹ پٹ: {{width}}×{{height}}، {{fps}} fps",
       "cancel": "رد کرو",
       "cut": "کاٹو",
       "download": "ڈاؤن لوڈ کرو",
       "done": "سیو ہو گیا: {{filename}}",
+      "empty": "پہلے اپنا ڈیزائن میں کچھ جوڑو۔",
       "failed": "ڈاؤن لوڈ فیل ہو گیا",
       "cancelled": "ڈاؤن لوڈ رد ہو گیا",
       "preparing": "تیار ہوت ہے…",
-      "rendering": "رینڈر ہوت ہے…",
-      "stillDescription": "ابھی کے فریم کو تصویر بنا کے سیو کرو۔",
-      "videoDescription": "اپنا ٹائم لائن کو ویڈیو فائل میں رینڈر کرو۔",
-      "unsupported": "تہار براؤزر ویڈیو ایکسپورٹ نہیں کر سکے ہے۔ Chrome، Edge، Brave یا Arc آزماؤ، یا اوکر بدلے PNG یا JPG ڈاؤن لوڈ کرو۔",
-      "cutPreview": "پلے ہیڈ پر کاٹو: {{value}}s",
-      "outputVideo": "آؤٹ پٹ: {{width}}×{{height}}، {{fps}} fps",
-      "empty": "پہلے اپنا ڈیزائن میں کچھ جوڑو۔"
+      "rendering": "رینڈر ہوت ہے…"
+    },
+    "inspector": {
+      "selectHint": "کینوس پر ایک لیئر یا ٹائم لائن پر ایک کلپ چنو۔",
+      "textHint": "ہٹائے کے واسطے کینوس پر کھینچو، سائز بدلے کے واسطے کونا کے استعمال کرو۔ لفظ بدلے کے واسطے ڈبل کلک کرو۔"
     },
     "layer": {
       "alignToPage": "پیج سے سیدھ کرو",
@@ -3399,6 +3465,7 @@
       "rotation": "گھماؤ {{value}}°",
       "opacity": "شفافیت {{value}}%",
       "resetPosition": "جگہ ری سیٹ کرو",
+      "matchCanvas": "پیج کو {{width}}×{{height}} بناؤ",
       "crop": "کراپ کرو",
       "cropLeft": "بایاں {{value}}%",
       "cropRight": "دایاں {{value}}%",
@@ -3417,8 +3484,7 @@
       "shadowOpacity": "زور {{value}}%",
       "shadowBlur": "دھندلاپن {{value}}",
       "shadowX": "کھسکاؤ X {{value}}",
-      "shadowY": "کھسکاؤ Y {{value}}",
-      "matchCanvas": "پیج کو {{width}}×{{height}} بناؤ"
+      "shadowY": "کھسکاؤ Y {{value}}"
     },
     "menu": {
       "addText": "ٹیکسٹ جوڑو",
@@ -3434,10 +3500,6 @@
       "sendToBack": "سب سے پیچھے بھیجو",
       "duplicate": "ڈپلیکیٹ کرو",
       "delete": "مٹاؤ"
-    },
-    "inspector": {
-      "selectHint": "کینوس پر ایک لیئر یا ٹائم لائن پر ایک کلپ چنو۔",
-      "textHint": "ہٹائے کے واسطے کینوس پر کھینچو، سائز بدلے کے واسطے کونا کے استعمال کرو۔ لفظ بدلے کے واسطے ڈبل کلک کرو۔"
     }
   },
   "post": {

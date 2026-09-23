@@ -3329,10 +3329,89 @@
     "spendUsd": "Spend (USD)",
     "resumeMint": "Resume order",
     "convertBnbNote": "Jago kɛli BNB Chain kan datugulen don. BNB b’i fɛ wa? A yɛlɛma ka kɛ ETH ye Base kan, o kɔfɛ i ka sara ni ETH ye.",
-    "convertBnb": "BNB yɛlɛma"
+    "convertBnb": "BNB yɛlɛma",
+    "pools": {
+      "title": "Pools",
+      "search": "Search pools",
+      "loading": "Loading pools…",
+      "noMatch": "Awo pool ti ko ba wi fun wiwa yi.",
+      "add": "Add pool",
+      "addTitle": "Ṣi pool tuntun kan",
+      "addDescription": "Ṣe atokọ eyikeyi aami lori Base, Ethereum, Robinhood Chain tabi Solana pẹlu iwe aṣẹ tirẹ. Ṣiṣi pool kan jẹ $100, san ni DHB.",
+      "network": "Network",
+      "contract": "Token contract address",
+      "mintPlaceholder": "Token mint address",
+      "lookingUp": "Nwa aami naa…",
+      "lookupFailed": "Ko le wa aami naa.",
+      "exists": "{{symbol}} ti ni pool tẹlẹ.",
+      "openExisting": "Open it",
+      "setImage": "Ṣeto aworan pool",
+      "imageHint": "Fọwọ ba Circle lati ṣeto aworan pool naa.",
+      "imageRules": "Yan PNG, JPG, WebP tabi GIF ti 5 MB tabi kere si.",
+      "feeDhb": "≈ {{amount}} DHB",
+      "priceUnavailable": "Iye DHB ko si ni bayi. Gbiyanju lẹẹkansi ni iṣẹju kan.",
+      "swapNote": "Rẹ {{symbol}} ni a paarọ si DHB fun idiyele ni iṣowo kanna. Ohunkunrin kankan ti o ku wa ninu apamọwọ rẹ.",
+      "alreadyPaid": "Idiyele rẹ ti san tẹlẹ. Pari ṣiṣi pool naa.",
+      "finish": "Pari ṣiṣi pool naa",
+      "notEnough": "Ko to owo fun idiyele $100",
+      "payAndOpen": "San ${{amount}} ki o si ṣi pool",
+      "discardPaid": "Bẹrẹ lẹẹkansi pẹlu aami miiran",
+      "uploading": "Uploading image…",
+      "quoting": "Idiyele idiyele…",
+      "paying": "Sanwo idiyele…",
+      "opening": "Ṣiṣi pool naa…",
+      "created": "{{symbol}} pool ti ṣii",
+      "createFailed": "A ko le ṣii pool naa."
+    },
+    "pool": {
+      "missingTitle": "Pool ko ri — DeHub DEX",
+      "missing": "Ko si pool fun aami yii sibẹsibẹ. Ṣi ọkan lati bẹrẹ iwe aṣẹ rẹ.",
+      "seoTitle": "{{symbol}}/USD — ṣowo {{name}} lori {{chain}} | DeHub DEX",
+      "seoDescription": "Ṣowo {{name}} ({{symbol}}) lori {{chain}}: iwe aṣẹ ifiwe, awọn aṣẹ opin ati awọn rira ati awọn tita lẹsẹkẹsẹ lori DeHub DEX.",
+      "changeImage": "Change image",
+      "imageUpdated": "Pool image updated",
+      "imageFailed": "A ko le ṣe imudojuiwọn aworan naa.",
+      "volume24": "24h volume",
+      "size": "Size ({{symbol}})",
+      "total": "Total ({{symbol}})",
+      "buyTotal": "Bids {{amount}} {{symbol}}",
+      "sellTotal": "Asks {{amount}} {{symbol}}",
+      "orderType": "Order type",
+      "limit": "Limit",
+      "instant": "Instant",
+      "instantBuy": "Instant buy",
+      "instantSell": "Instant sell",
+      "confirmInstantBuy": "Confirm instant buy",
+      "confirmInstantSell": "Confirm instant sell",
+      "placeBuy": "Gbe aṣẹ rira fun {{symbol}}",
+      "placeSell": "Gbe aṣẹ tita fun {{symbol}}",
+      "buyAt": "Buy at price",
+      "sellAt": "Sell at price",
+      "enterPrice": "Enter a price.",
+      "youReceive": "O gba nipa",
+      "priceImpact": "Price impact",
+      "minimum": "Minimum order",
+      "instantNote": "Awọn iṣowo lẹsẹkẹsẹ kun lẹsẹkẹsẹ ni idiyele ti o dara julọ kọja gbogbo paṣipaarọ lori nẹtiwọọki yii, pẹlu soke si 1% isokuso.",
+      "solanaLimitNote": "I ka tagamasiyɛnw be to ka to a la fɔɔ u ka fa i ka wari la wala i k'u jɔsi.",
+      "evmLimitNote": "I ka tagamasiyɛnw be sigi yɔrɔ kelen na i ka wari la ani k'u yɛlɛma i n'a fɔ lɔgɔfiyɛ b'a fɛ cogo min na. I be se ka bɔ tuma o tuma.",
+      "openOrders": "O la, an ka ɲi ka sɔn ka",
+      "myOrders": "Ne ka ciiw",
+      "noMyOrders": "I tɛ se ka fɛɛn minw ɲini, i tɛ se k'o sɔrɔ.",
+      "cancel": "Kanali",
+      "cancelled": "Ka koo dɔ latigɛ"
+    },
+    "chart": {
+      "bookStarts": "O koo be daminɛ yan.",
+      "firstOrder": "I ka kɔn ka wari di fɔlɔ walisa ka wari sɔrɔ.",
+      "waiting": "An ka jatiminɛ kɛ ka ɲɛsin o ma.",
+      "candlesStart": "O kɔ, u ye fitinɛ dɔw bɔ.",
+      "depthLabel": "O ye wari min ye, o ye wari min ye."
+    }
   },
   "editor": {
     "canvas": {
+      "dropMedia": "A bila yan ka a fara i ka desɛn kan",
+      "dropText": "A bila yan ka sɛbɛn fara a kan",
       "hideTimeline": "Waati sira dogo",
       "showTimeline": "Waati sira jira",
       "pause": "A lajɔ dɔɔnin",
@@ -3340,12 +3419,13 @@
       "resetToStart": "Segin a daminɛ ma",
       "resize": "Hakɛ yɛlɛma",
       "rotate": "A munumunu",
-      "toggleLoop": "Seginni daminɛ/a lajɔ",
-      "dropMedia": "A bila yan ka a fara i ka desɛn kan",
-      "dropText": "A bila yan ka sɛbɛn fara a kan"
+      "toggleLoop": "Seginni daminɛ/a lajɔ"
     },
     "export": {
       "title": "Jigi",
+      "stillDescription": "Sisan ja in mara i n'a fɔ ja.",
+      "videoDescription": "I ka waati sira kɛ ka kɛ videyo ye.",
+      "unsupported": "I ka navigatɛri tɛ se ka videyo bɔ. Chrome, Edge, Brave walima Arc lajɛ, walima PNG walima JPG jigi o nɔ na.",
       "format": "Filen suguya",
       "resolution": "Hakɛ",
       "quality": "Jogo",
@@ -3359,21 +3439,22 @@
       "webm": "WebM videyo (VP9 + Opus)",
       "frameAt": "Ja {{time}}s la",
       "duration": "Waati janya: {{value}}s",
+      "cutPreview": "Tigɛ fɔli yɔrɔ la: {{value}}s",
       "outputStill": "Bɔli: {{width}}×{{height}}",
+      "outputVideo": "Bɔli: {{width}}×{{height}}, {{fps}} fps",
       "cancel": "A dabila",
       "cut": "Tigɛ",
       "download": "Jigi",
       "done": "{{filename}} marala",
+      "empty": "Fɛn dɔ fara i ka desɛn kan fɔlɔ.",
       "failed": "Jigili ma se ka kɛ",
       "cancelled": "Jigili dabilala",
       "preparing": "A labɛnni…",
-      "rendering": "Videyo dilanni…",
-      "stillDescription": "Sisan ja in mara i n'a fɔ ja.",
-      "videoDescription": "I ka waati sira kɛ ka kɛ videyo ye.",
-      "unsupported": "I ka navigatɛri tɛ se ka videyo bɔ. Chrome, Edge, Brave walima Arc lajɛ, walima PNG walima JPG jigi o nɔ na.",
-      "cutPreview": "Tigɛ fɔli yɔrɔ la: {{value}}s",
-      "outputVideo": "Bɔli: {{width}}×{{height}}, {{fps}} fps",
-      "empty": "Fɛn dɔ fara i ka desɛn kan fɔlɔ."
+      "rendering": "Videyo dilanni…"
+    },
+    "inspector": {
+      "selectHint": "Layɛri dɔ sugandi kanvasi kan walima klipu dɔ waati sira kan.",
+      "textHint": "A sama kanvasi kan ka a lamaga, a nɔnɔw ta ka a bonya walima ka a dɔgɔya. Digi siɲɛ fila ka kumaw yɛlɛma."
     },
     "layer": {
       "alignToPage": "A tilen ɲɛ ma",
@@ -3387,6 +3468,7 @@
       "rotation": "Munumununi {{value}}°",
       "opacity": "Jɛya {{value}}%",
       "resetPosition": "Yɔrɔ segin a cogo fɔlɔ la",
+      "matchCanvas": "Ɲɛ kɛ {{width}}×{{height}} ye",
       "crop": "Dan tigɛ",
       "cropLeft": "Numanbolo {{value}}%",
       "cropRight": "Kininbolo {{value}}%",
@@ -3405,8 +3487,7 @@
       "shadowOpacity": "Fanga {{value}}%",
       "shadowBlur": "Dibiya {{value}}",
       "shadowX": "Yɔrɔ bila X {{value}}",
-      "shadowY": "Yɔrɔ bila Y {{value}}",
-      "matchCanvas": "Ɲɛ kɛ {{width}}×{{height}} ye"
+      "shadowY": "Yɔrɔ bila Y {{value}}"
     },
     "menu": {
       "addText": "Sɛbɛn fara a kan",
@@ -3422,10 +3503,6 @@
       "sendToBack": "A bila kɔfɛ pewu",
       "duplicate": "A ɲɔgɔn dilan",
       "delete": "A jɔsi"
-    },
-    "inspector": {
-      "selectHint": "Layɛri dɔ sugandi kanvasi kan walima klipu dɔ waati sira kan.",
-      "textHint": "A sama kanvasi kan ka a lamaga, a nɔnɔw ta ka a bonya walima ka a dɔgɔya. Digi siɲɛ fila ka kumaw yɛlɛma."
     }
   }
 }

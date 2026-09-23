@@ -237,6 +237,8 @@ project_id = "aigxuutjaqsywioxjefr"
   # Called by pg_cron with the publishable key; skips itself while the last snapshot is fresh.
   [functions.dex-market-sample]
     verify_jwt = false
+  [functions.dex-pool-create]
+    verify_jwt = false
   [functions.refresh-leaderboard-cache]
     verify_jwt = false
   [functions.refresh-leaderboard-user]

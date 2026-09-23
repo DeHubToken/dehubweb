@@ -23,7 +23,8 @@ import { createLogger } from '@/lib/logger';
 import { MarketChart } from '@/components/app/dex/MarketChart';
 import { SEOHead } from '@/components/SEOHead';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
-import dhbCoinImage from '@/assets/dehub-coin.png';
+import { PoolPicker } from '@/components/app/dex/PoolPicker';
+import { InstantDhbTrade } from '@/components/app/dex/InstantDhbTrade';
 import '@/components/app/dex/exchange.css';
 
 const logger = createLogger('Dex');
@@ -395,12 +396,7 @@ export default function DexPage() {
       jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub DEX', url: 'https://dehub.io/dex',
         applicationCategory: 'FinanceApplication', operatingSystem: 'Web', description: t('dex.seoDescription') }} />
     <header className="dex-top">
-      <div className="dex-pair">
-        <img src={dhbCoinImage} alt="DHB" />
-        <div className="dex-pair-picker">
-          <h1 className="dex-pair-name">DHB <span className="dex-muted">/</span> USD</h1>
-        </div>
-      </div>
+      <PoolPicker current={null} />
       <div className="dex-stat"><small>{t('dex.marketPrice')}</small><strong className="dex-reference">{usdPrice != null ? `$${formatPrice(usdPrice)}` : '—'}</strong></div>
       <div className="dex-stat"><small>{t('dex.bookPrice', { chain: venueName })}</small><strong>{poolPrice != null ? `$${formatPrice(poolPrice)}` : '—'}</strong></div>
       <div className="dex-stat"><small>{t('dex.change24')}</small><strong className={(snapshot?.change24h || 0) >= 0 ? 'dex-buy' : 'dex-sell'}>{snapshot?.change24h != null ? `${snapshot.change24h >= 0 ? '+' : ''}${snapshot.change24h.toFixed(2)}%` : '—'}</strong></div>
@@ -428,7 +424,7 @@ export default function DexPage() {
       </section>
       <section className={`dex-panel dex-ticket-panel dex-pane ${mobileView === 'trade' ? 'dex-pane-active' : ''}`}>
         <div className="dex-panel-head"><h2>{t('dex.placeOrder')}</h2><span className="dex-muted">{t('dex.lpFee')}</span></div>
-        <div className="dex-ticket"><fieldset disabled={busy || !!pending || !!withdrawing}>
+        <div className="dex-ticket"><InstantDhbTrade tokens={allTokens} onDone={() => setBalanceRevision((n) => n + 1)} /><fieldset disabled={busy || !!pending || !!withdrawing}>
           <div className="dex-side">{(['buy', 'sell'] as const).map((value) => <button type="button" key={value} className={side === value ? `active-${value}` : ''} onClick={() => changeSide(value)}>{t(value === 'buy' ? 'dex.buy' : 'dex.sell')}</button>)}</div>
           <label className="dex-field">{t(side === 'buy' ? 'dex.maxBuy' : 'dex.minSell')}<div className="dex-input"><input aria-label={t(side === 'buy' ? 'dex.maxBuy' : 'dex.minSell')} inputMode="decimal" value={side === 'buy' ? maxPrice : minPrice} onChange={(e) => { const raw = decimalInput(e.target.value); const value = Number(raw); setReview(null); priceTouched.current = true; if (side === 'buy') { setMaxPrice(raw); if (value > 0) setMinPrice((value * 0.999).toFixed(8)); } else { setMinPrice(raw); if (value > 0) setMaxPrice((value * 1.001).toFixed(8)); } }} /><span>USD</span></div></label>
           {priceWarning && <div role="status" className="dex-alert dex-warning">{priceWarning}<button type="button" onClick={() => { priceTouched.current = false; if (seedPrice != null) choosePrice(Number(defaultOrderPrice(side, seedPrice))); }}>{t('dex.useMarket')}</button></div>}
