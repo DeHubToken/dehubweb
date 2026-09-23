@@ -795,7 +795,9 @@
     "crossChainCompleted": "کراس-چین جمع پورا ہوئل! {{symbol}} Base پر ملل۔",
     "tryAgain": "پھر کوشش کرو",
     "refundAddress": "{{chain}} पर रिफंड एड्रेस",
-    "refundAddressHint": "अगर स्वैप पूरा नहीं हो सकता, तो आपका {{symbol}} यहाँ वापस भेज दिया जाता है।"
+    "refundAddressHint": "अगर स्वैप पूरा नहीं हो सकता, तो आपका {{symbol}} यहाँ वापस भेज दिया जाता है।",
+    "sendFromWallet": "ہمر والیٹ سے {{amount}} {{symbol}} بھیجو",
+    "walletSendSubmitted": "بھیج دیلا گیلک۔ توہر ETH کچھ منٹ میں Base پر پہنچ جائی۔"
   },
   "wallet": {
     "title": "بٹوا",
@@ -3337,7 +3339,9 @@
     "reviewSwap": "قم بتبديل حوالي {{amountIn}} {{symbol}} مقابل {{usdc}} USDC على Base أولاً. يتم إرجاع {{symbol}} غير المستخدمة في نفس المعاملة.",
     "pendingSwapNote": "تم تبديل {{symbol}} الخاص بك مقابل USDC. استأنف لإنشاء المركز دون الحاجة إلى التبديل مرة أخرى.",
     "resumeMint": "استئناف الطلب",
-    "resumeNeedsBalances": "أرصدة المحفظة لا تزال قيد التحميل. حاول مرة أخرى بعد لحظة."
+    "resumeNeedsBalances": "أرصدة المحفظة لا تزال قيد التحميل. حاول مرة أخرى بعد لحظة.",
+    "convertBnbNote": "BNB Chain پر ٹریڈنگ بند ہو گیا ہے۔ BNB ہے؟ اوکے Base پر ETH میں بدلو، پھر ETH سے پیمنٹ کرو۔",
+    "convertBnb": "BNB بدلو"
   },
   "editor": {
     "canvas": {

@@ -846,7 +846,9 @@
     "crossChainCompleted": "زەنجىرلەر ئارا ئامانەت تاماملاندى! {{symbol}} Base دا تاپشۇرۇۋېلىندى.",
     "tryAgain": "قايتا سىناش",
     "refundAddress": "{{chain}} دە قايتۇرۇش ئادرېسى",
-    "refundAddressHint": "ئەگەر ئالماشتۇرۇش تاماملانمىسا، {{symbol}} بۇ يەرگە قايتۇرۇلىدۇ."
+    "refundAddressHint": "ئەگەر ئالماشتۇرۇش تاماملانمىسا، {{symbol}} بۇ يەرگە قايتۇرۇلىدۇ.",
+    "sendFromWallet": "ھەميانىمدىن {{amount}} {{symbol}} ئەۋەتىش",
+    "walletSendSubmitted": "ئەۋەتىلدى. ETH ڭىز بىر نەچچە مىنۇتتا Base غا يېتىپ كېلىدۇ."
   },
   "wallet": {
     "title": "ھەمياق",
@@ -3431,7 +3433,9 @@
     "noBaseFunds": "ETH، USDC ياكى USDT ئاساسىدا يوق",
     "pendingSwapNote": "سىزنىڭ {{symbol}} USDC غا ئالماشتۇرۇلدى. ئورنىنى قايتا ئالماشتۇرماي قۇرۇشنى داۋاملاشتۇرۇڭ.",
     "resumeMint": "بۇيرۇقنى تەكرارلاش",
-    "resumeNeedsBalances": "خەزىنە تەڭپۇڭلۇقلىرى تېخىچە يۈكلىنىۋاتىدۇ. بىر مىنۇتتىن كېيىن قايتا سىناپ بېقىڭ."
+    "resumeNeedsBalances": "خەزىنە تەڭپۇڭلۇقلىرى تېخىچە يۈكلىنىۋاتىدۇ. بىر مىنۇتتىن كېيىن قايتا سىناپ بېقىڭ.",
+    "convertBnbNote": "BNB Chain دىكى سودا تاقالدى. BNB ڭىز بارمۇ؟ ئۇنى Base دا ETH غا ئالماشتۇرۇپ، ئاندىن ETH بىلەن تۆلەڭ.",
+    "convertBnb": "BNB ئالماشتۇرۇش"
   },
   "editor": {
     "canvas": {

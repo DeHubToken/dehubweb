@@ -857,7 +857,9 @@
     "crossChainCompleted": "Zəncirlərarası depozit tamamlandı! {{symbol}} Base-də qəbul edildi.",
     "tryAgain": "Yenidən cəhd et",
     "refundAddress": "Geri ödəniş ünvanı {{chain}}",
-    "refundAddressHint": "Dəyişmə tamamlana bilmirsə, {{symbol}} nömrəniz burada geri göndərilir."
+    "refundAddressHint": "Dəyişmə tamamlana bilmirsə, {{symbol}} nömrəniz burada geri göndərilir.",
+    "sendFromWallet": "Pul kisəmdən {{amount}} {{symbol}} göndər",
+    "walletSendSubmitted": "Göndərildi. ETH bir neçə dəqiqəyə Base-ə çatacaq."
   },
   "wallet": {
     "title": "Cüzdan",
@@ -5623,7 +5625,9 @@
     "reviewSwap": "Əvvəlcə Base-də {{amountIn}} {{symbol}}-i {{usdc}} USDC-yə dəyişin. İstifadə olunmamış {{symbol}} eyni əməliyyatda geri qaytarılır.",
     "pendingSwapNote": "Sizin {{symbol}} USDC-yə dəyişildi. Yenidən dəyişmədən mövqe yaratmaq üçün davam edin.",
     "resumeMint": "Davam et",
-    "resumeNeedsBalances": "Cüzdan balansları hələ də yüklənir. Bir azdan yenidən cəhd edin."
+    "resumeNeedsBalances": "Cüzdan balansları hələ də yüklənir. Bir azdan yenidən cəhd edin.",
+    "convertBnbNote": "BNB Chain üzərində ticarət bağlanıb. BNB-niz var? Onu Base-də ETH-ə çevirin, sonra ETH ilə ödəyin.",
+    "convertBnb": "BNB-ni çevir"
   },
   "editor": {
     "canvas": {

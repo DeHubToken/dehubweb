@@ -860,7 +860,9 @@
     "crossChainCompleted": "クロスチェーン入金が完了しました！{{symbol}}がBaseで受け取られました。",
     "tryAgain": "再試行",
     "refundAddress": "{{chain}}の返金先住所",
-    "refundAddressHint": "スワップが完了しない場合、{{symbol}}はここに送り返されます。"
+    "refundAddressHint": "スワップが完了しない場合、{{symbol}}はここに送り返されます。",
+    "sendFromWallet": "ウォレットから {{amount}} {{symbol}} を送金",
+    "walletSendSubmitted": "送金しました。ETH は数分で Base に届きます。"
   },
   "wallet": {
     "title": "ウォレット",
@@ -5769,7 +5771,9 @@
     "reviewSwap": "まずBaseで約 {{amountIn}} {{symbol}} を {{usdc}} USDC にスワップしてください。未使用の {{symbol}} は同じトランザクションで返金されます。",
     "pendingSwapNote": "あなたの {{symbol}} はUSDCにスワップされました。再度スワップせずにポジションを作成するために再開してください。",
     "resumeMint": "注文を再開",
-    "resumeNeedsBalances": "ウォレット残高はまだ読み込み中です。しばらくしてからもう一度お試しください。"
+    "resumeNeedsBalances": "ウォレット残高はまだ読み込み中です。しばらくしてからもう一度お試しください。",
+    "convertBnbNote": "BNB Chain での取引は終了しました。BNB をお持ちですか？Base 上の ETH に変換してから、ETH で支払ってください。",
+    "convertBnb": "BNB を変換"
   },
   "editor": {
     "canvas": {

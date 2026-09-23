@@ -843,7 +843,9 @@
     "crossChainCompleted": "ક્રોસ-ચેઇન ડિપોઝિટ પૂર્ણ! {{symbol}} Base પર મળ્યા.",
     "tryAgain": "ફરી પ્રયાસ કરો",
     "refundAddress": "{{chain}} પરનું સરનામું રિફંડ કરો",
-    "refundAddressHint": "જો સ્વેપ પૂર્ણ થઈ શકતું નથી, તો તમારું {{symbol}} અહીં પાછું મોકલવામાં આવે છે."
+    "refundAddressHint": "જો સ્વેપ પૂર્ણ થઈ શકતું નથી, તો તમારું {{symbol}} અહીં પાછું મોકલવામાં આવે છે.",
+    "sendFromWallet": "મારા વૉલેટમાંથી {{amount}} {{symbol}} મોકલો",
+    "walletSendSubmitted": "મોકલાયું. તમારું ETH થોડી મિનિટોમાં Base પર આવશે."
   },
   "wallet": {
     "title": "વૉલેટ",
@@ -3420,7 +3422,9 @@
     "noBaseFunds": "આધાર પર કોઈ ETH, USDC અથવા USDT નથી",
     "pendingSwapNote": "તમારા {{symbol}} ને USDC માટે સ્વેપ કરવામાં આવ્યું હતું. ફરીથી સ્વેપ કર્યા વિના સ્થિતિ બનાવવાનું ફરી શરૂ કરો.",
     "resumeMint": "ઓર્ડર ફરી શરૂ કરો",
-    "resumeNeedsBalances": "વૉલેટ બેલેન્સ હજી લોડ થઈ રહ્યું છે. થોડીવારમાં ફરી પ્રયાસ કરો."
+    "resumeNeedsBalances": "વૉલેટ બેલેન્સ હજી લોડ થઈ રહ્યું છે. થોડીવારમાં ફરી પ્રયાસ કરો.",
+    "convertBnbNote": "BNB Chain પર ટ્રેડિંગ બંધ છે. BNB છે? તેને Base પર ETHમાં બદલો, પછી ETHથી ચૂકવો.",
+    "convertBnb": "BNB બદલો"
   },
   "editor": {
     "canvas": {

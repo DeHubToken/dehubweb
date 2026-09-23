@@ -842,7 +842,9 @@
     "crossChainCompleted": "Тізбекаралық салым аяқталды! {{symbol}} Base желісінде алынды.",
     "tryAgain": "Қайта көру",
     "refundAddress": "{{chain}} бойынша қайтару мекенжайы",
-    "refundAddressHint": "Егер алмасу аяқталмаса, {{symbol}} осында қайта жіберіледі."
+    "refundAddressHint": "Егер алмасу аяқталмаса, {{symbol}} осында қайта жіберіледі.",
+    "sendFromWallet": "Әмиянымнан {{amount}} {{symbol}} жіберу",
+    "walletSendSubmitted": "Жіберілді. ETH бірнеше минутта Base-ке түседі."
   },
   "wallet": {
     "title": "Әмиян",
@@ -5720,7 +5722,9 @@
     "reviewSwap": "{{amountIn}}{{symbol}} туралы {{usdc}} USDC үшін алдымен негізде ауысыңыз. Пайдаланылмаған {{symbol}} сол транзакцияда қайтарылады.",
     "pendingSwapNote": "Сіздің {{symbol}} USDC үшін ауыстырылды. Қайта алмастырусыз позицияны жасауды жалғастырыңыз.",
     "resumeMint": "Тапсырысты жалғастыру",
-    "resumeNeedsBalances": "Әмиян балансы әлі де жүктелуде. Бір сәтте қайталап көріңіз."
+    "resumeNeedsBalances": "Әмиян балансы әлі де жүктелуде. Бір сәтте қайталап көріңіз.",
+    "convertBnbNote": "BNB Chain-дегі сауда жабылды. BNB бар ма? Оны Base-те ETH-ке айырбастап, содан кейін ETH-пен төлеңіз.",
+    "convertBnb": "BNB айырбастау"
   },
   "editor": {
     "canvas": {

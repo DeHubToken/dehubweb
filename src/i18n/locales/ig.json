@@ -844,7 +844,9 @@
     "crossChainCompleted": "Ntinye n'agbụ ọzọ agwụla! {{symbol}} abịarutela na Base.",
     "tryAgain": "Nwaa Ọzọ",
     "refundAddress": "Adreesị nkwụghachi na {{chain}}",
-    "refundAddressHint": "Ọ bụrụ na ngbanwe ahụ enweghị ike mezue, a ga-ezighachi {{symbol}} gị ebe a."
+    "refundAddressHint": "Ọ bụrụ na ngbanwe ahụ enweghị ike mezue, a ga-ezighachi {{symbol}} gị ebe a.",
+    "sendFromWallet": "Zipu {{amount}} {{symbol}} site na obere akpa m",
+    "walletSendSubmitted": "E zigala ya. ETH gị ga-eru Base n’ime nkeji ole na ole."
   },
   "wallet": {
     "title": "Obere Akpa",
@@ -3418,7 +3420,9 @@
     "reviewSwap": "Gbanwee ihe dị ka {{amountIn}} {{symbol}} maka {{usdc}} USDC na Base mbụ. {{symbol}} a na-ejighị eme ihe na-alaghachi na otu azụmahịa ahụ.",
     "pendingSwapNote": "E jiri {{symbol}} gị gbanwee maka USDC. Nọgide na-eke ọnọdụ ahụ na-enweghị mgbanwe ọzọ.",
     "resumeMint": "Nọgide na iwu",
-    "resumeNeedsBalances": "Ngwa akụkọ ka na-ebufe. Nwaa ọzọ n'oge na-adịghị anya."
+    "resumeNeedsBalances": "Ngwa akụkọ ka na-ebufe. Nwaa ọzọ n'oge na-adịghị anya.",
+    "convertBnbNote": "Azụmahịa na BNB Chain emechiela. Ị nwere BNB? Gbanwee ya ka ọ bụrụ ETH na Base, wee jiri ETH kwụọ ụgwọ.",
+    "convertBnb": "Gbanwee BNB"
   },
   "editor": {
     "canvas": {

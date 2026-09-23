@@ -17,6 +17,8 @@ import {
   type StatusResponse,
 } from '@/lib/near-intents';
 import { fetchOneClickChains, refundAddressFor, needsManualRefundAddress } from '@/lib/near-intents-tokens';
+import { sendNativeToken } from '@/lib/wallet/send';
+import { BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 
 import ethLogo from '@/assets/eth-logo.png';
 import usdcLogo from '@/assets/usdc-logo.png';
@@ -57,11 +59,16 @@ interface CrossChainDepositDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   destinationSymbol?: string;
+  /** Open straight on this origin asset's amount step, e.g. `{ chain: 'bsc', symbol: 'BNB' }`. */
+  initialAsset?: { chain: string; symbol: string };
 }
+
+/** Origin chains whose native coin the connected EVM wallet can send itself, so nothing needs copying. */
+const WALLET_NATIVE_CHAINS: Record<string, number> = { bsc: BNB_CHAIN_ID };
 
 type Step = 'chains' | 'amount' | 'deposit' | 'success' | 'error';
 
-export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol }: CrossChainDepositDrawerProps) {
+export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol, initialAsset }: CrossChainDepositDrawerProps) {
   const { walletAddress, user } = useAuth();
   const { t } = useTranslation();
   const dest = (destinationSymbol && DESTINATION_ASSETS[destinationSymbol]) || DEFAULT_DESTINATION;
@@ -81,6 +88,8 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
 
   const [assetQuery, setAssetQuery] = useState('');
   const [manualRefund, setManualRefund] = useState('');
+  const [walletSending, setWalletSending] = useState(false);
+  const initialApplied = useRef(false);
 
   const solanaAddress = user?.solanaAddress ?? null;
   const manualRefundNeeded = !!selectedChain && needsManualRefundAddress(selectedChain.id, solanaAddress);
@@ -134,6 +143,8 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
       setCopied(false);
       setAssetQuery('');
       setManualRefund('');
+      setWalletSending(false);
+      initialApplied.current = false;
     }
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
@@ -148,6 +159,15 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
     setQuote(null);
     setQuoteError('');
   };
+
+  // The live catalogue may land after the drawer opens, so the preselection waits for it.
+  useEffect(() => {
+    if (!open || !initialAsset || initialApplied.current || chainsLoading) return;
+    initialApplied.current = true;
+    const chain = chains.find((c) => c.id === initialAsset.chain);
+    const token = chain?.tokens.find((tk) => tk.symbol === initialAsset.symbol);
+    if (chain && token) handleSelectToken(chain, token);
+  }, [open, initialAsset, chains, chainsLoading]);
 
   const fetchQuote = useCallback(async () => {
     if (!selectedToken || !amount || !walletAddress || parseFloat(amount) <= 0) return;
@@ -236,6 +256,19 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
 
   const depositAddress = quote?.quote?.depositAddress ?? null;
   const destTxHash = depositStatus?.swapDetails?.destinationChainTxHashes?.[0]?.hash ?? null;
+
+  const walletChainId = selectedChain && selectedToken?.assetId.endsWith('-native.omft.near') ? WALLET_NATIVE_CHAINS[selectedChain.id] : undefined;
+  const handleWalletSend = async () => {
+    if (!depositAddress || !selectedToken || !walletChainId || walletSending) return;
+    setWalletSending(true);
+    try {
+      await sendNativeToken(depositAddress, amount, selectedToken.decimals, walletChainId as 56);
+      toast.success(t('commandCentre.walletSendSubmitted'));
+    } catch (err: any) {
+      toast.error(err?.shortMessage || err?.message || t('commandCentre.depositFailedMsg'));
+      setWalletSending(false);
+    }
+  };
 
   const handleCopyAddress = () => {
     if (!depositAddress) return;
@@ -399,6 +432,17 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
                 <div className="bg-white/[0.06] rounded-lg p-3 break-all font-mono text-xs text-white/80 text-center">
                   {depositAddress}
                 </div>
+                {walletChainId && walletAddress && (
+                  <Button
+                    variant="glass"
+                    className="w-full rounded-xl"
+                    disabled={walletSending}
+                    onClick={() => void handleWalletSend()}
+                  >
+                    {walletSending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                    {t('commandCentre.sendFromWallet', { amount, symbol: selectedToken.symbol })}
+                  </Button>
+                )}
                 <Button
                   variant="glass"
                   className="w-full rounded-xl"

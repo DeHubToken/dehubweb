@@ -859,7 +859,9 @@
     "crossChainCompleted": "Միջցանցային ավանդն ավարտված է! {{symbol}}-ը ստացվել է Base-ում։",
     "tryAgain": "Կրկին փորձել",
     "refundAddress": "Գումարի վերադարձի հասցեն ՝ {{chain}}",
-    "refundAddressHint": "Եթե փոխանակումը չի կարող ավարտվել, ձեր {{symbol}}-ը հետ է ուղարկվում այստեղ ։"
+    "refundAddressHint": "Եթե փոխանակումը չի կարող ավարտվել, ձեր {{symbol}}-ը հետ է ուղարկվում այստեղ ։",
+    "sendFromWallet": "Ուղարկել {{amount}} {{symbol}} իմ դրամապանակից",
+    "walletSendSubmitted": "Ուղարկված է։ Ձեր ETH-ը մի քանի րոպեում կհասնի Base։"
   },
   "wallet": {
     "title": "Dramer",
@@ -5657,7 +5659,9 @@
     "noBaseFunds": "Հիմքում չկա ETH, USDC կամ USDT",
     "pendingSwapNote": "Ձեր {{symbol}}-ը փոխանակվել է ԱՄՆ դոլարով ։ Վերսկսեք դիրքը ստեղծել առանց նորից փոխելու:",
     "resumeMint": "Վերսկսել պատվերը",
-    "resumeNeedsBalances": "Դրամապանակի մնացորդները դեռ բեռնվում են: Նորից փորձեք մի պահից ։"
+    "resumeNeedsBalances": "Դրամապանակի մնացորդները դեռ բեռնվում են: Նորից փորձեք մի պահից ։",
+    "convertBnbNote": "BNB Chain-ում առևտուրը փակված է։ Ունե՞ք BNB։ Փոխարկեք այն ETH-ի Base-ում, ապա վճարեք ETH-ով։",
+    "convertBnb": "Փոխարկել BNB"
   },
   "editor": {
     "canvas": {

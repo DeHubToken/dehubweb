@@ -849,7 +849,9 @@
     "crossChainCompleted": "ক্রস-চেইন জমা শেষ অইয়ে! {{symbol}} Base-অত পাওয়া গেছে।",
     "tryAgain": "আবার চেষ্টা গরন",
     "refundAddress": "রিফান্ড এড্রেস {{chain}} এ",
-    "refundAddressHint": "যদি স্ওয়াপ সম্পূর্ণ না হয়, আপনার {{symbol}} এখানে ফেরত পাঠানো হয়।"
+    "refundAddressHint": "যদি স্ওয়াপ সম্পূর্ণ না হয়, আপনার {{symbol}} এখানে ফেরত পাঠানো হয়।",
+    "sendFromWallet": "আঁর ওয়ালেট তুন {{amount}} {{symbol}} পাঠান",
+    "walletSendSubmitted": "পাঠানো অইয়ে। অনর ETH কয়েক মিনিটত Base-ত পৌঁছাইবো।"
   },
   "wallet": {
     "title": "ওয়ালেট",
@@ -3120,7 +3122,9 @@
     "payWith": "টাকা দে",
     "spendUsd": "খরচ (USD)",
     "noBaseFunds": "Base-এ কোনো ETH, USDC বা USDT নাই",
-    "reviewSwap": "Base-এ {{usdc}} USDC-র লাই {{amountIn}} {{symbol}} বদলি কর। {{symbol}} অব্যবহৃত একই লেনদেনে ফেরত যাইবো।"
+    "reviewSwap": "Base-এ {{usdc}} USDC-র লাই {{amountIn}} {{symbol}} বদলি কর। {{symbol}} অব্যবহৃত একই লেনদেনে ফেরত যাইবো।",
+    "convertBnbNote": "BNB Chain-ত ট্রেডিং বন্ধ। BNB আছে না? ইয়ারে Base-ত ETH-ত বদলান, তারপর ETH দি পেমেন্ট গরন।",
+    "convertBnb": "BNB বদলান"
   },
   "editor": {
     "canvas": {

@@ -863,7 +863,9 @@
     "tryAgain": "Jaribu Tena",
     "refundAddress": "Anwani ya kurejesha fedha kwenye {{chain}}",
     "refundAddressHint": "Ikiwa ubadilishaji hauwezi kukamilisha, {{symbol}} yako itatumwa tena hapa.",
-    "loginDescription": "Ingia ili kufikia pochi yako na kusimamia fedha zako."
+    "loginDescription": "Ingia ili kufikia pochi yako na kusimamia fedha zako.",
+    "sendFromWallet": "Tuma {{amount}} {{symbol}} kutoka kwenye pochi yangu",
+    "walletSendSubmitted": "Imetumwa. ETH yako itafika Base ndani ya dakika chache."
   },
   "wallet": {
     "title": "Pochi",
@@ -5722,7 +5724,9 @@
     "reviewSwap": "Badilisha kuhusu {{amountIn}} {{symbol}} kwa {{usdc}} USDC kwenye Msingi kwanza. Unused {{symbol}} imerejeshwa katika muamala huo huo.",
     "pendingSwapNote": "{{symbol}} yako ilibadilishwa kuwa USDC. Endelea kuunda nafasi bila kubadilishana tena.",
     "resumeMint": "Endelea kuagiza",
-    "resumeNeedsBalances": "Salio la pochi bado linapakia. Jaribu tena baada ya muda mfupi."
+    "resumeNeedsBalances": "Salio la pochi bado linapakia. Jaribu tena baada ya muda mfupi.",
+    "convertBnbNote": "Biashara kwenye BNB Chain imefungwa. Una BNB? Ibadilishe kuwa ETH kwenye Base, kisha ulipe kwa ETH.",
+    "convertBnb": "Badilisha BNB"
   },
   "editor": {
     "canvas": {

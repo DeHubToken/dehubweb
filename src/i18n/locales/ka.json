@@ -842,7 +842,9 @@
     "crossChainCompleted": "ჯვარედინი ჯაჭვის შენატანი დასრულდა! {{symbol}} მიღებულია Base-ზე.",
     "tryAgain": "სცადეთ ხელახლა",
     "refundAddress": "Თანხის დაბრუნების მისამართი: {{chain}}",
-    "refundAddressHint": "Თუ სვოპის დასრულება ვერ მოხერხდა, თქვენი {{symbol}} აქ დაგიბრუნდებათ."
+    "refundAddressHint": "Თუ სვოპის დასრულება ვერ მოხერხდა, თქვენი {{symbol}} აქ დაგიბრუნდებათ.",
+    "sendFromWallet": "გაგზავნე {{amount}} {{symbol}} ჩემი საფულიდან",
+    "walletSendSubmitted": "გაიგზავნა. თქვენი ETH რამდენიმე წუთში მივა Base-ზე."
   },
   "wallet": {
     "title": "საფულე",
@@ -5574,7 +5576,9 @@
     "noBaseFunds": "Ბაზაზე არ არის ETH, USDC ან USDT",
     "pendingSwapNote": "Თქვენი {{symbol}} გაცვალეს USDC-ზე. Განაგრძეთ პოზიციის შექმნა ხელახლა შეცვლის გარეშე.",
     "resumeMint": "Შეკვეთის გაგრძელება",
-    "resumeNeedsBalances": "Საფულის ნაშთები ჯერ კიდევ იტვირთება. Სცადეთ ხელახლა."
+    "resumeNeedsBalances": "Საფულის ნაშთები ჯერ კიდევ იტვირთება. Სცადეთ ხელახლა.",
+    "convertBnbNote": "ვაჭრობა BNB Chain-ზე დახურულია. გაქვთ BNB? გადააქციეთ ის ETH-ად Base-ზე, შემდეგ გადაიხადეთ ETH-ით.",
+    "convertBnb": "BNB-ის გადაცვლა"
   },
   "editor": {
     "canvas": {

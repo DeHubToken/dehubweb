@@ -806,7 +806,9 @@
     "crossChainCompleted": "Chetteübergryfendi Ylage abgschlosse! {{symbol}} uf Base übercho.",
     "tryAgain": "Nomol probiere",
     "refundAddress": "Rückgabeadresse uf {{chain}}",
-    "refundAddressHint": "Wenn de Swap nid chöi fertig gmacht wärde, wird dini {{symbol}} dohäre zruggschickt."
+    "refundAddressHint": "Wenn de Swap nid chöi fertig gmacht wärde, wird dini {{symbol}} dohäre zruggschickt.",
+    "sendFromWallet": "{{amount}} {{symbol}} us minere Wallet schicke",
+    "walletSendSubmitted": "Gschickt. Dis ETH chunnt i es paar Minute uf Base aa."
   },
   "wallet": {
     "title": "Portmoneé",
@@ -3426,7 +3428,9 @@
     "reviewSwap": "Swappe ca. {{amountIn}} {{symbol}} für {{usdc}} USDC uf Base zerscht. Ung bruuchti {{symbol}} wird i de glich Transaktion zrugggeh.",
     "pendingSwapNote": "Dini {{symbol}} sind für USDC gswappt worde. Mach wiiter zum Positioun erschaffe ohni no z'swappe.",
     "resumeMint": "Bestellig wiiterziehe",
-    "resumeNeedsBalances": "Wallet-Balanche lade no. Versuech’s grad no mal."
+    "resumeNeedsBalances": "Wallet-Balanche lade no. Versuech’s grad no mal.",
+    "convertBnbNote": "Dr Handel uf BNB Chain isch zue. Hesch BNB? Tuusch se uf Base in ETH und zahl dänn mit ETH.",
+    "convertBnb": "BNB tuusche"
   },
   "editor": {
     "canvas": {

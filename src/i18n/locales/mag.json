@@ -829,7 +829,9 @@
     "depositExpired": "जमा के समय खतम हो गेलई। फिर से कोशिश करऽ।",
     "depositFailedMsg": "जमा फेल हो गेलई।",
     "crossChainCompleted": "क्रॉस-चेन जमा पूरा हो गेलई! {{symbol}} Base पर मिल गेलई।",
-    "tryAgain": "फिर से कोशिश करऽ"
+    "tryAgain": "फिर से कोशिश करऽ",
+    "sendFromWallet": "हमर वॉलेट से {{amount}} {{symbol}} भेजऽ",
+    "walletSendSubmitted": "भेज देल गेल। तोहर ETH कुछ मिनट में Base पर पहुँच जाएत।"
   },
   "wallet": {
     "title": "वॉलेट",
@@ -3387,7 +3389,9 @@
     "spendUsd": "कुलई (यूएसडी)",
     "noBaseFunds": "कोई ETH, कोई USDC या कोई USDT आधार पर",
     "resumeMint": "रेज्यूमे ऑर्डर करे",
-    "resumeNeedsBalances": "बोझा अभी भी उठाता है । कुछ देर बाद दुबारा कोशिश करे"
+    "resumeNeedsBalances": "बोझा अभी भी उठाता है । कुछ देर बाद दुबारा कोशिश करे",
+    "convertBnbNote": "BNB Chain पर ट्रेडिंग बंद हो गेल हे। BNB हे? ओकरा Base पर ETH में बदलऽ, फेर ETH से भुगतान करऽ।",
+    "convertBnb": "BNB बदलऽ"
   },
   "editor": {
     "canvas": {

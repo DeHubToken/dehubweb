@@ -845,7 +845,9 @@
     "crossChainCompleted": "Starpķēžu depozīts pabeigts! {{symbol}} saņemts tīklā Base.",
     "tryAgain": "Mēģināt vēlreiz",
     "refundAddress": "Atmaksas adrese: {{chain}}",
-    "refundAddressHint": "Ja maiņu nevar pabeigt, jūsu {{symbol}} tiek nosūtīts atpakaļ uz šejieni."
+    "refundAddressHint": "Ja maiņu nevar pabeigt, jūsu {{symbol}} tiek nosūtīts atpakaļ uz šejieni.",
+    "sendFromWallet": "Sūtīt {{amount}} {{symbol}} no mana maka",
+    "walletSendSubmitted": "Nosūtīts. Jūsu ETH ieradīsies Base pēc dažām minūtēm."
   },
   "wallet": {
     "title": "Maks",
@@ -5757,7 +5759,9 @@
     "reviewSwap": "Apmainiet {{amountIn}} {{symbol}} pret {{usdc}} USDC Bāzē vispirms. Neizmantotais {{symbol}} tiek atgriezts tajā pašā darījumā.",
     "pendingSwapNote": "Jūsu {{symbol}} tika apmainīts pret USDC. Atsāciet, lai izveidotu pozīciju bez atkārtotas maiņas.",
     "resumeMint": "Atsākt pasūtījumu",
-    "resumeNeedsBalances": "Maka atlikumi joprojām tiek ielādēti. Pēc brīža mēģiniet vēlreiz."
+    "resumeNeedsBalances": "Maka atlikumi joprojām tiek ielādēti. Pēc brīža mēģiniet vēlreiz.",
+    "convertBnbNote": "Tirdzniecība BNB Chain ir slēgta. Jums ir BNB? Konvertējiet to uz ETH tīklā Base un pēc tam maksājiet ar ETH.",
+    "convertBnb": "Konvertēt BNB"
   },
   "editor": {
     "canvas": {

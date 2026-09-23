@@ -806,7 +806,9 @@
     "crossChainCompleted": "การฝากข้ามเครือข่ายสำเร็จแล้ว! ฮับ {{symbol}} อยู่ Base.",
     "tryAgain": "ลองใหม่",
     "refundAddress": "ที่อยู่คืนเงินบน {{chain}}",
-    "refundAddressHint": "ถ้าการแลกเปลี่ยนไม่สามารถเสร็จสิ้นได้ {{symbol}} ของคุณจะถูกส่งกลับมาที่นี่"
+    "refundAddressHint": "ถ้าการแลกเปลี่ยนไม่สามารถเสร็จสิ้นได้ {{symbol}} ของคุณจะถูกส่งกลับมาที่นี่",
+    "sendFromWallet": "ส่ง {{amount}} {{symbol}} จากกระเป๋าของข้อย",
+    "walletSendSubmitted": "ส่งแล้ว ETH ของเจ้าสิฮอด Base ในบ่กี่นาที"
   },
   "wallet": {
     "title": "กระเป๋าเงิน",
@@ -3394,7 +3396,9 @@
     "reviewSwap": "แลกเปลี่ยนประมาณ {{amountIn}} {{symbol}} เป็น {{usdc}} USDC บน Base ก่อน ส่วนที่เหลือ {{symbol}} จะถูกส่งคืนในธุรกรรมเดียวกัน",
     "pendingSwapNote": "{{symbol}} ของคุณถูกแลกเปลี่ยนเป็น USDC แล้ว ดำเนินการต่อเพื่อสร้างตำแหน่งโดยไม่ต้องแลกเปลี่ยนอีก",
     "resumeMint": "ดำเนินการต่อ",
-    "resumeNeedsBalances": "ยอดคงเหลือในกระเป๋าเงินกำลังโหลดอยู่ ลองอีกครั้งในสักครู่"
+    "resumeNeedsBalances": "ยอดคงเหลือในกระเป๋าเงินกำลังโหลดอยู่ ลองอีกครั้งในสักครู่",
+    "convertBnbNote": "การซื้อขายเทิง BNB Chain ปิดแล้ว มี BNB บ่? ปลี่ยนเป็น ETH เทิง Base แล้วจ่ายด้วย ETH",
+    "convertBnb": "ปลี่ยน BNB"
   },
   "editor": {
     "canvas": {

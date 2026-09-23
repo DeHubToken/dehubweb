@@ -906,7 +906,9 @@
     "crossChainCompleted": "Kumpleto na ang cross-chain deposit! Natanggap ang {{symbol}} sa Base.",
     "tryAgain": "Subukan ulit",
     "refundAddress": "Address ng refund sa {{chain}}",
-    "refundAddressHint": "Kung hindi makumpleto ang pagpapalit, ibabalik rito ang iyong {{symbol}}."
+    "refundAddressHint": "Kung hindi makumpleto ang pagpapalit, ibabalik rito ang iyong {{symbol}}.",
+    "sendFromWallet": "Ipadala ang {{amount}} {{symbol}} mula sa wallet ko",
+    "walletSendSubmitted": "Naipadala na. Darating ang ETH mo sa Base sa loob ng ilang minuto."
   },
   "wallet": {
     "title": "Wallet",
@@ -5539,7 +5541,9 @@
     "noBaseFunds": "Walang ETH, USDC o USDT sa Base",
     "pendingSwapNote": "Napalitan ng USDC ang iyong {{symbol}}. Ipagpatuloy upang lumikha ng posisyon nang hindi nagpapalit muli.",
     "resumeMint": "Ipagpatuloy ang order",
-    "resumeNeedsBalances": "Naglo - load pa rin ang mga balanse ng wallet. Subukan muli sa ilang sandali."
+    "resumeNeedsBalances": "Naglo - load pa rin ang mga balanse ng wallet. Subukan muli sa ilang sandali.",
+    "convertBnbNote": "Sarado na ang trading sa BNB Chain. May BNB ka? I-convert ito sa ETH sa Base, pagkatapos ay magbayad gamit ang ETH.",
+    "convertBnb": "I-convert ang BNB"
   },
   "editor": {
     "canvas": {

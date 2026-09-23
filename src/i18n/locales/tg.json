@@ -843,7 +843,9 @@
     "crossChainCompleted": "Пасандози байнизанҷирӣ анҷом ёфт! {{symbol}} дар Base қабул шуд.",
     "tryAgain": "Аз нав кӯшиш кунед",
     "refundAddress": "Адреси бозгашт дар {{chain}}",
-    "refundAddressHint": "Агар мубодила ба итмом нарасад, {{symbol}} ба ин ҷо фиристода мешавад."
+    "refundAddressHint": "Агар мубодила ба итмом нарасад, {{symbol}} ба ин ҷо фиристода мешавад.",
+    "sendFromWallet": "Аз ҳамёнам {{amount}} {{symbol}} фиристодан",
+    "walletSendSubmitted": "Фиристода шуд. ETH-и шумо дар чанд дақиқа ба Base мерасад."
   },
   "wallet": {
     "title": "Ҳамён",
@@ -3439,7 +3441,9 @@
     "spendUsd": "Хароҷот (USD)",
     "noBaseFunds": "Walang ETH, USDC o USDT sa Base",
     "resumeMint": "Идомаи тартибот",
-    "resumeNeedsBalances": "Ang balances ng Wallet ay hindi pa rin nai-load. Subukan muli sa isang minuto."
+    "resumeNeedsBalances": "Ang balances ng Wallet ay hindi pa rin nai-load. Subukan muli sa isang minuto.",
+    "convertBnbNote": "Савдо дар BNB Chain баста шуд. BNB доред? Онро дар Base ба ETH табдил диҳед, баъд бо ETH пардохт кунед.",
+    "convertBnb": "Табдили BNB"
   },
   "editor": {
     "canvas": {

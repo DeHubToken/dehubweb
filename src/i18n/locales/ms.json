@@ -1129,7 +1129,9 @@
     "crossChainCompleted": "Deposit rentas rantaian selesai! {{symbol}} diterima di Base.",
     "tryAgain": "Cuba Lagi",
     "refundAddress": "Alamat bayaran balik pada {{chain}}",
-    "refundAddressHint": "Jika pertukaran tidak dapat diselesaikan, {{symbol}} anda dihantar kembali ke sini."
+    "refundAddressHint": "Jika pertukaran tidak dapat diselesaikan, {{symbol}} anda dihantar kembali ke sini.",
+    "sendFromWallet": "Hantar {{amount}} {{symbol}} dari dompet saya",
+    "walletSendSubmitted": "Dihantar. ETH anda akan tiba di Base dalam beberapa minit."
   },
   "wallet": {
     "title": "Dompet",
@@ -5985,7 +5987,9 @@
     "reviewSwap": "Tukar tentang {{amountIn}} {{symbol}} untuk {{usdc}} USDC di Base terlebih dahulu. {{symbol}} yang tidak digunakan dikembalikan dalam transaksi yang sama.",
     "pendingSwapNote": "{{symbol}} anda telah ditukar dengan USDC. Sambung semula untuk mencipta kedudukan tanpa bertukar lagi.",
     "resumeMint": "Sambung pesanan",
-    "resumeNeedsBalances": "Baki dompet masih dimuatkan. Cuba lagi sebentar lagi."
+    "resumeNeedsBalances": "Baki dompet masih dimuatkan. Cuba lagi sebentar lagi.",
+    "convertBnbNote": "Dagangan di BNB Chain telah ditutup. Ada BNB? Tukarkannya kepada ETH di Base, kemudian bayar dengan ETH.",
+    "convertBnb": "Tukar BNB"
   },
   "editor": {
     "canvas": {

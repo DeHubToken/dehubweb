@@ -22,13 +22,15 @@ import { isSmartWalletSession } from '@/lib/connection-source';
 import { createLogger } from '@/lib/logger';
 import { MarketChart } from '@/components/app/dex/MarketChart';
 import { SEOHead } from '@/components/SEOHead';
+import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import '@/components/app/dex/exchange.css';
 
 const logger = createLogger('Dex');
 const PAGE_SIZE = 15;
-/** Base is the canonical book: it is where every funding route lands, so it opens first. */
-const VENUES: DexChainId[] = [BASE_CHAIN_ID, BNB_CHAIN_ID];
+/** Base is the only book. The BNB pool takes no new liquidity; positions already in it can
+ *  still be withdrawn by their owners from My positions. */
+const venue: DexChainId = BASE_CHAIN_ID;
 type CachedPosition = Omit<VerifiedPosition, 'liquidity'> & { liquidity: string };
 const readSharedMarket = minuteCache(async () => {
   const { data, error } = await readWithTimeout(Promise.resolve(supabase.rpc('get_dex_market')), 'Shared market');
@@ -84,9 +86,6 @@ export default function DexPage() {
   const { walletAddress, connect, requestWalletUnlock } = useAuth();
   const walletLocked = useWalletLocked();
   const [side, setSide] = useState<'buy' | 'sell'>('sell');
-  // Each network runs its own pool and its own book. A Base order can never be filled by a BNB
-  // order, so the page shows one venue at a time rather than a merged book that nobody can trade.
-  const [venue, setVenue] = useState<DexChainId>(BASE_CHAIN_ID);
   const [chainId, setChainId] = useState<DexChainId | null>(null);
   const [balance, setBalance] = useState('0');
   const [amount, setAmount] = useState('');
@@ -118,6 +117,7 @@ export default function DexPage() {
   const snapshotTime = useRef(0);
   const candles = snapshot?.candles[period] || [];
   const [depth, setDepth] = useState(false);
+  const [convertOpen, setConvertOpen] = useState(false);
   const [increment, setIncrement] = useState<number>(DEFAULT_INCREMENT);
   const [mobileView, setMobileView] = useState<'chart' | 'book' | 'trade'>('chart');
   const loadLock = useRef(false);
@@ -125,9 +125,11 @@ export default function DexPage() {
   const [balanceRevision, setBalanceRevision] = useState(0);
   const fundingToken = side === 'buy' ? 'USDC' : 'DHB';
   const venueName = DEX_CHAINS[venue].name;
-  // A Base buy is priced in dollars and can be paid from any Base asset with a USDC route.
-  // Everything else (sells, and the BNB book) deposits the pool token directly.
+  // A buy is priced in dollars and can be paid from any Base asset with a USDC route. Sells
+  // deposit DHB directly.
   const funded = side === 'buy' && venue === FUNDING_CHAIN;
+  // BNB cannot fund a Base order directly, so a holder is offered the conversion to ETH on Base.
+  const bnbHeld = useMemo(() => allTokens.some((token) => token.chainId === BNB_CHAIN_ID && token.isNative && token.balance > 0n), [allTokens]);
   const assets = useMemo(() => funded ? fundingAssets(allTokens, prices) : [], [funded, allTokens, prices]);
   const fundingAsset: FundingAsset | null = useMemo(() => {
     if (!funded) return null;
@@ -144,7 +146,9 @@ export default function DexPage() {
     tokenApproval: t('dex.automaticStage.tokenApproval'), permitApproval: t('dex.automaticStage.permitApproval'),
     submit: t('dex.automaticStage.submit'),
   };
-  const venuePositions = useMemo(() => positions.filter((p) => p.chain_id === venue), [positions, venue]);
+  const venuePositions = useMemo(() => positions.filter((p) => p.chain_id === venue), [positions]);
+  // Old BNB positions stay withdrawable, so their owners still see them under My positions.
+  const legacyMine = useMemo(() => positions.filter((p) => p.chain_id === BNB_CHAIN_ID && p.owner.toLowerCase() === walletAddress?.toLowerCase()).sort(byNewest), [positions, walletAddress]);
   const ordered = useMemo(() => [...venuePositions].sort(byNewest), [venuePositions]);
   const transactions = useMemo(() => ordered.slice(0, 8), [ordered]);
 
@@ -159,13 +163,12 @@ export default function DexPage() {
     }
     (side === 'sell' ? detectDhbChain : detectUsdcChain)(walletAddress).then((choice) => {
       if (!live) return;
-      // The venue decides the funding network. A balance on the other chain is not spendable here.
-      const held = venue === BASE_CHAIN_ID ? choice.base : choice.bnb;
-      setChainId(Number(held) > 0 ? venue : null); setBalance(held);
+      // Only a Base balance is spendable here.
+      setChainId(Number(choice.base) > 0 ? venue : null); setBalance(choice.base);
     }).catch(() => { if (live) setBalanceError(t('dex.balanceError')); })
       .finally(() => { if (live) setChecking(false); });
     return () => { live = false; };
-  }, [walletAddress, side, venue, funded, balanceRevision, t]);
+  }, [walletAddress, side, funded, balanceRevision, t]);
   useEffect(() => {
     if (!funded) return;
     setChainId(fundingAsset && fundingAsset.balance > 0n ? FUNDING_CHAIN : null);
@@ -184,7 +187,6 @@ export default function DexPage() {
           [BASE_CHAIN_ID, BNB_CHAIN_ID].includes(saved.input.chainId) &&
           (/^0x[0-9a-f]{64}$/i.test(saved.txHash ?? '') || /^0x[0-9a-f]{64}$/i.test(saved.funding?.swapTxHash ?? ''))) {
         setPending(saved);
-        setVenue(saved.input.chainId);
       }
     } catch { /* A storage failure does not change onchain ownership. */ }
   }, [walletAddress]);
@@ -240,15 +242,14 @@ export default function DexPage() {
   }, [loadPositions]);
 
 
-  // The outside pools the snapshot prices are all on Base, so they belong in the Base book only.
-  const externalAsks = useMemo(() => venue === BASE_CHAIN_ID ? snapshot?.externalAsks ?? [] : [], [venue, snapshot]);
+  const externalAsks = useMemo(() => snapshot?.externalAsks ?? [], [snapshot]);
   const { bids, asks } = useMemo(() => aggregateBook(venuePositions, increment, externalAsks),
     [venuePositions, increment, externalAsks]);
   const bestAsk = snapshot?.price ?? null;
   // Every DHB pool, weighted by its own dollar liquidity — not just this order book.
   const usdPrice = snapshot?.usdPrice ?? null;
   const liquidityUsd = snapshot?.liquidityUsd ?? null;
-  const shown = useMemo(() => mine ? ordered.filter((p) => p.owner.toLowerCase() === walletAddress?.toLowerCase()) : ordered, [ordered, mine, walletAddress]);
+  const shown = useMemo(() => mine ? [...ordered.filter((p) => p.owner.toLowerCase() === walletAddress?.toLowerCase()), ...legacyMine] : ordered, [ordered, mine, walletAddress, legacyMine]);
   const visiblePositions = shown.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
   useEffect(() => { setPage((value) => Math.min(value, Math.max(0, Math.ceil(shown.length / PAGE_SIZE) - 1))); }, [shown.length]);
   const bidTotal = bids.at(-1)?.cumulativeDhb || 0, askTotal = asks.at(-1)?.cumulativeDhb || 0;
@@ -295,10 +296,6 @@ export default function DexPage() {
     if (busyRef.current || pending) return;
     setAmount(''); priceTouched.current = false;
     choosePrice(Number(defaultOrderPrice(next, referencePrice(next))), next);
-  }
-  function changeVenue(next: DexChainId) {
-    if (busyRef.current || pending || withdrawing) return;
-    setVenue(next); setAmount(''); setReview(null); setFundingQuote(null); setFormError(''); setPage(0); priceTouched.current = false;
   }
   async function register(saved: Pending) {
     setStage('index');
@@ -399,7 +396,6 @@ export default function DexPage() {
         <img src={dhbCoinImage} alt="DHB" />
         <div className="dex-pair-picker">
           <h1 className="dex-pair-name">DHB <span className="dex-muted">/</span> USD</h1>
-          <div className="dex-tabs" role="tablist" aria-label={t('dex.venue')}>{VENUES.map((id) => <button type="button" role="tab" key={id} aria-selected={venue === id} disabled={busy || !!pending || !!withdrawing} onClick={() => changeVenue(id)}>{DEX_CHAINS[id].name}</button>)}</div>
         </div>
       </div>
       <div className="dex-stat"><small>{t('dex.marketPrice')}</small><strong className="dex-reference">{usdPrice != null ? `$${formatPrice(usdPrice)}` : '—'}</strong></div>
@@ -440,6 +436,7 @@ export default function DexPage() {
           <details className="dex-advanced"><summary>{t('dex.adjustRange')}</summary><p className="dex-help">{t('dex.rangeHint')}</p>{[{ label: t('dex.lowerPrice'), value: minPrice, set: setMinPrice }, { label: t('dex.upperPrice'), value: maxPrice, set: setMaxPrice }].map((field) => <label className="dex-field" key={field.label}>{field.label}<div className="dex-input"><input aria-label={field.label} inputMode="decimal" value={field.value} onChange={(e) => { field.set(decimalInput(e.target.value)); priceTouched.current = true; setReview(null); }} /><span>USD</span></div></label>)}</details>
           <dl><dt>{t('dex.estimated')}</dt><dd>{formatSize(estimate)} {side === 'buy' ? 'DHB' : 'USDC'}</dd><dt>{t('dex.network')}</dt><dd>{venueName}</dd><dt>{t('dex.lpFeeLabel')}</dt><dd>0%</dd></dl>
         </fieldset>
+        {side === 'buy' && bnbHeld && !pending && <div role="status" className="dex-alert dex-warning">{t('dex.convertBnbNote')}<button type="button" disabled={busy} onClick={() => setConvertOpen(true)}>{t('dex.convertBnb')}</button></div>}
         {balanceError && <div className="dex-alert">{balanceError}<button onClick={() => setBalanceRevision((n) => n + 1)} disabled={busy}>{t('dex.retry')}</button></div>}
         {review && !pending && <div className="dex-review"><strong>{t(side === 'buy' ? 'dex.reviewYourBuy' : 'dex.reviewYourSell')}</strong><br />{fundingQuote && fundingQuote.asset.symbol !== 'USDC' ? <>{t('dex.reviewSwap', { amountIn: formatSize(Number(formatUnits(fundingQuote.amountIn, fundingQuote.asset.decimals))), symbol: fundingQuote.asset.symbol, usdc: amount })}<br /></> : null}{t('dex.reviewDeposit', { amount, token: fundingToken, chain: DEX_CHAINS[review.chainId].name })}<br />{t('dex.reviewRange', { min: formatPrice(Number(minPrice)), max: formatPrice(Number(maxPrice)) })}{priceWarning && <><br />{priceWarning}</>}{review.willCreatePool && <><br />{t('dex.initializes')}</>}</div>}
         {pending && <div className="dex-review">{pending.txHash ? t('dex.pendingNote') : t('dex.pendingSwapNote', { symbol: pending.funding?.symbol ?? '' })} <a href={`${DEX_CHAINS[pending.input.chainId].explorer}/tx/${pending.txHash ?? pending.funding?.swapTxHash}`} target="_blank" rel="noreferrer">{t('dex.viewTransaction')} ↗</a></div>}
@@ -453,5 +450,7 @@ export default function DexPage() {
       {!shown.length ? <div className="dex-empty">{loading ? t('dex.verifying') : mine ? t('dex.noMyPositions') : t('dex.noPositions', { chain: venueName })}</div> : <div className="dex-table-scroll"><table className="dex-table"><thead><tr><th>{t('dex.position')}</th><th>{t('dex.priceRange')}</th><th>{t('dex.currentHoldings')}</th><th>{t('dex.state')}</th><th>{t('dex.networkColumn')}</th><th /></tr></thead><tbody>{visiblePositions.map((item) => { const fill = fillFraction(item) * 100; return <tr key={`${item.chain_id}:${item.token_id}`}><td className={item.side === 'buy' ? 'dex-buy' : 'dex-sell'}>{t(item.side === 'buy' ? 'dex.buy' : 'dex.sell')}<small>#{item.token_id}</small></td><td>{formatPrice(item.minPrice)} – {formatPrice(item.maxPrice)}<small>{t('dex.lpFeeValue', { fee: item.poolFee / 10000 })}</small></td><td>{formatSize(item.amountDhb)} DHB<small>{formatSize(item.amountUsdc)} USDC</small></td><td>{item.status === 'Filled' ? t('dex.ready') : item.status === 'In range' ? <>{t('dex.converting')} <span className="dex-muted">{fill < 1 ? '<1' : Math.round(fill)}%</span><i className="dex-fill" style={{ '--fill': `${fill}%` } as CSSProperties} /></> : t('dex.waiting')}<small>{item.owner.slice(0, 6)}…{item.owner.slice(-4)}</small></td><td>{DEX_CHAINS[item.chain_id as DexChainId].name}</td><td>{walletAddress?.toLowerCase() === item.owner.toLowerCase() ? <button disabled={busy || !!withdrawing} onClick={() => void handleWithdraw(item)}>{withdrawing === `${item.chain_id}:${item.token_id}` ? t('dex.withdrawing') : t('dex.withdraw')}</button> : <a href={`${DEX_CHAINS[item.chain_id as DexChainId].explorer}/tx/${item.mint_tx_hash}`} target="_blank" rel="noreferrer" aria-label={t('dex.viewPosition', { id: item.token_id })}><ExternalLink size={14} /></a>}</td></tr>; })}</tbody></table></div>}
       {shown.length > PAGE_SIZE && <div className="dex-pagination"><button disabled={!page} onClick={() => setPage((n) => n - 1)}>{t('dex.previous')}</button><span>{page + 1} / {Math.ceil(shown.length / PAGE_SIZE)}</span><button disabled={(page + 1) * PAGE_SIZE >= shown.length} onClick={() => setPage((n) => n + 1)}>{t('dex.next')}</button></div>}
     </section>
+    <CrossChainDepositDrawer open={convertOpen} onOpenChange={(open) => { setConvertOpen(open); if (!open) setBalanceRevision((n) => n + 1); }}
+      destinationSymbol="ETH" initialAsset={{ chain: 'bsc', symbol: 'BNB' }} />
   </div>;
 }

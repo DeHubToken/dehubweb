@@ -845,7 +845,9 @@
     "crossChainCompleted": "An kammala ajiyar cross-chain! An karɓi {{symbol}} a Base.",
     "tryAgain": "Sake Gwadawa",
     "refundAddress": "Maimaita adireshin akan {{chain}}",
-    "refundAddressHint": "Idan swap ba zai iya kammalawa ba, an mayar da {{symbol}} a nan."
+    "refundAddressHint": "Idan swap ba zai iya kammalawa ba, an mayar da {{symbol}} a nan.",
+    "sendFromWallet": "Aika {{amount}} {{symbol}} daga walat ɗina",
+    "walletSendSubmitted": "An aika. ETH ɗinku zai iso Base cikin ’yan mintuna."
   },
   "wallet": {
     "title": "Walat",
@@ -3457,7 +3459,9 @@
     "noBaseFunds": "Babu ETH, USDC ko USDT akan Base",
     "pendingSwapNote": "Your {{symbol}} an canza shi don USDC. Sake farawa don ƙirƙirar matsayi ba tare da sake canzawa ba.",
     "resumeMint": "Sake farawa oda",
-    "resumeNeedsBalances": "Wallet balance ne har yanzu loading. Ka sake gwadawa a cikin wani lokaci."
+    "resumeNeedsBalances": "Wallet balance ne har yanzu loading. Ka sake gwadawa a cikin wani lokaci.",
+    "convertBnbNote": "An rufe ciniki a BNB Chain. Kuna da BNB? Canza shi zuwa ETH a Base, sannan ku biya da ETH.",
+    "convertBnb": "Canza BNB"
   },
   "editor": {
     "canvas": {
