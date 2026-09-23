@@ -3581,13 +3581,23 @@
       "permitApproval": "Potvrďte schválenie pozície vo vašej peňaženke…",
       "submit": "Potvrďte pozíciu vo vašej peňaženke…",
       "confirm": "Čaká sa na potvrdenie…",
-      "index": "Registrácia vašej pozície…"
+      "index": "Registrácia vašej pozície…",
+      "swap": "Potvrďte výmenu v peňaženke...",
+      "swapConfirm": "Čaká sa na potvrdenie výmeny..."
     },
     "automaticStage": {
       "tokenApproval": "Smart peňaženka schvaľuje tokeny…",
       "permitApproval": "Smart peňaženka schvaľuje prístup k pozícii…",
-      "submit": "Smart peňaženka vytvára vašu pozíciu…"
-    }
+      "submit": "Smart peňaženka vytvára vašu pozíciu…",
+      "swap": "Výmena inteligentnej peňaženky a vytvorenie pozície..."
+    },
+    "payWith": "Zaplatiť cez",
+    "spendUsd": "Útrata (USD)",
+    "noBaseFunds": "Žiadne ETH, USDC alebo USDT na základni",
+    "reviewSwap": "Vymeňte najskôr {{amountIn}} {{symbol}} za {{usdc}} USDC na základni. Nepoužité {{symbol}} sa vráti v tej istej transakcii.",
+    "pendingSwapNote": "Váš účet {{symbol}} bol vymenený za USDC. Pokračujte a vytvorte pozíciu bez opätovného vymenenia.",
+    "resumeMint": "Obnoviť objednávku",
+    "resumeNeedsBalances": "Zostatky v peňaženke sa stále načítavajú. Skúste to znova o chvíľu."
   },
   "post": {
     "like": "Páči sa mi",

@@ -3410,12 +3410,22 @@
       "permitApproval": "Positiouns-Bewilligung i dim Wallet bestätige…",
       "submit": "Positioun i dim Wallet bestätige…",
       "confirm": "Warte uf Bestätigung…",
-      "index": "Dini Positioun registriere…"
+      "index": "Dini Positioun registriere…",
+      "swap": "Bestätige de Swop i dim Wallet…",
+      "swapConfirm": "Warte druf, dass de Swop bestätigt wird…"
     },
     "automaticStage": {
       "tokenApproval": "Smart Wallet, wo Token bewilligt…",
       "permitApproval": "Smart Wallet, wo Positiouns-Zugang bewilligt…",
-      "submit": "Smart Wallet, wo dini Positioun erschafft…"
-    }
+      "submit": "Smart Wallet, wo dini Positioun erschafft…",
+      "swap": "Smart Wallet am Swappe und din Positioun am erschaffe…"
+    },
+    "payWith": "Bezahle mit",
+    "spendUsd": "Usgeh (USD)",
+    "noBaseFunds": "Kein ETH, USDC oder USDT uf Base",
+    "reviewSwap": "Swappe ca. {{amountIn}} {{symbol}} für {{usdc}} USDC uf Base zerscht. Ung bruuchti {{symbol}} wird i de glich Transaktion zrugggeh.",
+    "pendingSwapNote": "Dini {{symbol}} sind für USDC gswappt worde. Mach wiiter zum Positioun erschaffe ohni no z'swappe.",
+    "resumeMint": "Bestellig wiiterziehe",
+    "resumeNeedsBalances": "Wallet-Balanche lade no. Versuech’s grad no mal."
   }
 }

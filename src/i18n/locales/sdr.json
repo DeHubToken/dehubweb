@@ -3321,13 +3321,23 @@
       "permitApproval": "أكد الموافقة على المركز في محفظتك…",
       "submit": "أكد المركز في محفظتك…",
       "confirm": "في انتظار التأكيد…",
-      "index": "تسجيل مركزك…"
+      "index": "تسجيل مركزك…",
+      "swap": "تأكيد التبديل في محفظتك…",
+      "swapConfirm": "في انتظار تأكيد التبديل…"
     },
     "automaticStage": {
       "tokenApproval": "Smart wallet approving tokens…",
       "permitApproval": "Smart wallet approving position access…",
-      "submit": "إنشاء مركزك بواسطة المحفظة الذكية…"
-    }
+      "submit": "إنشاء مركزك بواسطة المحفظة الذكية…",
+      "swap": "المحفظة الذكية تقوم بالتبديل وإنشاء مركزك…"
+    },
+    "payWith": "الدفع بواسطة",
+    "spendUsd": "إنفاق (USD)",
+    "noBaseFunds": "لا يوجد ETH أو USDC أو USDT على Base",
+    "reviewSwap": "قم بتبديل حوالي {{amountIn}} {{symbol}} مقابل {{usdc}} USDC على Base أولاً. يتم إرجاع {{symbol}} غير المستخدمة في نفس المعاملة.",
+    "pendingSwapNote": "تم تبديل {{symbol}} الخاص بك مقابل USDC. استأنف لإنشاء المركز دون الحاجة إلى التبديل مرة أخرى.",
+    "resumeMint": "استئناف الطلب",
+    "resumeNeedsBalances": "أرصدة المحفظة لا تزال قيد التحميل. حاول مرة أخرى بعد لحظة."
   },
   "post": {
     "like": "پسند",

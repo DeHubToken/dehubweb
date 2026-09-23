@@ -3279,6 +3279,7 @@
     "prepareFailed": "A tun tɛ se ka lɔyɔrɔ labɛn",
     "reviewYourBuy": "Ka taga a san",
     "reviewYourSell": "Ka taga bɔ i ka soo",
+    "reviewRange": "Range: {{min}} – {{max}} USD per DHB.",
     "initializes": "O be se ka kɛ ni 0% ye.",
     "pendingNote": "I ka baara kɛra. N'i ye mɔgɔ dɔ weele ka na i ka soo, i ka kan k'a fɔ ko i ye mɔgɔ dɔ weele ka na i ka soo",
     "viewTransaction": "Ka baara kɛ ni mɔgɔ dɔ ye",
@@ -3321,6 +3322,9 @@
     "automaticStage": {
       "tokenApproval": "Smart wallet approving tokens…",
       "permitApproval": "Smart wallet approving position access…"
-    }
+    },
+    "payWith": "Pay with",
+    "spendUsd": "Spend (USD)",
+    "resumeMint": "Resume order"
   }
 }

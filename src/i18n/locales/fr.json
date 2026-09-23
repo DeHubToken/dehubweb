@@ -5764,12 +5764,22 @@
       "permitApproval": "Confirmez l'approbation de la position dans votre portefeuille…",
       "submit": "Confirmez la position dans votre portefeuille…",
       "confirm": "En attente de confirmation…",
-      "index": "Enregistrement de votre position…"
+      "index": "Enregistrement de votre position…",
+      "swap": "Confirmez l'échange dans votre portefeuille…",
+      "swapConfirm": "En attente de confirmation de l'échange…"
     },
     "automaticStage": {
       "tokenApproval": "Le portefeuille intelligent approuve les jetons…",
       "permitApproval": "Le portefeuille intelligent approuve l'accès à la position…",
-      "submit": "Le portefeuille intelligent crée votre position…"
-    }
+      "submit": "Le portefeuille intelligent crée votre position…",
+      "swap": "Échange de portefeuille intelligent et création de votre position…"
+    },
+    "payWith": "Payer avec",
+    "spendUsd": "Dépenses (USD)",
+    "noBaseFunds": "Pas d'ETH, USDC ou USDT sur la base",
+    "reviewSwap": "Échangez d'abord environ {{amountIn}}{{symbol}} contre {{usdc}} USDC sur la base. Le {{symbol}} inutilisé est retourné dans la même transaction.",
+    "pendingSwapNote": "Votre {{symbol}} a été échangé contre de l'USDC. Reprenez pour créer le poste sans échanger à nouveau.",
+    "resumeMint": "Reprendre la commande",
+    "resumeNeedsBalances": "Les soldes des portefeuilles sont toujours en cours de chargement. Réessayez dans un instant."
   }
 }

@@ -5770,12 +5770,22 @@
       "permitApproval": "Confirme a aprovação da posição em sua carteira…",
       "submit": "Confirme a posição em sua carteira…",
       "confirm": "Aguardando confirmação…",
-      "index": "Registrando sua posição…"
+      "index": "Registrando sua posição…",
+      "swap": "Confirme a troca na sua carteira...",
+      "swapConfirm": "Aguardando a confirmação da troca..."
     },
     "automaticStage": {
       "tokenApproval": "Carteira inteligente aprovando tokens…",
       "permitApproval": "Carteira inteligente aprovando acesso à posição…",
-      "submit": "Carteira inteligente criando sua posição…"
-    }
+      "submit": "Carteira inteligente criando sua posição…",
+      "swap": "Troca inteligente de carteiras e criação da sua posição..."
+    },
+    "payWith": "Pagar com",
+    "spendUsd": "Gasto (USD)",
+    "noBaseFunds": "Sem ETH, USDC ou USDT na base",
+    "reviewSwap": "Troque cerca de {{amountIn}}{{symbol}} por {{usdc}} USDC no Base primeiro. O {{symbol}} não utilizado é devolvido na mesma transação.",
+    "pendingSwapNote": "O seu {{symbol}} foi trocado por USDC. Retomar para criar a posição sem trocar novamente.",
+    "resumeMint": "Retomar pedido",
+    "resumeNeedsBalances": "Os saldos da carteira ainda estão carregando. Tente novamente daqui a pouco."
   }
 }

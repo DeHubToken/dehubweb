@@ -5769,12 +5769,22 @@
       "permitApproval": "Konfirmasikan persetujuan posisi di dompet Anda…",
       "submit": "Konfirmasikan posisi di dompet Anda…",
       "confirm": "Menunggu konfirmasi…",
-      "index": "Mendaftarkan posisi Anda…"
+      "index": "Mendaftarkan posisi Anda…",
+      "swap": "Konfirmasi swap di dompet Anda...",
+      "swapConfirm": "Menunggu swap untuk mengonfirmasi..."
     },
     "automaticStage": {
       "tokenApproval": "Dompet pintar menyetujui token…",
       "permitApproval": "Dompet pintar menyetujui akses posisi…",
-      "submit": "Dompet pintar membuat posisi Anda…"
-    }
+      "submit": "Dompet pintar membuat posisi Anda…",
+      "swap": "Dompet pintar bertukar dan membuat posisi Anda..."
+    },
+    "payWith": "Bayar dengan",
+    "spendUsd": "Pengeluaran (USD)",
+    "noBaseFunds": "Tidak ada ETH, USDC atau USDT di Base",
+    "reviewSwap": "Tukar sekitar {{amountIn}}{{symbol}} dengan {{usdc}} USDC di Base terlebih dahulu. {{symbol}} yang tidak digunakan dikembalikan dalam transaksi yang sama.",
+    "pendingSwapNote": "{{symbol}} Anda ditukar dengan USDC. Lanjutkan untuk membuat posisi tanpa menukar lagi.",
+    "resumeMint": "Lanjutkan pesanan",
+    "resumeNeedsBalances": "Saldo dompet masih dimuat. Coba lagi sebentar lagi."
   }
 }

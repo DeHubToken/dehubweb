@@ -5757,12 +5757,22 @@
       "permitApproval": "지갑에서 포지션 승인 확인…",
       "submit": "지갑에서 포지션 확인…",
       "confirm": "확인 대기 중…",
-      "index": "포지션 등록 중…"
+      "index": "포지션 등록 중…",
+      "swap": "지갑의 교환을 확인하세요...",
+      "swapConfirm": "교환이 완료되기를 기다리는 중..."
     },
     "automaticStage": {
       "tokenApproval": "스마트 지갑 토큰 승인 중…",
       "permitApproval": "스마트 지갑 포지션 접근 승인 중…",
-      "submit": "스마트 지갑 포지션 생성 중…"
-    }
+      "submit": "스마트 지갑 포지션 생성 중…",
+      "swap": "스마트 지갑 교환 및 포지션 생성..."
+    },
+    "payWith": "결제수단:",
+    "spendUsd": "지출 (USD)",
+    "noBaseFunds": "베이스에 ETH, USDC 또는 USDT 없음",
+    "reviewSwap": "먼저 기지에서 {{amountIn}} {{symbol}} 을 (를) {{usdc}} USDC (으) 로 바꿉니다. 사용하지 않은 {{symbol}} 이 (가) 동일한 거래에서 반환됩니다.",
+    "pendingSwapNote": "고객님의 {{symbol}} 이 (가) USDC와 교환되었습니다. 다시 스와핑하지 않고 포지션을 생성하려면 다시 시작하십시오.",
+    "resumeMint": "주문 재개",
+    "resumeNeedsBalances": "지갑 잔액이 아직 로드 중입니다. 잠시 후 다시 시도하세요."
   }
 }

@@ -5697,6 +5697,7 @@
     "estimated": "推定全額変換",
     "network": "資金調達ネットワーク",
     "sellBelowMarket": "この売却は、市場価格 ${{price}} より {{percent}}% 低いです。誰かがそれを購入し、すぐに他の場所で転売できます。",
+    "buyAboveMarket": "この購入は市場価格 ${{price}} より {{percent}}% 高いです。他の場所よりもDHBの取引価格より高く支払うことになります。",
     "useMarket": "市場価格を使用",
     "balanceError": "残高チェックに失敗しました。注文を出す前に再試行してください。",
     "noFunding": "{{chain}}で{{token}}が利用できません。",
@@ -5752,12 +5753,22 @@
       "permitApproval": "ウォレットでポジション承認を確認…",
       "submit": "ウォレットでポジションを確認…",
       "confirm": "確認を待機中…",
-      "index": "ポジションを登録中…"
+      "index": "ポジションを登録中…",
+      "swap": "ウォレットでスワップを確認してください…",
+      "swapConfirm": "スワップの確認を待っています…"
     },
     "automaticStage": {
       "tokenApproval": "スマートウォレットがトークンを承認中…",
       "permitApproval": "スマートウォレットがポジションアクセスを承認中…",
-      "submit": "スマートウォレットがポジションを作成中…"
-    }
+      "submit": "スマートウォレットがポジションを作成中…",
+      "swap": "スマートウォレットでスワップし、ポジションを作成しています…"
+    },
+    "payWith": "で支払う",
+    "spendUsd": "（USD）を使用",
+    "noBaseFunds": "BaseにETH、USDC、USDTはありません",
+    "reviewSwap": "まずBaseで約 {{amountIn}} {{symbol}} を {{usdc}} USDC にスワップしてください。未使用の {{symbol}} は同じトランザクションで返金されます。",
+    "pendingSwapNote": "あなたの {{symbol}} はUSDCにスワップされました。再度スワップせずにポジションを作成するために再開してください。",
+    "resumeMint": "注文を再開",
+    "resumeNeedsBalances": "ウォレット残高はまだ読み込み中です。しばらくしてからもう一度お試しください。"
   }
 }

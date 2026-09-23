@@ -5649,12 +5649,22 @@
       "permitApproval": "Potvrdite odobrenje pozicije u svom novčaniku...",
       "submit": "Potvrdite poziciju u svom novčaniku...",
       "confirm": "Čekanje na potvrdu...",
-      "index": "Registriranje vaše pozicije..."
+      "index": "Registriranje vaše pozicije...",
+      "swap": "Potvrdite zamjenu u novčaniku…",
+      "swapConfirm": "Čeka se potvrda zamjene..."
     },
     "automaticStage": {
       "tokenApproval": "Pametni novčanik odobrava tokene...",
       "permitApproval": "Pametni novčanik odobrava pristup poziciji...",
-      "submit": "Pametni novčanik stvara vašu poziciju..."
-    }
+      "submit": "Pametni novčanik stvara vašu poziciju...",
+      "swap": "Pametna zamjena novčanika i kreiranje pozicije..."
+    },
+    "payWith": "Za plaćanje upotrijebi",
+    "spendUsd": "Potrošnja (USD)",
+    "noBaseFunds": "Bez ETH-a, USDC-a ili USDT-a na bazi",
+    "reviewSwap": "Prvo zamijenite oko {{amountIn}}{{symbol}} za {{usdc}} USDC na bazi. Neiskorišteno {{symbol}} vraća se u istoj transakciji.",
+    "pendingSwapNote": "Vaš {{symbol}} je zamijenjen za USDC. Nastavite kako biste stvorili položaj bez ponovne zamjene.",
+    "resumeMint": "Nastavi narudžbu",
+    "resumeNeedsBalances": "Saldo novčanika i dalje se učitava. Pokušajte ponovno za nekoliko trenutaka."
   }
 }

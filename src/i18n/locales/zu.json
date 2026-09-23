@@ -3473,12 +3473,22 @@
       "permitApproval": "Qinisekisa imvume yesikhundla esikhwameni sakho…",
       "submit": "Qinisekisa isikhundla esikhwameni sakho…",
       "confirm": "Ukulinda isiqinisekiso…",
-      "index": "Ukubhalisa isikhundla sakho…"
+      "index": "Ukubhalisa isikhundla sakho…",
+      "swap": "Qinisekisa ukushintshanisa esikhwameni sakho semali...",
+      "swapConfirm": "Ilinde ukushintshwa ukuze iqinisekise..."
     },
     "automaticStage": {
       "tokenApproval": "Isikhwama esihlakaniphile sigunyaza amathokheni…",
       "permitApproval": "Isikhwama esihlakaniphile sigunyaza ukufinyelela kwesikhundla…",
-      "submit": "Isikhwama esihlakaniphile sidala isikhundla sakho…"
-    }
+      "submit": "Isikhwama esihlakaniphile sidala isikhundla sakho…",
+      "swap": "Indlela yokushintsha isikhwama futhi usungule indawo yakho..."
+    },
+    "payWith": "Khokha nge-",
+    "spendUsd": "Sebenzisa (USD)",
+    "noBaseFunds": "Ayikho i-ETH, i-USDC noma i-USDT ku-Base",
+    "reviewSwap": "Shintshanisa mayelana {{amountIn}} {{symbol}} for {{usdc}} USDC ku-Base kuqala. I- {{symbol}} engasetshenziswanga ibuyiselwa kuthengiselana okufanayo.",
+    "pendingSwapNote": "I- {{symbol}} yakho ishintshelwe i-USDC. Qhubeka ukuze usungule indawo ngaphandle kokushintsha futhi.",
+    "resumeMint": "Qhubeka nokuhleleka",
+    "resumeNeedsBalances": "Amabhalansi e-Wallet asalayishwa. Zama futhi ngomzuzwana."
   }
 }

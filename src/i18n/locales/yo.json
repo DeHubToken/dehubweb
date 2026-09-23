@@ -3431,12 +3431,22 @@
       "permitApproval": "Jẹ́wọ́ ìfọwọ́ sí ipò nínú apamọwọ rẹ…",
       "submit": "Jẹ́wọ́ ipò nínú apamọwọ rẹ…",
       "confirm": "Nduro fun ìmúdájú…",
-      "index": "Forukọsilẹ ipilẹṣẹ rẹ…"
+      "index": "Forukọsilẹ ipilẹṣẹ rẹ…",
+      "swap": "Jẹ́rìí sí pàṣípààrọ̀ náà nínú àpamọ́ rẹ...",
+      "swapConfirm": "Dúró fún pàṣípààrọ̀ láti fìdí múlẹ̀..."
     },
     "automaticStage": {
       "tokenApproval": "Apamọwọ ọlọgbọn n fọwọsi awọn aami…",
       "permitApproval": "Apamọwọ ọlọgbọn n fọwọsi wiwọle ipilẹṣẹ…",
-      "submit": "Apamọwọ ọlọgbọn n ṣẹda ipilẹṣẹ rẹ…"
-    }
+      "submit": "Apamọwọ ọlọgbọn n ṣẹda ipilẹṣẹ rẹ…",
+      "swap": "Ṣíṣe pàṣípààrọ̀ àpò-ìfowópamọ́ ọlọ́gbọ́n àti pípèsè ipò rẹ..."
+    },
+    "payWith": "San pẹlu",
+    "spendUsd": "Ìnáwó (USD)",
+    "noBaseFunds": "Ko si ETH, USDC tabi USDT lori Ipilẹ",
+    "reviewSwap": "Yipada nipa {{amountIn}} {{symbol}} fun {{usdc}} USDC lori Ipilẹ akọkọ. A kò lo {{symbol}} ni a dá padà nínú ìdúnàádúrà kan náà.",
+    "pendingSwapNote": "A pààrọ̀ rẹ {{symbol}} fún USDC. Bẹ̀rẹ̀ láti ṣẹ̀dá ipò náà láì ṣe pàṣípààrọ̀ lẹ́ẹ̀kan síi.",
+    "resumeMint": "Bẹ̀rẹ̀ sí í pàṣẹ",
+    "resumeNeedsBalances": "Ìwọ̀n owó àpamọ́wọ́ ṣì ń gbé ẹrù. Gbiyanju lẹẹkansi ni akoko kan."
   }
 }

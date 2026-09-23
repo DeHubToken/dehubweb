@@ -5550,6 +5550,8 @@
     "upperPrice": "Yuxarı qiymət",
     "estimated": "Təxmin edilən tam çevrilmə",
     "network": "Fon şəbəkəsi",
+    "sellBelowMarket": "Bu satış bazar qiymətindən {{percent}}% aşağıdır, bazar qiyməti isə ${{price}}-dir. Kimsə bunu alıb dərhal başqa yerdə sata bilər.",
+    "buyAboveMarket": "Bu alış bazar qiymətindən {{percent}}% yuxarıdır, bazar qiyməti isə ${{price}}-dir. Siz DHB-nin başqa yerdə satdığından daha çox ödəyəcəksiniz.",
     "useMarket": "Bazar qiymətindən istifadə edin",
     "balanceError": "Balans yoxlanışı uğursuz oldu. Sifariş verməzdən əvvəl yenidən cəhd edin.",
     "noFunding": "{{chain}}-də {{token}} mövcud deyil.",
@@ -5605,12 +5607,22 @@
       "permitApproval": "Vəsait təsdiqini cüzdanınızda təsdiqləyin…",
       "submit": "Vəsaitinizi cüzdanınızda təsdiqləyin…",
       "confirm": "Təsdiqlənmə gözlənilir…",
-      "index": "Vəsaitinizin qeydiyyatı…"
+      "index": "Vəsaitinizin qeydiyyatı…",
+      "swap": "Cüzdanınızda mübadiləni təsdiqləyin…",
+      "swapConfirm": "Mübadilənin təsdiqlənməsini gözləyirik…"
     },
     "automaticStage": {
       "tokenApproval": "Ağıllı cüzdan tokenləri təsdiqləyir…",
       "permitApproval": "Ağıllı cüzdan vəsaitə girişi təsdiqləyir…",
-      "submit": "Ağıllı cüzdan vəsaitinizi yaradır…"
-    }
+      "submit": "Ağıllı cüzdan vəsaitinizi yaradır…",
+      "swap": "Ağıllı cüzdan mübadiləsi və mövqeyinizin yaradılması…"
+    },
+    "payWith": "Ödəniş",
+    "spendUsd": "Xərclə (USD)",
+    "noBaseFunds": "Base-də ETH, USDC və ya USDT yoxdur",
+    "reviewSwap": "Əvvəlcə Base-də {{amountIn}} {{symbol}}-i {{usdc}} USDC-yə dəyişin. İstifadə olunmamış {{symbol}} eyni əməliyyatda geri qaytarılır.",
+    "pendingSwapNote": "Sizin {{symbol}} USDC-yə dəyişildi. Yenidən dəyişmədən mövqe yaratmaq üçün davam edin.",
+    "resumeMint": "Davam et",
+    "resumeNeedsBalances": "Cüzdan balansları hələ də yüklənir. Bir azdan yenidən cəhd edin."
   }
 }

@@ -3440,12 +3440,22 @@
       "permitApproval": "在您的錢包中確認倉位批准…",
       "submit": "在您的錢包中確認倉位…",
       "confirm": "等待確認…",
-      "index": "正在註冊您的倉位…"
+      "index": "正在註冊您的倉位…",
+      "swap": "確認你銀包入面嘅交換 ...",
+      "swapConfirm": "等緊交換確認 ..."
     },
     "automaticStage": {
       "tokenApproval": "智能錢包正在批准代幣…",
       "permitApproval": "智能錢包正在批准倉位訪問權限…",
-      "submit": "智能錢包正在創建您的倉位…"
-    }
+      "submit": "智能錢包正在創建您的倉位…",
+      "swap": "智能錢包交換同埋建立你嘅位置 ..."
+    },
+    "payWith": "用嚟畀錢",
+    "spendUsd": "消費（美元）",
+    "noBaseFunds": "冇 ETH 、 USDC 或者 USDT 嘅基礎",
+    "reviewSwap": "先將大約 {{amountIn}} {{symbol}} 換成 {{usdc}} 基地上嘅 USDC 。喺同一個交易入面會返回未用過嘅 {{symbol}} 。",
+    "pendingSwapNote": "你個 {{symbol}} 係換咗做 USDC 。繼續建立位置，唔使再交換。",
+    "resumeMint": "恢復訂單",
+    "resumeNeedsBalances": "銀包餘額仲係載入緊。一陣再試下。"
   }
 }

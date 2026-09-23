@@ -3466,7 +3466,18 @@
     "withdrawReview": "{{chain}}-এ {{dhb}} DHB এবং {{usdc}} USDC উইথড্র করবেন? সাইনিংয়ের আগে পরিমাণ রিফ্রেশ হবে; প্রাইস টলারেন্স ০.৫%।",
     "withdrawn": "পজিশন উইথড্র করা হয়েছে",
     "withdrawFailed": "উইথড্রয়াল ফেইল করেছে",
-    "withdrawing": "উইথড্র হচ্ছে…"
+    "withdrawing": "উইথড্র হচ্ছে…",
+    "automaticStage": {
+      "submit": "Smart wallet আপনার পজিশন তৈরি করছে…",
+      "swap": "Smart wallet সোয়াপিং এবং আপনার পজিশন তৈরি করছে…"
+    },
+    "payWith": "দিয়ে পেমেন্ট করুন",
+    "spendUsd": "খরচ করুন (USD)",
+    "noBaseFunds": "Base-এ কোনো ETH, USDC বা USDT নেই",
+    "reviewSwap": "প্রথমে Base-এ {{amountIn}} {{symbol}} এর বদলে {{usdc}} USDC সোয়াপ করুন। অব্যবহৃত {{symbol}} একই ট্রানজেকশনে ফেরত দেওয়া হবে।",
+    "pendingSwapNote": "আপনার {{symbol}} USDC-এর বদলে সোয়াপ করা হয়েছে। আবার সোয়াপ না করে পজিশন তৈরি করতে রিজ্যুম করুন।",
+    "resumeMint": "অর্ডার রিজ্যুম করুন",
+    "resumeNeedsBalances": "ওয়ালেট ব্যালেন্স লোড হচ্ছে। একটু পরে আবার চেষ্টা করুন।"
   },
   "post": {
     "like": "ভালা লাগসে",

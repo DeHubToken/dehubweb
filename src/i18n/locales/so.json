@@ -3434,12 +3434,21 @@
       "permitApproval": "Xaqiiji ogolaanshaha booska ee jeebkaaga…",
       "submit": "Xaqiiji booska ee jeebkaaga…",
       "confirm": "Sugidda xaqiijinta…",
-      "index": "Diiwaangelinta booskaaga…"
+      "index": "Diiwaangelinta booskaaga…",
+      "swap": "Xaqiiji iswaafajinta boorsadaada…",
+      "swapConfirm": "Sugitaanka swap si loo xaqiijiyo…"
     },
     "automaticStage": {
       "tokenApproval": "Jeebka smart-ka oo ogolaanaya token-ka…",
       "permitApproval": "Jeebka smart-ka oo ogolaanaya helitaanka booska…",
-      "submit": "Jeebka smart-ka oo samaynaya booskaaga…"
-    }
+      "submit": "Jeebka smart-ka oo samaynaya booskaaga…",
+      "swap": "Jeebka caqliga leh oo beddelaya oo abuuraya booskaaga..."
+    },
+    "payWith": "Bixi la",
+    "spendUsd": "Kharashka (USD)",
+    "noBaseFunds": "No ETH, USDC ama USDT on Base",
+    "pendingSwapNote": "{{symbol}} waa loo beddelay USDC. Dib u bilow inaad abuurto booska adigoon mar kale leexan.",
+    "resumeMint": "Dib u bilow amarka",
+    "resumeNeedsBalances": "Miisaaniyada boorsada ayaa weli raraya. Isku day mar kale in daqiiqad ah."
   }
 }

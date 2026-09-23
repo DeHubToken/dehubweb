@@ -3456,13 +3456,23 @@
       "permitApproval": "Hamyoningizda pozitsiya tasdig'ini tasdiqlang…",
       "submit": "Hamyoningizda pozitsiyani tasdiqlang…",
       "confirm": "Tasdiqlanishini kutish…",
-      "index": "Pozitsiyangizni ro'yxatdan o'tkazish…"
+      "index": "Pozitsiyangizni ro'yxatdan o'tkazish…",
+      "swap": "Hamyoningizdagi almashtirishni tasdiqlang…",
+      "swapConfirm": "Almashuv tasdiqlanishi kutilmoqda…"
     },
     "automaticStage": {
       "tokenApproval": "Smart hamyon tokenlarni tasdiqlaydi…",
       "permitApproval": "Smart hamyon pozitsiyaga kirishni tasdiqlaydi…",
-      "submit": "Smart hamyon pozitsiyangizni yaratadi…"
-    }
+      "submit": "Smart hamyon pozitsiyangizni yaratadi…",
+      "swap": "Aqlli hamyonni almashtirish va o&#39;z pozitsiyangizni yaratish…"
+    },
+    "payWith": "To'lov qiling",
+    "spendUsd": "Xarajatlar (AQSh dollari)",
+    "noBaseFunds": "Bazada ETH, USDC yoki USDT yo&#39;q",
+    "reviewSwap": "Bazada avval {{amountIn}} {{symbol}} ni {{usdc}} USDC ga almashtiring. Ishlatilmagan {{symbol}} xuddi shu tranzaksiyada qaytariladi.",
+    "pendingSwapNote": "Sizning {{symbol}} koeffitsiyentingiz USDC ga almashtirildi. Qayta almashtirmasdan pozitsiyani yaratish uchun davom eting.",
+    "resumeMint": "Buyurtmani davom ettirish",
+    "resumeNeedsBalances": "Hamyon balanslari hali ham yuklanmoqda. Birozdan keyin qayta urinib ko&#39;ring."
   },
   "spaces": {
     "title": "Boʻlimlar",

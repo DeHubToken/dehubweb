@@ -3308,13 +3308,23 @@
       "permitApproval": "在您的钱包中确认仓位批准…",
       "submit": "在您的钱包中确认仓位…",
       "confirm": "等待确认…",
-      "index": "正在注册您的仓位…"
+      "index": "正在注册您的仓位…",
+      "swap": "確認你錢包裡的交換…",
+      "swapConfirm": "等待交換確認…"
     },
     "automaticStage": {
       "tokenApproval": "智能钱包正在批准代币…",
       "permitApproval": "智能钱包正在批准仓位访问…",
-      "submit": "智能钱包正在创建您的仓位…"
-    }
+      "submit": "智能钱包正在创建您的仓位…",
+      "swap": "智能錢包正在交換並創建你的倉位…"
+    },
+    "payWith": "用…支付",
+    "spendUsd": "花費 (USD)",
+    "noBaseFunds": "Base 上沒有 ETH、USDC 或 USDT",
+    "reviewSwap": "先在 Base 上交換大約 {{amountIn}} {{symbol}} 為 {{usdc}} USDC。剩餘的 {{symbol}} 在同一筆交易中退還。",
+    "pendingSwapNote": "你的 {{symbol}} 已換成 USDC。恢復創建倉位，無需再次交換。",
+    "resumeMint": "恢復訂單",
+    "resumeNeedsBalances": "錢包餘額仍在加載中。請稍後再試。"
   },
   "post": {
     "like": "赞",

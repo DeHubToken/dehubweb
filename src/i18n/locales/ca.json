@@ -5535,6 +5535,7 @@
     "seoDescription": "Estableix el teu preu de compra o venda de DHB amb una ordre límit de Uniswap v4 a Base o BNB Chain. Llibre d'ordres en directe, profunditat de mercat i un preu compartit en USD.",
     "venue": "Xarxa",
     "marketPrice": "Preu de mercat · USD",
+    "bookPrice": "Preu del llibre: {{chain}} USD",
     "change24": "Canvi 24h",
     "totalLiquidity": "Liquidesa total · USD",
     "listedDhb": "DHB cotitzats · {{chain}}",
@@ -5570,6 +5571,7 @@
     "useSellPrice": "Utilitza {{price}} com a preu de venda",
     "spread": "Spread · USD",
     "buyTotal": "Compra {{amount}} DHB",
+    "sellTotal": "Venda {{amount}} DHB",
     "placeOrder": "Realitza una comanda",
     "lpFee": "0% de comissió LP",
     "lpFeeLabel": "Comissió LP",
@@ -5647,12 +5649,22 @@
       "permitApproval": "Confirma l'aprovació de la posició a la teva cartera…",
       "submit": "Confirma la posició a la teva cartera…",
       "confirm": "Esperant confirmació…",
-      "index": "Registrant la teva posició…"
+      "index": "Registrant la teva posició…",
+      "swap": "Confirma l'intercanvi a la teva cartera...",
+      "swapConfirm": "S'està esperant l'intercanvi per confirmar..."
     },
     "automaticStage": {
       "tokenApproval": "Smart wallet aprovant tokens…",
       "permitApproval": "Smart wallet aprovant accés a la posició…",
-      "submit": "Smart wallet creant la teva posició…"
-    }
+      "submit": "Smart wallet creant la teva posició…",
+      "swap": "Intercanvi de cartera intel·ligent i creació de la teva posició..."
+    },
+    "payWith": "Paga amb",
+    "spendUsd": "Despesa (USD)",
+    "noBaseFunds": "No hi ha ETH, USDC ni USDT a la base",
+    "reviewSwap": "Canvia {{amountIn}}{{symbol}} per {{usdc}} USDC a Base first. El {{symbol}} no utilitzat es retorna en la mateixa transacció.",
+    "pendingSwapNote": "El teu {{symbol}} s'ha intercanviat per USDC. Torna a crear la posició sense tornar a intercanviar-la.",
+    "resumeMint": "Reprèn la comanda",
+    "resumeNeedsBalances": "Els saldos de la cartera encara s'estan carregant. Torna-ho a provar en un moment."
   }
 }

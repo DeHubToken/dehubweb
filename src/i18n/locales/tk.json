@@ -3398,12 +3398,21 @@
       "permitApproval": "Pozisiýa rugsatnamasyny portmonyňyzda tassyklaň…",
       "submit": "Pozisiýany portmonyňyzda tassyklaň…",
       "confirm": "Tassyklaýyşy garaşýarys…",
-      "index": "Pozisiýaňyzy bellige alýarys…"
+      "index": "Pozisiýaňyzy bellige alýarys…",
+      "swap": "Çuwallaryňyza çuwal goýuň...",
+      "swapConfirm": "Men ony tassyklamagyň aladasyny edýärin..."
     },
     "automaticStage": {
       "tokenApproval": "Akylly portmon ýöriteleşdirilen tokenleri tassyklaýar…",
       "permitApproval": "Akylly portmon pozisiýa elýeterliligini tassyklaýar…",
-      "submit": "Akylly portmon pozisiýaňyzy döredýär…"
-    }
+      "submit": "Akylly portmon pozisiýaňyzy döredýär…",
+      "swap": "Sen öz ornuny tapyp, öz ornuny tapyp bilersiň..."
+    },
+    "payWith": "Ödeme",
+    "spendUsd": "Çykyş (USD)",
+    "noBaseFunds": "ETH, USDC ýa-da USDT ýok",
+    "pendingSwapNote": "Siziň {{symbol}} USDC üçin üýtgedildi. Bu ýagdaýy üýtgetmän, ýene-de döretmek üçin dowam ediň.",
+    "resumeMint": "Buýruklary gaýtalap geç",
+    "resumeNeedsBalances": "Bu pullar henizem dolup-daşýar. Gaýtalaň"
   }
 }

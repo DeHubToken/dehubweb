@@ -3429,12 +3429,22 @@
       "permitApproval": "Konfirmasi persetujuan posisi wonten ing dompet panjenengan…",
       "submit": "Konfirmasi posisi wonten ing dompet panjenengan…",
       "confirm": "Ngentosi konfirmasi…",
-      "index": "Ndhaptar posisi panjenengan…"
+      "index": "Ndhaptar posisi panjenengan…",
+      "swap": "Konfirmasi swap ing dompetmu…",
+      "swapConfirm": "Ngenteni swap dikonfirmasi…"
     },
     "automaticStage": {
       "tokenApproval": "Dompet pinter nyetujoni token…",
       "permitApproval": "Dompet pinter nyetujoni akses posisi…",
-      "submit": "Dompet pinter nggawe posisi panjenengan…"
-    }
+      "submit": "Dompet pinter nggawe posisi panjenengan…",
+      "swap": "Dompet pinter nggawe swap lan nggawe posisimu…"
+    },
+    "payWith": "Bayar nganggo",
+    "spendUsd": "Belanjakno (USD)",
+    "noBaseFunds": "Ora ana ETH, USDC utawa USDT ing Base",
+    "reviewSwap": "Swap kira-kira {{amountIn}} {{symbol}} kanggo {{usdc}} USDC ing Base dhisik. {{symbol}} sing ora digunakake bakal dibalekake ing transaksi sing padha.",
+    "pendingSwapNote": "{{symbol}}-mu wis ditukar karo USDC. Nerusake kanggo nggawe posisi tanpa nggawe swap maneh.",
+    "resumeMint": "Terusake pesenan",
+    "resumeNeedsBalances": "Saldo dompet isih dimuat. Coba maneh sedhela."
   }
 }

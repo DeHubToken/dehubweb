@@ -5680,12 +5680,22 @@
       "permitApproval": "Bekræft position-godkendelse i din wallet…",
       "submit": "Bekræft position i din wallet…",
       "confirm": "Venter på bekræftelse…",
-      "index": "Registrerer din position…"
+      "index": "Registrerer din position…",
+      "swap": "Bekræft swappen i din tegnebog...",
+      "swapConfirm": "Venter på, at swappen bekræfter..."
     },
     "automaticStage": {
       "tokenApproval": "Smart wallet godkender tokens…",
       "permitApproval": "Smart wallet godkender adgang til position…",
-      "submit": "Smart wallet opretter din position…"
-    }
+      "submit": "Smart wallet opretter din position…",
+      "swap": "Smart wallet-bytning og oprettelse af din position..."
+    },
+    "payWith": "Betal med",
+    "spendUsd": "Forbrug (USD)",
+    "noBaseFunds": "Ingen ETH, USDC eller USDT på basis",
+    "reviewSwap": "Byt først om {{amountIn}}{{symbol}} for {{usdc}}USDC på Base. Ubrugt {{symbol}} returneres i samme transaktion.",
+    "pendingSwapNote": "Din{{symbol}} blev byttet ud med USDC. Genoptag for at oprette positionen uden at bytte igen.",
+    "resumeMint": "Genoptag bestilling",
+    "resumeNeedsBalances": "Tegnebogssaldi indlæses stadig. Prøv igen om et øjeblik."
   }
 }

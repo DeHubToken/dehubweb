@@ -5742,12 +5742,21 @@
       "permitApproval": "Patvirtinkite pozicijos patvirtinimą savo piniginėje…",
       "submit": "Patvirtinkite poziciją savo piniginėje…",
       "confirm": "Laukiama patvirtinimo…",
-      "index": "Registruojama jūsų pozicija…"
+      "index": "Registruojama jūsų pozicija…",
+      "swap": "Patvirtinkite keitimą piniginėje...",
+      "swapConfirm": "Laukiama sukeitimo patvirtinimo..."
     },
     "automaticStage": {
       "tokenApproval": "Išmanioji piniginė tvirtina žetonus…",
       "permitApproval": "Išmanioji piniginė tvirtina prieigą prie pozicijos…",
-      "submit": "Išmanioji piniginė kuria jūsų poziciją…"
-    }
+      "submit": "Išmanioji piniginė kuria jūsų poziciją…",
+      "swap": "Išmaniosios piniginės keitimas ir pozicijos kūrimas..."
+    },
+    "payWith": "Mokėti naudojant",
+    "spendUsd": "Išlaidos (USD)",
+    "noBaseFunds": "Nėra ETH, USDC arba USDT už bazinę kainą",
+    "pendingSwapNote": "Jūsų {{symbol}} buvo pakeistas į USDC. Tęskite, kad sukurtumėte poziciją, nekeisdami jos dar kartą.",
+    "resumeMint": "Tęsti užsakymą",
+    "resumeNeedsBalances": "Piniginės likučiai vis dar įkeliami. Netrukus bandykite dar kartą."
   }
 }

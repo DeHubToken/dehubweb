@@ -3459,12 +3459,21 @@
       "permitApproval": "Konfirmo miratimin e pozicionit në portofolin tënd…",
       "submit": "Konfirmo pozicionin në portofolin tënd…",
       "confirm": "Në pritje të konfirmimit…",
-      "index": "Regjistrimi i pozicionit tënd…"
+      "index": "Regjistrimi i pozicionit tënd…",
+      "swap": "Konfirmo shkëmbimin në portofolin tënd...",
+      "swapConfirm": "Në pritje të shkëmbimit për të konfirmuar..."
     },
     "automaticStage": {
       "tokenApproval": "Portofoli inteligjent miraton tokenat…",
       "permitApproval": "Portofoli inteligjent miraton aksesin në pozicion…",
-      "submit": "Portofoli inteligjent krijon pozicionin tënd…"
-    }
+      "submit": "Portofoli inteligjent krijon pozicionin tënd…",
+      "swap": "Ndërrimi inteligjent i portofolit dhe krijimi i pozicionit tënd..."
+    },
+    "payWith": "Paguaj me",
+    "spendUsd": "Shpenzo (USD)",
+    "noBaseFunds": "Nuk ka ETH, USDC ose USDT në bazë",
+    "pendingSwapNote": "Tuaj {{symbol}} u shkëmbye me USDC. Vazhdo për të krijuar pozicionin pa ndërruar përsëri.",
+    "resumeMint": "Rifillo porosinë",
+    "resumeNeedsBalances": "Bilancet e portofolit janë ende duke u ngarkuar. Provo përsëri pas një çasti."
   }
 }

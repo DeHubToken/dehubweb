@@ -5389,12 +5389,22 @@
       "permitApproval": "ຢືນຢັນການອະນຸມັດຕຳແໜ່ງໃນ wallet ຂອງທ່ານ…",
       "submit": "ຢືນຢັນຕຳແໜ່ງໃນ wallet ຂອງທ່ານ…",
       "confirm": "ລໍຖ້າການຢືນຢັນ…",
-      "index": "ກຳລັງລົງທະບຽນຕຳແໜ່ງຂອງທ່ານ…"
+      "index": "ກຳລັງລົງທະບຽນຕຳແໜ່ງຂອງທ່ານ…",
+      "swap": "ຢືນຢັນການແລກປ່ຽນໃນກະເປົາເງິນຂອງທ່ານ...",
+      "swapConfirm": "ລໍຖ້າການແລກປ່ຽນເພື່ອຢືນຢັນ..."
     },
     "automaticStage": {
       "tokenApproval": "Smart wallet ກຳລັງອະນຸມັດ token…",
       "permitApproval": "Smart wallet ກຳລັງອະນຸມັດການເຂົ້າເຖິງຕຳແໜ່ງ…",
-      "submit": "Smart wallet ກຳລັງສ້າງຕຳແໜ່ງຂອງທ່ານ…"
-    }
+      "submit": "Smart wallet ກຳລັງສ້າງຕຳແໜ່ງຂອງທ່ານ…",
+      "swap": "ການແລກປ່ຽນກະເປົາເງິນທີ່ສະຫຼາດແລະສ້າງ ຕໍາ ແຫນ່ງ ຂອງທ່ານ..."
+    },
+    "payWith": "ຊໍາລະເງິນກັບ",
+    "spendUsd": "ໃຊ້ຈ່າຍ (USD)",
+    "noBaseFunds": "ບໍ່ມີ ETH, USDC ຫຼື USDT ບົນພື້ນຖານ",
+    "reviewSwap": "ປ່ຽນປະມານ {{amountIn}}{{symbol}} ສໍາ ລັບ {{usdc}} USDC ໃສ່ Base ກ່ອນ. ບໍ່ໃຊ້ {{symbol}} ຖືກສົ່ງຄືນໃນການເຮັດທຸລະ ກໍາ ດຽວກັນ.",
+    "pendingSwapNote": "ຂອງທ່ານ {{symbol}} ໄດ້ຖືກແລກປ່ຽນເປັນ USDC. ໄປທີ່ສະແກນອີກເທື່ອຫນຶ່ງກັບ UniConverter.",
+    "resumeMint": "ສືບຕໍ່ສັ່ງຊື້",
+    "resumeNeedsBalances": "ກະເປົາເງິນຍັງຖືກໂຫຼດ. ພະ ຍາ ຍາມ ມັນ ອີກ ເທື່ອ ຫນຶ່ງ."
   }
 }

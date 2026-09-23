@@ -3438,12 +3438,21 @@
       "permitApproval": "Whakaūhia te whakaaetanga tūnga ki tō putea…",
       "submit": "Whakaūhia te tūnga ki tō putea…",
       "confirm": "Te tatari mō te whakapāhiko…",
-      "index": "Te rēhita i tō tūnga…"
+      "index": "Te rēhita i tō tūnga…",
+      "swap": "Whakamātauria te huringa i roto i to koutou putea...",
+      "swapConfirm": "Kei te tatari ahau ki te tohu..."
     },
     "automaticStage": {
       "tokenApproval": "Te whakaaetanga tohu a te putea atamai…",
       "permitApproval": "Te whakaaetanga uru tūnga a te putea atamai…",
-      "submit": "Te hanga i tō tūnga a te putea atamai…"
-    }
+      "submit": "Te hanga i tō tūnga a te putea atamai…",
+      "swap": "Ka huri te putea atamai me te hanga i to koutou tūnga..."
+    },
+    "payWith": "Utu ki",
+    "spendUsd": "Te whakapaunga (USD)",
+    "noBaseFunds": "Kaore he ETH, USDC ranei USDT i runga i te turanga",
+    "pendingSwapNote": "Ko to {{symbol}} kua hurihia mo te USDC. Whakamātauria ki te hanga i te tūnga, me te kore e huri ano.",
+    "resumeMint": "Whakahokia te ota",
+    "resumeNeedsBalances": "Kei te utaina tonu nga toenga putea. Whakamātauria ano i roto i te wa."
   }
 }

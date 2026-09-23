@@ -5769,12 +5769,22 @@
       "permitApproval": "在您的钱包中确认仓位批准…",
       "submit": "在您的钱包中确认仓位…",
       "confirm": "等待确认…",
-      "index": "正在注册您的仓位…"
+      "index": "正在注册您的仓位…",
+      "swap": "确认您钱包中的交换……",
+      "swapConfirm": "正在等待交换确认……"
     },
     "automaticStage": {
       "tokenApproval": "智能钱包正在批准代币…",
       "permitApproval": "智能钱包正在批准仓位访问…",
-      "submit": "智能钱包正在创建您的仓位…"
-    }
+      "submit": "智能钱包正在创建您的仓位…",
+      "swap": "智能钱包交换和创建您的位置……"
+    },
+    "payWith": "付款方式",
+    "spendUsd": "支出（美元）",
+    "noBaseFunds": "BASE上没有ETH、USDC或USDT",
+    "reviewSwap": "先在Base上将大约{{amountIn}} {{symbol}}换成{{usdc}} USDC。 未使用的{{symbol}}在同一笔交易中被退回。",
+    "pendingSwapNote": "您的{{symbol}}已换成USDC。 继续创建头寸，无需再次交换。",
+    "resumeMint": "恢复订单",
+    "resumeNeedsBalances": "钱包余额仍在加载中。 请稍后重试。"
   }
 }

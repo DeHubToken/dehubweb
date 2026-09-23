@@ -5768,12 +5768,22 @@
       "permitApproval": "Confirm position approval in your wallet…",
       "submit": "Confirm position in your wallet…",
       "confirm": "Waiting for confirmation…",
-      "index": "Registering your position…"
+      "index": "Registering your position…",
+      "swap": "Confirm the swap in your wallet…",
+      "swapConfirm": "Waiting for the swap to confirm…"
     },
     "automaticStage": {
       "tokenApproval": "Smart wallet approving tokens…",
       "permitApproval": "Smart wallet approving position access…",
-      "submit": "Smart wallet creating your position…"
-    }
+      "submit": "Smart wallet creating your position…",
+      "swap": "Smart wallet swapping and creating your position…"
+    },
+    "payWith": "Pay with",
+    "spendUsd": "Spend (USD)",
+    "noBaseFunds": "No ETH, USDC or USDT on Base",
+    "reviewSwap": "Swap about {{amountIn}} {{symbol}} for {{usdc}} USDC on Base first. Unused {{symbol}} is returned in the same transaction.",
+    "pendingSwapNote": "Your {{symbol}} was swapped for USDC. Resume to create the position without swapping again.",
+    "resumeMint": "Resume order",
+    "resumeNeedsBalances": "Wallet balances are still loading. Try again in a moment."
   }
 }
