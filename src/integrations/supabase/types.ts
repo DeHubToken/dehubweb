@@ -2269,6 +2269,53 @@ export type Database = {
         }
         Relationships: []
       }
+      dex_pool_orders: {
+        Row: {
+          created_at: string
+          maker: string
+          order_ref: string
+          owner_address: string
+          pool_id: string
+          price: number
+          side: string
+          token_amount: number
+          tx_hash: string
+          usd_amount: number
+        }
+        Insert: {
+          created_at?: string
+          maker: string
+          order_ref: string
+          owner_address: string
+          pool_id: string
+          price: number
+          side: string
+          token_amount: number
+          tx_hash: string
+          usd_amount: number
+        }
+        Update: {
+          created_at?: string
+          maker?: string
+          order_ref?: string
+          owner_address?: string
+          pool_id?: string
+          price?: number
+          side?: string
+          token_amount?: number
+          tx_hash?: string
+          usd_amount?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dex_pool_orders_pool_id_fkey"
+            columns: ["pool_id"]
+            isOneToOne: false
+            referencedRelation: "dex_pools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dex_pool_positions: {
         Row: {
           block_number: number
@@ -2317,6 +2364,95 @@ export type Database = {
           to_block?: number
           updated_at?: string
           window_blocks?: number
+        }
+        Relationships: []
+      }
+      dex_pool_trades: {
+        Row: {
+          created_at: string
+          owner_address: string
+          pool_id: string
+          price: number
+          side: string
+          token_amount: number
+          trader: string
+          tx_hash: string
+          usd_amount: number
+        }
+        Insert: {
+          created_at?: string
+          owner_address: string
+          pool_id: string
+          price: number
+          side: string
+          token_amount: number
+          trader: string
+          tx_hash: string
+          usd_amount: number
+        }
+        Update: {
+          created_at?: string
+          owner_address?: string
+          pool_id?: string
+          price?: number
+          side?: string
+          token_amount?: number
+          trader?: string
+          tx_hash?: string
+          usd_amount?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dex_pool_trades_pool_id_fkey"
+            columns: ["pool_id"]
+            isOneToOne: false
+            referencedRelation: "dex_pools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dex_pools: {
+        Row: {
+          chain: string
+          created_at: string
+          creator_address: string
+          decimals: number
+          fee_dhb: number
+          fee_tx_hash: string
+          fee_usd: number
+          id: string
+          image_url: string | null
+          name: string
+          symbol: string
+          token_address: string
+        }
+        Insert: {
+          chain: string
+          created_at?: string
+          creator_address: string
+          decimals: number
+          fee_dhb: number
+          fee_tx_hash: string
+          fee_usd: number
+          id?: string
+          image_url?: string | null
+          name: string
+          symbol: string
+          token_address: string
+        }
+        Update: {
+          chain?: string
+          created_at?: string
+          creator_address?: string
+          decimals?: number
+          fee_dhb?: number
+          fee_tx_hash?: string
+          fee_usd?: number
+          id?: string
+          image_url?: string | null
+          name?: string
+          symbol?: string
+          token_address?: string
         }
         Relationships: []
       }
@@ -6985,6 +7121,10 @@ export type Database = {
       }
       resolve_due_dao_proposals: { Args: never; Returns: number }
       resolve_due_governance_proposals: { Args: never; Returns: number }
+      set_dex_pool_image: {
+        Args: { p_image_url: string; p_pool_id: string }
+        Returns: undefined
+      }
       stage_dub_tick: {
         Args: {
           p_language: string
