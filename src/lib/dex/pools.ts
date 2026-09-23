@@ -126,10 +126,10 @@ export async function uploadPoolImage(file: File): Promise<string> {
   if (!file.type.startsWith('image/')) throw new Error('Choose an image file');
   if (file.size > 5 * 1024 * 1024) throw new Error('Images must be 5 MB or smaller');
   const extension = (file.name.split('.').pop() || 'png').replace(/[^a-z0-9]/gi, '').slice(0, 5) || 'png';
-  const path = `${crypto.randomUUID()}.${extension}`;
-  const { error } = await supabase.storage.from('dex-pool-images').upload(path, file, { contentType: file.type, cacheControl: '31536000', upsert: false });
+  const path = `dex-pools/${crypto.randomUUID()}.${extension}`;
+  const { error } = await supabase.storage.from('community-media').upload(path, file, { contentType: file.type, cacheControl: '31536000', upsert: false });
   if (error) throw error;
-  return supabase.storage.from('dex-pool-images').getPublicUrl(path).data.publicUrl;
+  return supabase.storage.from('community-media').getPublicUrl(path).data.publicUrl;
 }
 
 export async function setPoolImage(poolId: string, imageUrl: string, walletAddress: string): Promise<void> {
