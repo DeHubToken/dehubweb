@@ -16,11 +16,24 @@ interface EditorUiState {
   setPanel: (panel: EditorPanel | null) => void;
   togglePanel: (panel: EditorPanel) => void;
   setInspectorOpen: (open: boolean) => void;
+  /** Timeline visibility. Photo and graphic designs rarely need it. */
+  timelineOpen: boolean;
+  setTimelineOpen: (open: boolean) => void;
+  /**
+   * True after the last click landed on the canvas. Arrow keys then nudge the
+   * selected layer instead of moving the playhead.
+   */
+  canvasFocus: boolean;
+  setCanvasFocus: (focus: boolean) => void;
 }
 
 export const useEditorUiStore = create<EditorUiState>((set) => ({
   panel: 'design',
   inspectorOpen: true,
+  timelineOpen: true,
+  setTimelineOpen: (timelineOpen) => set({ timelineOpen }),
+  canvasFocus: false,
+  setCanvasFocus: (canvasFocus) => set({ canvasFocus }),
   setPanel: (panel) => set({ panel }),
   togglePanel: (panel) => set((s) => ({ panel: s.panel === panel ? null : panel })),
   setInspectorOpen: (inspectorOpen) => set({ inspectorOpen }),

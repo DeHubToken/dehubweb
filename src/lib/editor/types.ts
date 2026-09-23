@@ -38,6 +38,48 @@ interface BaseClip {
   animateIn?: ClipAnimation;
   /** Exit animation applied at the end of the clip. */
   animateOut?: ClipAnimation;
+  /** Placement on the canvas. Absent means the historical default (centred, fitted, upright). */
+  transform?: ClipTransform;
+  /** Drop shadow behind the element. Off by default. */
+  shadow?: ClipShadow | null;
+}
+
+/**
+ * Where a visual clip sits on the canvas. Media clips use every field; text
+ * clips keep their own x/y and font size, and read rotation, opacity and flips
+ * from here.
+ */
+export interface ClipTransform {
+  /** Normalised 0..1 centre inside the canvas. */
+  x: number;
+  y: number;
+  /** 1 = the fitted size (contain, or cover when fit is "cover"). */
+  scale: number;
+  /** Degrees, clockwise. */
+  rotation: number;
+  flipH?: boolean;
+  flipV?: boolean;
+  /** 0..1, default 1. */
+  opacity?: number;
+}
+
+export interface ClipShadow {
+  color: string;
+  /** 0..1 */
+  opacity: number;
+  /** Blur radius in px relative to 1080p. */
+  blur: number;
+  /** Offset in px relative to 1080p. */
+  offsetX: number;
+  offsetY: number;
+}
+
+/** Fractions (0..0.9) trimmed from each edge of the source image or video. */
+export interface ClipCrop {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
 }
 
 
@@ -97,6 +139,11 @@ export interface MediaClip extends BaseClip {
   audio?: ClipAudio;
   /** Playback rate for video/audio sources. 1 = normal, 2 = 2x, 0.5 = half. Default 1. */
   speed?: number;
+  /** "contain" fits inside the canvas (default); "cover" fills it edge to edge. */
+  fit?: "contain" | "cover";
+  crop?: ClipCrop | null;
+  /** Corner radius in px relative to 1080p. */
+  radius?: number;
 }
 
 export interface TextBackground {
@@ -131,6 +178,13 @@ export interface TextClip extends BaseClip {
   background?: TextBackground | null;
   /** Optional outline stroke around the glyphs. Off by default. */
   stroke?: TextStroke | null;
+  italic?: boolean;
+  uppercase?: boolean;
+  underline?: boolean;
+  /** Extra space between letters, in px relative to 1080p. */
+  letterSpacing?: number;
+  /** Line height as a multiple of font size. Default 1.2. */
+  lineHeight?: number;
 }
 
 export type Clip = MediaClip | TextClip;

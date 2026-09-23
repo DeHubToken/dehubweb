@@ -5,10 +5,10 @@
  *
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
-import type { Clip, MediaClip, TextClip, ProjectSnapshot } from "./types";
+import type { MediaClip, ProjectSnapshot } from "./types";
 import type { MediaItem } from "@/store/editorStore";
 import { computeRenderOps } from "./transitions";
-import { computeClipAnimation } from "./animationPresets";
+import { drawClip } from "./render";
 
 
 export type ExportFormat = "mp4" | "webm";
@@ -41,7 +41,6 @@ export function isExportSupported(): boolean {
     && typeof OffscreenCanvas === "function";
 }
 
-const FADE = 0.3;
 
 /** Pick an H.264 level whose max coded area fits width*height (rounded to macroblocks). */
 function pickAvcLevel(width: number, height: number, fps: number): string {
@@ -91,7 +90,7 @@ function checkAbort(signal?: AbortSignal) {
 }
 
 /** Pre-load all source media into seekable HTMLVideoElement / Image / AudioBuffer. */
-async function loadSources(media: MediaItem[]) {
+async function loadSources(media: MediaItem[], withAudio = true) {
   const videos = new Map<string, HTMLVideoElement>();
   const images = new Map<string, HTMLImageElement>();
   const audioBuffers = new Map<string, AudioBuffer>();
@@ -115,8 +114,8 @@ async function loadSources(media: MediaItem[]) {
         v.onerror = () => reject(new Error(`Failed to load ${m.name}`));
         videos.set(m.id, v);
       }));
-      // Also decode audio track for mixdown.
-      tasks.push((async () => {
+      // Also decode audio track for mixdown (not needed for stills).
+      if (withAudio) tasks.push((async () => {
         try {
           const buf = await (await fetch(m.url)).arrayBuffer();
           const audio = await audioCtx.decodeAudioData(buf.slice(0));
@@ -132,7 +131,7 @@ async function loadSources(media: MediaItem[]) {
         img.src = m.url;
         images.set(m.id, img);
       }));
-    } else if (m.kind === "audio") {
+    } else if (m.kind === "audio" && withAudio) {
       tasks.push((async () => {
         const buf = await (await fetch(m.url)).arrayBuffer();
         const audio = await audioCtx.decodeAudioData(buf.slice(0));
@@ -154,95 +153,6 @@ function seekVideo(v: HTMLVideoElement, t: number): Promise<void> {
     v.addEventListener("seeked", handler);
     try { v.currentTime = target; } catch { resolve(); }
   });
-}
-
-function cssFilterFor(clip: Clip, extraBlur = 0): string {
-  const parts: string[] = [];
-  if (clip.kind === "video" || clip.kind === "image") {
-    const e = (clip as MediaClip).effects;
-    if (e) {
-      if (e.brightness !== undefined && e.brightness !== 1) parts.push(`brightness(${e.brightness})`);
-      if (e.contrast !== undefined && e.contrast !== 1) parts.push(`contrast(${e.contrast})`);
-      if (e.saturation !== undefined && e.saturation !== 1) parts.push(`saturate(${e.saturation})`);
-      if (e.grayscale !== undefined && e.grayscale > 0) parts.push(`grayscale(${e.grayscale})`);
-      if (e.sepia !== undefined && e.sepia > 0) parts.push(`sepia(${e.sepia})`);
-      if (e.hueRotate !== undefined && e.hueRotate !== 0) parts.push(`hue-rotate(${e.hueRotate}deg)`);
-      if (e.invert !== undefined && e.invert > 0) parts.push(`invert(${e.invert})`);
-      const totalBlur = (e.blur ?? 0) + extraBlur;
-      if (totalBlur > 0) parts.push(`blur(${totalBlur}px)`);
-      return parts.length ? parts.join(" ") : "none";
-    }
-  }
-  if (extraBlur > 0) parts.push(`blur(${extraBlur}px)`);
-  return parts.length ? parts.join(" ") : "none";
-}
-
-function drawClipExport(
-  ctx: OffscreenCanvasRenderingContext2D,
-  canvas: OffscreenCanvas,
-  clip: Clip,
-  t: number,
-  videos: Map<string, HTMLVideoElement>,
-  images: Map<string, HTMLImageElement>,
-) {
-  const anim = computeClipAnimation(clip, t);
-  const hasCustomAnim = !!clip.animateIn || !!clip.animateOut;
-  const prev = ctx.filter;
-  const prevAlpha = ctx.globalAlpha;
-  ctx.save();
-  const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
-  ctx.translate(cx + anim.dx * canvas.width, cy + anim.dy * canvas.height);
-  if (anim.scale !== 1) ctx.scale(anim.scale, anim.scale);
-  ctx.translate(-cx, -cy);
-  ctx.globalAlpha = prevAlpha * anim.alpha;
-  ctx.filter = cssFilterFor(clip, anim.blurPx);
-  if (clip.kind === "video") {
-    const v = videos.get((clip as MediaClip).mediaId);
-    if (v && v.videoWidth) drawContain(ctx, v as unknown as CanvasImageSource, v.videoWidth, v.videoHeight, canvas.width, canvas.height);
-  } else if (clip.kind === "image") {
-    const img = images.get((clip as MediaClip).mediaId);
-    if (img && img.naturalWidth) drawContain(ctx, img, img.naturalWidth, img.naturalHeight, canvas.width, canvas.height);
-  } else if (clip.kind === "text") {
-    const text = clip as TextClip;
-    if (!hasCustomAnim) {
-      const into = t - text.start;
-      const outof = text.start + text.duration - t;
-      const fade = Math.max(0, Math.min(1, Math.min(into / FADE, outof / FADE, 1)));
-      ctx.globalAlpha = prevAlpha * fade;
-    }
-    ctx.fillStyle = text.color;
-    const size = (text.fontSize / 1080) * canvas.height;
-    ctx.font = `${text.fontWeight} ${size}px ${text.fontFamily}`;
-    ctx.textBaseline = "middle";
-    ctx.textAlign = text.align === "centre" ? "center" : text.align;
-    const x = text.x * canvas.width;
-    const y = text.y * canvas.height;
-    const lines = text.text.split(/\n/);
-    const lh = size * 1.2;
-    const startY = y - ((lines.length - 1) * lh) / 2;
-    lines.forEach((ln, i) => ctx.fillText(ln, x, startY + i * lh));
-  }
-  ctx.restore();
-  ctx.filter = prev;
-  ctx.globalAlpha = prevAlpha;
-}
-
-
-function drawContain(
-  ctx: OffscreenCanvasRenderingContext2D,
-  src: CanvasImageSource,
-  sw: number,
-  sh: number,
-  dw: number,
-  dh: number,
-) {
-  const scale = Math.min(dw / sw, dh / sh);
-  const w = sw * scale;
-  const h = sh * scale;
-  const x = (dw - w) / 2;
-  const y = (dh - h) / 2;
-  ctx.drawImage(src, x, y, w, h);
 }
 
 /** Render the audio mixdown to a stereo AudioBuffer at 48 kHz. */
@@ -443,7 +353,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
         ctx.clip();
       }
       ctx.globalAlpha = op.alpha;
-      drawClipExport(ctx, canvas, op.clip, t, videos, images);
+      drawClip(ctx, width, height, op.clip, t, { videos, images });
       ctx.restore();
     }
 
@@ -514,8 +424,85 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
 
   const mime = format === "mp4" ? "video/mp4" : "video/webm";
   const blob = new Blob([muxer.target.buffer], { type: mime });
-  const safeTitle = (snapshot.title || "video").replace(/[^\w\-]+/g, "_");
+  const safeTitle = (snapshot.title || "video").replace(/[^\w-]+/g, "_");
   const filename = `${safeTitle}.${format}`;
   onProgress?.(1, "Done");
   return { blob, filename };
+}
+
+export type StillFormat = "png" | "jpg";
+
+export interface StillOptions {
+  snapshot: ProjectSnapshot;
+  media: MediaItem[];
+  format: StillFormat;
+  /** Output scale multiplier: 1 = project resolution, 2 = double. */
+  scale: number;
+  /** Timeline time of the frame to capture. */
+  time: number;
+  /** JPEG quality 0..1. */
+  quality?: number;
+}
+
+/**
+ * Render a single frame to PNG or JPG. This is the download for photo and
+ * graphic designs, and a frame grab for video projects. Unlike the video path
+ * it needs no WebCodecs, so it works in every browser.
+ */
+export async function exportStill(opts: StillOptions): Promise<ExportResult> {
+  const { snapshot, media, format, scale, quality = 0.92 } = opts;
+  const { settings, clips, tracks } = snapshot;
+  const width = Math.max(2, Math.round(settings.width * scale));
+  const height = Math.max(2, Math.round(settings.height * scale));
+  const fullDuration = clips.reduce((m, c) => Math.max(m, c.start + c.duration), 0);
+  // The playhead can sit exactly on the end of the timeline, where nothing is active.
+  const t = Math.max(0, Math.min(opts.time, fullDuration - 1 / Math.max(1, settings.fps)));
+
+  const isVisualTrack = (trackId: string) => {
+    const tr = tracks.find((x) => x.id === trackId);
+    return !!tr && !tr.hidden && tr.kind !== "audio";
+  };
+  const trackZ = (trackId: string) => tracks.findIndex((x) => x.id === trackId);
+  const ops = computeRenderOps(clips, isVisualTrack, t, width).sort(
+    (a, b) => trackZ(a.clip.trackId) - trackZ(b.clip.trackId),
+  );
+
+  const used = new Set(ops.map((op) => (op.clip.kind === "text" ? "" : (op.clip as MediaClip).mediaId)));
+  const { videos, images } = await loadSources(media.filter((m) => used.has(m.id)), false);
+
+  for (const op of ops) {
+    if (op.clip.kind !== "video") continue;
+    const mc = op.clip as MediaClip;
+    const v = videos.get(mc.mediaId);
+    if (!v) continue;
+    const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
+    await seekVideo(v, op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * speed);
+  }
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Could not acquire canvas context");
+  ctx.fillStyle = settings.background;
+  ctx.fillRect(0, 0, width, height);
+  for (const op of ops) {
+    ctx.save();
+    if (op.translateX) ctx.translate(op.translateX, 0);
+    if (op.clipRect) {
+      ctx.beginPath();
+      ctx.rect(op.clipRect.x, 0, op.clipRect.w, height);
+      ctx.clip();
+    }
+    ctx.globalAlpha = op.alpha;
+    drawClip(ctx, width, height, op.clip, t, { videos, images });
+    ctx.restore();
+  }
+
+  const mime = format === "png" ? "image/png" : "image/jpeg";
+  const blob = await new Promise<Blob>((resolve, reject) =>
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Could not encode image"))), mime, quality),
+  );
+  const safeTitle = (snapshot.title || "design").replace(/[^\w-]+/g, "_");
+  return { blob, filename: `${safeTitle}.${format}` };
 }

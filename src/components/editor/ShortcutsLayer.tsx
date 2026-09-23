@@ -4,6 +4,8 @@
  */
 import { useEffect } from "react";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
+import { useEditorUiStore } from "@/store/editorUiStore";
+import { getTransform, isVisualClip, placementPatch } from "@/lib/editor/render";
 
 function isTextInput(el: EventTarget | null): boolean {
   if (!(el instanceof HTMLElement)) return false;
@@ -27,11 +29,37 @@ export function ShortcutsLayer() {
         if (e.shiftKey) s.redo(); else s.undo();
         return;
       }
-      // Duplicate
+      const onCanvas = useEditorUiStore.getState().canvasFocus;
+
+      // Duplicate: on the canvas it becomes a new layer at the same moment;
+      // on the timeline it is the next clip in sequence.
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "d") {
         e.preventDefault();
-        s.duplicateSelected();
+        if (onCanvas) s.duplicateOnCanvas(); else s.duplicateSelected();
         return;
+      }
+
+      if (e.key === "Escape" && s.selectedClipIds.length) {
+        s.selectClip(null);
+        return;
+      }
+
+      // Arrow keys nudge the selected layer while the canvas has focus:
+      // 1px, or 10px with Shift, in project pixels.
+      if (onCanvas && e.key.startsWith("Arrow") && s.selectedClipIds.length === 1) {
+        const clip = s.clips.find((c) => c.id === s.selectedClipIds[0]);
+        if (clip && isVisualClip(clip)) {
+          e.preventDefault();
+          const step = e.shiftKey ? 10 : 1;
+          const dx = e.key === "ArrowLeft" ? -step : e.key === "ArrowRight" ? step : 0;
+          const dy = e.key === "ArrowUp" ? -step : e.key === "ArrowDown" ? step : 0;
+          const tr = getTransform(clip);
+          s.patchClip(clip.id, placementPatch(clip, {
+            x: tr.x + dx / s.settings.width,
+            y: tr.y + dy / s.settings.height,
+          }));
+          return;
+        }
       }
       // Copy
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "c") {

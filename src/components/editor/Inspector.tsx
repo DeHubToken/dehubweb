@@ -3,6 +3,7 @@
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
 import { useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ import { FILTER_PRESETS, applyFilterPreset } from "@/lib/editor/filterPresets";
 import { ANIMATION_PRESETS, newAnimation } from "@/lib/editor/animationPresets";
 import { FontPicker } from "@/components/editor/FontPicker";
 import { findFontByCss, loadGoogleFont, primaryFamily } from "@/lib/editor/googleFonts";
+import { LayerSection } from "@/components/editor/inspector/LayerSection";
 
 
 const ASPECTS: { value: AspectPreset; label: string }[] = [
@@ -24,6 +26,7 @@ const ASPECTS: { value: AspectPreset; label: string }[] = [
 ];
 
 export function Inspector() {
+  const { t } = useTranslation();
   const settings = useEditorStore((s) => s.settings);
   const updateSettings = useEditorStore((s) => s.updateSettings);
   const selectedClipIds = useEditorStore((s) => s.selectedClipIds);
@@ -113,8 +116,10 @@ export function Inspector() {
       <section className="space-y-2 p-3">
         <h3 className="text-[11px] font-semibold uppercase tracking-wide text-white/50">Selection</h3>
         {!selected && (
-          <p className="text-xs text-white/40">Select a clip on the timeline.</p>
+          <p className="text-xs text-white/40">{t("editor.inspector.selectHint")}</p>
         )}
+
+        {selected && selected.kind !== "audio" && <LayerSection clip={selected} />}
 
         {visualMedia && (
           <div className="space-y-3">
@@ -350,7 +355,7 @@ export function Inspector() {
             </div>
 
             <p className="pt-1 text-[10px] text-white/40">
-              Drag directly on the preview to position. Right-click for layer controls.
+              {t("editor.inspector.textHint")}
             </p>
           </div>
         )}
