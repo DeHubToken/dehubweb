@@ -6817,6 +6817,10 @@ export type Database = {
         Args: { p_listing_id: string }
         Returns: number
       }
+      dex_market_sample_input: {
+        Args: { p_max_discovered?: number }
+        Returns: Json
+      }
       get_affiliate_page_stats: {
         Args: never
         Returns: {
@@ -6965,6 +6969,7 @@ export type Database = {
         Args: { p_token_ids: string[]; p_viewer_hash: string }
         Returns: number
       }
+      record_dex_market_sample: { Args: { p_sample: Json }; Returns: Json }
       record_dex_pool_positions: { Args: { p_rows: Json }; Returns: undefined }
       record_page_views: {
         Args: { p_address?: string; p_events: Json; p_viewer_id: string }
