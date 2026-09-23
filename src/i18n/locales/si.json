@@ -841,7 +841,9 @@
     "crossChainCompleted": "හරස්-චේන තැන්පතුව සම්පූර්ණයි! {{symbol}} Base මත ලැබුණි.",
     "tryAgain": "නැවත උත්සාහ කරන්න",
     "refundAddress": "{{chain}} හි මුදල් ආපසු ගෙවීමේ ලිපිනය",
-    "refundAddressHint": "හුවමාරුව සම්පූර්ණ කළ නොහැකි නම්, ඔබේ {{symbol}} නැවත මෙහි එවනු ලැබේ."
+    "refundAddressHint": "හුවමාරුව සම්පූර්ණ කළ නොහැකි නම්, ඔබේ {{symbol}} නැවත මෙහි එවනු ලැබේ.",
+    "sendFromWallet": "මගේ පසුම්බියෙන් {{amount}} {{symbol}} යවන්න",
+    "walletSendSubmitted": "යැව්වා. ඔබේ ETH මිනිත්තු කිහිපයකින් Base වෙත ළඟා වේ."
   },
   "wallet": {
     "title": "මුදල් පසුම්බිය",
@@ -5269,7 +5271,9 @@
     "noBaseFunds": "පදනම මත ETH, USDC හෝ USDT නැත",
     "pendingSwapNote": "ඔබගේ {{symbol}} USDC සඳහා මාරු කර ඇත. නැවත කිසිඳු බාධාවකින් තොරව මෙම ක් රමය ක් රියාත්මක කරන්න.",
     "resumeMint": "ඇණවුම නැවත ආරම්භ කරන්න",
-    "resumeNeedsBalances": "පසුම්බියේ ශේෂයන් තවමත් පූරණය වෙමින් පවතී. මඳ වේලාවකින් නැවත උත්සාහ කරන්න."
+    "resumeNeedsBalances": "පසුම්බියේ ශේෂයන් තවමත් පූරණය වෙමින් පවතී. මඳ වේලාවකින් නැවත උත්සාහ කරන්න.",
+    "convertBnbNote": "BNB Chain හි වෙළඳාම වසා ඇත. BNB තිබේද? එය Base හි ETH බවට පරිවර්තනය කර, පසුව ETH මඟින් ගෙවන්න.",
+    "convertBnb": "BNB පරිවර්තනය කරන්න"
   },
   "editor": {
     "canvas": {

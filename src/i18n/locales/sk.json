@@ -894,7 +894,9 @@
     "crossChainCompleted": "Cross-chain vklad dokončený! {{symbol}} prijaté na Base.",
     "tryAgain": "Skúsiť znova",
     "refundAddress": "Adresa na vrátenie peňazí {{chain}}",
-    "refundAddressHint": "Ak sa výmena nedá dokončiť, {{symbol}} sa odošle späť sem."
+    "refundAddressHint": "Ak sa výmena nedá dokončiť, {{symbol}} sa odošle späť sem.",
+    "sendFromWallet": "Odoslať {{amount}} {{symbol}} z mojej peňaženky",
+    "walletSendSubmitted": "Odoslané. Vaše ETH dorazí na Base o pár minút."
   },
   "wallet": {
     "title": "Peňaženka",
@@ -3597,7 +3599,9 @@
     "reviewSwap": "Vymeňte najskôr {{amountIn}} {{symbol}} za {{usdc}} USDC na základni. Nepoužité {{symbol}} sa vráti v tej istej transakcii.",
     "pendingSwapNote": "Váš účet {{symbol}} bol vymenený za USDC. Pokračujte a vytvorte pozíciu bez opätovného vymenenia.",
     "resumeMint": "Obnoviť objednávku",
-    "resumeNeedsBalances": "Zostatky v peňaženke sa stále načítavajú. Skúste to znova o chvíľu."
+    "resumeNeedsBalances": "Zostatky v peňaženke sa stále načítavajú. Skúste to znova o chvíľu.",
+    "convertBnbNote": "Obchodovanie na BNB Chain je uzavreté. Máte BNB? Premeňte ho na ETH na Base a potom plaťte v ETH.",
+    "convertBnb": "Premeniť BNB"
   },
   "editor": {
     "canvas": {

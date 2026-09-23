@@ -821,7 +821,9 @@
     "crossChainCompleted": "ক্রস-চেইন জমা সম্পূর্ণ হইল! Base-ত {{symbol}} পাওয়া গেইল।",
     "tryAgain": "আবার চেষ্টা করেন",
     "refundAddress": "{{chain}} এ রিফান্ড ঠিকানা",
-    "refundAddressHint": "যদি স্ওয়াপ সম্পূর্ণ না হয়, আপনার {{symbol}} এখানে ফেরত পাঠানো হয়।"
+    "refundAddressHint": "যদি স্ওয়াপ সম্পূর্ণ না হয়, আপনার {{symbol}} এখানে ফেরত পাঠানো হয়।",
+    "sendFromWallet": "মোর ওয়ালেট থাকি {{amount}} {{symbol}} পাঠান",
+    "walletSendSubmitted": "পাঠা হইছে। তোমার ETH কয়েক মিনিটত Base-ত পৌঁছিবে।"
   },
   "wallet": {
     "title": "ওয়ালেট",
@@ -2826,5 +2828,9 @@
       "duplicate": "ডুপ্লিকেট করো",
       "delete": "মুছো"
     }
+  },
+  "dex": {
+    "convertBnbNote": "BNB Chain-ত ট্রেডিং বন্ধ হয়া গেইছে। BNB আছে? ওটাক Base-ত ETH-ত বদলান, তারপর ETH দিয়া পেমেন্ট করেন।",
+    "convertBnb": "BNB বদলান"
   }
 }

@@ -859,7 +859,9 @@
     "crossChainCompleted": "واریز بین‌زنجیره‌ای کامل شد! {{symbol}} روی Base دریافت شد.",
     "tryAgain": "تلاش دوباره",
     "refundAddress": "آدرس بازپرداخت در {{chain}}",
-    "refundAddressHint": "اگر عملیات مبادله تکمیل نشود، {{symbol}} شما به اینجا برگردانده می‌شود."
+    "refundAddressHint": "اگر عملیات مبادله تکمیل نشود، {{symbol}} شما به اینجا برگردانده می‌شود.",
+    "sendFromWallet": "ارسال {{amount}} {{symbol}} از کیف پول من",
+    "walletSendSubmitted": "ارسال شد. ETH شما ظرف چند دقیقه در Base می‌رسد."
   },
   "wallet": {
     "title": "کیف پول",
@@ -5658,7 +5660,9 @@
     "reviewSwap": "ابتدا روی Base، حدود {{amountIn}} {{symbol}} را با {{usdc}} USDC سوآپ کنید. {{symbol}} استفاده نشده در همان تراکنش بازگردانده می‌شود.",
     "pendingSwapNote": "{{symbol}} شما با USDC مبادله شد. برای ایجاد موقعیت بدون مبادله مجدد، از سر بگیرید.",
     "resumeMint": "سفارش از سرگیری",
-    "resumeNeedsBalances": "موجودی کیف پول هنوز در حال بارگیری است. چند لحظه دیگر دوباره امتحان کنید."
+    "resumeNeedsBalances": "موجودی کیف پول هنوز در حال بارگیری است. چند لحظه دیگر دوباره امتحان کنید.",
+    "convertBnbNote": "معامله در BNB Chain بسته شده است. BNB دارید؟ آن را در Base به ETH تبدیل کنید و سپس با ETH پرداخت کنید.",
+    "convertBnb": "تبدیل BNB"
   },
   "editor": {
     "canvas": {

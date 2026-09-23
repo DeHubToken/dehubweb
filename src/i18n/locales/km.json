@@ -844,7 +844,9 @@
     "crossChainCompleted": "ការដាក់ប្រាក់ឆ្លងខ្សែសង្វាក់បានបញ្ចប់! បានទទួល {{symbol}} នៅលើ Base។",
     "tryAgain": "ព្យាយាមម្ដងទៀត",
     "refundAddress": "អាសយដ្ឋានសងប្រាក់វិញនៅលើ {{chain}}",
-    "refundAddressHint": "ប្រសិនបើការប្តូរមិនអាចបញ្ចប់បានទេ {{symbol}} របស់អ្នកត្រូវបានផ្ញើត្រឡប់មកវិញនៅទីនេះ ។"
+    "refundAddressHint": "ប្រសិនបើការប្តូរមិនអាចបញ្ចប់បានទេ {{symbol}} របស់អ្នកត្រូវបានផ្ញើត្រឡប់មកវិញនៅទីនេះ ។",
+    "sendFromWallet": "ផ្ញើ {{amount}} {{symbol}} ពីកាបូបរបស់ខ្ញុំ",
+    "walletSendSubmitted": "បានផ្ញើ។ ETH របស់អ្នកនឹងមកដល់ Base ក្នុងរយៈពេលប៉ុន្មាននាទី។"
   },
   "wallet": {
     "title": "កាបូប",
@@ -5557,7 +5559,9 @@
     "noBaseFunds": "គ្មាន ETH, USDC ឬ USDT នៅលើមូលដ្ឋាន",
     "pendingSwapNote": "{{symbol}} របស់អ្នកត្រូវបានប្តូរយក USDC ។ បន្តដើម្បីបង្កើតទីតាំងដោយមិនប្តូរម្តងទៀត ។",
     "resumeMint": "បន្តការបញ្ជាទិញ",
-    "resumeNeedsBalances": "សមតុល្យកាបូបនៅតែផ្ទុក ។ ព្យាយាមម្តងទៀតមួយភ្លែត ។"
+    "resumeNeedsBalances": "សមតុល្យកាបូបនៅតែផ្ទុក ។ ព្យាយាមម្តងទៀតមួយភ្លែត ។",
+    "convertBnbNote": "ការជួញដូរលើ BNB Chain ត្រូវបានបិទ។ មាន BNB មែនទេ? បំលែងវាទៅជា ETH នៅលើ Base រួចបង់ដោយ ETH។",
+    "convertBnb": "បំលែង BNB"
   },
   "editor": {
     "canvas": {

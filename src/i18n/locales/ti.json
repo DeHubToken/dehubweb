@@ -838,7 +838,9 @@
     "crossChainCompleted": "ናይ ሰንሰለት-ሰጋሪ ገንዘብ ምቕማጥ ተዛዚሙ! {{symbol}} ኣብ Base ተቐቢልካ ኣለኻ።",
     "tryAgain": "እንደገና ፈትን",
     "refundAddress": "ናይ ምምላስ ኣድራሻ ኣብ {{chain}}",
-    "refundAddressHint": "እቲ ስዋፕ ክዛዘም እንተዘይክኢሉ ፡ {{symbol}} ኣብዚ ተመሊሱ ኣሎ ።"
+    "refundAddressHint": "እቲ ስዋፕ ክዛዘም እንተዘይክኢሉ ፡ {{symbol}} ኣብዚ ተመሊሱ ኣሎ ።",
+    "sendFromWallet": "{{amount}} {{symbol}} ካብ ቦርሳይ ስደድ",
+    "walletSendSubmitted": "ተላኢኹ። ETH ኩም ኣብ ውሽጢ ቁሩብ ደቓይቕ Base ክበጽሕ እዩ።"
   },
   "wallet": {
     "title": "ዋሌት",
@@ -3362,7 +3364,9 @@
     "spendUsd": "ወፈያ (USD)",
     "noBaseFunds": "ኣብ መሰረት ዝኾነ ETH ፣ USDC ወይ USDT የለን ።",
     "resumeMint": "ቅደም ተከተል ምጅማር",
-    "resumeNeedsBalances": "ናይ ባጤራ ባጤራታት ገና ይጭፍጨፉ ኣለዉ ። ኣብ ሓደ እዋን እንደገና ፈትኖ ።"
+    "resumeNeedsBalances": "ናይ ባጤራ ባጤራታት ገና ይጭፍጨፉ ኣለዉ ። ኣብ ሓደ እዋን እንደገና ፈትኖ ።",
+    "convertBnbNote": "ንግዲ ኣብ BNB Chain ተዓጽዩ ኣሎ። BNB ኣለኩም ድዩ? ኣብ Base ናብ ETH ቀይርዎ፣ ድሕሪኡ ብETH ክፈሉ።",
+    "convertBnb": "BNB ቀይር"
   },
   "editor": {
     "canvas": {

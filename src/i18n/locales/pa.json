@@ -845,7 +845,9 @@
     "crossChainCompleted": "ਕ੍ਰਾਸ-ਚੇਨ ਜਮ੍ਹਾਂ ਪੂਰਾ ਹੋਇਆ! Base 'ਤੇ {{symbol}} ਮਿਲਿਆ।",
     "tryAgain": "ਫਿਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
     "refundAddress": "{{chain}} 'ਤੇ ਰਿਫੰਡ ਪਤਾ",
-    "refundAddressHint": "ਜੇ ਸਵੈਪ ਪੂਰਾ ਨਹੀਂ ਹੋ ਸਕਦਾ, ਤਾਂ ਤੁਹਾਡਾ {{symbol}} ਇੱਥੇ ਵਾਪਸ ਭੇਜਿਆ ਜਾਂਦਾ ਹੈ."
+    "refundAddressHint": "ਜੇ ਸਵੈਪ ਪੂਰਾ ਨਹੀਂ ਹੋ ਸਕਦਾ, ਤਾਂ ਤੁਹਾਡਾ {{symbol}} ਇੱਥੇ ਵਾਪਸ ਭੇਜਿਆ ਜਾਂਦਾ ਹੈ.",
+    "sendFromWallet": "ਮੇਰੇ ਵਾਲਿਟ ਤੋਂ {{amount}} {{symbol}} ਭੇਜੋ",
+    "walletSendSubmitted": "ਭੇਜ ਦਿੱਤਾ। ਤੁਹਾਡਾ ETH ਕੁਝ ਮਿੰਟਾਂ ਵਿੱਚ Base ’ਤੇ ਪਹੁੰਚ ਜਾਵੇਗਾ।"
   },
   "wallet": {
     "title": "ਵਾਲਿਟ",
@@ -3393,7 +3395,9 @@
     "noBaseFunds": "ਬੇਸ 'ਤੇ ਕੋਈ ETH, USDC ਜਾਂ USDT ਨਹੀਂ",
     "pendingSwapNote": "ਤੁਹਾਡਾ {{symbol}}USDC ਲਈ ਬਦਲਿਆ ਗਿਆ ਸੀ. ਦੁਬਾਰਾ ਸਵੈਪ ਕੀਤੇ ਬਿਨਾਂ ਸਥਿਤੀ ਬਣਾਉਣ ਲਈ ਦੁਬਾਰਾ ਸ਼ੁਰੂ ਕਰੋ.",
     "resumeMint": "ਆਰਡਰ ਦੁਬਾਰਾ ਸ਼ੁਰੂ ਕਰੋ",
-    "resumeNeedsBalances": "ਵਾਲਿਟ ਬੈਲੇਂਸ ਅਜੇ ਵੀ ਲੋਡ ਹੋ ਰਹੇ ਹਨ. ਇੱਕ ਪਲ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ."
+    "resumeNeedsBalances": "ਵਾਲਿਟ ਬੈਲੇਂਸ ਅਜੇ ਵੀ ਲੋਡ ਹੋ ਰਹੇ ਹਨ. ਇੱਕ ਪਲ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ.",
+    "convertBnbNote": "BNB Chain ’ਤੇ ਟ੍ਰੇਡਿੰਗ ਬੰਦ ਹੈ। BNB ਹੈ? ਇਸਨੂੰ Base ’ਤੇ ETH ਵਿੱਚ ਬਦਲੋ, ਫਿਰ ETH ਨਾਲ ਭੁਗਤਾਨ ਕਰੋ।",
+    "convertBnb": "BNB ਬਦਲੋ"
   },
   "editor": {
     "canvas": {

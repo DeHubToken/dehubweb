@@ -839,7 +839,9 @@
     "crossChainCompleted": "کراس-چین ڈپازٹ مکمل! Base پر {{symbol}} موصول ہوا۔",
     "tryAgain": "دوبارہ کوشش کریں",
     "refundAddress": "{{chain}} پر ریفنڈ کا پتہ",
-    "refundAddressHint": "اگر سویپ مکمل نہیں ہو سکتا تو آپ کا {{symbol}} یہاں واپس بھیج دیا جاتا ہے ۔"
+    "refundAddressHint": "اگر سویپ مکمل نہیں ہو سکتا تو آپ کا {{symbol}} یہاں واپس بھیج دیا جاتا ہے ۔",
+    "sendFromWallet": "میرے والٹ سے {{amount}} {{symbol}} بھیجیں",
+    "walletSendSubmitted": "بھیج دیا گیا۔ آپ کا ETH چند منٹوں میں Base پر پہنچ جائے گا۔"
   },
   "wallet": {
     "title": "والٹ",
@@ -5494,7 +5496,9 @@
     "reviewSwap": "پہلے بیس پر {{amountIn}}{{symbol}} کے لیے {{usdc}} USDC کے بارے میں سوائپ کریں ۔ غیر استعمال شدہ {{symbol}} اسی ٹرانزیکشن میں واپس آ گیا ہے ۔",
     "pendingSwapNote": "آپ کے {{symbol}} کو USDC کے لیے تبدیل کر دیا گیا تھا ۔ دوبارہ سوائپ کیے بغیر پوزیشن بنانے کے لیے دوبارہ شروع کریں ۔",
     "resumeMint": "آرڈر دوبارہ شروع کریں",
-    "resumeNeedsBalances": "والٹ بیلنسز اب بھی لوڈ ہو رہے ہیں ۔ کچھ دیر بعد دوبارہ کوشش کریں ۔"
+    "resumeNeedsBalances": "والٹ بیلنسز اب بھی لوڈ ہو رہے ہیں ۔ کچھ دیر بعد دوبارہ کوشش کریں ۔",
+    "convertBnbNote": "BNB Chain پر ٹریڈنگ بند ہو گئی ہے۔ BNB ہے؟ اسے Base پر ETH میں تبدیل کریں، پھر ETH سے ادائیگی کریں۔",
+    "convertBnb": "BNB تبدیل کریں"
   },
   "editor": {
     "canvas": {

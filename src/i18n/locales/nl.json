@@ -1055,7 +1055,9 @@
     "crossChainCompleted": "Cross-chain storting voltooid! {{symbol}} ontvangen op Base.",
     "tryAgain": "Opnieuw proberen",
     "refundAddress": "Terugbetalingsadres op {{chain}}",
-    "refundAddressHint": "Als de ruil niet kan worden voltooid, wordt uw {{symbol}} hier teruggestuurd."
+    "refundAddressHint": "Als de ruil niet kan worden voltooid, wordt uw {{symbol}} hier teruggestuurd.",
+    "sendFromWallet": "Stuur {{amount}} {{symbol}} vanuit mijn wallet",
+    "walletSendSubmitted": "Verzonden. Je ETH komt binnen een paar minuten aan op Base."
   },
   "wallet": {
     "title": "Portemonnee",
@@ -5933,7 +5935,9 @@
     "reviewSwap": "Wissel eerst {{amountIn}} {{symbol}} voor {{usdc}} USDC op Base. Ongebruikte {{symbol}} wordt geretourneerd in dezelfde transactie.",
     "pendingSwapNote": "Je {{symbol}} is geruild voor USDC. Hervatten om de positie te maken zonder opnieuw te wisselen.",
     "resumeMint": "Bestelling hervatten",
-    "resumeNeedsBalances": "Wallet-saldi worden nog geladen. Probeer het zo opnieuw."
+    "resumeNeedsBalances": "Wallet-saldi worden nog geladen. Probeer het zo opnieuw.",
+    "convertBnbNote": "Handelen op BNB Chain is gesloten. Heb je BNB? Zet het om naar ETH op Base en betaal daarna met ETH.",
+    "convertBnb": "BNB omzetten"
   },
   "editor": {
     "canvas": {

@@ -860,7 +860,9 @@
     "crossChainCompleted": "Depozita ndër-zinxhirore u përfundua! {{symbol}} u pranua në Base.",
     "tryAgain": "Provo përsëri",
     "refundAddress": "Adresa e rimbursimit në {{chain}}",
-    "refundAddressHint": "Nëse shkëmbimi nuk mund të përfundojë, {{symbol}} do të dërgohet përsëri këtu."
+    "refundAddressHint": "Nëse shkëmbimi nuk mund të përfundojë, {{symbol}} do të dërgohet përsëri këtu.",
+    "sendFromWallet": "Dërgo {{amount}} {{symbol}} nga portofoli im",
+    "walletSendSubmitted": "U dërgua. ETH juaj mbërrin në Base për pak minuta."
   },
   "wallet": {
     "title": "Portofoli",
@@ -3474,7 +3476,9 @@
     "noBaseFunds": "Nuk ka ETH, USDC ose USDT në bazë",
     "pendingSwapNote": "Tuaj {{symbol}} u shkëmbye me USDC. Vazhdo për të krijuar pozicionin pa ndërruar përsëri.",
     "resumeMint": "Rifillo porosinë",
-    "resumeNeedsBalances": "Bilancet e portofolit janë ende duke u ngarkuar. Provo përsëri pas një çasti."
+    "resumeNeedsBalances": "Bilancet e portofolit janë ende duke u ngarkuar. Provo përsëri pas një çasti.",
+    "convertBnbNote": "Tregtimi në BNB Chain është mbyllur. Keni BNB? Konvertojeni në ETH në Base, pastaj paguani me ETH.",
+    "convertBnb": "Konverto BNB"
   },
   "editor": {
     "canvas": {

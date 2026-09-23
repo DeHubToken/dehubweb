@@ -862,7 +862,9 @@
     "crossChainCompleted": "Depunere cross-chain finalizată! {{symbol}} primit pe Base.",
     "tryAgain": "Încearcă din nou",
     "refundAddress": "Adresa de rambursare pe {{chain}}",
-    "refundAddressHint": "Dacă schimbul nu poate fi finalizat, {{symbol}} va fi trimis înapoi aici."
+    "refundAddressHint": "Dacă schimbul nu poate fi finalizat, {{symbol}} va fi trimis înapoi aici.",
+    "sendFromWallet": "Trimite {{amount}} {{symbol}} din portofelul meu",
+    "walletSendSubmitted": "Trimis. ETH-ul tău ajunge pe Base în câteva minute."
   },
   "wallet": {
     "title": "Portofel",
@@ -5547,7 +5549,9 @@
     "reviewSwap": "Schimbă mai întâi între {{amountIn}} {{symbol}} pentru {{usdc}} USDC în bază. Neutilizat {{symbol}} este returnat în aceeași tranzacție.",
     "pendingSwapNote": "{{symbol}} a fost schimbat cu USDC. Reluați pentru a crea poziția fără a schimba din nou.",
     "resumeMint": "Reluați comanda",
-    "resumeNeedsBalances": "Soldurile portofelului se încarcă în continuare. Încearcă din nou peste un moment."
+    "resumeNeedsBalances": "Soldurile portofelului se încarcă în continuare. Încearcă din nou peste un moment.",
+    "convertBnbNote": "Tranzacționarea pe BNB Chain este închisă. Ai BNB? Convertește-l în ETH pe Base, apoi plătește cu ETH.",
+    "convertBnb": "Convertește BNB"
   },
   "editor": {
     "canvas": {

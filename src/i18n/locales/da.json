@@ -862,7 +862,9 @@
     "crossChainCompleted": "Cross-chain indbetaling gennemført! {{symbol}} modtaget på Base.",
     "tryAgain": "Prøv igen",
     "refundAddress": "Refusionsadresse på{{chain}}",
-    "refundAddressHint": "Hvis swappen ikke kan gennemføres, sendes din {{symbol}} tilbage hertil."
+    "refundAddressHint": "Hvis swappen ikke kan gennemføres, sendes din {{symbol}} tilbage hertil.",
+    "sendFromWallet": "Send {{amount}} {{symbol}} fra min wallet",
+    "walletSendSubmitted": "Sendt. Din ETH lander på Base om få minutter."
   },
   "wallet": {
     "title": "Tegnebog",
@@ -5696,7 +5698,9 @@
     "reviewSwap": "Byt først om {{amountIn}}{{symbol}} for {{usdc}}USDC på Base. Ubrugt {{symbol}} returneres i samme transaktion.",
     "pendingSwapNote": "Din{{symbol}} blev byttet ud med USDC. Genoptag for at oprette positionen uden at bytte igen.",
     "resumeMint": "Genoptag bestilling",
-    "resumeNeedsBalances": "Tegnebogssaldi indlæses stadig. Prøv igen om et øjeblik."
+    "resumeNeedsBalances": "Tegnebogssaldi indlæses stadig. Prøv igen om et øjeblik.",
+    "convertBnbNote": "Handel på BNB Chain er lukket. Har du BNB? Konvertér det til ETH på Base, og betal derefter med ETH.",
+    "convertBnb": "Konvertér BNB"
   },
   "editor": {
     "canvas": {

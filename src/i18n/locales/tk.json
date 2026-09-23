@@ -845,7 +845,9 @@
     "crossChainCompleted": "Zynjyrara goýum tamamlandy! {{symbol}} Base-de alyndy.",
     "tryAgain": "Gaýtadan synanyş",
     "refundAddress": "{{chain}} adresini gaýtar",
-    "refundAddressHint": "Eger üýtgeşik tamamlanmasa, {{symbol}} bu ýere iberilýär."
+    "refundAddressHint": "Eger üýtgeşik tamamlanmasa, {{symbol}} bu ýere iberilýär.",
+    "sendFromWallet": "Gapjygymdan {{amount}} {{symbol}} iber",
+    "walletSendSubmitted": "Iberildi. ETH-iňiz birnäçe minutda Base-e geler."
   },
   "wallet": {
     "title": "Gapjyk",
@@ -3413,7 +3415,9 @@
     "noBaseFunds": "ETH, USDC ýa-da USDT ýok",
     "pendingSwapNote": "Siziň {{symbol}} USDC üçin üýtgedildi. Bu ýagdaýy üýtgetmän, ýene-de döretmek üçin dowam ediň.",
     "resumeMint": "Buýruklary gaýtalap geç",
-    "resumeNeedsBalances": "Bu pullar henizem dolup-daşýar. Gaýtalaň"
+    "resumeNeedsBalances": "Bu pullar henizem dolup-daşýar. Gaýtalaň",
+    "convertBnbNote": "BNB Chain-de söwda ýapyldy. BNB barmy? Ony Base-de ETH-e öwrüň, soňra ETH bilen töläň.",
+    "convertBnb": "BNB öwür"
   },
   "editor": {
     "canvas": {

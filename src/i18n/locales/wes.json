@@ -747,7 +747,9 @@
     "depositExpired": "Deposit i taim don finish. Try again abeg.",
     "depositFailedMsg": "Deposit no work.",
     "crossChainCompleted": "Cross-chain deposit don finish! {{symbol}} don enta fo Base.",
-    "tryAgain": "Try Again"
+    "tryAgain": "Try Again",
+    "sendFromWallet": "Send {{amount}} {{symbol}} from ma wallet",
+    "walletSendSubmitted": "E don go. Ya ETH go reach Base for some few minutes."
   },
   "wallet": {
     "title": "Wallet",
@@ -2965,7 +2967,9 @@
     },
     "payWith": "Pay with",
     "spendUsd": "Spend (USD)",
-    "resumeMint": "Resume order"
+    "resumeMint": "Resume order",
+    "convertBnbNote": "Trading for BNB Chain don close. You get BNB? Change am for ETH for Base, then pay with ETH.",
+    "convertBnb": "Change BNB"
   },
   "editor": {
     "canvas": {

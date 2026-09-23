@@ -835,7 +835,9 @@
     "depositFailedMsg": "Bilali ma se.",
     "crossChainCompleted": "Sirasira tɛmɛnen bilali banna! {{symbol}} sɔrɔla Base kan.",
     "tryAgain": "A lajɛ tuguni",
-    "refundAddressHint": "N'i ma se ka o kɛ, i ka {{symbol}} bena segi yan."
+    "refundAddressHint": "N'i ma se ka o kɛ, i ka {{symbol}} bena segi yan.",
+    "sendFromWallet": "{{amount}} {{symbol}} ci ka bɔ n ka wari bɔrɔ la",
+    "walletSendSubmitted": "A cilen don. I ka ETH bɛna se Base kan miniti dama kɔnɔ."
   },
   "wallet": {
     "title": "Kɔrɔbɔ",
@@ -3325,7 +3327,9 @@
     },
     "payWith": "Pay with",
     "spendUsd": "Spend (USD)",
-    "resumeMint": "Resume order"
+    "resumeMint": "Resume order",
+    "convertBnbNote": "Jago kɛli BNB Chain kan datugulen don. BNB b’i fɛ wa? A yɛlɛma ka kɛ ETH ye Base kan, o kɔfɛ i ka sara ni ETH ye.",
+    "convertBnb": "BNB yɛlɛma"
   },
   "editor": {
     "canvas": {

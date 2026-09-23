@@ -857,7 +857,9 @@
     "crossChainCompleted": "Ahelateülene sissemakse tehtud! {{symbol}} laekus Base'i võrku.",
     "tryAgain": "Proovi uuesti",
     "refundAddress": "Tagasimakse aadress {{chain}}",
-    "refundAddressHint": "Kui vahetust ei saa lõpule viia, saadetakse teie {{symbol}} siia tagasi."
+    "refundAddressHint": "Kui vahetust ei saa lõpule viia, saadetakse teie {{symbol}} siia tagasi.",
+    "sendFromWallet": "Saada {{amount}} {{symbol}} minu rahakotist",
+    "walletSendSubmitted": "Saadetud. Sinu ETH jõuab Base’i mõne minuti pärast."
   },
   "wallet": {
     "title": "Rahakott",
@@ -5668,7 +5670,9 @@
     "reviewSwap": "Vaheta esmalt {{amountIn}}{{symbol}} USDC eest {{usdc}} baasil. Kasutamata {{symbol}} tagastatakse sama tehinguga.",
     "pendingSwapNote": "Sinu {{symbol}} vahetati USA dollari vastu. Jätkake positsiooni loomist ilma uuesti vahetamata.",
     "resumeMint": "Jätka tellimust",
-    "resumeNeedsBalances": "Rahakoti saldod on alles laadimisel. Proovi mõne hetke pärast uuesti."
+    "resumeNeedsBalances": "Rahakoti saldod on alles laadimisel. Proovi mõne hetke pärast uuesti.",
+    "convertBnbNote": "Kauplemine BNB Chainis on suletud. Sul on BNB-d? Vaheta see Base’is ETH-ks ja maksa siis ETH-ga.",
+    "convertBnb": "Vaheta BNB"
   },
   "editor": {
     "canvas": {

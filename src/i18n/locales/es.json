@@ -862,7 +862,9 @@
     "crossChainCompleted": "¡Depósito cross-chain completado! {{symbol}} recibido en Base.",
     "tryAgain": "Reintentar",
     "refundAddress": "Dirección de reembolso en {{chain}}",
-    "refundAddressHint": "Si el intercambio no se puede completar, tu {{symbol}} se enviará de vuelta aquí."
+    "refundAddressHint": "Si el intercambio no se puede completar, tu {{symbol}} se enviará de vuelta aquí.",
+    "sendFromWallet": "Enviar {{amount}} {{symbol}} desde mi billetera",
+    "walletSendSubmitted": "Enviado. Tu ETH llegará a Base en unos minutos."
   },
   "wallet": {
     "title": "Billetera",
@@ -5785,7 +5787,9 @@
     "reviewSwap": "Cambia {{amountIn}}{{symbol}} por {{usdc}} USDC en Base First. El {{symbol}} no utilizado se devuelve en la misma transacción.",
     "pendingSwapNote": "Tu {{symbol}} se ha cambiado por USDC. Reanudar para crear la posición sin volver a intercambiar.",
     "resumeMint": "Reanudar pedido",
-    "resumeNeedsBalances": "Los saldos de los monederos aún se están cargando. Inténtalo de nuevo en un momento."
+    "resumeNeedsBalances": "Los saldos de los monederos aún se están cargando. Inténtalo de nuevo en un momento.",
+    "convertBnbNote": "El trading en BNB Chain está cerrado. ¿Tienes BNB? Conviértelo a ETH en Base y luego paga con ETH.",
+    "convertBnb": "Convertir BNB"
   },
   "editor": {
     "canvas": {

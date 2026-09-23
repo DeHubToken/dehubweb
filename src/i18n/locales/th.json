@@ -884,7 +884,9 @@
     "crossChainCompleted": "ฝากข้ามเชนเสร็จสมบูรณ์! ได้รับ {{symbol}} บน Base",
     "tryAgain": "ลองอีกครั้ง",
     "refundAddress": "ที่อยู่ในการคืนเงินในวันที่ {{chain}}",
-    "refundAddressHint": "หากการแลกเปลี่ยนไม่เสร็จสมบูรณ์ {{symbol}} ของคุณจะถูกส่งกลับมาที่นี่"
+    "refundAddressHint": "หากการแลกเปลี่ยนไม่เสร็จสมบูรณ์ {{symbol}} ของคุณจะถูกส่งกลับมาที่นี่",
+    "sendFromWallet": "ส่ง {{amount}} {{symbol}} จากกระเป๋าของฉัน",
+    "walletSendSubmitted": "ส่งแล้ว ETH ของคุณจะถึง Base ในไม่กี่นาที"
   },
   "wallet": {
     "title": "กระเป๋าเงิน",
@@ -4990,7 +4992,9 @@
     "reviewSwap": "แลก {{amountIn}}{{symbol}} กับ {{usdc}} USDC บนฐานก่อน {{symbol}} ที่ไม่ได้ใช้จะถูกส่งคืนในธุรกรรมเดียวกัน",
     "pendingSwapNote": "{{symbol}} ของคุณเปลี่ยนเป็น USDC แล้ว ทำต่อเพื่อสร้างตำแหน่งโดยไม่ต้องสลับอีกครั้ง",
     "resumeMint": "ดำเนินการสั่งซื้อต่อ",
-    "resumeNeedsBalances": "ยอดคงเหลือในกระเป๋าเงินยังคงโหลดอยู่ โปรดรอสักครู่แล้วลองอีกครั้ง"
+    "resumeNeedsBalances": "ยอดคงเหลือในกระเป๋าเงินยังคงโหลดอยู่ โปรดรอสักครู่แล้วลองอีกครั้ง",
+    "convertBnbNote": "การซื้อขายบน BNB Chain ปิดแล้ว มี BNB ไหม? แปลงเป็น ETH บน Base แล้วชำระด้วย ETH",
+    "convertBnb": "แปลง BNB"
   },
   "editor": {
     "canvas": {
