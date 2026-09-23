@@ -3395,7 +3395,7 @@
     "expandPrompt": "Expandera denna prompt med mer detalj",
     "generate": "Generate",
     "preparing": "Förbereder",
-    "untitled": "Untitled",
+    "untitled": "Namnlös",
     "couldNotReadFile": "Kunde inte läsa den filen",
     "noChangesSuggested": "Inga ändringar föreslagna för den prompten.",
     "enhanceFailed": "Kunde inte förbättra den prompten.",
