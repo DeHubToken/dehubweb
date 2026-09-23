@@ -3164,6 +3164,7 @@
     "fieldChain": "சங்கிலி"
   },
   "fractions": {
+    "title": "பங்குகள்",
     "statusSettled": "தீர்வு செய்யப்பட்டது",
     "statusAwaitingFractions": "பின்னங்களுக்காக காத்திருக்கிறது",
     "statusAwaitingPayment": "பணம் செலுத்துவதற்காக காத்திருக்கிறது",

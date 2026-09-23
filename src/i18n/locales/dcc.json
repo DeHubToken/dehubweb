@@ -2475,5 +2475,8 @@
       "undo": "Undo",
       "openGenerator": "دیکھو اور بناؤ"
     }
+  },
+  "fractions": {
+    "title": "फ़्रैक्शन"
   }
 }

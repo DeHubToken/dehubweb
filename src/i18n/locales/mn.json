@@ -3635,5 +3635,8 @@
       "undo": "Буцаах",
       "openGenerator": "Хянаад үүсгэх"
     }
+  },
+  "fractions": {
+    "title": "Хувьцаа"
   }
 }

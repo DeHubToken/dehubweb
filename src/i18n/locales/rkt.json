@@ -2869,5 +2869,8 @@
     "inProgress": "চলতাছে",
     "completed": "শেষ হইছে",
     "underReview": "পর্যালোচনায়"
+  },
+  "fractions": {
+    "title": "ফ্র্যাকশন"
   }
 }

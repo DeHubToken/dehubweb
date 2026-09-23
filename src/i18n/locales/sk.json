@@ -3867,5 +3867,8 @@
     "inProgress": "V realizácii",
     "completed": "Dokončené",
     "underReview": "V recenzii"
+  },
+  "fractions": {
+    "title": "Podiely"
   }
 }

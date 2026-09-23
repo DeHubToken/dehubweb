@@ -3717,5 +3717,8 @@
     "backToBlog": "Blogga qaytish",
     "sharePost": "Postni ulashish",
     "relatedPosts": "Bogʻliq postlar"
+  },
+  "fractions": {
+    "title": "Ulushlar"
   }
 }
