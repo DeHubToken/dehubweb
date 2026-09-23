@@ -3008,5 +3008,8 @@
       "undo": "Undo",
       "openGenerator": "Check am and generate"
     }
+  },
+  "fractions": {
+    "title": "Fraction dem"
   }
 }

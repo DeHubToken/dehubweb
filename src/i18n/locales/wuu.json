@@ -3599,5 +3599,8 @@
       "undo": "撤销",
       "openGenerator": "查看并生成"
     }
+  },
+  "fractions": {
+    "title": "碎片"
   }
 }
