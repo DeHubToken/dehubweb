@@ -5653,12 +5653,22 @@
       "permitApproval": "Potvrďte schválení pozice ve své peněžence…",
       "submit": "Potvrďte pozici ve své peněžence…",
       "confirm": "Čekání na potvrzení…",
-      "index": "Registrace vaší pozice…"
+      "index": "Registrace vaší pozice…",
+      "swap": "Potvrďte výměnu v peněžence...",
+      "swapConfirm": "Čekání na potvrzení výměny..."
     },
     "automaticStage": {
       "tokenApproval": "Chytrá peněženka schvaluje tokeny…",
       "permitApproval": "Chytrá peněženka schvaluje přístup k pozici…",
-      "submit": "Chytrá peněženka vytváří vaši pozici…"
-    }
+      "submit": "Chytrá peněženka vytváří vaši pozici…",
+      "swap": "Výměna chytré peněženky a vytvoření pozice..."
+    },
+    "payWith": "Zaplatit pomocí",
+    "spendUsd": "Útrata (USD)",
+    "noBaseFunds": "Žádné ETH, USDC nebo USDT na bázi",
+    "reviewSwap": "Vyměňte nejdříve {{amountIn}} {{symbol}} za {{usdc}} USDC na základně. Nevyužité {{symbol}} je vráceno ve stejné transakci.",
+    "pendingSwapNote": "Váš {{symbol}} byl vyměněn za USDC. Pokračujte a vytvořte pozici bez opětovného prohození.",
+    "resumeMint": "Obnovit objednávku",
+    "resumeNeedsBalances": "Zůstatky peněženky se stále načítají. Zkuste to znovu za chvíli."
   }
 }

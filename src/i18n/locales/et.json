@@ -5652,12 +5652,22 @@
       "permitApproval": "Kinnitage positsiooni kinnitus oma rahakotis…",
       "submit": "Kinnitage positsioon oma rahakotis…",
       "confirm": "Ootan kinnitust…",
-      "index": "Teie positsiooni registreerimine…"
+      "index": "Teie positsiooni registreerimine…",
+      "swap": "Kinnita vahetus oma rahakotis...",
+      "swapConfirm": "Vahetuse kinnitamise ootamine…"
     },
     "automaticStage": {
       "tokenApproval": "Nutikas rahakott kinnitab tokeneid…",
       "permitApproval": "Nutikas rahakott kinnitab positsioonile juurdepääsu…",
-      "submit": "Nutikas rahakott loob teie positsiooni…"
-    }
+      "submit": "Nutikas rahakott loob teie positsiooni…",
+      "swap": "Nutikas rahakoti vahetamine ja positsiooni loomine..."
+    },
+    "payWith": "Makseviis",
+    "spendUsd": "Kulutus (USD)",
+    "noBaseFunds": "Puudub ETH, USDC või USDT baasil",
+    "reviewSwap": "Vaheta esmalt {{amountIn}}{{symbol}} USDC eest {{usdc}} baasil. Kasutamata {{symbol}} tagastatakse sama tehinguga.",
+    "pendingSwapNote": "Sinu {{symbol}} vahetati USA dollari vastu. Jätkake positsiooni loomist ilma uuesti vahetamata.",
+    "resumeMint": "Jätka tellimust",
+    "resumeNeedsBalances": "Rahakoti saldod on alles laadimisel. Proovi mõne hetke pärast uuesti."
   }
 }

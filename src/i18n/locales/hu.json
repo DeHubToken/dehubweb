@@ -5652,12 +5652,22 @@
       "permitApproval": "Pozíció jóváhagyás megerősítése a tárcádban…",
       "submit": "Pozíció megerősítése a tárcádban…",
       "confirm": "Megerősítésre vár…",
-      "index": "Pozíciód regisztrálása…"
+      "index": "Pozíciód regisztrálása…",
+      "swap": "Erősítse meg a cserét a pénztárcájában…",
+      "swapConfirm": "Várakozás a csere megerősítésére…"
     },
     "automaticStage": {
       "tokenApproval": "Okos tárca tokenek jóváhagyása…",
       "permitApproval": "Okos tárca pozíció hozzáférésének jóváhagyása…",
-      "submit": "Okos tárca a pozíciód létrehozása…"
-    }
+      "submit": "Okos tárca a pozíciód létrehozása…",
+      "swap": "Intelligens pénztárca csere és pozíció létrehozása..."
+    },
+    "payWith": "Fizetés ezzel:",
+    "spendUsd": "Kiadás (USD)",
+    "noBaseFunds": "Nincs ETH, USDC vagy USDT a bázison",
+    "reviewSwap": "Először cserélj körülbelül {{amountIn}}{{symbol}} összeget {{usdc}} USDC-re az alapáron. A nem használt {{symbol}} ugyanabban a tranzakcióban kerül visszaküldésre.",
+    "pendingSwapNote": "A (z) {{symbol}} USDC-re lett cserélve. Folytassa a pozíció létrehozását ismételt csere nélkül.",
+    "resumeMint": "Rendelés folytatása",
+    "resumeNeedsBalances": "A pénztárcaegyenlegek betöltése még folyamatban van. Próbálkozz újra egy pillanat múlva."
   }
 }

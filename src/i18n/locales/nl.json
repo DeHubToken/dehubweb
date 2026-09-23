@@ -5917,13 +5917,23 @@
       "permitApproval": "Bevestig positie goedkeuring in uw portemonnee…",
       "submit": "Bevestig positie in uw portemonnee…",
       "confirm": "Wachten op bevestiging…",
-      "index": "Uw positie registreren…"
+      "index": "Uw positie registreren…",
+      "swap": "Bevestig de ruil in je portemonnee...",
+      "swapConfirm": "Wachten op de omwisseling om te bevestigen..."
     },
     "automaticStage": {
       "tokenApproval": "Slimme portemonnee keurt tokens goed…",
       "permitApproval": "Slimme portemonnee keurt toegang tot positie goed…",
-      "submit": "Slimme portemonnee creëert uw positie…"
-    }
+      "submit": "Slimme portemonnee creëert uw positie…",
+      "swap": "Slimme portemonnee ruilen en je positie creëren..."
+    },
+    "payWith": "Betalen met",
+    "spendUsd": "Uitgaven (USD)",
+    "noBaseFunds": "Geen ETH, USDC of USDT op basis",
+    "reviewSwap": "Wissel eerst {{amountIn}} {{symbol}} voor {{usdc}} USDC op Base. Ongebruikte {{symbol}} wordt geretourneerd in dezelfde transactie.",
+    "pendingSwapNote": "Je {{symbol}} is geruild voor USDC. Hervatten om de positie te maken zonder opnieuw te wisselen.",
+    "resumeMint": "Bestelling hervatten",
+    "resumeNeedsBalances": "Wallet-saldi worden nog geladen. Probeer het zo opnieuw."
   },
   "glossary": {
     "title": "DHB Woordenlijst",

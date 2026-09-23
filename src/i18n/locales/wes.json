@@ -2962,6 +2962,9 @@
     "automaticStage": {
       "tokenApproval": "Smart wallet approving tokens…",
       "permitApproval": "Smart wallet approving position access…"
-    }
+    },
+    "payWith": "Pay with",
+    "spendUsd": "Spend (USD)",
+    "resumeMint": "Resume order"
   }
 }

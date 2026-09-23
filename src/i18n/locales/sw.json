@@ -5706,12 +5706,22 @@
       "permitApproval": "Thibitisha uidhinishaji wa nafasi kwenye pochi yako…",
       "submit": "Thibitisha nafasi kwenye pochi yako…",
       "confirm": "Inasubiri uthibitisho…",
-      "index": "Inasajili nafasi yako…"
+      "index": "Inasajili nafasi yako…",
+      "swap": "Thibitisha ubadilishaji kwenye pochi yako...",
+      "swapConfirm": "Inasubiri badiliko ili kuthibitisha..."
     },
     "automaticStage": {
       "tokenApproval": "Pochi mahiri inaidhinisha tokeni…",
       "permitApproval": "Pochi mahiri inaidhinisha ufikiaji wa nafasi…",
-      "submit": "Pochi mahiri inaunda nafasi yako…"
-    }
+      "submit": "Pochi mahiri inaunda nafasi yako…",
+      "swap": "Kubadilishana pochi kiotomatiki na kuunda nafasi yako..."
+    },
+    "payWith": "Lipa kwa",
+    "spendUsd": "Tumia (USD)",
+    "noBaseFunds": "Hakuna ETH, USDC au USDT kwenye Msingi",
+    "reviewSwap": "Badilisha kuhusu {{amountIn}} {{symbol}} kwa {{usdc}} USDC kwenye Msingi kwanza. Unused {{symbol}} imerejeshwa katika muamala huo huo.",
+    "pendingSwapNote": "{{symbol}} yako ilibadilishwa kuwa USDC. Endelea kuunda nafasi bila kubadilishana tena.",
+    "resumeMint": "Endelea kuagiza",
+    "resumeNeedsBalances": "Salio la pochi bado linapakia. Jaribu tena baada ya muda mfupi."
   }
 }

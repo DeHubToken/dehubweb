@@ -5524,13 +5524,22 @@
       "permitApproval": "Kumpirmahin ang position approval sa iyong wallet…",
       "submit": "Kumpirmahin ang posisyon sa iyong wallet…",
       "confirm": "Naghihintay ng kumpirmasyon…",
-      "index": "Nagre-register ng iyong posisyon…"
+      "index": "Nagre-register ng iyong posisyon…",
+      "swap": "Kumpirmahin ang swap sa iyong wallet...",
+      "swapConfirm": "Naghihintay para sa swap upang kumpirmahin..."
     },
     "automaticStage": {
       "tokenApproval": "Nag-a-approve ng mga token ang smart wallet…",
       "permitApproval": "Nag-a-approve ng access sa posisyon ang smart wallet…",
-      "submit": "Gumagawa ng iyong posisyon ang smart wallet…"
-    }
+      "submit": "Gumagawa ng iyong posisyon ang smart wallet…",
+      "swap": "Smart wallet swapping at paglikha ng iyong posisyon..."
+    },
+    "payWith": "Magbayad gamit ang",
+    "spendUsd": "Gastusin (USD)",
+    "noBaseFunds": "Walang ETH, USDC o USDT sa Base",
+    "pendingSwapNote": "Napalitan ng USDC ang iyong {{symbol}}. Ipagpatuloy upang lumikha ng posisyon nang hindi nagpapalit muli.",
+    "resumeMint": "Ipagpatuloy ang order",
+    "resumeNeedsBalances": "Naglo - load pa rin ang mga balanse ng wallet. Subukan muli sa ilang sandali."
   },
   "walletSelector": {
     "title": "Piliin ang Wallet",

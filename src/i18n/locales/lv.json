@@ -5741,12 +5741,22 @@
       "permitApproval": "Apstipriniet pozīcijas apstiprinājumu savā makā…",
       "submit": "Apstipriniet pozīciju savā makā…",
       "confirm": "Gaida apstiprinājumu…",
-      "index": "Reģistrē jūsu pozīciju…"
+      "index": "Reģistrē jūsu pozīciju…",
+      "swap": "Apstiprini maiņu makā...",
+      "swapConfirm": "Gaida maiņas apstiprināšanu..."
     },
     "automaticStage": {
       "tokenApproval": "Viedais maciņš apstiprina marķierus…",
       "permitApproval": "Viedais maciņš apstiprina piekļuvi pozīcijai…",
-      "submit": "Viedais maciņš izveido jūsu pozīciju…"
-    }
+      "submit": "Viedais maciņš izveido jūsu pozīciju…",
+      "swap": "Viedā maka maiņa un pozīcijas izveide…"
+    },
+    "payWith": "Maksāt ar",
+    "spendUsd": "Tēriņi (USD)",
+    "noBaseFunds": "Nav ETH, USDC vai USDT par bāzi",
+    "reviewSwap": "Apmainiet {{amountIn}} {{symbol}} pret {{usdc}} USDC Bāzē vispirms. Neizmantotais {{symbol}} tiek atgriezts tajā pašā darījumā.",
+    "pendingSwapNote": "Jūsu {{symbol}} tika apmainīts pret USDC. Atsāciet, lai izveidotu pozīciju bez atkārtotas maiņas.",
+    "resumeMint": "Atsākt pasūtījumu",
+    "resumeNeedsBalances": "Maka atlikumi joprojām tiek ielādēti. Pēc brīža mēģiniet vēlreiz."
   }
 }

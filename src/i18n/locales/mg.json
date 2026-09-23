@@ -5419,13 +5419,23 @@
       "permitApproval": "Hamafiso ny fankatoavan'ny toerana ao amin'ny poketrao…",
       "submit": "Hamafiso ny toerana ao amin'ny poketrao…",
       "confirm": "Miandry ny fanamafisana…",
-      "index": "Mampiditra ny toeranao…"
+      "index": "Mampiditra ny toeranao…",
+      "swap": "Ampitahao ny swap ao amin'ny kitapom-batsy...",
+      "swapConfirm": "Niandry ny swap mba hanamarinana..."
     },
     "automaticStage": {
       "tokenApproval": "Ny poketra manan-tsaina dia mankato ny token…",
       "permitApproval": "Ny poketra manan-tsaina dia mankato ny fidirana amin'ny toerana…",
-      "submit": "Ny poketra manan-tsaina dia mamorona ny toeranao…"
-    }
+      "submit": "Ny poketra manan-tsaina dia mamorona ny toeranao…",
+      "swap": "Smart kitapom-batsy swapping sy ny famoronana ny toerana..."
+    },
+    "payWith": "Aloavy amin'ny",
+    "spendUsd": "Fandaniam-bola (USD)",
+    "noBaseFunds": "Tsy misy ETH, USDC na USDT amin'ny fototra",
+    "reviewSwap": "Ampifamadiho ny {{amountIn}} {{symbol}} for {{usdc}} USDC voalohany. Naverina amin'ny fifampiraharahana mitovy ny {{symbol}}.",
+    "pendingSwapNote": "Ny {{symbol}} anao dia navadika ho USDC. Avereno ny fanovana ny toerana mba tsy hikolokolo indray.",
+    "resumeMint": "Alaviro ny filaharana",
+    "resumeNeedsBalances": "Mbola miraikitra ny fifandanjana sandoka. Miverena ao anatin'ny iray minitra."
   },
   "createPost": {
     "title": "Mamorona",

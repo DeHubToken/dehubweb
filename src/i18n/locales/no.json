@@ -3425,12 +3425,22 @@
       "permitApproval": "Bekreft posisjonsgodkjenning i lommeboken din…",
       "submit": "Bekreft posisjon i lommeboken din…",
       "confirm": "Venter på bekreftelse…",
-      "index": "Registrerer posisjonen din…"
+      "index": "Registrerer posisjonen din…",
+      "swap": "Bekreft byttet i lommeboken din…",
+      "swapConfirm": "Venter på bekreftelse av byttet…"
     },
     "automaticStage": {
       "tokenApproval": "Smart lommebok godkjenner tokens…",
       "permitApproval": "Smart lommebok godkjenner tilgang til posisjon…",
-      "submit": "Smart lommebok oppretter posisjonen din…"
-    }
+      "submit": "Smart lommebok oppretter posisjonen din…",
+      "swap": "Smart lommebokbytte og oppretting av posisjonen din…"
+    },
+    "payWith": "Betal med",
+    "spendUsd": "Forbruk (USD)",
+    "noBaseFunds": "Ingen ETH, USDC eller USDT på basen",
+    "reviewSwap": "Bytt først omtrent {{amountIn}} {{symbol}} med {{usdc}} USDC på basen. Ubrukte {{symbol}} returneres i samme transaksjon.",
+    "pendingSwapNote": "Din {{symbol}} ble byttet mot USDC. Fortsett for å opprette posisjonen uten å bytte igjen.",
+    "resumeMint": "Fortsett bestilling:",
+    "resumeNeedsBalances": "Wallet-saldoene lastes fortsatt inn. Prøv igjen om et øyeblikk."
   }
 }

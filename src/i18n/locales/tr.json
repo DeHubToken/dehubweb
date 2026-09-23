@@ -5769,12 +5769,22 @@
       "permitApproval": "Cüzdanınızdaki pozisyon onayını onaylayın…",
       "submit": "Cüzdanınızdaki pozisyonu onaylayın…",
       "confirm": "Onay bekleniyor…",
-      "index": "Pozisyonunuz kaydediliyor…"
+      "index": "Pozisyonunuz kaydediliyor…",
+      "swap": "Cüzdanınızdaki takası onaylayın…",
+      "swapConfirm": "Takasın onaylanması bekleniyor…"
     },
     "automaticStage": {
       "tokenApproval": "Akıllı cüzdan tokenları onaylıyor…",
       "permitApproval": "Akıllı cüzdan pozisyon erişimini onaylıyor…",
-      "submit": "Akıllı cüzdan pozisyonunuzu oluşturuyor…"
-    }
+      "submit": "Akıllı cüzdan pozisyonunuzu oluşturuyor…",
+      "swap": "Akıllı cüzdan takas etme ve konumunuzu oluşturma…"
+    },
+    "payWith": "Şununla ödeyin",
+    "spendUsd": "Harcama (USD)",
+    "noBaseFunds": "Tabanda ETH, USDC veya USDT yok",
+    "reviewSwap": "Önce Base'de {{amountIn}}{{symbol}} karşılığında {{usdc}} USDC'yi takas edin. Kullanılmayan {{symbol}} aynı işlemde iade edilir.",
+    "pendingSwapNote": "{{symbol}} USDC ile değiştirildi. Pozisyonu tekrar değiştirmeden oluşturmak için devam edin.",
+    "resumeMint": "Siparişi devam ettir",
+    "resumeNeedsBalances": "Cüzdan bakiyeleri hala yükleniyor. Birazdan tekrar deneyin."
   }
 }

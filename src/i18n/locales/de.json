@@ -5762,12 +5762,22 @@
       "permitApproval": "Positionsgenehmigung in deiner Wallet bestätigen…",
       "submit": "Position in deiner Wallet bestätigen…",
       "confirm": "Warte auf Bestätigung…",
-      "index": "Deine Position wird registriert…"
+      "index": "Deine Position wird registriert…",
+      "swap": "Bestätigen Sie den Tausch in Ihrer Brieftasche...",
+      "swapConfirm": "Warten auf Bestätigung des Swaps..."
     },
     "automaticStage": {
       "tokenApproval": "Smart Wallet genehmigt Tokens…",
       "permitApproval": "Smart Wallet genehmigt Zugriff auf Position…",
-      "submit": "Smart Wallet erstellt deine Position…"
-    }
+      "submit": "Smart Wallet erstellt deine Position…",
+      "swap": "Smart Wallet tauschen und Ihre Position erstellen..."
+    },
+    "payWith": "Bezahlen mit",
+    "spendUsd": "Ausgaben (USD)",
+    "noBaseFunds": "Keine ETH, USDC oder USDT auf Basis",
+    "reviewSwap": "Tausche zuerst über {{amountIn}}{{symbol}} gegen {{usdc}} USDC auf der Basis. Unbenutztes {{symbol}} wird in derselben Transaktion zurückgegeben.",
+    "pendingSwapNote": "Ihr {{symbol}} wurde gegen USDC getauscht. Fahren Sie fort, um die Position zu erstellen, ohne sie erneut zu tauschen.",
+    "resumeMint": "Bestellung fortsetzen",
+    "resumeNeedsBalances": "Wallet-Guthaben werden noch geladen. Versuchen Sie es gleich noch einmal."
   }
 }

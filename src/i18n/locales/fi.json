@@ -5650,12 +5650,22 @@
       "permitApproval": "Vahvista osuuden hyväksyntä lompakossasi…",
       "submit": "Vahvista osuus lompakossasi…",
       "confirm": "Odotetaan vahvistusta…",
-      "index": "Rekisteröidään osuuttasi…"
+      "index": "Rekisteröidään osuuttasi…",
+      "swap": "Vahvista vaihto lompakossasi...",
+      "swapConfirm": "Odotetaan vaihdon vahvistusta..."
     },
     "automaticStage": {
       "tokenApproval": "Älylompakko hyväksyy tokeneita…",
       "permitApproval": "Älylompakko hyväksyy pääsyn osuuteen…",
-      "submit": "Älylompakko luo osuuttasi…"
-    }
+      "submit": "Älylompakko luo osuuttasi…",
+      "swap": "Älykäs lompakon vaihto ja sijaintisi luominen..."
+    },
+    "payWith": "Maksa maksutavalla",
+    "spendUsd": "Kulutus (USD)",
+    "noBaseFunds": "Ei ETH: ta, USDC: tä tai USDT: tä alustalla",
+    "reviewSwap": "Vaihda ensin noin {{amountIn}} {{symbol}} hintaan {{usdc}} USDC. Käyttämätön {{symbol}} palautetaan samassa tapahtumassa.",
+    "pendingSwapNote": "Kohteesi {{symbol}} vaihdettiin USDC: hen. Jatka sijainnin luomista vaihtamatta sitä uudelleen.",
+    "resumeMint": "Jatka tilausta",
+    "resumeNeedsBalances": "Lompakon saldot latautuvat edelleen. Yritä hetken kuluttua uudelleen."
   }
 }
