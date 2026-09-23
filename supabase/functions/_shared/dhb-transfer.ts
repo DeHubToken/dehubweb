@@ -121,7 +121,7 @@ export async function verifyDhbPayment(
 /**
  * What a transfer was spent on. One transfer buys one of these.
  */
-export type DhbPaymentPurpose = 'ai' | 'dub' | 'voice-clone' | 'governance' | 'ads';
+export type DhbPaymentPurpose = 'ai' | 'dub' | 'voice-clone' | 'governance' | 'ads' | 'dex-pool';
 
 /**
  * Verify a transfer AND claim it, so it cannot pay for something else.

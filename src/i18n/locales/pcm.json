@@ -743,9 +743,9 @@
     "depositFailedMsg": "Deposit no work.",
     "crossChainCompleted": "Cross-chain deposit don complete! {{symbol}} enter for Base.",
     "tryAgain": "Try again",
-    "loginDescription": "Log in make you fit access your wallet and manage your money.",
     "sendFromWallet": "Send {{amount}} {{symbol}} from my wallet",
-    "walletSendSubmitted": "E don go. Your ETH go land for Base in few minutes."
+    "walletSendSubmitted": "E don go. Your ETH go land for Base in few minutes.",
+    "loginDescription": "Log in make you fit access your wallet and manage your money."
   },
   "wallet": {
     "title": "Wallet",
@@ -2834,10 +2834,54 @@
     "spendUsd": "Spend (USD)",
     "resumeMint": "Resume order",
     "convertBnbNote": "Trading for BNB Chain don close. You get BNB? Change am to ETH for Base, then pay with ETH.",
-    "convertBnb": "Change BNB"
+    "convertBnb": "Change BNB",
+    "pools": {
+      "title": "Pools",
+      "search": "Search pools",
+      "loading": "Loading pools…",
+      "add": "Add pool",
+      "network": "Network",
+      "contract": "Token contract address",
+      "mintPlaceholder": "Token mint address",
+      "openExisting": "Open it",
+      "feeDhb": "≈ {{amount}} DHB",
+      "uploading": "Uploading image…"
+    },
+    "pool": {
+      "changeImage": "Change image",
+      "imageUpdated": "Pool image updated",
+      "volume24": "24h volume",
+      "size": "Size ({{symbol}})",
+      "total": "Total ({{symbol}})",
+      "buyTotal": "Bids {{amount}} {{symbol}}",
+      "sellTotal": "Asks {{amount}} {{symbol}}",
+      "orderType": "Order type",
+      "limit": "Limit",
+      "instant": "Instant",
+      "instantBuy": "Instant buy",
+      "instantSell": "Instant sell",
+      "confirmInstantBuy": "Confirm instant buy",
+      "confirmInstantSell": "Confirm instant sell",
+      "buyAt": "Buy at price",
+      "sellAt": "Sell at price",
+      "enterPrice": "Enter a price.",
+      "priceImpact": "Price impact",
+      "minimum": "Minimum order",
+      "openOrders": "Open orders",
+      "myOrders": "My orders",
+      "cancel": "Cancel",
+      "cancelled": "Order cancelled",
+      "bought": "Bought {{amount}} {{symbol}}",
+      "sold": "Sold {{amount}} {{symbol}}"
+    },
+    "chart": {
+      "depthLabel": "Order book depth by USD price"
+    }
   },
   "editor": {
     "canvas": {
+      "dropMedia": "Drop am make e enter your design",
+      "dropText": "Drop am to add text",
       "hideTimeline": "Hide timeline",
       "showTimeline": "Show timeline",
       "pause": "Pause",
@@ -2845,12 +2889,13 @@
       "resetToStart": "Reset to start",
       "resize": "Resize",
       "rotate": "Rotate",
-      "toggleLoop": "Toggle loop",
-      "dropMedia": "Drop am make e enter your design",
-      "dropText": "Drop am to add text"
+      "toggleLoop": "Toggle loop"
     },
     "export": {
       "title": "Download",
+      "stillDescription": "Save di frame wey dey now as picture.",
+      "videoDescription": "Turn your timeline to video file.",
+      "unsupported": "Your browser no fit export video. Try Chrome, Edge, Brave or Arc, or download PNG or JPG instead.",
       "format": "File type",
       "resolution": "Size",
       "quality": "Quality",
@@ -2864,21 +2909,22 @@
       "webm": "WebM video (VP9 + Opus)",
       "frameAt": "Frame at {{time}}s",
       "duration": "Duration: {{value}}s",
+      "cutPreview": "Cut for playhead: {{value}}s",
       "outputStill": "Output: {{width}}×{{height}}",
+      "outputVideo": "Output: {{width}}×{{height}} for {{fps}} fps",
       "cancel": "Cancel",
       "cut": "Cut",
       "download": "Download",
       "done": "Saved {{filename}}",
+      "empty": "First put something for your design.",
       "failed": "Download failed",
       "cancelled": "Download cancelled",
       "preparing": "Preparing…",
-      "rendering": "Rendering…",
-      "stillDescription": "Save di frame wey dey now as picture.",
-      "videoDescription": "Turn your timeline to video file.",
-      "unsupported": "Your browser no fit export video. Try Chrome, Edge, Brave or Arc, or download PNG or JPG instead.",
-      "cutPreview": "Cut for playhead: {{value}}s",
-      "outputVideo": "Output: {{width}}×{{height}} for {{fps}} fps",
-      "empty": "First put something for your design."
+      "rendering": "Rendering…"
+    },
+    "inspector": {
+      "selectHint": "Pick one layer for di canvas or one clip for di timeline.",
+      "textHint": "Drag am for di canvas to move am, use di corner dem to resize. Double-click to change di words."
     },
     "layer": {
       "alignToPage": "Align to page",
@@ -2892,6 +2938,7 @@
       "rotation": "Rotation {{value}}°",
       "opacity": "Transparency {{value}}%",
       "resetPosition": "Reset position",
+      "matchCanvas": "Make di page {{width}}×{{height}}",
       "crop": "Crop",
       "cropLeft": "Left {{value}}%",
       "cropRight": "Right {{value}}%",
@@ -2910,8 +2957,7 @@
       "shadowOpacity": "Strength {{value}}%",
       "shadowBlur": "Blur {{value}}",
       "shadowX": "Offset X {{value}}",
-      "shadowY": "Offset Y {{value}}",
-      "matchCanvas": "Make di page {{width}}×{{height}}"
+      "shadowY": "Offset Y {{value}}"
     },
     "menu": {
       "addText": "Add text",
@@ -2927,10 +2973,6 @@
       "sendToBack": "Send to back",
       "duplicate": "Duplicate",
       "delete": "Delete"
-    },
-    "inspector": {
-      "selectHint": "Pick one layer for di canvas or one clip for di timeline.",
-      "textHint": "Drag am for di canvas to move am, use di corner dem to resize. Double-click to change di words."
     }
   }
 }

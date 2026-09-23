@@ -3273,7 +3273,31 @@
     "resumeMint": "آرڈر جاری رکھو",
     "resumeNeedsBalances": "والٹ بیلنس ہجے لوڈ تھی رہے نیں۔ تھوڑی دیر بعد فیر کوشش کرو۔",
     "convertBnbNote": "BNB Chain تے ٹریڈنگ بند تھی گئی اے۔ BNB ہے؟ ایں کوں Base تے ETH وچ بدلو، ول ETH نال ادائیگی کرو۔",
-    "convertBnb": "BNB بدلو"
+    "convertBnb": "BNB بدلو",
+    "pool": {
+      "evmLimitNote": "تہاڈی ٹوکن اک پاسے و الی Uniswap رینج وچ تہاڈے پرائس تے ہن تے مارکیٹ دے ٹریڈ کرن تے تبدیل تھی ویندن۔ کِنی وی ویل ودھ سکدے او۔",
+      "openOrders": "اوپن آرڈر",
+      "myOrders": "میرے آرڈر",
+      "noOrders": "{{symbol}} لئی ہجے کوئی اوپن آرڈر کینی۔ پہلا آرڈر کرو۔",
+      "noMyOrders": "تہاڈے کول ایس پول وچ کوئی اوپن آرڈر کینی۔",
+      "cancel": "کینسل کرو",
+      "cancelled": "آرڈر کینسل تھی گیا",
+      "bought": "{{amount}} {{symbol}} خریدیا",
+      "sold": "{{amount}} {{symbol}} ویچیا"
+    },
+    "chart": {
+      "bookStarts": "کتاب ایتھو شروع تھیو وِنجے",
+      "firstOrder": "لیکویڈیٹی پَچ کرݨ کیتے پہلا آرڈر ڈِتھو۔",
+      "waiting": "قیمت دے ڈیٹا دا انتظار ہے",
+      "candlesStart": "جَد ایہ ٹوکن ٹریڈ تھیسی تے کینڈلز نظر آسن۔",
+      "depthLabel": "آرڈر بک دی گہرائی USD قیمت دے لحاظ نال",
+      "priceLabel": "{{symbol}} قیمت دِیاں کینڈلز USD وچ",
+      "depthHint": "مجموعی {{symbol}} · معائنہ کرݨ کیتے ہور کرِسو",
+      "priceHint": "{{symbol}} قیمت · USD · معائنہ کرݨ کیتے ہور کرِسو"
+    },
+    "pools": {
+      "feeDhb": "≈ {{amount}} DHB"
+    }
   },
   "editor": {
     "canvas": {
