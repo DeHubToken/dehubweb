@@ -3693,220 +3693,220 @@
   },
   "/stages": {
     "af": {
-      "title": "Stadiums — Regstreekse Audiokamers op DeHub",
-      "description": "Sluit aan by regstreekse audiostadiums, luister terug na opgenome gesprekke, en gaan regstreeks met jou eie kamer op DeHub — die gedesentraliseerde, oopbronplatform."
+      "title": "Oudiokamers — regstreekse gesprekke op DeHub",
+      "description": "Sluit aan by regstreekse oudiokamers, luister terug na opgeneemde gesprekke, en gaan regstreeks met jou eie kamer op DeHub — die gedesentraliseerde oopbron-sosiale platform."
     },
     "ar": {
-      "title": "المسارح — غرف صوتية مباشرة على DeHub",
-      "description": "انضم إلى مسارح صوتية مباشرة، واستمع إلى محادثات مسجّلة، وابثّ من غرفتك الخاصة على DeHub — المنصة الاجتماعية اللامركزية مفتوحة المصدر."
+      "title": "الغرف الصوتية — غرف صوتية مباشرة على DeHub",
+      "description": "انضم إلى غرف صوتية مباشرة، واستمع إلى محادثات مسجّلة، وابثّ من غرفتك الخاصة على DeHub — المنصة الاجتماعية اللامركزية مفتوحة المصدر."
     },
     "az": {
-      "title": "Mərhələlər — DeHub-da canlı səsli otaqlar",
-      "description": "Canlı səsli Səhnələrə qoşulun, qeydə alınmış söhbətləri dinləyin və mərkəzləşmiş, açıq mənbə sosial platforması olan DeHub-da öz otağınızla canlı yayımlayın."
+      "title": "Səsli otaqlar — DeHub-da canlı səsli otaqlar",
+      "description": "Canlı səsli otaqlara qoşulun, qeydə alınmış söhbətləri dinləyin və mərkəzsizləşdirilmiş, açıq mənbəli sosial platforma olan DeHub-da öz otağınızla canlı yayına çıxın."
     },
     "be": {
-      "title": "Stages — Live Audio Rooms на DeHub",
-      "description": "Далучайцеся да жывых аўдыё Stages, слухайце запісы разговораў і пайдзіце ў эфір са сваім пакоем на DeHub — дэцэнтралізаванай платформе з адкрытым кодам."
+      "title": "Stages — галасавыя пакоі ў прамым эфіры на DeHub",
+      "description": "Далучайцеся да галасавых пакояў у прамым эфіры, слухайце запісы размоў і стварайце свой пакой на DeHub — дэцэнтралізаванай сацыяльнай платформе з адкрытым кодам."
     },
     "bg": {
-      "title": "Stages — Live Audio Rooms на DeHub",
-      "description": "Присъединете се към живи audio Stages, слушайте записани разговори и излезте в ефир със своята собствена стая на DeHub — децентрализираната, отворена платформа."
+      "title": "Stages — аудио стаи на живо в DeHub",
+      "description": "Присъединете се към аудио стаи на живо, слушайте записани разговори и излезте в ефир със своя стая в DeHub — децентрализираната социална платформа с отворен код."
     },
     "bn": {
-      "title": "পর্যায় — DeHub-এ লাইভ অডিও রুম",
-      "description": "লাইভ অডিও পর্যায়গুলিতে যোগ দিন, রেকর্ড করা কথোপকথনগুলি শুনুন এবং DeHub-এ আপনার নিজের রুম সহ লাইভ হন — বিকেন্দ্রীভূত, ওপেন সোর্স সোশ্যাল প্ল্যাটফর্ম।"
+      "title": "অডিও রুম — DeHub-এ লাইভ অডিও আলাপ",
+      "description": "লাইভ অডিও রুমে যোগ দিন, রেকর্ড করা কথোপকথন আবার শুনুন এবং DeHub-এ নিজের রুম নিয়ে লাইভ হন — বিকেন্দ্রীভূত, ওপেন সোর্স সোশ্যাল প্ল্যাটফর্ম।"
     },
     "ca": {
-      "title": "Etapes — Sales d'àudio en directe a DeHub",
-      "description": "Uneix-te a etapes d'àudio en directe, escolta de nou conversations gravades i connecta en directe amb la teva pròpia sala a DeHub — la plataforma social descentralitzada i de codi obert."
+      "title": "Stages — Sales d'àudio en directe a DeHub",
+      "description": "Uneix-te a sales d'àudio en directe, torna a escoltar converses gravades i connecta en directe amb la teva pròpia sala a DeHub — la plataforma social descentralitzada i de codi obert."
     },
     "cs": {
-      "title": "Stages — Live Audio Rooms na DeHub",
-      "description": "Připojte se k živým audio Stages, poslouchejte zpět nahrané rozhovory a vysílajte vlastní místnost na DeHub — decentralizované, open source sociální platformě."
+      "title": "Stages — živé audio místnosti na DeHub",
+      "description": "Připojte se k živým audio místnostem Stages, poslechněte si nahrané rozhovory a vysílejte vlastní místnost na DeHub — decentralizované sociální platformě s otevřeným zdrojovým kódem."
     },
     "da": {
-      "title": "Stages — Live Audio Rooms på DeHub",
-      "description": "Deltag i live audio Stages, lyt tilbage til optagne samtaler, og gå live med dit eget værelse på DeHub — den decentraliserede, open source sociale platform."
+      "title": "Stages — Live-lydrum på DeHub",
+      "description": "Deltag i live-lydrum, lyt tilbage til optagne samtaler, og gå live med dit eget rum på DeHub — den decentraliserede, open source sociale platform."
     },
     "de": {
       "title": "Stages – Live-Audioräume auf DeHub",
-      "description": "Treten Sie Live-Audio-Stages bei, hören Sie sich aufgezeichnete Gespräche an und gehen Sie live mit Ihrem eigenen Raum auf DeHub — der dezentralisierten, Open-Source-Sozialplattform."
+      "description": "Treten Sie Live-Audioräumen bei, hören Sie sich aufgezeichnete Gespräche an und gehen Sie mit Ihrem eigenen Raum auf DeHub live — der dezentralen Open-Source-Social-Plattform."
     },
     "en": {
       "title": "Stages — Live Audio Rooms on DeHub",
       "description": "Join live audio Stages, listen back to recorded conversations, and go live with your own room on DeHub — the decentralized, open source social platform."
     },
     "es": {
-      "title": "Escenarios — Salas de audio en directo en DeHub",
-      "description": "Únete a Escenarios de audio en directo, escucha conversaciones grabadas y sal en directo con tu propia sala en DeHub, la plataforma social descentralizada y de código abierto."
+      "title": "Salas de audio — Conversaciones de audio en directo en DeHub",
+      "description": "Únete a salas de audio en directo, escucha conversaciones grabadas y sal en directo con tu propia sala en DeHub, la plataforma social descentralizada y de código abierto."
     },
     "et": {
-      "title": "Etapid – otseülekande audioruumid DeHubis",
-      "description": "Liitu otseülekande audioetappidega, kuula salvestatud vestlusi ja mine otseülekandesse oma ruumiga DeHubis – detsentraliseeritud, avatud lähtekoodiga sotsiaalplatvormis."
+      "title": "Stages – otse-eetris helitoad DeHubis",
+      "description": "Liitu otse-eetris helitubadega, kuula salvestatud vestlusi ja mine oma toaga otse-eetrisse DeHubis – detsentraliseeritud avatud lähtekoodiga sotsiaalplatvormil."
     },
     "fa": {
-      "title": "مراحل — اتاق‌های صوتی زنده در DeHub",
-      "description": "به مراحل صوتی زنده بپیوندید، به مکالمات ضبط‌شده گوش دهید، و با اتاق خود در DeHub — پلتفرم اجتماعی غیرمتمرکز و متن‌باز — زنده شوید."
+      "title": "اتاق‌های صوتی — اتاق‌های صوتی زنده در DeHub",
+      "description": "به اتاق‌های صوتی زنده بپیوندید، مکالمات ضبط‌شده را دوباره گوش دهید و با اتاق خودتان در DeHub — پلتفرم اجتماعی غیرمتمرکز و متن‌باز — زنده شوید."
     },
     "fi": {
-      "title": "Vaiheet — Live Audio Rooms DeHubissa",
-      "description": "Liity live-ääni-Stageille, kuuntele tallennetut keskustelut ja mene live-lähetykseen omalla huoneellasi DeHubissa — hajautetulla, avoimen lähdekoodin sosiaalisella alustalla."
+      "title": "Stages — suorat äänihuoneet DeHubissa",
+      "description": "Liity suoriin äänihuoneisiin, kuuntele tallennettuja keskusteluja ja aloita suora lähetys omassa huoneessasi DeHubissa — hajautetulla, avoimen lähdekoodin sosiaalisella alustalla."
     },
     "fr": {
-      "title": "Scènes — Salles audio en direct sur DeHub",
-      "description": "Rejoignez les Stages audio en direct, écoutez les conversations enregistrées et diffusez en direct votre propre room sur DeHub — la plateforme sociale décentralisée et open source."
+      "title": "Salons audio — Conversations audio en direct sur DeHub",
+      "description": "Rejoignez des salons audio en direct, réécoutez des conversations enregistrées et lancez votre propre salon en direct sur DeHub — la plateforme sociale décentralisée et open source."
     },
     "he": {
-      "title": "שלבים — חדרי אודיו חי ב-DeHub",
-      "description": "הצטרף לשלבים אודיו חי, האזן לשיחות מוקלטות, והשתדל בחדר משלך ב-DeHub — פלטפורמת מדיה חברתית מבוזרת וקוד פתוח."
+      "title": "חדרי אודיו — שידורי אודיו חיים ב-DeHub",
+      "description": "הצטרף לחדרי אודיו חיים, האזן לשיחות מוקלטות, ועלה לשידור עם חדר משלך ב-DeHub — פלטפורמת המדיה החברתית המבוזרת בקוד פתוח."
     },
     "hi": {
-      "title": "स्टेज — DeHub पर लाइव ऑडियो रूम",
-      "description": "DeHub पर लाइव ऑडियो स्टेज में शामिल हों, रिकॉर्ड की गई बातचीत सुनें और अपना रूम लाइव करें — विकेंद्रीकृत, ओपन सोर्स सोशल प्लेटफ़ॉर्म।"
+      "title": "ऑडियो रूम — DeHub पर लाइव ऑडियो बातचीत",
+      "description": "DeHub पर लाइव ऑडियो रूम में शामिल हों, रिकॉर्ड की गई बातचीत सुनें और अपना रूम लाइव करें — विकेंद्रीकृत, ओपन सोर्स सोशल प्लेटफ़ॉर्म।"
     },
     "hr": {
-      "title": "Faze — Užive audio sobe na DeHub-u",
-      "description": "Pridruži se uživo audio fazama, sluša snimljene razgovore i kreni uživo sa svojom sobom na DeHub-u — decentraliziranoj, otvorenog koda društvenoj platformi."
+      "title": "Stages — audio sobe uživo na DeHub-u",
+      "description": "Pridružite se audio sobama uživo, poslušajte snimljene razgovore i krenite uživo sa svojom sobom na DeHub-u — decentraliziranoj društvenoj platformi otvorenog koda."
     },
     "hu": {
-      "title": "Szakaszok — Élő hangszobák a DeHub-on",
-      "description": "Csatlakozz élő hangszakaszokhoz, hallgass vissza felvett beszélgetésekhez, és menj élőbe a saját szobáddal a DeHub-on — a decentralizált, nyílt forráskódú közösségi platformon."
+      "title": "Hangszobák — élő beszélgetések a DeHubon",
+      "description": "Csatlakozz élő hangszobákhoz, hallgass vissza felvett beszélgetéseket, és menj élőbe a saját szobáddal a DeHubon — a decentralizált, nyílt forráskódú közösségi platformon."
     },
     "hy": {
-      "title": "Փուլեր — DeHub-ի ուղիղ աուդիո սենյակներ",
-      "description": "Միացեք ուղիղ աուդիո փուլերին, լսեք նախկինում գրանցված խոսակցությունները և ուղիղ եղեք ձեր սեփական սենյակով DeHub-ում՝ բաժանված, բաց կոդով սոցիալական հարթակ:"
+      "title": "Ձայնային սենյակներ — ուղիղ աուդիո զրույցներ DeHub-ում",
+      "description": "Միացեք ուղիղ ձայնային սենյակներին, վերալսեք ձայնագրված զրույցները և ուղիղ եթեր դուրս եկեք ձեր սեփական սենյակով DeHub-ում՝ ապակենտրոնացված, բաց կոդով սոցիալական հարթակում:"
     },
     "id": {
       "title": "Stage — Ruang Audio Live di DeHub",
-      "description": "Ikut Stage audio live, dengarkan kembali percakapan yang direkam, dan live dengan ruangan Anda sendiri di DeHub — platform sosial terdesentralisasi dan open source."
+      "description": "Ikuti ruang audio live, dengarkan kembali percakapan yang direkam, dan live dengan ruangan Anda sendiri di DeHub — platform sosial terdesentralisasi dan open source."
     },
     "it": {
-      "title": "Stages — Live Audio Rooms su DeHub",
-      "description": "Partecipa a Stages audio live, ascolta di nuovo conversazioni registrate e vai live con la tua room su DeHub — la piattaforma social decentralizzata e open source."
+      "title": "Stages — Stanze audio dal vivo su DeHub",
+      "description": "Partecipa alle stanze audio dal vivo, riascolta le conversazioni registrate e vai in diretta con la tua stanza su DeHub — la piattaforma social decentralizzata e open source."
     },
     "ja": {
-      "title": "ステージ — DeHubのライブオーディオルーム",
-      "description": "ライブオーディオステージに参加し、録音された会話を聞き直し、DeHub上で独自のルームをライブ配信してください — 分散型のオープンソースソーシャルプラットフォーム。"
+      "title": "音声ルーム — DeHubのライブ音声ルーム",
+      "description": "ライブ音声ルームに参加し、録音された会話を聴き直し、DeHubで自分のルームをライブ配信しましょう — 分散型のオープンソースソーシャルプラットフォーム。"
     },
     "ka": {
-      "title": "ეტაპები — DeHub-ზე პირდაპირი აუდიო ოთახები",
-      "description": "შეუერთდით პირდაპირ აუდიო ეტაპებს, მოუსმინეთ ჩაწერილ საუბრებს და ჩაერთეთ პირდაპირ ეთერში თქვენი საკუთარი ოთახით DeHub-ზე — დეცენტრალიზებულ, ღია კოდის სოციალურ პლატფორმაზე."
+      "title": "აუდიო ოთახები — პირდაპირი აუდიო საუბრები DeHub-ზე",
+      "description": "შეუერთდით პირდაპირ აუდიო ოთახებს, მოუსმინეთ ჩაწერილ საუბრებს და ჩაერთეთ პირდაპირ ეთერში თქვენი საკუთარი ოთახით DeHub-ზე — დეცენტრალიზებულ, ღია კოდის სოციალურ პლატფორმაზე."
     },
     "kk": {
-      "title": "Сахналар — DeHub-тағы тікелей аудио бөлмелер",
-      "description": "DeHub-тағы тікелей аудио сахналарға қосылыңыз, жазылған әңгімелерді тыңдаңыз және өзіңіздің бөлмеңізбен тікелей эфирге шығыңыз — децентрализацияланған, ашық бастапқы әлеуметтік платформа."
+      "title": "Аудио бөлмелер — DeHub-тағы тікелей эфир",
+      "description": "DeHub-тағы тікелей аудио бөлмелерге қосылыңыз, жазылған әңгімелерді тыңдаңыз және өз бөлмеңізбен тікелей эфирге шығыңыз — децентрализацияланған, ашық бастапқы кодты әлеуметтік платформа."
     },
     "km": {
-      "title": "ឆាក — បន្ទប់សំឡេងផ្សាយផ្ទាល់នៅលើ DeHub",
-      "description": "ចូលរួម Stages សំឡេងផ្សាយផ្ទាល់ ស្តាប់ការសន្ទនាដែលបានថតទុក និងផ្សាយផ្ទាល់ជាមួយបន្ទប់ផ្ទាល់ខ្លួនរបស់អ្នកនៅលើ DeHub — វេទិកាសង្គមដែលបើកចំហ និងប្រភពបើកចំហ។"
+      "title": "បន្ទប់សំឡេង — ការផ្សាយសំឡេងផ្ទាល់នៅលើ DeHub",
+      "description": "ចូលរួមបន្ទប់សំឡេងផ្សាយផ្ទាល់ ស្តាប់ការសន្ទនាដែលបានថតទុកឡើងវិញ និងផ្សាយផ្ទាល់ជាមួយបន្ទប់ផ្ទាល់ខ្លួនរបស់អ្នកនៅលើ DeHub — វេទិកាសង្គមវិមជ្ឈការ និងប្រភពបើកចំហ។"
     },
     "kn": {
-      "title": "ಸ್ಟೇಜ್‌ಗಳು — DeHub ನಲ್ಲಿ ಲೈವ್ ಆಡಿಯೋ ರೂಮ್‌ಗಳು",
-      "description": "DeHub ನಲ್ಲಿ ಲೈವ್ ಆಡಿಯೋ ಸ್ಟೇಜ್‌ಗಳಿಗೆ ಸೇರಿ, ರೆಕಾರ್ಡ್ ಮಾಡಿದ ಸಂಭಾಷಣೆಗಳನ್ನು ಮತ್ತೆ ಕೇಳಿ, ಮತ್ತು ನಿಮ್ಮದೇ ಆದ ರೂಮ್‌ನೊಂದಿಗೆ ಲೈವ್ ಆಗಿ ಹೋಗಿ — ವಿಕೇಂದ್ರೀಕೃತ, ಓಪನ್ ಸೋರ್ಸ್ ಸಾಮಾಜಿಕ ವೇದಿಕೆ."
+      "title": "ಆಡಿಯೊ ರೂಮ್‌ಗಳು — DeHub ನಲ್ಲಿ ಲೈವ್ ಸಂಭಾಷಣೆಗಳು",
+      "description": "DeHub ನಲ್ಲಿ ಲೈವ್ ಆಡಿಯೊ ರೂಮ್‌ಗಳಿಗೆ ಸೇರಿ, ರೆಕಾರ್ಡ್ ಮಾಡಿದ ಸಂಭಾಷಣೆಗಳನ್ನು ಮತ್ತೆ ಕೇಳಿ, ಮತ್ತು ನಿಮ್ಮದೇ ಆದ ರೂಮ್‌ನೊಂದಿಗೆ ಲೈವ್ ಹೋಗಿ — ವಿಕೇಂದ್ರೀಕೃತ, ಓಪನ್ ಸೋರ್ಸ್ ಸಾಮಾಜಿಕ ವೇದಿಕೆ."
     },
     "ko": {
-      "title": "스테이지 — DeHub의 라이브 오디오 룸",
-      "description": "DeHub에서 라이브 오디오 Stages에 참여하고, 녹음된 대화를 다시 듣고, 자신의 방을 라이브로 진행하세요 — 분산형, 오픈 소스 소셜 플랫폼입니다."
+      "title": "오디오 룸 — DeHub의 라이브 오디오 룸",
+      "description": "DeHub에서 라이브 오디오 룸에 참여하고, 녹음된 대화를 다시 듣고, 나만의 룸을 라이브로 진행하세요 — 분산형 오픈 소스 소셜 플랫폼입니다."
     },
     "ku": {
-      "title": "شانۆکان - ژوورە دەنگییە ڕاستەوخۆکانی DeHub",
-      "description": "شانۆ دەنگییە ڕاستەوخۆکان ببینە، گفتوگۆ تۆمارکراوەکان گوێ لێ بگرە، و بە ژووری خۆت لە DeHub - پلاتفۆرمی کۆمەڵایەتی کراوە و بێ ناوەند - ڕاستەوخۆ بگە."
+      "title": "ژوورە دەنگییەکان — ژووری دەنگیی ڕاستەوخۆ لە DeHub",
+      "description": "بەشداری ژوورە دەنگییە ڕاستەوخۆکان بە، گوێ لە گفتوگۆ تۆمارکراوەکان بگرەوە، و بە ژووری خۆت لە DeHub ڕاستەوخۆ بڕۆ — پلاتفۆرمی کۆمەڵایەتیی بێناوەند و سەرچاوە کراوە."
     },
     "ky": {
-      "title": "Этаптар — DeHubдагы жандуу аудио бөлмөлөр",
-      "description": "DeHubдагы жандуу аудио этаптарына кошулуңуз, жазылган сүйлөшүүлөрдү угуңуз жана өз бөлмөңүз менен жандуу эфирге чыгыңыз — борборлоштурулбаган, ачык булактуу социалдык платформа."
+      "title": "Аудио бөлмөлөр — DeHubдагы түз эфир",
+      "description": "DeHubдагы түз эфирдеги аудио бөлмөлөргө кошулуңуз, жазылган сүйлөшүүлөрдү угуңуз жана өз бөлмөңүз менен түз эфирге чыгыңыз — борборлоштурулбаган, ачык булактуу социалдык платформа."
     },
     "lo": {
-      "title": "ເວທີ - ຫ້ອງສຽງສົດໃນ DeHub",
-      "description": "ເຂົ້າຮ່ວມເວທີສຽງສົດ, ຟັງຄືນການສົນທະນາທີ່ບັນທຶກໄວ້, ແລະອອກອາກາດສົດດ້ວຍຫ້ອງຂອງທ່ານເອງໃນ DeHub - ແພລດຟອມສັງຄົມແບບເປີດ, ບໍ່ມີສູນກາງ."
+      "title": "ຫ້ອງສຽງ — ຖ່າຍທອດສຽງສົດໃນ DeHub",
+      "description": "ເຂົ້າຮ່ວມຫ້ອງສຽງສົດ, ຟັງຄືນການສົນທະນາທີ່ບັນທຶກໄວ້, ແລະອອກອາກາດສົດດ້ວຍຫ້ອງຂອງທ່ານເອງໃນ DeHub — ແພລດຟອມສັງຄົມແບບເປີດ, ບໍ່ມີສູນກາງ."
     },
     "lt": {
-      "title": "Scenos – tiesioginės garso patalpos DeHub",
-      "description": "Prisijunkite prie tiesioginių garso scenų, pasiklausykite įrašytų pokalbių ir pradėkite savo patalpų transliaciją DeHub – decentralizuotoje, atvirojo kodo socialinėje platformoje."
+      "title": "Stages – tiesioginiai garso kambariai DeHub",
+      "description": "Prisijunkite prie tiesioginių garso kambarių, klausykitės įrašytų pokalbių ir transliuokite savo kambarį DeHub – decentralizuotoje atvirojo kodo socialinėje platformoje."
     },
     "lv": {
-      "title": "Skatuves — tiešraides audio istabas DeHub",
-      "description": "Pievienojieties tiešraides audio skatuvēm, klausieties ierakstītas sarunas un sāciet tiešraidi ar savu istabu DeHub — decentralizētā, atvērtā pirmkoda sociālajā platformā."
+      "title": "Stages — tiešraides audio istabas DeHub",
+      "description": "Pievienojieties tiešraides audio istabām, klausieties ierakstītas sarunas un sāciet tiešraidi ar savu istabu DeHub — decentralizētā, atvērtā pirmkoda sociālajā platformā."
     },
     "mg": {
-      "title": "Stages ¢Live Audio amin'ny DeHub",
-      "description": "Mandraisa anjara amin'ny famoahana mivantana ny rakipeo, henoy ny resaka voarakitra, dia mandehana mipetraka miaraka amin'ny efitranonao ao amin'ny DeHub â Â sehatra sosialy natao ho an'ny daholobe manana loharano misokatra."
+      "title": "Stages — Efitrano feo mivantana ao amin'ny DeHub",
+      "description": "Midira amin'ny efitrano feo mivantana, henoy indray ny resaka voarakitra, ary mandehana mivantana miaraka amin'ny efitranonao manokana ao amin'ny DeHub — ilay tambajotra sosialy tsy miankina amin'ny foibe sy misokatra loharano."
     },
     "ml": {
-      "title": "സ്റ്റേജുകൾ — DeHub-ലെ തത്സമയ ഓഡിയോ റൂമുകൾ",
-      "description": "തത്സമയ ഓഡിയോ സ്റ്റേജുകളിൽ ചേരുക, രേഖപ്പെടുത്തിയ സംഭാഷണങ്ങൾ കേൾക്കുക, കൂടാതെ DeHub-ൽ നിങ്ങളുടെ സ്വന്തം റൂം ഉപയോഗിച്ച് തത്സമയമായി പോകുക — വികേന്ദ്രീകൃത, ഓപ്പൺ സോഴ്സ് സോഷ്യൽ പ്ലാറ്റ്ഫോം."
+      "title": "ഓഡിയോ റൂമുകൾ — DeHub-ലെ തത്സമയ സംഭാഷണങ്ങൾ",
+      "description": "തത്സമയ ഓഡിയോ റൂമുകളിൽ ചേരുക, റെക്കോർഡ് ചെയ്ത സംഭാഷണങ്ങൾ വീണ്ടും കേൾക്കുക, DeHub-ൽ നിങ്ങളുടെ സ്വന്തം റൂമുമായി തത്സമയമാകുക — വികേന്ദ്രീകൃത, ഓപ്പൺ സോഴ്സ് സോഷ്യൽ പ്ലാറ്റ്ഫോം."
     },
     "mr": {
-      "title": "स्टेज — DeHub वर लाइव्ह ऑडिओ रूम",
-      "description": "लाइव्ह ऑडिओ स्टेजमध्ये सामील व्हा, रेकॉर्ड केलेल्या संभाषणांना परत ऐका, आणि DeHub वर आपले स्वतःचे रूम लाइव्ह करा — विकेंद्रीकृत, ओपन सोर्स सोशल प्लॅटफॉर्म."
+      "title": "ऑडिओ रूम — DeHub वर लाइव्ह ऑडिओ संभाषणे",
+      "description": "DeHub वर लाइव्ह ऑडिओ रूममध्ये सामील व्हा, रेकॉर्ड केलेली संभाषणे पुन्हा ऐका आणि तुमची स्वतःची रूम लाइव्ह करा — विकेंद्रीकृत, ओपन सोर्स सोशल प्लॅटफॉर्म."
     },
     "ms": {
-      "title": "Peringkat — Bilik Audio Langsung di DeHub",
-      "description": "Sertai Peringkat audio langsung, dengarkan semula perbualan yang dirakam, dan aktif dengan bilik anda sendiri di DeHub — platform sosial terdesentralisasi dan sumber terbuka."
+      "title": "Bilik Audio — Siaran Audio Langsung di DeHub",
+      "description": "Sertai bilik audio langsung, dengarkan semula perbualan yang dirakam, dan bersiaran langsung dengan bilik anda sendiri di DeHub — platform sosial terdesentralisasi dan sumber terbuka."
     },
     "ne": {
-      "title": "चरणहरू — DeHub मा लाइभ अडियो कोठाहरू",
-      "description": "DeHub मा लाइभ अडियो चरणहरूमा सामेल हुनुहोस्, रेकर्ड गरिएको कुराकानी सुन्नुहोस्, र आफ्नो कोठा लाइभ गर्नुहोस् — विकेन्द्रीकृत, खुला स्रोत सामाजिक प्ल्याटफर्म।"
+      "title": "अडियो कोठाहरू — DeHub मा लाइभ अडियो कुराकानी",
+      "description": "DeHub मा लाइभ अडियो कोठाहरूमा सामेल हुनुहोस्, रेकर्ड गरिएका कुराकानी फेरि सुन्नुहोस्, र आफ्नै कोठा लाइभ गर्नुहोस् — विकेन्द्रीकृत, खुला स्रोत सामाजिक प्ल्याटफर्म।"
     },
     "nl": {
-      "title": "Stages — Live Audio Rooms op DeHub",
-      "description": "Neem deel aan live audio Stages, luister opgenomen gesprekken af en ga live met je eigen kamer op DeHub — het gedecentraliseerde, open source sociale platform."
+      "title": "Stages — Live audioruimtes op DeHub",
+      "description": "Neem deel aan live audioruimtes, luister opgenomen gesprekken terug en ga live met je eigen ruimte op DeHub — het gedecentraliseerde, open source sociale platform."
     },
     "pl": {
-      "title": "Etapy — Pokoje audio na żywo na DeHub",
-      "description": "Dołącz do etapów audio na żywo, posłuchaj nagranych rozmów i przejdź na żywo z własnym pokojem na DeHub — zdecentralizowanej, otwartej platformie społecznej."
+      "title": "Stages — pokoje audio na żywo na DeHub",
+      "description": "Dołączaj do pokojów audio na żywo, odsłuchuj nagrane rozmowy i nadawaj na żywo we własnym pokoju na DeHub — zdecentralizowanej platformie społecznościowej o otwartym kodzie."
     },
     "pt": {
-      "title": "Palcos — Salas de Áudio ao Vivo no DeHub",
-      "description": "Junte-se a Stages de áudio ao vivo, ouça novamente conversas gravadas e transmita ao vivo com sua própria sala no DeHub — a plataforma social descentralizada e de código aberto."
+      "title": "Salas de áudio — Áudio ao vivo no DeHub",
+      "description": "Participe de salas de áudio ao vivo, ouça novamente conversas gravadas e entre ao vivo com sua própria sala no DeHub — a plataforma social descentralizada e de código aberto."
     },
     "ro": {
-      "title": "Etape — Camere audio live pe DeHub",
-      "description": "Alătură-te etapelor audio live, ascultă din nou conversații înregistrate și treci live cu propria ta cameră pe DeHub — platforma socială descentralizată și open source."
+      "title": "Camere audio — conversații audio live pe DeHub",
+      "description": "Alătură-te camerelor audio live, ascultă din nou conversații înregistrate și intră live cu propria ta cameră pe DeHub — platforma socială descentralizată și open source."
     },
     "ru": {
-      "title": "Stages — Live Audio Rooms на DeHub",
-      "description": "Присоединяйтесь к живым аудио Stages, слушайте записи прошлых разговоров и создавайте свою комнату на DeHub — децентрализованной платформе с открытым исходным кодом."
+      "title": "Stages — аудиокомнаты в прямом эфире на DeHub",
+      "description": "Присоединяйтесь к аудиокомнатам в прямом эфире, слушайте записи прошлых разговоров и создавайте свою комнату на DeHub — децентрализованной социальной платформе с открытым исходным кодом."
     },
     "si": {
       "title": "Stages — DeHub හි සජීවී ශ්‍රව්‍ය කාමර",
-      "description": "සජීවී ශ්‍රව්‍ය Stages එකතු කරන්න,녹음කර ඇති සංවාද නැවත සවන් දෙන්න, සහ DeHub හි ඔබේ කාමරය සජීවයි කරන්න — විකේන්ද්‍රීකරණය, විවෘත මූලාශ්‍ර සමාජ වේදිකාව."
+      "description": "සජීවී ශ්‍රව්‍ය කාමරවලට එක්වන්න, පටිගත කළ සංවාදවලට නැවත සවන් දෙන්න, සහ DeHub හි ඔබේම කාමරයක් සමඟ සජීවී වන්න — විමධ්‍යගත, විවෘත මූලාශ්‍ර සමාජ මාධ්‍ය වේදිකාව."
     },
     "sv": {
-      "title": "Steg — Live Audio Rooms på DeHub",
-      "description": "Gå med i live audio Stages, lyssna på inspelade samtal och gå live med ditt eget rum på DeHub — den decentraliserade, öppen källkod sociala plattformen."
+      "title": "Stages — Live-ljudrum på DeHub",
+      "description": "Gå med i live-ljudrum, lyssna på inspelade samtal och gå live med ditt eget rum på DeHub — den decentraliserade sociala plattformen med öppen källkod."
     },
     "sw": {
-      "title": "Hatua — Vyumba vya Sauti Moja kwa Moja kwenye DeHub",
-      "description": "Jiunge na Hatua za sauti moja kwa moja, sikiliza nyuma ya mazungumzo yaliyorekodiwa, na kuwa moja kwa moja na chumba chako kwenye DeHub — jukwaa la kijamii lililosambazwa, chanzo wazi."
+      "title": "Vyumba vya Sauti — Mazungumzo ya Sauti Moja kwa Moja kwenye DeHub",
+      "description": "Jiunge na vyumba vya sauti vya moja kwa moja, sikiliza tena mazungumzo yaliyorekodiwa, na uwe moja kwa moja na chumba chako mwenyewe kwenye DeHub — jukwaa la kijamii lisilo na kitovu kimoja na la chanzo huria."
     },
     "ta": {
-      "title": "நிலைகள் — DeHub இல் நேரலை ஆடியோ அறைகள்",
-      "description": "DeHub இல் நேரலை ஆடியோ நிலைகளில் சேரவும், பதிவுசெய்யப்பட்ட உரையாடல்களைக் கேளுங்கள், மற்றும் DeHub இல் உங்கள் சொந்த அறையுடன் நேரலைக்கு செல்லவும் — பகுதியாக்கப்பட்ட, திறந்த மூல சামাজிக தளம்."
+      "title": "ஆடியோ அறைகள் — DeHub இல் நேரலை உரையாடல்கள்",
+      "description": "DeHub இல் நேரலை ஆடியோ அறைகளில் சேருங்கள், பதிவுசெய்யப்பட்ட உரையாடல்களைக் கேளுங்கள், உங்கள் சொந்த அறையுடன் நேரலைக்குச் செல்லுங்கள் — பரவலாக்கப்பட்ட, திறந்த மூல சமூக தளம்."
     },
     "th": {
       "title": "Stages — ห้องเสียงสดบน DeHub",
-      "description": "เข้าร่วมสเตจเสียงสด ฟังสนทนาที่บันทึกไว้ได้ และออกอากาศกับห้องของคุณเองบน DeHub — แพลตฟอร์มโซเชียลแบบกระจายอำนาจและโอเพนซอร์ส"
+      "description": "เข้าร่วมห้องเสียงสด ฟังบทสนทนาที่บันทึกไว้ย้อนหลัง และถ่ายทอดสดด้วยห้องของคุณเองบน DeHub — แพลตฟอร์มโซเชียลแบบกระจายอำนาจและโอเพนซอร์ส"
     },
     "tl": {
       "title": "Stages — Live Audio Rooms sa DeHub",
-      "description": "Sumali sa live audio Stages, makinig sa mga naitala na pag-uusap, at mag-live kasama ang iyong sariling room sa DeHub — ang decentralized, open source social platform."
+      "description": "Sumali sa mga live audio room, pakinggan ulit ang mga naitalang usapan, at mag-live gamit ang sarili mong room sa DeHub — ang desentralisado at open source na social platform."
     },
     "tr": {
-      "title": "Sahneler — DeHub'da Canlı Ses Odaları",
-      "description": "DeHub'da canlı ses Sahnelerine katılın, kaydedilmiş sohbetleri dinleyin ve kendi odanızla canlı yayına geçin — merkeziyetsiz, açık kaynaklı sosyal platform."
+      "title": "Sesli Odalar — DeHub'da Canlı Sohbet Odaları",
+      "description": "DeHub'da canlı sesli odalara katılın, kaydedilmiş sohbetleri dinleyin ve kendi odanızla canlı yayına geçin — merkeziyetsiz, açık kaynaklı sosyal platform."
     },
     "uk": {
-      "title": "Stages — Live Audio Rooms на DeHub",
-      "description": "Приєднуйтесь до живих аудіо-етапів, прослухайте записані розмови та транслюйте свою власну кімнату на DeHub — децентралізованій платформі з відкритим кодом."
+      "title": "Stages — аудіокімнати в прямому ефірі на DeHub",
+      "description": "Приєднуйтесь до аудіокімнат у прямому ефірі, слухайте записи розмов і створюйте власну кімнату на DeHub — децентралізованій соціальній платформі з відкритим кодом."
     },
     "ur": {
-      "title": "مراحل — DeHub پر براہ راست آڈیو کمرے",
-      "description": "براہ راست آڈیو مراحل میں شامل ہوں، ریکارڈ شدہ بات چیت سنیں، اور DeHub پر اپنے خود کے کمرے کے ساتھ براہ راست جائیں — غیر مرکزی، اوپن سورس سوشل پلیٹ فارم۔"
+      "title": "آڈیو رومز — DeHub پر لائیو آڈیو رومز",
+      "description": "لائیو آڈیو رومز میں شامل ہوں، ریکارڈ شدہ گفتگو دوبارہ سنیں، اور DeHub پر اپنے آڈیو روم کے ساتھ لائیو جائیں — غیر مرکزی، اوپن سورس سوشل پلیٹ فارم۔"
     },
     "vi": {
-      "title": "Sân khấu — Phòng âm thanh trực tiếp trên DeHub",
-      "description": "Tham gia các Sân khấu âm thanh trực tiếp, nghe lại các cuộc trò chuyện được ghi âm, và phát sóng trực tiếp với phòng của riêng bạn trên DeHub — nền tảng xã hội phi tập trung, mã nguồn mở."
+      "title": "Phòng âm thanh — Trò chuyện âm thanh trực tiếp trên DeHub",
+      "description": "Tham gia các phòng âm thanh trực tiếp, nghe lại các cuộc trò chuyện đã ghi âm và phát trực tiếp với phòng của riêng bạn trên DeHub — nền tảng xã hội phi tập trung, mã nguồn mở."
     },
     "zh": {
       "title": "语音房 — DeHub 的实时语音空间",
