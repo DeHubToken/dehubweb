@@ -2493,7 +2493,8 @@
       "uniqueVisitors": "مجرد د اخيستلو لپاره وکارول",
       "noVisits": "تر اوسه پورې هیڅ لیدنه نه ده شوې",
       "selfVisitsExcluded": "ستاسو په لینک کې ستاسو شخصي لیدنې حساب نه کیږي."
-    }
+    },
+    "moreDestinations": "د پیل لپاره نور ځایونه"
   },
   "creatorFlow": {
     "title": "د خالق جریان",
@@ -3809,5 +3810,34 @@
     "presetProductReviewHint": "وړاندې کوونکی صادق نظر ورکوي",
     "presetTvSpotName": "د تلويزيون په پرده",
     "presetTvSpotHint": "د ټلویزیوني خپرونو سټایل"
+  },
+  "affiliateLanding": {
+    "title": "د بلنې پاڼه مو خپله کړئ",
+    "subtitle": "پرېږدئ چې پاڼه ستاسو په څېر غږ وکړي. لیدونکي دا متن د یوځای کېدو مخکې ویني.",
+    "headline": "سرلیک",
+    "message": "د ښه راغلاست پیغام",
+    "buttonText": "د اصلي تڼۍ متن",
+    "destination": "د DeHub منزل",
+    "extraTitle": "اضافي تڼۍ ({{count}}/{{max}})",
+    "extraHint": "لیدونکي مستقیم د DeHub هغې برخې ته ولېږئ چې ورسره علاقه لري. هره تڼۍ ستاسو رېفرل ساتي.",
+    "extraLabel": "د تڼۍ متن",
+    "removeButton": "تڼۍ لرې کړئ",
+    "addCustom": "دودیز",
+    "presets": {
+      "edit": "سمول",
+      "create": "جوړول",
+      "build": "ودانول",
+      "import": "واردول",
+      "explore": "سپړل"
+    },
+    "publish": "بدلونونه خپاره کړئ",
+    "publishing": "خپرېږي…",
+    "reset": "بیا تنظیمول",
+    "preview": "ژوندۍ مخکتنه",
+    "published": "د بلنې پاڼه خپره شوه",
+    "saveFailed": "د بلنې پاڼه خوندي نه شوه",
+    "clicksTitle": "کلیکونه د منزل له مخې",
+    "clicksRow_one": "{{clicks}} کلیک · {{unique}} ځانګړي",
+    "clicksRow_other": "{{clicks}} کلیکونه · {{unique}} ځانګړي"
   }
 }

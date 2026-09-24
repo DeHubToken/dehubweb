@@ -6,10 +6,10 @@ import { Copy, ArrowRight, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { isValidAffiliateCode, setAffiliateRef, recordAffiliateClick, getPersistedViewerAddress } from "@/lib/affiliateRef";
+import { isValidAffiliateCode, setAffiliateRef, recordAffiliateClick, recordAffiliateCtaClick, getPersistedViewerAddress } from "@/lib/affiliateRef";
 import { resolveDeepLinkTarget } from "@/lib/affiliateDeepLink";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
-import { DEFAULT_AFFILIATE_LANDING, type AffiliateLandingCustomization } from "@/lib/affiliate";
+import { DEFAULT_AFFILIATE_LANDING, parseLandingCtas, withAffiliateRef, type AffiliateLandingCustomization } from "@/lib/affiliate";
 
 
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
@@ -58,10 +58,10 @@ export default function ReferralLanding() {
       // @ts-ignore - new table not in generated types
       const { data } = await supabase
         .from("affiliate_codes" as never)
-        .select("share_name,owner_address,landing_headline,landing_message,landing_cta_label,landing_destination")
+        .select("share_name,owner_address,landing_headline,landing_message,landing_cta_label,landing_destination,landing_ctas")
         .eq("code", code)
         .eq("active", true)
-        .maybeSingle() as unknown as { data: { share_name: string | null; owner_address: string; landing_headline: string | null; landing_message: string | null; landing_cta_label: string | null; landing_destination: string | null } | null };
+        .maybeSingle() as unknown as { data: { share_name: string | null; owner_address: string; landing_headline: string | null; landing_message: string | null; landing_cta_label: string | null; landing_destination: string | null; landing_ctas: unknown } | null };
       if (cancelled) return;
       if (data) {
         setHasCustomHeadline(Boolean(data.landing_headline?.trim()));
@@ -70,6 +70,7 @@ export default function ReferralLanding() {
           message: data.landing_message || DEFAULT_AFFILIATE_LANDING.message,
           ctaLabel: data.landing_cta_label || DEFAULT_AFFILIATE_LANDING.ctaLabel,
           destination: data.landing_destination || DEFAULT_AFFILIATE_LANDING.destination,
+          ctas: parseLandingCtas(data.landing_ctas),
         });
       }
       let resolved: string | null = null;
@@ -188,9 +189,27 @@ export default function ReferralLanding() {
                   className={`absolute inset-0 w-full h-full block transition-opacity duration-500 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
                 />
               </div>
+              {landing.ctas.length > 0 && (
+                <nav aria-label={t('referral.moreDestinations')} className="mx-auto grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-3">
+                  {landing.ctas.map((cta, i) => (
+                    <Link
+                      key={`${cta.destination}-${i}`}
+                      to={withAffiliateRef(cta.destination, code)}
+                      onClick={() => recordAffiliateCtaClick(code, cta.destination, getPersistedViewerAddress())}
+                      className="group flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-left text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                    >
+                      <span className="truncate">{cta.label}</span>
+                      <ArrowRight className="h-4 w-4 shrink-0 text-white/50 transition group-hover:translate-x-0.5 group-hover:text-white" />
+                    </Link>
+                  ))}
+                </nav>
+              )}
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                 <Button asChild size="lg">
-                  <Link to={landing.destination || ctaUrl}>{landing.ctaLabel || t('referral.continueToDehub')} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                  <Link
+                    to={landing.destination ? withAffiliateRef(landing.destination, code) : ctaUrl}
+                    onClick={() => recordAffiliateCtaClick(code, landing.destination || "/app", getPersistedViewerAddress())}
+                  >{landing.ctaLabel || t('referral.continueToDehub')} <ArrowRight className="ml-2 h-4 w-4" /></Link>
                 </Button>
                 <Button size="lg" variant="outline" onClick={() => copy(pageUrl)}>
                   <Copy className="mr-2 h-4 w-4" /> {t('referral.copyInviteLink')}

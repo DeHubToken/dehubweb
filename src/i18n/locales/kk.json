@@ -4560,7 +4560,8 @@
     "share": "Бөлісу",
     "invalidInvite": "Жарамсыз шақыру",
     "invalidInviteHint": "Бұл шақыру коды дұрыс емес сияқты.",
-    "goToDehub": "DeHub-қа өту"
+    "goToDehub": "DeHub-қа өту",
+    "moreDestinations": "Бастауға көбірек орындар"
   },
   "premium": {
     "seoTitle": "DeHub Extra — Премиум мүшелік",
@@ -6221,5 +6222,34 @@
     "desc": "Джунглидегі жарық күн немесе көгілдір ымырт",
     "day": "Күндіз",
     "evening": "Кеш"
+  },
+  "affiliateLanding": {
+    "title": "Шақыру бетіңізді баптаңыз",
+    "subtitle": "Бет сіз сияқты естілсін. Келушілер қосылмас бұрын осы мәтінді көреді.",
+    "headline": "Тақырып",
+    "message": "Сәлемдесу хабары",
+    "buttonText": "Негізгі түйме мәтіні",
+    "destination": "DeHub бағыты",
+    "extraTitle": "Қосымша түймелер ({{count}}/{{max}})",
+    "extraHint": "Келушілерді DeHub-тың өздерін қызықтыратын бөліміне тікелей жіберіңіз. Әр түйме рефералыңызды сақтайды.",
+    "extraLabel": "Түйме мәтіні",
+    "removeButton": "Түймені жою",
+    "addCustom": "Өзіндік",
+    "presets": {
+      "edit": "Өңдеу",
+      "create": "Жасау",
+      "build": "Құру",
+      "import": "Импорттау",
+      "explore": "Шолу"
+    },
+    "publish": "Өзгерістерді жариялау",
+    "publishing": "Жариялануда…",
+    "reset": "Қалпына келтіру",
+    "preview": "Тікелей алдын ала қарау",
+    "published": "Шақыру беті жарияланды",
+    "saveFailed": "Шақыру бетін сақтау мүмкін болмады",
+    "clicksTitle": "Бағыт бойынша басулар",
+    "clicksRow_one": "{{clicks}} басу · {{unique}} бірегей",
+    "clicksRow_other": "{{clicks}} басу · {{unique}} бірегей"
   }
 }

@@ -97,6 +97,22 @@ export const recordAffiliateClick = (code: string, viewerAddress?: string | null
   } catch { /* analytics must never block a landing */ }
 };
 
+/** Record which destination a landing visitor picked, for per-destination analytics. */
+export const recordAffiliateCtaClick = (code: string, destination: string, viewerAddress?: string | null) => {
+  try {
+    const visitorId = getVisitorId();
+    void import("@/integrations/supabase/client").then(({ supabase }) =>
+      // @ts-ignore - RPC introduced with multi-destination landing pages
+      Promise.resolve(supabase.rpc("record_affiliate_cta_click" as never, {
+        p_code: code,
+        p_destination: destination.split(/[?#]/)[0].slice(0, 200),
+        p_visitor_id: visitorId,
+        p_viewer_address: viewerAddress?.toLowerCase() || null,
+      } as never)),
+    ).catch(() => { /* analytics must never block navigation */ });
+  } catch { /* analytics must never block navigation */ }
+};
+
 export const getAffiliateRef = (): string | null => readCookie();
 
 export const captureAffiliateRefFromUrl = (viewerAddress?: string | null) => {

@@ -3822,7 +3822,8 @@
     "share": "هاوبه‌ش بكه‌",
     "invalidInvite": "بانگهێشتی نادروست",
     "invalidInviteHint": "ئه‌م كۆده‌ بانگهێشتنامه‌یه‌ دروست ناڕوات.",
-    "goToDehub": "بڕۆ بۆ DeHub"
+    "goToDehub": "بڕۆ بۆ DeHub",
+    "moreDestinations": "Cihên din ji bo destpêkê"
   },
   "premium": {
     "seoTitle": "DeHub Extra - ئه‌ندامێتی Premium",
@@ -5188,5 +5189,34 @@
     "desc": "Rojeke ronî an êvareke şîn a tarî li daristanê",
     "day": "Roj",
     "evening": "Êvar"
+  },
+  "affiliateLanding": {
+    "title": "Rûpela vexwendina xwe kesane bike",
+    "subtitle": "Bila rûpel wek te deng bide. Mêvan vê nivîsê berî tevlîbûnê dibînin.",
+    "headline": "Sernav",
+    "message": "Peyama bixêrhatinê",
+    "buttonText": "Nivîsa bişkoka sereke",
+    "destination": "Armanca DeHub",
+    "extraTitle": "Bişkokên zêde ({{count}}/{{max}})",
+    "extraHint": "Mêvanan rasterast bişîne beşa DeHub a ku ew pê re eleqedar in. Her bişkok referansa te diparêze.",
+    "extraLabel": "Nivîsa bişkokê",
+    "removeButton": "Bişkokê rake",
+    "addCustom": "Taybet",
+    "presets": {
+      "edit": "Biguherîne",
+      "create": "Biafirîne",
+      "build": "Ava bike",
+      "import": "Îthal bike",
+      "explore": "Keşf bike"
+    },
+    "publish": "Guherînan biweşîne",
+    "publishing": "Tê weşandin…",
+    "reset": "Vegerîne",
+    "preview": "Pêşdîtina zindî",
+    "published": "Rûpela vexwendinê hate weşandin",
+    "saveFailed": "Rûpela vexwendinê nehate tomarkirin",
+    "clicksTitle": "Klîk li gorî armancê",
+    "clicksRow_one": "{{clicks}} klîk · {{unique}} yekta",
+    "clicksRow_other": "{{clicks}} klîk · {{unique}} yekta"
   }
 }

@@ -4611,7 +4611,8 @@
     "share": "Partager",
     "invalidInvite": "Invitation invalide",
     "invalidInviteHint": "Ce code de parrainage ne semble pas correct.",
-    "goToDehub": "Aller à DeHub"
+    "goToDehub": "Aller à DeHub",
+    "moreDestinations": "Plus d'endroits où commencer"
   },
   "premium": {
     "seoTitle": "DeHub Extra — Adhésion Premium",
@@ -6255,5 +6256,34 @@
     "desc": "Une journée lumineuse ou un crépuscule bleuté dans la jungle",
     "day": "Jour",
     "evening": "Soir"
+  },
+  "affiliateLanding": {
+    "title": "Personnalisez votre page d'invitation",
+    "subtitle": "Donnez à la page votre ton. Les visiteurs voient ce texte avant de rejoindre.",
+    "headline": "Titre",
+    "message": "Message de bienvenue",
+    "buttonText": "Texte du bouton principal",
+    "destination": "Destination DeHub",
+    "extraTitle": "Boutons supplémentaires ({{count}}/{{max}})",
+    "extraHint": "Envoyez les visiteurs directement vers la partie de DeHub qui les intéresse. Chaque bouton conserve votre parrainage.",
+    "extraLabel": "Texte du bouton",
+    "removeButton": "Supprimer le bouton",
+    "addCustom": "Personnalisé",
+    "presets": {
+      "edit": "Modifier",
+      "create": "Créer",
+      "build": "Construire",
+      "import": "Importer",
+      "explore": "Explorer"
+    },
+    "publish": "Publier les modifications",
+    "publishing": "Publication…",
+    "reset": "Réinitialiser",
+    "preview": "Aperçu en direct",
+    "published": "Page d'invitation publiée",
+    "saveFailed": "Impossible d'enregistrer la page d'invitation",
+    "clicksTitle": "Clics par destination",
+    "clicksRow_one": "{{clicks}} clic · {{unique}} uniques",
+    "clicksRow_other": "{{clicks}} clics · {{unique}} uniques"
   }
 }

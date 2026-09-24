@@ -2514,7 +2514,8 @@
       "percentJoined": "{{pct}}% संयुक्त",
       "noVisits": "अद्यापि न आगतम्",
       "selfVisitsExcluded": "सम्प्रति भवतः सम्पर्कः अपर्याप्तः अस्ति ।"
-    }
+    },
+    "moreDestinations": "आरम्भाय अधिकानि स्थानानि"
   },
   "creatorFlow": {
     "title": "सृष्टिकर्ता प्रवाह",
@@ -3840,5 +3841,34 @@
     "presetProductReviewHint": "प्रस्तुतकर्ता एक ईमानदार राय दे रहा है",
     "presetTvSpotName": "दूरदर्शनस्थानम्",
     "presetTvSpotHint": "प्रसारण - शैली व्यवसाय"
+  },
+  "affiliateLanding": {
+    "title": "स्वस्य निमन्त्रणपृष्ठं परिष्कुरु",
+    "subtitle": "पृष्ठं त्वत्सदृशं भवतु। आगन्तुकाः सम्मिलनात् पूर्वम् इदं पाठं पश्यन्ति।",
+    "headline": "शीर्षकम्",
+    "message": "स्वागतसन्देशः",
+    "buttonText": "मुख्यपिञ्जस्य पाठः",
+    "destination": "DeHub गन्तव्यम्",
+    "extraTitle": "अतिरिक्तपिञ्जाः ({{count}}/{{max}})",
+    "extraHint": "आगन्तुकान् साक्षात् DeHub इत्यस्य तेषां रुचिकरं भागं प्रेषय। प्रत्येकं पिञ्जं तव सन्दर्भं रक्षति।",
+    "extraLabel": "पिञ्जपाठः",
+    "removeButton": "पिञ्जं निष्कासय",
+    "addCustom": "स्वनिर्मितम्",
+    "presets": {
+      "edit": "सम्पादय",
+      "create": "रचय",
+      "build": "निर्माहि",
+      "import": "आनय",
+      "explore": "अन्वेषय"
+    },
+    "publish": "परिवर्तनानि प्रकाशय",
+    "publishing": "प्रकाश्यते…",
+    "reset": "पुनःस्थापय",
+    "preview": "सजीवपूर्वदर्शनम्",
+    "published": "निमन्त्रणपृष्ठं प्रकाशितम्",
+    "saveFailed": "निमन्त्रणपृष्ठं रक्षितुं न शक्तम्",
+    "clicksTitle": "गन्तव्यानुसारं नोदनानि",
+    "clicksRow_one": "{{clicks}} नोदनम् · {{unique}} अद्वितीयानि",
+    "clicksRow_other": "{{clicks}} नोदनानि · {{unique}} अद्वितीयानि"
   }
 }
