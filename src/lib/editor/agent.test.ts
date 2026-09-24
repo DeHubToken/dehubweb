@@ -83,3 +83,22 @@ describe("templates", () => {
     }
   });
 });
+
+describe("agent layering", () => {
+  beforeEach(() => useEditorStore.getState().newProject());
+
+  it("stacks text at the same moment, above a shape added before it", async () => {
+    await applyOps([
+      { op: "add_shape", shape: "rect", fill: "#000000" },
+      { op: "add_text", text: "Title", y: 0.4 },
+      { op: "add_text", text: "Subtitle", y: 0.6 },
+    ]);
+    const s = useEditorStore.getState();
+    const z = (id: string) => s.tracks.findIndex((t) => t.id === s.clips.find((c) => c.id === id)?.trackId);
+    const [shape, title, subtitle] = s.clips;
+    expect(title.start).toBe(0);
+    expect(subtitle.start).toBe(0);
+    expect(z(title.id)).toBeGreaterThan(z(shape.id));
+    expect(z(subtitle.id)).toBeGreaterThan(z(title.id));
+  });
+});

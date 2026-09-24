@@ -13,7 +13,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";
 import type { AspectPreset, BlendMode, Clip, ClipAnimationKind, ClipEffects, MediaClip, ShapeClip, ShapeKind, TextClip } from "./types";
 import { BLEND_MODES, SHAPE_KINDS, aspectToDims } from "./types";
-import { getTransform, placementPatch } from "./render";
+import { clipBox, getTransform, placementPatch } from "./render";
 import { applyFilterPreset } from "./filterPresets";
 import { GOOGLE_FONTS, fontFamilyCss, loadGoogleFont } from "./googleFonts";
 import { downloadFreeAsset, provenanceForAsset, searchFreeAssets, type FreeAssetOrientation } from "./freeAssets";
@@ -234,6 +234,34 @@ function nearestAspect(ratio: number): AspectPreset {
   return ASPECTS.reduce((best, cur) => (Math.abs(Math.log(cur[1] / ratio)) < Math.abs(Math.log(best[1] / ratio)) ? cur : best))[0];
 }
 
+/**
+ * Shrink a text layer that is wider than the page. Small models happily ask
+ * for 170px "SUMMER SALE" on a square page, which runs off both edges (seen on
+ * staging). Waits briefly for the font so the measurement is the real one.
+ */
+async function fitTextToPage(id: string) {
+  const s = useEditorStore.getState();
+  const clip = s.clips.find((c) => c.id === id);
+  if (!clip || clip.kind !== "text" || typeof document === "undefined") return;
+  const family = clip.fontFamily.split(",")[0].replace(/['"]/g, "").trim();
+  try {
+    await Promise.race([
+      document.fonts.load(`${clip.italic ? "italic " : ""}${clip.fontWeight} 100px "${family}"`),
+      new Promise((r) => setTimeout(r, 1500)),
+    ]);
+  } catch {
+    /* measure with whatever is loaded */
+  }
+  const ctx = document.createElement("canvas").getContext("2d");
+  if (!ctx) return;
+  const W = s.settings.width;
+  const box = clipBox(ctx, clip, W, s.settings.height, { videos: new Map(), images: new Map() });
+  const max = W * 0.9;
+  if (box && box.w > max) {
+    useEditorStore.getState().patchClip(id, { fontSize: Math.max(12, Math.floor(clip.fontSize * (max / box.w))) });
+  }
+}
+
 export interface ApplyContext {
   wallet?: string | null;
 }
@@ -318,7 +346,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         return true;
       }
       case "add_text": {
-        const id = s.addTextClip(undefined, num(op.start));
+        const id = s.addTextClip(undefined, num(op.start), { layer: true });
         created.push(id);
         const patch = textPatch(op);
         const x = num(op.x);
@@ -330,6 +358,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         s.patchClip(id, patch);
         const clip = store().clips.find((c) => c.id === id);
         if (clip && (num(op.rotation) !== undefined || num(op.opacity) !== undefined)) place(clip, { op: "place", rotation: op.rotation, opacity: op.opacity });
+        await fitTextToPage(id);
         return true;
       }
       case "add_shape": {
@@ -343,7 +372,10 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
       case "update": {
         const clip = find(op.id);
         if (!clip) return false;
-        if (clip.kind === "text") s.patchClip(clip.id, textPatch(op));
+        if (clip.kind === "text") {
+          s.patchClip(clip.id, textPatch(op));
+          if (op.text !== undefined || op.fontSize !== undefined || op.fontFamily !== undefined) await fitTextToPage(clip.id);
+        }
         if (clip.kind === "shape") s.patchClip(clip.id, shapePatch(op));
         const shared = layerPatch(op);
         if (Object.keys(shared).length) s.patchClip(clip.id, shared);

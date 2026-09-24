@@ -92,7 +92,13 @@ interface EditorState extends EditableState {
   addClipFromMedia: (mediaId: string, trackId?: string, start?: number, opts?: { layer?: boolean }) => string | null;
   /** Canva-style duplicate: same moment in time, one layer up, nudged on the canvas. */
   duplicateOnCanvas: () => void;
-  addTextClip: (trackId?: string, start?: number) => string;
+  /**
+   * `layer: true` puts the text on a new track on top of the stack at exactly
+   * `start`, instead of queueing it after whatever is on the text track.
+   * The agent and templates use it, so text lands where it was asked to be
+   * and above any shape added before it.
+   */
+  addTextClip: (trackId?: string, start?: number, opts?: { layer?: boolean }) => string;
   /** Add a vector shape as a new layer on top, at the playhead. */
   addShapeClip: (shape: ShapeKind, patch?: Partial<ShapeClip>) => string;
   moveClip: (id: string, patch: { start?: number; trackId?: string }) => void;
@@ -398,13 +404,14 @@ export const useEditorStore = create<EditorState>((set, get) => ({
 
   },
 
-  addTextClip: (trackId, start) => {
+  addTextClip: (trackId, start, opts) => {
     const s = get();
-    const targetTrack =
-      (trackId && s.tracks.find((t) => t.id === trackId && t.kind === "text")) ||
-      s.tracks.find((t) => t.kind === "text") ||
-      // create one if absent
-      null;
+    const targetTrack = opts?.layer
+      ? null
+      : (trackId && s.tracks.find((t) => t.id === trackId && t.kind === "text")) ||
+        s.tracks.find((t) => t.kind === "text") ||
+        // create one if absent
+        null;
     let textTrackId = targetTrack?.id;
     if (!textTrackId) {
       textTrackId = nanoid(8);
@@ -433,7 +440,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
     const tracks = targetTrack
       ? s.tracks
-      : [...s.tracks, { id: textTrackId, kind: "text" as const, name: "Text", muted: false, hidden: false }];
+      : [...s.tracks, { id: textTrackId, kind: "text" as const, name: `Text ${s.tracks.filter((t) => t.kind === "text").length + 1}`, muted: false, hidden: false }];
     set({ past, future: [], tracks, clips: [...s.clips, clip], selectedClipIds: [clip.id] });
     return clip.id;
   },
