@@ -3001,6 +3001,17 @@
       "vignette": "Вињета {{value}}%",
       "auto": "Аутоматско побољшање",
       "autoFailed": "Није могуће анализирати ову слику."
+    },
+    "pages": {
+      "add": "Додај страницу",
+      "duplicate": "Дуплирај страницу",
+      "delete": "Обриши страницу",
+      "page": "Страница {{number}}",
+      "position": "Страница {{current}} од {{total}}",
+      "label": "Странице",
+      "allZip": "Све странице ({{count}}) (ZIP)",
+      "thisPage": "Само ова страница",
+      "exporting": "Рендеровање странице {{current}} од {{total}}…"
     }
   },
   "fractions": {

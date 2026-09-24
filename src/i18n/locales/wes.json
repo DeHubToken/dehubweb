@@ -3281,6 +3281,17 @@
       "vignette": "Vignette {{value}}%",
       "auto": "Auto enhance",
       "autoFailed": "We no fit check dis picture."
+    },
+    "pages": {
+      "add": "Add page",
+      "duplicate": "Copy page",
+      "delete": "Delete page",
+      "page": "Page {{number}}",
+      "position": "Page {{current}} for {{total}}",
+      "label": "Page dem",
+      "allZip": "All {{count}} page dem (ZIP)",
+      "thisPage": "Na dis page only",
+      "exporting": "Di make page {{current}} for {{total}}…"
     }
   },
   "fractions": {

@@ -6014,6 +6014,17 @@
       "vignette": "Վինետ {{value}}%",
       "auto": "Ավտոբարելավում",
       "autoFailed": "Չհաջողվեց վերլուծել այս նկարը։"
+    },
+    "pages": {
+      "add": "Ավելացնել էջ",
+      "duplicate": "Կրկնօրինակել էջը",
+      "delete": "Ջնջել էջը",
+      "page": "Էջ {{number}}",
+      "position": "Էջ {{current}}՝ {{total}}-ից",
+      "label": "Էջեր",
+      "allZip": "Բոլոր {{count}} էջերը (ZIP)",
+      "thisPage": "Միայն այս էջը",
+      "exporting": "Էջ {{current}}՝ {{total}}-ից, մշակվում է…"
     }
   }
 }

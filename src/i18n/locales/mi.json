@@ -3809,6 +3809,17 @@
       "vignette": "Pouri tapa {{value}}%",
       "auto": "Whakapai aunoa",
       "autoFailed": "Kāore i taea te tātari i tēnei pikitia."
+    },
+    "pages": {
+      "add": "Tāpiri whārangi",
+      "duplicate": "Tārua whārangi",
+      "delete": "Muku whārangi",
+      "page": "Whārangi {{number}}",
+      "position": "Whārangi {{current}} o {{total}}",
+      "label": "Ngā whārangi",
+      "allZip": "Ngā whārangi {{count}} katoa (ZIP)",
+      "thisPage": "Tēnei whārangi anake",
+      "exporting": "E whakaputa ana i te whārangi {{current}} o {{total}}…"
     }
   },
   "fractions": {

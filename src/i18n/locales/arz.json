@@ -3809,6 +3809,17 @@
       "vignette": "التظليل {{value}}%",
       "auto": "تحسين تلقائي",
       "autoFailed": "مقدرناش نحلل الصورة دي."
+    },
+    "pages": {
+      "add": "ضيف صفحة",
+      "duplicate": "كرر الصفحة",
+      "delete": "امسح الصفحة",
+      "page": "صفحة {{number}}",
+      "position": "صفحة {{current}} من {{total}}",
+      "label": "الصفحات",
+      "allZip": "كل الصفحات ({{count}}) (ZIP)",
+      "thisPage": "الصفحة دي بس",
+      "exporting": "بيجهز صفحة {{current}} من {{total}}…"
     }
   },
   "fractions": {

@@ -3768,6 +3768,17 @@
       "vignette": "Winýetka {{value}}%",
       "auto": "Awtomatik gowulandyrmak",
       "autoFailed": "Bu suraty seljerip bolmady."
+    },
+    "pages": {
+      "add": "Sahypa goş",
+      "duplicate": "Sahypany göçür",
+      "delete": "Sahypany poz",
+      "page": "Sahypa {{number}}",
+      "position": "Sahypa {{current}} / {{total}}",
+      "label": "Sahypalar",
+      "allZip": "Ähli {{count}} sahypa (ZIP)",
+      "thisPage": "Diňe şu sahypa",
+      "exporting": "Sahypa {{current}} / {{total}} taýýarlanýar…"
     }
   },
   "fractions": {

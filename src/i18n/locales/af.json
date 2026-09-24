@@ -5960,6 +5960,17 @@
       "vignette": "Vignet {{value}}%",
       "auto": "Outo-verbeter",
       "autoFailed": "Kon nie hierdie foto ontleed nie."
+    },
+    "pages": {
+      "add": "Voeg bladsy by",
+      "duplicate": "Dupliseer bladsy",
+      "delete": "Skrap bladsy",
+      "page": "Bladsy {{number}}",
+      "position": "Bladsy {{current}} van {{total}}",
+      "label": "Bladsye",
+      "allZip": "Al {{count}} bladsye (ZIP)",
+      "thisPage": "Slegs hierdie bladsy",
+      "exporting": "Lewer bladsy {{current}} van {{total}}…"
     }
   },
   "footer": {

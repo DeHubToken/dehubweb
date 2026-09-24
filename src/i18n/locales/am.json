@@ -3665,6 +3665,17 @@
       "vignette": "ቪኜት {{value}}%",
       "auto": "ራስ-ሰር ማሻሻያ",
       "autoFailed": "ይህን ምስል መተንተን አልተቻለም።"
+    },
+    "pages": {
+      "add": "ገጽ አክል",
+      "duplicate": "ገጹን አባዛ",
+      "delete": "ገጹን ሰርዝ",
+      "page": "ገጽ {{number}}",
+      "position": "ገጽ {{current}} ከ{{total}}",
+      "label": "ገጾች",
+      "allZip": "ሁሉም {{count}} ገጾች (ZIP)",
+      "thisPage": "ይህ ገጽ ብቻ",
+      "exporting": "ገጽ {{current}} ከ{{total}} በማዘጋጀት ላይ…"
     }
   },
   "fractions": {

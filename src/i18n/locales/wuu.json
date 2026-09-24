@@ -3737,6 +3737,17 @@
       "vignette": "暗角 {{value}}%",
       "auto": "自动增强",
       "autoFailed": "无法分析这张图片。"
+    },
+    "pages": {
+      "add": "添加页面",
+      "duplicate": "复制页面",
+      "delete": "删除页面",
+      "page": "第 {{number}} 页",
+      "position": "第 {{current}} 页，共 {{total}} 页",
+      "label": "页面",
+      "allZip": "全部 {{count}} 页 (ZIP)",
+      "thisPage": "仅此页",
+      "exporting": "正在渲染第 {{current}} 页，共 {{total}} 页…"
     }
   },
   "fractions": {

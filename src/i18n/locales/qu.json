@@ -3845,6 +3845,17 @@
       "vignette": "Patakuna tutayachiy {{value}}%",
       "auto": "Kikillanmanta allinchay",
       "autoFailed": "Manam kay siq'ita t'aqwiyta atikurqanchu."
+    },
+    "pages": {
+      "add": "Rapita yapay",
+      "duplicate": "Rapita iskaychay",
+      "delete": "Rapita qichuy",
+      "page": "Rapi {{number}}",
+      "position": "Rapi {{current}} / {{total}}",
+      "label": "Rapikuna",
+      "allZip": "Llapan {{count}} rapikuna (ZIP)",
+      "thisPage": "Kay rapillata",
+      "exporting": "Rapi {{current}} / {{total}} ruwakuchkan…"
     }
   },
   "fractions": {

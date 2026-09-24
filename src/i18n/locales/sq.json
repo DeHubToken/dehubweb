@@ -3830,6 +3830,17 @@
       "vignette": "Vinjeta {{value}}%",
       "auto": "Përmirësim automatik",
       "autoFailed": "Nuk mund ta analizonim këtë foto."
+    },
+    "pages": {
+      "add": "Shto faqe",
+      "duplicate": "Dyfisho faqen",
+      "delete": "Fshi faqen",
+      "page": "Faqja {{number}}",
+      "position": "Faqja {{current}} nga {{total}}",
+      "label": "Faqet",
+      "allZip": "Të gjitha {{count}} faqet (ZIP)",
+      "thisPage": "Vetëm këtë faqe",
+      "exporting": "Po përpunohet faqja {{current}} nga {{total}}…"
     }
   },
   "fractions": {

@@ -3673,6 +3673,17 @@
       "vignette": "وِگنیٹ {{value}}%",
       "auto": "آٹو بہتر کرو",
       "autoFailed": "ای تصویر کے جانچ نہیں ہوئے سکلک۔"
+    },
+    "pages": {
+      "add": "پنّا جوڑو",
+      "duplicate": "پنّا کے نقل بناؤ",
+      "delete": "پنّا مٹاؤ",
+      "page": "پنّا {{number}}",
+      "position": "پنّا {{current}} / {{total}}",
+      "label": "پنّا",
+      "allZip": "سب {{count}} پنّا (ZIP)",
+      "thisPage": "خالی ای پنّا",
+      "exporting": "پنّا {{current}} / {{total}} بنت ہے…"
     }
   },
   "post": {

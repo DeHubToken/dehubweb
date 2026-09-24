@@ -6135,6 +6135,17 @@
       "vignette": "Vignettatura {{value}}%",
       "auto": "Miglioramento automatico",
       "autoFailed": "Impossibile analizzare questa immagine."
+    },
+    "pages": {
+      "add": "Aggiungi pagina",
+      "duplicate": "Duplica pagina",
+      "delete": "Elimina pagina",
+      "page": "Pagina {{number}}",
+      "position": "Pagina {{current}} di {{total}}",
+      "label": "Pagine",
+      "allZip": "Tutte le {{count}} pagine (ZIP)",
+      "thisPage": "Solo questa pagina",
+      "exporting": "Rendering pagina {{current}} di {{total}}…"
     }
   }
 }

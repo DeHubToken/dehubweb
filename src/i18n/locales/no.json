@@ -3798,6 +3798,17 @@
       "vignette": "Vignett {{value}} %",
       "auto": "Autoforbedring",
       "autoFailed": "Kunne ikke analysere dette bildet."
+    },
+    "pages": {
+      "add": "Legg til side",
+      "duplicate": "Dupliser side",
+      "delete": "Slett side",
+      "page": "Side {{number}}",
+      "position": "Side {{current}} av {{total}}",
+      "label": "Sider",
+      "allZip": "Alle {{count}} sider (ZIP)",
+      "thisPage": "Bare denne siden",
+      "exporting": "Gjengir side {{current}} av {{total}}…"
     }
   },
   "fractions": {

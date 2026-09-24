@@ -2956,6 +2956,17 @@
       "vignette": "ভিনিয়েট {{value}}%",
       "auto": "অটো সুন্দর করো",
       "autoFailed": "এই ছবিটা বিশ্লেষণ করা গেইল না।"
+    },
+    "pages": {
+      "add": "পাতা যোগ করো",
+      "duplicate": "পাতা কপি করো",
+      "delete": "পাতা মুছি ফেলো",
+      "page": "পাতা {{number}}",
+      "position": "পাতা {{current}} / {{total}}",
+      "label": "পাতা",
+      "allZip": "সউগ {{count}}টা পাতা (ZIP)",
+      "thisPage": "খালি এই পাতাটা",
+      "exporting": "পাতা {{current}} / {{total}} বানাওছে…"
     }
   },
   "post": {

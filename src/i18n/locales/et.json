@@ -6025,6 +6025,17 @@
       "vignette": "Vinjett {{value}}%",
       "auto": "Automaatne täiustamine",
       "autoFailed": "Seda pilti ei õnnestunud analüüsida."
+    },
+    "pages": {
+      "add": "Lisa leht",
+      "duplicate": "Dubleeri leht",
+      "delete": "Kustuta leht",
+      "page": "Leht {{number}}",
+      "position": "Leht {{current}}/{{total}}",
+      "label": "Lehed",
+      "allZip": "Kõik {{count}} lehte (ZIP)",
+      "thisPage": "Ainult see leht",
+      "exporting": "Renderdan lehte {{current}}/{{total}}…"
     }
   }
 }

@@ -3777,6 +3777,17 @@
       "vignette": "વિગ્નેટ {{value}}%",
       "auto": "ઓટો એન્હાન્સ",
       "autoFailed": "આ ચિત્રનું વિશ્લેષણ કરી શકાયું નહીં."
+    },
+    "pages": {
+      "add": "પૃષ્ઠ ઉમેરો",
+      "duplicate": "પૃષ્ઠની નકલ કરો",
+      "delete": "પૃષ્ઠ કાઢી નાખો",
+      "page": "પૃષ્ઠ {{number}}",
+      "position": "પૃષ્ઠ {{current}} / {{total}}",
+      "label": "પૃષ્ઠો",
+      "allZip": "બધા {{count}} પૃષ્ઠો (ZIP)",
+      "thisPage": "ફક્ત આ પૃષ્ઠ",
+      "exporting": "પૃષ્ઠ {{current}} / {{total}} રેન્ડર થઈ રહ્યું છે…"
     }
   },
   "fractions": {

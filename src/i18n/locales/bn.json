@@ -5845,6 +5845,17 @@
       "vignette": "ভিনিয়েট {{value}}%",
       "auto": "অটো এনহ্যান্স",
       "autoFailed": "এই ছবিটি বিশ্লেষণ করা যায়নি।"
+    },
+    "pages": {
+      "add": "পৃষ্ঠা যোগ করুন",
+      "duplicate": "পৃষ্ঠা ডুপ্লিকেট করুন",
+      "delete": "পৃষ্ঠা মুছুন",
+      "page": "পৃষ্ঠা {{number}}",
+      "position": "পৃষ্ঠা {{current}} / {{total}}",
+      "label": "পৃষ্ঠাসমূহ",
+      "allZip": "সব {{count}}টি পৃষ্ঠা (ZIP)",
+      "thisPage": "শুধু এই পৃষ্ঠা",
+      "exporting": "পৃষ্ঠা {{current}} / {{total}} রেন্ডার হচ্ছে…"
     }
   }
 }

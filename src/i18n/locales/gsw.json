@@ -3783,6 +3783,17 @@
       "vignette": "Vignettierig {{value}}%",
       "auto": "Automatisch verbessere",
       "autoFailed": "Das Bild händ mir nöd chöne analysiere."
+    },
+    "pages": {
+      "add": "Siite dezue tue",
+      "duplicate": "Siite dupliziere",
+      "delete": "Siite lösche",
+      "page": "Siite {{number}}",
+      "position": "Siite {{current}} vo {{total}}",
+      "label": "Siite",
+      "allZip": "Alli {{count}} Siite (ZIP)",
+      "thisPage": "Nur die Siite",
+      "exporting": "Siite {{current}} vo {{total}} wird grenderet…"
     }
   },
   "fractions": {

@@ -6023,6 +6023,17 @@
       "vignette": "Vinjetti {{value}} %",
       "auto": "Automaattinen parannus",
       "autoFailed": "Kuvaa ei voitu analysoida."
+    },
+    "pages": {
+      "add": "Lisää sivu",
+      "duplicate": "Monista sivu",
+      "delete": "Poista sivu",
+      "page": "Sivu {{number}}",
+      "position": "Sivu {{current}}/{{total}}",
+      "label": "Sivut",
+      "allZip": "Kaikki {{count}} sivua (ZIP)",
+      "thisPage": "Vain tämä sivu",
+      "exporting": "Renderöidään sivua {{current}}/{{total}}…"
     }
   }
 }

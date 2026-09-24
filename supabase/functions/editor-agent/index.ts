@@ -53,6 +53,8 @@ Operations (only use fields you need):
 - remove_background: id (an image layer). Cuts the subject out, free and on-device. Use for "remove the background", "cut out", "isolate", product shots, stickers.
 - generate: kind ("image" | "video"), prompt (a rich, detailed generation prompt). This does NOT run anything; it opens the paid AI generator pre-filled for the user to confirm. Use only when the user explicitly asks to generate/create with AI or stock clearly will not do.
 - select: id. Selects a layer so the user sees it.
+- add_page: duplicate (true to copy the current page's layers). Appends a page and moves to it; every add_* after it lands on that page. Use for carousels, slides, multi-part posts: build page 1, add_page, build page 2, and so on.
+- goto_page: index (0-based). New layers then land on that page.
 
 Rules:
 - Refer to existing layers only by their id from the scene. New layers made earlier in the same list can be referred to as "new:0", "new:1"… in the order you created them.
@@ -70,7 +72,7 @@ Example answer:
 
 const OP_NAMES = [
   "set_canvas", "add_text", "add_shape", "update", "place", "effects", "crop", "style", "animate", "timing",
-  "audio", "order", "duplicate", "delete", "add_media", "add_stock", "use_template", "remove_background", "generate", "select",
+  "audio", "order", "duplicate", "delete", "add_media", "add_stock", "add_page", "goto_page", "use_template", "remove_background", "generate", "select",
 ];
 
 interface Message {

@@ -3804,6 +3804,17 @@
       "vignette": "Òkùnkùn etí {{value}}%",
       "auto": "Àtúnṣe aládàáṣe",
       "autoFailed": "A kò lè ṣàyẹ̀wò àwòrán yìí."
+    },
+    "pages": {
+      "add": "Fi ojú-ìwé kún un",
+      "duplicate": "Ṣe ẹ̀dà ojú-ìwé",
+      "delete": "Pa ojú-ìwé rẹ́",
+      "page": "Ojú-ìwé {{number}}",
+      "position": "Ojú-ìwé {{current}} nínú {{total}}",
+      "label": "Àwọn ojú-ìwé",
+      "allZip": "Gbogbo ojú-ìwé {{count}} (ZIP)",
+      "thisPage": "Ojú-ìwé yìí nìkan",
+      "exporting": "Ń ṣe ojú-ìwé {{current}} nínú {{total}}…"
     }
   },
   "fractions": {

@@ -3694,6 +3694,17 @@
       "vignette": "विनेट {{value}}%",
       "auto": "ऑटो सुधार",
       "autoFailed": "ए फोटो के विश्लेषण नइ हो सकिस।"
+    },
+    "pages": {
+      "add": "पन्ना जोड़व",
+      "duplicate": "पन्ना के नकल बनाव",
+      "delete": "पन्ना मिटाव",
+      "page": "पन्ना {{number}}",
+      "position": "पन्ना {{current}} / {{total}}",
+      "label": "पन्ना मन",
+      "allZip": "सबो {{count}} पन्ना (ZIP)",
+      "thisPage": "सिरिफ ए पन्ना",
+      "exporting": "पन्ना {{current}} / {{total}} रेंडर होवत हे…"
     }
   },
   "post": {

@@ -6025,6 +6025,17 @@
       "vignette": "Vignetta {{value}}%",
       "auto": "Automatikus javítás",
       "autoFailed": "Nem sikerült elemezni ezt a képet."
+    },
+    "pages": {
+      "add": "Oldal hozzáadása",
+      "duplicate": "Oldal duplikálása",
+      "delete": "Oldal törlése",
+      "page": "{{number}}. oldal",
+      "position": "{{current}}. oldal / {{total}}",
+      "label": "Oldalak",
+      "allZip": "Mind a(z) {{count}} oldal (ZIP)",
+      "thisPage": "Csak ez az oldal",
+      "exporting": "{{current}}. oldal renderelése / {{total}}…"
     }
   }
 }
