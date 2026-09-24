@@ -2495,7 +2495,8 @@
       "percentJoined": "{{pct}}% شامل ٿیا",
       "noVisits": "ہجے کوئی وزٹ نہ",
       "selfVisitsExcluded": "تہاڈی لنک تے تہاڈے اپنڑے وزٹ گنڑیا کینی ویندے ہن."
-    }
+    },
+    "moreDestinations": "شروع کرنے کی مزید جگہیں"
   },
   "creatorFlow": {
     "syncError": "تھاکرے اکاؤنٹ اچ محفوظ کُوں نی کر سگھیا",
@@ -3698,5 +3699,34 @@
     "presetProductReviewHint": "پریزینٹر دی سچی رائے",
     "presetTvSpotName": "ٹی وی سپاٹ",
     "presetTvSpotHint": "پالش شدہ براڈکاسٹ طرز کا کمرشل"
+  },
+  "affiliateLanding": {
+    "title": "اپنا دعوتی صفحہ حسبِ منشا بنائیں",
+    "subtitle": "صفحے کو اپنے جیسا بنائیں۔ آنے والے شامل ہونے سے پہلے یہ متن دیکھتے ہیں۔",
+    "headline": "سرخی",
+    "message": "خوش آمدید پیغام",
+    "buttonText": "مرکزی بٹن کا متن",
+    "destination": "DeHub منزل",
+    "extraTitle": "اضافی بٹن ({{count}}/{{max}})",
+    "extraHint": "آنے والوں کو سیدھا DeHub کے اس حصے پر بھیجیں جس میں ان کی دلچسپی ہے۔ ہر بٹن آپ کا ریفرل برقرار رکھتا ہے۔",
+    "extraLabel": "بٹن کا متن",
+    "removeButton": "بٹن ہٹائیں",
+    "addCustom": "حسبِ منشا",
+    "presets": {
+      "edit": "ترمیم",
+      "create": "بنائیں",
+      "build": "تعمیر",
+      "import": "درآمد",
+      "explore": "دریافت"
+    },
+    "publish": "تبدیلیاں شائع کریں",
+    "publishing": "شائع ہو رہا ہے…",
+    "reset": "ری سیٹ",
+    "preview": "لائیو پیش نظارہ",
+    "published": "دعوتی صفحہ شائع ہو گیا",
+    "saveFailed": "دعوتی صفحہ محفوظ نہیں ہو سکا",
+    "clicksTitle": "منزل کے لحاظ سے کلکس",
+    "clicksRow_one": "{{clicks}} کلک · {{unique}} منفرد",
+    "clicksRow_other": "{{clicks}} کلکس · {{unique}} منفرد"
   }
 }

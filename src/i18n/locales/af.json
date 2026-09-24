@@ -4459,7 +4459,8 @@
     "share": "Deel",
     "invalidInvite": "Ongeldige uitnodiging",
     "invalidInviteHint": "Daardie verwyssingskode lyk nie reg nie.",
-    "goToDehub": "Gaan na DeHub"
+    "goToDehub": "Gaan na DeHub",
+    "moreDestinations": "Meer plekke om te begin"
   },
   "premium": {
     "seoTitle": "DeHub Extra — Premium-lidmaatskap",
@@ -6137,5 +6138,34 @@
     "desc": "'n Helder dag of 'n skemerblou aand in die oerwoud",
     "day": "Dag",
     "evening": "Aand"
+  },
+  "affiliateLanding": {
+    "title": "Pas jou uitnodigingsblad aan",
+    "subtitle": "Laat die blad soos jy klink. Besoekers sien hierdie teks voordat hulle aansluit.",
+    "headline": "Opskrif",
+    "message": "Welkomsboodskap",
+    "buttonText": "Hoofknoppie-teks",
+    "destination": "DeHub-bestemming",
+    "extraTitle": "Ekstra knoppies ({{count}}/{{max}})",
+    "extraHint": "Stuur besoekers reguit na die deel van DeHub wat hulle interesseer. Elke knoppie behou jou verwysing.",
+    "extraLabel": "Knoppieteks",
+    "removeButton": "Verwyder knoppie",
+    "addCustom": "Pasgemaak",
+    "presets": {
+      "edit": "Wysig",
+      "create": "Skep",
+      "build": "Bou",
+      "import": "Voer in",
+      "explore": "Verken"
+    },
+    "publish": "Publiseer veranderinge",
+    "publishing": "Publiseer tans…",
+    "reset": "Stel terug",
+    "preview": "Regstreekse voorskou",
+    "published": "Uitnodigingsblad gepubliseer",
+    "saveFailed": "Kon nie uitnodigingsblad stoor nie",
+    "clicksTitle": "Klikke per bestemming",
+    "clicksRow_one": "{{clicks}} klik · {{unique}} uniek",
+    "clicksRow_other": "{{clicks}} klikke · {{unique}} uniek"
   }
 }

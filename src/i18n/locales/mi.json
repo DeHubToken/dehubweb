@@ -2559,7 +2559,8 @@
       "percentJoined": "{{pct}}% hono",
       "noVisits": "Kaore ano kia tae mai nga haerenga",
       "selfVisitsExcluded": "Ko to koutou ake haerenga ki to koutou hononga e kore e tatau."
-    }
+    },
+    "moreDestinations": "Ētahi atu wāhi hei tīmata"
   },
   "creatorFlow": {
     "title": "Creator Flow",
@@ -3940,5 +3941,34 @@
     "presetProductReviewHint": "Te kaikorero e hoatu ana i tōna whakaaro pono",
     "presetTvSpotName": "Whakaaturanga pouaka whakaata",
     "presetTvSpotHint": "Te whakatairanga i te ahua o te whakawhitiwhiti korero"
+  },
+  "affiliateLanding": {
+    "title": "Whakaritea tō whārangi pōwhiri",
+    "subtitle": "Kia rite te whārangi ki a koe. Ka kite ngā manuhiri i tēnei kupu i mua i te hono mai.",
+    "headline": "Upoko",
+    "message": "Karere pōwhiri",
+    "buttonText": "Kupu pātene matua",
+    "destination": "Ūnga DeHub",
+    "extraTitle": "Ētahi atu pātene ({{count}}/{{max}})",
+    "extraHint": "Tukuna tōtika ngā manuhiri ki te wāhanga o DeHub e aro ana rātou. Ka mau tonu i ia pātene tō tohutoro.",
+    "extraLabel": "Kupu pātene",
+    "removeButton": "Tangohia te pātene",
+    "addCustom": "Ritenga",
+    "presets": {
+      "edit": "Whakatika",
+      "create": "Waihanga",
+      "build": "Hanga",
+      "import": "Kawemai",
+      "explore": "Tūhura"
+    },
+    "publish": "Whakaputaina ngā huringa",
+    "publishing": "E whakaputa ana…",
+    "reset": "Tautuhi anō",
+    "preview": "Arokite ora",
+    "published": "Kua whakaputaina te whārangi pōwhiri",
+    "saveFailed": "Kāore i taea te tiaki i te whārangi pōwhiri",
+    "clicksTitle": "Pāwhiri mā te ūnga",
+    "clicksRow_one": "{{clicks}} pāwhiri · {{unique}} ahurei",
+    "clicksRow_other": "{{clicks}} pāwhiri · {{unique}} ahurei"
   }
 }

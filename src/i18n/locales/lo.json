@@ -4258,7 +4258,8 @@
     "share": "ແບ່ງປັນ",
     "invalidInvite": "ຄຳເຊີນບໍ່ຖືກຕ້ອງ",
     "invalidInviteHint": "ລະຫັດອ້າງອີງນັ້ນເບິ່ງຄືວ່າບໍ່ຖືກຕ້ອງ.",
-    "goToDehub": "ໄປທີ່ DeHub"
+    "goToDehub": "ໄປທີ່ DeHub",
+    "moreDestinations": "ບ່ອນເລີ່ມຕົ້ນເພີ່ມເຕີມ"
   },
   "premium": {
     "seoTitle": "DeHub Extra — ສະມາຊິກພຣີມຽມ",
@@ -5881,5 +5882,34 @@
     "desc": "ກາງເວັນທີ່ສົດໃສ ຫຼື ຕອນແລງສີຟ້າໃນປ່າ",
     "day": "ກາງເວັນ",
     "evening": "ຕອນແລງ"
+  },
+  "affiliateLanding": {
+    "title": "ປັບແຕ່ງໜ້າເຊີນຂອງທ່ານ",
+    "subtitle": "ເຮັດໃຫ້ໜ້າເປັນແບບຂອງທ່ານ. ຜູ້ເຂົ້າຊົມຈະເຫັນຂໍ້ຄວາມນີ້ກ່ອນເຂົ້າຮ່ວມ.",
+    "headline": "ຫົວຂໍ້",
+    "message": "ຂໍ້ຄວາມຕ້ອນຮັບ",
+    "buttonText": "ຂໍ້ຄວາມປຸ່ມຫຼັກ",
+    "destination": "ປາຍທາງໃນ DeHub",
+    "extraTitle": "ປຸ່ມເພີ່ມເຕີມ ({{count}}/{{max}})",
+    "extraHint": "ສົ່ງຜູ້ເຂົ້າຊົມໄປຫາສ່ວນຂອງ DeHub ທີ່ເຂົາເຈົ້າສົນໃຈໂດຍກົງ. ທຸກປຸ່ມຮັກສາການແນະນຳຂອງທ່ານ.",
+    "extraLabel": "ຂໍ້ຄວາມປຸ່ມ",
+    "removeButton": "ລຶບປຸ່ມ",
+    "addCustom": "ກຳນົດເອງ",
+    "presets": {
+      "edit": "ແກ້ໄຂ",
+      "create": "ສ້າງ",
+      "build": "ກໍ່ສ້າງ",
+      "import": "ນຳເຂົ້າ",
+      "explore": "ສຳຫຼວດ"
+    },
+    "publish": "ເຜີຍແຜ່ການປ່ຽນແປງ",
+    "publishing": "ກຳລັງເຜີຍແຜ່…",
+    "reset": "ຣີເຊັດ",
+    "preview": "ຕົວຢ່າງສົດ",
+    "published": "ເຜີຍແຜ່ໜ້າເຊີນແລ້ວ",
+    "saveFailed": "ບໍ່ສາມາດບັນທຶກໜ້າເຊີນໄດ້",
+    "clicksTitle": "ການຄລິກຕາມປາຍທາງ",
+    "clicksRow_one": "{{clicks}} ຄລິກ · {{unique}} ບໍ່ຊ້ຳ",
+    "clicksRow_other": "{{clicks}} ຄລິກ · {{unique}} ບໍ່ຊ້ຳ"
   }
 }

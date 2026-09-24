@@ -2583,7 +2583,8 @@
       "inLast30Days": "30 kun ichida {{count}}",
       "noVisits": "Hali tashriflar yo&#39;q",
       "selfVisitsExcluded": "Havolangizga shaxsiy tashriflaringiz hisobga olinmaydi."
-    }
+    },
+    "moreDestinations": "Boshlash uchun ko'proq joylar"
   },
   "creatorFlow": {
     "title": "Creator Flow",
@@ -3989,5 +3990,34 @@
     "presetProductReviewHint": "Ta'qdimotchi halol fikr bildiradi",
     "presetTvSpotName": "TV Spot",
     "presetTvSpotHint": "Sayqallangan radioeshittirish uslubidagi reklama"
+  },
+  "affiliateLanding": {
+    "title": "Taklif sahifangizni sozlang",
+    "subtitle": "Sahifa siz kabi yangrasin. Tashrif buyuruvchilar qo'shilishdan oldin bu matnni ko'radi.",
+    "headline": "Sarlavha",
+    "message": "Xush kelibsiz xabari",
+    "buttonText": "Asosiy tugma matni",
+    "destination": "DeHub manzili",
+    "extraTitle": "Qo'shimcha tugmalar ({{count}}/{{max}})",
+    "extraHint": "Tashrif buyuruvchilarni DeHub'ning ularni qiziqtirgan qismiga to'g'ridan-to'g'ri yuboring. Har bir tugma referalingizni saqlaydi.",
+    "extraLabel": "Tugma matni",
+    "removeButton": "Tugmani olib tashlash",
+    "addCustom": "Maxsus",
+    "presets": {
+      "edit": "Tahrirlash",
+      "create": "Yaratish",
+      "build": "Qurish",
+      "import": "Import",
+      "explore": "O'rganish"
+    },
+    "publish": "O'zgarishlarni nashr qilish",
+    "publishing": "Nashr qilinmoqda…",
+    "reset": "Tiklash",
+    "preview": "Jonli ko'rish",
+    "published": "Taklif sahifasi nashr qilindi",
+    "saveFailed": "Taklif sahifasini saqlab bo'lmadi",
+    "clicksTitle": "Manzil bo'yicha bosishlar",
+    "clicksRow_one": "{{clicks}} bosish · {{unique}} noyob",
+    "clicksRow_other": "{{clicks}} bosish · {{unique}} noyob"
   }
 }
