@@ -5771,7 +5771,8 @@
       "shadowOpacity": "Sterkte {{value}}%",
       "shadowBlur": "Vervaag {{value}}",
       "shadowX": "Offset X {{value}}",
-      "shadowY": "Offset Y {{value}}"
+      "shadowY": "Offset Y {{value}}",
+      "blend": "Meng"
     },
     "menu": {
       "addText": "Voeg teks by",
@@ -5798,7 +5799,10 @@
       "generations": "Generasies",
       "edit": "Wysig",
       "collapse": "Vou paneel in",
-      "home": "Tuis"
+      "home": "Tuis",
+      "elements": "Elemente",
+      "layers": "Lae",
+      "tools": "Redigeerderhulpmiddels"
     },
     "agent": {
       "introTitle": "Sê vir die AI wat jy wil hê",
@@ -5821,6 +5825,54 @@
       "changes": "Wysigings gemaak: {{count}}",
       "undo": "Ontdoen",
       "openGenerator": "Hersien en genereer"
+    },
+    "shape": {
+      "rect": "Reghoek",
+      "ellipse": "Sirkel",
+      "triangle": "Driehoek",
+      "star": "Ster",
+      "heart": "Hart",
+      "hexagon": "Seshoek",
+      "line": "Lyn",
+      "arrow": "Pyl",
+      "style": "Vormstyl",
+      "fill": "Vul",
+      "fillOn": "Vul",
+      "outline": "Buitelyn",
+      "outlineOn": "Buitelyn",
+      "outlineWidth": "Buitelynwydte {{value}}"
+    },
+    "elements": {
+      "shapes": "Vorms",
+      "hint": "Klik op 'n vorm om dit by die bladsy te voeg. Sleep die kanthandvatsels om dit te rek, en die hoeke om die grootte te verander."
+    },
+    "layers": {
+      "text": "Teks",
+      "media": "Media",
+      "empty": "Nog niks op die bladsy by die speelkop nie.",
+      "lock": "Sluit",
+      "unlock": "Ontsluit",
+      "show": "Wys",
+      "hide": "Versteek",
+      "hint": "Bo-aan die lys is voor. Sleep om te herrangskik. Geslote en versteekte lae kan net hier gekies word."
+    },
+    "blend": {
+      "normal": "Normaal",
+      "multiply": "Vermenigvuldig",
+      "screen": "Skerm",
+      "overlay": "Oorleg",
+      "darken": "Verdonker",
+      "lighten": "Verhelder",
+      "colorDodge": "Kleurontwyking",
+      "colorBurn": "Kleurbrand",
+      "hardLight": "Harde lig",
+      "softLight": "Sagte lig",
+      "difference": "Verskil",
+      "exclusion": "Uitsluiting",
+      "hue": "Tint",
+      "saturation": "Versadiging",
+      "color": "Kleur",
+      "luminosity": "Helderheid"
     }
   },
   "footer": {

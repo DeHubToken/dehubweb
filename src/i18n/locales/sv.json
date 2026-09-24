@@ -5836,7 +5836,8 @@
       "shadowOpacity": "Styrka {{value}}%",
       "shadowBlur": "Oskärpa {{value}}",
       "shadowX": "Förskjutning X {{value}}",
-      "shadowY": "Förskjutning Y {{value}}"
+      "shadowY": "Förskjutning Y {{value}}",
+      "blend": "Blandning"
     },
     "menu": {
       "addText": "Lägg till text",
@@ -5863,7 +5864,10 @@
       "generations": "Genereringar",
       "edit": "Redigera",
       "collapse": "Fäll ihop panelen",
-      "home": "Hem"
+      "home": "Hem",
+      "elements": "Element",
+      "layers": "Lager",
+      "tools": "Redigeringsverktyg"
     },
     "agent": {
       "introTitle": "Berätta för AI:n vad du vill ha",
@@ -5886,6 +5890,54 @@
       "changes": "Gjorda ändringar: {{count}}",
       "undo": "Ångra",
       "openGenerator": "Granska och generera"
+    },
+    "shape": {
+      "rect": "Rektangel",
+      "ellipse": "Cirkel",
+      "triangle": "Triangel",
+      "star": "Stjärna",
+      "heart": "Hjärta",
+      "hexagon": "Hexagon",
+      "line": "Linje",
+      "arrow": "Pil",
+      "style": "Formstil",
+      "fill": "Fyllning",
+      "fillOn": "Fyllning",
+      "outline": "Kontur",
+      "outlineOn": "Kontur",
+      "outlineWidth": "Konturbredd {{value}}"
+    },
+    "elements": {
+      "shapes": "Former",
+      "hint": "Klicka på en form för att lägga till den på sidan. Dra i sidohandtagen för att sträcka den och i hörnen för att ändra storlek."
+    },
+    "layers": {
+      "text": "Text",
+      "media": "Media",
+      "empty": "Inget på sidan vid uppspelningshuvudet än.",
+      "lock": "Lås",
+      "unlock": "Lås upp",
+      "show": "Visa",
+      "hide": "Dölj",
+      "hint": "Överst i listan ligger längst fram. Dra för att ändra ordning. Låsta och dolda lager kan bara väljas här."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Multiplicera",
+      "screen": "Raster",
+      "overlay": "Täcka över",
+      "darken": "Mörkare",
+      "lighten": "Ljusare",
+      "colorDodge": "Färgskugga",
+      "colorBurn": "Efterbränn färg",
+      "hardLight": "Hårt ljus",
+      "softLight": "Mjukt ljus",
+      "difference": "Differens",
+      "exclusion": "Uteslutning",
+      "hue": "Nyans",
+      "saturation": "Mättnad",
+      "color": "Färg",
+      "luminosity": "Luminiscens"
     }
   }
 }

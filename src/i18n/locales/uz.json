@@ -3640,7 +3640,8 @@
       "shadowOpacity": "Quvvat {{value}}%",
       "shadowBlur": "Xiralik {{value}}",
       "shadowX": "X siljishi {{value}}",
-      "shadowY": "Y siljishi {{value}}"
+      "shadowY": "Y siljishi {{value}}",
+      "blend": "Aralashtirish"
     },
     "menu": {
       "addText": "Matn qo'shish",
@@ -3667,7 +3668,10 @@
       "generations": "Yaratilganlar",
       "edit": "Tahrirlash",
       "collapse": "Panelni yig'ish",
-      "home": "Bosh sahifa"
+      "home": "Bosh sahifa",
+      "elements": "Elementlar",
+      "layers": "Qatlamlar",
+      "tools": "Tahrirlash vositalari"
     },
     "agent": {
       "introTitle": "AI'ga nima xohlayotganingizni ayting",
@@ -3690,6 +3694,54 @@
       "changes": "Kiritilgan o'zgarishlar: {{count}}",
       "undo": "Bekor qilish",
       "openGenerator": "Ko'rib chiqish va yaratish"
+    },
+    "shape": {
+      "rect": "To'rtburchak",
+      "ellipse": "Doira",
+      "triangle": "Uchburchak",
+      "star": "Yulduz",
+      "heart": "Yurak",
+      "hexagon": "Oltiburchak",
+      "line": "Chiziq",
+      "arrow": "Strelka",
+      "style": "Shakl uslubi",
+      "fill": "To'ldirish",
+      "fillOn": "To'ldirish",
+      "outline": "Kontur",
+      "outlineOn": "Kontur",
+      "outlineWidth": "Kontur qalinligi {{value}}"
+    },
+    "elements": {
+      "shapes": "Shakllar",
+      "hint": "Sahifaga qo'shish uchun shaklni bosing. Cho'zish uchun yon tutqichlarni, o'lchamini o'zgartirish uchun burchaklarni torting."
+    },
+    "layers": {
+      "text": "Matn",
+      "media": "Media",
+      "empty": "Ijro kursorida sahifada hali hech narsa yo'q.",
+      "lock": "Qulflash",
+      "unlock": "Qulfdan chiqarish",
+      "show": "Ko'rsatish",
+      "hide": "Yashirish",
+      "hint": "Ro'yxatning yuqorisi eng oldingi qatlam. Tartibini o'zgartirish uchun torting. Qulflangan va yashirilgan qatlamlarni faqat shu yerda tanlash mumkin."
+    },
+    "blend": {
+      "normal": "Oddiy",
+      "multiply": "Ko'paytirish",
+      "screen": "Ekran",
+      "overlay": "Ustma-ust",
+      "darken": "Qoraytirish",
+      "lighten": "Yorqinlashtirish",
+      "colorDodge": "Rangni ochlashtirish",
+      "colorBurn": "Rangni kuydirish",
+      "hardLight": "Qattiq yorug'lik",
+      "softLight": "Yumshoq yorug'lik",
+      "difference": "Farq",
+      "exclusion": "Istisno",
+      "hue": "Tus",
+      "saturation": "To'yinganlik",
+      "color": "Rang",
+      "luminosity": "Yorqinlik"
     }
   },
   "spaces": {

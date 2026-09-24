@@ -5602,7 +5602,8 @@
       "shadowOpacity": "Hery {{value}}%",
       "shadowBlur": "Manjavozavo {{value}}",
       "shadowX": "Fifindrana X {{value}}",
-      "shadowY": "Fifindrana Y {{value}}"
+      "shadowY": "Fifindrana Y {{value}}",
+      "blend": "Fampifangaroana"
     },
     "menu": {
       "addText": "Hanampy lahabolana",
@@ -5629,7 +5630,10 @@
       "generations": "Voaforona",
       "edit": "Hanova",
       "collapse": "Aforony ny tontonana",
-      "home": "Fandraisana"
+      "home": "Fandraisana",
+      "elements": "Singa",
+      "layers": "Sosona",
+      "tools": "Fitaovana fanovana"
     },
     "agent": {
       "introTitle": "Lazao amin'ny AI izay tianao",
@@ -5652,6 +5656,54 @@
       "changes": "Fanovana natao: {{count}}",
       "undo": "Foano",
       "openGenerator": "Jereo ary mamorona"
+    },
+    "shape": {
+      "rect": "Efamira lava",
+      "ellipse": "Faribolana",
+      "triangle": "Telozoro",
+      "star": "Kintana",
+      "heart": "Fo",
+      "hexagon": "Enina zoro",
+      "line": "Tsipika",
+      "arrow": "Zana-tsipìka",
+      "style": "Endriky ny bika",
+      "fill": "Famenoana",
+      "fillOn": "Famenoana",
+      "outline": "Sisiny",
+      "outlineOn": "Sisiny",
+      "outlineWidth": "Hatevin'ny sisiny {{value}}"
+    },
+    "elements": {
+      "shapes": "Bika",
+      "hint": "Tsindrio ny bika iray hampidirana azy ao amin'ny pejy. Sintony ny tahony amin'ny sisiny hanitarana azy, ary ny zorony hanovana ny habeny."
+    },
+    "layers": {
+      "text": "Lahatsoratra",
+      "media": "Media",
+      "empty": "Mbola tsy misy na inona na inona eo amin'ny pejy amin'ity fotoana ity.",
+      "lock": "Hidio",
+      "unlock": "Sokafy",
+      "show": "Aseho",
+      "hide": "Afeno",
+      "hint": "Ny ambony indrindra amin'ny lisitra no eo aloha. Sintony hanovana ny filaharana. Eto ihany no ahafahana misafidy ny sosona voahidy sy miafina."
+    },
+    "blend": {
+      "normal": "Mahazatra",
+      "multiply": "Ampitomboina",
+      "screen": "Efijery",
+      "overlay": "Mifanindry",
+      "darken": "Manamaizina",
+      "lighten": "Manazava",
+      "colorDodge": "Manazava loko",
+      "colorBurn": "Mandoro loko",
+      "hardLight": "Hazavana mafy",
+      "softLight": "Hazavana malefaka",
+      "difference": "Fahasamihafana",
+      "exclusion": "Fanilihana",
+      "hue": "Lokony",
+      "saturation": "Hamafin'ny loko",
+      "color": "Loko",
+      "luminosity": "Famirapiratana"
     }
   },
   "createPost": {

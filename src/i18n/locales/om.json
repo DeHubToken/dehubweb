@@ -3642,7 +3642,8 @@
       "shadowOpacity": "Cimina {{value}}%",
       "shadowBlur": "Bilurii {{value}}",
       "shadowX": "Siqsuu X {{value}}",
-      "shadowY": "Siqsuu Y {{value}}"
+      "shadowY": "Siqsuu Y {{value}}",
+      "blend": "Walmakuu"
     },
     "menu": {
       "addText": "Barruu itti dabali",
@@ -3669,7 +3670,10 @@
       "generations": "Kan uumaman",
       "edit": "Gulaali",
       "collapse": "Paanaalii cufi",
-      "home": "Mana"
+      "home": "Mana",
+      "elements": "Elementoota",
+      "layers": "Leeyarii",
+      "tools": "Meeshaalee gulaalaa"
     },
     "agent": {
       "introTitle": "Waan barbaaddu AI'tti himi",
@@ -3692,6 +3696,54 @@
       "changes": "Gulaallii hojjetaman: {{count}}",
       "undo": "Deebisi",
       "openGenerator": "Ilaaliitii uumi"
+    },
+    "shape": {
+      "rect": "Rektaangilii",
+      "ellipse": "Geengoo",
+      "triangle": "Rog-sadee",
+      "star": "Urjii",
+      "heart": "Onnee",
+      "hexagon": "Rog-jahee",
+      "line": "Sarara",
+      "arrow": "Xiyya",
+      "style": "Akkaataa bocaa",
+      "fill": "Guutuu",
+      "fillOn": "Guutuu",
+      "outline": "Daangaa",
+      "outlineOn": "Daangaa",
+      "outlineWidth": "Bal'ina daangaa {{value}}"
+    },
+    "elements": {
+      "shapes": "Bocawwan",
+      "hint": "Boca tokko cuqaasii fuula irratti dabali. Diriirsuuf qabduulee cinaa harkisi, hamma jijjiiruuf ammoo golee harkisi."
+    },
+    "layers": {
+      "text": "Barreeffama",
+      "media": "Miidiyaa",
+      "empty": "Iddoo taphataa irratti ammallee fuula irra homtuu hin jiru.",
+      "lock": "Cufi",
+      "unlock": "Bani",
+      "show": "Agarsiisi",
+      "hide": "Dhoksi",
+      "hint": "Gubbaan tarreeffamaa fuula dura. Tartiiba jijjiiruuf harkisi. Leeyarii cufamanii fi dhokataman as qofatti filachuun ni danda'ama."
+    },
+    "blend": {
+      "normal": "Idilee",
+      "multiply": "Baay'isi",
+      "screen": "Iskiriinii",
+      "overlay": "Irra-kaa'i",
+      "darken": "Dukkaneessi",
+      "lighten": "Ifeessi",
+      "colorDodge": "Halluu ifeessi",
+      "colorBurn": "Halluu gubi",
+      "hardLight": "Ifa cimaa",
+      "softLight": "Ifa laafaa",
+      "difference": "Garaagarummaa",
+      "exclusion": "Ala baasuu",
+      "hue": "Bifa halluu",
+      "saturation": "Guutummaa halluu",
+      "color": "Halluu",
+      "luminosity": "Ifaa"
     }
   },
   "spaces": {

@@ -3613,7 +3613,8 @@
       "shadowOpacity": "Kekuwatan {{value}}%",
       "shadowBlur": "Blur {{value}}",
       "shadowX": "Geser X {{value}}",
-      "shadowY": "Geser Y {{value}}"
+      "shadowY": "Geser Y {{value}}",
+      "blend": "Campuran"
     },
     "menu": {
       "addText": "Tambah teks",
@@ -3640,7 +3641,10 @@
       "generations": "Asil gawean",
       "edit": "Sunting",
       "collapse": "Ciutake panel",
-      "home": "Beranda"
+      "home": "Beranda",
+      "elements": "Elemen",
+      "layers": "Lapisan",
+      "tools": "Piranti editor"
     },
     "agent": {
       "introTitle": "Kandhani AI apa sing mbok karepake",
@@ -3663,6 +3667,54 @@
       "changes": "Suntingan sing digawe: {{count}}",
       "undo": "Batalake",
       "openGenerator": "Priksa lan gawe"
+    },
+    "shape": {
+      "rect": "Persegi dawa",
+      "ellipse": "Bunderan",
+      "triangle": "Segitiga",
+      "star": "Lintang",
+      "heart": "Ati",
+      "hexagon": "Segi enem",
+      "line": "Garis",
+      "arrow": "Panah",
+      "style": "Gaya wangun",
+      "fill": "Isi",
+      "fillOn": "Isi",
+      "outline": "Garis pinggir",
+      "outlineOn": "Garis pinggir",
+      "outlineWidth": "Kandel garis pinggir {{value}}"
+    },
+    "elements": {
+      "shapes": "Wangun",
+      "hint": "Klik wangun kanggo nambahake ing kaca. Seret gagang pinggir kanggo mulur, pojoke kanggo ngowahi ukuran."
+    },
+    "layers": {
+      "text": "Teks",
+      "media": "Media",
+      "empty": "Durung ana apa-apa ing kaca ing playhead.",
+      "lock": "Kunci",
+      "unlock": "Bukak kunci",
+      "show": "Tampilake",
+      "hide": "Umpetake",
+      "hint": "Sing paling dhuwur ing dhaptar ana ing ngarep. Seret kanggo ngurutake maneh. Lapisan sing dikunci lan diumpetake mung bisa dipilih ing kene."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Tikel",
+      "screen": "Layar",
+      "overlay": "Tumpang",
+      "darken": "Petengi",
+      "lighten": "Padhangi",
+      "colorDodge": "Dodge werna",
+      "colorBurn": "Burn werna",
+      "hardLight": "Cahya atos",
+      "softLight": "Cahya alus",
+      "difference": "Bedane",
+      "exclusion": "Pengecualian",
+      "hue": "Rona",
+      "saturation": "Kajenuhan",
+      "color": "Werna",
+      "luminosity": "Luminositas"
     }
   },
   "fractions": {

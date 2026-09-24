@@ -3476,7 +3476,8 @@
       "shadowOpacity": "ጥንካሬ {{value}}%",
       "shadowBlur": "ብዥታ {{value}}",
       "shadowX": "ማካካሻ X {{value}}",
-      "shadowY": "ማካካሻ Y {{value}}"
+      "shadowY": "ማካካሻ Y {{value}}",
+      "blend": "ቅልቅል"
     },
     "menu": {
       "addText": "ጽሑፍ ያክሉ",
@@ -3503,7 +3504,10 @@
       "generations": "የተፈጠሩ",
       "edit": "አርትዕ",
       "collapse": "ፓነሉን ሰብስብ",
-      "home": "መነሻ"
+      "home": "መነሻ",
+      "elements": "ክፍሎች",
+      "layers": "ንብርብሮች",
+      "tools": "የአርትዖት መሣሪያዎች"
     },
     "agent": {
       "introTitle": "የሚፈልጉትን ለAI ይንገሩት",
@@ -3526,6 +3530,54 @@
       "changes": "የተደረጉ ለውጦች፦ {{count}}",
       "undo": "ቀልብስ",
       "openGenerator": "ገምግም እና ፍጠር"
+    },
+    "shape": {
+      "rect": "አራት ማዕዘን",
+      "ellipse": "ክብ",
+      "triangle": "ሦስት ማዕዘን",
+      "star": "ኮከብ",
+      "heart": "ልብ",
+      "hexagon": "ስድስት ማዕዘን",
+      "line": "መስመር",
+      "arrow": "ቀስት",
+      "style": "የቅርጽ ዘይቤ",
+      "fill": "ሙሌት",
+      "fillOn": "ሙሌት",
+      "outline": "ዝርዝር መስመር",
+      "outlineOn": "ዝርዝር መስመር",
+      "outlineWidth": "የዝርዝር መስመር ስፋት {{value}}"
+    },
+    "elements": {
+      "shapes": "ቅርጾች",
+      "hint": "ቅርጹን ወደ ገጹ ለመጨመር ጠቅ ያድርጉ። ለመዘርጋት የጎን መያዣዎችን፣ መጠኑን ለመቀየር ማዕዘኖቹን ይጎትቱ።"
+    },
+    "layers": {
+      "text": "ጽሑፍ",
+      "media": "ሚዲያ",
+      "empty": "በማጫወቻው ቦታ ገጹ ላይ እስካሁን ምንም የለም።",
+      "lock": "ቆልፍ",
+      "unlock": "ክፈት",
+      "show": "አሳይ",
+      "hide": "ደብቅ",
+      "hint": "የዝርዝሩ አናት ፊት ለፊት ነው። ቅደም ተከተሉን ለመቀየር ይጎትቱ። የተቆለፉ እና የተደበቁ ንብርብሮችን እዚህ ብቻ መምረጥ ይቻላል።"
+    },
+    "blend": {
+      "normal": "መደበኛ",
+      "multiply": "ማባዛት",
+      "screen": "ስክሪን",
+      "overlay": "ተደራቢ",
+      "darken": "ማጨለም",
+      "lighten": "ማቅለል",
+      "colorDodge": "የቀለም ማድመቅ",
+      "colorBurn": "የቀለም ማቃጠል",
+      "hardLight": "ጠንካራ ብርሃን",
+      "softLight": "ለስላሳ ብርሃን",
+      "difference": "ልዩነት",
+      "exclusion": "ማግለል",
+      "hue": "ሕብር",
+      "saturation": "ሙሌትነት",
+      "color": "ቀለም",
+      "luminosity": "ብሩህነት"
     }
   },
   "fractions": {

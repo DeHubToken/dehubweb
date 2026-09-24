@@ -5953,7 +5953,8 @@
       "shadowOpacity": "Yoğunluk {{value}}%",
       "shadowBlur": "Bulanıklık {{value}}",
       "shadowX": "Ofset X {{value}}",
-      "shadowY": "Ofset Y {{value}}"
+      "shadowY": "Ofset Y {{value}}",
+      "blend": "Karışım"
     },
     "menu": {
       "addText": "Metin ekle",
@@ -5980,7 +5981,10 @@
       "generations": "Oluşturulanlar",
       "edit": "Düzenle",
       "collapse": "Paneli daralt",
-      "home": "Ana sayfa"
+      "home": "Ana sayfa",
+      "elements": "Öğeler",
+      "layers": "Katmanlar",
+      "tools": "Düzenleyici araçları"
     },
     "agent": {
       "introTitle": "AI'ya ne istediğini söyle",
@@ -6003,6 +6007,54 @@
       "changes": "Yapılan düzenlemeler: {{count}}",
       "undo": "Geri al",
       "openGenerator": "İncele ve oluştur"
+    },
+    "shape": {
+      "rect": "Dikdörtgen",
+      "ellipse": "Daire",
+      "triangle": "Üçgen",
+      "star": "Yıldız",
+      "heart": "Kalp",
+      "hexagon": "Altıgen",
+      "line": "Çizgi",
+      "arrow": "Ok",
+      "style": "Şekil stili",
+      "fill": "Dolgu",
+      "fillOn": "Dolgu",
+      "outline": "Kontur",
+      "outlineOn": "Kontur",
+      "outlineWidth": "Kontur kalınlığı {{value}}"
+    },
+    "elements": {
+      "shapes": "Şekiller",
+      "hint": "Sayfaya eklemek için bir şekle tıklayın. Esnetmek için yan tutamaçları, yeniden boyutlandırmak için köşeleri sürükleyin."
+    },
+    "layers": {
+      "text": "Metin",
+      "media": "Medya",
+      "empty": "Oynatma kafasının olduğu yerde sayfada henüz bir şey yok.",
+      "lock": "Kilitle",
+      "unlock": "Kilidi aç",
+      "show": "Göster",
+      "hide": "Gizle",
+      "hint": "Listenin en üstü öndedir. Sıralamak için sürükleyin. Kilitli ve gizli katmanlar yalnızca buradan seçilebilir."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Çoğalt",
+      "screen": "Ekran",
+      "overlay": "Kaplama",
+      "darken": "Koyulaştır",
+      "lighten": "Açıklaştır",
+      "colorDodge": "Renk Soldurma",
+      "colorBurn": "Renk Yanması",
+      "hardLight": "Sert Işık",
+      "softLight": "Yumuşak Işık",
+      "difference": "Fark",
+      "exclusion": "Dışlama",
+      "hue": "Ton",
+      "saturation": "Doygunluk",
+      "color": "Renk",
+      "luminosity": "Parlaklık"
     }
   }
 }

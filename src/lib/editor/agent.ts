@@ -11,8 +11,8 @@
  */
 import { useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";
-import type { AspectPreset, Clip, ClipAnimationKind, ClipEffects, MediaClip, TextClip } from "./types";
-import { aspectToDims } from "./types";
+import type { AspectPreset, BlendMode, Clip, ClipAnimationKind, ClipEffects, MediaClip, ShapeClip, ShapeKind, TextClip } from "./types";
+import { BLEND_MODES, SHAPE_KINDS, aspectToDims } from "./types";
 import { getTransform, placementPatch } from "./render";
 import { applyFilterPreset } from "./filterPresets";
 import { GOOGLE_FONTS, fontFamilyCss, loadGoogleFont } from "./googleFonts";
@@ -82,6 +82,9 @@ function describeClip(c: Clip, media: { id: string; name: string }[], hidden: bo
     if (tr.rotation) base.rotation = round(tr.rotation, 1);
     if ((tr.opacity ?? 1) !== 1) base.opacity = round(tr.opacity ?? 1, 2);
   }
+  if (c.blend && c.blend !== "normal") base.blend = c.blend;
+  if (c.locked) base.locked = true;
+  if (c.hidden) base.hiddenLayer = true;
   if (c.animateIn) base.in = c.animateIn.kind;
   if (c.animateOut) base.out = c.animateOut.kind;
   if (c.kind === "text") {
@@ -94,6 +97,9 @@ function describeClip(c: Clip, media: { id: string; name: string }[], hidden: bo
       color: c.color,
       align: c.align,
     };
+  }
+  if (c.kind === "shape") {
+    return { ...base, shape: c.shape, w: round(c.w), h: round(c.h), scale: round(tr.scale, 2), fill: c.fill, stroke: c.stroke ?? undefined };
   }
   const m = c as MediaClip;
   const out: Record<string, unknown> = { ...base, name: media.find((x) => x.id === m.mediaId)?.name };
@@ -179,6 +185,34 @@ function textPatch(op: AgentOp): Partial<TextClip> {
   return p;
 }
 
+/** Fields every layer kind shares: blend, lock, hide. */
+function layerPatch(op: AgentOp): { blend?: BlendMode; locked?: boolean; hidden?: boolean } {
+  const p: { blend?: BlendMode; locked?: boolean; hidden?: boolean } = {};
+  if (BLEND_MODES.includes(op.blend as BlendMode)) p.blend = op.blend as BlendMode;
+  const locked = bool(op.locked);
+  if (locked !== undefined) p.locked = locked;
+  const hidden = bool(op.hidden);
+  if (hidden !== undefined) p.hidden = hidden;
+  return p;
+}
+
+function shapePatch(op: AgentOp): Partial<ShapeClip> {
+  const p: Partial<ShapeClip> = {};
+  const w = num(op.w);
+  if (w !== undefined) p.w = clamp(w, 0.005, 3);
+  const h = num(op.h);
+  if (h !== undefined) p.h = clamp(h, 0.005, 3);
+  if (op.fill === "none") p.fill = null;
+  const fill = colour(op.fill) ?? colour(op.color);
+  if (fill) p.fill = fill;
+  const stroke = colour(op.strokeColor);
+  if (stroke) p.stroke = { color: stroke, width: clamp(num(op.strokeWidth) ?? 6, 0, 80) };
+  const r = num(op.radius);
+  if (r !== undefined) p.radius = clamp(r, 0, 540);
+  if (SHAPE_KINDS.includes(op.shape as ShapeKind)) p.shape = op.shape as ShapeKind;
+  return p;
+}
+
 function effectsPatch(op: AgentOp, current: ClipEffects | undefined): ClipEffects | undefined {
   let next: ClipEffects | undefined = current ? { ...current } : undefined;
   const preset = str(op.preset);
@@ -238,7 +272,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
       if (v !== undefined) patch[k] = v;
     }
     const out: Record<string, unknown> = Object.keys(patch).length ? { ...placementPatch(clip, patch) } : {};
-    if ((op.fit === "cover" || op.fit === "contain") && clip.kind !== "text") out.fit = op.fit;
+    if ((op.fit === "cover" || op.fit === "contain") && (clip.kind === "image" || clip.kind === "video")) out.fit = op.fit;
     if (Object.keys(out).length) store().patchClip(clip.id, out);
   };
 
@@ -286,10 +320,21 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         if (clip && (num(op.rotation) !== undefined || num(op.opacity) !== undefined)) place(clip, { op: "place", rotation: op.rotation, opacity: op.opacity });
         return true;
       }
+      case "add_shape": {
+        const kind = SHAPE_KINDS.includes(op.shape as ShapeKind) ? (op.shape as ShapeKind) : "rect";
+        const id = s.addShapeClip(kind, { ...shapePatch(op), ...layerPatch(op) });
+        created.push(id);
+        const clip = store().clips.find((c) => c.id === id);
+        if (clip) place(clip, op);
+        return true;
+      }
       case "update": {
         const clip = find(op.id);
         if (!clip) return false;
         if (clip.kind === "text") s.patchClip(clip.id, textPatch(op));
+        if (clip.kind === "shape") s.patchClip(clip.id, shapePatch(op));
+        const shared = layerPatch(op);
+        if (Object.keys(shared).length) s.patchClip(clip.id, shared);
         place(clip, op);
         return true;
       }
@@ -351,7 +396,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
       }
       case "audio": {
         const clip = find(op.id);
-        if (!clip || clip.kind === "text" || clip.kind === "image") return false;
+        if (!clip || (clip.kind !== "video" && clip.kind !== "audio")) return false;
         const patch: Partial<MediaClip> = {};
         const vol = num(op.volume);
         if (vol !== undefined) patch.audio = { ...clip.audio, volume: clamp(vol, 0, 2) };

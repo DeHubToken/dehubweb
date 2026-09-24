@@ -3615,7 +3615,8 @@
       "shadowOpacity": "Agbara {{value}}%",
       "shadowBlur": "Ìṣújú {{value}}",
       "shadowX": "Ìyípadà X {{value}}",
-      "shadowY": "Ìyípadà Y {{value}}"
+      "shadowY": "Ìyípadà Y {{value}}",
+      "blend": "Ìdàpọ̀"
     },
     "menu": {
       "addText": "Ṣafikun ọrọ",
@@ -3642,7 +3643,10 @@
       "generations": "Àwọn ìṣẹ̀dá",
       "edit": "Ṣàtúnṣe",
       "collapse": "Ká pánẹ́ẹ̀lì",
-      "home": "Ilé"
+      "home": "Ilé",
+      "elements": "Àwọn èròjà",
+      "layers": "Àwọn ìpele",
+      "tools": "Àwọn irinṣẹ́ olóòtú"
     },
     "agent": {
       "introTitle": "Sọ ohun tí o fẹ́ fún AI",
@@ -3665,6 +3669,54 @@
       "changes": "Àwọn àtúnṣe tí a ṣe: {{count}}",
       "undo": "Dá padà",
       "openGenerator": "Ṣàyẹ̀wò kí o sì ṣẹ̀dá"
+    },
+    "shape": {
+      "rect": "Onígun mẹ́rin gígùn",
+      "ellipse": "Àyíká",
+      "triangle": "Onígun mẹ́ta",
+      "star": "Ìràwọ̀",
+      "heart": "Ọkàn",
+      "hexagon": "Onígun mẹ́fà",
+      "line": "Ìlà",
+      "arrow": "Ọfà",
+      "style": "Ara ìrísí",
+      "fill": "Kún",
+      "fillOn": "Kún",
+      "outline": "Ìlà ìta",
+      "outlineOn": "Ìlà ìta",
+      "outlineWidth": "Fífẹ̀ ìlà ìta {{value}}"
+    },
+    "elements": {
+      "shapes": "Àwọn ìrísí",
+      "hint": "Tẹ ìrísí kan láti fi kún ojú-ìwé. Fa àwọn ìmúdání ẹ̀gbẹ́ láti nà án, àwọn igun láti yí ìwọ̀n rẹ̀ padà."
+    },
+    "layers": {
+      "text": "Ọ̀rọ̀",
+      "media": "Mídíà",
+      "empty": "Kò sí nǹkan kan lórí ojú-ìwé níbi orí-ìṣeré síbẹ̀.",
+      "lock": "Tì",
+      "unlock": "Ṣí",
+      "show": "Fihàn",
+      "hide": "Fi pamọ́",
+      "hint": "Òkè àkójọ ni iwájú. Fà á láti tún tò. Àwọn ìpele tí a tì àti tí a fi pamọ́ ni a lè yàn níbí nìkan."
+    },
+    "blend": {
+      "normal": "Déédé",
+      "multiply": "Sọdipúpọ̀",
+      "screen": "Ìbòjú",
+      "overlay": "Àbòbò",
+      "darken": "Ṣókùnkùn",
+      "lighten": "Tànmọ́lẹ̀",
+      "colorDodge": "Àwọ̀ dídán",
+      "colorBurn": "Àwọ̀ jíjó",
+      "hardLight": "Ìmọ́lẹ̀ líle",
+      "softLight": "Ìmọ́lẹ̀ rírọ̀",
+      "difference": "Ìyàtọ̀",
+      "exclusion": "Àyọkúrò",
+      "hue": "Ìró àwọ̀",
+      "saturation": "Ìkún àwọ̀",
+      "color": "Àwọ̀",
+      "luminosity": "Ìmọ́lẹ̀"
     }
   },
   "fractions": {

@@ -13,10 +13,15 @@ import {
   type MediaClip,
   type ProjectSettings,
   type ProjectSnapshot,
+  type ShapeClip,
+  type ShapeKind,
   type TextClip,
   type Track,
   type TrackKind,
 } from "@/lib/editor/types";
+
+/** A partial update to any kind of clip. */
+export type ClipPatch = Partial<MediaClip> | Partial<TextClip> | Partial<ShapeClip>;
 
 export interface MediaItem extends MediaMeta {
   url: string;
@@ -88,6 +93,8 @@ interface EditorState extends EditableState {
   /** Canva-style duplicate: same moment in time, one layer up, nudged on the canvas. */
   duplicateOnCanvas: () => void;
   addTextClip: (trackId?: string, start?: number) => string;
+  /** Add a vector shape as a new layer on top, at the playhead. */
+  addShapeClip: (shape: ShapeKind, patch?: Partial<ShapeClip>) => string;
   moveClip: (id: string, patch: { start?: number; trackId?: string }) => void;
   trimClip: (id: string, edge: "in" | "out", deltaSeconds: number) => void;
   splitAtPlayhead: () => void;
@@ -112,9 +119,9 @@ interface EditorState extends EditableState {
    * request can touch a dozen layers; undo should take the whole request back.
    */
   runAsOneStep: (fn: () => void | Promise<void>) => Promise<void>;
-  patchClipLive: (id: string, patch: Partial<MediaClip> | Partial<TextClip>) => void;
+  patchClipLive: (id: string, patch: ClipPatch) => void;
   /** Patch any clip through history, whatever its kind. */
-  patchClip: (id: string, patch: Partial<MediaClip> | Partial<TextClip>) => void;
+  patchClip: (id: string, patch: ClipPatch) => void;
 }
 
 const MAX_HISTORY = 50;
@@ -218,7 +225,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     }
     set((s) => ({ media: s.media.filter((m) => m.id !== id) }));
     // Also remove dependent clips through history.
-    const orphans = get().clips.filter((c) => c.kind !== "text" && c.mediaId === id).map((c) => c.id);
+    const orphans = get().clips.filter((c) => "mediaId" in c && c.mediaId === id).map((c) => c.id);
     if (orphans.length) get().rippleDelete(orphans);
   },
 
@@ -431,6 +438,36 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     return clip.id;
   },
 
+  addShapeClip: (shape, patch) => {
+    const s = get();
+    const count = s.tracks.filter((t) => t.kind === "video").length + 1;
+    const track: Track = { id: nanoid(8), kind: "video", name: `Video ${count}`, muted: false, hidden: false };
+    // A shape is decoration: keep it on screen for the rest of the timeline,
+    // or 5s on an empty one.
+    const end = s.clips.reduce((m, c) => Math.max(m, c.start + c.duration), 0);
+    const start = s.currentTime;
+    const line = shape === "line" || shape === "arrow";
+    const aspect = s.settings.width / s.settings.height;
+    const size = 0.3;
+    const clip: ShapeClip = {
+      id: nanoid(10),
+      trackId: track.id,
+      kind: "shape",
+      shape,
+      start,
+      duration: Math.max(5, end - start),
+      trimIn: 0,
+      w: size,
+      h: line ? 0.02 : size * aspect,
+      fill: line ? "#ffffff" : "#7c5cff",
+      stroke: line ? { color: "#ffffff", width: 8 } : null,
+      ...patch,
+    };
+    const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
+    set({ past, future: [], tracks: [...s.tracks, track], clips: [...s.clips, clip], selectedClipIds: [clip.id] });
+    return clip.id;
+  },
+
   moveClip: (id, patch) => {
     const s = get();
     const clip = s.clips.find((c) => c.id === id);
@@ -441,7 +478,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     // Enforce track kind compatibility.
     const clipKind = clip.kind;
     const ok =
-      (newTrack.kind === "video" && (clipKind === "video" || clipKind === "image")) ||
+      (newTrack.kind === "video" && (clipKind === "video" || clipKind === "image" || clipKind === "shape")) ||
       (newTrack.kind === "audio" && clipKind === "audio") ||
       (newTrack.kind === "text" && clipKind === "text");
     if (!ok) return;
@@ -634,20 +671,20 @@ export const useEditorStore = create<EditorState>((set, get) => ({
         (overrideTrackId ? s.tracks.find((t) => t.id === overrideTrackId) : null) ??
         s.tracks.find((t) => t.id === c.trackId) ??
         s.tracks.find((t) =>
-          (t.kind === "video" && (c.kind === "video" || c.kind === "image")) ||
+          (t.kind === "video" && (c.kind === "video" || c.kind === "image" || c.kind === "shape")) ||
           (t.kind === "audio" && c.kind === "audio") ||
           (t.kind === "text" && c.kind === "text"),
         );
       // If override track kind is incompatible, fall back to compatible track.
       if (track && overrideTrackId && track.id === overrideTrackId) {
         const compatible =
-          (track.kind === "video" && (c.kind === "video" || c.kind === "image")) ||
+          (track.kind === "video" && (c.kind === "video" || c.kind === "image" || c.kind === "shape")) ||
           (track.kind === "audio" && c.kind === "audio") ||
           (track.kind === "text" && c.kind === "text");
         if (!compatible) {
           track = s.tracks.find((t) => t.id === c.trackId) ??
             s.tracks.find((t) =>
-              (t.kind === "video" && (c.kind === "video" || c.kind === "image")) ||
+              (t.kind === "video" && (c.kind === "video" || c.kind === "image" || c.kind === "shape")) ||
               (t.kind === "audio" && c.kind === "audio") ||
               (t.kind === "text" && c.kind === "text"),
             );

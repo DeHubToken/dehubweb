@@ -5925,7 +5925,8 @@
       "shadowOpacity": "Spēks {{value}}%",
       "shadowBlur": "Aizmiglot {{value}}",
       "shadowX": "Nobīde X {{value}}",
-      "shadowY": "Nobīde Y {{value}}"
+      "shadowY": "Nobīde Y {{value}}",
+      "blend": "Sajaukšana"
     },
     "menu": {
       "addText": "Pievienot tekstu",
@@ -5952,7 +5953,10 @@
       "generations": "Ģenerējumi",
       "edit": "Rediģēt",
       "collapse": "Sakļaut paneli",
-      "home": "Sākums"
+      "home": "Sākums",
+      "elements": "Elementi",
+      "layers": "Slāņi",
+      "tools": "Rediģēšanas rīki"
     },
     "agent": {
       "introTitle": "Pastāstiet MI, ko vēlaties",
@@ -5975,6 +5979,54 @@
       "changes": "Veiktās izmaiņas: {{count}}",
       "undo": "Atsaukt",
       "openGenerator": "Pārskatīt un ģenerēt"
+    },
+    "shape": {
+      "rect": "Taisnstūris",
+      "ellipse": "Aplis",
+      "triangle": "Trijstūris",
+      "star": "Zvaigzne",
+      "heart": "Sirds",
+      "hexagon": "Sešstūris",
+      "line": "Līnija",
+      "arrow": "Bultiņa",
+      "style": "Formas stils",
+      "fill": "Aizpildījums",
+      "fillOn": "Aizpildījums",
+      "outline": "Kontūra",
+      "outlineOn": "Kontūra",
+      "outlineWidth": "Kontūras platums {{value}}"
+    },
+    "elements": {
+      "shapes": "Formas",
+      "hint": "Noklikšķiniet uz formas, lai pievienotu to lapai. Velciet sānu turus, lai to izstieptu, stūrus — lai mainītu izmēru."
+    },
+    "layers": {
+      "text": "Teksts",
+      "media": "Multivide",
+      "empty": "Atskaņošanas galviņas vietā lapā vēl nav nekā.",
+      "lock": "Bloķēt",
+      "unlock": "Atbloķēt",
+      "show": "Rādīt",
+      "hide": "Paslēpt",
+      "hint": "Saraksta augšā ir priekšplāns. Velciet, lai mainītu secību. Bloķētos un paslēptos slāņus var atlasīt tikai šeit."
+    },
+    "blend": {
+      "normal": "Normāls",
+      "multiply": "Reizināt",
+      "screen": "Ekrāns",
+      "overlay": "Pārklājums",
+      "darken": "Tumšāks",
+      "lighten": "Gaišāks",
+      "colorDodge": "Krāsu izgaismošana",
+      "colorBurn": "Krāsu apdedzināšana",
+      "hardLight": "Cietā gaisma",
+      "softLight": "Mīkstā gaisma",
+      "difference": "Starpība",
+      "exclusion": "Izslēgšana",
+      "hue": "Nokrāsa",
+      "saturation": "Piesātinājums",
+      "color": "Krāsa",
+      "luminosity": "Spilgtums"
     }
   }
 }

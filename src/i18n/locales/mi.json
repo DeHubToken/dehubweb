@@ -3620,7 +3620,8 @@
       "shadowOpacity": "Te kaha {{value}}%",
       "shadowBlur": "Whakarehu {{value}}",
       "shadowX": "Nekehanga X {{value}}",
-      "shadowY": "Nekehanga Y {{value}}"
+      "shadowY": "Nekehanga Y {{value}}",
+      "blend": "Whakaranu"
     },
     "menu": {
       "addText": "Tāpirihia te kuputuhi",
@@ -3647,7 +3648,10 @@
       "generations": "Ngā waihanga",
       "edit": "Whakatika",
       "collapse": "Tiango i te pae",
-      "home": "Kāinga"
+      "home": "Kāinga",
+      "elements": "Huānga",
+      "layers": "Paparanga",
+      "tools": "Taputapu ētita"
     },
     "agent": {
       "introTitle": "Kōrerotia ki te AI tō e hiahia ana",
@@ -3670,6 +3674,54 @@
       "changes": "Ngā whakatika kua mahia: {{count}}",
       "undo": "Wetekia",
       "openGenerator": "Arotake ka waihanga"
+    },
+    "shape": {
+      "rect": "Tapawhā hāngai",
+      "ellipse": "Porowhita",
+      "triangle": "Tapatoru",
+      "star": "Whetū",
+      "heart": "Manawa",
+      "hexagon": "Tapaono",
+      "line": "Rārangi",
+      "arrow": "Pere",
+      "style": "Āhua o te hanga",
+      "fill": "Whakakī",
+      "fillOn": "Whakakī",
+      "outline": "Tapa",
+      "outlineOn": "Tapa",
+      "outlineWidth": "Whānui o te tapa {{value}}"
+    },
+    "elements": {
+      "shapes": "Hanga",
+      "hint": "Pāwhiria tētahi hanga hei tāpiri ki te whārangi. Tōia ngā kakau taha hei whakaroa, ngā kokonga hei panoni i te rahi."
+    },
+    "layers": {
+      "text": "Kuputuhi",
+      "media": "Pāpāho",
+      "empty": "Kāore anō he mea i te whārangi i te pūpānga pūrei.",
+      "lock": "Raka",
+      "unlock": "Wetewete",
+      "show": "Whakaatu",
+      "hide": "Huna",
+      "hint": "Ko te runga o te rārangi te mua. Tōia hei whakaraupapa anō. Ka taea anake te kōwhiri i ngā paparanga kua rakaina, kua hunaia rānei i konei."
+    },
+    "blend": {
+      "normal": "Noa",
+      "multiply": "Whakarea",
+      "screen": "Mata",
+      "overlay": "Tāpaki",
+      "darken": "Whakapōuri",
+      "lighten": "Whakamārama",
+      "colorDodge": "Karo tae",
+      "colorBurn": "Tahu tae",
+      "hardLight": "Rama mārō",
+      "softLight": "Rama ngohengohe",
+      "difference": "Rerekētanga",
+      "exclusion": "Whakakorenga",
+      "hue": "Kano",
+      "saturation": "Kukū",
+      "color": "Tae",
+      "luminosity": "Pīataata"
     }
   },
   "fractions": {

@@ -3555,7 +3555,8 @@
       "shadowOpacity": "قوة {{value}}%",
       "shadowBlur": "تمويه {{value}}",
       "shadowX": "إزاحة سينية {{value}}",
-      "shadowY": "إزاحة صادية {{value}}"
+      "shadowY": "إزاحة صادية {{value}}",
+      "blend": "المزج"
     },
     "menu": {
       "addText": "إضافة نص",
@@ -3582,7 +3583,10 @@
       "generations": "الإنشاءات",
       "edit": "تعديل",
       "collapse": "طي اللوحة",
-      "home": "البيت"
+      "home": "البيت",
+      "elements": "العناصر",
+      "layers": "الطبقات",
+      "tools": "أدوات المحرر"
     },
     "agent": {
       "introTitle": "قول للذكاء الاصطناعي وش تبي",
@@ -3605,6 +3609,54 @@
       "changes": "التعديلات اللي تمت: {{count}}",
       "undo": "تراجع",
       "openGenerator": "راجع وأنشئ"
+    },
+    "shape": {
+      "rect": "مستطيل",
+      "ellipse": "دائرة",
+      "triangle": "مثلث",
+      "star": "نجمة",
+      "heart": "قلب",
+      "hexagon": "سداسي",
+      "line": "خط",
+      "arrow": "سهم",
+      "style": "نمط الشكل",
+      "fill": "تعبئة",
+      "fillOn": "تعبئة",
+      "outline": "حدود",
+      "outlineOn": "حدود",
+      "outlineWidth": "عرض الحدود {{value}}"
+    },
+    "elements": {
+      "shapes": "الأشكال",
+      "hint": "اضغط على شكل عشان تضيفه للصفحة. اسحب المقابض الجانبية عشان تمدّه، والزوايا عشان تغيّر حجمه."
+    },
+    "layers": {
+      "text": "نص",
+      "media": "وسائط",
+      "empty": "لسه ما في شي على الصفحة عند مؤشر التشغيل.",
+      "lock": "قفل",
+      "unlock": "فك القفل",
+      "show": "إظهار",
+      "hide": "إخفاء",
+      "hint": "أول القائمة هو الواجهة. اسحب عشان ترتّب. الطبقات المقفولة والمخفية تقدر تختارها من هنا بس."
+    },
+    "blend": {
+      "normal": "عادي",
+      "multiply": "ضرب",
+      "screen": "شاشة",
+      "overlay": "تراكب",
+      "darken": "تعتيم",
+      "lighten": "تفتيح",
+      "colorDodge": "تفادي اللون",
+      "colorBurn": "حرق اللون",
+      "hardLight": "ضوء ساطع",
+      "softLight": "ضوء خافت",
+      "difference": "الفرق",
+      "exclusion": "استبعاد",
+      "hue": "تدرج اللون",
+      "saturation": "التشبع",
+      "color": "اللون",
+      "luminosity": "الإضاءة"
     }
   },
   "fractions": {

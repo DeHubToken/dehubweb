@@ -5937,7 +5937,8 @@
       "shadowOpacity": "強さ{{value}}%",
       "shadowBlur": "ぼかし{{value}}",
       "shadowX": "オフセットX {{value}}",
-      "shadowY": "オフセットY {{value}}"
+      "shadowY": "オフセットY {{value}}",
+      "blend": "描画モード"
     },
     "menu": {
       "addText": "テキストを追加",
@@ -5964,7 +5965,10 @@
       "generations": "生成履歴",
       "edit": "編集",
       "collapse": "パネルを閉じる",
-      "home": "ホーム"
+      "home": "ホーム",
+      "elements": "要素",
+      "layers": "レイヤー",
+      "tools": "エディターツール"
     },
     "agent": {
       "introTitle": "AIにやりたいことを伝えましょう",
@@ -5987,6 +5991,54 @@
       "changes": "編集数: {{count}}",
       "undo": "元に戻す",
       "openGenerator": "確認して生成"
+    },
+    "shape": {
+      "rect": "長方形",
+      "ellipse": "円",
+      "triangle": "三角形",
+      "star": "星",
+      "heart": "ハート",
+      "hexagon": "六角形",
+      "line": "線",
+      "arrow": "矢印",
+      "style": "シェイプのスタイル",
+      "fill": "塗り",
+      "fillOn": "塗り",
+      "outline": "アウトライン",
+      "outlineOn": "アウトライン",
+      "outlineWidth": "アウトラインの太さ {{value}}"
+    },
+    "elements": {
+      "shapes": "シェイプ",
+      "hint": "シェイプをクリックするとページに追加されます。側面のハンドルをドラッグで伸縮、角のハンドルでサイズを変更できます。"
+    },
+    "layers": {
+      "text": "テキスト",
+      "media": "メディア",
+      "empty": "再生ヘッドの位置にはまだ何もありません。",
+      "lock": "ロック",
+      "unlock": "ロック解除",
+      "show": "表示",
+      "hide": "非表示",
+      "hint": "リストの一番上が最前面です。ドラッグで重ね順を変更できます。ロック中・非表示のレイヤーはここでのみ選択できます。"
+    },
+    "blend": {
+      "normal": "通常",
+      "multiply": "乗算",
+      "screen": "スクリーン",
+      "overlay": "オーバーレイ",
+      "darken": "比較（暗）",
+      "lighten": "比較（明）",
+      "colorDodge": "覆い焼きカラー",
+      "colorBurn": "焼き込みカラー",
+      "hardLight": "ハードライト",
+      "softLight": "ソフトライト",
+      "difference": "差の絶対値",
+      "exclusion": "除外",
+      "hue": "色相",
+      "saturation": "彩度",
+      "color": "カラー",
+      "luminosity": "輝度"
     }
   }
 }

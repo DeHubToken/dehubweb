@@ -3623,7 +3623,8 @@
       "shadowOpacity": "Ƙarfin {{value}}%",
       "shadowBlur": "Dishewa {{value}}",
       "shadowX": "Matsawa X {{value}}",
-      "shadowY": "Matsawa Y {{value}}"
+      "shadowY": "Matsawa Y {{value}}",
+      "blend": "Haɗawa"
     },
     "menu": {
       "addText": "Ƙara rubutu",
@@ -3650,7 +3651,10 @@
       "generations": "Abubuwan da aka ƙirƙira",
       "edit": "Gyara",
       "collapse": "Rufe allo",
-      "home": "Gida"
+      "home": "Gida",
+      "elements": "Abubuwa",
+      "layers": "Yadudduka",
+      "tools": "Kayan aikin gyara"
     },
     "agent": {
       "introTitle": "Faɗa wa AI abin da kake so",
@@ -3673,6 +3677,54 @@
       "changes": "Gyare-gyaren da aka yi: {{count}}",
       "undo": "Soke",
       "openGenerator": "Duba kuma ƙirƙira"
+    },
+    "shape": {
+      "rect": "Murabba'i mai tsayi",
+      "ellipse": "Da'ira",
+      "triangle": "Alwatika",
+      "star": "Tauraro",
+      "heart": "Zuciya",
+      "hexagon": "Mai kusurwa shida",
+      "line": "Layi",
+      "arrow": "Kibiya",
+      "style": "Salon siffa",
+      "fill": "Cikawa",
+      "fillOn": "Cikawa",
+      "outline": "Iyaka",
+      "outlineOn": "Iyaka",
+      "outlineWidth": "Faɗin iyaka {{value}}"
+    },
+    "elements": {
+      "shapes": "Siffofi",
+      "hint": "Danna siffa don ƙara ta a shafin. Ja maƙallan gefe don miƙa ta, kusurwoyi kuma don canja girmanta."
+    },
+    "layers": {
+      "text": "Rubutu",
+      "media": "Kafofin watsa labarai",
+      "empty": "Babu komai a shafin a wurin kunnawa tukuna.",
+      "lock": "Kulle",
+      "unlock": "Buɗe kulle",
+      "show": "Nuna",
+      "hide": "Ɓoye",
+      "hint": "Saman jerin shi ne gaba. Ja don sake tsarawa. Yadudduka da aka kulle ko aka ɓoye za a iya zaɓar su nan kawai."
+    },
+    "blend": {
+      "normal": "Na al'ada",
+      "multiply": "Ninkawa",
+      "screen": "Allo",
+      "overlay": "Ɗorawa",
+      "darken": "Duhunta",
+      "lighten": "Haskaka",
+      "colorDodge": "Haskaka launi",
+      "colorBurn": "Ƙona launi",
+      "hardLight": "Haske mai ƙarfi",
+      "softLight": "Haske mai laushi",
+      "difference": "Bambanci",
+      "exclusion": "Keɓewa",
+      "hue": "Nau'in launi",
+      "saturation": "Zurfin launi",
+      "color": "Launi",
+      "luminosity": "Haske"
     }
   },
   "fractions": {

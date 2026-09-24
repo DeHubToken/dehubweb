@@ -23,6 +23,8 @@ import { TextPanel } from './panels/TextPanel';
 import { GeneratePanel } from './panels/GeneratePanel';
 import { LibraryPanel } from './panels/LibraryPanel';
 import { AgentPanel } from './panels/AgentPanel';
+import { ElementsPanel } from './panels/ElementsPanel';
+import { LayersPanel } from './panels/LayersPanel';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 // The media panel pulls in IndexedDB and cloud-asset plumbing; keep it out of
@@ -40,6 +42,10 @@ export function PanelBody({ panel }: { panel: EditorPanel }) {
       return <AgentPanel />;
     case 'design':
       return <DesignPanel />;
+    case 'elements':
+      return <ElementsPanel />;
+    case 'layers':
+      return <LayersPanel />;
     case 'assets':
       return (
         <Suspense fallback={<DeHubPageLoader minHeight="40vh" />}>
@@ -105,7 +111,7 @@ export function EditorRail() {
 
   return (
     <nav
-      aria-label="Editor tools"
+      aria-label={t('editor.rail.tools')}
       className="hidden w-[4.5rem] shrink-0 flex-col gap-1 border-r border-white/10 bg-black/60 py-2 backdrop-blur-[24px] md:flex"
     >
       {RAIL_TABS.map((tab) => renderTab(tab))}

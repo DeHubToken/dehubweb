@@ -6,7 +6,7 @@
  */
 import { create } from 'zustand';
 
-export type EditorPanel = 'agent' | 'design' | 'assets' | 'media' | 'text' | 'generate' | 'library' | 'inspector';
+export type EditorPanel = 'agent' | 'design' | 'elements' | 'layers' | 'assets' | 'media' | 'text' | 'generate' | 'library' | 'inspector';
 
 /** A generation the AI agent prepared; the Generate panel shows it for the user to confirm. */
 export interface GeneratePrefill {

@@ -5953,7 +5953,8 @@
       "shadowOpacity": "Fuerza {{value}}%",
       "shadowBlur": "Desenfoque {{value}}",
       "shadowX": "Desplazamiento X {{value}}",
-      "shadowY": "Desplazamiento Y {{value}}"
+      "shadowY": "Desplazamiento Y {{value}}",
+      "blend": "Fusión"
     },
     "menu": {
       "addText": "Añadir texto",
@@ -5980,7 +5981,10 @@
       "generations": "Generaciones",
       "edit": "Editar",
       "collapse": "Contraer panel",
-      "home": "Inicio"
+      "home": "Inicio",
+      "elements": "Elementos",
+      "layers": "Capas",
+      "tools": "Herramientas del editor"
     },
     "agent": {
       "introTitle": "Dile a la IA lo que quieres",
@@ -6003,6 +6007,54 @@
       "changes": "Cambios realizados: {{count}}",
       "undo": "Deshacer",
       "openGenerator": "Revisar y generar"
+    },
+    "shape": {
+      "rect": "Rectángulo",
+      "ellipse": "Círculo",
+      "triangle": "Triángulo",
+      "star": "Estrella",
+      "heart": "Corazón",
+      "hexagon": "Hexágono",
+      "line": "Línea",
+      "arrow": "Flecha",
+      "style": "Estilo de forma",
+      "fill": "Relleno",
+      "fillOn": "Relleno",
+      "outline": "Contorno",
+      "outlineOn": "Contorno",
+      "outlineWidth": "Grosor del contorno {{value}}"
+    },
+    "elements": {
+      "shapes": "Formas",
+      "hint": "Haz clic en una forma para añadirla a la página. Arrastra los tiradores laterales para estirarla y las esquinas para cambiar su tamaño."
+    },
+    "layers": {
+      "text": "Texto",
+      "media": "Multimedia",
+      "empty": "Todavía no hay nada en la página en el cabezal de reproducción.",
+      "lock": "Bloquear",
+      "unlock": "Desbloquear",
+      "show": "Mostrar",
+      "hide": "Ocultar",
+      "hint": "Lo primero de la lista queda al frente. Arrastra para reordenar. Las capas bloqueadas y ocultas solo se pueden seleccionar aquí."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Multiplicar",
+      "screen": "Trama",
+      "overlay": "Superponer",
+      "darken": "Oscurecer",
+      "lighten": "Aclarar",
+      "colorDodge": "Sobreexponer color",
+      "colorBurn": "Subexponer color",
+      "hardLight": "Luz fuerte",
+      "softLight": "Luz suave",
+      "difference": "Diferencia",
+      "exclusion": "Exclusión",
+      "hue": "Tono",
+      "saturation": "Saturación",
+      "color": "Color",
+      "luminosity": "Luminosidad"
     }
   }
 }

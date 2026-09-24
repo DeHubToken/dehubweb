@@ -3487,7 +3487,8 @@
       "shadowOpacity": "Fanga {{value}}%",
       "shadowBlur": "Dibiya {{value}}",
       "shadowX": "Yɔrɔ bila X {{value}}",
-      "shadowY": "Yɔrɔ bila Y {{value}}"
+      "shadowY": "Yɔrɔ bila Y {{value}}",
+      "blend": "Ɲagami"
     },
     "menu": {
       "addText": "Sɛbɛn fara a kan",
@@ -3514,7 +3515,10 @@
       "generations": "Dilanninw",
       "edit": "Labɛn",
       "collapse": "Panɛli dogo",
-      "home": "Kɛnɛ"
+      "home": "Kɛnɛ",
+      "elements": "Fɛnw",
+      "layers": "Kɔrɔw",
+      "tools": "Latilenni minɛnw"
     },
     "agent": {
       "introTitle": "I b'a fɛ min, o fɔ AI ye",
@@ -3537,6 +3541,54 @@
       "changes": "Yɛlɛma minnu kɛra: {{count}}",
       "undo": "Segin kɔ",
       "openGenerator": "A lajɛ ka dilan"
+    },
+    "shape": {
+      "rect": "Kɛrɛnaani janyalen",
+      "ellipse": "Kori",
+      "triangle": "Kɛrɛsaba",
+      "star": "Dolo",
+      "heart": "Dusukun",
+      "hexagon": "Kɛrɛwɔɔrɔ",
+      "line": "Sira",
+      "arrow": "Bìnɛ",
+      "style": "Cogoya jogo",
+      "fill": "Fa",
+      "fillOn": "Fa",
+      "outline": "Dan sira",
+      "outlineOn": "Dan sira",
+      "outlineWidth": "Dan sira bonya {{value}}"
+    },
+    "elements": {
+      "shapes": "Cogoyaw",
+      "hint": "Cogoya dɔ digi ka a fara sɛbɛnbu kan. Kɛrɛfɛ minɛnw sama ka a janya, a kɛrɛw ka a hakɛ yɛlɛma."
+    },
+    "layers": {
+      "text": "Sɛbɛn",
+      "media": "Mediya",
+      "empty": "Foyi tɛ sɛbɛnbu kan fɔli yɔrɔ la fɔlɔ.",
+      "lock": "A datugu",
+      "unlock": "A dayɛlɛ",
+      "show": "A jira",
+      "hide": "A dogo",
+      "hint": "Lisi sanfɛla de ye ɲɛfɛla ye. A sama ka u sigicogo yɛlɛma. Kɔrɔ datugulenw ni dogolenw bɛ se ka ta yan dɔrɔn."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Caya",
+      "screen": "Ekaran",
+      "overlay": "Sanfɛla",
+      "darken": "Dibiya",
+      "lighten": "Yeelenya",
+      "colorDodge": "Kulɛri yeelenya",
+      "colorBurn": "Kulɛri jeni",
+      "hardLight": "Yeelen barika",
+      "softLight": "Yeelen nɔgɔn",
+      "difference": "Danfara",
+      "exclusion": "Bɔli",
+      "hue": "Kulɛri suguya",
+      "saturation": "Kulɛri barika",
+      "color": "Kulɛri",
+      "luminosity": "Yeelen hakɛ"
     }
   },
   "fractions": {

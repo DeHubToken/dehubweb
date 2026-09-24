@@ -10,13 +10,13 @@ import { useTranslation } from "react-i18next";
 import {
   AlignCenterHorizontal, AlignCenterVertical, AlignEndHorizontal, AlignEndVertical,
   AlignStartHorizontal, AlignStartVertical, Bold, FlipHorizontal2, FlipVertical2, Italic,
-  Maximize, Minimize, RotateCcw, Underline, CaseUpper, Frame,
+  Maximize, Minimize, RotateCcw, Underline, CaseUpper, Frame, Eye, EyeOff, Lock, Unlock,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";
-import type { Clip, ClipShadow, MediaClip, TextClip } from "@/lib/editor/types";
+import { BLEND_MODES, type BlendMode, type Clip, type ClipShadow, type MediaClip, type TextClip } from "@/lib/editor/types";
 import { clipBoxForSize, getTransform, placementPatch } from "@/lib/editor/render";
 
 const DEFAULT_SHADOW: ClipShadow = { color: "#000000", opacity: 0.5, blur: 24, offsetX: 0, offsetY: 12 };
@@ -34,6 +34,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
   const tr = getTransform(clip);
   const mediaClip = clip.kind === "image" || clip.kind === "video" ? (clip as MediaClip) : null;
   const text = clip.kind === "text" ? (clip as TextClip) : null;
+  const shape = clip.kind === "shape" ? clip : null;
   const source = mediaClip ? media.find((m) => m.id === mediaClip.mediaId) : null;
 
   /** Live slider: one undo step per drag. */
@@ -89,11 +90,50 @@ export function LayerSection({ clip }: { clip: Clip }) {
     top: (value: number) => t("editor.layer.cropTop", { value }),
     bottom: (value: number) => t("editor.layer.cropBottom", { value }),
   };
+  const blendLabels: Record<BlendMode, string> = {
+    normal: t("editor.blend.normal"),
+    multiply: t("editor.blend.multiply"),
+    screen: t("editor.blend.screen"),
+    overlay: t("editor.blend.overlay"),
+    darken: t("editor.blend.darken"),
+    lighten: t("editor.blend.lighten"),
+    "color-dodge": t("editor.blend.colorDodge"),
+    "color-burn": t("editor.blend.colorBurn"),
+    "hard-light": t("editor.blend.hardLight"),
+    "soft-light": t("editor.blend.softLight"),
+    difference: t("editor.blend.difference"),
+    exclusion: t("editor.blend.exclusion"),
+    hue: t("editor.blend.hue"),
+    saturation: t("editor.blend.saturation"),
+    color: t("editor.blend.color"),
+    luminosity: t("editor.blend.luminosity"),
+  };
   const shadow = clip.shadow;
   const crop = mediaClip?.crop ?? { left: 0, top: 0, right: 0, bottom: 0 };
 
   return (
     <div className="space-y-3 pt-2">
+      <div className="grid grid-cols-[1fr_auto_auto] items-end gap-1">
+        <div className="space-y-1">
+          <Label className="text-[10px] uppercase tracking-wide text-white/40">{t("editor.layer.blend")}</Label>
+          <select
+            value={clip.blend ?? "normal"}
+            onChange={(e) => patchClip(clip.id, { blend: e.target.value as BlendMode })}
+            className="h-7 w-full rounded-md border border-white/10 bg-white/5 px-2 text-xs text-white"
+          >
+            {BLEND_MODES.map((m) => (
+              <option key={m} value={m} className="bg-black">{blendLabels[m]}</option>
+            ))}
+          </select>
+        </div>
+        {iconBtn(clip.locked ? t("editor.layers.unlock") : t("editor.layers.lock"),
+          clip.locked ? <Lock className="mx-1.5 h-3.5 w-3.5" /> : <Unlock className="mx-1.5 h-3.5 w-3.5" />,
+          () => patchClip(clip.id, { locked: !clip.locked }), !!clip.locked)}
+        {iconBtn(clip.hidden ? t("editor.layers.show") : t("editor.layers.hide"),
+          clip.hidden ? <EyeOff className="mx-1.5 h-3.5 w-3.5" /> : <Eye className="mx-1.5 h-3.5 w-3.5" />,
+          () => patchClip(clip.id, { hidden: !clip.hidden }), !!clip.hidden)}
+      </div>
+
       <p className="text-[10px] uppercase tracking-wide text-white/40">{t("editor.layer.alignToPage")}</p>
       <div className="grid grid-cols-6 gap-1">
         {iconBtn(t("editor.layer.alignLeft"), <AlignStartVertical className="h-3.5 w-3.5" />, () => align("x", "start"))}
@@ -103,6 +143,52 @@ export function LayerSection({ clip }: { clip: Clip }) {
         {iconBtn(t("editor.layer.alignMiddle"), <AlignCenterHorizontal className="h-3.5 w-3.5" />, () => align("y", "centre"))}
         {iconBtn(t("editor.layer.alignBottom"), <AlignEndHorizontal className="h-3.5 w-3.5" />, () => align("y", "end"))}
       </div>
+
+      {shape && (
+        <>
+          <div className="grid grid-cols-2 gap-1">
+            {iconBtn(t("editor.menu.flipH"), <FlipHorizontal2 className="h-3.5 w-3.5" />,
+              () => patchClip(clip.id, placementPatch(clip, { flipH: !tr.flipH })), !!tr.flipH)}
+            {iconBtn(t("editor.menu.flipV"), <FlipVertical2 className="h-3.5 w-3.5" />,
+              () => patchClip(clip.id, placementPatch(clip, { flipV: !tr.flipV })), !!tr.flipV)}
+          </div>
+          {live(t("editor.layer.size", { value: Math.round(tr.scale * 100) }), tr.scale, 0.05, 6, 0.01,
+            (v) => patchClipLive(clip.id, placementPatch(clip, { scale: v })))}
+          <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">{t("editor.shape.style")}</p>
+          {shape.shape !== "line" && shape.shape !== "arrow" && (
+            <div className="grid grid-cols-[1fr_auto] items-end gap-2">
+              <div className="space-y-1">
+                <Label className="text-[10px] uppercase tracking-wide text-white/40">{t("editor.shape.fill")}</Label>
+                <input type="color" value={shape.fill ?? "#7c5cff"} disabled={!shape.fill}
+                  onChange={(e) => patchClip(clip.id, { fill: e.target.value })}
+                  className="h-7 w-full cursor-pointer rounded-md border border-white/10 bg-white/5 disabled:opacity-40" />
+              </div>
+              <label className="flex h-7 items-center gap-1.5 text-[11px] text-white/70">
+                <input type="checkbox" checked={!!shape.fill} className="h-3.5 w-3.5 accent-white"
+                  onChange={(e) => patchClip(clip.id, { fill: e.target.checked ? "#7c5cff" : null })} />
+                {t("editor.shape.fillOn")}
+              </label>
+            </div>
+          )}
+          <div className="grid grid-cols-[1fr_auto] items-end gap-2">
+            <div className="space-y-1">
+              <Label className="text-[10px] uppercase tracking-wide text-white/40">{t("editor.shape.outline")}</Label>
+              <input type="color" value={shape.stroke?.color ?? "#ffffff"} disabled={!shape.stroke}
+                onChange={(e) => patchClip(clip.id, { stroke: { width: shape.stroke?.width ?? 6, color: e.target.value } })}
+                className="h-7 w-full cursor-pointer rounded-md border border-white/10 bg-white/5 disabled:opacity-40" />
+            </div>
+            <label className="flex h-7 items-center gap-1.5 text-[11px] text-white/70">
+              <input type="checkbox" checked={!!shape.stroke} className="h-3.5 w-3.5 accent-white"
+                onChange={(e) => patchClip(clip.id, { stroke: e.target.checked ? { color: "#ffffff", width: 6 } : null })} />
+              {t("editor.shape.outlineOn")}
+            </label>
+          </div>
+          {shape.stroke && live(t("editor.shape.outlineWidth", { value: Math.round(shape.stroke.width) }), shape.stroke.width, 1, 60, 1,
+            (v) => patchClipLive(clip.id, { stroke: { ...shape.stroke!, width: v } }))}
+          {shape.shape === "rect" && live(t("editor.layer.cornerRounding", { value: Math.round(shape.radius ?? 0) }), shape.radius ?? 0, 0, 540, 1,
+            (v) => patchClipLive(clip.id, { radius: v }))}
+        </>
+      )}
 
       {mediaClip && (
         <>

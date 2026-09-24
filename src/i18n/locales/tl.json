@@ -5706,7 +5706,8 @@
       "shadowOpacity": "Lakas {{value}}%",
       "shadowBlur": "Blur {{value}}",
       "shadowX": "Offset X {{value}}",
-      "shadowY": "Offset Y {{value}}"
+      "shadowY": "Offset Y {{value}}",
+      "blend": "Blend"
     },
     "menu": {
       "addText": "Magdagdag ng teksto",
@@ -5733,7 +5734,10 @@
       "generations": "Mga nagawa",
       "edit": "I-edit",
       "collapse": "I-collapse ang panel",
-      "home": "Home"
+      "home": "Home",
+      "elements": "Mga elemento",
+      "layers": "Mga layer",
+      "tools": "Mga tool sa pag-edit"
     },
     "agent": {
       "introTitle": "Sabihin sa AI ang gusto mo",
@@ -5756,6 +5760,54 @@
       "changes": "Mga nagawang edit: {{count}}",
       "undo": "I-undo",
       "openGenerator": "Suriin at gumawa"
+    },
+    "shape": {
+      "rect": "Parihaba",
+      "ellipse": "Bilog",
+      "triangle": "Tatsulok",
+      "star": "Bituin",
+      "heart": "Puso",
+      "hexagon": "Heksagono",
+      "line": "Linya",
+      "arrow": "Arrow",
+      "style": "Estilo ng hugis",
+      "fill": "Fill",
+      "fillOn": "Fill",
+      "outline": "Outline",
+      "outlineOn": "Outline",
+      "outlineWidth": "Kapal ng outline {{value}}"
+    },
+    "elements": {
+      "shapes": "Mga hugis",
+      "hint": "I-click ang isang hugis para idagdag ito sa page. I-drag ang mga handle sa gilid para iunat ito, ang mga sulok para baguhin ang laki."
+    },
+    "layers": {
+      "text": "Teksto",
+      "media": "Media",
+      "empty": "Wala pang laman ang page sa playhead.",
+      "lock": "I-lock",
+      "unlock": "I-unlock",
+      "show": "Ipakita",
+      "hide": "Itago",
+      "hint": "Ang itaas ng listahan ang nasa harap. I-drag para ayusin ang pagkakasunod. Dito lang mapipili ang mga naka-lock at nakatagong layer."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Multiply",
+      "screen": "Screen",
+      "overlay": "Overlay",
+      "darken": "Darken",
+      "lighten": "Lighten",
+      "colorDodge": "Color dodge",
+      "colorBurn": "Color burn",
+      "hardLight": "Hard light",
+      "softLight": "Soft light",
+      "difference": "Difference",
+      "exclusion": "Exclusion",
+      "hue": "Hue",
+      "saturation": "Saturation",
+      "color": "Kulay",
+      "luminosity": "Luminosity"
     }
   },
   "walletSelector": {

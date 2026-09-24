@@ -5890,7 +5890,8 @@
       "shadowOpacity": "Nguvu {{value}}%",
       "shadowBlur": "Ukungu {{value}}",
       "shadowX": "Msogeo X {{value}}",
-      "shadowY": "Msogeo Y {{value}}"
+      "shadowY": "Msogeo Y {{value}}",
+      "blend": "Changanya"
     },
     "menu": {
       "addText": "Weka maandishi",
@@ -5917,7 +5918,10 @@
       "generations": "Vilivyotengenezwa",
       "edit": "Hariri",
       "collapse": "Kunja paneli",
-      "home": "Nyumbani"
+      "home": "Nyumbani",
+      "elements": "Vipengele",
+      "layers": "Tabaka",
+      "tools": "Zana za kuhariri"
     },
     "agent": {
       "introTitle": "Iambie AI unachotaka",
@@ -5940,6 +5944,54 @@
       "changes": "Mabadiliko yaliyofanywa: {{count}}",
       "undo": "Tendua",
       "openGenerator": "Kagua na utengeneze"
+    },
+    "shape": {
+      "rect": "Mstatili",
+      "ellipse": "Duara",
+      "triangle": "Pembetatu",
+      "star": "Nyota",
+      "heart": "Moyo",
+      "hexagon": "Heksagoni",
+      "line": "Mstari",
+      "arrow": "Mshale",
+      "style": "Mtindo wa umbo",
+      "fill": "Jaza",
+      "fillOn": "Jaza",
+      "outline": "Mstari wa nje",
+      "outlineOn": "Mstari wa nje",
+      "outlineWidth": "Upana wa mstari wa nje {{value}}"
+    },
+    "elements": {
+      "shapes": "Maumbo",
+      "hint": "Bofya umbo ili kuliongeza kwenye ukurasa. Buruta vishikio vya pembeni kulinyoosha, na kona kubadilisha ukubwa."
+    },
+    "layers": {
+      "text": "Maandishi",
+      "media": "Midia",
+      "empty": "Bado hakuna kitu kwenye ukurasa katika kichwa cha kucheza.",
+      "lock": "Funga",
+      "unlock": "Fungua",
+      "show": "Onyesha",
+      "hide": "Ficha",
+      "hint": "Juu ya orodha ndiyo mbele. Buruta kupanga upya. Tabaka zilizofungwa na zilizofichwa zinaweza kuchaguliwa hapa tu."
+    },
+    "blend": {
+      "normal": "Kawaida",
+      "multiply": "Zidisha",
+      "screen": "Skrini",
+      "overlay": "Funika",
+      "darken": "Fanya giza",
+      "lighten": "Fanya angavu",
+      "colorDodge": "Ng'arisha rangi",
+      "colorBurn": "Choma rangi",
+      "hardLight": "Mwanga mkali",
+      "softLight": "Mwanga laini",
+      "difference": "Tofauti",
+      "exclusion": "Utengaji",
+      "hue": "Toni ya rangi",
+      "saturation": "Ukolevu",
+      "color": "Rangi",
+      "luminosity": "Mng'ao"
     }
   }
 }

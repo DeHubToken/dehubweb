@@ -526,13 +526,15 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
   const width = Math.max(2, clip.duration * zoom);
 
   const media = useEditorStore((s) =>
-    clip.kind === "text" ? null : s.media.find((m) => m.id === clip.mediaId) ?? null,
+    "mediaId" in clip ? s.media.find((m) => m.id === clip.mediaId) ?? null : null,
   );
 
   const label =
     clip.kind === "text"
       ? `T · ${(clip as { text: string }).text || "Text"}`
-      : media?.name ?? clip.kind;
+      : clip.kind === "shape"
+        ? "◆"
+        : media?.name ?? clip.kind;
 
   // ── Drag to move (with optional cross-track) ──
   const dragRef = useRef<{
@@ -568,7 +570,7 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
       const hover = tracks[idx];
       if (hover) {
         const compat =
-          (hover.kind === "video" && (clip.kind === "video" || clip.kind === "image")) ||
+          (hover.kind === "video" && (clip.kind === "video" || clip.kind === "image" || clip.kind === "shape")) ||
           (hover.kind === "audio" && clip.kind === "audio") ||
           (hover.kind === "text" && clip.kind === "text");
         if (compat) targetTrackId = hover.id;

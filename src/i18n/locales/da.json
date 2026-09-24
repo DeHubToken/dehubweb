@@ -5864,7 +5864,8 @@
       "shadowOpacity": "Styrke {{value}}%",
       "shadowBlur": "Slør {{value}}",
       "shadowX": "Forskydning X {{value}}",
-      "shadowY": "Forskydning Y {{value}}"
+      "shadowY": "Forskydning Y {{value}}",
+      "blend": "Blanding"
     },
     "menu": {
       "addText": "Tilføj tekst",
@@ -5891,7 +5892,10 @@
       "generations": "Genereringer",
       "edit": "Rediger",
       "collapse": "Skjul panel",
-      "home": "Hjem"
+      "home": "Hjem",
+      "elements": "Elementer",
+      "layers": "Lag",
+      "tools": "Redigeringsværktøjer"
     },
     "agent": {
       "introTitle": "Fortæl AI'en, hvad du vil have",
@@ -5914,6 +5918,54 @@
       "changes": "Redigeringer foretaget: {{count}}",
       "undo": "Fortryd",
       "openGenerator": "Gennemse og generér"
+    },
+    "shape": {
+      "rect": "Rektangel",
+      "ellipse": "Cirkel",
+      "triangle": "Trekant",
+      "star": "Stjerne",
+      "heart": "Hjerte",
+      "hexagon": "Sekskant",
+      "line": "Linje",
+      "arrow": "Pil",
+      "style": "Formstil",
+      "fill": "Fyld",
+      "fillOn": "Fyld",
+      "outline": "Kontur",
+      "outlineOn": "Kontur",
+      "outlineWidth": "Konturbredde {{value}}"
+    },
+    "elements": {
+      "shapes": "Former",
+      "hint": "Klik på en form for at tilføje den til siden. Træk i sidehåndtagene for at strække den og i hjørnerne for at ændre størrelsen."
+    },
+    "layers": {
+      "text": "Tekst",
+      "media": "Medier",
+      "empty": "Der er intet på siden ved afspilningshovedet endnu.",
+      "lock": "Lås",
+      "unlock": "Lås op",
+      "show": "Vis",
+      "hide": "Skjul",
+      "hint": "Øverst på listen er forrest. Træk for at ændre rækkefølgen. Låste og skjulte lag kan kun vælges her."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Multiplicer",
+      "screen": "Skærm",
+      "overlay": "Overlejring",
+      "darken": "Mørkere",
+      "lighten": "Lysere",
+      "colorDodge": "Farveundvigelse",
+      "colorBurn": "Farvebrænding",
+      "hardLight": "Hårdt lys",
+      "softLight": "Blødt lys",
+      "difference": "Forskel",
+      "exclusion": "Udelukkelse",
+      "hue": "Nuance",
+      "saturation": "Mætning",
+      "color": "Farve",
+      "luminosity": "Lysstyrke"
     }
   }
 }

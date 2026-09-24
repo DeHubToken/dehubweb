@@ -5833,7 +5833,8 @@
       "shadowOpacity": "Força {{value}}%",
       "shadowBlur": "Difuminar {{value}}",
       "shadowX": "Desplaçament X {{value}}",
-      "shadowY": "Desplaçament Y {{value}}"
+      "shadowY": "Desplaçament Y {{value}}",
+      "blend": "Fusió"
     },
     "menu": {
       "addText": "Afegeix text",
@@ -5860,7 +5861,10 @@
       "generations": "Generacions",
       "edit": "Edita",
       "collapse": "Replega el tauler",
-      "home": "Inici"
+      "home": "Inici",
+      "elements": "Elements",
+      "layers": "Capes",
+      "tools": "Eines de l'editor"
     },
     "agent": {
       "introTitle": "Digues a la IA què vols",
@@ -5883,6 +5887,54 @@
       "changes": "Canvis fets: {{count}}",
       "undo": "Desfés",
       "openGenerator": "Revisa i genera"
+    },
+    "shape": {
+      "rect": "Rectangle",
+      "ellipse": "Cercle",
+      "triangle": "Triangle",
+      "star": "Estrella",
+      "heart": "Cor",
+      "hexagon": "Hexàgon",
+      "line": "Línia",
+      "arrow": "Fletxa",
+      "style": "Estil de la forma",
+      "fill": "Emplenament",
+      "fillOn": "Emplenament",
+      "outline": "Contorn",
+      "outlineOn": "Contorn",
+      "outlineWidth": "Gruix del contorn {{value}}"
+    },
+    "elements": {
+      "shapes": "Formes",
+      "hint": "Fes clic en una forma per afegir-la a la pàgina. Arrossega les nanses laterals per estirar-la i les cantonades per canviar-ne la mida."
+    },
+    "layers": {
+      "text": "Text",
+      "media": "Multimèdia",
+      "empty": "Encara no hi ha res a la pàgina al capçal de reproducció.",
+      "lock": "Bloca",
+      "unlock": "Desbloca",
+      "show": "Mostra",
+      "hide": "Amaga",
+      "hint": "La part superior de la llista és el davant. Arrossega per reordenar. Les capes blocades i amagades només es poden seleccionar aquí."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Multiplica",
+      "screen": "Pantalla",
+      "overlay": "Superposició",
+      "darken": "Enfosqueix",
+      "lighten": "Aclareix",
+      "colorDodge": "Esvaïment de color",
+      "colorBurn": "Cremat de color",
+      "hardLight": "Llum forta",
+      "softLight": "Llum suau",
+      "difference": "Diferència",
+      "exclusion": "Exclusió",
+      "hue": "To",
+      "saturation": "Saturació",
+      "color": "Color",
+      "luminosity": "Lluminositat"
     }
   }
 }

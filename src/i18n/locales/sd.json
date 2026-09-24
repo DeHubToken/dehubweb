@@ -3577,7 +3577,8 @@
       "shadowOpacity": "طاقت {{value}}%",
       "shadowBlur": "ڌنڌلاپڻ {{value}}",
       "shadowX": "آفسيٽ X {{value}}",
-      "shadowY": "آفسيٽ Y {{value}}"
+      "shadowY": "آفسيٽ Y {{value}}",
+      "blend": "ملاوٽ"
     },
     "menu": {
       "addText": "متن شامل ڪريو",
@@ -3604,7 +3605,10 @@
       "generations": "ٺاهيل",
       "edit": "ترميم",
       "collapse": "پينل بند ڪريو",
-      "home": "گھر"
+      "home": "گھر",
+      "elements": "عنصر",
+      "layers": "پرتون",
+      "tools": "ايڊيٽر ٽولز"
     },
     "agent": {
       "introTitle": "AI کي ٻڌايو ته توهان ڇا ٿا چاهيو",
@@ -3627,6 +3631,54 @@
       "changes": "ڪيل ترميمون: {{count}}",
       "undo": "واپس ڪريو",
       "openGenerator": "ڏسو ۽ ٺاهيو"
+    },
+    "shape": {
+      "rect": "مستطيل",
+      "ellipse": "گول",
+      "triangle": "ٽڪنڊو",
+      "star": "تارو",
+      "heart": "دل",
+      "hexagon": "ڇهه ڪنڊو",
+      "line": "لڪير",
+      "arrow": "تير",
+      "style": "شڪل جو انداز",
+      "fill": "ڀرڻ",
+      "fillOn": "ڀرڻ",
+      "outline": "آئوٽ لائين",
+      "outlineOn": "آئوٽ لائين",
+      "outlineWidth": "آئوٽ لائين جي ويڪر {{value}}"
+    },
+    "elements": {
+      "shapes": "شڪليون",
+      "hint": "صفحي ۾ شامل ڪرڻ لاءِ ڪنهن شڪل تي ڪلڪ ڪريو. ڊگهو ڪرڻ لاءِ پاسي وارا هينڊل ڇڪيو، ۽ سائيز بدلائڻ لاءِ ڪنڊون."
+    },
+    "layers": {
+      "text": "متن",
+      "media": "ميڊيا",
+      "empty": "پلي هيڊ تي اڃا صفحي تي ڪجهه به ناهي.",
+      "lock": "لاڪ ڪريو",
+      "unlock": "ان لاڪ ڪريو",
+      "show": "ڏيکاريو",
+      "hide": "لڪايو",
+      "hint": "لسٽ جو مٿيون حصو اڳيان آهي. ترتيب بدلائڻ لاءِ ڇڪيو. لاڪ ٿيل ۽ لڪيل پرتون صرف هتي چونڊي سگهجن ٿيون."
+    },
+    "blend": {
+      "normal": "عام",
+      "multiply": "ضرب",
+      "screen": "اسڪرين",
+      "overlay": "اوورلي",
+      "darken": "اونداهو ڪريو",
+      "lighten": "هلڪو ڪريو",
+      "colorDodge": "ڪلر ڊاج",
+      "colorBurn": "ڪلر برن",
+      "hardLight": "سخت روشني",
+      "softLight": "نرم روشني",
+      "difference": "فرق",
+      "exclusion": "خارج ڪرڻ",
+      "hue": "رنگت",
+      "saturation": "گهاٽائي",
+      "color": "رنگ",
+      "luminosity": "چمڪ"
     }
   },
   "fractions": {

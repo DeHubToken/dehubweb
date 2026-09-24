@@ -5941,7 +5941,8 @@
       "shadowOpacity": "강도 {{value}}%",
       "shadowBlur": "흐림 {{value}}",
       "shadowX": "X 오프셋 {{value}}",
-      "shadowY": "Y 오프셋 {{value}}"
+      "shadowY": "Y 오프셋 {{value}}",
+      "blend": "혼합 모드"
     },
     "menu": {
       "addText": "텍스트 추가",
@@ -5968,7 +5969,10 @@
       "generations": "생성 결과",
       "edit": "편집",
       "collapse": "패널 접기",
-      "home": "홈"
+      "home": "홈",
+      "elements": "요소",
+      "layers": "레이어",
+      "tools": "편집 도구"
     },
     "agent": {
       "introTitle": "AI에게 원하는 것을 말해 보세요",
@@ -5991,6 +5995,54 @@
       "changes": "적용된 편집: {{count}}",
       "undo": "실행 취소",
       "openGenerator": "검토 후 생성"
+    },
+    "shape": {
+      "rect": "직사각형",
+      "ellipse": "원",
+      "triangle": "삼각형",
+      "star": "별",
+      "heart": "하트",
+      "hexagon": "육각형",
+      "line": "선",
+      "arrow": "화살표",
+      "style": "도형 스타일",
+      "fill": "채우기",
+      "fillOn": "채우기",
+      "outline": "윤곽선",
+      "outlineOn": "윤곽선",
+      "outlineWidth": "윤곽선 두께 {{value}}"
+    },
+    "elements": {
+      "shapes": "도형",
+      "hint": "도형을 클릭하면 페이지에 추가됩니다. 옆 핸들을 드래그하면 늘어나고, 모서리를 드래그하면 크기가 바뀝니다."
+    },
+    "layers": {
+      "text": "텍스트",
+      "media": "미디어",
+      "empty": "재생 헤드 위치에 아직 아무것도 없습니다.",
+      "lock": "잠금",
+      "unlock": "잠금 해제",
+      "show": "표시",
+      "hide": "숨기기",
+      "hint": "목록 맨 위가 가장 앞입니다. 드래그해서 순서를 바꾸세요. 잠기거나 숨겨진 레이어는 여기서만 선택할 수 있습니다."
+    },
+    "blend": {
+      "normal": "표준",
+      "multiply": "곱하기",
+      "screen": "스크린",
+      "overlay": "오버레이",
+      "darken": "어둡게 하기",
+      "lighten": "밝게 하기",
+      "colorDodge": "색상 닷지",
+      "colorBurn": "색상 번",
+      "hardLight": "하드 라이트",
+      "softLight": "소프트 라이트",
+      "difference": "차이",
+      "exclusion": "제외",
+      "hue": "색조",
+      "saturation": "채도",
+      "color": "색상",
+      "luminosity": "광도"
     }
   }
 }

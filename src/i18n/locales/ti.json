@@ -3526,7 +3526,8 @@
       "shadowOpacity": "ሓይሊ {{value}}%",
       "shadowBlur": "ምድብዛዝ {{value}}",
       "shadowX": "ምልጋስ X {{value}}",
-      "shadowY": "ምልጋስ Y {{value}}"
+      "shadowY": "ምልጋስ Y {{value}}",
+      "blend": "ምሕዋስ"
     },
     "menu": {
       "addText": "ጽሑፍ ወስኽ",
@@ -3553,7 +3554,10 @@
       "generations": "ዝተፈጥሩ",
       "edit": "ኣርም",
       "collapse": "ሰሌዳ ዕጸፍ",
-      "home": "ገዛ"
+      "home": "ገዛ",
+      "elements": "ኣካላት",
+      "layers": "ደርብታት",
+      "tools": "መሳርሒታት ኣርታዒ"
     },
     "agent": {
       "introTitle": "ንAI እንታይ ከም እትደሊ ንገሮ",
@@ -3576,6 +3580,54 @@
       "changes": "ዝተገብሩ ምእራማት: {{count}}",
       "undo": "ምምላስ",
       "openGenerator": "ርኣይን ፍጠርን"
+    },
+    "shape": {
+      "rect": "ኣርባዕተ ኩርናዕ",
+      "ellipse": "ክቢ",
+      "triangle": "ሰለስተ ኩርናዕ",
+      "star": "ኮኾብ",
+      "heart": "ልቢ",
+      "hexagon": "ሽዱሽተ ኩርናዕ",
+      "line": "መስመር",
+      "arrow": "ፍላጻ",
+      "style": "ቅዲ ቅርጺ",
+      "fill": "ምምላእ",
+      "fillOn": "ምምላእ",
+      "outline": "ወሰን መስመር",
+      "outlineOn": "ወሰን መስመር",
+      "outlineWidth": "ስፍሓት ወሰን መስመር {{value}}"
+    },
+    "elements": {
+      "shapes": "ቅርጽታት",
+      "hint": "ናብ ገጽ ንምውሳኽ ኣብ ቅርጺ ጠውቕ። ንምዝርጋሕ ናይ ጎኒ መትሓዝያታት ጐትት፣ ዓቐን ንምቕያር ድማ ኩርናዓት።"
+    },
+    "layers": {
+      "text": "ጽሑፍ",
+      "media": "ሚድያ",
+      "empty": "ኣብ ቦታ መጻወቲ ርእሲ ክሳብ ሕጂ ኣብ ገጽ ዝኾነ ነገር የለን።",
+      "lock": "ቆልፍ",
+      "unlock": "ክፈት",
+      "show": "ኣርእዮ",
+      "hide": "ደብቕ",
+      "hint": "ላዕሊ ዝርዝር እቲ ቕድሚት እዩ። ስርዓት ንምቕያር ጐትት። ዝተቖልፉን ዝተሓብኡን ደርብታት ካብዚ ጥራይ እዮም ዝምረጹ።"
+    },
+    "blend": {
+      "normal": "ንቡር",
+      "multiply": "ምርባሕ",
+      "screen": "ስክሪን",
+      "overlay": "ምድራብ",
+      "darken": "ኣጸልምት",
+      "lighten": "ኣብርህ",
+      "colorDodge": "ሕብሪ ምብራህ",
+      "colorBurn": "ሕብሪ ምንዳድ",
+      "hardLight": "ተሪር ብርሃን",
+      "softLight": "ልስሉስ ብርሃን",
+      "difference": "ፍልልይ",
+      "exclusion": "ምግላል",
+      "hue": "ዓይነት ሕብሪ",
+      "saturation": "ጽግበት",
+      "color": "ሕብሪ",
+      "luminosity": "ብሩህነት"
     }
   },
   "fractions": {

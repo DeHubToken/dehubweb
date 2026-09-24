@@ -65,7 +65,8 @@ function halfExtents(b: ClipBox) {
 type Gesture =
   | { mode: "move"; id: string; px: number; py: number; box: ClipBox; ax: number; ay: number }
   | { mode: "scale"; id: string; box: ClipBox; dist: number; scale: number; font: number }
-  | { mode: "rotate"; id: string; box: ClipBox; angle: number; rotation: number };
+  | { mode: "rotate"; id: string; box: ClipBox; angle: number; rotation: number }
+  | { mode: "stretch"; id: string; box: ClipBox; axis: "x" | "y"; scale: number };
 
 export function Compositor() {
   const { t } = useTranslation();
@@ -285,7 +286,7 @@ export function Compositor() {
           // Keep the selection box in step with what was just drawn.
           const selId = state.selectedClipIds.length === 1 ? state.selectedClipIds[0] : null;
           const sel = selId ? state.clips.find((c) => c.id === selId) : null;
-          const visible = sel && isVisualClip(sel) && time >= sel.start && time <= sel.start + sel.duration;
+          const visible = sel && isVisualClip(sel) && !sel.hidden && time >= sel.start && time <= sel.start + sel.duration;
           const next = visible ? clipBox(ctx, sel, W, H, sources) : null;
           if (!sameBox(next, selBoxRef.current)) {
             selBoxRef.current = next;
@@ -403,7 +404,8 @@ export function Compositor() {
     const hidden = new Set(s.tracks.filter((tr) => tr.hidden).map((tr) => tr.id));
     const z = (id: string) => s.tracks.findIndex((tr) => tr.id === id);
     return s.clips
-      .filter((c) => isVisualClip(c) && !hidden.has(c.trackId) && now >= c.start && now <= c.start + c.duration)
+      // Hidden and locked layers are not pickable on the canvas; the Layers panel still reaches them.
+      .filter((c) => isVisualClip(c) && !c.hidden && !c.locked && !hidden.has(c.trackId) && now >= c.start && now <= c.start + c.duration)
       .sort((a, b) => z(a.trackId) - z(b.trackId))
       .map((clip) => ({ clip, box: clipBox(ctx, clip, s.settings.width, s.settings.height, sources) }))
       .filter((l): l is { clip: Clip; box: ClipBox } => !!l.box);
@@ -494,6 +496,19 @@ export function Compositor() {
       return;
     }
 
+    if (g.mode === "stretch") {
+      if (clip.kind !== "shape") return;
+      // Distance from the centre along the box's own axis, so a rotated shape
+      // stretches along its edge rather than the screen axis.
+      const rad = (-g.box.rotation * Math.PI) / 180;
+      const dx = p.x - g.box.cx;
+      const dy = p.y - g.box.cy;
+      const local = g.axis === "x" ? dx * Math.cos(rad) - dy * Math.sin(rad) : dx * Math.sin(rad) + dy * Math.cos(rad);
+      const size = Math.max(4, Math.abs(local) * 2) / (g.axis === "x" ? W : H) / Math.max(0.01, g.scale);
+      s.patchClipLive(g.id, g.axis === "x" ? { w: size } : { h: size });
+      return;
+    }
+
     // rotate
     const angle = (Math.atan2(p.y - g.box.cy, p.x - g.box.cx) * 180) / Math.PI;
     let rot = g.rotation + (angle - g.angle);
@@ -539,13 +554,15 @@ export function Compositor() {
     startGesture({ mode: "move", id: hit.clip.id, px: p.x, py: p.y, box: hit.box, ax: tr.x, ay: tr.y });
   };
 
-  const onHandleDown = (mode: "scale" | "rotate") => (e: React.PointerEvent) => {
+  const onHandleDown = (mode: "scale" | "rotate" | "stretch-x" | "stretch-y") => (e: React.PointerEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!selectedClip || !selBox) return;
     const p = toCanvas(e.clientX, e.clientY);
     const tr = getTransform(selectedClip);
-    if (mode === "scale") {
+    if (mode === "stretch-x" || mode === "stretch-y") {
+      startGesture({ mode: "stretch", id: selectedClip.id, box: selBox, axis: mode === "stretch-x" ? "x" : "y", scale: tr.scale });
+    } else if (mode === "scale") {
       startGesture({
         mode, id: selectedClip.id, box: selBox,
         dist: Math.hypot(p.x - selBox.cx, p.y - selBox.cy),
@@ -646,7 +663,7 @@ export function Compositor() {
   };
 
   // Display-space geometry for the selection overlay.
-  const overlay = selBox && selectedClip && !editingTextId && scale > 0
+  const overlay = selBox && selectedClip && !selectedClip.locked && !editingTextId && scale > 0
     ? {
         left: (selBox.cx - selBox.w / 2) * scale,
         top: (selBox.cy - selBox.h / 2) * scale,
@@ -737,6 +754,26 @@ export function Compositor() {
                     corner === "ne" && "left-full top-0 cursor-nesw-resize",
                     corner === "sw" && "left-0 top-full cursor-nesw-resize",
                     corner === "se" && "left-full top-full cursor-nwse-resize",
+                  )}
+                />
+              ))}
+              {selectedClip?.kind === "shape" && (["e", "w", "n", "s"] as const).map((edge) => (
+                <button
+                  key={edge}
+                  type="button"
+                  aria-label={t("editor.canvas.resize")}
+                  onPointerDown={onHandleDown(edge === "e" || edge === "w" ? "stretch-x" : "stretch-y")}
+                  className={cn(
+                    "pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 touch-none",
+                    "after:absolute after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:-translate-y-1/2",
+                    "after:rounded-full after:border after:border-black/40 after:bg-white after:shadow",
+                    edge === "e" || edge === "w"
+                      ? "h-6 w-4 top-1/2 cursor-ew-resize after:h-4 after:w-1.5"
+                      : "h-4 w-6 left-1/2 cursor-ns-resize after:h-1.5 after:w-4",
+                    edge === "e" && "left-full",
+                    edge === "w" && "left-0",
+                    edge === "n" && "top-0",
+                    edge === "s" && "top-full",
                   )}
                 />
               ))}

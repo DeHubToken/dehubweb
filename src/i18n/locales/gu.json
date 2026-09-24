@@ -3588,7 +3588,8 @@
       "shadowOpacity": "મજબૂતાઈ {{value}}%",
       "shadowBlur": "ઝાંખો {{value}}",
       "shadowX": "ઓફસેટ X {{value}}",
-      "shadowY": "ઓફસેટ Y {{value}}"
+      "shadowY": "ઓફસેટ Y {{value}}",
+      "blend": "બ્લેન્ડ"
     },
     "menu": {
       "addText": "ટેક્સ્ટ ઉમેરો",
@@ -3615,7 +3616,10 @@
       "generations": "જનરેશન્સ",
       "edit": "એડિટ",
       "collapse": "પેનલ બંધ કરો",
-      "home": "હોમ"
+      "home": "હોમ",
+      "elements": "ઘટકો",
+      "layers": "લેયર્સ",
+      "tools": "એડિટર ટૂલ્સ"
     },
     "agent": {
       "introTitle": "AI ને કહો કે તમારે શું જોઈએ છે",
@@ -3638,6 +3642,54 @@
       "changes": "કરેલા ફેરફારો: {{count}}",
       "undo": "અનડૂ",
       "openGenerator": "સમીક્ષા કરો અને જનરેટ કરો"
+    },
+    "shape": {
+      "rect": "લંબચોરસ",
+      "ellipse": "વર્તુળ",
+      "triangle": "ત્રિકોણ",
+      "star": "તારો",
+      "heart": "હૃદય",
+      "hexagon": "ષટ્કોણ",
+      "line": "રેખા",
+      "arrow": "તીર",
+      "style": "આકારની શૈલી",
+      "fill": "ભરણ",
+      "fillOn": "ભરણ",
+      "outline": "આઉટલાઇન",
+      "outlineOn": "આઉટલાઇન",
+      "outlineWidth": "આઉટલાઇનની જાડાઈ {{value}}"
+    },
+    "elements": {
+      "shapes": "આકારો",
+      "hint": "પેજ પર ઉમેરવા માટે આકાર પર ક્લિક કરો. લાંબો કરવા બાજુના હેન્ડલ અને કદ બદલવા ખૂણા ખેંચો."
+    },
+    "layers": {
+      "text": "ટેક્સ્ટ",
+      "media": "મીડિયા",
+      "empty": "પ્લેહેડ પર પેજ પર હજી કંઈ નથી.",
+      "lock": "લૉક કરો",
+      "unlock": "અનલૉક કરો",
+      "show": "બતાવો",
+      "hide": "છુપાવો",
+      "hint": "યાદીમાં સૌથી ઉપરનું સૌથી આગળ છે. ક્રમ બદલવા ખેંચો. લૉક કરેલા અને છુપાયેલા લેયર ફક્ત અહીંથી જ પસંદ થઈ શકે છે."
+    },
+    "blend": {
+      "normal": "સામાન્ય",
+      "multiply": "મલ્ટિપ્લાય",
+      "screen": "સ્ક્રીન",
+      "overlay": "ઓવરલે",
+      "darken": "ઘાટું",
+      "lighten": "આછું",
+      "colorDodge": "કલર ડૉજ",
+      "colorBurn": "કલર બર્ન",
+      "hardLight": "હાર્ડ લાઇટ",
+      "softLight": "સૉફ્ટ લાઇટ",
+      "difference": "તફાવત",
+      "exclusion": "એક્સક્લુઝન",
+      "hue": "રંગછટા",
+      "saturation": "સંતૃપ્તિ",
+      "color": "રંગ",
+      "luminosity": "તેજસ્વિતા"
     }
   },
   "fractions": {

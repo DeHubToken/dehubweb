@@ -5905,7 +5905,8 @@
       "shadowOpacity": "Intensywność {{value}}%",
       "shadowBlur": "Rozmycie {{value}}",
       "shadowX": "Przesunięcie X {{value}}",
-      "shadowY": "Przesunięcie Y {{value}}"
+      "shadowY": "Przesunięcie Y {{value}}",
+      "blend": "Mieszanie"
     },
     "menu": {
       "addText": "Dodaj tekst",
@@ -5932,7 +5933,10 @@
       "generations": "Wygenerowane",
       "edit": "Edytuj",
       "collapse": "Zwiń panel",
-      "home": "Strona główna"
+      "home": "Strona główna",
+      "elements": "Elementy",
+      "layers": "Warstwy",
+      "tools": "Narzędzia edycji"
     },
     "agent": {
       "introTitle": "Powiedz AI, czego chcesz",
@@ -5955,6 +5959,54 @@
       "changes": "Wprowadzone zmiany: {{count}}",
       "undo": "Cofnij",
       "openGenerator": "Przejrzyj i generuj"
+    },
+    "shape": {
+      "rect": "Prostokąt",
+      "ellipse": "Koło",
+      "triangle": "Trójkąt",
+      "star": "Gwiazda",
+      "heart": "Serce",
+      "hexagon": "Sześciokąt",
+      "line": "Linia",
+      "arrow": "Strzałka",
+      "style": "Styl kształtu",
+      "fill": "Wypełnienie",
+      "fillOn": "Wypełnienie",
+      "outline": "Obrys",
+      "outlineOn": "Obrys",
+      "outlineWidth": "Grubość obrysu {{value}}"
+    },
+    "elements": {
+      "shapes": "Kształty",
+      "hint": "Kliknij kształt, aby dodać go do strony. Przeciągnij uchwyty boczne, aby go rozciągnąć, a narożniki, aby zmienić rozmiar."
+    },
+    "layers": {
+      "text": "Tekst",
+      "media": "Multimedia",
+      "empty": "Na stronie w miejscu głowicy nie ma jeszcze nic.",
+      "lock": "Zablokuj",
+      "unlock": "Odblokuj",
+      "show": "Pokaż",
+      "hide": "Ukryj",
+      "hint": "Góra listy to pierwszy plan. Przeciągnij, aby zmienić kolejność. Zablokowane i ukryte warstwy można wybrać tylko tutaj."
+    },
+    "blend": {
+      "normal": "Zwykły",
+      "multiply": "Mnożenie",
+      "screen": "Mnożenie odwrotności",
+      "overlay": "Nakładka",
+      "darken": "Ciemniej",
+      "lighten": "Jaśniej",
+      "colorDodge": "Rozjaśnianie koloru",
+      "colorBurn": "Ściemnianie koloru",
+      "hardLight": "Ostre światło",
+      "softLight": "Łagodne światło",
+      "difference": "Różnica",
+      "exclusion": "Wykluczenie",
+      "hue": "Barwa",
+      "saturation": "Nasycenie",
+      "color": "Kolor",
+      "luminosity": "Jasność"
     }
   },
   "glossary": {

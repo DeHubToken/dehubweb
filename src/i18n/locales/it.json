@@ -5946,7 +5946,8 @@
       "shadowOpacity": "Forza {{value}}%",
       "shadowBlur": "Sfocatura {{value}}",
       "shadowX": "Offset X {{value}}",
-      "shadowY": "Offset Y {{value}}"
+      "shadowY": "Offset Y {{value}}",
+      "blend": "Fusione"
     },
     "menu": {
       "addText": "Aggiungi testo",
@@ -5973,7 +5974,10 @@
       "generations": "Generazioni",
       "edit": "Modifica",
       "collapse": "Comprimi pannello",
-      "home": "Home"
+      "home": "Home",
+      "elements": "Elementi",
+      "layers": "Livelli",
+      "tools": "Strumenti di modifica"
     },
     "agent": {
       "introTitle": "Di' all'IA cosa vuoi",
@@ -5996,6 +6000,54 @@
       "changes": "Modifiche effettuate: {{count}}",
       "undo": "Annulla",
       "openGenerator": "Rivedi e genera"
+    },
+    "shape": {
+      "rect": "Rettangolo",
+      "ellipse": "Cerchio",
+      "triangle": "Triangolo",
+      "star": "Stella",
+      "heart": "Cuore",
+      "hexagon": "Esagono",
+      "line": "Linea",
+      "arrow": "Freccia",
+      "style": "Stile forma",
+      "fill": "Riempimento",
+      "fillOn": "Riempimento",
+      "outline": "Contorno",
+      "outlineOn": "Contorno",
+      "outlineWidth": "Spessore contorno {{value}}"
+    },
+    "elements": {
+      "shapes": "Forme",
+      "hint": "Fai clic su una forma per aggiungerla alla pagina. Trascina le maniglie laterali per allungarla, gli angoli per ridimensionarla."
+    },
+    "layers": {
+      "text": "Testo",
+      "media": "Media",
+      "empty": "Ancora niente sulla pagina alla testina di riproduzione.",
+      "lock": "Blocca",
+      "unlock": "Sblocca",
+      "show": "Mostra",
+      "hide": "Nascondi",
+      "hint": "La cima dell'elenco è in primo piano. Trascina per riordinare. I livelli bloccati e nascosti si possono selezionare solo qui."
+    },
+    "blend": {
+      "normal": "Normale",
+      "multiply": "Moltiplica",
+      "screen": "Scolora",
+      "overlay": "Sovrapponi",
+      "darken": "Scurisci",
+      "lighten": "Schiarisci",
+      "colorDodge": "Scherma colore",
+      "colorBurn": "Brucia colore",
+      "hardLight": "Luce intensa",
+      "softLight": "Luce soffusa",
+      "difference": "Differenza",
+      "exclusion": "Esclusione",
+      "hue": "Tonalità",
+      "saturation": "Saturazione",
+      "color": "Colore",
+      "luminosity": "Luminosità"
     }
   }
 }

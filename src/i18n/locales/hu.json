@@ -5836,7 +5836,8 @@
       "shadowOpacity": "Erősség {{value}}%",
       "shadowBlur": "Elmosódás {{value}}",
       "shadowX": "Eltolás X {{value}}",
-      "shadowY": "Eltolás Y {{value}}"
+      "shadowY": "Eltolás Y {{value}}",
+      "blend": "Keverés"
     },
     "menu": {
       "addText": "Szöveg hozzáadása",
@@ -5863,7 +5864,10 @@
       "generations": "Generálások",
       "edit": "Szerkesztés",
       "collapse": "Panel összecsukása",
-      "home": "Kezdőlap"
+      "home": "Kezdőlap",
+      "elements": "Elemek",
+      "layers": "Rétegek",
+      "tools": "Szerkesztőeszközök"
     },
     "agent": {
       "introTitle": "Mondd el az AI-nak, mit szeretnél",
@@ -5886,6 +5890,54 @@
       "changes": "Elvégzett módosítások: {{count}}",
       "undo": "Visszavonás",
       "openGenerator": "Áttekintés és generálás"
+    },
+    "shape": {
+      "rect": "Téglalap",
+      "ellipse": "Kör",
+      "triangle": "Háromszög",
+      "star": "Csillag",
+      "heart": "Szív",
+      "hexagon": "Hatszög",
+      "line": "Vonal",
+      "arrow": "Nyíl",
+      "style": "Alakzat stílusa",
+      "fill": "Kitöltés",
+      "fillOn": "Kitöltés",
+      "outline": "Körvonal",
+      "outlineOn": "Körvonal",
+      "outlineWidth": "Körvonal vastagsága {{value}}"
+    },
+    "elements": {
+      "shapes": "Alakzatok",
+      "hint": "Kattints egy alakzatra, hogy hozzáadd az oldalhoz. Az oldalsó fogantyúkkal nyújthatod, a sarkokkal átméretezheted."
+    },
+    "layers": {
+      "text": "Szöveg",
+      "media": "Média",
+      "empty": "A lejátszófejnél még nincs semmi az oldalon.",
+      "lock": "Zárolás",
+      "unlock": "Feloldás",
+      "show": "Megjelenítés",
+      "hide": "Elrejtés",
+      "hint": "A lista teteje van legelöl. Húzd az átrendezéshez. A zárolt és rejtett rétegeket csak itt lehet kijelölni."
+    },
+    "blend": {
+      "normal": "Normál",
+      "multiply": "Szorzás",
+      "screen": "Szita",
+      "overlay": "Átfedés",
+      "darken": "Sötétítés",
+      "lighten": "Világosítás",
+      "colorDodge": "Színfakítás",
+      "colorBurn": "Színégetés",
+      "hardLight": "Kemény fény",
+      "softLight": "Lágy fény",
+      "difference": "Különbség",
+      "exclusion": "Kizárás",
+      "hue": "Színárnyalat",
+      "saturation": "Telítettség",
+      "color": "Szín",
+      "luminosity": "Fényerő"
     }
   }
 }

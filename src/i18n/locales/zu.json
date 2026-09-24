@@ -3657,7 +3657,8 @@
       "shadowOpacity": "Amandla {{value}}%",
       "shadowBlur": "Ukufiphala {{value}}",
       "shadowX": "Ukugudluza X {{value}}",
-      "shadowY": "Ukugudluza Y {{value}}"
+      "shadowY": "Ukugudluza Y {{value}}",
+      "blend": "Hlanganisa"
     },
     "menu": {
       "addText": "Faka umbhalo",
@@ -3684,7 +3685,10 @@
       "generations": "Okukhiqiziwe",
       "edit": "Hlela",
       "collapse": "Goqa iphaneli",
-      "home": "Ekhaya"
+      "home": "Ekhaya",
+      "elements": "Izakhi",
+      "layers": "Izendlalelo",
+      "tools": "Amathuluzi omhleli"
     },
     "agent": {
       "introTitle": "Tshela i-AI ukuthi ufunani",
@@ -3707,6 +3711,54 @@
       "changes": "Okuhleliwe: {{count}}",
       "undo": "Hlehlisa",
       "openGenerator": "Buyekeza bese ukhiqiza"
+    },
+    "shape": {
+      "rect": "Unxande",
+      "ellipse": "Indilinga",
+      "triangle": "Unxantathu",
+      "star": "Inkanyezi",
+      "heart": "Inhliziyo",
+      "hexagon": "I-heksagoni",
+      "line": "Umugqa",
+      "arrow": "Umcibisholo",
+      "style": "Isitayela sesimo",
+      "fill": "Gcwalisa",
+      "fillOn": "Gcwalisa",
+      "outline": "Umugqa wangaphandle",
+      "outlineOn": "Umugqa wangaphandle",
+      "outlineWidth": "Ububanzi bomugqa wangaphandle {{value}}"
+    },
+    "elements": {
+      "shapes": "Izimo",
+      "hint": "Chofoza isimo ukuze usengeze ekhasini. Hudula izibambo ezisezinhlangothini ukuze usinwebe, namakhona ukuze ushintshe usayizi."
+    },
+    "layers": {
+      "text": "Umbhalo",
+      "media": "Imidiya",
+      "empty": "Akukho lutho okwamanje ekhasini lapho kukhona i-playhead.",
+      "lock": "Khiya",
+      "unlock": "Vula",
+      "show": "Bonisa",
+      "hide": "Fihla",
+      "hint": "Phezulu kohlu kungaphambili. Hudula ukuze uhlele kabusha. Izendlalelo ezikhiyiwe nezifihliwe zingakhethwa lapha kuphela."
+    },
+    "blend": {
+      "normal": "Okujwayelekile",
+      "multiply": "Phindaphinda",
+      "screen": "Isikrini",
+      "overlay": "Ukwembeza",
+      "darken": "Yenza kube mnyama",
+      "lighten": "Khanyisa",
+      "colorDodge": "Ukukhanyisa umbala",
+      "colorBurn": "Ukushisa umbala",
+      "hardLight": "Ukukhanya okuqinile",
+      "softLight": "Ukukhanya okuthambile",
+      "difference": "Umehluko",
+      "exclusion": "Ukukhipha",
+      "hue": "Ithoni yombala",
+      "saturation": "Ukugcwala",
+      "color": "Umbala",
+      "luminosity": "Ukukhanya"
     }
   },
   "fractions": {

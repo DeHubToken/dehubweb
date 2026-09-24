@@ -3585,7 +3585,8 @@
       "shadowOpacity": "القوة {{value}}%",
       "shadowBlur": "طمس {{value}}",
       "shadowX": "الإزاحة X {{value}}",
-      "shadowY": "الإزاحة Y {{value}}"
+      "shadowY": "الإزاحة Y {{value}}",
+      "blend": "مزج"
     },
     "menu": {
       "addText": "إضافة نص",
@@ -3612,7 +3613,10 @@
       "generations": "اللي تصاوب",
       "edit": "بدّل",
       "collapse": "سدّ اللوحة",
-      "home": "الرئيسية"
+      "home": "الرئيسية",
+      "elements": "العناصر",
+      "layers": "الطبقات",
+      "tools": "أدوات التعديل"
     },
     "agent": {
       "introTitle": "قول للـAI شنو بغيتي",
@@ -3635,6 +3639,54 @@
       "changes": "التعديلات اللي تدارو: {{count}}",
       "undo": "رجوع",
       "openGenerator": "راجع وصاوب"
+    },
+    "shape": {
+      "rect": "مستطيل",
+      "ellipse": "دايرة",
+      "triangle": "مثلث",
+      "star": "نجمة",
+      "heart": "قلب",
+      "hexagon": "سداسي",
+      "line": "خط",
+      "arrow": "سهم",
+      "style": "ستايل الشكل",
+      "fill": "تعبئة",
+      "fillOn": "تعبئة",
+      "outline": "الحاشية",
+      "outlineOn": "الحاشية",
+      "outlineWidth": "عرض الحاشية {{value}}"
+    },
+    "elements": {
+      "shapes": "الأشكال",
+      "hint": "كليكي على شي شكل باش تزيدو للصفحة. جر المقابض ديال الجناب باش تمدو، والزوايا باش تبدل الحجم."
+    },
+    "layers": {
+      "text": "نص",
+      "media": "ميديا",
+      "empty": "مازال ما كاين والو فالصفحة فبلاصة القارئ.",
+      "lock": "قفل",
+      "unlock": "حل القفل",
+      "show": "بيّن",
+      "hide": "خبّي",
+      "hint": "اللي لفوق فاللائحة هو اللي قدام. جر باش تبدل الترتيب. الطبقات المقفولة والمخبية ما تقدرش تختارها غير من هنا."
+    },
+    "blend": {
+      "normal": "عادي",
+      "multiply": "ضرب",
+      "screen": "شاشة",
+      "overlay": "تراكب",
+      "darken": "تغميق",
+      "lighten": "تفتيح",
+      "colorDodge": "تفتيح اللون",
+      "colorBurn": "حرق اللون",
+      "hardLight": "ضوء قوي",
+      "softLight": "ضوء خفيف",
+      "difference": "الفرق",
+      "exclusion": "الاستبعاد",
+      "hue": "درجة اللون",
+      "saturation": "التشبع",
+      "color": "اللون",
+      "luminosity": "الإضاءة"
     }
   },
   "fractions": {

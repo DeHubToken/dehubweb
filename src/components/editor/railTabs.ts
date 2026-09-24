@@ -5,7 +5,7 @@
  * same tools in the same order. Kept in its own module so the rail file
  * only exports components and stays hot-reloadable.
  */
-import { Bot, ImagePlus, LayoutTemplate, LibraryBig, SlidersHorizontal, Sparkles, Type, Wand2 } from 'lucide-react';
+import { Bot, ImagePlus, Layers, LayoutTemplate, LibraryBig, Shapes, SlidersHorizontal, Sparkles, Type, Wand2 } from 'lucide-react';
 import type { EditorPanel } from '@/store/editorUiStore';
 
 export interface RailTab {
@@ -18,9 +18,11 @@ export interface RailTab {
 export const RAIL_TABS: RailTab[] = [
   { id: 'agent', labelKey: 'editor.rail.agent', icon: Bot },
   { id: 'design', labelKey: 'editor.rail.design', icon: LayoutTemplate },
+  { id: 'elements', labelKey: 'editor.rail.elements', icon: Shapes },
   { id: 'assets', labelKey: 'editor.rail.assets', icon: LibraryBig },
   { id: 'media', labelKey: 'editor.rail.media', icon: ImagePlus },
   { id: 'text', labelKey: 'editor.rail.text', icon: Type },
+  { id: 'layers', labelKey: 'editor.rail.layers', icon: Layers },
   { id: 'generate', labelKey: 'editor.rail.generate', icon: Sparkles },
   { id: 'library', labelKey: 'editor.rail.generations', icon: Wand2 },
 ];

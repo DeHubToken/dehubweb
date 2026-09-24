@@ -5946,7 +5946,8 @@
       "shadowOpacity": "Stärke {{value}}%",
       "shadowBlur": "Unschärfe {{value}}",
       "shadowX": "Versatz X {{value}}",
-      "shadowY": "Versatz Y {{value}}"
+      "shadowY": "Versatz Y {{value}}",
+      "blend": "Füllmethode"
     },
     "menu": {
       "addText": "Text hinzufügen",
@@ -5973,7 +5974,10 @@
       "generations": "Generierungen",
       "edit": "Bearbeiten",
       "collapse": "Bereich einklappen",
-      "home": "Start"
+      "home": "Start",
+      "elements": "Elemente",
+      "layers": "Ebenen",
+      "tools": "Editor-Werkzeuge"
     },
     "agent": {
       "introTitle": "Sag der KI, was du willst",
@@ -5996,6 +6000,54 @@
       "changes": "Änderungen: {{count}}",
       "undo": "Rückgängig",
       "openGenerator": "Prüfen und generieren"
+    },
+    "shape": {
+      "rect": "Rechteck",
+      "ellipse": "Kreis",
+      "triangle": "Dreieck",
+      "star": "Stern",
+      "heart": "Herz",
+      "hexagon": "Sechseck",
+      "line": "Linie",
+      "arrow": "Pfeil",
+      "style": "Formstil",
+      "fill": "Füllung",
+      "fillOn": "Füllung",
+      "outline": "Kontur",
+      "outlineOn": "Kontur",
+      "outlineWidth": "Konturstärke {{value}}"
+    },
+    "elements": {
+      "shapes": "Formen",
+      "hint": "Klicke auf eine Form, um sie zur Seite hinzuzufügen. Ziehe die seitlichen Griffe zum Strecken, die Ecken zum Skalieren."
+    },
+    "layers": {
+      "text": "Text",
+      "media": "Medien",
+      "empty": "An der Abspielposition ist noch nichts auf der Seite.",
+      "lock": "Sperren",
+      "unlock": "Entsperren",
+      "show": "Einblenden",
+      "hide": "Ausblenden",
+      "hint": "Oben in der Liste ist vorne. Zum Umsortieren ziehen. Gesperrte und ausgeblendete Ebenen lassen sich nur hier auswählen."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Multiplizieren",
+      "screen": "Negativ multiplizieren",
+      "overlay": "Ineinanderkopieren",
+      "darken": "Abdunkeln",
+      "lighten": "Aufhellen",
+      "colorDodge": "Farbig abwedeln",
+      "colorBurn": "Farbig nachbelichten",
+      "hardLight": "Hartes Licht",
+      "softLight": "Weiches Licht",
+      "difference": "Differenz",
+      "exclusion": "Ausschluss",
+      "hue": "Farbton",
+      "saturation": "Sättigung",
+      "color": "Farbe",
+      "luminosity": "Luminanz"
     }
   }
 }

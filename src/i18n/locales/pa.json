@@ -3561,7 +3561,8 @@
       "shadowOpacity": "ਤਾਕਤ {{value}}%",
       "shadowBlur": "ਬਲਰ {{value}}",
       "shadowX": "ਆਫਸੈੱਟ X {{value}}",
-      "shadowY": "ਆਫਸੈੱਟ Y {{value}}"
+      "shadowY": "ਆਫਸੈੱਟ Y {{value}}",
+      "blend": "ਮਿਸ਼ਰਣ"
     },
     "menu": {
       "addText": "ਟੈਕਸਟ ਸ਼ਾਮਲ",
@@ -3588,7 +3589,10 @@
       "generations": "ਬਣਾਈਆਂ ਚੀਜ਼ਾਂ",
       "edit": "ਸੋਧੋ",
       "collapse": "ਪੈਨਲ ਸਮੇਟੋ",
-      "home": "ਹੋਮ"
+      "home": "ਹੋਮ",
+      "elements": "ਤੱਤ",
+      "layers": "ਲੇਅਰਾਂ",
+      "tools": "ਐਡੀਟਰ ਟੂਲ"
     },
     "agent": {
       "introTitle": "AI ਨੂੰ ਦੱਸੋ ਕਿ ਤੁਸੀਂ ਕੀ ਚਾਹੁੰਦੇ ਹੋ",
@@ -3611,6 +3615,54 @@
       "changes": "ਕੀਤੀਆਂ ਸੋਧਾਂ: {{count}}",
       "undo": "ਅਨਡੂ",
       "openGenerator": "ਵੇਖੋ ਅਤੇ ਬਣਾਓ"
+    },
+    "shape": {
+      "rect": "ਆਇਤ",
+      "ellipse": "ਚੱਕਰ",
+      "triangle": "ਤਿਕੋਣ",
+      "star": "ਤਾਰਾ",
+      "heart": "ਦਿਲ",
+      "hexagon": "ਛੇਭੁਜ",
+      "line": "ਲਾਈਨ",
+      "arrow": "ਤੀਰ",
+      "style": "ਆਕਾਰ ਦੀ ਸ਼ੈਲੀ",
+      "fill": "ਭਰੋ",
+      "fillOn": "ਭਰੋ",
+      "outline": "ਰੂਪਰੇਖਾ",
+      "outlineOn": "ਰੂਪਰੇਖਾ",
+      "outlineWidth": "ਰੂਪਰੇਖਾ ਦੀ ਚੌੜਾਈ {{value}}"
+    },
+    "elements": {
+      "shapes": "ਆਕਾਰ",
+      "hint": "ਪੰਨੇ ਵਿੱਚ ਜੋੜਨ ਲਈ ਕਿਸੇ ਆਕਾਰ 'ਤੇ ਕਲਿੱਕ ਕਰੋ। ਖਿੱਚਣ ਲਈ ਪਾਸੇ ਦੇ ਹੈਂਡਲ ਅਤੇ ਆਕਾਰ ਬਦਲਣ ਲਈ ਕੋਨੇ ਘਸੀਟੋ।"
+    },
+    "layers": {
+      "text": "ਟੈਕਸਟ",
+      "media": "ਮੀਡੀਆ",
+      "empty": "ਪਲੇਹੈੱਡ 'ਤੇ ਪੰਨੇ ਉੱਤੇ ਅਜੇ ਕੁਝ ਨਹੀਂ ਹੈ।",
+      "lock": "ਲੌਕ ਕਰੋ",
+      "unlock": "ਅਨਲੌਕ ਕਰੋ",
+      "show": "ਦਿਖਾਓ",
+      "hide": "ਲੁਕਾਓ",
+      "hint": "ਸੂਚੀ ਦਾ ਸਿਖਰ ਸਭ ਤੋਂ ਅੱਗੇ ਹੈ। ਕ੍ਰਮ ਬਦਲਣ ਲਈ ਘਸੀਟੋ। ਲੌਕ ਅਤੇ ਲੁਕੀਆਂ ਲੇਅਰਾਂ ਸਿਰਫ਼ ਇੱਥੋਂ ਚੁਣੀਆਂ ਜਾ ਸਕਦੀਆਂ ਹਨ।"
+    },
+    "blend": {
+      "normal": "ਸਧਾਰਨ",
+      "multiply": "ਗੁਣਾ",
+      "screen": "ਸਕ੍ਰੀਨ",
+      "overlay": "ਓਵਰਲੇ",
+      "darken": "ਗੂੜ੍ਹਾ ਕਰੋ",
+      "lighten": "ਹਲਕਾ ਕਰੋ",
+      "colorDodge": "ਕਲਰ ਡੌਜ",
+      "colorBurn": "ਕਲਰ ਬਰਨ",
+      "hardLight": "ਹਾਰਡ ਲਾਈਟ",
+      "softLight": "ਸੌਫਟ ਲਾਈਟ",
+      "difference": "ਅੰਤਰ",
+      "exclusion": "ਐਕਸਕਲੂਜ਼ਨ",
+      "hue": "ਰੰਗਤ",
+      "saturation": "ਸੰਤ੍ਰਿਪਤਾ",
+      "color": "ਰੰਗ",
+      "luminosity": "ਚਮਕ"
     }
   },
   "fractions": {
