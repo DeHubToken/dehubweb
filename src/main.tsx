@@ -6,6 +6,7 @@ import { recoverFromChunkError } from "./lib/lazy-with-retry";
 import { registerServiceWorker } from "./lib/register-sw";
 import { installScrollFreezeWatchdog } from "./lib/scroll-freeze-watchdog";
 import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
+import { installWalletSessionFetch } from "./lib/wallet-session";
 import { installTranslatorDomGuard } from "./i18n/translator-dom-guard";
 import "./lib/toast-i18n-interceptor";
 // NOTE: auth-toast translations are no longer imported here — English lives in
@@ -22,6 +23,8 @@ import "./index.css";
 // stylesheet link is appended at the end of <head>.
 
 installSupabaseInterceptor();
+// Signs wallet-scoped REST and storage requests; see src/lib/wallet-session.ts.
+installWalletSessionFetch();
 
 // Chrome/Edge/Safari's own "translate this page" rewrites the text nodes React
 // is holding, and React's next update then throws NotFoundError and unmounts
