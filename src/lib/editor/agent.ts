@@ -20,6 +20,7 @@ import { downloadFreeAsset, provenanceForAsset, searchFreeAssets, type FreeAsset
 import { importOneFile } from "./importFiles";
 import { getPages, pageAt } from "./pages";
 import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
+import { useCaptionsStore } from "@/store/editorCaptionsStore";
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL || "https://aigxuutjaqsywioxjefr.supabase.co"}/functions/v1/editor-agent`;
 const ANON_KEY =
@@ -564,6 +565,11 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         // are not addressable as new:N from the outer list.
         const inner = await applyOps(tpl.ops(i18n.t.bind(i18n)), ctx);
         return inner.applied > 0;
+      }
+      case "captions": {
+        const clip = find(op.id) ?? store().clips.find((c) => c.kind === "video" || c.kind === "audio");
+        if (!clip || (clip.kind !== "video" && clip.kind !== "audio")) return false;
+        return await useCaptionsStore.getState().run(clip.id);
       }
       case "remove_background": {
         const clip = find(op.id);

@@ -6034,6 +6034,15 @@
       "allZip": "Kaikki {{count}} sivua (ZIP)",
       "thisPage": "Vain tämä sivu",
       "exporting": "Renderöidään sivua {{current}}/{{total}}…"
+    },
+    "captions": {
+      "action": "Automaattiset tekstitykset",
+      "working": "Kuunnellaan… {{percent}} %",
+      "downloading": "Valmistellaan puhemallia… {{percent}} %",
+      "hint": "Muuttaa puheen ajastetuiksi tekstityksiksi, joiden tyyliä voit muokata. Toimii laitteellasi: ilmainen ja yksityinen. Ensimmäisellä kerralla malli ladataan.",
+      "done": "Lisättiin {{count}} tekstitystä.",
+      "noSpeech": "Tästä leikkeestä ei löytynyt puhetta.",
+      "failed": "Tekstityksiä ei voitu luoda tälle leikkeelle."
     }
   }
 }

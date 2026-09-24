@@ -3815,6 +3815,15 @@
       "allZip": "Gbogbo ojú-ìwé {{count}} (ZIP)",
       "thisPage": "Ojú-ìwé yìí nìkan",
       "exporting": "Ń ṣe ojú-ìwé {{current}} nínú {{total}}…"
+    },
+    "captions": {
+      "action": "Àkọlé aládàáṣe",
+      "working": "Ń gbọ́… {{percent}}%",
+      "downloading": "Ń ṣètò àwòṣe ọ̀rọ̀ sísọ… {{percent}}%",
+      "hint": "Ó ń sọ ọ̀rọ̀ sísọ di àkọlé tí a ṣètò àkókò rẹ̀, tí o lè yí ìrísí rẹ̀ padà. Ó ń ṣiṣẹ́ lórí ẹ̀rọ rẹ: ọ̀fẹ́ àti àṣírí. Ìlò àkọ́kọ́ yóò ṣe ìgbàsílẹ̀ àwòṣe náà.",
+      "done": "A ti ṣàfikún àkọlé {{count}}.",
+      "noSpeech": "A kò rí ọ̀rọ̀ sísọ nínú agekuru yìí.",
+      "failed": "A kò lè ṣẹ̀dá àkọlé fún agekuru yìí."
     }
   },
   "fractions": {

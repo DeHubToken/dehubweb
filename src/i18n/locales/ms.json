@@ -6353,6 +6353,15 @@
       "allZip": "Semua {{count}} halaman (ZIP)",
       "thisPage": "Halaman ini sahaja",
       "exporting": "Memaparkan halaman {{current}} daripada {{total}}…"
+    },
+    "captions": {
+      "action": "Kapsyen automatik",
+      "working": "Mendengar… {{percent}}%",
+      "downloading": "Menyediakan model pertuturan… {{percent}}%",
+      "hint": "Menukar pertuturan kepada kapsyen bermasa yang boleh anda gayakan semula. Berjalan pada peranti anda: percuma dan peribadi. Penggunaan pertama akan memuat turun model.",
+      "done": "{{count}} kapsyen ditambah.",
+      "noSpeech": "Tiada pertuturan ditemui dalam klip ini.",
+      "failed": "Tidak dapat mencipta kapsyen untuk klip ini."
     }
   }
 }

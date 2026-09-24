@@ -5802,6 +5802,15 @@
       "allZip": "Ireo pejy {{count}} rehetra (ZIP)",
       "thisPage": "Ity pejy ity ihany",
       "exporting": "Mamorona ny pejy {{current}} amin'ny {{total}}…"
+    },
+    "captions": {
+      "action": "Dikanteny mandeha ho azy",
+      "working": "Mihaino… {{percent}}%",
+      "downloading": "Manomana ny modely feo… {{percent}}%",
+      "hint": "Mamadika ny teny ho dikanteny mifanaraka amin'ny fotoana izay azonao ovaina ny endriny. Mandeha amin'ny fitaovanao: maimaim-poana sy tsiambaratelo. Misintona ny modely amin'ny fampiasana voalohany.",
+      "done": "Dikanteny {{count}} no nampiana.",
+      "noSpeech": "Tsy nisy teny hita tao amin'ity clip ity.",
+      "failed": "Tsy afaka namorona dikanteny ho an'ity clip ity."
     }
   },
   "createPost": {

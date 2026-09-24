@@ -3840,6 +3840,15 @@
       "allZip": "Barcha {{count}} sahifa (ZIP)",
       "thisPage": "Faqat shu sahifa",
       "exporting": "{{current}}/{{total}} sahifa tayyorlanmoqda…"
+    },
+    "captions": {
+      "action": "Avtomatik subtitrlar",
+      "working": "Tinglanmoqda… {{percent}}%",
+      "downloading": "Nutq modeli tayyorlanmoqda… {{percent}}%",
+      "hint": "Nutqni vaqtga moslangan, uslubini o‘zgartirish mumkin bo‘lgan subtitrlarga aylantiradi. Qurilmangizda ishlaydi: bepul va maxfiy. Birinchi foydalanishda model yuklab olinadi.",
+      "done": "{{count}} ta subtitr qo‘shildi.",
+      "noSpeech": "Bu klipda nutq topilmadi.",
+      "failed": "Bu klip uchun subtitr yaratib bo‘lmadi."
     }
   },
   "spaces": {

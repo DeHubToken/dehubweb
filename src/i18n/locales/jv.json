@@ -3813,6 +3813,15 @@
       "allZip": "Kabeh {{count}} kaca (ZIP)",
       "thisPage": "Mung kaca iki",
       "exporting": "Nggawe kaca {{current}} saka {{total}}…"
+    },
+    "captions": {
+      "action": "Teks otomatis",
+      "working": "Lagi ngrungokake… {{percent}}%",
+      "downloading": "Lagi nyiapake model swara… {{percent}}%",
+      "hint": "Ngowahi omongan dadi teks sing pas wektune lan bisa diganti gayane. Mlaku ing piranti sampeyan: gratis lan pribadi. Nalika pisanan dienggo, model bakal diundhuh.",
+      "done": "{{count}} teks ditambahake.",
+      "noSpeech": "Ora ana omongan ing klip iki.",
+      "failed": "Ora bisa nggawe teks kanggo klip iki."
     }
   },
   "fractions": {

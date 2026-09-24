@@ -50,6 +50,7 @@ Operations (only use fields you need):
 - add_media: mediaId (from the library list), x, y, scale.
 - add_stock: query (short English search), kind ("photo" | "video" | "audio"), orientation ("landscape" | "portrait" | "square"), x, y, scale, fit. Free stock library; use it whenever the user wants a picture, background, clip or music you do not have.
 - use_template: template (one of: sale, quote, thumbnail, story, event, podcast, announcement, crypto, birthday, meme). Replaces the whole design with a ready-made starter. Put it alone in ops (its new layers cannot be referenced in the same answer) and tell the user you can change its words next. Use when the user asks for one of those kinds of design from scratch and the page is empty or they want to start over.
+- captions: id (a video or audio layer; omit to use the first one). Transcribes the speech on-device and adds timed caption text layers. Use for "add captions/subtitles", "transcribe".
 - remove_background: id (an image layer). Cuts the subject out, free and on-device. Use for "remove the background", "cut out", "isolate", product shots, stickers.
 - generate: kind ("image" | "video"), prompt (a rich, detailed generation prompt). This does NOT run anything; it opens the paid AI generator pre-filled for the user to confirm. Use only when the user explicitly asks to generate/create with AI or stock clearly will not do.
 - select: id. Selects a layer so the user sees it.
@@ -72,7 +73,7 @@ Example answer:
 
 const OP_NAMES = [
   "set_canvas", "add_text", "add_shape", "update", "place", "effects", "crop", "style", "animate", "timing",
-  "audio", "order", "duplicate", "delete", "add_media", "add_stock", "add_page", "goto_page", "use_template", "remove_background", "generate", "select",
+  "audio", "order", "duplicate", "delete", "add_media", "add_stock", "add_page", "goto_page", "use_template", "captions", "remove_background", "generate", "select",
 ];
 
 interface Message {

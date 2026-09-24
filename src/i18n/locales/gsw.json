@@ -3794,6 +3794,15 @@
       "allZip": "Alli {{count}} Siite (ZIP)",
       "thisPage": "Nur die Siite",
       "exporting": "Siite {{current}} vo {{total}} wird grenderet…"
+    },
+    "captions": {
+      "action": "Automatischi Untertitel",
+      "working": "Lost zue… {{percent}} %",
+      "downloading": "Sprachmodell wird parat gmacht… {{percent}} %",
+      "hint": "Macht us Sprooch zytlich abgstimmti Untertitel, wo du chasch gstalte. Lauft uf dim Grät: gratis und privat. S erschte Mal wird s Modell abeglade.",
+      "done": "{{count}} Untertitel dezue tue.",
+      "noSpeech": "I dem Clip isch kei Sprooch gfunde worde.",
+      "failed": "Für dä Clip hät mer kei Untertitel chöne mache."
     }
   },
   "fractions": {

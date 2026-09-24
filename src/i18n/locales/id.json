@@ -6153,6 +6153,15 @@
       "allZip": "Semua {{count}} halaman (ZIP)",
       "thisPage": "Hanya halaman ini",
       "exporting": "Merender halaman {{current}} dari {{total}}…"
+    },
+    "captions": {
+      "action": "Teks otomatis",
+      "working": "Mendengarkan… {{percent}}%",
+      "downloading": "Menyiapkan model ucapan… {{percent}}%",
+      "hint": "Mengubah ucapan menjadi teks berwaktu yang bisa kamu ubah gayanya. Berjalan di perangkatmu: gratis dan privat. Penggunaan pertama akan mengunduh modelnya.",
+      "done": "{{count}} teks ditambahkan.",
+      "noSpeech": "Tidak ada ucapan di klip ini.",
+      "failed": "Tidak bisa membuat teks untuk klip ini."
     }
   }
 }

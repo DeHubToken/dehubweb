@@ -6064,6 +6064,15 @@
       "allZip": "Alle {{count}} sider (ZIP)",
       "thisPage": "Kun denne side",
       "exporting": "Gengiver side {{current}} af {{total}}…"
+    },
+    "captions": {
+      "action": "Automatiske undertekster",
+      "working": "Lytter… {{percent}} %",
+      "downloading": "Gør talemodellen klar… {{percent}} %",
+      "hint": "Gør tale til tidsindstillede undertekster, som du kan restyle. Kører på din enhed: gratis og privat. Første gang downloades modellen.",
+      "done": "Tilføjede {{count}} undertekster.",
+      "noSpeech": "Ingen tale fundet i dette klip.",
+      "failed": "Kunne ikke lave undertekster til dette klip."
     }
   }
 }

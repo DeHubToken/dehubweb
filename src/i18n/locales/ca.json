@@ -6033,6 +6033,15 @@
       "allZip": "Totes les {{count}} pàgines (ZIP)",
       "thisPage": "Només aquesta pàgina",
       "exporting": "Renderitzant la pàgina {{current}} de {{total}}…"
+    },
+    "captions": {
+      "action": "Subtítols automàtics",
+      "working": "Escoltant… {{percent}}%",
+      "downloading": "Preparant el model de veu… {{percent}}%",
+      "hint": "Converteix la veu en subtítols sincronitzats que pots personalitzar. Funciona al teu dispositiu: gratuït i privat. El primer ús descarrega el model.",
+      "done": "S'han afegit {{count}} subtítols.",
+      "noSpeech": "No s'ha trobat veu en aquest clip.",
+      "failed": "No s'han pogut crear subtítols per a aquest clip."
     }
   }
 }

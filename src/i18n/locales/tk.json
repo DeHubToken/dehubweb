@@ -3779,6 +3779,15 @@
       "allZip": "Ähli {{count}} sahypa (ZIP)",
       "thisPage": "Diňe şu sahypa",
       "exporting": "Sahypa {{current}} / {{total}} taýýarlanýar…"
+    },
+    "captions": {
+      "action": "Awtomatik subtitrler",
+      "working": "Diňleýär… {{percent}}%",
+      "downloading": "Gürleýiş modeli taýýarlanýar… {{percent}}%",
+      "hint": "Gürleýşi wagta laýyk subtitrlere öwürýär, olaryň stilini üýtgedip bilersiňiz. Enjamyňyzda işleýär: mugt we şahsy. Ilkinji ulanylanda model ýüklenýär.",
+      "done": "{{count}} subtitr goşuldy.",
+      "noSpeech": "Bu klipde gürleýiş tapylmady.",
+      "failed": "Bu klip üçin subtitr döredip bolmady."
     }
   },
   "fractions": {

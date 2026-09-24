@@ -6036,6 +6036,15 @@
       "allZip": "Kõik {{count}} lehte (ZIP)",
       "thisPage": "Ainult see leht",
       "exporting": "Renderdan lehte {{current}}/{{total}}…"
+    },
+    "captions": {
+      "action": "Automaatsubtiitrid",
+      "working": "Kuulan… {{percent}}%",
+      "downloading": "Kõnemudelit valmistatakse ette… {{percent}}%",
+      "hint": "Muudab kõne ajastatud subtiitriteks, mille stiili saad muuta. Töötab sinu seadmes: tasuta ja privaatne. Esimesel kasutusel laaditakse mudel alla.",
+      "done": "Lisatud {{count}} subtiitrit.",
+      "noSpeech": "Selles klipis kõnet ei leitud.",
+      "failed": "Selle klipi jaoks ei õnnestunud subtiitreid luua."
     }
   }
 }

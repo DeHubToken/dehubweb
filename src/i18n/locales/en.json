@@ -6152,6 +6152,15 @@
       "allZip": "All {{count}} pages (ZIP)",
       "thisPage": "This page only",
       "exporting": "Rendering page {{current}} of {{total}}…"
+    },
+    "captions": {
+      "action": "Auto captions",
+      "working": "Listening… {{percent}}%",
+      "downloading": "Getting the speech model ready… {{percent}}%",
+      "hint": "Turns speech into timed captions you can restyle. Runs on your device: free and private. The first use downloads the model.",
+      "done": "Added {{count}} captions.",
+      "noSpeech": "No speech found in this clip.",
+      "failed": "Couldn't create captions for this clip."
     }
   }
 }
