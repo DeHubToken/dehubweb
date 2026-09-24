@@ -3916,7 +3916,8 @@
     "share": "แชร์",
     "invalidInvite": "เชิญไม่ถูกต้อง",
     "invalidInviteHint": "รหัสอ้างอิงนั้นดูเหมือนไม่ถูกต้อง",
-    "goToDehub": "ไปที่ DeHub"
+    "goToDehub": "ไปที่ DeHub",
+    "moreDestinations": "จุดเริ่มต้นเพิ่มเติม"
   },
   "premium": {
     "seoTitle": "DeHub Extra — สมาชิกพรีเมียม",
@@ -5475,5 +5476,34 @@
     "desc": "กลางวันสดใสหรือยามเย็นสีฟ้าสลัวในป่า",
     "day": "กลางวัน",
     "evening": "ยามเย็น"
+  },
+  "affiliateLanding": {
+    "title": "ปรับแต่งหน้าคำเชิญของคุณ",
+    "subtitle": "ทำให้หน้าเป็นสไตล์ของคุณ ผู้เยี่ยมชมจะเห็นข้อความนี้ก่อนเข้าร่วม",
+    "headline": "หัวข้อ",
+    "message": "ข้อความต้อนรับ",
+    "buttonText": "ข้อความปุ่มหลัก",
+    "destination": "ปลายทางใน DeHub",
+    "extraTitle": "ปุ่มเพิ่มเติม ({{count}}/{{max}})",
+    "extraHint": "ส่งผู้เยี่ยมชมไปยังส่วนของ DeHub ที่พวกเขาสนใจได้ทันที ทุกปุ่มยังคงการแนะนำของคุณไว้",
+    "extraLabel": "ข้อความปุ่ม",
+    "removeButton": "ลบปุ่ม",
+    "addCustom": "กำหนดเอง",
+    "presets": {
+      "edit": "แก้ไข",
+      "create": "สร้าง",
+      "build": "สร้างสรรค์",
+      "import": "นำเข้า",
+      "explore": "สำรวจ"
+    },
+    "publish": "เผยแพร่การเปลี่ยนแปลง",
+    "publishing": "กำลังเผยแพร่…",
+    "reset": "รีเซ็ต",
+    "preview": "ตัวอย่างสด",
+    "published": "เผยแพร่หน้าคำเชิญแล้ว",
+    "saveFailed": "ไม่สามารถบันทึกหน้าคำเชิญได้",
+    "clicksTitle": "คลิกตามปลายทาง",
+    "clicksRow_one": "{{clicks}} คลิก · {{unique}} ไม่ซ้ำ",
+    "clicksRow_other": "{{clicks}} คลิก · {{unique}} ไม่ซ้ำ"
   }
 }

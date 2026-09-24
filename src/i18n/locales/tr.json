@@ -4616,7 +4616,8 @@
     "share": "Paylaş",
     "invalidInvite": "Geçersiz davet",
     "invalidInviteHint": "Bu referans kodu doğru görünmüyor.",
-    "goToDehub": "DeHub'a git"
+    "goToDehub": "DeHub'a git",
+    "moreDestinations": "Başlamak için daha fazla yer"
   },
   "premium": {
     "seoTitle": "DeHub Extra — Premium Üyelik",
@@ -6260,5 +6261,34 @@
     "desc": "Ormanda parlak bir gün ya da loş mavi bir akşam",
     "day": "Gündüz",
     "evening": "Akşam"
+  },
+  "affiliateLanding": {
+    "title": "Davet sayfanı özelleştir",
+    "subtitle": "Sayfa senin gibi konuşsun. Ziyaretçiler katılmadan önce bu metni görür.",
+    "headline": "Başlık",
+    "message": "Karşılama mesajı",
+    "buttonText": "Ana buton metni",
+    "destination": "DeHub hedefi",
+    "extraTitle": "Ek butonlar ({{count}}/{{max}})",
+    "extraHint": "Ziyaretçileri DeHub'ın ilgilendikleri bölümüne doğrudan gönder. Her buton davet bağlantını korur.",
+    "extraLabel": "Buton metni",
+    "removeButton": "Butonu kaldır",
+    "addCustom": "Özel",
+    "presets": {
+      "edit": "Düzenle",
+      "create": "Oluştur",
+      "build": "İnşa et",
+      "import": "İçe aktar",
+      "explore": "Keşfet"
+    },
+    "publish": "Değişiklikleri yayınla",
+    "publishing": "Yayınlanıyor…",
+    "reset": "Sıfırla",
+    "preview": "Canlı önizleme",
+    "published": "Davet sayfası yayınlandı",
+    "saveFailed": "Davet sayfası kaydedilemedi",
+    "clicksTitle": "Hedefe göre tıklamalar",
+    "clicksRow_one": "{{clicks}} tıklama · {{unique}} benzersiz",
+    "clicksRow_other": "{{clicks}} tıklama · {{unique}} benzersiz"
   }
 }

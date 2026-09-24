@@ -2541,7 +2541,8 @@
       "percentJoined": "{{pct}}% قوشۇلدى",
       "noVisits": "تېخى زىيارەت يوق",
       "selfVisitsExcluded": "ئۇلانما زىيارەتلىرىڭىز ھېسابلانمايدۇ."
-    }
+    },
+    "moreDestinations": "باشلاشقا تېخىمۇ كۆپ ئورۇنلار"
   },
   "creatorFlow": {
     "title": "ئىجادكار ئېقىمى",
@@ -3916,5 +3917,34 @@
     "presetProductReviewHint": "تونۇشتۇرغۇچى ھەققانىي پىكىر بېرىدۇ",
     "presetTvSpotName": "TV Spot",
     "presetTvSpotHint": "تارقىتىش ئۇسلۇب تىجارىتى"
+  },
+  "affiliateLanding": {
+    "title": "تەكلىپ بېتىڭىزنى خاسلاشتۇرۇڭ",
+    "subtitle": "بەت سىزدەك ئاڭلانسۇن. زىيارەتچىلەر قوشۇلۇشتىن بۇرۇن بۇ تېكىستنى كۆرىدۇ.",
+    "headline": "ماۋزۇ",
+    "message": "قارشى ئېلىش ئۇچۇرى",
+    "buttonText": "ئاساسىي كۇنۇپكا تېكىستى",
+    "destination": "DeHub مەنزىلى",
+    "extraTitle": "قوشۇمچە كۇنۇپكىلار ({{count}}/{{max}})",
+    "extraHint": "زىيارەتچىلەرنى DeHub نىڭ ئۇلار قىزىقىدىغان قىسمىغا بىۋاسىتە ئەۋەتىڭ. ھەر بىر كۇنۇپكا تەۋسىيەڭىزنى ساقلايدۇ.",
+    "extraLabel": "كۇنۇپكا تېكىستى",
+    "removeButton": "كۇنۇپكىنى چىقىرىۋېتىش",
+    "addCustom": "ئىختىيارى",
+    "presets": {
+      "edit": "تەھرىرلەش",
+      "create": "قۇرۇش",
+      "build": "ياساش",
+      "import": "ئەكىرىش",
+      "explore": "ئىزدىنىش"
+    },
+    "publish": "ئۆزگىرىشلەرنى ئېلان قىلىش",
+    "publishing": "ئېلان قىلىنىۋاتىدۇ…",
+    "reset": "ئەسلىگە قايتۇرۇش",
+    "preview": "جانلىق ئالدىن كۆرۈش",
+    "published": "تەكلىپ بېتى ئېلان قىلىندى",
+    "saveFailed": "تەكلىپ بېتىنى ساقلىغىلى بولمىدى",
+    "clicksTitle": "مەنزىل بويىچە چېكىشلەر",
+    "clicksRow_one": "{{clicks}} چېكىش · {{unique}} يەككە",
+    "clicksRow_other": "{{clicks}} چېكىش · {{unique}} يەككە"
   }
 }

@@ -2553,7 +2553,8 @@
       "percentJoined": "{{pct}}% join",
       "noVisits": "Walang mga pagbisita pa pa",
       "selfVisitsExcluded": "Hindi account ang iyong sariling mga pagbisita sa iyong link."
-    }
+    },
+    "moreDestinations": "Ҷойҳои бештар барои оғоз"
   },
   "creatorFlow": {
     "title": "Creator Flow",
@@ -3924,5 +3925,34 @@
     "presetProductReviewHint": "Барандае, ки ақидаи ҳалолро баён мекунад",
     "presetTvSpotName": "Нуқтаи телевизор",
     "presetTvSpotHint": "Сиёсати Корбурди Маълумоти Шахсӣ"
+  },
+  "affiliateLanding": {
+    "title": "Саҳифаи даъвататонро танзим кунед",
+    "subtitle": "Бигузор саҳифа мисли шумо садо диҳад. Меҳмонон ин матнро пеш аз пайвастан мебинанд.",
+    "headline": "Сарлавҳа",
+    "message": "Паёми хушомад",
+    "buttonText": "Матни тугмаи асосӣ",
+    "destination": "Самти DeHub",
+    "extraTitle": "Тугмаҳои иловагӣ ({{count}}/{{max}})",
+    "extraHint": "Меҳмононро рост ба қисми DeHub, ки ба онҳо шавқовар аст, фиристед. Ҳар тугма рефералии шуморо нигоҳ медорад.",
+    "extraLabel": "Матни тугма",
+    "removeButton": "Тугмаро хориҷ кунед",
+    "addCustom": "Фардӣ",
+    "presets": {
+      "edit": "Таҳрир",
+      "create": "Эҷод",
+      "build": "Сохтан",
+      "import": "Воридот",
+      "explore": "Кашф"
+    },
+    "publish": "Нашри тағйирот",
+    "publishing": "Нашр шуда истодааст…",
+    "reset": "Бозсозӣ",
+    "preview": "Пешнамоиши зинда",
+    "published": "Саҳифаи даъват нашр шуд",
+    "saveFailed": "Саҳифаи даъватро захира кардан нашуд",
+    "clicksTitle": "Кликҳо аз рӯи самт",
+    "clicksRow_one": "{{clicks}} клик · {{unique}} ягона",
+    "clicksRow_other": "{{clicks}} клик · {{unique}} ягона"
   }
 }
