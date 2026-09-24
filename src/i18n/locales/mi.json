@@ -3587,7 +3587,8 @@
     },
     "inspector": {
       "selectHint": "Tīpakohia tētahi paparanga kei runga i te kānawehi, tētahi topenga rānei kei te raina wā.",
-      "textHint": "Tōia ki runga i te kānawehi hei neke, whakamahia ngā kokonga hei whakarōrahi. Paohia kia rua hei whakatika i ngā kupu."
+      "textHint": "Tōia ki runga i te kānawehi hei neke, whakamahia ngā kokonga hei whakarōrahi. Paohia kia rua hei whakatika i ngā kupu.",
+      "selection": "Tīpakonga"
     },
     "layer": {
       "alignToPage": "Whakararau ki te whārangi",
@@ -3778,7 +3779,9 @@
         "title": "Mīmi",
         "top": "Ina mahi te waehere",
         "bottom": "I te whakamātau tuatahi"
-      }
+      },
+      "replaceTitle": "Whakakapi i tō hoahoa?",
+      "replace": "Whakakapi"
     },
     "design": {
       "format": "Hōputu",
@@ -3829,6 +3832,14 @@
       "done": "Kua tāpiritia ngā tapanga {{count}}.",
       "noSpeech": "Kāore he kōrero i kitea i tēnei topenga.",
       "failed": "Kāore i taea te hanga tapanga mō tēnei topenga."
+    },
+    "multi": {
+      "selected": "{{count}} ngā paparanga kua tīpakohia",
+      "alignTogether": "Whakahāngai ki a rātou anō",
+      "spacing": "Āputa ōrite",
+      "spaceHorizontal": "Whakamokowā ōrite whakapae",
+      "spaceVertical": "Whakamokowā ōrite whakatū",
+      "hint": "Tōia tētahi hei neke tahi i a rātou. Pāwhiri-Shift, tōia rānei he pouaka ki te kānawehi wātea hei huri i te tīpakonga."
     }
   },
   "fractions": {

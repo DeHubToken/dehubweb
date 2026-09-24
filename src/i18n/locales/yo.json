@@ -3582,7 +3582,8 @@
     },
     "inspector": {
       "selectHint": "Yan ipele kan lori kanfasi tabi agekuru kan lori akoko.",
-      "textHint": "Fa lori kanfasi lati gbe, lo awọn igun lati tun iwọn, lẹẹmeji tẹ lati ṣatunkọ awọn ọrọ."
+      "textHint": "Fa lori kanfasi lati gbe, lo awọn igun lati tun iwọn, lẹẹmeji tẹ lati ṣatunkọ awọn ọrọ.",
+      "selection": "Àṣàyàn"
     },
     "layer": {
       "alignToPage": "Ṣe deede si oju-iwe",
@@ -3773,7 +3774,9 @@
         "title": "Mímù",
         "top": "Nígbà tí kóòdù bá ṣiṣẹ́",
         "bottom": "Ní ìgbìyànjú àkọ́kọ́"
-      }
+      },
+      "replaceTitle": "Ṣé o fẹ́ rọ́pò àwòrán rẹ?",
+      "replace": "Rọ́pò"
     },
     "design": {
       "format": "Ìgbékalẹ̀",
@@ -3824,6 +3827,14 @@
       "done": "A ti ṣàfikún àkọlé {{count}}.",
       "noSpeech": "A kò rí ọ̀rọ̀ sísọ nínú agekuru yìí.",
       "failed": "A kò lè ṣẹ̀dá àkọlé fún agekuru yìí."
+    },
+    "multi": {
+      "selected": "A ti yan ìpele {{count}}",
+      "alignTogether": "Tò wọ́n pọ̀ mọ́ ara wọn",
+      "spacing": "Àlàfo tó dọ́gba",
+      "spaceHorizontal": "Pín wọn dọ́gba ní ìbú",
+      "spaceVertical": "Pín wọn dọ́gba ní òòró",
+      "hint": "Fa èyíkéyìí nínú wọn láti gbé gbogbo wọn papọ̀. Tẹ Shift-kílíìkì tàbí fa àpótí sórí kánfásì òfìfo láti yí àṣàyàn padà."
     }
   },
   "fractions": {

@@ -5758,7 +5758,8 @@
     },
     "inspector": {
       "selectHint": "Kanvasda bir qatı və ya vaxt qrafikində bir klipi seçin.",
-      "textHint": "Hərəkət etmək üçün kanvasda sürüşdürün, ölçüsünü dəyişmək üçün künclərdən istifadə edin. Sözləri redaktə etmək üçün iki dəfə vurun."
+      "textHint": "Hərəkət etmək üçün kanvasda sürüşdürün, ölçüsünü dəyişmək üçün künclərdən istifadə edin. Sözləri redaktə etmək üçün iki dəfə vurun.",
+      "selection": "Seçim"
     },
     "layer": {
       "alignToPage": "Səhifəyə uyğunlaşdır",
@@ -5949,7 +5950,9 @@
         "title": "Mem",
         "top": "Kod işləyəndə",
         "bottom": "İlk cəhddən"
-      }
+      },
+      "replaceTitle": "Dizaynınız əvəz edilsin?",
+      "replace": "Əvəz et"
     },
     "design": {
       "format": "Format",
@@ -6000,6 +6003,14 @@
       "done": "{{count}} altyazı əlavə edildi.",
       "noSpeech": "Bu klipdə nitq tapılmadı.",
       "failed": "Bu klip üçün altyazı yaratmaq mümkün olmadı."
+    },
+    "multi": {
+      "selected": "{{count}} qat seçildi",
+      "alignTogether": "Bir-birinə uyğunlaşdır",
+      "spacing": "Bərabər aralıq",
+      "spaceHorizontal": "Üfüqi bərabər payla",
+      "spaceVertical": "Şaquli bərabər payla",
+      "hint": "Hamısını birlikdə hərəkət etdirmək üçün istənilən birini sürüşdürün. Seçimi dəyişmək üçün Shift+klik edin və ya boş kanvasda çərçivə çəkin."
     }
   }
 }

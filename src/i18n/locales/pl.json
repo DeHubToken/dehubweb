@@ -5872,7 +5872,8 @@
     },
     "inspector": {
       "selectHint": "Zaznacz warstwę na płótnie lub klip na osi czasu.",
-      "textHint": "Przeciągnij na płótnie, aby przesunąć, użyj rogów, aby zmienić rozmiar. Kliknij dwukrotnie, aby edytować tekst."
+      "textHint": "Przeciągnij na płótnie, aby przesunąć, użyj rogów, aby zmienić rozmiar. Kliknij dwukrotnie, aby edytować tekst.",
+      "selection": "Zaznaczenie"
     },
     "layer": {
       "alignToPage": "Wyrównaj do strony",
@@ -6063,7 +6064,9 @@
         "title": "Mem",
         "top": "Kiedy kod działa",
         "bottom": "Za pierwszym razem"
-      }
+      },
+      "replaceTitle": "Zastąpić projekt?",
+      "replace": "Zastąp"
     },
     "design": {
       "format": "Format",
@@ -6114,6 +6117,14 @@
       "done": "Dodano napisy: {{count}}.",
       "noSpeech": "Nie wykryto mowy w tym klipie.",
       "failed": "Nie udało się utworzyć napisów dla tego klipu."
+    },
+    "multi": {
+      "selected": "Zaznaczone warstwy: {{count}}",
+      "alignTogether": "Wyrównaj względem siebie",
+      "spacing": "Równe odstępy",
+      "spaceHorizontal": "Rozłóż równo w poziomie",
+      "spaceVertical": "Rozłóż równo w pionie",
+      "hint": "Przeciągnij dowolną z nich, aby przesunąć wszystkie razem. Kliknij z Shiftem lub zaznacz ramką na pustym płótnie, aby zmienić zaznaczenie."
     }
   },
   "glossary": {

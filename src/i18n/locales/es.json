@@ -5920,7 +5920,8 @@
     },
     "inspector": {
       "selectHint": "Selecciona una capa en el lienzo o un clip en la línea de tiempo.",
-      "textHint": "Arrastra en el lienzo para mover, usa las esquinas para cambiar el tamaño. Haz doble clic para editar el texto."
+      "textHint": "Arrastra en el lienzo para mover, usa las esquinas para cambiar el tamaño. Haz doble clic para editar el texto.",
+      "selection": "Selección"
     },
     "layer": {
       "alignToPage": "Alinear a la página",
@@ -6111,7 +6112,9 @@
         "title": "Meme",
         "top": "Cuando el código funciona",
         "bottom": "A la primera"
-      }
+      },
+      "replaceTitle": "¿Reemplazar tu diseño?",
+      "replace": "Reemplazar"
     },
     "design": {
       "format": "Formato",
@@ -6162,6 +6165,14 @@
       "done": "Se añadieron {{count}} subtítulos.",
       "noSpeech": "No se detectó voz en este clip.",
       "failed": "No se pudieron crear subtítulos para este clip."
+    },
+    "multi": {
+      "selected": "{{count}} capas seleccionadas",
+      "alignTogether": "Alinear entre sí",
+      "spacing": "Espaciado uniforme",
+      "spaceHorizontal": "Distribuir horizontalmente",
+      "spaceVertical": "Distribuir verticalmente",
+      "hint": "Arrastra cualquiera de ellas para moverlas juntas. Haz Mayús+clic o arrastra un recuadro en el lienzo vacío para cambiar la selección."
     }
   }
 }

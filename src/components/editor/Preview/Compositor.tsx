@@ -65,7 +65,12 @@ function halfExtents(b: ClipBox) {
 }
 
 type Gesture =
-  | { mode: "move"; id: string; px: number; py: number; box: ClipBox; ax: number; ay: number }
+  | {
+      mode: "move"; id: string; px: number; py: number; box: ClipBox; ax: number; ay: number;
+      /** Other selected layers that travel with this one. */
+      group: { id: string; ax: number; ay: number }[];
+    }
+  | { mode: "marquee"; x0: number; y0: number; additive: boolean }
   | { mode: "scale"; id: string; box: ClipBox; dist: number; scale: number; font: number }
   | { mode: "rotate"; id: string; box: ClipBox; angle: number; rotation: number }
   | { mode: "stretch"; id: string; box: ClipBox; axis: "x" | "y"; scale: number };
@@ -441,24 +446,38 @@ export function Compositor() {
   }, [selectedClipIds, clips]);
 
   const [guides, setGuides] = useState<{ v: number[]; h: number[] }>({ v: [], h: [] });
+  // Drag-to-select rectangle, in canvas pixels.
+  const [marquee, setMarqueeState] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+  const marqueeRef = useRef<typeof marquee>(null);
+  const setMarquee = useCallback((m: typeof marquee) => {
+    marqueeRef.current = m;
+    setMarqueeState(m);
+  }, []);
   const gestureRef = useRef<Gesture | null>(null);
 
   const onGestureMove = useCallback((e: PointerEvent) => {
     const g = gestureRef.current;
     if (!g) return;
     const s = useEditorStore.getState();
-    const clip = s.clips.find((c) => c.id === g.id);
-    if (!clip) return;
     const W = s.settings.width;
     const H = s.settings.height;
     const p = toCanvas(e.clientX, e.clientY);
+
+    if (g.mode === "marquee") {
+      setMarquee({ x: Math.min(g.x0, p.x), y: Math.min(g.y0, p.y), w: Math.abs(p.x - g.x0), h: Math.abs(p.y - g.y0) });
+      return;
+    }
+
+    const clip = s.clips.find((c) => c.id === g.id);
+    if (!clip) return;
 
     if (g.mode === "move") {
       let cx = g.box.cx + (p.x - g.px);
       let cy = g.box.cy + (p.y - g.py);
       const snapDist = SNAP_PX / Math.max(0.01, scale);
       const { hw, hh } = halfExtents(g.box);
-      const others = layersAt().filter((l) => l.clip.id !== g.id);
+      const moving = new Set([g.id, ...g.group.map((m) => m.id)]);
+      const others = layersAt().filter((l) => !moving.has(l.clip.id));
       const xs = [0, W / 2, W];
       const ys = [0, H / 2, H];
       for (const o of others) {
@@ -484,6 +503,10 @@ export function Compositor() {
       const dx = (cx - g.box.cx) / W;
       const dy = (cy - g.box.cy) / H;
       s.patchClipLive(g.id, placementPatch(clip, { x: g.ax + dx, y: g.ay + dy }));
+      for (const m of g.group) {
+        const other = s.clips.find((c) => c.id === m.id);
+        if (other) s.patchClipLive(m.id, placementPatch(other, { x: m.ax + dx, y: m.ay + dy }));
+      }
       return;
     }
 
@@ -521,15 +544,30 @@ export function Compositor() {
       if (Math.abs(rot - nearest) < 4) rot = nearest;
     }
     s.patchClipLive(g.id, placementPatch(clip, { rotation: Math.round(rot * 10) / 10 }));
-  }, [toCanvas, layersAt, scale]);
+  }, [toCanvas, layersAt, scale, setMarquee]);
 
   const onGestureEnd = useCallback(() => {
+    const g = gestureRef.current;
+    if (g?.mode === "marquee") {
+      const m = marqueeRef.current;
+      if (m && (m.w > 4 || m.h > 4)) {
+        const hits = layersAt()
+          .filter(({ box }) => {
+            const { hw, hh } = halfExtents(box);
+            return box.cx + hw >= m.x && box.cx - hw <= m.x + m.w && box.cy + hh >= m.y && box.cy - hh <= m.y + m.h;
+          })
+          .map((l) => l.clip.id);
+        const prev = g.additive ? useEditorStore.getState().selectedClipIds : [];
+        useEditorStore.getState().selectMany([...new Set([...prev, ...hits])]);
+      }
+      setMarquee(null);
+    }
     gestureRef.current = null;
     setGuides({ v: [], h: [] });
     window.removeEventListener("pointermove", onGestureMove);
     window.removeEventListener("pointerup", onGestureEnd);
     window.removeEventListener("pointercancel", onGestureEnd);
-  }, [onGestureMove]);
+  }, [onGestureMove, layersAt, setMarquee]);
 
   const startGesture = useCallback((g: Gesture) => {
     useEditorStore.getState().beginGesture();
@@ -545,15 +583,30 @@ export function Compositor() {
     if (editingTextId) return;
     if (e.button !== 0) return;
     const hit = hitTest(e.clientX, e.clientY);
+    const p = toCanvas(e.clientX, e.clientY);
     if (!hit) {
-      selectClip(null);
+      // Drag on empty canvas draws a selection box; a plain click clears.
+      if (!e.shiftKey) selectClip(null);
+      gestureRef.current = { mode: "marquee", x0: p.x, y0: p.y, additive: e.shiftKey };
+      window.addEventListener("pointermove", onGestureMove);
+      window.addEventListener("pointerup", onGestureEnd);
+      window.addEventListener("pointercancel", onGestureEnd);
       return;
     }
     if (e.shiftKey) { selectClip(hit.clip.id, true); return; }
-    if (selectedClipIds[0] !== hit.clip.id || selectedClipIds.length !== 1) selectClip(hit.clip.id);
-    const p = toCanvas(e.clientX, e.clientY);
+    // Grabbing a layer that is part of a multi-selection moves the whole group.
+    const inGroup = selectedClipIds.length > 1 && selectedClipIds.includes(hit.clip.id);
+    if (!inGroup && (selectedClipIds[0] !== hit.clip.id || selectedClipIds.length !== 1)) selectClip(hit.clip.id);
     const tr = getTransform(hit.clip);
-    startGesture({ mode: "move", id: hit.clip.id, px: p.x, py: p.y, box: hit.box, ax: tr.x, ay: tr.y });
+    const all = useEditorStore.getState().clips;
+    const group = inGroup
+      ? selectedClipIds
+          .filter((id) => id !== hit.clip.id)
+          .map((id) => all.find((c) => c.id === id))
+          .filter((c): c is Clip => !!c && isVisualClip(c) && !c.locked)
+          .map((c) => ({ id: c.id, ax: getTransform(c).x, ay: getTransform(c).y }))
+      : [];
+    startGesture({ mode: "move", id: hit.clip.id, px: p.x, py: p.y, box: hit.box, ax: tr.x, ay: tr.y, group });
   };
 
   const onHandleDown = (mode: "scale" | "rotate" | "stretch-x" | "stretch-y") => (e: React.PointerEvent) => {
@@ -665,6 +718,20 @@ export function Compositor() {
   };
 
   // Display-space geometry for the selection overlay.
+  // Dashed outline around a multi-selection (axis-aligned bounds of every member).
+  const groupBounds = (() => {
+    if (selectedClipIds.length < 2 || scale <= 0) return null;
+    const boxes = layersAt().filter((l) => selectedClipIds.includes(l.clip.id)).map((l) => l.box);
+    if (boxes.length < 2) return null;
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (const b of boxes) {
+      const { hw, hh } = halfExtents(b);
+      x0 = Math.min(x0, b.cx - hw); y0 = Math.min(y0, b.cy - hh);
+      x1 = Math.max(x1, b.cx + hw); y1 = Math.max(y1, b.cy + hh);
+    }
+    return { left: x0 * scale, top: y0 * scale, width: (x1 - x0) * scale, height: (y1 - y0) * scale };
+  })();
+
   const overlay = selBox && selectedClip && !selectedClip.locked && !editingTextId && scale > 0
     ? {
         left: (selBox.cx - selBox.w / 2) * scale,
@@ -717,6 +784,15 @@ export function Compositor() {
               <CanvasContextMenu clip={selectedClip} onEdit={(id) => setEditingTextId(id)} />
             </ContextMenu>
           </div>
+
+          {groupBounds && (
+            <div className="pointer-events-none absolute rounded-[2px] border-2 border-dashed border-white/90"
+              style={groupBounds} />
+          )}
+          {marquee && (
+            <div className="pointer-events-none absolute border border-sky-300 bg-sky-300/10"
+              style={{ left: marquee.x * scale, top: marquee.y * scale, width: marquee.w * scale, height: marquee.h * scale }} />
+          )}
 
           {/* Snapping guides */}
           {guides.v.map((x) => (

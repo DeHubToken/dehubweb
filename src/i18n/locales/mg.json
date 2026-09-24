@@ -5569,7 +5569,8 @@
     },
     "inspector": {
       "selectHint": "Mifidiana sosona eo amin'ny sary na clip eo amin'ny tsipika fotoana.",
-      "textHint": "Sintona eo amin'ny sary mba hifindra, ampiasao ny zorony mba hanova ny habeny. Kilikioka indroa mba hanova ny teny."
+      "textHint": "Sintona eo amin'ny sary mba hifindra, ampiasao ny zorony mba hanova ny habeny. Kilikioka indroa mba hanova ny teny.",
+      "selection": "Safidy"
     },
     "layer": {
       "alignToPage": "Alaharo amin'ny pejy",
@@ -5760,7 +5761,9 @@
         "title": "Meme",
         "top": "Rehefa mandeha ny kaody",
         "bottom": "Tamin'ny andrana voalohany"
-      }
+      },
+      "replaceTitle": "Hosoloina ny famolavolanao?",
+      "replace": "Soloina"
     },
     "design": {
       "format": "Endrika",
@@ -5811,6 +5814,14 @@
       "done": "Dikanteny {{count}} no nampiana.",
       "noSpeech": "Tsy nisy teny hita tao amin'ity clip ity.",
       "failed": "Tsy afaka namorona dikanteny ho an'ity clip ity."
+    },
+    "multi": {
+      "selected": "Sosona {{count}} voafidy",
+      "alignTogether": "Alaharo mifanaraka",
+      "spacing": "Elanelana mitovy",
+      "spaceHorizontal": "Zarao mitovy mitsivalana",
+      "spaceVertical": "Zarao mitovy mitsangana",
+      "hint": "Sintony ny iray amin'izy ireo mba hamindrana azy rehetra miaraka. Shift-kilikio na sintony boaty eo amin'ny sary foana mba hanova ny safidy."
     }
   },
   "createPost": {

@@ -5621,7 +5621,8 @@
     },
     "inspector": {
       "selectHint": "Chọn một lớp trên khung vẽ hoặc một clip trên dòng thời gian.",
-      "textHint": "Kéo trên khung vẽ để di chuyển, sử dụng các góc để thay đổi kích thước. Nhấp đúp để chỉnh sửa văn bản."
+      "textHint": "Kéo trên khung vẽ để di chuyển, sử dụng các góc để thay đổi kích thước. Nhấp đúp để chỉnh sửa văn bản.",
+      "selection": "Vùng chọn"
     },
     "layer": {
       "alignToPage": "Căn theo trang",
@@ -5812,7 +5813,9 @@
         "title": "Meme",
         "top": "Khi code chạy được",
         "bottom": "Ngay lần đầu tiên"
-      }
+      },
+      "replaceTitle": "Thay thế thiết kế của bạn?",
+      "replace": "Thay thế"
     },
     "design": {
       "format": "Định dạng",
@@ -5863,6 +5866,14 @@
       "done": "Đã thêm {{count}} phụ đề.",
       "noSpeech": "Không tìm thấy lời nói trong đoạn này.",
       "failed": "Không thể tạo phụ đề cho đoạn này."
+    },
+    "multi": {
+      "selected": "Đã chọn {{count}} lớp",
+      "alignTogether": "Căn chỉnh với nhau",
+      "spacing": "Giãn cách đều",
+      "spaceHorizontal": "Giãn đều theo chiều ngang",
+      "spaceVertical": "Giãn đều theo chiều dọc",
+      "hint": "Kéo bất kỳ lớp nào để di chuyển tất cả cùng lúc. Shift-click hoặc kéo khung trên vùng trống để thay đổi vùng chọn."
     }
   },
   "glossary": {

@@ -5913,7 +5913,8 @@
     },
     "inspector": {
       "selectHint": "Seleziona un livello sulla tela o una clip sulla timeline.",
-      "textHint": "Trascina sulla tela per spostare, usa gli angoli per ridimensionare. Fai doppio clic per modificare il testo."
+      "textHint": "Trascina sulla tela per spostare, usa gli angoli per ridimensionare. Fai doppio clic per modificare il testo.",
+      "selection": "Selezione"
     },
     "layer": {
       "alignToPage": "Allinea alla pagina",
@@ -6104,7 +6105,9 @@
         "title": "Meme",
         "top": "Quando il codice funziona",
         "bottom": "Al primo colpo"
-      }
+      },
+      "replaceTitle": "Sostituire il tuo progetto?",
+      "replace": "Sostituisci"
     },
     "design": {
       "format": "Formato",
@@ -6155,6 +6158,14 @@
       "done": "{{count}} sottotitoli aggiunti.",
       "noSpeech": "Nessun parlato trovato in questa clip.",
       "failed": "Impossibile creare i sottotitoli per questa clip."
+    },
+    "multi": {
+      "selected": "{{count}} livelli selezionati",
+      "alignTogether": "Allinea tra loro",
+      "spacing": "Spaziatura uniforme",
+      "spaceHorizontal": "Distribuisci in orizzontale",
+      "spaceVertical": "Distribuisci in verticale",
+      "hint": "Trascina uno qualsiasi per spostarli insieme. Maiusc+clic o trascina un riquadro sulla tela vuota per cambiare la selezione."
     }
   }
 }

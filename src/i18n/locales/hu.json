@@ -5803,7 +5803,8 @@
     },
     "inspector": {
       "selectHint": "Válassz ki egy réteget a vásznon vagy egy klipet az idővonalon.",
-      "textHint": "Húzd a vásznon a mozgatáshoz, a sarkoknál átméretezheted. Kattints duplán a szöveg szerkesztéséhez."
+      "textHint": "Húzd a vásznon a mozgatáshoz, a sarkoknál átméretezheted. Kattints duplán a szöveg szerkesztéséhez.",
+      "selection": "Kijelölés"
     },
     "layer": {
       "alignToPage": "Igazítás az oldalhoz",
@@ -5994,7 +5995,9 @@
         "title": "Mém",
         "top": "Amikor a kód működik",
         "bottom": "Elsőre"
-      }
+      },
+      "replaceTitle": "Lecseréled a tervedet?",
+      "replace": "Csere"
     },
     "design": {
       "format": "Formátum",
@@ -6045,6 +6048,14 @@
       "done": "{{count}} felirat hozzáadva.",
       "noSpeech": "Ebben a klipben nincs beszéd.",
       "failed": "Nem sikerült feliratot készíteni ehhez a kliphez."
+    },
+    "multi": {
+      "selected": "{{count}} réteg kijelölve",
+      "alignTogether": "Igazítás egymáshoz",
+      "spacing": "Egyenletes térköz",
+      "spaceHorizontal": "Egyenletes elosztás vízszintesen",
+      "spaceVertical": "Egyenletes elosztás függőlegesen",
+      "hint": "Húzd bármelyiket, hogy együtt mozgasd őket. Shift+kattintással vagy az üres vásznon keretet húzva módosíthatod a kijelölést."
     }
   }
 }

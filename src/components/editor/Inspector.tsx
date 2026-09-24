@@ -16,6 +16,7 @@ import { ANIMATION_PRESETS, newAnimation } from "@/lib/editor/animationPresets";
 import { FontPicker } from "@/components/editor/FontPicker";
 import { findFontByCss, loadGoogleFont, primaryFamily } from "@/lib/editor/googleFonts";
 import { LayerSection } from "@/components/editor/inspector/LayerSection";
+import { MultiSelectSection } from "@/components/editor/inspector/MultiSelectSection";
 import { autoEnhanceEffects } from "@/lib/editor/autoEnhance";
 import { useCaptionsStore } from "@/store/editorCaptionsStore";
 import { Captions, Loader2 } from "lucide-react";
@@ -41,7 +42,12 @@ export function Inspector() {
   const captionsProgress = useCaptionsStore((s) => s.progress);
   const runCaptions = useCaptionsStore((s) => s.run);
 
-  const selected = useMemo(() => clips.find((x) => x.id === selectedClipIds[0]) ?? null, [clips, selectedClipIds]);
+  // Single-layer controls only; several layers get MultiSelectSection instead.
+  const selected = useMemo(
+    () => (selectedClipIds.length === 1 ? clips.find((x) => x.id === selectedClipIds[0]) ?? null : null),
+    [clips, selectedClipIds],
+  );
+  const multi = selectedClipIds.length > 1;
   const text = selected && selected.kind === "text" ? (selected as TextClip) : null;
   const mediaClip = selected && (selected.kind === "video" || selected.kind === "image" || selected.kind === "audio")
     ? (selected as MediaClip)
@@ -121,8 +127,9 @@ export function Inspector() {
       </section>
 
       <section className="space-y-2 p-3">
-        <h3 className="text-[11px] font-semibold uppercase tracking-wide text-white/50">Selection</h3>
-        {!selected && (
+        <h3 className="text-[11px] font-semibold uppercase tracking-wide text-white/50">{t("editor.inspector.selection")}</h3>
+        {multi && <MultiSelectSection />}
+        {!selected && !multi && (
           <p className="text-xs text-white/40">{t("editor.inspector.selectHint")}</p>
         )}
 

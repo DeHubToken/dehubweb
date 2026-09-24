@@ -5920,7 +5920,8 @@
     },
     "inspector": {
       "selectHint": "Pilih lapisan di kanvas atau klip di linimasa.",
-      "textHint": "Seret di kanvas untuk memindahkan, gunakan sudut untuk mengubah ukuran. Klik dua kali untuk mengedit kata-kata."
+      "textHint": "Seret di kanvas untuk memindahkan, gunakan sudut untuk mengubah ukuran. Klik dua kali untuk mengedit kata-kata.",
+      "selection": "Pilihan"
     },
     "layer": {
       "alignToPage": "Sejajarkan ke halaman",
@@ -6111,7 +6112,9 @@
         "title": "Meme",
         "top": "Saat kodenya jalan",
         "bottom": "Di percobaan pertama"
-      }
+      },
+      "replaceTitle": "Ganti desain Anda?",
+      "replace": "Ganti"
     },
     "design": {
       "format": "Format",
@@ -6162,6 +6165,14 @@
       "done": "{{count}} teks ditambahkan.",
       "noSpeech": "Tidak ada ucapan di klip ini.",
       "failed": "Tidak bisa membuat teks untuk klip ini."
+    },
+    "multi": {
+      "selected": "{{count}} lapisan dipilih",
+      "alignTogether": "Sejajarkan satu sama lain",
+      "spacing": "Jarak merata",
+      "spaceHorizontal": "Ratakan jarak mendatar",
+      "spaceVertical": "Ratakan jarak menurun",
+      "hint": "Seret salah satunya untuk memindahkan semuanya bersama. Shift-klik atau seret kotak di kanvas kosong untuk mengubah pilihan."
     }
   }
 }

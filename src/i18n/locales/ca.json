@@ -5800,7 +5800,8 @@
     },
     "inspector": {
       "selectHint": "Selecciona una capa al llenç o un clip a la línia de temps.",
-      "textHint": "Arrossega al llenç per moure, utilitza les cantonades per canviar la mida. Fes doble clic per editar les paraules."
+      "textHint": "Arrossega al llenç per moure, utilitza les cantonades per canviar la mida. Fes doble clic per editar les paraules.",
+      "selection": "Selecció"
     },
     "layer": {
       "alignToPage": "Alinea a la pàgina",
@@ -5991,7 +5992,9 @@
         "title": "Mem",
         "top": "Quan el codi funciona",
         "bottom": "A la primera"
-      }
+      },
+      "replaceTitle": "Vols substituir el disseny?",
+      "replace": "Substitueix"
     },
     "design": {
       "format": "Format",
@@ -6042,6 +6045,14 @@
       "done": "S'han afegit {{count}} subtítols.",
       "noSpeech": "No s'ha trobat veu en aquest clip.",
       "failed": "No s'han pogut crear subtítols per a aquest clip."
+    },
+    "multi": {
+      "selected": "{{count}} capes seleccionades",
+      "alignTogether": "Alinea entre elles",
+      "spacing": "Espaiat uniforme",
+      "spaceHorizontal": "Distribueix en horitzontal",
+      "spaceVertical": "Distribueix en vertical",
+      "hint": "Arrossega'n qualsevol per moure-les juntes. Fes Maj+clic o arrossega un requadre al llenç buit per canviar la selecció."
     }
   }
 }
