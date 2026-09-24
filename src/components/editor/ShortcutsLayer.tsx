@@ -54,18 +54,23 @@ export function ShortcutsLayer() {
 
       // Arrow keys nudge the selected layer while the canvas has focus:
       // 1px, or 10px with Shift, in project pixels.
-      if (onCanvas && e.key.startsWith("Arrow") && s.selectedClipIds.length === 1) {
-        const clip = s.clips.find((c) => c.id === s.selectedClipIds[0]);
-        if (clip && isVisualClip(clip)) {
+      if (onCanvas && e.key.startsWith("Arrow") && s.selectedClipIds.length) {
+        const targets = s.clips.filter((c) => s.selectedClipIds.includes(c.id) && isVisualClip(c) && !c.locked);
+        if (targets.length) {
           e.preventDefault();
           const step = e.shiftKey ? 10 : 1;
           const dx = e.key === "ArrowLeft" ? -step : e.key === "ArrowRight" ? step : 0;
           const dy = e.key === "ArrowUp" ? -step : e.key === "ArrowDown" ? step : 0;
-          const tr = getTransform(clip);
-          s.patchClip(clip.id, placementPatch(clip, {
-            x: tr.x + dx / s.settings.width,
-            y: tr.y + dy / s.settings.height,
-          }));
+          // One undo step for the whole nudge, however many layers moved.
+          void s.runAsOneStep(() => {
+            for (const clip of targets) {
+              const tr = getTransform(clip);
+              s.patchClip(clip.id, placementPatch(clip, {
+                x: tr.x + dx / s.settings.width,
+                y: tr.y + dy / s.settings.height,
+              }));
+            }
+          });
           return;
         }
       }

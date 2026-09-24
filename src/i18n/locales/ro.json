@@ -5682,7 +5682,8 @@
     },
     "inspector": {
       "selectHint": "Selectează un strat pe pânză sau un clip pe cronologie.",
-      "textHint": "Trage pe pânză pentru a muta, folosește colțurile pentru a redimensiona. Dă dublu clic pentru a edita cuvintele."
+      "textHint": "Trage pe pânză pentru a muta, folosește colțurile pentru a redimensiona. Dă dublu clic pentru a edita cuvintele.",
+      "selection": "Selecție"
     },
     "layer": {
       "alignToPage": "Aliniere la pagină",
@@ -5873,7 +5874,9 @@
         "title": "Meme",
         "top": "Când codul merge",
         "bottom": "Din prima încercare"
-      }
+      },
+      "replaceTitle": "Înlocuiești designul?",
+      "replace": "Înlocuiește"
     },
     "design": {
       "format": "Format",
@@ -5924,6 +5927,14 @@
       "done": "Au fost adăugate {{count}} subtitrări.",
       "noSpeech": "Nu s-a găsit vorbire în acest clip.",
       "failed": "Nu s-au putut crea subtitrări pentru acest clip."
+    },
+    "multi": {
+      "selected": "{{count}} straturi selectate",
+      "alignTogether": "Aliniere între ele",
+      "spacing": "Spațiere egală",
+      "spaceHorizontal": "Distribuie egal pe orizontală",
+      "spaceVertical": "Distribuie egal pe verticală",
+      "hint": "Trage oricare dintre ele pentru a le muta împreună. Dă Shift-clic sau trage un chenar pe pânza goală pentru a schimba selecția."
     }
   },
   "footer": {

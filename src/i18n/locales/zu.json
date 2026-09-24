@@ -3624,7 +3624,8 @@
     },
     "inspector": {
       "selectHint": "Khetha ungqimba ku-canvas noma isiqeshana emugqeni wesikhathi.",
-      "textHint": "Dweba ku-canvas ukuze uhambise, sebenzisa amakhona ukuze ushintshe usayizi. Chofoza kabili ukuze uhlele amagama."
+      "textHint": "Dweba ku-canvas ukuze uhambise, sebenzisa amakhona ukuze ushintshe usayizi. Chofoza kabili ukuze uhlele amagama.",
+      "selection": "Ukukhetha"
     },
     "layer": {
       "alignToPage": "Qondanisa nekhasi",
@@ -3815,7 +3816,9 @@
         "title": "I-Meme",
         "top": "Uma ikhodi isebenza",
         "bottom": "Ngomzamo wokuqala"
-      }
+      },
+      "replaceTitle": "Shintsha umklamo wakho?",
+      "replace": "Shintsha"
     },
     "design": {
       "format": "Ifomethi",
@@ -3866,6 +3869,14 @@
       "done": "Kwengezwe imibhalo engezansi engu-{{count}}.",
       "noSpeech": "Ayikho inkulumo etholakele kule klip.",
       "failed": "Ayikwazanga ukwenza imibhalo engezansi yale klip."
+    },
+    "multi": {
+      "selected": "Kukhethwe izendlalelo ezingu-{{count}}",
+      "alignTogether": "Qondanisa zodwa",
+      "spacing": "Izikhala ezilinganayo",
+      "spaceHorizontal": "Sabalalisa ngokulinganayo ngokuvundlile",
+      "spaceVertical": "Sabalalisa ngokulinganayo ngokuqondile",
+      "hint": "Hudula noma yisiphi ukuze uzihambise ndawonye. Chofoza nge-Shift noma uhudule ibhokisi kukhanvasi engenalutho ukuze ushintshe ukukhetha."
     }
   },
   "fractions": {

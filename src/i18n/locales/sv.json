@@ -5803,7 +5803,8 @@
     },
     "inspector": {
       "selectHint": "Välj ett lager på arbetsytan eller ett klipp på tidslinjen.",
-      "textHint": "Dra på arbetsytan för att flytta, använd hörnen för att ändra storlek. Dubbelklicka för att redigera texten."
+      "textHint": "Dra på arbetsytan för att flytta, använd hörnen för att ändra storlek. Dubbelklicka för att redigera texten.",
+      "selection": "Markering"
     },
     "layer": {
       "alignToPage": "Justera till sida",
@@ -5994,7 +5995,9 @@
         "title": "Meme",
         "top": "När koden funkar",
         "bottom": "På första försöket"
-      }
+      },
+      "replaceTitle": "Ersätta din design?",
+      "replace": "Ersätt"
     },
     "design": {
       "format": "Format",
@@ -6045,6 +6048,14 @@
       "done": "{{count}} undertexter har lagts till.",
       "noSpeech": "Inget tal hittades i klippet.",
       "failed": "Det gick inte att skapa undertexter för klippet."
+    },
+    "multi": {
+      "selected": "{{count}} lager markerade",
+      "alignTogether": "Justera mot varandra",
+      "spacing": "Jämnt avstånd",
+      "spaceHorizontal": "Fördela jämnt horisontellt",
+      "spaceVertical": "Fördela jämnt vertikalt",
+      "hint": "Dra i vilket som helst för att flytta dem tillsammans. Skift-klicka eller dra en ruta på tom arbetsyta för att ändra markeringen."
     }
   }
 }

@@ -3609,7 +3609,8 @@
     },
     "inspector": {
       "selectHint": "Kanvaasii irratti laayerii tokko ykn sarara yeroo irratti kilippii tokko fili.",
-      "textHint": "Socho'uuf kanfaasi irratti harkisi, hammangaa jijjiiruuf golee fayyadami. Jechoota gulaaluuf lama cuqaasi."
+      "textHint": "Socho'uuf kanfaasi irratti harkisi, hammangaa jijjiiruuf golee fayyadami. Jechoota gulaaluuf lama cuqaasi.",
+      "selection": "Filannoo"
     },
     "layer": {
       "alignToPage": "Fuula irratti hiriirsi",
@@ -3800,7 +3801,9 @@
         "title": "Miim",
         "top": "Yeroo koodiin hojjetu",
         "bottom": "Yaalii jalqabaatiin"
-      }
+      },
+      "replaceTitle": "Dizaayinii kee bakka buusi?",
+      "replace": "Bakka buusi"
     },
     "design": {
       "format": "Foormaatii",
@@ -3851,6 +3854,14 @@
       "done": "Barreeffamni {{count}} dabalame.",
       "noSpeech": "Kiliippii kana keessatti haasaan hin argamne.",
       "failed": "Kiliippii kanaaf barreeffama uumuun hin danda'amne."
+    },
+    "multi": {
+      "selected": "Sadarkaaleen {{count}} filatamaniiru",
+      "alignTogether": "Walitti qajeelchi",
+      "spacing": "Fageenya walqixa",
+      "spaceHorizontal": "Bal'inaan walqixa qoodi",
+      "spaceVertical": "Dheerinaan walqixa qoodi",
+      "hint": "Hunda walii wajjin sochoosuuf isaan keessaa tokko harkisi. Filannoo jijjiiruuf Shift-cuqaasi yookaan kaanvaasii duwwaa irratti saanduqa harkisi."
     }
   },
   "spaces": {

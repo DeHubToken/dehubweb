@@ -5804,7 +5804,8 @@
     },
     "inspector": {
       "selectHint": "Vyberte vrstvu na plátně nebo klip na časové ose.",
-      "textHint": "Přetáhněte na plátně pro přesunutí, rohy použijte pro změnu velikosti. Dvakrát klikněte pro úpravu textu."
+      "textHint": "Přetáhněte na plátně pro přesunutí, rohy použijte pro změnu velikosti. Dvakrát klikněte pro úpravu textu.",
+      "selection": "Výběr"
     },
     "layer": {
       "alignToPage": "Zarovnat na stránku",
@@ -5995,7 +5996,9 @@
         "title": "Mem",
         "top": "Když kód funguje",
         "bottom": "Hned napoprvé"
-      }
+      },
+      "replaceTitle": "Nahradit váš návrh?",
+      "replace": "Nahradit"
     },
     "design": {
       "format": "Formát",
@@ -6046,6 +6049,14 @@
       "done": "Přidáno titulků: {{count}}.",
       "noSpeech": "V tomto klipu nebyla nalezena žádná řeč.",
       "failed": "Pro tento klip se nepodařilo vytvořit titulky."
+    },
+    "multi": {
+      "selected": "Vybrané vrstvy: {{count}}",
+      "alignTogether": "Zarovnat vůči sobě",
+      "spacing": "Rovnoměrné rozestupy",
+      "spaceHorizontal": "Rozmístit vodorovně",
+      "spaceVertical": "Rozmístit svisle",
+      "hint": "Přetažením kterékoli z nich posunete všechny najednou. Výběr změníte kliknutím se Shiftem nebo tažením rámečku na prázdném plátně."
     }
   }
 }

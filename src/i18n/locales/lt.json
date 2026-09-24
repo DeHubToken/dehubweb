@@ -5892,7 +5892,8 @@
     },
     "inspector": {
       "selectHint": "Pasirinkite sluoksnį drobėje arba klipą laiko juostoje.",
-      "textHint": "Vilkti drobėje, kad perkeltumėte, naudokite kampus, kad pakeistumėte dydį. Dukart spustelėkite, kad redaguotumėte žodžius."
+      "textHint": "Vilkti drobėje, kad perkeltumėte, naudokite kampus, kad pakeistumėte dydį. Dukart spustelėkite, kad redaguotumėte žodžius.",
+      "selection": "Pasirinkimas"
     },
     "layer": {
       "alignToPage": "Lygiuoti pagal puslapį",
@@ -6083,7 +6084,9 @@
         "title": "Memas",
         "top": "Kai kodas veikia",
         "bottom": "Iš pirmo karto"
-      }
+      },
+      "replaceTitle": "Pakeisti jūsų dizainą?",
+      "replace": "Pakeisti"
     },
     "design": {
       "format": "Formatas",
@@ -6134,6 +6137,14 @@
       "done": "Pridėta subtitrų: {{count}}.",
       "noSpeech": "Šiame klipe kalbos nerasta.",
       "failed": "Nepavyko sukurti subtitrų šiam klipui."
+    },
+    "multi": {
+      "selected": "Pasirinkta sluoksnių: {{count}}",
+      "alignTogether": "Lygiuoti vienas kito atžvilgiu",
+      "spacing": "Vienodi tarpai",
+      "spaceHorizontal": "Paskirstyti horizontaliai",
+      "spaceVertical": "Paskirstyti vertikaliai",
+      "hint": "Vilkite bet kurį, kad perkeltumėte visus kartu. Norėdami pakeisti pasirinkimą, spustelėkite su Shift arba tuščioje drobėje nubrėžkite rėmelį."
     }
   }
 }

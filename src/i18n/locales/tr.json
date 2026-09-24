@@ -5920,7 +5920,8 @@
     },
     "inspector": {
       "selectHint": "Tuvalde bir katman veya zaman çizelgesinde bir klip seçin.",
-      "textHint": "Taşımak için tuval üzerinde sürükleyin, yeniden boyutlandırmak için köşeleri kullanın. Kelimeleri düzenlemek için çift tıklayın."
+      "textHint": "Taşımak için tuval üzerinde sürükleyin, yeniden boyutlandırmak için köşeleri kullanın. Kelimeleri düzenlemek için çift tıklayın.",
+      "selection": "Seçim"
     },
     "layer": {
       "alignToPage": "Sayfaya hizala",
@@ -6111,7 +6112,9 @@
         "title": "Meme",
         "top": "Kod çalışınca",
         "bottom": "Hem de ilk denemede"
-      }
+      },
+      "replaceTitle": "Tasarımın değiştirilsin mi?",
+      "replace": "Değiştir"
     },
     "design": {
       "format": "Format",
@@ -6162,6 +6165,14 @@
       "done": "{{count}} altyazı eklendi.",
       "noSpeech": "Bu klipte konuşma bulunamadı.",
       "failed": "Bu klip için altyazı oluşturulamadı."
+    },
+    "multi": {
+      "selected": "{{count}} katman seçildi",
+      "alignTogether": "Birbirine hizala",
+      "spacing": "Eşit aralık",
+      "spaceHorizontal": "Yatayda eşit dağıt",
+      "spaceVertical": "Dikeyde eşit dağıt",
+      "hint": "Hepsini birlikte taşımak için herhangi birini sürükle. Seçimi değiştirmek için Shift+tıkla veya boş tuvalde bir kutu sürükle."
     }
   }
 }

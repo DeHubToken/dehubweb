@@ -5857,7 +5857,8 @@
     },
     "inspector": {
       "selectHint": "Chagua safu kwenye turubai au kipande kwenye kalenda ya matukio.",
-      "textHint": "Buruta kwenye turubai ili kusogeza, tumia pembe ili kurekebisha ukubwa. Bonyeza mara mbili ili kuhariri maneno."
+      "textHint": "Buruta kwenye turubai ili kusogeza, tumia pembe ili kurekebisha ukubwa. Bonyeza mara mbili ili kuhariri maneno.",
+      "selection": "Uteuzi"
     },
     "layer": {
       "alignToPage": "Linga na ukurasa",
@@ -6048,7 +6049,9 @@
         "title": "Meme",
         "top": "Code ikifanya kazi",
         "bottom": "Kwa jaribio la kwanza"
-      }
+      },
+      "replaceTitle": "Badilisha muundo wako?",
+      "replace": "Badilisha"
     },
     "design": {
       "format": "Muundo",
@@ -6099,6 +6102,14 @@
       "done": "Manukuu {{count}} yameongezwa.",
       "noSpeech": "Hakuna usemi uliopatikana kwenye klipu hii.",
       "failed": "Imeshindwa kuunda manukuu ya klipu hii."
+    },
+    "multi": {
+      "selected": "Safu {{count}} zimechaguliwa",
+      "alignTogether": "Linga zenyewe kwa zenyewe",
+      "spacing": "Nafasi sawa",
+      "spaceHorizontal": "Sambaza sawa kwa mlalo",
+      "spaceVertical": "Sambaza sawa kwa wima",
+      "hint": "Buruta yoyote kati yake ili kuzisogeza pamoja. Bofya ukishikilia Shift au buruta kisanduku kwenye turubai tupu ili kubadilisha uteuzi."
     }
   }
 }

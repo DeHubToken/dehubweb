@@ -5803,7 +5803,8 @@
     },
     "inspector": {
       "selectHint": "Valige lõuendilt kiht või ajajoonelt klipp.",
-      "textHint": "Liigutamiseks lohistage lõuendil, suuruse muutmiseks kasutage nurki. Sõnade muutmiseks topeltklõpsake."
+      "textHint": "Liigutamiseks lohistage lõuendil, suuruse muutmiseks kasutage nurki. Sõnade muutmiseks topeltklõpsake.",
+      "selection": "Valik"
     },
     "layer": {
       "alignToPage": "Joonda lehele",
@@ -5994,7 +5995,9 @@
         "title": "Meem",
         "top": "Kui kood töötab",
         "bottom": "Esimesel katsel"
-      }
+      },
+      "replaceTitle": "Kas asendada sinu kujundus?",
+      "replace": "Asenda"
     },
     "design": {
       "format": "Formaat",
@@ -6045,6 +6048,14 @@
       "done": "Lisatud {{count}} subtiitrit.",
       "noSpeech": "Selles klipis kõnet ei leitud.",
       "failed": "Selle klipi jaoks ei õnnestunud subtiitreid luua."
+    },
+    "multi": {
+      "selected": "{{count}} kihti valitud",
+      "alignTogether": "Joonda omavahel",
+      "spacing": "Ühtlane vahe",
+      "spaceHorizontal": "Jaota ühtlaselt horisontaalselt",
+      "spaceVertical": "Jaota ühtlaselt vertikaalselt",
+      "hint": "Lohista ükskõik millist, et neid koos liigutada. Valiku muutmiseks kasuta Shift-klõpsu või lohista tühjal lõuendil kast."
     }
   }
 }

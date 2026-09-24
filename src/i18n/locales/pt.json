@@ -5921,7 +5921,8 @@
     },
     "inspector": {
       "selectHint": "Selecione uma camada na tela ou um clipe na linha do tempo.",
-      "textHint": "Arraste na tela para mover, use os cantos para redimensionar. Clique duas vezes para editar o texto."
+      "textHint": "Arraste na tela para mover, use os cantos para redimensionar. Clique duas vezes para editar o texto.",
+      "selection": "Seleção"
     },
     "layer": {
       "alignToPage": "Alinhar à página",
@@ -6112,7 +6113,9 @@
         "title": "Meme",
         "top": "Quando o código funciona",
         "bottom": "De primeira"
-      }
+      },
+      "replaceTitle": "Substituir seu design?",
+      "replace": "Substituir"
     },
     "design": {
       "format": "Formato",
@@ -6163,6 +6166,14 @@
       "done": "{{count}} legendas adicionadas.",
       "noSpeech": "Nenhuma fala encontrada neste clipe.",
       "failed": "Não foi possível criar legendas para este clipe."
+    },
+    "multi": {
+      "selected": "{{count}} camadas selecionadas",
+      "alignTogether": "Alinhar entre si",
+      "spacing": "Espaçamento igual",
+      "spaceHorizontal": "Distribuir na horizontal",
+      "spaceVertical": "Distribuir na vertical",
+      "hint": "Arraste qualquer uma para mover todas juntas. Use Shift+clique ou arraste uma caixa na tela vazia para mudar a seleção."
     }
   }
 }

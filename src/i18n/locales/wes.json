@@ -3059,7 +3059,8 @@
     },
     "inspector": {
       "selectHint": "Choose one layer for di canvas or one clip for di timeline.",
-      "textHint": "Drag for di canvas for move-am, use di corner dem for change size. Double-click for change di words."
+      "textHint": "Drag for di canvas for move-am, use di corner dem for change size. Double-click for change di words.",
+      "selection": "Wetin you choose"
     },
     "layer": {
       "alignToPage": "Align to page",
@@ -3250,7 +3251,9 @@
         "title": "Meme",
         "top": "When di code work",
         "bottom": "For first try"
-      }
+      },
+      "replaceTitle": "Change your design?",
+      "replace": "Change-am"
     },
     "design": {
       "format": "Format",
@@ -3301,6 +3304,14 @@
       "done": "Don add {{count}} captions.",
       "noSpeech": "No tok for dis clip.",
       "failed": "E no fit make captions for dis clip."
+    },
+    "multi": {
+      "selected": "{{count}} layer dem don choose",
+      "alignTogether": "Align dem to each other",
+      "spacing": "Same space",
+      "spaceHorizontal": "Share space same-same across",
+      "spaceVertical": "Share space same-same down",
+      "hint": "Drag any one for move all of dem together. Shift-click or drag one box for empty canvas for change wetin you choose."
     }
   },
   "fractions": {

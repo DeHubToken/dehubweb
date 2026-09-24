@@ -5920,7 +5920,8 @@
     },
     "inspector": {
       "selectHint": "在画布上选择图层或在时间线上选择片段。",
-      "textHint": "在画布上拖动以移动，使用角落进行缩放。双击以编辑文字。"
+      "textHint": "在画布上拖动以移动，使用角落进行缩放。双击以编辑文字。",
+      "selection": "选区"
     },
     "layer": {
       "alignToPage": "对齐页面",
@@ -6111,7 +6112,9 @@
         "title": "表情包",
         "top": "当代码跑通时",
         "bottom": "一次成功"
-      }
+      },
+      "replaceTitle": "替换你的设计？",
+      "replace": "替换"
     },
     "design": {
       "format": "格式",
@@ -6162,6 +6165,14 @@
       "done": "已添加 {{count}} 条字幕。",
       "noSpeech": "此片段中未检测到语音。",
       "failed": "无法为此片段生成字幕。"
+    },
+    "multi": {
+      "selected": "已选择 {{count}} 个图层",
+      "alignTogether": "相互对齐",
+      "spacing": "均匀间距",
+      "spaceHorizontal": "水平均匀分布",
+      "spaceVertical": "垂直均匀分布",
+      "hint": "拖动其中任意一个即可一起移动。按住 Shift 点击，或在画布空白处拖出选框来更改选区。"
     }
   }
 }

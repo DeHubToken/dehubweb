@@ -3590,7 +3590,8 @@
     },
     "inspector": {
       "selectHint": "Zaɓi shimfiɗa a kan zane ko wani yanki a kan jadawalin lokaci.",
-      "textHint": "Ja a kan zane don motsawa, yi amfani da kusurwa don sake girman. Danna sau biyu don gyara kalmomi."
+      "textHint": "Ja a kan zane don motsawa, yi amfani da kusurwa don sake girman. Danna sau biyu don gyara kalmomi.",
+      "selection": "Zaɓi"
     },
     "layer": {
       "alignToPage": "Daidaita zuwa shafi",
@@ -3781,7 +3782,9 @@
         "title": "Meme",
         "top": "Idan kod ɗin ya yi aiki",
         "bottom": "A karon farko"
-      }
+      },
+      "replaceTitle": "Maye gurbin zanenka?",
+      "replace": "Maye gurbi"
     },
     "design": {
       "format": "Tsari",
@@ -3832,6 +3835,14 @@
       "done": "An ƙara rubutun ƙasa {{count}}.",
       "noSpeech": "Ba a sami magana a wannan bidiyo ba.",
       "failed": "An kasa ƙirƙirar rubutun ƙasa don wannan bidiyo."
+    },
+    "multi": {
+      "selected": "An zaɓi layuka {{count}}",
+      "alignTogether": "Daidaita su da juna",
+      "spacing": "Tazara daidai",
+      "spaceHorizontal": "Raba daidai a kwance",
+      "spaceVertical": "Raba daidai a tsaye",
+      "hint": "Ja kowanne daga cikinsu don motsa su tare. Danna Shift ko ja akwati a sararin fili don canza zaɓin."
     }
   },
   "fractions": {

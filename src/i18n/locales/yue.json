@@ -3591,7 +3591,8 @@
     },
     "inspector": {
       "selectHint": "請在畫布上選擇圖層或時間軸上的片段。",
-      "textHint": "在畫布上拖曳以移動，使用角落以調整大小。按兩下來編輯文字。"
+      "textHint": "在畫布上拖曳以移動，使用角落以調整大小。按兩下來編輯文字。",
+      "selection": "選取"
     },
     "layer": {
       "alignToPage": "對齊頁面",
@@ -3782,7 +3783,9 @@
         "title": "迷因",
         "top": "當段 code 行到",
         "bottom": "第一次就得"
-      }
+      },
+      "replaceTitle": "要取代您的設計嗎？",
+      "replace": "取代"
     },
     "design": {
       "format": "格式",
@@ -3833,6 +3836,14 @@
       "done": "加咗 {{count}} 條字幕。",
       "noSpeech": "呢段片冇搵到講嘢聲。",
       "failed": "呢段片整唔到字幕。"
+    },
+    "multi": {
+      "selected": "已選取 {{count}} 個圖層",
+      "alignTogether": "互相對齊",
+      "spacing": "平均間距",
+      "spaceHorizontal": "橫向平均分佈",
+      "spaceVertical": "直向平均分佈",
+      "hint": "拖曳任何一個即可一齊移動。按住 Shift 點擊，或喺空白畫布上拖出方框，即可更改選取範圍。"
     }
   },
   "fractions": {

@@ -3546,7 +3546,8 @@
     },
     "inspector": {
       "selectHint": "Kanwadaky gatlagy ýa-da wagt çyzgysyndaky klipi saýlaň.",
-      "textHint": "Süýşürmek üçin kanwada süýräň, ölçegini üýtgetmek üçin burçlary ulanyň. Sözleri üýtgetmek üçin iki gezek basyň."
+      "textHint": "Süýşürmek üçin kanwada süýräň, ölçegini üýtgetmek üçin burçlary ulanyň. Sözleri üýtgetmek üçin iki gezek basyň.",
+      "selection": "Saýlaw"
     },
     "layer": {
       "alignToPage": "Sahypa laýykla",
@@ -3737,7 +3738,9 @@
         "title": "Mem",
         "top": "Kod işlände",
         "bottom": "Ilkinji synanyşykda"
-      }
+      },
+      "replaceTitle": "Dizaýnyňyzy çalyşmalymy?",
+      "replace": "Çalyş"
     },
     "design": {
       "format": "Format",
@@ -3788,6 +3791,14 @@
       "done": "{{count}} subtitr goşuldy.",
       "noSpeech": "Bu klipde gürleýiş tapylmady.",
       "failed": "Bu klip üçin subtitr döredip bolmady."
+    },
+    "multi": {
+      "selected": "{{count}} gatlak saýlandy",
+      "alignTogether": "Biri-birine deňle",
+      "spacing": "Deň aralyk",
+      "spaceHorizontal": "Keseligine deň ýerleşdir",
+      "spaceVertical": "Dikligine deň ýerleşdir",
+      "hint": "Hemmesini bilelikde süýşürmek üçin islendik birini çekiň. Saýlawy üýtgetmek üçin Shift bilen basyň ýa-da boş kanwada çarçuwa çekiň."
     }
   },
   "fractions": {

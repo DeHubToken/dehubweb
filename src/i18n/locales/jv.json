@@ -3580,7 +3580,8 @@
     },
     "inspector": {
       "selectHint": "Pilih lapisan ing kanvas utawa klip ing garis wektu.",
-      "textHint": "Seret ing kanvas kanggo mindhah, gunakake pojok kanggo ngowahi ukuran. Klik kaping pindho kanggo nyunting tembung."
+      "textHint": "Seret ing kanvas kanggo mindhah, gunakake pojok kanggo ngowahi ukuran. Klik kaping pindho kanggo nyunting tembung.",
+      "selection": "Pilihan"
     },
     "layer": {
       "alignToPage": "Sejajarke karo kaca",
@@ -3771,7 +3772,9 @@
         "title": "Meme",
         "top": "Nalika kode mlaku",
         "bottom": "Pas nyoba pisanan"
-      }
+      },
+      "replaceTitle": "Ganti desainmu?",
+      "replace": "Ganti"
     },
     "design": {
       "format": "Format",
@@ -3822,6 +3825,14 @@
       "done": "{{count}} teks ditambahake.",
       "noSpeech": "Ora ana omongan ing klip iki.",
       "failed": "Ora bisa nggawe teks kanggo klip iki."
+    },
+    "multi": {
+      "selected": "{{count}} lapisan dipilih",
+      "alignTogether": "Sejajarke siji lan sijine",
+      "spacing": "Jarak rata",
+      "spaceHorizontal": "Ratakake jarak mendatar",
+      "spaceVertical": "Ratakake jarak mudhun",
+      "hint": "Seret salah sijine kanggo mindhah kabeh bebarengan. Shift-klik utawa seret kothak ing kanvas kosong kanggo ngowahi pilihan."
     }
   },
   "fractions": {

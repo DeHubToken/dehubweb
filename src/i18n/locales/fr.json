@@ -5915,7 +5915,8 @@
     },
     "inspector": {
       "selectHint": "Sélectionnez un calque sur la zone de dessin ou un clip sur la chronologie.",
-      "textHint": "Faites glisser sur la zone de dessin pour déplacer, utilisez les coins pour redimensionner. Double-cliquez pour modifier le texte."
+      "textHint": "Faites glisser sur la zone de dessin pour déplacer, utilisez les coins pour redimensionner. Double-cliquez pour modifier le texte.",
+      "selection": "Sélection"
     },
     "layer": {
       "alignToPage": "Aligner à la page",
@@ -6106,7 +6107,9 @@
         "title": "Mème",
         "top": "Quand le code marche",
         "bottom": "Du premier coup"
-      }
+      },
+      "replaceTitle": "Remplacer votre design ?",
+      "replace": "Remplacer"
     },
     "design": {
       "format": "Format",
@@ -6157,6 +6160,14 @@
       "done": "{{count}} sous-titres ajoutés.",
       "noSpeech": "Aucune parole détectée dans ce clip.",
       "failed": "Impossible de créer des sous-titres pour ce clip."
+    },
+    "multi": {
+      "selected": "{{count}} calques sélectionnés",
+      "alignTogether": "Aligner entre eux",
+      "spacing": "Espacement uniforme",
+      "spaceHorizontal": "Répartir horizontalement",
+      "spaceVertical": "Répartir verticalement",
+      "hint": "Faites glisser l'un d'eux pour les déplacer ensemble. Maj+clic ou tracez un cadre sur une zone vide du canevas pour modifier la sélection."
     }
   }
 }

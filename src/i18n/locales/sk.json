@@ -3732,7 +3732,8 @@
     },
     "inspector": {
       "selectHint": "Vyberte vrstvu na plátne alebo klip na časovej osi.",
-      "textHint": "Potiahnite na plátne pre presunutie, použite rohy na zmenu veľkosti. Dvojkliknite pre úpravu textu."
+      "textHint": "Potiahnite na plátne pre presunutie, použite rohy na zmenu veľkosti. Dvojkliknite pre úpravu textu.",
+      "selection": "Výber"
     },
     "layer": {
       "alignToPage": "Zarovnať na stránku",
@@ -3923,7 +3924,9 @@
         "title": "Meme",
         "top": "Keď kód funguje",
         "bottom": "Na prvý pokus"
-      }
+      },
+      "replaceTitle": "Nahradiť váš dizajn?",
+      "replace": "Nahradiť"
     },
     "design": {
       "format": "Formát",
@@ -3974,6 +3977,14 @@
       "done": "Pridané titulky: {{count}}.",
       "noSpeech": "V tomto klipe sa nenašla žiadna reč.",
       "failed": "Pre tento klip sa nepodarilo vytvoriť titulky."
+    },
+    "multi": {
+      "selected": "Vybraté vrstvy: {{count}}",
+      "alignTogether": "Zarovnať navzájom",
+      "spacing": "Rovnomerné rozostupy",
+      "spaceHorizontal": "Rozmiestniť rovnomerne vodorovne",
+      "spaceVertical": "Rozmiestniť rovnomerne zvisle",
+      "hint": "Potiahnite ktorúkoľvek z nich a presuniete ich spolu. Výber zmeníte kliknutím so Shift alebo ťahaním rámčeka na prázdnom plátne."
     }
   },
   "post": {

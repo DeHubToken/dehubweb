@@ -3608,7 +3608,8 @@
     },
     "inspector": {
       "selectHint": "Zgjidhni një shtresë në kanavacë ose një klip në linjën kohore.",
-      "textHint": "Zvarriteni në kanavacë për ta lëvizur, përdorni qoshet për ta ndryshuar madhësinë. Klikoni dy herë për të redaktuar fjalët."
+      "textHint": "Zvarriteni në kanavacë për ta lëvizur, përdorni qoshet për ta ndryshuar madhësinë. Klikoni dy herë për të redaktuar fjalët.",
+      "selection": "Përzgjedhja"
     },
     "layer": {
       "alignToPage": "Rreshto me faqen",
@@ -3799,7 +3800,9 @@
         "title": "Meme",
         "top": "Kur kodi punon",
         "bottom": "Që në provën e parë"
-      }
+      },
+      "replaceTitle": "Ta zëvendësosh dizajnin?",
+      "replace": "Zëvendëso"
     },
     "design": {
       "format": "Formati",
@@ -3850,6 +3853,14 @@
       "done": "U shtuan {{count}} titra.",
       "noSpeech": "Nuk u gjet e folur në këtë klip.",
       "failed": "Nuk u krijuan dot titra për këtë klip."
+    },
+    "multi": {
+      "selected": "{{count}} shtresa të përzgjedhura",
+      "alignTogether": "Rreshto me njëra-tjetrën",
+      "spacing": "Hapësirë e barabartë",
+      "spaceHorizontal": "Shpërndaj horizontalisht",
+      "spaceVertical": "Shpërndaj vertikalisht",
+      "hint": "Tërhiq cilëndo prej tyre për t'i lëvizur së bashku. Shift+klik ose tërhiq një kuti në kanavacën bosh për të ndryshuar përzgjedhjen."
     }
   },
   "fractions": {

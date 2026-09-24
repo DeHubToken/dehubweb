@@ -3576,7 +3576,8 @@
     },
     "inspector": {
       "selectHint": "Velg et lag på lerretet eller et klipp på tidslinjen.",
-      "textHint": "Dra på lerretet for å flytte, bruk hjørnene for å endre størrelse. Dobbeltklikk for å redigere teksten."
+      "textHint": "Dra på lerretet for å flytte, bruk hjørnene for å endre størrelse. Dobbeltklikk for å redigere teksten.",
+      "selection": "Utvalg"
     },
     "layer": {
       "alignToPage": "Juster til side",
@@ -3767,7 +3768,9 @@
         "title": "Meme",
         "top": "Når koden virker",
         "bottom": "På første forsøk"
-      }
+      },
+      "replaceTitle": "Erstatte designet ditt?",
+      "replace": "Erstatt"
     },
     "design": {
       "format": "Format",
@@ -3818,6 +3821,14 @@
       "done": "La til {{count}} tekstlinjer.",
       "noSpeech": "Fant ingen tale i dette klippet.",
       "failed": "Kunne ikke lage teksting for dette klippet."
+    },
+    "multi": {
+      "selected": "{{count}} lag valgt",
+      "alignTogether": "Juster mot hverandre",
+      "spacing": "Jevn avstand",
+      "spaceHorizontal": "Fordel jevnt vannrett",
+      "spaceVertical": "Fordel jevnt loddrett",
+      "hint": "Dra hvilken som helst av dem for å flytte dem sammen. Shift-klikk eller dra en ramme på tomt lerret for å endre utvalget."
     }
   },
   "fractions": {

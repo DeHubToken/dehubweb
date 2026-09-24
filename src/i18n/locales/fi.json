@@ -5801,7 +5801,8 @@
     },
     "inspector": {
       "selectHint": "Valitse taso piirtoalueelta tai leike aikajanasta.",
-      "textHint": "Vedä piirtoalueella siirtääksesi, käytä kulmia muuttaaksesi kokoa. Kaksoisnapsauta muokataksesi tekstiä."
+      "textHint": "Vedä piirtoalueella siirtääksesi, käytä kulmia muuttaaksesi kokoa. Kaksoisnapsauta muokataksesi tekstiä.",
+      "selection": "Valinta"
     },
     "layer": {
       "alignToPage": "Tasaa sivulle",
@@ -5992,7 +5993,9 @@
         "title": "Meemi",
         "top": "Kun koodi toimii",
         "bottom": "Ekalla yrityksellä"
-      }
+      },
+      "replaceTitle": "Korvataanko suunnitelmasi?",
+      "replace": "Korvaa"
     },
     "design": {
       "format": "Muoto",
@@ -6043,6 +6046,14 @@
       "done": "Lisättiin {{count}} tekstitystä.",
       "noSpeech": "Tästä leikkeestä ei löytynyt puhetta.",
       "failed": "Tekstityksiä ei voitu luoda tälle leikkeelle."
+    },
+    "multi": {
+      "selected": "{{count}} tasoa valittu",
+      "alignTogether": "Tasaa toisiinsa",
+      "spacing": "Tasaiset välit",
+      "spaceHorizontal": "Jaa tasaisesti vaakasuunnassa",
+      "spaceVertical": "Jaa tasaisesti pystysuunnassa",
+      "hint": "Vedä mitä tahansa niistä siirtääksesi ne yhdessä. Vaihda valintaa Shift-klikkauksella tai vetämällä laatikko tyhjälle kankaalle."
     }
   }
 }

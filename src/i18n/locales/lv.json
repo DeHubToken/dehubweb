@@ -5892,7 +5892,8 @@
     },
     "inspector": {
       "selectHint": "Atlasiet slāni zīmēšanas laukumā vai klipu laika skalā.",
-      "textHint": "Velciet zīmēšanas laukumā, lai pārvietotu, izmantojiet stūrus, lai mainītu izmērus. Veiciet dubultklikšķi, lai rediģētu vārdus."
+      "textHint": "Velciet zīmēšanas laukumā, lai pārvietotu, izmantojiet stūrus, lai mainītu izmērus. Veiciet dubultklikšķi, lai rediģētu vārdus.",
+      "selection": "Atlase"
     },
     "layer": {
       "alignToPage": "Līdzināt lapai",
@@ -6083,7 +6084,9 @@
         "title": "Mēms",
         "top": "Kad kods strādā",
         "bottom": "No pirmās reizes"
-      }
+      },
+      "replaceTitle": "Aizstāt jūsu dizainu?",
+      "replace": "Aizstāt"
     },
     "design": {
       "format": "Formāts",
@@ -6134,6 +6137,14 @@
       "done": "Pievienoti {{count}} subtitri.",
       "noSpeech": "Šajā klipā netika atrasta runa.",
       "failed": "Neizdevās izveidot subtitrus šim klipam."
+    },
+    "multi": {
+      "selected": "Atlasīti slāņi: {{count}}",
+      "alignTogether": "Līdzināt savstarpēji",
+      "spacing": "Vienmērīgas atstarpes",
+      "spaceHorizontal": "Izkārtot vienmērīgi horizontāli",
+      "spaceVertical": "Izkārtot vienmērīgi vertikāli",
+      "hint": "Velc jebkuru no tiem, lai pārvietotu tos kopā. Shift+klikšķis vai velc rāmi tukšā audekla vietā, lai mainītu atlasi."
     }
   }
 }

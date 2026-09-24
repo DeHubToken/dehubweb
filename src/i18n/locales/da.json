@@ -5831,7 +5831,8 @@
     },
     "inspector": {
       "selectHint": "Vælg et lag på lærredet eller et klip på tidslinjen.",
-      "textHint": "Træk på lærredet for at flytte, brug hjørnerne til at ændre størrelse. Dobbeltklik for at redigere teksten."
+      "textHint": "Træk på lærredet for at flytte, brug hjørnerne til at ændre størrelse. Dobbeltklik for at redigere teksten.",
+      "selection": "Markering"
     },
     "layer": {
       "alignToPage": "Juster til side",
@@ -6022,7 +6023,9 @@
         "title": "Meme",
         "top": "Når koden virker",
         "bottom": "I første forsøg"
-      }
+      },
+      "replaceTitle": "Erstat dit design?",
+      "replace": "Erstat"
     },
     "design": {
       "format": "Format",
@@ -6073,6 +6076,14 @@
       "done": "Tilføjede {{count}} undertekster.",
       "noSpeech": "Ingen tale fundet i dette klip.",
       "failed": "Kunne ikke lave undertekster til dette klip."
+    },
+    "multi": {
+      "selected": "{{count}} lag markeret",
+      "alignTogether": "Justér i forhold til hinanden",
+      "spacing": "Jævn afstand",
+      "spaceHorizontal": "Fordel vandret",
+      "spaceVertical": "Fordel lodret",
+      "hint": "Træk i et af dem for at flytte dem samlet. Skift-klik eller træk en boks på tomt lærred for at ændre markeringen."
     }
   }
 }
