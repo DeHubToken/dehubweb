@@ -3407,6 +3407,17 @@
       "vignette": "ভিনেট {{value}}%",
       "auto": "অটো এনহ্যান্স",
       "autoFailed": "এই ছবিয়ান বিশ্লেষণ গরা ন গেল।"
+    },
+    "pages": {
+      "add": "পেইজ যোগ গরো",
+      "duplicate": "পেইজ ডুপ্লিকেট গরো",
+      "delete": "পেইজ মুছি ফেলো",
+      "page": "পেইজ {{number}}",
+      "position": "পেইজ {{current}} / {{total}}",
+      "label": "পেইজগিন",
+      "allZip": "বেক {{count}}গান পেইজ (ZIP)",
+      "thisPage": "খালি এই পেইজ",
+      "exporting": "পেইজ {{current}} / {{total}} রেন্ডার অর…"
     }
   },
   "post": {

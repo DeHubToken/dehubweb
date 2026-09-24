@@ -3715,6 +3715,17 @@
       "vignette": "ቪኘት {{value}}%",
       "auto": "ብኣውቶማቲክ ኣመሓይሽ",
       "autoFailed": "ነዚ ስእሊ ክንትንትኖ ኣይከኣልናን።"
+    },
+    "pages": {
+      "add": "ገጽ ወስኽ",
+      "duplicate": "ገጽ ቅዳሕ",
+      "delete": "ገጽ ሰርዝ",
+      "page": "ገጽ {{number}}",
+      "position": "ገጽ {{current}} ካብ {{total}}",
+      "label": "ገጻት",
+      "allZip": "ኩሎም {{count}} ገጻት (ZIP)",
+      "thisPage": "እዚ ገጽ ጥራይ",
+      "exporting": "ገጽ {{current}} ካብ {{total}} ይዳሎ ኣሎ…"
     }
   },
   "fractions": {

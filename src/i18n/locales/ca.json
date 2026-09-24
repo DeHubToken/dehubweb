@@ -6022,6 +6022,17 @@
       "vignette": "Vinyetatge {{value}}%",
       "auto": "Millora automàtica",
       "autoFailed": "No s'ha pogut analitzar aquesta imatge."
+    },
+    "pages": {
+      "add": "Afegeix una pàgina",
+      "duplicate": "Duplica la pàgina",
+      "delete": "Elimina la pàgina",
+      "page": "Pàgina {{number}}",
+      "position": "Pàgina {{current}} de {{total}}",
+      "label": "Pàgines",
+      "allZip": "Totes les {{count}} pàgines (ZIP)",
+      "thisPage": "Només aquesta pàgina",
+      "exporting": "Renderitzant la pàgina {{current}} de {{total}}…"
     }
   }
 }

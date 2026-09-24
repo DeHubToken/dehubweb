@@ -233,6 +233,14 @@ export interface ProjectSettings {
   fps: number;
   background: string; // hex
   aspectPreset: AspectPreset;
+  /**
+   * Start times (seconds) of each page, ascending, first is 0. Absent means a
+   * single page. A page runs until the next page starts; the last one until
+   * the end of the timeline (at least PAGE_MIN seconds). Pages are slices of
+   * the one timeline, so a carousel is a still per page and a video's pages
+   * are its scenes.
+   */
+  pages?: number[];
 }
 
 export interface ProjectSnapshot {

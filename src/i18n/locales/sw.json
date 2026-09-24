@@ -6079,6 +6079,17 @@
       "vignette": "Vinyeti {{value}}%",
       "auto": "Boresha kiotomatiki",
       "autoFailed": "Haikuweza kuchanganua picha hii."
+    },
+    "pages": {
+      "add": "Ongeza ukurasa",
+      "duplicate": "Nakili ukurasa",
+      "delete": "Futa ukurasa",
+      "page": "Ukurasa {{number}}",
+      "position": "Ukurasa {{current}} kati ya {{total}}",
+      "label": "Kurasa",
+      "allZip": "Kurasa zote {{count}} (ZIP)",
+      "thisPage": "Ukurasa huu pekee",
+      "exporting": "Inatayarisha ukurasa {{current}} kati ya {{total}}…"
     }
   }
 }

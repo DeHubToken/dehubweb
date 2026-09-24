@@ -35,6 +35,7 @@ import { useEditorQuota } from "@/hooks/use-editor-quota";
 import { importFiles } from "@/lib/editor/importFiles";
 import { TEXT_DRAG_MIME, type TextPreset } from "@/lib/editor/textPresets";
 import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
+import { PagesStrip } from "./PagesStrip";
 
 const MEDIA_DRAG_MIME = "application/x-dehub-media";
 /** Snap distance in screen pixels. */
@@ -836,6 +837,8 @@ export function Compositor() {
         </div>
       </div>
 
+
+      <PagesStrip sources={sources} />
 
       <div className="flex min-w-0 items-center gap-3 border-t border-white/10 bg-black/60 px-4 py-2.5 backdrop-blur-[24px]">
         <Button

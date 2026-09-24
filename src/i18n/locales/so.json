@@ -3806,6 +3806,17 @@
       "vignette": "Madoobaynta geesaha {{value}}%",
       "auto": "Hagaajin toos ah",
       "autoFailed": "Sawirkan lama falanqayn karin."
+    },
+    "pages": {
+      "add": "Ku dar bog",
+      "duplicate": "Nuqul bogga",
+      "delete": "Tirtir bogga",
+      "page": "Bogga {{number}}",
+      "position": "Bogga {{current}} ee {{total}}",
+      "label": "Bogag",
+      "allZip": "Dhammaan {{count}} bog (ZIP)",
+      "thisPage": "Boggan oo kaliya",
+      "exporting": "Waxaa la diyaarinayaa bogga {{current}} ee {{total}}…"
     }
   },
   "fractions": {

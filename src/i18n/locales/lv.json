@@ -6114,6 +6114,17 @@
       "vignette": "Vinjete {{value}}%",
       "auto": "Automātiska uzlabošana",
       "autoFailed": "Neizdevās analizēt šo attēlu."
+    },
+    "pages": {
+      "add": "Pievienot lapu",
+      "duplicate": "Dublēt lapu",
+      "delete": "Dzēst lapu",
+      "page": "{{number}}. lapa",
+      "position": "{{current}}. lapa no {{total}}",
+      "label": "Lapas",
+      "allZip": "Visas {{count}} lapas (ZIP)",
+      "thisPage": "Tikai šī lapa",
+      "exporting": "Renderē {{current}}. lapu no {{total}}…"
     }
   }
 }

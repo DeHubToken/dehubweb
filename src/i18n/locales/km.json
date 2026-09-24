@@ -5914,6 +5914,17 @@
       "vignette": "វីញ៉េត {{value}}%",
       "auto": "កែលម្អស្វ័យប្រវត្តិ",
       "autoFailed": "មិនអាចវិភាគរូបភាពនេះបានទេ។"
+    },
+    "pages": {
+      "add": "បន្ថែមទំព័រ",
+      "duplicate": "ចម្លងទំព័រ",
+      "delete": "លុបទំព័រ",
+      "page": "ទំព័រ {{number}}",
+      "position": "ទំព័រ {{current}} នៃ {{total}}",
+      "label": "ទំព័រ",
+      "allZip": "ទំព័រទាំង {{count}} (ZIP)",
+      "thisPage": "តែទំព័រនេះប៉ុណ្ណោះ",
+      "exporting": "កំពុងបង្កើតទំព័រ {{current}} នៃ {{total}}…"
     }
   },
   "spaces": {

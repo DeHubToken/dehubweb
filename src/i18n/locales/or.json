@@ -3752,6 +3752,17 @@
       "vignette": "ଭିଗ୍ନେଟ {{value}}%",
       "auto": "ଅଟୋ ଏନହାନ୍ସ",
       "autoFailed": "ଏହି ଛବିର ବିଶ୍ଳେଷଣ କରାଯାଇପାରିଲା ନାହିଁ।"
+    },
+    "pages": {
+      "add": "ପୃଷ୍ଠା ଯୋଡନ୍ତୁ",
+      "duplicate": "ପୃଷ୍ଠା ନକଲ କରନ୍ତୁ",
+      "delete": "ପୃଷ୍ଠା ଡିଲିଟ୍ କରନ୍ତୁ",
+      "page": "ପୃଷ୍ଠା {{number}}",
+      "position": "ପୃଷ୍ଠା {{current}} / {{total}}",
+      "label": "ପୃଷ୍ଠାଗୁଡିକ",
+      "allZip": "ସମସ୍ତ {{count}} ପୃଷ୍ଠା (ZIP)",
+      "thisPage": "କେବଳ ଏହି ପୃଷ୍ଠା",
+      "exporting": "ପୃଷ୍ଠା {{current}} / {{total}} ରେଣ୍ଡର୍ ହେଉଛି…"
     }
   },
   "fractions": {

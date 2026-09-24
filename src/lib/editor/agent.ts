@@ -18,6 +18,7 @@ import { applyFilterPreset } from "./filterPresets";
 import { GOOGLE_FONTS, fontFamilyCss, loadGoogleFont } from "./googleFonts";
 import { downloadFreeAsset, provenanceForAsset, searchFreeAssets, type FreeAssetOrientation } from "./freeAssets";
 import { importOneFile } from "./importFiles";
+import { getPages, pageAt } from "./pages";
 import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL || "https://aigxuutjaqsywioxjefr.supabase.co"}/functions/v1/editor-agent`;
@@ -53,7 +54,10 @@ export function describeScene() {
     .sort((a, b) => (trackOrder.get(a.trackId) ?? 0) - (trackOrder.get(b.trackId) ?? 0))
     .map((c) => describeClip(c, s.media, hidden.has(c.trackId)));
   const duration = s.clips.reduce((m, c) => Math.max(m, c.start + c.duration), 0);
+  const pages = getPages(s.settings, s.clips);
   return {
+    pages: pages.length > 1 ? pages.map((p) => ({ index: p.index, start: round(p.start, 2), end: round(p.end, 2) })) : undefined,
+    currentPage: pages.length > 1 ? pageAt(pages, s.currentTime).index : undefined,
     page: {
       width: s.settings.width,
       height: s.settings.height,
@@ -533,6 +537,18 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         created.push(id);
         const clip = store().clips.find((c) => c.id === id);
         if (clip && kind !== "audio") place(clip, op);
+        return true;
+      }
+      case "add_page": {
+        s.addPage({ duplicate: bool(op.duplicate) === true });
+        return true;
+      }
+      case "goto_page": {
+        const pages = getPages(s.settings, s.clips);
+        const idx = num(op.index);
+        const page = idx !== undefined ? pages[Math.round(idx)] : undefined;
+        if (!page) return false;
+        s.setCurrentTime(page.start);
         return true;
       }
       case "use_template": {

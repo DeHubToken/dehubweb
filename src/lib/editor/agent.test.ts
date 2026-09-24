@@ -102,3 +102,37 @@ describe("agent layering", () => {
     expect(z(subtitle.id)).toBeGreaterThan(z(title.id));
   });
 });
+
+describe("pages", () => {
+  beforeEach(() => useEditorStore.getState().newProject());
+
+  it("builds a two-page carousel from agent ops, one undo", async () => {
+    await applyOps([
+      { op: "set_canvas", aspect: "1:1" },
+      { op: "add_text", text: "Slide one" },
+      { op: "add_page" },
+      { op: "add_text", text: "Slide two" },
+    ]);
+    const s = useEditorStore.getState();
+    expect(s.settings.pages).toEqual([0, 5]);
+    const [one, two] = s.clips;
+    expect(one.start).toBe(0);
+    expect(two.start).toBe(5);
+    s.undo();
+    expect(useEditorStore.getState().clips).toHaveLength(0);
+    expect(useEditorStore.getState().settings.pages).toBeUndefined();
+  });
+
+  it("duplicates the current page and deletes a middle page, closing the gap", async () => {
+    await applyOps([{ op: "add_shape", shape: "star" }]);
+    const st = useEditorStore.getState();
+    st.addPage({ duplicate: true });
+    st.addPage({ duplicate: true });
+    expect(useEditorStore.getState().settings.pages).toEqual([0, 5, 10]);
+    expect(useEditorStore.getState().clips.map((c) => c.start)).toEqual([0, 5, 10]);
+    useEditorStore.getState().deletePage(1);
+    const after = useEditorStore.getState();
+    expect(after.settings.pages).toEqual([0, 5]);
+    expect(after.clips.map((c) => c.start)).toEqual([0, 5]);
+  });
+});

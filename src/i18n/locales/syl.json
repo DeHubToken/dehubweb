@@ -3764,6 +3764,17 @@
       "vignette": "ভিনেট {{value}}%",
       "auto": "অটো এনহ্যান্স",
       "autoFailed": "এই ছবিটা বিশ্লেষণ করা গেল না।"
+    },
+    "pages": {
+      "add": "পেজ যোগ করো",
+      "duplicate": "পেজ ডুপ্লিকেট করো",
+      "delete": "পেজ মুছো",
+      "page": "পেজ {{number}}",
+      "position": "{{total}}-র মাঝে পেজ {{current}}",
+      "label": "পেজগুলা",
+      "allZip": "হকল {{count}}টা পেজ (ZIP)",
+      "thisPage": "খালি এই পেজ",
+      "exporting": "{{total}}-র মাঝে পেজ {{current}} রেন্ডার অর…"
     }
   },
   "post": {

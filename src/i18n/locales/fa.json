@@ -6015,6 +6015,17 @@
       "vignette": "وینیت {{value}}%",
       "auto": "بهبود خودکار",
       "autoFailed": "تحلیل این تصویر ممکن نشد."
+    },
+    "pages": {
+      "add": "افزودن صفحه",
+      "duplicate": "تکثیر صفحه",
+      "delete": "حذف صفحه",
+      "page": "صفحه {{number}}",
+      "position": "صفحه {{current}} از {{total}}",
+      "label": "صفحه‌ها",
+      "allZip": "همه {{count}} صفحه (ZIP)",
+      "thisPage": "فقط این صفحه",
+      "exporting": "در حال رندر صفحه {{current}} از {{total}}…"
     }
   }
 }

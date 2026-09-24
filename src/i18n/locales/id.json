@@ -6142,6 +6142,17 @@
       "vignette": "Vignet {{value}}%",
       "auto": "Tingkatkan otomatis",
       "autoFailed": "Tidak dapat menganalisis gambar ini."
+    },
+    "pages": {
+      "add": "Tambah halaman",
+      "duplicate": "Duplikat halaman",
+      "delete": "Hapus halaman",
+      "page": "Halaman {{number}}",
+      "position": "Halaman {{current}} dari {{total}}",
+      "label": "Halaman",
+      "allZip": "Semua {{count}} halaman (ZIP)",
+      "thisPage": "Hanya halaman ini",
+      "exporting": "Merender halaman {{current}} dari {{total}}…"
     }
   }
 }
