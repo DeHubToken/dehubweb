@@ -372,6 +372,7 @@ export type Database = {
           created_at: string
           id: string
           landing_cta_label: string | null
+          landing_ctas: Json
           landing_destination: string | null
           landing_headline: string | null
           landing_message: string | null
@@ -386,6 +387,7 @@ export type Database = {
           created_at?: string
           id?: string
           landing_cta_label?: string | null
+          landing_ctas?: Json
           landing_destination?: string | null
           landing_headline?: string | null
           landing_message?: string | null
@@ -400,12 +402,40 @@ export type Database = {
           created_at?: string
           id?: string
           landing_cta_label?: string | null
+          landing_ctas?: Json
           landing_destination?: string | null
           landing_headline?: string | null
           landing_message?: string | null
           owner_address?: string
           share_name?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      affiliate_cta_clicks: {
+        Row: {
+          clicked_at: string
+          code: string
+          destination: string
+          id: string
+          owner_address: string
+          visitor_id: string
+        }
+        Insert: {
+          clicked_at?: string
+          code: string
+          destination: string
+          id?: string
+          owner_address: string
+          visitor_id: string
+        }
+        Update: {
+          clicked_at?: string
+          code?: string
+          destination?: string
+          id?: string
+          owner_address?: string
+          visitor_id?: string
         }
         Relationships: []
       }
@@ -6987,6 +7017,14 @@ export type Database = {
         Args: { p_max_discovered?: number }
         Returns: Json
       }
+      get_affiliate_cta_stats: {
+        Args: never
+        Returns: {
+          clicks: number
+          destination: string
+          unique_visitors: number
+        }[]
+      }
       get_affiliate_page_stats: {
         Args: never
         Returns: {
@@ -7128,6 +7166,15 @@ export type Database = {
       pgstattuple_approx: {
         Args: { reloid: unknown }
         Returns: Record<string, unknown>
+      }
+      record_affiliate_cta_click: {
+        Args: {
+          p_code: string
+          p_destination: string
+          p_viewer_address?: string
+          p_visitor_id: string
+        }
+        Returns: undefined
       }
       record_affiliate_page_view:
         | {
