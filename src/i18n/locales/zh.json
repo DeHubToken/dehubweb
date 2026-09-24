@@ -4617,7 +4617,8 @@
     "share": "分享",
     "invalidInvite": "邀请无效",
     "invalidInviteHint": "这个推荐码看起来不正确。",
-    "goToDehub": "前往 DeHub"
+    "goToDehub": "前往 DeHub",
+    "moreDestinations": "更多起点"
   },
   "premium": {
     "seoTitle": "DeHub Extra — 高级会员",
@@ -6260,5 +6261,34 @@
     "desc": "丛林里的明媚白天或幽蓝黄昏",
     "day": "白天",
     "evening": "傍晚"
+  },
+  "affiliateLanding": {
+    "title": "自定义你的邀请页面",
+    "subtitle": "让页面体现你的风格。访客在加入前会看到这段文字。",
+    "headline": "标题",
+    "message": "欢迎语",
+    "buttonText": "主按钮文字",
+    "destination": "DeHub 目的地",
+    "extraTitle": "额外按钮 ({{count}}/{{max}})",
+    "extraHint": "将访客直接带到他们感兴趣的 DeHub 板块。每个按钮都会保留你的推荐。",
+    "extraLabel": "按钮文字",
+    "removeButton": "移除按钮",
+    "addCustom": "自定义",
+    "presets": {
+      "edit": "编辑",
+      "create": "创作",
+      "build": "构建",
+      "import": "导入",
+      "explore": "探索"
+    },
+    "publish": "发布更改",
+    "publishing": "发布中…",
+    "reset": "重置",
+    "preview": "实时预览",
+    "published": "邀请页面已发布",
+    "saveFailed": "无法保存邀请页面",
+    "clicksTitle": "按目的地统计点击",
+    "clicksRow_one": "{{clicks}} 次点击 · {{unique}} 独立",
+    "clicksRow_other": "{{clicks}} 次点击 · {{unique}} 独立"
   }
 }

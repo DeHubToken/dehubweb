@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Share2, Users, Wallet, Sparkles, RefreshCw, ExternalLink, Copy } from "lucide-react";
+import { Share2, Users, Wallet, Sparkles, RefreshCw, ExternalLink, Copy, Plus, X } from "lucide-react";
 import { AppState } from '@/components/app/AppState';
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
@@ -15,7 +15,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { BadgeIcon } from "@/components/app/BadgeIcon";
 import { VerifiedBadge } from "@/components/app/VerifiedBadge";
 import { useDeHubProfile } from "@/hooks/use-dehub-profile";
-import { AFFILIATE_COMMISSION_PCT, AFFILIATE_L1_COMMISSION_PCT, AFFILIATE_L2_COMMISSION_PCT, DEFAULT_AFFILIATE_LANDING, loadAffiliateStats, saveAffiliateLanding, type AffiliateLandingCustomization, type AffiliateStats, type AffiliateReferralEntry } from "@/lib/affiliate";
+import { AFFILIATE_COMMISSION_PCT, AFFILIATE_L1_COMMISSION_PCT, AFFILIATE_L2_COMMISSION_PCT, DEFAULT_AFFILIATE_LANDING, AFFILIATE_CTA_PRESETS, MAX_AFFILIATE_LANDING_CTAS, isSafeLandingDestination, loadAffiliateStats, saveAffiliateLanding, type AffiliateLandingCustomization, type AffiliateLandingCta, type AffiliateStats, type AffiliateReferralEntry } from "@/lib/affiliate";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 import { buildReferralDeepLink, sanitizeDeepLinkPath } from "@/lib/affiliateDeepLink";
 import { Input } from "@/components/ui/input";
@@ -134,15 +134,21 @@ export default function AffiliatePage() {
     }
   };
 
+  const landingCtas = landing.ctas ?? [];
+  const updateCta = (index: number, patch: Partial<AffiliateLandingCta>) =>
+    setLanding((v) => ({ ...v, ctas: (v.ctas ?? []).map((c, i) => (i === index ? { ...c, ...patch } : c)) }));
+  const addCta = (cta: AffiliateLandingCta) =>
+    setLanding((v) => ((v.ctas ?? []).length >= MAX_AFFILIATE_LANDING_CTAS ? v : { ...v, ctas: [...(v.ctas ?? []), cta] }));
+
   const saveLanding = async () => {
     if (!wallet || !stats?.code) return;
     setSavingLanding(true);
     try {
       await saveAffiliateLanding(wallet, stats.code, landing);
       setStats((current) => current ? { ...current, landing } : current);
-      toast.success("Invite page published");
+      toast.success(t('affiliateLanding.published'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Could not save invite page");
+      toast.error(error instanceof Error ? error.message : t('affiliateLanding.saveFailed'));
     } finally {
       setSavingLanding(false);
     }
@@ -252,38 +258,86 @@ export default function AffiliatePage() {
           <Card className="border-white/10 bg-white/[0.03] backdrop-blur">
             <CardContent className="p-5 md:p-6 space-y-5">
               <div>
-                <h2 className="text-lg font-semibold text-white">Customize your invite page</h2>
-                <p className="text-sm text-white/60">Make the page sound like you. Visitors see this copy before they join.</p>
+                <h2 className="text-lg font-semibold text-white">{t('affiliateLanding.title')}</h2>
+                <p className="text-sm text-white/60">{t('affiliateLanding.subtitle')}</p>
               </div>
               <div className="grid gap-5 lg:grid-cols-2">
                 <div className="space-y-4">
-                  <LabeledField label="Headline" count={`${landing.headline.length}/80`}>
+                  <LabeledField label={t('affiliateLanding.headline')} count={`${landing.headline.length}/80`}>
                     <Input className="border-white/15 !bg-black/50 !text-white placeholder:text-white/45" value={landing.headline} maxLength={80} onChange={(e) => setLanding((v) => ({ ...v, headline: e.target.value }))} placeholder={DEFAULT_AFFILIATE_LANDING.headline} />
                   </LabeledField>
-                  <LabeledField label="Welcome message" count={`${landing.message.length}/280`}>
+                  <LabeledField label={t('affiliateLanding.message')} count={`${landing.message.length}/280`}>
                     <textarea className="flex min-h-28 w-full rounded-md border border-white/15 !bg-black/50 px-3 py-2 text-sm !text-white placeholder:text-white/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40" value={landing.message} maxLength={280} onChange={(e) => setLanding((v) => ({ ...v, message: e.target.value }))} />
                   </LabeledField>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <LabeledField label="Button text" count={`${landing.ctaLabel.length}/32`}>
+                    <LabeledField label={t('affiliateLanding.buttonText')} count={`${landing.ctaLabel.length}/32`}>
                       <Input className="border-white/15 !bg-black/50 !text-white placeholder:text-white/45" value={landing.ctaLabel} maxLength={32} onChange={(e) => setLanding((v) => ({ ...v, ctaLabel: e.target.value }))} />
                     </LabeledField>
-                    <LabeledField label="DeHub destination">
+                    <LabeledField label={t('affiliateLanding.destination')}>
                       <Input className="border-white/15 !bg-black/50 !text-white placeholder:text-white/45" value={landing.destination} maxLength={200} onChange={(e) => setLanding((v) => ({ ...v, destination: e.target.value }))} placeholder="/app" />
                     </LabeledField>
                   </div>
+                  <div className="space-y-3 rounded-xl border border-white/10 p-3">
+                    <div>
+                      <p className="text-sm font-medium text-white">{t('affiliateLanding.extraTitle', { count: landingCtas.length, max: MAX_AFFILIATE_LANDING_CTAS })}</p>
+                      <p className="text-xs text-white/55">{t('affiliateLanding.extraHint')}</p>
+                    </div>
+                    {landingCtas.map((cta, i) => (
+                      <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-2">
+                        <Input aria-label={t('affiliateLanding.extraLabel')} className="border-white/15 !bg-black/50 !text-white placeholder:text-white/45" value={cta.label} maxLength={32} placeholder={t('affiliateLanding.extraLabel')} onChange={(e) => updateCta(i, { label: e.target.value })} />
+                        <Input aria-label={t('affiliateLanding.destination')} className="border-white/15 !bg-black/50 !text-white placeholder:text-white/45" value={cta.destination} maxLength={200} placeholder="/editor" onChange={(e) => updateCta(i, { destination: e.target.value })} />
+                        <Button variant="ghost" size="icon" aria-label={t('affiliateLanding.removeButton')} onClick={() => setLanding((v) => ({ ...v, ctas: (v.ctas ?? []).filter((_, j) => j !== i) }))}>
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                    {landingCtas.length < MAX_AFFILIATE_LANDING_CTAS && (
+                      <div className="flex flex-wrap gap-2">
+                        {AFFILIATE_CTA_PRESETS.filter((p) => !landingCtas.some((c) => c.destination === p.destination)).map((p) => (
+                          <Button key={p.key} size="sm" variant="outline" onClick={() => addCta({ label: t(`affiliateLanding.presets.${p.key}`), destination: p.destination })}>
+                            <Plus className="mr-1 h-3.5 w-3.5" /> {t(`affiliateLanding.presets.${p.key}`)}
+                          </Button>
+                        ))}
+                        <Button size="sm" variant="ghost" onClick={() => addCta({ label: "", destination: "/" })}>
+                          <Plus className="mr-1 h-3.5 w-3.5" /> {t('affiliateLanding.addCustom')}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
                   <div className="flex gap-2">
-                    <Button onClick={() => void saveLanding()} disabled={savingLanding || !landing.headline.trim() || !landing.message.trim() || !landing.ctaLabel.trim()}>
-                      {savingLanding ? "Publishing…" : "Publish changes"}
+                    <Button onClick={() => void saveLanding()} disabled={savingLanding || !landing.headline.trim() || !landing.message.trim() || !landing.ctaLabel.trim() || landingCtas.some((c) => !c.label.trim() || !isSafeLandingDestination(c.destination.trim()))}>
+                      {savingLanding ? t('affiliateLanding.publishing') : t('affiliateLanding.publish')}
                     </Button>
-                    <Button variant="ghost" onClick={() => setLanding(DEFAULT_AFFILIATE_LANDING)}>Reset</Button>
+                    <Button variant="ghost" onClick={() => setLanding(DEFAULT_AFFILIATE_LANDING)}>{t('affiliateLanding.reset')}</Button>
                   </div>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-black p-6 flex min-h-72 flex-col items-center justify-center text-center">
-                  <p className="text-xs uppercase tracking-[0.25em] text-white/40">Live preview</p>
+                  <p className="text-xs uppercase tracking-[0.25em] text-white/40">{t('affiliateLanding.preview')}</p>
                   <h3 className="mt-4 text-3xl font-bold text-white whitespace-pre-line">{landing.headline || DEFAULT_AFFILIATE_LANDING.headline}</h3>
                   <p className="mt-3 max-w-md text-sm text-white/65 whitespace-pre-line">{landing.message || DEFAULT_AFFILIATE_LANDING.message}</p>
+                  {landingCtas.length > 0 && (
+                    <div className="mt-5 grid w-full max-w-md grid-cols-2 gap-2">
+                      {landingCtas.map((c, i) => (
+                        <span key={i} className="truncate rounded-lg border border-white/15 px-3 py-2 text-xs font-semibold text-white">{c.label || "…"}</span>
+                      ))}
+                    </div>
+                  )}
                   <span className="mt-6 rounded-md bg-white px-5 py-2.5 text-sm font-semibold text-black">{landing.ctaLabel || DEFAULT_AFFILIATE_LANDING.ctaLabel}</span>
                 </div>
+              </div>
+              {(stats?.ctaClicks?.length ?? 0) > 0 && (
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold text-white">{t('affiliateLanding.clicksTitle')}</h3>
+                  <ul className="divide-y divide-white/10 rounded-xl border border-white/10">
+                    {(stats?.ctaClicks ?? []).map((c) => (
+                      <li key={c.destination} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
+                        <span className="truncate font-mono text-white/80">{c.destination}</span>
+                        <span className="shrink-0 text-white/60">{t('affiliateLanding.clicksRow', { count: c.clicks, clicks: c.clicks, unique: c.uniqueVisitors })}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               </div>
             </CardContent>
           </Card>

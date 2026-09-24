@@ -4442,7 +4442,8 @@
     "share": "Ibahagi",
     "invalidInvite": "Invalid na imbita",
     "invalidInviteHint": "Ang referral code na iyon ay hindi mukhang tama.",
-    "goToDehub": "Pumunta sa DeHub"
+    "goToDehub": "Pumunta sa DeHub",
+    "moreDestinations": "Iba pang lugar para magsimula"
   },
   "premium": {
     "seoTitle": "DeHub Extra — Premium Membership",
@@ -6147,5 +6148,34 @@
     "desc": "Maliwanag na araw o bughaw na takipsilim sa gubat",
     "day": "Araw",
     "evening": "Takipsilim"
+  },
+  "affiliateLanding": {
+    "title": "I-customize ang iyong invite page",
+    "subtitle": "Gawing parang ikaw ang page. Nakikita ng mga bisita ang tekstong ito bago sila sumali.",
+    "headline": "Headline",
+    "message": "Mensahe ng pagbati",
+    "buttonText": "Teksto ng pangunahing button",
+    "destination": "Destinasyon sa DeHub",
+    "extraTitle": "Karagdagang button ({{count}}/{{max}})",
+    "extraHint": "Diretsong dalhin ang mga bisita sa bahagi ng DeHub na gusto nila. Pinananatili ng bawat button ang iyong referral.",
+    "extraLabel": "Teksto ng button",
+    "removeButton": "Alisin ang button",
+    "addCustom": "Custom",
+    "presets": {
+      "edit": "I-edit",
+      "create": "Gumawa",
+      "build": "Bumuo",
+      "import": "Mag-import",
+      "explore": "Mag-explore"
+    },
+    "publish": "I-publish ang mga pagbabago",
+    "publishing": "Nagpa-publish…",
+    "reset": "I-reset",
+    "preview": "Live na preview",
+    "published": "Na-publish ang invite page",
+    "saveFailed": "Hindi ma-save ang invite page",
+    "clicksTitle": "Mga click ayon sa destinasyon",
+    "clicksRow_one": "{{clicks}} click · {{unique}} natatangi",
+    "clicksRow_other": "{{clicks}} click · {{unique}} natatangi"
   }
 }
