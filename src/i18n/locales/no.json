@@ -3660,5 +3660,8 @@
       "undo": "Angre",
       "openGenerator": "Se over og generer"
     }
+  },
+  "fractions": {
+    "title": "Andeler"
   }
 }

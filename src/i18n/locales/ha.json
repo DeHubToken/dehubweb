@@ -3032,7 +3032,7 @@
     "statusImported": "An shigo da shi",
     "statusImporting": "Shigo da",
     "subtitle": "Manna tashar ko bayanin martaba, gyara abin da kake so, biya sau ɗaya.",
-    "title": "Yi ƙaura duk",
+    "title": "Matsar da duka",
     "videoCountMany": "{{n}} bidiyo",
     "videoCountOne": "{{n}} bidiyo",
     "videosCount": "{{videos}} bidiyo",
@@ -3674,5 +3674,8 @@
       "undo": "Soke",
       "openGenerator": "Duba kuma ƙirƙira"
     }
+  },
+  "fractions": {
+    "title": "Rabe-rabe"
   }
 }

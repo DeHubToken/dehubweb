@@ -2914,7 +2914,7 @@
     "statusImported": "ተስተካክሏል",
     "statusImporting": "አስመጪ",
     "subtitle": "ሰርጥ ወይም መገለጫ ይለጥፉ ፣ የሚፈልጉትን ያርትዑ ፣ አንድ ጊዜ ይክፈሉ ።",
-    "title": "ሁሉንም ስደተኞች",
+    "title": "ሁሉንም አዛውር",
     "videoCountMany": "{{n}} ቪዲዮዎች",
     "videoCountOne": "{{n}} ቪዲዮ",
     "videosCount": "{{videos}} ቪዲዮዎች",
@@ -3527,5 +3527,8 @@
       "undo": "ቀልብስ",
       "openGenerator": "ገምግም እና ፍጠር"
     }
+  },
+  "fractions": {
+    "title": "ክፍልፋዮች"
   }
 }

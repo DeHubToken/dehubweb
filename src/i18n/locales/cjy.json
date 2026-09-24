@@ -3651,5 +3651,8 @@
     "followers": "关注者",
     "subscribers": "订阅者",
     "mentioned": "被提到的"
+  },
+  "fractions": {
+    "title": "碎片"
   }
 }

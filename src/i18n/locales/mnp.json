@@ -3581,5 +3581,8 @@
     "followers": "关注者",
     "subscribers": "订阅者",
     "mentioned": "提到其人"
+  },
+  "fractions": {
+    "title": "碎片"
   }
 }

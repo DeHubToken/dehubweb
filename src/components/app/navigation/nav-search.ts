@@ -1,6 +1,6 @@
 import {
-  ArrowLeftRight, Bot, Coins, Crown, Film, Gamepad2, History, ListOrdered, Megaphone,
-  Music2, Plug, Smartphone, Star, Tag, Tv, Video,
+  ArrowLeftRight, Bot, Coins, Crown, Film, Gamepad2, History, ListOrdered,
+  Music2, Plug, Smartphone, Star, Tag, Video,
 } from 'lucide-react';
 import type { NavItem } from '@/types/app.types';
 import { NAV_LABEL_KEYS } from './SidebarNavItem';
@@ -242,6 +242,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   // Nobody types "converter" looking for this — they type the platform
   // they're bringing content over from, or what they're trying to do with it.
   Converter: ['youtube', 'yt', 'yt-dlp', 'import youtube', 'import video', 'migrate', 'migrate all', 'download', 'convert', 'tiktok', 'instagram', 'reel', 'reels', 'twitter', 'x', 'facebook', 'twitch', 'clip', 'kick', 'rumble', 'vimeo', 'dailymotion', 'reddit', 'bluesky', 'odysee', 'streamable', 'loom', 'tumblr', 'pinterest', 'snapchat', 'vk', 'rutube', 'bilibili'],
+  Migrate: ['migrate all', 'import channel', 'youtube channel', 'bulk import', 'back catalogue', 'move channel', 'youtube', 'yt'],
   Notifications: ['alerts', 'activity', 'mentions', 'replies', 'likes', 'bell'],
   Messages: ['dm', 'dms', 'direct messages', 'chat', 'inbox', 'conversations', 'pm'],
   Communities: ['groups', 'community', 'rooms', 'servers', 'clubs'],
@@ -360,12 +361,10 @@ export const SEARCH_ONLY_ITEMS: readonly NavItem[] = [
   { icon: Video, label: 'Videos', path: '/videos' },
   { icon: Film, label: 'Shorts', path: '/shorts' },
   { icon: Music2, label: 'Music', path: '/music' },
-  { icon: Tv, label: 'Live TV', path: '/tv' },
   { icon: Coins, label: 'Buy DHB', path: '/app/buy' },
   { icon: ArrowLeftRight, label: 'Bridge', path: '/app/bridge' },
   { icon: ListOrdered, label: 'Top 100', path: '/app/top-100' },
   { icon: Bot, label: 'AI Agents', path: '/app/agents' },
-  { icon: Megaphone, label: 'Advertising', path: '/app/ads' },
   { icon: History, label: 'My Bounties', path: '/work/history' },
   { icon: Crown, label: 'Premium', path: '/premium' },
   { icon: Tag, label: 'Pricing', path: '/pricing' },

@@ -3636,5 +3636,8 @@
       "undo": "رجوع",
       "openGenerator": "راجع وصاوب"
     }
+  },
+  "fractions": {
+    "title": "الأجزاء"
   }
 }

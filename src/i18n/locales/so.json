@@ -3024,7 +3024,7 @@
     "statusImported": "La soo dejiyay",
     "statusImporting": "Soo dejinta",
     "subtitle": "Ku dheji kanaal ama astaan, wax ka beddel waxa aad jeceshahay, bixin hal mar.",
-    "title": "U haajiraan dhammaan",
+    "title": "Dhammaan u guuri",
     "videoCountMany": "{{n}} vidiyo",
     "videoCountOne": "{{n}} video",
     "videosCount": "{{videos}} vidiyo",
@@ -3668,5 +3668,8 @@
       "undo": "Ka noqo",
       "openGenerator": "Dib u eeg oo samee"
     }
+  },
+  "fractions": {
+    "title": "Saamiyo"
   }
 }

@@ -3677,5 +3677,8 @@
     "inProgress": "চলতাসে",
     "completed": "শেষ অইসে",
     "underReview": "পর্যালোচনায়"
+  },
+  "fractions": {
+    "title": "ফ্র্যাকশন"
   }
 }

@@ -2937,7 +2937,7 @@
     "statusImported": "आयातितम्",
     "statusImporting": "आगतम्",
     "subtitle": "एकवारं चैकं चैकं चैकं चैकं चैकं चैकं चैकं च ।",
-    "title": "प्रत्येके स्थलांतरित",
+    "title": "सर्वं स्थानान्तरयतु",
     "videoCountOne": "MSS{{n}} 1अभिप्रायः",
     "viewFeed": "अपना अपना भोजन लिखे",
     "watchOnSource": "उद्घाट्यताम्",
@@ -3571,5 +3571,8 @@
       "undo": "निरस्यतु",
       "openGenerator": "समीक्ष्य जनयतु"
     }
+  },
+  "fractions": {
+    "title": "अंशाः"
   }
 }

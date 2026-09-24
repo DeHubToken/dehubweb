@@ -3167,6 +3167,7 @@
     "website": "אתר אינטרנט"
   },
   "fractions": {
+    "title": "חלקים",
     "statusSettled": "הסתיים",
     "statusAwaitingFractions": "ממתין לשברים",
     "statusAwaitingPayment": "ממתין לתשלום",
