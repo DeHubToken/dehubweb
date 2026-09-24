@@ -53,3 +53,14 @@ describe("editor agent shapes", () => {
     expect(shape?.transform?.y).toBe(0.2);
   });
 });
+
+describe("editor agent tolerance", () => {
+  beforeEach(() => useEditorStore.getState().newProject());
+
+  it("turns a size sent to set_canvas into the nearest aspect", async () => {
+    await applyOps([{ op: "set_canvas", x: 1080, y: 1080 }]);
+    expect(useEditorStore.getState().settings.aspectPreset).toBe("1:1");
+    await applyOps([{ op: "set_canvas", width: 1080, height: 1920 }]);
+    expect(useEditorStore.getState().settings.aspectPreset).toBe("9:16");
+  });
+});
