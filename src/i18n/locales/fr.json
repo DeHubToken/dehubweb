@@ -3842,7 +3842,16 @@
     "aiGenerationCommunityAlt": "Génération IA de la communauté DeHub",
     "close": "Fermer",
     "toolFlow": "Flux de créateur",
-    "toolFlowDesc": "Chaînez du texte, des références, des images et des modèles vidéo sur un canevas, exécutez-le en un seul paiement, partagez-le avec un lien."
+    "toolFlowDesc": "Chaînez du texte, des références, des images et des modèles vidéo sur un canevas, exécutez-le en un seul paiement, partagez-le avec un lien.",
+    "freeImagesLeft_one": "Gratuit · {{count}} image libre restante",
+    "freeImagesLeft_other": "Gratuit · {{count}} images gratuites restantes",
+    "priceFreeRateLimited": "Gratuit · des limites tarifaires s'appliquent",
+    "priceChecking": "Vérification du prix…",
+    "priceUnavailable": "Prix indisponible — réessayez avant de payer",
+    "priceStandardTexture": "texture standard",
+    "priceUsually": "Habituellement {{time}} ; les files d'attente peuvent prendre plus de temps",
+    "useFreeModel_one": "Passez à {{model}} pour utiliser votre image gratuite {{count}}",
+    "useFreeModel_other": "Passez à {{model}} pour utiliser vos images gratuites {{count}}"
   },
   "pricing": {
     "plansForEveryWorkflow": "Plans pour chaque flux de travail",

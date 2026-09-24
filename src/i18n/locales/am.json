@@ -3743,5 +3743,16 @@
     "desc": "በጫካው ውስጥ ብሩህ ቀን ወይም ሰማያዊ ምሽት",
     "day": "ቀን",
     "evening": "ምሽት"
+  },
+  "creator": {
+    "freeImagesLeft_one": "ነፃ · {{count}} ነፃ ምስል ግራ",
+    "freeImagesLeft_other": "ነፃ · {{count}} ነፃ ምስሎች ይቀራሉ",
+    "priceFreeRateLimited": "ነፃ · ተመን ገደቦች ይተገበራሉ",
+    "priceChecking": "ዋጋን መመርመር…",
+    "priceUnavailable": "ዋጋ አይገኝም — ከመክፈልዎ በፊት ይመልሱ",
+    "priceStandardTexture": "መደበኛ ሸካራነት",
+    "priceUsually": "በተለምዶ {{time}}; ወረፋዎች ረዘም ያለ ጊዜ ሊወስዱ ይችላሉ",
+    "useFreeModel_one": "የእርስዎን {{count}} ነፃ ምስል ለመጠቀም ወደ {{model}} ቀይር",
+    "useFreeModel_other": "የእርስዎን {{count}} ነፃ ምስሎችን ለመጠቀም ወደ {{model}} ቀይር"
   }
 }

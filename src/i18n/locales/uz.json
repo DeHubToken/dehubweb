@@ -3936,5 +3936,16 @@
     "desc": "Jangalda yorqin kun yoki moviy g‘ira-shira oqshom",
     "day": "Kunduz",
     "evening": "Oqshom"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Bepul · {{count}} bepul rasm qoldi",
+    "freeImagesLeft_other": "Bepul · {{count}} bepul rasmlar qoldi",
+    "priceFreeRateLimited": "Bepul · narx cheklovlari qo&#39;llaniladi",
+    "priceChecking": "Narx tekshirilmoqda…",
+    "priceUnavailable": "Narxi mavjud emas — to&#39;lovdan oldin qayta urinib ko&#39;ring",
+    "priceStandardTexture": "standart tekstura",
+    "priceUsually": "Odatda {{time}}; navbatlar ko&#39;proq vaqt talab qilishi mumkin",
+    "useFreeModel_one": "Bepul {{count}} rasmingizdan foydalanish uchun {{model}} ga o&#39;ting",
+    "useFreeModel_other": "Bepul {{count}} rasmlaringizdan foydalanish uchun {{model}} ga o&#39;ting"
   }
 }

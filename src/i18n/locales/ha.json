@@ -3890,5 +3890,16 @@
     "desc": "Rana mai haske ko maraice mai shuɗi a cikin daji",
     "day": "Rana",
     "evening": "Maraice"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Free · {{count}} free image bar",
+    "freeImagesLeft_other": "Free · {{count}} Hotuna masu kyauta sun bar",
+    "priceFreeRateLimited": "Free · kudi iyaka amfani",
+    "priceChecking": "Binciken farashi…",
+    "priceUnavailable": "Farashin da ba a samu ba — sake dawowa kafin biyan kuɗi",
+    "priceStandardTexture": "daidaitaccen rubutu",
+    "priceUsually": "Yawancin lokaci {{time}}; queues na iya ɗaukar lokaci mai tsawo",
+    "useFreeModel_one": "Canja zuwa {{model}} don amfani da {{count}} hoto kyauta",
+    "useFreeModel_other": "Canja zuwa {{model}} don amfani da hotunanka {{count}} kyauta"
   }
 }

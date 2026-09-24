@@ -3844,5 +3844,16 @@
     "desc": "جهنگل ۾ روشن ڏينهن يا نيري شام",
     "day": "ڏينهن",
     "evening": "شام"
+  },
+  "creator": {
+    "freeImagesLeft_one": "آزاد · {{count}} مفت تصوير کاٻي پاسي",
+    "freeImagesLeft_other": "آزاد · {{count}} مفت تصويرون ڇڏي",
+    "priceFreeRateLimited": "مفت · شرح جون حدون لاڳو آهن",
+    "priceChecking": "قيمت چيڪ ڪندي...",
+    "priceUnavailable": "قيمت دستياب ناهي — ادا ڪرڻ کان پهريان ٻيهر ڪوشش ڪريو",
+    "priceStandardTexture": "معياري بناوت",
+    "priceUsually": "عام طور تي {{time}}; قطارون وڌيڪ وقت وٺي سگھن ٿيون",
+    "useFreeModel_one": "توهان جي {{count}} مفت تصوير استعمال ڪرڻ لاءِ {{model}} تي سوئچ ڪريو",
+    "useFreeModel_other": "توهان جي {{count}} مفت تصويرون استعمال ڪرڻ لاءِ {{model}} تي سوئچ ڪريو"
   }
 }

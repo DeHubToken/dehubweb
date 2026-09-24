@@ -3891,5 +3891,16 @@
     "desc": "森林入面嘅明媚白日或者幽藍黃昏",
     "day": "日頭",
     "evening": "黃昏"
+  },
+  "creator": {
+    "freeImagesLeft_one": "免費 · {{count}} 免費圖片左邊",
+    "freeImagesLeft_other": "免費 · {{count}} 免費圖片剩低",
+    "priceFreeRateLimited": "免費 · 適用價格限制",
+    "priceChecking": "檢查緊價錢 …",
+    "priceUnavailable": "價錢唔可用 — 喺畀錢之前重試",
+    "priceStandardTexture": "標準質地",
+    "priceUsually": "通常係 {{time}} ；排隊可能要耐啲",
+    "useFreeModel_one": "切換去 {{model}} 就可以用你嘅 {{count}} 免費圖片",
+    "useFreeModel_other": "切換去 {{model}} 就可以用你嘅 {{count}} 免費圖片"
   }
 }

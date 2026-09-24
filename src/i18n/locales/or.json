@@ -3830,5 +3830,16 @@
     "desc": "ଜଙ୍ଗଲରେ ଉଜ୍ଜ୍ୱଳ ଦିନ କିମ୍ବା ନୀଳ ସନ୍ଧ୍ୟା",
     "day": "ଦିନ",
     "evening": "ସନ୍ଧ୍ୟା"
+  },
+  "creator": {
+    "freeImagesLeft_one": "ମୁକ୍ତ {{count}} ମୁକ୍ତ ପ୍ରତିଛବି ବାମ",
+    "freeImagesLeft_other": "ମୁକ୍ତ {{count}} ମୁକ୍ତ ପ୍ରତିଛବି ବାକି ଅଛି",
+    "priceFreeRateLimited": "ନିଃଶୁଳ୍କ ହାର ସୀମା ପ୍ରଯୁଜ୍ୟ",
+    "priceChecking": "ମୂଲ୍ୟ ଯାଞ୍ଚ କରୁଅଛି...",
+    "priceUnavailable": "ମୂଲ୍ୟ ଉପଲବ୍ଧ ନାହିଁ — ପରିଶୋଧ କରିବା ପୂର୍ବରୁ ପୁନର୍ବାର ଚେଷ୍ଟା କରନ୍ତୁ",
+    "priceStandardTexture": "ମାନକ ସଂରଚନା",
+    "priceUsually": "{{time}}; ଧାଡ଼ିଗୁଡ଼ିକ ଅଧିକ ସମୟ ନେଇପାରେ",
+    "useFreeModel_one": "ଆପଣଙ୍କ {{count}}ଟି ମାଗଣା ଛବି ବ୍ୟବହାର କରିବାକୁ {{model}}କୁ ଯାଆନ୍ତୁ",
+    "useFreeModel_other": "ଆପଣଙ୍କ {{count}}ଟି ମାଗଣା ଛବି ବ୍ୟବହାର କରିବାକୁ {{model}}କୁ ଯାଆନ୍ତୁ"
   }
 }

@@ -3782,5 +3782,16 @@
     "desc": "जंगल में चमकत दिन भा नीला साँझ",
     "day": "दिन",
     "evening": "साँझ"
+  },
+  "creator": {
+    "freeImagesLeft_one": "मुफ्त · {{count}} गो मुफ्त फोटो बाचल बा",
+    "freeImagesLeft_other": "मुफ्त · {{count}} गो मुफ्त फोटो बाचल बा",
+    "priceFreeRateLimited": "• ऐसे करें आवेदन, ऐसे करें आवेदन",
+    "priceChecking": "देखते ही देखते कीमत-",
+    "priceUnavailable": "पुराने के साथ भ्रमित न करें, वास्तव में, अलग-अलग चीजें",
+    "priceStandardTexture": "मानक अनुकूलन, अनुकूलन",
+    "priceUsually": "आमतौर पर {{time}}; कतार में जादे समय लाग सकेला",
+    "useFreeModel_one": "आपन {{count}} गो मुफ्त फोटो इस्तेमाल करे खातिर {{model}} पर जाईं",
+    "useFreeModel_other": "आपन {{count}} गो मुफ्त फोटो इस्तेमाल करे खातिर {{model}} पर जाईं"
   }
 }

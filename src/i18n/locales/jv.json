@@ -3880,5 +3880,16 @@
     "desc": "Awan sing padhang utawa sore biru surem ing alas",
     "day": "Awan",
     "evening": "Sore"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Gratis · {{count}} gambar gratis isih ana",
+    "freeImagesLeft_other": "Gratis · {{count}} gambar-gambar gratis isih ana",
+    "priceFreeRateLimited": "Gratis · watesan tarif lumaku",
+    "priceChecking": "Mriksa rega…",
+    "priceUnavailable": "Rega ora kasedhiya — coba maneh sadurunge mbayar",
+    "priceStandardTexture": "tekstur standar",
+    "priceUsually": "Biasane {{time}}; antrean bisa luwih suwe",
+    "useFreeModel_one": "Ganti menyang {{model}} kanggo nggunakake gambar gratis {{count}}",
+    "useFreeModel_other": "Ganti menyang {{model}} kanggo nggunakake gambar gratis {{count}}"
   }
 }

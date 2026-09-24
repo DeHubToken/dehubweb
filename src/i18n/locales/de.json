@@ -3839,7 +3839,16 @@
     "aiGenerationCommunityAlt": "KI-Generierung aus der DeHub-Community",
     "close": "Schließen",
     "toolFlow": "Creator-Flow",
-    "toolFlowDesc": "Ketten Sie Text, Referenzen, Bild- und Videomodelle auf einer Leinwand, führen Sie sie in einer Zahlung aus und teilen Sie sie mit einem Link."
+    "toolFlowDesc": "Ketten Sie Text, Referenzen, Bild- und Videomodelle auf einer Leinwand, führen Sie sie in einer Zahlung aus und teilen Sie sie mit einem Link.",
+    "freeImagesLeft_one": "Kostenloses · {{count}} freies Bild verbleibend",
+    "freeImagesLeft_other": "Kostenlose · {{count}} kostenlose Bilder übrig",
+    "priceFreeRateLimited": "Es gelten kostenlose Tariflimits",
+    "priceChecking": "Preis wird überprüft...",
+    "priceUnavailable": "Preis nicht verfügbar — vor der Zahlung erneut versuchen",
+    "priceStandardTexture": "standardtextur",
+    "priceUsually": "Normalerweise {{time}}; Warteschlangen können länger dauern",
+    "useFreeModel_one": "Wechseln Sie zu {{model}}, um Ihr kostenloses Bild von {{count}} zu verwenden",
+    "useFreeModel_other": "Wechseln Sie zu {{model}}, um Ihre kostenlosen Bilder von {{count}} zu verwenden"
   },
   "pricing": {
     "plansForEveryWorkflow": "Pläne für jeden Workflow",

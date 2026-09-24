@@ -3839,7 +3839,16 @@
     "aiGenerationCommunityAlt": "AI generation from the DeHub community",
     "close": "Close",
     "toolFlow": "Creator Flow",
-    "toolFlowDesc": "Chain text, references, image and video models on a canvas, run it in one payment, share it with a link."
+    "toolFlowDesc": "Chain text, references, image and video models on a canvas, run it in one payment, share it with a link.",
+    "freeImagesLeft_one": "Free · {{count}} free image left",
+    "freeImagesLeft_other": "Free · {{count}} free images left",
+    "priceFreeRateLimited": "Free · rate limits apply",
+    "priceChecking": "Checking price…",
+    "priceUnavailable": "Price unavailable — retry before paying",
+    "priceStandardTexture": "standard texture",
+    "priceUsually": "Usually {{time}}; queues may take longer",
+    "useFreeModel_one": "Switch to {{model}} to use your {{count}} free image",
+    "useFreeModel_other": "Switch to {{model}} to use your {{count}} free images"
   },
   "pricing": {
     "plansForEveryWorkflow": "Plans for every workflow",

@@ -3863,5 +3863,16 @@
     "desc": "جاڭگالدىكى يورۇق كۈندۈز ياكى كۆكۈچ گۇگۇم",
     "day": "كۈندۈز",
     "evening": "كەچقۇرۇن"
+  },
+  "creator": {
+    "freeImagesLeft_one": "ھەقسىز {{count}} ھەقسىز سۈرەت قالدۇرۇلدى",
+    "freeImagesLeft_other": "ئازادە {{count}} ئازادە سۈرەتلەر قالدۇرۇلدى",
+    "priceFreeRateLimited": "ھەقسىز · نىسبەت چەكلىمىسى قوللىنىلىدۇ",
+    "priceChecking": "باھانى تەكشۈرۈش...",
+    "priceUnavailable": "باھاسى يوق — تۆلەشتىن بۇرۇن تەكرارلاش",
+    "priceStandardTexture": "ئۆلچەملىك توختام",
+    "priceUsually": "ئادەتتە {{time}} ؛ نۆۋەتلەر تېخىمۇ ئۇزۇن داۋاملىشىشى مۇمكىن",
+    "useFreeModel_one": "{{model}} غا ئۆتۈپ، {{count}} ھەقسىز سۈرەتنى ئىشلىتىڭ",
+    "useFreeModel_other": "{{model}} غا ئۆتۈپ، {{count}} ھەقسىز سۈرەتلەرنى ئىشلىتىڭ"
   }
 }

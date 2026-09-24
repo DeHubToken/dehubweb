@@ -3840,7 +3840,16 @@
     "aiGenerationCommunityAlt": "Karya AI dari komunitas DeHub",
     "close": "Tutup",
     "toolFlow": "Alur Kreator",
-    "toolFlowDesc": "Teks berantai, referensi, model gambar dan video di kanvas, jalankan dalam satu pembayaran, bagikan dengan tautan."
+    "toolFlowDesc": "Teks berantai, referensi, model gambar dan video di kanvas, jalankan dalam satu pembayaran, bagikan dengan tautan.",
+    "freeImagesLeft_one": "Gratis · {{count}} gambar gratis tersisa",
+    "freeImagesLeft_other": "Gratis · {{count}} gambar gratis tersisa",
+    "priceFreeRateLimited": "Gratis · batas tarif berlaku",
+    "priceChecking": "Memeriksa harga…",
+    "priceUnavailable": "Harga tidak tersedia — coba lagi sebelum membayar",
+    "priceStandardTexture": "tekstur standar",
+    "priceUsually": "Biasanya {{time}}; antrean mungkin membutuhkan waktu lebih lama",
+    "useFreeModel_one": "Beralih ke {{model}} untuk menggunakan gambar gratis {{count}} Anda",
+    "useFreeModel_other": "Beralih ke {{model}} untuk menggunakan gambar gratis {{count}} Anda"
   },
   "pricing": {
     "plansForEveryWorkflow": "Paket untuk setiap alur kerja",

@@ -3536,5 +3536,16 @@
     "desc": "জঙ্গলত উজ্জ্বল দিন বা নীল সাইনঝা",
     "day": "দিন",
     "evening": "সাইনঝা"
+  },
+  "creator": {
+    "freeImagesLeft_one": "ফ্রি · {{count}} ফ্রি ছবি বাকি",
+    "freeImagesLeft_other": "ফ্রি · {{count}} ফ্রি ছবি বাকি",
+    "priceFreeRateLimited": "ফ্রি · রেট লিমিট প্রযোজ্য",
+    "priceChecking": "দাম চেক করতাছি…",
+    "priceUnavailable": "দাম পাওয়া যায় নি — পেমেন্ট করার আগে আবার চেষ্টা করুন",
+    "priceStandardTexture": "স্ট্যান্ডার্ড টেক্সচার",
+    "priceUsually": "সাধারণত {{time}}; কিউ বেশি সময় লাগি পারের",
+    "useFreeModel_one": "{{model}} এ যাও আর {{count}} ফ্রি ছবি ব্যবহার করো",
+    "useFreeModel_other": "{{model}} এ যাও আর {{count}} ফ্রি ছবিগুলো ব্যবহার করো"
   }
 }

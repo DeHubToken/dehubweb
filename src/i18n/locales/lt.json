@@ -3821,7 +3821,16 @@
     "aiGenerationCommunityAlt": "Dirbtinio intelekto generavimas iš „DeHub“ bendruomenės",
     "close": "Uždaryti",
     "toolFlow": "Kūrėjo srautas",
-    "toolFlowDesc": "Sujunkite tekstinius, nuorodinius, vaizdo ir vaizdo modelius drobėje, paleiskite juos vienu mokėjimu, bendrinkite nuoroda."
+    "toolFlowDesc": "Sujunkite tekstinius, nuorodinius, vaizdo ir vaizdo modelius drobėje, paleiskite juos vienu mokėjimu, bendrinkite nuoroda.",
+    "freeImagesLeft_one": "Laisva · {{count}} laisvas vaizdas liko",
+    "freeImagesLeft_other": "Liko laisvų · {{count}} laisvų vaizdų",
+    "priceFreeRateLimited": "Nemokamai · taikomi kainų apribojimai",
+    "priceChecking": "Tikrinama kaina...",
+    "priceUnavailable": "Kaina negalima — bandykite dar kartą prieš mokėdami",
+    "priceStandardTexture": "standartinė tekstūra",
+    "priceUsually": "Paprastai {{time}}; eilės gali užtrukti ilgiau",
+    "useFreeModel_one": "Perjunkite į {{model}}, kad galėtumėte naudoti savo {{count}} nemokamą vaizdą",
+    "useFreeModel_other": "Perjunkite į {{model}}, kad galėtumėte naudoti savo {{count}} nemokamus vaizdus"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planai kiekvienam darbo procesui",

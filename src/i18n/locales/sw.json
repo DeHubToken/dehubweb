@@ -3838,7 +3838,16 @@
     "aiGenerationCommunityAlt": "AI generation kutoka kwa jamii ya DeHub",
     "close": "Close",
     "toolFlow": "Mtiririko wa Muumba",
-    "toolFlowDesc": "Maandishi ya mnyororo, marejeleo, mifano ya picha na video kwenye turubai, iendeshe kwa malipo moja, shiriki na kiunganishi."
+    "toolFlowDesc": "Maandishi ya mnyororo, marejeleo, mifano ya picha na video kwenye turubai, iendeshe kwa malipo moja, shiriki na kiunganishi.",
+    "freeImagesLeft_one": "Bila malipo · {{count}} picha ya bila malipo imebaki",
+    "freeImagesLeft_other": "Bila malipo · {{count}} picha za bila malipo zimebaki",
+    "priceFreeRateLimited": "Ukomo wa bei bila malipo unatumika",
+    "priceChecking": "Inakagua bei...",
+    "priceUnavailable": "Bei haipatikani — jaribu tena kabla ya kulipa",
+    "priceStandardTexture": "muundo wa kawaida",
+    "priceUsually": "Kwa kawaida {{time}}; foleni zinaweza kuchukua muda mrefu",
+    "useFreeModel_one": "Badilisha kwenda {{model}} ili utumie picha yako ya bure ya {{count}}",
+    "useFreeModel_other": "Badilisha kwenda {{model}} ili utumie picha zako za {{count}} bila malipo"
   },
   "pricing": {
     "plansForEveryWorkflow": "Mipango kwa kila workflow",

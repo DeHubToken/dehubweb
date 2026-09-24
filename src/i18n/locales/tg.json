@@ -3871,5 +3871,16 @@
     "desc": "Рӯзи равшан ё шоми кабуди нимторик дар ҷангал",
     "day": "Рӯз",
     "evening": "Шом"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Озод · {{count}} free image left",
+    "freeImagesLeft_other": "Озод · {{count}} free images left",
+    "priceFreeRateLimited": "Озод · маҳдудиятҳои меъёри татбиқ",
+    "priceChecking": "Санҷиши нарх...",
+    "priceUnavailable": "Нарх дастрас нест — пеш аз пардохт дубора кӯшиш кунед",
+    "priceStandardTexture": "texture стандартӣ",
+    "priceUsually": "Одатан {{time}}; сафҳо метавонад тӯлонитар гирад",
+    "useFreeModel_one": "Барои истифодаи {{count}} акси ройгонатон ба {{model}} гузаред",
+    "useFreeModel_other": "Гузариш ба {{model}} барои истифодабарии {{count}} free images"
   }
 }

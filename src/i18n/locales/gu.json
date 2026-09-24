@@ -3855,5 +3855,16 @@
     "desc": "જંગલમાં તેજસ્વી દિવસ અથવા ઝાંખી વાદળી સાંજ",
     "day": "દિવસ",
     "evening": "સાંજ"
+  },
+  "creator": {
+    "freeImagesLeft_one": "મફત · {{count}} મફત છબી બાકી છે",
+    "freeImagesLeft_other": "મફત · {{count}} મફત છબીઓ બાકી છે",
+    "priceFreeRateLimited": "મફત · દર મર્યાદા લાગુ પડે છે",
+    "priceChecking": "કિંમત ચકાસી રહ્યા છે...",
+    "priceUnavailable": "કિંમત અનુપલબ્ધ — ચૂકવણી કરતા પહેલા ફરીથી પ્રયાસ કરો",
+    "priceStandardTexture": "પ્રમાણભૂત ટેક્ષ્ચર",
+    "priceUsually": "સામાન્ય રીતે {{time}}; કતારમાં વધુ સમય લાગી શકે છે",
+    "useFreeModel_one": "તમારી {{count}} મફત છબીનો ઉપયોગ કરવા માટે {{model}} પર સ્વિચ કરો",
+    "useFreeModel_other": "તમારી {{count}} મફત છબીઓનો ઉપયોગ કરવા માટે {{model}} પર સ્વિચ કરો"
   }
 }

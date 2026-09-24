@@ -3829,5 +3829,16 @@
     "desc": "กลางเว็นแจ้งใสหรือยามแลงสีฟ้าในป่า",
     "day": "กลางเว็น",
     "evening": "ยามแลง"
+  },
+  "creator": {
+    "freeImagesLeft_one": "ฟรี · เหลือรูปฟรี {{count}} รูป",
+    "freeImagesLeft_other": "ฟรี · เหลือรูปภาพฟรี {{count}} รูป",
+    "priceFreeRateLimited": "ฟรี · จำกัดอัตราการใช้งาน",
+    "priceChecking": "กำลังตรวจสอบราคา…",
+    "priceUnavailable": "ไม่สามารถแสดงราคาได้ — ลองใหม่อีกครั้งก่อนชำระเงิน",
+    "priceStandardTexture": "พื้นผิวมาตรฐาน",
+    "priceUsually": "ปกติ {{time}}; คิวอาจใช้เวลานานขึ้น",
+    "useFreeModel_one": "สลับไปที่ {{model}} เพื่อใช้รูปภาพฟรี {{count}} ของคุณ",
+    "useFreeModel_other": "สลับไปที่ {{model}} เพื่อใช้รูปภาพฟรี {{count}} ของคุณ"
   }
 }

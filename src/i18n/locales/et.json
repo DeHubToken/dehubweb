@@ -3784,7 +3784,16 @@
     "aiGenerationCommunityAlt": "AI-loomine DeHub kogukonnast",
     "close": "Sulge",
     "toolFlow": "Looja voog",
-    "toolFlowDesc": "Keti tekst, viited, pildi- ja videomudelid lõuendil, käivitage see ühe maksega, jagage seda lingiga."
+    "toolFlowDesc": "Keti tekst, viited, pildi- ja videomudelid lõuendil, käivitage see ühe maksega, jagage seda lingiga.",
+    "freeImagesLeft_one": "Vaba · {{count}} vaba pilti jäänud",
+    "freeImagesLeft_other": "Tasuta · {{count}} tasuta pilti jäänud",
+    "priceFreeRateLimited": "Kehtivad tasuta · hinnapiirangud",
+    "priceChecking": "Hinna kontrollimine…",
+    "priceUnavailable": "Hind pole saadaval — proovi enne maksmist uuesti",
+    "priceStandardTexture": "standardne tekstuur",
+    "priceUsually": "Tavaliselt võivad järjekorrad {{time}} võtta kauem aega",
+    "useFreeModel_one": "Kasuta {{model}}, et kasutada oma {{count}} tasuta pilti",
+    "useFreeModel_other": "Vali {{model}}, et kasutada oma {{count}} tasuta pilte"
   },
   "pricing": {
     "plansForEveryWorkflow": "Plaanid igale töövoogule",

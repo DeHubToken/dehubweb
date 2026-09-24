@@ -3610,7 +3610,16 @@
     "aiGenerationCommunityAlt": "AI generation từ cộng đồng DeHub",
     "close": "Close",
     "toolFlow": "Quy trình của người sáng tạo",
-    "toolFlowDesc": "Chuỗi văn bản, tài liệu tham khảo, mô hình hình ảnh và video trên canvas, chạy nó trong một khoản thanh toán, chia sẻ nó với một liên kết."
+    "toolFlowDesc": "Chuỗi văn bản, tài liệu tham khảo, mô hình hình ảnh và video trên canvas, chạy nó trong một khoản thanh toán, chia sẻ nó với một liên kết.",
+    "freeImagesLeft_one": "Miễn phí · {{count}} hình ảnh miễn phí còn lại",
+    "freeImagesLeft_other": "Miễn phí · {{count}} hình ảnh miễn phí còn lại",
+    "priceFreeRateLimited": "Miễn phí · áp dụng giới hạn mức giá",
+    "priceChecking": "Đang kiểm tra giá…",
+    "priceUnavailable": "Giá không khả dụng — hãy thử lại trước khi thanh toán",
+    "priceStandardTexture": "kết cấu tiêu chuẩn",
+    "priceUsually": "Thông thường {{time}}; hàng đợi có thể mất nhiều thời gian hơn",
+    "useFreeModel_one": "Chuyển sang {{model}} để sử dụng hình ảnh miễn phí {{count}} của bạn",
+    "useFreeModel_other": "Chuyển sang {{model}} để sử dụng {{count}} hình ảnh miễn phí"
   },
   "pricing": {
     "findTheRightFit": "Từ cá nhân đến các đội enterprise, tìm sự phù hợp",

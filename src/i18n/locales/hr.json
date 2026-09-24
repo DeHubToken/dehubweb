@@ -3781,7 +3781,16 @@
     "aiGenerationCommunityAlt": "AI generiranje iz DeHub zajednice",
     "close": "Zatvori",
     "toolFlow": "Tijek rada kreatora",
-    "toolFlowDesc": "Lančani tekst, reference, modeli slika i videozapisa na platnu, pokrenite ga u jednom plaćanju, podijelite ga s poveznicom."
+    "toolFlowDesc": "Lančani tekst, reference, modeli slika i videozapisa na platnu, pokrenite ga u jednom plaćanju, podijelite ga s poveznicom.",
+    "freeImagesLeft_one": "Besplatno · {{count}} slobodna slika lijevo",
+    "freeImagesLeft_other": "Besplatno · {{count}} preostalih besplatnih slika",
+    "priceFreeRateLimited": "Besplatno · primjenjuju se ograničenja cijena",
+    "priceChecking": "Provjera cijene…",
+    "priceUnavailable": "Cijena nije dostupna — pokušajte ponovno prije plaćanja",
+    "priceStandardTexture": "standardna tekstura",
+    "priceUsually": "Obično {{time}}; redovi čekanja mogu potrajati dulje",
+    "useFreeModel_one": "Prebacite se na {{model}} i iskoristite besplatnu sliku {{count}}",
+    "useFreeModel_other": "Prebacite se na {{model}} i iskoristite svoje {{count}} besplatne slike"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planovi za svaki radni tok",
