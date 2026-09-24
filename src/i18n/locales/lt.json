@@ -5925,7 +5925,8 @@
       "shadowOpacity": "Stiprumas {{value}}%",
       "shadowBlur": "Suliejimas {{value}}",
       "shadowX": "Poslinkis X {{value}}",
-      "shadowY": "Poslinkis Y {{value}}"
+      "shadowY": "Poslinkis Y {{value}}",
+      "blend": "Maišymas"
     },
     "menu": {
       "addText": "Pridėti tekstą",
@@ -5952,7 +5953,10 @@
       "generations": "Sugeneruota",
       "edit": "Redaguoti",
       "collapse": "Suskleisti skydelį",
-      "home": "Pradžia"
+      "home": "Pradžia",
+      "elements": "Elementai",
+      "layers": "Sluoksniai",
+      "tools": "Redaktoriaus įrankiai"
     },
     "agent": {
       "introTitle": "Pasakykite DI, ko norite",
@@ -5975,6 +5979,54 @@
       "changes": "Atlikta pakeitimų: {{count}}",
       "undo": "Anuliuoti",
       "openGenerator": "Peržiūrėti ir generuoti"
+    },
+    "shape": {
+      "rect": "Stačiakampis",
+      "ellipse": "Apskritimas",
+      "triangle": "Trikampis",
+      "star": "Žvaigždė",
+      "heart": "Širdis",
+      "hexagon": "Šešiakampis",
+      "line": "Linija",
+      "arrow": "Rodyklė",
+      "style": "Figūros stilius",
+      "fill": "Užpildas",
+      "fillOn": "Užpildas",
+      "outline": "Kontūras",
+      "outlineOn": "Kontūras",
+      "outlineWidth": "Kontūro storis {{value}}"
+    },
+    "elements": {
+      "shapes": "Figūros",
+      "hint": "Spustelėkite figūrą, kad pridėtumėte ją į puslapį. Tempkite šonines rankenėles, kad ištemptumėte, o kampus – kad pakeistumėte dydį."
+    },
+    "layers": {
+      "text": "Tekstas",
+      "media": "Medija",
+      "empty": "Ties grojimo žymekliu puslapyje dar nieko nėra.",
+      "lock": "Užrakinti",
+      "unlock": "Atrakinti",
+      "show": "Rodyti",
+      "hide": "Slėpti",
+      "hint": "Sąrašo viršus yra priekis. Tempkite, kad pakeistumėte tvarką. Užrakintus ir paslėptus sluoksnius galima pasirinkti tik čia."
+    },
+    "blend": {
+      "normal": "Normalus",
+      "multiply": "Dauginti",
+      "screen": "Ekranas",
+      "overlay": "Perdengti",
+      "darken": "Tamsinti",
+      "lighten": "Šviesinti",
+      "colorDodge": "Spalvos šviesinimas",
+      "colorBurn": "Spalvos tamsinimas",
+      "hardLight": "Ryški šviesa",
+      "softLight": "Švelni šviesa",
+      "difference": "Skirtumas",
+      "exclusion": "Išskyrimas",
+      "hue": "Atspalvis",
+      "saturation": "Sodrumas",
+      "color": "Spalva",
+      "luminosity": "Šviesis"
     }
   }
 }

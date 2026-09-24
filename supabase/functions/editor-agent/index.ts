@@ -6,9 +6,10 @@
 //   - The model never sees pixels. The client sends a compact text summary of
 //     the page (size, layers, their positions and styles), a few hundred
 //     tokens at most.
-//   - It answers with one forced tool call, never prose, capped at 1.5k tokens.
+//   - It answers in JSON mode, never prose, capped at 2k tokens.
 //   - It runs on the flash-lite tier through aiChat (Google direct first,
-//     gateway only as a fallback).
+//     gateway only as a fallback), stepping up to flash only when flash-lite
+//     comes back empty.
 //   - All rendering and file work stays in the browser.
 // A typical request costs a small fraction of a cent.
 //
@@ -20,20 +21,23 @@ import { corsHeaders, handleCorsPreflight } from "../_shared/cors.ts";
 import { rateLimitByIp } from "../_shared/auth.ts";
 import { aiChat } from "../_shared/ai-chat.ts";
 
-const MODEL = "google/gemini-2.5-flash-lite";
+/** Cheapest first; the second is only asked when the first answers empty. */
+const MODELS = ["google/gemini-2.5-flash-lite", "google/gemini-2.5-flash"];
 const MAX_HISTORY = 12;
 const MAX_CHARS = 4_000;
 const MAX_SCENE_CHARS = 16_000;
 
 const SYSTEM = `
-You are the editing agent inside DeHub's design and video editor (like Canva). The user describes what they want; you do it by calling apply_edits with a list of operations. Never ask the user to do something by hand that an operation can do.
+You are the editing agent inside DeHub's design and video editor (like Canva). The user describes what they want; you do it by answering with a JSON object {"reply": string, "ops": [ ... ]} where each op is an object with an "op" field and the fields listed below. Output only that JSON, nothing else. Never ask the user to do something by hand that an operation can do.
 
 The page: coordinates x,y are 0..1 (0,0 = top-left, 0.5,0.5 = centre). Layers later in the list are drawn on top. Times are in seconds. Font sizes are pixels on a 1080px-tall page (title ~120-180, subtitle ~60-80, body ~40-50). Colours are hex like #ff3366.
 
 Operations (only use fields you need):
 - set_canvas: aspect ("16:9" | "9:16" | "1:1" | "4:5"), background (hex).
 - add_text: text, x, y, fontSize, fontWeight (100-900), color, fontFamily (a Google Font name, e.g. "Inter", "Bebas Neue", "Playfair Display", "Montserrat", "Anton", "Poppins"), align ("left"|"centre"|"right"), italic, uppercase, underline, letterSpacing, lineHeight, bgColor + bgOpacity (pill behind text), strokeColor + strokeWidth (outline), start, duration.
-- update: id plus any of the add_text fields (for text layers) or media fields.
+- add_shape: shape ("rect" | "ellipse" | "triangle" | "star" | "heart" | "hexagon" | "line" | "arrow"), x, y, w and h (fractions of page width and height), fill (hex or "none"), strokeColor + strokeWidth (outline; for line/arrow this is the line), radius (rect corners), rotation, opacity. Use for backgrounds panels, banners behind text, badges, dividers, frames and arrows.
+- update: id plus any of the add_text fields (text layers), add_shape fields (shapes) or media fields; also for any layer: blend, locked, hidden.
+- blend (on update/add_*): "normal" | "multiply" | "screen" | "overlay" | "darken" | "lighten" | "color-dodge" | "color-burn" | "hard-light" | "soft-light" | "difference" | "exclusion" | "hue" | "saturation" | "color" | "luminosity".
 - place: id, x, y, scale (1 = fitted size), rotation (deg), opacity (0..1), flipH, flipV, fit ("contain" | "cover" = fill the page).
 - effects: id, preset (one of: none, cinematic, warm, cool, vintage, bw, sepia, dreamy, punchy, faded, noir, sunny, moody, vibrant, cyber, invert) and/or brightness, contrast, saturation (0..2, 1 = normal), blur (0..20), grayscale, sepia, invert (0..1), hueRotate (0..360).
 - crop: id, left, top, right, bottom (fractions 0..0.9).
@@ -54,91 +58,16 @@ Rules:
 - Make good design choices: readable contrast, sensible hierarchy, keep text inside the page, centre things unless told otherwise.
 - reply: one or two short sentences, in the user's language, saying what you did. No markdown.
 - If the request is not about editing this design, do nothing (empty ops) and say what you can help with.
+
+Example request: "square instagram post for a summer sale with a beach photo and a bold title"
+Example answer:
+{"reply":"Made a square post with a beach photo and a bold sale title.","ops":[{"op":"set_canvas","aspect":"1:1"},{"op":"add_stock","query":"tropical beach","kind":"photo","orientation":"square","fit":"cover"},{"op":"effects","id":"new:0","preset":"sunny"},{"op":"add_shape","shape":"rect","x":0.5,"y":0.2,"w":0.8,"h":0.16,"fill":"#000000","radius":24,"opacity":0.55},{"op":"add_text","text":"SUMMER SALE","x":0.5,"y":0.2,"fontSize":150,"fontWeight":900,"fontFamily":"Anton","color":"#ffffff"}]}
 `.trim();
 
 const OP_NAMES = [
-  "set_canvas", "add_text", "update", "place", "effects", "crop", "style", "animate", "timing",
+  "set_canvas", "add_text", "add_shape", "update", "place", "effects", "crop", "style", "animate", "timing",
   "audio", "order", "duplicate", "delete", "add_media", "add_stock", "generate", "select",
 ];
-
-// One flat op shape. Gemini's OpenAI-compatible endpoint is happier with a
-// single object of optional fields than with oneOf unions.
-const OP_SCHEMA = {
-  type: "object",
-  properties: {
-    op: { type: "string", enum: OP_NAMES },
-    id: { type: "string" },
-    aspect: { type: "string", enum: ["16:9", "9:16", "1:1", "4:5"] },
-    background: { type: "string" },
-    text: { type: "string" },
-    x: { type: "number" },
-    y: { type: "number" },
-    fontSize: { type: "number" },
-    fontWeight: { type: "number" },
-    color: { type: "string" },
-    fontFamily: { type: "string" },
-    align: { type: "string", enum: ["left", "centre", "right"] },
-    italic: { type: "boolean" },
-    uppercase: { type: "boolean" },
-    underline: { type: "boolean" },
-    letterSpacing: { type: "number" },
-    lineHeight: { type: "number" },
-    bgColor: { type: "string" },
-    bgOpacity: { type: "number" },
-    strokeColor: { type: "string" },
-    strokeWidth: { type: "number" },
-    start: { type: "number" },
-    duration: { type: "number" },
-    scale: { type: "number" },
-    rotation: { type: "number" },
-    opacity: { type: "number" },
-    flipH: { type: "boolean" },
-    flipV: { type: "boolean" },
-    fit: { type: "string", enum: ["contain", "cover"] },
-    preset: { type: "string" },
-    brightness: { type: "number" },
-    contrast: { type: "number" },
-    saturation: { type: "number" },
-    blur: { type: "number" },
-    grayscale: { type: "number" },
-    sepia: { type: "number" },
-    invert: { type: "number" },
-    hueRotate: { type: "number" },
-    left: { type: "number" },
-    top: { type: "number" },
-    right: { type: "number" },
-    bottom: { type: "number" },
-    radius: { type: "number" },
-    shadow: { type: "boolean" },
-    in: { type: "string" },
-    out: { type: "string" },
-    volume: { type: "number" },
-    speed: { type: "number" },
-    direction: { type: "string", enum: ["front", "back", "forward", "backward"] },
-    mediaId: { type: "string" },
-    query: { type: "string" },
-    kind: { type: "string", enum: ["photo", "video", "audio", "image"] },
-    orientation: { type: "string", enum: ["landscape", "portrait", "square"] },
-    prompt: { type: "string" },
-  },
-  required: ["op"],
-};
-
-const TOOL = {
-  type: "function",
-  function: {
-    name: "apply_edits",
-    description: "Apply edits to the user's design.",
-    parameters: {
-      type: "object",
-      properties: {
-        reply: { type: "string", description: "Short message to the user about what was done." },
-        ops: { type: "array", items: OP_SCHEMA, description: "Operations, applied in order." },
-      },
-      required: ["reply", "ops"],
-    },
-  },
-};
 
 interface Message {
   role: "user" | "assistant";
@@ -182,42 +111,65 @@ Deno.serve(async (req) => {
     ...history,
   ];
 
-  const upstream = await aiChat(
-    {
-      model: MODEL,
-      messages,
-      tools: [TOOL],
-      tool_choice: { type: "function", function: { name: "apply_edits" } },
-      temperature: 0.4,
-      max_tokens: 1500,
-    },
-    { label: "editor-agent", expectToolCall: "apply_edits" },
-  );
-
-  if (!upstream.ok) {
-    const detail = await upstream.text().catch(() => "");
-    console.error("editor-agent upstream error:", upstream.status, detail.slice(0, 500));
-    if (upstream.status === 429) return json({ error: "rate_limited" }, 429);
-    return json({ error: "unavailable" }, 502);
+  // Plain JSON output rather than a tool call: flash-lite handles a big
+  // optional-field tool schema badly (it returns empty arguments), and JSON
+  // mode is just as cheap. If the cheap tier still comes back empty, try the
+  // flash tier once before giving up.
+  let parsed: { reply?: unknown; ops?: unknown } | null = null;
+  for (const model of MODELS) {
+    const upstream = await aiChat(
+      {
+        model,
+        messages,
+        response_format: { type: "json_object" },
+        temperature: 0.4,
+        max_tokens: 2000,
+      },
+      { label: "editor-agent" },
+    );
+    if (!upstream.ok) {
+      const detail = await upstream.text().catch(() => "");
+      console.error(`[editor-agent] ${model} upstream ${upstream.status}:`, detail.slice(0, 300));
+      if (upstream.status === 429) return json({ error: "rate_limited" }, 429);
+      continue;
+    }
+    const data = await upstream.json().catch(() => null);
+    const msg = data?.choices?.[0]?.message;
+    parsed = parseAnswer(msg?.content) ?? parseAnswer(msg?.tool_calls?.[0]?.function?.arguments);
+    const usage = data?.usage;
+    console.log(
+      `[editor-agent] ${model} tokens in=${usage?.prompt_tokens ?? "?"} out=${usage?.completion_tokens ?? "?"} ` +
+        `finish=${data?.choices?.[0]?.finish_reason ?? "?"} parsed=${!!parsed}`,
+    );
+    if (parsed && (Array.isArray(parsed.ops) && parsed.ops.length || typeof parsed.reply === "string" && parsed.reply)) break;
+    console.log(`[editor-agent] ${model} empty answer: ${String(msg?.content ?? "").slice(0, 300)}`);
+    parsed = null;
   }
+  if (!parsed) return json({ error: "unavailable" }, 502);
 
-  const data = await upstream.json().catch(() => null);
-  const call = data?.choices?.[0]?.message?.tool_calls?.find(
-    (c: { function?: { name?: string } }) => c?.function?.name === "apply_edits",
-  );
-  let args: { reply?: unknown; ops?: unknown } = {};
-  try {
-    args = JSON.parse(call?.function?.arguments ?? "{}");
-  } catch {
-    return json({ error: "unavailable" }, 502);
-  }
-  const ops = Array.isArray(args.ops)
-    ? args.ops.filter((o) => o && typeof o === "object" && OP_NAMES.includes((o as { op?: string }).op ?? "")).slice(0, 40)
+  const ops = Array.isArray(parsed.ops)
+    ? parsed.ops.filter((o) => o && typeof o === "object" && OP_NAMES.includes((o as { op?: string }).op ?? "")).slice(0, 40)
     : [];
-  const reply = typeof args.reply === "string" ? args.reply.slice(0, 600) : "";
-
-  const usage = data?.usage;
-  if (usage) console.log(`[editor-agent] tokens in=${usage.prompt_tokens} out=${usage.completion_tokens} ops=${ops.length}`);
-
+  const reply = typeof parsed.reply === "string" ? parsed.reply.slice(0, 600) : "";
   return json({ reply, ops });
 });
+
+/** Pull {reply, ops} out of a model answer, tolerating code fences and stray prose. */
+function parseAnswer(raw: unknown): { reply?: unknown; ops?: unknown } | null {
+  if (typeof raw !== "string" || !raw.trim()) return null;
+  const text = raw.replace(/^s*```(?:json)?s*/i, "").replace(/s*```s*$/, "");
+  const tryParse = (t: string) => {
+    try {
+      const v = JSON.parse(t);
+      if (Array.isArray(v)) return { reply: "", ops: v };
+      return v && typeof v === "object" ? v : null;
+    } catch {
+      return null;
+    }
+  };
+  const direct = tryParse(text);
+  if (direct) return direct;
+  const a = text.indexOf("{");
+  const b = text.lastIndexOf("}");
+  return a >= 0 && b > a ? tryParse(text.slice(a, b + 1)) : null;
+}

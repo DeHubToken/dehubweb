@@ -3624,7 +3624,8 @@
       "shadowOpacity": "強度 {{value}}%",
       "shadowBlur": "模糊 {{value}}",
       "shadowX": "偏移 X {{value}}",
-      "shadowY": "偏移量 Y {{value}}"
+      "shadowY": "偏移量 Y {{value}}",
+      "blend": "混合"
     },
     "menu": {
       "addText": "加文字",
@@ -3651,7 +3652,10 @@
       "generations": "生成內容",
       "edit": "編輯",
       "collapse": "收起面板",
-      "home": "主頁"
+      "home": "主頁",
+      "elements": "元素",
+      "layers": "圖層",
+      "tools": "編輯工具"
     },
     "agent": {
       "introTitle": "話畀 AI 知您想要乜",
@@ -3674,6 +3678,54 @@
       "changes": "已作出編輯：{{count}}",
       "undo": "復原",
       "openGenerator": "檢查並生成"
+    },
+    "shape": {
+      "rect": "長方形",
+      "ellipse": "圓形",
+      "triangle": "三角形",
+      "star": "星形",
+      "heart": "心形",
+      "hexagon": "六邊形",
+      "line": "線條",
+      "arrow": "箭嘴",
+      "style": "形狀樣式",
+      "fill": "填色",
+      "fillOn": "填色",
+      "outline": "外框",
+      "outlineOn": "外框",
+      "outlineWidth": "外框闊度 {{value}}"
+    },
+    "elements": {
+      "shapes": "形狀",
+      "hint": "撳一下形狀就可以加入頁面。拖曳兩側控點拉闊，拖曳四角調整大小。"
+    },
+    "layers": {
+      "text": "文字",
+      "media": "媒體",
+      "empty": "播放位置暫時未有任何內容。",
+      "lock": "鎖定",
+      "unlock": "解除鎖定",
+      "show": "顯示",
+      "hide": "隱藏",
+      "hint": "清單最頂嘅喺最前面。拖曳嚟重新排列。已鎖定同已隱藏嘅圖層只可以喺呢度揀。"
+    },
+    "blend": {
+      "normal": "正常",
+      "multiply": "色彩增值",
+      "screen": "濾色",
+      "overlay": "覆蓋",
+      "darken": "變暗",
+      "lighten": "變亮",
+      "colorDodge": "加亮顏色",
+      "colorBurn": "加深顏色",
+      "hardLight": "實光",
+      "softLight": "柔光",
+      "difference": "差異化",
+      "exclusion": "排除",
+      "hue": "色相",
+      "saturation": "飽和度",
+      "color": "顏色",
+      "luminosity": "明度"
     }
   },
   "fractions": {

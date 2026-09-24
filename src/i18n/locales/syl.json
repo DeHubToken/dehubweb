@@ -3575,7 +3575,8 @@
       "shadowOpacity": "জোর {{value}}%",
       "shadowBlur": "ঝাপসা {{value}}",
       "shadowX": "X সরানি {{value}}",
-      "shadowY": "Y সরানি {{value}}"
+      "shadowY": "Y সরানি {{value}}",
+      "blend": "ব্লেন্ড"
     },
     "menu": {
       "addText": "লেখা যোগ করো",
@@ -3602,7 +3603,10 @@
       "generations": "বানানি জিনিস",
       "edit": "এডিট করো",
       "collapse": "প্যানেল গুটাও",
-      "home": "ঘর"
+      "home": "ঘর",
+      "elements": "এলিমেন্ট",
+      "layers": "লেয়ার",
+      "tools": "এডিটর টুল"
     },
     "agent": {
       "introTitle": "AI-রে কও তুমি কিতা চাও",
@@ -3625,6 +3629,54 @@
       "changes": "বদল করা অইছে: {{count}}",
       "undo": "আগর মতো করো",
       "openGenerator": "দেখিয়া বানাও"
+    },
+    "shape": {
+      "rect": "চাইরকোনা",
+      "ellipse": "গোল",
+      "triangle": "তিনকোনা",
+      "star": "তারা",
+      "heart": "দিল",
+      "hexagon": "ছয়কোনা",
+      "line": "লাইন",
+      "arrow": "তীর",
+      "style": "আকারর স্টাইল",
+      "fill": "ভরাট",
+      "fillOn": "ভরাট",
+      "outline": "আউটলাইন",
+      "outlineOn": "আউটলাইন",
+      "outlineWidth": "আউটলাইনর চওড়া {{value}}"
+    },
+    "elements": {
+      "shapes": "আকার",
+      "hint": "পেইজো যোগ করতে কুনু আকারো ক্লিক করো। লম্বা করতে পাশর হ্যান্ডেল, সাইজ বদলাইতে কোনা টানো।"
+    },
+    "layers": {
+      "text": "লেখা",
+      "media": "মিডিয়া",
+      "empty": "প্লেহেডো অখনো পেইজো কুচ্ছু নাই।",
+      "lock": "লক করো",
+      "unlock": "আনলক করো",
+      "show": "দেখাও",
+      "hide": "লুকাও",
+      "hint": "লিস্টর উপরর টা সামনে। ক্রম বদলাইতে টানো। লক করা আর লুকানি লেয়ার খালি ইখানো বাছা যায়।"
+    },
+    "blend": {
+      "normal": "নরমাল",
+      "multiply": "মাল্টিপ্লাই",
+      "screen": "স্ক্রিন",
+      "overlay": "ওভারলে",
+      "darken": "আন্ধার করো",
+      "lighten": "ফরসা করো",
+      "colorDodge": "কালার ডজ",
+      "colorBurn": "কালার বার্ন",
+      "hardLight": "হার্ড লাইট",
+      "softLight": "সফট লাইট",
+      "difference": "ফারাক",
+      "exclusion": "এক্সক্লুশন",
+      "hue": "হিউ",
+      "saturation": "স্যাচুরেশন",
+      "color": "রং",
+      "luminosity": "উজ্জ্বলতা"
     }
   },
   "post": {

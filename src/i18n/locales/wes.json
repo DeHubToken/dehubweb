@@ -3092,7 +3092,8 @@
       "shadowOpacity": "Strength {{value}}%",
       "shadowBlur": "Blur {{value}}",
       "shadowX": "Offset X {{value}}",
-      "shadowY": "Offset Y {{value}}"
+      "shadowY": "Offset Y {{value}}",
+      "blend": "Blend"
     },
     "menu": {
       "addText": "Add text",
@@ -3119,7 +3120,10 @@
       "generations": "Generation dem",
       "edit": "Edit",
       "collapse": "Close panel",
-      "home": "Home"
+      "home": "Home",
+      "elements": "Elements",
+      "layers": "Layers",
+      "tools": "Editor tools"
     },
     "agent": {
       "introTitle": "Tell AI wetin you want",
@@ -3142,6 +3146,54 @@
       "changes": "Edit wey we make: {{count}}",
       "undo": "Undo",
       "openGenerator": "Check am and generate"
+    },
+    "shape": {
+      "rect": "Rectangle",
+      "ellipse": "Circle",
+      "triangle": "Triangle",
+      "star": "Star",
+      "heart": "Heart",
+      "hexagon": "Hexagon",
+      "line": "Line",
+      "arrow": "Arrow",
+      "style": "Shape style",
+      "fill": "Fill",
+      "fillOn": "Fill",
+      "outline": "Outline",
+      "outlineOn": "Outline",
+      "outlineWidth": "Outline width {{value}}"
+    },
+    "elements": {
+      "shapes": "Shapes",
+      "hint": "Click shape for add-am for page. Drag the side handles for stretch-am, the corners for change size."
+    },
+    "layers": {
+      "text": "Text",
+      "media": "Media",
+      "empty": "Nothing dey for page for playhead yet.",
+      "lock": "Lock",
+      "unlock": "Unlock",
+      "show": "Show",
+      "hide": "Hide",
+      "hint": "Top of list na the front. Drag for change order. Layer dem weh dey locked or hidden, na only here you fit pick-am."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Multiply",
+      "screen": "Screen",
+      "overlay": "Overlay",
+      "darken": "Darken",
+      "lighten": "Lighten",
+      "colorDodge": "Color dodge",
+      "colorBurn": "Color burn",
+      "hardLight": "Hard light",
+      "softLight": "Soft light",
+      "difference": "Difference",
+      "exclusion": "Exclusion",
+      "hue": "Hue",
+      "saturation": "Saturation",
+      "color": "Color",
+      "luminosity": "Luminosity"
     }
   },
   "fractions": {

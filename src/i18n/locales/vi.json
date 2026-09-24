@@ -5654,7 +5654,8 @@
       "shadowOpacity": "Cường độ {{value}}%",
       "shadowBlur": "Làm mờ {{value}}",
       "shadowX": "Độ lệch X {{value}}",
-      "shadowY": "Độ lệch Y {{value}}"
+      "shadowY": "Độ lệch Y {{value}}",
+      "blend": "Hòa trộn"
     },
     "menu": {
       "addText": "Thêm văn bản",
@@ -5681,7 +5682,10 @@
       "generations": "Đã tạo",
       "edit": "Chỉnh sửa",
       "collapse": "Thu gọn bảng",
-      "home": "Trang chủ"
+      "home": "Trang chủ",
+      "elements": "Thành phần",
+      "layers": "Lớp",
+      "tools": "Công cụ chỉnh sửa"
     },
     "agent": {
       "introTitle": "Nói với AI điều bạn muốn",
@@ -5704,6 +5708,54 @@
       "changes": "Số chỉnh sửa đã thực hiện: {{count}}",
       "undo": "Hoàn tác",
       "openGenerator": "Xem lại và tạo"
+    },
+    "shape": {
+      "rect": "Hình chữ nhật",
+      "ellipse": "Hình tròn",
+      "triangle": "Hình tam giác",
+      "star": "Ngôi sao",
+      "heart": "Trái tim",
+      "hexagon": "Hình lục giác",
+      "line": "Đường thẳng",
+      "arrow": "Mũi tên",
+      "style": "Kiểu hình dạng",
+      "fill": "Tô màu",
+      "fillOn": "Tô màu",
+      "outline": "Viền",
+      "outlineOn": "Viền",
+      "outlineWidth": "Độ dày viền {{value}}"
+    },
+    "elements": {
+      "shapes": "Hình dạng",
+      "hint": "Nhấp vào một hình để thêm vào trang. Kéo các tay cầm bên cạnh để kéo giãn, kéo các góc để đổi kích thước."
+    },
+    "layers": {
+      "text": "Văn bản",
+      "media": "Phương tiện",
+      "empty": "Chưa có gì trên trang tại đầu phát.",
+      "lock": "Khóa",
+      "unlock": "Mở khóa",
+      "show": "Hiện",
+      "hide": "Ẩn",
+      "hint": "Đầu danh sách là lớp trên cùng. Kéo để sắp xếp lại. Lớp bị khóa và bị ẩn chỉ có thể chọn tại đây."
+    },
+    "blend": {
+      "normal": "Bình thường",
+      "multiply": "Nhân",
+      "screen": "Màn hình",
+      "overlay": "Lớp phủ",
+      "darken": "Làm tối",
+      "lighten": "Làm sáng",
+      "colorDodge": "Làm sáng màu",
+      "colorBurn": "Làm tối màu",
+      "hardLight": "Ánh sáng mạnh",
+      "softLight": "Ánh sáng dịu",
+      "difference": "Khác biệt",
+      "exclusion": "Loại trừ",
+      "hue": "Sắc độ",
+      "saturation": "Độ bão hòa",
+      "color": "Màu",
+      "luminosity": "Độ sáng"
     }
   },
   "glossary": {

@@ -67,7 +67,7 @@ export function MobileBottomBar() {
     <>
       <nav
         className="flex h-14 shrink-0 items-stretch justify-start gap-0.5 overflow-x-auto border-t border-white/10 bg-black/70 px-1 backdrop-blur-[24px] scrollbar-none md:hidden"
-        aria-label="Editor tools"
+        aria-label={t('editor.rail.tools')}
       >
         <Link
           to="/"
@@ -75,7 +75,7 @@ export function MobileBottomBar() {
           className="flex w-14 shrink-0 flex-col items-center justify-center gap-1 rounded-lg text-white/55 transition hover:bg-white/10 hover:text-white"
         >
           <Home className="h-[18px] w-[18px]" />
-          <span className="text-[9px] font-medium leading-none">Home</span>
+          <span className="text-[9px] font-medium leading-none">{t('editor.rail.home')}</span>
         </Link>
 
         {tabs.map((tab) => {

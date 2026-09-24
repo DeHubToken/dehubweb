@@ -5791,7 +5791,8 @@
       "shadowOpacity": "Güc {{value}}%",
       "shadowBlur": "Bulanıqlıq {{value}}",
       "shadowX": "Ofset X {{value}}",
-      "shadowY": "Ofset Y {{value}}"
+      "shadowY": "Ofset Y {{value}}",
+      "blend": "Qarışdırma"
     },
     "menu": {
       "addText": "Mətn əlavə edin",
@@ -5818,7 +5819,10 @@
       "generations": "Yaradılanlar",
       "edit": "Redaktə",
       "collapse": "Paneli yığ",
-      "home": "Ana səhifə"
+      "home": "Ana səhifə",
+      "elements": "Elementlər",
+      "layers": "Qatlar",
+      "tools": "Redaktə alətləri"
     },
     "agent": {
       "introTitle": "AI-a nə istədiyinizi deyin",
@@ -5841,6 +5845,54 @@
       "changes": "Edilən dəyişikliklər: {{count}}",
       "undo": "Geri qaytar",
       "openGenerator": "Bax və yarat"
+    },
+    "shape": {
+      "rect": "Düzbucaqlı",
+      "ellipse": "Dairə",
+      "triangle": "Üçbucaq",
+      "star": "Ulduz",
+      "heart": "Ürək",
+      "hexagon": "Altıbucaqlı",
+      "line": "Xətt",
+      "arrow": "Ox",
+      "style": "Fiqur üslubu",
+      "fill": "Doldurma",
+      "fillOn": "Doldurma",
+      "outline": "Kontur",
+      "outlineOn": "Kontur",
+      "outlineWidth": "Kontur qalınlığı {{value}}"
+    },
+    "elements": {
+      "shapes": "Fiqurlar",
+      "hint": "Fiquru səhifəyə əlavə etmək üçün üzərinə klikləyin. Uzatmaq üçün yan tutacaqları, ölçünü dəyişmək üçün küncləri sürüşdürün."
+    },
+    "layers": {
+      "text": "Mətn",
+      "media": "Media",
+      "empty": "Oynatma başlığında səhifədə hələ heç nə yoxdur.",
+      "lock": "Kilidlə",
+      "unlock": "Kilidi aç",
+      "show": "Göstər",
+      "hide": "Gizlə",
+      "hint": "Siyahının yuxarısı ön plandır. Sıranı dəyişmək üçün sürüşdürün. Kilidli və gizli qatları yalnız burada seçmək olar."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Vurma",
+      "screen": "Ekran",
+      "overlay": "Örtük",
+      "darken": "Tündləşdirmə",
+      "lighten": "Açıqlaşdırma",
+      "colorDodge": "Rəngi açıqlaşdırma",
+      "colorBurn": "Rəngi tündləşdirmə",
+      "hardLight": "Sərt işıq",
+      "softLight": "Yumşaq işıq",
+      "difference": "Fərq",
+      "exclusion": "İstisna",
+      "hue": "Çalar",
+      "saturation": "Doyğunluq",
+      "color": "Rəng",
+      "luminosity": "Parlaqlıq"
     }
   }
 }

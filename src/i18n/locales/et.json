@@ -5836,7 +5836,8 @@
       "shadowOpacity": "Tugevus {{value}}%",
       "shadowBlur": "Hägustamine {{value}}",
       "shadowX": "Nihe X {{value}}",
-      "shadowY": "Nihe Y {{value}}"
+      "shadowY": "Nihe Y {{value}}",
+      "blend": "Segamine"
     },
     "menu": {
       "addText": "Lisa tekst",
@@ -5863,7 +5864,10 @@
       "generations": "Genereeritud",
       "edit": "Muuda",
       "collapse": "Ahenda paneel",
-      "home": "Avaleht"
+      "home": "Avaleht",
+      "elements": "Elemendid",
+      "layers": "Kihid",
+      "tools": "Redaktori tööriistad"
     },
     "agent": {
       "introTitle": "Ütle AI-le, mida soovid",
@@ -5886,6 +5890,54 @@
       "changes": "Tehtud muudatusi: {{count}}",
       "undo": "Võta tagasi",
       "openGenerator": "Vaata üle ja genereeri"
+    },
+    "shape": {
+      "rect": "Ristkülik",
+      "ellipse": "Ring",
+      "triangle": "Kolmnurk",
+      "star": "Täht",
+      "heart": "Süda",
+      "hexagon": "Kuusnurk",
+      "line": "Joon",
+      "arrow": "Nool",
+      "style": "Kujundi stiil",
+      "fill": "Täide",
+      "fillOn": "Täide",
+      "outline": "Kontuur",
+      "outlineOn": "Kontuur",
+      "outlineWidth": "Kontuuri laius {{value}}"
+    },
+    "elements": {
+      "shapes": "Kujundid",
+      "hint": "Klõpsa kujundil, et see lehele lisada. Venitamiseks lohista külgmisi pidemeid, suuruse muutmiseks nurki."
+    },
+    "layers": {
+      "text": "Tekst",
+      "media": "Meedia",
+      "empty": "Esituspea kohal pole lehel veel midagi.",
+      "lock": "Lukusta",
+      "unlock": "Ava lukk",
+      "show": "Näita",
+      "hide": "Peida",
+      "hint": "Loendi ülemine on kõige ees. Järjestuse muutmiseks lohista. Lukustatud ja peidetud kihte saab valida ainult siit."
+    },
+    "blend": {
+      "normal": "Tavaline",
+      "multiply": "Korruta",
+      "screen": "Ekraan",
+      "overlay": "Ülekate",
+      "darken": "Tumedam",
+      "lighten": "Heledam",
+      "colorDodge": "Värvi helestus",
+      "colorBurn": "Värvi põletus",
+      "hardLight": "Kõva valgus",
+      "softLight": "Pehme valgus",
+      "difference": "Erinevus",
+      "exclusion": "Välistus",
+      "hue": "Toon",
+      "saturation": "Küllastus",
+      "color": "Värv",
+      "luminosity": "Heledus"
     }
   }
 }

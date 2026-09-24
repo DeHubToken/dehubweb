@@ -6101,7 +6101,8 @@
       "shadowOpacity": "Sterkte {{value}}%",
       "shadowBlur": "Vervagen {{value}}",
       "shadowX": "Offset X {{value}}",
-      "shadowY": "Offset Y {{value}}"
+      "shadowY": "Offset Y {{value}}",
+      "blend": "Overvloeien"
     },
     "menu": {
       "addText": "Tekst toevoegen",
@@ -6128,7 +6129,10 @@
       "generations": "Generaties",
       "edit": "Bewerken",
       "collapse": "Paneel inklappen",
-      "home": "Home"
+      "home": "Home",
+      "elements": "Elementen",
+      "layers": "Lagen",
+      "tools": "Editortools"
     },
     "agent": {
       "introTitle": "Vertel de AI wat je wilt",
@@ -6151,6 +6155,54 @@
       "changes": "Bewerkingen: {{count}}",
       "undo": "Ongedaan maken",
       "openGenerator": "Bekijken en genereren"
+    },
+    "shape": {
+      "rect": "Rechthoek",
+      "ellipse": "Cirkel",
+      "triangle": "Driehoek",
+      "star": "Ster",
+      "heart": "Hart",
+      "hexagon": "Zeshoek",
+      "line": "Lijn",
+      "arrow": "Pijl",
+      "style": "Vormstijl",
+      "fill": "Vulling",
+      "fillOn": "Vulling",
+      "outline": "Omtrek",
+      "outlineOn": "Omtrek",
+      "outlineWidth": "Omtrekdikte {{value}}"
+    },
+    "elements": {
+      "shapes": "Vormen",
+      "hint": "Klik op een vorm om die aan de pagina toe te voegen. Sleep de zijgrepen om uit te rekken, de hoeken om het formaat te wijzigen."
+    },
+    "layers": {
+      "text": "Tekst",
+      "media": "Media",
+      "empty": "Er staat nog niets op de pagina bij de afspeelkop.",
+      "lock": "Vergrendelen",
+      "unlock": "Ontgrendelen",
+      "show": "Tonen",
+      "hide": "Verbergen",
+      "hint": "Bovenaan de lijst is vooraan. Sleep om de volgorde te wijzigen. Vergrendelde en verborgen lagen kun je alleen hier selecteren."
+    },
+    "blend": {
+      "normal": "Normaal",
+      "multiply": "Vermenigvuldigen",
+      "screen": "Bleken",
+      "overlay": "Bedekken",
+      "darken": "Donkerder",
+      "lighten": "Lichter",
+      "colorDodge": "Kleur tegenhouden",
+      "colorBurn": "Kleur doordrukken",
+      "hardLight": "Fel licht",
+      "softLight": "Zacht licht",
+      "difference": "Verschil",
+      "exclusion": "Uitsluiting",
+      "hue": "Kleurtoon",
+      "saturation": "Verzadiging",
+      "color": "Kleur",
+      "luminosity": "Lichtsterkte"
     }
   },
   "glossary": {

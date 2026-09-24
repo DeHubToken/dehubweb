@@ -5833,7 +5833,8 @@
       "shadowOpacity": "Snaga {{value}}%",
       "shadowBlur": "Zamućenje {{value}}",
       "shadowX": "Pomak X {{value}}",
-      "shadowY": "Pomak Y {{value}}"
+      "shadowY": "Pomak Y {{value}}",
+      "blend": "Stapanje"
     },
     "menu": {
       "addText": "Dodajte tekst",
@@ -5860,7 +5861,10 @@
       "generations": "Generirano",
       "edit": "Uredi",
       "collapse": "Sažmi ploču",
-      "home": "Početna"
+      "home": "Početna",
+      "elements": "Elementi",
+      "layers": "Slojevi",
+      "tools": "Alati uređivača"
     },
     "agent": {
       "introTitle": "Recite AI-ju što želite",
@@ -5883,6 +5887,54 @@
       "changes": "Napravljene izmjene: {{count}}",
       "undo": "Poništi",
       "openGenerator": "Pregledaj i generiraj"
+    },
+    "shape": {
+      "rect": "Pravokutnik",
+      "ellipse": "Krug",
+      "triangle": "Trokut",
+      "star": "Zvijezda",
+      "heart": "Srce",
+      "hexagon": "Šesterokut",
+      "line": "Linija",
+      "arrow": "Strelica",
+      "style": "Stil oblika",
+      "fill": "Ispuna",
+      "fillOn": "Ispuna",
+      "outline": "Obrub",
+      "outlineOn": "Obrub",
+      "outlineWidth": "Debljina obruba {{value}}"
+    },
+    "elements": {
+      "shapes": "Oblici",
+      "hint": "Klikni oblik da ga dodaš na stranicu. Povuci bočne ručice da ga razvučeš, a kutove da promijeniš veličinu."
+    },
+    "layers": {
+      "text": "Tekst",
+      "media": "Mediji",
+      "empty": "Na mjestu glave za reprodukciju na stranici još nema ničega.",
+      "lock": "Zaključaj",
+      "unlock": "Otključaj",
+      "show": "Prikaži",
+      "hide": "Sakrij",
+      "hint": "Vrh popisa je sprijeda. Povuci za promjenu redoslijeda. Zaključani i skriveni slojevi mogu se odabrati samo ovdje."
+    },
+    "blend": {
+      "normal": "Normalno",
+      "multiply": "Množenje",
+      "screen": "Zaslon",
+      "overlay": "Preklapanje",
+      "darken": "Potamni",
+      "lighten": "Posvijetli",
+      "colorDodge": "Posvjetljivanje boje",
+      "colorBurn": "Paljenje boje",
+      "hardLight": "Jako svjetlo",
+      "softLight": "Meko svjetlo",
+      "difference": "Razlika",
+      "exclusion": "Isključivanje",
+      "hue": "Nijansa",
+      "saturation": "Zasićenje",
+      "color": "Boja",
+      "luminosity": "Svjetlina"
     }
   }
 }

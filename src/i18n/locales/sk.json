@@ -3765,7 +3765,8 @@
       "shadowOpacity": "Sila {{value}}%",
       "shadowBlur": "Rozostrenie {{value}}",
       "shadowX": "Posun X {{value}}",
-      "shadowY": "Posun Y {{value}}"
+      "shadowY": "Posun Y {{value}}",
+      "blend": "Prelínanie"
     },
     "menu": {
       "addText": "Pridať text",
@@ -3792,7 +3793,10 @@
       "generations": "Vygenerované",
       "edit": "Upraviť",
       "collapse": "Zbaliť panel",
-      "home": "Domov"
+      "home": "Domov",
+      "elements": "Prvky",
+      "layers": "Vrstvy",
+      "tools": "Nástroje editora"
     },
     "agent": {
       "introTitle": "Povedzte AI, čo chcete",
@@ -3815,6 +3819,54 @@
       "changes": "Vykonané úpravy: {{count}}",
       "undo": "Späť",
       "openGenerator": "Skontrolovať a generovať"
+    },
+    "shape": {
+      "rect": "Obdĺžnik",
+      "ellipse": "Kruh",
+      "triangle": "Trojuholník",
+      "star": "Hviezda",
+      "heart": "Srdce",
+      "hexagon": "Šesťuholník",
+      "line": "Čiara",
+      "arrow": "Šípka",
+      "style": "Štýl tvaru",
+      "fill": "Výplň",
+      "fillOn": "Výplň",
+      "outline": "Obrys",
+      "outlineOn": "Obrys",
+      "outlineWidth": "Hrúbka obrysu {{value}}"
+    },
+    "elements": {
+      "shapes": "Tvary",
+      "hint": "Kliknutím na tvar ho pridáte na stránku. Potiahnutím bočných úchytov ho natiahnete, rohmi zmeníte veľkosť."
+    },
+    "layers": {
+      "text": "Text",
+      "media": "Médiá",
+      "empty": "Na stránke v mieste prehrávacej hlavy zatiaľ nič nie je.",
+      "lock": "Zamknúť",
+      "unlock": "Odomknúť",
+      "show": "Zobraziť",
+      "hide": "Skryť",
+      "hint": "Vrch zoznamu je vpredu. Potiahnutím zmeníte poradie. Zamknuté a skryté vrstvy sa dajú vybrať iba tu."
+    },
+    "blend": {
+      "normal": "Normálny",
+      "multiply": "Násobiť",
+      "screen": "Závoj",
+      "overlay": "Prekrytie",
+      "darken": "Stmaviť",
+      "lighten": "Zosvetliť",
+      "colorDodge": "Zosvetliť farby",
+      "colorBurn": "Stmaviť farby",
+      "hardLight": "Tvrdé svetlo",
+      "softLight": "Mäkké svetlo",
+      "difference": "Rozdiel",
+      "exclusion": "Vylúčenie",
+      "hue": "Odtieň",
+      "saturation": "Sýtosť",
+      "color": "Farba",
+      "luminosity": "Svietivosť"
     }
   },
   "post": {
