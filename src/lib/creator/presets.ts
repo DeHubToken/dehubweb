@@ -6,6 +6,10 @@
  * look, type a subject, generate. `{subject}` is replaced with whatever the
  * creator typed; if they typed nothing the `sample` subject is used so the
  * tile is still one click from a result.
+ *
+ * The product-shoot, UGC/ad and illustration-style presets follow the mode
+ * taxonomy in higgsfield-ai/skills (MIT, see LICENSE-HiggsfieldSkills); the
+ * prompt scaffolds themselves are ours.
  */
 
 import type { AudioTask } from '@/constants/audio-models.constants';
@@ -147,6 +151,139 @@ export const IMAGE_PRESETS: CreatorPreset[] = [
     model: 'gemini-3-pro-image',
     aspect: '16:9',
   },
+  {
+    id: 'lifestyle-scene',
+    nameKey: 'creator.presetLifestyleSceneName',
+    kind: 'image',
+    group: 'Commercial',
+    template:
+      '{subject}, placed naturally in a real lived-in setting, candid lifestyle photography, soft window light, gentle background activity, warm true-to-life colour, the product clearly readable and in sharp focus, 35mm lens',
+    sample: 'a bottle of cold brew on a sunlit kitchen counter',
+    hintKey: 'creator.presetLifestyleSceneHint',
+    model: 'gemini-3-pro-image',
+    aspect: '4:5',
+  },
+  {
+    id: 'hand-closeup',
+    nameKey: 'creator.presetHandCloseupName',
+    kind: 'image',
+    group: 'Commercial',
+    template:
+      '{subject}, tight close-up held in a hand, natural skin texture, the product label facing camera, shallow depth of field, soft diffused daylight, clean uncluttered background, macro detail',
+    sample: 'a lip balm tube being uncapped',
+    hintKey: 'creator.presetHandCloseupHint',
+    model: 'gemini-3-pro-image',
+    aspect: '4:5',
+  },
+  {
+    id: 'moodboard-pin',
+    nameKey: 'creator.presetMoodboardPinName',
+    kind: 'image',
+    group: 'Social',
+    template:
+      '{subject}, vertical Pinterest-style moodboard image, curated aesthetic styling, muted cohesive palette, soft natural light, layered textures and props, editorial composition with breathing room',
+    sample: 'a soy candle on a linen-draped side table, cottagecore mood',
+    hintKey: 'creator.presetMoodboardPinHint',
+    model: 'gemini-3-pro-image',
+    aspect: '2:3',
+  },
+  {
+    id: 'hero-banner',
+    nameKey: 'creator.presetHeroBannerName',
+    kind: 'image',
+    group: 'Commercial',
+    template:
+      '{subject}, wide campaign hero image, product placed off-centre with generous clean negative space on one side for a headline, polished commercial lighting, cohesive brand-colour backdrop, crisp and premium',
+    sample: 'a pair of running shoes on a gradient backdrop',
+    hintKey: 'creator.presetHeroBannerHint',
+    model: 'gemini-3-pro-image',
+    aspect: '16:9',
+  },
+  {
+    id: 'conceptual-product',
+    nameKey: 'creator.presetConceptualProductName',
+    kind: 'image',
+    group: 'Commercial',
+    template:
+      '{subject}, surreal conceptual product render, levitating mid-air with dynamic splash and floating elements around it, sculptural studio lighting, high-end CGI finish, bold saturated backdrop, tack sharp',
+    sample: 'a can of sparkling water',
+    hintKey: 'creator.presetConceptualProductHint',
+    model: 'gemini-3-pro-image',
+    aspect: '1:1',
+  },
+  {
+    id: 'model-wearing',
+    nameKey: 'creator.presetModelWearingName',
+    kind: 'image',
+    group: 'Portrait',
+    template:
+      '{subject}, worn by a model in a natural pose, fashion e-commerce photography, even soft lighting, neutral backdrop, true-to-life fit and fabric detail, full outfit visible',
+    sample: 'an oversized cream knit cardigan',
+    hintKey: 'creator.presetModelWearingHint',
+    model: 'gemini-3-pro-image',
+    aspect: '3:4',
+  },
+  {
+    id: 'seasonal-restyle',
+    nameKey: 'creator.presetSeasonalRestyleName',
+    kind: 'image',
+    group: 'Commercial',
+    template:
+      'Keep the product exactly as it is and restyle the scene around it: {subject}. Change only the setting, props, lighting and mood; the product shape, label and colours stay identical.',
+    sample: 'a cosy winter holiday version with warm fairy lights',
+    hintKey: 'creator.presetSeasonalRestyleHint',
+    model: 'gemini-3-pro-image',
+    aspect: '1:1',
+    requiresImage: true,
+  },
+  {
+    id: 'flat-vector',
+    nameKey: 'creator.presetFlatVectorName',
+    kind: 'image',
+    group: 'Design',
+    template:
+      '{subject}, flat 2D vector illustration, bold clean outlines, solid vibrant flat fills, no shading, no gradients, simple readable shapes, generous negative space',
+    sample: 'a rocket launching from a laptop screen',
+    hintKey: 'creator.presetFlatVectorHint',
+    model: 'gemini-3.1-flash-image',
+    aspect: '16:9',
+  },
+  {
+    id: 'ink-marker',
+    nameKey: 'creator.presetInkMarkerName',
+    kind: 'image',
+    group: 'Design',
+    template:
+      '{subject}, hand-inked black marker drawing on off-white paper, solid jet-black fills, thin white scratch highlights, visible marker grain, strictly monochrome',
+    sample: 'a fox reading a newspaper',
+    hintKey: 'creator.presetInkMarkerHint',
+    model: 'gemini-3.1-flash-image',
+    aspect: '1:1',
+  },
+  {
+    id: 'mono-silhouette',
+    nameKey: 'creator.presetMonoSilhouetteName',
+    kind: 'image',
+    group: 'Design',
+    template:
+      '{subject}, strict monochrome minimalism, black silhouettes on a white void, high contrast, lots of negative space, graphic and poster-like',
+    sample: 'a lighthouse on a cliff',
+    hintKey: 'creator.presetMonoSilhouetteHint',
+    model: 'gemini-3.1-flash-image',
+    aspect: '3:4',
+  },
+  {
+    id: 'storybook-gouache',
+    nameKey: 'creator.presetStorybookGouacheName',
+    kind: 'image',
+    group: 'Design',
+    template:
+      '{subject}, hand-painted storybook gouache illustration, soft textures, warm muted palette, visible brush strokes, gentle whimsical lighting',
+    sample: 'a bear baking bread in a forest cottage',
+    hintKey: 'creator.presetStorybookGouacheHint',
+    model: 'gemini-3.1-flash-image',
+    aspect: '4:3',
+  },
 ];
 
 export const VIDEO_PRESETS: CreatorPreset[] = [
@@ -254,6 +391,67 @@ export const VIDEO_PRESETS: CreatorPreset[] = [
     aspect: '16:9',
     negative: 'identity change, morphing face, warping',
     requiresImage: true,
+  },
+  {
+    id: 'ugc-selfie',
+    nameKey: 'creator.presetUgcSelfieName',
+    kind: 'video',
+    group: 'Social',
+    template:
+      'A person films themselves on a phone at arm’s length, talking casually and enthusiastically about {subject}. Handheld selfie framing, natural room light, relaxed authentic delivery, small natural camera wobble, one continuous take.',
+    sample: 'a new pair of wireless earbuds',
+    hintKey: 'creator.presetUgcSelfieHint',
+    model: 'seedance-2.0',
+    aspect: '9:16',
+  },
+  {
+    id: 'ugc-unboxing',
+    nameKey: 'creator.presetUgcUnboxingName',
+    kind: 'video',
+    group: 'Social',
+    template:
+      'Phone-shot unboxing: hands open a delivery box on a table and reveal {subject}, lifting it toward the camera with a genuine reaction. Top-down then close handheld framing, natural daylight, one continuous take.',
+    sample: 'a skincare gift set',
+    hintKey: 'creator.presetUgcUnboxingHint',
+    model: 'seedance-2.0',
+    aspect: '9:16',
+  },
+  {
+    id: 'ugc-tutorial',
+    nameKey: 'creator.presetUgcTutorialName',
+    kind: 'video',
+    group: 'Social',
+    template:
+      'A creator demonstrates how to use {subject} step by step, showing it clearly to the phone camera, pointing out one key feature. Handheld vertical framing, bright natural light, friendly instructional energy.',
+    sample: 'a pour-over coffee kit',
+    hintKey: 'creator.presetUgcTutorialHint',
+    model: 'seedance-2.0',
+    aspect: '9:16',
+  },
+  {
+    id: 'product-review',
+    nameKey: 'creator.presetProductReviewName',
+    kind: 'video',
+    group: 'Social',
+    template:
+      'A presenter sits facing the camera holding {subject}, turning it in their hands while giving an honest opinion, nodding and gesturing naturally. Medium close-up, soft key light, tidy home background.',
+    sample: 'a mechanical keyboard',
+    hintKey: 'creator.presetProductReviewHint',
+    model: 'seedance-2.0',
+    aspect: '9:16',
+  },
+  {
+    id: 'tv-spot',
+    nameKey: 'creator.presetTvSpotName',
+    kind: 'video',
+    group: 'Commercial',
+    template:
+      'Polished broadcast commercial for {subject}: a sweeping establishing shot, a smooth dolly move to a hero close-up of the product, crisp commercial lighting, rich colour grade, premium and confident pacing.',
+    sample: 'a luxury electric SUV',
+    hintKey: 'creator.presetTvSpotHint',
+    model: 'kling-2.6-pro',
+    aspect: '16:9',
+    negative: 'shaky camera, warping, distorted text, jump cut',
   },
 ];
 
