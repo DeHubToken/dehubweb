@@ -4989,6 +4989,78 @@
       "hint": "Li ser cîhaza te dixebite: belaş, taybet, tiştek nayê barkirin. Cara yekem modela AI dadixe, paşê çend çirkeyan digire.",
       "done": "Paşxane hat rakirin.",
       "failed": "Paşxane nehat rakirin. Wêneyekî din biceribîne, an gerokeke wek Chrome an Edge."
+    },
+    "templates": {
+      "heading": "ڕووکارەکان",
+      "hint": "یەکێک هەڵبژێرە بۆ دەستپێکردن. هەموو وشە و ڕەنگ و وێنەیەک دەگۆڕدرێت، یان داوا لە AI بکە بۆت بگۆڕێت.",
+      "use": "ڕووکاری {{name}} بەکاربهێنە",
+      "replaceConfirm": "دیزاینی ئێستا بەم ڕووکارە بگۆڕدرێت؟ دەتوانیت پاشگەزی بکەیتەوە.",
+      "sale": {
+        "title": "داشکاندنی هاوین",
+        "subtitle": "تا 50% داشکاندن · تەنها ئەم کۆتایی هەفتەیە"
+      },
+      "quote": {
+        "title": "کارتی وتە",
+        "body": "سادەی بکە، بەڵام بەمانا.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "باوەڕ ناکەیت",
+        "badge": "نوێ"
+      },
+      "story": {
+        "title": "بەرهەمی نوێ",
+        "cta": "بۆ کڕین بەرەو سەرەوە ڕابکێشە"
+      },
+      "event": {
+        "title": "شەوی مۆسیقای ڕاستەوخۆ",
+        "date": "هەینی کاتژمێر 8ی ئێوارە",
+        "place": "The Warehouse، ناوەندی شار"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "ئەڵقەی 12 · ئێستا بڵاوبووەوە"
+      },
+      "announcement": {
+        "kicker": "بەم زووانە",
+        "title": "هەواڵێکی گەورە دێت"
+      },
+      "crypto": {
+        "title": "نوێکردنەوەی نرخ",
+        "change": "+42% ئەم هەفتەیە"
+      },
+      "birthday": {
+        "title": "ڕۆژی لەدایکبوونت پیرۆز",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "میم",
+        "top": "کاتێک کۆدەکە کار دەکات",
+        "bottom": "لە یەکەم هەوڵدا"
+      }
+    },
+    "design": {
+      "format": "فۆرمات",
+      "landscape": "ئاسۆیی",
+      "landscapeDetail": "YouTube، وێب",
+      "vertical": "ستوونی",
+      "verticalDetail": "Shorts، Reels",
+      "square": "چوارگۆشە",
+      "squareDetail": "پۆستی فید",
+      "portrait": "درێژ",
+      "portraitDetail": "Instagram",
+      "canvas": "کانڤاس",
+      "resolution": "ڕوونی",
+      "frameRate": "ڕێژەی چوارچێوە",
+      "background": "باکگراوند",
+      "backgroundSwatch": "باکگراوند {{hex}}",
+      "customBackground": "ڕەنگی باکگراوندی تایبەت",
+      "emptyTitle": "پەڕەکە بەتاڵە",
+      "emptyBody": "لە ڕووکارێک، سەرچاوەیەکی خۆڕایی، فایلی خۆت دەست پێبکە، یان تەنها لە AI بپرسە.",
+      "browseAssets": "سەرچاوە خۆڕاییەکان ببینە",
+      "importMedia": "هێنانی میدیا",
+      "generateClip": "کلیپێک دروست بکە",
+      "addHeadline": "سەردێڕێک زیاد بکە"
     }
   }
 }

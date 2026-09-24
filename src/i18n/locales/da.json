@@ -5974,6 +5974,78 @@
       "hint": "Kører på din enhed: gratis, privat, intet uploades. Første gang downloades AI-modellen, derefter tager det få sekunder.",
       "done": "Baggrund fjernet.",
       "failed": "Kunne ikke fjerne baggrunden. Prøv et andet billede eller en browser som Chrome eller Edge."
+    },
+    "templates": {
+      "heading": "Skabeloner",
+      "hint": "Vælg en for at starte. Alle ord, farver og billeder kan ændres, eller bed AI'en om at gøre det for dig.",
+      "use": "Brug skabelonen {{name}}",
+      "replaceConfirm": "Erstat det nuværende design med denne skabelon? Du kan fortryde det.",
+      "sale": {
+        "title": "Sommerudsalg",
+        "subtitle": "Op til 50% rabat · Kun denne weekend"
+      },
+      "quote": {
+        "title": "Citatkort",
+        "body": "Gør det enkelt, men betydningsfuldt.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Det her tror du ikke på",
+        "badge": "Ny"
+      },
+      "story": {
+        "title": "Nyhed",
+        "cta": "Swipe op og shop"
+      },
+      "event": {
+        "title": "Livemusik-aften",
+        "date": "Fredag kl. 20",
+        "place": "The Warehouse, centrum"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Afsnit 12 · Ude nu"
+      },
+      "announcement": {
+        "kicker": "Kommer snart",
+        "title": "Store nyheder på vej"
+      },
+      "crypto": {
+        "title": "Kursopdatering",
+        "change": "+42% denne uge"
+      },
+      "birthday": {
+        "title": "Tillykke med fødselsdagen",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Når koden virker",
+        "bottom": "I første forsøg"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Liggende",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Lodret",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Kvadrat",
+      "squareDetail": "Feed-opslag",
+      "portrait": "Portræt",
+      "portraitDetail": "Instagram",
+      "canvas": "Lærred",
+      "resolution": "Opløsning",
+      "frameRate": "Billedhastighed",
+      "background": "Baggrund",
+      "backgroundSwatch": "Baggrund {{hex}}",
+      "customBackground": "Brugerdefineret baggrundsfarve",
+      "emptyTitle": "Siden er tom",
+      "emptyBody": "Start fra en skabelon, et gratis element, din egen fil, eller spørg bare AI'en.",
+      "browseAssets": "Gennemse gratis elementer",
+      "importMedia": "Importér medier",
+      "generateClip": "Generér et klip",
+      "addHeadline": "Tilføj en overskrift"
     }
   }
 }

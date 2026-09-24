@@ -5758,6 +5758,78 @@
       "hint": "פועל במכשיר שלך: חינם, פרטי, שום דבר לא מועלה. בשימוש הראשון מודל ה-AI יורד, ואחר כך זה לוקח כמה שניות.",
       "done": "הרקע הוסר.",
       "failed": "לא ניתן היה להסיר את הרקע. נסו תמונה אחרת, או דפדפן כמו Chrome או Edge."
+    },
+    "templates": {
+      "heading": "תבניות",
+      "hint": "בחרו אחת כדי להתחיל. אפשר לשנות כל מילה, צבע ותמונה, או לבקש מה-AI לשנות בשבילכם.",
+      "use": "השתמשו בתבנית {{name}}",
+      "replaceConfirm": "להחליף את העיצוב הנוכחי בתבנית הזו? אפשר לבטל.",
+      "sale": {
+        "title": "מבצע קיץ",
+        "subtitle": "עד 50% הנחה · רק בסוף השבוע הזה"
+      },
+      "quote": {
+        "title": "כרטיס ציטוט",
+        "body": "תעשו את זה פשוט, אבל משמעותי.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "לא תאמינו",
+        "badge": "חדש"
+      },
+      "story": {
+        "title": "קולקציה חדשה",
+        "cta": "החליקו למעלה לקנייה"
+      },
+      "event": {
+        "title": "ערב מוזיקה חיה",
+        "date": "שישי 20:00",
+        "place": "המחסן, מרכז העיר"
+      },
+      "podcast": {
+        "title": "תוכנית היוצרים",
+        "episode": "פרק 12 · עכשיו באוויר"
+      },
+      "announcement": {
+        "kicker": "בקרוב",
+        "title": "חדשות גדולות בדרך"
+      },
+      "crypto": {
+        "title": "עדכון מחיר",
+        "change": "+42% השבוע"
+      },
+      "birthday": {
+        "title": "יום הולדת שמח",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "מם",
+        "top": "כשהקוד עובד",
+        "bottom": "בניסיון הראשון"
+      }
+    },
+    "design": {
+      "format": "פורמט",
+      "landscape": "לרוחב",
+      "landscapeDetail": "YouTube, אתרים",
+      "vertical": "אנכי",
+      "verticalDetail": "Shorts, Reels",
+      "square": "ריבוע",
+      "squareDetail": "פוסט בפיד",
+      "portrait": "לאורך",
+      "portraitDetail": "Instagram",
+      "canvas": "קנבס",
+      "resolution": "רזולוציה",
+      "frameRate": "קצב פריימים",
+      "background": "רקע",
+      "backgroundSwatch": "רקע {{hex}}",
+      "customBackground": "צבע רקע מותאם",
+      "emptyTitle": "הדף ריק",
+      "emptyBody": "התחילו מתבנית, נכס חינמי, קובץ משלכם, או פשוט בקשו מה-AI.",
+      "browseAssets": "עיון בנכסים חינמיים",
+      "importMedia": "ייבוא מדיה",
+      "generateClip": "יצירת קליפ",
+      "addHeadline": "הוספת כותרת"
     }
   }
 }

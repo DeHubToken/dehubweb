@@ -3672,6 +3672,78 @@
       "hint": "เฮ็ดงานในเครื่องของเจ้า: ฟรี เป็นส่วนตัว บ่มีหยังถูกอัปโหลด ใช้เทื่อแรกสิดาวน์โหลดโมเดล AI หลังจากนั้นกะใช้เวลาแค่ไม่กี่วินาที",
       "done": "ลบพื้นหลังแล้ว",
       "failed": "ลบพื้นหลังบ่ได้ ลองฮูปอื่น หรือเบราว์เซอร์คือ Chrome หรือ Edge เบิ่ง"
+    },
+    "templates": {
+      "heading": "เทมเพลต",
+      "hint": "เลือกอันหนึ่งเพื่อเริ่ม ทุกคำ สี และรูปภาพเปลี่ยนได้ หรือให้ AI เปลี่ยนให้กะได้",
+      "use": "ใช้เทมเพลต {{name}}",
+      "replaceConfirm": "แทนที่งานออกแบบปัจจุบันด้วยเทมเพลตนี้บ่? ย้อนกลับได้",
+      "sale": {
+        "title": "ลดราคาหน้าร้อน",
+        "subtitle": "ลดสูงสุด 50% · เสาร์อาทิตย์นี้เท่านั้น"
+      },
+      "quote": {
+        "title": "การ์ดคำคม",
+        "body": "เฮ็ดให้ง่าย แต่มีความหมาย",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "บ่เชื่อแน่นอน",
+        "badge": "ใหม่"
+      },
+      "story": {
+        "title": "ของใหม่มาแล้ว",
+        "cta": "ปัดขึ้นเพื่อซื้อ"
+      },
+      "event": {
+        "title": "คืนดนตรีสด",
+        "date": "วันศุกร์ 2 ทุ่ม",
+        "place": "The Warehouse ใจกลางเมือง"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "ตอนที่ 12 · ออกแล้ว"
+      },
+      "announcement": {
+        "kicker": "เร็วๆ นี้",
+        "title": "ข่าวใหญ่กำลังมา"
+      },
+      "crypto": {
+        "title": "อัปเดตราคา",
+        "change": "+42% อาทิตย์นี้"
+      },
+      "birthday": {
+        "title": "สุขสันต์วันเกิด",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "มีม",
+        "top": "ตอนโค้ดเฮ็ดงานได้",
+        "bottom": "ตั้งแต่เทื่อแรก"
+      }
+    },
+    "design": {
+      "format": "รูปแบบ",
+      "landscape": "แนวนอน",
+      "landscapeDetail": "YouTube, เว็บ",
+      "vertical": "แนวตั้ง",
+      "verticalDetail": "Shorts, Reels",
+      "square": "สี่เหลี่ยมจัตุรัส",
+      "squareDetail": "โพสต์ฟีด",
+      "portrait": "แนวตั้งภาพ",
+      "portraitDetail": "Instagram",
+      "canvas": "ผืนผ้าใบ",
+      "resolution": "ความละเอียด",
+      "frameRate": "อัตราเฟรม",
+      "background": "พื้นหลัง",
+      "backgroundSwatch": "พื้นหลัง {{hex}}",
+      "customBackground": "สีพื้นหลังกำหนดเอง",
+      "emptyTitle": "หน้านี้ว่างเปล่า",
+      "emptyBody": "เริ่มจากเทมเพลต ไฟล์ฟรี ไฟล์ของเจ้าเอง หรือถาม AI เลย",
+      "browseAssets": "เบิ่งไฟล์ฟรี",
+      "importMedia": "นำเข้าสื่อ",
+      "generateClip": "สร้างคลิป",
+      "addHeadline": "เพิ่มหัวข้อ"
     }
   },
   "fractions": {

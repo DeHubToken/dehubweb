@@ -6064,6 +6064,78 @@
       "hint": "Roda no seu dispositivo: grátis, privado, nada é enviado. No primeiro uso, o modelo de IA é baixado; depois leva só alguns segundos.",
       "done": "Fundo removido.",
       "failed": "Não foi possível remover o fundo. Tente outra imagem ou um navegador como Chrome ou Edge."
+    },
+    "templates": {
+      "heading": "Modelos",
+      "hint": "Escolha um para começar. Cada palavra, cor e foto pode ser alterada, ou peça para a IA mudar por você.",
+      "use": "Usar o modelo {{name}}",
+      "replaceConfirm": "Substituir o design atual por este modelo? Dá para desfazer.",
+      "sale": {
+        "title": "Liquida de Verão",
+        "subtitle": "Até 50% off · Só neste fim de semana"
+      },
+      "quote": {
+        "title": "Card de citação",
+        "body": "Simples, mas marcante.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Você não vai acreditar!",
+        "badge": "Novo"
+      },
+      "story": {
+        "title": "Lançamento",
+        "cta": "Arraste pra cima e compre"
+      },
+      "event": {
+        "title": "Noite de música ao vivo",
+        "date": "Sexta, 20h",
+        "place": "O Galpão, centro"
+      },
+      "podcast": {
+        "title": "O Show do Criador",
+        "episode": "Episódio 12 · Já no ar"
+      },
+      "announcement": {
+        "kicker": "Em breve",
+        "title": "Vem novidade grande aí"
+      },
+      "crypto": {
+        "title": "Atualização de preço",
+        "change": "+42% na semana"
+      },
+      "birthday": {
+        "title": "Feliz Aniversário",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Quando o código funciona",
+        "bottom": "De primeira"
+      }
+    },
+    "design": {
+      "format": "Formato",
+      "landscape": "Paisagem",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Vertical",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Quadrado",
+      "squareDetail": "Post no feed",
+      "portrait": "Retrato",
+      "portraitDetail": "Instagram",
+      "canvas": "Tela",
+      "resolution": "Resolução",
+      "frameRate": "Taxa de quadros",
+      "background": "Fundo",
+      "backgroundSwatch": "Fundo {{hex}}",
+      "customBackground": "Cor de fundo personalizada",
+      "emptyTitle": "A página está vazia",
+      "emptyBody": "Comece com um modelo, um recurso gratuito, seu próprio arquivo ou simplesmente peça à IA.",
+      "browseAssets": "Ver recursos gratuitos",
+      "importMedia": "Importar mídia",
+      "generateClip": "Gerar um clipe",
+      "addHeadline": "Adicionar título"
     }
   }
 }

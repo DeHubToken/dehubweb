@@ -3636,6 +3636,78 @@
       "hint": "ኣብ መሳርሒኻ ይሰርሕ፦ ብናጻ፣ ብሕታዊ፣ ዝኾነ ነገር ኣይሰቀልን። ቀዳማይ ግዜ ናይ AI ሞዴል የውርድ፣ ድሕሪኡ ቁሩብ ሰከንድታት ጥራይ ይወስድ።",
       "done": "ድሕረ ባይታ ተወጊዱ።",
       "failed": "ድሕረ ባይታ ክውገድ ኣይተኻእለን። ካልእ ስእሊ፣ ወይ ከም Chrome ወይ Edge ዝኣመሰለ መርበብ ፈትን።"
+    },
+    "templates": {
+      "heading": "ቅጥዕታት",
+      "hint": "ንምጅማር ሓደ ምረጽ። ነፍሲ ወከፍ ቃል፣ ሕብሪ ከምኡ'ውን ስእሊ ክቕየር ይኽእል፣ ወይ AI ክቕይረልካ ሕተት።",
+      "use": "ቅጥዒ {{name}} ተጠቐም",
+      "replaceConfirm": "እቲ ሕጂ ዘሎ ንድፊ በዚ ቅጥዒ ይተካእ? ክትመልሶ ትኽእል ኢኻ።",
+      "sale": {
+        "title": "ናይ ሓጋይ ዋጋ ምጉዳል",
+        "subtitle": "ክሳብ 50% ቅናሽ · ነዚ ቀዳመ-ሰንበት ጥራይ"
+      },
+      "quote": {
+        "title": "ካርድ ጥቕሲ",
+        "body": "ቀሊል ግበሮ፣ ግን ትርጉም ዘለዎ።",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "ኣይትኣምኖን ኢኻ",
+        "badge": "ሓድሽ"
+      },
+      "story": {
+        "title": "ሓድሽ ኣቕሓ",
+        "cta": "ንምዕዳግ ንላዕሊ ሰሓብ"
+      },
+      "event": {
+        "title": "ምሸት ቀጥታ ሙዚቃ",
+        "date": "ዓርቢ 2 ምሸት",
+        "place": "ዌርሃውስ፣ ማእከል ከተማ"
+      },
+      "podcast": {
+        "title": "ናይ ፈጠርቲ ምርኢት",
+        "episode": "ክፋል 12 · ሕጂ ወጺኡ"
+      },
+      "announcement": {
+        "kicker": "ቀልጢፉ ይመጽእ",
+        "title": "ዓቢ ዜና ይመጽእ ኣሎ"
+      },
+      "crypto": {
+        "title": "ሓድሽ ዋጋ",
+        "change": "+42% ኣብዚ ሰሙን"
+      },
+      "birthday": {
+        "title": "መበል ልደትካ ብሩኽ ይኹን",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "ሚም",
+        "top": "ኮድ ክሰርሕ ከሎ",
+        "bottom": "ብቐዳማይ ፈተነ"
+      }
+    },
+    "design": {
+      "format": "ቅርጺ",
+      "landscape": "ግድም",
+      "landscapeDetail": "YouTube፣ ዌብ",
+      "vertical": "ቀጥ",
+      "verticalDetail": "Shorts፣ Reels",
+      "square": "ርቡዕ",
+      "squareDetail": "ናይ ፊድ ጽሑፍ",
+      "portrait": "ፖርትሬት",
+      "portraitDetail": "Instagram",
+      "canvas": "ሸራ",
+      "resolution": "ጽሬት",
+      "frameRate": "ፍጥነት ፍሬም",
+      "background": "ድሕረ ባይታ",
+      "backgroundSwatch": "ድሕረ ባይታ {{hex}}",
+      "customBackground": "ናይ ገዛእ ርእስኻ ሕብሪ ድሕረ ባይታ",
+      "emptyTitle": "እቲ ገጽ ባዶ እዩ",
+      "emptyBody": "ካብ ቅጥዒ፣ ነጻ ንብረት፣ ናይ ገዛእ ርእስኻ ፋይል ጀምር፣ ወይ AI ሕተት።",
+      "browseAssets": "ነጻ ንብረታት ርአ",
+      "importMedia": "ሚድያ ኣእቱ",
+      "generateClip": "ክሊፕ ፍጠር",
+      "addHeadline": "ኣርእስቲ ወስኽ"
     }
   },
   "fractions": {

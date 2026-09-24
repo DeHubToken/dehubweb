@@ -5944,6 +5944,78 @@
       "hint": "Toimii laitteellasi: ilmainen, yksityinen, mitään ei lähetetä. Ensimmäisellä kerralla tekoälymalli ladataan, sen jälkeen poisto kestää muutaman sekunnin.",
       "done": "Tausta poistettu.",
       "failed": "Taustan poistaminen epäonnistui. Kokeile toista kuvaa tai selainta, kuten Chromea tai Edgeä."
+    },
+    "templates": {
+      "heading": "Mallit",
+      "hint": "Valitse yksi aloittaaksesi. Voit muuttaa jokaisen sanan, värin ja kuvan – tai pyytää tekoälyä tekemään sen.",
+      "use": "Käytä mallia {{name}}",
+      "replaceConfirm": "Korvataanko nykyinen suunnitelma tällä mallilla? Voit kumota sen.",
+      "sale": {
+        "title": "Kesäale",
+        "subtitle": "Jopa -50 % · Vain tänä viikonloppuna"
+      },
+      "quote": {
+        "title": "Sitaattikortti",
+        "body": "Tee siitä yksinkertainen, mutta merkityksellinen.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Et usko tätä",
+        "badge": "Uusi"
+      },
+      "story": {
+        "title": "Uutuudet",
+        "cta": "Pyyhkäise ylös ja shoppaile"
+      },
+      "event": {
+        "title": "Livemusiikki-ilta",
+        "date": "Perjantai klo 20",
+        "place": "The Warehouse, keskusta"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Jakso 12 · Nyt ulkona"
+      },
+      "announcement": {
+        "kicker": "Tulossa pian",
+        "title": "Isoja uutisia tulossa"
+      },
+      "crypto": {
+        "title": "Hintapäivitys",
+        "change": "+42 % tällä viikolla"
+      },
+      "birthday": {
+        "title": "Hyvää syntymäpäivää",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meemi",
+        "top": "Kun koodi toimii",
+        "bottom": "Ekalla yrityksellä"
+      }
+    },
+    "design": {
+      "format": "Muoto",
+      "landscape": "Vaaka",
+      "landscapeDetail": "YouTube, verkko",
+      "vertical": "Pysty",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Neliö",
+      "squareDetail": "Syötejulkaisu",
+      "portrait": "Muotokuva",
+      "portraitDetail": "Instagram",
+      "canvas": "Kangas",
+      "resolution": "Resoluutio",
+      "frameRate": "Kuvataajuus",
+      "background": "Tausta",
+      "backgroundSwatch": "Tausta {{hex}}",
+      "customBackground": "Oma taustaväri",
+      "emptyTitle": "Sivu on tyhjä",
+      "emptyBody": "Aloita mallista, ilmaisesta aineistosta, omasta tiedostosta tai kysy tekoälyltä.",
+      "browseAssets": "Selaa ilmaisia aineistoja",
+      "importMedia": "Tuo mediaa",
+      "generateClip": "Luo klippi",
+      "addHeadline": "Lisää otsikko"
     }
   }
 }

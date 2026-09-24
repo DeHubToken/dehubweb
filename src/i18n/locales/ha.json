@@ -3733,6 +3733,78 @@
       "hint": "Yana aiki a na'urarka: kyauta, sirri, babu abin da ake lodawa. Amfani na farko yana sauke samfurin AI, sannan yana ɗaukar 'yan daƙiƙoƙi.",
       "done": "An cire bango.",
       "failed": "Ba a iya cire bango ba. Gwada wani hoto, ko burauza kamar Chrome ko Edge."
+    },
+    "templates": {
+      "heading": "Samfura",
+      "hint": "Zaɓi ɗaya don farawa. Ana iya canja kowace kalma, launi da hoto, ko ka nemi AI ya canja maka.",
+      "use": "Yi amfani da samfurin {{name}}",
+      "replaceConfirm": "Maye gurbin zanen yanzu da wannan samfurin? Za ka iya sokewa.",
+      "sale": {
+        "title": "Rangwamen Bazara",
+        "subtitle": "Rangwame har 50% · Wannan karshen mako kaɗai"
+      },
+      "quote": {
+        "title": "Katin zance",
+        "body": "Ka sa ya zama mai sauƙi, amma mai ma'ana.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Ba za ka yarda da wannan ba",
+        "badge": "Sabo"
+      },
+      "story": {
+        "title": "Sabon kaya ya iso",
+        "cta": "Ja sama don siyayya"
+      },
+      "event": {
+        "title": "Daren kiɗa kai tsaye",
+        "date": "Juma'a 8 na dare",
+        "place": "The Warehouse, cikin gari"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Kashi na 12 · Ya fito yanzu"
+      },
+      "announcement": {
+        "kicker": "Nan ba da jimawa ba",
+        "title": "Babban labari na zuwa"
+      },
+      "crypto": {
+        "title": "Sabunta farashi",
+        "change": "+42% a wannan makon"
+      },
+      "birthday": {
+        "title": "Barka da Ranar Haihuwa",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Idan kod ɗin ya yi aiki",
+        "bottom": "A karon farko"
+      }
+    },
+    "design": {
+      "format": "Tsari",
+      "landscape": "Kwance",
+      "landscapeDetail": "YouTube, yanar gizo",
+      "vertical": "A tsaye",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Murabba'i",
+      "squareDetail": "Post na feed",
+      "portrait": "Hoto a tsaye",
+      "portraitDetail": "Instagram",
+      "canvas": "Allon zane",
+      "resolution": "Ƙuduri",
+      "frameRate": "Saurin firam",
+      "background": "Bango",
+      "backgroundSwatch": "Bango {{hex}}",
+      "customBackground": "Launin bango na musamman",
+      "emptyTitle": "Shafin babu komai",
+      "emptyBody": "Fara daga samfuri, kadara kyauta, fayil ɗinka, ko kawai ka tambayi AI.",
+      "browseAssets": "Duba kadarori kyauta",
+      "importMedia": "Shigo da midiya",
+      "generateClip": "Samar da gajeren bidiyo",
+      "addHeadline": "Ƙara babban take"
     }
   },
   "fractions": {

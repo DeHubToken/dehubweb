@@ -6035,6 +6035,78 @@
       "hint": "Veikia jūsų įrenginyje: nemokamai, privačiai, niekas neįkeliama. Pirmą kartą atsisiunčiamas DI modelis, vėliau tai užtrunka kelias sekundes.",
       "done": "Fonas pašalintas.",
       "failed": "Nepavyko pašalinti fono. Išbandykite kitą vaizdą arba naršyklę, pvz., Chrome ar Edge."
+    },
+    "templates": {
+      "heading": "Šablonai",
+      "hint": "Pasirink vieną ir pradėk. Kiekvieną žodį, spalvą ir nuotrauką gali pakeisti arba paprašyti DI tai padaryti.",
+      "use": "Naudoti šabloną {{name}}",
+      "replaceConfirm": "Pakeisti dabartinį dizainą šiuo šablonu? Galėsi atšaukti.",
+      "sale": {
+        "title": "Vasaros išpardavimas",
+        "subtitle": "Iki -50 % · Tik šį savaitgalį"
+      },
+      "quote": {
+        "title": "Citatos kortelė",
+        "body": "Paprasta, bet prasminga.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Nepatikėsi",
+        "badge": "Nauja"
+      },
+      "story": {
+        "title": "Naujiena",
+        "cta": "Braukite aukštyn ir pirkite"
+      },
+      "event": {
+        "title": "Gyvos muzikos vakaras",
+        "date": "Penktadienį 20 val.",
+        "place": "The Warehouse, centre"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "12 epizodas · Jau klausyk"
+      },
+      "announcement": {
+        "kicker": "Jau netrukus",
+        "title": "Artėja didelės naujienos"
+      },
+      "crypto": {
+        "title": "Kainos naujiena",
+        "change": "+42 % per savaitę"
+      },
+      "birthday": {
+        "title": "Su gimtadieniu",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Memas",
+        "top": "Kai kodas veikia",
+        "bottom": "Iš pirmo karto"
+      }
+    },
+    "design": {
+      "format": "Formatas",
+      "landscape": "Gulsčias",
+      "landscapeDetail": "YouTube, internetas",
+      "vertical": "Vertikalus",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Kvadratas",
+      "squareDetail": "Srauto įrašas",
+      "portrait": "Portretas",
+      "portraitDetail": "Instagram",
+      "canvas": "Drobė",
+      "resolution": "Raiška",
+      "frameRate": "Kadrų dažnis",
+      "background": "Fonas",
+      "backgroundSwatch": "Fonas {{hex}}",
+      "customBackground": "Pasirinktinė fono spalva",
+      "emptyTitle": "Puslapis tuščias",
+      "emptyBody": "Pradėk nuo šablono, nemokamo ištekliaus, savo failo arba tiesiog paklausk DI.",
+      "browseAssets": "Naršyti nemokamus išteklius",
+      "importMedia": "Importuoti mediją",
+      "generateClip": "Sugeneruoti klipą",
+      "addHeadline": "Pridėti antraštę"
     }
   }
 }

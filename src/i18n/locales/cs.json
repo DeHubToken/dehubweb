@@ -5947,6 +5947,78 @@
       "hint": "Běží ve vašem zařízení: zdarma, soukromě, nic se nenahrává. Při prvním použití se stáhne model AI, pak to trvá jen pár sekund.",
       "done": "Pozadí odstraněno.",
       "failed": "Pozadí se nepodařilo odstranit. Zkuste jiný obrázek nebo prohlížeč jako Chrome či Edge."
+    },
+    "templates": {
+      "heading": "Šablony",
+      "hint": "Vyberte jednu a začněte. Každé slovo, barvu i fotku můžete změnit, nebo o to požádat AI.",
+      "use": "Použít šablonu {{name}}",
+      "replaceConfirm": "Nahradit aktuální návrh touto šablonou? Lze to vrátit.",
+      "sale": {
+        "title": "Letní výprodej",
+        "subtitle": "Až −50 % · Jen tento víkend"
+      },
+      "quote": {
+        "title": "Karta s citátem",
+        "body": "Jednoduše, ale výrazně.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Tomu neuvěříte!",
+        "badge": "Novinka"
+      },
+      "story": {
+        "title": "Nová kolekce",
+        "cta": "Přejeď nahoru a nakupuj"
+      },
+      "event": {
+        "title": "Večer živé hudby",
+        "date": "Pátek 20:00",
+        "place": "Sklad, centrum"
+      },
+      "podcast": {
+        "title": "Show tvůrců",
+        "episode": "Díl 12 · Právě venku"
+      },
+      "announcement": {
+        "kicker": "Již brzy",
+        "title": "Chystáme velkou novinku"
+      },
+      "crypto": {
+        "title": "Aktualizace ceny",
+        "change": "+42 % za týden"
+      },
+      "birthday": {
+        "title": "Všechno nejlepší",
+        "name": "Same!"
+      },
+      "meme": {
+        "title": "Mem",
+        "top": "Když kód funguje",
+        "bottom": "Hned napoprvé"
+      }
+    },
+    "design": {
+      "format": "Formát",
+      "landscape": "Na šířku",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Na výšku",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Čtverec",
+      "squareDetail": "Příspěvek do feedu",
+      "portrait": "Portrét",
+      "portraitDetail": "Instagram",
+      "canvas": "Plátno",
+      "resolution": "Rozlišení",
+      "frameRate": "Snímková frekvence",
+      "background": "Pozadí",
+      "backgroundSwatch": "Pozadí {{hex}}",
+      "customBackground": "Vlastní barva pozadí",
+      "emptyTitle": "Stránka je prázdná",
+      "emptyBody": "Začněte šablonou, bezplatným prvkem, vlastním souborem, nebo se prostě zeptejte AI.",
+      "browseAssets": "Procházet bezplatné prvky",
+      "importMedia": "Importovat média",
+      "generateClip": "Vygenerovat klip",
+      "addHeadline": "Přidat nadpis"
     }
   }
 }

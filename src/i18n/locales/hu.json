@@ -5946,6 +5946,78 @@
       "hint": "Az eszközödön fut: ingyenes, privát, semmi sem kerül feltöltésre. Első használatkor letölti az AI-modellt, utána csak néhány másodperc.",
       "done": "Háttér eltávolítva.",
       "failed": "Nem sikerült eltávolítani a hátteret. Próbálj másik képet, vagy egy böngészőt, például Chrome-ot vagy Edge-et."
+    },
+    "templates": {
+      "heading": "Sablonok",
+      "hint": "Válassz egyet a kezdéshez. Minden szó, szín és fotó módosítható, vagy kérd meg az MI-t, hogy megtegye helyetted.",
+      "use": "A(z) {{name}} sablon használata",
+      "replaceConfirm": "Lecseréled a jelenlegi tervet erre a sablonra? Visszavonhatod.",
+      "sale": {
+        "title": "Nyári akció",
+        "subtitle": "Akár 50% kedvezmény · Csak ezen a hétvégén"
+      },
+      "quote": {
+        "title": "Idézetkártya",
+        "body": "Legyen egyszerű, de jelentős.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Ezt nem fogod elhinni",
+        "badge": "Új"
+      },
+      "story": {
+        "title": "Friss kollekció",
+        "cta": "Húzd fel a vásárláshoz"
+      },
+      "event": {
+        "title": "Élőzenés este",
+        "date": "Péntek 20:00",
+        "place": "The Warehouse, belváros"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "12. epizód · Már elérhető"
+      },
+      "announcement": {
+        "kicker": "Hamarosan",
+        "title": "Nagy hír érkezik"
+      },
+      "crypto": {
+        "title": "Árfolyam",
+        "change": "+42% a héten"
+      },
+      "birthday": {
+        "title": "Boldog szülinapot",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Mém",
+        "top": "Amikor a kód működik",
+        "bottom": "Elsőre"
+      }
+    },
+    "design": {
+      "format": "Formátum",
+      "landscape": "Fekvő",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Álló",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Négyzet",
+      "squareDetail": "Hírfolyam-bejegyzés",
+      "portrait": "Portré",
+      "portraitDetail": "Instagram",
+      "canvas": "Vászon",
+      "resolution": "Felbontás",
+      "frameRate": "Képkockasebesség",
+      "background": "Háttér",
+      "backgroundSwatch": "Háttér {{hex}}",
+      "customBackground": "Egyéni háttérszín",
+      "emptyTitle": "Az oldal üres",
+      "emptyBody": "Kezdj egy sablonnal, ingyenes elemmel, saját fájllal, vagy csak kérdezd az MI-t.",
+      "browseAssets": "Ingyenes elemek böngészése",
+      "importMedia": "Média importálása",
+      "generateClip": "Klip generálása",
+      "addHeadline": "Címsor hozzáadása"
     }
   }
 }

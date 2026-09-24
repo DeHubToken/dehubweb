@@ -3730,6 +3730,78 @@
       "hint": "Ka rere ki tō pūrere: he kore utu, he tūmataiti, kāore he mea e tukuatu. I te whakamahinga tuatahi ka tikiake te tauira AI, kātahi ka roa ētahi hēkona noa.",
       "done": "Kua tangohia te papamuri.",
       "failed": "Kāore i taea te tango i te papamuri. Whakamātauria tētahi atu atahanga, tētahi pūtirotiro rānei pērā i a Chrome, Edge rānei."
+    },
+    "templates": {
+      "heading": "Tauira",
+      "hint": "Kōwhiria tētahi hei tīmata. Ka taea te panoni i ia kupu, tae, whakaahua hoki, ki te tono rānei ki te AI kia panonitia māu.",
+      "use": "Whakamahia te tauira {{name}}",
+      "replaceConfirm": "Whakakapia te hoahoa o nāianei ki tēnei tauira? Ka taea te wetewete.",
+      "sale": {
+        "title": "Hoko Raumati",
+        "subtitle": "Tae atu ki te 50% te heke · Tēnei wiki whakatā anake"
+      },
+      "quote": {
+        "title": "Kāri kōrero",
+        "body": "Kia māmā, engari kia whai tikanga.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Kāore koe e whakapono",
+        "badge": "Hou"
+      },
+      "story": {
+        "title": "Taonga hou",
+        "cta": "Pāhekeheke ake hei hoko"
+      },
+      "event": {
+        "title": "Pō waiata ora",
+        "date": "Rāmere 8 i te pō",
+        "place": "The Warehouse, tāone"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Wāhanga 12 · Kua puta"
+      },
+      "announcement": {
+        "kicker": "Ākuanei",
+        "title": "He rongo nui e haere mai ana"
+      },
+      "crypto": {
+        "title": "Whakahou utu",
+        "change": "+42% i tēnei wiki"
+      },
+      "birthday": {
+        "title": "Rā Whānau Harikoa",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Mīmi",
+        "top": "Ina mahi te waehere",
+        "bottom": "I te whakamātau tuatahi"
+      }
+    },
+    "design": {
+      "format": "Hōputu",
+      "landscape": "Whakapae",
+      "landscapeDetail": "YouTube, ipurangi",
+      "vertical": "Poutū",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Tapawhā rite",
+      "squareDetail": "Pānui whāngai",
+      "portrait": "Whakaahua poutū",
+      "portraitDetail": "Instagram",
+      "canvas": "Kānawehi",
+      "resolution": "Taumira",
+      "frameRate": "Pāpātanga anga",
+      "background": "Papamuri",
+      "backgroundSwatch": "Papamuri {{hex}}",
+      "customBackground": "Tae papamuri ritenga",
+      "emptyTitle": "Kua kau te whārangi",
+      "emptyBody": "Tīmata mai i tētahi tauira, i tētahi rawa kore utu, i tō kōnae ake, me pātai noa rānei ki te AI.",
+      "browseAssets": "Tirotiro rawa kore utu",
+      "importMedia": "Kawemai pāpāho",
+      "generateClip": "Waihanga topenga",
+      "addHeadline": "Tāpiri upoko"
     }
   },
   "fractions": {

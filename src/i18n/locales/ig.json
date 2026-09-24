@@ -3696,6 +3696,78 @@
       "hint": "Ọ na-arụ ọrụ na ngwaọrụ gị: n'efu, nzuzo, ọ dịghị ihe a na-ebugo. Ojiji mbụ na-ebudata ụdị AI, mgbe ahụ ọ na-ewe sekọnd ole na ole.",
       "done": "E wepụla azụ foto.",
       "failed": "Enweghị ike iwepụ azụ foto. Nwaa foto ọzọ, ma ọ bụ ihe nchọgharị dị ka Chrome ma ọ bụ Edge."
+    },
+    "templates": {
+      "heading": "Ndebiri",
+      "hint": "Họrọ otu iji malite. Ị nwere ike ịgbanwe okwu ọ bụla, agba na foto, ma ọ bụ gwa AI ka o mee ya maka gị.",
+      "use": "Jiri ndebiri {{name}}",
+      "replaceConfirm": "Dochie imewe dị ugbu a na ndebiri a? Ị nwere ike ịtụgharị ya.",
+      "sale": {
+        "title": "Ire Ọkọchị",
+        "subtitle": "Ruo 50% mbelata · Naanị izu ụka a"
+      },
+      "quote": {
+        "title": "Kaadị okwu",
+        "body": "Mee ya dị mfe, mana ka o nwee isi.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Ị gaghị ekwere nke a",
+        "badge": "Ọhụrụ"
+      },
+      "story": {
+        "title": "Ihe ọhụrụ abịala",
+        "cta": "Swaipu elu ka ị zụta"
+      },
+      "event": {
+        "title": "Abalị egwu ndụ",
+        "date": "Fraịde 8 abalị",
+        "place": "The Warehouse, n'obodo"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Ihe omume 12 · Ọ pụtala"
+      },
+      "announcement": {
+        "kicker": "Na-abịa n'oge na-adịghị anya",
+        "title": "Nnukwu akụkọ na-abịa"
+      },
+      "crypto": {
+        "title": "Mmelite ọnụahịa",
+        "change": "+42% n'izu a"
+      },
+      "birthday": {
+        "title": "Ụbọchị ọmụmụ ọma",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Mgbe koodu rụrụ ọrụ",
+        "bottom": "Na mbọ mbụ"
+      }
+    },
+    "design": {
+      "format": "Nhazi",
+      "landscape": "Ogologo n'akụkụ",
+      "landscapeDetail": "YouTube, weebụ",
+      "vertical": "Kwụ ọtọ",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Square",
+      "squareDetail": "Post nri",
+      "portrait": "Foto ogologo",
+      "portraitDetail": "Instagram",
+      "canvas": "Kanvas",
+      "resolution": "Mkpebi",
+      "frameRate": "Ọsọ fireemu",
+      "background": "Azụ",
+      "backgroundSwatch": "Azụ {{hex}}",
+      "customBackground": "Agba azụ nke gị",
+      "emptyTitle": "Peeji ahụ tọgbọ chakoo",
+      "emptyBody": "Malite site na ndebiri, akụrụngwa n'efu, faịlụ nke gị, ma ọ bụ jụọ AI.",
+      "browseAssets": "Chọgharịa akụrụngwa n'efu",
+      "importMedia": "Bubata mgbasa ozi",
+      "generateClip": "Mepụta klip",
+      "addHeadline": "Tinye isiokwu"
     }
   },
   "fractions": {
