@@ -100,6 +100,9 @@ export function Compositor() {
   const timelineOpen = useEditorUiStore((s) => s.timelineOpen);
   const setTimelineOpen = useEditorUiStore((s) => s.setTimelineOpen);
   const setCanvasFocus = useEditorUiStore((s) => s.setCanvasFocus);
+  const draw = useEditorUiStore((s) => s.draw);
+  // Freehand stroke in progress, in canvas pixels (live preview only).
+  const [stroke, setStroke] = useState<[number, number][] | null>(null);
   const quota = useEditorQuota();
 
   // ── Element pools ──
@@ -579,9 +582,60 @@ export function Compositor() {
 
   useEffect(() => () => onGestureEnd(), [onGestureEnd]);
 
+  const startStroke = (e: React.PointerEvent<HTMLCanvasElement>, pen: { color: string; width: number }) => {
+    const pts: [number, number][] = [];
+    const push = (clientX: number, clientY: number) => {
+      const p = toCanvas(clientX, clientY);
+      const last = pts[pts.length - 1];
+      // Skip samples closer than 2 canvas px: smoother curve, smaller layer.
+      if (!last || Math.hypot(p.x - last[0], p.y - last[1]) >= 2) pts.push([p.x, p.y]);
+    };
+    push(e.clientX, e.clientY);
+    setStroke([...pts]);
+    const onMove = (ev: PointerEvent) => {
+      push(ev.clientX, ev.clientY);
+      setStroke([...pts]);
+    };
+    const onUp = () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+      setStroke(null);
+      if (!pts.length) return;
+      const s = useEditorStore.getState();
+      const W = s.settings.width;
+      const H = s.settings.height;
+      const xs = pts.map((p) => p[0]);
+      const ys = pts.map((p) => p[1]);
+      const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+      // Give a straight or tiny stroke a real box so its points stay finite.
+      const w = Math.max(maxX - minX, 4);
+      const h = Math.max(maxY - minY, 4);
+      const cx = (minX + maxX) / 2;
+      const cy = (minY + maxY) / 2;
+      s.addShapeClip("path", {
+        fill: null,
+        stroke: { color: pen.color, width: pen.width },
+        w: w / W,
+        h: h / H,
+        points: pts.map(([x, y]) => [(x - cx) / w, (y - cy) / h] as [number, number]),
+        transform: { x: cx / W, y: cy / H, scale: 1, rotation: 0 },
+      });
+      // Keep drawing: no selection box getting in the way of the next stroke.
+      useEditorStore.getState().selectClip(null);
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
+  };
+
   const onCanvasPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (editingTextId) return;
     if (e.button !== 0) return;
+    if (draw) {
+      startStroke(e, draw);
+      return;
+    }
     const hit = hitTest(e.clientX, e.clientY);
     const p = toCanvas(e.clientX, e.clientY);
     if (!hit) {
@@ -777,7 +831,7 @@ export function Compositor() {
                   onContextMenu={onCanvasContextMenu}
                   className={cn(
                     "h-full w-full touch-none",
-                    editingTextId ? "cursor-text" : selectedClip ? "cursor-move" : "cursor-default",
+                    draw ? "cursor-crosshair" : editingTextId ? "cursor-text" : selectedClip ? "cursor-move" : "cursor-default",
                   )}
                 />
               </ContextMenuTrigger>
@@ -792,6 +846,19 @@ export function Compositor() {
           {marquee && (
             <div className="pointer-events-none absolute border border-sky-300 bg-sky-300/10"
               style={{ left: marquee.x * scale, top: marquee.y * scale, width: marquee.w * scale, height: marquee.h * scale }} />
+          )}
+
+          {stroke && draw && (
+            <svg className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
+              <polyline
+                points={stroke.map(([x, y]) => `${x * scale},${y * scale}`).join(" ")}
+                fill="none"
+                stroke={draw.color}
+                strokeWidth={Math.max(1, (draw.width / 1080) * settings.height * scale)}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           )}
 
           {/* Snapping guides */}

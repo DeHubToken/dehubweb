@@ -3726,7 +3726,8 @@
       "fillOn": "Hunt'achiy",
       "outline": "Muyuq siqi",
       "outlineOn": "Muyuq siqi",
-      "outlineWidth": "Muyuq siqipa rakhu kaynin {{value}}"
+      "outlineWidth": "Muyuq siqipa rakhu kaynin {{value}}",
+      "path": "Siq'isqa"
     },
     "elements": {
       "shapes": "Rikch'aykuna",
@@ -3890,6 +3891,14 @@
       "apply": "Marcata churay",
       "addLogo": "Logota yapay",
       "applied": "Marcaqa {{count}} capakunapi churasqa."
+    },
+    "draw": {
+      "heading": "Siq'iy",
+      "start": "Siq'iyta qallariy",
+      "stop": "Siq'iyta sayachiy",
+      "colour": "Qillqanapa llimpin",
+      "width": "Qillqanapa tamañon {{value}}",
+      "hint": "Lienzopi aysay siq'inaykipaq. Sapa siqi sapan capa, kuyuchiyta, tamañonta tikrayta utaq qulluchiyta atinki. Sayachinaykipaq Esc ñit'iy."
     }
   },
   "fractions": {

@@ -3649,7 +3649,8 @@
       "fillOn": "Doldurma",
       "outline": "Gyra çyzyk",
       "outlineOn": "Gyra çyzyk",
-      "outlineWidth": "Gyra çyzygyň galyňlygy {{value}}"
+      "outlineWidth": "Gyra çyzygyň galyňlygy {{value}}",
+      "path": "Surat"
     },
     "elements": {
       "shapes": "Şekiller",
@@ -3813,6 +3814,14 @@
       "apply": "Brendi ulan",
       "addLogo": "Logotip goş",
       "applied": "Brend {{count}} gata ulanyldy."
+    },
+    "draw": {
+      "heading": "Çyz",
+      "start": "Çyzmaga başla",
+      "stop": "Çyzmagy bes et",
+      "colour": "Galamyň reňki",
+      "width": "Galamyň ölçegi {{value}}",
+      "hint": "Çyzmak üçin kanwasda süýräň. Her çyzyk öz aýratyn gatlagy bolup, ony süýşürip, ölçegini üýtgedip ýa-da pozup bilersiňiz. Bes etmek üçin Esc basyň."
     }
   },
   "fractions": {

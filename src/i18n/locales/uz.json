@@ -3710,7 +3710,8 @@
       "fillOn": "To'ldirish",
       "outline": "Kontur",
       "outlineOn": "Kontur",
-      "outlineWidth": "Kontur qalinligi {{value}}"
+      "outlineWidth": "Kontur qalinligi {{value}}",
+      "path": "Chizma"
     },
     "elements": {
       "shapes": "Shakllar",
@@ -3874,6 +3875,14 @@
       "apply": "Brendni qo‘llash",
       "addLogo": "Logotip qo‘shish",
       "applied": "Brend {{count}} ta qatlamga qo‘llandi."
+    },
+    "draw": {
+      "heading": "Chizish",
+      "start": "Chizishni boshlash",
+      "stop": "Chizishni to'xtatish",
+      "colour": "Qalam rangi",
+      "width": "Qalam o'lchami {{value}}",
+      "hint": "Chizish uchun kanvas ustida torting. Har bir chiziq alohida qatlam bo'lib, uni ko'chirish, o'lchamini o'zgartirish yoki o'chirish mumkin. To'xtatish uchun Esc tugmasini bosing."
     }
   },
   "spaces": {

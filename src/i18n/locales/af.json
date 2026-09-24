@@ -5841,7 +5841,8 @@
       "fillOn": "Vul",
       "outline": "Buitelyn",
       "outlineOn": "Buitelyn",
-      "outlineWidth": "Buitelynwydte {{value}}"
+      "outlineWidth": "Buitelynwydte {{value}}",
+      "path": "Tekening"
     },
     "elements": {
       "shapes": "Vorms",
@@ -6005,6 +6006,14 @@
       "apply": "Pas handelsmerk toe",
       "addLogo": "Voeg logo by",
       "applied": "Handelsmerk op {{count}} lae toegepas."
+    },
+    "draw": {
+      "heading": "Teken",
+      "start": "Begin teken",
+      "stop": "Stop teken",
+      "colour": "Penkleur",
+      "width": "Pengrootte {{value}}",
+      "hint": "Sleep op die doek om te teken. Elke haal is sy eie laag wat jy kan skuif, se grootte verander of uitvee. Druk Esc om te stop."
     }
   },
   "footer": {

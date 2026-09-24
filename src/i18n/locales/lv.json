@@ -5995,7 +5995,8 @@
       "fillOn": "Aizpildījums",
       "outline": "Kontūra",
       "outlineOn": "Kontūra",
-      "outlineWidth": "Kontūras platums {{value}}"
+      "outlineWidth": "Kontūras platums {{value}}",
+      "path": "Zīmējums"
     },
     "elements": {
       "shapes": "Formas",
@@ -6159,6 +6160,14 @@
       "apply": "Lietot zīmolu",
       "addLogo": "Pievienot logotipu",
       "applied": "Zīmols lietots {{count}} slāņiem."
+    },
+    "draw": {
+      "heading": "Zīmēt",
+      "start": "Sākt zīmēt",
+      "stop": "Beigt zīmēt",
+      "colour": "Pildspalvas krāsa",
+      "width": "Pildspalvas izmērs {{value}}",
+      "hint": "Velc pa audeklu, lai zīmētu. Katrs vilciens ir atsevišķs slānis, ko vari pārvietot, mainīt izmēru vai dzēst. Nospied Esc, lai beigtu."
     }
   }
 }

@@ -5934,7 +5934,8 @@
       "fillOn": "Fyld",
       "outline": "Kontur",
       "outlineOn": "Kontur",
-      "outlineWidth": "Konturbredde {{value}}"
+      "outlineWidth": "Konturbredde {{value}}",
+      "path": "Tegning"
     },
     "elements": {
       "shapes": "Former",
@@ -6098,6 +6099,14 @@
       "apply": "Anvend brand",
       "addLogo": "Tilføj logo",
       "applied": "Brand anvendt på {{count}} lag."
+    },
+    "draw": {
+      "heading": "Tegn",
+      "start": "Start tegning",
+      "stop": "Stop tegning",
+      "colour": "Pennefarve",
+      "width": "Pennestørrelse {{value}}",
+      "hint": "Træk på lærredet for at tegne. Hvert strøg er sit eget lag, som du kan flytte, ændre størrelse på eller slette. Tryk på Esc for at stoppe."
     }
   }
 }

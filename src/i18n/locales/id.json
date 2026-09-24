@@ -6023,7 +6023,8 @@
       "fillOn": "Isi",
       "outline": "Garis tepi",
       "outlineOn": "Garis tepi",
-      "outlineWidth": "Lebar garis tepi {{value}}"
+      "outlineWidth": "Lebar garis tepi {{value}}",
+      "path": "Gambar"
     },
     "elements": {
       "shapes": "Bentuk",
@@ -6187,6 +6188,14 @@
       "apply": "Terapkan merek",
       "addLogo": "Tambah logo",
       "applied": "Merek diterapkan ke {{count}} lapisan."
+    },
+    "draw": {
+      "heading": "Gambar",
+      "start": "Mulai menggambar",
+      "stop": "Berhenti menggambar",
+      "colour": "Warna pena",
+      "width": "Ukuran pena {{value}}",
+      "hint": "Seret di kanvas untuk menggambar. Setiap goresan adalah lapisan tersendiri yang bisa dipindah, diubah ukurannya, atau dihapus. Tekan Esc untuk berhenti."
     }
   }
 }

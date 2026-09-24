@@ -6007,7 +6007,8 @@
       "fillOn": "塗り",
       "outline": "アウトライン",
       "outlineOn": "アウトライン",
-      "outlineWidth": "アウトラインの太さ {{value}}"
+      "outlineWidth": "アウトラインの太さ {{value}}",
+      "path": "描画"
     },
     "elements": {
       "shapes": "シェイプ",
@@ -6171,6 +6172,14 @@
       "apply": "ブランドを適用",
       "addLogo": "ロゴを追加",
       "applied": "{{count}} 個のレイヤーにブランドを適用しました。"
+    },
+    "draw": {
+      "heading": "描画",
+      "start": "描画を開始",
+      "stop": "描画を終了",
+      "colour": "ペンの色",
+      "width": "ペンのサイズ {{value}}",
+      "hint": "キャンバス上をドラッグして描きます。各ストロークは個別のレイヤーになり、移動、サイズ変更、削除ができます。Esc キーで終了します。"
     }
   }
 }

@@ -3162,7 +3162,8 @@
       "fillOn": "Fill",
       "outline": "Outline",
       "outlineOn": "Outline",
-      "outlineWidth": "Outline width {{value}}"
+      "outlineWidth": "Outline width {{value}}",
+      "path": "Drawing"
     },
     "elements": {
       "shapes": "Shapes",
@@ -3326,6 +3327,14 @@
       "apply": "Apply brand",
       "addLogo": "Add logo",
       "applied": "Brand don apply for {{count}} layer dem."
+    },
+    "draw": {
+      "heading": "Draw",
+      "start": "Start for draw",
+      "stop": "Stop draw",
+      "colour": "Pen colour",
+      "width": "Pen size {{value}}",
+      "hint": "Drag for canvas for draw. Each line na yi own layer weh you fit move, resize or delete. Press Esc for stop."
     }
   },
   "fractions": {

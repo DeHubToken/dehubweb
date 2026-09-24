@@ -3685,7 +3685,8 @@
       "fillOn": "Kún",
       "outline": "Ìlà ìta",
       "outlineOn": "Ìlà ìta",
-      "outlineWidth": "Fífẹ̀ ìlà ìta {{value}}"
+      "outlineWidth": "Fífẹ̀ ìlà ìta {{value}}",
+      "path": "Àwòrán yíyà"
     },
     "elements": {
       "shapes": "Àwọn ìrísí",
@@ -3849,6 +3850,14 @@
       "apply": "Lo àmì-ìdámọ̀",
       "addLogo": "Ṣàfikún àmì",
       "applied": "A ti lo àmì-ìdámọ̀ sí ìpele {{count}}."
+    },
+    "draw": {
+      "heading": "Yà",
+      "start": "Bẹ̀rẹ̀ sí yà",
+      "stop": "Dá yíyà dúró",
+      "colour": "Àwọ̀ gègé",
+      "width": "Ìwọ̀n gègé {{value}}",
+      "hint": "Fà lórí kanfasi láti yà. Ìlà kọ̀ọ̀kan jẹ́ ìpele tirẹ̀ tí o lè gbé, yí ìwọ̀n rẹ̀ padà tàbí pa rẹ́. Tẹ Esc láti dúró."
     }
   },
   "fractions": {

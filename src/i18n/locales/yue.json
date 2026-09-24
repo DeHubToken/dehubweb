@@ -3694,7 +3694,8 @@
       "fillOn": "填色",
       "outline": "外框",
       "outlineOn": "外框",
-      "outlineWidth": "外框闊度 {{value}}"
+      "outlineWidth": "外框闊度 {{value}}",
+      "path": "繪圖"
     },
     "elements": {
       "shapes": "形狀",
@@ -3858,6 +3859,14 @@
       "apply": "套用品牌",
       "addLogo": "加標誌",
       "applied": "已經將品牌套用到 {{count}} 個圖層。"
+    },
+    "draw": {
+      "heading": "繪畫",
+      "start": "開始繪畫",
+      "stop": "停止繪畫",
+      "colour": "畫筆顏色",
+      "width": "畫筆大小 {{value}}",
+      "hint": "喺畫布上拖曳嚟繪畫。每一筆都係獨立圖層，可以移動、調整大小或者刪除。撳 Esc 停止。"
     }
   },
   "fractions": {
