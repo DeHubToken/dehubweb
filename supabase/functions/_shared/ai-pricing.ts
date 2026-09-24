@@ -271,6 +271,10 @@ export function quotePriceDhb(kind: JobKind, modelId: string, opts: QuoteOptions
 
   const quantity = Math.max(1, Math.floor(opts.quantity ?? 1));
   const markup = MARKUP_OVERRIDES[modelId] ?? MARKUP;
+  // Images in a batch are separate jobs, each drawn at its own rounded price,
+  // so the batch quote is exactly the sum of its parts. Other quantities
+  // (seconds of music, minutes of audio) are one job and round once.
+  if (kind === "image") return Math.ceil((cost * (1 + markup)) / DHB_USD_PEG) * quantity;
   const retailUsd = cost * (1 + markup) * quantity;
 
   // Whole DHB. Rounding up keeps a batch from costing less than its parts.

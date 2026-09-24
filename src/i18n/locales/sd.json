@@ -2725,7 +2725,8 @@
     "foldersInFolder_one": "{{count}} فولڊر ۾",
     "foldersInFolder_other": "{{count}} فولڊرن ۾",
     "foldersNoItems": "هن فولڊر ۾ اڃا تائين ڪجھ به ناهي",
-    "foldersNoItemsHint": "ھڪڙو نتيجو کوليو ۽ ان کي ھتي فائل ڪرڻ لاءِ \"فولڊر ۾ شامل ڪريو\" چونڊيو."
+    "foldersNoItemsHint": "ھڪڙو نتيجو کوليو ۽ ان کي ھتي فائل ڪرڻ لاءِ \"فولڊر ۾ شامل ڪريو\" چونڊيو.",
+    "skippedUpstreamFailed": "اهو ئي سبب آهي جو هڪ ڀيرو ٻيهر ناڪام ٿيو آهي. ان جي قيمت توهان جي توازن ۾ رهي ٿي."
   },
   "videoPlayer": {
     "volume": "آواز",

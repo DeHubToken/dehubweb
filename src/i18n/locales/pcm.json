@@ -2371,7 +2371,8 @@
     "foldersAddTo": "Add to folder",
     "foldersEmpty": "No folders yet.",
     "foldersInFolder_one": "In {{count}} folder",
-    "foldersInFolder_other": "In {{count}} folders"
+    "foldersInFolder_other": "In {{count}} folders",
+    "skippedUpstreamFailed": "E skip am because one step before am fail. The money still dey your balance."
   },
   "videoPlayer": {
     "volume": "Volume",

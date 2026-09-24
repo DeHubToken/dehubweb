@@ -2680,7 +2680,8 @@
     "foldersAddTo": "Add to folder",
     "foldersEmpty": "No folders yet.",
     "foldersInFolder_one": "In {{count}} folder",
-    "foldersInFolder_other": "In {{count}} folders"
+    "foldersInFolder_other": "In {{count}} folders",
+    "skippedUpstreamFailed": "Ek pahila step fail bhelay tyamule skip kelay. Tyacha kharch tumchya balance madhe rahil."
   },
   "videoPlayer": {
     "volume": "دەنگ",

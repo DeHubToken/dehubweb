@@ -4977,7 +4977,8 @@
     "foldersInFolder_one": "A la carpeta {{count}}",
     "foldersInFolder_other": "A {{count}} carpetes",
     "foldersNoItems": "Encara no hi ha res en aquesta carpeta",
-    "foldersNoItemsHint": "Obre un resultat i tria \"Afegeix a la carpeta\" per arxivar-lo aquí."
+    "foldersNoItemsHint": "Obre un resultat i tria \"Afegeix a la carpeta\" per arxivar-lo aquí.",
+    "skippedUpstreamFailed": "S'ha ometut perquè ha fallat un pas anterior. El seu cost es manté en el teu saldo."
   },
   "videoPlayer": {
     "volume": "Volum",

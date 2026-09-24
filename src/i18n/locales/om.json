@@ -2790,7 +2790,8 @@
     "foldersInFolder_one": "Galmee {{count}} keessatti",
     "foldersInFolder_other": "Galmeewwan {{count}} keessatti",
     "foldersNoItems": "Galmee kana keessa hanga ammaatti homaa hin jiru",
-    "foldersNoItemsHint": "Bu&#39;aa tokko baniitii &quot;Add to folder&quot; filadhuutii asitti galmeessi."
+    "foldersNoItemsHint": "Bu&#39;aa tokko baniitii &quot;Add to folder&quot; filadhuutii asitti galmeessi.",
+    "skippedUpstreamFailed": "Tarkaanfiin duraan fudhatame waan fashalaa&#39;eef darbame. Baasii isaa madaallii kee keessa jiraata."
   },
   "videoPlayer": {
     "volume": "Sagalee",

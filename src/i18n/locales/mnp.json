@@ -2675,7 +2675,8 @@
     "foldersInFolder_one": "在 {{count}} 文件夹中",
     "foldersInFolder_other": "在 {{count}} 个文件夹中",
     "foldersNoItems": "此文件夹中尚无内容",
-    "foldersNoItemsHint": "打开一个结果并选择“添加到文件夹”以在此处归档。"
+    "foldersNoItemsHint": "打开一个结果并选择“添加到文件夹”以在此处归档。",
+    "skippedUpstreamFailed": "因为前一步失败，已跳过。费用仍保留在您的余额中。"
   },
   "videoPlayer": {
     "volume": "音量",

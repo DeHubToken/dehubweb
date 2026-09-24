@@ -2762,7 +2762,8 @@
     "foldersInFolder_one": "Дар ҷузвдони {{count}}",
     "foldersInFolder_other": "Дар ҷузвдонҳои {{count}}",
     "foldersNoItems": "Ҳанӯз дар ин ҷузвдон чизе нест",
-    "foldersNoItemsHint": "Натиҷаро кушоед ва \"Ба ҷузвдон илова кунед\"-ро интихоб кунед, то онро дар ин ҷо ҷойгир кунед."
+    "foldersNoItemsHint": "Натиҷаро кушоед ва \"Ба ҷузвдон илова кунед\"-ро интихоб кунед, то онро дар ин ҷо ҷойгир кунед.",
+    "skippedUpstreamFailed": "QShortcut Музди он дар тарозуи шумост."
   },
   "videoPlayer": {
     "volume": "Баландии садо",

@@ -2638,7 +2638,8 @@
     "foldersInFolder_one": "{{count}} ফোল্ডারে",
     "foldersInFolder_other": "{{count}} ফোল্ডারে",
     "foldersNoItems": "এই ফোল্ডারে এখনো কিছু নাই",
-    "foldersNoItemsHint": "একটা ফলাফল খোলো আর \"ফোল্ডারে যোগ করো\" বেছাই করে এখানে ফাইল করো।"
+    "foldersNoItemsHint": "একটা ফলাফল খোলো আর \"ফোল্ডারে যোগ করো\" বেছাই করে এখানে ফাইল করো।",
+    "skippedUpstreamFailed": "আগের স্টেপ ফেইল হওয়ার কারণে এটা স্কিপ অই গেয়ি। এর কস্ট আপনার ব্যালেন্সেই রইবো।"
   },
   "videoPlayer": {
     "volume": "ভলিউম",

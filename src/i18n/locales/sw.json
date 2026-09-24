@@ -5034,7 +5034,8 @@
     "foldersInFolder_one": "Kwenye folda ya {{count}}",
     "foldersInFolder_other": "Kwenye folda {{count}}",
     "foldersNoItems": "Hakuna chochote kwenye folda hii bado",
-    "foldersNoItemsHint": "Fungua matokeo na uchague \"Ongeza kwenye folda\" ili uihifadhi hapa."
+    "foldersNoItemsHint": "Fungua matokeo na uchague \"Ongeza kwenye folda\" ili uihifadhi hapa.",
+    "skippedUpstreamFailed": "Imeruka kwa sababu hatua ya awali imeshindwa. Gharama yake inakaa katika salio lako."
   },
   "videoPlayer": {
     "volume": "Sauti",

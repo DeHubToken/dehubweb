@@ -2768,7 +2768,8 @@
     "foldersInFolder_one": "I roto i te kōpaki {{count}}",
     "foldersInFolder_other": "I roto i ngā kōpaki {{count}}",
     "foldersNoItems": "Kāore anō kia whai mea kei roto i tēnei kōpaki",
-    "foldersNoItemsHint": "Whakatuwherahia tētahi hua ka tīpakohia te \"Tāpiri ki te kōpaki\" hei penapena ki konei."
+    "foldersNoItemsHint": "Whakatuwherahia tētahi hua ka tīpakohia te \"Tāpiri ki te kōpaki\" hei penapena ki konei.",
+    "skippedUpstreamFailed": "E kore e taea e te tangata te mahi i te mea kua kore e taea e ia te mahi i Ko te utu e noho ana i roto i to koutou toenga."
   },
   "videoPlayer": {
     "volume": "Rahi oro",

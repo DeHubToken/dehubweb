@@ -4981,7 +4981,8 @@
     "foldersInFolder_one": "Kaustas {{count}}",
     "foldersInFolder_other": "Kaustades {{count}}",
     "foldersNoItems": "Selles kaustas pole veel midagi",
-    "foldersNoItemsHint": "Avage tulemus ja valige \"Lisa kausta\", et see siia salvestada."
+    "foldersNoItemsHint": "Avage tulemus ja valige \"Lisa kausta\", et see siia salvestada.",
+    "skippedUpstreamFailed": "Jäeti vahele, kuna varasem toiming ebaõnnestus. Selle hind jääb sinu saldosse."
   },
   "videoPlayer": {
     "volume": "Helitugevus",

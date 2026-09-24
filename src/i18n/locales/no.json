@@ -2765,7 +2765,8 @@
     "foldersInFolder_one": "I mappen {{count}}",
     "foldersInFolder_other": "I {{count}} mapper",
     "foldersNoItems": "Ingenting i denne mappen ennå",
-    "foldersNoItemsHint": "Åpne et resultat og velg \"Legg til i mappe\" for å arkivere det her."
+    "foldersNoItemsHint": "Åpne et resultat og velg \"Legg til i mappe\" for å arkivere det her.",
+    "skippedUpstreamFailed": "Hoppet over fordi et tidligere trinn mislyktes. Kostnaden forblir i saldoen din."
   },
   "videoPlayer": {
     "volume": "Lydstyrke",
