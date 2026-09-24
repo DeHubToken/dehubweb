@@ -6145,6 +6145,20 @@
       "spaceHorizontal": "Paskirstyti horizontaliai",
       "spaceVertical": "Paskirstyti vertikaliai",
       "hint": "Vilkite bet kurį, kad perkeltumėte visus kartu. Norėdami pakeisti pasirinkimą, spustelėkite su Shift arba tuščioje drobėje nubrėžkite rėmelį."
+    },
+    "brand": {
+      "heading": "Prekės ženklo rinkinys",
+      "colors": "Prekės ženklo spalvos",
+      "addColor": "Pridėti prekės ženklo spalvą",
+      "removeColor": "Pašalinti {{color}}",
+      "headingFont": "Antraščių šriftas",
+      "bodyFont": "Teksto šriftas",
+      "logo": "Logotipas",
+      "noLogo": "Logotipo nėra",
+      "logoHint": "Įkelkite logotipą į Medija, tada pasirinkite jį čia.",
+      "apply": "Taikyti prekės ženklą",
+      "addLogo": "Pridėti logotipą",
+      "applied": "Prekės ženklas pritaikytas sluoksniams: {{count}}."
     }
   }
 }

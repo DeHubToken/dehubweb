@@ -6166,6 +6166,20 @@
       "spaceHorizontal": "Horizontal verteilen",
       "spaceVertical": "Vertikal verteilen",
       "hint": "Zieh eine davon, um alle gemeinsam zu verschieben. Mit Umschalt-Klick oder einem Rahmen auf der leeren Fläche änderst du die Auswahl."
+    },
+    "brand": {
+      "heading": "Markenkit",
+      "colors": "Markenfarben",
+      "addColor": "Markenfarbe hinzufügen",
+      "removeColor": "{{color}} entfernen",
+      "headingFont": "Überschriftenschrift",
+      "bodyFont": "Textschrift",
+      "logo": "Logo",
+      "noLogo": "Kein Logo",
+      "logoHint": "Lade dein Logo unter Medien hoch und wähle es dann hier aus.",
+      "apply": "Marke anwenden",
+      "addLogo": "Logo hinzufügen",
+      "applied": "Marke auf {{count}} Ebenen angewendet."
     }
   }
 }

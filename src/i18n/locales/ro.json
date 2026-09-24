@@ -5935,6 +5935,20 @@
       "spaceHorizontal": "Distribuie egal pe orizontală",
       "spaceVertical": "Distribuie egal pe verticală",
       "hint": "Trage oricare dintre ele pentru a le muta împreună. Dă Shift-clic sau trage un chenar pe pânza goală pentru a schimba selecția."
+    },
+    "brand": {
+      "heading": "Kit de brand",
+      "colors": "Culorile brandului",
+      "addColor": "Adaugă o culoare de brand",
+      "removeColor": "Elimină {{color}}",
+      "headingFont": "Font pentru titluri",
+      "bodyFont": "Font pentru text",
+      "logo": "Logo",
+      "noLogo": "Fără logo",
+      "logoHint": "Încarcă logo-ul în Media, apoi alege-l aici.",
+      "apply": "Aplică brandul",
+      "addLogo": "Adaugă logo",
+      "applied": "Brand aplicat pe {{count}} straturi."
     }
   },
   "footer": {

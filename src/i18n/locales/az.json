@@ -6011,6 +6011,20 @@
       "spaceHorizontal": "Üfüqi bərabər payla",
       "spaceVertical": "Şaquli bərabər payla",
       "hint": "Hamısını birlikdə hərəkət etdirmək üçün istənilən birini sürüşdürün. Seçimi dəyişmək üçün Shift+klik edin və ya boş kanvasda çərçivə çəkin."
+    },
+    "brand": {
+      "heading": "Brend dəsti",
+      "colors": "Brend rəngləri",
+      "addColor": "Brend rəngi əlavə et",
+      "removeColor": "{{color}} sil",
+      "headingFont": "Başlıq şrifti",
+      "bodyFont": "Mətn şrifti",
+      "logo": "Loqo",
+      "noLogo": "Loqo yoxdur",
+      "logoHint": "Loqonu Media bölməsinə yüklə, sonra burada seç.",
+      "apply": "Brendi tətbiq et",
+      "addLogo": "Loqo əlavə et",
+      "applied": "Brend {{count}} qata tətbiq olundu."
     }
   }
 }

@@ -3860,6 +3860,20 @@
       "spaceHorizontal": "Gorizontal teng taqsimlash",
       "spaceVertical": "Vertikal teng taqsimlash",
       "hint": "Hammasini birga siljitish uchun istalgan birini torting. Tanlovni o'zgartirish uchun Shift bilan bosing yoki bo'sh kanvasda ramka torting."
+    },
+    "brand": {
+      "heading": "Brend to‘plami",
+      "colors": "Brend ranglari",
+      "addColor": "Brend rangini qo‘shish",
+      "removeColor": "{{color}} ni olib tashlash",
+      "headingFont": "Sarlavha shrifti",
+      "bodyFont": "Matn shrifti",
+      "logo": "Logotip",
+      "noLogo": "Logotip yo‘q",
+      "logoHint": "Logotipingizni Media bo‘limiga yuklang, so‘ng shu yerdan tanlang.",
+      "apply": "Brendni qo‘llash",
+      "addLogo": "Logotip qo‘shish",
+      "applied": "Brend {{count}} ta qatlamga qo‘llandi."
     }
   },
   "spaces": {

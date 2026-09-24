@@ -6053,6 +6053,20 @@
       "spaceHorizontal": "Distribueix en horitzontal",
       "spaceVertical": "Distribueix en vertical",
       "hint": "Arrossega'n qualsevol per moure-les juntes. Fes Maj+clic o arrossega un requadre al llenç buit per canviar la selecció."
+    },
+    "brand": {
+      "heading": "Kit de marca",
+      "colors": "Colors de marca",
+      "addColor": "Afegeix un color de marca",
+      "removeColor": "Elimina {{color}}",
+      "headingFont": "Font dels títols",
+      "bodyFont": "Font del cos",
+      "logo": "Logotip",
+      "noLogo": "Sense logotip",
+      "logoHint": "Puja el logotip a Multimèdia i després tria'l aquí.",
+      "apply": "Aplica la marca",
+      "addLogo": "Afegeix un logotip",
+      "applied": "Marca aplicada a {{count}} capes."
     }
   }
 }

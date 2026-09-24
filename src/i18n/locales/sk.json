@@ -3985,6 +3985,20 @@
       "spaceHorizontal": "Rozmiestniť rovnomerne vodorovne",
       "spaceVertical": "Rozmiestniť rovnomerne zvisle",
       "hint": "Potiahnite ktorúkoľvek z nich a presuniete ich spolu. Výber zmeníte kliknutím so Shift alebo ťahaním rámčeka na prázdnom plátne."
+    },
+    "brand": {
+      "heading": "Balík značky",
+      "colors": "Farby značky",
+      "addColor": "Pridať farbu značky",
+      "removeColor": "Odstrániť {{color}}",
+      "headingFont": "Písmo nadpisov",
+      "bodyFont": "Písmo textu",
+      "logo": "Logo",
+      "noLogo": "Žiadne logo",
+      "logoHint": "Nahrajte logo v sekcii Médiá a potom ho vyberte tu.",
+      "apply": "Použiť značku",
+      "addLogo": "Pridať logo",
+      "applied": "Značka použitá na {{count}} vrstiev."
     }
   },
   "post": {

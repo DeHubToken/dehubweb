@@ -6373,6 +6373,20 @@
       "spaceHorizontal": "Jarakkan sekata melintang",
       "spaceVertical": "Jarakkan sekata menegak",
       "hint": "Seret mana-mana satu untuk menggerakkan semuanya bersama. Shift-klik atau seret kotak pada kanvas kosong untuk menukar pilihan."
+    },
+    "brand": {
+      "heading": "Kit jenama",
+      "colors": "Warna jenama",
+      "addColor": "Tambah warna jenama",
+      "removeColor": "Buang {{color}}",
+      "headingFont": "Fon tajuk",
+      "bodyFont": "Fon badan",
+      "logo": "Logo",
+      "noLogo": "Tiada logo",
+      "logoHint": "Muat naik logo anda dalam Media, kemudian pilih di sini.",
+      "apply": "Guna jenama",
+      "addLogo": "Tambah logo",
+      "applied": "Jenama digunakan pada {{count}} lapisan."
     }
   }
 }

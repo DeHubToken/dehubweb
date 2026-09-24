@@ -3862,6 +3862,20 @@
       "spaceHorizontal": "Bal'inaan walqixa qoodi",
       "spaceVertical": "Dheerinaan walqixa qoodi",
       "hint": "Hunda walii wajjin sochoosuuf isaan keessaa tokko harkisi. Filannoo jijjiiruuf Shift-cuqaasi yookaan kaanvaasii duwwaa irratti saanduqa harkisi."
+    },
+    "brand": {
+      "heading": "Kiitii birandii",
+      "colors": "Halluuwwan birandii",
+      "addColor": "Halluu birandii dabaluu",
+      "removeColor": "{{color}} haqi",
+      "headingFont": "Qubee mata-dureewwanii",
+      "bodyFont": "Qubee barreeffamaa",
+      "logo": "Loogoo",
+      "noLogo": "Loogoon hin jiru",
+      "logoHint": "Loogoo kee Miidiyaa keessatti olkaa'i, achiis asitti filadhu.",
+      "apply": "Birandii hojii irra oolchi",
+      "addLogo": "Loogoo dabali",
+      "applied": "Birandiin leeyarii {{count}} irratti hojii irra oole."
     }
   },
   "spaces": {

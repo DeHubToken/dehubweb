@@ -3843,6 +3843,20 @@
       "spaceHorizontal": "Raba daidai a kwance",
       "spaceVertical": "Raba daidai a tsaye",
       "hint": "Ja kowanne daga cikinsu don motsa su tare. Danna Shift ko ja akwati a sararin fili don canza zaɓin."
+    },
+    "brand": {
+      "heading": "Kayan alama",
+      "colors": "Launukan alama",
+      "addColor": "Ƙara launin alama",
+      "removeColor": "Cire {{color}}",
+      "headingFont": "Rubutun kanun labarai",
+      "bodyFont": "Rubutun jiki",
+      "logo": "Tambari",
+      "noLogo": "Babu tambari",
+      "logoHint": "Ɗora tambarinka a Kafofin watsa labarai, sannan ka zaɓe shi nan.",
+      "apply": "Aiwatar da alama",
+      "addLogo": "Ƙara tambari",
+      "applied": "An aiwatar da alama a kan yadudduka {{count}}."
     }
   },
   "fractions": {

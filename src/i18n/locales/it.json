@@ -6166,6 +6166,20 @@
       "spaceHorizontal": "Distribuisci in orizzontale",
       "spaceVertical": "Distribuisci in verticale",
       "hint": "Trascina uno qualsiasi per spostarli insieme. Maiusc+clic o trascina un riquadro sulla tela vuota per cambiare la selezione."
+    },
+    "brand": {
+      "heading": "Kit del brand",
+      "colors": "Colori del brand",
+      "addColor": "Aggiungi un colore del brand",
+      "removeColor": "Rimuovi {{color}}",
+      "headingFont": "Font dei titoli",
+      "bodyFont": "Font del testo",
+      "logo": "Logo",
+      "noLogo": "Nessun logo",
+      "logoHint": "Carica il tuo logo in Media, poi selezionalo qui.",
+      "apply": "Applica brand",
+      "addLogo": "Aggiungi logo",
+      "applied": "Brand applicato a {{count}} livelli."
     }
   }
 }
