@@ -103,11 +103,13 @@ async function quoteFor(
 ) {
   const { data: listing } = await supabase
     .from("store_listings")
-    .select("id, wallet_address, title, price, status, stock_quantity, is_digital")
+    .select("id, wallet_address, title, price, status, stock_quantity, is_digital, external_url")
     .eq("id", listingId)
     .maybeSingle();
 
   if (!listing) return { error: "Listing not found", status: 404 } as const;
+  // Print-on-demand items are bought on the external site, never on DeHub.
+  if (listing.external_url != null) return { error: "external_listing", status: 400 } as const;
   if (listing.status !== "active") return { error: "That item is no longer for sale", status: 400 } as const;
   if (listing.stock_quantity === 0) return { error: "Sold out", status: 400 } as const;
 
