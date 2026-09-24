@@ -13,7 +13,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { useTranslation } from "react-i18next";
 import {
   Play, Pause, Repeat, Type, RotateCcw, RotateCw, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown,
-  Copy, Trash2, Pencil, FlipHorizontal2, FlipVertical2, Maximize, Minimize, Crosshair, PanelBottomClose, PanelBottomOpen,
+  Copy, Trash2, Pencil, Scissors, FlipHorizontal2, FlipVertical2, Maximize, Minimize, Crosshair, PanelBottomClose, PanelBottomOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -34,6 +34,7 @@ import { useCloseOnSurfaceSwitch } from "@/hooks/use-surface-switch";
 import { useEditorQuota } from "@/hooks/use-editor-quota";
 import { importFiles } from "@/lib/editor/importFiles";
 import { TEXT_DRAG_MIME, type TextPreset } from "@/lib/editor/textPresets";
+import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
 
 const MEDIA_DRAG_MIME = "application/x-dehub-media";
 /** Snap distance in screen pixels. */
@@ -914,6 +915,9 @@ function CanvasContextMenu({
   const addTextClip = useEditorStore((s) => s.addTextClip);
   const patchClip = useEditorStore((s) => s.patchClip);
   const tracks = useEditorStore((s) => s.tracks);
+  const bgBusy = useBgRemovalStore((s) => !!s.clipId);
+  const runBgRemoval = useBgRemovalStore((s) => s.run);
+  const quota = useEditorQuota();
   const menuClass = "w-56 border-white/10 bg-black/85 text-white backdrop-blur-[24px]";
 
   if (!clip) {
@@ -941,6 +945,11 @@ function CanvasContextMenu({
           </ContextMenuItem>
           <ContextMenuSeparator className="bg-white/10" />
         </>
+      )}
+      {mediaClip?.kind === "image" && (
+        <ContextMenuItem disabled={bgBusy} onSelect={() => void runBgRemoval(clip.id, quota.walletAddress)}>
+          <Scissors className="mr-2 h-3.5 w-3.5" /> {t("editor.bgRemove.action")}
+        </ContextMenuItem>
       )}
       {mediaClip && (
         <>

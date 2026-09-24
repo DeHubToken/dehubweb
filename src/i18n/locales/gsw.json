@@ -3696,6 +3696,14 @@
       "saturation": "Sättigung",
       "color": "Farb",
       "luminosity": "Luminanz"
+    },
+    "bgRemove": {
+      "action": "Hintergrund entferne",
+      "working": "Hintergrund wird entfernt…",
+      "downloading": "KI-Modell wird parat gmacht… {{percent}} %",
+      "hint": "Lauft uf dim Grät: gratis, privat, nüt wird uffeglade. Bim erschte Mal wird s KI-Modell abeglade, dänn gaht s nur es paar Sekunde.",
+      "done": "Hintergrund entfernt.",
+      "failed": "Hintergrund het nöd chöne entfernt wärde. Probier es anders Bild oder en Browser wie Chrome oder Edge."
     }
   },
   "fractions": {

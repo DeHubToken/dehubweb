@@ -6055,6 +6055,14 @@
       "saturation": "Saturación",
       "color": "Color",
       "luminosity": "Luminosidad"
+    },
+    "bgRemove": {
+      "action": "Quitar fondo",
+      "working": "Quitando el fondo…",
+      "downloading": "Preparando el modelo de IA… {{percent}}%",
+      "hint": "Se ejecuta en tu dispositivo: gratis, privado y sin subir nada. La primera vez descarga el modelo de IA; después tarda unos segundos.",
+      "done": "Fondo eliminado.",
+      "failed": "No se pudo quitar el fondo. Prueba con otra imagen o con un navegador como Chrome o Edge."
     }
   }
 }

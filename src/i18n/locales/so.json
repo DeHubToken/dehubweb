@@ -3719,6 +3719,14 @@
       "saturation": "Buuxnaanta",
       "color": "Midab",
       "luminosity": "Iftiinka"
+    },
+    "bgRemove": {
+      "action": "Ka saar asalka",
+      "working": "Waa la saarayaa asalka…",
+      "downloading": "Moodeelka AI waa la diyaarinayaa… {{percent}}%",
+      "hint": "Wuxuu ku shaqeeyaa qalabkaaga: bilaash, gaar ah, waxba lama soo geliyo. Isticmaalka ugu horreeya wuxuu soo dejiyaa moodeelka AI, kadibna dhowr ilbiriqsi ayuu qaataa.",
+      "done": "Asalka waa la saaray.",
+      "failed": "Asalka lama saari karin. Isku day sawir kale, ama browser sida Chrome ama Edge."
     }
   },
   "fractions": {

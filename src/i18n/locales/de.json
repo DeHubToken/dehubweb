@@ -6048,6 +6048,14 @@
       "saturation": "Sättigung",
       "color": "Farbe",
       "luminosity": "Luminanz"
+    },
+    "bgRemove": {
+      "action": "Hintergrund entfernen",
+      "working": "Hintergrund wird entfernt…",
+      "downloading": "KI-Modell wird vorbereitet… {{percent}} %",
+      "hint": "Läuft auf deinem Gerät: kostenlos, privat, nichts wird hochgeladen. Beim ersten Mal wird das KI-Modell heruntergeladen, danach dauert es nur wenige Sekunden.",
+      "done": "Hintergrund entfernt.",
+      "failed": "Hintergrund konnte nicht entfernt werden. Versuche ein anderes Bild oder einen Browser wie Chrome oder Edge."
     }
   }
 }

@@ -5939,6 +5939,14 @@
       "saturation": "Sytost",
       "color": "Barva",
       "luminosity": "Světlost"
+    },
+    "bgRemove": {
+      "action": "Odstranit pozadí",
+      "working": "Odstraňování pozadí…",
+      "downloading": "Příprava modelu AI… {{percent}} %",
+      "hint": "Běží ve vašem zařízení: zdarma, soukromě, nic se nenahrává. Při prvním použití se stáhne model AI, pak to trvá jen pár sekund.",
+      "done": "Pozadí odstraněno.",
+      "failed": "Pozadí se nepodařilo odstranit. Zkuste jiný obrázek nebo prohlížeč jako Chrome či Edge."
     }
   }
 }

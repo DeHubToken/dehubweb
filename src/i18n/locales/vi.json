@@ -5756,6 +5756,14 @@
       "saturation": "Độ bão hòa",
       "color": "Màu",
       "luminosity": "Độ sáng"
+    },
+    "bgRemove": {
+      "action": "Xóa phông nền",
+      "working": "Đang xóa phông nền…",
+      "downloading": "Đang chuẩn bị mô hình AI… {{percent}}%",
+      "hint": "Chạy trên thiết bị của bạn: miễn phí, riêng tư, không tải lên gì cả. Lần đầu sẽ tải mô hình AI, sau đó chỉ mất vài giây.",
+      "done": "Đã xóa phông nền.",
+      "failed": "Không thể xóa phông nền. Hãy thử ảnh khác hoặc trình duyệt như Chrome hay Edge."
     }
   },
   "glossary": {

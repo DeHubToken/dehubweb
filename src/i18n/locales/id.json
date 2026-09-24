@@ -6055,6 +6055,14 @@
       "saturation": "Saturasi",
       "color": "Warna",
       "luminosity": "Luminositas"
+    },
+    "bgRemove": {
+      "action": "Hapus latar belakang",
+      "working": "Menghapus latar belakang…",
+      "downloading": "Menyiapkan model AI… {{percent}}%",
+      "hint": "Berjalan di perangkat Anda: gratis, privat, tidak ada yang diunggah. Penggunaan pertama akan mengunduh model AI, setelah itu hanya butuh beberapa detik.",
+      "done": "Latar belakang dihapus.",
+      "failed": "Tidak dapat menghapus latar belakang. Coba gambar lain, atau peramban seperti Chrome atau Edge."
     }
   }
 }

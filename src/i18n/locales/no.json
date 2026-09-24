@@ -3711,6 +3711,14 @@
       "saturation": "Metning",
       "color": "Farge",
       "luminosity": "Luminans"
+    },
+    "bgRemove": {
+      "action": "Fjern bakgrunn",
+      "working": "Fjerner bakgrunnen…",
+      "downloading": "Gjør klar AI-modellen… {{percent}} %",
+      "hint": "Kjører på enheten din: gratis, privat, ingenting lastes opp. Første gang lastes AI-modellen ned, deretter tar det noen sekunder.",
+      "done": "Bakgrunnen er fjernet.",
+      "failed": "Kunne ikke fjerne bakgrunnen. Prøv et annet bilde, eller en nettleser som Chrome eller Edge."
     }
   },
   "fractions": {

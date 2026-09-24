@@ -3743,6 +3743,14 @@
       "saturation": "Ngopje",
       "color": "Ngjyrë",
       "luminosity": "Ndriçim"
+    },
+    "bgRemove": {
+      "action": "Hiq sfondin",
+      "working": "Po hiqet sfondi…",
+      "downloading": "Po përgatitet modeli i AI… {{percent}}%",
+      "hint": "Punon në pajisjen tënde: falas, privat, asgjë nuk ngarkohet. Përdorimi i parë shkarkon modelin e AI, pastaj zgjat vetëm pak sekonda.",
+      "done": "Sfondi u hoq.",
+      "failed": "Sfondi nuk u hoq dot. Provo një imazh tjetër ose një shfletues si Chrome ose Edge."
     }
   },
   "fractions": {
