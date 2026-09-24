@@ -301,7 +301,7 @@ export function useBuyUsername() {
       if (result.pending) return;
 
       // A buyer who already had a handle keeps it; the new one is in the vault.
-      const wearing = result.activeUsername ?? result.username;
+      const wearing = ('activeUsername' in result && result.activeUsername) || result.username;
       toast.success(
         wearing === result.username
           ? i18n.t('usernames.youAreNow', { handle: result.username })
