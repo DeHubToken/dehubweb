@@ -3751,6 +3751,17 @@
       "vignette": "ขอบมืด {{value}}%",
       "auto": "ปรับปรุงอัตโนมัติ",
       "autoFailed": "บ่สามารถวิเคราะห์ฮูบนี้ได้"
+    },
+    "pages": {
+      "add": "เพิ่มหน้า",
+      "duplicate": "ทำซ้ำหน้า",
+      "delete": "ลบหน้า",
+      "page": "หน้า {{number}}",
+      "position": "หน้า {{current}} จาก {{total}}",
+      "label": "หน้า",
+      "allZip": "ทั้งหมด {{count}} หน้า (ZIP)",
+      "thisPage": "เฉพาะหน้านี้",
+      "exporting": "กำลังเรนเดอร์หน้า {{current}} จาก {{total}}…"
     }
   },
   "fractions": {

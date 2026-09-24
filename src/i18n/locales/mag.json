@@ -3738,6 +3738,17 @@
       "vignette": "विनेट {{value}}%",
       "auto": "ऑटो सुधार",
       "autoFailed": "ई फोटो के जाँच न हो सकल।"
+    },
+    "pages": {
+      "add": "पन्ना जोड़ऽ",
+      "duplicate": "पन्ना के कॉपी बनावऽ",
+      "delete": "पन्ना हटावऽ",
+      "page": "पन्ना {{number}}",
+      "position": "पन्ना {{current}} / {{total}}",
+      "label": "पन्ना",
+      "allZip": "सब {{count}} पन्ना (ZIP)",
+      "thisPage": "खाली ई पन्ना",
+      "exporting": "पन्ना {{current}} / {{total}} बन रहल हे…"
     }
   },
   "fractions": {

@@ -15,6 +15,8 @@ import { Download, X, Scissors } from "lucide-react";
 import { toast } from "sonner";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, exportStill, isExportSupported, type ExportFormat, type StillFormat } from "@/lib/editor/exporter";
+import { getPages, pageAt } from "@/lib/editor/pages";
+import { zipFiles } from "@/lib/editor/zip";
 
 interface Props {
   open: boolean;
@@ -45,6 +47,9 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const [format, setFormat] = useState<Format>("mp4");
   const [scaleKey, setScaleKey] = useState("1");
   const [qualityKey, setQualityKey] = useState<Quality>("high");
+  const [allPages, setAllPages] = useState(true);
+  const pages = getPages(settings, clips);
+  const multiPage = pages.length > 1;
 
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -96,14 +101,23 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     setProgress(50);
     setLabel(t("editor.export.rendering"));
     try {
-      const { blob, filename } = await exportStill({
-        snapshot: toSnapshot(),
-        media,
-        format: format as StillFormat,
-        scale,
-        time: currentTime,
-      });
-      download(blob, filename);
+      const snapshot = toSnapshot();
+      if (multiPage && allPages) {
+        const files: { name: string; blob: Blob }[] = [];
+        for (const p of pages) {
+          setProgress(Math.round((p.index / pages.length) * 100));
+          setLabel(t("editor.pages.exporting", { current: p.index + 1, total: pages.length }));
+          const { blob, filename } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time: p.start });
+          files.push({ name: filename.replace(/.(png|jpg)$/, `-${String(p.index + 1).padStart(2, "0")}.$1`), blob });
+        }
+        const zip = await zipFiles(files);
+        const safeTitle = (snapshot.title || "design").replace(/[^w-]+/g, "_");
+        download(zip, `${safeTitle}.zip`);
+      } else {
+        const time = multiPage ? pageAt(pages, currentTime).start : currentTime;
+        const { blob, filename } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time });
+        download(blob, filename);
+      }
       onOpenChange(false);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : t("editor.export.failed"));
@@ -203,6 +217,17 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 </SelectContent>
               </Select>
             </Row>
+            {still && multiPage && (
+              <Row label={t("editor.pages.label")}>
+                <Select value={allPages ? "all" : "one"} onValueChange={(v) => setAllPages(v === "all")}>
+                  <SelectTrigger className="h-9 border-white/10 bg-white/5 text-white"><SelectValue /></SelectTrigger>
+                  <SelectContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">
+                    <SelectItem value="all">{t("editor.pages.allZip", { count: pages.length })}</SelectItem>
+                    <SelectItem value="one">{t("editor.pages.thisPage")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </Row>
+            )}
             {!still && (
               <Row label={t("editor.export.quality")}>
                 <Select value={qualityKey} onValueChange={(v) => setQualityKey(v as Quality)}>

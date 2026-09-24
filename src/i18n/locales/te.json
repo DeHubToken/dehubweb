@@ -5932,6 +5932,17 @@
       "vignette": "విగ్నెట్ {{value}}%",
       "auto": "ఆటో ఎన్‌హాన్స్",
       "autoFailed": "ఈ చిత్రాన్ని విశ్లేషించలేకపోయాం."
+    },
+    "pages": {
+      "add": "పేజీ జోడించు",
+      "duplicate": "పేజీ నకలు చేయి",
+      "delete": "పేజీ తొలగించు",
+      "page": "పేజీ {{number}}",
+      "position": "పేజీ {{current}} / {{total}}",
+      "label": "పేజీలు",
+      "allZip": "మొత్తం {{count}} పేజీలు (ZIP)",
+      "thisPage": "ఈ పేజీ మాత్రమే",
+      "exporting": "పేజీ {{current}} / {{total}} రెండర్ అవుతోంది…"
     }
   }
 }

@@ -3750,6 +3750,17 @@
       "vignette": "ਵਿਗਨੈੱਟ {{value}}%",
       "auto": "ਆਟੋ ਸੁਧਾਰ",
       "autoFailed": "ਇਸ ਤਸਵੀਰ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਨਹੀਂ ਹੋ ਸਕਿਆ।"
+    },
+    "pages": {
+      "add": "ਪੰਨਾ ਜੋੜੋ",
+      "duplicate": "ਪੰਨੇ ਦੀ ਨਕਲ ਬਣਾਓ",
+      "delete": "ਪੰਨਾ ਮਿਟਾਓ",
+      "page": "ਪੰਨਾ {{number}}",
+      "position": "{{total}} ਵਿੱਚੋਂ ਪੰਨਾ {{current}}",
+      "label": "ਪੰਨੇ",
+      "allZip": "ਸਾਰੇ {{count}} ਪੰਨੇ (ZIP)",
+      "thisPage": "ਸਿਰਫ਼ ਇਹ ਪੰਨਾ",
+      "exporting": "{{total}} ਵਿੱਚੋਂ ਪੰਨਾ {{current}} ਰੈਂਡਰ ਹੋ ਰਿਹਾ ਹੈ…"
     }
   },
   "fractions": {

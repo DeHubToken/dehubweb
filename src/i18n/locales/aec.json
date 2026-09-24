@@ -3747,6 +3747,17 @@
       "vignette": "التظليل {{value}}%",
       "auto": "تحسين تلقائي",
       "autoFailed": "مش قادر أحلل الصورة دي."
+    },
+    "pages": {
+      "add": "ضيف صفحة",
+      "duplicate": "كرّر الصفحة",
+      "delete": "امسح الصفحة",
+      "page": "صفحة {{number}}",
+      "position": "صفحة {{current}} من {{total}}",
+      "label": "الصفحات",
+      "allZip": "كل الصفحات الـ{{count}} (ZIP)",
+      "thisPage": "الصفحة دي بس",
+      "exporting": "بيجهّز صفحة {{current}} من {{total}}…"
     }
   },
   "post": {

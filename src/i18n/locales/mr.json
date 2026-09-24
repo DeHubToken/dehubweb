@@ -5803,6 +5803,17 @@
       "vignette": "व्हिनेट {{value}}%",
       "auto": "ऑटो सुधारणा",
       "autoFailed": "हे चित्र विश्लेषित करता आले नाही."
+    },
+    "pages": {
+      "add": "पान जोडा",
+      "duplicate": "पानाची प्रत बनवा",
+      "delete": "पान हटवा",
+      "page": "पान {{number}}",
+      "position": "{{total}} पैकी पान {{current}}",
+      "label": "पाने",
+      "allZip": "सर्व {{count}} पाने (ZIP)",
+      "thisPage": "फक्त हे पान",
+      "exporting": "{{total}} पैकी पान {{current}} रेंडर होत आहे…"
     }
   }
 }

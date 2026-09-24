@@ -6053,6 +6053,17 @@
       "vignette": "Vignet {{value}} %",
       "auto": "Autoforbedring",
       "autoFailed": "Kunne ikke analysere dette billede."
+    },
+    "pages": {
+      "add": "Tilføj side",
+      "duplicate": "Dupliker side",
+      "delete": "Slet side",
+      "page": "Side {{number}}",
+      "position": "Side {{current}} af {{total}}",
+      "label": "Sider",
+      "allZip": "Alle {{count}} sider (ZIP)",
+      "thisPage": "Kun denne side",
+      "exporting": "Gengiver side {{current}} af {{total}}…"
     }
   }
 }

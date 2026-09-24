@@ -6146,6 +6146,17 @@
       "vignette": "विनेट {{value}}%",
       "auto": "ऑटो एन्हांस",
       "autoFailed": "इस तस्वीर का विश्लेषण नहीं हो सका।"
+    },
+    "pages": {
+      "add": "पेज जोड़ें",
+      "duplicate": "पेज डुप्लिकेट करें",
+      "delete": "पेज हटाएँ",
+      "page": "पेज {{number}}",
+      "position": "पेज {{current}} / {{total}}",
+      "label": "पेज",
+      "allZip": "सभी {{count}} पेज (ZIP)",
+      "thisPage": "सिर्फ़ यह पेज",
+      "exporting": "पेज {{current}} / {{total}} रेंडर हो रहा है…"
     }
   }
 }

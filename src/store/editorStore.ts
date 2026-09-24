@@ -6,6 +6,7 @@
 import { create } from "zustand";
 import { nanoid } from "nanoid";
 import type { MediaMeta, StoredMedia } from "@/lib/editor/mediaStore";
+import { getPages, pageAt } from "@/lib/editor/pages";
 import {
   DEFAULT_SETTINGS,
   type Clip,
@@ -119,6 +120,14 @@ interface EditorState extends EditableState {
    * `beginGesture` records one undo step up front, and `patchClipLive` applies
    * the in-between states without touching history, so one drag is one undo.
    */
+  /**
+   * Append a page after the last one and move the playhead to it. With
+   * `duplicate`, copy the layers of the current page onto it.
+   */
+  addPage: (opts?: { duplicate?: boolean }) => void;
+  /** Delete a page and its layers; later pages move up to close the gap. */
+  deletePage: (index: number) => void;
+
   beginGesture: () => void;
   /**
    * Run several store edits as one undo step. Used by the AI agent, whose one
@@ -751,6 +760,56 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const s = get();
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
     set({ past, future: [], settings: { ...s.settings, ...patch } });
+  },
+
+  addPage: (opts) => {
+    const s = get();
+    const pages = getPages(s.settings, s.clips);
+    const last = pages[pages.length - 1];
+    const current = pageAt(pages, s.currentTime);
+    const start = last.end;
+    let clips = s.clips;
+    let selected: string[] = [];
+    if (opts?.duplicate) {
+      const shift = start - current.start;
+      const copies = s.clips
+        .filter((c) => c.start >= current.start && c.start < current.end)
+        .map((c) => ({ ...c, id: nanoid(10), start: c.start + shift, duration: Math.min(c.duration, current.end - c.start) }) as Clip);
+      clips = [...s.clips, ...copies];
+      selected = [];
+    }
+    const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
+    set({
+      past,
+      future: [],
+      clips,
+      settings: { ...s.settings, pages: [...pages.map((p) => p.start), start] },
+      currentTime: start,
+      selectedClipIds: selected,
+      isPlaying: false,
+    });
+  },
+
+  deletePage: (index) => {
+    const s = get();
+    const pages = getPages(s.settings, s.clips);
+    if (pages.length < 2) return;
+    const page = pages[index];
+    if (!page) return;
+    const len = page.end - page.start;
+    const clips = s.clips
+      .filter((c) => !(c.start >= page.start && c.start < page.end))
+      .map((c) => (c.start >= page.end ? ({ ...c, start: c.start - len } as Clip) : c));
+    const starts = pages.filter((p) => p.index !== index).map((p) => (p.start >= page.end ? p.start - len : p.start));
+    const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
+    set({
+      past,
+      future: [],
+      clips,
+      settings: { ...s.settings, pages: starts.length > 1 ? starts : undefined },
+      currentTime: Math.max(0, (starts[Math.max(0, index - 1)] ?? 0)),
+      selectedClipIds: [],
+    });
   },
 
   beginGesture: () => {

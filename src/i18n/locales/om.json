@@ -3831,6 +3831,17 @@
       "vignette": "Vinyeetii {{value}}%",
       "auto": "Ofumaan fooyyessi",
       "autoFailed": "Suuraa kana xiinxaluu hin dandeenye."
+    },
+    "pages": {
+      "add": "Fuula dabaluu",
+      "duplicate": "Fuula garagalchuu",
+      "delete": "Fuula haquu",
+      "page": "Fuula {{number}}",
+      "position": "Fuula {{current}} kan {{total}} keessaa",
+      "label": "Fuulota",
+      "allZip": "Fuulota {{count}} hunda (ZIP)",
+      "thisPage": "Fuula kana qofa",
+      "exporting": "Fuula {{current}} kan {{total}} keessaa qopheessaa jira…"
     }
   },
   "spaces": {

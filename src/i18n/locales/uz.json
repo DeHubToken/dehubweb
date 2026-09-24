@@ -3829,6 +3829,17 @@
       "vignette": "Vinyetka {{value}}%",
       "auto": "Avtomatik yaxshilash",
       "autoFailed": "Bu rasmni tahlil qilib bo'lmadi."
+    },
+    "pages": {
+      "add": "Sahifa qo'shish",
+      "duplicate": "Sahifadan nusxa olish",
+      "delete": "Sahifani o'chirish",
+      "page": "{{number}}-sahifa",
+      "position": "{{current}}/{{total}} sahifa",
+      "label": "Sahifalar",
+      "allZip": "Barcha {{count}} sahifa (ZIP)",
+      "thisPage": "Faqat shu sahifa",
+      "exporting": "{{current}}/{{total}} sahifa tayyorlanmoqda…"
     }
   },
   "spaces": {

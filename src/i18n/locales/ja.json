@@ -6126,6 +6126,17 @@
       "vignette": "周辺減光 {{value}}%",
       "auto": "自動補正",
       "autoFailed": "この画像を解析できませんでした。"
+    },
+    "pages": {
+      "add": "ページを追加",
+      "duplicate": "ページを複製",
+      "delete": "ページを削除",
+      "page": "ページ {{number}}",
+      "position": "ページ {{current}} / {{total}}",
+      "label": "ページ",
+      "allZip": "全{{count}}ページ（ZIP）",
+      "thisPage": "このページのみ",
+      "exporting": "ページ {{current}} / {{total}} をレンダリング中…"
     }
   }
 }

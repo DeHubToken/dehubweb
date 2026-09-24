@@ -6022,6 +6022,17 @@
       "vignette": "Vinjeta {{value}}%",
       "auto": "Automatsko poboljšanje",
       "autoFailed": "Nije moguće analizirati ovu sliku."
+    },
+    "pages": {
+      "add": "Dodaj stranicu",
+      "duplicate": "Dupliciraj stranicu",
+      "delete": "Izbriši stranicu",
+      "page": "Stranica {{number}}",
+      "position": "Stranica {{current}} od {{total}}",
+      "label": "Stranice",
+      "allZip": "Sve stranice ({{count}}) (ZIP)",
+      "thisPage": "Samo ova stranica",
+      "exporting": "Renderiranje stranice {{current}} od {{total}}…"
     }
   }
 }

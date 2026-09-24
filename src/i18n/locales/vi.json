@@ -5843,6 +5843,17 @@
       "vignette": "Làm tối góc {{value}}%",
       "auto": "Tự động nâng cao",
       "autoFailed": "Không thể phân tích ảnh này."
+    },
+    "pages": {
+      "add": "Thêm trang",
+      "duplicate": "Nhân bản trang",
+      "delete": "Xóa trang",
+      "page": "Trang {{number}}",
+      "position": "Trang {{current}}/{{total}}",
+      "label": "Trang",
+      "allZip": "Tất cả {{count}} trang (ZIP)",
+      "thisPage": "Chỉ trang này",
+      "exporting": "Đang kết xuất trang {{current}}/{{total}}…"
     }
   },
   "glossary": {

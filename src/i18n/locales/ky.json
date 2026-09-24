@@ -6103,6 +6103,17 @@
       "vignette": "Виньетка {{value}}%",
       "auto": "Автожакшыртуу",
       "autoFailed": "Бул сүрөттү талдоо мүмкүн болгон жок."
+    },
+    "pages": {
+      "add": "Барак кошуу",
+      "duplicate": "Баракты көчүрүү",
+      "delete": "Баракты өчүрүү",
+      "page": "{{number}}-барак",
+      "position": "Барак {{current}} / {{total}}",
+      "label": "Барактар",
+      "allZip": "Бардык {{count}} барак (ZIP)",
+      "thisPage": "Ушул барак гана",
+      "exporting": "Барак {{current}} / {{total}} даярдалууда…"
     }
   }
 }

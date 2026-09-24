@@ -6142,6 +6142,17 @@
       "vignette": "Vinyet {{value}}%",
       "auto": "Otomatik iyileştir",
       "autoFailed": "Bu fotoğraf analiz edilemedi."
+    },
+    "pages": {
+      "add": "Sayfa ekle",
+      "duplicate": "Sayfayı çoğalt",
+      "delete": "Sayfayı sil",
+      "page": "Sayfa {{number}}",
+      "position": "Sayfa {{current}} / {{total}}",
+      "label": "Sayfalar",
+      "allZip": "Tüm {{count}} sayfa (ZIP)",
+      "thisPage": "Yalnızca bu sayfa",
+      "exporting": "Sayfa {{current}} / {{total}} işleniyor…"
     }
   }
 }

@@ -3813,6 +3813,17 @@
       "vignette": "暗角 {{value}}%",
       "auto": "自動增強",
       "autoFailed": "分析唔到呢張相。"
+    },
+    "pages": {
+      "add": "加頁",
+      "duplicate": "複製呢頁",
+      "delete": "刪除呢頁",
+      "page": "第 {{number}} 頁",
+      "position": "第 {{current}} 頁，共 {{total}} 頁",
+      "label": "頁面",
+      "allZip": "全部 {{count}} 頁（ZIP）",
+      "thisPage": "淨係呢頁",
+      "exporting": "處理緊第 {{current}} 頁，共 {{total}} 頁…"
     }
   },
   "fractions": {

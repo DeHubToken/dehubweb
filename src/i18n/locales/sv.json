@@ -6025,6 +6025,17 @@
       "vignette": "Vinjett {{value}} %",
       "auto": "Autoförbättra",
       "autoFailed": "Kunde inte analysera den här bilden."
+    },
+    "pages": {
+      "add": "Lägg till sida",
+      "duplicate": "Duplicera sida",
+      "delete": "Ta bort sida",
+      "page": "Sida {{number}}",
+      "position": "Sida {{current}} av {{total}}",
+      "label": "Sidor",
+      "allZip": "Alla {{count}} sidor (ZIP)",
+      "thisPage": "Endast denna sida",
+      "exporting": "Renderar sida {{current}} av {{total}}…"
     }
   }
 }

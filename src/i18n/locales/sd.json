@@ -3766,6 +3766,17 @@
       "vignette": "وِگنيٽ {{value}}%",
       "auto": "خودڪار بهتري",
       "autoFailed": "هن تصوير جو تجزيو نه ٿي سگهيو."
+    },
+    "pages": {
+      "add": "صفحو شامل ڪريو",
+      "duplicate": "صفحي جي ڪاپي ٺاهيو",
+      "delete": "صفحو ڊاهيو",
+      "page": "صفحو {{number}}",
+      "position": "صفحو {{current}} مان {{total}}",
+      "label": "صفحا",
+      "allZip": "سڀ {{count}} صفحا (ZIP)",
+      "thisPage": "صرف هي صفحو",
+      "exporting": "صفحو {{current}} مان {{total}} تيار ٿي رهيو آهي…"
     }
   },
   "fractions": {

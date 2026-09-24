@@ -3678,6 +3678,17 @@
       "vignette": "وینیټ {{value}}%",
       "auto": "اتومات ښه کول",
       "autoFailed": "دا انځور ونه شو شننل."
+    },
+    "pages": {
+      "add": "پاڼه اضافه کړئ",
+      "duplicate": "پاڼه دوه ځله کړئ",
+      "delete": "پاڼه ړنګه کړئ",
+      "page": "پاڼه {{number}}",
+      "position": "پاڼه {{current}} له {{total}} څخه",
+      "label": "پاڼې",
+      "allZip": "ټولې {{count}} پاڼې (ZIP)",
+      "thisPage": "یوازې دا پاڼه",
+      "exporting": "د {{total}} څخه {{current}} پاڼه جوړېږي…"
     }
   },
   "fractions": {
