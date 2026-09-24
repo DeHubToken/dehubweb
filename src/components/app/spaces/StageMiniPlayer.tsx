@@ -37,7 +37,9 @@ export function StageMiniPlayer() {
 
   const handleLeaveOrEnd = () => {
     if (myRole === 'host') {
-      endSpace();
+      // One tap here took the room off the air for every listener; the full
+      // stage view already asks first.
+      if (window.confirm(t('stages.endForEveryone'))) endSpace();
     } else {
       leaveSpace();
     }
