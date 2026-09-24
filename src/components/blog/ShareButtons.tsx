@@ -2,6 +2,7 @@
 import React from 'react';
 import { Twitter, Facebook, Linkedin, Share2, Send } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAffiliateShareUrl } from '@/lib/useAffiliateShareUrl';
 
 interface ShareButtonsProps {
   shareUrl: string;
@@ -10,7 +11,8 @@ interface ShareButtonsProps {
   variant?: 'icons' | 'text';
 }
 
-export const ShareButtons: React.FC<ShareButtonsProps> = ({ shareUrl, postTitle, imageUrl, variant = 'icons' }) => {
+export const ShareButtons: React.FC<ShareButtonsProps> = ({ shareUrl: articleUrl, postTitle, imageUrl, variant = 'icons' }) => {
+  const shareUrl = useAffiliateShareUrl(articleUrl);
 
   const handleShare = (platform: string) => {
     let url = '';
