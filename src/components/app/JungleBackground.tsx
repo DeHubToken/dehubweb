@@ -76,7 +76,7 @@ const CANOPY = [
 const PALM_LEAF = [new THREE.Color('#5f9230'), new THREE.Color('#6fa136'), new THREE.Color('#4d7f2a')];
 const BROADLEAF = [new THREE.Color('#5d9a33'), new THREE.Color('#78ad3b'), new THREE.Color('#3f7a2c')];
 const FERN = new THREE.Color('#467f2b');
-const BARK = new THREE.Color('#3b2d21');
+const BARK = new THREE.Color('#5c4a37');
 const BARK_PALE = new THREE.Color('#9a8f7b');
 const PALM_BARK = new THREE.Color('#6d5d48');
 const LIANA = new THREE.Color('#3a3020');
@@ -153,25 +153,25 @@ const MOODS: Record<JungleMood, MoodSpec> = {
     dapple: 1,
   },
   evening: {
-    skyTop: new THREE.Color('#0f1a3d'),
-    haze: new THREE.Color('#56669a'),
-    sun: new THREE.Color('#ffa189'),
+    skyTop: new THREE.Color('#050a1d'),
+    haze: new THREE.Color('#2a3357'),
+    sun: new THREE.Color('#a58fd0'),
     /* Just below a canopy-grazing angle and very weak: the sun has set, and
        what is left is a rim of warm light on the few faces turned to it. At
        full strength a horizon sun paints every trunk salmon. */
     sunDir: new THREE.Vector3(-0.6, 0.16, -0.78).normalize(),
-    sunI: 0.16,
-    hemiSky: new THREE.Color('#91a8ec'),
-    hemiGround: new THREE.Color('#1a2031'),
-    hemiI: 1.55,
-    fog: 0.021,
+    sunI: 0.1,
+    hemiSky: new THREE.Color('#6479bd'),
+    hemiGround: new THREE.Color('#0b0e17'),
+    hemiI: 1.0,
+    fog: 0.026,
     shafts: 0,
     mote: new THREE.Color('#d4ff5e'),
     moteSize: 1.9,
     blink: 1,
     stars: 1,
-    vignette: new THREE.Color(0.01, 0.02, 0.06),
-    vignetteAmt: 0.86,
+    vignette: new THREE.Color(0.004, 0.008, 0.03),
+    vignetteAmt: 0.93,
     bloom: 0.12,
     trans: 0.08,
     dapple: 0,
@@ -208,6 +208,8 @@ interface Budget {
   grass: number;
   flowers: number;
   motes: number;
+  /** Evening fireflies. They keep drifting at rest — see the ambient loop. */
+  fireflies: number;
   shafts: number;
   /** Icosahedron subdivision for crowns. 1 is 80 faces, 0 is 20. */
   blobDetail: 0 | 1;
@@ -229,18 +231,18 @@ interface Budget {
    hardest on the low tier. */
 const BUDGETS: Record<Tier, Budget> = {
   low: {
-    trees: 30, emergents: 5, palms: 9, broadleaf: 34, ferns: 44, lianas: 22, ceiling: 16,
-    rocks: 12, grass: 4500, flowers: 36, motes: 70, shafts: 3,
+    trees: 26, emergents: 4, palms: 9, broadleaf: 34, ferns: 44, lianas: 22, ceiling: 4,
+    rocks: 12, grass: 1200, flowers: 36, motes: 70, fireflies: 120, shafts: 3,
     blobDetail: 0, leaves: 8, shadow: 0, groundSegments: 48, fps: 30, maxPixels: 1_000_000, maxRatio: 1.25,
   },
   mid: {
-    trees: 50, emergents: 8, palms: 15, broadleaf: 70, ferns: 90, lianas: 44, ceiling: 26,
-    rocks: 20, grass: 11000, flowers: 70, motes: 220, shafts: 5,
+    trees: 44, emergents: 7, palms: 15, broadleaf: 70, ferns: 90, lianas: 44, ceiling: 6,
+    rocks: 20, grass: 2600, flowers: 70, motes: 220, fireflies: 280, shafts: 5,
     blobDetail: 1, leaves: 16, shadow: 1024, groundSegments: 72, fps: 60, maxPixels: 1_600_000, maxRatio: 1.5,
   },
   high: {
-    trees: 70, emergents: 11, palms: 21, broadleaf: 110, ferns: 140, lianas: 70, ceiling: 34,
-    rocks: 28, grass: 18000, flowers: 110, motes: 420, shafts: 7,
+    trees: 62, emergents: 10, palms: 21, broadleaf: 110, ferns: 140, lianas: 70, ceiling: 8,
+    rocks: 28, grass: 4000, flowers: 110, motes: 420, fireflies: 440, shafts: 7,
     blobDetail: 1, leaves: 22, shadow: 2048, groundSegments: 96, fps: 60, maxPixels: 2_000_000, maxRatio: 1.5,
   },
 };
@@ -490,6 +492,10 @@ const BLOB_M = new THREE.Matrix4();
 const BLOB_P = new Float64Array(9);
 const BLOB_N = new Float64Array(12);
 const BLOB_C = new THREE.Color();
+const TUBE_C = new THREE.Color();
+let TUBE_RING = new Float64Array(0);
+const TUBE_ALONG = new Float64Array(64);
+const CORE_TMP = new THREE.Color();
 /** Card corners as (-1|1) offsets along its two axes, their UVs, and the two-triangle order. */
 const CARD_SIGN = [-1, -1, 1, -1, 1, 1, -1, 1];
 const CARD_UV = [0, 0, 1, 0, 1, 1, 0, 1];
@@ -501,46 +507,115 @@ const CARD_ORDER = [0, 1, 2, 0, 2, 3];
  * boot — about a millisecond of canvas work instead of a texture download.
  */
 function makeLeafTexture(rng: () => number): THREE.Texture | null {
-  const size = 256;
+  const size = 512;
   const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
   const g = canvas.getContext('2d');
   if (!g) return null;
   const cx = size / 2;
-  for (let i = 0; i < 64; i++) {
-    /* Back-to-front: darker, larger leaves first, so the rim of the cluster
-       is lit and its heart is in its own shade. */
-    const t = i / 64;
+  const n = 120;
+  for (let i = 0; i < n; i++) {
+    /* Back-to-front: darker leaves first so the rim of the cluster is lit and
+       its heart sits in its own shade — self-shadowing for free. */
+    const t = i / n;
     const a = rng() * Math.PI * 2;
-    const d = (0.15 + rng() * 0.62) * cx;
-    const x = cx + Math.cos(a) * d * 0.9;
-    const y = cx + Math.sin(a) * d * 0.9;
-    const len = 30 + rng() * 26;
-    const wid = len * (0.34 + rng() * 0.12);
+    const d = Math.sqrt(0.05 + rng() * 0.95) * cx * 0.78;
+    const x = cx + Math.cos(a) * d;
+    const y = cx + Math.sin(a) * d;
+    const len = 52 + rng() * 44;
+    const wid = len * (0.3 + rng() * 0.12);
     g.save();
     g.translate(x, y);
-    g.rotate(a + (rng() - 0.5) * 0.9);
-    const shade = Math.round(120 + t * 110 + rng() * 25);
+    /* Leaves point outward from the twig, with some droop and scatter. */
+    g.rotate(a + (rng() - 0.5) * 1.1);
+    const v = 105 + t * 120 + rng() * 25;
+    /* A little hue in the texture itself — some leaves younger and yellower,
+       some older and bluer — so a crown is never one flat tint. */
+    const warm = (rng() - 0.4) * 22;
+    const rC = Math.min(255, v + warm);
+    const gC = Math.min(255, v + warm * 0.4);
+    const bC = Math.min(255, v - warm * 0.8);
     const grad = g.createLinearGradient(0, 0, len, 0);
-    grad.addColorStop(0, `rgb(${shade * 0.7},${shade * 0.7},${shade * 0.7})`);
-    grad.addColorStop(1, `rgb(${shade},${shade},${shade})`);
+    grad.addColorStop(0, `rgb(${rC * 0.62},${gC * 0.62},${bC * 0.62})`);
+    grad.addColorStop(0.55, `rgb(${rC},${gC},${bC})`);
+    grad.addColorStop(1, `rgb(${rC * 0.9},${gC * 0.9},${bC * 0.9})`);
     g.fillStyle = grad;
     g.beginPath();
     g.moveTo(0, 0);
-    g.quadraticCurveTo(len * 0.45, -wid, len, 0);
-    g.quadraticCurveTo(len * 0.45, wid, 0, 0);
+    g.bezierCurveTo(len * 0.25, -wid * 1.05, len * 0.75, -wid * 0.7, len, 0);
+    g.bezierCurveTo(len * 0.75, wid * 0.7, len * 0.25, wid * 1.05, 0, 0);
     g.fill();
-    g.strokeStyle = `rgba(255,255,255,0.28)`;
-    g.lineWidth = 1.2;
+    /* Veins: a midrib and a few pairs of side veins, faint. */
+    g.strokeStyle = 'rgba(255,255,240,0.22)';
+    g.lineWidth = 1.6;
     g.beginPath();
-    g.moveTo(2, 0);
-    g.lineTo(len * 0.92, 0);
+    g.moveTo(3, 0);
+    g.lineTo(len * 0.94, 0);
     g.stroke();
+    g.lineWidth = 0.9;
+    g.strokeStyle = 'rgba(255,255,240,0.13)';
+    for (let k = 1; k <= 4; k++) {
+      const vx = len * (0.14 + k * 0.17);
+      const reach = wid * 0.75 * Math.sin(Math.PI * (vx / len));
+      g.beginPath();
+      g.moveTo(vx, 0);
+      g.lineTo(vx + reach * 0.9, -reach);
+      g.moveTo(vx, 0);
+      g.lineTo(vx + reach * 0.9, reach);
+      g.stroke();
+    }
     g.restore();
   }
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  return tex;
+}
+
+/**
+ * Bark: a tiling canvas of vertical fibre with a few horizontal checks, in
+ * greys so the trunk's vertex colour (and its moss) tints it. It is what
+ * turns a tapered tube into a tree trunk at close range.
+ */
+function makeBarkTexture(rng: () => number): THREE.Texture | null {
+  const w = 128;
+  const h = 256;
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const g = canvas.getContext('2d');
+  if (!g) return null;
+  g.fillStyle = 'rgb(196,196,196)';
+  g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 70; i++) {
+    const x = rng() * w;
+    const width = 1 + rng() * 5;
+    const shade = Math.round(120 + rng() * 120);
+    g.strokeStyle = `rgba(${shade},${shade},${shade},0.75)`;
+    g.lineWidth = width;
+    for (const ox of [-w, 0, w]) {
+      g.beginPath();
+      let px = x + ox;
+      g.moveTo(px, -4);
+      for (let y = 0; y <= h + 8; y += 16) {
+        /* Wobble that returns to its start, so the tile wraps vertically. */
+        px = x + ox + Math.sin((y / h) * Math.PI * 2 + i) * (2 + width);
+        g.lineTo(px, y);
+      }
+      g.stroke();
+    }
+  }
+  g.fillStyle = 'rgba(40,40,40,0.35)';
+  for (let i = 0; i < 26; i++) {
+    const x = rng() * w;
+    const y = rng() * h;
+    g.fillRect(x, y, 4 + rng() * 14, 1 + rng() * 2);
+  }
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
   tex.anisotropy = 4;
   return tex;
 }
@@ -564,12 +639,16 @@ function makeLitterTexture(rng: () => number): THREE.Texture | null {
     const y = rng() * size;
     const len = 5 + rng() * 11;
     const shade = Math.round(150 + rng() * 105);
-    /* Draw at all nine wrap offsets so the tile has no seams. */
-    for (const ox of [-size, 0, size]) {
-      for (const oy of [-size, 0, size]) {
+    /* Wrap copies only for leaves that actually cross an edge, so the tile
+       has no seams without drawing every leaf nine times. */
+    const xs = x < len ? [0, size] : x > size - len ? [0, -size] : [0];
+    const ys = y < len ? [0, size] : y > size - len ? [0, -size] : [0];
+    const rot = rng() * Math.PI * 2;
+    for (const ox of xs) {
+      for (const oy of ys) {
         g.save();
         g.translate(x + ox, y + oy);
-        g.rotate(rng() * Math.PI * 2);
+        g.rotate(rot);
         g.fillStyle = `rgb(${shade},${Math.round(shade * 0.97)},${Math.round(shade * 0.9)})`;
         g.beginPath();
         g.ellipse(0, 0, len, len * 0.38, 0, 0, Math.PI * 2);
@@ -683,41 +762,67 @@ function tube(
   base: THREE.Color,
   swayAt: (i: number) => number,
   shadeAt: (i: number, y: number) => number = (_i, y) => 0.45 + 0.55 * smooth(-0.2, 3.2, y),
+  /** 0..1: moss creeping up the base and over the up-facing side. */
+  moss = 0,
 ) {
-  const rings: { p: V3; n: V3 }[][] = [];
-  for (let i = 0; i < pts.length; i++) {
-    const prev = pts[Math.max(0, i - 1)];
-    const next = pts[Math.min(pts.length - 1, i + 1)];
-    const t = norm(sub(next, prev));
-    const ref: V3 = Math.abs(t[1]) < 0.95 ? [0, 1, 0] : [1, 0, 0];
-    const u = norm(cross(t, ref));
-    const w = cross(t, u);
-    const ring: { p: V3; n: V3 }[] = [];
+  /* Scalar maths into a reused scratch buffer. There are about a thousand
+     tubes now (roots, limbs, twigs, vines), and the tuple-per-vertex version
+     of this spent a quarter of a second in garbage collection at boot. */
+  const n = pts.length;
+  const stride = (sides + 1) * 6;
+  if (TUBE_RING.length < n * stride) TUBE_RING = new Float64Array(n * stride * 2);
+  const R = TUBE_RING;
+  /* Bark UVs: around the tube in whole repeats (so the seam matches), and
+     along it by arc length, so the fibre keeps its scale on bends. */
+  const wraps = Math.max(1, Math.round(radii[0] * 5));
+  let along = 0;
+  for (let i = 0; i < n; i++) {
+    const p = pts[i];
+    const pv = pts[Math.max(0, i - 1)];
+    const nx = pts[Math.min(n - 1, i + 1)];
+    let tx = nx[0] - pv[0], ty = nx[1] - pv[1], tz = nx[2] - pv[2];
+    const tl = Math.hypot(tx, ty, tz) || 1;
+    tx /= tl; ty /= tl; tz /= tl;
+    /* u = t x ref, w = t x u */
+    let ux: number, uy: number, uz: number;
+    if (Math.abs(ty) < 0.95) { ux = -tz; uy = 0; uz = tx; } else { ux = 0; uy = tz; uz = -ty; }
+    const ul = Math.hypot(ux, uy, uz) || 1;
+    ux /= ul; uy /= ul; uz /= ul;
+    const wx = ty * uz - tz * uy, wy = tz * ux - tx * uz, wz = tx * uy - ty * ux;
+    const rad = radii[i];
     for (let k = 0; k <= sides; k++) {
       const ang = (k / sides) * Math.PI * 2;
-      const d = add(mul(u, Math.cos(ang)), mul(w, Math.sin(ang)));
-      ring.push({ p: add(pts[i], mul(d, radii[i])), n: d });
+      const c = Math.cos(ang), sn = Math.sin(ang);
+      const dx = ux * c + wx * sn, dy = uy * c + wy * sn, dz = uz * c + wz * sn;
+      const o = i * stride + k * 6;
+      R[o] = p[0] + dx * rad; R[o + 1] = p[1] + dy * rad; R[o + 2] = p[2] + dz * rad;
+      R[o + 3] = dx; R[o + 4] = dy; R[o + 5] = dz;
     }
-    rings.push(ring);
+    TUBE_ALONG[i] = along;
+    if (i < n - 1) along += Math.hypot(pts[i + 1][0] - p[0], pts[i + 1][1] - p[1], pts[i + 1][2] - p[2]);
   }
-  for (let i = 0; i < rings.length - 1; i++) {
+  const put = (ring: number, seg: number, k: number, sw: number) => {
+    const o = ring * stride + seg * 6;
+    b.setUV((seg / sides) * wraps, TUBE_ALONG[ring] * 0.45);
+    let col = base;
+    if (moss > 0) {
+      const m = moss * Math.max(smooth(0.1, 0.8, R[o + 4]) * 0.8, 1 - smooth(0, 1.6, R[o + 1]));
+      col = TUBE_C.copy(base).lerp(MOSS, Math.min(1, m));
+    }
+    b.v(R[o], R[o + 1], R[o + 2], R[o + 3], R[o + 4], R[o + 5], col, k, sw);
+  };
+  for (let i = 0; i < n - 1; i++) {
     const s0 = swayAt(i);
     const s1 = swayAt(i + 1);
     const k0 = shadeAt(i, pts[i][1]);
     const k1 = shadeAt(i + 1, pts[i + 1][1]);
     for (let k = 0; k < sides; k++) {
-      const a0 = rings[i][k];
-      const a1 = rings[i][k + 1];
-      const b0 = rings[i + 1][k];
-      const b1 = rings[i + 1][k + 1];
-      const put = (q: { p: V3; n: V3 }, k: number, s: number) =>
-        b.v(q.p[0], q.p[1], q.p[2], q.n[0], q.n[1], q.n[2], base, k, s);
-      put(a0, k0, s0);
-      put(a1, k0, s0);
-      put(b1, k1, s1);
-      put(a0, k0, s0);
-      put(b1, k1, s1);
-      put(b0, k1, s1);
+      put(i, k, k0, s0);
+      put(i, k + 1, k0, s0);
+      put(i + 1, k + 1, k1, s1);
+      put(i, k, k0, s0);
+      put(i + 1, k + 1, k1, s1);
+      put(i + 1, k, k1, s1);
     }
   }
 }
@@ -1153,7 +1258,7 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
     float t = pow(clamp(d.y, 0.0, 1.0), 0.55);
     vec3 c = mix(uLow, uTop, t);
     float s = max(dot(d, uSunDir), 0.0);
-    c += uSun * (pow(s, 280.0) * 1.6 * (1.0 - uStars) + pow(s, 18.0) * 0.45 + pow(s, 3.0) * 0.12 * (1.0 - uStars * 0.85));
+    c += uSun * (pow(s, 280.0) * 1.6 * (1.0 - uStars) + pow(s, 18.0) * 0.45 * (1.0 - uStars * 0.8) + pow(s, 3.0) * 0.12 * (1.0 - uStars * 0.85));
     /* Evening: a band of afterglow along the horizon on the sun's side, and
        stars that only appear well clear of the haze. */
     float band = exp(-abs(d.y) * 12.0) * pow(s, 7.0) * uStars;
@@ -1204,161 +1309,230 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
 
     yield;
     /* ======================================================================
-       4. CANOPY TREES
+       4. TREES
        ======================================================================
-       The thicket: trunks with a branch or two, and crowns of four to seven
-       broad, squat blobs that darken toward their undersides. Kept out of the
-       trail corridor and at least ~10 units off, so a silhouette has room to
-       read as a tree rather than as a wall.
+       Every broadleaf tree — thicket, giants and the overhang — is grown the
+       same way, like a real tree rather than a lollipop:
+
+         trunk     a bent, tapering tube with a flared foot and surface roots,
+                   bark-textured, with moss creeping up its base and over its
+                   up-facing side;
+         limbs     three to eight curved branches forking out of the upper
+                   trunk, about half of them splitting off a twig;
+         clusters  foliage only at branch tips — a small dark core (the shade
+                   inside the clump) wrapped in dense leaf cards.
+
+       Foliage living only at the tips is what makes the difference: sky and
+       light show between clusters, branches are visible inside the crown, and
+       the silhouette breaks up into clumps the way real canopy does.
        ====================================================================== */
+    interface TreeSpec {
+      x: number;
+      z: number;
+      h: number;
+      tr: number;
+      spread: number;
+      limbs: number;
+      cluster: number;
+      bark: THREE.Color;
+      green: THREE.Color;
+      /** Radians: limbs favour this direction (the overhang reaches over the trail). */
+      lean?: number;
+      buttress?: boolean;
+      sway: number;
+    }
+
+    const cluster = (c: V3, cr: number, green: THREE.Color, sway: number, hang: boolean) => {
+      const q = quat(r(-0.3, 0.3), rng() * 6, r(-0.3, 0.3));
+      const core: V3 = [cr * 0.72, cr * 0.46, cr * 0.72];
+      foliage.setAnchor(c);
+      /* The core is darker than the leaves: it is the inside of the clump. It
+         is always the 20-face blob — the cards hide its outline completely,
+         and at 80 faces it was a third of the geometry uploaded on frame one. */
+      blob(foliage, c, core, q, 0, CORE_TMP.copy(green).multiplyScalar(0.62), rng() * 100, sway, { ao: 0.7 });
+      const shell: V3 = [cr * r(1.05, 1.25), cr * r(0.72, 0.85), cr * r(1.05, 1.25)];
+      cards.setAnchor(c);
+      leafCards(cards, c, shell, q, budget.leaves, green.clone().lerp(CANOPY[4], rng() * 0.25), rng, sway);
+      if (hang) hangPoints.push([c[0] + r(-0.6, 0.6), c[1] - cr * 0.55, c[2] + r(-0.6, 0.6)]);
+    };
+
+    const growTree = (t: TreeSpec) => {
+      const { x, z, h, tr, bark } = t;
+      trunks.push({ x, z, r: tr * (t.buttress ? 2.4 : 1.4) });
+      wood.setAnchor([x, 0, z]);
+
+      /* Trunk: a random walk of small bends, plus a flared foot. */
+      const segs = 8;
+      const pts: V3[] = [];
+      const radii: number[] = [];
+      let bx = 0;
+      let bz = 0;
+      const leanX = r(-0.5, 0.5);
+      const leanZ = r(-0.5, 0.5);
+      for (let k = 0; k <= segs; k++) {
+        const u = k / segs;
+        if (k > 1) {
+          bx += (rng() - 0.5) * 0.22;
+          bz += (rng() - 0.5) * 0.22;
+        }
+        pts.push([x + leanX * u * u + bx, -0.35 + (h + 0.35) * u, z + leanZ * u * u + bz]);
+        radii.push(tr * (1 - 0.6 * u) * (1 + 1.1 * Math.pow(1 - u, 10)));
+      }
+      tube(wood, pts, radii, 8, bark, () => 0, (_i, y) => 0.5 + 0.5 * smooth(-0.2, 4, y), 0.75);
+      const trunkAt = (u: number): V3 => {
+        const f = u * segs;
+        const i = Math.min(segs - 1, Math.floor(f));
+        const k = f - i;
+        return [
+          pts[i][0] + (pts[i + 1][0] - pts[i][0]) * k,
+          pts[i][1] + (pts[i + 1][1] - pts[i][1]) * k,
+          pts[i][2] + (pts[i + 1][2] - pts[i][2]) * k,
+        ];
+      };
+
+      /* Surface roots snaking out from the foot. */
+      const roots = t.buttress ? 0 : 3 + Math.floor(rng() * 3);
+      for (let k = 0; k < roots; k++) {
+        const a = rng() * Math.PI * 2;
+        const dx = Math.cos(a);
+        const dz = Math.sin(a);
+        const reach = tr * r(3, 5.5);
+        tube(
+          wood,
+          [
+            [x + dx * tr * 0.6, 0.35, z + dz * tr * 0.6],
+            [x + dx * reach * 0.5, 0.02, z + dz * reach * 0.5 + r(-0.2, 0.2)],
+            [x + dx * reach, -0.3, z + dz * reach],
+          ],
+          [tr * 0.42, tr * 0.24, tr * 0.08],
+          5,
+          bark,
+          () => 0,
+          () => 0.62,
+          0.9,
+        );
+      }
+
+      /* Buttresses on the giants: thin concave fins out to the ground. */
+      if (t.buttress) {
+        const fins = 4 + Math.floor(rng() * 2);
+        for (let f = 0; f < fins; f++) {
+          const a = (f / fins) * Math.PI * 2 + r(-0.3, 0.3);
+          const dx = Math.cos(a);
+          const dz = Math.sin(a);
+          const reach = r(1.8, 3.2);
+          const hb = r(2.4, 3.6);
+          for (let st = 0; st < 4; st++) {
+            const t0 = st / 4;
+            const t1 = (st + 1) / 4;
+            const y0 = hb * Math.pow(1 - t0, 1.8);
+            const y1 = hb * Math.pow(1 - t1, 1.8);
+            const o0: V3 = [x + dx * (tr + reach * t0), y0 - 0.25, z + dz * (tr + reach * t0)];
+            const o1: V3 = [x + dx * (tr + reach * t1), y1 - 0.25, z + dz * (tr + reach * t1)];
+            const i0: V3 = [x + dx * tr * 0.6, y0 * 0.2 - 0.25, z + dz * tr * 0.6];
+            const i1: V3 = [x + dx * tr * 0.6, y1 * 0.2 - 0.25, z + dz * tr * 0.6];
+            wood.tri(i0, o0, o1, bark, 0.55, 0.75, 0.6, 0, 0, 0);
+            wood.tri(i0, o1, i1, bark, 0.55, 0.6, 0.45, 0, 0, 0);
+          }
+        }
+      }
+
+      /* Limbs, each curving up and out to a cluster, some forking a twig. */
+      const hang = z > -36;
+      for (let k = 0; k < t.limbs; k++) {
+        const a = t.lean !== undefined
+          ? t.lean + r(-1.1, 1.1)
+          : (k / t.limbs) * Math.PI * 2 + r(-0.45, 0.45);
+        const u0 = r(0.5, 0.88);
+        const o = trunkAt(u0);
+        const len = t.spread * r(0.55, 1);
+        const rise = len * r(0.3, 0.75);
+        const dx = Math.cos(a);
+        const dz = Math.sin(a);
+        const mid: V3 = [o[0] + dx * len * 0.5, o[1] + rise * 0.62, o[2] + dz * len * 0.5];
+        const tip: V3 = [o[0] + dx * len, o[1] + rise, o[2] + dz * len];
+        const lr = tr * (0.55 - 0.25 * u0);
+        tube(wood, [o, mid, tip], [lr, lr * 0.65, lr * 0.3], 5, bark, (i) => i * 0.15 * t.sway, () => 0.7, 0.35);
+        cluster(tip, t.cluster * r(0.85, 1.15), t.green, t.sway, hang && k < 2);
+        if (rng() < 0.55) {
+          const ta = a + r(-1, 1);
+          const tl = len * r(0.35, 0.55);
+          const twig: V3 = [mid[0] + Math.cos(ta) * tl, mid[1] + tl * r(0.2, 0.6), mid[2] + Math.sin(ta) * tl];
+          tube(wood, [mid, twig], [lr * 0.45, lr * 0.15], 4, bark, (i) => i * 0.2 * t.sway, () => 0.7, 0.3);
+          cluster(twig, t.cluster * r(0.6, 0.8), t.green, t.sway, false);
+        }
+      }
+      /* The leader: the trunk's own top clump. */
+      cluster(trunkAt(1), t.cluster * r(1, 1.25), t.green, t.sway, false);
+    };
+
+    /* -- the thicket ------------------------------------------------------- */
     for (let i = 0; i < budget.trees; i++) {
-      if (i % 6 === 5) yield;
+      if (i % 4 === 3) yield;
       const near = i < budget.trees * 0.3;
       const angle = rng() * Math.PI * 2;
       const radius = near ? r(10, 20) : r(20, 52);
       const x = Math.cos(angle) * radius;
       const z = -Math.abs(Math.sin(angle) * radius) - (near ? 1 : 8);
       if (z > 4 || inCorridor(x, z, 1.5)) continue;
-
-      const h = (near ? 8 : 10) + rng() * (near ? 4 : 6);
-      const tr = r(0.16, 0.34);
-      const lean: V3 = [r(-0.4, 0.4), 0, r(-0.4, 0.4)];
-      const top: V3 = add([x, h, z], lean);
-      trunks.push({ x, z, r: tr });
-
-      wood.setAnchor([x, 0, z]);
-      const pts: V3[] = [];
-      const radii: number[] = [];
-      for (let k = 0; k <= 4; k++) {
-        const t = k / 4;
-        pts.push([x + lean[0] * t * t, -0.3 + (h + 0.3) * t, z + lean[2] * t * t]);
-        radii.push(tr * (1.25 - 0.55 * t));
-      }
-      tube(wood, pts, radii, 6, BARK, () => 0);
-      /* A branch or two into the crown, so it is held up by something. */
-      const branches = 1 + Math.floor(rng() * 2);
-      for (let k = 0; k < branches; k++) {
-        const a = rng() * Math.PI * 2;
-        const from: V3 = [x + lean[0] * 0.5, h * r(0.6, 0.75), z + lean[2] * 0.5];
-        const to: V3 = [from[0] + Math.cos(a) * r(1.4, 2.4), h * r(0.85, 0.95), from[2] + Math.sin(a) * r(1.4, 2.4)];
-        tube(wood, [from, to], [tr * 0.55, tr * 0.25], 4, BARK, () => 0);
-      }
-
-      const green = pick(CANOPY);
-      const blobs = 4 + Math.floor(rng() * 4);
-      for (let k = 0; k < blobs; k++) {
-        const rad = (near ? 2.1 : 1.9) + rng() * 1.5;
-        const c: V3 = [top[0] + r(-2.3, 2.3), h * r(0.8, 1.08), top[2] + r(-2.3, 2.3)];
-        foliage.setAnchor(c);
-        const col = green.clone().lerp(CANOPY[(CANOPY.indexOf(green) + 1) % CANOPY.length], rng() * 0.35);
-        const sc: V3 = [rad * r(1.2, 1.5), rad * r(0.55, 0.75), rad * r(1.2, 1.5)];
-        const q = quat(r(-0.3, 0.3), rng() * 6, r(-0.3, 0.3));
-        blob(foliage, c, sc, q, budget.blobDetail, col, rng() * 100, 1);
-        cards.setAnchor(c);
-        leafCards(cards, c, sc, q, budget.leaves, col, rng, 1);
-        if (k < 2 && z > -34) hangPoints.push([c[0] + r(-1, 1), c[1] - rad * 0.5, c[2] + r(-1, 1)]);
-      }
+      const h = (near ? 8.5 : 10) + rng() * (near ? 4 : 6);
+      growTree({
+        x, z, h,
+        tr: r(0.2, 0.36),
+        spread: r(2.6, 4.2),
+        limbs: 3 + Math.floor(rng() * 3),
+        cluster: r(1.25, 1.8),
+        bark: BARK,
+        green: pick(CANOPY),
+        sway: 1,
+      });
     }
 
     yield;
-    /* ======================================================================
-       5. EMERGENTS
-       ======================================================================
-       The giants: pale-barked, buttress-rooted, with a flat umbrella crown far
-       above everything else. Only a handful, all in the middle distance where
-       the haze has started to take them — that is what makes them feel huge.
-       ====================================================================== */
+    /* -- the giants: pale-barked, buttressed, spreading over everything ---- */
     for (let i = 0; i < budget.emergents; i++) {
+      yield;
       const x = r(-46, 46);
       const z = r(-58, -26);
       if (inCorridor(x, z, 4)) continue;
-      const h = r(17, 25);
-      const tr = r(0.55, 0.85);
-      trunks.push({ x, z, r: tr * 2.2 });
-
-      wood.setAnchor([x, 0, z]);
-      const pts: V3[] = [];
-      const radii: number[] = [];
-      for (let k = 0; k <= 6; k++) {
-        const t = k / 6;
-        pts.push([x, -0.3 + (h + 0.3) * t, z]);
-        radii.push(tr * (1.15 - 0.45 * t));
-      }
-      tube(wood, pts, radii, 7, BARK_PALE, () => 0, (_i, y) => 0.55 + 0.45 * smooth(0, 8, y));
-
-      /* Buttresses: thin curved fins from ~3m up the trunk out to the ground,
-         mossy along their upper edge. */
-      const fins = 4 + Math.floor(rng() * 2);
-      for (let f = 0; f < fins; f++) {
-        const a = (f / fins) * Math.PI * 2 + r(-0.3, 0.3);
-        const dx = Math.cos(a);
-        const dz = Math.sin(a);
-        const reach = r(1.8, 3.2);
-        const hb = r(2.4, 3.6);
-        const steps = 4;
-        for (let s = 0; s < steps; s++) {
-          const t0 = s / steps;
-          const t1 = (s + 1) / steps;
-          /* Concave profile: the fin hugs the trunk high up and sweeps out low. */
-          const y0 = hb * Math.pow(1 - t0, 1.8);
-          const y1 = hb * Math.pow(1 - t1, 1.8);
-          const o0: V3 = [x + dx * (tr + reach * t0), y0 - 0.25, z + dz * (tr + reach * t0)];
-          const o1: V3 = [x + dx * (tr + reach * t1), y1 - 0.25, z + dz * (tr + reach * t1)];
-          const i0: V3 = [x + dx * tr * 0.6, y0 * 0.2 - 0.25, z + dz * tr * 0.6];
-          const i1: V3 = [x + dx * tr * 0.6, y1 * 0.2 - 0.25, z + dz * tr * 0.6];
-          wood.tri(i0, o0, o1, BARK_PALE, 0.55, 0.75, 0.6, 0, 0, 0);
-          wood.tri(i0, o1, i1, BARK_PALE, 0.55, 0.6, 0.45, 0, 0, 0);
-        }
-      }
-
-      /* Umbrella crown on a few radiating limbs. */
-      const green = pick(CANOPY.slice(1));
-      const top: V3 = [x, h, z];
-      const lobes = 6 + Math.floor(rng() * 4);
-      for (let k = 0; k < lobes; k++) {
-        const a = (k / lobes) * Math.PI * 2 + r(-0.3, 0.3);
-        const d = r(2.5, 6.5);
-        const c: V3 = [x + Math.cos(a) * d, h + r(1, 3.2), z + Math.sin(a) * d];
-        if (k < 4) {
-          wood.setAnchor([x, 0, z]);
-          tube(wood, [[x, h * 0.86, z], [c[0] * 0.7 + x * 0.3, c[1] - 0.6, c[2] * 0.7 + z * 0.3]], [tr * 0.4, tr * 0.18], 5, BARK_PALE, () => 0);
-        }
-        foliage.setAnchor(c);
-        const rad = r(2.6, 4);
-        const sc: V3 = [rad * 1.45, rad * 0.5, rad * 1.45];
-        const q = quat(r(-0.2, 0.2), rng() * 6, r(-0.2, 0.2));
-        const col = green.clone().lerp(CANOPY[4], rng() * 0.3);
-        blob(foliage, c, sc, q, budget.blobDetail, col, rng() * 100, 0.6);
-        cards.setAnchor(c);
-        leafCards(cards, c, sc, q, Math.round(budget.leaves * 0.8), col, rng, 0.6);
-      }
-      foliage.setAnchor(top);
+      growTree({
+        x, z,
+        h: r(17, 25),
+        tr: r(0.55, 0.85),
+        spread: r(6, 9),
+        limbs: 6 + Math.floor(rng() * 3),
+        cluster: r(2.2, 3),
+        bark: BARK_PALE,
+        green: pick(CANOPY.slice(1)),
+        buttress: true,
+        sway: 0.6,
+      });
     }
 
     yield;
-    /* ======================================================================
-       6. CANOPY CEILING
-       ======================================================================
-       A broken layer of crowns high overhead, close enough to frame the top of
-       the shot in dark leaf and far enough that it never covers the lens.
-       The GAPS are the point: they are where the sky, the sun glow and the
-       shafts come through.
-       ====================================================================== */
+    /* -- the overhang ------------------------------------------------------
+       Tall trees just off either side of the trail whose limbs reach in over
+       it. This is the canopy overhead — made of real branches and clumps with
+       sky between them, where an earlier version floated flat slabs. The sun
+       side is left open so light still falls down the trail. */
     for (let i = 0; i < budget.ceiling; i++) {
-      const x = r(-34, 34);
-      const z = r(-30, 2);
-      const c: V3 = [x, r(14, 18), z];
-      /* Leave a clear window roughly where the sun sits in frame. */
-      if (x < 6 && x > -26 && z < -6) continue;
-      const rad = r(2.2, 3.6);
-      foliage.setAnchor(c);
-      const sc: V3 = [rad * 1.4, rad * 0.6, rad * 1.25];
-      const q = quat(r(-0.2, 0.2), rng() * 6, r(-0.2, 0.2));
-      const col = pick(CANOPY.slice(0, 3));
-      blob(foliage, c, sc, q, budget.blobDetail, col, rng() * 100, 0.4, { ao: 0.7 });
-      cards.setAnchor(c);
-      leafCards(cards, c, sc, q, budget.leaves + 6, col, rng, 0.4);
-      if (rng() < 0.6) hangPoints.push([c[0] + r(-1.5, 1.5), c[1] - rad * 0.4, c[2] + r(-1.5, 1.5)]);
+      yield;
+      const side = i % 2 === 0 ? 1 : -1;
+      const x = side * r(7, 16);
+      const z = r(-26, 0);
+      if (side < 0 && z < -8) continue;
+      growTree({
+        x, z,
+        h: r(14, 18),
+        tr: r(0.35, 0.5),
+        spread: r(6, 8.5),
+        limbs: 4 + Math.floor(rng() * 3),
+        cluster: r(1.7, 2.3),
+        bark: BARK,
+        green: pick(CANOPY.slice(0, 3)),
+        lean: side > 0 ? Math.PI : 0,
+        sway: 0.4,
+      });
     }
 
     yield;
@@ -1557,7 +1731,13 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
       scene.add(mesh);
     };
     commit(foliage, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }), true);
-    commit(wood, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }), false);
+    yield;
+    {
+      const bark = makeBarkTexture(rng);
+      if (bark) track(bark);
+      commit(wood, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide, map: bark }), false);
+    }
+    yield;
     {
       const tex = makeLeafTexture(rng);
       if (tex) {
@@ -1589,6 +1769,7 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
       const colors = new Float32Array(p.count * 3);
       const c = new THREE.Color();
       for (let i = 0; i < p.count; i++) {
+        if (i % 2500 === 2499) yield;
         const x = p.getX(i);
         const z = p.getZ(i);
         /* THE CAMERA MUST NEVER BE INSIDE THE TERRAIN: small amplitude, and
@@ -1612,6 +1793,7 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
       p.needsUpdate = true;
       geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
       geo.computeVertexNormals();
+      yield;
       const litter = makeLitterTexture(rng);
       if (litter) track(litter);
       const mat = track(new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide, map: litter }));
@@ -1636,40 +1818,79 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
 
     yield;
     /* ======================================================================
-       12. GRASS
+       12. GROUND COVER
        ======================================================================
-       Instanced blades, dark at the root and light at the tip, sun-flecked by
-       the same dapple as the floor so the two read as one surface.
+       A rainforest floor is not a lawn. An earlier pass used single-triangle
+       grass blades, and thousands of identical straight spikes read as fake
+       at a glance. This is low, broad-leaved cover instead — rosettes of
+       drooping oval leaves and small seedlings on a stem — instanced, tinted
+       per plant, and thinned out down the middle into a faint worn trail.
        ====================================================================== */
     {
-      const geo = track(new THREE.BufferGeometry());
-      geo.setAttribute('position', new THREE.Float32BufferAttribute([-0.035, 0, 0, 0.035, 0, 0, 0, 1, 0], 3));
-      geo.setAttribute('normal', new THREE.Float32BufferAttribute([0, 1, 0.25, 0, 1, 0.25, 0, 1, 0.25], 3));
-      geo.setAttribute('color', new THREE.Float32BufferAttribute([0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1.25, 1.25, 1.2], 3));
-      const mat = track(new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }));
-      patchInstanced(mat, U, 'position.y', true);
+      const white = new THREE.Color(1, 1, 1);
+      const stem = new THREE.Color(0.85, 0.9, 0.75);
+      const shapeRng = makeRng(77);
+      const sr = (a: number, b: number) => a + shapeRng() * (b - a);
+      const toGeo = (bt: Batch) => {
+        const g = bt.build();
+        g.deleteAttribute('aAnchor');
+        g.deleteAttribute('aSway');
+        g.deleteAttribute('uv');
+        return track(g);
+      };
 
-      const mesh = new THREE.InstancedMesh(geo, mat, budget.grass);
-      mesh.receiveShadow = budget.shadow > 0;
-      const dummy = new THREE.Object3D();
-      const tint = new THREE.Color();
-      for (let i = 0; i < budget.grass; i++) {
-        /* A full disc around the camera (not a half-plane in front of it), so
-           the near field is turf rather than bare ground. */
-        const d = Math.sqrt(rng()) * 30;
-        const a = rng() * Math.PI * 2;
-        dummy.position.set(Math.cos(a) * d, -0.2, -10 + Math.sin(a) * d);
-        dummy.rotation.set(0, rng() * Math.PI, (rng() - 0.5) * 0.4);
-        dummy.scale.set(0.8 + rng() * 0.8, 0.2 + rng() * 0.5, 1);
-        dummy.updateMatrix();
-        mesh.setMatrixAt(i, dummy.matrix);
-        tint.copy(GRASS).lerp(rng() < 0.3 ? BROADLEAF[1] : CANOPY[2], rng() * 0.5);
-        mesh.setColorAt(i, tint);
+      /* Rosette: six drooping oval leaves round a low centre. */
+      const rosette = new Batch();
+      for (let k = 0; k < 6; k++) {
+        const a = (k / 6) * Math.PI * 2 + sr(-0.25, 0.25);
+        leaf(rosette, [0, 0.03, 0], norm([Math.cos(a), sr(0.25, 0.6), Math.sin(a)]), sr(0.26, 0.34), sr(0.1, 0.13), sr(0.55, 0.85), white, 0, 1, 2);
       }
-      mesh.instanceMatrix.needsUpdate = true;
-      if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-      mesh.frustumCulled = false;
-      scene.add(mesh);
+      /* Seedling: a short stem with paired leaves up it. */
+      const sprig = new Batch();
+      tube(sprig, [[0, 0, 0], [0.02, 0.2, 0.01], [0.03, 0.38, 0]], [0.012, 0.009, 0.006], 3, stem, (i) => i * 0.5, () => 0.85);
+      for (const [y, len] of [[0.14, 0.15], [0.26, 0.13], [0.36, 0.11]] as const) {
+        const a = sr(0, Math.PI);
+        for (const sgn of [1, -1]) {
+          leaf(sprig, [0.02, y, 0], norm([Math.cos(a) * sgn, 0.35, Math.sin(a) * sgn]), len, len * 0.42, 0.5, white, 0, 1, 2);
+        }
+      }
+
+      const tints = [GRASS, BROADLEAF[0], BROADLEAF[2], CANOPY[3], FERN, new THREE.Color('#9aae45')];
+      const place = (geo: THREE.BufferGeometry, count: number, scaleMin: number, scaleMax: number) => {
+        const mat = track(new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }));
+        patchInstanced(mat, U, 'clamp(position.y * 2.5 + length(position.xz) * 1.4, 0.0, 1.0)', true);
+        const mesh = new THREE.InstancedMesh(geo, mat, count);
+        mesh.receiveShadow = budget.shadow > 0;
+        const dummy = new THREE.Object3D();
+        const tint = new THREE.Color();
+        let n = 0;
+        for (let i = 0; i < count; i++) {
+          /* Densest at the viewer's feet, where each plant is big enough to
+             read; thinning out to where the haze takes over anyway. */
+          const d = Math.pow(rng(), 0.75) * 30;
+          const a = rng() * Math.PI * 2;
+          const x = Math.cos(a) * d;
+          const z = -3 + Math.sin(a) * d;
+          /* The trail: a wandering strip down the middle that plants mostly
+             leave alone, as if it is walked. */
+          if (z > -34 && Math.abs(x - Math.sin(z * 0.18) * 0.5) < 0.85 && rng() < 0.9) continue;
+          dummy.position.set(x, -0.22, z);
+          dummy.rotation.set((rng() - 0.5) * 0.25, rng() * Math.PI * 2, (rng() - 0.5) * 0.25);
+          dummy.scale.setScalar(r(scaleMin, scaleMax));
+          dummy.updateMatrix();
+          mesh.setMatrixAt(n, dummy.matrix);
+          tint.copy(pick(tints)).lerp(pick(tints), rng() * 0.5).multiplyScalar(0.85 + rng() * 0.3);
+          mesh.setColorAt(n, tint);
+          n++;
+        }
+        mesh.count = n;
+        mesh.instanceMatrix.needsUpdate = true;
+        if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+        mesh.frustumCulled = false;
+        scene.add(mesh);
+      };
+      place(toGeo(rosette), Math.round(budget.grass * 0.65), 0.9, 2.1);
+      place(toGeo(sprig), Math.round(budget.grass * 0.35), 1, 2);
     }
 
     yield;
@@ -1878,10 +2099,8 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
     float d = -mv.z;
     gl_PointSize = clamp(uScale * (0.018 + aSeed * 0.022) * uSize / d, 1.0, 14.0);
     vA = (0.35 + 0.65 * (0.5 + 0.5 * sin(t * 2.3))) * smoothstep(1.2, 4.0, d) * (1.0 - smoothstep(18.0, 26.0, d));
-    /* Fireflies: the same specks, but each one pulses on and off on its own
-       slow clock instead of shimmering. */
-    float pulse = pow(0.5 + 0.5 * sin(uTime * 1.3 + aSeed * 61.0), 5.0);
-    vA *= mix(1.0, 0.15 + pulse * 2.2, uBlink);
+    /* Daytime only: at dusk the fireflies below take over. */
+    vA *= 1.0 - uBlink;
     gl_Position = projectionMatrix * mv;
   }`,
           fragmentShader: `
@@ -1974,6 +2193,161 @@ void main() {
   }
 
   /* ======================================================================
+     Fireflies
+     ======================================================================
+     Their own little scene, drawn after the forest, so they can keep moving
+     while the forest stays a still frame. Each one wanders on a slow loop and
+     blinks on its own clock: mostly dark, then a soft green-gold flash with a
+     halo. At dusk this is the whole mood, so there are a lot of them.
+     ====================================================================== */
+  const fireflyScene = new THREE.Scene();
+  const fireflyU = {
+    uTime: U.uTime,
+    uEve: { value: 0 },
+    uScale: { value: renderer.getPixelRatio() * window.innerHeight * 0.5 },
+    uCol: { value: new THREE.Color('#d8ff6e') },
+  };
+  if (budget.fireflies > 0) {
+    const frng = makeRng(4242);
+    const n = budget.fireflies;
+    const pos = new Float32Array(n * 3);
+    const seeds = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      const z = -36 + Math.pow(frng(), 0.7) * 43;
+      pos[i * 3] = (frng() - 0.5) * (14 + (7 - z) * 0.6);
+      pos[i * 3 + 1] = 0.2 + Math.pow(frng(), 1.6) * 4.8;
+      pos[i * 3 + 2] = z;
+      seeds[i] = frng();
+    }
+    const geo = track(new THREE.BufferGeometry());
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('aSeed', new THREE.BufferAttribute(seeds, 1));
+    const mat = track(
+      new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        fog: false,
+        uniforms: fireflyU,
+        vertexShader: `
+uniform float uTime;
+uniform float uScale;
+uniform float uEve;
+attribute float aSeed;
+varying float vA;
+void main() {
+  float s = aSeed;
+  float t = uTime * 0.32 + s * 50.0;
+  vec3 p = position + vec3(
+    sin(t * 0.9 + s * 13.0) * 0.9 + sin(t * 2.1 + s * 3.0) * 0.25,
+    sin(t * 0.7 + s * 7.0) * 0.45,
+    cos(t * 0.8 + s * 11.0) * 0.9
+  );
+  vec4 mv = modelViewMatrix * vec4(p, 1.0);
+  float d = -mv.z;
+  float blink = smoothstep(0.05, 1.0, sin(uTime * (0.7 + s * 0.9) + s * 40.0));
+  vA = blink * uEve * smoothstep(0.8, 3.0, d);
+  gl_PointSize = clamp(uScale * (0.42 + s * 0.3) / d, 5.0, 56.0) * (0.55 + 0.45 * blink);
+  gl_Position = projectionMatrix * mv;
+}`,
+        fragmentShader: `
+uniform vec3 uCol;
+varying float vA;
+void main() {
+  vec2 c = gl_PointCoord - 0.5;
+  float r2 = dot(c, c);
+  /* A tiny hot core inside a wide soft glow: at this size the sprite is
+     mostly halo, which is what reads as a light rather than a dot. */
+  float core = exp(-r2 * 260.0) * 1.4;
+  float halo = exp(-r2 * 22.0) * 0.5 + exp(-r2 * 7.0) * 0.12;
+  float a = (core + halo) * vA;
+  gl_FragColor = vec4(mix(uCol, vec3(1.0, 1.0, 0.8), min(core, 1.0) * 0.5) * a, a);
+}`,
+      }),
+    );
+    const pts = new THREE.Points(geo, mat);
+    pts.frustumCulled = false;
+    fireflyScene.add(pts);
+  }
+
+  /* -- the cached frame ----------------------------------------------------
+     Letting fireflies move at rest must not mean redrawing the forest 30
+     times a second. The forest is rendered once into a texture (colour AND
+     depth); each ambient frame copies it to the screen — writing the depth
+     back too, so fireflies still disappear behind trunks and leaves — and
+     draws only the fireflies on top. An idle evening page therefore costs a
+     full-screen copy and a few hundred points, not 200k triangles.
+
+     The target is sRGB so it stores exactly what the screen would have shown
+     with the same precision in the darks; the copy decodes and re-encodes, so
+     the cached path is pixel-identical to the direct one. */
+  const stillPreferred =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ambientAllowed = !stillPreferred && budget.fireflies > 0;
+  const ambientThrottle = createFrameThrottle(30);
+  let cache: THREE.WebGLRenderTarget | null = null;
+  let sceneDirty = true;
+  const bufSize = new THREE.Vector2();
+  const blitScene = new THREE.Scene();
+  const blitU = {
+    tColor: { value: null as THREE.Texture | null },
+    tDepth: { value: null as THREE.Texture | null },
+  };
+  {
+    const geo = track(new THREE.PlaneGeometry(2, 2));
+    const mat = track(
+      new THREE.ShaderMaterial({
+        depthTest: true,
+        depthWrite: true,
+        depthFunc: THREE.AlwaysDepth,
+        uniforms: blitU,
+        vertexShader: `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = vec4(position.xy, 0.0, 1.0);
+}`,
+        fragmentShader: `
+uniform sampler2D tColor;
+uniform sampler2D tDepth;
+varying vec2 vUv;
+void main() {
+  gl_FragColor = texture2D(tColor, vUv);
+  gl_FragDepth = texture2D(tDepth, vUv).x;
+  #include <colorspace_fragment>
+}`,
+      }),
+    );
+    const quad = new THREE.Mesh(geo, mat);
+    quad.frustumCulled = false;
+    blitScene.add(quad);
+  }
+
+  function drawForestIntoCache() {
+    renderer.getDrawingBufferSize(bufSize);
+    if (!cache) {
+      cache = new THREE.WebGLRenderTarget(bufSize.x, bufSize.y, {
+        samples: tier === 'low' ? 0 : 4,
+        colorSpace: THREE.SRGBColorSpace,
+        depthTexture: new THREE.DepthTexture(bufSize.x, bufSize.y),
+      });
+      blitU.tColor.value = cache.texture;
+      blitU.tDepth.value = cache.depthTexture;
+    } else if (cache.width !== bufSize.x || cache.height !== bufSize.y) {
+      cache.setSize(bufSize.x, bufSize.y);
+    }
+    renderer.setRenderTarget(cache);
+    renderer.render(scene, camera);
+    renderer.setRenderTarget(null);
+    sceneDirty = false;
+  }
+
+  function drawFromCache() {
+    renderer.render(blitScene, overlayCam);
+  }
+
+  /* ======================================================================
      Time of day
      ======================================================================
      moodT runs 0 (day) to 1 (evening). Every mood parameter is lerped from
@@ -2008,6 +2382,7 @@ void main() {
     C(M.uMote.value, a.mote, b.mote);
     M.uMoteSize.value = L(a.moteSize, b.moteSize);
     M.uBlink.value = L(a.blink, b.blink);
+    fireflyU.uEve.value = smooth(0.35, 1, t);
     M.uStars.value = L(a.stars, b.stars);
     C(tmpC, a.vignette, b.vignette);
     overlayU.uVig.value.copy(tmpC);
@@ -2093,6 +2468,7 @@ void main() {
     capPixelRatio(renderer, window.innerWidth, window.innerHeight, budget.maxPixels, budget.maxRatio);
     /* The expensive transparent layers go first: they are pure fill rate. */
     for (const m of shaftMats) m.uniforms.uIntensity.value *= 0.7;
+    sceneDirty = true;
   }
 
   function resize() {
@@ -2104,6 +2480,8 @@ void main() {
     capPixelRatio(renderer, w, h, budget.maxPixels, budget.maxRatio);
     overlayU.uAspect.value = camera.aspect;
     if (motesMat) motesMat.uniforms.uScale.value = renderer.getPixelRatio() * h * 0.5;
+    fireflyU.uScale.value = renderer.getPixelRatio() * h * 0.5;
+    sceneDirty = true;
     idleFrames = 0;
     if (gate.isActive() && raf === null) start();
   }
@@ -2149,8 +2527,32 @@ void main() {
     camera.lookAt(yaw * 3, 2.6 - pitch * 1.4, -26);
     updateSun();
 
-    renderer.render(scene, camera);
-    renderer.autoClear = false;
+    const moving =
+      U.uStrength.value > 0 ||
+      prevStrength > 0 ||
+      push > 0 ||
+      moodT !== moodTarget ||
+      Math.abs(targetYaw - yaw) > 0.0005 ||
+      Math.abs(targetPitch - pitch) > 0.0005;
+    const ambient = ambientAllowed && fireflyU.uEve.value > 0.01;
+
+    if (ambient) {
+      /* Cached-frame path: the forest is drawn into a texture only when it
+         actually changes; in between, each frame is one full-screen copy plus
+         a few hundred points. */
+      if (moving || sceneDirty || !cache) {
+        drawForestIntoCache();
+      } else if (!ambientThrottle(now)) {
+        return;
+      }
+      drawFromCache();
+      renderer.autoClear = false;
+      renderer.render(fireflyScene, camera);
+    } else {
+      renderer.render(scene, camera);
+      sceneDirty = true;
+      renderer.autoClear = false;
+    }
     renderer.render(overlayScene, overlayCam);
     renderer.autoClear = true;
 
@@ -2160,15 +2562,9 @@ void main() {
     }
 
     /* Park the loop when nothing is moving. It restarts on any pointer move,
-       resize or dolly. */
-    const moving =
-      U.uStrength.value > 0 ||
-      prevStrength > 0 ||
-      push > 0 ||
-      moodT !== moodTarget ||
-      Math.abs(targetYaw - yaw) > 0.0005 ||
-      Math.abs(targetPitch - pitch) > 0.0005;
-    idleFrames = moving ? 0 : idleFrames + 1;
+       resize or dolly. In the evening it never parks — the fireflies are the
+       one thing allowed to move on their own, and they run on the cache. */
+    idleFrames = moving || ambient ? 0 : idleFrames + 1;
     if (idleFrames > 8) {
       cancelAnimationFrame(raf);
       raf = null;
@@ -2206,16 +2602,47 @@ void main() {
            are all ready. */
         const go = () => {
           if (cancelled) return;
-          ready = true;
-          start();
+          warmUp(0);
         };
-        Promise.all([renderer.compileAsync(scene, camera), renderer.compileAsync(overlayScene, overlayCam)]).then(go, go);
+        Promise.all([
+          renderer.compileAsync(scene, camera),
+          renderer.compileAsync(overlayScene, overlayCam),
+          renderer.compileAsync(fireflyScene, camera),
+        ]).then(go, go);
         return;
       }
     }
     setTimeout(pump, 0);
   };
   pump();
+
+  /* GPU WARM-UP. The first draw uploads every vertex buffer and texture, and
+     with ~15 meshes that is a quarter-second freeze in one go. While the
+     canvas is still invisible, draw one mesh per task on its own, so each
+     upload lands in its own slice instead of all of them in one frame.
+     Shadows join last, on the first real frame. */
+  let warmList: THREE.Object3D[] = [];
+  function warmUp(i: number) {
+    if (cancelled) return;
+    if (i === 0) {
+      warmList = scene.children.filter((o) => (o as THREE.Mesh).isMesh || (o as THREE.Points).isPoints);
+    }
+    if (i >= warmList.length) {
+      for (const o of warmList) o.visible = true;
+      renderer.shadowMap.needsUpdate = true;
+      ready = true;
+      start();
+      return;
+    }
+    const needs = renderer.shadowMap.needsUpdate;
+    renderer.shadowMap.needsUpdate = false;
+    warmList.forEach((o, k) => {
+      o.visible = k === i;
+    });
+    if (!renderer.getContext().isContextLost()) renderer.render(scene, camera);
+    renderer.shadowMap.needsUpdate = needs;
+    setTimeout(() => warmUp(i + 1), 0);
+  }
 
   const onContextLost = (e: Event) => {
     e.preventDefault();
@@ -2246,6 +2673,7 @@ void main() {
         // a double dispose is not worth crashing an unmount over
       }
     }
+    cache?.dispose();
     releaseContext(renderer);
   };
 }
