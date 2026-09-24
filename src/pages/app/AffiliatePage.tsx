@@ -338,7 +338,6 @@ export default function AffiliatePage() {
                   </ul>
                 </div>
               )}
-              </div>
             </CardContent>
           </Card>
 
