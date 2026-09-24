@@ -6117,6 +6117,40 @@
       "sendToBack": "Naar achtergrond",
       "duplicate": "Dupliceren",
       "delete": "Verwijderen"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Ontwerp",
+      "assets": "Elementen",
+      "media": "Media",
+      "text": "Tekst",
+      "generate": "Genereren",
+      "generations": "Generaties",
+      "edit": "Bewerken",
+      "collapse": "Paneel inklappen",
+      "home": "Home"
+    },
+    "agent": {
+      "introTitle": "Vertel de AI wat je wilt",
+      "introBody": "Beschrijf het ontwerp of de wijziging in je eigen woorden. Het past het paginaformaat aan, schrijft en stijlt tekst, zoekt gratis foto's, video's en muziek, past filters toe, ordent lagen en animeert ze. Elk verzoek maak je in één keer ongedaan.",
+      "suggestPoster": "Maak een vierkante Instagram-post voor een zomeruitverkoop met een strandfoto en een vette titel",
+      "suggestTitle": "Voeg bovenaan een grote, vette titel toe met daaronder een kleinere ondertitel",
+      "suggestFilter": "Maak de foto warmer en iets lichter",
+      "suggestStory": "Maak hier een 9:16-story van en vul de pagina met de foto",
+      "suggestBackground": "Voeg rustige achtergrondmuziek toe en laat de tekst infaden",
+      "placeholder": "Beschrijf wat je wilt…",
+      "send": "Versturen",
+      "hint": "Enter om te versturen · Ctrl+K om hierheen te gaan",
+      "clear": "Chat wissen",
+      "working": "Bezig…",
+      "done": "Klaar.",
+      "nothingToDo": "Ik kon daar niets aan veranderen. Beschrijf de bewerking die je wilt.",
+      "noStock": "Geen gratis materiaal gevonden voor ‘{{query}}’.",
+      "rateLimited": "Je hebt veel verzoeken verstuurd. Probeer het over een paar minuten opnieuw.",
+      "failed": "De AI kon dat nu niet doen. Probeer het zo opnieuw.",
+      "changes": "Bewerkingen: {{count}}",
+      "undo": "Ongedaan maken",
+      "openGenerator": "Bekijken en genereren"
     }
   },
   "glossary": {

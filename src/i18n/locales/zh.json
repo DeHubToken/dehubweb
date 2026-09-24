@@ -5969,6 +5969,40 @@
       "sendToBack": "置于底层",
       "duplicate": "复制",
       "delete": "删除"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "设计",
+      "assets": "素材",
+      "media": "媒体",
+      "text": "文字",
+      "generate": "生成",
+      "generations": "生成记录",
+      "edit": "编辑",
+      "collapse": "收起面板",
+      "home": "首页"
+    },
+    "agent": {
+      "introTitle": "告诉 AI 你想要什么",
+      "introBody": "用你自己的话描述设计或修改。它可以调整页面尺寸、撰写并设置文字样式、查找免费的照片、视频和音乐、应用滤镜、排列图层并添加动画。每个请求都可一步撤销。",
+      "suggestPoster": "为夏季促销制作一张方形 Instagram 帖子，配上海滩照片和醒目的标题",
+      "suggestTitle": "在顶部添加一个大号粗体标题，并在下方添加一个较小的副标题",
+      "suggestFilter": "让照片更暖一些，也更亮一点",
+      "suggestStory": "把它改成 9:16 的快拍，并让照片铺满页面",
+      "suggestBackground": "添加舒缓的背景音乐，并让文字淡入",
+      "placeholder": "描述你想要的效果…",
+      "send": "发送",
+      "hint": "按 Enter 发送 · 按 Ctrl+K 跳转到此处",
+      "clear": "清空聊天",
+      "working": "正在处理…",
+      "done": "完成。",
+      "nothingToDo": "没有找到可修改的内容。请试着描述你想要的编辑。",
+      "noStock": "没有与“{{query}}”匹配的免费素材。",
+      "rateLimited": "你的请求太多了。请几分钟后再试。",
+      "failed": "AI 暂时无法完成此操作。请稍后再试。",
+      "changes": "已进行的修改：{{count}}",
+      "undo": "撤销",
+      "openGenerator": "查看并生成"
     }
   }
 }

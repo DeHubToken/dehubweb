@@ -5618,6 +5618,40 @@
       "sendToBack": "Alefaso any aoriana",
       "duplicate": "Handika mitovy",
       "delete": "Hamafa"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Endrika",
+      "assets": "Fitaovana",
+      "media": "Media",
+      "text": "Soratra",
+      "generate": "Mamorona",
+      "generations": "Voaforona",
+      "edit": "Hanova",
+      "collapse": "Aforony ny tontonana",
+      "home": "Fandraisana"
+    },
+    "agent": {
+      "introTitle": "Lazao amin'ny AI izay tianao",
+      "introBody": "Lazalazao amin'ny teninao manokana ny endrika na ny fanovana. Manova ny haben'ny pejy izy, manoratra sy mandravaka soratra, mitady sary, video ary mozika maimaim-poana, mampihatra sivana, mandamina ny sosona ary mampihetsika azy ireo. Azo foanana indray mandeha ny fangatahana tsirairay.",
+      "suggestPoster": "Manaova lahatsoratra Instagram efamira ho an'ny varotra lafo mora amin'ny fahavaratra misy sarin'ny tora-pasika sy lohateny matevina",
+      "suggestTitle": "Ampio lohateny lehibe sy matevina eo ambony ary lohateny kely kokoa eo ambaniny",
+      "suggestFilter": "Ataovy mafana kokoa sy mazava kely kokoa ilay sary",
+      "suggestStory": "Avadiho ho tantara 9:16 ity ary fenoy amin'ilay sary ny pejy",
+      "suggestBackground": "Ampio mozika mangina ao ambadika ary ataovy miseho moramora ny soratra",
+      "placeholder": "Lazalazao izay tianao…",
+      "send": "Alefa",
+      "hint": "Enter handefasana · Ctrl+K hankanesana eto",
+      "clear": "Fafao ny resaka",
+      "working": "Eo am-panaovana azy…",
+      "done": "Vita.",
+      "nothingToDo": "Tsy nahita zavatra hovaina tamin'izany aho. Andramo lazalazaina ny fanovana tianao.",
+      "noStock": "Tsy misy fitaovana maimaim-poana mifanaraka amin'ny “{{query}}”.",
+      "rateLimited": "Nandefa fangatahana maro ianao. Andramo indray afaka minitra vitsivitsy.",
+      "failed": "Tsy vitan'ny AI izany amin'izao fotoana izao. Andramo indray afaka kelikely.",
+      "changes": "Fanovana natao: {{count}}",
+      "undo": "Foano",
+      "openGenerator": "Jereo ary mamorona"
     }
   },
   "createPost": {

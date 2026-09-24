@@ -5670,6 +5670,40 @@
       "sendToBack": "Đưa xuống dưới cùng",
       "duplicate": "Sao chép",
       "delete": "Xóa"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Thiết kế",
+      "assets": "Thành phần",
+      "media": "Phương tiện",
+      "text": "Văn bản",
+      "generate": "Tạo",
+      "generations": "Đã tạo",
+      "edit": "Chỉnh sửa",
+      "collapse": "Thu gọn bảng",
+      "home": "Trang chủ"
+    },
+    "agent": {
+      "introTitle": "Nói với AI điều bạn muốn",
+      "introBody": "Mô tả thiết kế hoặc thay đổi bằng lời của bạn. AI sẽ đổi kích thước trang, viết và định dạng chữ, tìm ảnh, video và nhạc miễn phí, áp dụng bộ lọc, sắp xếp các lớp và tạo hiệu ứng cho chúng. Mỗi yêu cầu chỉ cần một lần hoàn tác.",
+      "suggestPoster": "Tạo một bài đăng Instagram vuông cho đợt giảm giá mùa hè với ảnh bãi biển và tiêu đề nổi bật",
+      "suggestTitle": "Thêm một tiêu đề to đậm ở trên cùng và một phụ đề nhỏ hơn bên dưới",
+      "suggestFilter": "Làm ảnh ấm hơn và sáng hơn một chút",
+      "suggestStory": "Chuyển cái này thành story 9:16 và lấp đầy trang bằng ảnh",
+      "suggestBackground": "Thêm nhạc nền nhẹ nhàng và cho chữ hiện dần lên",
+      "placeholder": "Mô tả điều bạn muốn…",
+      "send": "Gửi",
+      "hint": "Enter để gửi · Ctrl+K để chuyển đến đây",
+      "clear": "Xóa cuộc trò chuyện",
+      "working": "Đang xử lý…",
+      "done": "Xong.",
+      "nothingToDo": "Mình không tìm thấy gì để thay đổi. Hãy thử mô tả chỉnh sửa bạn muốn.",
+      "noStock": "Không có tư liệu miễn phí nào khớp với “{{query}}”.",
+      "rateLimited": "Bạn đã gửi quá nhiều yêu cầu. Hãy thử lại sau vài phút.",
+      "failed": "AI hiện không thể làm việc này. Hãy thử lại sau một lát.",
+      "changes": "Số chỉnh sửa đã thực hiện: {{count}}",
+      "undo": "Hoàn tác",
+      "openGenerator": "Xem lại và tạo"
     }
   },
   "glossary": {

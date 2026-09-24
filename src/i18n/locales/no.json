@@ -3625,6 +3625,40 @@
       "sendToBack": "Send til bakgrunn",
       "duplicate": "Dupliser",
       "delete": "Slett"
+    },
+    "rail": {
+      "agent": "KI",
+      "design": "Design",
+      "assets": "Ressurser",
+      "media": "Medier",
+      "text": "Tekst",
+      "generate": "Generer",
+      "generations": "Genereringer",
+      "edit": "Rediger",
+      "collapse": "Skjul panel",
+      "home": "Hjem"
+    },
+    "agent": {
+      "introTitle": "Fortell KI-en hva du vil ha",
+      "introBody": "Beskriv designet eller endringen med dine egne ord. Den endrer størrelse på siden, skriver og formaterer tekst, finner gratis bilder, videoer og musikk, legger på filtre, ordner lag og animerer dem. Hver forespørsel kan angres i ett steg.",
+      "suggestPoster": "Lag et kvadratisk Instagram-innlegg for sommersalg med et strandbilde og en fet tittel",
+      "suggestTitle": "Legg til en stor fet tittel øverst og en mindre undertittel under",
+      "suggestFilter": "Gjør bildet varmere og litt lysere",
+      "suggestStory": "Gjør dette om til en 9:16-story og fyll siden med bildet",
+      "suggestBackground": "Legg til rolig bakgrunnsmusikk og tone inn teksten",
+      "placeholder": "Beskriv hva du vil ha…",
+      "send": "Send",
+      "hint": "Enter for å sende · Ctrl+K for å hoppe hit",
+      "clear": "Tøm chatten",
+      "working": "Jobber med det…",
+      "done": "Ferdig.",
+      "nothingToDo": "Fant ingenting å endre for det. Prøv å beskrive endringen du vil ha.",
+      "noStock": "Ingen gratis materiale samsvarte med «{{query}}».",
+      "rateLimited": "Du har sendt mange forespørsler. Prøv igjen om noen minutter.",
+      "failed": "KI-en kunne ikke gjøre det akkurat nå. Prøv igjen om litt.",
+      "changes": "Endringer gjort: {{count}}",
+      "undo": "Angre",
+      "openGenerator": "Se over og generer"
     }
   }
 }

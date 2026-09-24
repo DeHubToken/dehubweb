@@ -3672,6 +3672,40 @@
       "sendToBack": "Llapanpa qhipanman kachay",
       "duplicate": "Iskaychay",
       "delete": "Chinkachiy"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Diseño",
+      "assets": "Imakuna",
+      "media": "Media",
+      "text": "Qillqa",
+      "generate": "Paqarichiy",
+      "generations": "Paqarichisqakuna",
+      "edit": "Allichay",
+      "collapse": "Panelta pakay",
+      "home": "Qallariy"
+    },
+    "agent": {
+      "introTitle": "AI-man willay imatachus munanki",
+      "introBody": "Diseñota utaq tikrayta kikiykiq simiykiwan willay. Paginaq sayayninta tikran, qillqata qillqan hinaspa sumaqchan, mana qullqiyuq fotokunata, videokunata, takikunatapas maskan, filtrokunata churan, capakunata allichan hinaspa kuyuchin. Sapa mañakuyqa huk kutichiywanmi kutirin.",
+      "suggestPoster": "Rupay mit'a rebajapaq tawa k'uchuyuq Instagram willakuyta ruway, qucha patapi fotowan, rakhu sutichaywan",
+      "suggestTitle": "Hawaman hatun rakhu sutichayta churay, uranmantaq aswan huch'uy uña sutichayta",
+      "suggestFilter": "Fotota aswan q'uñiman hinaspa huk chikan aswan k'anchayniyuqman tukuchiy",
+      "suggestStory": "Kayta 9:16 historiaman tukuchiy hinaspa paginata fotowan hunt'achiy",
+      "suggestBackground": "Thak takita qhipa kaqpi churay hinaspa qillqata allillamanta rikhurichiy",
+      "placeholder": "Imatachus munanki willay…",
+      "send": "Apachiy",
+      "hint": "Enter apachinapaq · Ctrl+K kayman hamunapaq",
+      "clear": "Rimanakuyta pichay",
+      "working": "Llamk'achkani…",
+      "done": "Tukusqa.",
+      "nothingToDo": "Chaypaq mana imatapas tikranapaq tarirqanichu. Munasqayki allichayta willayta pruebay.",
+      "noStock": "Mana qullqiyuq imakuna “{{query}}”-wan tupanchu.",
+      "rateLimited": "Achka mañakuykunata apachirqanki. Wakin minutokuna qhipaman yapamanta pruebay.",
+      "failed": "AI-qa manam kunan chayta ruwayta atirqanchu. Huk ratumanta yapamanta pruebay.",
+      "changes": "Ruwasqa allichaykuna: {{count}}",
+      "undo": "Kutichiy",
+      "openGenerator": "Qhawaspa paqarichiy"
     }
   }
 }

@@ -5880,6 +5880,40 @@
       "sendToBack": "Placer bagerst",
       "duplicate": "Dupliker",
       "delete": "Slet"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Design",
+      "assets": "Elementer",
+      "media": "Medier",
+      "text": "Tekst",
+      "generate": "Generér",
+      "generations": "Genereringer",
+      "edit": "Rediger",
+      "collapse": "Skjul panel",
+      "home": "Hjem"
+    },
+    "agent": {
+      "introTitle": "Fortæl AI'en, hvad du vil have",
+      "introBody": "Beskriv designet eller ændringen med dine egne ord. Den ændrer sidens størrelse, skriver og styler tekst, finder gratis fotos, videoer og musik, lægger filtre på, arrangerer lag og animerer dem. Hver anmodning kan fortrydes i ét trin.",
+      "suggestPoster": "Lav et kvadratisk Instagram-opslag til et sommerudsalg med et strandbillede og en fed overskrift",
+      "suggestTitle": "Tilføj en stor, fed overskrift øverst og en mindre undertitel under den",
+      "suggestFilter": "Gør billedet varmere og lidt lysere",
+      "suggestStory": "Lav det om til en 9:16-story, og fyld siden med billedet",
+      "suggestBackground": "Tilføj rolig baggrundsmusik, og lad teksten fade ind",
+      "placeholder": "Beskriv, hvad du vil have…",
+      "send": "Send",
+      "hint": "Enter for at sende · Ctrl+K for at hoppe hertil",
+      "clear": "Ryd chat",
+      "working": "Arbejder på det…",
+      "done": "Færdig.",
+      "nothingToDo": "Jeg kunne ikke finde noget at ændre ud fra det. Prøv at beskrive den redigering, du vil have.",
+      "noStock": "Intet gratis stockmateriale matchede „{{query}}“.",
+      "rateLimited": "Du har sendt mange anmodninger. Prøv igen om et par minutter.",
+      "failed": "AI'en kunne ikke gøre det lige nu. Prøv igen om lidt.",
+      "changes": "Redigeringer foretaget: {{count}}",
+      "undo": "Fortryd",
+      "openGenerator": "Gennemse og generér"
     }
   }
 }

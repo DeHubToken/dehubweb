@@ -5849,6 +5849,40 @@
       "sendToBack": "Premjesti na dno",
       "duplicate": "Dupliciraj",
       "delete": "Izbriši"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Dizajn",
+      "assets": "Elementi",
+      "media": "Mediji",
+      "text": "Tekst",
+      "generate": "Generiraj",
+      "generations": "Generirano",
+      "edit": "Uredi",
+      "collapse": "Sažmi ploču",
+      "home": "Početna"
+    },
+    "agent": {
+      "introTitle": "Recite AI-ju što želite",
+      "introBody": "Opišite dizajn ili promjenu svojim riječima. Mijenja veličinu stranice, piše i oblikuje tekst, pronalazi besplatne fotografije, videozapise i glazbu, primjenjuje filtre, slaže slojeve i animira ih. Svaki se zahtjev poništava jednim korakom.",
+      "suggestPoster": "Napravi kvadratnu Instagram objavu za ljetno sniženje s fotografijom plaže i upadljivim naslovom",
+      "suggestTitle": "Dodaj veliki podebljani naslov na vrh i manji podnaslov ispod njega",
+      "suggestFilter": "Učini fotografiju toplijom i malo svjetlijom",
+      "suggestStory": "Pretvori ovo u priču 9:16 i ispuni stranicu fotografijom",
+      "suggestBackground": "Dodaj mirnu pozadinsku glazbu i neka se tekst postupno pojavi",
+      "placeholder": "Opišite što želite…",
+      "send": "Pošalji",
+      "hint": "Enter za slanje · Ctrl+K za skok ovamo",
+      "clear": "Očisti razgovor",
+      "working": "Radim na tome…",
+      "done": "Gotovo.",
+      "nothingToDo": "Nisam pronašao ništa za promijeniti. Pokušajte opisati izmjenu koju želite.",
+      "noStock": "Nema besplatnog materijala za „{{query}}”.",
+      "rateLimited": "Poslali ste puno zahtjeva. Pokušajte ponovno za nekoliko minuta.",
+      "failed": "AI to trenutačno ne može učiniti. Pokušajte ponovno malo kasnije.",
+      "changes": "Napravljene izmjene: {{count}}",
+      "undo": "Poništi",
+      "openGenerator": "Pregledaj i generiraj"
     }
   }
 }

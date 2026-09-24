@@ -3602,6 +3602,40 @@
       "sendToBack": "Ziga n'azụ kpam kpam",
       "duplicate": "Mepụta oyiri",
       "delete": "Hichaa"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Imewe",
+      "assets": "Akụrụngwa",
+      "media": "Mgbasa ozi",
+      "text": "Ederede",
+      "generate": "Mepụta",
+      "generations": "Ihe emepụtara",
+      "edit": "Dezie",
+      "collapse": "Mechie pane",
+      "home": "Ụlọ"
+    },
+    "agent": {
+      "introTitle": "Gwa AI ihe ị chọrọ",
+      "introBody": "Kọwaa imewe ma ọ bụ mgbanwe ahụ n'okwu gị. Ọ na-agbanwe nha peeji, dee ma chọọ ederede mma, chọta foto, vidiyo na egwu n'efu, tinye nzacha, hazie ọkwa ma mee ka ha na-emegharị. Arịrịọ ọ bụla bụ otu nkagharị.",
+      "suggestPoster": "Mee post Instagram nwere akụkụ anọ maka ire ahịa oge okpomọkụ nwere foto ụsọ osimiri na aha buru ibu",
+      "suggestTitle": "Tinye aha buru ibu n'elu na obere aha n'okpuru ya",
+      "suggestFilter": "Mee ka foto ahụ kpoo ọkụ ma dọkwuo ntakịrị",
+      "suggestStory": "Gbanwee nke a ka ọ bụrụ akụkọ 9:16 ma jupụta peeji ahụ na foto ahụ",
+      "suggestBackground": "Tinye egwu ndabere dị jụụ ma mee ka ederede pụta nwayọọ",
+      "placeholder": "Kọwaa ihe ị chọrọ…",
+      "send": "Zipu",
+      "hint": "Enter iji zipu · Ctrl+K iji bịa ebe a",
+      "clear": "Hichapụ nkata",
+      "working": "Ọ na-arụ ọrụ…",
+      "done": "Emechaala.",
+      "nothingToDo": "Ahụghị m ihe m ga-agbanwe maka nke ahụ. Gbalịa kọwaa mgbanwe ị chọrọ.",
+      "noStock": "Enweghị ihe n'efu dabara na “{{query}}”.",
+      "rateLimited": "I zitela ọtụtụ arịrịọ. Nwaa ọzọ n'ime nkeji ole na ole.",
+      "failed": "AI enweghị ike ime nke ahụ ugbu a. Nwaa ọzọ n'oge na-adịghị anya.",
+      "changes": "Mgbanwe emere: {{count}}",
+      "undo": "Kagharịa",
+      "openGenerator": "Lelee ma mepụta"
     }
   }
 }

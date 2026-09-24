@@ -5957,6 +5957,40 @@
       "sendToBack": "맨 뒤로 보내기",
       "duplicate": "복제",
       "delete": "삭제"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "디자인",
+      "assets": "요소",
+      "media": "미디어",
+      "text": "텍스트",
+      "generate": "생성",
+      "generations": "생성 결과",
+      "edit": "편집",
+      "collapse": "패널 접기",
+      "home": "홈"
+    },
+    "agent": {
+      "introTitle": "AI에게 원하는 것을 말해 보세요",
+      "introBody": "디자인이나 변경 사항을 편하게 설명하세요. 페이지 크기 조정, 텍스트 작성과 스타일 지정, 무료 사진·동영상·음악 찾기, 필터 적용, 레이어 정리와 애니메이션까지 해 줍니다. 요청마다 실행 취소 한 번으로 되돌릴 수 있습니다.",
+      "suggestPoster": "해변 사진과 굵은 제목으로 여름 세일용 정사각형 인스타그램 게시물 만들어 줘",
+      "suggestTitle": "상단에 크고 굵은 제목을 넣고 그 아래에 작은 부제목을 추가해 줘",
+      "suggestFilter": "사진을 더 따뜻하고 조금 더 밝게 해 줘",
+      "suggestStory": "이걸 9:16 스토리로 바꾸고 사진으로 페이지를 꽉 채워 줘",
+      "suggestBackground": "잔잔한 배경 음악을 넣고 텍스트가 서서히 나타나게 해 줘",
+      "placeholder": "원하는 것을 설명하세요…",
+      "send": "보내기",
+      "hint": "Enter로 보내기 · Ctrl+K로 여기로 이동",
+      "clear": "대화 지우기",
+      "working": "작업 중…",
+      "done": "완료했습니다.",
+      "nothingToDo": "변경할 부분을 찾지 못했습니다. 원하는 편집을 설명해 보세요.",
+      "noStock": "'{{query}}'와 일치하는 무료 소재가 없습니다.",
+      "rateLimited": "요청을 너무 많이 보냈습니다. 몇 분 후에 다시 시도하세요.",
+      "failed": "지금은 AI가 이 작업을 할 수 없습니다. 잠시 후 다시 시도하세요.",
+      "changes": "적용된 편집: {{count}}",
+      "undo": "실행 취소",
+      "openGenerator": "검토 후 생성"
     }
   }
 }

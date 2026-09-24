@@ -5969,6 +5969,40 @@
       "sendToBack": "En arkaya gönder",
       "duplicate": "Çoğalt",
       "delete": "Sil"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Tasarım",
+      "assets": "Öğeler",
+      "media": "Medya",
+      "text": "Metin",
+      "generate": "Oluştur",
+      "generations": "Oluşturulanlar",
+      "edit": "Düzenle",
+      "collapse": "Paneli daralt",
+      "home": "Ana sayfa"
+    },
+    "agent": {
+      "introTitle": "AI'ya ne istediğini söyle",
+      "introBody": "Tasarımı veya değişikliği kendi sözlerinle anlat. Sayfayı yeniden boyutlandırır, metin yazıp biçimlendirir, ücretsiz fotoğraf, video ve müzik bulur, filtre uygular, katmanları düzenler ve canlandırır. Her istek tek bir geri alma ile geri alınır.",
+      "suggestPoster": "Plaj fotoğrafı ve dikkat çekici bir başlıkla yaz indirimi için kare bir Instagram gönderisi yap",
+      "suggestTitle": "Üste büyük kalın bir başlık, altına da daha küçük bir alt başlık ekle",
+      "suggestFilter": "Fotoğrafı daha sıcak ve biraz daha parlak yap",
+      "suggestStory": "Bunu 9:16 bir hikâyeye çevir ve sayfayı fotoğrafla doldur",
+      "suggestBackground": "Sakin bir arka plan müziği ekle ve metni yavaşça belirginleştir",
+      "placeholder": "Ne istediğini anlat…",
+      "send": "Gönder",
+      "hint": "Göndermek için Enter · Buraya gelmek için Ctrl+K",
+      "clear": "Sohbeti temizle",
+      "working": "Üzerinde çalışıyorum…",
+      "done": "Tamam.",
+      "nothingToDo": "Bunun için değiştirilecek bir şey bulamadım. İstediğin düzenlemeyi anlatmayı dene.",
+      "noStock": "“{{query}}” ile eşleşen ücretsiz içerik yok.",
+      "rateLimited": "Çok fazla istek gönderdin. Birkaç dakika sonra tekrar dene.",
+      "failed": "AI bunu şu anda yapamadı. Biraz sonra tekrar dene.",
+      "changes": "Yapılan düzenlemeler: {{count}}",
+      "undo": "Geri al",
+      "openGenerator": "İncele ve oluştur"
     }
   }
 }

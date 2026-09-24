@@ -3781,6 +3781,40 @@
       "sendToBack": "Presunúť do pozadia",
       "duplicate": "Duplikovať",
       "delete": "Odstrániť"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Dizajn",
+      "assets": "Zdroje",
+      "media": "Médiá",
+      "text": "Text",
+      "generate": "Generovať",
+      "generations": "Vygenerované",
+      "edit": "Upraviť",
+      "collapse": "Zbaliť panel",
+      "home": "Domov"
+    },
+    "agent": {
+      "introTitle": "Povedzte AI, čo chcete",
+      "introBody": "Opíšte dizajn alebo zmenu vlastnými slovami. Mení veľkosť stránky, píše a štýluje text, hľadá bezplatné fotky, videá a hudbu, používa filtre, usporadúva vrstvy a animuje ich. Každú požiadavku vrátite jedným Späť.",
+      "suggestPoster": "Vytvor štvorcový príspevok na Instagram pre letný výpredaj s fotkou pláže a výrazným nadpisom",
+      "suggestTitle": "Pridaj hore veľký tučný nadpis a pod neho menší podnadpis",
+      "suggestFilter": "Urob fotku teplejšiu a trochu jasnejšiu",
+      "suggestStory": "Zmeň to na 9:16 story a vyplň stránku fotkou",
+      "suggestBackground": "Pridaj pokojnú hudbu v pozadí a nechaj text postupne objaviť",
+      "placeholder": "Opíšte, čo chcete…",
+      "send": "Odoslať",
+      "hint": "Enter na odoslanie · Ctrl+K na presun sem",
+      "clear": "Vymazať chat",
+      "working": "Pracujem na tom…",
+      "done": "Hotovo.",
+      "nothingToDo": "Nenašiel som nič, čo by sa pre to dalo zmeniť. Skúste opísať úpravu, ktorú chcete.",
+      "noStock": "Žiadny bezplatný obsah nezodpovedá „{{query}}“.",
+      "rateLimited": "Poslali ste veľa požiadaviek. Skúste to znova o pár minút.",
+      "failed": "AI to teraz nedokázala urobiť. Skúste to znova o chvíľu.",
+      "changes": "Vykonané úpravy: {{count}}",
+      "undo": "Späť",
+      "openGenerator": "Skontrolovať a generovať"
     }
   },
   "post": {

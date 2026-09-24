@@ -8,6 +8,7 @@
  * from `md` up and open as a bottom sheet below that.
  */
 import { Suspense, lazy } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEditorUiStore, type EditorPanel } from '@/store/editorUiStore';
@@ -21,6 +22,7 @@ import { DesignPanel } from './panels/DesignPanel';
 import { TextPanel } from './panels/TextPanel';
 import { GeneratePanel } from './panels/GeneratePanel';
 import { LibraryPanel } from './panels/LibraryPanel';
+import { AgentPanel } from './panels/AgentPanel';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 // The media panel pulls in IndexedDB and cloud-asset plumbing; keep it out of
@@ -34,6 +36,8 @@ const FreeAssetsPanel = lazy(() =>
 
 export function PanelBody({ panel }: { panel: EditorPanel }) {
   switch (panel) {
+    case 'agent':
+      return <AgentPanel />;
     case 'design':
       return <DesignPanel />;
     case 'assets':
@@ -63,6 +67,7 @@ export function PanelBody({ panel }: { panel: EditorPanel }) {
 
 /** Vertical icon rail. Docked from `md` up; the mobile bar handles smaller. */
 export function EditorRail() {
+  const { t } = useTranslation();
   const panel = useEditorUiStore((s) => s.panel);
   const togglePanel = useEditorUiStore((s) => s.togglePanel);
   const hasSelection = useEditorStore((s) => s.selectedClipIds.length > 0);
@@ -80,7 +85,7 @@ export function EditorRail() {
         type="button"
         onClick={() => togglePanel(tab.id)}
         aria-pressed={active}
-        aria-label={tab.label}
+        aria-label={t(tab.labelKey)}
         className={cn(
           'relative mx-1.5 flex flex-col items-center gap-1 rounded-xl px-1 py-2.5 transition',
           active ? 'bg-white/[0.14] text-white' : 'text-white/55 hover:bg-white/10 hover:text-white',
@@ -88,7 +93,7 @@ export function EditorRail() {
         )}
       >
         <Icon className="h-[18px] w-[18px]" />
-        <span className="text-[9.5px] font-medium leading-none">{tab.label}</span>
+        <span className="text-[9.5px] font-medium leading-none">{t(tab.labelKey)}</span>
         {badge !== null && (
           <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white px-1 text-[9px] font-bold tabular-nums text-black">
             {badge}
@@ -113,6 +118,7 @@ export function EditorRail() {
 
 /** Docked panel column beside the rail. */
 export function EditorPanelColumn() {
+  const { t } = useTranslation();
   const panel = useEditorUiStore((s) => s.panel);
   const setPanel = useEditorUiStore((s) => s.setPanel);
   const isMobile = useIsMobile();
@@ -128,16 +134,16 @@ export function EditorPanelColumn() {
   // rendering it here too would put two Inspectors side by side, each editing
   // the same clip. The rail tab that sets this is itself lg:hidden.
   if (panel === 'inspector' && isWide) return null;
-  const tab = [...RAIL_TABS, INSPECTOR_TAB].find((t) => t.id === panel);
+  const tab = [...RAIL_TABS, INSPECTOR_TAB].find((x) => x.id === panel);
 
   return (
     <aside className="hidden h-full w-72 shrink-0 flex-col border-r border-white/10 bg-black/60 backdrop-blur-[24px] md:flex lg:w-80">
       <div className="flex h-10 shrink-0 items-center justify-between border-b border-white/10 px-3">
-        <h2 className="text-[12px] font-semibold text-white/85">{tab?.label}</h2>
+        <h2 className="text-[12px] font-semibold text-white/85">{tab ? t(tab.labelKey) : null}</h2>
         <button
           type="button"
           onClick={() => setPanel(null)}
-          aria-label="Collapse panel"
+          aria-label={t('editor.rail.collapse')}
           className="rounded-md p-1 text-white/45 transition hover:bg-white/10 hover:text-white"
         >
           <ChevronLeft className="h-4 w-4" />

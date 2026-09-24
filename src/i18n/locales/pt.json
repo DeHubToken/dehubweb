@@ -5970,6 +5970,40 @@
       "sendToBack": "Enviar para o fundo",
       "duplicate": "Duplicar",
       "delete": "Eliminar"
+    },
+    "rail": {
+      "agent": "IA",
+      "design": "Design",
+      "assets": "Elementos",
+      "media": "Mídia",
+      "text": "Texto",
+      "generate": "Gerar",
+      "generations": "Gerações",
+      "edit": "Editar",
+      "collapse": "Recolher painel",
+      "home": "Início"
+    },
+    "agent": {
+      "introTitle": "Diga à IA o que você quer",
+      "introBody": "Descreva o design ou a alteração com suas palavras. Ela redimensiona a página, escreve e estiliza textos, encontra fotos, vídeos e músicas gratuitos, aplica filtros, organiza camadas e as anima. Cada pedido é desfeito de uma só vez.",
+      "suggestPoster": "Crie um post quadrado para o Instagram de uma liquidação de verão com uma foto de praia e um título em destaque",
+      "suggestTitle": "Adicione um título grande em negrito no topo e um subtítulo menor abaixo dele",
+      "suggestFilter": "Deixe a foto mais quente e um pouco mais clara",
+      "suggestStory": "Transforme isto em um story 9:16 e preencha a página com a foto",
+      "suggestBackground": "Adicione uma música de fundo tranquila e faça o texto aparecer aos poucos",
+      "placeholder": "Descreva o que você quer…",
+      "send": "Enviar",
+      "hint": "Enter para enviar · Ctrl+K para vir aqui",
+      "clear": "Limpar conversa",
+      "working": "Trabalhando nisso…",
+      "done": "Pronto.",
+      "nothingToDo": "Não encontrei nada para alterar. Tente descrever a edição que você quer.",
+      "noStock": "Nenhum conteúdo gratuito corresponde a “{{query}}”.",
+      "rateLimited": "Você enviou muitos pedidos. Tente de novo em alguns minutos.",
+      "failed": "A IA não conseguiu fazer isso agora. Tente de novo daqui a pouco.",
+      "changes": "Edições feitas: {{count}}",
+      "undo": "Desfazer",
+      "openGenerator": "Revisar e gerar"
     }
   }
 }

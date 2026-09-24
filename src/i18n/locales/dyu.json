@@ -3503,6 +3503,40 @@
       "sendToBack": "A bila kɔfɛ pewu",
       "duplicate": "A ɲɔgɔn dilan",
       "delete": "A jɔsi"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Desɛn",
+      "assets": "Minɛnw",
+      "media": "Mediya",
+      "text": "Sɛbɛn",
+      "generate": "Dilan",
+      "generations": "Dilanninw",
+      "edit": "Labɛn",
+      "collapse": "Panɛli dogo",
+      "home": "Kɛnɛ"
+    },
+    "agent": {
+      "introTitle": "I b'a fɛ min, o fɔ AI ye",
+      "introBody": "Desɛn walima yɛlɛma min b'i fɛ, o ɲɛfɔ i yɛrɛ ka kumaw la. A bɛ se ka ɲɛ hakɛ yɛlɛma, ka sɛbɛn sɛbɛn ani k'a cɛɲa, ka foto, videyo ani donkili fu sɔrɔ, ka filitiri kɛ, ka layɛrew labɛn ani k'u lamaga. Ɲininkali kelen o kelen bɛ se ka segin kɔ siɲɛ kelen.",
+      "suggestPoster": "Instagram post kare dɔ dilan sumaya feerewaati kama, ni kɔgɔjida foto ye ani kuncɛ barikama",
+      "suggestTitle": "Kuncɛ belebele barikama dɔ fara sanfɛ, ani kuncɛ dɔgɔman dɔ a jukɔrɔ",
+      "suggestFilter": "Foto kɛ a ka funteni dɔɔnin ani a ka yeelen dɔɔnin",
+      "suggestStory": "Nin kɛ 9:16 story ye ani ka ɲɛ fa ni foto ye",
+      "suggestBackground": "Donkili sumalen dɔ fara kɔfɛ ani ka sɛbɛn jira dɔɔni dɔɔni",
+      "placeholder": "Min b'i fɛ, o ɲɛfɔ…",
+      "send": "A ci",
+      "hint": "Enter ka a ci · Ctrl+K ka na yan",
+      "clear": "Baro jɔsi",
+      "working": "N bɛ baara la a kan…",
+      "done": "A banna.",
+      "nothingToDo": "N ma foyi sɔrɔ ka yɛlɛma o la. Labɛnni min b'i fɛ, o ɲɛfɔ.",
+      "noStock": "Minɛn fu si ma bɛn “{{query}}” ma.",
+      "rateLimited": "I ye ɲininkali caman ci. Segin a kan miniti damadɔ kɔfɛ.",
+      "failed": "AI ma se k'o kɛ sisan. Segin a kan dɔɔnin kɔfɛ.",
+      "changes": "Yɛlɛma minnu kɛra: {{count}}",
+      "undo": "Segin kɔ",
+      "openGenerator": "A lajɛ ka dilan"
     }
   }
 }

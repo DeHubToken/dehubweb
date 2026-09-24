@@ -3656,6 +3656,40 @@
       "sendToBack": "Eng orqaga o'tkazish",
       "duplicate": "Nusxalash",
       "delete": "Oʻchirish"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Dizayn",
+      "assets": "Resurslar",
+      "media": "Media",
+      "text": "Matn",
+      "generate": "Yaratish",
+      "generations": "Yaratilganlar",
+      "edit": "Tahrirlash",
+      "collapse": "Panelni yig'ish",
+      "home": "Bosh sahifa"
+    },
+    "agent": {
+      "introTitle": "AI'ga nima xohlayotganingizni ayting",
+      "introBody": "Dizayn yoki o'zgarishni o'z so'zlaringiz bilan tasvirlang. U sahifa o'lchamini o'zgartiradi, matn yozadi va bezaydi, bepul foto, video va musiqa topadi, filtrlar qo'llaydi, qatlamlarni tartiblaydi va ularni animatsiya qiladi. Har bir so'rov bir qadamda bekor qilinadi.",
+      "suggestPoster": "Yozgi chegirma uchun plyaj surati va qalin sarlavhali kvadrat Instagram post tayyorla",
+      "suggestTitle": "Tepaga katta qalin sarlavha va uning ostiga kichikroq kichik sarlavha qo'sh",
+      "suggestFilter": "Suratni iliqroq va biroz yorqinroq qil",
+      "suggestStory": "Buni 9:16 hikoyaga aylantir va sahifani surat bilan to'ldir",
+      "suggestBackground": "Sokin fon musiqasi qo'sh va matnni asta-sekin paydo qil",
+      "placeholder": "Nima xohlayotganingizni tasvirlang…",
+      "send": "Yuborish",
+      "hint": "Yuborish uchun Enter · Bu yerga o'tish uchun Ctrl+K",
+      "clear": "Chatni tozalash",
+      "working": "Ustida ishlayapman…",
+      "done": "Tayyor.",
+      "nothingToDo": "Buning uchun o'zgartiradigan hech narsa topmadim. Kerakli tahrirni tasvirlab ko'ring.",
+      "noStock": "“{{query}}” ga mos bepul material topilmadi.",
+      "rateLimited": "Siz juda ko'p so'rov yubordingiz. Bir necha daqiqadan so'ng qayta urinib ko'ring.",
+      "failed": "AI hozir buni bajara olmadi. Birozdan so'ng qayta urinib ko'ring.",
+      "changes": "Kiritilgan o'zgarishlar: {{count}}",
+      "undo": "Bekor qilish",
+      "openGenerator": "Ko'rib chiqish va yaratish"
     }
   },
   "spaces": {

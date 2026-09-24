@@ -58,6 +58,8 @@ export function GeneratePanel() {
   const startImage = useGenerationStore((s) => s.startImage);
   const startVideo = useGenerationStore((s) => s.startVideo);
   const setPanel = useEditorUiStore((s) => s.setPanel);
+  const generatePrefill = useEditorUiStore((s) => s.generatePrefill);
+  const setGeneratePrefill = useEditorUiStore((s) => s.setGeneratePrefill);
 
   const [kind, setKind] = useState<GenKind>('image');
   const [prompt, setPrompt] = useState('');
@@ -79,6 +81,19 @@ export function GeneratePanel() {
     [activeVideoModel],
   );
   const aspect = kind === 'video' ? videoAspect : imageAspect;
+
+  // The AI agent prepares a generation and hands it over here; the user still
+  // presses Generate, since this spends DHB.
+  useEffect(() => {
+    if (!generatePrefill) return;
+    setKind(generatePrefill.kind);
+    setPrompt(generatePrefill.prompt);
+    if (generatePrefill.aspect) {
+      if (generatePrefill.kind === 'video') setVideoAspect(generatePrefill.aspect);
+      else setImageAspect(generatePrefill.aspect);
+    }
+    setGeneratePrefill(null);
+  }, [generatePrefill, setGeneratePrefill]);
 
   // Keep the video ratio legal when the model changes.
   useEffect(() => {

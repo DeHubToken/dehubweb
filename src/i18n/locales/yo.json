@@ -3631,6 +3631,40 @@
       "sendToBack": "Gbé sí ẹ̀yìn pátápátá",
       "duplicate": "Ṣe ẹ̀dà",
       "delete": "Paarẹ"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Àpẹrẹ",
+      "assets": "Àwọn ohun-ìní",
+      "media": "Mídíà",
+      "text": "Ọ̀rọ̀",
+      "generate": "Ṣẹ̀dá",
+      "generations": "Àwọn ìṣẹ̀dá",
+      "edit": "Ṣàtúnṣe",
+      "collapse": "Ká pánẹ́ẹ̀lì",
+      "home": "Ilé"
+    },
+    "agent": {
+      "introTitle": "Sọ ohun tí o fẹ́ fún AI",
+      "introBody": "Ṣàpèjúwe àpẹrẹ tàbí àyípadà náà ní ọ̀rọ̀ ara rẹ. Ó ń yí ìwọ̀n ojú-ìwé padà, ó ń kọ ọ̀rọ̀ ó sì ń ṣe é lọ́ṣọ̀ọ́, ó ń wá fọ́tò, fídíò àti orin ọ̀fẹ́, ó ń lo àlẹ̀mọ́, ó ń to àwọn ìpele ó sì ń mú wọn rìn. Ìbéèrè kọ̀ọ̀kan ni a lè dá padà pẹ̀lú ìdápadà kan.",
+      "suggestPoster": "Ṣe ìfiránṣẹ́ Instagram onígun mẹ́rin fún ọjà ẹ̀dínwó ìgbà ooru pẹ̀lú fọ́tò etíkun àti àkọlé tó nípọn",
+      "suggestTitle": "Fi àkọlé ńlá tó nípọn sí òkè àti àkọlé kékeré sí ìsàlẹ̀ rẹ̀",
+      "suggestFilter": "Jẹ́ kí fọ́tò náà gbóná sí i kí ó sì mọ́lẹ̀ díẹ̀",
+      "suggestStory": "Sọ èyí di story 9:16 kí o sì fi fọ́tò kún ojú-ìwé náà",
+      "suggestBackground": "Fi orin ìsàlẹ̀ tó parọ́rọ́ kún un kí o sì jẹ́ kí ọ̀rọ̀ náà fara hàn díẹ̀díẹ̀",
+      "placeholder": "Ṣàpèjúwe ohun tí o fẹ́…",
+      "send": "Fi ránṣẹ́",
+      "hint": "Enter láti fi ránṣẹ́ · Ctrl+K láti wá síbí",
+      "clear": "Pa ìjíròrò rẹ́",
+      "working": "Ó ń ṣiṣẹ́ lórí rẹ̀…",
+      "done": "Ó ti parí.",
+      "nothingToDo": "Mi ò rí nǹkan kan láti yí padà fún ìyẹn. Gbìyànjú láti ṣàpèjúwe àtúnṣe tí o fẹ́.",
+      "noStock": "Kò sí ohun ọ̀fẹ́ tó bá “{{query}}” mu.",
+      "rateLimited": "O ti fi ìbéèrè púpọ̀ ránṣẹ́. Gbìyànjú lẹ́ẹ̀kan sí i lẹ́yìn ìṣẹ́jú díẹ̀.",
+      "failed": "AI kò lè ṣe ìyẹn báyìí. Gbìyànjú lẹ́ẹ̀kan sí i láìpẹ́.",
+      "changes": "Àwọn àtúnṣe tí a ṣe: {{count}}",
+      "undo": "Dá padà",
+      "openGenerator": "Ṣàyẹ̀wò kí o sì ṣẹ̀dá"
     }
   }
 }

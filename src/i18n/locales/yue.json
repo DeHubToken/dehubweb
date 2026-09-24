@@ -3640,6 +3640,40 @@
       "sendToBack": "移至最後",
       "duplicate": "複製",
       "delete": "刪除"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "設計",
+      "assets": "素材",
+      "media": "媒體",
+      "text": "文字",
+      "generate": "生成",
+      "generations": "生成內容",
+      "edit": "編輯",
+      "collapse": "收起面板",
+      "home": "主頁"
+    },
+    "agent": {
+      "introTitle": "話畀 AI 知您想要乜",
+      "introBody": "用自己嘅說話描述設計或者改動。佢可以調整頁面大小、撰寫同設計文字、搵免費相片、影片同音樂、套用濾鏡、排列圖層同加動畫。每個要求都可以一次復原。",
+      "suggestPoster": "整一個正方形嘅 Instagram 帖，宣傳夏日減價，用沙灘相同粗體標題",
+      "suggestTitle": "喺頂部加個大粗體標題，下面加個細啲嘅副標題",
+      "suggestFilter": "將張相調暖啲、光少少",
+      "suggestStory": "將佢變成 9:16 限時動態，用張相填滿成頁",
+      "suggestBackground": "加啲輕鬆嘅背景音樂，再令文字淡入",
+      "placeholder": "描述您想要乜…",
+      "send": "傳送",
+      "hint": "Enter 傳送 · Ctrl+K 跳到呢度",
+      "clear": "清除對話",
+      "working": "處理緊…",
+      "done": "完成。",
+      "nothingToDo": "搵唔到有乜可以改。試下描述您想要嘅編輯。",
+      "noStock": "冇免費素材符合「{{query}}」。",
+      "rateLimited": "您傳送咗好多要求。請過幾分鐘再試。",
+      "failed": "AI 暫時做唔到。請稍後再試。",
+      "changes": "已作出編輯：{{count}}",
+      "undo": "復原",
+      "openGenerator": "檢查並生成"
     }
   }
 }

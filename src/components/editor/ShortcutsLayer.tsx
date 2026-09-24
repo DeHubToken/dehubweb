@@ -23,6 +23,14 @@ export function ShortcutsLayer() {
       const fps = s.settings.fps || 30;
       const dur = selectTimelineDuration(s);
 
+      // Ask the AI agent
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        useEditorUiStore.getState().setPanel("agent");
+        window.dispatchEvent(new Event("editor:focus-agent"));
+        return;
+      }
+
       // Undo / redo
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") {
         e.preventDefault();

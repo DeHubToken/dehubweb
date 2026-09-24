@@ -107,6 +107,11 @@ interface EditorState extends EditableState {
    * the in-between states without touching history, so one drag is one undo.
    */
   beginGesture: () => void;
+  /**
+   * Run several store edits as one undo step. Used by the AI agent, whose one
+   * request can touch a dozen layers; undo should take the whole request back.
+   */
+  runAsOneStep: (fn: () => void | Promise<void>) => Promise<void>;
   patchClipLive: (id: string, patch: Partial<MediaClip> | Partial<TextClip>) => void;
   /** Patch any clip through history, whatever its kind. */
   patchClip: (id: string, patch: Partial<MediaClip> | Partial<TextClip>) => void;
@@ -707,6 +712,20 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   beginGesture: () => {
     const s = get();
     set({ past: [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY), future: [] });
+  },
+
+  runAsOneStep: async (fn) => {
+    const before = get();
+    const pastLen = before.past.length;
+    const snapshot = snapshotEditable(before);
+    try {
+      await fn();
+    } finally {
+      const after = get();
+      if (after.past.length !== pastLen || after.clips !== before.clips || after.tracks !== before.tracks || after.settings !== before.settings) {
+        set({ past: [...before.past, snapshot].slice(-MAX_HISTORY), future: [] });
+      }
+    }
   },
 
   patchClipLive: (id, patch) =>

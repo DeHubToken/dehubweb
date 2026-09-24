@@ -93,6 +93,11 @@ project_id = "aigxuutjaqsywioxjefr"
   # Unauthenticated by design (the canvas works signed-out); IP-limited.
   [functions.creator-prompt-assistant]
     verify_jwt = false
+
+  # Editor AI agent. Unauthenticated like the prompt assistant (editing works
+  # signed out, nothing here spends DHB); IP-limited.
+  [functions.editor-agent]
+    verify_jwt = false
   [functions.dehub-mcp]
     verify_jwt = false
   [functions.dhb-buy-bot]

@@ -1,0 +1,436 @@
+/**
+ * Editor agent — client half.
+ * ===========================
+ * `describeScene` turns the design into a compact text summary, the
+ * editor-agent edge function asks a cheap model for a list of operations, and
+ * `applyOps` carries them out here in the browser through the normal store
+ * actions. The server never renders, downloads or stores anything, which is
+ * what keeps a request at a fraction of a cent.
+ *
+ * One request is one undo step (runAsOneStep), however many layers it touched.
+ */
+import { useEditorStore } from "@/store/editorStore";
+import { useEditorUiStore } from "@/store/editorUiStore";
+import type { AspectPreset, Clip, ClipAnimationKind, ClipEffects, MediaClip, TextClip } from "./types";
+import { aspectToDims } from "./types";
+import { getTransform, placementPatch } from "./render";
+import { applyFilterPreset } from "./filterPresets";
+import { GOOGLE_FONTS, fontFamilyCss, loadGoogleFont } from "./googleFonts";
+import { downloadFreeAsset, provenanceForAsset, searchFreeAssets, type FreeAssetOrientation } from "./freeAssets";
+import { importOneFile } from "./importFiles";
+
+const FN_URL = `${import.meta.env.VITE_SUPABASE_URL || "https://aigxuutjaqsywioxjefr.supabase.co"}/functions/v1/editor-agent`;
+const ANON_KEY =
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpZ3h1dXRqYXFzeXdpb3hqZWZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2MzY0MzIsImV4cCI6MjA4MzIxMjQzMn0.hjMx0kShuJlaZ26UoG7RFGu3OC_aLR0C1Sf1qdk3x0I";
+
+export interface AgentMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+/** One operation, as the model returns it. Every field but `op` is optional. */
+export interface AgentOp {
+  op: string;
+  [field: string]: unknown;
+}
+
+export interface AgentResult {
+  reply: string;
+  ops: AgentOp[];
+}
+
+const round = (n: number, d = 3) => Math.round(n * 10 ** d) / 10 ** d;
+
+/** Compact, model-friendly description of the design. Kept small on purpose: it is most of the input tokens. */
+export function describeScene() {
+  const s = useEditorStore.getState();
+  const trackOrder = new Map(s.tracks.map((t, i) => [t.id, i]));
+  const hidden = new Set(s.tracks.filter((t) => t.hidden).map((t) => t.id));
+  const layers = s.clips
+    .slice()
+    .sort((a, b) => (trackOrder.get(a.trackId) ?? 0) - (trackOrder.get(b.trackId) ?? 0))
+    .map((c) => describeClip(c, s.media, hidden.has(c.trackId)));
+  const duration = s.clips.reduce((m, c) => Math.max(m, c.start + c.duration), 0);
+  return {
+    page: {
+      width: s.settings.width,
+      height: s.settings.height,
+      aspect: s.settings.aspectPreset,
+      background: s.settings.background,
+      duration: round(duration, 2),
+    },
+    playhead: round(s.currentTime, 2),
+    selected: s.selectedClipIds,
+    layers,
+    library: s.media.slice(0, 30).map((m) => ({ id: m.id, kind: m.kind, name: m.name })),
+  };
+}
+
+function describeClip(c: Clip, media: { id: string; name: string }[], hidden: boolean) {
+  const tr = getTransform(c);
+  const base: Record<string, unknown> = {
+    id: c.id,
+    kind: c.kind,
+    start: round(c.start, 2),
+    duration: round(c.duration, 2),
+  };
+  if (hidden) base.hidden = true;
+  if (c.kind !== "audio") {
+    base.x = round(tr.x);
+    base.y = round(tr.y);
+    if (tr.rotation) base.rotation = round(tr.rotation, 1);
+    if ((tr.opacity ?? 1) !== 1) base.opacity = round(tr.opacity ?? 1, 2);
+  }
+  if (c.animateIn) base.in = c.animateIn.kind;
+  if (c.animateOut) base.out = c.animateOut.kind;
+  if (c.kind === "text") {
+    return {
+      ...base,
+      text: c.text.slice(0, 200),
+      font: c.fontFamily.split(",")[0].replace(/'/g, ""),
+      fontSize: c.fontSize,
+      fontWeight: c.fontWeight,
+      color: c.color,
+      align: c.align,
+    };
+  }
+  const m = c as MediaClip;
+  const out: Record<string, unknown> = { ...base, name: media.find((x) => x.id === m.mediaId)?.name };
+  if (c.kind !== "audio") {
+    out.scale = round(tr.scale, 2);
+    if (m.fit === "cover") out.fit = "cover";
+    if (m.effects) out.effects = m.effects;
+    if (m.crop) out.crop = m.crop;
+  }
+  if (m.speed && m.speed !== 1) out.speed = m.speed;
+  if (m.audio?.volume !== undefined) out.volume = m.audio.volume;
+  return out;
+}
+
+/** Ask the agent. Throws with a user-safe code on failure ("rate_limited" | "unavailable"). */
+export async function askAgent(messages: AgentMessage[], signal?: AbortSignal): Promise<AgentResult> {
+  const res = await fetch(FN_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: ANON_KEY,
+      Authorization: `Bearer ${ANON_KEY}`,
+    },
+    body: JSON.stringify({ messages, scene: describeScene() }),
+    signal,
+  });
+  const data = await res.json().catch(() => null);
+  if (!res.ok || !data) throw new Error(data?.error === "rate_limited" || res.status === 429 ? "rate_limited" : "unavailable");
+  return { reply: String(data.reply ?? ""), ops: Array.isArray(data.ops) ? data.ops : [] };
+}
+
+// ── Applying operations ──
+
+const num = (v: unknown): number | undefined => (typeof v === "number" && Number.isFinite(v) ? v : undefined);
+const str = (v: unknown): string | undefined => (typeof v === "string" && v.trim() ? v : undefined);
+const bool = (v: unknown): boolean | undefined => (typeof v === "boolean" ? v : undefined);
+const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
+const HEX = /^#[0-9a-f]{3,8}$/i;
+const colour = (v: unknown) => (typeof v === "string" && HEX.test(v.trim()) ? v.trim() : undefined);
+
+const ANIMATIONS: ClipAnimationKind[] = [
+  "fade", "slide-up", "slide-down", "slide-left", "slide-right", "zoom-in", "zoom-out", "pop", "rise", "blur",
+];
+
+function fontCss(name: string): string {
+  const f = GOOGLE_FONTS.find((g) => g.family.toLowerCase() === name.toLowerCase());
+  if (f) {
+    loadGoogleFont(f.family, f.weights);
+    return fontFamilyCss(f.family, f.category);
+  }
+  // Not in our list: try it anyway, Google serves most families by name.
+  loadGoogleFont(name, [400, 700, 900]);
+  return fontFamilyCss(name);
+}
+
+function textPatch(op: AgentOp): Partial<TextClip> {
+  const p: Partial<TextClip> = {};
+  const text = typeof op.text === "string" ? op.text : undefined;
+  if (text !== undefined) p.text = text.slice(0, 2000);
+  const fontSize = num(op.fontSize);
+  if (fontSize !== undefined) p.fontSize = clamp(Math.round(fontSize), 6, 800);
+  const fontWeight = num(op.fontWeight);
+  if (fontWeight !== undefined) p.fontWeight = clamp(Math.round(fontWeight / 100) * 100, 100, 900);
+  const c = colour(op.color);
+  if (c) p.color = c;
+  const family = str(op.fontFamily);
+  if (family) p.fontFamily = fontCss(family);
+  if (op.align === "left" || op.align === "centre" || op.align === "right") p.align = op.align;
+  const italic = bool(op.italic);
+  if (italic !== undefined) p.italic = italic;
+  const uppercase = bool(op.uppercase);
+  if (uppercase !== undefined) p.uppercase = uppercase;
+  const underline = bool(op.underline);
+  if (underline !== undefined) p.underline = underline;
+  const ls = num(op.letterSpacing);
+  if (ls !== undefined) p.letterSpacing = clamp(ls, -20, 200);
+  const lh = num(op.lineHeight);
+  if (lh !== undefined) p.lineHeight = clamp(lh, 0.6, 4);
+  const bg = colour(op.bgColor);
+  if (bg) p.background = { color: bg, opacity: clamp(num(op.bgOpacity) ?? 0.6, 0, 1), padding: 24, radius: 16 };
+  const stroke = colour(op.strokeColor);
+  if (stroke) p.stroke = { color: stroke, width: clamp(num(op.strokeWidth) ?? 4, 0, 40) };
+  return p;
+}
+
+function effectsPatch(op: AgentOp, current: ClipEffects | undefined): ClipEffects | undefined {
+  let next: ClipEffects | undefined = current ? { ...current } : undefined;
+  const preset = str(op.preset);
+  if (preset) next = preset === "none" ? undefined : applyFilterPreset(preset) ?? next;
+  const fields: [keyof ClipEffects, number, number][] = [
+    ["brightness", 0, 2], ["contrast", 0, 2], ["saturation", 0, 2], ["blur", 0, 20],
+    ["grayscale", 0, 1], ["sepia", 0, 1], ["invert", 0, 1], ["hueRotate", 0, 360],
+  ];
+  for (const [key, lo, hi] of fields) {
+    const v = num(op[key]);
+    if (v !== undefined) next = { ...(next ?? {}), [key]: clamp(v, lo, hi) };
+  }
+  return next;
+}
+
+export interface ApplyContext {
+  wallet?: string | null;
+}
+
+/** What happened, for the chat log. */
+export interface ApplyReport {
+  applied: number;
+  failed: number;
+  /** A stock search the agent asked for that found nothing. */
+  missingStock: string[];
+  /** The agent prepared a paid generation for the user to confirm. */
+  generate?: { kind: "image" | "video"; prompt: string };
+}
+
+/** Carry out the agent's operations as one undo step. */
+export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<ApplyReport> {
+  const report: ApplyReport = { applied: 0, failed: 0, missingStock: [] };
+  const created: string[] = [];
+  const store = () => useEditorStore.getState();
+  const resolve = (id: unknown): string | undefined => {
+    if (typeof id !== "string") return undefined;
+    const m = /^new:(\d+)$/.exec(id);
+    return m ? created[Number(m[1])] : id;
+  };
+  const find = (id: unknown): Clip | undefined => {
+    const rid = resolve(id);
+    return rid ? store().clips.find((c) => c.id === rid) : undefined;
+  };
+
+  const place = (clip: Clip, op: AgentOp) => {
+    const patch: Record<string, unknown> = {};
+    for (const k of ["x", "y", "scale", "rotation", "opacity"] as const) {
+      const v = num(op[k]);
+      if (v === undefined) continue;
+      patch[k] = k === "x" || k === "y" ? clamp(v, -0.5, 1.5)
+        : k === "scale" ? clamp(v, 0.02, 20)
+        : k === "opacity" ? clamp(v, 0, 1)
+        : v;
+    }
+    for (const k of ["flipH", "flipV"] as const) {
+      const v = bool(op[k]);
+      if (v !== undefined) patch[k] = v;
+    }
+    const out: Record<string, unknown> = Object.keys(patch).length ? { ...placementPatch(clip, patch) } : {};
+    if ((op.fit === "cover" || op.fit === "contain") && clip.kind !== "text") out.fit = op.fit;
+    if (Object.keys(out).length) store().patchClip(clip.id, out);
+  };
+
+  await store().runAsOneStep(async () => {
+    for (const op of ops) {
+      try {
+        const ok = await applyOne(op);
+        if (ok) report.applied++;
+        else report.failed++;
+      } catch (e) {
+        console.warn("[editor-agent] op failed", op, e);
+        report.failed++;
+      }
+    }
+  });
+  return report;
+
+  async function applyOne(op: AgentOp): Promise<boolean> {
+    const s = store();
+    switch (op.op) {
+      case "set_canvas": {
+        const patch: Record<string, unknown> = {};
+        const aspect = op.aspect as AspectPreset | undefined;
+        if (aspect === "16:9" || aspect === "9:16" || aspect === "1:1" || aspect === "4:5") {
+          Object.assign(patch, aspectToDims(aspect, 1080), { aspectPreset: aspect });
+        }
+        const bg = colour(op.background);
+        if (bg) patch.background = bg;
+        if (!Object.keys(patch).length) return false;
+        s.updateSettings(patch);
+        return true;
+      }
+      case "add_text": {
+        const id = s.addTextClip(undefined, num(op.start));
+        created.push(id);
+        const patch = textPatch(op);
+        const x = num(op.x);
+        const y = num(op.y);
+        if (x !== undefined) patch.x = clamp(x, 0, 1);
+        if (y !== undefined) patch.y = clamp(y, 0, 1);
+        const d = num(op.duration);
+        if (d !== undefined) patch.duration = clamp(d, 0.2, 3600);
+        s.patchClip(id, patch);
+        const clip = store().clips.find((c) => c.id === id);
+        if (clip && (num(op.rotation) !== undefined || num(op.opacity) !== undefined)) place(clip, { op: "place", rotation: op.rotation, opacity: op.opacity });
+        return true;
+      }
+      case "update": {
+        const clip = find(op.id);
+        if (!clip) return false;
+        if (clip.kind === "text") s.patchClip(clip.id, textPatch(op));
+        place(clip, op);
+        return true;
+      }
+      case "place": {
+        const clip = find(op.id);
+        if (!clip || clip.kind === "audio") return false;
+        place(clip, op);
+        return true;
+      }
+      case "effects": {
+        const clip = find(op.id);
+        if (!clip || (clip.kind !== "image" && clip.kind !== "video")) return false;
+        s.patchClip(clip.id, { effects: effectsPatch(op, clip.effects) });
+        return true;
+      }
+      case "crop": {
+        const clip = find(op.id);
+        if (!clip || (clip.kind !== "image" && clip.kind !== "video")) return false;
+        const c = clip.crop ?? { left: 0, top: 0, right: 0, bottom: 0 };
+        const edge = (k: "left" | "top" | "right" | "bottom") => clamp(num(op[k]) ?? c[k], 0, 0.9);
+        s.patchClip(clip.id, { crop: { left: edge("left"), top: edge("top"), right: edge("right"), bottom: edge("bottom") } });
+        return true;
+      }
+      case "style": {
+        const clip = find(op.id);
+        if (!clip) return false;
+        const patch: Partial<MediaClip> = {};
+        const r = num(op.radius);
+        if (r !== undefined && clip.kind !== "text") patch.radius = clamp(r, 0, 540);
+        const sh = bool(op.shadow);
+        if (sh !== undefined) patch.shadow = sh ? { color: "#000000", opacity: 0.5, blur: 24, offsetX: 0, offsetY: 12 } : null;
+        s.patchClip(clip.id, patch);
+        return true;
+      }
+      case "animate": {
+        const clip = find(op.id);
+        if (!clip) return false;
+        const anim = (v: unknown) =>
+          v === "none" ? null : ANIMATIONS.includes(v as ClipAnimationKind) ? { kind: v as ClipAnimationKind, duration: 0.5 } : undefined;
+        const patch: Partial<Clip> = {};
+        const a = anim(op.in);
+        const b = anim(op.out);
+        if (a !== undefined) patch.animateIn = a ?? undefined;
+        if (b !== undefined) patch.animateOut = b ?? undefined;
+        s.patchClip(clip.id, patch);
+        return true;
+      }
+      case "timing": {
+        const clip = find(op.id);
+        if (!clip) return false;
+        const start = num(op.start);
+        const duration = num(op.duration);
+        if (start !== undefined) s.moveClip(clip.id, { start: Math.max(0, start) });
+        if (duration !== undefined) {
+          const cur = store().clips.find((c) => c.id === clip.id);
+          if (cur) s.trimClip(clip.id, "out", clamp(duration, 0.1, 3600) - cur.duration);
+        }
+        return true;
+      }
+      case "audio": {
+        const clip = find(op.id);
+        if (!clip || clip.kind === "text" || clip.kind === "image") return false;
+        const patch: Partial<MediaClip> = {};
+        const vol = num(op.volume);
+        if (vol !== undefined) patch.audio = { ...clip.audio, volume: clamp(vol, 0, 2) };
+        const speed = num(op.speed);
+        if (speed !== undefined) patch.speed = clamp(speed, 0.25, 4);
+        s.patchClip(clip.id, patch);
+        return true;
+      }
+      case "order": {
+        const clip = find(op.id);
+        const dir = op.direction;
+        if (!clip || (dir !== "front" && dir !== "back" && dir !== "forward" && dir !== "backward")) return false;
+        s.moveTrack(clip.trackId, dir);
+        return true;
+      }
+      case "duplicate": {
+        const clip = find(op.id);
+        if (!clip) return false;
+        s.selectClip(clip.id);
+        s.duplicateOnCanvas();
+        const copy = store().selectedClipIds[0];
+        if (copy) created.push(copy);
+        return true;
+      }
+      case "delete": {
+        const clip = find(op.id);
+        if (!clip) return false;
+        s.rippleDelete([clip.id]);
+        return true;
+      }
+      case "select": {
+        const clip = find(op.id);
+        if (!clip) return false;
+        s.selectClip(clip.id);
+        return true;
+      }
+      case "add_media": {
+        const mediaId = str(op.mediaId);
+        const media = mediaId ? s.media.find((m) => m.id === mediaId) : undefined;
+        if (!media) return false;
+        const id = s.addClipFromMedia(media.id, undefined, undefined, { layer: media.kind === "image" });
+        if (!id) return false;
+        created.push(id);
+        const clip = store().clips.find((c) => c.id === id);
+        if (clip) place(clip, op);
+        return true;
+      }
+      case "add_stock": {
+        const kind = op.kind === "video" || op.kind === "audio" ? op.kind : "photo";
+        const query = str(op.query) ?? "";
+        const orientation = (["landscape", "portrait", "square"].includes(op.orientation as string)
+          ? op.orientation : "all") as FreeAssetOrientation;
+        const result = await searchFreeAssets({ kind, query, page: 1, orientation });
+        const asset = result.items[0];
+        if (!asset) {
+          report.missingStock.push(query);
+          return false;
+        }
+        const file = await downloadFreeAsset(asset);
+        const mediaId = await importOneFile(file, { wallet: ctx.wallet, provenance: provenanceForAsset(asset) });
+        if (!mediaId) return false;
+        const id = store().addClipFromMedia(mediaId, undefined, undefined, { layer: kind === "photo" });
+        if (!id) return false;
+        created.push(id);
+        const clip = store().clips.find((c) => c.id === id);
+        if (clip && kind !== "audio") place(clip, op);
+        return true;
+      }
+      case "generate": {
+        const prompt = str(op.prompt);
+        if (!prompt) return false;
+        const kind = op.kind === "video" ? "video" : "image";
+        const aspect = s.settings.aspectPreset !== "custom" ? s.settings.aspectPreset : undefined;
+        useEditorUiStore.getState().setGeneratePrefill({ kind, prompt, aspect });
+        report.generate = { kind, prompt };
+        return true;
+      }
+      default:
+        return false;
+    }
+  }
+}

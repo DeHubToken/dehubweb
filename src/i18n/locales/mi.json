@@ -3636,6 +3636,40 @@
       "sendToBack": "Tukua ki muri rawa",
       "duplicate": "Tāruarua",
       "delete": "Mukua"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Hoahoa",
+      "assets": "Rawa",
+      "media": "Pāpāho",
+      "text": "Kuputuhi",
+      "generate": "Waihanga",
+      "generations": "Ngā waihanga",
+      "edit": "Whakatika",
+      "collapse": "Tiango i te pae",
+      "home": "Kāinga"
+    },
+    "agent": {
+      "introTitle": "Kōrerotia ki te AI tō e hiahia ana",
+      "introBody": "Whakaahuatia te hoahoa, te panoni rānei ki ōu ake kupu. Ka panoni i te rahi o te whārangi, ka tuhi, ka whakahāngai i te kuputuhi, ka kimi whakaahua, ataata, puoro kore utu, ka tāpiri tātari, ka whakaraupapa i ngā paparanga, ka whakakorikori hoki. Ka taea te whakakore i ia tono i te hīkoi kotahi.",
+      "suggestPoster": "Hangaia he pānui Instagram tapawhā mō te hoko raumati, he whakaahua tātahi me tētahi taitara mātotoru",
+      "suggestTitle": "Tāpirihia he taitara nui mātotoru ki runga me tētahi taitara iti ki raro",
+      "suggestFilter": "Kia mahana ake te whakaahua, kia mārama iti ake hoki",
+      "suggestStory": "Hurihia tēnei hei kōrero 9:16, ka whakakī i te whārangi ki te whakaahua",
+      "suggestBackground": "Tāpirihia he puoro papamuri mārie, ka whakaputa haere i te kuputuhi",
+      "placeholder": "Whakaahuatia tō e hiahia ana…",
+      "send": "Tukua",
+      "hint": "Enter hei tuku · Ctrl+K hei peke ki konei",
+      "clear": "Ūkuia te kōrerorero",
+      "working": "Kei te mahi…",
+      "done": "Kua oti.",
+      "nothingToDo": "Kāore i kitea he mea hei panoni mō tērā. Whakamātauria te whakaahua i te whakatika e hiahia ana koe.",
+      "noStock": "Kāore he rawa kore utu i ōrite ki “{{query}}”.",
+      "rateLimited": "He maha ō tono kua tukuna. Whakamātau anō ā ngā meneti torutoru.",
+      "failed": "Kāore i taea e te AI te mahi i tēnei ināianei. Whakamātau anō ā tōna wā.",
+      "changes": "Ngā whakatika kua mahia: {{count}}",
+      "undo": "Wetekia",
+      "openGenerator": "Arotake ka waihanga"
     }
   }
 }

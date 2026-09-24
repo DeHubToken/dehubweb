@@ -5849,6 +5849,40 @@
       "sendToBack": "Envia al darrere",
       "duplicate": "Duplica",
       "delete": "Elimina"
+    },
+    "rail": {
+      "agent": "IA",
+      "design": "Disseny",
+      "assets": "Recursos",
+      "media": "Multimèdia",
+      "text": "Text",
+      "generate": "Genera",
+      "generations": "Generacions",
+      "edit": "Edita",
+      "collapse": "Replega el tauler",
+      "home": "Inici"
+    },
+    "agent": {
+      "introTitle": "Digues a la IA què vols",
+      "introBody": "Descriu el disseny o el canvi amb les teves paraules. Redimensiona la pàgina, escriu i dona estil al text, troba fotos, vídeos i música gratuïts, aplica filtres, ordena les capes i les anima. Cada petició es desfà d'un sol cop.",
+      "suggestPoster": "Fes una publicació quadrada d'Instagram per a les rebaixes d'estiu amb una foto de platja i un títol destacat",
+      "suggestTitle": "Afegeix un títol gran i en negreta a dalt i un subtítol més petit a sota",
+      "suggestFilter": "Fes la foto més càlida i una mica més brillant",
+      "suggestStory": "Converteix-ho en una història 9:16 i omple la pàgina amb la foto",
+      "suggestBackground": "Afegeix música de fons tranquil·la i fes aparèixer el text a poc a poc",
+      "placeholder": "Descriu el que vols…",
+      "send": "Envia",
+      "hint": "Enter per enviar · Ctrl+K per venir aquí",
+      "clear": "Esborra el xat",
+      "working": "Hi estic treballant…",
+      "done": "Fet.",
+      "nothingToDo": "No he trobat res a canviar amb això. Prova de descriure l'edició que vols.",
+      "noStock": "Cap recurs gratuït coincideix amb “{{query}}”.",
+      "rateLimited": "Has enviat moltes peticions. Torna-ho a provar d'aquí a uns minuts.",
+      "failed": "La IA no ho ha pogut fer ara mateix. Torna-ho a provar d'aquí a un moment.",
+      "changes": "Canvis fets: {{count}}",
+      "undo": "Desfés",
+      "openGenerator": "Revisa i genera"
     }
   }
 }

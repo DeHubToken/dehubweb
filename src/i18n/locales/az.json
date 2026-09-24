@@ -5807,6 +5807,40 @@
       "sendToBack": "Ən arxaya göndər",
       "duplicate": "Dublikat çıxarın",
       "delete": "Sil"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Dizayn",
+      "assets": "Resurslar",
+      "media": "Media",
+      "text": "Mətn",
+      "generate": "Yarat",
+      "generations": "Yaradılanlar",
+      "edit": "Redaktə",
+      "collapse": "Paneli yığ",
+      "home": "Ana səhifə"
+    },
+    "agent": {
+      "introTitle": "AI-a nə istədiyinizi deyin",
+      "introBody": "Dizaynı və ya dəyişikliyi öz sözlərinizlə təsvir edin. O, səhifənin ölçüsünü dəyişir, mətn yazır və tərtib edir, pulsuz foto, video və musiqi tapır, filtrlər tətbiq edir, qatları düzür və onları animasiya edir. Hər sorğu bir addımda geri qaytarılır.",
+      "suggestPoster": "Yay endirimi üçün çimərlik fotosu və qalın başlıqla kvadrat Instagram postu hazırla",
+      "suggestTitle": "Yuxarıya böyük qalın başlıq, altına isə kiçik alt başlıq əlavə et",
+      "suggestFilter": "Fotonu daha isti və bir az daha parlaq et",
+      "suggestStory": "Bunu 9:16 hekayəyə çevir və səhifəni fotoyla doldur",
+      "suggestBackground": "Sakit fon musiqisi əlavə et və mətni tədricən göstər",
+      "placeholder": "Nə istədiyinizi təsvir edin…",
+      "send": "Göndər",
+      "hint": "Göndərmək üçün Enter · Bura keçmək üçün Ctrl+K",
+      "clear": "Söhbəti təmizlə",
+      "working": "Üzərində işləyirəm…",
+      "done": "Hazırdır.",
+      "nothingToDo": "Bunun üçün dəyişdiriləcək heç nə tapmadım. İstədiyiniz redaktəni təsvir etməyə çalışın.",
+      "noStock": "“{{query}}” ilə uyğun pulsuz material tapılmadı.",
+      "rateLimited": "Çox sorğu göndərmisiniz. Bir neçə dəqiqədən sonra yenidən cəhd edin.",
+      "failed": "AI bunu hazırda edə bilmədi. Bir az sonra yenidən cəhd edin.",
+      "changes": "Edilən dəyişikliklər: {{count}}",
+      "undo": "Geri qaytar",
+      "openGenerator": "Bax və yarat"
     }
   }
 }

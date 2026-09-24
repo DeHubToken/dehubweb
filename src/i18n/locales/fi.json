@@ -5850,6 +5850,40 @@
       "sendToBack": "Siirrä taaimmaiseksi",
       "duplicate": "Kopioi",
       "delete": "Poista"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Suunnittelu",
+      "assets": "Aineistot",
+      "media": "Media",
+      "text": "Teksti",
+      "generate": "Luo",
+      "generations": "Luodut",
+      "edit": "Muokkaa",
+      "collapse": "Pienennä paneeli",
+      "home": "Etusivu"
+    },
+    "agent": {
+      "introTitle": "Kerro AI:lle, mitä haluat",
+      "introBody": "Kuvaile suunnitelma tai muutos omin sanoin. Se muuttaa sivun kokoa, kirjoittaa ja muotoilee tekstiä, etsii ilmaisia kuvia, videoita ja musiikkia, lisää suodattimia, järjestää tasoja ja animoi niitä. Jokaisen pyynnön voi kumota yhdellä kertaa.",
+      "suggestPoster": "Tee neliönmuotoinen Instagram-julkaisu kesäalesta, jossa on rantakuva ja lihavoitu otsikko",
+      "suggestTitle": "Lisää ylös iso lihavoitu otsikko ja sen alle pienempi alaotsikko",
+      "suggestFilter": "Tee kuvasta lämpimämpi ja vähän kirkkaampi",
+      "suggestStory": "Muuta tämä 9:16-tarinaksi ja täytä sivu kuvalla",
+      "suggestBackground": "Lisää rauhallista taustamusiikkia ja häivytä teksti esiin",
+      "placeholder": "Kuvaile, mitä haluat…",
+      "send": "Lähetä",
+      "hint": "Enter lähettää · Ctrl+K siirtää tänne",
+      "clear": "Tyhjennä keskustelu",
+      "working": "Työn alla…",
+      "done": "Valmis.",
+      "nothingToDo": "En löytänyt tähän mitään muutettavaa. Kuvaile haluamasi muokkaus.",
+      "noStock": "Ilmaista sisältöä ei löytynyt haulle “{{query}}”.",
+      "rateLimited": "Olet lähettänyt paljon pyyntöjä. Yritä uudelleen muutaman minuutin päästä.",
+      "failed": "AI ei pystynyt tekemään sitä juuri nyt. Yritä hetken päästä uudelleen.",
+      "changes": "Muutoksia: {{count}}",
+      "undo": "Kumoa",
+      "openGenerator": "Tarkista ja luo"
     }
   }
 }

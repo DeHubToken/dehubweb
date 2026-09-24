@@ -3633,6 +3633,40 @@
       "sendToBack": "U dir gadaal",
       "duplicate": "Labanlaab",
       "delete": "Tirtir"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Naqshad",
+      "assets": "Agabka",
+      "media": "Warbaahinta",
+      "text": "Qoraal",
+      "generate": "Samee",
+      "generations": "Waxyaabaha la sameeyay",
+      "edit": "Wax ka beddel",
+      "collapse": "Isku laab guddiga",
+      "home": "Guriga"
+    },
+    "agent": {
+      "introTitle": "U sheeg AI-ga waxaad rabto",
+      "introBody": "Ku sharax naqshadda ama isbeddelka ereyadaada. Wuxuu beddelaa cabbirka bogga, qoraa oo qurxiyaa qoraalka, helaa sawirro, muuqaallo iyo muusig bilaash ah, adeegsadaa shaandheyaal, habeeyaa lakabyada oo dhaqdhaqaajiyaa. Codsi kasta hal mar ayaa laga noqon karaa.",
+      "suggestPoster": "Ii samee boostada Instagram oo labajibbaaran oo iibka xagaaga ah, leh sawir xeeb iyo cinwaan adag",
+      "suggestTitle": "Ku dar cinwaan weyn oo adag xagga sare iyo cinwaan hoose oo yar hoostiisa",
+      "suggestFilter": "Sawirka ka dhig mid diiran oo xoogaa iftiin badan",
+      "suggestStory": "Tan u beddel sheeko 9:16 ah oo bogga ku buuxi sawirka",
+      "suggestBackground": "Ku dar muusig xasilloon oo gadaal ah oo qoraalka si tartiib ah u soo bixi",
+      "placeholder": "Sharax waxaad rabto…",
+      "send": "Dir",
+      "hint": "Enter si aad u dirto · Ctrl+K si aad halkan u timaado",
+      "clear": "Nadiifi sheekada",
+      "working": "Waan ka shaqaynayaa…",
+      "done": "Waa la dhammeeyay.",
+      "nothingToDo": "Wax aan beddelo kuma helin taas. Isku day inaad sharaxdo wax-ka-beddelka aad rabto.",
+      "noStock": "Ma jiro agab bilaash ah oo la mid ah “{{query}}”.",
+      "rateLimited": "Codsiyo badan ayaad dirtay. Isku day mar kale dhowr daqiiqo kadib.",
+      "failed": "AI-ga hadda ma samayn karo taas. Isku day mar kale wax yar kadib.",
+      "changes": "Isbeddellada la sameeyay: {{count}}",
+      "undo": "Ka noqo",
+      "openGenerator": "Dib u eeg oo samee"
     }
   }
 }

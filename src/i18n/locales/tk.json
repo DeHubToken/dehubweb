@@ -3595,6 +3595,40 @@
       "sendToBack": "Iň yza iber",
       "duplicate": "Duplikat",
       "delete": "Poz"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Dizaýn",
+      "assets": "Serişdeler",
+      "media": "Media",
+      "text": "Tekst",
+      "generate": "Döret",
+      "generations": "Döredilenler",
+      "edit": "Redaktirle",
+      "collapse": "Paneli ýygna",
+      "home": "Baş sahypa"
+    },
+    "agent": {
+      "introTitle": "AI-a näme isleýändigiňizi aýdyň",
+      "introBody": "Dizaýny ýa-da üýtgeşmäni öz sözleriňiz bilen düşündiriň. Ol sahypanyň ölçegini üýtgedýär, tekst ýazýar we bezeýär, mugt suratlary, wideolary we sazy tapýar, süzgüçleri ulanýar, gatlaklary tertipleýär we olary hereketlendirýär. Her haýyş bir ädimde yzyna gaýtarylýar.",
+      "suggestPoster": "Kenar suraty we galyň sözbaşy bilen tomusky arzanladyş üçin inedördül Instagram posty döret",
+      "suggestTitle": "Ýokarda uly galyň sözbaşy, onuň aşagynda kiçiräk kiçi sözbaşy goş",
+      "suggestFilter": "Suraty has ýyly we birneme ýagtyrak et",
+      "suggestStory": "Muny 9:16 story et we sahypany surat bilen doldur",
+      "suggestBackground": "Asuda fon sazyny goş we teksti ýuwaş-ýuwaşdan görkez",
+      "placeholder": "Näme isleýändigiňizi ýazyň…",
+      "send": "Iber",
+      "hint": "Ibermek üçin Enter · Şu ýere geçmek üçin Ctrl+K",
+      "clear": "Söhbetdeşligi arassala",
+      "working": "Işlenýär…",
+      "done": "Taýýar.",
+      "nothingToDo": "Munuň üçin üýtgetjek zat tapmadym. Isleýän üýtgeşmäňizi düşündirip görüň.",
+      "noStock": "“{{query}}” boýunça mugt material tapylmady.",
+      "rateLimited": "Siz köp haýyş iberdiňiz. Birnäçe minutdan soň gaýtadan synanyşyň.",
+      "failed": "AI häzir muny edip bilmedi. Biraz soň gaýtadan synanyşyň.",
+      "changes": "Edilen üýtgeşmeler: {{count}}",
+      "undo": "Yzyna al",
+      "openGenerator": "Gözden geçir we döret"
     }
   }
 }

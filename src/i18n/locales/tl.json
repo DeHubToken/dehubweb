@@ -5722,6 +5722,40 @@
       "sendToBack": "Dalhin sa pinakalikod",
       "duplicate": "I-duplicate",
       "delete": "Tanggalin"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Disenyo",
+      "assets": "Assets",
+      "media": "Media",
+      "text": "Teksto",
+      "generate": "Gumawa",
+      "generations": "Mga nagawa",
+      "edit": "I-edit",
+      "collapse": "I-collapse ang panel",
+      "home": "Home"
+    },
+    "agent": {
+      "introTitle": "Sabihin sa AI ang gusto mo",
+      "introBody": "Ilarawan ang disenyo o ang pagbabago sa sarili mong salita. Binabago nito ang laki ng page, nagsusulat at nag-i-style ng teksto, naghahanap ng libreng litrato, video at musika, naglalagay ng filter, nag-aayos ng mga layer at ina-animate ang mga ito. Bawat request ay isang undo lang.",
+      "suggestPoster": "Gumawa ng square na Instagram post para sa summer sale na may litrato ng beach at bold na pamagat",
+      "suggestTitle": "Magdagdag ng malaking bold na pamagat sa itaas at mas maliit na subtitle sa ilalim nito",
+      "suggestFilter": "Gawing mas warm at medyo mas maliwanag ang litrato",
+      "suggestStory": "Gawin itong 9:16 na story at punuin ang page ng litrato",
+      "suggestBackground": "Magdagdag ng kalmadong background music at i-fade in ang teksto",
+      "placeholder": "Ilarawan ang gusto mo…",
+      "send": "Ipadala",
+      "hint": "Enter para ipadala · Ctrl+K para pumunta rito",
+      "clear": "I-clear ang chat",
+      "working": "Ginagawa na…",
+      "done": "Tapos na.",
+      "nothingToDo": "Wala akong nakitang babaguhin para diyan. Subukang ilarawan ang edit na gusto mo.",
+      "noStock": "Walang libreng stock na tumugma sa “{{query}}”.",
+      "rateLimited": "Marami ka nang naipadalang request. Subukan ulit pagkalipas ng ilang minuto.",
+      "failed": "Hindi ito magawa ng AI ngayon. Subukan ulit mamaya.",
+      "changes": "Mga nagawang edit: {{count}}",
+      "undo": "I-undo",
+      "openGenerator": "Suriin at gumawa"
     }
   },
   "walletSelector": {

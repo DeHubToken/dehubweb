@@ -5941,6 +5941,40 @@
       "sendToBack": "Nosūtīt uz aizmuguri",
       "duplicate": "Dublēt",
       "delete": "Dzēst"
+    },
+    "rail": {
+      "agent": "MI",
+      "design": "Dizains",
+      "assets": "Resursi",
+      "media": "Mediji",
+      "text": "Teksts",
+      "generate": "Ģenerēt",
+      "generations": "Ģenerējumi",
+      "edit": "Rediģēt",
+      "collapse": "Sakļaut paneli",
+      "home": "Sākums"
+    },
+    "agent": {
+      "introTitle": "Pastāstiet MI, ko vēlaties",
+      "introBody": "Aprakstiet dizainu vai izmaiņas saviem vārdiem. Tas maina lapas izmēru, raksta un noformē tekstu, atrod bezmaksas fotoattēlus, video un mūziku, lieto filtrus, sakārto slāņus un tos animē. Katru pieprasījumu var atsaukt vienā solī.",
+      "suggestPoster": "Izveido kvadrātveida Instagram ierakstu vasaras izpārdošanai ar pludmales foto un treknu virsrakstu",
+      "suggestTitle": "Pievieno lielu treknu virsrakstu augšā un mazāku apakšvirsrakstu zem tā",
+      "suggestFilter": "Padari foto siltāku un nedaudz gaišāku",
+      "suggestStory": "Pārveido šo par 9:16 stāstu un aizpildi lapu ar foto",
+      "suggestBackground": "Pievieno mierīgu fona mūziku un liec tekstam parādīties pakāpeniski",
+      "placeholder": "Aprakstiet, ko vēlaties…",
+      "send": "Sūtīt",
+      "hint": "Enter, lai sūtītu · Ctrl+K, lai pārietu šeit",
+      "clear": "Notīrīt tērzēšanu",
+      "working": "Strādāju pie tā…",
+      "done": "Gatavs.",
+      "nothingToDo": "Neatradu neko, ko mainīt. Mēģiniet aprakstīt vēlamo labojumu.",
+      "noStock": "Neviens bezmaksas materiāls neatbilst “{{query}}”.",
+      "rateLimited": "Jūs nosūtījāt daudz pieprasījumu. Mēģiniet vēlreiz pēc dažām minūtēm.",
+      "failed": "MI šobrīd to nevarēja izdarīt. Mēģiniet vēlreiz pēc brīža.",
+      "changes": "Veiktās izmaiņas: {{count}}",
+      "undo": "Atsaukt",
+      "openGenerator": "Pārskatīt un ģenerēt"
     }
   }
 }

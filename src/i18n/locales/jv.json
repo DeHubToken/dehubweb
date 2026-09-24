@@ -3629,6 +3629,40 @@
       "sendToBack": "Pindhah menyang paling mburi",
       "duplicate": "Gandakake",
       "delete": "Busak"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Desain",
+      "assets": "Aset",
+      "media": "Media",
+      "text": "Teks",
+      "generate": "Gawe",
+      "generations": "Asil gawean",
+      "edit": "Sunting",
+      "collapse": "Ciutake panel",
+      "home": "Beranda"
+    },
+    "agent": {
+      "introTitle": "Kandhani AI apa sing mbok karepake",
+      "introBody": "Critakna desain utawa owahan nganggo tembungmu dhewe. AI bisa ngowahi ukuran kaca, nulis lan nata gaya teks, golek foto, video lan musik gratis, nerapake filter, nata lapisan lan nganimasikake. Saben panjaluk bisa dibatalake sepisan.",
+      "suggestPoster": "Gawekna kiriman Instagram kothak kanggo diskon musim panas nganggo foto pantai lan judhul kandel",
+      "suggestTitle": "Tambahna judhul gedhe kandel ing ndhuwur lan subjudhul luwih cilik ing ngisore",
+      "suggestFilter": "Gawe fotone luwih anget lan rada luwih padhang",
+      "suggestStory": "Owahi iki dadi story 9:16 lan kebaki kaca nganggo fotone",
+      "suggestBackground": "Tambahna musik latar sing tenang lan gawe teks metu alon-alon",
+      "placeholder": "Critakna apa sing mbok karepake…",
+      "send": "Kirim",
+      "hint": "Enter kanggo ngirim · Ctrl+K kanggo mrene",
+      "clear": "Busak obrolan",
+      "working": "Lagi digarap…",
+      "done": "Rampung.",
+      "nothingToDo": "Aku ora nemokake apa-apa sing kudu diowahi. Coba critakna suntingan sing mbok karepake.",
+      "noStock": "Ora ana stok gratis sing cocog karo “{{query}}”.",
+      "rateLimited": "Kowe wis ngirim akeh panjaluk. Coba maneh sawetara menit engkas.",
+      "failed": "AI saiki durung bisa nindakake kuwi. Coba maneh sedhela engkas.",
+      "changes": "Suntingan sing digawe: {{count}}",
+      "undo": "Batalake",
+      "openGenerator": "Priksa lan gawe"
     }
   }
 }

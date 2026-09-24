@@ -5969,6 +5969,40 @@
       "sendToBack": "Enviar al fondo",
       "duplicate": "Duplicar",
       "delete": "Eliminar"
+    },
+    "rail": {
+      "agent": "IA",
+      "design": "Diseño",
+      "assets": "Recursos",
+      "media": "Multimedia",
+      "text": "Texto",
+      "generate": "Generar",
+      "generations": "Generaciones",
+      "edit": "Editar",
+      "collapse": "Contraer panel",
+      "home": "Inicio"
+    },
+    "agent": {
+      "introTitle": "Dile a la IA lo que quieres",
+      "introBody": "Describe el diseño o el cambio con tus propias palabras. Cambia el tamaño de la página, escribe y da estilo al texto, busca fotos, vídeos y música gratis, aplica filtros, organiza las capas y las anima. Cada petición se deshace de una vez.",
+      "suggestPoster": "Haz una publicación cuadrada de Instagram para unas rebajas de verano con una foto de playa y un título en negrita",
+      "suggestTitle": "Añade un título grande en negrita arriba y un subtítulo más pequeño debajo",
+      "suggestFilter": "Haz la foto más cálida y un poco más luminosa",
+      "suggestStory": "Convierte esto en una historia 9:16 y llena la página con la foto",
+      "suggestBackground": "Añade música de fondo tranquila y haz que el texto aparezca con un fundido",
+      "placeholder": "Describe lo que quieres…",
+      "send": "Enviar",
+      "hint": "Enter para enviar · Ctrl+K para venir aquí",
+      "clear": "Borrar chat",
+      "working": "Trabajando en ello…",
+      "done": "Listo.",
+      "nothingToDo": "No encontré nada que cambiar con eso. Prueba a describir la edición que quieres.",
+      "noStock": "No hay contenido gratuito que coincida con «{{query}}».",
+      "rateLimited": "Has enviado muchas peticiones. Vuelve a intentarlo en unos minutos.",
+      "failed": "La IA no ha podido hacerlo ahora. Vuelve a intentarlo en un momento.",
+      "changes": "Cambios realizados: {{count}}",
+      "undo": "Deshacer",
+      "openGenerator": "Revisar y generar"
     }
   }
 }
