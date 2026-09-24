@@ -130,6 +130,9 @@ async function searchOpenverse(options: SearchFreeAssetsOptions): Promise<FreeAs
   url.searchParams.set("mature", "false");
   if (options.kind === "photo") url.searchParams.set("categories", "photograph");
   if (options.kind === "graphic") url.searchParams.set("categories", "illustration,digitized_art");
+  // Ask Openverse for the shape; filtering one page afterwards often left nothing.
+  const aspect = ({ square: "square", landscape: "wide", portrait: "tall" } as const)[options.orientation as "square" | "landscape" | "portrait"];
+  if (aspect && options.kind !== "audio") url.searchParams.set("aspect_ratio", aspect);
   const response = await fetch(url, { signal: options.signal });
   if (!response.ok) throw new Error(`Openverse returned ${response.status}`);
   const data = await response.json() as { results?: Array<Record<string, unknown>>; page_count?: number; result_count?: number };

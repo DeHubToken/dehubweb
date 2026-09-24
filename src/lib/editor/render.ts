@@ -30,7 +30,6 @@ export interface ClipBox {
 }
 
 const DEFAULT_TRANSFORM: ClipTransform = { x: 0.5, y: 0.5, scale: 1, rotation: 0 };
-const TEXT_FADE = 0.3;
 
 export function getTransform(clip: Clip): ClipTransform {
   const t = { ...DEFAULT_TRANSFORM, ...(clip.transform ?? {}) };
@@ -240,14 +239,10 @@ export function drawClip(ctx: Ctx2D, W: number, H: number, clip: Clip, t: number
   if (tr.rotation) ctx.rotate((tr.rotation * Math.PI) / 180);
   if (tr.flipH || tr.flipV) ctx.scale(tr.flipH ? -1 : 1, tr.flipV ? -1 : 1);
 
-  let alpha = baseAlpha * anim.alpha * (tr.opacity ?? 1);
-  if (clip.kind === "text" && !clip.animateIn && !clip.animateOut) {
-    // Historical soft fade for text clips without an explicit animation.
-    const into = t - clip.start;
-    const outof = clip.start + clip.duration - t;
-    alpha *= Math.max(0, Math.min(1, into / TEXT_FADE, outof / TEXT_FADE, 1));
-  }
-  ctx.globalAlpha = alpha;
+  // Text used to fade in over its first 0.3s by default, which made every
+  // title invisible at 0s: exactly where a still design sits and where PNG
+  // export captures. Fades are an explicit animation now (animateIn "fade").
+  ctx.globalAlpha = baseAlpha * anim.alpha * (tr.opacity ?? 1);
   ctx.filter = cssFilterFor(clip, anim.blurPx);
   if (clip.blend && clip.blend !== "normal") ctx.globalCompositeOperation = clip.blend;
 

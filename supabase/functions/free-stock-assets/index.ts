@@ -75,6 +75,8 @@ async function json(url: URL | string, init?: RequestInit) {
   return response.json();
 }
 
+const OPENVERSE_ASPECT: Partial<Record<Orientation, string>> = { square: "square", landscape: "wide", portrait: "tall" };
+
 async function openverse(kind: Kind, query: string, page: number, orientation: Orientation): Promise<ProviderResult> {
   const endpoint = kind === "audio" ? "audio" : "images";
   const url = new URL(`https://api.openverse.org/v1/${endpoint}/`);
@@ -85,14 +87,20 @@ async function openverse(kind: Kind, query: string, page: number, orientation: O
   url.searchParams.set("mature", "false");
   if (kind === "photo") url.searchParams.set("categories", "photograph");
   if (kind === "graphic") url.searchParams.set("categories", "illustration,digitized_art");
+  // Filter shape at the source; filtering a 20-result page afterwards often
+  // left nothing (no square photo in the first page of "tropical beach").
+  const aspect = OPENVERSE_ASPECT[orientation];
+  if (aspect && kind !== "audio") url.searchParams.set("aspect_ratio", aspect);
   const data = await json(url);
   const items = (data.results || []).flatMap((row: Record<string, unknown>): Asset[] => {
     const downloadUrl = String(row.url || "");
     const landingUrl = String(row.foreign_landing_url || row.detail_url || "");
     if (!downloadUrl || !landingUrl) return [];
-    const size = Number(info.size) || 0;
-    const duration = Number(info.duration) || 0;
-    const mimeType = String(info.mime || "");
+    // Openverse fields, not Wikimedia's: this block was copied from the
+    // Commons mapper and read an undefined `info`, so every photo search threw.
+    const size = Number(row.filesize) || 0;
+    const duration = kind === "audio" ? (Number(row.duration) || 0) / 1000 : 0;
+    const mimeType = String(row.mime_type || "");
     if ((kind === "video" || kind === "animation") && (mimeType !== "video/webm" || duration > 180 || size > 250 * 1024 * 1024)) return [];
     if (kind === "gif" && size > 50 * 1024 * 1024) return [];
     if (kind === "audio" && duration > 600) return [];
