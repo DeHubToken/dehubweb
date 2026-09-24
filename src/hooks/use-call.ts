@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { getAuthToken } from '@/lib/api/dehub/core';
+import { apiCall, getAuthToken } from '@/lib/api/dehub/core';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast as sonnerToast } from 'sonner';
 import { simpleCallCheck, testCallDetection, debugAllCalls } from '@/utils/simple-call-check';
@@ -343,6 +343,14 @@ export const useCall = (): UseCallReturn => {
       const callSession = session as CallSession;
       setCurrentCall(callSession);
       currentCallRef.current = callSession;
+
+      // The callee only sees call_sessions while DeHub is open; ask the server
+      // to ring their phone (and browser) with a push.
+      apiCall('/api/push/call-ring', {
+        method: 'POST',
+        body: { sessionId: callSession.id },
+        requiresAuth: true,
+      }).catch((e) => console.warn('Call ring push failed (non-fatal):', e));
 
       // Log call initiation in chat
       callMessageHandlerRef.current?.(callType === 'video' ? '📹 Video call' : '📞 Voice call');
