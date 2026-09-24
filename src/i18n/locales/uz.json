@@ -3922,5 +3922,8 @@
   },
   "accounts": {
     "title": "Hisoblar"
+  },
+  "stages": {
+    "title": "Audio xonalar"
   }
 }
