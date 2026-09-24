@@ -2,11 +2,14 @@
  * Cloud persistence for editor media (imported clips + exported videos).
  * Assets live under `editor-assets/<wallet>/<asset-id>/original.<ext>` in
  * Supabase Storage, with a matching row in `public.editor_assets`.
+ *
+ * Every read and write goes through the `editor-assets` edge function, which
+ * takes the wallet from the verified DeHub token. The table and bucket are not
+ * reachable from the browser directly.
  */
 import { supabase } from "@/integrations/supabase/client";
-import { walletScopedClient, withWalletHeader } from "@/lib/supabase-wallet-client";
+import { ensureFreshToken } from "@/lib/api/dehub/core";
 import type { MediaProvenance } from "@/lib/editor/mediaStore";
-import type { Json } from "@/integrations/supabase/types";
 
 const BUCKET = "editor-assets";
 
@@ -50,18 +53,29 @@ function extForMime(mime: string, fallback = "bin"): string {
   return map[mime] ?? mime.split("/")[1] ?? fallback;
 }
 
+async function call<T = Record<string, unknown>>(wallet: string, body: Record<string, unknown>): Promise<T> {
+  const token = await ensureFreshToken();
+  const { data, error } = await supabase.functions.invoke("editor-assets", {
+    body,
+    headers: { "x-dehub-token": token, "x-wallet-address": wallet.toLowerCase() },
+  });
+  if (error || data?.error) throw new Error(data?.error || error?.message || "Editor storage request failed");
+  return data as T;
+}
+
 /** Signed URL cache so we don't re-hit the API on every render. */
 const signedUrlCache = new Map<string, { url: string; expiresAt: number }>();
 
-export async function getSignedAssetUrl(wallet: string, path: string, ttlSeconds = 60 * 60 * 4): Promise<string> {
+export async function getSignedAssetUrl(wallet: string, path: string): Promise<string> {
   const cacheKey = `${wallet.toLowerCase()}:${path}`;
   const cached = signedUrlCache.get(cacheKey);
   const now = Date.now();
   if (cached && cached.expiresAt - 60_000 > now) return cached.url;
-  const { data, error } = await walletScopedClient(wallet).storage.from(BUCKET).createSignedUrl(path, ttlSeconds);
-  if (error || !data?.signedUrl) throw error ?? new Error("signed url failed");
-  signedUrlCache.set(cacheKey, { url: data.signedUrl, expiresAt: now + ttlSeconds * 1000 });
-  return data.signedUrl;
+  const { urls, ttl } = await call<{ urls: Record<string, string>; ttl: number }>(wallet, { action: "sign", paths: [path] });
+  const url = urls?.[path];
+  if (!url) throw new Error("signed url failed");
+  signedUrlCache.set(cacheKey, { url, expiresAt: now + (ttl ?? 3600) * 1000 });
+  return url;
 }
 
 export interface UploadArgs {
@@ -81,104 +95,74 @@ export interface UploadArgs {
   onProgress?: (fraction: number) => void;
 }
 
+type Slot = { path: string; token: string };
+
 export async function uploadEditorAsset(args: UploadArgs): Promise<CloudAsset> {
   const wallet = args.wallet.toLowerCase();
-  const storage = walletScopedClient(wallet).storage;
   const id = args.id ?? crypto.randomUUID();
-  const ext = extForMime(args.mimeType, args.kind === "image" ? "jpg" : "bin");
-  const storagePath = `${wallet}/${id}/original.${ext}`;
+  const ext = extForMime(args.mimeType, args.kind === "image" ? "jpg" : "bin").replace(/[^a-z0-9]/gi, "").slice(0, 5) || "bin";
+  const hasThumb = !!args.thumbnail && args.thumbnail.size > 0;
+  const slots = await call<{ original: Slot; thumb: Slot | null }>(wallet, { action: "prepare", id, ext, thumbnail: hasThumb });
+  const bucket = supabase.storage.from(BUCKET);
 
-  const { error: upErr } = await storage
-    .from(BUCKET)
-    .upload(storagePath, args.blob, {
-      contentType: args.mimeType,
-      cacheControl: "31536000",
-      upsert: true,
-    });
+  const { error: upErr } = await bucket.uploadToSignedUrl(slots.original.path, slots.original.token, args.blob, {
+    contentType: args.mimeType,
+    cacheControl: "31536000",
+  });
   if (upErr) throw upErr;
   args.onProgress?.(0.85);
 
   let thumbnailPath: string | null = null;
-  if (args.thumbnail && args.thumbnail.size > 0) {
-    thumbnailPath = `${wallet}/${id}/thumb.jpg`;
-    const { error: thErr } = await storage
-      .from(BUCKET)
-      .upload(thumbnailPath, args.thumbnail, {
-        contentType: args.thumbnail.type || "image/jpeg",
-        cacheControl: "31536000",
-        upsert: true,
-      });
-    if (thErr) {
-      console.warn("[editor] thumbnail upload failed", thErr);
-      thumbnailPath = null;
-    }
+  if (hasThumb && slots.thumb) {
+    const { error: thErr } = await bucket.uploadToSignedUrl(slots.thumb.path, slots.thumb.token, args.thumbnail!, {
+      contentType: args.thumbnail!.type || "image/jpeg",
+      cacheControl: "31536000",
+    });
+    if (thErr) console.warn("[editor] thumbnail upload failed", thErr);
+    else thumbnailPath = slots.thumb.path;
   }
   args.onProgress?.(0.95);
 
   const row = {
     id,
-    wallet_address: wallet,
     name: args.name,
     kind: args.kind,
     mime_type: args.mimeType,
     size_bytes: args.blob.size + (args.thumbnail?.size ?? 0),
-    storage_path: storagePath,
+    storage_path: slots.original.path,
     thumbnail_path: thumbnailPath,
     duration_seconds: args.duration ?? null,
     width: args.width ?? null,
     height: args.height ?? null,
     preserved: !!args.preserved,
     posted_post_id: args.postedPostId ?? null,
-    provenance: (args.provenance ?? null) as unknown as Json,
-    last_used_at: new Date().toISOString(),
+    provenance: args.provenance ?? null,
   };
 
-  const { data, error } = await withWalletHeader(
-    supabase.from("editor_assets").insert(row).select("*").single(),
-    wallet,
-  );
-  if (error) {
+  try {
+    const { asset } = await call<{ asset: CloudAsset }>(wallet, { action: "commit", row });
+    args.onProgress?.(1);
+    return asset;
+  } catch (e) {
     // best-effort cleanup on DB failure
-    await storage.from(BUCKET).remove([storagePath, thumbnailPath].filter(Boolean) as string[]);
-    throw error;
+    await call(wallet, { action: "discard", paths: [slots.original.path, thumbnailPath].filter(Boolean) }).catch(() => {});
+    throw e;
   }
-  args.onProgress?.(1);
-  return data as unknown as CloudAsset;
 }
 
 export async function listEditorAssets(wallet: string): Promise<CloudAsset[]> {
-  const { data, error } = await withWalletHeader(
-    supabase
-      .from("editor_assets")
-      .select("*")
-      .eq("wallet_address", wallet.toLowerCase())
-      .order("created_at", { ascending: false }),
-    wallet,
-  );
-  if (error) throw error;
-  return (data ?? []) as unknown as CloudAsset[];
+  const { assets } = await call<{ assets: CloudAsset[] }>(wallet, { action: "list" });
+  return assets ?? [];
 }
 
 export async function deleteEditorAsset(wallet: string, asset: Pick<CloudAsset, "id" | "storage_path" | "thumbnail_path">): Promise<void> {
-  const paths = [asset.storage_path, asset.thumbnail_path].filter(Boolean) as string[];
-  if (paths.length) {
-    const { error: rmErr } = await walletScopedClient(wallet).storage.from(BUCKET).remove(paths);
-    if (rmErr) console.warn("[editor] storage remove failed", rmErr);
-  }
-  const { error } = await withWalletHeader(
-    supabase.from("editor_assets").delete().eq("id", asset.id),
-    wallet,
-  );
-  if (error) throw error;
+  await call(wallet, { action: "remove", id: asset.id });
 }
 
 /** Bump last_used_at so the 12-month unused clock resets. */
 export async function touchEditorAsset(wallet: string, id: string): Promise<void> {
   try {
-    await withWalletHeader(
-      supabase.from("editor_assets").update({ last_used_at: new Date().toISOString() }).eq("id", id),
-      wallet,
-    );
+    await call(wallet, { action: "touch", id });
   } catch (e) {
     console.warn("[editor] touch failed", e);
   }
@@ -188,30 +172,17 @@ export async function touchEditorAsset(wallet: string, id: string): Promise<void
 export async function preserveEditorAssets(wallet: string, ids: string[], postedPostId: string): Promise<void> {
   if (!ids.length) return;
   try {
-    await withWalletHeader(
-      supabase
-        .from("editor_assets")
-        .update({ preserved: true, posted_post_id: postedPostId, last_used_at: new Date().toISOString() })
-        .in("id", ids),
-      wallet,
-    );
+    await call(wallet, { action: "preserve", ids, postedPostId });
   } catch (e) {
     console.warn("[editor] preserve failed", e);
   }
 }
 
 export async function getEditorStorageUsage(wallet: string): Promise<{ used_bytes: number; asset_count: number }> {
-  const { data, error } = await withWalletHeader(
-    supabase.rpc("get_editor_storage_usage", { _wallet: wallet.toLowerCase() }),
-    wallet,
-  );
-  if (error) {
-    console.warn("[editor] usage rpc failed", error);
+  try {
+    return await call<{ used_bytes: number; asset_count: number }>(wallet, { action: "usage" });
+  } catch (error) {
+    console.warn("[editor] usage request failed", error);
     return { used_bytes: 0, asset_count: 0 };
   }
-  const row = Array.isArray(data) ? data[0] : data;
-  return {
-    used_bytes: Number(row?.used_bytes ?? 0),
-    asset_count: Number(row?.asset_count ?? 0),
-  };
 }
