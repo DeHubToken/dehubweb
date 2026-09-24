@@ -10,6 +10,7 @@
  * MARKETING_PAGES is required to have a card rather than falling back to the
  * shared one.
  */
+import { createHash } from 'node:crypto';
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -58,6 +59,19 @@ describe('per-route OG cards', () => {
       (f) => f !== 'dehub-social-share' && ![...cardKeys].some((k) => fileFor(k) === f),
     );
     expect(orphans).toEqual([]);
+  });
+
+  /** A copied file passes every existence check and still shares the wrong
+   *  picture: arcade-gods-eye.jpg was a byte copy of arcade.jpg. */
+  it('gives every card its own image, not a copy of another', () => {
+    const seen = new Map<string, string>();
+    const copies: string[] = [];
+    for (const f of readdirSync(resolve(ROOT, 'public/og'))) {
+      const hash = createHash('sha1').update(readFileSync(resolve(ROOT, 'public/og', f))).digest('hex');
+      if (seen.has(hash)) copies.push(`${f} = ${seen.get(hash)}`);
+      else seen.set(hash, f);
+    }
+    expect(copies).toEqual([]);
   });
 
   it('gives every edge-rendered marketing page its own card', () => {
