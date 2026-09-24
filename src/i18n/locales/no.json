@@ -3679,7 +3679,8 @@
       "fillOn": "Fyll",
       "outline": "Omriss",
       "outlineOn": "Omriss",
-      "outlineWidth": "Omrissbredde {{value}}"
+      "outlineWidth": "Omrissbredde {{value}}",
+      "path": "Tegning"
     },
     "elements": {
       "shapes": "Former",
@@ -3843,6 +3844,14 @@
       "apply": "Bruk merkevare",
       "addLogo": "Legg til logo",
       "applied": "Merkevaren er brukt på {{count}} lag."
+    },
+    "draw": {
+      "heading": "Tegn",
+      "start": "Begynn å tegne",
+      "stop": "Slutt å tegne",
+      "colour": "Pennefarge",
+      "width": "Pennestørrelse {{value}}",
+      "hint": "Dra på lerretet for å tegne. Hvert strøk er et eget lag du kan flytte, endre størrelse på eller slette. Trykk Esc for å stoppe."
     }
   },
   "fractions": {

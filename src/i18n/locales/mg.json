@@ -5672,7 +5672,8 @@
       "fillOn": "Famenoana",
       "outline": "Sisiny",
       "outlineOn": "Sisiny",
-      "outlineWidth": "Hatevin'ny sisiny {{value}}"
+      "outlineWidth": "Hatevin'ny sisiny {{value}}",
+      "path": "Sary vita"
     },
     "elements": {
       "shapes": "Bika",
@@ -5836,6 +5837,14 @@
       "apply": "Ampiharo ny marika",
       "addLogo": "Hanampy logo",
       "applied": "Nampiharina tamin'ny sosona {{count}} ny marika."
+    },
+    "draw": {
+      "heading": "Hanao sary",
+      "start": "Manomboka manao sary",
+      "stop": "Hampiato ny sary",
+      "colour": "Loko penina",
+      "width": "Haben'ny penina {{value}}",
+      "hint": "Tariho eo amin'ny lasitra mba hanaovana sary. Sosona manokana ny tsipika tsirairay, azonao afindra, ovaina habe na fafana. Tsindrio ny Esc mba hampiato."
     }
   },
   "createPost": {

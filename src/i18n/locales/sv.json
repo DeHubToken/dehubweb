@@ -5906,7 +5906,8 @@
       "fillOn": "Fyllning",
       "outline": "Kontur",
       "outlineOn": "Kontur",
-      "outlineWidth": "Konturbredd {{value}}"
+      "outlineWidth": "Konturbredd {{value}}",
+      "path": "Teckning"
     },
     "elements": {
       "shapes": "Former",
@@ -6070,6 +6071,14 @@
       "apply": "Använd varumärke",
       "addLogo": "Lägg till logotyp",
       "applied": "Varumärket tillämpades på {{count}} lager."
+    },
+    "draw": {
+      "heading": "Rita",
+      "start": "Börja rita",
+      "stop": "Sluta rita",
+      "colour": "Pennfärg",
+      "width": "Pennstorlek {{value}}",
+      "hint": "Dra på arbetsytan för att rita. Varje streck är ett eget lager som du kan flytta, ändra storlek på eller ta bort. Tryck på Esc för att sluta."
     }
   }
 }

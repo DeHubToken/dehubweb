@@ -5995,7 +5995,8 @@
       "fillOn": "Užpildas",
       "outline": "Kontūras",
       "outlineOn": "Kontūras",
-      "outlineWidth": "Kontūro storis {{value}}"
+      "outlineWidth": "Kontūro storis {{value}}",
+      "path": "Piešinys"
     },
     "elements": {
       "shapes": "Figūros",
@@ -6159,6 +6160,14 @@
       "apply": "Taikyti prekės ženklą",
       "addLogo": "Pridėti logotipą",
       "applied": "Prekės ženklas pritaikytas sluoksniams: {{count}}."
+    },
+    "draw": {
+      "heading": "Piešti",
+      "start": "Pradėti piešti",
+      "stop": "Baigti piešti",
+      "colour": "Rašiklio spalva",
+      "width": "Rašiklio dydis {{value}}",
+      "hint": "Vilkite per drobę, kad pieštumėte. Kiekvienas brūkšnys yra atskiras sluoksnis, kurį galite perkelti, keisti jo dydį arba ištrinti. Paspauskite Esc, kad sustabdytumėte."
     }
   }
 }

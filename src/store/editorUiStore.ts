@@ -34,6 +34,9 @@ interface EditorUiState {
   setCanvasFocus: (focus: boolean) => void;
   generatePrefill: GeneratePrefill | null;
   setGeneratePrefill: (prefill: GeneratePrefill | null) => void;
+  /** Freehand drawing: while set, dragging on the canvas draws instead of selecting. */
+  draw: { color: string; width: number } | null;
+  setDraw: (draw: { color: string; width: number } | null) => void;
 }
 
 export const useEditorUiStore = create<EditorUiState>((set) => ({
@@ -43,6 +46,8 @@ export const useEditorUiStore = create<EditorUiState>((set) => ({
   setTimelineOpen: (timelineOpen) => set({ timelineOpen }),
   canvasFocus: false,
   setCanvasFocus: (canvasFocus) => set({ canvasFocus }),
+  draw: null,
+  setDraw: (draw) => set({ draw }),
   generatePrefill: null,
   setGeneratePrefill: (generatePrefill) => set({ generatePrefill }),
   setPanel: (panel) => set({ panel }),

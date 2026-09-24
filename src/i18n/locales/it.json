@@ -6016,7 +6016,8 @@
       "fillOn": "Riempimento",
       "outline": "Contorno",
       "outlineOn": "Contorno",
-      "outlineWidth": "Spessore contorno {{value}}"
+      "outlineWidth": "Spessore contorno {{value}}",
+      "path": "Disegno"
     },
     "elements": {
       "shapes": "Forme",
@@ -6180,6 +6181,14 @@
       "apply": "Applica brand",
       "addLogo": "Aggiungi logo",
       "applied": "Brand applicato a {{count}} livelli."
+    },
+    "draw": {
+      "heading": "Disegna",
+      "start": "Inizia a disegnare",
+      "stop": "Smetti di disegnare",
+      "colour": "Colore penna",
+      "width": "Dimensione penna {{value}}",
+      "hint": "Trascina sulla tela per disegnare. Ogni tratto è un livello a sé che puoi spostare, ridimensionare o eliminare. Premi Esc per terminare."
     }
   }
 }

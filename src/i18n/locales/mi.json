@@ -3690,7 +3690,8 @@
       "fillOn": "Whakakī",
       "outline": "Tapa",
       "outlineOn": "Tapa",
-      "outlineWidth": "Whānui o te tapa {{value}}"
+      "outlineWidth": "Whānui o te tapa {{value}}",
+      "path": "Tuhinga"
     },
     "elements": {
       "shapes": "Hanga",
@@ -3854,6 +3855,14 @@
       "apply": "Whakamahia te waitohu",
       "addLogo": "Tāpiri moko",
       "applied": "Kua whakamahia te waitohu ki ngā paparanga {{count}}."
+    },
+    "draw": {
+      "heading": "Tuhi",
+      "start": "Tīmata ki te tuhi",
+      "stop": "Kāti te tuhi",
+      "colour": "Tae o te pene",
+      "width": "Rahi o te pene {{value}}",
+      "hint": "Tōia ki runga i te kānawehi hei tuhi. He paparanga motuhake ia rārangi ka taea e koe te neke, te panoni rahi, te muku rānei. Pēhia te Esc kia mutu."
     }
   },
   "fractions": {

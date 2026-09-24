@@ -161,7 +161,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
           {live(t("editor.layer.size", { value: Math.round(tr.scale * 100) }), tr.scale, 0.05, 6, 0.01,
             (v) => patchClipLive(clip.id, placementPatch(clip, { scale: v })))}
           <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">{t("editor.shape.style")}</p>
-          {shape.shape !== "line" && shape.shape !== "arrow" && (
+          {shape.shape !== "line" && shape.shape !== "arrow" && shape.shape !== "path" && (
             <div className="grid grid-cols-[1fr_auto] items-end gap-2">
               <div className="space-y-1">
                 <Label className="text-[10px] uppercase tracking-wide text-white/40">{t("editor.shape.fill")}</Label>

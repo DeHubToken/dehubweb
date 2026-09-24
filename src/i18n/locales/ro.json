@@ -5785,7 +5785,8 @@
       "fillOn": "Umplere",
       "outline": "Contur",
       "outlineOn": "Contur",
-      "outlineWidth": "Grosime contur {{value}}"
+      "outlineWidth": "Grosime contur {{value}}",
+      "path": "Desen"
     },
     "elements": {
       "shapes": "Forme",
@@ -5949,6 +5950,14 @@
       "apply": "Aplică brandul",
       "addLogo": "Adaugă logo",
       "applied": "Brand aplicat pe {{count}} straturi."
+    },
+    "draw": {
+      "heading": "Desenează",
+      "start": "Începe desenul",
+      "stop": "Oprește desenul",
+      "colour": "Culoarea stiloului",
+      "width": "Mărimea stiloului {{value}}",
+      "hint": "Trage pe pânză pentru a desena. Fiecare trăsătură este un strat separat pe care îl poți muta, redimensiona sau șterge. Apasă Esc pentru a opri."
     }
   },
   "footer": {

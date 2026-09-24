@@ -6024,7 +6024,8 @@
       "fillOn": "Preenchimento",
       "outline": "Contorno",
       "outlineOn": "Contorno",
-      "outlineWidth": "Espessura do contorno {{value}}"
+      "outlineWidth": "Espessura do contorno {{value}}",
+      "path": "Desenho"
     },
     "elements": {
       "shapes": "Formas",
@@ -6188,6 +6189,14 @@
       "apply": "Aplicar marca",
       "addLogo": "Adicionar logotipo",
       "applied": "Marca aplicada a {{count}} camadas."
+    },
+    "draw": {
+      "heading": "Desenhar",
+      "start": "Começar a desenhar",
+      "stop": "Parar de desenhar",
+      "colour": "Cor da caneta",
+      "width": "Tamanho da caneta {{value}}",
+      "hint": "Arraste na tela para desenhar. Cada traço é uma camada própria que você pode mover, redimensionar ou excluir. Pressione Esc para parar."
     }
   }
 }
