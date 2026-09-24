@@ -3824,6 +3824,13 @@
       "importMedia": "Miidiyaa galchi",
       "generateClip": "Kilippii uumi",
       "addHeadline": "Mata-duree dabali"
+    },
+    "adjust": {
+      "warmth": "Ho'a {{value}}",
+      "tint": "Tintii {{value}}",
+      "vignette": "Vinyeetii {{value}}%",
+      "auto": "Ofumaan fooyyessi",
+      "autoFailed": "Suuraa kana xiinxaluu hin dandeenye."
     }
   },
   "spaces": {

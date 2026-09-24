@@ -3802,6 +3802,13 @@
       "importMedia": "Kawemai pāpāho",
       "generateClip": "Waihanga topenga",
       "addHeadline": "Tāpiri upoko"
+    },
+    "adjust": {
+      "warmth": "Mahana {{value}}",
+      "tint": "Tae {{value}}",
+      "vignette": "Pouri tapa {{value}}%",
+      "auto": "Whakapai aunoa",
+      "autoFailed": "Kāore i taea te tātari i tēnei pikitia."
     }
   },
   "fractions": {

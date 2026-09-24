@@ -6119,6 +6119,13 @@
       "importMedia": "メディアを読み込む",
       "generateClip": "クリップを生成",
       "addHeadline": "見出しを追加"
+    },
+    "adjust": {
+      "warmth": "暖かみ {{value}}",
+      "tint": "色かぶり補正 {{value}}",
+      "vignette": "周辺減光 {{value}}%",
+      "auto": "自動補正",
+      "autoFailed": "この画像を解析できませんでした。"
     }
   }
 }

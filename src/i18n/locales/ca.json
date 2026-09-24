@@ -6015,6 +6015,13 @@
       "importMedia": "Importa multimèdia",
       "generateClip": "Genera un clip",
       "addHeadline": "Afegeix un titular"
+    },
+    "adjust": {
+      "warmth": "Calidesa {{value}}",
+      "tint": "Tonalitat {{value}}",
+      "vignette": "Vinyetatge {{value}}%",
+      "auto": "Millora automàtica",
+      "autoFailed": "No s'ha pogut analitzar aquesta imatge."
     }
   }
 }

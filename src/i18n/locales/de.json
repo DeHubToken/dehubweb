@@ -6128,6 +6128,13 @@
       "importMedia": "Medien importieren",
       "generateClip": "Clip generieren",
       "addHeadline": "Überschrift hinzufügen"
+    },
+    "adjust": {
+      "warmth": "Wärme {{value}}",
+      "tint": "Tönung {{value}}",
+      "vignette": "Vignette {{value}} %",
+      "auto": "Automatisch verbessern",
+      "autoFailed": "Dieses Bild konnte nicht analysiert werden."
     }
   }
 }

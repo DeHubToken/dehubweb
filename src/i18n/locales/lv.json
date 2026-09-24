@@ -6107,6 +6107,13 @@
       "importMedia": "Importēt multividi",
       "generateClip": "Ģenerēt klipu",
       "addHeadline": "Pievienot virsrakstu"
+    },
+    "adjust": {
+      "warmth": "Siltums {{value}}",
+      "tint": "Tonis {{value}}",
+      "vignette": "Vinjete {{value}}%",
+      "auto": "Automātiska uzlabošana",
+      "autoFailed": "Neizdevās analizēt šo attēlu."
     }
   }
 }

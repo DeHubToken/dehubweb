@@ -5897,6 +5897,13 @@
       "importMedia": "Importă media",
       "generateClip": "Generează un clip",
       "addHeadline": "Adaugă un titlu"
+    },
+    "adjust": {
+      "warmth": "Căldură {{value}}",
+      "tint": "Nuanță {{value}}",
+      "vignette": "Vignetă {{value}}%",
+      "auto": "Îmbunătățire automată",
+      "autoFailed": "Nu am putut analiza această imagine."
     }
   },
   "footer": {

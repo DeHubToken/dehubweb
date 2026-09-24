@@ -3839,6 +3839,13 @@
       "importMedia": "Ngenisa imidiya",
       "generateClip": "Khiqiza isiqeshana",
       "addHeadline": "Engeza isihloko"
+    },
+    "adjust": {
+      "warmth": "Ukufudumala {{value}}",
+      "tint": "Umbala {{value}}",
+      "vignette": "I-vignette {{value}}%",
+      "auto": "Thuthukisa ngokuzenzakalela",
+      "autoFailed": "Asikwazanga ukuhlaziya lesi sithombe."
     }
   },
   "fractions": {

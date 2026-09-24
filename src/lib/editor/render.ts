@@ -253,14 +253,89 @@ export function drawClip(ctx: Ctx2D, W: number, H: number, clip: Clip, t: number
   ctx.restore();
 }
 
+// ── Colour grading (warmth, tint, vignette) ──
+// CSS filters cannot shift white balance or vignette, so graded clips are
+// drawn to a scratch canvas first. The grade is confined to the clip's own
+// pixels (destination-in against the source), so a cut-out never tints the
+// layers beneath it. One scratch canvas is reused for every clip and frame.
+let scratch: OffscreenCanvas | HTMLCanvasElement | null = null;
+
+function scratchCanvas(w: number, h: number): OffscreenCanvas | HTMLCanvasElement | null {
+  if (!scratch) {
+    if (typeof OffscreenCanvas !== "undefined") scratch = new OffscreenCanvas(w, h);
+    else if (typeof document !== "undefined") scratch = document.createElement("canvas");
+    else return null;
+  }
+  if (scratch.width !== w) scratch.width = w;
+  if (scratch.height !== h) scratch.height = h;
+  return scratch;
+}
+
+export function needsGrade(e: MediaClip["effects"]): boolean {
+  return !!e && (!!e.warmth || !!e.tint || !!e.vignette);
+}
+
+function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: number, w: number, h: number, e: NonNullable<MediaClip["effects"]>) {
+  // Cap the working size: grading is about colour, not detail, and a 4K frame
+  // per tick would be wasted work.
+  const k = Math.min(1, 1600 / Math.max(w, h));
+  const cw = Math.max(1, Math.round(w * k));
+  const ch = Math.max(1, Math.round(h * k));
+  const cvs = scratchCanvas(cw, ch);
+  const g = cvs?.getContext("2d") as Ctx2D | null;
+  if (!cvs || !g) return null;
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  g.globalAlpha = 1;
+  g.filter = "none";
+  g.globalCompositeOperation = "copy";
+  g.drawImage(el, sx, sy, sw, sh, 0, 0, cw, ch);
+  const fillBlend = (colour: string, alpha: number, mode: GlobalCompositeOperation) => {
+    g.globalCompositeOperation = mode;
+    g.globalAlpha = alpha;
+    g.fillStyle = colour;
+    g.fillRect(0, 0, cw, ch);
+  };
+  const warmth = Math.max(-1, Math.min(1, e.warmth ?? 0));
+  if (warmth) fillBlend(warmth > 0 ? "#ff9a2e" : "#2e7bff", Math.abs(warmth) * 0.35, "soft-light");
+  const tint = Math.max(-1, Math.min(1, e.tint ?? 0));
+  if (tint) fillBlend(tint > 0 ? "#ff3ec8" : "#3eff6a", Math.abs(tint) * 0.3, "soft-light");
+  const vignette = Math.max(0, Math.min(1, e.vignette ?? 0));
+  if (vignette) {
+    const grad = g.createRadialGradient(cw / 2, ch / 2, Math.min(cw, ch) * 0.25, cw / 2, ch / 2, Math.hypot(cw, ch) / 2);
+    grad.addColorStop(0, "rgba(0,0,0,0)");
+    grad.addColorStop(1, `rgba(0,0,0,${0.85 * vignette})`);
+    g.globalCompositeOperation = "source-over";
+    g.globalAlpha = 1;
+    g.fillStyle = grad;
+    g.fillRect(0, 0, cw, ch);
+  }
+  // Put the source's own transparency back.
+  g.globalCompositeOperation = "destination-in";
+  g.globalAlpha = 1;
+  g.drawImage(el, sx, sy, sw, sh, 0, 0, cw, ch);
+  g.globalCompositeOperation = "source-over";
+  return { el: cvs as CanvasImageSource, w: cw, h: ch };
+}
+
 function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: RenderSources) {
   const m = mediaSource(clip, src);
   if (!m) return;
   const c = cropOf(clip);
-  const sx = m.w * c.left;
-  const sy = m.h * c.top;
-  const sw = m.w * (1 - c.left - c.right);
-  const sh = m.h * (1 - c.top - c.bottom);
+  let el = m.el;
+  let sx = m.w * c.left;
+  let sy = m.h * c.top;
+  let sw = m.w * (1 - c.left - c.right);
+  let sh = m.h * (1 - c.top - c.bottom);
+  if (needsGrade(clip.effects)) {
+    const graded = grade(el, sx, sy, sw, sh, Math.abs(box.w), Math.abs(box.h), clip.effects!);
+    if (graded) {
+      el = graded.el;
+      sx = 0;
+      sy = 0;
+      sw = graded.w;
+      sh = graded.h;
+    }
+  }
   const x = -box.w / 2;
   const y = -box.h / 2;
   const r = ((clip.radius ?? 0) / 1080) * H;
@@ -277,12 +352,12 @@ function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: Re
     ctx.save();
     roundRectPath(ctx, x, y, box.w, box.h, r);
     ctx.clip();
-    ctx.drawImage(m.el, sx, sy, sw, sh, x, y, box.w, box.h);
+    ctx.drawImage(el, sx, sy, sw, sh, x, y, box.w, box.h);
     ctx.restore();
   } else {
     // Without rounding the shadow follows the image's own alpha, so cut-outs cast a true shadow.
     applyShadow(ctx, clip, H);
-    ctx.drawImage(m.el, sx, sy, sw, sh, x, y, box.w, box.h);
+    ctx.drawImage(el, sx, sy, sw, sh, x, y, box.w, box.h);
     clearShadow(ctx);
   }
 }

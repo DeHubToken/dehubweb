@@ -3757,6 +3757,13 @@
       "importMedia": "মিডিয়া আনো",
       "generateClip": "ক্লিপ বানাও",
       "addHeadline": "হেডলাইন দেও"
+    },
+    "adjust": {
+      "warmth": "উষ্ণতা {{value}}",
+      "tint": "টিন্ট {{value}}",
+      "vignette": "ভিনেট {{value}}%",
+      "auto": "অটো এনহ্যান্স",
+      "autoFailed": "এই ছবিটা বিশ্লেষণ করা গেল না।"
     }
   },
   "post": {

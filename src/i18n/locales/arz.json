@@ -3802,6 +3802,13 @@
       "importMedia": "استيراد وسائط",
       "generateClip": "إنشاء مقطع",
       "addHeadline": "إضافة عنوان"
+    },
+    "adjust": {
+      "warmth": "الدفا {{value}}",
+      "tint": "الصبغة {{value}}",
+      "vignette": "التظليل {{value}}%",
+      "auto": "تحسين تلقائي",
+      "autoFailed": "مقدرناش نحلل الصورة دي."
     }
   },
   "fractions": {

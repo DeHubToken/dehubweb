@@ -3766,6 +3766,13 @@
       "importMedia": "Медиа оруулах",
       "generateClip": "Клип үүсгэх",
       "addHeadline": "Гарчиг нэмэх"
+    },
+    "adjust": {
+      "warmth": "Дулаан өнгө {{value}}",
+      "tint": "Өнгө аяс {{value}}",
+      "vignette": "Виньетка {{value}}%",
+      "auto": "Автоматаар сайжруулах",
+      "autoFailed": "Энэ зургийг шинжлэх боломжгүй байна."
     }
   },
   "fractions": {

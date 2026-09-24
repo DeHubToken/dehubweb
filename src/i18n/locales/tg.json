@@ -3786,6 +3786,13 @@
       "importMedia": "Воридоти медиа",
       "generateClip": "Эҷоди клип",
       "addHeadline": "Илова кардани сарлавҳа"
+    },
+    "adjust": {
+      "warmth": "Гармӣ {{value}}",
+      "tint": "Тобиш {{value}}",
+      "vignette": "Виньетка {{value}}%",
+      "auto": "Беҳсозии худкор",
+      "autoFailed": "Ин тасвирро таҳлил карда нашуд."
     }
   },
   "fractions": {

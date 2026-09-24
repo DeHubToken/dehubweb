@@ -5340,6 +5340,13 @@
       "importMedia": "นำเข้าสื่อ",
       "generateClip": "สร้างคลิป",
       "addHeadline": "เพิ่มพาดหัว"
+    },
+    "adjust": {
+      "warmth": "ความอุ่น {{value}}",
+      "tint": "สีอ่อน {{value}}",
+      "vignette": "ขอบมืด {{value}}%",
+      "auto": "ปรับปรุงอัตโนมัติ",
+      "autoFailed": "ไม่สามารถวิเคราะห์รูปภาพนี้ได้"
     }
   },
   "glossary": {

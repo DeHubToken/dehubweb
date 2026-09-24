@@ -3806,6 +3806,13 @@
       "importMedia": "匯入媒體",
       "generateClip": "生成片段",
       "addHeadline": "加入標題"
+    },
+    "adjust": {
+      "warmth": "暖度 {{value}}",
+      "tint": "色調 {{value}}",
+      "vignette": "暗角 {{value}}%",
+      "auto": "自動增強",
+      "autoFailed": "分析唔到呢張相。"
     }
   },
   "fractions": {

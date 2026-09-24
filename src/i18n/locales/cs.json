@@ -6019,6 +6019,13 @@
       "importMedia": "Importovat média",
       "generateClip": "Vygenerovat klip",
       "addHeadline": "Přidat nadpis"
+    },
+    "adjust": {
+      "warmth": "Teplota {{value}}",
+      "tint": "Odstín {{value}}",
+      "vignette": "Viněta {{value}}%",
+      "auto": "Automatické vylepšení",
+      "autoFailed": "Tento snímek se nepodařilo analyzovat."
     }
   }
 }

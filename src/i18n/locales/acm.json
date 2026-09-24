@@ -3761,6 +3761,13 @@
       "importMedia": "استورد وسائط",
       "generateClip": "سوّي مقطع",
       "addHeadline": "ضيف عنوان"
+    },
+    "adjust": {
+      "warmth": "الدفء {{value}}",
+      "tint": "الصبغة {{value}}",
+      "vignette": "التظليل {{value}}%",
+      "auto": "تحسين تلقائي",
+      "autoFailed": "ما كدرنا نحلل هاي الصورة."
     }
   },
   "fractions": {

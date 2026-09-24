@@ -3560,6 +3560,13 @@
       "importMedia": "میڈیا امپورٹ کرو",
       "generateClip": "کلپ بݨاؤ",
       "addHeadline": "سرخی شامل کرو"
+    },
+    "adjust": {
+      "warmth": "گرماہٹ {{value}}",
+      "tint": "ٹنٹ {{value}}",
+      "vignette": "وِگنیٹ {{value}}%",
+      "auto": "آٹو بہتری",
+      "autoFailed": "ایں تصویر دا تجزیہ نئیں تھی سڳیا۔"
     }
   },
   "fractions": {

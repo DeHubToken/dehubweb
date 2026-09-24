@@ -5838,6 +5838,13 @@
       "importMedia": "মিডিয়া আমদানি",
       "generateClip": "ক্লিপ তৈরি করুন",
       "addHeadline": "শিরোনাম যোগ করুন"
+    },
+    "adjust": {
+      "warmth": "উষ্ণতা {{value}}",
+      "tint": "টিন্ট {{value}}",
+      "vignette": "ভিনিয়েট {{value}}%",
+      "auto": "অটো এনহ্যান্স",
+      "autoFailed": "এই ছবিটি বিশ্লেষণ করা যায়নি।"
     }
   }
 }

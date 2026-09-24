@@ -6135,6 +6135,13 @@
       "importMedia": "Medya içe aktar",
       "generateClip": "Klip oluştur",
       "addHeadline": "Başlık ekle"
+    },
+    "adjust": {
+      "warmth": "Sıcaklık {{value}}",
+      "tint": "Renk tonu {{value}}",
+      "vignette": "Vinyet {{value}}%",
+      "auto": "Otomatik iyileştir",
+      "autoFailed": "Bu fotoğraf analiz edilemedi."
     }
   }
 }

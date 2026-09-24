@@ -3669,6 +3669,13 @@
       "importMedia": "Media don",
       "generateClip": "Klipu dɔ dilan",
       "addHeadline": "Kuntilenna fara a kan"
+    },
+    "adjust": {
+      "warmth": "Funteni {{value}}",
+      "tint": "Kulɛri {{value}}",
+      "vignette": "Dafɛw dibi {{value}}%",
+      "auto": "A ɲɛ ka ɲɛ a yɛrɛ ma",
+      "autoFailed": "Ja in ma se ka sɛgɛsɛgɛ."
     }
   },
   "fractions": {

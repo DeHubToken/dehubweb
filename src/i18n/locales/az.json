@@ -5973,6 +5973,13 @@
       "importMedia": "Media idxal et",
       "generateClip": "Klip yarat",
       "addHeadline": "Başlıq əlavə et"
+    },
+    "adjust": {
+      "warmth": "İstilik {{value}}",
+      "tint": "Çalar {{value}}",
+      "vignette": "Vinyet {{value}}%",
+      "auto": "Avtomatik təkmilləşdirmə",
+      "autoFailed": "Bu şəkli təhlil etmək mümkün olmadı."
     }
   }
 }

@@ -3759,6 +3759,13 @@
       "importMedia": "ميڊيا امپورٽ ڪريو",
       "generateClip": "ڪلپ ٺاهيو",
       "addHeadline": "سرخي شامل ڪريو"
+    },
+    "adjust": {
+      "warmth": "گرمائش {{value}}",
+      "tint": "رنگت {{value}}",
+      "vignette": "وِگنيٽ {{value}}%",
+      "auto": "خودڪار بهتري",
+      "autoFailed": "هن تصوير جو تجزيو نه ٿي سگهيو."
     }
   },
   "fractions": {

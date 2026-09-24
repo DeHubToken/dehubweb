@@ -3400,6 +3400,13 @@
       "importMedia": "মিডিয়া আনো",
       "generateClip": "ক্লিপ বানাও",
       "addHeadline": "শিরোনাম যোগ গরো"
+    },
+    "adjust": {
+      "warmth": "উষ্ণতা {{value}}",
+      "tint": "টিন্ট {{value}}",
+      "vignette": "ভিনেট {{value}}%",
+      "auto": "অটো এনহ্যান্স",
+      "autoFailed": "এই ছবিয়ান বিশ্লেষণ গরা ন গেল।"
     }
   },
   "post": {

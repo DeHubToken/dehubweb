@@ -6133,6 +6133,13 @@
       "importMedia": "استيراد وسائط",
       "generateClip": "توليد مقطع",
       "addHeadline": "إضافة عنوان"
+    },
+    "adjust": {
+      "warmth": "الدفء {{value}}",
+      "tint": "الصبغة {{value}}",
+      "vignette": "التظليل الجانبي {{value}}%",
+      "auto": "تحسين تلقائي",
+      "autoFailed": "تعذّر تحليل هذه الصورة."
     }
   }
 }

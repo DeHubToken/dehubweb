@@ -5953,6 +5953,13 @@
       "importMedia": "Voer media in",
       "generateClip": "Genereer 'n snit",
       "addHeadline": "Voeg 'n opskrif by"
+    },
+    "adjust": {
+      "warmth": "Warmte {{value}}",
+      "tint": "Tint {{value}}",
+      "vignette": "Vignet {{value}}%",
+      "auto": "Outo-verbeter",
+      "autoFailed": "Kon nie hierdie foto ontleed nie."
     }
   },
   "footer": {

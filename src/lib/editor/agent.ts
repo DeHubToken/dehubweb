@@ -221,6 +221,7 @@ function effectsPatch(op: AgentOp, current: ClipEffects | undefined): ClipEffect
   const fields: [keyof ClipEffects, number, number][] = [
     ["brightness", 0, 2], ["contrast", 0, 2], ["saturation", 0, 2], ["blur", 0, 20],
     ["grayscale", 0, 1], ["sepia", 0, 1], ["invert", 0, 1], ["hueRotate", 0, 360],
+    ["warmth", -1, 1], ["tint", -1, 1], ["vignette", 0, 1],
   ];
   for (const [key, lo, hi] of fields) {
     const v = num(op[key]);
@@ -260,6 +261,20 @@ async function fitTextToPage(id: string) {
   if (box && box.w > max) {
     useEditorStore.getState().patchClip(id, { fontSize: Math.max(12, Math.floor(clip.fontSize * (max / box.w))) });
   }
+}
+
+const NOT_A_PHOTO = /illustrat|clip ?art|vector|drawing|cartoon|icon|logo|diagram|sketch|svg/i;
+
+/**
+ * Pick the best stock result, not just the first. Openverse's "photograph"
+ * category still returns clip-art (a white-background palm-tree illustration
+ * came back for "palm trees tropical beach" on staging), so skip anything
+ * titled like an illustration and prefer pictures big enough to fill a page.
+ */
+function pickStock<T extends { title: string; width?: number; mimeType: string }>(items: T[], kind: string): T | undefined {
+  if (kind !== "photo") return items[0];
+  const photos = items.filter((a) => !NOT_A_PHOTO.test(a.title) && !a.mimeType.includes("svg"));
+  return photos.find((a) => (a.width ?? 0) >= 1000) ?? photos[0] ?? items[0];
 }
 
 export interface ApplyContext {
@@ -500,7 +515,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         let asset: Awaited<ReturnType<typeof searchFreeAssets>>["items"][number] | undefined;
         for (const [q, o] of attempts) {
           try {
-            asset = (await searchFreeAssets({ kind, query: q, page: 1, orientation: o })).items[0];
+            asset = pickStock((await searchFreeAssets({ kind, query: q, page: 1, orientation: o })).items, kind);
           } catch {
             asset = undefined;
           }

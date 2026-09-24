@@ -5845,6 +5845,13 @@
       "importMedia": "میڈیا امپورٹ کریں",
       "generateClip": "کلپ بنائیں",
       "addHeadline": "سرخی شامل کریں"
+    },
+    "adjust": {
+      "warmth": "گرماہٹ {{value}}",
+      "tint": "ٹنٹ {{value}}",
+      "vignette": "وِگنیٹ {{value}}%",
+      "auto": "خودکار بہتری",
+      "autoFailed": "اس تصویر کا تجزیہ نہیں ہو سکا۔"
     }
   }
 }

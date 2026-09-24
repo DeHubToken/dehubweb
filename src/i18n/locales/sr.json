@@ -2994,6 +2994,13 @@
       "importMedia": "Увези медије",
       "generateClip": "Генериши клип",
       "addHeadline": "Додај наслов"
+    },
+    "adjust": {
+      "warmth": "Топлина {{value}}",
+      "tint": "Нијанса {{value}}",
+      "vignette": "Вињета {{value}}%",
+      "auto": "Аутоматско побољшање",
+      "autoFailed": "Није могуће анализирати ову слику."
     }
   },
   "fractions": {

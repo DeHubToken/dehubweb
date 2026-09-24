@@ -3838,6 +3838,13 @@
       "importMedia": "Mediata apamuy",
       "generateClip": "Klipta ruray",
       "addHeadline": "Umalliq qillqata yapay"
+    },
+    "adjust": {
+      "warmth": "Q'uñi kay {{value}}",
+      "tint": "Llimp'i tinti {{value}}",
+      "vignette": "Patakuna tutayachiy {{value}}%",
+      "auto": "Kikillanmanta allinchay",
+      "autoFailed": "Manam kay siq'ita t'aqwiyta atikurqanchu."
     }
   },
   "fractions": {

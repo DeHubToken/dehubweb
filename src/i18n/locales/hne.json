@@ -3687,6 +3687,13 @@
       "importMedia": "मीडिया लावव",
       "generateClip": "क्लिप बनाव",
       "addHeadline": "हेडलाइन जोड़व"
+    },
+    "adjust": {
+      "warmth": "गरमाहट {{value}}",
+      "tint": "टिंट {{value}}",
+      "vignette": "विनेट {{value}}%",
+      "auto": "ऑटो सुधार",
+      "autoFailed": "ए फोटो के विश्लेषण नइ हो सकिस।"
     }
   },
   "post": {

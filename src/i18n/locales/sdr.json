@@ -3666,6 +3666,13 @@
       "importMedia": "میڈیا لاؤ",
       "generateClip": "کلپ بناؤ",
       "addHeadline": "سرخی جوڑو"
+    },
+    "adjust": {
+      "warmth": "گرماہٹ {{value}}",
+      "tint": "ٹنٹ {{value}}",
+      "vignette": "وِگنیٹ {{value}}%",
+      "auto": "آٹو بہتر کرو",
+      "autoFailed": "ای تصویر کے جانچ نہیں ہوئے سکلک۔"
     }
   },
   "post": {

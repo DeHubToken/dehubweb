@@ -5830,6 +5830,13 @@
       "importMedia": "ייבוא מדיה",
       "generateClip": "יצירת קליפ",
       "addHeadline": "הוספת כותרת"
+    },
+    "adjust": {
+      "warmth": "חמימות {{value}}",
+      "tint": "גוון {{value}}",
+      "vignette": "הצללת שוליים {{value}}%",
+      "auto": "שיפור אוטומטי",
+      "autoFailed": "לא ניתן היה לנתח את התמונה הזו."
     }
   }
 }

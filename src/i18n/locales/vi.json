@@ -5836,6 +5836,13 @@
       "importMedia": "Nhập phương tiện",
       "generateClip": "Tạo clip",
       "addHeadline": "Thêm tiêu đề"
+    },
+    "adjust": {
+      "warmth": "Độ ấm {{value}}",
+      "tint": "Sắc thái {{value}}",
+      "vignette": "Làm tối góc {{value}}%",
+      "auto": "Tự động nâng cao",
+      "autoFailed": "Không thể phân tích ảnh này."
     }
   },
   "glossary": {

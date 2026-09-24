@@ -3671,6 +3671,13 @@
       "importMedia": "رسنۍ راوړئ",
       "generateClip": "کلیپ جوړ کړئ",
       "addHeadline": "سرلیک زیات کړئ"
+    },
+    "adjust": {
+      "warmth": "تودوالی {{value}}",
+      "tint": "رنګ ټینټ {{value}}",
+      "vignette": "وینیټ {{value}}%",
+      "auto": "اتومات ښه کول",
+      "autoFailed": "دا انځور ونه شو شننل."
     }
   },
   "fractions": {

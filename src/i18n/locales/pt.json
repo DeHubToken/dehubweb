@@ -6136,6 +6136,13 @@
       "importMedia": "Importar mídia",
       "generateClip": "Gerar um clipe",
       "addHeadline": "Adicionar título"
+    },
+    "adjust": {
+      "warmth": "Temperatura {{value}}",
+      "tint": "Matiz {{value}}",
+      "vignette": "Vinheta {{value}}%",
+      "auto": "Aprimorar automaticamente",
+      "autoFailed": "Não foi possível analisar esta imagem."
     }
   }
 }

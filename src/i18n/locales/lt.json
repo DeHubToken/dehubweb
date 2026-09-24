@@ -6107,6 +6107,13 @@
       "importMedia": "Importuoti mediją",
       "generateClip": "Sugeneruoti klipą",
       "addHeadline": "Pridėti antraštę"
+    },
+    "adjust": {
+      "warmth": "Šiltumas {{value}}",
+      "tint": "Atspalvis {{value}}",
+      "vignette": "Vinjetė {{value}} %",
+      "auto": "Automatinis pagerinimas",
+      "autoFailed": "Nepavyko išanalizuoti šios nuotraukos."
     }
   }
 }

@@ -3797,6 +3797,13 @@
       "importMedia": "Kó mídíà wọlé",
       "generateClip": "Ṣe kílíìpù",
       "addHeadline": "Ṣafikun àkọlé"
+    },
+    "adjust": {
+      "warmth": "Ìgbóná {{value}}",
+      "tint": "Àwọ̀ díẹ̀ {{value}}",
+      "vignette": "Òkùnkùn etí {{value}}%",
+      "auto": "Àtúnṣe aládàáṣe",
+      "autoFailed": "A kò lè ṣàyẹ̀wò àwòrán yìí."
     }
   },
   "fractions": {

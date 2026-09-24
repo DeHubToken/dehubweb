@@ -5907,6 +5907,13 @@
       "importMedia": "នាំចូលមេឌៀ",
       "generateClip": "បង្កើតឃ្លីប",
       "addHeadline": "បន្ថែមចំណងជើង"
+    },
+    "adjust": {
+      "warmth": "ភាពកក់ក្ដៅ {{value}}",
+      "tint": "ពណ៌លាំ {{value}}",
+      "vignette": "វីញ៉េត {{value}}%",
+      "auto": "កែលម្អស្វ័យប្រវត្តិ",
+      "autoFailed": "មិនអាចវិភាគរូបភាពនេះបានទេ។"
     }
   },
   "spaces": {

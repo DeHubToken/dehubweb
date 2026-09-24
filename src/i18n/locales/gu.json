@@ -3770,6 +3770,13 @@
       "importMedia": "મીડિયા ઇમ્પોર્ટ કરો",
       "generateClip": "ક્લિપ બનાવો",
       "addHeadline": "હેડલાઇન ઉમેરો"
+    },
+    "adjust": {
+      "warmth": "ઉષ્ણતા {{value}}",
+      "tint": "ટિન્ટ {{value}}",
+      "vignette": "વિગ્નેટ {{value}}%",
+      "auto": "ઓટો એન્હાન્સ",
+      "autoFailed": "આ ચિત્રનું વિશ્લેષણ કરી શકાયું નહીં."
     }
   },
   "fractions": {

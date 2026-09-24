@@ -5784,6 +5784,13 @@
       "importMedia": "Hampiditra media",
       "generateClip": "Hamorona klip",
       "addHeadline": "Hanampy lohateny"
+    },
+    "adjust": {
+      "warmth": "Hafanana {{value}}",
+      "tint": "Loko manjavozavo {{value}}",
+      "vignette": "Maizina amin'ny sisiny {{value}}%",
+      "auto": "Fanatsarana ho azy",
+      "autoFailed": "Tsy voadinika ity sary ity."
     }
   },
   "createPost": {

@@ -3658,6 +3658,13 @@
       "importMedia": "ሚዲያ አስገባ",
       "generateClip": "ክሊፕ ፍጠር",
       "addHeadline": "ርዕስ ጨምር"
+    },
+    "adjust": {
+      "warmth": "ሙቀት {{value}}",
+      "tint": "ቅልም {{value}}",
+      "vignette": "ቪኜት {{value}}%",
+      "auto": "ራስ-ሰር ማሻሻያ",
+      "autoFailed": "ይህን ምስል መተንተን አልተቻለም።"
     }
   },
   "fractions": {

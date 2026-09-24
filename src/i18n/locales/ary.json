@@ -3767,6 +3767,13 @@
       "importMedia": "زيد ميديا",
       "generateClip": "صايب كليب",
       "addHeadline": "زيد عنوان"
+    },
+    "adjust": {
+      "warmth": "الدفء {{value}}",
+      "tint": "اللون {{value}}",
+      "vignette": "التظليل {{value}}%",
+      "auto": "تحسين أوتوماتيكي",
+      "autoFailed": "ما قدرناش نحللو هاد التصويرة."
     }
   },
   "fractions": {

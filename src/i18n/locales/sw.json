@@ -6072,6 +6072,13 @@
       "importMedia": "Leta media",
       "generateClip": "Tengeneza klipu",
       "addHeadline": "Ongeza kichwa"
+    },
+    "adjust": {
+      "warmth": "Joto {{value}}",
+      "tint": "Rangi-ndogo {{value}}",
+      "vignette": "Vinyeti {{value}}%",
+      "auto": "Boresha kiotomatiki",
+      "autoFailed": "Haikuweza kuchanganua picha hii."
     }
   }
 }

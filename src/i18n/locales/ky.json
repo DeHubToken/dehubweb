@@ -6096,6 +6096,13 @@
       "importMedia": "Медиа импорттоо",
       "generateClip": "Клип түзүү",
       "addHeadline": "Аталыш кошуу"
+    },
+    "adjust": {
+      "warmth": "Жылуулук {{value}}",
+      "tint": "Түс кошумчасы {{value}}",
+      "vignette": "Виньетка {{value}}%",
+      "auto": "Автожакшыртуу",
+      "autoFailed": "Бул сүрөттү талдоо мүмкүн болгон жок."
     }
   }
 }

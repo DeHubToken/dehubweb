@@ -3702,6 +3702,13 @@
       "importMedia": "माध्यमम् आनयतु",
       "generateClip": "क्लिप् रचयतु",
       "addHeadline": "शीर्षकं योजयतु"
+    },
+    "adjust": {
+      "warmth": "उष्णता {{value}}",
+      "tint": "वर्णच्छाया {{value}}",
+      "vignette": "विग्नेट् {{value}}%",
+      "auto": "स्वचालितसंवर्धनम्",
+      "autoFailed": "अस्य चित्रस्य विश्लेषणं कर्तुं न शक्तम्।"
     }
   },
   "fractions": {

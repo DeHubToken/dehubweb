@@ -6135,6 +6135,13 @@
       "importMedia": "Importar medios",
       "generateClip": "Generar un clip",
       "addHeadline": "Añadir un titular"
+    },
+    "adjust": {
+      "warmth": "Calidez {{value}}",
+      "tint": "Matiz {{value}}",
+      "vignette": "Viñeta {{value}}%",
+      "auto": "Mejora automática",
+      "autoFailed": "No se pudo analizar esta imagen."
     }
   }
 }

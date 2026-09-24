@@ -5755,6 +5755,13 @@
       "importMedia": "ນຳເຂົ້າສື່",
       "generateClip": "ສ້າງຄລິບ",
       "addHeadline": "ເພີ່ມຫົວຂໍ້"
+    },
+    "adjust": {
+      "warmth": "ຄວາມອົບອຸ່ນ {{value}}",
+      "tint": "ໂທນສີ {{value}}",
+      "vignette": "ຂອບມືດ {{value}}%",
+      "auto": "ປັບປຸງອັດຕະໂນມັດ",
+      "autoFailed": "ບໍ່ສາມາດວິເຄາະຮູບນີ້ໄດ້."
     }
   }
 }

@@ -6283,6 +6283,13 @@
       "importMedia": "Media importeren",
       "generateClip": "Clip genereren",
       "addHeadline": "Kop toevoegen"
+    },
+    "adjust": {
+      "warmth": "Warmte {{value}}",
+      "tint": "Tint {{value}}",
+      "vignette": "Vignet {{value}}%",
+      "auto": "Automatisch verbeteren",
+      "autoFailed": "Deze foto kon niet worden geanalyseerd."
     }
   },
   "glossary": {

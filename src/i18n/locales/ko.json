@@ -6123,6 +6123,13 @@
       "importMedia": "미디어 가져오기",
       "generateClip": "클립 생성",
       "addHeadline": "제목 추가"
+    },
+    "adjust": {
+      "warmth": "따뜻함 {{value}}",
+      "tint": "색조 {{value}}",
+      "vignette": "비네트 {{value}}%",
+      "auto": "자동 보정",
+      "autoFailed": "이 사진을 분석할 수 없습니다."
     }
   }
 }

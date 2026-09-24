@@ -112,6 +112,12 @@ export interface ClipEffects {
   hueRotate?: number;
   /** 0..1, 0 = off */
   invert?: number;
+  /** -1 (cool/blue) .. 1 (warm/orange), 0 = neutral */
+  warmth?: number;
+  /** -1 (green) .. 1 (magenta), 0 = neutral */
+  tint?: number;
+  /** 0..1 darkening towards the edges, 0 = off */
+  vignette?: number;
 }
 
 export type ClipAnimationKind =
