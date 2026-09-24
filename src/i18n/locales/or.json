@@ -3745,6 +3745,13 @@
       "importMedia": "ମିଡିଆ ଇମ୍ପୋର୍ଟ କରନ୍ତୁ",
       "generateClip": "ଏକ କ୍ଲିପ୍ ତିଆରି କରନ୍ତୁ",
       "addHeadline": "ଏକ ଶୀର୍ଷକ ଯୋଡନ୍ତୁ"
+    },
+    "adjust": {
+      "warmth": "ଉଷ୍ଣତା {{value}}",
+      "tint": "ଟିଣ୍ଟ {{value}}",
+      "vignette": "ଭିଗ୍ନେଟ {{value}}%",
+      "auto": "ଅଟୋ ଏନହାନ୍ସ",
+      "autoFailed": "ଏହି ଛବିର ବିଶ୍ଳେଷଣ କରାଯାଇପାରିଲା ନାହିଁ।"
     }
   },
   "fractions": {

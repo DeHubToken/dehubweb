@@ -6016,6 +6016,13 @@
       "importMedia": "Tuo mediaa",
       "generateClip": "Luo klippi",
       "addHeadline": "Lisää otsikko"
+    },
+    "adjust": {
+      "warmth": "Lämpö {{value}}",
+      "tint": "Sävy {{value}}",
+      "vignette": "Vinjetti {{value}} %",
+      "auto": "Automaattinen parannus",
+      "autoFailed": "Kuvaa ei voitu analysoida."
     }
   }
 }

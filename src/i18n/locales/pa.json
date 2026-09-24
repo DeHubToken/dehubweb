@@ -3743,6 +3743,13 @@
       "importMedia": "ਮੀਡੀਆ ਇੰਪੋਰਟ ਕਰੋ",
       "generateClip": "ਕਲਿੱਪ ਬਣਾਓ",
       "addHeadline": "ਹੈੱਡਲਾਈਨ ਜੋੜੋ"
+    },
+    "adjust": {
+      "warmth": "ਗਰਮਾਹਟ {{value}}",
+      "tint": "ਟਿੰਟ {{value}}",
+      "vignette": "ਵਿਗਨੈੱਟ {{value}}%",
+      "auto": "ਆਟੋ ਸੁਧਾਰ",
+      "autoFailed": "ਇਸ ਤਸਵੀਰ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਨਹੀਂ ਹੋ ਸਕਿਆ।"
     }
   },
   "fractions": {

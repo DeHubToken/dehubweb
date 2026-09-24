@@ -3791,6 +3791,13 @@
       "importMedia": "Importer media",
       "generateClip": "Generer et klipp",
       "addHeadline": "Legg til en overskrift"
+    },
+    "adjust": {
+      "warmth": "Varme {{value}}",
+      "tint": "Fargetone {{value}}",
+      "vignette": "Vignett {{value}} %",
+      "auto": "Autoforbedring",
+      "autoFailed": "Kunne ikke analysere dette bildet."
     }
   },
   "fractions": {

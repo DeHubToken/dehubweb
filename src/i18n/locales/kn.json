@@ -6028,6 +6028,13 @@
       "importMedia": "ಮಾಧ್ಯಮ ಆಮದು ಮಾಡಿ",
       "generateClip": "ಕ್ಲಿಪ್ ರಚಿಸಿ",
       "addHeadline": "ಶೀರ್ಷಿಕೆ ಸೇರಿಸಿ"
+    },
+    "adjust": {
+      "warmth": "ಬೆಚ್ಚಗು {{value}}",
+      "tint": "ಟಿಂಟ್ {{value}}",
+      "vignette": "ವಿಗ್ನೆಟ್ {{value}}%",
+      "auto": "ಸ್ವಯಂ ವರ್ಧನೆ",
+      "autoFailed": "ಈ ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ."
     }
   }
 }

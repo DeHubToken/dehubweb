@@ -6070,6 +6070,13 @@
       "importMedia": "Медиа импорттау",
       "generateClip": "Клип жасау",
       "addHeadline": "Тақырып қосу"
+    },
+    "adjust": {
+      "warmth": "Жылылық {{value}}",
+      "tint": "Реңк {{value}}",
+      "vignette": "Виньетка {{value}}%",
+      "auto": "Автожақсарту",
+      "autoFailed": "Бұл суретті талдау мүмкін болмады."
     }
   },
   "spaces": {

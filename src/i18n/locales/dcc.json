@@ -2606,6 +2606,13 @@
       "importMedia": "میڈیا لاؤ",
       "generateClip": "کلپ بناؤ",
       "addHeadline": "سرخی ڈالو"
+    },
+    "adjust": {
+      "warmth": "گرمائی {{value}}",
+      "tint": "ٹِنٹ {{value}}",
+      "vignette": "وِگنیٹ {{value}}%",
+      "auto": "آٹو بہتر کرو",
+      "autoFailed": "اس تصویر کو پرکھ نئیں سکے۔"
     }
   },
   "fractions": {

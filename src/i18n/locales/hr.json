@@ -6015,6 +6015,13 @@
       "importMedia": "Uvezi medije",
       "generateClip": "Generiraj isječak",
       "addHeadline": "Dodaj naslov"
+    },
+    "adjust": {
+      "warmth": "Toplina {{value}}",
+      "tint": "Nijansa {{value}}",
+      "vignette": "Vinjeta {{value}}%",
+      "auto": "Automatsko poboljšanje",
+      "autoFailed": "Nije moguće analizirati ovu sliku."
     }
   }
 }

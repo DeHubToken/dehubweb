@@ -3822,6 +3822,13 @@
       "importMedia": "Media import qilish",
       "generateClip": "Klip yaratish",
       "addHeadline": "Sarlavha qo'shish"
+    },
+    "adjust": {
+      "warmth": "Iliqlik {{value}}",
+      "tint": "Tus {{value}}",
+      "vignette": "Vinyetka {{value}}%",
+      "auto": "Avtomatik yaxshilash",
+      "autoFailed": "Bu rasmni tahlil qilib bo'lmadi."
     }
   },
   "spaces": {

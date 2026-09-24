@@ -6087,6 +6087,13 @@
       "importMedia": "Importuj multimedia",
       "generateClip": "Wygeneruj klip",
       "addHeadline": "Dodaj nagłówek"
+    },
+    "adjust": {
+      "warmth": "Ciepło {{value}}",
+      "tint": "Odcień {{value}}",
+      "vignette": "Winieta {{value}}%",
+      "auto": "Automatyczne ulepszanie",
+      "autoFailed": "Nie udało się przeanalizować tego zdjęcia."
     }
   },
   "glossary": {

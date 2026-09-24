@@ -5924,6 +5924,13 @@
       "importMedia": "მედიის იმპორტი",
       "generateClip": "კლიპის გენერირება",
       "addHeadline": "სათაურის დამატება"
+    },
+    "adjust": {
+      "warmth": "სითბო {{value}}",
+      "tint": "ელფერი {{value}}",
+      "vignette": "ვინიეტი {{value}}%",
+      "auto": "ავტოგაუმჯობესება",
+      "autoFailed": "ამ სურათის ანალიზი ვერ მოხერხდა."
     }
   },
   "spaces": {

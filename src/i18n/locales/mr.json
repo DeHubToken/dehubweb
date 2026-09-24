@@ -5796,6 +5796,13 @@
       "importMedia": "मीडिया आयात करा",
       "generateClip": "क्लिप तयार करा",
       "addHeadline": "मथळा जोडा"
+    },
+    "adjust": {
+      "warmth": "उबदारपणा {{value}}",
+      "tint": "टिंट {{value}}",
+      "vignette": "व्हिनेट {{value}}%",
+      "auto": "ऑटो सुधारणा",
+      "autoFailed": "हे चित्र विश्लेषित करता आले नाही."
     }
   }
 }

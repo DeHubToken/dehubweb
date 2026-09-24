@@ -3733,6 +3733,13 @@
       "importMedia": "استورد وسائط",
       "generateClip": "اعمل مقطع",
       "addHeadline": "أضف عنوان"
+    },
+    "adjust": {
+      "warmth": "الدفء {{value}}",
+      "tint": "الصبغة {{value}}",
+      "vignette": "التظليل {{value}}%",
+      "auto": "تحسين تلقائي",
+      "autoFailed": "ما قدرنا نحلل الصورة دي."
     }
   },
   "fractions": {

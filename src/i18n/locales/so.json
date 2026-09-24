@@ -3799,6 +3799,13 @@
       "importMedia": "Soo geli warbaahin",
       "generateClip": "Samee kilib",
       "addHeadline": "Ku dar cinwaan"
+    },
+    "adjust": {
+      "warmth": "Diirimaad {{value}}",
+      "tint": "Midab-dhex {{value}}",
+      "vignette": "Madoobaynta geesaha {{value}}%",
+      "auto": "Hagaajin toos ah",
+      "autoFailed": "Sawirkan lama falanqayn karin."
     }
   },
   "fractions": {

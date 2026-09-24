@@ -3731,6 +3731,13 @@
       "importMedia": "मीडिया इंपोर्ट करीं",
       "generateClip": "क्लिप बनाईं",
       "addHeadline": "हेडलाइन जोड़ीं"
+    },
+    "adjust": {
+      "warmth": "गरमाहट {{value}}",
+      "tint": "टिंट {{value}}",
+      "vignette": "विनेट {{value}}%",
+      "auto": "ऑटो सुधार",
+      "autoFailed": "ई फोटो के जाँच न हो सकल।"
     }
   },
   "fractions": {

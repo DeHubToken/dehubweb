@@ -3139,6 +3139,13 @@
       "importMedia": "Import media",
       "generateClip": "Make clip",
       "addHeadline": "Add headline"
+    },
+    "adjust": {
+      "warmth": "Warmth {{value}}",
+      "tint": "Tint {{value}}",
+      "vignette": "Vignette {{value}}%",
+      "auto": "Auto enhance",
+      "autoFailed": "We no fit check dis picture."
     }
   },
   "fractions": {

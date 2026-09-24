@@ -6335,6 +6335,13 @@
       "importMedia": "Import media",
       "generateClip": "Jana klip",
       "addHeadline": "Tambah tajuk utama"
+    },
+    "adjust": {
+      "warmth": "Kehangatan {{value}}",
+      "tint": "Rona {{value}}",
+      "vignette": "Vignet {{value}}%",
+      "auto": "Tingkatkan automatik",
+      "autoFailed": "Tidak dapat menganalisis gambar ini."
     }
   }
 }
