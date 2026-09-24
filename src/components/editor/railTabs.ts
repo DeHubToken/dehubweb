@@ -5,22 +5,24 @@
  * same tools in the same order. Kept in its own module so the rail file
  * only exports components and stays hot-reloadable.
  */
-import { ImagePlus, LayoutTemplate, LibraryBig, SlidersHorizontal, Sparkles, Type, Wand2 } from 'lucide-react';
+import { Bot, ImagePlus, LayoutTemplate, LibraryBig, SlidersHorizontal, Sparkles, Type, Wand2 } from 'lucide-react';
 import type { EditorPanel } from '@/store/editorUiStore';
 
 export interface RailTab {
   id: EditorPanel;
-  label: string;
+  /** i18n key; render with t(tab.labelKey). */
+  labelKey: string;
   icon: React.ComponentType<{ className?: string }>;
 }
 
 export const RAIL_TABS: RailTab[] = [
-  { id: 'design', label: 'Design', icon: LayoutTemplate },
-  { id: 'assets', label: 'Assets', icon: LibraryBig },
-  { id: 'media', label: 'Media', icon: ImagePlus },
-  { id: 'text', label: 'Text', icon: Type },
-  { id: 'generate', label: 'Generate', icon: Sparkles },
-  { id: 'library', label: 'Generations', icon: Wand2 },
+  { id: 'agent', labelKey: 'editor.rail.agent', icon: Bot },
+  { id: 'design', labelKey: 'editor.rail.design', icon: LayoutTemplate },
+  { id: 'assets', labelKey: 'editor.rail.assets', icon: LibraryBig },
+  { id: 'media', labelKey: 'editor.rail.media', icon: ImagePlus },
+  { id: 'text', labelKey: 'editor.rail.text', icon: Type },
+  { id: 'generate', labelKey: 'editor.rail.generate', icon: Sparkles },
+  { id: 'library', labelKey: 'editor.rail.generations', icon: Wand2 },
 ];
 
 /**
@@ -31,6 +33,6 @@ export const RAIL_TABS: RailTab[] = [
  */
 export const INSPECTOR_TAB: RailTab = {
   id: 'inspector',
-  label: 'Edit',
+  labelKey: 'editor.rail.edit',
   icon: SlidersHorizontal,
 };

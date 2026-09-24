@@ -3610,6 +3610,40 @@
       "sendToBack": "Ganz nach hinde schicke",
       "duplicate": "Dupliziere",
       "delete": "Lösche"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Gstaltig",
+      "assets": "Elemänt",
+      "media": "Medie",
+      "text": "Text",
+      "generate": "Generiere",
+      "generations": "Generierts",
+      "edit": "Bearbeite",
+      "collapse": "Panel zueklappe",
+      "home": "Hei"
+    },
+    "agent": {
+      "introTitle": "Säg de AI, was du wotsch",
+      "introBody": "Beschrieb d'Gstaltig oder d'Änderig i dine eigete Wort. Si passt d'Gröössi vo de Siite aa, schriibt und gstaltet Text, findet gratis Fotis, Videos und Musig, wändet Filter aa, ordnet Ebene und animiert si. Jedi Aafrog isch ei Rückgängig.",
+      "suggestPoster": "Mach en quadratische Instagram-Post für en Summerusverchauf mit emne Strandfoti und emne fette Titel",
+      "suggestTitle": "Tue obe en grosse, fette Titel dezue und drunder en chliinere Untertitel",
+      "suggestFilter": "Mach s'Foti wärmer und chli heller",
+      "suggestStory": "Mach drus e 9:16-Story und füll d'Siite mit em Foti",
+      "suggestBackground": "Tue ruhigi Hintergrundmusig dezue und bländ de Text iä",
+      "placeholder": "Beschrieb, was du wotsch…",
+      "send": "Schicke",
+      "hint": "Enter zum Schicke · Ctrl+K zum do here springe",
+      "clear": "Chat lösche",
+      "working": "Bi draa…",
+      "done": "Fertig.",
+      "nothingToDo": "Ich ha nüt gfunde, wo mer do chönnt ändere. Beschrieb doch d'Bearbeitig, wo du wotsch.",
+      "noStock": "Kei gratis Material passt zu «{{query}}».",
+      "rateLimited": "Du hesch vill Aafroge gschickt. Probier's i es paar Minute nomol.",
+      "failed": "D'AI het das grad nöd chöne mache. Probier's gli nomol.",
+      "changes": "Bearbeitige: {{count}}",
+      "undo": "Rückgängig",
+      "openGenerator": "Aaluege und generiere"
     }
   }
 }

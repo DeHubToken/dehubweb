@@ -5921,6 +5921,40 @@
       "sendToBack": "Przesuń na spód",
       "duplicate": "Duplikuj",
       "delete": "Usuń"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Projekt",
+      "assets": "Zasoby",
+      "media": "Multimedia",
+      "text": "Tekst",
+      "generate": "Generuj",
+      "generations": "Wygenerowane",
+      "edit": "Edytuj",
+      "collapse": "Zwiń panel",
+      "home": "Strona główna"
+    },
+    "agent": {
+      "introTitle": "Powiedz AI, czego chcesz",
+      "introBody": "Opisz projekt lub zmianę własnymi słowami. AI zmienia rozmiar strony, pisze i formatuje tekst, znajduje darmowe zdjęcia, filmy i muzykę, nakłada filtry, układa warstwy i je animuje. Każde polecenie cofniesz jednym krokiem.",
+      "suggestPoster": "Zrób kwadratowy post na Instagram o letniej wyprzedaży ze zdjęciem plaży i pogrubionym tytułem",
+      "suggestTitle": "Dodaj duży pogrubiony tytuł na górze i mniejszy podtytuł pod nim",
+      "suggestFilter": "Zrób zdjęcie cieplejsze i trochę jaśniejsze",
+      "suggestStory": "Zamień to na relację 9:16 i wypełnij stronę zdjęciem",
+      "suggestBackground": "Dodaj spokojną muzykę w tle i niech tekst pojawia się stopniowo",
+      "placeholder": "Opisz, czego chcesz…",
+      "send": "Wyślij",
+      "hint": "Enter, aby wysłać · Ctrl+K, aby tu przejść",
+      "clear": "Wyczyść czat",
+      "working": "Pracuję nad tym…",
+      "done": "Gotowe.",
+      "nothingToDo": "Nie znalazłem nic do zmiany. Spróbuj opisać edycję, której chcesz.",
+      "noStock": "Brak darmowych materiałów pasujących do „{{query}}”.",
+      "rateLimited": "Wysłano dużo próśb. Spróbuj ponownie za kilka minut.",
+      "failed": "AI nie może tego teraz zrobić. Spróbuj ponownie za chwilę.",
+      "changes": "Wprowadzone zmiany: {{count}}",
+      "undo": "Cofnij",
+      "openGenerator": "Przejrzyj i generuj"
     }
   },
   "glossary": {

@@ -5852,6 +5852,40 @@
       "sendToBack": "Háttérbe küldés",
       "duplicate": "Duplikálás",
       "delete": "Törlés"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Tervezés",
+      "assets": "Elemek",
+      "media": "Média",
+      "text": "Szöveg",
+      "generate": "Generálás",
+      "generations": "Generálások",
+      "edit": "Szerkesztés",
+      "collapse": "Panel összecsukása",
+      "home": "Kezdőlap"
+    },
+    "agent": {
+      "introTitle": "Mondd el az AI-nak, mit szeretnél",
+      "introBody": "Írd le a saját szavaiddal a tervet vagy a változtatást. Átméretezi az oldalt, szöveget ír és formáz, ingyenes fotókat, videókat és zenét keres, szűrőket alkalmaz, elrendezi és animálja a rétegeket. Minden kérés egyetlen visszavonással visszaállítható.",
+      "suggestPoster": "Készíts egy négyzetes Instagram-posztot nyári akcióhoz egy strandfotóval és egy félkövér címmel",
+      "suggestTitle": "Tegyél fel felülre egy nagy, félkövér címet, alá pedig egy kisebb alcímet",
+      "suggestFilter": "Legyen a fotó melegebb és egy kicsit világosabb",
+      "suggestStory": "Alakítsd ezt 9:16-os történetté, és töltsd ki az oldalt a fotóval",
+      "suggestBackground": "Adj hozzá nyugodt háttérzenét, és a szöveg fokozatosan jelenjen meg",
+      "placeholder": "Írd le, mit szeretnél…",
+      "send": "Küldés",
+      "hint": "Enter: küldés · Ctrl+K: ugrás ide",
+      "clear": "Csevegés törlése",
+      "working": "Dolgozom rajta…",
+      "done": "Kész.",
+      "nothingToDo": "Nem találtam semmit, amit ehhez módosítani lehetne. Próbáld leírni a kívánt szerkesztést.",
+      "noStock": "Nincs a(z) „{{query}}” kifejezésnek megfelelő ingyenes tartalom.",
+      "rateLimited": "Sok kérést küldtél. Próbáld újra néhány perc múlva.",
+      "failed": "Az AI most nem tudta ezt megcsinálni. Próbáld újra egy kicsit később.",
+      "changes": "Elvégzett módosítások: {{count}}",
+      "undo": "Visszavonás",
+      "openGenerator": "Áttekintés és generálás"
     }
   }
 }

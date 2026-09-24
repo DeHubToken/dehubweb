@@ -5852,6 +5852,40 @@
       "sendToBack": "Flytta längst bak",
       "duplicate": "Duplicera",
       "delete": "Radera"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Design",
+      "assets": "Element",
+      "media": "Media",
+      "text": "Text",
+      "generate": "Generera",
+      "generations": "Genereringar",
+      "edit": "Redigera",
+      "collapse": "Fäll ihop panelen",
+      "home": "Hem"
+    },
+    "agent": {
+      "introTitle": "Berätta för AI:n vad du vill ha",
+      "introBody": "Beskriv designen eller ändringen med egna ord. Den ändrar sidans storlek, skriver och formaterar text, hittar gratis foton, videor och musik, lägger på filter, ordnar lager och animerar dem. Varje begäran kan ångras i ett steg.",
+      "suggestPoster": "Gör ett kvadratiskt Instagraminlägg för en sommarrea med en strandbild och en fet rubrik",
+      "suggestTitle": "Lägg till en stor fet rubrik överst och en mindre underrubrik under den",
+      "suggestFilter": "Gör bilden varmare och lite ljusare",
+      "suggestStory": "Gör om det här till en 9:16-story och fyll sidan med bilden",
+      "suggestBackground": "Lägg till lugn bakgrundsmusik och tona in texten",
+      "placeholder": "Beskriv vad du vill ha…",
+      "send": "Skicka",
+      "hint": "Enter för att skicka · Ctrl+K för att hoppa hit",
+      "clear": "Rensa chatten",
+      "working": "Jobbar på det…",
+      "done": "Klart.",
+      "nothingToDo": "Jag hittade inget att ändra utifrån det. Försök beskriva redigeringen du vill ha.",
+      "noStock": "Inget gratis material matchade ”{{query}}”.",
+      "rateLimited": "Du har skickat många förfrågningar. Försök igen om några minuter.",
+      "failed": "AI:n kunde inte göra det just nu. Försök igen om en stund.",
+      "changes": "Gjorda ändringar: {{count}}",
+      "undo": "Ångra",
+      "openGenerator": "Granska och generera"
     }
   }
 }

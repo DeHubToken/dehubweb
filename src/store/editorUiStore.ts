@@ -6,7 +6,14 @@
  */
 import { create } from 'zustand';
 
-export type EditorPanel = 'design' | 'assets' | 'media' | 'text' | 'generate' | 'library' | 'inspector';
+export type EditorPanel = 'agent' | 'design' | 'assets' | 'media' | 'text' | 'generate' | 'library' | 'inspector';
+
+/** A generation the AI agent prepared; the Generate panel shows it for the user to confirm. */
+export interface GeneratePrefill {
+  kind: 'image' | 'video';
+  prompt: string;
+  aspect?: string;
+}
 
 interface EditorUiState {
   /** Open panel, or null when the rail is collapsed to give the canvas room. */
@@ -25,15 +32,19 @@ interface EditorUiState {
    */
   canvasFocus: boolean;
   setCanvasFocus: (focus: boolean) => void;
+  generatePrefill: GeneratePrefill | null;
+  setGeneratePrefill: (prefill: GeneratePrefill | null) => void;
 }
 
 export const useEditorUiStore = create<EditorUiState>((set) => ({
-  panel: 'design',
+  panel: 'agent',
   inspectorOpen: true,
   timelineOpen: true,
   setTimelineOpen: (timelineOpen) => set({ timelineOpen }),
   canvasFocus: false,
   setCanvasFocus: (canvasFocus) => set({ canvasFocus }),
+  generatePrefill: null,
+  setGeneratePrefill: (generatePrefill) => set({ generatePrefill }),
   setPanel: (panel) => set({ panel }),
   togglePanel: (panel) => set((s) => ({ panel: s.panel === panel ? null : panel })),
   setInspectorOpen: (inspectorOpen) => set({ inspectorOpen }),

@@ -5787,6 +5787,40 @@
       "sendToBack": "Stuur na agter",
       "duplicate": "Duplikaat",
       "delete": "Skrap"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Ontwerp",
+      "assets": "Bates",
+      "media": "Media",
+      "text": "Teks",
+      "generate": "Genereer",
+      "generations": "Generasies",
+      "edit": "Wysig",
+      "collapse": "Vou paneel in",
+      "home": "Tuis"
+    },
+    "agent": {
+      "introTitle": "Sê vir die AI wat jy wil hê",
+      "introBody": "Beskryf die ontwerp of die verandering in jou eie woorde. Dit verander die bladgrootte, skryf en stileer teks, vind gratis foto's, video's en musiek, pas filters toe, rangskik lae en animeer hulle. Elke versoek is een ontdoen-stap.",
+      "suggestPoster": "Maak 'n vierkantige Instagram-plasing vir 'n someruitverkoping met 'n strandfoto en 'n vet titel",
+      "suggestTitle": "Voeg 'n groot, vet titel bo-aan by en 'n kleiner subtitel daaronder",
+      "suggestFilter": "Maak die foto warmer en 'n bietjie helderder",
+      "suggestStory": "Maak dit 'n 9:16-storie en vul die blad met die foto",
+      "suggestBackground": "Voeg kalm agtergrondmusiek by en laat die teks invervaag",
+      "placeholder": "Beskryf wat jy wil hê…",
+      "send": "Stuur",
+      "hint": "Enter om te stuur · Ctrl+K om hierheen te spring",
+      "clear": "Vee klets uit",
+      "working": "Besig…",
+      "done": "Klaar.",
+      "nothingToDo": "Ek kon niks vind om daarvoor te verander nie. Probeer die wysiging beskryf wat jy wil hê.",
+      "noStock": "Geen gratis voorraad pas by “{{query}}” nie.",
+      "rateLimited": "Jy het baie versoeke gestuur. Probeer weer oor 'n paar minute.",
+      "failed": "Die AI kon dit nie nou doen nie. Probeer weer oor 'n oomblik.",
+      "changes": "Wysigings gemaak: {{count}}",
+      "undo": "Ontdoen",
+      "openGenerator": "Hersien en genereer"
     }
   },
   "footer": {

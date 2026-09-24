@@ -2973,6 +2973,40 @@
       "sendToBack": "Send to back",
       "duplicate": "Duplicate",
       "delete": "Delete"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Design",
+      "assets": "Asset Dem",
+      "media": "Media",
+      "text": "Text",
+      "generate": "Generate",
+      "generations": "Wetin You Don Generate",
+      "edit": "Edit",
+      "collapse": "Close panel",
+      "home": "Home"
+    },
+    "agent": {
+      "introTitle": "Tell AI wetin you want",
+      "introBody": "Talk the design or the change for your own words. E go resize the page, write and style text, find free photo, video and music, put filter, arrange layer and make dem move. Every request na one undo.",
+      "suggestPoster": "Make square Instagram post for summer sale wey get beach photo and bold title",
+      "suggestTitle": "Put big bold title for top and small subtitle under am",
+      "suggestFilter": "Make the photo warm pass and bright small",
+      "suggestStory": "Turn this one to 9:16 story and make the photo full the page",
+      "suggestBackground": "Add cool background music and make the text dey show small small",
+      "placeholder": "Talk wetin you want…",
+      "send": "Send",
+      "hint": "Enter to send · Ctrl+K to come here",
+      "clear": "Clear chat",
+      "working": "E dey work on am…",
+      "done": "E don finish.",
+      "nothingToDo": "I no see anything to change for that one. Try talk the edit wey you want.",
+      "noStock": "No free stock match “{{query}}”.",
+      "rateLimited": "You don send plenty request. Try again after some minutes.",
+      "failed": "AI no fit do am now. Try again small time.",
+      "changes": "Edit wey e make: {{count}}",
+      "undo": "Undo",
+      "openGenerator": "Check am and generate"
     }
   }
 }

@@ -5968,6 +5968,40 @@
       "sendToBack": "Send to back",
       "duplicate": "Duplicate",
       "delete": "Delete"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Design",
+      "assets": "Assets",
+      "media": "Media",
+      "text": "Text",
+      "generate": "Generate",
+      "generations": "Generations",
+      "edit": "Edit",
+      "collapse": "Collapse panel",
+      "home": "Home"
+    },
+    "agent": {
+      "introTitle": "Tell the AI what you want",
+      "introBody": "Describe the design or the change in your own words. It resizes the page, writes and styles text, finds free photos, videos and music, applies filters, arranges layers and animates them. Every request is one undo.",
+      "suggestPoster": "Make a square Instagram post for a summer sale with a beach photo and a bold title",
+      "suggestTitle": "Add a big bold title at the top and a smaller subtitle under it",
+      "suggestFilter": "Make the photo warmer and a bit brighter",
+      "suggestStory": "Turn this into a 9:16 story and fill the page with the photo",
+      "suggestBackground": "Add calm background music and fade the text in",
+      "placeholder": "Describe what you want…",
+      "send": "Send",
+      "hint": "Enter to send · Ctrl+K to jump here",
+      "clear": "Clear chat",
+      "working": "Working on it…",
+      "done": "Done.",
+      "nothingToDo": "I couldn't find anything to change for that. Try describing the edit you want.",
+      "noStock": "No free stock matched “{{query}}”.",
+      "rateLimited": "You've sent a lot of requests. Try again in a few minutes.",
+      "failed": "The AI couldn't do that right now. Try again in a moment.",
+      "changes": "Edits made: {{count}}",
+      "undo": "Undo",
+      "openGenerator": "Review and generate"
     }
   }
 }

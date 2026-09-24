@@ -5941,6 +5941,40 @@
       "sendToBack": "Perkelti į galą",
       "duplicate": "Dubliuoti",
       "delete": "Ištrinti"
+    },
+    "rail": {
+      "agent": "DI",
+      "design": "Dizainas",
+      "assets": "Ištekliai",
+      "media": "Medija",
+      "text": "Tekstas",
+      "generate": "Generuoti",
+      "generations": "Sugeneruota",
+      "edit": "Redaguoti",
+      "collapse": "Suskleisti skydelį",
+      "home": "Pradžia"
+    },
+    "agent": {
+      "introTitle": "Pasakykite DI, ko norite",
+      "introBody": "Apibūdinkite dizainą ar pakeitimą savais žodžiais. Jis keičia puslapio dydį, rašo ir formatuoja tekstą, randa nemokamų nuotraukų, vaizdo įrašų ir muzikos, taiko filtrus, išdėsto sluoksnius ir juos animuoja. Kiekvieną užklausą galima atšaukti vienu veiksmu.",
+      "suggestPoster": "Sukurk kvadratinį Instagram įrašą vasaros išpardavimui su paplūdimio nuotrauka ir ryškia antrašte",
+      "suggestTitle": "Pridėk didelę paryškintą antraštę viršuje ir mažesnę paantraštę po ja",
+      "suggestFilter": "Padaryk nuotrauką šiltesnę ir šiek tiek šviesesnę",
+      "suggestStory": "Paversk tai 9:16 istorija ir užpildyk puslapį nuotrauka",
+      "suggestBackground": "Pridėk ramią foninę muziką ir tekstą išryškink palaipsniui",
+      "placeholder": "Apibūdinkite, ko norite…",
+      "send": "Siųsti",
+      "hint": "Enter – siųsti · Ctrl+K – pereiti čia",
+      "clear": "Išvalyti pokalbį",
+      "working": "Dirbama…",
+      "done": "Atlikta.",
+      "nothingToDo": "Neradau, ką tam pakeisti. Pabandykite apibūdinti norimą pakeitimą.",
+      "noStock": "Nerasta nemokamo turinio pagal „{{query}}“.",
+      "rateLimited": "Išsiuntėte daug užklausų. Bandykite dar kartą po kelių minučių.",
+      "failed": "DI dabar negalėjo to atlikti. Bandykite dar kartą po akimirkos.",
+      "changes": "Atlikta pakeitimų: {{count}}",
+      "undo": "Anuliuoti",
+      "openGenerator": "Peržiūrėti ir generuoti"
     }
   }
 }

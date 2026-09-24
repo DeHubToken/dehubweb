@@ -5964,6 +5964,40 @@
       "sendToBack": "Envoyer à l'arrière",
       "duplicate": "Dupliquer",
       "delete": "Supprimer"
+    },
+    "rail": {
+      "agent": "IA",
+      "design": "Design",
+      "assets": "Éléments",
+      "media": "Médias",
+      "text": "Texte",
+      "generate": "Générer",
+      "generations": "Générations",
+      "edit": "Modifier",
+      "collapse": "Réduire le panneau",
+      "home": "Accueil"
+    },
+    "agent": {
+      "introTitle": "Dites à l'IA ce que vous voulez",
+      "introBody": "Décrivez le design ou la modification avec vos propres mots. Elle redimensionne la page, écrit et met en forme le texte, trouve des photos, vidéos et musiques gratuites, applique des filtres, organise les calques et les anime. Chaque demande s'annule en une seule fois.",
+      "suggestPoster": "Crée une publication Instagram carrée pour des soldes d'été avec une photo de plage et un titre en gras",
+      "suggestTitle": "Ajoute un grand titre en gras en haut et un sous-titre plus petit en dessous",
+      "suggestFilter": "Rends la photo plus chaude et un peu plus lumineuse",
+      "suggestStory": "Transforme ceci en story 9:16 et remplis la page avec la photo",
+      "suggestBackground": "Ajoute une musique de fond calme et fais apparaître le texte en fondu",
+      "placeholder": "Décrivez ce que vous voulez…",
+      "send": "Envoyer",
+      "hint": "Entrée pour envoyer · Ctrl+K pour venir ici",
+      "clear": "Effacer la discussion",
+      "working": "Je m'en occupe…",
+      "done": "Terminé.",
+      "nothingToDo": "Je n'ai rien trouvé à modifier pour cela. Essayez de décrire la modification souhaitée.",
+      "noStock": "Aucun contenu gratuit ne correspond à « {{query}} ».",
+      "rateLimited": "Vous avez envoyé beaucoup de demandes. Réessayez dans quelques minutes.",
+      "failed": "L'IA n'a pas pu le faire pour le moment. Réessayez dans un instant.",
+      "changes": "Modifications effectuées : {{count}}",
+      "undo": "Annuler",
+      "openGenerator": "Vérifier et générer"
     }
   }
 }

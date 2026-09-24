@@ -5962,6 +5962,40 @@
       "sendToBack": "Porta in secondo piano",
       "duplicate": "Duplica",
       "delete": "Elimina"
+    },
+    "rail": {
+      "agent": "IA",
+      "design": "Design",
+      "assets": "Risorse",
+      "media": "Media",
+      "text": "Testo",
+      "generate": "Genera",
+      "generations": "Generazioni",
+      "edit": "Modifica",
+      "collapse": "Comprimi pannello",
+      "home": "Home"
+    },
+    "agent": {
+      "introTitle": "Di' all'IA cosa vuoi",
+      "introBody": "Descrivi il design o la modifica con parole tue. Ridimensiona la pagina, scrive e formatta il testo, trova foto, video e musica gratuiti, applica filtri, dispone i livelli e li anima. Ogni richiesta si annulla in un solo passaggio.",
+      "suggestPoster": "Crea un post Instagram quadrato per i saldi estivi con una foto di spiaggia e un titolo in grassetto",
+      "suggestTitle": "Aggiungi un titolo grande in grassetto in alto e un sottotitolo più piccolo sotto",
+      "suggestFilter": "Rendi la foto più calda e un po' più luminosa",
+      "suggestStory": "Trasformalo in una storia 9:16 e riempi la pagina con la foto",
+      "suggestBackground": "Aggiungi una musica di sottofondo rilassante e fai apparire il testo in dissolvenza",
+      "placeholder": "Descrivi cosa vuoi…",
+      "send": "Invia",
+      "hint": "Invio per inviare · Ctrl+K per venire qui",
+      "clear": "Cancella chat",
+      "working": "Ci sto lavorando…",
+      "done": "Fatto.",
+      "nothingToDo": "Non ho trovato nulla da modificare. Prova a descrivere la modifica che vuoi.",
+      "noStock": "Nessun contenuto gratuito corrisponde a “{{query}}”.",
+      "rateLimited": "Hai inviato molte richieste. Riprova tra qualche minuto.",
+      "failed": "L'IA non è riuscita a farlo ora. Riprova tra un momento.",
+      "changes": "Modifiche effettuate: {{count}}",
+      "undo": "Annulla",
+      "openGenerator": "Rivedi e genera"
     }
   }
 }

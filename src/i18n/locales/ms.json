@@ -6169,6 +6169,40 @@
       "sendToBack": "Hantar ke paling belakang",
       "duplicate": "Buat pendua",
       "delete": "Hapus"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Reka Bentuk",
+      "assets": "Aset",
+      "media": "Media",
+      "text": "Teks",
+      "generate": "Jana",
+      "generations": "Hasil Janaan",
+      "edit": "Sunting",
+      "collapse": "Runtuhkan panel",
+      "home": "Laman Utama"
+    },
+    "agent": {
+      "introTitle": "Beritahu AI apa yang anda mahu",
+      "introBody": "Terangkan reka bentuk atau perubahan dengan kata-kata anda sendiri. Ia mengubah saiz halaman, menulis dan menggayakan teks, mencari foto, video dan muzik percuma, menggunakan penapis, menyusun lapisan dan menganimasikannya. Setiap permintaan boleh dibuat asal sekali gus.",
+      "suggestPoster": "Buat hantaran Instagram segi empat sama untuk jualan musim panas dengan foto pantai dan tajuk tebal",
+      "suggestTitle": "Tambah tajuk besar dan tebal di atas dan subtajuk yang lebih kecil di bawahnya",
+      "suggestFilter": "Jadikan foto lebih hangat dan sedikit lebih cerah",
+      "suggestStory": "Tukar ini kepada story 9:16 dan penuhkan halaman dengan foto",
+      "suggestBackground": "Tambah muzik latar yang tenang dan buat teks muncul perlahan-lahan",
+      "placeholder": "Terangkan apa yang anda mahu…",
+      "send": "Hantar",
+      "hint": "Enter untuk hantar · Ctrl+K untuk ke sini",
+      "clear": "Kosongkan sembang",
+      "working": "Sedang diusahakan…",
+      "done": "Selesai.",
+      "nothingToDo": "Saya tidak menemui apa-apa untuk diubah bagi permintaan itu. Cuba terangkan suntingan yang anda mahu.",
+      "noStock": "Tiada stok percuma yang sepadan dengan “{{query}}”.",
+      "rateLimited": "Anda telah menghantar banyak permintaan. Cuba lagi dalam beberapa minit.",
+      "failed": "AI tidak dapat melakukannya sekarang. Cuba lagi sebentar lagi.",
+      "changes": "Suntingan dibuat: {{count}}",
+      "undo": "Buat asal",
+      "openGenerator": "Semak dan jana"
     }
   }
 }

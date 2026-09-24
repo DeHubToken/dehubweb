@@ -3673,6 +3673,40 @@
       "sendToBack": "Thumela emuva kakhulu",
       "duplicate": "Phindaphinda",
       "delete": "Susa"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Umklamo",
+      "assets": "Izinsiza",
+      "media": "Imidiya",
+      "text": "Umbhalo",
+      "generate": "Khiqiza",
+      "generations": "Okukhiqiziwe",
+      "edit": "Hlela",
+      "collapse": "Goqa iphaneli",
+      "home": "Ekhaya"
+    },
+    "agent": {
+      "introTitle": "Tshela i-AI ukuthi ufunani",
+      "introBody": "Chaza umklamo noma ushintsho ngamazwi akho. Ishintsha usayizi wekhasi, ibhale futhi ihlobise umbhalo, ithola izithombe, amavidiyo nomculo wamahhala, isebenzisa izihlungi, ihlele izendlalelo futhi izenze zinyakaze. Isicelo ngasinye sihlehliswa ngesinyathelo esisodwa.",
+      "suggestPoster": "Yenza okuthunyelwe kwe-Instagram okuyisikwele kokudayiswa kwasehlobo nesithombe solwandle nesihloko esigqamile",
+      "suggestTitle": "Engeza isihloko esikhulu esigqamile phezulu nesihlokwana esincane ngaphansi kwaso",
+      "suggestFilter": "Yenza isithombe sifudumale futhi sikhanye kancane",
+      "suggestStory": "Shintsha lokhu kube yi-story ye-9:16 bese ugcwalisa ikhasi ngesithombe",
+      "suggestBackground": "Engeza umculo ozolile wangemuva bese wenza umbhalo uvele kancane kancane",
+      "placeholder": "Chaza ukuthi ufunani…",
+      "send": "Thumela",
+      "hint": "Enter ukuthumela · Ctrl+K ukuza lapha",
+      "clear": "Sula ingxoxo",
+      "working": "Ngiyasebenza kukho…",
+      "done": "Kwenziwe.",
+      "nothingToDo": "Angitholanga lutho lokushintsha. Zama ukuchaza ukuhlela okufunayo.",
+      "noStock": "Akukho okwamahhala okufana no-“{{query}}”.",
+      "rateLimited": "Uthumele izicelo eziningi. Zama futhi emizuzwini embalwa.",
+      "failed": "I-AI ayikwazanga ukukwenza lokho manje. Zama futhi ngemuva kwesikhashana.",
+      "changes": "Okuhleliwe: {{count}}",
+      "undo": "Hlehlisa",
+      "openGenerator": "Buyekeza bese ukhiqiza"
     }
   }
 }

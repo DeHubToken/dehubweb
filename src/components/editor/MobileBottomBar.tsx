@@ -13,6 +13,7 @@
  * ids while the docked column sat hidden behind CSS.
  */
 import { useCallback, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Home } from "lucide-react";
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from "@/hooks/use-surface-switch";
@@ -26,6 +27,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 
 export function MobileBottomBar() {
+  const { t } = useTranslation();
   const isMobile = useIsMobile();
   const panel = useEditorUiStore((s) => s.panel);
   const setPanel = useEditorUiStore((s) => s.setPanel);
@@ -44,7 +46,7 @@ export function MobileBottomBar() {
   // Look the header up in the full set, not the selection-dependent one: an
   // inspector sheet left open after the selection clears would otherwise render
   // with an empty title.
-  const openTab = [...RAIL_TABS, INSPECTOR_TAB].find((t) => t.id === panel);
+  const openTab = [...RAIL_TABS, INSPECTOR_TAB].find((x) => x.id === panel);
 
   // The shared default of 'design' is right for the docked column but wrong
   // here: it would throw a sheet over three quarters of the screen the moment
@@ -69,7 +71,7 @@ export function MobileBottomBar() {
       >
         <Link
           to="/"
-          aria-label="Home"
+          aria-label={t('editor.rail.home')}
           className="flex w-14 shrink-0 flex-col items-center justify-center gap-1 rounded-lg text-white/55 transition hover:bg-white/10 hover:text-white"
         >
           <Home className="h-[18px] w-[18px]" />
@@ -86,14 +88,14 @@ export function MobileBottomBar() {
               type="button"
               onClick={() => togglePanel(tab.id)}
               aria-pressed={active}
-              aria-label={tab.label}
+              aria-label={t(tab.labelKey)}
               className={cn(
                 "relative flex w-14 shrink-0 flex-col items-center justify-center gap-1 rounded-lg transition",
                 active ? "bg-white/[0.14] text-white" : "text-white/55 hover:bg-white/10 hover:text-white",
               )}
             >
               <Icon className="h-[18px] w-[18px]" />
-              <span className="text-[9px] font-medium leading-none">{tab.label}</span>
+              <span className="text-[9px] font-medium leading-none">{t(tab.labelKey)}</span>
               {badge !== null && (
                 <span className="absolute right-2 top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-white px-1 text-[8px] font-bold tabular-nums text-black">
                   {badge}
@@ -110,7 +112,7 @@ export function MobileBottomBar() {
           className="h-[76dvh] border-white/10 bg-zinc-950/95 p-0 text-white backdrop-blur-[24px]"
         >
           <SheetHeader className="border-b border-white/10 px-3 py-2.5 text-left">
-            <SheetTitle className="text-sm text-white/85">{openTab?.label ?? ""}</SheetTitle>
+            <SheetTitle className="text-sm text-white/85">{openTab ? t(openTab.labelKey) : ""}</SheetTitle>
           </SheetHeader>
           <div className="h-[calc(76dvh-3.25rem)] min-h-0">
             {sheetOpen && panel ? <PanelBody panel={panel} /> : null}
