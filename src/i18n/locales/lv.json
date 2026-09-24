@@ -6170,5 +6170,11 @@
       "width": "Pildspalvas izmērs {{value}}",
       "hint": "Velc pa audeklu, lai zīmētu. Katrs vilciens ir atsevišķs slānis, ko vari pārvietot, mainīt izmēru vai dzēst. Nospied Esc, lai beigtu."
     }
+  },
+  "jungleMood": {
+    "title": "Diennakts laiks",
+    "desc": "Gaiša diena vai krēslaini zils vakars džungļos",
+    "day": "Diena",
+    "evening": "Vakars"
   }
 }

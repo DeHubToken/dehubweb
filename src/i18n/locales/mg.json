@@ -5924,5 +5924,11 @@
     "txPpvSale": "Fivarotana PPV — {{amount}} DHB",
     "txTipSent": "Fanomezana ho an'i {{name}} — {{amount}} DHB",
     "txTipReceived": "{{name}} nanome fanomezana anao — {{amount}} DHB"
+  },
+  "jungleMood": {
+    "title": "Fotoana amin’ny andro",
+    "desc": "Andro mazava na hariva manga manjombona any anaty ala",
+    "day": "Antoandro",
+    "evening": "Hariva"
   }
 }

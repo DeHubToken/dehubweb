@@ -6191,5 +6191,11 @@
       "width": "Stiftgröße {{value}}",
       "hint": "Zum Zeichnen auf der Leinwand ziehen. Jeder Strich ist eine eigene Ebene, die du verschieben, skalieren oder löschen kannst. Drücke Esc zum Beenden."
     }
+  },
+  "jungleMood": {
+    "title": "Tageszeit",
+    "desc": "Ein heller Tag oder ein dämmrig blauer Abend im Dschungel",
+    "day": "Tag",
+    "evening": "Abend"
   }
 }

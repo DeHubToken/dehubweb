@@ -6218,5 +6218,11 @@
         }
       ]
     }
+  },
+  "jungleMood": {
+    "title": "Pora dnia",
+    "desc": "Jasny dzień lub zmierzchowy niebieski wieczór w dżungli",
+    "day": "Dzień",
+    "evening": "Wieczór"
   }
 }

@@ -3871,5 +3871,11 @@
   },
   "accounts": {
     "title": "Àwọn Àkọọ́lẹ̀"
+  },
+  "jungleMood": {
+    "title": "Àkókò ọjọ́",
+    "desc": "Ọjọ́ tó mọ́lẹ̀ tàbí ìrọ̀lẹ́ aláwọ̀ búlúù nínú igbó",
+    "day": "Ọ̀sán",
+    "evening": "Ìrọ̀lẹ́"
   }
 }

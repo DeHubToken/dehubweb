@@ -3925,5 +3925,11 @@
   },
   "stages": {
     "title": "Audio xonalar"
+  },
+  "jungleMood": {
+    "title": "Kun vaqti",
+    "desc": "Jangalda yorqin kun yoki moviy g‘ira-shira oqshom",
+    "day": "Kunduz",
+    "evening": "Oqshom"
   }
 }

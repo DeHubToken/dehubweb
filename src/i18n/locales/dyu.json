@@ -3743,5 +3743,11 @@
   },
   "accounts": {
     "title": "Jatebolow"
+  },
+  "jungleMood": {
+    "title": "Tile waati",
+    "desc": "Tile yeelen walima wula bulaman kungo kɔnɔ",
+    "day": "Tile",
+    "evening": "Wula"
   }
 }

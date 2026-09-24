@@ -6193,5 +6193,11 @@
       "width": "Taille du stylo {{value}}",
       "hint": "Faites glisser sur le canevas pour dessiner. Chaque trait est un calque à part que vous pouvez déplacer, redimensionner ou supprimer. Appuyez sur Esc pour arrêter."
     }
+  },
+  "jungleMood": {
+    "title": "Moment de la journée",
+    "desc": "Une journée lumineuse ou un crépuscule bleuté dans la jungle",
+    "day": "Jour",
+    "evening": "Soir"
   }
 }

@@ -5974,5 +5974,11 @@
         }
       ]
     }
+  },
+  "jungleMood": {
+    "title": "Thời điểm trong ngày",
+    "desc": "Ngày nắng rực rỡ hoặc hoàng hôn xanh thẫm giữa rừng",
+    "day": "Ban ngày",
+    "evening": "Chiều tối"
   }
 }

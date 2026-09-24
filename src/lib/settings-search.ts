@@ -59,6 +59,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'appearance', anchor: 'theme', label: 'Theme', labelKey: 'settings.theme', keywords: 'dark light mode skin cosmic jungle osaka winter minimal appearance' },
   { tab: 'appearance', anchor: 'theme-color', label: 'Theme Color', labelKey: 'settings.themeColor', keywords: 'hue colour accent brand rainbow' },
   { tab: 'appearance', anchor: 'dim-lights', label: 'Dim Lights', labelKey: 'settings.dimLights', keywords: 'brightness blue light night filter' },
+  { tab: 'appearance', anchor: 'jungle-mood', label: 'Time of day', labelKey: 'jungleMood.title', keywords: 'jungle day evening night dusk dark light mode sun moon' },
   { tab: 'appearance', anchor: 'language', label: 'Language', labelKey: 'settings.language', keywords: 'translate locale english' },
   { tab: 'appearance', anchor: 'feed-layout', label: 'Feed Layout', labelKey: 'settings.feedLayout', keywords: 'compact comfortable sidebar density' },
   { tab: 'appearance', anchor: 'default-profile-tab', label: 'Default profile tab', labelKey: 'settings.defaultProfileTab', keywords: 'landing tab visitors' },

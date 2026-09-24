@@ -113,6 +113,8 @@ import { useMatureContent } from '@/hooks/use-mature-content';
 import { useKidsMode } from '@/hooks/use-kids-mode';
 import { KidsModeDrawer } from '@/components/app/settings/KidsModeDrawer';
 import { Baby } from 'lucide-react';
+import { JungleMoodToggle } from '@/components/app/jungle/JungleMoodToggle';
+import { useJungleMood } from '@/lib/jungle-mood';
 import { useHideWatched } from '@/hooks/use-watched-videos';
 import { useUsernameHoldings } from '@/hooks/use-username-market';
 import { UsernameVault } from '@/components/app/usernames/UsernameVault';
@@ -2165,6 +2167,11 @@ function BlockedUsersSection() {
   );
 }
 
+function JungleMoodIcon() {
+  const [mood] = useJungleMood();
+  return mood === 'evening' ? <Moon /> : <Sun />;
+}
+
 function DimLightsToggle() {
   const { t } = useTranslation();
   const { dimLights, setDimLights, dimStrength, setDimStrength } = useAppTheme();
@@ -2570,6 +2577,18 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
         {(theme === 'cosmic' || theme === 'hazy' || theme === 'swarms' || theme === 'lavalamp') && (
           <div data-setting-anchor="theme-color">
             <ThemeColorPicker theme={theme} />
+          </div>
+        )}
+
+        {/* Jungle only: its own day / evening switch */}
+        {theme === 'jungle' && (
+          <div data-setting-anchor="jungle-mood" className="mt-4">
+            <SettingsRow
+              icon={<JungleMoodIcon />}
+              title={t('jungleMood.title')}
+              description={t('jungleMood.desc')}
+              action={<JungleMoodToggle />}
+            />
           </div>
         )}
 

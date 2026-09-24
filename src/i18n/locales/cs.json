@@ -6082,5 +6082,11 @@
       "width": "Velikost pera {{value}}",
       "hint": "Kreslete tažením po plátně. Každý tah je samostatná vrstva, kterou můžete přesunout, změnit její velikost nebo smazat. Stiskem Esc kreslení ukončíte."
     }
+  },
+  "jungleMood": {
+    "title": "Denní doba",
+    "desc": "Jasný den nebo šerý modrý večer v džungli",
+    "day": "Den",
+    "evening": "Večer"
   }
 }

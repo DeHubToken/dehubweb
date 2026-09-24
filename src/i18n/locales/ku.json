@@ -5126,5 +5126,11 @@
       "width": "قەبارەی پێنووس {{value}}",
       "hint": "بۆ کێشان لەسەر تابلۆکە ڕابکێشە. هەر هێڵێک چینێکی جیاوازە کە دەتوانیت بیجوڵێنیت، قەبارەکەی بگۆڕیت یان بیسڕیتەوە. Esc دابگرە بۆ ڕاگرتن."
     }
+  },
+  "jungleMood": {
+    "title": "Dema rojê",
+    "desc": "Rojeke ronî an êvareke şîn a tarî li daristanê",
+    "day": "Roj",
+    "evening": "Êvar"
   }
 }

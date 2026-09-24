@@ -3835,5 +3835,11 @@
   },
   "accounts": {
     "title": "Hasaplar"
+  },
+  "jungleMood": {
+    "title": "Günüň wagty",
+    "desc": "Jeňňelde ýagty gün ýa-da gök öwüşginli agşam",
+    "day": "Gündiz",
+    "evening": "Agşam"
   }
 }

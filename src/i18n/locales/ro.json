@@ -5974,5 +5974,11 @@
       "white": "Alb",
       "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
     }
+  },
+  "jungleMood": {
+    "title": "Momentul zilei",
+    "desc": "O zi luminoasă sau o seară albastră de amurg în junglă",
+    "day": "Zi",
+    "evening": "Seară"
   }
 }

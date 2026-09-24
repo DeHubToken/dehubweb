@@ -6199,5 +6199,11 @@
       "width": "Tamanho da caneta {{value}}",
       "hint": "Arraste na tela para desenhar. Cada traço é uma camada própria que você pode mover, redimensionar ou excluir. Pressione Esc para parar."
     }
+  },
+  "jungleMood": {
+    "title": "Hora do dia",
+    "desc": "Um dia claro ou um entardecer azulado na selva",
+    "day": "Dia",
+    "evening": "Entardecer"
   }
 }

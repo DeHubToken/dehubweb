@@ -3213,5 +3213,11 @@
   },
   "accounts": {
     "title": "Account dem"
+  },
+  "jungleMood": {
+    "title": "Time for day",
+    "desc": "Bright afternoon or blue evening for inside bush",
+    "day": "Afternoon",
+    "evening": "Evening"
   }
 }

@@ -6036,5 +6036,11 @@
       "width": "Qələm ölçüsü {{value}}",
       "hint": "Çəkmək üçün kətan üzərində sürüşdürün. Hər xətt ayrıca laydır, onu köçürə, ölçüsünü dəyişə və ya silə bilərsiniz. Dayandırmaq üçün Esc basın."
     }
+  },
+  "jungleMood": {
+    "title": "Günün vaxtı",
+    "desc": "Cəngəllikdə parlaq gün və ya alaqaranlıq mavi axşam",
+    "day": "Gündüz",
+    "evening": "Axşam"
   }
 }

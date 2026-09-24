@@ -3850,5 +3850,11 @@
   },
   "accounts": {
     "title": "Konte"
+  },
+  "jungleMood": {
+    "title": "Tageszyt",
+    "desc": "En helle Tag oder en dämmrig blaue Abig im Dschungel",
+    "day": "Tag",
+    "evening": "Abig"
   }
 }

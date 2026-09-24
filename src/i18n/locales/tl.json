@@ -6085,5 +6085,11 @@
   "notification": {
     "noNotifications": "Walang mga abiso",
     "loadMore": "Mag-load ng higit pa"
+  },
+  "jungleMood": {
+    "title": "Oras ng araw",
+    "desc": "Maliwanag na araw o bughaw na takipsilim sa gubat",
+    "day": "Araw",
+    "evening": "Takipsilim"
   }
 }

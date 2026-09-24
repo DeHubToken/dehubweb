@@ -6081,5 +6081,11 @@
       "width": "Pliiatsi suurus {{value}}",
       "hint": "Joonistamiseks lohista lõuendil. Iga joon on eraldi kiht, mida saad liigutada, suurust muuta või kustutada. Lõpetamiseks vajuta Esc."
     }
+  },
+  "jungleMood": {
+    "title": "Kellaaeg",
+    "desc": "Helge päev või hämarsinine õhtu džunglis",
+    "day": "Päev",
+    "evening": "Õhtu"
   }
 }

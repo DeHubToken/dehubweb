@@ -3880,5 +3880,11 @@
   },
   "accounts": {
     "title": "帳戶"
+  },
+  "jungleMood": {
+    "title": "時段",
+    "desc": "森林入面嘅明媚白日或者幽藍黃昏",
+    "day": "日頭",
+    "evening": "黃昏"
   }
 }
