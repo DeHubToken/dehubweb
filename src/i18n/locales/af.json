@@ -2444,6 +2444,16 @@
     "resolve": "Los op"
   },
   "stores": {
+    "podToggle": "Druk-op-aanvraag-item",
+    "podHint": "Koppel 'n produk uit jou druk-op-aanvraag-winkel. Die verskaffer druk en stuur elke bestelling, so jy hou geen voorraad nie.",
+    "podUrlLabel": "Produkskakel",
+    "podProviderLabel": "Verskaffer",
+    "podOther": "Ander",
+    "podInvalidUrl": "Voer 'n geldige https://-produkskakel in",
+    "podBadge": "Druk op aanvraag",
+    "podBuyOn": "Koop op {{provider}}",
+    "podNote": "Gedruk en gestuur op aanvraag deur {{provider}}. Betaling gebeur op hul webwerf.",
+    "podUrlPlaceholder": "https://…",
     "title": "Winkels",
     "browse": "Blaai",
     "myStore": "My Winkel",

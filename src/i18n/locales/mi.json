@@ -3877,6 +3877,16 @@
     "title": "Wāhanga"
   },
   "stores": {
+    "podToggle": "Tūemi tā-ā-tono",
+    "podHint": "Hono atu he hua mai i tō toa tā-ā-tono. Mā te kaiwhakarato e tā, e tuku ia ota, nō reira kāore he rawa hei pupuri.",
+    "podUrlLabel": "Hono hua",
+    "podProviderLabel": "Kaiwhakarato",
+    "podOther": "Ētahi atu",
+    "podInvalidUrl": "Tāurua he hono https:// tika",
+    "podBadge": "Tā-ā-tono",
+    "podBuyOn": "Hoko i {{provider}}",
+    "podNote": "Ka tāia, ka tukuna ā-tono e {{provider}}. Ka utu ki tō rātou pae.",
+    "podUrlPlaceholder": "https://…",
     "title": "Ngā Toa"
   },
   "accounts": {

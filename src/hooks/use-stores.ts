@@ -170,6 +170,8 @@ export function useCreateListing() {
       digital_file_url?: string;
       condition: string;
       shipping_info?: string;
+      external_url?: string | null;
+      pod_provider?: string | null;
       status?: string;
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');

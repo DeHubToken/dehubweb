@@ -2514,6 +2514,16 @@
     "resolve": "Həll et"
   },
   "stores": {
+    "podToggle": "Sifarişlə çap məhsulu",
+    "podHint": "Sifarişlə çap mağazanızdan məhsul əlaqələndirin. Təchizatçı hər sifarişi çap edib göndərir, ehtiyat saxlamırsınız.",
+    "podUrlLabel": "Məhsul linki",
+    "podProviderLabel": "Təchizatçı",
+    "podOther": "Digər",
+    "podInvalidUrl": "Düzgün https:// məhsul linki daxil edin",
+    "podBadge": "Sifarişlə çap",
+    "podBuyOn": "{{provider}} saytında al",
+    "podNote": "{{provider}} tərəfindən sifarişlə çap edilir və göndərilir. Ödəniş onların saytında olur.",
+    "podUrlPlaceholder": "https://…",
     "title": "Mağazalar",
     "browse": "Axtar",
     "myStore": "Mağazam",

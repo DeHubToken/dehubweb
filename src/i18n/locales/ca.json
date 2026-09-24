@@ -2520,6 +2520,16 @@
     "resolve": "Resol"
   },
   "stores": {
+    "podToggle": "Article d'impressió sota demanda",
+    "podHint": "Enllaça un producte de la teva botiga d'impressió sota demanda. El proveïdor imprimeix i envia cada comanda, així que no necessites estoc.",
+    "podUrlLabel": "Enllaç del producte",
+    "podProviderLabel": "Proveïdor",
+    "podOther": "Altres",
+    "podInvalidUrl": "Introdueix un enllaç https:// vàlid",
+    "podBadge": "Impressió sota demanda",
+    "podBuyOn": "Compra a {{provider}}",
+    "podNote": "Imprès i enviat sota demanda per {{provider}}. El pagament es fa al seu lloc web.",
+    "podUrlPlaceholder": "https://…",
     "title": "Botigues",
     "browse": "Navega",
     "myStore": "La meva botiga",
