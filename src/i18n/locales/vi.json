@@ -5764,6 +5764,78 @@
       "hint": "Chạy trên thiết bị của bạn: miễn phí, riêng tư, không tải lên gì cả. Lần đầu sẽ tải mô hình AI, sau đó chỉ mất vài giây.",
       "done": "Đã xóa phông nền.",
       "failed": "Không thể xóa phông nền. Hãy thử ảnh khác hoặc trình duyệt như Chrome hay Edge."
+    },
+    "templates": {
+      "heading": "Mẫu",
+      "hint": "Chọn một mẫu để bắt đầu. Mọi chữ, màu và ảnh đều có thể đổi, hoặc nhờ AI đổi giúp bạn.",
+      "use": "Dùng mẫu {{name}}",
+      "replaceConfirm": "Thay thiết kế hiện tại bằng mẫu này? Bạn có thể hoàn tác.",
+      "sale": {
+        "title": "Sale Hè",
+        "subtitle": "Giảm đến 50% · Chỉ cuối tuần này"
+      },
+      "quote": {
+        "title": "Thẻ trích dẫn",
+        "body": "Đơn giản, nhưng ý nghĩa.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Không thể tin nổi!",
+        "badge": "Mới"
+      },
+      "story": {
+        "title": "Hàng mới về",
+        "cta": "Vuốt lên để mua"
+      },
+      "event": {
+        "title": "Đêm nhạc sống",
+        "date": "Thứ Sáu 20h",
+        "place": "The Warehouse, trung tâm"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Tập 12 · Đã lên sóng"
+      },
+      "announcement": {
+        "kicker": "Sắp ra mắt",
+        "title": "Tin lớn sắp đến"
+      },
+      "crypto": {
+        "title": "Cập nhật giá",
+        "change": "+42% tuần này"
+      },
+      "birthday": {
+        "title": "Chúc mừng sinh nhật",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Khi code chạy được",
+        "bottom": "Ngay lần đầu tiên"
+      }
+    },
+    "design": {
+      "format": "Định dạng",
+      "landscape": "Ngang",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Dọc",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Vuông",
+      "squareDetail": "Bài đăng feed",
+      "portrait": "Chân dung",
+      "portraitDetail": "Instagram",
+      "canvas": "Canvas",
+      "resolution": "Độ phân giải",
+      "frameRate": "Tốc độ khung hình",
+      "background": "Nền",
+      "backgroundSwatch": "Nền {{hex}}",
+      "customBackground": "Màu nền tùy chỉnh",
+      "emptyTitle": "Trang đang trống",
+      "emptyBody": "Bắt đầu từ mẫu, tài nguyên miễn phí, tệp của bạn, hoặc chỉ cần hỏi AI.",
+      "browseAssets": "Xem tài nguyên miễn phí",
+      "importMedia": "Nhập phương tiện",
+      "generateClip": "Tạo clip",
+      "addHeadline": "Thêm tiêu đề"
     }
   },
   "glossary": {

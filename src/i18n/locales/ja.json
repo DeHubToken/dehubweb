@@ -6047,6 +6047,78 @@
       "hint": "端末上で動作：無料・プライベートで、何もアップロードされません。初回のみAIモデルをダウンロードし、その後は数秒で完了します。",
       "done": "背景を削除しました。",
       "failed": "背景を削除できませんでした。別の画像を試すか、ChromeやEdgeなどのブラウザをお使いください。"
+    },
+    "templates": {
+      "heading": "テンプレート",
+      "hint": "ひとつ選んでスタート。文字も色も写真もすべて変更できます。AIに頼んで変えてもらうことも。",
+      "use": "{{name}}テンプレートを使う",
+      "replaceConfirm": "現在のデザインをこのテンプレートに置き換えますか?元に戻せます。",
+      "sale": {
+        "title": "サマーセール",
+        "subtitle": "最大50%オフ · 今週末限定"
+      },
+      "quote": {
+        "title": "名言カード",
+        "body": "シンプルに、でも意味深く。",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "信じられない!",
+        "badge": "NEW"
+      },
+      "story": {
+        "title": "新作登場",
+        "cta": "上にスワイプして購入"
+      },
+      "event": {
+        "title": "ライブミュージックナイト",
+        "date": "金曜 20:00",
+        "place": "ザ・ウェアハウス(ダウンタウン)"
+      },
+      "podcast": {
+        "title": "クリエイター・ショー",
+        "episode": "第12話 · 配信中"
+      },
+      "announcement": {
+        "kicker": "近日公開",
+        "title": "ビッグニュース到来"
+      },
+      "crypto": {
+        "title": "価格アップデート",
+        "change": "今週 +42%"
+      },
+      "birthday": {
+        "title": "お誕生日おめでとう",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "ミーム",
+        "top": "コードが動いた",
+        "bottom": "一発で"
+      }
+    },
+    "design": {
+      "format": "フォーマット",
+      "landscape": "横長",
+      "landscapeDetail": "YouTube、Web",
+      "vertical": "縦長",
+      "verticalDetail": "ショート、リール",
+      "square": "正方形",
+      "squareDetail": "フィード投稿",
+      "portrait": "ポートレート",
+      "portraitDetail": "Instagram",
+      "canvas": "キャンバス",
+      "resolution": "解像度",
+      "frameRate": "フレームレート",
+      "background": "背景",
+      "backgroundSwatch": "背景 {{hex}}",
+      "customBackground": "カスタム背景色",
+      "emptyTitle": "ページが空です",
+      "emptyBody": "テンプレート、無料素材、自分のファイルから始めるか、AIに頼んでみましょう。",
+      "browseAssets": "無料素材を見る",
+      "importMedia": "メディアを読み込む",
+      "generateClip": "クリップを生成",
+      "addHeadline": "見出しを追加"
     }
   }
 }

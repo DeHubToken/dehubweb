@@ -6063,6 +6063,78 @@
       "hint": "Cihazınızda çalışır: ücretsiz, gizli, hiçbir şey yüklenmez. İlk kullanımda yapay zekâ modeli indirilir, sonra birkaç saniye sürer.",
       "done": "Arka plan kaldırıldı.",
       "failed": "Arka plan kaldırılamadı. Başka bir görsel ya da Chrome veya Edge gibi bir tarayıcı deneyin."
+    },
+    "templates": {
+      "heading": "Şablonlar",
+      "hint": "Başlamak için birini seç. Her kelime, renk ve fotoğraf değiştirilebilir ya da yapay zekâdan senin için değiştirmesini iste.",
+      "use": "{{name}} şablonunu kullan",
+      "replaceConfirm": "Mevcut tasarım bu şablonla değiştirilsin mi? Geri alabilirsin.",
+      "sale": {
+        "title": "Yaz İndirimi",
+        "subtitle": "%50'ye varan indirim · Sadece bu hafta sonu"
+      },
+      "quote": {
+        "title": "Alıntı kartı",
+        "body": "Basit olsun, ama anlamlı.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Buna inanamayacaksın!",
+        "badge": "Yeni"
+      },
+      "story": {
+        "title": "Yeni sezon",
+        "cta": "Alışveriş için yukarı kaydır"
+      },
+      "event": {
+        "title": "Canlı müzik gecesi",
+        "date": "Cuma 20:00",
+        "place": "Depo, şehir merkezi"
+      },
+      "podcast": {
+        "title": "Creator Show",
+        "episode": "12. Bölüm · Yayında"
+      },
+      "announcement": {
+        "kicker": "Çok yakında",
+        "title": "Büyük haber geliyor"
+      },
+      "crypto": {
+        "title": "Fiyat güncellemesi",
+        "change": "Bu hafta +%42"
+      },
+      "birthday": {
+        "title": "İyi ki doğdun",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Kod çalışınca",
+        "bottom": "Hem de ilk denemede"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Yatay",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Dikey",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Kare",
+      "squareDetail": "Akış gönderisi",
+      "portrait": "Portre",
+      "portraitDetail": "Instagram",
+      "canvas": "Tuval",
+      "resolution": "Çözünürlük",
+      "frameRate": "Kare hızı",
+      "background": "Arka plan",
+      "backgroundSwatch": "Arka plan {{hex}}",
+      "customBackground": "Özel arka plan rengi",
+      "emptyTitle": "Sayfa boş",
+      "emptyBody": "Bir şablonla, ücretsiz bir öğeyle, kendi dosyanla başla ya da yapay zekâya sor.",
+      "browseAssets": "Ücretsiz öğelere göz at",
+      "importMedia": "Medya içe aktar",
+      "generateClip": "Klip oluştur",
+      "addHeadline": "Başlık ekle"
     }
   }
 }

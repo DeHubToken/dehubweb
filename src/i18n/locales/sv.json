@@ -5946,6 +5946,78 @@
       "hint": "Körs på din enhet: gratis, privat, inget laddas upp. Första gången laddas AI-modellen ner, sedan tar det bara några sekunder.",
       "done": "Bakgrunden har tagits bort.",
       "failed": "Det gick inte att ta bort bakgrunden. Prova en annan bild eller en webbläsare som Chrome eller Edge."
+    },
+    "templates": {
+      "heading": "Mallar",
+      "hint": "Välj en för att börja. Varje ord, färg och foto kan ändras, eller be AI:n ändra det åt dig.",
+      "use": "Använd mallen {{name}}",
+      "replaceConfirm": "Ersätt nuvarande design med den här mallen? Du kan ångra det.",
+      "sale": {
+        "title": "Sommarrea",
+        "subtitle": "Upp till 50% rabatt · Bara i helgen"
+      },
+      "quote": {
+        "title": "Citatkort",
+        "body": "Gör det enkelt, men betydelsefullt.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Det här tror du inte",
+        "badge": "Ny"
+      },
+      "story": {
+        "title": "Nyhet",
+        "cta": "Svep upp och shoppa"
+      },
+      "event": {
+        "title": "Livemusikkväll",
+        "date": "Fredag 20.00",
+        "place": "The Warehouse, centrum"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Avsnitt 12 · Ute nu"
+      },
+      "announcement": {
+        "kicker": "Kommer snart",
+        "title": "Stora nyheter på väg"
+      },
+      "crypto": {
+        "title": "Kursuppdatering",
+        "change": "+42% den här veckan"
+      },
+      "birthday": {
+        "title": "Grattis på födelsedagen",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "När koden funkar",
+        "bottom": "På första försöket"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Liggande",
+      "landscapeDetail": "YouTube, webb",
+      "vertical": "Vertikal",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Kvadrat",
+      "squareDetail": "Flödesinlägg",
+      "portrait": "Porträtt",
+      "portraitDetail": "Instagram",
+      "canvas": "Arbetsyta",
+      "resolution": "Upplösning",
+      "frameRate": "Bildfrekvens",
+      "background": "Bakgrund",
+      "backgroundSwatch": "Bakgrund {{hex}}",
+      "customBackground": "Anpassad bakgrundsfärg",
+      "emptyTitle": "Sidan är tom",
+      "emptyBody": "Börja med en mall, en gratis resurs, din egen fil, eller fråga bara AI:n.",
+      "browseAssets": "Bläddra bland gratis resurser",
+      "importMedia": "Importera media",
+      "generateClip": "Generera ett klipp",
+      "addHeadline": "Lägg till en rubrik"
     }
   }
 }

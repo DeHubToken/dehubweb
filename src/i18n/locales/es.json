@@ -6063,6 +6063,78 @@
       "hint": "Se ejecuta en tu dispositivo: gratis, privado y sin subir nada. La primera vez descarga el modelo de IA; después tarda unos segundos.",
       "done": "Fondo eliminado.",
       "failed": "No se pudo quitar el fondo. Prueba con otra imagen o con un navegador como Chrome o Edge."
+    },
+    "templates": {
+      "heading": "Plantillas",
+      "hint": "Elige una para empezar. Puedes cambiar cada palabra, color y foto, o pedirle a la IA que lo haga por ti.",
+      "use": "Usar la plantilla {{name}}",
+      "replaceConfirm": "¿Reemplazar el diseño actual con esta plantilla? Puedes deshacerlo.",
+      "sale": {
+        "title": "Rebajas de verano",
+        "subtitle": "Hasta 50% de descuento · Solo este finde"
+      },
+      "quote": {
+        "title": "Tarjeta de cita",
+        "body": "Hazlo simple, pero significativo.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "No te lo vas a creer",
+        "badge": "Nuevo"
+      },
+      "story": {
+        "title": "Nueva colección",
+        "cta": "Desliza para comprar"
+      },
+      "event": {
+        "title": "Noche de música en vivo",
+        "date": "Viernes 20:00",
+        "place": "The Warehouse, centro"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Episodio 12 · Ya disponible"
+      },
+      "announcement": {
+        "kicker": "Muy pronto",
+        "title": "Se vienen grandes noticias"
+      },
+      "crypto": {
+        "title": "Precio actualizado",
+        "change": "+42% esta semana"
+      },
+      "birthday": {
+        "title": "Feliz cumpleaños",
+        "name": "¡Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Cuando el código funciona",
+        "bottom": "A la primera"
+      }
+    },
+    "design": {
+      "format": "Formato",
+      "landscape": "Horizontal",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Vertical",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Cuadrado",
+      "squareDetail": "Publicación",
+      "portrait": "Retrato",
+      "portraitDetail": "Instagram",
+      "canvas": "Lienzo",
+      "resolution": "Resolución",
+      "frameRate": "Fotogramas por segundo",
+      "background": "Fondo",
+      "backgroundSwatch": "Fondo {{hex}}",
+      "customBackground": "Color de fondo personalizado",
+      "emptyTitle": "La página está vacía",
+      "emptyBody": "Empieza con una plantilla, un recurso gratis, tu propio archivo o pídeselo a la IA.",
+      "browseAssets": "Ver recursos gratis",
+      "importMedia": "Importar medios",
+      "generateClip": "Generar un clip",
+      "addHeadline": "Añadir un titular"
     }
   }
 }

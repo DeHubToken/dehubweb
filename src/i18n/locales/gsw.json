@@ -3704,6 +3704,78 @@
       "hint": "Lauft uf dim Grät: gratis, privat, nüt wird uffeglade. Bim erschte Mal wird s KI-Modell abeglade, dänn gaht s nur es paar Sekunde.",
       "done": "Hintergrund entfernt.",
       "failed": "Hintergrund het nöd chöne entfernt wärde. Probier es anders Bild oder en Browser wie Chrome oder Edge."
+    },
+    "templates": {
+      "heading": "Vorlage",
+      "hint": "Wähl eini zum Starte. Jedes Wort, jedi Farb und jedes Foto chasch ändere, oder d KI fröge, dass sies für di macht.",
+      "use": "Vorlag {{name}} bruuche",
+      "replaceConfirm": "Aktuelli Gstaltig dur die Vorlag ersetze? Chasch es rückgängig mache.",
+      "sale": {
+        "title": "Summer-Usverchauf",
+        "subtitle": "Bis 50% billiger · Nume das Wuchenend"
+      },
+      "quote": {
+        "title": "Zitatcharte",
+        "body": "Mach's eifach, aber bedütend.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Das glaubsch nöd!",
+        "badge": "Neu"
+      },
+      "story": {
+        "title": "Neui Kollektion",
+        "cta": "Uufe wische und poschte"
+      },
+      "event": {
+        "title": "Live-Musig-Abig",
+        "date": "Friitig 20 Uhr",
+        "place": "D Lagerhalle, Innestadt"
+      },
+      "podcast": {
+        "title": "D Creator-Show",
+        "episode": "Folg 12 · Jetzt dusse"
+      },
+      "announcement": {
+        "kicker": "Bald",
+        "title": "Grossi News chömed"
+      },
+      "crypto": {
+        "title": "Priis-Update",
+        "change": "+42% die Wuche"
+      },
+      "birthday": {
+        "title": "Alles Gueti zum Geburi",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Wenn de Code lauft",
+        "bottom": "Scho bim erschte Mol"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Querformat",
+      "landscapeDetail": "YouTube, Web",
+      "vertical": "Hochformat",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Quadrat",
+      "squareDetail": "Feed-Post",
+      "portrait": "Porträt",
+      "portraitDetail": "Instagram",
+      "canvas": "Leinwand",
+      "resolution": "Uflösig",
+      "frameRate": "Bildrate",
+      "background": "Hintergrund",
+      "backgroundSwatch": "Hintergrund {{hex}}",
+      "customBackground": "Eigeni Hintergrundfarb",
+      "emptyTitle": "D Siite isch leer",
+      "emptyBody": "Fang mit ere Vorlag, eme gratis Element, dinere eigete Datei aa, oder frög eifach d KI.",
+      "browseAssets": "Gratis Elemänt aaluege",
+      "importMedia": "Medie importiere",
+      "generateClip": "Clip generiere",
+      "addHeadline": "Überschrift dezue tue"
     }
   },
   "fractions": {

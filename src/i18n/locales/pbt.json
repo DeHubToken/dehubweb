@@ -3599,6 +3599,78 @@
       "hint": "ستاسو په وسیله چلېږي: وړیا، خصوصي، هېڅ شی نه پورته کېږي. په لومړي ځل د AI ماډل ښکته کېږي، بیا یوازې څو ثانیې نیسي.",
       "done": "شالید لرې شو.",
       "failed": "شالید لرې نه شو. بل انځور وازمایئ، یا د Chrome یا Edge په څېر براوزر."
+    },
+    "templates": {
+      "heading": "کينډۍ",
+      "hint": "د پیل لپاره یوه وټاکئ. هره کلمه، رنګ او انځور بدلېدای شي، یا AI ته ووایاست چې ستاسو لپاره یې بدل کړي.",
+      "use": "د {{name}} کينډۍ وکاروئ",
+      "replaceConfirm": "اوسنی ډیزاین په دې کينډۍ بدل کړو؟ بېرته یې راګرځولای شئ.",
+      "sale": {
+        "title": "د اوړي لوی تخفیف",
+        "subtitle": "تر 50% پورې تخفیف · یوازې همدا اونۍ پای"
+      },
+      "quote": {
+        "title": "د وینا کارت",
+        "body": "ساده یې کړه، خو په مانا.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "باور به نه کوئ",
+        "badge": "نوی"
+      },
+      "story": {
+        "title": "نوې ټولګه",
+        "cta": "د پېرلو لپاره پورته ښوئ کړئ"
+      },
+      "event": {
+        "title": "د ژوندۍ موسیقۍ شپه",
+        "date": "جمعه د شپې 8 بجې",
+        "place": "ګودام، د ښار زړه"
+      },
+      "podcast": {
+        "title": "د جوړونکو خپرونه",
+        "episode": "برخه 12 · اوس خپره شوه"
+      },
+      "announcement": {
+        "kicker": "ژر راځي",
+        "title": "لوی خبر په لاره دی"
+      },
+      "crypto": {
+        "title": "د بیې تازه",
+        "change": "دا اونۍ +42%"
+      },
+      "birthday": {
+        "title": "کلیزه دې مبارک",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "میم",
+        "top": "کله چې کوډ کار وکړي",
+        "bottom": "په لومړي ځل"
+      }
+    },
+    "design": {
+      "format": "بڼه",
+      "landscape": "افقي",
+      "landscapeDetail": "YouTube، وېب",
+      "vertical": "عمودي",
+      "verticalDetail": "Shorts، Reels",
+      "square": "مربع",
+      "squareDetail": "د فیډ پوسټ",
+      "portrait": "پورټریټ",
+      "portraitDetail": "Instagram",
+      "canvas": "کینوس",
+      "resolution": "ریزولوشن",
+      "frameRate": "د چوکاټ کچه",
+      "background": "شالید",
+      "backgroundSwatch": "شالید {{hex}}",
+      "customBackground": "خپل شالید رنګ",
+      "emptyTitle": "پاڼه خالي ده",
+      "emptyBody": "له کينډۍ، وړیا سرچینې، خپل فایل پیل کړئ، یا یوازې له AI وپوښتئ.",
+      "browseAssets": "وړیا سرچینې وګورئ",
+      "importMedia": "رسنۍ راوړئ",
+      "generateClip": "کلیپ جوړ کړئ",
+      "addHeadline": "سرلیک زیات کړئ"
     }
   },
   "fractions": {

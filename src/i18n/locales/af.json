@@ -5881,6 +5881,78 @@
       "hint": "Loop op jou toestel: gratis, privaat, niks word opgelaai nie. Die eerste keer word die KI-model afgelaai, daarna neem dit net 'n paar sekondes.",
       "done": "Agtergrond verwyder.",
       "failed": "Kon nie die agtergrond verwyder nie. Probeer 'n ander prent, of 'n blaaier soos Chrome of Edge."
+    },
+    "templates": {
+      "heading": "Sjablone",
+      "hint": "Kies een om te begin. Elke woord, kleur en foto kan verander word, of vra die AI om dit vir jou te doen.",
+      "use": "Gebruik die {{name}}-sjabloon",
+      "replaceConfirm": "Vervang die huidige ontwerp met hierdie sjabloon? Jy kan dit ontdoen.",
+      "sale": {
+        "title": "Somer-uitverkoping",
+        "subtitle": "Tot 50% af · Net hierdie naweek"
+      },
+      "quote": {
+        "title": "Aanhalingskaart",
+        "body": "Maak dit eenvoudig, maar betekenisvol.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Jy sal dit nie glo nie",
+        "badge": "Nuut"
+      },
+      "story": {
+        "title": "Nuwe vrystelling",
+        "cta": "Swiep op om te koop"
+      },
+      "event": {
+        "title": "Live musiekaand",
+        "date": "Vrydag 20:00",
+        "place": "Die Pakhuis, middestad"
+      },
+      "podcast": {
+        "title": "Die Skepper-show",
+        "episode": "Episode 12 · Nou beskikbaar"
+      },
+      "announcement": {
+        "kicker": "Binnekort",
+        "title": "Groot nuus kom"
+      },
+      "crypto": {
+        "title": "Prysopdatering",
+        "change": "+42% hierdie week"
+      },
+      "birthday": {
+        "title": "Gelukkige verjaarsdag",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Wanneer die kode werk",
+        "bottom": "Met die eerste probeerslag"
+      }
+    },
+    "design": {
+      "format": "Formaat",
+      "landscape": "Landskap",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Vertikaal",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Vierkant",
+      "squareDetail": "Voerplasing",
+      "portrait": "Portret",
+      "portraitDetail": "Instagram",
+      "canvas": "Doek",
+      "resolution": "Resolusie",
+      "frameRate": "Raamtempo",
+      "background": "Agtergrond",
+      "backgroundSwatch": "Agtergrond {{hex}}",
+      "customBackground": "Pasgemaakte agtergrondkleur",
+      "emptyTitle": "Die bladsy is leeg",
+      "emptyBody": "Begin met 'n sjabloon, 'n gratis bate, jou eie lêer, of vra net die AI.",
+      "browseAssets": "Blaai deur gratis bates",
+      "importMedia": "Voer media in",
+      "generateClip": "Genereer 'n snit",
+      "addHeadline": "Voeg 'n opskrif by"
     }
   },
   "footer": {

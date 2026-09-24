@@ -5901,6 +5901,78 @@
       "hint": "Cihazınızda işləyir: pulsuz, məxfi, heç nə yüklənmir. İlk istifadədə süni intellekt modeli endirilir, sonra bir neçə saniyə çəkir.",
       "done": "Fon silindi.",
       "failed": "Fonu silmək alınmadı. Başqa şəkil və ya Chrome, Edge kimi brauzer yoxlayın."
+    },
+    "templates": {
+      "heading": "Şablonlar",
+      "hint": "Başlamaq üçün birini seçin. Hər söz, rəng və foto dəyişdirilə bilər, ya da AI-dan sizin üçün dəyişməsini istəyin.",
+      "use": "{{name}} şablonundan istifadə et",
+      "replaceConfirm": "Cari dizayn bu şablonla əvəz edilsin? Geri qaytara bilərsiniz.",
+      "sale": {
+        "title": "Yay endirimi",
+        "subtitle": "50%-dək endirim · Yalnız bu həftəsonu"
+      },
+      "quote": {
+        "title": "Sitat kartı",
+        "body": "Sadə et, amma mənalı.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Buna inanmayacaqsınız",
+        "badge": "Yeni"
+      },
+      "story": {
+        "title": "Yeni kolleksiya",
+        "cta": "Almaq üçün yuxarı sürüşdürün"
+      },
+      "event": {
+        "title": "Canlı musiqi gecəsi",
+        "date": "Cümə, 20:00",
+        "place": "The Warehouse, şəhər mərkəzi"
+      },
+      "podcast": {
+        "title": "Yaradıcı Şou",
+        "episode": "Epizod 12 · Artıq yayında"
+      },
+      "announcement": {
+        "kicker": "Tezliklə",
+        "title": "Böyük xəbər gəlir"
+      },
+      "crypto": {
+        "title": "Qiymət yeniləməsi",
+        "change": "Bu həftə +42%"
+      },
+      "birthday": {
+        "title": "Ad günün mübarək",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Mem",
+        "top": "Kod işləyəndə",
+        "bottom": "İlk cəhddən"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Üfüqi",
+      "landscapeDetail": "YouTube, veb",
+      "vertical": "Şaquli",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Kvadrat",
+      "squareDetail": "Lent paylaşımı",
+      "portrait": "Portret",
+      "portraitDetail": "Instagram",
+      "canvas": "Kətan",
+      "resolution": "Keyfiyyət",
+      "frameRate": "Kadr tezliyi",
+      "background": "Fon",
+      "backgroundSwatch": "Fon {{hex}}",
+      "customBackground": "Xüsusi fon rəngi",
+      "emptyTitle": "Səhifə boşdur",
+      "emptyBody": "Şablondan, pulsuz resursdan, öz faylınızdan başlayın və ya sadəcə AI-dan soruşun.",
+      "browseAssets": "Pulsuz resurslara bax",
+      "importMedia": "Media idxal et",
+      "generateClip": "Klip yarat",
+      "addHeadline": "Başlıq əlavə et"
     }
   }
 }

@@ -3586,6 +3586,78 @@
       "hint": "በመሣሪያዎ ላይ ይሰራል፦ ነፃ፣ የግል፣ ምንም አይሰቀልም። የመጀመሪያው አጠቃቀም የAI ሞዴሉን ያወርዳል፣ ከዚያ ጥቂት ሰከንዶች ብቻ ይወስዳል።",
       "done": "ዳራው ተወግዷል።",
       "failed": "ዳራውን ማስወገድ አልተቻለም። ሌላ ምስል ወይም እንደ Chrome ወይም Edge ያለ አሳሽ ይሞክሩ።"
+    },
+    "templates": {
+      "heading": "አብነቶች",
+      "hint": "ለመጀመር አንዱን ይምረጡ። ሁሉም ቃል፣ ቀለም እና ፎቶ ሊቀየር ይችላል፣ ወይም AI እንዲቀይርልዎ ይጠይቁ።",
+      "use": "የ{{name}} አብነትን ይጠቀሙ",
+      "replaceConfirm": "የአሁኑን ንድፍ በዚህ አብነት ይተኩ? መቀልበስ ይችላሉ።",
+      "sale": {
+        "title": "የበጋ ቅናሽ",
+        "subtitle": "እስከ 50% ቅናሽ · በዚህ ሳምንት መጨረሻ ብቻ"
+      },
+      "quote": {
+        "title": "የጥቅስ ካርድ",
+        "body": "ቀላል አድርገው፣ ግን ትርጉም ያለው።",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "ይህን አያምኑም",
+        "badge": "አዲስ"
+      },
+      "story": {
+        "title": "አዲስ ስብስብ",
+        "cta": "ለመግዛት ወደ ላይ ያንሸራትቱ"
+      },
+      "event": {
+        "title": "የቀጥታ ሙዚቃ ምሽት",
+        "date": "አርብ ምሽት 2 ሰዓት",
+        "place": "ዘ ዌርሃውስ፣ መሀል ከተማ"
+      },
+      "podcast": {
+        "title": "የፈጣሪዎች ሾው",
+        "episode": "ክፍል 12 · አሁን ወጥቷል"
+      },
+      "announcement": {
+        "kicker": "በቅርቡ",
+        "title": "ትልቅ ዜና እየመጣ ነው"
+      },
+      "crypto": {
+        "title": "የዋጋ ዝማኔ",
+        "change": "በዚህ ሳምንት +42%"
+      },
+      "birthday": {
+        "title": "መልካም ልደት",
+        "name": "ሳም!"
+      },
+      "meme": {
+        "title": "ሚም",
+        "top": "ኮዱ ሲሰራ",
+        "bottom": "በመጀመሪያ ሙከራ"
+      }
+    },
+    "design": {
+      "format": "ቅርጸት",
+      "landscape": "አግድም",
+      "landscapeDetail": "YouTube፣ ድር",
+      "vertical": "ቋሚ",
+      "verticalDetail": "Shorts፣ Reels",
+      "square": "ካሬ",
+      "squareDetail": "የፊድ ልጥፍ",
+      "portrait": "ቁመታዊ",
+      "portraitDetail": "Instagram",
+      "canvas": "ሸራ",
+      "resolution": "ጥራት",
+      "frameRate": "የፍሬም ፍጥነት",
+      "background": "ዳራ",
+      "backgroundSwatch": "ዳራ {{hex}}",
+      "customBackground": "ብጁ የዳራ ቀለም",
+      "emptyTitle": "ገጹ ባዶ ነው",
+      "emptyBody": "ከአብነት፣ ከነጻ ሀብት፣ ከራስዎ ፋይል ይጀምሩ፣ ወይም AI ይጠይቁ።",
+      "browseAssets": "ነጻ ሀብቶችን ያስሱ",
+      "importMedia": "ሚዲያ አስገባ",
+      "generateClip": "ክሊፕ ፍጠር",
+      "addHeadline": "ርዕስ ጨምር"
     }
   },
   "fractions": {

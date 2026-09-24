@@ -6056,6 +6056,78 @@
       "hint": "Läuft auf deinem Gerät: kostenlos, privat, nichts wird hochgeladen. Beim ersten Mal wird das KI-Modell heruntergeladen, danach dauert es nur wenige Sekunden.",
       "done": "Hintergrund entfernt.",
       "failed": "Hintergrund konnte nicht entfernt werden. Versuche ein anderes Bild oder einen Browser wie Chrome oder Edge."
+    },
+    "templates": {
+      "heading": "Vorlagen",
+      "hint": "Wähle eine zum Start. Jedes Wort, jede Farbe und jedes Foto lässt sich ändern – oder lass die KI das für dich machen.",
+      "use": "Vorlage {{name}} verwenden",
+      "replaceConfirm": "Aktuelles Design durch diese Vorlage ersetzen? Du kannst es rückgängig machen.",
+      "sale": {
+        "title": "Summer Sale",
+        "subtitle": "Bis zu 50 % Rabatt · Nur dieses Wochenende"
+      },
+      "quote": {
+        "title": "Zitatkarte",
+        "body": "Einfach, aber bedeutend.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Das glaubst du nicht",
+        "badge": "Neu"
+      },
+      "story": {
+        "title": "Neu eingetroffen",
+        "cta": "Nach oben wischen zum Shoppen"
+      },
+      "event": {
+        "title": "Live-Musik-Abend",
+        "date": "Freitag, 20 Uhr",
+        "place": "The Warehouse, Innenstadt"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Folge 12 · Jetzt online"
+      },
+      "announcement": {
+        "kicker": "Demnächst",
+        "title": "Große News kommen"
+      },
+      "crypto": {
+        "title": "Kurs-Update",
+        "change": "+42 % diese Woche"
+      },
+      "birthday": {
+        "title": "Alles Gute zum Geburtstag",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Wenn der Code läuft",
+        "bottom": "Beim ersten Versuch"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Querformat",
+      "landscapeDetail": "YouTube, Web",
+      "vertical": "Hochformat",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Quadrat",
+      "squareDetail": "Feed-Beitrag",
+      "portrait": "Porträt",
+      "portraitDetail": "Instagram",
+      "canvas": "Leinwand",
+      "resolution": "Auflösung",
+      "frameRate": "Bildrate",
+      "background": "Hintergrund",
+      "backgroundSwatch": "Hintergrund {{hex}}",
+      "customBackground": "Eigene Hintergrundfarbe",
+      "emptyTitle": "Die Seite ist leer",
+      "emptyBody": "Starte mit einer Vorlage, einem kostenlosen Asset, deiner eigenen Datei oder frag einfach die KI.",
+      "browseAssets": "Kostenlose Assets durchsuchen",
+      "importMedia": "Medien importieren",
+      "generateClip": "Clip generieren",
+      "addHeadline": "Überschrift hinzufügen"
     }
   }
 }

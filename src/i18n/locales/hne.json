@@ -3615,6 +3615,78 @@
       "hint": "तोर डिवाइस म चलथे: मुफत, निजी, कुछु अपलोड नई होवय। पहिली बार AI मॉडल डाउनलोड होथे, ओकर बाद कुछ सेकंड लगथे।",
       "done": "बैकग्राउंड हटगे।",
       "failed": "बैकग्राउंड नई हट सकिस। दूसर फोटू, या Chrome या Edge जइसन ब्राउज़र आजमाव।"
+    },
+    "templates": {
+      "heading": "टेम्पलेट",
+      "hint": "सुरू करे बर एक ठन चुनव। हर सब्द, रंग अउ फोटो बदले जा सकथे, या AI ले कहव कि तोर बर बदल दे।",
+      "use": "{{name}} टेम्पलेट लगाव",
+      "replaceConfirm": "अभी के डिज़ाइन ल ए टेम्पलेट ले बदल देवन? तैं वापस कर सकथस।",
+      "sale": {
+        "title": "गरमी सेल",
+        "subtitle": "50% तक छूट · सिरिफ ए हफ्ता के आखिरी म"
+      },
+      "quote": {
+        "title": "कोटेशन कार्ड",
+        "body": "सरल रखव, फेर दमदार।",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "तैं बिस्वास नइ करबे",
+        "badge": "नवा"
+      },
+      "story": {
+        "title": "नवा माल आ गे",
+        "cta": "खरीदे बर ऊपर सरकाव"
+      },
+      "event": {
+        "title": "लाइव संगीत के रात",
+        "date": "सुकरवार रात 8 बजे",
+        "place": "द वेयरहाउस, सहर के बीच"
+      },
+      "podcast": {
+        "title": "क्रिएटर सो",
+        "episode": "एपिसोड 12 · अब आ गे"
+      },
+      "announcement": {
+        "kicker": "जल्दी आवत हे",
+        "title": "बड़ खबर आवत हे"
+      },
+      "crypto": {
+        "title": "भाव अपडेट",
+        "change": "ए हफ्ता +42%"
+      },
+      "birthday": {
+        "title": "जनमदिन के बधाई",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "मीम",
+        "top": "जब कोड चल जाय",
+        "bottom": "पहिली बेर म"
+      }
+    },
+    "design": {
+      "format": "फॉर्मेट",
+      "landscape": "आड़ा",
+      "landscapeDetail": "YouTube, वेब",
+      "vertical": "खड़ा",
+      "verticalDetail": "Shorts, Reels",
+      "square": "चौकोर",
+      "squareDetail": "फीड पोस्ट",
+      "portrait": "पोर्ट्रेट",
+      "portraitDetail": "Instagram",
+      "canvas": "कैनवास",
+      "resolution": "रिज़ॉल्यूशन",
+      "frameRate": "फ्रेम रेट",
+      "background": "पृष्ठभूमि",
+      "backgroundSwatch": "पृष्ठभूमि {{hex}}",
+      "customBackground": "अपन पसंद के पृष्ठभूमि रंग",
+      "emptyTitle": "पन्ना खाली हे",
+      "emptyBody": "टेम्पलेट, फोकट संसाधन, अपन फाइल ले सुरू करव, या बस AI ले पूछव।",
+      "browseAssets": "फोकट संसाधन देखव",
+      "importMedia": "मीडिया लावव",
+      "generateClip": "क्लिप बनाव",
+      "addHeadline": "हेडलाइन जोड़व"
     }
   },
   "post": {

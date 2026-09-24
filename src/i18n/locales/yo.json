@@ -3725,6 +3725,78 @@
       "hint": "Ó ń ṣiṣẹ́ lórí ẹ̀rọ rẹ: ọ̀fẹ́, àṣírí, kò sí ohun tí a gbé sókè. Ìlò àkọ́kọ́ máa ṣe ìgbàsílẹ̀ àwòṣe AI, lẹ́yìn náà ó máa gba ìṣẹ́jú-àáyá díẹ̀.",
       "done": "A ti yọ ẹ̀yìn àwòrán kúrò.",
       "failed": "A kò lè yọ ẹ̀yìn àwòrán kúrò. Gbìyànjú àwòrán míràn, tàbí aṣàwákiri bíi Chrome tàbí Edge."
+    },
+    "templates": {
+      "heading": "Àwọn àwòṣe",
+      "hint": "Yan ọ̀kan láti bẹ̀rẹ̀. O lè yí gbogbo ọ̀rọ̀, àwọ̀ àti fọ́tò padà, tàbí kí o ní kí AI yí i padà fún ọ.",
+      "use": "Lo àwòṣe {{name}}",
+      "replaceConfirm": "Fi àwòṣe yìí rọ́pò àpẹrẹ lọ́wọ́lọ́wọ́? O lè dá a padà.",
+      "sale": {
+        "title": "Ìtajà Ẹ̀rùn",
+        "subtitle": "Ẹ̀dínwó títí dé 50% · Òpin ọ̀sẹ̀ yìí nìkan"
+      },
+      "quote": {
+        "title": "Káàdì ọ̀rọ̀ àyọlò",
+        "body": "Ṣe é ní ṣókí, ṣùgbọ́n kó nítumọ̀.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "O ò ní gbà á gbọ́",
+        "badge": "Tuntun"
+      },
+      "story": {
+        "title": "Ọjà tuntun dé",
+        "cta": "Fà sókè láti rajà"
+      },
+      "event": {
+        "title": "Alẹ́ orin láàyè",
+        "date": "Ẹtì 8 alẹ́",
+        "place": "The Warehouse, àárín ìlú"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Ìṣẹ̀lẹ̀ 12 · Ó ti jáde"
+      },
+      "announcement": {
+        "kicker": "Ó ń bọ̀ láìpẹ́",
+        "title": "Ìròyìn ńlá ń bọ̀"
+      },
+      "crypto": {
+        "title": "Ìmúdójúìwọ̀n iye owó",
+        "change": "+42% ní ọ̀sẹ̀ yìí"
+      },
+      "birthday": {
+        "title": "Ẹ kú ọjọ́ ìbí",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Mímù",
+        "top": "Nígbà tí kóòdù bá ṣiṣẹ́",
+        "bottom": "Ní ìgbìyànjú àkọ́kọ́"
+      }
+    },
+    "design": {
+      "format": "Ìgbékalẹ̀",
+      "landscape": "Ní ìbú",
+      "landscapeDetail": "YouTube, wẹ́ẹ̀bù",
+      "vertical": "Ní òró",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Onígun mẹ́rin",
+      "squareDetail": "Ìfìwéránṣẹ́ fíìdì",
+      "portrait": "Àwòrán gígùn",
+      "portraitDetail": "Instagram",
+      "canvas": "Kánfásì",
+      "resolution": "Ìpinnu",
+      "frameRate": "Ìwọ̀n férémù",
+      "background": "Ẹ̀yìn",
+      "backgroundSwatch": "Ẹ̀yìn {{hex}}",
+      "customBackground": "Àwọ̀ ẹ̀yìn àdáni",
+      "emptyTitle": "Ojú-ìwé náà ṣófo",
+      "emptyBody": "Bẹ̀rẹ̀ láti àwòṣe, ohun-ìní ọ̀fẹ́, fáìlì tìrẹ, tàbí kí o kàn béèrè lọ́wọ́ AI.",
+      "browseAssets": "Wo àwọn ohun-ìní ọ̀fẹ́",
+      "importMedia": "Kó mídíà wọlé",
+      "generateClip": "Ṣe kílíìpù",
+      "addHeadline": "Ṣafikun àkọlé"
     }
   },
   "fractions": {

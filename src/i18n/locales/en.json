@@ -6062,6 +6062,78 @@
       "hint": "Runs on your device: free, private, nothing is uploaded. The first use downloads the AI model, then it takes a few seconds.",
       "done": "Background removed.",
       "failed": "Couldn't remove the background. Try another image, or a browser like Chrome or Edge."
+    },
+    "templates": {
+      "heading": "Templates",
+      "hint": "Pick one to start. Every word, colour and photo can be changed, or ask the AI to change it for you.",
+      "use": "Use the {{name}} template",
+      "replaceConfirm": "Replace the current design with this template? You can undo it.",
+      "sale": {
+        "title": "Summer Sale",
+        "subtitle": "Up to 50% off · This weekend only"
+      },
+      "quote": {
+        "title": "Quote card",
+        "body": "Make it simple, but significant.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "You won't believe this",
+        "badge": "New"
+      },
+      "story": {
+        "title": "New drop",
+        "cta": "Swipe up to shop"
+      },
+      "event": {
+        "title": "Live music night",
+        "date": "Friday 8 PM",
+        "place": "The Warehouse, downtown"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Episode 12 · Out now"
+      },
+      "announcement": {
+        "kicker": "Coming soon",
+        "title": "Big news is coming"
+      },
+      "crypto": {
+        "title": "Price update",
+        "change": "+42% this week"
+      },
+      "birthday": {
+        "title": "Happy Birthday",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "When the code works",
+        "bottom": "On the first try"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Landscape",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Vertical",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Square",
+      "squareDetail": "Feed post",
+      "portrait": "Portrait",
+      "portraitDetail": "Instagram",
+      "canvas": "Canvas",
+      "resolution": "Resolution",
+      "frameRate": "Frame rate",
+      "background": "Background",
+      "backgroundSwatch": "Background {{hex}}",
+      "customBackground": "Custom background colour",
+      "emptyTitle": "The page is empty",
+      "emptyBody": "Start from a template, a free asset, your own file, or just ask the AI.",
+      "browseAssets": "Browse free assets",
+      "importMedia": "Import media",
+      "generateClip": "Generate a clip",
+      "addHeadline": "Add a headline"
     }
   }
 }

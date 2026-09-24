@@ -3594,6 +3594,78 @@
       "hint": "تہار ڈیوائس میں چلیلا: مفت، نجی، کچھو اپلوڈ نہیں ہوئیلا۔ پہلا بار AI ماڈل ڈاؤن لوڈ ہوئیلا، اوکر بعد کچھ سیکنڈ لاگیلا۔",
       "done": "بیک گراؤنڈ ہٹ گیلک۔",
       "failed": "بیک گراؤنڈ نہیں ہٹ پائلک۔ دوسر تصویر، یا Chrome یا Edge جیسن براؤزر آزماؤ۔"
+    },
+    "templates": {
+      "heading": "ٹیمپلیٹ",
+      "hint": "شروع کرے کے واسطے ایک چنو۔ ہر لفظ، رنگ اور فوٹو بدلا جا سکت ہے، یا AI کے کہو کہ تمہار واسطے بدل دیوے۔",
+      "use": "{{name}} ٹیمپلیٹ لگاؤ",
+      "replaceConfirm": "ابھی کے ڈیزائن کے ای ٹیمپلیٹ سے بدل دیں؟ واپس کر سکت ہو۔",
+      "sale": {
+        "title": "گرمی کے سیل",
+        "subtitle": "50% تک چھوٹ · خالی ای ہفتہ کے آخر"
+      },
+      "quote": {
+        "title": "قول کارڈ",
+        "body": "سیدھا رکھو، مگر دمدار۔",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "یقین نہیں کرب",
+        "badge": "نوا"
+      },
+      "story": {
+        "title": "نوا مال آئیس",
+        "cta": "خریدے کے واسطے اوپر سرکاؤ"
+      },
+      "event": {
+        "title": "لائیو گانا کے رات",
+        "date": "شکروار رات 8 بجے",
+        "place": "The Warehouse، شہر کے بیچ"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "ایپیسوڈ 12 · آ گیلک"
+      },
+      "announcement": {
+        "kicker": "جلدی آوت ہے",
+        "title": "بڑا خبر آوت ہے"
+      },
+      "crypto": {
+        "title": "دام کے خبر",
+        "change": "ای ہفتہ +42%"
+      },
+      "birthday": {
+        "title": "جنم دن کے بدھائی",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "میم",
+        "top": "جب کوڈ چل جاوے",
+        "bottom": "پہلا کوشش میں"
+      }
+    },
+    "design": {
+      "format": "فارمیٹ",
+      "landscape": "آڑا",
+      "landscapeDetail": "YouTube، ویب",
+      "vertical": "کھڑا",
+      "verticalDetail": "Shorts، Reels",
+      "square": "چوکور",
+      "squareDetail": "فیڈ پوسٹ",
+      "portrait": "لمبا",
+      "portraitDetail": "Instagram",
+      "canvas": "کینوس",
+      "resolution": "ریزولیوشن",
+      "frameRate": "فریم ریٹ",
+      "background": "پیچھے کے رنگ",
+      "backgroundSwatch": "پیچھے کے رنگ {{hex}}",
+      "customBackground": "اپن پسند کے پیچھے کے رنگ",
+      "emptyTitle": "پنا خالی ہے",
+      "emptyBody": "ٹیمپلیٹ، فری سامان، اپن فائل سے شروع کرو، یا بس AI سے پوچھو۔",
+      "browseAssets": "فری سامان دیکھو",
+      "importMedia": "میڈیا لاؤ",
+      "generateClip": "کلپ بناؤ",
+      "addHeadline": "سرخی جوڑو"
     }
   },
   "post": {

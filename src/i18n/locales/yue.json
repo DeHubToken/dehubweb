@@ -3734,6 +3734,78 @@
       "hint": "喺你部機度運行：免費、私隱、乜都唔會上載。第一次用會下載 AI 模型，之後幾秒就搞掂。",
       "done": "已移除背景。",
       "failed": "移除唔到背景。試下第二張圖，或者用 Chrome 或 Edge 呢類瀏覽器。"
+    },
+    "templates": {
+      "heading": "範本",
+      "hint": "揀一個開始。每個字、顏色同相片都改得，或者叫 AI 幫你改。",
+      "use": "使用 {{name}} 範本",
+      "replaceConfirm": "用呢個範本取代目前嘅設計？可以復原㗎。",
+      "sale": {
+        "title": "夏日大減價",
+        "subtitle": "低至半價 · 只限今個週末"
+      },
+      "quote": {
+        "title": "金句卡",
+        "body": "簡單，但要有意義。",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "你一定唔信",
+        "badge": "新"
+      },
+      "story": {
+        "title": "新品登場",
+        "cta": "向上掃即買"
+      },
+      "event": {
+        "title": "現場音樂之夜",
+        "date": "星期五 晚上 8 點",
+        "place": "The Warehouse，市中心"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "第 12 集 · 已推出"
+      },
+      "announcement": {
+        "kicker": "即將推出",
+        "title": "大消息快到"
+      },
+      "crypto": {
+        "title": "價格更新",
+        "change": "今個禮拜 +42%"
+      },
+      "birthday": {
+        "title": "生日快樂",
+        "name": "Sam！"
+      },
+      "meme": {
+        "title": "迷因",
+        "top": "當段 code 行到",
+        "bottom": "第一次就得"
+      }
+    },
+    "design": {
+      "format": "格式",
+      "landscape": "橫向",
+      "landscapeDetail": "YouTube、網頁",
+      "vertical": "直向",
+      "verticalDetail": "Shorts、Reels",
+      "square": "正方形",
+      "squareDetail": "動態貼文",
+      "portrait": "直幅",
+      "portraitDetail": "Instagram",
+      "canvas": "畫布",
+      "resolution": "解像度",
+      "frameRate": "影格率",
+      "background": "背景",
+      "backgroundSwatch": "背景 {{hex}}",
+      "customBackground": "自訂背景顏色",
+      "emptyTitle": "頁面係空嘅",
+      "emptyBody": "由範本、免費素材、你自己嘅檔案開始，或者直接問 AI。",
+      "browseAssets": "瀏覽免費素材",
+      "importMedia": "匯入媒體",
+      "generateClip": "生成片段",
+      "addHeadline": "加入標題"
     }
   },
   "fractions": {

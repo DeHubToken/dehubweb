@@ -6263,6 +6263,78 @@
       "hint": "Berjalan pada peranti anda: percuma, peribadi, tiada apa-apa dimuat naik. Penggunaan pertama memuat turun model AI, kemudian hanya mengambil beberapa saat.",
       "done": "Latar belakang dibuang.",
       "failed": "Tidak dapat membuang latar belakang. Cuba imej lain, atau pelayar seperti Chrome atau Edge."
+    },
+    "templates": {
+      "heading": "Templat",
+      "hint": "Pilih satu untuk bermula. Setiap perkataan, warna dan foto boleh ditukar, atau minta AI menukarnya untuk anda.",
+      "use": "Guna templat {{name}}",
+      "replaceConfirm": "Gantikan reka bentuk semasa dengan templat ini? Anda boleh membuat asal.",
+      "sale": {
+        "title": "Jualan Musim Panas",
+        "subtitle": "Diskaun sehingga 50% · Hujung minggu ini sahaja"
+      },
+      "quote": {
+        "title": "Kad petikan",
+        "body": "Buat ringkas, tapi bermakna.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Anda takkan percaya",
+        "badge": "Baharu"
+      },
+      "story": {
+        "title": "Koleksi baharu",
+        "cta": "Leret ke atas untuk membeli"
+      },
+      "event": {
+        "title": "Malam muzik langsung",
+        "date": "Jumaat 8 malam",
+        "place": "The Warehouse, pusat bandar"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Episod 12 · Kini keluar"
+      },
+      "announcement": {
+        "kicker": "Akan datang",
+        "title": "Berita besar akan tiba"
+      },
+      "crypto": {
+        "title": "Kemas kini harga",
+        "change": "+42% minggu ini"
+      },
+      "birthday": {
+        "title": "Selamat Hari Jadi",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Bila kod berfungsi",
+        "bottom": "Pada cubaan pertama"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Landskap",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Menegak",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Segi empat sama",
+      "squareDetail": "Hantaran suapan",
+      "portrait": "Potret",
+      "portraitDetail": "Instagram",
+      "canvas": "Kanvas",
+      "resolution": "Resolusi",
+      "frameRate": "Kadar bingkai",
+      "background": "Latar belakang",
+      "backgroundSwatch": "Latar belakang {{hex}}",
+      "customBackground": "Warna latar belakang tersuai",
+      "emptyTitle": "Halaman ini kosong",
+      "emptyBody": "Mulakan dengan templat, aset percuma, fail anda sendiri, atau tanya sahaja AI.",
+      "browseAssets": "Layari aset percuma",
+      "importMedia": "Import media",
+      "generateClip": "Jana klip",
+      "addHeadline": "Tambah tajuk utama"
     }
   }
 }
