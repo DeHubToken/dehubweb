@@ -228,6 +228,11 @@ function effectsPatch(op: AgentOp, current: ClipEffects | undefined): ClipEffect
   return next;
 }
 
+const ASPECTS: [AspectPreset, number][] = [["16:9", 16 / 9], ["1:1", 1], ["4:5", 4 / 5], ["9:16", 9 / 16]];
+function nearestAspect(ratio: number): AspectPreset {
+  return ASPECTS.reduce((best, cur) => (Math.abs(Math.log(cur[1] / ratio)) < Math.abs(Math.log(best[1] / ratio)) ? cur : best))[0];
+}
+
 export interface ApplyContext {
   wallet?: string | null;
 }
@@ -295,7 +300,13 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
     switch (op.op) {
       case "set_canvas": {
         const patch: Record<string, unknown> = {};
-        const aspect = op.aspect as AspectPreset | undefined;
+        let aspect = op.aspect as AspectPreset | undefined;
+        // Small models sometimes send a size instead of an aspect (seen live:
+        // x=1080, y=1080). Snap any width/height pair to the nearest preset.
+        const big = (v: unknown) => { const n = num(v); return n !== undefined && n > 1 ? n : undefined; };
+        const pw = num(op.width) ?? big(op.x);
+        const ph = num(op.height) ?? big(op.y);
+        if (!aspect && pw && ph && pw > 0 && ph > 0) aspect = nearestAspect(pw / ph);
         if (aspect === "16:9" || aspect === "9:16" || aspect === "1:1" || aspect === "4:5") {
           Object.assign(patch, aspectToDims(aspect, 1080), { aspectPreset: aspect });
         }
