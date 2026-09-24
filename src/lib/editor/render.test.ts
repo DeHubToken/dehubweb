@@ -60,3 +60,13 @@ describe("shape geometry", () => {
     expect(clipBoxForSize(ctx, shape, 1000, 800, null)).toMatchObject({ w: 1000, h: 400 });
   });
 });
+
+describe("freehand path", () => {
+  it("sizes like any shape and keeps its points in the box", () => {
+    const path = { id: "p", trackId: "t", kind: "shape", shape: "path", start: 0, duration: 5, trimIn: 0,
+      w: 0.2, h: 0.1, fill: null, stroke: { color: "#fff", width: 10 },
+      points: [[-0.5, -0.5], [0, 0.5], [0.5, -0.5]] as [number, number][],
+      transform: { x: 0.5, y: 0.5, scale: 1, rotation: 0 } } as const;
+    expect(clipBoxForSize(ctx, path, 1000, 1000, null)).toMatchObject({ w: 200, h: 100 });
+  });
+});

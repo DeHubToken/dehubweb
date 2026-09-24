@@ -5907,7 +5907,8 @@
       "fillOn": "Výplň",
       "outline": "Obrys",
       "outlineOn": "Obrys",
-      "outlineWidth": "Šířka obrysu {{value}}"
+      "outlineWidth": "Šířka obrysu {{value}}",
+      "path": "Kresba"
     },
     "elements": {
       "shapes": "Tvary",
@@ -6071,6 +6072,14 @@
       "apply": "Použít značku",
       "addLogo": "Přidat logo",
       "applied": "Značka použita na vrstvy: {{count}}."
+    },
+    "draw": {
+      "heading": "Kreslit",
+      "start": "Začít kreslit",
+      "stop": "Přestat kreslit",
+      "colour": "Barva pera",
+      "width": "Velikost pera {{value}}",
+      "hint": "Kreslete tažením po plátně. Každý tah je samostatná vrstva, kterou můžete přesunout, změnit její velikost nebo smazat. Stiskem Esc kreslení ukončíte."
     }
   }
 }

@@ -6016,7 +6016,8 @@
       "fillOn": "Füllung",
       "outline": "Kontur",
       "outlineOn": "Kontur",
-      "outlineWidth": "Konturstärke {{value}}"
+      "outlineWidth": "Konturstärke {{value}}",
+      "path": "Zeichnung"
     },
     "elements": {
       "shapes": "Formen",
@@ -6180,6 +6181,14 @@
       "apply": "Marke anwenden",
       "addLogo": "Logo hinzufügen",
       "applied": "Marke auf {{count}} Ebenen angewendet."
+    },
+    "draw": {
+      "heading": "Zeichnen",
+      "start": "Zeichnen starten",
+      "stop": "Zeichnen beenden",
+      "colour": "Stiftfarbe",
+      "width": "Stiftgröße {{value}}",
+      "hint": "Zum Zeichnen auf der Leinwand ziehen. Jeder Strich ist eine eigene Ebene, die du verschieben, skalieren oder löschen kannst. Drücke Esc zum Beenden."
     }
   }
 }

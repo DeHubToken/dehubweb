@@ -3656,7 +3656,8 @@
       "fillOn": "Mejupụta",
       "outline": "Ọnụ gburugburu",
       "outlineOn": "Ọnụ gburugburu",
-      "outlineWidth": "Obosara ọnụ gburugburu {{value}}"
+      "outlineWidth": "Obosara ọnụ gburugburu {{value}}",
+      "path": "Ihe esere"
     },
     "elements": {
       "shapes": "Ọdịdị",
@@ -3820,6 +3821,14 @@
       "apply": "Tinye akara",
       "addLogo": "Tinye akara ngosi",
       "applied": "Etinyere akara na ọkwa {{count}}."
+    },
+    "draw": {
+      "heading": "See ihe",
+      "start": "Bido ise ihe",
+      "stop": "Kwụsị ise ihe",
+      "colour": "Agba pen",
+      "width": "Nha pen {{value}}",
+      "hint": "Dọrọ na kanvas iji see ihe. Ahịrị ọ bụla bụ layer nke ya ị nwere ike ịkwaga, gbanwee nha ya ma ọ bụ hichapụ. Pịa Esc iji kwụsị."
     }
   },
   "fractions": {

@@ -5975,7 +5975,8 @@
       "fillOn": "Wypełnienie",
       "outline": "Obrys",
       "outlineOn": "Obrys",
-      "outlineWidth": "Grubość obrysu {{value}}"
+      "outlineWidth": "Grubość obrysu {{value}}",
+      "path": "Rysunek"
     },
     "elements": {
       "shapes": "Kształty",
@@ -6139,6 +6140,14 @@
       "apply": "Zastosuj markę",
       "addLogo": "Dodaj logo",
       "applied": "Zastosowano markę do warstw: {{count}}."
+    },
+    "draw": {
+      "heading": "Rysuj",
+      "start": "Zacznij rysować",
+      "stop": "Przestań rysować",
+      "colour": "Kolor pióra",
+      "width": "Rozmiar pióra {{value}}",
+      "hint": "Przeciągnij po płótnie, aby rysować. Każde pociągnięcie to osobna warstwa, którą możesz przesunąć, zmienić jej rozmiar lub usunąć. Naciśnij Esc, aby zakończyć."
     }
   },
   "glossary": {

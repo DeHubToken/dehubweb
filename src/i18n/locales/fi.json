@@ -5904,7 +5904,8 @@
       "fillOn": "Täyttö",
       "outline": "Ääriviiva",
       "outlineOn": "Ääriviiva",
-      "outlineWidth": "Ääriviivan paksuus {{value}}"
+      "outlineWidth": "Ääriviivan paksuus {{value}}",
+      "path": "Piirros"
     },
     "elements": {
       "shapes": "Muodot",
@@ -6068,6 +6069,14 @@
       "apply": "Käytä brändiä",
       "addLogo": "Lisää logo",
       "applied": "Brändi käytetty {{count}} tasoon."
+    },
+    "draw": {
+      "heading": "Piirrä",
+      "start": "Aloita piirtäminen",
+      "stop": "Lopeta piirtäminen",
+      "colour": "Kynän väri",
+      "width": "Kynän koko {{value}}",
+      "hint": "Piirrä vetämällä kankaalla. Jokainen veto on oma tasonsa, jota voit siirtää, muuttaa kokoa tai poistaa. Lopeta painamalla Esc."
     }
   }
 }

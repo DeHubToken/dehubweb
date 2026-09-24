@@ -5960,7 +5960,8 @@
       "fillOn": "Jaza",
       "outline": "Mstari wa nje",
       "outlineOn": "Mstari wa nje",
-      "outlineWidth": "Upana wa mstari wa nje {{value}}"
+      "outlineWidth": "Upana wa mstari wa nje {{value}}",
+      "path": "Mchoro"
     },
     "elements": {
       "shapes": "Maumbo",
@@ -6124,6 +6125,14 @@
       "apply": "Tumia chapa",
       "addLogo": "Ongeza nembo",
       "applied": "Chapa imetumika kwenye tabaka {{count}}."
+    },
+    "draw": {
+      "heading": "Chora",
+      "start": "Anza kuchora",
+      "stop": "Acha kuchora",
+      "colour": "Rangi ya kalamu",
+      "width": "Ukubwa wa kalamu {{value}}",
+      "hint": "Buruta kwenye turubai ili kuchora. Kila mstari ni safu yake ambayo unaweza kuhamisha, kubadilisha ukubwa au kufuta. Bonyeza Esc ili kuacha."
     }
   }
 }

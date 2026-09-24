@@ -15,7 +15,7 @@ import {
   type ProjectSettings,
   type ProjectSnapshot,
   type ShapeClip,
-  type ShapeKind,
+  type ShapeKindAll,
   type TextClip,
   type Track,
   type TrackKind,
@@ -101,7 +101,7 @@ interface EditorState extends EditableState {
    */
   addTextClip: (trackId?: string, start?: number, opts?: { layer?: boolean }) => string;
   /** Add a vector shape as a new layer on top, at the playhead. */
-  addShapeClip: (shape: ShapeKind, patch?: Partial<ShapeClip>) => string;
+  addShapeClip: (shape: ShapeKindAll, patch?: Partial<ShapeClip>) => string;
   moveClip: (id: string, patch: { start?: number; trackId?: string }) => void;
   trimClip: (id: string, edge: "in" | "out", deltaSeconds: number) => void;
   splitAtPlayhead: () => void;

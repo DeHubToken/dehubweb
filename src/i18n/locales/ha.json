@@ -3693,7 +3693,8 @@
       "fillOn": "Cikawa",
       "outline": "Iyaka",
       "outlineOn": "Iyaka",
-      "outlineWidth": "Faɗin iyaka {{value}}"
+      "outlineWidth": "Faɗin iyaka {{value}}",
+      "path": "Zane"
     },
     "elements": {
       "shapes": "Siffofi",
@@ -3857,6 +3858,14 @@
       "apply": "Aiwatar da alama",
       "addLogo": "Ƙara tambari",
       "applied": "An aiwatar da alama a kan yadudduka {{count}}."
+    },
+    "draw": {
+      "heading": "Zana",
+      "start": "Fara zane",
+      "stop": "Dakatar da zane",
+      "colour": "Launin alƙalami",
+      "width": "Girman alƙalami {{value}}",
+      "hint": "Ja a kan zane don zana. Kowane layi yana da nasa layer da za ka iya motsawa, canza girma ko goge shi. Danna Esc don tsayawa."
     }
   },
   "fractions": {

@@ -3687,7 +3687,8 @@
       "fillOn": "Buuxin",
       "outline": "Xuduud",
       "outlineOn": "Xuduud",
-      "outlineWidth": "Ballaca xuduudda {{value}}"
+      "outlineWidth": "Ballaca xuduudda {{value}}",
+      "path": "Sawir gacmeed"
     },
     "elements": {
       "shapes": "Qaababka",
@@ -3851,6 +3852,14 @@
       "apply": "Dabaq summadda",
       "addLogo": "Ku dar astaan",
       "applied": "Summadda waxaa lagu dabaqay {{count}} lakab."
+    },
+    "draw": {
+      "heading": "Sawir",
+      "start": "Bilow sawirka",
+      "stop": "Jooji sawirka",
+      "colour": "Midabka qalinka",
+      "width": "Cabbirka qalinka {{value}}",
+      "hint": "Ku jiid shiraaca si aad u sawirto. Xarriiq kastaa waa lakab gaar ah oo aad dhaqaajin kartid, cabbirkiisa beddeli kartid ama tirtiri kartid. Riix Esc si aad u joojiso."
     }
   },
   "fractions": {

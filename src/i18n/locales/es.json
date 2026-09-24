@@ -6023,7 +6023,8 @@
       "fillOn": "Relleno",
       "outline": "Contorno",
       "outlineOn": "Contorno",
-      "outlineWidth": "Grosor del contorno {{value}}"
+      "outlineWidth": "Grosor del contorno {{value}}",
+      "path": "Dibujo"
     },
     "elements": {
       "shapes": "Formas",
@@ -6187,6 +6188,14 @@
       "apply": "Aplicar marca",
       "addLogo": "Añadir logotipo",
       "applied": "Marca aplicada a {{count}} capas."
+    },
+    "draw": {
+      "heading": "Dibujar",
+      "start": "Empezar a dibujar",
+      "stop": "Dejar de dibujar",
+      "colour": "Color del lápiz",
+      "width": "Tamaño del lápiz {{value}}",
+      "hint": "Arrastra sobre el lienzo para dibujar. Cada trazo es una capa propia que puedes mover, redimensionar o eliminar. Pulsa Esc para terminar."
     }
   }
 }

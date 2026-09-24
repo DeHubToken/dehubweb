@@ -5776,7 +5776,8 @@
       "fillOn": "Fill",
       "outline": "Outline",
       "outlineOn": "Outline",
-      "outlineWidth": "Kapal ng outline {{value}}"
+      "outlineWidth": "Kapal ng outline {{value}}",
+      "path": "Drawing"
     },
     "elements": {
       "shapes": "Mga hugis",
@@ -5940,6 +5941,14 @@
       "apply": "Ilapat ang brand",
       "addLogo": "Magdagdag ng logo",
       "applied": "Nailapat ang brand sa {{count}} layer."
+    },
+    "draw": {
+      "heading": "Gumuhit",
+      "start": "Simulan ang pagguhit",
+      "stop": "Itigil ang pagguhit",
+      "colour": "Kulay ng panulat",
+      "width": "Laki ng panulat {{value}}",
+      "hint": "I-drag sa canvas para gumuhit. Bawat guhit ay sariling layer na puwede mong ilipat, i-resize o burahin. Pindutin ang Esc para huminto."
     }
   },
   "walletSelector": {

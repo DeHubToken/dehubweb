@@ -5906,7 +5906,8 @@
       "fillOn": "Täide",
       "outline": "Kontuur",
       "outlineOn": "Kontuur",
-      "outlineWidth": "Kontuuri laius {{value}}"
+      "outlineWidth": "Kontuuri laius {{value}}",
+      "path": "Joonistus"
     },
     "elements": {
       "shapes": "Kujundid",
@@ -6070,6 +6071,14 @@
       "apply": "Rakenda bränd",
       "addLogo": "Lisa logo",
       "applied": "Bränd rakendati {{count}} kihile."
+    },
+    "draw": {
+      "heading": "Joonista",
+      "start": "Alusta joonistamist",
+      "stop": "Lõpeta joonistamine",
+      "colour": "Pliiatsi värv",
+      "width": "Pliiatsi suurus {{value}}",
+      "hint": "Joonistamiseks lohista lõuendil. Iga joon on eraldi kiht, mida saad liigutada, suurust muuta või kustutada. Lõpetamiseks vajuta Esc."
     }
   }
 }

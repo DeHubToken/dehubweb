@@ -363,11 +363,29 @@ function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: Re
 }
 
 /** Build the outline of a shape centred on the origin. */
-export function shapePath(ctx: Ctx2D, shape: ShapeClip["shape"], w: number, h: number, radius = 0) {
+export function shapePath(ctx: Ctx2D, shape: ShapeClip["shape"], w: number, h: number, radius = 0, points?: [number, number][]) {
   const hw = w / 2;
   const hh = h / 2;
   ctx.beginPath();
   switch (shape) {
+    case "path": {
+      // Midpoint quadratic smoothing: the curve passes through the midpoint of
+      // each pair of samples, using the samples as control points.
+      const p = points ?? [];
+      if (!p.length) return;
+      const X = (i: number) => p[i][0] * w;
+      const Y = (i: number) => p[i][1] * h;
+      ctx.moveTo(X(0), Y(0));
+      if (p.length === 1) {
+        ctx.lineTo(X(0) + 0.01, Y(0));
+        return;
+      }
+      for (let i = 1; i < p.length - 1; i++) {
+        ctx.quadraticCurveTo(X(i), Y(i), (X(i) + X(i + 1)) / 2, (Y(i) + Y(i + 1)) / 2);
+      }
+      ctx.lineTo(X(p.length - 1), Y(p.length - 1));
+      return;
+    }
     case "rect":
       roundRectPath(ctx, -hw, -hh, w, h, radius);
       return;
@@ -422,8 +440,8 @@ export function shapePath(ctx: Ctx2D, shape: ShapeClip["shape"], w: number, h: n
 
 function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
   const k = H / 1080;
-  const open = clip.shape === "line" || clip.shape === "arrow";
-  shapePath(ctx, clip.shape, box.w, box.h, (clip.radius ?? 0) * k);
+  const open = clip.shape === "line" || clip.shape === "arrow" || clip.shape === "path";
+  shapePath(ctx, clip.shape, box.w, box.h, (clip.radius ?? 0) * k, clip.points);
   applyShadow(ctx, clip, H);
   if (!open && clip.fill) {
     ctx.fillStyle = clip.fill;

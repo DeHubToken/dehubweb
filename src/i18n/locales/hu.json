@@ -5906,7 +5906,8 @@
       "fillOn": "Kitöltés",
       "outline": "Körvonal",
       "outlineOn": "Körvonal",
-      "outlineWidth": "Körvonal vastagsága {{value}}"
+      "outlineWidth": "Körvonal vastagsága {{value}}",
+      "path": "Rajz"
     },
     "elements": {
       "shapes": "Alakzatok",
@@ -6070,6 +6071,14 @@
       "apply": "Márka alkalmazása",
       "addLogo": "Logó hozzáadása",
       "applied": "Márka alkalmazva {{count}} rétegre."
+    },
+    "draw": {
+      "heading": "Rajzolás",
+      "start": "Rajzolás indítása",
+      "stop": "Rajzolás leállítása",
+      "colour": "Toll színe",
+      "width": "Tollméret {{value}}",
+      "hint": "Húzd a vásznon a rajzoláshoz. Minden vonás külön réteg, amelyet mozgathatsz, átméretezhetsz vagy törölhetsz. A leállításhoz nyomd meg az Esc billentyűt."
     }
   }
 }

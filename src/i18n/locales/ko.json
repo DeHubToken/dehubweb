@@ -6011,7 +6011,8 @@
       "fillOn": "채우기",
       "outline": "윤곽선",
       "outlineOn": "윤곽선",
-      "outlineWidth": "윤곽선 두께 {{value}}"
+      "outlineWidth": "윤곽선 두께 {{value}}",
+      "path": "그림"
     },
     "elements": {
       "shapes": "도형",
@@ -6175,6 +6176,14 @@
       "apply": "브랜드 적용",
       "addLogo": "로고 추가",
       "applied": "레이어 {{count}}개에 브랜드를 적용했습니다."
+    },
+    "draw": {
+      "heading": "그리기",
+      "start": "그리기 시작",
+      "stop": "그리기 중지",
+      "colour": "펜 색상",
+      "width": "펜 크기 {{value}}",
+      "hint": "캔버스에서 드래그하여 그리세요. 각 획은 이동, 크기 조정 또는 삭제할 수 있는 별도 레이어입니다. 중지하려면 Esc를 누르세요."
     }
   }
 }

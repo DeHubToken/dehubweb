@@ -6018,7 +6018,8 @@
       "fillOn": "Remplissage",
       "outline": "Contour",
       "outlineOn": "Contour",
-      "outlineWidth": "Épaisseur du contour {{value}}"
+      "outlineWidth": "Épaisseur du contour {{value}}",
+      "path": "Dessin"
     },
     "elements": {
       "shapes": "Formes",
@@ -6182,6 +6183,14 @@
       "apply": "Appliquer la marque",
       "addLogo": "Ajouter un logo",
       "applied": "Marque appliquée à {{count}} calques."
+    },
+    "draw": {
+      "heading": "Dessiner",
+      "start": "Commencer à dessiner",
+      "stop": "Arrêter de dessiner",
+      "colour": "Couleur du stylo",
+      "width": "Taille du stylo {{value}}",
+      "hint": "Faites glisser sur le canevas pour dessiner. Chaque trait est un calque à part que vous pouvez déplacer, redimensionner ou supprimer. Appuyez sur Esc pour arrêter."
     }
   }
 }

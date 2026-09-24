@@ -6223,7 +6223,8 @@
       "fillOn": "Isian",
       "outline": "Garis luar",
       "outlineOn": "Garis luar",
-      "outlineWidth": "Lebar garis luar {{value}}"
+      "outlineWidth": "Lebar garis luar {{value}}",
+      "path": "Lukisan"
     },
     "elements": {
       "shapes": "Bentuk",
@@ -6387,6 +6388,14 @@
       "apply": "Guna jenama",
       "addLogo": "Tambah logo",
       "applied": "Jenama digunakan pada {{count}} lapisan."
+    },
+    "draw": {
+      "heading": "Lukis",
+      "start": "Mula melukis",
+      "stop": "Berhenti melukis",
+      "colour": "Warna pen",
+      "width": "Saiz pen {{value}}",
+      "hint": "Seret pada kanvas untuk melukis. Setiap lakaran ialah lapisan tersendiri yang boleh anda alihkan, ubah saiz atau padam. Tekan Esc untuk berhenti."
     }
   }
 }

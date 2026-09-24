@@ -3727,7 +3727,8 @@
       "fillOn": "Gcwalisa",
       "outline": "Umugqa wangaphandle",
       "outlineOn": "Umugqa wangaphandle",
-      "outlineWidth": "Ububanzi bomugqa wangaphandle {{value}}"
+      "outlineWidth": "Ububanzi bomugqa wangaphandle {{value}}",
+      "path": "Umdwebo"
     },
     "elements": {
       "shapes": "Izimo",
@@ -3891,6 +3892,14 @@
       "apply": "Sebenzisa umkhiqizo",
       "addLogo": "Engeza ilogo",
       "applied": "Umkhiqizo usetshenziswe ezendlalelweni ezingu-{{count}}."
+    },
+    "draw": {
+      "heading": "Dweba",
+      "start": "Qala ukudweba",
+      "stop": "Yeka ukudweba",
+      "colour": "Umbala wepeni",
+      "width": "Usayizi wepeni {{value}}",
+      "hint": "Hudula kukhanvasi ukuze udwebe. Umugqa ngamunye uwungqimba lwawo ongaluhambisa, ushintshe usayizi walo noma ulususe. Cindezela u-Esc ukuze uyeke."
     }
   },
   "fractions": {

@@ -6023,7 +6023,8 @@
       "fillOn": "Dolgu",
       "outline": "Kontur",
       "outlineOn": "Kontur",
-      "outlineWidth": "Kontur kalınlığı {{value}}"
+      "outlineWidth": "Kontur kalınlığı {{value}}",
+      "path": "Çizim"
     },
     "elements": {
       "shapes": "Şekiller",
@@ -6187,6 +6188,14 @@
       "apply": "Markayı uygula",
       "addLogo": "Logo ekle",
       "applied": "Marka {{count}} katmana uygulandı."
+    },
+    "draw": {
+      "heading": "Çiz",
+      "start": "Çizmeye başla",
+      "stop": "Çizmeyi bırak",
+      "colour": "Kalem rengi",
+      "width": "Kalem boyutu {{value}}",
+      "hint": "Çizmek için tuvalde sürükleyin. Her çizgi taşıyabileceğiniz, yeniden boyutlandırabileceğiniz veya silebileceğiniz ayrı bir katmandır. Durdurmak için Esc'ye basın."
     }
   }
 }

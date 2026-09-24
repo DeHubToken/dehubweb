@@ -3557,7 +3557,8 @@
       "fillOn": "Fa",
       "outline": "Dan sira",
       "outlineOn": "Dan sira",
-      "outlineWidth": "Dan sira bonya {{value}}"
+      "outlineWidth": "Dan sira bonya {{value}}",
+      "path": "Jiraliwaleya"
     },
     "elements": {
       "shapes": "Cogoyaw",
@@ -3721,6 +3722,14 @@
       "apply": "Taamasiyɛn waleya",
       "addLogo": "Logo fara a kan",
       "applied": "Taamasiyɛn waleyara kɔrɔ {{count}} kan."
+    },
+    "draw": {
+      "heading": "Ja ci",
+      "start": "Ja ci daminɛ",
+      "stop": "Ja ci jɔ",
+      "colour": "Kalamu kulɛri",
+      "width": "Kalamu bonya {{value}}",
+      "hint": "I bolo sama ja ci yɔrɔ kan walasa ka ja ci. Sira kelen kelen bɛɛ ye layer ye, i bɛ se k'a bila yɔrɔ wɛrɛ, k'a bonya caman wala k'a jɔsi. Esc digi walasa ka jɔ."
     }
   },
   "fractions": {

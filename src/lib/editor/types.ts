@@ -206,12 +206,20 @@ export interface TextClip extends BaseClip {
 }
 
 export const SHAPE_KINDS = ["rect", "ellipse", "triangle", "star", "heart", "hexagon", "line", "arrow"] as const;
+/** "path" is a freehand drawing; it is not offered in the shapes grid. */
+export type ShapeKindAll = (typeof SHAPE_KINDS)[number] | "path";
 export type ShapeKind = (typeof SHAPE_KINDS)[number];
 
 /** A vector shape. Size is a fraction of the page, before transform.scale. */
 export interface ShapeClip extends BaseClip {
   kind: "shape";
-  shape: ShapeKind;
+  shape: ShapeKindAll;
+  /**
+   * Freehand stroke for shape "path": points in the layer's own box, each
+   * coordinate -0.5..0.5 of its width/height, so the drawing scales, stretches
+   * and rotates with the layer like any other shape.
+   */
+  points?: [number, number][];
   /** Width and height as fractions of the page width and height. */
   w: number;
   h: number;

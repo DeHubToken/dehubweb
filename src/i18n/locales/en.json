@@ -6022,7 +6022,8 @@
       "fillOn": "Fill",
       "outline": "Outline",
       "outlineOn": "Outline",
-      "outlineWidth": "Outline width {{value}}"
+      "outlineWidth": "Outline width {{value}}",
+      "path": "Drawing"
     },
     "elements": {
       "shapes": "Shapes",
@@ -6186,6 +6187,14 @@
       "apply": "Apply brand",
       "addLogo": "Add logo",
       "applied": "Brand applied to {{count}} layers."
+    },
+    "draw": {
+      "heading": "Draw",
+      "start": "Start drawing",
+      "stop": "Stop drawing",
+      "colour": "Pen colour",
+      "width": "Pen size {{value}}",
+      "hint": "Drag on the canvas to draw. Each stroke is its own layer you can move, resize or delete. Press Esc to stop."
     }
   }
 }

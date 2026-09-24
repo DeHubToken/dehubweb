@@ -3712,7 +3712,8 @@
       "fillOn": "Guutuu",
       "outline": "Daangaa",
       "outlineOn": "Daangaa",
-      "outlineWidth": "Bal'ina daangaa {{value}}"
+      "outlineWidth": "Bal'ina daangaa {{value}}",
+      "path": "Fakkii"
     },
     "elements": {
       "shapes": "Bocawwan",
@@ -3876,6 +3877,14 @@
       "apply": "Birandii hojii irra oolchi",
       "addLogo": "Loogoo dabali",
       "applied": "Birandiin leeyarii {{count}} irratti hojii irra oole."
+    },
+    "draw": {
+      "heading": "Kaasi",
+      "start": "Kaasuu jalqabi",
+      "stop": "Kaasuu dhaabi",
+      "colour": "Halluu qalamaa",
+      "width": "Hamma qalamaa {{value}}",
+      "hint": "Kaasuuf kanvaasii irratti harkisi. Sarari tokkoon tokkoon isaa gombisa mataa isaa ti; sochoosuu, hamma jijjiiruu ykn haquu dandeessa. Dhaabuuf Esc tuqi."
     }
   },
   "spaces": {

@@ -6171,7 +6171,8 @@
       "fillOn": "Vulling",
       "outline": "Omtrek",
       "outlineOn": "Omtrek",
-      "outlineWidth": "Omtrekdikte {{value}}"
+      "outlineWidth": "Omtrekdikte {{value}}",
+      "path": "Tekening"
     },
     "elements": {
       "shapes": "Vormen",
@@ -6335,6 +6336,14 @@
       "apply": "Merk toepassen",
       "addLogo": "Logo toevoegen",
       "applied": "Merk toegepast op {{count}} lagen."
+    },
+    "draw": {
+      "heading": "Tekenen",
+      "start": "Begin met tekenen",
+      "stop": "Stop met tekenen",
+      "colour": "Penkleur",
+      "width": "Pengrootte {{value}}",
+      "hint": "Sleep over het canvas om te tekenen. Elke streek is een eigen laag die je kunt verplaatsen, vergroten/verkleinen of verwijderen. Druk op Esc om te stoppen."
     }
   },
   "glossary": {

@@ -47,6 +47,10 @@ export function ShortcutsLayer() {
         return;
       }
 
+      if (e.key === "Escape" && useEditorUiStore.getState().draw) {
+        useEditorUiStore.getState().setDraw(null);
+        return;
+      }
       if (e.key === "Escape" && s.selectedClipIds.length) {
         s.selectClip(null);
         return;

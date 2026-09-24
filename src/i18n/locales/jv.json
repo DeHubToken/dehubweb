@@ -3683,7 +3683,8 @@
       "fillOn": "Isi",
       "outline": "Garis pinggir",
       "outlineOn": "Garis pinggir",
-      "outlineWidth": "Kandel garis pinggir {{value}}"
+      "outlineWidth": "Kandel garis pinggir {{value}}",
+      "path": "Gambar"
     },
     "elements": {
       "shapes": "Wangun",
@@ -3847,6 +3848,14 @@
       "apply": "Trapake merek",
       "addLogo": "Tambah logo",
       "applied": "Merek wis ditrapake ing {{count}} lapisan."
+    },
+    "draw": {
+      "heading": "Nggambar",
+      "start": "Wiwit nggambar",
+      "stop": "Mandheg nggambar",
+      "colour": "Warna pulpen",
+      "width": "Ukuran pulpen {{value}}",
+      "hint": "Seret ing kanvas kanggo nggambar. Saben goresan dadi lapisan dhewe sing bisa dipindhah, diowahi ukurane, utawa dibusak. Pencet Esc kanggo mandheg."
     }
   },
   "fractions": {

@@ -3835,7 +3835,8 @@
       "fillOn": "Výplň",
       "outline": "Obrys",
       "outlineOn": "Obrys",
-      "outlineWidth": "Hrúbka obrysu {{value}}"
+      "outlineWidth": "Hrúbka obrysu {{value}}",
+      "path": "Kresba"
     },
     "elements": {
       "shapes": "Tvary",
@@ -3999,6 +4000,14 @@
       "apply": "Použiť značku",
       "addLogo": "Pridať logo",
       "applied": "Značka použitá na {{count}} vrstiev."
+    },
+    "draw": {
+      "heading": "Kresliť",
+      "start": "Začať kresliť",
+      "stop": "Prestať kresliť",
+      "colour": "Farba pera",
+      "width": "Veľkosť pera {{value}}",
+      "hint": "Ťahaním po plátne kreslíte. Každý ťah je samostatná vrstva, ktorú môžete presunúť, zmeniť jej veľkosť alebo odstrániť. Stlačením Esc skončíte."
     }
   },
   "post": {

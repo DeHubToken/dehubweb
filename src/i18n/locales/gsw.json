@@ -3664,7 +3664,8 @@
       "fillOn": "Füllig",
       "outline": "Kontur",
       "outlineOn": "Kontur",
-      "outlineWidth": "Konturbreiti {{value}}"
+      "outlineWidth": "Konturbreiti {{value}}",
+      "path": "Zeichnig"
     },
     "elements": {
       "shapes": "Forme",
@@ -3828,6 +3829,14 @@
       "apply": "Marke aawände",
       "addLogo": "Logo derzuefüege",
       "applied": "Marke uf {{count}} Ebene aagwändet."
+    },
+    "draw": {
+      "heading": "Zeichne",
+      "start": "Zeichne starte",
+      "stop": "Zeichne beände",
+      "colour": "Stiftfarb",
+      "width": "Stiftgröössi {{value}}",
+      "hint": "Zieh uf de Leinwand zum Zeichne. Jede Strich isch en eigeni Ebeni, wo du chasch verschiebe, d Gröössi ändere oder lösche. Drück Esc zum Ufhöre."
     }
   },
   "fractions": {

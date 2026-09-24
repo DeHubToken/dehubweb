@@ -3562,7 +3562,8 @@
       "fillOn": "填充",
       "outline": "描边",
       "outlineOn": "描边",
-      "outlineWidth": "描边宽度 {{value}}"
+      "outlineWidth": "描边宽度 {{value}}",
+      "path": "手画"
     },
     "elements": {
       "shapes": "形状",
@@ -3726,6 +3727,14 @@
       "apply": "应用品牌",
       "addLogo": "添加标志",
       "applied": "品牌已应用到 {{count}} 个图层。"
+    },
+    "draw": {
+      "heading": "画",
+      "start": "开始画",
+      "stop": "停止画",
+      "colour": "笔颜色",
+      "width": "笔大小 {{value}}",
+      "hint": "在画布上拖动来画。每一笔都是单独的图层，可以移动、缩放或删除。按 Esc 停止。"
     }
   },
   "post": {

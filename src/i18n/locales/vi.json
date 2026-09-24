@@ -5724,7 +5724,8 @@
       "fillOn": "Tô màu",
       "outline": "Viền",
       "outlineOn": "Viền",
-      "outlineWidth": "Độ dày viền {{value}}"
+      "outlineWidth": "Độ dày viền {{value}}",
+      "path": "Hình vẽ"
     },
     "elements": {
       "shapes": "Hình dạng",
@@ -5888,6 +5889,14 @@
       "apply": "Áp dụng thương hiệu",
       "addLogo": "Thêm logo",
       "applied": "Đã áp dụng thương hiệu cho {{count}} lớp."
+    },
+    "draw": {
+      "heading": "Vẽ",
+      "start": "Bắt đầu vẽ",
+      "stop": "Dừng vẽ",
+      "colour": "Màu bút",
+      "width": "Cỡ bút {{value}}",
+      "hint": "Kéo trên canvas để vẽ. Mỗi nét là một lớp riêng mà bạn có thể di chuyển, đổi kích thước hoặc xóa. Nhấn Esc để dừng."
     }
   },
   "glossary": {

@@ -3711,7 +3711,8 @@
       "fillOn": "Mbushje",
       "outline": "Kontur",
       "outlineOn": "Kontur",
-      "outlineWidth": "Trashësia e konturit {{value}}"
+      "outlineWidth": "Trashësia e konturit {{value}}",
+      "path": "Vizatim"
     },
     "elements": {
       "shapes": "Format",
@@ -3875,6 +3876,14 @@
       "apply": "Apliko markën",
       "addLogo": "Shto logo",
       "applied": "Marka u aplikua në {{count}} shtresa."
+    },
+    "draw": {
+      "heading": "Vizato",
+      "start": "Fillo vizatimin",
+      "stop": "Ndalo vizatimin",
+      "colour": "Ngjyra e lapsit",
+      "width": "Madhësia e lapsit {{value}}",
+      "hint": "Tërhiq mbi kanavacë për të vizatuar. Çdo vijë është shtresë më vete që mund ta lëvizësh, t'i ndryshosh madhësinë ose ta fshish. Shtyp Esc për të ndaluar."
     }
   },
   "fractions": {

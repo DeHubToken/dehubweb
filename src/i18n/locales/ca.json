@@ -5903,7 +5903,8 @@
       "fillOn": "Emplenament",
       "outline": "Contorn",
       "outlineOn": "Contorn",
-      "outlineWidth": "Gruix del contorn {{value}}"
+      "outlineWidth": "Gruix del contorn {{value}}",
+      "path": "Dibuix"
     },
     "elements": {
       "shapes": "Formes",
@@ -6067,6 +6068,14 @@
       "apply": "Aplica la marca",
       "addLogo": "Afegeix un logotip",
       "applied": "Marca aplicada a {{count}} capes."
+    },
+    "draw": {
+      "heading": "Dibuixa",
+      "start": "Comença a dibuixar",
+      "stop": "Deixa de dibuixar",
+      "colour": "Color del llapis",
+      "width": "Mida del llapis {{value}}",
+      "hint": "Arrossega sobre el llenç per dibuixar. Cada traç és una capa pròpia que pots moure, redimensionar o suprimir. Prem Esc per parar."
     }
   }
 }

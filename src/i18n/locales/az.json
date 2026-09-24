@@ -5861,7 +5861,8 @@
       "fillOn": "Doldurma",
       "outline": "Kontur",
       "outlineOn": "Kontur",
-      "outlineWidth": "Kontur qalınlığı {{value}}"
+      "outlineWidth": "Kontur qalınlığı {{value}}",
+      "path": "Rəsm"
     },
     "elements": {
       "shapes": "Fiqurlar",
@@ -6025,6 +6026,14 @@
       "apply": "Brendi tətbiq et",
       "addLogo": "Loqo əlavə et",
       "applied": "Brend {{count}} qata tətbiq olundu."
+    },
+    "draw": {
+      "heading": "Çək",
+      "start": "Çəkməyə başla",
+      "stop": "Çəkməni dayandır",
+      "colour": "Qələm rəngi",
+      "width": "Qələm ölçüsü {{value}}",
+      "hint": "Çəkmək üçün kətan üzərində sürüşdürün. Hər xətt ayrıca laydır, onu köçürə, ölçüsünü dəyişə və ya silə bilərsiniz. Dayandırmaq üçün Esc basın."
     }
   }
 }

@@ -5903,7 +5903,8 @@
       "fillOn": "Ispuna",
       "outline": "Obrub",
       "outlineOn": "Obrub",
-      "outlineWidth": "Debljina obruba {{value}}"
+      "outlineWidth": "Debljina obruba {{value}}",
+      "path": "Crtež"
     },
     "elements": {
       "shapes": "Oblici",
@@ -6067,6 +6068,14 @@
       "apply": "Primijeni brend",
       "addLogo": "Dodaj logotip",
       "applied": "Brend primijenjen na slojeve: {{count}}."
+    },
+    "draw": {
+      "heading": "Crtanje",
+      "start": "Počni crtati",
+      "stop": "Prestani crtati",
+      "colour": "Boja olovke",
+      "width": "Veličina olovke {{value}}",
+      "hint": "Povlačite po platnu za crtanje. Svaki potez je zaseban sloj koji možete pomaknuti, promijeniti mu veličinu ili izbrisati. Pritisnite Esc za prekid."
     }
   }
 }
