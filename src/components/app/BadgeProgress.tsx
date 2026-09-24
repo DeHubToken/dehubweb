@@ -214,7 +214,7 @@ function BadgeLadderRail({
   price?: number;
 }) {
   return (
-    <div className="mt-4 -mx-1 flex items-center gap-0.5 overflow-x-auto px-1 pb-1 scrollbar-hide">
+    <div className="mt-4 -mx-1 flex items-center gap-0.5 md:gap-1.5 overflow-x-auto md:overflow-visible px-1 pb-1 scrollbar-hide">
       {ladder.map((rung, i) => {
         const earned = i <= index;
         const current = i === index;
@@ -228,7 +228,7 @@ function BadgeLadderRail({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: reduceMotion ? 0 : i * 0.035, duration: 0.3 }}
                 className={cn(
-                  'relative shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-all',
+                  'relative shrink-0 w-7 h-7 sm:w-8 sm:h-8 md:flex-1 md:w-auto md:h-auto md:aspect-square md:max-w-16 rounded-lg flex items-center justify-center transition-all',
                   earned ? 'bg-white/[0.07]' : 'bg-white/[0.02]',
                   current && 'bg-white/[0.12]',
                 )}
@@ -240,7 +240,7 @@ function BadgeLadderRail({
                     loading="lazy"
                     decoding="async"
                     className={cn(
-                      'w-4 h-4 sm:w-[18px] sm:h-[18px] object-contain transition-all',
+                      'w-4 h-4 sm:w-[18px] sm:h-[18px] md:w-3/5 md:h-3/5 object-contain transition-all',
                       earned ? 'opacity-100' : 'opacity-25',
                       current && 'drop-shadow-[0_0_6px_rgba(255,255,255,0.75)]',
                     )}
