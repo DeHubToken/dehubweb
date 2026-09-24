@@ -6109,5 +6109,11 @@
       "width": "Pennestørrelse {{value}}",
       "hint": "Træk på lærredet for at tegne. Hvert strøg er sit eget lag, som du kan flytte, ændre størrelse på eller slette. Tryk på Esc for at stoppe."
     }
+  },
+  "jungleMood": {
+    "title": "Tidspunkt på dagen",
+    "desc": "En lys dag eller en dunkelblå aften i junglen",
+    "day": "Dag",
+    "evening": "Aften"
   }
 }

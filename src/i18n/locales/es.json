@@ -6198,5 +6198,11 @@
       "width": "Tamaño del lápiz {{value}}",
       "hint": "Arrastra sobre el lienzo para dibujar. Cada trazo es una capa propia que puedes mover, redimensionar o eliminar. Pulsa Esc para terminar."
     }
+  },
+  "jungleMood": {
+    "title": "Momento del día",
+    "desc": "Un día luminoso o un atardecer azul en la selva",
+    "day": "Día",
+    "evening": "Atardecer"
   }
 }

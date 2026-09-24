@@ -3865,5 +3865,11 @@
   },
   "accounts": {
     "title": "Kontoer"
+  },
+  "jungleMood": {
+    "title": "Tid på døgnet",
+    "desc": "En lys dag eller en skumringsblå kveld i jungelen",
+    "day": "Dag",
+    "evening": "Kveld"
   }
 }

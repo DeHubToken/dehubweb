@@ -6081,5 +6081,11 @@
       "width": "Tollméret {{value}}",
       "hint": "Húzd a vásznon a rajzoláshoz. Minden vonás külön réteg, amelyet mozgathatsz, átméretezhetsz vagy törölhetsz. A leállításhoz nyomd meg az Esc billentyűt."
     }
+  },
+  "jungleMood": {
+    "title": "Napszak",
+    "desc": "Ragyogó nappal vagy alkonyati kék este a dzsungelben",
+    "day": "Nappal",
+    "evening": "Este"
   }
 }

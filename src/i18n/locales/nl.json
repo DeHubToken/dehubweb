@@ -6406,5 +6406,11 @@
         "definition": "Een collectieve virtuele gedeelde ruimte, gecreëerd door de convergentie van virtueel verbeterde fysieke realiteit en fysiek persistente virtuele ruimte, inclusief de som van alle virtuele werelden, augmented reality en het internet."
       }
     }
+  },
+  "jungleMood": {
+    "title": "Tijd van de dag",
+    "desc": "Een zonnige dag of een schemerblauwe avond in de jungle",
+    "day": "Dag",
+    "evening": "Avond"
   }
 }

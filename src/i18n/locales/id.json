@@ -6198,5 +6198,11 @@
       "width": "Ukuran pena {{value}}",
       "hint": "Seret di kanvas untuk menggambar. Setiap goresan adalah lapisan tersendiri yang bisa dipindah, diubah ukurannya, atau dihapus. Tekan Esc untuk berhenti."
     }
+  },
+  "jungleMood": {
+    "title": "Waktu",
+    "desc": "Siang yang cerah atau senja biru temaram di hutan",
+    "day": "Siang",
+    "evening": "Senja"
   }
 }

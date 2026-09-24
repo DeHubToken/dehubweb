@@ -3913,5 +3913,11 @@
   },
   "accounts": {
     "title": "Ama-akhawunti"
+  },
+  "jungleMood": {
+    "title": "Isikhathi sosuku",
+    "desc": "Usuku olukhanyayo noma kusihlwa okuluhlaza okwesibhakabhaka ehlathini",
+    "day": "Emini",
+    "evening": "Kusihlwa"
   }
 }

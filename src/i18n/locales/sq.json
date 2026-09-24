@@ -3897,5 +3897,11 @@
   },
   "accounts": {
     "title": "Llogaritë"
+  },
+  "jungleMood": {
+    "title": "Koha e ditës",
+    "desc": "Një ditë e ndritshme ose një mbrëmje blu e muzgët në xhungël",
+    "day": "Ditë",
+    "evening": "Mbrëmje"
   }
 }

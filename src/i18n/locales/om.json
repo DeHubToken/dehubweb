@@ -3924,5 +3924,11 @@
   },
   "accounts": {
     "title": "Herregawwan"
+  },
+  "jungleMood": {
+    "title": "Yeroo guyyaa",
+    "desc": "Guyyaa ifaa ykn galgala cuquliisaa bosona keessatti",
+    "day": "Guyyaa",
+    "evening": "Galgala"
   }
 }

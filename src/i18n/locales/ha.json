@@ -3879,5 +3879,11 @@
   },
   "accounts": {
     "title": "Asusu"
+  },
+  "jungleMood": {
+    "title": "Lokacin rana",
+    "desc": "Rana mai haske ko maraice mai shuɗi a cikin daji",
+    "day": "Rana",
+    "evening": "Maraice"
   }
 }

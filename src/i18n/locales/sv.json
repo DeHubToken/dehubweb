@@ -6081,5 +6081,11 @@
       "width": "Pennstorlek {{value}}",
       "hint": "Dra på arbetsytan för att rita. Varje streck är ett eget lager som du kan flytta, ändra storlek på eller ta bort. Tryck på Esc för att sluta."
     }
+  },
+  "jungleMood": {
+    "title": "Tid på dygnet",
+    "desc": "En ljus dag eller en skymningsblå kväll i djungeln",
+    "day": "Dag",
+    "evening": "Kväll"
   }
 }

@@ -6135,5 +6135,11 @@
       "width": "Ukubwa wa kalamu {{value}}",
       "hint": "Buruta kwenye turubai ili kuchora. Kila mstari ni safu yake ambayo unaweza kuhamisha, kubadilisha ukubwa au kufuta. Bonyeza Esc ili kuacha."
     }
+  },
+  "jungleMood": {
+    "title": "Wakati wa siku",
+    "desc": "Mchana angavu au jioni ya samawati msituni",
+    "day": "Mchana",
+    "evening": "Jioni"
   }
 }

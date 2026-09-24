@@ -4,6 +4,7 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { capPixelRatio, createRenderGate, releaseContext } from '@/lib/three/scene-helpers';
 import { createFrameThrottle } from '@/lib/raf-throttle';
 import { getJunglePush, subscribeJunglePush } from '@/lib/jungle-cinematic';
+import { getJungleMood, subscribeJungleMood, type JungleMood } from '@/lib/jungle-mood';
 
 /**
  * Globally rendered "Jungle" background — a rainforest floor at blade height,
@@ -81,7 +82,7 @@ const PALM_BARK = new THREE.Color('#6d5d48');
 const LIANA = new THREE.Color('#3a3020');
 const ROCK = new THREE.Color('#7b7866');
 const MOSS = new THREE.Color('#5f8a2a');
-const LOAM = new THREE.Color('#3a3420');
+const LOAM = new THREE.Color('#4d4429');
 const GROUND_MOSS = new THREE.Color('#44621f');
 const GRASS = new THREE.Color('#79a83a');
 const BLOOMS = [
@@ -89,6 +90,93 @@ const BLOOMS = [
   new THREE.Color('#ffa31f'),
   new THREE.Color('#ff5c9b'),
 ];
+
+/* ==========================================================================
+   Time of day
+   ==========================================================================
+   Two lighting rigs the scene cross-fades between. Everything here is a
+   uniform, a light or the fog — nothing is baked — so switching is free and
+   needs no rebuild.
+
+   DAY is backlit late morning: warm sun behind the forest, green-gold haze,
+   shafts through the canopy.
+
+   EVENING is the blue hour just after sunset: the sun is a pink-orange glow on
+   the horizon, the fill is cool and blue, the haze thickens and turns
+   indigo, stars come out overhead and the pollen becomes fireflies.
+   ========================================================================== */
+
+interface MoodSpec {
+  skyTop: THREE.Color;
+  haze: THREE.Color;
+  sun: THREE.Color;
+  sunDir: THREE.Vector3;
+  sunI: number;
+  hemiSky: THREE.Color;
+  hemiGround: THREE.Color;
+  hemiI: number;
+  fog: number;
+  shafts: number;
+  mote: THREE.Color;
+  moteSize: number;
+  blink: number;
+  stars: number;
+  vignette: THREE.Color;
+  vignetteAmt: number;
+  bloom: number;
+  trans: number;
+  dapple: number;
+}
+
+const DAY_SUN_DIR = new THREE.Vector3(-0.5, 0.58, -0.64).normalize();
+
+const MOODS: Record<JungleMood, MoodSpec> = {
+  day: {
+    skyTop: SKY_TOP,
+    haze: HAZE,
+    sun: SUN,
+    sunDir: DAY_SUN_DIR,
+    sunI: 2.4,
+    hemiSky: new THREE.Color('#a6d2cf'),
+    hemiGround: new THREE.Color('#2c3a17'),
+    hemiI: 1.3,
+    fog: 0.0165,
+    shafts: 1,
+    mote: SUN,
+    moteSize: 1,
+    blink: 0,
+    stars: 0,
+    vignette: new THREE.Color(0.03, 0.06, 0.035),
+    vignetteAmt: 0.74,
+    bloom: 1,
+    trans: 1,
+    dapple: 1,
+  },
+  evening: {
+    skyTop: new THREE.Color('#0f1a3d'),
+    haze: new THREE.Color('#56669a'),
+    sun: new THREE.Color('#ffa189'),
+    /* Just below a canopy-grazing angle and very weak: the sun has set, and
+       what is left is a rim of warm light on the few faces turned to it. At
+       full strength a horizon sun paints every trunk salmon. */
+    sunDir: new THREE.Vector3(-0.6, 0.16, -0.78).normalize(),
+    sunI: 0.16,
+    hemiSky: new THREE.Color('#91a8ec'),
+    hemiGround: new THREE.Color('#1a2031'),
+    hemiI: 1.55,
+    fog: 0.021,
+    shafts: 0,
+    mote: new THREE.Color('#d4ff5e'),
+    moteSize: 1.9,
+    blink: 1,
+    stars: 1,
+    vignette: new THREE.Color(0.01, 0.02, 0.06),
+    vignetteAmt: 0.86,
+    bloom: 0.12,
+    trans: 0.08,
+    dapple: 0,
+  },
+};
 
 /* ==========================================================================
    Device tier
@@ -123,8 +211,10 @@ interface Budget {
   shafts: number;
   /** Icosahedron subdivision for crowns. 1 is 80 faces, 0 is 20. */
   blobDetail: 0 | 1;
-  /** Loose leaves scattered over each crown blob. */
+  /** Textured leaf cards per crown blob. */
   leaves: number;
+  /** Shadow map size; 0 = no real shadows (dapple is faked in the shader). */
+  shadow: number;
   groundSegments: number;
   fps: number;
   maxPixels: number;
@@ -140,18 +230,18 @@ interface Budget {
 const BUDGETS: Record<Tier, Budget> = {
   low: {
     trees: 30, emergents: 5, palms: 9, broadleaf: 34, ferns: 44, lianas: 22, ceiling: 16,
-    rocks: 12, grass: 4500, flowers: 36, motes: 0, shafts: 3,
-    blobDetail: 0, leaves: 6, groundSegments: 48, fps: 30, maxPixels: 1_000_000, maxRatio: 1.25,
+    rocks: 12, grass: 4500, flowers: 36, motes: 70, shafts: 3,
+    blobDetail: 0, leaves: 8, shadow: 0, groundSegments: 48, fps: 30, maxPixels: 1_000_000, maxRatio: 1.25,
   },
   mid: {
     trees: 50, emergents: 8, palms: 15, broadleaf: 70, ferns: 90, lianas: 44, ceiling: 26,
     rocks: 20, grass: 11000, flowers: 70, motes: 220, shafts: 5,
-    blobDetail: 1, leaves: 12, groundSegments: 72, fps: 60, maxPixels: 1_600_000, maxRatio: 1.5,
+    blobDetail: 1, leaves: 16, shadow: 1024, groundSegments: 72, fps: 60, maxPixels: 1_600_000, maxRatio: 1.5,
   },
   high: {
     trees: 70, emergents: 11, palms: 21, broadleaf: 110, ferns: 140, lianas: 70, ceiling: 34,
     rocks: 28, grass: 18000, flowers: 110, motes: 420, shafts: 7,
-    blobDetail: 1, leaves: 18, groundSegments: 96, fps: 60, maxPixels: 2_000_000, maxRatio: 1.5,
+    blobDetail: 1, leaves: 22, shadow: 2048, groundSegments: 96, fps: 60, maxPixels: 2_000_000, maxRatio: 1.5,
   },
 };
 
@@ -229,9 +319,19 @@ class Batch {
   private col = new Float32Array(0);
   private anc = new Float32Array(0);
   private sway = new Float32Array(0);
+  private uv = new Float32Array(0);
   private ax = 0;
   private ay = 0;
   private az = 0;
+  /* Texture coordinate for the next vertex. Only leaf cards set it; the
+     untextured batches carry zeros they never read. */
+  private u = 0;
+  private w = 0;
+
+  setUV(u: number, w: number) {
+    this.u = u;
+    this.w = w;
+  }
 
   setAnchor(a: V3) {
     this.ax = a[0];
@@ -251,6 +351,7 @@ class Batch {
     this.col = re(this.col, 3);
     this.anc = re(this.anc, 3);
     this.sway = re(this.sway, 1);
+    this.uv = re(this.uv, 2);
     this.cap = cap;
   }
 
@@ -267,6 +368,8 @@ class Batch {
     this.col[i] = c.r * k; this.col[i + 1] = c.g * k; this.col[i + 2] = c.b * k;
     this.anc[i] = this.ax; this.anc[i + 1] = this.ay; this.anc[i + 2] = this.az;
     this.sway[this.n] = s;
+    this.uv[this.n * 2] = this.u;
+    this.uv[this.n * 2 + 1] = this.w;
     this.n++;
   }
 
@@ -286,6 +389,7 @@ class Batch {
     g.setAttribute('color', new THREE.BufferAttribute(this.col.subarray(0, n * 3), 3));
     g.setAttribute('aAnchor', new THREE.BufferAttribute(this.anc.subarray(0, n * 3), 3));
     g.setAttribute('aSway', new THREE.BufferAttribute(this.sway.subarray(0, n), 1));
+    g.setAttribute('uv', new THREE.BufferAttribute(this.uv.subarray(0, n * 2), 2));
     return g;
   }
 }
@@ -386,13 +490,114 @@ const BLOB_M = new THREE.Matrix4();
 const BLOB_P = new Float64Array(9);
 const BLOB_N = new Float64Array(12);
 const BLOB_C = new THREE.Color();
+/** Card corners as (-1|1) offsets along its two axes, their UVs, and the two-triangle order. */
+const CARD_SIGN = [-1, -1, 1, -1, 1, 1, -1, 1];
+const CARD_UV = [0, 0, 1, 0, 1, 1, 0, 1];
+const CARD_ORDER = [0, 1, 2, 0, 2, 3];
 
 /**
- * Loose leaves scattered over a crown's surface, pointing outward. A smooth
- * blob alone reads as a green cushion; the ragged silhouette these give it is
- * what makes it read as foliage. Each is a folded diamond — two triangles.
+ * The leaf atlas: one 256px canvas of overlapping leaves radiating from the
+ * centre, painted in greys so vertex colour tints it per crown. Generated at
+ * boot — about a millisecond of canvas work instead of a texture download.
  */
-function leafClump(
+function makeLeafTexture(rng: () => number): THREE.Texture | null {
+  const size = 256;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const g = canvas.getContext('2d');
+  if (!g) return null;
+  const cx = size / 2;
+  for (let i = 0; i < 64; i++) {
+    /* Back-to-front: darker, larger leaves first, so the rim of the cluster
+       is lit and its heart is in its own shade. */
+    const t = i / 64;
+    const a = rng() * Math.PI * 2;
+    const d = (0.15 + rng() * 0.62) * cx;
+    const x = cx + Math.cos(a) * d * 0.9;
+    const y = cx + Math.sin(a) * d * 0.9;
+    const len = 30 + rng() * 26;
+    const wid = len * (0.34 + rng() * 0.12);
+    g.save();
+    g.translate(x, y);
+    g.rotate(a + (rng() - 0.5) * 0.9);
+    const shade = Math.round(120 + t * 110 + rng() * 25);
+    const grad = g.createLinearGradient(0, 0, len, 0);
+    grad.addColorStop(0, `rgb(${shade * 0.7},${shade * 0.7},${shade * 0.7})`);
+    grad.addColorStop(1, `rgb(${shade},${shade},${shade})`);
+    g.fillStyle = grad;
+    g.beginPath();
+    g.moveTo(0, 0);
+    g.quadraticCurveTo(len * 0.45, -wid, len, 0);
+    g.quadraticCurveTo(len * 0.45, wid, 0, 0);
+    g.fill();
+    g.strokeStyle = `rgba(255,255,255,0.28)`;
+    g.lineWidth = 1.2;
+    g.beginPath();
+    g.moveTo(2, 0);
+    g.lineTo(len * 0.92, 0);
+    g.stroke();
+    g.restore();
+  }
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  return tex;
+}
+
+/**
+ * Leaf litter for the floor: a tiling canvas of small dead leaves in greys,
+ * multiplied over the ground's vertex colour. It is the near-field detail
+ * that stops the floor reading as a flat green sheet.
+ */
+function makeLitterTexture(rng: () => number): THREE.Texture | null {
+  const size = 256;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const g = canvas.getContext('2d');
+  if (!g) return null;
+  g.fillStyle = 'rgb(205,205,205)';
+  g.fillRect(0, 0, size, size);
+  for (let i = 0; i < 340; i++) {
+    const x = rng() * size;
+    const y = rng() * size;
+    const len = 5 + rng() * 11;
+    const shade = Math.round(150 + rng() * 105);
+    /* Draw at all nine wrap offsets so the tile has no seams. */
+    for (const ox of [-size, 0, size]) {
+      for (const oy of [-size, 0, size]) {
+        g.save();
+        g.translate(x + ox, y + oy);
+        g.rotate(rng() * Math.PI * 2);
+        g.fillStyle = `rgb(${shade},${Math.round(shade * 0.97)},${Math.round(shade * 0.9)})`;
+        g.beginPath();
+        g.ellipse(0, 0, len, len * 0.38, 0, 0, Math.PI * 2);
+        g.fill();
+        g.restore();
+      }
+    }
+  }
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(64, 64);
+  tex.anisotropy = 8;
+  return tex;
+}
+
+/**
+ * Leaf cards over a crown: textured quads scattered on its surface, facing
+ * roughly outward. This is how real-time foliage is built in games — the blob
+ * underneath gives the crown its mass and its shadowed core; the cards give it
+ * a ragged, leafy silhouette and let light and shadow through the gaps.
+ *
+ * Normals are NOT the card's own: every corner takes the crown's ellipsoid
+ * normal at that point, so a crown of two hundred flat cards still shades as
+ * one soft volume instead of as confetti.
+ */
+function leafCards(
   b: Batch,
   c: V3,
   s: V3,
@@ -402,26 +607,68 @@ function leafClump(
   rng: () => number,
   sway: number,
 ) {
-  const u = new THREE.Vector3();
-  const col = base.clone().offsetHSL(0.01, 0.04, 0.05);
+  /* Scalar maths only. This runs for tens of thousands of cards at boot, and
+     a version built on small tuple allocations spent a third of a second in
+     garbage collection on its own. */
+  const e = BLOB_M.makeRotationFromQuaternion(rot).elements;
+  const m00 = e[0], m01 = e[4], m02 = e[8];
+  const m10 = e[1], m11 = e[5], m12 = e[9];
+  const m20 = e[2], m21 = e[6], m22 = e[10];
+  const mean = (s[0] + s[1] + s[2]) / 3;
+  const cx = c[0], cy = c[1], cz = c[2];
+  const sx = s[0], sy = s[1], sz = s[2];
+  const U = CARD_UV;
   for (let i = 0; i < count; i++) {
-    /* Biased to the upper and outer surface — leaves hang where the light is. */
-    u.set(rng() * 2 - 1, rng() * 1.4 - 0.4, rng() * 2 - 1).normalize();
-    const surf = new THREE.Vector3(u.x * s[0], u.y * s[1], u.z * s[2]).applyQuaternion(rot);
-    const p: V3 = [c[0] + surf.x * 0.92, c[1] + surf.y * 0.92, c[2] + surf.z * 0.92];
-    const out = u.clone().applyQuaternion(rot);
-    const dir = norm([out.x + (rng() - 0.5) * 0.8, out.y * 0.5 - 0.35, out.z + (rng() - 0.5) * 0.8]);
-    const { side, up } = frame(dir);
-    const len = Math.min(s[0], s[2]) * (0.3 + rng() * 0.25);
-    const w = len * 0.42;
-    const tip = add(p, mul(dir, len));
-    const midp = add(p, mul(dir, len * 0.45));
-    const l = add(add(midp, mul(side, w)), mul(up, w * 0.3));
-    const r = add(sub(midp, mul(side, w)), mul(up, w * 0.3));
-    const k = 0.85 + rng() * 0.3;
-    b.tri(p, tip, l, col, 0.8, k, k * 0.95, sway, sway, sway);
-    b.tri(p, r, tip, col, 0.8, k * 0.9, k, sway, sway, sway);
+    let nx = rng() * 2 - 1;
+    let ny = rng() * 1.6 - 0.6;
+    let nz = rng() * 2 - 1;
+    const ul = Math.hypot(nx, ny, nz) || 1;
+    nx /= ul; ny /= ul; nz /= ul;
+    const depth = 0.72 + rng() * 0.3;
+    const lx = nx * sx * depth, ly = ny * sy * depth, lz = nz * sz * depth;
+    const px = cx + m00 * lx + m01 * ly + m02 * lz;
+    const py = cy + m10 * lx + m11 * ly + m12 * lz;
+    const pz = cz + m20 * lx + m21 * ly + m22 * lz;
+    const gx = nx / sx, gy = ny / sy, gz = nz / sz;
+    let ox = m00 * gx + m01 * gy + m02 * gz;
+    let oy = m10 * gx + m11 * gy + m12 * gz;
+    let oz = m20 * gx + m21 * gy + m22 * gz;
+    const ol = Math.hypot(ox, oy, oz) || 1;
+    ox /= ol; oy /= ol; oz /= ol;
+    /* Card basis: the outward normal nudged up and jittered, a side vector
+       from it, then a random spin in that plane so no two cards line up. */
+    let dx = ox + (rng() - 0.5) * 0.6, dy = oy + 0.25, dz = oz + (rng() - 0.5) * 0.6;
+    const dl = Math.hypot(dx, dy, dz) || 1;
+    dx /= dl; dy /= dl; dz /= dl;
+    let rx = -dz, rz = dx; // cross(dir, up) with up = (0,1,0)
+    const rl = Math.hypot(rx, rz);
+    const ry = 0;
+    if (rl < 1e-4) { rx = 1; rz = 0; } else { rx /= rl; rz /= rl; }
+    const qx = ry * dz - rz * dy, qy = rz * dx - rx * dz, qz = rx * dy - ry * dx;
+    const spin = rng() * Math.PI * 2;
+    const cs = Math.cos(spin), sn = Math.sin(spin);
+    const half = mean * (0.42 + rng() * 0.22);
+    const ax = (rx * cs + qx * sn) * half, ay = (ry * cs + qy * sn) * half, az = (rz * cs + qz * sn) * half;
+    const bx = (-rx * sn + qx * cs) * half, by = (-ry * sn + qy * cs) * half, bz = (-rz * sn + qz * cs) * half;
+    const flip = rng() < 0.5;
+    const tint = 0.9 + rng() * 0.22;
+    for (let t = 0; t < 6; t++) {
+      const k = CARD_ORDER[t];
+      const su = CARD_SIGN[k * 2], sv = CARD_SIGN[k * 2 + 1];
+      const vx = px + ax * su + bx * sv;
+      const vy = py + ay * su + by * sv;
+      const vz = pz + az * su + bz * sv;
+      /* Ellipsoid normal and height occlusion, both measured from the crown. */
+      const ex = (vx - cx) / sx, ey = (vy - cy) / sy, ez = (vz - cz) / sz;
+      let nnx = ex * 0.8 + ox * 0.6, nny = ey * 0.8 + oy * 0.6, nnz = ez * 0.8 + oz * 0.6;
+      const nl = Math.hypot(nnx, nny, nnz) || 1;
+      nnx /= nl; nny /= nl; nnz /= nl;
+      const ao = 0.5 + 0.5 * smooth(-0.9, 0.8, ey / (Math.hypot(ex, ey, ez) || 1));
+      b.setUV(flip ? 1 - U[k * 2] : U[k * 2], U[k * 2 + 1]);
+      b.v(vx, vy, vz, nnx, nny, nnz, base, ao * tint, sway);
+    }
   }
+  b.setUV(0, 0);
 }
 
 /**
@@ -578,6 +825,10 @@ interface SceneUniforms {
   /** Direction toward the sun, in VIEW space — updated when the camera moves. */
   uSunView: { value: THREE.Vector3 };
   uSunCol: { value: THREE.Color };
+  /** Foliage translucency strength (mood). */
+  uTrans: { value: number };
+  /** Faked sun-fleck strength on the floor (tier x mood). */
+  uDapple: { value: number };
 }
 
 const WIND_DECLS = `
@@ -604,6 +855,7 @@ const WIND_BODY = `
 /** Sun flecks on the forest floor: a few interfering sines, thresholded. */
 const DAPPLE_FN = `
 uniform vec3 uSunCol;
+uniform float uDapple;
 float dapple(vec2 xz) {
   vec2 q = xz * 0.55;
   vec2 r = mat2(0.8, -0.6, 0.6, 0.8) * q * 1.7;
@@ -623,7 +875,7 @@ const FOLIAGE_TRANSLUCENCY = `
   {
     vec3 toFrag = -normalize(vViewPosition);
     float back = max(dot(toFrag, uSunView), 0.0);
-    float trans = pow(back, 4.0) * 0.75 + 0.05;
+    float trans = (pow(back, 4.0) * 0.75 + 0.05) * uTrans;
     outgoingLight += diffuseColor.rgb * uSunCol * trans;
   }
   #include <opaque_fragment>
@@ -643,7 +895,7 @@ function patchMerged(mat: THREE.Material, U: SceneUniforms, translucent: boolean
     );
     if (translucent) {
       shader.fragmentShader =
-        `uniform vec3 uSunView;\nuniform vec3 uSunCol;\n` +
+        `uniform vec3 uSunView;\nuniform vec3 uSunCol;\nuniform float uTrans;\n` +
         shader.fragmentShader.replace('#include <opaque_fragment>', FOLIAGE_TRANSLUCENCY);
     }
   };
@@ -676,7 +928,7 @@ function patchInstanced(mat: THREE.Material, U: SceneUniforms, swayExpr: string,
           .replace('#include <normal_fragment_begin>', '#include <normal_fragment_begin>\nnormal = normalize(vNormal);')
           .replace(
             '#include <opaque_fragment>',
-            `outgoingLight *= 0.72 + dapple(vWorldXZ) * 0.85 * uSunCol;
+            `outgoingLight *= mix(vec3(1.0), 0.72 + dapple(vWorldXZ) * 0.85 * uSunCol, uDapple);
              #include <opaque_fragment>`,
           );
     }
@@ -744,6 +996,17 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
      additive layers we control directly. */
   renderer.toneMapping = THREE.NoToneMapping;
   renderer.setClearColor(HAZE);
+  /* REAL SHADOWS, DRAWN ONCE. The scene is static, so the shadow map is
+     rendered on the first frame and again only when the sun moves (the day /
+     evening fade) — never per frame. Pointer wind does not update it; nobody
+     can see a crown's shadow lag a few centimetres. That makes canopy dapple
+     on the floor, trunks in the shade of crowns and leaf-shaped light
+     through the gaps essentially free after the first frame. */
+  if (budget.shadow > 0) {
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.autoUpdate = false;
+  }
 
   const scene = new THREE.Scene();
   /* Exponential-squared: clear near the camera, then a fast roll-off into
@@ -762,10 +1025,32 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
      leaves glow, shafts come toward us, trunks go to silhouette. The
      hemisphere fill is stronger than a sunny scene would want because under
      a canopy most light is bounced sky and bounced green. */
-  const SUN_DIR = new THREE.Vector3(-0.58, 0.44, -0.68).normalize();
+  /* Live sun direction — the mood fade moves it. Shafts are aimed at build
+     time along the DAY sun, and simply fade out at dusk. */
+  const SUN_DIR = DAY_SUN_DIR.clone();
   const sun = new THREE.DirectionalLight(SUN, 2.3);
-  sun.position.copy(SUN_DIR).multiplyScalar(60);
+  const SUN_TARGET = new THREE.Vector3(0, 0, -14);
+  sun.target.position.copy(SUN_TARGET);
+  sun.position.copy(SUN_TARGET).addScaledVector(SUN_DIR, 70);
+  if (budget.shadow > 0) {
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(budget.shadow, budget.shadow);
+    const sc = sun.shadow.camera;
+    sc.left = -42;
+    sc.right = 42;
+    sc.top = 42;
+    sc.bottom = -42;
+    sc.near = 1;
+    sc.far = 170;
+    sun.shadow.bias = -0.0006;
+    sun.shadow.normalBias = 0.04;
+    sun.shadow.radius = 3;
+    /* Not black: under a real canopy the shade is full of bounced green
+       light. The hemisphere fill is the other half of that. */
+    sun.shadow.intensity = 0.72;
+  }
   scene.add(sun);
+  scene.add(sun.target);
   const hemi = new THREE.HemisphereLight(0xa6d2cf, 0x2c3a17, 1.15);
   scene.add(hemi);
 
@@ -776,6 +1061,21 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
     uStrength: { value: 0 },
     uSunView: { value: new THREE.Vector3() },
     uSunCol: { value: SUN.clone() },
+    uTrans: { value: 1 },
+    uDapple: { value: 1 },
+  };
+
+  /* Mood uniforms, shared by reference into every shader that needs them, so
+     applyMood() below is one pass of assignments. */
+  const M = {
+    uTop: { value: SKY_TOP.clone() },
+    uLow: { value: HAZE.clone() },
+    uSunDir: { value: SUN_DIR },
+    uStars: { value: 0 },
+    uShafts: { value: 1 },
+    uMote: { value: SUN.clone() },
+    uMoteSize: { value: 1 },
+    uBlink: { value: 0 },
   };
 
   const disposables: Array<{ dispose(): void }> = [];
@@ -792,6 +1092,8 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
 
   const foliage = new Batch();
   const wood = new Batch();
+  /** Leaf cards: the one alpha-tested, textured batch. */
+  const cards = new Batch();
   /** Trunk footprints, for occlusion baked into the ground. */
   const trunks: { x: number; z: number; r: number }[] = [];
   /** Crown undersides lianas can hang from. */
@@ -822,10 +1124,11 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
           depthWrite: false,
           fog: false,
           uniforms: {
-            uTop: { value: SKY_TOP.clone() },
-            uLow: { value: HAZE.clone() },
-            uSun: { value: SUN.clone() },
-            uSunDir: { value: SUN_DIR.clone() },
+            uTop: M.uTop,
+            uLow: M.uLow,
+            uSun: U.uSunCol,
+            uSunDir: M.uSunDir,
+            uStars: M.uStars,
           },
           vertexShader: `
   varying vec3 vDir;
@@ -838,13 +1141,29 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
   uniform vec3 uLow;
   uniform vec3 uSun;
   uniform vec3 uSunDir;
+  uniform float uStars;
   varying vec3 vDir;
+  float hash(vec3 p) {
+    p = fract(p * 0.3183099 + 0.1);
+    p *= 17.0;
+    return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
+  }
   void main() {
     vec3 d = normalize(vDir);
     float t = pow(clamp(d.y, 0.0, 1.0), 0.55);
     vec3 c = mix(uLow, uTop, t);
     float s = max(dot(d, uSunDir), 0.0);
-    c += uSun * (pow(s, 280.0) * 1.6 + pow(s, 18.0) * 0.45 + pow(s, 3.0) * 0.12);
+    c += uSun * (pow(s, 280.0) * 1.6 * (1.0 - uStars) + pow(s, 18.0) * 0.45 + pow(s, 3.0) * 0.12 * (1.0 - uStars * 0.85));
+    /* Evening: a band of afterglow along the horizon on the sun's side, and
+       stars that only appear well clear of the haze. */
+    float band = exp(-abs(d.y) * 12.0) * pow(s, 7.0) * uStars;
+    c += uSun * band * 0.4;
+    if (uStars > 0.0) {
+      vec3 cell = floor(d * 260.0);
+      float h = hash(cell);
+      float star = step(0.9965, h) * smoothstep(0.12, 0.45, d.y);
+      c += vec3(0.85, 0.9, 1.0) * star * (0.5 + 0.5 * fract(h * 97.0)) * uStars;
+    }
     gl_FragColor = vec4(c, 1.0);
   }`,
         }),
@@ -935,7 +1254,8 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
         const sc: V3 = [rad * r(1.2, 1.5), rad * r(0.55, 0.75), rad * r(1.2, 1.5)];
         const q = quat(r(-0.3, 0.3), rng() * 6, r(-0.3, 0.3));
         blob(foliage, c, sc, q, budget.blobDetail, col, rng() * 100, 1);
-        leafClump(foliage, c, sc, q, budget.leaves, col, rng, 1);
+        cards.setAnchor(c);
+        leafCards(cards, c, sc, q, budget.leaves, col, rng, 1);
         if (k < 2 && z > -34) hangPoints.push([c[0] + r(-1, 1), c[1] - rad * 0.5, c[2] + r(-1, 1)]);
       }
     }
@@ -1009,7 +1329,8 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
         const q = quat(r(-0.2, 0.2), rng() * 6, r(-0.2, 0.2));
         const col = green.clone().lerp(CANOPY[4], rng() * 0.3);
         blob(foliage, c, sc, q, budget.blobDetail, col, rng() * 100, 0.6);
-        leafClump(foliage, c, sc, q, Math.round(budget.leaves * 0.6), col, rng, 0.6);
+        cards.setAnchor(c);
+        leafCards(cards, c, sc, q, Math.round(budget.leaves * 0.8), col, rng, 0.6);
       }
       foliage.setAnchor(top);
     }
@@ -1028,14 +1349,15 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
       const z = r(-30, 2);
       const c: V3 = [x, r(14, 18), z];
       /* Leave a clear window roughly where the sun sits in frame. */
-      if (x < -4 && x > -20 && z < -12) continue;
+      if (x < 6 && x > -26 && z < -6) continue;
       const rad = r(2.2, 3.6);
       foliage.setAnchor(c);
       const sc: V3 = [rad * 1.4, rad * 0.6, rad * 1.25];
       const q = quat(r(-0.2, 0.2), rng() * 6, r(-0.2, 0.2));
       const col = pick(CANOPY.slice(0, 3));
       blob(foliage, c, sc, q, budget.blobDetail, col, rng() * 100, 0.4, { ao: 0.7 });
-      leafClump(foliage, c, sc, q, budget.leaves + 6, col, rng, 0.4);
+      cards.setAnchor(c);
+      leafCards(cards, c, sc, q, budget.leaves + 6, col, rng, 0.4);
       if (rng() < 0.6) hangPoints.push([c[0] + r(-1.5, 1.5), c[1] - rad * 0.4, c[2] + r(-1.5, 1.5)]);
     }
 
@@ -1220,26 +1542,44 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
       blob(wood, c, [rad * 1.3, rad * 0.62, rad * 1.1], quat(r(-0.2, 0.2), rng() * 6, r(-0.2, 0.2)), budget.blobDetail, ROCK, rng() * 100, 0, { top: MOSS, ao: 0.5, facet: 0.7, jitter: 0.4 });
     }
 
-    /* -- commit the two batches ------------------------------------------- */
-    {
-      const geo = track(foliage.build());
-      const mat = track(new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }));
-      patchMerged(mat, U, true);
+    /* -- commit the batches ----------------------------------------------- */
+    const shadowed = budget.shadow > 0;
+    const commit = (batch: Batch, mat: THREE.Material, translucent: boolean) => {
+      const geo = track(batch.build());
+      track(mat);
+      patchMerged(mat, U, translucent);
       const mesh = new THREE.Mesh(geo, mat);
       /* Wind moves vertices outside the baked bounds; culling against them
          could pop a whole batch out of frame. */
       mesh.frustumCulled = false;
+      mesh.castShadow = shadowed;
+      mesh.receiveShadow = shadowed;
       scene.add(mesh);
-    }
+    };
+    commit(foliage, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }), true);
+    commit(wood, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }), false);
     {
-      const geo = track(wood.build());
-      const mat = track(new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }));
-      patchMerged(mat, U, false);
-      const mesh = new THREE.Mesh(geo, mat);
-      mesh.frustumCulled = false;
-      scene.add(mesh);
+      const tex = makeLeafTexture(rng);
+      if (tex) {
+        track(tex);
+        commit(
+          cards,
+          new THREE.MeshLambertMaterial({
+            vertexColors: true,
+            side: THREE.DoubleSide,
+            map: tex,
+            /* The shadow pass reads alphaTest too, so the light that reaches
+               the floor is shaped like leaves, not like cards. With MSAA on,
+               alpha-to-coverage turns the hard cut-out edge into a soft one. */
+            alphaTest: 0.5,
+            alphaToCoverage: tier !== 'low',
+          }),
+          true,
+        );
+      }
     }
 
+    yield;
     /* -- 3. GROUND (now the trunks are known) ------------------------------ */
     {
       const seg = budget.groundSegments;
@@ -1272,9 +1612,12 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
       p.needsUpdate = true;
       geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
       geo.computeVertexNormals();
-      const mat = track(new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }));
+      const litter = makeLitterTexture(rng);
+      if (litter) track(litter);
+      const mat = track(new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide, map: litter }));
       mat.onBeforeCompile = (shader) => {
         shader.uniforms.uSunCol = U.uSunCol;
+        shader.uniforms.uDapple = U.uDapple;
         shader.vertexShader = shader.vertexShader
           .replace('void main() {', 'varying vec2 vWorldXZ;\nvoid main() {')
           .replace('#include <begin_vertex>', '#include <begin_vertex>\nvWorldXZ = (modelMatrix * vec4(transformed, 1.0)).xz;');
@@ -1282,11 +1625,13 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
           `varying vec2 vWorldXZ;\n${DAPPLE_FN}\n` +
           shader.fragmentShader.replace(
             '#include <opaque_fragment>',
-            `outgoingLight *= 0.62 + dapple(vWorldXZ) * 1.1 * uSunCol;
+            `outgoingLight *= mix(vec3(1.0), 0.62 + dapple(vWorldXZ) * 1.1 * uSunCol, uDapple);
              #include <opaque_fragment>`,
           );
       };
-      scene.add(new THREE.Mesh(geo, mat));
+      const ground = new THREE.Mesh(geo, mat);
+      ground.receiveShadow = budget.shadow > 0;
+      scene.add(ground);
     }
 
     yield;
@@ -1305,6 +1650,7 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
       patchInstanced(mat, U, 'position.y', true);
 
       const mesh = new THREE.InstancedMesh(geo, mat, budget.grass);
+      mesh.receiveShadow = budget.shadow > 0;
       const dummy = new THREE.Object3D();
       const tint = new THREE.Color();
       for (let i = 0; i < budget.grass; i++) {
@@ -1379,7 +1725,7 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
             transparent: true,
             depthWrite: false,
             fog: false,
-            uniforms: { uCol: { value: HAZE.clone() }, uOpacity: { value: opacity }, uSeed: { value: z } },
+            uniforms: { uCol: M.uLow, uOpacity: { value: opacity }, uSeed: { value: z } },
             vertexShader: `
   varying vec2 vUv;
   void main() {
@@ -1436,6 +1782,7 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
             uniforms: {
               uCol: { value: SUN.clone() },
               uIntensity: { value: r(0.32, 0.55) },
+              uShafts: M.uShafts,
               uTime: U.uTime,
               uSeed: { value: rng() * 10 },
             },
@@ -1453,6 +1800,7 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
             fragmentShader: `
   uniform vec3 uCol;
   uniform float uIntensity;
+  uniform float uShafts;
   uniform float uTime;
   uniform float uSeed;
   varying vec3 vN;
@@ -1466,7 +1814,7 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
     float along = smoothstep(0.0, 0.25, vUv.y) * smoothstep(1.0, 0.55, vUv.y);
     float streak = 0.7 + 0.3 * sin(vUv.x * 6.2832 * 5.0 + uSeed + uTime * 0.15);
     float nearFade = smoothstep(2.0, 9.0, -vView.z);
-    float a = edge * along * streak * nearFade * uIntensity;
+    float a = edge * along * streak * nearFade * uIntensity * uShafts;
     gl_FragColor = vec4(uCol * a, a);
   }`,
           }),
@@ -1510,12 +1858,16 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
           fog: false,
           uniforms: {
             uTime: U.uTime,
-            uCol: { value: SUN.clone() },
+            uCol: M.uMote,
+            uSize: M.uMoteSize,
+            uBlink: M.uBlink,
             uScale: { value: renderer.getPixelRatio() * window.innerHeight * 0.5 },
           },
           vertexShader: `
   uniform float uTime;
   uniform float uScale;
+  uniform float uSize;
+  uniform float uBlink;
   attribute float aSeed;
   varying float vA;
   void main() {
@@ -1524,8 +1876,12 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
     p += vec3(sin(t) * 0.35, sin(t * 0.7 + 1.3) * 0.25, cos(t * 0.8) * 0.3);
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
     float d = -mv.z;
-    gl_PointSize = clamp(uScale * (0.018 + aSeed * 0.022) / d, 1.0, 9.0);
+    gl_PointSize = clamp(uScale * (0.018 + aSeed * 0.022) * uSize / d, 1.0, 14.0);
     vA = (0.35 + 0.65 * (0.5 + 0.5 * sin(t * 2.3))) * smoothstep(1.2, 4.0, d) * (1.0 - smoothstep(18.0, 26.0, d));
+    /* Fireflies: the same specks, but each one pulses on and off on its own
+       slow clock instead of shimmering. */
+    float pulse = pow(0.5 + 0.5 * sin(uTime * 1.3 + aSeed * 61.0), 5.0);
+    vA *= mix(1.0, 0.15 + pulse * 2.2, uBlink);
     gl_Position = projectionMatrix * mv;
   }`,
           fragmentShader: `
@@ -1563,7 +1919,10 @@ function mountJungle(canvas: HTMLCanvasElement, host: HTMLElement): () => void {
   const overlayU = {
     uSun: { value: new THREE.Vector2(-0.6, 0.9) },
     uAspect: { value: window.innerWidth / Math.max(1, window.innerHeight) },
-    uSunCol: { value: SUN.clone() },
+    uSunCol: U.uSunCol,
+    uVig: { value: MOODS.day.vignette.clone() },
+    uVigAmt: { value: MOODS.day.vignetteAmt },
+    uBloom: { value: 1 },
   };
   {
     const geo = track(new THREE.PlaneGeometry(2, 2));
@@ -1586,14 +1945,17 @@ void main() {
 uniform vec2 uSun;
 uniform float uAspect;
 uniform vec3 uSunCol;
+uniform vec3 uVig;
+uniform float uVigAmt;
+uniform float uBloom;
 varying vec2 vUv;
 void main() {
   vec2 p = (vUv - 0.5) * 2.0;
   float v = length(p * vec2(0.72, 0.86) + vec2(0.0, 0.1));
-  float a = smoothstep(0.62, 1.45, v) * 0.74;
-  vec3 dark = vec3(0.03, 0.06, 0.035) * a;
+  float a = smoothstep(0.62, 1.45, v) * uVigAmt;
+  vec3 dark = uVig * a;
   vec2 d = (p - uSun) * vec2(uAspect, 1.0);
-  float g = exp(-dot(d, d) * 0.9) * 0.34 + exp(-dot(d, d) * 7.0) * 0.18;
+  float g = (exp(-dot(d, d) * 0.9) * 0.34 + exp(-dot(d, d) * 7.0) * 0.18) * uBloom;
   gl_FragColor = vec4(dark + uSunCol * g * (1.0 - a), a);
 }`,
       }),
@@ -1610,6 +1972,59 @@ void main() {
     if (sunScratch.z > 1) overlayU.uSun.value.set(0, 9);
     else overlayU.uSun.value.set(sunScratch.x, sunScratch.y);
   }
+
+  /* ======================================================================
+     Time of day
+     ======================================================================
+     moodT runs 0 (day) to 1 (evening). Every mood parameter is lerped from
+     it, so the switch is a ~1.4s dusk/dawn rather than a cut. While it runs
+     the shadow map is redrawn each frame (the sun is moving); once it lands
+     the map is static again.
+     ====================================================================== */
+  const tmpC = new THREE.Color();
+  const tierDapple = budget.shadow > 0 ? 0.3 : 1;
+  const hazeNow = new THREE.Color();
+  function applyMood(t: number) {
+    const a = MOODS.day;
+    const b = MOODS.evening;
+    const k = t * t * (3 - 2 * t);
+    const L = (x: number, y: number) => x + (y - x) * k;
+    const C = (out: THREE.Color, x: THREE.Color, y: THREE.Color) => out.copy(x).lerp(y, k);
+    C(M.uTop.value, a.skyTop, b.skyTop);
+    C(hazeNow, a.haze, b.haze);
+    M.uLow.value.copy(hazeNow);
+    (scene.fog as THREE.FogExp2).color.copy(hazeNow);
+    (scene.fog as THREE.FogExp2).density = L(a.fog, b.fog);
+    renderer.setClearColor(hazeNow);
+    C(U.uSunCol.value, a.sun, b.sun);
+    sun.color.copy(U.uSunCol.value);
+    sun.intensity = L(a.sunI, b.sunI);
+    SUN_DIR.copy(a.sunDir).lerp(b.sunDir, k).normalize();
+    sun.position.copy(SUN_TARGET).addScaledVector(SUN_DIR, 70);
+    C(hemi.color, a.hemiSky, b.hemiSky);
+    C(hemi.groundColor, a.hemiGround, b.hemiGround);
+    hemi.intensity = L(a.hemiI, b.hemiI);
+    M.uShafts.value = L(a.shafts, b.shafts);
+    C(M.uMote.value, a.mote, b.mote);
+    M.uMoteSize.value = L(a.moteSize, b.moteSize);
+    M.uBlink.value = L(a.blink, b.blink);
+    M.uStars.value = L(a.stars, b.stars);
+    C(tmpC, a.vignette, b.vignette);
+    overlayU.uVig.value.copy(tmpC);
+    overlayU.uVigAmt.value = L(a.vignetteAmt, b.vignetteAmt);
+    overlayU.uBloom.value = L(a.bloom, b.bloom);
+    U.uTrans.value = L(a.trans, b.trans);
+    U.uDapple.value = L(a.dapple, b.dapple) * tierDapple;
+    renderer.shadowMap.needsUpdate = true;
+  }
+
+  let moodTarget = getJungleMood() === 'evening' ? 1 : 0;
+  let moodT = moodTarget;
+  applyMood(moodT);
+  const unsubscribeMood = subscribeJungleMood((m) => {
+    moodTarget = m === 'evening' ? 1 : 0;
+    if (gate.isActive() && raf === null) start();
+  });
 
   /* ======================================================================
      Interaction
@@ -1714,6 +2129,12 @@ void main() {
 
     U.uTime.value = clock.getElapsedTime();
 
+    if (moodT !== moodTarget) {
+      const step = Math.min(dt, 100) / 1400;
+      moodT = moodTarget > moodT ? Math.min(moodTarget, moodT + step) : Math.max(moodTarget, moodT - step);
+      applyMood(moodT);
+    }
+
     const prevStrength = U.uStrength.value;
     U.uStrength.value += (targetStrength - U.uStrength.value) * 0.08;
     if (U.uStrength.value < 0.002) U.uStrength.value = 0;
@@ -1744,6 +2165,7 @@ void main() {
       U.uStrength.value > 0 ||
       prevStrength > 0 ||
       push > 0 ||
+      moodT !== moodTarget ||
       Math.abs(targetYaw - yaw) > 0.0005 ||
       Math.abs(targetPitch - pitch) > 0.0005;
     idleFrames = moving ? 0 : idleFrames + 1;
@@ -1809,6 +2231,7 @@ void main() {
     raf = null;
     gate.destroy();
     unsubscribePush();
+    unsubscribeMood();
     window.removeEventListener('resize', resize);
     window.removeEventListener('pointermove', onPointerMove);
     document.removeEventListener('pointerleave', onPointerLeave);

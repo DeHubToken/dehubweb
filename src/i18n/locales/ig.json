@@ -3842,5 +3842,11 @@
   },
   "accounts": {
     "title": "Akaụntụ"
+  },
+  "jungleMood": {
+    "title": "Oge nke ụbọchị",
+    "desc": "Ụbọchị na-enwu enwu ma ọ bụ mgbede na-acha anụnụ anụnụ n’ọhịa",
+    "day": "Ehihie",
+    "evening": "Mgbede"
   }
 }

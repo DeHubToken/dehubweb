@@ -4072,5 +4072,11 @@
   },
   "accounts": {
     "title": "Účty"
+  },
+  "jungleMood": {
+    "title": "Denná doba",
+    "desc": "Jasný deň alebo šerý modrý večer v džungli",
+    "day": "Deň",
+    "evening": "Večer"
   }
 }

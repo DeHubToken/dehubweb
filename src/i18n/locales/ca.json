@@ -6078,5 +6078,11 @@
       "width": "Mida del llapis {{value}}",
       "hint": "Arrossega sobre el llenç per dibuixar. Cada traç és una capa pròpia que pots moure, redimensionar o suprimir. Prem Esc per parar."
     }
+  },
+  "jungleMood": {
+    "title": "Moment del dia",
+    "desc": "Un dia lluminós o un capvespre blau a la jungla",
+    "day": "Dia",
+    "evening": "Capvespre"
   }
 }

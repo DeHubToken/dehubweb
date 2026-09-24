@@ -6398,5 +6398,11 @@
       "width": "Saiz pen {{value}}",
       "hint": "Seret pada kanvas untuk melukis. Setiap lakaran ialah lapisan tersendiri yang boleh anda alihkan, ubah saiz atau padam. Tekan Esc untuk berhenti."
     }
+  },
+  "jungleMood": {
+    "title": "Waktu",
+    "desc": "Siang yang cerah atau senja biru kelam di hutan",
+    "day": "Siang",
+    "evening": "Senja"
   }
 }
