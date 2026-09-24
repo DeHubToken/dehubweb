@@ -3820,7 +3820,16 @@
     "aiGenerationCommunityAlt": "AI ģenerēšana no DeHub kopienas",
     "close": "Aizvērt",
     "toolFlow": "Veidotāja plūsma",
-    "toolFlowDesc": "Ķēdējiet teksta, atsauču, attēlu un video modeļus uz audekla, palaidiet tos ar vienu maksājumu, kopīgojiet tos ar saiti."
+    "toolFlowDesc": "Ķēdējiet teksta, atsauču, attēlu un video modeļus uz audekla, palaidiet tos ar vienu maksājumu, kopīgojiet tos ar saiti.",
+    "freeImagesLeft_one": "Bezmaksas · {{count}} atlikušais brīvais attēls",
+    "freeImagesLeft_other": "Atlikušie bezmaksas · {{count}} brīvie attēli",
+    "priceFreeRateLimited": "Bezmaksas · tiek piemēroti cenu ierobežojumi",
+    "priceChecking": "Pārbauda cenu...",
+    "priceUnavailable": "Cena nav pieejama — pirms apmaksas mēģiniet vēlreiz",
+    "priceStandardTexture": "standarta tekstūra",
+    "priceUsually": "Parasti {{time}}; rindas var aizņemt vairāk laika",
+    "useFreeModel_one": "Pārslēdzieties uz {{model}}, lai izmantotu savu {{count}} brīvo attēlu",
+    "useFreeModel_other": "Pārslēdzieties uz {{model}}, lai izmantotu savus {{count}} bezmaksas attēlus"
   },
   "pricing": {
     "plansForEveryWorkflow": "Plāni katrai darba plūsmai",

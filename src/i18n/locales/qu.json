@@ -3923,5 +3923,16 @@
     "desc": "Sach’a ukhupi k’anchay punchaw utaq anqas sukhayay",
     "day": "Punchaw",
     "evening": "Sukhayay"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Gratis · {{count}} gratis imagen saqisqa",
+    "freeImagesLeft_other": "Gratis · {{count}} gratis imaymanakuna saqisqa",
+    "priceFreeRateLimited": "Gratis · tarifa límites nisqakunan ruwakun",
+    "priceChecking": "Preciota qhawaspa...",
+    "priceUnavailable": "Precio mana kanchu — manaraq qullqita quchkaspa wakmanta kallpachakuy",
+    "priceStandardTexture": "textura estándar nisqa",
+    "priceUsually": "Usually {{time}}; filakunaqa aswan unaytan hap’inman",
+    "useFreeModel_one": "{{model}} nisqaman tikray {{count}} mana qullqiyuq siq&#39;iykita llamk&#39;achinaykipaq",
+    "useFreeModel_other": "{{model}} nisqaman tikray {{count}} mana qullqiyuq siq&#39;iykikunata llamk&#39;achinaykipaq"
   }
 }

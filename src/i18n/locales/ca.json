@@ -3784,7 +3784,16 @@
     "aiGenerationCommunityAlt": "Generació d'IA de la comunitat DeHub",
     "close": "Tancar",
     "toolFlow": "Flux de creadors",
-    "toolFlowDesc": "Cadena de text, referències, imatges i models de vídeo en un llenç, executar-lo en un pagament, compartir-lo amb un enllaç."
+    "toolFlowDesc": "Cadena de text, referències, imatges i models de vídeo en un llenç, executar-lo en un pagament, compartir-lo amb un enllaç.",
+    "freeImagesLeft_one": "Gratis · {{count}} imatge gratuïta a l'esquerra",
+    "freeImagesLeft_other": "Queden {{count}} imatges gratuïtes",
+    "priceFreeRateLimited": "S'apliquen límits de tarifa gratuïta",
+    "priceChecking": "S'està comprovant el preu...",
+    "priceUnavailable": "Preu no disponible: torna-ho a provar abans de pagar",
+    "priceStandardTexture": "textura estàndard",
+    "priceUsually": "Normalment, les cues a {{time}}; poden trigar més",
+    "useFreeModel_one": "Canvia a {{model}} per utilitzar la teva imatge gratuïta de {{count}}",
+    "useFreeModel_other": "Canvia a {{model}} per utilitzar les teves {{count}} imatges gratuïtes"
   },
   "pricing": {
     "plansForEveryWorkflow": "Plans per a cada flux de treball",

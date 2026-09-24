@@ -3784,7 +3784,16 @@
     "aiGenerationCommunityAlt": "AI generování z komunity DeHub",
     "close": "Zavřít",
     "toolFlow": "Tok tvůrce",
-    "toolFlowDesc": "Řetězový text, reference, obrázky a video modely na plátně, spusťte je v jedné platbě, sdílejte je s odkazem."
+    "toolFlowDesc": "Řetězový text, reference, obrázky a video modely na plátně, spusťte je v jedné platbě, sdílejte je s odkazem.",
+    "freeImagesLeft_one": "Volný · {{count}} zbývá obrázek zdarma",
+    "freeImagesLeft_other": "Zdarma · {{count}} zbývají volné obrázky",
+    "priceFreeRateLimited": "Zdarma · platí limity sazeb",
+    "priceChecking": "Kontroluje se cena…",
+    "priceUnavailable": "Cena není k dispozici — zkuste to znovu před zaplacením",
+    "priceStandardTexture": "standardní textura",
+    "priceUsually": "Obvykle {{time}}; fronty mohou trvat déle",
+    "useFreeModel_one": "Přepni na {{model}} a použij svůj {{count}} obrázek zdarma",
+    "useFreeModel_other": "Přepni na {{model}} a použij {{count}} obrázky zdarma"
   },
   "pricing": {
     "plansForEveryWorkflow": "Plány pro každý pracovní postup",

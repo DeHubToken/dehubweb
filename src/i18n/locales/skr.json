@@ -3645,5 +3645,16 @@
     "desc": "جنگل وچ روشن ڈینہہ یا نیلی شام",
     "day": "ڈینہہ",
     "evening": "شام"
+  },
+  "creator": {
+    "freeImagesLeft_one": "مفت · {{count}} مفت تصویر باقی",
+    "freeImagesLeft_other": "مفت · {{count}} مفت تصاویر باقی",
+    "priceFreeRateLimited": "مفت · شرحت لا محدود لاگو ٿي سگهن ٿا",
+    "priceChecking": "قيمت چيڪ ٿي رهي آهي…",
+    "priceUnavailable": "قيمت دستياب ناهي — ادائگي کان پهريان ٻيهر ڪوشش ڪريو",
+    "priceStandardTexture": "معياري بناوت",
+    "priceUsually": "عام طور تي {{time}}؛ قطارن ۾ وڌيڪ وقت لڳي سگهي ٿو",
+    "useFreeModel_one": "{{model}} تے استعمال کرو تِیندا {{count}} مفت فوٹو",
+    "useFreeModel_other": "{{model}} تے استعمال کرو تِیندا {{count}} مفت فوٹو"
   }
 }

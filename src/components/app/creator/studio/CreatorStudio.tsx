@@ -38,7 +38,7 @@ import {
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
-import { useJobQuote, formatDhb } from '@/hooks/use-ai-quote';
+import { useJobQuote, formatDhb, useFreeImages } from '@/hooks/use-ai-quote';
 import { AuthenticationError, apiCall } from '@/lib/api/dehub/core';
 import {
   IMAGE_MODELS,
@@ -457,6 +457,8 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const checkingSession = useRef(false);
+  // openPaywall is declared above runImage; the ref gives it the current one.
+  const runImageRef = useRef<(txHash?: string) => void>(() => {});
 
   const startImage = useGenerationStore((s) => s.startImage);
   const startVideo = useGenerationStore((s) => s.startVideo);
@@ -1052,10 +1054,19 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     : mode === '3d' ? { kind: 'model3d', modelId: model3dModel, quality: 'standard' }
     : { kind: 'image', modelId: imageModel, quantity: batch });
   const estimatedTime = mode === 'audio' ? activeAudioTask.typicalDuration : mode === '3d' ? activeModel3d?.typicalDuration : null;
-  const priceLabel = mode === 'audio' && !activeAudioTask.paid ? 'Free · rate limits apply'
-    : generationQuote.isLoading ? 'Checking price…'
-    : generationQuote.error ? 'Price unavailable — retry before paying'
-    : `${formatDhb(generationQuote.priceDhb)} DHB · USD ${generationQuote.priceUsd.toFixed(3)}${mode === '3d' ? ' · standard texture' : ''}`;
+  // Free starter images: the server claims one per job, this only decides
+  // whether Generate skips the paywall and what the price line says.
+  const freeImages = useFreeImages(walletAddress);
+  const freeImageEligible = mode === 'image' && batch === 1 && freeImages.remaining > 0 && freeImages.models.includes(imageModel);
+  const freeModelSuggestion = mode === 'image' && !freeImageEligible && freeImages.remaining > 0
+    ? freeImages.models.find((m) => m in IMAGE_MODELS && m === 'gemini-3.1-flash-image') ?? freeImages.models.find((m) => m in IMAGE_MODELS)
+    : undefined;
+  const usd = generationQuote.priceUsd;
+  const priceLabel = freeImageEligible ? t('creator.freeImagesLeft', { count: freeImages.remaining })
+    : mode === 'audio' && !activeAudioTask.paid ? t('creator.priceFreeRateLimited')
+    : generationQuote.isLoading ? t('creator.priceChecking')
+    : generationQuote.error ? t('creator.priceUnavailable')
+    : `${formatDhb(generationQuote.priceDhb)} DHB · USD ${usd < 0.1 ? usd.toFixed(3) : usd.toFixed(2)}${mode === '3d' ? ` · ${t('creator.priceStandardTexture')}` : ''}`;
 
   const audioQuantityLabel = useMemo(() => {
     if (audioTask === 'music') return `${musicSeconds}s track`;
@@ -1207,7 +1218,8 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       return;
     } finally { checkingSession.current = false; }
     if (mode === 'image') {
-      setImagePaywallOpen(true);
+      if (freeImageEligible) runImageRef.current();
+      else setImagePaywallOpen(true);
       return;
     }
     if (mode === 'video') {
@@ -1259,10 +1271,14 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     audioTask,
     activeAudioTask,
     runAudio,
+    freeImageEligible,
   ]);
 
-  /** Called by the paywall once the DHB transfer confirms. */
-  const runImage = useCallback((txHash: string) => {
+  /**
+   * Called by the paywall once the DHB transfer confirms, or straight from
+   * Generate with no hash when the job runs on a free starter image.
+   */
+  const runImage = useCallback((txHash?: string) => {
     setImagePaywallOpen(false);
     const meta = {
       prompt: prompt.trim() || preset?.sample || t('creator.untitled'),
@@ -1277,14 +1293,17 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
           prompt: resolvedPrompt,
           model: imageModel,
           aspectRatio: imageAspect,
-          txHash,
+          ...(txHash ? { txHash } : { useFree: true }),
           ...(reference ? { sourceImage: reference.url } : {}),
         },
         meta,
       );
     }
+    // The claim lands when the request reaches the server; re-read after it.
+    if (!txHash) window.setTimeout(() => void freeImages.refetch(), 4000);
     toast.success(batch > 1 ? t('creator.imagesQueued', { count: batch }) : t('creator.generationStarted'));
-  }, [prompt, preset, resolvedPrompt, imageModel, imageAspect, batch, reference, presetId, startImage]);
+  }, [prompt, preset, resolvedPrompt, imageModel, imageAspect, batch, reference, presetId, startImage, freeImages]);
+  runImageRef.current = runImage;
 
   const runVideo = useCallback(
     (options: VideoGenerationOptions | undefined, txHash: string) => {
@@ -2053,7 +2072,16 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                 {generateButton()}
               </div>
 
-              <p aria-live="polite" className="mt-2 px-1 text-[12px] text-white/65">{priceLabel}{estimatedTime ? ` · Usually ${estimatedTime}; queues may take longer` : ''}</p>
+              <p aria-live="polite" className="mt-2 px-1 text-[12px] text-white/65">{priceLabel}{estimatedTime ? ` · ${t('creator.priceUsually', { time: estimatedTime })}` : ''}</p>
+              {freeModelSuggestion && (
+                <button
+                  type="button"
+                  onClick={() => { setImageModel(freeModelSuggestion as ImageModelKey); setBatch(1); }}
+                  className="mt-1 px-1 text-left text-[12px] font-medium text-white underline underline-offset-2 hover:text-white/80"
+                >
+                  {t('creator.useFreeModel', { count: freeImages.remaining, model: IMAGE_MODELS[freeModelSuggestion]?.name ?? freeModelSuggestion })}
+                </button>
+              )}
               {blockingIssue && (
                 <p id="studio-blocking-reason" className="mt-2 px-1 text-[12px] text-white/45">
                   {blockingIssue}

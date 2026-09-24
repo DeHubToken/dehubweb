@@ -3793,5 +3793,16 @@
     "desc": "ኣብ ጫካ ብሩህ መዓልቲ ወይ ሰማያዊ ምሸት",
     "day": "መዓልቲ",
     "evening": "ምሸት"
+  },
+  "creator": {
+    "freeImagesLeft_one": "ነጻ · {{count}} ነጻ ስእሊ ተሪፉ",
+    "freeImagesLeft_other": "ነጻ · {{count}} ነጻ ስእልታት ተሪፉ",
+    "priceFreeRateLimited": "Free · ተመኖች ገደብ ይምልከቶም",
+    "priceChecking": "ዋጋ ምምርማር...",
+    "priceUnavailable": "ዘይርከብ ዋጋ — ቅድሚ ምኽፋልካ ተመሊስካ",
+    "priceStandardTexture": "መደበኛ ቅርጺ",
+    "priceUsually": "መብዛሕትኡ ግዜ {{time}}; መስመራት ዝያዳ ግዜ ክወስድ ይኽእል",
+    "useFreeModel_one": "{{count}} ናጻ ስእልኻ ንምጥቃም ናብ {{model}} ቀይር",
+    "useFreeModel_other": "{{count}} ናጻ ስእልታትካ ንምጥቃም ናብ {{model}} ቀይር"
   }
 }

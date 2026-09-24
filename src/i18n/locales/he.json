@@ -3647,7 +3647,16 @@
     "aiGenerationCommunityAlt": "יצירת AI מקהילת DeHub",
     "close": "סגור",
     "toolFlow": "תהליך היוצר",
-    "toolFlowDesc": "שרשור טקסט, הפניות, מודלים של תמונות ווידאו על בד, הפעל אותו בתשלום אחד, שתף אותו עם קישור."
+    "toolFlowDesc": "שרשור טקסט, הפניות, מודלים של תמונות ווידאו על בד, הפעל אותו בתשלום אחד, שתף אותו עם קישור.",
+    "freeImagesLeft_one": "חינם · {{count}} נותרה תמונה חינמית",
+    "freeImagesLeft_other": "חינם · {{count}} תמונות חינמיות נותרו",
+    "priceFreeRateLimited": "חינם · בכפוף למגבלות התעריף",
+    "priceChecking": "המחיר בבדיקה…",
+    "priceUnavailable": "המחיר לא זמין — יש לנסות שוב לפני התשלום",
+    "priceStandardTexture": "מרקם סטנדרטי",
+    "priceUsually": "בדרך כלל {{time}}; התורים עשויים להימשך זמן רב יותר",
+    "useFreeModel_one": "יש לעבור אל {{model}} כדי להשתמש בתמונה החינמית של {{count}}",
+    "useFreeModel_other": "יש לעבור אל {{model}} כדי להשתמש בתמונות החינמיות של {{count}}"
   },
   "pricing": {
     "plansForEveryWorkflow": "תוכניות לכל זרימת עבודה",

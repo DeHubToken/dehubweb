@@ -3783,7 +3783,16 @@
     "aiGenerationCommunityAlt": "AI-generering från DeHub-gemenskapen",
     "close": "Stäng",
     "toolFlow": "Kreatörsflöde",
-    "toolFlowDesc": "Kedjetext, referenser, bild- och videomodeller på en duk, kör den i en betalning, dela den med en länk."
+    "toolFlowDesc": "Kedjetext, referenser, bild- och videomodeller på en duk, kör den i en betalning, dela den med en länk.",
+    "freeImagesLeft_one": "Gratis · {{count}} gratis bild kvar",
+    "freeImagesLeft_other": "Gratis · {{count}} gratis bilder kvar",
+    "priceFreeRateLimited": "Gratis · prisgränser gäller",
+    "priceChecking": "Kontrollerar pris...",
+    "priceUnavailable": "Priset är inte tillgängligt — försök igen innan du betalar",
+    "priceStandardTexture": "standardtextur",
+    "priceUsually": "Vanligtvis {{time}}; köerna kan ta längre tid",
+    "useFreeModel_one": "Byt till {{model}} för att använda din {{count}} kostnadsfria bild",
+    "useFreeModel_other": "Byt till {{model}} för att använda dina {{count}} gratis bilder"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planer för varje arbetsflöde",

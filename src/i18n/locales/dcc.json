@@ -2694,5 +2694,16 @@
     "desc": "جنگل میں روشن دن یا نیلی شام",
     "day": "دن",
     "evening": "شام"
+  },
+  "creator": {
+    "freeImagesLeft_one": "मोफत · {{count}} मोफत चित्र बाकी",
+    "freeImagesLeft_other": "मोफत · {{count}} मोफत चित्रं बाकी",
+    "priceFreeRateLimited": "मोफत · वापर मर्यादा लागू",
+    "priceChecking": "किंमत तपासत आहे…",
+    "priceUnavailable": "किंमत उपलब्ध नाही — पैसे देण्याआधी पुन्हा प्रयत्न करा",
+    "priceStandardTexture": "साधं टेक्स्चर",
+    "priceUsually": "साधारणपणे {{time}}; रांगेत जास्त वेळ लागू शकतो",
+    "useFreeModel_one": "तुमचं {{count}} मोफत चित्र वापरण्यासाठी {{model}} निवडा",
+    "useFreeModel_other": "तुमची {{count}} मोफत चित्रं वापरण्यासाठी {{model}} निवडा"
   }
 }

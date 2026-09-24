@@ -3924,5 +3924,16 @@
     "desc": "Usuku olukhanyayo noma kusihlwa okuluhlaza okwesibhakabhaka ehlathini",
     "day": "Emini",
     "evening": "Kusihlwa"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Mahhala · {{count}} isithombe samahhala esisele",
+    "freeImagesLeft_other": "Mahhala · {{count}} izithombe zamahhala ezisele",
+    "priceFreeRateLimited": "Imikhawulo yamanani yamahhala iyasebenza",
+    "priceChecking": "Ihlola inani...",
+    "priceUnavailable": "Inani alitholakali — zama futhi ngaphambi kokukhokha",
+    "priceStandardTexture": "ukuthungwa okuvamile",
+    "priceUsually": "Ngokuvamile {{time}}; imigqa ingathatha isikhathi eside",
+    "useFreeModel_one": "Shintshela ku- {{model}} ukuze usebenzise isithombe sakho samahhala se- {{count}}",
+    "useFreeModel_other": "Shintshela ku- {{model}} ukuze usebenzise izithombe zakho zamahhala ze- {{count}}"
   }
 }

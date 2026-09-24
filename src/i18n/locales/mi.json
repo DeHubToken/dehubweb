@@ -3887,5 +3887,16 @@
     "desc": "He rā mārama, he ahiahi kikorangi rānei i te ngahere",
     "day": "Awatea",
     "evening": "Ahiahi"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Free · {{count}} Whakaahua koreutu i mahue",
+    "freeImagesLeft_other": "Free · {{count}} whakaahua free mahue",
+    "priceFreeRateLimited": "Kore utu · ka whai mana ngā rohe reiti",
+    "priceChecking": "Kei te tirotiro i te utu…",
+    "priceUnavailable": "Kāore e wātea te utu — ngana anō i mua i te utu",
+    "priceStandardTexture": "kakano noa",
+    "priceUsually": "I te nuinga o te wā {{time}}; ka roa ake pea ngā rarangi tatari",
+    "useFreeModel_one": "Whakawhiti ki {{model}} ki te whakamahi i to {{count}} whakaahua koreutu",
+    "useFreeModel_other": "Whakawhiti ki {{model}} ki te whakamahi i to {{count}} whakaahua koreutu"
   }
 }

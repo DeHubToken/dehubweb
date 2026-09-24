@@ -3784,7 +3784,16 @@
     "aiGenerationCommunityAlt": "AI-generálás a DeHub közösségből",
     "close": "Bezárás",
     "toolFlow": "Alkotói folyamat",
-    "toolFlowDesc": "Láncszöveg, referenciák, kép- és videomodellek egy vásznon, futtassa le egy fizetéssel, ossza meg egy linkkel."
+    "toolFlowDesc": "Láncszöveg, referenciák, kép- és videomodellek egy vásznon, futtassa le egy fizetéssel, ossza meg egy linkkel.",
+    "freeImagesLeft_one": "Ingyenes · {{count}} szabad kép maradt",
+    "freeImagesLeft_other": "Ingyenes · {{count}} szabad kép maradt",
+    "priceFreeRateLimited": "Ingyenes · díjkorlátozások érvényesek",
+    "priceChecking": "Ár ellenőrzése…",
+    "priceUnavailable": "Az ár nem érhető el — próbálkozz újra a fizetés előtt",
+    "priceStandardTexture": "szabványos textúra",
+    "priceUsually": "Általában {{time}}; a sorok tovább tarthatnak",
+    "useFreeModel_one": "Válts {{model}} módra {{count}} ingyenes képed használatához",
+    "useFreeModel_other": "Válts {{model}} módba {{count}} ingyenes képeid használatához"
   },
   "pricing": {
     "plansForEveryWorkflow": "Csomagok minden munkafolyamathoz",

@@ -3828,5 +3828,16 @@
     "desc": "ਜੰਗਲ ਵਿੱਚ ਚਮਕਦਾ ਦਿਨ ਜਾਂ ਨੀਲੀ ਧੁੰਦਲੀ ਸ਼ਾਮ",
     "day": "ਦਿਨ",
     "evening": "ਸ਼ਾਮ"
+  },
+  "creator": {
+    "freeImagesLeft_one": "ਮੁਫ਼ਤ · {{count}} ਮੁਫ਼ਤ ਚਿੱਤਰ ਨੂੰ ਛੱਡ ਦਿੱਤਾ",
+    "freeImagesLeft_other": "ਮੁਫਤ · {{count}} ਮੁਫਤ ਚਿੱਤਰ ਬਚੇ",
+    "priceFreeRateLimited": "ਮੁਫਤ · ਦਰ ਦੀਆਂ ਸੀਮਾਵਾਂ ਲਾਗੂ ਹੁੰਦੀਆਂ ਹਨ",
+    "priceChecking": "ਕੀਮਤ ਚੈੱਕ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ...",
+    "priceUnavailable": "ਕੀਮਤ ਉਪਲਬਧ ਨਹੀਂ ਹੈ — ਭੁਗਤਾਨ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
+    "priceStandardTexture": "ਸਟੈਂਡਰਡ ਟੈਕਸਟ",
+    "priceUsually": "ਆਮ ਤੌਰ 'ਤੇ {{time}}; ਕਤਾਰਾਂ ਵਿੱਚ ਵਧੇਰੇ ਸਮਾਂ ਲੱਗ ਸਕਦਾ ਹੈ",
+    "useFreeModel_one": "ਆਪਣੇ {{count}} ਮੁਫਤ ਚਿੱਤਰ ਦੀ ਵਰਤੋਂ ਕਰਨ ਲਈ {{model}} ਤੇ ਸਵਿਚ ਕਰੋ",
+    "useFreeModel_other": "ਆਪਣੇ {{count}} ਮੁਫਤ ਚਿੱਤਰਾਂ ਦੀ ਵਰਤੋਂ ਕਰਨ ਲਈ {{model}} ਤੇ ਸਵਿਚ ਕਰੋ"
   }
 }

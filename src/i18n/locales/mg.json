@@ -3641,7 +3641,16 @@
     "aiGenerationCommunityAlt": "AI avy amin'ny vondrom-piarahamonina DeHub",
     "close": "Mifanakaiky",
     "toolFlow": "Mpamorona Flow",
-    "toolFlowDesc": "Chain text, andinin-tsoratra masina, sary sy ny lahatsary modely amin'ny lamba, mihazakazaka izany amin'ny fandoavam-bola iray, mizara izany amin'ny rohy."
+    "toolFlowDesc": "Chain text, andinin-tsoratra masina, sary sy ny lahatsary modely amin'ny lamba, mihazakazaka izany amin'ny fandoavam-bola iray, mizara izany amin'ny rohy.",
+    "freeImagesLeft_one": "Noafahana · {{count}} free image left",
+    "freeImagesLeft_other": "Maimaimpoana · {{count}} free images left",
+    "priceFreeRateLimited": "Free · tahan'ny fetra ampiharina",
+    "priceChecking": "Manamarina ny vidiny...",
+    "priceUnavailable": "Ny vidiny tsy misy vidiny — Andramo indray alohan'ny handoavana",
+    "priceStandardTexture": "fitsipika mihasimba",
+    "priceUsually": "Matetika {{time}}; mety haharitra ela kokoa ny filaharana",
+    "useFreeModel_one": "Midira ao amin'ny {{model}} 0 mba hampiasanao ny sarinao {{count}} FREE",
+    "useFreeModel_other": "Ampifamadiho amin'ny {{model}} 0 mba hampiasanao ny {{count}} FREE images"
   },
   "pricing": {
     "plansForEveryWorkflow": "Mikasa ny hikolokoloana amin'ny asa rehetra",

@@ -3787,5 +3787,16 @@
     "desc": "वने उज्ज्वलः दिवसः अथवा नीला सन्ध्या",
     "day": "दिवसः",
     "evening": "सन्ध्या"
+  },
+  "creator": {
+    "freeImagesLeft_one": "मुक्त {{count}} मुक्त छवि वाम",
+    "freeImagesLeft_other": "मुक्त {{count}} मुक्त छायाचित्रे",
+    "priceFreeRateLimited": "निः शुल्क - दर सीमाएं लागू",
+    "priceChecking": "किंमतं परीक्षते...",
+    "priceUnavailable": "अप्राप्य मूल्यः पुनः प्राप्ति",
+    "priceStandardTexture": "मानकपाठः",
+    "priceUsually": "प्रायः {{time}}; पङ्क्तौ अधिकः समयः भवितुम् अर्हति",
+    "useFreeModel_one": "भवतः {{count}} निःशुल्कं चित्रम् उपयोक्तुं {{model}} चिनोतु",
+    "useFreeModel_other": "भवतः {{count}} निःशुल्कानि चित्राणि उपयोक्तुं {{model}} चिनोतु"
   }
 }

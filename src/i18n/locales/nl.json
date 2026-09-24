@@ -4032,7 +4032,16 @@
     "aiGenerationCommunityAlt": "AI-generatie van de DeHub-gemeenschap",
     "close": "Sluiten",
     "toolFlow": "Creator Flow",
-    "toolFlowDesc": "Keten van tekst, referenties, beeld- en videomodellen op een canvas, voer het uit in één betaling, deel het met een link."
+    "toolFlowDesc": "Keten van tekst, referenties, beeld- en videomodellen op een canvas, voer het uit in één betaling, deel het met een link.",
+    "freeImagesLeft_one": "Gratis · {{count}} gratis afbeelding over",
+    "freeImagesLeft_other": "Gratis · {{count}} gratis afbeeldingen over",
+    "priceFreeRateLimited": "Gratis · er zijn tarieflimieten van toepassing",
+    "priceChecking": "Prijs controleren...",
+    "priceUnavailable": "Prijs niet beschikbaar — probeer het opnieuw voordat je betaalt",
+    "priceStandardTexture": "standaard textuur",
+    "priceUsually": "Gewoonlijk kunnen {{time}}; wachtrijen langer duren",
+    "useFreeModel_one": "Schakel over naar {{model}} om je {{count}} gratis afbeelding te gebruiken",
+    "useFreeModel_other": "Schakel over naar {{model}} om uw {{count}} gratis afbeeldingen te gebruiken"
   },
   "pricing": {
     "plansForEveryWorkflow": "Plannen voor elke workflow",

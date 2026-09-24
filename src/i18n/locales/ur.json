@@ -3619,7 +3619,16 @@
     "aiGenerationCommunityAlt": "DeHub کمیونٹی سے AI نسل",
     "close": "بند کریں",
     "toolFlow": "خالق کا بہاؤ",
-    "toolFlowDesc": "چین ٹیکسٹ، حوالہ جات، تصویر اور ویڈیو ماڈلز ایک کینوس پر، اسے ایک ادائیگی میں چلائیں، اسے ایک لنک کے ساتھ شیئر کریں ۔"
+    "toolFlowDesc": "چین ٹیکسٹ، حوالہ جات، تصویر اور ویڈیو ماڈلز ایک کینوس پر، اسے ایک ادائیگی میں چلائیں، اسے ایک لنک کے ساتھ شیئر کریں ۔",
+    "freeImagesLeft_one": "مفت · {{count}} مفت تصویر باقی ہے",
+    "freeImagesLeft_other": "مفت · {{count}} مفت تصاویر باقی ہیں",
+    "priceFreeRateLimited": "مفت · شرح کی حدود لاگو ہوتی ہیں",
+    "priceChecking": "قیمت چیک کی جا رہی ہے…",
+    "priceUnavailable": "قیمت دستیاب نہیں ہے — ادائیگی کرنے سے پہلے دوبارہ کوشش کریں",
+    "priceStandardTexture": "معیاری ساخت",
+    "priceUsually": "عام طور پر {{time}}؛ قطاروں میں زیادہ وقت لگ سکتا ہے",
+    "useFreeModel_one": "اپنی {{count}} مفت تصویر استعمال کرنے کے لیے {{model}} پر سوئچ کریں",
+    "useFreeModel_other": "اپنی {{count}} مفت تصاویر استعمال کرنے کے لیے {{model}} پر سوئچ کریں"
   },
   "pricing": {
     "plansForEveryWorkflow": "ہر ورک فلو کے لیے منصوبے",

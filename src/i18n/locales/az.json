@@ -3752,7 +3752,16 @@
     "aiGenerationCommunityAlt": "DeHub cəmiyyətindən AI yaradılışı",
     "close": "Bağla",
     "toolFlow": "Yaradıcı Axını",
-    "toolFlowDesc": "Kətan üzərində mətn, istinad, şəkil və video modelləri zəncirləyin, onu bir ödənişdə icra edin və linklə paylaşın."
+    "toolFlowDesc": "Kətan üzərində mətn, istinad, şəkil və video modelləri zəncirləyin, onu bir ödənişdə icra edin və linklə paylaşın.",
+    "freeImagesLeft_one": "Pulsuz · {{count}} pulsuz şəkil qaldı",
+    "freeImagesLeft_other": "Pulsuz · {{count}} pulsuz şəkil qaldı",
+    "priceFreeRateLimited": "Pulsuz · qiymət limitləri tətbiq olunur",
+    "priceChecking": "Qiymət yoxlanılır...",
+    "priceUnavailable": "Qiymət mövcud deyil — ödəniş etməzdən əvvəl yenidən cəhd edin",
+    "priceStandardTexture": "standart faktura",
+    "priceUsually": "Adətən {{time}}; növbələr daha uzun çəkə bilər",
+    "useFreeModel_one": "{{count}} pulsuz şəklinizdən istifadə etmək üçün {{model}} seçiminə keçin",
+    "useFreeModel_other": "{{count}} pulsuz şəkillərinizdən istifadə etmək üçün {{model}} seçiminə keçin"
   },
   "pricing": {
     "plansForEveryWorkflow": "Hər bir iş axını üçün planlar",

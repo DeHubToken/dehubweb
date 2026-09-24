@@ -3782,7 +3782,16 @@
     "aiGenerationCommunityAlt": "AI-luominen DeHub-yhteisöstä",
     "close": "Sulje",
     "toolFlow": "Tekijän virtaus",
-    "toolFlowDesc": "Ketjuta teksti, referenssit, kuva- ja videomallit kankaalle, suorita se yhdellä maksulla, jaa se linkin avulla."
+    "toolFlowDesc": "Ketjuta teksti, referenssit, kuva- ja videomallit kankaalle, suorita se yhdellä maksulla, jaa se linkin avulla.",
+    "freeImagesLeft_one": "Vapaa · {{count}} vapaa kuva jäljellä",
+    "freeImagesLeft_other": "Ilmaisia · {{count}} ilmaista kuvaa jäljellä",
+    "priceFreeRateLimited": "Ilmaisia · hintarajoituksia sovelletaan",
+    "priceChecking": "Tarkistetaan hintaa...",
+    "priceUnavailable": "Hinta ei saatavilla — yritä uudelleen ennen maksamista",
+    "priceStandardTexture": "vakiokoostumus",
+    "priceUsually": "Yleensä {{time}}; jonot voivat kestää kauemmin",
+    "useFreeModel_one": "Vaihda {{model}} käyttääksesi ilmaista kuvaasi {{count}}",
+    "useFreeModel_other": "Vaihda {{model}} käyttääksesi ilmaisia {{count}} -kuviasi"
   },
   "pricing": {
     "plansForEveryWorkflow": "Suunnitelmat jokaiselle työnkululle",

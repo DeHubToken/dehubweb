@@ -3884,5 +3884,16 @@
     "desc": "Maalin iftiin leh ama fiid buluug ah oo kaynta ah",
     "day": "Maalin",
     "evening": "Fiid"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Free · {{count}} image free tagay",
+    "freeImagesLeft_other": "Free · {{count}} sawirada bilaashka ah ayaa haray",
+    "priceFreeRateLimited": "Free · xadka sicirka khuseeya",
+    "priceChecking": "Qiimaha hubinta…",
+    "priceUnavailable": "Qiimaha aan la heli karin — dib u soo celi ka hor intaadan bixin",
+    "priceStandardTexture": "texture caadiga ah",
+    "priceUsually": "Caadi ahaan {{time}}; safafku wuxuu qaadan karaa waqti dheer",
+    "useFreeModel_one": "Beddel {{model}} si aad u isticmaasho {{count}} sawir bilaash ah",
+    "useFreeModel_other": "Beddel {{model}} si aad u isticmaasho {{count}} sawirada bilaashka ah"
   }
 }

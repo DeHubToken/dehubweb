@@ -3661,7 +3661,16 @@
     "aiGenerationCommunityAlt": "Generare AI din comunitatea DeHub",
     "close": "Închide",
     "toolFlow": "Flux creator",
-    "toolFlowDesc": "Text în lanț, referințe, modele de imagini și video pe o pânză, rulați-o într-o singură plată, partajați-o cu un link."
+    "toolFlowDesc": "Text în lanț, referințe, modele de imagini și video pe o pânză, rulați-o într-o singură plată, partajați-o cu un link.",
+    "freeImagesLeft_one": "Gratuit · {{count}} imagine gratuită rămasă",
+    "freeImagesLeft_other": "Gratuit · {{count}} imagini gratuite rămase",
+    "priceFreeRateLimited": "Se aplică limite pentru tarifele gratuite",
+    "priceChecking": "Se verifică prețul...",
+    "priceUnavailable": "Preț indisponibil — reîncearcă înainte de a plăti",
+    "priceStandardTexture": "textură standard",
+    "priceUsually": "De obicei, cozile {{time}}; pot dura mai mult",
+    "useFreeModel_one": "Comută la {{model}} pentru a utiliza imaginea gratuită {{count}}",
+    "useFreeModel_other": "Comută la {{model}} pentru a utiliza imaginile gratuite {{count}}"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planuri pentru fiecare flux de lucru",

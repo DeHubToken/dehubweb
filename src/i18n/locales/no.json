@@ -3876,5 +3876,16 @@
     "desc": "En lys dag eller en skumringsblå kveld i jungelen",
     "day": "Dag",
     "evening": "Kveld"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Gratis · {{count}} gratis bilde igjen",
+    "freeImagesLeft_other": "Gratis · {{count}} gratis bilder igjen",
+    "priceFreeRateLimited": "Gratis · prisgrenser gjelder",
+    "priceChecking": "Sjekker prisen…",
+    "priceUnavailable": "Pris utilgjengelig – prøv på nytt før du betaler",
+    "priceStandardTexture": "standard tekstur",
+    "priceUsually": "Vanligvis {{time}}; køene kan ta lengre tid",
+    "useFreeModel_one": "Bytt til {{model}} for å bruke ditt gratis {{count}}-bilde",
+    "useFreeModel_other": "Bytt til {{model}} for å bruke dine {{count}} gratisbilder"
   }
 }

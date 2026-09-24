@@ -3839,7 +3839,16 @@
     "aiGenerationCommunityAlt": "Generowanie AI ze społeczności DeHub",
     "close": "Zamknij",
     "toolFlow": "Przepływ twórcy",
-    "toolFlowDesc": "Łańcuchowy tekst, referencje, modele obrazu i wideo na płótnie, uruchom je w jednej płatności, udostępnij za pomocą linku."
+    "toolFlowDesc": "Łańcuchowy tekst, referencje, modele obrazu i wideo na płótnie, uruchom je w jednej płatności, udostępnij za pomocą linku.",
+    "freeImagesLeft_one": "Pozostał darmowy obraz · {{count}}",
+    "freeImagesLeft_other": "Pozostało bezpłatnych obrazów: · {{count}}",
+    "priceFreeRateLimited": "Obowiązują bezpłatne · limity stawek",
+    "priceChecking": "Sprawdzam cenę…",
+    "priceUnavailable": "Cena niedostępna — ponów próbę przed dokonaniem płatności",
+    "priceStandardTexture": "tekstura standardowa",
+    "priceUsually": "Zwykle {{time}}; kolejki mogą trwać dłużej",
+    "useFreeModel_one": "Przełącz na {{model}}, aby użyć swojego {{count}} bezpłatnego obrazu",
+    "useFreeModel_other": "Przełącz się na {{model}}, aby korzystać z {{count}} darmowych obrazów"
   },
   "pricing": {
     "plansForEveryWorkflow": "Plany dla każdego przepływu pracy",

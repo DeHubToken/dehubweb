@@ -3500,7 +3500,16 @@
     "aiGenerationAlt": "ການສ້າງ AI",
     "aiGenerationCommunityAlt": "ການສ້າງ AI ຈາກຊຸມຊົນ DeHub",
     "close": "ປິດ",
-    "toolFlowDesc": "ເຊື່ອມຕໍ່ຂໍ້ຄວາມ, ການອ້າງອີງ, ຮູບແບບຮູບພາບ ແລະວິດີໂອໃນຜ້າໃບ, ດຳເນີນການດ້ວຍການຈ່າຍເງິນຄັ້ງດຽວ, ແບ່ງປັນດ້ວຍລິ້ງ."
+    "toolFlowDesc": "ເຊື່ອມຕໍ່ຂໍ້ຄວາມ, ການອ້າງອີງ, ຮູບແບບຮູບພາບ ແລະວິດີໂອໃນຜ້າໃບ, ດຳເນີນການດ້ວຍການຈ່າຍເງິນຄັ້ງດຽວ, ແບ່ງປັນດ້ວຍລິ້ງ.",
+    "freeImagesLeft_one": "ຟຣີ · {{count}} ຮູບພາບຟຣີຊ້າຍ",
+    "freeImagesLeft_other": "ຟຣີ · {{count}} ຮູບພາບຟຣີທີ່ຍັງເຫຼືອ",
+    "priceFreeRateLimited": "FREE · ຂໍ້ ຈໍາ ກັດອັດຕາການ ນໍາ ໃຊ້",
+    "priceChecking": "ກຳລັງກວດສອບລາຄາ...",
+    "priceUnavailable": "ລາຄາບໍ່ສາມາດໃຊ້ໄດ້ - ລອງໃໝ່ກ່ອນຈ່າຍ",
+    "priceStandardTexture": "ໂຄງສ້າງມາດຕະຖານ",
+    "priceUsually": "ປົກກະຕິແລ້ວ {{time}}; ຄິວອາດຈະໃຊ້ເວລາດົນກວ່າ",
+    "useFreeModel_one": "ປ່ຽນເປັນ {{model}} ເພື່ອໃຊ້ {{count}} ຮູບພາບຟຣີຂອງທ່ານ",
+    "useFreeModel_other": "ປ່ຽນເປັນ {{model}} ເພື່ອໃຊ້ {{count}} ຮູບພາບຟຣີຂອງທ່ານ"
   },
   "pricing": {
     "plansForEveryWorkflow": "ແຜນສຳລັບທຸກໆການເຮັດວຽກ",

@@ -3803,5 +3803,16 @@
     "desc": "نهار مشمس أو مسا أزرق هادي بالغابة",
     "day": "نهار",
     "evening": "مسا"
+  },
+  "creator": {
+    "freeImagesLeft_one": "مجاني · {{count}} صورة مجانية متبقية",
+    "freeImagesLeft_other": "مجاني · {{count}} صور مجانية متبقية",
+    "priceFreeRateLimited": "مجاني · تطبق حدود الاستخدام",
+    "priceChecking": "جاري التحقق من السعر…",
+    "priceUnavailable": "السعر غير متوفر — حاول مرة أخرى قبل الدفع",
+    "priceStandardTexture": "نسيج قياسي",
+    "priceUsually": "عادةً {{time}}؛ قد تستغرق قوائم الانتظار وقتًا أطول",
+    "useFreeModel_one": "غيّر إلى {{model}} لاستخدام صورك المجانية {{count}}",
+    "useFreeModel_other": "غيّر إلى {{model}} لاستخدام صورك المجانية {{count}}"
   }
 }

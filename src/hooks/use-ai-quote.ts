@@ -72,3 +72,28 @@ export function formatDhb(amount: number): string {
   if (amount >= 1_000) return `${(amount / 1_000).toFixed(1)}K`;
   return Math.round(amount).toLocaleString();
 }
+
+/**
+ * Free starter images left for the signed-in wallet, and the models they run
+ * on. The server holds the count and claims one per job; this only decides
+ * whether the studio skips the paywall.
+ */
+export function useFreeImages(wallet: string | null | undefined) {
+  const query = useQuery({
+    queryKey: ['ai-free', wallet?.toLowerCase()],
+    queryFn: async () => {
+      const { invokeAi } = await import('@/lib/ai-invoke');
+      const { data, error } = await invokeAi<{ remaining: number; limit: number; models: string[] }>('ai-free', { body: {} });
+      if (error || !data) throw error ?? new Error('free images unavailable');
+      return data;
+    },
+    enabled: !!wallet,
+    staleTime: 60_000,
+  });
+  return {
+    remaining: query.data?.remaining ?? 0,
+    limit: query.data?.limit ?? 0,
+    models: query.data?.models ?? [],
+    refetch: query.refetch,
+  };
+}
