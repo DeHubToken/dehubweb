@@ -3723,6 +3723,78 @@
       "hint": "Mlaku ing piranthimu: gratis, pribadi, ora ana sing diunggah. Nalika pisanan nganggo, model AI diundhuh dhisik, sabanjure mung butuh sawetara detik.",
       "done": "Latar mburi wis dibusak.",
       "failed": "Ora bisa mbusak latar mburi. Coba gambar liya, utawa peramban kaya Chrome utawa Edge."
+    },
+    "templates": {
+      "heading": "Cithakan",
+      "hint": "Pilih siji kanggo miwiti. Saben tembung, werna lan foto bisa diowahi, utawa njaluk AI ngowahi kanggo sampeyan.",
+      "use": "Gunakake cithakan {{name}}",
+      "replaceConfirm": "Ganti desain saiki nganggo cithakan iki? Sampeyan bisa mbatalake.",
+      "sale": {
+        "title": "Diskon Mangsa Panas",
+        "subtitle": "Nganti 50% · Mung minggu iki"
+      },
+      "quote": {
+        "title": "Kertu kutipan",
+        "body": "Gawe prasaja, nanging migunani.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Ora bakal percaya",
+        "badge": "Anyar"
+      },
+      "story": {
+        "title": "Rilis anyar",
+        "cta": "Geser munggah kanggo tuku"
+      },
+      "event": {
+        "title": "Wengi musik live",
+        "date": "Jemuwah jam 8 bengi",
+        "place": "The Warehouse, tengah kutha"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Episode 12 · Wis metu"
+      },
+      "announcement": {
+        "kicker": "Enggal teka",
+        "title": "Kabar gedhe arep teka"
+      },
+      "crypto": {
+        "title": "Update rega",
+        "change": "+42% minggu iki"
+      },
+      "birthday": {
+        "title": "Sugeng Ambal Warsa",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Nalika kode mlaku",
+        "bottom": "Pas nyoba pisanan"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Lanskap",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Vertikal",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Kothak",
+      "squareDetail": "Kiriman feed",
+      "portrait": "Potret",
+      "portraitDetail": "Instagram",
+      "canvas": "Kanvas",
+      "resolution": "Resolusi",
+      "frameRate": "Tingkat pigura",
+      "background": "Latar",
+      "backgroundSwatch": "Latar {{hex}}",
+      "customBackground": "Werna latar khusus",
+      "emptyTitle": "Kaca iki kosong",
+      "emptyBody": "Miwiti saka cithakan, aset gratis, file dhewe, utawa takon wae marang AI.",
+      "browseAssets": "Deleng aset gratis",
+      "importMedia": "Impor media",
+      "generateClip": "Gawe klip",
+      "addHeadline": "Tambah judhul"
     }
   },
   "fractions": {

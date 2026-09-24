@@ -5825,6 +5825,78 @@
       "hint": "Rulează pe dispozitivul tău: gratuit, privat, nu se încarcă nimic. La prima utilizare se descarcă modelul AI, apoi durează doar câteva secunde.",
       "done": "Fundal eliminat.",
       "failed": "Fundalul nu a putut fi eliminat. Încearcă altă imagine sau un browser precum Chrome ori Edge."
+    },
+    "templates": {
+      "heading": "Șabloane",
+      "hint": "Alege unul ca să începi. Fiecare cuvânt, culoare și fotografie se poate schimba, sau cere-i AI-ului să o facă pentru tine.",
+      "use": "Folosește șablonul {{name}}",
+      "replaceConfirm": "Înlocuiești designul actual cu acest șablon? Poți anula.",
+      "sale": {
+        "title": "Reduceri de vară",
+        "subtitle": "Până la 50% reducere · Doar weekendul acesta"
+      },
+      "quote": {
+        "title": "Card cu citat",
+        "body": "Fă-o simplu, dar semnificativ.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Nu-ți vine să crezi",
+        "badge": "Nou"
+      },
+      "story": {
+        "title": "Colecție nouă",
+        "cta": "Glisează în sus pentru cumpărături"
+      },
+      "event": {
+        "title": "Seară de muzică live",
+        "date": "Vineri, ora 20",
+        "place": "The Warehouse, centru"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Episodul 12 · Disponibil acum"
+      },
+      "announcement": {
+        "kicker": "În curând",
+        "title": "Vin vești mari"
+      },
+      "crypto": {
+        "title": "Actualizare preț",
+        "change": "+42% săptămâna asta"
+      },
+      "birthday": {
+        "title": "La mulți ani",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Când codul merge",
+        "bottom": "Din prima încercare"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Peisaj",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Vertical",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Pătrat",
+      "squareDetail": "Postare în feed",
+      "portrait": "Portret",
+      "portraitDetail": "Instagram",
+      "canvas": "Pânză",
+      "resolution": "Rezoluție",
+      "frameRate": "Rată de cadre",
+      "background": "Fundal",
+      "backgroundSwatch": "Fundal {{hex}}",
+      "customBackground": "Culoare de fundal personalizată",
+      "emptyTitle": "Pagina e goală",
+      "emptyBody": "Pornește de la un șablon, o resursă gratuită, fișierul tău sau pur și simplu întreabă AI-ul.",
+      "browseAssets": "Răsfoiește resurse gratuite",
+      "importMedia": "Importă media",
+      "generateClip": "Generează un clip",
+      "addHeadline": "Adaugă un titlu"
     }
   },
   "footer": {

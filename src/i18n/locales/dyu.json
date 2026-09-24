@@ -3597,6 +3597,78 @@
       "hint": "A bɛ baara kɛ i ka minɛn kan: a ye fu ye, a ye gundo ye, foyi tɛ ci. Siɲɛ fɔlɔ, AI modɛli bɛ jigi, o kɔfɛ a bɛ segɔni dama dɔrɔn ta.",
       "done": "Kɔfɛla bɔra.",
       "failed": "Kɔfɛla ma se ka bɔ. Ja wɛrɛ lajɛ, walima navigatɛri i n'a fɔ Chrome walima Edge."
+    },
+    "templates": {
+      "heading": "Modɛliw",
+      "hint": "Kelen sugandi ka daminɛ. Kuma, kulɛri ani foto bɛɛ bɛ se ka yɛlɛma, walima a fɔ AI ye a ka a yɛlɛma i ye.",
+      "use": "{{name}} modɛli ta",
+      "replaceConfirm": "I ka desɛn sisan bila ka nin modɛli bila a nɔ na? I bɛ se ka a segin.",
+      "sale": {
+        "title": "Tilema sanni",
+        "subtitle": "Fo 50% dɔgɔyali · Nin dɔgɔkun laban dɔrɔn"
+      },
+      "quote": {
+        "title": "Kuma kɔrɔ karti",
+        "body": "A kɛ nɔgɔya la, nka a ka kɔrɔ sɔrɔ.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "I tɛna nin da",
+        "badge": "Kura"
+      },
+      "story": {
+        "title": "Fɛn kura sera",
+        "cta": "A yɛlɛn sanfɛ ka san"
+      },
+      "event": {
+        "title": "Fɔli su",
+        "date": "Juma, su 8",
+        "place": "The Warehouse, dugu cɛma"
+      },
+      "podcast": {
+        "title": "Dabɔbaga Show",
+        "episode": "Tila 12 · A bɔra"
+      },
+      "announcement": {
+        "kicker": "A bɛ na sɔɔni",
+        "title": "Kibaru ba bɛ na"
+      },
+      "crypto": {
+        "title": "Sɔngɔ kura",
+        "change": "+42% nin dɔgɔkun"
+      },
+      "birthday": {
+        "title": "I ka bɔnda san diya",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Mɛmu",
+        "top": "Ni kode ye baara kɛ",
+        "bottom": "Fɔlɔ fɔlɔ la"
+      }
+    },
+    "design": {
+      "format": "Cogoya",
+      "landscape": "Jɛngɛnen",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Jɔlen",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Karela",
+      "squareDetail": "Feed bila",
+      "portrait": "Jɔlen misɛn",
+      "portraitDetail": "Instagram",
+      "canvas": "Kanfa",
+      "resolution": "Jɛya",
+      "frameRate": "Filimu teliya",
+      "background": "Kɔfɛla",
+      "backgroundSwatch": "Kɔfɛla {{hex}}",
+      "customBackground": "Kɔfɛla kulɛri i yɛrɛ ta",
+      "emptyTitle": "Ɲɛ in lankolon lo",
+      "emptyBody": "A daminɛ modɛli la, fɛn fu dɔ la, i yɛrɛ ka fisiye la, walima AI ɲininka.",
+      "browseAssets": "Fɛn fuw lajɛ",
+      "importMedia": "Media don",
+      "generateClip": "Klipu dɔ dilan",
+      "addHeadline": "Kuntilenna fara a kan"
     }
   },
   "fractions": {

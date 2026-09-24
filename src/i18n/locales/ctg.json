@@ -3328,6 +3328,78 @@
       "hint": "তোঁয়ার ডিভাইসত চলে: ফ্রি, প্রাইভেট, কিছু আপলোড ন অয়। পইলাবার AI মডেল ডাউনলোড অয়, তারপর কয়েক সেকেন্ড লাগে।",
       "done": "ব্যাকগ্রাউন্ড সরাই দিয়ে।",
       "failed": "ব্যাকগ্রাউন্ড সরান ন গেল। আরেকখান ছবি, না অইলে Chrome বা Edge এর মতন ব্রাউজার দি চেষ্টা গরো।"
+    },
+    "templates": {
+      "heading": "টেমপ্লেট",
+      "hint": "শুরু গরিবার লাই একখান বাছো। প্রতিটা শব্দ, রং আর ছবি বদলাইত পারিবা, নইলে AI-রে কও বদলাই দিত।",
+      "use": "{{name}} টেমপ্লেট লও",
+      "replaceConfirm": "এই টেমপ্লেট দি এহনর ডিজাইন বদলাইবানি? আবার ফিরাই আনিত পারিবা।",
+      "sale": {
+        "title": "গরমর সেল",
+        "subtitle": "৫০% পর্যন্ত ছাড় · খালি এই সপ্তাহান্তে"
+      },
+      "quote": {
+        "title": "উক্তি কার্ড",
+        "body": "সোজা রাখো, কিন্তু দামি।",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "বিশ্বাস ন গরিবা",
+        "badge": "নয়া"
+      },
+      "story": {
+        "title": "নয়া আইস্সে",
+        "cta": "কিনিবার লাই উপরে টানো"
+      },
+      "event": {
+        "title": "লাইভ গানর রাইত",
+        "date": "শুক্কুরবার রাইত ৮টা",
+        "place": "The Warehouse, শহরর মাঝে"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "পর্ব ১২ · আইস্সে"
+      },
+      "announcement": {
+        "kicker": "শিগগির আইয়ের",
+        "title": "বড় খবর আইয়ের"
+      },
+      "crypto": {
+        "title": "দামর খবর",
+        "change": "এই সপ্তাহত +৪২%"
+      },
+      "birthday": {
+        "title": "শুভ জন্মদিন",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "মিম",
+        "top": "যেতে কোড চলে",
+        "bottom": "পয়লা চেষ্টাতেই"
+      }
+    },
+    "design": {
+      "format": "ফরম্যাট",
+      "landscape": "আড়াআড়ি",
+      "landscapeDetail": "YouTube, ওয়েব",
+      "vertical": "খাড়া",
+      "verticalDetail": "Shorts, Reels",
+      "square": "চারকোনা",
+      "squareDetail": "ফিড পোস্ট",
+      "portrait": "লম্বা",
+      "portraitDetail": "Instagram",
+      "canvas": "ক্যানভাস",
+      "resolution": "রেজোলিউশন",
+      "frameRate": "ফ্রেম রেট",
+      "background": "পিছের রং",
+      "backgroundSwatch": "পিছের রং {{hex}}",
+      "customBackground": "নিজর পছন্দর পিছের রং",
+      "emptyTitle": "পাতাখান খালি",
+      "emptyBody": "টেমপ্লেট, ফ্রি জিনিস, নিজর ফাইল দি শুরু গরো, নইলে খালি AI-রে কও।",
+      "browseAssets": "ফ্রি জিনিস চাও",
+      "importMedia": "মিডিয়া আনো",
+      "generateClip": "ক্লিপ বানাও",
+      "addHeadline": "শিরোনাম যোগ গরো"
     }
   },
   "post": {

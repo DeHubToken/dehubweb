@@ -3766,6 +3766,78 @@
       "hint": "Qampa equipoykipi llamk’an: mana qullqiyuq, pakasqa, manam imapas wicharichikunchu. Ñawpaq kutipi AI modelota uraykachin, chaymanta pisi segundollapi.",
       "done": "Qhipa pampa qichusqa.",
       "failed": "Manam qhipa pampata qichuyta atikunchu. Huk rikchayta, utaq Chrome utaq Edge hina browserta llamk’achiy."
+    },
+    "templates": {
+      "heading": "Plantillakuna",
+      "hint": "Hukta akllay qallarinaykipaq. Sapa simita, llimpita, fototapas tikrayta atinki, utaq IA-ta mañakuy qampaq tikrananpaq.",
+      "use": "{{name}} plantillata llamk'achiy",
+      "replaceConfirm": "Kunan diseñota kay plantillawan tikraykuchikuchu? Kutichiyta atinki.",
+      "sale": {
+        "title": "Ruphay mit'a qhatu",
+        "subtitle": "50% kama pisiyan · Kay semana tukukuypi"
+      },
+      "quote": {
+        "title": "Rimay tarjeta",
+        "body": "Ch'uyata ruray, ichaqa chaniyuqta.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Mana creerankichu",
+        "badge": "Musuq"
+      },
+      "story": {
+        "title": "Musuq lluqsiy",
+        "cta": "Rantinaykipaq wichayman aysay"
+      },
+      "event": {
+        "title": "Kawsaq takiy tuta",
+        "date": "Viernes tutapi 8",
+        "place": "The Warehouse, llaqta chawpi"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Episodio 12 · Kunan lluqsirqan"
+      },
+      "announcement": {
+        "kicker": "Qayllaña",
+        "title": "Hatun willakuy hamushan"
+      },
+      "crypto": {
+        "title": "Chanin musuqchay",
+        "change": "+42% kay semanapi"
+      },
+      "birthday": {
+        "title": "Sumaq p'unchawniyki",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Codigo llamk'aqtin",
+        "bottom": "Ñawpaq kaqpi"
+      }
+    },
+    "design": {
+      "format": "Formato",
+      "landscape": "Kinray",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Sayasqa",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Tawa k'uchu",
+      "squareDetail": "Feed willakuy",
+      "portrait": "Retrato",
+      "portraitDetail": "Instagram",
+      "canvas": "Lienzo",
+      "resolution": "Resolución",
+      "frameRate": "Frame rate",
+      "background": "Qhipa pampa",
+      "backgroundSwatch": "Qhipa pampa {{hex}}",
+      "customBackground": "Munasqa qhipa pampa llimpi",
+      "emptyTitle": "Rapiqa ch'usaqmi",
+      "emptyBody": "Plantillawan, mana qullqiyuq recursowan, kikiykiq archivoykiwan qallariy, utaq IA-ta tapuy.",
+      "browseAssets": "Mana qullqiyuq recursokunata qhaway",
+      "importMedia": "Mediata apamuy",
+      "generateClip": "Klipta ruray",
+      "addHeadline": "Umalliq qillqata yapay"
     }
   },
   "fractions": {

@@ -3659,6 +3659,78 @@
       "hint": "तोहर डिवाइस पर चलऽ हे: मुफ्त, निजी, कुछो अपलोड न होवऽ हे। पहिला बेर AI मॉडल डाउनलोड होवऽ हे, फिर कुछ सेकेंड लगऽ हे।",
       "done": "बैकग्राउंड हटा देल गेल।",
       "failed": "बैकग्राउंड न हट सकल। दोसर फोटो आजमावऽ, या Chrome या Edge जइसन ब्राउज़र।"
+    },
+    "templates": {
+      "heading": "टेम्पलेट",
+      "hint": "सुरू करे ला एगो चुनीं। हर शब्द, रंग आउ फोटो बदल सकऽ हीं, या AI से बदलवा लीं।",
+      "use": "{{name}} टेम्पलेट इस्तेमाल करीं",
+      "replaceConfirm": "अभी के डिज़ाइन के ई टेम्पलेट से बदल दीं? वापस ले सकऽ हीं।",
+      "sale": {
+        "title": "समर सेल",
+        "subtitle": "50% तक छूट · खाली ई वीकेंड"
+      },
+      "quote": {
+        "title": "कोट कार्ड",
+        "body": "सिंपल रखीं, पर दमदार।",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "बिस्वास न होतो!",
+        "badge": "नया"
+      },
+      "story": {
+        "title": "नया माल आयल",
+        "cta": "ऊपर स्वाइप करके खरीदीं"
+      },
+      "event": {
+        "title": "लाइव म्यूज़िक नाइट",
+        "date": "सुक्कर रात 8 बजे",
+        "place": "द वेयरहाउस, सहर बीच"
+      },
+      "podcast": {
+        "title": "द क्रिएटर शो",
+        "episode": "एपिसोड 12 · अब आ गेल"
+      },
+      "announcement": {
+        "kicker": "जल्दिए आ रहल",
+        "title": "बड़का खबर आ रहल"
+      },
+      "crypto": {
+        "title": "दाम अपडेट",
+        "change": "ई हफ्ता +42%"
+      },
+      "birthday": {
+        "title": "जनमदिन मुबारक",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "मीम",
+        "top": "जब कोड चल जाय",
+        "bottom": "पहिले बार में"
+      }
+    },
+    "design": {
+      "format": "फॉर्मेट",
+      "landscape": "लैंडस्केप",
+      "landscapeDetail": "YouTube, वेब",
+      "vertical": "वर्टिकल",
+      "verticalDetail": "Shorts, Reels",
+      "square": "चौकोर",
+      "squareDetail": "फीड पोस्ट",
+      "portrait": "पोर्ट्रेट",
+      "portraitDetail": "Instagram",
+      "canvas": "कैनवास",
+      "resolution": "रिज़ॉल्यूशन",
+      "frameRate": "फ्रेम रेट",
+      "background": "बैकग्राउंड",
+      "backgroundSwatch": "बैकग्राउंड {{hex}}",
+      "customBackground": "अपन बैकग्राउंड रंग",
+      "emptyTitle": "पन्ना खाली हे",
+      "emptyBody": "टेम्पलेट, फ्री एसेट, अपन फाइल से सुरू करीं, या बस AI से पूछीं।",
+      "browseAssets": "फ्री एसेट देखीं",
+      "importMedia": "मीडिया इंपोर्ट करीं",
+      "generateClip": "क्लिप बनाईं",
+      "addHeadline": "हेडलाइन जोड़ीं"
     }
   },
   "fractions": {

@@ -5816,6 +5816,78 @@
       "hint": "Tumatakbo sa iyong device: libre, pribado, walang ina-upload. Sa unang gamit, ida-download ang AI model, pagkatapos ay ilang segundo lang.",
       "done": "Naalis na ang background.",
       "failed": "Hindi maalis ang background. Subukan ang ibang larawan, o browser tulad ng Chrome o Edge."
+    },
+    "templates": {
+      "heading": "Mga template",
+      "hint": "Pumili ng isa para magsimula. Mababago ang bawat salita, kulay at larawan, o ipagawa ito sa AI.",
+      "use": "Gamitin ang {{name}} template",
+      "replaceConfirm": "Palitan ang kasalukuyang disenyo ng template na ito? Puwede mo itong i-undo.",
+      "sale": {
+        "title": "Summer Sale",
+        "subtitle": "Hanggang 50% off · Ngayong weekend lang"
+      },
+      "quote": {
+        "title": "Quote card",
+        "body": "Gawing simple, pero may saysay.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Hindi ka maniniwala",
+        "badge": "Bago"
+      },
+      "story": {
+        "title": "Bagong labas",
+        "cta": "Mag-swipe up para mamili"
+      },
+      "event": {
+        "title": "Gabi ng live music",
+        "date": "Biyernes, 8 PM",
+        "place": "The Warehouse, downtown"
+      },
+      "podcast": {
+        "title": "Ang Creator Show",
+        "episode": "Episode 12 · Labas na"
+      },
+      "announcement": {
+        "kicker": "Malapit na",
+        "title": "May malaking balita"
+      },
+      "crypto": {
+        "title": "Update sa presyo",
+        "change": "+42% ngayong linggo"
+      },
+      "birthday": {
+        "title": "Maligayang Kaarawan",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Kapag gumana ang code",
+        "bottom": "Sa unang subok"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Landscape",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Vertical",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Square",
+      "squareDetail": "Post sa feed",
+      "portrait": "Portrait",
+      "portraitDetail": "Instagram",
+      "canvas": "Canvas",
+      "resolution": "Resolusyon",
+      "frameRate": "Frame rate",
+      "background": "Background",
+      "backgroundSwatch": "Background {{hex}}",
+      "customBackground": "Custom na kulay ng background",
+      "emptyTitle": "Walang laman ang page",
+      "emptyBody": "Magsimula sa template, libreng asset, sarili mong file, o tanungin lang ang AI.",
+      "browseAssets": "Mag-browse ng libreng asset",
+      "importMedia": "Mag-import ng media",
+      "generateClip": "Gumawa ng clip",
+      "addHeadline": "Magdagdag ng headline"
     }
   },
   "walletSelector": {

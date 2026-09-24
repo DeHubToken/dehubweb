@@ -6058,6 +6058,78 @@
       "hint": "S’exécute sur votre appareil : gratuit, privé, rien n’est envoyé. La première utilisation télécharge le modèle d’IA, ensuite cela prend quelques secondes.",
       "done": "Arrière-plan supprimé.",
       "failed": "Impossible de supprimer l’arrière-plan. Essayez une autre image ou un navigateur comme Chrome ou Edge."
+    },
+    "templates": {
+      "heading": "Modèles",
+      "hint": "Choisissez-en un pour commencer. Chaque mot, couleur et photo peut être modifié, ou demandez à l'IA de le faire pour vous.",
+      "use": "Utiliser le modèle {{name}}",
+      "replaceConfirm": "Remplacer le design actuel par ce modèle ? Vous pourrez annuler.",
+      "sale": {
+        "title": "Soldes d'été",
+        "subtitle": "Jusqu'à -50 % · Ce week-end seulement"
+      },
+      "quote": {
+        "title": "Carte citation",
+        "body": "Faites simple, mais marquant.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Vous n'allez pas y croire",
+        "badge": "Nouveau"
+      },
+      "story": {
+        "title": "Nouveautés",
+        "cta": "Glissez pour acheter"
+      },
+      "event": {
+        "title": "Soirée live",
+        "date": "Vendredi 20 h",
+        "place": "The Warehouse, centre-ville"
+      },
+      "podcast": {
+        "title": "Le Créa Show",
+        "episode": "Épisode 12 · Disponible"
+      },
+      "announcement": {
+        "kicker": "Bientôt",
+        "title": "Une grande annonce arrive"
+      },
+      "crypto": {
+        "title": "Point prix",
+        "change": "+42 % cette semaine"
+      },
+      "birthday": {
+        "title": "Joyeux anniversaire",
+        "name": "Sam !"
+      },
+      "meme": {
+        "title": "Mème",
+        "top": "Quand le code marche",
+        "bottom": "Du premier coup"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Paysage",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Vertical",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Carré",
+      "squareDetail": "Publication",
+      "portrait": "Portrait",
+      "portraitDetail": "Instagram",
+      "canvas": "Toile",
+      "resolution": "Résolution",
+      "frameRate": "Fréquence d'images",
+      "background": "Arrière-plan",
+      "backgroundSwatch": "Arrière-plan {{hex}}",
+      "customBackground": "Couleur d'arrière-plan personnalisée",
+      "emptyTitle": "La page est vide",
+      "emptyBody": "Partez d'un modèle, d'une ressource gratuite, de votre propre fichier, ou demandez simplement à l'IA.",
+      "browseAssets": "Parcourir les ressources gratuites",
+      "importMedia": "Importer des médias",
+      "generateClip": "Générer un clip",
+      "addHeadline": "Ajouter un titre"
     }
   }
 }

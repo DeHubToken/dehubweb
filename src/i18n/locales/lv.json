@@ -6035,6 +6035,78 @@
       "hint": "Darbojas tavā ierīcē: bez maksas, privāti, nekas netiek augšupielādēts. Pirmajā reizē tiek lejupielādēts AI modelis, pēc tam tas aizņem dažas sekundes.",
       "done": "Fons noņemts.",
       "failed": "Neizdevās noņemt fonu. Izmēģini citu attēlu vai pārlūku, piemēram, Chrome vai Edge."
+    },
+    "templates": {
+      "heading": "Veidnes",
+      "hint": "Izvēlies vienu, lai sāktu. Katru vārdu, krāsu un foto var mainīt, vai palūdz, lai AI to izdara tavā vietā.",
+      "use": "Izmantot veidni {{name}}",
+      "replaceConfirm": "Aizstāt pašreizējo dizainu ar šo veidni? To var atsaukt.",
+      "sale": {
+        "title": "Vasaras izpārdošana",
+        "subtitle": "Līdz -50% · Tikai šajā nedēļas nogalē"
+      },
+      "quote": {
+        "title": "Citāta kartīte",
+        "body": "Vienkārši, bet nozīmīgi.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Tu tam neticēsi",
+        "badge": "Jauns"
+      },
+      "story": {
+        "title": "Jaunumi",
+        "cta": "Velc augšup, lai iepirktos"
+      },
+      "event": {
+        "title": "Dzīvās mūzikas vakars",
+        "date": "Piektdien 20:00",
+        "place": "The Warehouse, centrā"
+      },
+      "podcast": {
+        "title": "Radītāju šovs",
+        "episode": "12. epizode · Jau klāt"
+      },
+      "announcement": {
+        "kicker": "Drīzumā",
+        "title": "Tuvojas lielas ziņas"
+      },
+      "crypto": {
+        "title": "Cenu jaunumi",
+        "change": "+42% šonedēļ"
+      },
+      "birthday": {
+        "title": "Daudz laimes dzimšanas dienā",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Mēms",
+        "top": "Kad kods strādā",
+        "bottom": "No pirmās reizes"
+      }
+    },
+    "design": {
+      "format": "Formāts",
+      "landscape": "Ainava",
+      "landscapeDetail": "YouTube, tīmeklis",
+      "vertical": "Vertikāls",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Kvadrāts",
+      "squareDetail": "Plūsmas ieraksts",
+      "portrait": "Portrets",
+      "portraitDetail": "Instagram",
+      "canvas": "Audekls",
+      "resolution": "Izšķirtspēja",
+      "frameRate": "Kadru ātrums",
+      "background": "Fons",
+      "backgroundSwatch": "Fons {{hex}}",
+      "customBackground": "Pielāgota fona krāsa",
+      "emptyTitle": "Lapa ir tukša",
+      "emptyBody": "Sāc ar veidni, bezmaksas resursu, savu failu vai vienkārši pajautā AI.",
+      "browseAssets": "Pārlūkot bezmaksas resursus",
+      "importMedia": "Importēt multividi",
+      "generateClip": "Ģenerēt klipu",
+      "addHeadline": "Pievienot virsrakstu"
     }
   }
 }

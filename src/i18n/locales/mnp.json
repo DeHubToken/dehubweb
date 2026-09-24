@@ -3602,6 +3602,78 @@
       "hint": "在你的设备上运行：免费、私密，不上传任何内容。首次使用会下载 AI 模型，之后只需几秒钟。",
       "done": "背景已移除。",
       "failed": "无法移除背景。请换一张图片，或使用 Chrome、Edge 等浏览器。"
+    },
+    "templates": {
+      "heading": "模板",
+      "hint": "挑一个开始。每个字、颜色和相片都能改，也能叫 AI 帮你改。",
+      "use": "用{{name}}模板",
+      "replaceConfirm": "用这个模板换掉现在的设计？可以撤回。",
+      "sale": {
+        "title": "夏季大促",
+        "subtitle": "低至五折 · 就这个周末"
+      },
+      "quote": {
+        "title": "语录卡片",
+        "body": "简单，但有分量。",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "你绝对想不到",
+        "badge": "新"
+      },
+      "story": {
+        "title": "新货到了",
+        "cta": "上滑去买"
+      },
+      "event": {
+        "title": "现场音乐夜",
+        "date": "礼拜五晚8点",
+        "place": "市中心 The Warehouse"
+      },
+      "podcast": {
+        "title": "创作者秀",
+        "episode": "第12期 · 已上线"
+      },
+      "announcement": {
+        "kicker": "马上就来",
+        "title": "大消息要来了"
+      },
+      "crypto": {
+        "title": "价格速报",
+        "change": "本周 +42%"
+      },
+      "birthday": {
+        "title": "生日快乐",
+        "name": "Sam！"
+      },
+      "meme": {
+        "title": "表情包",
+        "top": "代码跑通的时候",
+        "bottom": "一次就成"
+      }
+    },
+    "design": {
+      "format": "格式",
+      "landscape": "横屏",
+      "landscapeDetail": "YouTube、网页",
+      "vertical": "竖屏",
+      "verticalDetail": "Shorts、Reels",
+      "square": "方形",
+      "squareDetail": "动态帖子",
+      "portrait": "竖版",
+      "portraitDetail": "Instagram",
+      "canvas": "画布",
+      "resolution": "分辨率",
+      "frameRate": "帧率",
+      "background": "背景",
+      "backgroundSwatch": "背景 {{hex}}",
+      "customBackground": "自定义背景颜色",
+      "emptyTitle": "页面是空的",
+      "emptyBody": "从模板、免费素材、自己的文件开始，或者直接问 AI。",
+      "browseAssets": "浏览免费素材",
+      "importMedia": "导入媒体",
+      "generateClip": "生成片段",
+      "addHeadline": "添加标题"
     }
   },
   "post": {

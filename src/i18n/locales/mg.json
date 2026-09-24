@@ -5712,6 +5712,78 @@
       "hint": "Mandeha ao amin'ny fitaovanao: maimaim-poana, tsiambaratelo, tsy misy alefa any ivelany. Amin'ny fampiasana voalohany dia misintona ny modely AI, avy eo segondra vitsy monja.",
       "done": "Voaesotra ny ambadika.",
       "failed": "Tsy voaesotra ny ambadika. Andramo sary hafa, na mpitety tahaka ny Chrome na Edge."
+    },
+    "templates": {
+      "heading": "Modely",
+      "hint": "Misafidiana iray hanombohana. Azo ovaina ny teny, loko ary sary rehetra, na angataho ny AI hanova azy ho anao.",
+      "use": "Ampiasao ny modely {{name}}",
+      "replaceConfirm": "Soloina ity modely ity ve ny famolavolana ankehitriny? Azonao foanana izany.",
+      "sale": {
+        "title": "Varotra fahavaratra",
+        "subtitle": "Hatramin'ny 50% fihenam-bidy · Ity faran'ny herinandro ity ihany"
+      },
+      "quote": {
+        "title": "Karatra teny malaza",
+        "body": "Ataovy tsotra, nefa misy dikany.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Tsy hino ianao",
+        "badge": "Vaovao"
+      },
+      "story": {
+        "title": "Vokatra vaovao",
+        "cta": "Tosiho miakatra hividianana"
+      },
+      "event": {
+        "title": "Alina mozika mivantana",
+        "date": "Zoma 8 ora alina",
+        "place": "The Warehouse, afovoan-tanàna"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Fizarana 12 · Efa mivoaka"
+      },
+      "announcement": {
+        "kicker": "Ho avy tsy ho ela",
+        "title": "Vaovao lehibe ho avy"
+      },
+      "crypto": {
+        "title": "Vidiny vaovao",
+        "change": "+42% amin'ity herinandro ity"
+      },
+      "birthday": {
+        "title": "Tratry ny tsingerintaona",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Rehefa mandeha ny kaody",
+        "bottom": "Tamin'ny andrana voalohany"
+      }
+    },
+    "design": {
+      "format": "Endrika",
+      "landscape": "Mitsivalana",
+      "landscapeDetail": "YouTube, tranonkala",
+      "vertical": "Mitsangana",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Efamira",
+      "squareDetail": "Lahatsoratra",
+      "portrait": "Portrait",
+      "portraitDetail": "Instagram",
+      "canvas": "Lamba",
+      "resolution": "Fahazavan'ny sary",
+      "frameRate": "Tahan'ny sary",
+      "background": "Ambadika",
+      "backgroundSwatch": "Ambadika {{hex}}",
+      "customBackground": "Loko ambadika manokana",
+      "emptyTitle": "Foana ny pejy",
+      "emptyBody": "Manomboka amin'ny modely, fitaovana maimaim-poana, ny rakitrao, na manontania fotsiny ny AI.",
+      "browseAssets": "Jereo ny fitaovana maimaim-poana",
+      "importMedia": "Hampiditra media",
+      "generateClip": "Hamorona klip",
+      "addHeadline": "Hanampy lohateny"
     }
   },
   "createPost": {

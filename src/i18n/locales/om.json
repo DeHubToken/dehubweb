@@ -3752,6 +3752,78 @@
       "hint": "Meeshaa kee irratti hojjeta: bilisa, dhuunfaa, homtuu hin olfe'amu. Yeroo jalqabaaf moodeela AI buufata, sana booda sekondii muraasa qofa fudhata.",
       "done": "Duubaan haqameera.",
       "failed": "Duubaa haquu hin dandeenye. Suuraa biraa ykn biraawzarii akka Chrome ykn Edge yaali."
+    },
+    "templates": {
+      "heading": "Tempileetii",
+      "hint": "Jalqabuuf tokko filadhu. Jechi, halluun fi suuraan hundi jijjiiramuu danda'u, yookaan AI akka siif jijjiiru gaafadhu.",
+      "use": "Tempileetii {{name}} fayyadami",
+      "replaceConfirm": "Dizaayinii ammaa tempileetii kanaan bakka buusi? Deebisuu dandeessa.",
+      "sale": {
+        "title": "Gurgurtaa Bonaa",
+        "subtitle": "Hanga 50% hir'ina · Dhuma torbanii kana qofa"
+      },
+      "quote": {
+        "title": "Kaardii jechaa",
+        "body": "Salphaa godhi, garuu barbaachisaa.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Hin amantu!",
+        "badge": "Haaraa"
+      },
+      "story": {
+        "title": "Haaraan dhufe",
+        "cta": "Bittaaf ol harkisi"
+      },
+      "event": {
+        "title": "Halkan muuziqaa kallattii",
+        "date": "Jimaata 8 galgala",
+        "place": "Mana Kuusaa, gidduu magaalaa"
+      },
+      "podcast": {
+        "title": "Agarsiisa Uumtootaa",
+        "episode": "Kutaa 12 · Amma ba'eera"
+      },
+      "announcement": {
+        "kicker": "Dhiyootti",
+        "title": "Oduun guddaan dhufaa jira"
+      },
+      "crypto": {
+        "title": "Haaromsa gatii",
+        "change": "+42% torban kana"
+      },
+      "birthday": {
+        "title": "Guyyaa dhalootaa gammadi",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Miim",
+        "top": "Yeroo koodiin hojjetu",
+        "bottom": "Yaalii jalqabaatiin"
+      }
+    },
+    "design": {
+      "format": "Foormaatii",
+      "landscape": "Ciisaa",
+      "landscapeDetail": "YouTube, weebii",
+      "vertical": "Dheeraa",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Iskuweerii",
+      "squareDetail": "Maxxansa feed",
+      "portrait": "Dhaabbataa",
+      "portraitDetail": "Instagram",
+      "canvas": "Kaanvaasii",
+      "resolution": "Qulqullina",
+      "frameRate": "Saffisa fireemii",
+      "background": "Duubbee",
+      "backgroundSwatch": "Duubbee {{hex}}",
+      "customBackground": "Halluu duubbee dhuunfaa",
+      "emptyTitle": "Fuulli duwwaa dha",
+      "emptyBody": "Tempileetii, qabeenya bilisaa, faayilii kee irraa jalqabi, yookaan AI gaafadhu.",
+      "browseAssets": "Qabeenya bilisaa ilaali",
+      "importMedia": "Miidiyaa galchi",
+      "generateClip": "Kilippii uumi",
+      "addHeadline": "Mata-duree dabali"
     }
   },
   "spaces": {

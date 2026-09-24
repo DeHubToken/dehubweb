@@ -6051,6 +6051,78 @@
       "hint": "기기에서 실행돼요: 무료이고 비공개이며 아무것도 업로드되지 않아요. 처음 사용할 때 AI 모델을 다운로드하고, 이후에는 몇 초면 끝나요.",
       "done": "배경을 제거했어요.",
       "failed": "배경을 제거하지 못했어요. 다른 이미지를 사용하거나 Chrome 또는 Edge 같은 브라우저에서 시도해 보세요."
+    },
+    "templates": {
+      "heading": "템플릿",
+      "hint": "하나를 골라 시작하세요. 모든 글자, 색상, 사진을 바꿀 수 있고 AI에게 바꿔 달라고 할 수도 있어요.",
+      "use": "{{name}} 템플릿 사용",
+      "replaceConfirm": "현재 디자인을 이 템플릿으로 바꿀까요? 실행 취소할 수 있어요.",
+      "sale": {
+        "title": "썸머 세일",
+        "subtitle": "최대 50% 할인 · 이번 주말만"
+      },
+      "quote": {
+        "title": "명언 카드",
+        "body": "단순하게, 하지만 의미 있게.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "믿을 수 없을걸!",
+        "badge": "NEW"
+      },
+      "story": {
+        "title": "신상 출시",
+        "cta": "위로 밀어서 쇼핑"
+      },
+      "event": {
+        "title": "라이브 뮤직 나이트",
+        "date": "금요일 오후 8시",
+        "place": "더 웨어하우스, 다운타운"
+      },
+      "podcast": {
+        "title": "크리에이터 쇼",
+        "episode": "12화 · 지금 공개"
+      },
+      "announcement": {
+        "kicker": "커밍 순",
+        "title": "빅 뉴스가 온다"
+      },
+      "crypto": {
+        "title": "가격 업데이트",
+        "change": "이번 주 +42%"
+      },
+      "birthday": {
+        "title": "생일 축하해",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "밈",
+        "top": "코드가 돌아갈 때",
+        "bottom": "한 번에"
+      }
+    },
+    "design": {
+      "format": "형식",
+      "landscape": "가로",
+      "landscapeDetail": "YouTube, 웹",
+      "vertical": "세로",
+      "verticalDetail": "쇼츠, 릴스",
+      "square": "정사각형",
+      "squareDetail": "피드 게시물",
+      "portrait": "세로형",
+      "portraitDetail": "Instagram",
+      "canvas": "캔버스",
+      "resolution": "해상도",
+      "frameRate": "프레임 레이트",
+      "background": "배경",
+      "backgroundSwatch": "배경 {{hex}}",
+      "customBackground": "사용자 지정 배경색",
+      "emptyTitle": "페이지가 비어 있어요",
+      "emptyBody": "템플릿, 무료 에셋, 내 파일로 시작하거나 AI에게 물어보세요.",
+      "browseAssets": "무료 에셋 둘러보기",
+      "importMedia": "미디어 가져오기",
+      "generateClip": "클립 생성",
+      "addHeadline": "제목 추가"
     }
   }
 }

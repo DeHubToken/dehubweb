@@ -6211,6 +6211,78 @@
       "hint": "Draait op je apparaat: gratis, privé, er wordt niets geüpload. Bij het eerste gebruik wordt het AI-model gedownload, daarna duurt het een paar seconden.",
       "done": "Achtergrond verwijderd.",
       "failed": "Kan de achtergrond niet verwijderen. Probeer een andere afbeelding of een browser zoals Chrome of Edge."
+    },
+    "templates": {
+      "heading": "Sjablonen",
+      "hint": "Kies er een om te beginnen. Elk woord, elke kleur en foto kun je aanpassen, of laat de AI het voor je doen.",
+      "use": "Sjabloon {{name}} gebruiken",
+      "replaceConfirm": "Huidig ontwerp vervangen door dit sjabloon? Je kunt het ongedaan maken.",
+      "sale": {
+        "title": "Zomersale",
+        "subtitle": "Tot 50% korting · Alleen dit weekend"
+      },
+      "quote": {
+        "title": "Citaatkaart",
+        "body": "Maak het simpel, maar betekenisvol.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Dit geloof je niet",
+        "badge": "Nieuw"
+      },
+      "story": {
+        "title": "Nieuwe drop",
+        "cta": "Swipe omhoog om te shoppen"
+      },
+      "event": {
+        "title": "Livemuziekavond",
+        "date": "Vrijdag 20.00 uur",
+        "place": "The Warehouse, centrum"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Aflevering 12 · Nu te horen"
+      },
+      "announcement": {
+        "kicker": "Binnenkort",
+        "title": "Groot nieuws op komst"
+      },
+      "crypto": {
+        "title": "Koersupdate",
+        "change": "+42% deze week"
+      },
+      "birthday": {
+        "title": "Gefeliciteerd",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Als de code werkt",
+        "bottom": "In één keer"
+      }
+    },
+    "design": {
+      "format": "Formaat",
+      "landscape": "Liggend",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Verticaal",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Vierkant",
+      "squareDetail": "Feedpost",
+      "portrait": "Staand",
+      "portraitDetail": "Instagram",
+      "canvas": "Canvas",
+      "resolution": "Resolutie",
+      "frameRate": "Framerate",
+      "background": "Achtergrond",
+      "backgroundSwatch": "Achtergrond {{hex}}",
+      "customBackground": "Eigen achtergrondkleur",
+      "emptyTitle": "De pagina is leeg",
+      "emptyBody": "Begin met een sjabloon, een gratis asset, je eigen bestand of vraag het gewoon aan de AI.",
+      "browseAssets": "Gratis assets bekijken",
+      "importMedia": "Media importeren",
+      "generateClip": "Clip genereren",
+      "addHeadline": "Kop toevoegen"
     }
   },
   "glossary": {

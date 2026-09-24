@@ -3750,6 +3750,78 @@
       "hint": "Qurilmangizda ishlaydi: bepul, shaxsiy, hech narsa yuklanmaydi. Birinchi marta AI modeli yuklab olinadi, keyin bir necha soniya oladi.",
       "done": "Fon olib tashlandi.",
       "failed": "Fonni olib tashlab bo‘lmadi. Boshqa rasm yoki Chrome yoki Edge kabi brauzerni sinab ko‘ring."
+    },
+    "templates": {
+      "heading": "Shablonlar",
+      "hint": "Boshlash uchun birini tanlang. Har bir so'z, rang va rasmni o'zgartirish mumkin yoki AI'dan siz uchun o'zgartirishni so'rang.",
+      "use": "{{name}} shablonidan foydalanish",
+      "replaceConfirm": "Joriy dizayn ushbu shablon bilan almashtirilsinmi? Bekor qilishingiz mumkin.",
+      "sale": {
+        "title": "Yozgi chegirma",
+        "subtitle": "50% gacha chegirma · Faqat shu dam olish kunlari"
+      },
+      "quote": {
+        "title": "Iqtibos kartasi",
+        "body": "Oddiy qiling, lekin mazmunli.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Bunga ishonmaysiz",
+        "badge": "Yangi"
+      },
+      "story": {
+        "title": "Yangi kolleksiya",
+        "cta": "Xarid uchun yuqoriga suring"
+      },
+      "event": {
+        "title": "Jonli musiqa kechasi",
+        "date": "Juma, 20:00",
+        "place": "The Warehouse, shahar markazi"
+      },
+      "podcast": {
+        "title": "Ijodkorlar shousi",
+        "episode": "12-qism · Allaqachon efirda"
+      },
+      "announcement": {
+        "kicker": "Tez orada",
+        "title": "Katta yangilik kelmoqda"
+      },
+      "crypto": {
+        "title": "Narx yangiligi",
+        "change": "Bu hafta +42%"
+      },
+      "birthday": {
+        "title": "Tug'ilgan kuning muborak",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Mem",
+        "top": "Kod ishlaganda",
+        "bottom": "Birinchi urinishdayoq"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Gorizontal",
+      "landscapeDetail": "YouTube, veb",
+      "vertical": "Vertikal",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Kvadrat",
+      "squareDetail": "Lenta posti",
+      "portrait": "Portret",
+      "portraitDetail": "Instagram",
+      "canvas": "Kanvas",
+      "resolution": "O'lcham sifati",
+      "frameRate": "Kadr tezligi",
+      "background": "Fon",
+      "backgroundSwatch": "Fon {{hex}}",
+      "customBackground": "Maxsus fon rangi",
+      "emptyTitle": "Sahifa bo'sh",
+      "emptyBody": "Shablon, bepul resurs, o'z faylingizdan boshlang yoki shunchaki AI'dan so'rang.",
+      "browseAssets": "Bepul resurslarni ko'rish",
+      "importMedia": "Media import qilish",
+      "generateClip": "Klip yaratish",
+      "addHeadline": "Sarlavha qo'shish"
     }
   },
   "spaces": {

@@ -3719,6 +3719,78 @@
       "hint": "Kjører på enheten din: gratis, privat, ingenting lastes opp. Første gang lastes AI-modellen ned, deretter tar det noen sekunder.",
       "done": "Bakgrunnen er fjernet.",
       "failed": "Kunne ikke fjerne bakgrunnen. Prøv et annet bilde, eller en nettleser som Chrome eller Edge."
+    },
+    "templates": {
+      "heading": "Maler",
+      "hint": "Velg en for å starte. Alle ord, farger og bilder kan endres, eller be AI-en endre det for deg.",
+      "use": "Bruk malen {{name}}",
+      "replaceConfirm": "Erstatte gjeldende design med denne malen? Du kan angre.",
+      "sale": {
+        "title": "Sommersalg",
+        "subtitle": "Opptil 50 % rabatt · Kun denne helgen"
+      },
+      "quote": {
+        "title": "Sitatkort",
+        "body": "Gjør det enkelt, men betydningsfullt.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Dette tror du ikke",
+        "badge": "Ny"
+      },
+      "story": {
+        "title": "Nyheter",
+        "cta": "Sveip opp for å handle"
+      },
+      "event": {
+        "title": "Livemusikkveld",
+        "date": "Fredag kl. 20",
+        "place": "The Warehouse, sentrum"
+      },
+      "podcast": {
+        "title": "Skaperpraten",
+        "episode": "Episode 12 · Ute nå"
+      },
+      "announcement": {
+        "kicker": "Kommer snart",
+        "title": "Store nyheter på vei"
+      },
+      "crypto": {
+        "title": "Prisoppdatering",
+        "change": "+42 % denne uken"
+      },
+      "birthday": {
+        "title": "Gratulerer med dagen",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Når koden virker",
+        "bottom": "På første forsøk"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Liggende",
+      "landscapeDetail": "YouTube, nett",
+      "vertical": "Vertikal",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Kvadrat",
+      "squareDetail": "Feedinnlegg",
+      "portrait": "Stående",
+      "portraitDetail": "Instagram",
+      "canvas": "Lerret",
+      "resolution": "Oppløsning",
+      "frameRate": "Bildefrekvens",
+      "background": "Bakgrunn",
+      "backgroundSwatch": "Bakgrunn {{hex}}",
+      "customBackground": "Egendefinert bakgrunnsfarge",
+      "emptyTitle": "Siden er tom",
+      "emptyBody": "Start fra en mal, en gratis ressurs, din egen fil, eller bare spør AI-en.",
+      "browseAssets": "Bla i gratis ressurser",
+      "importMedia": "Importer media",
+      "generateClip": "Generer et klipp",
+      "addHeadline": "Legg til en overskrift"
     }
   },
   "fractions": {

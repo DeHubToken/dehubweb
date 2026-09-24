@@ -3751,6 +3751,78 @@
       "hint": "Punon në pajisjen tënde: falas, privat, asgjë nuk ngarkohet. Përdorimi i parë shkarkon modelin e AI, pastaj zgjat vetëm pak sekonda.",
       "done": "Sfondi u hoq.",
       "failed": "Sfondi nuk u hoq dot. Provo një imazh tjetër ose një shfletues si Chrome ose Edge."
+    },
+    "templates": {
+      "heading": "Shabllonet",
+      "hint": "Zgjidh një për të filluar. Çdo fjalë, ngjyrë dhe foto mund të ndryshohet, ose kërkoji AI-së ta bëjë për ty.",
+      "use": "Përdor shabllonin {{name}}",
+      "replaceConfirm": "Të zëvendësohet dizajni aktual me këtë shabllon? Mund ta zhbësh.",
+      "sale": {
+        "title": "Ulje Vere",
+        "subtitle": "Deri në 50% zbritje · Vetëm këtë fundjavë"
+      },
+      "quote": {
+        "title": "Kartë citati",
+        "body": "Bëje të thjeshtë, por domethënëse.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Nuk do ta besosh!",
+        "badge": "E re"
+      },
+      "story": {
+        "title": "Koleksion i ri",
+        "cta": "Rrëshqit lart për të blerë"
+      },
+      "event": {
+        "title": "Mbrëmje me muzikë live",
+        "date": "E premte, ora 20:00",
+        "place": "Magazina, në qendër"
+      },
+      "podcast": {
+        "title": "Shou i Krijuesve",
+        "episode": "Episodi 12 · Tani në dispozicion"
+      },
+      "announcement": {
+        "kicker": "Së shpejti",
+        "title": "Po vijnë lajme të mëdha"
+      },
+      "crypto": {
+        "title": "Përditësim çmimi",
+        "change": "+42% këtë javë"
+      },
+      "birthday": {
+        "title": "Gëzuar ditëlindjen",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Kur kodi punon",
+        "bottom": "Që në provën e parë"
+      }
+    },
+    "design": {
+      "format": "Formati",
+      "landscape": "Horizontal",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Vertikal",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Katror",
+      "squareDetail": "Postim në feed",
+      "portrait": "Portret",
+      "portraitDetail": "Instagram",
+      "canvas": "Kanavaca",
+      "resolution": "Rezolucioni",
+      "frameRate": "Shpejtësia e kuadrove",
+      "background": "Sfondi",
+      "backgroundSwatch": "Sfondi {{hex}}",
+      "customBackground": "Ngjyrë e personalizuar sfondi",
+      "emptyTitle": "Faqja është bosh",
+      "emptyBody": "Fillo nga një shabllon, një burim falas, skedari yt, ose thjesht pyet AI-në.",
+      "browseAssets": "Shfleto burimet falas",
+      "importMedia": "Importo media",
+      "generateClip": "Gjenero një klip",
+      "addHeadline": "Shto një titull"
     }
   },
   "fractions": {

@@ -2534,6 +2534,78 @@
       "hint": "تمہارے ڈیوائس پو چلتا: مفت، پرائیویٹ، کچھ بھی اپلوڈ نئیں ہوتا۔ پہلی بار AI ماڈل ڈاؤنلوڈ ہوتا، پھر چند سیکنڈ لگتے۔",
       "done": "بیک گراؤنڈ ہٹ گیا۔",
       "failed": "بیک گراؤنڈ نئیں ہٹا سکے۔ دوسری تصویر آزماؤ، یا Chrome یا Edge جیسا براؤزر۔"
+    },
+    "templates": {
+      "heading": "ٹیمپلیٹ",
+      "hint": "شروع کرنے کو ایک چنو۔ ہر لفظ، رنگ اور فوٹو بدل سکتے، یا AI کو بولو بدل دینے کو۔",
+      "use": "{{name}} ٹیمپلیٹ لگاؤ",
+      "replaceConfirm": "ابھی کا ڈیزائن اس ٹیمپلیٹ سے بدلنا؟ واپس بھی کرسکتے۔",
+      "sale": {
+        "title": "گرمی کی سیل",
+        "subtitle": "50% تک چھوٹ · صرف اس ہفتے کے آخر"
+      },
+      "quote": {
+        "title": "قول کارڈ",
+        "body": "سیدھا رکھو، پر دمدار۔",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "یقین نئیں آئیں گا",
+        "badge": "نیا"
+      },
+      "story": {
+        "title": "نیا مال آیا",
+        "cta": "خریدنے کو اوپر سوائپ کرو"
+      },
+      "event": {
+        "title": "لائیو میوزک کی رات",
+        "date": "جمعہ رات 8 بجے",
+        "place": "دی گودام، شہر کے بیچ"
+      },
+      "podcast": {
+        "title": "دی کریئیٹر شو",
+        "episode": "قسط 12 · ابھی آگئی"
+      },
+      "announcement": {
+        "kicker": "جلدی آرا",
+        "title": "بڑی خبر آری"
+      },
+      "crypto": {
+        "title": "قیمت کی خبر",
+        "change": "اس ہفتے +42%"
+      },
+      "birthday": {
+        "title": "سالگرہ مبارک",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "میم",
+        "top": "جب کوڈ چل جاتا",
+        "bottom": "پہلی ہی بار میں"
+      }
+    },
+    "design": {
+      "format": "فارمیٹ",
+      "landscape": "آڑا",
+      "landscapeDetail": "YouTube، ویب",
+      "vertical": "کھڑا",
+      "verticalDetail": "Shorts، Reels",
+      "square": "چوکور",
+      "squareDetail": "فیڈ پوسٹ",
+      "portrait": "پورٹریٹ",
+      "portraitDetail": "Instagram",
+      "canvas": "کینوس",
+      "resolution": "ریزولوشن",
+      "frameRate": "فریم ریٹ",
+      "background": "پس منظر",
+      "backgroundSwatch": "پس منظر {{hex}}",
+      "customBackground": "اپنا پس منظر رنگ",
+      "emptyTitle": "صفحہ خالی ہے",
+      "emptyBody": "ٹیمپلیٹ، مفت ایسیٹ، اپنی فائل سے شروع کرو، یا بس AI کو بولو۔",
+      "browseAssets": "مفت ایسیٹ دیکھو",
+      "importMedia": "میڈیا لاؤ",
+      "generateClip": "کلپ بناؤ",
+      "addHeadline": "سرخی ڈالو"
     }
   },
   "fractions": {

@@ -3727,6 +3727,78 @@
       "hint": "Wuxuu ku shaqeeyaa qalabkaaga: bilaash, gaar ah, waxba lama soo geliyo. Isticmaalka ugu horreeya wuxuu soo dejiyaa moodeelka AI, kadibna dhowr ilbiriqsi ayuu qaataa.",
       "done": "Asalka waa la saaray.",
       "failed": "Asalka lama saari karin. Isku day sawir kale, ama browser sida Chrome ama Edge."
+    },
+    "templates": {
+      "heading": "Qaababka",
+      "hint": "Mid dooro si aad u bilowdo. Eray kasta, midab kasta iyo sawir kasta waa la beddeli karaa, ama AI-ga ka codso inuu kuu beddelo.",
+      "use": "Isticmaal qaabka {{name}}",
+      "replaceConfirm": "Naqshadda hadda ku beddel qaabkan? Waad ka noqon kartaa.",
+      "sale": {
+        "title": "Iibka Xagaaga",
+        "subtitle": "Ilaa 50% dhimis · Usbuucan dhammaadkiisa oo keliya"
+      },
+      "quote": {
+        "title": "Kaarka xigasho",
+        "body": "Ka dhig mid fudud, laakiin macno leh.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Ma rumaysan doontid",
+        "badge": "Cusub"
+      },
+      "story": {
+        "title": "Alaab cusub",
+        "cta": "Kor u rog si aad u iibsato"
+      },
+      "event": {
+        "title": "Habeen muusig toos ah",
+        "date": "Jimce 8 fiidnimo",
+        "place": "The Warehouse, bartamaha magaalada"
+      },
+      "podcast": {
+        "title": "Bandhigga Abuuraha",
+        "episode": "Qaybta 12 · Hadda waa diyaar"
+      },
+      "announcement": {
+        "kicker": "Dhawaan",
+        "title": "War weyn ayaa imanaya"
+      },
+      "crypto": {
+        "title": "Cusboonaysiin qiimo",
+        "change": "+42% usbuucan"
+      },
+      "birthday": {
+        "title": "Dhalasho wanaagsan",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Marka koodku shaqeeyo",
+        "bottom": "Isku daygii ugu horreeyay"
+      }
+    },
+    "design": {
+      "format": "Qaab",
+      "landscape": "Jiif",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Taagan",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Afargees",
+      "squareDetail": "Qoraal feed",
+      "portrait": "Sawir taagan",
+      "portraitDetail": "Instagram",
+      "canvas": "Shiraac",
+      "resolution": "Tayada",
+      "frameRate": "Heerka fireemka",
+      "background": "Asalka",
+      "backgroundSwatch": "Asalka {{hex}}",
+      "customBackground": "Midab asal gaar ah",
+      "emptyTitle": "Boggu waa madhan yahay",
+      "emptyBody": "Ka bilow qaab, agab bilaash ah, faylkaaga, ama AI-ga weydii.",
+      "browseAssets": "Daalaco agab bilaash ah",
+      "importMedia": "Soo geli warbaahin",
+      "generateClip": "Samee kilib",
+      "addHeadline": "Ku dar cinwaan"
     }
   },
   "fractions": {

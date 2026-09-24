@@ -6000,6 +6000,78 @@
       "hint": "Inafanya kazi kwenye kifaa chako: bure, faragha, hakuna kinachopakiwa. Matumizi ya kwanza hupakua modeli ya AI, kisha huchukua sekunde chache tu.",
       "done": "Mandharinyuma yameondolewa.",
       "failed": "Imeshindwa kuondoa mandharinyuma. Jaribu picha nyingine, au kivinjari kama Chrome au Edge."
+    },
+    "templates": {
+      "heading": "Violezo",
+      "hint": "Chagua kimoja kuanza. Kila neno, rangi na picha vinaweza kubadilishwa, au omba AI ikubadilishie.",
+      "use": "Tumia kiolezo cha {{name}}",
+      "replaceConfirm": "Badilisha muundo wa sasa kwa kiolezo hiki? Unaweza kutendua.",
+      "sale": {
+        "title": "Ofa za Kiangazi",
+        "subtitle": "Punguzo hadi 50% · Wikendi hii tu"
+      },
+      "quote": {
+        "title": "Kadi ya nukuu",
+        "body": "Ifanye rahisi, lakini yenye maana.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Hutaamini hili",
+        "badge": "Mpya"
+      },
+      "story": {
+        "title": "Mzigo mpya",
+        "cta": "Telezesha juu kununua"
+      },
+      "event": {
+        "title": "Usiku wa muziki mubashara",
+        "date": "Ijumaa saa 2 usiku",
+        "place": "The Warehouse, katikati ya mji"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Kipindi cha 12 · Kimetoka"
+      },
+      "announcement": {
+        "kicker": "Inakuja hivi karibuni",
+        "title": "Habari kubwa inakuja"
+      },
+      "crypto": {
+        "title": "Taarifa ya bei",
+        "change": "+42% wiki hii"
+      },
+      "birthday": {
+        "title": "Heri ya Siku ya Kuzaliwa",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Code ikifanya kazi",
+        "bottom": "Kwa jaribio la kwanza"
+      }
+    },
+    "design": {
+      "format": "Muundo",
+      "landscape": "Mlalo",
+      "landscapeDetail": "YouTube, wavuti",
+      "vertical": "Wima",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Mraba",
+      "squareDetail": "Chapisho la mlisho",
+      "portrait": "Picha wima",
+      "portraitDetail": "Instagram",
+      "canvas": "Turubai",
+      "resolution": "Ubora wa picha",
+      "frameRate": "Kasi ya fremu",
+      "background": "Mandharinyuma",
+      "backgroundSwatch": "Mandharinyuma {{hex}}",
+      "customBackground": "Rangi maalum ya mandharinyuma",
+      "emptyTitle": "Ukurasa uko tupu",
+      "emptyBody": "Anza na kiolezo, rasilimali ya bure, faili yako, au uliza AI tu.",
+      "browseAssets": "Vinjari rasilimali za bure",
+      "importMedia": "Leta media",
+      "generateClip": "Tengeneza klipu",
+      "addHeadline": "Ongeza kichwa"
     }
   }
 }

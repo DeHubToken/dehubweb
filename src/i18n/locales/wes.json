@@ -3202,6 +3202,78 @@
       "hint": "E di run for yua phone or computer: free, private, notin no di upload. Di first time e go download di AI model, after dat e go take only small seconds.",
       "done": "Background don comot.",
       "failed": "We no fit remove di background. Try another picture, or browser like Chrome or Edge."
+    },
+    "templates": {
+      "heading": "Templates",
+      "hint": "Pick one for start. You fit change every word, colour and photo, or ask AI make e change am for you.",
+      "use": "Use di {{name}} template",
+      "replaceConfirm": "Replace dis design wit dis template? You fit undo am.",
+      "sale": {
+        "title": "Summer Sale",
+        "subtitle": "Up to 50% off · Na dis weekend only"
+      },
+      "quote": {
+        "title": "Quote card",
+        "body": "Make am simple, but make e get meaning.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "You no go believe dis",
+        "badge": "New"
+      },
+      "story": {
+        "title": "New tins don land",
+        "cta": "Swipe up for buy"
+      },
+      "event": {
+        "title": "Live music night",
+        "date": "Friday 8 PM",
+        "place": "The Warehouse, for town"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Episode 12 · E don comot"
+      },
+      "announcement": {
+        "kicker": "E di come soon",
+        "title": "Big news di come"
+      },
+      "crypto": {
+        "title": "Price update",
+        "change": "+42% dis week"
+      },
+      "birthday": {
+        "title": "Happy Birthday",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "When di code work",
+        "bottom": "For first try"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Landscape",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Vertical",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Square",
+      "squareDetail": "Feed post",
+      "portrait": "Portrait",
+      "portraitDetail": "Instagram",
+      "canvas": "Canvas",
+      "resolution": "Resolution",
+      "frameRate": "Frame rate",
+      "background": "Background",
+      "backgroundSwatch": "Background {{hex}}",
+      "customBackground": "Your own background colour",
+      "emptyTitle": "Dis page empty",
+      "emptyBody": "Start from template, free asset, yua own file, or just ask AI.",
+      "browseAssets": "Look free assets",
+      "importMedia": "Import media",
+      "generateClip": "Make clip",
+      "addHeadline": "Add headline"
     }
   },
   "fractions": {

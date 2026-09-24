@@ -6015,6 +6015,78 @@
       "hint": "Działa na Twoim urządzeniu: za darmo, prywatnie, nic nie jest wysyłane. Przy pierwszym użyciu pobierany jest model AI, potem trwa to kilka sekund.",
       "done": "Tło usunięte.",
       "failed": "Nie udało się usunąć tła. Spróbuj innego obrazu lub przeglądarki, np. Chrome albo Edge."
+    },
+    "templates": {
+      "heading": "Szablony",
+      "hint": "Wybierz jeden, aby zacząć. Każde słowo, kolor i zdjęcie można zmienić albo poprosić AI, by zrobiła to za ciebie.",
+      "use": "Użyj szablonu {{name}}",
+      "replaceConfirm": "Zastąpić obecny projekt tym szablonem? Możesz to cofnąć.",
+      "sale": {
+        "title": "Letnia wyprzedaż",
+        "subtitle": "Do -50% · Tylko w ten weekend"
+      },
+      "quote": {
+        "title": "Karta z cytatem",
+        "body": "Prosto, ale z przekazem.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Nie uwierzysz",
+        "badge": "Nowość"
+      },
+      "story": {
+        "title": "Nowa kolekcja",
+        "cta": "Przesuń w górę, by kupić"
+      },
+      "event": {
+        "title": "Wieczór muzyki na żywo",
+        "date": "Piątek, 20:00",
+        "place": "The Warehouse, centrum"
+      },
+      "podcast": {
+        "title": "Creator Show",
+        "episode": "Odcinek 12 · Już jest"
+      },
+      "announcement": {
+        "kicker": "Już wkrótce",
+        "title": "Nadchodzą wielkie wieści"
+      },
+      "crypto": {
+        "title": "Aktualizacja ceny",
+        "change": "+42% w tym tygodniu"
+      },
+      "birthday": {
+        "title": "Wszystkiego najlepszego",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Mem",
+        "top": "Kiedy kod działa",
+        "bottom": "Za pierwszym razem"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Poziomy",
+      "landscapeDetail": "YouTube, sieć",
+      "vertical": "Pionowy",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Kwadrat",
+      "squareDetail": "Post w feedzie",
+      "portrait": "Portret",
+      "portraitDetail": "Instagram",
+      "canvas": "Płótno",
+      "resolution": "Rozdzielczość",
+      "frameRate": "Liczba klatek",
+      "background": "Tło",
+      "backgroundSwatch": "Tło {{hex}}",
+      "customBackground": "Własny kolor tła",
+      "emptyTitle": "Strona jest pusta",
+      "emptyBody": "Zacznij od szablonu, darmowego zasobu, własnego pliku lub po prostu zapytaj AI.",
+      "browseAssets": "Przeglądaj darmowe zasoby",
+      "importMedia": "Importuj multimedia",
+      "generateClip": "Wygeneruj klip",
+      "addHeadline": "Dodaj nagłówek"
     }
   },
   "glossary": {

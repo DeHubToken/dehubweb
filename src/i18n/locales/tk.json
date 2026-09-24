@@ -3689,6 +3689,78 @@
       "hint": "Enjamyňyzda işleýär: mugt, gizlin, hiç zat ýüklenmeýär. Ilkinji gezek AI modeli ýüklenip alynýar, soňra bary-ýogy birnäçe sekunt gerek.",
       "done": "Fon aýryldy.",
       "failed": "Fony aýryp bolmady. Başga surat ýa-da Chrome, Edge ýaly brauzer synap görüň."
+    },
+    "templates": {
+      "heading": "Şablonlar",
+      "hint": "Başlamak üçin birini saýlaň. Her sözi, reňki we suraty üýtgedip bilersiňiz ýa-da AI-dan üýtgetmegini haýyş ediň.",
+      "use": "{{name}} şablonyny ulan",
+      "replaceConfirm": "Häzirki dizaýny bu şablon bilen çalyşmalymy? Yzyna gaýtaryp bilersiňiz.",
+      "sale": {
+        "title": "Tomus arzanladyşy",
+        "subtitle": "50%-e çenli arzan · Diňe şu dynç günleri"
+      },
+      "quote": {
+        "title": "Sitata kartoçkasy",
+        "body": "Ýönekeý, ýöne manyly bolsun.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Muňa ynanmarsyňyz",
+        "badge": "Täze"
+      },
+      "story": {
+        "title": "Täze gelenler",
+        "cta": "Satyn almak üçin ýokary süýşüriň"
+      },
+      "event": {
+        "title": "Janly saz agşamy",
+        "date": "Anna 20:00",
+        "place": "The Warehouse, şäher merkezi"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "12-nji bölüm · Indi çykdy"
+      },
+      "announcement": {
+        "kicker": "Ýakyn wagtda",
+        "title": "Uly habar geler"
+      },
+      "crypto": {
+        "title": "Baha täzeligi",
+        "change": "Şu hepde +42%"
+      },
+      "birthday": {
+        "title": "Doglan günüň gutly bolsun",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Mem",
+        "top": "Kod işlände",
+        "bottom": "Ilkinji synanyşykda"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Keseligine",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Dikligine",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Inedördül",
+      "squareDetail": "Lenta ýazgysy",
+      "portrait": "Portret",
+      "portraitDetail": "Instagram",
+      "canvas": "Kanwa",
+      "resolution": "Çözgüt",
+      "frameRate": "Kadr tizligi",
+      "background": "Fon",
+      "backgroundSwatch": "Fon {{hex}}",
+      "customBackground": "Öz fon reňkiňiz",
+      "emptyTitle": "Sahypa boş",
+      "emptyBody": "Şablondan, mugt serişdeden, öz faýlyňyzdan başlaň ýa-da AI-dan soraň.",
+      "browseAssets": "Mugt serişdelere göz aýla",
+      "importMedia": "Media import et",
+      "generateClip": "Klip döret",
+      "addHeadline": "Sözbaşy goş"
     }
   },
   "fractions": {

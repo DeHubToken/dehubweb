@@ -3875,6 +3875,78 @@
       "hint": "Beží vo vašom zariadení: zadarmo, súkromne, nič sa nenahráva. Pri prvom použití sa stiahne AI model, potom to trvá pár sekúnd.",
       "done": "Pozadie bolo odstránené.",
       "failed": "Pozadie sa nepodarilo odstrániť. Skúste iný obrázok alebo prehliadač ako Chrome či Edge."
+    },
+    "templates": {
+      "heading": "Šablóny",
+      "hint": "Vyberte si jednu a začnite. Každé slovo, farbu aj fotku môžete zmeniť, alebo požiadajte AI, aby to spravila za vás.",
+      "use": "Použiť šablónu {{name}}",
+      "replaceConfirm": "Nahradiť aktuálny dizajn touto šablónou? Môžete to vrátiť späť.",
+      "sale": {
+        "title": "Letný výpredaj",
+        "subtitle": "Zľavy až 50 % · Len tento víkend"
+      },
+      "quote": {
+        "title": "Karta s citátom",
+        "body": "Jednoducho, ale výrazne.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Tomuto neuveríte",
+        "badge": "Nové"
+      },
+      "story": {
+        "title": "Nová kolekcia",
+        "cta": "Potiahni hore a nakupuj"
+      },
+      "event": {
+        "title": "Večer živej hudby",
+        "date": "Piatok 20:00",
+        "place": "The Warehouse, centrum"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Epizóda 12 · Už vonku"
+      },
+      "announcement": {
+        "kicker": "Už čoskoro",
+        "title": "Blíži sa veľká novinka"
+      },
+      "crypto": {
+        "title": "Aktualizácia ceny",
+        "change": "+42 % tento týždeň"
+      },
+      "birthday": {
+        "title": "Všetko najlepšie",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Keď kód funguje",
+        "bottom": "Na prvý pokus"
+      }
+    },
+    "design": {
+      "format": "Formát",
+      "landscape": "Na šírku",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Na výšku",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Štvorec",
+      "squareDetail": "Príspevok vo feede",
+      "portrait": "Portrét",
+      "portraitDetail": "Instagram",
+      "canvas": "Plátno",
+      "resolution": "Rozlíšenie",
+      "frameRate": "Snímková frekvencia",
+      "background": "Pozadie",
+      "backgroundSwatch": "Pozadie {{hex}}",
+      "customBackground": "Vlastná farba pozadia",
+      "emptyTitle": "Stránka je prázdna",
+      "emptyBody": "Začnite zo šablóny, bezplatného zdroja, vlastného súboru alebo sa jednoducho opýtajte AI.",
+      "browseAssets": "Prehliadať bezplatné zdroje",
+      "importMedia": "Importovať médiá",
+      "generateClip": "Vygenerovať klip",
+      "addHeadline": "Pridať nadpis"
     }
   },
   "post": {

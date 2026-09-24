@@ -3687,6 +3687,78 @@
       "hint": "توهان جي ڊوائيس تي هلي ٿو: مفت، ذاتي، ڪجهه به اپلوڊ نه ٿيندو. پهريون ڀيرو AI ماڊل ڊائونلوڊ ٿيندو، پوءِ رڳو ڪجهه سيڪنڊ لڳندا.",
       "done": "پس منظر هٽايو ويو.",
       "failed": "پس منظر هٽائي نه سگهياسين. ٻي تصوير آزمايو، يا Chrome يا Edge جهڙو برائوزر."
+    },
+    "templates": {
+      "heading": "ٽيمپليٽ",
+      "hint": "شروع ڪرڻ لاءِ هڪ چونڊيو. هر لفظ، رنگ ۽ فوٽو بدلائي سگهجي ٿو، يا AI کي چئو ته اوهان لاءِ بدلائي.",
+      "use": "{{name}} ٽيمپليٽ استعمال ڪريو",
+      "replaceConfirm": "موجوده ڊيزائن کي هن ٽيمپليٽ سان مٽايو؟ واپس ڪري سگهو ٿا.",
+      "sale": {
+        "title": "سمر سيل",
+        "subtitle": "50% تائين رعايت · صرف هن هفتي جي آخر"
+      },
+      "quote": {
+        "title": "اقتباس ڪارڊ",
+        "body": "سادو رکو، پر اثرائتو.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "يقين نه ايندو!",
+        "badge": "نئون"
+      },
+      "story": {
+        "title": "نئون مال",
+        "cta": "خريداري لاءِ مٿي سوائپ ڪريو"
+      },
+      "event": {
+        "title": "لائيو ميوزڪ رات",
+        "date": "جمعو رات 8 وڳي",
+        "place": "دي ويئر هائوس، شهر جو مرڪز"
+      },
+      "podcast": {
+        "title": "دي ڪريئيٽر شو",
+        "episode": "قسط 12 · هاڻي موجود"
+      },
+      "announcement": {
+        "kicker": "جلد اچي رهيو آهي",
+        "title": "وڏي خبر اچي رهي آهي"
+      },
+      "crypto": {
+        "title": "قيمت اپڊيٽ",
+        "change": "+42% هن هفتي"
+      },
+      "birthday": {
+        "title": "سالگرهه مبارڪ",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "ميم",
+        "top": "جڏهن ڪوڊ هلي",
+        "bottom": "پهرين ڪوشش ۾"
+      }
+    },
+    "design": {
+      "format": "فارميٽ",
+      "landscape": "افقي",
+      "landscapeDetail": "YouTube، ويب",
+      "vertical": "عمودي",
+      "verticalDetail": "Shorts، Reels",
+      "square": "چورس",
+      "squareDetail": "فيڊ پوسٽ",
+      "portrait": "پورٽريٽ",
+      "portraitDetail": "Instagram",
+      "canvas": "ڪينوس",
+      "resolution": "ريزوليوشن",
+      "frameRate": "فريم ريٽ",
+      "background": "پس منظر",
+      "backgroundSwatch": "پس منظر {{hex}}",
+      "customBackground": "ڪسٽم پس منظر رنگ",
+      "emptyTitle": "صفحو خالي آهي",
+      "emptyBody": "ٽيمپليٽ، مفت اثاثي، پنهنجي فائل سان شروع ڪريو، يا بس AI کان پڇو.",
+      "browseAssets": "مفت اثاثا ڏسو",
+      "importMedia": "ميڊيا امپورٽ ڪريو",
+      "generateClip": "ڪلپ ٺاهيو",
+      "addHeadline": "سرخي شامل ڪريو"
     }
   },
   "fractions": {

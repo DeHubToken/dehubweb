@@ -6056,6 +6056,78 @@
       "hint": "Funziona sul tuo dispositivo: gratis, privato, nessun caricamento. Al primo utilizzo scarica il modello IA, poi bastano pochi secondi.",
       "done": "Sfondo rimosso.",
       "failed": "Impossibile rimuovere lo sfondo. Prova un’altra immagine o un browser come Chrome o Edge."
+    },
+    "templates": {
+      "heading": "Modelli",
+      "hint": "Scegline uno per iniziare. Ogni parola, colore e foto si può cambiare, oppure chiedi all'IA di farlo per te.",
+      "use": "Usa il modello {{name}}",
+      "replaceConfirm": "Sostituire il design attuale con questo modello? Puoi annullare.",
+      "sale": {
+        "title": "Saldi estivi",
+        "subtitle": "Fino al 50% · Solo questo weekend"
+      },
+      "quote": {
+        "title": "Scheda citazione",
+        "body": "Semplice, ma significativo.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Non ci crederai",
+        "badge": "Novità"
+      },
+      "story": {
+        "title": "Nuovi arrivi",
+        "cta": "Scorri su per acquistare"
+      },
+      "event": {
+        "title": "Serata di musica live",
+        "date": "Venerdì ore 20",
+        "place": "The Warehouse, in centro"
+      },
+      "podcast": {
+        "title": "Il Creator Show",
+        "episode": "Episodio 12 · Ora disponibile"
+      },
+      "announcement": {
+        "kicker": "In arrivo",
+        "title": "Grandi novità in arrivo"
+      },
+      "crypto": {
+        "title": "Aggiornamento prezzo",
+        "change": "+42% questa settimana"
+      },
+      "birthday": {
+        "title": "Buon compleanno",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Quando il codice funziona",
+        "bottom": "Al primo colpo"
+      }
+    },
+    "design": {
+      "format": "Formato",
+      "landscape": "Orizzontale",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Verticale",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Quadrato",
+      "squareDetail": "Post nel feed",
+      "portrait": "Ritratto",
+      "portraitDetail": "Instagram",
+      "canvas": "Tela",
+      "resolution": "Risoluzione",
+      "frameRate": "Frequenza fotogrammi",
+      "background": "Sfondo",
+      "backgroundSwatch": "Sfondo {{hex}}",
+      "customBackground": "Colore sfondo personalizzato",
+      "emptyTitle": "La pagina è vuota",
+      "emptyBody": "Parti da un modello, una risorsa gratuita, un tuo file, o chiedi semplicemente all'IA.",
+      "browseAssets": "Sfoglia risorse gratuite",
+      "importMedia": "Importa media",
+      "generateClip": "Genera una clip",
+      "addHeadline": "Aggiungi un titolo"
     }
   }
 }

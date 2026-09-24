@@ -477,6 +477,20 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         if (clip && kind !== "audio") place(clip, op);
         return true;
       }
+      case "use_template": {
+        // Loaded lazily: templates import this module, so a static import would be circular.
+        const { TEMPLATES } = await import("./templates");
+        const tpl = TEMPLATES.find((x) => x.id === op.template);
+        if (!tpl) return false;
+        const { default: i18n } = await import("@/i18n");
+        const all = store().clips.map((c) => c.id);
+        if (all.length) store().rippleDelete(all);
+        store().setCurrentTime(0);
+        // Nested ops run inside this request's undo step; their new layers
+        // are not addressable as new:N from the outer list.
+        const inner = await applyOps(tpl.ops(i18n.t.bind(i18n)), ctx);
+        return inner.applied > 0;
+      }
       case "remove_background": {
         const clip = find(op.id);
         if (!clip || clip.kind !== "image") return false;

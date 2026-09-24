@@ -64,3 +64,22 @@ describe("editor agent tolerance", () => {
     expect(useEditorStore.getState().settings.aspectPreset).toBe("9:16");
   });
 });
+
+describe("templates", () => {
+  beforeEach(() => useEditorStore.getState().newProject());
+
+  it("builds every template without stock photos and keeps layers the same length", async () => {
+    const { TEMPLATES, applyTemplate } = await import("./templates");
+    const t = ((k: string) => k) as unknown as import("i18next").TFunction;
+    for (const tpl of TEMPLATES) {
+      // Stock search needs the network; the rest of the template must still build.
+      const ops = tpl.ops(t).filter((o) => o.op !== "add_stock");
+      await applyTemplate({ ...tpl, ops: () => ops }, t);
+      const s = useEditorStore.getState();
+      expect(s.settings.aspectPreset).toBe(tpl.aspect);
+      expect(s.clips.length).toBeGreaterThan(0);
+      const ends = new Set(s.clips.map((c) => c.start + c.duration));
+      expect(ends.size).toBe(1);
+    }
+  });
+});

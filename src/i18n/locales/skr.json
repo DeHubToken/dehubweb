@@ -3488,6 +3488,78 @@
       "hint": "تہاڈے ڈیوائس تے چلدا اے: مفت، نجی، کجھ وی اپلوڈ نئیں تھیندا۔ پہلی واری AI ماڈل ڈاؤن لوڈ تھیندا اے، ول بس کجھ سیکنڈ لگدے ہن۔",
       "done": "پس منظر ہٹ گیا۔",
       "failed": "پس منظر نئیں ہٹ سگیا۔ ٻئی تصویر آزماؤ، یا Chrome یا Edge جیہا براؤزر۔"
+    },
+    "templates": {
+      "heading": "ٹیمپلیٹ",
+      "hint": "شروع کرݨ کیتے ہک چݨو۔ ہر لفظ، رنگ تے فوٹو بدل سکدے ہو، یا AI کوں آکھو او بدل ݙیوے۔",
+      "use": "{{name}} ٹیمپلیٹ ورتو",
+      "replaceConfirm": "موجودہ ڈیزائن کوں ایں ٹیمپلیٹ نال بدلݨے؟ تساں واپس کر سکدے ہو۔",
+      "sale": {
+        "title": "گرمیاں دی سیل",
+        "subtitle": "50% تک رعایت · صرف ایں ہفتے دے اخیر"
+      },
+      "quote": {
+        "title": "قول کارڈ",
+        "body": "سادہ رکھو، پر معنی والا۔",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "یقین نہ آسی!",
+        "badge": "نواں"
+      },
+      "story": {
+        "title": "نواں مال آ ڳیا",
+        "cta": "خریدݨ کیتے اُتے سوائپ کرو"
+      },
+      "event": {
+        "title": "لائیو موسیقی دی رات",
+        "date": "جمعہ رات 8 وجے",
+        "place": "دی ویئرہاؤس، شہر دا مرکز"
+      },
+      "podcast": {
+        "title": "دی کریئیٹر شو",
+        "episode": "قسط 12 · ہݨ آ ڳئی"
+      },
+      "announcement": {
+        "kicker": "جلدی آندا پئے",
+        "title": "وݙی خبر آندی پئی اے"
+      },
+      "crypto": {
+        "title": "قیمت اپڈیٹ",
+        "change": "ایں ہفتے +42%"
+      },
+      "birthday": {
+        "title": "سالگرہ مبارک",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "میم",
+        "top": "جݙاں کوڈ چل پووے",
+        "bottom": "پہلی واری ای"
+      }
+    },
+    "design": {
+      "format": "فارمیٹ",
+      "landscape": "لینڈ سکیپ",
+      "landscapeDetail": "YouTube، ویب",
+      "vertical": "عمودی",
+      "verticalDetail": "Shorts، Reels",
+      "square": "چوکور",
+      "squareDetail": "فیڈ پوسٹ",
+      "portrait": "پورٹریٹ",
+      "portraitDetail": "Instagram",
+      "canvas": "کینوس",
+      "resolution": "ریزولوشن",
+      "frameRate": "فریم ریٹ",
+      "background": "پس منظر",
+      "backgroundSwatch": "پس منظر {{hex}}",
+      "customBackground": "اپݨا پس منظر رنگ",
+      "emptyTitle": "ورقہ خالی اے",
+      "emptyBody": "ٹیمپلیٹ، مفت اثاثے، اپݨی فائل توں شروع کرو، یا بس AI کنوں پچھو۔",
+      "browseAssets": "مفت اثاثے ݙیکھو",
+      "importMedia": "میڈیا امپورٹ کرو",
+      "generateClip": "کلپ بݨاؤ",
+      "addHeadline": "سرخی شامل کرو"
     }
   },
   "fractions": {

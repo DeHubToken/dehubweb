@@ -6063,6 +6063,78 @@
       "hint": "Berjalan di perangkat Anda: gratis, privat, tidak ada yang diunggah. Penggunaan pertama akan mengunduh model AI, setelah itu hanya butuh beberapa detik.",
       "done": "Latar belakang dihapus.",
       "failed": "Tidak dapat menghapus latar belakang. Coba gambar lain, atau peramban seperti Chrome atau Edge."
+    },
+    "templates": {
+      "heading": "Template",
+      "hint": "Pilih satu untuk mulai. Setiap kata, warna, dan foto bisa diubah, atau minta AI mengubahnya untukmu.",
+      "use": "Pakai template {{name}}",
+      "replaceConfirm": "Ganti desain saat ini dengan template ini? Kamu bisa membatalkannya.",
+      "sale": {
+        "title": "Diskon Musim Panas",
+        "subtitle": "Diskon hingga 50% · Khusus akhir pekan ini"
+      },
+      "quote": {
+        "title": "Kartu kutipan",
+        "body": "Buat sederhana, tapi bermakna.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Kamu nggak bakal percaya",
+        "badge": "Baru"
+      },
+      "story": {
+        "title": "Koleksi baru",
+        "cta": "Geser ke atas untuk belanja"
+      },
+      "event": {
+        "title": "Malam musik live",
+        "date": "Jumat 20.00",
+        "place": "The Warehouse, pusat kota"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Episode 12 · Tayang sekarang"
+      },
+      "announcement": {
+        "kicker": "Segera hadir",
+        "title": "Kabar besar segera datang"
+      },
+      "crypto": {
+        "title": "Update harga",
+        "change": "+42% minggu ini"
+      },
+      "birthday": {
+        "title": "Selamat Ulang Tahun",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meme",
+        "top": "Saat kodenya jalan",
+        "bottom": "Di percobaan pertama"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Lanskap",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Vertikal",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Persegi",
+      "squareDetail": "Postingan feed",
+      "portrait": "Potret",
+      "portraitDetail": "Instagram",
+      "canvas": "Kanvas",
+      "resolution": "Resolusi",
+      "frameRate": "Frame rate",
+      "background": "Latar",
+      "backgroundSwatch": "Latar {{hex}}",
+      "customBackground": "Warna latar kustom",
+      "emptyTitle": "Halaman masih kosong",
+      "emptyBody": "Mulai dari template, aset gratis, file sendiri, atau tanya AI saja.",
+      "browseAssets": "Jelajahi aset gratis",
+      "importMedia": "Impor media",
+      "generateClip": "Buat klip",
+      "addHeadline": "Tambah judul"
     }
   }
 }

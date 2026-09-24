@@ -5943,6 +5943,78 @@
       "hint": "Funciona al teu dispositiu: gratuït, privat i no es puja res. El primer ús baixa el model d'IA; després només triga uns segons.",
       "done": "S'ha eliminat el fons.",
       "failed": "No s'ha pogut eliminar el fons. Prova una altra imatge o un navegador com Chrome o Edge."
+    },
+    "templates": {
+      "heading": "Plantilles",
+      "hint": "Tria'n una per començar. Pots canviar cada paraula, color i foto, o demanar a la IA que ho faci per tu.",
+      "use": "Fes servir la plantilla {{name}}",
+      "replaceConfirm": "Vols substituir el disseny actual per aquesta plantilla? Ho pots desfer.",
+      "sale": {
+        "title": "Rebaixes d'estiu",
+        "subtitle": "Fins a un 50% · Només aquest cap de setmana"
+      },
+      "quote": {
+        "title": "Targeta de cita",
+        "body": "Fes-ho simple, però significatiu.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "No t'ho creuràs",
+        "badge": "Nou"
+      },
+      "story": {
+        "title": "Novetat",
+        "cta": "Llisca amunt per comprar"
+      },
+      "event": {
+        "title": "Nit de música en directe",
+        "date": "Divendres 20 h",
+        "place": "The Warehouse, al centre"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Episodi 12 · Ja disponible"
+      },
+      "announcement": {
+        "kicker": "Properament",
+        "title": "Arriben grans notícies"
+      },
+      "crypto": {
+        "title": "Actualització de preu",
+        "change": "+42% aquesta setmana"
+      },
+      "birthday": {
+        "title": "Per molts anys",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Mem",
+        "top": "Quan el codi funciona",
+        "bottom": "A la primera"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Horitzontal",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Vertical",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Quadrat",
+      "squareDetail": "Publicació al feed",
+      "portrait": "Retrat",
+      "portraitDetail": "Instagram",
+      "canvas": "Llenç",
+      "resolution": "Resolució",
+      "frameRate": "Fotogrames per segon",
+      "background": "Fons",
+      "backgroundSwatch": "Fons {{hex}}",
+      "customBackground": "Color de fons personalitzat",
+      "emptyTitle": "La pàgina és buida",
+      "emptyBody": "Comença amb una plantilla, un recurs gratuït, el teu fitxer o demana-ho a la IA.",
+      "browseAssets": "Explora recursos gratuïts",
+      "importMedia": "Importa multimèdia",
+      "generateClip": "Genera un clip",
+      "addHeadline": "Afegeix un titular"
     }
   }
 }

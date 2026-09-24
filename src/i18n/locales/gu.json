@@ -3698,6 +3698,78 @@
       "hint": "તમારા ડિવાઇસ પર જ ચાલે છે: મફત, ખાનગી, કશું અપલોડ થતું નથી. પહેલી વાર AI મૉડલ ડાઉનલોડ થાય છે, પછી થોડી સેકન્ડ લાગે છે.",
       "done": "બેકગ્રાઉન્ડ દૂર થયું.",
       "failed": "બેકગ્રાઉન્ડ દૂર ન થઈ શક્યું. બીજી ઇમેજ, અથવા Chrome કે Edge જેવું બ્રાઉઝર અજમાવો."
+    },
+    "templates": {
+      "heading": "ટેમ્પ્લેટ્સ",
+      "hint": "શરૂ કરવા માટે એક પસંદ કરો. દરેક શબ્દ, રંગ અને ફોટો બદલી શકાય છે, અથવા AIને તમારા માટે બદલવા કહો.",
+      "use": "{{name}} ટેમ્પ્લેટ વાપરો",
+      "replaceConfirm": "હાલની ડિઝાઇનને આ ટેમ્પ્લેટથી બદલવી છે? તમે તેને પૂર્વવત્ કરી શકો છો.",
+      "sale": {
+        "title": "સમર સેલ",
+        "subtitle": "50% સુધી છૂટ · ફક્ત આ વીકએન્ડ"
+      },
+      "quote": {
+        "title": "ક્વોટ કાર્ડ",
+        "body": "સરળ રાખો, પણ અર્થપૂર્ણ.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "તમે માનશો નહીં",
+        "badge": "નવું"
+      },
+      "story": {
+        "title": "નવું કલેક્શન",
+        "cta": "ખરીદવા ઉપર સ્વાઇપ કરો"
+      },
+      "event": {
+        "title": "લાઇવ મ્યુઝિક નાઇટ",
+        "date": "શુક્રવાર રાત્રે 8",
+        "place": "The Warehouse, ડાઉનટાઉન"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "એપિસોડ 12 · હવે ઉપલબ્ધ"
+      },
+      "announcement": {
+        "kicker": "ટૂંક સમયમાં",
+        "title": "મોટા સમાચાર આવી રહ્યા છે"
+      },
+      "crypto": {
+        "title": "ભાવ અપડેટ",
+        "change": "આ અઠવાડિયે +42%"
+      },
+      "birthday": {
+        "title": "જન્મદિવસની શુભેચ્છા",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "મીમ",
+        "top": "જ્યારે કોડ ચાલે",
+        "bottom": "પહેલા જ પ્રયાસમાં"
+      }
+    },
+    "design": {
+      "format": "ફોર્મેટ",
+      "landscape": "લેન્ડસ્કેપ",
+      "landscapeDetail": "YouTube, વેબ",
+      "vertical": "વર્ટિકલ",
+      "verticalDetail": "Shorts, Reels",
+      "square": "ચોરસ",
+      "squareDetail": "ફીડ પોસ્ટ",
+      "portrait": "પોર્ટ્રેટ",
+      "portraitDetail": "Instagram",
+      "canvas": "કેનવાસ",
+      "resolution": "રિઝોલ્યુશન",
+      "frameRate": "ફ્રેમ રેટ",
+      "background": "બેકગ્રાઉન્ડ",
+      "backgroundSwatch": "બેકગ્રાઉન્ડ {{hex}}",
+      "customBackground": "કસ્ટમ બેકગ્રાઉન્ડ રંગ",
+      "emptyTitle": "પેજ ખાલી છે",
+      "emptyBody": "ટેમ્પ્લેટ, મફત એસેટ, તમારી પોતાની ફાઇલથી શરૂ કરો, અથવા ફક્ત AIને પૂછો.",
+      "browseAssets": "મફત એસેટ્સ જુઓ",
+      "importMedia": "મીડિયા ઇમ્પોર્ટ કરો",
+      "generateClip": "ક્લિપ બનાવો",
+      "addHeadline": "હેડલાઇન ઉમેરો"
     }
   },
   "fractions": {

@@ -5946,6 +5946,78 @@
       "hint": "Töötab sinu seadmes: tasuta, privaatne, midagi ei laadita üles. Esimesel kasutamisel laaditakse alla AI-mudel, seejärel võtab see vaid mõne sekundi.",
       "done": "Taust eemaldatud.",
       "failed": "Tausta ei õnnestunud eemaldada. Proovi teist pilti või brauserit nagu Chrome või Edge."
+    },
+    "templates": {
+      "heading": "Mallid",
+      "hint": "Vali üks ja alusta. Iga sõna, värvi ja fotot saab muuta või palu tehisintellektil seda sinu eest teha.",
+      "use": "Kasuta malli {{name}}",
+      "replaceConfirm": "Kas asendada praegune kujundus selle malliga? Saad selle tagasi võtta.",
+      "sale": {
+        "title": "Suvine allahindlus",
+        "subtitle": "Kuni -50% · Ainult sel nädalavahetusel"
+      },
+      "quote": {
+        "title": "Tsitaadikaart",
+        "body": "Tee see lihtsaks, aga tähendusrikkaks.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Sa ei usu seda",
+        "badge": "Uus"
+      },
+      "story": {
+        "title": "Värske kollektsioon",
+        "cta": "Libista üles ja osta"
+      },
+      "event": {
+        "title": "Live-muusika õhtu",
+        "date": "Reede kell 20",
+        "place": "The Warehouse, kesklinn"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "Osa 12 · Nüüd väljas"
+      },
+      "announcement": {
+        "kicker": "Varsti tulekul",
+        "title": "Suured uudised tulekul"
+      },
+      "crypto": {
+        "title": "Hinnauuendus",
+        "change": "+42% sel nädalal"
+      },
+      "birthday": {
+        "title": "Palju õnne sünnipäevaks",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Meem",
+        "top": "Kui kood töötab",
+        "bottom": "Esimesel katsel"
+      }
+    },
+    "design": {
+      "format": "Formaat",
+      "landscape": "Horisontaalne",
+      "landscapeDetail": "YouTube, veeb",
+      "vertical": "Vertikaalne",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Ruut",
+      "squareDetail": "Voo postitus",
+      "portrait": "Portree",
+      "portraitDetail": "Instagram",
+      "canvas": "Lõuend",
+      "resolution": "Eraldusvõime",
+      "frameRate": "Kaadrisagedus",
+      "background": "Taust",
+      "backgroundSwatch": "Taust {{hex}}",
+      "customBackground": "Kohandatud taustavärv",
+      "emptyTitle": "Leht on tühi",
+      "emptyBody": "Alusta mallist, tasuta elemendist, oma failist või lihtsalt küsi tehisintellektilt.",
+      "browseAssets": "Sirvi tasuta elemente",
+      "importMedia": "Impordi meediat",
+      "generateClip": "Genereeri klipp",
+      "addHeadline": "Lisa pealkiri"
     }
   }
 }

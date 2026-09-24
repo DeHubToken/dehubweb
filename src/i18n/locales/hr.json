@@ -5943,6 +5943,78 @@
       "hint": "Radi na vašem uređaju: besplatno, privatno, ništa se ne prenosi. Pri prvoj upotrebi preuzima se AI model, a zatim traje nekoliko sekundi.",
       "done": "Pozadina je uklonjena.",
       "failed": "Uklanjanje pozadine nije uspjelo. Pokušajte s drugom slikom ili preglednikom poput Chromea ili Edgea."
+    },
+    "templates": {
+      "heading": "Predlošci",
+      "hint": "Odaberite jedan za početak. Svaku riječ, boju i fotografiju možete promijeniti ili zamoliti AI da to učini za vas.",
+      "use": "Koristi predložak {{name}}",
+      "replaceConfirm": "Zamijeniti trenutni dizajn ovim predloškom? Možete poništiti.",
+      "sale": {
+        "title": "Ljetno sniženje",
+        "subtitle": "Do −50 % · Samo ovaj vikend"
+      },
+      "quote": {
+        "title": "Kartica s citatom",
+        "body": "Jednostavno, ali značajno.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Nećete vjerovati!",
+        "badge": "Novo"
+      },
+      "story": {
+        "title": "Nova kolekcija",
+        "cta": "Povuci gore i kupuj"
+      },
+      "event": {
+        "title": "Večer glazbe uživo",
+        "date": "Petak u 20 h",
+        "place": "Skladište, centar"
+      },
+      "podcast": {
+        "title": "Kreatorski show",
+        "episode": "Epizoda 12 · Već vani"
+      },
+      "announcement": {
+        "kicker": "Uskoro",
+        "title": "Stižu velike vijesti"
+      },
+      "crypto": {
+        "title": "Ažuriranje cijene",
+        "change": "+42 % ovaj tjedan"
+      },
+      "birthday": {
+        "title": "Sretan rođendan",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "Mem",
+        "top": "Kad kod radi",
+        "bottom": "Iz prve"
+      }
+    },
+    "design": {
+      "format": "Format",
+      "landscape": "Vodoravno",
+      "landscapeDetail": "YouTube, web",
+      "vertical": "Okomito",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Kvadrat",
+      "squareDetail": "Objava u feedu",
+      "portrait": "Portret",
+      "portraitDetail": "Instagram",
+      "canvas": "Platno",
+      "resolution": "Rezolucija",
+      "frameRate": "Broj sličica",
+      "background": "Pozadina",
+      "backgroundSwatch": "Pozadina {{hex}}",
+      "customBackground": "Prilagođena boja pozadine",
+      "emptyTitle": "Stranica je prazna",
+      "emptyBody": "Počnite od predloška, besplatnog elementa, vlastite datoteke ili samo pitajte AI.",
+      "browseAssets": "Pregledaj besplatne elemente",
+      "importMedia": "Uvezi medije",
+      "generateClip": "Generiraj isječak",
+      "addHeadline": "Dodaj naslov"
     }
   }
 }

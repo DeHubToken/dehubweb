@@ -3767,6 +3767,78 @@
       "hint": "Isebenza kudivayisi yakho: mahhala, iyimfihlo, akukho okulayishwayo. Ukusetshenziswa kokuqala kudawuniloda imodeli ye-AI, bese kuthatha imizuzwana embalwa.",
       "done": "Ingemuva lisusiwe.",
       "failed": "Akukwazekanga ukususa ingemuva. Zama esinye isithombe, noma isiphequluli esifana ne-Chrome noma i-Edge."
+    },
+    "templates": {
+      "heading": "Izifanekiso",
+      "hint": "Khetha esisodwa ukuze uqale. Wonke amagama, imibala nezithombe kungashintshwa, noma ucele i-AI ikushintshele.",
+      "use": "Sebenzisa isifanekiso se-{{name}}",
+      "replaceConfirm": "Faka lesi sifanekiso esikhundleni sedizayini yamanje? Ungakuhlehlisa.",
+      "sale": {
+        "title": "Intengiso Yehlobo",
+        "subtitle": "Kuze kube ngu-50% phansi · Ngale mpelasonto kuphela"
+      },
+      "quote": {
+        "title": "Ikhadi lesicaphuno",
+        "body": "Kwenze kube lula, kodwa kube nomthelela.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "Ngeke ukukholwe!",
+        "badge": "Okusha"
+      },
+      "story": {
+        "title": "Okusha kufikile",
+        "cta": "Swayipha phezulu uthenge"
+      },
+      "event": {
+        "title": "Ubusuku bomculo obukhoma",
+        "date": "NgoLwesihlanu 8 ebusuku",
+        "place": "I-Warehouse, edolobheni"
+      },
+      "podcast": {
+        "title": "I-Creator Show",
+        "episode": "Isiqephu 12 · Sesiphumile"
+      },
+      "announcement": {
+        "kicker": "Kuyeza maduze",
+        "title": "Kuza izindaba ezinkulu"
+      },
+      "crypto": {
+        "title": "Isibuyekezo sentengo",
+        "change": "+42% kuleli sonto"
+      },
+      "birthday": {
+        "title": "Usuku lokuzalwa oluhle",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "I-Meme",
+        "top": "Uma ikhodi isebenza",
+        "bottom": "Ngomzamo wokuqala"
+      }
+    },
+    "design": {
+      "format": "Ifomethi",
+      "landscape": "Okuvundlile",
+      "landscapeDetail": "YouTube, iwebhu",
+      "vertical": "Okumile",
+      "verticalDetail": "Shorts, Reels",
+      "square": "Isikwele",
+      "squareDetail": "Okuthunyelwe kwe-feed",
+      "portrait": "Iphothreyithi",
+      "portraitDetail": "Instagram",
+      "canvas": "Ikhanvasi",
+      "resolution": "Ukucaca",
+      "frameRate": "Isilinganiso sozimele",
+      "background": "Ingemuva",
+      "backgroundSwatch": "Ingemuva {{hex}}",
+      "customBackground": "Umbala wengemuva wangokwezifiso",
+      "emptyTitle": "Ikhasi alinalutho",
+      "emptyBody": "Qala ngesifanekiso, impahla yamahhala, ifayela lakho, noma vele ubuze i-AI.",
+      "browseAssets": "Phequlula izimpahla zamahhala",
+      "importMedia": "Ngenisa imidiya",
+      "generateClip": "Khiqiza isiqeshana",
+      "addHeadline": "Engeza isihloko"
     }
   },
   "fractions": {

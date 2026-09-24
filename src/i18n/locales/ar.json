@@ -6061,6 +6061,78 @@
       "hint": "يعمل على جهازك: مجاني وخاص ولا يُرفع أي شيء. في أول استخدام يُنزَّل نموذج الذكاء الاصطناعي، ثم يستغرق الأمر بضع ثوانٍ فقط.",
       "done": "تمت إزالة الخلفية.",
       "failed": "تعذّرت إزالة الخلفية. جرّب صورة أخرى أو متصفحًا مثل Chrome أو Edge."
+    },
+    "templates": {
+      "heading": "القوالب",
+      "hint": "اختر قالبًا للبدء. يمكنك تغيير كل كلمة ولون وصورة، أو اطلب من الذكاء الاصطناعي تغييرها لك.",
+      "use": "استخدم قالب {{name}}",
+      "replaceConfirm": "هل تريد استبدال التصميم الحالي بهذا القالب؟ يمكنك التراجع.",
+      "sale": {
+        "title": "تخفيضات الصيف",
+        "subtitle": "خصم حتى 50% · نهاية هذا الأسبوع فقط"
+      },
+      "quote": {
+        "title": "بطاقة اقتباس",
+        "body": "اجعلها بسيطة، لكن مؤثرة.",
+        "author": "Don Draper"
+      },
+      "thumbnail": {
+        "title": "لن تصدق هذا",
+        "badge": "جديد"
+      },
+      "story": {
+        "title": "إصدار جديد",
+        "cta": "اسحب للأعلى للتسوق"
+      },
+      "event": {
+        "title": "ليلة موسيقى حية",
+        "date": "الجمعة 8 مساءً",
+        "place": "The Warehouse، وسط المدينة"
+      },
+      "podcast": {
+        "title": "The Creator Show",
+        "episode": "الحلقة 12 · متاحة الآن"
+      },
+      "announcement": {
+        "kicker": "قريبًا",
+        "title": "خبر كبير قادم"
+      },
+      "crypto": {
+        "title": "تحديث السعر",
+        "change": "+42% هذا الأسبوع"
+      },
+      "birthday": {
+        "title": "عيد ميلاد سعيد",
+        "name": "Sam!"
+      },
+      "meme": {
+        "title": "ميم",
+        "top": "عندما يعمل الكود",
+        "bottom": "من أول محاولة"
+      }
+    },
+    "design": {
+      "format": "التنسيق",
+      "landscape": "أفقي",
+      "landscapeDetail": "YouTube، الويب",
+      "vertical": "عمودي",
+      "verticalDetail": "Shorts، Reels",
+      "square": "مربع",
+      "squareDetail": "منشور",
+      "portrait": "طولي",
+      "portraitDetail": "Instagram",
+      "canvas": "اللوحة",
+      "resolution": "الدقة",
+      "frameRate": "معدل الإطارات",
+      "background": "الخلفية",
+      "backgroundSwatch": "الخلفية {{hex}}",
+      "customBackground": "لون خلفية مخصص",
+      "emptyTitle": "الصفحة فارغة",
+      "emptyBody": "ابدأ بقالب أو مورد مجاني أو ملفك الخاص، أو اطلب من الذكاء الاصطناعي.",
+      "browseAssets": "تصفح الموارد المجانية",
+      "importMedia": "استيراد وسائط",
+      "generateClip": "توليد مقطع",
+      "addHeadline": "إضافة عنوان"
     }
   }
 }
