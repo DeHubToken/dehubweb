@@ -407,7 +407,9 @@ function FeedDescription({
   description,
   isTranslated,
   translatedText,
+  onOpen,
 }: { 
+  onOpen?: () => void;
   postId: string;
   disabled?: boolean;
   title?: string; 
@@ -416,7 +418,19 @@ function FeedDescription({
   translatedText?: string;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const tapGestures = useTapGestures({ postId, disabled, enableLongPress: false });
+  // A single tap on the title or description opens the post, like the rest of
+  // the card; two and three taps still react. Links and "See more" keep theirs.
+  const tapGestures = useTapGestures({
+    postId,
+    disabled,
+    enableLongPress: false,
+    onSingleTap: (event) => {
+      if ((event.target as HTMLElement | null)?.closest?.('button, a, input, textarea, [role="button"]')) return;
+      const selection = window.getSelection();
+      if (selection && selection.toString().length > 0) return;
+      onOpen?.();
+    },
+  });
   const MAX_LENGTH = 150;
   
   // Parse translated text back into title/description.
@@ -1160,6 +1174,12 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         {/* Title & Description */}
         <FeedDescription 
           postId={post.id}
+          onOpen={() => {
+            if (wasDrawerJustDismissed()) return;
+            if (showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
+            cacheImageForNavigation(queryClient, post);
+            navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
+          }}
           disabled={matureGate.isGated || isPPV || isW2E || isLocked || isSubGated}
           title={post.title} 
           description={post.description}

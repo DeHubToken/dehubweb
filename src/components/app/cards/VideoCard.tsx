@@ -1448,10 +1448,19 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     onUndoSingleTap: isImmersive ? handlePlayClick : undefined,
   });
 
+  // A single tap on the title or description opens the post, like the rest of
+  // the card; two and three taps still react. Links and "See more" keep theirs.
   const captionTapGestures = useTapGestures({
     postId: video.id,
     disabled: hideActions || isContentGated,
     enableLongPress: false,
+    onSingleTap: (event) => {
+      if (isImmersive) return;
+      if ((event.target as HTMLElement | null)?.closest?.('button, a, input, textarea, [role="button"]')) return;
+      const selection = window.getSelection();
+      if (selection && selection.toString().length > 0) return;
+      openPost();
+    },
   });
 
   // Playback and reactions run from pointer events above. The compatibility
