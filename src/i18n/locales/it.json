@@ -3838,7 +3838,16 @@
     "aiGenerationCommunityAlt": "Generazione IA dalla comunità DeHub",
     "close": "Chiudi",
     "toolFlow": "Creator Flow",
-    "toolFlowDesc": "Testo a catena, riferimenti, modelli di immagini e video su tela, eseguilo in un unico pagamento, condividilo con un link."
+    "toolFlowDesc": "Testo a catena, riferimenti, modelli di immagini e video su tela, eseguilo in un unico pagamento, condividilo con un link.",
+    "freeImagesLeft_one": "Gratis · {{count}} immagine libera rimasta",
+    "freeImagesLeft_other": "Gratis · {{count}} immagini gratuite rimaste",
+    "priceFreeRateLimited": "Gratuito · si applicano limiti tariffari",
+    "priceChecking": "Verifica del prezzo in corso...",
+    "priceUnavailable": "Prezzo non disponibile — riprova prima di pagare",
+    "priceStandardTexture": "texture standard",
+    "priceUsually": "Di solito {{time}}; le code potrebbero richiedere più tempo",
+    "useFreeModel_one": "Passa a {{model}} per utilizzare l'immagine gratuita di {{count}}",
+    "useFreeModel_other": "Passa a {{model}} per utilizzare le tue {{count}} immagini gratuite"
   },
   "pricing": {
     "plansForEveryWorkflow": "Piani per ogni flusso di lavoro",

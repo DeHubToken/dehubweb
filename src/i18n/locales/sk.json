@@ -4083,5 +4083,16 @@
     "desc": "Jasný deň alebo šerý modrý večer v džungli",
     "day": "Deň",
     "evening": "Večer"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Zostáva voľný · {{count}} voľný obrázok",
+    "freeImagesLeft_other": "Zostávajúce bezplatné · {{count}}",
+    "priceFreeRateLimited": "Zadarmo · uplatňujú sa limity sadzieb",
+    "priceChecking": "Kontroluje sa cena...",
+    "priceUnavailable": "Cena nie je k dispozícii — skúste to znova pred zaplatením",
+    "priceStandardTexture": "štandardná textúra",
+    "priceUsually": "Zvyčajne {{time}}; fronty môžu trvať dlhšie",
+    "useFreeModel_one": "Prepnite na {{model}} a použite svoj {{count}} bezplatný obrázok",
+    "useFreeModel_other": "Prepnite na {{model}} a použite svoje {{count}} bezplatné obrázky"
   }
 }

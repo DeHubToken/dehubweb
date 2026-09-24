@@ -3846,5 +3846,16 @@
     "desc": "Jeňňelde ýagty gün ýa-da gök öwüşginli agşam",
     "day": "Gündiz",
     "evening": "Agşam"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Özgür · {{count}} pulsuz surat çep",
+    "freeImagesLeft_other": "Özgür {{count}} Özgür suratlar",
+    "priceFreeRateLimited": "Pulsuz · derejeler çäkleri ulanylýar",
+    "priceChecking": "Baýlyk bilen...",
+    "priceUnavailable": "Öýlenmezden öň gaýtargy",
+    "priceStandardTexture": "standart teksturasy",
+    "priceUsually": "Adatça {{time}}; ýüpler köp wagt sarp edip biler",
+    "useFreeModel_one": "{{model}}saýtyna geçip, öz {{count}}pulsuz suratyňy ulan",
+    "useFreeModel_other": "{{model}}saýtyna geçip, öz {{count}}pulsuz suratlaryňyzy ulanyň"
   }
 }

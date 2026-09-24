@@ -3692,7 +3692,16 @@
     "aiGenerationCommunityAlt": "AI generation mula sa DeHub community",
     "close": "Isara",
     "toolFlow": "Daloy ng Tagapaglikha",
-    "toolFlowDesc": "Chain teksto, mga sanggunian, imahe at video modelo sa isang canvas, patakbuhin ito sa isang pagbabayad, ibahagi ito sa isang link."
+    "toolFlowDesc": "Chain teksto, mga sanggunian, imahe at video modelo sa isang canvas, patakbuhin ito sa isang pagbabayad, ibahagi ito sa isang link.",
+    "freeImagesLeft_one": "Libre ·{{count}} ang natitirang libreng larawan",
+    "freeImagesLeft_other": "Libre ·{{count}} mga libreng larawan na natitira",
+    "priceFreeRateLimited": "Libre · nalalapat ang mga limitasyon ng rate",
+    "priceChecking": "Sinusuri ang presyo...",
+    "priceUnavailable": "Hindi available ang presyo — subukan muli bago magbayad",
+    "priceStandardTexture": "karaniwang texture",
+    "priceUsually": "Karaniwang {{time}}; maaaring mas matagal ang mga pila",
+    "useFreeModel_one": "Lumipat sa {{model}} para gamitin ang iyong {{count}} libreng larawan",
+    "useFreeModel_other": "Lumipat sa {{model}} para gamitin ang iyong {{count}} libreng mga larawan"
   },
   "pricing": {
     "plansForEveryWorkflow": "Mga plano para sa bawat workflow",

@@ -3935,5 +3935,16 @@
     "desc": "Guyyaa ifaa ykn galgala cuquliisaa bosona keessatti",
     "day": "Guyyaa",
     "evening": "Galgala"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Bilisaa · {{count}} suuraa bilisaa hafe",
+    "freeImagesLeft_other": "Bilisaa · {{count}} suuraa bilisaa hafe",
+    "priceFreeRateLimited": "Daangaan gatii bilisaa · ni raawwatama",
+    "priceChecking": "Gatii ilaalaa jirra...",
+    "priceUnavailable": "Gatiin hin argamu — osoo hin kaffaliin dura irra deebi&#39;ii yaali",
+    "priceStandardTexture": "teekchara istaandaardii",
+    "priceUsually": "Yeroo baayyee {{time}}; tarreen yeroo dheeraa fudhachuu danda’a",
+    "useFreeModel_one": "Fakkii bilisaa {{count}} keessan fayyadamuuf gara {{model}} tti jijjiiraa",
+    "useFreeModel_other": "Suuraalee bilisaa {{count}} keessan fayyadamuuf gara {{model}} tti jijjiiraa"
   }
 }

@@ -3832,7 +3832,16 @@
     "aiGenerationCommunityAlt": "DeHubコミュニティからのAI生成",
     "close": "閉じる",
     "toolFlow": "クリエイターフロー",
-    "toolFlowDesc": "キャンバス上のチェーンテキスト、参照、画像、ビデオモデルを1回の支払いで実行し、リンクで共有します。"
+    "toolFlowDesc": "キャンバス上のチェーンテキスト、参照、画像、ビデオモデルを1回の支払いで実行し、リンクで共有します。",
+    "freeImagesLeft_one": "無料·残り{{count}}枚の無料画像",
+    "freeImagesLeft_other": "無料·残り{{count}}枚の無料画像",
+    "priceFreeRateLimited": "無料・料金制限が適用されます",
+    "priceChecking": "価格を確認しています…",
+    "priceUnavailable": "価格は利用できません—支払う前に再試行してください",
+    "priceStandardTexture": "標準テクスチャ",
+    "priceUsually": "通常は{{time}}です。待ち時間が長くなる場合があります",
+    "useFreeModel_one": "{{count}}の空き画像を使用するには、{{model}}に切り替えてください",
+    "useFreeModel_other": "{{count}}の無料画像を使用するには、{{model}}に切り替えてください"
   },
   "pricing": {
     "plansForEveryWorkflow": "すべてのワークフロー向けプラン",

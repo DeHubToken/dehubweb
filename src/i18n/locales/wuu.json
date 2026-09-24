@@ -3815,5 +3815,16 @@
     "desc": "丛林里个明媚日里或者幽蓝黄昏",
     "day": "日里",
     "evening": "夜快"
+  },
+  "creator": {
+    "freeImagesLeft_one": "免费 · 还有{{count}}张免费图片",
+    "freeImagesLeft_other": "免费 · 还有{{count}}张免费图片",
+    "priceFreeRateLimited": "免费 · 速率限制适用",
+    "priceChecking": "正在检查价格…",
+    "priceUnavailable": "价格不可用 — 付款前重试",
+    "priceStandardTexture": "标准纹理",
+    "priceUsually": "通常是 {{time}}；队列可能需要更长时间",
+    "useFreeModel_one": "换到 {{model}} 来用你个 {{count}} 张免费图",
+    "useFreeModel_other": "换到 {{model}} 来用你个 {{count}} 张免费图"
   }
 }

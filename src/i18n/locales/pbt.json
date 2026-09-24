@@ -3756,5 +3756,16 @@
     "desc": "په ځنګل کې روښانه ورځ یا شین ماښام",
     "day": "ورځ",
     "evening": "ماښام"
+  },
+  "creator": {
+    "freeImagesLeft_one": "وړیا · {{count}} وړیا انځور پاتې دی",
+    "freeImagesLeft_other": "وړیا · {{count}} وړیا انځورونه پاتې دي",
+    "priceFreeRateLimited": "د نرخ محدودیتونه: د نرخ محدودیتونه پلي کیږي",
+    "priceChecking": "د قیمتونو معاینه کول...",
+    "priceUnavailable": "قیمتونه د لاسرسي وړ ندي — مخکې له دې چې تادیه وکړئ بیا هڅه وکړئ",
+    "priceStandardTexture": "معیاري متنونه",
+    "priceUsually": "معمولاً {{time}}؛ کتارونه ښايي ډېر وخت ونيسي",
+    "useFreeModel_one": "خپل {{count}} وړیا انځور کارولو لپاره {{model}} ته واوړئ",
+    "useFreeModel_other": "خپلو {{count}} وړیا انځورونو کارولو لپاره {{model}} ته واوړئ"
   }
 }

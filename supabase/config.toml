@@ -5,6 +5,8 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.editor-assets]
     verify_jwt = false
+  [functions.ai-free]
+    verify_jwt = false
   [functions.creator-library]
     verify_jwt = false
   [functions.creator-reconcile]

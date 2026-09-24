@@ -3082,5 +3082,16 @@
     "desc": "Ведар дан или сумрачно плаво вече у џунгли",
     "day": "Дан",
     "evening": "Вече"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Бесплатно · преостала је {{count}} бесплатна слика",
+    "freeImagesLeft_other": "Бесплатно · преостало је {{count}} бесплатних слика",
+    "priceFreeRateLimited": "Бесплатно · важе ограничења коришћења",
+    "priceChecking": "Провера цене…",
+    "priceUnavailable": "Цена није доступна — покушајте поново пре плаћања",
+    "priceStandardTexture": "стандардна текстура",
+    "priceUsually": "Обично {{time}}; редови могу трајати дуже",
+    "useFreeModel_one": "Пређите на {{model}} да искористите своју {{count}} бесплатну слику",
+    "useFreeModel_other": "Пређите на {{model}} да искористите својих {{count}} бесплатних слика"
   }
 }

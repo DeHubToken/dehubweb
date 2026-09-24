@@ -3861,5 +3861,16 @@
     "desc": "En helle Tag oder en dämmrig blaue Abig im Dschungel",
     "day": "Tag",
     "evening": "Abig"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Gratis · {{count}} gratis Bild übrig",
+    "freeImagesLeft_other": "Gratis · {{count}} gratis Bilder übrig",
+    "priceFreeRateLimited": "Gratis · Rate Limits gilt",
+    "priceChecking": "Prüfe Preis…",
+    "priceUnavailable": "Preis nöd verfügbar — probier’s no mal vor em Bezahle",
+    "priceStandardTexture": "Standard Textur",
+    "priceUsually": "Normalerwiis {{time}}; Wartezyte chönd länger sii",
+    "useFreeModel_one": "Schalt zu {{model}} zum bruuche din {{count}} gratis Bild",
+    "useFreeModel_other": "Schalt zu {{model}} zum bruuche din {{count}} gratis Bilder"
   }
 }

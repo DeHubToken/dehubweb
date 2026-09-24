@@ -3816,5 +3816,16 @@
     "desc": "जंगल में उजर दिन या नीला साँझ",
     "day": "दिन",
     "evening": "साँझ"
+  },
+  "creator": {
+    "freeImagesLeft_one": "मुफ्त · {{count}} गो मुफ्त फोटो बचल हे",
+    "freeImagesLeft_other": "मुफ्त · {{count}} गो मुफ्त फोटो बचल हे",
+    "priceFreeRateLimited": "Free के तरीका से Promote करे",
+    "priceChecking": "चाहे कीमत चेक करे -",
+    "priceUnavailable": "No Replies to \"रिचार्ज के बाद रिचार्ज करे अपना प्राइस\"",
+    "priceStandardTexture": "स्टैंडर्ड कैलक्यूलेटर",
+    "priceUsually": "अक्सर {{time}}; कतार में जादे समय लग सकऽ हे",
+    "useFreeModel_one": "अप्पन {{count}} गो मुफ्त फोटो ला {{model}} पर जा",
+    "useFreeModel_other": "अप्पन {{count}} गो मुफ्त फोटो ला {{model}} पर जा"
   }
 }

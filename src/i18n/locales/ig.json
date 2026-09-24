@@ -3853,5 +3853,16 @@
     "desc": "Ụbọchị na-enwu enwu ma ọ bụ mgbede na-acha anụnụ anụnụ n’ọhịa",
     "day": "Ehihie",
     "evening": "Mgbede"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Free · {{count}} free image left",
+    "freeImagesLeft_other": "Free · {{count}} free oyiyi ekpe",
+    "priceFreeRateLimited": "Free · ọnụego ịgba emetụta",
+    "priceChecking": "Inyocha price...",
+    "priceUnavailable": "Ọnụahịa adịghị — gbalịa ọzọ tupu ị kwụọ ụgwọ",
+    "priceStandardTexture": "ọkọlọtọ udidi",
+    "priceUsually": "Na-emekarị {{time}}; folda nwere ike iwe ogologo oge",
+    "useFreeModel_one": "Banye na {{model}} iji gị {{count}} free image",
+    "useFreeModel_other": "Banye {{model}} iji gị {{count}} free oyiyi"
   }
 }

@@ -3887,5 +3887,16 @@
     "desc": "نهار منوّر أو مسا أزرق هادي في الغابة",
     "day": "نهار",
     "evening": "مسا"
+  },
+  "creator": {
+    "freeImagesLeft_one": "صورة مجانية متبقية ·{{count}}",
+    "freeImagesLeft_other": "تبقى صور مجانية ·{{count}}",
+    "priceFreeRateLimited": "مجاناً · تُطبَّق حدود الأسعار",
+    "priceChecking": "جارٍ التحقق من السعر...",
+    "priceUnavailable": "السعر غير متاح — أعد المحاولة قبل الدفع",
+    "priceStandardTexture": "القوام القياسي",
+    "priceUsually": "عادة {{time}}؛ قد تستغرق قوائم الانتظار وقتًا أطول",
+    "useFreeModel_one": "قم بالتبديل إلى {{model}} لاستخدام صورتك المجانية {{count}}",
+    "useFreeModel_other": "قم بالتبديل إلى {{model}} لاستخدام صورك المجانية {{count}}"
   }
 }

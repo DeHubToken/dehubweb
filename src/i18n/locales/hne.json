@@ -3810,5 +3810,16 @@
     "desc": "जंगल म उजियार दिन या नीला संझा",
     "day": "दिन",
     "evening": "संझा"
+  },
+  "creator": {
+    "freeImagesLeft_one": "फ्री {{count}} free image left",
+    "freeImagesLeft_other": "मुक्त {{count}} free images left",
+    "priceFreeRateLimited": "फ्री - दर सीमा लागू",
+    "priceChecking": "कीमत ल देखते हुए तर्कसंगत...",
+    "priceUnavailable": "कीमत उपलब्ध नी हवय — भुगतान करे से पहले रिट्री करे",
+    "priceStandardTexture": "मानक बनावट",
+    "priceUsually": "सामान्य {{time}}; कतारों ल जादा समय लग सकत हे",
+    "useFreeModel_one": "अपन {{count}} ठन मुफत फोटो बर {{model}} म जाव",
+    "useFreeModel_other": "अपन {{count}} ठन मुफत फोटो बर {{model}} म जाव"
   }
 }
