@@ -47,6 +47,9 @@ const DIRECT_MODELS: Record<string, string[]> = {
   'google/gemini-2.5-flash-lite': ['gemini-2.5-flash-lite', ...KNOWN_GOOD],
   'google/gemini-2.5-pro': ['gemini-2.5-pro', ...KNOWN_GOOD],
   'google/gemini-3-flash-preview': ['gemini-3-flash-preview', ...KNOWN_GOOD],
+  // KNOWN_GOOD's own head, asked for by name. Direct-only: the gateway has no
+  // such id, so there is nothing to fall back to beyond the ladder.
+  'google/gemini-3.5-flash-lite': [...KNOWN_GOOD],
 };
 
 /** Ids Google has 404'd in this isolate — not worth asking twice. */
