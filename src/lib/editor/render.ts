@@ -10,7 +10,7 @@
  * testing and the pixels that get drawn can never disagree about where a clip
  * is.
  */
-import type { Clip, ClipTransform, MediaClip, TextClip } from "./types";
+import type { Clip, ClipTransform, MediaClip, ShapeClip, TextClip } from "./types";
 import { computeClipAnimation } from "./animationPresets";
 
 export type Ctx2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
@@ -45,8 +45,9 @@ export function getTransform(clip: Clip): ClipTransform {
 /** Update a clip's placement; text keeps its anchor in x/y, media in transform. */
 export function placementPatch(clip: MediaClip, patch: Partial<ClipTransform>): Partial<MediaClip>;
 export function placementPatch(clip: TextClip, patch: Partial<ClipTransform>): Partial<TextClip>;
-export function placementPatch(clip: Clip, patch: Partial<ClipTransform>): Partial<MediaClip> | Partial<TextClip>;
-export function placementPatch(clip: Clip, patch: Partial<ClipTransform>): Partial<MediaClip> | Partial<TextClip> {
+export function placementPatch(clip: ShapeClip, patch: Partial<ClipTransform>): Partial<ShapeClip>;
+export function placementPatch(clip: Clip, patch: Partial<ClipTransform>): Partial<MediaClip> | Partial<TextClip> | Partial<ShapeClip>;
+export function placementPatch(clip: Clip, patch: Partial<ClipTransform>): Partial<MediaClip> | Partial<TextClip> | Partial<ShapeClip> {
   const next = { ...getTransform(clip), ...patch };
   if (clip.kind === "text") {
     const out: Partial<TextClip> = { transform: next };
@@ -58,7 +59,7 @@ export function placementPatch(clip: Clip, patch: Partial<ClipTransform>): Parti
 }
 
 export function isVisualClip(clip: Clip): boolean {
-  return clip.kind === "video" || clip.kind === "image" || clip.kind === "text";
+  return clip.kind === "video" || clip.kind === "image" || clip.kind === "text" || clip.kind === "shape";
 }
 
 function mediaSource(clip: MediaClip, src: RenderSources): { el: CanvasImageSource; w: number; h: number } | null {
@@ -121,7 +122,7 @@ function layoutText(ctx: Ctx2D, text: TextClip, H: number): TextLayout {
 
 /** Where a clip sits, in canvas pixels. Null while its media has not decoded yet. */
 export function clipBox(ctx: Ctx2D, clip: Clip, W: number, H: number, src: RenderSources): ClipBox | null {
-  const m = clip.kind === "image" || clip.kind === "video" ? mediaSource(clip, src) : null;
+  const m = clip.kind === "image" || clip.kind === "video" ? mediaSource(clip as MediaClip, src) : null;
   return clipBoxForSize(ctx, clip, W, H, m ? { w: m.w, h: m.h } : null);
 }
 
@@ -137,6 +138,9 @@ export function clipBoxForSize(
     const ax = clip.x * W;
     const cx = clip.align === "centre" ? ax : clip.align === "left" ? ax + l.maxW / 2 : ax - l.maxW / 2;
     return { cx, cy: clip.y * H, w, h, rotation: tr.rotation };
+  }
+  if (clip.kind === "shape") {
+    return { cx: tr.x * W, cy: tr.y * H, w: Math.max(1, clip.w * W * tr.scale), h: Math.max(1, clip.h * H * tr.scale), rotation: tr.rotation };
   }
   if (clip.kind === "audio" || !size || !size.w || !size.h) return null;
   const m = size;
@@ -218,7 +222,7 @@ export function roundRectPath(ctx: Ctx2D, x: number, y: number, w: number, h: nu
  * (translate / clip rect / alpha) and wraps this in save/restore.
  */
 export function drawClip(ctx: Ctx2D, W: number, H: number, clip: Clip, t: number, src: RenderSources) {
-  if (!isVisualClip(clip)) return;
+  if (!isVisualClip(clip) || clip.hidden) return;
   const box = clipBox(ctx, clip, W, H, src);
   if (!box) return;
   const tr = getTransform(clip);
@@ -245,9 +249,11 @@ export function drawClip(ctx: Ctx2D, W: number, H: number, clip: Clip, t: number
   }
   ctx.globalAlpha = alpha;
   ctx.filter = cssFilterFor(clip, anim.blurPx);
+  if (clip.blend && clip.blend !== "normal") ctx.globalCompositeOperation = clip.blend;
 
   if (clip.kind === "text") drawText(ctx, clip, box, H);
-  else drawMedia(ctx, clip, box, H, src);
+  else if (clip.kind === "shape") drawShape(ctx, clip, box, H);
+  else drawMedia(ctx, clip as MediaClip, box, H, src);
 
   ctx.restore();
 }
@@ -284,6 +290,85 @@ function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: Re
     ctx.drawImage(m.el, sx, sy, sw, sh, x, y, box.w, box.h);
     clearShadow(ctx);
   }
+}
+
+/** Build the outline of a shape centred on the origin. */
+export function shapePath(ctx: Ctx2D, shape: ShapeClip["shape"], w: number, h: number, radius = 0) {
+  const hw = w / 2;
+  const hh = h / 2;
+  ctx.beginPath();
+  switch (shape) {
+    case "rect":
+      roundRectPath(ctx, -hw, -hh, w, h, radius);
+      return;
+    case "ellipse":
+      ctx.ellipse(0, 0, hw, hh, 0, 0, Math.PI * 2);
+      break;
+    case "triangle":
+      ctx.moveTo(0, -hh);
+      ctx.lineTo(hw, hh);
+      ctx.lineTo(-hw, hh);
+      break;
+    case "hexagon":
+      for (let i = 0; i < 6; i++) {
+        const a = (Math.PI / 3) * i;
+        const x = Math.cos(a) * hw;
+        const y = Math.sin(a) * hh;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      break;
+    case "star":
+      for (let i = 0; i < 10; i++) {
+        const a = -Math.PI / 2 + (Math.PI / 5) * i;
+        const r = i % 2 === 0 ? 1 : 0.42;
+        const x = Math.cos(a) * hw * r;
+        const y = Math.sin(a) * hh * r;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      break;
+    case "heart":
+      ctx.moveTo(0, hh);
+      ctx.bezierCurveTo(-hw * 1.1, hh * 0.1, -hw * 0.9, -hh * 1.1, 0, -hh * 0.45);
+      ctx.bezierCurveTo(hw * 0.9, -hh * 1.1, hw * 1.1, hh * 0.1, 0, hh);
+      break;
+    case "line":
+      ctx.moveTo(-hw, 0);
+      ctx.lineTo(hw, 0);
+      return;
+    case "arrow": {
+      const head = Math.min(w * 0.3, Math.max(h * 1.5, 12));
+      ctx.moveTo(-hw, 0);
+      ctx.lineTo(hw, 0);
+      ctx.moveTo(hw - head, -head * 0.6);
+      ctx.lineTo(hw, 0);
+      ctx.lineTo(hw - head, head * 0.6);
+      return;
+    }
+  }
+  ctx.closePath();
+}
+
+function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
+  const k = H / 1080;
+  const open = clip.shape === "line" || clip.shape === "arrow";
+  shapePath(ctx, clip.shape, box.w, box.h, (clip.radius ?? 0) * k);
+  applyShadow(ctx, clip, H);
+  if (!open && clip.fill) {
+    ctx.fillStyle = clip.fill;
+    ctx.fill();
+    clearShadow(ctx);
+  }
+  const stroke = clip.stroke ?? (open ? { color: clip.fill ?? "#ffffff", width: 8 } : null);
+  if (stroke && stroke.width > 0) {
+    ctx.lineWidth = stroke.width * k;
+    ctx.strokeStyle = stroke.color;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.stroke();
+  }
+  clearShadow(ctx);
 }
 
 function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, H: number) {

@@ -5715,7 +5715,8 @@
       "shadowOpacity": "Intensitate {{value}}%",
       "shadowBlur": "Estompare {{value}}",
       "shadowX": "Decalaj X {{value}}",
-      "shadowY": "Decalaj Y {{value}}"
+      "shadowY": "Decalaj Y {{value}}",
+      "blend": "Amestecare"
     },
     "menu": {
       "addText": "Adaugă text",
@@ -5742,7 +5743,10 @@
       "generations": "Generări",
       "edit": "Editare",
       "collapse": "Restrânge panoul",
-      "home": "Acasă"
+      "home": "Acasă",
+      "elements": "Elemente",
+      "layers": "Straturi",
+      "tools": "Instrumente editor"
     },
     "agent": {
       "introTitle": "Spune-i AI-ului ce vrei",
@@ -5765,6 +5769,54 @@
       "changes": "Editări făcute: {{count}}",
       "undo": "Anulare",
       "openGenerator": "Verifică și generează"
+    },
+    "shape": {
+      "rect": "Dreptunghi",
+      "ellipse": "Cerc",
+      "triangle": "Triunghi",
+      "star": "Stea",
+      "heart": "Inimă",
+      "hexagon": "Hexagon",
+      "line": "Linie",
+      "arrow": "Săgeată",
+      "style": "Stil formă",
+      "fill": "Umplere",
+      "fillOn": "Umplere",
+      "outline": "Contur",
+      "outlineOn": "Contur",
+      "outlineWidth": "Grosime contur {{value}}"
+    },
+    "elements": {
+      "shapes": "Forme",
+      "hint": "Dă clic pe o formă ca s-o adaugi în pagină. Trage de mânerele laterale ca s-o întinzi și de colțuri ca s-o redimensionezi."
+    },
+    "layers": {
+      "text": "Text",
+      "media": "Media",
+      "empty": "Deocamdată nu e nimic pe pagină în dreptul cursorului de redare.",
+      "lock": "Blochează",
+      "unlock": "Deblochează",
+      "show": "Afișează",
+      "hide": "Ascunde",
+      "hint": "Primul din listă este în față. Trage pentru a reordona. Straturile blocate și ascunse pot fi selectate doar de aici."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Multiplicare",
+      "screen": "Ecran",
+      "overlay": "Suprapunere",
+      "darken": "Întunecare",
+      "lighten": "Luminare",
+      "colorDodge": "Evitare culoare",
+      "colorBurn": "Ardere culoare",
+      "hardLight": "Lumină puternică",
+      "softLight": "Lumină difuză",
+      "difference": "Diferență",
+      "exclusion": "Excludere",
+      "hue": "Nuanță",
+      "saturation": "Saturație",
+      "color": "Culoare",
+      "luminosity": "Luminozitate"
     }
   },
   "footer": {

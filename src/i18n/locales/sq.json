@@ -3641,7 +3641,8 @@
       "shadowOpacity": "Forca {{value}}%",
       "shadowBlur": "Turbullim {{value}}",
       "shadowX": "Zhvendosja X {{value}}",
-      "shadowY": "Zhvendosja Y {{value}}"
+      "shadowY": "Zhvendosja Y {{value}}",
+      "blend": "Përzierja"
     },
     "menu": {
       "addText": "Shto tekst",
@@ -3668,7 +3669,10 @@
       "generations": "Gjenerimet",
       "edit": "Redakto",
       "collapse": "Palos panelin",
-      "home": "Kreu"
+      "home": "Kreu",
+      "elements": "Elementet",
+      "layers": "Shtresat",
+      "tools": "Veglat e redaktorit"
     },
     "agent": {
       "introTitle": "Tregoji AI-së çfarë dëshiron",
@@ -3691,6 +3695,54 @@
       "changes": "Ndryshime të bëra: {{count}}",
       "undo": "Zhbëj",
       "openGenerator": "Rishiko dhe gjenero"
+    },
+    "shape": {
+      "rect": "Drejtkëndësh",
+      "ellipse": "Rreth",
+      "triangle": "Trekëndësh",
+      "star": "Yll",
+      "heart": "Zemër",
+      "hexagon": "Gjashtëkëndësh",
+      "line": "Vijë",
+      "arrow": "Shigjetë",
+      "style": "Stili i formës",
+      "fill": "Mbushje",
+      "fillOn": "Mbushje",
+      "outline": "Kontur",
+      "outlineOn": "Kontur",
+      "outlineWidth": "Trashësia e konturit {{value}}"
+    },
+    "elements": {
+      "shapes": "Format",
+      "hint": "Kliko një formë për ta shtuar në faqe. Tërhiq dorezat anësore për ta zgjatur dhe qoshet për të ndryshuar madhësinë."
+    },
+    "layers": {
+      "text": "Tekst",
+      "media": "Media",
+      "empty": "Ende nuk ka asgjë në faqe te koka e luajtjes.",
+      "lock": "Kyç",
+      "unlock": "Shkyç",
+      "show": "Shfaq",
+      "hide": "Fshih",
+      "hint": "Maja e listës është përpara. Tërhiq për të rirenditur. Shtresat e kyçura dhe të fshehura mund të zgjidhen vetëm këtu."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Shumëzim",
+      "screen": "Ekran",
+      "overlay": "Mbivendosje",
+      "darken": "Errëso",
+      "lighten": "Ndriço",
+      "colorDodge": "Shmangie ngjyre",
+      "colorBurn": "Djegie ngjyre",
+      "hardLight": "Dritë e fortë",
+      "softLight": "Dritë e butë",
+      "difference": "Diferencë",
+      "exclusion": "Përjashtim",
+      "hue": "Nuancë",
+      "saturation": "Ngopje",
+      "color": "Ngjyrë",
+      "luminosity": "Ndriçim"
     }
   },
   "fractions": {

@@ -3609,7 +3609,8 @@
       "shadowOpacity": "Styrke {{value}}%",
       "shadowBlur": "Uskarphet {{value}}",
       "shadowX": "Forskyvning X {{value}}",
-      "shadowY": "Forskyvning Y {{value}}"
+      "shadowY": "Forskyvning Y {{value}}",
+      "blend": "Blanding"
     },
     "menu": {
       "addText": "Legg til tekst",
@@ -3636,7 +3637,10 @@
       "generations": "Genereringer",
       "edit": "Rediger",
       "collapse": "Skjul panel",
-      "home": "Hjem"
+      "home": "Hjem",
+      "elements": "Elementer",
+      "layers": "Lag",
+      "tools": "Redigeringsverktøy"
     },
     "agent": {
       "introTitle": "Fortell KI-en hva du vil ha",
@@ -3659,6 +3663,54 @@
       "changes": "Endringer gjort: {{count}}",
       "undo": "Angre",
       "openGenerator": "Se over og generer"
+    },
+    "shape": {
+      "rect": "Rektangel",
+      "ellipse": "Sirkel",
+      "triangle": "Trekant",
+      "star": "Stjerne",
+      "heart": "Hjerte",
+      "hexagon": "Sekskant",
+      "line": "Linje",
+      "arrow": "Pil",
+      "style": "Formstil",
+      "fill": "Fyll",
+      "fillOn": "Fyll",
+      "outline": "Omriss",
+      "outlineOn": "Omriss",
+      "outlineWidth": "Omrissbredde {{value}}"
+    },
+    "elements": {
+      "shapes": "Former",
+      "hint": "Klikk på en form for å legge den til på siden. Dra i sidehåndtakene for å strekke den, og i hjørnene for å endre størrelsen."
+    },
+    "layers": {
+      "text": "Tekst",
+      "media": "Medier",
+      "empty": "Ingenting på siden ved avspillingshodet ennå.",
+      "lock": "Lås",
+      "unlock": "Lås opp",
+      "show": "Vis",
+      "hide": "Skjul",
+      "hint": "Øverst i listen er fremst. Dra for å endre rekkefølgen. Låste og skjulte lag kan bare velges her."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Multipliser",
+      "screen": "Skjerm",
+      "overlay": "Overlegg",
+      "darken": "Mørkere",
+      "lighten": "Lysere",
+      "colorDodge": "Fargeunnvikelse",
+      "colorBurn": "Fargebrenning",
+      "hardLight": "Hardt lys",
+      "softLight": "Mykt lys",
+      "difference": "Differanse",
+      "exclusion": "Utelukkelse",
+      "hue": "Fargetone",
+      "saturation": "Metning",
+      "color": "Farge",
+      "luminosity": "Luminans"
     }
   },
   "fractions": {

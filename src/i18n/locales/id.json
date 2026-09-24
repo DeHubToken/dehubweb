@@ -5953,7 +5953,8 @@
       "shadowOpacity": "Kekuatan {{value}}%",
       "shadowBlur": "Blur {{value}}",
       "shadowX": "Offset X {{value}}",
-      "shadowY": "Offset Y {{value}}"
+      "shadowY": "Offset Y {{value}}",
+      "blend": "Pembauran"
     },
     "menu": {
       "addText": "Tambahkan teks",
@@ -5980,7 +5981,10 @@
       "generations": "Hasil buatan",
       "edit": "Edit",
       "collapse": "Ciutkan panel",
-      "home": "Beranda"
+      "home": "Beranda",
+      "elements": "Elemen",
+      "layers": "Lapisan",
+      "tools": "Alat editor"
     },
     "agent": {
       "introTitle": "Beri tahu AI apa yang Anda inginkan",
@@ -6003,6 +6007,54 @@
       "changes": "Edit dilakukan: {{count}}",
       "undo": "Urungkan",
       "openGenerator": "Tinjau dan buat"
+    },
+    "shape": {
+      "rect": "Persegi panjang",
+      "ellipse": "Lingkaran",
+      "triangle": "Segitiga",
+      "star": "Bintang",
+      "heart": "Hati",
+      "hexagon": "Segi enam",
+      "line": "Garis",
+      "arrow": "Panah",
+      "style": "Gaya bentuk",
+      "fill": "Isi",
+      "fillOn": "Isi",
+      "outline": "Garis tepi",
+      "outlineOn": "Garis tepi",
+      "outlineWidth": "Lebar garis tepi {{value}}"
+    },
+    "elements": {
+      "shapes": "Bentuk",
+      "hint": "Klik sebuah bentuk untuk menambahkannya ke halaman. Seret pegangan samping untuk meregangkannya, sudut untuk mengubah ukurannya."
+    },
+    "layers": {
+      "text": "Teks",
+      "media": "Media",
+      "empty": "Belum ada apa pun di halaman pada posisi playhead.",
+      "lock": "Kunci",
+      "unlock": "Buka kunci",
+      "show": "Tampilkan",
+      "hide": "Sembunyikan",
+      "hint": "Bagian atas daftar adalah yang paling depan. Seret untuk menyusun ulang. Lapisan yang terkunci dan tersembunyi hanya bisa dipilih di sini."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Kalikan",
+      "screen": "Layar",
+      "overlay": "Hamparan",
+      "darken": "Gelapkan",
+      "lighten": "Terangkan",
+      "colorDodge": "Dodge warna",
+      "colorBurn": "Burn warna",
+      "hardLight": "Cahaya keras",
+      "softLight": "Cahaya lembut",
+      "difference": "Perbedaan",
+      "exclusion": "Eksklusi",
+      "hue": "Rona",
+      "saturation": "Saturasi",
+      "color": "Warna",
+      "luminosity": "Luminositas"
     }
   }
 }

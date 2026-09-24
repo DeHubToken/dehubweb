@@ -5837,7 +5837,8 @@
       "shadowOpacity": "Síla {{value}}%",
       "shadowBlur": "Rozostření {{value}}",
       "shadowX": "Posun X {{value}}",
-      "shadowY": "Posun Y {{value}}"
+      "shadowY": "Posun Y {{value}}",
+      "blend": "Prolnutí"
     },
     "menu": {
       "addText": "Přidat text",
@@ -5864,7 +5865,10 @@
       "generations": "Vygenerované",
       "edit": "Upravit",
       "collapse": "Sbalit panel",
-      "home": "Domů"
+      "home": "Domů",
+      "elements": "Prvky",
+      "layers": "Vrstvy",
+      "tools": "Nástroje editoru"
     },
     "agent": {
       "introTitle": "Řekněte AI, co chcete",
@@ -5887,6 +5891,54 @@
       "changes": "Provedené úpravy: {{count}}",
       "undo": "Zpět",
       "openGenerator": "Zkontrolovat a vygenerovat"
+    },
+    "shape": {
+      "rect": "Obdélník",
+      "ellipse": "Kruh",
+      "triangle": "Trojúhelník",
+      "star": "Hvězda",
+      "heart": "Srdce",
+      "hexagon": "Šestiúhelník",
+      "line": "Čára",
+      "arrow": "Šipka",
+      "style": "Styl tvaru",
+      "fill": "Výplň",
+      "fillOn": "Výplň",
+      "outline": "Obrys",
+      "outlineOn": "Obrys",
+      "outlineWidth": "Šířka obrysu {{value}}"
+    },
+    "elements": {
+      "shapes": "Tvary",
+      "hint": "Kliknutím na tvar ho přidáte na stránku. Tažením bočních úchytů ho roztáhnete, tažením rohů změníte velikost."
+    },
+    "layers": {
+      "text": "Text",
+      "media": "Média",
+      "empty": "Na pozici přehrávací hlavy zatím na stránce nic není.",
+      "lock": "Zamknout",
+      "unlock": "Odemknout",
+      "show": "Zobrazit",
+      "hide": "Skrýt",
+      "hint": "Horní část seznamu je popředí. Přetažením změníte pořadí. Zamčené a skryté vrstvy lze vybrat jen zde."
+    },
+    "blend": {
+      "normal": "Normální",
+      "multiply": "Násobit",
+      "screen": "Závoj",
+      "overlay": "Překrýt",
+      "darken": "Ztmavit",
+      "lighten": "Zesvětlit",
+      "colorDodge": "Zesvětlit barvy",
+      "colorBurn": "Ztmavit barvy",
+      "hardLight": "Tvrdé světlo",
+      "softLight": "Měkké světlo",
+      "difference": "Rozdíl",
+      "exclusion": "Vyloučit",
+      "hue": "Odstín",
+      "saturation": "Sytost",
+      "color": "Barva",
+      "luminosity": "Světlost"
     }
   }
 }

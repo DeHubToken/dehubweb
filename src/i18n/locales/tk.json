@@ -3579,7 +3579,8 @@
       "shadowOpacity": "Güýç {{value}}%",
       "shadowBlur": "Bulaşyklyk {{value}}",
       "shadowX": "Süýşme X {{value}}",
-      "shadowY": "Süýşme Y {{value}}"
+      "shadowY": "Süýşme Y {{value}}",
+      "blend": "Garyşdyrma"
     },
     "menu": {
       "addText": "Tekst goş",
@@ -3606,7 +3607,10 @@
       "generations": "Döredilenler",
       "edit": "Redaktirle",
       "collapse": "Paneli ýygna",
-      "home": "Baş sahypa"
+      "home": "Baş sahypa",
+      "elements": "Elementler",
+      "layers": "Gatlar",
+      "tools": "Redaktor gurallary"
     },
     "agent": {
       "introTitle": "AI-a näme isleýändigiňizi aýdyň",
@@ -3629,6 +3633,54 @@
       "changes": "Edilen üýtgeşmeler: {{count}}",
       "undo": "Yzyna al",
       "openGenerator": "Gözden geçir we döret"
+    },
+    "shape": {
+      "rect": "Gönüburçluk",
+      "ellipse": "Tegelek",
+      "triangle": "Üçburçluk",
+      "star": "Ýyldyz",
+      "heart": "Ýürek",
+      "hexagon": "Altyburçluk",
+      "line": "Çyzyk",
+      "arrow": "Ok",
+      "style": "Şekil stili",
+      "fill": "Doldurma",
+      "fillOn": "Doldurma",
+      "outline": "Gyra çyzyk",
+      "outlineOn": "Gyra çyzyk",
+      "outlineWidth": "Gyra çyzygyň galyňlygy {{value}}"
+    },
+    "elements": {
+      "shapes": "Şekiller",
+      "hint": "Sahypa goşmak üçin şekile basyň. Uzaltmak üçin gapdal tutawaçlary, ölçegini üýtgetmek üçin burçlary süýşüriň."
+    },
+    "layers": {
+      "text": "Tekst",
+      "media": "Media",
+      "empty": "Oýnatma nokadynda sahypada entek hiç zat ýok.",
+      "lock": "Gulpla",
+      "unlock": "Gulpy aç",
+      "show": "Görkez",
+      "hide": "Gizle",
+      "hint": "Sanawyň ýokarsy öňdäki. Tertibini üýtgetmek üçin süýşüriň. Gulplanan we gizlenen gatlary diňe şu ýerden saýlap bolýar."
+    },
+    "blend": {
+      "normal": "Adaty",
+      "multiply": "Köpeltmek",
+      "screen": "Ekran",
+      "overlay": "Örtük",
+      "darken": "Garaltmak",
+      "lighten": "Ýagtyltmak",
+      "colorDodge": "Reňki ýagtyltmak",
+      "colorBurn": "Reňki ýakmak",
+      "hardLight": "Güýçli yşyk",
+      "softLight": "Ýumşak yşyk",
+      "difference": "Tapawut",
+      "exclusion": "Aýyrmak",
+      "hue": "Öwüşgin",
+      "saturation": "Doýgunlyk",
+      "color": "Reňk",
+      "luminosity": "Ýagtylyk"
     }
   },
   "fractions": {

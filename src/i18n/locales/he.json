@@ -5648,7 +5648,8 @@
       "shadowOpacity": "חוזק {{value}}%",
       "shadowBlur": "טשטוש {{value}}",
       "shadowX": "היסט X {{value}}",
-      "shadowY": "היסט Y {{value}}"
+      "shadowY": "היסט Y {{value}}",
+      "blend": "מיזוג"
     },
     "menu": {
       "addText": "הוספת טקסט",
@@ -5675,7 +5676,10 @@
       "generations": "יצירות",
       "edit": "עריכה",
       "collapse": "כווץ חלונית",
-      "home": "דף הבית"
+      "home": "דף הבית",
+      "elements": "אלמנטים",
+      "layers": "שכבות",
+      "tools": "כלי עריכה"
     },
     "agent": {
       "introTitle": "ספר ל-AI מה אתה רוצה",
@@ -5698,6 +5702,54 @@
       "changes": "עריכות שבוצעו: {{count}}",
       "undo": "בטל",
       "openGenerator": "סקור וצור"
+    },
+    "shape": {
+      "rect": "מלבן",
+      "ellipse": "עיגול",
+      "triangle": "משולש",
+      "star": "כוכב",
+      "heart": "לב",
+      "hexagon": "משושה",
+      "line": "קו",
+      "arrow": "חץ",
+      "style": "סגנון צורה",
+      "fill": "מילוי",
+      "fillOn": "מילוי",
+      "outline": "קו מתאר",
+      "outlineOn": "קו מתאר",
+      "outlineWidth": "עובי קו מתאר {{value}}"
+    },
+    "elements": {
+      "shapes": "צורות",
+      "hint": "לחץ על צורה כדי להוסיף אותה לדף. גרור את הידיות שבצדדים כדי למתוח אותה, ואת הפינות כדי לשנות גודל."
+    },
+    "layers": {
+      "text": "טקסט",
+      "media": "מדיה",
+      "empty": "עדיין אין כלום בדף במיקום סמן ההפעלה.",
+      "lock": "נעל",
+      "unlock": "בטל נעילה",
+      "show": "הצג",
+      "hide": "הסתר",
+      "hint": "ראש הרשימה הוא החזית. גרור כדי לשנות סדר. שכבות נעולות ומוסתרות ניתן לבחור רק כאן."
+    },
+    "blend": {
+      "normal": "רגיל",
+      "multiply": "הכפלה",
+      "screen": "מסך",
+      "overlay": "שכבת-על",
+      "darken": "הכהה",
+      "lighten": "הבהר",
+      "colorDodge": "הבהרת צבע",
+      "colorBurn": "צריבת צבע",
+      "hardLight": "אור חזק",
+      "softLight": "אור רך",
+      "difference": "הפרש",
+      "exclusion": "החרגה",
+      "hue": "גוון",
+      "saturation": "רוויה",
+      "color": "צבע",
+      "luminosity": "בהירות"
     }
   }
 }

@@ -5834,7 +5834,8 @@
       "shadowOpacity": "Vahvuus {{value}}%",
       "shadowBlur": "Sumennus {{value}}",
       "shadowX": "Siirtymä X {{value}}",
-      "shadowY": "Siirtymä Y {{value}}"
+      "shadowY": "Siirtymä Y {{value}}",
+      "blend": "Sekoitus"
     },
     "menu": {
       "addText": "Lisää teksti",
@@ -5861,7 +5862,10 @@
       "generations": "Luodut",
       "edit": "Muokkaa",
       "collapse": "Pienennä paneeli",
-      "home": "Etusivu"
+      "home": "Etusivu",
+      "elements": "Elementit",
+      "layers": "Tasot",
+      "tools": "Editorin työkalut"
     },
     "agent": {
       "introTitle": "Kerro AI:lle, mitä haluat",
@@ -5884,6 +5888,54 @@
       "changes": "Muutoksia: {{count}}",
       "undo": "Kumoa",
       "openGenerator": "Tarkista ja luo"
+    },
+    "shape": {
+      "rect": "Suorakulmio",
+      "ellipse": "Ympyrä",
+      "triangle": "Kolmio",
+      "star": "Tähti",
+      "heart": "Sydän",
+      "hexagon": "Kuusikulmio",
+      "line": "Viiva",
+      "arrow": "Nuoli",
+      "style": "Muodon tyyli",
+      "fill": "Täyttö",
+      "fillOn": "Täyttö",
+      "outline": "Ääriviiva",
+      "outlineOn": "Ääriviiva",
+      "outlineWidth": "Ääriviivan paksuus {{value}}"
+    },
+    "elements": {
+      "shapes": "Muodot",
+      "hint": "Lisää muoto sivulle napsauttamalla sitä. Venytä sivukahvoista ja muuta kokoa kulmista."
+    },
+    "layers": {
+      "text": "Teksti",
+      "media": "Media",
+      "empty": "Toistokohdassa ei ole vielä mitään sivulla.",
+      "lock": "Lukitse",
+      "unlock": "Avaa lukitus",
+      "show": "Näytä",
+      "hide": "Piilota",
+      "hint": "Listan ylin on edessä. Järjestä uudelleen vetämällä. Lukitut ja piilotetut tasot voi valita vain täältä."
+    },
+    "blend": {
+      "normal": "Normaali",
+      "multiply": "Kerro",
+      "screen": "Rasteri",
+      "overlay": "Sulauta",
+      "darken": "Tummenna",
+      "lighten": "Vaalenna",
+      "colorDodge": "Värilisävalotus",
+      "colorBurn": "Värivarjostus",
+      "hardLight": "Kova valo",
+      "softLight": "Pehmeä valo",
+      "difference": "Erotus",
+      "exclusion": "Poisto",
+      "hue": "Sävy",
+      "saturation": "Kylläisyys",
+      "color": "Väri",
+      "luminosity": "Kirkkaus"
     }
   }
 }

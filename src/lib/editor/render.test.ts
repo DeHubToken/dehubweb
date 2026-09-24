@@ -52,3 +52,11 @@ describe("placementPatch", () => {
     expect(patch.transform?.rotation).toBe(45);
   });
 });
+
+describe("shape geometry", () => {
+  it("sizes a shape from page fractions and scale", () => {
+    const shape = { id: "s", trackId: "t", kind: "shape", shape: "rect", start: 0, duration: 5, trimIn: 0,
+      w: 0.5, h: 0.25, fill: "#fff", transform: { x: 0.5, y: 0.5, scale: 2, rotation: 0 } } as const;
+    expect(clipBoxForSize(ctx, shape, 1000, 800, null)).toMatchObject({ w: 1000, h: 400 });
+  });
+});

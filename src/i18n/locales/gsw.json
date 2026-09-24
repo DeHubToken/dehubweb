@@ -3594,7 +3594,8 @@
       "shadowOpacity": "Stärchi {{value}}%",
       "shadowBlur": "Unschärfi {{value}}",
       "shadowX": "Versatz X {{value}}",
-      "shadowY": "Versatz Y {{value}}"
+      "shadowY": "Versatz Y {{value}}",
+      "blend": "Mischmodus"
     },
     "menu": {
       "addText": "Text dezue füege",
@@ -3621,7 +3622,10 @@
       "generations": "Generierts",
       "edit": "Bearbeite",
       "collapse": "Panel zueklappe",
-      "home": "Hei"
+      "home": "Hei",
+      "elements": "Elemänt",
+      "layers": "Ebene",
+      "tools": "Editor-Wärchzüüg"
     },
     "agent": {
       "introTitle": "Säg de AI, was du wotsch",
@@ -3644,6 +3648,54 @@
       "changes": "Bearbeitige: {{count}}",
       "undo": "Rückgängig",
       "openGenerator": "Aaluege und generiere"
+    },
+    "shape": {
+      "rect": "Rechteck",
+      "ellipse": "Kreis",
+      "triangle": "Dreieck",
+      "star": "Stärn",
+      "heart": "Härz",
+      "hexagon": "Sechseck",
+      "line": "Linie",
+      "arrow": "Pfiil",
+      "style": "Form-Stil",
+      "fill": "Füllig",
+      "fillOn": "Füllig",
+      "outline": "Kontur",
+      "outlineOn": "Kontur",
+      "outlineWidth": "Konturbreiti {{value}}"
+    },
+    "elements": {
+      "shapes": "Forme",
+      "hint": "Klick uf e Form, zum si uf d Siite z tue. Zie a de siitliche Griff zum si z strecke, a de Egge zum d Gröössi z ändere."
+    },
+    "layers": {
+      "text": "Text",
+      "media": "Medie",
+      "empty": "Bim Abspielkopf isch no nüt uf de Siite.",
+      "lock": "Sperre",
+      "unlock": "Entsperre",
+      "show": "Zeige",
+      "hide": "Verstecke",
+      "hint": "Zoberscht i de Lischte isch voorne. Zie zum d Reihefolg z ändere. Gsperrti und versteckti Ebene chasch nume da uswähle."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Multipliziere",
+      "screen": "Negativ multipliziere",
+      "overlay": "Ineinanderkopiere",
+      "darken": "Abdunkle",
+      "lighten": "Ufhelle",
+      "colorDodge": "Farbig abwedle",
+      "colorBurn": "Farbig nachbelichte",
+      "hardLight": "Harts Liecht",
+      "softLight": "Weichs Liecht",
+      "difference": "Differänz",
+      "exclusion": "Usschluss",
+      "hue": "Farbton",
+      "saturation": "Sättigung",
+      "color": "Farb",
+      "luminosity": "Luminanz"
     }
   },
   "fractions": {

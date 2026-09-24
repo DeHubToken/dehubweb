@@ -3656,7 +3656,8 @@
       "shadowOpacity": "Kallpa {{value}}%",
       "shadowBlur": "Difuso {{value}}",
       "shadowX": "Kuyuy X {{value}}",
-      "shadowY": "Kuyuy Y {{value}}"
+      "shadowY": "Kuyuy Y {{value}}",
+      "blend": "Chaqruy"
     },
     "menu": {
       "addText": "Qillqata yapay",
@@ -3683,7 +3684,10 @@
       "generations": "Paqarichisqakuna",
       "edit": "Allichay",
       "collapse": "Panelta pakay",
-      "home": "Qallariy"
+      "home": "Qallariy",
+      "elements": "Imakuna",
+      "layers": "Pataqkuna",
+      "tools": "Editorpa llamk'anankuna"
     },
     "agent": {
       "introTitle": "AI-man willay imatachus munanki",
@@ -3706,6 +3710,54 @@
       "changes": "Ruwasqa allichaykuna: {{count}}",
       "undo": "Kutichiy",
       "openGenerator": "Qhawaspa paqarichiy"
+    },
+    "shape": {
+      "rect": "Suni tawak'uchu",
+      "ellipse": "Muyu",
+      "triangle": "Kimsak'uchu",
+      "star": "Quyllur",
+      "heart": "Sunqu",
+      "hexagon": "Suqtak'uchu",
+      "line": "Siqi",
+      "arrow": "Wach'i",
+      "style": "Rikch'aypa laya",
+      "fill": "Hunt'achiy",
+      "fillOn": "Hunt'achiy",
+      "outline": "Muyuq siqi",
+      "outlineOn": "Muyuq siqi",
+      "outlineWidth": "Muyuq siqipa rakhu kaynin {{value}}"
+    },
+    "elements": {
+      "shapes": "Rikch'aykuna",
+      "hint": "Huk rikch'ayta ñit'iy p'anqaman yapanaykipaq. Aysanaykipaq ladonpi hap'inakunata aysay, tamañonta tikranaykipaq k'uchukunata."
+    },
+    "layers": {
+      "text": "Qillqa",
+      "media": "Media",
+      "empty": "Manaraq imapas kanchu p'anqapi kay pachapi.",
+      "lock": "Wichq'ay",
+      "unlock": "Kichay",
+      "show": "Rikuchiy",
+      "hide": "Pakay",
+      "hint": "Listapa hanaqninmi ñawpaqpi. Aysay kutichispa churanaykipaq. Wichq'asqa pakasqa pataqkunataqa kaypi chillam akllayta atinki."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Mirachiy",
+      "screen": "Pantalla",
+      "overlay": "Hawanpi churay",
+      "darken": "Tutayachiy",
+      "lighten": "K'anchachiy",
+      "colorDodge": "Llimp'i k'anchachiy",
+      "colorBurn": "Llimp'i ruphachiy",
+      "hardLight": "Sinchi k'anchay",
+      "softLight": "Llampu k'anchay",
+      "difference": "Hukniray",
+      "exclusion": "Hawaman qarquy",
+      "hue": "Llimp'i rikch'ay",
+      "saturation": "Llimp'i sinchi kay",
+      "color": "Llimp'i",
+      "luminosity": "K'anchariy"
     }
   },
   "fractions": {

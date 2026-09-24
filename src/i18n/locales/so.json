@@ -3617,7 +3617,8 @@
       "shadowOpacity": "Xoog {{value}}%",
       "shadowBlur": "Mugdi {{value}}",
       "shadowX": "Leexasho X {{value}}",
-      "shadowY": "Leexasho Y {{value}}"
+      "shadowY": "Leexasho Y {{value}}",
+      "blend": "Isku-dar"
     },
     "menu": {
       "addText": "Ku dar qoraalka",
@@ -3644,7 +3645,10 @@
       "generations": "Waxyaabaha la sameeyay",
       "edit": "Wax ka beddel",
       "collapse": "Isku laab guddiga",
-      "home": "Guriga"
+      "home": "Guriga",
+      "elements": "Walxaha",
+      "layers": "Lakabyada",
+      "tools": "Qalabka tafatirka"
     },
     "agent": {
       "introTitle": "U sheeg AI-ga waxaad rabto",
@@ -3667,6 +3671,54 @@
       "changes": "Isbeddellada la sameeyay: {{count}}",
       "undo": "Ka noqo",
       "openGenerator": "Dib u eeg oo samee"
+    },
+    "shape": {
+      "rect": "Leydi",
+      "ellipse": "Goobo",
+      "triangle": "Saddexagal",
+      "star": "Xiddig",
+      "heart": "Wadne",
+      "hexagon": "Lixagal",
+      "line": "Xarriiq",
+      "arrow": "Fallaar",
+      "style": "Qaabka sawirka",
+      "fill": "Buuxin",
+      "fillOn": "Buuxin",
+      "outline": "Xuduud",
+      "outlineOn": "Xuduud",
+      "outlineWidth": "Ballaca xuduudda {{value}}"
+    },
+    "elements": {
+      "shapes": "Qaababka",
+      "hint": "Guji qaab si aad ugu darto bogga. Jiid gacan-qabsiyada dhinacyada si aad u kala fidiso, geesaha si aad u beddesho cabbirka."
+    },
+    "layers": {
+      "text": "Qoraal",
+      "media": "Warbaahin",
+      "empty": "Weli waxba ma saarna bogga meesha ciyaaruhu joogo.",
+      "lock": "Xir",
+      "unlock": "Fur",
+      "show": "Muuji",
+      "hide": "Qari",
+      "hint": "Korka liisku waa hore. Jiid si aad u beddesho kala horreynta. Lakabyada xiran iyo kuwa qarsoon halkan oo keliya ayaa laga dooran karaa."
+    },
+    "blend": {
+      "normal": "Caadi",
+      "multiply": "Isku dhufasho",
+      "screen": "Shaashad",
+      "overlay": "Dul-saar",
+      "darken": "Madoobeyn",
+      "lighten": "Iftiimin",
+      "colorDodge": "Iftiiminta midabka",
+      "colorBurn": "Gubidda midabka",
+      "hardLight": "Iftiin adag",
+      "softLight": "Iftiin jilicsan",
+      "difference": "Farqi",
+      "exclusion": "Ka-reebid",
+      "hue": "Nooca midabka",
+      "saturation": "Buuxnaanta",
+      "color": "Midab",
+      "luminosity": "Iftiinka"
     }
   },
   "fractions": {

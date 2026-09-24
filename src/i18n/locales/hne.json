@@ -3505,7 +3505,8 @@
       "shadowOpacity": "ताकत {{value}}%",
       "shadowBlur": "धुंधलापन {{value}}",
       "shadowX": "आफसेट एक्स {{value}}",
-      "shadowY": "आफसेट वाई {{value}}"
+      "shadowY": "आफसेट वाई {{value}}",
+      "blend": "मिलाव"
     },
     "menu": {
       "addText": "पाठ जोड़व",
@@ -3532,7 +3533,10 @@
       "generations": "बनाए गे",
       "edit": "एडिट",
       "collapse": "पैनल ल समेटव",
-      "home": "घर"
+      "home": "घर",
+      "elements": "तत्व",
+      "layers": "लेयर",
+      "tools": "एडिटर औजार"
     },
     "agent": {
       "introTitle": "AI ल बतावव तोला का चाही",
@@ -3555,6 +3559,54 @@
       "changes": "करे गे बदलाव: {{count}}",
       "undo": "पूर्ववत करव",
       "openGenerator": "देखव अउ बनाव"
+    },
+    "shape": {
+      "rect": "आयत",
+      "ellipse": "गोला",
+      "triangle": "त्रिभुज",
+      "star": "तारा",
+      "heart": "दिल",
+      "hexagon": "षट्भुज",
+      "line": "लकीर",
+      "arrow": "तीर",
+      "style": "आकार के स्टाइल",
+      "fill": "भरव",
+      "fillOn": "भरव",
+      "outline": "आउटलाइन",
+      "outlineOn": "आउटलाइन",
+      "outlineWidth": "आउटलाइन चौड़ई {{value}}"
+    },
+    "elements": {
+      "shapes": "आकार",
+      "hint": "पेज म जोड़े बर कोनो आकार ल क्लिक करव। खींचे बर बगल के हैंडल ल, आकार बदले बर कोना मन ल घसीटव।"
+    },
+    "layers": {
+      "text": "पाठ",
+      "media": "मीडिया",
+      "empty": "प्लेहेड म पेज म अभी कुछु नइ हे।",
+      "lock": "ताला लगाव",
+      "unlock": "ताला खोलव",
+      "show": "दिखाव",
+      "hide": "छिपाव",
+      "hint": "सूची के ऊपर वाला सबले आगू हे। क्रम बदले बर घसीटव। ताला लगे अउ छिपे लेयर ल इहें ले चुने जा सकथे।"
+    },
+    "blend": {
+      "normal": "सामान्य",
+      "multiply": "गुणा",
+      "screen": "स्क्रीन",
+      "overlay": "ओवरले",
+      "darken": "गहरा",
+      "lighten": "हल्का",
+      "colorDodge": "कलर डॉज",
+      "colorBurn": "कलर बर्न",
+      "hardLight": "हार्ड लाइट",
+      "softLight": "सॉफ्ट लाइट",
+      "difference": "अंतर",
+      "exclusion": "बहिष्करण",
+      "hue": "रंगत",
+      "saturation": "संतृप्ति",
+      "color": "रंग",
+      "luminosity": "चमक"
     }
   },
   "post": {

@@ -3586,7 +3586,8 @@
       "shadowOpacity": "Ike {{value}}%",
       "shadowBlur": "Enweghị nkọ {{value}}",
       "shadowX": "Mbugharị X {{value}}",
-      "shadowY": "Mbugharị Y {{value}}"
+      "shadowY": "Mbugharị Y {{value}}",
+      "blend": "Ngwakọta"
     },
     "menu": {
       "addText": "Tinye ederede",
@@ -3613,7 +3614,10 @@
       "generations": "Ihe emepụtara",
       "edit": "Dezie",
       "collapse": "Mechie pane",
-      "home": "Ụlọ"
+      "home": "Ụlọ",
+      "elements": "Ihe ndị ọzọ",
+      "layers": "Ọkwa",
+      "tools": "Ngwa nhazi"
     },
     "agent": {
       "introTitle": "Gwa AI ihe ị chọrọ",
@@ -3636,6 +3640,54 @@
       "changes": "Mgbanwe emere: {{count}}",
       "undo": "Kagharịa",
       "openGenerator": "Lelee ma mepụta"
+    },
+    "shape": {
+      "rect": "Akụkụ anọ",
+      "ellipse": "Okirikiri",
+      "triangle": "Triangulu",
+      "star": "Kpakpando",
+      "heart": "Obi",
+      "hexagon": "Akụkụ isii",
+      "line": "Ahịrị",
+      "arrow": "Akụ",
+      "style": "Ụdị ọdịdị",
+      "fill": "Mejupụta",
+      "fillOn": "Mejupụta",
+      "outline": "Ọnụ gburugburu",
+      "outlineOn": "Ọnụ gburugburu",
+      "outlineWidth": "Obosara ọnụ gburugburu {{value}}"
+    },
+    "elements": {
+      "shapes": "Ọdịdị",
+      "hint": "Pịa otu ọdịdị iji tinye ya na peeji. Dọrọ njide dị n'akụkụ iji gbatịa ya, nkuku iji gbanwee nha ya."
+    },
+    "layers": {
+      "text": "Ederede",
+      "media": "Mgbasa ozi",
+      "empty": "Ọ nweghị ihe dị na peeji ebe a na-akpọ ugbu a.",
+      "lock": "Kpọchie",
+      "unlock": "Meghee",
+      "show": "Gosi",
+      "hide": "Zobe",
+      "hint": "Elu ndepụta bụ n'ihu. Dọrọ iji hazigharịa. Ọkwa ekpọchiri na ndị ezoro ezo nwere ike ịhọrọ naanị ebe a."
+    },
+    "blend": {
+      "normal": "Nkịtị",
+      "multiply": "Mụbaa",
+      "screen": "Ihuenyo",
+      "overlay": "Kpuchie",
+      "darken": "Mee ka ọ gbaa ọchịchịrị",
+      "lighten": "Mee ka ọ dị ìhè",
+      "colorDodge": "Mbelata agba",
+      "colorBurn": "Ọkụ agba",
+      "hardLight": "Ìhè siri ike",
+      "softLight": "Ìhè dị nro",
+      "difference": "Ọdịiche",
+      "exclusion": "Mwepụ",
+      "hue": "Ụcha",
+      "saturation": "Njupụta agba",
+      "color": "Agba",
+      "luminosity": "Nchapụta"
     }
   },
   "fractions": {

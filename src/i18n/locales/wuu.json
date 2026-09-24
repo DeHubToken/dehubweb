@@ -3548,7 +3548,8 @@
       "shadowOpacity": "强度 {{value}}%",
       "shadowBlur": "模糊 {{value}}",
       "shadowX": "X偏移 {{value}}",
-      "shadowY": "Y偏移 {{value}}"
+      "shadowY": "Y偏移 {{value}}",
+      "blend": "混合"
     },
     "menu": {
       "addText": "添加文字",
@@ -3575,7 +3576,10 @@
       "generations": "生成记录",
       "edit": "编辑",
       "collapse": "收起面板",
-      "home": "主页"
+      "home": "主页",
+      "elements": "元素",
+      "layers": "图层",
+      "tools": "编辑工具"
     },
     "agent": {
       "introTitle": "告诉 AI 你想要什么",
@@ -3598,6 +3602,54 @@
       "changes": "已完成的编辑：{{count}}",
       "undo": "撤销",
       "openGenerator": "查看并生成"
+    },
+    "shape": {
+      "rect": "矩形",
+      "ellipse": "圆形",
+      "triangle": "三角形",
+      "star": "星形",
+      "heart": "心形",
+      "hexagon": "六边形",
+      "line": "直线",
+      "arrow": "箭头",
+      "style": "形状样式",
+      "fill": "填充",
+      "fillOn": "填充",
+      "outline": "描边",
+      "outlineOn": "描边",
+      "outlineWidth": "描边宽度 {{value}}"
+    },
+    "elements": {
+      "shapes": "形状",
+      "hint": "点击形状即可添加到页面。拖动两侧手柄可拉伸，拖动四角可调整大小。"
+    },
+    "layers": {
+      "text": "文本",
+      "media": "媒体",
+      "empty": "播放头位置的页面上还没有内容。",
+      "lock": "锁定",
+      "unlock": "解锁",
+      "show": "显示",
+      "hide": "隐藏",
+      "hint": "列表顶部为最前层。拖动可调整顺序。已锁定和已隐藏的图层只能在这里选中。"
+    },
+    "blend": {
+      "normal": "正常",
+      "multiply": "正片叠底",
+      "screen": "滤色",
+      "overlay": "叠加",
+      "darken": "变暗",
+      "lighten": "变亮",
+      "colorDodge": "颜色减淡",
+      "colorBurn": "颜色加深",
+      "hardLight": "强光",
+      "softLight": "柔光",
+      "difference": "差值",
+      "exclusion": "排除",
+      "hue": "色相",
+      "saturation": "饱和度",
+      "color": "颜色",
+      "luminosity": "明度"
     }
   },
   "fractions": {

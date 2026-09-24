@@ -3484,7 +3484,8 @@
       "shadowOpacity": "زور {{value}}%",
       "shadowBlur": "دھندلاپن {{value}}",
       "shadowX": "کھسکاؤ X {{value}}",
-      "shadowY": "کھسکاؤ Y {{value}}"
+      "shadowY": "کھسکاؤ Y {{value}}",
+      "blend": "بلینڈ"
     },
     "menu": {
       "addText": "ٹیکسٹ جوڑو",
@@ -3511,7 +3512,10 @@
       "generations": "بنایل چیز",
       "edit": "ایڈٹ",
       "collapse": "پینل سمیٹو",
-      "home": "گھر"
+      "home": "گھر",
+      "elements": "عنصر",
+      "layers": "لیئر",
+      "tools": "ایڈیٹر اوزار"
     },
     "agent": {
       "introTitle": "AI کے بتاؤ کہ تہار کا چاہی",
@@ -3534,6 +3538,54 @@
       "changes": "کیل ایڈٹ: {{count}}",
       "undo": "انڈو",
       "openGenerator": "دیکھو اور بناؤ"
+    },
+    "shape": {
+      "rect": "آیت",
+      "ellipse": "گول",
+      "triangle": "تکون",
+      "star": "تارا",
+      "heart": "دل",
+      "hexagon": "چھ کونا",
+      "line": "لکیر",
+      "arrow": "تیر",
+      "style": "شکل کے انداز",
+      "fill": "بھراؤ",
+      "fillOn": "بھراؤ",
+      "outline": "کنارہ",
+      "outlineOn": "کنارہ",
+      "outlineWidth": "کنارہ کے موٹائی {{value}}"
+    },
+    "elements": {
+      "shapes": "شکل",
+      "hint": "پنّا میں جوڑے کے واسطے کوئی شکل پر کلک کرو۔ لمبا کرے کے واسطے بغل کے ہینڈل، سائز بدلے کے واسطے کونا کھینچو۔"
+    },
+    "layers": {
+      "text": "ٹیکسٹ",
+      "media": "میڈیا",
+      "empty": "پلے ہیڈ پر پنّا میں ابھی کچھو نہیں ہے۔",
+      "lock": "لاک",
+      "unlock": "ان لاک",
+      "show": "دکھاؤ",
+      "hide": "چھپاؤ",
+      "hint": "لسٹ کے اوپر والا سب سے آگے ہے۔ ترتیب بدلے کے واسطے کھینچو۔ لاک اور چھپل لیئر کھالی ایہاں سے چنل جا سکے ہے۔"
+    },
+    "blend": {
+      "normal": "نارمل",
+      "multiply": "ملٹی پلائی",
+      "screen": "اسکرین",
+      "overlay": "اوورلے",
+      "darken": "گہرا",
+      "lighten": "ہلکا",
+      "colorDodge": "کلر ڈاج",
+      "colorBurn": "کلر برن",
+      "hardLight": "ہارڈ لائٹ",
+      "softLight": "سافٹ لائٹ",
+      "difference": "فرق",
+      "exclusion": "ایکسکلوژن",
+      "hue": "رنگت",
+      "saturation": "سیچوریشن",
+      "color": "رنگ",
+      "luminosity": "چمک"
     }
   },
   "post": {

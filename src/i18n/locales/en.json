@@ -5952,7 +5952,8 @@
       "shadowOpacity": "Strength {{value}}%",
       "shadowBlur": "Blur {{value}}",
       "shadowX": "Offset X {{value}}",
-      "shadowY": "Offset Y {{value}}"
+      "shadowY": "Offset Y {{value}}",
+      "blend": "Blend"
     },
     "menu": {
       "addText": "Add text",
@@ -5979,7 +5980,10 @@
       "generations": "Generations",
       "edit": "Edit",
       "collapse": "Collapse panel",
-      "home": "Home"
+      "home": "Home",
+      "elements": "Elements",
+      "layers": "Layers",
+      "tools": "Editor tools"
     },
     "agent": {
       "introTitle": "Tell the AI what you want",
@@ -6002,6 +6006,54 @@
       "changes": "Edits made: {{count}}",
       "undo": "Undo",
       "openGenerator": "Review and generate"
+    },
+    "shape": {
+      "rect": "Rectangle",
+      "ellipse": "Circle",
+      "triangle": "Triangle",
+      "star": "Star",
+      "heart": "Heart",
+      "hexagon": "Hexagon",
+      "line": "Line",
+      "arrow": "Arrow",
+      "style": "Shape style",
+      "fill": "Fill",
+      "fillOn": "Fill",
+      "outline": "Outline",
+      "outlineOn": "Outline",
+      "outlineWidth": "Outline width {{value}}"
+    },
+    "elements": {
+      "shapes": "Shapes",
+      "hint": "Click a shape to add it to the page. Drag the side handles to stretch it, the corners to resize."
+    },
+    "layers": {
+      "text": "Text",
+      "media": "Media",
+      "empty": "Nothing on the page at the playhead yet.",
+      "lock": "Lock",
+      "unlock": "Unlock",
+      "show": "Show",
+      "hide": "Hide",
+      "hint": "Top of the list is the front. Drag to restack. Locked and hidden layers can only be picked here."
+    },
+    "blend": {
+      "normal": "Normal",
+      "multiply": "Multiply",
+      "screen": "Screen",
+      "overlay": "Overlay",
+      "darken": "Darken",
+      "lighten": "Lighten",
+      "colorDodge": "Color dodge",
+      "colorBurn": "Color burn",
+      "hardLight": "Hard light",
+      "softLight": "Soft light",
+      "difference": "Difference",
+      "exclusion": "Exclusion",
+      "hue": "Hue",
+      "saturation": "Saturation",
+      "color": "Color",
+      "luminosity": "Luminosity"
     }
   }
 }

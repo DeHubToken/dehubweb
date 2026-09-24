@@ -3549,7 +3549,8 @@
       "shadowOpacity": "तेजी {{value}}%",
       "shadowBlur": "धुंधलापन {{value}}",
       "shadowX": "खिसकाव X {{value}}",
-      "shadowY": "खिसकाव Y {{value}}"
+      "shadowY": "खिसकाव Y {{value}}",
+      "blend": "ब्लेंड"
     },
     "menu": {
       "addText": "टेक्स्ट जोड़ीं",
@@ -3576,7 +3577,10 @@
       "generations": "बनावल",
       "edit": "एडिट",
       "collapse": "पैनल समेटीं",
-      "home": "घर"
+      "home": "घर",
+      "elements": "एलिमेंट",
+      "layers": "लेयर",
+      "tools": "एडिटर टूल"
     },
     "agent": {
       "introTitle": "AI के बताईं कि का चाहीं",
@@ -3599,6 +3603,54 @@
       "changes": "कइल गेल बदलाव: {{count}}",
       "undo": "अनडू",
       "openGenerator": "देखीं आउ बनावीं"
+    },
+    "shape": {
+      "rect": "आयत",
+      "ellipse": "गोला",
+      "triangle": "त्रिभुज",
+      "star": "तारा",
+      "heart": "दिल",
+      "hexagon": "षट्भुज",
+      "line": "रेखा",
+      "arrow": "तीर",
+      "style": "आकृति स्टाइल",
+      "fill": "भराव",
+      "fillOn": "भराव",
+      "outline": "रूपरेखा",
+      "outlineOn": "रूपरेखा",
+      "outlineWidth": "रूपरेखा के मोटाई {{value}}"
+    },
+    "elements": {
+      "shapes": "आकृति",
+      "hint": "कउनो आकृति पर क्लिक करके पेज में जोड़ीं। खींचे खातिर बगल के हैंडल घसीटीं, आकार बदले खातिर कोना।"
+    },
+    "layers": {
+      "text": "टेक्स्ट",
+      "media": "मीडिया",
+      "empty": "प्लेहेड पर अभी पेज पर कुछो न हे।",
+      "lock": "लॉक करीं",
+      "unlock": "अनलॉक करीं",
+      "show": "देखाईं",
+      "hide": "छिपाईं",
+      "hint": "सूची के ऊपर वाला सबसे आगे हे। क्रम बदले खातिर घसीटीं। लॉक आउ छिपल लेयर खाली इहें से चुनल जा सकऽ हे।"
+    },
+    "blend": {
+      "normal": "सामान्य",
+      "multiply": "गुणा",
+      "screen": "स्क्रीन",
+      "overlay": "ओवरले",
+      "darken": "गहरा",
+      "lighten": "हल्का",
+      "colorDodge": "कलर डॉज",
+      "colorBurn": "कलर बर्न",
+      "hardLight": "हार्ड लाइट",
+      "softLight": "सॉफ्ट लाइट",
+      "difference": "अंतर",
+      "exclusion": "बहिष्करण",
+      "hue": "ह्यू",
+      "saturation": "संतृप्ति",
+      "color": "रंग",
+      "luminosity": "चमक"
     }
   },
   "fractions": {

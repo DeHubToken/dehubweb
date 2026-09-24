@@ -2424,7 +2424,8 @@
       "shadowOpacity": "زور {{value}}%",
       "shadowBlur": "دھندلاپن {{value}}",
       "shadowX": "آفسیٹ X {{value}}",
-      "shadowY": "آفسیٹ Y {{value}}"
+      "shadowY": "آفسیٹ Y {{value}}",
+      "blend": "بلینڈ"
     },
     "menu": {
       "addText": "ٹیکسٹ ڈالو",
@@ -2451,7 +2452,10 @@
       "generations": "بنائے ہوئے",
       "edit": "ایڈٹ",
       "collapse": "پینل بند کرو",
-      "home": "گھر"
+      "home": "گھر",
+      "elements": "ایلیمنٹس",
+      "layers": "لیئرز",
+      "tools": "ایڈیٹر ٹولز"
     },
     "agent": {
       "introTitle": "AI کو بولو تمہیں کیا چاہیے",
@@ -2474,6 +2478,54 @@
       "changes": "کیے ہوئے ایڈٹ: {{count}}",
       "undo": "Undo",
       "openGenerator": "دیکھو اور بناؤ"
+    },
+    "shape": {
+      "rect": "مستطیل",
+      "ellipse": "دائرہ",
+      "triangle": "تکون",
+      "star": "تارا",
+      "heart": "دل",
+      "hexagon": "چھ کونا",
+      "line": "لکیر",
+      "arrow": "تیر",
+      "style": "شکل کا اسٹائل",
+      "fill": "فِل",
+      "fillOn": "فِل",
+      "outline": "آؤٹ لائن",
+      "outlineOn": "آؤٹ لائن",
+      "outlineWidth": "آؤٹ لائن کی چوڑائی {{value}}"
+    },
+    "elements": {
+      "shapes": "شکلاں",
+      "hint": "پیج پو ڈالنے کو کسی شکل پو کلک کرو۔ کھینچنے کو بازو کے ہینڈل گھسیٹو، سائز بدلنے کو کونے۔"
+    },
+    "layers": {
+      "text": "ٹیکسٹ",
+      "media": "میڈیا",
+      "empty": "پلے ہیڈ پو ابھی پیج پو کچھ نئیں ہے۔",
+      "lock": "لاک کرو",
+      "unlock": "ان لاک کرو",
+      "show": "دکھاؤ",
+      "hide": "چھپاؤ",
+      "hint": "لسٹ میں سب سے اوپر والا سب سے آگے رہتا۔ ترتیب بدلنے کو گھسیٹو۔ لاک اور چھپے ہوئے لیئرز صرف یہیں سے چنے جاتے۔"
+    },
+    "blend": {
+      "normal": "نارمل",
+      "multiply": "ملٹی پلائی",
+      "screen": "اسکرین",
+      "overlay": "اوورلے",
+      "darken": "ڈارکن",
+      "lighten": "لائٹن",
+      "colorDodge": "کلر ڈاج",
+      "colorBurn": "کلر برن",
+      "hardLight": "ہارڈ لائٹ",
+      "softLight": "سافٹ لائٹ",
+      "difference": "ڈفرنس",
+      "exclusion": "ایکسکلوژن",
+      "hue": "ہیو",
+      "saturation": "سیچوریشن",
+      "color": "کلر",
+      "luminosity": "لیومینوسٹی"
     }
   },
   "fractions": {

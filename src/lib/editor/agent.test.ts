@@ -38,3 +38,18 @@ describe("editor agent", () => {
     expect(JSON.stringify(scene).length).toBeLessThan(2000);
   });
 });
+
+describe("editor agent shapes", () => {
+  beforeEach(() => useEditorStore.getState().newProject());
+
+  it("adds a styled shape behind a title and can hide and lock it", async () => {
+    const report = await applyOps([
+      { op: "add_shape", shape: "rect", w: 0.8, h: 0.2, fill: "#ff3366", radius: 24, y: 0.2 },
+      { op: "update", id: "new:0", blend: "multiply", locked: true },
+    ]);
+    expect(report).toMatchObject({ applied: 2, failed: 0 });
+    const shape = useEditorStore.getState().clips.find((c) => c.kind === "shape");
+    expect(shape).toMatchObject({ shape: "rect", w: 0.8, h: 0.2, fill: "#ff3366", radius: 24, blend: "multiply", locked: true });
+    expect(shape?.transform?.y).toBe(0.2);
+  });
+});

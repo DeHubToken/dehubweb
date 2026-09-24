@@ -104,7 +104,7 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
       // Preserve all source assets used on the timeline + store the exported MP4.
       if (walletAddress) {
         const sourceIds = Array.from(
-          new Set(clips.map((c) => (c.kind !== "text" ? c.mediaId : null)).filter((x): x is string => !!x)),
+          new Set(clips.map((c) => ("mediaId" in c ? c.mediaId : null)).filter((x): x is string => !!x)),
         );
         void preserveEditorAssets(walletAddress, sourceIds, `pending-${Date.now()}`).catch((e) =>
           console.warn("[editor] preserve failed", e),

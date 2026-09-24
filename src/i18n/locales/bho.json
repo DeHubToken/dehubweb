@@ -3515,7 +3515,8 @@
       "shadowOpacity": "गाढ़ापन {{value}}%",
       "shadowBlur": "धुंधलापन {{value}}",
       "shadowX": "खिसकाव X {{value}}",
-      "shadowY": "खिसकाव Y {{value}}"
+      "shadowY": "खिसकाव Y {{value}}",
+      "blend": "ब्लेंड"
     },
     "menu": {
       "addText": "पाठ जोड़ें",
@@ -3542,7 +3543,10 @@
       "generations": "बनावल चीज",
       "edit": "एडिट",
       "collapse": "पैनल समेटीं",
-      "home": "घरे"
+      "home": "घरे",
+      "elements": "तत्व",
+      "layers": "लेयर",
+      "tools": "एडिटर टूल"
     },
     "agent": {
       "introTitle": "AI के बताईं कि रउआ का चाहीं",
@@ -3565,6 +3569,54 @@
       "changes": "कइल गइल बदलाव: {{count}}",
       "undo": "अनडू",
       "openGenerator": "देखीं आ बनाईं"
+    },
+    "shape": {
+      "rect": "आयत",
+      "ellipse": "गोला",
+      "triangle": "त्रिभुज",
+      "star": "तारा",
+      "heart": "दिल",
+      "hexagon": "षट्भुज",
+      "line": "लाइन",
+      "arrow": "तीर",
+      "style": "आकार शैली",
+      "fill": "भरीं",
+      "fillOn": "भरीं",
+      "outline": "आउटलाइन",
+      "outlineOn": "आउटलाइन",
+      "outlineWidth": "आउटलाइन चौड़ाई {{value}}"
+    },
+    "elements": {
+      "shapes": "आकार",
+      "hint": "पन्ना में जोड़े खातिर कवनो आकार पर क्लिक करीं। खींचे खातिर बगल के हैंडल, आकार बदले खातिर कोना घसीटीं।"
+    },
+    "layers": {
+      "text": "टेक्स्ट",
+      "media": "मीडिया",
+      "empty": "प्लेहेड पर पन्ना में अबहीं कुछ नइखे।",
+      "lock": "लॉक करीं",
+      "unlock": "अनलॉक करीं",
+      "show": "देखाईं",
+      "hide": "छिपाईं",
+      "hint": "सूची के सबसे ऊपर वाला सबसे आगे बा। क्रम बदले खातिर घसीटीं। लॉक आ छिपल लेयर इहें से चुनल जा सकेला।"
+    },
+    "blend": {
+      "normal": "सामान्य",
+      "multiply": "मल्टीप्लाई",
+      "screen": "स्क्रीन",
+      "overlay": "ओवरले",
+      "darken": "गहिरा करीं",
+      "lighten": "हल्का करीं",
+      "colorDodge": "कलर डॉज",
+      "colorBurn": "कलर बर्न",
+      "hardLight": "हार्ड लाइट",
+      "softLight": "सॉफ्ट लाइट",
+      "difference": "अंतर",
+      "exclusion": "एक्सक्लूज़न",
+      "hue": "ह्यू",
+      "saturation": "संतृप्ति",
+      "color": "रंग",
+      "luminosity": "चमक"
     }
   },
   "fractions": {
