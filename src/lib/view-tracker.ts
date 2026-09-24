@@ -5,16 +5,18 @@
  * 
  * - Videos: Fire-and-forget after watching to a threshold, ONCE PER WATCH —
  *   a replay or a reopen is another view, the way it works on every other video
- *   platform. No local suppression; the API's 30-second per-viewer-per-post
+ *   platform. No local suppression; the API's 30-minute per-viewer-per-post
  *   rate limit is what stops a reload loop.
  * - Feed items (images/posts): Batch after visibility duration, sent together
- * - Deduplication: 24-hour per-user-per-post via localStorage, feed items only
+ * - Deduplication: 30-minute per-user-per-post via localStorage, feed items
+ *   only. After that, seeing the post again is another view, the way X counts
+ *   impressions.
  *
  * Signed-out visitors count too. The DeHub API requires a valid JWT on its view
  * endpoints, so views from visitors with no session go to the `anon-views`
- * Supabase edge function instead, which dedupes by (device id + IP) per post per
- * UTC day. Each viewer only ever hits one of the two backends, so a person is
- * never counted twice.
+ * Supabase edge function instead, which counts one viewer per (device id + IP)
+ * per post per UTC day and repeats after the same 30-minute cooldown. Each
+ * viewer only ever hits one of the two backends, so no view is recorded twice.
  */
 
 import { getAuthToken } from '@/lib/api/dehub';
@@ -22,7 +24,7 @@ import { recordAnonViews, recordAnonViewsBeacon } from '@/lib/anon-views-api';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const VIEWED_STORAGE_KEY = 'dehub_viewed_posts';
-const VIEW_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 hours
+const VIEW_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes, matches the API cooldown
 
 // Batch configuration
 const BATCH_INTERVAL_MS = 5000; // Send batch every 5 seconds
@@ -64,7 +66,7 @@ function getViewedPosts(): ViewedRecord[] {
     const records: ViewedRecord[] = JSON.parse(data);
     const now = Date.now();
     
-    // Filter out expired records (older than 24 hours)
+    // Filter out expired records (older than the cooldown)
     return records.filter(r => now - r.timestamp < VIEW_EXPIRY_MS);
   } catch {
     return [];
@@ -203,7 +205,7 @@ class VideoViewTracker {
     // dedup that used to sit here is gone on purpose — it made the second watch
     // of a video invisible, which is not how a video's view count works
     // anywhere. What is left standing against a reload loop is the API's
-    // 30-second per-viewer-per-post rate limit.
+    // 30-minute per-viewer-per-post rate limit.
 
     // Playback has jumped back to the top after a real watch — a replay, in the
     // same mounted player. Re-arm, so pressing play again counts again.
@@ -246,7 +248,7 @@ class VideoViewTracker {
     this.watchedVideos.add(tokenId);
 
     // Deliberately does NOT markAsViewed: that list is the feed tracker's
-    // 24-hour suppression, and a video that counts every watch must not write
+    // cooldown, and a video that counts every watch must not write
     // itself into it. The feed's own impression dedup is untouched.
 
     // Fire and forget - don't await
@@ -289,13 +291,18 @@ class FeedViewTracker {
   private visibilityStart = new Map<string, number>(); // tokenId -> timestamp when became visible
   private pendingViews = new Set<string>(); // tokenIds ready to be sent
   private batchTimer: NodeJS.Timeout | null = null;
-  private alreadySent = new Set<string>(); // Session-level dedup
+  private alreadySent = new Map<string, number>(); // tokenId -> sent at, in-memory dedup when storage is unavailable
   
   constructor() {
     // Start the batch interval
     this.startBatchInterval();
   }
-  
+
+  private sentRecently(tokenId: string): boolean {
+    const sentAt = this.alreadySent.get(tokenId);
+    return sentAt !== undefined && Date.now() - sentAt < VIEW_EXPIRY_MS;
+  }
+
   private startBatchInterval(): void {
     if (this.batchTimer) return;
     
@@ -309,7 +316,7 @@ class FeedViewTracker {
    */
   onVisible(tokenId: string): void {
     // Skip if already sent or pending
-    if (this.alreadySent.has(tokenId) || hasBeenViewed(tokenId)) return;
+    if (this.sentRecently(tokenId) || hasBeenViewed(tokenId)) return;
     
     if (!this.visibilityStart.has(tokenId)) {
       this.visibilityStart.set(tokenId, Date.now());
@@ -326,7 +333,7 @@ class FeedViewTracker {
       
       // If visible long enough, queue for batch
       if (visibleDuration >= MIN_VISIBILITY_MS) {
-        if (!this.alreadySent.has(tokenId) && !hasBeenViewed(tokenId)) {
+        if (!this.sentRecently(tokenId) && !hasBeenViewed(tokenId)) {
           this.pendingViews.add(tokenId);
         }
       }
@@ -345,7 +352,7 @@ class FeedViewTracker {
       const visibleDuration = now - startTime;
       
       if (visibleDuration >= MIN_VISIBILITY_MS) {
-        if (!this.alreadySent.has(tokenId) && !hasBeenViewed(tokenId)) {
+        if (!this.sentRecently(tokenId) && !hasBeenViewed(tokenId)) {
           this.pendingViews.add(tokenId);
         }
       }
@@ -369,7 +376,7 @@ class FeedViewTracker {
     // Remove from pending
     for (const id of tokenIds) {
       this.pendingViews.delete(id);
-      this.alreadySent.add(id);
+      this.alreadySent.set(id, Date.now());
     }
     
     // Mark as viewed locally
