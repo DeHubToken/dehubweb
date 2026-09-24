@@ -29,6 +29,7 @@ export const SEO_I18N_ROUTES = {
   arcade: '/arcade',
   converter: '/converter',
   depin: '/depin',
+  dex: '/dex',
   events: '/events',
   fractions: '/fractions',
   jobs: '/jobs',

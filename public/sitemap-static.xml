@@ -109,6 +109,30 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://dehub.io/arcade/gods-eye</loc>
+    <lastmod>2026-09-24T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/dex</loc>
+    <lastmod>2026-09-24T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/ads</loc>
+    <lastmod>2026-09-24T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/buy</loc>
+    <lastmod>2026-09-24T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://dehub.io/arcade/kings-gambit</loc>
     <lastmod>2026-08-10T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
