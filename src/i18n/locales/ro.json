@@ -4859,7 +4859,8 @@
     "foldersInFolder_one": "În dosarul {{count}}",
     "foldersInFolder_other": "În dosarele {{count}}",
     "foldersNoItems": "Nimic în acest dosar încă",
-    "foldersNoItemsHint": "Deschide un rezultat și alege „Adaugă în dosar” pentru a-l salva aici."
+    "foldersNoItemsHint": "Deschide un rezultat și alege „Adaugă în dosar” pentru a-l salva aici.",
+    "skippedUpstreamFailed": "Omis deoarece un pas anterior a eșuat. Costul său rămâne în soldul tău."
   },
   "videoPlayer": {
     "volume": "Volum",

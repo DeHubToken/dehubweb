@@ -5044,7 +5044,8 @@
     "foldersInFolder_one": "In {{count}} folder",
     "foldersInFolder_other": "In {{count}} folders",
     "foldersNoItems": "Nothing in this folder yet",
-    "foldersNoItemsHint": "Open a result and choose \"Add to folder\" to file it here."
+    "foldersNoItemsHint": "Open a result and choose \"Add to folder\" to file it here.",
+    "skippedUpstreamFailed": "Skipped because an earlier step failed. Its cost stays in your balance."
   },
   "videoPlayer": {
     "volume": "Volume",

@@ -2139,7 +2139,8 @@
     "foldersRename": "ফোল्डर नाव बदलो",
     "foldersDelete": "ফোল्डर हटाओ",
     "foldersDeleteConfirm": "\"{{name}}\" फोल्डर हटवायचा? त्यातले जनरेशन्स तुमच्या लायब्ररीत राहतील.",
-    "foldersInFolder_other": "{{count}} फोल्डरांमध्ये"
+    "foldersInFolder_other": "{{count}} फोल्डरांमध्ये",
+    "skippedUpstreamFailed": "मागचं पाऊल अयशस्वी झाल्यामुळे वगळलं. त्याचा खर्च तुमच्या शिल्लकीत राहतो."
   },
   "videoPlayer": {
     "volume": "آواز"

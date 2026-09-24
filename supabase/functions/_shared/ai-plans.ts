@@ -28,45 +28,48 @@ export interface AiPlan {
   grantDhb: number;
   /** Whether grantDhb multiplies by the subscription item quantity. */
   perSeat: boolean;
+  /** Months one invoice covers; an annual invoice grants the whole year. */
+  periodMonths: number;
 }
 
 export const AI_PLANS: Record<string, AiPlan> = {
   creator_monthly: {
     id: 'creator', name: 'Creator', priceId: 'creator_monthly',
-    pricedAtUsd: 19, grantDhb: 23_000, perSeat: false,
+    pricedAtUsd: 19, grantDhb: 23_000, perSeat: false, periodMonths: 1,
   },
   creator_annual: {
     id: 'creator', name: 'Creator', priceId: 'creator_annual',
-    pricedAtUsd: 19, grantDhb: 23_000, perSeat: false,
+    pricedAtUsd: 19, grantDhb: 23_000, perSeat: false, periodMonths: 12,
   },
   ultra_monthly: {
     id: 'ultra', name: 'Ultra', priceId: 'ultra_monthly',
-    pricedAtUsd: 99, grantDhb: 130_000, perSeat: false,
+    pricedAtUsd: 99, grantDhb: 130_000, perSeat: false, periodMonths: 1,
   },
   ultra_annual: {
     id: 'ultra', name: 'Ultra', priceId: 'ultra_annual',
-    pricedAtUsd: 99, grantDhb: 130_000, perSeat: false,
+    pricedAtUsd: 99, grantDhb: 130_000, perSeat: false, periodMonths: 12,
   },
   team_monthly: {
     id: 'team', name: 'Team', priceId: 'team_monthly',
-    pricedAtUsd: 65, grantDhb: 88_000, perSeat: true,
+    pricedAtUsd: 65, grantDhb: 88_000, perSeat: true, periodMonths: 1,
   },
   team_annual: {
     id: 'team', name: 'Team', priceId: 'team_annual',
-    pricedAtUsd: 65, grantDhb: 88_000, perSeat: true,
+    pricedAtUsd: 65, grantDhb: 88_000, perSeat: true, periodMonths: 12,
   },
   scale_monthly: {
     id: 'scale', name: 'Scale', priceId: 'scale_monthly',
-    pricedAtUsd: 150, grantDhb: 210_000, perSeat: true,
+    pricedAtUsd: 150, grantDhb: 210_000, perSeat: true, periodMonths: 1,
   },
   scale_annual: {
     id: 'scale', name: 'Scale', priceId: 'scale_annual',
-    pricedAtUsd: 150, grantDhb: 210_000, perSeat: true,
+    pricedAtUsd: 150, grantDhb: 210_000, perSeat: true, periodMonths: 12,
   },
 };
 
 /**
- * DHB to grant for a paid invoice.
+ * DHB to grant for a paid invoice. Annual plans are invoiced once a year, so
+ * one invoice carries twelve months of the monthly grant.
  *
  * The legacy dehub_extra / dehub_family / dehub_xl tiers are the older Premium
  * product, not AI plans, and deliberately grant nothing — returning 0 here
@@ -76,5 +79,6 @@ export function planGrantDhb(priceId: string | null | undefined, seats = 1): num
   if (!priceId) return 0;
   const plan = AI_PLANS[priceId];
   if (!plan) return 0;
-  return plan.perSeat ? plan.grantDhb * Math.max(1, seats) : plan.grantDhb;
+  const perPeriod = plan.grantDhb * plan.periodMonths;
+  return plan.perSeat ? perPeriod * Math.max(1, seats) : perPeriod;
 }

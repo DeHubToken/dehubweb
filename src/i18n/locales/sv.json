@@ -4980,7 +4980,8 @@
     "foldersInFolder_one": "I mappen {{count}}",
     "foldersInFolder_other": "I {{count}} mappar",
     "foldersNoItems": "Inget i den här mappen ännu",
-    "foldersNoItemsHint": "Öppna ett resultat och välj \"Lägg till i mapp\" för att spara det här."
+    "foldersNoItemsHint": "Öppna ett resultat och välj \"Lägg till i mapp\" för att spara det här.",
+    "skippedUpstreamFailed": "Hoppades över eftersom ett tidigare steg misslyckades. Kostnaden stannar i ditt saldo."
   },
   "videoPlayer": {
     "volume": "Volym",

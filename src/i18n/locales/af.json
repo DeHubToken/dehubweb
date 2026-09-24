@@ -4886,7 +4886,8 @@
     "foldersInFolder_one": "In {{count}}@ gids",
     "foldersInFolder_other": "In {{count}}@ gidse",
     "foldersNoItems": "Niks in hierdie gids nog nie",
-    "foldersNoItemsHint": "Maak 'n resultaat oop en kies \"Voeg by die gids\" om dit hier in te dien."
+    "foldersNoItemsHint": "Maak 'n resultaat oop en kies \"Voeg by die gids\" om dit hier in te dien.",
+    "skippedUpstreamFailed": "Dit was omdat 'n vorige stap nie geslaag het nie. Die koste daarvan bly in jou balans."
   },
   "videoPlayer": {
     "volume": "Volume",

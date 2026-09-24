@@ -9,14 +9,18 @@ Deno.serve(async (req) => {
   const db = serviceClient();
   const budget = await checkRateLimit(db, 'creator-reconcile', 'creator-reconcile', { limit: 1, windowMs: 240000 });
   if (!budget.allowed) return jsonResponse({ processed: 0 });
+  // A job still "submitting" after half an hour died with its edge function
+  // (an image can wait on kie and then fal past the runtime limit) after the
+  // draw was taken. Nothing was delivered, so it is refunded like a failure.
+  const stale = new Date(Date.now() - 30 * 60_000).toISOString();
   const { data: jobs, error } = await db.from('ai_generation_jobs').select('*')
-    .or('status.in.(starting,processing,refund_pending),result->>savePending.eq.true')
+    .or(`status.in.(starting,processing,refund_pending),result->>savePending.eq.true,and(status.eq.submitting,created_at.lt.${stale})`)
     .order('updated_at').limit(8);
   if (error) return jsonResponse({ error: 'Could not load pending renders' }, 503);
   let processed = 0;
   await Promise.all((jobs ?? []).map(async (job) => {
     try {
-      if (job.status === 'refund_pending') {
+      if (job.status === 'refund_pending' || job.status === 'submitting') {
         const released = await db.rpc('ai_payment_release', { p_tx_hash: job.tx_hash, p_wallet: job.wallet_address, p_dhb: job.price_dhb, p_job_id: job.id });
         if (released.error && !released.error.message.includes('REFUND_ALREADY_APPLIED')) throw released.error;
         await db.from('ai_generation_jobs').update({ status: 'failed', result: { ...job.result, paymentRestored: true } }).eq('id', job.id);

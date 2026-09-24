@@ -2789,7 +2789,8 @@
     "foldersInFolder_one": "Në dosjen {{count}}",
     "foldersInFolder_other": "Në dosjet {{count}}",
     "foldersNoItems": "Asgjë në këtë dosje akoma",
-    "foldersNoItemsHint": "Hap një rezultat dhe zgjidh \"Shto në dosje\" për ta ruajtur këtu."
+    "foldersNoItemsHint": "Hap një rezultat dhe zgjidh \"Shto në dosje\" për ta ruajtur këtu.",
+    "skippedUpstreamFailed": "U anashkalua sepse një hap i mëparshëm dështoi. Kostoja e saj qëndron në balancën tënde."
   },
   "videoPlayer": {
     "volume": "Volumi",

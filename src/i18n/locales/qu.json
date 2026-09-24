@@ -2805,7 +2805,8 @@
     "foldersInFolder_one": "\"{{count}}\" k'itipim",
     "foldersInFolder_other": "\"{{count}}\" k'itipikunapi",
     "foldersNoItems": "Kay k'itipim mana imapas kanchu",
-    "foldersNoItemsHint": "Huk kaqta kichariy chaymanta \"K'itiman yapay\" nisqata akllariy kaypi waqaychanaykipaq."
+    "foldersNoItemsHint": "Huk kaqta kichariy chaymanta \"K'itiman yapay\" nisqata akllariy kaypi waqaychanaykipaq.",
+    "skippedUpstreamFailed": "Saltasqa, ñawpaq llamk&#39;ay mana allin kasqanrayku. Costonqa saldoykipin qhepan."
   },
   "videoPlayer": {
     "volume": "Uyariy",

@@ -2674,7 +2674,8 @@
     "foldersInFolder_one": "{{count}} فولڊر ۾",
     "foldersInFolder_other": "{{count}} فولڊرن ۾",
     "foldersNoItems": "هن فولڊر ۾ اڃا تائين ڪجهه به ناهي",
-    "foldersNoItemsHint": "هڪ نتيجو کوليو ۽ ان کي هتي فائل ڪرڻ لاءِ \"فولڊر ۾ شامل ڪريو\" چونڊيو."
+    "foldersNoItemsHint": "هڪ نتيجو کوليو ۽ ان کي هتي فائل ڪرڻ لاءِ \"فولڊر ۾ شامل ڪريو\" چونڊيو.",
+    "skippedUpstreamFailed": "پچھلا قدم ناکام تھیون پاروں چھوڑ ڈتا ڳیا۔ ایندا خرچ تہاڈے بیلنس اچ رہسی۔"
   },
   "videoPlayer": {
     "volume": "آواز",

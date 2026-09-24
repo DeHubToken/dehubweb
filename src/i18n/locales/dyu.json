@@ -2707,7 +2707,8 @@
     "foldersInFolder_one": "{{count}} fɔlida la",
     "foldersInFolder_other": "{{count}} fɔlida-w la",
     "foldersNoItems": "Mun tɛ a la cɛ",
-    "foldersNoItemsHint": "Jɛnɛ fɔ gara ani \"Fɔlida la sɛbɛn\" fɔ suula a la."
+    "foldersNoItemsHint": "Jɛnɛ fɔ gara ani \"Fɔlida la sɛbɛn\" fɔ suula a la.",
+    "skippedUpstreamFailed": "A tun be se ka kɛ ko a tun ye min kɛ, a tun ma se k'o kɛ. I ka wari be to i ka wari la."
   },
   "videoPlayer": {
     "volume": "Mankan",

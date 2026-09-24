@@ -2772,7 +2772,8 @@
     "foldersInFolder_one": "Galka {{count}}",
     "foldersInFolder_other": "Galka {{count}}",
     "foldersNoItems": "Waxba kuma jiraan galkan weli",
-    "foldersNoItemsHint": "Fur natiijo oo dooro \"Ku dar galka\" si aad halkan ugu kaydiso."
+    "foldersNoItemsHint": "Fur natiijo oo dooro \"Ku dar galka\" si aad halkan ugu kaydiso.",
+    "skippedUpstreamFailed": "Waxa uu ku guuldareystay in uu ku guuldareysto guul darradii hore. Kharashkiisu wuxuu ku jiraa dheelitirkaaga."
   },
   "videoPlayer": {
     "volume": "Codka",

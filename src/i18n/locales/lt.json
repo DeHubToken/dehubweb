@@ -5019,7 +5019,8 @@
     "foldersInFolder_one": "Aplanke {{count}}",
     "foldersInFolder_other": "Aplankuose {{count}}",
     "foldersNoItems": "Šiame aplanke dar nieko nėra",
-    "foldersNoItemsHint": "Atidarykite rezultatą ir pasirinkite „Pridėti prie aplanko“, kad jį čia įrašytumėte."
+    "foldersNoItemsHint": "Atidarykite rezultatą ir pasirinkite „Pridėti prie aplanko“, kad jį čia įrašytumėte.",
+    "skippedUpstreamFailed": "Praleista, nes ankstesnis veiksmas nepavyko. Jo kaina išliks jūsų balanse."
   },
   "videoPlayer": {
     "volume": "Garsumas",

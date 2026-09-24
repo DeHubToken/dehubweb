@@ -2698,7 +2698,8 @@
     "foldersInFolder_one": "في مجلد {{count}}",
     "foldersInFolder_other": "في {{count}} مجلدات",
     "foldersNoItems": "ما في حاجة في هسع المجلد",
-    "foldersNoItemsHint": "افتح النتيجة واختار \"أضف للمجلد\" عشان تحطها هنا."
+    "foldersNoItemsHint": "افتح النتيجة واختار \"أضف للمجلد\" عشان تحطها هنا.",
+    "skippedUpstreamFailed": "تم تخطيها بسبب فشل خطوة سابقة. تكلفتها تبقى في رصيدك."
   },
   "videoPlayer": {
     "volume": "مستوى الصوت",
