@@ -19,8 +19,9 @@
  * Dedup sorts the views, it no longer discards any. Everything is FORWARDED to
  * the DeHub API, which folds it into the post's `totalViews` — the number the
  * apps render: first-of-the-day views as `tokenIds`, the rest as
- * `repeatTokenIds`, which count on videos and are ignored on text and image
- * posts. Clients used to fetch this store separately and add it on at display
+ * `repeatTokenIds`, which count on every post once per viewer per 30 minutes —
+ * the viewer hash rides along as `viewerKey` so the API can hold that
+ * cooldown. Clients used to fetch this store separately and add it on at display
  * time, which is why a post's view count painted low and then jumped a moment
  * later.
  *
@@ -121,7 +122,11 @@ async function hashViewer(deviceId: string, ip: string): Promise<string> {
  * a later request and the totals table still holds the truth for a re-import.
  * The viewer's own request must never fail because of this.
  */
-async function forwardToDeHub(tokenIds: string[], repeatTokenIds: string[] = []): Promise<void> {
+async function forwardToDeHub(
+  tokenIds: string[],
+  repeatTokenIds: string[] = [],
+  viewerKey?: string,
+): Promise<void> {
   if (tokenIds.length === 0 && repeatTokenIds.length === 0) return;
 
   const serviceKey = Deno.env.get('VIEW_SERVICE_KEY');
@@ -144,6 +149,7 @@ async function forwardToDeHub(tokenIds: string[], repeatTokenIds: string[] = [])
       body: JSON.stringify({
         tokenIds: tokenIds.map(Number),
         repeatTokenIds: repeatTokenIds.map(Number),
+        viewerKey,
       }),
       signal: controller.signal,
     });
@@ -251,9 +257,9 @@ Deno.serve(async (req) => {
       // The ledger above still records one row per viewer per post per day —
       // that table is the record of unique signed-out VIEWERS and stays that.
       // But the ids it deduped away are real views of real posts, and used to
-      // be dropped here. They go on to the API as repeats, which counts them on
-      // videos and ignores them elsewhere. The split is the whole reason this
-      // forward names two lists.
+      // be dropped here. They go on to the API as repeats, which counts them
+      // once per viewer per post per 30 minutes. The split is the whole reason
+      // this forward names two lists.
       const newIdSet = new Set(newIds);
       const repeatIds = tokenIds.filter((id) => !newIdSet.has(id));
 
@@ -261,7 +267,7 @@ Deno.serve(async (req) => {
         `[anon-views] recorded ${newIds.length}/${tokenIds.length} anonymous views (${repeatIds.length} repeat)`,
       );
 
-      await forwardToDeHub(newIds, repeatIds);
+      await forwardToDeHub(newIds, repeatIds, viewerHash);
 
       return json({
         success: true,
