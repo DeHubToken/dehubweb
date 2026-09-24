@@ -17,6 +17,8 @@ import { FontPicker } from "@/components/editor/FontPicker";
 import { findFontByCss, loadGoogleFont, primaryFamily } from "@/lib/editor/googleFonts";
 import { LayerSection } from "@/components/editor/inspector/LayerSection";
 import { autoEnhanceEffects } from "@/lib/editor/autoEnhance";
+import { useCaptionsStore } from "@/store/editorCaptionsStore";
+import { Captions, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 
@@ -35,6 +37,9 @@ export function Inspector() {
   const clips = useEditorStore((s) => s.clips);
   const updateTextClip = useEditorStore((s) => s.updateTextClip);
   const updateMediaClip = useEditorStore((s) => s.updateMediaClip);
+  const captionsClipId = useCaptionsStore((s) => s.clipId);
+  const captionsProgress = useCaptionsStore((s) => s.progress);
+  const runCaptions = useCaptionsStore((s) => s.run);
 
   const selected = useMemo(() => clips.find((x) => x.id === selectedClipIds[0]) ?? null, [clips, selectedClipIds]);
   const text = selected && selected.kind === "text" ? (selected as TextClip) : null;
@@ -213,6 +218,22 @@ export function Inspector() {
                 </Button>
               ))}
             </div>
+          </div>
+        )}
+
+        {hasAudio && (
+          <div className="space-y-1.5 pt-2">
+            <Button size="sm" variant="ghost" disabled={!!captionsClipId}
+              onClick={() => void runCaptions(hasAudio.id)}
+              className="h-8 w-full gap-1.5 rounded-md bg-white text-[11px] font-semibold text-black hover:bg-white/90 disabled:opacity-60">
+              {captionsClipId === hasAudio.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Captions className="h-3.5 w-3.5" />}
+              {captionsClipId === hasAudio.id
+                ? captionsProgress?.stage === "download"
+                  ? t("editor.captions.downloading", { percent: Math.round((captionsProgress.loaded / Math.max(1, captionsProgress.total)) * 100) })
+                  : t("editor.captions.working", { percent: captionsProgress?.stage === "transcribing" ? Math.round((captionsProgress.done / Math.max(1, captionsProgress.total)) * 100) : 0 })
+                : t("editor.captions.action")}
+            </Button>
+            {!captionsClipId && <p className="text-[10px] leading-snug text-white/40">{t("editor.captions.hint")}</p>}
           </div>
         )}
 

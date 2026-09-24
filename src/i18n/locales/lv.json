@@ -6125,6 +6125,15 @@
       "allZip": "Visas {{count}} lapas (ZIP)",
       "thisPage": "Tikai šī lapa",
       "exporting": "Renderē {{current}}. lapu no {{total}}…"
+    },
+    "captions": {
+      "action": "Automātiskie subtitri",
+      "working": "Klausās… {{percent}}%",
+      "downloading": "Sagatavo runas modeli… {{percent}}%",
+      "hint": "Pārvērš runu laikā sinhronizētos subtitros, kuru stilu vari mainīt. Darbojas tavā ierīcē: bez maksas un privāti. Pirmajā lietošanas reizē tiek lejupielādēts modelis.",
+      "done": "Pievienoti {{count}} subtitri.",
+      "noSpeech": "Šajā klipā netika atrasta runa.",
+      "failed": "Neizdevās izveidot subtitrus šim klipam."
     }
   }
 }

@@ -5991,6 +5991,15 @@
       "allZip": "Bütün {{count}} səhifə (ZIP)",
       "thisPage": "Yalnız bu səhifə",
       "exporting": "Səhifə {{current}} / {{total}} hazırlanır…"
+    },
+    "captions": {
+      "action": "Avtomatik altyazılar",
+      "working": "Dinlənilir… {{percent}}%",
+      "downloading": "Nitq modeli hazırlanır… {{percent}}%",
+      "hint": "Nitqi yenidən üslublaya biləcəyiniz zamanlanmış altyazılara çevirir. Cihazınızda işləyir: pulsuz və məxfi. İlk istifadədə model endirilir.",
+      "done": "{{count}} altyazı əlavə edildi.",
+      "noSpeech": "Bu klipdə nitq tapılmadı.",
+      "failed": "Bu klip üçün altyazı yaratmaq mümkün olmadı."
     }
   }
 }

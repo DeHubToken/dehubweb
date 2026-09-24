@@ -3786,6 +3786,15 @@
       "allZip": "Peeji {{count}} niile (ZIP)",
       "thisPage": "Naanị peeji a",
       "exporting": "Na-akwado peeji {{current}} n'ime {{total}}…"
+    },
+    "captions": {
+      "action": "Ndepụta okwu akpaka",
+      "working": "Na-ege ntị… {{percent}}%",
+      "downloading": "Na-akwado ụdị okwu… {{percent}}%",
+      "hint": "Na-atụgharị okwu ka ọ bụrụ ndepụta nwere oge ị nwere ike ịgbanwe ụdị ya. Ọ na-arụ ọrụ na ngwaọrụ gị: n'efu na nzuzo. Ojiji mbụ na-ebudata ụdị ahụ.",
+      "done": "Etinyere ndepụta {{count}}.",
+      "noSpeech": "Ahụghị okwu ọ bụla na klip a.",
+      "failed": "Enweghị ike ịmepụta ndepụta maka klip a."
     }
   },
   "fractions": {

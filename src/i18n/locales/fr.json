@@ -6148,6 +6148,15 @@
       "allZip": "Les {{count}} pages (ZIP)",
       "thisPage": "Cette page uniquement",
       "exporting": "Rendu de la page {{current}} sur {{total}}…"
+    },
+    "captions": {
+      "action": "Sous-titres auto",
+      "working": "Écoute… {{percent}} %",
+      "downloading": "Préparation du modèle vocal… {{percent}} %",
+      "hint": "Transforme la parole en sous-titres synchronisés que vous pouvez styliser. Fonctionne sur votre appareil : gratuit et privé. La première utilisation télécharge le modèle.",
+      "done": "{{count}} sous-titres ajoutés.",
+      "noSpeech": "Aucune parole détectée dans ce clip.",
+      "failed": "Impossible de créer des sous-titres pour ce clip."
     }
   }
 }

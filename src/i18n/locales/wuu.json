@@ -3748,6 +3748,15 @@
       "allZip": "全部 {{count}} 页 (ZIP)",
       "thisPage": "仅此页",
       "exporting": "正在渲染第 {{current}} 页，共 {{total}} 页…"
+    },
+    "captions": {
+      "action": "自动字幕",
+      "working": "正在聆听… {{percent}}%",
+      "downloading": "正在准备语音模型… {{percent}}%",
+      "hint": "将语音转换为带时间轴的字幕，样式可随意调整。在您的设备上运行：免费且私密。首次使用时会下载模型。",
+      "done": "已添加 {{count}} 条字幕。",
+      "noSpeech": "此片段中未检测到语音。",
+      "failed": "无法为此片段生成字幕。"
     }
   },
   "fractions": {

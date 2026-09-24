@@ -6033,6 +6033,15 @@
       "allZip": "Sve stranice ({{count}}) (ZIP)",
       "thisPage": "Samo ova stranica",
       "exporting": "Renderiranje stranice {{current}} od {{total}}…"
+    },
+    "captions": {
+      "action": "Automatski titlovi",
+      "working": "Slušam… {{percent}} %",
+      "downloading": "Pripremam model govora… {{percent}} %",
+      "hint": "Pretvara govor u vremenski usklađene titlove kojima možete promijeniti stil. Radi na vašem uređaju: besplatno i privatno. Pri prvoj upotrebi preuzima se model.",
+      "done": "Dodano titlova: {{count}}.",
+      "noSpeech": "U ovom isječku nije pronađen govor.",
+      "failed": "Nije moguće izraditi titlove za ovaj isječak."
     }
   }
 }
