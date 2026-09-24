@@ -2521,6 +2521,16 @@
     "resolve": "Ratkaise"
   },
   "stores": {
+    "podToggle": "Tilauspainatustuote",
+    "podHint": "Linkitä tuote tilauspainatuskaupastasi. Palveluntarjoaja painaa ja lähettää jokaisen tilauksen, joten varastoa ei tarvita.",
+    "podUrlLabel": "Tuotelinkki",
+    "podProviderLabel": "Palveluntarjoaja",
+    "podOther": "Muu",
+    "podInvalidUrl": "Anna kelvollinen https://-tuotelinkki",
+    "podBadge": "Tilauspainatus",
+    "podBuyOn": "Osta: {{provider}}",
+    "podNote": "{{provider}} painaa ja lähettää tilauksesta. Maksu tapahtuu heidän sivustollaan.",
+    "podUrlPlaceholder": "https://…",
     "title": "Kaupat",
     "browse": "Selaa",
     "myStore": "Oma kauppa",

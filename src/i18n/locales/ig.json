@@ -3843,6 +3843,16 @@
     "title": "Òkè"
   },
   "stores": {
+    "podToggle": "Ihe e bipụtara mgbe a chọrọ ya",
+    "podHint": "Jikọọ ngwaahịa site n'ụlọ ahịa mbipụta-mgbe-a-chọrọ gị. Onye na-enye ọrụ na-ebipụta ma zipu iwu ọ bụla, ya mere ịchọghị ngwaahịa n'aka.",
+    "podUrlLabel": "Njikọ ngwaahịa",
+    "podProviderLabel": "Onye na-enye ọrụ",
+    "podOther": "Ndị ọzọ",
+    "podInvalidUrl": "Tinye njikọ https:// ziri ezi",
+    "podBadge": "Mbipụta mgbe a chọrọ",
+    "podBuyOn": "Zụta na {{provider}}",
+    "podNote": "{{provider}} na-ebipụta ma na-eziga mgbe a chọrọ. Ịkwụ ụgwọ na-eme na saịtị ha.",
+    "podUrlPlaceholder": "https://…",
     "title": "Ụlọ Ahịa"
   },
   "accounts": {

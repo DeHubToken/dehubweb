@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ShippingAddressForm } from './ShippingAddressForm';
-import { ShoppingCart, MessageSquare, Loader2, ChevronLeft, ChevronRight, Package, Truck, Share2, PauseCircle } from 'lucide-react';
+import { ExternalLink, ShoppingCart, MessageSquare, Loader2, ChevronLeft, ChevronRight, Package, Truck, Share2, PauseCircle } from 'lucide-react';
 import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { useAuth } from '@/contexts/AuthContext';
@@ -30,6 +30,7 @@ import { useNavigate } from 'react-router-dom';
 import { openDmDock } from '@/hooks/use-dm-dock';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { ReviewSection } from './ReviewSection';
+import { podProviderLabel, parsePodUrl } from '@/lib/pod-providers';
 
 interface Props {
   listing: any;
@@ -72,7 +73,9 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
   // Quoting needs a DeHub token, so a signed-out browser would only get a 401
   // back. They see the USD price and Buy opens the login modal; the quote
   // fetches on its own once they are in, because this flips with it.
-  const canQuote = open && !!listingId && isAuthenticated && !isSelf && !soldOut;
+  // Print-on-demand listings are bought on the provider's site, never quoted here.
+  const podUrl = listing?.external_url ? parsePodUrl(listing.external_url) : null;
+  const canQuote = open && !!listingId && isAuthenticated && !isSelf && !soldOut && !podUrl;
 
   // Re-quote on every open. A listing can sit in the grid for days and the peg
   // moves, so a quote from the last time this drawer was open is not one to
@@ -183,6 +186,15 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
             </div>
           </div>
 
+          {podUrl && (
+            <div className="flex gap-2.5 p-3 rounded-xl border border-white/10 bg-white/5">
+              <Package className="w-4 h-4 text-zinc-300 shrink-0 mt-0.5" />
+              <p className="text-xs text-zinc-300">
+                {t('stores.podNote', { provider: podProviderLabel(listing.pod_provider) ?? podUrl.hostname })}
+              </p>
+            </div>
+          )}
+
           {/* Description */}
           {listing.description && (
             <p className="text-sm whitespace-pre-wrap text-primary-foreground">{listing.description}</p>
@@ -227,7 +239,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
           {/* Pricing state. A quote that never arrives is the case this whole
               path exists for: no quote means no purchase, rather than a
               purchase for nothing. */}
-          {isAuthenticated && !isSelf && !soldOut && !quote && (
+          {isAuthenticated && !isSelf && !soldOut && !podUrl && !quote && (
             quoteError ? (
               <p className="text-sm text-red-400">{quoteError}</p>
             ) : (
@@ -253,7 +265,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
           )}
 
           {/* Buy form */}
-          {!isSelf && !soldOut && quote && !quote.paymentsFrozen && (
+          {!isSelf && !soldOut && !podUrl && quote && !quote.paymentsFrozen && (
             <>
               {needsShipping && (
                 <ShippingAddressForm onChange={setShippingAddress} />
@@ -267,7 +279,15 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
 
           {/* Actions */}
           <div className="flex gap-2">
-            {!isSelf && (
+            {podUrl && (
+              <Button asChild className="flex-1">
+                <a href={podUrl.href} target="_blank" rel="noopener noreferrer nofollow">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  {t('stores.podBuyOn', { provider: podProviderLabel(listing.pod_provider) ?? podUrl.hostname })}
+                </a>
+              </Button>
+            )}
+            {!isSelf && !podUrl && (
               <Button onClick={handleBuy} disabled={!canBuy} className="flex-1">
                 {buy.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ShoppingCart className="w-4 h-4 mr-2" />}
                 {soldOut ? t('stores.soldOutButton') : buy.isPending ? t('stores.confirmingPayment') : t('stores.buyNow')}

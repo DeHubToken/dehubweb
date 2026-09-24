@@ -2518,6 +2518,16 @@
     "resolve": "Lös"
   },
   "stores": {
+    "podToggle": "Print-on-demand-produkt",
+    "podHint": "Länka en produkt från din print-on-demand-butik. Leverantören trycker och skickar varje beställning, så du behöver inget lager.",
+    "podUrlLabel": "Produktlänk",
+    "podProviderLabel": "Leverantör",
+    "podOther": "Annat",
+    "podInvalidUrl": "Ange en giltig https://-produktlänk",
+    "podBadge": "Print on demand",
+    "podBuyOn": "Köp hos {{provider}}",
+    "podNote": "Trycks och skickas vid beställning av {{provider}}. Betalningen sker på deras sida.",
+    "podUrlPlaceholder": "https://…",
     "title": "Butiker",
     "browse": "Bläddra",
     "myStore": "Min butik",
